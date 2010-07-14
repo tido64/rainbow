@@ -17,12 +17,13 @@
 class Screen
 {
 public:
-	Screen();
+	static Screen *Instance();
 	inline int get_width() { return this->width; }
 	inline int get_height() { return this->height; }
 
 private:
 	int width, height;
+	Screen();
 };
 
 #endif

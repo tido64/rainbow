@@ -26,13 +26,13 @@ class Sprite
 public:
 	const float accel_x, accel_y;
 
-	Sprite(const char *gfx, const float x = 0, const float y = 0) : accel_x(x), accel_y(y), pos_x(0), pos_y(0)
+	Sprite(const char *file, const float x = 0, const float y = 0) : accel_x(x), accel_y(y), pos_x(0), pos_y(0)
 	{
 	#if defined(ONWIRE_ANDROID)
 
 	#elif defined(ONWIRE_IOS)
 
-		this->sprite = [CCSprite spriteWithFile: [NSString stringWithUTF8String:gfx]];
+		this->sprite = [CCSprite spriteWithFile: [NSString stringWithUTF8String:file]];
 
 	#endif
 	}
@@ -48,6 +48,17 @@ public:
 	}
 
 	SpriteObject *get_object() { return this->sprite; }
+
+	void scale(const float f)
+	{
+	#if defined(ONWIRE_ANDROID)
+
+	#elif defined(ONWIRE_IOS)
+
+		this->sprite.scale = f;
+
+	#endif
+	}
 
 	void scale(const float x, const float y)
 	{

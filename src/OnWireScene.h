@@ -10,18 +10,23 @@
 
 #include "Assets.h"
 #include "Physics.h"
-#include "Screen.h"
+
+@interface GameUI : CCLayer {
+	HUD hud;
+	Master *master;
+}
+
+@end
 
 @interface OnWire : CCLayer {
 	GLESDebugDraw *debug_draw;
 	Physics physics;
-	Screen screen;
 
 	// Sprites
-	CCSprite *building;
+	Sprite *building;
 	Sprite *skyline;
 }
 
-+(id) scene; // returns a Scene that contains the HelloWorld as the only child
++(id) scene;
 
 @end

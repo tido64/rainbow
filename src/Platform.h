@@ -14,7 +14,7 @@
 #	define ONWIRE_ANDROID
 #elif defined(TARGET_OS_IPHONE) || defined(TARGET_IPHONE_SIMULATOR)
 #	import "cocos2d.h"
-#	define string NSString
+#	define ctons_str(s) [NSString stringWithUTF8String: (s)];
 #	define ONWIRE_IOS
 #endif
 

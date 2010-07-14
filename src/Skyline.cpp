@@ -9,10 +9,11 @@
 
 #include "Skyline.h"
 
-Skyline::Skyline(Screen &s) : Sprite("OnWire_thirdPerson01.png")
+Skyline::Skyline() : Sprite("Skyline.png")
 {
-	int s_w = s.get_width();
-	int s_h = s.get_height();
-	this->scale(s_w / 600.0f, s_h / 763.0f);
+	Screen *s = Screen::Instance();
+	int s_w = s->get_width();
+	int s_h = s->get_height();
+	this->scale(s_w / 643.0f, s_h / 962.0f);
 	this->set_position(s_w >> 1, s_h >> 1);
 }

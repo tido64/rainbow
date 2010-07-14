@@ -10,6 +10,8 @@
 #ifndef ASSETS_H_
 #define ASSETS_H_
 
-#include "Skyline.h";
+#include "Building.h"
+#include "Master.h"
+#include "Skyline.h"
 
 #endif

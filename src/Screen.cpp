@@ -23,3 +23,9 @@ Screen::Screen()
 
 #endif
 }
+
+Screen *Screen::Instance()
+{
+	static Screen inst;
+	return &inst;
+}

@@ -8,6 +8,43 @@
 
 #import "OnWireScene.h"
 
+@implementation GameUI
+
+-(id) init
+{
+	if((self=[super init]))
+	{
+		//self.isTouchEnabled = YES; // enable touches
+
+		// Initialise game master
+		master = Master::Instance();
+		master->use(&hud);
+		master->reset(9000);
+
+		// Add HUD elements
+		[self addChild:hud.get_distance()->get_label()];
+		[self addChild:hud.get_distance_label()->get_label()];
+		[self addChild:hud.get_time()->get_label()];
+		[self addChild:hud.get_time_label()->get_label()];
+
+		// Set up timer
+		[self schedule: @selector(tick) interval:1.0f];
+	}
+	return self;
+}
+
+-(void) tick
+{
+	Master::Instance()->elapse_time();
+}
+
+-(void) dealloc
+{
+	[super dealloc];
+}
+
+@end
+
 @implementation OnWire
 
 +(id) scene
@@ -17,9 +54,11 @@
 	
 	// 'layer' is an autorelease object.
 	OnWire *layer = [OnWire node];
+	GameUI *ui = [GameUI node];
 	
 	// add layer as a child to scene
 	[scene addChild: layer];
+	[scene addChild: ui];
 	
 	// return the scene
 	return scene;
@@ -27,9 +66,9 @@
 
 -(id) init
 {
-	if( (self=[super init]))
+	if((self=[super init]))
 	{
-		self.isTouchEnabled = YES; // enable touches
+		//self.isTouchEnabled = YES; // enable touches
 		self.isAccelerometerEnabled = YES; // enable accelerometer
 
 		// Physics
@@ -44,13 +83,11 @@
 		//flags += b2DebugDraw::e_centerOfMassBit;
 		debug_draw->SetFlags(flags);
 
-		// Add sprites
-		skyline = new Skyline(screen);
+		// Create and add sprites
+		skyline = new Skyline();
+		building = new Building();
 		[self addChild:skyline->get_object()];
-
-		//building = [CCSprite spriteWithFile: @"Icon.png"];
-		//building.position = ccp(screen.get_width() / 2, screen.get_height() / 2);
-		//[self addChild: building];
+		[self addChild:building->get_object()];
 
 		[self schedule: @selector(tick:)];
 
@@ -124,6 +161,7 @@
 
 -(void) tick: (ccTime) dt
 {
+	building->update();
 	physics.tick(dt);
 
 	//Iterate over the bodies in the physics world
@@ -140,10 +178,10 @@
 }
 
 // on "dealloc" you need to release all your retained objects
-- (void) dealloc
+-(void) dealloc
 {
-	delete skyline;
 	delete building;
+	delete skyline;
 	delete debug_draw;
 
 	// don't forget to call "super dealloc"

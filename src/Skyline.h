@@ -18,7 +18,7 @@
 class Skyline : public Sprite
 {
 public:
-	Skyline(Screen &screen);
+	Skyline();
 	~Skyline() { }
 	void update() { }
 };
