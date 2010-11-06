@@ -1,13 +1,7 @@
-/*
- *  Controls.h
- *  OnWire
- *
- *	Handles accelerometer/gyroscope and touch events independent of platform.
- *
- *  Created by Tommy Nguyen on 6/27/10.
- *  Copyright 2010 __MyCompanyName__. All rights reserved.
- *
- */
+/// Handles accelerometer/gyroscope and touch events independent of platform.
+
+/// Copyright 2010 __MyCompanyName__. All rights reserved.
+/// \author Tommy Nguyen
 
 #ifndef CONTROLS_H_
 #define CONTROLS_H_

@@ -9,7 +9,8 @@
 
 #include "Building.h"
 
-Building::Building() : Sprite("Building.png"), initial(0.3f), progress(initial)
+Building::Building() :
+	Sprite("Building.png"), initial(0.3f), progress(initial)
 {
 	Screen *s = Screen::Instance();
 	//this->scale(s_w / 488, s_h / 1547.0f);

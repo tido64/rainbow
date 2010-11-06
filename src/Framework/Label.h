@@ -1,28 +1,26 @@
-/*
- *  Label.h
- *  OnWire
- *
- *	Platform independent label super class.
- *
- *  Created by Tommy Nguyen on 7/9/10.
- *  Copyright 2010 __MyCompanyName__. All rights reserved.
- *
- */
+/// Platform independent label class.
+
+/// Copyright 2010 __MyCompanyName__. All rights reserved.
+/// \author Tommy Nguyen
 
 #ifndef LABEL_H_
 #define LABEL_H_
 
-#include "Platform.h"
+#include "../Hardware/Platform.h"
 
 #if defined(ONWIRE_ANDROID)
 #	// Insert definitions
 #elif defined(ONWIRE_IOS)
-#	define LabelObject CCBitmapFontAtlas
+#	define RealLabel CCBitmapFontAtlas
 #endif
 
 class Label
 {
 public:
+
+	/// Creates a label with an initial string and font.
+	/// \param str	Initial string
+	/// \param font	Font to be used with this label
 	Label(const char *str, const char *font = 0) : valign(0.5f)
 	{
 	#if defined(ONWIRE_ANDROID)
@@ -38,6 +36,7 @@ public:
 
 	~Label() { delete this->label; }
 
+	/// Center-justifies the label.
 	void align_center()
 	{
 	#if defined(ONWIRE_ANDROID)
@@ -49,6 +48,7 @@ public:
 	#endif
 	}
 
+	/// Left-justifies the label.
 	void align_left()
 	{
 	#if defined(ONWIRE_ANDROID)
@@ -59,7 +59,8 @@ public:
 
 	#endif
 	}
-	
+
+	/// Right-justifies the label.
 	void align_right()
 	{
 	#if defined(ONWIRE_ANDROID)
@@ -71,6 +72,7 @@ public:
 	#endif
 	}
 
+	/// Returns the height of the label.
 	const unsigned int get_height()
 	{
 	#if defined(ONWIRE_ANDROID)
@@ -81,9 +83,12 @@ public:
 
 	#endif
 	}
-	
-	LabelObject *get_label() { return this->label; }
 
+	/// Returns the label object. Used by the director.
+	/// \return Actual label object
+	RealLabel *get_label() { return this->label; }
+
+	/// Returns the width of the label.
 	const unsigned int get_width()
 	{
 	#if defined(ONWIRE_ANDROID)
@@ -94,7 +99,10 @@ public:
 
 	#endif
 	}
-	
+
+	/// Sets the position of the label.
+	/// \param x The x-coordinate
+	/// \param y The y-coordinate
 	void set_position(const unsigned int x, const unsigned int y)
 	{
 	#if defined(ONWIRE_ANDROID)
@@ -106,6 +114,8 @@ public:
 	#endif
 	}
 
+	/// Scales the label to given factor.
+	/// \param f Factor to scale by
 	void scale(const float f)
 	{
 	#if defined(ONWIRE_ANDROID)
@@ -116,8 +126,9 @@ public:
 
 	#endif
 	}
-	
-	
+
+	/// Sets the text in the label.
+	/// \param str The text
 	void set_text(const char *str)
 	{
 	#if defined(ONWIRE_ANDROID)
@@ -130,11 +141,13 @@ public:
 	#endif
 	}
 
+	/// Sets the vertial alignment.
+	/// \param v Vertical alignment value between 0 and 1
 	void set_valign(const float v) { this->valign = v; }
-	
+
 private:
-	float valign;
-	LabelObject *label;
+	float valign;		///< Vertical alignment
+	RealLabel *label;	///< Actual label object
 };
 
 #endif

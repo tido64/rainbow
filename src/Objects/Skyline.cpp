@@ -9,7 +9,8 @@
 
 #include "Skyline.h"
 
-Skyline::Skyline() : Sprite("Skyline.png")
+Skyline::Skyline() :
+	Sprite("Skyline.png")
 {
 	Screen *s = Screen::Instance();
 	int s_w = s->get_width();

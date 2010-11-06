@@ -18,8 +18,8 @@
 
 		// Initialise game master
 		master = Master::Instance();
-		master->use(&hud);
 		master->reset(9000);
+		master->add(&hud);
 
 		// Add HUD elements
 		[self addChild:hud.get_distance()->get_label()];
@@ -35,7 +35,7 @@
 
 -(void) tick
 {
-	Master::Instance()->elapse_time();
+	master->elapse_time();
 }
 
 -(void) dealloc
@@ -51,15 +51,15 @@
 {
 	// 'scene' is an autorelease object.
 	CCScene *scene = [CCScene node];
-	
+
 	// 'layer' is an autorelease object.
 	OnWire *layer = [OnWire node];
 	GameUI *ui = [GameUI node];
-	
+
 	// add layer as a child to scene
 	[scene addChild: layer];
 	[scene addChild: ui];
-	
+
 	// return the scene
 	return scene;
 }
@@ -72,12 +72,15 @@
 		self.isAccelerometerEnabled = YES; // enable accelerometer
 
 		// Physics
-		debug_draw = new GLESDebugDraw(PTM_RATIO);
-		physics.world->SetDebugDraw(debug_draw);
+		physics = Physics::Instance();
 
-		unsigned int flags = 0;
+		// Physics debugging
+		debug_draw = new GLESDebugDraw(PTM_RATIO);
+		physics->world->SetDebugDraw(debug_draw);
+
+		uint32 flags = 0;
 		flags += b2DebugDraw::e_shapeBit;
-		//flags += b2DebugDraw::e_jointBit;
+		flags += b2DebugDraw::e_jointBit;
 		//flags += b2DebugDraw::e_aabbBit;
 		//flags += b2DebugDraw::e_pairBit;
 		//flags += b2DebugDraw::e_centerOfMassBit;
@@ -86,58 +89,16 @@
 		// Create and add sprites
 		skyline = new Skyline();
 		building = new Building();
-		[self addChild:skyline->get_object()];
-		[self addChild:building->get_object()];
+		line = [[Line alloc] init: Screen::Instance()->get_height() >> 1];
+		//[self addChild:skyline->get_object()];
+		//[self addChild:building->get_object()];
+		[self addChild:line];
+		Master::Instance()->add(line);
 
-		[self schedule: @selector(tick:)];
+		[self schedule: @selector(tick:)]; // interval:timestep];
 
 		// Controls
 		//[[CCTouchDispatcher sharedDispatcher] addTargetedDelegate:this priority:0 swallowsTouches:YES];
-
-/* Physics? Ain't ready for that yet...
-
-		// Define the ground body.
-		b2BodyDef groundBodyDef;
-		groundBodyDef.position.Set(0, 0); // bottom-left corner
-		
-		// Call the body factory which allocates memory for the ground body
-		// from a pool and creates the ground box shape (also from a pool).
-		// The body is also added to the world.
-		b2Body* groundBody = world->CreateBody(&groundBodyDef);
-		
-		// Define the ground box shape.
-		b2PolygonShape groundBox;		
-		
-		// bottom
-		groundBox.SetAsEdge(b2Vec2(0, 0), b2Vec2(screen->get_width()/PTM_RATIO, 0));
-		groundBody->CreateFixture(&groundBox, 0);
-		
-		// top
-		groundBox.SetAsEdge(b2Vec2(0, screen->get_height() / PTM_RATIO), b2Vec2(screen->get_width() / PTM_RATIO, screen->get_height() / PTM_RATIO));
-		groundBody->CreateFixture(&groundBox, 0);
-		
-		// left
-		groundBox.SetAsEdge(b2Vec2(0, screen->get_height() / PTM_RATIO), b2Vec2(0, 0));
-		groundBody->CreateFixture(&groundBox, 0);
-		
-		// right
-		groundBox.SetAsEdge(b2Vec2(screen->get_width() / PTM_RATIO, screen->get_height() / PTM_RATIO), b2Vec2(screen->get_width() / PTM_RATIO, 0));
-		groundBody->CreateFixture(&groundBox, 0);
-		
-		//Set up sprite
-		
-		CCSpriteSheet *sheet = [CCSpriteSheet spriteSheetWithFile:@"blocks.png" capacity:150];
-		[self addChild:sheet z:0 tag:kTagSpriteSheet];
-		
-		[self addNewSpriteWithCoords:ccp(screen->get_width() / 2, screen->get_height() / 2)];
-		
-		CCLabel *label = [CCLabel labelWithString:@"Tap screen" fontName:@"Marker Felt" fontSize:32];
-		[self addChild:label z:0];
-		[label setColor:ccc3(0,0,255)];
-		label.position = ccp( screenSize.width/2, screenSize.height-50);
-		
-		[self schedule: @selector(tick:)];
- */
 	}
 	return self;
 }
@@ -145,13 +106,13 @@
 -(void) draw
 {
 	// Default GL states: GL_TEXTURE_2D, GL_VERTEX_ARRAY, GL_COLOR_ARRAY, GL_TEXTURE_COORD_ARRAY
-	// Needed states:  GL_VERTEX_ARRAY, 
+	// Needed states:  GL_VERTEX_ARRAY,
 	// Unneeded states: GL_TEXTURE_2D, GL_COLOR_ARRAY, GL_TEXTURE_COORD_ARRAY
 	glDisable(GL_TEXTURE_2D);
 	glDisableClientState(GL_COLOR_ARRAY);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 
-	physics.world->DrawDebugData();
+	physics->world->DrawDebugData();
 
 	// restore default GL states
 	glEnable(GL_TEXTURE_2D);
@@ -161,19 +122,21 @@
 
 -(void) tick: (ccTime) dt
 {
-	building->update();
-	physics.tick(dt);
+	//building->update();
+	physics->step(dt);
+	[line update];
 
 	//Iterate over the bodies in the physics world
-	for (b2Body *b = physics.world->GetBodyList(); b; b = b->GetNext())
+	for (b2Body *b = physics->world->GetBodyList(); b; b = b->GetNext())
 	{
-		if (b->GetUserData() != NULL)
+		BodyData *d = static_cast<BodyData *>(b->GetUserData());
+		if (d != 0 && d->sprite != 0)
 		{
 			//Synchronize the AtlasSprites position and rotation with the corresponding body
 			CCSprite *myActor = (CCSprite*)b->GetUserData();
 			myActor.position = CGPointMake( b->GetPosition().x * PTM_RATIO, b->GetPosition().y * PTM_RATIO);
 			myActor.rotation = -1 * CC_RADIANS_TO_DEGREES(b->GetAngle());
-		}	
+		}
 	}
 }
 

@@ -10,9 +10,9 @@
 #ifndef BUILDING_H_
 #define BUILDING_H_
 
+#include "../Framework/Sprite.h"
+#include "../Hardware/Screen.h"
 #include "Master.h"
-#include "Screen.h"
-#include "Sprite.h"
 
 class Building : public Sprite
 {

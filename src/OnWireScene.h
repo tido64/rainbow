@@ -20,9 +20,10 @@
 
 @interface OnWire : CCLayer {
 	GLESDebugDraw *debug_draw;
-	Physics physics;
+	Physics *physics;
 
 	// Sprites
+	Line *line;
 	Sprite *building;
 	Sprite *skyline;
 }

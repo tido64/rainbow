@@ -15,13 +15,27 @@ Master *Master::Instance()
 	return &inst;
 }
 
+void Master::add(HUD *hud)
+{
+	this->hud = hud;
+
+	if (this->target != 0)
+		this->hud->reset(this->target);
+}
+
+void Master::add(Line *line)
+{
+	this->line = line;
+}
+
 void Master::elapse_time()
 {
 	if (this->finished || this->time >= 5999) return;
 	this->hud->update_time(++this->time);
 
 	// DEBUGGING ONLY
-	this->travel(2000);
+	this->travel(1400);
+	play();
 }
 
 float Master::get_progress()
@@ -39,13 +53,22 @@ unsigned int Master::get_traveled()
 	return this->traveled;
 }
 
+void Master::play()
+{
+	// apply pranks and kinds of shit here
+	WindAction wa;
+	wa.fire();
+}
+
 void Master::reset(const unsigned int t)
 {
 	this->finished = false;
 	this->target = t;
 	this->time = 0;
 	this->traveled = 0;
-	this->hud->reset(this->target);
+
+	if (this->hud != 0)
+		this->hud->reset(this->target);
 }
 
 void Master::travel(const unsigned int d)
@@ -59,9 +82,4 @@ void Master::travel(const unsigned int d)
 		this->finished = true;
 	}
 	this->hud->update_distance(this->target - this->traveled);
-}
-
-void Master::use(HUD *hud)
-{
-	this->hud = hud;
 }

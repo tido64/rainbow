@@ -9,7 +9,8 @@
 
 #include "Controls.h"
 
-Controls::Controls(const unsigned int w, const unsigned int h) : scr_width(w), scr_height(h), speed(100), sprite_count(0)
+Controls::Controls(const unsigned int w, const unsigned int h) :
+	scr_width(w), scr_height(h), speed(100), sprite_count(0)
 {
 #if defined(ONWIRE_ANDROID)
 
