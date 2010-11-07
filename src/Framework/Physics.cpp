@@ -52,19 +52,10 @@ b2Body *Physics::create_body(const b2BodyDef *d, const b2FixtureDef *fixture, co
 	//data.I = inertia;
 	//data.mass = mass;
 	//b->SetMassData(&data);
-	b->CreateFixture(fixture);
+	if (fixture != 0) b->CreateFixture(fixture);
 	BodyData *u = new BodyData(d->position, d->angle);
 	b->SetUserData(u);
 	return b;
-}
-
-b2FixtureDef *Physics::create_fixture(b2Shape *shape, const float friction, const float density)
-{
-	b2FixtureDef *f = new b2FixtureDef();
-	f->shape = shape;
-	f->friction = friction;
-	f->density = density;
-	return f;
 }
 
 b2Joint *Physics::create_joint(b2Body *a, b2Body *b, const b2Vec2 &a_pos, const b2Vec2 &b_pos)
@@ -103,7 +94,7 @@ void Physics::interpolate()
 	const float rest = 1.0f - this->accumulator_ratio;
 	for (b2Body *b = this->world->GetBodyList(); b; b = b->GetNext())
 	{
-		if (b->GetType() == b2_staticBody) continue;
+		if (b->GetType() == b2_staticBody || !b->IsAwake()) continue;
 
 		BodyData *d = static_cast<BodyData *>(b->GetUserData());
 		b->SetTransform(

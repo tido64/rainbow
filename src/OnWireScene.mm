@@ -10,22 +10,19 @@
 
 @implementation GameUI
 
--(id) init
+-(id) initDraw:(OnWireGame *)g
 {
 	if((self=[super init]))
 	{
 		//self.isTouchEnabled = YES; // enable touches
 
-		// Initialise game master
-		master = Master::Instance();
-		master->reset(9000);
-		master->add(&hud);
-
-		// Add HUD elements
-		[self addChild:hud.get_distance()->get_label()];
-		[self addChild:hud.get_distance_label()->get_label()];
-		[self addChild:hud.get_time()->get_label()];
-		[self addChild:hud.get_time_label()->get_label()];
+		game = g;
+		game->reset(9000);
+		CCBitmapFontAtlas **labels = game->get_hud_elements();
+		const unsigned int c = game->get_hud_element_count();
+		for (unsigned int i = 0; i < c; ++i)
+			[self addChild:labels[i]];
+		delete[] labels;
 
 		// Set up timer
 		[self schedule: @selector(tick) interval:1.0f];
@@ -35,7 +32,7 @@
 
 -(void) tick
 {
-	master->elapse_time();
+	game->elapse_time();
 }
 
 -(void) dealloc
@@ -52,9 +49,10 @@
 	// 'scene' is an autorelease object.
 	CCScene *scene = [CCScene node];
 
-	// 'layer' is an autorelease object.
+	// 'layer' and 'ui' are autorelease objects.
 	OnWire *layer = [OnWire node];
 	GameUI *ui = [GameUI node];
+	[ui initDraw: layer->game];
 
 	// add layer as a child to scene
 	[scene addChild: layer];
@@ -86,16 +84,20 @@
 		//flags += b2DebugDraw::e_centerOfMassBit;
 		debug_draw->SetFlags(flags);
 
-		// Create and add sprites
-		skyline = new Skyline();
-		building = new Building();
-		line = [[Line alloc] init: Screen::Instance()->get_height() >> 1];
-		//[self addChild:skyline->get_object()];
-		//[self addChild:building->get_object()];
-		[self addChild:line];
-		Master::Instance()->add(line);
+		// Initialise game
+		game = new OnWireGame();
 
-		[self schedule: @selector(tick:)]; // interval:timestep];
+		// Add sprites to cocos2d's main loop
+		CCSprite **s = game->get_game_objects();
+		const unsigned int c = game->get_game_object_count();
+		for (unsigned int i = 0; i < c; ++i)
+			[self addChild:s[i]];
+		delete[] s;
+
+		line = [LineRender node];
+		[self addChild:[line setData:game->get_line()]];
+
+		[self schedule: @selector(tick:)];
 
 		// Controls
 		//[[CCTouchDispatcher sharedDispatcher] addTargetedDelegate:this priority:0 swallowsTouches:YES];
@@ -122,9 +124,8 @@
 
 -(void) tick: (ccTime) dt
 {
-	//building->update();
 	physics->step(dt);
-	[line update];
+	game->update();
 
 	//Iterate over the bodies in the physics world
 	for (b2Body *b = physics->world->GetBodyList(); b; b = b->GetNext())
@@ -143,8 +144,7 @@
 // on "dealloc" you need to release all your retained objects
 -(void) dealloc
 {
-	delete building;
-	delete skyline;
+	delete game;
 	delete debug_draw;
 
 	// don't forget to call "super dealloc"

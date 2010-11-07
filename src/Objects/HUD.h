@@ -7,6 +7,7 @@
 
 #ifndef HUD_H_
 #define HUD_H_
+#define HUD_COUNT 4
 
 #include "../Framework/Label.h"
 #include "../Hardware/Screen.h"
@@ -17,21 +18,9 @@ public:
 	HUD();
 	~HUD();
 
-	/// Returns the distance label. Used for adding it to the director.
-	/// \return Distance label
-	Label *get_distance() { return this->distance; }
+	inline unsigned int get_element_count() { return HUD_COUNT; }
 
-	/// Returns the label for distance. Used for adding it to the director.
-	/// \return Label for distance
-	Label *get_distance_label() { return this->distance_label; }
-
-	/// Returns the time label. Used for adding it to the director.
-	/// \return Time label
-	Label *get_time() { return this->time; }
-
-	/// Returns the label for time. Used for adding it to the director.
-	/// \return Label for time
-	Label *get_time_label() { return this->time_label; }
+	RealLabel **get_elements();
 
 	/// Resets the values in the HUD.
 	/// \param target The new target distance

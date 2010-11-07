@@ -12,14 +12,13 @@
 
 #include "../Framework/Sprite.h"
 #include "../Hardware/Screen.h"
-#include "Master.h"
 
 class Building : public Sprite
 {
 public:
 	Building();
 	~Building() { }
-	void update();
+	void update(const float &progress);
 
 private:
 	float initial, progress;

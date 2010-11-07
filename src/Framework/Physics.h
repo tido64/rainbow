@@ -22,18 +22,12 @@
 #define PTM_RATIO 32
 
 // Abstraction layer
-typedef b2Body				Body;
-typedef b2BodyDef			BodyDef;
-typedef b2CircleShape		CircleShape;
-typedef b2FixtureDef		Fixture;
-typedef b2Vec2				Vec2;
-
-// Constants (duh!)
-const unsigned int max_steps = 5;
-const int p_iter = 1;
-const int v_iter = 8;
-const float fixed_timestep = 1 / 60.0f;
-const float g = -9.80665f;
+typedef b2Body			Body;
+typedef b2BodyDef		BodyDef;
+typedef b2CircleShape	CircleShape;
+typedef b2FixtureDef	Fixture;
+typedef b2PolygonShape	PolygonShape;
+typedef b2Vec2			Vec2;
 
 class Physics
 {
@@ -49,31 +43,28 @@ public:
 	/// \param h Height of the box
 	/// \param x Position of the box (x-coordinate)
 	/// \param y Position of the box (y-coordinate)
+	/// \return  Body object
 	b2Body *create_anchor(const float w, const float h, const float x, const float y);
 
 	/// Creates a body, given definition and fixture.
 	/// \param d Body definition
 	/// \param f Body fixture
-	b2Body *create_body(const b2BodyDef *d, const b2FixtureDef *fixture, const float inertia = 0.0f, const float mass = 0.0f);
-
-	/// Creates a body fixture based on its shape, friction and density.
-	/// \param shape	Shape of the body
-	/// \param friction	Body friction, default 0.2f
-	/// \param density	Body density, default 0.0f
-	b2FixtureDef *create_fixture(b2Shape *shape, const float friction = 0.2f, const float density = 0.0f);
+	/// \return  Body object
+	b2Body *create_body(const b2BodyDef *d, const b2FixtureDef *fixture = 0, const float inertia = 0.0f, const float mass = 0.0f);
 
 	/// Creates a distant joint between two bodies.
 	/// \param a		Body A
 	/// \param b		Body B
 	/// \param a_pos	Position of the first end of the joint
 	/// \param b_pos	Position of the other end of the joint
+	/// \return			Joint object
 	b2Joint *create_joint(b2Body *a, b2Body *b, const b2Vec2 &a_pos, const b2Vec2 &b_pos);
 
 	/// Defines linear and/or angular damping.
 	/// \param d				Body definition
 	/// \param linearDamping	Linear damping
 	/// \param angularDamping	Angular damping
-	void define_body_damping(b2BodyDef *d, const float linearDamping = 0.0f, const float angularDamping = 0.01f);
+	void define_body_damping(b2BodyDef *d, const float linearDamping = 0.0f, const float angularDamping = 0.1f);
 
 	/// Defines body position. Remember that it's better to define its position
 	/// beforehand than to create the body and then move it.
@@ -98,7 +89,17 @@ public:
 	void step(float dt);
 
 private:
-	float accumulator, accumulator_ratio;
+	static const unsigned int
+		max_steps = 5;					///< Maximum allowed steps (prevents spiral of death)
+	static const int
+		p_iter = 1,						///< Position iterations
+		v_iter = 8;						///< Velocity iterations
+	static const float
+		fixed_timestep = 1.f / 60.f,	///< Fixed time step
+		g = -9.80665f;					///< Standard gravitational acceleration value
+	float
+		accumulator,					///< Renderer time accumulator
+		accumulator_ratio;				///< The ratio of accumulator (after consumption) over fixed timestep
 
 	/// Initialises the physics engine. In this implementation, the Box2D world
 	/// and its properties.

@@ -69,6 +69,16 @@ HUD::~HUD()
 	delete this->time_label;
 }
 
+RealLabel **HUD::get_elements()
+{
+	RealLabel **labels = new RealLabel *[HUD_COUNT];
+	labels[0] = this->distance->get_label();
+	labels[1] = this->distance_label->get_label();
+	labels[2] = this->time->get_label();
+	labels[3] = this->time_label->get_label();
+	return labels;
+}
+
 void HUD::reset(const unsigned int target)
 {
 	this->time->set_text(init_time);

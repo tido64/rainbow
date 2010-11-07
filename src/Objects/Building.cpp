@@ -15,12 +15,11 @@ Building::Building() :
 	Screen *s = Screen::Instance();
 	//this->scale(s_w / 488, s_h / 1547.0f);
 	this->scale(this->initial);
-	this->set_position(s->get_width() >> 1, 200);
+	this->set_position(s->get_width() * 0.5f, 180.0f);
 }
 
-void Building::update()
+void Building::update(const float &p)
 {
-	const float p = Master::Instance()->get_progress();
 	if (p == this->progress) return;
 	this->progress = p;
 

@@ -7,25 +7,22 @@
 //
 
 #import "GLES-Render.h"
+#import "Objects/LineRender.h"
 
-#include "Assets.h"
+#include "OnWireGame.h"
 #include "Physics.h"
 
 @interface GameUI : CCLayer {
-	HUD hud;
-	Master *master;
+	OnWireGame *game;
 }
 
 @end
 
 @interface OnWire : CCLayer {
 	GLESDebugDraw *debug_draw;
+	LineRender *line;
+	OnWireGame *game;
 	Physics *physics;
-
-	// Sprites
-	Line *line;
-	Sprite *building;
-	Sprite *skyline;
 }
 
 +(id) scene;

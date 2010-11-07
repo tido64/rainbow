@@ -16,13 +16,13 @@ public:
 	static Screen *Instance();
 
 	/// Returns the width of the screen of the current device.
-	inline unsigned int get_width() { return this->width; }
+	inline float get_width() { return this->width; }
 
 	/// Returns the height of the screen of the current device.
-	inline unsigned int get_height() { return this->height; }
+	inline float get_height() { return this->height; }
 
 private:
-	unsigned int
+	float
 		width,	///< Width of the screen of the current device
 		height; ///< Height of the screen of the current device
 	Screen();

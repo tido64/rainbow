@@ -1,7 +1,7 @@
 /// Platform independent sprite super class.
 
-/// Sprites aree created by extending this class. Initialised from a bitmap
-/// file. Support for JPEG/PNG varies with platform.
+/// Sprites are created by extending this class. Initialised from a bitmap file.
+/// Support for JPEG/PNG varies with platform.
 ///
 /// Copyright 2010 __MyCompanyName__. All rights reserved.
 /// \author Tommy Nguyen
@@ -106,14 +106,11 @@ public:
 		this->pos_y = y;
 	}
 
-	/// Updates the state of this sprite. Must be overriden.
-	virtual void update() = 0;
-
 protected:
 	float
-		pos_x,				///< Position of this sprite (x-coordinate)
-		pos_y;				///< Position of this sprite (y-coordinate)
-	RealSprite *sprite;		///< The actual sprite object
+		pos_x,			///< Position of this sprite (x-coordinate)
+		pos_y;			///< Position of this sprite (y-coordinate)
+	RealSprite *sprite;	///< The actual sprite object
 };
 
 #endif
