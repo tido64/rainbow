@@ -6,25 +6,29 @@
 #ifndef CONTROLS_H_
 #define CONTROLS_H_
 
-#include "Sprite.h"
-
-#if defined(ONWIRE_ANDROID)
-#elif defined(ONWIRE_IOS)
-#	include "CCTouchDispatcher.h"
-#endif
+#include "../Framework/Sprite.h"
+#include "../Framework/Touch.h"
+#include "../Hardware/Screen.h"
 
 class Controls
 {
 public:
-	Controls(const unsigned int w, const unsigned int h);
+	Controls();
+	~Controls();
+
 	void accelerate(const float x, const float y);
 	void add_object(Sprite *);
-	void touch();
+
+	void touch_began(Touch *touches, const unsigned int count);
+	void touch_canceled();
+	void touch_ended(Touch *touches, const unsigned int count);
+	void touch_moved(Touch *touches, const unsigned int count);
 
 private:
-	const unsigned int scr_width, scr_height, speed;
+	const unsigned int scr_w, scr_h, speed;
 	unsigned int sprite_count;
-	Sprite *sprites;
+	Sprite **sprites;
+	Touches touches;
 };
 
-#endif CONTROLS_H_
+#endif

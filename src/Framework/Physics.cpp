@@ -1,24 +1,17 @@
-/*
- *  Physics.cpp
- *  OnWire
- *
- *  Created by Tommy Nguyen on 6/27/10.
- *  Copyright 2010 __MyCompanyName__. All rights reserved.
- *
- */
+//
+//  Physics.cpp
+//  OnWire
+//
+//  Created by Tommy Nguyen on 6/27/10.
+//  Copyright 2010 __MyCompanyName__. All rights reserved.
+//
 
 #include "Physics.h"
-
-Physics *Physics::Instance()
-{
-	static Physics inst;
-	return &inst;
-}
 
 Physics::Physics() : accumulator(0.0f), accumulator_ratio(0.0f)
 {
 	// Define gravity vector
-	b2Vec2 gravity(0.0f, g);
+	b2Vec2 gravity(0.0f, Physics::g);
 
 	// Define the world
 	this->world = new b2World(gravity, true);
@@ -33,7 +26,7 @@ Physics::~Physics()
 	delete this->world;
 }
 
-b2Body *Physics::create_anchor(const float w, const float h, const float x, const float y)
+b2Body *Physics::create_anchor(const float &w, const float &h, const float &x, const float &y)
 {
 	b2BodyDef body_def;
 	body_def.position.x = x;
@@ -56,6 +49,13 @@ b2Body *Physics::create_body(const b2BodyDef *d, const b2FixtureDef *fixture, co
 	BodyData *u = new BodyData(d->position, d->angle);
 	b->SetUserData(u);
 	return b;
+}
+
+b2Joint *Physics::create_joint(b2Body *a, b2Body *b)
+{
+	b2DistanceJointDef joint_def;
+	joint_def.Initialize(a, b, a->GetPosition(), b->GetPosition());
+	return this->world->CreateJoint(&joint_def);
 }
 
 b2Joint *Physics::create_joint(b2Body *a, b2Body *b, const b2Vec2 &a_pos, const b2Vec2 &b_pos)
@@ -129,7 +129,7 @@ void Physics::save_state()
 	}
 }
 
-void Physics::step(float dt)
+void Physics::step(const float &dt)
 {
 	this->accumulator += dt;
 	unsigned int n_steps = static_cast<unsigned int>(this->accumulator / fixed_timestep);
@@ -140,12 +140,12 @@ void Physics::step(float dt)
 	}
 
 	this->accumulator -= n_steps * fixed_timestep;
-	if (n_steps > max_steps) n_steps = max_steps;
+	if (n_steps > Physics::max_steps) n_steps = Physics::max_steps;
 
 	this->restore_state();
 	for (unsigned int i = 0; i < n_steps; ++i)
 	{
-		this->world->Step(fixed_timestep, v_iter, p_iter);
+		this->world->Step(Physics::fixed_timestep, Physics::v_iter, Physics::p_iter);
 		this->save_state();
 	}
 	this->world->ClearForces();

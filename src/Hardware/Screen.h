@@ -8,24 +8,39 @@
 
 #include "Platform.h"
 
-class Screen
+struct Screen
 {
-public:
-
-	/// Screen is a singleton.
-	static Screen *Instance();
-
 	/// Returns the width of the screen of the current device.
-	inline float get_width() { return this->width; }
+	static float width()
+	{
+	#if defined(ONWIRE_ANDROID)
+
+		static float w = 0;
+
+	#elif defined(ONWIRE_IOS)
+
+		static float w = [CCDirector sharedDirector].winSize.width;
+
+	#endif
+
+		return w;
+	}
 
 	/// Returns the height of the screen of the current device.
-	inline float get_height() { return this->height; }
+	static float height()
+	{
+	#if defined(ONWIRE_ANDROID)
 
-private:
-	float
-		width,	///< Width of the screen of the current device
-		height; ///< Height of the screen of the current device
-	Screen();
+		static float h = 0;
+
+	#elif defined(ONWIRE_IOS)
+
+		static float h = [CCDirector sharedDirector].winSize.height;
+
+	#endif
+
+		return h;
+	}
 };
 
 #endif

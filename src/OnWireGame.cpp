@@ -1,20 +1,17 @@
-/*
- *  OnWireGame.cpp
- *  OnWire
- *
- *  Created by Tommy Nguyen on 7/14/10.
- *  Copyright 2010 __MyCompanyName__. All rights reserved.
- *
- */
+//
+//  OnWireGame.cpp
+//  OnWire
+//
+//  Created by Tommy Nguyen on 7/14/10.
+//  Copyright 2010 __MyCompanyName__. All rights reserved.
+//
 
 #include "OnWireGame.h"
 
 OnWireGame::OnWireGame() :
-	time(0), target(time), traveled(target),
-	building(new Building()),
-	hud(new HUD()),
-	line(new Line(Screen::Instance()->get_height() * 0.5f)),
-	skyline(new Skyline())
+	time(0), target(time), traveled(target), building(new Building()),
+	hud(new HUD()), line(new Line(Screen::width(), Screen::height())),
+	skyline(new Skyline()), wind(this->line)
 {
 }
 
@@ -31,16 +28,6 @@ void OnWireGame::draw()
 	this->line->draw();
 }
 
-void OnWireGame::elapse_time()
-{
-	if (this->finished || this->time >= 5999) return;
-	this->hud->update_time(++this->time);
-
-	// DEBUGGING ONLY
-	this->travel(1400);
-	this->play();
-}
-
 RealSprite **OnWireGame::get_game_objects()
 {
 	RealSprite **sprites = new RealSprite *[OBJECT_COUNT];
@@ -52,8 +39,7 @@ RealSprite **OnWireGame::get_game_objects()
 void OnWireGame::play()
 {
 	// apply pranks and kinds of shit here
-	WindAction wa(this->line);
-	wa.fire();
+	this->wind.fire();
 }
 
 void OnWireGame::reset(const unsigned int t)
@@ -63,6 +49,16 @@ void OnWireGame::reset(const unsigned int t)
 	this->time = 0;
 	this->traveled = 0;
 	this->hud->reset(this->target);
+}
+
+void OnWireGame::tick()
+{
+	if (this->finished || this->time >= 5999) return;
+	this->hud->update_time(++this->time);
+
+	// DEBUGGING ONLY
+	this->travel(1400);
+	this->play();
 }
 
 void OnWireGame::travel(const unsigned int d)
@@ -77,7 +73,6 @@ void OnWireGame::travel(const unsigned int d)
 	}
 	this->hud->update_distance(this->target - this->traveled);
 }
-
 
 void OnWireGame::update()
 {

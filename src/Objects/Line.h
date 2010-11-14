@@ -10,33 +10,42 @@
 #ifndef LINE_H_
 #define LINE_H_
 
+#include <OpenGLES/ES1/gl.h>
 #include "../Framework/Physics.h"
-#include "../Hardware/Screen.h"
 
-static const unsigned int LINE_SEGMENTS = 12;
-static const unsigned int LINE_TRIANGLES = (LINE_SEGMENTS << 1) + 4;
-static const unsigned int LINE_VERTICES = LINE_TRIANGLES << 1;
-static const float LINE_WIDTH = 5.0f;
-static const float LINE_WIDTH_OFFSET = (LINE_WIDTH - 1.0f) / LINE_TRIANGLES;
+const unsigned int
+	LINE_SEGMENTS = 12,											///< Number of segments making up the line
+	LINE_TRIANGLES = (LINE_SEGMENTS << 1) + 4,					///< Number of triangles needed to draw the line
+	LINE_VERTICES = LINE_TRIANGLES << 1;						///< Number of vertices needed to make a triangle strip
+const float
+	LINE_WIDTH = 5.0f,											///< Width of the line at the bottom of the screen
+	LINE_WIDTH_OFFSET = (LINE_WIDTH - 1.0f) / LINE_TRIANGLES;	///< Width of the line at the top of the screen
 
 class Line
 {
 public:
-	/// Initialise the line with a length (usually half the screen height).
-	/// \param length The length of the line
-	Line(const float &length);
+	Line(const float &scr_w, const float &scr_h);
 	~Line();
 
 	/// Applies an impulse on given segment of the line.
-	void apply_impulse(const Vec2 &Ns, const unsigned int segment);
+	inline void apply_impulse(const Vec2 &Ns, const unsigned int n)
+	{
+		this->segment[n]->ApplyLinearImpulse(Ns, this->segment[n]->GetWorldCenter());
+	}
 
 	/// Uses OpenGL ES for drawing.
 	void draw();
+
+	inline float get_displacement_at(const unsigned int n)
+	{
+		return this->segment[n]->GetPosition().y - this->center;
+	}
 
 	/// Updates line segment positions from the physics engine.
 	void update();
 
 private:
+	const float center;	///< Horizontal center
 	GLfloat *line;		///< Line segments to draw on-screen, used by OGLES
 	Body
 		*end,			///< Anchor at the end of the line

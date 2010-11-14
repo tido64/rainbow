@@ -1,16 +1,15 @@
-/*
- *  Controls.cpp
- *  OnWire
- *
- *  Created by Tommy Nguyen on 6/27/10.
- *  Copyright 2010 __MyCompanyName__. All rights reserved.
- *
- */
+//
+//  Controls.cpp
+//  OnWire
+//
+//  Created by Tommy Nguyen on 6/27/10.
+//  Copyright 2010 __MyCompanyName__. All rights reserved.
+//
 
 #include "Controls.h"
 
-Controls::Controls(const unsigned int w, const unsigned int h) :
-	scr_width(w), scr_height(h), speed(100), sprite_count(0)
+Controls::Controls() :
+	scr_w(Screen::width()), scr_h(Screen::height()), speed(100), sprite_count(0)
 {
 #if defined(ONWIRE_ANDROID)
 
@@ -18,6 +17,18 @@ Controls::Controls(const unsigned int w, const unsigned int h) :
 
 #elif defined(ONWIRE_IOS)
 
+	touches = CFDictionaryCreateMutable(0, 3, &kHashDictionaryKeyCallBacks, &kTouchDictionaryValueCallBacks);
+
+#endif
+}
+
+Controls::~Controls()
+{
+#if defined(ONWIRE_ANDROID)
+
+#elif defined(ONWIRE_IOS)
+
+	CFRelease(touches);
 
 #endif
 }
@@ -52,8 +63,8 @@ void Controls::accelerate(const float x, const float y)
 	if (!should_move) return;
 
 	// Loop through sprites and update their positions
-	for (unsigned int i = 0; i < this->sprite_count; ++i)
-		(this->sprites + i)->accelerate(x, y);
+	//for (unsigned int i = 0; i < this->sprite_count; ++i)
+	//	(this->sprites + i)->accelerate(x, y);
 
 /*
 	if(acceleration.x > 0.25) {  // tilting the device upwards
@@ -100,7 +111,65 @@ void Controls::add_object(Sprite *sprite)
 	++this->sprite_count;
 }
 
-void Controls::touch()
+void Controls::touch_began(Touch *t, const unsigned int c)
 {
-	// Not yet implemented.
+#if defined(ONWIRE_ANDROID)
+
+#elif defined(ONWIRE_IOS)
+
+	for (unsigned int i = 0; i < c; ++i)
+	{
+		CFDictionarySetValue(touches, reinterpret_cast<void *>(t[i].hash), t + i);
+		CCLOG(@"Touch with id #%i detected at (%i,%i)", t[i].hash, static_cast<int>(t[i].x), static_cast<int>(t[i].y));
+	}
+	CCLOG(@"Hash count: %d", CFDictionaryGetCount(touches));
+
+#endif
+}
+
+void Controls::touch_canceled()
+{
+#if defined(ONWIRE_ANDROID)
+
+#elif defined(ONWIRE_IOS)
+
+	CFDictionaryRemoveAllValues(touches);
+	CCLOG(@"Stop!");
+
+#endif
+}
+
+void Controls::touch_ended(Touch *t, const unsigned int c)
+{
+#if defined(ONWIRE_ANDROID)
+
+#elif defined(ONWIRE_IOS)
+
+	for (unsigned int i = 0; i < c; ++i)
+	{
+		CFDictionaryRemoveValue(touches, reinterpret_cast<void *>(t[i].hash));
+		CCLOG(@"Finger with id #%i lifted at (%i,%i)", t[i].hash, static_cast<int>(t[i].x), static_cast<int>(t[i].y));
+	}
+	CCLOG(@"Hash count: %d", CFDictionaryGetCount(touches));
+
+#endif
+}
+
+void Controls::touch_moved(Touch *t, const unsigned int c)
+{
+#if defined(ONWIRE_ANDROID)
+
+#elif defined(ONWIRE_IOS)
+
+	Touch *curr;
+	for (unsigned int i = 0; i < c; ++i)
+	{
+		curr = t + i;
+		const Touch *orig = static_cast<const Touch *>(CFDictionaryGetValue(touches, reinterpret_cast<void *>(curr->hash)));
+		CCLOG(@"Touch with id #%i moved from (%i,%i) to (%i,%i)", curr->hash,
+			static_cast<int>(orig->x), static_cast<int>(orig->y),
+			static_cast<int>(curr->x), static_cast<int>(curr->y));
+	}
+
+#endif
 }

@@ -5,6 +5,7 @@
 ///
 /// Copyright 2010 __MyCompanyName__. All rights reserved.
 /// \author Tommy Nguyen
+/// \see http://www.cocos2d-iphone.org/forum/topic/8267
 
 #ifndef SPRITE_H_
 #define SPRITE_H_
@@ -12,10 +13,11 @@
 #include "../Hardware/Platform.h"
 
 #if defined(ONWIRE_ANDROID)
-#	// Insert definitions
+
 #elif defined(ONWIRE_IOS)
 
-#define Point(x, y) CGPointMake((x), (y))
+#include "cocos2d.h"
+
 typedef CCSprite RealSprite;
 
 #endif
@@ -33,7 +35,7 @@ public:
 	/// \param x Acceleration constant in x-direction
 	/// \param y Acceleration constant in y-direction
 	Sprite(const char *file, const float x = 0, const float y = 0) :
-		accel_x(x), accel_y(y), pos_x(0), pos_y(0)
+		accel_x(x), accel_y(y), pos_x(0.0f), pos_y(0.0f)
 	{
 	#if defined(ONWIRE_ANDROID)
 
@@ -49,21 +51,20 @@ public:
 	/// Sets traveling speed.
 	/// \param x Speed in x-direction
 	/// \param y Speed in y-direction
-	void accelerate(const float x, const float y)
+	void accelerate(const float &x, const float &y)
 	{
 		this->set_position(
 			this->pos_x - (y * this->accel_x),
-			this->pos_y + (x * this->accel_y)
-		);
+			this->pos_y + (x * this->accel_y));
 	}
 
 	/// Returns the sprite object. Used by the director.
 	/// \return Actual sprite object
-	RealSprite *get_object() { return this->sprite; }
+	inline RealSprite *get_object() { return this->sprite; }
 
 	/// Scales the sprite.
 	/// \param f Scaling factor
-	void scale(const float f)
+	inline void scale(const float &f)
 	{
 	#if defined(ONWIRE_ANDROID)
 
@@ -77,7 +78,7 @@ public:
 	/// Scales the sprite.
 	/// \param x Scaling factor in x-direction
 	/// \param y Scaling factor in y-direction
-	void scale(const float x, const float y)
+	inline void scale(const float &x, const float &y)
 	{
 	#if defined(ONWIRE_ANDROID)
 
@@ -89,10 +90,24 @@ public:
 	#endif
 	}
 
-	/// Sets the position of the sprite.
+	/// Sets the anchor point.
 	/// \param x The x-coordinate
 	/// \param y The y-coordinate
-	void set_position(const float x, const float y)
+	inline void set_anchor(const float &x, const float &y)
+	{
+	#if defined(ONWIRE_ANDROID)
+
+	#elif defined(ONWIRE_IOS)
+
+		[this->sprite setAnchorPoint:ccp(x, y)];
+
+	#endif
+	}
+
+	/// Sets the position.
+	/// \param x The x-coordinate
+	/// \param y The y-coordinate
+	inline void set_position(const float &x, const float &y)
 	{
 	#if defined(ONWIRE_ANDROID)
 

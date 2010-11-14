@@ -7,8 +7,8 @@
 #define ONWIREGAME_H_
 #define OBJECT_COUNT 2
 
-#include "Actions/WindAction.h"
-#include "Framework/Physics.h"
+#include "Elements/Wind.h"
+#include "Hardware/Controls.h"
 #include "Objects/Building.h"
 #include "Objects/HUD.h"
 #include "Objects/Line.h"
@@ -17,14 +17,10 @@
 class OnWireGame
 {
 public:
-
 	OnWireGame();
 	~OnWireGame();
 
 	void draw();
-
-	/// Increments time by one second.
-	void elapse_time();
 
 	/// Returns the number of in-game objects.
 	inline unsigned int get_game_object_count() { return OBJECT_COUNT; }
@@ -48,6 +44,9 @@ public:
 	/// \param target Target distance
 	void reset(const unsigned int target);
 
+	/// Increments time by one second.
+	void tick();
+
 	/// Tells master how much the player has traveled since last time.
 	/// \param distance Traveled distance since last call
 	void travel(const unsigned int distance);
@@ -64,6 +63,7 @@ private:
 	HUD *hud;			///< The active HUD
 	Line *line;			///< The in-game line
 	Skyline *skyline;	///< Skyline backdrop
+	Wind wind;
 };
 
 #endif

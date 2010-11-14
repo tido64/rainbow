@@ -10,7 +10,7 @@
 
 @implementation LineRender
 
--(LineRender *)setData:(GLfloat *)arr
+-(LineRender *)setData:(const GLfloat *)arr
 {
 	line = arr;
 	return self;
@@ -22,7 +22,7 @@
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 	glDisableClientState(GL_COLOR_ARRAY);
 
-	glColor4f(0.0f, 0.0f, 0.0f, 1.0f);
+	glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
 	glVertexPointer(2, GL_FLOAT, 0, line);
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, LINE_TRIANGLES);
 

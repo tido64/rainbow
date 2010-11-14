@@ -1,23 +1,23 @@
-/*
- *  Line.cpp
- *  OnWire
- *
- *  Created by Tommy Nguyen on 7/30/10.
- *  Copyright 2010 __MyCompanyName__. All rights reserved.
- *
- */
+//
+//  Line.cpp
+//  OnWire
+//
+//  Created by Tommy Nguyen on 7/30/10.
+//  Copyright 2010 __MyCompanyName__. All rights reserved.
+//
 
 #include "Line.h"
 
-const float diameter	= 5.0f;
-const float offset		= 0.0f;
+const float offset = 0.0f; ///< For debugging purposes only.
 
-Line::Line(const float &l) :
+Line::Line(const float &scr_w, const float &scr_h) :
+	center(scr_w * 0.5f),
 	line(new GLfloat[LINE_VERTICES]), physics(Physics::Instance())
 {
 	const float
+		l = scr_h * 0.5f,
 		d = l / PTM_RATIO / LINE_SEGMENTS,
-		x = Screen::Instance()->get_width() / (PTM_RATIO << 1);
+		x = scr_w / (PTM_RATIO << 1);
 
 	// Create a pendulum
 	CircleShape body_shape;
@@ -29,42 +29,42 @@ Line::Line(const float &l) :
 	body_fix->density = 1.0f;
 
 	BodyDef *body_def = new BodyDef();
-	this->physics->define_body_damping(body_def, 0.3f);
+	this->physics->define_body_damping(body_def, 0.1f);
 
 	this->physics->define_body_position(body_def, x, -body_shape.m_radius + offset);
 	this->start = this->physics->create_body(body_def, body_fix);
-	Body *last = this->start;
 
 	float r = d * 0.5f;
 	body_shape.m_radius = r;
 	body_fix->density = 0.1f;
 
 	// Create rope segments and joints
-	this->segment = new Body*[LINE_SEGMENTS];
-	for (unsigned int i = 0; i < LINE_SEGMENTS; ++i)
+	this->segment = new Body *[LINE_SEGMENTS];
+	this->physics->define_body_position(body_def, x, r + offset);
+	Body *b = this->physics->create_body(body_def, body_fix);
+	this->physics->create_joint(this->start, b);
+	this->segment[0] = b;
+	for (unsigned int i = 1; i < LINE_SEGMENTS; ++i)
 	{
-		this->physics->define_body_position(body_def, x, r + offset);
 		r += d;
+		this->physics->define_body_position(body_def, x, r + offset);
 
-		Body *b = this->physics->create_body(body_def, body_fix);
-		this->physics->create_joint(last, b, last->GetPosition(), b->GetPosition());
-
+		b = this->physics->create_body(body_def, body_fix);
+		this->physics->create_joint(this->segment[i - 1], b);
 		this->segment[i] = b;
-		last = b;
 	}
+	delete body_def;
+	delete body_fix;
 
 	// Attach the other end of the line to the building
 	this->end = this->physics->create_anchor(0.1f, 0.1f, x, l / PTM_RATIO + offset);
-	this->physics->create_joint(last, this->end, last->GetPosition(), this->end->GetPosition());
-
-	delete body_def;
-	delete body_fix;
+	this->physics->create_joint(this->segment[LINE_SEGMENTS - 1], this->end);
 
 	// Create constraints
 	body_def = new BodyDef();
 	this->physics->define_body_position(body_def, 0.f, 0.f);
-
 	Body *c = this->physics->create_body(body_def);
+	delete body_def;
 	PolygonShape c_shape;
 
 	r = d * 0.5f;
@@ -83,11 +83,6 @@ Line::~Line()
 {
 	delete[] this->line;
 	delete[] this->segment;
-}
-
-void Line::apply_impulse(const Vec2 &Ns, const unsigned int n)
-{
-	this->segment[n]->ApplyLinearImpulse(Ns, this->segment[n]->GetWorldCenter());
 }
 
 void Line::draw()

@@ -2,6 +2,7 @@
 
 /// Copyright 2010 __MyCompanyName__. All rights reserved.
 /// \author Tommy Nguyen
+/// \see http://www.cocos2d-iphone.org/forum/topic/8267
 
 #ifndef LABEL_H_
 #define LABEL_H_
@@ -9,9 +10,16 @@
 #include "../Hardware/Platform.h"
 
 #if defined(ONWIRE_ANDROID)
-#	// Insert definitions
+
 #elif defined(ONWIRE_IOS)
-#	define RealLabel CCBitmapFontAtlas
+
+#include "cocos2d.h"
+
+#define ctons_str(s) [NSString stringWithUTF8String:(s)];
+
+typedef CCBitmapFontAtlas RealLabel;
+//typedef CCLabelBMFont RealLabel;
+
 #endif
 
 class Label
@@ -29,7 +37,8 @@ public:
 
 		NSString *s = ctons_str(str);
 		NSString *f = ctons_str(font);
-		this->label = [CCBitmapFontAtlas bitmapFontAtlasWithString:s fntFile:f];
+		this->label = [RealLabel bitmapFontAtlasWithString:s fntFile:f];
+		//this->label = [RealLabel labelWithString:s fntFile:f];
 
 	#endif
 	}
@@ -37,7 +46,7 @@ public:
 	~Label() { delete this->label; }
 
 	/// Center-justifies the label.
-	void align_center()
+	inline void align_center()
 	{
 	#if defined(ONWIRE_ANDROID)
 
@@ -49,7 +58,7 @@ public:
 	}
 
 	/// Left-justifies the label.
-	void align_left()
+	inline void align_left()
 	{
 	#if defined(ONWIRE_ANDROID)
 
@@ -61,7 +70,7 @@ public:
 	}
 
 	/// Right-justifies the label.
-	void align_right()
+	inline void align_right()
 	{
 	#if defined(ONWIRE_ANDROID)
 
@@ -73,7 +82,7 @@ public:
 	}
 
 	/// Returns the height of the label.
-	const unsigned int get_height()
+	inline const unsigned int get_height()
 	{
 	#if defined(ONWIRE_ANDROID)
 
@@ -86,10 +95,10 @@ public:
 
 	/// Returns the label object. Used by the director.
 	/// \return Actual label object
-	RealLabel *get_label() { return this->label; }
+	inline RealLabel *get_label() { return this->label; }
 
 	/// Returns the width of the label.
-	const unsigned int get_width()
+	inline const unsigned int get_width()
 	{
 	#if defined(ONWIRE_ANDROID)
 
@@ -103,7 +112,7 @@ public:
 	/// Sets the position of the label.
 	/// \param x The x-coordinate
 	/// \param y The y-coordinate
-	void set_position(const unsigned int x, const unsigned int y)
+	inline void set_position(const unsigned int x, const unsigned int y)
 	{
 	#if defined(ONWIRE_ANDROID)
 
@@ -116,7 +125,7 @@ public:
 
 	/// Scales the label to given factor.
 	/// \param f Factor to scale by
-	void scale(const float f)
+	inline void scale(const float &f)
 	{
 	#if defined(ONWIRE_ANDROID)
 
@@ -143,7 +152,7 @@ public:
 
 	/// Sets the vertial alignment.
 	/// \param v Vertical alignment value between 0 and 1
-	void set_valign(const float v) { this->valign = v; }
+	inline void set_valign(const float &v) { this->valign = v; }
 
 private:
 	float valign;		///< Vertical alignment

@@ -10,15 +10,9 @@
 #import "Objects/LineRender.h"
 
 #include "OnWireGame.h"
-#include "Physics.h"
-
-@interface GameUI : CCLayer {
-	OnWireGame *game;
-}
-
-@end
 
 @interface OnWire : CCLayer {
+	Controls *controls;
 	GLESDebugDraw *debug_draw;
 	LineRender *line;
 	OnWireGame *game;

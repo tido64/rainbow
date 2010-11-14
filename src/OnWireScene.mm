@@ -8,71 +8,32 @@
 
 #import "OnWireScene.h"
 
-@implementation GameUI
-
--(id) initDraw:(OnWireGame *)g
-{
-	if((self=[super init]))
-	{
-		//self.isTouchEnabled = YES; // enable touches
-
-		game = g;
-		game->reset(9000);
-		CCBitmapFontAtlas **labels = game->get_hud_elements();
-		const unsigned int c = game->get_hud_element_count();
-		for (unsigned int i = 0; i < c; ++i)
-			[self addChild:labels[i]];
-		delete[] labels;
-
-		// Set up timer
-		[self schedule: @selector(tick) interval:1.0f];
-	}
-	return self;
-}
-
--(void) tick
-{
-	game->elapse_time();
-}
-
--(void) dealloc
-{
-	[super dealloc];
-}
-
-@end
-
 @implementation OnWire
 
-+(id) scene
++(id)scene
 {
 	// 'scene' is an autorelease object.
 	CCScene *scene = [CCScene node];
 
-	// 'layer' and 'ui' are autorelease objects.
+	// 'layer' is an autorelease object.
 	OnWire *layer = [OnWire node];
-	GameUI *ui = [GameUI node];
-	[ui initDraw: layer->game];
 
 	// add layer as a child to scene
 	[scene addChild: layer];
-	[scene addChild: ui];
 
 	// return the scene
 	return scene;
 }
 
--(id) init
+-(id)init
 {
 	if((self=[super init]))
 	{
-		//self.isTouchEnabled = YES; // enable touches
-		self.isAccelerometerEnabled = YES; // enable accelerometer
+		self.isTouchEnabled = YES;
+		self.isAccelerometerEnabled = YES;
 
 		// Physics
 		physics = Physics::Instance();
-
-		// Physics debugging
 		debug_draw = new GLESDebugDraw(PTM_RATIO);
 		physics->world->SetDebugDraw(debug_draw);
 
@@ -86,17 +47,27 @@
 
 		// Initialise game
 		game = new OnWireGame();
+		controls = new Controls();
 
 		// Add sprites to cocos2d's main loop
-		CCSprite **s = game->get_game_objects();
-		const unsigned int c = game->get_game_object_count();
+		CCNode **nodes = game->get_game_objects();
+		unsigned int c = game->get_game_object_count();
 		for (unsigned int i = 0; i < c; ++i)
-			[self addChild:s[i]];
-		delete[] s;
+			[self addChild:nodes[i]];
+		delete[] nodes;
 
 		line = [LineRender node];
 		[self addChild:[line setData:game->get_line()]];
 
+		nodes = game->get_hud_elements();
+		c = game->get_hud_element_count();
+		for (unsigned int i = 0; i < c; ++i)
+			[self addChild:nodes[i]];
+		delete[] nodes;
+
+		game->reset(9000);
+
+		[self schedule: @selector(clock) interval:1.0f];
 		[self schedule: @selector(tick:)];
 
 		// Controls
@@ -105,7 +76,12 @@
 	return self;
 }
 
--(void) draw
+-(void)clock
+{
+	game->tick();
+}
+
+-(void)draw
 {
 	// Default GL states: GL_TEXTURE_2D, GL_VERTEX_ARRAY, GL_COLOR_ARRAY, GL_TEXTURE_COORD_ARRAY
 	// Needed states:  GL_VERTEX_ARRAY,
@@ -122,7 +98,7 @@
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 }
 
--(void) tick: (ccTime) dt
+-(void)tick:(ccTime)dt
 {
 	physics->step(dt);
 	game->update();
@@ -131,19 +107,49 @@
 	for (b2Body *b = physics->world->GetBodyList(); b; b = b->GetNext())
 	{
 		BodyData *d = static_cast<BodyData *>(b->GetUserData());
-		if (d != 0 && d->sprite != 0)
+		if (d != 0 && d->data != 0)
 		{
 			//Synchronize the AtlasSprites position and rotation with the corresponding body
-			CCSprite *myActor = (CCSprite*)b->GetUserData();
+			CCSprite *myActor = (CCSprite *)b->GetUserData();
 			myActor.position = CGPointMake( b->GetPosition().x * PTM_RATIO, b->GetPosition().y * PTM_RATIO);
 			myActor.rotation = -1 * CC_RADIANS_TO_DEGREES(b->GetAngle());
 		}
 	}
 }
 
-// on "dealloc" you need to release all your retained objects
--(void) dealloc
+-(void)ccTouchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
+	const unsigned int c = touches.count;
+	Touch *t = get_touch_set(touches);
+	controls->touch_began(t, c);
+	delete[] t;
+}
+
+-(void)ccTouchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
+{
+	const unsigned int c = touches.count;
+	Touch *t = get_touch_set(touches);
+	controls->touch_moved(t, c);
+	delete[] t;
+}
+
+-(void)ccTouchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
+{
+	const unsigned int c = touches.count;
+	Touch *t = get_touch_set(touches);
+	controls->touch_ended(t, c);
+	delete[] t;
+}
+
+-(void)ccTouchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
+{
+	controls->touch_canceled();
+}
+
+// on "dealloc" you need to release all your retained objects
+-(void)dealloc
+{
+	delete controls;
 	delete game;
 	delete debug_draw;
 

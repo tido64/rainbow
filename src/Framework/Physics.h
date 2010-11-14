@@ -35,8 +35,11 @@ public:
 	b2World *world;	///< Box2D world object
 
 	/// Physics is a singleton.
-	static Physics *Instance();
-	~Physics();
+	static Physics *Instance()
+	{
+		static Physics inst;
+		return &inst;
+	}
 
 	/// Creates an anchor bpx to tie things to.
 	/// \param w Width of the box
@@ -44,7 +47,7 @@ public:
 	/// \param x Position of the box (x-coordinate)
 	/// \param y Position of the box (y-coordinate)
 	/// \return  Body object
-	b2Body *create_anchor(const float w, const float h, const float x, const float y);
+	b2Body *create_anchor(const float &w, const float &h, const float &x, const float &y);
 
 	/// Creates a body, given definition and fixture.
 	/// \param d Body definition
@@ -52,7 +55,13 @@ public:
 	/// \return  Body object
 	b2Body *create_body(const b2BodyDef *d, const b2FixtureDef *fixture = 0, const float inertia = 0.0f, const float mass = 0.0f);
 
-	/// Creates a distant joint between two bodies.
+	/// Creates a distant joint between two bodies at their anchor points.
+	/// \param a		Body A
+	/// \param b		Body B
+	/// \return			Joint object
+	b2Joint *create_joint(b2Body *a, b2Body *b);
+
+	/// Creates a distant joint between two bodies at given points.
 	/// \param a		Body A
 	/// \param b		Body B
 	/// \param a_pos	Position of the first end of the joint
@@ -73,7 +82,9 @@ public:
 	/// \param y Position (y-coordinate)
 	void define_body_position(b2BodyDef *d, const float x = 0.0f, const float y = 0.0f);
 
-	void dispose_body(b2Body *);
+	/// Removes given body from the world.
+	/// \param b Body to remove
+	void dispose_body(b2Body *b);
 
 	/// Performs inter-frame interpolation.
 	void interpolate();
@@ -84,9 +95,9 @@ public:
 	/// Saves the current state of all bodies.
 	void save_state();
 
-	/// Advances Box2D a step forward.
+	/// Advances Box2D a step forward. This implementation uses a fixed delta.
 	/// \param dt Time spent on rendering the frame.
-	void step(float dt);
+	void step(const float &dt);
 
 private:
 	static const unsigned int
@@ -101,26 +112,26 @@ private:
 		accumulator,					///< Renderer time accumulator
 		accumulator_ratio;				///< The ratio of accumulator (after consumption) over fixed timestep
 
-	/// Initialises the physics engine. In this implementation, the Box2D world
-	/// and its properties.
 	Physics();
+	~Physics();
+
+	/// Intentionally undefined.
+	Physics(const Physics &);
+
+	/// Intentionally undefined.
+	Physics &operator=(const Physics &);
 };
 
 /// Structure to keep body states between iterations. Necessary for the
-/// interpolation technique with fixed time steps.
+/// interpolation technique deployed with fixed time steps.
 struct BodyData
 {
 	float curr_r, prev_r;
 	b2Vec2 curr_p, prev_p;
-	CCSprite *sprite;
+	void *data;
 
-	BodyData(const b2Vec2 &p, const float &r) : sprite(0)
-	{
-		prev_r = r;
-		curr_r = r;
-		prev_p = p;
-		curr_p = p;
-	}
+	BodyData(const b2Vec2 &p, const float &r) :
+		curr_r(r), prev_r(r), curr_p(p), prev_p(p), data(0) { }
 };
 
 #endif
