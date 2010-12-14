@@ -2,9 +2,10 @@
 
 /// iOS: Defines custom CFDictionaryKeyCallBacks and CFDictionaryValueCallBacks.
 ///
+/// \see http://developer.apple.com/library/mac/#documentation/CoreFoundation/Conceptual/CFCollections/Tasks/creating.html
+///
 /// Copyright 2010 Ninja Unicorn. All rights reserved.
 /// \author Tommy Nguyen
-/// \see http://developer.apple.com/library/mac/#documentation/CoreFoundation/Conceptual/CFCollections/Tasks/creating.html
 
 #ifndef TOUCH_H_
 #define TOUCH_H_
@@ -13,9 +14,9 @@
 
 struct Touch
 {
-	unsigned int hash;	///< Unique hash value that distinguishes this touch from another
-	float x;			///< x-component of the touch location
-	float y;			///< y-component of the touch location
+	unsigned int hash;  ///< Unique hash value that distinguishes this touch from another
+	float x;            ///< x-component of the touch location
+	float y;            ///< y-component of the touch location
 
 	Touch() : hash(0), x(0.0f), y(0.0f) { }
 	Touch(const unsigned int h, const float &x, const float &y) :
@@ -24,7 +25,9 @@ struct Touch
 
 #if defined(ONWIRE_ANDROID)
 
-typedef map<Touch> Touches;
+#include <map>
+
+typedef std::map<Touch> Touches;
 
 #elif defined(ONWIRE_IOS)
 

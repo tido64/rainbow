@@ -13,7 +13,8 @@ class Wind : public Element
 {
 public:
 	Wind(Line *);
-	void fire();
+	void activate();
+	bool fire();
 
 private:
 	float force;

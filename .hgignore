@@ -1,1 +1,3 @@
-\.DS_Store
+Debug
+Icon.$
+\.(?:DS_Store|build|dropbox|mode\dv\d|pbxuser)

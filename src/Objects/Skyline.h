@@ -9,12 +9,14 @@
 #include "../Framework/Sprite.h"
 #include "../Hardware/Screen.h"
 
-class Skyline : public Sprite
+class Skyline
 {
 public:
-	Skyline();
-	~Skyline() { }
-	void update() { }
+	Skyline(Sprite *s);
+	~Skyline() { delete this->sprite; }
+
+private:
+	Sprite *sprite;
 };
 
 #endif

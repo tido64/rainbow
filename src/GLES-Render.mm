@@ -62,7 +62,7 @@ void GLESDebugDraw::DrawSolidPolygon(const b2Vec2* old_vertices, int32 vertexCou
 
 	glVertexPointer(2, GL_FLOAT, 0, vertices);
 
-	glColor4f(color.r, color.g, color.b,0.5f);
+	glColor4f(color.r*0.5f, color.g*0.5f, color.b*0.5f,0.5f);
 	glDrawArrays(GL_TRIANGLE_FAN, 0, vertexCount);
 
 	glColor4f(color.r, color.g, color.b,1);
@@ -107,7 +107,7 @@ void GLESDebugDraw::DrawSolidCircle(const b2Vec2& center, float32 radius, const 
 		theta += k_increment;
 	}
 
-	glColor4f(color.r, color.g, color.b,0.5f);
+	glColor4f(color.r*0.5f, color.g*0.5f, color.b*0.5f,0.5f);
 	glVertexPointer(2, GL_FLOAT, 0, glVertices);
 	glDrawArrays(GL_TRIANGLE_FAN, 0, vertexCount);
 	glColor4f(color.r, color.g, color.b,1);

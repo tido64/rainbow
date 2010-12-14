@@ -12,17 +12,10 @@
 
 +(id)scene
 {
-	// 'scene' is an autorelease object.
-	CCScene *scene = [CCScene node];
-
-	// 'layer' is an autorelease object.
-	OnWire *layer = [OnWire node];
-
-	// add layer as a child to scene
-	[scene addChild: layer];
-
-	// return the scene
-	return scene;
+	CCScene *scene = [CCScene node];  // 'scene' is an autorelease object
+	OnWire *layer = [OnWire node];    // 'layer' is an autorelease object
+	[scene addChild:layer];           // add 'layer' as a child to scene
+	return scene;                     // return the scene
 }
 
 -(id)init
@@ -50,28 +43,17 @@
 		controls = new Controls();
 
 		// Add sprites to cocos2d's main loop
-		CCNode **nodes = game->get_game_objects();
-		unsigned int c = game->get_game_object_count();
+		CCNode **nodes = game->get_objects();
+		const unsigned int c = game->get_object_count();
 		for (unsigned int i = 0; i < c; ++i)
 			[self addChild:nodes[i]];
 		delete[] nodes;
 
-		line = [LineRender node];
-		[self addChild:[line setData:game->get_line()]];
-
-		nodes = game->get_hud_elements();
-		c = game->get_hud_element_count();
-		for (unsigned int i = 0; i < c; ++i)
-			[self addChild:nodes[i]];
-		delete[] nodes;
 
 		game->reset(9000);
 
-		[self schedule: @selector(clock) interval:1.0f];
+		//[self schedule: @selector(clock) interval:1.0f];
 		[self schedule: @selector(tick:)];
-
-		// Controls
-		//[[CCTouchDispatcher sharedDispatcher] addTargetedDelegate:this priority:0 swallowsTouches:YES];
 	}
 	return self;
 }
@@ -84,18 +66,23 @@
 -(void)draw
 {
 	// Default GL states: GL_TEXTURE_2D, GL_VERTEX_ARRAY, GL_COLOR_ARRAY, GL_TEXTURE_COORD_ARRAY
-	// Needed states:  GL_VERTEX_ARRAY,
-	// Unneeded states: GL_TEXTURE_2D, GL_COLOR_ARRAY, GL_TEXTURE_COORD_ARRAY
-	glDisable(GL_TEXTURE_2D);
+	// Needed states: GL_TEXTURE_2D, GL_VERTEX_ARRAY, GL_TEXTURE_COORD_ARRAY
+	// Unneeded states: GL_COLOR_ARRAY
 	glDisableClientState(GL_COLOR_ARRAY);
-	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 
-	physics->world->DrawDebugData();
+	game->draw();
+
+	// Needed states: GL_VERTEX_ARRAY,
+	// Unneeded states: GL_TEXTURE_2D, GL_COLOR_ARRAY, GL_TEXTURE_COORD_ARRAY
+	//glDisable(GL_TEXTURE_2D);
+	//glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+
+	//physics->world->DrawDebugData();
 
 	// restore default GL states
-	glEnable(GL_TEXTURE_2D);
+	//glEnable(GL_TEXTURE_2D);
 	glEnableClientState(GL_COLOR_ARRAY);
-	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+	//glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 }
 
 -(void)tick:(ccTime)dt
@@ -103,18 +90,18 @@
 	physics->step(dt);
 	game->update();
 
-	//Iterate over the bodies in the physics world
+	/*/ Iterate over the bodies in the physics world
 	for (b2Body *b = physics->world->GetBodyList(); b; b = b->GetNext())
 	{
 		BodyData *d = static_cast<BodyData *>(b->GetUserData());
 		if (d != 0 && d->data != 0)
 		{
-			//Synchronize the AtlasSprites position and rotation with the corresponding body
-			CCSprite *myActor = (CCSprite *)b->GetUserData();
-			myActor.position = CGPointMake( b->GetPosition().x * PTM_RATIO, b->GetPosition().y * PTM_RATIO);
-			myActor.rotation = -1 * CC_RADIANS_TO_DEGREES(b->GetAngle());
+			// Synchronize the AtlasSprites position and rotation with the corresponding body
+			CCSprite *actor = (CCSprite *)d->data;
+			actor.position = CGPointMake(b->GetPosition().x * PTM_RATIO, b->GetPosition().y * PTM_RATIO);
+			actor.rotation = -1 * CC_RADIANS_TO_DEGREES(b->GetAngle());
 		}
-	}
+	}*/
 }
 
 -(void)ccTouchesBegan:(NSSet *)touches withEvent:(UIEvent *)event

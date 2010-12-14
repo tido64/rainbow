@@ -7,78 +7,85 @@
 //
 
 #import "OnWireAppDelegate.h"
-//#import "cocos2d.h"
-//#import "HelloWorldScene.h"
 #import "OnWireScene.h"
 
 @implementation OnWireAppDelegate
 
 @synthesize window;
 
-- (void) applicationDidFinishLaunching:(UIApplication*)application
+-(void)applicationDidFinishLaunching:(UIApplication*)application
 {
-	// CC_DIRECTOR_INIT()
-	//
-	// 1. Initializes an EAGLView with 0-bit depth format, and RGB565 render buffer
-	// 2. EAGLView multiple touches: disabled
-	// 3. creates a UIWindow, and assign it to the "window" var (it must already be declared)
-	// 4. Parents EAGLView to the newly created window
-	// 5. Creates Display Link Director
-	// 5a. If it fails, it will use an NSTimer director
-	// 6. It will try to run at 60 FPS
-	// 7. Display FPS: NO
-	// 8. Device orientation: Portrait
-	// 9. Connects the director to the EAGLView
-	//
-	CC_DIRECTOR_INIT();
+	// Init the window
+	window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
 
-	// Obtain the shared director in order to...
+	// Try to use CADisplayLink director, if it fails (SDK < 3.1) use the default director
+	if(![CCDirector setDirectorType:kCCDirectorTypeDisplayLink])
+		[CCDirector setDirectorType:kCCDirectorTypeNSTimer];
+
 	CCDirector *director = [CCDirector sharedDirector];
+	[director setDeviceOrientation:kCCDeviceOrientationPortrait];  // We don't want landscape orientation
+	[director setDisplayFPS:true];                                 // Display FPS only when debugging
+	[director setAnimationInterval:1.0/60];                        // 60 FPS is nice
 
-	// Sets landscape mode
-	//[director setDeviceOrientation:kCCDeviceOrientationLandscapeLeft];
+	EAGLView *glView = [EAGLView viewWithFrame:[window bounds]
+		pixelFormat:kEAGLColorFormatRGB565
+		depthFormat:0  // GL_DEPTH_COMPONENT24_OES
+		preserveBackbuffer:false
+		//sharegroup:0
+		//multiSampling:false
+		//numberOfSamples:0
+	];
+	[glView setMultipleTouchEnabled:YES];
 
-	// Sets portrait mode
-	[director setDeviceOrientation:kCCDeviceOrientationPortrait];
+	// Attach the OpenGL View to the director
+	[director setOpenGLView:glView];
+	[window addSubview:glView];
+	[window makeKeyAndVisible];
 
-	// Turn on display FPS
-	[director setDisplayFPS:YES];
-
-	// Turn on multiple touches
-	EAGLView *view = [director openGLView];
-	[view setMultipleTouchEnabled:YES];
+	// Enables High Res mode (Retina Display) on iPhone 4 and maintains low res on all other devices
+	//if(![director enableRetinaDisplay:YES])
+	//	CCLOG(@"Retina Display Not supported");
 
 	// Default texture format for PNG/BMP/TIFF/JPEG/GIF images
 	// It can be RGBA8888, RGBA4444, RGB5_A1, RGB565
 	// You can change anytime.
-	[CCTexture2D setDefaultAlphaPixelFormat:kTexture2DPixelFormat_RGBA8888];
+	[CCTexture2D setDefaultAlphaPixelFormat:kCCTexture2DPixelFormat_RGBA8888];
 
-	//[[CCDirector sharedDirector] runWithScene: [HelloWorld scene]];
-	//[director setAnimationInterval:1.0f/30.0f];
 	[[CCDirector sharedDirector] runWithScene: [OnWire scene]];
 }
 
-- (void)applicationWillResignActive:(UIApplication *)application {
+-(void)applicationWillResignActive:(UIApplication *)application {
 	[[CCDirector sharedDirector] pause];
 }
 
-- (void)applicationDidBecomeActive:(UIApplication *)application {
+-(void)applicationDidBecomeActive:(UIApplication *)application {
 	[[CCDirector sharedDirector] resume];
 }
 
-- (void)applicationDidReceiveMemoryWarning:(UIApplication *)application {
+-(void)applicationDidReceiveMemoryWarning:(UIApplication *)application {
 	[[CCDirector sharedDirector] purgeCachedData];
 }
 
-- (void)applicationWillTerminate:(UIApplication *)application {
-	[[CCDirector sharedDirector] end];
+-(void)applicationDidEnterBackground:(UIApplication*)application {
+	[[CCDirector sharedDirector] stopAnimation];
 }
 
-- (void)applicationSignificantTimeChange:(UIApplication *)application {
+-(void)applicationWillEnterForeground:(UIApplication*)application {
+	[[CCDirector sharedDirector] startAnimation];
+}
+
+-(void)applicationWillTerminate:(UIApplication *)application {
+	CCDirector *director = [CCDirector sharedDirector];
+	[[director openGLView] removeFromSuperview];
+	[window release];
+	[director end];
+}
+
+-(void)applicationSignificantTimeChange:(UIApplication *)application {
 	[[CCDirector sharedDirector] setNextDeltaTimeZero:YES];
 }
 
-- (void)dealloc {
+-(void)dealloc {
 	[[CCDirector sharedDirector] release];
 	[window release];
 	[super dealloc];

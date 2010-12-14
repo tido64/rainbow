@@ -10,10 +10,16 @@
 
 Wind::Wind(Line *l) : force(1.0f), line(l) { }
 
-void Wind::fire()
+void Wind::activate()
+{
+	this->active = true;
+}
+
+bool Wind::fire()
 {
 	const unsigned int s = LINE_SEGMENTS >> 1;
 	this->line->apply_impulse(Vec2(this->force, 0.0f), s);
 	this->line->apply_impulse(Vec2(this->force, 0.0f), s + 1);
 	this->line->apply_impulse(Vec2(this->force, 0.0f), s + 2);
+	return true;
 }

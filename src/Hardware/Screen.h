@@ -7,6 +7,7 @@
 #define SCREEN_H_
 
 #include "Platform.h"
+#include "cocos2d.h"
 
 struct Screen
 {
@@ -40,6 +41,12 @@ struct Screen
 	#endif
 
 		return h;
+	}
+
+	/// Returns the DPI of the screen.
+	static int dpi()
+	{
+		return 326;  // iPhone 4 DPI
 	}
 };
 

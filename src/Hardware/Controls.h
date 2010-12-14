@@ -1,5 +1,7 @@
 /// Handles accelerometer/gyroscope and touch events independent of platform.
 
+/// \see http://developer.apple.com/library/ios/#documentation/UIKit/Reference/UIAcceleration_Class/Reference/UIAcceleration.html
+///
 /// Copyright 2010 __MyCompanyName__. All rights reserved.
 /// \author Tommy Nguyen
 

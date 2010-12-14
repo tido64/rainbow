@@ -1,8 +1,9 @@
 /// Platform independent label class.
 
+/// \see http://www.cocos2d-iphone.org/forum/topic/8267
+///
 /// Copyright 2010 __MyCompanyName__. All rights reserved.
 /// \author Tommy Nguyen
-/// \see http://www.cocos2d-iphone.org/forum/topic/8267
 
 #ifndef LABEL_H_
 #define LABEL_H_
@@ -14,8 +15,6 @@
 #elif defined(ONWIRE_IOS)
 
 #include "cocos2d.h"
-
-#define ctons_str(s) [NSString stringWithUTF8String:(s)];
 
 typedef CCBitmapFontAtlas RealLabel;
 //typedef CCLabelBMFont RealLabel;
@@ -29,7 +28,7 @@ public:
 	/// Creates a label with an initial string and font.
 	/// \param str	Initial string
 	/// \param font	Font to be used with this label
-	Label(const char *str, const char *font = 0) : valign(0.5f)
+	Label(const char *str, const char *font = 0) : align(0.0f), valign(0.5f)
 	{
 	#if defined(ONWIRE_ANDROID)
 
@@ -48,11 +47,13 @@ public:
 	/// Center-justifies the label.
 	inline void align_center()
 	{
+		this->align = 0.5f;
+
 	#if defined(ONWIRE_ANDROID)
 
 	#elif defined(ONWIRE_IOS)
 
-		[label setAnchorPoint: ccp(0.5f, this->valign)];
+		[label setAnchorPoint: ccp(this->align, this->valign)];
 
 	#endif
 	}
@@ -60,11 +61,13 @@ public:
 	/// Left-justifies the label.
 	inline void align_left()
 	{
+		this->align = 0.0f;
+
 	#if defined(ONWIRE_ANDROID)
 
 	#elif defined(ONWIRE_IOS)
 
-		[label setAnchorPoint: ccp(0, this->valign)];
+		[label setAnchorPoint: ccp(this->align, this->valign)];
 
 	#endif
 	}
@@ -72,11 +75,13 @@ public:
 	/// Right-justifies the label.
 	inline void align_right()
 	{
+		this->align = 1.0f;
+
 	#if defined(ONWIRE_ANDROID)
 
 	#elif defined(ONWIRE_IOS)
 
-		[label setAnchorPoint: ccp(1, this->valign)];
+		[label setAnchorPoint: ccp(this->align, this->valign)];
 
 	#endif
 	}
@@ -152,11 +157,22 @@ public:
 
 	/// Sets the vertial alignment.
 	/// \param v Vertical alignment value between 0 and 1
-	inline void set_valign(const float &v) { this->valign = v; }
+	inline void set_valign(const float &v)
+	{
+		this->valign = v;
+	#if defined(ONWIRE_ANDROID)
+
+	#elif defined(ONWIRE_IOS)
+
+		[label setAnchorPoint: ccp(this->align, this->valign)];
+
+	#endif
+	}
 
 private:
-	float valign;		///< Vertical alignment
-	RealLabel *label;	///< Actual label object
+	float align;       ///< Horisontal alignment
+	float valign;      ///< Vertical alignment
+	RealLabel *label;  ///< Actual label object
 };
 
 #endif

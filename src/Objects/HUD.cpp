@@ -8,18 +8,18 @@
 
 #include "HUD.h"
 
-const unsigned int HUD::label_margin	= 10;
-const unsigned int HUD::padding			= 8;
-const unsigned int HUD::total_margin	= HUD::label_margin + (HUD::padding >> 1);
+const unsigned int HUD::label_margin  = 10;
+const unsigned int HUD::padding       = 8;
+const unsigned int HUD::total_margin  = HUD::label_margin + (HUD::padding >> 1);
 
-const float HUD::label_size				= 0.4f;
-const float HUD::progress_size			= 0.85f;
+const float HUD::label_size           = 0.4f;
+const float HUD::progress_size        = 0.85f;
 
-const char HUD::distance_format[]		= "%um";
-const char HUD::init_time[]				= "0:00";
-const char HUD::label_font[]			= "ArialBold.fnt";
-const char HUD::progress_font[]			= "ArialBlack.fnt";
-const char HUD::time_format[]			= "%u:%.2u";
+const char HUD::distance_format[]     = "%um";
+const char HUD::init_time[]           = "0:00";
+const char HUD::label_font[]          = "ArialBold.fnt";
+const char HUD::progress_font[]       = "ArialBlack.fnt";
+const char HUD::time_format[]         = "%u:%.2u";
 
 HUD::HUD()
 {
@@ -67,29 +67,19 @@ HUD::~HUD()
 	delete this->time_label;
 }
 
-RealLabel **HUD::get_elements()
-{
-	RealLabel **labels = new RealLabel *[HUD_COUNT];
-	labels[0] = this->distance->get_label();
-	labels[1] = this->distance_label->get_label();
-	labels[2] = this->time->get_label();
-	labels[3] = this->time_label->get_label();
-	return labels;
-}
-
 void HUD::reset(const unsigned int target)
 {
 	this->time->set_text(HUD::init_time);
-	this->update_distance(target);
+	this->set_distance(target);
 }
 
-void HUD::update_distance(const unsigned int d)
+void HUD::set_distance(const unsigned int d)
 {
 	sprintf(this->buffer, HUD::distance_format, d);
 	this->distance->set_text(this->buffer);
 }
 
-void HUD::update_time(const unsigned int time)
+void HUD::set_time(const unsigned int time)
 {
 	sprintf(this->buffer, HUD::time_format, time / 60, time % 60);
 	this->time->set_text(this->buffer);

@@ -1,131 +1,104 @@
-/// Platform independent sprite super class.
+/// Custom sprite object, created by TextureAtlas.
 
-/// Sprites are created by extending this class. Initialised from a bitmap file.
-/// Support for JPEG/PNG varies with platform.
+/// Implemented using interleaved vertex data buffer objects.
 ///
-/// Copyright 2010 __MyCompanyName__. All rights reserved.
+/// \see http://developer.apple.com/library/ios/#documentation/3DDrawing/Conceptual/OpenGLES_ProgrammingGuide/TechniquesforWorkingwithVertexData/TechniquesforWorkingwithVertexData.html
+/// \see http://iphonedevelopment.blogspot.com/2009/06/opengl-es-from-ground-up-part-8.html
+///
+/// Copyright 2010 Ninja Unicorn. All rights reserved.
 /// \author Tommy Nguyen
-/// \see http://www.cocos2d-iphone.org/forum/topic/8267
 
 #ifndef SPRITE_H_
 #define SPRITE_H_
 
-#include "../Hardware/Platform.h"
+#include <cassert>
+#include <OpenGLES/ES1/gl.h>
 
-#if defined(ONWIRE_ANDROID)
-
-#elif defined(ONWIRE_IOS)
-
-#include "cocos2d.h"
-
-typedef CCSprite RealSprite;
-
-#endif
+class TextureAtlas;
 
 class Sprite
 {
 public:
-	const float
-		accel_x,	///< Acceleration in x-direction
-		accel_y;	///< Acceleration in y-direction
+	bool visible;               ///< Visibility of sprite
+	const unsigned int width;   ///< Width of sprite (not scaled)
+	const unsigned int height;  ///< Height of sprite (not scaled)
+	GLuint texture;             ///< Texture buffer name
+	float rotation;             ///< Sprite rotation
+	float scale_x;              ///< Scale in x-direction
+	float scale_y;              ///< Scale in y-direction
 
-	/// Creates a sprite given a file, and optionally how fast it accelerates.
-	/// All sprites are created at (0,0).
-	/// \param file Path to bitmap file
-	/// \param x Acceleration constant in x-direction
-	/// \param y Acceleration constant in y-direction
-	Sprite(const char *file, const float x = 0, const float y = 0) :
-		accel_x(x), accel_y(y), pos_x(0.0f), pos_y(0.0f)
+	Sprite(TextureAtlas *, const unsigned int w, const unsigned int h);
+
+	void draw();
+
+	/// Uniform scaling of sprite (does not affect width and height properties).
+	inline void scale(const float f)
 	{
-	#if defined(ONWIRE_ANDROID)
+		if (f == this->scale_x && f == this->scale_y) return;
 
-	#elif defined(ONWIRE_IOS)
-
-		this->sprite = [CCSprite spriteWithFile: [NSString stringWithUTF8String:file]];
-
-	#endif
+		this->scale_x = f;
+		this->scale_y = f;
+		this->update();
 	}
 
-	~Sprite() { delete this->sprite; }
-
-	/// Sets traveling speed.
-	/// \param x Speed in x-direction
-	/// \param y Speed in y-direction
-	void accelerate(const float &x, const float &y)
+	/// Non-uniform scaling of sprite (does not affect width and height properties).
+	inline void scale(const float fx, const float fy)
 	{
-		this->set_position(
-			this->pos_x - (y * this->accel_x),
-			this->pos_y + (x * this->accel_y));
+		if (fx == this->scale_x && fy == this->scale_y) return;
+
+		this->scale_x = fx;
+		this->scale_y = fy;
+		this->update();
 	}
 
-	/// Returns the sprite object. Used by the director.
-	/// \return Actual sprite object
-	inline RealSprite *get_object() { return this->sprite; }
-
-	/// Scales the sprite.
-	/// \param f Scaling factor
-	inline void scale(const float &f)
+	/// Sets the pivot point for rotation and translation.
+	/// \param x  Normalised x-component of pivot point
+	/// \param y  Normalised y-component of pivot point
+	inline void set_pivot(const float x, const float y)
 	{
-	#if defined(ONWIRE_ANDROID)
+		assert(x >= 0.0f && x <= 1.0f);
+		assert(y >= 0.0f && y <= 1.0f);
 
-	#elif defined(ONWIRE_IOS)
+		const float x0 = this->position_x - this->pivot_delta[0];
+		const float y0 = this->position_y - this->pivot_delta[1];
 
-		this->sprite.scale = f;
+		this->pivot_delta[0] = this->width * x;
+		this->pivot_delta[1] = this->height * (1 - y);
 
-	#endif
+		this->pivot_abs[0] = x0 + this->pivot_delta[0];
+		this->pivot_abs[1] = y0 + this->pivot_delta[1];
+
+		this->pivot_x = x;
+		this->pivot_y = y;
 	}
 
-	/// Scales the sprite.
-	/// \param x Scaling factor in x-direction
-	/// \param y Scaling factor in y-direction
-	inline void scale(const float &x, const float &y)
-	{
-	#if defined(ONWIRE_ANDROID)
+	/// Sets sprite position (absolute).
+	void set_position(const float x, const float y);
 
-	#elif defined(ONWIRE_IOS)
+	/// Sets the texture.
+	/// \param id  Texture name to use
+	void set_texture(const unsigned int id, GLenum usage = GL_DYNAMIC_DRAW);
 
-		this->sprite.scaleX = x;
-		this->sprite.scaleY = y;
+private:
+	static const unsigned int vertex_sz = 4;
+	static const unsigned int vertices = 4;
+	static const unsigned int buffer_sz = vertices * vertex_sz * sizeof(float);
 
-	#endif
-	}
+	//GLuint buffer;                             ///< Vertex buffer object name
+	float pivot_abs[2];                        ///< Absolute pivot point coordinates
+	float pivot_delta[2];                      ///< For storing axis components
+	float pivot_x;                             ///< x-component of the sprite's pivot point (normalised)
+	float pivot_y;                             ///< y-component of the sprite's pivot point (normalised)
+	float position_x;                          ///< x-component of the sprite's position
+	float position_y;                          ///< y-component of the sprite's position
+	float vertex_array[vertices * vertex_sz];  ///< Vertex array
+	TextureAtlas *atlas;                       ///< Texture atlas pointer
 
-	/// Sets the anchor point.
-	/// \param x The x-coordinate
-	/// \param y The y-coordinate
-	inline void set_anchor(const float &x, const float &y)
-	{
-	#if defined(ONWIRE_ANDROID)
+	/// Updates vertex buffer object.
+	void update();
 
-	#elif defined(ONWIRE_IOS)
-
-		[this->sprite setAnchorPoint:ccp(x, y)];
-
-	#endif
-	}
-
-	/// Sets the position.
-	/// \param x The x-coordinate
-	/// \param y The y-coordinate
-	inline void set_position(const float &x, const float &y)
-	{
-	#if defined(ONWIRE_ANDROID)
-
-	#elif defined(ONWIRE_IOS)
-
-		this->sprite.position = ccp(x, y);
-
-	#endif
-
-		this->pos_x = x;
-		this->pos_y = y;
-	}
-
-protected:
-	float
-		pos_x,			///< Position of this sprite (x-coordinate)
-		pos_y;			///< Position of this sprite (y-coordinate)
-	RealSprite *sprite;	///< The actual sprite object
+	template<int N> friend class SpriteBatch;
+	friend class TextureAtlas;
 };
 
 #endif

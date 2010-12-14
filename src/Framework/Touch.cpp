@@ -1,11 +1,10 @@
-/*
- *  Touch.cpp
- *  OnWire
- *
- *  Created by Tommy Nguyen on 11/14/10.
- *  Copyright 2010 Ninja Unicorn. All rights reserved.
- *
- */
+//
+//  Touch.cpp
+//  OnWire
+//
+//  Created by Tommy Nguyen on 11/14/10.
+//  Copyright 2010 Ninja Unicorn. All rights reserved.
+//
 
 #include "Touch.h"
 
@@ -13,16 +12,16 @@
 
 Touch *get_touch_set(NSSet *touches)
 {
-	Touch *f = new Touch[touches.count];
+	Touch *t = new Touch[touches.count];
 	unsigned int i = 0;
 	for (UITouch *touch in touches)
 	{
 		CGPoint p = [[CCDirector sharedDirector] convertToGL:[touch locationInView:[touch view]]];
-		f[i].hash = touch.hash;
-		f[i].x = p.x;
-		f[i++].y = p.y;
+		t[i].hash = touch.hash;
+		t[i].x = p.x;
+		t[i++].y = p.y;
 	}
-	return f;
+	return t;
 }
 
 // CFDictionaryKeyCallBacks
@@ -60,7 +59,6 @@ const void *touch_retain(CFAllocatorRef a, const void *ptr)
 
 void touch_release(CFAllocatorRef a, const void *ptr)
 {
-	//CFAllocatorDeallocate(a, (Touch *)ptr);
 	CFAllocatorDeallocate(a, reinterpret_cast<Touch *>(const_cast<void *>(ptr)));
 }
 

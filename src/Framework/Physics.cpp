@@ -90,7 +90,7 @@ void Physics::dispose_body(b2Body *b)
 
 void Physics::interpolate()
 {
-	this->accumulator_ratio = this->accumulator / fixed_timestep;
+	this->accumulator_ratio = this->accumulator / Physics::fixed_dt;
 	const float rest = 1.0f - this->accumulator_ratio;
 	for (b2Body *b = this->world->GetBodyList(); b; b = b->GetNext())
 	{
@@ -132,20 +132,20 @@ void Physics::save_state()
 void Physics::step(const float &dt)
 {
 	this->accumulator += dt;
-	unsigned int n_steps = static_cast<unsigned int>(this->accumulator / fixed_timestep);
+	unsigned int n_steps = static_cast<unsigned int>(this->accumulator / Physics::fixed_dt);
 	if (n_steps == 0)
 	{
 		this->restore_state();
 		return;
 	}
 
-	this->accumulator -= n_steps * fixed_timestep;
+	this->accumulator -= n_steps * Physics::fixed_dt;
 	if (n_steps > Physics::max_steps) n_steps = Physics::max_steps;
 
 	this->restore_state();
 	for (unsigned int i = 0; i < n_steps; ++i)
 	{
-		this->world->Step(Physics::fixed_timestep, Physics::v_iter, Physics::p_iter);
+		this->world->Step(Physics::fixed_dt, Physics::v_iter, Physics::p_iter);
 		this->save_state();
 	}
 	this->world->ClearForces();

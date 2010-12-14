@@ -5,40 +5,35 @@
 
 #ifndef ONWIREGAME_H_
 #define ONWIREGAME_H_
-#define OBJECT_COUNT 2
 
+#include "Elements/Bird.h"
 #include "Elements/Wind.h"
+#include "Framework/Sprite.h"
+#include "Framework/TextureAtlas.h"
 #include "Hardware/Controls.h"
-#include "Objects/Building.h"
-#include "Objects/HUD.h"
-#include "Objects/Line.h"
-#include "Objects/Skyline.h"
+#include "Objects/Assets.h"
+
+typedef CCNode RealObject;
 
 class OnWireGame
 {
 public:
+	static const unsigned int element_count = 2;
+	static const unsigned int object_count = 4;
+
 	OnWireGame();
 	~OnWireGame();
 
 	void draw();
 
 	/// Returns the number of in-game objects.
-	inline unsigned int get_game_object_count() { return OBJECT_COUNT; }
+	inline unsigned int get_object_count() { return object_count; }
 
-	/// Returns an array of all in-game objects.
-	RealSprite **get_game_objects();
+	/// Returns an array of all in-game objects. Z-ordered.
+	RealObject **get_objects();
 
-	/// Returns the number of HUD elements.
-	inline unsigned int get_hud_element_count() { return this->hud->get_element_count(); }
-
-	/// Returns an array of all HUD element objects.
-	inline RealLabel **get_hud_elements() { return this->hud->get_elements(); }
-
-	/// Returns the vertex array containing the line.
-	inline GLfloat *get_line() { return this->line->line; }
-
-	/// Game logic.
-	void play();
+	/// Returns the vertex array making up the line.
+	inline GLfloat *get_line() { return this->line.vertices; }
 
 	/// Resets all progress and sets a target distance.
 	/// \param target Target distance
@@ -54,16 +49,20 @@ public:
 	void update();
 
 private:
-	bool finished;		///< Whether or not the player has reached the goal
-	unsigned int time;	///< Time spent on the current game
-	float
-		target,			///< Target distance to reach the goal
-		traveled;		///< Distance traveled by the player so far
-	Building *building;	///< The target building
-	HUD *hud;			///< The active HUD
-	Line *line;			///< The in-game line
-	Skyline *skyline;	///< Skyline backdrop
-	Wind wind;
+	bool finished;      ///< Whether or not the player has reached the goal
+	unsigned int time;  ///< Time spent on the current game
+	float target;       ///< Target distance
+	float traveled;     ///< Distance traveled by the player so far
+
+	TextureAtlas texture_atlas;        ///< Main texture atlas
+	Sprite *skyline;
+	Building building;                 ///< Target building
+	Line line;                         ///< The line
+	Avatar avatar;                     ///< Player avatar
+	HUD hud;                           ///< Player's head-up display
+	Element *elements[element_count];  ///< All elements
+
+	Font freetype;
 };
 
 #endif
