@@ -37,7 +37,7 @@ public:
 
 	/// Creates a sprite.
 	/// \return A sprite object
-	Sprite* create_sprite(const unsigned int x, const unsigned int y, const unsigned int width, const unsigned int height, GLenum usage = GL_DYNAMIC_DRAW);
+	Sprite* create_sprite(const unsigned int x, const unsigned int y, const unsigned int width, const unsigned int height);
 
 	/// Defines a texture from the map.
 	/// \param x       x-component of texture location

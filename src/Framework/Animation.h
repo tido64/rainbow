@@ -13,7 +13,6 @@
 
 struct Animation
 {
-	static const double half = 0.5;
 	static const double third = 1.0 / 3.0;
 	static const double quarter = 0.25;
 
@@ -28,7 +27,7 @@ struct Animation
 		float s2 = b_y - a_y;
 		s1 *= s1;
 		s2 *= s2;
-		return pow(s1 + s2, half);
+		return sqrt(s1 + s2);
 	}
 
 	static float ease_in_cubic(const float start, const float end, const float t)
@@ -64,7 +63,7 @@ struct Animation
 	static float ease_out_square(const float start, const float end, const float t)
 	{
 		assert(t >= 0.0f && t < 1.0f);
-		return start + (end - start) * pow(t, half);
+		return start + (end - start) * sqrt(t);
 	}
 
 };

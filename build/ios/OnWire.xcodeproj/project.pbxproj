@@ -21,7 +21,6 @@
 		19266A44129C74A90047311E /* fps_images.png in Resources */ = {isa = PBXBuildFile; fileRef = 19266A42129C74A90047311E /* fps_images.png */; };
 		196803AB12AEA63E00040574 /* TextureAtlas.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 196803AA12AEA63E00040574 /* TextureAtlas.cpp */; };
 		1968049A12AED5AC00040574 /* Sprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1968049912AED5AC00040574 /* Sprite.cpp */; };
-		1969C80512B3B687001C30A6 /* SpriteBatch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1969C80412B3B687001C30A6 /* SpriteBatch.cpp */; };
 		19724AFD12A590DE000DEA7E /* ArialBlack.fnt in Resources */ = {isa = PBXBuildFile; fileRef = 19724AF912A590DD000DEA7E /* ArialBlack.fnt */; };
 		19724AFE12A590DE000DEA7E /* ArialBlack.png in Resources */ = {isa = PBXBuildFile; fileRef = 19724AFA12A590DE000DEA7E /* ArialBlack.png */; };
 		19724AFF12A590DE000DEA7E /* ArialBold.fnt in Resources */ = {isa = PBXBuildFile; fileRef = 19724AFB12A590DE000DEA7E /* ArialBold.fnt */; };
@@ -383,7 +382,6 @@
 		1968049812AED5AC00040574 /* Sprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Sprite.h; sourceTree = "<group>"; };
 		1968049912AED5AC00040574 /* Sprite.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = Sprite.cpp; sourceTree = "<group>"; };
 		1969C80312B3B687001C30A6 /* SpriteBatch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpriteBatch.h; sourceTree = "<group>"; };
-		1969C80412B3B687001C30A6 /* SpriteBatch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SpriteBatch.cpp; sourceTree = "<group>"; };
 		19724AF912A590DD000DEA7E /* ArialBlack.fnt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = ArialBlack.fnt; path = ../../res/Fonts/ArialBlack.fnt; sourceTree = SOURCE_ROOT; };
 		19724AFA12A590DE000DEA7E /* ArialBlack.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ArialBlack.png; path = ../../res/Fonts/ArialBlack.png; sourceTree = SOURCE_ROOT; };
 		19724AFB12A590DE000DEA7E /* ArialBold.fnt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = ArialBold.fnt; path = ../../res/Fonts/ArialBold.fnt; sourceTree = SOURCE_ROOT; };
@@ -948,7 +946,6 @@
 				1908C895128E17980084C761 /* Physics.h */,
 				1968049912AED5AC00040574 /* Sprite.cpp */,
 				1968049812AED5AC00040574 /* Sprite.h */,
-				1969C80412B3B687001C30A6 /* SpriteBatch.cpp */,
 				1969C80312B3B687001C30A6 /* SpriteBatch.h */,
 				196803AA12AEA63E00040574 /* TextureAtlas.cpp */,
 				196803A912AEA63E00040574 /* TextureAtlas.h */,
@@ -2069,7 +2066,6 @@
 				19883A1F1294746D00CC98E7 /* Avatar.cpp in Sources */,
 				196803AB12AEA63E00040574 /* TextureAtlas.cpp in Sources */,
 				1968049A12AED5AC00040574 /* Sprite.cpp in Sources */,
-				1969C80512B3B687001C30A6 /* SpriteBatch.cpp in Sources */,
 				19CAE13112B6CABC00AB1423 /* Font.cpp in Sources */,
 				19CAE4C212B6D2FB00AB1423 /* Bird.cpp in Sources */,
 				19CAE4C312B6D2FB00AB1423 /* Wind.cpp in Sources */,

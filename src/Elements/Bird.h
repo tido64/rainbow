@@ -14,7 +14,7 @@
 class Bird : public Element
 {
 public:
-	Bird(Sprite *s);
+	Bird();
 	~Bird() { }
 
 	void activate();

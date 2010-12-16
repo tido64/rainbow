@@ -1,7 +1,7 @@
 /// The target building.
 
-/// This is where the our player wants to reach. Zooms in as the player gets
-/// closer to the building.
+/// This is where our player wants to reach. Zooms in as the player gets closer
+/// to the building.
 ///
 /// Copyright 2010 __MyCompanyName__. All rights reserved.
 /// \author Tommy Nguyen

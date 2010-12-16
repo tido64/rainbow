@@ -90,8 +90,8 @@ Font::~Font()
 
 void Font::test()
 {
-	// Let's print the letter A
-	const unsigned char c = 65;
+	// Let's print a red letter A
+	const unsigned char c = 38;
 	const unsigned int c_offset = c * char_sz;
 
 	glColor4ub(0xff, 0x00, 0x00, 0xff);

@@ -12,13 +12,13 @@
 class Wind : public Element
 {
 public:
-	Wind(Line *);
+	Wind(const Line *);
 	void activate();
 	bool fire();
 
 private:
 	float force;
-	Line *line;
+	const Line *line;
 };
 
 #endif

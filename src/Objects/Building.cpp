@@ -9,25 +9,24 @@
 #include "Building.h"
 
 Building::Building() :
-	scale(0.5f), progress(scale)
+	scale(0.4f), progress(scale)
 { }
 
 void Building::set_sprite(Sprite *s)
 {
 	this->sprite = s;
 	this->sprite->scale(this->scale);
-	this->sprite->set_pivot(this->scale, 0.39f);
-	this->sprite->set_position(Screen::width() * this->scale, Screen::height() * this->scale);
+	this->sprite->set_pivot(0.5f, 0.39f);
+	this->sprite->set_position(Screen::width() * 0.5f, Screen::height() * 0.5f);
 }
 
 void Building::update(const float &p)
 {
 	assert(this->sprite != 0);
 
-	this->scale += 0.001f;
-	this->sprite->scale(this->scale);
-	return;
-
+	this->scale += 0.0005;             //DEBUG
+	this->sprite->scale(this->scale);  //DEBUG
+	return;                            //DEBUG
 
 	if (p == this->progress) return;
 

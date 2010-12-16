@@ -52,7 +52,7 @@
 
 		game->reset(9000);
 
-		//[self schedule: @selector(clock) interval:1.0f];
+		[self schedule: @selector(clock) interval:1.0f];
 		[self schedule: @selector(tick:)];
 	}
 	return self;

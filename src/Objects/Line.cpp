@@ -82,7 +82,7 @@ void Line::draw()
 {
 	glDisable(GL_TEXTURE_2D);
 
-	glColor4ub(0x00, 0x00, 0x00, 0xff);
+	glColor4ub(0xff, 0x00, 0x00, 0xff);
 	glBindBuffer(GL_ARRAY_BUFFER, this->buffer);
 	glVertexPointer(2, GL_FLOAT, 0, 0);
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, LINE_TRIANGLES);
@@ -125,5 +125,5 @@ void Line::update()
 	this->vertices[++count] = y;
 
 	glBindBuffer(GL_ARRAY_BUFFER, this->buffer);
-	glBufferData(GL_ARRAY_BUFFER, VBO_SIZE, this->vertices, GL_DYNAMIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, LINE_VBO_SIZE, this->vertices, GL_DYNAMIC_DRAW);
 }

@@ -21,7 +21,7 @@ class Font
 public:
 	const unsigned int pt;
 
-	Font(const char *font_family, unsigned int height);
+	Font(const char *font_family, unsigned int pt);
 	~Font();
 
 	void test();

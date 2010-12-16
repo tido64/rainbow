@@ -9,6 +9,7 @@
 #include "Elements/Bird.h"
 #include "Elements/Wind.h"
 #include "Framework/Sprite.h"
+#include "Framework/SpriteBatch.h"
 #include "Framework/TextureAtlas.h"
 #include "Hardware/Controls.h"
 #include "Objects/Assets.h"
@@ -55,14 +56,18 @@ private:
 	float traveled;     ///< Distance traveled by the player so far
 
 	TextureAtlas texture_atlas;        ///< Main texture atlas
+	SpriteBatch<2> background;
 	Sprite *skyline;
 	Building building;                 ///< Target building
 	Line line;                         ///< The line
 	Avatar avatar;                     ///< Player avatar
 	HUD hud;                           ///< Player's head-up display
-	Element *elements[element_count];  ///< All elements
 
-	Font freetype;
+	Element *elements[element_count];  ///< All elements
+	Bird yellow_bird;
+	Wind wind;
+
+	//Font freetype;
 };
 
 #endif

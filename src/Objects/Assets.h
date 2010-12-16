@@ -18,6 +18,6 @@
 #define blue_bird_landed 726, 0, 24, 67
 
 #define avatar_asset 616, 300, 86, 206
-#define building_asset 805, 0, 488, 947, GL_STATIC_DRAW
+#define building_asset 805, 0, 488, 947
 #define skyline_asset 1365, 0, 640, 960
 #define wind_asset 0, 327, 466, 603

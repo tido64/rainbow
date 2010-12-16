@@ -18,10 +18,12 @@ void Avatar::set_sprite(Sprite *s)
 	this->sprite->scale(0.5f);
 	this->sprite->set_pivot(0.5f, 0.0f);
 	this->sprite->set_position(this->base->x * PTM_RATIO, this->base->y * PTM_RATIO);
+	this->sprite->update();
 }
 
 void Avatar::update()
 {
 	this->sprite->set_position(this->base->x * PTM_RATIO, this->base->y * PTM_RATIO);
-	this->sprite->rotation = atan((this->head_x - this->base->x) / this->head_y);
+	this->sprite->rotate(atan((this->head_x - this->base->x) / this->head_y));
+	this->sprite->update();
 }

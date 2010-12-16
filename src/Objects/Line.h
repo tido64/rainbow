@@ -18,7 +18,7 @@ const unsigned int
 	LINE_SEGMENTS = 12,                                        ///< Number of segments making up the line
 	LINE_TRIANGLES = (LINE_SEGMENTS << 1) + 4,                 ///< Number of triangles needed to draw the line
 	LINE_VERTICES = LINE_TRIANGLES << 1,                       ///< Number of vertices needed to make the triangle strip
-	VBO_SIZE = LINE_VERTICES * sizeof(float);                  ///< Vertex buffer size
+	LINE_VBO_SIZE = LINE_VERTICES * sizeof(float);             ///< Vertex buffer size
 const float
 	LINE_WIDTH = 6.0f,                                         ///< Width of the line at the bottom of the screen
 	LINE_WIDTH_OFFSET = (LINE_WIDTH - 1.0f) / LINE_TRIANGLES;  ///< Width of the line at the top of the screen
@@ -30,7 +30,7 @@ public:
 	~Line() { }
 
 	/// Applies an impulse on given segment of the line.
-	inline void apply_impulse(const Vec2 &Ns, const unsigned int n)
+	inline void apply_impulse(const Vec2 &Ns, const unsigned int n) const
 	{
 		this->segment[n]->ApplyLinearImpulse(Ns, this->segment[n]->GetWorldCenter());
 	}

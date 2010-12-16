@@ -55,11 +55,11 @@ TextureAtlas::TextureAtlas(const char *filename, const int mipmap) : textures(64
 	free(data);
 }
 
-Sprite* TextureAtlas::create_sprite(const unsigned int x, const unsigned int y, const unsigned int w, const unsigned int h, GLenum u)
+Sprite* TextureAtlas::create_sprite(const unsigned int x, const unsigned int y, const unsigned int w, const unsigned int h)
 {
 	const unsigned int i = this->define_texture(x, y, w, h);
 	Sprite *sprite = new Sprite(this, w, h);
-	sprite->set_texture(i, u);
+	sprite->set_texture(i);
 	this->sprites.add(sprite);
 	return sprite;
 }

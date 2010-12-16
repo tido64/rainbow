@@ -8,7 +8,7 @@
 
 #include "Wind.h"
 
-Wind::Wind(Line *l) : force(1.0f), line(l) { }
+Wind::Wind(const Line *l) : force(1.0f), line(l) { }
 
 void Wind::activate()
 {

@@ -12,16 +12,22 @@ OnWireGame::OnWireGame() :
 	time(0), target(time), traveled(target), texture_atlas("assets-hd.png"),
 	line(Screen::width(), Screen::height()),
 	avatar(this->line.get_displacement_at(4)),
-	freetype("/Users/tido/Downloads/frabk.ttf", 20)
+	//freetype("/Users/tido/Downloads/frabk.ttf", 20)
+	wind(&this->line)
 {
 	// Define background
 	this->skyline = this->texture_atlas.create_sprite(skyline_asset);
 	this->skyline->scale(0.5f);
 	this->skyline->set_position(Screen::width() * 0.5f, Screen::height() * 0.5f);
+	this->background.add(this->skyline);
 
 	// Define building
 	Sprite *s = this->texture_atlas.create_sprite(building_asset);
 	this->building.set_sprite(s);
+	this->background.add(s);
+
+	// Update background sprites
+	this->background.update();
 
 	// Define avatar
 	s = this->texture_atlas.create_sprite(avatar_asset);
@@ -35,8 +41,9 @@ OnWireGame::OnWireGame() :
 	//s = this->texture_atlas.create_sprite(blue_bird_flying);
 	//s->set_position(100, 240);
 
-	//this->elements[0] = new Bird(this->sprite_sheet.get_sprite(yellow_bird_flying));
-	//this->elements[1] = new Wind(&this->line);
+	this->yellow_bird.set_sprite(this->texture_atlas.create_sprite(yellow_bird_flying));
+	this->elements[0] = &this->yellow_bird;
+	this->elements[1] = &this->wind;
 }
 
 OnWireGame::~OnWireGame()
@@ -47,12 +54,9 @@ OnWireGame::~OnWireGame()
 
 void OnWireGame::draw()
 {
-	this->skyline->draw();
-	this->building.draw();
+	this->background.draw();
 	this->line.draw();
 	this->avatar.draw();
-
-	this->freetype.test();
 }
 
 RealObject **OnWireGame::get_objects()
@@ -82,14 +86,14 @@ void OnWireGame::tick()
 
 	this->hud.set_time(++this->time);
 
+	this->elements[1]->activate();  // DEBUG
+	return;                         // DEBUG
+
 	if (Random() < 0.2)
 	{
 		unsigned int i = static_cast<unsigned int>(Random() * 2);
 		this->elements[i]->activate();
 	}
-
-	// DEBUGGING ONLY
-	//this->travel(1400);
 }
 
 void OnWireGame::travel(const unsigned int d)
@@ -107,18 +111,22 @@ void OnWireGame::travel(const unsigned int d)
 
 void OnWireGame::update()
 {
-	//this->building.update(this->traveled / this->target);
+	// Update game elements
+	this->building.update(this->traveled / this->target);
 	this->line.update();
 	this->avatar.update();
 
-	/*
+	// Fire game obstacles
 	for (unsigned int i = 0; i < element_count; ++i)
 	{
 		if (!this->elements[i]->active) continue;
 
 		if (this->elements[i]->fire())
 			this->elements[i]->active = false;
-	}*/
+	}
+
+	// Update sprites
+	this->background.update();
 
 	// Always re-enable client memory before drawing
 	glBindBuffer(GL_ARRAY_BUFFER, 0);

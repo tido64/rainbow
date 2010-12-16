@@ -8,11 +8,9 @@
 
 #include "Bird.h"
 
-Bird::Bird(Sprite *s) :
-	Element(s), scr_w(Screen::width()), scr_h(Screen::height()), speed(1.0f / 90.0f)
-{
-	this->sprite->scale(0.5f);
-}
+Bird::Bird() :
+	scr_w(Screen::width()), scr_h(Screen::height()), speed(1.0f / 90.0f)
+{ }
 
 void Bird::activate()
 {
