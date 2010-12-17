@@ -44,8 +44,8 @@ TextureAtlas::TextureAtlas(const char *filename, const int mipmap) : textures(64
 	//glEnable(GL_BLEND);
 	//glBlendFunc(GL_ONE, GL_SRC_COLOR);
 
-	glGenTextures(1, &this->texture[0]);
-	glBindTexture(GL_TEXTURE_2D, this->texture[0]);
+	glGenTextures(1, &this->texture);
+	glBindTexture(GL_TEXTURE_2D, this->texture);
 
 	// Enable mipmap
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); //GL_NEAREST);

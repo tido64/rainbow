@@ -31,7 +31,7 @@ Sprite::~Sprite()
 
 void Sprite::draw()
 {
-	// Enables all colour channels on texture
+	// Enable all colour channels on texture
 	glColor4ub(0xff, 0xff, 0xff, 0xff);
 	glBindTexture(GL_TEXTURE_2D, this->texture);
 

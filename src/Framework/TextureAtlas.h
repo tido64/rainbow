@@ -17,10 +17,9 @@
 
 #include <cstring>
 
-#include "../Hardware/Platform.h"
+#include "Hardware/Platform.h"
 
 #if defined(ONWIRE_ANDROID)
-#
 #elif defined(ONWIRE_IOS)
 #	include <OpenGLES/ES1/gl.h>
 #	include <UIKit/UIKit.h>
@@ -51,7 +50,7 @@ public:
 	//void draw();
 
 	/// Returns the texture name this atlas holds.
-	inline GLuint get_name() { return this->texture[0]; }
+	inline GLuint get_name() { return this->texture; }
 
 	/// Gets named texture.
 	/// \param id        The id of the texture to get
@@ -61,7 +60,7 @@ public:
 private:
 	unsigned int width;        ///< Width of the map
 	unsigned int height;       ///< Height of the map
-	GLuint texture[1];         ///< Stores texture name
+	GLuint texture;            ///< Stores texture name
 	Vector<GLfloat> textures;  ///< Stores all textures
 	Vector<Sprite *> sprites;  ///< Stores all sprites
 };

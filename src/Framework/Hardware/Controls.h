@@ -8,9 +8,9 @@
 #ifndef CONTROLS_H_
 #define CONTROLS_H_
 
-#include "../Framework/Sprite.h"
-#include "../Framework/Touch.h"
-#include "../Hardware/Screen.h"
+#include "../Sprite.h"
+#include "Screen.h"
+#include "Touch.h"
 
 class Controls
 {

@@ -9,8 +9,8 @@
 #ifndef BUILDING_H_
 #define BUILDING_H_
 
+#include "../Framework/Hardware/Screen.h"
 #include "../Framework/Drawable.h"
-#include "../Hardware/Screen.h"
 
 class Building : public Drawable
 {

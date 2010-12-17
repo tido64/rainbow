@@ -8,7 +8,7 @@
 #ifndef LABEL_H_
 #define LABEL_H_
 
-#include "../Hardware/Platform.h"
+#include "Hardware/Platform.h"
 
 #if defined(ONWIRE_ANDROID)
 
@@ -16,8 +16,7 @@
 
 #include "cocos2d.h"
 
-typedef CCBitmapFontAtlas RealLabel;
-//typedef CCLabelBMFont RealLabel;
+typedef CCLabelBMFont RealLabel;
 
 #endif
 
@@ -36,8 +35,7 @@ public:
 
 		NSString *s = ctons_str(str);
 		NSString *f = ctons_str(font);
-		this->label = [RealLabel bitmapFontAtlasWithString:s fntFile:f];
-		//this->label = [RealLabel labelWithString:s fntFile:f];
+		this->label = [RealLabel labelWithString:s fntFile:f];
 
 	#endif
 	}

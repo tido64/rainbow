@@ -13,7 +13,7 @@
 #ifndef PHYSICS_H_
 #define PHYSICS_H_
 
-#include "../Hardware/Platform.h"
+#include "Hardware/Platform.h"
 #include "Box2D.h"
 
 // Pixel to metres ratio. Box2D uses metres as the unit for measurement.

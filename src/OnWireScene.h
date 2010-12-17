@@ -7,14 +7,11 @@
 //
 
 #import "GLES-Render.h"
-#import "Objects/LineRender.h"
-
-#include "OnWireGame.h"
+#import "OnWireGame.h"
 
 @interface OnWire : CCLayer {
 	Controls *controls;
 	GLESDebugDraw *debug_draw;
-	LineRender *line;
 	OnWireGame *game;
 	Physics *physics;
 }

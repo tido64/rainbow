@@ -89,9 +89,9 @@ void OnWireGame::tick()
 	this->elements[1]->activate();  // DEBUG
 	return;                         // DEBUG
 
-	if (Random() < 0.2)
+	if (this->random->next() < 0.2)
 	{
-		unsigned int i = static_cast<unsigned int>(Random() * 2);
+		unsigned int i = static_cast<unsigned int>(this->random->next() * 2);
 		this->elements[i]->activate();
 	}
 }

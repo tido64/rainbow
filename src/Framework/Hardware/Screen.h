@@ -7,7 +7,11 @@
 #define SCREEN_H_
 
 #include "Platform.h"
-#include "cocos2d.h"
+
+#if defined(ONWIRE_ANDROID)
+#elif defined(ONWIRE_IOS)
+#	include "cocos2d.h"
+#endif
 
 struct Screen
 {

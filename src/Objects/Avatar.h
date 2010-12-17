@@ -8,9 +8,9 @@
 
 #include <cmath>
 
+#include "../Framework/Hardware/Screen.h"
 #include "../Framework/Drawable.h"
 #include "../Framework/Physics.h"
-#include "../Hardware/Screen.h"
 
 class Avatar : public Drawable
 {

@@ -8,9 +8,9 @@
 #ifndef HUD_H_
 #define HUD_H_
 
+#include "../Framework/Hardware/Screen.h"
 #include "../Framework/Font.h"
 #include "../Framework/Label.h"
-#include "../Hardware/Screen.h"
 
 class HUD
 {

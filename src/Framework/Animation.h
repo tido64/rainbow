@@ -65,7 +65,6 @@ struct Animation
 		assert(t >= 0.0f && t < 1.0f);
 		return start + (end - start) * sqrt(t);
 	}
-
 };
 
 #endif

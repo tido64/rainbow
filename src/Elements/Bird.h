@@ -6,9 +6,10 @@
 #ifndef BIRD_H_
 #define BIRD_H_
 
+#include "../Framework/Hardware/Screen.h"
+#include "../Framework/Random.h"
 #include "../Framework/Animation.h"
 #include "../Framework/Element.h"
-#include "../Hardware/Screen.h"
 #include "../Objects/Line.h"
 
 class Bird : public Element
@@ -33,6 +34,7 @@ private:
 	float spawn_y;       ///< y-component of spawning point
 	float speed;         ///< Traveling speed
 	float t;             ///< Timeline indicator
+	Random *random;      ///< Random number generator
 };
 
 #endif

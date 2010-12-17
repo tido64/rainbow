@@ -1,7 +1,7 @@
 /// The line object represents the actual line in the game.
 
-/// Responsible for initialising the physical in-game object and updating it. On
-/// other platforms than iOS, it also handles on-screen drawing.
+/// Responsible for initialising the physical in-game object and updating it.
+/// Implemented with vertex buffer object.
 ///
 /// \see http://www.box2d.org/forum/viewtopic.php?f=6&t=2094
 ///
@@ -12,6 +12,7 @@
 #define LINE_H_
 
 #include <OpenGLES/ES1/gl.h>
+
 #include "../Framework/Physics.h"
 
 const unsigned int

@@ -2,12 +2,6 @@
 
 /// Implemented using interleaved vertex data buffer objects.
 ///
-/// Affine matrix combines scaling+translation and rotation:
-///
-/// | sx  0   Tx |   | cos(θ) -sin(θ)  0 |   | sx*cos(θ)  -sx*sin(θ)  Tx |
-/// | 0   sy  Ty | x | sin(θ)  cos(θ)  0 | = | sy*sin(θ)   sx*cos(θ)  Ty |
-/// | 0   0   1  |   |   0       0     1 |   |     0           0       1 |
-///
 /// \see http://developer.apple.com/library/ios/#documentation/3DDrawing/Conceptual/OpenGLES_ProgrammingGuide/TechniquesforWorkingwithVertexData/TechniquesforWorkingwithVertexData.html
 /// \see http://iphonedevelopment.blogspot.com/2009/06/opengl-es-from-ground-up-part-8.html
 /// \see http://mathforum.org/mathimages/index.php/Transformation_Matrix
@@ -21,6 +15,7 @@
 #include <cassert>
 #include <cmath>
 #include <cfloat>
+
 #include <OpenGLES/ES1/gl.h>
 
 static const unsigned int sprite_vertex_sz = 4;

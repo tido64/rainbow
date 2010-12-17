@@ -20,7 +20,7 @@
 
 	// Try to use CADisplayLink director, if it fails (SDK < 3.1) use the default director
 	if(![CCDirector setDirectorType:kCCDirectorTypeDisplayLink])
-		[CCDirector setDirectorType:kCCDirectorTypeNSTimer];
+		[CCDirector setDirectorType:kCCDirectorTypeDefault];
 
 	CCDirector *director = [CCDirector sharedDirector];
 	[director setDeviceOrientation:kCCDeviceOrientationPortrait];  // We don't want landscape orientation
@@ -29,11 +29,11 @@
 
 	EAGLView *glView = [EAGLView viewWithFrame:[window bounds]
 		pixelFormat:kEAGLColorFormatRGB565
-		depthFormat:0  // GL_DEPTH_COMPONENT24_OES
-		preserveBackbuffer:false
-		//sharegroup:0
-		//multiSampling:false
-		//numberOfSamples:0
+		depthFormat:GL_DEPTH_COMPONENT24_OES
+		//preserveBackbuffer:NO
+		//sharegroup:nil
+		//multiSampling:YES
+		//numberOfSamples:4
 	];
 	[glView setMultipleTouchEnabled:YES];
 

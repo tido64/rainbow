@@ -8,9 +8,8 @@
 
 #if defined(ANDROID)
 #	define ONWIRE_ANDROID
-#elif defined(TARGET_OS_IPHONE) || defined(TARGET_IPHONE_SIMULATOR)
+#elif defined(TARGET_OS_MAC) || defined(TARGET_OS_IPHONE) || defined(TARGET_IPHONE_SIMULATOR)
 #	define ONWIRE_IOS
-#	define Random()      (static_cast<double>(arc4random()) / 0xFFFFFFFFu)
 #	define ctons_str(s)  [NSString stringWithUTF8String:(s)];
 #endif
 

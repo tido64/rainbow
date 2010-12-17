@@ -8,10 +8,11 @@
 
 #include "Elements/Bird.h"
 #include "Elements/Wind.h"
+#include "Framework/Hardware/Controls.h"
+#include "Framework/Random.h"
 #include "Framework/Sprite.h"
 #include "Framework/SpriteBatch.h"
 #include "Framework/TextureAtlas.h"
-#include "Hardware/Controls.h"
 #include "Objects/Assets.h"
 
 typedef CCNode RealObject;
@@ -54,11 +55,12 @@ private:
 	unsigned int time;  ///< Time spent on the current game
 	float target;       ///< Target distance
 	float traveled;     ///< Distance traveled by the player so far
+	Random *random;     ///< Random number generator
 
 	TextureAtlas texture_atlas;        ///< Main texture atlas
-	SpriteBatch<2> background;
-	Sprite *skyline;
+	Sprite *skyline;                   ///< The skyline backdrop
 	Building building;                 ///< Target building
+	SpriteBatch<2> background;         ///< Combines skyline and building
 	Line line;                         ///< The line
 	Avatar avatar;                     ///< Player avatar
 	HUD hud;                           ///< Player's head-up display

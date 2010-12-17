@@ -10,7 +10,7 @@
 #ifndef TOUCH_H_
 #define TOUCH_H_
 
-#include "../Hardware/Platform.h"
+#include "Platform.h"
 
 struct Touch
 {

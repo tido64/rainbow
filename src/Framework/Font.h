@@ -9,9 +9,9 @@
 #ifndef FONT_H_
 #define FONT_H_
 
-#include <ft2build.h>
-#include FT_FREETYPE_H
-#include FT_GLYPH_H
+//#include <ft2build.h>
+//#include FT_FREETYPE_H
+//#include FT_GLYPH_H
 #include <OpenGLES/ES1/gl.h>
 
 struct char_data;

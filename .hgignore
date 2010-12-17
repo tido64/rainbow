@@ -1,3 +1,5 @@
 Debug
 Icon.$
+build/ios/libs/.*
+libs/.*\.(?:c|cpp|cxx|h)
 \.(?:DS_Store|build|dropbox|mode\dv\d|pbxuser)
