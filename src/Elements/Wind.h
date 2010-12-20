@@ -6,7 +6,7 @@
 #ifndef WIND_H_
 #define WIND_H_
 
-#include "../Framework/Element.h"
+#include <Rainbow/Element.h>
 #include "../Objects/Line.h"
 
 class Wind : public Element

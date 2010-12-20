@@ -126,4 +126,5 @@ void Line::update()
 
 	glBindBuffer(GL_ARRAY_BUFFER, this->buffer);
 	glBufferData(GL_ARRAY_BUFFER, LINE_VBO_SIZE, this->vertices, GL_DYNAMIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }

@@ -12,8 +12,7 @@
 #define LINE_H_
 
 #include <OpenGLES/ES1/gl.h>
-
-#include "../Framework/Physics.h"
+#include <Rainbow/Physics.h>
 
 const unsigned int
 	LINE_SEGMENTS = 12,                                        ///< Number of segments making up the line

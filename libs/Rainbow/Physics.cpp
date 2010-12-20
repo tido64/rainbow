@@ -6,7 +6,7 @@
 //  Copyright 2010 __MyCompanyName__. All rights reserved.
 //
 
-#include "Physics.h"
+#include <Rainbow/Physics.h>
 
 Physics::Physics() : accumulator(0.0f), accumulator_ratio(0.0f)
 {

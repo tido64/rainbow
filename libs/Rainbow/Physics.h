@@ -13,8 +13,8 @@
 #ifndef PHYSICS_H_
 #define PHYSICS_H_
 
-#include "Hardware/Platform.h"
-#include "Box2D.h"
+#include <Box2D/Box2D.h>
+#include <Rainbow/Hardware/Platform.h>
 
 // Pixel to metres ratio. Box2D uses metres as the unit for measurement.
 // This ratio defines how many pixels correspond to 1 Box2D "metre"
@@ -100,7 +100,7 @@ public:
 	/// \param dt Time spent on rendering the frame
 	void step(const float &dt);
 
-private:
+protected:
 	static const unsigned int
 		max_steps = 5;            ///< Maximum allowed steps (prevents spiral of death)
 	static const int
@@ -109,9 +109,10 @@ private:
 	static const float
 		fixed_dt = 1.0f / 60.0f,  ///< Fixed delta time step
 		g = -9.80665f;            ///< Standard gravitational acceleration value
-	float
-		accumulator,              ///< Renderer time accumulator
-		accumulator_ratio;        ///< The ratio of accumulated time (after consumption) over fixed delta
+
+private:
+	float accumulator;        ///< Renderer time accumulator
+	float accumulator_ratio;  ///< The ratio of accumulated time (after consumption) over fixed delta
 
 	Physics();
 	~Physics();

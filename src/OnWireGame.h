@@ -6,13 +6,12 @@
 #ifndef ONWIREGAME_H_
 #define ONWIREGAME_H_
 
+#include <Rainbow/Hardware/Controls.h>
+#include <Rainbow/SpriteBatch.h>
+
 #include "Elements/Bird.h"
+//#include "Elements/Rain.h"
 #include "Elements/Wind.h"
-#include "Framework/Hardware/Controls.h"
-#include "Framework/Random.h"
-#include "Framework/Sprite.h"
-#include "Framework/SpriteBatch.h"
-#include "Framework/TextureAtlas.h"
 #include "Objects/Assets.h"
 
 typedef CCNode RealObject;
@@ -24,7 +23,6 @@ public:
 	static const unsigned int object_count = 4;
 
 	OnWireGame();
-	~OnWireGame();
 
 	void draw();
 
@@ -55,7 +53,6 @@ private:
 	unsigned int time;  ///< Time spent on the current game
 	float target;       ///< Target distance
 	float traveled;     ///< Distance traveled by the player so far
-	Random *random;     ///< Random number generator
 
 	TextureAtlas texture_atlas;        ///< Main texture atlas
 	Sprite *skyline;                   ///< The skyline backdrop
@@ -63,10 +60,12 @@ private:
 	SpriteBatch<2> background;         ///< Combines skyline and building
 	Line line;                         ///< The line
 	Avatar avatar;                     ///< Player avatar
+	SpriteBatch<1> foreground;         ///< Combines avatar and all game elements
 	HUD hud;                           ///< Player's head-up display
 
 	Element *elements[element_count];  ///< All elements
 	Bird yellow_bird;
+	//RainPS rain;
 	Wind wind;
 
 	//Font freetype;

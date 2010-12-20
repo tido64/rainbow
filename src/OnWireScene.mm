@@ -49,7 +49,6 @@
 			[self addChild:nodes[i]];
 		delete[] nodes;
 
-
 		game->reset(9000);
 
 		[self schedule: @selector(clock) interval:1.0f];

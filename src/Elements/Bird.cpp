@@ -8,9 +8,10 @@
 
 #include "Bird.h"
 
+using Ars::mt_random;
+
 Bird::Bird() :
-	scr_w(Screen::width()), scr_h(Screen::height()), speed(1.0f / 90.0f),
-	random(Random::Instance())
+	scr_w(Screen::width()), scr_h(Screen::height()), speed(1.0f / 90.0f)
 { }
 
 void Bird::activate()
@@ -21,31 +22,31 @@ void Bird::activate()
 	this->active = true;
 
 	// Random spawning point
-	if (this->random->next() < 0.5f)  // sides
+	if (mt_random() < 0.5f)  // sides
 	{
-		this->spawn_x = (this->random->next() < 0.5f) ? 0.0f : scr_w;
-		this->spawn_y = this->random->next();
+		this->spawn_x = (mt_random() < 0.5f) ? 0.0f : scr_w;
+		this->spawn_y = mt_random();
 		if (this->spawn_y < 0.5f)
 			this->spawn_y += 0.5f;
 		this->spawn_y *= scr_h;
 	}
 	else  // the top
 	{
-		this->spawn_x = scr_w * this->random->next();
+		this->spawn_x = scr_w * mt_random();
 		this->spawn_y = scr_h;
 	}
 
 	// Random exit point
-	if (this->random->next() < 0.5f)  // sides
+	if (mt_random() < 0.5f)  // sides
 	{
-		this->exit_x = (this->random->next() < 0.5f) ? 0.0f : scr_w;
-		this->exit_y = this->random->next();
+		this->exit_x = (mt_random() < 0.5f) ? 0.0f : scr_w;
+		this->exit_y = mt_random();
 		if (this->exit_y < 0.5f)
 			this->exit_y += 0.5f;
 	}
 	else  // top
 	{
-		this->exit_x = scr_w * this->random->next();
+		this->exit_x = scr_w * mt_random();
 		this->exit_y = scr_h;
 	}
 
@@ -78,7 +79,7 @@ bool Bird::fire()
 void Bird::set_target(const Vec2 *p)
 {
 	this->target = p;
-	if (this->random->next() < 0.5f)
+	if (mt_random() < 0.5f)
 	{
 		this->exit_x = 0.0f;
 		this->spawn_x = this->scr_w;

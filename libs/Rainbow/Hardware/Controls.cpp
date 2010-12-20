@@ -6,10 +6,10 @@
 //  Copyright 2010 __MyCompanyName__. All rights reserved.
 //
 
-#include "Controls.h"
+#include <Rainbow/Hardware/Controls.h>
 
 Controls::Controls() :
-	scr_w(Screen::width()), scr_h(Screen::height()), speed(100), sprite_count(0)
+	scr_w(Screen::width()), scr_h(Screen::height())
 {
 #if defined(ONWIRE_ANDROID)
 
@@ -35,7 +35,7 @@ Controls::~Controls()
 
 void Controls::accelerate(const float x, const float y)
 {
-	if (this->sprite_count == 0) return;
+	if (this->sprites.size() == 0) return;
 
 	bool should_move = false;
 	//float final_x, final_y;
@@ -108,7 +108,6 @@ void Controls::accelerate(const float x, const float y)
 void Controls::add_object(Sprite *sprite)
 {
 	// add objects to array
-	++this->sprite_count;
 }
 
 void Controls::touch_began(Touch *t, const unsigned int c)

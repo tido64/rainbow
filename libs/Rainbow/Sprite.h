@@ -13,22 +13,17 @@
 #define SPRITE_H_
 
 #include <cassert>
-#include <cmath>
-#include <cfloat>
 
 #include <OpenGLES/ES1/gl.h>
 
-static const unsigned int sprite_vertex_sz = 4;
-static const unsigned int sprite_vertices = 4;
-static const unsigned int sprite_vertex_array = sprite_vertices * sprite_vertex_sz;
-static const unsigned int sprite_buffer_sz = sprite_vertex_array * sizeof(float);
-static const unsigned int sprite_buffer_stride = sprite_vertices * sizeof(float);
-
-class TextureAtlas;
+#include <Rainbow/ArsMathematica.h>
+#include <Rainbow/TextureAtlas.h>
 
 class Sprite
 {
 public:
+	static const unsigned int vertex_array_sz = 4 * sizeof(SpriteVertex);
+
 	const unsigned int width;   ///< Width of sprite (not scaled)
 	const unsigned int height;  ///< Height of sprite (not scaled)
 
@@ -57,39 +52,37 @@ public:
 
 	/// Sets the texture.
 	/// \param id  Id of texture to use
-	void set_texture(const unsigned int id);
+	void set_texture(const unsigned int id)
+	{
+		this->atlas->get_texture(id, this->vertex_array);
+	}
 
 	/// Updates the vertices of this sprite.
 	void update();
 
-	/// Compares to floating point numbers. Returns true on approximately equal.
-	static inline bool equalf(const float a, const float b)
-	{
-		return fabs(a - b) <= ((fabs(a) < fabs(b) ? fabs(b) : fabs(a)) * FLT_EPSILON);
-	}
+protected:
+	static const unsigned char stale_pivot    = 0x01;
+	static const unsigned char stale_position = 0x02;
+	static const unsigned char stale_scale    = 0x04;
+	static const unsigned char stale_angle    = 0x08;
 
 private:
-	bool batched;         ///< Whether or not this sprite is batched
-	unsigned char stale;  ///< Sprite is stale if its properties has changed
-	GLuint texture;       ///< Texture buffer name
+	bool buffered;               ///< Whether or not this sprite is buffered
+	unsigned char stale;         ///< Sprite is stale if its properties has changed
+	GLuint texture;              ///< Texture buffer name
 
-	float angle;          ///< Sprite rotation angle
-	float cos_r;          ///< Cosine of angle
-	float sin_r;          ///< Sine of angle
+	float angle;                 ///< Sprite rotation angle
+	float cos_r;                 ///< Cosine of angle
+	float sin_r;                 ///< Sine of angle
 
-	float scale_x;        ///< Scale in x-direction
-	float scale_y;        ///< Scale in y-direction
+	Vec2f origin[4];             ///< Original rendering at origo
+	Vec2f pivot;                 ///< Pivot point (normalised)
+	Vec2f position;              ///< Current position
+	Vec2f position_d;            ///< Difference between current and next position
+	Vec2f scale_f;               ///< Scaling factor
 
-	float origin[8];      ///< The original rendering at origo
-	float pivot_x;        ///< x-component of the sprite's pivot point (normalised)
-	float pivot_y;        ///< y-component of the sprite's pivot point (normalised)
-	float position_dx;    ///< Difference between current and next position
-	float position_dy;    ///< Difference between current and next position
-	float position_x;     ///< x-component of the sprite's position
-	float position_y;     ///< y-component of the sprite's position
-
-	float *vertex_array;  ///< Vertex array
-	TextureAtlas *atlas;  ///< Texture atlas pointer
+	SpriteVertex *vertex_array;  ///< Vertex array or, if buffered, the sprite batch's buffer
+	TextureAtlas *atlas;         ///< Texture atlas pointer
 
 	template<int N> friend class SpriteBatch;
 	friend class TextureAtlas;

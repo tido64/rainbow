@@ -10,7 +10,7 @@
 #ifndef TOUCH_H_
 #define TOUCH_H_
 
-#include "Platform.h"
+#include <Rainbow/Hardware/Platform.h>
 
 struct Touch
 {
@@ -31,7 +31,7 @@ typedef std::map<Touch> Touches;
 
 #elif defined(ONWIRE_IOS)
 
-#include "cocos2d.h"
+#include <cocos2d/cocos2d.h>
 
 typedef CFMutableDictionaryRef Touches;
 

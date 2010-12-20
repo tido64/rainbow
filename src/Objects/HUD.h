@@ -8,15 +8,14 @@
 #ifndef HUD_H_
 #define HUD_H_
 
-#include "../Framework/Hardware/Screen.h"
-#include "../Framework/Font.h"
-#include "../Framework/Label.h"
+#include <Rainbow/Hardware/Screen.h>
+#include <Rainbow/Font.h>
+#include <Rainbow/Label.h>
 
 class HUD
 {
 public:
 	HUD();
-	~HUD();
 
 	/// Resets all values.
 	/// \param target The new target distance
@@ -46,10 +45,10 @@ private:
 		time_format[];      ///< Provides formatting for time
 
 	char buffer[16];        ///< Buffer for creating strings
-	Label *distance;        ///< Label for distance value
-	Label *distance_label;  ///< Label for distance text
-	Label *time;            ///< Label for time value
-	Label *time_label;      ///< Label for time text
+	Label distance;         ///< Label for distance value
+	Label distance_label;   ///< Label for distance text
+	Label time;             ///< Label for time value
+	Label time_label;       ///< Label for time text
 
 	friend class OnWireGame;
 };

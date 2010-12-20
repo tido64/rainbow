@@ -1,4 +1,4 @@
-/// Use FreeType to load OpenType and TrueType fonts.
+/// Uses FreeType to load OpenType and TrueType fonts.
 
 /// \see http://www.alfredrossi.com/?p=73
 /// \see http://musingsofninjarat.wordpress.com/opengl-freetype-texture-fonts/

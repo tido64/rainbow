@@ -8,13 +8,13 @@
 #ifndef LABEL_H_
 #define LABEL_H_
 
-#include "Hardware/Platform.h"
+#include <Rainbow/Hardware/Platform.h>
 
 #if defined(ONWIRE_ANDROID)
 
 #elif defined(ONWIRE_IOS)
 
-#include "cocos2d.h"
+#include <cocos2d/cocos2d.h>
 
 typedef CCLabelBMFont RealLabel;
 

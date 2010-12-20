@@ -24,8 +24,8 @@ void Building::update(const float &p)
 {
 	assert(this->sprite != 0);
 
-	this->scale += 0.0005;             //DEBUG
-	this->sprite->scale(this->scale);  //DEBUG
+	this->scale += 0.005;             //DEBUG
+	this->sprite->rotate(this->scale);  //DEBUG
 	return;                            //DEBUG
 
 	if (p == this->progress) return;

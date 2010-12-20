@@ -6,7 +6,7 @@
 #ifndef DRAWABLE_H_
 #define DRAWABLE_H_
 
-#include "Sprite.h"
+#include <Rainbow/Sprite.h>
 
 class Drawable
 {

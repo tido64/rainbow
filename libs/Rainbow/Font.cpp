@@ -7,7 +7,7 @@
  *
  */
 
-#include "Font.h"
+#include <Rainbow/Font.h>
 
 Font::Font(const char *f, unsigned int pt) : pt(pt)
 {

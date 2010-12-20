@@ -8,9 +8,10 @@
 #ifndef CONTROLS_H_
 #define CONTROLS_H_
 
-#include "../Sprite.h"
-#include "Screen.h"
-#include "Touch.h"
+#include <Rainbow/Hardware/Screen.h>
+#include <Rainbow/Hardware/Touch.h>
+#include <Rainbow/Sprite.h>
+#include <Rainbow/Vector.h>
 
 class Controls
 {
@@ -27,9 +28,8 @@ public:
 	void touch_moved(Touch *touches, const unsigned int count);
 
 private:
-	const unsigned int scr_w, scr_h, speed;
-	unsigned int sprite_count;
-	Sprite **sprites;
+	const unsigned int scr_w, scr_h;
+	Vector<Sprite *> sprites;
 	Touches touches;
 };
 

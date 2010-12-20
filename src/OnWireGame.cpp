@@ -8,8 +8,11 @@
 
 #include "OnWireGame.h"
 
+using Ars::mt_random;
+
 OnWireGame::OnWireGame() :
-	time(0), target(time), traveled(target), texture_atlas("assets-hd.png"),
+	time(0), target(time), traveled(target),
+	texture_atlas("assets-hd.png", 11, 8),
 	line(Screen::width(), Screen::height()),
 	avatar(this->line.get_displacement_at(4)),
 	//freetype("/Users/tido/Downloads/frabk.ttf", 20)
@@ -33,6 +36,10 @@ OnWireGame::OnWireGame() :
 	s = this->texture_atlas.create_sprite(avatar_asset);
 	s->set_texture(0);
 	this->avatar.set_sprite(s);
+	this->foreground.add(s);
+
+	// Update foreground sprites
+	this->foreground.update();
 
 	// Define birds
 	//s = this->texture_atlas.create_sprite(yellow_bird_flying);
@@ -44,19 +51,22 @@ OnWireGame::OnWireGame() :
 	this->yellow_bird.set_sprite(this->texture_atlas.create_sprite(yellow_bird_flying));
 	this->elements[0] = &this->yellow_bird;
 	this->elements[1] = &this->wind;
-}
 
-OnWireGame::~OnWireGame()
-{
-	//delete reinterpret_cast<Bird *>(this->elements[0]);
-	//delete reinterpret_cast<Wind *>(this->elements[1]);
+	//this->rain.emit(100);
+	SpriteVertex svx;
+	const void *tex_offset = &svx.position;
+	const void *tes_offset = &svx.texcoord;
+	const unsigned int ptr = reinterpret_cast<unsigned int>(tes_offset) - reinterpret_cast<unsigned int> (tex_offset);
+	CCLOG(@"Pointers: %u", ptr);
+	CCLOG(@"Pointer: %u", reinterpret_cast<float *>(0) + 2);
 }
 
 void OnWireGame::draw()
 {
 	this->background.draw();
 	this->line.draw();
-	this->avatar.draw();
+	this->foreground.draw();
+	//this->rain.draw();
 }
 
 RealObject **OnWireGame::get_objects()
@@ -64,10 +74,10 @@ RealObject **OnWireGame::get_objects()
 	if (object_count == 0) return 0;
 
 	RealObject **objects = new RealObject *[object_count];
-	objects[0] = this->hud.distance->get_label();
-	objects[1] = this->hud.distance_label->get_label();
-	objects[2] = this->hud.time->get_label();
-	objects[3] = this->hud.time_label->get_label();
+	objects[0] = this->hud.distance.get_label();
+	objects[1] = this->hud.distance_label.get_label();
+	objects[2] = this->hud.time.get_label();
+	objects[3] = this->hud.time_label.get_label();
 	return objects;
 }
 
@@ -89,9 +99,9 @@ void OnWireGame::tick()
 	this->elements[1]->activate();  // DEBUG
 	return;                         // DEBUG
 
-	if (this->random->next() < 0.2)
+	if (mt_random() < 0.2)
 	{
-		unsigned int i = static_cast<unsigned int>(this->random->next() * 2);
+		unsigned int i = static_cast<unsigned int>(mt_random() * 2);
 		this->elements[i]->activate();
 	}
 }
@@ -116,7 +126,7 @@ void OnWireGame::update()
 	this->line.update();
 	this->avatar.update();
 
-	// Fire game obstacles
+	// Update game obstacles
 	for (unsigned int i = 0; i < element_count; ++i)
 	{
 		if (!this->elements[i]->active) continue;
@@ -127,7 +137,6 @@ void OnWireGame::update()
 
 	// Update sprites
 	this->background.update();
-
-	// Always re-enable client memory before drawing
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	this->foreground.update();
+	//this->rain.update();
 }

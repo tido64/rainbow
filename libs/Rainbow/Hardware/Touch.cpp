@@ -6,7 +6,7 @@
 //  Copyright 2010 Ninja Unicorn. All rights reserved.
 //
 
-#include "Touch.h"
+#include <Rainbow/Hardware/Touch.h>
 
 #ifdef ONWIRE_IOS
 

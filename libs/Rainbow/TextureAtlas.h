@@ -2,13 +2,6 @@
 
 /// GL drawing order: (1,1) -> (0,1) -> (1,0) -> (0,0)
 ///
-/// Note: Textures' dimension must be (2^n) by (2^m) for some arbitrary n and m,
-/// where n > 6 and m > 6.
-///
-/// Note: Textures are loaded upside-down, so the coordinates must be flipped.
-///
-/// \see http://iphonedevelopment.blogspot.com/2009/05/opengl-es-from-ground-up-part-6_25.html
-///
 /// Copyright 2010 Ninja Unicorn. All rights reserved.
 /// \author Tommy Nguyen
 
@@ -17,22 +10,17 @@
 
 #include <cstring>
 
-#include "Hardware/Platform.h"
+#include <Rainbow/Texture.h>
+#include <Rainbow/Types.h>
+#include <Rainbow/Vector.h>
 
-#if defined(ONWIRE_ANDROID)
-#elif defined(ONWIRE_IOS)
-#	include <OpenGLES/ES1/gl.h>
-#	include <UIKit/UIKit.h>
-#endif
-
-#include "Sprite.h"
-#include "Vector.h"
+class Sprite;
 
 class TextureAtlas
 {
 public:
-	TextureAtlas(const char *filename, const int mipmap = 0);
-	~TextureAtlas() { }
+	TextureAtlas(const char *filename, const int texture_count, const int sprite_count, const int mipmap = 0);
+	~TextureAtlas();
 
 	/// Creates a sprite.
 	/// \return A sprite object
@@ -50,17 +38,15 @@ public:
 	//void draw();
 
 	/// Returns the texture name this atlas holds.
-	inline GLuint get_name() { return this->texture; }
+	inline GLuint get_name() { return this->texture.name; }
 
 	/// Gets named texture.
 	/// \param id        The id of the texture to get
 	/// \param vertices  Interleaved vertex data array (vertex and texture coordinates)
-	void get_texture(const unsigned int id, float *vertices);
+	void get_texture(const unsigned int id, SpriteVertex *vertices);
 
 private:
-	unsigned int width;        ///< Width of the map
-	unsigned int height;       ///< Height of the map
-	GLuint texture;            ///< Stores texture name
+	Texture texture;           ///< Loaded texture
 	Vector<GLfloat> textures;  ///< Stores all textures
 	Vector<Sprite *> sprites;  ///< Stores all sprites
 };

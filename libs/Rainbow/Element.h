@@ -6,7 +6,7 @@
 #ifndef ELEMENT_H_
 #define ELEMENT_H_
 
-#include "Sprite.h"
+#include <Rainbow/Sprite.h>
 
 class Element
 {

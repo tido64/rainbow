@@ -28,7 +28,7 @@
 	[director setAnimationInterval:1.0/60];                        // 60 FPS is nice
 
 	EAGLView *glView = [EAGLView viewWithFrame:[window bounds]
-		pixelFormat:kEAGLColorFormatRGB565
+		pixelFormat:kEAGLColorFormatRGBA8
 		depthFormat:GL_DEPTH_COMPONENT24_OES
 		//preserveBackbuffer:NO
 		//sharegroup:nil
