@@ -2,7 +2,7 @@
 
 /// GL drawing order: (1,1) -> (0,1) -> (1,0) -> (0,0)
 ///
-/// Copyright 2010 Ninja Unicorn. All rights reserved.
+/// Copyright 2010 Bifrost Games. All rights reserved.
 /// \author Tommy Nguyen
 
 #ifndef TEXTUREATLAS_H_
@@ -43,11 +43,11 @@ public:
 	/// Gets named texture.
 	/// \param id        The id of the texture to get
 	/// \param vertices  Interleaved vertex data array (vertex and texture coordinates)
-	void get_texture(const unsigned int id, SpriteVertex *vertices);
+	void get_texture(unsigned int id, SpriteVertex *vertices);
 
 private:
 	Texture texture;           ///< Loaded texture
-	Vector<GLfloat> textures;  ///< Stores all textures
+	Vector<Vec2f> textures;    ///< Stores all textures
 	Vector<Sprite *> sprites;  ///< Stores all sprites
 };
 

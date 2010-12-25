@@ -1,5 +1,5 @@
-Debug
-Icon.$
+(?:Debug|Icon.|bin|obj)$
 build/ios/libs/.*
-libs/(?:freetype)
+libs/(?:Box2D|freetype)
 \.(?:DS_Store|build|dropbox|mode\dv\d|pbxuser)
+local\.properties

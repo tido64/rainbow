@@ -6,7 +6,7 @@
 /// \see http://iphonedevelopment.blogspot.com/2009/06/opengl-es-from-ground-up-part-8.html
 /// \see http://mathforum.org/mathimages/index.php/Transformation_Matrix
 ///
-/// Copyright 2010 Ninja Unicorn. All rights reserved.
+/// Copyright 2010 Bifrost Games. All rights reserved.
 /// \author Tommy Nguyen
 
 #ifndef SPRITE_H_
@@ -14,9 +14,8 @@
 
 #include <cassert>
 
-#include <OpenGLES/ES1/gl.h>
-
 #include <Rainbow/ArsMathematica.h>
+#include <Rainbow/OpenGL.h>
 #include <Rainbow/TextureAtlas.h>
 
 class Sprite

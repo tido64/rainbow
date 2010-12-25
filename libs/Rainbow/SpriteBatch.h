@@ -7,7 +7,7 @@
 /// It is also possible to instantiate a sprite batch with only one sprite. The
 /// batch will then simply act as a buffer.
 ///
-/// Copyright 2010 Ninja Unicorn. All rights reserved.
+/// Copyright 2010 Bifrost Games. All rights reserved.
 /// \author Tommy Nguyen
 
 #ifndef SPRITEBATCH_H_

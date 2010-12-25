@@ -2,14 +2,14 @@
 
 /// Displays on-screen player progress and how much time he has used.
 ///
-/// Copyright 2010 __MyCompanyName__. All rights reserved.
+/// Copyright 2010 Bifrost Games. All rights reserved.
 /// \author Tommy Nguyen
 
 #ifndef HUD_H_
 #define HUD_H_
 
 #include <Rainbow/Hardware/Screen.h>
-#include <Rainbow/Font.h>
+#include <Rainbow/FontAtlas.h>
 #include <Rainbow/Label.h>
 
 class HUD

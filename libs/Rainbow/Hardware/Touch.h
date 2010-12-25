@@ -4,7 +4,7 @@
 ///
 /// \see http://developer.apple.com/library/mac/#documentation/CoreFoundation/Conceptual/CFCollections/Tasks/creating.html
 ///
-/// Copyright 2010 Ninja Unicorn. All rights reserved.
+/// Copyright 2010 Bifrost Games. All rights reserved.
 /// \author Tommy Nguyen
 
 #ifndef TOUCH_H_
@@ -25,9 +25,9 @@ struct Touch
 
 #if defined(ONWIRE_ANDROID)
 
-#include <map>
+#include <Rainbow/HashTable.h>
 
-typedef std::map<Touch> Touches;
+typedef std::tr1::unordered_map<unsigned int, Touch> Touches;
 
 #elif defined(ONWIRE_IOS)
 

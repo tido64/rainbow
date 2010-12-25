@@ -2,7 +2,7 @@
 
 /// This class is mainly for use on iOS platforms.
 ///
-/// Copyright 2010 Ninja Unicorn. All rights reserved.
+/// Copyright 2010 Bifrost Games. All rights reserved.
 /// \author Tommy Nguyen
 
 #ifndef VECTOR_H_

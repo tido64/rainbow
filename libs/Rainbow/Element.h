@@ -1,6 +1,6 @@
 /// A generic game element.
 
-/// Copyright 2010 __MyCompanyName__. All rights reserved.
+/// Copyright 2010 Bifrost Games. All rights reserved.
 /// \author Tommy Nguyen
 
 #ifndef ELEMENT_H_

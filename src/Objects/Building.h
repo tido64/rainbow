@@ -3,7 +3,7 @@
 /// This is where our player wants to reach. Zooms in as the player gets closer
 /// to the building.
 ///
-/// Copyright 2010 __MyCompanyName__. All rights reserved.
+/// Copyright 2010 Bifrost Games. All rights reserved.
 /// \author Tommy Nguyen
 
 #ifndef BUILDING_H_

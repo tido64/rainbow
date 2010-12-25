@@ -3,7 +3,7 @@
 //  OnWire
 //
 //  Created by Tommy Nguyen on 12/7/10.
-//  Copyright 2010 Ninja Unicorn. All rights reserved.
+//  Copyright 2010 Bifrost Games. All rights reserved.
 //
 
 #include <Rainbow/Sprite.h>
@@ -38,25 +38,25 @@ unsigned int TextureAtlas::define_texture(const unsigned int x, const unsigned i
 	const float y0 = y / static_cast<float>(this->texture.height);
 	const float y1 = (y + h) / static_cast<float>(this->texture.height);
 
-	this->textures.add(x1); this->textures.add(y0);  // (1,0)
-	this->textures.add(x0); this->textures.add(y0);  // (0,0)
-	this->textures.add(x1); this->textures.add(y1);  // (1,1)
-	this->textures.add(x0); this->textures.add(y1);  // (0,1)
+	this->textures.add(Vec2f(x1, y0));
+	this->textures.add(Vec2f(x0, y0));
+	this->textures.add(Vec2f(x1, y1));
+	this->textures.add(Vec2f(x0, y1));
 
 	return i;
 }
 
-void TextureAtlas::get_texture(const unsigned int i, SpriteVertex *vertices)
+void TextureAtlas::get_texture(unsigned int i, SpriteVertex *vertices)
 {
-	vertices[0].texcoord.x = this->textures[i];
-	vertices[0].texcoord.y = this->textures[i + 1];
+	vertices[0].texcoord.x = this->textures[i].x;
+	vertices[0].texcoord.y = this->textures[i].y;
 
-	vertices[1].texcoord.x = this->textures[i + 2];
-	vertices[1].texcoord.y = this->textures[i + 3];
+	vertices[1].texcoord.x = this->textures[++i].x;
+	vertices[1].texcoord.y = this->textures[i].y;
 
-	vertices[2].texcoord.x = this->textures[i + 4];
-	vertices[2].texcoord.y = this->textures[i + 5];
+	vertices[2].texcoord.x = this->textures[++i].x;
+	vertices[2].texcoord.y = this->textures[i].y;
 
-	vertices[3].texcoord.x = this->textures[i + 6];
-	vertices[3].texcoord.y = this->textures[i + 7];
+	vertices[3].texcoord.x = this->textures[++i].x;
+	vertices[3].texcoord.y = this->textures[i].y;
 }

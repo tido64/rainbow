@@ -3,7 +3,7 @@
 //  OnWire
 //
 //  Created by Tommy Nguyen on 7/14/10.
-//  Copyright 2010 __MyCompanyName__. All rights reserved.
+//  Copyright 2010 Bifrost Games. All rights reserved.
 //
 
 #include "OnWireGame.h"
@@ -15,8 +15,8 @@ OnWireGame::OnWireGame() :
 	texture_atlas("assets-hd.png", 11, 8),
 	line(Screen::width(), Screen::height()),
 	avatar(this->line.get_displacement_at(4)),
-	//freetype("/Users/tido/Downloads/frabk.ttf", 20)
-	wind(&this->line)
+	wind(&this->line),
+	freetype("/Users/tido/Dropbox/corporate/Bifrost/OnWire/res/Fonts/dustismo.ttf", 16)
 {
 	// Define background
 	this->skyline = this->texture_atlas.create_sprite(skyline_asset);
@@ -52,13 +52,15 @@ OnWireGame::OnWireGame() :
 	this->elements[0] = &this->yellow_bird;
 	this->elements[1] = &this->wind;
 
-	//this->rain.emit(100);
+	/*
+	this->rain.emit(100);
 	SpriteVertex svx;
 	const void *tex_offset = &svx.position;
 	const void *tes_offset = &svx.texcoord;
 	const unsigned int ptr = reinterpret_cast<unsigned int>(tes_offset) - reinterpret_cast<unsigned int> (tex_offset);
 	CCLOG(@"Pointers: %u", ptr);
 	CCLOG(@"Pointer: %u", reinterpret_cast<float *>(0) + 2);
+	 */
 }
 
 void OnWireGame::draw()
@@ -67,6 +69,8 @@ void OnWireGame::draw()
 	this->line.draw();
 	this->foreground.draw();
 	//this->rain.draw();
+	//this->freetype.print("Distance", 10, 454);
+	this->freetype.print("Printed using a TrueType font :)", 15, 80);
 }
 
 RealObject **OnWireGame::get_objects()

@@ -2,7 +2,7 @@
 
 /// \see http://developer.apple.com/library/ios/#documentation/UIKit/Reference/UIAcceleration_Class/Reference/UIAcceleration.html
 ///
-/// Copyright 2010 __MyCompanyName__. All rights reserved.
+/// Copyright 2010 Bifrost Games. All rights reserved.
 /// \author Tommy Nguyen
 
 #ifndef CONTROLS_H_
@@ -20,7 +20,7 @@ public:
 	~Controls();
 
 	void accelerate(const float x, const float y);
-	void add_object(Sprite *);
+	void add_listener(Sprite *);
 
 	void touch_began(Touch *touches, const unsigned int count);
 	void touch_canceled();

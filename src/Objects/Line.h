@@ -5,13 +5,13 @@
 ///
 /// \see http://www.box2d.org/forum/viewtopic.php?f=6&t=2094
 ///
-/// Copyright 2010 __MyCompanyName__. All rights reserved.
+/// Copyright 2010 Bifrost Games. All rights reserved.
 /// \author Tommy Nguyen
 
 #ifndef LINE_H_
 #define LINE_H_
 
-#include <OpenGLES/ES1/gl.h>
+#include <Rainbow/OpenGL.h>
 #include <Rainbow/Physics.h>
 
 const unsigned int

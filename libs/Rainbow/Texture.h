@@ -7,17 +7,16 @@
 ///
 /// \see http://iphonedevelopment.blogspot.com/2009/05/opengl-es-from-ground-up-part-6_25.html
 ///
-/// Copyright 2010 Ninja Unicorn. All rights reserved.
+/// Copyright 2010 Bifrost Games. All rights reserved.
 /// \author Tommy Nguyen
 
 #ifndef TEXTURE_H_
 #define TEXTURE_H_
 
-#include <Rainbow/Hardware/Platform.h>
+#include <Rainbow/OpenGL.h>
 
 #if defined(ONWIRE_ANDROID)
 #elif defined(ONWIRE_IOS)
-#	include <OpenGLES/ES1/gl.h>
 #	include <UIKit/UIKit.h>
 #endif
 

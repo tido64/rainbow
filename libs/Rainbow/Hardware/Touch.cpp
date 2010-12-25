@@ -3,7 +3,7 @@
 //  OnWire
 //
 //  Created by Tommy Nguyen on 11/14/10.
-//  Copyright 2010 Ninja Unicorn. All rights reserved.
+//  Copyright 2010 Bifrost Games. All rights reserved.
 //
 
 #include <Rainbow/Hardware/Touch.h>

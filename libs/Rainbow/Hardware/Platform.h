@@ -1,16 +1,15 @@
 /// Platform specific definitions. Makes sure correct code is being compiled.
 
-/// Copyright 2010 __MyCompanyName__. All rights reserved.
+/// Copyright 2010 Bifrost Games. All rights reserved.
 /// \author Tommy Nguyen
 
 #ifndef PLATFORM_H_
 #define PLATFORM_H_
 
-#if defined(ANDROID)
+#if defined(__ANDROID__)
 #	define ONWIRE_ANDROID
-#elif defined(TARGET_OS_MAC) || defined(TARGET_OS_IPHONE) || defined(TARGET_IPHONE_SIMULATOR)
+#elif defined(__APPLE__)
 #	define ONWIRE_IOS
-#	define ctons_str(s) [NSString stringWithUTF8String:(s)];
 #endif
 
 #endif

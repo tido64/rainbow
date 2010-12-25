@@ -2,7 +2,7 @@
 
 /// \see http://www.cocos2d-iphone.org/forum/topic/8267
 ///
-/// Copyright 2010 __MyCompanyName__. All rights reserved.
+/// Copyright 2010 Bifrost Games. All rights reserved.
 /// \author Tommy Nguyen
 
 #ifndef LABEL_H_
@@ -15,6 +15,8 @@
 #elif defined(ONWIRE_IOS)
 
 #include <cocos2d/cocos2d.h>
+
+#define ctons_str(s) [NSString stringWithUTF8String:(s)];
 
 typedef CCLabelBMFont RealLabel;
 

@@ -3,7 +3,7 @@
 //  OnWire
 //
 //  Created by Tommy Nguyen on 6/27/10.
-//  Copyright 2010 __MyCompanyName__. All rights reserved.
+//  Copyright 2010 Bifrost Games. All rights reserved.
 //
 
 #include <Rainbow/Hardware/Controls.h>
@@ -105,9 +105,9 @@ void Controls::accelerate(const float x, const float y)
 */
 }
 
-void Controls::add_object(Sprite *sprite)
+void Controls::add_listener(Sprite *sprite)
 {
-	// add objects to array
+	this->sprites.add(sprite);
 }
 
 void Controls::touch_began(Touch *t, const unsigned int c)

@@ -3,7 +3,7 @@
 //  OnWire
 //
 //  Created by Tommy Nguyen on 6/25/10.
-//  Copyright __MyCompanyName__ 2010. All rights reserved.
+//  Copyright Bifrost Games 2010. All rights reserved.
 //
 
 #import "OnWireAppDelegate.h"

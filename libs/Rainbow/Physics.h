@@ -7,7 +7,7 @@
 /// \see http://gafferongames.com/game-physics/fix-your-timestep/
 /// \see http://www.unagames.com/blog/daniele/2010/06/fixed-time-step-implementation-box2d
 ///
-/// Copyright 2010 __MyCompanyName__. All rights reserved.
+/// Copyright 2010 Bifrost Games. All rights reserved.
 /// \author Tommy Nguyen
 
 #ifndef PHYSICS_H_

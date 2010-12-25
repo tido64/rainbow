@@ -1,6 +1,6 @@
 /// Retrieves screen size regardless of platform.
 
-/// Copyright 2010 __MyCompanyName__. All rights reserved.
+/// Copyright 2010 Bifrost Games. All rights reserved.
 /// \author Tommy Nguyen
 
 #ifndef SCREEN_H_

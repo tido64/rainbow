@@ -1,12 +1,13 @@
 /// Game object handles all in-game logic.
 
-/// Copyright 2010 __MyCompanyName__. All rights reserved.
+/// Copyright 2010 Bifrost Games. All rights reserved.
 /// \author Tommy Nguyen
 
 #ifndef ONWIREGAME_H_
 #define ONWIREGAME_H_
 
 #include <Rainbow/Hardware/Controls.h>
+#include <Rainbow/FontAtlas.h>
 #include <Rainbow/SpriteBatch.h>
 
 #include "Elements/Bird.h"
@@ -68,7 +69,7 @@ private:
 	//RainPS rain;
 	Wind wind;
 
-	//Font freetype;
+	FontAtlas freetype;
 };
 
 #endif

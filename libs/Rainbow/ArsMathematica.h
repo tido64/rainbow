@@ -3,7 +3,7 @@
 /// The reason this file can't be named Math.h is because Xcode can't
 /// distinguish between this file and another file placed elsewhere.
 ///
-/// Copyright 2010 __MyCompanyName__. All rights reserved.
+/// Copyright 2010 Bifrost Games. All rights reserved.
 /// \author Tommy Nguyen
 
 #ifndef MATH_H_

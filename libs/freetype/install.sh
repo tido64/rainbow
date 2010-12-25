@@ -16,7 +16,7 @@ echo "Disable the following files:
  - base/fttrigon.c
  - base/ftutil.c
 
-Also disable any files in cff/, pshinter/, psmodule/,raster/, sfnt/, smooth/, truetype/ except the ones that have the same name.c.
+Also disable any files in cff/, pshinter/, psnames/, raster/, sfnt/, smooth/, truetype/ except the ones that have the same name.c.
 
 Edit include/freetype/config/ftmodule.h and comment the following modules:
 
