@@ -14,7 +14,7 @@ class Wind : public Element
 public:
 	Wind(const Line *);
 	void activate();
-	bool fire();
+	void fire();
 
 private:
 	float force;

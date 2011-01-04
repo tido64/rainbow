@@ -28,7 +28,6 @@ public:
 	void touch_moved(Touch *touches, const unsigned int count);
 
 private:
-	const unsigned int scr_w, scr_h;
 	Vector<Sprite *> sprites;
 	Touches touches;
 };

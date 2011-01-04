@@ -8,7 +8,7 @@
 
 struct FontGlyph
 {
-	int advance;
+	short int advance;
 	SpriteVertex quad[4];
 };
 

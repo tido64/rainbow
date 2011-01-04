@@ -9,7 +9,7 @@
 #include "Avatar.h"
 
 Avatar::Avatar(const Vec2 *b) :
-	head_x(b->x), head_y(Screen::height() * 0.5f / PTM_RATIO), base(b)
+	head_x(b->x), head_y(Screen::Instance()->height() * 0.5f / PTM_RATIO), base(b)
 { }
 
 void Avatar::set_sprite(Sprite *s)

@@ -8,8 +8,7 @@
 
 #include <Rainbow/Hardware/Controls.h>
 
-Controls::Controls() :
-	scr_w(Screen::width()), scr_h(Screen::height())
+Controls::Controls()
 {
 #if defined(ONWIRE_ANDROID)
 

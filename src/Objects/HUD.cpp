@@ -8,70 +8,46 @@
 
 #include "HUD.h"
 
-const unsigned int HUD::label_margin  = 10;
-const unsigned int HUD::padding       = 8;
-const unsigned int HUD::total_margin  = HUD::label_margin + (HUD::padding >> 1);
-
-const float HUD::label_size           = 0.4f;
-const float HUD::progress_size        = 0.85f;
-
-const char HUD::distance_format[]     = "%um";
-const char HUD::init_time[]           = "0:00";
-const char HUD::label_font[]          = "ArialBold.fnt";
-const char HUD::progress_font[]       = "ArialBlack.fnt";
-const char HUD::time_format[]         = "%u:%.2u";
+const char HUD::distance_format[]  = "%um";
+const char HUD::time_format[]      = "%02u:%.2u";
 
 HUD::HUD() :
-	distance("9000m", HUD::progress_font),
-	distance_label("Distance", HUD::label_font),
-	time(HUD::init_time, HUD::progress_font),
-	time_label("Time", HUD::label_font)
+	arial_black("ArialBlack.ttf", 22),
+	arial_bold("ArialBold.ttf", 13)
+{ }
+
+void HUD::draw()
 {
-	// Set vertical alignment to bottom
-	this->distance.set_valign(0.0f);
-	this->distance_label.set_valign(0.0f);
-	this->time.set_valign(0.0f);
-	this->time_label.set_valign(0.0f);
-
-	// Set horizontal alignment
-	this->distance.align_left();
-	this->distance_label.align_left();
-	this->time.align_right();
-	this->time_label.align_right();
-
-	// Set font size
-	this->distance.scale(HUD::progress_size);
-	this->distance_label.scale(HUD::label_size);
-	this->time.scale(HUD::progress_size);
-	this->time_label.scale(HUD::label_size);
-
-	// Calculate label position on screen
-	const unsigned int
-		w = Screen::width(),
-		top_pos = Screen::height() - this->distance.get_height() + HUD::padding,
-		top_label_pos = Screen::height() - this->distance_label.get_height() + HUD::padding;
-
-	// Set position of labels
-	this->distance.set_position((this->distance_label.get_width() * HUD::label_size) + HUD::total_margin, top_pos);
-	this->distance_label.set_position(HUD::label_margin, top_label_pos);
-	this->time.set_position(w - (this->time_label.get_width() * HUD::label_size) - HUD::total_margin, top_pos);
-	this->time_label.set_position(w - HUD::label_margin, top_label_pos);
+	this->arial_bold.print("Distance", this->distance_label, this->top);
+	this->arial_bold.print("Time", this->time_label, this->top);
+	this->arial_black.print(this->distance_str, this->distance_label + 58, this->top - 3);
+	this->arial_black.print(this->time_str, this->time_label - 85, this->top - 3);
 }
 
-void HUD::reset(const unsigned int target)
+void HUD::reset(const unsigned int t)
 {
-	this->time.set_text(HUD::init_time);
-	this->set_distance(target);
+	this->set_distance(t);
+	this->set_time(0);
 }
 
 void HUD::set_distance(const unsigned int d)
 {
-	sprintf(this->buffer, HUD::distance_format, d);
-	this->distance.set_text(this->buffer);
+	this->distance = d;
 }
 
-void HUD::set_time(const unsigned int time)
+void HUD::set_time(const unsigned int t)
 {
-	sprintf(this->buffer, HUD::time_format, time / 60, time % 60);
-	this->time.set_text(this->buffer);
+	this->time = t;
+}
+
+void HUD::update()
+{
+	static Screen *scr = Screen::Instance();
+
+	this->top = scr->height() * 0.94375f;
+	this->distance_label = scr->width() * 0.0375f;
+	this->time_label = scr->width() * 0.8625f;
+
+	sprintf(this->distance_str, HUD::distance_format, this->distance);
+	sprintf(this->time_str, HUD::time_format, this->time / 60, this->time % 60);
 }

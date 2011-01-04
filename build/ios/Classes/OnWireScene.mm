@@ -25,6 +25,9 @@
 		self.isTouchEnabled = YES;
 		self.isAccelerometerEnabled = YES;
 
+		// Initialise screen
+		Screen::Instance()->init();
+
 		// Physics
 		physics = Physics::Instance();
 		debug_draw = new GLESDebugDraw(PTM_RATIO);
@@ -41,14 +44,6 @@
 		// Initialise game
 		game = new OnWireGame();
 		controls = new Controls();
-
-		// Add sprites to cocos2d's main loop
-		CCNode **nodes = game->get_objects();
-		const unsigned int c = game->get_object_count();
-		for (unsigned int i = 0; i < c; ++i)
-			[self addChild:nodes[i]];
-		delete[] nodes;
-
 		game->reset(9000);
 
 		[self schedule: @selector(clock) interval:1.0f];

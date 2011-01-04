@@ -38,6 +38,8 @@ public:
 		this->array[this->count++] = element;
 	}
 
+	inline T& at(const unsigned int i) { return this->array[i]; }
+
 	/// Returns the C array.
 	inline T* c_arr() { return this->array; }
 
@@ -45,7 +47,7 @@ public:
 	inline unsigned int size() { return this->count; }
 
 	/// Returns the element stored at index.
-	inline T& operator[](unsigned int i) { return this->array[i]; }
+	inline T& operator[](const unsigned int i) { return this->array[i]; }
 
 private:
 	unsigned int count;

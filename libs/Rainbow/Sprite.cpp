@@ -12,9 +12,9 @@
 using Ars::equalf;
 
 Sprite::Sprite(TextureAtlas *a, const unsigned int w, const unsigned int h) :
-	width(w), height(h), stale(0xff), texture(a->get_name()), angle(0.0f),
-	pivot(0.5f, 0.5f), scale_f(1.0f, 1.0f), vertex_array(new SpriteVertex[4]),
-	atlas(a)
+	width(w), height(h), buffered(false), stale(0xff), texture(a->get_name()),
+	angle(0.0f), pivot(0.5f, 0.5f), scale_f(1.0f, 1.0f),
+	vertex_array(new SpriteVertex[4]), atlas(a)
 {
 	this->update();
 }

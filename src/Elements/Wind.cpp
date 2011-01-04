@@ -15,11 +15,11 @@ void Wind::activate()
 	this->active = true;
 }
 
-bool Wind::fire()
+void Wind::fire()
 {
 	const unsigned int s = LINE_SEGMENTS >> 1;
 	this->line->apply_impulse(Vec2(this->force, 0.0f), s);
 	this->line->apply_impulse(Vec2(this->force, 0.0f), s + 1);
 	this->line->apply_impulse(Vec2(this->force, 0.0f), s + 2);
-	return true;
+	this->active = false;
 }

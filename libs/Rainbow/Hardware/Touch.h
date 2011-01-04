@@ -23,13 +23,7 @@ struct Touch
 		hash(h), x(x), y(x) { }
 };
 
-#if defined(ONWIRE_ANDROID)
-
-#include <Rainbow/HashTable.h>
-
-typedef std::tr1::unordered_map<unsigned int, Touch> Touches;
-
-#elif defined(ONWIRE_IOS)
+#if defined(ONWIRE_IOS)
 
 #include <cocos2d/cocos2d.h>
 
@@ -47,6 +41,12 @@ const void *touch_retain(CFAllocatorRef a, const void *ptr);
 void touch_release(CFAllocatorRef a, const void *ptr);
 Boolean touch_equal(const void *a, const void *b);
 CFStringRef touch_copy_description(const void *ptr);
+
+#else
+
+#include <Rainbow/HashTable.h>
+
+typedef std::tr1::unordered_map<unsigned int, Touch> Touches;
 
 #endif
 

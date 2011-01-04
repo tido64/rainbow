@@ -10,36 +10,29 @@
 
 #include <Rainbow/Hardware/Platform.h>
 
-#if defined(ONWIRE_ANDROID)
-
-#elif defined(ONWIRE_IOS)
-
-#include <cocos2d/cocos2d.h>
-
-#define ctons_str(s) [NSString stringWithUTF8String:(s)];
+#ifdef ONWIRE_IOS
+#	include <cocos2d/cocos2d.h>
+#	define ctons_str(s) [NSString stringWithUTF8String:(s)];
 
 typedef CCLabelBMFont RealLabel;
 
+#else
+#	include <Rainbow/FontAtlas.h>
 #endif
 
 class Label
 {
-public:
 
+#ifdef ONWIRE_IOS
+public:
 	/// Creates a label with an initial string and font.
 	/// \param str	Initial string
 	/// \param font	Font to be used with this label
 	Label(const char *str, const char *font = 0) : align(0.0f), valign(0.5f)
 	{
-	#if defined(ONWIRE_ANDROID)
-
-	#elif defined(ONWIRE_IOS)
-
 		NSString *s = ctons_str(str);
 		NSString *f = ctons_str(font);
 		this->label = [RealLabel labelWithString:s fntFile:f];
-
-	#endif
 	}
 
 	~Label() { delete this->label; }
@@ -48,54 +41,27 @@ public:
 	inline void align_center()
 	{
 		this->align = 0.5f;
-
-	#if defined(ONWIRE_ANDROID)
-
-	#elif defined(ONWIRE_IOS)
-
 		[label setAnchorPoint: ccp(this->align, this->valign)];
-
-	#endif
 	}
 
 	/// Left-justifies the label.
 	inline void align_left()
 	{
 		this->align = 0.0f;
-
-	#if defined(ONWIRE_ANDROID)
-
-	#elif defined(ONWIRE_IOS)
-
 		[label setAnchorPoint: ccp(this->align, this->valign)];
-
-	#endif
 	}
 
 	/// Right-justifies the label.
 	inline void align_right()
 	{
 		this->align = 1.0f;
-
-	#if defined(ONWIRE_ANDROID)
-
-	#elif defined(ONWIRE_IOS)
-
 		[label setAnchorPoint: ccp(this->align, this->valign)];
-
-	#endif
 	}
 
 	/// Returns the height of the label.
 	inline const unsigned int get_height()
 	{
-	#if defined(ONWIRE_ANDROID)
-
-	#elif defined(ONWIRE_IOS)
-
 		return this->label.contentSize.height;
-
-	#endif
 	}
 
 	/// Returns the label object. Used by the director.
@@ -105,13 +71,7 @@ public:
 	/// Returns the width of the label.
 	inline const unsigned int get_width()
 	{
-	#if defined(ONWIRE_ANDROID)
-
-	#elif defined(ONWIRE_IOS)
-
 		return this->label.contentSize.width;
-
-	#endif
 	}
 
 	/// Sets the position of the label.
@@ -119,40 +79,22 @@ public:
 	/// \param y The y-coordinate
 	inline void set_position(const unsigned int x, const unsigned int y)
 	{
-	#if defined(ONWIRE_ANDROID)
-
-	#elif defined(ONWIRE_IOS)
-
 		this->label.position = ccp(x, y);
-
-	#endif
 	}
 
 	/// Scales the label to given factor.
 	/// \param f Factor to scale by
 	inline void scale(const float &f)
 	{
-	#if defined(ONWIRE_ANDROID)
-
-	#elif defined(ONWIRE_IOS)
-
 		[label setScale:f];
-
-	#endif
 	}
 
 	/// Sets the text in the label.
 	/// \param str The text
 	void set_text(const char *str)
 	{
-	#if defined(ONWIRE_ANDROID)
-
-	#elif defined(ONWIRE_IOS)
-
 		NSString *s = ctons_str(str);
 		[label setString:s];
-
-	#endif
 	}
 
 	/// Sets the vertial alignment.
@@ -160,19 +102,45 @@ public:
 	inline void set_valign(const float &v)
 	{
 		this->valign = v;
-	#if defined(ONWIRE_ANDROID)
-
-	#elif defined(ONWIRE_IOS)
-
 		[label setAnchorPoint: ccp(this->align, this->valign)];
-
-	#endif
 	}
 
 private:
 	float align;       ///< Horisontal alignment
 	float valign;      ///< Vertical alignment
 	RealLabel *label;  ///< Actual label object
+
+#else
+
+public:
+	Label(const char *str = 0, const FontAtlas *f = 0) : string(str), font(f) { }
+
+	void draw()
+	{
+		if (this->string == 0) return;
+
+		this->font->print(this->string, this->position.x, this->position.y);
+	}
+
+	inline void set_font(const FontAtlas *f) { this->font = f; }
+
+	void set_position(const float x, const float y)
+	{
+		this->position.x = x;
+		this->position.y = y;
+	}
+
+	void set_text(const char *str)
+	{
+		this->string = str;
+	}
+
+private:
+	const char *string;
+	const FontAtlas *font;
+	Vec2f position;
+
+#endif
 };
 
 #endif

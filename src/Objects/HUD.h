@@ -10,12 +10,14 @@
 
 #include <Rainbow/Hardware/Screen.h>
 #include <Rainbow/FontAtlas.h>
-#include <Rainbow/Label.h>
 
 class HUD
 {
 public:
 	HUD();
+
+	/// Draws head-up display.
+	void draw();
 
 	/// Resets all values.
 	/// \param target The new target distance
@@ -29,28 +31,23 @@ public:
 	/// \param t Time spent
 	void set_time(const unsigned int t);
 
-private:
-	static const unsigned int
-		label_margin,       ///< Margin between left edge of the screen and label
-		padding,            ///< Padding between label and value
-		total_margin;       ///< Total margin preceding the value
-	static const float
-		label_size,         ///< Size of the describing label
-		progress_size;      ///< Size of the progress label
+	void update();
+
+protected:
 	static const char
 		distance_format[],  ///< Provides formatting for distance
-		init_time[],        ///< The initial time value
-		label_font[],       ///< Font name of the labels in the display
-		progress_font[],    ///< Font name of the numbers in the display
 		time_format[];      ///< Provides formatting for time
 
-	char buffer[16];        ///< Buffer for creating strings
-	Label distance;         ///< Label for distance value
-	Label distance_label;   ///< Label for distance text
-	Label time;             ///< Label for time value
-	Label time_label;       ///< Label for time text
-
-	friend class OnWireGame;
+private:
+	float distance_label;   ///< Position of distance label
+	float time_label;       ///< Position of time label
+	float top;              ///< y-component of label positions
+	unsigned int distance;  ///< Distance left
+	unsigned int time;      ///< Time elapsed
+	char distance_str[8];   ///< Distance label
+	char time_str[8];       ///< Time label
+	FontAtlas arial_black;  ///< Arial Black
+	FontAtlas arial_bold;   ///< Arial Bold
 };
 
 #endif

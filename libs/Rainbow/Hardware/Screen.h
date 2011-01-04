@@ -1,4 +1,4 @@
-/// Retrieves screen size regardless of platform.
+/// Stores screen size.
 
 /// Copyright 2010 Bifrost Games. All rights reserved.
 /// \author Tommy Nguyen
@@ -13,45 +13,39 @@
 #	include <cocos2d/cocos2d.h>
 #endif
 
-struct Screen
+class Screen
 {
-	/// Returns the width of the screen of the current device.
-	static float width()
+public:
+	static inline Screen* Instance()
 	{
-	#if defined(ONWIRE_ANDROID)
+		static Screen main;
+		return &main;
+	}
 
-		static float w = 0;
+	void init(const float width = 0, const float height = 0)
+	{
+	#if defined(ONWIRE_IOS)
 
-	#elif defined(ONWIRE_IOS)
+		this->w = [CCDirector sharedDirector].winSize.width;
+		this->h = [CCDirector sharedDirector].winSize.height;
 
-		static float w = [CCDirector sharedDirector].winSize.width;
+	#else
+
+		this->w = width;
+		this->h = height;
 
 	#endif
-
-		return w;
 	}
 
-	/// Returns the height of the screen of the current device.
-	static float height()
-	{
-	#if defined(ONWIRE_ANDROID)
+	inline float width() { return this->w; }
+	inline float height() { return this->h; }
 
-		static float h = 0;
+private:
+	float w, h;
 
-	#elif defined(ONWIRE_IOS)
-
-		static float h = [CCDirector sharedDirector].winSize.height;
-
-	#endif
-
-		return h;
-	}
-
-	/// Returns the DPI of the screen.
-	static int dpi()
-	{
-		return 326;  // iPhone 4 DPI
-	}
+	Screen() : w(0.0f), h(0.0f) { }
+	Screen(const Screen &);
+	Screen& operator=(const Screen &);
 };
 
 #endif

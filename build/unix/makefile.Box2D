@@ -1,0 +1,26 @@
+TARGET = libBox2D.a
+OBJDIR = build/unix/Box2D
+SRCDIR = libs/Box2D
+
+CPP = g++
+CFLAGS = -g0 -O2 -pipe -I libs -ftree-vectorize -march=native
+
+OBJ = $(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(wildcard $(SRCDIR)/**/*.cpp)) \
+	$(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(wildcard $(SRCDIR)/**/**/*.cpp))
+
+default: $(OBJDIR)/../$(TARGET)
+
+%.a: $(OBJ)
+	@echo Creating static Box2D library...
+	@ar rsc $@ $^
+
+$(OBJDIR)/%.o: $(SRCDIR)/%.cpp
+	@if [ ! -d $(OBJDIR)/Collision/Shapes ]; then mkdir -p $(OBJDIR)/Collision/Shapes; fi
+	@if [ ! -d $(OBJDIR)/Common ]; then mkdir -p $(OBJDIR)/Common; fi
+	@if [ ! -d $(OBJDIR)/Dynamics/Contacts ]; then mkdir -p $(OBJDIR)/Dynamics/Contacts; fi
+	@if [ ! -d $(OBJDIR)/Dynamics/Joints ]; then mkdir -p $(OBJDIR)/Dynamics/Joints; fi
+	@echo Compiling $<
+	@$(CPP) -c $< $(CFLAGS) -o $@
+
+clean:
+	rm -rf $(OBJDIR)

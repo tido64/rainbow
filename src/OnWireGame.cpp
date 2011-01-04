@@ -13,15 +13,14 @@ using Ars::mt_random;
 OnWireGame::OnWireGame() :
 	time(0), target(time), traveled(target),
 	texture_atlas("assets-hd.png", 11, 8),
-	line(Screen::width(), Screen::height()),
+	line(Screen::Instance()->width(), Screen::Instance()->height()),
 	avatar(this->line.get_displacement_at(4)),
-	wind(&this->line),
-	freetype("/Users/tido/Dropbox/corporate/Bifrost/OnWire/res/Fonts/dustismo.ttf", 16)
+	wind(&this->line)
 {
 	// Define background
 	this->skyline = this->texture_atlas.create_sprite(skyline_asset);
 	this->skyline->scale(0.5f);
-	this->skyline->set_position(Screen::width() * 0.5f, Screen::height() * 0.5f);
+	this->skyline->set_position(Screen::Instance()->width() * 0.5f, Screen::Instance()->height() * 0.5f);
 	this->background.add(this->skyline);
 
 	// Define building
@@ -69,20 +68,7 @@ void OnWireGame::draw()
 	this->line.draw();
 	this->foreground.draw();
 	//this->rain.draw();
-	//this->freetype.print("Distance", 10, 454);
-	this->freetype.print("Printed using a TrueType font :)", 15, 80);
-}
-
-RealObject **OnWireGame::get_objects()
-{
-	if (object_count == 0) return 0;
-
-	RealObject **objects = new RealObject *[object_count];
-	objects[0] = this->hud.distance.get_label();
-	objects[1] = this->hud.distance_label.get_label();
-	objects[2] = this->hud.time.get_label();
-	objects[3] = this->hud.time_label.get_label();
-	return objects;
+	this->hud.draw();
 }
 
 void OnWireGame::reset(const unsigned int t)
@@ -96,9 +82,10 @@ void OnWireGame::reset(const unsigned int t)
 
 void OnWireGame::tick()
 {
-	if (this->finished || this->time >= 5999) return;
+	if (this->finished) return;
 
-	this->hud.set_time(++this->time);
+	if (this->time < 5999)
+		this->hud.set_time(++this->time);
 
 	this->elements[1]->activate();  // DEBUG
 	return;                         // DEBUG
@@ -135,12 +122,12 @@ void OnWireGame::update()
 	{
 		if (!this->elements[i]->active) continue;
 
-		if (this->elements[i]->fire())
-			this->elements[i]->active = false;
+		this->elements[i]->fire();
 	}
 
 	// Update sprites
 	this->background.update();
 	this->foreground.update();
 	//this->rain.update();
+	this->hud.update();
 }

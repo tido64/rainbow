@@ -7,7 +7,6 @@
 #define ONWIREGAME_H_
 
 #include <Rainbow/Hardware/Controls.h>
-#include <Rainbow/FontAtlas.h>
 #include <Rainbow/SpriteBatch.h>
 
 #include "Elements/Bird.h"
@@ -15,23 +14,12 @@
 #include "Elements/Wind.h"
 #include "Objects/Assets.h"
 
-typedef CCNode RealObject;
-
 class OnWireGame
 {
 public:
-	static const unsigned int element_count = 2;
-	static const unsigned int object_count = 4;
-
 	OnWireGame();
 
 	void draw();
-
-	/// Returns the number of in-game objects.
-	inline unsigned int get_object_count() { return object_count; }
-
-	/// Returns an array of all in-game objects. Z-ordered.
-	RealObject **get_objects();
 
 	/// Returns the vertex array making up the line.
 	inline GLfloat *get_line() { return this->line.vertices; }
@@ -48,6 +36,9 @@ public:
 	void travel(const unsigned int distance);
 
 	void update();
+
+protected:
+	static const unsigned int element_count = 2;
 
 private:
 	bool finished;      ///< Whether or not the player has reached the goal
@@ -68,8 +59,6 @@ private:
 	Bird yellow_bird;
 	//RainPS rain;
 	Wind wind;
-
-	FontAtlas freetype;
 };
 
 #endif

@@ -14,10 +14,10 @@ public:
 	bool active;  ///< Whether this element is active
 
 	Element() : active(false), sprite(0) { }
-	~Element() { delete this->sprite; }
+	~Element() { }
 
 	virtual void activate() = 0;
-	virtual bool fire() = 0;
+	virtual void fire() = 0;
 
 	void set_sprite(Sprite *s)
 	{

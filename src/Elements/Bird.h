@@ -19,12 +19,10 @@ public:
 	~Bird() { }
 
 	void activate();
-	bool fire();
+	void fire();
 	void set_target(const Vec2 *target);
 
 private:
-	const float scr_w;   ///< Width of screen
-	const float scr_h;   ///< Height of screen
 	const Vec2 *target;  ///< The target landing platform
 	float exit_x;        ///< x-component of exit point
 	float exit_y;        ///< y-component of exit point

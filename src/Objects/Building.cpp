@@ -17,16 +17,16 @@ void Building::set_sprite(Sprite *s)
 	this->sprite = s;
 	this->sprite->scale(this->scale);
 	this->sprite->set_pivot(0.5f, 0.39f);
-	this->sprite->set_position(Screen::width() * 0.5f, Screen::height() * 0.5f);
+	this->sprite->set_position(Screen::Instance()->width() * 0.5f, Screen::Instance()->height() * 0.5f);
 }
 
 void Building::update(const float &p)
 {
 	assert(this->sprite != 0);
 
-	this->scale += 0.005;             //DEBUG
+	this->scale += 0.005;               //DEBUG
 	this->sprite->rotate(this->scale);  //DEBUG
-	return;                            //DEBUG
+	return;                             //DEBUG
 
 	if (p == this->progress) return;
 

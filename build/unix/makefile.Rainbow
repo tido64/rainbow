@@ -1,0 +1,22 @@
+TARGET = libRainbow.a
+OBJDIR = build/unix/Rainbow
+SRCDIR = libs/Rainbow
+
+CPP = g++
+CFLAGS = -g -O2 -Wall -pipe -I libs -I /usr/include/freetype2 -ftree-vectorize -ftree-vectorizer-verbose=6 -march=native
+
+OBJ = $(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(wildcard $(SRCDIR)/*.cpp)) \
+	$(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(wildcard $(SRCDIR)/**/*.cpp))
+
+default: $(OBJDIR)/../$(TARGET)
+
+%.a: $(OBJ)
+	ar rsc $@ $^
+
+$(OBJDIR)/%.o: $(SRCDIR)/%.cpp
+	@if [ ! -d $(OBJDIR)/Hardware ]; then mkdir -p $(OBJDIR)/Hardware; fi
+	@echo Compiling $<
+	@$(CPP) -c $< $(CFLAGS) -o $@
+
+clean:
+	rm -rf $(OBJDIR)

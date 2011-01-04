@@ -14,15 +14,14 @@ TextureAtlas::TextureAtlas(const char *filename, const int texture_count, const 
 
 TextureAtlas::~TextureAtlas()
 {
-	for (unsigned int i = 0; this->sprites.size(); ++i)
+	for (unsigned int i = 0; i < this->sprites.size(); ++i)
 		delete this->sprites[i];
 }
 
 Sprite* TextureAtlas::create_sprite(const unsigned int x, const unsigned int y, const unsigned int w, const unsigned int h)
 {
-	const unsigned int i = this->define_texture(x, y, w, h);
 	Sprite *sprite = new Sprite(this, w, h);
-	sprite->set_texture(i);
+	sprite->set_texture(this->define_texture(x, y, w, h));
 	this->sprites.add(sprite);
 	return sprite;
 }
@@ -48,6 +47,23 @@ unsigned int TextureAtlas::define_texture(const unsigned int x, const unsigned i
 
 void TextureAtlas::get_texture(unsigned int i, SpriteVertex *vertices)
 {
+	const Vec2f *texture = this->textures.c_arr() + i;
+	vertices->texcoord.x = texture->x;
+	vertices->texcoord.y = texture->y;
+
+	++texture; ++vertices;
+	vertices->texcoord.x = texture->x;
+	vertices->texcoord.y = texture->y;
+
+	++texture; ++vertices;
+	vertices->texcoord.x = texture->x;
+	vertices->texcoord.y = texture->y;
+
+	++texture; ++vertices;
+	vertices->texcoord.x = texture->x;
+	vertices->texcoord.y = texture->y;
+
+	/*
 	vertices[0].texcoord.x = this->textures[i].x;
 	vertices[0].texcoord.y = this->textures[i].y;
 
@@ -59,4 +75,5 @@ void TextureAtlas::get_texture(unsigned int i, SpriteVertex *vertices)
 
 	vertices[3].texcoord.x = this->textures[++i].x;
 	vertices[3].texcoord.y = this->textures[i].y;
+	*/
 }
