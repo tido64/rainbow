@@ -15,25 +15,36 @@
 #ifndef TEXTURE_H_
 #define TEXTURE_H_
 
+#include <Rainbow/AssetManager.h>
 #include <Rainbow/OpenGL.h>
 
-#if defined(ONWIRE_IOS)
+#if defined(RAINBOW_IOS)
 #	include <UIKit/UIKit.h>
 #else
 #	include <cstdio>
 #	include <png.h>
+
+struct png_read_struct
+{
+	unsigned int offset;
+	unsigned char *data;
+
+	png_read_struct(unsigned char *data = 0, unsigned int offset = 0) : offset(offset), data(data) { }
+};
+
 #endif
 
-struct Texture
+class Texture
 {
+public:
 	GLuint name;
-	float width, height;
+	GLsizei width, height;
 
 	Texture(const char *filename)
 	{
 		void *data = 0;
 
-		#if defined(ONWIRE_IOS)
+		#if defined(RAINBOW_IOS)
 		{
 			NSString *file = [NSString stringWithUTF8String:(filename)];
 			NSString *path = [[NSBundle mainBundle] pathForResource:[file stringByDeletingPathExtension] ofType:[file pathExtension]];
@@ -60,14 +71,18 @@ struct Texture
 		}
 		#else
 		{
-			// Load file into memory and make sure it is a PNG
-			FILE *fp = fopen(filename, "rb");
-			assert(fp != 0);
-			png_byte header[8];
-			int result = fread(header, 1, 8, fp);
-			assert(result == 8);
-			result = png_sig_cmp(header, 0, 8);
-			assert(result == 0);
+			// Load file into memory
+			png_read_struct texture;
+			texture.offset = 8;
+			AssetManager::Instance()->load(texture.data, filename);
+
+			// Check PNG signature
+			{
+				unsigned char png_sig[texture.offset];
+				memcpy(png_sig, texture.data, texture.offset);
+				int result = png_sig_cmp(png_sig, 0, texture.offset);
+				assert(result == 0);
+			}
 
 			png_structp png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, 0, 0, 0);
 			assert(png_ptr != 0);
@@ -78,59 +93,66 @@ struct Texture
 			png_infop end_info = png_create_info_struct(png_ptr);
 			assert(end_info != 0);
 
-			if (setjmp(png_jmpbuf(png_ptr)))
-			{
-				png_destroy_read_struct(&png_ptr, &info_ptr, &end_info);
-				fclose(fp);
-				throw "Could not set longjmp";
-			}
+			int result = setjmp(png_jmpbuf(png_ptr));
+			assert(result == 0);
 
 			// Texture can't be greater than what the hardware supports
 			png_set_user_limits(png_ptr, GL_MAX_TEXTURE_SIZE, GL_MAX_TEXTURE_SIZE);
 
 			// Initialise PNG reading
-			png_init_io(png_ptr, fp);
-			png_set_sig_bytes(png_ptr, 8);
+			png_set_sig_bytes(png_ptr, texture.offset);
+			png_set_read_fn(png_ptr, &texture, mem_fread);
 
 			// Retrieve PNG info
 			png_read_info(png_ptr, info_ptr);
 			assert(png_get_channels(png_ptr, info_ptr) == 4);  // Ensure we're dealing with a 4-channel PNG
-			const unsigned int width = png_get_image_width(png_ptr, info_ptr);
-			const unsigned int height = png_get_image_height(png_ptr, info_ptr);
-			assert(width > 0 && height > 0);
+			this->width = png_get_image_width(png_ptr, info_ptr);
+			this->height = png_get_image_height(png_ptr, info_ptr);
+			assert(this->width > 0 && this->height > 0);
 
+			// Allocate memory for bitmap
 			png_read_update_info(png_ptr, info_ptr);
 			const unsigned int rowbytes = png_get_rowbytes(png_ptr, info_ptr);
-			data = malloc(height * rowbytes);
+			data = malloc(this->height * rowbytes);
 			assert(data != 0);
 
-			png_bytep *row_pointers = new png_bytep[height];
+			// Allocate row pointer array
+			png_bytep *row_pointers = new png_bytep[this->height];
 			assert(row_pointers != 0);
 
-			png_byte *b = reinterpret_cast<png_byte *>(data);
+			png_byte *b = static_cast<png_byte *>(data);
 			row_pointers[0] = b;
-			for (unsigned int i = 1; i < height; ++i)
+			for (int i = 1; i < this->height; ++i)
 				row_pointers[i] = b + i * rowbytes;
 
 			png_read_image(png_ptr, row_pointers);
 
 			delete[] row_pointers;
 			png_destroy_read_struct(&png_ptr, &info_ptr, &end_info);
-			fclose(fp);
-
-			this->width = width;
-			this->height = height;
 		}
 		#endif
 
 		glGenTextures(1, &this->name);
 		glBindTexture(GL_TEXTURE_2D, this->name);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); //GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, this->width, this->height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
 
 		free(data);
 	}
+
+private:
+
+#ifdef PNG_LIBPNG_VER_STRING
+
+	static void mem_fread(png_structp png_ptr, png_bytep data, png_size_t length)
+	{
+		png_read_struct *read_struct = (png_read_struct *)png_get_io_ptr(png_ptr);
+		memcpy(data, read_struct->data + read_struct->offset, length);
+		read_struct->offset += length;
+	}
+
+#endif
 };
 
 #endif

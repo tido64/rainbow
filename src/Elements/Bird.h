@@ -7,8 +7,7 @@
 #define BIRD_H_
 
 #include <Rainbow/Hardware/Screen.h>
-#include <Rainbow/Animation.h>
-#include <Rainbow/ArsMathematica.h>
+#include <Rainbow/Algorithm.h>
 #include <Rainbow/Element.h>
 #include "../Objects/Line.h"
 

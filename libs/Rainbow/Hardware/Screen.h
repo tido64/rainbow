@@ -8,8 +8,7 @@
 
 #include <Rainbow/Hardware/Platform.h>
 
-#if defined(ONWIRE_ANDROID)
-#elif defined(ONWIRE_IOS)
+#ifdef RAINBOW_IOS
 #	include <cocos2d/cocos2d.h>
 #endif
 
@@ -24,7 +23,7 @@ public:
 
 	void init(const float width = 0, const float height = 0)
 	{
-	#if defined(ONWIRE_IOS)
+	#if defined(RAINBOW_IOS)
 
 		this->w = [CCDirector sharedDirector].winSize.width;
 		this->h = [CCDirector sharedDirector].winSize.height;

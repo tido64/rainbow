@@ -42,6 +42,7 @@
 		debug_draw->SetFlags(flags);
 
 		// Initialise game
+		AssetManager::Instance()->set_source();
 		game = new OnWireGame();
 		controls = new Controls();
 		game->reset(9000);
@@ -101,7 +102,7 @@
 -(void)ccTouchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
 	const unsigned int c = touches.count;
-	Touch *t = get_touch_set(touches);
+	Touch *t = get_touches(touches);
 	controls->touch_began(t, c);
 	delete[] t;
 }
@@ -109,7 +110,7 @@
 -(void)ccTouchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
 {
 	const unsigned int c = touches.count;
-	Touch *t = get_touch_set(touches);
+	Touch *t = get_touches(touches);
 	controls->touch_moved(t, c);
 	delete[] t;
 }
@@ -117,7 +118,7 @@
 -(void)ccTouchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
 	const unsigned int c = touches.count;
-	Touch *t = get_touch_set(touches);
+	Touch *t = get_touches(touches);
 	controls->touch_ended(t, c);
 	delete[] t;
 }

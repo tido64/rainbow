@@ -5,9 +5,9 @@
 
 #include <Rainbow/Hardware/Platform.h>
 
-#if defined(ONWIRE_ANDROID)
+#if defined(RAINBOW_ANDROID)
 #	include <GLES/gl.h>
-#elif defined(ONWIRE_IOS)
+#elif defined(RAINBOW_IOS)
 #	include <OpenGLES/ES1/gl.h>
 #else
 #	define GL_GLEXT_PROTOTYPES 1

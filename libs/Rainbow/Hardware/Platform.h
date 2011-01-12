@@ -7,9 +7,13 @@
 #define PLATFORM_H_
 
 #if defined(__ANDROID__)
-#	define ONWIRE_ANDROID
+#	define RAINBOW_ANDROID
 #elif defined(__APPLE__)
-#	define ONWIRE_IOS
+#	define RAINBOW_IOS
+#elif defined(__linux)
+#	define RAINBOW_NIX
+#elif defined(_WIN32)
+#	define RAINBOW_WIN
 #endif
 
 #endif

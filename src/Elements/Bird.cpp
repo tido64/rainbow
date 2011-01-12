@@ -8,7 +8,7 @@
 
 #include "Bird.h"
 
-using Ars::mt_random;
+using Rainbow::mt_random;
 
 Bird::Bird() : speed(1.0f / 90.0f) { }
 
@@ -64,8 +64,8 @@ void Bird::fire()
 
 	if (this->t < 1.0f)  // bird still in air
 	{
-		float x = Animation::ease_out_quad(this->spawn_x, this->landing_x, this->t);
-		float y = Animation::ease_in_cubic(this->spawn_y, this->landing_y, this->t);
+		float x = Rainbow::Animation::ease_out_quad(this->spawn_x, this->landing_x, this->t);
+		float y = Rainbow::Animation::ease_in_cubic(this->spawn_y, this->landing_y, this->t);
 
 		// wing animation?
 

@@ -54,7 +54,7 @@ public:
 
 	void draw()
 	{
-		static const void *tex_offset = reinterpret_cast<float *>(0) + 2;
+		static const void *tex_offset = static_cast<float *>(0) + 2;
 
 		// Enable all colour channels
 		glColor4ub(0xff, 0xff, 0xff, 0xff);

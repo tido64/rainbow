@@ -18,7 +18,7 @@ TextureAtlas::~TextureAtlas()
 		delete this->sprites[i];
 }
 
-Sprite* TextureAtlas::create_sprite(const unsigned int x, const unsigned int y, const unsigned int w, const unsigned int h)
+Sprite* TextureAtlas::create_sprite(const int x, const int y, const int w, const int h)
 {
 	Sprite *sprite = new Sprite(this, w, h);
 	sprite->set_texture(this->define_texture(x, y, w, h));
@@ -26,7 +26,7 @@ Sprite* TextureAtlas::create_sprite(const unsigned int x, const unsigned int y, 
 	return sprite;
 }
 
-unsigned int TextureAtlas::define_texture(const unsigned int x, const unsigned int y, const unsigned int w, const unsigned int h)
+unsigned int TextureAtlas::define_texture(const int x, const int y, const int w, const int h)
 {
 	assert(x >= 0 && (x + w) <= this->texture.width && y >= 0 && (y + h) <= this->texture.height);
 
@@ -62,18 +62,4 @@ void TextureAtlas::get_texture(unsigned int i, SpriteVertex *vertices)
 	++texture; ++vertices;
 	vertices->texcoord.x = texture->x;
 	vertices->texcoord.y = texture->y;
-
-	/*
-	vertices[0].texcoord.x = this->textures[i].x;
-	vertices[0].texcoord.y = this->textures[i].y;
-
-	vertices[1].texcoord.x = this->textures[++i].x;
-	vertices[1].texcoord.y = this->textures[i].y;
-
-	vertices[2].texcoord.x = this->textures[++i].x;
-	vertices[2].texcoord.y = this->textures[i].y;
-
-	vertices[3].texcoord.x = this->textures[++i].x;
-	vertices[3].texcoord.y = this->textures[i].y;
-	*/
 }

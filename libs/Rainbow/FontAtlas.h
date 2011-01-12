@@ -16,9 +16,12 @@
 #define FONTATLAS_H_
 
 #include <cassert>
+
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include FT_GLYPH_H
+
+#include <Rainbow/AssetManager.h>
 #include <Rainbow/FontGlyph.h>
 #include <Rainbow/OpenGL.h>
 

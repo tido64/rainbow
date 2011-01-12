@@ -8,7 +8,7 @@
 
 #include "OnWireGame.h"
 
-using Ars::mt_random;
+using Rainbow::mt_random;
 
 OnWireGame::OnWireGame() :
 	time(0), target(time), traveled(target),
@@ -60,6 +60,8 @@ OnWireGame::OnWireGame() :
 	CCLOG(@"Pointers: %u", ptr);
 	CCLOG(@"Pointer: %u", reinterpret_cast<float *>(0) + 2);
 	 */
+
+	AssetManager::Instance()->close();
 }
 
 void OnWireGame::draw()

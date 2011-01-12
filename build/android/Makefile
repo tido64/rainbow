@@ -2,10 +2,11 @@ NAME = OnWire
 PACKAGE = com.bifrostgames.onwire
 TARGET = $(NAME)-debug
 BINDIR = bin
+APK = $(BINDIR)/$(TARGET).apk
 
 ANT = ant debug
 
-default: $(BINDIR)/$(TARGET).apk
+default: $(APK)
 
 %.apk:
 	@ndk-build
@@ -14,7 +15,7 @@ default: $(BINDIR)/$(TARGET).apk
 create:
 	@android create project --name $(NAME) --target 1 --path . --package $(PACKAGE) --activity $(NAME)
 
-install: $(EXEC)
+install: $(APK)
 	@adb install $<
 
 uninstall:
@@ -25,4 +26,4 @@ update: clean
 
 clean:
 	@ndk-build clean
-	@rm -fr $(BINDIR)/* gen/
+	@ant clean

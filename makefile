@@ -4,9 +4,9 @@ OBJDIR = build/unix
 SRCDIR = src
 
 CPP = g++
-CFLAGS = -g -O2 -Wall -pipe -I libs -I /usr/include/freetype2 -ftree-vectorize -ftree-vectorizer-verbose=6 -march=native
-LDFLAGS = -lGL -lSDL -lfreetype -lpng
-#STATIC_LIBS = /usr/lib/libfreetype.a /usr/lib/libpng.a /usr/lib/libz.a
+CFLAGS = -g0 -O2 -Wall -pipe -I ../lib -I libs -I /usr/include/freetype2 -ftree-vectorize -ftree-vectorizer-verbose=0 -march=native
+LDFLAGS = -lGL -lSDL -lfreetype -lpng -lzip
+#STATIC_LIBS = /usr/lib/libfreetype.a /usr/lib/libpng.a /usr/lib/libzip.a /usr/lib/libz.a
 
 EXEC = $(BINDIR)/$(TARGET)
 OBJ = $(OBJDIR)/OnWireSDL.o \

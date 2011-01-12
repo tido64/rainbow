@@ -13,19 +13,15 @@ FontAtlas::FontAtlas(const char *f, const unsigned int pt) : pt(pt)
 {
 	assert(f != 0);
 
-	#if defined(ONWIRE_IOS)
-	{
-		NSString *file = [NSString stringWithUTF8String:(f)];
-		NSString *path = [[NSBundle mainBundle] pathForResource:[file stringByDeletingPathExtension] ofType:[file pathExtension]];
-		f = [path UTF8String];
-	}
-	#endif
+	unsigned char *font_data = 0;
+	const unsigned int font_sz = AssetManager::Instance()->load(font_data, f);
 
 	FT_Library lib;
 	int ft_error = FT_Init_FreeType(&lib);
+	assert(ft_error == 0);
 
 	FT_Face face;
-	ft_error = FT_New_Face(lib, f, 0, &face);
+	ft_error = FT_New_Memory_Face(lib, font_data, font_sz, 0, &face);
 	assert(ft_error == 0);
 	FT_Set_Char_Size(face, this->pt << 6, this->pt << 6, 96, 96);
 
@@ -111,6 +107,7 @@ FontAtlas::FontAtlas(const char *f, const unsigned int pt) : pt(pt)
 
 	FT_Done_Face(face);
 	FT_Done_FreeType(lib);
+	free(font_data);
 }
 
 void FontAtlas::print(const char *text, const float x, const float y) const

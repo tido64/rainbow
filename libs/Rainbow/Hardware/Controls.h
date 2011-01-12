@@ -16,16 +16,16 @@
 class Controls
 {
 public:
-	Controls();
-	~Controls();
+	//Controls();
+	//~Controls();
 
 	void accelerate(const float x, const float y);
 	void add_listener(Sprite *);
 
-	void touch_began(Touch *touches, const unsigned int count);
+	void touch_began(const Touch *touches, const unsigned int count);
 	void touch_canceled();
-	void touch_ended(Touch *touches, const unsigned int count);
-	void touch_moved(Touch *touches, const unsigned int count);
+	void touch_ended(const Touch *touches, const unsigned int count);
+	void touch_moved(const Touch *touches, const unsigned int count);
 
 private:
 	Vector<Sprite *> sprites;

@@ -1,8 +1,6 @@
-/// Data structure for keeping track of touches.
+/// Data structures for keeping track of touches.
 
-/// iOS: Defines custom CFDictionaryKeyCallBacks and CFDictionaryValueCallBacks.
-///
-/// \see http://developer.apple.com/library/mac/#documentation/CoreFoundation/Conceptual/CFCollections/Tasks/creating.html
+/// \see http://www.boost.org/doc/libs/1_45_0/doc/html/unordered.html
 ///
 /// Copyright 2010 Bifrost Games. All rights reserved.
 /// \author Tommy Nguyen
@@ -10,44 +8,87 @@
 #ifndef TOUCH_H_
 #define TOUCH_H_
 
-#include <Rainbow/Hardware/Platform.h>
+#include <functional>
 
-struct Touch
+#include <boost/unordered_set.hpp>
+#include <Rainbow/Hardware/Screen.h>
+
+#if defined(RAINBOW_IOS)
+#	include <UIKit/UITouch.h>
+#endif
+
+namespace Rainbow
 {
-	unsigned int hash;  ///< Unique hash value that distinguishes this touch from another
-	float x;            ///< x-component of the touch location
-	float y;            ///< y-component of the touch location
+	struct Touch
+	{
+		int x;              ///< x-component of the touch location
+		int y;              ///< y-component of the touch location
+		unsigned int hash;  ///< Unique hash value that distinguishes a touch from another
 
-	Touch() : hash(0), x(0.0f), y(0.0f) { }
-	Touch(const unsigned int h, const float &x, const float &y) :
-		hash(h), x(x), y(x) { }
-};
+		Touch() : x(0.0f), y(0.0f), hash(0) { }
+		Touch(const Touch *t) : x(t->x), y(t->y), hash(t->hash) { }
 
-#if defined(ONWIRE_IOS)
+	#if defined(RAINBOW_IOS)
 
-#include <cocos2d/cocos2d.h>
+		Touch(const UITouch *t) : hash(t.hash)
+		{
+			CGPoint p = [t locationInView:[t view]];
+			this->x = p.x;
+			this->y = Screen::Instance()->height() - p.y;
+		}
 
-typedef CFMutableDictionaryRef Touches;
+		Touch& operator=(const UITouch *t)
+		{
+			CGPoint p = [t locationInView:[t view]];
+			this->x = p.x;
+			this->y = Screen::Instance()->height() - p.y;
+			this->hash = t.hash;
+			return *this;
+		}
 
-Touch *get_touch_set(NSSet *touches);
+	#endif
+	};
 
-extern const CFDictionaryKeyCallBacks kHashDictionaryKeyCallBacks;
-Boolean uint_equal(const void *a, const void *b);
-CFHashCode uint_hash(const void *ptr);
-CFStringRef uint_copy_description(const void *ptr);
+#if defined(RAINBOW_IOS)
 
-extern const CFDictionaryValueCallBacks kTouchDictionaryValueCallBacks;
-const void *touch_retain(CFAllocatorRef a, const void *ptr);
-void touch_release(CFAllocatorRef a, const void *ptr);
-Boolean touch_equal(const void *a, const void *b);
-CFStringRef touch_copy_description(const void *ptr);
-
-#else
-
-#include <Rainbow/HashTable.h>
-
-typedef std::tr1::unordered_map<unsigned int, Touch> Touches;
+	/// Only available on iOS. Used for converting an NSSet to a C array.
+	struct TouchArray : std::unary_function<NSSet *&, Touch*>
+	{
+		Touch* operator()(NSSet *&touches) const
+		{
+			Touch *t = new Touch[touches.count];
+			Touch *t_iter = t;
+			for (UITouch *touch in touches)
+			{
+				*t_iter = touch;
+				++t_iter;
+			}
+			return t;
+		}
+	};
 
 #endif
+
+	/// Determines whether two touches are from the same finger.
+	struct TouchEqual : std::binary_function<Touch, Touch, bool>
+	{
+		bool operator()(const Touch &a, const Touch &b) const
+		{
+			return a.hash == b.hash;
+		}
+	};
+
+	/// Touches already have a hash value assigned to them that we can use directly.
+	struct TouchHasher : std::unary_function<Touch, unsigned int>
+	{
+		unsigned int operator()(const Touch &t) const
+		{
+			return t.hash;
+		}
+	};
+}
+
+typedef Rainbow::Touch Touch;
+typedef boost::unordered_set<Touch, Rainbow::TouchHasher, Rainbow::TouchEqual> Touches;
 
 #endif

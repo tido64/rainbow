@@ -8,30 +8,6 @@
 
 #include <Rainbow/Hardware/Controls.h>
 
-Controls::Controls()
-{
-#if defined(ONWIRE_ANDROID)
-
-	// controls
-
-#elif defined(ONWIRE_IOS)
-
-	touches = CFDictionaryCreateMutable(0, 3, &kHashDictionaryKeyCallBacks, &kTouchDictionaryValueCallBacks);
-
-#endif
-}
-
-Controls::~Controls()
-{
-#if defined(ONWIRE_ANDROID)
-
-#elif defined(ONWIRE_IOS)
-
-	CFRelease(touches);
-
-#endif
-}
-
 void Controls::accelerate(const float x, const float y)
 {
 	if (this->sprites.size() == 0) return;
@@ -109,65 +85,38 @@ void Controls::add_listener(Sprite *sprite)
 	this->sprites.add(sprite);
 }
 
-void Controls::touch_began(Touch *t, const unsigned int c)
+void Controls::touch_began(const Touch *touches, const unsigned int count)
 {
-#if defined(ONWIRE_ANDROID)
-
-#elif defined(ONWIRE_IOS)
-
-	for (unsigned int i = 0; i < c; ++i)
+	for (unsigned int i = 0; i < count; ++i)
 	{
-		CFDictionarySetValue(touches, reinterpret_cast<void *>(t[i].hash), t + i);
-		CCLOG(@"Touch with id #%i detected at (%i,%i)", t[i].hash, static_cast<int>(t[i].x), static_cast<int>(t[i].y));
+		this->touches.insert(*touches);
+		CCLOG(@"Touch with id #%i detected at (%i,%i)", touches->hash, touches->x, touches->y);
+		++touches;
 	}
-	CCLOG(@"Hash count: %d", CFDictionaryGetCount(touches));
-
-#endif
+	CCLOG(@"Touch count: %u", this->touches.size());
 }
 
 void Controls::touch_canceled()
 {
-#if defined(ONWIRE_ANDROID)
-
-#elif defined(ONWIRE_IOS)
-
-	CFDictionaryRemoveAllValues(touches);
-	CCLOG(@"Stop!");
-
-#endif
+	this->touches.clear();
 }
 
-void Controls::touch_ended(Touch *t, const unsigned int c)
+void Controls::touch_ended(const Touch *touches, const unsigned int count)
 {
-#if defined(ONWIRE_ANDROID)
-
-#elif defined(ONWIRE_IOS)
-
-	for (unsigned int i = 0; i < c; ++i)
+	for (unsigned int i = 0; i < count; ++i)
 	{
-		CFDictionaryRemoveValue(touches, reinterpret_cast<void *>(t[i].hash));
-		CCLOG(@"Finger with id #%i lifted at (%i,%i)", t[i].hash, static_cast<int>(t[i].x), static_cast<int>(t[i].y));
+		this->touches.erase(this->touches.find(*touches));
+		++touches;
 	}
-	CCLOG(@"Hash count: %d", CFDictionaryGetCount(touches));
-
-#endif
+	CCLOG(@"Touch count: %u", this->touches.size());
 }
 
-void Controls::touch_moved(Touch *t, const unsigned int c)
+void Controls::touch_moved(const Touch *touches, const unsigned int count)
 {
-#if defined(ONWIRE_ANDROID)
-
-#elif defined(ONWIRE_IOS)
-
-	Touch *curr;
-	for (unsigned int i = 0; i < c; ++i)
+	for (unsigned int i = 0; i < count; ++i)
 	{
-		curr = t + i;
-		const Touch *orig = static_cast<const Touch *>(CFDictionaryGetValue(touches, reinterpret_cast<void *>(curr->hash)));
-		CCLOG(@"Touch with id #%i moved from (%i,%i) to (%i,%i)", curr->hash,
-			static_cast<int>(orig->x), static_cast<int>(orig->y),
-			static_cast<int>(curr->x), static_cast<int>(curr->y));
+		//const Touch &t = *this->touches.find(*touches);
+		CCLOG(@"Touch with id #%i moved to (%i,%i)", touches->hash, touches->x, touches->y);
+		++touches;
 	}
-
-#endif
 }

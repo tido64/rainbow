@@ -24,7 +24,7 @@ public:
 
 	/// Creates a sprite.
 	/// \return A sprite object
-	Sprite* create_sprite(const unsigned int x, const unsigned int y, const unsigned int width, const unsigned int height);
+	Sprite* create_sprite(const int x, const int y, const int width, const int height);
 
 	/// Defines a texture from the map.
 	/// \param x       x-component of texture location
@@ -32,7 +32,7 @@ public:
 	/// \param width   Width of the texture
 	/// \param height  Height of the texture
 	/// \return An id unique to the texture
-	unsigned int define_texture(const unsigned int x, const unsigned int y, const unsigned int width, const unsigned int height);
+	unsigned int define_texture(const int x, const int y, const int width, const int height);
 
 	/// Draws all sprites created from the texture atlas.
 	//void draw();

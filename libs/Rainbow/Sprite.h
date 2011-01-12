@@ -14,7 +14,7 @@
 
 #include <cassert>
 
-#include <Rainbow/ArsMathematica.h>
+#include <Rainbow/Algorithm.h>
 #include <Rainbow/OpenGL.h>
 #include <Rainbow/TextureAtlas.h>
 

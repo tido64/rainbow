@@ -9,7 +9,7 @@
 
 #include <Rainbow/Sprite.h>
 
-using Ars::equalf;
+using Rainbow::equalf;
 
 Sprite::Sprite(TextureAtlas *a, const unsigned int w, const unsigned int h) :
 	width(w), height(h), buffered(false), stale(0xff), texture(a->get_name()),

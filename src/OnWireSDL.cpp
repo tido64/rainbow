@@ -58,6 +58,7 @@ int main()
 	init_GL();
 	resize(screen_width, screen_height);
 
+	AssetManager::Instance()->set_source("assets.bfz");
 	OnWireGame the_game;
 	the_game.reset(1337);
 	SDL_Thread *clock_thread = SDL_CreateThread(tick, &the_game);
