@@ -45,6 +45,7 @@
 		191EE2CF12C4F5E000DA2B46 /* smooth.c in Sources */ = {isa = PBXBuildFile; fileRef = 191EE27B12C4F5E000DA2B46 /* smooth.c */; };
 		191EE2D012C4F5E000DA2B46 /* truetype.c in Sources */ = {isa = PBXBuildFile; fileRef = 191EE28012C4F5E000DA2B46 /* truetype.c */; };
 		191EE34712C4FF2000DA2B46 /* FontAtlas.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 191EE34512C4FF2000DA2B46 /* FontAtlas.cpp */; };
+		1946EC7712E5D7DC00AA1D73 /* Rain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1946EC7512E5D7DC00AA1D73 /* Rain.cpp */; };
 		1970470D12BFC4A600E0E9C2 /* Controls.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 197046AF12BFC4A600E0E9C2 /* Controls.cpp */; };
 		1970470F12BFC4A600E0E9C2 /* Physics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 197046B712BFC4A600E0E9C2 /* Physics.cpp */; };
 		1970471012BFC4A600E0E9C2 /* Sprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 197046BE12BFC4A600E0E9C2 /* Sprite.cpp */; };
@@ -601,15 +602,21 @@
 		191EE34512C4FF2000DA2B46 /* FontAtlas.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = FontAtlas.cpp; sourceTree = "<group>"; };
 		191EE34612C4FF2000DA2B46 /* FontAtlas.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FontAtlas.h; sourceTree = "<group>"; };
 		191EE37F12C6046100DA2B46 /* FontGlyph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FontGlyph.h; sourceTree = "<group>"; };
+		1946E6F012E05ACD00AA1D73 /* Gestures.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Gestures.h; sourceTree = "<group>"; };
+		1946E7AA12E0698A00AA1D73 /* Touchable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Touchable.h; sourceTree = "<group>"; };
+		1946E94912E1CC4700AA1D73 /* Touch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Touch.h; sourceTree = "<group>"; };
+		1946E97612E3768500AA1D73 /* OnWireState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OnWireState.h; sourceTree = "<group>"; };
+		1946EB7D12E3B72B00AA1D73 /* Animation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Animation.h; sourceTree = "<group>"; };
+		1946EC7112E5D1F500AA1D73 /* ParticleSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParticleSystem.h; sourceTree = "<group>"; };
+		1946EC7212E5D1F500AA1D73 /* PointSprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PointSprite.h; sourceTree = "<group>"; };
+		1946EC7512E5D7DC00AA1D73 /* Rain.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; name = Rain.cpp; path = ../../../../../Corporate/Bifrost/OnWire/libs/Rainbow/ParticleSystem/Rain.cpp; sourceTree = SOURCE_ROOT; };
+		1946EC7612E5D7DC00AA1D73 /* Rain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Rain.h; path = ../../../../../Corporate/Bifrost/OnWire/libs/Rainbow/ParticleSystem/Rain.h; sourceTree = SOURCE_ROOT; };
 		194870D912DCE3F200DE6F3B /* AssetManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AssetManager.h; sourceTree = "<group>"; };
 		197046AA12BFC4A600E0E9C2 /* Drawable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Drawable.h; sourceTree = "<group>"; };
-		197046AB12BFC4A600E0E9C2 /* Element.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Element.h; sourceTree = "<group>"; };
 		197046AF12BFC4A600E0E9C2 /* Controls.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = Controls.cpp; sourceTree = "<group>"; };
 		197046B012BFC4A600E0E9C2 /* Controls.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Controls.h; sourceTree = "<group>"; };
 		197046B112BFC4A600E0E9C2 /* Platform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Platform.h; sourceTree = "<group>"; };
 		197046B212BFC4A600E0E9C2 /* Screen.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Screen.h; sourceTree = "<group>"; };
-		197046B412BFC4A600E0E9C2 /* Touch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Touch.h; sourceTree = "<group>"; };
-		197046B612BFC4A600E0E9C2 /* ParticleSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParticleSystem.h; sourceTree = "<group>"; };
 		197046B712BFC4A600E0E9C2 /* Physics.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Physics.cpp; sourceTree = "<group>"; };
 		197046B812BFC4A600E0E9C2 /* Physics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Physics.h; sourceTree = "<group>"; };
 		197046BA12BFC4A600E0E9C2 /* dSFMT-params.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "dSFMT-params.h"; sourceTree = "<group>"; };
@@ -1011,6 +1018,7 @@
 				1970478B12BFD5A500E0E9C2 /* OnWireAppDelegate.mm */,
 				1970478C12BFD5A500E0E9C2 /* OnWireScene.h */,
 				1970478D12BFD5A500E0E9C2 /* OnWireScene.mm */,
+				1946E97612E3768500AA1D73 /* OnWireState.h */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -1349,6 +1357,26 @@
 			path = truetype;
 			sourceTree = "<group>";
 		};
+		1946E6EF12E05ACD00AA1D73 /* Input */ = {
+			isa = PBXGroup;
+			children = (
+				1946E6F012E05ACD00AA1D73 /* Gestures.h */,
+				1946E94912E1CC4700AA1D73 /* Touch.h */,
+			);
+			path = Input;
+			sourceTree = "<group>";
+		};
+		1946EC6F12E5D1F500AA1D73 /* ParticleSystem */ = {
+			isa = PBXGroup;
+			children = (
+				1946EC7112E5D1F500AA1D73 /* ParticleSystem.h */,
+				1946EC7212E5D1F500AA1D73 /* PointSprite.h */,
+				1946EC7512E5D7DC00AA1D73 /* Rain.cpp */,
+				1946EC7612E5D7DC00AA1D73 /* Rain.h */,
+			);
+			path = ParticleSystem;
+			sourceTree = "<group>";
+		};
 		197045B312BFC48100E0E9C2 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
@@ -1362,16 +1390,17 @@
 			isa = PBXGroup;
 			children = (
 				197046AE12BFC4A600E0E9C2 /* Hardware */,
+				1946E6EF12E05ACD00AA1D73 /* Input */,
+				1946EC6F12E5D1F500AA1D73 /* ParticleSystem */,
 				197046B912BFC4A600E0E9C2 /* Random */,
 				19FFBBF712DE5F7C00C89254 /* Algorithm.h */,
+				1946EB7D12E3B72B00AA1D73 /* Animation.h */,
 				194870D912DCE3F200DE6F3B /* AssetManager.h */,
 				197046AA12BFC4A600E0E9C2 /* Drawable.h */,
-				197046AB12BFC4A600E0E9C2 /* Element.h */,
 				191EE34512C4FF2000DA2B46 /* FontAtlas.cpp */,
 				191EE34612C4FF2000DA2B46 /* FontAtlas.h */,
 				191EE37F12C6046100DA2B46 /* FontGlyph.h */,
 				191EE0EB12C4C7D800DA2B46 /* OpenGL.h */,
-				197046B612BFC4A600E0E9C2 /* ParticleSystem.h */,
 				197046B712BFC4A600E0E9C2 /* Physics.cpp */,
 				197046B812BFC4A600E0E9C2 /* Physics.h */,
 				197046BE12BFC4A600E0E9C2 /* Sprite.cpp */,
@@ -1381,6 +1410,7 @@
 				197046C212BFC4A600E0E9C2 /* Texture.h */,
 				197046C312BFC4A600E0E9C2 /* TextureAtlas.cpp */,
 				197046C412BFC4A600E0E9C2 /* TextureAtlas.h */,
+				1946E7AA12E0698A00AA1D73 /* Touchable.h */,
 				197046C512BFC4A600E0E9C2 /* Types.h */,
 				197046C612BFC4A600E0E9C2 /* Vector.h */,
 			);
@@ -1395,7 +1425,6 @@
 				197046B012BFC4A600E0E9C2 /* Controls.h */,
 				197046B112BFC4A600E0E9C2 /* Platform.h */,
 				197046B212BFC4A600E0E9C2 /* Screen.h */,
-				197046B412BFC4A600E0E9C2 /* Touch.h */,
 			);
 			path = Hardware;
 			sourceTree = "<group>";
@@ -2209,6 +2238,7 @@
 				191EE2D012C4F5E000DA2B46 /* truetype.c in Sources */,
 				191EE34712C4FF2000DA2B46 /* FontAtlas.cpp in Sources */,
 				19B56D8912CBCAA700924439 /* GLES-Render.mm in Sources */,
+				1946EC7712E5D7DC00AA1D73 /* Rain.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

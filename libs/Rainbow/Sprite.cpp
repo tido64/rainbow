@@ -11,10 +11,10 @@
 
 using Rainbow::equalf;
 
-Sprite::Sprite(TextureAtlas *a, const unsigned int w, const unsigned int h) :
-	width(w), height(h), buffered(false), stale(0xff), texture(a->get_name()),
-	angle(0.0f), pivot(0.5f, 0.5f), scale_f(1.0f, 1.0f),
-	vertex_array(new SpriteVertex[4]), atlas(a)
+Sprite::Sprite(const unsigned int w, const unsigned int h, TextureAtlas *p) :
+	width(w), height(h), buffered(false), stale(0xff), angle(0.0f),
+	texture(p->get_name()), vertex_array(new SpriteVertex[4]), parent(p),
+	pivot(0.5f, 0.5f), scale_f(1.0f, 1.0f)
 {
 	this->update();
 }
@@ -25,6 +25,7 @@ Sprite::~Sprite()
 		delete[] this->vertex_array;
 }
 
+#ifdef ENABLE_VERTEX_ARRAY_DRAW
 void Sprite::draw()
 {
 	// Enable all colour channels on texture
@@ -35,6 +36,7 @@ void Sprite::draw()
 	glTexCoordPointer(2, GL_FLOAT, sizeof(SpriteVertex), &this->vertex_array[0].texcoord);
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 }
+#endif
 
 void Sprite::rotate(const float r)
 {
@@ -55,13 +57,14 @@ void Sprite::scale(const float f)
 	this->stale |= stale_scale;
 }
 
-void Sprite::scale(const float fx, const float fy)
-{
-	assert(fx > 0.0f && fy > 0.0f);
-	if (equalf(fx, this->scale_f.x) && equalf(fy, this->scale_f.y)) return;
 
-	this->scale_f.x = fx;
-	this->scale_f.y = fy;
+void Sprite::scale(const Vec2f &f)
+{
+	assert(f.x > 0.0f && f.y > 0.0f);
+	if (equalf(f.x, this->scale_f.x) && equalf(f.y, this->scale_f.y)) return;
+
+	this->scale_f.x = f.x;
+	this->scale_f.y = f.y;
 
 	this->stale |= stale_scale;
 }
@@ -85,6 +88,17 @@ void Sprite::set_position(const float x, const float y)
 	this->position_d.y = y - this->position.y;
 	this->position.x = x;
 	this->position.y = y;
+
+	this->stale |= stale_position;
+}
+
+void Sprite::set_position(const Vec2f &p)
+{
+	if (equalf(p.x, this->position.x) && equalf(p.y, this->position.y)) return;
+
+	this->position_d.x = p.x - this->position.x;
+	this->position_d.y = p.y - this->position.y;
+	this->position = p;
 
 	this->stale |= stale_position;
 }
@@ -114,8 +128,8 @@ void Sprite::update()
 		{
 			if (this->stale & stale_angle)
 			{
-				this->cos_r = cos(-this->angle);
-				this->sin_r = sin(-this->angle);
+				this->cos_r = cosf(-this->angle);
+				this->sin_r = sinf(-this->angle);
 			}
 
 			const float sx_cos_r = this->scale_f.x * this->cos_r;

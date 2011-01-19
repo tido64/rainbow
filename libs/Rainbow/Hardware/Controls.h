@@ -9,18 +9,26 @@
 #define CONTROLS_H_
 
 #include <Rainbow/Hardware/Screen.h>
-#include <Rainbow/Hardware/Touch.h>
-#include <Rainbow/Sprite.h>
+#include <Rainbow/Input/Touch.h>
+#include <Rainbow/Touchable.h>
 #include <Rainbow/Vector.h>
 
 class Controls
 {
 public:
-	//Controls();
-	//~Controls();
+	static inline Controls* Instance()
+	{
+		static Controls c;
+		return &c;
+	}
 
 	void accelerate(const float x, const float y);
-	void add_listener(Sprite *);
+	void add_touchable(Touchable *);
+
+	const Touches* get_touches() const
+	{
+		return &touches;
+	}
 
 	void touch_began(const Touch *touches, const unsigned int count);
 	void touch_canceled();
@@ -28,8 +36,12 @@ public:
 	void touch_moved(const Touch *touches, const unsigned int count);
 
 private:
-	Vector<Sprite *> sprites;
+	Vector<Touchable *> touchables;
 	Touches touches;
+
+	Controls() { }
+	Controls(const Controls &);
+	Controls& operator=(const Controls &);
 };
 
 #endif

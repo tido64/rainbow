@@ -53,7 +53,6 @@ private:
 	Body *end;                        ///< Anchor at the end of the line
 	Body *segment[LINE_SEGMENTS];     ///< Actual line segments
 	Body *start;                      ///< Anchor at the start of the line
-	Physics *physics;                 ///< Physics engine pointer
 
 	friend class OnWireGame;
 };

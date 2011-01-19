@@ -13,7 +13,6 @@
 	Controls *controls;
 	GLESDebugDraw *debug_draw;
 	OnWireGame *game;
-	Physics *physics;
 	Rainbow::TouchArray get_touches;
 }
 

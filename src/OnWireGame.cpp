@@ -11,19 +11,19 @@
 using Rainbow::mt_random;
 
 OnWireGame::OnWireGame() :
-	time(0), target(time), traveled(target),
 	texture_atlas("assets-hd.png", 11, 8),
-	line(Screen::Instance()->width(), Screen::Instance()->height()),
+	line(Screen::Instance().width(), Screen::Instance().height()),
 	avatar(this->line.get_displacement_at(4)),
 	wind(&this->line)
 {
 	// Define background
 	this->skyline = this->texture_atlas.create_sprite(skyline_asset);
 	this->skyline->scale(0.5f);
-	this->skyline->set_position(Screen::Instance()->width() * 0.5f, Screen::Instance()->height() * 0.5f);
+	this->skyline->set_position(Screen::Instance().width() * 0.5f, Screen::Instance().height() * 0.5f);
 	this->background.add(this->skyline);
 
 	// Define building
+	Controls::Instance()->add_touchable(&this->building);
 	Sprite *s = this->texture_atlas.create_sprite(building_asset);
 	this->building.set_sprite(s);
 	this->background.add(s);
@@ -48,18 +48,19 @@ OnWireGame::OnWireGame() :
 	//s->set_position(100, 240);
 
 	this->yellow_bird.set_sprite(this->texture_atlas.create_sprite(yellow_bird_flying));
-	this->elements[0] = &this->yellow_bird;
-	this->elements[1] = &this->wind;
+	this->clips[0] = &this->yellow_bird;
+	this->clips[1] = &this->wind;
 
-	/*
 	this->rain.emit(100);
+	this->rain.update();
+	/*
 	SpriteVertex svx;
 	const void *tex_offset = &svx.position;
 	const void *tes_offset = &svx.texcoord;
 	const unsigned int ptr = reinterpret_cast<unsigned int>(tes_offset) - reinterpret_cast<unsigned int> (tex_offset);
 	CCLOG(@"Pointers: %u", ptr);
 	CCLOG(@"Pointer: %u", reinterpret_cast<float *>(0) + 2);
-	 */
+	*/
 
 	AssetManager::Instance()->close();
 }
@@ -69,67 +70,64 @@ void OnWireGame::draw()
 	this->background.draw();
 	this->line.draw();
 	this->foreground.draw();
-	//this->rain.draw();
+	this->rain.draw();
 	this->hud.draw();
 }
 
 void OnWireGame::reset(const unsigned int t)
 {
-	this->finished = false;
-	this->target = t;
-	this->time = 0;
-	this->traveled = 0;
-	this->hud.reset(this->target);
+	OnWireState::Instance().reset(t);
+	this->hud.reset(t);
 }
 
 void OnWireGame::tick()
 {
-	if (this->finished) return;
+	if (OnWireState::Instance().finished) return;
 
-	if (this->time < 5999)
-		this->hud.set_time(++this->time);
+	if (OnWireState::Instance().time < 5999)
+		this->hud.set_time(++OnWireState::Instance().time);
 
-	this->elements[1]->activate();  // DEBUG
-	return;                         // DEBUG
+	this->clips[1]->play();  // DEBUG
+	return;                  // DEBUG
 
 	if (mt_random() < 0.2)
 	{
 		unsigned int i = static_cast<unsigned int>(mt_random() * 2);
-		this->elements[i]->activate();
+		this->clips[i]->play();
 	}
 }
 
 void OnWireGame::travel(const unsigned int d)
 {
-	if (this->traveled == this->target) return;
+	if (OnWireState::Instance().traveled == OnWireState::Instance().target) return;
 
-	this->traveled += d;
-	if (this->traveled >= this->target)
+	OnWireState::Instance().traveled += d;
+	if (OnWireState::Instance().traveled >= OnWireState::Instance().target)
 	{
-		this->traveled = this->target;
-		this->finished = true;
+		OnWireState::Instance().traveled = OnWireState::Instance().target;
+		OnWireState::Instance().finished = true;
 	}
-	this->hud.set_distance(this->target - this->traveled);
+	this->hud.set_distance(OnWireState::Instance().target - OnWireState::Instance().traveled);
 }
 
 void OnWireGame::update()
 {
 	// Update game elements
-	this->building.update(this->traveled / this->target);
+	this->building.update();
 	this->line.update();
 	this->avatar.update();
 
 	// Update game obstacles
-	for (unsigned int i = 0; i < element_count; ++i)
+	for (unsigned int i = 0; i < clip_count; ++i)
 	{
-		if (!this->elements[i]->active) continue;
+		if (this->clips[i]->stopped) continue;
 
-		this->elements[i]->fire();
+		this->clips[i]->step();
 	}
 
 	// Update sprites
 	this->background.update();
 	this->foreground.update();
-	//this->rain.update();
+	this->rain.update();
 	this->hud.update();
 }

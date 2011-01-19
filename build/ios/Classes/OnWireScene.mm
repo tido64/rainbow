@@ -26,12 +26,11 @@
 		self.isAccelerometerEnabled = YES;
 
 		// Initialise screen
-		Screen::Instance()->init();
+		Screen::Instance().init();
 
 		// Physics
-		physics = Physics::Instance();
 		debug_draw = new GLESDebugDraw(PTM_RATIO);
-		physics->world->SetDebugDraw(debug_draw);
+		Physics::Instance().world->SetDebugDraw(debug_draw);
 
 		uint32 flags = 0;
 		flags += b2DebugDraw::e_shapeBit;
@@ -43,8 +42,8 @@
 
 		// Initialise game
 		AssetManager::Instance()->set_source();
+		controls = Controls::Instance();
 		game = new OnWireGame();
-		controls = new Controls();
 		game->reset(9000);
 
 		[self schedule: @selector(clock) interval:1.0f];
@@ -82,21 +81,8 @@
 
 -(void)tick:(ccTime)dt
 {
-	physics->step(dt);
+	Physics::Instance().step(dt);
 	game->update();
-
-	/*/ Iterate over the bodies in the physics world
-	for (b2Body *b = physics->world->GetBodyList(); b; b = b->GetNext())
-	{
-		BodyData *d = static_cast<BodyData *>(b->GetUserData());
-		if (d != 0 && d->data != 0)
-		{
-			// Synchronize the AtlasSprites position and rotation with the corresponding body
-			CCSprite *actor = (CCSprite *)d->data;
-			actor.position = CGPointMake(b->GetPosition().x * PTM_RATIO, b->GetPosition().y * PTM_RATIO);
-			actor.rotation = -1 * CC_RADIANS_TO_DEGREES(b->GetAngle());
-		}
-	}*/
 }
 
 -(void)ccTouchesBegan:(NSSet *)touches withEvent:(UIEvent *)event

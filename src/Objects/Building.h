@@ -10,18 +10,28 @@
 #define BUILDING_H_
 
 #include <Rainbow/Hardware/Screen.h>
+#include <Rainbow/Input/Gestures.h>
+#include <Rainbow/Algorithm.h>
 #include <Rainbow/Drawable.h>
+#include <Rainbow/Touchable.h>
 
-class Building : public Drawable
+#include "../OnWireState.h"
+
+class Building : public Drawable, public Touchable
 {
 public:
 	Building();
 
 	void set_sprite(Sprite *);
-	void update(const float &progress);
+	void touch_began(const Touches &touches);
+	void touch_canceled();
+	void touch_ended(const Touches &touches);
+	void touch_moved(const Touches &touches);
+	void update();
 
 private:
-	float scale, progress;
+	float angle, scale, progress;
+	Rainbow::Gestures::Pinch pinch;
 };
 
 #endif

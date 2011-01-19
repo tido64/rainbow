@@ -42,8 +42,6 @@ private:
 	float distance_label;   ///< Position of distance label
 	float time_label;       ///< Position of time label
 	float top;              ///< y-component of label positions
-	unsigned int distance;  ///< Distance left
-	unsigned int time;      ///< Time elapsed
 	char distance_str[8];   ///< Distance label
 	char time_str[8];       ///< Time label
 	FontAtlas arial_black;  ///< Arial Black

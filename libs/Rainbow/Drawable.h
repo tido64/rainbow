@@ -21,8 +21,8 @@ public:
 		this->sprite->draw();
 	}
 
-	/// Sets the sprite to draw.
 	virtual void set_sprite(Sprite *) = 0;
+	virtual void update() = 0;
 
 protected:
 	Sprite *sprite;  ///< The drawable object

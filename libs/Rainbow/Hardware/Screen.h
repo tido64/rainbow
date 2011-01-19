@@ -15,21 +15,23 @@
 class Screen
 {
 public:
-	static inline Screen* Instance()
+	static inline Screen& Instance()
 	{
 		static Screen main;
-		return &main;
+		return main;
 	}
 
-	void init(const float width = 0, const float height = 0)
+	void init(const float width = 0.0f, const float height = 0.0f)
 	{
 	#if defined(RAINBOW_IOS)
 
-		this->w = [CCDirector sharedDirector].winSize.width;
-		this->h = [CCDirector sharedDirector].winSize.height;
+		CCDirector *director = [CCDirector sharedDirector];
+		this->w = director.winSize.width;
+		this->h = director.winSize.height;
 
 	#else
 
+		assert(width > 0.0f && height > 0.0f);
 		this->w = width;
 		this->h = height;
 

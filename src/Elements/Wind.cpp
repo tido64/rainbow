@@ -10,16 +10,16 @@
 
 Wind::Wind(const Line *l) : force(1.0f), line(l) { }
 
-void Wind::activate()
+void Wind::play()
 {
-	this->active = true;
+	this->stopped = false;
 }
 
-void Wind::fire()
+void Wind::step()
 {
 	const unsigned int s = LINE_SEGMENTS >> 1;
 	this->line->apply_impulse(Vec2(this->force, 0.0f), s);
 	this->line->apply_impulse(Vec2(this->force, 0.0f), s + 1);
 	this->line->apply_impulse(Vec2(this->force, 0.0f), s + 2);
-	this->active = false;
+	this->stopped = true;
 }

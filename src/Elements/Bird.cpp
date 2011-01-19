@@ -12,70 +12,69 @@ using Rainbow::mt_random;
 
 Bird::Bird() : speed(1.0f / 90.0f) { }
 
-void Bird::activate()
+void Bird::play()
 {
-	if (this->active) return;
+	if (!this->stopped) return;
 
 	this->t = 0;
-	this->active = true;
+	this->stopped = false;
 
 	// Random spawning point
-	Screen *scr = Screen::Instance();
 	if (mt_random() < 0.5f)  // sides
 	{
-		this->spawn_x = (mt_random() < 0.5f) ? 0.0f : scr->width();
-		this->spawn_y = mt_random();
-		if (this->spawn_y < 0.5f)
-			this->spawn_y += 0.5f;
-		this->spawn_y *= scr->height();
+		this->spawn.x = (mt_random() < 0.5f) ? 0.0f : Screen::Instance().width();
+		this->spawn.y = mt_random();
+		if (this->spawn.y < 0.5f)
+			this->spawn.y += 0.5f;
+		this->spawn.y *= Screen::Instance().height();
 	}
 	else  // the top
 	{
-		this->spawn_x = scr->width() * mt_random();
-		this->spawn_y = scr->height();
+		this->spawn.x = Screen::Instance().width() * mt_random();
+		this->spawn.y = Screen::Instance().height();
 	}
 
 	// Random exit point
 	if (mt_random() < 0.5f)  // sides
 	{
-		this->exit_x = (mt_random() < 0.5f) ? 0.0f : scr->width();
-		this->exit_y = mt_random();
-		if (this->exit_y < 0.5f)
-			this->exit_y += 0.5f;
+		this->exit.x = (mt_random() < 0.5f) ? 0.0f : Screen::Instance().width();
+		this->exit.y = mt_random();
+		if (this->exit.y < 0.5f)
+			this->exit.y += 0.5f;
 	}
 	else  // top
 	{
-		this->exit_x = scr->width() * mt_random();
-		this->exit_y = scr->height();
+		this->exit.x = Screen::Instance().width() * mt_random();
+		this->exit.y = Screen::Instance().height();
 	}
 
-	this->landing_x = 120;
-	this->landing_y = 160;
+	this->landing.x = 120;
+	this->landing.y = 160;
 }
 
-void Bird::fire()
+void Bird::set_target(const Vec2 *p)
 {
-	assert(this->active);
+	this->target = p;
+	this->sprite->set_position(this->spawn);
+}
+
+void Bird::step()
+{
+	assert(!this->stopped);
 
 	if (false)  // flying away
 	{
-		this->active = false;
+		this->stopped = true;
 	}
 
 	if (this->t < 1.0f)  // bird still in air
 	{
-		float x = Rainbow::Animation::ease_out_quad(this->spawn_x, this->landing_x, this->t);
-		float y = Rainbow::Animation::ease_in_cubic(this->spawn_y, this->landing_y, this->t);
+		float x = ease_out_quad(this->spawn.x, this->landing.x, this->t);
+		float y = ease_in_cubic(this->spawn.y, this->landing.y, this->t);
 
 		// wing animation?
 
 		this->t += this->speed;
 		this->sprite->set_position(x, y);
 	}
-}
-
-void Bird::set_target(const Vec2 *p)
-{
-	this->target = p;
-	this->sprite->set_position(this->spawn_x, this->spawn_y);
 }

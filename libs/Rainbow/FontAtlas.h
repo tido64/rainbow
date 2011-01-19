@@ -37,9 +37,10 @@ public:
 	void print(const char *text, const float x = 0.0f, const float y = 0.0f) const;
 
 protected:
-	static const unsigned char chars = 128;
-	static const unsigned short int margin = 2;   ///< Margin around each font glyph
-	static const unsigned short int padding = 3;  ///< Texture padding for proper anti-aliasing
+	static const unsigned char ascii_offset = 32;  ///< Start loading from character 32
+	static const unsigned char chars = 95;         ///< Load characters through 126 from the ASCII table
+	static const unsigned short int margin = 2;    ///< Margin around each font glyph
+	static const unsigned short int padding = 3;   ///< Texture padding for proper anti-aliasing
 
 private:
 	GLuint textures[chars];

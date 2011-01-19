@@ -6,53 +6,86 @@
 #ifndef TYPES_H_
 #define TYPES_H_
 
-struct Color4f
+/// Structure for storing a color (RGBA).
+template<typename T>
+struct __Color4
 {
-	float r, g, b, a;
+	T r, g, b, a;
 
-	Color4f() : r(1.0f), g(1.0f), b(1.0f), a(1.0f) { }
-	Color4f(const float r, const float g, const float b, const float a = 1.0f) :
-		r(r), g(g), b(b), a(a)
-	{ }
+	__Color4() : r(1), g(1), b(1), a(1) { }
+	__Color4(const T r, const T g, const T b, const T a = 1) :
+		r(r), g(g), b(b), a(a) { }
 };
 
-struct Vec2f
+/// Structure for storing a pair of numerical values.
+template<typename T>
+struct __Vec2
 {
-	float x, y;
+	T x, y;
 
-	Vec2f() : x(0.0f), y(0.0f) { }
-	Vec2f(const float x, const float y) : x(x), y(y) { }
+	__Vec2() : x(0), y(0) { }
+	__Vec2(const T x, const T y) : x(x), y(y) { }
 
-	inline float dot(const Vec2f &v)
+	/// Returns the angle (in radians) between two points.
+	inline float angle(const __Vec2<T> &v) const
+	{
+		return atan2f(v.y - this->y, v.x - this->x);
+	}
+
+	/// Returns the dot product of two vectors
+	inline T dot(const __Vec2<T> &v) const
 	{
 		return this->x * this->y + v.x * v.y;
 	}
 
-	void operator += (const Vec2f &v)
+	/// Returns the distance between two points.
+	T distance(const __Vec2<T> &v) const
+	{
+		T dx = v.x - this->x;
+		T dy = v.y - this->y;
+		return sqrt(dx * dx + dy * dy);
+	}
+
+	/// Determines whether the vector is zero.
+	inline bool is_zero() const
+	{
+		return (this->x == 0) && (this->y == 0);
+	}
+
+	/// Zeroes the vector.
+	inline void zero()
+	{
+		this->x = 0;
+		this->y = 0;
+	}
+
+	__Vec2<T>& operator+=(const __Vec2<T> &v)
 	{
 		this->x += v.x;
 		this->y += v.y;
+		return *this;
 	}
 
-	void operator -= (const Vec2f &v)
+	/*
+	__Vec2<T>& operator-=(const __Vec2<T> &v)
 	{
 		this->x -= v.x;
 		this->y -= v.y;
+		return *this;
 	}
 
-	void operator *= (const float &f)
+	__Vec2<T>& operator*=(const T &f)
 	{
 		this->x *= f;
 		this->y *= f;
-	}
+		return *this;
+	}*/
 };
 
-struct ParticleVertex
-{
-	Vec2f position;
-	Vec2f texcoord;
-	Color4f color;
-};
+typedef __Color4<unsigned char> Color4ub;
+typedef __Color4<float> Color4f;
+typedef __Vec2<float> Vec2f;
+typedef __Vec2<int> Vec2i;
 
 struct SpriteVertex
 {

@@ -21,8 +21,8 @@ public:
 	void update();
 
 private:
-	const float head_x, head_y;
 	const Vec2 *base;
+	const Vec2f head;
 };
 
 #endif

@@ -7,12 +7,13 @@
 #define ONWIREGAME_H_
 
 #include <Rainbow/Hardware/Controls.h>
+#include <Rainbow/ParticleSystem/Rain.h>
 #include <Rainbow/SpriteBatch.h>
 
 #include "Elements/Bird.h"
-//#include "Elements/Rain.h"
 #include "Elements/Wind.h"
 #include "Objects/Assets.h"
+#include "OnWireState.h"
 
 class OnWireGame
 {
@@ -38,26 +39,21 @@ public:
 	void update();
 
 protected:
-	static const unsigned int element_count = 2;
+	static const unsigned int clip_count = 2;
 
 private:
-	bool finished;      ///< Whether or not the player has reached the goal
-	unsigned int time;  ///< Time spent on the current game
-	float target;       ///< Target distance
-	float traveled;     ///< Distance traveled by the player so far
+	TextureAtlas texture_atlas;    ///< Main texture atlas
+	Sprite *skyline;               ///< The skyline backdrop
+	Building building;             ///< Target building
+	SpriteBatch<2> background;     ///< Combines skyline and building
+	Line line;                     ///< The line
+	Avatar avatar;                 ///< Player avatar
+	SpriteBatch<1> foreground;     ///< Combines avatar and all game elements
+	HUD hud;                       ///< Player's head-up display
 
-	TextureAtlas texture_atlas;        ///< Main texture atlas
-	Sprite *skyline;                   ///< The skyline backdrop
-	Building building;                 ///< Target building
-	SpriteBatch<2> background;         ///< Combines skyline and building
-	Line line;                         ///< The line
-	Avatar avatar;                     ///< Player avatar
-	SpriteBatch<1> foreground;         ///< Combines avatar and all game elements
-	HUD hud;                           ///< Player's head-up display
-
-	Element *elements[element_count];  ///< All elements
+	Animation *clips[clip_count];  ///< All elements
 	Bird yellow_bird;
-	//RainPS rain;
+	RainPS rain;
 	Wind wind;
 };
 

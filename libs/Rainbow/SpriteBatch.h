@@ -69,8 +69,7 @@ public:
 
 	void update()
 	{
-		// Make sure we're not wasting memory, and also to make sure the loop
-		// below is unrollable if needed
+		// Make sure we're not wasting memory
 		assert(this->count == N);
 
 		// Update all sprite vertices

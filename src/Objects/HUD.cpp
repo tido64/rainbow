@@ -32,22 +32,17 @@ void HUD::reset(const unsigned int t)
 
 void HUD::set_distance(const unsigned int d)
 {
-	this->distance = d;
+	sprintf(this->distance_str, HUD::distance_format, d);
 }
 
 void HUD::set_time(const unsigned int t)
 {
-	this->time = t;
+	sprintf(this->time_str, HUD::time_format, t / 60, t % 60);
 }
 
 void HUD::update()
 {
-	static Screen *scr = Screen::Instance();
-
-	this->top = scr->height() * 0.94375f;
-	this->distance_label = scr->width() * 0.0375f;
-	this->time_label = scr->width() * 0.8625f;
-
-	sprintf(this->distance_str, HUD::distance_format, this->distance);
-	sprintf(this->time_str, HUD::time_format, this->time / 60, this->time % 60);
+	this->top = Screen::Instance().height() * 0.94375f;
+	this->distance_label = Screen::Instance().width() * 0.0375f;
+	this->time_label = Screen::Instance().width() * 0.8625f;
 }

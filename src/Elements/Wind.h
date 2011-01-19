@@ -6,15 +6,18 @@
 #ifndef WIND_H_
 #define WIND_H_
 
-#include <Rainbow/Element.h>
+#include <Rainbow/Animation.h>
+
 #include "../Objects/Line.h"
 
-class Wind : public Element
+class Wind : public Animation
 {
 public:
 	Wind(const Line *);
-	void activate();
-	void fire();
+	void play();
+	void set_sprite(Sprite *) { }
+	void step();
+	void update() { }
 
 private:
 	float force;

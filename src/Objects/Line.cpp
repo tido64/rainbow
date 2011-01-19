@@ -11,7 +11,7 @@
 const float offset = 0.0f;  ///< For debugging purposes only.
 
 Line::Line(const float &scr_w, const float &scr_h) :
-	center(scr_w * 0.5f), physics(Physics::Instance())
+	center(scr_w * 0.5f)
 {
 	const float
 		l = scr_h * 0.5f,
@@ -28,40 +28,40 @@ Line::Line(const float &scr_w, const float &scr_h) :
 	body_fix->density = 1.0f;
 
 	BodyDef *body_def = new BodyDef();
-	this->physics->define_body_damping(body_def, 0.1f, 0.2f);
+	Physics::Instance().define_body_damping(body_def, 0.1f, 0.2f);
 
-	this->physics->define_body_position(body_def, x, -body_shape.m_radius + offset);
-	this->start = this->physics->create_body(body_def, body_fix);
+	Physics::Instance().define_body_position(body_def, x, -body_shape.m_radius + offset);
+	this->start = Physics::Instance().create_body(body_def, body_fix);
 
 	float r = d * 0.5f;
 	body_shape.m_radius = r;
 	body_fix->density = 0.1f;
 
 	// Create rope segments and joints
-	this->physics->define_body_position(body_def, x, r + offset);
-	Body *b = this->physics->create_body(body_def, body_fix);
-	this->physics->create_joint(this->start, b);
+	Physics::Instance().define_body_position(body_def, x, r + offset);
+	Body *b = Physics::Instance().create_body(body_def, body_fix);
+	Physics::Instance().create_joint(this->start, b);
 	this->segment[0] = b;
 	for (unsigned int i = 1; i < LINE_SEGMENTS; ++i)
 	{
 		r += d;
-		this->physics->define_body_position(body_def, x, r + offset);
+		Physics::Instance().define_body_position(body_def, x, r + offset);
 
-		b = this->physics->create_body(body_def, body_fix);
-		this->physics->create_joint(this->segment[i - 1], b);
+		b = Physics::Instance().create_body(body_def, body_fix);
+		Physics::Instance().create_joint(this->segment[i - 1], b);
 		this->segment[i] = b;
 	}
 	delete body_def;
 	delete body_fix;
 
 	// Attach the other end of the line to the building
-	this->end = this->physics->create_anchor(0.1f, 0.1f, x, l / PTM_RATIO + offset);
-	this->physics->create_joint(this->segment[LINE_SEGMENTS - 1], this->end);
+	this->end = Physics::Instance().create_anchor(0.1f, 0.1f, x, l / PTM_RATIO + offset);
+	Physics::Instance().create_joint(this->segment[LINE_SEGMENTS - 1], this->end);
 
 	// Create constraints
 	body_def = new BodyDef();
-	this->physics->define_body_position(body_def, 0.0f, 0.0f);
-	Body *c = this->physics->create_body(body_def);
+	Physics::Instance().define_body_position(body_def, 0.0f, 0.0f);
+	Body *c = Physics::Instance().create_body(body_def);
 	delete body_def;
 	PolygonShape c_shape;
 
@@ -93,36 +93,33 @@ void Line::draw()
 
 void Line::update()
 {
-	unsigned int count = 0;
 	float offset = LINE_WIDTH * 0.5f;
 
 	Vec2 cur = this->start->GetWorldCenter();
-	float x = cur.x * PTM_RATIO;
-	float y = cur.y * PTM_RATIO;
-	this->vertices[count] = x - offset;
-	this->vertices[++count] = y;
-	this->vertices[++count] = x + offset;
-	this->vertices[++count] = y;
+	cur *= PTM_RATIO;
+	GLfloat *vertex = this->vertices;
+	*vertex = cur.x - offset;
+	*(++vertex) = cur.y;
+	*(++vertex) = cur.x + offset;
+	*(++vertex) = cur.y;
 
 	for (unsigned int i = 0; i < LINE_SEGMENTS; ++i)
 	{
 		offset -= LINE_WIDTH_OFFSET;
 		cur = this->segment[i]->GetWorldCenter();
-		x = cur.x * PTM_RATIO;
-		y = cur.y * PTM_RATIO;
-		this->vertices[++count] = x - offset;
-		this->vertices[++count] = y;
-		this->vertices[++count] = x + offset;
-		this->vertices[++count] = y;
+		cur *= PTM_RATIO;
+		*(++vertex) = cur.x - offset;
+		*(++vertex) = cur.y;
+		*(++vertex) = cur.x + offset;
+		*(++vertex) = cur.y;
 	}
 
 	cur = this->end->GetWorldCenter();
-	x = cur.x * PTM_RATIO;
-	y = cur.y * PTM_RATIO;
-	this->vertices[++count] = x - offset;
-	this->vertices[++count] = y;
-	this->vertices[++count] = x + offset;
-	this->vertices[++count] = y;
+	cur *= PTM_RATIO;
+	*(++vertex) = cur.x - offset;
+	*(++vertex) = cur.y;
+	*(++vertex) = cur.x + offset;
+	*(++vertex) = cur.y;
 
 	glBindBuffer(GL_ARRAY_BUFFER, this->buffer);
 	glBufferData(GL_ARRAY_BUFFER, LINE_VBO_SIZE, this->vertices, GL_DYNAMIC_DRAW);

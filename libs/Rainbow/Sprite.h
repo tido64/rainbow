@@ -26,7 +26,7 @@ public:
 	const unsigned int width;   ///< Width of sprite (not scaled)
 	const unsigned int height;  ///< Height of sprite (not scaled)
 
-	Sprite(TextureAtlas *, const unsigned int w, const unsigned int h);
+	Sprite(const unsigned int width, const unsigned int height, TextureAtlas *parent = 0);
 	~Sprite();
 
 	/// Draw the sprite.
@@ -39,7 +39,7 @@ public:
 	void scale(const float f);
 
 	/// Non-uniform scaling of sprite (does not affect width and height properties).
-	void scale(const float fx, const float fy);
+	void scale(const Vec2f &f);
 
 	/// Sets the pivot point for rotation and translation.
 	/// \param x  Normalised x-component of pivot point
@@ -49,11 +49,14 @@ public:
 	/// Sets sprite position (absolute).
 	void set_position(const float x, const float y);
 
+	/// Sets sprite position (absolute).
+	void set_position(const Vec2f &position);
+
 	/// Sets the texture.
 	/// \param id  Id of texture to use
 	void set_texture(const unsigned int id)
 	{
-		this->atlas->get_texture(id, this->vertex_array);
+		this->parent->get_texture(id, this->vertex_array);
 	}
 
 	/// Updates the vertices of this sprite.
@@ -68,20 +71,20 @@ protected:
 private:
 	bool buffered;               ///< Whether or not this sprite is buffered
 	unsigned char stale;         ///< Sprite is stale if its properties has changed
-	GLuint texture;              ///< Texture buffer name
 
 	float angle;                 ///< Sprite rotation angle
 	float cos_r;                 ///< Cosine of angle
 	float sin_r;                 ///< Sine of angle
 
-	Vec2f origin[4];             ///< Original rendering at origo
+	GLuint texture;              ///< Texture buffer name
+	SpriteVertex *vertex_array;  ///< Vertex array or, if buffered, the sprite batch's buffer
+	TextureAtlas *parent;        ///< Texture atlas pointer
+
 	Vec2f pivot;                 ///< Pivot point (normalised)
 	Vec2f position;              ///< Current position
 	Vec2f position_d;            ///< Difference between current and next position
 	Vec2f scale_f;               ///< Scaling factor
-
-	SpriteVertex *vertex_array;  ///< Vertex array or, if buffered, the sprite batch's buffer
-	TextureAtlas *atlas;         ///< Texture atlas pointer
+	Vec2f origin[4];             ///< Original rendering at origo
 
 	template<int N> friend class SpriteBatch;
 	friend class TextureAtlas;

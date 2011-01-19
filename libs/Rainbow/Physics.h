@@ -36,10 +36,10 @@ public:
 	b2World *world;  ///< Box2D world object
 
 	/// Physics is a singleton.
-	static Physics *Instance()
+	static inline Physics& Instance()
 	{
 		static Physics inst;
-		return &inst;
+		return inst;
 	}
 
 	/// Creates an anchor bpx to tie things to.

@@ -1,6 +1,6 @@
-/// Custom vector class. Implemented after STL::Vector.
+/// Simple vector class. Mimics STL::vector.
 
-/// This class is mainly for use on iOS platforms.
+/// This class is mainly for the lack of full STL implementation.
 ///
 /// Copyright 2010 Bifrost Games. All rights reserved.
 /// \author Tommy Nguyen
@@ -8,8 +8,11 @@
 #ifndef VECTOR_H_
 #define VECTOR_H_
 
-#include <cassert>
-#include <cstring>
+#include <Rainbow/Hardware/Platform.h>
+
+#if 1//def RAINBOW_ANDROID
+#	include <cassert>
+#	include <cstring>
 
 template<class T>
 class Vector
@@ -23,8 +26,17 @@ public:
 
 	~Vector() { delete[] this->array; }
 
+	inline T& at(const unsigned int i)
+	{
+		assert(i < this->count);
+		return this->array[i];
+	}
+
+	/// Returns a pointer to the first element.
+	inline T* begin() const { return this->array; }
+
 	/// Adds an element to the vector.
-	void add(const T &element)
+	void push_back(const T &element)
 	{
 		// Check that there is enough space
 		if (this->count == this->reserved)
@@ -38,21 +50,25 @@ public:
 		this->array[this->count++] = element;
 	}
 
-	inline T& at(const unsigned int i) { return this->array[i]; }
-
-	/// Returns the C array.
-	inline T* c_arr() { return this->array; }
-
 	/// Returns the number of elements in this vector.
-	inline unsigned int size() { return this->count; }
+	inline unsigned int size() const { return this->count; }
 
 	/// Returns the element stored at index.
-	inline T& operator[](const unsigned int i) { return this->array[i]; }
+	inline T& operator[](const unsigned int i)
+	{
+		assert(i < this->count);
+		return this->array[i];
+	}
 
 private:
 	unsigned int count;
 	unsigned int reserved;
 	T *array;
 };
+
+#else
+#	include <vector>
+#	define Vector std::vector
+#endif
 
 #endif

@@ -28,7 +28,7 @@ FontAtlas::FontAtlas(const char *f, const unsigned int pt) : pt(pt)
 	glGenTextures(chars, this->textures);
 	for (unsigned char i = 0; i < chars; ++i)
 	{
-		ft_error = FT_Load_Glyph(face, FT_Get_Char_Index(face, i), FT_LOAD_DEFAULT);
+		ft_error = FT_Load_Glyph(face, FT_Get_Char_Index(face, i + ascii_offset), FT_LOAD_DEFAULT);
 		assert(ft_error == 0);
 		FT_Glyph glyph;
 		ft_error = FT_Get_Glyph(face->glyph, &glyph);
@@ -112,20 +112,18 @@ FontAtlas::FontAtlas(const char *f, const unsigned int pt) : pt(pt)
 
 void FontAtlas::print(const char *text, const float x, const float y) const
 {
-	unsigned int i = 0;
-
 	//glColor4f(1.0f, 1.0f, 0.0f, 1.0f);
 	glPushMatrix();
 	glTranslatef(x, y, 0.0f);
-	while (text[i] != '\0')
+	while (*text != '\0')
 	{
-		const unsigned int c = static_cast<unsigned int>(text[i]);
+		const unsigned int c = static_cast<unsigned int>(*text - ascii_offset);
 		glBindTexture(GL_TEXTURE_2D, this->textures[c]);
 		glVertexPointer(2, GL_FLOAT, sizeof(SpriteVertex), &this->charset[c].quad[0].position);
 		glTexCoordPointer(2, GL_FLOAT, sizeof(SpriteVertex), &this->charset[c].quad[0].texcoord);
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 		glTranslatef(this->charset[c].advance, 0.0f, 0.0f);
-		++i;
+		++text;
 	}
 	glPopMatrix();
 }

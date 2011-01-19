@@ -34,9 +34,6 @@ public:
 	/// \return An id unique to the texture
 	unsigned int define_texture(const int x, const int y, const int width, const int height);
 
-	/// Draws all sprites created from the texture atlas.
-	//void draw();
-
 	/// Returns the texture name this atlas holds.
 	inline GLuint get_name() { return this->texture.name; }
 
@@ -47,8 +44,8 @@ public:
 
 private:
 	Texture texture;           ///< Loaded texture
-	Vector<Vec2f> textures;    ///< Stores all textures
 	Vector<Sprite *> sprites;  ///< Stores all sprites
+	Vector<Vec2f> textures;    ///< Stores all textures
 };
 
 #endif

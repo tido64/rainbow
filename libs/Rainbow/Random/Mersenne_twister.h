@@ -23,10 +23,10 @@
 class Random
 {
 public:
-	static Random *Instance()
+	static Random& Instance()
 	{
 		static Random inst;
-		return &inst;
+		return inst;
 	}
 
 	double next()
@@ -44,7 +44,7 @@ public:
 			this->dsfmt.status[DSFMT_N] = lung;
 			this->dsfmt.idx = 0;
 		}
-		return psfmt64[this->dsfmt.idx++] - this->one;
+		return psfmt64[this->dsfmt.idx++] - 1.0;
 	}
 
 	inline double next(double min, double max)
@@ -161,12 +161,11 @@ public:
 	}
 
 private:
-	const double one;  ///< for converting [1,2) to [0,1)
 	dsfmt_t dsfmt;     ///< dsfmt internal state vector
 
-	Random() : one(1.0) { this->seed(static_cast<uint32_t>(time(0))); }
-	Random(uint32_t seed) : one(1.0) { this->seed(seed); }
-	Random(uint32_t init_key[], int key_length) : one(1.0) { this->seed(init_key, key_length); }
+	Random() { this->seed(static_cast<uint32_t>(time(0))); }
+	Random(uint32_t seed) { this->seed(seed); }
+	Random(uint32_t init_key[], int key_length) { this->seed(init_key, key_length); }
 	Random(const Random &);
 
 #if defined(__SSE2__)
