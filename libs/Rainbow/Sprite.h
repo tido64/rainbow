@@ -32,14 +32,24 @@ public:
 	/// Draw the sprite.
 	void draw();
 
+	inline const float& get_angle() const
+	{
+		return this->angle;
+	}
+
+	inline const Vec2f& get_position() const
+	{
+		return this->position;
+	}
+
 	/// Rotate the sprite by an angle (in radian).
-	void rotate(const float r);
+	void rotate(const float);
 
 	/// Uniform scaling of sprite (does not affect width and height properties).
-	void scale(const float f);
+	void scale(const float);
 
 	/// Non-uniform scaling of sprite (does not affect width and height properties).
-	void scale(const Vec2f &f);
+	void scale(const Vec2f &);
 
 	/// Sets the pivot point for rotation and translation.
 	/// \param x  Normalised x-component of pivot point
@@ -50,11 +60,11 @@ public:
 	void set_position(const float x, const float y);
 
 	/// Sets sprite position (absolute).
-	void set_position(const Vec2f &position);
+	void set_position(const Vec2f &);
 
 	/// Sets the texture.
 	/// \param id  Id of texture to use
-	void set_texture(const unsigned int id)
+	inline void set_texture(const unsigned int id)
 	{
 		this->parent->get_texture(id, this->vertex_array);
 	}

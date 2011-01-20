@@ -41,7 +41,7 @@
 		debug_draw->SetFlags(flags);
 
 		// Initialise game
-		AssetManager::Instance()->set_source();
+		AssetManager::Instance().set_source();
 		controls = Controls::Instance();
 		game = new OnWireGame();
 		game->reset(9000);

@@ -62,7 +62,7 @@ OnWireGame::OnWireGame() :
 	CCLOG(@"Pointer: %u", reinterpret_cast<float *>(0) + 2);
 	*/
 
-	AssetManager::Instance()->close();
+	//AssetManager::Instance().close();
 }
 
 void OnWireGame::draw()

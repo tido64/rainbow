@@ -1,5 +1,5 @@
 /// Defines all assets.
-///
+
 /// Copyright 2010 Bifrost Games. All rights reserved.
 /// \author Tommy Nguyen
 

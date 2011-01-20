@@ -66,7 +66,6 @@ struct __Vec2
 		return *this;
 	}
 
-	/*
 	__Vec2<T>& operator-=(const __Vec2<T> &v)
 	{
 		this->x -= v.x;
@@ -79,7 +78,7 @@ struct __Vec2
 		this->x *= f;
 		this->y *= f;
 		return *this;
-	}*/
+	}
 };
 
 typedef __Color4<unsigned char> Color4ub;

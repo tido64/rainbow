@@ -91,7 +91,7 @@ void Controls::touch_began(const Touch *touches, const unsigned int count)
 		//CCLOG(@"Touch id #%i detected at (%i,%i)", touches->hash, touches->x, touches->y);
 		++touches;
 	}
-	CCLOG(@"Touch count: %u", this->touches.size());
+	//CCLOG(@"Touch count: %u", this->touches.size());
 
 	for (unsigned int i = 0; i < this->touchables.size(); ++i)
 		this->touchables[i]->touch_began(this->touches);
@@ -102,7 +102,7 @@ void Controls::touch_canceled()
 	for (unsigned int i = 0; i < this->touchables.size(); ++i)
 		this->touchables[i]->touch_canceled();
 	this->touches.clear();
-	CCLOG(@"Touch count: %u", this->touches.size());
+	//CCLOG(@"Touch count: %u", this->touches.size());
 }
 
 void Controls::touch_ended(const Touch *touches, const unsigned int count)
@@ -112,7 +112,7 @@ void Controls::touch_ended(const Touch *touches, const unsigned int count)
 		this->touches.erase(touches->hash);
 		++touches;
 	}
-	CCLOG(@"Touch count: %u", this->touches.size());
+	//CCLOG(@"Touch count: %u", this->touches.size());
 	for (unsigned int i = 0; i < this->touchables.size(); ++i)
 		this->touchables[i]->touch_ended(this->touches);
 }

@@ -9,12 +9,12 @@
 
 #include <Rainbow/FontAtlas.h>
 
-FontAtlas::FontAtlas(const char *f, const unsigned int pt) : pt(pt)
+FontAtlas::FontAtlas(const char *f, const float pt) : pt(pt)
 {
 	assert(f != 0);
 
 	unsigned char *font_data = 0;
-	const unsigned int font_sz = AssetManager::Instance()->load(font_data, f);
+	const unsigned int font_sz = AssetManager::Instance().load(font_data, f);
 
 	FT_Library lib;
 	int ft_error = FT_Init_FreeType(&lib);
@@ -23,7 +23,7 @@ FontAtlas::FontAtlas(const char *f, const unsigned int pt) : pt(pt)
 	FT_Face face;
 	ft_error = FT_New_Memory_Face(lib, font_data, font_sz, 0, &face);
 	assert(ft_error == 0);
-	FT_Set_Char_Size(face, this->pt << 6, this->pt << 6, 96, 96);
+	FT_Set_Char_Size(face, this->pt * 64, this->pt * 64, 96, 96);
 
 	glGenTextures(chars, this->textures);
 	for (unsigned char i = 0; i < chars; ++i)

@@ -58,7 +58,7 @@ int main()
 	init_GL();
 	resize(screen_width, screen_height);
 
-	AssetManager::Instance()->set_source("assets.bfz");
+	AssetManager::Instance().set_source("assets.bfz");
 	OnWireGame the_game;
 	the_game.reset(1337);
 	SDL_Thread *clock_thread = SDL_CreateThread(tick, &the_game);
@@ -101,7 +101,7 @@ int main()
 		{
 			// Update physics
 			now = SDL_GetTicks();
-			Physics::Instance()->step((now - time) / 1000.0f);
+			Physics::Instance().step((now - time) / 1000.0f);
 			time = now;
 
 			// Update game logic
@@ -163,7 +163,7 @@ void resize(const int w, const int h)
 	glLoadIdentity();
 	glViewport(0, 0, w, h);
 
-	Screen::Instance()->init(w, h);
+	Screen::Instance().init(w, h);
 }
 
 int tick(void *g)

@@ -28,9 +28,9 @@
 class FontAtlas
 {
 public:
-	const unsigned int pt;
+	const float pt;
 
-	FontAtlas(const char *font_family, const unsigned int pt);
+	FontAtlas(const char *font_family, const float pt);
 	~FontAtlas() { }
 
 	/// Prints text at (x,y).

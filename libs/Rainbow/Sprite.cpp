@@ -53,7 +53,6 @@ void Sprite::scale(const float f)
 
 	this->scale_f.x = f;
 	this->scale_f.y = f;
-
 	this->stale |= stale_scale;
 }
 
@@ -63,9 +62,7 @@ void Sprite::scale(const Vec2f &f)
 	assert(f.x > 0.0f && f.y > 0.0f);
 	if (equalf(f.x, this->scale_f.x) && equalf(f.y, this->scale_f.y)) return;
 
-	this->scale_f.x = f.x;
-	this->scale_f.y = f.y;
-
+	this->scale_f = f;
 	this->stale |= stale_scale;
 }
 
@@ -76,7 +73,6 @@ void Sprite::set_pivot(const float x, const float y)
 
 	this->pivot.x = x;
 	this->pivot.y = y;
-
 	this->stale |= stale_pivot | stale_scale;
 }
 
@@ -84,11 +80,8 @@ void Sprite::set_position(const float x, const float y)
 {
 	if (equalf(x, this->position.x) && equalf(y, this->position.y)) return;
 
-	this->position_d.x = x - this->position.x;
-	this->position_d.y = y - this->position.y;
-	this->position.x = x;
-	this->position.y = y;
-
+	this->position_d.x = x;
+	this->position_d.y = y;
 	this->stale |= stale_position;
 }
 
@@ -96,10 +89,7 @@ void Sprite::set_position(const Vec2f &p)
 {
 	if (equalf(p.x, this->position.x) && equalf(p.y, this->position.y)) return;
 
-	this->position_d.x = p.x - this->position.x;
-	this->position_d.y = p.y - this->position.y;
-	this->position = p;
-
+	this->position_d = p;
 	this->stale |= stale_position;
 }
 
@@ -123,6 +113,8 @@ void Sprite::update()
 			this->origin[3].x = this->origin[1].x;
 			this->origin[3].y = this->origin[2].y;
 		}
+
+		this->position = this->position_d;
 
 		if (this->angle != 0.0f)
 		{
@@ -168,19 +160,11 @@ void Sprite::update()
 		return;
 	}
 
-	if (this->stale & stale_position)
-	{
-		this->vertex_array[0].position.x += this->position_d.x;
-		this->vertex_array[0].position.y += this->position_d.y;
-
-		this->vertex_array[1].position.x += this->position_d.x;
-		this->vertex_array[1].position.y += this->position_d.y;
-
-		this->vertex_array[2].position.x += this->position_d.x;
-		this->vertex_array[2].position.y += this->position_d.y;
-
-		this->vertex_array[3].position.x += this->position_d.x;
-		this->vertex_array[3].position.y += this->position_d.y;
-	}
+	this->position_d -= this->position;
+	this->vertex_array[0].position += this->position_d;
+	this->vertex_array[1].position += this->position_d;
+	this->vertex_array[2].position += this->position_d;
+	this->vertex_array[3].position += this->position_d;
+	this->position += this->position_d;
 	this->stale = 0;
 }

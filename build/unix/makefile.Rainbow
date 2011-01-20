@@ -15,6 +15,7 @@ default: $(OBJDIR)/../$(TARGET)
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
 	@if [ ! -d $(OBJDIR)/Hardware ]; then mkdir -p $(OBJDIR)/Hardware; fi
+	@if [ ! -d $(OBJDIR)/ParticleSystem ]; then mkdir -p $(OBJDIR)/ParticleSystem; fi
 	@echo Compiling $<
 	@$(CPP) -c $< $(CFLAGS) -o $@
 

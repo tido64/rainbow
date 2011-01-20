@@ -10,6 +10,8 @@
 
 #ifdef RAINBOW_IOS
 #	include <cocos2d/cocos2d.h>
+#else
+#	include <cassert>
 #endif
 
 class Screen

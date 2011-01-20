@@ -42,6 +42,7 @@ public:
 
 	Texture(const char *filename)
 	{
+		GLint format = GL_RGBA;  // Default texture format
 		void *data = 0;
 
 		#if defined(RAINBOW_IOS)
@@ -74,7 +75,7 @@ public:
 			// Load file into memory
 			png_read_struct texture;
 			texture.offset = 8;
-			AssetManager::Instance()->load(texture.data, filename);
+			AssetManager::Instance().load(texture.data, filename);
 
 			// Check PNG signature
 			{
@@ -105,7 +106,30 @@ public:
 
 			// Retrieve PNG info
 			png_read_info(png_ptr, info_ptr);
-			assert(png_get_channels(png_ptr, info_ptr) == 4);  // Ensure we're dealing with a 4-channel PNG
+			if (png_get_channels(png_ptr, info_ptr) != 4)
+			{
+				switch(png_get_color_type(png_ptr, info_ptr))
+				{
+					case PNG_COLOR_TYPE_GRAY:
+						if (png_get_bit_depth(png_ptr, info_ptr) < 8)
+							png_set_expand_gray_1_2_4_to_8(png_ptr);
+						format = GL_LUMINANCE;
+						break;
+					case PNG_COLOR_TYPE_PALETTE:
+						png_set_palette_to_rgb(png_ptr);
+					case PNG_COLOR_TYPE_RGB:
+						format = GL_RGB;
+						break;
+					case PNG_COLOR_TYPE_GRAY_ALPHA:
+						if (png_get_bit_depth(png_ptr, info_ptr) < 8)
+							png_set_expand_gray_1_2_4_to_8(png_ptr);
+						format = GL_LUMINANCE_ALPHA;
+						break;
+					default:
+						printf("Unknown PNG color type: %u\n", png_get_color_type(png_ptr, info_ptr));
+						break;
+				}
+			}
 			this->width = png_get_image_width(png_ptr, info_ptr);
 			this->height = png_get_image_height(png_ptr, info_ptr);
 			assert(this->width > 0 && this->height > 0);
@@ -136,7 +160,7 @@ public:
 		glBindTexture(GL_TEXTURE_2D, this->name);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, this->width, this->height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, this->width, this->height, 0, format, GL_UNSIGNED_BYTE, data);
 
 		free(data);
 	}

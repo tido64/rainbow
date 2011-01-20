@@ -1,5 +1,5 @@
 (?:Debug|Icon.|bin|obj)$
 build/ios/libs/.*
-libs/(?:Box2D|freetype)
+libs/freetype
 \.(?:DS_Store|build|dropbox|mode\dv\d|o|pbxuser)
 local\.properties

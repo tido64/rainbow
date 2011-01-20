@@ -12,8 +12,8 @@ const char HUD::distance_format[]  = "%um";
 const char HUD::time_format[]      = "%02u:%.2u";
 
 HUD::HUD() :
-	arial_black("ArialBlack.ttf", 22),
-	arial_bold("ArialBold.ttf", 13)
+	arial_black("ArialBlack.ttf", 22.0f),
+	arial_bold("ArialBold.ttf", 13.5f)
 { }
 
 void HUD::draw()
