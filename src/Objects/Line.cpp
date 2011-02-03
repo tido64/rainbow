@@ -8,11 +8,13 @@
 
 #include "Line.h"
 
-const float offset = 0.0f;  ///< For debugging purposes only.
-
 Line::Line(const float &scr_w, const float &scr_h) :
+	LINE_VBO_SIZE(LINE_VERTICES * sizeof(float)), LINE_WIDTH(6.0f),
+	LINE_WIDTH_OFFSET((LINE_WIDTH - 1.0f) / LINE_TRIANGLES),
 	center(scr_w * 0.5f)
 {
+	const float offset = 0.0f;  ///< For debugging purposes only.
+
 	const float
 		l = scr_h * 0.5f,
 		d = l / PTM_RATIO / LINE_SEGMENTS,

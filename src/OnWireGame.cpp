@@ -70,7 +70,7 @@ void OnWireGame::draw()
 	this->background.draw();
 	this->line.draw();
 	this->foreground.draw();
-	this->rain.draw();
+	//this->rain.draw();
 	this->hud.draw();
 }
 

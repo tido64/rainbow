@@ -1,17 +1,3 @@
-/// A texture loaded from an image file.
-
-/// Note: Textures' dimension must be (2^n) by (2^m) for some arbitrary n and m,
-/// where n > 6 and m > 6.
-///
-/// Note: Textures are loaded upside-down, so the coordinates must be flipped.
-///
-/// \see http://iphonedevelopment.blogspot.com/2009/05/opengl-es-from-ground-up-part-6_25.html
-/// \see http://developer.android.com/guide/topics/resources/providing-resources.html
-/// \see http://en.wikibooks.org/wiki/OpenGL_Programming/Intermediate/Textures
-///
-/// Copyright 2010 Bifrost Games. All rights reserved.
-/// \author Tommy Nguyen
-
 #ifndef TEXTURE_H_
 #define TEXTURE_H_
 
@@ -34,6 +20,19 @@ struct png_read_struct
 
 #endif
 
+/// A texture loaded from an image file.
+
+/// Note: Textures' dimension must be (2^n) by (2^m) for some arbitrary n and m,
+/// where n > 6 and m > 6.
+///
+/// Note: Textures are loaded upside-down, so the coordinates must be flipped.
+///
+/// \see http://iphonedevelopment.blogspot.com/2009/05/opengl-es-from-ground-up-part-6_25.html
+/// \see http://developer.android.com/guide/topics/resources/providing-resources.html
+/// \see http://en.wikibooks.org/wiki/OpenGL_Programming/Intermediate/Textures
+///
+/// Copyright 2010 Bifrost Games. All rights reserved.
+/// \author Tommy Nguyen
 class Texture
 {
 public:

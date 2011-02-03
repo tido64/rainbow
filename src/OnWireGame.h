@@ -13,7 +13,6 @@
 #include "Elements/Bird.h"
 #include "Elements/Wind.h"
 #include "Objects/Assets.h"
-#include "OnWireState.h"
 
 class OnWireGame
 {

@@ -1,4 +1,4 @@
-(?:Debug|Icon.|bin|obj)$
+(?:Debug|Icon.|bin|doc|obj)$
 build/ios/libs/.*
 libs/freetype
 \.(?:DS_Store|build|dropbox|mode\dv\d|o|pbxuser)

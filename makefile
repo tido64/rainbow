@@ -12,26 +12,28 @@ EXEC = $(BINDIR)/$(TARGET)
 OBJ = $(OBJDIR)/OnWireSDL.o \
 	$(OBJDIR)/OnWireGame.o \
 	$(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(wildcard $(SRCDIR)/**/*.cpp)) \
-	$(OBJDIR)/libRainbow.a \
+	$(OBJDIR)/librainbow.a \
 	$(OBJDIR)/libBox2D.a
 
-default: $(EXEC)
+default: check $(EXEC)
 
 $(EXEC): $(OBJ)
-	@if [ ! -d $(BINDIR) ]; then mkdir -p $(BINDIR); fi
 	$(CPP) $(LDFLAGS) -o $@ $(OBJ) $(STATIC_LIBS)
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
-	@if [ ! -d $(OBJDIR)/Elements ]; then mkdir -p $(OBJDIR)/Elements; fi
-	@if [ ! -d $(OBJDIR)/Objects ]; then mkdir -p $(OBJDIR)/Objects; fi
 	@echo Compiling $<
 	@$(CPP) -c $< $(CFLAGS) -o $@
 
 %Box2D.a:
 	@make -f $(OBJDIR)/makefile.Box2D
 
-%Rainbow.a:
+%rainbow.a:
 	@make -f $(OBJDIR)/makefile.Rainbow
+
+check:
+	@if [ ! -d $(BINDIR) ]; then mkdir -p $(BINDIR); fi
+	@if [ ! -d $(OBJDIR)/Elements ]; then mkdir -p $(OBJDIR)/Elements; fi
+	@if [ ! -d $(OBJDIR)/Objects ]; then mkdir -p $(OBJDIR)/Objects; fi
 
 clean:
 	@make -f $(OBJDIR)/makefile.Box2D clean

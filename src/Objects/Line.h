@@ -14,20 +14,12 @@
 #include <Rainbow/OpenGL.h>
 #include <Rainbow/Physics.h>
 
-const unsigned int
-	LINE_SEGMENTS = 12,                                        ///< Number of segments making up the line
-	LINE_TRIANGLES = (LINE_SEGMENTS << 1) + 4,                 ///< Number of triangles needed to draw the line
-	LINE_VERTICES = LINE_TRIANGLES << 1,                       ///< Number of vertices needed to make the triangle strip
-	LINE_VBO_SIZE = LINE_VERTICES * sizeof(float);             ///< Vertex buffer size
-const float
-	LINE_WIDTH = 6.0f,                                         ///< Width of the line at the bottom of the screen
-	LINE_WIDTH_OFFSET = (LINE_WIDTH - 1.0f) / LINE_TRIANGLES;  ///< Width of the line at the top of the screen
-
 class Line
 {
 public:
+	static const unsigned int LINE_SEGMENTS = 12;  ///< Number of segments making up the line
+
 	Line(const float &scr_w, const float &scr_h);
-	~Line() { }
 
 	/// Applies an impulse on given segment of the line.
 	inline void apply_impulse(const Vec2 &Ns, const unsigned int n) const
@@ -38,13 +30,22 @@ public:
 	/// Uses OpenGL ES for drawing.
 	void draw();
 
-	inline const Vec2* get_displacement_at(const unsigned int n)
+	inline const Vec2* get_displacement_at(const unsigned int n) const
 	{
 		return &this->segment[n]->GetPosition();//.y - this->center;
 	}
 
 	/// Updates line segment positions from the physics engine.
 	void update();
+
+protected:
+	static const unsigned int
+		LINE_TRIANGLES = (LINE_SEGMENTS << 1) + 4,  ///< Number of triangles needed to draw the line
+		LINE_VERTICES = LINE_TRIANGLES << 1;        ///< Number of vertices needed to make the triangle strip
+
+	const unsigned int LINE_VBO_SIZE;  ///< Vertex buffer size
+	const float LINE_WIDTH;            ///< Width of the line at the bottom of the screen
+	const float LINE_WIDTH_OFFSET;     ///< Width of the line at the top of the screen
 
 private:
 	const float center;               ///< Horizontal center

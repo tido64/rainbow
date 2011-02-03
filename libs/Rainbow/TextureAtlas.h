@@ -1,10 +1,3 @@
-/// Custom texture atlas implemented in OpenGL ES 1.1.
-
-/// GL drawing order: (1,1) -> (0,1) -> (1,0) -> (0,0)
-///
-/// Copyright 2010 Bifrost Games. All rights reserved.
-/// \author Tommy Nguyen
-
 #ifndef TEXTUREATLAS_H_
 #define TEXTUREATLAS_H_
 
@@ -16,6 +9,13 @@
 
 class Sprite;
 
+
+/// Custom texture atlas implemented in OpenGL ES 1.1.
+
+/// GL drawing order: (1,1) -> (0,1) -> (1,0) -> (0,0)
+///
+/// Copyright 2010 Bifrost Games. All rights reserved.
+/// \author Tommy Nguyen
 class TextureAtlas
 {
 public:

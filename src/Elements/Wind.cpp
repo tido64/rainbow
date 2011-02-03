@@ -17,7 +17,7 @@ void Wind::play()
 
 void Wind::step()
 {
-	const unsigned int s = LINE_SEGMENTS >> 1;
+	const unsigned int s = Line::LINE_SEGMENTS >> 1;
 	this->line->apply_impulse(Vec2(this->force, 0.0f), s);
 	this->line->apply_impulse(Vec2(this->force, 0.0f), s + 1);
 	this->line->apply_impulse(Vec2(this->force, 0.0f), s + 2);

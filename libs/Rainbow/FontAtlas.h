@@ -39,8 +39,8 @@ public:
 protected:
 	static const unsigned char ascii_offset = 32;  ///< Start loading from character 32
 	static const unsigned char chars = 95;         ///< Load characters through 126 from the ASCII table
-	static const unsigned short int margin = 2;    ///< Margin around each font glyph
-	static const unsigned short int padding = 3;   ///< Texture padding for proper anti-aliasing
+	static const unsigned short int margin = 2;    ///< Drawn margin around font glyph
+	static const unsigned short int padding = 3;   ///< Padding around font glyph texture
 
 private:
 	GLuint textures[chars];

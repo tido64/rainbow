@@ -1,4 +1,4 @@
-TARGET = libRainbow.a
+TARGET = librainbow.a
 OBJDIR = build/unix/Rainbow
 SRCDIR = libs/Rainbow
 
@@ -8,16 +8,19 @@ CFLAGS = -g -O2 -Wall -pipe -I ../lib -I libs -I /usr/include/freetype2 -ftree-v
 OBJ = $(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(wildcard $(SRCDIR)/*.cpp)) \
 	$(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(wildcard $(SRCDIR)/**/*.cpp))
 
-default: $(OBJDIR)/../$(TARGET)
+default: check $(OBJDIR)/../$(TARGET)
 
 %.a: $(OBJ)
 	ar rsc $@ $^
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
-	@if [ ! -d $(OBJDIR)/Hardware ]; then mkdir -p $(OBJDIR)/Hardware; fi
-	@if [ ! -d $(OBJDIR)/ParticleSystem ]; then mkdir -p $(OBJDIR)/ParticleSystem; fi
 	@echo Compiling $<
 	@$(CPP) -c $< $(CFLAGS) -o $@
+
+check:
+	@if [ ! -d $(OBJDIR)/Hardware ]; then mkdir -p $(OBJDIR)/Hardware; fi
+	@if [ ! -d $(OBJDIR)/Input ]; then mkdir -p $(OBJDIR)/Input; fi
+	@if [ ! -d $(OBJDIR)/ParticleSystem ]; then mkdir -p $(OBJDIR)/ParticleSystem; fi
 
 clean:
 	rm -rf $(OBJDIR)

@@ -1,12 +1,10 @@
-/// Common structs used throughout the framework.
-
-/// Copyright 2010 Bifrost Games. All rights reserved.
-/// \author Tommy Nguyen
-
 #ifndef TYPES_H_
 #define TYPES_H_
 
 /// Structure for storing a color (RGBA).
+
+/// Copyright 2010 Bifrost Games. All rights reserved.
+/// \author Tommy Nguyen
 template<typename T>
 struct __Color4
 {
@@ -17,7 +15,11 @@ struct __Color4
 		r(r), g(g), b(b), a(a) { }
 };
 
+
 /// Structure for storing a pair of numerical values.
+
+/// Copyright 2010 Bifrost Games. All rights reserved.
+/// \author Tommy Nguyen
 template<typename T>
 struct __Vec2
 {
@@ -86,6 +88,11 @@ typedef __Color4<float> Color4f;
 typedef __Vec2<float> Vec2f;
 typedef __Vec2<int> Vec2i;
 
+
+/// A typical sprite vertex contains x- and y-coordinates for position and texture.
+
+/// Copyright 2010 Bifrost Games. All rights reserved.
+/// \author Tommy Nguyen
 struct SpriteVertex
 {
 	Vec2f position;

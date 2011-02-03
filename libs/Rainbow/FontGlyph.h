@@ -1,3 +1,5 @@
+/// Font glyph structure for storing advance and a textured sprite.
+
 /// Copyright 2010 Bifrost Games. All rights reserved.
 /// \author Tommy Nguyen
 

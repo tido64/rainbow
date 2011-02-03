@@ -35,9 +35,9 @@ namespace Rainbow
 		{
 			p->size = mt_random() * 16;
 			p->position.x = Screen::Instance().width() * 0.3f + Screen::Instance().width() * 0.6f * (mt_random() - 0.5f) * 2;
-			p->position.y = Screen::Instance().height() * mt_random();
+			p->position.y = Screen::Instance().height();
 			p->vector.x = mt_random() * 2;
-			p->vector.y = mt_random() * (p->size / 8) - 10;
+			p->vector.y = mt_random() * (p->size / 8) - 16;
 			p->color.r = p->color.g = mt_random();
 			p->color.b = mt_random() + 0.5f;
 		}
@@ -47,6 +47,7 @@ namespace Rainbow
 			for (unsigned int i = 0; i < count; ++i)
 			{
 				init(p);
+				p->position.y *= mt_random();
 				p->texcoord[0].x = 1.0f;
 				p->texcoord[0].y = 0.0f;
 				p->texcoord[1].x = 0.0f;

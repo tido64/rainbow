@@ -1,15 +1,3 @@
-/// Platform-independent physics engine.
-
-/// This implementation extends Box2D with a few convenience methods and
-/// abstractions in case of engine change. Time step has been fixed, with help
-/// from UNAgames.
-///
-/// \see http://gafferongames.com/game-physics/fix-your-timestep/
-/// \see http://www.unagames.com/blog/daniele/2010/06/fixed-time-step-implementation-box2d
-///
-/// Copyright 2010 Bifrost Games. All rights reserved.
-/// \author Tommy Nguyen
-
 #ifndef PHYSICS_H_
 #define PHYSICS_H_
 
@@ -30,6 +18,18 @@ typedef b2FixtureDef    Fixture;
 typedef b2PolygonShape  PolygonShape;
 typedef b2Vec2          Vec2;
 
+
+/// Platform-independent physics engine.
+
+/// This implementation extends Box2D with a few convenience methods and
+/// abstractions in case of engine change. Time step has been fixed, with help
+/// from UNAgames.
+///
+/// \see http://gafferongames.com/game-physics/fix-your-timestep/
+/// \see http://www.unagames.com/blog/daniele/2010/06/fixed-time-step-implementation-box2d
+///
+/// Copyright 2010 Bifrost Games. All rights reserved.
+/// \author Tommy Nguyen
 class Physics
 {
 public:
@@ -51,8 +51,10 @@ public:
 	b2Body *create_anchor(const float &w, const float &h, const float &x, const float &y);
 
 	/// Creates a body, given definition and fixture.
-	/// \param d  Body definition
-	/// \param f  Body fixture
+	/// \param d        Body definition
+	/// \param fixture  Body fixture
+	/// \param inertia  Inertia
+	/// \param mass     Body mass
 	/// \return   Body object
 	b2Body *create_body(const b2BodyDef *d, const b2FixtureDef *fixture = 0, const float inertia = 0.0f, const float mass = 0.0f);
 

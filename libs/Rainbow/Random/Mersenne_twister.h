@@ -1,5 +1,5 @@
 /// Double precision SIMD-oriented Fast Mersenne Twister (dSFMT) based on IEEE 754 format.
-///
+
 /// \author Mutsuo Saito (Hiroshima University)
 /// \author Makoto Matsumoto (Hiroshima University)
 ///

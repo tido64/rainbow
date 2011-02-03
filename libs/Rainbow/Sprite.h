@@ -32,11 +32,13 @@ public:
 	/// Draw the sprite.
 	void draw();
 
+	/// Returns the current angle of the sprite.
 	inline const float& get_angle() const
 	{
 		return this->angle;
 	}
 
+	/// Returns the current position of the sprite.
 	inline const Vec2f& get_position() const
 	{
 		return this->position;
