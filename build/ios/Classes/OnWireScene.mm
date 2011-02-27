@@ -85,6 +85,25 @@
 	game->update();
 }
 
+- (void) accelerometer:(UIAccelerometer *)accelerometer didAccelerate:(UIAcceleration *)acceleration
+{
+	static b2Vec2 gravity(0.0f, -9.80665f);
+	gravity.x = -gravity.y * acceleration.x;
+	Physics::Instance().world->SetGravity(gravity);
+	return;
+
+
+	if (acceleration.x > 0.25) // right
+		CCLOG(@"%f: Tilting right", acceleration.x);
+	else if (acceleration.x < -0.25) // left
+		CCLOG(@"%f: Tilting left", acceleration.x);
+	if (acceleration.y > 0.25) // down
+		CCLOG(@"%f: Tilting down", acceleration.y);
+	else if (acceleration.y < -0.25) // up
+		CCLOG(@"%f: Tilting up", acceleration.y);
+	CCLOG(@" ");
+}
+
 -(void)ccTouchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
 	const unsigned int c = touches.count;

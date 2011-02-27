@@ -13,7 +13,7 @@ OBJ = $(OBJDIR)/OnWireSDL.o \
 	$(OBJDIR)/OnWireGame.o \
 	$(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(wildcard $(SRCDIR)/**/*.cpp)) \
 	$(OBJDIR)/librainbow.a \
-	$(OBJDIR)/libBox2D.a
+	$(OBJDIR)/libbox2d.a
 
 default: check $(EXEC)
 
@@ -24,11 +24,11 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
 	@echo Compiling $<
 	@$(CPP) -c $< $(CFLAGS) -o $@
 
-%Box2D.a:
-	@make -f $(OBJDIR)/makefile.Box2D
+%box2d.a:
+	@make -f $(OBJDIR)/Makefile.Box2D
 
 %rainbow.a:
-	@make -f $(OBJDIR)/makefile.Rainbow
+	@make -f $(OBJDIR)/Makefile.Rainbow
 
 check:
 	@if [ ! -d $(BINDIR) ]; then mkdir -p $(BINDIR); fi
@@ -36,8 +36,8 @@ check:
 	@if [ ! -d $(OBJDIR)/Objects ]; then mkdir -p $(OBJDIR)/Objects; fi
 
 clean:
-	@make -f $(OBJDIR)/makefile.Box2D clean
-	@make -f $(OBJDIR)/makefile.Rainbow clean
+	@make -f $(OBJDIR)/Makefile.Box2D clean
+	@make -f $(OBJDIR)/Makefile.Rainbow clean
 	rm -f $(OBJ)
 	rm -fr $(OBJDIR)/Elements
 	rm -fr $(OBJDIR)/Objects

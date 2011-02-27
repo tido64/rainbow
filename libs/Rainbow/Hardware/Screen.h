@@ -6,7 +6,7 @@
 #ifndef SCREEN_H_
 #define SCREEN_H_
 
-#include <Rainbow/Hardware/Platform.h>
+#include "Platform.h"
 
 #ifdef RAINBOW_IOS
 #	include <cocos2d/cocos2d.h>
@@ -28,8 +28,8 @@ public:
 	#if defined(RAINBOW_IOS)
 
 		CCDirector *director = [CCDirector sharedDirector];
-		this->w = director.winSize.width;
-		this->h = director.winSize.height;
+		this->w = director.winSizeInPixels.width;
+		this->h = director.winSizeInPixels.height;
 
 	#else
 
@@ -40,8 +40,8 @@ public:
 	#endif
 	}
 
-	inline float width() { return this->w; }
-	inline float height() { return this->h; }
+	inline float width() const { return this->w; }
+	inline float height() const { return this->h; }
 
 private:
 	float w, h;

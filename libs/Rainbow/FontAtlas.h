@@ -21,9 +21,9 @@
 #include FT_FREETYPE_H
 #include FT_GLYPH_H
 
-#include <Rainbow/AssetManager.h>
-#include <Rainbow/FontGlyph.h>
-#include <Rainbow/OpenGL.h>
+#include "AssetManager.h"
+#include "FontGlyph.h"
+#include "OpenGL.h"
 
 class FontAtlas
 {

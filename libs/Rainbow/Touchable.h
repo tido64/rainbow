@@ -6,7 +6,7 @@
 #ifndef TOUCHABLE_H_
 #define TOUCHABLE_H_
 
-#include <Rainbow/Input/Touch.h>
+#include "Input/Touch.h"
 
 class Touchable
 {

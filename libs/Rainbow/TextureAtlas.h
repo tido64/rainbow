@@ -3,9 +3,9 @@
 
 #include <cstring>
 
-#include <Rainbow/Texture.h>
-#include <Rainbow/Types.h>
-#include <Rainbow/Vector.h>
+#include "Texture.h"
+#include "Types.h"
+#include "Vector.h"
 
 class Sprite;
 
@@ -35,7 +35,7 @@ public:
 	unsigned int define_texture(const int x, const int y, const int width, const int height);
 
 	/// Returns the texture name this atlas holds.
-	inline GLuint get_name() { return this->texture.name; }
+	inline GLuint get_name() const { return this->texture.name; }
 
 	/// Gets named texture.
 	/// \param id        The id of the texture to get

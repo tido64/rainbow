@@ -1,4 +1,4 @@
-#include <Rainbow/AssetManager.h>
+#include "AssetManager.h"
 
 void AssetManager::close()
 {

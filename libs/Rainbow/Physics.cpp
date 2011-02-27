@@ -6,7 +6,7 @@
 //  Copyright 2010 Bifrost Games. All rights reserved.
 //
 
-#include <Rainbow/Physics.h>
+#include "Physics.h"
 
 Physics::Physics() : accumulator(0.0f), accumulator_ratio(0.0f)
 {

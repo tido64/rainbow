@@ -6,7 +6,7 @@
 #ifndef FONTGLYPH_H_
 #define FONTGLYPH_H_
 
-#include <Rainbow/Types.h>
+#include "Types.h"
 
 struct FontGlyph
 {

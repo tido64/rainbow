@@ -1,4 +1,4 @@
-#include <Rainbow/Input/Gestures.h>
+#include "Gestures.h"
 
 namespace Rainbow
 {

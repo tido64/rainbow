@@ -11,8 +11,9 @@
 #include <functional>
 
 #include <boost/unordered_map.hpp>
-#include <Rainbow/Hardware/Screen.h>
-#include <Rainbow/Types.h>
+
+#include "../Hardware/Screen.h"
+#include "../Types.h"
 
 #if defined(RAINBOW_IOS)
 #	include <UIKit/UITouch.h>

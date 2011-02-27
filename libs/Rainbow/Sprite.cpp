@@ -7,7 +7,7 @@
  *
  */
 
-#include <Rainbow/Sprite.h>
+#include "Sprite.h"
 
 using Rainbow::equalf;
 

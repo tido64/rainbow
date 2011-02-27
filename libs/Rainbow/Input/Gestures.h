@@ -1,11 +1,14 @@
 /// Handles touch gestures.
 
+/// Copyright 2010 Bifrost Games. All rights reserved.
+/// \author Tommy Nguyen
+
 #ifndef GESTURES_H_
 #define GESTURES_H_
 
-#include <Rainbow/Hardware/Controls.h>
-#include <Rainbow/Input/Touch.h>
-#include <Rainbow/Algorithm.h>
+#include "../Hardware/Controls.h"
+#include "../Algorithm.h"
+#include "Touch.h"
 
 namespace Rainbow
 {

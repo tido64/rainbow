@@ -9,7 +9,7 @@
 #include <cfloat>
 #include <cmath>
 
-#include <Rainbow/Random/Mersenne_twister.h>
+#include "Random/Mersenne_twister.h"
 
 namespace Rainbow
 {

@@ -14,9 +14,9 @@
 
 #include <cassert>
 
-#include <Rainbow/Algorithm.h>
-#include <Rainbow/OpenGL.h>
-#include <Rainbow/TextureAtlas.h>
+#include "Algorithm.h"
+#include "OpenGL.h"
+#include "TextureAtlas.h"
 
 class Sprite
 {

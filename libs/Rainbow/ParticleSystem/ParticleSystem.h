@@ -9,9 +9,9 @@
 #ifndef PARTICLESYSTEM_H_
 #define PARTICLESYSTEM_H_
 
-#include <Rainbow/OpenGL.h>
-#include <Rainbow/Texture.h>
-#include <Rainbow/ParticleSystem/PointSprite.h>
+#include "../OpenGL.h"
+#include "../Texture.h"
+#include "PointSprite.h"
 
 template<class ParticleInitPolicy, class ParticleActionPolicy, const int max_particles>
 class ParticleSystem

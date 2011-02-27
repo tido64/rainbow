@@ -6,29 +6,29 @@
 //  Copyright 2010 Bifrost Games. All rights reserved.
 //
 
-#include <Rainbow/Hardware/Controls.h>
+#include "Controls.h"
 
-void Controls::accelerate(const float x, const float y)
+void Controls::accelerate(const Acceleration &a)
 {
+	static const float threshold = 0.20f;
+
 	bool should_move = false;
 	//float final_x, final_y;
 
-	// Pitch
-	if (x > 0.25) // upwards
+	if (a.x > threshold) // right
 	{
 		should_move = true;
 	}
-	else if (x < -0.25) // downwards
+	else if (a.x < -threshold) // left
 	{
 		should_move = true;
 	}
 
-	// Roll
-	if (y < -0.25) // right
+	if (a.y > threshold) // down
 	{
 		should_move = true;
 	}
-	else if (y > 0.25) // left
+	else if (a.y < -threshold) // up
 	{
 		should_move = true;
 	}

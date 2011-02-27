@@ -1,4 +1,4 @@
-TARGET = libBox2D.a
+TARGET = libbox2d.a
 OBJDIR = build/unix/Box2D
 SRCDIR = ../lib/Box2D
 
@@ -25,4 +25,4 @@ check:
 	@if [ ! -d $(OBJDIR)/Dynamics/Joints ]; then mkdir -p $(OBJDIR)/Dynamics/Joints; fi
 
 clean:
-	rm -rf $(OBJDIR)
+	rm -fr $(OBJDIR)

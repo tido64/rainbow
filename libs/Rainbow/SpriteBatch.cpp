@@ -1,4 +1,4 @@
-#include <Rainbow/SpriteBatch.h>
+#include "SpriteBatch.h"
 
 template<>
 void SpriteBatch<1>::add(Sprite *s)

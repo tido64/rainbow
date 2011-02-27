@@ -3,7 +3,7 @@
 /// Copyright 2010 Bifrost Games. All rights reserved.
 /// \author Tommy Nguyen
 
-#include <Rainbow/Hardware/Platform.h>
+#include "Hardware/Platform.h"
 
 #if defined(RAINBOW_ANDROID)
 #	include <GLES/gl.h>

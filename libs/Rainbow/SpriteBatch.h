@@ -13,7 +13,7 @@
 #ifndef SPRITEBATCH_H_
 #define SPRITEBATCH_H_
 
-#include <Rainbow/Sprite.h>
+#include "Sprite.h"
 
 template<int N>
 class SpriteBatch

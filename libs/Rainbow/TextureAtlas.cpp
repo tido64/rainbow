@@ -6,7 +6,7 @@
 //  Copyright 2010 Bifrost Games. All rights reserved.
 //
 
-#include <Rainbow/Sprite.h>
+#include "Sprite.h"
 
 TextureAtlas::TextureAtlas(const char *filename, const int texture_count, const int sprite_count, const int mipmap) :
 	texture(filename), sprites(sprite_count), textures(texture_count * 8)

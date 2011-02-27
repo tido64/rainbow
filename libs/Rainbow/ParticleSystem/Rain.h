@@ -7,9 +7,9 @@
 #ifndef RAIN_H_
 #define RAIN_H_
 
-#include <Rainbow/Algorithm.h>
-#include <Rainbow/Hardware/Screen.h>
-#include <Rainbow/ParticleSystem/ParticleSystem.h>
+#include "../Hardware/Screen.h"
+#include "../Algorithm.h"
+#include "ParticleSystem.h"
 
 namespace Rainbow
 {
@@ -28,6 +28,6 @@ namespace Rainbow
 	}
 }
 
-typedef ParticleSystem<Rainbow::Rain::ParticleInitPolicy, Rainbow::Rain::ParticleActionPolicy, 100> RainPS;
+typedef ParticleSystem<Rainbow::Rain::ParticleInitPolicy, Rainbow::Rain::ParticleActionPolicy, 500> RainPS;
 
 #endif

@@ -9,7 +9,7 @@
 #include "Building.h"
 
 Building::Building() :
-	scale(0.4f), progress(scale)
+	scale(0.75f), progress(scale)
 { }
 
 void Building::set_sprite(Sprite *s)

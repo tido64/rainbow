@@ -2,7 +2,8 @@
 #define PHYSICS_H_
 
 #include <Box2D/Box2D.h>
-#include <Rainbow/Hardware/Platform.h>
+
+#include "Hardware/Platform.h"
 
 // Pixel to metres ratio. Box2D uses metres as the unit for measurement.
 // This ratio defines how many pixels correspond to 1 Box2D "metre"
@@ -15,6 +16,7 @@ typedef b2Body          Body;
 typedef b2BodyDef       BodyDef;
 typedef b2CircleShape   CircleShape;
 typedef b2FixtureDef    Fixture;
+typedef b2Joint         Joint;
 typedef b2PolygonShape  PolygonShape;
 typedef b2Vec2          Vec2;
 
@@ -42,7 +44,7 @@ public:
 		return inst;
 	}
 
-	/// Creates an anchor bpx to tie things to.
+	/// Creates an anchor box to tie things to.
 	/// \param w  Width of the box
 	/// \param h  Height of the box
 	/// \param x  Position of the box (x-coordinate)
@@ -55,7 +57,7 @@ public:
 	/// \param fixture  Body fixture
 	/// \param inertia  Inertia
 	/// \param mass     Body mass
-	/// \return   Body object
+	/// \return         Body object
 	b2Body *create_body(const b2BodyDef *d, const b2FixtureDef *fixture = 0, const float inertia = 0.0f, const float mass = 0.0f);
 
 	/// Creates a distant joint between two bodies at their anchor points.
@@ -80,13 +82,13 @@ public:
 
 	/// Defines body position. Remember that it's better to define its position
 	/// beforehand than to create the body and then move it.
-	/// \param d Body definition
-	/// \param x Position (x-coordinate)
-	/// \param y Position (y-coordinate)
+	/// \param d  Body definition
+	/// \param x  Position (x-coordinate)
+	/// \param y  Position (y-coordinate)
 	void define_body_position(b2BodyDef *d, const float x = 0.0f, const float y = 0.0f);
 
 	/// Removes given body from the world.
-	/// \param b Body to remove
+	/// \param b  Body to remove
 	void dispose_body(b2Body *b);
 
 	/// Performs inter-frame interpolation.
@@ -99,7 +101,7 @@ public:
 	void save_state();
 
 	/// Advances Box2D a step forward. This implementation uses a fixed delta.
-	/// \param dt Time spent on rendering the frame
+	/// \param dt  Time spent on rendering the frame
 	void step(const float &dt);
 
 protected:

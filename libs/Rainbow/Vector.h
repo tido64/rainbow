@@ -8,11 +8,8 @@
 #ifndef VECTOR_H_
 #define VECTOR_H_
 
-#include <Rainbow/Hardware/Platform.h>
-
-#if 1//def RAINBOW_ANDROID
-#	include <cassert>
-#	include <cstring>
+#include <cassert>
+#include <cstring>
 
 template<class T>
 class Vector
@@ -65,10 +62,5 @@ private:
 	unsigned int reserved;
 	T *array;
 };
-
-#else
-#	include <vector>
-#	define Vector std::vector
-#endif
 
 #endif

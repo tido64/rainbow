@@ -6,7 +6,7 @@
 #ifndef POINTSPRITE_H_
 #define POINTSPRITE_H_
 
-#include <Rainbow/Types.h>
+#include "../Types.h"
 
 struct PointSprite
 {

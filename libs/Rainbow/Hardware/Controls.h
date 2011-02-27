@@ -8,10 +8,11 @@
 #ifndef CONTROLS_H_
 #define CONTROLS_H_
 
-#include <Rainbow/Hardware/Screen.h>
-#include <Rainbow/Input/Touch.h>
-#include <Rainbow/Touchable.h>
-#include <Rainbow/Vector.h>
+#include "../Input/Acceleration.h"
+#include "../Input/Touch.h"
+#include "../Touchable.h"
+#include "../Vector.h"
+#include "Screen.h"
 
 class Controls
 {
@@ -22,7 +23,7 @@ public:
 		return &c;
 	}
 
-	void accelerate(const float x, const float y);
+	void accelerate(const Acceleration &);
 	void add_touchable(Touchable *);
 
 	const Touches* get_touches() const

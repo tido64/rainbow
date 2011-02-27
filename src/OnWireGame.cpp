@@ -18,7 +18,7 @@ OnWireGame::OnWireGame() :
 {
 	// Define background
 	this->skyline = this->texture_atlas.create_sprite(skyline_asset);
-	this->skyline->scale(0.5f);
+	this->skyline->scale(1.0f);
 	this->skyline->set_position(Screen::Instance().width() * 0.5f, Screen::Instance().height() * 0.5f);
 	this->background.add(this->skyline);
 
@@ -51,8 +51,9 @@ OnWireGame::OnWireGame() :
 	this->clips[0] = &this->yellow_bird;
 	this->clips[1] = &this->wind;
 
-	this->rain.emit(100);
-	this->rain.update();
+	//this->rain.emit(2000);
+	//this->rain.update();
+
 	/*
 	SpriteVertex svx;
 	const void *tex_offset = &svx.position;

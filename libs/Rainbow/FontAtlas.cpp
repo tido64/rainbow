@@ -10,7 +10,7 @@
 
 // http://iphone-3d-programming.labs.oreilly.com/ch07.html
 
-#include <Rainbow/FontAtlas.h>
+#include "FontAtlas.h"
 
 FontAtlas::FontAtlas(const char *f, const float pt) : pt(pt)
 {

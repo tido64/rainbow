@@ -20,7 +20,8 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
 check:
 	@if [ ! -d $(OBJDIR)/Hardware ]; then mkdir -p $(OBJDIR)/Hardware; fi
 	@if [ ! -d $(OBJDIR)/Input ]; then mkdir -p $(OBJDIR)/Input; fi
+	@if [ ! -d $(OBJDIR)/Lua ]; then mkdir -p $(OBJDIR)/Lua; fi
 	@if [ ! -d $(OBJDIR)/ParticleSystem ]; then mkdir -p $(OBJDIR)/ParticleSystem; fi
 
 clean:
-	rm -rf $(OBJDIR)
+	rm -fr $(OBJDIR)

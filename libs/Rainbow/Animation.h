@@ -6,7 +6,7 @@
 #ifndef ANIMATION_H_
 #define ANIMATION_H_
 
-#include <Rainbow/Drawable.h>
+#include "Drawable.h"
 
 class Animation : public Drawable
 {
