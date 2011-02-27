@@ -10,7 +10,7 @@ lua_Platform::lua_Platform(lua_State *L, const int ns)
 	{
 		lua_newtable(L);
 		lua_pushvalue(L, -1);
-		lua_setfield(L, -2, "screen");
+		lua_setfield(L, -3, "screen");
 
 		lua_pushcclosure(L, &lua_Platform::height, 0);
 		lua_setfield(L, -2, "height");

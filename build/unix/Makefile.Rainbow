@@ -3,7 +3,7 @@ OBJDIR = build/unix/Rainbow
 SRCDIR = libs/Rainbow
 
 CPP = g++
-CFLAGS = -g -O2 -Wall -pipe -I ../lib -I libs -I /usr/include/freetype2 -ftree-vectorize -ftree-vectorizer-verbose=6 -march=native
+CFLAGS = -g -O2 -Wall -pipe -I $(LIBDIR) -I $(LIBLUA) -I libs -I $(LIBFREETYPE)  -ftree-vectorize -ftree-vectorizer-verbose=6 -march=native
 
 OBJ = $(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(wildcard $(SRCDIR)/*.cpp)) \
 	$(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(wildcard $(SRCDIR)/**/*.cpp))
@@ -25,3 +25,6 @@ check:
 
 clean:
 	rm -fr $(OBJDIR)
+
+debug:
+	@echo CFLAGS = $(CFLAGS)

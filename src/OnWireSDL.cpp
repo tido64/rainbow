@@ -3,12 +3,13 @@
 #include <SDL/SDL_thread.h>
 
 #define DEBUG 1
-#include "OnWireGame.h"
+//#include "OnWireGame.h"
+#include <Rainbow/Director.h>
 
 bool active = true;
 bool done = false;
-const unsigned short int screen_width = 320;
-const unsigned short int screen_height = 480;
+const unsigned short int screen_width = 640;
+const unsigned short int screen_height = 960;
 int video_mode = 0;
 const double fps = 1000.0 / 60.0;
 
@@ -59,9 +60,12 @@ int main()
 	resize(screen_width, screen_height);
 
 	AssetManager::Instance().set_source("assets.bfz");
-	OnWireGame the_game;
-	the_game.reset(1337);
-	SDL_Thread *clock_thread = SDL_CreateThread(tick, &the_game);
+	//OnWireGame the_game;
+	//the_game.reset(1337);
+	Director onwire_game;
+
+	// If the game wishes to have a ticker
+	SDL_Thread *clock_thread = SDL_CreateThread(tick, &onwire_game);
 
 	unsigned int now, time = SDL_GetTicks();
 	while (!done)
@@ -105,11 +109,11 @@ int main()
 			time = now;
 
 			// Update game logic
-			the_game.update();
+			onwire_game.update();
 
 			// Draw
 			glClear(GL_COLOR_BUFFER_BIT);
-			the_game.draw();
+			onwire_game.draw();
 			SDL_GL_SwapBuffers();
 		}
 	}
@@ -169,7 +173,7 @@ void resize(const int w, const int h)
 int tick(void *g)
 {
 	const unsigned int delay = 1000;
-	OnWireGame *game = static_cast<OnWireGame *>(g);
+	Director *game = static_cast<Director *>(g);
 	SDL_Delay(delay);
 
 	unsigned int start = SDL_GetTicks();

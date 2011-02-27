@@ -153,6 +153,7 @@ public:
 
 			delete[] row_pointers;
 			png_destroy_read_struct(&png_ptr, &info_ptr, &end_info);
+			free(texture.data);
 		}
 		#endif
 

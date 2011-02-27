@@ -32,6 +32,14 @@ public:
 		int (T::*lua_CFunction)(lua_State *);
 	};
 
+	/// Dumps Lua stack to stdout
+	static void dump_stack(lua_State *L)
+	{
+		puts("Lua stack");
+		for (int l = 1; l <= lua_gettop(L); ++l)
+			printf("#%i: %s\n", l, lua_tostring(L, l));
+	}
+
 	Lua();
 	~Lua() { lua_close(this->L); }
 
@@ -70,11 +78,9 @@ public:
 		}
 
 		luaL_newmetatable(this->L, T::class_name);
-		const int meta_tbl = lua_gettop(this->L);
-
 		lua_pushstring(this->L, "__gc");
 		lua_pushcclosure(this->L, &Lua::dealloc<T>, 0);
-		lua_settable(this->L, meta_tbl);
+		lua_settable(this->L, -3);
 	}
 
 private:
@@ -84,9 +90,11 @@ private:
     static int alloc(lua_State * L)
 	{
 		T *obj = new T(L);
+		lua_pop(L, lua_gettop(L));
 
 		lua_newtable(L);
 		lua_pushnumber(L, 0);
+
 		T **ptr = static_cast<T **>(lua_newuserdata(L, sizeof(T*)));
 		*ptr = obj;
 
@@ -119,9 +127,10 @@ private:
 		const int i = static_cast<int>(lua_tonumber(L, lua_upvalueindex(1)));
 		lua_pushnumber(L, 0);
 		lua_gettable(L, 1);
+		lua_remove(L, 1);
 
 		T **ptr = static_cast<T **>(luaL_checkudata(L, -1, T::class_name));
-		lua_remove(L, -1);
+		lua_pop(L, 1);
 
 		return ((*ptr)->*(T::methods[i].lua_CFunction))(L);
 	}

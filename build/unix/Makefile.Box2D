@@ -3,7 +3,7 @@ OBJDIR = build/unix/Box2D
 SRCDIR = ../lib/Box2D
 
 CPP = g++
-CFLAGS = -g0 -O2 -pipe -I ../lib -ftree-vectorize -march=native
+CFLAGS = -g0 -O2 -pipe -I $(LIBDIR) -ftree-vectorize -march=native
 
 OBJ = $(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(wildcard $(SRCDIR)/**/*.cpp)) \
 	$(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(wildcard $(SRCDIR)/**/**/*.cpp))

@@ -1,19 +1,26 @@
+# Libraries
+LIBDIR = ../lib
+LIBLUA = $(LIBDIR)/Lua
+LIBFREETYPE = /usr/include/freetype2
+
+# Build environment
 TARGET = onwire
 BINDIR = bin
 OBJDIR = build/unix
 SRCDIR = src
 
+# Flags
 CPP = g++
-CFLAGS = -g0 -O2 -Wall -pipe -I ../lib -I libs -I /usr/include/freetype2 -ftree-vectorize -ftree-vectorizer-verbose=0 -march=native
+CFLAGS = -g -O2 -Wall -pipe -I $(LIBDIR) -I $(LIBLUA) -I libs -I $(LIBFREETYPE) -ftree-vectorize -ftree-vectorizer-verbose=0 -march=native
 LDFLAGS = -lGL -lSDL -lfreetype -lpng -lzip
 #STATIC_LIBS = /usr/lib/libfreetype.a /usr/lib/libpng.a /usr/lib/libzip.a /usr/lib/libz.a
 
 EXEC = $(BINDIR)/$(TARGET)
 OBJ = $(OBJDIR)/OnWireSDL.o \
-	$(OBJDIR)/OnWireGame.o \
 	$(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(wildcard $(SRCDIR)/**/*.cpp)) \
 	$(OBJDIR)/librainbow.a \
-	$(OBJDIR)/libbox2d.a
+	$(OBJDIR)/libbox2d.a \
+	$(OBJDIR)/liblua.a
 
 default: check $(EXEC)
 
@@ -25,10 +32,15 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
 	@$(CPP) -c $< $(CFLAGS) -o $@
 
 %box2d.a:
-	@make -f $(OBJDIR)/Makefile.Box2D
+	@LIBDIR=$(LIBDIR) make -f $(OBJDIR)/Makefile.Box2D
+
+%lua.a:
+	@cd $(LIBLUA) && make linux
+	@mv $(LIBLUA)/liblua.a $(OBJDIR)
+	@cd $(LIBLUA) && make clean
 
 %rainbow.a:
-	@make -f $(OBJDIR)/Makefile.Rainbow
+	@LIBDIR=$(LIBDIR) LIBLUA=$(LIBLUA) LIBFREETYPE=$(LIBFREETYPE) make -f $(OBJDIR)/Makefile.Rainbow
 
 check:
 	@if [ ! -d $(BINDIR) ]; then mkdir -p $(BINDIR); fi
@@ -44,3 +56,6 @@ clean:
 
 clean-all: clean
 	@rm -fr $(EXEC)
+
+debug:
+	@echo CFLAGS = $(CFLAGS)

@@ -28,6 +28,7 @@ int lua_Texture::create_sprite(lua_State *L)
 		lua_tointeger(L, 3),
 		lua_tointeger(L, 4));
 	lua_pushlightuserdata(L, s);
+	Lua::dump_stack(L);
 	return 1;
 }
 

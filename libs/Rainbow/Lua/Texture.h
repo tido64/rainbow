@@ -11,6 +11,7 @@ public:
 	static const Lua::Method<lua_Texture> methods[];
 
 	lua_Texture(lua_State *);
+	~lua_Texture() { delete this->t; }
 
 	int create_sprite(lua_State *);
 	int define_texture(lua_State *);

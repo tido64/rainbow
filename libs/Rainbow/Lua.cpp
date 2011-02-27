@@ -27,7 +27,27 @@ Lua::Lua() : L(lua_open())
 void Lua::call(const char *k)
 {
 	lua_getfield(this->L, LUA_GLOBALSINDEX, k);
-	lua_pcall(this->L, 0, 0, 0);
+	int lua_e = lua_pcall(this->L, 0, 0, 0);
+	if (lua_e != 0)
+	{
+		const char *m = lua_tostring(this->L, -1);
+		switch (lua_e)
+		{
+			case LUA_ERRRUN:
+				printf("Lua runtime error: %s: %s\n", k, m);
+				break;
+			case LUA_ERRMEM:
+				printf("Lua memory allocation error: %s: %s\n", k, m);
+				break;
+			case LUA_ERRERR:
+				printf("Lua error while running the error handler function: %s: %s\n", k, m);
+				break;
+			default:
+				printf("Unknown Lua error: %s: %s\n", k, m);
+				break;
+		}
+		exit(1);
+	}
 }
 
 void Lua::load(const char *lua)
@@ -39,13 +59,13 @@ void Lua::load(const char *lua)
 		switch (lua_e)
 		{
 			case LUA_ERRSYNTAX:
-				printf("Syntax error: %s\n", lua);
+				printf("Lua syntax error: %s\n", lua);
 				break;
 			case LUA_ERRMEM:
-				printf("Memory allocation error: %s\n", lua);
+				printf("Lua memory allocation error: %s\n", lua);
 				break;
 			default:
-				printf("Read error: %s\n", lua);
+				printf("Lua read error: %s\n", lua);
 				break;
 		}
 		exit(1);
