@@ -12,6 +12,8 @@ public:
 
 	lua_Sprite(lua_State *);
 
+	inline Sprite* raw_ptr() const { return this->s; }
+
 	int get_angle(lua_State *);
 	int get_position(lua_State *);
 	int rotate(lua_State *);

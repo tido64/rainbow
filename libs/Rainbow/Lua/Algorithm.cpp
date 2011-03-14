@@ -2,7 +2,7 @@
 
 lua_Algorithm::lua_Algorithm(lua_State *L, const int ns)
 {
-	lua_newtable(L);
+	lua_createtable(L, 0, 0);
 	lua_pushvalue(L, -1);
 	lua_setfield(L, ns, "algorithm");
 

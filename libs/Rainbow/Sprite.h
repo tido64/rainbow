@@ -98,7 +98,7 @@ private:
 	Vec2f scale_f;               ///< Scaling factor
 	Vec2f origin[4];             ///< Original rendering at origo
 
-	template<int N> friend class SpriteBatch;
+	friend class SpriteBatch;
 	friend class TextureAtlas;
 };
 

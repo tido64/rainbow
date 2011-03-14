@@ -12,8 +12,10 @@ using Rainbow::mt_random;
 
 OnWireGame::OnWireGame() :
 	texture_atlas("assets-hd.png", 11, 8),
+	background(1),
 	line(Screen::Instance().width(), Screen::Instance().height()),
 	avatar(this->line.get_displacement_at(4)),
+	foreground(),
 	wind(&this->line)
 {
 	// Define background

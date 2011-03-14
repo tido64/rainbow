@@ -43,8 +43,8 @@
 		// Initialise game
 		AssetManager::Instance().set_source();
 		controls = Controls::Instance();
-		game = new OnWireGame();
-		game->reset(9000);
+		//game = new OnWireGame();
+		//game->reset(9000);
 
 		[self schedule: @selector(clock) interval:1.0f];
 		[self schedule: @selector(tick:)];
@@ -54,7 +54,8 @@
 
 -(void)clock
 {
-	game->tick();
+	//game->tick();
+	game.tick();
 }
 
 -(void)draw
@@ -64,7 +65,8 @@
 	// Unneeded states: GL_COLOR_ARRAY
 	glDisableClientState(GL_COLOR_ARRAY);
 
-	game->draw();
+	//game->draw();
+	game.draw();
 
 	// Needed states: GL_VERTEX_ARRAY,
 	// Unneeded states: GL_TEXTURE_2D, GL_COLOR_ARRAY, GL_TEXTURE_COORD_ARRAY
@@ -82,7 +84,8 @@
 -(void)tick:(ccTime)dt
 {
 	Physics::Instance().step(dt);
-	game->update();
+	//game->update();
+	game.update();
 }
 
 - (void) accelerometer:(UIAccelerometer *)accelerometer didAccelerate:(UIAcceleration *)acceleration
@@ -137,7 +140,7 @@
 -(void)dealloc
 {
 	delete controls;
-	delete game;
+	//delete game;
 	delete debug_draw;
 
 	// don't forget to call "super dealloc"

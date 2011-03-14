@@ -44,10 +44,10 @@ private:
 	TextureAtlas texture_atlas;    ///< Main texture atlas
 	Sprite *skyline;               ///< The skyline backdrop
 	Building building;             ///< Target building
-	SpriteBatch<2> background;     ///< Combines skyline and building
+	SpriteBatch background;        ///< Combines skyline and building
 	Line line;                     ///< The line
 	Avatar avatar;                 ///< Player avatar
-	SpriteBatch<1> foreground;     ///< Combines avatar and all game elements
+	SpriteBatch foreground;        ///< Combines avatar and all game elements
 	HUD hud;                       ///< Player's head-up display
 
 	Animation *clips[clip_count];  ///< All elements

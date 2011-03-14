@@ -11,7 +11,19 @@
 
 Director::Director()
 {
+#ifdef RAINBOW_IOS
+
+	const char *script = AssetManager::Instance().get_full_path("onwire.lua");
+	this->lua.load(script);
+
+#else
+
 	this->lua.load("onwire.lua");
+
+#endif
+
+	this->lua.call("init");
+	this->lua.call("update");
 }
 
 void Director::draw()

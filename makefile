@@ -8,6 +8,7 @@ TARGET = onwire
 BINDIR = bin
 OBJDIR = build/unix
 SRCDIR = src
+STATIC = $(OBJDIR)/librainbow.a $(OBJDIR)/libbox2d.a $(OBJDIR)/liblua.a
 
 # Flags
 CPP = g++
@@ -17,15 +18,12 @@ LDFLAGS = -lGL -lSDL -lfreetype -lpng -lzip
 
 EXEC = $(BINDIR)/$(TARGET)
 OBJ = $(OBJDIR)/OnWireSDL.o \
-	$(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(wildcard $(SRCDIR)/**/*.cpp)) \
-	$(OBJDIR)/librainbow.a \
-	$(OBJDIR)/libbox2d.a \
-	$(OBJDIR)/liblua.a
+	$(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(wildcard $(SRCDIR)/**/*.cpp))
 
 default: check $(EXEC)
 
-$(EXEC): $(OBJ)
-	$(CPP) $(LDFLAGS) -o $@ $(OBJ) $(STATIC_LIBS)
+$(EXEC): $(OBJ) $(STATIC)
+	$(CPP) $(LDFLAGS) -o $@ $^
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
 	@echo Compiling $<
@@ -33,6 +31,7 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
 
 %box2d.a:
 	@LIBDIR=$(LIBDIR) make -f $(OBJDIR)/Makefile.Box2D
+	@make -f $(OBJDIR)/Makefile.Box2D clean
 
 %lua.a:
 	@cd $(LIBLUA) && make linux
@@ -48,14 +47,13 @@ check:
 	@if [ ! -d $(OBJDIR)/Objects ]; then mkdir -p $(OBJDIR)/Objects; fi
 
 clean:
-	@make -f $(OBJDIR)/Makefile.Box2D clean
 	@make -f $(OBJDIR)/Makefile.Rainbow clean
-	rm -f $(OBJ)
-	rm -fr $(OBJDIR)/Elements
-	rm -fr $(OBJDIR)/Objects
+	@rm -fr $(OBJDIR)/Elements
+	@rm -fr $(OBJDIR)/Objects
+	@rm -f $(OBJDIR)/*.o
 
-clean-all: clean
-	@rm -fr $(EXEC)
+dist-clean: clean
+	@rm -f $(OBJDIR)/*.a $(OBJDIR)/*.o
 
 debug:
 	@echo CFLAGS = $(CFLAGS)

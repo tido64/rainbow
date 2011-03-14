@@ -1,6 +1,6 @@
 #include "Texture.h"
 
-const char *lua_Texture::class_name = "texture";
+const char *lua_Texture::class_name = "load_texture";
 const Lua::Method<lua_Texture> lua_Texture::methods[] = {
 	{ "create_sprite",  &lua_Texture::create_sprite },
 	{ "define_texture", &lua_Texture::define_texture },
@@ -27,8 +27,9 @@ int lua_Texture::create_sprite(lua_State *L)
 		lua_tointeger(L, 2),
 		lua_tointeger(L, 3),
 		lua_tointeger(L, 4));
+	lua_pop(L, lua_gettop(L));
 	lua_pushlightuserdata(L, s);
-	Lua::dump_stack(L);
+	Lua::alloc<lua_Sprite>(L);
 	return 1;
 }
 

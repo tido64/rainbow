@@ -12,6 +12,7 @@ public:
 
 	lua_Font(lua_State *);
 
+	int color(lua_State *);
 	int print(lua_State *);
 
 private:

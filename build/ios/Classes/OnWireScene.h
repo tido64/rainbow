@@ -7,12 +7,15 @@
 //
 
 #import "GLES-Render.h"
-#import "OnWireGame.h"
+//#import "OnWireGame.h"
+#import "Director.h"
+#import "Controls.h"
 
 @interface OnWire : CCLayer {
 	Controls *controls;
 	GLESDebugDraw *debug_draw;
-	OnWireGame *game;
+	//OnWireGame *game;
+	Director game;
 	Rainbow::TouchArray get_touches;
 }
 

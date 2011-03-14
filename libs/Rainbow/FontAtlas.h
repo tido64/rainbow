@@ -36,6 +36,9 @@ public:
 	/// Prints text at (x,y).
 	void print(const char *text, const float x = 0.0f, const float y = 0.0f) const;
 
+	/// Sets font color.
+	void set_color(const unsigned char r, const unsigned char g, const unsigned char b, const unsigned char a = 0xff);
+
 protected:
 	static const unsigned char ascii_offset = 32;  ///< Start loading from character 32
 	static const unsigned char chars = 95;         ///< Load characters through 126 from the ASCII table
@@ -45,6 +48,7 @@ protected:
 private:
 	GLuint textures[chars];
 	FontGlyph charset[chars];
+	Color4ub color;
 
 	inline int next_pow2(const int a)
 	{

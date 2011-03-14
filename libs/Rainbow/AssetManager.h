@@ -46,7 +46,7 @@ public:
 	void close();
 
 	/// Returns the full path to a resource or asset.
-	const char* get_full_path(const char *filename);
+	const char* get_full_path(const char *filename = 0);
 
 	/// Loads a file into provided buffer.
 	/// \param buffer    The buffer to fill

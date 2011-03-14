@@ -6,8 +6,7 @@
 #ifndef DIRECTOR_H_
 #define DIRECTOR_H_
 
-#include "Lua/Algorithm.h"
-#include "Lua/Physics.h"
+#include "AssetManager.h"
 #include "Lua.h"
 
 class Director
@@ -27,12 +26,6 @@ public:
 
 private:
 	Lua lua;
-
-	static int rand(lua_State *L)
-	{
-		lua_pushnumber(L, Rainbow::mt_random());
-		return 1;
-	}
 };
 
 #endif

@@ -11,7 +11,7 @@ OBJ = $(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(wildcard $(SRCDIR)/*.cpp)) \
 default: check $(OBJDIR)/../$(TARGET)
 
 %.a: $(OBJ)
-	ar rsc $@ $^
+	@ar rsc $@ $^
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
 	@echo Compiling $<
@@ -24,7 +24,4 @@ check:
 	@if [ ! -d $(OBJDIR)/ParticleSystem ]; then mkdir -p $(OBJDIR)/ParticleSystem; fi
 
 clean:
-	rm -fr $(OBJDIR)
-
-debug:
-	@echo CFLAGS = $(CFLAGS)
+	@rm -fr $(OBJDIR)

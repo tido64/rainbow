@@ -87,6 +87,13 @@
 		1970471212BFC4A600E0E9C2 /* TextureAtlas.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 197046C312BFC4A600E0E9C2 /* TextureAtlas.cpp */; };
 		1970478E12BFD5A500E0E9C2 /* OnWireAppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1970478B12BFD5A500E0E9C2 /* OnWireAppDelegate.mm */; };
 		1970478F12BFD5A500E0E9C2 /* OnWireScene.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1970478D12BFD5A500E0E9C2 /* OnWireScene.mm */; };
+		198B85381323FF9A0077F9A6 /* SpriteBatch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 198B85361323FF9A0077F9A6 /* SpriteBatch.cpp */; };
+		19AE6E1B132E192D00D7EF03 /* Avatar.lua in Resources */ = {isa = PBXBuildFile; fileRef = 19AE6E15132E192D00D7EF03 /* Avatar.lua */; };
+		19AE6E1C132E192D00D7EF03 /* Building.lua in Resources */ = {isa = PBXBuildFile; fileRef = 19AE6E16132E192D00D7EF03 /* Building.lua */; };
+		19AE6E1D132E192D00D7EF03 /* HUD.lua in Resources */ = {isa = PBXBuildFile; fileRef = 19AE6E17132E192D00D7EF03 /* HUD.lua */; };
+		19AE6E1E132E192D00D7EF03 /* onwire.lua in Resources */ = {isa = PBXBuildFile; fileRef = 19AE6E18132E192D00D7EF03 /* onwire.lua */; };
+		19AE6E1F132E192D00D7EF03 /* State.lua in Resources */ = {isa = PBXBuildFile; fileRef = 19AE6E19132E192D00D7EF03 /* State.lua */; };
+		19AE6E20132E192D00D7EF03 /* Utils.lua in Resources */ = {isa = PBXBuildFile; fileRef = 19AE6E1A132E192D00D7EF03 /* Utils.lua */; };
 		19B56D8912CBCAA700924439 /* GLES-Render.mm in Sources */ = {isa = PBXBuildFile; fileRef = 19B56D8812CBCAA700924439 /* GLES-Render.mm */; };
 		19B56E8712CBD7A600924439 /* ArialBlack.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 19B56E8512CBD7A600924439 /* ArialBlack.ttf */; };
 		19B56E8812CBD7A600924439 /* ArialBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 19B56E8612CBD7A600924439 /* ArialBold.ttf */; };
@@ -734,6 +741,14 @@
 		1970478B12BFD5A500E0E9C2 /* OnWireAppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = OnWireAppDelegate.mm; path = Classes/OnWireAppDelegate.mm; sourceTree = "<group>"; };
 		1970478C12BFD5A500E0E9C2 /* OnWireScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OnWireScene.h; path = Classes/OnWireScene.h; sourceTree = "<group>"; };
 		1970478D12BFD5A500E0E9C2 /* OnWireScene.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = OnWireScene.mm; path = Classes/OnWireScene.mm; sourceTree = "<group>"; };
+		198B85361323FF9A0077F9A6 /* SpriteBatch.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = SpriteBatch.cpp; sourceTree = "<group>"; };
+		198B85371323FF9A0077F9A6 /* SpriteBatch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpriteBatch.h; sourceTree = "<group>"; };
+		19AE6E15132E192D00D7EF03 /* Avatar.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Avatar.lua; sourceTree = "<group>"; };
+		19AE6E16132E192D00D7EF03 /* Building.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Building.lua; sourceTree = "<group>"; };
+		19AE6E17132E192D00D7EF03 /* HUD.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = HUD.lua; sourceTree = "<group>"; };
+		19AE6E18132E192D00D7EF03 /* onwire.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = onwire.lua; sourceTree = "<group>"; };
+		19AE6E19132E192D00D7EF03 /* State.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = State.lua; sourceTree = "<group>"; };
+		19AE6E1A132E192D00D7EF03 /* Utils.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Utils.lua; sourceTree = "<group>"; };
 		19B56D8812CBCAA700924439 /* GLES-Render.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = "GLES-Render.mm"; path = "../../src/GLES-Render.mm"; sourceTree = SOURCE_ROOT; };
 		19B56E8512CBD7A600924439 /* ArialBlack.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = ArialBlack.ttf; sourceTree = "<group>"; };
 		19B56E8612CBD7A600924439 /* ArialBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = ArialBold.ttf; sourceTree = "<group>"; };
@@ -1620,6 +1635,20 @@
 			path = Random;
 			sourceTree = "<group>";
 		};
+		19AE6E14132E192D00D7EF03 /* Lua */ = {
+			isa = PBXGroup;
+			children = (
+				19AE6E15132E192D00D7EF03 /* Avatar.lua */,
+				19AE6E16132E192D00D7EF03 /* Building.lua */,
+				19AE6E17132E192D00D7EF03 /* HUD.lua */,
+				19AE6E18132E192D00D7EF03 /* onwire.lua */,
+				19AE6E19132E192D00D7EF03 /* State.lua */,
+				19AE6E1A132E192D00D7EF03 /* Utils.lua */,
+			);
+			name = Lua;
+			path = ../../../../bifrost/onwire/res/Lua;
+			sourceTree = SOURCE_ROOT;
+		};
 		19C28FACFE9D520D11CA2CBB /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -1642,6 +1671,8 @@
 				19E360DB131865D20029AF15 /* Platform.h */,
 				19E360DE131865D20029AF15 /* Sprite.cpp */,
 				19E360DF131865D20029AF15 /* Sprite.h */,
+				198B85361323FF9A0077F9A6 /* SpriteBatch.cpp */,
+				198B85371323FF9A0077F9A6 /* SpriteBatch.h */,
 				19E360E0131865D20029AF15 /* Texture.cpp */,
 				19E360E1131865D20029AF15 /* Texture.h */,
 			);
@@ -1926,6 +1957,7 @@
 			isa = PBXGroup;
 			children = (
 				1916BABF12BC12F20071E294 /* Fonts */,
+				19AE6E14132E192D00D7EF03 /* Lua */,
 				1916BA4912BC0F7A0071E294 /* assets-hd.png */,
 				1916BA4A12BC0F7A0071E294 /* assets.png */,
 				1916BACB12BC13260071E294 /* Default.png */,
@@ -2391,6 +2423,12 @@
 				1912BB5112BE241B0013E632 /* mobpig.png in Resources */,
 				19B56E8712CBD7A600924439 /* ArialBlack.ttf in Resources */,
 				19B56E8812CBD7A600924439 /* ArialBold.ttf in Resources */,
+				19AE6E1B132E192D00D7EF03 /* Avatar.lua in Resources */,
+				19AE6E1C132E192D00D7EF03 /* Building.lua in Resources */,
+				19AE6E1D132E192D00D7EF03 /* HUD.lua in Resources */,
+				19AE6E1E132E192D00D7EF03 /* onwire.lua in Resources */,
+				19AE6E1F132E192D00D7EF03 /* State.lua in Resources */,
+				19AE6E20132E192D00D7EF03 /* Utils.lua in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2479,6 +2517,7 @@
 				19E360E5131865D20029AF15 /* Platform.cpp in Sources */,
 				19E360E7131865D20029AF15 /* Sprite.cpp in Sources */,
 				19E360E8131865D20029AF15 /* Texture.cpp in Sources */,
+				198B85381323FF9A0077F9A6 /* SpriteBatch.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

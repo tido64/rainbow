@@ -16,6 +16,9 @@ const char* AssetManager::get_full_path(const char *filename)
 {
 #if defined(RAINBOW_ANDROID)
 
+	if (filename == 0)
+		return "assets";
+
 	unsigned int length = 0;
 	while (filename[length] != '\0')
 		++length;
@@ -26,12 +29,15 @@ const char* AssetManager::get_full_path(const char *filename)
 
 #elif defined(RAINBOW_IOS)
 
+	if (filename == 0)
+		return [[archive bundlePath] UTF8String];
+
 	NSString *file = [NSString stringWithUTF8String:(filename)];
-	NSString *path = [archive pathForResource:[file stringByDeletingPathExtension] ofType:[file pathExtension]];
-	return [path UTF8String];
+	return [[archive pathForResource:[file stringByDeletingPathExtension] ofType:[file pathExtension]] UTF8String];
 
 #else
 
+	assert(filename != 0);
 	return filename;
 
 #endif

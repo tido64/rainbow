@@ -25,4 +25,4 @@ check:
 	@if [ ! -d $(OBJDIR)/Dynamics/Joints ]; then mkdir -p $(OBJDIR)/Dynamics/Joints; fi
 
 clean:
-	rm -fr $(OBJDIR)
+	@rm -fr $(OBJDIR)

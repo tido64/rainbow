@@ -53,7 +53,6 @@ public:
 	/// Returns the element stored at index.
 	inline T& operator[](const unsigned int i)
 	{
-		assert(i < this->count);
 		return this->array[i];
 	}
 

@@ -9,10 +9,8 @@ class lua_Platform
 public:
 	lua_Platform(lua_State *, const int);
 
-	// rainbow.platform.screen
-	static int height(lua_State *);
-	static int touch(lua_State *);
-	static int width(lua_State *);
+	/// rainbow.platform.screen returns width, height and touch capabilities
+	static int screen(lua_State *);
 };
 
 #endif

@@ -1,6 +1,6 @@
 #include "Sprite.h"
 
-const char *lua_Sprite::class_name = "sprite";
+const char *lua_Sprite::class_name = "__sprite";
 const Lua::Method<lua_Sprite> lua_Sprite::methods[] = {
 	{ "get_angle",    &lua_Sprite::get_angle },
 	{ "get_position", &lua_Sprite::get_position },

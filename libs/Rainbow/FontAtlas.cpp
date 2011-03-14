@@ -122,6 +122,7 @@ void FontAtlas::print(const char *text, const float x, const float y) const
 {
 	glPushMatrix();
 	glTranslatef(x, y, 0.0f);
+	glColor4ub(this->color.r, this->color.g, this->color.b, this->color.a);
 	while (*text != '\0')
 	{
 		const unsigned int c = static_cast<unsigned int>(*text - ascii_offset);
@@ -136,4 +137,12 @@ void FontAtlas::print(const char *text, const float x, const float y) const
 		++text;
 	}
 	glPopMatrix();
+}
+
+void FontAtlas::set_color(const unsigned char r, const unsigned char g, const unsigned char b, const unsigned char a)
+{
+	this->color.r = r;
+	this->color.g = g;
+	this->color.b = b;
+	this->color.a = a;
 }
