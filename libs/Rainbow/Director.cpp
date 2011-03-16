@@ -13,6 +13,7 @@ Director::Director()
 {
 #ifdef RAINBOW_IOS
 
+	Screen::Instance().init();
 	const char *script = AssetManager::Instance().get_full_path("onwire.lua");
 	this->lua.load(script);
 

@@ -23,6 +23,8 @@ public:
 		glGenBuffers(1, &this->buffer);
 	}
 
+	~SpriteBatch() { delete[] this->vertex_buffer; }
+
 	/// Adds a sprite to the batch.
 	/// \param s  The sprite to add
 	void add(Sprite *s);

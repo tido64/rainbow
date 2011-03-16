@@ -42,7 +42,6 @@ Lua::Lua() : L(lua_open())
 	strcat(lua_path, ";");
 	strcat(lua_path, bundle);
 	strcat(lua_path, "/?.lua");
-	CCLOG(@"LUA_PATH=%s", lua_path);
 
 	lua_pushstring(this->L, lua_path);
 	lua_setfield(this->L, -3, "path");
@@ -57,29 +56,10 @@ void Lua::call(const char *k)
 {
 	lua_getfield(this->L, LUA_GLOBALSINDEX, k);
 	int lua_e = lua_pcall(this->L, 0, 0, 0);
-	if (lua_e != 0)
-	{
-		const char *m = lua_tostring(this->L, -1);
-		switch (lua_e)
-		{
-			case LUA_ERRRUN:
-				printf("Lua runtime error: %s: %s\n", k, m);
-				break;
-			case LUA_ERRMEM:
-				printf("Lua memory allocation error: %s: %s\n", k, m);
-				break;
-			case LUA_ERRERR:
-				printf("Lua error while running the error handler function: %s: %s\n", k, m);
-				break;
-			default:
-				printf("Unknown Lua error: %s: %s\n", k, m);
-				break;
-		}
-		exit(1);
-	}
+	if (lua_e != 0) this->err(lua_e);
 }
 
-void Lua::err(const int lua_e, const char *lua)
+void Lua::err(const int lua_e)
 {
 	const char *m = lua_tostring(this->L, -1);
 	switch (lua_e)
@@ -93,11 +73,14 @@ void Lua::err(const int lua_e, const char *lua)
 		case LUA_ERRMEM:
 			printf("Lua memory allocation");
 			break;
+		case LUA_ERRERR:
+			printf("Lua error handling");
+			break;
 		default:
 			printf("Unknown Lua");
 			break;
 	}
-	printf(" error: %s: %s\n", lua, m);
+	printf(" error: %s\n", m);
 	exit(1);
 }
 
@@ -105,10 +88,8 @@ void Lua::load(const char *lua)
 {
 	// Load Lua script
 	int lua_e = luaL_loadfile(this->L, lua);
-	if (lua_e != 0)
-		this->err(lua_e, lua);
+	if (lua_e != 0) this->err(lua_e);
 
 	lua_e = lua_pcall(this->L, 0, LUA_MULTRET, 0);
-	if (lua_e != 0)
-		this->err(lua_e, lua);
+	if (lua_e != 0) this->err(lua_e);
 }

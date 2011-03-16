@@ -14,7 +14,12 @@ lua_Font::lua_Font(lua_State *L)  // const char *font_family, const float pt
 
 int lua_Font::color(lua_State *L)
 {
-	this->font->set_color(lua_tonumber(L, 1), lua_tonumber(L, 2), lua_tonumber(L, 3), lua_tonumber(L, 4));
+	this->font->set_color(
+		lua_tointeger(L, 1),
+		lua_tointeger(L, 2),
+		lua_tointeger(L, 3),
+		(lua_gettop(L) == 4) ? lua_tointeger(L, 4) : 0xff
+	);
 	return 0;
 }
 

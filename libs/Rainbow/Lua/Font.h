@@ -11,6 +11,7 @@ public:
 	static const Lua::Method<lua_Font> methods[];
 
 	lua_Font(lua_State *);
+	~lua_Font() { delete this->font; }
 
 	int color(lua_State *);
 	int print(lua_State *);

@@ -147,7 +147,7 @@ private:
 		return ((*ptr)->*(T::methods[i].lua_CFunction))(L);
 	}
 
-	void err(int, const char *);
+	void err(int);
 };
 
 #include "Lua/Algorithm.h"

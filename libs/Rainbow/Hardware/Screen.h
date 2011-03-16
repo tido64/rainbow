@@ -27,6 +27,10 @@ public:
 	{
 	#if defined(RAINBOW_IOS)
 
+		CCDirector *director = [CCDirector sharedDirector];
+		this->w = director.winSizeInPixels.width;
+		this->h = director.winSizeInPixels.height;
+
 	#else
 
 		assert(width > 0.0f && height > 0.0f);
@@ -36,31 +40,8 @@ public:
 	#endif
 	}
 
-	inline float width() const
-	{
-	#if defined(RAINBOW_IOS)
-
-		return [[CCDirector sharedDirector] winSizeInPixels].width;
-
-	#else
-
-		return this->h;
-
-	#endif
-	}
-
-	inline float height() const
-	{
-	#if defined(RAINBOW_IOS)
-
-		return [[CCDirector sharedDirector] winSizeInPixels].height;
-
-	#else
-
-		return this->h;
-
-	#endif
-	}
+	inline float width() const { return this->w; }
+	inline float height() const { return this->h; }
 
 private:
 	float w, h;

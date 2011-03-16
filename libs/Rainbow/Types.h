@@ -2,6 +2,7 @@
 #define TYPES_H_
 
 /// Structure for storing a color (RGBA).
+/// FIXME: Different default values for char <-> float
 
 /// Copyright 2010 Bifrost Games. All rights reserved.
 /// \author Tommy Nguyen
