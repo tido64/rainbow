@@ -35,8 +35,8 @@ FontAtlas::FontAtlas(const char *f, const float pt) : pt(pt)
 	glGenTextures(chars, this->textures);
 	for (unsigned int i = 0; i < chars; ++i)
 	{
-		ft_error = FT_Load_Glyph(face, FT_Get_Char_Index(face, i + ascii_offset), FT_LOAD_RENDER);
-		assert(ft_error == 0);
+		ft_error = FT_Load_Char(face, i + ascii_offset, FT_LOAD_RENDER);
+		//assert(ft_error == 0);
 
 		const FT_GlyphSlot &slot = face->glyph;
 		const FT_Bitmap &bitmap = slot->bitmap;
@@ -62,12 +62,20 @@ FontAtlas::FontAtlas(const char *f, const float pt) : pt(pt)
 			{
 				for (int x = 0; x < w; ++x)
 				{
+				#ifdef RAINBOW_IOS
+
 					*d_ptr = *(d_ptr + 1) = *buf;
-					//if (*buf > 0)
-					//{
-					//	*d_ptr = 255;
-					//	*(d_ptr + 1) = *buf;
-					//}
+
+				#else
+
+					if (*buf > 0)
+					{
+						*d_ptr = 255;
+						*(d_ptr + 1) = *buf;
+					}
+
+				#endif
+
 					d_ptr += 2;
 					++buf;
 				}
@@ -82,9 +90,21 @@ FontAtlas::FontAtlas(const char *f, const float pt) : pt(pt)
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE_ALPHA, width, height, 0, GL_LUMINANCE_ALPHA, GL_UNSIGNED_BYTE, data);
 		}
 
-		// Create a custom font glyph
+		// Save font glyph
 		FontGlyph &fg = this->charset[i];
-		fg.advance = (slot->advance.x + slot->bitmap_left) * (1.0f / 64);
+		fg.advance = slot->advance.x >> 6;
+		fg.left = slot->bitmap_left;
+
+		if (FT_HAS_KERNING(face))
+		{
+			unsigned int glyph = i + ascii_offset;
+			FT_Vector kerning;
+			for (unsigned int j = 0; j < chars; ++j)
+			{
+				FT_Get_Kerning(face, j + ascii_offset, glyph, FT_KERNING_DEFAULT, &kerning);
+				fg.kern[j] = kerning.x >> 6;
+			}
+		}
 
 		// Vertices
 		fg.quad[0].position.x = bitmap.width + margin;
@@ -123,17 +143,20 @@ void FontAtlas::print(const char *text, const float x, const float y) const
 	glPushMatrix();
 	glTranslatef(x, y, 0.0f);
 	glColor4ub(this->color.r, this->color.g, this->color.b, this->color.a);
+	unsigned int prev = 0;  // 'space' has no kerning
 	while (*text != '\0')
 	{
 		const unsigned int c = static_cast<unsigned int>(*text - ascii_offset);
 		const FontGlyph &glyph = this->charset[c];
 
+		glTranslatef(glyph.left + glyph.kern[prev], 0.0f, 0.0f);
 		glBindTexture(GL_TEXTURE_2D, this->textures[c]);
 		glVertexPointer(2, GL_FLOAT, sizeof(SpriteVertex), &glyph.quad[0].position);
 		glTexCoordPointer(2, GL_FLOAT, sizeof(SpriteVertex), &glyph.quad[0].texcoord);
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-		glTranslatef(glyph.advance, 0.0f, 0.0f);
+		glTranslatef(glyph.advance - glyph.left, 0.0f, 0.0f);
 
+		prev = c;
 		++text;
 	}
 	glPopMatrix();

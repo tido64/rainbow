@@ -12,10 +12,7 @@
 #ifndef SPRITE_H_
 #define SPRITE_H_
 
-#include <cassert>
-
 #include "Algorithm.h"
-#include "OpenGL.h"
 #include "TextureAtlas.h"
 
 class Sprite

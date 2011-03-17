@@ -10,7 +10,9 @@
 
 struct FontGlyph
 {
-	short int advance;
+	unsigned short int advance;
+	short int left;
+	short int kern[95];
 	SpriteVertex quad[4];
 };
 

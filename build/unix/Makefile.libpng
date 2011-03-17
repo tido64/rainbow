@@ -1,0 +1,24 @@
+TARGET = libpng.a
+OBJDIR = build/unix/libpng
+SRCDIR = $(LIBPNG)
+
+CC = gcc
+CFLAGS = -g0 -O2 -pipe -ftree-vectorize -march=native
+
+OBJ = $(patsubst $(SRCDIR)/%.c,$(OBJDIR)/%.o,$(wildcard $(SRCDIR)/*.c)) \
+
+default: check $(OBJDIR)/../$(TARGET)
+
+%.a: $(OBJ)
+	@echo Creating static libpng library...
+	@ar rsc $@ $^
+
+$(OBJDIR)/%.o: $(SRCDIR)/%.c
+	@echo Compiling $<
+	@$(CC) -c $< $(CFLAGS) -o $@
+
+check:
+	@if [ ! -d $(OBJDIR) ]; then mkdir -p $(OBJDIR); fi
+
+clean:
+	@rm -fr $(OBJDIR)

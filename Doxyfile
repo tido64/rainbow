@@ -1,7 +1,7 @@
 # Doxyfile 1.7.1
 
 DOXYFILE_ENCODING      = UTF-8
-PROJECT_NAME           = OnWire
+PROJECT_NAME           = Rainbow
 PROJECT_NUMBER         = 1.0
 OUTPUT_DIRECTORY       = doc
 CREATE_SUBDIRS         = YES

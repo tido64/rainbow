@@ -11,7 +11,6 @@
 #define SPRITEBATCH_H_
 
 #include "Sprite.h"
-#include "Vector.h"
 
 class SpriteBatch
 {

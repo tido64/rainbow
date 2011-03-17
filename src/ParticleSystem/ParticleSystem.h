@@ -9,7 +9,6 @@
 #ifndef PARTICLESYSTEM_H_
 #define PARTICLESYSTEM_H_
 
-#include "../OpenGL.h"
 #include "../Texture.h"
 #include "PointSprite.h"
 

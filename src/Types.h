@@ -2,8 +2,9 @@
 #define TYPES_H_
 
 /// Structure for storing a color (RGBA).
-/// FIXME: Different default values for char <-> float
 
+/// FIXME: Different default values for char <-> float
+///
 /// Copyright 2010 Bifrost Games. All rights reserved.
 /// \author Tommy Nguyen
 template<typename T>
@@ -17,7 +18,7 @@ struct __Color4
 };
 
 
-/// Structure for storing a pair of numerical values.
+/// Structure for storing a two-dimensional vector.
 
 /// Copyright 2010 Bifrost Games. All rights reserved.
 /// \author Tommy Nguyen

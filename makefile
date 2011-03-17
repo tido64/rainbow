@@ -1,23 +1,20 @@
-# Libraries
-LIBDIR = ../lib
-LIBLUA = $(LIBDIR)/Lua
-LIBFREETYPE = /usr/include/freetype2
-
-# Build environment
-TARGET = onwire
+TARGET = rainbow
 BINDIR = bin
+LIBDIR = ../lib
 OBJDIR = build/unix
 SRCDIR = src
-STATIC = $(OBJDIR)/librainbow.a $(OBJDIR)/libbox2d.a $(OBJDIR)/liblua.a
+STATIC = $(OBJDIR)/libbox2d.a $(OBJDIR)/liblua.a $(OBJDIR)/libpng.a
 
-# Flags
+LIBLUA = $(LIBDIR)/Lua
+LIBFT = /usr/include/freetype2
+LIBPNG = $(LIBDIR)/libpng
+
 CPP = g++
-CFLAGS = -g -O2 -Wall -pipe -I $(LIBDIR) -I $(LIBLUA) -I libs -I $(LIBFREETYPE) -ftree-vectorize -ftree-vectorizer-verbose=0 -march=native
-LDFLAGS = -lGL -lSDL -lfreetype -lpng -lzip
-#STATIC_LIBS = /usr/lib/libfreetype.a /usr/lib/libpng.a /usr/lib/libzip.a /usr/lib/libz.a
+CFLAGS = -g -O2 -Wall -pipe -I $(LIBDIR) -I $(LIBLUA) -I $(LIBFT) -I $(LIBPNG) -ftree-vectorize -ftree-vectorizer-verbose=6 -march=native
+LDFLAGS = -lGL -lSDL -lfreetype -lzip
 
 EXEC = $(BINDIR)/$(TARGET)
-OBJ = $(OBJDIR)/OnWireSDL.o \
+OBJ = $(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(wildcard $(SRCDIR)/*.cpp)) \
 	$(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(wildcard $(SRCDIR)/**/*.cpp))
 
 default: check $(EXEC)
@@ -38,22 +35,20 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
 	@mv $(LIBLUA)/liblua.a $(OBJDIR)
 	@cd $(LIBLUA) && make clean
 
-%rainbow.a:
-	@LIBDIR=$(LIBDIR) LIBLUA=$(LIBLUA) LIBFREETYPE=$(LIBFREETYPE) make -f $(OBJDIR)/Makefile.Rainbow
+%libpng.a:
+	@LIBPNG=$(LIBPNG) make -f $(OBJDIR)/Makefile.libpng
+	@make -f $(OBJDIR)/Makefile.libpng clean
 
 check:
 	@if [ ! -d $(BINDIR) ]; then mkdir -p $(BINDIR); fi
-	@if [ ! -d $(OBJDIR)/Elements ]; then mkdir -p $(OBJDIR)/Elements; fi
-	@if [ ! -d $(OBJDIR)/Objects ]; then mkdir -p $(OBJDIR)/Objects; fi
+	@if [ ! -d $(OBJDIR)/Hardware ]; then mkdir -p $(OBJDIR)/Hardware; fi
+	@if [ ! -d $(OBJDIR)/Input ]; then mkdir -p $(OBJDIR)/Input; fi
+	@if [ ! -d $(OBJDIR)/Lua ]; then mkdir -p $(OBJDIR)/Lua; fi
+	@if [ ! -d $(OBJDIR)/ParticleSystem ]; then mkdir -p $(OBJDIR)/ParticleSystem; fi
 
 clean:
-	@make -f $(OBJDIR)/Makefile.Rainbow clean
-	@rm -fr $(OBJDIR)/Elements
-	@rm -fr $(OBJDIR)/Objects
-	@rm -f $(OBJDIR)/*.o
-
-dist-clean: clean
-	@rm -f $(OBJDIR)/*.a $(OBJDIR)/*.o
-
-debug:
-	@echo CFLAGS = $(CFLAGS)
+	@rm -fr $(OBJDIR)/Hardware
+	@rm -fr $(OBJDIR)/Input
+	@rm -fr $(OBJDIR)/Lua
+	@rm -fr $(OBJDIR)/ParticleSystem
+	@rm -fr $(OBJ)

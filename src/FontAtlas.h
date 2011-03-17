@@ -1,8 +1,11 @@
 /// Uses FreeType to load OpenType and TrueType fonts.
 
-/// Creates textures from font glyphs for symbols 1 through 128. Later
+/// Creates textures from font glyphs for symbols 32 through 126. Later
 /// implementations should put all symbols in a single texture and optimise
 /// printing on to the screen.
+///
+/// - Supports anti-aliasing
+/// - Supports kerning
 ///
 /// \see http://www.alfredrossi.com/?p=73
 /// \see http://musingsofninjarat.wordpress.com/opengl-freetype-texture-fonts/
@@ -14,8 +17,6 @@
 
 #ifndef FONTATLAS_H_
 #define FONTATLAS_H_
-
-#include <cassert>
 
 #include <ft2build.h>
 #include FT_FREETYPE_H

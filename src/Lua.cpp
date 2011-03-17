@@ -81,6 +81,7 @@ void Lua::err(const int lua_e)
 			break;
 	}
 	printf(" error: %s\n", m);
+	Lua::dump_stack(this->L);
 	exit(1);
 }
 

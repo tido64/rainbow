@@ -1,8 +1,6 @@
 #ifndef TEXTUREATLAS_H_
 #define TEXTUREATLAS_H_
 
-#include <cstring>
-
 #include "Texture.h"
 #include "Types.h"
 #include "Vector.h"

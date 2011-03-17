@@ -3,8 +3,7 @@
 #include <SDL/SDL_thread.h>
 
 #define DEBUG 1
-//#include "OnWireGame.h"
-#include <Rainbow/Director.h>
+#include "Director.h"
 
 bool active = true;
 bool done = false;
@@ -60,12 +59,10 @@ int main()
 	resize(screen_width, screen_height);
 
 	AssetManager::Instance().set_source("assets.bfz");
-	//OnWireGame the_game;
-	//the_game.reset(1337);
-	Director onwire_game;
+	Director director;
 
 	// If the game wishes to have a ticker
-	SDL_Thread *clock_thread = SDL_CreateThread(tick, &onwire_game);
+	//SDL_Thread *clock_thread = SDL_CreateThread(tick, &director);
 
 	unsigned int now, time = SDL_GetTicks();
 	while (!done)
@@ -109,17 +106,17 @@ int main()
 			time = now;
 
 			// Update game logic
-			onwire_game.update();
+			director.update();
 
 			// Draw
 			glClear(GL_COLOR_BUFFER_BIT);
-			onwire_game.draw();
+			director.draw();
 			SDL_GL_SwapBuffers();
 		}
 	}
 
 	puts("Quitting...");
-	SDL_WaitThread(clock_thread, 0);
+	//SDL_WaitThread(clock_thread, 0);
 	SDL_Quit();
 	return 0;
 }
