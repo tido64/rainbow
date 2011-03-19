@@ -6,8 +6,6 @@
 #ifndef DIRECTOR_H_
 #define DIRECTOR_H_
 
-#include "Hardware/Screen.h"
-#include "AssetManager.h"
 #include "Lua.h"
 
 class Director

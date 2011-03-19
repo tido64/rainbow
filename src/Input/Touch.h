@@ -1,6 +1,6 @@
 /// Data structures for keeping track of touches.
 
-/// \see http://www.boost.org/doc/libs/1_45_0/doc/html/unordered.html
+/// \see http://www.boost.org/doc/libs/1_46_1/doc/html/unordered.html
 ///
 /// Copyright 2010 Bifrost Games. All rights reserved.
 /// \author Tommy Nguyen

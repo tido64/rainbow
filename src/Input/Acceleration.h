@@ -6,7 +6,7 @@
 #ifndef ACCELERATION_H_
 #define ACCELERATION_H_
 
-#include "../Hardware/Platform.h"
+#include "../Platform.h"
 
 #ifdef RAINBOW_IOS
 #	include <UIKit/UIAccelerometer.h>

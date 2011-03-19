@@ -1,7 +1,7 @@
 #ifndef ASSETMANAGER_H_
 #define ASSETMANAGER_H_
 
-#include "Hardware/Platform.h"
+#include "Platform.h"
 
 #if defined(RAINBOW_ANDROID)
 #	include <zip.h>

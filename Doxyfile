@@ -100,7 +100,7 @@ FILE_PATTERNS          = *.c \
                          *.m \
                          *.mm
 RECURSIVE              = YES
-EXCLUDE                = build libs/freetype
+EXCLUDE                = build
 EXCLUDE_SYMLINKS       = NO
 EXCLUDE_PATTERNS       = 
 EXCLUDE_SYMBOLS        = 

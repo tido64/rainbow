@@ -1,0 +1,129 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{3CAABE36-A39D-4108-93AE-FEE05D4086EB}</ProjectGuid>
+    <RootNamespace>Rainbow</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\..\..\lib;..\..\..\lib\libpng;..\..\..\lib\libzip;..\..\..\lib\Lua;</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>..\..\..\lib\Win32</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>..\..\..\lib;..\..\..\lib\libpng;..\..\..\lib\libzip;..\..\..\lib\Lua;</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>..\..\..\lib\Win32</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\src\Algorithm.h" />
+    <ClInclude Include="..\..\src\Animation.h" />
+    <ClInclude Include="..\..\src\AssetManager.h" />
+    <ClInclude Include="..\..\src\Director.h" />
+    <ClInclude Include="..\..\src\Drawable.h" />
+    <ClInclude Include="..\..\src\FontAtlas.h" />
+    <ClInclude Include="..\..\src\FontGlyph.h" />
+    <ClInclude Include="..\..\src\Hardware\Controls.h" />
+    <ClInclude Include="..\..\src\Hardware\Platform.h" />
+    <ClInclude Include="..\..\src\Hardware\Screen.h" />
+    <ClInclude Include="..\..\src\Input\Acceleration.h" />
+    <ClInclude Include="..\..\src\Input\Gestures.h" />
+    <ClInclude Include="..\..\src\Input\Touch.h" />
+    <ClInclude Include="..\..\src\Lua.h" />
+    <ClInclude Include="..\..\src\Lua\Algorithm.h" />
+    <ClInclude Include="..\..\src\Lua\Font.h" />
+    <ClInclude Include="..\..\src\Lua\Physics.h" />
+    <ClInclude Include="..\..\src\Lua\Platform.h" />
+    <ClInclude Include="..\..\src\Lua\Sprite.h" />
+    <ClInclude Include="..\..\src\Lua\SpriteBatch.h" />
+    <ClInclude Include="..\..\src\Lua\Texture.h" />
+    <ClInclude Include="..\..\src\OpenGL.h" />
+    <ClInclude Include="..\..\src\ParticleSystem\ParticleSystem.h" />
+    <ClInclude Include="..\..\src\ParticleSystem\PointSprite.h" />
+    <ClInclude Include="..\..\src\ParticleSystem\Rain.h" />
+    <ClInclude Include="..\..\src\Physics.h" />
+    <ClInclude Include="..\..\src\Random\dSFMT-params.h" />
+    <ClInclude Include="..\..\src\Random\dSFMT-params19937.h" />
+    <ClInclude Include="..\..\src\Random\dSFMT.h" />
+    <ClInclude Include="..\..\src\Random\Mersenne_twister.h" />
+    <ClInclude Include="..\..\src\Sprite.h" />
+    <ClInclude Include="..\..\src\SpriteBatch.h" />
+    <ClInclude Include="..\..\src\Texture.h" />
+    <ClInclude Include="..\..\src\TextureAtlas.h" />
+    <ClInclude Include="..\..\src\Touchable.h" />
+    <ClInclude Include="..\..\src\Types.h" />
+    <ClInclude Include="..\..\src\Vector.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\AssetManager.cpp" />
+    <ClCompile Include="..\..\src\Director.cpp" />
+    <ClCompile Include="..\..\src\FontAtlas.cpp" />
+    <ClCompile Include="..\..\src\Hardware\Controls.cpp" />
+    <ClCompile Include="..\..\src\Input\Gestures.cpp" />
+    <ClCompile Include="..\..\src\Lua.cpp" />
+    <ClCompile Include="..\..\src\Lua\Algorithm.cpp" />
+    <ClCompile Include="..\..\src\Lua\Font.cpp" />
+    <ClCompile Include="..\..\src\Lua\Physics.cpp" />
+    <ClCompile Include="..\..\src\Lua\Platform.cpp" />
+    <ClCompile Include="..\..\src\Lua\Sprite.cpp" />
+    <ClCompile Include="..\..\src\Lua\SpriteBatch.cpp" />
+    <ClCompile Include="..\..\src\Lua\Texture.cpp" />
+    <ClCompile Include="..\..\src\ParticleSystem\Rain.cpp" />
+    <ClCompile Include="..\..\src\Physics.cpp" />
+    <ClCompile Include="..\..\src\RainbowSDL.cpp" />
+    <ClCompile Include="..\..\src\Sprite.cpp" />
+    <ClCompile Include="..\..\src\SpriteBatch.cpp" />
+    <ClCompile Include="..\..\src\TextureAtlas.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

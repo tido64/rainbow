@@ -8,7 +8,6 @@
 
 #include "../Hardware/Controls.h"
 #include "../Algorithm.h"
-#include "Touch.h"
 
 namespace Rainbow
 {

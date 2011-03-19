@@ -1,4 +1,3 @@
-#include <cstdlib>
 #include <SDL/SDL.h>
 #include <SDL/SDL_thread.h>
 
@@ -60,9 +59,6 @@ int main()
 
 	AssetManager::Instance().set_source("assets.bfz");
 	Director director;
-
-	// If the game wishes to have a ticker
-	//SDL_Thread *clock_thread = SDL_CreateThread(tick, &director);
 
 	unsigned int now, time = SDL_GetTicks();
 	while (!done)
@@ -165,30 +161,4 @@ void resize(const int w, const int h)
 	glViewport(0, 0, w, h);
 
 	Screen::Instance().init(w, h);
-}
-
-int tick(void *g)
-{
-	const unsigned int delay = 1000;
-	Director *game = static_cast<Director *>(g);
-	SDL_Delay(delay);
-
-	unsigned int start = SDL_GetTicks();
-	unsigned int wait = 0;
-	while (!done)
-	{
-		if (!active)
-		{
-			SDL_Delay(delay);
-			start = SDL_GetTicks();
-			continue;
-		}
-
-		game->tick();
-		wait = delay - (SDL_GetTicks() - start);
-		if (wait > 0)
-			SDL_Delay(wait);
-		start = SDL_GetTicks();
-	}
-	return 0;
 }

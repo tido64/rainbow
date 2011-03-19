@@ -3,7 +3,7 @@
 
 #include <Box2D/Box2D.h>
 
-#include "Hardware/Platform.h"
+#include "Platform.h"
 
 // Pixel to metres ratio. Box2D uses metres as the unit for measurement.
 // This ratio defines how many pixels correspond to 1 Box2D "metre"
@@ -128,8 +128,13 @@ private:
 	Physics &operator=(const Physics &);
 };
 
-/// Structure to keep body states between iterations. Necessary for the
-/// interpolation technique deployed with fixed time steps.
+
+/// Structure to keep body states between iterations.
+
+/// Necessary for the interpolation technique deployed with fixed time steps.
+///
+/// Copyright 2010 Bifrost Games. All rights reserved.
+/// \author Tommy Nguyen
 struct BodyData
 {
 	float curr_r, prev_r;

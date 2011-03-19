@@ -9,10 +9,8 @@
 #define CONTROLS_H_
 
 #include "../Input/Acceleration.h"
-#include "../Input/Touch.h"
 #include "../Touchable.h"
 #include "../Vector.h"
-#include "Screen.h"
 
 class Controls
 {

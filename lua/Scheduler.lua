@@ -1,16 +1,14 @@
--- A time event trigger class.
+--! Scheduler class makes sure objects are notifed at specified intervals.
 
--- Add objects that need to be called at a specific interval.
---
--- Copyright 2011 Bifrost Games. All rights reserved.
--- \author Tommy Nguyen
+--! Copyright 2011 Bifrost Games. All rights reserved.
+--! \author Tommy Nguyen
 
-Timer = {};
-Timer.__index = Timer;
+Scheduler = {};
+Scheduler.__index = Scheduler;
 
-function Timer.new(secs)
+function Scheduler.new(secs)
 	local a = {};
-	setmetatable(a, Timer);
+	setmetatable(a, Scheduler);
 	a.count = 0;
 	a.subscribers = {};
 	a.ticker = "0";
@@ -19,12 +17,14 @@ function Timer.new(secs)
 	return a;
 end
 
-function Timer:add(obj)
+--! Add an object that needs to be notified.
+function Scheduler:add(obj)
 	self.count = self.count + 1;
 	self.subscribers[self.count] = obj;
 end
 
-function Timer:update()
+--! Notify all objects at specified intervals.
+function Scheduler:update()
 	local time = os.date("%Y%m%d%H%M%S");
 	if time > self.ticker then
 		self.ticker = time;

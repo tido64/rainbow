@@ -8,7 +8,7 @@
 class Sprite;
 
 
-/// Custom texture atlas implemented in OpenGL ES 1.1.
+/// Texture atlas implemented in OpenGL ES 1.1.
 
 /// GL drawing order: (1,1) -> (0,1) -> (1,0) -> (0,0)
 ///

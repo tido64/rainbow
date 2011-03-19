@@ -6,7 +6,7 @@
 #ifndef SCREEN_H_
 #define SCREEN_H_
 
-#include "Platform.h"
+#include "../Platform.h"
 
 #ifdef RAINBOW_IOS
 #	include <cocos2d/cocos2d.h>

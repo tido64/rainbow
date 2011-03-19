@@ -25,7 +25,7 @@ namespace Rainbow
 			}
 			for (unsigned int i = 0; i < count; ++i)
 			{
-				if (s->position.x >= Screen::Instance().width() | s->position.y <= 0.0f)
+				if ((s->position.x >= Screen::Instance().width()) | (s->position.y <= 0.0f))
 					ParticleInitPolicy::init(s);
 				++s;
 			}

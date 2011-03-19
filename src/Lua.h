@@ -1,8 +1,6 @@
 #ifndef LUA_H_
 #define LUA_H_
 
-#include <cassert>
-#include <cstdlib>
 #include <cstring>
 
 extern "C"

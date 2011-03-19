@@ -3,19 +3,21 @@ BINDIR = bin
 LIBDIR = ../lib
 OBJDIR = build/unix
 SRCDIR = src
-STATIC = $(OBJDIR)/libbox2d.a $(OBJDIR)/liblua.a $(OBJDIR)/libpng.a
 
-LIBLUA = $(LIBDIR)/Lua
-LIBFT = /usr/include/freetype2
-LIBPNG = $(LIBDIR)/libpng
+LIBFT  := /usr/include/freetype2
+STATIC := $(OBJDIR)/libbox2d.a $(OBJDIR)/liblua.a $(OBJDIR)/libpng.a #$(OBJDIR)/libzip.a
+LIBLUA := $(LIBDIR)/Lua
+LIBPNG := $(LIBDIR)/libpng
+LIBZIP := $(LIBDIR)/libzip
 
-CPP = g++
-CFLAGS = -g -O2 -Wall -pipe -I $(LIBDIR) -I $(LIBLUA) -I $(LIBFT) -I $(LIBPNG) -ftree-vectorize -ftree-vectorizer-verbose=6 -march=native
-LDFLAGS = -lGL -lSDL -lfreetype -lzip
+CPP     := g++
+CFLAGS  := -g -O2 -Wall -pipe -I $(LIBFT) -I $(LIBDIR) -I $(LIBLUA) -I $(LIBPNG) -ftree-vectorize -ftree-vectorizer-verbose=6 -march=native
+LDFLAGS := -lGL -lSDL -lfreetype -lz -lzip
 
-EXEC = $(BINDIR)/$(TARGET)
-OBJ = $(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(wildcard $(SRCDIR)/*.cpp)) \
+EXEC := $(BINDIR)/$(TARGET)
+OBJ  := $(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(wildcard $(SRCDIR)/*.cpp)) \
 	$(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(wildcard $(SRCDIR)/**/*.cpp))
+DIRS := Hardware Input Lua ParticleSystem
 
 default: check $(EXEC)
 
@@ -35,20 +37,27 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
 	@mv $(LIBLUA)/liblua.a $(OBJDIR)
 	@cd $(LIBLUA) && make clean
 
-%libpng.a:
-	@LIBPNG=$(LIBPNG) make -f $(OBJDIR)/Makefile.libpng
-	@make -f $(OBJDIR)/Makefile.libpng clean
+%png.a:
+	@LIBSRC=$(LIBPNG) TARGET=libpng make -f $(OBJDIR)/Makefile.lib
+	@TARGET=libpng make -f $(OBJDIR)/Makefile.lib clean
+
+%zip.a:
+	@LIBSRC=$(LIBZIP) TARGET=libzip make -f $(OBJDIR)/Makefile.lib
+	@TARGET=libzip make -f $(OBJDIR)/Makefile.lib clean
 
 check:
 	@if [ ! -d $(BINDIR) ]; then mkdir -p $(BINDIR); fi
-	@if [ ! -d $(OBJDIR)/Hardware ]; then mkdir -p $(OBJDIR)/Hardware; fi
-	@if [ ! -d $(OBJDIR)/Input ]; then mkdir -p $(OBJDIR)/Input; fi
-	@if [ ! -d $(OBJDIR)/Lua ]; then mkdir -p $(OBJDIR)/Lua; fi
-	@if [ ! -d $(OBJDIR)/ParticleSystem ]; then mkdir -p $(OBJDIR)/ParticleSystem; fi
+	@for dir in $(DIRS); do \
+		if [ ! -d $(OBJDIR)/$$dir ]; then \
+			mkdir -p $(OBJDIR)/$$dir; \
+		fi; \
+	done
 
 clean:
-	@rm -fr $(OBJDIR)/Hardware
-	@rm -fr $(OBJDIR)/Input
-	@rm -fr $(OBJDIR)/Lua
-	@rm -fr $(OBJDIR)/ParticleSystem
+	@for dir in $(DIRS); do \
+		rm -fr $(OBJDIR)/$$dir; \
+	done
 	@rm -fr $(OBJ)
+
+dist-clean: clean
+	@rm -f $(STATIC)
