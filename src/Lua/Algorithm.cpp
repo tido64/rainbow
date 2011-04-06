@@ -1,10 +1,10 @@
 #include "Algorithm.h"
 
-lua_Algorithm::lua_Algorithm(lua_State *L, const int ns)
+lua_Algorithm::lua_Algorithm(lua_State *L)
 {
 	lua_createtable(L, 0, 0);
 	lua_pushvalue(L, -1);
-	lua_setfield(L, ns, "algorithm");
+	lua_setfield(L, -3, "algorithm");
 
 	lua_pushcclosure(L, &lua_Algorithm::random, 0);
 	lua_setfield(L, -2, "random");

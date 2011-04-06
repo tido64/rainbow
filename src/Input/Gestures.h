@@ -6,14 +6,14 @@
 #ifndef GESTURES_H_
 #define GESTURES_H_
 
-#include "../Hardware/Controls.h"
 #include "../Algorithm.h"
+#include "Input.h"
 
 namespace Rainbow
 {
 	namespace Gestures
 	{
-		static const Touches *touches = Controls::Instance()->get_touches();
+		static const Touches &touches = Input::Instance().get_touches();
 
 		class Pinch
 		{

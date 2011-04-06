@@ -22,7 +22,7 @@ void SpriteBatch::add(Sprite *s)
 
 			this->sprites[0]->vertex_array = batch;
 			for (unsigned int i = 1; i < this->sprites.size(); ++i)
-				this->sprites[i]->vertex_array = ++batch;
+				this->sprites[i]->vertex_array = this->vertex_buffer + indexof(i);
 		}
 
 		// Copy degenerate vertices

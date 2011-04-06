@@ -166,6 +166,11 @@ public:
 		free(data);
 	}
 
+	~Texture()
+	{
+		glDeleteTextures(1, &this->name);
+	}
+
 private:
 
 #ifdef PNG_LIBPNG_VER_STRING

@@ -19,10 +19,7 @@ const char* AssetManager::get_full_path(const char *filename)
 	if (filename == 0)
 		return "assets";
 
-	unsigned int length = 0;
-	while (filename[length] != '\0')
-		++length;
-	char *tmp = new char[length + 8];
+	char *tmp = new char[strlen(filename) + 8];
 	strcpy(tmp, "assets/");
 	strcat(tmp, filename);
 	return tmp;

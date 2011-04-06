@@ -7,7 +7,7 @@
 class lua_Algorithm
 {
 public:
-	lua_Algorithm(lua_State *, const int);
+	lua_Algorithm(lua_State *);
 	static int random(lua_State *);
 };
 

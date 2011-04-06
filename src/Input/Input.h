@@ -5,28 +5,44 @@
 /// Copyright 2010 Bifrost Games. All rights reserved.
 /// \author Tommy Nguyen
 
-#ifndef CONTROLS_H_
-#define CONTROLS_H_
+#ifndef INPUT_H_
+#define INPUT_H_
 
-#include "../Input/Acceleration.h"
-#include "../Touchable.h"
+#include "../Platform.h"
 #include "../Vector.h"
 
-class Controls
+#ifdef RAINBOW_ACCELERATED
+#	include "Acceleration.h"
+#endif
+
+#ifdef RAINBOW_TOUCHED
+#	include "../Touchable.h"
+#endif
+
+class Input
 {
 public:
-	static inline Controls* Instance()
+	static inline Input& Instance()
 	{
-		static Controls c;
-		return &c;
+		static Input c;
+		return c;
 	}
 
-	void accelerate(const Acceleration &);
-	void add_touchable(Touchable *);
+#ifdef RAINBOW_ACCELERATED
 
-	const Touches* get_touches() const
+	bool accelerated;
+	Acceleration acceleration;
+
+#endif
+
+#ifdef RAINBOW_TOUCHED
+
+	mutable bool touched;
+
+	inline const Touches& get_touches() const
 	{
-		return &touches;
+		this->touched = false;
+		return touches;
 	}
 
 	void touch_began(const Touch *touches, const unsigned int count);
@@ -34,13 +50,16 @@ public:
 	void touch_ended(const Touch *touches, const unsigned int count);
 	void touch_moved(const Touch *touches, const unsigned int count);
 
-private:
-	Vector<Touchable *> touchables;
-	Touches touches;
+#endif
 
-	Controls() { }
-	Controls(const Controls &);
-	Controls& operator=(const Controls &);
+private:
+#ifdef RAINBOW_TOUCHED
+	Touches touches;
+#endif
+
+	Input() { }
+	Input(const Input &);
+	Input& operator=(const Input &);
 };
 
 #endif

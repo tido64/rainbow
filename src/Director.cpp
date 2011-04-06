@@ -13,18 +13,14 @@ Director::Director()
 {
 #ifdef RAINBOW_IOS
 
-	Screen::Instance().init();
-	const char *script = AssetManager::Instance().get_full_path("onwire.lua");
-	this->lua.load(script);
+	// Asset source set in Lua constructor
+	this->update_video();
 
 #else
 
-	this->lua.load("onwire.lua");
+	AssetManager::Instance().set_source("assets.bfz");
 
 #endif
-
-	this->lua.call("init");
-	this->lua.call("update");
 }
 
 void Director::draw()
@@ -32,8 +28,18 @@ void Director::draw()
 	this->lua.call("draw");
 }
 
-void Director::update()
+void Director::init(const char *script)
 {
+	this->lua.load(AssetManager::Instance().get_full_path(script));
+	this->lua.call("init");
 	this->lua.call("update");
+}
+
+void Director::update(const float dt)
+{
+	Physics::Instance().step(dt);
+	this->lua.input.update(this->lua.L);
+	this->lua.call("update");
+
 	// Update sprites and such here
 }

@@ -23,13 +23,13 @@ public:
 		return main;
 	}
 
-	void init(const float width = 0.0f, const float height = 0.0f)
+	void set(const float width = 0.0f, const float height = 0.0f)
 	{
 	#if defined(RAINBOW_IOS)
 
-		CCDirector *director = [CCDirector sharedDirector];
-		this->w = director.winSizeInPixels.width;
-		this->h = director.winSizeInPixels.height;
+		CGSize dim = [[CCDirector sharedDirector] winSizeInPixels];
+		this->w = dim.width;
+		this->h = dim.height;
 
 	#else
 
@@ -46,7 +46,13 @@ public:
 private:
 	float w, h;
 
-	Screen() : w(0.0f), h(0.0f) { }
+	Screen() : w(0.0f), h(0.0f)
+	{
+	#if defined(RAINBOW_IOS)
+		this->set();
+	#endif
+	}
+
 	Screen(const Screen &);
 	Screen& operator=(const Screen &);
 };

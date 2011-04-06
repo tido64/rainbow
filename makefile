@@ -4,20 +4,24 @@ LIBDIR = ../lib
 OBJDIR = build/unix
 SRCDIR = src
 
-LIBFT  := /usr/include/freetype2
-STATIC := $(OBJDIR)/libbox2d.a $(OBJDIR)/liblua.a $(OBJDIR)/libpng.a #$(OBJDIR)/libzip.a
-LIBLUA := $(LIBDIR)/Lua
-LIBPNG := $(LIBDIR)/libpng
-LIBZIP := $(LIBDIR)/libzip
+# Dynamic libraries
+INCFT  := `freetype-config --cflags`
+INCSDL := `sdl-config --cflags`
+
+# Static libraries
+STATIC  := $(OBJDIR)/libbox2d.a $(OBJDIR)/liblua.a $(OBJDIR)/libpng.a
+LIBLUA  := $(LIBDIR)/Lua
+LIBPNG  := $(LIBDIR)/libpng
+LIBZIP  := $(LIBDIR)/libzip
 
 CPP     := g++
-CFLAGS  := -g -O2 -Wall -pipe -I $(LIBFT) -I $(LIBDIR) -I $(LIBLUA) -I $(LIBPNG) -ftree-vectorize -ftree-vectorizer-verbose=6 -march=native
-LDFLAGS := -lGL -lSDL -lfreetype -lz -lzip
+CFLAGS  := -g -O2 -Wall -pipe $(INCSDL) $(INCFT) -I$(LIBDIR) -I$(LIBLUA) -I$(LIBPNG) -ftree-vectorize -ftree-vectorizer-verbose=6 -march=native
+LDFLAGS := -lGL -lSDL -lfreetype -lz -lzip -lopenal
 
 EXEC := $(BINDIR)/$(TARGET)
 OBJ  := $(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(wildcard $(SRCDIR)/*.cpp)) \
 	$(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(wildcard $(SRCDIR)/**/*.cpp))
-DIRS := Hardware Input Lua ParticleSystem
+DIRS := Audio Hardware Input Lua ParticleSystem
 
 default: check $(EXEC)
 
@@ -59,5 +63,9 @@ clean:
 	done
 	@rm -fr $(OBJ)
 
-dist-clean: clean
+distclean: clean
 	@rm -f $(STATIC)
+
+flags:
+	@echo $(CFLAGS)
+	@echo $(LDFLAGS)

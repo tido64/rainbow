@@ -3,6 +3,9 @@
 /// Copyright 2010 Bifrost Games. All rights reserved.
 /// \author Tommy Nguyen
 
+#ifndef OPENGL_H_
+#define OPENGL_H_
+
 #include "Platform.h"
 
 #if defined(RAINBOW_ANDROID)
@@ -17,4 +20,6 @@
 #ifdef GL_VERSION_ES_CM_1_1
 #	define GL_COORD_REPLACE  GL_COORD_REPLACE_OES
 #	define GL_POINT_SPRITE   GL_POINT_SPRITE_OES
+#endif
+
 #endif

@@ -8,12 +8,18 @@
 
 #if defined(__ANDROID__)
 #	define RAINBOW_ANDROID
+#	define RAINBOW_ACCELERATED
+#	define RAINBOW_TOUCHED
 #elif defined(__APPLE__)
 #	define RAINBOW_IOS
+#	define RAINBOW_ACCELERATED
+#	define RAINBOW_TOUCHED
 #elif defined(__linux)
 #	define RAINBOW_NIX
+#	define RAINBOW_TACTILE
 #elif defined(_WIN32)
 #	define RAINBOW_WIN
+#	define RAINBOW_TACTILE
 #endif
 
 #endif

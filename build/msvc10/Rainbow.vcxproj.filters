@@ -132,14 +132,17 @@
     <ClInclude Include="..\..\src\Input\Touch.h">
       <Filter>Input</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\Hardware\Controls.h">
-      <Filter>Hardware</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\Hardware\Platform.h">
-      <Filter>Hardware</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\Hardware\Screen.h">
       <Filter>Hardware</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Input\Input.h">
+      <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Lua\Input.h">
+      <Filter>Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Platform.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -179,9 +182,6 @@
     <ClCompile Include="..\..\src\Lua\Physics.cpp">
       <Filter>Lua</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Lua\Platform.cpp">
-      <Filter>Lua</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Lua\Sprite.cpp">
       <Filter>Lua</Filter>
     </ClCompile>
@@ -197,8 +197,8 @@
     <ClCompile Include="..\..\src\Input\Gestures.cpp">
       <Filter>Input</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Hardware\Controls.cpp">
-      <Filter>Hardware</Filter>
+    <ClCompile Include="..\..\src\Input\Input.cpp">
+      <Filter>Input</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

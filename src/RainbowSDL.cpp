@@ -4,20 +4,25 @@
 #define DEBUG 1
 #include "Director.h"
 
-bool active = true;
-bool done = false;
-const unsigned short int screen_width = 640;
-const unsigned short int screen_height = 960;
-int video_mode = 0;
-const double fps = 1000.0 / 60.0;
+bool active = true;  ///< Whether the window is in focus
+bool done = false;   ///< Whether the user has requested to quit
 
-void draw();
-bool init_GL();
-void on_key_press(SDL_keysym &keysym);
-void quit(int code);
-void resize(const int w, const int h);
-int tick(void *);
+unsigned short int screen_width = 640;        ///< Window width
+unsigned short int screen_height = 960;       ///< Window height
+int video_mode = SDL_HWPALETTE | SDL_OPENGL;  ///< Window video mode
+const double fps = 1000.0 / 60.0;             ///< Preferred frames per second
 
+Director director;  ///< Game director handles everything
+
+bool init_GL();                         ///< Initialize 2d viewport
+void on_key_press(SDL_keysym &keysym);  ///< Handle key press event
+void resize(const int w, const int h);  ///< Handle window resize event
+
+
+/// Rainbow rendered with the help of SDL library.
+
+/// Copyright 2010 Bifrost Games. All rights reserved.
+/// \author Tommy Nguyen
 int main()
 {
 	if (SDL_Init(/*SDL_INIT_AUDIO |*/ SDL_INIT_VIDEO) < 0)
@@ -29,12 +34,11 @@ int main()
 	const SDL_VideoInfo *video_info = SDL_GetVideoInfo();
 	if (!video_info)
 	{
-		fprintf(stderr, "Video query failed: %s\n", SDL_GetError());
+		fprintf(stderr, "SDL video query failed: %s\n", SDL_GetError());
 		SDL_Quit();
 		exit(1);
 	}
 
-	video_mode = SDL_HWPALETTE | SDL_OPENGL;
 	if (!video_info->hw_available)
 		video_mode |= SDL_SWSURFACE;
 	else
@@ -48,7 +52,7 @@ int main()
 	SDL_Surface *surface = SDL_SetVideoMode(screen_width, screen_height, 0, video_mode);
 	if (!surface)
 	{
-		fprintf(stderr, "Unable to set video mode: %s\n", SDL_GetError());
+		fprintf(stderr, "SDL unable to set video mode: %s\n", SDL_GetError());
 		SDL_Quit();
 		exit(1);
 	}
@@ -57,8 +61,7 @@ int main()
 	init_GL();
 	resize(screen_width, screen_height);
 
-	AssetManager::Instance().set_source("assets.bfz");
-	Director director;
+	director.init("onwire.lua");
 
 	unsigned int now, time = SDL_GetTicks();
 	while (!done)
@@ -75,7 +78,7 @@ int main()
 					surface = SDL_SetVideoMode(event.resize.w, event.resize.h, 0, video_mode);
 					if (!surface)
 					{
-						fprintf(stderr, "Unable to set video mode: %s\n", SDL_GetError());
+						fprintf(stderr, "SDL unable to set video mode: %s\n", SDL_GetError());
 						done = true;
 					}
 					resize(event.resize.w, event.resize.h);
@@ -84,7 +87,6 @@ int main()
 					on_key_press(event.key.keysym);
 					break;
 				case SDL_QUIT:
-					puts("Quitting...");
 					active = false;
 					done = true;
 					break;
@@ -96,13 +98,10 @@ int main()
 			SDL_Delay(fps);
 		else
 		{
-			// Update physics
-			now = SDL_GetTicks();
-			Physics::Instance().step((now - time) / 1000.0f);
-			time = now;
-
 			// Update game logic
-			director.update();
+			now = SDL_GetTicks();
+			director.update((now - time) / 1000.0f);
+			time = now;
 
 			// Draw
 			glClear(GL_COLOR_BUFFER_BIT);
@@ -110,16 +109,12 @@ int main()
 			SDL_GL_SwapBuffers();
 		}
 	}
-
-	puts("Quitting...");
-	//SDL_WaitThread(clock_thread, 0);
 	SDL_Quit();
 	return 0;
 }
 
 bool init_GL()
 {
-	// Initialize 2d viewport
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
 	glDisable(GL_DEPTH_TEST);
@@ -146,6 +141,7 @@ void on_key_press(SDL_keysym &keysym)
 			done = true;
 			break;
 		default:
+			director.key_press();
 			break;
 	}
 }
@@ -160,5 +156,5 @@ void resize(const int w, const int h)
 	glLoadIdentity();
 	glViewport(0, 0, w, h);
 
-	Screen::Instance().init(w, h);
+	director.update_video(w, h);
 }

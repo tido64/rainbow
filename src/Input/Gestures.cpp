@@ -1,3 +1,5 @@
+#ifdef RAINBOW_TOUCHED
+
 #include "Gestures.h"
 
 namespace Rainbow
@@ -6,9 +8,9 @@ namespace Rainbow
 	{
 		void Pinch::operator()()
 		{
-			if (touches->size() == 2)
+			if (touches.size() == 2)
 			{
-				Touches::const_iterator i = touches->cbegin();
+				Touches::const_iterator i = touches.cbegin();
 				const Vec2i &a = i->second.position;
 				const Vec2i &b = (++i)->second.position;
 
@@ -34,3 +36,5 @@ namespace Rainbow
 		}
 	}
 }
+
+#endif

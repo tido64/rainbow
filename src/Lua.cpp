@@ -1,21 +1,23 @@
 #include "Lua.h"
 
-Lua::Lua() : L(lua_open())
+Lua::Lua() : L(luaL_newstate())
 {
 	const char *rainbow = "rainbow";
 	luaL_openlibs(this->L);
 
 	// Create "rainbow" namespace
 	lua_createtable(this->L, 0, 0);
-	const int lua_rainbow = lua_gettop(this->L);
 	lua_pushvalue(this->L, -1);
 	lua_setfield(this->L, LUA_GLOBALSINDEX, rainbow);
 
 	// Create "rainbow.algorithm" namespace
-	lua_Algorithm algorithm(this->L, lua_rainbow);
+	lua_Algorithm algorithm(this->L);
+
+	// Create "rainbow.input" namespace
+	this->input.init(this->L);
 
 	// Create "rainbow.platform" namespace
-	lua_Platform platform(this->L, lua_rainbow);
+	this->platform.init(this->L);
 
 	lua_pop(this->L, 1);
 
@@ -37,7 +39,7 @@ Lua::Lua() : L(lua_open())
 
 	size_t path_len;
 	const char *pkg_path = lua_tolstring(this->L, -1, &path_len);
-	char *lua_path = new char[path_len + 1024];
+	char *lua_path = new char[path_len + strlen(bundle) + 8];
 	strcpy(lua_path, pkg_path);
 	strcat(lua_path, ";");
 	strcat(lua_path, bundle);
@@ -61,7 +63,8 @@ void Lua::call(const char *k)
 
 void Lua::err(const int lua_e)
 {
-	const char *m = lua_tostring(this->L, -1);
+	const char *m = lua_tolstring(this->L, -1, 0);
+	lua_pop(this->L, 1);
 	switch (lua_e)
 	{
 		case LUA_ERRRUN:
@@ -93,4 +96,11 @@ void Lua::load(const char *lua)
 
 	lua_e = lua_pcall(this->L, 0, LUA_MULTRET, 0);
 	if (lua_e != 0) this->err(lua_e);
+}
+
+void Lua::update()
+{
+	this->input.update(this->L);
+	this->platform.update(this->L);
+	this->call("update");
 }

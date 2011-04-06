@@ -10,6 +10,9 @@ extern "C"
 	#include <lauxlib.h>
 }
 
+#include "Lua/Input.h"
+#include "Lua/Platform.h"
+
 
 /// Embeds Lua scripting engine.
 
@@ -63,8 +66,10 @@ public:
 	{
 		puts("Lua stack");
 		for (int l = 1; l <= lua_gettop(L); ++l)
-			printf("#%i: %s\n", l, lua_tostring(L, l));
+			printf("#%i: %s\n", l, lua_tolstring(L, l, 0));
 	}
+
+	void update();
 
 	/// Wraps a C++ object and makes its methods available in Lua
 	/// \param ns  Inserts object into given namespace
@@ -123,6 +128,8 @@ public:
 
 private:
 	lua_State *L;
+	lua_Input input;
+	lua_Platform platform;
 
 	template<class T>
 	static int dealloc(lua_State *L)
@@ -146,12 +153,14 @@ private:
 	}
 
 	void err(int);
+
+	friend class Director;
 };
 
+// Include Lua wrappers
 #include "Lua/Algorithm.h"
 #include "Lua/Font.h"
 #include "Lua/Physics.h"
-#include "Lua/Platform.h"
 #include "Lua/SpriteBatch.h"
 #include "Lua/Texture.h"
 

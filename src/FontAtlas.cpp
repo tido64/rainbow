@@ -144,7 +144,7 @@ void FontAtlas::print(const char *text, const float x, const float y) const
 	glTranslatef(x, y, 0.0f);
 	glColor4ub(this->color.r, this->color.g, this->color.b, this->color.a);
 	unsigned int prev = 0;  // 'space' has no kerning
-	while (*text != '\0')
+	for (; *text != '\0'; ++text)
 	{
 		const unsigned int c = static_cast<unsigned int>(*text - ascii_offset);
 		const FontGlyph &glyph = this->charset[c];
@@ -157,7 +157,6 @@ void FontAtlas::print(const char *text, const float x, const float y) const
 		glTranslatef(glyph.advance - glyph.left, 0.0f, 0.0f);
 
 		prev = c;
-		++text;
 	}
 	glPopMatrix();
 }

@@ -6,8 +6,6 @@
 #ifndef ACCELERATION_H_
 #define ACCELERATION_H_
 
-#include "../Platform.h"
-
 #ifdef RAINBOW_IOS
 #	include <UIKit/UIAccelerometer.h>
 #endif
@@ -24,6 +22,16 @@ public:
 
 	/// Only available on iOS. Used for converting a UIAcceleration.
 	Acceleration(UIAcceleration *a) : x(a.x), y(a.y), z(a.z), timestamp(a.timestamp) { }
+
+	/// Only available on iOS. Used for converting a UIAcceleration.
+	Acceleration& operator=(const UIAcceleration *a)
+	{
+		this->x = a.x;
+		this->y = a.y;
+		this->z = a.z;
+		this->timestamp = a.timestamp;
+		return *this;
+	}
 
 #endif
 };

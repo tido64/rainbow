@@ -1,11 +1,11 @@
--- Rainbow Lua utilities
+--! Rainbow Lua utilities
 
--- Copyright 2011 Bifrost Games. All rights reserved.
--- \author Tommy Nguyen
+--! Copyright 2011 Bifrost Games. All rights reserved.
+--! \author Tommy Nguyen
 
--- Dumps all symbols in a table. To dump all global variables, specify _G.
--- \param offset  For internal use only
--- \param story   Table to dump
+--! Dumps all symbols in a table. To dump all global variables, specify _G.
+--! \param offset  For internal use only
+--! \param story   Table to dump
 function rainbow.dump_table(story, offset)
 	offset = offset or "";
 	local n, v;

@@ -16,12 +16,19 @@ public:
 	void draw();
 
 	/// Loads and initialises game script
-	inline void init(const char *game) { this->lua.load(game); }
+	void init(const char *);
 
-	/// Increments time by one second.
-	inline void tick() { this->lua.call("tick"); }
+	/// Handle key press events
+	inline void key_press() { this->lua.input.update(this->lua.L); }
 
-	void update();
+	void update(const float);
+
+	/// Update screen resolution
+	inline void update_video(const int w = 0, const int h = 0)
+	{
+		Screen::Instance().set(w, h);
+		this->lua.platform.update(this->lua.L);
+	}
 
 private:
 	Lua lua;
