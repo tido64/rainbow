@@ -24,14 +24,14 @@ public:
 
 	~SpriteBatch() { delete[] this->vertex_buffer; }
 
-	/// Adds a sprite to the batch.
+	/// Add a sprite to the batch.
 	/// \param s  The sprite to add
 	void add(Sprite *s);
 
-	/// Draws the batch of sprites.
+	/// Draw the batch of sprites.
 	void draw();
 
-	/// Updates the batch of sprites.
+	/// Update the batch of sprites.
 	void update();
 
 protected:

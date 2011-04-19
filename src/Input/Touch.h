@@ -79,7 +79,7 @@ namespace Rainbow
 
 #endif
 
-	/// Determines whether two touches are from the same finger.
+	/// Determine whether two touches are from the same finger.
 	struct TouchEqual : std::binary_function<unsigned int, unsigned int, bool>
 	{
 		inline bool operator()(const unsigned int &a, const unsigned int &b) const

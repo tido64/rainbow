@@ -30,10 +30,10 @@ public:
 	/// Draw the sprite.
 	void draw();
 
-	/// Returns the current angle of the sprite.
+	/// Return the current angle of the sprite.
 	const float& get_angle() const;
 
-	/// Returns the current position of the sprite.
+	/// Return the current position of the sprite.
 	const Vec2f& get_position() const;
 
 	/// Rotate the sprite by an angle (in radian).
@@ -45,22 +45,22 @@ public:
 	/// Non-uniform scaling of sprite (does not affect width and height properties).
 	void scale(const Vec2f &);
 
-	/// Sets the pivot point for rotation and translation.
+	/// Set the pivot point for rotation and translation.
 	/// \param x  Normalised x-component of pivot point
 	/// \param y  Normalised y-component of pivot point
 	void set_pivot(const float x, const float y);
 
-	/// Sets sprite position (absolute).
+	/// Set sprite position (absolute).
 	void set_position(const float x, const float y);
 
-	/// Sets sprite position (absolute).
+	/// Set sprite position (absolute).
 	void set_position(const Vec2f &);
 
-	/// Sets the texture.
+	/// Set the texture.
 	/// \param id  Id of texture to use
 	void set_texture(const unsigned int id);
 
-	/// Updates the vertices of this sprite.
+	/// Update the vertices of this sprite.
 	void update();
 
 protected:

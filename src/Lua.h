@@ -33,7 +33,7 @@ public:
 		int (T::*lua_CFunction)(lua_State *);
 	};
 
-	/// Creates a Lua wrapped object
+	/// Create a Lua wrapped object
 	template<class T>
     static int alloc(lua_State *L)
 	{
@@ -61,7 +61,7 @@ public:
 		return 1;
     }
 
-	/// Dumps Lua stack to stdout
+	/// Dump Lua stack to stdout
 	static void dump_stack(lua_State *L)
 	{
 		puts("Lua stack");
@@ -71,7 +71,7 @@ public:
 
 	void update();
 
-	/// Wraps a C++ object and makes its methods available in Lua
+	/// Wrap a C++ object and makes its methods available in Lua
 	/// \param ns  Inserts object into given namespace
 	template<class T>
 	void wrap(const char *ns = 0)
@@ -104,7 +104,7 @@ public:
 		lua_settable(this->L, -3);
 	}
 
-	/// Returns the wrapper of the object on top of the stack.
+	/// Return the wrapper of the object on top of the stack.
 	/// \return Pointer to wrapper
 	template<class T>
 	static T* wrapper(lua_State *L)

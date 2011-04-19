@@ -11,7 +11,6 @@ void AssetManager::close()
 #endif
 }
 
-/// Returns the full path to a resource or asset.
 const char* AssetManager::get_full_path(const char *filename)
 {
 #if defined(RAINBOW_ANDROID)
@@ -40,9 +39,6 @@ const char* AssetManager::get_full_path(const char *filename)
 #endif
 }
 
-/// Loads a file into provided buffer.
-/// \param buffer    The buffer to fill
-/// \param filename  The file to load
 unsigned int AssetManager::load(unsigned char *&buffer, const char *filename)
 {
 	unsigned int sz = 0;

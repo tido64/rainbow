@@ -37,14 +37,13 @@ class Physics
 public:
 	b2World *world;  ///< Box2D world object
 
-	/// Physics is a singleton.
 	static inline Physics& Instance()
 	{
 		static Physics inst;
 		return inst;
 	}
 
-	/// Creates an anchor box to tie things to.
+	/// Create an anchor box to tie things to.
 	/// \param w  Width of the box
 	/// \param h  Height of the box
 	/// \param x  Position of the box (x-coordinate)
@@ -52,7 +51,7 @@ public:
 	/// \return   Body object
 	b2Body *create_anchor(const float &w, const float &h, const float &x, const float &y);
 
-	/// Creates a body, given definition and fixture.
+	/// Create a body, given definition and fixture.
 	/// \param d        Body definition
 	/// \param fixture  Body fixture
 	/// \param inertia  Inertia
@@ -60,13 +59,13 @@ public:
 	/// \return         Body object
 	b2Body *create_body(const b2BodyDef *d, const b2FixtureDef *fixture = 0, const float inertia = 0.0f, const float mass = 0.0f);
 
-	/// Creates a distant joint between two bodies at their anchor points.
+	/// Create a distant joint between two bodies at their anchor points.
 	/// \param a  Body A
 	/// \param b  Body B
 	/// \return   Joint object
 	b2Joint *create_joint(b2Body *a, b2Body *b);
 
-	/// Creates a distant joint between two bodies at given points.
+	/// Create a distant joint between two bodies at given points.
 	/// \param a      Body A
 	/// \param b      Body B
 	/// \param a_pos  Position of the first end of the joint
@@ -74,33 +73,33 @@ public:
 	/// \return       Joint object
 	b2Joint *create_joint(b2Body *a, b2Body *b, const b2Vec2 &a_pos, const b2Vec2 &b_pos);
 
-	/// Defines linear and/or angular damping.
+	/// Define linear and/or angular damping.
 	/// \param d               Body definition
 	/// \param linearDamping   Linear damping
 	/// \param angularDamping  Angular damping
 	void define_body_damping(b2BodyDef *d, const float linearDamping = 0.0f, const float angularDamping = 0.1f);
 
-	/// Defines body position. Remember that it's better to define its position
+	/// Define body position. Remember that it's better to define its position
 	/// beforehand than to create the body and then move it.
 	/// \param d  Body definition
 	/// \param x  Position (x-coordinate)
 	/// \param y  Position (y-coordinate)
 	void define_body_position(b2BodyDef *d, const float x = 0.0f, const float y = 0.0f);
 
-	/// Removes given body from the world.
+	/// Remove given body from the world.
 	/// \param b  Body to remove
 	void dispose_body(b2Body *b);
 
-	/// Performs inter-frame interpolation.
+	/// Perform inter-frame interpolation.
 	void interpolate();
 
-	/// Restores the last state of all bodies.
+	/// Restore the last state of all bodies.
 	void restore_state();
 
-	/// Saves the current state of all bodies.
+	/// Save the current state of all bodies.
 	void save_state();
 
-	/// Advances Box2D a step forward. This implementation uses a fixed delta.
+	/// Advance Box2D a step forward. This implementation uses a fixed delta.
 	/// \param dt  Time spent on rendering the frame
 	void step(const float &dt);
 

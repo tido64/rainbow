@@ -33,10 +33,10 @@ public:
 		return this->array[i];
 	}
 
-	/// Returns a pointer to the first element.
+	/// Return a pointer to the first element.
 	inline T* begin() const { return this->array; }
 
-	/// Adds an element to the vector.
+	/// Add an element to the vector.
 	void push_back(const T &element)
 	{
 		// Check that there is enough space
@@ -51,7 +51,7 @@ public:
 		this->array[this->count++] = element;
 	}
 
-	/// Returns the number of elements in this vector.
+	/// Return the number of elements in this vector.
 	inline unsigned int size() const { return this->count; }
 
 	Vector& operator=(const Vector &v)
@@ -64,7 +64,7 @@ public:
 		return *this;
 	}
 
-	/// Returns the element stored at index.
+	/// Return the element stored at index.
 	inline T& operator[](const unsigned int i) const
 	{
 		return this->array[i];

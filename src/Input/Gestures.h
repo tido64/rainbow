@@ -23,7 +23,7 @@ namespace Rainbow
 
 			Pinch() : angle(0.0f), scale(1.0f), angle_base(0.0f), scale_base(0.0f) { }
 
-			/// Detects two finger gesture and updates angle and scale.
+			/// Detect two finger gesture and updates angle and scale.
 			void operator()();
 
 		private:

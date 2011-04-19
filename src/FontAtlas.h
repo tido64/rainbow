@@ -7,6 +7,7 @@
 /// - Supports anti-aliasing
 /// - Supports kerning
 ///
+/// \see http://iphone-3d-programming.labs.oreilly.com/ch07.html
 /// \see http://www.alfredrossi.com/?p=73
 /// \see http://musingsofninjarat.wordpress.com/opengl-freetype-texture-fonts/
 /// \see http://ftgl.sourceforge.net/docs/html/ftgl-tutorial.html
@@ -34,10 +35,10 @@ public:
 
 	FontAtlas(const char *font_family, const float pt);
 
-	/// Prints text at (x,y).
+	/// Print text at (x,y).
 	void print(const char *text, const float x = 0.0f, const float y = 0.0f) const;
 
-	/// Sets font color.
+	/// Set font color.
 	void set_color(const unsigned char r, const unsigned char g, const unsigned char b, const unsigned char a = 0xff);
 
 protected:

@@ -124,6 +124,7 @@
     <ClCompile Include="..\..\src\RainbowSDL.cpp" />
     <ClCompile Include="..\..\src\Sprite.cpp" />
     <ClCompile Include="..\..\src\SpriteBatch.cpp" />
+    <ClCompile Include="..\..\src\Texture.cpp" />
     <ClCompile Include="..\..\src\TextureAtlas.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

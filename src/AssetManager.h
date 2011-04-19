@@ -42,13 +42,13 @@ public:
 
 	~AssetManager() { this->close(); }
 
-	/// Closes any open archive streams.
+	/// Close any open archive streams.
 	void close();
 
-	/// Returns the full path to a resource or asset.
+	/// Return the full path to a resource or asset.
 	const char* get_full_path(const char *filename = 0);
 
-	/// Loads a file into provided buffer.
+	/// Load file into provided buffer.
 	/// \param buffer    The buffer to fill
 	/// \param filename  The file to load
 	unsigned int load(unsigned char *&buffer, const char *filename);
@@ -59,7 +59,6 @@ public:
 private:
 	Assets archive;  ///< Source of assets
 
-	// Singleton directives
 	AssetManager() : archive(0) { }
 	AssetManager(const AssetManager &);
 	AssetManager& operator=(const AssetManager &);

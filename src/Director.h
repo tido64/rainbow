@@ -15,7 +15,7 @@ public:
 
 	void draw();
 
-	/// Loads and initialises game script
+	/// Load and initialise game script
 	void init(const char *);
 
 	/// Handle key press events
