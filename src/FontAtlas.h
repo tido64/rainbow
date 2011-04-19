@@ -52,8 +52,14 @@ private:
 	FontGlyph charset[chars];
 	Colorub color;
 
+	/// Intentionally left undefined.
 	FontAtlas(const FontAtlas &);
+
+	/// Find the next power of 2 greater than given number.
+	/// \return Power of 2, greater than 16 (minimum GL texture size)
 	int next_pow2(const int a);
+
+	/// Intentionally left undefined.
 	FontAtlas& operator=(const FontAtlas &);
 };
 

@@ -114,8 +114,8 @@ protected:
 		g = -9.80665f;            ///< Standard gravitational acceleration value
 
 private:
-	float accumulator;        ///< Renderer time accumulator
-	float accumulator_ratio;  ///< The ratio of accumulated time (after consumption) over fixed delta
+	float accumulator;            ///< Renderer time accumulator
+	float accumulator_ratio;      ///< The ratio of accumulated time (after consumption) over fixed delta
 
 	Physics();
 	~Physics();

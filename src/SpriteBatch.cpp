@@ -38,7 +38,6 @@ void SpriteBatch::add(Sprite *s)
 	this->sprites.push_back(s);
 
 	// Update constants
-	//this->batch_vertices = (this->sprites.size() * 4 + (this->sprites.size() - 1) * 2);
 	this->batch_vertices = (this->sprites.size() << 2) + ((this->sprites.size() - 1) << 1);
 	this->batch_buffer_sz = this->batch_vertices * sizeof(SpriteVertex);
 }

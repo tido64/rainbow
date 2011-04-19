@@ -36,9 +36,9 @@ public:
 	void draw()
 	{
 		static const Texture texture("mobpig.png");
-		static const void *color_offset = reinterpret_cast<float *>(0) + 5;
-		static const void *tex_offset = reinterpret_cast<float *>(0) + 9;
-		static const void *vertex_offset = reinterpret_cast<float *>(0) + 1;
+		static const void *color_offset = static_cast<float *>(0) + 5;
+		static const void *tex_offset = static_cast<float *>(0) + 9;
+		static const void *vertex_offset = static_cast<float *>(0) + 1;
 		if (!this->active) return;
 
 		glEnable(GL_POINT_SPRITE);

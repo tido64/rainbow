@@ -6,6 +6,7 @@
 #ifndef DIRECTOR_H_
 #define DIRECTOR_H_
 
+#include "ConFuoco/Mixer.h"
 #include "Lua.h"
 
 class Director
@@ -15,19 +16,21 @@ public:
 
 	void draw();
 
-	/// Load and initialise game script
+	/// Load and initialise game script.
 	void init(const char *);
 
-	/// Handle key press events
+	/// Handle key press events.
 	void key_press();
 
-	void update(const float);
+	/// Update world.
+	/// \param dt  Time since last update
+	void update(const float dt);
 
-	/// Update screen resolution
+	/// Update screen resolution.
 	void update_video(const int w = 0, const int h = 0);
 
 private:
-	Lua lua;
+	Lua lua;  ///< Lua interpreter
 };
 
 inline void Director::key_press()

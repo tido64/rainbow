@@ -132,5 +132,6 @@ GLint Texture::load(void *&data, const char *filename)
 	free(texture.data);
 
 	return format;
+
 #endif
 }

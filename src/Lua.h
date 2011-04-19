@@ -33,7 +33,7 @@ public:
 		int (T::*lua_CFunction)(lua_State *);
 	};
 
-	/// Create a Lua wrapped object
+	/// Create a Lua wrapped object.
 	template<class T>
     static int alloc(lua_State *L)
 	{
@@ -61,7 +61,7 @@ public:
 		return 1;
     }
 
-	/// Dump Lua stack to stdout
+	/// Dump Lua stack to stdout.
 	static void dump_stack(lua_State *L)
 	{
 		puts("Lua stack");
@@ -71,7 +71,7 @@ public:
 
 	void update();
 
-	/// Wrap a C++ object and makes its methods available in Lua
+	/// Wrap a C++ object and makes its methods available in Lua.
 	/// \param ns  Inserts object into given namespace
 	template<class T>
 	void wrap(const char *ns = 0)
@@ -119,11 +119,11 @@ public:
 	Lua();
 	~Lua() { lua_close(this->L); }
 
-	/// Call a function with no parameters or return value
+	/// Call a function with no parameters or return value.
 	/// \param k  Name of the function to call
 	void call(const char *k);
 
-	/// Load given Lua script
+	/// Load given Lua script.
 	void load(const char *);
 
 private:

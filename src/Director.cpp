@@ -9,12 +9,19 @@
 
 #include "Director.h"
 
+using Rainbow::ConFuoco::Mixer;
+
 Director::Director()
 {
 #ifdef RAINBOW_IOS
 
 	// Asset source set in Lua constructor
 	this->update_video();
+
+	//Mixer::Instance().set_bgm(AssetManager::Instance().get_full_path("1-02 N.M.H..mp3"));
+	//Mixer::Instance().play_bgm();
+	//unsigned int funk = Mixer::Instance().add(AssetManager::Instance().get_full_path("Funk.caf"));
+	//Mixer::Instance().play(funk);
 
 #else
 
@@ -37,6 +44,7 @@ void Director::init(const char *script)
 
 void Director::update(const float dt)
 {
+	Mixer::Instance().update();
 	Physics::Instance().step(dt);
 	this->lua.input.update(this->lua.L);
 	this->lua.call("update");
