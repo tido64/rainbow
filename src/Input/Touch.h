@@ -12,8 +12,8 @@
 
 #include <boost/unordered_map.hpp>
 
+#include "../Common/Vec2.h"
 #include "../Hardware/Screen.h"
-#include "../Types.h"
 
 #if defined(RAINBOW_IOS)
 #	include <UIKit/UITouch.h>

@@ -28,6 +28,9 @@
     <Filter Include="Hardware">
       <UniqueIdentifier>{7c328da2-51b2-4ba5-9e5a-bec40c107bbf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Common">
+      <UniqueIdentifier>{beeb2511-fe05-42ee-9b54-4a1b7556846a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\Algorithm.h">
@@ -73,12 +76,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\Touchable.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\Types.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\Vector.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\Lua\Algorithm.h">
@@ -143,6 +140,21 @@
     </ClInclude>
     <ClInclude Include="..\..\src\Platform.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Common\Color.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Common\SpriteVertex.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Common\Vec2.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Common\Vec3.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Common\Vector.h">
+      <Filter>Common</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

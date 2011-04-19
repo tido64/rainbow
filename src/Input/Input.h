@@ -8,8 +8,8 @@
 #ifndef INPUT_H_
 #define INPUT_H_
 
+#include "../Common/Vector.h"
 #include "../Platform.h"
-#include "../Vector.h"
 
 #ifdef RAINBOW_ACCELERATED
 #	include "Acceleration.h"
@@ -39,27 +39,31 @@ public:
 
 	mutable bool touched;
 
-	inline const Touches& get_touches() const
-	{
-		this->touched = false;
-		return touches;
-	}
-
+	const Touches& get_touches() const;
 	void touch_began(const Touch *touches, const unsigned int count);
 	void touch_canceled();
 	void touch_ended(const Touch *touches, const unsigned int count);
 	void touch_moved(const Touch *touches, const unsigned int count);
 
+protected:
+	Touches touches;
+
 #endif
 
 private:
-#ifdef RAINBOW_TOUCHED
-	Touches touches;
-#endif
-
 	Input() { }
 	Input(const Input &);
 	Input& operator=(const Input &);
 };
+
+#ifdef RAINBOW_TOUCHED
+
+inline const Touches& Input::get_touches() const
+{
+	this->touched = false;
+	return touches;
+}
+
+#endif
 
 #endif

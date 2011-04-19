@@ -24,41 +24,48 @@ protected:
 	static const double third = 1.0 / 3.0;
 	static const double quarter = 0.25;
 
-	inline float ease_in_cubic(const float start, const float end, const float t)
-	{
-		assert(t >= 0.0f && t < 1.0f);
-		return start + (end - start) * t * t * t;
-	}
-
-	inline float ease_in_quad(const float start, const float end, const float t)
-	{
-		assert(t >= 0.0f && t < 1.0f);
-		return start + (end - start) * t * t * t * t;
-	}
-
-	inline float ease_in_square(const float start, const float end, const float t)
-	{
-		assert(t >= 0.0f && t < 1.0f);
-		return start + (end - start) * t * t;
-	}
-
-	inline float ease_out_cubic(const float start, const float end, const float t)
-	{
-		assert(t >= 0.0f && t < 1.0f);
-		return start + (end - start) * pow(t, third);
-	}
-
-	inline float ease_out_quad(const float start, const float end, const float t)
-	{
-		assert(t >= 0.0f && t < 1.0f);
-		return start + (end - start) * pow(t, quarter);
-	}
-
-	inline float ease_out_square(const float start, const float end, const float t)
-	{
-		assert(t >= 0.0f && t < 1.0f);
-		return start + (end - start) * sqrt(t);
-	}
+	float ease_in_cubic(const float start, const float end, const float t)
+	float ease_in_quad(const float start, const float end, const float t)
+	float ease_in_square(const float start, const float end, const float t)
+	float ease_out_cubic(const float start, const float end, const float t)
+	float ease_out_quad(const float start, const float end, const float t)
+	float ease_out_square(const float start, const float end, const float t)
 };
+
+inline float Animation::ease_in_cubic(const float start, const float end, const float t)
+{
+	assert(t >= 0.0f && t < 1.0f);
+	return start + (end - start) * t * t * t;
+}
+
+inline float Animation::ease_in_quad(const float start, const float end, const float t)
+{
+	assert(t >= 0.0f && t < 1.0f);
+	return start + (end - start) * t * t * t * t;
+}
+
+inline float Animation::ease_in_square(const float start, const float end, const float t)
+{
+	assert(t >= 0.0f && t < 1.0f);
+	return start + (end - start) * t * t;
+}
+
+inline float Animation::ease_out_cubic(const float start, const float end, const float t)
+{
+	assert(t >= 0.0f && t < 1.0f);
+	return start + (end - start) * pow(t, third);
+}
+
+inline float Animation::ease_out_quad(const float start, const float end, const float t)
+{
+	assert(t >= 0.0f && t < 1.0f);
+	return start + (end - start) * pow(t, quarter);
+}
+
+inline float Animation::ease_out_square(const float start, const float end, const float t)
+{
+	assert(t >= 0.0f && t < 1.0f);
+	return start + (end - start) * sqrt(t);
+}
 
 #endif

@@ -22,6 +22,7 @@
 #include FT_FREETYPE_H
 #include FT_GLYPH_H
 
+#include "Common/Color.h"
 #include "AssetManager.h"
 #include "FontGlyph.h"
 #include "OpenGL.h"
@@ -32,7 +33,6 @@ public:
 	const float pt;
 
 	FontAtlas(const char *font_family, const float pt);
-	~FontAtlas() { }
 
 	/// Prints text at (x,y).
 	void print(const char *text, const float x = 0.0f, const float y = 0.0f) const;
@@ -49,14 +49,18 @@ protected:
 private:
 	GLuint textures[chars];
 	FontGlyph charset[chars];
-	Color4ub color;
+	Colorub color;
 
-	inline int next_pow2(const int a)
-	{
-		int p = 16;
-		for (; p < a; p <<= 1);
-		return p;
-	}
+	FontAtlas(const FontAtlas &);
+	int next_pow2(const int a);
+	FontAtlas& operator=(const FontAtlas &);
 };
+
+inline int FontAtlas::next_pow2(const int a)
+{
+	int p = 16;
+	for (; p < a; p <<= 1);
+	return p;
+}
 
 #endif

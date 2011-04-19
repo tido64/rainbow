@@ -24,22 +24,17 @@ public:
 	const unsigned int height;  ///< Height of sprite (not scaled)
 
 	Sprite(const unsigned int width, const unsigned int height, TextureAtlas *parent = 0);
+	Sprite(const Sprite &);
 	~Sprite();
 
 	/// Draw the sprite.
 	void draw();
 
 	/// Returns the current angle of the sprite.
-	inline const float& get_angle() const
-	{
-		return this->angle;
-	}
+	const float& get_angle() const;
 
 	/// Returns the current position of the sprite.
-	inline const Vec2f& get_position() const
-	{
-		return this->position;
-	}
+	const Vec2f& get_position() const;
 
 	/// Rotate the sprite by an angle (in radian).
 	void rotate(const float);
@@ -63,10 +58,7 @@ public:
 
 	/// Sets the texture.
 	/// \param id  Id of texture to use
-	inline void set_texture(const unsigned int id)
-	{
-		this->parent->get_texture(id, this->vertex_array);
-	}
+	void set_texture(const unsigned int id);
 
 	/// Updates the vertices of this sprite.
 	void update();
@@ -95,8 +87,25 @@ private:
 	Vec2f scale_f;               ///< Scaling factor
 	Vec2f origin[4];             ///< Original rendering at origo
 
+	Sprite& operator=(const Sprite &);
+
 	friend class SpriteBatch;
 	friend class TextureAtlas;
 };
+
+inline const float& Sprite::get_angle() const
+{
+	return this->angle;
+}
+
+inline const Vec2f& Sprite::get_position() const
+{
+	return this->position;
+}
+
+inline void Sprite::set_texture(const unsigned int id)
+{
+	this->parent->get_texture(id, this->vertex_array);
+}
 
 #endif

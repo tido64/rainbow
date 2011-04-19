@@ -19,6 +19,18 @@ Sprite::Sprite(const unsigned int w, const unsigned int h, TextureAtlas *p) :
 	this->update();
 }
 
+Sprite::Sprite(const Sprite &s) :
+	width(s.width), height(s.height), buffered(false), stale(s.stale),
+	angle(s.angle), cos_r(s.cos_r), sin_r(s.sin_r), texture(s.texture),
+	vertex_array(new SpriteVertex[4]), parent(s.parent), pivot(s.pivot),
+	position(s.position), position_d(s.position_d), scale_f(s.scale_f)
+{
+	memcpy(this->vertex_array, s.vertex_array, 4 * sizeof(SpriteVertex));
+	memcpy(this->origin, s.origin, 4 * sizeof(Vec2f));
+	if (this->stale)
+		this->update();
+}
+
 Sprite::~Sprite()
 {
 	if (!this->buffered)

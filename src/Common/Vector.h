@@ -15,10 +15,14 @@ template<class T>
 class Vector
 {
 public:
-	Vector(const int reserve = 8) : count(0), reserved(reserve)
+	Vector(const int reserve = 8) :
+		count(0), reserved(reserve), array(new T[reserve])
+	{ }
+
+	Vector(const Vector &v) :
+		count(v.count), reserved(v.reserved), array(new T[v.reserved])
 	{
-		assert(reserve > 0);
-		this->array = new T[this->reserved];
+		memcpy(this->array, v.array, v.count * sizeof(T));
 	}
 
 	~Vector() { delete[] this->array; }
@@ -50,8 +54,18 @@ public:
 	/// Returns the number of elements in this vector.
 	inline unsigned int size() const { return this->count; }
 
+	Vector& operator=(const Vector &v)
+	{
+		this->count = v.count;
+		this->reserved = v.reserved;
+		delete[] this->array;
+		this->array = new T[this->reserved];
+		memcpy(this->array, v.array, this->count * sizeof(T));
+		return *this;
+	}
+
 	/// Returns the element stored at index.
-	inline T& operator[](const unsigned int i)
+	inline T& operator[](const unsigned int i) const
 	{
 		return this->array[i];
 	}

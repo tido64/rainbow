@@ -16,12 +16,13 @@ LIBZIP  := $(LIBDIR)/libzip
 
 CPP     := g++
 CFLAGS  := -g -O2 -Wall -pipe $(INCSDL) $(INCFT) -I$(LIBDIR) -I$(LIBLUA) -I$(LIBPNG) -ftree-vectorize -ftree-vectorizer-verbose=6 -march=native
-LDFLAGS := -lGL -lSDL -lfreetype -lz -lzip -lopenal
+LDFLAGS := -lGL -lSDL -lfreetype -lz -lzip -lopenal -lavformat
 
 EXEC := $(BINDIR)/$(TARGET)
 OBJ  := $(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(wildcard $(SRCDIR)/*.cpp)) \
-	$(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(wildcard $(SRCDIR)/**/*.cpp))
-DIRS := Audio Hardware Input Lua ParticleSystem
+	$(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(wildcard $(SRCDIR)/**/*.cpp)) \
+	$(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(wildcard $(SRCDIR)/**/**/*.cpp))
+DIRS := Audio/Codecs Hardware Input Lua ParticleSystem
 
 default: check $(EXEC)
 

@@ -19,19 +19,26 @@ public:
 	void init(const char *);
 
 	/// Handle key press events
-	inline void key_press() { this->lua.input.update(this->lua.L); }
+	void key_press();
 
 	void update(const float);
 
 	/// Update screen resolution
-	inline void update_video(const int w = 0, const int h = 0)
-	{
-		Screen::Instance().set(w, h);
-		this->lua.platform.update(this->lua.L);
-	}
+	void update_video(const int w = 0, const int h = 0);
 
 private:
 	Lua lua;
 };
+
+inline void Director::key_press()
+{
+	this->lua.input.update(this->lua.L);
+}
+
+inline void Director::update_video(const int w, const int h)
+{
+	Screen::Instance().set(w, h);
+	this->lua.platform.update(this->lua.L);
+}
 
 #endif

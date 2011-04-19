@@ -35,10 +35,7 @@ public:
 	void update();
 
 protected:
-	inline unsigned int indexof(const unsigned int i)
-	{
-		return (i << 2) + (i << 1);
-	}
+	unsigned int indexof(const unsigned int i);
 
 private:
 	GLuint buffer;
@@ -49,6 +46,14 @@ private:
 	unsigned int reserved;
 	Vector<Sprite *> sprites;
 	SpriteVertex *vertex_buffer;
+
+	SpriteBatch(const SpriteBatch &sb);
+	SpriteBatch& operator=(const SpriteBatch &);
 };
+
+inline unsigned int SpriteBatch::indexof(const unsigned int i)
+{
+	return (i << 2) + (i << 1);
+}
 
 #endif

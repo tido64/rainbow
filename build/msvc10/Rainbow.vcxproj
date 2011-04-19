@@ -67,6 +67,11 @@
     <ClInclude Include="..\..\src\Algorithm.h" />
     <ClInclude Include="..\..\src\Animation.h" />
     <ClInclude Include="..\..\src\AssetManager.h" />
+    <ClInclude Include="..\..\src\Common\Color.h" />
+    <ClInclude Include="..\..\src\Common\SpriteVertex.h" />
+    <ClInclude Include="..\..\src\Common\Vec2.h" />
+    <ClInclude Include="..\..\src\Common\Vec3.h" />
+    <ClInclude Include="..\..\src\Common\Vector.h" />
     <ClInclude Include="..\..\src\Director.h" />
     <ClInclude Include="..\..\src\Drawable.h" />
     <ClInclude Include="..\..\src\FontAtlas.h" />
@@ -100,8 +105,6 @@
     <ClInclude Include="..\..\src\Texture.h" />
     <ClInclude Include="..\..\src\TextureAtlas.h" />
     <ClInclude Include="..\..\src\Touchable.h" />
-    <ClInclude Include="..\..\src\Types.h" />
-    <ClInclude Include="..\..\src\Vector.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\AssetManager.cpp" />

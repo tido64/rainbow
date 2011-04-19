@@ -6,7 +6,7 @@
 #ifndef FONTGLYPH_H_
 #define FONTGLYPH_H_
 
-#include "Types.h"
+#include "Common/SpriteVertex.h"
 
 struct FontGlyph
 {

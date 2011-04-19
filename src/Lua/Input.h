@@ -32,7 +32,10 @@ public:
 
 	void update(lua_State *L)
 	{
+	#if defined(RAINBOW_ACCELERATED) || defined(RAINBOW_TOUCHED)
 		const Input &input = Input::Instance();
+	#endif
+
 		lua_getfield(L, LUA_GLOBALSINDEX, "rainbow");
 		lua_getfield(L, -1, "input");
 

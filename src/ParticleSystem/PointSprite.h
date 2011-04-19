@@ -6,14 +6,15 @@
 #ifndef POINTSPRITE_H_
 #define POINTSPRITE_H_
 
-#include "../Types.h"
+#include "../Common/Color.h"
+#include "../Common/Vec2.h"
 
 struct PointSprite
 {
 	float size;
 	Vec2f position;
 	Vec2f vector;
-	Color4f color;
+	Colorf color;
 	Vec2f texcoord[4];
 };
 

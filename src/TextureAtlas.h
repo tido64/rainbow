@@ -2,8 +2,8 @@
 #define TEXTUREATLAS_H_
 
 #include "Texture.h"
-#include "Types.h"
-#include "Vector.h"
+#include "Common/SpriteVertex.h"
+#include "Common/Vector.h"
 
 class Sprite;
 
@@ -33,7 +33,7 @@ public:
 	unsigned int define_texture(const int x, const int y, const int width, const int height);
 
 	/// Returns the texture name this atlas holds.
-	inline GLuint get_name() const { return this->texture.name; }
+	GLuint get_name() const;
 
 	/// Gets named texture.
 	/// \param id        The id of the texture to get
@@ -44,6 +44,14 @@ private:
 	Texture texture;           ///< Loaded texture
 	Vector<Sprite *> sprites;  ///< Stores all sprites
 	Vector<Vec2f> textures;    ///< Stores all textures
+
+	TextureAtlas(const TextureAtlas &);
+	TextureAtlas& operator=(const TextureAtlas &);
 };
+
+inline GLuint TextureAtlas::get_name() const
+{
+	return this->texture.name;
+}
 
 #endif

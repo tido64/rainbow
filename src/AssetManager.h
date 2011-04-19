@@ -54,20 +54,7 @@ public:
 	unsigned int load(unsigned char *&buffer, const char *filename);
 
 	/// Set the source to load resources from.
-	inline void set_source(const char *src = 0)
-	{
-	#if defined(RAINBOW_IOS)
-
-		this->archive = [NSBundle mainBundle];
-
-	#elif defined(RAINBOW_ZIP)
-
-		int errorp = 0;
-		this->archive = zip_open(src, 0, &errorp);
-		assert(errorp == 0);
-
-	#endif
-	}
+	void set_source(const char *src = 0);
 
 private:
 	Assets archive;  ///< Source of assets
@@ -77,5 +64,20 @@ private:
 	AssetManager(const AssetManager &);
 	AssetManager& operator=(const AssetManager &);
 };
+
+inline void AssetManager::set_source(const char *src)
+{
+#if defined(RAINBOW_IOS)
+
+	this->archive = [NSBundle mainBundle];
+
+#elif defined(RAINBOW_ZIP)
+
+	int errorp = 0;
+	this->archive = zip_open(src, 0, &errorp);
+	assert(errorp == 0);
+
+#endif
+}
 
 #endif

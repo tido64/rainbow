@@ -105,7 +105,7 @@ public:
 	}
 
 	/// Returns the wrapper of the object on top of the stack.
-	/// \return  Pointer to wrapper
+	/// \return Pointer to wrapper
 	template<class T>
 	static T* wrapper(lua_State *L)
 	{
@@ -152,7 +152,9 @@ private:
 		return ((*ptr)->*(T::methods[i].lua_CFunction))(L);
 	}
 
+	Lua(const Lua &);
 	void err(int);
+	Lua& operator=(const Lua &);
 
 	friend class Director;
 };
