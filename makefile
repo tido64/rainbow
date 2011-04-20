@@ -22,7 +22,7 @@ EXEC := $(BINDIR)/$(TARGET)
 OBJ  := $(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(wildcard $(SRCDIR)/*.cpp)) \
 	$(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(wildcard $(SRCDIR)/**/*.cpp)) \
 	$(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(wildcard $(SRCDIR)/**/**/*.cpp))
-DIRS := Audio/Codecs Hardware Input Lua ParticleSystem
+DIRS := Common ConFuoco ConFuoco/Codecs Hardware Input Lua ParticleSystem
 
 default: check $(EXEC)
 

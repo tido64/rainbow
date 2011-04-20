@@ -11,14 +11,14 @@ namespace Rainbow
 	{
 		Decoder::Decoder() { }
 
-		void Decoder::open(Wave &wave, const char *media)
+		void Decoder::open(Wave &wave, const char *file, bool streaming)
 		{
-			CFURLRef url = CFURLCreateFromFileSystemRepresentation(0, reinterpret_cast<const UInt8 *>(media), strlen(media), false);
+			CFURLRef url = CFURLCreateFromFileSystemRepresentation(0, reinterpret_cast<const UInt8 *>(file), strlen(file), false);
 			ExtAudioFileRef ext_audio = 0;
 			if (ExtAudioFileOpenURL(url, &ext_audio) != noErr)
 			{
 				CFRelease(url);
-				NSLog(@"Rainbow::Audio::Decoder: Could not open %s\n", CFURLGetString(url));
+				NSLog(@"Rainbow::ConFuoco::Decoder: Could not open %s\n", CFURLGetString(url));
 				return;
 			}
 			CFRelease(url);
@@ -27,7 +27,7 @@ namespace Rainbow
 			UInt32 size = sizeof(audio_format);
 			if (ExtAudioFileGetProperty(ext_audio, kExtAudioFileProperty_FileDataFormat, &size, &audio_format) != noErr)
 			{
-				NSLog(@"Rainbow::Audio::Decoder: Could not get audio format\n");
+				NSLog(@"Rainbow::ConFuoco::Decoder: Could not get audio format\n");
 				return;
 			}
 			assert(audio_format.mChannelsPerFrame <= 2);
@@ -42,7 +42,7 @@ namespace Rainbow
 
 			if (ExtAudioFileSetProperty(ext_audio, kExtAudioFileProperty_ClientDataFormat, sizeof(audio_format), &audio_format) != noErr)
 			{
-				NSLog(@"Rainbow::Audio::Decoder: Could not set client data format\n");
+				NSLog(@"Rainbow::ConFuoco::Decoder: Could not set client data format\n");
 				return;
 			}
 
@@ -50,12 +50,12 @@ namespace Rainbow
 			size = sizeof(frames);
 			if (ExtAudioFileGetProperty(ext_audio, kExtAudioFileProperty_FileLengthFrames, &size, &frames) != noErr)
 			{
-				NSLog(@"Rainbow::Audio::Decoder: Could not get audio length\n");
+				NSLog(@"Rainbow::ConFuoco::Decoder: Could not get audio length\n");
 				return;
 			}
 
 			size = frames * audio_format.mBytesPerFrame;
-			wave.buffer = new byte[size];
+			wave.buffer = new char[size];
 			assert(wave.buffer != 0);
 			memset(wave.buffer, 0, size);
 
@@ -67,9 +67,9 @@ namespace Rainbow
 
 			if (ExtAudioFileRead(ext_audio, reinterpret_cast<UInt32 *>(&frames), &abuffer) != noErr)
 			{
-				delete[] wave.buffer;
+				delete[] static_cast<char *>(wave.buffer);
 				wave.buffer = 0;
-				NSLog(@"Rainbow::Audio::Decoder: Could not read from %s\n", media);
+				NSLog(@"Rainbow::ConFuoco::Decoder: Could not read from %s\n", file);
 				return;
 			}
 			ExtAudioFileDispose(ext_audio);

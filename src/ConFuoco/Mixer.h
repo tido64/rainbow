@@ -150,8 +150,7 @@ namespace Rainbow
 
 		private:
 			bool interrupted;                     ///< Audio mixer got interrupted by external events
-			bool playing;                         ///< Audio mixer is outputting to device
-			byte cleanup;                         ///< Used internally for cleaning up AL lib
+			unsigned char cleanup;                ///< Used internally for cleaning up AL lib
 			unsigned int busy;                    ///< Whether the audio device is busy (iPod, etc.)
 			unsigned int buffer_count;            ///< Number of buffered sound streams in use
 			unsigned int source_count;            ///< Number of sound sources in use

@@ -15,7 +15,7 @@ namespace Rainbow
 	namespace ConFuoco
 	{
 		Mixer::Mixer() :
-			interrupted(false), playing(false), cleanup(0), busy(0),
+			interrupted(false), cleanup(0), busy(0),
 			buffer_count(0), source_count(0), context(0)
 		{
 			#ifdef RAINBOW_IOS
@@ -100,24 +100,21 @@ namespace Rainbow
 
 		#ifndef RAINBOW_IOS
 
-			if (this->interrupted)
-				return;
-
-			alGetSourcei(this->stream.sourced, AL_SOURCE_STATE, &work);
-			if(work != AL_PLAYING)
+			if (this->interrupted || !this->stream.playing)
 				return;
 
 			unsigned int buffer = 0;
 			alGetSourcei(this->stream.sourced, AL_BUFFERS_PROCESSED, &work);
 			for (int i = 0; i < work; ++i)
 			{
-				printf("%i buffer(s) processed\n", work);
 				int packets = Decoder::Instance().read(this->stream);
-				printf("Read additional %i packet(s)\n", packets);
 				if (!packets)
 				{
-					puts("Finished");
-					exit(0);
+					if (!this->stream.loops)
+					{
+						this->stream.playing = false;
+						return;
+					}
 					Decoder::Instance().reset(this->stream);
 					Decoder::Instance().read(this->stream);
 				}
@@ -163,13 +160,14 @@ namespace Rainbow
 
 		#else
 
-			Decoder::Instance().open_stream(this->stream, media);
+			Decoder::Instance().open(this->stream, media, true);
 			for (unsigned int i = 0; i < STREAM_BUFFERS; ++i)
 			{
 				Decoder::Instance().read(this->stream);
 				alBufferData(this->stream.buffered[i], this->stream.format, this->stream.buffer, this->stream.buffer_size, this->stream.frequency);
 			}
 			alSourceQueueBuffers(this->stream.sourced, STREAM_BUFFERS, this->stream.buffered);
+			this->stream.in_use = true;
 
 		#endif
 		}
@@ -185,14 +183,10 @@ namespace Rainbow
 
 		#else
 
-			if (!this->stream.in_use)
+			if (!this->stream.in_use || this->stream.playing)
 				return;
 
-			int state = 0;
-			alGetSourcei(this->stream.sourced, AL_SOURCE_STATE, &state);
-			if (state == AL_PLAYING)
-				return;
-
+			this->stream.playing = true;
 			alSourcePlay(this->stream.sourced);
 
 		#endif
@@ -202,15 +196,18 @@ namespace Rainbow
 		{
 		#ifdef RAINBOW_IOS
 
-			if (this->player.playing)
-				[this->player pause];
+			if (!this->player.playing)
+				return
+
+			[this->player pause];
 
 		#else
 
-			int state = 0;
-			alGetSourcei(this->stream.sourced, AL_SOURCE_STATE, &state);
-			if (state == AL_PLAYING)
-				alSourcePause(this->stream.sourced);
+			if (!this->stream.playing)
+				return;
+
+			this->stream.playing = false;
+			alSourcePause(this->stream.sourced);
 
 		#endif
 		}
@@ -232,14 +229,16 @@ namespace Rainbow
 
 		#else
 
+			this->stream.playing = false;
 			if (this->stream.in_use)
 			{
 				int state = 0;
 				alGetSourcei(this->stream.sourced, AL_SOURCE_STATE, &state);
 				if (state == AL_PLAYING)
 					alSourceStop(this->stream.sourced);
+
 				if (clear)
-					this->stream.release();
+					Decoder::Instance().close(this->stream);
 			}
 
 		#endif
@@ -275,7 +274,7 @@ namespace Rainbow
 					break;
 				case kAudioSessionEndInterruption:
 					if (AudioSessionSetActive(true))
-						NSLog(@"Rainbow::Audio::Mixer: Could not activate audio session\n");
+						NSLog(@"Rainbow::ConFuoco::Mixer: Could not activate audio session\n");
 					alcMakeContextCurrent(mixer->context);
 					break;
 				default:
@@ -290,7 +289,7 @@ namespace Rainbow
 			UInt32 size = sizeof(CFStringRef);
 			CFStringRef new_route;
 			OSStatus result = AudioSessionGetProperty(kAudioSessionProperty_AudioRoute, &size, &new_route);
-			NSLog(@"Rainbow::Audio::Mixer: Route changed from %@ to %@ (%d)\n", old_route, new_route, result);
+			NSLog(@"Rainbow::ConFuoco::Mixer: Route changed from %@ to %@ (%d)\n", old_route, new_route, result);
 		}
 
 		void Mixer::init_audio_session()
@@ -300,14 +299,14 @@ namespace Rainbow
 			OSStatus result = AudioSessionInitialize(0, 0, InterruptionListener, this);
 			if (result != 0 && result != kAudioSessionAlreadyInitialized)
 			{
-				NSLog(@"Rainbow::Audio::Mixer: Could not initialise audio device (%d)\n", result);
+				NSLog(@"Rainbow::ConFuoco::Mixer: Could not initialise audio device (%d)\n", result);
 				return;
 			}
 
 			UInt32 property = sizeof(this->busy);
 			result = AudioSessionGetProperty(kAudioSessionProperty_OtherAudioIsPlaying, &property, &this->busy);
 			if (result != 0)
-				NSLog(@"Rainbow::Audio::Mixer: Could not find out whether audio device is in use (%d)\n", result);
+				NSLog(@"Rainbow::ConFuoco::Mixer: Could not find out whether audio device is in use (%d)\n", result);
 
 			property = (this->busy) ? kAudioSessionCategory_AmbientSound : kAudioSessionCategory_SoloAmbientSound;
 			result = AudioSessionSetProperty(kAudioSessionProperty_AudioCategory, sizeof(property), &property);
@@ -317,16 +316,16 @@ namespace Rainbow
 				property = kAudioSessionCategory_AmbientSound;
 				result = AudioSessionSetProperty(kAudioSessionProperty_AudioCategory, sizeof(property), &property);
 				if (result != 0)
-					NSLog(@"Rainbow::Audio::Mixer: Could not set audio session category (%d)\n", result);
+					NSLog(@"Rainbow::ConFuoco::Mixer: Could not set audio session category (%d)\n", result);
 			}
 
 			result = AudioSessionAddPropertyListener(kAudioSessionProperty_AudioRouteChange, RouteChangeListener, this);
 			if (result != 0)
-				NSLog(@"Rainbow::Audio::Mixer: Could not add audio route change listener (%d)\n", result);
+				NSLog(@"Rainbow::ConFuoco::Mixer: Could not add audio route change listener (%d)\n", result);
 
 			result = AudioSessionSetActive(true);
 			if (result != 0)
-				NSLog(@"Rainbow::Audio::Mixer: Could not activate audio session (%s)\n", result);
+				NSLog(@"Rainbow::ConFuoco::Mixer: Could not activate audio session (%s)\n", result);
 		}
 
 	#endif
@@ -356,7 +355,7 @@ namespace Rainbow
 			alGenBuffers(AUDIO_BUFFERS, this->buffers);
 			if ((err = alGetError()) != AL_NO_ERROR)
 			{
-				printf("Rainbow::Audio::Mixer: Could not generate buffers (%x)\n", err);
+				printf("Rainbow::ConFuoco::Mixer: Could not generate buffers (%x)\n", err);
 				exit(1);
 			}
 			this->cleanup |= AUDIO_BUFFERED;
@@ -367,7 +366,7 @@ namespace Rainbow
 			alGenSources(AUDIO_SOURCES, this->sources);
 			if ((err = alGetError()) != AL_NO_ERROR)
 			{
-				printf("Rainbow::Audio::Mixer: Could not generate sources (%x)\n", err);
+				printf("Rainbow::ConFuoco::Mixer: Could not generate sources (%x)\n", err);
 				exit(1);
 			}
 			this->cleanup |= AUDIO_SOURCED;
@@ -382,7 +381,7 @@ namespace Rainbow
 				alSourcei(this->sources[i], AL_ROLLOFF_FACTOR, 0);
 				if ((err = alGetError()) != AL_NO_ERROR)
 				{
-					printf("Rainbow::Audio::Mixer: Could not set source parameters (%x)\n", err);
+					printf("Rainbow::ConFuoco::Mixer: Could not set source parameters (%x)\n", err);
 					exit(1);
 				}
 			}

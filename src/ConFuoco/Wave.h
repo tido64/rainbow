@@ -1,12 +1,12 @@
 #ifndef AUDIO_WAVE_H_
 #define AUDIO_WAVE_H_
 
+#include "../Platform.h"
+
 namespace Rainbow
 {
 	namespace ConFuoco
 	{
-		typedef unsigned char byte;
-
 		/// Basic sound wave properties.
 
 		/// Copyright 2011 Bifrost Games. All rights reserved.
@@ -14,14 +14,15 @@ namespace Rainbow
 		class Wave
 		{
 		public:
-			Wave() : buffer(0), buffer_size(0), buffered(-1), format(0), frequency(0) { }
-			virtual ~Wave() { delete[] this->buffer; }
+			Wave();
+			virtual ~Wave() { this->release(); }
 
 			/// Clear buffer and reset state.
 			virtual void release();
 
 		protected:
-			unsigned char *buffer;  ///< Wave buffer
+			void *buffer;              ///< Wave buffer
+			void *handle;              ///< Decoder handler
 
 		private:
 			unsigned int buffer_size;  ///< Size of buffer
