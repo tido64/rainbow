@@ -1,4 +1,4 @@
-#include "Algorithm.h"
+#include "lua_Algorithm.h"
 
 lua_Algorithm::lua_Algorithm(lua_State *L)
 {

@@ -1,4 +1,4 @@
-#include "Sprite.h"
+#include "lua_Sprite.h"
 
 const char *lua_Sprite::class_name = "create_sprite";
 const Lua::Method<lua_Sprite> lua_Sprite::methods[] = {

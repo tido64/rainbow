@@ -10,8 +10,8 @@ extern "C"
 	#include <lauxlib.h>
 }
 
-#include "Lua/Input.h"
-#include "Lua/Platform.h"
+#include "Lua/lua_Input.h"
+#include "Lua/lua_Platform.h"
 
 
 /// Embeds Lua scripting engine.
@@ -160,10 +160,10 @@ private:
 };
 
 // Include Lua wrappers
-#include "Lua/Algorithm.h"
-#include "Lua/Font.h"
-#include "Lua/Physics.h"
-#include "Lua/SpriteBatch.h"
-#include "Lua/Texture.h"
+#include "Lua/lua_Algorithm.h"
+#include "Lua/lua_Font.h"
+#include "Lua/lua_Physics.h"
+#include "Lua/lua_SpriteBatch.h"
+#include "Lua/lua_Texture.h"
 
 #endif

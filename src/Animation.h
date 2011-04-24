@@ -21,16 +21,19 @@ public:
 protected:
 	unsigned int frames;
 
-	static const double third = 1.0 / 3.0;
-	static const double quarter = 0.25;
+	static const double third;
+	static const double quarter;
 
-	float ease_in_cubic(const float start, const float end, const float t)
-	float ease_in_quad(const float start, const float end, const float t)
-	float ease_in_square(const float start, const float end, const float t)
-	float ease_out_cubic(const float start, const float end, const float t)
-	float ease_out_quad(const float start, const float end, const float t)
-	float ease_out_square(const float start, const float end, const float t)
+	float ease_in_cubic(const float start, const float end, const float t);
+	float ease_in_quad(const float start, const float end, const float t);
+	float ease_in_square(const float start, const float end, const float t);
+	float ease_out_cubic(const float start, const float end, const float t);
+	float ease_out_quad(const float start, const float end, const float t);
+	float ease_out_square(const float start, const float end, const float t);
 };
+
+const double Animation::third = 1.0 / 3.0;
+const double Animation::quarter = 0.25;
 
 inline float Animation::ease_in_cubic(const float start, const float end, const float t)
 {

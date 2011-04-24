@@ -19,7 +19,6 @@ typedef NSBundle* Assets;
 #	include <zip.h>
 #	define RAINBOW_ZIP
 
-//typedef unsigned char Assets;
 typedef zip* Assets;
 
 #endif
@@ -34,7 +33,7 @@ typedef zip* Assets;
 class AssetManager
 {
 public:
-	static inline AssetManager& Instance()
+	static AssetManager& Instance()
 	{
 		static AssetManager am;
 		return am;

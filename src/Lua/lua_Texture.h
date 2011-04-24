@@ -2,8 +2,7 @@
 #define LUA_TEXTURE_H_
 
 #include "../Lua.h"
-//#include "../TextureAtlas.h"
-#include "Sprite.h"
+#include "lua_Sprite.h"
 
 class lua_Texture
 {

@@ -35,7 +35,7 @@ namespace Rainbow
 				wave.buffer = new char[wave.buffer_size + 1];
 				return;
 			}
-			wave.buffer_size = ov_pcm_total(vf, -1) * vi->channels * 2;
+			wave.buffer_size = static_cast<unsigned int>(ov_pcm_total(vf, -1)) * vi->channels * 2;
 			wave.buffer = new char[wave.buffer_size + 1];
 			this->read(wave);
 			wave.handle = 0;

@@ -16,7 +16,7 @@ class SpriteBatch
 {
 public:
 	SpriteBatch(const int hint = 8) :
-		texture(0), count(0), reserved(this->indexof(hint)), sprites(hint)
+		texture(0), count(0), reserved(indexof(hint)), sprites(hint)
 	{
 		this->vertex_buffer = new SpriteVertex[this->reserved];
 		glGenBuffers(1, &this->buffer);

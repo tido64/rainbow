@@ -41,11 +41,15 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\..\lib;..\..\..\lib\libpng;..\..\..\lib\libzip;..\..\..\lib\Lua;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\lib;..\..\..\lib\FreeType\include;..\..\..\lib\libpng;..\..\..\lib\libzip-0.10;..\..\..\lib\Lua;..\..\..\lib\Win32;..\..\..\lib\Xiph.Org</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>..\..\..\lib\Win32</AdditionalLibraryDirectories>
+      <SubSystem>Windows</SubSystem>
+      <AdditionalDependencies>freetype.lib;GLee.lib;libpng15.lib;libvorbisfile.lib;lua5.1.lib;OpenAL32.lib;Opengl32.lib;SDL.lib;SDLmain.lib;zdll.lib;zip.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreSpecificDefaultLibraries>LIBCMT;msvcrt.lib</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -54,16 +58,56 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>..\..\..\lib;..\..\..\lib\libpng;..\..\..\lib\libzip;..\..\..\lib\Lua;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\lib;..\..\..\lib\FreeType\include;..\..\..\lib\libpng;..\..\..\lib\libzip-0.10;..\..\..\lib\Lua;..\..\..\lib\Win32;..\..\..\lib\Xiph.Org</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>..\..\..\lib\Win32</AdditionalLibraryDirectories>
+      <SubSystem>Windows</SubSystem>
+      <AdditionalDependencies>freetype.lib;GLee.lib;libpng15.lib;libvorbisfile.lib;lua5.1.lib;OpenAL32.lib;Opengl32.lib;SDL.lib;SDLmain.lib;zdll.lib;zip.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreSpecificDefaultLibraries>LIBCMT;msvcrt.lib</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\lib\Box2D\Box2D.h" />
+    <ClInclude Include="..\..\..\lib\Box2D\Collision\b2BroadPhase.h" />
+    <ClInclude Include="..\..\..\lib\Box2D\Collision\b2Collision.h" />
+    <ClInclude Include="..\..\..\lib\Box2D\Collision\b2Distance.h" />
+    <ClInclude Include="..\..\..\lib\Box2D\Collision\b2DynamicTree.h" />
+    <ClInclude Include="..\..\..\lib\Box2D\Collision\b2TimeOfImpact.h" />
+    <ClInclude Include="..\..\..\lib\Box2D\Collision\Shapes\b2CircleShape.h" />
+    <ClInclude Include="..\..\..\lib\Box2D\Collision\Shapes\b2PolygonShape.h" />
+    <ClInclude Include="..\..\..\lib\Box2D\Collision\Shapes\b2Shape.h" />
+    <ClInclude Include="..\..\..\lib\Box2D\Common\b2BlockAllocator.h" />
+    <ClInclude Include="..\..\..\lib\Box2D\Common\b2Math.h" />
+    <ClInclude Include="..\..\..\lib\Box2D\Common\b2Settings.h" />
+    <ClInclude Include="..\..\..\lib\Box2D\Common\b2StackAllocator.h" />
+    <ClInclude Include="..\..\..\lib\Box2D\Dynamics\b2Body.h" />
+    <ClInclude Include="..\..\..\lib\Box2D\Dynamics\b2ContactManager.h" />
+    <ClInclude Include="..\..\..\lib\Box2D\Dynamics\b2Fixture.h" />
+    <ClInclude Include="..\..\..\lib\Box2D\Dynamics\b2Island.h" />
+    <ClInclude Include="..\..\..\lib\Box2D\Dynamics\b2TimeStep.h" />
+    <ClInclude Include="..\..\..\lib\Box2D\Dynamics\b2World.h" />
+    <ClInclude Include="..\..\..\lib\Box2D\Dynamics\b2WorldCallbacks.h" />
+    <ClInclude Include="..\..\..\lib\Box2D\Dynamics\Contacts\b2CircleContact.h" />
+    <ClInclude Include="..\..\..\lib\Box2D\Dynamics\Contacts\b2Contact.h" />
+    <ClInclude Include="..\..\..\lib\Box2D\Dynamics\Contacts\b2ContactSolver.h" />
+    <ClInclude Include="..\..\..\lib\Box2D\Dynamics\Contacts\b2PolygonAndCircleContact.h" />
+    <ClInclude Include="..\..\..\lib\Box2D\Dynamics\Contacts\b2PolygonContact.h" />
+    <ClInclude Include="..\..\..\lib\Box2D\Dynamics\Contacts\b2TOISolver.h" />
+    <ClInclude Include="..\..\..\lib\Box2D\Dynamics\Joints\b2DistanceJoint.h" />
+    <ClInclude Include="..\..\..\lib\Box2D\Dynamics\Joints\b2FrictionJoint.h" />
+    <ClInclude Include="..\..\..\lib\Box2D\Dynamics\Joints\b2GearJoint.h" />
+    <ClInclude Include="..\..\..\lib\Box2D\Dynamics\Joints\b2Joint.h" />
+    <ClInclude Include="..\..\..\lib\Box2D\Dynamics\Joints\b2LineJoint.h" />
+    <ClInclude Include="..\..\..\lib\Box2D\Dynamics\Joints\b2MouseJoint.h" />
+    <ClInclude Include="..\..\..\lib\Box2D\Dynamics\Joints\b2PrismaticJoint.h" />
+    <ClInclude Include="..\..\..\lib\Box2D\Dynamics\Joints\b2PulleyJoint.h" />
+    <ClInclude Include="..\..\..\lib\Box2D\Dynamics\Joints\b2RevoluteJoint.h" />
+    <ClInclude Include="..\..\..\lib\Box2D\Dynamics\Joints\b2WeldJoint.h" />
     <ClInclude Include="..\..\src\Algorithm.h" />
     <ClInclude Include="..\..\src\Animation.h" />
     <ClInclude Include="..\..\src\AssetManager.h" />
@@ -72,6 +116,11 @@
     <ClInclude Include="..\..\src\Common\Vec2.h" />
     <ClInclude Include="..\..\src\Common\Vec3.h" />
     <ClInclude Include="..\..\src\Common\Vector.h" />
+    <ClInclude Include="..\..\src\ConFuoco\Decoder.h" />
+    <ClInclude Include="..\..\src\ConFuoco\Mixer.h" />
+    <ClInclude Include="..\..\src\ConFuoco\OpenAL.h" />
+    <ClInclude Include="..\..\src\ConFuoco\Stream.h" />
+    <ClInclude Include="..\..\src\ConFuoco\Wave.h" />
     <ClInclude Include="..\..\src\Director.h" />
     <ClInclude Include="..\..\src\Drawable.h" />
     <ClInclude Include="..\..\src\FontAtlas.h" />
@@ -82,14 +131,14 @@
     <ClInclude Include="..\..\src\Input\Input.h" />
     <ClInclude Include="..\..\src\Input\Touch.h" />
     <ClInclude Include="..\..\src\Lua.h" />
-    <ClInclude Include="..\..\src\Lua\Algorithm.h" />
-    <ClInclude Include="..\..\src\Lua\Font.h" />
-    <ClInclude Include="..\..\src\Lua\Input.h" />
-    <ClInclude Include="..\..\src\Lua\Physics.h" />
-    <ClInclude Include="..\..\src\Lua\Platform.h" />
-    <ClInclude Include="..\..\src\Lua\Sprite.h" />
-    <ClInclude Include="..\..\src\Lua\SpriteBatch.h" />
-    <ClInclude Include="..\..\src\Lua\Texture.h" />
+    <ClInclude Include="..\..\src\Lua\lua_Algorithm.h" />
+    <ClInclude Include="..\..\src\Lua\lua_Font.h" />
+    <ClInclude Include="..\..\src\Lua\lua_Input.h" />
+    <ClInclude Include="..\..\src\Lua\lua_Physics.h" />
+    <ClInclude Include="..\..\src\Lua\lua_Platform.h" />
+    <ClInclude Include="..\..\src\Lua\lua_Sprite.h" />
+    <ClInclude Include="..\..\src\Lua\lua_SpriteBatch.h" />
+    <ClInclude Include="..\..\src\Lua\lua_Texture.h" />
     <ClInclude Include="..\..\src\OpenGL.h" />
     <ClInclude Include="..\..\src\ParticleSystem\ParticleSystem.h" />
     <ClInclude Include="..\..\src\ParticleSystem\PointSprite.h" />
@@ -107,18 +156,57 @@
     <ClInclude Include="..\..\src\Touchable.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\lib\Box2D\Collision\b2BroadPhase.cpp" />
+    <ClCompile Include="..\..\..\lib\Box2D\Collision\b2CollideCircle.cpp" />
+    <ClCompile Include="..\..\..\lib\Box2D\Collision\b2CollidePolygon.cpp" />
+    <ClCompile Include="..\..\..\lib\Box2D\Collision\b2Collision.cpp" />
+    <ClCompile Include="..\..\..\lib\Box2D\Collision\b2Distance.cpp" />
+    <ClCompile Include="..\..\..\lib\Box2D\Collision\b2DynamicTree.cpp" />
+    <ClCompile Include="..\..\..\lib\Box2D\Collision\b2TimeOfImpact.cpp" />
+    <ClCompile Include="..\..\..\lib\Box2D\Collision\Shapes\b2CircleShape.cpp" />
+    <ClCompile Include="..\..\..\lib\Box2D\Collision\Shapes\b2PolygonShape.cpp" />
+    <ClCompile Include="..\..\..\lib\Box2D\Common\b2BlockAllocator.cpp" />
+    <ClCompile Include="..\..\..\lib\Box2D\Common\b2Math.cpp" />
+    <ClCompile Include="..\..\..\lib\Box2D\Common\b2Settings.cpp" />
+    <ClCompile Include="..\..\..\lib\Box2D\Common\b2StackAllocator.cpp" />
+    <ClCompile Include="..\..\..\lib\Box2D\Dynamics\b2Body.cpp" />
+    <ClCompile Include="..\..\..\lib\Box2D\Dynamics\b2ContactManager.cpp" />
+    <ClCompile Include="..\..\..\lib\Box2D\Dynamics\b2Fixture.cpp" />
+    <ClCompile Include="..\..\..\lib\Box2D\Dynamics\b2Island.cpp" />
+    <ClCompile Include="..\..\..\lib\Box2D\Dynamics\b2World.cpp" />
+    <ClCompile Include="..\..\..\lib\Box2D\Dynamics\b2WorldCallbacks.cpp" />
+    <ClCompile Include="..\..\..\lib\Box2D\Dynamics\Contacts\b2CircleContact.cpp" />
+    <ClCompile Include="..\..\..\lib\Box2D\Dynamics\Contacts\b2Contact.cpp" />
+    <ClCompile Include="..\..\..\lib\Box2D\Dynamics\Contacts\b2ContactSolver.cpp" />
+    <ClCompile Include="..\..\..\lib\Box2D\Dynamics\Contacts\b2PolygonAndCircleContact.cpp" />
+    <ClCompile Include="..\..\..\lib\Box2D\Dynamics\Contacts\b2PolygonContact.cpp" />
+    <ClCompile Include="..\..\..\lib\Box2D\Dynamics\Contacts\b2TOISolver.cpp" />
+    <ClCompile Include="..\..\..\lib\Box2D\Dynamics\Joints\b2DistanceJoint.cpp" />
+    <ClCompile Include="..\..\..\lib\Box2D\Dynamics\Joints\b2FrictionJoint.cpp" />
+    <ClCompile Include="..\..\..\lib\Box2D\Dynamics\Joints\b2GearJoint.cpp" />
+    <ClCompile Include="..\..\..\lib\Box2D\Dynamics\Joints\b2Joint.cpp" />
+    <ClCompile Include="..\..\..\lib\Box2D\Dynamics\Joints\b2LineJoint.cpp" />
+    <ClCompile Include="..\..\..\lib\Box2D\Dynamics\Joints\b2MouseJoint.cpp" />
+    <ClCompile Include="..\..\..\lib\Box2D\Dynamics\Joints\b2PrismaticJoint.cpp" />
+    <ClCompile Include="..\..\..\lib\Box2D\Dynamics\Joints\b2PulleyJoint.cpp" />
+    <ClCompile Include="..\..\..\lib\Box2D\Dynamics\Joints\b2RevoluteJoint.cpp" />
+    <ClCompile Include="..\..\..\lib\Box2D\Dynamics\Joints\b2WeldJoint.cpp" />
     <ClCompile Include="..\..\src\AssetManager.cpp" />
+    <ClCompile Include="..\..\src\ConFuoco\Codecs\Apple.cpp" />
+    <ClCompile Include="..\..\src\ConFuoco\Codecs\Vorbis.cpp" />
+    <ClCompile Include="..\..\src\ConFuoco\Mixer.cpp" />
+    <ClCompile Include="..\..\src\ConFuoco\Wave.cpp" />
     <ClCompile Include="..\..\src\Director.cpp" />
     <ClCompile Include="..\..\src\FontAtlas.cpp" />
     <ClCompile Include="..\..\src\Input\Gestures.cpp" />
     <ClCompile Include="..\..\src\Input\Input.cpp" />
     <ClCompile Include="..\..\src\Lua.cpp" />
-    <ClCompile Include="..\..\src\Lua\Algorithm.cpp" />
-    <ClCompile Include="..\..\src\Lua\Font.cpp" />
-    <ClCompile Include="..\..\src\Lua\Physics.cpp" />
-    <ClCompile Include="..\..\src\Lua\Sprite.cpp" />
-    <ClCompile Include="..\..\src\Lua\SpriteBatch.cpp" />
-    <ClCompile Include="..\..\src\Lua\Texture.cpp" />
+    <ClCompile Include="..\..\src\Lua\lua_Algorithm.cpp" />
+    <ClCompile Include="..\..\src\Lua\lua_Font.cpp" />
+    <ClCompile Include="..\..\src\Lua\lua_Physics.cpp" />
+    <ClCompile Include="..\..\src\Lua\lua_Sprite.cpp" />
+    <ClCompile Include="..\..\src\Lua\lua_SpriteBatch.cpp" />
+    <ClCompile Include="..\..\src\Lua\lua_Texture.cpp" />
     <ClCompile Include="..\..\src\ParticleSystem\Rain.cpp" />
     <ClCompile Include="..\..\src\Physics.cpp" />
     <ClCompile Include="..\..\src\RainbowSDL.cpp" />
@@ -126,6 +214,9 @@
     <ClCompile Include="..\..\src\SpriteBatch.cpp" />
     <ClCompile Include="..\..\src\Texture.cpp" />
     <ClCompile Include="..\..\src\TextureAtlas.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="version.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

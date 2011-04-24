@@ -16,7 +16,7 @@
 #endif
 
 #ifndef M_PI_2
-#	define M_PI_2 1.57079632679489661923
+#	define M_PI_2 1.57079632679489661923f
 #endif
 #define AUDIO_BUFFERED 1       ///< Flagged when AL buffers have been generated
 #define AUDIO_SOURCED  1 << 1  ///< Flagged when AL sources have been generated
@@ -36,7 +36,7 @@ namespace Rainbow
 		class Mixer
 		{
 		public:
-			static inline Mixer& Instance()
+			static Mixer& Instance()
 			{
 				static Mixer mixer;
 				return mixer;
@@ -196,7 +196,7 @@ namespace Rainbow
 
 		inline void Mixer::set_orientation(const float r)
 		{
-			float ori[] = { cos(r + M_PI_2), sin(r + M_PI_2), 0.0f, 0.0f, 0.0f, 1.0f };
+			float ori[] = { cosf(r + M_PI_2), sinf(r + M_PI_2), 0.0f, 0.0f, 0.0f, 1.0f };
 			alListenerfv(AL_ORIENTATION, ori);
 		}
 

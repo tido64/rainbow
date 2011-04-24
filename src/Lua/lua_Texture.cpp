@@ -1,4 +1,4 @@
-#include "Texture.h"
+#include "lua_Texture.h"
 
 const char *lua_Texture::class_name = "load_texture";
 const Lua::Method<lua_Texture> lua_Texture::methods[] = {

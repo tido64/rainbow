@@ -1,4 +1,4 @@
-#include "Physics.h"
+#include "lua_Physics.h"
 
 const char *lua_Physics::class_name = "physics";
 const Lua::Method<lua_Physics> lua_Physics::methods[] = {
@@ -14,10 +14,10 @@ const Lua::Method<lua_Physics> lua_Physics::methods[] = {
 int lua_Physics::create_anchor(lua_State *L)  // const float &w, const float &h, const float &x, const float &y
 {
 	Body *b = Physics::Instance().create_anchor(
-		lua_tointeger(L, 1),
-		lua_tointeger(L, 2),
-		lua_tointeger(L, 3),
-		lua_tointeger(L, 4));
+		lua_tonumber(L, 1),
+		lua_tonumber(L, 2),
+		lua_tonumber(L, 3),
+		lua_tonumber(L, 4));
 	lua_pushlightuserdata(L, b);
 	return 1;  // b2Body *
 }

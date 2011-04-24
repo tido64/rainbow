@@ -40,7 +40,7 @@ inline void Director::key_press()
 
 inline void Director::update_video(const int w, const int h)
 {
-	Screen::Instance().set(w, h);
+	Screen::Instance().set(static_cast<float>(w), static_cast<float>(h));
 	this->lua.platform.update(this->lua.L);
 }
 

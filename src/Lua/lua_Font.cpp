@@ -1,4 +1,4 @@
-#include "Font.h"
+#include "lua_Font.h"
 
 const char *lua_Font::class_name = "font";
 const Lua::Method<lua_Font> lua_Font::methods[] = {

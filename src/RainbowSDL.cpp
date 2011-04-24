@@ -23,7 +23,7 @@ void resize(const int w, const int h);  ///< Handle window resize event
 
 /// Copyright 2010 Bifrost Games. All rights reserved.
 /// \author Tommy Nguyen
-int main()
+int main(int argc, char *argv[])
 {
 	if (SDL_Init(/*SDL_INIT_AUDIO |*/ SDL_INIT_VIDEO) < 0)
 	{
@@ -95,7 +95,7 @@ int main()
 			}
 		}
 		if (!active)
-			SDL_Delay(fps);
+			SDL_Delay(static_cast<Uint32>(fps));
 		else
 		{
 			// Update game logic

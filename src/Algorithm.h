@@ -20,7 +20,7 @@ namespace Rainbow
 	}
 
 	/// Convert degrees to radians.
-	inline float deg2rad(const float d) { return d * 0.017453292519943; }
+	inline float deg2rad(const float d) { return d * 0.017453292519943f; }
 
 	/// Compare two floating point numbers and approximate.
 	/// \return True when approximately equal
@@ -30,10 +30,10 @@ namespace Rainbow
 	}
 
 	/// Get a random number.
-	inline float mt_random() { return Random::Instance().next(); }
+	inline float mt_random() { return static_cast<float>(Random::Instance().next()); }
 
 	/// Convert radians to degrees.
-	inline float rad2deg(const float r) { return r * 57.295779513082325; }
+	inline float rad2deg(const float r) { return r * 57.295779513082325f; }
 }
 
 #endif

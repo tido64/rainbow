@@ -37,7 +37,7 @@ class Physics
 public:
 	b2World *world;  ///< Box2D world object
 
-	static inline Physics& Instance()
+	static Physics& Instance()
 	{
 		static Physics inst;
 		return inst;
@@ -109,9 +109,8 @@ protected:
 	static const int
 		p_iter = 10,              ///< Position iterations
 		v_iter = 10;              ///< Velocity iterations
-	static const float
-		fixed_dt = 1.0f / 60.0f,  ///< Fixed delta time step
-		g = -9.80665f;            ///< Standard gravitational acceleration value
+	static const float fixed_dt;  ///< Fixed delta time step
+	static const float g;         ///< Standard gravitational acceleration value
 
 private:
 	float accumulator;            ///< Renderer time accumulator

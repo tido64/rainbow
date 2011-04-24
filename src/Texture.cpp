@@ -54,10 +54,11 @@ GLint Texture::load(void *&data, const char *filename)
 
 	// Check PNG signature
 	{
-		unsigned char png_sig[texture.offset];
+		unsigned char *png_sig = new unsigned char[texture.offset];
 		memcpy(png_sig, texture.data, texture.offset);
 		int result = png_sig_cmp(png_sig, 0, texture.offset);
 		assert(result == 0);
+		delete[] png_sig;
 	}
 
 	png_structp png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, 0, 0, 0);

@@ -1,4 +1,4 @@
-#include "SpriteBatch.h"
+#include "lua_SpriteBatch.h"
 
 const char *lua_SpriteBatch::class_name = "spritebatch";
 const Lua::Method<lua_SpriteBatch> lua_SpriteBatch::methods[] = {

@@ -8,6 +8,9 @@
 
 #include "Physics.h"
 
+const float Physics::fixed_dt = 1.0f / 60.0f;
+const float Physics::g = -9.80665f;
+
 Physics::Physics() : accumulator(0.0f), accumulator_ratio(0.0f)
 {
 	// Define gravity vector

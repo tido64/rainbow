@@ -22,7 +22,7 @@
 class Input
 {
 public:
-	static inline Input& Instance()
+	static Input& Instance()
 	{
 		static Input c;
 		return c;
