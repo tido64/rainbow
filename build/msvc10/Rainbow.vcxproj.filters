@@ -306,6 +306,12 @@
     <ClInclude Include="..\..\src\Lua\lua_Texture.h">
       <Filter>Lua</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\Lua\lua.h">
+      <Filter>Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Lua\lua_Audio.h">
+      <Filter>Lua</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\AssetManager.cpp">
@@ -480,6 +486,12 @@
       <Filter>Lua</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Lua\lua_Texture.cpp">
+      <Filter>Lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Lua\lua_Audio.cpp">
+      <Filter>Lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Lua\lua_Input.cpp">
       <Filter>Lua</Filter>
     </ClCompile>
   </ItemGroup>

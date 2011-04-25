@@ -131,7 +131,9 @@
     <ClInclude Include="..\..\src\Input\Input.h" />
     <ClInclude Include="..\..\src\Input\Touch.h" />
     <ClInclude Include="..\..\src\Lua.h" />
+    <ClInclude Include="..\..\src\Lua\lua.h" />
     <ClInclude Include="..\..\src\Lua\lua_Algorithm.h" />
+    <ClInclude Include="..\..\src\Lua\lua_Audio.h" />
     <ClInclude Include="..\..\src\Lua\lua_Font.h" />
     <ClInclude Include="..\..\src\Lua\lua_Input.h" />
     <ClInclude Include="..\..\src\Lua\lua_Physics.h" />
@@ -202,7 +204,9 @@
     <ClCompile Include="..\..\src\Input\Input.cpp" />
     <ClCompile Include="..\..\src\Lua.cpp" />
     <ClCompile Include="..\..\src\Lua\lua_Algorithm.cpp" />
+    <ClCompile Include="..\..\src\Lua\lua_Audio.cpp" />
     <ClCompile Include="..\..\src\Lua\lua_Font.cpp" />
+    <ClCompile Include="..\..\src\Lua\lua_Input.cpp" />
     <ClCompile Include="..\..\src\Lua\lua_Physics.cpp" />
     <ClCompile Include="..\..\src\Lua\lua_Sprite.cpp" />
     <ClCompile Include="..\..\src\Lua\lua_SpriteBatch.cpp" />

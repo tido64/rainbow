@@ -146,7 +146,7 @@ int lua_Audio::play(lua_State *L)
 
 int lua_Audio::set_looping(lua_State *L)
 {
-	Mixer::Instance().set_looping(lua_tointeger(L, 1), lua_toboolean(L, 2), 0);
+	Mixer::Instance().set_looping(lua_tointeger(L, 1), lua_toboolean(L, 2) == 1, 0);
 	return 0;
 }
 

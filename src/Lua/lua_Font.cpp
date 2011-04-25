@@ -26,8 +26,8 @@ int lua_Font::color(lua_State *L)
 int lua_Font::print(lua_State *L)
 {
 	const int n = lua_gettop(L);
-	const int x = (n >= 2) ? lua_tonumber(L, 2) : 0;
-	const int y = (n == 3) ? lua_tonumber(L, 3) : 0;
+	const float x = (n >= 2) ? lua_tonumber(L, 2) : 0;
+	const float y = (n == 3) ? lua_tonumber(L, 3) : 0;
 	this->font->print(lua_tolstring(L, 1, 0), x, y);
 	return 0;
 }

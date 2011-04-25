@@ -27,7 +27,7 @@ FontAtlas::FontAtlas(const char *f, const float pt) : pt(pt)
 	ft_error = FT_New_Memory_Face(lib, font_data, font_sz, 0, &face);
 	assert(ft_error == 0);
 
-	FT_Set_Char_Size(face, 0, this->pt * 64, 96, 96);
+	FT_Set_Char_Size(face, 0, static_cast<int>(this->pt * 64), 96, 96);
 
 	glGenTextures(chars, this->textures);
 	for (unsigned int i = 0; i < chars; ++i)
@@ -91,7 +91,7 @@ FontAtlas::FontAtlas(const char *f, const float pt) : pt(pt)
 
 		// Save font glyph
 		FontGlyph &fg = this->charset[i];
-		fg.advance = slot->advance.x >> 6;
+		fg.advance = static_cast<short>(slot->advance.x >> 6);
 		fg.left = slot->bitmap_left;
 
 		if (FT_HAS_KERNING(face))
@@ -101,19 +101,19 @@ FontAtlas::FontAtlas(const char *f, const float pt) : pt(pt)
 			for (unsigned int j = 0; j < chars; ++j)
 			{
 				FT_Get_Kerning(face, j + ascii_offset, glyph, FT_KERNING_DEFAULT, &kerning);
-				fg.kern[j] = kerning.x >> 6;
+				fg.kern[j] = static_cast<short>(kerning.x >> 6);
 			}
 		}
 
 		// Vertices
-		fg.quad[0].position.x = bitmap.width + margin;
-		fg.quad[0].position.y = slot->bitmap_top + margin;
+		fg.quad[0].position.x = static_cast<float>(bitmap.width + margin);
+		fg.quad[0].position.y = static_cast<float>(slot->bitmap_top + margin);
 
 		fg.quad[1].position.x = -margin;
 		fg.quad[1].position.y = fg.quad[0].position.y;
 
 		fg.quad[2].position.x = fg.quad[0].position.x;
-		fg.quad[2].position.y = slot->bitmap_top - bitmap.rows - margin;
+		fg.quad[2].position.y = static_cast<float>(slot->bitmap_top - bitmap.rows - margin);
 
 		fg.quad[3].position.x = fg.quad[1].position.x;
 		fg.quad[3].position.y = fg.quad[2].position.y;
@@ -148,12 +148,12 @@ void FontAtlas::print(const char *text, const float x, const float y) const
 		const unsigned int c = static_cast<unsigned int>(*text - ascii_offset);
 		const FontGlyph &glyph = this->charset[c];
 
-		glTranslatef(glyph.left + glyph.kern[prev], 0.0f, 0.0f);
+		glTranslatef(static_cast<float>(glyph.left + glyph.kern[prev]), 0.0f, 0.0f);
 		glBindTexture(GL_TEXTURE_2D, this->textures[c]);
 		glVertexPointer(2, GL_FLOAT, sizeof(SpriteVertex), &glyph.quad[0].position);
 		glTexCoordPointer(2, GL_FLOAT, sizeof(SpriteVertex), &glyph.quad[0].texcoord);
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-		glTranslatef(glyph.advance - glyph.left, 0.0f, 0.0f);
+		glTranslatef(static_cast<float>(glyph.advance - glyph.left), 0.0f, 0.0f);
 
 		prev = c;
 	}
