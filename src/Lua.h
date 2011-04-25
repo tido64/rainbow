@@ -3,13 +3,9 @@
 
 #include <cstring>
 
-extern "C"
-{
-	#include <lua.h>
-	#include <lualib.h>
-	#include <lauxlib.h>
-}
-
+// Lua entry points
+#include "Lua/lua_Algorithm.h"
+#include "Lua/lua_Audio.h"
 #include "Lua/lua_Input.h"
 #include "Lua/lua_Platform.h"
 
@@ -159,8 +155,7 @@ private:
 	friend class Director;
 };
 
-// Include Lua wrappers
-#include "Lua/lua_Algorithm.h"
+// Lua wrappers
 #include "Lua/lua_Font.h"
 #include "Lua/lua_Physics.h"
 #include "Lua/lua_SpriteBatch.h"

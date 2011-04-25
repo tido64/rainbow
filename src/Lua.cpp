@@ -13,6 +13,9 @@ Lua::Lua() : L(luaL_newstate())
 	// Create "rainbow.algorithm" namespace
 	lua_Algorithm algorithm(this->L);
 
+	// Create "rainbow.audio" namespace
+	lua_Audio audio(this->L);
+
 	// Create "rainbow.input" namespace
 	this->input.init(this->L);
 

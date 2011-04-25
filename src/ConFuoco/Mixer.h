@@ -123,8 +123,6 @@ namespace Rainbow
 			/// Stop playing background music and optionally clear buffer.
 			void stop_bgm(bool clear = false);
 
-		#ifdef RAINBOW_IOS
-
 			/// Set background music panning.
 			/// \param p  -1.0 is left, 0.0 is center, 1.0 is right
 			void set_bgm_pan(float p = 0.0f);
@@ -132,6 +130,8 @@ namespace Rainbow
 			/// Set background music volume.
 			/// \param v  Volume [0.0, 1.0]
 			void set_bgm_volume(float v);
+
+#ifdef RAINBOW_IOS
 
 		protected:
 			AVAudioPlayer *player;

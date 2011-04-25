@@ -6,10 +6,37 @@ lua_Algorithm::lua_Algorithm(lua_State *L)
 	lua_pushvalue(L, -1);
 	lua_setfield(L, -3, "algorithm");
 
+	lua_pushcclosure(L, &lua_Algorithm::angle, 0);
+	lua_setfield(L, -2, "angle");
+
+	lua_pushcclosure(L, &lua_Algorithm::deg2rad, 0);
+	lua_setfield(L, -2, "deg2rad");
+
+	lua_pushcclosure(L, &lua_Algorithm::rad2deg, 0);
+	lua_setfield(L, -2, "rad2deg");
+
 	lua_pushcclosure(L, &lua_Algorithm::random, 0);
 	lua_setfield(L, -2, "random");
 
 	lua_pop(L, 1);
+}
+
+int lua_Algorithm::angle(lua_State *L)
+{
+	lua_pushnumber(L, Rainbow::angle(lua_tonumber(L, 1), lua_tonumber(L, 2), lua_tonumber(L, 3), lua_tonumber(L, 4)));
+	return 1;
+}
+
+int lua_Algorithm::deg2rad(lua_State *L)
+{
+	lua_pushnumber(L, Rainbow::deg2rad(lua_tonumber(L, 1)));
+	return 1;
+}
+
+int lua_Algorithm::rad2deg(lua_State *L)
+{
+	lua_pushnumber(L, Rainbow::rad2deg(lua_tonumber(L, 1)));
+	return 1;
 }
 
 int lua_Algorithm::random(lua_State *L)

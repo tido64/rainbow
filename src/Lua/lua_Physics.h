@@ -1,8 +1,8 @@
 #ifndef LUA_PHYSICS_H_
 #define LUA_PHYSICS_H_
 
-#include "../Physics.h"
 #include "../Lua.h"
+#include "../Physics.h"
 
 class lua_Physics
 {

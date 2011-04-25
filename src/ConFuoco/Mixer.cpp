@@ -142,6 +142,7 @@ namespace Rainbow
 		{
 			const unsigned int src = this->sources[this->source_count++];
 			alSourcei(src, AL_BUFFER, this->buffers[id]);
+			this->set_position(src, x, y, z);
 			alSourcePlay(src);
 			return src;
 		}
@@ -244,25 +245,33 @@ namespace Rainbow
 		#endif
 		}
 
-	#ifdef RAINBOW_IOS
-
 		void Mixer::set_bgm_pan(float p)
 		{
+		#ifdef RAINBOW_IOS
+
 			if (p > 1.0f)
 				p = 1.0f;
 			else if (p < -1.0f)
 				p = -1.0f;
 			this->player.pan = p;
+
+		#endif
 		}
 
 		void Mixer::set_bgm_volume(float v)
 		{
+		#ifdef RAINBOW_IOS
+
 			if (v > 1.0f)
 				v = 1.0f;
 			else if (v < 0.0f)
 				v = 0.0f;
 			this->player.volume = v;
+
+		#endif
 		}
+
+	#ifdef RAINBOW_IOS
 
 		void Mixer::InterruptionListener(void *client, UInt32 state)
 		{
