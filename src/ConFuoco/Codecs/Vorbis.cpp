@@ -1,3 +1,4 @@
+#include "../../AssetManager.h"
 #include "../Decoder.h"
 
 #include <cstring>
@@ -13,7 +14,7 @@ namespace Rainbow
 
 		void Decoder::open(Wave &wave, const char *file, bool streaming)
 		{
-			FILE *vorb = fopen(file, "rb");
+			FILE *vorb = fopen(AssetManager::Instance().get_full_path(file), "rb");
 			assert(vorb || !"Rainbow::ConFuoco::Decoder: Could not open file");
 
 			OggVorbis_File *vf = new OggVorbis_File;

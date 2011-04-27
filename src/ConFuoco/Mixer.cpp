@@ -245,32 +245,6 @@ namespace Rainbow
 		#endif
 		}
 
-		void Mixer::set_bgm_pan(float p)
-		{
-		#ifdef RAINBOW_IOS
-
-			if (p > 1.0f)
-				p = 1.0f;
-			else if (p < -1.0f)
-				p = -1.0f;
-			this->player.pan = p;
-
-		#endif
-		}
-
-		void Mixer::set_bgm_volume(float v)
-		{
-		#ifdef RAINBOW_IOS
-
-			if (v > 1.0f)
-				v = 1.0f;
-			else if (v < 0.0f)
-				v = 0.0f;
-			this->player.volume = v;
-
-		#endif
-		}
-
 	#ifdef RAINBOW_IOS
 
 		void Mixer::InterruptionListener(void *client, UInt32 state)
@@ -354,30 +328,20 @@ namespace Rainbow
 				alGetError();
 				return;
 			}
-
 			alcMakeContextCurrent(this->context);
-			ALenum err;
 
 			#ifndef RAINBOW_IOS
 				alGenBuffers(STREAM_BUFFERS, this->stream.buffered);
 			#endif
 			alGenBuffers(AUDIO_BUFFERS, this->buffers);
-			if ((err = alGetError()) != AL_NO_ERROR)
-			{
-				printf("Rainbow::ConFuoco::Mixer: Could not generate buffers (%x)\n", err);
-				exit(1);
-			}
+			assert(alGetError() == AL_NO_ERROR || !"Rainbow::ConFuoco::Mixer: Could not generate buffers");
 			this->cleanup |= AUDIO_BUFFERED;
 
 			#ifndef RAINBOW_IOS
 				alGenSources(1, &this->stream.sourced);
 			#endif
 			alGenSources(AUDIO_SOURCES, this->sources);
-			if ((err = alGetError()) != AL_NO_ERROR)
-			{
-				printf("Rainbow::ConFuoco::Mixer: Could not generate sources (%x)\n", err);
-				exit(1);
-			}
+			assert(alGetError() == AL_NO_ERROR || !"Rainbow::ConFuoco::Mixer: Could not generate sources");
 			this->cleanup |= AUDIO_SOURCED;
 
 			#ifndef RAINBOW_IOS
@@ -388,11 +352,7 @@ namespace Rainbow
 			{
 				alSourcei(this->sources[i], AL_SOURCE_RELATIVE, AL_TRUE);
 				alSourcei(this->sources[i], AL_ROLLOFF_FACTOR, 0);
-				if ((err = alGetError()) != AL_NO_ERROR)
-				{
-					printf("Rainbow::ConFuoco::Mixer: Could not set source parameters (%x)\n", err);
-					exit(1);
-				}
+				assert(alGetError() == AL_NO_ERROR || !"Rainbow::ConFuoco::Mixer: Could not set source parameters");
 			}
 		}
 	}

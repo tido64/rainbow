@@ -1,11 +1,13 @@
 /// Uses FreeType to load OpenType and TrueType fonts.
 
-/// Creates textures from font glyphs for symbols 32 through 126. Later
-/// implementations should put all symbols in a single texture and optimise
-/// printing on to the screen.
+/// Creates textures from font glyphs for symbols 32 through 126. Copies bitmap
+/// data into a larger buffer which is then used as texture.
 ///
-/// - Supports anti-aliasing
-/// - Supports kerning
+/// Features:
+/// - Anti-aliasing
+/// - Kerning
+///
+/// FIXME: Optimise texture size by sorting glyphs.
 ///
 /// \see http://iphone-3d-programming.labs.oreilly.com/ch07.html
 /// \see http://www.alfredrossi.com/?p=73
@@ -13,7 +15,7 @@
 /// \see http://ftgl.sourceforge.net/docs/html/ftgl-tutorial.html
 /// \see Beginning OpenGL Game Programming 2nd Edition (2009)
 ///
-/// Copyright 2010 Bifrost Games. All rights reserved.
+/// Copyright 2010-11 Bifrost Games. All rights reserved.
 /// \author Tommy Nguyen
 
 #ifndef FONTATLAS_H_
@@ -48,9 +50,9 @@ protected:
 	static const unsigned short int padding = 3;   ///< Padding around font glyph texture
 
 private:
-	GLuint textures[chars];
+	GLuint texture;
 	FontGlyph charset[chars];
-	Colorub color;
+	Colorb color;
 
 	/// Intentionally left undefined.
 	FontAtlas(const FontAtlas &);

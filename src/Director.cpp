@@ -13,19 +13,12 @@ using Rainbow::ConFuoco::Mixer;
 
 Director::Director()
 {
-#ifdef RAINBOW_IOS
+#if defined(RAINBOW_IOS)
 
 	// Asset source set in Lua constructor
 	this->update_video();
 
-	//Mixer::Instance().set_bgm(AssetManager::Instance().get_full_path("1-02 N.M.H..mp3"));
-	//Mixer::Instance().play_bgm();
-	//unsigned int funk = Mixer::Instance().add(AssetManager::Instance().get_full_path("Funk.caf"));
-	//Mixer::Instance().play(funk);
-
-#else
-
-	AssetManager::Instance().set_source("assets.bfz");
+#elif defined(RAINBOW_ANDROID)
 
 #endif
 }

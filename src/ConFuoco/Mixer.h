@@ -3,7 +3,6 @@
 
 #include <cmath>
 #include <cstdio>
-#include <cstdlib>
 
 #include "OpenAL.h"
 
@@ -131,7 +130,7 @@ namespace Rainbow
 			/// \param v  Volume [0.0, 1.0]
 			void set_bgm_volume(float v);
 
-#ifdef RAINBOW_IOS
+		#ifdef RAINBOW_IOS
 
 		protected:
 			AVAudioPlayer *player;
@@ -241,6 +240,32 @@ namespace Rainbow
 		inline void Mixer::set_velocity(const unsigned int source, const float x, const float y, const float z)
 		{
 			alSource3f(source, AL_VELOCITY, x, y, z);
+		}
+
+		inline void Mixer::set_bgm_pan(float p)
+		{
+		#ifdef RAINBOW_IOS
+
+			if (p > 1.0f)
+				p = 1.0f;
+			else if (p < -1.0f)
+				p = -1.0f;
+			this->player.pan = p;
+
+		#endif
+		}
+
+		inline void Mixer::set_bgm_volume(float v)
+		{
+		#ifdef RAINBOW_IOS
+
+			if (v > 1.0f)
+				v = 1.0f;
+			else if (v < 0.0f)
+				v = 0.0f;
+			this->player.volume = v;
+
+		#endif
 		}
 	}
 }

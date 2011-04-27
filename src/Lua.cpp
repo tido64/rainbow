@@ -5,22 +5,15 @@ Lua::Lua() : L(luaL_newstate())
 	const char *rainbow = "rainbow";
 	luaL_openlibs(this->L);
 
-	// Create "rainbow" namespace
+	// Initialize "rainbow" namespace
 	lua_createtable(this->L, 0, 0);
 	lua_pushvalue(this->L, -1);
 	lua_setfield(this->L, LUA_GLOBALSINDEX, rainbow);
 
-	// Create "rainbow.algorithm" namespace
-	lua_Algorithm algorithm(this->L);
-
-	// Create "rainbow.audio" namespace
-	lua_Audio audio(this->L);
-
-	// Create "rainbow.input" namespace
-	this->input.init(this->L);
-
-	// Create "rainbow.platform" namespace
-	this->platform.init(this->L);
+	lua_Algorithm algorithm(this->L);  // Initialize "rainbow.algorithm" namespace
+	lua_Audio audio(this->L);          // Initialize "rainbow.audio" namespace
+	this->input.init(this->L);         // Initialize "rainbow.input" namespace
+	this->platform.init(this->L);      // Initialize "rainbow.platform" namespace
 
 	lua_pop(this->L, 1);
 
@@ -30,31 +23,28 @@ Lua::Lua() : L(luaL_newstate())
 	Lua::wrap<lua_SpriteBatch>(rainbow);
 	Lua::wrap<lua_Texture>(rainbow);
 
-	// On some platforms, we need to set LUA_PATH
+	// We need to set LUA_PATH
 
-#ifdef RAINBOW_IOS
-
-	AssetManager::Instance().set_source();
+	#ifdef RAINBOW_IOS
+		AssetManager::Instance().set_source();
+	#endif
 	const char *bundle = AssetManager::Instance().get_full_path();
 
 	lua_getfield(this->L, LUA_GLOBALSINDEX, "package");
 	lua_getfield(this->L, -1, "path");
 
-	size_t path_len;
+	size_t path_len = 0;
 	const char *pkg_path = lua_tolstring(this->L, -1, &path_len);
-	char *lua_path = new char[path_len + strlen(bundle) + 8];
-	strcpy(lua_path, pkg_path);
-	strcat(lua_path, ";");
-	strcat(lua_path, bundle);
-	strcat(lua_path, "/?.lua");
+	char *lua_path = new char[strlen(bundle) + 8 + path_len];
+	strcpy(lua_path, bundle);
+	strcat(lua_path, "/?.lua;");
+	strcat(lua_path, pkg_path);
 
 	lua_pushstring(this->L, lua_path);
 	lua_setfield(this->L, -3, "path");
 	lua_pop(this->L, 2);
 
 	delete[] lua_path;
-
-#endif
 }
 
 void Lua::call(const char *k)

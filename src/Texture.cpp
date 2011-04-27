@@ -11,7 +11,7 @@ Texture::Texture(const char *filename)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, this->width, this->height, 0, format, GL_UNSIGNED_BYTE, data);
 
-	free(data);
+	delete[] static_cast<unsigned char *>(data);
 }
 
 GLint Texture::load(void *&data, const char *filename)
@@ -30,7 +30,7 @@ GLint Texture::load(void *&data, const char *filename)
 	CGRect bounds = CGRectMake(0, 0, this->width, this->height);
 
 	CGColorSpaceRef color_space = CGColorSpaceCreateDeviceRGB();
-	data = malloc(this->height * this->width * 4);
+	data = new unsigned char[this->height * this->width * 4];
 	assert(data != 0);
 
 	CGContextRef context = CGBitmapContextCreate(data, this->width, this->height, 8, 4 * this->width, color_space, kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big);
@@ -107,6 +107,7 @@ GLint Texture::load(void *&data, const char *filename)
 				break;
 		}
 	}
+
 	this->width = png_get_image_width(png_ptr, info_ptr);
 	this->height = png_get_image_height(png_ptr, info_ptr);
 	assert(this->width > 0 && this->height > 0);
@@ -114,7 +115,7 @@ GLint Texture::load(void *&data, const char *filename)
 	// Allocate memory for bitmap
 	png_read_update_info(png_ptr, info_ptr);
 	const unsigned int rowbytes = png_get_rowbytes(png_ptr, info_ptr);
-	data = malloc(this->height * rowbytes);
+	data = new unsigned char[this->height * rowbytes];
 	assert(data != 0);
 
 	// Allocate row pointer array
@@ -130,7 +131,7 @@ GLint Texture::load(void *&data, const char *filename)
 
 	delete[] row_pointers;
 	png_destroy_read_struct(&png_ptr, &info_ptr, &end_info);
-	free(texture.data);
+	delete[] texture.data;
 
 	return format;
 

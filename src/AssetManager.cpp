@@ -13,7 +13,15 @@ void AssetManager::close()
 
 const char* AssetManager::get_full_path(const char *filename)
 {
-#if defined(RAINBOW_ANDROID)
+#if defined(RAINBOW_IOS)
+
+	if (filename == 0)
+		return [[archive bundlePath] UTF8String];
+
+	NSString *file = [NSString stringWithUTF8String:(filename)];
+	return [[archive pathForResource:[file stringByDeletingPathExtension] ofType:[file pathExtension]] UTF8String];
+
+#elif defined(RAINBOW_ANDROID)
 
 	if (filename == 0)
 		return "assets";
@@ -23,18 +31,15 @@ const char* AssetManager::get_full_path(const char *filename)
 	strcat(tmp, filename);
 	return tmp;
 
-#elif defined(RAINBOW_IOS)
-
-	if (filename == 0)
-		return [[archive bundlePath] UTF8String];
-
-	NSString *file = [NSString stringWithUTF8String:(filename)];
-	return [[archive pathForResource:[file stringByDeletingPathExtension] ofType:[file pathExtension]] UTF8String];
-
 #else
 
-	assert(filename != 0);
-	return filename;
+	if (filename == 0)
+		return "Data";
+
+	char *tmp = new char[strlen(filename) + 6];
+	strcpy(tmp, "Data/");
+	strcat(tmp, filename);
+	return tmp;
 
 #endif
 }
@@ -57,7 +62,7 @@ unsigned int AssetManager::load(unsigned char *&buffer, const char *filename)
 	sz = stat.size;
 
 	// Allocate buffer
-	buffer = (unsigned char *)malloc(sz + 1);
+	buffer = new unsigned char[sz + 1];
 	assert(buffer != 0);
 
 	// Fill buffer
@@ -76,7 +81,7 @@ unsigned int AssetManager::load(unsigned char *&buffer, const char *filename)
 	sz = ftell(fp);
 
 	// Allocate buffer
-	buffer = (unsigned char *)malloc(sz + 1);
+	buffer = new unsigned char[sz + 1];
 	assert(buffer != 0);
 
 	// Fill buffer

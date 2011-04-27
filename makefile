@@ -12,11 +12,10 @@ INCSDL := `sdl-config --cflags`
 STATIC  := $(OBJDIR)/libbox2d.a $(OBJDIR)/liblua.a $(OBJDIR)/libpng.a
 LIBLUA  := $(LIBDIR)/Lua
 LIBPNG  := $(LIBDIR)/libpng
-LIBZIP  := $(LIBDIR)/libzip
 
 CPP     := g++
-CFLAGS  := -g -O2 -Wall -pipe $(INCSDL) $(INCFT) -I$(LIBDIR) -I$(LIBLUA) -I$(LIBPNG) -ftree-vectorize -ftree-vectorizer-verbose=6 -march=native
-LDFLAGS := -lGL -lSDL -lfreetype -lz -lzip -lopenal -lavformat
+CFLAGS  := -g -O2 -Wall -Werror -pipe $(INCSDL) $(INCFT) -I$(LIBDIR) -I$(LIBLUA) -I$(LIBPNG) -ftree-vectorize -ftree-vectorizer-verbose=6 -march=native
+LDFLAGS := -lGL -lSDL -lfreetype -lz -lzip -lopenal -lvorbisfile
 
 EXEC := $(BINDIR)/$(TARGET)
 OBJ  := $(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(wildcard $(SRCDIR)/*.cpp)) \
@@ -45,10 +44,6 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
 %png.a:
 	@LIBSRC=$(LIBPNG) TARGET=libpng make -f $(OBJDIR)/Makefile.lib
 	@TARGET=libpng make -f $(OBJDIR)/Makefile.lib clean
-
-%zip.a:
-	@LIBSRC=$(LIBZIP) TARGET=libzip make -f $(OBJDIR)/Makefile.lib
-	@TARGET=libzip make -f $(OBJDIR)/Makefile.lib clean
 
 check:
 	@if [ ! -d $(BINDIR) ]; then mkdir -p $(BINDIR); fi

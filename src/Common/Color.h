@@ -41,7 +41,7 @@ namespace Rainbow
 	};
 }
 
-typedef Rainbow::__Color<unsigned char> Colorub;
+typedef Rainbow::__Color<unsigned char> Colorb;
 typedef Rainbow::__Color<float> Colorf;
 
 #endif

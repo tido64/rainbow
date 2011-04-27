@@ -3,23 +3,21 @@
 
 #include "Platform.h"
 
-#if defined(RAINBOW_ANDROID)
-#	include <zip.h>
-#	define RAINBOW_ZIP
-
-typedef zip* Assets;
-
-#elif defined(RAINBOW_IOS)
+#if defined(RAINBOW_IOS)
 
 typedef NSBundle* Assets;
 
-#else
-#	include <cassert>
-#	include <cstdlib>
+#elif defined(RAINBOW_ZIP)
 #	include <zip.h>
-#	define RAINBOW_ZIP
 
 typedef zip* Assets;
+
+#else
+#	include <cassert>
+#	include <cstdio>
+#	include <cstring>
+
+typedef char* Assets;
 
 #endif
 

@@ -41,7 +41,6 @@ public:
 	GLsizei width, height;
 
 	Texture(const char *filename);
-	~Texture() { glDeleteTextures(1, &this->name); }
 
 private:
 	GLint load(void *&data, const char *filename);
