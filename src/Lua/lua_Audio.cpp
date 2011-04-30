@@ -128,7 +128,8 @@ int lua_Audio::set_velocity(lua_State *L)
 
 int lua_Audio::add(lua_State *L)
 {
-	lua_pushinteger(L, Mixer::Instance().add(lua_tolstring(L, 1, 0)));
+	const char *file = AssetManager::Instance().get_full_path(lua_tolstring(L, 1, 0));
+	lua_pushinteger(L, Mixer::Instance().add(file));
 	return 1;
 }
 
@@ -152,7 +153,8 @@ int lua_Audio::set_looping(lua_State *L)
 
 int lua_Audio::set_bgm(lua_State *L)
 {
-	Mixer::Instance().set_bgm(lua_tolstring(L, 1, 0));
+	const char *file = AssetManager::Instance().get_full_path(lua_tolstring(L, 1, 0));
+	Mixer::Instance().set_bgm(file);
 	return 0;
 }
 

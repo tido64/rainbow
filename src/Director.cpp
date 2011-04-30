@@ -21,10 +21,22 @@ Director::Director()
 #elif defined(RAINBOW_ANDROID)
 
 #endif
+
+	// Add director to input event loop
+	Input::Instance().director = this;
 }
 
 void Director::draw()
 {
+	/*if (this->drawables.size() == 0)
+		return
+
+	Drawable **obj = this->drawables.begin();
+	for (unsigned int i = 0; i < this->drawables.size(); ++i)
+	{
+		(*obj)->draw();
+		++obj;
+	}*/
 	this->lua.call("draw");
 }
 
@@ -39,8 +51,16 @@ void Director::update(const float dt)
 {
 	Mixer::Instance().update();
 	Physics::Instance().step(dt);
-	this->lua.input.update(this->lua.L);
+
+	#ifdef RAINBOW_ACCELERATED
+		this->lua.input.update(this->lua.L);
+	#endif
 	this->lua.call("update");
 
-	// Update sprites and such here
+	/*Drawable **obj = this->drawables.begin();
+	for (unsigned int i = 0; i < this->drawables.size(); ++i)
+	{
+		(*obj)->update();
+		++obj;
+	}*/
 }

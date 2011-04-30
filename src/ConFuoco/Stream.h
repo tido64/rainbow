@@ -11,7 +11,7 @@ namespace Rainbow
 	{
 		/// Audio stream buffer.
 
-		/// On the iPhone, we'll limited ourself to only one of these.
+		/// Not used on iOS. Limited to streaming background music.
 		///
 		/// Copyright 2011 Bifrost Games. All rights reserved.
 		/// \author Tommy Nguyen

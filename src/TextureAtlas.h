@@ -1,18 +1,18 @@
 #ifndef TEXTUREATLAS_H_
 #define TEXTUREATLAS_H_
 
-#include "Texture.h"
 #include "Common/SpriteVertex.h"
 #include "Common/Vector.h"
+#include "Texture.h"
 
 class Sprite;
 
 
-/// Texture atlas implemented in OpenGL ES 1.1.
+/// Texture atlas implemented in OpenGL ES.
 
 /// GL drawing order: (1,1) -> (0,1) -> (1,0) -> (0,0)
 ///
-/// Copyright 2010 Bifrost Games. All rights reserved.
+/// Copyright 2010-11 Bifrost Games. All rights reserved.
 /// \author Tommy Nguyen
 class TextureAtlas
 {

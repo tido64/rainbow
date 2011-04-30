@@ -3,8 +3,6 @@
 
 #include <Box2D/Box2D.h>
 
-#include "Platform.h"
-
 // Pixel to metres ratio. Box2D uses metres as the unit for measurement.
 // This ratio defines how many pixels correspond to 1 Box2D "metre"
 // Box2D is optimized for objects of 1x1 metre therefore it makes sense
@@ -30,18 +28,18 @@ typedef b2Vec2          Vec2;
 /// \see http://gafferongames.com/game-physics/fix-your-timestep/
 /// \see http://www.unagames.com/blog/daniele/2010/06/fixed-time-step-implementation-box2d
 ///
-/// Copyright 2010 Bifrost Games. All rights reserved.
+/// Copyright 2010-11 Bifrost Games. All rights reserved.
 /// \author Tommy Nguyen
 class Physics
 {
 public:
-	b2World *world;  ///< Box2D world object
-
 	static Physics& Instance()
 	{
 		static Physics inst;
 		return inst;
 	}
+
+	b2World *world;  ///< Box2D world object
 
 	/// Create an anchor box to tie things to.
 	/// \param w  Width of the box
@@ -105,16 +103,17 @@ public:
 
 protected:
 	static const unsigned int
-		max_steps = 5;            ///< Maximum allowed steps (prevents spiral of death)
+		max_steps = 5;        ///< Maximum allowed steps (prevents spiral of death)
 	static const int
-		p_iter = 10,              ///< Position iterations
-		v_iter = 10;              ///< Velocity iterations
-	static const float fixed_dt;  ///< Fixed delta time step
-	static const float g;         ///< Standard gravitational acceleration value
+		p_iter = 10,          ///< Position iterations
+		v_iter = 10;          ///< Velocity iterations
+	static const float
+		fixed_dt,             ///< Fixed delta time step
+		g;                    ///< Standard gravitational acceleration value
 
 private:
-	float accumulator;            ///< Renderer time accumulator
-	float accumulator_ratio;      ///< The ratio of accumulated time (after consumption) over fixed delta
+	float accumulator;        ///< Renderer time accumulator
+	float accumulator_ratio;  ///< The ratio of accumulated time (after consumption) over fixed delta
 
 	Physics();
 	~Physics();

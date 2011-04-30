@@ -20,6 +20,7 @@
 
 #ifndef FONTATLAS_H_
 #define FONTATLAS_H_
+#define FONTATLAS_KERNING
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
@@ -38,7 +39,7 @@ public:
 	FontAtlas(const char *font_family, const float pt);
 
 	/// Print text at (x,y).
-	void print(const char *text, const float x = 0.0f, const float y = 0.0f) const;
+	void print(const char *text, const int x = 0, const int y = 0) const;
 
 	/// Set font color.
 	void set_color(const unsigned char r, const unsigned char g, const unsigned char b, const unsigned char a = 0xff);

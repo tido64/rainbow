@@ -29,6 +29,7 @@ FontAtlas::FontAtlas(const char *f, const float pt) : pt(pt)
 
 	FT_Set_Char_Size(face, 0, static_cast<int>(this->pt * 64), 96, 96);
 
+	// Simple algorithm for calculating texture size
 	unsigned int max_width = 0;
 	unsigned int max_height = 0;
 	unsigned int w_offset = 0;
@@ -55,6 +56,7 @@ FontAtlas::FontAtlas(const char *f, const float pt) : pt(pt)
 	GLubyte *tex_buf = new GLubyte[w_offset];
 	memset(tex_buf, 0, w_offset);
 
+	// Read all glyph bitmaps and copy them to our texture
 	w_offset = 0;
 	h_offset = 0;
 	const float tex_w_fraction = 1.0f / tex_width;
@@ -66,6 +68,7 @@ FontAtlas::FontAtlas(const char *f, const float pt) : pt(pt)
 		const FT_GlyphSlot &slot = face->glyph;
 		const FT_Bitmap &bitmap = slot->bitmap;
 
+		// Make sure bitmap data has enough space
 		const int width = bitmap.width + (padding << 1);
 		if (w_offset + width > tex_width)
 		{
@@ -73,7 +76,7 @@ FontAtlas::FontAtlas(const char *f, const float pt) : pt(pt)
 			h_offset += max_height;
 		}
 
-		// Create texture
+		// Copy bitmap data to texture
 		if (bitmap.buffer)
 		{
 			const unsigned char *buf = bitmap.buffer;
@@ -109,6 +112,8 @@ FontAtlas::FontAtlas(const char *f, const float pt) : pt(pt)
 		fg.advance = static_cast<short>(slot->advance.x >> 6);
 		fg.left = slot->bitmap_left;
 
+	#ifdef FONTATLAS_KERNING
+
 		if (FT_HAS_KERNING(face))
 		{
 			unsigned int glyph = i + ascii_offset;
@@ -119,6 +124,8 @@ FontAtlas::FontAtlas(const char *f, const float pt) : pt(pt)
 				fg.kern[j] = static_cast<short>(kerning.x >> 6);
 			}
 		}
+
+	#endif
 
 		// Vertices
 		fg.quad[0].position.x = static_cast<float>(bitmap.width + margin);
@@ -140,6 +147,7 @@ FontAtlas::FontAtlas(const char *f, const float pt) : pt(pt)
 		fg.quad[3].texcoord.x = fg.quad[1].texcoord.x;
 		fg.quad[3].texcoord.y = fg.quad[2].texcoord.y;
 
+		// Advance to next "slot" in texture
 		w_offset += width;
 	}
 	FT_Done_Face(face);
@@ -172,10 +180,10 @@ FontAtlas::FontAtlas(const char *f, const float pt) : pt(pt)
 	delete[] tex_buf;
 }
 
-void FontAtlas::print(const char *text, const float x, const float y) const
+void FontAtlas::print(const char *text, const int x, const int y) const
 {
 	glPushMatrix();
-	glTranslatef(x, y, 0.0f);
+	glTranslatef(static_cast<GLfloat>(x), static_cast<GLfloat>(y), 0.0f);
 
 	glBindTexture(GL_TEXTURE_2D, this->texture);
 	glColor4ub(this->color.r, this->color.g, this->color.b, this->color.a);
@@ -186,7 +194,11 @@ void FontAtlas::print(const char *text, const float x, const float y) const
 		const unsigned int c = static_cast<unsigned int>(*text - ascii_offset);
 		const FontGlyph &glyph = this->charset[c];
 
-		glTranslatef(static_cast<float>(glyph.left + glyph.kern[prev]), 0.0f, 0.0f);
+		#ifdef FONTATLAS_KERNING
+			glTranslatef(static_cast<float>(glyph.left + glyph.kern[prev]), 0.0f, 0.0f);
+		#else
+			glTranslatef(static_cast<float>(glyph.left), 0.0f, 0.0f);
+		#endif
 		glVertexPointer(2, GL_FLOAT, sizeof(SpriteVertex), &glyph.quad[0].position);
 		glTexCoordPointer(2, GL_FLOAT, sizeof(SpriteVertex), &glyph.quad[0].texcoord);
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);

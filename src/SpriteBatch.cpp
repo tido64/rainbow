@@ -1,5 +1,12 @@
 #include "SpriteBatch.h"
 
+SpriteBatch::SpriteBatch(const int hint) :
+	texture(0), count(0), reserved(indexof(hint)), sprites(hint)
+{
+	this->vertex_buffer = new SpriteVertex[this->reserved];
+	glGenBuffers(1, &this->buffer);
+}
+
 void SpriteBatch::add(Sprite *s)
 {
 	unsigned int offset = 0;
@@ -8,7 +15,7 @@ void SpriteBatch::add(Sprite *s)
 		this->texture = s->texture;
 	else
 	{
-		// Make sure all the sprites use the same texture atlas
+		// Make sure all sprites use the same texture
 		assert(s->texture == this->texture);
 
 		offset = this->indexof(this->sprites.size());

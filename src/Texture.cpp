@@ -52,7 +52,7 @@ GLint Texture::load(void *&data, const char *filename)
 	texture.offset = 8;
 	AssetManager::Instance().load(texture.data, filename);
 
-	// Check PNG signature
+	// Look for PNG signature
 	{
 		unsigned char *png_sig = new unsigned char[texture.offset];
 		memcpy(png_sig, texture.data, texture.offset);

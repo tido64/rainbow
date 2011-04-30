@@ -2,7 +2,7 @@
 
 /// \see http://www.boost.org/doc/libs/1_46_1/doc/html/unordered.html
 ///
-/// Copyright 2010 Bifrost Games. All rights reserved.
+/// Copyright 2010-11 Bifrost Games. All rights reserved.
 /// \author Tommy Nguyen
 
 #ifndef TOUCH_H_

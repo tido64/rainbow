@@ -1,6 +1,6 @@
 /// Handles touch gestures.
 
-/// Copyright 2010 Bifrost Games. All rights reserved.
+/// Copyright 2010-11 Bifrost Games. All rights reserved.
 /// \author Tommy Nguyen
 
 #ifndef GESTURES_H_
@@ -8,6 +8,8 @@
 
 #include "../Algorithm.h"
 #include "Input.h"
+
+#ifdef RAINBOW_TOUCHED
 
 namespace Rainbow
 {
@@ -32,5 +34,7 @@ namespace Rainbow
 		};
 	}
 }
+
+#endif
 
 #endif

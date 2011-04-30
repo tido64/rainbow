@@ -1,5 +1,6 @@
 #include "lua.h"
 #include "../ConFuoco/Mixer.h"
+#include "../AssetManager.h"
 
 class lua_Audio
 {

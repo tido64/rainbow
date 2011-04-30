@@ -1,6 +1,8 @@
 /// Interface for touchable objects.
 
-/// Copyright 2010 Bifrost Games. All rights reserved.
+/// This interface can be used for both touch and mouse inputs.
+///
+/// Copyright 2010-11 Bifrost Games. All rights reserved.
 /// \author Tommy Nguyen
 
 #ifndef TOUCHABLE_H_

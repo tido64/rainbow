@@ -1,5 +1,9 @@
 --! Scheduler class makes sure objects are notifed at specified intervals.
 
+--! All objects must implement the following function:
+--!
+--! - tick()
+--!
 --! Copyright 2011 Bifrost Games. All rights reserved.
 --! \author Tommy Nguyen
 
@@ -23,7 +27,32 @@ function Scheduler:add(obj)
 	self.subscribers[self.count] = obj;
 end
 
---! Notify all objects at specified intervals.
+--! Remove object from scheduler.
+function Scheduler:remove(obj)
+	local sub = 0;
+	for i = 1, self.count do
+		if self.subscribers[i] == obj then
+			sub = i;
+			break;
+		end
+	end
+	if sub == 0 then
+		return;
+	end
+	self.subscribers[sub] = self.subscribers[self.count];
+	self.subscribers[self.count] = nil;
+	self.count = self.count - 1;
+end
+
+--! Remove all objects from scheduler.
+function Scheduler:remove_all()
+	for i = 1, self.count do
+		self.subscribers[i] = nil;
+	end
+	self.count = 0;
+end
+
+--! Notify all objects at specified interval.
 function Scheduler:update()
 	local time = os.date("%Y%m%d%H%M%S");
 	if time > self.ticker then

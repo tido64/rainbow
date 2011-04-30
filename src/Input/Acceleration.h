@@ -3,6 +3,8 @@
 /// Copyright 2011 Bifrost Games. All rights reserved.
 /// \author Tommy Nguyen
 
+#ifdef RAINBOW_ACCELERATED
+
 #ifndef ACCELERATION_H_
 #define ACCELERATION_H_
 
@@ -35,5 +37,7 @@ public:
 
 #endif
 };
+
+#endif
 
 #endif

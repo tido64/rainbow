@@ -9,6 +9,7 @@ typedef NSBundle* Assets;
 
 #elif defined(RAINBOW_ZIP)
 #	include <zip.h>
+#	define RAINBOW_DATA_PATH "assets/"
 
 typedef zip* Assets;
 
@@ -16,6 +17,7 @@ typedef zip* Assets;
 #	include <cassert>
 #	include <cstdio>
 #	include <cstring>
+#	define RAINBOW_DATA_PATH "Data/"
 
 typedef char* Assets;
 
@@ -26,7 +28,7 @@ typedef char* Assets;
 
 /// \see http://www.nih.at/libzip/
 ///
-/// Copyright 2010 Bifrost Games. All rights reserved.
+/// Copyright 2010-11 Bifrost Games. All rights reserved.
 /// \author Tommy Nguyen
 class AssetManager
 {
@@ -54,9 +56,11 @@ public:
 	void set_source(const char *src = 0);
 
 private:
-	Assets archive;  ///< Source of assets
+	unsigned int size;  ///< Size of temporary string
+	char *path;         ///< Temporary string
+	Assets archive;     ///< Source of assets
 
-	AssetManager() : archive(0) { }
+	AssetManager() : size(0), path(0), archive(0)  { }
 	AssetManager(const AssetManager &);
 	AssetManager& operator=(const AssetManager &);
 };

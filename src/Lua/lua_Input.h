@@ -4,24 +4,17 @@
 #include "lua.h"
 
 #include "../Platform.h"
-#ifdef RAINBOW_TOUCHED
-#	include "../Input/Gestures.h"
-#else
-#	include "../Input/Input.h"
-#endif
+#include "../Input/Gestures.h"
 
 class lua_Input
 {
 public:
 	lua_Input() { }
 	void init(lua_State *L);
+	void touch_event(lua_State *L);
 	void update(lua_State *L);
 
 private:
-#ifdef RAINBOW_TOUCHED
-	bool touched;
-	Rainbow::Gestures::Pinch pinch;
-#endif
 };
 
 #endif

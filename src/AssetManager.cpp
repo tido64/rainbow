@@ -2,6 +2,7 @@
 
 void AssetManager::close()
 {
+	delete[] this->path;
 	if (this->archive == 0) return;
 
 #if defined(RAINBOW_ZIP)
@@ -21,25 +22,26 @@ const char* AssetManager::get_full_path(const char *filename)
 	NSString *file = [NSString stringWithUTF8String:(filename)];
 	return [[archive pathForResource:[file stringByDeletingPathExtension] ofType:[file pathExtension]] UTF8String];
 
-#elif defined(RAINBOW_ANDROID)
-
-	if (filename == 0)
-		return "assets";
-
-	char *tmp = new char[strlen(filename) + 8];
-	strcpy(tmp, "assets/");
-	strcat(tmp, filename);
-	return tmp;
-
 #else
 
 	if (filename == 0)
-		return "Data";
+		return RAINBOW_DATA_PATH;
 
-	char *tmp = new char[strlen(filename) + 6];
-	strcpy(tmp, "Data/");
-	strcat(tmp, filename);
-	return tmp;
+	const unsigned int length = strlen(filename) + 6;
+	if (this->path == 0)
+	{
+		this->path = new char[length];
+		this->size = length;
+	}
+	else if (this->size < length)
+	{
+		delete[] this->path;
+		this->path = new char[length];
+		this->size = length;
+	}
+	strcpy(this->path, RAINBOW_DATA_PATH);
+	strcat(this->path, filename);
+	return this->path;
 
 #endif
 }

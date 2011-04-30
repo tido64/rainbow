@@ -65,10 +65,11 @@ public:
 			printf("#%i: %s\n", l, lua_tolstring(L, l, 0));
 	}
 
+	/// Update world state and call update function in Lua script.
 	void update();
 
 	/// Wrap a C++ object and makes its methods available in Lua.
-	/// \param ns  Inserts object into given namespace
+	/// \param ns  Inserts object into specified namespace
 	template<class T>
 	void wrap(const char *ns = 0)
 	{
@@ -119,14 +120,10 @@ public:
 	/// \param k  Name of the function to call
 	void call(const char *k);
 
-	/// Load given Lua script.
+	/// Load specified Lua script.
 	void load(const char *);
 
 private:
-	lua_State *L;
-	lua_Input input;
-	lua_Platform platform;
-
 	template<class T>
 	static int dealloc(lua_State *L)
 	{
@@ -147,6 +144,10 @@ private:
 
 		return ((*ptr)->*(T::methods[i].lua_CFunction))(L);
 	}
+
+	lua_Input input;
+	lua_Platform platform;
+	lua_State *L;
 
 	Lua(const Lua &);
 	void err(int);

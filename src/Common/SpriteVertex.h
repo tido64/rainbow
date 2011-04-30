@@ -5,7 +5,7 @@
 
 /// A typical sprite vertex contains x- and y-coordinates for position and texture.
 
-/// Copyright 2010 Bifrost Games. All rights reserved.
+/// Copyright 2010-11 Bifrost Games. All rights reserved.
 /// \author Tommy Nguyen
 struct SpriteVertex
 {

@@ -32,7 +32,7 @@ struct png_read_struct
 /// \see http://developer.android.com/guide/topics/resources/providing-resources.html
 /// \see http://en.wikibooks.org/wiki/OpenGL_Programming/Intermediate/Textures
 ///
-/// Copyright 2010 Bifrost Games. All rights reserved.
+/// Copyright 2010-11 Bifrost Games. All rights reserved.
 /// \author Tommy Nguyen
 class Texture
 {
@@ -43,7 +43,11 @@ public:
 	Texture(const char *filename);
 
 private:
-	GLint load(void *&data, const char *filename);
+	/// Read image data into buffer.
+	/// \param data[out]  Destination buffer
+	/// \param file[in]   Path to image
+	/// \return Image colour format
+	GLint load(void *&data, const char *file);
 
 #ifdef PNG_LIBPNG_VER_STRING
 

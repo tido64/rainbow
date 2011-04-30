@@ -14,9 +14,10 @@ const double fps = 1000.0 / 60.0;             ///< Preferred frames per second
 
 Director director;  ///< Game director handles everything
 
-bool init_GL();                         ///< Initialize 2d viewport
-void on_key_press(SDL_keysym &keysym);  ///< Handle key press event
-void resize(const int w, const int h);  ///< Handle window resize event
+bool init_GL();                           ///< Initialize 2d viewport
+void on_key_press(SDL_keysym &keysym);    ///< Handle key press event
+void on_mouse_event(SDL_keysym &keysym);  ///< Handle mouse event
+void resize(const int w, const int h);    ///< Handle window resize event
 
 
 /// Rainbow rendered with the help of SDL library.
@@ -25,7 +26,7 @@ void resize(const int w, const int h);  ///< Handle window resize event
 /// \author Tommy Nguyen
 int main(int argc, char *argv[])
 {
-	if (SDL_Init(/*SDL_INIT_AUDIO |*/ SDL_INIT_VIDEO) < 0)
+	if (SDL_Init(SDL_INIT_VIDEO) < 0)
 	{
 		fprintf(stderr, "Unable to initialise SDL: %s\n", SDL_GetError());
 		exit(1);
@@ -39,10 +40,7 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 
-	if (!video_info->hw_available)
-		video_mode |= SDL_SWSURFACE;
-	else
-		video_mode |= SDL_HWSURFACE;
+	video_mode |= (!video_info->hw_available) ? SDL_SWSURFACE : SDL_HWSURFACE;
 	if (video_info->blit_hw)
 		video_mode |= SDL_HWACCEL;
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
@@ -74,6 +72,20 @@ int main(int argc, char *argv[])
 				case SDL_ACTIVEEVENT:
 					active = (event.active.gain == 0) ? false : true;
 					break;
+				case SDL_KEYDOWN:
+					on_key_press(event.key.keysym);
+					break;
+				case SDL_MOUSEMOTION:
+					// event.motion.xrel, event.motion.yrel, event.motion.x, event.motion.y
+					break;
+				case SDL_MOUSEBUTTONDOWN:
+					// trigger touch event
+					// event.button.button, event.button.x, event.button.y
+					break;
+				case SDL_QUIT:
+					active = false;
+					done = true;
+					break;
 				case SDL_VIDEORESIZE:
 					surface = SDL_SetVideoMode(event.resize.w, event.resize.h, 0, video_mode);
 					if (!surface)
@@ -82,13 +94,6 @@ int main(int argc, char *argv[])
 						done = true;
 					}
 					resize(event.resize.w, event.resize.h);
-					break;
-				case SDL_KEYDOWN:
-					on_key_press(event.key.keysym);
-					break;
-				case SDL_QUIT:
-					active = false;
-					done = true;
 					break;
 				default:
 					break;

@@ -4,24 +4,19 @@
 /// are drawn with a single glDraw call. The sprites must use the same texture
 /// atlas.
 ///
-/// Copyright 2010 Bifrost Games. All rights reserved.
+/// Copyright 2010-11 Bifrost Games. All rights reserved.
 /// \author Tommy Nguyen
 
 #ifndef SPRITEBATCH_H_
 #define SPRITEBATCH_H_
 
+#include "Drawable.h"
 #include "Sprite.h"
 
-class SpriteBatch
+class SpriteBatch : public Drawable
 {
 public:
-	SpriteBatch(const int hint = 8) :
-		texture(0), count(0), reserved(indexof(hint)), sprites(hint)
-	{
-		this->vertex_buffer = new SpriteVertex[this->reserved];
-		glGenBuffers(1, &this->buffer);
-	}
-
+	SpriteBatch(const int hint = 8);
 	~SpriteBatch() { delete[] this->vertex_buffer; }
 
 	/// Add a sprite to the batch.

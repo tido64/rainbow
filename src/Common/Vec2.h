@@ -5,7 +5,7 @@ namespace Rainbow
 {
 	/// Structure for storing a two-dimensional vector.
 
-	/// Copyright 2010 Bifrost Games. All rights reserved.
+	/// Copyright 2010-11 Bifrost Games. All rights reserved.
 	/// \author Tommy Nguyen
 	template<typename T>
 	struct __Vec2

@@ -1,24 +1,18 @@
-/// Handles accelerometer/gyroscope and touch events independent of platform.
-
-/// \see http://developer.apple.com/library/ios/#documentation/UIKit/Reference/UIAcceleration_Class/Reference/UIAcceleration.html
-///
-/// Copyright 2010 Bifrost Games. All rights reserved.
-/// \author Tommy Nguyen
-
 #ifndef INPUT_H_
 #define INPUT_H_
 
 #include "../Common/Vector.h"
 #include "../Platform.h"
+#include "../Touchable.h"
+#include "Acceleration.h"
 
-#ifdef RAINBOW_ACCELERATED
-#	include "Acceleration.h"
-#endif
 
-#ifdef RAINBOW_TOUCHED
-#	include "../Touchable.h"
-#endif
+/// Handles accelerometer/gyroscope and touch events independent of platform.
 
+/// \see http://developer.apple.com/library/ios/#documentation/UIKit/Reference/UIAcceleration_Class/Reference/UIAcceleration.html
+///
+/// Copyright 2010-11 Bifrost Games. All rights reserved.
+/// \author Tommy Nguyen
 class Input
 {
 public:
@@ -28,6 +22,8 @@ public:
 		return c;
 	}
 
+	mutable bool touched;
+
 #ifdef RAINBOW_ACCELERATED
 
 	bool accelerated;
@@ -35,35 +31,31 @@ public:
 
 #endif
 
-#ifdef RAINBOW_TOUCHED
-
-	mutable bool touched;
-
 	const Touches& get_touches() const;
 	void touch_began(const Touch *touches, const unsigned int count);
 	void touch_canceled();
 	void touch_ended(const Touch *touches, const unsigned int count);
 	void touch_moved(const Touch *touches, const unsigned int count);
 
-protected:
+private:
+	Touchable *director;
 	Touches touches;
 
-#endif
-
-private:
 	Input() { }
-	Input(const Input &);
-	Input& operator=(const Input &);
-};
 
-#ifdef RAINBOW_TOUCHED
+	/// Intentionally left undefined.
+	Input(const Input &);
+
+	/// Intentionally left undefined.
+	Input& operator=(const Input &);
+
+	friend class Director;
+};
 
 inline const Touches& Input::get_touches() const
 {
 	this->touched = false;
 	return touches;
 }
-
-#endif
 
 #endif

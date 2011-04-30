@@ -5,7 +5,7 @@ namespace Rainbow
 {
 	/// Structure for storing a color (RGBA).
 
-	/// Copyright 2010 Bifrost Games. All rights reserved.
+	/// Copyright 2010-11 Bifrost Games. All rights reserved.
 	/// \author Tommy Nguyen
 	template<typename T>
 	struct __Color

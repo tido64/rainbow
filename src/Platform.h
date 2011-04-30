@@ -1,6 +1,6 @@
 /// Platform specific definitions. Makes sure correct code is being compiled.
 
-/// Copyright 2010 Bifrost Games. All rights reserved.
+/// Copyright 2010-11 Bifrost Games. All rights reserved.
 /// \author Tommy Nguyen
 
 #ifndef PLATFORM_H_
