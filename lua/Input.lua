@@ -45,10 +45,14 @@ function rainbow.input.unsubscribe_all()
 	__rainbow_input_listener_count = 0;
 end
 
---! Notify all listeners of a touch begun event.
+--! Notify all listeners of a touch began event.
 function rainbow.input.touch_began()
+	local t = rainbow.input.touches;
 	for i = 1, __rainbow_input_listener_count do
-		__rainbow_input_listeners[i]:touch_began();
+		__rainbow_input_listeners[i]:touch_began(t);
+	end
+	for h,t in pairs(t) do
+		print("Touch event #" .. h .. " began at (" .. t.x .. "," .. t.y .. ")");
 	end
 end
 
@@ -57,18 +61,27 @@ function rainbow.input.touch_canceled()
 	for i = 1, __rainbow_input_listener_count do
 		__rainbow_input_listeners[i]:touch_canceled();
 	end
+	print("Touch events canceled");
 end
 
 --! Notify all listeners of a touch ended event.
 function rainbow.input.touch_ended()
+	local t = rainbow.input.touches;
 	for i = 1, __rainbow_input_listener_count do
 		__rainbow_input_listeners[i]:touch_ended();
+	end
+	for h,t in pairs(t) do
+		print("Touch event #" .. h .. " ended at (" .. t.x .. "," .. t.y .. ")");
 	end
 end
 
 --! Notify all listeners of a touch moved event.
 function rainbow.input.touch_moved()
+	local t = rainbow.input.touches;
 	for i = 1, __rainbow_input_listener_count do
-		__rainbow_input_listeners[i]:touch_moved();
+		__rainbow_input_listeners[i]:touch_moved(t);
+	end
+	for h,t in pairs(t) do
+		print("Touch event #" .. h .. " moved to (" .. t.x .. "," .. t.y .. ")");
 	end
 end

@@ -14,7 +14,7 @@ namespace Rainbow
 		void Decoder::open(Wave &wave, const char *file, bool streaming)
 		{
 			FILE *vorb = fopen(file, "rb");
-			assert(vorb || !"Rainbow::ConFuoco::Decoder: Could not open file");
+			assert(vorb || !"Rainbow::ConFuoco::Decoder: Failed to open file");
 
 			OggVorbis_File *vf = new OggVorbis_File;
 			if (ov_open_callbacks(vorb, vf, 0, 0, OV_CALLBACKS_DEFAULT) < 0)
@@ -24,7 +24,7 @@ namespace Rainbow
 			}
 
 			vorbis_info *vi = ov_info(vf, -1);
-			assert(vi || !"Rainbow::ConFuoco::Decoder::Vorbis: Could not retrieve Ogg bitstream info");
+			assert(vi || !"Rainbow::ConFuoco::Decoder::Vorbis: Failed to retrieve Ogg bitstream info");
 			wave.format = (vi->channels == 1) ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16;
 			wave.frequency = vi->rate;
 			wave.handle = vf;
@@ -70,7 +70,7 @@ namespace Rainbow
 
 			while (offset < wave.buffer_size && (read = ov_read(vf, buffer + offset, wave.buffer_size - offset, 0, 2, 1, &bitstream)) != 0)
 			{
-				assert(read >= 0);
+				assert(read >= 0 || !"Rainbow::ConFuoco::Decoder: Failed to read stream");
 				offset += read;
 			}
 

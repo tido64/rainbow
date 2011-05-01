@@ -78,7 +78,7 @@ void Lua::err(const int lua_e)
 	}
 	printf(" error: %s\n", m);
 	Lua::dump_stack(this->L);
-	exit(1);
+	assert(!"Lua related error, see stdout");
 }
 
 void Lua::load(const char *lua)

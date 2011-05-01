@@ -334,14 +334,14 @@ namespace Rainbow
 				alGenBuffers(STREAM_BUFFERS, this->stream.buffered);
 			#endif
 			alGenBuffers(AUDIO_BUFFERS, this->buffers);
-			assert(alGetError() == AL_NO_ERROR || !"Rainbow::ConFuoco::Mixer: Could not generate buffers");
+			assert(alGetError() == AL_NO_ERROR || !"Rainbow::ConFuoco::Mixer: Failed to generate buffers");
 			this->cleanup |= AUDIO_BUFFERED;
 
 			#ifndef RAINBOW_IOS
 				alGenSources(1, &this->stream.sourced);
 			#endif
 			alGenSources(AUDIO_SOURCES, this->sources);
-			assert(alGetError() == AL_NO_ERROR || !"Rainbow::ConFuoco::Mixer: Could not generate sources");
+			assert(alGetError() == AL_NO_ERROR || !"Rainbow::ConFuoco::Mixer: Failed to generate sources");
 			this->cleanup |= AUDIO_SOURCED;
 
 			#ifndef RAINBOW_IOS
@@ -352,7 +352,7 @@ namespace Rainbow
 			{
 				alSourcei(this->sources[i], AL_SOURCE_RELATIVE, AL_TRUE);
 				alSourcei(this->sources[i], AL_ROLLOFF_FACTOR, 0);
-				assert(alGetError() == AL_NO_ERROR || !"Rainbow::ConFuoco::Mixer: Could not set source parameters");
+				assert(alGetError() == AL_NO_ERROR || !"Rainbow::ConFuoco::Mixer: Failed to set source parameters");
 			}
 		}
 	}

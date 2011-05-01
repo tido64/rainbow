@@ -60,7 +60,7 @@ void Sprite::rotate(const float r)
 
 void Sprite::scale(const float f)
 {
-	assert(f > 0.0f);
+	assert(f > 0.0f || !"Rainbow::Sprite: Can't scale with a negative factor");
 	if (equalf(f, this->scale_f.x) && equalf(f, this->scale_f.y)) return;
 
 	this->scale_f.x = f;
@@ -71,7 +71,7 @@ void Sprite::scale(const float f)
 
 void Sprite::scale(const Vec2f &f)
 {
-	assert(f.x > 0.0f && f.y > 0.0f);
+	assert((f.x > 0.0f && f.y > 0.0f) || !"Rainbow::Sprite: Can't scale with a negative factor");
 	if (equalf(f.x, this->scale_f.x) && equalf(f.y, this->scale_f.y)) return;
 
 	this->scale_f = f;
@@ -80,7 +80,8 @@ void Sprite::scale(const Vec2f &f)
 
 void Sprite::set_pivot(const float x, const float y)
 {
-	assert(x >= 0.0f && x <= 1.0f && y >= 0.0f && y <= 1.0f);
+	assert((x >= 0.0f && x <= 1.0f && y >= 0.0f && y <= 1.0f)
+		|| !"Rainbow::Sprite: Invalid pivot point");
 	if (equalf(x, this->pivot.x) && equalf(y, this->pivot.y)) return;
 
 	this->pivot.x = x;

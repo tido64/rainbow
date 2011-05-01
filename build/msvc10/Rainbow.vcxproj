@@ -55,7 +55,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>..\..\..\lib\Win32</AdditionalLibraryDirectories>
       <SubSystem>Windows</SubSystem>
-      <AdditionalDependencies>freetype.lib;GLee.lib;libpng15.lib;libvorbis.lib;libvorbisfile.lib;lua5.1.lib;OpenAL32.lib;Opengl32.lib;SDL.lib;SDLmain.lib;zdll.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>freetype244MT.lib;GLee.lib;libpng15_static.lib;libvorbis.lib;libvorbisfile.lib;lua5.1.lib;OpenAL32.lib;Opengl32.lib;SDL.lib;SDLmain.lib;zdll.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>LIBCMT;msvcrt.lib</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
@@ -73,7 +73,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <AdditionalLibraryDirectories>..\..\..\lib\Win32</AdditionalLibraryDirectories>
       <SubSystem>Windows</SubSystem>
-      <AdditionalDependencies>freetype.lib;GLee.lib;libpng15.lib;libvorbis.lib;libvorbisfile.lib;lua5.1.lib;OpenAL32.lib;Opengl32.lib;SDL.lib;SDLmain.lib;zdll.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>freetype244MT.lib;GLee.lib;libpng15_static.lib;libvorbis.lib;libvorbisfile.lib;lua5.1.lib;OpenAL32.lib;Opengl32.lib;SDL.lib;SDLmain.lib;zdll.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>LIBCMT</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>

@@ -13,10 +13,10 @@
 class Touchable
 {
 public:
-	virtual void touch_began(const Touches &touches) = 0;
+	virtual void touch_began(const Touch *const touches, const unsigned int count) = 0;
 	virtual void touch_canceled() = 0;
-	virtual void touch_ended(const Touches &touches) = 0;
-	virtual void touch_moved(const Touches &touches) = 0;
+	virtual void touch_ended(const Touch *const touches, const unsigned int count) = 0;
+	virtual void touch_moved(const Touch *const touches, const unsigned int count) = 0;
 };
 
 #endif

@@ -16,7 +16,7 @@ void SpriteBatch::add(Sprite *s)
 	else
 	{
 		// Make sure all sprites use the same texture
-		assert(s->texture == this->texture);
+		assert(s->texture == this->texture || !"Rainbow::SpriteBatch: Added sprite to wrong batch");
 
 		offset = this->indexof(this->sprites.size());
 		if (offset >= this->reserved)

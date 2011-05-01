@@ -10,8 +10,6 @@
 
 #include <functional>
 
-#include <boost/unordered_map.hpp>
-
 #include "../Common/Vec2.h"
 #include "../Hardware/Screen.h"
 
@@ -29,6 +27,8 @@ struct Touch
 
 	Touch& operator=(const Touch &t)
 	{
+		if (t.hash == this->hash)
+			return *this;
 		if (this->hash == 0)
 		{
 			this->hash = t.hash;
@@ -43,6 +43,8 @@ struct Touch
 	/// Only available on iOS. Used for converting a UITouch.
 	Touch& operator=(const UITouch *t)
 	{
+		if (t.hash == this->hash)
+			return *this;
 		CGPoint p = [t locationInView:[t view]];
 		this->position.x = p.x;
 		this->position.y = Screen::Instance().height() - p.y;
@@ -57,10 +59,10 @@ struct Touch
 #endif
 };
 
-namespace Rainbow
-{
 #if defined(RAINBOW_IOS)
 
+namespace Rainbow
+{
 	/// Only available on iOS. Used for converting an NSSet to a C array.
 	struct TouchArray : std::unary_function<NSSet *&, Touch*>
 	{
@@ -76,28 +78,8 @@ namespace Rainbow
 			return t;
 		}
 	};
-
-#endif
-
-	/// Determine whether two touches are from the same finger.
-	struct TouchEqual : std::binary_function<unsigned int, unsigned int, bool>
-	{
-		inline bool operator()(const unsigned int &a, const unsigned int &b) const
-		{
-			return a == b;
-		}
-	};
-
-	/// Touches already have a hash value assigned to them that we can use directly.
-	struct TouchHasher : std::unary_function<unsigned int, std::size_t>
-	{
-		inline std::size_t operator()(const unsigned int &k) const
-		{
-			return static_cast<std::size_t>(k);
-		}
-	};
 }
 
-typedef boost::unordered_map<unsigned int, Touch, Rainbow::TouchHasher, Rainbow::TouchEqual> Touches;
+#endif
 
 #endif

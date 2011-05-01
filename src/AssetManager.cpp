@@ -55,28 +55,28 @@ unsigned int AssetManager::load(unsigned char *&buffer, const char *filename)
 	assert(this->archive != 0);
 	filename = this->get_full_path(filename);
 	zip_file *zf = zip_fopen(this->archive, filename, 0);
-	assert(zf != 0);
+	assert(zf != 0 || !"Rainbow::AssetManager: Failed to load file");
 
 	// Get uncompressed size of file
 	struct zip_stat stat;
 	unsigned int read = zip_stat(this->archive, filename, 0, &stat);
-	assert(read == 0);
+	assert(read == 0 || !"Rainbow::AssetManager: Failed to retrieve uncompressed size");
 	sz = stat.size;
 
 	// Allocate buffer
 	buffer = new unsigned char[sz + 1];
-	assert(buffer != 0);
+	assert(buffer != 0 || !"Rainbow::AssetManager: Failed to allocate buffer");
 
 	// Fill buffer
 	read = zip_fread(zf, buffer, sz);
 	zip_fclose(zf);
-	assert(read == sz);
+	assert(read == sz || !"Rainbow::AssetManager: Failed to uncompress file");
 
 #else
 
 	filename = this->get_full_path(filename);
 	FILE *fp = fopen(filename, "rb");
-	assert(fp != 0);
+	assert(fp != 0 || !"Rainbow::AssetManager: Failed to load file");
 
 	// Get size of file
 	fseek(fp, 0, SEEK_END);
@@ -84,13 +84,13 @@ unsigned int AssetManager::load(unsigned char *&buffer, const char *filename)
 
 	// Allocate buffer
 	buffer = new unsigned char[sz + 1];
-	assert(buffer != 0);
+	assert(buffer != 0 || !"Rainbow::AssetManager: Failed to allocate buffer");
 
 	// Fill buffer
 	fseek(fp, 0, SEEK_SET);
 	unsigned int read = fread(buffer, 1, sz, fp);
 	fclose(fp);
-	assert(read == sz);
+	assert(read == sz || !"Rainbow::AssetManager: Failed to read file");
 
 #endif
 

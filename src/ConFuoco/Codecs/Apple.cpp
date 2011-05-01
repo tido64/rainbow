@@ -18,7 +18,7 @@ namespace Rainbow
 			if (ExtAudioFileOpenURL(url, &ext_audio) != noErr)
 			{
 				CFRelease(url);
-				NSLog(@"Rainbow::ConFuoco::Decoder: Could not open %s\n", CFURLGetString(url));
+				NSLog(@"Rainbow::ConFuoco::Decoder: Failed to open %s\n", CFURLGetString(url));
 				return;
 			}
 			CFRelease(url);
@@ -27,10 +27,10 @@ namespace Rainbow
 			UInt32 size = sizeof(audio_format);
 			if (ExtAudioFileGetProperty(ext_audio, kExtAudioFileProperty_FileDataFormat, &size, &audio_format) != noErr)
 			{
-				NSLog(@"Rainbow::ConFuoco::Decoder: Could not get audio format\n");
+				NSLog(@"Rainbow::ConFuoco::Decoder: Failed to retrieve audio format\n");
 				return;
 			}
-			assert(audio_format.mChannelsPerFrame <= 2);
+			assert(audio_format.mChannelsPerFrame <= 2 || !"Rainbow::ConFuoco::Decoder: We don't support more than 2 channels");
 
 			audio_format.mFormatID = kAudioFormatLinearPCM;
 			audio_format.mFormatFlags = kAudioFormatFlagIsSignedInteger | kAudioFormatFlagIsPacked | kAudioFormatFlagsNativeEndian;
@@ -42,7 +42,7 @@ namespace Rainbow
 
 			if (ExtAudioFileSetProperty(ext_audio, kExtAudioFileProperty_ClientDataFormat, sizeof(audio_format), &audio_format) != noErr)
 			{
-				NSLog(@"Rainbow::ConFuoco::Decoder: Could not set client data format\n");
+				NSLog(@"Rainbow::ConFuoco::Decoder: Failed to set client data format\n");
 				return;
 			}
 
@@ -50,7 +50,7 @@ namespace Rainbow
 			size = sizeof(frames);
 			if (ExtAudioFileGetProperty(ext_audio, kExtAudioFileProperty_FileLengthFrames, &size, &frames) != noErr)
 			{
-				NSLog(@"Rainbow::ConFuoco::Decoder: Could not get audio length\n");
+				NSLog(@"Rainbow::ConFuoco::Decoder: Failed to retrieve audio length\n");
 				return;
 			}
 
@@ -69,7 +69,7 @@ namespace Rainbow
 			{
 				delete[] static_cast<char *>(wave.buffer);
 				wave.buffer = 0;
-				NSLog(@"Rainbow::ConFuoco::Decoder: Could not read from %s\n", file);
+				NSLog(@"Rainbow::ConFuoco::Decoder: Failed to read %s\n", file);
 				return;
 			}
 			ExtAudioFileDispose(ext_audio);

@@ -20,12 +20,12 @@ FontAtlas::FontAtlas(const char *f, const float pt) : pt(pt)
 	// Instantiate FreeType
 	FT_Library lib;
 	int ft_error = FT_Init_FreeType(&lib);
-	assert(ft_error == 0);
+	assert(ft_error == 0 || !"Rainbow::FontAtlas: Failed to initialise FreeType");
 
 	// Load font face
 	FT_Face face;
 	ft_error = FT_New_Memory_Face(lib, font_data, font_sz, 0, &face);
-	assert(ft_error == 0);
+	assert(ft_error == 0 || !"Rainbow::FontAtlas: Failed to load font face");
 
 	FT_Set_Char_Size(face, 0, static_cast<int>(this->pt * 64), 96, 96);
 
@@ -37,7 +37,7 @@ FontAtlas::FontAtlas(const char *f, const float pt) : pt(pt)
 	for (unsigned int i = 0; i < chars; ++i)
 	{
 		ft_error = FT_Load_Char(face, i + ascii_offset, FT_LOAD_RENDER);
-		assert(ft_error == 0);
+		assert(ft_error == 0 || !"Rainbow::FontAtlas: Failed to load characters");
 
 		const FT_Bitmap &bitmap = face->glyph->bitmap;
 

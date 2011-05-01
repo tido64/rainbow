@@ -28,7 +28,8 @@ Sprite* TextureAtlas::create_sprite(const int x, const int y, const int w, const
 
 unsigned int TextureAtlas::define_texture(const int x, const int y, const int w, const int h)
 {
-	assert(x >= 0 && (x + w) <= this->texture.width && y >= 0 && (y + h) <= this->texture.height);
+	assert((x >= 0 && (x + w) <= this->texture.width && y >= 0 && (y + h) <= this->texture.height)
+		|| !"Rainbow::TextureAtlas: Invalid dimensions");
 
 	unsigned int i = this->textures.size();
 

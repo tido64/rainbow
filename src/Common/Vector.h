@@ -31,7 +31,7 @@ public:
 
 	inline T& at(const unsigned int i)
 	{
-		assert(i < this->count);
+		assert(i < this->count || !"Rainbow::Vector: Tried to access an element out of range");
 		return this->array[i];
 	}
 

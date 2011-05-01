@@ -23,7 +23,7 @@ GLint Texture::load(void *&data, const char *filename)
 	NSData *texture = [[NSData alloc] initWithContentsOfFile:path];
 	UIImage *image = [[UIImage alloc] initWithData:texture];
 	[texture release];
-	assert(image != nil);
+	assert(image != nil || !"Rainbow::Texture: Failed to load file");
 
 	this->width = CGImageGetWidth(image.CGImage);
 	this->height = CGImageGetHeight(image.CGImage);
@@ -31,7 +31,7 @@ GLint Texture::load(void *&data, const char *filename)
 
 	CGColorSpaceRef color_space = CGColorSpaceCreateDeviceRGB();
 	data = new unsigned char[this->height * this->width * 4];
-	assert(data != 0);
+	assert(data != 0 || !"Rainbow::Texture: Failed to allocate memory");
 
 	CGContextRef context = CGBitmapContextCreate(data, this->width, this->height, 8, 4 * this->width, color_space, kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big);
 	CGColorSpaceRelease(color_space);
@@ -57,21 +57,21 @@ GLint Texture::load(void *&data, const char *filename)
 		unsigned char *png_sig = new unsigned char[texture.offset];
 		memcpy(png_sig, texture.data, texture.offset);
 		int result = png_sig_cmp(png_sig, 0, texture.offset);
-		assert(result == 0);
+		assert(result == 0 || !"Rainbow::Texture: File is not PNG");
 		delete[] png_sig;
 	}
 
 	png_structp png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, 0, 0, 0);
-	assert(png_ptr != 0);
+	assert(png_ptr != 0 || !"Rainbow::Texture: Failed to retrieve libpng version string");
 
 	png_infop info_ptr = png_create_info_struct(png_ptr);
-	assert(info_ptr != 0);
+	assert(info_ptr != 0 || !"Rainbow::Texture: Failed to allocate memory");
 
 	png_infop end_info = png_create_info_struct(png_ptr);
-	assert(end_info != 0);
+	assert(end_info != 0 || !"Rainbow::Texture: Failed to allocate memory");
 
 	int result = setjmp(png_jmpbuf(png_ptr));
-	assert(result == 0);
+	assert(result == 0 || !"Rainbow::Texture: Failed to allocate memory");
 
 	// Texture can't be greater than what the hardware supports
 	png_set_user_limits(png_ptr, GL_MAX_TEXTURE_SIZE, GL_MAX_TEXTURE_SIZE);
@@ -110,17 +110,17 @@ GLint Texture::load(void *&data, const char *filename)
 
 	this->width = png_get_image_width(png_ptr, info_ptr);
 	this->height = png_get_image_height(png_ptr, info_ptr);
-	assert(this->width > 0 && this->height > 0);
+	assert((this->width > 0 && this->height > 0) || !"Rainbow::Texture: Invalid texture dimensions");
 
 	// Allocate memory for bitmap
 	png_read_update_info(png_ptr, info_ptr);
 	const unsigned int rowbytes = png_get_rowbytes(png_ptr, info_ptr);
 	data = new unsigned char[this->height * rowbytes];
-	assert(data != 0);
+	assert(data != 0 || !"Rainbow::Texture: Failed to allocate buffer");
 
 	// Allocate row pointer array
 	png_bytep *row_pointers = new png_bytep[this->height];
-	assert(row_pointers != 0);
+	assert(row_pointers != 0 || !"Rainbow::Texture: Failed to allocate buffer");
 
 	png_byte *b = static_cast<png_byte *>(data);
 	row_pointers[0] = b;
@@ -128,8 +128,8 @@ GLint Texture::load(void *&data, const char *filename)
 		row_pointers[i] = b + i * rowbytes;
 
 	png_read_image(png_ptr, row_pointers);
-
 	delete[] row_pointers;
+
 	png_destroy_read_struct(&png_ptr, &info_ptr, &end_info);
 	delete[] texture.data;
 

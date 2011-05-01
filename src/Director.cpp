@@ -23,7 +23,7 @@ Director::Director()
 #endif
 
 	// Add director to input event loop
-	Input::Instance().director = this;
+	Input::Instance().subscribe(this, -1);
 }
 
 void Director::draw()

@@ -32,16 +32,16 @@ public:
 	void key_press();
 
 	/// Handle mouse/touch begin-events.
-	void touch_began(const Touches &touches);
+	void touch_began(const Touch *const touches, const unsigned int count);
 
 	/// Handle mouse/touch cancel-events.
 	void touch_canceled();
 
 	/// Handle mouse/touch end-events.
-	void touch_ended(const Touches &touches);
+	void touch_ended(const Touch *const touches, const unsigned int count);
 
 	/// Handle mouse/touch move-events.
-	void touch_moved(const Touches &touches);
+	void touch_moved(const Touch *const touches, const unsigned int count);
 
 private:
 	Lua lua;  ///< Lua interpreter
@@ -63,24 +63,24 @@ inline void Director::key_press()
 {
 }
 
-inline void Director::touch_began(const Touches &touches)
+inline void Director::touch_began(const Touch *const touches, const unsigned int count)
 {
-	this->lua.input.touch_event(this->lua.L);
+	this->lua.input.touch_began(this->lua.L, touches, count);
 }
 
 inline void Director::touch_canceled()
 {
-	this->lua.input.touch_event(this->lua.L);
+	this->lua.input.touch_canceled(this->lua.L);
 }
 
-inline void Director::touch_ended(const Touches &touches)
+inline void Director::touch_ended(const Touch *const touches, const unsigned int count)
 {
-	this->lua.input.touch_event(this->lua.L);
+	this->lua.input.touch_ended(this->lua.L, touches, count);
 }
 
-inline void Director::touch_moved(const Touches &touches)
+inline void Director::touch_moved(const Touch *const touches, const unsigned int count)
 {
-	this->lua.input.touch_event(this->lua.L);
+	this->lua.input.touch_moved(this->lua.L, touches, count);
 }
 
 #endif

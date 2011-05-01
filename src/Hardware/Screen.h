@@ -1,6 +1,6 @@
 /// Stores screen size.
 
-/// Copyright 2010 Bifrost Games. All rights reserved.
+/// Copyright 2010-11 Bifrost Games. All rights reserved.
 /// \author Tommy Nguyen
 
 #ifndef SCREEN_H_
@@ -40,8 +40,8 @@ public:
 	#endif
 	}
 
-	inline float width() const { return this->w; }
-	inline float height() const { return this->h; }
+	float width() const;
+	float height() const;
 
 private:
 	float w, h;
@@ -56,5 +56,15 @@ private:
 	Screen(const Screen &);
 	Screen& operator=(const Screen &);
 };
+
+inline float Screen::width() const
+{
+	return this->w;
+}
+
+inline float Screen::height() const
+{
+	return this->h;
+}
 
 #endif
