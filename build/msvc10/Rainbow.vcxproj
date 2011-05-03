@@ -48,14 +48,14 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\..\lib;..\..\..\lib\FreeType\include;..\..\..\lib\libpng;..\..\..\lib\libzip-0.10;..\..\..\lib\Lua;..\..\..\lib\Win32;..\..\..\lib\Xiph.Org</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\lib;..\..\..\lib\FreeType\include;..\..\..\lib\libpng;..\..\..\lib\Lua;..\..\..\lib\Win32;..\..\..\lib\Xiph.Org</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>..\..\..\lib\Win32</AdditionalLibraryDirectories>
       <SubSystem>Windows</SubSystem>
-      <AdditionalDependencies>freetype244MT.lib;GLee.lib;libpng15_static.lib;libvorbis.lib;libvorbisfile.lib;lua5.1.lib;OpenAL32.lib;Opengl32.lib;SDL.lib;SDLmain.lib;zdll.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>freetype244MT.lib;GLee.lib;libpng15_static.lib;libvorbis.lib;libvorbisfile.lib;lua51.lib;OpenAL32.lib;Opengl32.lib;SDL.lib;SDLmain.lib;zdll.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>LIBCMT;msvcrt.lib</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
@@ -65,7 +65,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>..\..\..\lib;..\..\..\lib\FreeType\include;..\..\..\lib\libpng;..\..\..\lib\libzip-0.10;..\..\..\lib\Lua;..\..\..\lib\Win32;..\..\..\lib\Xiph.Org</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\lib;..\..\..\lib\FreeType\include;..\..\..\lib\libpng;..\..\..\lib\Lua;..\..\..\lib\Win32;..\..\..\lib\Xiph.Org</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -73,7 +73,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <AdditionalLibraryDirectories>..\..\..\lib\Win32</AdditionalLibraryDirectories>
       <SubSystem>Windows</SubSystem>
-      <AdditionalDependencies>freetype244MT.lib;GLee.lib;libpng15_static.lib;libvorbis.lib;libvorbisfile.lib;lua5.1.lib;OpenAL32.lib;Opengl32.lib;SDL.lib;SDLmain.lib;zdll.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>freetype244MT.lib;GLee.lib;libpng15_static.lib;libvorbis.lib;libvorbisfile.lib;lua51.lib;OpenAL32.lib;Opengl32.lib;SDL.lib;SDLmain.lib;zdll.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>LIBCMT</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>

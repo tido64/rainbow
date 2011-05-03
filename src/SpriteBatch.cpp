@@ -51,15 +51,16 @@ void SpriteBatch::add(Sprite *s)
 
 void SpriteBatch::draw()
 {
-	static const void *tex_offset = static_cast<float *>(0) + 2;
+	// Offsets: Refer struct SpriteVertex
+	static const void *tx_offset = reinterpret_cast<void *>(sizeof(Colorb));
+	static const void *vx_offset = reinterpret_cast<void *>(sizeof(Colorb) + sizeof(Vec2f));
 
-	// Enable all colour channels
-	glColor4ub(0xff, 0xff, 0xff, 0xff);
 	glBindTexture(GL_TEXTURE_2D, this->texture);
 
 	glBindBuffer(GL_ARRAY_BUFFER, this->buffer);
-	glVertexPointer(2, GL_FLOAT, sizeof(SpriteVertex), 0);
-	glTexCoordPointer(2, GL_FLOAT, sizeof(SpriteVertex), tex_offset);
+	glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(SpriteVertex), 0);
+	glTexCoordPointer(2, GL_FLOAT, sizeof(SpriteVertex), tx_offset);
+	glVertexPointer(2, GL_FLOAT, sizeof(SpriteVertex), vx_offset);
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, this->batch_vertices);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }

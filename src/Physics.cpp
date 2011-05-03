@@ -84,10 +84,7 @@ void Physics::define_body_position(b2BodyDef *d, const float x, const float y)
 void Physics::dispose_body(b2Body *b)
 {
 	if (b->GetUserData() != 0)
-	{
-		BodyData *d = static_cast<BodyData *>(b->GetUserData());
-		delete d;
-	}
+		delete static_cast<BodyData *>(b->GetUserData());
 	this->world->DestroyBody(b);
 }
 

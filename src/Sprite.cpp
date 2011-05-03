@@ -78,6 +78,14 @@ void Sprite::scale(const Vec2f &f)
 	this->stale |= stale_scale;
 }
 
+void Sprite::set_color(const unsigned int v0, const unsigned int v1, const unsigned int v2, const unsigned int v3)
+{
+	this->vertex_array[0].color = v0;
+	this->vertex_array[1].color = v1;
+	this->vertex_array[2].color = v2;
+	this->vertex_array[3].color = v3;
+}
+
 void Sprite::set_pivot(const float x, const float y)
 {
 	assert((x >= 0.0f && x <= 1.0f && y >= 0.0f && y <= 1.0f)

@@ -182,9 +182,10 @@ FontAtlas::FontAtlas(const char *f, const float pt) : pt(pt)
 
 void FontAtlas::print(const char *text, const int x, const int y) const
 {
+	glDisableClientState(GL_COLOR_ARRAY);
 	glPushMatrix();
-	glTranslatef(static_cast<GLfloat>(x), static_cast<GLfloat>(y), 0.0f);
 
+	glTranslatef(static_cast<GLfloat>(x), static_cast<GLfloat>(y), 0.0f);
 	glBindTexture(GL_TEXTURE_2D, this->texture);
 	glColor4ub(this->color.r, this->color.g, this->color.b, this->color.a);
 
@@ -199,8 +200,8 @@ void FontAtlas::print(const char *text, const int x, const int y) const
 		#else
 			glTranslatef(static_cast<float>(glyph.left), 0.0f, 0.0f);
 		#endif
-		glVertexPointer(2, GL_FLOAT, sizeof(SpriteVertex), &glyph.quad[0].position);
 		glTexCoordPointer(2, GL_FLOAT, sizeof(SpriteVertex), &glyph.quad[0].texcoord);
+		glVertexPointer(2, GL_FLOAT, sizeof(SpriteVertex), &glyph.quad[0].position);
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 		glTranslatef(static_cast<float>(glyph.advance - glyph.left), 0.0f, 0.0f);
 
@@ -208,6 +209,7 @@ void FontAtlas::print(const char *text, const int x, const int y) const
 	}
 
 	glPopMatrix();
+	glEnableClientState(GL_COLOR_ARRAY);
 }
 
 void FontAtlas::set_color(const unsigned char r, const unsigned char g, const unsigned char b, const unsigned char a)

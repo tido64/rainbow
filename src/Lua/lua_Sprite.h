@@ -18,6 +18,7 @@ public:
 	int get_position(lua_State *);
 	int rotate(lua_State *);
 	int scale(lua_State *);
+	int set_color(lua_State *);
 	int set_pivot(lua_State *);
 	int set_position(lua_State *);
 	int set_texture(lua_State *);

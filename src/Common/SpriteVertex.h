@@ -1,6 +1,7 @@
 #ifndef SPRITEVERTEX_H_
 #define SPRITEVERTEX_H_
 
+#include "Color.h"
 #include "Vec2.h"
 
 /// A typical sprite vertex contains x- and y-coordinates for position and texture.
@@ -9,8 +10,9 @@
 /// \author Tommy Nguyen
 struct SpriteVertex
 {
-	Vec2f position;
+	Colorb color;
 	Vec2f texcoord;
+	Vec2f position;
 };
 
 #endif

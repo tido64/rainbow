@@ -13,13 +13,13 @@ bool done = false;   ///< Whether the user has requested to quit
 
 unsigned short int screen_width = 640;        ///< Window width
 unsigned short int screen_height = 960;       ///< Window height
-int video_mode = SDL_HWPALETTE | SDL_OPENGL;  ///< Window video mode
 const double fps = 1000.0 / 60.0;             ///< Preferred frames per second
+const double milli = 1.0 / 1000.0;            ///< 1 millisecond
 
 Touch mouse_input;  ///< Mouse input
 Director director;  ///< Game director handles everything
 
-bool init_GL();                                     ///< Initialize 2d viewport
+void init_GL();                                     ///< Initialise 2d viewport
 void on_key_press(SDL_keysym &);                    ///< Handle key press event
 void on_mouse_button_down(SDL_MouseButtonEvent &);  ///< Handle mouse button event
 void on_mouse_button_up(SDL_MouseButtonEvent &);    ///< Handle mouse button event
@@ -43,13 +43,12 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 
-	video_mode |= (!video_info->hw_available) ? SDL_SWSURFACE : SDL_HWSURFACE;
+	int video_mode = SDL_HWPALETTE | SDL_OPENGL | ((!video_info->hw_available) ? SDL_SWSURFACE : SDL_HWSURFACE);
 	if (video_info->blit_hw)
 		video_mode |= SDL_HWACCEL;
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 	//SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
 	//SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 4);
-
 	SDL_Surface *surface = SDL_SetVideoMode(screen_width, screen_height, 0, video_mode);
 	if (!surface)
 	{
@@ -74,7 +73,7 @@ int main(int argc, char *argv[])
 			switch (event.type)
 			{
 				case SDL_ACTIVEEVENT:
-					active = (event.active.gain == 0) ? false : true;
+					active = (event.active.gain != 0);
 					break;
 				case SDL_KEYDOWN:
 					on_key_press(event.key.keysym);
@@ -111,7 +110,7 @@ int main(int argc, char *argv[])
 		{
 			// Update game logic
 			now = SDL_GetTicks();
-			director.update((now - time) / 1000.0f);
+			director.update((now - time) * milli);
 			time = now;
 
 			// Draw
@@ -124,21 +123,20 @@ int main(int argc, char *argv[])
 	return 0;
 }
 
-bool init_GL()
+void init_GL()
 {
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
-	glDisable(GL_DEPTH_TEST);
 	glDisable(GL_LIGHTING);
+	glDisable(GL_DEPTH_TEST);
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	glEnable(GL_TEXTURE_2D);
-	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 	glEnableClientState(GL_VERTEX_ARRAY);
-
-	return true;
+	glEnableClientState(GL_COLOR_ARRAY);
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 }
 
 void on_key_press(SDL_keysym &keysym)
@@ -158,7 +156,7 @@ void on_key_press(SDL_keysym &keysym)
 	}
 }
 
-void on_mouse_button_down(SDL_MouseButtonEvent &mouse)
+inline void on_mouse_button_down(SDL_MouseButtonEvent &mouse)
 {
 	mouse_input.initial.x = mouse.x;
 	mouse_input.initial.y = screen_height - mouse.y;
@@ -166,14 +164,14 @@ void on_mouse_button_down(SDL_MouseButtonEvent &mouse)
 	Input::Instance().touch_began(&mouse_input, 1);
 }
 
-void on_mouse_button_up(SDL_MouseButtonEvent &mouse)
+inline void on_mouse_button_up(SDL_MouseButtonEvent &mouse)
 {
 	mouse_input.position.x = mouse.x;
 	mouse_input.position.y = screen_height - mouse.y;
 	Input::Instance().touch_ended(&mouse_input, 1);
 }
 
-void on_mouse_motion(SDL_MouseMotionEvent &mouse)
+inline void on_mouse_motion(SDL_MouseMotionEvent &mouse)
 {
 	mouse_input.position.x = mouse.x;
 	mouse_input.position.y = screen_height - mouse.y;

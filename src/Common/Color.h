@@ -11,9 +11,6 @@ namespace Rainbow
 	struct __Color
 	{
 		T r, g, b, a;
-
-		__Color();
-		__Color(const T r, const T g, const T b, const T a);
 	};
 
 	template<>
@@ -26,6 +23,15 @@ namespace Rainbow
 		__Color(const unsigned char r, const unsigned char g, const unsigned char b, const unsigned char a = 0xff) :
 			r(r), g(g), b(b), a(a)
 		{ }
+
+		__Color<unsigned char>& operator=(const unsigned int c)
+		{
+			this->r = 0xff & (c >> 24);
+			this->g = 0xff & (c >> 16);
+			this->b = 0xff & (c >> 8);
+			this->a = 0xff & c;
+			return *this;
+		}
 	};
 
 	template<>
@@ -38,6 +44,16 @@ namespace Rainbow
 		__Color(const float r, const float g, const float b, const float a = 1.0f) :
 			r(r), g(g), b(b), a(a)
 		{ }
+
+		__Color<float>& operator=(const unsigned int c)
+		{
+			static const float white = 1.0f / 255.0f;
+			this->r = (0xff & (c >> 24)) * white;
+			this->g = (0xff & (c >> 16)) * white;
+			this->b = (0xff & (c >> 8)) * white;
+			this->a = (0xff & c) * white;
+			return *this;
+		}
 	};
 }
 

@@ -6,6 +6,7 @@ const Lua::Method<lua_Sprite> lua_Sprite::methods[] = {
 	{ "get_position", &lua_Sprite::get_position },
 	{ "rotate",       &lua_Sprite::rotate },
 	{ "scale",        &lua_Sprite::scale },
+	{ "set_color",    &lua_Sprite::set_color },
 	{ "set_pivot",    &lua_Sprite::set_pivot },
 	{ "set_position", &lua_Sprite::set_position },
 	{ "set_texture",  &lua_Sprite::set_texture },
@@ -40,6 +41,12 @@ int lua_Sprite::rotate(lua_State *L)
 int lua_Sprite::scale(lua_State *L)
 {
 	this->s->scale(lua_tonumber(L, 1));
+	return 0;
+}
+
+int lua_Sprite::set_color(lua_State *L)
+{
+	this->s->set_color(lua_tointeger(L, 1), lua_tointeger(L, 2), lua_tointeger(L, 3), lua_tointeger(L, 4));
 	return 0;
 }
 

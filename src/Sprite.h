@@ -45,6 +45,13 @@ public:
 	/// Non-uniform scaling of sprite (does not affect width and height properties).
 	void scale(const Vec2f &);
 
+	/// Set sprite colour.
+	/// \param v0  Colour for vertex 0
+	/// \param v1  Colour for vertex 1
+	/// \param v2  Colour for vertex 2
+	/// \param v3  Colour for vertex 3
+	void set_color(const unsigned int v0, const unsigned int v1, const unsigned int v2, const unsigned int v3);
+
 	/// Set the pivot point for rotation and translation.
 	/// \param x  Normalised x-component of pivot point
 	/// \param y  Normalised y-component of pivot point
