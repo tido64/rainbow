@@ -9,7 +9,7 @@
 
 #include "FontAtlas.h"
 
-FontAtlas::FontAtlas(const char *f, const float pt) : pt(pt)
+FontAtlas::FontAtlas(const char *const f, const float pt) : pt(pt)
 {
 	assert(f != 0);
 
@@ -190,7 +190,7 @@ void FontAtlas::print(const char *text, const int x, const int y) const
 	glColor4ub(this->color.r, this->color.g, this->color.b, this->color.a);
 
 	unsigned int prev = 0;  // 'space' has no kerning
-	for (; *text != '\0'; ++text)
+	for (; *text; ++text)
 	{
 		const unsigned int c = static_cast<unsigned int>(*text - ascii_offset);
 		const FontGlyph &glyph = this->charset[c];

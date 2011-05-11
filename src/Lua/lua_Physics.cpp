@@ -1,57 +1,174 @@
+#ifdef _WIN32
+#	pragma warning(disable : 4244)
+#endif
+
 #include "lua_Physics.h"
 
-const char *lua_Physics::class_name = "physics";
-const Lua::Method<lua_Physics> lua_Physics::methods[] = {
-	{ "create_anchor",        &lua_Physics::create_anchor },
-	{ "create_body",          &lua_Physics::create_body },
-	{ "create_joint",         &lua_Physics::create_joint },
-	{ "define_body_damping",  &lua_Physics::define_body_damping },
-	{ "define_body_position", &lua_Physics::define_body_position },
-	{ "dispose_body",         &lua_Physics::dispose_body },
-	{ 0 }
-};
-
-int lua_Physics::create_anchor(lua_State *L)  // const float &w, const float &h, const float &x, const float &y
+lua_Physics::lua_Physics(lua_State *L)
 {
-	Body *b = Physics::Instance().create_anchor(
-		lua_tonumber(L, 1),
-		lua_tonumber(L, 2),
-		lua_tonumber(L, 3),
-		lua_tonumber(L, 4));
-	lua_pushlightuserdata(L, b);
-	return 1;  // b2Body *
+	lua_createtable(L, 0, 0);
+	lua_pushvalue(L, -1);
+	lua_setfield(L, -3, "physics");
+
+	lua_pushcclosure(L, &lua_Physics::apply_force, 0);
+	lua_setfield(L, -2, "apply_force");
+
+	lua_pushcclosure(L, &lua_Physics::apply_angular_impulse, 0);
+	lua_setfield(L, -2, "apply_angular_impulse");
+
+	lua_pushcclosure(L, &lua_Physics::apply_torque, 0);
+	lua_setfield(L, -2, "apply_torque");
+
+	lua_pushcclosure(L, &lua_Physics::create_anchor, 0);
+	lua_setfield(L, -2, "create_anchor");
+
+	lua_pushcclosure(L, &lua_Physics::create_circle, 0);
+	lua_setfield(L, -2, "create_circle");
+
+	lua_pushcclosure(L, &lua_Physics::create_distance_joint, 0);
+	lua_setfield(L, -2, "create_distance_joint");
+
+	lua_pushcclosure(L, &lua_Physics::create_rope, 0);
+	lua_setfield(L, -2, "create_rope");
+
+	lua_pushcclosure(L, &lua_Physics::create_world, 0);
+	lua_setfield(L, -2, "create_world");
+
+	lua_pushcclosure(L, &lua_Physics::destroy, 0);
+	lua_setfield(L, -2, "destroy");
+
+	lua_pushcclosure(L, &lua_Physics::set_body_damping, 0);
+	lua_setfield(L, -2, "set_body_damping");
+
+	lua_pushcclosure(L, &lua_Physics::set_gravity, 0);
+	lua_setfield(L, -2, "set_gravity");
+
+	lua_pop(L, 1);
 }
 
-int lua_Physics::create_body(lua_State *L)  // const b2BodyDef *d, const b2FixtureDef *fixture = 0, const float inertia = 0.0f, const float mass = 0.0f
+int lua_Physics::apply_force(lua_State *L)
 {
-	Body *b = 0;
-	//Physics::Instance().create_body();
-	lua_pushlightuserdata(L, b);
-	return 1;  // b2Body *
-}
-
-int lua_Physics::create_joint(lua_State *L)  // b2Body *a, b2Body *b, const b2Vec2 &a_pos, const b2Vec2 &b_pos
-{
-	Joint *j = 0;
-	//Physics::Instance().create_body();
-	lua_pushlightuserdata(L, j);
-	return 1;  // b2Joint *
-}
-
-int lua_Physics::define_body_damping(lua_State *L)  // b2BodyDef *d, const float linearDamping = 0.0f, const float angularDamping = 0.1f
-{
-	//Physics::Instance().define_body_damping();
+	Physics::Instance().apply_force(lua_touserdata(L, 1), lua_tonumber(L, 2), lua_tonumber(L, 3), lua_tonumber(L, 4), lua_tonumber(L, 5));
 	return 0;
 }
 
-int lua_Physics::define_body_position(lua_State *L)  // b2BodyDef *d, const float x = 0.0f, const float y = 0.0f
+int lua_Physics::apply_angular_impulse(lua_State *L)
 {
-	//Physics::Instance().define_body_position();
+	Physics::Instance().apply_angular_impulse(lua_touserdata(L, 1), lua_tonumber(L, 2));
 	return 0;
 }
 
-int lua_Physics::dispose_body(lua_State *L)  // b2Body *b
+int lua_Physics::apply_torque(lua_State *L)
 {
-	//Physics::Instance().dispose_body();
+	Physics::Instance().apply_torque(lua_touserdata(L, 1), lua_tonumber(L, 2));
+	return 0;
+}
+
+int lua_Physics::create_anchor(lua_State *L)
+{
+	lua_pushlightuserdata(L, Physics::Instance().create_anchor(lua_tonumber(L, 1), lua_tonumber(L, 2), lua_tonumber(L, 3), lua_tonumber(L, 4)));
+	return 1;
+}
+
+int lua_Physics::create_circle(lua_State *L)
+{
+	float friction = 0.2f;
+	float restitution = 0.0f;
+	float density = 0.0f;
+
+	switch (lua_gettop(L))
+	{
+		case 6:
+			density = lua_tonumber(L, 6);
+		case 5:
+			restitution = lua_tonumber(L, 5);
+		case 4:
+			friction = lua_tonumber(L, 4);
+		default:
+			break;
+	}
+
+	lua_pushlightuserdata(L, Physics::Instance().create_circle(lua_tonumber(L, 1), lua_tonumber(L, 2), lua_tonumber(L, 3), friction, restitution, density));
+	return 1;
+}
+
+int lua_Physics::create_distance_joint(lua_State *L)
+{
+	lua_pushlightuserdata(L, Physics::Instance().create_distance_joint(lua_touserdata(L, 1), lua_touserdata(L, 2)));
+	return 1;
+}
+
+int lua_Physics::create_rope(lua_State *L)
+{
+	lua_pushlightuserdata(L, Physics::Instance().create_rope(lua_tonumber(L, 1), lua_tonumber(L, 2), lua_tonumber(L, 3), lua_tonumber(L, 4), (lua_gettop(L) == 5) ? lua_tonumber(L, 5) : 0));
+	return 1;
+}
+
+int lua_Physics::create_world(lua_State *L)
+{
+	float g_x = 0.0f;
+	float g_y = kStandardGravity;
+	bool sleep = true;
+
+	switch(lua_gettop(L))
+	{
+		case 3:
+			sleep = lua_toboolean(L, 3) == 1;
+		case 2:
+			g_y = lua_tonumber(L, 2);
+		case 1:
+			g_x = lua_tonumber(L, 1);
+		default:
+			break;
+	}
+
+	Physics::Instance().create_world(g_x, g_y, sleep);
+	return 0;
+}
+
+int lua_Physics::destroy(lua_State *L)
+{
+	if (lua_gettop(L) < 1)
+		Physics::Instance().destroy();
+	else
+		Physics::Instance().destroy(lua_touserdata(L, 1));
+	return 0;
+}
+
+int lua_Physics::set_body_damping(lua_State *L)
+{
+	float linearDamping = 0.0f;
+	float angularDamping = 0.1f;
+
+	switch(lua_gettop(L))
+	{
+		case 2:
+			angularDamping = lua_tonumber(L, 2);
+		case 1:
+			linearDamping = lua_tonumber(L, 1);
+		default:
+			break;
+	}
+
+	Physics::Instance().set_body_damping(lua_touserdata(L, 1), linearDamping, angularDamping);
+	return 0;
+}
+
+int lua_Physics::set_gravity(lua_State *L)
+{
+	float g_x = 0.0f;
+	float g_y = kStandardGravity;
+
+	switch(lua_gettop(L))
+	{
+		case 2:
+			g_y = lua_tonumber(L, 2);
+		case 1:
+			g_x = lua_tonumber(L, 1);
+		default:
+			break;
+	}
+
+	Physics::Instance().set_gravity(g_x, g_y);
 	return 0;
 }

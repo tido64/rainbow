@@ -1,3 +1,7 @@
+#ifdef _WIN32
+#	pragma warning(disable : 4244)
+#endif
+
 #include "lua_Sprite.h"
 
 const char *lua_Sprite::class_name = "create_sprite";
@@ -15,7 +19,7 @@ const Lua::Method<lua_Sprite> lua_Sprite::methods[] = {
 
 lua_Sprite::lua_Sprite(lua_State *L)
 {
-	this->s = static_cast<Sprite *>(lua_touserdata(L, 1));
+	this->s = static_cast<Sprite *>(lua_touserdata(L, -1));
 }
 
 int lua_Sprite::get_angle(lua_State *L)

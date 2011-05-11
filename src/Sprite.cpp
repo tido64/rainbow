@@ -37,22 +37,10 @@ Sprite::~Sprite()
 		delete[] this->vertex_array;
 }
 
-#ifdef ENABLE_VERTEX_ARRAY_DRAW
-void Sprite::draw()
-{
-	// Enable all colour channels on texture
-	glColor4ub(0xff, 0xff, 0xff, 0xff);
-	glBindTexture(GL_TEXTURE_2D, this->texture);
-
-	glVertexPointer(2, GL_FLOAT, sizeof(SpriteVertex), &this->vertex_array[0].position);
-	glTexCoordPointer(2, GL_FLOAT, sizeof(SpriteVertex), &this->vertex_array[0].texcoord);
-	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-}
-#endif
-
 void Sprite::rotate(const float r)
 {
-	if (equalf(r, this->angle)) return;
+	if (equalf(r, this->angle))
+		return;
 
 	this->angle = r;
 	this->stale |= stale_angle | stale_scale;
@@ -61,7 +49,8 @@ void Sprite::rotate(const float r)
 void Sprite::scale(const float f)
 {
 	assert(f > 0.0f || !"Rainbow::Sprite: Can't scale with a negative factor");
-	if (equalf(f, this->scale_f.x) && equalf(f, this->scale_f.y)) return;
+	if (equalf(f, this->scale_f.x) && equalf(f, this->scale_f.y))
+		return;
 
 	this->scale_f.x = f;
 	this->scale_f.y = f;
@@ -72,7 +61,8 @@ void Sprite::scale(const float f)
 void Sprite::scale(const Vec2f &f)
 {
 	assert((f.x > 0.0f && f.y > 0.0f) || !"Rainbow::Sprite: Can't scale with a negative factor");
-	if (equalf(f.x, this->scale_f.x) && equalf(f.y, this->scale_f.y)) return;
+	if (equalf(f.x, this->scale_f.x) && equalf(f.y, this->scale_f.y))
+		return;
 
 	this->scale_f = f;
 	this->stale |= stale_scale;
@@ -90,7 +80,8 @@ void Sprite::set_pivot(const float x, const float y)
 {
 	assert((x >= 0.0f && x <= 1.0f && y >= 0.0f && y <= 1.0f)
 		|| !"Rainbow::Sprite: Invalid pivot point");
-	if (equalf(x, this->pivot.x) && equalf(y, this->pivot.y)) return;
+	if (equalf(x, this->pivot.x) && equalf(y, this->pivot.y))
+		return;
 
 	this->pivot.x = x;
 	this->pivot.y = y;
@@ -99,7 +90,8 @@ void Sprite::set_pivot(const float x, const float y)
 
 void Sprite::set_position(const float x, const float y)
 {
-	if (equalf(x, this->position.x) && equalf(y, this->position.y)) return;
+	if (equalf(x, this->position.x) && equalf(y, this->position.y))
+		return;
 
 	this->position_d.x = x;
 	this->position_d.y = y;
@@ -108,7 +100,8 @@ void Sprite::set_position(const float x, const float y)
 
 void Sprite::set_position(const Vec2f &p)
 {
-	if (equalf(p.x, this->position.x) && equalf(p.y, this->position.y)) return;
+	if (equalf(p.x, this->position.x) && equalf(p.y, this->position.y))
+		return;
 
 	this->position_d = p;
 	this->stale |= stale_position;
@@ -116,7 +109,8 @@ void Sprite::set_position(const Vec2f &p)
 
 void Sprite::update()
 {
-	if (this->stale == 0) return;
+	if (this->stale == 0)
+		return;
 
 	if (this->stale & stale_scale)
 	{

@@ -1,3 +1,7 @@
+#ifdef _WIN32
+#	pragma warning(disable : 4244)
+#endif
+
 #include "lua_Audio.h"
 
 using Rainbow::ConFuoco::Mixer;
@@ -101,47 +105,46 @@ int lua_Audio::set_pitch(lua_State *L)
 int lua_Audio::set_position(lua_State *L)
 {
 	if (lua_gettop(L) == 4)
-		Mixer::Instance().set_position(lua_tointeger(L, 1),
-									   static_cast<float>(lua_tonumber(L, 2)),
-									   static_cast<float>(lua_tonumber(L, 3)),
-									   static_cast<float>(lua_tonumber(L, 4)));
+		Mixer::Instance().set_position(lua_tointeger(L, 1), lua_tonumber(L, 2), lua_tonumber(L, 3), lua_tonumber(L, 4));
 	else
-		Mixer::Instance().set_position(static_cast<float>(lua_tonumber(L, 1)),
-									   static_cast<float>(lua_tonumber(L, 2)),
-									   static_cast<float>(lua_tonumber(L, 3)));
+		Mixer::Instance().set_position(static_cast<float>(lua_tonumber(L, 1)), lua_tonumber(L, 2), lua_tonumber(L, 3));
 	return 0;
 }
 
 int lua_Audio::set_velocity(lua_State *L)
 {
 	if (lua_gettop(L) == 4)
-		Mixer::Instance().set_velocity(lua_tointeger(L, 1),
-									   static_cast<float>(lua_tonumber(L, 2)),
-									   static_cast<float>(lua_tonumber(L, 3)),
-									   static_cast<float>(lua_tonumber(L, 4)));
+		Mixer::Instance().set_velocity(lua_tointeger(L, 1), lua_tonumber(L, 2), lua_tonumber(L, 3), lua_tonumber(L, 4));
 	else
-		Mixer::Instance().set_velocity(static_cast<float>(lua_tonumber(L, 1)),
-									   static_cast<float>(lua_tonumber(L, 2)),
-									   static_cast<float>(lua_tonumber(L, 3)));
+		Mixer::Instance().set_velocity(static_cast<float>(lua_tonumber(L, 1)), lua_tonumber(L, 2), lua_tonumber(L, 3));
 	return 0;
 }
 
 int lua_Audio::add(lua_State *L)
 {
-	const char *file = AssetManager::Instance().get_full_path(lua_tolstring(L, 1, 0));
-	lua_pushinteger(L, Mixer::Instance().add(file));
+	lua_pushinteger(L, Mixer::Instance().add(AssetManager::Instance().get_full_path(lua_tolstring(L, 1, 0))));
 	return 1;
 }
 
 int lua_Audio::play(lua_State *L)
 {
-	if (lua_gettop(L) == 4)
-		lua_pushinteger(L, Mixer::Instance().play(lua_tointeger(L, 1),
-												  static_cast<float>(lua_tonumber(L, 2)),
-												  static_cast<float>(lua_tonumber(L, 3)),
-												  static_cast<float>(lua_tonumber(L, 4))));
-	else
-		lua_pushinteger(L, Mixer::Instance().play(lua_tointeger(L, 1)));
+	float x = 0.0f;
+	float y = 0.0f;
+	float z = 0.0f;
+
+	switch (lua_gettop(L))
+	{
+		case 4:
+			z = lua_tonumber(L, 4);
+		case 3:
+			y = lua_tonumber(L, 3);
+		case 2:
+			x = lua_tonumber(L, 2);
+		default:
+			break;
+	}
+
+	lua_pushinteger(L, Mixer::Instance().play(lua_tointeger(L, 1), x, y, z));
 	return 1;
 }
 
@@ -153,8 +156,7 @@ int lua_Audio::set_looping(lua_State *L)
 
 int lua_Audio::set_bgm(lua_State *L)
 {
-	const char *file = AssetManager::Instance().get_full_path(lua_tolstring(L, 1, 0));
-	Mixer::Instance().set_bgm(file);
+	Mixer::Instance().set_bgm(AssetManager::Instance().get_full_path(lua_tolstring(L, 1, 0)));
 	return 0;
 }
 

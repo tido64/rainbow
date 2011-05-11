@@ -1,3 +1,7 @@
+#ifdef _WIN32
+#	pragma warning(disable : 4244)
+#endif
+
 #include "lua_SpriteBatch.h"
 
 const char *lua_SpriteBatch::class_name = "spritebatch";

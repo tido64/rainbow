@@ -13,6 +13,11 @@ namespace Rainbow
 		T r, g, b, a;
 	};
 
+
+	/// Structure for storing a color (RGBA) using unsigned bytes.
+
+	/// Copyright 2010-11 Bifrost Games. All rights reserved.
+	/// \author Tommy Nguyen
 	template<>
 	struct __Color<unsigned char>
 	{
@@ -34,6 +39,11 @@ namespace Rainbow
 		}
 	};
 
+
+	/// Structure for storing a color (RGBA) using floats.
+
+	/// Copyright 2010-11 Bifrost Games. All rights reserved.
+	/// \author Tommy Nguyen
 	template<>
 	struct __Color<float>
 	{

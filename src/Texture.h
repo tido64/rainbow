@@ -7,7 +7,6 @@
 #if defined(RAINBOW_IOS)
 #	include <UIKit/UIKit.h>
 #else
-#	include <cstdio>
 #	include <png.h>
 
 struct png_read_struct
@@ -15,7 +14,8 @@ struct png_read_struct
 	unsigned int offset;
 	unsigned char *data;
 
-	png_read_struct(unsigned char *data = 0, unsigned int offset = 0) : offset(offset), data(data) { }
+	png_read_struct(unsigned char *data = 0, unsigned int offset = 0) :
+		offset(offset), data(data) { }
 };
 
 #endif
@@ -44,8 +44,8 @@ public:
 
 private:
 	/// Read image data into buffer.
-	/// \param data[out]  Destination buffer
-	/// \param file[in]   Path to image
+	/// \param[out] data  Destination buffer
+	/// \param[in]  file  Path to image
 	/// \return Image colour format
 	GLint load(void *&data, const char *file);
 

@@ -1,7 +1,5 @@
 /// Data structures for keeping track of touches.
 
-/// \see http://www.boost.org/doc/libs/1_46_1/doc/html/unordered.html
-///
 /// Copyright 2010-11 Bifrost Games. All rights reserved.
 /// \author Tommy Nguyen
 
@@ -27,9 +25,9 @@ struct Touch
 
 	Touch& operator=(const Touch &t)
 	{
-		if (t.hash == this->hash)
+		if (this == &t)
 			return *this;
-		if (this->hash == 0)
+		if (this->hash != t.hash)
 		{
 			this->hash = t.hash;
 			this->initial = t.position;
@@ -41,13 +39,13 @@ struct Touch
 #if defined(RAINBOW_IOS)
 
 	/// Only available on iOS. Used for converting a UITouch.
-	Touch& operator=(const UITouch *t)
+	Touch& operator=(const UITouch *const t)
 	{
 		if (t.hash == this->hash)
 			return *this;
 		CGPoint p = [t locationInView:[t view]];
 		this->position.x = p.x;
-		this->position.y = Screen::Instance().height() - p.y;
+		this->position.y = p.y;
 		if (this->hash == 0)
 		{
 			this->hash = t.hash;

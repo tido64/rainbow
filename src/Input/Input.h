@@ -6,6 +6,7 @@
 #include "../Touchable.h"
 #include "Acceleration.h"
 
+#define RAINBOW_ALL_EVENTS    -1
 #define RAINBOW_KEY_EVENTS    (1 << 0)
 #define RAINBOW_TOUCH_EVENTS  (1 << 1)
 
@@ -39,10 +40,10 @@ public:
 	/// \param flags  Events to subscribe to
 	void subscribe(Touchable *const t, unsigned int flags);
 
-	void touch_began(const Touch *const touches, const unsigned int count);
+	void touch_began(Touch *const touches, const unsigned int count);
 	void touch_canceled();
-	void touch_ended(const Touch *const touches, const unsigned int count);
-	void touch_moved(const Touch *const touches, const unsigned int count);
+	void touch_ended(Touch *const touches, const unsigned int count);
+	void touch_moved(Touch *const touches, const unsigned int count);
 
 private:
 	Vector<Touchable *> touch_subscribers;
@@ -51,6 +52,8 @@ private:
 
 	/// Intentionally left undefined.
 	Input(const Input &);
+
+	void touch_flip(Touch *const touches, const unsigned int count);
 
 	/// Intentionally left undefined.
 	Input& operator=(const Input &);

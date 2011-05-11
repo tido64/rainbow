@@ -4,6 +4,7 @@
 #include <cmath>
 #include <cstdio>
 
+#include "../Common/Constants.h"
 #include "OpenAL.h"
 
 #ifdef RAINBOW_IOS
@@ -14,9 +15,6 @@
 #	include "Stream.h"
 #endif
 
-#ifndef M_PI_2
-#	define M_PI_2 1.57079632679489661923f
-#endif
 #define AUDIO_BUFFERED 1       ///< Flagged when AL buffers have been generated
 #define AUDIO_SOURCED  1 << 1  ///< Flagged when AL sources have been generated
 #define AUDIO_BUFFERS  16      ///< Number of different sounds
@@ -195,7 +193,7 @@ namespace Rainbow
 
 		inline void Mixer::set_orientation(const float r)
 		{
-			float ori[] = { cosf(r + M_PI_2), sinf(r + M_PI_2), 0.0f, 0.0f, 0.0f, 1.0f };
+			float ori[] = { cosf(r + kPi_2), sinf(r + kPi_2), 0.0f, 0.0f, 0.0f, 1.0f };
 			alListenerfv(AL_ORIENTATION, ori);
 		}
 

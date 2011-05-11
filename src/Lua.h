@@ -65,19 +65,40 @@ public:
 			printf("#%i: %s\n", l, lua_tolstring(L, l, 0));
 	}
 
+	/// Return the wrapper of the object on top of the stack.
+	/// \return Pointer to wrapper
+	template<class T>
+	static T* wrapper(lua_State *L)
+	{
+		// Get user data from table
+		lua_rawgeti(L, -1, 0);
+		void *ptr = luaL_checkudata(L, -1, T::class_name);
+		lua_pop(L, 1);
+		return *static_cast<T **>(ptr);
+	}
+
+	~Lua() { lua_close(this->L); }
+
+	/// Call a function with no parameters or return value.
+	/// \param k  Name of the function to call
+	void call(const char *const);
+
+	/// Load specified Lua script.
+	void load(const char *const);
+
 	/// Update world state and call update function in Lua script.
 	void update();
 
 	/// Wrap a C++ object and makes its methods available in Lua.
-	/// \param ns  Inserts object into specified namespace
+	/// \param ns  Insert object into specified namespace
 	template<class T>
-	void wrap(const char *ns = 0)
+	void wrap(const char *const ns = 0)
 	{
 		if (ns != 0 && strcmp(ns, "") != 0)
 		{
 			lua_getfield(this->L, LUA_GLOBALSINDEX, ns);
 
-			if (lua_type(L, -1) != LUA_TTABLE)
+			if (lua_type(this->L, -1) != LUA_TTABLE)
 			{
 				lua_pop(this->L, 1);
 				lua_createtable(this->L, 0, 0);
@@ -101,28 +122,6 @@ public:
 		lua_settable(this->L, -3);
 	}
 
-	/// Return the wrapper of the object on top of the stack.
-	/// \return Pointer to wrapper
-	template<class T>
-	static T* wrapper(lua_State *L)
-	{
-		// Get user data from table
-		lua_rawgeti(L, lua_gettop(L), 0);
-		void *ptr = luaL_checkudata(L, -1, T::class_name);
-		lua_pop(L, 1);
-		return *static_cast<T **>(ptr);
-	}
-
-	Lua();
-	~Lua() { lua_close(this->L); }
-
-	/// Call a function with no parameters or return value.
-	/// \param k  Name of the function to call
-	void call(const char *k);
-
-	/// Load specified Lua script.
-	void load(const char *);
-
 private:
 	template<class T>
 	static int dealloc(lua_State *L)
@@ -145,12 +144,18 @@ private:
 		return ((*ptr)->*(T::methods[i].lua_CFunction))(L);
 	}
 
+	lua_State *L;
 	lua_Input input;
 	lua_Platform platform;
-	lua_State *L;
 
+	Lua();
+
+	/// Intentionally left undefined.
 	Lua(const Lua &);
+
 	void err(int);
+
+	/// Intentionally left undefined.
 	Lua& operator=(const Lua &);
 
 	friend class Director;

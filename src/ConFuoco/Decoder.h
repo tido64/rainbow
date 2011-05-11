@@ -33,9 +33,9 @@ namespace Rainbow
 			}
 
 			/// Open a sound stream from file.
-			/// \param wave[out]      Wave construct
-			/// \param file[in]       Path to file to open
-			/// \param streaming[in]  Open for streaming?
+			/// \param[out] wave       Wave construct
+			/// \param[in]  file       Path to file to open
+			/// \param[in]  streaming  Open for streaming?
 			void open(Wave &wave, const char *file, bool streaming = false);
 
 		#ifndef RAINBOW_IOS

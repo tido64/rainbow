@@ -23,7 +23,7 @@ Director::Director()
 #endif
 
 	// Add director to input event loop
-	Input::Instance().subscribe(this, -1);
+	Input::Instance().subscribe(this, RAINBOW_ALL_EVENTS);
 }
 
 void Director::draw()
@@ -40,22 +40,18 @@ void Director::draw()
 	this->lua.call("draw");
 }
 
-void Director::init(const char *script)
+void Director::init(const char *const script)
 {
 	this->lua.load(AssetManager::Instance().get_full_path(script));
 	this->lua.call("init");
-	this->lua.call("update");
+	this->lua.update();
 }
 
 void Director::update(const float dt)
 {
 	Mixer::Instance().update();
 	Physics::Instance().step(dt);
-
-	#ifdef RAINBOW_ACCELERATED
-		this->lua.input.update(this->lua.L);
-	#endif
-	this->lua.call("update");
+	this->lua.update();
 
 	/*Drawable **obj = this->drawables.begin();
 	for (unsigned int i = 0; i < this->drawables.size(); ++i)

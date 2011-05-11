@@ -1,3 +1,7 @@
+#ifdef _WIN32
+#	pragma warning(disable : 4244)
+#endif
+
 #include "lua_Input.h"
 
 void lua_Input::init(lua_State *L)
@@ -11,12 +15,39 @@ void lua_Input::init(lua_State *L)
 	// rainbow.input.acceleration
 	lua_createtable(L, 0, 0);
 	lua_setfield(L, -2, "acceleration");
+	this->accelerate(L);
 
 #endif
 
 	lua_pop(L, 1);
-	this->update(L);
 }
+
+#ifdef RAINBOW_ACCELERATED
+
+void lua_Input::accelerate(lua_State *L)
+{
+	//if (!input.accelerated)
+	//	return;
+
+	lua_getfield(L, LUA_GLOBALSINDEX, "rainbow");
+	lua_getfield(L, -1, "input");
+
+	const Input &input = Input::Instance();
+
+	lua_getfield(L, -1, "acceleration");
+	lua_pushnumber(L, input.acceleration.x * RAINBOW_INV_FIXED_SCALE);
+	lua_setfield(L, -2, "x");
+	lua_pushnumber(L, input.acceleration.y * RAINBOW_INV_FIXED_SCALE);
+	lua_setfield(L, -2, "y");
+	lua_pushnumber(L, input.acceleration.z * RAINBOW_INV_FIXED_SCALE);
+	lua_setfield(L, -2, "z");
+	lua_pushnumber(L, input.acceleration.timestamp);
+	lua_setfield(L, -2, "timestamp");
+
+	lua_pop(L, 3);
+}
+
+#endif
 
 void lua_Input::touch_began(lua_State *L, const Touch *const touches, const unsigned int count)
 {
@@ -105,32 +136,4 @@ void lua_Input::touch_moved(lua_State *L, const Touch *const touches, const unsi
 	}
 	lua_pcall(L, 0, 0, 0);
 	lua_pop(L, 2);
-}
-
-void lua_Input::update(lua_State *L)
-{
-#ifdef RAINBOW_ACCELERATED
-
-	const Input &input = Input::Instance();
-
-	lua_getfield(L, LUA_GLOBALSINDEX, "rainbow");
-	lua_getfield(L, -1, "input");
-
-	if (input.accelerated)
-	{
-		lua_getfield(L, -1, "acceleration");
-		lua_pushnumber(L, input.acceleration.x);
-		lua_setfield(L, -2, "x");
-		lua_pushnumber(L, input.acceleration.y);
-		lua_setfield(L, -2, "y");
-		lua_pushnumber(L, input.acceleration.z);
-		lua_setfield(L, -2, "z");
-		lua_pushnumber(L, input.acceleration.timestamp);
-		lua_setfield(L, -2, "timestamp");
-		lua_pop(L, 1);
-	}
-
-	lua_pop(L, 2);
-
-#endif
 }

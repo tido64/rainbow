@@ -45,7 +45,7 @@ public:
 	void close();
 
 	/// Return the full path to a resource or asset.
-	const char* get_full_path(const char *filename = 0);
+	const char* get_full_path(const char *const filename = 0);
 
 	/// Load file into provided buffer.
 	/// \param buffer    The buffer to fill
@@ -53,7 +53,7 @@ public:
 	unsigned int load(unsigned char *&buffer, const char *filename);
 
 	/// Set the source to load resources from.
-	void set_source(const char *src = 0);
+	void set_source(const char *const src = 0);
 
 private:
 	unsigned int size;  ///< Size of temporary string
@@ -65,7 +65,7 @@ private:
 	AssetManager& operator=(const AssetManager &);
 };
 
-inline void AssetManager::set_source(const char *src)
+inline void AssetManager::set_source(const char *const src)
 {
 #if defined(RAINBOW_IOS)
 

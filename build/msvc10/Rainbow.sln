@@ -5,12 +5,18 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Rainbow", "Rainbow.vcxproj"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug Static Lib|Win32 = Debug Static Lib|Win32
 		Debug|Win32 = Debug|Win32
+		Release Static Lib|Win32 = Release Static Lib|Win32
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3CAABE36-A39D-4108-93AE-FEE05D4086EB}.Debug Static Lib|Win32.ActiveCfg = Debug Static Lib|Win32
+		{3CAABE36-A39D-4108-93AE-FEE05D4086EB}.Debug Static Lib|Win32.Build.0 = Debug Static Lib|Win32
 		{3CAABE36-A39D-4108-93AE-FEE05D4086EB}.Debug|Win32.ActiveCfg = Debug|Win32
 		{3CAABE36-A39D-4108-93AE-FEE05D4086EB}.Debug|Win32.Build.0 = Debug|Win32
+		{3CAABE36-A39D-4108-93AE-FEE05D4086EB}.Release Static Lib|Win32.ActiveCfg = Release Static Lib|Win32
+		{3CAABE36-A39D-4108-93AE-FEE05D4086EB}.Release Static Lib|Win32.Build.0 = Release Static Lib|Win32
 		{3CAABE36-A39D-4108-93AE-FEE05D4086EB}.Release|Win32.ActiveCfg = Release|Win32
 		{3CAABE36-A39D-4108-93AE-FEE05D4086EB}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection

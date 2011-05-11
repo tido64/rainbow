@@ -16,8 +16,9 @@ void Input::subscribe(Touchable *const t, unsigned int flags)
 		this->touch_subscribers.push_back(t);
 }
 
-void Input::touch_began(const Touch *const touches, const unsigned int count)
+void Input::touch_began(Touch *const touches, const unsigned int count)
 {
+	this->touch_flip(touches, count);
 	for (unsigned int i = 0; i < this->touch_subscribers.size(); ++i)
 		this->touch_subscribers[i]->touch_began(touches, count);
 }
@@ -28,14 +29,24 @@ void Input::touch_canceled()
 		this->touch_subscribers[i]->touch_canceled();
 }
 
-void Input::touch_ended(const Touch *const touches, const unsigned int count)
+void Input::touch_ended(Touch *const touches, const unsigned int count)
 {
+	this->touch_flip(touches, count);
 	for (unsigned int i = 0; i < this->touch_subscribers.size(); ++i)
 		this->touch_subscribers[i]->touch_ended(touches, count);
 }
 
-void Input::touch_moved(const Touch *const touches, const unsigned int count)
+void Input::touch_moved(Touch *const touches, const unsigned int count)
 {
+	this->touch_flip(touches, count);
 	for (unsigned int i = 0; i < this->touch_subscribers.size(); ++i)
 		this->touch_subscribers[i]->touch_moved(touches, count);
 }
+
+void Input::touch_flip(Touch *const touches, const unsigned int count)
+{
+	const int height = static_cast<int>(Screen::Instance().height());
+	for (unsigned int i = 0; i < count; ++i)
+		touches[i].position.y = height - touches[i].position.y;
+}
+

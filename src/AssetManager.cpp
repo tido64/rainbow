@@ -3,16 +3,17 @@
 void AssetManager::close()
 {
 	delete[] this->path;
-	if (this->archive == 0) return;
 
 #if defined(RAINBOW_ZIP)
 
+	if (this->archive == 0)
+		return;
 	this->archive = reinterpret_cast<zip *>(zip_close(this->archive));
 
 #endif
 }
 
-const char* AssetManager::get_full_path(const char *filename)
+const char* AssetManager::get_full_path(const char *const filename)
 {
 #if defined(RAINBOW_IOS)
 
@@ -74,8 +75,7 @@ unsigned int AssetManager::load(unsigned char *&buffer, const char *filename)
 
 #else
 
-	filename = this->get_full_path(filename);
-	FILE *fp = fopen(filename, "rb");
+	FILE *fp = fopen(this->get_full_path(filename), "rb");
 	assert(fp != 0 || !"Rainbow::AssetManager: Failed to load file");
 
 	// Get size of file

@@ -1,8 +1,6 @@
 /// Copyright 2010-11 Bifrost Games. All rights reserved.
 /// \author Tommy Nguyen
 
-//#define NDEBUG 1
-
 #include <SDL/SDL.h>
 #include <SDL/SDL_thread.h>
 
@@ -11,10 +9,10 @@
 bool active = true;  ///< Whether the window is in focus
 bool done = false;   ///< Whether the user has requested to quit
 
-unsigned short int screen_width = 640;        ///< Window width
-unsigned short int screen_height = 960;       ///< Window height
-const double fps = 1000.0 / 60.0;             ///< Preferred frames per second
-const double milli = 1.0 / 1000.0;            ///< 1 millisecond
+unsigned short int screen_width = 640;   ///< Window width
+unsigned short int screen_height = 960;  ///< Window height
+const double fps = 1000.0 / 60.0;        ///< Preferred frames per second
+const float milli = 1.0f / 1000.0f;      ///< 1 millisecond
 
 Touch mouse_input;  ///< Mouse input
 Director director;  ///< Game director handles everything
@@ -56,7 +54,7 @@ int main(int argc, char *argv[])
 		SDL_Quit();
 		exit(1);
 	}
-	SDL_WM_SetCaption("OnWire", "OnWire");
+	SDL_WM_SetCaption(RAINBOW_BUILD, "Rainbow");
 
 	init_GL();
 	resize(screen_width, screen_height);
@@ -64,7 +62,7 @@ int main(int argc, char *argv[])
 	mouse_input.hash = 1;
 	director.init("onwire.lua");
 
-	unsigned int now, time = SDL_GetTicks();
+	unsigned int now = 0, time = SDL_GetTicks();
 	while (!done)
 	{
 		SDL_Event event;
@@ -159,7 +157,7 @@ void on_key_press(SDL_keysym &keysym)
 inline void on_mouse_button_down(SDL_MouseButtonEvent &mouse)
 {
 	mouse_input.initial.x = mouse.x;
-	mouse_input.initial.y = screen_height - mouse.y;
+	mouse_input.initial.y = mouse.y;
 	mouse_input.position = mouse_input.initial;
 	Input::Instance().touch_began(&mouse_input, 1);
 }
@@ -167,14 +165,14 @@ inline void on_mouse_button_down(SDL_MouseButtonEvent &mouse)
 inline void on_mouse_button_up(SDL_MouseButtonEvent &mouse)
 {
 	mouse_input.position.x = mouse.x;
-	mouse_input.position.y = screen_height - mouse.y;
+	mouse_input.position.y = mouse.y;
 	Input::Instance().touch_ended(&mouse_input, 1);
 }
 
 inline void on_mouse_motion(SDL_MouseMotionEvent &mouse)
 {
 	mouse_input.position.x = mouse.x;
-	mouse_input.position.y = screen_height - mouse.y;
+	mouse_input.position.y = mouse.y;
 	Input::Instance().touch_moved(&mouse_input, 1);
 }
 

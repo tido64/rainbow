@@ -6,20 +6,19 @@
 #ifndef DIRECTOR_H_
 #define DIRECTOR_H_
 
-#include "ConFuoco/Mixer.h"
 #include "Lua.h"
 
 class Director : public Touchable
 {
 public:
-	static Vector<Drawable *> drawables;  ///< Drawable objects
+	//static Vector<Drawable *> drawables;  ///< Drawable objects
 
 	Director();
 
 	void draw();
 
 	/// Load and initialise game script.
-	void init(const char *);
+	void init(const char *const);
 
 	/// Update world.
 	/// \param dt  Time since last update
@@ -44,7 +43,7 @@ public:
 	void touch_moved(const Touch *const touches, const unsigned int count);
 
 private:
-	Lua lua;  ///< Lua interpreter
+	Lua lua;
 
 	/// Intentionally left undefined.
 	Director(const Director &);

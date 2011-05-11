@@ -27,9 +27,6 @@ public:
 	Sprite(const Sprite &);
 	~Sprite();
 
-	/// Draw the sprite.
-	void draw();
-
 	/// Return the current angle of the sprite.
 	const float& get_angle() const;
 

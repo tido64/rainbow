@@ -3,11 +3,14 @@
 
 #include <Box2D/Box2D.h>
 
+#include "Algorithm.h"
+
 // Pixel to metres ratio. Box2D uses metres as the unit for measurement.
 // This ratio defines how many pixels correspond to 1 Box2D "metre"
 // Box2D is optimized for objects of 1x1 metre therefore it makes sense
 // to define the ratio so that your most common object type is 1x1 metre.
 #define PTM_RATIO 32
+#define MTP_RATIO (1.0f / PTM_RATIO)
 
 // Abstraction layer
 typedef b2Body          Body;
@@ -33,72 +36,100 @@ typedef b2Vec2          Vec2;
 class Physics
 {
 public:
+	/// Structure to keep body states between iterations.
+
+	/// Necessary for the interpolation technique deployed with fixed time steps.
+	///
+	/// Copyright 2010-11 Bifrost Games. All rights reserved.
+	/// \author Tommy Nguyen
+	struct BodyData
+	{
+		float curr_r, prev_r;
+		void *data;
+		b2Vec2 curr_p, prev_p;
+
+		BodyData(const b2BodyDef &d) :
+			curr_r(d.angle), prev_r(d.angle), data(0), curr_p(d.position), prev_p(d.position) { }
+	};
+
 	static Physics& Instance()
 	{
 		static Physics inst;
 		return inst;
 	}
 
-	b2World *world;  ///< Box2D world object
+	/// Apply a force at a world point. If the force is not applied at the
+	/// center of mass, it will generate a torque and affect the angular
+	/// velocity.
+	/// \param b   The body to apply force on
+	/// \param vx  Force vector, usually in Newtons (N)
+	/// \param vy  Force vector, usually in Newtons (N)
+	/// \param px  The world position of the point of application
+	/// \param py  The world position of the point of application
+	void apply_force(void *b, const float vx, const float vy, const float px, const float py);
 
-	/// Create an anchor box to tie things to.
-	/// \param w  Width of the box
-	/// \param h  Height of the box
+	/// Apply an angular impulse.
+	/// \param b        The body to apply angular impulse on
+	/// \param impulse  The angular impulse in units of kg*m^2/s
+	void apply_angular_impulse(void *b, float impulse);
+
+	/// Apply a torque. This affects the angular velocity without affecting the
+	/// linear velocity of the center of mass.
+	/// \param torque  About the z-axis (out of the screen), usually in N-m.
+	void apply_torque(void *b, float torque);
+
+	/// Create an immovable box. Useful as platforms.
 	/// \param x  Position of the box (x-coordinate)
 	/// \param y  Position of the box (y-coordinate)
+	/// \param w  Width of the box
+	/// \param h  Height of the box
 	/// \return   Body object
-	b2Body *create_anchor(const float &w, const float &h, const float &x, const float &y);
+	b2Body* create_anchor(const float x, const float y, const float w, const float h);
 
-	/// Create a body, given definition and fixture.
-	/// \param d        Body definition
-	/// \param fixture  Body fixture
-	/// \param inertia  Inertia
-	/// \param mass     Body mass
-	/// \return         Body object
-	b2Body *create_body(const b2BodyDef *d, const b2FixtureDef *fixture = 0, const float inertia = 0.0f, const float mass = 0.0f);
+	b2Body* create_circle(const float x, const float y, const float radius, const float friction = 0.2f, const float restitution = 0.0f, const float density = 0.0f);
 
 	/// Create a distant joint between two bodies at their anchor points.
 	/// \param a  Body A
 	/// \param b  Body B
 	/// \return   Joint object
-	b2Joint *create_joint(b2Body *a, b2Body *b);
+	b2Joint* create_distance_joint(void *a, void *b);
 
-	/// Create a distant joint between two bodies at given points.
+	/// Create a distant joint between two bodies at specified points.
 	/// \param a      Body A
 	/// \param b      Body B
 	/// \param a_pos  Position of the first end of the joint
 	/// \param b_pos  Position of the other end of the joint
 	/// \return       Joint object
-	b2Joint *create_joint(b2Body *a, b2Body *b, const b2Vec2 &a_pos, const b2Vec2 &b_pos);
+	b2Joint* create_distance_joint(b2Body *a, b2Body *b, const b2Vec2 &a_pos, const b2Vec2 &b_pos);
 
-	/// Define linear and/or angular damping.
+	b2Body* create_rope(float x0, float y0, float x1, float y1, unsigned int segments = 0);
+
+	/// Create the world. Deletes the old one.
+	/// \param g_x    Gravity in x-direction, defaults to 0.0f
+	/// \param g_y    Gravity in y-direction, defaults to -9.80665f
+	/// \param sleep  Enable sleeping objects, defaults to true
+	void create_world(const float g_x = 0.0f, const float g_y = kStandardGravity, bool sleep = true);
+
+	/// Destroy all bodies.
+	void destroy();
+
+	/// Remove specified body from the world.
+	/// \param b  Body to remove
+	void destroy(void *b);
+
+	/// Set linear and/or angular damping.
 	/// \param d               Body definition
 	/// \param linearDamping   Linear damping
 	/// \param angularDamping  Angular damping
-	void define_body_damping(b2BodyDef *d, const float linearDamping = 0.0f, const float angularDamping = 0.1f);
+	void set_body_damping(void *b, const float linearDamping = 0.0f, const float angularDamping = 0.1f);
 
-	/// Define body position. Remember that it's better to define its position
-	/// beforehand than to create the body and then move it.
-	/// \param d  Body definition
-	/// \param x  Position (x-coordinate)
-	/// \param y  Position (y-coordinate)
-	void define_body_position(b2BodyDef *d, const float x = 0.0f, const float y = 0.0f);
-
-	/// Remove given body from the world.
-	/// \param b  Body to remove
-	void dispose_body(b2Body *b);
-
-	/// Perform inter-frame interpolation.
-	void interpolate();
-
-	/// Restore the last state of all bodies.
-	void restore_state();
-
-	/// Save the current state of all bodies.
-	void save_state();
+	/// Change the gravitational forces.
+	/// \param g_x  Gravity in x-direction, defaults to 0.0f
+	/// \param g_y  Gravity in y-direction, defaults to -9.80665f
+	void set_gravity(const float g_x = 0.0f, const float g_y = kStandardGravity);
 
 	/// Advance Box2D a step forward. This implementation uses a fixed delta.
-	/// \param dt  Time spent on rendering the frame
+	/// \param dt  Time spent rendering the frame
 	void step(const float &dt);
 
 protected:
@@ -109,11 +140,13 @@ protected:
 		v_iter = 10;          ///< Velocity iterations
 	static const float
 		fixed_dt,             ///< Fixed delta time step
-		g;                    ///< Standard gravitational acceleration value
+		inv_fixed_dt;         ///< Inversed fixed delta
 
 private:
 	float accumulator;        ///< Renderer time accumulator
 	float accumulator_ratio;  ///< The ratio of accumulated time (after consumption) over fixed delta
+
+	b2World *world;           ///< Box2D world object
 
 	Physics();
 	~Physics();
@@ -121,25 +154,42 @@ private:
 	/// Intentionally undefined.
 	Physics(const Physics &);
 
+	/// Interpolate between current and next frame.
+	void interpolate();
+
+	/// Restore the last state of all bodies.
+	void restore_state();
+
+	/// Save the current state of all bodies.
+	void save_state();
+
 	/// Intentionally undefined.
 	Physics &operator=(const Physics &);
 };
 
-
-/// Structure to keep body states between iterations.
-
-/// Necessary for the interpolation technique deployed with fixed time steps.
-///
-/// Copyright 2010 Bifrost Games. All rights reserved.
-/// \author Tommy Nguyen
-struct BodyData
+inline void Physics::apply_force(void *b, const float vx, const float vy, const float px, const float py)
 {
-	float curr_r, prev_r;
-	b2Vec2 curr_p, prev_p;
-	void *data;
+	static_cast<b2Body *>(b)->ApplyForce(b2Vec2(vx, vy), b2Vec2(px, py));
+}
 
-	BodyData(const b2Vec2 &p, const float &r) :
-		curr_r(r), prev_r(r), curr_p(p), prev_p(p), data(0) { }
-};
+inline void Physics::apply_angular_impulse(void *b, float impulse)
+{
+	static_cast<b2Body *>(b)->ApplyAngularImpulse(impulse);
+}
+
+inline void Physics::apply_torque(void *b, float torque)
+{
+	static_cast<b2Body *>(b)->ApplyTorque(torque);
+}
+
+inline b2Joint *Physics::create_distance_joint(void *a, void *b)
+{
+	return this->create_distance_joint(static_cast<b2Body *>(a), static_cast<b2Body *>(b), static_cast<b2Body *>(a)->GetWorldCenter(), static_cast<b2Body *>(b)->GetWorldCenter());
+}
+
+inline void Physics::set_gravity(const float g_x, const float g_y)
+{
+	this->world->SetGravity(b2Vec2(g_x, g_y));
+}
 
 #endif

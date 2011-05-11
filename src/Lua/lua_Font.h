@@ -13,8 +13,8 @@ public:
 	lua_Font(lua_State *);
 	~lua_Font() { delete this->font; }
 
-	int color(lua_State *);
 	int print(lua_State *);
+	int set_color(lua_State *);
 
 private:
 	FontAtlas *font;

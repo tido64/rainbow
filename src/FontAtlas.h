@@ -1,3 +1,16 @@
+#ifndef FONTATLAS_H_
+#define FONTATLAS_H_
+#define FONTATLAS_KERNING
+
+#include <ft2build.h>
+#include FT_FREETYPE_H
+#include FT_GLYPH_H
+
+#include "AssetManager.h"
+#include "FontGlyph.h"
+#include "OpenGL.h"
+
+
 /// Uses FreeType to load OpenType and TrueType fonts.
 
 /// Creates textures from font glyphs for symbols 32 through 126. Copies bitmap
@@ -17,26 +30,12 @@
 ///
 /// Copyright 2010-11 Bifrost Games. All rights reserved.
 /// \author Tommy Nguyen
-
-#ifndef FONTATLAS_H_
-#define FONTATLAS_H_
-#define FONTATLAS_KERNING
-
-#include <ft2build.h>
-#include FT_FREETYPE_H
-#include FT_GLYPH_H
-
-#include "Common/Color.h"
-#include "AssetManager.h"
-#include "FontGlyph.h"
-#include "OpenGL.h"
-
 class FontAtlas
 {
 public:
 	const float pt;
 
-	FontAtlas(const char *font_family, const float pt);
+	FontAtlas(const char *const font_family, const float pt);
 
 	/// Print text at (x,y).
 	void print(const char *text, const int x = 0, const int y = 0) const;

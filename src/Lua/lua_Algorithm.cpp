@@ -1,3 +1,7 @@
+#ifdef _WIN32
+#	pragma warning(disable : 4244)
+#endif
+
 #include "lua_Algorithm.h"
 
 lua_Algorithm::lua_Algorithm(lua_State *L)

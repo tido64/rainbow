@@ -2,7 +2,7 @@
 
 Lua::Lua() : L(luaL_newstate())
 {
-	const char *rainbow = "rainbow";
+	const char *const rainbow = "rainbow";
 	luaL_openlibs(this->L);
 
 	// Initialize "rainbow" namespace
@@ -10,21 +10,21 @@ Lua::Lua() : L(luaL_newstate())
 	lua_pushvalue(this->L, -1);
 	lua_setfield(this->L, LUA_GLOBALSINDEX, rainbow);
 
-	lua_Algorithm algorithm(this->L);  // Initialize "rainbow.algorithm" namespace
-	lua_Audio audio(this->L);          // Initialize "rainbow.audio" namespace
 	this->input.init(this->L);         // Initialize "rainbow.input" namespace
 	this->platform.init(this->L);      // Initialize "rainbow.platform" namespace
+
+	lua_Algorithm algorithm(this->L);  // Initialize "rainbow.algorithm" namespace
+	lua_Audio audio(this->L);          // Initialize "rainbow.audio" namespace
+	lua_Physics physics(this->L);      // Initialize "rainbow.physics" namespace
 
 	lua_pop(this->L, 1);
 
 	Lua::wrap<lua_Font>(rainbow);
-	Lua::wrap<lua_Physics>(rainbow);
 	Lua::wrap<lua_Sprite>(rainbow);
 	Lua::wrap<lua_SpriteBatch>(rainbow);
 	Lua::wrap<lua_Texture>(rainbow);
 
 	// We need to set LUA_PATH
-
 	#ifdef RAINBOW_IOS
 		AssetManager::Instance().set_source();
 	#endif
@@ -47,11 +47,12 @@ Lua::Lua() : L(luaL_newstate())
 	delete[] lua_path;
 }
 
-void Lua::call(const char *k)
+void Lua::call(const char *const k)
 {
 	lua_getfield(this->L, LUA_GLOBALSINDEX, k);
 	int lua_e = lua_pcall(this->L, 0, 0, 0);
-	if (lua_e != 0) this->err(lua_e);
+	if (lua_e)
+		this->err(lua_e);
 }
 
 void Lua::err(const int lua_e)
@@ -81,19 +82,24 @@ void Lua::err(const int lua_e)
 	assert(!"Lua related error, see stdout");
 }
 
-void Lua::load(const char *lua)
+void Lua::load(const char *const lua)
 {
 	// Load Lua script
 	int lua_e = luaL_loadfile(this->L, lua);
-	if (lua_e != 0) this->err(lua_e);
+	if (lua_e)
+		this->err(lua_e);
 
 	lua_e = lua_pcall(this->L, 0, LUA_MULTRET, 0);
-	if (lua_e != 0) this->err(lua_e);
+	if (lua_e)
+		this->err(lua_e);
 }
 
 void Lua::update()
 {
-	this->input.update(this->L);
+#ifdef RAINBOW_ACCELERATED
+	this->input.accelerate(this->L);
+#endif
+
 	this->platform.update(this->L);
 	this->call("update");
 }

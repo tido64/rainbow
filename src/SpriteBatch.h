@@ -42,7 +42,10 @@ private:
 	Vector<Sprite *> sprites;
 	SpriteVertex *vertex_buffer;
 
-	SpriteBatch(const SpriteBatch &sb);
+	/// Intentionally left undefined.
+	SpriteBatch(const SpriteBatch &);
+
+	/// Intentionally left undefined.
 	SpriteBatch& operator=(const SpriteBatch &);
 };
 

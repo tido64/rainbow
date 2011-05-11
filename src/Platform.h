@@ -21,4 +21,6 @@
 #	define RAINBOW_WIN
 #endif
 
+#define RAINBOW_BUILD "Rainbow / Bifrost Games Property / Built " __DATE__
+
 #endif
