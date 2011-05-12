@@ -7,9 +7,8 @@
 
 class Sprite;
 
-
 /// Texture atlas implemented in OpenGL ES.
-
+///
 /// GL drawing order: (1,1) -> (0,1) -> (1,0) -> (0,0)
 ///
 /// Copyright 2010-11 Bifrost Games. All rights reserved.

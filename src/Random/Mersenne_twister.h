@@ -1,14 +1,3 @@
-/// Double precision SIMD-oriented Fast Mersenne Twister (dSFMT) based on IEEE 754 format.
-
-/// \author Mutsuo Saito (Hiroshima University)
-/// \author Makoto Matsumoto (Hiroshima University)
-///
-/// Copyright (C) 2007,2008 Mutsuo Saito, Makoto Matsumoto and Hiroshima
-/// University. All rights reserved.
-///
-/// The new BSD License is applied to this software
-/// (see http://www.opensource.org/licenses/bsd-license.php)
-
 #ifndef MERSENNE_TWISTER_H_
 #	define MERSENNE_TWISTER_H_
 #	if defined(_MSC_VER) && (defined(_M_X64) || _M_IX86_FP >= 2)
@@ -20,6 +9,16 @@
 
 #include "dSFMT-params.h"
 
+/// Double precision SIMD-oriented Fast Mersenne Twister (dSFMT) based on IEEE 754 format.
+///
+/// \author Mutsuo Saito (Hiroshima University)
+/// \author Makoto Matsumoto (Hiroshima University)
+///
+/// Copyright (C) 2007,2008 Mutsuo Saito, Makoto Matsumoto and Hiroshima
+/// University. All rights reserved.
+///
+/// The new BSD License is applied to this software
+/// (see http://www.opensource.org/licenses/bsd-license.php)
 class Random
 {
 public:

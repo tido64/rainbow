@@ -1,5 +1,5 @@
 /// Provides algorithms and mathematical functions.
-
+///
 /// Copyright 2010-11 Bifrost Games. All rights reserved.
 /// \author Tommy Nguyen
 

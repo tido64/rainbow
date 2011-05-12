@@ -10,7 +10,7 @@ namespace Rainbow
 	namespace ConFuoco
 	{
 		/// Audio stream buffer.
-
+		///
 		/// Not used on iOS. Limited to streaming background music.
 		///
 		/// Copyright 2011 Bifrost Games. All rights reserved.

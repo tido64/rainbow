@@ -25,7 +25,7 @@ namespace Rainbow
 	namespace ConFuoco
 	{
 		/// Mixes audio streams.
-
+		///
 		/// \see http://www.devmaster.net/articles/openal-tutorials/lesson8.php
 		///
 		/// Copyright 2011 Bifrost Games. All rights reserved.

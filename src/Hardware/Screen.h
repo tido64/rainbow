@@ -1,8 +1,3 @@
-/// Stores screen size.
-
-/// Copyright 2010-11 Bifrost Games. All rights reserved.
-/// \author Tommy Nguyen
-
 #ifndef SCREEN_H_
 #define SCREEN_H_
 
@@ -14,6 +9,10 @@
 #	include <cassert>
 #endif
 
+/// Stores screen size.
+///
+/// Copyright 2010-11 Bifrost Games. All rights reserved.
+/// \author Tommy Nguyen
 class Screen
 {
 public:

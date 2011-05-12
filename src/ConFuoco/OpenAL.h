@@ -1,5 +1,5 @@
 /// Includes correct OpenAL headers for corresponding platforms.
-
+///
 /// Copyright 2011 Bifrost Games. All rights reserved.
 /// \author Tommy Nguyen
 

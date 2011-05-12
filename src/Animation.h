@@ -1,14 +1,13 @@
-/// A generic sprite animation.
-
-/// Copyright 2010 Bifrost Games. All rights reserved.
-/// \author Tommy Nguyen
-
 #ifndef ANIMATION_H_
 #define ANIMATION_H_
 
 #include "Common/Constants.h"
 #include "Drawable.h"
 
+/// A generic sprite animation.
+///
+/// Copyright 2010 Bifrost Games. All rights reserved.
+/// \author Tommy Nguyen
 class Animation : public Drawable
 {
 public:

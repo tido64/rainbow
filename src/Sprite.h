@@ -1,5 +1,11 @@
-/// Custom sprite object, created by TextureAtlas.
+#ifndef SPRITE_H_
+#define SPRITE_H_
 
+#include "Algorithm.h"
+#include "TextureAtlas.h"
+
+/// Custom sprite object, created by TextureAtlas.
+///
 /// Implemented using interleaved vertex data buffer objects.
 ///
 /// \see http://developer.apple.com/library/ios/#documentation/3DDrawing/Conceptual/OpenGLES_ProgrammingGuide/TechniquesforWorkingwithVertexData/TechniquesforWorkingwithVertexData.html
@@ -8,13 +14,6 @@
 ///
 /// Copyright 2010-11 Bifrost Games. All rights reserved.
 /// \author Tommy Nguyen
-
-#ifndef SPRITE_H_
-#define SPRITE_H_
-
-#include "Algorithm.h"
-#include "TextureAtlas.h"
-
 class Sprite
 {
 public:

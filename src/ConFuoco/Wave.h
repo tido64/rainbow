@@ -8,7 +8,7 @@ namespace Rainbow
 	namespace ConFuoco
 	{
 		/// Basic sound wave properties.
-
+		///
 		/// Copyright 2011 Bifrost Games. All rights reserved.
 		/// \author Tommy Nguyen
 		class Wave

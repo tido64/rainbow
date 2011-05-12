@@ -1,5 +1,5 @@
 /// Includes correct OpenGL ES headers for corresponding platforms.
-
+///
 /// Copyright 2010-11 Bifrost Games. All rights reserved.
 /// \author Tommy Nguyen
 

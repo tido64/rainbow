@@ -2,7 +2,7 @@
 
 Lua::Lua() : L(luaL_newstate())
 {
-	const char *const rainbow = "rainbow";
+	const char rainbow[] = "rainbow";
 	luaL_openlibs(this->L);
 
 	// Initialize "rainbow" namespace

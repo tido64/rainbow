@@ -9,9 +9,8 @@
 #include "Lua/lua_Input.h"
 #include "Lua/lua_Platform.h"
 
-
 /// Embeds Lua scripting engine.
-
+///
 /// Features a simple C++-wrapper, adapted from lua-users.org
 ///
 /// \see http://www.lua.org/manual/5.1/

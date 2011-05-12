@@ -1,13 +1,12 @@
-/// Simple game loop for Lua-scripted games.
-
-/// Copyright 2011 Bifrost Games. All rights reserved.
-/// \author Tommy Nguyen
-
 #ifndef DIRECTOR_H_
 #define DIRECTOR_H_
 
 #include "Lua.h"
 
+/// Simple game loop for Lua-scripted games.
+///
+/// Copyright 2011 Bifrost Games. All rights reserved.
+/// \author Tommy Nguyen
 class Director : public Touchable
 {
 public:

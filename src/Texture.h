@@ -9,6 +9,10 @@
 #else
 #	include <png.h>
 
+/// Structure for reading PNG bitmaps.
+///
+/// Copyright 2010-11 Bifrost Games. All rights reserved.
+/// \author Tommy Nguyen
 struct png_read_struct
 {
 	unsigned int offset;
@@ -20,9 +24,8 @@ struct png_read_struct
 
 #endif
 
-
 /// A texture loaded from an image file.
-
+///
 /// Note: Textures' dimension must be (2^n) by (2^m) for some arbitrary n and m,
 /// where n > 6 and m > 6.
 ///

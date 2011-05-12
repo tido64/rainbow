@@ -1,18 +1,17 @@
-/// Simple vector class. Mimics STL::vector.
-
-/// This class is mainly for the lack of full STL implementation on some
-/// platforms, such as Android. And for some bizarre reason, it is also faster
-/// than STL::vector.
-///
-/// Copyright 2010-11 Bifrost Games. All rights reserved.
-/// \author Tommy Nguyen
-
 #ifndef VECTOR_H_
 #define VECTOR_H_
 
 #include <cassert>
 #include <cstring>
 
+/// Simple vector class, mimicking STL::vector.
+///
+/// This class is mainly for the lack of full STL implementation on some
+/// platforms, such as Android. And for some bizarre reason, it is also faster
+/// than STL::vector.
+///
+/// Copyright 2010-11 Bifrost Games. All rights reserved.
+/// \author Tommy Nguyen
 template<class T>
 class Vector
 {

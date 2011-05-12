@@ -9,13 +9,13 @@ INCFT  := `freetype-config --cflags`
 INCSDL := `sdl-config --cflags`
 
 # Static libraries
-STATIC  := $(OBJDIR)/libbox2d.a $(OBJDIR)/liblua.a $(OBJDIR)/libpng.a
-LIBLUA  := $(LIBDIR)/Lua
+STATIC  := $(OBJDIR)/libbox2d.a $(OBJDIR)/libpng.a
+LIBLUA  := /usr/include/luajit-2.0
 LIBPNG  := $(LIBDIR)/libpng
 
 CPP     := g++
 CFLAGS  := -g -O2 -Wall -Werror -pipe $(INCSDL) $(INCFT) -I$(LIBDIR) -I$(LIBLUA) -I$(LIBPNG) -ftree-vectorize -ftree-vectorizer-verbose=6 -march=native
-LDFLAGS := -lGL -lSDL -lfreetype -lz -lzip -lopenal -lvorbisfile
+LDFLAGS := -lGL -lSDL -lfreetype -lluajit-5.1 -lz -lopenal -lvorbisfile
 
 EXEC := $(BINDIR)/$(TARGET)
 OBJ  := $(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(wildcard $(SRCDIR)/*.cpp)) \

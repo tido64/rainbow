@@ -10,11 +10,10 @@
 #define RAINBOW_FIXED_SCALE      1000.0f
 #define RAINBOW_INV_FIXED_SCALE  (1.0f / RAINBOW_FIXED_SCALE)
 
-
 namespace Rainbow
 {
 	/// Structure for handling accelerometer data.
-
+	///
 	/// Uses fixed-point arithmetic with a scaling factor of 1/1000.
 	///
 	/// Copyright 2011 Bifrost Games. All rights reserved.

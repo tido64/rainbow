@@ -10,9 +10,8 @@
 #define RAINBOW_KEY_EVENTS    (1 << 0)
 #define RAINBOW_TOUCH_EVENTS  (1 << 1)
 
-
 /// Handles accelerometer/gyroscope and touch events independent of platform.
-
+///
 /// Subscribable input events. There are no accelerometer events.
 ///
 /// \see http://developer.apple.com/library/ios/#documentation/UIKit/Reference/UIAcceleration_Class/Reference/UIAcceleration.html

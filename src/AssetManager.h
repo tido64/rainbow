@@ -23,9 +23,8 @@ typedef char* Assets;
 
 #endif
 
-
 /// Native assets loading. Supports zip archives.
-
+///
 /// \see http://www.nih.at/libzip/
 ///
 /// Copyright 2010-11 Bifrost Games. All rights reserved.

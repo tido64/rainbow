@@ -21,9 +21,8 @@ typedef b2Joint         Joint;
 typedef b2PolygonShape  PolygonShape;
 typedef b2Vec2          Vec2;
 
-
 /// Platform-independent physics engine.
-
+///
 /// This implementation extends Box2D with a few convenience methods and
 /// abstractions in case of engine change. Time step has been fixed, with help
 /// from UNAgames.
@@ -37,7 +36,7 @@ class Physics
 {
 public:
 	/// Structure to keep body states between iterations.
-
+	///
 	/// Necessary for the interpolation technique deployed with fixed time steps.
 	///
 	/// Copyright 2010-11 Bifrost Games. All rights reserved.

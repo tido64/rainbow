@@ -10,7 +10,7 @@ namespace Rainbow
 	namespace ConFuoco
 	{
 		/// Audio file decoder.
-
+		///
 		/// On iOS, uses its internal library for decoding audio. On other
 		/// platforms we use Ogg Vorbis.
 		///

@@ -1,18 +1,17 @@
-/// A batch of sprites to be drawn.
-
-/// All sprites share a common vertex buffer object (at different offsets) and
-/// are drawn with a single glDraw call. The sprites must use the same texture
-/// atlas.
-///
-/// Copyright 2010-11 Bifrost Games. All rights reserved.
-/// \author Tommy Nguyen
-
 #ifndef SPRITEBATCH_H_
 #define SPRITEBATCH_H_
 
 #include "Drawable.h"
 #include "Sprite.h"
 
+/// A batch of sprites to be drawn.
+///
+/// All sprites share a common vertex buffer object (at different offsets) and
+/// are drawn with a single glDraw call. The sprites must use the same texture
+/// atlas.
+///
+/// Copyright 2010-11 Bifrost Games. All rights reserved.
+/// \author Tommy Nguyen
 class SpriteBatch : public Drawable
 {
 public:

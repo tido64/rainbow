@@ -1,7 +1,6 @@
 #ifndef LUA_TEXTURE_H_
 #define LUA_TEXTURE_H_
 
-#include "../Lua.h"
 #include "lua_Sprite.h"
 
 class lua_Texture

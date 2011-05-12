@@ -1,8 +1,3 @@
-/// Data structures for keeping track of touches.
-
-/// Copyright 2010-11 Bifrost Games. All rights reserved.
-/// \author Tommy Nguyen
-
 #ifndef TOUCH_H_
 #define TOUCH_H_
 
@@ -15,6 +10,10 @@
 #	include <UIKit/UITouch.h>
 #endif
 
+/// Data structures for keeping track of touches.
+///
+/// Copyright 2010-11 Bifrost Games. All rights reserved.
+/// \author Tommy Nguyen
 struct Touch
 {
 	unsigned int hash;  ///< Unique hash value that distinguishes a touch from another

@@ -10,9 +10,8 @@
 #include "FontGlyph.h"
 #include "OpenGL.h"
 
-
 /// Uses FreeType to load OpenType and TrueType fonts.
-
+///
 /// Creates textures from font glyphs for symbols 32 through 126. Copies bitmap
 /// data into a larger buffer which is then used as texture.
 ///
