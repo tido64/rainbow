@@ -13,9 +13,10 @@ STATIC  := $(OBJDIR)/libbox2d.a $(OBJDIR)/libpng.a
 LIBLUA  := /usr/include/luajit-2.0
 LIBPNG  := $(LIBDIR)/libpng
 
-CPP     := g++
-CFLAGS  := -g -O2 -Wall -Werror -pipe $(INCSDL) $(INCFT) -I$(LIBDIR) -I$(LIBLUA) -I$(LIBPNG) -ftree-vectorize -ftree-vectorizer-verbose=6 -march=native
-LDFLAGS := -lGL -lSDL -lfreetype -lluajit-5.1 -lz -lopenal -lvorbisfile
+CC      := "clang -x c"
+CPP     := clang
+CFLAGS  := -g -O2 -Wall -Werror -pipe $(INCSDL) $(INCFT) -I$(LIBDIR) -I$(LIBLUA) -I$(LIBPNG) -march=native -stdlib=libstdc++
+LDFLAGS := -lstdc++ -lm -lGL -lSDL -lfreetype -lluajit-5.1 -lz -lopenal -lvorbisfile
 
 EXEC := $(BINDIR)/$(TARGET)
 OBJ  := $(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(wildcard $(SRCDIR)/*.cpp)) \
@@ -33,7 +34,7 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
 	@$(CPP) -c $< $(CFLAGS) -o $@
 
 %box2d.a:
-	@LIBDIR=$(LIBDIR) make -f $(OBJDIR)/Makefile.Box2D
+	@CPP=$(CPP) LIBDIR=$(LIBDIR) make -f $(OBJDIR)/Makefile.Box2D
 	@make -f $(OBJDIR)/Makefile.Box2D clean
 
 %lua.a:
@@ -42,7 +43,7 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
 	@cd $(LIBLUA) && make clean
 
 %png.a:
-	@LIBSRC=$(LIBPNG) TARGET=libpng make -f $(OBJDIR)/Makefile.lib
+	@CC=$(CC) LIBSRC=$(LIBPNG) TARGET=libpng make -f $(OBJDIR)/Makefile.lib
 	@TARGET=libpng make -f $(OBJDIR)/Makefile.lib clean
 
 check:

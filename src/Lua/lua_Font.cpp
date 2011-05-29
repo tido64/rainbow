@@ -16,12 +16,6 @@ lua_Font::lua_Font(lua_State *L)
 	this->font = new FontAtlas(lua_tolstring(L, 1, 0), lua_tonumber(L, 2));
 }
 
-int lua_Font::set_color(lua_State *L)
-{
-	this->font->set_color(lua_tointeger(L, 1), lua_tointeger(L, 2), lua_tointeger(L, 3), (lua_gettop(L) == 4) ? lua_tointeger(L, 4) : 0xff);
-	return 0;
-}
-
 int lua_Font::print(lua_State *L)
 {
 	int x = 0;
@@ -38,5 +32,11 @@ int lua_Font::print(lua_State *L)
 	}
 
 	this->font->print(lua_tolstring(L, 1, 0), x, y);
+	return 0;
+}
+
+int lua_Font::set_color(lua_State *L)
+{
+	this->font->set_color(lua_tointeger(L, 1), lua_tointeger(L, 2), lua_tointeger(L, 3), (lua_gettop(L) == 4) ? lua_tointeger(L, 4) : 0xff);
 	return 0;
 }

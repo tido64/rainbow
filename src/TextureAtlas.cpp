@@ -46,7 +46,7 @@ unsigned int TextureAtlas::define_texture(const int x, const int y, const int w,
 	return i;
 }
 
-void TextureAtlas::get_texture(unsigned int i, SpriteVertex *vertices)
+void TextureAtlas::get_texture(unsigned int i, SpriteVertex *vertices) const
 {
 	const Vec2f *texture = &this->textures[i];
 	vertices->texcoord.x = texture->x;

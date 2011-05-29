@@ -26,8 +26,12 @@ public:
 	/// Update screen resolution.
 	void update_video(const int w = 0, const int h = 0);
 
+#ifdef RAINBOW_BUTTONS
+
 	/// Handle key press events.
 	void key_press();
+
+#endif
 
 	/// Handle mouse/touch begin-events.
 	void touch_began(const Touch *const touches, const unsigned int count);
@@ -57,9 +61,13 @@ inline void Director::update_video(const int w, const int h)
 	this->lua.platform.update(this->lua.L);
 }
 
+#ifdef RAINBOW_BUTTONS
+
 inline void Director::key_press()
 {
 }
+
+#endif
 
 inline void Director::touch_began(const Touch *const touches, const unsigned int count)
 {

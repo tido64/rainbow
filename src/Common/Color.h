@@ -23,7 +23,7 @@ namespace Rainbow
 		unsigned char r, g, b, a;
 
 		_Color() : r(0xff), g(0xff), b(0xff), a(0xff) { }
-
+		_Color(const _Color<unsigned char> &c) : r(c.r), g(c.g), b(c.b), a(c.a) { }
 		_Color(const unsigned char r, const unsigned char g, const unsigned char b, const unsigned char a = 0xff) :
 			r(r), g(g), b(b), a(a)
 		{ }

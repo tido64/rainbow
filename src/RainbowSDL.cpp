@@ -19,14 +19,20 @@ Director director;  ///< Game director handles everything
 
 void init_GL();                                     ///< Initialise 2d viewport
 void on_key_press(SDL_keysym &);                    ///< Handle key press event
-void on_mouse_button_down(SDL_MouseButtonEvent &);  ///< Handle mouse button event
-void on_mouse_button_up(SDL_MouseButtonEvent &);    ///< Handle mouse button event
+void on_mouse_button_down(SDL_MouseButtonEvent &);  ///< Handle mouse button down event
+void on_mouse_button_up(SDL_MouseButtonEvent &);    ///< Handle mouse button up event
 void on_mouse_motion(SDL_MouseMotionEvent &);       ///< Handle mouse motion event
 void resize(const int w, const int h);              ///< Handle window resize event
 
 
 int main(int argc, char *argv[])
 {
+	//if (argc < 2)
+	//{
+	//	printf("Syntax: %s <main.lua>\n", argv[0]);
+	//	return 0;
+	//}
+
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
 	{
 		fprintf(stderr, "Unable to initialise SDL: %s\n", SDL_GetError());

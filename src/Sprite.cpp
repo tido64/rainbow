@@ -11,7 +11,7 @@
 
 using Rainbow::equalf;
 
-Sprite::Sprite(const unsigned int w, const unsigned int h, TextureAtlas *p) :
+Sprite::Sprite(const unsigned int w, const unsigned int h, const TextureAtlas *p) :
 	width(w), height(h), buffered(false), stale(0xff), angle(0.0f),
 	texture(p->get_name()), vertex_array(new SpriteVertex[4]), parent(p),
 	pivot(0.5f, 0.5f), scale_f(1.0f, 1.0f)

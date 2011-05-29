@@ -22,7 +22,7 @@ public:
 	const unsigned int width;   ///< Width of sprite (not scaled)
 	const unsigned int height;  ///< Height of sprite (not scaled)
 
-	Sprite(const unsigned int width, const unsigned int height, TextureAtlas *parent = 0);
+	Sprite(const unsigned int width, const unsigned int height, const TextureAtlas *parent = 0);
 	Sprite(const Sprite &);
 	~Sprite();
 
@@ -82,7 +82,7 @@ private:
 
 	GLuint texture;              ///< Texture buffer name
 	SpriteVertex *vertex_array;  ///< Vertex array or, if buffered, the sprite batch's buffer
-	TextureAtlas *parent;        ///< Texture atlas pointer
+	const TextureAtlas *parent;  ///< Texture atlas pointer
 
 	Vec2f pivot;                 ///< Pivot point (normalised)
 	Vec2f position;              ///< Current position

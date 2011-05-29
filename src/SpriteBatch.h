@@ -25,21 +25,23 @@ public:
 	/// Draw the batch of sprites.
 	void draw();
 
+	/// Return the number of sprites.
+	unsigned int size();
+
 	/// Update the batch of sprites.
 	void update();
 
 protected:
-	unsigned int indexof(const unsigned int i);
+	unsigned int align(const unsigned int i);
 
 private:
-	GLuint buffer;
-	GLuint texture;
-	unsigned int batch_buffer_sz;
-	unsigned int batch_vertices;
-	unsigned int count;
-	unsigned int reserved;
-	Vector<Sprite *> sprites;
-	SpriteVertex *vertex_buffer;
+	GLuint buffer;                 ///< GL vertex buffer
+	GLuint texture;                ///< GL texture name
+	unsigned int batch_buffer_sz;  ///< Size of batch buffer
+	unsigned int batch_vertices;   ///< Total number of vertices in this batch
+	unsigned int reserved;         ///< Allocated memory for sprite vertices
+	Vector<Sprite *> sprites;      ///< Vector storing all sprites
+	SpriteVertex *vertex_buffer;   ///< Common vertex array for all sprites in the batch
 
 	/// Intentionally left undefined.
 	SpriteBatch(const SpriteBatch &);
@@ -48,9 +50,14 @@ private:
 	SpriteBatch& operator=(const SpriteBatch &);
 };
 
-inline unsigned int SpriteBatch::indexof(const unsigned int i)
+inline unsigned int SpriteBatch::align(const unsigned int i)
 {
 	return (i << 2) + (i << 1);
+}
+
+inline unsigned int SpriteBatch::size()
+{
+	return this->sprites.size();
 }
 
 #endif

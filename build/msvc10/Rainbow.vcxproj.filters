@@ -19,9 +19,6 @@
     <Filter Include="Random">
       <UniqueIdentifier>{f45bbb59-bc7b-45e3-a7b6-99a115b0ad62}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ParticleSystem">
-      <UniqueIdentifier>{b907639b-7a16-4fae-9ead-ba9630108b95}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Input">
       <UniqueIdentifier>{e57c7a15-070c-4d36-a9da-9544a5b730b5}</UniqueIdentifier>
     </Filter>
@@ -116,15 +113,6 @@
     </ClInclude>
     <ClInclude Include="..\..\src\Random\Mersenne_twister.h">
       <Filter>Random</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\ParticleSystem\ParticleSystem.h">
-      <Filter>ParticleSystem</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\ParticleSystem\PointSprite.h">
-      <Filter>ParticleSystem</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\ParticleSystem\Rain.h">
-      <Filter>ParticleSystem</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\Input\Acceleration.h">
       <Filter>Input</Filter>
@@ -343,9 +331,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\TextureAtlas.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\ParticleSystem\Rain.cpp">
-      <Filter>ParticleSystem</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Input\Gestures.cpp">
       <Filter>Input</Filter>

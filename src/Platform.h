@@ -8,17 +8,24 @@
 
 #if defined(__ANDROID__)
 #	define RAINBOW_ANDROID
-#	define RAINBOW_ACCELERATED
-#	define RAINBOW_TOUCHED
 #	define RAINBOW_ZIP
 #elif defined(__APPLE__)
 #	define RAINBOW_IOS
-#	define RAINBOW_ACCELERATED
-#	define RAINBOW_TOUCHED
 #elif defined(__linux)
-#	define RAINBOW_NIX
+#	define RAINBOW_UNIX
 #elif defined(_WIN32)
 #	define RAINBOW_WIN
+#endif
+
+// Platforms that make use of buttons (keyboards, gamepads, etc.)
+#if defined(RAINBOW_UNIX) || defined(RAINBOW_WIN)
+#	define RAINBOW_BUTTONS
+#endif
+
+// Platforms with accelerometer and touch screen
+#if defined(RAINBOW_ANDROID) || defined(RAINBOW_IOS)
+#	define RAINBOW_ACCELERATED
+#	define RAINBOW_TOUCHED
 #endif
 
 #define RAINBOW_BUILD "Rainbow / Bifrost Games Property / Built " __DATE__

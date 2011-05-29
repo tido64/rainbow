@@ -49,9 +49,9 @@ protected:
 	static const unsigned short int padding = 3;   ///< Padding around font glyph texture
 
 private:
-	GLuint texture;
-	FontGlyph charset[chars];
-	Colorb color;
+	GLuint texture;            ///< GL texture id
+	Colorb color;              ///< Font colour
+	FontGlyph charset[chars];  ///< Character set
 
 	/// Intentionally left undefined.
 	FontAtlas(const FontAtlas &);

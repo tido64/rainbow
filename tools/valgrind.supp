@@ -1,0 +1,161 @@
+{
+   ioctl/drmIoctl/drmCommandWriteRead
+   Memcheck:Param
+   ioctl(generic)
+   fun:ioctl
+   fun:drmIoctl
+   fun:drmCommandWriteRead
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/libGL.so.1.2
+   obj:/usr/lib/libGL.so.1.2
+   obj:/usr/lib/libGL.so.1.2
+   fun:glXChooseVisual
+   obj:/usr/lib/libSDL-1.2.so.0.11.3
+   obj:/usr/lib/libSDL-1.2.so.0.11.3
+}
+{
+   ioctl/drmIoctl/drm_intel_bufmgr_gem_init
+   Memcheck:Param
+   ioctl(generic)
+   fun:ioctl
+   fun:drmIoctl
+   fun:drm_intel_bufmgr_gem_init
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/xorg/modules/dri/i965_dri.so
+   obj:/usr/lib/libGL.so.1.2
+   obj:/usr/lib/libGL.so.1.2
+   obj:/usr/lib/libGL.so.1.2
+   fun:glXChooseVisual
+   obj:/usr/lib/libSDL-1.2.so.0.11.3
+   obj:/usr/lib/libSDL-1.2.so.0.11.3
+   obj:/usr/lib/libSDL-1.2.so.0.11.3
+}
+{
+   libluajit-5.1.so.2.0.0/lua_pushlstring/libluajit-5.1.so.2.0.0
+   Memcheck:Cond
+   obj:/usr/lib/libluajit-5.1.so.2.0.0
+   fun:lua_pushlstring
+   obj:/usr/lib/libluajit-5.1.so.2.0.0
+   fun:luaL_pushresult
+   fun:luaL_gsub
+   obj:/usr/lib/libluajit-5.1.so.2.0.0
+   obj:/usr/lib/libluajit-5.1.so.2.0.0
+   obj:/usr/lib/libluajit-5.1.so.2.0.0
+   obj:/usr/lib/libluajit-5.1.so.2.0.0
+   obj:/usr/lib/libluajit-5.1.so.2.0.0
+   fun:lua_pcall
+   fun:_ZN3Lua4loadEPKc
+}
+{
+   libSDL-1.2.so.0.11.3/libSDL-1.2.so.0.11.3/libSDL-1.2.so.0.11.3
+   Memcheck:Cond
+   obj:/usr/lib/libSDL-1.2.so.0.11.3
+   obj:/usr/lib/libSDL-1.2.so.0.11.3
+   obj:/usr/lib/libSDL-1.2.so.0.11.3
+   fun:SDL_PumpEvents
+   fun:SDL_PollEvent
+   fun:main
+}
+{
+   malloc/_XlcDefaultMapModifiers/XSetLocaleModifiers
+   Memcheck:Leak
+   fun:malloc
+   fun:_XlcDefaultMapModifiers
+   fun:XSetLocaleModifiers
+   obj:/usr/lib/libSDL-1.2.so.0.11.3
+   obj:/usr/lib/libSDL-1.2.so.0.11.3
+   fun:SDL_VideoInit
+   fun:SDL_InitSubSystem
+   fun:SDL_Init
+   fun:main
+}
+{
+   malloc/libX11.so.6.3.0/_XimSetICValueData
+   Memcheck:Leak
+   fun:malloc
+   obj:/usr/lib/libX11.so.6.3.0
+   fun:_XimSetICValueData
+   fun:_XimLocalCreateIC
+   fun:XCreateIC
+   obj:/usr/lib/libSDL-1.2.so.0.11.3
+   obj:/usr/lib/libSDL-1.2.so.0.11.3
+   fun:SDL_VideoInit
+   fun:SDL_InitSubSystem
+   fun:SDL_Init
+   fun:main
+}
+{
+   malloc/libX11.so.6.3.0/_XimSetICValueData
+   Memcheck:Leak
+   fun:malloc
+   obj:/usr/lib/libX11.so.6.3.0
+   fun:_XimSetICValueData
+   fun:_XimLocalCreateIC
+   fun:XCreateIC
+   obj:/usr/lib/libSDL-1.2.so.0.11.3
+   obj:/usr/lib/libSDL-1.2.so.0.11.3
+   obj:/usr/lib/libSDL-1.2.so.0.11.3
+   fun:SDL_SetVideoMode
+   fun:main
+}
+{
+   realloc/libX11.so.6.3.0/libX11.so.6.3.0
+   Memcheck:Leak
+   fun:realloc
+   obj:/usr/lib/libX11.so.6.3.0
+   obj:/usr/lib/libX11.so.6.3.0
+   obj:/usr/lib/libX11.so.6.3.0
+   fun:_XlcCreateLC
+   fun:_XlcDefaultLoader
+   fun:_XOpenLC
+   fun:_XlcCurrentLC
+   fun:XSetLocaleModifiers
+   obj:/usr/lib/libSDL-1.2.so.0.11.3
+   obj:/usr/lib/libSDL-1.2.so.0.11.3
+   fun:SDL_VideoInit
+}
+{
+   malloc/XGetVisualInfo/glXChooseVisual
+   Memcheck:Leak
+   fun:malloc
+   fun:XGetVisualInfo
+   fun:glXChooseVisual
+   obj:/usr/lib/libSDL-1.2.so.0.11.3
+   obj:/usr/lib/libSDL-1.2.so.0.11.3
+   obj:/usr/lib/libSDL-1.2.so.0.11.3
+   fun:SDL_SetVideoMode
+   fun:main
+}
+{
+   realloc/libX11.so.6.3.0/libX11.so.6.3.0
+   Memcheck:Leak
+   fun:realloc
+   obj:/usr/lib/libX11.so.6.3.0
+   obj:/usr/lib/libX11.so.6.3.0
+   obj:/usr/lib/libX11.so.6.3.0
+   fun:_XlcCreateLC
+   fun:_XlcUtf8Loader
+   fun:_XOpenLC
+   fun:_XlcCurrentLC
+   fun:XSetLocaleModifiers
+   obj:/usr/lib/libSDL-1.2.so.0.11.3
+   obj:/usr/lib/libSDL-1.2.so.0.11.3
+   fun:SDL_VideoInit
+}
+{
+   malloc/libGL.so.1.2/libGL.so.1.2
+   Memcheck:Leak
+   fun:malloc
+   obj:/usr/lib/libGL.so.1.2
+   obj:/usr/lib/libGL.so.1.2
+   obj:/usr/lib/libGL.so.1.2
+   obj:/usr/lib/libGL.so.1.2
+   fun:glXChooseVisual
+   obj:/usr/lib/libSDL-1.2.so.0.11.3
+   obj:/usr/lib/libSDL-1.2.so.0.11.3
+   obj:/usr/lib/libSDL-1.2.so.0.11.3
+   fun:SDL_SetVideoMode
+   fun:main
+}

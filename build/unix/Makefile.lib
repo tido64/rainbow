@@ -1,7 +1,6 @@
 OBJDIR := build/unix/$(TARGET)
 SRCDIR := $(LIBSRC)
 
-CC = gcc
 CFLAGS = -g0 -O2 -pipe -march=native
 
 OBJ = $(patsubst $(SRCDIR)/%.c,$(OBJDIR)/%.o,$(wildcard $(SRCDIR)/*.c))

@@ -223,9 +223,6 @@
     <ClInclude Include="..\..\src\Lua\lua_SpriteBatch.h" />
     <ClInclude Include="..\..\src\Lua\lua_Texture.h" />
     <ClInclude Include="..\..\src\OpenGL.h" />
-    <ClInclude Include="..\..\src\ParticleSystem\ParticleSystem.h" />
-    <ClInclude Include="..\..\src\ParticleSystem\PointSprite.h" />
-    <ClInclude Include="..\..\src\ParticleSystem\Rain.h" />
     <ClInclude Include="..\..\src\Physics.h" />
     <ClInclude Include="..\..\src\Platform.h" />
     <ClInclude Include="..\..\src\Random\dSFMT-params.h" />
@@ -292,7 +289,6 @@
     <ClCompile Include="..\..\src\Lua\lua_Sprite.cpp" />
     <ClCompile Include="..\..\src\Lua\lua_SpriteBatch.cpp" />
     <ClCompile Include="..\..\src\Lua\lua_Texture.cpp" />
-    <ClCompile Include="..\..\src\ParticleSystem\Rain.cpp" />
     <ClCompile Include="..\..\src\Physics.cpp" />
     <ClCompile Include="..\..\src\RainbowSDL.cpp" />
     <ClCompile Include="..\..\src\Sprite.cpp" />

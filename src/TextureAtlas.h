@@ -37,7 +37,7 @@ public:
 	/// Get named texture.
 	/// \param id        The id of the texture to get
 	/// \param vertices  Interleaved vertex data array (vertex and texture coordinates)
-	void get_texture(unsigned int id, SpriteVertex *vertices);
+	void get_texture(unsigned int id, SpriteVertex *vertices) const;
 
 private:
 	Texture texture;           ///< Loaded texture

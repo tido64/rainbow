@@ -1,7 +1,7 @@
 #include "SpriteBatch.h"
 
 SpriteBatch::SpriteBatch(const int hint) :
-	texture(0), count(0), reserved(indexof(hint)), sprites(hint)
+	texture(0), reserved(align(hint)), sprites(hint)
 {
 	this->vertex_buffer = new SpriteVertex[this->reserved];
 	glGenBuffers(1, &this->buffer);
@@ -18,7 +18,7 @@ void SpriteBatch::add(Sprite *s)
 		// Make sure all sprites use the same texture
 		assert(s->texture == this->texture || !"Rainbow::SpriteBatch: Added sprite to wrong batch");
 
-		offset = this->indexof(this->sprites.size());
+		offset = this->align(this->sprites.size());
 		if (offset >= this->reserved)
 		{
 			this->reserved <<= 1;
@@ -29,7 +29,7 @@ void SpriteBatch::add(Sprite *s)
 
 			this->sprites[0]->vertex_array = batch;
 			for (unsigned int i = 1; i < this->sprites.size(); ++i)
-				this->sprites[i]->vertex_array = this->vertex_buffer + indexof(i);
+				this->sprites[i]->vertex_array = this->vertex_buffer + this->align(i);
 		}
 
 		// Copy degenerate vertices
@@ -72,7 +72,7 @@ void SpriteBatch::update()
 	for (unsigned int i = 1; i < this->sprites.size(); ++i)
 	{
 		this->sprites[i]->update();
-		unsigned int offset = this->indexof(i);
+		unsigned int offset = this->align(i);
 		this->vertex_buffer[offset - 2] = this->vertex_buffer[offset - 3];
 		this->vertex_buffer[offset - 1] = this->vertex_buffer[offset];
 	}

@@ -10,9 +10,9 @@
 /// \author Tommy Nguyen
 struct SpriteVertex
 {
-	Colorb color;
-	Vec2f texcoord;
-	Vec2f position;
+	Colorb color;    ///< Texture colour, usually white
+	Vec2f texcoord;  ///< Texture coordinates
+	Vec2f position;  ///< Position of vertex
 };
 
 #endif
