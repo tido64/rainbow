@@ -1,6 +1,8 @@
 #ifndef VEC2_H_
 #define VEC2_H_
 
+#include <cmath>
+
 namespace Rainbow
 {
 	/// Structure for storing a two-dimensional vector.
@@ -24,7 +26,7 @@ namespace Rainbow
 		/// Return the dot product of two vectors
 		inline T dot(const _Vec2<T> &v) const
 		{
-			return this->x * this->y + v.x * v.y;
+			return this->x * v.x + this->y * v.y;
 		}
 
 		/// Return the distance between two points.

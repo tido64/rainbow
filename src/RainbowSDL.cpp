@@ -4,6 +4,10 @@
 #include <SDL/SDL.h>
 #include <SDL/SDL_thread.h>
 
+#ifdef RAINBOW_TEST
+#	include "../tests/test.cpp"
+#endif
+
 #include "Director.h"
 
 bool active = true;  ///< Whether the window is in focus
@@ -27,11 +31,19 @@ void resize(const int w, const int h);              ///< Handle window resize ev
 
 int main(int argc, char *argv[])
 {
-	//if (argc < 2)
-	//{
-	//	printf("Syntax: %s <main.lua>\n", argv[0]);
-	//	return 0;
-	//}
+	if (argc < 2)
+	{
+	#ifdef RAINBOW_TEST
+
+		testing::InitGoogleTest(&argc, argv);
+		return RUN_ALL_TESTS();
+
+	#else
+
+		return 0;
+
+	#endif
+	}
 
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
 	{
@@ -66,7 +78,7 @@ int main(int argc, char *argv[])
 	resize(screen_width, screen_height);
 
 	mouse_input.hash = 1;
-	director.init("onwire.lua");
+	director.init(argv[1]);
 
 	unsigned int now = 0, time = SDL_GetTicks();
 	while (!done)
@@ -152,12 +164,12 @@ void on_key_press(SDL_keysym &keysym)
 			{
 				active = false;
 				done = true;
-				break;
+				return;
 			}
 		default:
-			director.key_press();
 			break;
 	}
+	director.key_press();
 }
 
 inline void on_mouse_button_down(SDL_MouseButtonEvent &mouse)

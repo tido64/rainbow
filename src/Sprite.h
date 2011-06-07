@@ -1,8 +1,11 @@
 #ifndef SPRITE_H_
 #define SPRITE_H_
 
+#include "Common/SpriteVertex.h"
+#include "Common/Vec2.h"
 #include "Algorithm.h"
-#include "TextureAtlas.h"
+
+class SpriteBatch;
 
 /// Custom sprite object, created by TextureAtlas.
 ///
@@ -16,15 +19,16 @@
 /// \author Tommy Nguyen
 class Sprite
 {
+	friend class SpriteBatch;
+
 public:
 	static const unsigned int vertex_array_sz = 4 * sizeof(SpriteVertex);
 
 	const unsigned int width;   ///< Width of sprite (not scaled)
 	const unsigned int height;  ///< Height of sprite (not scaled)
 
-	Sprite(const unsigned int width, const unsigned int height, const TextureAtlas *parent = 0);
+	Sprite(const unsigned int width, const unsigned int height, const SpriteBatch *parent);
 	Sprite(const Sprite &);
-	~Sprite();
 
 	/// Return the current angle of the sprite.
 	const float& get_angle() const;
@@ -80,9 +84,8 @@ private:
 	float cos_r;                 ///< Cosine of angle
 	float sin_r;                 ///< Sine of angle
 
-	GLuint texture;              ///< Texture buffer name
 	SpriteVertex *vertex_array;  ///< Vertex array or, if buffered, the sprite batch's buffer
-	const TextureAtlas *parent;  ///< Texture atlas pointer
+	const SpriteBatch *parent;   ///< Pointer to sprite batch
 
 	Vec2f pivot;                 ///< Pivot point (normalised)
 	Vec2f position;              ///< Current position
@@ -91,9 +94,6 @@ private:
 	Vec2f origin[4];             ///< Original rendering at origo
 
 	Sprite& operator=(const Sprite &);
-
-	friend class SpriteBatch;
-	friend class TextureAtlas;
 };
 
 inline const float& Sprite::get_angle() const
@@ -104,11 +104,6 @@ inline const float& Sprite::get_angle() const
 inline const Vec2f& Sprite::get_position() const
 {
 	return this->position;
-}
-
-inline void Sprite::set_texture(const unsigned int id)
-{
-	this->parent->get_texture(id, this->vertex_array);
 }
 
 #endif

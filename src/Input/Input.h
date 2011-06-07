@@ -27,12 +27,8 @@ public:
 		return c;
 	}
 
-#ifdef RAINBOW_ACCELERATED
-
 	bool accelerated;
 	Acceleration acceleration;
-
-#endif
 
 	/// Subscribe to input events.
 	/// \param t      The object that wants to subscribe

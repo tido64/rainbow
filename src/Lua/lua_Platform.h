@@ -31,7 +31,7 @@ public:
 	#endif
 		lua_setfield(L, -2, "touch");
 
-		lua_pop(L, 2);
+		lua_pop(L, 3);
 		this->update(L);
 	}
 

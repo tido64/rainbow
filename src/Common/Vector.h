@@ -17,39 +17,52 @@ class Vector
 {
 public:
 	Vector(const int reserve = 8) :
-		count(0), reserved(reserve), array(new T[reserve])
+		count(0), reserved(reserve), c_array(new T[reserve])
 	{ }
 
 	Vector(const Vector &v) :
-		count(v.count), reserved(v.reserved), array(new T[v.reserved])
+		count(v.count), reserved(v.reserved), c_array(new T[v.reserved])
 	{
-		memcpy(this->array, v.array, v.count * sizeof(T));
+		memcpy(this->c_array, v.c_array, v.count * sizeof(T));
 	}
 
-	~Vector() { delete[] this->array; }
+	~Vector() { delete[] this->c_array; }
 
 	inline T& at(const unsigned int i)
 	{
 		assert(i < this->count || !"Rainbow::Vector: Tried to access an element out of range");
-		return this->array[i];
+		return this->c_array[i];
 	}
 
 	/// Return a pointer to the first element.
-	inline T* begin() const { return this->array; }
+	inline T* begin() const { return this->c_array; }
+
+	/// Return size of allocated storage capacity.
+	inline unsigned int capacity() const { return this->reserved; }
 
 	/// Add an element to the vector.
 	void push_back(const T &element)
 	{
 		// Check that there is enough space
 		if (this->count == this->reserved)
-		{
-			this->reserved <<= 1;
-			T *a = new T[this->reserved];
-			memcpy(a, this->array, this->count * sizeof(T));
-			delete[] this->array;
-			this->array = a;
-		}
-		this->array[this->count++] = element;
+			this->reserve(this->reserved <<= 1);
+		this->c_array[this->count++] = element;
+	}
+
+	/// Increase or decrease the capacity of the vector.
+	/// \param i  The size of the new capacity. If less than the number of
+	///           elements in the container, the container is simply tightened.
+	void reserve(unsigned int i)
+	{
+		if (i < this->count)
+			i = this->count;
+
+		T *a = new T[i];
+		assert(a);
+		this->reserved = i;
+		memcpy(a, this->c_array, this->count * sizeof(T));
+		delete[] this->c_array;
+		this->c_array = a;
 	}
 
 	/// Return the number of elements in this vector.
@@ -59,22 +72,23 @@ public:
 	{
 		this->count = v.count;
 		this->reserved = v.reserved;
-		delete[] this->array;
-		this->array = new T[this->reserved];
-		memcpy(this->array, v.array, this->count * sizeof(T));
+		delete[] this->c_array;
+		this->c_array = new T[this->reserved];
+		assert(this->c_array);
+		memcpy(this->c_array, v.c_array, this->count * sizeof(T));
 		return *this;
 	}
 
 	/// Return the element stored at index.
 	inline T& operator[](const unsigned int i) const
 	{
-		return this->array[i];
+		return this->c_array[i];
 	}
 
 private:
 	unsigned int count;
 	unsigned int reserved;
-	T *array;
+	T *c_array;
 };
 
 #endif

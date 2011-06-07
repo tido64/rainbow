@@ -7,7 +7,7 @@
 class lua_Sprite
 {
 public:
-	static const char *class_name;
+	static const char *const class_name;
 	static const Lua::Method<lua_Sprite> methods[];
 
 	lua_Sprite(lua_State *);

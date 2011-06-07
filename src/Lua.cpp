@@ -28,14 +28,14 @@ Lua::Lua() : L(luaL_newstate())
 	#ifdef RAINBOW_IOS
 		AssetManager::Instance().set_source();
 	#endif
-	const char *bundle = AssetManager::Instance().get_full_path();
+	const char *const bundle = AssetManager::Instance().get_full_path();
 
 	lua_getfield(this->L, LUA_GLOBALSINDEX, "package");
 	lua_getfield(this->L, -1, "path");
 
 	size_t path_len = 0;
-	const char *pkg_path = lua_tolstring(this->L, -1, &path_len);
-	char *lua_path = new char[strlen(bundle) + 8 + path_len];
+	const char *const pkg_path = lua_tolstring(this->L, -1, &path_len);
+	char *const lua_path = new char[strlen(bundle) + 8 + path_len];
 	strcpy(lua_path, bundle);
 	strcat(lua_path, "/?.lua;");
 	strcat(lua_path, pkg_path);
@@ -57,7 +57,7 @@ void Lua::call(const char *const k)
 
 void Lua::err(const int lua_e)
 {
-	const char *m = lua_tolstring(this->L, -1, 0);
+	const char *const m = lua_tolstring(this->L, -1, 0);
 	lua_pop(this->L, 1);
 	switch (lua_e)
 	{
@@ -74,12 +74,62 @@ void Lua::err(const int lua_e)
 			printf("Lua error handling");
 			break;
 		default:
-			printf("Unknown Lua");
+			printf("Lua");
 			break;
 	}
 	printf(" error: %s\n", m);
-	Lua::dump_stack(this->L);
+	dump_stack(this->L);
 	assert(!"Lua related error, see stdout");
+}
+
+void Lua::dump_stack(lua_State *L)
+{
+	puts("Lua stack");
+	for (int l = 1; l <= lua_gettop(L); ++l)
+	{
+		printf("#%i: ", l);
+		switch (lua_type(L, l))
+		{
+			case LUA_TNIL:
+				puts("(nil)");
+				break;
+			case LUA_TNUMBER:
+				printf(LUA_NUMBER_FMT "\n", lua_tonumber(L, l));
+				break;
+			case LUA_TBOOLEAN:
+				printf("%s\n", lua_toboolean(L, l) ? "true" : "false");
+				break;
+			case LUA_TSTRING:
+				printf("%s\n", lua_tolstring(L, l, 0));
+				break;
+			case LUA_TTABLE:
+				puts("(table)");
+				break;
+			case LUA_TFUNCTION:
+				printf("%lx\n", reinterpret_cast<intptr_t>(lua_tocfunction(L, l)));
+				break;
+			case LUA_TUSERDATA:
+				printf("%lx\n", reinterpret_cast<intptr_t>(lua_touserdata(L, l)));
+				break;
+			case LUA_TTHREAD:
+				puts("(thread)");
+				break;
+			case LUA_TLIGHTUSERDATA:
+				printf("%lx\n", reinterpret_cast<intptr_t>(lua_topointer(L, l)));
+				break;
+			default:
+				puts("(unknown)");
+				break;
+		}
+	}
+}
+
+lua_Debug* Lua::getinfo(lua_State *L)
+{
+	lua_Debug *d = new lua_Debug;
+	lua_getstack(L, 1, d);
+	lua_getinfo(L, "nSl", d);
+	return d;
 }
 
 void Lua::load(const char *const lua)

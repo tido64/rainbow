@@ -11,7 +11,7 @@ namespace Rainbow
 	{
 		Decoder::Decoder() { }
 
-		void Decoder::open(Wave &wave, const char *file, bool streaming)
+		void Decoder::open(Wave &wave, const char *const file, bool streaming)
 		{
 			CFURLRef url = CFURLCreateFromFileSystemRepresentation(0, reinterpret_cast<const UInt8 *>(file), strlen(file), false);
 			ExtAudioFileRef ext_audio = 0;

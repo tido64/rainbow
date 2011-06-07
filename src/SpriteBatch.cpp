@@ -1,23 +1,55 @@
 #include "SpriteBatch.h"
 
+const void *SpriteBatch::tx_offset = reinterpret_cast<void *>(sizeof(Colorb));
+const void *SpriteBatch::vx_offset = reinterpret_cast<void *>(sizeof(Colorb) + sizeof(Vec2f));
+
 SpriteBatch::SpriteBatch(const int hint) :
-	texture(0), reserved(align(hint)), sprites(hint)
+	reserved(align(hint)), texture(0), sprites(hint)
 {
 	this->vertex_buffer = new SpriteVertex[this->reserved];
 	glGenBuffers(1, &this->buffer);
 }
 
-void SpriteBatch::add(Sprite *s)
+Sprite* SpriteBatch::add(const int x, const int y, const int w, const int h)
+{
+	Sprite *s = new Sprite(w, h, this);
+	this->push_back(s);
+	s->set_texture(this->texture->create(x, y, w, h));
+	return s;
+}
+
+void SpriteBatch::draw()
+{
+	glBindTexture(GL_TEXTURE_2D, this->texture->name);
+	glBindBuffer(GL_ARRAY_BUFFER, this->buffer);
+	glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(SpriteVertex), 0);
+	glTexCoordPointer(2, GL_FLOAT, sizeof(SpriteVertex), tx_offset);
+	glVertexPointer(2, GL_FLOAT, sizeof(SpriteVertex), vx_offset);
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, this->batch_vertices);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
+Texture* SpriteBatch::set_texture(const char *const texture)
+{
+	delete this->texture;
+	this->texture = new Texture();
+	this->texture->load(texture);
+	return this->texture;
+}
+
+Texture* SpriteBatch::set_texture(Texture *t)
+{
+	delete this->texture;
+	this->texture = t;
+	return this->texture;
+}
+
+void SpriteBatch::push_back(Sprite *s)
 {
 	unsigned int offset = 0;
 
-	if (this->texture == 0)
-		this->texture = s->texture;
-	else
+	if (this->sprites.size() > 0)
 	{
-		// Make sure all sprites use the same texture
-		assert(s->texture == this->texture || !"Rainbow::SpriteBatch: Added sprite to wrong batch");
-
 		offset = this->align(this->sprites.size());
 		if (offset >= this->reserved)
 		{
@@ -31,38 +63,15 @@ void SpriteBatch::add(Sprite *s)
 			for (unsigned int i = 1; i < this->sprites.size(); ++i)
 				this->sprites[i]->vertex_array = this->vertex_buffer + this->align(i);
 		}
-
-		// Copy degenerate vertices
-		this->vertex_buffer[offset - 2] = this->vertex_buffer[offset - 3];
-		this->vertex_buffer[offset - 1] = *s->vertex_array;
 	}
 
-	// Delete the current vertex array and assign the batch's buffer
-	memcpy(this->vertex_buffer + offset, s->vertex_array, Sprite::vertex_array_sz);
-	delete[] s->vertex_array;
+	// Assign the batch's buffer to the sprite
 	s->vertex_array = &this->vertex_buffer[offset];
-	s->buffered = true;
 	this->sprites.push_back(s);
 
 	// Update constants
 	this->batch_vertices = (this->sprites.size() << 2) + ((this->sprites.size() - 1) << 1);
 	this->batch_buffer_sz = this->batch_vertices * sizeof(SpriteVertex);
-}
-
-void SpriteBatch::draw()
-{
-	// Offsets: Refer struct SpriteVertex
-	static const void *tx_offset = reinterpret_cast<void *>(sizeof(Colorb));
-	static const void *vx_offset = reinterpret_cast<void *>(sizeof(Colorb) + sizeof(Vec2f));
-
-	glBindTexture(GL_TEXTURE_2D, this->texture);
-
-	glBindBuffer(GL_ARRAY_BUFFER, this->buffer);
-	glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(SpriteVertex), 0);
-	glTexCoordPointer(2, GL_FLOAT, sizeof(SpriteVertex), tx_offset);
-	glVertexPointer(2, GL_FLOAT, sizeof(SpriteVertex), vx_offset);
-	glDrawArrays(GL_TRIANGLE_STRIP, 0, this->batch_vertices);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 void SpriteBatch::update()

@@ -2,6 +2,7 @@
 #	pragma warning(disable : 4244)
 #endif
 
+#include "../Lua.h"
 #include "lua_Input.h"
 
 void lua_Input::init(lua_State *L)
@@ -10,25 +11,16 @@ void lua_Input::init(lua_State *L)
 	lua_pushvalue(L, -1);
 	lua_setfield(L, -3, "input");
 
-#ifdef RAINBOW_ACCELERATED
-
 	// rainbow.input.acceleration
 	lua_createtable(L, 0, 0);
 	lua_setfield(L, -2, "acceleration");
 	this->accelerate(L);
 
-#endif
-
 	lua_pop(L, 1);
 }
 
-#ifdef RAINBOW_ACCELERATED
-
 void lua_Input::accelerate(lua_State *L)
 {
-	//if (!input.accelerated)
-	//	return;
-
 	lua_getfield(L, LUA_GLOBALSINDEX, "rainbow");
 	lua_getfield(L, -1, "input");
 
@@ -46,8 +38,6 @@ void lua_Input::accelerate(lua_State *L)
 
 	lua_pop(L, 3);
 }
-
-#endif
 
 void lua_Input::touch_began(lua_State *L, const Touch *const touches, const unsigned int count)
 {

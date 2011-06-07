@@ -129,7 +129,7 @@ namespace Rainbow
 		#endif
 		}
 
-		unsigned int Mixer::add(const char *media)
+		unsigned int Mixer::add(const char *const media)
 		{
 			Wave &w = waves[this->buffer_count];
 			w.buffered = this->buffer_count++;
@@ -147,7 +147,7 @@ namespace Rainbow
 			return src;
 		}
 
-		void Mixer::set_bgm(const char *media)
+		void Mixer::set_bgm(const char *const media)
 		{
 			this->stop_bgm(true);
 

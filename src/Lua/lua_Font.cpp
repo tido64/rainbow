@@ -4,7 +4,7 @@
 
 #include "lua_Font.h"
 
-const char *lua_Font::class_name = "font";
+const char *const lua_Font::class_name = "font";
 const Lua::Method<lua_Font> lua_Font::methods[] = {
 	{ "print", &lua_Font::print },
 	{ "set_color", &lua_Font::set_color },

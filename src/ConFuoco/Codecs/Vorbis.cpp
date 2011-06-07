@@ -11,7 +11,7 @@ namespace Rainbow
 	{
 		Decoder::Decoder() { }
 
-		void Decoder::open(Wave &wave, const char *file, bool streaming)
+		void Decoder::open(Wave &wave, const char *const file, bool streaming)
 		{
 			FILE *vorb = fopen(file, "rb");
 			assert(vorb || !"Rainbow::ConFuoco::Decoder: Failed to open file");

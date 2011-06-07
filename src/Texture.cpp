@@ -1,21 +1,38 @@
 #include "Texture.h"
 
-Texture::Texture(const char *filename)
+unsigned int Texture::create(const int x, const int y, const int w, const int h)
 {
-	void *data = 0;
-	GLint format = this->load(data, filename);
+	assert((x >= 0 && (x + w) <= this->width && y >= 0 && (y + h) <= this->height)
+		|| !"Rainbow::TextureAtlas: Invalid dimensions");
 
-	glGenTextures(1, &this->name);
-	glBindTexture(GL_TEXTURE_2D, this->name);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, this->width, this->height, 0, format, GL_UNSIGNED_BYTE, data);
+	unsigned int i = this->textures.size();
 
-	delete[] static_cast<unsigned char *>(data);
+	const float x0 = x / static_cast<float>(this->width);
+	const float x1 = (x + w) / static_cast<float>(this->width);
+	const float y0 = y / static_cast<float>(this->height);
+	const float y1 = (y + h) / static_cast<float>(this->height);
+
+	this->textures.push_back(Vec2f(x1, y0));
+	this->textures.push_back(Vec2f(x0, y0));
+	this->textures.push_back(Vec2f(x1, y1));
+	this->textures.push_back(Vec2f(x0, y1));
+
+	return i;
 }
 
-GLint Texture::load(void *&data, const char *filename)
+bool Texture::is_pow2(const unsigned int i)
 {
+	unsigned int p = 64;
+	for (; p < i; p <<= 1);
+	return p == i;
+}
+
+void Texture::load(const char *const filename)
+{
+	assert(this->textures.size() == 0);
+
+	GLint format = GL_RGBA;
+
 #if defined(RAINBOW_IOS)
 
 	NSString *file = [NSString stringWithUTF8String:(filename)];
@@ -27,10 +44,11 @@ GLint Texture::load(void *&data, const char *filename)
 
 	this->width = CGImageGetWidth(image.CGImage);
 	this->height = CGImageGetHeight(image.CGImage);
+	assert((this->is_pow2(this->width) && this->is_pow2(this->height)) || !"Rainbow::Texture: Texture dimension is not a power of 2");
 	CGRect bounds = CGRectMake(0, 0, this->width, this->height);
 
 	CGColorSpaceRef color_space = CGColorSpaceCreateDeviceRGB();
-	data = new unsigned char[this->height * this->width * 4];
+	unsigned char *data = new unsigned char[this->height * this->width * 4];
 	assert(data != 0 || !"Rainbow::Texture: Failed to allocate memory");
 
 	CGContextRef context = CGBitmapContextCreate(data, this->width, this->height, 8, 4 * this->width, color_space, kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big);
@@ -43,13 +61,10 @@ GLint Texture::load(void *&data, const char *filename)
 
 	[image release];
 
-	return GL_RGBA;
-
 #else
 
 	// Load file into memory
 	png_read_struct texture;
-	texture.offset = 8;
 	AssetManager::Instance().load(texture.data, filename);
 
 	// Look for PNG signature
@@ -81,7 +96,6 @@ GLint Texture::load(void *&data, const char *filename)
 	png_set_read_fn(png_ptr, &texture, mem_fread);
 
 	// Retrieve PNG info
-	GLint format = GL_RGBA;
 	png_read_info(png_ptr, info_ptr);
 	if (png_get_channels(png_ptr, info_ptr) != 4)
 	{
@@ -115,7 +129,7 @@ GLint Texture::load(void *&data, const char *filename)
 	// Allocate memory for bitmap
 	png_read_update_info(png_ptr, info_ptr);
 	const unsigned int rowbytes = png_get_rowbytes(png_ptr, info_ptr);
-	data = new unsigned char[this->height * rowbytes];
+	unsigned char *data = new unsigned char[this->height * rowbytes];
 	assert(data != 0 || !"Rainbow::Texture: Failed to allocate buffer");
 
 	// Allocate row pointer array
@@ -133,7 +147,18 @@ GLint Texture::load(void *&data, const char *filename)
 	png_destroy_read_struct(&png_ptr, &info_ptr, &end_info);
 	delete[] texture.data;
 
-	return format;
-
 #endif
+
+	glGenTextures(1, &this->name);
+	glBindTexture(GL_TEXTURE_2D, this->name);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, this->width, this->height, 0, format, GL_UNSIGNED_BYTE, data);
+
+	delete[] data;
+}
+
+const Vec2f* Texture::operator[](const unsigned int i) const
+{
+	return &this->textures[i];
 }

@@ -1,62 +1,43 @@
-TARGET = rainbow
-BINDIR = bin
-LIBDIR = ../lib
-OBJDIR = build/unix
-SRCDIR = src
+include build/unix/Makefile.inc
 
-# Dynamic libraries
-INCFT  := `freetype-config --cflags`
-INCSDL := `sdl-config --cflags`
+TARGET     = rainbow
+SRC_DIR    = src
+MODULES    = ConFuoco ConFuoco/Codecs Input Lua
 
-# Static libraries
-STATIC  := $(OBJDIR)/libbox2d.a $(OBJDIR)/libpng.a
-LIBLUA  := /usr/include/luajit-2.0
-LIBPNG  := $(LIBDIR)/libpng
+EXEC      := $(BIN_DIR)/$(TARGET)
+BUILD_DIR := $(addprefix $(OBJ_DIR)/,$(MODULES))
+MODULES   := $(SRC_DIR) $(addprefix $(SRC_DIR)/,$(MODULES))
+OBJ       := $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(foreach mod,$(MODULES),$(wildcard $(mod)/*.cpp)))
 
-CC      := "clang -x c"
-CPP     := clang
-CFLAGS  := -g -O2 -Wall -Werror -pipe $(INCSDL) $(INCFT) -I$(LIBDIR) -I$(LIBLUA) -I$(LIBPNG) -march=native -stdlib=libstdc++
-LDFLAGS := -lstdc++ -lm -lGL -lSDL -lfreetype -lluajit-5.1 -lz -lopenal -lvorbisfile
-
-EXEC := $(BINDIR)/$(TARGET)
-OBJ  := $(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(wildcard $(SRCDIR)/*.cpp)) \
-	$(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(wildcard $(SRCDIR)/**/*.cpp)) \
-	$(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(wildcard $(SRCDIR)/**/**/*.cpp))
-DIRS := Common ConFuoco ConFuoco/Codecs Hardware Input Lua ParticleSystem
-
-default: check $(EXEC)
+default: $(BUILD_DIR) $(EXEC)
 
 $(EXEC): $(OBJ) $(STATIC)
-	$(CPP) $(LDFLAGS) -o $@ $^
+	@echo "> Linking $@"
+	@$(CPP) $(LDFLAGS) -o $@ $^
 
-$(OBJDIR)/%.o: $(SRCDIR)/%.cpp
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
 	@echo Compiling $<
 	@$(CPP) -c $< $(CFLAGS) -o $@
 
 %box2d.a:
-	@CPP=$(CPP) LIBDIR=$(LIBDIR) make -f $(OBJDIR)/Makefile.Box2D
-	@make -f $(OBJDIR)/Makefile.Box2D clean
+	@$(MAKE) -f $(OBJ_DIR)/Makefile.Box2D
+	@$(MAKE) -f $(OBJ_DIR)/Makefile.Box2D clean
 
 %lua.a:
-	@cd $(LIBLUA) && make linux
-	@mv $(LIBLUA)/liblua.a $(OBJDIR)
-	@cd $(LIBLUA) && make clean
+	@$(MAKE) -C $(LIBLUA) linux
+	@mv $(LIBLUA)/liblua.a $(OBJ_DIR)
+	@$(MAKE) -C $(LIBLUA) clean
 
 %png.a:
-	@CC=$(CC) LIBSRC=$(LIBPNG) TARGET=libpng make -f $(OBJDIR)/Makefile.lib
-	@TARGET=libpng make -f $(OBJDIR)/Makefile.lib clean
+	@SRC_DIR=$(LIBPNG) TARGET=libpng $(MAKE) -f $(OBJ_DIR)/Makefile.lib
+	@TARGET=libpng $(MAKE) -f $(OBJ_DIR)/Makefile.lib clean
 
-check:
-	@if [ ! -d $(BINDIR) ]; then mkdir -p $(BINDIR); fi
-	@for dir in $(DIRS); do \
-		if [ ! -d $(OBJDIR)/$$dir ]; then \
-			mkdir -p $(OBJDIR)/$$dir; \
-		fi; \
-	done
+$(BUILD_DIR):
+	@mkdir -p $@
 
 clean:
-	@for dir in $(DIRS); do \
-		rm -fr $(OBJDIR)/$$dir; \
+	@for dir in $(BUILD_DIR); do \
+		rm -fr $$dir; \
 	done
 	@rm -fr $(OBJ)
 
@@ -64,5 +45,10 @@ distclean: clean
 	@rm -f $(STATIC)
 
 flags:
-	@echo $(CFLAGS)
-	@echo $(LDFLAGS)
+	@echo CFLAGS = $(CFLAGS)
+	@echo LDFLAGS = $(LDFLAGS)
+
+test: $(OBJ) $(STATIC)
+	@echo "> Building tests"
+	@$(CPP) -c $(SRC_DIR)/RainbowSDL.cpp -DRAINBOW_TEST $(CFLAGS) -o $(OBJ_DIR)/RainbowSDL.o
+	@$(CPP) $(LDFLAGS) -lpthread -o $(BIN_DIR)/run_tests $(OBJ) $(STATIC) $(wildcard $(LIB_DIR)/gtest/*.a)

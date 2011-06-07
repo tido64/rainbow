@@ -1,3 +1,6 @@
+#ifndef LUA_AUDIO_H_
+#define LUA_AUDIO_H_
+
 #include "lua.h"
 #include "../ConFuoco/Mixer.h"
 #include "../AssetManager.h"
@@ -33,3 +36,5 @@ public:
 	static int set_bgm_pan(lua_State *);
 	static int set_bgm_volume(lua_State *);
 };
+
+#endif

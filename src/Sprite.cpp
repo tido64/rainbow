@@ -1,40 +1,22 @@
-/*
- *  Sprite.cpp
- *  OnWire
- *
- *  Created by Tommy Nguyen on 12/7/10.
- *  Copyright 2010 Bifrost Games. All rights reserved.
- *
- */
+/// Copyright 2010-11 Bifrost Games. All rights reserved.
+/// \author Tommy Nguyen
 
-#include "Sprite.h"
+#include "SpriteBatch.h"
 
 using Rainbow::equalf;
 
-Sprite::Sprite(const unsigned int w, const unsigned int h, const TextureAtlas *p) :
+Sprite::Sprite(const unsigned int w, const unsigned int h, const SpriteBatch *p) :
 	width(w), height(h), buffered(false), stale(0xff), angle(0.0f),
-	texture(p->get_name()), vertex_array(new SpriteVertex[4]), parent(p),
-	pivot(0.5f, 0.5f), scale_f(1.0f, 1.0f)
-{
-	this->update();
-}
+	vertex_array(0), parent(p), pivot(0.5f, 0.5f), scale_f(1.0f, 1.0f)
+{ }
 
 Sprite::Sprite(const Sprite &s) :
 	width(s.width), height(s.height), buffered(false), stale(s.stale),
-	angle(s.angle), cos_r(s.cos_r), sin_r(s.sin_r), texture(s.texture),
-	vertex_array(new SpriteVertex[4]), parent(s.parent), pivot(s.pivot),
-	position(s.position), position_d(s.position_d), scale_f(s.scale_f)
+	angle(s.angle), cos_r(s.cos_r), sin_r(s.sin_r),	vertex_array(0),
+	parent(s.parent), pivot(s.pivot), position(s.position),
+	position_d(s.position_d), scale_f(s.scale_f)
 {
-	memcpy(this->vertex_array, s.vertex_array, 4 * sizeof(SpriteVertex));
 	memcpy(this->origin, s.origin, 4 * sizeof(Vec2f));
-	if (this->stale)
-		this->update();
-}
-
-Sprite::~Sprite()
-{
-	if (!this->buffered)
-		delete[] this->vertex_array;
 }
 
 void Sprite::rotate(const float r)
@@ -49,6 +31,7 @@ void Sprite::rotate(const float r)
 void Sprite::scale(const float f)
 {
 	assert(f > 0.0f || !"Rainbow::Sprite: Can't scale with a negative factor");
+
 	if (equalf(f, this->scale_f.x) && equalf(f, this->scale_f.y))
 		return;
 
@@ -61,6 +44,7 @@ void Sprite::scale(const float f)
 void Sprite::scale(const Vec2f &f)
 {
 	assert((f.x > 0.0f && f.y > 0.0f) || !"Rainbow::Sprite: Can't scale with a negative factor");
+
 	if (equalf(f.x, this->scale_f.x) && equalf(f.y, this->scale_f.y))
 		return;
 
@@ -78,8 +62,8 @@ void Sprite::set_color(const unsigned int v0, const unsigned int v1, const unsig
 
 void Sprite::set_pivot(const float x, const float y)
 {
-	assert((x >= 0.0f && x <= 1.0f && y >= 0.0f && y <= 1.0f)
-		|| !"Rainbow::Sprite: Invalid pivot point");
+	assert((x >= 0.0f && x <= 1.0f && y >= 0.0f && y <= 1.0f) || !"Rainbow::Sprite: Invalid pivot point");
+
 	if (equalf(x, this->pivot.x) && equalf(y, this->pivot.y))
 		return;
 
@@ -105,6 +89,18 @@ void Sprite::set_position(const Vec2f &p)
 
 	this->position_d = p;
 	this->stale |= stale_position;
+}
+
+void Sprite::set_texture(const unsigned int id)
+{
+	const Vec2f *tex_coord = this->parent->texture->operator[](id);
+	SpriteVertex *vx = this->vertex_array;
+	for (unsigned int i = 0; i < 4; ++i)
+	{
+		vx->texcoord = *tex_coord;
+		++tex_coord;
+		++vx;
+	}
 }
 
 void Sprite::update()

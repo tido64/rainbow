@@ -1,5 +1,3 @@
-#ifdef RAINBOW_ACCELERATED
-
 #ifndef ACCELERATION_H_
 #define ACCELERATION_H_
 
@@ -27,8 +25,12 @@ namespace Rainbow
 		Acceleration() :
 			x(0), y(0), z(0), timestamp(0.0) { }
 
+		Acceleration(const float x, const float y, const float z, const double timestamp) :
+			x(cut(x)), y(cut(y)), z(cut(z)), timestamp(timestamp) { }
+
+
 		Acceleration(const Acceleration &a) :
-			x(cut(a.x)), y(cut(a.y)), z(cut(a.z)), timestamp(a.timestamp) { }
+			x(a.x), y(a.y), z(a.z), timestamp(a.timestamp) { }
 
 	#ifdef RAINBOW_IOS
 
@@ -53,7 +55,5 @@ namespace Rainbow
 }
 
 typedef Rainbow::Acceleration Acceleration;
-
-#endif
 
 #endif

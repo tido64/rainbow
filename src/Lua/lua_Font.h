@@ -7,7 +7,7 @@
 class lua_Font
 {
 public:
-	static const char *class_name;
+	static const char *const class_name;
 	static const Lua::Method<lua_Font> methods[];
 
 	lua_Font(lua_State *);

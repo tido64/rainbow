@@ -55,7 +55,7 @@ namespace Rainbow
 
 		_Color<float>& operator=(const unsigned int c)
 		{
-			static const float white = 1.0f / 255.0f;
+			const float white = 1.0f / 255.0f;
 			this->r = (0xff & (c >> 24)) * white;
 			this->g = (0xff & (c >> 16)) * white;
 			this->b = (0xff & (c >> 8)) * white;

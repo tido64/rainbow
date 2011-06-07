@@ -1,0 +1,16 @@
+#include "../src/Algorithm.h"
+
+TEST(AlgorithmTest, ApproximatelyEqualFloats)
+{
+	ASSERT_TRUE(Rainbow::equalf(3.14285714f, 22.0f / 7.0f));
+}
+
+TEST(AlgorithmTest, DegreesToRadians)
+{
+	ASSERT_EQ(3.14f, Rainbow::deg2rad(Rainbow::rad2deg(3.14f)));
+}
+
+TEST(AlgorithmTest, DistanceBetweenTwoPoints)
+{
+	ASSERT_EQ(5.0f, Rainbow::distance(0.0f, 0.0f, 3.0f, 4.0f));
+}

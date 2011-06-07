@@ -1,22 +1,21 @@
-OBJDIR := build/unix/$(TARGET)
-SRCDIR := $(LIBSRC)
+include build/unix/Makefile.inc
 
-CFLAGS = -g0 -O2 -pipe -march=native
+CFLAGS  := -g0 -O2 -pipe -march=native
+OBJ_DIR := $(OBJ_DIR)/$(TARGET)
+OBJ     := $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(wildcard $(SRC_DIR)/*.c))
 
-OBJ = $(patsubst $(SRCDIR)/%.c,$(OBJDIR)/%.o,$(wildcard $(SRCDIR)/*.c))
-
-default: check $(OBJDIR)/../$(TARGET).a
+default: $(OBJ_DIR) $(OBJ_DIR)/../$(TARGET).a
 
 %.a: $(OBJ)
 	@echo Creating static $(TARGET) library...
 	@ar rsc $@ $^
 
-$(OBJDIR)/%.o: $(SRCDIR)/%.c
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	@echo Compiling $<
 	@$(CC) -c $< $(CFLAGS) -o $@
 
-check:
-	@if [ ! -d $(OBJDIR) ]; then mkdir -p $(OBJDIR); fi
+$(OBJ_DIR):
+	@mkdir -p $(OBJ_DIR)
 
 clean:
-	@rm -fr $(OBJDIR)
+	@rm -fr $(OBJ_DIR)

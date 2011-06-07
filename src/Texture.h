@@ -1,6 +1,10 @@
 #ifndef TEXTURE_H_
 #define TEXTURE_H_
 
+#include <cassert>
+
+#include "Common/Vec2.h"
+#include "Common/Vector.h"
 #include "AssetManager.h"
 #include "OpenGL.h"
 
@@ -8,26 +12,12 @@
 #	include <UIKit/UIKit.h>
 #else
 #	include <png.h>
-
-/// Structure for reading PNG bitmaps.
-///
-/// Copyright 2010-11 Bifrost Games. All rights reserved.
-/// \author Tommy Nguyen
-struct png_read_struct
-{
-	unsigned int offset;
-	unsigned char *data;
-
-	png_read_struct(unsigned char *data = 0, unsigned int offset = 0) :
-		offset(offset), data(data) { }
-};
-
 #endif
 
 /// A texture loaded from an image file.
 ///
-/// Note: Textures' dimension must be (2^n) by (2^m) for some arbitrary n and m,
-/// where n > 6 and m > 6.
+/// iOS Note: Textures' dimension must be (2^n) by (2^m) for some arbitrary n
+/// and m, where n, m > 6.
 ///
 /// Note: Textures are loaded upside-down, so the coordinates must be flipped.
 ///
@@ -43,16 +33,43 @@ public:
 	GLuint name;
 	GLsizei width, height;
 
-	Texture(const char *filename);
+	/// Create a texture from file.
+	/// \param x       Starting point of the texture (x-coordinate)
+	/// \param y       Starting point of the texture (y-coordinate)
+	/// \param width   Width of the texture
+	/// \param height  Height of the texture
+	/// \return The name of the texture
+	unsigned int create(const int x, const int y, const int width, const int height);
+
+	/// Read image data into graphics buffer.
+	/// \param file  Path to image
+	void load(const char *const file);
+
+	/// Trim the internal texture storage.
+	void trim();
+
+	const Vec2f* operator[](const unsigned int i) const;
 
 private:
-	/// Read image data into buffer.
-	/// \param[out] data  Destination buffer
-	/// \param[in]  file  Path to image
-	/// \return Image colour format
-	GLint load(void *&data, const char *file);
+	Vector<Vec2f> textures;  ///< Texture coordinates
+
+	/// Return true if the integer provided is a power of 2.
+	bool is_pow2(const unsigned int);
 
 #ifdef PNG_LIBPNG_VER_STRING
+
+	/// Structure for reading PNG bitmaps.
+	///
+	/// Copyright 2010-11 Bifrost Games. All rights reserved.
+	/// \author Tommy Nguyen
+	struct png_read_struct
+	{
+		unsigned int offset;
+		unsigned char *data;
+
+		png_read_struct(unsigned char *data = 0, unsigned int offset = 8) :
+			offset(offset), data(data) { }
+	};
 
 	static void mem_fread(png_structp png_ptr, png_bytep data, png_size_t length)
 	{
@@ -63,5 +80,10 @@ private:
 
 #endif
 };
+
+inline void Texture::trim()
+{
+	this->textures.reserve(0);
+}
 
 #endif

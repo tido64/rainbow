@@ -24,7 +24,7 @@ public:
 	template<class T>
 	struct Method
 	{
-		const char *name;
+		const char *const name;
 		int (T::*lua_CFunction)(lua_State *);
 	};
 
@@ -57,12 +57,10 @@ public:
     }
 
 	/// Dump Lua stack to stdout.
-	static void dump_stack(lua_State *L)
-	{
-		puts("Lua stack");
-		for (int l = 1; l <= lua_gettop(L); ++l)
-			printf("#%i: %s\n", l, lua_tolstring(L, l, 0));
-	}
+	static void dump_stack(lua_State *L);
+
+	/// Return information about a specific function or function invocation.
+	static lua_Debug* getinfo(lua_State *L);
 
 	/// Return the wrapper of the object on top of the stack.
 	/// \return Pointer to wrapper
@@ -119,6 +117,7 @@ public:
 		lua_pushstring(this->L, "__gc");
 		lua_pushcclosure(this->L, &Lua::dealloc<T>, 0);
 		lua_settable(this->L, -3);
+		lua_pop(this->L, 1);
 	}
 
 private:
@@ -133,6 +132,18 @@ private:
 	template<class T>
 	static int thunk(lua_State *L)
 	{
+	#ifndef NDEBUG
+
+		if (lua_type(L, 1) != LUA_TTABLE)
+		{
+			lua_Debug *d = getinfo(L);
+			printf("%s:%i: error: Called a class function using '.' instead of ':'\n", d->source, d->currentline);
+			delete d;
+			assert(lua_type(L, 1) == LUA_TTABLE);
+		}
+
+	#endif
+
 		const int i = static_cast<int>(lua_tonumber(L, lua_upvalueindex(1)));
 		lua_rawgeti(L, 1, 0);
 		lua_remove(L, 1);
@@ -163,6 +174,7 @@ private:
 // Lua wrappers
 #include "Lua/lua_Font.h"
 #include "Lua/lua_Physics.h"
+#include "Lua/lua_Sprite.h"
 #include "Lua/lua_SpriteBatch.h"
 #include "Lua/lua_Texture.h"
 

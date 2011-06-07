@@ -85,7 +85,7 @@ namespace Rainbow
 
 			/// Add sound to mixer.
 			/// \return Audio buffer id
-			unsigned int add(const char *);
+			unsigned int add(const char *const);
 
 			/// Play sound wave at given position.
 			/// \return Source id
@@ -109,7 +109,7 @@ namespace Rainbow
 			/* Background music controls */
 
 			/// Set stream as background music.
-			void set_bgm(const char *media);
+			void set_bgm(const char *const media);
 
 			/// Play background music.
 			void play_bgm();
