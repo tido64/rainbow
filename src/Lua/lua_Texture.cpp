@@ -2,13 +2,13 @@
 #	pragma warning(disable : 4244)
 #endif
 
-#include "lua_Texture.h"
+#include "Lua/lua_Texture.h"
 
-const char *const lua_Texture::class_name = "load_texture";
-const Lua::Method<lua_Texture> lua_Texture::methods[] = {
+const char lua_Texture::class_name[] = "load_texture";
+const LuaMachine::Method<lua_Texture> lua_Texture::methods[] = {
 	{ "create",  &lua_Texture::create },
 	{ "trim",    &lua_Texture::trim },
-	{ 0 }
+	{ 0, 0 }
 };
 
 lua_Texture::lua_Texture(lua_State *L)

@@ -1,4 +1,9 @@
-#include "Texture.h"
+#include "Graphics/Texture.h"
+
+Texture::Texture(const void *const data)
+{
+	this->load(data);
+}
 
 unsigned int Texture::create(const int x, const int y, const int w, const int h)
 {
@@ -27,7 +32,7 @@ bool Texture::is_pow2(const unsigned int i)
 	return p == i;
 }
 
-void Texture::load(const char *const filename)
+void Texture::load(const void *img_data)
 {
 	assert(this->textures.size() == 0);
 
@@ -35,11 +40,8 @@ void Texture::load(const char *const filename)
 
 #if defined(RAINBOW_IOS)
 
-	NSString *file = [NSString stringWithUTF8String:(filename)];
-	NSString *path = [[NSBundle mainBundle] pathForResource:[file stringByDeletingPathExtension] ofType:[file pathExtension]];
-	NSData *texture = [[NSData alloc] initWithContentsOfFile:path];
-	UIImage *image = [[UIImage alloc] initWithData:texture];
-	[texture release];
+	UIImage *image = [[UIImage alloc] initWithData:static_cast<const NSData *>(img_data)];
+	[static_cast<const NSData *>(img_data) release];
 	assert(image != nil || !"Rainbow::Texture: Failed to load file");
 
 	this->width = CGImageGetWidth(image.CGImage);
@@ -63,15 +65,18 @@ void Texture::load(const char *const filename)
 
 #else
 
-	// Load file into memory
+	// Prepare for decoding PNG data
 	png_read_struct texture;
-	AssetManager::Instance().load(texture.data, filename);
+	texture.data = static_cast<const unsigned char *>(img_data);
 
 	// Look for PNG signature
 	{
 		unsigned char *png_sig = new unsigned char[texture.offset];
 		memcpy(png_sig, texture.data, texture.offset);
-		int result = png_sig_cmp(png_sig, 0, texture.offset);
+	#ifndef NDEBUG
+		int result =
+	#endif
+		png_sig_cmp(png_sig, 0, texture.offset);
 		assert(result == 0 || !"Rainbow::Texture: File is not PNG");
 		delete[] png_sig;
 	}
@@ -85,7 +90,10 @@ void Texture::load(const char *const filename)
 	png_infop end_info = png_create_info_struct(png_ptr);
 	assert(end_info != 0 || !"Rainbow::Texture: Failed to allocate memory");
 
-	int result = setjmp(png_jmpbuf(png_ptr));
+#ifndef NDEBUG
+	int result =
+#endif
+	setjmp(png_jmpbuf(png_ptr));
 	assert(result == 0 || !"Rainbow::Texture: Failed to allocate memory");
 
 	// Texture can't be greater than what the hardware supports

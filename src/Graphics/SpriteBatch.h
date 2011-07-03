@@ -1,10 +1,9 @@
 #ifndef SPRITEBATCH_H_
 #define SPRITEBATCH_H_
 
-#include "Drawable.h"
-#include "OpenGL.h"
-#include "Sprite.h"
-#include "Texture.h"
+#include "Graphics/Drawable.h"
+#include "Graphics/Sprite.h"
+#include "Graphics/Texture.h"
 
 /// A drawable batch of sprites.
 ///
@@ -27,8 +26,8 @@ public:
 	/// Draw the batch of sprites.
 	void draw();
 
-	/// Load specified texture.
-	Texture* set_texture(const char *const texture);
+	/// Load texture data.
+	Texture* set_texture(const void *const texture);
 
 	/// Re-use specified texture.
 	Texture* set_texture(Texture *texture);

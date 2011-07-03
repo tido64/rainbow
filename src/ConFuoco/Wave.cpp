@@ -1,4 +1,4 @@
-#include "Wave.h"
+#include "ConFuoco/Wave.h"
 
 namespace Rainbow
 {

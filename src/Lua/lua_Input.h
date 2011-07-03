@@ -2,9 +2,7 @@
 #define LUA_INPUT_H_
 
 #include "lua.h"
-
-#include "../Platform.h"
-#include "../Input/Input.h"
+#include "Input/Input.h"
 
 class lua_Input
 {

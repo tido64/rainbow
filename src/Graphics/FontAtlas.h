@@ -6,8 +6,8 @@
 #include FT_FREETYPE_H
 #include FT_GLYPH_H
 
+#include "Graphics/FontGlyph.h"
 #include "AssetManager.h"
-#include "FontGlyph.h"
 #include "OpenGL.h"
 
 /// Uses FreeType to load OpenType and TrueType fonts.
@@ -34,7 +34,9 @@ class FontAtlas
 public:
 	const float pt;
 
-	FontAtlas(const char *const font_family, const float pt);
+	FontAtlas(const float pt);
+
+	void load(const void *font_data, const unsigned int size);
 
 	/// Print text at (x,y).
 	void print(const char *text, const int x = 0, const int y = 0) const;

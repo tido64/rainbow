@@ -1,16 +1,16 @@
-#include "../../src/Common/Vector.h"
+#include "Common/Vector.h"
 
 class VectorTest : public testing::Test
 {
 protected:
 	const unsigned int test_capacity;
 	const unsigned int test_size;
-	Vector<int> intvec;
+	Vector<unsigned int> intvec;
 
 	VectorTest() : test_capacity(16384), test_size(10000)
 	{
 		// Initialise vector with some content
-		for (int i = 0; i < this->test_size; ++i)
+		for (unsigned int i = 0; i < this->test_size; ++i)
 			this->intvec.push_back(i);
 	}
 };
@@ -19,13 +19,13 @@ TEST_F(VectorTest, PushBackAndExpansion)
 {
 	ASSERT_EQ(test_capacity, intvec.capacity());
 	ASSERT_EQ(test_size, intvec.size());
-	for (int i = 0; i < test_size; ++i)
+	for (unsigned int i = 0; i < test_size; ++i)
 		ASSERT_EQ(i, intvec[i]);
 }
 
 TEST_F(VectorTest, At)
 {
-	for (int i = 0; i < test_size; ++i)
+	for (unsigned int i = 0; i < test_size; ++i)
 		ASSERT_EQ(i, intvec.at(i));
 }
 
@@ -36,20 +36,20 @@ TEST_F(VectorTest, Begin)
 
 TEST_F(VectorTest, OperatorEq)
 {
-	Vector<int> cpvec;
+	Vector<unsigned int> cpvec;
 	cpvec = intvec;
 	ASSERT_EQ(test_capacity, cpvec.capacity());
 	ASSERT_EQ(test_size, cpvec.size());
-	for (int i = 0; i < test_size; ++i)
+	for (unsigned int i = 0; i < test_size; ++i)
 		ASSERT_EQ(i, cpvec[i]);
 }
 
 TEST_F(VectorTest, CopyConstructor)
 {
-	Vector<int> cpvec(intvec);
+	Vector<unsigned int> cpvec(intvec);
 	ASSERT_EQ(test_capacity, cpvec.capacity());
 	ASSERT_EQ(test_size, cpvec.size());
-	for (int i = 0; i < test_size; ++i)
+	for (unsigned int i = 0; i < test_size; ++i)
 		ASSERT_EQ(i, cpvec[i]);
 }
 
@@ -58,7 +58,7 @@ TEST_F(VectorTest, ReserveLessThanSize)
 	intvec.reserve(0);
 	ASSERT_EQ(test_size, intvec.capacity());
 	ASSERT_EQ(test_size, intvec.size());
-	for (int i = 0; i < test_size; ++i)
+	for (unsigned int i = 0; i < test_size; ++i)
 		ASSERT_EQ(i, intvec[i]);
 }
 
@@ -68,14 +68,14 @@ TEST_F(VectorTest, ReserveGreaterThanSize)
 	intvec.reserve(double_capacity);
 	ASSERT_EQ(double_capacity, intvec.capacity());
 	ASSERT_EQ(test_size, intvec.size());
-	for (int i = 0; i < test_size; ++i)
+	for (unsigned int i = 0; i < test_size; ++i)
 		ASSERT_EQ(i, intvec[i]);
 }
 
 TEST_F(VectorTest, Assignment)
 {
-	for (int i = 0; i < test_size; ++i)
+	for (unsigned int i = 0; i < test_size; ++i)
 		intvec[i] = i * 5;
-	for (int i = 0; i < test_size; ++i)
+	for (unsigned int i = 0; i < test_size; ++i)
 		ASSERT_EQ(i * 5, intvec[i]);
 }

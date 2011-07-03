@@ -1,7 +1,7 @@
 #ifndef AUDIO_STREAM_H_
 #define AUDIO_STREAM_H_
 
-#include "Wave.h"
+#include "ConFuoco/Wave.h"
 
 #define STREAM_BUFFERS 3
 

@@ -1,15 +1,15 @@
-#include "../../src/Common/List.h"
+#include "Common/List.h"
 
 class ListTest : public testing::Test
 {
 protected:
 	const unsigned int test_size;
-	List<int> intlist;
+	List<unsigned int> intlist;
 
 	ListTest() : test_size(10000)
 	{
 		// Initialise list with some content
-		for (int i = 0; i < this->test_size; ++i)
+		for (unsigned int i = 0; i < this->test_size; ++i)
 			this->intlist.push_back(i);
 	}
 };
@@ -18,8 +18,8 @@ TEST_F(ListTest, IteratorIncrementAndDecrement)
 {
 	ASSERT_EQ(test_size, intlist.size());
 
-	int count = 0;
-	List<int>::Iterator i = intlist.begin();
+	unsigned int count = 0;
+	List<unsigned int>::Iterator i = intlist.begin();
 
 	while (count < test_size - 1)
 	{
@@ -41,7 +41,7 @@ TEST_F(ListTest, Remove)
 	intlist.remove(over);
 	ASSERT_EQ(test_size - 1, intlist.size());
 
-	List<int>::Iterator iter = intlist.begin();
+	List<unsigned int>::Iterator iter = intlist.begin();
 	for (unsigned int i = 0; i < over; ++i)
 	{
 		ASSERT_EQ(i, *iter);

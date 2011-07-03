@@ -1,14 +1,14 @@
 #ifndef LUA_SPRITE_H_
 #define LUA_SPRITE_H_
 
-#include "../Lua.h"
-#include "../Sprite.h"
+#include "Graphics/Sprite.h"
+#include "LuaMachine.h"
 
 class lua_Sprite
 {
 public:
-	static const char *const class_name;
-	static const Lua::Method<lua_Sprite> methods[];
+	static const char class_name[];
+	static const LuaMachine::Method<lua_Sprite> methods[];
 
 	lua_Sprite(lua_State *);
 

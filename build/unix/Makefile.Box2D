@@ -1,9 +1,9 @@
-include build/unix/Makefile.inc
+include build/unix/default.mk
 
-TARGET     = libbox2d.a
-MODULES    = Collision Collision/Shapes Common Dynamics Dynamics/Contacts Dynamics/Joints
+TARGET    := $(OBJ_DIR)/libbox2d.a
+MODULES   := Collision Collision/Shapes Common Dynamics Dynamics/Contacts Dynamics/Joints
 
-CFLAGS    := -g0 -O2 -pipe -I $(LIB_DIR) -march=native
+CXXFLAGS  := $(CFLAGS)
 
 OBJ_DIR   := $(OBJ_DIR)/Box2D
 SRC_DIR   := $(LIB_DIR)/Box2D
@@ -11,15 +11,13 @@ BUILD_DIR := $(addprefix $(OBJ_DIR)/,$(MODULES))
 MODULES   := $(SRC_DIR) $(addprefix $(SRC_DIR)/,$(MODULES))
 OBJ       := $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(foreach mod,$(MODULES),$(wildcard $(mod)/*.cpp)))
 
-default: $(BUILD_DIR) $(OBJ_DIR)/../$(TARGET)
+default: $(BUILD_DIR) $(TARGET)
 
 %.a: $(OBJ)
-	@echo Creating static Box2D library...
-	@ar rsc $@ $^
+	$(call archive)
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
-	@echo Compiling $<
-	@$(CPP) -c $< $(CFLAGS) -o $@
+	$(call compile)
 
 $(BUILD_DIR):
 	@mkdir -p $@

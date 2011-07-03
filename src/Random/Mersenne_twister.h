@@ -7,7 +7,7 @@
 #include <cstring>
 #include <ctime>
 
-#include "dSFMT-params.h"
+#include "Random/dSFMT-params.h"
 
 /// Double precision SIMD-oriented Fast Mersenne Twister (dSFMT) based on IEEE 754 format.
 ///

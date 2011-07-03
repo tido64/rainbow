@@ -1,18 +1,15 @@
-include build/unix/Makefile.inc
+include build/unix/default.mk
 
-CFLAGS  := -g0 -O2 -pipe -march=native
 OBJ_DIR := $(OBJ_DIR)/$(TARGET)
 OBJ     := $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(wildcard $(SRC_DIR)/*.c))
 
-default: $(OBJ_DIR) $(OBJ_DIR)/../$(TARGET).a
+default: $(OBJ_DIR) $(OBJ_DIR).a
 
 %.a: $(OBJ)
-	@echo Creating static $(TARGET) library...
-	@ar rsc $@ $^
+	$(call archive)
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
-	@echo Compiling $<
-	@$(CC) -c $< $(CFLAGS) -o $@
+	$(call compilec)
 
 $(OBJ_DIR):
 	@mkdir -p $(OBJ_DIR)

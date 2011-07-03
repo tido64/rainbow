@@ -5,5 +5,6 @@
 #include "Common/Vec2.test"
 #include "Common/Vec3.test"
 #include "Common/Vector.test"
-#include "Acceleration.test"
+#include "Input/Acceleration.test"
+#include "Input/Touch.test"
 #include "Algorithm.test"

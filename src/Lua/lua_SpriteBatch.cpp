@@ -2,25 +2,25 @@
 #	pragma warning(disable : 4244)
 #endif
 
-#include "lua_SpriteBatch.h"
+#include "Lua/lua_SpriteBatch.h"
 
-const char *const lua_SpriteBatch::class_name = "spritebatch";
-const Lua::Method<lua_SpriteBatch> lua_SpriteBatch::methods[] = {
+const char lua_SpriteBatch::class_name[] = "spritebatch";
+const LuaMachine::Method<lua_SpriteBatch> lua_SpriteBatch::methods[] = {
 	{ "add",          &lua_SpriteBatch::add },
 	{ "draw",         &lua_SpriteBatch::draw },
 	{ "set_texture",  &lua_SpriteBatch::set_texture },
 	{ "update",       &lua_SpriteBatch::update },
-	{ 0 }
+	{ 0, 0 }
 };
 
 int lua_SpriteBatch::add(lua_State *L)
 {
 	assert(lua_gettop(L) == 4 || !"Rainbow::Lua::SpriteBatch::add takes four parameters");
 	lua_pushlightuserdata(L, this->s.add(lua_tointeger(L, 1), lua_tointeger(L, 2), lua_tointeger(L, 3), lua_tointeger(L, 4)));
-	return Lua::alloc<lua_Sprite>(L);
+	return LuaMachine::alloc<lua_Sprite>(L);
 }
 
-int lua_SpriteBatch::draw(lua_State *L)
+int lua_SpriteBatch::draw(lua_State *)
 {
 	this->s.draw();
 	return 0;
@@ -28,12 +28,28 @@ int lua_SpriteBatch::draw(lua_State *L)
 
 int lua_SpriteBatch::set_texture(lua_State *L)
 {
-	assert(lua_gettop(L) == 1 || !"Rainbow::Lua::SpriteBatch::add takes only one parameter");
-	lua_pushlightuserdata(L, this->s.set_texture(lua_tolstring(L, 1, 0)));
-	return Lua::alloc<lua_Texture>(L);
+	assert(lua_gettop(L) == 1 || !"Rainbow::Lua::SpriteBatch::set_texture takes only one parameter");
+
+	switch (lua_type(L, 1))
+	{
+		case LUA_TSTRING:
+			{
+				void *data = 0;
+				AssetManager::Instance().load(data, lua_tolstring(L, 1, 0));
+				lua_pushlightuserdata(L, this->s.set_texture(data));
+				return LuaMachine::alloc<lua_Texture>(L);
+			}
+			break;
+		case LUA_TLIGHTUSERDATA:
+			lua_pushlightuserdata(L, this->s.set_texture(reinterpret_cast<const Texture *>(lua_topointer(L, 1))));
+			break;
+		default:
+			break;
+	}
+	return 0;
 }
 
-int lua_SpriteBatch::update(lua_State *L)
+int lua_SpriteBatch::update(lua_State *)
 {
 	this->s.update();
 	return 0;

@@ -31,7 +31,7 @@ b2Body* Physics::create_anchor(const float x, const float y, const float w, cons
 	return b;
 }
 
-b2Body* Physics::create_circle(const float x, const float y, const float r, const float friction, const float restitution, const float density)
+b2Body* Physics::create_circle(const float x, const float y, const float r, const float friction, const float /*restitution*/, const float density)
 {
 	b2CircleShape shape;
 	shape.m_radius = r * MTP_RATIO;

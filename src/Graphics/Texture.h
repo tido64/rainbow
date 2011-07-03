@@ -1,8 +1,6 @@
 #ifndef TEXTURE_H_
 #define TEXTURE_H_
 
-#include <cassert>
-
 #include "Common/Vec2.h"
 #include "Common/Vector.h"
 #include "AssetManager.h"
@@ -33,6 +31,8 @@ public:
 	GLuint name;
 	GLsizei width, height;
 
+	Texture(const void *const data);
+
 	/// Create a texture from file.
 	/// \param x       Starting point of the texture (x-coordinate)
 	/// \param y       Starting point of the texture (y-coordinate)
@@ -40,10 +40,6 @@ public:
 	/// \param height  Height of the texture
 	/// \return The name of the texture
 	unsigned int create(const int x, const int y, const int width, const int height);
-
-	/// Read image data into graphics buffer.
-	/// \param file  Path to image
-	void load(const char *const file);
 
 	/// Trim the internal texture storage.
 	void trim();
@@ -56,6 +52,9 @@ private:
 	/// Return true if the integer provided is a power of 2.
 	bool is_pow2(const unsigned int);
 
+	/// Read image data into graphics buffer.
+	void load(const void *img_data);
+
 #ifdef PNG_LIBPNG_VER_STRING
 
 	/// Structure for reading PNG bitmaps.
@@ -65,7 +64,7 @@ private:
 	struct png_read_struct
 	{
 		unsigned int offset;
-		unsigned char *data;
+		const unsigned char *data;
 
 		png_read_struct(unsigned char *data = 0, unsigned int offset = 8) :
 			offset(offset), data(data) { }

@@ -1,6 +1,6 @@
-#include "Lua.h"
+#include "LuaMachine.h"
 
-Lua::Lua() : L(luaL_newstate())
+LuaMachine::LuaMachine() : L(luaL_newstate())
 {
 	const char rainbow[] = "rainbow";
 	luaL_openlibs(this->L);
@@ -19,10 +19,10 @@ Lua::Lua() : L(luaL_newstate())
 
 	lua_pop(this->L, 1);
 
-	Lua::wrap<lua_Font>(rainbow);
-	Lua::wrap<lua_Sprite>(rainbow);
-	Lua::wrap<lua_SpriteBatch>(rainbow);
-	Lua::wrap<lua_Texture>(rainbow);
+	LuaMachine::wrap<lua_Font>(rainbow);
+	LuaMachine::wrap<lua_Sprite>(rainbow);
+	LuaMachine::wrap<lua_SpriteBatch>(rainbow);
+	LuaMachine::wrap<lua_Texture>(rainbow);
 
 	// We need to set LUA_PATH
 	#ifdef RAINBOW_IOS
@@ -47,7 +47,7 @@ Lua::Lua() : L(luaL_newstate())
 	delete[] lua_path;
 }
 
-void Lua::call(const char *const k)
+void LuaMachine::call(const char *const k)
 {
 	lua_getfield(this->L, LUA_GLOBALSINDEX, k);
 	int lua_e = lua_pcall(this->L, 0, 0, 0);
@@ -55,7 +55,7 @@ void Lua::call(const char *const k)
 		this->err(lua_e);
 }
 
-void Lua::err(const int lua_e)
+void LuaMachine::err(const int lua_e)
 {
 	const char *const m = lua_tolstring(this->L, -1, 0);
 	lua_pop(this->L, 1);
@@ -82,7 +82,7 @@ void Lua::err(const int lua_e)
 	assert(!"Lua related error, see stdout");
 }
 
-void Lua::dump_stack(lua_State *L)
+void LuaMachine::dump_stack(lua_State *L)
 {
 	puts("Lua stack");
 	for (int l = 1; l <= lua_gettop(L); ++l)
@@ -124,7 +124,7 @@ void Lua::dump_stack(lua_State *L)
 	}
 }
 
-lua_Debug* Lua::getinfo(lua_State *L)
+lua_Debug* LuaMachine::getinfo(lua_State *L)
 {
 	lua_Debug *d = new lua_Debug;
 	lua_getstack(L, 1, d);
@@ -132,7 +132,7 @@ lua_Debug* Lua::getinfo(lua_State *L)
 	return d;
 }
 
-void Lua::load(const char *const lua)
+void LuaMachine::load(const char *const lua)
 {
 	// Load Lua script
 	int lua_e = luaL_loadfile(this->L, lua);
@@ -144,7 +144,7 @@ void Lua::load(const char *const lua)
 		this->err(lua_e);
 }
 
-void Lua::update()
+void LuaMachine::update()
 {
 #ifdef RAINBOW_ACCELERATED
 	this->input.accelerate(this->L);

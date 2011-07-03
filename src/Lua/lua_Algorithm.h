@@ -2,7 +2,7 @@
 #define LUA_ALGORITHM_H_
 
 #include "lua.h"
-#include "../Algorithm.h"
+#include "Algorithm.h"
 
 class lua_Algorithm
 {

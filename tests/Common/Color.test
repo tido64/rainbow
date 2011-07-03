@@ -1,4 +1,4 @@
-#include "../../src/Common/Color.h"
+#include "Common/Color.h"
 
 TEST(ColorBytesTest, Assignment)
 {

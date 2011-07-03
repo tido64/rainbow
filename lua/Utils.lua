@@ -5,7 +5,7 @@
 
 rainbow.utils = {};
 
-require("Accelerometer");  -- Include the accelerometer helper
+--require("Accelerometer");  -- Include the accelerometer helper
 
 --! Dump all symbols in a table. To dump all global variables, specify _G.
 --! \param story   Table to dump

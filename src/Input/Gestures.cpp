@@ -1,6 +1,6 @@
 #ifdef RAINBOW_TOUCHED
 
-#include "Gestures.h"
+#include "Input/Gestures.h"
 
 namespace Rainbow
 {

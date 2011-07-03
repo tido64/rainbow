@@ -5,7 +5,7 @@
 #include <SDL/SDL_thread.h>
 
 #ifdef RAINBOW_TEST
-#	include "../tests/test.cpp"
+#	include "../tests/test.h"
 #endif
 
 #include "Director.h"

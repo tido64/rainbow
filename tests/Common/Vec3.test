@@ -1,4 +1,4 @@
-#include "../../src/Common/Vec3.h"
+#include "Common/Vec3.h"
 
 TEST(Vec3Test, OperatorAdd)
 {

@@ -1,4 +1,4 @@
-#include "../src/Algorithm.h"
+#include "Algorithm.h"
 
 TEST(AlgorithmTest, ApproximatelyEqualFloats)
 {

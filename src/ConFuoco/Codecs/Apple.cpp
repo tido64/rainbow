@@ -1,4 +1,4 @@
-#include "../Decoder.h"
+#include "ConFuoco/Decoder.h"
 
 #ifdef RAINBOW_IOS
 

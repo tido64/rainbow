@@ -4,8 +4,8 @@
 #include <cmath>
 #include <cstdio>
 
-#include "../Common/Constants.h"
-#include "OpenAL.h"
+#include "Common/Constants.h"
+#include "ConFuoco/OpenAL.h"
 
 #ifdef RAINBOW_IOS
 #	include <AVFoundation/AVFoundation.h>
@@ -92,7 +92,7 @@ namespace Rainbow
 			unsigned int play(const unsigned int id, const float x = 0, const float y = 0, const float z = 0);
 
 			/// Set source looping.
-			void set_looping(const unsigned int source, const bool looping, const unsigned int position = 0);
+			void set_looping(const unsigned int source, const bool looping);
 
 			/// Set sound pitch at source.
 			/// \param source  Source id
@@ -216,7 +216,7 @@ namespace Rainbow
 			alListener3f(AL_VELOCITY, x, y, z);
 		}
 
-		inline void Mixer::set_looping(const unsigned int source, const bool looping, const unsigned int position)
+		inline void Mixer::set_looping(const unsigned int source, const bool looping)
 		{
 			alSourcei(source, AL_LOOPING, looping ? AL_TRUE : AL_FALSE);
 		}
@@ -240,31 +240,27 @@ namespace Rainbow
 			alSource3f(source, AL_VELOCITY, x, y, z);
 		}
 
+	#ifdef RAINBOW_IOS
+
 		inline void Mixer::set_bgm_pan(float p)
 		{
-		#ifdef RAINBOW_IOS
-
 			if (p > 1.0f)
 				p = 1.0f;
 			else if (p < -1.0f)
 				p = -1.0f;
 			this->player.pan = p;
-
-		#endif
 		}
 
 		inline void Mixer::set_bgm_volume(float v)
 		{
-		#ifdef RAINBOW_IOS
-
 			if (v > 1.0f)
 				v = 1.0f;
 			else if (v < 0.0f)
 				v = 0.0f;
 			this->player.volume = v;
-
-		#endif
 		}
+
+	#endif
 	}
 }
 

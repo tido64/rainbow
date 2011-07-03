@@ -18,7 +18,7 @@
 ///
 /// Copyright 2011 Bifrost Games. All rights reserved.
 /// \author Tommy Nguyen
-class Lua
+class LuaMachine
 {
 public:
 	template<class T>
@@ -49,7 +49,7 @@ public:
 		{
 			lua_pushstring(L, T::methods[i].name);
 			lua_pushnumber(L, i);
-			lua_pushcclosure(L, &Lua::thunk<T>, 1);
+			lua_pushcclosure(L, &LuaMachine::thunk<T>, 1);
 			lua_settable(L, -3);
 		}
 
@@ -74,7 +74,7 @@ public:
 		return *static_cast<T **>(ptr);
 	}
 
-	~Lua() { lua_close(this->L); }
+	~LuaMachine() { lua_close(this->L); }
 
 	/// Call a function with no parameters or return value.
 	/// \param k  Name of the function to call
@@ -103,19 +103,19 @@ public:
 				lua_setfield(L, LUA_GLOBALSINDEX, ns);
 			}
 
-			lua_pushcclosure(this->L, &Lua::alloc<T>, 0);
+			lua_pushcclosure(this->L, &LuaMachine::alloc<T>, 0);
 			lua_setfield(this->L, -2, T::class_name);
 			lua_pop(this->L, 1);
 		}
 		else
 		{
-			lua_pushcclosure(this->L, &Lua::alloc<T>, 0);
+			lua_pushcclosure(this->L, &LuaMachine::alloc<T>, 0);
 			lua_setfield(this->L, LUA_GLOBALSINDEX, T::class_name);
 		}
 
 		luaL_newmetatable(this->L, T::class_name);
 		lua_pushstring(this->L, "__gc");
-		lua_pushcclosure(this->L, &Lua::dealloc<T>, 0);
+		lua_pushcclosure(this->L, &LuaMachine::dealloc<T>, 0);
 		lua_settable(this->L, -3);
 		lua_pop(this->L, 1);
 	}
@@ -158,15 +158,15 @@ private:
 	lua_Input input;
 	lua_Platform platform;
 
-	Lua();
+	LuaMachine();
 
 	/// Intentionally left undefined.
-	Lua(const Lua &);
+	LuaMachine(const LuaMachine &);
 
 	void err(int);
 
 	/// Intentionally left undefined.
-	Lua& operator=(const Lua &);
+	LuaMachine& operator=(const LuaMachine &);
 
 	friend class Director;
 };

@@ -2,10 +2,10 @@
 #	pragma warning(disable : 4244)
 #endif
 
-#include "lua_Sprite.h"
+#include "Lua/lua_Sprite.h"
 
-const char *const lua_Sprite::class_name = "_sprite";
-const Lua::Method<lua_Sprite> lua_Sprite::methods[] = {
+const char lua_Sprite::class_name[] = "_sprite";
+const LuaMachine::Method<lua_Sprite> lua_Sprite::methods[] = {
 	{ "get_angle",    &lua_Sprite::get_angle },
 	{ "get_position", &lua_Sprite::get_position },
 	{ "rotate",       &lua_Sprite::rotate },
@@ -14,7 +14,7 @@ const Lua::Method<lua_Sprite> lua_Sprite::methods[] = {
 	{ "set_pivot",    &lua_Sprite::set_pivot },
 	{ "set_position", &lua_Sprite::set_position },
 	{ "set_texture",  &lua_Sprite::set_texture },
-	{ 0 }
+	{ 0, 0 }
 };
 
 lua_Sprite::lua_Sprite(lua_State *L)

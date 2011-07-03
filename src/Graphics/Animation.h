@@ -2,7 +2,7 @@
 #define ANIMATION_H_
 
 #include "Common/Constants.h"
-#include "Drawable.h"
+#include "Graphics/Drawable.h"
 
 /// A generic sprite animation.
 ///

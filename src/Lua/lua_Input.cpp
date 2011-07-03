@@ -2,8 +2,8 @@
 #	pragma warning(disable : 4244)
 #endif
 
-#include "../Lua.h"
-#include "lua_Input.h"
+#include "Lua/lua_Input.h"
+#include "LuaMachine.h"
 
 void lua_Input::init(lua_State *L)
 {

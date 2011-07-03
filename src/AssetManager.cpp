@@ -47,31 +47,15 @@ const char* AssetManager::get_full_path(const char *const filename)
 #endif
 }
 
-unsigned int AssetManager::load(unsigned char *&buffer, const char *filename)
+unsigned int AssetManager::load(void *&buffer, const char *filename)
 {
-	unsigned int sz = 0;
+#if defined(RAINBOW_IOS)
 
-#ifdef RAINBOW_ZIP
-
-	assert(this->archive != 0);
-	filename = this->get_full_path(filename);
-	zip_file *zf = zip_fopen(this->archive, filename, 0);
-	assert(zf != 0 || !"Rainbow::AssetManager: Failed to load file");
-
-	// Get uncompressed size of file
-	struct zip_stat stat;
-	unsigned int read = zip_stat(this->archive, filename, 0, &stat);
-	assert(read == 0 || !"Rainbow::AssetManager: Failed to retrieve uncompressed size");
-	sz = stat.size;
-
-	// Allocate buffer
-	buffer = new unsigned char[sz + 1];
-	assert(buffer != 0 || !"Rainbow::AssetManager: Failed to allocate buffer");
-
-	// Fill buffer
-	read = zip_fread(zf, buffer, sz);
-	zip_fclose(zf);
-	assert(read == sz || !"Rainbow::AssetManager: Failed to uncompress file");
+	NSString *file = [NSString stringWithUTF8String:(filename)];
+	NSString *path = [[NSBundle mainBundle] pathForResource:[file stringByDeletingPathExtension] ofType:[file pathExtension]];
+	NSData *texture = [[NSData alloc] initWithContentsOfFile:path];
+	buffer = texture;
+	return [texture length];
 
 #else
 
@@ -80,7 +64,7 @@ unsigned int AssetManager::load(unsigned char *&buffer, const char *filename)
 
 	// Get size of file
 	fseek(fp, 0, SEEK_END);
-	sz = ftell(fp);
+	const unsigned int sz = ftell(fp);
 
 	// Allocate buffer
 	buffer = new unsigned char[sz + 1];
@@ -88,11 +72,11 @@ unsigned int AssetManager::load(unsigned char *&buffer, const char *filename)
 
 	// Fill buffer
 	fseek(fp, 0, SEEK_SET);
-	unsigned int read = fread(buffer, 1, sz, fp);
+	const unsigned int read = fread(buffer, 1, sz, fp);
 	fclose(fp);
 	assert(read == sz || !"Rainbow::AssetManager: Failed to read file");
 
-#endif
+	return (read != sz) ? 0 : sz;
 
-	return sz;
+#endif
 }

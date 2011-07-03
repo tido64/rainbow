@@ -1,9 +1,14 @@
 /// Copyright 2010-11 Bifrost Games. All rights reserved.
 /// \author Tommy Nguyen
 
-#include "SpriteBatch.h"
+#include "Graphics/SpriteBatch.h"
 
 using Rainbow::equalf;
+
+const unsigned char stale_pivot    = 0x01;
+const unsigned char stale_position = 0x02;
+const unsigned char stale_scale    = 0x04;
+const unsigned char stale_angle    = 0x08;
 
 Sprite::Sprite(const unsigned int w, const unsigned int h, const SpriteBatch *p) :
 	width(w), height(h), buffered(false), stale(0xff), angle(0.0f),

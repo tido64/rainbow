@@ -81,7 +81,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\..\lib;..\..\..\lib\FreeType\include;..\..\..\lib\libpng;..\..\..\lib\Lua;..\..\..\lib\Win32;..\..\..\lib\Xiph.Org</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\src;..\..\..\lib;..\..\..\lib\FreeType\include;..\..\..\lib\libpng;..\..\..\lib\Lua;..\..\..\lib\Win32;..\..\..\lib\Xiph.Org</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -96,7 +96,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\..\lib;..\..\..\lib\FreeType\include;..\..\..\lib\libpng;..\..\..\lib\Lua;..\..\..\lib\Win32;..\..\..\lib\Xiph.Org</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\src;..\..\..\lib;..\..\..\lib\FreeType\include;..\..\..\lib\libpng;..\..\..\lib\Lua;..\..\..\lib\Win32;..\..\..\lib\Xiph.Org</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -117,7 +117,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>..\..\..\lib;..\..\..\lib\FreeType\include;..\..\..\lib\libpng;..\..\..\lib\Lua;..\..\..\lib\Win32;..\..\..\lib\Xiph.Org</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\src;..\..\..\lib;..\..\..\lib\FreeType\include;..\..\..\lib\libpng;..\..\..\lib\Lua;..\..\..\lib\Win32;..\..\..\lib\Xiph.Org</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -135,7 +135,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>..\..\..\lib;..\..\..\lib\FreeType\include;..\..\..\lib\libpng;..\..\..\lib\Lua;..\..\..\lib\Win32;..\..\..\lib\Xiph.Org</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\src;..\..\..\lib;..\..\..\lib\FreeType\include;..\..\..\lib\libpng;..\..\..\lib\Lua;..\..\..\lib\Win32;..\..\..\lib\Xiph.Org</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
     </ClCompile>
@@ -193,6 +193,7 @@
     <ClInclude Include="..\..\src\AssetManager.h" />
     <ClInclude Include="..\..\src\Common\Color.h" />
     <ClInclude Include="..\..\src\Common\Constants.h" />
+    <ClInclude Include="..\..\src\Common\Data.h" />
     <ClInclude Include="..\..\src\Common\SpriteVertex.h" />
     <ClInclude Include="..\..\src\Common\Vec2.h" />
     <ClInclude Include="..\..\src\Common\Vec3.h" />
@@ -203,15 +204,20 @@
     <ClInclude Include="..\..\src\ConFuoco\Stream.h" />
     <ClInclude Include="..\..\src\ConFuoco\Wave.h" />
     <ClInclude Include="..\..\src\Director.h" />
-    <ClInclude Include="..\..\src\Drawable.h" />
-    <ClInclude Include="..\..\src\FontAtlas.h" />
-    <ClInclude Include="..\..\src\FontGlyph.h" />
+    <ClInclude Include="..\..\src\Graphics\Animation.h" />
+    <ClInclude Include="..\..\src\Graphics\Drawable.h" />
+    <ClInclude Include="..\..\src\Graphics\FontAtlas.h" />
+    <ClInclude Include="..\..\src\Graphics\FontGlyph.h" />
+    <ClInclude Include="..\..\src\Graphics\Sprite.h" />
+    <ClInclude Include="..\..\src\Graphics\SpriteBatch.h" />
+    <ClInclude Include="..\..\src\Graphics\Texture.h" />
     <ClInclude Include="..\..\src\Hardware\Screen.h" />
     <ClInclude Include="..\..\src\Input\Acceleration.h" />
     <ClInclude Include="..\..\src\Input\Gestures.h" />
     <ClInclude Include="..\..\src\Input\Input.h" />
     <ClInclude Include="..\..\src\Input\Touch.h" />
-    <ClInclude Include="..\..\src\Lua.h" />
+    <ClInclude Include="..\..\src\Input\Touchable.h" />
+    <ClInclude Include="..\..\src\LuaMachine.h" />
     <ClInclude Include="..\..\src\Lua\lua.h" />
     <ClInclude Include="..\..\src\Lua\lua_Algorithm.h" />
     <ClInclude Include="..\..\src\Lua\lua_Audio.h" />
@@ -229,10 +235,6 @@
     <ClInclude Include="..\..\src\Random\dSFMT-params19937.h" />
     <ClInclude Include="..\..\src\Random\dSFMT.h" />
     <ClInclude Include="..\..\src\Random\Mersenne_twister.h" />
-    <ClInclude Include="..\..\src\Sprite.h" />
-    <ClInclude Include="..\..\src\SpriteBatch.h" />
-    <ClInclude Include="..\..\src\Texture.h" />
-    <ClInclude Include="..\..\src\Touchable.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\lib\Box2D\Collision\b2BroadPhase.cpp" />
@@ -271,15 +273,19 @@
     <ClCompile Include="..\..\..\lib\Box2D\Dynamics\Joints\b2RevoluteJoint.cpp" />
     <ClCompile Include="..\..\..\lib\Box2D\Dynamics\Joints\b2WeldJoint.cpp" />
     <ClCompile Include="..\..\src\AssetManager.cpp" />
+    <ClCompile Include="..\..\src\Common\Data.cpp" />
     <ClCompile Include="..\..\src\ConFuoco\Codecs\Apple.cpp" />
     <ClCompile Include="..\..\src\ConFuoco\Codecs\Vorbis.cpp" />
     <ClCompile Include="..\..\src\ConFuoco\Mixer.cpp" />
     <ClCompile Include="..\..\src\ConFuoco\Wave.cpp" />
     <ClCompile Include="..\..\src\Director.cpp" />
-    <ClCompile Include="..\..\src\FontAtlas.cpp" />
+    <ClCompile Include="..\..\src\Graphics\FontAtlas.cpp" />
+    <ClCompile Include="..\..\src\Graphics\Sprite.cpp" />
+    <ClCompile Include="..\..\src\Graphics\SpriteBatch.cpp" />
+    <ClCompile Include="..\..\src\Graphics\Texture.cpp" />
     <ClCompile Include="..\..\src\Input\Gestures.cpp" />
     <ClCompile Include="..\..\src\Input\Input.cpp" />
-    <ClCompile Include="..\..\src\Lua.cpp" />
+    <ClCompile Include="..\..\src\LuaMachine.cpp" />
     <ClCompile Include="..\..\src\Lua\lua_Algorithm.cpp" />
     <ClCompile Include="..\..\src\Lua\lua_Audio.cpp" />
     <ClCompile Include="..\..\src\Lua\lua_Font.cpp" />
@@ -290,9 +296,6 @@
     <ClCompile Include="..\..\src\Lua\lua_Texture.cpp" />
     <ClCompile Include="..\..\src\Physics.cpp" />
     <ClCompile Include="..\..\src\RainbowSDL.cpp" />
-    <ClCompile Include="..\..\src\Sprite.cpp" />
-    <ClCompile Include="..\..\src\SpriteBatch.cpp" />
-    <ClCompile Include="..\..\src\Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="version.rc" />

@@ -1,4 +1,4 @@
-#include "../../src/Common/Vec2.h"
+#include "Common/Vec2.h"
 
 TEST(Vec2Test, Angle)
 {

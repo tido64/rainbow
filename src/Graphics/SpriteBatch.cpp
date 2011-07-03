@@ -1,4 +1,4 @@
-#include "SpriteBatch.h"
+#include "Graphics/SpriteBatch.h"
 
 const void *SpriteBatch::tx_offset = reinterpret_cast<void *>(sizeof(Colorb));
 const void *SpriteBatch::vx_offset = reinterpret_cast<void *>(sizeof(Colorb) + sizeof(Vec2f));
@@ -29,11 +29,10 @@ void SpriteBatch::draw()
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-Texture* SpriteBatch::set_texture(const char *const texture)
+Texture* SpriteBatch::set_texture(const void *const texture)
 {
 	delete this->texture;
-	this->texture = new Texture();
-	this->texture->load(texture);
+	this->texture = new Texture(texture);
 	return this->texture;
 }
 

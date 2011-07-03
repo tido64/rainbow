@@ -2,7 +2,6 @@
 #define SPRITE_H_
 
 #include "Common/SpriteVertex.h"
-#include "Common/Vec2.h"
 #include "Algorithm.h"
 
 class SpriteBatch;
@@ -69,12 +68,6 @@ public:
 
 	/// Update the vertices of this sprite.
 	void update();
-
-protected:
-	static const unsigned char stale_pivot    = 0x01;
-	static const unsigned char stale_position = 0x02;
-	static const unsigned char stale_scale    = 0x04;
-	static const unsigned char stale_angle    = 0x08;
 
 private:
 	bool buffered;               ///< Whether or not this sprite is buffered

@@ -1,30 +1,25 @@
-/*
- *  FontAtlas.cpp
- *  OnWire
- *
- *  Created by Tommy Nguyen on 12/13/10.
- *  Copyright 2010 Bifrost Games. All rights reserved.
- *
- */
+/// Copyright 2010-11 Bifrost Games. All rights reserved.
+/// \author Tommy Nguyen
 
-#include "FontAtlas.h"
+#include "Graphics/FontAtlas.h"
 
-FontAtlas::FontAtlas(const char *const f, const float pt) : pt(pt)
+FontAtlas::FontAtlas(const float pt) : pt(pt) { }
+
+void FontAtlas::load(const void *font_data, const unsigned int size)
 {
-	assert(f != 0);
-
-	// Read font into memory
-	unsigned char *font_data = 0;
-	const unsigned int font_sz = AssetManager::Instance().load(font_data, f);
+	assert(font_data != 0);
 
 	// Instantiate FreeType
 	FT_Library lib;
-	int ft_error = FT_Init_FreeType(&lib);
+#ifndef NDEBUG
+	int ft_error =
+#endif
+	FT_Init_FreeType(&lib);
 	assert(ft_error == 0 || !"Rainbow::FontAtlas: Failed to initialise FreeType");
 
 	// Load font face
 	FT_Face face;
-	ft_error = FT_New_Memory_Face(lib, font_data, font_sz, 0, &face);
+	ft_error = FT_New_Memory_Face(lib, static_cast<const FT_Byte *>(font_data), size, 0, &face);
 	assert(ft_error == 0 || !"Rainbow::FontAtlas: Failed to load font face");
 
 	FT_Set_Char_Size(face, 0, static_cast<int>(this->pt * 64), 96, 96);
@@ -152,7 +147,6 @@ FontAtlas::FontAtlas(const char *const f, const float pt) : pt(pt)
 	}
 	FT_Done_Face(face);
 	FT_Done_FreeType(lib);
-	delete[] font_data;
 
 	/**
 	 * For printing out texture buffer

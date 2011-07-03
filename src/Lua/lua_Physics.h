@@ -2,7 +2,7 @@
 #define LUA_PHYSICS_H_
 
 #include "lua.h"
-#include "../Physics.h"
+#include "Physics.h"
 
 class lua_Physics
 {

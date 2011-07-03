@@ -6,8 +6,8 @@
 #ifndef GESTURES_H_
 #define GESTURES_H_
 
-#include "../Algorithm.h"
-#include "Input.h"
+#include "Input/Input.h"
+#include "Algorithm.h"
 
 #ifdef RAINBOW_TOUCHED
 

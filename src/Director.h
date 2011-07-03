@@ -1,7 +1,7 @@
 #ifndef DIRECTOR_H_
 #define DIRECTOR_H_
 
-#include "Lua.h"
+#include "LuaMachine.h"
 
 /// Simple game loop for Lua-scripted games.
 ///
@@ -46,7 +46,7 @@ public:
 	void touch_moved(const Touch *const touches, const unsigned int count);
 
 private:
-	Lua lua;
+	LuaMachine lua;
 
 	/// Intentionally left undefined.
 	Director(const Director &);

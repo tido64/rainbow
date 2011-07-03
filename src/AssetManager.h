@@ -49,7 +49,7 @@ public:
 	/// Load file into provided buffer.
 	/// \param buffer    The buffer to fill
 	/// \param filename  The file to load
-	unsigned int load(unsigned char *&buffer, const char *filename);
+	unsigned int load(void *&buffer, const char *filename);
 
 	/// Set the source to load resources from.
 	void set_source(const char *const src = 0);
@@ -64,19 +64,13 @@ private:
 	AssetManager& operator=(const AssetManager &);
 };
 
-inline void AssetManager::set_source(const char *const src)
-{
 #if defined(RAINBOW_IOS)
 
+inline void AssetManager::set_source(const char *const src)
+{
 	this->archive = [NSBundle mainBundle];
-
-#elif defined(RAINBOW_ZIP)
-
-	int errorp = 0;
-	this->archive = zip_open(src, 0, &errorp);
-	assert(errorp == 0);
+}
 
 #endif
-}
 
 #endif

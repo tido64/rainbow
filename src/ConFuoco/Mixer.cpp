@@ -7,8 +7,8 @@
  *
  */
 
-#include "Mixer.h"
-#include "Decoder.h"
+#include "ConFuoco/Decoder.h"
+#include "ConFuoco/Mixer.h"
 
 namespace Rainbow
 {

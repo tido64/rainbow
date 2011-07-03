@@ -6,7 +6,7 @@
 //  Copyright 2010 Bifrost Games. All rights reserved.
 //
 
-#include "Input.h"
+#include "Input/Input.h"
 
 void Input::subscribe(Touchable *const t, unsigned int flags)
 {

@@ -1,7 +1,7 @@
 #ifndef LUA_PLATFORM_H_
 #define LUA_PLATFORM_H_
 
-#include "../Hardware/Screen.h"
+#include "Hardware/Screen.h"
 
 class lua_Platform
 {

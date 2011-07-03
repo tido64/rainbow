@@ -3,7 +3,7 @@
 
 #include <cassert>
 
-#include "Mixer.h"
+#include "ConFuoco/Mixer.h"
 
 namespace Rainbow
 {

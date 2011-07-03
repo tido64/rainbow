@@ -1,0 +1,14 @@
+#include "Input/Touch.h"
+
+TEST(TouchTest, CopyAssignment)
+{
+	Touch t1, t2;
+	t1.hash = 1337;
+	t1.initial = Vec2i(1, 2);
+	t1.position = Vec2i(3, 4);
+
+	t2 = t1;
+	ASSERT_EQ(t1.hash, t2.hash);
+	ASSERT_EQ(t1.position.x, t2.position.x);
+	ASSERT_EQ(t1.position.y, t2.position.y);
+}

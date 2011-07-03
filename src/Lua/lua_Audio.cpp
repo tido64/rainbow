@@ -2,7 +2,7 @@
 #	pragma warning(disable : 4244)
 #endif
 
-#include "lua_Audio.h"
+#include "Lua/lua_Audio.h"
 
 using Rainbow::ConFuoco::Mixer;
 
@@ -150,7 +150,7 @@ int lua_Audio::play(lua_State *L)
 
 int lua_Audio::set_looping(lua_State *L)
 {
-	Mixer::Instance().set_looping(lua_tointeger(L, 1), lua_toboolean(L, 2) == 1, 0);
+	Mixer::Instance().set_looping(lua_tointeger(L, 1), lua_toboolean(L, 2) == 1);
 	return 0;
 }
 
@@ -160,32 +160,32 @@ int lua_Audio::set_bgm(lua_State *L)
 	return 0;
 }
 
-int lua_Audio::play_bgm(lua_State *L)
+int lua_Audio::play_bgm(lua_State *)
 {
 	Mixer::Instance().play_bgm();
 	return 0;
 }
 
-int lua_Audio::pause_bgm(lua_State *L)
+int lua_Audio::pause_bgm(lua_State *)
 {
 	Mixer::Instance().pause_bgm();
 	return 0;
 }
 
-int lua_Audio::stop_bgm(lua_State *L)
+int lua_Audio::stop_bgm(lua_State *)
 {
 	Mixer::Instance().stop_bgm();
 	return 0;
 }
 
-int lua_Audio::set_bgm_pan(lua_State *L)
+int lua_Audio::set_bgm_pan(lua_State *)
 {
-	Mixer::Instance().set_bgm_pan(lua_tonumber(L, 1));
+	//Mixer::Instance().set_bgm_pan(lua_tonumber(L, 1));
 	return 0;
 }
 
-int lua_Audio::set_bgm_volume(lua_State *L)
+int lua_Audio::set_bgm_volume(lua_State *)
 {
-	Mixer::Instance().set_bgm_volume(lua_tonumber(L, 1));
+	//Mixer::Instance().set_bgm_volume(lua_tonumber(L, 1));
 	return 0;
 }

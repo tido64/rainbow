@@ -2,18 +2,21 @@
 #	pragma warning(disable : 4244)
 #endif
 
-#include "lua_Font.h"
+#include "Lua/lua_Font.h"
 
-const char *const lua_Font::class_name = "font";
-const Lua::Method<lua_Font> lua_Font::methods[] = {
+const char lua_Font::class_name[] = "font";
+const LuaMachine::Method<lua_Font> lua_Font::methods[] = {
 	{ "print", &lua_Font::print },
 	{ "set_color", &lua_Font::set_color },
-	{ 0 }
+	{ 0, 0 }
 };
 
-lua_Font::lua_Font(lua_State *L)
+lua_Font::lua_Font(lua_State *L) : font(new FontAtlas(lua_tonumber(L, 2)))
 {
-	this->font = new FontAtlas(lua_tolstring(L, 1, 0), lua_tonumber(L, 2));
+	void *data = 0;
+	const unsigned int size = AssetManager::Instance().load(data, lua_tolstring(L, 1, 0));
+	this->font->load(data, size);
+	// FIXME: Delete *data;
 }
 
 int lua_Font::print(lua_State *L)

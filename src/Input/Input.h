@@ -1,10 +1,9 @@
 #ifndef INPUT_H_
 #define INPUT_H_
 
-#include "../Common/Vector.h"
-#include "../Platform.h"
-#include "../Touchable.h"
-#include "Acceleration.h"
+#include "Common/Vector.h"
+#include "Input/Acceleration.h"
+#include "Input/Touchable.h"
 
 #define RAINBOW_ALL_EVENTS    -1
 #define RAINBOW_KEY_EVENTS    (1 << 0)

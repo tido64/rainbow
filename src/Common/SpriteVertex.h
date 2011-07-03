@@ -1,8 +1,8 @@
 #ifndef SPRITEVERTEX_H_
 #define SPRITEVERTEX_H_
 
-#include "Color.h"
-#include "Vec2.h"
+#include "Common/Color.h"
+#include "Common/Vec2.h"
 
 /// A typical sprite vertex contains x- and y-coordinates for position and texture.
 ///

@@ -6,7 +6,7 @@
 #ifndef OPENAL_H_
 #define OPENAL_H_
 
-#include "../Platform.h"
+#include "Platform.h"
 
 #ifdef RAINBOW_IOS
 #	include <OpenAL/al.h>
