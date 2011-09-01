@@ -2,12 +2,17 @@
 #define FONTATLAS_H_
 #define FONTATLAS_KERNING
 
+#include "Platform.h"
+#ifndef RAINBOW_IOS
+#	include <cassert>
+#endif
+
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include FT_GLYPH_H
 
+#include "Common/Data.h"
 #include "Graphics/FontGlyph.h"
-#include "AssetManager.h"
 #include "OpenGL.h"
 
 /// Uses FreeType to load OpenType and TrueType fonts.
@@ -36,13 +41,21 @@ public:
 
 	FontAtlas(const float pt);
 
-	void load(const void *font_data, const unsigned int size);
+	void bind() const;
+
+	const FontGlyph& get_glyph(const char c) const;
+
+	/// Load font and create a texture atlas.
+	void load(const Data &font);
 
 	/// Print text at (x,y).
 	void print(const char *text, const int x = 0, const int y = 0) const;
 
 	/// Set font color.
-	void set_color(const unsigned char r, const unsigned char g, const unsigned char b, const unsigned char a = 0xff);
+	void set_color(const unsigned char r,
+	               const unsigned char g,
+	               const unsigned char b,
+	               const unsigned char a = 0xff);
 
 protected:
 	static const unsigned char ascii_offset = 32;  ///< Start loading from character 32
@@ -65,6 +78,16 @@ private:
 	/// Intentionally left undefined.
 	FontAtlas& operator=(const FontAtlas &);
 };
+
+inline void FontAtlas::bind() const
+{
+	glBindTexture(GL_TEXTURE_2D, this->texture);
+}
+
+inline const FontGlyph& FontAtlas::get_glyph(const char c) const
+{
+	return this->charset[static_cast<unsigned int>(c - ascii_offset)];
+}
 
 inline int FontAtlas::next_pow2(const int a)
 {

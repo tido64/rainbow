@@ -4,7 +4,7 @@
 
 #include "Lua/lua_Physics.h"
 
-lua_Physics::lua_Physics(lua_State *L)
+void lua_Physics::init(lua_State *L)
 {
 	lua_createtable(L, 0, 0);
 	lua_pushvalue(L, -1);

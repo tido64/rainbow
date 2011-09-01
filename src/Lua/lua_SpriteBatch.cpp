@@ -34,14 +34,15 @@ int lua_SpriteBatch::set_texture(lua_State *L)
 	{
 		case LUA_TSTRING:
 			{
-				void *data = 0;
-				AssetManager::Instance().load(data, lua_tolstring(L, 1, 0));
-				lua_pushlightuserdata(L, this->s.set_texture(data));
+				const char *const path = Data::get_path(lua_tolstring(L, 1, 0));
+				Data t(path);
+				Data::free(path);
+				lua_pushlightuserdata(L, this->s.set_texture(t));
 				return LuaMachine::alloc<lua_Texture>(L);
 			}
 			break;
 		case LUA_TLIGHTUSERDATA:
-			lua_pushlightuserdata(L, this->s.set_texture(reinterpret_cast<const Texture *>(lua_topointer(L, 1))));
+			//lua_pushlightuserdata(L, this->s.set_texture(reinterpret_cast<Texture *>(lua_topointer(L, 1))));
 			break;
 		default:
 			break;

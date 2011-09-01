@@ -16,7 +16,7 @@ namespace Rainbow
 		_Vec3(const T x, const T y, const T z) : x(x), y(y), z(z) { }
 
 		/// Determine whether the vector is zero.
-		inline bool is_zero() const
+		bool is_zero() const
 		{
 			return (this->x == 0) && (this->y == 0) && (this->z == 0);
 		}

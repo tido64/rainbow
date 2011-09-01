@@ -2,13 +2,13 @@
 #define LUA_AUDIO_H_
 
 #include "lua.h"
+#include "Common/Data.h"
 #include "ConFuoco/Mixer.h"
-#include "AssetManager.h"
 
 class lua_Audio
 {
 public:
-	lua_Audio(lua_State *);
+	static void init(lua_State *);
 
 	static int set_doppler_factor(lua_State *);
 	static int set_doppler_velocity(lua_State *);
@@ -35,6 +35,11 @@ public:
 	static int stop_bgm(lua_State *);
 	static int set_bgm_pan(lua_State *);
 	static int set_bgm_volume(lua_State *);
+
+private:
+	lua_Audio();
+	lua_Audio(const lua_Audio &);
+	lua_Audio& operator=(const lua_Audio &);
 };
 
 #endif

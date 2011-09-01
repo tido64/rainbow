@@ -14,9 +14,7 @@ struct FontGlyph
 	SpriteVertex quad[4];        ///< Sprite vertices
 
 #ifdef FONTATLAS_KERNING
-
 	short int kern[95];          ///< Font kerning information for each character
-
 #endif
 };
 

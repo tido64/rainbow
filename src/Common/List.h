@@ -34,7 +34,7 @@ public:
 	class Iterator
 	{
 	public:
-		Iterator() : ptr(0) { }
+		Iterator() : ptr(nullptr) { }
 		Iterator(const Iterator &i) : ptr(i.ptr) { }
 
 		bool operator==(const Iterator &i) const { return this->ptr == i.ptr; }
@@ -79,7 +79,7 @@ public:
 		friend class List;
 	};
 
-	List() : count(0), first(0), last(0)  { }
+	List() : count(0), first(nullptr), last(nullptr)  { }
 	~List() { delete this->first; }
 
 	/// Return iterator to the beginning.
@@ -116,7 +116,7 @@ public:
 				if (e->next)
 				{
 					e->next->prev = e->prev;
-					e->next = 0;
+					e->next = nullptr;
 				}
 				else
 					this->last = e->prev;
@@ -136,6 +136,12 @@ private:
 	unsigned int count;  ///< Element count
 	Element *first;      ///< Pointer to the first element
 	Element *last;       ///< Pointer to the last element
+
+	/// Intentionally left undefined.
+	List(const List &);
+
+	/// Intentionally left undefined.
+	List& operator=(const List &);
 };
 
 #endif

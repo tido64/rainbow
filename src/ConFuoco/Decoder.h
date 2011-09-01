@@ -26,33 +26,28 @@ namespace Rainbow
 		class Decoder
 		{
 		public:
-			static Decoder& Instance()
-			{
-				static Decoder dec;
-				return dec;
-			}
-
 			/// Open a sound stream from file.
 			/// \param[out] wave       Wave construct
-			/// \param[in]  file       Path to file to open
-			/// \param[in]  streaming  Open for streaming?
-			void open(Wave &wave, const char *const file, bool streaming = false);
+			/// \param      file       Path to file to open
+			/// \param      streaming  Open for streaming?
+			static void open(Wave &wave, const char *const file, bool streaming = false);
 
 		#ifndef RAINBOW_IOS
 
 			/// Close stream and release any buffers;
-			void close(Stream &);
+			static void close(Stream &);
 
 			/// Read (and decode) maximum number of audio frames to stream buffer.
 			/// \return Bytes read. If 0, then EOF has been reached.
-			unsigned int read(Wave &wave);
+			static unsigned int read(Wave &wave);
 
 			/// Rewind stream to the beginning.
-			void reset(Stream &);
+			static void reset(Stream &);
 
 		#endif
 
 		private:
+			/// Intentionally left undefined.
 			Decoder();
 
 			/// Intentionally left undefined.

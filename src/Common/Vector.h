@@ -28,17 +28,17 @@ public:
 
 	~Vector() { delete[] this->c_array; }
 
-	inline T& at(const unsigned int i)
+	T& at(const unsigned int i)
 	{
 		assert(i < this->count || !"Rainbow::Vector: Tried to access an element out of range");
 		return this->c_array[i];
 	}
 
 	/// Return a pointer to the first element.
-	inline T* begin() const { return this->c_array; }
+	T* begin() const { return this->c_array; }
 
 	/// Return size of allocated storage capacity.
-	inline unsigned int capacity() const { return this->reserved; }
+	unsigned int capacity() const { return this->reserved; }
 
 	/// Add an element to the vector.
 	void push_back(const T &element)
@@ -58,7 +58,6 @@ public:
 			i = this->count;
 
 		T *a = new T[i];
-		assert(a);
 		this->reserved = i;
 		memcpy(a, this->c_array, this->count * sizeof(T));
 		delete[] this->c_array;
@@ -66,7 +65,7 @@ public:
 	}
 
 	/// Return the number of elements in this vector.
-	inline unsigned int size() const { return this->count; }
+	unsigned int size() const { return this->count; }
 
 	Vector& operator=(const Vector &v)
 	{
@@ -74,13 +73,12 @@ public:
 		this->reserved = v.reserved;
 		delete[] this->c_array;
 		this->c_array = new T[this->reserved];
-		assert(this->c_array);
 		memcpy(this->c_array, v.c_array, this->count * sizeof(T));
 		return *this;
 	}
 
 	/// Return the element stored at index.
-	inline T& operator[](const unsigned int i) const
+	T& operator[](const unsigned int i) const
 	{
 		return this->c_array[i];
 	}

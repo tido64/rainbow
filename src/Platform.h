@@ -17,7 +17,7 @@
 #	define RAINBOW_WIN
 #endif
 
-// Platforms that make use of buttons (keyboards, gamepads, etc.)
+// Platforms that make use of physical buttons (keyboards, gamepads, etc.)
 #if defined(RAINBOW_UNIX) || defined(RAINBOW_WIN)
 #	define RAINBOW_BUTTONS
 #endif
@@ -30,4 +30,32 @@
 
 #define RAINBOW_BUILD "Rainbow / Bifrost Games Property / Built " __DATE__
 
+// Retrieve GCC compiler version
+#if __GNUC__
+#	ifndef __GNUC_PATCHLEVEL__
+#		define __GNUC_VERSION__ (__GNUC__ * 10000 + __GNUC_MINOR__ * 100)
+#	else
+#		define __GNUC_VERSION__ (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__)
+#	endif
+#else
+#	define __GNUC_VERSION__ 0
 #endif
+
+// Define nullptr for non-C++0x-compliant compilers
+#if __cplusplus <= 19971 && __GNUC_VERSION__ < 40600
+const
+class nullptr_t
+{
+public:
+	template<class T>
+	inline operator T*() const { return 0; }
+
+	template<class C, class T>
+	inline operator T C::*() const { return 0; }
+
+private:
+	void operator&() const;
+} nullptr = {};
+#endif
+
+#endif  // PLATFORM_H_

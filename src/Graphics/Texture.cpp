@@ -1,6 +1,6 @@
 #include "Graphics/Texture.h"
 
-Texture::Texture(const void *const data)
+Texture::Texture(const Data &data)
 {
 	this->load(data);
 }
@@ -32,7 +32,7 @@ bool Texture::is_pow2(const unsigned int i)
 	return p == i;
 }
 
-void Texture::load(const void *img_data)
+void Texture::load(const Data &img_data)
 {
 	assert(this->textures.size() == 0);
 
@@ -40,8 +40,7 @@ void Texture::load(const void *img_data)
 
 #if defined(RAINBOW_IOS)
 
-	UIImage *image = [[UIImage alloc] initWithData:static_cast<const NSData *>(img_data)];
-	[static_cast<const NSData *>(img_data) release];
+	UIImage *image = [[UIImage alloc] initWithData:(const NSData *)(img_data)];
 	assert(image != nil || !"Rainbow::Texture: Failed to load file");
 
 	this->width = CGImageGetWidth(image.CGImage);
@@ -51,7 +50,6 @@ void Texture::load(const void *img_data)
 
 	CGColorSpaceRef color_space = CGColorSpaceCreateDeviceRGB();
 	unsigned char *data = new unsigned char[this->height * this->width * 4];
-	assert(data != 0 || !"Rainbow::Texture: Failed to allocate memory");
 
 	CGContextRef context = CGBitmapContextCreate(data, this->width, this->height, 8, 4 * this->width, color_space, kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big);
 	CGColorSpaceRelease(color_space);
@@ -67,7 +65,7 @@ void Texture::load(const void *img_data)
 
 	// Prepare for decoding PNG data
 	png_read_struct texture;
-	texture.data = static_cast<const unsigned char *>(img_data);
+	texture.data = img_data.bytes();
 
 	// Look for PNG signature
 	{
@@ -138,11 +136,9 @@ void Texture::load(const void *img_data)
 	png_read_update_info(png_ptr, info_ptr);
 	const unsigned int rowbytes = png_get_rowbytes(png_ptr, info_ptr);
 	unsigned char *data = new unsigned char[this->height * rowbytes];
-	assert(data != 0 || !"Rainbow::Texture: Failed to allocate buffer");
 
 	// Allocate row pointer array
 	png_bytep *row_pointers = new png_bytep[this->height];
-	assert(row_pointers != 0 || !"Rainbow::Texture: Failed to allocate buffer");
 
 	png_byte *b = static_cast<png_byte *>(data);
 	row_pointers[0] = b;
@@ -153,7 +149,6 @@ void Texture::load(const void *img_data)
 	delete[] row_pointers;
 
 	png_destroy_read_struct(&png_ptr, &info_ptr, &end_info);
-	delete[] texture.data;
 
 #endif
 

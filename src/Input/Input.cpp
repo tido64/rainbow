@@ -1,10 +1,5 @@
-//
-//  Input.cpp
-//  OnWire
-//
-//  Created by Tommy Nguyen on 6/27/10.
-//  Copyright 2010 Bifrost Games. All rights reserved.
-//
+/// Copyright 2010-11 Bifrost Games. All rights reserved.
+/// \author Tommy Nguyen
 
 #include "Input/Input.h"
 
@@ -49,4 +44,3 @@ void Input::touch_flip(Touch *const touches, const unsigned int count)
 	for (unsigned int i = 0; i < count; ++i)
 		touches[i].position.y = height - touches[i].position.y;
 }
-

@@ -18,13 +18,13 @@ namespace Rainbow
 		_Vec2(const T x, const T y) : x(x), y(y) { }
 
 		/// Return the angle (in radians) between two points.
-		inline float angle(const _Vec2<T> &v) const
+		float angle(const _Vec2<T> &v) const
 		{
 			return atan2f(v.y - this->y, v.x - this->x);
 		}
 
 		/// Return the dot product of two vectors
-		inline T dot(const _Vec2<T> &v) const
+		T dot(const _Vec2<T> &v) const
 		{
 			return this->x * v.x + this->y * v.y;
 		}
@@ -38,13 +38,13 @@ namespace Rainbow
 		}
 
 		/// Determine whether the vector is zero.
-		inline bool is_zero() const
+		bool is_zero() const
 		{
 			return (this->x == 0) && (this->y == 0);
 		}
 
 		/// Zero the vector.
-		inline void zero()
+		void zero()
 		{
 			this->x = 0;
 			this->y = 0;

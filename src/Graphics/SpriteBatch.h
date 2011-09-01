@@ -19,7 +19,7 @@ class SpriteBatch : public Drawable
 
 public:
 	SpriteBatch(const int hint = 8);
-	~SpriteBatch() { delete[] this->vertex_buffer; }
+	~SpriteBatch();
 
 	Sprite* add(const int x, const int y, const int width, const int height);
 
@@ -27,7 +27,7 @@ public:
 	void draw();
 
 	/// Load texture data.
-	Texture* set_texture(const void *const texture);
+	Texture* set_texture(const Data &texture);
 
 	/// Re-use specified texture.
 	Texture* set_texture(Texture *texture);
@@ -39,8 +39,7 @@ public:
 	void update();
 
 protected:
-	static const void *tx_offset;
-	static const void *vx_offset;
+	static const unsigned char indices[];  ///< Global vertex indices (currently limited to 64 vertices, or 16 sprites)
 
 	unsigned int align(const unsigned int i);
 
@@ -50,11 +49,10 @@ protected:
 
 private:
 	GLuint buffer;                 ///< GL vertex buffer
-	unsigned int batch_buffer_sz;  ///< Size of batch buffer
 	unsigned int batch_vertices;   ///< Total number of vertices in this batch
 	unsigned int reserved;         ///< Allocated memory for sprite vertices
 	SpriteVertex *vertex_buffer;   ///< Common vertex array for all sprites in the batch
-	Texture *texture;              ///< Texture
+	Texture *texture;              ///<
 	Vector<Sprite *> sprites;      ///< Vector storing all sprites
 
 	/// Intentionally left undefined.

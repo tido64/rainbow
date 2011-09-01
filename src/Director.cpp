@@ -42,7 +42,9 @@ void Director::draw()
 
 void Director::init(const char *const script)
 {
-	this->lua.load(AssetManager::Instance().get_full_path(script));
+	const char *const path = Data::get_path(script);
+	this->lua.load(path);
+	Data::free(path);
 	this->lua.call("init");
 	this->lua.update();
 }

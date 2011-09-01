@@ -35,15 +35,6 @@ public:
 	/// Return the current position of the sprite.
 	const Vec2f& get_position() const;
 
-	/// Rotate the sprite by an angle (in radian).
-	void rotate(const float);
-
-	/// Uniform scaling of sprite (does not affect width and height properties).
-	void scale(const float);
-
-	/// Non-uniform scaling of sprite (does not affect width and height properties).
-	void scale(const Vec2f &);
-
 	/// Set sprite colour.
 	/// \param v0  Colour for vertex 0
 	/// \param v1  Colour for vertex 1
@@ -61,6 +52,15 @@ public:
 
 	/// Set sprite position (absolute).
 	void set_position(const Vec2f &);
+
+	/// Set angle of rotation (in radian).
+	void set_rotation(const float);
+
+	/// Uniform scaling of sprite (does not affect width and height properties).
+	void set_scale(const float);
+
+	/// Non-uniform scaling of sprite (does not affect width and height properties).
+	void set_scale(const Vec2f &);
 
 	/// Set the texture.
 	/// \param id  Id of texture to use

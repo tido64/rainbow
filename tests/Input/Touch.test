@@ -1,6 +1,69 @@
-#include "Input/Touch.h"
+#include "Input/Input.h"
 
-TEST(TouchTest, CopyAssignment)
+class TouchTest : public Touchable, public testing::Test
+{
+public:
+	enum Events
+	{
+		TOUCH_BEGAN    = 1 << 0,
+		TOUCH_CANCELED = 1 << 1,
+		TOUCH_ENDED    = 1 << 2,
+		TOUCH_MOVED    = 1 << 3
+	};
+
+	TouchTest() : flags(0)
+	{
+		Input::Instance().subscribe(this, RAINBOW_TOUCH_EVENTS);
+	}
+
+	bool is_triggered(const unsigned int flags)
+	{
+		return this->flags & flags;
+	}
+
+	void reset() { this->flags = 0; }
+
+	virtual void touch_began(const Touch *const touches, const unsigned int count)
+	{
+		if (count != 1
+			|| touches[0].hash != 1
+			|| touches[0].position.x != 2
+			|| touches[0].position.y != -3)  // Coordinates are flipped, so 3 becomes -3 here
+			return;
+
+		this->flags |= TOUCH_BEGAN;
+	}
+
+	virtual void touch_canceled()
+	{
+		this->flags |= TOUCH_CANCELED;
+	}
+
+	virtual void touch_ended(const Touch *const touches, const unsigned int count)
+	{
+		if (count != 1
+			|| touches[0].hash != 1
+			|| touches[0].position.x != 2
+			|| touches[0].position.y != -3)  // Coordinates are flipped, so 3 becomes -3 here
+			return;
+		this->flags |= TOUCH_ENDED;
+	}
+
+	virtual void touch_moved(const Touch *const touches, const unsigned int count)
+	{
+		if (count != 1
+			|| touches[0].hash != 1
+			|| touches[0].position.x != 2
+			|| touches[0].position.y != -3)  // Coordinates are flipped, so 3 becomes -3 here
+			return;
+		this->flags |= TOUCH_MOVED;
+	}
+
+private:
+	unsigned int flags;
+};
+
+TEST_F(TouchTest, CopyAssignment)
 {
 	Touch t1, t2;
 	t1.hash = 1337;
@@ -12,3 +75,37 @@ TEST(TouchTest, CopyAssignment)
 	ASSERT_EQ(t1.position.x, t2.position.x);
 	ASSERT_EQ(t1.position.y, t2.position.y);
 }
+
+TEST_F(TouchTest, TouchBeganEvent)
+{
+	Touch t1;
+	t1.hash = 1;
+	t1.position = Vec2i(2, 3);
+	Input::Instance().touch_began(&t1, 1);
+	ASSERT_TRUE(is_triggered(TOUCH_BEGAN));
+}
+
+TEST_F(TouchTest, TouchCanceledEvent)
+{
+	Input::Instance().touch_canceled();
+	ASSERT_TRUE(is_triggered(TOUCH_CANCELED));
+}
+
+TEST_F(TouchTest, TouchEndedEvent)
+{
+	Touch t1;
+	t1.hash = 1;
+	t1.position = Vec2i(2, 3);
+	Input::Instance().touch_ended(&t1, 1);
+	ASSERT_TRUE(is_triggered(TOUCH_ENDED));
+}
+
+TEST_F(TouchTest, TouchMovedEvent)
+{
+	Touch t1;
+	t1.hash = 1;
+	t1.position = Vec2i(2, 3);
+	Input::Instance().touch_moved(&t1, 1);
+	ASSERT_TRUE(is_triggered(TOUCH_MOVED));
+}
+

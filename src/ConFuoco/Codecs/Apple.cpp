@@ -9,8 +9,6 @@ namespace Rainbow
 {
 	namespace ConFuoco
 	{
-		Decoder::Decoder() { }
-
 		void Decoder::open(Wave &wave, const char *const file, bool streaming)
 		{
 			CFURLRef url = CFURLCreateFromFileSystemRepresentation(0, reinterpret_cast<const UInt8 *>(file), strlen(file), false);
@@ -56,7 +54,6 @@ namespace Rainbow
 
 			size = frames * audio_format.mBytesPerFrame;
 			wave.buffer = new char[size];
-			assert(wave.buffer != 0);
 			memset(wave.buffer, 0, size);
 
 			AudioBufferList abuffer;
@@ -68,7 +65,7 @@ namespace Rainbow
 			if (ExtAudioFileRead(ext_audio, reinterpret_cast<UInt32 *>(&frames), &abuffer) != noErr)
 			{
 				delete[] static_cast<char *>(wave.buffer);
-				wave.buffer = 0;
+				wave.buffer = nullptr;
 				NSLog(@"Rainbow::ConFuoco::Decoder: Failed to read %s\n", file);
 				return;
 			}

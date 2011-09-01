@@ -4,6 +4,7 @@
 #include <Box2D/Box2D.h>
 
 #include "Algorithm.h"
+#include "Platform.h"
 
 // Pixel to metres ratio. Box2D uses metres as the unit for measurement.
 // This ratio defines how many pixels correspond to 1 Box2D "metre"
@@ -51,11 +52,7 @@ public:
 			curr_r(d.angle), prev_r(d.angle), data(0), curr_p(d.position), prev_p(d.position) { }
 	};
 
-	static Physics& Instance()
-	{
-		static Physics inst;
-		return inst;
-	}
+	static Physics& Instance();
 
 	/// Apply a force at a world point. If the force is not applied at the
 	/// center of mass, it will generate a torque and affect the angular
@@ -150,7 +147,7 @@ private:
 	Physics();
 	~Physics();
 
-	/// Intentionally undefined.
+	/// Intentionally left undefined.
 	Physics(const Physics &);
 
 	/// Interpolate between current and next frame.
@@ -162,9 +159,15 @@ private:
 	/// Save the current state of all bodies.
 	void save_state();
 
-	/// Intentionally undefined.
+	/// Intentionally left undefined.
 	Physics &operator=(const Physics &);
 };
+
+inline Physics& Physics::Instance()
+{
+	static Physics inst;
+	return inst;
+}
 
 inline void Physics::apply_force(void *b, const float vx, const float vy, const float px, const float py)
 {

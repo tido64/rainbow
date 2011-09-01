@@ -16,7 +16,7 @@ namespace Rainbow
 	{
 		Mixer::Mixer() :
 			interrupted(false), cleanup(0), busy(0),
-			buffer_count(0), source_count(0), context(0)
+			buffer_count(0), source_count(0), context(nullptr)
 		{
 			#ifdef RAINBOW_IOS
 				this->init_audio_session();
@@ -107,7 +107,7 @@ namespace Rainbow
 			alGetSourcei(this->stream.sourced, AL_BUFFERS_PROCESSED, &work);
 			for (int i = 0; i < work; ++i)
 			{
-				int packets = Decoder::Instance().read(this->stream);
+				int packets = Decoder::read(this->stream);
 				if (!packets)
 				{
 					if (!this->stream.loops)
@@ -115,8 +115,8 @@ namespace Rainbow
 						this->stream.playing = false;
 						return;
 					}
-					Decoder::Instance().reset(this->stream);
-					Decoder::Instance().read(this->stream);
+					Decoder::reset(this->stream);
+					Decoder::read(this->stream);
 				}
 				alSourceUnqueueBuffers(this->stream.sourced, 1, &buffer);
 				alBufferData(buffer, this->stream.format, this->stream.buffer, this->stream.buffer_size, this->stream.frequency);
@@ -133,7 +133,7 @@ namespace Rainbow
 		{
 			Wave &w = waves[this->buffer_count];
 			w.buffered = this->buffer_count++;
-			Decoder::Instance().open(w, media);
+			Decoder::open(w, media);
 			alBufferData(this->buffers[w.buffered], w.format, w.buffer, w.buffer_size, w.frequency);
 			return w.buffered;
 		}
@@ -161,10 +161,10 @@ namespace Rainbow
 
 		#else
 
-			Decoder::Instance().open(this->stream, media, true);
+			Decoder::open(this->stream, media, true);
 			for (unsigned int i = 0; i < STREAM_BUFFERS; ++i)
 			{
-				Decoder::Instance().read(this->stream);
+				Decoder::read(this->stream);
 				alBufferData(this->stream.buffered[i], this->stream.format, this->stream.buffer, this->stream.buffer_size, this->stream.frequency);
 			}
 			alSourceQueueBuffers(this->stream.sourced, STREAM_BUFFERS, this->stream.buffered);
@@ -239,7 +239,7 @@ namespace Rainbow
 					alSourceStop(this->stream.sourced);
 
 				if (clear)
-					Decoder::Instance().close(this->stream);
+					Decoder::close(this->stream);
 			}
 
 		#endif

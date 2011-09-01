@@ -2,3 +2,4 @@ set(BOX2D_INCLUDE_DIR ${LOCAL_LIBRARY})
 
 file(GLOB_RECURSE BOX2D_SRC ${BOX2D_INCLUDE_DIR}/*.cpp)
 add_library(box2d STATIC ${BOX2D_SRC})
+set_target_properties(box2d PROPERTIES COMPILE_FLAGS "-w")

@@ -1,9 +1,9 @@
 #ifndef TEXTURE_H_
 #define TEXTURE_H_
 
+#include "Common/Data.h"
 #include "Common/Vec2.h"
 #include "Common/Vector.h"
-#include "AssetManager.h"
 #include "OpenGL.h"
 
 #if defined(RAINBOW_IOS)
@@ -31,7 +31,7 @@ public:
 	GLuint name;
 	GLsizei width, height;
 
-	Texture(const void *const data);
+	explicit Texture(const Data &data);
 
 	/// Create a texture from file.
 	/// \param x       Starting point of the texture (x-coordinate)
@@ -53,7 +53,7 @@ private:
 	bool is_pow2(const unsigned int);
 
 	/// Read image data into graphics buffer.
-	void load(const void *img_data);
+	void load(const Data &img_data);
 
 #ifdef PNG_LIBPNG_VER_STRING
 
@@ -72,7 +72,7 @@ private:
 
 	static void mem_fread(png_structp png_ptr, png_bytep data, png_size_t length)
 	{
-		png_read_struct *read_struct = (png_read_struct *)png_get_io_ptr(png_ptr);
+		png_read_struct *read_struct = static_cast<png_read_struct *>(png_get_io_ptr(png_ptr));
 		memcpy(data, read_struct->data + read_struct->offset, length);
 		read_struct->offset += length;
 	}

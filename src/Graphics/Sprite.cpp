@@ -12,49 +12,16 @@ const unsigned char stale_angle    = 0x08;
 
 Sprite::Sprite(const unsigned int w, const unsigned int h, const SpriteBatch *p) :
 	width(w), height(h), buffered(false), stale(0xff), angle(0.0f),
-	vertex_array(0), parent(p), pivot(0.5f, 0.5f), scale_f(1.0f, 1.0f)
+	vertex_array(nullptr), parent(p), pivot(0.5f, 0.5f), scale_f(1.0f, 1.0f)
 { }
 
 Sprite::Sprite(const Sprite &s) :
 	width(s.width), height(s.height), buffered(false), stale(s.stale),
-	angle(s.angle), cos_r(s.cos_r), sin_r(s.sin_r),	vertex_array(0),
+	angle(s.angle), cos_r(s.cos_r), sin_r(s.sin_r),	vertex_array(nullptr),
 	parent(s.parent), pivot(s.pivot), position(s.position),
 	position_d(s.position_d), scale_f(s.scale_f)
 {
 	memcpy(this->origin, s.origin, 4 * sizeof(Vec2f));
-}
-
-void Sprite::rotate(const float r)
-{
-	if (equalf(r, this->angle))
-		return;
-
-	this->angle = r;
-	this->stale |= stale_angle | stale_scale;
-}
-
-void Sprite::scale(const float f)
-{
-	assert(f > 0.0f || !"Rainbow::Sprite: Can't scale with a negative factor");
-
-	if (equalf(f, this->scale_f.x) && equalf(f, this->scale_f.y))
-		return;
-
-	this->scale_f.x = f;
-	this->scale_f.y = f;
-	this->stale |= stale_scale;
-}
-
-
-void Sprite::scale(const Vec2f &f)
-{
-	assert((f.x > 0.0f && f.y > 0.0f) || !"Rainbow::Sprite: Can't scale with a negative factor");
-
-	if (equalf(f.x, this->scale_f.x) && equalf(f.y, this->scale_f.y))
-		return;
-
-	this->scale_f = f;
-	this->stale |= stale_scale;
 }
 
 void Sprite::set_color(const unsigned int v0, const unsigned int v1, const unsigned int v2, const unsigned int v3)
@@ -94,6 +61,39 @@ void Sprite::set_position(const Vec2f &p)
 
 	this->position_d = p;
 	this->stale |= stale_position;
+}
+
+void Sprite::set_rotation(const float r)
+{
+	if (equalf(r, this->angle))
+		return;
+
+	this->angle = r;
+	this->stale |= stale_angle | stale_scale;
+}
+
+void Sprite::set_scale(const float f)
+{
+	assert(f > 0.0f || !"Rainbow::Sprite: Can't scale with a negative factor");
+
+	if (equalf(f, this->scale_f.x) && equalf(f, this->scale_f.y))
+		return;
+
+	this->scale_f.x = f;
+	this->scale_f.y = f;
+	this->stale |= stale_scale;
+}
+
+
+void Sprite::set_scale(const Vec2f &f)
+{
+	assert((f.x > 0.0f && f.y > 0.0f) || !"Rainbow::Sprite: Can't scale with a negative factor");
+
+	if (equalf(f.x, this->scale_f.x) && equalf(f.y, this->scale_f.y))
+		return;
+
+	this->scale_f = f;
+	this->stale |= stale_scale;
 }
 
 void Sprite::set_texture(const unsigned int id)

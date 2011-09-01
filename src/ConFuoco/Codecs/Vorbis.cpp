@@ -9,14 +9,12 @@ namespace Rainbow
 {
 	namespace ConFuoco
 	{
-		Decoder::Decoder() { }
-
 		void Decoder::open(Wave &wave, const char *const file, bool streaming)
 		{
 			FILE *vorb = fopen(file, "rb");
 			assert(vorb || !"Rainbow::ConFuoco::Decoder: Failed to open file");
 
-			OggVorbis_File *vf = new OggVorbis_File;
+			OggVorbis_File *vf = new OggVorbis_File();
 			if (ov_open_callbacks(vorb, vf, 0, 0, OV_CALLBACKS_DEFAULT) < 0)
 			{
 				fclose(vorb);
@@ -37,8 +35,8 @@ namespace Rainbow
 			}
 			wave.buffer_size = static_cast<unsigned int>(ov_pcm_total(vf, -1)) * vi->channels * 2;
 			wave.buffer = new char[wave.buffer_size + 1];
-			this->read(wave);
-			wave.handle = 0;
+			read(wave);
+			wave.handle = nullptr;
 
 			ov_clear(vf);
 			delete vf;
@@ -57,9 +55,6 @@ namespace Rainbow
 
 		unsigned int Decoder::read(Wave &wave)
 		{
-			if (!wave.handle)
-				return 0;
-
 			unsigned int offset = 0;
 			int bitstream = 0;
 			int read = 0;

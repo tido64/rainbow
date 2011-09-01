@@ -16,11 +16,11 @@ public:
 
 	int get_angle(lua_State *);
 	int get_position(lua_State *);
-	int rotate(lua_State *);
-	int scale(lua_State *);
 	int set_color(lua_State *);
 	int set_pivot(lua_State *);
 	int set_position(lua_State *);
+	int set_rotation(lua_State *);
+	int set_scale(lua_State *);
 	int set_texture(lua_State *);
 
 private:

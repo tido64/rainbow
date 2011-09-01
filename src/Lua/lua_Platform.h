@@ -6,7 +6,7 @@
 class lua_Platform
 {
 public:
-	void init(lua_State *L)
+	static void init(lua_State *L)
 	{
 		lua_createtable(L, 0, 0);
 		lua_pushvalue(L, -1);
@@ -32,11 +32,11 @@ public:
 		lua_setfield(L, -2, "touch");
 
 		lua_pop(L, 3);
-		this->update(L);
+		update(L);
 	}
 
 	/// Updates rainbow.platform.screen
-	void update(lua_State *L)
+	static void update(lua_State *L)
 	{
 		lua_getfield(L, LUA_GLOBALSINDEX, "rainbow");
 		lua_getfield(L, -1, "platform");
@@ -50,6 +50,11 @@ public:
 
 		lua_pop(L, 2);
 	}
+
+private:
+	lua_Platform();
+	lua_Platform(const lua_Platform &);
+	lua_Platform& operator=(const lua_Platform &);
 };
 
 #endif

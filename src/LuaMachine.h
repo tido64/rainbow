@@ -74,7 +74,7 @@ public:
 		return *static_cast<T **>(ptr);
 	}
 
-	~LuaMachine() { lua_close(this->L); }
+	~LuaMachine();
 
 	/// Call a function with no parameters or return value.
 	/// \param k  Name of the function to call
@@ -155,8 +155,6 @@ private:
 	}
 
 	lua_State *L;
-	lua_Input input;
-	lua_Platform platform;
 
 	LuaMachine();
 
@@ -170,6 +168,11 @@ private:
 
 	friend class Director;
 };
+
+inline LuaMachine::~LuaMachine()
+{
+	lua_close(this->L);
+}
 
 // Lua wrappers
 #include "Lua/lua_Font.h"

@@ -13,10 +13,10 @@ const LuaMachine::Method<lua_Font> lua_Font::methods[] = {
 
 lua_Font::lua_Font(lua_State *L) : font(new FontAtlas(lua_tonumber(L, 2)))
 {
-	void *data = 0;
-	const unsigned int size = AssetManager::Instance().load(data, lua_tolstring(L, 1, 0));
-	this->font->load(data, size);
-	// FIXME: Delete *data;
+	const char *const path = Data::get_path(lua_tolstring(L, 1, 0));
+	Data font(path);
+	Data::free(path);
+	this->font->load(font);
 }
 
 int lua_Font::print(lua_State *L)

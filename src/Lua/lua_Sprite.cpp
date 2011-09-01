@@ -8,11 +8,11 @@ const char lua_Sprite::class_name[] = "_sprite";
 const LuaMachine::Method<lua_Sprite> lua_Sprite::methods[] = {
 	{ "get_angle",    &lua_Sprite::get_angle },
 	{ "get_position", &lua_Sprite::get_position },
-	{ "rotate",       &lua_Sprite::rotate },
-	{ "scale",        &lua_Sprite::scale },
 	{ "set_color",    &lua_Sprite::set_color },
 	{ "set_pivot",    &lua_Sprite::set_pivot },
 	{ "set_position", &lua_Sprite::set_position },
+	{ "set_rotation", &lua_Sprite::set_rotation },
+	{ "set_scale",    &lua_Sprite::set_scale },
 	{ "set_texture",  &lua_Sprite::set_texture },
 	{ 0, 0 }
 };
@@ -36,18 +36,6 @@ int lua_Sprite::get_position(lua_State *L)
 	return 2;
 }
 
-int lua_Sprite::rotate(lua_State *L)
-{
-	this->s->rotate(lua_tonumber(L, 1));
-	return 0;
-}
-
-int lua_Sprite::scale(lua_State *L)
-{
-	this->s->scale(lua_tonumber(L, 1));
-	return 0;
-}
-
 int lua_Sprite::set_color(lua_State *L)
 {
 	this->s->set_color(lua_tointeger(L, 1), lua_tointeger(L, 2), lua_tointeger(L, 3), lua_tointeger(L, 4));
@@ -63,6 +51,18 @@ int lua_Sprite::set_pivot(lua_State *L)
 int lua_Sprite::set_position(lua_State *L)
 {
 	this->s->set_position(lua_tonumber(L, 1), lua_tonumber(L, 2));
+	return 0;
+}
+
+int lua_Sprite::set_rotation(lua_State *L)
+{
+	this->s->set_rotation(lua_tonumber(L, 1));
+	return 0;
+}
+
+int lua_Sprite::set_scale(lua_State *L)
+{
+	this->s->set_scale(lua_tonumber(L, 1));
 	return 0;
 }
 

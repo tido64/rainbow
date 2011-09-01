@@ -1,0 +1,38 @@
+#include "Common/Data.h"
+
+class DataTest : public testing::Test
+{
+protected:
+	const char *const file;
+	const char *const path;
+	const char *const secret;
+	Data data;
+
+	DataTest() :
+		file("Data.test"),
+		path(RAINBOW_DATA_USER_PATH "Data.test"),
+		secret("It's a double-rainbow!\n")
+	{ }
+};
+
+TEST_F(DataTest, GetPath)
+{
+	const char *const construct = Data::get_path(file, true);
+	ASSERT_STREQ(path, construct);
+	Data::free(construct);
+}
+
+TEST_F(DataTest, CopyAndSave)
+{
+	data.copy(secret, strlen(secret));
+	ASSERT_EQ(strlen(secret), data.size());
+	ASSERT_STREQ(secret, reinterpret_cast<char *>(data.bytes()));
+	ASSERT_TRUE(data.save(file));
+}
+
+TEST_F(DataTest, Load)
+{
+	ASSERT_TRUE(data.load(file));
+	ASSERT_STREQ(secret, reinterpret_cast<char *>(data.bytes()));
+	remove(file);
+}

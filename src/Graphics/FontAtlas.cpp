@@ -5,9 +5,9 @@
 
 FontAtlas::FontAtlas(const float pt) : pt(pt) { }
 
-void FontAtlas::load(const void *font_data, const unsigned int size)
+void FontAtlas::load(const Data &font)
 {
-	assert(font_data != 0);
+	assert(font.bytes() != 0);
 
 	// Instantiate FreeType
 	FT_Library lib;
@@ -19,7 +19,10 @@ void FontAtlas::load(const void *font_data, const unsigned int size)
 
 	// Load font face
 	FT_Face face;
-	ft_error = FT_New_Memory_Face(lib, static_cast<const FT_Byte *>(font_data), size, 0, &face);
+#ifndef NDEBUG
+	ft_error =
+#endif
+	FT_New_Memory_Face(lib, static_cast<const FT_Byte *>(font.bytes()), font.size(), 0, &face);
 	assert(ft_error == 0 || !"Rainbow::FontAtlas: Failed to load font face");
 
 	FT_Set_Char_Size(face, 0, static_cast<int>(this->pt * 64), 96, 96);
@@ -31,7 +34,10 @@ void FontAtlas::load(const void *font_data, const unsigned int size)
 	unsigned int h_offset = 0;
 	for (unsigned int i = 0; i < chars; ++i)
 	{
-		ft_error = FT_Load_Char(face, i + ascii_offset, FT_LOAD_RENDER);
+	#ifndef NDEBUG
+		ft_error =
+	#endif
+		FT_Load_Char(face, i + ascii_offset, FT_LOAD_RENDER);
 		assert(ft_error == 0 || !"Rainbow::FontAtlas: Failed to load characters");
 
 		const FT_Bitmap &bitmap = face->glyph->bitmap;
@@ -58,7 +64,10 @@ void FontAtlas::load(const void *font_data, const unsigned int size)
 	const float tex_h_fraction = 1.0f / tex_height;
 	for (unsigned int i = 0; i < chars; ++i)
 	{
-		ft_error = FT_Load_Char(face, i + ascii_offset, FT_LOAD_RENDER);
+	#ifndef NDEBUG
+		ft_error =
+	#endif
+		FT_Load_Char(face, i + ascii_offset, FT_LOAD_RENDER);
 
 		const FT_GlyphSlot &slot = face->glyph;
 		const FT_Bitmap &bitmap = slot->bitmap;

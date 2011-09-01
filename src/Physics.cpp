@@ -11,7 +11,7 @@
 const float Physics::fixed_dt = 1.0f / 60.0f;
 const float Physics::inv_fixed_dt = 60.0f;
 
-Physics::Physics() : accumulator(0.0f), accumulator_ratio(0.0f), world(0) { }
+Physics::Physics() : accumulator(0.0f), accumulator_ratio(0.0f), world(nullptr) { }
 
 Physics::~Physics()
 {

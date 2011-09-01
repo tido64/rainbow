@@ -7,12 +7,17 @@
 class lua_Algorithm
 {
 public:
-	lua_Algorithm(lua_State *);
+	static void init(lua_State *);
 
 	static int angle(lua_State *);
 	static int deg2rad(lua_State *);
 	static int rad2deg(lua_State *);
 	static int random(lua_State *);
+
+private:
+	lua_Algorithm();
+	lua_Algorithm(const lua_Algorithm &);
+	lua_Algorithm& operator=(const lua_Algorithm &);
 };
 
 #endif

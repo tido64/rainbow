@@ -33,11 +33,7 @@ namespace Rainbow
 		class Mixer
 		{
 		public:
-			static Mixer& Instance()
-			{
-				static Mixer mixer;
-				return mixer;
-			}
+			static Mixer& Instance();
 
 			~Mixer();
 
@@ -170,6 +166,12 @@ namespace Rainbow
 			/// Intentionally left undefined.
 			Mixer& operator=(const Mixer &);
 		};
+
+		inline Mixer& Mixer::Instance()
+		{
+			static Mixer mixer;
+			return mixer;
+		}
 
 		inline void Mixer::set_doppler_factor(const float f)
 		{

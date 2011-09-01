@@ -18,16 +18,10 @@ namespace Rainbow
 		class Stream : public Wave
 		{
 		public:
-			virtual ~Stream() { this->release(); }
+			~Stream();
 
 			/// Clear buffer and reset state.
-			virtual void close()
-			{
-				this->release();
-				this->loops = true;
-				this->playing = false;
-				this->in_use = false;
-			}
+			void close();
 
 		private:
 			bool loops;    ///< Whether this stream should loop
@@ -37,7 +31,7 @@ namespace Rainbow
 			unsigned int sourced;                   ///< alSource id
 			unsigned int buffered[STREAM_BUFFERS];  ///< alBuffer ids
 
-			Stream() : loops(true), playing(false), in_use(false), sourced(-1) { }
+			Stream();
 
 			/// Intentionally left undefined.
 			Stream(const Stream &);
@@ -47,6 +41,22 @@ namespace Rainbow
 
 			friend class Mixer;
 		};
+
+		inline Stream::Stream() :
+			loops(true), playing(false), in_use(false), sourced(-1) { }
+
+		inline Stream::~Stream()
+		{
+			this->release();
+		}
+
+		inline void Stream::close()
+		{
+			this->release();
+			this->loops = true;
+			this->playing = false;
+			this->in_use = false;
+		}
 	}
 }
 

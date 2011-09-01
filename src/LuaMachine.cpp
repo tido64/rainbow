@@ -10,12 +10,11 @@ LuaMachine::LuaMachine() : L(luaL_newstate())
 	lua_pushvalue(this->L, -1);
 	lua_setfield(this->L, LUA_GLOBALSINDEX, rainbow);
 
-	this->input.init(this->L);         // Initialize "rainbow.input" namespace
-	this->platform.init(this->L);      // Initialize "rainbow.platform" namespace
-
-	lua_Algorithm algorithm(this->L);  // Initialize "rainbow.algorithm" namespace
-	lua_Audio audio(this->L);          // Initialize "rainbow.audio" namespace
-	lua_Physics physics(this->L);      // Initialize "rainbow.physics" namespace
+	lua_Platform::init(this->L);   // Initialize "rainbow.platform" namespace
+	lua_Input::init(this->L);      // Initialize "rainbow.input" namespace
+	lua_Algorithm::init(this->L);  // Initialize "rainbow.algorithm" namespace
+	lua_Audio::init(this->L);      // Initialize "rainbow.audio" namespace
+	lua_Physics::init(this->L);    // Initialize "rainbow.physics" namespace
 
 	lua_pop(this->L, 1);
 
@@ -25,10 +24,7 @@ LuaMachine::LuaMachine() : L(luaL_newstate())
 	LuaMachine::wrap<lua_Texture>(rainbow);
 
 	// We need to set LUA_PATH
-	#ifdef RAINBOW_IOS
-		AssetManager::Instance().set_source();
-	#endif
-	const char *const bundle = AssetManager::Instance().get_full_path();
+	const char *const bundle = Data::get_path();
 
 	lua_getfield(this->L, LUA_GLOBALSINDEX, "package");
 	lua_getfield(this->L, -1, "path");
@@ -44,7 +40,7 @@ LuaMachine::LuaMachine() : L(luaL_newstate())
 	lua_setfield(this->L, -3, "path");
 	lua_pop(this->L, 2);
 
-	delete[] lua_path;
+	Data::free(lua_path);
 }
 
 void LuaMachine::call(const char *const k)
@@ -126,7 +122,7 @@ void LuaMachine::dump_stack(lua_State *L)
 
 lua_Debug* LuaMachine::getinfo(lua_State *L)
 {
-	lua_Debug *d = new lua_Debug;
+	lua_Debug *d = new lua_Debug();
 	lua_getstack(L, 1, d);
 	lua_getinfo(L, "nSl", d);
 	return d;
@@ -147,9 +143,9 @@ void LuaMachine::load(const char *const lua)
 void LuaMachine::update()
 {
 #ifdef RAINBOW_ACCELERATED
-	this->input.accelerate(this->L);
+	lua_Input::accelerate(this->L);
 #endif
 
-	this->platform.update(this->L);
+	lua_Platform::update(this->L);
 	this->call("update");
 }

@@ -20,14 +20,10 @@
 class Input
 {
 public:
-	static Input& Instance()
-	{
-		static Input c;
-		return c;
-	}
+	static Input& Instance();
 
-	bool accelerated;
-	Acceleration acceleration;
+	bool accelerated;           ///< Whether we should update accelerometer data
+	Acceleration acceleration;  ///< Accelerometer data
 
 	/// Subscribe to input events.
 	/// \param t      The object that wants to subscribe
@@ -47,10 +43,18 @@ private:
 	/// Intentionally left undefined.
 	Input(const Input &);
 
+	/// The coordinates system on most devices are "flipped". This function
+	/// will "correct" the values.
 	void touch_flip(Touch *const touches, const unsigned int count);
 
 	/// Intentionally left undefined.
 	Input& operator=(const Input &);
 };
+
+inline Input& Input::Instance()
+{
+	static Input i;
+	return i;
+}
 
 #endif

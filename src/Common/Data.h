@@ -3,12 +3,10 @@
 
 #include "Platform.h"
 
-#if defined(RAINBOW_IOS)
-#else
-#	include <cassert>
-#	include <cstdio>
-#	include <cstring>
-#endif
+#define RAINBOW_DATA_ASSETS_PATH        "Data/"
+#define RAINBOW_DATA_ASSETS_PATH_LENGTH 6
+#define RAINBOW_DATA_USER_PATH          "./"
+#define RAINBOW_DATA_USER_PATH_LENGTH   3
 
 /// Wrapper for byte buffers.
 ///
@@ -26,21 +24,28 @@
 class Data
 {
 public:
-#if defined(RAINBOW_IOS)
+	/// Free memory allocated by get_path().
+	static void free(const void *const data);
 
-	Data() : data(nil) { }
-	~Data() { [data release]; }
+	/// Convenience method for getting the full path to a file.
+	/// \param file       The file to obtain full path for.
+	/// \param user_data  Whether to get path to user data.
+	/// \return Full path to file. Returned string must be freed with Data::free.
+	static const char* get_path(const char *const file = 0, const bool user_data = false);
 
-#else
+	/// Construct an empty data object. No memory will be allocated.
+	Data();
 
-	Data() : sz(0), data(0) { }
-	~Data() { delete[] this->data; }
+	/// Construct a data object with the contents of the file.
+	explicit Data(const char *const file);
 
-#endif
+	~Data();
 
 	/// Return raw byte array.
-	/// \return Pointer to array. If 0, then buffer is empty.
+	/// \return Pointer to array. Returns 0 if buffer is empty.
 	unsigned char* bytes() const;
+
+	bool copy(const void *const data, const unsigned int length);
 
 	/// Load data from file.
 	/// \return True on success, false otherwise.
@@ -67,66 +72,22 @@ private:
 #else
 
 private:
-	unsigned int sz;
-	unsigned char *data;
+	unsigned int allocated;  ///< Allocated memory size
+	unsigned int sz;         ///< Size of used buffer, not necessarily equal to allocated
+	unsigned char *data;     ///< Actual buffer, implemented as a C-array
+
+	/// Not sure whether we'll need this. So it'll stay undefined for now.
+	Data(const Data &);
+
+	/// Resize allocated memory segment. If the requested allocation size is
+	/// smaller than current allocated size, nothing will happen.
+	/// \return True on successful allocation. False otherwise.
+	bool allocate(const unsigned int size);
 
 #endif
+
 };
 
-#ifdef RAINBOW_IOS
-
-inline unsigned char* Data::bytes() const
-{
-	return static_cast<unsigned char *>(data.mutableBytes);
-}
-
-inline unsigned int Data::size() const
-{
-	return data.length;
-}
-
-inline Data::operator void*() const
-{
-	return data.mutableBytes;
-}
-
-inline Data::operator unsigned char*() const
-{
-	return static_cast<unsigned char *>(data.mutableBytes);
-}
-
-inline Data::operator NSData*() const
-{
-	return static_cast<NSData *>(this->data);
-}
-
-inline Data::operator NSMutableData*() const
-{
-	return this->data;
-}
-
-#else
-
-inline unsigned char* Data::bytes() const
-{
-	return this->data;
-}
-
-inline unsigned int Data::size() const
-{
-	return this->sz;
-}
-
-inline Data::operator void*() const
-{
-	return this->data;
-}
-
-inline Data::operator unsigned char*() const
-{
-	return this->data;
-}
-
-#endif
+#include "Common/impl/Data.inl"
 
 #endif

@@ -4,7 +4,7 @@
 
 #include "Lua/lua_Algorithm.h"
 
-lua_Algorithm::lua_Algorithm(lua_State *L)
+void lua_Algorithm::init(lua_State *L)
 {
 	lua_createtable(L, 0, 0);
 	lua_pushvalue(L, -1);
