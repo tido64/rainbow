@@ -29,6 +29,7 @@ set(CMAKE_CXX_FLAGS_RELEASE "-O2 -finline-functions")
 
 if(CMAKE_C_COMPILER MATCHES .*clang$)
 	set(CMAKE_C_FLAGS "-x c ${CMAKE_C_FLAGS}")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libstdc++")
 endif(CMAKE_C_COMPILER MATCHES .*clang$)
 
 # Dynamic libraries

@@ -1,3 +1,6 @@
+/// Copyright 2011 Bifrost Games. All rights reserved.
+/// \author Tommy Nguyen
+
 #include "ConFuoco/Wave.h"
 
 namespace Rainbow

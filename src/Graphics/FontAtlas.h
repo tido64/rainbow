@@ -3,6 +3,7 @@
 #define FONTATLAS_KERNING
 
 #include "Platform.h"
+
 #ifndef RAINBOW_IOS
 #	include <cassert>
 #endif

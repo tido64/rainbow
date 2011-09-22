@@ -1,3 +1,6 @@
+/// Copyright 2011 Bifrost Games. All rights reserved.
+/// \author Tommy Nguyen
+
 #include "Common/Data.h"
 
 #if defined(RAINBOW_IOS)
