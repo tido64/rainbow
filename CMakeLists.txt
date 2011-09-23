@@ -1,36 +1,33 @@
-project(RAINBOW)
 cmake_minimum_required(VERSION 2.8)
+if(UNIX)
+	# clang is our default compiler on Unix
+	set(CMAKE_C_COMPILER "clang")
+	set(CMAKE_CXX_COMPILER "clang")
+endif(UNIX)
 
-set(CMAKE_BUILD_TYPE Debug)
-
-option(PROFILING "Compile with profiling" OFF)
+project(RAINBOW)
+#option(PROFILING "Compile with profiling" OFF)
 
 set(LOCAL_LIBRARY ../lib)
 set(LOCAL_LIBRARY_BUILD ${CMAKE_SOURCE_DIR}/build/cmake)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${LOCAL_LIBRARY_BUILD})
+set(CMAKE_BUILD_TYPE Debug)
 
-set(RAINBOW_CXXFLAGS "-Wall -Wextra -Wstrict-null-sentinel -Woverloaded-virtual -Wsign-promo -pedantic-errors -fexceptions -fno-rtti")
-set(RAINBOW_LDFLAGS "-Wl,-z,now -Wl,-z,relro")
+if(UNIX)
+	set(RAINBOW_COMMON_CFLAGS "-fno-rtti -fstack-protector -fpie -march=native")
 
-# Circumvents "relocation R_X86_64_32S against `__libc_csu_fini' can not be
-# used when making a shared object; recompile with -fPIE"
-if(PROFILING)
-	set(CMAKE_C_FLAGS          "-pipe -std=c99 -pg -w -fno-rtti -march=native")
-	set(CMAKE_CXX_FLAGS        "-pipe -std=c++0x -pg ${RAINBOW_CXXFLAGS} -march=native")
-	set(CMAKE_EXE_LINKER_FLAGS "-pg ${RAINBOW_LDFLAGS}")
-	message(STATUS "Profiling is enabled")
-else(PROFILING)
-	set(CMAKE_C_FLAGS          "-pipe -std=c99 -w -fno-rtti -fpie -march=native")
-	set(CMAKE_CXX_FLAGS        "-pipe -std=c++0x ${RAINBOW_CXXFLAGS} -fpie -march=native")
-	set(CMAKE_EXE_LINKER_FLAGS "-pie ${RAINBOW_LDFLAGS}")
-endif(PROFILING)
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -ftrapv")
-set(CMAKE_CXX_FLAGS_RELEASE "-O2 -finline-functions")
+	set(CMAKE_C_COMPILER "clang")
+	set(CMAKE_C_FLAGS    "-pipe -x c -std=c99 -w ${RAINBOW_COMMON_CFLAGS}")
 
-if(CMAKE_C_COMPILER MATCHES .*clang$)
-	set(CMAKE_C_FLAGS "-x c ${CMAKE_C_FLAGS}")
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libstdc++")
-endif(CMAKE_C_COMPILER MATCHES .*clang$)
+	set(CMAKE_CXX_COMPILER "clang")
+	set(CMAKE_CXX_FLAGS    "-pipe -std=c++0x -Wall -Wextra -Woverloaded-virtual -Wsign-promo -Wno-variadic-macros -pedantic -U__GXX_EXPERIMENTAL_CXX0X__ ${RAINBOW_COMMON_CFLAGS} -stdlib=libstdc++")
+
+	set(CMAKE_EXE_LINKER_FLAGS "-pie -Wl,-z,now -Wl,-z,relro -pthreads")
+
+	# Debug- and release-specific flags
+	set(CMAKE_CXX_FLAGS_DEBUG   "${CMAKE_CXX_FLAGS_DEBUG} -ftrapv")
+	set(CMAKE_CXX_FLAGS_RELEASE "-O2 -D_FORTIFY_SOURCE=2 -finline-functions")
+endif(UNIX)
 
 # Dynamic libraries
 find_package(Freetype REQUIRED)
@@ -75,4 +72,5 @@ target_link_libraries(rainbow
 	png
 	z
 	m
-)	# stdc++
+	stdc++
+)
