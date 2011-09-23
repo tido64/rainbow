@@ -7,8 +7,6 @@
 class lua_Input
 {
 public:
-	static void init(lua_State *L);
-
 	static void accelerate(lua_State *L);
 	static void touch_began(lua_State *L, const Touch *const touches, const unsigned int count);
 	static void touch_canceled(lua_State *L);
@@ -16,11 +14,14 @@ public:
 	static void touch_moved(lua_State *L, const Touch *const touches, const unsigned int count);
 
 private:
+	static void init(lua_State *L);
 	static void touch_event(lua_State *L, const Touch *const touches = 0, const unsigned int count = 0);
 
 	lua_Input();
 	lua_Input(const lua_Input &);
 	lua_Input& operator=(const lua_Input &);
+
+	friend class LuaMachine;
 };
 
 #endif

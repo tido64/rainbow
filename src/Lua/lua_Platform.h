@@ -6,6 +6,23 @@
 class lua_Platform
 {
 public:
+	/// Updates rainbow.platform.screen
+	static void update(lua_State *L)
+	{
+		lua_getfield(L, LUA_GLOBALSINDEX, "rainbow");
+		lua_getfield(L, -1, "platform");
+		lua_getfield(L, -1, "screen");
+
+		lua_pushnumber(L, Screen::Instance().width());
+		lua_setfield(L, -2, "width");
+
+		lua_pushnumber(L, Screen::Instance().height());
+		lua_setfield(L, -2, "height");
+
+		lua_pop(L, 2);
+	}
+
+private:
 	static void init(lua_State *L)
 	{
 		lua_createtable(L, 0, 0);
@@ -35,26 +52,11 @@ public:
 		update(L);
 	}
 
-	/// Updates rainbow.platform.screen
-	static void update(lua_State *L)
-	{
-		lua_getfield(L, LUA_GLOBALSINDEX, "rainbow");
-		lua_getfield(L, -1, "platform");
-		lua_getfield(L, -1, "screen");
-
-		lua_pushnumber(L, Screen::Instance().width());
-		lua_setfield(L, -2, "width");
-
-		lua_pushnumber(L, Screen::Instance().height());
-		lua_setfield(L, -2, "height");
-
-		lua_pop(L, 2);
-	}
-
-private:
 	lua_Platform();
 	lua_Platform(const lua_Platform &);
 	lua_Platform& operator=(const lua_Platform &);
+
+	friend class LuaMachine;
 };
 
 #endif

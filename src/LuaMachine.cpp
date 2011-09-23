@@ -1,5 +1,55 @@
 #include "LuaMachine.h"
 
+void LuaMachine::dump_stack(lua_State *L)
+{
+	puts("Lua stack");
+	for (int l = 1; l <= lua_gettop(L); ++l)
+	{
+		printf("#%i: ", l);
+		switch (lua_type(L, l))
+		{
+			case LUA_TNIL:
+				puts("(nil)");
+				break;
+			case LUA_TNUMBER:
+				printf(LUA_NUMBER_FMT "\n", lua_tonumber(L, l));
+				break;
+			case LUA_TBOOLEAN:
+				printf("%s\n", lua_toboolean(L, l) ? "true" : "false");
+				break;
+			case LUA_TSTRING:
+				printf("%s\n", lua_tolstring(L, l, 0));
+				break;
+			case LUA_TTABLE:
+				puts("(table)");
+				break;
+			case LUA_TFUNCTION:
+				printf("%lx\n", reinterpret_cast<intptr_t>(lua_tocfunction(L, l)));
+				break;
+			case LUA_TUSERDATA:
+				printf("%lx\n", reinterpret_cast<intptr_t>(lua_touserdata(L, l)));
+				break;
+			case LUA_TTHREAD:
+				puts("(thread)");
+				break;
+			case LUA_TLIGHTUSERDATA:
+				printf("%lx\n", reinterpret_cast<intptr_t>(lua_topointer(L, l)));
+				break;
+			default:
+				puts("(unknown)");
+				break;
+		}
+	}
+}
+
+lua_Debug* LuaMachine::getinfo(lua_State *L)
+{
+	lua_Debug *d = new lua_Debug();
+	lua_getstack(L, 1, d);
+	lua_getinfo(L, "nSl", d);
+	return d;
+}
+
 LuaMachine::LuaMachine() : L(luaL_newstate())
 {
 	const char rainbow[] = "rainbow";
@@ -76,56 +126,6 @@ void LuaMachine::err(const int lua_e)
 	printf(" error: %s\n", m);
 	dump_stack(this->L);
 	assert(!"Lua related error, see stdout");
-}
-
-void LuaMachine::dump_stack(lua_State *L)
-{
-	puts("Lua stack");
-	for (int l = 1; l <= lua_gettop(L); ++l)
-	{
-		printf("#%i: ", l);
-		switch (lua_type(L, l))
-		{
-			case LUA_TNIL:
-				puts("(nil)");
-				break;
-			case LUA_TNUMBER:
-				printf(LUA_NUMBER_FMT "\n", lua_tonumber(L, l));
-				break;
-			case LUA_TBOOLEAN:
-				printf("%s\n", lua_toboolean(L, l) ? "true" : "false");
-				break;
-			case LUA_TSTRING:
-				printf("%s\n", lua_tolstring(L, l, 0));
-				break;
-			case LUA_TTABLE:
-				puts("(table)");
-				break;
-			case LUA_TFUNCTION:
-				printf("%lx\n", reinterpret_cast<intptr_t>(lua_tocfunction(L, l)));
-				break;
-			case LUA_TUSERDATA:
-				printf("%lx\n", reinterpret_cast<intptr_t>(lua_touserdata(L, l)));
-				break;
-			case LUA_TTHREAD:
-				puts("(thread)");
-				break;
-			case LUA_TLIGHTUSERDATA:
-				printf("%lx\n", reinterpret_cast<intptr_t>(lua_topointer(L, l)));
-				break;
-			default:
-				puts("(unknown)");
-				break;
-		}
-	}
-}
-
-lua_Debug* LuaMachine::getinfo(lua_State *L)
-{
-	lua_Debug *d = new lua_Debug();
-	lua_getstack(L, 1, d);
-	lua_getinfo(L, "nSl", d);
-	return d;
 }
 
 void LuaMachine::load(const char *const lua)

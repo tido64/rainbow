@@ -8,8 +8,6 @@
 class lua_Audio
 {
 public:
-	static void init(lua_State *);
-
 	static int set_doppler_factor(lua_State *);
 	static int set_doppler_velocity(lua_State *);
 	static int set_speed_of_sound(lua_State *);
@@ -37,9 +35,13 @@ public:
 	static int set_bgm_volume(lua_State *);
 
 private:
+	static void init(lua_State *);
+
 	lua_Audio();
 	lua_Audio(const lua_Audio &);
 	lua_Audio& operator=(const lua_Audio &);
+
+	friend class LuaMachine;
 };
 
 #endif

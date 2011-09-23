@@ -7,8 +7,6 @@
 class lua_Physics
 {
 public:
-	static void init(lua_State *);
-
 	static int apply_force(lua_State *);
 	static int apply_angular_impulse(lua_State *);
 	static int apply_torque(lua_State *);
@@ -22,9 +20,13 @@ public:
 	static int set_gravity(lua_State *);
 
 private:
+	static void init(lua_State *);
+
 	lua_Physics();
 	lua_Physics(const lua_Physics &);
 	lua_Physics& operator=(const lua_Physics &);
+
+	friend class LuaMachine;
 };
 
 #endif
