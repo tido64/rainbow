@@ -14,3 +14,14 @@ TEST(AlgorithmTest, DistanceBetweenTwoPoints)
 {
 	ASSERT_EQ(5.0f, Rainbow::distance(0.0f, 0.0f, 3.0f, 4.0f));
 }
+
+TEST(AlgorithmTest, IntegerToString)
+{
+	char *number = Rainbow::itoa(65535);
+	ASSERT_STREQ("65535", number);
+	delete[] number;
+
+	number = Rainbow::itoa(-65535);
+	ASSERT_STREQ("-65535", number);
+	delete[] number;
+}

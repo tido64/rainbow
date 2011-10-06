@@ -40,6 +40,34 @@ namespace Rainbow
 		return fabs(a - b) <= ((fabs(a) < fabs(b) ? fabs(b) : fabs(a)) * FLT_EPSILON);
 	}
 
+	/// Convert an integer to a C-string.
+	inline char* itoa(int i)
+	{
+		int sz = 1;
+		if (i < 0)
+		{
+			++sz;
+			i *= -1;
+		}
+		int tmp = i;
+		while (tmp > 9)
+		{
+			tmp /= 10;
+			++sz;
+		}
+
+		char *str = new char[sz + 1];
+		str[sz] = '\0';
+		for (int j = sz - 1; j > 0; --j)
+		{
+			tmp = i % 10;
+			str[j] = tmp + '0';
+			i /= 10;
+		}
+		str[0] = (i == 0) ? '-' : i + '0';
+		return str;
+	}
+
 	/// Get a random number.
 	inline float mt_random() { return static_cast<float>(Random::Instance().next()); }
 
