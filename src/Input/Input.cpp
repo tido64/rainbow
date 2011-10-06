@@ -11,6 +11,20 @@ void Input::subscribe(Touchable *const t, unsigned int flags)
 		this->touch_subscribers.push_back(t);
 }
 
+#ifdef RAINBOW_BUTTONS
+
+void Input::key_down(const Key &k)
+{
+	lua_Input::key_down(this->lua_state, k);
+}
+
+void Input::key_up(const Key &k)
+{
+	lua_Input::key_up(this->lua_state, k);
+}
+
+#endif
+
 void Input::touch_began(Touch *const touches, const unsigned int count)
 {
 	this->touch_flip(touches, count);

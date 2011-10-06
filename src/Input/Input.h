@@ -3,6 +3,7 @@
 
 #include "Common/Vector.h"
 #include "Input/Acceleration.h"
+#include "Input/Key.h"
 #include "Input/Touchable.h"
 #include "Lua/lua_Input.h"
 
@@ -37,6 +38,11 @@ public:
 	/// \param t      The object that wants to subscribe
 	/// \param flags  Events to subscribe to
 	void subscribe(Touchable *const t, unsigned int flags);
+
+#ifdef RAINBOW_BUTTONS
+	void key_down(const Key &k);
+	void key_up(const Key &k);
+#endif
 
 	void touch_began(Touch *const touches, const unsigned int count);
 	void touch_canceled();

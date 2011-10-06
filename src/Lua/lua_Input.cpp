@@ -39,6 +39,13 @@ void lua_Input::accelerate(lua_State *L)
 	lua_pop(L, 3);
 }
 
+void lua_Input::getfield(lua_State *L, const char *const field)
+{
+	lua_getfield(L, LUA_GLOBALSINDEX, "rainbow");
+	lua_getfield(L, -1, "input");
+	lua_getfield(L, -1, field);
+}
+
 void lua_Input::touch_began(lua_State *L, const Touch *const touches, const unsigned int count)
 {
 	touch_event(L, touches, count);
@@ -50,6 +57,7 @@ void lua_Input::touch_began(lua_State *L, const Touch *const touches, const unsi
 	}
 	lua_pcall(L, 0, 0, 0);
 	lua_pop(L, 2);
+	assert(lua_gettop(L) == 0 || !"Rainbow::Lua::Input::touch_began: Leftover elements in the stack");
 }
 
 void lua_Input::touch_canceled(lua_State *L)
@@ -63,6 +71,7 @@ void lua_Input::touch_canceled(lua_State *L)
 	}
 	lua_pcall(L, 0, 0, 0);
 	lua_pop(L, 2);
+	assert(lua_gettop(L) == 0 || !"Rainbow::Lua::Input::touch_canceled: Leftover elements in the stack");
 }
 
 void lua_Input::touch_ended(lua_State *L, const Touch *const touches, const unsigned int count)
@@ -76,13 +85,13 @@ void lua_Input::touch_ended(lua_State *L, const Touch *const touches, const unsi
 	}
 	lua_pcall(L, 0, 0, 0);
 	lua_pop(L, 2);
+	assert(lua_gettop(L) == 0 || !"Rainbow::Lua::Input::touch_ended: Leftover elements in the stack");
 }
 
 void lua_Input::touch_event(lua_State *L, const Touch *const touches, const unsigned int count)
 {
 	lua_getfield(L, LUA_GLOBALSINDEX, "rainbow");
 	lua_getfield(L, -1, "input");
-
 	if (count == 0)
 	{
 		lua_pushnil(L);
@@ -126,4 +135,34 @@ void lua_Input::touch_moved(lua_State *L, const Touch *const touches, const unsi
 	}
 	lua_pcall(L, 0, 0, 0);
 	lua_pop(L, 2);
+	assert(lua_gettop(L) == 0 || !"Rainbow::Lua::Input::touch_moved: Leftover elements in the stack");
 }
+
+#ifdef RAINBOW_BUTTONS
+
+void lua_Input::key_event(lua_State *L, const char *const type, const Key &key)
+{
+	getfield(L, type);
+	if (!lua_isfunction(L, -1))
+	{
+		lua_pop(L, 3);
+		return;
+	}
+
+	lua_pushinteger(L, key.key);
+	lua_call(L, 1, 0);
+	lua_pop(L, 2);
+	assert(lua_gettop(L) == 0 || !"Rainbow::Lua::Input::key_event: Leftover elements in the stack");
+}
+
+void lua_Input::key_down(lua_State *L, const Key &key)
+{
+	key_event(L, "key_down", key);
+}
+
+void lua_Input::key_up(lua_State *L, const Key &key)
+{
+	key_event(L, "key_up", key);
+}
+
+#endif  // RAINBOW_BUTTONS

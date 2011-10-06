@@ -97,8 +97,10 @@ int main(int argc, char *argv[])
 						done = true;
 						break;
 					}
+					Input::Instance().key_down(Key::from_raw(&event.key.keysym));
 					break;
 				case SDL_KEYUP:
+					Input::Instance().key_up(Key::from_raw(&event.key.keysym));
 					break;
 				case SDL_MOUSEMOTION:
 					on_mouse_motion(event.motion);

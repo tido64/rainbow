@@ -1,8 +1,10 @@
 --! Rainbow Lua input subscription class.
-
+--!
 --! Lets objects subscribe to and be notified of input events. All listeners
 --! must implement the following methods:
 --!
+--! - key_down()
+--! - key_up()
 --! - touch_began()
 --! - touch_canceled()
 --! - touch_ended()
@@ -10,6 +12,8 @@
 --!
 --! Copyright 2011 Bifrost Games. All rights reserved.
 --! \author Tommy Nguyen
+
+require("Keyboard");  -- Table of raw keycodes
 
 _rainbow_input_listeners = {};
 _rainbow_input_listener_count = 0;
@@ -43,6 +47,16 @@ function rainbow.input.unsubscribe_all()
 		_rainbow_input_listeners[i] = nil;
 	end
 	_rainbow_input_listener_count = 0;
+end
+
+--! Notify all listeners of a key down event.
+function rainbow.input.key_down(key)
+	print("key_down: " .. key);
+end
+
+--! Notify all listeners of a key up event.
+function rainbow.input.key_up(key)
+	print("key_up: " .. key);
 end
 
 --! Notify all listeners of a touch began event.
