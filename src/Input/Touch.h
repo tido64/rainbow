@@ -4,7 +4,6 @@
 #include <functional>
 
 #include "Common/Vec2.h"
-#include "Hardware/Screen.h"
 
 #if defined(RAINBOW_IOS)
 #	include <UIKit/UITouch.h>

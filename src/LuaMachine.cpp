@@ -91,6 +91,7 @@ LuaMachine::LuaMachine() : L(luaL_newstate())
 	lua_pop(this->L, 2);
 
 	Data::free(lua_path);
+	assert(lua_gettop(L) == 0 || !"LuaMachine::LuaMachine: Stack not empty");
 }
 
 void LuaMachine::call(const char *const k)
@@ -142,10 +143,9 @@ void LuaMachine::load(const char *const lua)
 
 void LuaMachine::update()
 {
-#ifdef RAINBOW_ACCELERATED
+#if RAINBOW_ACCELERATED
 	lua_Input::accelerate(this->L);
 #endif
 
-	lua_Platform::update(this->L);
 	this->call("update");
 }

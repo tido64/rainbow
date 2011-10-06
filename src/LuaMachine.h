@@ -38,11 +38,6 @@ public:
 	/// Return information about a specific function or function invocation.
 	static lua_Debug* getinfo(lua_State *L);
 
-	/// Return the wrapper of the object on top of the stack.
-	/// \return Pointer to wrapper
-	template<class T>
-	static T* wrapper(lua_State *L);
-
 	~LuaMachine();
 
 private:
@@ -51,6 +46,11 @@ private:
 
 	template<class T>
 	static int thunk(lua_State *L);
+
+	/// Return the wrapper of the object on top of the stack.
+	/// \return Pointer to wrapper
+	template<class T>
+	static T* wrapper(lua_State *L);
 
 	lua_State *L;
 
@@ -109,16 +109,6 @@ int LuaMachine::alloc(lua_State *L)
 	return 1;
 }
 
-template<class T>
-T* LuaMachine::wrapper(lua_State *L)
-{
-	// Get user data from table
-	lua_rawgeti(L, -1, 0);
-	void *ptr = luaL_checkudata(L, -1, T::class_name);
-	lua_pop(L, 1);
-	return *static_cast<T **>(ptr);
-}
-
 inline LuaMachine::~LuaMachine()
 {
 	lua_close(this->L);
@@ -155,6 +145,16 @@ int LuaMachine::thunk(lua_State *L)
 	lua_pop(L, 1);
 
 	return ((*ptr)->*(T::methods[i].lua_CFunction))(L);
+}
+
+template<class T>
+T* LuaMachine::wrapper(lua_State *L)
+{
+	// Get user data from table
+	lua_rawgeti(L, -1, 0);
+	void *ptr = luaL_checkudata(L, -1, T::class_name);
+	lua_pop(L, 1);
+	return *static_cast<T **>(ptr);
 }
 
 template<class T>

@@ -13,17 +13,7 @@ using Rainbow::ConFuoco::Mixer;
 
 Director::Director()
 {
-#if defined(RAINBOW_IOS)
-
-	// Asset source set in Lua constructor
-	this->update_video();
-
-#elif defined(RAINBOW_ANDROID)
-
-#endif
-
-	// Add director to input event loop
-	Input::Instance().subscribe(this, RAINBOW_ALL_EVENTS);
+	Input::Instance().set_state(this->lua.L);
 }
 
 void Director::draw()
@@ -47,6 +37,12 @@ void Director::init(const char *const script)
 	Data::free(path);
 	this->lua.call("init");
 	this->lua.update();
+}
+
+void Director::set_video(const int w, const int h)
+{
+	Input::Instance().set_height(h);
+	lua_Platform::update(this->lua.L, w, h);
 }
 
 void Director::update(const float dt)

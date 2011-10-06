@@ -22,7 +22,6 @@ Touch mouse_input;  ///< Mouse input
 Director director;  ///< Game director handles everything
 
 void init_GL();                                     ///< Initialise 2d viewport
-void on_key_press(SDL_keysym &);                    ///< Handle key press event
 void on_mouse_button_down(SDL_MouseButtonEvent &);  ///< Handle mouse button down event
 void on_mouse_button_up(SDL_MouseButtonEvent &);    ///< Handle mouse button up event
 void on_mouse_motion(SDL_MouseMotionEvent &);       ///< Handle mouse motion event
@@ -92,7 +91,14 @@ int main(int argc, char *argv[])
 					active = (event.active.gain != 0);
 					break;
 				case SDL_KEYDOWN:
-					on_key_press(event.key.keysym);
+					if (event.key.keysym.sym == SDLK_q && (event.key.keysym.mod & KMOD_LCTRL))
+					{
+						active = false;
+						done = true;
+						break;
+					}
+					break;
+				case SDL_KEYUP:
 					break;
 				case SDL_MOUSEMOTION:
 					on_mouse_motion(event.motion);
@@ -155,24 +161,7 @@ void init_GL()
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 }
 
-void on_key_press(SDL_keysym &keysym)
-{
-	switch (keysym.sym)
-	{
-		case SDLK_q:
-			if (keysym.mod == (KMOD_NUM | KMOD_LCTRL) || (keysym.mod == KMOD_LCTRL))
-			{
-				active = false;
-				done = true;
-				return;
-			}
-		default:
-			break;
-	}
-	director.key_press();
-}
-
-inline void on_mouse_button_down(SDL_MouseButtonEvent &mouse)
+void on_mouse_button_down(SDL_MouseButtonEvent &mouse)
 {
 	mouse_input.initial.x = mouse.x;
 	mouse_input.initial.y = mouse.y;
@@ -180,14 +169,14 @@ inline void on_mouse_button_down(SDL_MouseButtonEvent &mouse)
 	Input::Instance().touch_began(&mouse_input, 1);
 }
 
-inline void on_mouse_button_up(SDL_MouseButtonEvent &mouse)
+void on_mouse_button_up(SDL_MouseButtonEvent &mouse)
 {
 	mouse_input.position.x = mouse.x;
 	mouse_input.position.y = mouse.y;
 	Input::Instance().touch_ended(&mouse_input, 1);
 }
 
-inline void on_mouse_motion(SDL_MouseMotionEvent &mouse)
+void on_mouse_motion(SDL_MouseMotionEvent &mouse)
 {
 	mouse_input.position.x = mouse.x;
 	mouse_input.position.y = mouse.y;
@@ -204,5 +193,5 @@ void resize(const int w, const int h)
 	glLoadIdentity();
 	glViewport(0, 0, w, h);
 
-	director.update_video(w, h);
+	director.set_video(w, h);
 }
