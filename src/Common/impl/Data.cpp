@@ -102,12 +102,12 @@ Data::~Data()
 
 bool Data::allocate(const unsigned int size)
 {
-	// Allocate buffer
-	if (size > this->allocated)  // Data needs a bigger buffer
+	if (size >= this->allocated)  // Data needs a bigger buffer
 	{
 		delete[] this->data;
-		this->data = new unsigned char[size];
-		this->allocated = size;
+		this->allocated = size + 1;
+		this->data = new unsigned char[this->allocated];
+		this->data[size] = 0;
 	}
 	else  // Pad with zeros
 		memset(this->data + size, 0, this->allocated - size);
