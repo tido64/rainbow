@@ -59,5 +59,5 @@ void Input::touch_moved(Touch *const touches, const unsigned int count)
 void Input::touch_flip(Touch *const touches, const unsigned int count)
 {
 	for (unsigned int i = 0; i < count; ++i)
-		touches[i].position.y = this->height - touches[i].position.y;
+		touches[i].y = this->height - touches[i].y;
 }

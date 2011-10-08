@@ -30,7 +30,7 @@ public:
 
 	T& at(const unsigned int i)
 	{
-		assert(i < this->count || !"Rainbow::Vector: Tried to access an element out of range");
+		assert(i < this->count || !"Rainbow::Vector::at: Tried to access an element out of range");
 		return this->c_array[i];
 	}
 
@@ -40,13 +40,17 @@ public:
 	/// Return size of allocated storage capacity.
 	unsigned int capacity() const { return this->reserved; }
 
+	/// Empties the vector.
+	void clear() { this->count = 0; }
+
 	/// Add an element to the vector.
 	void push_back(const T &element)
 	{
 		// Check that there is enough space
 		if (this->count == this->reserved)
 			this->reserve(this->reserved <<= 1);
-		this->c_array[this->count++] = element;
+		this->c_array[this->count] = element;
+		++this->count;
 	}
 
 	/// Increase or decrease the capacity of the vector.
@@ -80,6 +84,7 @@ public:
 	/// Return the element stored at index.
 	T& operator[](const unsigned int i) const
 	{
+		assert(i < this->count || !"Rainbow::Vector::operator[]: Tried to access an element out of range");
 		return this->c_array[i];
 	}
 

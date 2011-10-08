@@ -7,12 +7,12 @@
 
 void lua_Input::init(lua_State *L)
 {
-	lua_createtable(L, 0, 0);
+	lua_createtable(L, 0, 2);
 	lua_pushvalue(L, -1);
 	lua_setfield(L, -3, "input");
 
 	// rainbow.input.acceleration
-	lua_createtable(L, 0, 0);
+	lua_createtable(L, 0, 2);
 	lua_setfield(L, -2, "acceleration");
 	accelerate(L);
 
@@ -21,12 +21,8 @@ void lua_Input::init(lua_State *L)
 
 void lua_Input::accelerate(lua_State *L)
 {
-	lua_getfield(L, LUA_GLOBALSINDEX, "rainbow");
-	lua_getfield(L, -1, "input");
-
 	const Input &input = Input::Instance();
-
-	lua_getfield(L, -1, "acceleration");
+	getfield(L, "acceleration");
 	lua_pushnumber(L, input.acceleration.x * RAINBOW_INV_FIXED_SCALE);
 	lua_setfield(L, -2, "x");
 	lua_pushnumber(L, input.acceleration.y * RAINBOW_INV_FIXED_SCALE);
@@ -35,7 +31,6 @@ void lua_Input::accelerate(lua_State *L)
 	lua_setfield(L, -2, "z");
 	lua_pushnumber(L, input.acceleration.timestamp);
 	lua_setfield(L, -2, "timestamp");
-
 	lua_pop(L, 3);
 }
 
@@ -46,96 +41,59 @@ void lua_Input::getfield(lua_State *L, const char *const field)
 	lua_getfield(L, -1, field);
 }
 
-void lua_Input::touch_began(lua_State *L, const Touch *const touches, const unsigned int count)
+void lua_Input::touch_event(lua_State *L, const char *const type, const Touch *const touches, const unsigned int count)
 {
-	touch_event(L, touches, count);
-	lua_getfield(L, -1, "touch_began");
+	getfield(L, type);
 	if (!lua_isfunction(L, -1))
 	{
 		lua_pop(L, 3);
 		return;
 	}
-	lua_pcall(L, 0, 0, 0);
+
+	lua_createtable(L, 0, count);
+	for (unsigned int i = 0; i < count; ++i)
+	{
+		lua_createtable(L, 0, 2);
+		lua_pushvalue(L, -1);
+		lua_setfield(L, -3, Rainbow::itoa(touches[i].hash));
+		lua_pushinteger(L, touches[i].x);
+		lua_setfield(L, -2, "x");
+		lua_pushinteger(L, touches[i].y);
+		lua_setfield(L, -2, "y");
+		lua_pop(L, 1);
+	}
+	lua_call(L, 1, 0);
 	lua_pop(L, 2);
-	assert(lua_gettop(L) == 0 || !"Rainbow::Lua::Input::touch_began: Leftover elements in the stack");
+	assert(lua_gettop(L) == 0 || !"Rainbow::Lua::Input::touch_event: Leftover elements in the stack");
+}
+
+void lua_Input::touch_began(lua_State *L, const Touch *const touches, const unsigned int count)
+{
+	touch_event(L, "touch_began", touches, count);
 }
 
 void lua_Input::touch_canceled(lua_State *L)
 {
-	touch_event(L);
-	lua_getfield(L, -1, "touch_canceled");
+	getfield(L, "touch_canceled");
 	if (!lua_isfunction(L, -1))
 	{
 		lua_pop(L, 3);
 		return;
 	}
-	lua_pcall(L, 0, 0, 0);
+
+	lua_call(L, 0, 0);
 	lua_pop(L, 2);
 	assert(lua_gettop(L) == 0 || !"Rainbow::Lua::Input::touch_canceled: Leftover elements in the stack");
 }
 
 void lua_Input::touch_ended(lua_State *L, const Touch *const touches, const unsigned int count)
 {
-	touch_event(L, touches, count);
-	lua_getfield(L, -1, "touch_ended");
-	if (!lua_isfunction(L, -1))
-	{
-		lua_pop(L, 3);
-		return;
-	}
-	lua_pcall(L, 0, 0, 0);
-	lua_pop(L, 2);
-	assert(lua_gettop(L) == 0 || !"Rainbow::Lua::Input::touch_ended: Leftover elements in the stack");
-}
-
-void lua_Input::touch_event(lua_State *L, const Touch *const touches, const unsigned int count)
-{
-	lua_getfield(L, LUA_GLOBALSINDEX, "rainbow");
-	lua_getfield(L, -1, "input");
-	if (count == 0)
-	{
-		lua_pushnil(L);
-		lua_setfield(L, -2, "touches");
-	}
-	else
-	{
-		static char hash[sizeof(unsigned int)];
-		lua_createtable(L, 0, 0);
-		lua_pushvalue(L, -1);
-		lua_setfield(L, -3, "touches");
-		for (unsigned int i = 0; i < count; ++i)
-		{
-			lua_createtable(L, 0, 0);
-			lua_pushvalue(L, -1);
-			sprintf(hash, "%u", touches[i].hash);
-			lua_setfield(L, -3, hash);
-
-			lua_pushinteger(L, touches[i].position.x);
-			lua_setfield(L, -2, "x");
-			lua_pushinteger(L, touches[i].position.y);
-			lua_setfield(L, -2, "y");
-
-			lua_pop(L, 1);
-		}
-		lua_pop(L, 1);
-	}
-
-	// Don't pop it in here
-	//lua_pop(L, 2);
+	touch_event(L, "touch_ended", touches, count);
 }
 
 void lua_Input::touch_moved(lua_State *L, const Touch *const touches, const unsigned int count)
 {
-	touch_event(L, touches, count);
-	lua_getfield(L, -1, "touch_moved");
-	if (!lua_isfunction(L, -1))
-	{
-		lua_pop(L, 3);
-		return;
-	}
-	lua_pcall(L, 0, 0, 0);
-	lua_pop(L, 2);
-	assert(lua_gettop(L) == 0 || !"Rainbow::Lua::Input::touch_moved: Leftover elements in the stack");
+	touch_event(L, "touch_moved", touches, count);
 }
 
 #ifdef RAINBOW_BUTTONS

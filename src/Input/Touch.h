@@ -16,23 +16,11 @@
 struct Touch
 {
 	unsigned int hash;  ///< Unique hash value that distinguishes a touch from another
-	Vec2i initial;      ///< The initial x- and y-values
-	Vec2i position;     ///< Position of touch
+	int x, y;           ///< Position of touch
 
-	Touch() : hash(0) { }
-
-	Touch& operator=(const Touch &t)
-	{
-		if (this == &t)
-			return *this;
-		if (this->hash != t.hash)
-		{
-			this->hash = t.hash;
-			this->initial = t.position;
-		}
-		this->position = t.position;
-		return *this;
-	}
+	Touch() : hash(0), x(0), y(0) { }
+	Touch(const int x, const int y) : hash(0), x(x), y(y) { }
+	Touch(const unsigned hash, const int x, const int y) : hash(hash), x(x), y(y) { }
 
 #if defined(RAINBOW_IOS)
 
@@ -41,14 +29,10 @@ struct Touch
 	{
 		if (t.hash == this->hash)
 			return *this;
+		this->hash = t.hash;
 		CGPoint p = [t locationInView:[t view]];
-		this->position.x = p.x;
-		this->position.y = p.y;
-		if (this->hash == 0)
-		{
-			this->hash = t.hash;
-			this->initial = this->position;
-		}
+		this->x = p.x;
+		this->y = p.y;
 		return *this;
 	}
 

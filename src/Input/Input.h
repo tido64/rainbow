@@ -28,6 +28,9 @@ public:
 	bool accelerated;           ///< Whether we should update accelerometer data
 	Acceleration acceleration;  ///< Accelerometer data
 
+	/// Reset input subscription list.
+	void reset();
+
 	/// Set screen height. Needed to properly flip the image vertically.
 	void set_height(const int height);
 
@@ -74,6 +77,11 @@ inline Input& Input::Instance()
 }
 
 inline Input::Input() : height(0), lua_state(nullptr) { }
+
+inline void Input::reset()
+{
+	this->touch_subscribers.clear();
+}
 
 inline void Input::set_height(const int h)
 {

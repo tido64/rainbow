@@ -165,23 +165,22 @@ void init_GL()
 
 void on_mouse_button_down(SDL_MouseButtonEvent &mouse)
 {
-	mouse_input.initial.x = mouse.x;
-	mouse_input.initial.y = mouse.y;
-	mouse_input.position = mouse_input.initial;
+	mouse_input.x = mouse.x;
+	mouse_input.y = mouse.y;
 	Input::Instance().touch_began(&mouse_input, 1);
 }
 
 void on_mouse_button_up(SDL_MouseButtonEvent &mouse)
 {
-	mouse_input.position.x = mouse.x;
-	mouse_input.position.y = mouse.y;
+	mouse_input.x = mouse.x;
+	mouse_input.y = mouse.y;
 	Input::Instance().touch_ended(&mouse_input, 1);
 }
 
 void on_mouse_motion(SDL_MouseMotionEvent &mouse)
 {
-	mouse_input.position.x = mouse.x;
-	mouse_input.position.y = mouse.y;
+	mouse_input.x = mouse.x;
+	mouse_input.y = mouse.y;
 	Input::Instance().touch_moved(&mouse_input, 1);
 }
 

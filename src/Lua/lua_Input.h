@@ -21,7 +21,7 @@ private:
 	static void getfield(lua_State *L, const char *const field);
 	static void init(lua_State *L);
 	static void key_event(lua_State *L, const char *const type, const Key &key);
-	static void touch_event(lua_State *L, const Touch *const touches = 0, const unsigned int count = 0);
+	static void touch_event(lua_State *L, const char *const type, const Touch *const touches = 0, const unsigned int count = 0);
 
 	lua_Input();
 	lua_Input(const lua_Input &);
