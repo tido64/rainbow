@@ -1,9 +1,11 @@
 #include "LuaMachine.h"
 
-#if UINTPTR_MAX == 0xffffffff  // 32-bit
+#if __WORDSIZE == 32
 #	define PRINT_ADDRESS(addr) printf("%x\n", reinterpret_cast<uintptr_t>(addr))
-#else  // 64-bit
+#elif __WORDSIZE == 64
 #	define PRINT_ADDRESS(addr) printf("%lx\n", reinterpret_cast<uintptr_t>(addr))
+#else
+#	error "Unknown system"
 #endif
 
 void LuaMachine::dump_stack(lua_State *L)
