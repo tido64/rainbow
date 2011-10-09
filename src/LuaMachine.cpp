@@ -1,5 +1,11 @@
 #include "LuaMachine.h"
 
+#if UINTPTR_MAX == 0xffffffff  // 32-bit
+#	define PRINT_ADDRESS(addr) printf("%x\n", reinterpret_cast<uintptr_t>(addr))
+#else  // 64-bit
+#	define PRINT_ADDRESS(addr) printf("%lx\n", reinterpret_cast<uintptr_t>(addr))
+#endif
+
 void LuaMachine::dump_stack(lua_State *L)
 {
 	puts("Lua stack");
@@ -24,16 +30,16 @@ void LuaMachine::dump_stack(lua_State *L)
 				puts("(table)");
 				break;
 			case LUA_TFUNCTION:
-				printf("%lx\n", reinterpret_cast<intptr_t>(lua_tocfunction(L, l)));
+				PRINT_ADDRESS(lua_tocfunction(L, l));
 				break;
 			case LUA_TUSERDATA:
-				printf("%lx\n", reinterpret_cast<intptr_t>(lua_touserdata(L, l)));
+				PRINT_ADDRESS(lua_touserdata(L, l));
 				break;
 			case LUA_TTHREAD:
 				puts("(thread)");
 				break;
 			case LUA_TLIGHTUSERDATA:
-				printf("%lx\n", reinterpret_cast<intptr_t>(lua_topointer(L, l)));
+				PRINT_ADDRESS(lua_topointer(L, l));
 				break;
 			default:
 				puts("(unknown)");
