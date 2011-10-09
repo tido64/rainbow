@@ -254,21 +254,21 @@ Key Key::from_raw(const SDL_keysym *keysym)
 			break;
 	}
 
-	if (keysym->sym & KMOD_LSHIFT)
+	if (keysym->mod & KMOD_LSHIFT)
 		k.modifier |= mod_l_shift;
-	if (keysym->sym & KMOD_RSHIFT)
+	if (keysym->mod & KMOD_RSHIFT)
 		k.modifier |= mod_r_shift;
-	if (keysym->sym & KMOD_LCTRL)
+	if (keysym->mod & KMOD_LCTRL)
 		k.modifier |= mod_l_ctrl;
-	if (keysym->sym & KMOD_RCTRL)
+	if (keysym->mod & KMOD_RCTRL)
 		k.modifier |= mod_r_ctrl;
-	if (keysym->sym & KMOD_LALT)
+	if (keysym->mod & KMOD_LALT)
 		k.modifier |= mod_l_alt;
-	if (keysym->sym & KMOD_RALT)
+	if (keysym->mod & KMOD_RALT)
 		k.modifier |= mod_r_alt;
-	if (keysym->sym & KMOD_LMETA)
+	if (keysym->mod & KMOD_LMETA)
 		k.modifier |= mod_l_meta;
-	if (keysym->sym & KMOD_RMETA)
+	if (keysym->mod & KMOD_RMETA)
 		k.modifier |= mod_r_meta;
 
 	return k;
