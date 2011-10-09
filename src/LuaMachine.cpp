@@ -62,7 +62,7 @@ LuaMachine::LuaMachine() : L(luaL_newstate())
 	luaL_openlibs(this->L);
 
 	// Initialize "rainbow" namespace
-	lua_createtable(this->L, 0, 0);
+	lua_createtable(this->L, 0, 16);
 	lua_pushvalue(this->L, -1);
 	lua_setfield(this->L, LUA_GLOBALSINDEX, rainbow);
 
