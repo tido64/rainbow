@@ -24,6 +24,13 @@ struct Touch
 
 #if defined(RAINBOW_IOS)
 
+	/// Only available on iOS.
+	void operator*=(const int f)
+	{
+		this->x *= f;
+		this->y *= f;
+	}
+
 	/// Only available on iOS. Used for converting a UITouch.
 	Touch& operator=(const UITouch *const t)
 	{
