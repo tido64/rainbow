@@ -108,12 +108,9 @@ int lua_Physics::create_world(lua_State *L)
 {
 	float g_x = 0.0f;
 	float g_y = kStandardGravity;
-	bool sleep = true;
 
 	switch(lua_gettop(L))
 	{
-		case 3:
-			sleep = lua_toboolean(L, 3) == 1;
 		case 2:
 			g_y = lua_tonumber(L, 2);
 		case 1:
@@ -122,7 +119,7 @@ int lua_Physics::create_world(lua_State *L)
 			break;
 	}
 
-	Physics::Instance().create_world(g_x, g_y, sleep);
+	Physics::Instance().create_world(g_x, g_y);
 	return 0;
 }
 

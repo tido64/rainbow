@@ -104,7 +104,7 @@ public:
 	/// \param g_x    Gravity in x-direction, defaults to 0.0f
 	/// \param g_y    Gravity in y-direction, defaults to -9.80665f
 	/// \param sleep  Enable sleeping objects, defaults to true
-	void create_world(const float g_x = 0.0f, const float g_y = kStandardGravity, bool sleep = true);
+	void create_world(const float g_x = 0.0f, const float g_y = kStandardGravity);
 
 	/// Destroy all bodies.
 	void destroy();

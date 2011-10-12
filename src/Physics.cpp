@@ -101,11 +101,11 @@ b2Body* Physics::create_rope(float x0, float y0, float x1, float y1, unsigned in
 	return this->world->GetBodyList();
 }
 
-void Physics::create_world(const float g_x, const float g_y, bool sleep)
+void Physics::create_world(const float g_x, const float g_y)
 {
 	if (!this->world)
 	{
-		this->world = new b2World(b2Vec2(g_x, g_y), sleep);
+		this->world = new b2World(b2Vec2(g_x, g_y));
 		this->world->SetAutoClearForces(false);
 		this->world->SetContinuousPhysics(true);
 	}
@@ -203,8 +203,8 @@ void Physics::save_state()
 		BodyData *d = static_cast<BodyData *>(b->GetUserData());
 		b2Transform t = b->GetTransform();
 		d->prev_p = d->curr_p;
-		d->curr_p = t.position;
+		d->curr_p = t.p;
 		d->prev_r = d->curr_r;
-		d->curr_r = t.GetAngle();
+		d->curr_r = t.q.GetAngle();
 	}
 }
