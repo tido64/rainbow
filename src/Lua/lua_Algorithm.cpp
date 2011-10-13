@@ -49,14 +49,14 @@ int lua_Algorithm::random(lua_State *L)
 	switch (lua_gettop(L))
 	{
 		case 1:
-			r = Rainbow::mt_random() * lua_tonumber(L, 1);
+			r = Random::Instance().next<float_p>(lua_tonumber(L, 1));
 			break;
 		case 2:
 			r = lua_tonumber(L, 1);
-			r = (lua_tonumber(L, 2) - r) * Rainbow::mt_random() + r;
+			r = Random::Instance().next<float_p>(r, lua_tonumber(L, 2));
 			break;
 		default:
-			r = Rainbow::mt_random();
+			r = Random::Instance().next();
 			break;
 	}
 	lua_pushnumber(L, r);

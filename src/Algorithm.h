@@ -10,7 +10,7 @@
 #include <cmath>
 
 #include "Common/Constants.h"
-#include "Random/Mersenne_twister.h"
+#include "Common/Random.h"
 
 namespace Rainbow
 {
@@ -67,9 +67,6 @@ namespace Rainbow
 		str[0] = (i == 0) ? '-' : i + '0';
 		return str;
 	}
-
-	/// Get a random number.
-	inline float mt_random() { return static_cast<float>(Random::Instance().next()); }
 
 	/// Convert radians to degrees.
 	inline float rad2deg(const float r) { return r * k180_Pi; }
