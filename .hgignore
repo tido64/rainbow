@@ -1,4 +1,4 @@
-(?:Debug|Icon.|bin|doc|obj|msvc\d+)$
+(?:Debug|Icon.|bin|doc|lib|obj|msvc\d+)$
 build/ios/libs/.*
 \.(?:DS_Store|build|dropbox|mode\dv\d|o|pbxuser)
 local\.properties
