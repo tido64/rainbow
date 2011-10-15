@@ -108,7 +108,8 @@ void lua_Input::key_event(lua_State *L, const char *const type, const Key &key)
 	}
 
 	lua_pushinteger(L, key.key);
-	lua_call(L, 1, 0);
+	lua_pushinteger(L, key.modifier);
+	lua_call(L, 2, 0);
 	lua_pop(L, 2);
 	assert(lua_gettop(L) == 0 || !"Rainbow::Lua::Input::key_event: Leftover elements in the stack");
 }

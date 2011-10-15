@@ -11,7 +11,7 @@ struct SDL_keysym;
 typedef SDL_keysym RawKeysym;
 
 #else
-#	error "Unknown platform"
+#	error "This platform is not supposed to use SDL."
 #endif
 
 /// Keyboard input.
@@ -27,6 +27,7 @@ public:
 	enum Keys
 	{
 		key_none = 0,
+		key_tab = 9,
 		key_enter = 13,
 		key_escape = 27,
 		key_space = 32,
@@ -91,7 +92,12 @@ public:
 		key_down,
 		key_right,
 		key_left,
-		key_f1 = 512,
+		key_insert,
+		key_home,
+		key_end,
+		key_pageup,
+		key_pagedown,
+		key_f1 = 282,
 		key_f2,
 		key_f3,
 		key_f4,
@@ -105,24 +111,35 @@ public:
 		key_f12,
 		key_f13,
 		key_f14,
-		key_f15
+		key_f15,
+		key_rshift = 303,
+		key_lshift,
+		key_rctrl,
+		key_lctrl,
+		key_ralt,
+		key_lalt,
+		key_rmeta,
+		key_lmeta,
+		key_lsuper,  ///< Left Windows-key
+		key_rsuper,  ///< Right Windows-key
+		key_mode     ///< Alt Gr
 	};
 
 	enum Mods
 	{
 		mod_none,
-		mod_l_ctrl = 1,       // 00000001
-		mod_r_ctrl = 1 << 1,  // 00000010
-		mod_ctrl   = 3,       // 00000011
-		mod_l_alt = 1 << 2,   // 00000100
-		mod_r_alt = 1 << 3,   // 00001000
-		mod_alt   = 3 << 2,   // 00001100
-		mod_l_shift = 1 << 4, // 00010000
-		mod_r_shift = 1 << 5, // 00100000
-		mod_shift   = 3 << 4, // 00110000
-		mod_l_meta = 1 << 6,  // 01000000
-		mod_r_meta = 1 << 7,  // 10000000
-		mod_meta   = 3 << 6   // 11000000
+		mod_lctrl = 1,       // 00000001
+		mod_rctrl = 1 << 1,  // 00000010
+		mod_ctrl  = 3,       // 00000011
+		mod_lalt = 1 << 2,   // 00000100
+		mod_ralt = 1 << 3,   // 00001000
+		mod_alt  = 3 << 2,   // 00001100
+		mod_lshift = 1 << 4, // 00010000
+		mod_rshift = 1 << 5, // 00100000
+		mod_shift  = 3 << 4, // 00110000
+		mod_lmeta = 1 << 6,  // 01000000
+		mod_rmeta = 1 << 7,  // 10000000
+		mod_meta  = 3 << 6   // 11000000
 	};
 
 	Keys key;

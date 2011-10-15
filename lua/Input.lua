@@ -50,13 +50,19 @@ function rainbow.input.unsubscribe_all()
 end
 
 --! Notify all listeners of a key down event.
-function rainbow.input.key_down(key)
-	print("key_down: " .. key);
+function rainbow.input.key_down(key, mod)
+	for i = 1, _rainbow_input_listener_count do
+		_rainbow_input_listeners[i]:key_down(key);
+	end
+	print("Key down: " .. mod .. "+" .. key);
 end
 
 --! Notify all listeners of a key up event.
-function rainbow.input.key_up(key)
-	print("key_up: " .. key);
+function rainbow.input.key_up(key, mod)
+	for i = 1, _rainbow_input_listener_count do
+		_rainbow_input_listeners[i]:key_up(key);
+	end
+	print("Key up: " .. mod .. "+" .. key);
 end
 
 --! Notify all listeners of a touch began event.

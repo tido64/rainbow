@@ -2,25 +2,30 @@
 
 function parse_key(str, prefix)
 	local start_pos, len = string.find(str, prefix)
-	if start_pos == nil then
+	if not start_pos then
 		return nil
 	end
 	len = len - 1
-	local end_pos = string.find(str, " ", start_pos + len)
+	local end_pos = string.find(str, "%s", start_pos + len)
 	local enum = nil
-	if end_pos == nil then
-		end_pos = string.find(str, ",", start_pos + len)
-		if end_pos == nil then
-			return nil
-		end
-	else
-		enum, len = string.find(str, ",", end_pos)
-		if enum ~= nil then
-			enum = tonumber(string.sub(str, end_pos + 3, enum - 1))
+	if end_pos then
+		local comma = string.find(str, ",", start_pos + len)
+		if comma and comma < end_pos then
+			end_pos = nil;
+		else
+			enum, len = string.find(str, ",", end_pos)
+			if enum then
+				enum = tonumber(string.sub(str, end_pos + 3, enum - 1))
+			end
 		end
 	end
-	end_pos = end_pos - 1;
-	return string.sub(str, start_pos, end_pos), enum
+	if not end_pos then
+		end_pos = string.find(str, ",", start_pos + len)
+		if not end_pos then
+			return nil
+		end
+	end
+	return string.sub(str, start_pos, end_pos - 1), enum
 end
 
 io.input("src/Input/Key.h")
@@ -29,11 +34,11 @@ keys_lua = "rainbow.keyboard = {\n"
 for line in io.lines() do
 	if parse_key(line, "mod_") then break end
 	local key, e = parse_key(line, "key_")
-	if key == nil then
+	if not key then
 		key, e = parse_key(line, "numpad_")
 	end
-	if key ~= nil then
-		if e ~= nil then
+	if key then
+		if e then
 			enum = e
 		end
 		keys_lua = keys_lua  .. "	" .. key .. " = " .. enum .. ",\n"

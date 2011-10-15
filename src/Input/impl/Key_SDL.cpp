@@ -13,6 +13,9 @@ Key Key::from_raw(const SDL_keysym *keysym)
 	Key k;
 	switch (keysym->sym)
 	{
+		case SDLK_TAB:
+			k.key = key_tab;
+			break;
 		case SDLK_RETURN:
 			k.key = key_enter;
 			break;
@@ -205,6 +208,21 @@ Key Key::from_raw(const SDL_keysym *keysym)
 		case SDLK_LEFT:
 			k.key = key_left;
 			break;
+		case SDLK_INSERT:
+			k.key = key_insert;
+			break;
+		case SDLK_HOME:
+			k.key = key_home;
+			break;
+		case SDLK_END:
+			k.key = key_end;
+			break;
+		case SDLK_PAGEUP:
+			k.key = key_pageup;
+			break;
+		case SDLK_PAGEDOWN:
+			k.key = key_pagedown;
+			break;
 		case SDLK_F1:
 			k.key = key_f1;
 			break;
@@ -250,26 +268,59 @@ Key Key::from_raw(const SDL_keysym *keysym)
 		case SDLK_F15:
 			k.key = key_f15;
 			break;
+		case SDLK_RSHIFT:
+			k.key = key_rshift;
+			break;
+		case SDLK_LSHIFT:
+			k.key = key_lshift;
+			break;
+		case SDLK_RCTRL:
+			k.key = key_rctrl;
+			break;
+		case SDLK_LCTRL:
+			k.key = key_lctrl;
+			break;
+		case SDLK_RALT:
+			k.key = key_ralt;
+			break;
+		case SDLK_LALT:
+			k.key = key_lalt;
+			break;
+		case SDLK_RMETA:
+			k.key = key_rmeta;
+			break;
+		case SDLK_LMETA:
+			k.key = key_lmeta;
+			break;
+		case SDLK_LSUPER:
+			k.key = key_lsuper;
+			break;
+		case SDLK_RSUPER:
+			k.key = key_rsuper;
+			break;
+		case SDLK_MODE:
+			k.key = key_mode;
+			break;
 		default:
 			break;
 	}
 
 	if (keysym->mod & KMOD_LSHIFT)
-		k.modifier |= mod_l_shift;
+		k.modifier |= mod_lshift;
 	if (keysym->mod & KMOD_RSHIFT)
-		k.modifier |= mod_r_shift;
+		k.modifier |= mod_rshift;
 	if (keysym->mod & KMOD_LCTRL)
-		k.modifier |= mod_l_ctrl;
+		k.modifier |= mod_lctrl;
 	if (keysym->mod & KMOD_RCTRL)
-		k.modifier |= mod_r_ctrl;
+		k.modifier |= mod_rctrl;
 	if (keysym->mod & KMOD_LALT)
-		k.modifier |= mod_l_alt;
+		k.modifier |= mod_lalt;
 	if (keysym->mod & KMOD_RALT)
-		k.modifier |= mod_r_alt;
+		k.modifier |= mod_ralt;
 	if (keysym->mod & KMOD_LMETA)
-		k.modifier |= mod_l_meta;
+		k.modifier |= mod_lmeta;
 	if (keysym->mod & KMOD_RMETA)
-		k.modifier |= mod_r_meta;
+		k.modifier |= mod_rmeta;
 
 	return k;
 }
