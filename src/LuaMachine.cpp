@@ -1,9 +1,9 @@
 #include "LuaMachine.h"
 
 #if __WORDSIZE == 32
-#	define PRINT_ADDRESS(addr) printf("%x\n", reinterpret_cast<uintptr_t>(addr))
+#	define PRINT_ADDRESS(addr) printf("%x\n", static_cast<unsigned int>(reinterpret_cast<uintptr_t>(addr)))
 #elif __WORDSIZE == 64
-#	define PRINT_ADDRESS(addr) printf("%lx\n", reinterpret_cast<uintptr_t>(addr))
+#	define PRINT_ADDRESS(addr) printf("%lx\n", static_cast<unsigned int>(reinterpret_cast<uintptr_t>(addr)))
 #else
 #	error "Unknown system"
 #endif

@@ -1,12 +1,15 @@
-#include "Platform.h"
 #include "Random.h"
 
-#if defined(__clang__) || defined(__GNUC__)
+#ifdef RAINBOW_UNIX
 #	pragma GCC diagnostic push
 #	pragma GCC diagnostic ignored "-Wlong-long"
 #endif
-#include <dSFMT/dSFMT.c>
-#if defined(__clang__) || defined(__GNUC__)
+
+#ifndef RAINBOW_IOS
+#	include <dSFMT/dSFMT.c>
+#endif
+
+#ifdef RAINBOW_UNIX
 #	pragma GCC diagnostic pop
 #endif
 

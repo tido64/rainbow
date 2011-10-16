@@ -15,6 +15,9 @@
 #	define RAINBOW_UNIX
 #elif defined(_WIN32)
 #	define RAINBOW_WIN
+#	if defined(_MSC_VER) && (defined(_M_X64) || _M_IX86_FP >= 2)
+#		define __SSE2__ 1
+#	endif
 #endif
 
 // Platforms that make use of physical buttons (keyboards, gamepads, etc.)

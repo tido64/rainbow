@@ -2,18 +2,21 @@
 #define RANDOM_H_
 
 #include <ctime>
+#include "Platform.h"
 
-#if defined(_MSC_VER) && (defined(_M_X64) || _M_IX86_FP >= 2)
-#	define __SSE2__ 1
-#elif defined(__clang__) || defined(__GNUC__)
+#if defined(RAINBOW_UNIX)
 #	pragma GCC diagnostic push
 #	pragma GCC diagnostic ignored "-Wlong-long"
 #endif
 
 #define DSFMT_MEXP 19937
-#include <dSFMT/dSFMT.h>
+#ifndef RAINBOW_IOS  // Workaround Xcode's super inclusion algorithm
+#	include <dSFMT/dSFMT.h>
+#else
+#	include "dSFMT.h"
+#endif
 
-#if defined(__clang__) || defined(__GNUC__)
+#if defined(RAINBOW_UNIX)
 #	pragma GCC diagnostic pop
 #endif
 
