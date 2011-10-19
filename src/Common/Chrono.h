@@ -2,8 +2,6 @@
 #define CHRONO_H_
 
 #include <cassert>
-#include <ctime>
-//#include <unistd.h>
 
 /// Simple class for keeping time.
 ///
@@ -14,32 +12,55 @@
 class Chrono
 {
 public:
+	static Chrono& Instance();
+
 	/// Return current time.
-	static unsigned long current()
-	{
-		assert(tm_current > 0);
-		return tm_current;
-	}
+	unsigned long current();
 
 	/// Return last frame's time.
-	static unsigned long last_frame()
-	{
-		assert(tm_last > 0);
-		return tm_last;
-	}
+	unsigned long last_frame();
 
 	/// Tick tock.
-	static void update()
-	{
-		tm_last = tm_current;
-		timespec t;
-		clock_gettime(CLOCK_MONOTONIC, &t);
-		tm_current = t.tv_sec * 1000 + t.tv_nsec / 1000;
-	}
+	void update();
 
 private:
-	static unsigned long tm_current;  ///< Current frame time in milliseconds
-	static unsigned long tm_last;     ///< Last frame time in milliseconds
+	unsigned long tm_current;  ///< Current frame time in milliseconds
+	unsigned long tm_last;     ///< Last frame time in milliseconds
+
+	Chrono();
+
+	/// Intentionally left undefined.
+	Chrono(const Chrono &);
+
+	/// Platform-dependent function for retrieving current time in milliseconds.
+	unsigned long get_time();
+
+	/// Intentionally left undefined.
+	Chrono& operator=(const Chrono &);
 };
+
+inline Chrono& Chrono::Instance()
+{
+	static Chrono chrono;
+	return chrono;
+}
+
+inline unsigned long Chrono::current()
+{
+	assert(tm_current > 0 || !"Rainbow::Chrono: Current time has not been updated.");
+	return tm_current;
+}
+
+inline unsigned long Chrono::last_frame()
+{
+	assert(tm_last > 0 || !"Rainbow::Chrono: Last frame time has not been saved.");
+	return tm_last;
+}
+
+inline void Chrono::update()
+{
+	tm_last = tm_current;
+	tm_current = this->get_time();
+}   
 
 #endif
