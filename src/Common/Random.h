@@ -65,6 +65,13 @@ inline float_p Random::next()
 	return static_cast<float_p>(dsfmt_genrand_close1_open2(&dsfmt_global_data) - 1.0);
 }
 
+inline Random::Random(uint32_t seed)
+{
+	if (seed == 0)
+		seed = static_cast<uint32_t>(time(nullptr));
+	dsfmt_init_gen_rand(&dsfmt_global_data, seed);
+}
+
 inline Random::Random(uint32_t init_key[], int key_length)
 {
 	dsfmt_init_by_array(&dsfmt_global_data, init_key, key_length);
