@@ -9,58 +9,78 @@
 ///
 /// Copyright 2011 Bifrost Games. All rights reserved.
 /// \author Tommy Nguyen
-class Chrono
+namespace Rainbow
 {
-public:
-	static Chrono& Instance();
+	template<class T>
+	class _Chrono
+	{
+	public:
+		static T& Instance();
 
-	/// Return current time.
-	unsigned long current();
+		/// Return timestamp of current frame.
+		unsigned long current();
 
-	/// Return last frame's time.
-	unsigned long last_frame();
+		/// Return the time difference between current and previous frame.
+		unsigned long diff();
 
-	/// Tick tock.
-	void update();
+		/// Return timestamp of previous frame.
+		unsigned long previous();
 
-private:
-	unsigned long tm_current;  ///< Current frame time in milliseconds
-	unsigned long tm_last;     ///< Last frame time in milliseconds
+		/// Update the clock using an external or internal source, depending on
+		/// the platform.
+		void update(const unsigned long t = 0);
 
-	Chrono();
+	protected:
+		unsigned long tm_current;   ///< Current frame time in milliseconds.
+		unsigned long tm_dt;        ///< Time difference between current and previous frame.
+		unsigned long tm_previous;  ///< Previous frame time in milliseconds.
 
-	/// Intentionally left undefined.
-	Chrono(const Chrono &);
+		_Chrono();
+	};
 
-	/// Platform-dependent function for retrieving current time in milliseconds.
-	unsigned long get_time();
+	template<class T>
+	inline T& _Chrono<T>::Instance()
+	{
+		static T chrono;
+		return chrono;
+	}
 
-	/// Intentionally left undefined.
-	Chrono& operator=(const Chrono &);
-};
+	template<class T>
+	inline _Chrono<T>::_Chrono() : tm_current(0), tm_dt(0), tm_previous(0) { }
 
-inline Chrono& Chrono::Instance()
-{
-	static Chrono chrono;
-	return chrono;
+	template<class T>
+	inline unsigned long _Chrono<T>::current()
+	{
+		assert(this->tm_current > 0 || !"Rainbow::Chrono: Current time has not been updated.");
+		return this->tm_current;
+	}
+
+	template<class T>
+	inline unsigned long _Chrono<T>::diff()
+	{
+		return this->tm_dt;
+	}
+
+	template<class T>
+	inline unsigned long _Chrono<T>::previous()
+	{
+		assert(this->tm_previous > 0 || !"Rainbow::Chrono: Previous frame time has not been saved.");
+		return this->tm_previous;
+	}
+
+	template<class T>
+	void _Chrono<T>::update(const unsigned long)
+	{
+		this->tm_previous = this->tm_current;
+		this->tm_current = static_cast<T*>(this)->get_time();
+		this->tm_dt = this->tm_current - this->tm_previous;
+	}
 }
 
-inline unsigned long Chrono::current()
-{
-	assert(tm_current > 0 || !"Rainbow::Chrono: Current time has not been updated.");
-	return tm_current;
-}
-
-inline unsigned long Chrono::last_frame()
-{
-	assert(tm_last > 0 || !"Rainbow::Chrono: Last frame time has not been saved.");
-	return tm_last;
-}
-
-inline void Chrono::update()
-{
-	tm_last = tm_current;
-	tm_current = this->get_time();
-}   
+#include "Platform.h"
+#include "Common/impl/Chrono_Apple.h"
+#include "Common/impl/Chrono_SDL.h"
+#include "Common/impl/Chrono_Unix.h"
+#include "Common/impl/Chrono_Win.h"
 
 #endif

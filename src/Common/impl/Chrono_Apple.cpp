@@ -1,12 +1,9 @@
 /// Copyright 2011 Bifrost Games. All rights reserved.
 /// \author Tommy Nguyen
 
-#include "Platform.h"
-#ifdef RAINBOW_IOS
-#include <mach/mach_time.h>
 #include "Common/Chrono.h"
 
-Chrono::Chrono() : tm_current(0), tm_last(0) { }
+#ifdef RAINBOW_IOS
 
 unsigned long Chrono::get_time()
 {
@@ -14,6 +11,13 @@ unsigned long Chrono::get_time()
 	mach_timebase_info(&info);
 	const uint64_t t = mach_absolute_time();
 	return (double)t * (double)info.numer / (double)info.denom / 1.0e6;
+}
+
+void Chrono::update(const unsigned int t)
+{
+	this->tm_previous = this->tm_current;
+	this->tm_current += t;
+	this->tm_dt = this->tm_current - this->tm_previous;
 }
 
 #endif

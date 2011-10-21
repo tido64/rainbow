@@ -1,18 +1,9 @@
 /// Copyright 2011 Bifrost Games. All rights reserved.
 /// \author Tommy Nguyen
 
-#include "Platform.h"
-#ifdef RAINBOW_UNIX
-#include <unistd.h>
-#if _POSIX_TIMERS <= 0
-#	warning "POSIX Realtime extension not found."
-#	include <sys/time.h>
-#else
-#	include <ctime>
-#endif
 #include "Common/Chrono.h"
 
-Chrono::Chrono() : tm_current(0), tm_last(0) { }
+#if defined(RAINBOW_UNIX) && !defined(RAINBOW_SDL)
 
 unsigned long Chrono::get_time()
 {

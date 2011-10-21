@@ -1,9 +1,9 @@
 /// Copyright 2011 Bifrost Games. All rights reserved.
 /// \author Tommy Nguyen
 
-#include "Platform.h"
-#ifdef RAINBOW_WIN
 #include "Common/Chrono.h"
+
+#if defined(RAINBOW_WIN) && !defined(RAINBOW_SDL)
 
 namespace Rainbow
 {
@@ -15,7 +15,7 @@ namespace Rainbow
 	} ChronoInfo;
 }
 
-Chrono::Chrono() : tm_current(0), tm_last(0)
+Chrono::Chrono() : tm_current(0), tm_dt(0), tm_previous(0)
 {
 	LARGE_INTEGER perf_freq;
 	Rainbow::ChronoInfo.hiperf_clock = QueryPerformanceFrequency(perf_freq);
