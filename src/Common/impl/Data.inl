@@ -3,6 +3,8 @@
 
 #if defined(RAINBOW_IOS)
 
+inline Data::Data() : data(nil) { }
+
 inline unsigned char* Data::bytes() const
 {
 	return static_cast<unsigned char *>(data.mutableBytes);

@@ -3,70 +3,7 @@
 
 #include "Common/Data.h"
 
-#if defined(RAINBOW_IOS)
-
-void Data::free(const void *const p) { /* This is not needed */ }
-
-const char* Data::get_path(const char *const file, const bool user_data)
-{
-	if (user_data)
-	{
-		// return user data path
-		assert(!"Data::get_path: Not implemented yet");
-		return 0;
-	}
-
-	if (file == 0)
-		return [[[NSBundle mainBundle] bundlePath] UTF8String];
-
-	NSString *path = [NSString stringWithUTF8String:(file)];
-	return [[[NSBundle mainBundle] pathForResource:[path stringByDeletingPathExtension] ofType:[path pathExtension]] UTF8String];
-}
-
-Data::Data() : data(nil) { }
-
-Data::Data(const char *const file) : data(nil)
-{
-	this->load(file);
-}
-
-Data::~Data()
-{
-	[data release];
-}
-
-bool Data::copy(const void *const data, const unsigned int length)
-{
-	assert(!"Data::copy: Not implemented yet");
-	return true;
-}
-
-bool Data::load(const char *const file)
-{
-	NSError *err = nil;
-	NSString *path = [NSString stringWithUTF8String:file];
-	this->data = [[NSMutableData alloc] initWithContentsOfFile:path options:NSDataReadingUncached error:&err];
-	if (err != nil)
-	{
-		[data release];
-		NSLog(@"Rainbow::Data: Failed to read file");
-		this->data = nil;
-		return false;
-	}
-	return true;
-}
-
-bool Data::save(const char *const file) const
-{
-	if (!this->data)
-		return false;
-
-	assert(!"Data::save: Not implemented yet");
-
-	return true;
-}
-
-#elif defined(RAINBOW_UNIX) || defined(RAINBOW_WIN)
+#if defined(RAINBOW_UNIX) || defined(RAINBOW_WIN)
 
 #include <cassert>
 #include <cstdio>
@@ -185,6 +122,4 @@ bool Data::save(const char *const file) const
 	return true;
 }
 
-#else
-#	error "Unknown platform"
 #endif
