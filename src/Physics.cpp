@@ -146,7 +146,7 @@ void Physics::step(const float &dt)
 
 	this->accumulator += dt;
 	unsigned int n_steps = static_cast<unsigned int>(this->accumulator * Physics::inv_fixed_dt);
-	if (n_steps == 0)
+	if (!n_steps)
 	{
 		this->restore_state();
 		return;

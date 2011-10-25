@@ -316,14 +316,14 @@ namespace Rainbow
 		void Mixer::init_AL()
 		{
 			ALCdevice *device = alcOpenDevice(0);
-			if (device == 0)
+			if (!device)
 			{
 				alGetError();
 				return;
 			}
 
 			this->context = alcCreateContext(device, 0);
-			if (this->context == 0)
+			if (!this->context)
 			{
 				alGetError();
 				return;

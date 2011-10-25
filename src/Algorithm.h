@@ -64,7 +64,7 @@ namespace Rainbow
 			str[j] = tmp + '0';
 			i /= 10;
 		}
-		str[0] = (i == 0) ? '-' : i + '0';
+		str[0] = (!i) ? '-' : i + '0';
 		return str;
 	}
 

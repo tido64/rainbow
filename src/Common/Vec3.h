@@ -18,7 +18,7 @@ namespace Rainbow
 		/// Determine whether the vector is zero.
 		bool is_zero() const
 		{
-			return (this->x == 0) && (this->y == 0) && (this->z == 0);
+			return !this->x && !this->y && !this->z;
 		}
 
 		/// Zero the vector.

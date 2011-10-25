@@ -160,7 +160,7 @@ T* LuaMachine::wrapper(lua_State *L)
 template<class T>
 void LuaMachine::wrap(const char *const ns)
 {
-	if (ns != 0 && strcmp(ns, "") != 0)
+	if (ns && strcmp(ns, ""))
 	{
 		lua_getfield(this->L, LUA_GLOBALSINDEX, ns);
 

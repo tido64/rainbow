@@ -110,7 +110,7 @@ void Sprite::set_texture(const unsigned int id)
 
 void Sprite::update()
 {
-	if (this->stale == 0)
+	if (!this->stale)
 		return;
 
 	if (this->stale & stale_scale)

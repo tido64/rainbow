@@ -16,7 +16,7 @@ const char* Data::get_path(const char *const file, const bool user_data)
 		return 0;
 	}
 
-	if (file == 0)
+	if (!file)
 		return [[[NSBundle mainBundle] bundlePath] UTF8String];
 
 	NSString *path = [NSString stringWithUTF8String:(file)];
@@ -47,7 +47,7 @@ bool Data::load(const char *const file)
 	if (err != nil)
 	{
 		[data release];
-		NSLog(@"Rainbow::Data::load Failed to read file");
+		NSLog(@"Rainbow::Data::load: Failed to read file");
 		this->data = nil;
 		return false;
 	}

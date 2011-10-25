@@ -96,7 +96,7 @@ void FontAtlas::load(const Data &font)
 
 				#else
 
-					if (*buf > 0)
+					if (*buf)
 					{
 						*d_ptr = 255;
 						*(d_ptr + 1) = *buf;

@@ -16,7 +16,7 @@ void Data::free(const void *const p)
 
 const char* Data::get_path(const char *const file, const bool user_data)
 {
-	if (file == 0)
+	if (!file)
 		return (user_data) ? RAINBOW_DATA_USER_PATH : RAINBOW_DATA_ASSETS_PATH;
 
 	char *path = new char[strlen(file) + ((user_data) ? RAINBOW_DATA_USER_PATH_LENGTH : RAINBOW_DATA_ASSETS_PATH_LENGTH)];

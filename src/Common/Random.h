@@ -67,7 +67,7 @@ inline float_p Random::next()
 
 inline Random::Random(uint32_t seed)
 {
-	if (seed == 0)
+	if (!seed)
 		seed = static_cast<uint32_t>(time(nullptr));
 	dsfmt_init_gen_rand(&dsfmt_global_data, seed);
 }
