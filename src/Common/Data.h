@@ -88,6 +88,6 @@ private:
 
 };
 
-#include "Common/impl/Data.inl"
+#include "Common/impl/Data-inl.h"
 
 #endif
