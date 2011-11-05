@@ -8,6 +8,7 @@
  */
 
 #include "Director.h"
+#include "Common/Chrono.h"
 
 using Rainbow::ConFuoco::Mixer;
 
@@ -18,7 +19,7 @@ Director::Director()
 
 void Director::draw()
 {
-	/*if (this->drawables.size() == 0)
+	/*if (!this->drawables.size())
 		return
 
 	Drawable **obj = this->drawables.begin();
@@ -32,9 +33,7 @@ void Director::draw()
 
 void Director::init(const char *const script)
 {
-	const char *const path = Data::get_path(script);
-	this->lua.load(path);
-	Data::free(path);
+	this->lua.load(script);
 	this->lua.call("init");
 	this->lua.update();
 }
@@ -45,10 +44,11 @@ void Director::set_video(const int w, const int h)
 	lua_Platform::update(this->lua.L, w, h);
 }
 
-void Director::update(const float dt)
+void Director::update(const unsigned long t)
 {
+	Chrono::Instance().update(t);
 	Mixer::Instance().update();
-	Physics::Instance().step(dt);
+	Physics::Instance().step(Chrono::Instance().diff() * (1.0f / 1000.0f));
 	this->lua.update();
 
 	/*Drawable **obj = this->drawables.begin();

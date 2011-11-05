@@ -67,5 +67,6 @@ target_link_libraries(rainbow
 	png
 	z
 	m
+	rt
 	stdc++
 )

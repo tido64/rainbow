@@ -1,7 +1,11 @@
 /// Copyright 2010-11 Bifrost Games. All rights reserved.
 /// \author Tommy Nguyen
 
+#include "Algorithm.h"
+#include "Common/SpriteVertex.h"
 #include "Graphics/SpriteBatch.h"
+#include "Graphics/Texture.h"
+#include "Graphics/Transition.h"
 
 using Rainbow::equalf;
 
@@ -13,7 +17,9 @@ const unsigned char stale_angle    = 0x08;
 Sprite::Sprite(const unsigned int w, const unsigned int h, const SpriteBatch *p) :
 	width(w), height(h), buffered(false), stale(0xff), angle(0.0f),
 	vertex_array(nullptr), parent(p), pivot(0.5f, 0.5f), scale_f(1.0f, 1.0f)
-{ }
+{
+	memset(this->transitions, 0, sizeof(this->transitions));
+}
 
 Sprite::Sprite(const Sprite &s) :
 	width(s.width), height(s.height), buffered(false), stale(s.stale),
@@ -22,6 +28,24 @@ Sprite::Sprite(const Sprite &s) :
 	position_d(s.position_d), scale_f(s.scale_f)
 {
 	memcpy(this->origin, s.origin, 4 * sizeof(Vec2f));
+}
+
+void Sprite::move(const float x, const float y, const unsigned int duration, const int trns_x, const int trns_y)
+{
+	delete this->transitions[0];
+	delete this->transitions[1];
+	this->position_d = this->position;
+	this->transitions[0] = Transition<void>::create(this->position_d.x, x, duration, trns_x);
+	this->transitions[1] = Transition<void>::create(this->position_d.y, y, duration, trns_y);
+	this->transitions[0]->update();
+	this->transitions[1]->update();
+}
+
+void Sprite::rotate(const float r, const unsigned int duration, const int transition)
+{
+	delete this->transitions[2];
+	this->transitions[2] = Transition<void>::create(this->angle, r, duration, transition);
+	this->transitions[2]->update();
 }
 
 void Sprite::set_color(const unsigned int v0, const unsigned int v1, const unsigned int v2, const unsigned int v3)
@@ -51,6 +75,10 @@ void Sprite::set_position(const float x, const float y)
 
 	this->position_d.x = x;
 	this->position_d.y = y;
+	delete this->transitions[0];
+	delete this->transitions[1];
+	this->transitions[0] = 0;
+	this->transitions[1] = 0;
 	this->stale |= stale_position;
 }
 
@@ -60,6 +88,10 @@ void Sprite::set_position(const Vec2f &p)
 		return;
 
 	this->position_d = p;
+	delete this->transitions[0];
+	delete this->transitions[1];
+	this->transitions[0] = 0;
+	this->transitions[1] = 0;
 	this->stale |= stale_position;
 }
 
@@ -69,6 +101,8 @@ void Sprite::set_rotation(const float r)
 		return;
 
 	this->angle = r;
+	delete this->transitions[2];
+	this->transitions[2] = 0;
 	this->stale |= stale_angle | stale_scale;
 }
 
@@ -110,6 +144,10 @@ void Sprite::set_texture(const unsigned int id)
 
 void Sprite::update()
 {
+	this->do_transition(0, stale_position);
+	this->do_transition(1, stale_position);
+	this->do_transition(2, stale_angle | stale_scale);
+
 	if (!this->stale)
 		return;
 
@@ -171,16 +209,15 @@ void Sprite::update()
 			this->vertex_array[3].position.x = this->scale_f.x * this->origin[3].x + this->position.x;
 			this->vertex_array[3].position.y = this->scale_f.y * this->origin[3].y + this->position.y;
 		}
-
-		this->stale = 0;
-		return;
 	}
-
-	this->position_d -= this->position;
-	this->vertex_array[0].position += this->position_d;
-	this->vertex_array[1].position += this->position_d;
-	this->vertex_array[2].position += this->position_d;
-	this->vertex_array[3].position += this->position_d;
-	this->position += this->position_d;
+	else
+	{
+		this->position_d -= this->position;
+		this->vertex_array[0].position += this->position_d;
+		this->vertex_array[1].position += this->position_d;
+		this->vertex_array[2].position += this->position_d;
+		this->vertex_array[3].position += this->position_d;
+		this->position += this->position_d;
+	}
 	this->stale = 0;
 }

@@ -1,9 +1,13 @@
 #ifndef SPRITEBATCH_H_
 #define SPRITEBATCH_H_
 
+#include "OpenGL.h"
+#include "Common/Vector.h"
 #include "Graphics/Drawable.h"
 #include "Graphics/Sprite.h"
-#include "Graphics/Texture.h"
+
+class Data;
+class Texture;
 
 /// A drawable batch of sprites.
 ///

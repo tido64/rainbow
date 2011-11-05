@@ -77,9 +77,11 @@ int main(int argc, char *argv[])
 	resize(screen_width, screen_height);
 
 	mouse_input.hash = 1;
-	director.init(argv[1]);
+	const char *const path = Data::get_path(argv[1]);
+	director.init(path);
+	Data::free(path);
 
-	unsigned int now = 0, time = SDL_GetTicks();
+	Chrono::Instance().update();
 	while (!done)
 	{
 		SDL_Event event;
@@ -133,9 +135,7 @@ int main(int argc, char *argv[])
 		else
 		{
 			// Update game logic
-			now = SDL_GetTicks();
-			director.update((now - time) * milli);
-			time = now;
+			director.update(0);
 
 			// Draw
 			glClear(GL_COLOR_BUFFER_BIT);

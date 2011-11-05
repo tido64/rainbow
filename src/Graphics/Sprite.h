@@ -1,14 +1,18 @@
 #ifndef SPRITE_H_
 #define SPRITE_H_
 
-#include "Common/SpriteVertex.h"
-#include "Algorithm.h"
+#include "Common/Vec2.h"
+#include "Graphics/Animation.h"
 
-class SpriteBatch;
+class  SpriteBatch;
+struct SpriteVertex;
 
 /// Custom sprite object, created by TextureAtlas.
 ///
 /// Implemented using interleaved vertex data buffer objects.
+///
+/// FIXME: Transitions (move, rotate, scale) does a lot of memory juggling.
+///        Perhaps implement some kind of memory pooling?
 ///
 /// \see http://developer.apple.com/library/ios/#documentation/3DDrawing/Conceptual/OpenGLES_ProgrammingGuide/TechniquesforWorkingwithVertexData/TechniquesforWorkingwithVertexData.html
 /// \see http://iphonedevelopment.blogspot.com/2009/06/opengl-es-from-ground-up-part-8.html
@@ -21,8 +25,6 @@ class Sprite
 	friend class SpriteBatch;
 
 public:
-	static const unsigned int vertex_array_sz = 4 * sizeof(SpriteVertex);
-
 	const unsigned int width;   ///< Width of sprite (not scaled)
 	const unsigned int height;  ///< Height of sprite (not scaled)
 
@@ -34,6 +36,9 @@ public:
 
 	/// Return the current position of the sprite.
 	const Vec2f& get_position() const;
+
+	void move(const float x, const float y, const unsigned int duration, const int trns_x = 0, const int trns_y = 0);
+	void rotate(const float r, const unsigned int duration, const int trns = 0);
 
 	/// Set sprite colour.
 	/// \param v0  Colour for vertex 0
@@ -77,6 +82,8 @@ private:
 	float cos_r;                 ///< Cosine of angle
 	float sin_r;                 ///< Sine of angle
 
+	Animation *transitions[4];   ///< Container for the three possible transitions: movement, rotation and scaling
+
 	SpriteVertex *vertex_array;  ///< Vertex array or, if buffered, the sprite batch's buffer
 	const SpriteBatch *parent;   ///< Pointer to sprite batch
 
@@ -86,6 +93,7 @@ private:
 	Vec2f scale_f;               ///< Scaling factor
 	Vec2f origin[4];             ///< Original rendering at origo
 
+	void do_transition(const unsigned int i, const unsigned char mask);
 	Sprite& operator=(const Sprite &);
 };
 
@@ -97,6 +105,19 @@ inline const float& Sprite::get_angle() const
 inline const Vec2f& Sprite::get_position() const
 {
 	return this->position;
+}
+
+inline void Sprite::do_transition(const unsigned int i, const unsigned char mask)
+{
+	if (this->transitions[i])
+	{
+		if (this->transitions[i]->update())
+		{
+			delete this->transitions[i];
+			this->transitions[i] = 0;
+		}
+		this->stale |= mask;
+	}
 }
 
 #endif

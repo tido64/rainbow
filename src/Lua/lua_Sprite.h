@@ -1,7 +1,6 @@
 #ifndef LUA_SPRITE_H_
 #define LUA_SPRITE_H_
 
-#include "Graphics/Sprite.h"
 #include "LuaMachine.h"
 
 class lua_Sprite
@@ -12,7 +11,7 @@ public:
 
 	lua_Sprite(lua_State *);
 
-	inline Sprite* raw_ptr() const { return this->s; }
+	Sprite* raw_ptr() const;
 
 	int get_angle(lua_State *);
 	int get_position(lua_State *);
@@ -23,8 +22,20 @@ public:
 	int set_scale(lua_State *);
 	int set_texture(lua_State *);
 
+	int move(lua_State *);
+	int rotate(lua_State *);
+	int scale(lua_State *);
+
 private:
+	Animation *ani_move;
+	Animation *ani_rotate;
+	Animation *ani_scale;
 	Sprite *s;
 };
+
+inline Sprite* lua_Sprite::raw_ptr() const
+{
+	return this->s;
+}
 
 #endif

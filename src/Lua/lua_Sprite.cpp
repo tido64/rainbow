@@ -2,7 +2,10 @@
 #	pragma warning(disable : 4244)
 #endif
 
+#include "Graphics/Transitions.h"
 #include "Lua/lua_Sprite.h"
+
+namespace Transitions = Rainbow::Transitions;
 
 const char lua_Sprite::class_name[] = "_sprite";
 const LuaMachine::Method<lua_Sprite> lua_Sprite::methods[] = {
@@ -14,13 +17,15 @@ const LuaMachine::Method<lua_Sprite> lua_Sprite::methods[] = {
 	{ "set_rotation", &lua_Sprite::set_rotation },
 	{ "set_scale",    &lua_Sprite::set_scale },
 	{ "set_texture",  &lua_Sprite::set_texture },
+	{ "move",         &lua_Sprite::move },
+	{ "rotate",       &lua_Sprite::rotate },
+	{ "scale",        &lua_Sprite::scale },
 	{ 0, 0 }
 };
 
-lua_Sprite::lua_Sprite(lua_State *L)
-{
-	this->s = static_cast<Sprite *>(lua_touserdata(L, -1));
-}
+lua_Sprite::lua_Sprite(lua_State *L) :
+	ani_move(nullptr), ani_rotate(nullptr), ani_scale(nullptr),
+	s(static_cast<Sprite *>(lua_touserdata(L, -1))) { }
 
 int lua_Sprite::get_angle(lua_State *L)
 {
@@ -69,5 +74,42 @@ int lua_Sprite::set_scale(lua_State *L)
 int lua_Sprite::set_texture(lua_State *L)
 {
 	this->s->set_texture(lua_tointeger(L, 1));
+	return 0;
+}
+
+int lua_Sprite::move(lua_State *L)
+{
+	assert(lua_gettop(L) >= 2 || !"Rainbow::Lua::Sprite::move: Requires at least 2 parameters (x, y [, duration, effect_x, effect_y])");
+
+	int duration = 1000, trns_x = 0, trns_y = 0;
+	switch (lua_gettop(L))
+	{
+		case 5:
+			trns_y = lua_tointeger(L, 5);
+		case 4:
+			trns_x = lua_tointeger(L, 4);
+		case 3:
+			duration = lua_tointeger(L, 3);
+		default:
+			break;
+	}
+	this->s->move(lua_tonumber(L, 1), lua_tonumber(L, 2), duration, trns_x, trns_y);
+
+	return 0;
+}
+
+int lua_Sprite::rotate(lua_State *L)
+{
+	assert(lua_gettop(L) >= 2 || !"Rainbow::Lua::Sprite::rotate: Requires at least 2 parameters (r, duration [, effect])");
+
+	this->s->set_rotation(lua_tonumber(L, 1));
+	return 0;
+}
+
+int lua_Sprite::scale(lua_State *L)
+{
+	assert(lua_gettop(L) >= 2 || !"Rainbow::Lua::Sprite::scale: Requires at least 2 parameters (f, duration [, effect])");
+
+	this->s->set_scale(lua_tonumber(L, 1));
 	return 0;
 }

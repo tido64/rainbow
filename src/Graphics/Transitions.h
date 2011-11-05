@@ -1,69 +1,96 @@
 #ifndef TRANSITIONS_H_
 #define TRANSITIONS_H_
 
+#include <cassert>
 #include <cmath>
+#include "Common/Constants.h"
 
-namespace Transitions
+namespace Rainbow
 {
-	class EaseInCubic
+	namespace Transitions
 	{
-	public:
-		float operator()(const float start, const float end, const float t)
+		enum Effect
 		{
-			assert(t >= 0.0f && t < 1.0f);
-			return start + (end - start) * t * t * t;
-		}
-	};
+			fx_linear,
+			fx_easein_cubic,
+			fx_easein_quadratic,
+			fx_easein_square,
+			fx_easeout_cubic,
+			fx_easeout_quadratic,
+			fx_easeout_square
+		};
 
-	class EaseInQuad
-	{
-	public:
-		float operator()(const float start, const float end, const float t)
+		/// Standard linear transition.
+		class Linear
 		{
-			assert(t >= 0.0f && t < 1.0f);
-			return start + (end - start) * t * t * t * t;
-		}
-	};
+		public:
+			float operator()(const float start, const float end, const float t) const
+			{
+				assert(t >= 0.0f && t < 1.0f);
+				return start + (end - start) * t;
+			}
+		};
 
-	class EaseInSquare
-	{
-	public:
-		float operator()(const float start, const float end, const float t)
+		class EaseInCubic
 		{
-			assert(t >= 0.0f && t < 1.0f);
-			return start + (end - start) * t * t;
-		}
-	};
+		public:
+			float operator()(const float start, const float end, const float t) const
+			{
+				assert(t >= 0.0f && t < 1.0f);
+				return start + (end - start) * t * t * t;
+			}
+		};
 
-	class EaseOutCubic
-	{
-	public:
-		float operator()(const float start, const float end, const float t)
+		class EaseInQuad
 		{
-			assert(t >= 0.0f && t < 1.0f);
-			return start + (end - start) * pow(t, kThird);
-		}
-	};
+		public:
+			float operator()(const float start, const float end, const float t) const
+			{
+				assert(t >= 0.0f && t < 1.0f);
+				return start + (end - start) * t * t * t * t;
+			}
+		};
 
-	class EaseOutQuad
-	{
-	public:
-		float operator()(const float start, const float end, const float t)
+		class EaseInSquare
 		{
-			assert(t >= 0.0f && t < 1.0f);
-			return start + (end - start) * pow(t, kQuarter);
-		}
-	};
+		public:
+			float operator()(const float start, const float end, const float t) const
+			{
+				assert(t >= 0.0f && t < 1.0f);
+				return start + (end - start) * t * t;
+			}
+		};
 
-	class EaseOutSquare
-	{
-	public:
-		float operator()(const float start, const float end, const float t)
+		class EaseOutCubic
 		{
-			assert(t >= 0.0f && t < 1.0f);
-			return start + (end - start) * sqrt(t);
-		}
-	};
+		public:
+			float operator()(const float start, const float end, const float t) const
+			{
+				assert(t >= 0.0f && t < 1.0f);
+				return start + (end - start) * pow(t, kThird);
+			}
+		};
+
+		class EaseOutQuad
+		{
+		public:
+			float operator()(const float start, const float end, const float t) const
+			{
+				assert(t >= 0.0f && t < 1.0f);
+				return start + (end - start) * pow(t, kQuarter);
+			}
+		};
+
+		class EaseOutSquare
+		{
+		public:
+			float operator()(const float start, const float end, const float t) const
+			{
+				assert(t >= 0.0f && t < 1.0f);
+				return start + (end - start) * sqrt(t);
+			}
+		};
+	}
 }
 
 #endif

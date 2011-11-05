@@ -23,8 +23,8 @@ public:
 	void set_video(const int width, const int height);
 
 	/// Update world.
-	/// \param dt  Time since last update
-	void update(const float dt);
+	/// \param t  Current time or milliseconds since last frame (platform-dependent).
+	void update(const unsigned long t);
 
 private:
 	LuaMachine lua;

@@ -1,8 +1,6 @@
 #ifndef LUA_H_
 #define LUA_H_
 
-#include <cstring>
-
 // Lua entry points
 #include "Lua/lua_Algorithm.h"
 #include "Lua/lua_Audio.h"
@@ -192,8 +190,8 @@ void LuaMachine::wrap(const char *const ns)
 // Lua wrappers
 #include "Lua/lua_Font.h"
 #include "Lua/lua_Physics.h"
-#include "Lua/lua_Sprite.h"
 #include "Lua/lua_SpriteBatch.h"
+#include "Lua/lua_Sprite.h"
 #include "Lua/lua_Texture.h"
 
 #endif
