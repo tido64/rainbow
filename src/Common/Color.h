@@ -1,6 +1,8 @@
 #ifndef COLOR_H_
 #define COLOR_H_
 
+#include "Common/StaticAssert.h"
+
 namespace Rainbow
 {
 	/// Structure for storing a color (RGBA).
@@ -30,6 +32,7 @@ namespace Rainbow
 
 		_Color<unsigned char>& operator=(const unsigned int c)
 		{
+			static_assert(sizeof(unsigned int) >= 4);
 			this->r = 0xff & (c >> 24);
 			this->g = 0xff & (c >> 16);
 			this->b = 0xff & (c >> 8);
@@ -55,6 +58,7 @@ namespace Rainbow
 
 		_Color<float>& operator=(const unsigned int c)
 		{
+			static_assert(sizeof(unsigned int) >= 4);
 			const float white = 1.0f / 255.0f;
 			this->r = (0xff & (c >> 24)) * white;
 			this->g = (0xff & (c >> 16)) * white;
