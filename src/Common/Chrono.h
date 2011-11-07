@@ -3,14 +3,14 @@
 
 #include <cassert>
 
-/// Simple class for keeping time.
-///
-/// Resolution of time is in milliseconds.
-///
-/// Copyright 2011 Bifrost Games. All rights reserved.
-/// \author Tommy Nguyen
 namespace Rainbow
 {
+	/// Simple class for keeping time.
+	///
+	/// Resolution of time is in milliseconds.
+	///
+	/// Copyright 2011 Bifrost Games. All rights reserved.
+	/// \author Tommy Nguyen
 	template<class T>
 	class _Chrono
 	{

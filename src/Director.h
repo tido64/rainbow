@@ -24,7 +24,7 @@ public:
 
 	/// Update world.
 	/// \param t  Current time or milliseconds since last frame (platform-dependent).
-	void update(const unsigned long t);
+	void update(const unsigned long t = 0);
 
 private:
 	LuaMachine lua;

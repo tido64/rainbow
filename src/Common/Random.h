@@ -23,6 +23,10 @@
 /// Define floating point precision for pseudo-random generated numbers.
 typedef float float_p;
 
+/// C++ wrapper for dSFMT random number generator.
+///
+/// Copyright 2010-11 Bifrost Games. All rights reserved.
+/// \author Tommy Nguyen
 class Random
 {
 public:

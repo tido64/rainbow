@@ -1,8 +1,7 @@
 #ifndef LUA_PHYSICS_H_
 #define LUA_PHYSICS_H_
 
-#include "lua.h"
-#include "Physics.h"
+struct lua_State;
 
 class lua_Physics
 {

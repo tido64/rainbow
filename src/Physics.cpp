@@ -6,6 +6,7 @@
 //  Copyright 2010 Bifrost Games. All rights reserved.
 //
 
+#include "Algorithm.h"
 #include "Physics.h"
 
 const float Physics::fixed_dt = 1.0f / 60.0f;

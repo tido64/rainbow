@@ -4,6 +4,13 @@
 #include "Common/Chrono.h"
 
 #if defined(RAINBOW_UNIX) && !defined(RAINBOW_SDL)
+#if _POSIX_TIMERS <= 0
+#	warning "POSIX Realtime extension not found."
+#	include <sys/time.h>
+#else
+#	include <ctime>
+#endif
+#include <unistd.h>
 
 unsigned long Chrono::get_time()
 {

@@ -1,8 +1,10 @@
 #ifndef LUA_INPUT_H_
 #define LUA_INPUT_H_
 
-#include "lua.h"
-#include "Input/Input.h"
+class  Key;
+struct lua_State;
+class  LuaMachine;
+struct Touch;
 
 class lua_Input
 {

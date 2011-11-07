@@ -2,19 +2,10 @@
 #define FONTATLAS_H_
 #define FONTATLAS_KERNING
 
-#include "Platform.h"
-
-#ifndef RAINBOW_IOS
-#	include <cassert>
-#endif
-
-#include <ft2build.h>
-#include FT_FREETYPE_H
-#include FT_GLYPH_H
-
-#include "Common/Data.h"
-#include "Graphics/FontGlyph.h"
 #include "OpenGL.h"
+#include "Graphics/FontGlyph.h"
+
+class Data;
 
 /// Uses FreeType to load OpenType and TrueType fonts.
 ///

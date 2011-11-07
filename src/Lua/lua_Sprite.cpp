@@ -2,6 +2,7 @@
 #	pragma warning(disable : 4244)
 #endif
 
+#include "Graphics/Sprite.h"
 #include "Graphics/Transitions.h"
 #include "Lua/lua_Sprite.h"
 
@@ -24,7 +25,6 @@ const LuaMachine::Method<lua_Sprite> lua_Sprite::methods[] = {
 };
 
 lua_Sprite::lua_Sprite(lua_State *L) :
-	ani_move(nullptr), ani_rotate(nullptr), ani_scale(nullptr),
 	s(static_cast<Sprite *>(lua_touserdata(L, -1))) { }
 
 int lua_Sprite::get_angle(lua_State *L)

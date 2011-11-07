@@ -9,6 +9,8 @@
 #endif
 
 #include "Director.h"
+#include "OpenGL.h"
+#include "Input/Key.h"
 
 bool active = true;  ///< Whether the window is in focus
 bool done = false;   ///< Whether the user has requested to quit
@@ -135,7 +137,7 @@ int main(int argc, char *argv[])
 		else
 		{
 			// Update game logic
-			director.update(0);
+			director.update();
 
 			// Draw
 			glClear(GL_COLOR_BUFFER_BIT);

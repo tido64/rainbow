@@ -2,7 +2,10 @@
 #	pragma warning(disable : 4244)
 #endif
 
+#include "Common/Data.h"
+#include "Lua/lua_Sprite.h"
 #include "Lua/lua_SpriteBatch.h"
+#include "Lua/lua_Texture.h"
 
 const char lua_SpriteBatch::class_name[] = "spritebatch";
 const LuaMachine::Method<lua_SpriteBatch> lua_SpriteBatch::methods[] = {

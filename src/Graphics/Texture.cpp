@@ -1,3 +1,7 @@
+/// Copyright 2010-11 Bifrost Games. All rights reserved.
+/// \author Tommy Nguyen
+
+#include "Common/Data.h"
 #include "Graphics/Texture.h"
 
 Texture::Texture(const Data &data)

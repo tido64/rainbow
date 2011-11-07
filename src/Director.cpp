@@ -1,14 +1,12 @@
-/*
- *  Director.cpp
- *  OnWire
- *
- *  Created by Tommy Nguyen on 2/13/11.
- *  Copyright 2011 Bifrost Games. All rights reserved.
- *
- */
+/// Copyright 2011 Bifrost Games. All rights reserved.
+/// \author Tommy Nguyen
 
 #include "Director.h"
+#include "Physics.h"
 #include "Common/Chrono.h"
+#include "ConFuoco/Mixer.h"
+#include "Input/Input.h"
+#include "Lua/lua_Platform.h"
 
 using Rainbow::ConFuoco::Mixer;
 

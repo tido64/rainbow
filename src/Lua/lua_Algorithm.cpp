@@ -2,6 +2,8 @@
 #	pragma warning(disable : 4244)
 #endif
 
+#include "lua.h"
+#include "Algorithm.h"
 #include "Lua/lua_Algorithm.h"
 
 void lua_Algorithm::init(lua_State *L)

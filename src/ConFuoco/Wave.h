@@ -1,8 +1,6 @@
 #ifndef AUDIO_WAVE_H_
 #define AUDIO_WAVE_H_
 
-#include "Platform.h"
-
 namespace Rainbow
 {
 	namespace ConFuoco

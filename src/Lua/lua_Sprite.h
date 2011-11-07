@@ -3,6 +3,9 @@
 
 #include "LuaMachine.h"
 
+struct lua_State;
+class  Sprite;
+
 class lua_Sprite
 {
 public:
@@ -27,9 +30,6 @@ public:
 	int scale(lua_State *);
 
 private:
-	Animation *ani_move;
-	Animation *ani_rotate;
-	Animation *ani_scale;
 	Sprite *s;
 };
 

@@ -2,7 +2,6 @@
 #define AUDIO_MIXER_H_
 
 #include <cmath>
-#include <cstdio>
 
 #include "Common/Constants.h"
 #include "ConFuoco/OpenAL.h"

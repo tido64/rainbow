@@ -1,7 +1,4 @@
-#include "Common/Chrono.h"
-
 #ifdef RAINBOW_IOS
-#include <mach/mach_time.h>
 
 /// Apple-implementation of Chrono.
 ///

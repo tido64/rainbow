@@ -1,8 +1,7 @@
 #ifndef LUA_ALGORITHM_H_
 #define LUA_ALGORITHM_H_
 
-#include "lua.h"
-#include "Algorithm.h"
+struct lua_State;
 
 class lua_Algorithm
 {

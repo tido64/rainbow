@@ -1,7 +1,10 @@
 /// Copyright 2010-11 Bifrost Games. All rights reserved.
 /// \author Tommy Nguyen
 
+#include "Input/Key.h"
 #include "Input/Input.h"
+#include "Input/Touchable.h"
+#include "Lua/lua_Input.h"
 
 void Input::subscribe(Touchable *const t, unsigned int flags)
 {

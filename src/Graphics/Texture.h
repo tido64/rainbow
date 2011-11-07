@@ -1,9 +1,6 @@
 #ifndef TEXTURE_H_
 #define TEXTURE_H_
 
-#include "Common/Data.h"
-#include "Common/Vec2.h"
-#include "Common/Vector.h"
 #include "OpenGL.h"
 
 #if defined(RAINBOW_IOS)
@@ -11,6 +8,11 @@
 #else
 #	include <png.h>
 #endif
+
+#include "Common/Vec2.h"
+#include "Common/Vector.h"
+
+class Data;
 
 /// A texture loaded from an image file.
 ///

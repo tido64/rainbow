@@ -2,6 +2,8 @@
 #	pragma warning(disable : 4244)
 #endif
 
+#include "lua.h"
+#include "Physics.h"
 #include "Lua/lua_Physics.h"
 
 void lua_Physics::init(lua_State *L)

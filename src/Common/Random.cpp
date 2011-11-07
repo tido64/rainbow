@@ -1,3 +1,6 @@
+/// Copyright 2010-11 Bifrost Games. All rights reserved.
+/// \author Tommy Nguyen
+
 #include "Random.h"
 
 #ifdef RAINBOW_UNIX

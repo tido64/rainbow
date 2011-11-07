@@ -2,6 +2,9 @@
 #	pragma warning(disable : 4244)
 #endif
 
+#include "lua.h"
+#include "Common/Data.h"
+#include "ConFuoco/Mixer.h"
 #include "Lua/lua_Audio.h"
 
 using Rainbow::ConFuoco::Mixer;

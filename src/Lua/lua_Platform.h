@@ -1,6 +1,9 @@
 #ifndef LUA_PLATFORM_H_
 #define LUA_PLATFORM_H_
 
+#include "lua.h"
+#include "Platform.h"
+
 class lua_Platform
 {
 public:

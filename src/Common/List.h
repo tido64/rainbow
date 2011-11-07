@@ -1,9 +1,6 @@
 #ifndef LIST_H_
 #define LIST_H_
 
-#include <cassert>
-#include <cstring>
-
 /// Simple double-linked list container, mimicking STL::list.
 ///
 /// This class is mainly for the lack of full STL implementation on some

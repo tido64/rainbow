@@ -1,6 +1,17 @@
 /// Copyright 2010-11 Bifrost Games. All rights reserved.
 /// \author Tommy Nguyen
 
+#include "Platform.h"
+
+#ifndef RAINBOW_IOS
+#	include <cassert>
+#endif
+
+#include <ft2build.h>
+#include FT_FREETYPE_H
+#include FT_GLYPH_H
+
+#include "Common/Data.h"
 #include "Graphics/FontAtlas.h"
 
 FontAtlas::FontAtlas(const float pt) : pt(pt) { }

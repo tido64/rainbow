@@ -1,4 +1,16 @@
-#include "LuaMachine.h"
+/// Copyright 2011 Bifrost Games. All rights reserved.
+/// \author Tommy Nguyen
+
+#include "Common/Data.h"
+#include "Lua/lua_Algorithm.h"
+#include "Lua/lua_Audio.h"
+#include "Lua/lua_Font.h"
+#include "Lua/lua_Input.h"
+#include "Lua/lua_Physics.h"
+#include "Lua/lua_Platform.h"
+#include "Lua/lua_Sprite.h"
+#include "Lua/lua_SpriteBatch.h"
+#include "Lua/lua_Texture.h"
 
 #if __WORDSIZE == 32
 #	define PRINT_ADDRESS(addr) printf("%x\n", static_cast<unsigned int>(reinterpret_cast<uintptr_t>(addr)))

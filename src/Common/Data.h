@@ -85,7 +85,6 @@ private:
 	bool allocate(const unsigned int size);
 
 #endif
-
 };
 
 #include "Common/impl/Data-inl.h"

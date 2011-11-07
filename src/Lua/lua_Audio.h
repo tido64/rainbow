@@ -1,9 +1,7 @@
 #ifndef LUA_AUDIO_H_
 #define LUA_AUDIO_H_
 
-#include "lua.h"
-#include "Common/Data.h"
-#include "ConFuoco/Mixer.h"
+struct lua_State;
 
 class lua_Audio
 {

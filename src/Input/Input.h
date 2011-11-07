@@ -3,14 +3,16 @@
 
 #include "Common/Vector.h"
 #include "Input/Acceleration.h"
-#include "Input/Key.h"
-#include "Input/Touchable.h"
-#include "Lua/lua_Input.h"
 
 // Rainbow input events
 #define RAINBOW_ALL_EVENTS    -1
 #define RAINBOW_KEY_EVENTS    (1 << 0)
 #define RAINBOW_TOUCH_EVENTS  (1 << 1)
+
+class  Key;
+struct lua_State;
+struct Touch;
+class  Touchable;
 
 /// Handles accelerometer/gyroscope and touch events independent of platform.
 ///

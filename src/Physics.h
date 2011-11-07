@@ -3,8 +3,7 @@
 
 #include <Box2D/Box2D.h>
 
-#include "Algorithm.h"
-#include "Platform.h"
+#include "Common/Constants.h"
 
 // Pixel to metres ratio. Box2D uses metres as the unit for measurement.
 // This ratio defines how many pixels correspond to 1 Box2D "metre"

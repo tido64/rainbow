@@ -3,6 +3,8 @@
 
 #include "Graphics/Animation.h"
 
+/// Transition of a property from one value to another.
+///
 /// Copyright 2011 Bifrost Games. All rights reserved.
 /// \author Tommy Nguyen
 template<class T>

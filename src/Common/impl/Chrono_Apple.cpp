@@ -4,6 +4,7 @@
 #include "Common/Chrono.h"
 
 #ifdef RAINBOW_IOS
+#include <mach/mach_time.h>
 
 unsigned long Chrono::get_time()
 {

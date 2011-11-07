@@ -1,8 +1,9 @@
 #ifndef LUA_TEXTURE_H_
 #define LUA_TEXTURE_H_
 
-#include "Graphics/Texture.h"
 #include "LuaMachine.h"
+
+class Texture;
 
 class lua_Texture
 {

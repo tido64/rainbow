@@ -3,13 +3,14 @@
 
 #include <functional>
 
+#include "Platform.h"
 #include "Common/Vec2.h"
 
 #if defined(RAINBOW_IOS)
 #	include <UIKit/UITouch.h>
 #endif
 
-/// Data structures for keeping track of touches.
+/// Structure for keeping track of touches.
 ///
 /// Copyright 2010-11 Bifrost Games. All rights reserved.
 /// \author Tommy Nguyen

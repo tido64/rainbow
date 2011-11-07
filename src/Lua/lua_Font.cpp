@@ -2,6 +2,8 @@
 #	pragma warning(disable : 4244)
 #endif
 
+#include "Common/Data.h"
+#include "Graphics/FontAtlas.h"
 #include "Lua/lua_Font.h"
 
 const char lua_Font::class_name[] = "font";
@@ -17,6 +19,11 @@ lua_Font::lua_Font(lua_State *L) : font(new FontAtlas(lua_tonumber(L, 2)))
 	Data font(path);
 	Data::free(path);
 	this->font->load(font);
+}
+
+lua_Font::~lua_Font()
+{
+	delete this->font;
 }
 
 int lua_Font::print(lua_State *L)

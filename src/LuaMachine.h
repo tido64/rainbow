@@ -1,11 +1,11 @@
 #ifndef LUA_H_
 #define LUA_H_
 
-// Lua entry points
-#include "Lua/lua_Algorithm.h"
-#include "Lua/lua_Audio.h"
-#include "Lua/lua_Input.h"
-#include "Lua/lua_Platform.h"
+#include <cassert>
+#include <cstdio>
+#include <cstring>
+
+#include "Lua/lua.h"
 
 /// Embeds Lua scripting engine.
 ///
@@ -186,12 +186,5 @@ void LuaMachine::wrap(const char *const ns)
 	lua_settable(this->L, -3);
 	lua_pop(this->L, 1);
 }
-
-// Lua wrappers
-#include "Lua/lua_Font.h"
-#include "Lua/lua_Physics.h"
-#include "Lua/lua_SpriteBatch.h"
-#include "Lua/lua_Sprite.h"
-#include "Lua/lua_Texture.h"
 
 #endif

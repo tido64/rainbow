@@ -2,6 +2,7 @@
 #	pragma warning(disable : 4244)
 #endif
 
+#include "Graphics/Texture.h"
 #include "Lua/lua_Texture.h"
 
 const char lua_Texture::class_name[] = "load_texture";

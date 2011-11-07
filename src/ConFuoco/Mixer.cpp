@@ -8,7 +8,6 @@
  */
 
 #include "ConFuoco/Decoder.h"
-#include "ConFuoco/Mixer.h"
 
 namespace Rainbow
 {
