@@ -107,11 +107,6 @@ int LuaMachine::alloc(lua_State *L)
 	return 1;
 }
 
-inline LuaMachine::~LuaMachine()
-{
-	lua_close(this->L);
-}
-
 template<class T>
 int LuaMachine::dealloc(lua_State *L)
 {

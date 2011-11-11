@@ -70,6 +70,11 @@ lua_Debug* LuaMachine::getinfo(lua_State *L)
 	return d;
 }
 
+LuaMachine::~LuaMachine()
+{
+	lua_close(this->L);
+}
+
 LuaMachine::LuaMachine() : L(luaL_newstate())
 {
 	const char rainbow[] = "rainbow";
@@ -146,7 +151,7 @@ void LuaMachine::err(const int lua_e)
 	}
 	printf(" error: %s\n", m);
 	dump_stack(this->L);
-	assert(!"Lua related error, see stdout");
+	assert(!"Lua related error, see stdout for details");
 }
 
 void LuaMachine::load(const char *const lua)
