@@ -31,15 +31,17 @@ namespace Rainbow
 			{
 				wave.buffer_size = BUFFER_SIZE * vi->channels * 2;
 				wave.buffer = new char[wave.buffer_size + 1];
-				return;
 			}
-			wave.buffer_size = static_cast<unsigned int>(ov_pcm_total(vf, -1)) * vi->channels * 2;
-			wave.buffer = new char[wave.buffer_size + 1];
-			read(wave);
-			wave.handle = nullptr;
+			else
+			{
+				wave.buffer_size = static_cast<unsigned int>(ov_pcm_total(vf, -1)) * vi->channels * 2;
+				wave.buffer = new char[wave.buffer_size + 1];
+				read(wave);
+				wave.handle = nullptr;
 
-			ov_clear(vf);
-			delete vf;
+				ov_clear(vf);
+				delete vf;
+			}
 		}
 
 		void Decoder::close(Stream &stream)
@@ -65,7 +67,7 @@ namespace Rainbow
 
 			while (offset < wave.buffer_size && (read = ov_read(vf, buffer + offset, wave.buffer_size - offset, 0, 2, 1, &bitstream)) != 0)
 			{
-				assert(read >= 0 || !"Rainbow::ConFuoco::Decoder: Failed to read stream");
+				assert(read >= 0 || !"Rainbow::ConFuoco::Decoder::Vorbis: Failed to read stream");
 				offset += read;
 			}
 
@@ -80,10 +82,10 @@ namespace Rainbow
 
 		#else
 
-			int result = 0;
-			if ((result = ov_raw_seek(static_cast<OggVorbis_File *>(stream.handle), 0)) != 0)
+			int failed = ov_raw_seek(static_cast<OggVorbis_File *>(stream.handle), 0);
+			if (failed)
 			{
-				switch (result)
+				switch (failed)
 				{
 					case OV_ENOSEEK:
 						fprintf(stderr, "Rainbow::ConFuoco::Decoder::Vorbis:OV_ENOSEEK\n");
@@ -104,7 +106,7 @@ namespace Rainbow
 						fprintf(stderr, "Rainbow::ConFuoco::Decoder::Vorbis:OV_EUNKNOWN\n");
 						break;
 				}
-				assert(result == 0);
+				assert(!"Rainbow::ConFuoco::Decoder::Vorbis: Failed to reset stream");
 			}
 
 		#endif

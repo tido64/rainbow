@@ -11,12 +11,15 @@ namespace Rainbow
 		/// \author Tommy Nguyen
 		class Wave
 		{
+			friend class Decoder;
+			friend class Mixer;
+
 		public:
 			Wave();
 			virtual ~Wave() { this->release(); }
 
 			/// Clear buffer and reset state.
-			virtual void release();
+			void release();
 
 		protected:
 			void *buffer;              ///< Wave buffer
@@ -33,9 +36,6 @@ namespace Rainbow
 
 			/// Intentionally left undefined.
 			Wave& operator=(const Wave &);
-
-			friend class Decoder;
-			friend class Mixer;
 		};
 	}
 }

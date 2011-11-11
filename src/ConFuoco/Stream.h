@@ -17,9 +17,9 @@ namespace Rainbow
 		/// \author Tommy Nguyen
 		class Stream : public Wave
 		{
-		public:
-			~Stream();
+			friend class Mixer;
 
+		public:
 			/// Clear buffer and reset state.
 			void close();
 
@@ -38,17 +38,10 @@ namespace Rainbow
 
 			/// Intentionally left undefined.
 			Stream& operator=(const Stream &);
-
-			friend class Mixer;
 		};
 
 		inline Stream::Stream() :
 			loops(true), playing(false), in_use(false), sourced(-1) { }
-
-		inline Stream::~Stream()
-		{
-			this->release();
-		}
 
 		inline void Stream::close()
 		{
