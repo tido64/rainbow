@@ -10,7 +10,11 @@
 
 #include "Director.h"
 #include "OpenGL.h"
+#include "Common/Chrono.h"
+#include "Common/Data.h"
 #include "Input/Key.h"
+#include "Input/Input.h"
+#include "Input/Touch.h"
 
 bool active = true;  ///< Whether the window is in focus
 bool done = false;   ///< Whether the user has requested to quit
