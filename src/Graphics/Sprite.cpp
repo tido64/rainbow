@@ -30,6 +30,28 @@ Sprite::Sprite(const Sprite &s) :
 	memcpy(this->origin, s.origin, 4 * sizeof(Vec2f));
 }
 
+void Sprite::move(const float x, const float y)
+{
+	if (equalf(x, 0.0f) && equalf(y, 0.0f))
+		return;
+
+	this->position_d.x += x;
+	this->position_d.y += y;
+	this->delete_transitions();
+	this->stale |= stale_position;
+}
+
+void Sprite::rotate(const float r)
+{
+	if (equalf(r, 0.0f))
+		return;
+
+	this->angle += r;
+	delete this->transitions[2];
+	this->transitions[2] = 0;
+	this->stale |= stale_angle | stale_scale;
+}
+
 void Sprite::move(const float x, const float y, const unsigned int duration, const int trns_x, const int trns_y)
 {
 	delete this->transitions[0];
@@ -75,10 +97,7 @@ void Sprite::set_position(const float x, const float y)
 
 	this->position_d.x = x;
 	this->position_d.y = y;
-	delete this->transitions[0];
-	delete this->transitions[1];
-	this->transitions[0] = 0;
-	this->transitions[1] = 0;
+	this->delete_transitions();
 	this->stale |= stale_position;
 }
 
@@ -88,10 +107,7 @@ void Sprite::set_position(const Vec2f &p)
 		return;
 
 	this->position_d = p;
-	delete this->transitions[0];
-	delete this->transitions[1];
-	this->transitions[0] = 0;
-	this->transitions[1] = 0;
+	this->delete_transitions();
 	this->stale |= stale_position;
 }
 
@@ -169,6 +185,7 @@ void Sprite::update()
 		}
 
 		this->position = this->position_d;
+		this->position_d.zero();
 
 		if (this->angle != 0.0f)
 		{
@@ -218,6 +235,15 @@ void Sprite::update()
 		this->vertex_array[2].position += this->position_d;
 		this->vertex_array[3].position += this->position_d;
 		this->position += this->position_d;
+		this->position_d.zero();
 	}
 	this->stale = 0;
+}
+
+void Sprite::delete_transitions()
+{
+	delete this->transitions[0];
+	delete this->transitions[1];
+	this->transitions[0] = 0;
+	this->transitions[1] = 0;
 }

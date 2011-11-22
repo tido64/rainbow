@@ -28,7 +28,10 @@ public:
 	Sprite* add(const int x, const int y, const int width, const int height);
 
 	/// Draw the batch of sprites.
-	void draw();
+	virtual void draw();
+
+	/// Return all sprites within this batch.
+	Vector<Sprite*>& get_sprites();
 
 	/// Load texture data.
 	Texture* set_texture(const Data &texture);
@@ -40,7 +43,7 @@ public:
 	unsigned int size();
 
 	/// Update the batch of sprites.
-	void update();
+	virtual void update();
 
 protected:
 	static const unsigned char indices[];  ///< Global vertex indices (currently limited to 64 vertices, or 16 sprites)
@@ -57,7 +60,7 @@ private:
 	unsigned int reserved;         ///< Allocated memory for sprite vertices
 	SpriteVertex *vertex_buffer;   ///< Common vertex array for all sprites in the batch
 	Texture *texture;              ///<
-	Vector<Sprite *> sprites;      ///< Vector storing all sprites
+	Vector<Sprite*> sprites;       ///< Vector storing all sprites
 
 	/// Intentionally left undefined.
 	SpriteBatch(const SpriteBatch &);
@@ -69,6 +72,11 @@ private:
 inline unsigned int SpriteBatch::align(const unsigned int i)
 {
 	return (i << 2) + (i << 1);
+}
+
+inline Vector<Sprite*>& SpriteBatch::get_sprites()
+{
+	return this->sprites;
 }
 
 inline unsigned int SpriteBatch::size()

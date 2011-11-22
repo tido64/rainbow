@@ -37,6 +37,12 @@ public:
 	/// Return the current position of the sprite.
 	const Vec2f& get_position() const;
 
+	/// Move sprite by (x,y).
+	void move(const float x, const float y);
+
+	/// Rotate sprite by r.
+	void rotate(const float r);
+
 	void move(const float x, const float y, const unsigned int duration, const int trns_x = 0, const int trns_y = 0);
 	void rotate(const float r, const unsigned int duration, const int trns = 0);
 
@@ -93,6 +99,7 @@ private:
 	Vec2f scale_f;               ///< Scaling factor
 	Vec2f origin[4];             ///< Original rendering at origo
 
+	void delete_transitions();
 	void do_transition(const unsigned int i, const unsigned char mask);
 	Sprite& operator=(const Sprite &);
 };
