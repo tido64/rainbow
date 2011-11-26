@@ -15,24 +15,6 @@ namespace SceneGraph
 			delete *i;
 	}
 
-	void Node::add_child(Node *n)
-	{
-		this->children.push_back(n);
-	}
-
-	void Node::remove_child(Node *n)
-	{
-		this->children.remove(n);
-	}
-
-	void Node::set_parent(Node *n)
-	{
-		if (this->parent)
-			this->parent->remove_child(this);
-		this->parent = n;
-		this->parent->add_child(this);
-	}
-
 	void Node::move(const float x, const float y)
 	{
 		if (equalf(x, 0.0f) && equalf(y, 0.0f))
@@ -106,7 +88,6 @@ namespace SceneGraph
 	{
 		this->type = n.type;
 		this->data = n.data;
-		//this->state = 0;
 		return *this;
 	}
 

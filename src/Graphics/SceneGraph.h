@@ -1,4 +1,7 @@
-#include "Common/List.h"
+#ifndef SCENEGRAPH_NODE_H_
+#define SCENEGRAPH_NODE_H_
+
+#include "Common/TreeNode.h"
 #include "Graphics/Drawable.h"
 
 class Sprite;
@@ -14,7 +17,7 @@ namespace SceneGraph
 	///
 	/// Copyright 2011 Bifrost Games. All rights reserved.
 	/// \author Tommy Nguyen
-	class Node : public Drawable
+	class Node : public Drawable, TreeNode<Node>
 	{
 	public:
 		bool enabled;  ///< Whether or not this node should be updated and/or drawn.
@@ -24,14 +27,14 @@ namespace SceneGraph
 			GroupNode,
 			SpriteNode,
 			SpriteBatchNode
-		} type;
+		} type;  ///< Defines what type of graphical element this node represents.
 
 		union
 		{
 			void *data;
 			Sprite *sprite;
 			SpriteBatch *sprite_batch;
-		};
+		};  ///< Graphical element represented by this node.
 
 		/// Create a group node.
 		Node();
@@ -45,22 +48,13 @@ namespace SceneGraph
 		/// Create a sprite batch node.
 		explicit Node(SpriteBatch *);
 
-		~Node();
-
-		/// Add a child node.
-		void add_child(Node *);
+		virtual ~Node();
 
 		/// Add a child sprite node.
 		Node* add_child(Sprite *);
 
 		/// Add a child sprite batch node.
 		Node* add_child(SpriteBatch *);
-
-		/// Remove a child node.
-		void remove_child(Node *);
-
-		/// Move this node to another parent node.
-		void set_parent(Node *);
 
 		/// Recursively move all sprites by (x,y).
 		void move(const float x, const float y);
@@ -84,24 +78,21 @@ namespace SceneGraph
 		virtual void update();
 
 	private:
-		Node *parent;          ///< The node's parent.
-		List<Node*> children;  ///< List of child nodes.
-
 		template<class T>
 		Node* add_child(T *p);
 	};
 
 	inline Node::Node() :
-		enabled(true), type(GroupNode), data(nullptr), parent(nullptr) { }
+		enabled(true), type(GroupNode), data(nullptr) { }
 
 	inline Node::Node(Sprite *s) :
-		enabled(true), type(SpriteNode), data(s), parent(nullptr) { }
+		enabled(true), type(SpriteNode), data(s) { }
 
 	inline Node::Node(SpriteBatch *b) :
-		enabled(true), type(SpriteBatchNode), data(b), parent(nullptr) { }
+		enabled(true), type(SpriteBatchNode), data(b) { }
 
 	inline Node::Node(const Node &n) :
-		enabled(true), type(n.type), data(n.data), parent(nullptr) { }
+		enabled(true), type(n.type), data(n.data) { }
 
 	inline Node* Node::add_child(Sprite *s)
 	{
@@ -121,3 +112,5 @@ namespace SceneGraph
 		return n;
 	}
 }
+
+#endif
