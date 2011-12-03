@@ -18,7 +18,7 @@ function dumptable(story, offset)
 			io.write(offset .. n .. " ");
 			print(v);
 			if type(v) == "table" then
-				rainbow.utils.dump_table(v, offset .. "--> ");
+				dumptable(v, offset .. "--> ");
 			end
 		end
 	end
