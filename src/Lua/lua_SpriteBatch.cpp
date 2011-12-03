@@ -19,7 +19,11 @@ const LuaMachine::Method<lua_SpriteBatch> lua_SpriteBatch::methods[] = {
 int lua_SpriteBatch::add(lua_State *L)
 {
 	assert(lua_gettop(L) == 4 || !"Rainbow::Lua::SpriteBatch::add takes four parameters");
-	lua_pushlightuserdata(L, this->s.add(lua_tointeger(L, 1), lua_tointeger(L, 2), lua_tointeger(L, 3), lua_tointeger(L, 4)));
+
+	lua_pushlightuserdata(L, this->s.add(lua_tointeger(L, 1),
+	                                     lua_tointeger(L, 2),
+	                                     lua_tointeger(L, 3),
+	                                     lua_tointeger(L, 4)));
 	return LuaMachine::alloc<lua_Sprite>(L);
 }
 

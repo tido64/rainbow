@@ -10,7 +10,9 @@ public:
 	static const char class_name[];
 	static const LuaMachine::Method<lua_SpriteBatch> methods[];
 
-	lua_SpriteBatch(lua_State *L) : s(lua_tointeger(L, 1)) { }
+	lua_SpriteBatch(lua_State *L);
+
+	SpriteBatch* raw_ptr();
 
 	int add(lua_State *);
 	int draw(lua_State *);
@@ -20,5 +22,13 @@ public:
 private:
 	SpriteBatch s;
 };
+
+inline lua_SpriteBatch::lua_SpriteBatch(lua_State *L) :
+	s(lua_tointeger(L, 1)) { }
+
+inline SpriteBatch* lua_SpriteBatch::raw_ptr()
+{
+	return &this->s;
+}
 
 #endif

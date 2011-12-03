@@ -25,7 +25,7 @@ const LuaMachine::Method<lua_Sprite> lua_Sprite::methods[] = {
 };
 
 lua_Sprite::lua_Sprite(lua_State *L) :
-	s(static_cast<Sprite *>(lua_touserdata(L, -1))) { }
+	s(static_cast<Sprite*>(lua_touserdata(L, -1))) { }
 
 int lua_Sprite::get_angle(lua_State *L)
 {
