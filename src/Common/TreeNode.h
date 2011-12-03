@@ -17,13 +17,13 @@ public:
 	virtual ~TreeNode();
 
 	/// Add a node as child.
-	void add_child(TreeNode<T> *);
+	void add_child(T *);
 
 	/// Remove a child node.
-	void remove_child(TreeNode<T> *);
+	void remove_child(T *);
 
 	/// Set parent node.
-	void set_parent(TreeNode<T> *);
+	void set_parent(T *);
 
 protected:
 	T *parent;          ///< This node's parent.
@@ -37,25 +37,25 @@ template<class T>
 TreeNode<T>::~TreeNode() { }
 
 template<class T>
-void TreeNode<T>::add_child(TreeNode<T> *n)
+void TreeNode<T>::add_child(T *n)
 {
-	n->parent = this;
+	n->parent = static_cast<T*>(this);
 	this->children.push_back(n);
 }
 
 template<class T>
-void TreeNode<T>::remove_child(TreeNode<T> *n)
+void TreeNode<T>::remove_child(T *n)
 {
 	this->children.remove(n);
 	n->parent = nullptr;
 }
 
 template<class T>
-void TreeNode<T>::set_parent(TreeNode<T> *n)
+void TreeNode<T>::set_parent(T *n)
 {
 	if (this->parent)
-		this->parent->remove_child(this);
-	n->add_child(this);
+		this->parent->remove_child(static_cast<T*>(this));
+	n->add_child(static_cast<T*>(this));
 }
 
 #endif

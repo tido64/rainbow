@@ -17,7 +17,7 @@ namespace SceneGraph
 	///
 	/// Copyright 2011 Bifrost Games. All rights reserved.
 	/// \author Tommy Nguyen
-	class Node : public Drawable, TreeNode<Node>
+	class Node : public Drawable, public TreeNode<Node>
 	{
 	public:
 		bool enabled;  ///< Whether or not this node should be updated and/or drawn.
@@ -26,7 +26,8 @@ namespace SceneGraph
 		{
 			GroupNode,
 			SpriteNode,
-			SpriteBatchNode
+			SpriteBatchNode,
+			TransitionNode
 		} type;  ///< Defines what type of graphical element this node represents.
 
 		union
@@ -50,11 +51,9 @@ namespace SceneGraph
 
 		virtual ~Node();
 
-		/// Add a child sprite node.
-		Node* add_child(Sprite *);
-
-		/// Add a child sprite batch node.
-		Node* add_child(SpriteBatch *);
+		/// Add a child node.
+		template<class T>
+		Node* add_child(T *p);
 
 		/// Recursively move all sprites by (x,y).
 		void move(const float x, const float y);
@@ -76,10 +75,6 @@ namespace SceneGraph
 
 		/// Update this node and all its enabled children.
 		virtual void update();
-
-	private:
-		template<class T>
-		Node* add_child(T *p);
 	};
 
 	inline Node::Node() :
@@ -94,21 +89,18 @@ namespace SceneGraph
 	inline Node::Node(const Node &n) :
 		enabled(true), type(n.type), data(n.data) { }
 
-	inline Node* Node::add_child(Sprite *s)
-	{
-		return this->add_child<Sprite>(s);
-	}
-
-	inline Node* Node::add_child(SpriteBatch *s)
-	{
-		return this->add_child<SpriteBatch>(s);
-	}
-
 	template<class T>
 	Node* Node::add_child(T *p)
 	{
 		Node *n = new Node(p);
-		this->add_child(p);
+		this->add_child(n);
+		return n;
+	}
+
+	template<>
+	inline Node* Node::add_child<Node>(Node *n)
+	{
+		TreeNode<Node>::add_child(n);
 		return n;
 	}
 }
