@@ -8,17 +8,10 @@
 #include "Lua/lua_Input.h"
 #include "Lua/lua_Physics.h"
 #include "Lua/lua_Platform.h"
+#include "Lua/lua_SceneGraph.h"
 #include "Lua/lua_Sprite.h"
 #include "Lua/lua_SpriteBatch.h"
 #include "Lua/lua_Texture.h"
-
-#if __WORDSIZE == 32
-#	define PRINT_ADDRESS(addr) printf("%x\n", static_cast<unsigned int>(reinterpret_cast<uintptr_t>(addr)))
-#elif __WORDSIZE == 64
-#	define PRINT_ADDRESS(addr) printf("%lx\n", static_cast<unsigned long>(reinterpret_cast<uintptr_t>(addr)))
-#else
-#	error "Unknown system"
-#endif
 
 void LuaMachine::dump_stack(lua_State *L)
 {
@@ -44,16 +37,16 @@ void LuaMachine::dump_stack(lua_State *L)
 				puts("(table)");
 				break;
 			case LUA_TFUNCTION:
-				PRINT_ADDRESS(lua_tocfunction(L, l));
+				printf("%p\n", lua_tocfunction(L, l));
 				break;
 			case LUA_TUSERDATA:
-				PRINT_ADDRESS(lua_touserdata(L, l));
+				printf("%p\n", lua_touserdata(L, l));
 				break;
 			case LUA_TTHREAD:
 				puts("(thread)");
 				break;
 			case LUA_TLIGHTUSERDATA:
-				PRINT_ADDRESS(lua_topointer(L, l));
+				printf("%p\n", lua_topointer(L, l));
 				break;
 			default:
 				puts("(unknown)");
@@ -75,7 +68,7 @@ LuaMachine::~LuaMachine()
 	lua_close(this->L);
 }
 
-LuaMachine::LuaMachine() : L(luaL_newstate())
+LuaMachine::LuaMachine() : scenegraph(nullptr), L(luaL_newstate())
 {
 	const char rainbow[] = "rainbow";
 	luaL_openlibs(this->L);
@@ -90,6 +83,9 @@ LuaMachine::LuaMachine() : L(luaL_newstate())
 	lua_Algorithm::init(this->L);  // Initialize "rainbow.algorithm" namespace
 	lua_Audio::init(this->L);      // Initialize "rainbow.audio" namespace
 	lua_Physics::init(this->L);    // Initialize "rainbow.physics" namespace
+
+	// Initialize "rainbow.scenegraph"
+	this->scenegraph = new lua_SceneGraph(this->L);
 
 	lua_pop(this->L, 1);
 
@@ -154,7 +150,7 @@ void LuaMachine::err(const int lua_e)
 	assert(!"Lua related error, see stdout for details");
 }
 
-void LuaMachine::load(const char *const lua)
+void LuaMachine::load(SceneGraph::Node *root, const char *const lua)
 {
 	// Load Lua script
 	int lua_e = luaL_loadfile(this->L, lua);
@@ -164,6 +160,8 @@ void LuaMachine::load(const char *const lua)
 	lua_e = lua_pcall(this->L, 0, LUA_MULTRET, 0);
 	if (lua_e)
 		this->err(lua_e);
+
+	this->scenegraph->set_root(root);
 }
 
 void LuaMachine::update()

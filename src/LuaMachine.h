@@ -7,6 +7,9 @@
 
 #include "Lua/lua.h"
 
+namespace SceneGraph { class Node; }
+class lua_SceneGraph;
+
 /// Embeds Lua scripting engine.
 ///
 /// Features a simple C++-wrapper, adapted from lua-users.org
@@ -18,6 +21,8 @@
 /// \author Tommy Nguyen
 class LuaMachine
 {
+	friend class Director;
+
 public:
 	template<class T>
 	struct Method
@@ -36,20 +41,21 @@ public:
 	/// Return information about a specific function or function invocation.
 	static lua_Debug* getinfo(lua_State *L);
 
+	template<class T>
+	static int thunk(lua_State *L);
+
 	~LuaMachine();
 
 private:
 	template<class T>
 	static int dealloc(lua_State *L);
 
-	template<class T>
-	static int thunk(lua_State *L);
-
 	/// Return the wrapper of the object on top of the stack.
 	/// \return Pointer to wrapper
 	template<class T>
 	static T* wrapper(lua_State *L);
 
+	lua_SceneGraph *scenegraph;
 	lua_State *L;
 
 	LuaMachine();
@@ -64,7 +70,7 @@ private:
 	void err(int);
 
 	/// Load specified Lua script.
-	void load(const char *const);
+	void load(SceneGraph::Node *root, const char *const);
 
 	/// Update world state and call update function in Lua script.
 	void update();
@@ -76,8 +82,6 @@ private:
 
 	/// Intentionally left undefined.
 	LuaMachine& operator=(const LuaMachine &);
-
-	friend class Director;
 };
 
 template<class T>
@@ -89,7 +93,7 @@ int LuaMachine::alloc(lua_State *L)
 	lua_createtable(L, 0, 0);
 	lua_pushnumber(L, 0);
 
-	T **ptr = static_cast<T **>(lua_newuserdata(L, sizeof(T*)));
+	T **ptr = static_cast<T**>(lua_newuserdata(L, sizeof(T*)));
 	*ptr = obj;
 
 	lua_getfield(L, LUA_REGISTRYINDEX, T::class_name);
@@ -134,7 +138,7 @@ int LuaMachine::thunk(lua_State *L)
 	lua_rawgeti(L, 1, 0);
 	lua_remove(L, 1);
 
-	T **ptr = static_cast<T **>(luaL_checkudata(L, -1, T::class_name));
+	T **ptr = static_cast<T**>(luaL_checkudata(L, -1, T::class_name));
 	lua_pop(L, 1);
 
 	return ((*ptr)->*(T::methods[i].lua_CFunction))(L);

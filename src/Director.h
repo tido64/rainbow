@@ -2,6 +2,7 @@
 #define DIRECTOR_H_
 
 #include "LuaMachine.h"
+#include "Graphics/SceneGraph.h"
 
 /// Simple game loop for Lua-scripted games.
 ///
@@ -10,8 +11,6 @@
 class Director
 {
 public:
-	//static Vector<Drawable *> drawables;  ///< Drawable objects
-
 	Director();
 
 	void draw();
@@ -28,6 +27,7 @@ public:
 
 private:
 	LuaMachine lua;
+	SceneGraph::Node scenegraph;
 
 	/// Intentionally left undefined.
 	Director(const Director &);

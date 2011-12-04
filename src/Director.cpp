@@ -17,21 +17,13 @@ Director::Director()
 
 void Director::draw()
 {
-	/*if (!this->drawables.size())
-		return
-
-	Drawable **obj = this->drawables.begin();
-	for (unsigned int i = 0; i < this->drawables.size(); ++i)
-	{
-		(*obj)->draw();
-		++obj;
-	}*/
+	this->scenegraph.draw();
 	this->lua.call("draw");
 }
 
 void Director::init(const char *const script)
 {
-	this->lua.load(script);
+	this->lua.load(&this->scenegraph, script);
 	this->lua.call("init");
 	this->lua.update();
 }
@@ -48,11 +40,5 @@ void Director::update(const unsigned long t)
 	Mixer::Instance().update();
 	Physics::Instance().step(Chrono::Instance().diff() * (1.0f / 1000.0f));
 	this->lua.update();
-
-	/*Drawable **obj = this->drawables.begin();
-	for (unsigned int i = 0; i < this->drawables.size(); ++i)
-	{
-		(*obj)->update();
-		++obj;
-	}*/
+	this->scenegraph.update();
 }
