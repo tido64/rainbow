@@ -59,7 +59,9 @@ void lua_Input::touch_event(lua_State *L, const char *const type, const Touch *c
 	{
 		lua_createtable(L, 0, 2);
 		lua_pushvalue(L, -1);
-		lua_setfield(L, -3, Rainbow::itoa(touches[i].hash));
+		const char *const hash = Rainbow::itoa(touches[i].hash);
+		lua_setfield(L, -3, hash);
+		delete hash;
 		lua_pushinteger(L, touches[i].x);
 		lua_setfield(L, -2, "x");
 		lua_pushinteger(L, touches[i].y);
