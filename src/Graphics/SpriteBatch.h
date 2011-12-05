@@ -2,6 +2,7 @@
 #define SPRITEBATCH_H_
 
 #include "OpenGL.h"
+#include "Common/SmartPtr.h"
 #include "Common/Vector.h"
 #include "Graphics/Drawable.h"
 #include "Graphics/Sprite.h"
@@ -36,8 +37,11 @@ public:
 	/// Load texture data.
 	Texture* set_texture(const Data &texture);
 
-	/// Re-use specified texture.
+	/// Re-use a texture.
 	Texture* set_texture(Texture *texture);
+
+	/// Re-use a texture.
+	SmartPtr<Texture>& set_texture(SmartPtr<Texture> &texture);
 
 	/// Return the number of sprites.
 	unsigned int size();
@@ -55,12 +59,12 @@ protected:
 	void push_back(Sprite *s);
 
 private:
-	GLuint buffer;                 ///< GL vertex buffer
-	unsigned int batch_vertices;   ///< Total number of vertices in this batch
-	unsigned int reserved;         ///< Allocated memory for sprite vertices
-	SpriteVertex *vertex_buffer;   ///< Common vertex array for all sprites in the batch
-	Texture *texture;              ///<
-	Vector<Sprite*> sprites;       ///< Vector storing all sprites
+	GLuint buffer;                 ///< GL vertex buffer.
+	unsigned int batch_vertices;   ///< Total number of vertices in this batch.
+	unsigned int reserved;         ///< Allocated memory for sprite vertices.
+	SpriteVertex *vertex_buffer;   ///< Common vertex array for all sprites in the batch.
+	SmartPtr<Texture> texture;     ///< Texture atlas used by all sprites in the batch.
+	Vector<Sprite*> sprites;       ///< Vector storing all sprites.
 
 	/// Intentionally left undefined.
 	SpriteBatch(const SpriteBatch &);
