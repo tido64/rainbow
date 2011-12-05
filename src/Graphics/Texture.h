@@ -29,6 +29,8 @@ class Data;
 /// \author Tommy Nguyen
 class Texture
 {
+	template<class T> friend class SmartPtr;
+
 public:
 	GLuint name;
 	GLsizei width, height;
@@ -49,6 +51,7 @@ public:
 	const Vec2f* operator[](const unsigned int i) const;
 
 private:
+	unsigned int refs;
 	Vector<Vec2f> textures;  ///< Texture coordinates
 
 	/// Return true if the integer provided is a power of 2.

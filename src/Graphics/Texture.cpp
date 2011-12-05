@@ -2,9 +2,10 @@
 /// \author Tommy Nguyen
 
 #include "Common/Data.h"
+#include "Common/SmartPtr.h"
 #include "Graphics/Texture.h"
 
-Texture::Texture(const Data &data)
+Texture::Texture(const Data &data) : refs(0)
 {
 	this->load(data);
 }
