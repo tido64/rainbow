@@ -28,7 +28,11 @@ class Data;
 /// \author Tommy Nguyen
 class FontAtlas
 {
+	template<class T> friend class SmartPtr;
+
 public:
+	static const unsigned char ascii_offset = 32;  ///< Start loading from character 32
+
 	const float pt;
 
 	FontAtlas(const float pt);
@@ -50,12 +54,12 @@ public:
 	               const unsigned char a = 0xff);
 
 protected:
-	static const unsigned char ascii_offset = 32;  ///< Start loading from character 32
 	static const unsigned char chars = 95;         ///< Load characters through 126 from the ASCII table
 	static const unsigned short int margin = 2;    ///< Drawn margin around font glyph
 	static const unsigned short int padding = 3;   ///< Padding around font glyph texture
 
 private:
+	unsigned int refs;         ///< SmartPtr reference counter
 	GLuint texture;            ///< GL texture id
 	Colorb color;              ///< Font colour
 	FontGlyph charset[chars];  ///< Character set
