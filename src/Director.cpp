@@ -18,7 +18,6 @@ Director::Director()
 void Director::draw()
 {
 	this->scenegraph.draw();
-	this->lua.call("draw");
 }
 
 void Director::init(const char *const script)
