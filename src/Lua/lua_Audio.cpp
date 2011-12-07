@@ -125,7 +125,7 @@ int lua_Audio::set_velocity(lua_State *L)
 
 int lua_Audio::add(lua_State *L)
 {
-	const char *const path = Data::get_path(lua_tolstring(L, 1, 0));
+	const char *const path = Data::get_path(lua_tolstring(L, 1, nullptr));
 	lua_pushinteger(L, Mixer::Instance().add(path));
 	Data::free(path);
 	return 1;
@@ -161,7 +161,7 @@ int lua_Audio::set_looping(lua_State *L)
 
 int lua_Audio::set_bgm(lua_State *L)
 {
-	const char *const path = Data::get_path(lua_tolstring(L, 1, 0));
+	const char *const path = Data::get_path(lua_tolstring(L, 1, nullptr));
 	Mixer::Instance().set_bgm(path);
 	Data::free(path);
 	return 0;

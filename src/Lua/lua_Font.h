@@ -2,8 +2,8 @@
 #define LUA_FONT_H_
 
 #include "LuaMachine.h"
-
-class FontAtlas;
+#include "Common/SmartPtr.h"
+#include "Graphics/FontAtlas.h"
 
 class lua_Font
 {
@@ -12,13 +12,19 @@ public:
 	static const LuaMachine::Method<lua_Font> methods[];
 
 	lua_Font(lua_State *);
-	~lua_Font();
+
+	FontAtlas* raw_ptr() const;
 
 	int print(lua_State *);
 	int set_color(lua_State *);
 
 private:
-	FontAtlas *font;
+	SmartPtr<FontAtlas> font;
 };
+
+inline FontAtlas* lua_Font::raw_ptr() const
+{
+	return this->font.raw_ptr();
+}
 
 #endif

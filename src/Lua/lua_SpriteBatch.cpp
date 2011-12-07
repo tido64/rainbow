@@ -41,7 +41,7 @@ int lua_SpriteBatch::set_texture(lua_State *L)
 	{
 		case LUA_TSTRING:
 			{
-				const char *const path = Data::get_path(lua_tolstring(L, 1, 0));
+				const char *const path = Data::get_path(lua_tolstring(L, 1, nullptr));
 				Data t(path);
 				Data::free(path);
 				lua_pushlightuserdata(L, this->s.set_texture(t));

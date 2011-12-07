@@ -3,7 +3,6 @@
 #endif
 
 #include "Common/Data.h"
-#include "Graphics/FontAtlas.h"
 #include "Lua/lua_Font.h"
 
 const char lua_Font::class_name[] = "font";
@@ -15,15 +14,10 @@ const LuaMachine::Method<lua_Font> lua_Font::methods[] = {
 
 lua_Font::lua_Font(lua_State *L) : font(new FontAtlas(lua_tonumber(L, 2)))
 {
-	const char *const path = Data::get_path(lua_tolstring(L, 1, 0));
+	const char *const path = Data::get_path(lua_tolstring(L, 1, nullptr));
 	Data font(path);
 	Data::free(path);
 	this->font->load(font);
-}
-
-lua_Font::~lua_Font()
-{
-	delete this->font;
 }
 
 int lua_Font::print(lua_State *L)
@@ -41,7 +35,7 @@ int lua_Font::print(lua_State *L)
 			break;
 	}
 
-	this->font->print(lua_tolstring(L, 1, 0), x, y);
+	this->font->print(lua_tolstring(L, 1, nullptr), x, y);
 	return 0;
 }
 
