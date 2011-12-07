@@ -6,6 +6,7 @@
 #include "Lua/lua_Audio.h"
 #include "Lua/lua_Font.h"
 #include "Lua/lua_Input.h"
+#include "Lua/lua_Label.h"
 #include "Lua/lua_Physics.h"
 #include "Lua/lua_Platform.h"
 #include "Lua/lua_SceneGraph.h"
@@ -31,7 +32,7 @@ void LuaMachine::dump_stack(lua_State *L)
 				printf("%s\n", lua_toboolean(L, l) ? "true" : "false");
 				break;
 			case LUA_TSTRING:
-				printf("%s\n", lua_tolstring(L, l, 0));
+				printf("%s\n", lua_tolstring(L, l, nullptr));
 				break;
 			case LUA_TTABLE:
 				puts("(table)");
@@ -90,6 +91,7 @@ LuaMachine::LuaMachine() : scenegraph(nullptr), L(luaL_newstate())
 	lua_pop(this->L, 1);
 
 	LuaMachine::wrap<lua_Font>(rainbow);
+	LuaMachine::wrap<lua_Label>(rainbow);
 	LuaMachine::wrap<lua_Sprite>(rainbow);
 	LuaMachine::wrap<lua_SpriteBatch>(rainbow);
 	LuaMachine::wrap<lua_Texture>(rainbow);
@@ -125,7 +127,7 @@ void LuaMachine::call(const char *const k)
 
 void LuaMachine::err(const int lua_e)
 {
-	const char *const m = lua_tolstring(this->L, -1, 0);
+	const char *const m = lua_tolstring(this->L, -1, nullptr);
 	lua_pop(this->L, 1);
 	switch (lua_e)
 	{

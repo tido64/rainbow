@@ -2,6 +2,7 @@
 /// \author Tommy Nguyen
 
 #include "Algorithm.h"
+#include "Graphics/Label.h"
 #include "Graphics/SceneGraph.h"
 #include "Graphics/SpriteBatch.h"
 
@@ -98,8 +99,9 @@ namespace SceneGraph
 
 		switch (this->type)
 		{
+			case LabelNode:
 			case SpriteBatchNode:
-				this->sprite_batch->draw();
+				this->drawable->draw();
 				break;
 			default:
 				break;

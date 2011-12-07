@@ -17,6 +17,7 @@ public:
 	~lua_SceneGraph();
 
 	int add_batch(lua_State *);
+	int add_label(lua_State *);
 	int add_node(lua_State *);
 	int add_sprite(lua_State *);
 	int enable(lua_State *);

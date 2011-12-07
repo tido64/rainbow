@@ -1,3 +1,4 @@
+#include "Lua/lua_Label.h"
 #include "Lua/lua_SceneGraph.h"
 #include "Lua/lua_Sprite.h"
 #include "Lua/lua_SpriteBatch.h"
@@ -5,6 +6,7 @@
 const char lua_SceneGraph::class_name[] = "scenegraph";
 const LuaMachine::Method<lua_SceneGraph> lua_SceneGraph::methods[] = {
 	{ "add_batch",   &lua_SceneGraph::add_batch },
+	{ "add_label",   &lua_SceneGraph::add_label },
 	{ "add_node",    &lua_SceneGraph::add_node },
 	{ "add_sprite",  &lua_SceneGraph::add_sprite },
 	{ "enable",      &lua_SceneGraph::enable },
@@ -25,6 +27,11 @@ lua_SceneGraph::~lua_SceneGraph()
 int lua_SceneGraph::add_batch(lua_State *L)
 {
 	return this->add_child<SpriteBatch, lua_SpriteBatch>(L);
+}
+
+int lua_SceneGraph::add_label(lua_State *L)
+{
+	return this->add_child<Label, lua_Label>(L);
 }
 
 int lua_SceneGraph::add_node(lua_State *L)

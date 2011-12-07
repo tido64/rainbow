@@ -4,6 +4,7 @@
 #include "Common/TreeNode.h"
 #include "Graphics/Drawable.h"
 
+class Label;
 class Sprite;
 class SpriteBatch;
 
@@ -25,6 +26,7 @@ namespace SceneGraph
 		enum
 		{
 			GroupNode,
+			LabelNode,
 			SpriteNode,
 			SpriteBatchNode,
 			TransitionNode
@@ -33,6 +35,7 @@ namespace SceneGraph
 		union
 		{
 			void *data;
+			Drawable *drawable;
 			Sprite *sprite;
 			SpriteBatch *sprite_batch;
 		};  ///< Graphical element represented by this node.
@@ -42,6 +45,9 @@ namespace SceneGraph
 
 		/// Create a node with another node's type and data.
 		Node(const Node &);
+
+		/// Create a label node.
+		explicit Node(Label *);
 
 		/// Create a sprite node.
 		explicit Node(Sprite *);
@@ -79,6 +85,9 @@ namespace SceneGraph
 
 	inline Node::Node() :
 		enabled(true), type(GroupNode), data(nullptr) { }
+
+	inline Node::Node(Label *l) :
+		enabled(true), type(LabelNode), data(l) { }
 
 	inline Node::Node(Sprite *s) :
 		enabled(true), type(SpriteNode), data(s) { }

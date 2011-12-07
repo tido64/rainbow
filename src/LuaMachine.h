@@ -44,16 +44,16 @@ public:
 	template<class T>
 	static int thunk(lua_State *L);
 
+	/// Return the wrapper of the object on top of the stack.
+	/// \return Pointer to wrapper
+	template<class T>
+	static T* wrapper(lua_State *L);
+
 	~LuaMachine();
 
 private:
 	template<class T>
 	static int dealloc(lua_State *L);
-
-	/// Return the wrapper of the object on top of the stack.
-	/// \return Pointer to wrapper
-	template<class T>
-	static T* wrapper(lua_State *L);
 
 	lua_SceneGraph *scenegraph;
 	lua_State *L;
@@ -151,7 +151,7 @@ T* LuaMachine::wrapper(lua_State *L)
 	lua_rawgeti(L, -1, 0);
 	void *ptr = luaL_checkudata(L, -1, T::class_name);
 	lua_pop(L, 1);
-	return *static_cast<T **>(ptr);
+	return *static_cast<T**>(ptr);
 }
 
 template<class T>
