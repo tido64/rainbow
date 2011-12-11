@@ -44,15 +44,6 @@ public:
 	/// Load font and create a texture atlas.
 	void load(const Data &font);
 
-	/// Print text at (x,y).
-	void print(const char *text, const int x = 0, const int y = 0) const;
-
-	/// Set font color.
-	void set_color(const unsigned char r,
-	               const unsigned char g,
-	               const unsigned char b,
-	               const unsigned char a = 0xff);
-
 protected:
 	static const unsigned char chars = 95;         ///< Load characters through 126 from the ASCII table
 	static const unsigned short int margin = 2;    ///< Drawn margin around font glyph

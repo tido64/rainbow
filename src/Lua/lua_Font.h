@@ -15,9 +15,6 @@ public:
 
 	FontAtlas* raw_ptr() const;
 
-	int print(lua_State *);
-	int set_color(lua_State *);
-
 private:
 	SmartPtr<FontAtlas> font;
 };
