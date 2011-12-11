@@ -184,8 +184,11 @@ void Sprite::update()
 			this->origin[3].y = this->origin[2].y;
 		}
 
-		this->position = this->position_d;
-		this->position_d.zero();
+		if (this->stale & stale_position)
+		{
+			this->position = this->position_d;
+			this->position_d.zero();
+		}
 
 		if (this->angle != 0.0f)
 		{

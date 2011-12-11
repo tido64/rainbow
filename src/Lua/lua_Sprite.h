@@ -27,7 +27,6 @@ public:
 
 	int move(lua_State *);
 	int rotate(lua_State *);
-	int scale(lua_State *);
 
 private:
 	Sprite *s;

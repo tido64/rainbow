@@ -20,7 +20,6 @@ const LuaMachine::Method<lua_Sprite> lua_Sprite::methods[] = {
 	{ "set_texture",  &lua_Sprite::set_texture },
 	{ "move",         &lua_Sprite::move },
 	{ "rotate",       &lua_Sprite::rotate },
-	{ "scale",        &lua_Sprite::scale },
 	{ 0, 0 }
 };
 
@@ -102,14 +101,7 @@ int lua_Sprite::rotate(lua_State *L)
 {
 	assert(lua_gettop(L) >= 2 || !"Rainbow::Lua::Sprite::rotate: Requires at least 2 parameters (r, duration [, effect])");
 
-	this->s->set_rotation(lua_tonumber(L, 1));
-	return 0;
-}
-
-int lua_Sprite::scale(lua_State *L)
-{
-	assert(lua_gettop(L) >= 2 || !"Rainbow::Lua::Sprite::scale: Requires at least 2 parameters (f, duration [, effect])");
-
-	this->s->set_scale(lua_tonumber(L, 1));
+	const int transition = (lua_gettop(L) >= 3) ? lua_tointeger(L, 3) : 0;
+	this->s->rotate(lua_tonumber(L, 1), lua_tonumber(L, 2), transition);
 	return 0;
 }
