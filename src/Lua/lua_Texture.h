@@ -2,8 +2,8 @@
 #define LUA_TEXTURE_H_
 
 #include "LuaMachine.h"
-
-class Texture;
+#include "Common/SmartPtr.h"
+#include "Graphics/Texture.h"
 
 class lua_Texture
 {
@@ -13,11 +13,18 @@ public:
 
 	lua_Texture(lua_State *);
 
+	Texture* raw_ptr() const;
+
 	int create(lua_State *);
 	int trim(lua_State *);
 
 private:
-	Texture *t;
+	SmartPtr<Texture> texture;
 };
+
+inline Texture* lua_Texture::raw_ptr() const
+{
+	return this->texture.raw_ptr();
+}
 
 #endif

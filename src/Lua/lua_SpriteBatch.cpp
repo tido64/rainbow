@@ -45,13 +45,16 @@ int lua_SpriteBatch::set_texture(lua_State *L)
 				Data t(path);
 				Data::free(path);
 				lua_pushlightuserdata(L, this->s.set_texture(t));
-				return LuaMachine::alloc<lua_Texture>(L);
+			}
+			return LuaMachine::alloc<lua_Texture>(L);
+		case LUA_TTABLE:
+			{
+				lua_Texture *texture = LuaMachine::wrapper<lua_Texture>(L);
+				this->s.set_texture(texture->raw_ptr());
 			}
 			break;
-		case LUA_TLIGHTUSERDATA:
-			//lua_pushlightuserdata(L, this->s.set_texture(reinterpret_cast<Texture *>(lua_topointer(L, 1))));
-			break;
 		default:
+			assert(!"Rainbow::Lua::SpriteBatch::set_texture: Parameter must be a path to an asset or an existing one");
 			break;
 	}
 	return 0;
