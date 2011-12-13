@@ -134,7 +134,6 @@ void Sprite::set_scale(const float f)
 	this->stale |= stale_scale;
 }
 
-
 void Sprite::set_scale(const Vec2f &f)
 {
 	assert((f.x > 0.0f && f.y > 0.0f) || !"Rainbow::Sprite: Can't scale with a negative factor");

@@ -165,8 +165,3 @@ void Texture::load(const Data &img_data)
 
 	delete[] data;
 }
-
-const Vec2f* Texture::operator[](const unsigned int i) const
-{
-	return &this->textures[i];
-}

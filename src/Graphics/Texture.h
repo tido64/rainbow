@@ -90,4 +90,9 @@ inline void Texture::trim()
 	this->textures.reserve(0);
 }
 
+inline const Vec2f* Texture::operator[](const unsigned int i) const
+{
+	return &this->textures[i];
+}
+
 #endif

@@ -36,4 +36,9 @@ private:
 	Director& operator=(const Director &);
 };
 
+inline void Director::draw()
+{
+	this->scenegraph.draw();
+}
+
 #endif

@@ -15,11 +15,6 @@ Director::Director()
 	Input::Instance().set_state(this->lua.L);
 }
 
-void Director::draw()
-{
-	this->scenegraph.draw();
-}
-
 void Director::init(const char *const script)
 {
 	this->lua.load(&this->scenegraph, script);
