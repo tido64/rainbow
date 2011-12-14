@@ -238,7 +238,10 @@ namespace Rainbow
 					alSourceStop(this->stream.sourced);
 
 				if (clear)
+				{
+					alSourceUnqueueBuffers(this->stream.sourced, STREAM_BUFFERS, this->stream.buffered);
 					Decoder::close(this->stream);
+				}
 			}
 
 		#endif
