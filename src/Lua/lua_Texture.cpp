@@ -36,6 +36,7 @@ lua_Texture::lua_Texture(lua_State *L)
 int lua_Texture::create(lua_State *L)
 {
 	assert(lua_gettop(L) == 4 || !"Rainbow::Lua::Texture::create takes four parameters");
+
 	const int x = lua_tointeger(L, 1);
 	const int y = lua_tointeger(L, 2);
 	const int w = lua_tointeger(L, 3);

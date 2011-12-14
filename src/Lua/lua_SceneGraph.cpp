@@ -19,11 +19,6 @@ const LuaMachine::Method<lua_SceneGraph> lua_SceneGraph::methods[] = {
 	{ 0, 0 }
 };
 
-lua_SceneGraph::~lua_SceneGraph()
-{
-	delete this->ptr;
-}
-
 int lua_SceneGraph::add_batch(lua_State *L)
 {
 	return this->add_child<SpriteBatch, lua_SpriteBatch>(L);

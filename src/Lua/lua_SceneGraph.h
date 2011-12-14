@@ -45,6 +45,11 @@ private:
 	lua_SceneGraph& operator=(const lua_SceneGraph &);
 };
 
+inline lua_SceneGraph::~lua_SceneGraph()
+{
+	delete this->ptr;
+}
+
 template<class T, class W>
 int lua_SceneGraph::add_child(lua_State *L)
 {
