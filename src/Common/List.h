@@ -94,6 +94,8 @@ void List<T>::remove(const T &value)
 			Element *next = e->next;
 			if (e->prev)
 				e->prev->next = e->next;
+			else
+				this->first = nullptr;
 			if (e->next)
 			{
 				e->next->prev = e->prev;
@@ -103,7 +105,7 @@ void List<T>::remove(const T &value)
 				this->last = e->prev;
 			delete e;
 			e = next;
-			--count;
+			--this->count;
 		}
 		else
 			e = e->next;
