@@ -91,18 +91,19 @@ void List<T>::remove(const T &value)
 	{
 		if (e->value == value)
 		{
+			Element *prev = e->prev;
 			Element *next = e->next;
-			if (e->prev)
-				e->prev->next = e->next;
+			if (prev)
+				prev->next = next;
 			else
-				this->first = nullptr;
-			if (e->next)
+				this->first = next;
+			if (next)
 			{
-				e->next->prev = e->prev;
+				next->prev = prev;
 				e->next = nullptr;
 			}
 			else
-				this->last = e->prev;
+				this->last = prev;
 			delete e;
 			e = next;
 			--this->count;

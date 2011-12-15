@@ -53,3 +53,10 @@ TEST_F(ListTest, Remove)
 		++iter;
 	}
 }
+
+TEST_F(ListTest, RemoveAll)
+{
+	for (unsigned int i = 0; intlist.size() != 0; ++i)
+		intlist.remove(i);
+	ASSERT_EQ(intlist.end(), intlist.begin());
+}
