@@ -47,7 +47,7 @@ public:
 	/// Return the wrapper of the object on top of the stack.
 	/// \return Pointer to wrapper
 	template<class T>
-	static T* wrapper(lua_State *L);
+	static T* wrapper(lua_State *L, const int index = -1);
 
 	~LuaMachine();
 
@@ -145,10 +145,10 @@ int LuaMachine::thunk(lua_State *L)
 }
 
 template<class T>
-T* LuaMachine::wrapper(lua_State *L)
+T* LuaMachine::wrapper(lua_State *L, const int index)
 {
 	// Get user data from table
-	lua_rawgeti(L, -1, 0);
+	lua_rawgeti(L, index, 0);
 	void *ptr = luaL_checkudata(L, -1, T::class_name);
 	lua_pop(L, 1);
 	return *static_cast<T**>(ptr);
