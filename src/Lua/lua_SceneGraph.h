@@ -14,8 +14,9 @@ public:
 	static const char class_name[];
 	static const LuaMachine::Method<lua_SceneGraph> methods[];
 
-	~lua_SceneGraph();
+	inline ~lua_SceneGraph();
 
+	int add_animation(lua_State *);
 	int add_batch(lua_State *);
 	int add_label(lua_State *);
 	int add_node(lua_State *);
@@ -39,13 +40,13 @@ private:
 	template<class T, class W>
 	int add_child(lua_State *);
 
-	void set_root(SceneGraph::Node *);
-	SceneGraph::Node* to_node(lua_State *, const int);
+	inline void set_root(SceneGraph::Node *);
+	inline SceneGraph::Node* to_node(lua_State *, const int);
 
 	lua_SceneGraph& operator=(const lua_SceneGraph &);
 };
 
-inline lua_SceneGraph::~lua_SceneGraph()
+lua_SceneGraph::~lua_SceneGraph()
 {
 	delete this->ptr;
 }
@@ -70,12 +71,12 @@ int lua_SceneGraph::add_child(lua_State *L)
 	return 1;
 }
 
-inline void lua_SceneGraph::set_root(SceneGraph::Node *r)
+void lua_SceneGraph::set_root(SceneGraph::Node *r)
 {
 	this->root = r;
 }
 
-inline SceneGraph::Node* lua_SceneGraph::to_node(lua_State *L, const int n)
+SceneGraph::Node* lua_SceneGraph::to_node(lua_State *L, const int n)
 {
 	return static_cast<SceneGraph::Node*>(lua_touserdata(L, n));
 }

@@ -3,6 +3,7 @@
 
 #include "Common/Data.h"
 #include "Lua/lua_Algorithm.h"
+#include "Lua/lua_Animation.h"
 #include "Lua/lua_Audio.h"
 #include "Lua/lua_Font.h"
 #include "Lua/lua_Input.h"
@@ -90,6 +91,7 @@ LuaMachine::LuaMachine() : scenegraph(nullptr), L(luaL_newstate())
 
 	lua_pop(this->L, 1);
 
+	LuaMachine::wrap<lua_Animation>(rainbow);
 	LuaMachine::wrap<lua_Font>(rainbow);
 	LuaMachine::wrap<lua_Label>(rainbow);
 	LuaMachine::wrap<lua_Sprite>(rainbow);

@@ -4,6 +4,7 @@
 #include "Common/TreeNode.h"
 #include "Graphics/Drawable.h"
 
+class Animation;
 class Label;
 class Sprite;
 class SpriteBatch;
@@ -25,35 +26,39 @@ namespace SceneGraph
 
 		enum
 		{
+			AnimationNode,
 			GroupNode,
 			LabelNode,
 			SpriteNode,
-			SpriteBatchNode,
-			TransitionNode
+			SpriteBatchNode
 		} type;  ///< Defines what type of graphical element this node represents.
 
 		union
 		{
 			void *data;
+			Animation *animation;
 			Drawable *drawable;
 			Sprite *sprite;
 			SpriteBatch *sprite_batch;
 		};  ///< Graphical element represented by this node.
 
 		/// Create a group node.
-		Node();
+		inline Node();
 
 		/// Create a node with another node's type and data.
-		Node(const Node &);
+		inline Node(const Node &);
+
+		/// Create an animation node.
+		inline explicit Node(Animation *);
 
 		/// Create a label node.
-		explicit Node(Label *);
+		inline explicit Node(Label *);
 
 		/// Create a sprite node.
-		explicit Node(Sprite *);
+		inline explicit Node(Sprite *);
 
 		/// Create a sprite batch node.
-		explicit Node(SpriteBatch *);
+		inline explicit Node(SpriteBatch *);
 
 		virtual ~Node();
 
@@ -83,20 +88,23 @@ namespace SceneGraph
 		virtual void update();
 	};
 
-	inline Node::Node() :
+	Node::Node() :
 		enabled(true), type(GroupNode), data(nullptr) { }
 
-	inline Node::Node(Label *l) :
+	Node::Node(const Node &n) :
+		enabled(true), type(n.type), data(n.data) { }
+
+	Node::Node(Animation *a) :
+		enabled(true), type(AnimationNode), data(a) { }
+
+	Node::Node(Label *l) :
 		enabled(true), type(LabelNode), data(l) { }
 
-	inline Node::Node(Sprite *s) :
+	Node::Node(Sprite *s) :
 		enabled(true), type(SpriteNode), data(s) { }
 
-	inline Node::Node(SpriteBatch *b) :
+	Node::Node(SpriteBatch *b) :
 		enabled(true), type(SpriteBatchNode), data(b) { }
-
-	inline Node::Node(const Node &n) :
-		enabled(true), type(n.type), data(n.data) { }
 
 	template<class T>
 	Node* Node::add_child(T *p)
