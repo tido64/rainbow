@@ -14,6 +14,8 @@ public:
 
 	inline ChronoTrigger(const unsigned int timeout);
 
+	virtual ~ChronoTrigger();
+
 	/// Whether this ticker is running.
 	inline bool is_stopped();
 
@@ -32,10 +34,8 @@ public:
 	/// Accumulate time and trigger when it reaches time out.
 	void update();
 
-protected:
-	bool stopped;              ///< Whether time is accumulating.
-
 private:
+	bool stopped;              ///< Whether time is accumulating.
 	unsigned int accumulated;  ///< Accumulated, monotonic time.
 	unsigned int trigger;      ///< Time till a tick.
 };

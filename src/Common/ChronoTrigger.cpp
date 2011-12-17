@@ -1,5 +1,7 @@
 #include "Common/ChronoTrigger.h"
 
+ChronoTrigger::~ChronoTrigger() { }
+
 void ChronoTrigger::update()
 {
 	if (this->stopped)

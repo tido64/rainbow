@@ -57,8 +57,8 @@ void Sprite::move(const float x, const float y, const unsigned int duration, con
 	delete this->transitions[0];
 	delete this->transitions[1];
 	this->position_d = this->position;
-	this->transitions[0] = Transition<void>::create(this->position_d.x, x, duration, trns_x);
-	this->transitions[1] = Transition<void>::create(this->position_d.y, y, duration, trns_y);
+	this->transitions[0] = Transition::create(this->position_d.x, x, duration, trns_x);
+	this->transitions[1] = Transition::create(this->position_d.y, y, duration, trns_y);
 	this->transitions[0]->update();
 	this->transitions[1]->update();
 }
@@ -66,7 +66,7 @@ void Sprite::move(const float x, const float y, const unsigned int duration, con
 void Sprite::rotate(const float r, const unsigned int duration, const int transition)
 {
 	delete this->transitions[2];
-	this->transitions[2] = Transition<void>::create(this->angle, r, duration, transition);
+	this->transitions[2] = Transition::create(this->angle, r, duration, transition);
 	this->transitions[2]->update();
 }
 

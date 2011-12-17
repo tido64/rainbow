@@ -1,35 +1,41 @@
 #ifndef TRANSITION_H_
 #define TRANSITION_H_
 
-#include "Graphics/Animation.h"
-
 /// Transition of a property from one value to another.
 ///
 /// Copyright 2011 Bifrost Games. All rights reserved.
 /// \author Tommy Nguyen
-template<class T>
-class Transition : public Animation
+class Transition
 {
 public:
-	Transition(float &property, const float final, const unsigned int duration = 1000);
-	virtual bool update();
+	static Transition* create(float &property, const float final, const unsigned int duration, const int transition);
 
-private:
-	T transition;
-	const float final;
-	const float initial;
-	float &property;
+	virtual ~Transition() { }
+	virtual bool update() = 0;
 };
 
-template<class T>
-inline Transition<T>::Transition(float &prop, const float fin, const unsigned int dur) :
-	Animation(dur), final(fin), initial(prop), property(prop) { }
-
-template<>
-class Transition<void>
+namespace Rainbow
 {
-public:
-	static Animation* create(float &property, const float final, const unsigned int duration, const int transition);
-};
+	template<class T>
+	class _Transition : public Transition
+	{
+	public:
+		inline _Transition(float &property, const float final, const unsigned int duration = 1000);
+		virtual bool update();
+
+	private:
+		T transition;
+		bool stopped;
+		const float final;
+		const float initial;
+		float &property;
+		const unsigned int duration;
+		unsigned int elapsed;
+	};
+
+	template<class T>
+	_Transition<T>::_Transition(float &p, const float f, const unsigned int d) :
+		stopped(false), final(f), initial(p), property(p), duration(d), elapsed(0) { }
+}
 
 #endif

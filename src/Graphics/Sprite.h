@@ -2,7 +2,7 @@
 #define SPRITE_H_
 
 #include "Common/Vec2.h"
-#include "Graphics/Animation.h"
+#include "Graphics/Transition.h"
 
 class  SpriteBatch;
 struct SpriteVertex;
@@ -88,7 +88,7 @@ private:
 	float cos_r;                 ///< Cosine of angle
 	float sin_r;                 ///< Sine of angle
 
-	Animation *transitions[4];   ///< Container for the three possible transitions: movement, rotation and scaling
+	Transition *transitions[4];  ///< Container for the three possible transitions: movement, rotation and scaling
 
 	SpriteVertex *vertex_array;  ///< Vertex array or, if buffered, the sprite batch's buffer
 	const SpriteBatch *parent;   ///< Pointer to sprite batch
