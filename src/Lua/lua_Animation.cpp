@@ -5,9 +5,9 @@
 const char lua_Animation::class_name[] = "animation";
 const LuaMachine::Method<lua_Animation> lua_Animation::methods[] = {
 	{ "is_stopped",  &lua_Animation::is_stopped },
+	{ "set_delay",   &lua_Animation::set_delay },
 	{ "set_fps",     &lua_Animation::set_fps },
 	{ "set_frames",  &lua_Animation::set_frames },
-	{ "set_loop",    &lua_Animation::set_loop },
 	{ "play",        &lua_Animation::play },
 	{ "stop",        &lua_Animation::stop },
 	{ 0, 0 }
@@ -41,7 +41,7 @@ lua_Animation::lua_Animation(lua_State *L)
 	frames[count] = 0;
 
 	const unsigned int fps = lua_tointeger(L, 3);
-	const bool loop = (lua_gettop(L) == 4) ? lua_toboolean(L, 4) : true;
+	const int loop = (lua_gettop(L) == 4) ? lua_tointeger(L, 4) : 0;
 	this->animation = new Animation(sprite, frames, fps, loop);
 }
 
@@ -54,6 +54,15 @@ int lua_Animation::is_stopped(lua_State *L)
 {
 	lua_pushboolean(L, this->animation->is_stopped());
 	return 1;
+}
+
+int lua_Animation::set_delay(lua_State *L)
+{
+	assert(lua_gettop(L) == 1
+	       || !"Rainbow::Lua::Animation::set_loop: Missing parameter");
+
+	this->animation->set_delay(lua_tointeger(L, 1));
+	return 0;
 }
 
 int lua_Animation::set_fps(lua_State *L)
@@ -76,15 +85,6 @@ int lua_Animation::set_frames(lua_State *L)
 		frames[i] = lua_tointeger(L, i);
 	frames[framec] = 0;
 	this->animation->set_frames(frames);
-	return 0;
-}
-
-int lua_Animation::set_loop(lua_State *L)
-{
-	assert(lua_gettop(L) == 1
-	       || !"Rainbow::Lua::Animation::set_loop: Missing parameter");
-
-	this->animation->set_loop(lua_toboolean(L, 1));
 	return 0;
 }
 

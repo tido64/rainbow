@@ -16,18 +16,22 @@ void Animation::set_frames(const unsigned int *const frames)
 {
 	delete[] this->frames;
 
-	this->frame = frames;
 	this->frames = frames;
+	this->reset();
 }
 
 void Animation::tick()
 {
 	this->sprite->set_texture(*this->frame);
-	if (!*(++this->frame))
+	if (!*(this->frame + 1))
 	{
-		if (!this->loop)
+		if (this->delay < 0)
 			this->stop();
+		else if (this->idled < this->delay)
+			++this->idled;
 		else
 			this->reset();
 	}
+	else
+		++this->frame;
 }

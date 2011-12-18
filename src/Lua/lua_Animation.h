@@ -17,9 +17,9 @@ public:
 
 	int is_stopped(lua_State *);
 
+	int set_delay(lua_State *);
 	int set_fps(lua_State *);
 	int set_frames(lua_State *);
-	int set_loop(lua_State *);
 
 	int play(lua_State *);
 	int stop(lua_State *);
