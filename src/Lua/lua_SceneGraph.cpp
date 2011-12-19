@@ -38,7 +38,7 @@ int lua_SceneGraph::add_label(lua_State *L)
 
 int lua_SceneGraph::add_node(lua_State *L)
 {
-	assert(lua_gettop(L) == 0 || lua_gettop(L) == 1 || !"Rainbow::Lua::SceneGraph::add_node: Invalid parameters");
+	assert(lua_gettop(L) == 0 || lua_gettop(L) == 1 || !"Rainbow::Lua syntax: rainbow.scenegraph:add_node([parent,] node)");
 
 	SceneGraph::Node *node = (!lua_gettop(L)) ? this->root : this->to_node(L, 1);
 	lua_pushlightuserdata(L, node->add_child(new SceneGraph::Node()));
@@ -52,7 +52,7 @@ int lua_SceneGraph::add_sprite(lua_State *L)
 
 int lua_SceneGraph::enable(lua_State *L)
 {
-	assert(lua_gettop(L) == 1 || !"Rainbow::Lua::SceneGraph::enable: Requires one parameter");
+	assert(lua_gettop(L) == 1 || !"Rainbow::Lua syntax: rainbow.scenegraph:enable(node)");
 
 	this->to_node(L, 1)->enabled = true;
 	return 0;
@@ -60,7 +60,7 @@ int lua_SceneGraph::enable(lua_State *L)
 
 int lua_SceneGraph::disable(lua_State *L)
 {
-	assert(lua_gettop(L) == 1 || !"Rainbow::Lua::SceneGraph::disable: Requires one parameter");
+	assert(lua_gettop(L) == 1 || !"Rainbow::Lua syntax: rainbow.scenegraph:disable(node)");
 
 	this->to_node(L, 1)->enabled = false;
 	return 0;
@@ -68,16 +68,17 @@ int lua_SceneGraph::disable(lua_State *L)
 
 int lua_SceneGraph::remove(lua_State *L)
 {
-	assert(lua_gettop(L) == 1 || !"Rainbow::Lua::SceneGraph::remove: Requires one parameter");
+	assert(lua_gettop(L) == 1 || lua_gettop(L) == 2 || !"Rainbow::Lua syntax: scenegraph:remove([parent,] node)");
 
-	SceneGraph::Node *n = this->to_node(L, 1);
-	this->root->remove_child(n);
+	const int top = lua_gettop(L);
+	SceneGraph::Node *node = (top == 1) ? this->root : this->to_node(L, 1);
+	node->remove_child(this->to_node(L, top));
 	return 0;
 }
 
 int lua_SceneGraph::set_parent(lua_State *L)
 {
-	assert(lua_gettop(L) == 2 || !"Rainbow::Lua::SceneGraph::set_parent: Requires two parameters");
+	assert(lua_gettop(L) == 2 || !"Rainbow::Lua syntax: rainbow.scenegraph:set_parent(parent, child)");
 
 	SceneGraph::Node *child = this->to_node(L, 2);
 	child->set_parent(this->to_node(L, 1));
@@ -86,7 +87,7 @@ int lua_SceneGraph::set_parent(lua_State *L)
 
 int lua_SceneGraph::move(lua_State *L)
 {
-	assert(lua_gettop(L) == 3 || !"Rainbow::Lua::SceneGraph::move: Requires three parameters");
+	assert(lua_gettop(L) == 3 || !"Rainbow::Lua syntax: rainbow.scenegraph:move(node, x, y)");
 
 	SceneGraph::Node *node = this->to_node(L, 1);
 	node->move(lua_tonumber(L, 2), lua_tonumber(L, 3));
@@ -95,7 +96,7 @@ int lua_SceneGraph::move(lua_State *L)
 
 int lua_SceneGraph::rotate(lua_State *L)
 {
-	assert(lua_gettop(L) == 2 || !"Rainbow::Lua::SceneGraph::rotate: Requires two parameters");
+	assert(lua_gettop(L) == 2 || !"Rainbow::Lua syntax: rainbow.scenegraph:rotate(node, r)");
 
 	SceneGraph::Node *node = this->to_node(L, 1);
 	node->rotate(lua_tonumber(L, 2));
@@ -104,7 +105,7 @@ int lua_SceneGraph::rotate(lua_State *L)
 
 int lua_SceneGraph::scale(lua_State *L)
 {
-	assert(lua_gettop(L) == 2 || !"Rainbow::Lua::SceneGraph::scale: Requires two parameters");
+	assert(lua_gettop(L) == 2 || !"Rainbow::Lua syntax: rainbow.scenegraph:scale(node, f)");
 
 	SceneGraph::Node *node = this->to_node(L, 1);
 	node->scale(lua_tonumber(L, 2));
@@ -113,8 +114,6 @@ int lua_SceneGraph::scale(lua_State *L)
 
 lua_SceneGraph::lua_SceneGraph(lua_State *L) : ptr(nullptr), root(nullptr)
 {
-	assert(!this->ptr || !"Rainbow::Lua::SceneGraph::init: Already initialized");
-
 	lua_createtable(L, 0, 16);
 	lua_pushvalue(L, -1);
 	lua_setfield(L, -3, class_name);
