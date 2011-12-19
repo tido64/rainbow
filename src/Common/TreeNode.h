@@ -46,6 +46,8 @@ void TreeNode<T>::add_child(T *n)
 template<class T>
 void TreeNode<T>::remove_child(T *n)
 {
+	if (!n)
+		return;
 	this->children.remove(n);
 	n->parent = nullptr;
 }
