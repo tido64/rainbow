@@ -20,6 +20,7 @@ public:
 	int set_delay(lua_State *);
 	int set_fps(lua_State *);
 	int set_frames(lua_State *);
+	int set_sprite(lua_State *);
 
 	int play(lua_State *);
 	int stop(lua_State *);

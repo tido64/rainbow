@@ -33,6 +33,8 @@ public:
 	/// \param frames  Null-terminated array of texture ids to be used as frames.
 	void set_frames(const unsigned int *const frames);
 
+	inline void set_sprite(Sprite *);
+
 	virtual void tick();
 
 private:
@@ -55,6 +57,11 @@ void Animation::reset()
 void Animation::set_delay(const int delay)
 {
 	this->delay = delay;
+}
+
+void Animation::set_sprite(Sprite *s)
+{
+	this->sprite = s;
 }
 
 #endif
