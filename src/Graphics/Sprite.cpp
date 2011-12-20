@@ -186,7 +186,7 @@ void Sprite::update()
 		if (this->stale & stale_position)
 		{
 			this->position = this->position_d;
-			this->position_d.zero();
+			this->position_d = this->position;
 		}
 
 		if (this->angle != 0.0f)
@@ -237,7 +237,7 @@ void Sprite::update()
 		this->vertex_array[2].position += this->position_d;
 		this->vertex_array[3].position += this->position_d;
 		this->position += this->position_d;
-		this->position_d.zero();
+		this->position_d = this->position;
 	}
 	this->stale = 0;
 }
