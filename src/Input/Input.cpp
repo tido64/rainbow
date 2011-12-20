@@ -61,6 +61,21 @@ void Input::touch_moved(Touch *const touches, const unsigned int count)
 
 void Input::touch_flip(Touch *const touches, const unsigned int count)
 {
+#ifdef RAINBOW_IOS
+	const UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
+	if (UIInterfaceOrientationIsLandscape(orientation))
+	{
+		int tmp = 0;
+		for (unsigned int i = 0; i < count; ++i)
+		{
+			tmp = touches[i].x;
+			touches[i].x = touches[i].y;
+			touches[i].y = tmp;
+		}
+		return;
+	}
+#endif
+
 	for (unsigned int i = 0; i < count; ++i)
 		touches[i].y = this->height - touches[i].y;
 }
