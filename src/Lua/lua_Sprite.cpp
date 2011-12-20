@@ -78,7 +78,7 @@ int lua_Sprite::set_texture(lua_State *L)
 
 int lua_Sprite::move(lua_State *L)
 {
-	assert(lua_gettop(L) >= 2 || !"Rainbow::Lua::Sprite::move: Requires at least 2 parameters (x, y [, duration, effect_x, effect_y])");
+	assert(lua_gettop(L) >= 2 || !"Rainbow::Lua syntax: <sprite>:move(x, y [, duration, effect_x, effect_y])");
 
 	int duration = 1000, trns_x = 0, trns_y = 0;
 	switch (lua_gettop(L))
@@ -89,6 +89,10 @@ int lua_Sprite::move(lua_State *L)
 			trns_x = lua_tointeger(L, 4);
 		case 3:
 			duration = lua_tointeger(L, 3);
+			break;
+		case 2:
+			this->s->move(lua_tonumber(L, 1), lua_tonumber(L, 2));
+			return 0;
 		default:
 			break;
 	}
@@ -99,7 +103,7 @@ int lua_Sprite::move(lua_State *L)
 
 int lua_Sprite::rotate(lua_State *L)
 {
-	assert(lua_gettop(L) >= 2 || !"Rainbow::Lua::Sprite::rotate: Requires at least 2 parameters (r, duration [, effect])");
+	assert(lua_gettop(L) >= 2 || !"Rainbow::Lua syntax: <sprite>:rotate(r, duration [, effect])");
 
 	const int transition = (lua_gettop(L) >= 3) ? lua_tointeger(L, 3) : 0;
 	this->s->rotate(lua_tonumber(L, 1), lua_tonumber(L, 2), transition);
