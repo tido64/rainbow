@@ -20,6 +20,7 @@ void Director::init(const char *const script)
 	this->lua.load(&this->scenegraph, script);
 	this->lua.call("init");
 	this->lua.update();
+	this->scenegraph.update();
 }
 
 void Director::set_video(const int w, const int h)
