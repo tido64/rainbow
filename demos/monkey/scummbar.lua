@@ -167,15 +167,13 @@ function SceneSCUMMBar:update()
 		self.scene = screen.width;
 	end
 	if self.scene ~= self.position then
+		threepwood.lock = true;
 		local x = 10;
 		if self.scene < self.position then
 			x = -10;
 		end
 		rainbow.scenegraph:move(self.node, x, 0);
 		self.position = self.position + x;
-		if self.scene == self.position then
-			threepwood.lock = true;
-		end
 	else
 		threepwood.lock = false;
 	end

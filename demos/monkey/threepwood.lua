@@ -86,10 +86,7 @@ function Threepwood:stop()
 end
 
 function Threepwood:update()
-	if self.lock then
-		-- While Guybrush is locked, get his screen position
-		self.x, self.y = self.sprite:get_position();
-	elseif self.walk then
+	if self.walk then
 		-- While Guybrush is walking check for when he reaches his destination
 		-- and stop the animation.
 		local diff_x = global_scale * self.face;
@@ -101,5 +98,8 @@ function Threepwood:update()
 			self:stop();
 		end
 		self.sprite:move(diff_x, 0);
+	elseif self.lock then
+		-- While Guybrush is locked, get his screen position
+		self.x, self.y = self.sprite:get_position();
 	end
 end

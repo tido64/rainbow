@@ -8,7 +8,6 @@
 require("Utils");      -- Rainbow (debugging) utilities
 require("Input");      -- Input event handler
 require("Scheduler");  -- Time trigger
-require("State");      -- Game state
 
 assets = nil;      -- Sprite sheet
 global_scale = 3;  -- Global scaling factor
