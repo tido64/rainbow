@@ -159,14 +159,14 @@ void LuaMachine::wrap(const char *const ns)
 {
 	if (ns && strcmp(ns, ""))
 	{
-		lua_getfield(this->L, LUA_GLOBALSINDEX, ns);
+		lua_getglobal(this->L, ns);
 
 		if (lua_type(this->L, -1) != LUA_TTABLE)
 		{
 			lua_pop(this->L, 1);
 			lua_createtable(this->L, 0, 0);
 			lua_pushvalue(this->L, -1);
-			lua_setfield(L, LUA_GLOBALSINDEX, ns);
+			lua_setglobal(L, ns);
 		}
 
 		lua_pushcclosure(this->L, &LuaMachine::alloc<T>, 0);
@@ -176,7 +176,7 @@ void LuaMachine::wrap(const char *const ns)
 	else
 	{
 		lua_pushcclosure(this->L, &LuaMachine::alloc<T>, 0);
-		lua_setfield(this->L, LUA_GLOBALSINDEX, T::class_name);
+		lua_setglobal(this->L, T::class_name);
 	}
 
 	luaL_newmetatable(this->L, T::class_name);

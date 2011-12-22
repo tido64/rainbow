@@ -10,7 +10,7 @@ public:
 	/// Updates rainbow.platform.screen
 	static void update(lua_State *L, const unsigned int width, const unsigned int height)
 	{
-		lua_getfield(L, LUA_GLOBALSINDEX, "rainbow");
+		lua_getglobal(L, "rainbow");
 		lua_getfield(L, -1, "platform");
 		lua_getfield(L, -1, "screen");
 

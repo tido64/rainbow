@@ -40,7 +40,7 @@ void lua_Input::accelerate(lua_State *L)
 
 void lua_Input::getfield(lua_State *L, const char *const field)
 {
-	lua_getfield(L, LUA_GLOBALSINDEX, "rainbow");
+	lua_getglobal(L, "rainbow");
 	lua_getfield(L, -1, "input");
 	lua_getfield(L, -1, field);
 }

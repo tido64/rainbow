@@ -78,7 +78,7 @@ LuaMachine::LuaMachine() : scenegraph(nullptr), L(luaL_newstate())
 	// Initialize "rainbow" namespace
 	lua_createtable(this->L, 0, 16);
 	lua_pushvalue(this->L, -1);
-	lua_setfield(this->L, LUA_GLOBALSINDEX, rainbow);
+	lua_setglobal(this->L, rainbow);
 
 	lua_Platform::init(this->L);   // Initialize "rainbow.platform" namespace
 	lua_Input::init(this->L);      // Initialize "rainbow.input" namespace
@@ -101,7 +101,7 @@ LuaMachine::LuaMachine() : scenegraph(nullptr), L(luaL_newstate())
 	// We need to set LUA_PATH
 	const char *const bundle = Data::get_path();
 
-	lua_getfield(this->L, LUA_GLOBALSINDEX, "package");
+	lua_getglobal(this->L, "package");
 	lua_getfield(this->L, -1, "path");
 
 	size_t path_len = 0;
@@ -121,7 +121,7 @@ LuaMachine::LuaMachine() : scenegraph(nullptr), L(luaL_newstate())
 
 void LuaMachine::call(const char *const k)
 {
-	lua_getfield(this->L, LUA_GLOBALSINDEX, k);
+	lua_getglobal(this->L, k);
 	int lua_e = lua_pcall(this->L, 0, 0, 0);
 	if (lua_e)
 		this->err(lua_e);
