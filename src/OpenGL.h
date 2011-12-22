@@ -13,7 +13,9 @@
 #elif defined(RAINBOW_IOS)
 #	include <OpenGLES/ES1/gl.h>
 #elif defined(RAINBOW_WIN)
-#	define WIN32
+#	ifndef WIN32
+#		define WIN32
+#	endif
 #	include <GL/GLee.h>
 #else
 #	define GL_GLEXT_PROTOTYPES 1

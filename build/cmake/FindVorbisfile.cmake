@@ -9,10 +9,27 @@
 # 	VORBISFILE_LIBRARY, where to find the Vorbisfile library.
 
 find_path(VORBISFILE_INCLUDE_DIR "vorbis/vorbisfile.h"
-	/usr/include  # Linux
+	/usr/include               # Linux
+	/usr/i486-mingw32/include  # MinGW
 )
-set(VORBISFILE_NAMES ${VORBISFILE_NAMES} vorbisfile libvorbisfile)
-find_library(VORBISFILE_LIBRARY NAMES ${VORBISFILE_NAMES})
+find_library(VORBISFILE_LIBRARY NAMES vorbisfile libvorbisfile)
+
+if(MINGW)
+	find_path(VORBIS_INCLUDE_DIR "vorbis/codec.h"
+		/usr/include               # Linux
+		/usr/i486-mingw32/include  # MinGW
+	)
+	find_library(VORBIS_LIBRARY NAMES vorbis libvorbis)
+
+	find_path(OGG_INCLUDE_DIR "ogg/ogg.h"
+		/usr/include               # Linux
+		/usr/i486-mingw32/include  # MinGW
+	)
+	find_library(OGG_LIBRARY NAMES ogg libogg)
+
+	set(VORBISFILE_INCLUDE_DIR ${VORBISFILE_INCLUDE_DIR} ${VORBIS_INCLUDE_DIR} ${OGG_INCLUDE_DIR})
+	set(VORBISFILE_LIBRARY ${VORBISFILE_LIBRARY} ${VORBIS_LIBRARY} ${OGG_LIBRARY})
+endif()
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(Vorbisfile DEFAULT_MSG VORBISFILE_LIBRARY VORBISFILE_INCLUDE_DIR)

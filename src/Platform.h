@@ -51,6 +51,7 @@
 
 // Define nullptr for non-C++0x-compliant compilers
 #if __cplusplus <= 19971 && __GNUC_VERSION__ < 40600
+
 const
 class nullptr_t
 {
@@ -64,6 +65,9 @@ public:
 private:
 	void operator&() const;
 } nullptr = {};
+
+#elif __MINGW32__
+#	define nullptr 0
 #endif
 
 #endif  // PLATFORM_H_

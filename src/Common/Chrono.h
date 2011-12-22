@@ -17,6 +17,8 @@ namespace Rainbow
 	public:
 		static T& Instance();
 
+		virtual ~_Chrono() { }
+
 		/// Return timestamp of current frame.
 		unsigned long current();
 
