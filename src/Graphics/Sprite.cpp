@@ -16,7 +16,8 @@ const unsigned char stale_angle    = 0x08;
 
 Sprite::Sprite(const unsigned int w, const unsigned int h, const SpriteBatch *p) :
 	width(w), height(h), buffered(false), stale(0xff), angle(0.0f),
-	vertex_array(nullptr), parent(p), pivot(0.5f, 0.5f), scale_f(1.0f, 1.0f)
+	cos_r(1.0f), sin_r(0.0f), vertex_array(nullptr), parent(p),
+	pivot(0.5f, 0.5f), scale_f(1.0f, 1.0f)
 {
 	memset(this->transitions, 0, sizeof(this->transitions));
 }

@@ -14,7 +14,7 @@ const LuaMachine::Method<lua_Animation> lua_Animation::methods[] = {
 	{ 0, 0 }
 };
 
-lua_Animation::lua_Animation(lua_State *L)
+lua_Animation::lua_Animation(lua_State *L) : animation(nullptr)
 {
 	assert(lua_gettop(L) == 3 || lua_gettop(L) == 4
 	       || !"Rainbow::Lua::Animation: rainbow.animation(sprite, frames{}, fps, loop delay)");

@@ -78,7 +78,7 @@ inline Input& Input::Instance()
 	return i;
 }
 
-inline Input::Input() : height(0), lua_state(nullptr) { }
+inline Input::Input() : accelerated(false), height(0), lua_state(nullptr) { }
 
 inline void Input::reset()
 {

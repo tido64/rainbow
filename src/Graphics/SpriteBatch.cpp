@@ -38,7 +38,8 @@ const unsigned char SpriteBatch::indices[] = {
 };
 
 SpriteBatch::SpriteBatch(const int hint) :
-	batch_vertices(0), reserved(align(hint)), sprites(hint)
+	buffer(0), batch_vertices(0), reserved(align(hint)),
+	vertex_buffer(nullptr), sprites(hint)
 {
 	this->vertex_buffer = new SpriteVertex[this->reserved];
 	glGenBuffers(1, &this->buffer);

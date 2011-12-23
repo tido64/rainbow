@@ -90,7 +90,6 @@ if(GTEST)
 endif()
 if(MINGW)
 	add_library(GLee STATIC ${LOCAL_LIBRARY}/GL/GLee.c)
-	set(CROSS_LIBRARIES GLee)
 endif()
 
 # Rainbow

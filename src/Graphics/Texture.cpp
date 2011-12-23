@@ -5,7 +5,7 @@
 #include "Common/SmartPtr.h"
 #include "Graphics/Texture.h"
 
-Texture::Texture(const Data &data) : refs(0)
+Texture::Texture(const Data &data) : name(0), width(0), height(0), refs(0)
 {
 	this->load(data);
 }
