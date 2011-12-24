@@ -3,4 +3,32 @@ if [ ! -d lib/libpng ]; then
 	echo "Could not find 'lib/libpng'"
 	exit
 fi
-rm -fr contrib/gregbook contrib/pngminim contrib/pngminus contrib/pngsuite contrib/visupng/{PngFile.*,README.txt,VisualPng.*,resource.h} example.c pngtest.c
+cd lib/libpng
+rm -fr \
+	*-sh \
+	*.jpg \
+	*.png \
+	*.sh \
+	aclocal.m4 \
+	ANNOUNCE \
+	CHANGES \
+	CMakeLists.txt \
+	configure \
+	configure.ac \
+	contrib/gregbook \
+	contrib/pngminim \
+	contrib/pngminus \
+	contrib/pngsuite \
+	contrib/visupng/{PngFile.*,README.txt,VisualPng.*,resource.h} \
+	depcomp \
+	example.c \
+	INSTALL \
+	libpng.3 \
+	libpng-config.in \
+	libpng.pc.in \
+	libpngpf.3 \
+	Makefile.* \
+	missing \
+	pngtest.c \
+	projects \
+	TODO
