@@ -2,8 +2,8 @@
 #define FONTATLAS_H_
 #define FONTATLAS_KERNING
 
-#include "OpenGL.h"
 #include "Graphics/FontGlyph.h"
+#include "Graphics/OpenGL.h"
 
 class Data;
 

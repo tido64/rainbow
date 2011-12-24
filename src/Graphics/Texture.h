@@ -1,7 +1,7 @@
 #ifndef TEXTURE_H_
 #define TEXTURE_H_
 
-#include "OpenGL.h"
+#include "Graphics/OpenGL.h"
 
 #if defined(RAINBOW_IOS)
 #	include <UIKit/UIKit.h>

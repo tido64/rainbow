@@ -1,10 +1,10 @@
 #ifndef SPRITEBATCH_H_
 #define SPRITEBATCH_H_
 
-#include "OpenGL.h"
 #include "Common/SmartPtr.h"
 #include "Common/Vector.h"
 #include "Graphics/Drawable.h"
+#include "Graphics/OpenGL.h"
 #include "Graphics/Sprite.h"
 
 class Data;
