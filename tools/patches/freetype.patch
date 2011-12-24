@@ -1,0 +1,39 @@
+From 26ae1ff3d2ef9869a761df864c3f23519b9c0c39 Mon Sep 17 00:00:00 2001
+From: Tommy Nguyen <tn0502@gmail.com>
+Date: Sat, 1 Oct 2011 10:58:46 +0200
+Subject: [PATCH] Disable unused modules.
+
+---
+ include/freetype/config/ftmodule.h |    9 ---------
+ 1 files changed, 0 insertions(+), 9 deletions(-)
+
+diff --git a/include/freetype/config/ftmodule.h b/include/freetype/config/ftmodule.h
+--- a/include/freetype/config/ftmodule.h
++++ b/include/freetype/config/ftmodule.h
+@@ -10,16 +10,8 @@
+  *
+  */
+ 
+-FT_USE_MODULE( FT_Module_Class, autofit_module_class )
+ FT_USE_MODULE( FT_Driver_ClassRec, tt_driver_class )
+-FT_USE_MODULE( FT_Driver_ClassRec, t1_driver_class )
+ FT_USE_MODULE( FT_Driver_ClassRec, cff_driver_class )
+-FT_USE_MODULE( FT_Driver_ClassRec, t1cid_driver_class )
+-FT_USE_MODULE( FT_Driver_ClassRec, pfr_driver_class )
+-FT_USE_MODULE( FT_Driver_ClassRec, t42_driver_class )
+-FT_USE_MODULE( FT_Driver_ClassRec, winfnt_driver_class )
+-FT_USE_MODULE( FT_Driver_ClassRec, pcf_driver_class )
+-FT_USE_MODULE( FT_Module_Class, psaux_module_class )
+ FT_USE_MODULE( FT_Module_Class, psnames_module_class )
+ FT_USE_MODULE( FT_Module_Class, pshinter_module_class )
+ FT_USE_MODULE( FT_Renderer_Class, ft_raster1_renderer_class )
+@@ -27,6 +19,5 @@ FT_USE_MODULE( FT_Module_Class, sfnt_module_class )
+ FT_USE_MODULE( FT_Renderer_Class, ft_smooth_renderer_class )
+ FT_USE_MODULE( FT_Renderer_Class, ft_smooth_lcd_renderer_class )
+ FT_USE_MODULE( FT_Renderer_Class, ft_smooth_lcdv_renderer_class )
+-FT_USE_MODULE( FT_Driver_ClassRec, bdf_driver_class )
+ 
+ /* EOF */
+-- 
+1.7.6.1
+
