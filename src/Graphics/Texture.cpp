@@ -5,47 +5,40 @@
 #include "Common/SmartPtr.h"
 #include "Graphics/Texture.h"
 
-Texture::Texture(const Data &data) : name(0), width(0), height(0), refs(0)
+#if defined(RAINBOW_IOS)
+#	include <UIKit/UIKit.h>
+#else
+#	include <stdexcept>
+#	include <png.h>
+
+/// Structure for reading PNG bitmaps.
+///
+/// Copyright 2010-11 Bifrost Games. All rights reserved.
+/// \author Tommy Nguyen
+struct png_read_struct
 {
-	this->load(data);
+	unsigned int offset;
+	const unsigned char *data;
+
+	png_read_struct(unsigned char *data) : offset(8), data(data) { }
+};
+
+static void mem_fread(png_structp png_ptr, png_bytep data, png_size_t length)
+{
+	png_read_struct *read_struct = static_cast<png_read_struct*>(png_get_io_ptr(png_ptr));
+	memcpy(data, read_struct->data + read_struct->offset, length);
+	read_struct->offset += length;
 }
 
-unsigned int Texture::create(const int x, const int y, const int w, const int h)
+#endif
+
+Texture::Texture(const Data &img) : name(0), refs(0), width(0), height(0)
 {
-	assert((x >= 0 && (x + w) <= this->width && y >= 0 && (y + h) <= this->height)
-		|| !"Rainbow::TextureAtlas: Invalid dimensions");
-
-	unsigned int i = this->textures.size();
-
-	const float x0 = x / static_cast<float>(this->width);
-	const float x1 = (x + w) / static_cast<float>(this->width);
-	const float y0 = y / static_cast<float>(this->height);
-	const float y1 = (y + h) / static_cast<float>(this->height);
-
-	this->textures.push_back(Vec2f(x1, y0));
-	this->textures.push_back(Vec2f(x0, y0));
-	this->textures.push_back(Vec2f(x1, y1));
-	this->textures.push_back(Vec2f(x0, y1));
-
-	return i;
-}
-
-bool Texture::is_pow2(const unsigned int i)
-{
-	unsigned int p = 64;
-	for (; p < i; p <<= 1);
-	return p == i;
-}
-
-void Texture::load(const Data &img_data)
-{
-	assert(this->textures.size() == 0);
-
 	GLint format = GL_RGBA;
 
 #if defined(RAINBOW_IOS)
 
-	UIImage *image = [[UIImage alloc] initWithData:(const NSData *)(img_data)];
+	UIImage *image = [[UIImage alloc] initWithData:(const NSData *)img];
 	assert(image != nil || !"Rainbow::Texture: Failed to load file");
 
 	this->width = CGImageGetWidth(image.CGImage);
@@ -69,41 +62,39 @@ void Texture::load(const Data &img_data)
 #else
 
 	// Prepare for decoding PNG data
-	png_read_struct texture;
-	texture.data = img_data.bytes();
+	png_read_struct texture(img.bytes());
 
 	// Look for PNG signature
-	{
-		unsigned char *png_sig = new unsigned char[texture.offset];
-		memcpy(png_sig, texture.data, texture.offset);
-	#ifndef NDEBUG
-		int result =
-	#endif
-		png_sig_cmp(png_sig, 0, texture.offset);
-		assert(result == 0 || !"Rainbow::Texture: File is not PNG");
-		delete[] png_sig;
-	}
-
-	png_structp png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, 0, 0, 0);
-	assert(png_ptr != 0 || !"Rainbow::Texture: Failed to retrieve libpng version string");
-
-	png_infop info_ptr = png_create_info_struct(png_ptr);
-	assert(info_ptr != 0 || !"Rainbow::Texture: Failed to allocate memory");
-
-	png_infop end_info = png_create_info_struct(png_ptr);
-	assert(end_info != 0 || !"Rainbow::Texture: Failed to allocate memory");
-
 #ifndef NDEBUG
 	int result =
 #endif
-	setjmp(png_jmpbuf(png_ptr));
-	assert(result == 0 || !"Rainbow::Texture: Failed to allocate memory");
+	png_sig_cmp(texture.data, 0, texture.offset);
+	assert(result == 0 || !"Rainbow::Texture: File is not PNG");
+
+	png_structp png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
+	if (!png_ptr)
+		throw std::runtime_error("Rainbow::Texture: Failed to create PNG reading structure");
+
+	png_infop info_ptr = png_create_info_struct(png_ptr);
+	if (!info_ptr)
+	{
+		png_destroy_read_struct(&png_ptr, nullptr, nullptr);
+		throw std::runtime_error("Rainbow::Texture: Failed to initialize PNG information structure");
+	}
+
+	if (setjmp(png_jmpbuf(png_ptr)))
+	{
+		png_destroy_read_struct(&png_ptr, &info_ptr, nullptr);
+		throw std::runtime_error("Rainbow::Texture: Failed to read PNG");
+	}
+
+	// Offset because we've read the signature
+	png_set_sig_bytes(png_ptr, texture.offset);
 
 	// Texture can't be greater than what the hardware supports
 	png_set_user_limits(png_ptr, GL_MAX_TEXTURE_SIZE, GL_MAX_TEXTURE_SIZE);
 
-	// Initialise PNG reading
-	png_set_sig_bytes(png_ptr, texture.offset);
+	// Set reading function
 	png_set_read_fn(png_ptr, &texture, mem_fread);
 
 	// Retrieve PNG info
@@ -145,15 +136,15 @@ void Texture::load(const Data &img_data)
 	// Allocate row pointer array
 	png_bytep *row_pointers = new png_bytep[this->height];
 
-	png_byte *b = static_cast<png_byte *>(data);
+	png_byte *b = static_cast<png_byte*>(data);
 	row_pointers[0] = b;
 	for (int i = 1; i < this->height; ++i)
-		row_pointers[i] = b + i * rowbytes;
+		row_pointers[i] = row_pointers[i - 1] + rowbytes;
 
 	png_read_image(png_ptr, row_pointers);
 	delete[] row_pointers;
 
-	png_destroy_read_struct(&png_ptr, &info_ptr, &end_info);
+	png_destroy_read_struct(&png_ptr, &info_ptr, nullptr);
 
 #endif
 
@@ -164,4 +155,31 @@ void Texture::load(const Data &img_data)
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, this->width, this->height, 0, format, GL_UNSIGNED_BYTE, data);
 
 	delete[] data;
+}
+
+unsigned int Texture::create(const int x, const int y, const int w, const int h)
+{
+	assert((x >= 0 && (x + w) <= this->width && y >= 0 && (y + h) <= this->height)
+		|| !"Rainbow::TextureAtlas: Invalid dimensions");
+
+	unsigned int i = this->textures.size();
+
+	const float x0 = x / static_cast<float>(this->width);
+	const float x1 = (x + w) / static_cast<float>(this->width);
+	const float y0 = y / static_cast<float>(this->height);
+	const float y1 = (y + h) / static_cast<float>(this->height);
+
+	this->textures.push_back(Vec2f(x1, y0));
+	this->textures.push_back(Vec2f(x0, y0));
+	this->textures.push_back(Vec2f(x1, y1));
+	this->textures.push_back(Vec2f(x0, y1));
+
+	return i;
+}
+
+bool Texture::is_pow2(const unsigned int i)
+{
+	unsigned int p = 64;
+	for (; p < i; p <<= 1);
+	return p == i;
 }
