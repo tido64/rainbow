@@ -3,10 +3,7 @@
 
 #include "Platform.h"
 
-#define RAINBOW_DATA_ASSETS_PATH        "Data/"
-#define RAINBOW_DATA_ASSETS_PATH_LENGTH 6
-#define RAINBOW_DATA_USER_PATH          "./"
-#define RAINBOW_DATA_USER_PATH_LENGTH   3
+#define RAINBOW_PATH_LENGTH 512  ///< Max string length, including null-terminator.
 
 /// Wrapper for byte buffers.
 ///
@@ -24,14 +21,25 @@
 class Data
 {
 public:
-	/// Free memory allocated by get_path().
+	/// Free memory allocated by Data::get_path().
 	static void free(const void *const data);
 
-	/// Convenience method for getting the full path to a file.
-	/// \param file       The file to obtain full path for.
-	/// \param user_data  Whether to get path to user data.
-	/// \return Full path to file. Returned string must be freed with Data::free.
-	static const char* get_path(const char *const file = 0, const bool user_data = false);
+	/// Convenience method for getting the full path to a data file.
+	/// \param file  The file to obtain full path for. If \c nullptr, the path
+	///              is returned.
+	/// \return Full path to file. Returned string must be freed with
+	///         Data::free() unless \p file was a \c nullptr.
+	static const char* get_path(const char *const file = nullptr);
+
+	/// Set the path where all data files reside.
+	/// \param path  Path to data files.
+	/// \return Path string.
+	static const char* set_datapath(const char *const path);
+
+	/// Set the path where all user files reside.
+	/// \param path  Path to user files.
+	/// \return Path string.
+	static const char* set_userdatapath(const char *const path);
 
 	/// Construct an empty data object. No memory will be allocated.
 	Data();
@@ -43,23 +51,23 @@ public:
 
 	/// Return raw byte array.
 	/// \return Pointer to array. Returns 0 if buffer is empty.
-	unsigned char* bytes() const;
+	inline unsigned char* bytes() const;
 
 	bool copy(const void *const data, const unsigned int length);
 
 	/// Load data from file.
-	/// \return True on success, false otherwise.
+	/// \return \c true on success, \c false otherwise.
 	bool load(const char *const file);
 
 	/// Save data to file.
-	/// \return True on success, false otherwise.
+	/// \return \c true on success, \c false otherwise.
 	bool save(const char *const file) const;
 
 	/// Return the size of this buffer.
-	unsigned int size() const;
+	inline unsigned int size() const;
 
-	operator void*() const;
-	operator unsigned char*() const;
+	inline operator void*() const;
+	inline operator unsigned char*() const;
 
 #ifdef RAINBOW_IOS
 
@@ -72,17 +80,25 @@ private:
 #else
 
 private:
-	unsigned int allocated;  ///< Allocated memory size
-	unsigned int sz;         ///< Size of used buffer, not necessarily equal to allocated
-	unsigned char *data;     ///< Actual buffer, implemented as a C-array
+	static unsigned int data_path_length;            ///< Length of data path string.
+	static unsigned int userdata_path_length;        ///< Length of user path string.
+	static char data_path[RAINBOW_PATH_LENGTH];      ///< Path to data files.
+	static char userdata_path[RAINBOW_PATH_LENGTH];  ///< Path to user files.
 
-	/// Not sure whether we'll need this. So it'll stay undefined for now.
+	unsigned int allocated;  ///< Allocated memory size.
+	unsigned int sz;         ///< Size of used buffer, not necessarily equal to allocated.
+	unsigned char *data;     ///< Actual buffer, implemented as a C-array.
+
+	/// Intentionally left undefined.
 	Data(const Data &);
 
 	/// Resize allocated memory segment. If the requested allocation size is
 	/// smaller than current allocated size, nothing will happen.
 	/// \return True on successful allocation. False otherwise.
 	bool allocate(const unsigned int size);
+
+	/// Intentionally left undefined.
+	Data& operator=(const Data &);
 
 #endif
 };

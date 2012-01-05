@@ -9,20 +9,47 @@
 #include <cstdio>
 #include <cstring>
 
+unsigned int Data::data_path_length = 0;
+unsigned int Data::userdata_path_length = 0;
+char Data::data_path[] = { 0 };
+char Data::userdata_path[] = { 0 };
+
 void Data::free(const void *const p)
 {
 	delete[] static_cast<const char *const>(p);
 }
 
-const char* Data::get_path(const char *const file, const bool user_data)
+const char* Data::get_path(const char *const file)
 {
 	if (!file)
-		return (user_data) ? RAINBOW_DATA_USER_PATH : RAINBOW_DATA_ASSETS_PATH;
+		return Data::data_path;
 
-	char *path = new char[strlen(file) + ((user_data) ? RAINBOW_DATA_USER_PATH_LENGTH : RAINBOW_DATA_ASSETS_PATH_LENGTH)];
-	strcpy(path, (user_data) ? RAINBOW_DATA_USER_PATH : RAINBOW_DATA_ASSETS_PATH);
+	char *path = new char[strlen(file) + Data::data_path_length];
+	strcpy(path, Data::data_path);
 	strcat(path, file);
 	return path;
+}
+
+const char* Data::set_datapath(const char *const path)
+{
+	const unsigned int length = strlen(path);
+	if (length >= RAINBOW_PATH_LENGTH + 1)
+		return nullptr;
+	Data::data_path_length = length;
+	Data::data_path[length] = '/';
+	Data::data_path[length + 1] = '\0';
+	return static_cast<const char*>(memcpy(Data::data_path, path, length));
+}
+
+const char* Data::set_userdatapath(const char *const path)
+{
+	const unsigned int length = strlen(path);
+	if (length >= RAINBOW_PATH_LENGTH + 1)
+		return nullptr;
+	Data::userdata_path_length = length;
+	Data::userdata_path[length] = '/';
+	Data::userdata_path[length + 1] = '\0';
+	return static_cast<const char*>(memcpy(Data::userdata_path, path, length));
 }
 
 Data::Data() : allocated(0), sz(0), data(nullptr) { }
@@ -64,10 +91,7 @@ bool Data::load(const char *const file)
 {
 	FILE *fp = fopen(file, "rb");
 	if (!fp)
-	{
-		assert(!"Rainbow::Data: Failed to load file");
 		return false;
-	}
 
 	// Get size of file
 	fseek(fp, 0, SEEK_END);
@@ -85,7 +109,6 @@ bool Data::load(const char *const file)
 	if (read != size)
 	{
 		delete[] this->data;
-		assert(!"Rainbow::Data: Failed to read file");
 		this->data = nullptr;
 		this->allocated = 0;
 		this->sz = 0;
@@ -105,19 +128,13 @@ bool Data::save(const char *const file) const
 
 	FILE *fp = fopen(file, "wb");
 	if (!fp)
-	{
-		assert(!"Rainbow::Data: Failed to open file");
 		return false;
-	}
 
 	// Write buffer to file
 	const unsigned int written = fwrite(this->data, sizeof(unsigned char), this->sz, fp);
 	fclose(fp);
 	if (written != this->sz)
-	{
-		assert(!"Rainbow::Data: Failed to save file");
 		return false;
-	}
 
 	return true;
 }

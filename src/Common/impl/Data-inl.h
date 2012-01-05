@@ -5,22 +5,22 @@
 
 inline Data::Data() : data(nil) { }
 
-inline unsigned char* Data::bytes() const
+unsigned char* Data::bytes() const
 {
 	return static_cast<unsigned char *>(data.mutableBytes);
 }
 
-inline unsigned int Data::size() const
+unsigned int Data::size() const
 {
 	return data.length;
 }
 
-inline Data::operator void*() const
+Data::operator void*() const
 {
 	return data.mutableBytes;
 }
 
-inline Data::operator unsigned char*() const
+Data::operator unsigned char*() const
 {
 	return static_cast<unsigned char *>(data.mutableBytes);
 }
@@ -37,22 +37,22 @@ inline Data::operator NSMutableData*() const
 
 #elif defined(RAINBOW_UNIX) || defined(RAINBOW_WIN)
 
-inline unsigned char* Data::bytes() const
+unsigned char* Data::bytes() const
 {
 	return this->data;
 }
 
-inline unsigned int Data::size() const
+unsigned int Data::size() const
 {
 	return this->sz;
 }
 
-inline Data::operator void*() const
+Data::operator void*() const
 {
 	return this->data;
 }
 
-inline Data::operator unsigned char*() const
+Data::operator unsigned char*() const
 {
 	return this->data;
 }

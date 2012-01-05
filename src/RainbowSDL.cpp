@@ -23,15 +23,13 @@ unsigned short int screen_width = 640;   ///< Window width
 unsigned short int screen_height = 960;  ///< Window height
 const double fps = 1000.0 / 60.0;        ///< Preferred frames per second
 const float milli = 1.0f / 1000.0f;      ///< 1 millisecond
-
-Touch mouse_input;  ///< Mouse input
-Director director;  ///< Game director handles everything
+Touch mouse_input;                       ///< Mouse input
 
 void init_GL();                                     ///< Initialise 2d viewport
 void on_mouse_button_down(SDL_MouseButtonEvent &);  ///< Handle mouse button down event
 void on_mouse_button_up(SDL_MouseButtonEvent &);    ///< Handle mouse button up event
 void on_mouse_motion(SDL_MouseMotionEvent &);       ///< Handle mouse motion event
-void resize(const int w, const int h);              ///< Handle window resize event
+void resize(Director &, const int w, const int h);  ///< Handle window resize event
 
 
 int main(int argc, char *argv[])
@@ -39,14 +37,10 @@ int main(int argc, char *argv[])
 	if (argc < 2)
 	{
 	#ifdef RAINBOW_TEST
-
 		testing::InitGoogleTest(&argc, argv);
 		return RUN_ALL_TESTS();
-
 	#else
-
 		return 0;
-
 	#endif
 	}
 
@@ -68,8 +62,6 @@ int main(int argc, char *argv[])
 	if (video_info->blit_hw)
 		video_mode |= SDL_HWACCEL;
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-	//SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
-	//SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 4);
 	SDL_Surface *surface = SDL_SetVideoMode(screen_width, screen_height, 0, video_mode);
 	if (!surface)
 	{
@@ -80,13 +72,19 @@ int main(int argc, char *argv[])
 	SDL_WM_SetCaption(RAINBOW_BUILD, "Rainbow");
 
 	init_GL();
-	resize(screen_width, screen_height);
 
-	mouse_input.hash = 1;
-	const char *const path = Data::get_path(argv[1]);
+	Data::set_datapath(argv[1]);  // Set data path
+	Director director;            // Instantiate the director
+
+	// Resize viewport
+	resize(director, screen_width, screen_height);
+
+	// Load game
+	const char *const path = Data::get_path("main.lua");
 	director.init(path);
 	Data::free(path);
 
+	mouse_input.hash = 1;
 	Chrono::Instance().update();
 	while (!done)
 	{
@@ -130,7 +128,7 @@ int main(int argc, char *argv[])
 						fprintf(stderr, "SDL unable to set video mode: %s\n", SDL_GetError());
 						done = true;
 					}
-					resize(event.resize.w, event.resize.h);
+					resize(director, event.resize.w, event.resize.h);
 					break;
 				default:
 					break;
@@ -190,7 +188,7 @@ void on_mouse_motion(SDL_MouseMotionEvent &mouse)
 	Input::Instance().touch_moved(&mouse_input, 1);
 }
 
-void resize(const int w, const int h)
+void resize(Director &director, const int w, const int h)
 {
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
