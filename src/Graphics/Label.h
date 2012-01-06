@@ -3,7 +3,6 @@
 
 #include <cstring>
 
-#include "Common/SmartPtr.h"
 #include "Graphics/Drawable.h"
 #include "Graphics/FontAtlas.h"
 

@@ -2,6 +2,7 @@
 #define FONTATLAS_H_
 #define FONTATLAS_KERNING
 
+#include "Common/SmartPtr.h"
 #include "Graphics/FontGlyph.h"
 #include "Graphics/OpenGL.h"
 
@@ -26,10 +27,8 @@ class Data;
 ///
 /// Copyright 2010-11 Bifrost Games. All rights reserved.
 /// \author Tommy Nguyen
-class FontAtlas
+class FontAtlas : public SmartPtrFriendly
 {
-	template<class T> friend class SmartPtr;
-
 public:
 	static const unsigned char ascii_offset = 32;  ///< Start loading from character 32
 
@@ -50,7 +49,6 @@ protected:
 	static const unsigned short int padding = 3;   ///< Padding around font glyph texture
 
 private:
-	unsigned int refs;         ///< SmartPtr reference counter
 	GLuint texture;            ///< GL texture id
 	Colorb color;              ///< Font colour
 	FontGlyph charset[chars];  ///< Character set

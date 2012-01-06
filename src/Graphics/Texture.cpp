@@ -2,7 +2,6 @@
 /// \author Tommy Nguyen
 
 #include "Common/Data.h"
-#include "Common/SmartPtr.h"
 #include "Graphics/Texture.h"
 
 #if defined(RAINBOW_IOS)
@@ -32,7 +31,7 @@ static void mem_fread(png_structp png_ptr, png_bytep data, png_size_t length)
 
 #endif
 
-Texture::Texture(const Data &img) : name(0), refs(0), width(0), height(0)
+Texture::Texture(const Data &img) : name(0), width(0), height(0)
 {
 	GLint format = GL_RGBA;
 
@@ -43,7 +42,8 @@ Texture::Texture(const Data &img) : name(0), refs(0), width(0), height(0)
 
 	this->width = CGImageGetWidth(image.CGImage);
 	this->height = CGImageGetHeight(image.CGImage);
-	assert((this->is_pow2(this->width) && this->is_pow2(this->height)) || !"Rainbow::Texture: Texture dimension is not a power of 2");
+	assert((this->is_pow2(this->width) && this->is_pow2(this->height))
+		|| !"Rainbow::Texture: Texture dimension is not a power of 2");
 	CGRect bounds = CGRectMake(0, 0, this->width, this->height);
 
 	CGColorSpaceRef color_space = CGColorSpaceCreateDeviceRGB();

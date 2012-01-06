@@ -14,7 +14,7 @@
 #include "Common/Data.h"
 #include "Graphics/FontAtlas.h"
 
-FontAtlas::FontAtlas(const float pt) : pt(pt), refs(0), texture(0) { }
+FontAtlas::FontAtlas(const float pt) : pt(pt), texture(0) { }
 
 void FontAtlas::load(const Data &font)
 {

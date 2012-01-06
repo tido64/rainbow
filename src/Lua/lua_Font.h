@@ -2,7 +2,6 @@
 #define LUA_FONT_H_
 
 #include "LuaMachine.h"
-#include "Common/SmartPtr.h"
 #include "Graphics/FontAtlas.h"
 
 class lua_Font

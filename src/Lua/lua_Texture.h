@@ -2,7 +2,6 @@
 #define LUA_TEXTURE_H_
 
 #include "LuaMachine.h"
-#include "Common/SmartPtr.h"
 #include "Graphics/Texture.h"
 
 class lua_Texture

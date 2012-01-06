@@ -5,15 +5,34 @@
 
 #include "Platform.h"
 
-/// Smart pointer automatically releases the allocated memory when it no
-/// longer is referenced.
+/// Make a class SmartPtr-friendly.
 ///
-/// Classes that need to use this class should add a variable called
-/// 'refs' of type 'unsigned int', and let SmartPtr have access to it.
+/// Subclasses of SmartPtrFriendly can be wrapped with SmartPtr.
 ///
-/// The rationale for this design is to keep things simple and stupid,
-/// and prevent frivolous use of this pointer type. Whenever possible,
-/// use 'new' and 'delete'.
+/// Copyright 2011 Bifrost Games. All rights reserved.
+/// \author Tommy Nguyen
+class SmartPtrFriendly
+{
+	template<class T> friend class SmartPtr;
+
+public:
+	SmartPtrFriendly() : refs(0) { }
+
+private:
+	unsigned int refs;
+
+	SmartPtrFriendly(const SmartPtrFriendly &);
+	SmartPtrFriendly& operator=(const SmartPtrFriendly &);
+};
+
+/// Smart pointer automatically releases the allocated memory when it no longer
+/// is referenced.
+///
+/// Classes that need to use this class must subclass SmartPtrFriendly.
+///
+/// The rationale for this design is to keep things simple and stupid, and
+/// prevent frivolous use of this pointer type. Whenever possible, use \c new
+/// and \c delete.
 ///
 /// Copyright 2011 Bifrost Games. All rights reserved.
 /// \author Tommy Nguyen
@@ -33,7 +52,7 @@ public:
 	~SmartPtr();
 
 	/// Return the actual pointer.
-	T* raw_ptr() const;
+	inline T* raw_ptr() const;
 
 	/// Release the current pointer and copy the new one.
 	SmartPtr<T>& operator=(const SmartPtr<T> &);
@@ -42,13 +61,13 @@ public:
 	SmartPtr<T>& operator=(T *);
 
 	/// Dereferencing this pointer returns the actual pointer.
-	T& operator*() const;
+	inline T& operator*() const;
 
 	/// Dereferencing this pointer returns the actual pointer.
-	T* operator->() const;
+	inline T* operator->() const;
 
 private:
-	T *ptr;  ///< The pointer managed by this smart pointer.
+	SmartPtrFriendly *ptr;  ///< Actual pointer managed by this smart pointer.
 
 	/// Decrement reference counter and release memory if the count hits 0.
 	void release();
@@ -78,15 +97,15 @@ SmartPtr<T>::~SmartPtr()
 }
 
 template<class T>
-inline T* SmartPtr<T>::raw_ptr() const
+T* SmartPtr<T>::raw_ptr() const
 {
-	return this->ptr;
+	return static_cast<T*>(this->ptr);
 }
 
 template<class T>
 SmartPtr<T>& SmartPtr<T>::operator=(const SmartPtr<T> &smart_ptr)
 {
-	return *this = smart_ptr.ptr;
+	return *this = static_cast<T*>(smart_ptr.ptr);
 }
 
 template<class T>
@@ -99,17 +118,17 @@ SmartPtr<T>& SmartPtr<T>::operator=(T *ptr)
 }
 
 template<class T>
-inline T& SmartPtr<T>::operator*() const
+T& SmartPtr<T>::operator*() const
 {
 	assert(this->ptr || !"Rainbow::SmartPtr: No reference to pointer");
-	return *this->ptr;
+	return *static_cast<T*>(this->ptr);
 }
 
 template<class T>
-inline T* SmartPtr<T>::operator->() const
+T* SmartPtr<T>::operator->() const
 {
 	assert(this->ptr || !"Rainbow::SmartPtr: No reference to pointer");
-	return this->ptr;
+	return static_cast<T*>(this->ptr);
 }
 
 template<class T>
