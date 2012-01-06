@@ -1,6 +1,6 @@
 --! Monkey Demo: SCUMM Bar
 --!
---! Copyright 2011 Bifrost Games. All rights reserved.
+--! Copyright 2011-12 Bifrost Entertainment. All rights reserved.
 --! \author Tommy Nguyen
 
 SceneSCUMMBar = {};
