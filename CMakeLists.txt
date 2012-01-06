@@ -78,12 +78,12 @@ endif()
 find_package(Freetype REQUIRED)
 find_package(OpenAL REQUIRED)
 find_package(OpenGL REQUIRED)
-find_package(Lua51 REQUIRED)
 find_package(SDL REQUIRED)
 find_package(Vorbisfile REQUIRED)
 find_package(ZLIB REQUIRED)
 
 # Static libraries
+include(${LOCAL_LIBRARY_BUILD}/Lua.cmake)
 include(${LOCAL_LIBRARY_BUILD}/libpng.cmake)
 if(GTEST)
 	include(${LOCAL_LIBRARY_BUILD}/gtest.cmake)
@@ -96,9 +96,10 @@ endif()
 file(GLOB_RECURSE RAINBOW_LIB lib/*.cpp)
 file(GLOB_RECURSE RAINBOW_SRC src/*.cpp)
 add_executable(rainbow ${RAINBOW_LIB} ${RAINBOW_SRC})
-add_dependencies(rainbow png)
+add_dependencies(rainbow lua png)
 include_directories(src
 	${LOCAL_LIBRARY}
+	${LUA_INCLUDE_DIR}
 	${FREETYPE_INCLUDE_DIRS}
 	${LIBPNG_INCLUDE_DIR}
 	${ZLIB_INCLUDE_DIRS}
@@ -106,12 +107,12 @@ include_directories(src
 )
 if(MINGW)
 	target_link_libraries(rainbow
-		${GTEST_LIBRARY} ${LUA_LIBRARY} ${SDL_LIBRARY} ${FREETYPE_LIBRARIES}
+		${GTEST_LIBRARY} lua ${SDL_LIBRARY} ${FREETYPE_LIBRARIES}
 		${VORBISFILE_LIBRARY} ${OPENAL_LIBRARY} GLee ${OPENGL_gl_LIBRARY} png
-		${ZLIB_LIBRARIES} dxguid gdi32 winmm)
+		${ZLIB_LIBRARIES} dxguid gdi32 winmm msvcr100)
 else()
 	target_link_libraries(rainbow
-		${GTEST_LIBRARY} ${LUA_LIBRARY} ${SDL_LIBRARY} ${FREETYPE_LIBRARIES}
+		${GTEST_LIBRARY} lua ${SDL_LIBRARY} ${FREETYPE_LIBRARIES}
 		${VORBISFILE_LIBRARY} ${OPENAL_LIBRARY} ${OPENGL_gl_LIBRARY} png
 		${ZLIB_LIBRARIES} m rt stdc++)
 endif()

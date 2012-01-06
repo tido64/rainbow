@@ -2,7 +2,8 @@
 #	pragma warning(disable : 4244)
 #endif
 
-#include "lua.h"
+#include <lua.hpp>
+
 #include "Algorithm.h"
 #include "Lua/lua_Algorithm.h"
 
