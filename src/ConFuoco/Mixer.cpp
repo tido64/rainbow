@@ -1,11 +1,5 @@
-/*
- *  Mixer.cpp
- *  OnWire
- *
- *  Created by Tommy Nguyen on 3/29/11.
- *  Copyright 2011 Bifrost Games. All rights reserved.
- *
- */
+/// Copyright 2011-12 Bifrost Entertainment. All rights reserved.
+/// \author Tommy Nguyen
 
 #include "ConFuoco/Decoder.h"
 

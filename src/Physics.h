@@ -30,7 +30,7 @@ typedef b2Vec2          Vec2;
 /// \see http://gafferongames.com/game-physics/fix-your-timestep/
 /// \see http://www.unagames.com/blog/daniele/2010/06/fixed-time-step-implementation-box2d
 ///
-/// Copyright 2010-11 Bifrost Games. All rights reserved.
+/// Copyright 2010-12 Bifrost Entertainment. All rights reserved.
 /// \author Tommy Nguyen
 class Physics
 {
@@ -39,7 +39,7 @@ public:
 	///
 	/// Necessary for the interpolation technique deployed with fixed time steps.
 	///
-	/// Copyright 2010-11 Bifrost Games. All rights reserved.
+	/// Copyright 2010-12 Bifrost Entertainment. All rights reserved.
 	/// \author Tommy Nguyen
 	struct BodyData
 	{

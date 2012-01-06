@@ -18,7 +18,7 @@ struct SpriteVertex;
 /// \see http://iphonedevelopment.blogspot.com/2009/06/opengl-es-from-ground-up-part-8.html
 /// \see http://mathforum.org/mathimages/index.php/Transformation_Matrix
 ///
-/// Copyright 2010-11 Bifrost Games. All rights reserved.
+/// Copyright 2010-12 Bifrost Entertainment. All rights reserved.
 /// \author Tommy Nguyen
 class Sprite
 {

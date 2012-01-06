@@ -1,10 +1,5 @@
-//
-//  Physics.cpp
-//  OnWire
-//
-//  Created by Tommy Nguyen on 6/27/10.
-//  Copyright 2010 Bifrost Games. All rights reserved.
-//
+/// Copyright 2010-12 Bifrost Entertainment. All rights reserved.
+/// \author Tommy Nguyen
 
 #include "Algorithm.h"
 #include "Physics.h"

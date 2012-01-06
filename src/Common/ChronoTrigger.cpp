@@ -1,3 +1,6 @@
+/// Copyright 2011-12 Bifrost Entertainment. All rights reserved.
+/// \author Tommy Nguyen
+
 #include "Common/ChronoTrigger.h"
 
 ChronoTrigger::~ChronoTrigger() { }

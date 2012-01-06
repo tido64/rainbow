@@ -12,7 +12,7 @@
 ///       character by character (ie. a glDraw per character) without any form
 ///       of caching.
 ///
-/// Copyright 2011 Bifrost Games. All rights reserved.
+/// Copyright 2011-12 Bifrost Entertainment. All rights reserved.
 /// \author Tommy Nguyen
 class Label : public Drawable
 {

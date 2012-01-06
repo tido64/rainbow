@@ -7,7 +7,7 @@ namespace Rainbow
 {
 	/// Structure for storing a color (RGBA).
 	///
-	/// Copyright 2010-11 Bifrost Games. All rights reserved.
+	/// Copyright 2010-12 Bifrost Entertainment. All rights reserved.
 	/// \author Tommy Nguyen
 	template<typename T>
 	struct _Color
@@ -17,7 +17,7 @@ namespace Rainbow
 
 	/// Structure for storing a color (RGBA) using unsigned bytes.
 	///
-	/// Copyright 2010-11 Bifrost Games. All rights reserved.
+	/// Copyright 2010-12 Bifrost Entertainment. All rights reserved.
 	/// \author Tommy Nguyen
 	template<>
 	struct _Color<unsigned char>
@@ -43,7 +43,7 @@ namespace Rainbow
 
 	/// Structure for storing a color (RGBA) using floats.
 	///
-	/// Copyright 2010-11 Bifrost Games. All rights reserved.
+	/// Copyright 2010-11 Bifrost Entertainment. All rights reserved.
 	/// \author Tommy Nguyen
 	template<>
 	struct _Color<float>

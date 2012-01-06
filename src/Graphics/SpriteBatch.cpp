@@ -1,3 +1,6 @@
+/// Copyright 2010-12 Bifrost Entertainment. All rights reserved.
+/// \author Tommy Nguyen
+
 #include "Common/SpriteVertex.h"
 #include "Graphics/SpriteBatch.h"
 #include "Graphics/Texture.h"

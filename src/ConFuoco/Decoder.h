@@ -21,7 +21,7 @@ namespace Rainbow
 		/// \see https://developer.apple.com/library/ios/#documentation/MusicAudio/Conceptual/AudioQueueProgrammingGuide/Introduction/Introduction.html#//apple_ref/doc/uid/TP40005343
 		/// \see http://www.wooji-juice.com/blog/iphone-openal-ima4-adpcm.html
 		///
-		/// Copyright 2011 Bifrost Games. All rights reserved.
+		/// Copyright 2011-12 Bifrost Entertainment. All rights reserved.
 		/// \author Tommy Nguyen
 		class Decoder
 		{

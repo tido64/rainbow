@@ -25,7 +25,7 @@ class Data;
 /// \see http://ftgl.sourceforge.net/docs/html/ftgl-tutorial.html
 /// \see Beginning OpenGL Game Programming 2nd Edition (2009)
 ///
-/// Copyright 2010-11 Bifrost Games. All rights reserved.
+/// Copyright 2010-12 Bifrost Entertainment. All rights reserved.
 /// \author Tommy Nguyen
 class FontAtlas : public SmartPtrFriendly
 {

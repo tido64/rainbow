@@ -1,6 +1,3 @@
-/// Copyright 2011 Bifrost Games. All rights reserved.
-/// \author Tommy Nguyen
-
 #include "Common/Chrono.h"
 
 #ifdef RAINBOW_SDL
@@ -8,7 +5,7 @@
 
 /// SDL-implementation of Chrono.
 ///
-/// Copyright 2011 Bifrost Games. All rights reserved.
+/// Copyright 2011-12 Bifrost Entertainment. All rights reserved.
 /// \author Tommy Nguyen
 class Chrono : public Rainbow::_Chrono<Chrono>
 {

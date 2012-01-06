@@ -9,7 +9,7 @@
 ///
 /// Subclasses of SmartPtrFriendly can be wrapped with SmartPtr.
 ///
-/// Copyright 2011 Bifrost Games. All rights reserved.
+/// Copyright 2012 Bifrost Entertainment. All rights reserved.
 /// \author Tommy Nguyen
 class SmartPtrFriendly
 {
@@ -34,7 +34,7 @@ private:
 /// prevent frivolous use of this pointer type. Whenever possible, use \c new
 /// and \c delete.
 ///
-/// Copyright 2011 Bifrost Games. All rights reserved.
+/// Copyright 2011-12 Bifrost Entertainment. All rights reserved.
 /// \author Tommy Nguyen
 template<class T>
 class SmartPtr

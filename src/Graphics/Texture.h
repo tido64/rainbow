@@ -19,7 +19,7 @@ class Data;
 /// \see http://developer.android.com/guide/topics/resources/providing-resources.html
 /// \see http://en.wikibooks.org/wiki/OpenGL_Programming/Intermediate/Textures
 ///
-/// Copyright 2010-11 Bifrost Games. All rights reserved.
+/// Copyright 2010-12 Bifrost Entertainment. All rights reserved.
 /// \author Tommy Nguyen
 class Texture : public SmartPtrFriendly
 {

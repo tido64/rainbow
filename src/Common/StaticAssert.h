@@ -9,7 +9,7 @@ namespace Rainbow
 	/// Static assert is inspired by Boost.StaticAssert and aims to implement
 	/// simple compile-time assertion.
 	///
-	/// Copyright 2011 Bifrost Games. All rights reserved.
+	/// Copyright 2011-12 Bifrost Entertainment. All rights reserved.
 	/// \author Tommy Nguyen
 	template<>
 	struct _static_assert<true> { };

@@ -1,6 +1,6 @@
 /// Platform specific definitions. Makes sure correct code is being compiled.
 ///
-/// Copyright 2010-11 Bifrost Games. All rights reserved.
+/// Copyright 2010-12 Bifrost Entertainment. All rights reserved.
 /// \author Tommy Nguyen
 
 #ifndef PLATFORM_H_
@@ -36,7 +36,7 @@
 #	define RAINBOW_TOUCHED 0
 #endif
 
-#define RAINBOW_BUILD "Rainbow / Bifrost Games Property / Built " __DATE__
+#define RAINBOW_BUILD "Rainbow / Bifrost Entertainment Property / Built " __DATE__
 
 // Retrieve GCC compiler version
 #if __GNUC__

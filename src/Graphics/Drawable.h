@@ -3,7 +3,7 @@
 
 /// A drawable interface.
 ///
-/// Copyright 2010-11 Bifrost Games. All rights reserved.
+/// Copyright 2010-12 Bifrost Entertainment. All rights reserved.
 /// \author Tommy Nguyen
 class Drawable
 {
