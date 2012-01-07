@@ -35,7 +35,7 @@ const char* Data::set_datapath(const char *const path)
 	const unsigned int length = strlen(path);
 	if (length >= RAINBOW_PATH_LENGTH + 1)
 		return nullptr;
-	Data::data_path_length = length;
+	Data::data_path_length = length + 2;
 	Data::data_path[length] = '/';
 	Data::data_path[length + 1] = '\0';
 	return static_cast<const char*>(memcpy(Data::data_path, path, length));
@@ -46,7 +46,7 @@ const char* Data::set_userdatapath(const char *const path)
 	const unsigned int length = strlen(path);
 	if (length >= RAINBOW_PATH_LENGTH + 1)
 		return nullptr;
-	Data::userdata_path_length = length;
+	Data::userdata_path_length = length + 2;
 	Data::userdata_path[length] = '/';
 	Data::userdata_path[length + 1] = '\0';
 	return static_cast<const char*>(memcpy(Data::userdata_path, path, length));
