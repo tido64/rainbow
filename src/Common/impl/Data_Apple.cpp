@@ -1,5 +1,4 @@
-/// Copyright 2011-12 Bifrost Entertainment. All rights reserved.
-/// \author Tommy Nguyen
+// Copyright 2011-12 Bifrost Entertainment. All rights reserved.
 
 #include "Common/Data.h"
 
