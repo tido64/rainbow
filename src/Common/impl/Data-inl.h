@@ -15,6 +15,11 @@ unsigned int Data::size() const
 	return data.length;
 }
 
+Data::operator bool() const
+{
+	return data.mutableBytes;
+}
+
 Data::operator void*() const
 {
 	return data.mutableBytes;
@@ -45,6 +50,11 @@ unsigned char* Data::bytes() const
 unsigned int Data::size() const
 {
 	return this->sz;
+}
+
+Data::operator bool() const
+{
+	return this->data;
 }
 
 Data::operator void*() const

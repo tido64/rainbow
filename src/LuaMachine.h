@@ -125,12 +125,7 @@ int LuaMachine::thunk(lua_State *L)
 #ifndef NDEBUG
 
 	if (lua_type(L, 1) != LUA_TTABLE)
-	{
-		lua_Debug *d = getinfo(L);
-		printf("%s:%i: error: Called a class function using '.' instead of ':'\n", d->source, d->currentline);
-		delete d;
-		assert(lua_type(L, 1) == LUA_TTABLE);
-	}
+		return luaL_error(L, "Called a class function using '.' instead of ':'");
 
 #endif
 

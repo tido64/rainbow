@@ -66,6 +66,7 @@ public:
 	/// Return the size of this buffer.
 	inline unsigned int size() const;
 
+	inline operator bool() const;
 	inline operator void*() const;
 	inline operator unsigned char*() const;
 

@@ -18,7 +18,7 @@ const LuaMachine::Method<lua_SpriteBatch> lua_SpriteBatch::methods[] = {
 
 int lua_SpriteBatch::add(lua_State *L)
 {
-	assert(lua_gettop(L) == 4 || !"Rainbow::Lua::SpriteBatch::add takes four parameters");
+	assert(lua_gettop(L) == 4 || !"Rainbow::Lua syntax: rainbow.spritebatch:add(x, y, width, height)");
 
 	const int x = lua_tointeger(L, 1);
 	const int y = lua_tointeger(L, 2);
@@ -36,7 +36,7 @@ int lua_SpriteBatch::draw(lua_State *)
 
 int lua_SpriteBatch::set_texture(lua_State *L)
 {
-	assert(lua_gettop(L) == 1 || !"Rainbow::Lua::SpriteBatch::set_texture takes only one parameter");
+	assert(lua_gettop(L) == 1 || !"Rainbow::Lua syntax: rainbow.spritebatch:set_texture(<path to texture>|texture)");
 
 	switch (lua_type(L, 1))
 	{
@@ -45,6 +45,8 @@ int lua_SpriteBatch::set_texture(lua_State *L)
 				const char *const path = Data::get_path(lua_tolstring(L, 1, nullptr));
 				Data t(path);
 				Data::free(path);
+				if (!t)
+					return luaL_error(L, "rainbow.spritebatch:set_texture: Failed to load texture");
 				lua_pushlightuserdata(L, this->s.set_texture(t));
 			}
 			return LuaMachine::alloc<lua_Texture>(L);
@@ -55,7 +57,7 @@ int lua_SpriteBatch::set_texture(lua_State *L)
 			}
 			break;
 		default:
-			assert(!"Rainbow::Lua::SpriteBatch::set_texture: Parameter must be a path to an asset or an existing one");
+			assert(!"Rainbow::Lua syntax: rainbow.spritebatch:set_texture(<path to texture>|texture)");
 			break;
 	}
 	return 0;

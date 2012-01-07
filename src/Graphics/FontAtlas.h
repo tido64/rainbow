@@ -36,12 +36,12 @@ public:
 
 	FontAtlas(const float pt);
 
-	void bind() const;
+	inline void bind() const;
 
-	const FontGlyph& get_glyph(const char c) const;
+	inline const FontGlyph& get_glyph(const char c) const;
 
 	/// Load font and create a texture atlas.
-	void load(const Data &font);
+	bool load(const Data &font);
 
 protected:
 	static const unsigned char chars = 95;         ///< Load characters through 126 from the ASCII table
@@ -58,23 +58,23 @@ private:
 
 	/// Find the next power of 2 greater than given number.
 	/// \return Power of 2, greater than 16 (minimum GL texture size)
-	int next_pow2(const int a);
+	inline int next_pow2(const int a);
 
 	/// Intentionally left undefined.
 	FontAtlas& operator=(const FontAtlas &);
 };
 
-inline void FontAtlas::bind() const
+void FontAtlas::bind() const
 {
 	glBindTexture(GL_TEXTURE_2D, this->texture);
 }
 
-inline const FontGlyph& FontAtlas::get_glyph(const char c) const
+const FontGlyph& FontAtlas::get_glyph(const char c) const
 {
 	return this->charset[static_cast<unsigned int>(c - ascii_offset)];
 }
 
-inline int FontAtlas::next_pow2(const int a)
+int FontAtlas::next_pow2(const int a)
 {
 	int p = 16;
 	for (; p < a; p <<= 1);

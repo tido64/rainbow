@@ -16,25 +16,26 @@
 
 FontAtlas::FontAtlas(const float pt) : pt(pt), texture(0) { }
 
-void FontAtlas::load(const Data &font)
+bool FontAtlas::load(const Data &font)
 {
-	assert(font.bytes() != 0);
+	assert(font || !"Rainbow::FontAtlas: No data provided");
 
 	// Instantiate FreeType
 	FT_Library lib;
-#ifndef NDEBUG
-	int ft_error =
-#endif
-	FT_Init_FreeType(&lib);
-	assert(ft_error == 0 || !"Rainbow::FontAtlas: Failed to initialise FreeType");
+	if (FT_Init_FreeType(&lib))
+	{
+		assert(!"Rainbow::FontAtlas: Failed to initialise FreeType");
+		return false;
+	}
 
 	// Load font face
 	FT_Face face;
-#ifndef NDEBUG
-	ft_error =
-#endif
-	FT_New_Memory_Face(lib, static_cast<const FT_Byte *>(font.bytes()), font.size(), 0, &face);
-	assert(ft_error == 0 || !"Rainbow::FontAtlas: Failed to load font face");
+	if (FT_New_Memory_Face(lib, static_cast<const FT_Byte*>(font.bytes()), font.size(), 0, &face))
+	{
+		FT_Done_FreeType(lib);
+		assert(!"Rainbow::FontAtlas: Failed to load font face");
+		return false;
+	}
 
 	FT_Set_Char_Size(face, 0, static_cast<int>(this->pt * 64), 96, 96);
 
@@ -45,11 +46,13 @@ void FontAtlas::load(const Data &font)
 	unsigned int h_offset = 0;
 	for (unsigned int i = 0; i < chars; ++i)
 	{
-	#ifndef NDEBUG
-		ft_error =
-	#endif
-		FT_Load_Char(face, i + ascii_offset, FT_LOAD_RENDER);
-		assert(ft_error == 0 || !"Rainbow::FontAtlas: Failed to load characters");
+		if (FT_Load_Char(face, i + ascii_offset, FT_LOAD_RENDER))
+		{
+			FT_Done_Face(face);
+			FT_Done_FreeType(lib);
+			assert(!"Rainbow::FontAtlas: Failed to load characters");
+			return false;
+		}
 
 		const FT_Bitmap &bitmap = face->glyph->bitmap;
 
@@ -75,9 +78,6 @@ void FontAtlas::load(const Data &font)
 	const float tex_h_fraction = 1.0f / tex_height;
 	for (unsigned int i = 0; i < chars; ++i)
 	{
-	#ifndef NDEBUG
-		ft_error =
-	#endif
 		FT_Load_Char(face, i + ascii_offset, FT_LOAD_RENDER);
 
 		const FT_GlyphSlot &slot = face->glyph;
@@ -190,6 +190,9 @@ void FontAtlas::load(const Data &font)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE_ALPHA, tex_width, tex_height, 0, GL_LUMINANCE_ALPHA, GL_UNSIGNED_BYTE, tex_buf);
+
 	glBindTexture(GL_TEXTURE_2D, 0);
 	delete[] tex_buf;
+
+	return true;
 }

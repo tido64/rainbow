@@ -11,13 +11,12 @@ class Data;
 /// A texture atlas loaded from an image file.
 ///
 /// \note Textures are loaded "upside-down", so the coordinates must be flipped.
-///
 /// \note iOS: Textures' dimension must be \c 2<sup>n</sup> by \c 2<sup>m</sup>
-/// for some arbitrary \c n and \c m, where <tt>n, m > 6</tt>.
+///       for some arbitrary \c n and \c m, where <tt>n, m > 6</tt>.
 ///
 /// \see http://iphonedevelopment.blogspot.com/2009/05/opengl-es-from-ground-up-part-6_25.html
-/// \see http://developer.android.com/guide/topics/resources/providing-resources.html
-/// \see http://en.wikibooks.org/wiki/OpenGL_Programming/Intermediate/Textures
+///      http://developer.android.com/guide/topics/resources/providing-resources.html
+///      http://en.wikibooks.org/wiki/OpenGL_Programming/Intermediate/Textures
 ///
 /// Copyright 2010-12 Bifrost Entertainment. All rights reserved.
 /// \author Tommy Nguyen
@@ -40,6 +39,7 @@ public:
 	inline void trim();
 
 	inline const Vec2f* operator[](const unsigned int i) const;
+	inline operator bool() const;
 
 private:
 	GLsizei width, height;
@@ -62,6 +62,11 @@ void Texture::trim()
 const Vec2f* Texture::operator[](const unsigned int i) const
 {
 	return &this->textures[i];
+}
+
+Texture::operator bool() const
+{
+	return this->name;
 }
 
 #endif

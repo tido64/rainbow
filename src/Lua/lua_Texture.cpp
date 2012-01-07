@@ -24,18 +24,22 @@ lua_Texture::lua_Texture(lua_State *L)
 				const char *const path = Data::get_path(lua_tolstring(L, -1, nullptr));
 				Data tex_data(path);
 				Data::free(path);
+				if (!tex_data)
+					luaL_error(L, "rainbow.texture: Failed to load texture");
 				this->texture = new Texture(tex_data);
+				if (!*this->texture)
+					luaL_error(L, "rainbow.texture: Failed to create texture");
 			}
 			break;
 		default:
-			assert(!"Rainbow::Lua::Texture: Invalid parameters");
+			assert(lua_gettop(L) == 4 || !"Rainbow::Lua syntax: rainbow.texture(<path to texture>)");
 			break;
 	}
 }
 
 int lua_Texture::create(lua_State *L)
 {
-	assert(lua_gettop(L) == 4 || !"Rainbow::Lua::Texture::create takes four parameters");
+	assert(lua_gettop(L) == 4 || !"Rainbow::Lua syntax: rainbow.texture:create(x, y, width, height)");
 
 	const int x = lua_tointeger(L, 1);
 	const int y = lua_tointeger(L, 2);

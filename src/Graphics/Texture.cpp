@@ -7,7 +7,6 @@
 #if defined(RAINBOW_IOS)
 #	include <UIKit/UIKit.h>
 #else
-#	include <stdexcept>
 #	include <png.h>
 
 /// Structure for reading PNG bitmaps.
@@ -33,6 +32,8 @@ static void mem_fread(png_structp png_ptr, png_bytep data, png_size_t length)
 
 Texture::Texture(const Data &img) : name(0), width(0), height(0)
 {
+	assert(img || !"Rainbow::Texture: No data provided");
+
 	GLint format = GL_RGBA;
 
 #if defined(RAINBOW_IOS)
@@ -66,26 +67,31 @@ Texture::Texture(const Data &img) : name(0), width(0), height(0)
 
 	// Look for PNG signature
 #ifndef NDEBUG
-	int result =
+	int png_error =
 #endif
 	png_sig_cmp(texture.data, 0, texture.offset);
-	assert(result == 0 || !"Rainbow::Texture: File is not PNG");
+	assert(!png_error || !"Rainbow::Texture: File is not PNG");
 
 	png_structp png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
 	if (!png_ptr)
-		throw std::runtime_error("Rainbow::Texture: Failed to create PNG reading structure");
+	{
+		assert(!"Rainbow::Texture: Failed to create PNG reading structure");
+		return;
+	}
 
 	png_infop info_ptr = png_create_info_struct(png_ptr);
 	if (!info_ptr)
 	{
 		png_destroy_read_struct(&png_ptr, nullptr, nullptr);
-		throw std::runtime_error("Rainbow::Texture: Failed to initialize PNG information structure");
+		assert(!"Rainbow::Texture: Failed to initialize PNG information structure");
+		return;
 	}
 
 	if (setjmp(png_jmpbuf(png_ptr)))
 	{
 		png_destroy_read_struct(&png_ptr, &info_ptr, nullptr);
-		throw std::runtime_error("Rainbow::Texture: Failed to read PNG");
+		assert(!"Rainbow::Texture: Failed to read PNG");
+		return;
 	}
 
 	// Offset because we've read the signature
