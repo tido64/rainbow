@@ -139,7 +139,7 @@ void SmartPtr<T>::release()
 
 	if (this->ptr && !--this->ptr->refs)
 	{
-		delete this->ptr;
+		delete static_cast<T*>(this->ptr);
 		//this->ptr = nullptr;
 	}
 }

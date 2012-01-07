@@ -14,8 +14,6 @@ public:
 	static const char class_name[];
 	static const LuaMachine::Method<lua_SceneGraph> methods[];
 
-	inline ~lua_SceneGraph();
-
 	int add_animation(lua_State *);
 	int add_batch(lua_State *);
 	int add_label(lua_State *);
@@ -45,11 +43,6 @@ private:
 
 	lua_SceneGraph& operator=(const lua_SceneGraph &);
 };
-
-lua_SceneGraph::~lua_SceneGraph()
-{
-	delete this->ptr;
-}
 
 template<class T, class W>
 int lua_SceneGraph::add_child(lua_State *L)
