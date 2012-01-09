@@ -6,15 +6,8 @@
 
 void Data::free(const void *const p) { /* This is not needed */ }
 
-const char* Data::get_path(const char *const file, const bool user_data)
+const char* Data::get_path(const char *const file)
 {
-	if (user_data)
-	{
-		// return user data path
-		assert(!"Rainbow::Data::get_path: Not implemented yet");
-		return 0;
-	}
-
 	if (!file)
 		return [[[NSBundle mainBundle] bundlePath] UTF8String];
 
