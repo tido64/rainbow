@@ -116,63 +116,70 @@ LuaMachine::LuaMachine() : scenegraph(nullptr), L(luaL_newstate())
 	lua_setfield(this->L, -3, "path");
 	lua_pop(this->L, 2);
 
-	assert(lua_gettop(L) == 0 || !"LuaMachine::LuaMachine: Stack not empty");
+	assert(lua_gettop(L) == 0 || !"Rainbow::LuaMachine: Stack not empty");
 }
 
-void LuaMachine::call(const char *const k)
+int LuaMachine::call(const char *const k, int nargs, int nresults)
 {
 	lua_getglobal(this->L, k);
-	int lua_e = lua_pcall(this->L, 0, 0, 0);
+	const int lua_e = lua_pcall(this->L, nargs, nresults, 0);
 	if (lua_e)
 		this->err(lua_e);
+	return lua_e;
 }
 
 void LuaMachine::err(const int lua_e)
 {
+	assert(lua_e != LUA_OK || !"Rainbow::LuaMachine::err: No error to report");
+
+	static const char *err_general = "general";
+	static const char *err_runtime = "runtime";
+	static const char *err_syntax  = "syntax";
+	static const char *err_memory  = "memory allocation";
+	static const char *err_errfunc = "error handling";
+
+	const char *desc = err_general;
 	const char *const m = lua_tolstring(this->L, -1, nullptr);
 	lua_pop(this->L, 1);
 	switch (lua_e)
 	{
 		case LUA_ERRRUN:
-			printf("Lua runtime");
+			desc = err_runtime;
+			dump_stack(this->L);
 			break;
 		case LUA_ERRSYNTAX:
-			printf("Lua syntax");
+			desc = err_syntax;
+			dump_stack(this->L);
 			break;
 		case LUA_ERRMEM:
-			printf("Lua memory allocation");
+			desc = err_memory;
+			dump_stack(this->L);
 			break;
 		case LUA_ERRERR:
-			printf("Lua error handling");
+			desc = err_errfunc;
 			break;
 		default:
-			printf("Lua");
 			break;
 	}
-	printf(" error: %s\n", m);
-	dump_stack(this->L);
-	assert(!"Lua related error, see stdout for details");
+	printf("Lua %s error: %s\n", desc, m);
 }
 
-void LuaMachine::load(SceneGraph::Node *root, const char *const lua)
+int LuaMachine::load(SceneGraph::Node *root, const char *const lua)
 {
 	// Load Lua script
 	int lua_e = luaL_loadfile(this->L, lua);
-	if (lua_e)
+	if (lua_e || (lua_e = lua_pcall(this->L, 0, LUA_MULTRET, 0)))
 		this->err(lua_e);
-
-	lua_e = lua_pcall(this->L, 0, LUA_MULTRET, 0);
-	if (lua_e)
-		this->err(lua_e);
-
-	this->scenegraph->set_root(root);
+	else
+		this->scenegraph->set_root(root);
+	return lua_e;
 }
 
-void LuaMachine::update()
+int LuaMachine::update()
 {
 #if RAINBOW_ACCELERATED
 	lua_Input::accelerate(this->L);
 #endif
 
-	this->call("update");
+	return this->call("update");
 }

@@ -2,6 +2,7 @@
 #define DIRECTOR_H_
 
 #include "LuaMachine.h"
+#include "Common/ShutdownSequence.h"
 #include "Graphics/SceneGraph.h"
 
 /// Simple game loop for Lua-scripted games.
@@ -26,6 +27,7 @@ public:
 	void update(const unsigned long t = 0);
 
 private:
+	ShutdownSequence shutdown;
 	LuaMachine lua;
 	SceneGraph::Node scenegraph;
 

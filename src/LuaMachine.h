@@ -1,5 +1,5 @@
-#ifndef LUA_H_
-#define LUA_H_
+#ifndef LUAMACHINE_H_
+#define LUAMACHINE_H_
 
 #include <cassert>
 #include <cstdio>
@@ -14,7 +14,7 @@ class lua_SceneGraph;
 ///
 /// Features a simple C++-wrapper, adapted from lua-users.org
 ///
-/// \see http://www.lua.org/manual/5.1/
+/// \see http://www.lua.org/manual/5.2/
 /// \see http://lua-users.org/wiki/LunaWrapper
 ///
 /// Copyright 2011-12 Bifrost Entertainment. All rights reserved.
@@ -45,7 +45,7 @@ public:
 	static int thunk(lua_State *L);
 
 	/// Return the wrapper of the object on top of the stack.
-	/// \return Pointer to wrapper
+	/// \return Pointer to wrapper.
 	template<class T>
 	static T* wrapper(lua_State *L, const int index = -1);
 
@@ -64,19 +64,25 @@ private:
 	LuaMachine(const LuaMachine &);
 
 	/// Call a function with no parameters or return value.
-	/// \param k  Name of the function to call
-	void call(const char *const);
+	/// \param k         Name of the function to call.
+	/// \param nargs     Number of arguments pushed to the stack.
+	/// \param nresults  Number of results to push to the stack; LUA_MULTRET for all.
+	/// \return Lua error code (defined in lua.h).
+	int call(const char *const, int nargs = 0, int nresults = 0);
 
-	void err(int);
+	/// Output information about the error, and dump the stack if applicable.
+	void err(const int lua_error);
 
 	/// Load specified Lua script.
-	void load(SceneGraph::Node *root, const char *const);
+	/// \return Lua error code (defined in lua.h).
+	int load(SceneGraph::Node *root, const char *const);
 
 	/// Update world state and call update function in Lua script.
-	void update();
+	/// \return Lua error code (defined in lua.h).
+	int update();
 
 	/// Wrap a C++ object and makes its methods available in Lua.
-	/// \param ns  Insert object into specified namespace
+	/// \param ns  Insert object into specified namespace.
 	template<class T>
 	void wrap(const char *const ns = 0);
 

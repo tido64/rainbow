@@ -2,7 +2,6 @@
 
 #include "Common/SpriteVertex.h"
 #include "Graphics/SpriteBatch.h"
-#include "Graphics/Texture.h"
 
 const unsigned char SpriteBatch::indices[] = {
 	  0,   1,   2,   2,   1,   3,   4,   5,   6,   6,   5,   7,

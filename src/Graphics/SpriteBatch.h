@@ -1,9 +1,7 @@
 #ifndef SPRITEBATCH_H_
 #define SPRITEBATCH_H_
 
-#include "Common/Vector.h"
 #include "Graphics/Drawable.h"
-#include "Graphics/OpenGL.h"
 #include "Graphics/Sprite.h"
 #include "Graphics/Texture.h"
 
