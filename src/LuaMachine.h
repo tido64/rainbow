@@ -5,7 +5,8 @@
 #include <cstdio>
 #include <cstring>
 
-#include <lua.hpp>
+#include <lualib.h>
+#include <lauxlib.h>
 
 namespace SceneGraph { class Node; }
 class lua_SceneGraph;

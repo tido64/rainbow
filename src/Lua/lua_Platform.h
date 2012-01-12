@@ -1,7 +1,7 @@
 #ifndef LUA_PLATFORM_H_
 #define LUA_PLATFORM_H_
 
-#include <lua.hpp>
+#include <lauxlib.h>
 
 #include "Platform.h"
 

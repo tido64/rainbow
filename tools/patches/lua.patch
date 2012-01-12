@@ -1,0 +1,19 @@
+# HG changeset patch
+# User Tommy Nguyen <tn0502@gmail.com>
+# Date 1325878120 -3600
+# Node ID b15ddf0b414932c8383638a368a6847e94d76d93
+# Parent  3bc25d7017ca3b3d04d4dbb9ab1cdbaf872b4dc8
+Patch for making Lua compile with a C++ compiler when LUA_NUMBER=float.
+
+diff -r 3bc25d7017ca -r b15ddf0b4149 lib/Lua/lmathlib.c
+--- a/lib/Lua/lmathlib.c	Fri Jan 06 04:53:01 2012 +0100
++++ b/lib/Lua/lmathlib.c	Fri Jan 06 20:28:40 2012 +0100
+@@ -102,7 +102,7 @@
+ }
+ 
+ static int math_modf (lua_State *L) {
+-  lua_Number ip;
++  double ip;
+   lua_Number fp = l_tg(modf)(luaL_checknumber(L, 1), &ip);
+   lua_pushnumber(L, ip);
+   lua_pushnumber(L, fp);

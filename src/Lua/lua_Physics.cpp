@@ -2,7 +2,7 @@
 #	pragma warning(disable : 4244)
 #endif
 
-#include <lua.hpp>
+#include <lauxlib.h>
 
 #include "Physics.h"
 #include "Lua/lua_Physics.h"

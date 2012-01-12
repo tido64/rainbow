@@ -102,7 +102,7 @@ static int math_fmod (lua_State *L) {
 }
 
 static int math_modf (lua_State *L) {
-  lua_Number ip;
+  double ip;
   lua_Number fp = l_tg(modf)(luaL_checknumber(L, 1), &ip);
   lua_pushnumber(L, ip);
   lua_pushnumber(L, fp);
