@@ -15,11 +15,7 @@ rm -fr \
 	CMakeLists.txt \
 	configure \
 	configure.ac \
-	contrib/gregbook \
-	contrib/pngminim \
-	contrib/pngminus \
-	contrib/pngsuite \
-	contrib/visupng/{PngFile.*,README.txt,VisualPng.*,resource.h} \
+	contrib \
 	depcomp \
 	example.c \
 	INSTALL \
