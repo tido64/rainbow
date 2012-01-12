@@ -65,7 +65,9 @@ function Threepwood:move(pos)
 	end
 
 	-- Determine the direction Guybrush is facing and start the walking animation.
-	rainbow.scenegraph:remove(self.parent_node, self.animation_node);
+	if self.animation_node then
+		rainbow.scenegraph:remove(self.parent_node, self.animation_node);
+	end
 	self.walk = pos;
 	if self.x < self.walk.x then
 		self.direction = self.standingr;
@@ -81,6 +83,7 @@ end
 
 function Threepwood:stop()
 	rainbow.scenegraph:remove(self.parent_node, self.animation_node);
+	self.animation_node = nil;
 	self.sprite:set_texture(self.direction);
 	self.walk = nil;
 end
