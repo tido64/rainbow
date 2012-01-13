@@ -57,13 +57,13 @@ Sprite* SpriteBatch::add(const int x, const int y, const int w, const int h)
 {
 	Sprite *s = new Sprite(w, h, this);
 	this->push_back(s);
-	s->set_texture(this->texture->create(x, y, w, h));
+	s->set_texture(this->texture->define(x, y, w, h));
 	return s;
 }
 
 void SpriteBatch::draw()
 {
-	glBindTexture(GL_TEXTURE_2D, this->texture->name);
+	this->texture->bind();
 	glBindBuffer(GL_ARRAY_BUFFER, this->buffer);
 	glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(SpriteVertex), 0);
 	glTexCoordPointer(2, GL_FLOAT, sizeof(SpriteVertex), SpriteVertex::tx_offset);
@@ -72,19 +72,19 @@ void SpriteBatch::draw()
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-Texture* SpriteBatch::set_texture(const Data &texture)
+TextureAtlas* SpriteBatch::set_texture(const Data &texture)
 {
-	this->texture = new Texture(texture);
+	this->texture = new TextureAtlas(texture);
 	return this->texture.raw_ptr();
 }
 
-Texture* SpriteBatch::set_texture(Texture *t)
+TextureAtlas* SpriteBatch::set_texture(TextureAtlas *t)
 {
 	this->texture = t;
 	return this->texture.raw_ptr();
 }
 
-SmartPtr<Texture>& SpriteBatch::set_texture(SmartPtr<Texture> &t)
+SmartPtr<TextureAtlas>& SpriteBatch::set_texture(SmartPtr<TextureAtlas> &t)
 {
 	return this->texture = t;
 }

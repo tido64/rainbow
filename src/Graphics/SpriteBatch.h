@@ -3,7 +3,7 @@
 
 #include "Graphics/Drawable.h"
 #include "Graphics/Sprite.h"
-#include "Graphics/Texture.h"
+#include "Graphics/TextureAtlas.h"
 
 /// A drawable batch of sprites.
 ///
@@ -30,13 +30,13 @@ public:
 	Vector<Sprite*>& get_sprites();
 
 	/// Load texture data.
-	Texture* set_texture(const Data &texture);
+	TextureAtlas* set_texture(const Data &texture);
 
-	/// Re-use a texture.
-	Texture* set_texture(Texture *texture);
+	/// Re-use a texture atlas.
+	TextureAtlas* set_texture(TextureAtlas *texture);
 
-	/// Re-use a texture.
-	SmartPtr<Texture>& set_texture(SmartPtr<Texture> &texture);
+	/// Re-use a texture atlas.
+	SmartPtr<TextureAtlas>& set_texture(SmartPtr<TextureAtlas> &texture);
 
 	/// Return the number of sprites.
 	unsigned int size();
@@ -54,12 +54,12 @@ protected:
 	void push_back(Sprite *s);
 
 private:
-	GLuint buffer;                 ///< GL vertex buffer.
-	unsigned int batch_vertices;   ///< Total number of vertices in this batch.
-	unsigned int reserved;         ///< Allocated memory for sprite vertices.
-	SpriteVertex *vertex_buffer;   ///< Common vertex array for all sprites in the batch.
-	SmartPtr<Texture> texture;     ///< Texture atlas used by all sprites in the batch.
-	Vector<Sprite*> sprites;       ///< Vector storing all sprites.
+	GLuint buffer;                   ///< GL vertex buffer.
+	unsigned int batch_vertices;     ///< Total number of vertices in this batch.
+	unsigned int reserved;           ///< Allocated memory for sprite vertices.
+	SpriteVertex *vertex_buffer;     ///< Common vertex array for all sprites in the batch.
+	SmartPtr<TextureAtlas> texture;  ///< Texture atlas used by all sprites in the batch.
+	Vector<Sprite*> sprites;         ///< Vector storing all sprites.
 
 	/// Intentionally left undefined.
 	SpriteBatch(const SpriteBatch &);

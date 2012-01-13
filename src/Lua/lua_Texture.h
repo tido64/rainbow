@@ -2,7 +2,7 @@
 #define LUA_TEXTURE_H_
 
 #include "LuaMachine.h"
-#include "Graphics/Texture.h"
+#include "Graphics/TextureAtlas.h"
 
 class lua_Texture
 {
@@ -12,16 +12,16 @@ public:
 
 	lua_Texture(lua_State *);
 
-	Texture* raw_ptr() const;
+	TextureAtlas* raw_ptr() const;
 
 	int create(lua_State *);
 	int trim(lua_State *);
 
 private:
-	SmartPtr<Texture> texture;
+	SmartPtr<TextureAtlas> texture;
 };
 
-inline Texture* lua_Texture::raw_ptr() const
+inline TextureAtlas* lua_Texture::raw_ptr() const
 {
 	return this->texture.raw_ptr();
 }

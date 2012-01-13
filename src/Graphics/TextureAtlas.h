@@ -1,5 +1,5 @@
-#ifndef TEXTURE_H_
-#define TEXTURE_H_
+#ifndef TEXTUREATLAS_H_
+#define TEXTUREATLAS_H_
 
 #include "Common/SmartPtr.h"
 #include "Common/Vec2.h"
@@ -8,7 +8,7 @@
 
 class Data;
 
-/// A texture atlas loaded from an image file.
+/// Texture atlas loaded from an image file.
 ///
 /// \note Textures are loaded "upside-down", so the coordinates must be flipped.
 /// \note iOS: Textures' dimension must be \c 2<sup>n</sup> by \c 2<sup>m</sup>
@@ -20,51 +20,59 @@ class Data;
 ///
 /// Copyright 2010-12 Bifrost Entertainment. All rights reserved.
 /// \author Tommy Nguyen
-class Texture : public SmartPtrFriendly
+class TextureAtlas : public SmartPtrFriendly
 {
 public:
-	GLuint name;
+	explicit TextureAtlas(const Data &img);
+	inline ~TextureAtlas();
 
-	explicit Texture(const Data &img);
-	inline ~Texture();
+	/// Bind this texture.
+	inline void bind() const;
 
 	/// Define a texture within the atlas.
 	/// \param x,y     Starting point of the texture.
 	/// \param width   Width of the texture.
 	/// \param height  Height of the texture.
 	/// \return The id of the texture.
-	unsigned int create(const int x, const int y, const int width, const int height);
+	unsigned int define(const int x, const int y, const int width, const int height);
 
 	/// Trim the internal texture storage.
 	inline void trim();
 
-	inline const Vec2f* operator[](const unsigned int i) const;
+	inline Vec2f* operator[](const unsigned int i) const;
 	inline operator bool() const;
 
 private:
-	GLsizei width, height;
-	Vector<Vec2f> textures;  ///< Texture coordinates
+	GLuint name;             ///< Texture atlas' GL id.
+	GLsizei width;           ///< Width of texture atlas.
+	GLsizei height;          ///< Height of texture atlas.
+	Vector<Vec2f> textures;  ///< Texture coordinates.
 
 	/// Return \c true if the integer provided is a power of 2.
 	bool is_pow2(const unsigned int);
 };
 
-Texture::~Texture()
+TextureAtlas::~TextureAtlas()
 {
 	glDeleteTextures(1, &this->name);
 }
 
-void Texture::trim()
+void TextureAtlas::bind() const
+{
+	glBindTexture(GL_TEXTURE_2D, this->name);
+}
+
+void TextureAtlas::trim()
 {
 	this->textures.reserve(0);
 }
 
-const Vec2f* Texture::operator[](const unsigned int i) const
+Vec2f* TextureAtlas::operator[](const unsigned int i) const
 {
 	return &this->textures[i];
 }
 
-Texture::operator bool() const
+TextureAtlas::operator bool() const
 {
 	return this->name;
 }

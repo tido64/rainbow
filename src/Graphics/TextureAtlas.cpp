@@ -1,7 +1,7 @@
 // Copyright 2010-12 Bifrost Entertainment. All rights reserved.
 
 #include "Common/Data.h"
-#include "Graphics/Texture.h"
+#include "Graphics/TextureAtlas.h"
 
 #if defined(RAINBOW_IOS)
 #	include <UIKit/UIKit.h>
@@ -29,21 +29,21 @@ static void mem_fread(png_structp png_ptr, png_bytep data, png_size_t length)
 
 #endif
 
-Texture::Texture(const Data &img) : name(0), width(0), height(0)
+TextureAtlas::TextureAtlas(const Data &img) : name(0), width(0), height(0)
 {
-	assert(img || !"Rainbow::Texture: No data provided");
+	assert(img || !"Rainbow::TextureAtlas: No data provided");
 
 	GLint format = GL_RGBA;
 
 #if defined(RAINBOW_IOS)
 
-	UIImage *image = [[UIImage alloc] initWithData:(const NSData *)img];
-	assert(image != nil || !"Rainbow::Texture: Failed to load file");
+	UIImage *image = [[UIImage alloc] initWithData:(const NSData*)img];
+	assert(image != nil || !"Rainbow::TextureAtlas: Failed to load file");
 
 	this->width = CGImageGetWidth(image.CGImage);
 	this->height = CGImageGetHeight(image.CGImage);
 	assert((this->is_pow2(this->width) && this->is_pow2(this->height))
-		|| !"Rainbow::Texture: Texture dimension is not a power of 2");
+		|| !"Rainbow::TextureAtlas: Texture dimension is not a power of 2");
 	CGRect bounds = CGRectMake(0, 0, this->width, this->height);
 
 	CGColorSpaceRef color_space = CGColorSpaceCreateDeviceRGB();
@@ -69,12 +69,12 @@ Texture::Texture(const Data &img) : name(0), width(0), height(0)
 	int png_error =
 #endif
 	png_sig_cmp(texture.data, 0, texture.offset);
-	assert(!png_error || !"Rainbow::Texture: File is not PNG");
+	assert(!png_error || !"Rainbow::TextureAtlas: File is not PNG");
 
 	png_structp png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
 	if (!png_ptr)
 	{
-		assert(!"Rainbow::Texture: Failed to create PNG reading structure");
+		assert(!"Rainbow::TextureAtlas: Failed to create PNG reading structure");
 		return;
 	}
 
@@ -82,14 +82,14 @@ Texture::Texture(const Data &img) : name(0), width(0), height(0)
 	if (!info_ptr)
 	{
 		png_destroy_read_struct(&png_ptr, nullptr, nullptr);
-		assert(!"Rainbow::Texture: Failed to initialize PNG information structure");
+		assert(!"Rainbow::TextureAtlas: Failed to initialize PNG information structure");
 		return;
 	}
 
 	if (setjmp(png_jmpbuf(png_ptr)))
 	{
 		png_destroy_read_struct(&png_ptr, &info_ptr, nullptr);
-		assert(!"Rainbow::Texture: Failed to read PNG");
+		assert(!"Rainbow::TextureAtlas: Failed to read PNG");
 		return;
 	}
 
@@ -131,7 +131,7 @@ Texture::Texture(const Data &img) : name(0), width(0), height(0)
 
 	this->width = png_get_image_width(png_ptr, info_ptr);
 	this->height = png_get_image_height(png_ptr, info_ptr);
-	assert((this->width > 0 && this->height > 0) || !"Rainbow::Texture: Invalid texture dimensions");
+	assert((this->width > 0 && this->height > 0) || !"Rainbow::TextureAtlas: Invalid texture dimensions");
 
 	// Allocate memory for bitmap
 	png_read_update_info(png_ptr, info_ptr);
@@ -154,7 +154,7 @@ Texture::Texture(const Data &img) : name(0), width(0), height(0)
 #endif
 
 	glGenTextures(1, &this->name);
-	glBindTexture(GL_TEXTURE_2D, this->name);
+	this->bind();
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, this->width, this->height, 0, format, GL_UNSIGNED_BYTE, data);
@@ -162,10 +162,10 @@ Texture::Texture(const Data &img) : name(0), width(0), height(0)
 	delete[] data;
 }
 
-unsigned int Texture::create(const int x, const int y, const int w, const int h)
+unsigned int TextureAtlas::define(const int x, const int y, const int w, const int h)
 {
 	assert((x >= 0 && (x + w) <= this->width && y >= 0 && (y + h) <= this->height)
-		|| !"Rainbow::TextureAtlas: Invalid dimensions");
+		|| !"Rainbow::TextureAtlas::define: Invalid dimensions");
 
 	unsigned int i = this->textures.size();
 
@@ -182,7 +182,7 @@ unsigned int Texture::create(const int x, const int y, const int w, const int h)
 	return i;
 }
 
-bool Texture::is_pow2(const unsigned int i)
+bool TextureAtlas::is_pow2(const unsigned int i)
 {
 	unsigned int p = 64;
 	for (; p < i; p <<= 1);

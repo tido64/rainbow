@@ -3,7 +3,7 @@
 #include "Algorithm.h"
 #include "Common/SpriteVertex.h"
 #include "Graphics/SpriteBatch.h"
-#include "Graphics/Texture.h"
+#include "Graphics/TextureAtlas.h"
 #include "Graphics/Transition.h"
 
 using Rainbow::equalf;
