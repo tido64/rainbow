@@ -29,7 +29,8 @@ public:
 	void push_back(const T &value);
 
 	/// Remove elements with specific value.
-	void remove(const T &value);
+	/// \return Number of elements removed.
+	unsigned int remove(const T &value);
 
 	/// Return size of list.
 	unsigned int size();
@@ -84,8 +85,9 @@ void List<T>::push_back(const T &value)
 }
 
 template<class T>
-void List<T>::remove(const T &value)
+unsigned int List<T>::remove(const T &value)
 {
+	unsigned int removed = 0;
 	Element *e = this->first;
 	while (e)
 	{
@@ -106,11 +108,13 @@ void List<T>::remove(const T &value)
 				this->last = prev;
 			delete e;
 			e = next;
-			--this->count;
+			++removed;
 		}
 		else
 			e = e->next;
 	}
+	this->count -= removed;
+	return removed;
 }
 
 template<class T>

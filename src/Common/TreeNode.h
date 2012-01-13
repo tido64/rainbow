@@ -48,7 +48,11 @@ void TreeNode<T>::remove_child(T *n)
 {
 	if (!n)
 		return;
+#ifndef NDEBUG
+	unsigned int removed =
+#endif
 	this->children.remove(n);
+	assert(removed || !"Rainbow::TreeNode::remove_child: Node does not exist");
 	delete n;
 }
 
