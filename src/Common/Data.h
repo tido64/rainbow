@@ -42,7 +42,7 @@ public:
 	static const char* set_userdatapath(const char *const path);
 
 	/// Construct an empty data object. No memory will be allocated.
-	Data();
+	inline Data();
 
 	/// Construct a data object with the contents of the file.
 	explicit Data(const char *const file);
@@ -53,27 +53,32 @@ public:
 	/// \return Pointer to array. Returns 0 if buffer is empty.
 	inline unsigned char* bytes() const;
 
-	bool copy(const void *const data, const unsigned int length);
-
-	/// Load data from file.
-	/// \return \c true on success, \c false otherwise.
-	bool load(const char *const file);
+	/// Make full copy of data set.
+	/// \param data    Data to take make copy of.
+	/// \param length  Length of data.
+	void copy(const void *const data, const unsigned int length);
 
 	/// Save data to file.
 	/// \return \c true on success, \c false otherwise.
 	bool save(const char *const file) const;
+
+	/// Take ownership of data set.
+	/// \param data    Data to take ownership of.
+	/// \param length  Length of data.
+	void set(unsigned char *data, const unsigned int length);
 
 	/// Return the size of this buffer.
 	inline unsigned int size() const;
 
 	inline operator bool() const;
 	inline operator void*() const;
+	inline operator char*() const;
 	inline operator unsigned char*() const;
 
 #ifdef RAINBOW_IOS
 
-	operator NSData*() const;
-	operator NSMutableData*() const;
+	inline operator NSData*() const;
+	inline operator NSMutableData*() const;
 
 private:
 	NSMutableData *data;
@@ -95,8 +100,7 @@ private:
 
 	/// Resize allocated memory segment. If the requested allocation size is
 	/// smaller than current allocated size, nothing will happen.
-	/// \return True on successful allocation. False otherwise.
-	bool allocate(const unsigned int size);
+	void allocate(const unsigned int size);
 
 	/// Intentionally left undefined.
 	Data& operator=(const Data &);

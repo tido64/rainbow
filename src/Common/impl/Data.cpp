@@ -51,55 +51,19 @@ const char* Data::set_userdatapath(const char *const path)
 	return static_cast<const char*>(memcpy(Data::userdata_path, path, length));
 }
 
-Data::Data() : allocated(0), sz(0), data(nullptr) { }
-
 Data::Data(const char *const file) : allocated(0), sz(0), data(nullptr)
-{
-	this->load(file);
-}
-
-Data::~Data()
-{
-	delete[] this->data;
-}
-
-bool Data::allocate(const unsigned int size)
-{
-	if (size >= this->allocated)  // Data needs a bigger buffer
-	{
-		delete[] this->data;
-		this->allocated = size + 1;
-		this->data = new unsigned char[this->allocated];
-		this->data[size] = 0;
-	}
-	else  // Pad with zeros
-		memset(this->data + size, 0, this->allocated - size);
-
-	return true;
-}
-
-bool Data::copy(const void *const data, const unsigned int length)
-{
-	if (!this->allocate(length) || !memcpy(this->data, data, length))
-		return false;
-	this->sz = length;
-	return true;
-}
-
-bool Data::load(const char *const file)
 {
 	FILE *fp = fopen(file, "rb");
 	if (!fp)
-		return false;
+	{
+		fprintf(stderr, "Rainbow::Data: Failed to open '%s'\n", file);
+		return;
+	}
 
 	// Get size of file
 	fseek(fp, 0, SEEK_END);
 	const unsigned int size = ftell(fp);
-	if (!this->allocate(size))
-	{
-		fclose(fp);
-		return false;
-	}
+	this->allocate(size);
 
 	// Fill buffer
 	fseek(fp, 0, SEEK_SET);
@@ -111,11 +75,34 @@ bool Data::load(const char *const file)
 		this->data = nullptr;
 		this->allocated = 0;
 		this->sz = 0;
-		return false;
 	}
-	this->sz = size;
+	else
+		this->sz = size;
+}
 
-	return true;
+Data::~Data()
+{
+	delete[] this->data;
+}
+
+void Data::allocate(const unsigned int size)
+{
+	if (size >= this->allocated)  // Data needs a bigger buffer
+	{
+		delete[] this->data;
+		this->allocated = size + 1;
+		this->data = new unsigned char[this->allocated];
+		this->data[size] = 0;
+	}
+	else  // Pad with zeros
+		memset(this->data + size, 0, this->allocated - size);
+}
+
+void Data::copy(const void *const data, const unsigned int length)
+{
+	this->allocate(length);
+	memcpy(this->data, data, length);
+	this->sz = length;
 }
 
 bool Data::save(const char *const file) const
@@ -123,7 +110,7 @@ bool Data::save(const char *const file) const
 	if (!this->data)
 		return false;
 
-	assert(this->sz > 0 || !"Rainbow::Data: Data is set but size is 0");
+	assert(this->sz > 0 || !"Rainbow::Data::save: Data is set but size is 0");
 
 	FILE *fp = fopen(file, "wb");
 	if (!fp)
@@ -136,6 +123,14 @@ bool Data::save(const char *const file) const
 		return false;
 
 	return true;
+}
+
+void Data::set(unsigned char *data, const unsigned int length)
+{
+	delete[] this->data;
+	this->data = data;
+	this->allocated = length;
+	this->sz = length;
 }
 
 #endif

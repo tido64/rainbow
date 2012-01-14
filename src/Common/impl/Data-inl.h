@@ -3,7 +3,7 @@
 
 #if defined(RAINBOW_IOS)
 
-inline Data::Data() : data(nil) { }
+Data::Data() : data(nil) { }
 
 unsigned char* Data::bytes() const
 {
@@ -25,22 +25,29 @@ Data::operator void*() const
 	return data.mutableBytes;
 }
 
-Data::operator unsigned char*() const
+Data::operator char*() const
 {
-	return static_cast<unsigned char *>(data.mutableBytes);
+	return static_cast<char*>(data.mutableBytes);
 }
 
-inline Data::operator NSData*() const
+Data::operator unsigned char*() const
+{
+	return static_cast<unsigned char*>(data.mutableBytes);
+}
+
+Data::operator NSData*() const
 {
 	return static_cast<NSData *>(this->data);
 }
 
-inline Data::operator NSMutableData*() const
+Data::operator NSMutableData*() const
 {
 	return this->data;
 }
 
 #elif defined(RAINBOW_UNIX) || defined(RAINBOW_WIN)
+
+Data::Data() : allocated(0), sz(0), data(nullptr) { }
 
 unsigned char* Data::bytes() const
 {
@@ -60,6 +67,11 @@ Data::operator bool() const
 Data::operator void*() const
 {
 	return this->data;
+}
+
+Data::operator char*() const
+{
+	return reinterpret_cast<char*>(this->data);
 }
 
 Data::operator unsigned char*() const

@@ -62,7 +62,7 @@ TextureAtlas::TextureAtlas(const Data &img) : name(0), width(0), height(0)
 #else
 
 	// Prepare for decoding PNG data
-	png_read_struct texture(img.bytes());
+	png_read_struct texture(img);
 
 	// Look for PNG signature
 #ifndef NDEBUG
