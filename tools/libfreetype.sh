@@ -4,14 +4,11 @@ if [ ! -f include/ft2build.h ]; then
 	exit
 fi
 
-TOOLS="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-
-rm -fr ChangeLog* Jam* Makefile README* autogen.sh builds configure devel docs modules.cfg objs version.sed vms_make.com \
-src/{autofit,bdf,cache,cid,gxvalid,gzip,lzw,otvalid,pcf,pfr,psaux,tools,type1,type42,winfonts} \
-src/base/{ftbdf.c,ftcid.c,ftfstype.c,ftgasp.c,ftgxval.c,ftlcdfil.c,ftmac.c,ftmm.c,ftotval.c,ftpatent.c,ftpfr.c,fttype1.c,ftwinfnt.c,ftxf86.c}
+rm -fr autogen.sh builds ChangeLog* configure devel Jamrules Makefile modules.cfg objs README* version.sed vms_make.com \
+       src/{bdf,bzip2,cache,cid,gxvalid,gzip,lzw,otvalid,pcf,pfr,psaux,raster,tools,type1,type42,winfonts} \
+       src/base/{ftapi.c,ftbdf.c,ftcid.c,ftfstype.c,ftgasp.c,ftgxval.c,ftlcdfil.c,ftmac.c,ftmm.c,ftotval.c,ftpatent.c,ftpfr.c,ftstroke.c,ftsynth.c,fttype1.c,ftwinfnt.c,ftxf86.c}
 find . -name '*.mk' -exec rm {} \;
 find . -name Jamfile -exec rm {} \;
-patch -Nr - include/freetype/config/ftmodule.h < $TOOLS/patches/freetype.patch
 
 echo "Disable the following files:"
 echo
