@@ -1,14 +1,30 @@
-# HG changeset patch
-# User Tommy Nguyen <tn0502@gmail.com>
-# Date 1325878120 -3600
-# Node ID b15ddf0b414932c8383638a368a6847e94d76d93
-# Parent  3bc25d7017ca3b3d04d4dbb9ab1cdbaf872b4dc8
-Patch for making Lua compile with a C++ compiler when LUA_NUMBER=float.
-
-diff -r 3bc25d7017ca -r b15ddf0b4149 lib/Lua/lmathlib.c
---- a/lib/Lua/lmathlib.c	Fri Jan 06 04:53:01 2012 +0100
-+++ b/lib/Lua/lmathlib.c	Fri Jan 06 20:28:40 2012 +0100
-@@ -102,7 +102,7 @@
+diff -rupN LICENSE LICENSE
+--- LICENSE	1970-01-01 01:00:00.000000000 +0100
++++ LICENSE	2012-01-06 05:03:39.698319313 +0100
+@@ -0,0 +1,19 @@
++Copyright (c) 1994-2012 Lua.org, PUC-Rio.
++
++Permission is hereby granted, free of charge, to any person obtaining a copy
++of this software and associated documentation files (the "Software"), to deal
++in the Software without restriction, including without limitation the rights
++to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
++copies of the Software, and to permit persons to whom the Software is
++furnished to do so, subject to the following conditions:
++
++The above copyright notice and this permission notice shall be included in
++all copies or substantial portions of the Software.
++
++THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
++IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
++FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
++AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
++LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
++OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
++THE SOFTWARE.
+diff -rupN lmathlib.c lmathlib.c
+--- lmathlib.c	2011-07-05 14:49:35.000000000 +0200
++++ lmathlib.c	2012-01-12 18:38:09.130465126 +0100
+@@ -102,7 +102,7 @@ static int math_fmod (lua_State *L) {
  }
  
  static int math_modf (lua_State *L) {
@@ -17,3 +33,55 @@ diff -r 3bc25d7017ca -r b15ddf0b4149 lib/Lua/lmathlib.c
    lua_Number fp = l_tg(modf)(luaL_checknumber(L, 1), &ip);
    lua_pushnumber(L, ip);
    lua_pushnumber(L, fp);
+diff -rupN loslib.c loslib.c
+--- loslib.c	2011-11-30 13:35:05.000000000 +0100
++++ loslib.c	2012-01-17 20:37:12.606736469 +0100
+@@ -262,12 +262,6 @@ static int os_time (lua_State *L) {
+ }
+ 
+ 
+-static int os_difftime (lua_State *L) {
+-  lua_pushnumber(L, difftime((time_t)(luaL_checknumber(L, 1)),
+-                             (time_t)(luaL_optnumber(L, 2, 0))));
+-  return 1;
+-}
+-
+ /* }====================================================== */
+ 
+ 
+@@ -299,7 +293,6 @@ static int os_exit (lua_State *L) {
+ static const luaL_Reg syslib[] = {
+   {"clock",     os_clock},
+   {"date",      os_date},
+-  {"difftime",  os_difftime},
+   {"execute",   os_execute},
+   {"exit",      os_exit},
+   {"getenv",    os_getenv},
+diff -rupN luaconf.h luaconf.h
+--- luaconf.h	2011-12-06 17:58:36.000000000 +0100
++++ luaconf.h	2012-01-06 05:03:39.718319433 +0100
+@@ -376,8 +376,8 @@
+ ** ===================================================================
+ */
+ 
+-#define LUA_NUMBER_DOUBLE
+-#define LUA_NUMBER	double
++#define LUA_NUMBER_FLOAT
++#define LUA_NUMBER	float
+ 
+ /*
+ @@ LUAI_UACNUMBER is the result of an 'usual argument conversion'
+@@ -392,10 +392,10 @@
+ @@ lua_number2str converts a number to a string.
+ @@ LUAI_MAXNUMBER2STR is maximum size of previous conversion.
+ */
+-#define LUA_NUMBER_SCAN		"%lf"
+-#define LUA_NUMBER_FMT		"%.14g"
++#define LUA_NUMBER_SCAN		"%f"
++#define LUA_NUMBER_FMT		"%.7g"
+ #define lua_number2str(s,n)	sprintf((s), LUA_NUMBER_FMT, (n))
+-#define LUAI_MAXNUMBER2STR	32 /* 16 digits, sign, point, and \0 */
++#define LUAI_MAXNUMBER2STR	16 /* 16 digits, sign, point, and \0 */
+ 
+ 
+ /*
