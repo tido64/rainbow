@@ -7,6 +7,7 @@
 #	include "../tests/test.h"
 #endif
 
+#include "Config.h"
 #include "Director.h"
 #include "Common/Chrono.h"
 #include "Common/Data.h"
@@ -18,11 +19,11 @@
 bool active = true;  ///< Whether the window is in focus
 bool done = false;   ///< Whether the user has requested to quit
 
-unsigned short int screen_width = 640;   ///< Window width
-unsigned short int screen_height = 960;  ///< Window height
-const double fps = 1000.0 / 60.0;        ///< Preferred frames per second
-const float milli = 1.0f / 1000.0f;      ///< 1 millisecond
-Touch mouse_input;                       ///< Mouse input
+unsigned int screen_width = 960;     ///< Window width
+unsigned int screen_height = 640;    ///< Window height
+const double fps = 1000.0 / 60.0;    ///< Preferred frames per second
+const float milli = 1.0f / 1000.0f;  ///< 1 millisecond
+Touch mouse_input;                   ///< Mouse input
 
 void init_GL();                                     ///< Initialise 2d viewport
 void on_mouse_button_down(SDL_MouseButtonEvent &);  ///< Handle mouse button down event
@@ -41,6 +42,15 @@ int main(int argc, char *argv[])
 	#else
 		return 0;
 	#endif
+	}
+	Data::set_datapath(argv[1]);  // Set data path
+
+	Config config;
+	if (config.is_portrait())
+	{
+		unsigned int tmp = screen_width;
+		screen_width = screen_height;
+		screen_height = tmp;
 	}
 
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
@@ -71,11 +81,7 @@ int main(int argc, char *argv[])
 	SDL_WM_SetCaption(RAINBOW_BUILD, "Rainbow");
 
 	init_GL();
-
-	Data::set_datapath(argv[1]);  // Set data path
-	Director director;            // Instantiate the director
-
-	// Resize viewport
+	Director director;
 	resize(director, screen_width, screen_height);
 
 	// Load game
@@ -125,6 +131,7 @@ int main(int argc, char *argv[])
 					if (!surface)
 					{
 						fprintf(stderr, "SDL unable to set video mode: %s\n", SDL_GetError());
+						active = false;
 						done = true;
 					}
 					resize(director, event.resize.w, event.resize.h);
@@ -134,7 +141,13 @@ int main(int argc, char *argv[])
 			}
 		}
 		if (!active)
+		{
+			if (done)
+				break;
+
+			Chrono::Instance().update();
 			SDL_Delay(static_cast<Uint32>(fps));
+		}
 		else
 		{
 			// Update game logic
