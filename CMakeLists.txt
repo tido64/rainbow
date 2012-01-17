@@ -109,7 +109,7 @@ if(MINGW)
 	target_link_libraries(rainbow
 		${GTEST_LIBRARY} lua ${SDL_LIBRARY} freetype
 		${VORBISFILE_LIBRARY} ${OPENAL_LIBRARY} GLee ${OPENGL_gl_LIBRARY} png
-		${ZLIB_LIBRARIES} dxguid gdi32 winmm msvcr100)
+		${ZLIB_LIBRARIES} dxguid gdi32 winmm)
 else()
 	target_link_libraries(rainbow
 		${GTEST_LIBRARY} lua ${SDL_LIBRARY} freetype
