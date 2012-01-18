@@ -1,5 +1,8 @@
 // Copyright 2010-12 Bifrost Entertainment. All rights reserved.
 
+#include "Platform.h"
+#ifdef RAINBOW_SDL
+
 #include <SDL/SDL.h>
 #include <SDL/SDL_thread.h>
 
@@ -212,3 +215,5 @@ void resize(Director &director, const int w, const int h)
 
 	director.set_video(w, h);
 }
+
+#endif
