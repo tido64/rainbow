@@ -1,5 +1,3 @@
-#include "Common/Chrono.h"
-
 #ifdef RAINBOW_SDL
 #include <SDL/SDL_timer.h>
 
@@ -10,8 +8,8 @@
 class Chrono : public Rainbow::_Chrono<Chrono>
 {
 public:
-	Chrono() { }
-	unsigned long get_time();
+	inline Chrono();
+	inline unsigned long get_time();
 
 private:
 	/// Intentionally left undefined.
@@ -21,7 +19,9 @@ private:
 	Chrono& operator=(const Chrono &);
 };
 
-inline unsigned long Chrono::get_time()
+Chrono::Chrono() { }
+
+unsigned long Chrono::get_time()
 {
 	return SDL_GetTicks();
 }

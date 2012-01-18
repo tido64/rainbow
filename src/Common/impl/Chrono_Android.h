@@ -1,15 +1,13 @@
-#include "Common/Chrono.h"
+#ifdef RAINBOW_ANDROID
 
-#if defined(RAINBOW_WIN) && !defined(RAINBOW_SDL)
-
-/// Windows-implementation of Chrono.
+/// Android-implementation of Chrono.
 ///
 /// Copyright 2011-12 Bifrost Entertainment. All rights reserved.
 /// \author Tommy Nguyen
 class Chrono : public Rainbow::_Chrono<Chrono>
 {
 public:
-	Chrono();
+	inline Chrono();
 	unsigned long get_time();
 
 private:
@@ -19,5 +17,7 @@ private:
 	/// Intentionally left undefined.
 	Chrono& operator=(const Chrono &);
 };
+
+Chrono::Chrono() { }
 
 #endif
