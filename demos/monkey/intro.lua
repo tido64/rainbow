@@ -16,6 +16,7 @@ function SceneIntro.new(assets)
 	s.bg_island = s.spritebatch:add(0, 0, 320, 200);
 	s.bg_title = nil;
 
+	s.bgm = rainbow.audio.load_stream("opening.ogg");
 	s.node = nil;
 	s.sched = Scheduler.new(22);
 
@@ -41,8 +42,7 @@ function SceneIntro:init()
 	end
 
 	-- Start opening theme
-	rainbow.audio.set_bgm("opening.ogg");
-	rainbow.audio.play_bgm();
+	rainbow.audio.play(self.bgm);
 
 	-- Scale and position island
 	self.bg_island:set_scale(global_scale);
@@ -76,7 +76,7 @@ end
 
 function SceneIntro:touch_began()
 	rainbow.input.unsubscribe(self);
-	rainbow.audio.stop_bgm();
+	rainbow.audio.clear();
 	rainbow.scenegraph:remove(self.node);
 	self.node = nil;
 end

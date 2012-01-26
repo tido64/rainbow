@@ -14,6 +14,7 @@
 #include "Director.h"
 #include "Common/Chrono.h"
 #include "Common/Data.h"
+#include "ConFuoco/Mixer.h"
 #include "Graphics/OpenGL.h"
 #include "Input/Key.h"
 #include "Input/Input.h"
@@ -47,6 +48,9 @@ int main(int argc, char *argv[])
 	#endif
 	}
 	Data::set_datapath(argv[1]);  // Set data path
+
+	if (!ConFuoco::Mixer::Instance().is_available())
+		return 1;
 
 	Config config;
 	if (config.is_portrait())

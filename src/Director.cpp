@@ -7,8 +7,6 @@
 #include "Input/Input.h"
 #include "Lua/lua_Platform.h"
 
-using Rainbow::ConFuoco::Mixer;
-
 Director::Director()
 {
 	Input::Instance().set_state(this->lua.L);
@@ -31,7 +29,7 @@ void Director::set_video(const int w, const int h)
 void Director::update(const unsigned long t)
 {
 	Chrono::Instance().update(t);
-	Mixer::Instance().update();
+	ConFuoco::Mixer::Instance().update();
 	Physics::Instance().step(Chrono::Instance().diff() * (1.0f / 1000.0f));
 	if (this->lua.update())
 		this->shutdown.execute();

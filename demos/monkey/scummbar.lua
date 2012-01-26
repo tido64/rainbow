@@ -59,13 +59,14 @@ function SceneSCUMMBar.new(assets)
 	s.scene = s.position;
 	s.margin = 64;
 
+	s.bgm = rainbow.audio.load_stream("scummbar.ogg");
 	s.node = nil;
 
 	return s;
 end
 
 function SceneSCUMMBar:destruct()
-	rainbow.audio.stop_bgm();
+	rainbow.audio.clear();
 
 	rainbow.scenegraph:remove(self.node);
 	self.node = nil;
@@ -89,8 +90,7 @@ function SceneSCUMMBar:init()
 	end
 
 	-- Start SCUMM Bar theme
-	rainbow.audio.set_bgm("scummbar.ogg");
-	rainbow.audio.play_bgm();
+	rainbow.audio.play(self.bgm);
 
 	-- Local convenience variables
 	local screen = rainbow.platform.screen;

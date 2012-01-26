@@ -8,10 +8,10 @@
 
 #include "Platform.h"
 
-#ifdef RAINBOW_IOS
+#if defined(RAINBOW_IOS)
 #	include <OpenAL/al.h>
 #	include <OpenAL/alc.h>
-#else
+#elif !defined(RAINBOW_ANDROID)
 #	include <AL/al.h>
 #	include <AL/alc.h>
 #endif

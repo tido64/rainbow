@@ -1,62 +1,57 @@
-#ifndef AUDIO_DECODER_H_
-#define AUDIO_DECODER_H_
+#ifndef CONFUOCO_DECODER_H_
+#define CONFUOCO_DECODER_H_
 
-#include <cassert>
-
-#include "ConFuoco/Mixer.h"
-
-namespace Rainbow
+namespace ConFuoco
 {
-	namespace ConFuoco
+	/// Audio file decoder.
+	///
+	/// On iOS, uses its internal library for decoding audio. On other
+	/// platforms we use Ogg Vorbis.
+	///
+	/// \see https://developer.apple.com/library/ios/#documentation/MusicAudio/Conceptual/AudioQueueProgrammingGuide/AQPlayback/PlayingAudio.html#//apple_ref/doc/uid/TP40005343-CH3-SW1
+	/// \see https://developer.apple.com/library/ios/#samplecode/oalTouch/Introduction/Intro.html#//apple_ref/doc/uid/DTS40007769
+	/// \see https://developer.apple.com/library/ios/#documentation/AudioVideo/Conceptual/MultimediaPG/Introduction/Introduction.html
+	/// \see https://developer.apple.com/library/ios/#codinghowtos/AudioAndVideo/_index.html#//apple_ref/doc/uid/TP40007426
+	/// \see https://developer.apple.com/library/ios/#documentation/MusicAudio/Conceptual/AudioQueueProgrammingGuide/Introduction/Introduction.html#//apple_ref/doc/uid/TP40005343
+	/// \see http://www.wooji-juice.com/blog/iphone-openal-ima4-adpcm.html
+	///
+	/// Copyright 2011-12 Bifrost Entertainment. All rights reserved.
+	/// \author Tommy Nguyen
+	class Decoder
 	{
-		/// Audio file decoder.
-		///
-		/// On iOS, uses its internal library for decoding audio. On other
-		/// platforms we use Ogg Vorbis.
-		///
-		/// \see https://developer.apple.com/library/ios/#documentation/MusicAudio/Conceptual/AudioQueueProgrammingGuide/AQPlayback/PlayingAudio.html#//apple_ref/doc/uid/TP40005343-CH3-SW1
-		/// \see https://developer.apple.com/library/ios/#samplecode/oalTouch/Introduction/Intro.html#//apple_ref/doc/uid/DTS40007769
-		/// \see https://developer.apple.com/library/ios/#documentation/AudioVideo/Conceptual/MultimediaPG/Introduction/Introduction.html
-		/// \see https://developer.apple.com/library/ios/#codinghowtos/AudioAndVideo/_index.html#//apple_ref/doc/uid/TP40007426
-		/// \see https://developer.apple.com/library/ios/#documentation/MusicAudio/Conceptual/AudioQueueProgrammingGuide/Introduction/Introduction.html#//apple_ref/doc/uid/TP40005343
-		/// \see http://www.wooji-juice.com/blog/iphone-openal-ima4-adpcm.html
-		///
-		/// Copyright 2011-12 Bifrost Entertainment. All rights reserved.
-		/// \author Tommy Nguyen
-		class Decoder
-		{
-		public:
-			/// Open a sound stream from file.
-			/// \param[out] wave       Wave construct
-			/// \param      file       Path to file to open
-			/// \param      streaming  Open for streaming?
-			static void open(Wave &wave, const char *const file, bool streaming = false);
+	public:
+		/// Close stream and release any resources.
+		/// \param handle  Codec-specific handle.
+		static void close(void *handle);
 
-		#ifndef RAINBOW_IOS
+		/// Stream from file.
+		/// \param[out] handle     Codec-specific handle.
+		/// \param[out] buffer     Output stream buffer.
+		/// \param[out] channels   Number of channels in the bitstream.
+		/// \param[out] rate       Sampling rate of the bitstream.
+		/// \param      file       Path to the bitstream to open.
+		/// \return Size of the stream buffer.
+		static unsigned int open_stream(void **handle, char **buffer, int &channels, int &rate, const char *const file);
 
-			/// Close stream and release any buffers;
-			static void close(Stream &);
+		/// Load entire audio file into buffer.
+		/// \param[out] buffer     Output buffer.
+		/// \param[out] channels   Number of channels in the bitstream.
+		/// \param[out] rate       Sampling rate of the bitstream.
+		/// \param      file       Path to the bitstream to open.
+		/// \return Size of the decoded bitstream.
+		static unsigned int open_wave(char **buffer, int &channels, int &rate, const char *const file);
 
-			/// Read (and decode) maximum number of audio frames to stream buffer.
-			/// \return Bytes read. If 0, then EOF has been reached.
-			static unsigned int read(Wave &wave);
+		/// Read (and decode) audio frames till buffer is full.
+		/// \param[out] dst   Destination for decoded bitstream.
+		/// \param      src   Codec-specific handle for source bitstream.
+		/// \param      size  Size of destination buffer.
+		/// \return Bytes written to the buffer.
+		static unsigned int read(char *dst, void *src, const unsigned int size);
 
-			/// Rewind stream to the beginning.
-			static void reset(Stream &);
-
-		#endif
-
-		private:
-			/// Intentionally left undefined.
-			Decoder();
-
-			/// Intentionally left undefined.
-			Decoder(const Decoder &);
-
-			/// Intentionally left undefined.
-			Decoder& operator=(const Decoder &);
-		};
-	}
+		/// Rewind stream to the beginning.
+		/// \param handle  Codec-specific handle.
+		static void reset(void *handle);
+	};
 }
 
 #endif
