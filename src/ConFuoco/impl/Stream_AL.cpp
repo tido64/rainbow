@@ -3,9 +3,9 @@
 #include "ConFuoco/OpenAL.h"
 #ifdef RAINBOW_SDL
 
-#include <cassert>
 #include <cstdio>
 
+#include "Common/Assert.h"
 #include "ConFuoco/Decoder.h"
 #include "ConFuoco/impl/Stream_AL.h"
 
@@ -14,7 +14,7 @@ namespace ConFuoco
 	Stream::Stream() :
 		format(0), rate(0), loops(-1), buffer_size(0), buffer(nullptr), handle(nullptr)
 	{
-		assert(this->sid || !"Rainbow::ConFuoco::AL: Failed to generate source");
+		R_ASSERT(this->sid, "Failed to generate source.");
 
 		alGenBuffers(CONFUOCO_STREAM_AL_BUFFERS, this->bid);
 		if (alGetError() != AL_NO_ERROR)

@@ -1,11 +1,11 @@
 #include "Platform.h"
 #ifdef RAINBOW_SDL
 
-#include <cassert>
 #include <cstring>
 
 #include <vorbis/vorbisfile.h>
 
+#include "Common/Assert.h"
 #include "ConFuoco/Decoder.h"
 
 namespace ConFuoco
@@ -72,7 +72,8 @@ namespace ConFuoco
 
 	void Decoder::close(void *handle)
 	{
-		assert(handle || !"Rainbow::ConFuoco::Decoder::Vorbis::close: Missing handle");
+		R_ASSERT(handle, "close: Missing handle.");
+
 		OggVorbis_File *vf = static_cast<OggVorbis_File*>(handle);
 		ov_clear(vf);
 		delete vf;
@@ -133,7 +134,7 @@ namespace ConFuoco
 					fprintf(stderr, "Rainbow::ConFuoco::Decoder::Vorbis:OV_EUNKNOWN\n");
 					break;
 			}
-			assert(!"Rainbow::ConFuoco::Decoder::Vorbis: Failed to reset stream");
+			R_ASSERT(false, "reset: Failed to reset stream.");
 		}
 
 	#endif

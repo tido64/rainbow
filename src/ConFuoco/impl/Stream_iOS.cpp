@@ -3,8 +3,7 @@
 #include "Platform.h"
 #ifdef RAINBOW_IOS
 
-#include <cassert>
-
+#include "Common/Assert.h"
 #include "ConFuoco/impl/Stream_iOS.h"
 
 namespace ConFuoco
@@ -25,7 +24,7 @@ namespace ConFuoco
 		if (!this->player)
 		{
 			NSLog(@"Rainbow::ConFuoco::iOS::load: %@", [error description]);
-			assert(this->player);
+			R_ASSERT(this->player, "load: Failed to create player.");
 			return false;
 		}
 

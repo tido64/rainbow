@@ -1,6 +1,7 @@
 #ifndef TREENODE_H_
 #define TREENODE_H_
 
+#include "Common/Assert.h"
 #include "Common/List.h"
 
 /// A barebone implementation of a tree node.
@@ -52,7 +53,7 @@ void TreeNode<T>::remove_child(T *n)
 	unsigned int removed =
 #endif
 	this->children.remove(n);
-	assert(removed || !"Rainbow::TreeNode::remove_child: Node does not exist");
+	R_ASSERT(removed, "remove_child: Node does not exist.");
 	delete n;
 }
 

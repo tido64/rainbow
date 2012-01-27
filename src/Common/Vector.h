@@ -1,8 +1,9 @@
 #ifndef VECTOR_H_
 #define VECTOR_H_
 
-#include <cassert>
 #include <cstring>
+
+#include "Common/Assert.h"
 
 /// Simple vector class, mimicking STL::vector.
 ///
@@ -76,7 +77,7 @@ Vector<T>::~Vector()
 template<class T>
 inline T& Vector<T>::at(const unsigned int i)
 {
-	assert(i < this->count || !"Rainbow::Vector::at: Tried to access an element out of range");
+	R_ASSERT(i < this->count, "at: Tried to access an element out of range.");
 	return this->c_array[i];
 }
 
@@ -141,7 +142,7 @@ Vector<T>& Vector<T>::operator=(const Vector<T> &v)
 template<class T>
 T& Vector<T>::operator[](const unsigned int i) const
 {
-	assert(i < this->count || !"Rainbow::Vector::operator[]: Tried to access an element out of range");
+	R_ASSERT(i < this->count, "operator[]: Tried to access an element out of range.");
 	return this->c_array[i];
 }
 

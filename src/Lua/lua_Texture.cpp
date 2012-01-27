@@ -32,14 +32,14 @@ lua_Texture::lua_Texture(lua_State *L)
 			}
 			break;
 		default:
-			assert(lua_gettop(L) == 4 || !"Rainbow::Lua syntax: rainbow.texture(<path to texture>)");
+			LUA_ASSERT(lua_gettop(L) == 4, "rainbow.texture(<path to texture>)");
 			break;
 	}
 }
 
 int lua_Texture::create(lua_State *L)
 {
-	assert(lua_gettop(L) == 4 || !"Rainbow::Lua syntax: rainbow.texture:create(x, y, width, height)");
+	LUA_ASSERT(lua_gettop(L) == 4, "<texture>:create(x, y, width, height)");
 
 	const int x = lua_tointeger(L, 1);
 	const int y = lua_tointeger(L, 2);

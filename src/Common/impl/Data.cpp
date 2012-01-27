@@ -1,12 +1,12 @@
 // Copyright 2011-12 Bifrost Entertainment. All rights reserved.
 
 #include "Common/Data.h"
-
 #if defined(RAINBOW_UNIX) || defined(RAINBOW_WIN)
 
-#include <cassert>
 #include <cstdio>
 #include <cstring>
+
+#include "Common/Assert.h"
 
 unsigned int Data::data_path_length = 0;
 unsigned int Data::userdata_path_length = 0;
@@ -110,7 +110,7 @@ bool Data::save(const char *const file) const
 	if (!this->data)
 		return false;
 
-	assert(this->sz > 0 || !"Rainbow::Data::save: Data is set but size is 0");
+	R_ASSERT(this->sz > 0, "save: Data is set but size is 0.");
 
 	FILE *fp = fopen(file, "wb");
 	if (!fp)

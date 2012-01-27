@@ -1,7 +1,7 @@
 #ifndef CHRONO_H_
 #define CHRONO_H_
 
-#include <cassert>
+#include "Common/Assert.h"
 
 namespace Rainbow
 {
@@ -53,7 +53,7 @@ namespace Rainbow
 	template<class T>
 	inline unsigned long _Chrono<T>::current()
 	{
-		assert(this->tm_current > 0 || !"Rainbow::Chrono: Current time has not been updated.");
+		R_ASSERT(this->tm_current > 0, "current: Current time has not been updated.");
 		return this->tm_current;
 	}
 
@@ -66,7 +66,7 @@ namespace Rainbow
 	template<class T>
 	inline unsigned long _Chrono<T>::previous()
 	{
-		assert(this->tm_previous > 0 || !"Rainbow::Chrono: Previous frame time has not been saved.");
+		R_ASSERT(this->tm_previous > 0, "previous: Previous frame time has not been saved.");
 		return this->tm_previous;
 	}
 

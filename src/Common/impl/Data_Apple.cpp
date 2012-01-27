@@ -35,7 +35,7 @@ Data::~Data()
 
 void Data::copy(const void *const data, const unsigned int length)
 {
-	assert(!"Rainbow::Data::copy: Not implemented yet");
+	R_ASSERT(false, "copy: Not implemented yet");
 }
 
 bool Data::save(const char *const file) const
@@ -43,7 +43,7 @@ bool Data::save(const char *const file) const
 	if (!this->data)
 		return false;
 
-	assert(!"Rainbow::Data::save: Not implemented yet");
+	R_ASSERT(false, "save: Not implemented yet");
 
 	return true;
 }

@@ -31,19 +31,19 @@ static void mem_fread(png_structp png_ptr, png_bytep data, png_size_t length)
 
 TextureAtlas::TextureAtlas(const Data &img) : name(0), width(0), height(0)
 {
-	assert(img || !"Rainbow::TextureAtlas: No data provided");
+	R_ASSERT(img, "No data provided.");
 
 	GLint format = GL_RGBA;
 
 #if defined(RAINBOW_IOS)
 
 	UIImage *image = [[UIImage alloc] initWithData:(const NSData*)img];
-	assert(image != nil || !"Rainbow::TextureAtlas: Failed to load file");
+	R_ASSERT(image, "Failed to load file.");
 
 	this->width = CGImageGetWidth(image.CGImage);
 	this->height = CGImageGetHeight(image.CGImage);
-	assert((this->is_pow2(this->width) && this->is_pow2(this->height))
-		|| !"Rainbow::TextureAtlas: Texture dimension is not a power of 2");
+	R_ASSERT(this->is_pow2(this->width) && this->is_pow2(this->height),
+	         "Texture dimension is not a power of 2.");
 	CGRect bounds = CGRectMake(0, 0, this->width, this->height);
 
 	CGColorSpaceRef color_space = CGColorSpaceCreateDeviceRGB();
@@ -69,12 +69,12 @@ TextureAtlas::TextureAtlas(const Data &img) : name(0), width(0), height(0)
 	int png_error =
 #endif
 	png_sig_cmp(texture.data, 0, texture.offset);
-	assert(!png_error || !"Rainbow::TextureAtlas: File is not PNG");
+	R_ASSERT(!png_error, "File is not PNG.");
 
 	png_structp png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
 	if (!png_ptr)
 	{
-		assert(!"Rainbow::TextureAtlas: Failed to create PNG reading structure");
+		R_ASSERT(false, "Failed to create PNG reading structure.");
 		return;
 	}
 
@@ -82,14 +82,14 @@ TextureAtlas::TextureAtlas(const Data &img) : name(0), width(0), height(0)
 	if (!info_ptr)
 	{
 		png_destroy_read_struct(&png_ptr, nullptr, nullptr);
-		assert(!"Rainbow::TextureAtlas: Failed to initialize PNG information structure");
+		R_ASSERT(false, "Failed to initialize PNG information structure.");
 		return;
 	}
 
 	if (setjmp(png_jmpbuf(png_ptr)))
 	{
 		png_destroy_read_struct(&png_ptr, &info_ptr, nullptr);
-		assert(!"Rainbow::TextureAtlas: Failed to read PNG");
+		R_ASSERT(false, "Failed to read PNG.");
 		return;
 	}
 
@@ -131,7 +131,7 @@ TextureAtlas::TextureAtlas(const Data &img) : name(0), width(0), height(0)
 
 	this->width = png_get_image_width(png_ptr, info_ptr);
 	this->height = png_get_image_height(png_ptr, info_ptr);
-	assert((this->width > 0 && this->height > 0) || !"Rainbow::TextureAtlas: Invalid texture dimensions");
+	R_ASSERT(this->width > 0 && this->height > 0, "Invalid texture dimensions.");
 
 	// Allocate memory for bitmap
 	png_read_update_info(png_ptr, info_ptr);
@@ -164,8 +164,8 @@ TextureAtlas::TextureAtlas(const Data &img) : name(0), width(0), height(0)
 
 unsigned int TextureAtlas::define(const int x, const int y, const int w, const int h)
 {
-	assert((x >= 0 && (x + w) <= this->width && y >= 0 && (y + h) <= this->height)
-		|| !"Rainbow::TextureAtlas::define: Invalid dimensions");
+	R_ASSERT(x >= 0 && (x + w) <= this->width && y >= 0 && (y + h) <= this->height,
+	         "define: Invalid dimensions.");
 
 	unsigned int i = this->textures.size();
 

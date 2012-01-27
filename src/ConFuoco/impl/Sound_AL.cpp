@@ -3,9 +3,9 @@
 #include "ConFuoco/OpenAL.h"
 #if defined(RAINBOW_IOS) || defined(RAINBOW_SDL)
 
-#include <cassert>
 #include <cstdio>
 
+#include "Common/Assert.h"
 #include "ConFuoco/Decoder.h"
 #include "ConFuoco/impl/Sound_AL.h"
 
@@ -13,7 +13,7 @@ namespace ConFuoco
 {
 	Sound::Sound() : bid(0)
 	{
-		assert(this->sid || !"Rainbow::ConFuoco::AL: Failed to generate source");
+		R_ASSERT(this->sid, "Failed to generate source.");
 
 		alGenBuffers(1, &this->bid);
 		if (alGetError() != AL_NO_ERROR)

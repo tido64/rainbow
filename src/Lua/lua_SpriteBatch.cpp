@@ -18,7 +18,7 @@ const LuaMachine::Method<lua_SpriteBatch> lua_SpriteBatch::methods[] = {
 
 int lua_SpriteBatch::add(lua_State *L)
 {
-	assert(lua_gettop(L) == 4 || !"Rainbow::Lua syntax: rainbow.spritebatch:add(x, y, width, height)");
+	LUA_ASSERT(lua_gettop(L) == 4, "<spritebatch>:add(x, y, width, height)");
 
 	const int x = lua_tointeger(L, 1);
 	const int y = lua_tointeger(L, 2);
@@ -36,7 +36,7 @@ int lua_SpriteBatch::draw(lua_State *)
 
 int lua_SpriteBatch::set_texture(lua_State *L)
 {
-	assert(lua_gettop(L) == 1 || !"Rainbow::Lua syntax: rainbow.spritebatch:set_texture(<path to texture>|texture)");
+	LUA_ASSERT(lua_gettop(L) == 1, "<spritebatch>:set_texture(<path to texture>|<texture>)");
 
 	switch (lua_type(L, 1))
 	{
@@ -57,7 +57,7 @@ int lua_SpriteBatch::set_texture(lua_State *L)
 			}
 			break;
 		default:
-			assert(!"Rainbow::Lua syntax: rainbow.spritebatch:set_texture(<path to texture>|texture)");
+			LUA_ASSERT(false, "<spritebatch>:set_texture(<path to texture>|<texture>)");
 			break;
 	}
 	return 0;

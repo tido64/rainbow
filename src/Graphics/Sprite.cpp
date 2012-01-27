@@ -3,8 +3,6 @@
 #include "Algorithm.h"
 #include "Common/SpriteVertex.h"
 #include "Graphics/SpriteBatch.h"
-#include "Graphics/TextureAtlas.h"
-#include "Graphics/Transition.h"
 
 using Rainbow::equalf;
 
@@ -80,7 +78,7 @@ void Sprite::set_color(const unsigned int v0, const unsigned int v1, const unsig
 
 void Sprite::set_pivot(const float x, const float y)
 {
-	assert((x >= 0.0f && x <= 1.0f && y >= 0.0f && y <= 1.0f) || !"Rainbow::Sprite: Invalid pivot point");
+	R_ASSERT(x >= 0.0f && x <= 1.0f && y >= 0.0f && y <= 1.0f, "set_pivot: Invalid pivot point.");
 
 	if (equalf(x, this->pivot.x) && equalf(y, this->pivot.y))
 		return;
@@ -124,7 +122,7 @@ void Sprite::set_rotation(const float r)
 
 void Sprite::set_scale(const float f)
 {
-	assert(f > 0.0f || !"Rainbow::Sprite: Can't scale with a negative factor");
+	R_ASSERT(f > 0.0f, "set_scale: Can't scale with a negative factor.");
 
 	if (equalf(f, this->scale_f.x) && equalf(f, this->scale_f.y))
 		return;
@@ -136,7 +134,7 @@ void Sprite::set_scale(const float f)
 
 void Sprite::set_scale(const Vec2f &f)
 {
-	assert((f.x > 0.0f && f.y > 0.0f) || !"Rainbow::Sprite: Can't scale with a negative factor");
+	R_ASSERT(f.x > 0.0f && f.y > 0.0f, "set_scale: Can't scale with a negative factor.");
 
 	if (equalf(f.x, this->scale_f.x) && equalf(f.y, this->scale_f.y))
 		return;

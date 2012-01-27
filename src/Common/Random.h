@@ -2,6 +2,7 @@
 #define RANDOM_H_
 
 #include <ctime>
+
 #include "Platform.h"
 
 #if defined(RAINBOW_UNIX)
@@ -19,6 +20,8 @@
 #if defined(RAINBOW_UNIX)
 #	pragma GCC diagnostic pop
 #endif
+
+#include "Common/Assert.h"
 
 /// Define floating point precision for pseudo-random generated numbers.
 typedef float float_p;
@@ -43,7 +46,7 @@ public:
 	template<class T>
 	T next(const T &n1, const T &n2)
 	{
-		assert(n1 < n2 || !"Rainbow::Random::next: Parameters must be in ascending order");
+		R_ASSERT(n1 < n2, "next: Parameters must be in ascending order.");
 		return static_cast<T>(this->next() * (n2 - n1)) + n1;
 	}
 

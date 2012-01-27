@@ -91,7 +91,7 @@ SmartPtr<TextureAtlas>& SpriteBatch::set_texture(SmartPtr<TextureAtlas> &t)
 
 void SpriteBatch::push_back(Sprite *s)
 {
-	assert(this->sprites.size() <= 16 || !"Rainbow::SpriteBatch: Hard-coded limit reached");
+	R_ASSERT(this->sprites.size() <= 16, "Hard-coded limit reached.");
 
 	const unsigned int index = this->sprites.size() << 2;
 	if (index > this->reserved)

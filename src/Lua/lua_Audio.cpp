@@ -1,8 +1,7 @@
-#include <cassert>
-
 #include <lualib.h>
 #include <lauxlib.h>
 
+#include "Common/Assert.h"
 #include "Common/Data.h"
 #include "ConFuoco/Mixer.h"
 #include "ConFuoco/Wave.h"
@@ -73,7 +72,7 @@ int lua_Audio::clear(lua_State *)
 
 int lua_Audio::load_sfx(lua_State *L)
 {
-	assert(lua_gettop(L) == 1 || !"Rainbow::Lua syntax: rainbow.audio.load_sfx(file)");
+	LUA_ASSERT(lua_gettop(L) == 1, "rainbow.audio.load_sfx(file)");
 
 	const char *file = lua_tolstring(L, 1, nullptr);
 	const char *path = Data::get_path(file);
@@ -84,7 +83,7 @@ int lua_Audio::load_sfx(lua_State *L)
 
 int lua_Audio::load_stream(lua_State *L)
 {
-	assert(lua_gettop(L) == 1 || !"Rainbow::Lua syntax: rainbow.audio.load_stream(file)");
+	LUA_ASSERT(lua_gettop(L) == 1, "rainbow.audio.load_stream(file)");
 
 	const char *file = lua_tolstring(L, 1, nullptr);
 	const char *path = Data::get_path(file);
@@ -95,7 +94,7 @@ int lua_Audio::load_stream(lua_State *L)
 
 int lua_Audio::pause(lua_State *L)
 {
-	assert(lua_gettop(L) == 1 || !"Rainbow::Lua syntax: rainbow.audio.pause(id)");
+	LUA_ASSERT(lua_gettop(L) == 1, "rainbow.audio.pause(id)");
 
 	static_cast<Wave*>(lua_touserdata(L, 1))->pause();
 	return 0;
@@ -103,7 +102,7 @@ int lua_Audio::pause(lua_State *L)
 
 int lua_Audio::play(lua_State *L)
 {
-	assert(lua_gettop(L) == 1 || !"Rainbow::Lua syntax: rainbow.audio.play(id)");
+	LUA_ASSERT(lua_gettop(L) == 1, "rainbow.audio.play(id)");
 
 	static_cast<Wave*>(lua_touserdata(L, 1))->play();
 	return 0;
@@ -111,7 +110,7 @@ int lua_Audio::play(lua_State *L)
 
 int lua_Audio::stop(lua_State *L)
 {
-	assert(lua_gettop(L) == 1 || !"Rainbow::Lua syntax: rainbow.audio.stop(id)");
+	LUA_ASSERT(lua_gettop(L) == 1, "rainbow.audio.stop(id)");
 
 	static_cast<Wave*>(lua_touserdata(L, 1))->stop();
 	return 0;

@@ -1,7 +1,6 @@
 #ifndef LUAMACHINE_H_
 #define LUAMACHINE_H_
 
-#include <cassert>
 #include <cstdio>
 #include <cstring>
 

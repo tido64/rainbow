@@ -1,11 +1,5 @@
 // Copyright 2010-12 Bifrost Entertainment. All rights reserved.
 
-#include "Platform.h"
-
-#ifndef RAINBOW_IOS
-#	include <cassert>
-#endif
-
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include FT_GLYPH_H
@@ -17,13 +11,13 @@ FontAtlas::FontAtlas(const float pt) : pt(pt), texture(0) { }
 
 bool FontAtlas::load(const Data &font)
 {
-	assert(font || !"Rainbow::FontAtlas: No data provided");
+	R_ASSERT(font, "load: No data provided.");
 
 	// Instantiate FreeType
 	FT_Library lib;
 	if (FT_Init_FreeType(&lib))
 	{
-		assert(!"Rainbow::FontAtlas: Failed to initialise FreeType");
+		R_ASSERT(false, "load: Failed to initialise FreeType.");
 		return false;
 	}
 
@@ -32,7 +26,7 @@ bool FontAtlas::load(const Data &font)
 	if (FT_New_Memory_Face(lib, static_cast<const FT_Byte*>(font.bytes()), font.size(), 0, &face))
 	{
 		FT_Done_FreeType(lib);
-		assert(!"Rainbow::FontAtlas: Failed to load font face");
+		R_ASSERT(false, "load: Failed to load font face.");
 		return false;
 	}
 
@@ -49,7 +43,7 @@ bool FontAtlas::load(const Data &font)
 		{
 			FT_Done_Face(face);
 			FT_Done_FreeType(lib);
-			assert(!"Rainbow::FontAtlas: Failed to load characters");
+			R_ASSERT(false, "load: Failed to load characters.");
 			return false;
 		}
 
@@ -183,15 +177,13 @@ bool FontAtlas::load(const Data &font)
 	 */
 
 	glGenTextures(1, &this->texture);
-	glBindTexture(GL_TEXTURE_2D, this->texture);
+	this->bind();
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE_ALPHA, tex_width, tex_height, 0, GL_LUMINANCE_ALPHA, GL_UNSIGNED_BYTE, tex_buf);
 
-	glBindTexture(GL_TEXTURE_2D, 0);
 	delete[] tex_buf;
-
 	return true;
 }

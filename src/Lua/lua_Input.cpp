@@ -70,7 +70,6 @@ void lua_Input::touch_event(lua_State *L, const char *const type, const Touch *c
 	}
 	lua_call(L, 1, 0);
 	lua_pop(L, 2);
-	assert(lua_gettop(L) == 0 || !"Rainbow::Lua::Input::touch_event: Leftover elements in the stack");
 }
 
 void lua_Input::touch_began(lua_State *L, const Touch *const touches, const unsigned int count)
@@ -89,7 +88,6 @@ void lua_Input::touch_canceled(lua_State *L)
 
 	lua_call(L, 0, 0);
 	lua_pop(L, 2);
-	assert(lua_gettop(L) == 0 || !"Rainbow::Lua::Input::touch_canceled: Leftover elements in the stack");
 }
 
 void lua_Input::touch_ended(lua_State *L, const Touch *const touches, const unsigned int count)
@@ -117,7 +115,6 @@ void lua_Input::key_event(lua_State *L, const char *const type, const Key &key)
 	lua_pushinteger(L, key.modifier);
 	lua_call(L, 2, 0);
 	lua_pop(L, 2);
-	assert(lua_gettop(L) == 0 || !"Rainbow::Lua::Input::key_event: Leftover elements in the stack");
 }
 
 void lua_Input::key_down(lua_State *L, const Key &key)

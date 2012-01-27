@@ -16,8 +16,8 @@ const LuaMachine::Method<lua_Animation> lua_Animation::methods[] = {
 
 lua_Animation::lua_Animation(lua_State *L) : animation(nullptr)
 {
-	assert(lua_gettop(L) == 3 || lua_gettop(L) == 4
-	       || !"Rainbow::Lua::Animation: rainbow.animation(sprite, frames{}, fps, loop delay)");
+	LUA_ASSERT(lua_gettop(L) == 3 || lua_gettop(L) == 4,
+	           "rainbow.animation(sprite, frames{}, fps, loop delay)");
 
 	Sprite *sprite = lua_isnil(L, 1) ? nullptr : LuaMachine::wrapper<lua_Sprite>(L, 1)->raw_ptr();
 
@@ -62,7 +62,7 @@ int lua_Animation::is_stopped(lua_State *L)
 
 int lua_Animation::set_delay(lua_State *L)
 {
-	assert(lua_gettop(L) == 1 || !"Rainbow::Lua syntax: <animation>:set_loop(delay in milliseconds)");
+	LUA_ASSERT(lua_gettop(L) == 1, "<animation>:set_loop(delay in milliseconds)");
 
 	this->animation->set_delay(lua_tointeger(L, 1));
 	return 0;
@@ -70,7 +70,7 @@ int lua_Animation::set_delay(lua_State *L)
 
 int lua_Animation::set_fps(lua_State *L)
 {
-	assert(lua_gettop(L) == 1 || !"Rainbow::Lua syntax: <animation>:set_fps(fps)");
+	LUA_ASSERT(lua_gettop(L) == 1, "<animation>:set_fps(fps)");
 
 	this->animation->set_timeout(1000.0f / lua_tointeger(L, 1));
 	return 0;
@@ -78,8 +78,7 @@ int lua_Animation::set_fps(lua_State *L)
 
 int lua_Animation::set_frames(lua_State *L)
 {
-	assert(lua_gettop(L) > 1
-	       || !"Rainbow::Lua syntax: <animation>:set_frames(table { count > 1 })");
+	LUA_ASSERT(lua_gettop(L) > 1, "<animation>:set_frames(table { count > 1 })");
 
 	const unsigned int framec = lua_gettop(L);
 	unsigned int *const frames = new unsigned int[framec + 1];
@@ -92,7 +91,7 @@ int lua_Animation::set_frames(lua_State *L)
 
 int lua_Animation::set_sprite(lua_State *L)
 {
-	assert(lua_gettop(L) == 1 || !"Rainbow::Lua syntax: <animation>:set_sprite(sprite)");
+	LUA_ASSERT(lua_gettop(L) == 1, "<animation>:set_sprite(sprite)");
 
 	Sprite *sprite = LuaMachine::wrapper<lua_Sprite>(L, 1)->raw_ptr();
 	this->animation->set_sprite(sprite);

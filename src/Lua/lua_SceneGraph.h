@@ -1,8 +1,6 @@
 #ifndef LUA_SCENEGRAPH_H_
 #define LUA_SCENEGRAPH_H_
 
-#include <cassert>
-
 #include "LuaMachine.h"
 #include "Graphics/SceneGraph.h"
 
@@ -47,7 +45,7 @@ private:
 template<class T, class W>
 int lua_SceneGraph::add_child(lua_State *L)
 {
-	assert(lua_gettop(L) == 1 || lua_gettop(L) == 2 || !"Rainbow::Lua::SceneGraph::add_child: Invalid parameters");
+	R_ASSERT(lua_gettop(L) == 1 || lua_gettop(L) == 2, "add_child: Invalid parameters");
 
 	// Retrieve Lua wrapper
 	const int n = lua_gettop(L);
