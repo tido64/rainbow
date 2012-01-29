@@ -1,7 +1,6 @@
 // Copyright 2011-12 Bifrost Entertainment. All rights reserved.
 
 #include "Common/Data.h"
-#include "Lua/lua_Algorithm.h"
 #include "Lua/lua_Animation.h"
 #include "Lua/lua_Audio.h"
 #include "Lua/lua_Font.h"
@@ -9,6 +8,7 @@
 #include "Lua/lua_Label.h"
 #include "Lua/lua_Physics.h"
 #include "Lua/lua_Platform.h"
+#include "Lua/lua_Random.h"
 #include "Lua/lua_SceneGraph.h"
 #include "Lua/lua_Sprite.h"
 #include "Lua/lua_SpriteBatch.h"
@@ -81,8 +81,8 @@ LuaMachine::LuaMachine() : scenegraph(nullptr), L(luaL_newstate())
 	lua_setglobal(this->L, rainbow);
 
 	lua_Platform::init(this->L);   // Initialize "rainbow.platform" namespace
+	lua_Random::init(this->L);     // Initialize "rainbow.random" function
 	lua_Input::init(this->L);      // Initialize "rainbow.input" namespace
-	lua_Algorithm::init(this->L);  // Initialize "rainbow.algorithm" namespace
 	lua_Audio::init(this->L);      // Initialize "rainbow.audio" namespace
 	lua_Physics::init(this->L);    // Initialize "rainbow.physics" namespace
 

@@ -10,7 +10,6 @@
 #include <cmath>
 
 #include "Common/Constants.h"
-#include "Common/Random.h"
 
 namespace Rainbow
 {
