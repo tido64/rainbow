@@ -11,21 +11,27 @@
 find_path(VORBISFILE_INCLUDE_DIR "vorbis/vorbisfile.h"
 	/usr/include               # Linux
 	/usr/i486-mingw32/include  # MinGW
+	../libs/include            # Windows
 )
-find_library(VORBISFILE_LIBRARY NAMES vorbisfile libvorbisfile)
+find_library(VORBISFILE_LIBRARY NAMES vorbisfile libvorbisfile
+                                HINTS ../libs/Win32)
 
 if(MINGW)
 	find_path(VORBIS_INCLUDE_DIR "vorbis/codec.h"
 		/usr/include               # Linux
 		/usr/i486-mingw32/include  # MinGW
+		../libs/include            # Windows
 	)
-	find_library(VORBIS_LIBRARY NAMES vorbis libvorbis)
+	find_library(VORBIS_LIBRARY NAMES vorbis libvorbis
+	                            HINTS ../libs/Win32)
 
 	find_path(OGG_INCLUDE_DIR "ogg/ogg.h"
 		/usr/include               # Linux
 		/usr/i486-mingw32/include  # MinGW
+		../libs/include            # Windows
 	)
-	find_library(OGG_LIBRARY NAMES ogg libogg)
+	find_library(OGG_LIBRARY NAMES ogg libogg
+	                         HINTS ../libs/Win32)
 
 	set(VORBISFILE_INCLUDE_DIR ${VORBISFILE_INCLUDE_DIR} ${VORBIS_INCLUDE_DIR} ${OGG_INCLUDE_DIR})
 	set(VORBISFILE_LIBRARY ${VORBISFILE_LIBRARY} ${VORBIS_LIBRARY} ${OGG_LIBRARY})

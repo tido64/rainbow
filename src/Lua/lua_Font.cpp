@@ -1,7 +1,3 @@
-#ifdef _WIN32
-#	pragma warning(disable : 4244)
-#endif
-
 #include "Common/Data.h"
 #include "Lua/lua_Font.h"
 

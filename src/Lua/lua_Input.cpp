@@ -1,7 +1,3 @@
-#ifdef _WIN32
-#	pragma warning(disable : 4244)
-#endif
-
 #include "Algorithm.h"
 #include "LuaMachine.h"
 #include "Input/Input.h"

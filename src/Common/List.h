@@ -16,14 +16,14 @@ class List
 public:
 	class Iterator;
 
-	List();
+	inline List();
 	~List();
 
 	/// Return iterator to the beginning.
-	Iterator begin() const;
+	inline Iterator begin() const;
 
 	/// Return iterator to the end.
-	Iterator end() const;
+	inline Iterator end() const;
 
 	/// Insert an item at the back of the list.
 	void push_back(const T &value);
@@ -33,7 +33,7 @@ public:
 	unsigned int remove(const T &value);
 
 	/// Return size of list.
-	unsigned int size();
+	inline unsigned int size();
 
 private:
 	class Element;
@@ -49,8 +49,45 @@ private:
 };
 
 template<class T>
-inline List<T>::List() :
-	count(0), first(nullptr), last(nullptr) { }
+class List<T>::Element
+{
+	friend class List;
+	friend class List::Iterator;
+
+	Element *next;  ///< Pointer to the next element
+	Element *prev;  ///< Pointer to the previous element
+	T value;        ///< Stored value
+
+	inline Element(const T &v, Element *const p = 0, Element *const n = 0);
+	~Element();
+};
+
+template<class T>
+class List<T>::Iterator
+{
+	friend class List;
+
+public:
+	inline Iterator();
+	inline Iterator(const Iterator &i);
+
+	inline bool operator==(const Iterator &i) const;
+	inline bool operator!=(const Iterator &i) const;
+	Iterator& operator++();
+	Iterator operator++(int);
+	Iterator& operator--();
+	Iterator operator--(int);
+	inline T& operator*() const;
+	inline T& operator->() const;
+
+private:
+	Element *ptr;
+
+	inline Iterator(Element *const p);
+};
+
+template<class T>
+List<T>::List() : count(0), first(nullptr), last(nullptr) { }
 
 template<class T>
 List<T>::~List()
@@ -59,13 +96,13 @@ List<T>::~List()
 }
 
 template<class T>
-inline typename List<T>::Iterator List<T>::begin() const
+typename List<T>::Iterator List<T>::begin() const
 {
 	return Iterator(this->first);
 }
 
 template<class T>
-inline typename List<T>::Iterator List<T>::end() const
+typename List<T>::Iterator List<T>::end() const
 {
 	return Iterator();
 }
@@ -118,27 +155,13 @@ unsigned int List<T>::remove(const T &value)
 }
 
 template<class T>
-inline unsigned int List<T>::size()
+unsigned int List<T>::size()
 {
 	return this->count;
 }
 
 template<class T>
-class List<T>::Element
-{
-	friend class List;
-	friend class List::Iterator;
-
-	Element *next;  ///< Pointer to the next element
-	Element *prev;  ///< Pointer to the previous element
-	T value;        ///< Stored value
-
-	Element(const T &v, Element *const p = 0, Element *const n = 0);
-	~Element();
-};
-
-template<class T>
-inline List<T>::Element::Element(const T &v, Element *const p, Element *const n) :
+List<T>::Element::Element(const T &v, Element *const p, Element *const n) :
 	next(n), prev(p), value(v) { }
 
 template<class T>
@@ -148,45 +171,19 @@ List<T>::Element::~Element()
 }
 
 template<class T>
-class List<T>::Iterator
-{
-	friend class List;
-
-public:
-	Iterator();
-	Iterator(const Iterator &i);
-
-	bool operator==(const Iterator &i) const;
-	bool operator!=(const Iterator &i) const;
-	Iterator& operator++();
-	Iterator operator++(int);
-	Iterator& operator--();
-	Iterator operator--(int);
-	T& operator*() const;
-	T& operator->() const;
-
-private:
-	Element *ptr;
-
-	Iterator(Element *const p);
-};
+List<T>::Iterator::Iterator() : ptr(nullptr) { }
 
 template<class T>
-inline List<T>::Iterator::Iterator() :
-	ptr(nullptr) { }
+List<T>::Iterator::Iterator(const Iterator &i) : ptr(i.ptr) { }
 
 template<class T>
-inline List<T>::Iterator::Iterator(const Iterator &i) :
-	ptr(i.ptr) { }
-
-template<class T>
-inline bool List<T>::Iterator::operator==(const Iterator &i) const
+bool List<T>::Iterator::operator==(const Iterator &i) const
 {
 	return this->ptr == i.ptr;
 }
 
 template<class T>
-inline bool List<T>::Iterator::operator!=(const Iterator &i) const
+bool List<T>::Iterator::operator!=(const Iterator &i) const
 {
 	return this->ptr != i.ptr;
 }
@@ -222,19 +219,18 @@ typename List<T>::Iterator List<T>::Iterator::operator--(int)
 }
 
 template<class T>
-inline T& List<T>::Iterator::operator*() const
+T& List<T>::Iterator::operator*() const
 {
 	return this->ptr->value;
 }
 
 template<class T>
-inline T& List<T>::Iterator::operator->() const
+T& List<T>::Iterator::operator->() const
 {
 	return this->ptr->value;
 }
 
 template<class T>
-inline List<T>::Iterator::Iterator(Element *const p) :
-	ptr(p) { }
+List<T>::Iterator::Iterator(Element *const p) : ptr(p) { }
 
 #endif

@@ -1,0 +1,39 @@
+#include <winver.h>
+
+#define RAINBOW_VERSION      1,0,0,0
+#define RAINBOW_VERSION_STR  "1.0.0"
+
+#ifdef NDEBUG
+#	define RAINBOW_DEBUG 0
+#else
+#	define RAINBOW_DEBUG VS_FF_DEBUG
+#endif
+
+VS_VERSION_INFO VERSIONINFO
+FILEVERSION     RAINBOW_VERSION
+PRODUCTVERSION  RAINBOW_VERSION
+FILEFLAGSMASK   VS_FFI_FILEFLAGSMASK
+FILEFLAGS       RAINBOW_DEBUG
+FILEOS          VOS_NT_WINDOWS32
+FILETYPE        VFT_APP
+FILESUBTYPE     0
+BEGIN
+	BLOCK "StringFileInfo"
+	BEGIN
+		BLOCK "random"
+		BEGIN
+			VALUE "CompanyName",       "Bifrost Entertainment AS"
+			VALUE "FileDescription",   "Internal build of the Rainbow engine"
+			VALUE "FileVersion",       RAINBOW_VERSION_STR
+			VALUE "InternalName",      "Rainbow"
+			VALUE "LegalCopyright",    "Copyright \251 2012"
+			VALUE "OriginalFilename",  "rainbow.exe"
+			VALUE "ProductName",       "Rainbow"
+			VALUE "ProductVersion",    RAINBOW_VERSION_STR
+		END
+	END
+	BLOCK "VarFileInfo"
+	BEGIN
+		VALUE "Translation", 0x409, 1252
+	END
+END

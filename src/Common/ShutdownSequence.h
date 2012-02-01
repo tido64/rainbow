@@ -5,10 +5,9 @@
 ///
 /// Copyright 2012 Bifrost Entertainment. All rights reserved.
 /// \author Tommy Nguyen
-class ShutdownSequence
+struct ShutdownSequence
 {
-public:
-	void execute();
+	void operator()();
 };
 
 #endif

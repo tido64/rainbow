@@ -7,7 +7,7 @@
 
 extern bool done;
 
-void ShutdownSequence::execute()
+void ShutdownSequence::operator()()
 {
 	done = true;
 }

@@ -2,6 +2,7 @@
 
 #include "Algorithm.h"
 #include "Physics.h"
+#include "Platform.h"
 
 const float Physics::fixed_dt = 1.0f / 60.0f;
 const float Physics::inv_fixed_dt = 60.0f;

@@ -20,7 +20,7 @@
 
 @end
 
-void ShutdownSequence::execute()
+void ShutdownSequence::operator()()
 {
 	RainbowAlertViewDelegate *rad = [RainbowAlertViewDelegate alloc];
 	[rad autorelease];

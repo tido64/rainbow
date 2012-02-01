@@ -43,7 +43,7 @@ namespace Rainbow
 
 	/// Structure for storing a color (RGBA) using floats.
 	///
-	/// Copyright 2010-11 Bifrost Entertainment. All rights reserved.
+	/// Copyright 2010-12 Bifrost Entertainment. All rights reserved.
 	/// \author Tommy Nguyen
 	template<>
 	struct _Color<float>
