@@ -1,5 +1,6 @@
 // Copyright 2010-12 Bifrost Entertainment. All rights reserved.
 
+#include "Algorithm.h"
 #include "Common/Data.h"
 #include "Graphics/TextureAtlas.h"
 
@@ -42,7 +43,7 @@ TextureAtlas::TextureAtlas(const Data &img) : name(0), width(0), height(0)
 
 	this->width = CGImageGetWidth(image.CGImage);
 	this->height = CGImageGetHeight(image.CGImage);
-	R_ASSERT(this->is_pow2(this->width) && this->is_pow2(this->height),
+	R_ASSERT(this->is_valid(this->width) && this->is_valid(this->height),
 	         "Texture dimension is not a power of 2.");
 	CGRect bounds = CGRectMake(0, 0, this->width, this->height);
 
@@ -182,9 +183,7 @@ unsigned int TextureAtlas::define(const int x, const int y, const int w, const i
 	return i;
 }
 
-bool TextureAtlas::is_pow2(const unsigned int i)
+bool TextureAtlas::is_valid(const unsigned int i)
 {
-	unsigned int p = 64;
-	for (; p < i; p <<= 1);
-	return p == i;
+	return (i < 64) ? false : Rainbow::is_pow2(i);
 }

@@ -1,5 +1,7 @@
 /// Provides algorithms and mathematical functions.
 ///
+/// \see http://graphics.stanford.edu/~seander/bithacks.html
+///
 /// Copyright 2010-12 Bifrost Entertainment. All rights reserved.
 /// \author Tommy Nguyen
 
@@ -20,7 +22,10 @@ namespace Rainbow
 	}
 
 	/// Convert degrees to radians.
-	inline float deg2rad(const float d) { return d * kPi_180; }
+	inline float deg2rad(const float d)
+	{
+		return d * kPi / 180;
+	}
 
 	/// Calculate the distance between two points.
 	inline float distance(const float a_x, const float a_y, const float b_x, const float b_y)
@@ -37,6 +42,13 @@ namespace Rainbow
 	inline bool equalf(const float a, const float b)
 	{
 		return fabs(a - b) <= ((fabs(a) < fabs(b) ? fabs(b) : fabs(a)) * FLT_EPSILON);
+	}
+
+	/// Determine whether an integer is a power of 2.
+	/// \note 0 is incorrectly considered a power of 2.
+	inline bool is_pow2(const unsigned int i)
+	{
+		return (i & (i - 1)) == 0;
 	}
 
 	/// Convert an integer to a C-string.
@@ -67,8 +79,24 @@ namespace Rainbow
 		return str;
 	}
 
+	/// Calculate the next power of 2.
+	/// \note 0 is incorrectly considered a power of 2.
+	inline unsigned int next_pow2(unsigned int i)
+	{
+		--i;
+		i |= i >>  1;
+		i |= i >>  2;
+		i |= i >>  4;
+		i |= i >>  8;
+		i |= i >> 16;
+		return ++i;
+	}
+
 	/// Convert radians to degrees.
-	inline float rad2deg(const float r) { return r * k180_Pi; }
+	inline float rad2deg(const float r)
+	{
+		return r * 180 / kPi;
+	}
 }
 
 #endif

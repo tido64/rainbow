@@ -48,8 +48,8 @@ private:
 	GLsizei height;          ///< Height of texture atlas.
 	Vector<Vec2f> textures;  ///< Texture coordinates.
 
-	/// Return \c true if the integer provided is a power of 2.
-	bool is_pow2(const unsigned int);
+	/// Return \c true if the integer is a power of 2 and not less than 64.
+	bool is_valid(const unsigned int);
 };
 
 TextureAtlas::~TextureAtlas()
