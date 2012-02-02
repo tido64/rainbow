@@ -13,92 +13,143 @@
 --! Copyright 2011-12 Bifrost Entertainment. All rights reserved.
 --! \author Tommy Nguyen
 
-require("Keyboard");  -- Table of raw keycodes
+require("Keyboard")  -- Table of raw keycodes
 
-_rainbow_input_listeners = {};
-_rainbow_input_listener_count = 0;
+rainbow.input._listeners = {}
+rainbow.input._count = 0
+rainbow.input._down = false
 
 --! Add an object as input listener.
 function rainbow.input.subscribe(obj)
-	_rainbow_input_listener_count = _rainbow_input_listener_count + 1;
-	_rainbow_input_listeners[_rainbow_input_listener_count] = obj;
+	local input = rainbow.input
+	input._count = input._count + 1
+	input._listeners[input._count] = obj
 end
 
 --! Remove a listener.
 function rainbow.input.unsubscribe(obj)
-	local listener = 0;
-	for i = 1, _rainbow_input_listener_count do
-		if _rainbow_input_listeners[i] == obj then
-			listener = i;
-			break;
+	local input = rainbow.input
+	if input._count == 0 then
+		return
+	end
+
+	local listeners = input._listeners
+	for i = input._count, 1 do
+		if listeners[i] == obj then
+			listeners[i] = listeners[input._count]
+			listeners[input._count] = nil
+			input._count = input._count - 1
+			break
 		end
 	end
-	if listener == 0 then
-		return;
-	end
-	_rainbow_input_listeners[listener] = _rainbow_input_listeners[_rainbow_input_listener_count];
-	_rainbow_input_listeners[_rainbow_input_listener_count] = nil;
-	_rainbow_input_listener_count = _rainbow_input_listener_count - 1;
 end
 
 --! Remove all listeners.
 function rainbow.input.unsubscribe_all()
-	for i = 1, _rainbow_input_listener_count do
-		_rainbow_input_listeners[i] = nil;
+	local input = rainbow.input
+	local listeners = input._listeners
+	for i = 1, input._count do
+		listeners[i] = nil
 	end
-	_rainbow_input_listener_count = 0;
+	input._count = 0
 end
 
 --! Notify all listeners of a key down event.
 function rainbow.input.key_down(key, mod)
-	for i = 1, _rainbow_input_listener_count do
-		_rainbow_input_listeners[i]:key_down(key);
+	print("Key down: " .. mod .. "+" .. key)
+
+	local input = rainbow.input
+	if input._count == 0 then
+		return
 	end
-	print("Key down: " .. mod .. "+" .. key);
+
+	local listeners = input._listeners
+	for i = input._count, 1 do
+		listeners[i]:key_down(key, mod)
+	end
 end
 
 --! Notify all listeners of a key up event.
 function rainbow.input.key_up(key, mod)
-	for i = 1, _rainbow_input_listener_count do
-		_rainbow_input_listeners[i]:key_up(key);
+	print("Key up: " .. mod .. "+" .. key)
+
+	local input = rainbow.input
+	if input._count == 0 then
+		return
 	end
-	print("Key up: " .. mod .. "+" .. key);
+
+	local listeners = input._listeners
+	for i = input._count, 1 do
+		listeners[i]:key_up(key, mod)
+	end
 end
 
 --! Notify all listeners of a touch began event.
 function rainbow.input.touch_began(touches)
-	for i = 1, _rainbow_input_listener_count do
-		_rainbow_input_listeners[i]:touch_began(touches);
-	end
 	for h,t in pairs(touches) do
-		print("Touch event #" .. h .. " began at (" .. t.x .. "," .. t.y .. ")");
+		print("Touch event #" .. h .. " began at (" .. t.x .. "," .. t.y .. ")")
+	end
+
+	local input = rainbow.input
+	input._down = true
+	if input._count == 0 then
+		return
+	end
+
+	local listeners = input._listeners
+	for i = input._count, 1 do
+		listeners[i]:touch_began(touches)
 	end
 end
 
 --! Notify all listeners of a touch canceled event.
 function rainbow.input.touch_canceled()
-	for i = 1, _rainbow_input_listener_count do
-		_rainbow_input_listeners[i]:touch_canceled();
+	print("Touch events canceled")
+
+	local input = rainbow.input
+	input._down = false
+	if input._count == 0 then
+		return
 	end
-	--print("Touch events canceled");
+
+	local listeners = input._listeners
+	for i = input._count, 1 do
+		listeners[i]:touch_canceled()
+	end
 end
 
 --! Notify all listeners of a touch ended event.
 function rainbow.input.touch_ended(touches)
-	for i = 1, _rainbow_input_listener_count do
-		_rainbow_input_listeners[i]:touch_ended(touches);
-	end
 	for h,t in pairs(touches) do
-		print("Touch event #" .. h .. " ended at (" .. t.x .. "," .. t.y .. ")");
+		print("Touch event #" .. h .. " ended at (" .. t.x .. "," .. t.y .. ")")
+	end
+
+	local input = rainbow.input
+	input._down = false
+	if input._count == 0 then
+		return
+	end
+
+	local listeners = input._listeners
+	for i = input._count, 1 do
+		listeners[i]:touch_ended(touches)
 	end
 end
 
 --! Notify all listeners of a touch moved event.
 function rainbow.input.touch_moved(touches)
-	for i = 1, _rainbow_input_listener_count do
-		_rainbow_input_listeners[i]:touch_moved(touches);
+	local input = rainbow.input
+	if input._down then
+		for h,t in pairs(touches) do
+			print("Touch event #" .. h .. " moved to (" .. t.x .. "," .. t.y .. ")")
+		end
 	end
-	for h,t in pairs(touches) do
-		print("Touch event #" .. h .. " moved to (" .. t.x .. "," .. t.y .. ")");
+	if input._count == 0 then
+		return
+	end
+
+	local listeners = input._listeners
+	for i = input._count, 1 do
+		listeners[i]:touch_moved(touches)
 	end
 end
