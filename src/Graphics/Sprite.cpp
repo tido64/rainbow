@@ -145,14 +145,9 @@ void Sprite::set_scale(const Vec2f &f)
 
 void Sprite::set_texture(const unsigned int id)
 {
-	const Vec2f *tex_coord = this->parent->texture->operator[](id);
-	SpriteVertex *vx = this->vertex_array;
+	const Texture &tx = (*this->parent->texture)[id];
 	for (unsigned int i = 0; i < 4; ++i)
-	{
-		vx->texcoord = *tex_coord;
-		++tex_coord;
-		++vx;
-	}
+		this->vertex_array[i].texcoord = tx.vx[i];
 }
 
 void Sprite::update()

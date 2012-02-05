@@ -2,9 +2,9 @@
 #define TEXTUREATLAS_H_
 
 #include "Common/SmartPtr.h"
-#include "Common/Vec2.h"
 #include "Common/Vector.h"
 #include "Graphics/OpenGL.h"
+#include "Graphics/Texture.h"
 
 class Data;
 
@@ -39,14 +39,14 @@ public:
 	/// Trim the internal texture storage.
 	inline void trim();
 
-	inline Vec2f* operator[](const unsigned int i) const;
+	inline const Texture& operator[](const unsigned int i) const;
 	inline operator bool() const;
 
 private:
-	GLuint name;             ///< Texture atlas' GL id.
-	GLsizei width;           ///< Width of texture atlas.
-	GLsizei height;          ///< Height of texture atlas.
-	Vector<Vec2f> textures;  ///< Texture coordinates.
+	GLuint name;               ///< Texture atlas' GL id.
+	GLsizei width;             ///< Width of texture atlas.
+	GLsizei height;            ///< Height of texture atlas.
+	Vector<Texture> textures;  ///< Defined textures.
 
 	/// Return \c true if the integer is a power of 2 and not less than 64.
 	bool is_valid(const unsigned int);
@@ -67,9 +67,9 @@ void TextureAtlas::trim()
 	this->textures.reserve(0);
 }
 
-Vec2f* TextureAtlas::operator[](const unsigned int i) const
+const Texture& TextureAtlas::operator[](const unsigned int i) const
 {
-	return &this->textures[i];
+	return this->textures[i];
 }
 
 TextureAtlas::operator bool() const

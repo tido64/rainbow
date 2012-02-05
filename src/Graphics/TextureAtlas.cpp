@@ -168,18 +168,14 @@ unsigned int TextureAtlas::define(const int x, const int y, const int w, const i
 	R_ASSERT(x >= 0 && (x + w) <= this->width && y >= 0 && (y + h) <= this->height,
 	         "define: Invalid dimensions.");
 
-	unsigned int i = this->textures.size();
-
 	const float x0 = x / static_cast<float>(this->width);
 	const float x1 = (x + w) / static_cast<float>(this->width);
 	const float y0 = y / static_cast<float>(this->height);
 	const float y1 = (y + h) / static_cast<float>(this->height);
 
-	this->textures.push_back(Vec2f(x1, y0));
-	this->textures.push_back(Vec2f(x0, y0));
-	this->textures.push_back(Vec2f(x1, y1));
-	this->textures.push_back(Vec2f(x0, y1));
-
+	const unsigned int i = this->textures.size();
+	this->textures.push_back(Texture(x0, y0, x1, y1));
+	this->textures[i].atlas = this->name;
 	return i;
 }
 
