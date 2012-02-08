@@ -20,7 +20,7 @@ namespace ConFuoco
 				fprintf(stderr, "Rainbow::ConFuoco::Decoder::open: Failed to open file\n");
 				return nullptr;
 			}
-	
+
 			OggVorbis_File *vf = new OggVorbis_File();
 			if (ov_open_callbacks(vorb, vf, 0, 0, OV_CALLBACKS_DEFAULT) < 0)
 			{
@@ -28,7 +28,7 @@ namespace ConFuoco
 				fprintf(stderr, "Rainbow::ConFuoco::Decoder::Vorbis::open: Does not appear to be an Ogg bitstream\n");
 				return nullptr;
 			}
-	
+
 			vorbis_info *vi = ov_info(vf, -1);
 			if (!vi)
 			{
@@ -91,10 +91,7 @@ namespace ConFuoco
 		{
 			read = ov_read(vf, dst + offset, size - offset, 0, 2, 1, &bitstream);
 			if (read <= 0)
-			{
-				fprintf(stderr, "Rainbow::ConFuoco::Decoder::Vorbis::read: Failed to read stream\n");
 				break;
-			}
 			offset += read;
 		}
 
