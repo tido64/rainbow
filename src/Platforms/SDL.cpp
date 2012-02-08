@@ -53,11 +53,10 @@ int main(int argc, char *argv[])
 		return 1;
 
 	Config config;
-	if (config.is_portrait())
+	if (config.get_width() && config.get_height())
 	{
-		unsigned int tmp = screen_width;
-		screen_width = screen_height;
-		screen_height = tmp;
+		screen_width = config.get_width();
+		screen_height = config.get_height();
 	}
 
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
