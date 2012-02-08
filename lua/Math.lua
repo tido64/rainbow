@@ -38,6 +38,21 @@ function rainbow.math.deg2rad(degrees)
 	return degrees * math.pi / 180;
 end
 
+--! Calculate the hitbox.
+function rainbow.math.hitbox(x, y, width, height, scale)
+	if not scale then
+		scale = 1.0;
+	end
+	local half_w = width * scale * 0.5;
+	local half_h = height * scale * 0.5;
+	local hitbox = {};
+	hitbox.x0 = x - half_w;
+	hitbox.y0 = y - half_h;
+	hitbox.x1 = x + half_w;
+	hitbox.y1 = y + half_h;
+	return hitbox;
+end
+
 --! Calculate the distance between two points.
 --! \param a_x,a_y  Starting point.
 --! \param b_x,b_y  End point.
