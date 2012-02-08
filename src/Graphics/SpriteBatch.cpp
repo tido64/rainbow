@@ -38,8 +38,8 @@ const unsigned char SpriteBatch::indices[] = {
 	248, 249, 250, 250, 249, 251, 252, 253, 254, 254, 253, 255
 };
 
-SpriteBatch::SpriteBatch(const int hint) :
-	buffer(0), batch_vertices(0), reserved(align(hint)),
+SpriteBatch::SpriteBatch(const unsigned int hint) :
+	buffer(0), batch_vertices(0), reserved(hint << 2),
 	vertex_buffer(nullptr), sprites(hint)
 {
 	this->vertex_buffer = new SpriteVertex[this->reserved];

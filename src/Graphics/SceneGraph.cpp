@@ -99,6 +99,7 @@ namespace SceneGraph
 
 		switch (this->type)
 		{
+			case DrawableNode:
 			case LabelNode:
 			case SpriteBatchNode:
 				this->drawable->draw();
@@ -120,11 +121,9 @@ namespace SceneGraph
 			case AnimationNode:
 				this->animation->update();
 				break;
-			case SpriteNode:
-				this->sprite->update();
-				break;
+			case DrawableNode:
 			case SpriteBatchNode:
-				this->sprite_batch->update();
+				this->drawable->update();
 				break;
 			default:
 				break;

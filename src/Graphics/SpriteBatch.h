@@ -18,7 +18,9 @@ class SpriteBatch : public Drawable
 	friend void Sprite::set_texture(const unsigned int id);
 
 public:
-	SpriteBatch(const int hint = 8);
+	static const unsigned char indices[];  ///< Global vertex indices (currently limited to 64 vertices, or 16 sprites)
+
+	SpriteBatch(const unsigned int hint = 8);
 	~SpriteBatch();
 
 	Sprite* add(const int x, const int y, const int width, const int height);
@@ -45,10 +47,6 @@ public:
 	virtual void update();
 
 protected:
-	static const unsigned char indices[];  ///< Global vertex indices (currently limited to 64 vertices, or 16 sprites)
-
-	unsigned int align(const unsigned int i);
-
 	/// Add a sprite to the batch.
 	/// \param s  The sprite to add
 	void push_back(Sprite *s);
@@ -67,11 +65,6 @@ private:
 	/// Intentionally left undefined.
 	SpriteBatch& operator=(const SpriteBatch &);
 };
-
-inline unsigned int SpriteBatch::align(const unsigned int i)
-{
-	return (i << 2) + (i << 1);
-}
 
 inline Vector<Sprite*>& SpriteBatch::get_sprites()
 {

@@ -27,6 +27,7 @@ namespace SceneGraph
 		enum
 		{
 			AnimationNode,
+			DrawableNode,
 			GroupNode,
 			LabelNode,
 			SpriteNode,
@@ -59,6 +60,9 @@ namespace SceneGraph
 
 		/// Create a sprite batch node.
 		inline explicit Node(SpriteBatch *);
+
+		/// Create a generic drawable node.
+		inline Node(Drawable *);
 
 		virtual ~Node();
 
@@ -105,6 +109,9 @@ namespace SceneGraph
 
 	Node::Node(SpriteBatch *b) :
 		enabled(true), type(SpriteBatchNode), data(b) { }
+
+	Node::Node(Drawable *d) :
+		enabled(true), type(DrawableNode), data(d) { }
 
 	template<class T>
 	Node* Node::add_child(T *p)
