@@ -3,7 +3,7 @@
 
 #include "Common/SmartPtr.h"
 #include "Common/Vector.h"
-#include "Graphics/OpenGL.h"
+#include "Graphics/Renderer.h"
 #include "Graphics/Texture.h"
 
 class Data;
@@ -43,9 +43,9 @@ public:
 	inline operator bool() const;
 
 private:
-	GLuint name;               ///< Texture atlas' GL id.
-	GLsizei width;             ///< Width of texture atlas.
-	GLsizei height;            ///< Height of texture atlas.
+	unsigned int name;         ///< Texture atlas' id.
+	int width;                 ///< Width of texture atlas.
+	int height;                ///< Height of texture atlas.
 	Vector<Texture> textures;  ///< Defined textures.
 
 	/// Return \c true if the integer is a power of 2 and not less than 64.
@@ -54,12 +54,12 @@ private:
 
 TextureAtlas::~TextureAtlas()
 {
-	glDeleteTextures(1, &this->name);
+	Renderer::delete_texture(this->name);
 }
 
 void TextureAtlas::bind() const
 {
-	glBindTexture(GL_TEXTURE_2D, this->name);
+	Renderer::bind_texture(this->name);
 }
 
 void TextureAtlas::trim()

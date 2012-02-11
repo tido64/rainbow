@@ -6,6 +6,7 @@
 
 #include "Common/Data.h"
 #include "Graphics/FontAtlas.h"
+#include "Graphics/OpenGL.h"
 
 FontAtlas::FontAtlas(const float pt) : pt(pt), texture(0) { }
 
@@ -176,14 +177,7 @@ bool FontAtlas::load(const Data &font)
 	}
 	 */
 
-	glGenTextures(1, &this->texture);
-	this->bind();
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE_ALPHA, tex_width, tex_height, 0, GL_LUMINANCE_ALPHA, GL_UNSIGNED_BYTE, tex_buf);
-
+	Renderer::create_texture(this->texture, GL_LUMINANCE_ALPHA, tex_width, tex_height, GL_LUMINANCE_ALPHA, tex_buf);
 	delete[] tex_buf;
 	return true;
 }

@@ -2,6 +2,7 @@
 
 #include "Algorithm.h"
 #include "Common/Data.h"
+#include "Graphics/OpenGL.h"
 #include "Graphics/TextureAtlas.h"
 
 #if defined(RAINBOW_IOS)
@@ -154,12 +155,7 @@ TextureAtlas::TextureAtlas(const Data &img) : name(0), width(0), height(0)
 
 #endif
 
-	glGenTextures(1, &this->name);
-	this->bind();
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, this->width, this->height, 0, format, GL_UNSIGNED_BYTE, data);
-
+	Renderer::create_texture(this->name, GL_RGBA, this->width, this->height, format, data);
 	delete[] data;
 }
 

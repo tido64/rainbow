@@ -122,6 +122,7 @@ namespace SceneGraph
 				this->animation->update();
 				break;
 			case DrawableNode:
+			case LabelNode:
 			case SpriteBatchNode:
 				this->drawable->update();
 				break;

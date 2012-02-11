@@ -17,32 +17,34 @@
 class Label : public Drawable
 {
 public:
-	Label();
+	inline Label();
 	Label(const char *);
 	~Label();
 
 	/// Draw text at previously set position.
 	virtual void draw();
 
-	/// Render string to a bitmap.
-	void finalize();
-
 	/// Set text color.
-	void set_color(const Colorb &);
+	inline void set_color(const Colorb &);
 
 	/// Set text font.
-	void set_font(FontAtlas *);
+	inline void set_font(FontAtlas *);
 
 	/// Set position of text.
-	void set_position(const int x, const int y);
+	inline void set_position(const int x, const int y);
 
 	/// Set text to display.
 	void set_text(const char *);
 
-	/// Does absolutely nothing (for now).
+	/// Populate the vertex array.
 	virtual void update();
 
+protected:
+	static const unsigned char stale_color    = 0x01;
+	static const unsigned char stale_position = 0x02;
+
 private:
+	unsigned char stale;       ///< Flags indicating need for update.
 	unsigned int length;       ///< Length of the string.
 	unsigned int size;         ///< Size of the vertex array.
 	char *text;                ///< Content of this label.
@@ -52,25 +54,25 @@ private:
 	Colorb color;              ///< Color of the text.
 };
 
-inline Label::Label() :
-	length(0), size(0), text(nullptr), vx(nullptr) { }
+Label::Label() :
+	stale(0), length(0), size(0), text(nullptr), vx(nullptr) { }
 
-inline void Label::set_color(const Colorb &c)
+void Label::set_color(const Colorb &c)
 {
 	this->color = c;
+	this->stale = stale_color;
 }
 
-inline void Label::set_font(FontAtlas *f)
+void Label::set_font(FontAtlas *f)
 {
 	this->font = f;
 }
 
-inline void Label::set_position(const int x, const int y)
+void Label::set_position(const int x, const int y)
 {
 	this->position.x = x;
 	this->position.y = y;
+	this->stale = stale_position;
 }
-
-inline void Label::update() { }
 
 #endif

@@ -15,7 +15,7 @@
 #include "Common/Chrono.h"
 #include "Common/Data.h"
 #include "ConFuoco/Mixer.h"
-#include "Graphics/OpenGL.h"
+#include "Graphics/Renderer.h"
 #include "Input/Key.h"
 #include "Input/Input.h"
 #include "Input/Touch.h"
@@ -29,7 +29,6 @@ const double fps = 1000.0 / 60.0;    ///< Preferred frames per second
 const float milli = 1.0f / 1000.0f;  ///< 1 millisecond
 Touch mouse_input;                   ///< Mouse input
 
-void init_GL();                                     ///< Initialise 2d viewport
 void on_mouse_button_down(SDL_MouseButtonEvent &);  ///< Handle mouse button down event
 void on_mouse_button_up(SDL_MouseButtonEvent &);    ///< Handle mouse button up event
 void on_mouse_motion(SDL_MouseMotionEvent &);       ///< Handle mouse motion event
@@ -86,7 +85,7 @@ int main(int argc, char *argv[])
 	}
 	SDL_WM_SetCaption(RAINBOW_BUILD, "Rainbow");
 
-	init_GL();
+	Renderer::init();
 	Director director;
 	resize(director, screen_width, screen_height);
 
@@ -160,29 +159,13 @@ int main(int argc, char *argv[])
 			director.update();
 
 			// Draw
-			glClear(GL_COLOR_BUFFER_BIT);
+			Renderer::clear();
 			director.draw();
 			SDL_GL_SwapBuffers();
 		}
 	}
 	SDL_Quit();
 	return 0;
-}
-
-void init_GL()
-{
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-
-	glDisable(GL_LIGHTING);
-	glDisable(GL_DEPTH_TEST);
-
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-	glEnable(GL_TEXTURE_2D);
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glEnableClientState(GL_COLOR_ARRAY);
-	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 }
 
 void on_mouse_button_down(SDL_MouseButtonEvent &mouse)
@@ -208,14 +191,7 @@ void on_mouse_motion(SDL_MouseMotionEvent &mouse)
 
 void resize(Director &director, const int w, const int h)
 {
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	glOrtho(0, w, 0, h, -1, 1);
-
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-	glViewport(0, 0, w, h);
-
+	Renderer::resize(w, h);
 	director.set_video(w, h);
 }
 

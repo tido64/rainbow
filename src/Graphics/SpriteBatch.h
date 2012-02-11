@@ -18,8 +18,6 @@ class SpriteBatch : public Drawable
 	friend void Sprite::set_texture(const unsigned int id);
 
 public:
-	static const unsigned char indices[];  ///< Global vertex indices (currently limited to 64 vertices, or 16 sprites)
-
 	SpriteBatch(const unsigned int hint = 8);
 	~SpriteBatch();
 
@@ -52,7 +50,7 @@ protected:
 	void push_back(Sprite *s);
 
 private:
-	GLuint buffer;                   ///< GL vertex buffer.
+	unsigned int buffer;             ///< GL vertex buffer.
 	unsigned int batch_vertices;     ///< Total number of vertices in this batch.
 	unsigned int reserved;           ///< Allocated memory for sprite vertices.
 	SpriteVertex *vertex_buffer;     ///< Common vertex array for all sprites in the batch.

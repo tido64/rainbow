@@ -4,7 +4,7 @@
 
 #include "Common/SmartPtr.h"
 #include "Graphics/FontGlyph.h"
-#include "Graphics/OpenGL.h"
+#include "Graphics/Renderer.h"
 
 class Data;
 
@@ -30,7 +30,7 @@ class Data;
 class FontAtlas : public SmartPtrFriendly
 {
 public:
-	static const unsigned char ascii_offset = 32;  ///< Start loading from character 32
+	static const unsigned char ascii_offset = 32;  ///< Start loading from character 32.
 
 	const float pt;
 
@@ -44,14 +44,14 @@ public:
 	bool load(const Data &font);
 
 protected:
-	static const unsigned char chars = 95;         ///< Load characters through 126 from the ASCII table
-	static const unsigned short int margin = 2;    ///< Drawn margin around font glyph
-	static const unsigned short int padding = 3;   ///< Padding around font glyph texture
+	static const unsigned char chars = 95;        ///< Load characters through 126 from the ASCII table.
+	static const unsigned short int margin = 2;   ///< Drawn margin around font glyph.
+	static const unsigned short int padding = 3;  ///< Padding around font glyph texture.
 
 private:
-	GLuint texture;            ///< GL texture id
-	Colorb color;              ///< Font colour
-	FontGlyph charset[chars];  ///< Character set
+	unsigned int texture;      ///< Texture name.
+	Colorb color;              ///< Font colour.
+	FontGlyph charset[chars];  ///< Character set.
 
 	/// Intentionally left undefined.
 	FontAtlas(const FontAtlas &);
@@ -66,7 +66,7 @@ private:
 
 void FontAtlas::bind() const
 {
-	glBindTexture(GL_TEXTURE_2D, this->texture);
+	Renderer::bind_texture(this->texture);
 }
 
 const FontGlyph& FontAtlas::get_glyph(const char c) const
