@@ -91,7 +91,7 @@ namespace ConFuoco
 		for (unsigned int i = 0; i < CONFUOCO_STREAM_AL_BUFFERS; ++i)
 		{
 			Decoder::read(this->buffer, this->handle, this->buffer_size);
-			alBufferData(this->bid[i], this->format, buffer, this->buffer_size, this->rate);
+			alBufferData(this->bid[i], this->format, this->buffer, this->buffer_size, this->rate);
 			if (alGetError() != AL_NO_ERROR)
 			{
 				fprintf(stderr, "Rainbow::ConFuoco::AL: Failed to buffer data\n");
@@ -107,6 +107,8 @@ namespace ConFuoco
 		this->stop();
 		alSourceUnqueueBuffers(this->sid, CONFUOCO_STREAM_AL_BUFFERS, this->bid);
 		Decoder::close(this->handle);
+		delete[] this->buffer;
+		this->buffer = nullptr;
 	}
 }
 
