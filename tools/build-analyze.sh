@@ -29,6 +29,7 @@ function compile {
 CC=
 CXX=
 compile "Cross compile" i486-mingw32-c++ -DMINGW=ON
+mv rainbow rainbow.exe
 
 # GCC compile pass
 CC=gcc

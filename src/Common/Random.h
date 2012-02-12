@@ -3,6 +3,7 @@
 
 #include <ctime>
 
+#include "Platform.h"
 #include "Common/RainbowAssert.h"
 
 #if defined(RAINBOW_UNIX)
