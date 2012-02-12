@@ -14,7 +14,7 @@
 
 - (void)alertView:(UIAlertView*)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-	[[UIApplication sharedApplication] applicationWillTerminate];
+	//[[UIApplication sharedApplication] applicationWillTerminate];
 	exit(1);
 }
 
@@ -23,15 +23,12 @@
 void ShutdownSequence::operator()()
 {
 	RainbowAlertViewDelegate *rad = [RainbowAlertViewDelegate alloc];
-	[rad autorelease];
 
-	UIAlertView *alert = [UIAlertView alloc];
-	[alert initWithTitle:@"Crashed! >_<"
-	             message:@"We're sincerely sorry for this."
-	            delegate:rad
-	   cancelButtonTitle:@"OK"
-	   otherButtonTitles:nil];
-	[alert autorelease];
+	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Crashed! >_<"
+		message:@"We're sincerely sorry for this."
+		delegate:rad
+		cancelButtonTitle:@"OK"
+		otherButtonTitles:nil];
 	[alert show];
 }
 

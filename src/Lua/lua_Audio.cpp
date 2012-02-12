@@ -1,8 +1,8 @@
 #include <lualib.h>
 #include <lauxlib.h>
 
-#include "Common/Assert.h"
 #include "Common/Data.h"
+#include "Common/RainbowAssert.h"
 #include "ConFuoco/Mixer.h"
 #include "ConFuoco/Wave.h"
 #include "Lua/lua_Audio.h"

@@ -1,4 +1,4 @@
-#include "Common/Assert.h"
+#include "Common/RainbowAssert.h"
 #include "Graphics/Sprite.h"
 #include "Graphics/Transitions.h"
 #include "Lua/lua_Sprite.h"

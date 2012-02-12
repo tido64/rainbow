@@ -1,6 +1,7 @@
 // Copyright 2011-12 Bifrost Entertainment. All rights reserved.
 
 #include "Common/Data.h"
+#include "Common/RainbowAssert.h"
 
 #ifdef RAINBOW_IOS
 
@@ -22,16 +23,12 @@ Data::Data(const char *const file) : data(nil)
 	this->data = [[NSMutableData alloc] initWithContentsOfFile:path options:NSDataReadingUncached error:&err];
 	if (err != nil)
 	{
-		[data release];
 		NSLog(@"Rainbow::Data: Failed to read file");
 		this->data = nil;
 	}
 }
 
-Data::~Data()
-{
-	[data release];
-}
+Data::~Data() { }
 
 void Data::copy(const void *const data, const unsigned int length)
 {

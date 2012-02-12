@@ -16,7 +16,7 @@ namespace ConFuoco
 		CFRelease(url);
 		if (status != noErr)
 		{
-			NSLog(@"Rainbow::ConFuoco::Decoder::iOS: Failed to open %s\n", CFURLGetString(url));
+			NSLog(@"Rainbow::ConFuoco::Decoder::iOS: Failed to open %s\n", file);
 			return 0;
 		}
 

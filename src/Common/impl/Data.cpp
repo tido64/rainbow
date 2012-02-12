@@ -6,7 +6,7 @@
 #include <cstdio>
 #include <cstring>
 
-#include "Common/Assert.h"
+#include "Common/RainbowAssert.h"
 
 unsigned int Data::data_path_length = 0;
 unsigned int Data::userdata_path_length = 0;

@@ -5,7 +5,7 @@
 
 #include <cstdio>
 
-#include "Common/Assert.h"
+#include "Common/RainbowAssert.h"
 #include "ConFuoco/Decoder.h"
 #include "ConFuoco/impl/Stream_AL.h"
 

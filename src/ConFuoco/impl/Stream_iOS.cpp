@@ -3,7 +3,7 @@
 #include "Platform.h"
 #ifdef RAINBOW_IOS
 
-#include "Common/Assert.h"
+#include "Common/RainbowAssert.h"
 #include "ConFuoco/impl/Stream_iOS.h"
 
 namespace ConFuoco
@@ -20,7 +20,7 @@ namespace ConFuoco
 		NSError *error;
 		NSURL *fileURL = [[NSURL alloc] initFileURLWithPath:[NSString stringWithUTF8String:file]];
 		this->player = [[AVAudioPlayer alloc] initWithContentsOfURL:fileURL error:&error];
-		[fileURL release];
+		fileURL = nil;
 		if (!this->player)
 		{
 			NSLog(@"Rainbow::ConFuoco::iOS::load: %@", [error description]);

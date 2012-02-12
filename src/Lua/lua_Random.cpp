@@ -1,5 +1,3 @@
-#include <cassert>
-
 #include <lualib.h>
 #include <lauxlib.h>
 

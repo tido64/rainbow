@@ -9,17 +9,19 @@
 #include "Platform.h"
 
 #if defined(RAINBOW_ANDROID)
-#	include <GLES/gl.h>
+#	include <GLES2/gl.h>
 #elif defined(RAINBOW_IOS)
-#	include <OpenGLES/ES1/gl.h>
+#	include <OpenGLES/ES2/gl.h>
 #elif defined(RAINBOW_WIN)
 #	ifndef WIN32
 #		define WIN32
 #	endif
 #	include <GL/GLee.h>
+#	include <GL/glext.h>
 #else
 #	define GL_GLEXT_PROTOTYPES 1
 #	include <GL/gl.h>
+#	include <GL/glext.h>
 #endif
 
 #endif

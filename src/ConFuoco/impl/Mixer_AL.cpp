@@ -60,7 +60,7 @@ namespace ConFuoco
 		UInt32 size = sizeof(CFStringRef);
 		CFStringRef new_route;
 		OSStatus result = AudioSessionGetProperty(kAudioSessionProperty_AudioRoute, &size, &new_route);
-		NSLog(@"Rainbow::ConFuoco::iOS::Mixer: Route changed from %@ to %@ (%d)\n", old_route, new_route, result);
+		NSLog(@"Rainbow::ConFuoco::iOS::Mixer: Route changed from %@ to %@ (%ld)\n", old_route, new_route, result);
 	}
 
 #endif
@@ -72,7 +72,7 @@ namespace ConFuoco
 		OSStatus result = AudioSessionInitialize(0, 0, InterruptionListener, this);
 		if (result != 0 && result != kAudioSessionAlreadyInitialized)
 		{
-			NSLog(@"Rainbow::ConFuoco::iOS::Mixer: Failed to initialise audio device (%d)\n", result);
+			NSLog(@"Rainbow::ConFuoco::iOS::Mixer: Failed to initialise audio device (%ld)\n", result);
 			return;
 		}
 
@@ -80,7 +80,7 @@ namespace ConFuoco
 		UInt32 propertySize = sizeof(property);
 		result = AudioSessionGetProperty(kAudioSessionProperty_OtherAudioIsPlaying, &propertySize, &property);
 		if (result != 0)
-			NSLog(@"Rainbow::ConFuoco::iOS::Mixer: Failed to find out whether audio device is in use (%d)\n", result);
+			NSLog(@"Rainbow::ConFuoco::iOS::Mixer: Failed to find out whether audio device is in use (%ld)\n", result);
 
 		property = property ? kAudioSessionCategory_AmbientSound : kAudioSessionCategory_SoloAmbientSound;
 		result = AudioSessionSetProperty(kAudioSessionProperty_AudioCategory, sizeof(property), &property);
@@ -91,16 +91,16 @@ namespace ConFuoco
 			result = AudioSessionSetProperty(kAudioSessionProperty_AudioCategory, sizeof(property), &property);
 			if (result != 0)
 		#endif
-				NSLog(@"Rainbow::ConFuoco::iOS::Mixer: Failed to set audio session category (%d)\n", result);
+				NSLog(@"Rainbow::ConFuoco::iOS::Mixer: Failed to set audio session category (%ld)\n", result);
 		}
 
 		result = AudioSessionAddPropertyListener(kAudioSessionProperty_AudioRouteChange, RouteChangeListener, this);
 		if (result != 0)
-			NSLog(@"Rainbow::ConFuoco::iOS::Mixer: Failed to add audio route change listener (%d)\n", result);
+			NSLog(@"Rainbow::ConFuoco::iOS::Mixer: Failed to add audio route change listener (%ld)\n", result);
 
 		result = AudioSessionSetActive(true);
 		if (result != 0)
-			NSLog(@"Rainbow::ConFuoco::iOS::Mixer: Failed to activate audio session (%s)\n", result);
+			NSLog(@"Rainbow::ConFuoco::iOS::Mixer: Failed to activate audio session (%ld)\n", result);
 
 	#endif
 

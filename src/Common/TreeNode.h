@@ -1,8 +1,8 @@
 #ifndef TREENODE_H_
 #define TREENODE_H_
 
-#include "Common/Assert.h"
 #include "Common/List.h"
+#include "Common/RainbowAssert.h"
 
 /// A barebone implementation of a tree node.
 ///

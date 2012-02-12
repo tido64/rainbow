@@ -1,12 +1,16 @@
 #ifndef RENDERER_H_
 #define RENDERER_H_
 
+class Pipeline;
+class Shader;
 struct SpriteVertex;
 
 class Renderer
 {
 public:
-	static void init();
+	static bool init();
+	static void release();
+
 	static void clear();
 	static void resize(const unsigned int width, const unsigned int height);
 
@@ -27,8 +31,11 @@ public:
 	static void update_buffer(const unsigned int buffer, const unsigned int size, const void *data);
 
 private:
-	/// Index buffer object.
-	static unsigned int index_buffer;
+	static unsigned int index_buffer;  ///< Index buffer object.
+
+	static Pipeline *pipeline;       ///< Graphics pipeline in use.
+	static Shader *vertex_shader;    ///< Vertex shader in use.
+	static Shader *fragment_shader;  ///< Fragment shader in use.
 
 	/// Global vertex indices (currently limited to 384 vertices, or 64 sprites).
 	static const unsigned char default_indices[];

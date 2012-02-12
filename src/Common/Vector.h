@@ -3,7 +3,7 @@
 
 #include <cstring>
 
-#include "Common/Assert.h"
+#include "Common/RainbowAssert.h"
 
 /// Simple vector class, mimicking STL::vector.
 ///

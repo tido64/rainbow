@@ -39,7 +39,7 @@ TextureAtlas::TextureAtlas(const Data &img) : name(0), width(0), height(0)
 
 #if defined(RAINBOW_IOS)
 
-	UIImage *image = [[UIImage alloc] initWithData:(const NSData*)img];
+	UIImage *image = [[UIImage alloc] initWithData:(NSData*)img];
 	R_ASSERT(image, "Failed to load file.");
 
 	this->width = CGImageGetWidth(image.CGImage);
@@ -59,7 +59,7 @@ TextureAtlas::TextureAtlas(const Data &img) : name(0), width(0), height(0)
 	CGContextDrawImage(context, bounds, image.CGImage);
 	CGContextRelease(context);
 
-	[image release];
+	image = nil;
 
 #else
 

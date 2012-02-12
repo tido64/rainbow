@@ -48,6 +48,5 @@ namespace Rainbow
 #define R_ASSERT(expr, reason)   static_cast<void>(0)
 #define static_assert(expr)      static_cast<void>(0)
 
-#endif
-
-#endif
+#endif  // !NDEBUG
+#endif  // RAINBOW_ASSERT_H_

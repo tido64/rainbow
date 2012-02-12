@@ -1,7 +1,6 @@
 #ifndef LUAMACHINE_H_
 #define LUAMACHINE_H_
 
-#include <cstdio>
 #include <cstring>
 
 #include <lualib.h>

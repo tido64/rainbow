@@ -3,7 +3,7 @@
 
 #include <ctime>
 
-#include "Platform.h"
+#include "Common/RainbowAssert.h"
 
 #if defined(RAINBOW_UNIX)
 #	pragma GCC diagnostic push
@@ -20,8 +20,6 @@
 #if defined(RAINBOW_UNIX)
 #	pragma GCC diagnostic pop
 #endif
-
-#include "Common/Assert.h"
 
 /// Define floating point precision for pseudo-random generated numbers.
 typedef float float_p;

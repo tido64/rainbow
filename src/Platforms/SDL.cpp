@@ -64,17 +64,7 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 
-	const SDL_VideoInfo *video_info = SDL_GetVideoInfo();
-	if (!video_info)
-	{
-		fprintf(stderr, "SDL video query failed: %s\n", SDL_GetError());
-		SDL_Quit();
-		exit(1);
-	}
-
-	int video_mode = SDL_HWPALETTE | SDL_OPENGL | ((!video_info->hw_available) ? SDL_SWSURFACE : SDL_HWSURFACE);
-	if (video_info->blit_hw)
-		video_mode |= SDL_HWACCEL;
+	const int video_mode = SDL_OPENGL;
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 	SDL_Surface *surface = SDL_SetVideoMode(screen_width, screen_height, 0, video_mode);
 	if (!surface)
@@ -85,7 +75,14 @@ int main(int argc, char *argv[])
 	}
 	SDL_WM_SetCaption(RAINBOW_BUILD, "Rainbow");
 
-	Renderer::init();
+	if (!Renderer::init())
+	{
+		fprintf(stderr, "[Rainbow] Failed to initialise OpenGL\n");
+		Renderer::release();
+		SDL_Quit();
+		exit(1);
+	}
+
 	Director director;
 	resize(director, screen_width, screen_height);
 
@@ -164,6 +161,7 @@ int main(int argc, char *argv[])
 			SDL_GL_SwapBuffers();
 		}
 	}
+	Renderer::release();
 	SDL_Quit();
 	return 0;
 }

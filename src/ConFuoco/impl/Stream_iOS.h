@@ -44,7 +44,7 @@ namespace ConFuoco
 			return;
 
 		this->stop();
-		[this->player release];
+		this->player = nil;
 	}
 }
 

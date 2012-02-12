@@ -52,7 +52,7 @@ struct Touch
 namespace Rainbow
 {
 	/// Only available on iOS. Used for converting an NSSet to a C array.
-	struct TouchArray : std::unary_function<NSSet *&, Touch*>
+	struct TouchArray : std::unary_function<NSSet*, Touch*>
 	{
 		Touch* operator()(NSSet *&touches) const
 		{

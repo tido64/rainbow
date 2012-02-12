@@ -1,25 +1,68 @@
+// Copyright 2012 Bifrost Entertainment. All rights reserved.
+
+#include "Common/Data.h"
 #include "Common/SpriteVertex.h"
 #include "Graphics/OpenGL.h"
+#include "Graphics/Pipeline.h"
 #include "Graphics/Renderer.h"
+#include "Graphics/Shader.h"
 
-void Renderer::init()
+bool Renderer::init()
 {
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
-	glDisable(GL_LIGHTING);
+	glDisable(GL_STENCIL_TEST);
 	glDisable(GL_DEPTH_TEST);
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	glEnable(GL_TEXTURE_2D);
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glEnableClientState(GL_COLOR_ARRAY);
-	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+	// Load vertex shader
+	{
+		const char *shader_path = Data::get_path("Shaders/Fixed2D.vsh");
+		Data vsh(shader_path);
+		Data::free(shader_path);
+		if (!vsh)
+			return false;
+
+		vertex_shader = new Shader(GL_VERTEX_SHADER, vsh);
+		if (!*vertex_shader)
+			return false;
+	}
+
+	// Load fragment shader
+	{
+		const char *shader_path = Data::get_path("Shaders/Fixed2D.fsh");
+		Data fsh(shader_path);
+		Data::free(shader_path);
+		if (!fsh)
+			return false;
+
+		fragment_shader = new Shader(GL_FRAGMENT_SHADER, fsh);
+		if (!*fragment_shader)
+			return false;
+	}
+
+	pipeline = new Pipeline();
+	pipeline->attach_shader(vertex_shader);
+	pipeline->attach_shader(fragment_shader);
+	if (!pipeline->link())
+		return false;
+	pipeline->use();
 
 	glGenBuffers(1, &index_buffer);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffer);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, 384, default_indices, GL_STATIC_DRAW);
+
+	return glGetError() == GL_NO_ERROR;
+}
+
+void Renderer::release()
+{
+	glUseProgram(0);
+	delete pipeline;
+	delete fragment_shader;
+	delete vertex_shader;
 }
 
 void Renderer::clear()
@@ -29,13 +72,18 @@ void Renderer::clear()
 
 void Renderer::resize(const unsigned int width, const unsigned int height)
 {
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	glOrtho(0, width, 0, height, -1, 1);
+	const float u = 2.0f / width;
+	const float v = 2.0f / height;
+	const float ortho[] = {
+		   u, 0.0f,  0.0f, -1.0f,
+		0.0f,    v,  0.0f, -1.0f,
+		0.0f, 0.0f, -1.0f,  0.0f,
+		0.0f, 0.0f,  0.0f,  1.0f
+	};
 
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-	glViewport(0, 0, width, height);
+	glUniformMatrix4fv(glGetUniformLocation(*pipeline, "mvp_matrix"), 1, 0, ortho);
+
+	R_ASSERT(glGetError() == GL_NO_ERROR, "Failed to initialise OpenGL viewport");
 }
 
 void Renderer::bind_buffer(const unsigned int buffer)
@@ -74,6 +122,8 @@ void Renderer::create_texture(unsigned int &texture, const unsigned int internal
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glTexImage2D(GL_TEXTURE_2D, 0, internal_format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+
+	R_ASSERT(glGetError() == GL_NO_ERROR, "Failed to create texture");
 }
 
 void Renderer::delete_buffer(const unsigned int buffer)
@@ -89,18 +139,27 @@ void Renderer::delete_texture(const unsigned int texture)
 void Renderer::draw_buffer(const unsigned int buffer, const unsigned int count)
 {
 	bind_buffer(buffer);
-	glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(SpriteVertex), 0);
-	glTexCoordPointer(2, GL_FLOAT, sizeof(SpriteVertex), SpriteVertex::tx_offset);
-	glVertexPointer(2, GL_FLOAT, sizeof(SpriteVertex), SpriteVertex::vx_offset);
+
+	glVertexAttribPointer(Pipeline::COLOR_LOCATION, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(SpriteVertex), 0);
+	glVertexAttribPointer(Pipeline::TEXCOORD_LOCATION, 2, GL_FLOAT, GL_FALSE, sizeof(SpriteVertex), SpriteVertex::tx_offset);
+	glVertexAttribPointer(Pipeline::VERTEX_LOCATION, 2, GL_FLOAT, GL_TRUE, sizeof(SpriteVertex), SpriteVertex::vx_offset);
+
 	glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_BYTE, 0);
+
+	R_ASSERT(glGetError() == GL_NO_ERROR, "Failed to draw buffer");
 }
 
 void Renderer::draw_elements(const SpriteVertex *vertices, const unsigned int count)
 {
-	glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(SpriteVertex), &vertices->color);
-	glTexCoordPointer(2, GL_FLOAT, sizeof(SpriteVertex), &vertices->texcoord);
-	glVertexPointer(2, GL_FLOAT, sizeof(SpriteVertex), &vertices->position);
+	bind_buffer(0);
+
+	glVertexAttribPointer(Pipeline::COLOR_LOCATION, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(SpriteVertex), &vertices->color);
+	glVertexAttribPointer(Pipeline::TEXCOORD_LOCATION, 2, GL_FLOAT, GL_FALSE, sizeof(SpriteVertex), &vertices->texcoord);
+	glVertexAttribPointer(Pipeline::VERTEX_LOCATION, 2, GL_FLOAT, GL_TRUE, sizeof(SpriteVertex), &vertices->position);
+
 	glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_BYTE, 0);
+
+	R_ASSERT(glGetError() == GL_NO_ERROR, "Failed to draw elements");
 }
 
 void Renderer::update_buffer(const unsigned int buffer, const unsigned int size, const void *data)
@@ -108,9 +167,14 @@ void Renderer::update_buffer(const unsigned int buffer, const unsigned int size,
 	bind_buffer(buffer);
 	glBufferData(GL_ARRAY_BUFFER, size, data, GL_DYNAMIC_DRAW);
 	bind_buffer(0);
+
+	R_ASSERT(glGetError() == GL_NO_ERROR, "Failed to update buffer");
 }
 
 unsigned int Renderer::index_buffer = 0;
+Pipeline *Renderer::pipeline = nullptr;
+Shader *Renderer::vertex_shader = nullptr;
+Shader *Renderer::fragment_shader = nullptr;
 const unsigned char Renderer::default_indices[] = {
 	  0,   1,   2,   2,   1,   3,   4,   5,   6,   6,   5,   7,
 	  8,   9,  10,  10,   9,  11,  12,  13,  14,  14,  13,  15,

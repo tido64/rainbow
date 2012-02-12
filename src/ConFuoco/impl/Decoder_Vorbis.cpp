@@ -5,7 +5,7 @@
 
 #include <vorbis/vorbisfile.h>
 
-#include "Common/Assert.h"
+#include "Common/RainbowAssert.h"
 #include "ConFuoco/Decoder.h"
 
 namespace ConFuoco
