@@ -5,7 +5,7 @@
 
 namespace Rainbow
 {
-	/// Structure for storing a color (RGBA).
+	/// Structure for storing a colour (RGBA).
 	///
 	/// Copyright 2010-12 Bifrost Entertainment. All rights reserved.
 	/// \author Tommy Nguyen
@@ -13,9 +13,20 @@ namespace Rainbow
 	struct _Color
 	{
 		T r, g, b, a;
+
+		_Color(const _Color<T> &c) : r(c.r), g(c.g), b(c.b), a(c.a) { }
+
+		_Color<T>& operator=(const _Color<T> &c)
+		{
+			this->r = c.r;
+			this->g = c.g;
+			this->b = c.b;
+			this->a = c.a;
+			return *this;
+		}
 	};
 
-	/// Structure for storing a color (RGBA) using unsigned bytes.
+	/// Structure for storing a colour (RGBA) using unsigned bytes.
 	///
 	/// Copyright 2010-12 Bifrost Entertainment. All rights reserved.
 	/// \author Tommy Nguyen
@@ -25,7 +36,7 @@ namespace Rainbow
 		unsigned char r, g, b, a;
 
 		_Color() : r(0xff), g(0xff), b(0xff), a(0xff) { }
-		_Color(const _Color<unsigned char> &c) : r(c.r), g(c.g), b(c.b), a(c.a) { }
+
 		_Color(const unsigned char r, const unsigned char g, const unsigned char b, const unsigned char a = 0xff) :
 			r(r), g(g), b(b), a(a)
 		{ }
@@ -41,7 +52,7 @@ namespace Rainbow
 		}
 	};
 
-	/// Structure for storing a color (RGBA) using floats.
+	/// Structure for storing a colour (RGBA) using floats.
 	///
 	/// Copyright 2010-12 Bifrost Entertainment. All rights reserved.
 	/// \author Tommy Nguyen
