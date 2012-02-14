@@ -26,24 +26,26 @@ class  Touchable;
 class Input
 {
 public:
-	static Input& Instance();
-
-	bool accelerated;           ///< Whether we should update accelerometer data
-	Acceleration acceleration;  ///< Accelerometer data
+	static inline Input& Instance();
 
 	/// Reset input subscription list.
-	void reset();
+	inline void reset();
 
 	/// Set screen height. Needed to properly flip the image vertically.
-	void set_height(const int height);
+	inline void set_height(const int height);
 
 	/// Set active Lua state.
-	void set_state(lua_State *L);
+	inline void set_state(lua_State *L);
 
 	/// Subscribe to input events.
 	/// \param t      The object that wants to subscribe
 	/// \param flags  Events to subscribe to
 	void subscribe(Touchable *const t, unsigned int flags);
+
+	/// Acceleration event.
+	/// \param x,y,z  Acceleration data.
+	/// \param t      The relative time at which the acceleration event occurred.
+	void accelerated(const double x, const double y, const double z, const double t);
 
 #ifdef RAINBOW_BUTTONS
 	void key_down(const Key &k);
@@ -58,9 +60,10 @@ public:
 private:
 	int height;
 	lua_State *lua_state;
-	Vector<Touchable *> touch_subscribers;
+	Acceleration acceleration;  ///< Accelerometer data
+	Vector<Touchable*> touch_subscribers;
 
-	Input();
+	inline Input();
 
 	/// Intentionally left undefined.
 	Input(const Input &);
@@ -73,27 +76,27 @@ private:
 	Input& operator=(const Input &);
 };
 
-inline Input& Input::Instance()
+Input& Input::Instance()
 {
 	static Input i;
 	return i;
 }
 
-inline Input::Input() : accelerated(false), height(0), lua_state(nullptr) { }
-
-inline void Input::reset()
+void Input::reset()
 {
 	this->touch_subscribers.clear();
 }
 
-inline void Input::set_height(const int h)
+void Input::set_height(const int h)
 {
 	this->height = h;
 }
 
-inline void Input::set_state(lua_State *L)
+void Input::set_state(lua_State *L)
 {
 	this->lua_state = L;
 }
+
+Input::Input() : height(0), lua_state(nullptr) { }
 
 #endif

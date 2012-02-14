@@ -5,67 +5,18 @@
 #include "Input/Touch.h"
 #include "Lua/lua_Input.h"
 
-void lua_Input::init(lua_State *L)
+void lua_Input::accelerated(lua_State *L, const Acceleration &acceleration)
 {
-	lua_createtable(L, 0, 2);
-	lua_pushvalue(L, -1);
-	lua_setfield(L, -3, "input");
-
-	// rainbow.input.acceleration
-	lua_createtable(L, 0, 2);
-	lua_setfield(L, -2, "acceleration");
-	accelerate(L);
-
-	lua_pop(L, 1);
-}
-
-void lua_Input::accelerate(lua_State *L)
-{
-	const Input &input = Input::Instance();
 	getfield(L, "acceleration");
-	lua_pushnumber(L, input.acceleration.x * RAINBOW_INV_FIXED_SCALE);
-	lua_setfield(L, -2, "x");
-	lua_pushnumber(L, input.acceleration.y * RAINBOW_INV_FIXED_SCALE);
-	lua_setfield(L, -2, "y");
-	lua_pushnumber(L, input.acceleration.z * RAINBOW_INV_FIXED_SCALE);
-	lua_setfield(L, -2, "z");
-	lua_pushnumber(L, input.acceleration.timestamp);
+	lua_pushnumber(L, acceleration.timestamp);
 	lua_setfield(L, -2, "timestamp");
+	lua_pushnumber(L, acceleration.x);
+	lua_setfield(L, -2, "x");
+	lua_pushnumber(L, acceleration.y);
+	lua_setfield(L, -2, "y");
+	lua_pushnumber(L, acceleration.z);
+	lua_setfield(L, -2, "z");
 	lua_pop(L, 3);
-}
-
-void lua_Input::getfield(lua_State *L, const char *const field)
-{
-	lua_getglobal(L, "rainbow");
-	lua_getfield(L, -1, "input");
-	lua_getfield(L, -1, field);
-}
-
-void lua_Input::touch_event(lua_State *L, const char *const type, const Touch *const touches, const unsigned int count)
-{
-	getfield(L, type);
-	if (!lua_isfunction(L, -1))
-	{
-		lua_pop(L, 3);
-		return;
-	}
-
-	lua_createtable(L, 0, count);
-	for (unsigned int i = 0; i < count; ++i)
-	{
-		lua_createtable(L, 0, 2);
-		lua_pushvalue(L, -1);
-		const char *const hash = Rainbow::itoa(touches[i].hash);
-		lua_setfield(L, -3, hash);
-		delete[] hash;
-		lua_pushinteger(L, touches[i].x);
-		lua_setfield(L, -2, "x");
-		lua_pushinteger(L, touches[i].y);
-		lua_setfield(L, -2, "y");
-		lua_pop(L, 1);
-	}
-	lua_call(L, 1, 0);
-	lua_pop(L, 2);
 }
 
 void lua_Input::touch_began(lua_State *L, const Touch *const touches, const unsigned int count)
@@ -94,6 +45,53 @@ void lua_Input::touch_ended(lua_State *L, const Touch *const touches, const unsi
 void lua_Input::touch_moved(lua_State *L, const Touch *const touches, const unsigned int count)
 {
 	touch_event(L, "touch_moved", touches, count);
+}
+
+void lua_Input::getfield(lua_State *L, const char *const field)
+{
+	lua_getglobal(L, "rainbow");
+	lua_getfield(L, -1, "input");
+	lua_getfield(L, -1, field);
+}
+
+void lua_Input::init(lua_State *L)
+{
+	lua_createtable(L, 0, 2);
+	lua_pushvalue(L, -1);
+	lua_setfield(L, -3, "input");
+
+	// rainbow.input.acceleration
+	lua_createtable(L, 0, 2);
+	lua_setfield(L, -2, "acceleration");
+
+	lua_pop(L, 1);
+}
+
+void lua_Input::touch_event(lua_State *L, const char *const type, const Touch *const touches, const unsigned int count)
+{
+	getfield(L, type);
+	if (!lua_isfunction(L, -1))
+	{
+		lua_pop(L, 3);
+		return;
+	}
+
+	lua_createtable(L, 0, count);
+	for (unsigned int i = 0; i < count; ++i)
+	{
+		lua_createtable(L, 0, 2);
+		lua_pushvalue(L, -1);
+		const char *const hash = Rainbow::itoa(touches[i].hash);
+		lua_setfield(L, -3, hash);
+		delete[] hash;
+		lua_pushinteger(L, touches[i].x);
+		lua_setfield(L, -2, "x");
+		lua_pushinteger(L, touches[i].y);
+		lua_setfield(L, -2, "y");
+		lua_pop(L, 1);
+	}
+	lua_call(L, 1, 0);
+	lua_pop(L, 2);
 }
 
 #ifdef RAINBOW_BUTTONS

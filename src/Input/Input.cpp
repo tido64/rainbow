@@ -1,7 +1,7 @@
 // Copyright 2010-12 Bifrost Entertainment. All rights reserved.
 
-#include "Input/Key.h"
 #include "Input/Input.h"
+#include "Input/Key.h"
 #include "Input/Touchable.h"
 #include "Lua/lua_Input.h"
 
@@ -11,6 +11,12 @@ void Input::subscribe(Touchable *const t, unsigned int flags)
 
 	if (flags & RAINBOW_TOUCH_EVENTS)
 		this->touch_subscribers.push_back(t);
+}
+
+void Input::accelerated(const double x, const double y, const double z, const double t)
+{
+	this->acceleration.update(x, y, z, t);
+	lua_Input::accelerated(this->lua_state, this->acceleration);
 }
 
 #ifdef RAINBOW_BUTTONS

@@ -174,12 +174,3 @@ int LuaMachine::load(SceneGraph::Node *root, const char *const lua)
 		this->scenegraph->set_root(root);
 	return lua_e;
 }
-
-int LuaMachine::update()
-{
-#if RAINBOW_ACCELERATED
-	lua_Input::accelerate(this->L);
-#endif
-
-	return this->call("update");
-}

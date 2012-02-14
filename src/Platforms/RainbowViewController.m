@@ -3,15 +3,18 @@
 
 #import "RainbowViewController.h"
 
+#include "Config.h"
 #include "Director.h"
 #include "Common/Data.h"
 #include "Graphics/Renderer.h"
 #include "Input/Input.h"
 #include "Input/Touch.h"
 
-@interface RainbowViewController() {
+@interface RainbowViewController()
+{
 	Director *director;  ///< Rainbow director.
 }
+
 @property (strong, nonatomic) EAGLContext *context;
 
 @end
@@ -25,7 +28,8 @@
 ///       768x1024 in portrait mode as well.
 /// \param touches  Set of touches to convert.
 /// \return Array of touches.
-- (Touch *)getTouches:(NSSet *)touches {
+- (Touch *)getTouches:(NSSet *)touches
+{
 	Touch *t_arr = new Touch[touches.count];
 	Touch *t = t_arr;
 	if (UIInterfaceOrientationIsPortrait([[UIApplication sharedApplication] statusBarOrientation]))
@@ -57,21 +61,26 @@
 {
 	[super viewDidLoad];
 
+	Config config;
+	if (config.needs_accelerometer())
+	{
+		// Enable accelerometer.
+		[[UIAccelerometer sharedAccelerometer] setUpdateInterval:(1.0 / self.preferredFramesPerSecond)];
+		[[UIAccelerometer sharedAccelerometer] setDelegate:self];
+	}
+
+	// Set up OpenGL ES 2.0 context.
 	self.context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
 	if (!self.context)
 	{
 		NSLog(@"[Rainbow] Failed to create ES context");
 		return;
 	}
-#if defined(DEBUG)
-	else
-		NSLog(@"[Rainbow] Successfully created ES context");
-#endif
-
-	((GLKView*)self.view).context = self.context;
+	((GLKView *)self.view).context = self.context;
 	[self setPreferredFramesPerSecond:60];
 	[EAGLContext setCurrentContext:self.context];
 
+	// Prepare graphics and initialise the director.
 	Renderer::init();
 	self->director = new Director();
 
@@ -95,6 +104,8 @@
 
 - (void)viewDidUnload
 {
+	[[UIAccelerometer sharedAccelerometer] setDelegate:nil];
+
 	delete self->director;
 	Renderer::release();
 
@@ -122,36 +133,50 @@
 
 #pragma mark - GLKViewDelegate
 
-- (void)glkView:(GLKView *)view drawInRect:(CGRect)rect {
+- (void)glkView:(GLKView *)view drawInRect:(CGRect)rect
+{
 	glClear(GL_COLOR_BUFFER_BIT);
 	self->director->draw();
 }
 
 #pragma mark - GLKViewControllerDelegate
 
-- (void)update {
+- (void)update
+{
 	self->director->update(self.timeSinceLastDraw * 1000);
+}
+
+#pragma mark - UIAccelerometerDelegate
+
+- (void)accelerometer:(UIAccelerometer *)accelerometer didAccelerate:(UIAcceleration *)acceleration
+{
+	Input::Instance().accelerated(
+		acceleration.x, acceleration.y, acceleration.z, acceleration.timestamp);
 }
 
 #pragma mark - UIResponder
 
-- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+{
 	Touch *t = [self getTouches:touches];
 	Input::Instance().touch_began(t, touches.count);
 	delete[] t;
 }
 
-- (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
+- (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
+{
 	Input::Instance().touch_canceled();
 }
 
-- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
+- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
+{
 	Touch *t = [self getTouches:touches];
 	Input::Instance().touch_ended(t, touches.count);
 	delete[] t;
 }
 
-- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
+- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
+{
 	Touch *t = [self getTouches:touches];
 	Input::Instance().touch_moved(t, touches.count);
 	delete[] t;

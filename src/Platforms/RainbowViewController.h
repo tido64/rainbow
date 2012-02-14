@@ -4,6 +4,6 @@
 ///
 /// Copyright 2012 Bifrost Entertainment. All rights reserved.
 /// \author Tommy Nguyen
-@interface RainbowViewController : GLKViewController
+@interface RainbowViewController : GLKViewController <UIAccelerometerDelegate>
 
 @end

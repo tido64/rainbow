@@ -76,10 +76,6 @@ private:
 	/// \return Lua error code (defined in lua.h).
 	int load(SceneGraph::Node *root, const char *const);
 
-	/// Update world state and call update function in Lua script.
-	/// \return Lua error code (defined in lua.h).
-	int update();
-
 	/// Wrap a C++ object and makes its methods available in Lua.
 	/// \param ns  Insert object into specified namespace.
 	template<class T>

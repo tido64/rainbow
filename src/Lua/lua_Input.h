@@ -1,6 +1,7 @@
 #ifndef LUA_INPUT_H_
 #define LUA_INPUT_H_
 
+class  Acceleration;
 class  Key;
 struct lua_State;
 class  LuaMachine;
@@ -8,8 +9,10 @@ struct Touch;
 
 class lua_Input
 {
+	friend class LuaMachine;
+
 public:
-	static void accelerate(lua_State *L);
+	static void accelerated(lua_State *L, const Acceleration &acceleration);
 
 #ifdef RAINBOW_BUTTONS
 	static void key_down(lua_State *L, const Key &key);
@@ -34,8 +37,6 @@ private:
 	lua_Input();
 	lua_Input(const lua_Input &);
 	lua_Input& operator=(const lua_Input &);
-
-	friend class LuaMachine;
 };
 
 #endif

@@ -1,59 +1,44 @@
 #ifndef ACCELERATION_H_
 #define ACCELERATION_H_
 
-#ifdef RAINBOW_IOS
-#	include <UIKit/UIAccelerometer.h>
-#endif
+#include "Common/Vec3.h"
 
-#define RAINBOW_FIXED_SCALE      1000.0f
-#define RAINBOW_INV_FIXED_SCALE  (1.0f / RAINBOW_FIXED_SCALE)
+#define kFilteringFactor 0.1
 
-namespace Rainbow
+/// Structure representing immediate, three-dimensional acceleration data.
+///
+/// Implements a simple high-pass filter that removes the gravity component from
+/// the acceleration data.
+///
+/// Copyright 2011-12 Bifrost Entertainment. All rights reserved.
+/// \author Tommy Nguyen
+class Acceleration
 {
-	/// Structure for handling accelerometer data.
-	///
-	/// Uses fixed-point arithmetic with a scaling factor of 1/1000.
-	///
-	/// Copyright 2011-12 Bifrost Entertainment. All rights reserved.
-	/// \author Tommy Nguyen
-	class Acceleration
-	{
-	public:
-		int x, y, z;
-		double timestamp;
+public:
+	double timestamp;         ///< The relative time at which the acceleration event occurred.
+	const double &x, &y, &z;  ///< Filtered acceleration data.
 
-		Acceleration() :
-			x(0), y(0), z(0), timestamp(0.0) { }
+	inline Acceleration();
 
-		Acceleration(const float x, const float y, const float z, const double timestamp) :
-			x(cut(x)), y(cut(y)), z(cut(z)), timestamp(timestamp) { }
+	/// Update acceleration data.
+	/// \param x,y,z  Raw acceleration data.
+	/// \param t      The relative time at which the acceleration event occurred.
+	inline void update(const double x, const double y, const double z, const double t);
 
+private:
+	Vec3d pass;  ///< Filtered acceleration data.
+};
 
-		Acceleration(const Acceleration &a) :
-			x(a.x), y(a.y), z(a.z), timestamp(a.timestamp) { }
+Acceleration::Acceleration() :
+	timestamp(0.0), x(pass.x), y(pass.y), z(pass.z) { }
 
-	#ifdef RAINBOW_IOS
-
-		/// Only available on iOS. Used for converting a UIAcceleration.
-		Acceleration& operator=(const UIAcceleration *const a)
-		{
-			this->x = this->cut(a.x);
-			this->y = this->cut(a.y);
-			this->z = this->cut(a.z);
-			this->timestamp = a.timestamp;
-			return *this;
-		}
-
-	#endif
-
-	private:
-		inline int cut(const float x)
-		{
-			return static_cast<int>(x * RAINBOW_FIXED_SCALE);
-		}
-	};
+void Acceleration::update(const double x, const double y, const double z, const double t)
+{
+	// Calculate the low-pass value and subtract it from the measured value.
+	this->pass.x = x - ((x * kFilteringFactor) + (this->pass.x * (1.0 - kFilteringFactor)));
+	this->pass.y = y - ((y * kFilteringFactor) + (this->pass.y * (1.0 - kFilteringFactor)));
+	this->pass.z = z - ((z * kFilteringFactor) + (this->pass.z * (1.0 - kFilteringFactor)));
+	this->timestamp = t;
 }
-
-typedef Rainbow::Acceleration Acceleration;
 
 #endif
