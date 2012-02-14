@@ -38,9 +38,13 @@ public:
 	inline void set_state(lua_State *L);
 
 	/// Subscribe to input events.
-	/// \param t      The object that wants to subscribe
-	/// \param flags  Events to subscribe to
+	/// \param t      The object that wants to subscribe.
+	/// \param flags  Events to subscribe to.
 	void subscribe(Touchable *const t, unsigned int flags);
+
+	/// Unsubscribe the object from input events.
+	/// \param t  The object to unsubscribe.
+	inline void unsubscribe(Touchable *const t);
 
 	/// Acceleration event.
 	/// \param x,y,z  Acceleration data.
@@ -95,6 +99,11 @@ void Input::set_height(const int h)
 void Input::set_state(lua_State *L)
 {
 	this->lua_state = L;
+}
+
+void Input::unsubscribe(Touchable *const t)
+{
+	this->touch_subscribers.quick_remove(t);
 }
 
 Input::Input() : height(0), lua_state(nullptr) { }
