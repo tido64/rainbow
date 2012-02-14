@@ -4,6 +4,7 @@
 #include <cstring>
 #include <new>
 
+#include "Platform.h"
 #include "Common/RainbowAssert.h"
 
 /// Simple vector class, mimicking STL::vector.
@@ -36,6 +37,11 @@ public:
 
 	/// Add an element to the vector.
 	void push_back(const T &element);
+
+	/// Remove the first element that equals a value by swapping it with the
+	/// last element. Don't use this if you need to maintain the element order.
+	/// \param element  The value to remove.
+	void quick_remove(const T &element);
 
 	/// Increase or decrease the capacity of the vector.
 	/// \note On failure, the vector will remain untouched.
@@ -109,6 +115,20 @@ void Vector<T>::push_back(const T &element)
 
 	new (this->c_array + this->count) T(element);
 	++this->count;
+}
+
+template<class T>
+void Vector<T>::quick_remove(const T &element)
+{
+	for (unsigned int i = 0; i < this->count; ++i)
+	{
+		if (this->c_array[i] == element)
+		{
+			this->c_array[i].~T();
+			memmove(this->c_array + i, this->c_array + (--this->count), sizeof(T));
+			break;
+		}
+	}
 }
 
 template<class T>
