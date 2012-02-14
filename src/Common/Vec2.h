@@ -50,6 +50,11 @@ namespace Rainbow
 			this->y = 0;
 		}
 
+		bool operator==(const _Vec2<T> &v) const
+		{
+			return this->x == v.x && this->y == v.y;
+		}
+
 		_Vec2<T>& operator+=(const _Vec2<T> &v)
 		{
 			this->x += v.x;
