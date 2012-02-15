@@ -28,6 +28,8 @@ public:
 	static void draw_buffer(const unsigned int buffer, const unsigned int count);
 	static void draw_elements(const SpriteVertex *vertices, const unsigned int count);
 
+	static Shader* load_shader(const unsigned int type, const char *const shader);
+
 	static void update_buffer(const unsigned int buffer, const unsigned int size, const void *data);
 
 private:

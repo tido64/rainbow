@@ -17,31 +17,13 @@ bool Renderer::init()
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	// Load vertex shader
-	{
-		const char *shader_path = Data::get_path("Shaders/Fixed2D.vsh");
-		Data vsh(shader_path);
-		Data::free(shader_path);
-		if (!vsh)
-			return false;
+	vertex_shader = load_shader(GL_VERTEX_SHADER, "Shaders/Fixed2D.vsh");
+	if (!vertex_shader)
+		return false;
 
-		vertex_shader = new Shader(GL_VERTEX_SHADER, vsh);
-		if (!*vertex_shader)
-			return false;
-	}
-
-	// Load fragment shader
-	{
-		const char *shader_path = Data::get_path("Shaders/Fixed2D.fsh");
-		Data fsh(shader_path);
-		Data::free(shader_path);
-		if (!fsh)
-			return false;
-
-		fragment_shader = new Shader(GL_FRAGMENT_SHADER, fsh);
-		if (!*fragment_shader)
-			return false;
-	}
+	fragment_shader = load_shader(GL_FRAGMENT_SHADER, "Shaders/Fixed2D.fsh");
+	if (!fragment_shader)
+		return false;
 
 	pipeline = new Pipeline();
 	pipeline->attach_shader(vertex_shader);
@@ -160,6 +142,23 @@ void Renderer::draw_elements(const SpriteVertex *vertices, const unsigned int co
 	glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_BYTE, 0);
 
 	R_ASSERT(glGetError() == GL_NO_ERROR, "Failed to draw elements");
+}
+
+Shader* Renderer::load_shader(const unsigned int type, const char *const src_path)
+{
+	const char *full_path = Data::get_path(src_path);
+	Data source(full_path);
+	Data::free(full_path);
+	if (!source)
+		return nullptr;
+
+	Shader *shader = new Shader(type, source);
+	if (!*shader)
+	{
+		delete shader;
+		shader = nullptr;
+	}
+	return shader;
 }
 
 void Renderer::update_buffer(const unsigned int buffer, const unsigned int size, const void *data)
