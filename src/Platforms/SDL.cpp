@@ -91,7 +91,6 @@ int main(int argc, char *argv[])
 	director.init(path);
 	Data::free(path);
 
-	mouse_input.hash = 1;
 	Chrono::Instance().update();
 	while (!done)
 	{

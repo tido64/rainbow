@@ -12,11 +12,28 @@ struct Touch
 {
 	unsigned int hash;  ///< Unique hash value for each touch.
 	int x, y;           ///< Position of touch.
+	int x0, y0;         ///< Previous position of touch.
 
-	Touch() : hash(0), x(0), y(0) { }
-	Touch(const int x, const int y) : hash(0), x(x), y(y) { }
-	Touch(const unsigned hash, const int x, const int y) :
-		hash(hash), x(x), y(y) { }
+	inline Touch();
+	inline Touch(const int x, const int y);
+	inline Touch(const int x, const int y, const int x0, const int y0);
+
+	/// Two touch objects are equal if their hash values are, i.e. they came
+	/// from the same touch event.
+	inline bool operator==(const Touch &t) const;
 };
+
+Touch::Touch() : hash(0), x(0), y(0), x0(0), y0(0) { }
+
+Touch::Touch(const int x, const int y) :
+	hash(0), x(x), y(y), x0(x), y0(y) { }
+
+Touch::Touch(const int x, const int y, const int x0, const int y0) :
+	hash(0), x(x), y(y), x0(x0), y0(y0) { }
+
+bool Touch::operator==(const Touch &t) const
+{
+	return this->hash == t.hash;
+}
 
 #endif

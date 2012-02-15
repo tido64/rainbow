@@ -40,6 +40,9 @@
 			t->hash = [touch hash];
 			t->x = p.x;
 			t->y = p.y;
+			p = [touch previousLocationInView:nil];
+			t->x0 = p.x;
+			t->y0 = p.y;
 			++t;
 		}
 	}
@@ -51,6 +54,9 @@
 			t->hash = [touch hash];
 			t->x = p.y;
 			t->y = p.x;
+			p = [touch previousLocationInView:nil];
+			t->x0 = p.y;
+			t->y0 = p.x;
 			++t;
 		}
 	}
@@ -68,6 +74,7 @@
 		[[UIAccelerometer sharedAccelerometer] setUpdateInterval:(1.0 / self.preferredFramesPerSecond)];
 		[[UIAccelerometer sharedAccelerometer] setDelegate:self];
 	}
+	[[self view] setMultipleTouchEnabled:YES];
 
 	// Set up OpenGL ES 2.0 context.
 	self.context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
