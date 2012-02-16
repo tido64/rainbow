@@ -34,7 +34,7 @@ function rainbow.input.unsubscribe(obj)
 	end
 
 	local listeners = input._listeners
-	for i = input._count, 1 do
+	for i = input._count, 1, -1 do
 		if listeners[i] == obj then
 			listeners[i] = listeners[input._count]
 			listeners[input._count] = nil
@@ -64,7 +64,7 @@ function rainbow.input.key_down(key, mod)
 	end
 
 	local listeners = input._listeners
-	for i = input._count, 1 do
+	for i = input._count, 1, -1 do
 		listeners[i]:key_down(key, mod)
 	end
 end
@@ -79,7 +79,7 @@ function rainbow.input.key_up(key, mod)
 	end
 
 	local listeners = input._listeners
-	for i = input._count, 1 do
+	for i = input._count, 1, -1 do
 		listeners[i]:key_up(key, mod)
 	end
 end
@@ -97,7 +97,7 @@ function rainbow.input.touch_began(touches)
 	end
 
 	local listeners = input._listeners
-	for i = input._count, 1 do
+	for i = input._count, 1, -1 do
 		listeners[i]:touch_began(touches)
 	end
 end
@@ -113,7 +113,7 @@ function rainbow.input.touch_canceled()
 	end
 
 	local listeners = input._listeners
-	for i = input._count, 1 do
+	for i = input._count, 1, -1 do
 		listeners[i]:touch_canceled()
 	end
 end
@@ -131,7 +131,7 @@ function rainbow.input.touch_ended(touches)
 	end
 
 	local listeners = input._listeners
-	for i = input._count, 1 do
+	for i = input._count, 1, -1 do
 		listeners[i]:touch_ended(touches)
 	end
 end
@@ -149,7 +149,7 @@ function rainbow.input.touch_moved(touches)
 	end
 
 	local listeners = input._listeners
-	for i = input._count, 1 do
+	for i = input._count, 1, -1 do
 		listeners[i]:touch_moved(touches)
 	end
 end
