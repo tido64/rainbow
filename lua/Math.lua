@@ -71,7 +71,7 @@ end
 --! \param box    Table with the upper-left and lower-right points of the box.
 --! \param point  The point to check.
 function rainbow.math.is_inside(box, point)
-	return point.x >= box.x0 && point.x <= box.x1 && point.y >= box.y0 && point.y <= box.y1;
+	return point.x >= box.x0 and point.x <= box.x1 and point.y >= box.y0 and point.y <= box.y1;
 end
 
 --! Convert degrees to radians.
