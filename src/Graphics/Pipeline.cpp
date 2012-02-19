@@ -62,15 +62,5 @@ bool Pipeline::link()
 		return false;
 	}
 
-#ifndef NDEBUG
-	int params = 0;
-	glGetProgramiv(this->program, GL_ATTACHED_SHADERS, &params);
-	R_ASSERT(params == 2, "GLSL: No shaders attached.");
-	glGetProgramiv(this->program, GL_ACTIVE_ATTRIBUTES, &params);
-	R_ASSERT(params == 3, "GLSL: No active attributes.");
-	glGetProgramiv(this->program, GL_ACTIVE_UNIFORMS, &params);
-	R_ASSERT(params == 2, "GLSL: No active uniforms.");
-#endif
-
 	return glGetError() == GL_NO_ERROR;
 }

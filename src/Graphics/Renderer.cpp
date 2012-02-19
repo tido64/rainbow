@@ -11,6 +11,7 @@ bool Renderer::init()
 {
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
+	glEnable(GL_CULL_FACE);
 	glDisable(GL_STENCIL_TEST);
 	glDisable(GL_DEPTH_TEST);
 
@@ -157,6 +158,7 @@ Shader* Renderer::load_shader(const unsigned int type, const char *const src_pat
 	{
 		delete shader;
 		shader = nullptr;
+		R_ASSERT(shader, "load_shader: Failed to compile shader");
 	}
 	return shader;
 }

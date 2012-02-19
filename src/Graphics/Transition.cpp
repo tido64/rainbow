@@ -10,7 +10,7 @@ using namespace Rainbow::Transitions;
 
 Transition* Transition::create(float &property, const float final, const unsigned int duration, const int transition)
 {
-	Transition *t = nullptr;
+	Transition *t;
 	switch (transition)
 	{
 		case fx_easein_cubic:

@@ -13,17 +13,6 @@ namespace Rainbow
 	struct _Color
 	{
 		T r, g, b, a;
-
-		_Color(const _Color<T> &c) : r(c.r), g(c.g), b(c.b), a(c.a) { }
-
-		_Color<T>& operator=(const _Color<T> &c)
-		{
-			this->r = c.r;
-			this->g = c.g;
-			this->b = c.b;
-			this->a = c.a;
-			return *this;
-		}
 	};
 
 	/// Structure for storing a colour (RGBA) using unsigned bytes.
@@ -38,8 +27,7 @@ namespace Rainbow
 		_Color() : r(0xff), g(0xff), b(0xff), a(0xff) { }
 
 		_Color(const unsigned char r, const unsigned char g, const unsigned char b, const unsigned char a = 0xff) :
-			r(r), g(g), b(b), a(a)
-		{ }
+			r(r), g(g), b(b), a(a) { }
 
 		_Color<unsigned char>& operator=(const unsigned int c)
 		{
@@ -63,9 +51,14 @@ namespace Rainbow
 
 		_Color() : r(1.0f), g(1.0f), b(1.0f), a(1.0f) { }
 
+		_Color(const unsigned int c) :
+			r((0xff & (c >> 24)) * 1.0f / 255.0f),
+			g((0xff & (c >> 16)) * 1.0f / 255.0f),
+			b((0xff & (c >> 8)) * 1.0f / 255.0f),
+			a((0xff & (c)) * 1.0f / 255.0f) { }
+
 		_Color(const float r, const float g, const float b, const float a = 1.0f) :
-			r(r), g(g), b(b), a(a)
-		{ }
+			r(r), g(g), b(b), a(a) { }
 
 		_Color<float>& operator=(const unsigned int c)
 		{
