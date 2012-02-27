@@ -10,8 +10,9 @@ require("Input")  -- Input event handler
 
 assets   = nil  -- Sprite sheet
 batch    = nil  -- Sprite batch with only one sprite
+bgm      = nil  -- Background music
 canvas   = nil  -- Canvas
-original = nil
+original = nil  -- Backdrop
 
 function init()
 	assets = rainbow.texture("canvas.png")
@@ -31,13 +32,16 @@ function init()
 	canvas:set_brush(assets, brush)
 	canvas:set_brush_size(64)
 	canvas:set_foreground(0x000000ff)
-	--canvas:set_background(0xffffffff)
+	canvas:set_background(assets, blurred)
 	canvas:set_position(screen.width * 0.5, screen.height * 0.5)
 
 	canvas:clear()
 
 	rainbow.scenegraph:add_batch(batch)
 	rainbow.scenegraph:add_drawable(canvas)
+
+	bgm = rainbow.audio.load_stream("kimjongil.ogg");
+	rainbow.audio.play(bgm);
 end
 
 function update()

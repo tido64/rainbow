@@ -15,26 +15,30 @@
 Canvas::Canvas(const int w, const int h) :
 	changed(false), down(false), brush_size(7), background_tex(0),
 	canvas_fb(0), canvas_tex(0), x(0), y(0), width(w), height(h),
-	vsh(nullptr), fsh(nullptr), brush(nullptr)
+	vsh(nullptr), combiner(nullptr), function(nullptr), brush(nullptr)
 {
 	this->vsh = Renderer::load_shader(GL_VERTEX_SHADER, "Shaders/Canvas.vsh");
 	if (!this->vsh)
 		return;
 
-	this->fsh = Renderer::load_shader(GL_FRAGMENT_SHADER, "Shaders/Canvas.fsh");
-	if (!this->fsh)
+	this->combiner = Renderer::load_shader(GL_FRAGMENT_SHADER, "Shaders/Canvas.fsh");
+	if (!this->combiner)
 		return;
 
-	this->pipeline.attach_shader(this->vsh);
-	this->pipeline.attach_shader(this->fsh);
-	if (!this->pipeline.link())
+	this->function = Renderer::load_shader(GL_FRAGMENT_SHADER, "Shaders/CanvasEraser.fsh");
+	if (!this->function)
 		return;
 
-	int program;
-	glGetIntegerv(GL_CURRENT_PROGRAM, &program);
-	glUseProgram(this->pipeline);
+	this->update_program.attach_shader(this->vsh);
+	this->update_program.attach_shader(this->combiner);
+	if (!this->update_program.link())
+		return;
 
-	this->brush_attr = glGetAttribLocation(this->pipeline, "brush_size");
+	this->draw_program.attach_shader(this->vsh);
+	this->draw_program.attach_shader(this->function);
+	if (!this->draw_program.link())
+		return;
+
 	const float u = 2.0f / this->width;
 	const float v = 2.0f / this->height;
 	const float ortho[] = {
@@ -43,10 +47,18 @@ Canvas::Canvas(const int w, const int h) :
 		0.0f, 0.0f, -1.0f,  0.0f,
 		0.0f, 0.0f,  0.0f,  1.0f
 	};
-	glUniformMatrix4fv(glGetUniformLocation(this->pipeline, "mvp_matrix"), 1, 0, ortho);
-	glUniform1i(glGetUniformLocation(this->pipeline, "canvas"), 1);
-	glUniform2f(glGetUniformLocation(this->pipeline, "dimension"), this->width, this->height);
-	glUseProgram(program);
+
+	Renderer::attach_pipeline(this->update_program);
+	glUniformMatrix4fv(glGetUniformLocation(this->update_program, "mvp_matrix"), 1, 0, ortho);
+	glUniform1i(glGetUniformLocation(this->update_program, "canvas"), 1);
+	glUniform2f(glGetUniformLocation(this->update_program, "dimension"), this->width, this->height);
+
+	Renderer::attach_pipeline(this->draw_program);
+	glUniformMatrix4fv(glGetUniformLocation(this->draw_program, "mvp_matrix"), 1, 0, ortho);
+	glUniform1i(glGetUniformLocation(this->draw_program, "canvas"), 1);
+	glUniform2f(glGetUniformLocation(this->draw_program, "dimension"), this->width, this->height);
+
+	Renderer::detach_pipeline();
 
 	glGenFramebuffers(1, &this->canvas_fb);
 	glBindFramebuffer(GL_FRAMEBUFFER, this->canvas_fb);
@@ -65,28 +77,28 @@ Canvas::Canvas(const int w, const int h) :
 	Renderer::clear();
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-	this->sprite[0].texcoord.x = 1.0f;
-	this->sprite[0].texcoord.y = 0.0f;
+	this->sprite[0].texcoord.x = 0.0f;
+	this->sprite[0].texcoord.y = 1.0f;
 
-	this->sprite[1].texcoord.x = 0.0f;
-	this->sprite[1].texcoord.y = 0.0f;
+	this->sprite[1].texcoord.x = 1.0f;
+	this->sprite[1].texcoord.y = 1.0f;
 
 	this->sprite[2].texcoord.x = 1.0f;
-	this->sprite[2].texcoord.y = 1.0f;
+	this->sprite[2].texcoord.y = 0.0f;
 
 	this->sprite[3].texcoord.x = 0.0f;
-	this->sprite[3].texcoord.y = 1.0f;
+	this->sprite[3].texcoord.y = 0.0f;
 
-	this->sprite[0].position.x = this->width * 0.5f;
-	this->sprite[0].position.y = this->height * 0.5f;
+	this->sprite[0].position.x = this->width * -0.5f;
+	this->sprite[0].position.y = this->height * -0.5f;
 
-	this->sprite[1].position.x = this->sprite[0].position.x - this->width;
+	this->sprite[1].position.x = this->sprite[0].position.x + this->width;
 	this->sprite[1].position.y = this->sprite[0].position.y;
 
-	this->sprite[2].position.x = this->sprite[0].position.x;
-	this->sprite[2].position.y = this->sprite[0].position.y - this->height;
+	this->sprite[2].position.x = this->sprite[1].position.x;
+	this->sprite[2].position.y = this->sprite[1].position.y + this->height;
 
-	this->sprite[3].position.x = this->sprite[1].position.x;
+	this->sprite[3].position.x = this->sprite[0].position.x;
 	this->sprite[3].position.y = this->sprite[2].position.y;
 
 	Input::Instance().subscribe(this, RAINBOW_TOUCH_EVENTS);
@@ -97,7 +109,8 @@ Canvas::~Canvas()
 	Input::Instance().unsubscribe(this);
 	this->release();
 
-	delete this->fsh;
+	delete this->combiner;
+	delete this->function;
 	delete this->vsh;
 }
 
@@ -129,11 +142,31 @@ void Canvas::set_background(const unsigned int color)
 
 void Canvas::set_background(const Texture &texture)
 {
+	SpriteVertex vx[4];
+
+	// We need to undo the reverse order of the UV coordinates because the
+	// texture bound to the framebuffer is not reversed, but will be when
+	// drawn later on.
+	for (unsigned int i = 0; i < 4; ++i)
+		vx[i].texcoord = texture.vx[3 - i];
+
+	vx[0].position.x = 0;
+	vx[0].position.y = 0;
+
+	vx[1].position.x = this->width;
+	vx[1].position.y = 0;
+
+	vx[2].position.x = this->width;
+	vx[2].position.y = this->height;
+
+	vx[3].position.x = 0;
+	vx[3].position.y = this->height;
+
 	glBindFramebuffer(GL_FRAMEBUFFER, this->canvas_fb);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, this->background_tex, 0);
 
 	Renderer::bind_texture(texture);
-
+	Renderer::draw_elements(vx, 6);
 
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, this->canvas_tex, 0);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -141,14 +174,10 @@ void Canvas::set_background(const Texture &texture)
 
 void Canvas::set_foreground(const unsigned int color)
 {
-	int program;
-	glGetIntegerv(GL_CURRENT_PROGRAM, &program);
-	glUseProgram(this->pipeline);
-
+	Renderer::attach_pipeline(this->update_program);
 	Colorf c(color);
-	glUniform4f(glGetUniformLocation(this->pipeline, "color"), c.r, c.g, c.b, c.a);
-
-	glUseProgram(program);
+	glUniform4f(glGetUniformLocation(this->update_program, "color"), c.r, c.g, c.b, c.a);
+	Renderer::detach_pipeline();
 }
 
 void Canvas::set_position(const int x, const int y)
@@ -168,11 +197,13 @@ void Canvas::set_position(const int x, const int y)
 
 void Canvas::draw()
 {
+	Renderer::attach_pipeline(this->draw_program);
 	Renderer::bind_texture(this->canvas_tex);
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, this->background_tex);
 	Renderer::draw_elements(this->sprite, 6);
 	glActiveTexture(GL_TEXTURE0);
+	Renderer::detach_pipeline();
 }
 
 void Canvas::update()
@@ -182,6 +213,7 @@ void Canvas::update()
 
 	BrushVertex vx[4];
 	Vector<BrushVertex> vertices;
+	this->touch.y = this->height - this->touch.y;
 	if (this->touch.x == this->prev_point.x && this->touch.y == this->prev_point.y)
 	{
 		this->create_point(vx, this->touch.x, this->touch.y);
@@ -210,9 +242,7 @@ void Canvas::update()
 		this->prev_point.y = this->touch.y;
 	}
 
-	int program;
-	glGetIntegerv(GL_CURRENT_PROGRAM, &program);
-	glUseProgram(this->pipeline);
+	Renderer::attach_pipeline(this->update_program);
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, this->canvas_fb);
 	glDisableVertexAttribArray(Pipeline::COLOR_LOCATION);
 
@@ -228,7 +258,7 @@ void Canvas::update()
 
 	glEnableVertexAttribArray(Pipeline::COLOR_LOCATION);
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-	glUseProgram(program);
+	Renderer::detach_pipeline();
 
 	this->changed = false;
 }
@@ -240,7 +270,7 @@ void Canvas::touch_began(const Touch *const touches, const unsigned int)
 
 	this->touch = *touches;
 	this->prev_point.x = this->touch.x;
-	this->prev_point.y = this->touch.y;
+	this->prev_point.y = this->height - this->touch.y;
 	this->changed = true;
 
 #ifdef RAINBOW_SDL
@@ -278,6 +308,7 @@ void Canvas::touch_ended(const Touch *const touches, const unsigned int count)
 			break;
 		}
 	}
+
 #ifdef RAINBOW_SDL
 	this->down = false;
 #endif
@@ -305,24 +336,22 @@ void Canvas::create_point(BrushVertex *vertex, const int x, const int y)
 {
 	R_ASSERT(this->brush, "create_point: No brush assigned");
 
-	vertex[0].texcoord = this->brush->vx[0];
-	vertex[1].texcoord = this->brush->vx[1];
-	vertex[2].texcoord = this->brush->vx[2];
-	vertex[3].texcoord = this->brush->vx[3];
+	for (unsigned int i = 0; i < 4; ++i)
+		vertex[i].texcoord = this->brush->vx[i];
 
 	const int a_x = x - (this->brush_size >> 1);
 	const int a_y = y - (this->brush_size >> 1);
 
-	vertex[0].position.x = a_x + this->brush_size;
-	vertex[0].position.y = a_y + this->brush_size;
+	vertex[0].position.x = a_x;
+	vertex[0].position.y = a_y;
 
-	vertex[1].position.x = a_x;
-	vertex[1].position.y = vertex[0].position.y;
+	vertex[1].position.x = a_x + this->brush_size;
+	vertex[1].position.y = a_y;
 
-	vertex[2].position.x = vertex[0].position.x;
-	vertex[2].position.y = a_y;
+	vertex[2].position.x = vertex[1].position.x;
+	vertex[2].position.y = a_y + this->brush_size;
 
-	vertex[3].position.x = vertex[1].position.x;
+	vertex[3].position.x = vertex[0].position.x;
 	vertex[3].position.y = vertex[2].position.y;
 }
 

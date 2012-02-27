@@ -1,7 +1,7 @@
 /// Copyright 2012 Bifrost Entertainment. All rights reserved.
 /// \author Tommy Nguyen
 
-#version 100
+//#version 100
 
 #ifndef GL_ES
 #	define lowp

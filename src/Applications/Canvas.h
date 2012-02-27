@@ -12,6 +12,10 @@ struct Texture;
 
 /// Canvas is a painting application.
 ///
+/// Currently setup to "erase" the foreground, giving the illusion of revealing
+/// the background. However, its function is entirely determined by the
+/// fragment shader.
+///
 /// Copyright 2012 Bifrost Entertainment. All rights reserved.
 /// \author Tommy Nguyen
 class Canvas : public Drawable, public Touchable
@@ -68,7 +72,6 @@ private:
 	unsigned int brush_size;  ///< Size of the brush in diameter.
 
 	unsigned int background_tex;  ///< Background texture.
-	unsigned int brush_attr;      ///< Brush shader attribute.
 	unsigned int canvas_fb;       ///< Canvas frame buffer.
 	unsigned int canvas_tex;      ///< Canvas texture.
 
@@ -76,13 +79,15 @@ private:
 	int width, height;  ///< Width and height of canvas.
 
 	const Shader *vsh;       ///< Canvas vertex shader.
-	const Shader *fsh;       ///< Canvas fragment shader.
+	const Shader *combiner;  ///< Combiner (fragment shader).
+	const Shader *function;  ///< Function (fragment shader).
 	const Texture *brush;    ///< Brush texture.
 
-	Vec2f prev_point;        ///< Previous touch point.
-	Pipeline pipeline;       ///< Canvas pipeline.
-	SpriteVertex sprite[4];  ///< Canvas sprite.
-	Touch touch;             ///< Current touch point.
+	Vec2f prev_point;         ///< Previous touch point.
+	Pipeline draw_program;    ///< Canvas draw pipeline.
+	Pipeline update_program;  ///< Canvas update pipeline.
+	SpriteVertex sprite[4];   ///< Canvas sprite.
+	Touch touch;              ///< Current touch point.
 
 	/// Intentionally left undefined.
 	Canvas(const Canvas &c);
