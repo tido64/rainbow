@@ -163,16 +163,13 @@ void Sprite::update()
 	{
 		if (this->stale & stale_pivot)
 		{
-			this->origin[0].x = this->width * this->pivot.x;
-			this->origin[0].y = this->height * (1 - this->pivot.y);
-
-			this->origin[1].x = this->origin[0].x - this->width;
+			this->origin[0].x = this->width * -this->pivot.x;
+			this->origin[0].y = this->height * -(1 - this->pivot.y);
+			this->origin[1].x = this->origin[0].x + this->width;
 			this->origin[1].y = this->origin[0].y;
-
-			this->origin[2].x = this->origin[0].x;
-			this->origin[2].y = this->origin[0].y - this->height;
-
-			this->origin[3].x = this->origin[1].x;
+			this->origin[2].x = this->origin[1].x;
+			this->origin[2].y = this->origin[1].y + this->height;
+			this->origin[3].x = this->origin[0].x;
 			this->origin[3].y = this->origin[2].y;
 		}
 

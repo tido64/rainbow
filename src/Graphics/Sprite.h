@@ -7,9 +7,19 @@
 class  SpriteBatch;
 struct SpriteVertex;
 
-/// Custom sprite object, created by TextureAtlas.
+/// A sprite is a textured quad.
 ///
-/// Implemented using interleaved vertex data buffer objects.
+/// 3 ┌─────┐ 2
+///   │     │
+///   │     │
+/// 0 └─────┘ 1
+///
+/// The vertex order of the quad is 0,1,2 for the first triangle, and 2,3,0 for
+/// the second.
+///
+/// The sprite itself does not have a texture. It holds the texture coordinates
+/// but it is the sprite batch that holds the actual texture. That way,
+/// changing textures on a whole batch (i.e. skinning) can be easily achieved.
 ///
 /// FIXME: Transitions (move, rotate, scale) does a lot of memory juggling.
 ///        Perhaps implement some kind of memory pooling?
@@ -25,8 +35,8 @@ class Sprite
 	friend class SpriteBatch;
 
 public:
-	const unsigned int width;   ///< Width of sprite (not scaled)
-	const unsigned int height;  ///< Height of sprite (not scaled)
+	const unsigned int width;   ///< Width of sprite (not scaled).
+	const unsigned int height;  ///< Height of sprite (not scaled).
 
 	Sprite(const unsigned int width, const unsigned int height, const SpriteBatch *parent);
 	Sprite(const Sprite &);
@@ -47,15 +57,15 @@ public:
 	void rotate(const float r, const unsigned int duration, const int trns = 0);
 
 	/// Set sprite colour.
-	/// \param v0  Colour for vertex 0
-	/// \param v1  Colour for vertex 1
-	/// \param v2  Colour for vertex 2
-	/// \param v3  Colour for vertex 3
+	/// \param v0  Colour for vertex 0.
+	/// \param v1  Colour for vertex 1.
+	/// \param v2  Colour for vertex 2.
+	/// \param v3  Colour for vertex 3.
 	void set_color(const unsigned int v0, const unsigned int v1, const unsigned int v2, const unsigned int v3);
 
 	/// Set the pivot point for rotation and translation.
-	/// \param x  Normalised x-component of pivot point
-	/// \param y  Normalised y-component of pivot point
+	/// \param x  Normalised x-component of pivot point.
+	/// \param y  Normalised y-component of pivot point.
 	void set_pivot(const float x, const float y);
 
 	/// Set sprite position (absolute).
@@ -74,30 +84,30 @@ public:
 	void set_scale(const Vec2f &);
 
 	/// Set the texture.
-	/// \param id  Id of texture to use
+	/// \param id  Id of texture to use.
 	void set_texture(const unsigned int id);
 
 	/// Update the vertices of this sprite.
 	void update();
 
 private:
-	bool buffered;               ///< Whether or not this sprite is buffered
-	unsigned char stale;         ///< Sprite is stale if its properties has changed
+	bool buffered;               ///< Whether or not this sprite is buffered.
+	unsigned char stale;         ///< Sprite is stale if its properties has changed.
 
-	float angle;                 ///< Sprite rotation angle
-	float cos_r;                 ///< Cosine of angle
-	float sin_r;                 ///< Sine of angle
+	float angle;                 ///< Sprite rotation angle.
+	float cos_r;                 ///< Cosine of angle.
+	float sin_r;                 ///< Sine of angle.
 
-	Transition *transitions[4];  ///< Container for the three possible transitions: movement, rotation and scaling
+	Transition *transitions[4];  ///< Container for the three possible transitions: movement, rotation and scaling.
 
-	SpriteVertex *vertex_array;  ///< Vertex array or, if buffered, the sprite batch's buffer
-	const SpriteBatch *parent;   ///< Pointer to sprite batch
+	SpriteVertex *vertex_array;  ///< Vertex array or, if buffered, the sprite batch's buffer.
+	const SpriteBatch *parent;   ///< Pointer to sprite batch.
 
-	Vec2f pivot;                 ///< Pivot point (normalised)
-	Vec2f position;              ///< Current position
-	Vec2f position_d;            ///< Difference between current and next position
-	Vec2f scale_f;               ///< Scaling factor
-	Vec2f origin[4];             ///< Original rendering at origo
+	Vec2f pivot;                 ///< Pivot point (normalised).
+	Vec2f position;              ///< Current position.
+	Vec2f position_d;            ///< Difference between current and next position.
+	Vec2f scale_f;               ///< Scaling factor.
+	Vec2f origin[4];             ///< Original rendering at origo.
 
 	void delete_transitions();
 	void do_transition(const unsigned int i, const unsigned char mask);
