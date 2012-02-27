@@ -69,6 +69,16 @@ void Renderer::resize(const unsigned int width, const unsigned int height)
 	R_ASSERT(glGetError() == GL_NO_ERROR, "Failed to initialise OpenGL viewport");
 }
 
+void Renderer::attach_pipeline(const Pipeline &program)
+{
+	glUseProgram(program);
+}
+
+void Renderer::detach_pipeline()
+{
+	glUseProgram(*pipeline);
+}
+
 void Renderer::bind_buffer(const unsigned int buffer)
 {
 	static unsigned int bound = 0;

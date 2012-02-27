@@ -14,6 +14,9 @@ public:
 	static void clear();
 	static void resize(const unsigned int width, const unsigned int height);
 
+	static void attach_pipeline(const Pipeline &program);
+	static void detach_pipeline();
+
 	static void bind_buffer(const unsigned int buffer);
 	static void bind_texture(const unsigned int texture);
 
