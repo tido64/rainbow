@@ -35,7 +35,6 @@ void Input::key_up(const Key &k)
 
 void Input::touch_began(Touch *const touches, const unsigned int count)
 {
-	this->touch_flip(touches, count);
 	for (unsigned int i = 0; i < this->touch_subscribers.size(); ++i)
 		this->touch_subscribers[i]->touch_began(touches, count);
 	lua_Input::touch_began(this->lua_state, touches, count);
@@ -50,7 +49,6 @@ void Input::touch_canceled()
 
 void Input::touch_ended(Touch *const touches, const unsigned int count)
 {
-	this->touch_flip(touches, count);
 	for (unsigned int i = 0; i < this->touch_subscribers.size(); ++i)
 		this->touch_subscribers[i]->touch_ended(touches, count);
 	lua_Input::touch_ended(this->lua_state, touches, count);
@@ -58,14 +56,7 @@ void Input::touch_ended(Touch *const touches, const unsigned int count)
 
 void Input::touch_moved(Touch *const touches, const unsigned int count)
 {
-	this->touch_flip(touches, count);
 	for (unsigned int i = 0; i < this->touch_subscribers.size(); ++i)
 		this->touch_subscribers[i]->touch_moved(touches, count);
 	lua_Input::touch_moved(this->lua_state, touches, count);
-}
-
-void Input::touch_flip(Touch *const touches, const unsigned int count)
-{
-	for (unsigned int i = 0; i < count; ++i)
-		touches[i].y = this->height - touches[i].y;
 }

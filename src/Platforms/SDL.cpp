@@ -168,21 +168,21 @@ int main(int argc, char *argv[])
 void on_mouse_button_down(SDL_MouseButtonEvent &mouse)
 {
 	mouse_input.x = mouse.x;
-	mouse_input.y = mouse.y;
+	mouse_input.y = screen_height - mouse.y;
 	Input::Instance().touch_began(&mouse_input, 1);
 }
 
 void on_mouse_button_up(SDL_MouseButtonEvent &mouse)
 {
 	mouse_input.x = mouse.x;
-	mouse_input.y = mouse.y;
+	mouse_input.y = screen_height - mouse.y;
 	Input::Instance().touch_ended(&mouse_input, 1);
 }
 
 void on_mouse_motion(SDL_MouseMotionEvent &mouse)
 {
 	mouse_input.x = mouse.x;
-	mouse_input.y = mouse.y;
+	mouse_input.y = screen_height - mouse.y;
 	Input::Instance().touch_moved(&mouse_input, 1);
 }
 

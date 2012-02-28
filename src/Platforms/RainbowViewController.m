@@ -32,34 +32,66 @@
 {
 	Touch *t_arr = new Touch[touches.count];
 	Touch *t = t_arr;
-	if (UIInterfaceOrientationIsPortrait([[UIApplication sharedApplication] statusBarOrientation]))
+
+	const CGSize size = [[UIScreen mainScreen] bounds].size;
+	switch ([[UIApplication sharedApplication] statusBarOrientation])
 	{
-		for (UITouch *touch in touches)
-		{
-			CGPoint p = [touch locationInView:nil];
-			t->hash = [touch hash];
-			t->x = p.x;
-			t->y = p.y;
-			p = [touch previousLocationInView:nil];
-			t->x0 = p.x;
-			t->y0 = p.y;
-			++t;
-		}
+		case UIInterfaceOrientationPortrait:
+			for (UITouch *touch in touches)
+			{
+				CGPoint p = [touch locationInView:nil];
+				t->hash = [touch hash];
+				t->x = p.x;
+				t->y = size.height - p.y;
+				p = [touch previousLocationInView:nil];
+				t->x0 = p.x;
+				t->y0 = size.height - p.y;
+				++t;
+			}
+			break;
+		case UIInterfaceOrientationPortraitUpsideDown:
+			for (UITouch *touch in touches)
+			{
+				CGPoint p = [touch locationInView:nil];
+				t->hash = [touch hash];
+				t->x = size.width - p.x;
+				t->y = p.y;
+				p = [touch previousLocationInView:nil];
+				t->x0 = size.width - p.x;
+				t->y0 = p.y;
+				++t;
+			}
+			break;
+		case UIInterfaceOrientationLandscapeLeft:
+			for (UITouch *touch in touches)
+			{
+				CGPoint p = [touch locationInView:nil];
+				t->hash = [touch hash];
+				t->x = size.height - p.y;
+				t->y = size.width - p.x;
+				p = [touch previousLocationInView:nil];
+				t->x0 = size.height - p.y;
+				t->y0 = size.width - p.x;
+				++t;
+			}
+			break;
+		case UIInterfaceOrientationLandscapeRight:
+			for (UITouch *touch in touches)
+			{
+				CGPoint p = [touch locationInView:nil];
+				t->hash = [touch hash];
+				t->x = p.y;
+				t->y = p.x;
+				p = [touch previousLocationInView:nil];
+				t->x0 = p.y;
+				t->y0 = p.x;
+				++t;
+			}
+			break;
+		default:
+			break;
 	}
-	else
-	{
-		for (UITouch *touch in touches)
-		{
-			CGPoint p = [touch locationInView:nil];
-			t->hash = [touch hash];
-			t->x = p.y;
-			t->y = p.x;
-			p = [touch previousLocationInView:nil];
-			t->x0 = p.y;
-			t->y0 = p.x;
-			++t;
-		}
-	}
+
 	return t_arr;
 }
 

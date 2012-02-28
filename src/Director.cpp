@@ -22,7 +22,6 @@ void Director::init(const char *const script)
 
 void Director::set_video(const int w, const int h)
 {
-	Input::Instance().set_height(h);
 	lua_Platform::update(this->lua.L, w, h);
 }
 
