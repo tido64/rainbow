@@ -9,15 +9,10 @@ const LuaMachine::Method<lua_Canvas> lua_Canvas::methods[] = {
 	{ "set_brush",      &lua_Canvas::set_brush },
 	{ "set_brush_size", &lua_Canvas::set_brush_size },
 	{ "set_foreground", &lua_Canvas::set_foreground },
-	{ "set_position",   &lua_Canvas::set_position },
 	{ 0, 0 }
 };
 
-lua_Canvas::lua_Canvas(lua_State *L) : canvas(nullptr)
-{
-	LUA_ASSERT(lua_gettop(L) == 2, "rainbow.canvas(width, height)");
-	this->canvas = new Canvas(lua_tointeger(L, 1), lua_tointeger(L, 2));
-}
+lua_Canvas::lua_Canvas(lua_State *) : canvas(new Canvas()) { }
 
 lua_Canvas::~lua_Canvas()
 {
@@ -37,16 +32,18 @@ int lua_Canvas::set_background(lua_State *L)
 		case 1:
 			this->canvas->set_background(lua_tointeger(L, 1));
 			break;
-		case 2:
+		case 4:
 			{
 				const int i = lua_tointeger(L, 2);
-				lua_pop(L, 1);
+				const int w = lua_tointeger(L, 3);
+				const int h = lua_tointeger(L, 4);
+				lua_pop(L, 3);
 				lua_Texture *texture = LuaMachine::wrapper<lua_Texture>(L);
-				this->canvas->set_background((*texture->raw_ptr())[i]);
+				this->canvas->set_background((*texture->raw_ptr())[i], w, h);
 			}
 			break;
 		default:
-			LUA_ASSERT(false, "<canvas>:set_background(colour|texture_atlas, texture_id)");
+			LUA_ASSERT(false, "<canvas>:set_background(colour|texture_atlas, texture_id, width, height)");
 			break;
 	}
 	return 0;
@@ -73,12 +70,5 @@ int lua_Canvas::set_foreground(lua_State *L)
 {
 	LUA_ASSERT(lua_gettop(L) == 1, "<canvas>:set_foreground(0xrrggbbaa)");
 	this->canvas->set_foreground(lua_tointeger(L, 1));
-	return 0;
-}
-
-int lua_Canvas::set_position(lua_State *L)
-{
-	LUA_ASSERT(lua_gettop(L) == 2, "<canvas>:set_position(x, y)");
-	this->canvas->set_position(lua_tointeger(L, 1), lua_tointeger(L, 2));
 	return 0;
 }

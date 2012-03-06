@@ -20,7 +20,6 @@ public:
 	int set_brush(lua_State *);
 	int set_brush_size(lua_State *);
 	int set_foreground(lua_State *);
-	int set_position(lua_State *);
 
 private:
 	Canvas *canvas;

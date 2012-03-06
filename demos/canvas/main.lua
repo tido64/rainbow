@@ -21,19 +21,21 @@ function init()
 	batch:set_texture(assets)
 
 	local screen = rainbow.platform.screen
+	local width = 960
+	local height = 640
 
-	original = batch:add(0, 0, 960, 640)
+	original = batch:add(0, 0, width, height)
 	original:set_position(screen.width * 0.5, screen.height * 0.5)
+	original:set_scale(screen.width / width)
 
-	local blurred = assets:create(1088, 0, 960, 640)
+	local blurred = assets:create(1088, 0, width, height)
 	local brush   = assets:create(0, 919, 105, 105)
 
-	canvas = rainbow.canvas(screen.width, screen.height)
+	canvas = rainbow.canvas()
 	canvas:set_brush(assets, brush)
 	canvas:set_brush_size(64)
 	canvas:set_foreground(0x000000ff)
-	canvas:set_background(assets, blurred)
-	canvas:set_position(screen.width * 0.5, screen.height * 0.5)
+	canvas:set_background(assets, blurred, width, height)
 
 	canvas:clear()
 

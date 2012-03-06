@@ -2,7 +2,6 @@
 #define RAINBOW_CANVAS_H_
 
 #include "Common/SpriteVertex.h"
-#include "Common/Vector.h"
 #include "Graphics/Drawable.h"
 #include "Graphics/Pipeline.h"
 #include "Input/Touchable.h"
@@ -21,17 +20,21 @@ struct Texture;
 class Canvas : public Drawable, public Touchable
 {
 public:
-	Canvas(const int width, const int height);
+	Canvas();
 	~Canvas();
 
 	/// Clear the canvas.
 	void clear();
 
 	/// Set background colour.
+	/// \param color  RGBA value.
 	void set_background(const unsigned int color);
 
-	/// Set background texture.
-	void set_background(const Texture &texture);
+	/// Set background texture. Note that the texture will be stretched to fill
+	/// the canvas, maintaining ratio.
+	/// \param texture       Texture to set as background.
+	/// \param width,height  Dimension of texture.
+	void set_background(const Texture &texture, const int width, const int height);
 
 	inline void set_brush(const Texture &brush);
 
@@ -39,10 +42,8 @@ public:
 	inline void set_brush_size(const unsigned int size);
 
 	/// Set foreground colour.
+	/// \param color  RGBA value.
 	void set_foreground(const unsigned int colour);
-
-	/// Set position.
-	void set_position(const int x, const int y);
 
 	/// Returns \c true if the canvas was successfully created, otherwise \c false.
 	inline operator bool() const;
@@ -79,13 +80,11 @@ private:
 	int width, height;  ///< Width and height of canvas.
 
 	const Shader *vsh;       ///< Canvas vertex shader.
-	const Shader *combiner;  ///< Combiner (fragment shader).
 	const Shader *function;  ///< Function (fragment shader).
 	const Texture *brush;    ///< Brush texture.
 
 	Vec2f prev_point;         ///< Previous touch point.
 	Pipeline draw_program;    ///< Canvas draw pipeline.
-	Pipeline update_program;  ///< Canvas update pipeline.
 	SpriteVertex sprite[4];   ///< Canvas sprite.
 	Touch touch;              ///< Current touch point.
 
