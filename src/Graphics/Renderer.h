@@ -43,7 +43,7 @@ private:
 	static Shader *fragment_shader;  ///< Fragment shader in use.
 
 	/// Global vertex indices (currently limited to 384 vertices, or 64 sprites).
-	static const unsigned char default_indices[];
+	static const unsigned short default_indices[];
 };
 
 #endif
