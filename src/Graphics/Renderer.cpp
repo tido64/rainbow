@@ -73,7 +73,7 @@ void Renderer::resize(const unsigned int width, const unsigned int height)
 		0.0f, 0.0f,  0.0f,  1.0f
 	};
 
-	glUniformMatrix4fv(glGetUniformLocation(*pipeline, "mvp_matrix"), 1, 0, ortho);
+	glUniformMatrix4fv(glGetUniformLocation(*pipeline, "mvp_matrix"), 1, GL_FALSE, ortho);
 	glViewport(0, 0, width, height);
 
 	R_ASSERT(glGetError() == GL_NO_ERROR, "Failed to initialise OpenGL viewport");

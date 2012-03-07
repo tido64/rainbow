@@ -61,23 +61,15 @@ public:
 	virtual void touch_moved(const Touch *const touches, const unsigned int count);
 
 private:
-	struct BrushVertex
-	{
-		Vec2f texcoord;
-		Vec2f position;
-	};
-
 	bool changed;             ///< Whether an update is needed.
 	bool down;                ///< Whether the brush is down.
 	Colorb foreground_color;  ///< Brush colour.
 	unsigned int brush_size;  ///< Size of the brush in diameter.
+	int width, height;        ///< Width and height of canvas.
 
 	unsigned int background_tex;  ///< Background texture.
 	unsigned int canvas_fb;       ///< Canvas frame buffer.
 	unsigned int canvas_tex;      ///< Canvas texture.
-
-	int x, y;           ///< Position of canvas, centered.
-	int width, height;  ///< Width and height of canvas.
 
 	const Shader *vsh;       ///< Canvas vertex shader.
 	const Shader *function;  ///< Function (fragment shader).
@@ -92,7 +84,7 @@ private:
 	Canvas(const Canvas &c);
 
 	/// Create a sprite from a point.
-	void create_point(BrushVertex *vertex, const int x, const int y);
+	void create_point(SpriteVertex *vertex, const int x, const int y);
 
 	/// Release all resources.
 	void release();

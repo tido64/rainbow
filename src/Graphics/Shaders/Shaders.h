@@ -21,14 +21,13 @@ const char canvaseraser_fsh[] =
 
 "uniform lowp sampler2D canvas;"
 "uniform lowp sampler2D texture;"
-"uniform lowp vec4 color;"
 
 "varying lowp vec2 v_texcoord;"
 
 "void main()"
 "{"
 "	gl_FragColor = texture2D(canvas, v_texcoord);"
-"	gl_FragColor.a -= texture2D(texture, v_texcoord).a;"
+"	gl_FragColor.a = max(0.0, gl_FragColor.a - texture2D(texture, v_texcoord).a);"
 "}";
 
 const char fixed2d_vsh[] =

@@ -16,7 +16,6 @@ precision mediump float;
 
 uniform lowp sampler2D canvas;
 uniform lowp sampler2D texture;
-uniform lowp vec4 color;
 
 varying lowp vec2 v_texcoord;
 

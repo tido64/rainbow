@@ -10,8 +10,8 @@
 #include "Input/Input.h"
 
 Canvas::Canvas() :
-	changed(false), down(false), brush_size(7), background_tex(0),
-	canvas_fb(0), canvas_tex(0), x(0), y(0), width(0), height(0),
+	changed(false), down(false), brush_size(7), width(0), height(0),
+	background_tex(0), canvas_fb(0), canvas_tex(0),
 	vsh(nullptr), function(nullptr), brush(nullptr)
 {
 	GLint viewport[4];
@@ -52,9 +52,8 @@ Canvas::Canvas() :
 	};
 
 	Renderer::attach_pipeline(this->draw_program);
-	glUniformMatrix4fv(glGetUniformLocation(this->draw_program, "mvp_matrix"), 1, 0, ortho);
+	glUniformMatrix4fv(glGetUniformLocation(this->draw_program, "mvp_matrix"), 1, GL_FALSE, ortho);
 	glUniform1i(glGetUniformLocation(this->draw_program, "canvas"), 1);
-
 	Renderer::detach_pipeline();
 
 	glGenFramebuffers(1, &this->canvas_fb);
@@ -78,30 +77,25 @@ Canvas::Canvas() :
 
 	this->sprite[0].texcoord.x = 0.0f;
 	this->sprite[0].texcoord.y = 0.0f;
-
-	this->sprite[1].texcoord.x = 1.0f;
-	this->sprite[1].texcoord.y = 0.0f;
-
-	this->sprite[2].texcoord.x = 1.0f;
-	this->sprite[2].texcoord.y = 1.0f;
-
-	this->sprite[3].texcoord.x = 0.0f;
-	this->sprite[3].texcoord.y = 1.0f;
-
 	this->sprite[0].position.x = 0;
 	this->sprite[0].position.y = 0;
 
+	this->sprite[1].texcoord.x = 1.0f;
+	this->sprite[1].texcoord.y = 0.0f;
 	this->sprite[1].position.x = this->width;
 	this->sprite[1].position.y = 0;
 
+	this->sprite[2].texcoord.x = 1.0f;
+	this->sprite[2].texcoord.y = 1.0f;
 	this->sprite[2].position.x = this->width;
 	this->sprite[2].position.y = this->height;
 
+	this->sprite[3].texcoord.x = 0.0f;
+	this->sprite[3].texcoord.y = 1.0f;
 	this->sprite[3].position.x = 0;
 	this->sprite[3].position.y = this->height;
 
 	Input::Instance().subscribe(this, RAINBOW_TOUCH_EVENTS);
-	this->clear();
 }
 
 Canvas::~Canvas()
@@ -183,10 +177,7 @@ void Canvas::set_background(const Texture &texture, const int width, const int h
 
 void Canvas::set_foreground(const unsigned int color)
 {
-	Colorf c(color);
-	Renderer::attach_pipeline(this->draw_program);
-	glUniform4f(glGetUniformLocation(this->draw_program, "color"), c.r, c.g, c.b, c.a);
-	Renderer::detach_pipeline();
+	this->foreground_color = color;
 }
 
 void Canvas::draw()
@@ -208,19 +199,19 @@ void Canvas::update()
 		return;
 
 	glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-	glDisableVertexAttribArray(Pipeline::COLOR_LOCATION);
-
+	Renderer::bind_texture(*this->brush);
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, this->canvas_fb);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, this->canvas_tex, 0);
-	Renderer::bind_texture(*this->brush);
 
-	BrushVertex vx[4];
+	SpriteVertex vx[4];
+	vx[0].color = this->foreground_color;
+	vx[1].color = this->foreground_color;
+	vx[2].color = this->foreground_color;
+	vx[3].color = this->foreground_color;
 	if (this->touch.x == this->prev_point.x && this->touch.y == this->prev_point.y)
 	{
 		this->create_point(vx, this->touch.x, this->touch.y);
-		glVertexAttribPointer(Pipeline::TEXCOORD_LOCATION, 2, GL_FLOAT, GL_FALSE, sizeof(BrushVertex), &vx[0].texcoord);
-		glVertexAttribPointer(Pipeline::VERTEX_LOCATION, 2, GL_FLOAT, GL_TRUE, sizeof(BrushVertex), &vx[0].position);
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
+		Renderer::draw_elements(vx, 6);
 	}
 	else
 	{
@@ -230,7 +221,7 @@ void Canvas::update()
 		const int points = (fabsf(dt_x) < fabsf(dt_y)) ? fabsf(dt_y) : fabsf(dt_x);
 		R_ASSERT(points > 0, "update: No points to draw");
 
-		Vector<BrushVertex> vertices(points * 4);
+		Vector<SpriteVertex> vertices(points * 4);
 		for (int i = 0; i < points; ++i)
 		{
 			const float p = static_cast<float>(i) / static_cast<float>(points);
@@ -240,9 +231,7 @@ void Canvas::update()
 			vertices.push_back(vx[2]);
 			vertices.push_back(vx[3]);
 		}
-		glVertexAttribPointer(Pipeline::TEXCOORD_LOCATION, 2, GL_FLOAT, GL_FALSE, sizeof(BrushVertex), &vertices[0].texcoord);
-		glVertexAttribPointer(Pipeline::VERTEX_LOCATION, 2, GL_FLOAT, GL_TRUE, sizeof(BrushVertex), &vertices[0].position);
-		glDrawElements(GL_TRIANGLES, points * 6, GL_UNSIGNED_SHORT, nullptr);
+		Renderer::draw_elements(vertices.begin(), points * 6);
 
 		// Update previous point. We use this method because input events might
 		// occur several times between frames, so (x0,y0) becomes unreliable.
@@ -250,11 +239,8 @@ void Canvas::update()
 		this->prev_point.y = this->touch.y;
 	}
 
-	//glViewport(viewport[0], viewport[1], viewport[2], viewport[3]);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, 0, 0);
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-
-	glEnableVertexAttribArray(Pipeline::COLOR_LOCATION);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	this->changed = false;
@@ -328,25 +314,26 @@ void Canvas::touch_moved(const Touch *const touches, const unsigned int count)
 	}
 }
 
-void Canvas::create_point(BrushVertex *vertex, const int x, const int y)
+void Canvas::create_point(SpriteVertex *vertex, const int x, const int y)
 {
 	R_ASSERT(this->brush, "create_point: No brush assigned");
-
-	for (unsigned int i = 0; i < 4; ++i)
-		vertex[i].texcoord = this->brush->vx[i];
 
 	const int a_x = x - (this->brush_size >> 1);
 	const int a_y = y - (this->brush_size >> 1);
 
+	vertex[0].texcoord = this->brush->vx[0];
 	vertex[0].position.x = a_x;
 	vertex[0].position.y = a_y;
 
+	vertex[1].texcoord = this->brush->vx[1];
 	vertex[1].position.x = a_x + this->brush_size;
 	vertex[1].position.y = a_y;
 
+	vertex[2].texcoord = this->brush->vx[2];
 	vertex[2].position.x = vertex[1].position.x;
 	vertex[2].position.y = a_y + this->brush_size;
 
+	vertex[3].texcoord = this->brush->vx[3];
 	vertex[3].position.x = vertex[0].position.x;
 	vertex[3].position.y = vertex[2].position.y;
 }
