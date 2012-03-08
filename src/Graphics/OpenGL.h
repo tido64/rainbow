@@ -9,7 +9,7 @@
 #include "Platform.h"
 
 #if defined(RAINBOW_ANDROID)
-#	include <GLES2/gl.h>
+#	include <GLES2/gl2.h>
 #elif defined(RAINBOW_IOS)
 #	include <OpenGLES/ES2/gl.h>
 #elif defined(RAINBOW_WIN)
