@@ -47,6 +47,6 @@ for line in io.lines() do
 end
 io.output("lua/Keyboard.lua")
 io.write("--! Raw keyboard codes.\n--!\n");
-io.write("--! This file was auto-generated with lua_keys.lua.\n");
-io.write(os.date("--! Copyright %Y Bifrost Games. All rights reserved.\n\n"));
+io.write("--! This file was auto-generated with genkeys.lua.\n");
+io.write(os.date("--! Copyright %Y Bifrost Entertainment AS. All rights reserved.\n\n"));
 io.write(string.sub(keys_lua, 0, -3) .. "\n};\n")
