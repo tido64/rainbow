@@ -68,12 +68,32 @@ void Sprite::rotate(const float r, const unsigned int duration, const int transi
 	this->transitions[2]->update();
 }
 
-void Sprite::set_color(const unsigned int v0, const unsigned int v1, const unsigned int v2, const unsigned int v3)
+void Sprite::set_color(const unsigned int c)
 {
-	this->vertex_array[0].color = v0;
-	this->vertex_array[1].color = v1;
-	this->vertex_array[2].color = v2;
-	this->vertex_array[3].color = v3;
+	this->vertex_array[0].color = c;
+	this->vertex_array[1].color = c;
+	this->vertex_array[2].color = c;
+	this->vertex_array[3].color = c;
+}
+
+void Sprite::set_color0(const unsigned int c)
+{
+	this->vertex_array[0].color = c;
+}
+
+void Sprite::set_color1(const unsigned int c)
+{
+	this->vertex_array[1].color = c;
+}
+
+void Sprite::set_color2(const unsigned int c)
+{
+	this->vertex_array[2].color = c;
+}
+
+void Sprite::set_color3(const unsigned int c)
+{
+	this->vertex_array[3].color = c;
 }
 
 void Sprite::set_pivot(const float x, const float y)

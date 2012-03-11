@@ -39,7 +39,11 @@ int lua_Sprite::get_position(lua_State *L)
 
 int lua_Sprite::set_color(lua_State *L)
 {
-	this->s->set_color(lua_tointeger(L, 1), lua_tointeger(L, 2), lua_tointeger(L, 3), lua_tointeger(L, 4));
+	unsigned int color = lua_tointeger(L, 1) << 24;
+	color += lua_tointeger(L, 2) << 16;
+	color += lua_tointeger(L, 3) << 8;
+	color += lua_tointeger(L, 4);
+	this->s->set_color(color);
 	return 0;
 }
 

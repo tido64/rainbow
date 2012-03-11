@@ -57,11 +57,19 @@ public:
 	void rotate(const float r, const unsigned int duration, const int trns = 0);
 
 	/// Set sprite colour.
-	/// \param v0  Colour for vertex 0.
-	/// \param v1  Colour for vertex 1.
-	/// \param v2  Colour for vertex 2.
-	/// \param v3  Colour for vertex 3.
-	void set_color(const unsigned int v0, const unsigned int v1, const unsigned int v2, const unsigned int v3);
+	void set_color(const unsigned int c);
+
+	/// Set vertex 0 colour;
+	void set_color0(const unsigned int c);
+
+	/// Set vertex 1 colour;
+	void set_color1(const unsigned int c);
+
+	/// Set vertex 2 colour;
+	void set_color2(const unsigned int c);
+
+	/// Set vertex 3 colour;
+	void set_color3(const unsigned int c);
 
 	/// Set the pivot point for rotation and translation.
 	/// \param x  Normalised x-component of pivot point.
