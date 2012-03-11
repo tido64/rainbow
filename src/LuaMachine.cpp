@@ -16,7 +16,7 @@
 
 void LuaMachine::dump_stack(lua_State *L)
 {
-	puts("Lua stack");
+	printf("Lua stack size: %i\n", lua_gettop(L));
 	for (int l = 1; l <= lua_gettop(L); ++l)
 	{
 		printf("#%i: ", l);
@@ -72,31 +72,32 @@ LuaMachine::~LuaMachine()
 
 LuaMachine::LuaMachine() : scenegraph(nullptr), L(luaL_newstate())
 {
-	const char rainbow[] = "rainbow";
 	luaL_openlibs(this->L);
 
 	// Initialize "rainbow" namespace
 	lua_createtable(this->L, 0, 16);
 	lua_pushvalue(this->L, -1);
-	lua_setglobal(this->L, rainbow);
+	lua_setglobal(this->L, "rainbow");
 
-	lua_Platform::init(this->L);   // Initialize "rainbow.platform" namespace
-	lua_Random::init(this->L);     // Initialize "rainbow.random" function
-	lua_Input::init(this->L);      // Initialize "rainbow.input" namespace
-	lua_Audio::init(this->L);      // Initialize "rainbow.audio" namespace
-	lua_Physics::init(this->L);    // Initialize "rainbow.physics" namespace
+	lua_Platform::init(this->L);  // Initialize "rainbow.platform" namespace
+	lua_Random::init(this->L);    // Initialize "rainbow.random" function
+	lua_Input::init(this->L);     // Initialize "rainbow.input" namespace
+	lua_Audio::init(this->L);     // Initialize "rainbow.audio" namespace
+	lua_Physics::init(this->L);   // Initialize "rainbow.physics" namespace
 
 	// Initialize "rainbow.scenegraph"
 	this->scenegraph = new lua_SceneGraph(this->L);
 
-	lua_pop(this->L, 1);
+	// Bind C++ objects
+	wrap<lua_Animation>(this->L);
+	wrap<lua_Font>(this->L);
+	wrap<lua_Label>(this->L);
+	wrap<lua_Sprite>(this->L);
+	wrap<lua_SpriteBatch>(this->L);
+	wrap<lua_Texture>(this->L);
 
-	LuaMachine::wrap<lua_Animation>(rainbow);
-	LuaMachine::wrap<lua_Font>(rainbow);
-	LuaMachine::wrap<lua_Label>(rainbow);
-	LuaMachine::wrap<lua_Sprite>(rainbow);
-	LuaMachine::wrap<lua_SpriteBatch>(rainbow);
-	LuaMachine::wrap<lua_Texture>(rainbow);
+	// Clean up the stack
+	lua_pop(this->L, 1);
 
 	// We need to set LUA_PATH
 	const char *const bundle = Data::get_path();
@@ -132,11 +133,11 @@ void LuaMachine::err(const int lua_e)
 {
 	R_ASSERT(lua_e != LUA_OK, "err: No error to report.");
 
-	static const char *err_general = "general";
-	static const char *err_runtime = "runtime";
-	static const char *err_syntax  = "syntax";
-	static const char *err_memory  = "memory allocation";
-	static const char *err_errfunc = "error handling";
+	const char *err_general = "general";
+	const char *err_runtime = "runtime";
+	const char *err_syntax  = "syntax";
+	const char *err_memory  = "memory allocation";
+	const char *err_errfunc = "error handling";
 
 	const char *desc = err_general;
 	const char *const m = lua_tolstring(this->L, -1, nullptr);
@@ -161,7 +162,7 @@ void LuaMachine::err(const int lua_e)
 		default:
 			break;
 	}
-	printf("Lua %s error: %s\n", desc, m);
+	fprintf(stderr, "Lua %s error: %s\n", desc, m);
 }
 
 int LuaMachine::load(SceneGraph::Node *root, const char *const lua)

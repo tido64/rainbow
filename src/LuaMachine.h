@@ -43,6 +43,11 @@ public:
 	template<class T>
 	static int thunk(lua_State *L);
 
+	/// Wrap a C++ object and make its methods available in the namespace on top
+	/// of the stack.
+	template<class T>
+	static void wrap(lua_State *L);
+
 	/// Return the wrapper of the object on top of the stack.
 	/// \return Pointer to wrapper.
 	template<class T>
@@ -75,11 +80,6 @@ private:
 	/// Load specified Lua script.
 	/// \return Lua error code (defined in lua.h).
 	int load(SceneGraph::Node *root, const char *const);
-
-	/// Wrap a C++ object and makes its methods available in Lua.
-	/// \param ns  Insert object into specified namespace.
-	template<class T>
-	void wrap(const char *const ns = 0);
 
 	/// Intentionally left undefined.
 	LuaMachine& operator=(const LuaMachine &);
@@ -141,6 +141,18 @@ int LuaMachine::thunk(lua_State *L)
 }
 
 template<class T>
+void LuaMachine::wrap(lua_State *L)
+{
+	lua_pushcclosure(L, &LuaMachine::alloc<T>, 0);
+	lua_setfield(L, -2, T::class_name);
+	luaL_newmetatable(L, T::class_name);
+	lua_pushstring(L, "__gc");
+	lua_pushcclosure(L, &LuaMachine::dealloc<T>, 0);
+	lua_settable(L, -3);
+	lua_pop(L, 1);
+}
+
+template<class T>
 T* LuaMachine::wrapper(lua_State *L, const int index)
 {
 	// Get user data from table
@@ -148,38 +160,6 @@ T* LuaMachine::wrapper(lua_State *L, const int index)
 	void *ptr = luaL_checkudata(L, -1, T::class_name);
 	lua_pop(L, 1);
 	return *static_cast<T**>(ptr);
-}
-
-template<class T>
-void LuaMachine::wrap(const char *const ns)
-{
-	if (ns && strcmp(ns, ""))
-	{
-		lua_getglobal(this->L, ns);
-
-		if (lua_type(this->L, -1) != LUA_TTABLE)
-		{
-			lua_pop(this->L, 1);
-			lua_createtable(this->L, 0, 0);
-			lua_pushvalue(this->L, -1);
-			lua_setglobal(L, ns);
-		}
-
-		lua_pushcclosure(this->L, &LuaMachine::alloc<T>, 0);
-		lua_setfield(this->L, -2, T::class_name);
-		lua_pop(this->L, 1);
-	}
-	else
-	{
-		lua_pushcclosure(this->L, &LuaMachine::alloc<T>, 0);
-		lua_setglobal(this->L, T::class_name);
-	}
-
-	luaL_newmetatable(this->L, T::class_name);
-	lua_pushstring(this->L, "__gc");
-	lua_pushcclosure(this->L, &LuaMachine::dealloc<T>, 0);
-	lua_settable(this->L, -3);
-	lua_pop(this->L, 1);
 }
 
 #endif
