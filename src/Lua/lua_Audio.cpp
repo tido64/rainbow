@@ -1,11 +1,10 @@
-#include <lualib.h>
-#include <lauxlib.h>
-
+#include "LuaMachine.h"
 #include "Common/Data.h"
 #include "Common/RainbowAssert.h"
 #include "ConFuoco/Mixer.h"
 #include "ConFuoco/Wave.h"
 #include "Lua/lua_Audio.h"
+#include "Lua/lua_Recorder.h"
 
 using ConFuoco::Mixer;
 using ConFuoco::Wave;
@@ -42,6 +41,8 @@ void lua_Audio::init(lua_State *L)
 
 	lua_pushcclosure(L, &lua_Audio::stop, 0);
 	lua_setfield(L, -2, "stop");
+
+	LuaMachine::wrap<lua_Recorder>(L);
 
 	lua_pop(L, 1);
 }
