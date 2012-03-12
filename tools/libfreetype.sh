@@ -4,7 +4,7 @@ if [ ! -f include/ft2build.h ]; then
 	exit
 fi
 
-rm -fr autogen.sh builds ChangeLog* configure devel Jamrules Makefile modules.cfg objs README* version.sed vms_make.com \
+rm -fr autogen.sh builds ChangeLog* configure devel Jamrules Makefile modules.cfg objs README.git version.sed vms_make.com \
        src/{bdf,bzip2,cache,cid,gxvalid,gzip,lzw,otvalid,pcf,pfr,psaux,raster,tools,type1,type42,winfonts} \
        src/base/{ftapi.c,ftbdf.c,ftcid.c,ftfstype.c,ftgasp.c,ftgxval.c,ftlcdfil.c,ftmac.c,ftmm.c,ftotval.c,ftpatent.c,ftpfr.c,ftstroke.c,ftsynth.c,fttype1.c,ftwinfnt.c,ftxf86.c}
 find . -name '*.mk' -exec rm {} \;
@@ -12,6 +12,7 @@ find . -name Jamfile -exec rm {} \;
 
 echo "Disable the following files:"
 echo
+echo " - base/basepic.c"
 echo " - base/ftadvanc.c"
 echo " - base/ftcalc.c"
 echo " - base/ftgloadr.c"
