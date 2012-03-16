@@ -14,7 +14,7 @@ Director::Director()
 
 void Director::init(const char *const script)
 {
-	if (this->lua.load(&this->scenegraph, script) || this->lua.call("init") || this->lua.call("update"))
+	if (this->lua.load(&this->scenegraph, script) || this->lua.call("init") || this->lua.update(0))
 		this->shutdown();
 	else
 		this->scenegraph.update();
@@ -30,7 +30,7 @@ void Director::update(const unsigned long t)
 	Chrono::Instance().update(t);
 	ConFuoco::Mixer::Instance().update();
 	Physics::Instance().step(Chrono::Instance().diff() * (1.0f / 1000.0f));
-	if (this->lua.call("update"))
+	if (this->lua.update(Chrono::Instance().diff()))
 		this->shutdown();
 	else
 		this->scenegraph.update();

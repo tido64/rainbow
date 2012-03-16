@@ -178,3 +178,9 @@ int LuaMachine::load(SceneGraph::Node *root, const char *const lua)
 		this->scenegraph->set_root(root);
 	return lua_e;
 }
+
+int LuaMachine::update(const unsigned long t)
+{
+	lua_pushinteger(this->L, t);
+	return this->call("update", 1);
+}

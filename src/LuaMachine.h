@@ -55,6 +55,9 @@ public:
 
 	~LuaMachine();
 
+	/// Call game update function.
+	int update(const unsigned long t);
+
 private:
 	template<class T>
 	static int dealloc(lua_State *L);
