@@ -1,7 +1,6 @@
 // Copyright 2012 Bifrost Entertainment. All rights reserved.
 
 #include "Applications/Canvas.h"
-#include "Common/Vector.h"
 #include "Graphics/OpenGL.h"
 #include "Graphics/Renderer.h"
 #include "Graphics/Shader.h"

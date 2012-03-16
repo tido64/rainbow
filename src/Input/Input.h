@@ -1,7 +1,6 @@
 #ifndef INPUT_H_
 #define INPUT_H_
 
-#include "Platform.h"
 #include "Common/Vector.h"
 #include "Input/Acceleration.h"
 

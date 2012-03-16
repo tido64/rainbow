@@ -1,5 +1,4 @@
 #include "Applications/lua_Canvas.h"
-#include "Common/RainbowAssert.h"
 #include "Lua/lua_Texture.h"
 
 const char lua_Canvas::class_name[] = "canvas";

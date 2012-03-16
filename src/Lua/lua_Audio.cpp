@@ -1,4 +1,3 @@
-#include "LuaMachine.h"
 #include "Common/Data.h"
 #include "Common/RainbowAssert.h"
 #include "ConFuoco/Mixer.h"
