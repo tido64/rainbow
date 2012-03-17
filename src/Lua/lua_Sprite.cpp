@@ -5,6 +5,7 @@
 const char lua_Sprite::class_name[] = "_sprite";
 const LuaMachine::Method<lua_Sprite> lua_Sprite::methods[] = {
 	{ "get_angle",    &lua_Sprite::get_angle },
+	{ "get_color",    &lua_Sprite::get_color },
 	{ "get_position", &lua_Sprite::get_position },
 	{ "set_color",    &lua_Sprite::set_color },
 	{ "set_pivot",    &lua_Sprite::set_pivot },
@@ -24,6 +25,16 @@ int lua_Sprite::get_angle(lua_State *L)
 {
 	lua_pushnumber(L, this->s->get_angle());
 	return 1;
+}
+
+int lua_Sprite::get_color(lua_State *L)
+{
+	const Colorb& c = this->s->get_color();
+	lua_pushinteger(L, c.r);
+	lua_pushinteger(L, c.g);
+	lua_pushinteger(L, c.b);
+	lua_pushinteger(L, c.a);
+	return 4;
 }
 
 int lua_Sprite::get_position(lua_State *L)

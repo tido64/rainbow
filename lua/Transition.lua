@@ -96,3 +96,32 @@ do
 		return self
 	end
 end
+
+do
+	local function fadeto(self, dt)
+		self.elapsed = self.elapsed + dt
+		local progress = self.elapsed / self.duration
+		if progress >= 1.0 then
+			self.sprite:set_color(self.r, self.g, self.b, self.final_a)
+			unregister(self)
+		else
+			self.sprite:set_color(self.r, self.g, self.b, self.transition(self.a, self.final_a, progress))
+		end
+	end
+
+	function rainbow.transition.fadeto(sprite, alpha, duration, method)
+		method = method or effects.linear
+		local self = {
+			cancel = unregister,
+			tick = fadeto,
+			transition = method
+		}
+		self.duration = duration
+		self.elapsed = 0
+		self.final_a = alpha
+		self.r, self.g, self.b, self.a = sprite:get_color()
+		self.sprite = sprite
+		register(self)
+		return self
+	end
+end

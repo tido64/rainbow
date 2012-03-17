@@ -1,6 +1,7 @@
 #ifndef SPRITE_H_
 #define SPRITE_H_
 
+#include "Common/SpriteVertex.h"
 #include "Common/Vec2.h"
 
 class  SpriteBatch;
@@ -40,6 +41,9 @@ public:
 	/// Return the current angle of the sprite.
 	inline const float& get_angle() const;
 
+	/// Return vertex 0's colour.
+	inline const Colorb& get_color() const;
+
 	/// Return the current position of the sprite.
 	inline const Vec2f& get_position() const;
 
@@ -53,16 +57,16 @@ public:
 	void set_color(const unsigned int c);
 
 	/// Set vertex 0 colour;
-	void set_color0(const unsigned int c);
+	inline void set_color0(const unsigned int c);
 
 	/// Set vertex 1 colour;
-	void set_color1(const unsigned int c);
+	inline void set_color1(const unsigned int c);
 
 	/// Set vertex 2 colour;
-	void set_color2(const unsigned int c);
+	inline void set_color2(const unsigned int c);
 
 	/// Set vertex 3 colour;
-	void set_color3(const unsigned int c);
+	inline void set_color3(const unsigned int c);
 
 	/// Set the pivot point for rotation and translation.
 	/// \param x  Normalised x-component of pivot point.
@@ -116,9 +120,34 @@ const float& Sprite::get_angle() const
 	return this->angle;
 }
 
+const Colorb& Sprite::get_color() const
+{
+	return this->vertex_array[0].color;
+}
+
 const Vec2f& Sprite::get_position() const
 {
 	return this->position;
+}
+
+void Sprite::set_color0(const unsigned int c)
+{
+	this->vertex_array[0].color = c;
+}
+
+void Sprite::set_color1(const unsigned int c)
+{
+	this->vertex_array[1].color = c;
+}
+
+void Sprite::set_color2(const unsigned int c)
+{
+	this->vertex_array[2].color = c;
+}
+
+void Sprite::set_color3(const unsigned int c)
+{
+	this->vertex_array[3].color = c;
 }
 
 #endif

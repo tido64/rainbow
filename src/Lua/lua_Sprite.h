@@ -17,6 +17,7 @@ public:
 	inline Sprite* raw_ptr() const;
 
 	int get_angle(lua_State *);
+	int get_color(lua_State *);
 	int get_position(lua_State *);
 	int set_color(lua_State *);
 	int set_pivot(lua_State *);

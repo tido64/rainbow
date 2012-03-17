@@ -1,7 +1,6 @@
 // Copyright 2010-12 Bifrost Entertainment. All rights reserved.
 
 #include "Algorithm.h"
-#include "Common/SpriteVertex.h"
 #include "Graphics/SpriteBatch.h"
 
 using Rainbow::equalf;
@@ -49,26 +48,6 @@ void Sprite::set_color(const unsigned int c)
 	this->vertex_array[0].color = c;
 	this->vertex_array[1].color = c;
 	this->vertex_array[2].color = c;
-	this->vertex_array[3].color = c;
-}
-
-void Sprite::set_color0(const unsigned int c)
-{
-	this->vertex_array[0].color = c;
-}
-
-void Sprite::set_color1(const unsigned int c)
-{
-	this->vertex_array[1].color = c;
-}
-
-void Sprite::set_color2(const unsigned int c)
-{
-	this->vertex_array[2].color = c;
-}
-
-void Sprite::set_color3(const unsigned int c)
-{
 	this->vertex_array[3].color = c;
 }
 
