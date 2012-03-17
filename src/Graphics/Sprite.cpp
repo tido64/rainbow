@@ -14,10 +14,7 @@ const unsigned char stale_angle    = 0x08;
 Sprite::Sprite(const unsigned int w, const unsigned int h, const SpriteBatch *p) :
 	width(w), height(h), buffered(false), stale(0xff), angle(0.0f),
 	cos_r(1.0f), sin_r(0.0f), vertex_array(nullptr), parent(p),
-	pivot(0.5f, 0.5f), scale_f(1.0f, 1.0f)
-{
-	memset(this->transitions, 0, sizeof(this->transitions));
-}
+	pivot(0.5f, 0.5f), scale_f(1.0f, 1.0f) { }
 
 Sprite::Sprite(const Sprite &s) :
 	width(s.width), height(s.height), buffered(false), stale(s.stale),
@@ -35,7 +32,6 @@ void Sprite::move(const float x, const float y)
 
 	this->position_d.x += x;
 	this->position_d.y += y;
-	this->delete_transitions();
 	this->stale |= stale_position;
 }
 
@@ -45,27 +41,7 @@ void Sprite::rotate(const float r)
 		return;
 
 	this->angle += r;
-	delete this->transitions[2];
-	this->transitions[2] = 0;
 	this->stale |= stale_angle | stale_scale;
-}
-
-void Sprite::move(const float x, const float y, const unsigned int duration, const int trns_x, const int trns_y)
-{
-	delete this->transitions[0];
-	delete this->transitions[1];
-	this->position_d = this->position;
-	this->transitions[0] = Transition::create(this->position_d.x, x, duration, trns_x);
-	this->transitions[1] = Transition::create(this->position_d.y, y, duration, trns_y);
-	this->transitions[0]->update();
-	this->transitions[1]->update();
-}
-
-void Sprite::rotate(const float r, const unsigned int duration, const int transition)
-{
-	delete this->transitions[2];
-	this->transitions[2] = Transition::create(this->angle, r, duration, transition);
-	this->transitions[2]->update();
 }
 
 void Sprite::set_color(const unsigned int c)
@@ -115,7 +91,6 @@ void Sprite::set_position(const float x, const float y)
 
 	this->position_d.x = x;
 	this->position_d.y = y;
-	this->delete_transitions();
 	this->stale |= stale_position;
 }
 
@@ -125,7 +100,6 @@ void Sprite::set_position(const Vec2f &p)
 		return;
 
 	this->position_d = p;
-	this->delete_transitions();
 	this->stale |= stale_position;
 }
 
@@ -135,8 +109,6 @@ void Sprite::set_rotation(const float r)
 		return;
 
 	this->angle = r;
-	delete this->transitions[2];
-	this->transitions[2] = 0;
 	this->stale |= stale_angle | stale_scale;
 }
 
@@ -172,10 +144,6 @@ void Sprite::set_texture(const unsigned int id)
 
 void Sprite::update()
 {
-	this->do_transition(0, stale_position);
-	this->do_transition(1, stale_position);
-	this->do_transition(2, stale_angle | stale_scale);
-
 	if (!this->stale)
 		return;
 
@@ -238,6 +206,7 @@ void Sprite::update()
 			this->vertex_array[3].position.x = this->scale_f.x * this->origin[3].x + this->position.x;
 			this->vertex_array[3].position.y = this->scale_f.y * this->origin[3].y + this->position.y;
 		}
+		this->stale = 0;
 	}
 	else
 	{
@@ -248,14 +217,6 @@ void Sprite::update()
 		this->vertex_array[3].position += this->position_d;
 		this->position += this->position_d;
 		this->position_d = this->position;
+		this->stale = 0;
 	}
-	this->stale = 0;
-}
-
-void Sprite::delete_transitions()
-{
-	delete this->transitions[0];
-	delete this->transitions[1];
-	this->transitions[0] = 0;
-	this->transitions[1] = 0;
 }

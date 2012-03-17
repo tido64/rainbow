@@ -14,7 +14,7 @@ public:
 
 	lua_Sprite(lua_State *);
 
-	Sprite* raw_ptr() const;
+	inline Sprite* raw_ptr() const;
 
 	int get_angle(lua_State *);
 	int get_position(lua_State *);
@@ -32,7 +32,7 @@ private:
 	Sprite *s;
 };
 
-inline Sprite* lua_Sprite::raw_ptr() const
+Sprite* lua_Sprite::raw_ptr() const
 {
 	return this->s;
 }

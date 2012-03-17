@@ -2,7 +2,6 @@
 #define SPRITE_H_
 
 #include "Common/Vec2.h"
-#include "Graphics/Transition.h"
 
 class  SpriteBatch;
 struct SpriteVertex;
@@ -20,9 +19,6 @@ struct SpriteVertex;
 /// The sprite itself does not have a texture. It holds the texture coordinates
 /// but it is the sprite batch that holds the actual texture. That way,
 /// changing textures on a whole batch (i.e. skinning) can be easily achieved.
-///
-/// FIXME: Transitions (move, rotate, scale) does a lot of memory juggling.
-///        Perhaps implement some kind of memory pooling?
 ///
 /// \see http://developer.apple.com/library/ios/#documentation/3DDrawing/Conceptual/OpenGLES_ProgrammingGuide/TechniquesforWorkingwithVertexData/TechniquesforWorkingwithVertexData.html
 /// \see http://iphonedevelopment.blogspot.com/2009/06/opengl-es-from-ground-up-part-8.html
@@ -42,19 +38,16 @@ public:
 	Sprite(const Sprite &);
 
 	/// Return the current angle of the sprite.
-	const float& get_angle() const;
+	inline const float& get_angle() const;
 
 	/// Return the current position of the sprite.
-	const Vec2f& get_position() const;
+	inline const Vec2f& get_position() const;
 
 	/// Move sprite by (x,y).
 	void move(const float x, const float y);
 
 	/// Rotate sprite by r.
 	void rotate(const float r);
-
-	void move(const float x, const float y, const unsigned int duration, const int trns_x = 0, const int trns_y = 0);
-	void rotate(const float r, const unsigned int duration, const int trns = 0);
 
 	/// Set sprite colour.
 	void set_color(const unsigned int c);
@@ -106,8 +99,6 @@ private:
 	float cos_r;                 ///< Cosine of angle.
 	float sin_r;                 ///< Sine of angle.
 
-	Transition *transitions[4];  ///< Container for the three possible transitions: movement, rotation and scaling.
-
 	SpriteVertex *vertex_array;  ///< Vertex array or, if buffered, the sprite batch's buffer.
 	const SpriteBatch *parent;   ///< Pointer to sprite batch.
 
@@ -117,32 +108,17 @@ private:
 	Vec2f scale_f;               ///< Scaling factor.
 	Vec2f origin[4];             ///< Original rendering at origo.
 
-	void delete_transitions();
-	void do_transition(const unsigned int i, const unsigned char mask);
 	Sprite& operator=(const Sprite &);
 };
 
-inline const float& Sprite::get_angle() const
+const float& Sprite::get_angle() const
 {
 	return this->angle;
 }
 
-inline const Vec2f& Sprite::get_position() const
+const Vec2f& Sprite::get_position() const
 {
 	return this->position;
-}
-
-inline void Sprite::do_transition(const unsigned int i, const unsigned char mask)
-{
-	if (this->transitions[i])
-	{
-		if (this->transitions[i]->update())
-		{
-			delete this->transitions[i];
-			this->transitions[i] = 0;
-		}
-		this->stale |= mask;
-	}
 }
 
 #endif
