@@ -1,9 +1,18 @@
 cmake_minimum_required(VERSION 2.8)
 project(Rainbow)
+
 option(GTEST "Compile with Google C++ Testing Framework" OFF)
 option(MINGW "Cross compile with MinGW" OFF)
 #option(PROFILING "Compile with profiling" OFF)
 
+# Features
+option(PHYSICS "Use physics (Box2D)" OFF)
+
+# Target
+file(GLOB_RECURSE RAINBOW_CPP src/*.cpp)
+add_executable(rainbow ${RAINBOW_CPP} ${RAINBOW_H})
+
+# Common variables
 set(LOCAL_LIBRARY lib)
 set(LOCAL_LIBRARY_BUILD ${CMAKE_SOURCE_DIR}/build/cmake)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${LOCAL_LIBRARY_BUILD})
@@ -20,7 +29,9 @@ find_package(Vorbisfile REQUIRED)
 find_package(ZLIB REQUIRED)
 
 # Static libraries
-include(${LOCAL_LIBRARY_BUILD}/Box2D.cmake)
+if(PHYSICS)
+	include(${LOCAL_LIBRARY_BUILD}/Box2D.cmake)
+endif()
 include(${LOCAL_LIBRARY_BUILD}/Lua.cmake)
 include(${LOCAL_LIBRARY_BUILD}/FreeType.cmake)
 include(${LOCAL_LIBRARY_BUILD}/libpng.cmake)
@@ -33,9 +44,6 @@ include(${LOCAL_LIBRARY_BUILD}/MSVC.cmake)
 include(${LOCAL_LIBRARY_BUILD}/Unix.cmake)
 
 # Rainbow
-file(GLOB_RECURSE RAINBOW_CPP src/*.cpp)
-add_executable(rainbow ${RAINBOW_CPP} ${RAINBOW_H})
-add_dependencies(rainbow box2d freetype lua png)
 include_directories(src
 	${LOCAL_LIBRARY}
 	${LUA_INCLUDE_DIR}

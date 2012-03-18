@@ -1,3 +1,5 @@
+#ifdef USE_PHYSICS
+
 #include <lauxlib.h>
 
 #include "Physics.h"
@@ -168,3 +170,5 @@ int lua_Physics::set_gravity(lua_State *L)
 	Physics::Instance().set_gravity(g_x, g_y);
 	return 0;
 }
+
+#endif

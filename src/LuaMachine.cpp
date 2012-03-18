@@ -6,13 +6,16 @@
 #include "Lua/lua_Font.h"
 #include "Lua/lua_Input.h"
 #include "Lua/lua_Label.h"
-#include "Lua/lua_Physics.h"
 #include "Lua/lua_Platform.h"
 #include "Lua/lua_Random.h"
 #include "Lua/lua_SceneGraph.h"
 #include "Lua/lua_Sprite.h"
 #include "Lua/lua_SpriteBatch.h"
 #include "Lua/lua_Texture.h"
+
+#ifdef USE_PHYSICS
+#	include "Lua/lua_Physics.h"
+#endif
 
 void LuaMachine::dump_stack(lua_State *L)
 {
@@ -83,7 +86,10 @@ LuaMachine::LuaMachine() : scenegraph(nullptr), L(luaL_newstate())
 	lua_Random::init(this->L);    // Initialize "rainbow.random" function
 	lua_Input::init(this->L);     // Initialize "rainbow.input" namespace
 	lua_Audio::init(this->L);     // Initialize "rainbow.audio" namespace
+
+#ifdef USE_PHYSICS
 	lua_Physics::init(this->L);   // Initialize "rainbow.physics" namespace
+#endif
 
 	// Initialize "rainbow.scenegraph"
 	this->scenegraph = new lua_SceneGraph(this->L);

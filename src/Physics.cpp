@@ -1,5 +1,7 @@
 // Copyright 2010-12 Bifrost Entertainment. All rights reserved.
 
+#ifdef USE_PHYSICS
+
 #include "Algorithm.h"
 #include "Physics.h"
 #include "Platform.h"
@@ -204,3 +206,5 @@ void Physics::save_state()
 		d->curr_r = t.q.GetAngle();
 	}
 }
+
+#endif

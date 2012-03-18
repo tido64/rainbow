@@ -1,6 +1,8 @@
 #ifndef LUA_PHYSICS_H_
 #define LUA_PHYSICS_H_
 
+#ifdef USE_PHYSICS
+
 struct lua_State;
 
 class lua_Physics
@@ -28,4 +30,5 @@ private:
 	friend class LuaMachine;
 };
 
+#endif  // USE_PHYSICS
 #endif

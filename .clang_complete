@@ -11,3 +11,4 @@
 -I lib/Lua
 -I lib/FreeType/include
 -I lib/libpng
+-D USE_PHYSICS

@@ -17,5 +17,6 @@ foreach(source ${FREETYPE_BASE_SRC} ${FREETYPE_DRIVER_SRC} ${FREETYPE_RASTER_SRC
 	set(FREETYPE_SRC ${FREETYPE_SRC} ${FREETYPE_SOURCE_DIR}/${source})
 endforeach()
 
-add_definitions(-DFT2_BUILD_LIBRARY)
 add_library(freetype STATIC ${FREETYPE_SRC})
+add_definitions(-DFT2_BUILD_LIBRARY)
+add_dependencies(rainbow freetype)

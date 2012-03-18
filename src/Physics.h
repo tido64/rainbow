@@ -1,6 +1,7 @@
 #ifndef PHYSICS_H_
 #define PHYSICS_H_
 
+#ifdef USE_PHYSICS
 #include <Box2D/Box2D.h>
 
 #include "Common/Constants.h"
@@ -193,4 +194,5 @@ inline void Physics::set_gravity(const float g_x, const float g_y)
 	this->world->SetGravity(b2Vec2(g_x, g_y));
 }
 
+#endif  // USE_PHYSICS
 #endif

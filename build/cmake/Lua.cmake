@@ -12,5 +12,6 @@ foreach(file ${LUA_CORE_SRC} ${LUA_LIB_SRC})
 	set(LUA_SRC ${LUA_SRC} ${PROJECT_SOURCE_DIR}/${LUA_INCLUDE_DIR}/${file})
 endforeach()
 
-add_definitions(-DLUA_COMPAT_ALL)
 add_library(lua STATIC ${LUA_SRC})
+add_definitions(-DLUA_COMPAT_ALL)
+add_dependencies(rainbow lua)
