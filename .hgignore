@@ -4,7 +4,13 @@ doc/
 lua/Keyboard\.lua
 
 # Libraries
-lib/
 \.(?:git|hg|svn)
-lib/.*(?:\.cmake|\.txt|Makefile|html|makefile)
+lib/.*(?:\.cmake|\.txt|docs|html|Makefile|makefile|LICENSE|README)
+lib/dSFMT/check.sh
+lib/dSFMT/test.c
+lib/gtest/
 lib/libpng/scripts/
+
+# Xcode-specific
+xcuserdata
+xcode4  # temporary

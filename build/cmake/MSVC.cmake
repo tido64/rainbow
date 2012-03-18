@@ -1,4 +1,7 @@
 if(MINGW OR WIN32)
+	file(GLOB RAINBOW_APPS_SRC src/Applications/*)
+	source_group("Source Files\\Applications" FILES ${RAINBOW_APPS_SRC})
+
 	file(GLOB RAINBOW_COMMON_SRC src/Common/*)
 	source_group("Source Files\\Common" FILES ${RAINBOW_COMMON_SRC})
 	file(GLOB RAINBOW_COMMON_SRC src/Common/impl/*)

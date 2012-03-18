@@ -13,6 +13,9 @@ rm -fr \
 	ANNOUNCE \
 	CHANGES \
 	CMakeLists.txt \
+	config.guess \
+	config.h.in \
+	config.sub \
 	configure \
 	configure.ac \
 	contrib \
@@ -25,6 +28,7 @@ rm -fr \
 	libpngpf.3 \
 	Makefile.* \
 	missing \
+	png.5 \
 	pngtest.c \
 	projects \
 	TODO

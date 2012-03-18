@@ -1,0 +1,13 @@
+-std=c++0x
+-Wall
+-Wextra
+-Wold-style-cast
+-Woverloaded-virtual
+-Wsign-promo
+-Wno-variadic-macros
+-Werror
+-I src
+-I lib
+-I lib/Lua
+-I lib/FreeType/include
+-I lib/libpng
