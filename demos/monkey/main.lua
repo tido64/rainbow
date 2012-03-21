@@ -5,15 +5,15 @@
 --! Copyright 2011-12 Bifrost Entertainment. All rights reserved.
 --! \author Tommy Nguyen
 
-require("Utils");      -- Rainbow (debugging) utilities
-require("Input");      -- Input event handler
-require("Scheduler");  -- Time trigger
+require("Utils");  -- Rainbow (debugging) utilities
+require("Input");  -- Input event handler
 
-assets = nil;      -- Sprite sheet
 global_scale = 3;  -- Global scaling factor
 threepwood = nil;  -- Guybrush Threepwood
-scene = nil;       -- Current scene
-scenes = {};       -- Table o'scenes
+
+local assets = nil;  -- Sprite sheet
+local scene = nil;   -- Current scene
+local scenes = {};   -- Table o'scenes
 
 require("threepwood");  -- I'm Guybrush Threepwood. A mighty pirate.
 require("intro");       -- Intro scene
@@ -35,8 +35,8 @@ function init()
 	scene:init();
 end
 
-function update()
-	local next_scene = scene:update();
+function update(dt)
+	local next_scene = scene:update(dt);
 	if next_scene then
 		-- Delete current scene
 		scene:destruct();

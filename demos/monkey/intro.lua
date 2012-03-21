@@ -3,6 +3,8 @@
 --! Copyright 2011-12 Bifrost Entertainment. All rights reserved.
 --! \author Tommy Nguyen
 
+require("Scheduler");  -- Time trigger
+
 SceneIntro = {};
 SceneIntro.__index = SceneIntro;
 
@@ -90,9 +92,9 @@ end
 function SceneIntro:touch_moved()
 end
 
-function SceneIntro:update()
+function SceneIntro:update(dt)
 	if not self.node then
 		return "scummbar";
 	end
-	self.sched:update();
+	self.sched:update(dt);
 end

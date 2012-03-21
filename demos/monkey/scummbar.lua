@@ -156,6 +156,7 @@ function SceneSCUMMBar:touch_moved()
 end
 
 function SceneSCUMMBar:update()
+	local threepwood = threepwood
 	threepwood:update();
 
 	-- Determine whether we should be panning the screen.
