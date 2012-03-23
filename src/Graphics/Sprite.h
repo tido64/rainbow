@@ -69,8 +69,7 @@ public:
 	inline void set_color3(const unsigned int c);
 
 	/// Set the pivot point for rotation and translation.
-	/// \param x  Normalised x-component of pivot point.
-	/// \param y  Normalised y-component of pivot point.
+	/// \param x,y  Normalised pivot point.
 	void set_pivot(const float x, const float y);
 
 	/// Set sprite position (absolute).
@@ -96,8 +95,7 @@ public:
 	void update();
 
 private:
-	bool buffered;               ///< Whether or not this sprite is buffered.
-	unsigned char stale;         ///< Sprite is stale if its properties has changed.
+	unsigned char stale;         ///< Sprite is stale if its properties have changed.
 
 	float angle;                 ///< Sprite rotation angle.
 	float cos_r;                 ///< Cosine of angle.
@@ -108,7 +106,7 @@ private:
 
 	Vec2f pivot;                 ///< Pivot point (normalised).
 	Vec2f position;              ///< Current position.
-	Vec2f position_d;            ///< Difference between current and next position.
+	Vec2f position_d;            ///< Position after next update.
 	Vec2f scale_f;               ///< Scaling factor.
 	Vec2f origin[4];             ///< Original rendering at origo.
 

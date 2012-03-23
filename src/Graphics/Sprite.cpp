@@ -5,21 +5,21 @@
 
 using Rainbow::equalf;
 
-const unsigned char stale_pivot    = 0x01;
-const unsigned char stale_position = 0x02;
-const unsigned char stale_scale    = 0x04;
-const unsigned char stale_angle    = 0x08;
+const unsigned char stale_pivot    = 1u << 0;
+const unsigned char stale_position = 1u << 1;
+const unsigned char stale_scale    = 1u << 2;
+const unsigned char stale_angle    = 1u << 3;
 
 Sprite::Sprite(const unsigned int w, const unsigned int h, const SpriteBatch *p) :
-	width(w), height(h), buffered(false), stale(0xff), angle(0.0f),
+	width(w), height(h), stale(0xff), angle(0.0f),
 	cos_r(1.0f), sin_r(0.0f), vertex_array(nullptr), parent(p),
 	pivot(0.5f, 0.5f), scale_f(1.0f, 1.0f) { }
 
 Sprite::Sprite(const Sprite &s) :
-	width(s.width), height(s.height), buffered(false), stale(s.stale),
-	angle(s.angle), cos_r(s.cos_r), sin_r(s.sin_r),	vertex_array(nullptr),
-	parent(s.parent), pivot(s.pivot), position(s.position),
-	position_d(s.position_d), scale_f(s.scale_f)
+	width(s.width), height(s.height), stale(s.stale), angle(s.angle),
+	cos_r(s.cos_r), sin_r(s.sin_r),	vertex_array(nullptr), parent(s.parent),
+	pivot(s.pivot), position(s.position), position_d(s.position_d),
+	scale_f(s.scale_f)
 {
 	memcpy(this->origin, s.origin, 4 * sizeof(Vec2f));
 }
@@ -93,7 +93,7 @@ void Sprite::set_rotation(const float r)
 
 void Sprite::set_scale(const float f)
 {
-	R_ASSERT(f > 0.0f, "set_scale: Can't scale with a negative factor.");
+	R_ASSERT(f > 0.0f, "set_scale: Can't scale with a factor of zero or less.");
 
 	if (equalf(f, this->scale_f.x) && equalf(f, this->scale_f.y))
 		return;
@@ -105,7 +105,7 @@ void Sprite::set_scale(const float f)
 
 void Sprite::set_scale(const Vec2f &f)
 {
-	R_ASSERT(f.x > 0.0f && f.y > 0.0f, "set_scale: Can't scale with a negative factor.");
+	R_ASSERT(f.x > 0.0f && f.y > 0.0f, "set_scale: Can't scale with a factor of zero or less.");
 
 	if (equalf(f.x, this->scale_f.x) && equalf(f.y, this->scale_f.y))
 		return;
@@ -117,8 +117,10 @@ void Sprite::set_scale(const Vec2f &f)
 void Sprite::set_texture(const unsigned int id)
 {
 	const Texture &tx = (*this->parent->texture)[id];
-	for (unsigned int i = 0; i < 4; ++i)
-		this->vertex_array[i].texcoord = tx.vx[i];
+	this->vertex_array[0].texcoord = tx.vx[0];
+	this->vertex_array[1].texcoord = tx.vx[1];
+	this->vertex_array[2].texcoord = tx.vx[2];
+	this->vertex_array[3].texcoord = tx.vx[3];
 }
 
 void Sprite::update()
@@ -141,12 +143,9 @@ void Sprite::update()
 		}
 
 		if (this->stale & stale_position)
-		{
 			this->position = this->position_d;
-			this->position_d = this->position;
-		}
 
-		if (this->angle != 0.0f)
+		if (!equalf(this->angle, 0.0f))
 		{
 			if (this->stale & stale_angle)
 			{
