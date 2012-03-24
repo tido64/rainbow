@@ -154,61 +154,46 @@ void Sprite::update()
 				this->sin_r = sinf(-this->angle);
 			}
 
-		#if defined(__SSE2__)
+		#if 0 //defined(__SSE3__)
 
 			// sx*cos(r), sx*sin(r), sy*sin(r), sy*cos(r)
 			__m128 factor = _mm_set_ps(this->scale_f.y, this->scale_f.y, this->scale_f.x, this->scale_f.x);
-			__m128 vx = _mm_set_ps(this->cos_r, this->sin_r, this->sin_r, this->cos_r);
-			factor = _mm_mul_ps(factor, vx);
+			__m128 vx0 = _mm_set_ps(this->cos_r, this->sin_r, this->sin_r, this->cos_r);
+			__m128 pos = _mm_set_ps(this->position.y, this->position.x, this->position.y, this->position.x);
+			__m128 vx1, tmp;
+			factor = _mm_mul_ps(factor, vx0);
 
-			float factors[4];
-			_mm_store_ps(factors, factor);
+			vx1 = _mm_set_ps(this->origin[0].y, this->origin[0].x, this->origin[0].y, this->origin[0].x);
+			vx0 = _mm_mul_ps(factor, vx1);
+			vx0 = _mm_set_ps(this->origin[1].y, this->origin[1].x, this->origin[1].y, this->origin[1].x);
+			vx1 = _mm_mul_ps(factor, vx0);
 
-			// [sx*cos(r)] * [x0]
-			factor = _mm_set1_ps(factors[0]);
-			vx = _mm_set_ps(this->origin[3].x, this->origin[2].x, this->origin[1].x, this->origin[0].x);
-			vx = _mm_mul_ps(factor, vx);
-
-			// [sx*sin(r)] * [y0]
-			factor = _mm_set1_ps(factors[1]);
-			__m128 vy = _mm_set_ps(this->origin[3].y, this->origin[2].y, this->origin[1].y, this->origin[0].y);
-			vy = _mm_mul_ps(factor, vy);
-
-			// [sx*cos(r) * x0] - [sx*sin(r) * y0]
-			vx = _mm_sub_ps(vx, vy);
-
-			// [sx*cos(r) * x0 - sx*sin(r) * y0] + x1
-			vy = _mm_set1_ps(this->position.x);
-			vx = _mm_add_ps(vx, vy);
+			tmp = _mm_shuffle_ps(vx0, vx1, _MM_SHUFFLE(2, 0, 2, 0));
+			vx0 = _mm_shuffle_ps(vx0, vx1, _MM_SHUFFLE(3, 1, 3, 1));
+			vx1 = _mm_addsub_ps(tmp, vx0);
+			vx0 = _mm_add_ps(vx1, pos);
 
 			float result[4];
-			_mm_store_ps(result, vx);
+			_mm_store_ps(result, vx0);
 			this->vertex_array[0].position.x = result[0];
-			this->vertex_array[1].position.x = result[1];
-			this->vertex_array[2].position.x = result[2];
-			this->vertex_array[3].position.x = result[3];
+			this->vertex_array[0].position.y = result[1];
+			this->vertex_array[1].position.x = result[2];
+			this->vertex_array[1].position.y = result[3];
 
-			// [sy*sin(r)] * [x0]
-			factor = _mm_set1_ps(factors[2]);
-			vx = _mm_set_ps(this->origin[3].x, this->origin[2].x, this->origin[1].x, this->origin[0].x);
-			vx = _mm_mul_ps(factor, vx);
+			vx1 = _mm_set_ps(this->origin[2].y, this->origin[2].x, this->origin[2].y, this->origin[2].x);
+			vx0 = _mm_mul_ps(factor, vx1);
+			vx0 = _mm_set_ps(this->origin[3].y, this->origin[3].x, this->origin[3].y, this->origin[3].x);
+			vx1 = _mm_mul_ps(factor, vx0);
 
-			// [sy*cos(r)] * [y0]
-			factor = _mm_set1_ps(factors[3]);
-			vy = _mm_set_ps(this->origin[3].y, this->origin[2].y, this->origin[1].y, this->origin[0].y);
-			vy = _mm_mul_ps(factor, vy);
+			tmp = _mm_shuffle_ps(vx0, vx1, _MM_SHUFFLE(2, 0, 2, 0));
+			vx0 = _mm_shuffle_ps(vx0, vx1, _MM_SHUFFLE(3, 1, 3, 1));
+			vx1 = _mm_addsub_ps(tmp, vx0);
+			vx0 = _mm_add_ps(vx1, pos);
 
-			// [sy*sin(r) * x0] + [sy*cos(r)] * y0
-			vx = _mm_add_ps(vx, vy);
-
-			// [sy*sin(r) * x0 + sy*cos(r) * y0] + y1
-			vy = _mm_set1_ps(this->position.y);
-			vx = _mm_add_ps(vx, vy);
-
-			_mm_store_ps(result, vx);
-			this->vertex_array[0].position.y = result[0];
-			this->vertex_array[1].position.y = result[1];
-			this->vertex_array[2].position.y = result[2];
+			_mm_store_ps(result, vx0);
+			this->vertex_array[2].position.x = result[0];
+			this->vertex_array[2].position.y = result[1];
+			this->vertex_array[3].position.x = result[2];
 			this->vertex_array[3].position.y = result[3];
 
 		#else
