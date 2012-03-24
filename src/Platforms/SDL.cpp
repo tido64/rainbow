@@ -33,6 +33,7 @@ void on_mouse_button_down(SDL_MouseButtonEvent &);  ///< Handle mouse button dow
 void on_mouse_button_up(SDL_MouseButtonEvent &);    ///< Handle mouse button up event
 void on_mouse_motion(SDL_MouseMotionEvent &);       ///< Handle mouse motion event
 void resize(Director &, const int w, const int h);  ///< Handle window resize event
+int  sdl_eventfilter(const SDL_Event *);            ///< Filters SDL events
 
 
 int main(int argc, char *argv[])
@@ -63,6 +64,7 @@ int main(int argc, char *argv[])
 		fprintf(stderr, "Unable to initialise SDL: %s\n", SDL_GetError());
 		exit(1);
 	}
+	SDL_SetEventFilter(&sdl_eventfilter);
 
 	const int video_mode = SDL_OPENGL;
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
@@ -190,6 +192,24 @@ void resize(Director &director, const int w, const int h)
 {
 	Renderer::resize(w, h);
 	director.set_video(w, h);
+}
+
+int sdl_eventfilter(const SDL_Event *e)
+{
+	switch (e->type)
+	{
+		case SDL_ACTIVEEVENT:
+		case SDL_KEYDOWN:
+		case SDL_KEYUP:
+		case SDL_MOUSEMOTION:
+		case SDL_MOUSEBUTTONDOWN:
+		case SDL_MOUSEBUTTONUP:
+		case SDL_QUIT:
+		case SDL_VIDEORESIZE:
+			return 1;
+		default:
+			return 0;
+	}
 }
 
 #endif
