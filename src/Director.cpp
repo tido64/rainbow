@@ -29,7 +29,9 @@ void Director::update(const unsigned long t)
 {
 	Chrono::Instance().update(t);
 	ConFuoco::Mixer::Instance().update();
+#ifdef USE_PHYSICS
 	Physics::Instance().step(Chrono::Instance().diff() * (1.0f / 1000.0f));
+#endif
 	if (this->lua.update(Chrono::Instance().diff()))
 		this->shutdown();
 	else
