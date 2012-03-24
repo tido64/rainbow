@@ -55,11 +55,11 @@ void SpriteBatch::push_back(Sprite *s)
 	R_ASSERT(this->sprites.size() <= 16, "Hard-coded limit reached.");
 
 	const unsigned int index = this->sprites.size() << 2;
-	if (index > this->reserved)
+	if (index >= this->reserved)
 	{
 		this->reserved <<= 1;
 		SpriteVertex *batch = new SpriteVertex[this->reserved];
-		memcpy(batch, this->vertex_buffer, this->sprites.size() * sizeof(SpriteVertex));
+		memcpy(batch, this->vertex_buffer, index * sizeof(SpriteVertex));
 		delete[] this->vertex_buffer;
 		this->vertex_buffer = batch;
 

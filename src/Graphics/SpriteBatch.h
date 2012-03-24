@@ -23,11 +23,8 @@ public:
 
 	Sprite* add(const int x, const int y, const int width, const int height);
 
-	/// Draw the batch of sprites.
-	virtual void draw();
-
 	/// Return all sprites within this batch.
-	Vector<Sprite*>& get_sprites();
+	inline Vector<Sprite*>& get_sprites();
 
 	/// Load texture data.
 	TextureAtlas* set_texture(const Data &texture);
@@ -39,7 +36,10 @@ public:
 	SmartPtr<TextureAtlas>& set_texture(SmartPtr<TextureAtlas> &texture);
 
 	/// Return the number of sprites.
-	unsigned int size();
+	inline unsigned int size();
+
+	/// Draw the batch of sprites.
+	virtual void draw();
 
 	/// Update the batch of sprites.
 	virtual void update();
@@ -64,12 +64,12 @@ private:
 	SpriteBatch& operator=(const SpriteBatch &);
 };
 
-inline Vector<Sprite*>& SpriteBatch::get_sprites()
+Vector<Sprite*>& SpriteBatch::get_sprites()
 {
 	return this->sprites;
 }
 
-inline unsigned int SpriteBatch::size()
+unsigned int SpriteBatch::size()
 {
 	return this->sprites.size();
 }
