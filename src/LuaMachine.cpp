@@ -132,7 +132,18 @@ int LuaMachine::call(const char *const k, int nargs, int nresults)
 
 	lua_getglobal(this->L, k);
 	lua_insert(this->L, 1);
+
+#ifndef NDEBUG
+	lua_getglobal(this->L, "debug");
+	lua_getfield(this->L, -1, "traceback");
+	lua_insert(this->L, 1);
+	lua_pop(this->L, 1);
+	const int lua_e = lua_pcall(this->L, nargs, nresults, 1);
+	lua_remove(this->L, 1);
+#else
 	const int lua_e = lua_pcall(this->L, nargs, nresults, 0);
+#endif
+
 	if (lua_e)
 		this->err(lua_e);
 	return lua_e;
@@ -155,15 +166,12 @@ void LuaMachine::err(const int lua_e)
 	{
 		case LUA_ERRRUN:
 			desc = err_runtime;
-			dump_stack(this->L);
 			break;
 		case LUA_ERRSYNTAX:
 			desc = err_syntax;
-			dump_stack(this->L);
 			break;
 		case LUA_ERRMEM:
 			desc = err_memory;
-			dump_stack(this->L);
 			break;
 		case LUA_ERRERR:
 			desc = err_errfunc;
@@ -172,6 +180,7 @@ void LuaMachine::err(const int lua_e)
 			break;
 	}
 	fprintf(stderr, "Lua %s error: %s\n", desc, m);
+	dump_stack(this->L);
 }
 
 int LuaMachine::load(SceneGraph::Node *root, const char *const lua)

@@ -26,6 +26,14 @@ namespace Rainbow
 		if (!(expr)) \
 		{ \
 			fprintf(stderr, "[Rainbow] Lua syntax: %s\n", syntax); \
+			unsigned int depth = 0; \
+			lua_Debug entry; \
+			while (lua_getstack(L, depth, &entry)) \
+			{ \
+				lua_getinfo(L, "nSl", &entry); \
+				fprintf(stderr, "%s:%d: %s\n", entry.short_src, entry.currentline, entry.name ? entry.name : ""); \
+				++depth; \
+			} \
 			abort(); \
 		} \
 	} while (0)
