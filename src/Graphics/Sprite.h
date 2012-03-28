@@ -47,6 +47,9 @@ public:
 	/// Return the current position of the sprite.
 	inline const Vec2f& get_position() const;
 
+	/// Mirror sprite.
+	void mirror();
+
 	/// Move sprite by (x,y).
 	void move(const float x, const float y);
 

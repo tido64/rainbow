@@ -25,6 +25,16 @@ Sprite::Sprite(const Sprite &s) :
 	memcpy(this->origin, s.origin, 4 * sizeof(Vec2f));
 }
 
+void Sprite::mirror()
+{
+	Vec2f tmp = this->vertex_array[0].texcoord;
+	this->vertex_array[0].texcoord = this->vertex_array[1].texcoord;
+	this->vertex_array[1].texcoord = tmp;
+	tmp = this->vertex_array[2].texcoord;
+	this->vertex_array[2].texcoord = this->vertex_array[3].texcoord;
+	this->vertex_array[3].texcoord = tmp;
+}
+
 void Sprite::move(const float x, const float y)
 {
 	if (equalf(x, 0.0f) && equalf(y, 0.0f))

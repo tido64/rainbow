@@ -13,6 +13,7 @@ const LuaMachine::Method<lua_Sprite> lua_Sprite::methods[] = {
 	{ "set_rotation", &lua_Sprite::set_rotation },
 	{ "set_scale",    &lua_Sprite::set_scale },
 	{ "set_texture",  &lua_Sprite::set_texture },
+	{ "mirror",       &lua_Sprite::mirror },
 	{ "move",         &lua_Sprite::move },
 	{ "rotate",       &lua_Sprite::rotate },
 	{ 0, 0 }
@@ -82,6 +83,12 @@ int lua_Sprite::set_scale(lua_State *L)
 int lua_Sprite::set_texture(lua_State *L)
 {
 	this->s->set_texture(lua_tointeger(L, 1));
+	return 0;
+}
+
+int lua_Sprite::mirror(lua_State *)
+{
+	this->s->mirror();
 	return 0;
 }
 

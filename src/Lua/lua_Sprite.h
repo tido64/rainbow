@@ -26,6 +26,7 @@ public:
 	int set_scale(lua_State *);
 	int set_texture(lua_State *);
 
+	int mirror(lua_State *);
 	int move(lua_State *);
 	int rotate(lua_State *);
 
