@@ -1,3 +1,4 @@
+#include "Director.h"
 #include "Input/Input.h"
 #include "Input/Touchable.h"
 
@@ -6,10 +7,10 @@ class TouchTest : public Touchable, public testing::Test
 public:
 	enum Events
 	{
-		TOUCH_BEGAN    = 1 << 0,
-		TOUCH_CANCELED = 1 << 1,
-		TOUCH_ENDED    = 1 << 2,
-		TOUCH_MOVED    = 1 << 3
+		TOUCH_BEGAN    = 1u << 0,
+		TOUCH_CANCELED = 1u << 1,
+		TOUCH_ENDED    = 1u << 2,
+		TOUCH_MOVED    = 1u << 3
 	};
 
 	TouchTest() : flags(0)
@@ -24,8 +25,7 @@ public:
 
 	bool is_invalid(const Touch *const touches, const unsigned int count)
 	{
-		// Coordinates are flipped, so 3 becomes -3 here
-		return count != 1 || touches[0].hash != 1 || touches[0].x != 2 || touches[0].y != -3;
+		return count != 1 || touches[0].hash != 1 || touches[0].x != 2 || touches[0].y != 3;
 	}
 
 	bool is_triggered(const unsigned int flags)
@@ -61,11 +61,13 @@ public:
 
 private:
 	unsigned int flags;
+	Director director;
 };
 
 TEST_F(TouchTest, TouchBeganEvent)
 {
-	Touch t1(1, 2, 3);
+	Touch t1(2, 3);
+	t1.hash = 1;
 	Input::Instance().touch_began(&t1, 1);
 	ASSERT_TRUE(is_triggered(TOUCH_BEGAN));
 }
@@ -78,14 +80,16 @@ TEST_F(TouchTest, TouchCanceledEvent)
 
 TEST_F(TouchTest, TouchEndedEvent)
 {
-	Touch t1(1, 2, 3);
+	Touch t1(2, 3);
+	t1.hash = 1;
 	Input::Instance().touch_ended(&t1, 1);
 	ASSERT_TRUE(is_triggered(TOUCH_ENDED));
 }
 
 TEST_F(TouchTest, TouchMovedEvent)
 {
-	Touch t1(1, 2, 3);
+	Touch t1(2, 3);
+	t1.hash = 1;
 	Input::Instance().touch_moved(&t1, 1);
 	ASSERT_TRUE(is_triggered(TOUCH_MOVED));
 }

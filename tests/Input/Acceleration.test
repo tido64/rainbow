@@ -1,9 +1,0 @@
-#include "Input/Acceleration.h"
-
-TEST(AccelerationTest, FixedPoint)
-{
-	Acceleration a(0.12345678f, 1.23456789f, 12.3456789f, 0.0);
-	ASSERT_EQ(123, a.x);
-	ASSERT_EQ(1234, a.y);
-	ASSERT_EQ(12345, a.z);
-}

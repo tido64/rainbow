@@ -15,18 +15,13 @@ protected:
 	}
 };
 
-TEST_F(VectorTest, PushBackAndExpansion)
-{
-	ASSERT_EQ(test_capacity, intvec.capacity());
-	ASSERT_EQ(test_size, intvec.size());
-	for (unsigned int i = 0; i < test_size; ++i)
-		ASSERT_EQ(i, intvec[i]);
-}
-
-TEST_F(VectorTest, At)
+TEST_F(VectorTest, Access)
 {
 	for (unsigned int i = 0; i < test_size; ++i)
+	{
 		ASSERT_EQ(i, intvec.at(i));
+		ASSERT_EQ(i, intvec[i]);
+	}
 }
 
 TEST_F(VectorTest, Begin)
@@ -34,23 +29,12 @@ TEST_F(VectorTest, Begin)
 	ASSERT_EQ(&intvec[0], intvec.begin());
 }
 
-TEST_F(VectorTest, OperatorEq)
+TEST_F(VectorTest, PushBackPastCapacity)
 {
-	Vector<unsigned int> cpvec;
-	cpvec = intvec;
-	ASSERT_EQ(test_capacity, cpvec.capacity());
-	ASSERT_EQ(test_size, cpvec.size());
+	ASSERT_EQ(test_capacity, intvec.capacity());
+	ASSERT_EQ(test_size, intvec.size());
 	for (unsigned int i = 0; i < test_size; ++i)
-		ASSERT_EQ(i, cpvec[i]);
-}
-
-TEST_F(VectorTest, CopyConstructor)
-{
-	Vector<unsigned int> cpvec(intvec);
-	ASSERT_EQ(test_capacity, cpvec.capacity());
-	ASSERT_EQ(test_size, cpvec.size());
-	for (unsigned int i = 0; i < test_size; ++i)
-		ASSERT_EQ(i, cpvec[i]);
+		ASSERT_EQ(i, intvec[i]);
 }
 
 TEST_F(VectorTest, ReserveLessThanSize)
@@ -64,18 +48,20 @@ TEST_F(VectorTest, ReserveLessThanSize)
 
 TEST_F(VectorTest, ReserveGreaterThanSize)
 {
-	const unsigned int double_capacity = test_capacity << 1;
-	intvec.reserve(double_capacity);
-	ASSERT_EQ(double_capacity, intvec.capacity());
+	const unsigned int cap = test_capacity + 10;
+	intvec.reserve(cap);
+	ASSERT_EQ(cap, intvec.capacity());
 	ASSERT_EQ(test_size, intvec.size());
-	for (unsigned int i = 0; i < test_size; ++i)
-		ASSERT_EQ(i, intvec[i]);
+	for (unsigned int i = test_size; i < cap; ++i)
+		intvec.push_back(i);
+	ASSERT_EQ(cap, intvec.capacity());
+	ASSERT_EQ(cap, intvec.size());
 }
 
 TEST_F(VectorTest, Assignment)
 {
 	for (unsigned int i = 0; i < test_size; ++i)
-		intvec[i] = i * 5;
+		intvec[i] = 0xdeadbeef;
 	for (unsigned int i = 0; i < test_size; ++i)
-		ASSERT_EQ(i * 5, intvec[i]);
+		ASSERT_EQ(0xdeadbeef, intvec[i]);
 }
