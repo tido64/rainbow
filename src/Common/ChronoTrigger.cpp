@@ -10,9 +10,9 @@ void ChronoTrigger::update()
 		return;
 
 	this->accumulated += Chrono::Instance().diff();
-	if (this->accumulated >= this->trigger)
+	while (this->accumulated >= this->trigger)
 	{
 		this->tick();
-		this->accumulated = 0;
+		this->accumulated -= this->trigger;
 	}
 }
