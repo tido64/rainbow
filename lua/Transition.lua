@@ -98,6 +98,35 @@ do
 end
 
 do
+	local function scaleto(self, dt)
+		self.elapsed = self.elapsed + dt
+		local progress = self.elapsed / self.duration
+		if progress >= 1.0 then
+			self.sprite:set_scale(self.final)
+			unregister(self)
+		else
+			self.sprite:set_scale(self.transition(self.start, self.final, progress))
+		end
+	end
+
+	function rainbow.transition.scaleto(sprite, start, final, duration, method)
+		method = method or effects.linear
+		local self = {
+			cancel = unregister,
+			tick = scaleto,
+			transition = method
+		}
+		self.duration = duration
+		self.elapsed = 0
+		self.final = final
+		self.start = start
+		self.sprite = sprite
+		register(self)
+		return self
+	end
+end
+
+do
 	local function fadeto(self, dt)
 		self.elapsed = self.elapsed + dt
 		local progress = self.elapsed / self.duration
