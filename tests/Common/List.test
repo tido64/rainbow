@@ -6,7 +6,7 @@ protected:
 	const unsigned int test_size;
 	List<unsigned int> intlist;
 
-	ListTest() : test_size(10000)
+	ListTest() : test_size(10)
 	{
 		// Initialise list with some content
 		for (unsigned int i = 0; i < this->test_size; ++i)
@@ -16,12 +16,12 @@ protected:
 
 TEST_F(ListTest, IteratorIncrementAndDecrement)
 {
-	ASSERT_EQ(test_size, intlist.size());
+	ASSERT_EQ(this->test_size, this->intlist.size());
 
 	unsigned int count = 0;
-	List<unsigned int>::Iterator i = intlist.begin();
+	List<unsigned int>::Iterator i = this->intlist.begin();
 
-	while (count < test_size - 1)
+	while (count < this->test_size - 1)
 	{
 		ASSERT_EQ(count++, *i);
 		++i;
@@ -35,28 +35,41 @@ TEST_F(ListTest, IteratorIncrementAndDecrement)
 	ASSERT_EQ(count, *i);
 }
 
-TEST_F(ListTest, Remove)
+TEST_F(ListTest, RemoveFirsts)
 {
-	const unsigned int over = 9000;
-	intlist.remove(over);
-	ASSERT_EQ(test_size - 1, intlist.size());
+	unsigned int i = 0;
+	List<unsigned int>::Iterator iter = this->intlist.begin();
+	while (iter != this->intlist.end())
+	{
+		ASSERT_EQ(i, *iter);
+		this->intlist.remove(i);
+		iter = this->intlist.begin();
+		++i;
+	}
+}
 
-	List<unsigned int>::Iterator iter = intlist.begin();
-	for (unsigned int i = 0; i < over; ++i)
+TEST_F(ListTest, RemoveMiddles)
+{
+	unsigned int i = 1;
+	for (; i < this->test_size - 1; ++i)
 	{
-		ASSERT_EQ(i, *iter);
-		++iter;
+		this->intlist.remove(i);
+		List<unsigned int>::Iterator iter = this->intlist.begin();
+		ASSERT_EQ(0u, *iter);
+		ASSERT_EQ(i + 1, *++iter);
+		ASSERT_EQ(0u, *--iter);
 	}
-	for (unsigned int i = over + 1; i < (test_size - 1); ++i)
-	{
-		ASSERT_EQ(i, *iter);
-		++iter;
-	}
+	ASSERT_EQ(2u, this->intlist.size());
+	this->intlist.remove(i);
+	ASSERT_EQ(1u, this->intlist.size());
+	this->intlist.remove(0);
+	ASSERT_EQ(0u, this->intlist.size());
+	ASSERT_EQ(this->intlist.end(), this->intlist.begin());
 }
 
 TEST_F(ListTest, RemoveAll)
 {
-	for (unsigned int i = 0; intlist.size() != 0; ++i)
-		intlist.remove(i);
-	ASSERT_EQ(intlist.end(), intlist.begin());
+	for (unsigned int i = 0; this->intlist.size() != 0; ++i)
+		this->intlist.remove(i);
+	ASSERT_EQ(this->intlist.end(), this->intlist.begin());
 }

@@ -29,8 +29,10 @@ public:
 	void push_back(const T &value);
 
 	/// Remove elements with specific value.
+	/// \param value  The value to remove from the list.
+	/// \param count  Number of elements to remove from the list.
 	/// \return Number of elements removed.
-	unsigned int remove(const T &value);
+	unsigned int remove(const T &value, unsigned int count = 1);
 
 	/// Return size of list.
 	inline unsigned int size();
@@ -59,7 +61,6 @@ class List<T>::Element
 	T value;        ///< Stored value
 
 	inline Element(const T &v, Element *const p = 0, Element *const n = 0);
-	~Element();
 };
 
 template<class T>
@@ -71,14 +72,14 @@ public:
 	inline Iterator();
 	inline Iterator(const Iterator &i);
 
-	inline bool operator==(const Iterator &i) const;
-	inline bool operator!=(const Iterator &i) const;
 	Iterator& operator++();
 	Iterator operator++(int);
 	Iterator& operator--();
 	Iterator operator--(int);
-	inline T& operator*() const;
 	inline T& operator->() const;
+	inline T& operator*() const;
+	inline bool operator==(const Iterator &i) const;
+	inline bool operator!=(const Iterator &i) const;
 
 private:
 	Element *ptr;
@@ -92,7 +93,14 @@ List<T>::List() : count(0), first(nullptr), last(nullptr) { }
 template<class T>
 List<T>::~List()
 {
-	delete this->first;
+	Element *e = this->first;
+	Element *next = nullptr;
+	while (e)
+	{
+		next = e->next;
+		delete(e);
+		e = next;
+	}
 }
 
 template<class T>
@@ -115,14 +123,16 @@ void List<T>::push_back(const T &value)
 	{
 		this->first = new Element(value);
 		this->last = this->first;
-		return;
 	}
-	this->last->next = new Element(value, this->last);
-	this->last = this->last->next;
+	else
+	{
+		this->last->next = new Element(value, this->last);
+		this->last = this->last->next;
+	}
 }
 
 template<class T>
-unsigned int List<T>::remove(const T &value)
+unsigned int List<T>::remove(const T &value, unsigned int count)
 {
 	unsigned int removed = 0;
 	Element *e = this->first;
@@ -130,22 +140,32 @@ unsigned int List<T>::remove(const T &value)
 	{
 		if (e->value == value)
 		{
-			Element *prev = e->prev;
-			Element *next = e->next;
-			if (prev)
-				prev->next = next;
-			else
-				this->first = next;
-			if (next)
+			if (e == this->first)
 			{
-				next->prev = prev;
-				e->next = nullptr;
+				this->first = e->next;
+				if (this->first)
+					this->first->prev = nullptr;
+				else
+					this->last = nullptr;
+			}
+			else if (e == this->last)
+			{
+				this->last = e->prev;
+				this->last->next = nullptr;
 			}
 			else
-				this->last = prev;
+			{
+				Element *prev = e->prev;
+				Element *next = e->next;
+				prev->next = next;
+				next->prev = prev;
+			}
+			Element *next = e->next;
 			delete e;
 			e = next;
 			++removed;
+			if (!--count)
+				break;
 		}
 		else
 			e = e->next;
@@ -165,28 +185,10 @@ List<T>::Element::Element(const T &v, Element *const p, Element *const n) :
 	next(n), prev(p), value(v) { }
 
 template<class T>
-List<T>::Element::~Element()
-{
-	delete this->next;
-}
-
-template<class T>
 List<T>::Iterator::Iterator() : ptr(nullptr) { }
 
 template<class T>
 List<T>::Iterator::Iterator(const Iterator &i) : ptr(i.ptr) { }
-
-template<class T>
-bool List<T>::Iterator::operator==(const Iterator &i) const
-{
-	return this->ptr == i.ptr;
-}
-
-template<class T>
-bool List<T>::Iterator::operator!=(const Iterator &i) const
-{
-	return this->ptr != i.ptr;
-}
 
 template<class T>
 typename List<T>::Iterator& List<T>::Iterator::operator++()
@@ -219,15 +221,27 @@ typename List<T>::Iterator List<T>::Iterator::operator--(int)
 }
 
 template<class T>
+T& List<T>::Iterator::operator->() const
+{
+	return this->ptr->value;
+}
+
+template<class T>
 T& List<T>::Iterator::operator*() const
 {
 	return this->ptr->value;
 }
 
 template<class T>
-T& List<T>::Iterator::operator->() const
+bool List<T>::Iterator::operator==(const Iterator &i) const
 {
-	return this->ptr->value;
+	return this->ptr == i.ptr;
+}
+
+template<class T>
+bool List<T>::Iterator::operator!=(const Iterator &i) const
+{
+	return this->ptr != i.ptr;
 }
 
 template<class T>
