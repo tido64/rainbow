@@ -1,7 +1,7 @@
 #ifndef LIST_H_
 #define LIST_H_
 
-#include "Platform.h"
+#include "Common/RainbowAssert.h"
 
 /// Simple double-linked list container, mimicking STL::list.
 ///
@@ -20,10 +20,10 @@ public:
 	~List();
 
 	/// Return iterator to the beginning.
-	inline Iterator begin() const;
+	inline Iterator begin();
 
 	/// Return iterator to the end.
-	inline Iterator end() const;
+	inline Iterator end();
 
 	/// Insert an item at the back of the list.
 	void push_back(const T &value);
@@ -39,6 +39,7 @@ public:
 
 private:
 	class Element;
+
 	unsigned int count;  ///< Element count
 	Element *first;      ///< Pointer to the first element
 	Element *last;       ///< Pointer to the last element
@@ -56,6 +57,10 @@ class List<T>::Element
 	friend class List;
 	friend class List::Iterator;
 
+public:
+	void swap(Element *e);
+
+private:
 	Element *next;  ///< Pointer to the next element
 	Element *prev;  ///< Pointer to the previous element
 	T value;        ///< Stored value
@@ -69,22 +74,23 @@ class List<T>::Iterator
 	friend class List;
 
 public:
-	inline Iterator();
-	inline Iterator(const Iterator &i);
+	void swap(Iterator &i);
 
-	Iterator& operator++();
-	Iterator operator++(int);
-	Iterator& operator--();
-	Iterator operator--(int);
+	inline operator bool() const;
+
+	inline Iterator& operator++();
+	inline Iterator& operator++(int);
+	inline Iterator& operator--();
+	inline Iterator& operator--(int);
 	inline T& operator->() const;
 	inline T& operator*() const;
-	inline bool operator==(const Iterator &i) const;
-	inline bool operator!=(const Iterator &i) const;
 
 private:
 	Element *ptr;
+	List *list;
 
-	inline Iterator(Element *const p);
+	inline Iterator(List *list);
+	inline Iterator(List *list, Element *const p);
 };
 
 template<class T>
@@ -104,15 +110,15 @@ List<T>::~List()
 }
 
 template<class T>
-typename List<T>::Iterator List<T>::begin() const
+typename List<T>::Iterator List<T>::begin()
 {
-	return Iterator(this->first);
+	return Iterator(this, this->first);
 }
 
 template<class T>
-typename List<T>::Iterator List<T>::end() const
+typename List<T>::Iterator List<T>::end()
 {
-	return Iterator();
+	return Iterator(this);
 }
 
 template<class T>
@@ -181,14 +187,79 @@ unsigned int List<T>::size()
 }
 
 template<class T>
+void List<T>::Element::swap(Element *b)
+{
+	Element *next = b->next;
+	Element *prev = b->prev;
+
+	if (next == this)  // [.|.|b|a|.|.] -> [.|.|a|b|.|.]
+	{
+		b->next = this->next;
+		if (b->next)
+			b->next->prev = b;
+		b->prev = this;
+
+		this->next = b;
+		this->prev = prev;
+		if (this->prev)
+			this->prev->next = this;
+	}
+	else if(prev == this)  // [.|.|a|b|.|.] -> [.|.|b|a|.|.]
+	{
+		b->next = this;
+		b->prev = this->prev;
+		if (b->prev)
+			b->prev->next = b;
+
+		this->next = next;
+		if (this->next)
+			this->next->prev = this;
+		this->prev = b;
+	}
+	else  // [.|.|a|.|b|.|.] -> [.|.|b|.|a|.|.]
+	{
+		b->next = this->next;
+		b->prev = this->prev;
+		if (b->next)
+			b->next->prev = b;
+		if (b->prev)
+			b->prev->next = b;
+
+		this->next = next;
+		this->prev = prev;
+		if (next)
+			next->prev = this;
+		if (prev)
+			prev->next = this;
+	}
+}
+
+template<class T>
 List<T>::Element::Element(const T &v, Element *const p, Element *const n) :
 	next(n), prev(p), value(v) { }
 
 template<class T>
-List<T>::Iterator::Iterator() : ptr(nullptr) { }
+void List<T>::Iterator::swap(Iterator &i)
+{
+	R_ASSERT(this->list && i.list, "swap: Swapping between different lists is not supported");
+	R_ASSERT(this->ptr && i.ptr, "swap: Iterator is a nullptr");
+
+	this->ptr->swap(i.ptr);
+	if (this->ptr == this->list->first)
+		this->list->first = i.ptr;
+	else if (this->ptr == this->list->last)
+		this->list->last = i.ptr;
+	else if (i.ptr == this->list->first)
+		this->list->first = this->ptr;
+	else if (i.ptr == this->list->last)
+		this->list->last = this->ptr;
+}
 
 template<class T>
-List<T>::Iterator::Iterator(const Iterator &i) : ptr(i.ptr) { }
+List<T>::Iterator::operator bool() const
+{
+	return this->ptr;
+}
 
 template<class T>
 typename List<T>::Iterator& List<T>::Iterator::operator++()
@@ -198,9 +269,9 @@ typename List<T>::Iterator& List<T>::Iterator::operator++()
 }
 
 template<class T>
-typename List<T>::Iterator List<T>::Iterator::operator++(int)
+typename List<T>::Iterator& List<T>::Iterator::operator++(int)
 {
-	Iterator i(*this);
+	Iterator &i = *this;
 	this->ptr = this->ptr->next;
 	return i;
 }
@@ -213,9 +284,9 @@ typename List<T>::Iterator& List<T>::Iterator::operator--()
 }
 
 template<class T>
-typename List<T>::Iterator List<T>::Iterator::operator--(int)
+typename List<T>::Iterator& List<T>::Iterator::operator--(int)
 {
-	Iterator i(*this);
+	Iterator &i = *this;
 	this->ptr = this->ptr->prev;
 	return i;
 }
@@ -233,18 +304,9 @@ T& List<T>::Iterator::operator*() const
 }
 
 template<class T>
-bool List<T>::Iterator::operator==(const Iterator &i) const
-{
-	return this->ptr == i.ptr;
-}
+List<T>::Iterator::Iterator(List *l) : ptr(nullptr), list(l) { }
 
 template<class T>
-bool List<T>::Iterator::operator!=(const Iterator &i) const
-{
-	return this->ptr != i.ptr;
-}
-
-template<class T>
-List<T>::Iterator::Iterator(Element *const p) : ptr(p) { }
+List<T>::Iterator::Iterator(List *l, Element *const p) : ptr(p), list(l) { }
 
 #endif
