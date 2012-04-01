@@ -56,7 +56,7 @@ function Parallax:destruct()
 end
 
 function Parallax:hide()
-	self.root:disable()
+	self.scene:disable(self.root)
 end
 
 function Parallax:set_layer_velocity(layer, x, y)
@@ -64,7 +64,7 @@ function Parallax:set_layer_velocity(layer, x, y)
 end
 
 function Parallax:show()
-	self.root:enable()
+	self.scene:enable(self.root)
 end
 
 function Parallax:update(dt)
