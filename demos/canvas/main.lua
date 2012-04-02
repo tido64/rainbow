@@ -8,11 +8,12 @@
 require("Utils")  -- Rainbow (debugging) utilities
 require("Input")  -- Input event handler
 
-assets   = nil  -- Sprite sheet
-batch    = nil  -- Sprite batch with only one sprite
-bgm      = nil  -- Background music
-canvas   = nil  -- Canvas
-original = nil  -- Backdrop
+local assets   = nil  -- Sprite sheet
+local batch    = nil  -- Sprite batch with only one sprite
+local bgm      = nil  -- Background music
+local canvas   = nil  -- Canvas
+local check    = 30
+local original = nil  -- Backdrop
 
 function init()
 	assets = rainbow.texture("canvas.png")
@@ -47,4 +48,9 @@ function init()
 end
 
 function update()
+	check = check - 1
+	if check == 0 then
+		print("Current fill percentage: " .. canvas:get_filled())
+		check = 30
+	end
 end

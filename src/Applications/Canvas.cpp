@@ -9,8 +9,8 @@
 #include "Input/Input.h"
 
 Canvas::Canvas() :
-	changed(false), down(false), brush_size(7), width(0), height(0),
-	background_tex(0), canvas_fb(0), canvas_tex(0),
+	changed(false), down(false), fill(0.0f), brush_size(7),
+	width(0), height(0), background_tex(0), canvas_fb(0), canvas_tex(0),
 	vsh(nullptr), function(nullptr), brush(nullptr)
 {
 	GLint viewport[4];
@@ -113,6 +113,27 @@ void Canvas::clear()
 	Renderer::clear();
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, 0, 0);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+float Canvas::get_filled()
+{
+	if (this->fill < 0.0f)
+	{
+		glBindFramebuffer(GL_FRAMEBUFFER, this->canvas_fb);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, this->canvas_tex, 0);
+		const unsigned int size = this->width * this->height;
+		unsigned char *data = new unsigned char[size];
+		glReadPixels(0, 0, this->width, this->height, GL_ALPHA, GL_UNSIGNED_BYTE, data);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, 0, 0);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+		unsigned int sum = 0;
+		for (unsigned int i = 0; i < size; ++i)
+			sum += data[i] > 0;
+		delete[] data;
+		this->fill = static_cast<float>(sum) / static_cast<float>(size);
+	}
+	return this->fill;
 }
 
 void Canvas::set_background(const unsigned int color)
@@ -243,6 +264,7 @@ void Canvas::update()
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	this->changed = false;
+	this->fill = -1.0f;
 }
 
 void Canvas::touch_began(const Touch *const touches, const unsigned int)

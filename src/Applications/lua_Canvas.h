@@ -10,12 +10,13 @@ public:
 	static const char class_name[];
 	static const LuaMachine::Method<lua_Canvas> methods[];
 
-	lua_Canvas(lua_State *);
-	~lua_Canvas();
+	inline lua_Canvas(lua_State *);
+	inline ~lua_Canvas();
 
 	inline Drawable* raw_ptr();
 
 	int clear(lua_State *);
+	int get_filled(lua_State *);
 	int set_background(lua_State *);
 	int set_brush(lua_State *);
 	int set_brush_size(lua_State *);
@@ -24,6 +25,13 @@ public:
 private:
 	Canvas *canvas;
 };
+
+lua_Canvas::lua_Canvas(lua_State *) : canvas(new Canvas()) { }
+
+lua_Canvas::~lua_Canvas()
+{
+	delete this->canvas;
+}
 
 Drawable* lua_Canvas::raw_ptr()
 {

@@ -4,6 +4,7 @@
 const char lua_Canvas::class_name[] = "canvas";
 const LuaMachine::Method<lua_Canvas> lua_Canvas::methods[] = {
 	{ "clear",          &lua_Canvas::clear },
+	{ "get_filled",     &lua_Canvas::get_filled },
 	{ "set_background", &lua_Canvas::set_background },
 	{ "set_brush",      &lua_Canvas::set_brush },
 	{ "set_brush_size", &lua_Canvas::set_brush_size },
@@ -11,17 +12,16 @@ const LuaMachine::Method<lua_Canvas> lua_Canvas::methods[] = {
 	{ 0, 0 }
 };
 
-lua_Canvas::lua_Canvas(lua_State *) : canvas(new Canvas()) { }
-
-lua_Canvas::~lua_Canvas()
-{
-	delete this->canvas;
-}
-
 int lua_Canvas::clear(lua_State *)
 {
 	this->canvas->clear();
 	return 0;
+}
+
+int lua_Canvas::get_filled(lua_State *L)
+{
+	lua_pushnumber(L, this->canvas->get_filled());
+	return 1;
 }
 
 int lua_Canvas::set_background(lua_State *L)

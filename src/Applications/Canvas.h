@@ -26,6 +26,9 @@ public:
 	/// Clear the canvas.
 	void clear();
 
+	/// Get percentage of the canvas being filled.
+	float get_filled();
+
 	/// Set background colour.
 	/// \param color  RGBA value.
 	void set_background(const unsigned int color);
@@ -64,6 +67,7 @@ private:
 	bool changed;             ///< Whether an update is needed.
 	bool down;                ///< Whether the brush is down.
 	Colorb foreground_color;  ///< Brush colour.
+	float fill;               ///< Percentage of the canvas being filled.
 	unsigned int brush_size;  ///< Size of the brush in diameter.
 	int width, height;        ///< Width and height of canvas.
 
