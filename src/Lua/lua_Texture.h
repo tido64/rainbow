@@ -12,7 +12,7 @@ public:
 
 	lua_Texture(lua_State *);
 
-	TextureAtlas* raw_ptr() const;
+	inline TextureAtlas* raw_ptr() const;
 
 	int create(lua_State *);
 	int trim(lua_State *);
@@ -21,7 +21,7 @@ private:
 	SmartPtr<TextureAtlas> texture;
 };
 
-inline TextureAtlas* lua_Texture::raw_ptr() const
+TextureAtlas* lua_Texture::raw_ptr() const
 {
 	return this->texture.raw_ptr();
 }

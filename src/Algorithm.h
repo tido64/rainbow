@@ -21,10 +21,10 @@ namespace Rainbow
 		return atanf((b_y - a_y) / (b_x - a_x));
 	}
 
-	/// Convert degrees to radians.
-	inline float deg2rad(const float d)
+	/// Convert radians to degrees.
+	inline float degrees(const float r)
 	{
-		return d * kPi / 180;
+		return r * kRadian;
 	}
 
 	/// Calculate the distance between two points.
@@ -92,10 +92,10 @@ namespace Rainbow
 		return ++i;
 	}
 
-	/// Convert radians to degrees.
-	inline float rad2deg(const float r)
+	/// Convert degrees to radians.
+	inline float radians(const float d)
 	{
-		return r * 180 / kPi;
+		return d * kDegree;
 	}
 }
 

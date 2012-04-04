@@ -12,13 +12,13 @@ public:
 
 	lua_Font(lua_State *);
 
-	FontAtlas* raw_ptr() const;
+	inline FontAtlas* raw_ptr() const;
 
 private:
 	SmartPtr<FontAtlas> font;
 };
 
-inline FontAtlas* lua_Font::raw_ptr() const
+FontAtlas* lua_Font::raw_ptr() const
 {
 	return this->font.raw_ptr();
 }

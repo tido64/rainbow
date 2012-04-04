@@ -14,7 +14,7 @@ class Director
 public:
 	Director();
 
-	void draw();
+	inline void draw();
 
 	/// Load and initialise game script.
 	void init(const char *const);
@@ -38,7 +38,7 @@ private:
 	Director& operator=(const Director &);
 };
 
-inline void Director::draw()
+void Director::draw()
 {
 	this->scenegraph.draw();
 }

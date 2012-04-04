@@ -15,18 +15,18 @@ namespace Rainbow
 	class _Chrono
 	{
 	public:
-		static T& Instance();
+		static inline T& Instance();
 
 		virtual ~_Chrono() { }
 
 		/// Return timestamp of current frame.
-		unsigned long current();
+		inline unsigned long current();
 
 		/// Return the time difference between current and previous frame.
-		unsigned long diff();
+		inline unsigned long diff();
 
 		/// Return timestamp of previous frame.
-		unsigned long previous();
+		inline unsigned long previous();
 
 		/// Update the clock using an external or internal source, depending on
 		/// the platform.
@@ -37,34 +37,34 @@ namespace Rainbow
 		unsigned long tm_dt;        ///< Time difference between current and previous frame.
 		unsigned long tm_previous;  ///< Previous frame time in milliseconds.
 
-		_Chrono();
+		inline _Chrono();
 	};
 
 	template<class T>
-	inline T& _Chrono<T>::Instance()
+	T& _Chrono<T>::Instance()
 	{
 		static T chrono;
 		return chrono;
 	}
 
 	template<class T>
-	inline _Chrono<T>::_Chrono() : tm_current(0), tm_dt(0), tm_previous(0) { }
+	_Chrono<T>::_Chrono() : tm_current(0), tm_dt(0), tm_previous(0) { }
 
 	template<class T>
-	inline unsigned long _Chrono<T>::current()
+	unsigned long _Chrono<T>::current()
 	{
 		R_ASSERT(this->tm_current > 0, "current: Current time has not been updated.");
 		return this->tm_current;
 	}
 
 	template<class T>
-	inline unsigned long _Chrono<T>::diff()
+	unsigned long _Chrono<T>::diff()
 	{
 		return this->tm_dt;
 	}
 
 	template<class T>
-	inline unsigned long _Chrono<T>::previous()
+	unsigned long _Chrono<T>::previous()
 	{
 		R_ASSERT(this->tm_previous > 0, "previous: Previous frame time has not been saved.");
 		return this->tm_previous;

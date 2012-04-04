@@ -14,7 +14,7 @@ public:
 	lua_Label(lua_State *);
 	~lua_Label();
 
-	Label* raw_ptr() const;
+	inline Label* raw_ptr() const;
 
 	int set_color(lua_State *);
 	int set_font(lua_State *);
@@ -25,7 +25,7 @@ private:
 	Label *label;
 };
 
-inline Label* lua_Label::raw_ptr() const
+Label* lua_Label::raw_ptr() const
 {
 	return this->label;
 }

@@ -145,13 +145,13 @@ public:
 	Keys key;
 	unsigned int modifier;
 
-	Key();
+	inline Key();
 
 	/// Get the string literal of a key.
 	const char* to_literal(const Key &k);
 };
 
-inline Key::Key() : key(key_none), modifier(mod_none) { }
+Key::Key() : key(key_none), modifier(mod_none) { }
 
 #endif  // RAINBOW_BUTTONS
 #endif  // KEY_H_

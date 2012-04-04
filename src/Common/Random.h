@@ -32,9 +32,9 @@ typedef float float_p;
 class Random
 {
 public:
-	static Random& Instance();
+	static inline Random& Instance();
 
-	float_p next();
+	inline float_p next();
 
 	template<class T>
 	T next(const T &n)
@@ -50,8 +50,8 @@ public:
 	}
 
 private:
-	Random(uint32_t seed = 0);
-	Random(uint32_t init_key[], int key_length);
+	inline Random(uint32_t seed = 0);
+	inline Random(uint32_t init_key[], int key_length);
 
 	/// Intentionally left undefined.
 	Random(const Random &);
@@ -60,25 +60,25 @@ private:
 	Random& operator=(const Random &);
 };
 
-inline Random& Random::Instance()
+Random& Random::Instance()
 {
 	static Random rand;
 	return rand;
 }
 
-inline float_p Random::next()
+float_p Random::next()
 {
 	return static_cast<float_p>(dsfmt_genrand_close1_open2(&dsfmt_global_data) - 1.0);
 }
 
-inline Random::Random(uint32_t seed)
+Random::Random(uint32_t seed)
 {
 	if (!seed)
 		seed = static_cast<uint32_t>(time(nullptr));
 	dsfmt_init_gen_rand(&dsfmt_global_data, seed);
 }
 
-inline Random::Random(uint32_t init_key[], int key_length)
+Random::Random(uint32_t init_key[], int key_length)
 {
 	dsfmt_init_by_array(&dsfmt_global_data, init_key, key_length);
 }
