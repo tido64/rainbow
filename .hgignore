@@ -1,7 +1,8 @@
-doc/
-
 # Generated files
+\.orig
+doc/
 lua/Keyboard\.lua
+src/Graphics/Shaders/Shaders.h
 
 # Libraries
 \.(?:git|hg|svn)

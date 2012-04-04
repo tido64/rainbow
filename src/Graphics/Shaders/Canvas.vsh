@@ -19,4 +19,3 @@ void main()
 	v_texcoord = texcoord;
 	gl_Position = vec4(vertex, 0.0, 1.0) * mvp_matrix;
 }
-
