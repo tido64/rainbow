@@ -1,6 +1,6 @@
 #ifdef USE_PHYSICS
 
-#include <lauxlib.h>
+#include <lua.hpp>
 
 #include "Physics.h"
 #include "Lua/lua_Physics.h"

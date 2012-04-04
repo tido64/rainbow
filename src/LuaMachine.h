@@ -3,8 +3,7 @@
 
 #include <cstring>
 
-#include <lualib.h>
-#include <lauxlib.h>
+#include <lua.hpp>
 
 namespace SceneGraph { class Node; }
 class lua_SceneGraph;

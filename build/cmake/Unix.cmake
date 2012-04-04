@@ -1,7 +1,7 @@
 if(UNIX)
 	if(NOT MINGW)
+		set(RAINBOW_CSTD   "-std=c99")
 		set(RAINBOW_CXXSTD "-std=c++0x")
-		set(RAINBOW_CSTD "-x c++ ${RAINBOW_CXXSTD}")
 	endif()
 
 	# Common C-/C++ compiler flags

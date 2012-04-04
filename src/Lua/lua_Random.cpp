@@ -1,5 +1,4 @@
-#include <lualib.h>
-#include <lauxlib.h>
+#include <lua.hpp>
 
 #include "Common/Random.h"
 #include "Lua/lua_Random.h"

@@ -420,8 +420,8 @@
 /* the following operations need the math library */
 #if defined(lobject_c) || defined(lvm_c)
 #include <math.h>
-#define luai_nummod(L,a,b)	((a) - floor((a)/(b))*(b))
-#define luai_numpow(L,a,b)	(pow(a,b))
+#define luai_nummod(L,a,b)	((a) - floorf((a)/(b))*(b))
+#define luai_numpow(L,a,b)	(powf(a,b))
 #endif
 
 /* these are quite standard operations */

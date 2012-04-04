@@ -2,8 +2,8 @@ if(MINGW)
 	set(CMAKE_SYSTEM_NAME Windows)
 
 	# MinGW compilers
+	set(CMAKE_C_COMPILER i486-mingw32-gcc)
 	set(CMAKE_CXX_COMPILER i486-mingw32-g++)
-	set(CMAKE_C_COMPILER ${CMAKE_CXX_COMPILER})
 	set(CMAKE_RANLIB i486-mingw32-ranlib)
 	set(CMAKE_RC_COMPILER i486-mingw32-windres)
 
