@@ -108,11 +108,12 @@ Canvas::~Canvas()
 
 void Canvas::clear()
 {
-	glBindFramebuffer(GL_FRAMEBUFFER, this->canvas_fb);
+	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, this->canvas_fb);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, this->canvas_tex, 0);
 	Renderer::clear();
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, 0, 0);
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+	this->fill = 0.0f;
 }
 
 float Canvas::get_filled()
@@ -121,17 +122,17 @@ float Canvas::get_filled()
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, this->canvas_fb);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, this->canvas_tex, 0);
-		const unsigned int size = this->width * this->height;
+		const unsigned int size = (this->width * this->height) << 2;
 		unsigned char *data = new unsigned char[size];
-		glReadPixels(0, 0, this->width, this->height, GL_ALPHA, GL_UNSIGNED_BYTE, data);
+		glReadPixels(0, 0, this->width, this->height, GL_RGBA, GL_UNSIGNED_BYTE, data);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, 0, 0);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 		unsigned int sum = 0;
-		for (unsigned int i = 0; i < size; ++i)
-			sum += data[i] > 0;
+		for (unsigned int i = 0; i < size; i += 4)
+			sum += data[i + 3] > 0;
 		delete[] data;
-		this->fill = static_cast<float>(sum) / static_cast<float>(size);
+		this->fill = static_cast<float>(sum) / static_cast<float>(size >> 2);
 	}
 	return this->fill;
 }
@@ -143,11 +144,11 @@ void Canvas::set_background(const unsigned int color)
 	glClearColor(c.r, c.g, c.b, c.a);
 
 	// Change background colour.
-	glBindFramebuffer(GL_FRAMEBUFFER, this->canvas_fb);
+	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, this->canvas_fb);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, this->background_tex, 0);
 	Renderer::clear();
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, 0, 0);
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 
 	// Reset clear colour.
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
@@ -180,7 +181,7 @@ void Canvas::set_background(const Texture &texture, const int width, const int h
 	vx[3].position.x = vx[0].position.x;
 	vx[3].position.y = vx[2].position.y;
 
-	glBindFramebuffer(GL_FRAMEBUFFER, this->canvas_fb);
+	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, this->canvas_fb);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, this->background_tex, 0);
 	R_ASSERT(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE,
 	         "set_background: Failed to set background");
@@ -190,7 +191,7 @@ void Canvas::set_background(const Texture &texture, const int width, const int h
 	Renderer::draw_elements(vx, 6);
 
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, 0, 0);
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 
 	R_ASSERT(glGetError() == GL_NO_ERROR, "GL: Failed to set background");
 }
