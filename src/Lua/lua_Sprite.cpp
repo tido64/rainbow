@@ -76,7 +76,18 @@ int lua_Sprite::set_rotation(lua_State *L)
 
 int lua_Sprite::set_scale(lua_State *L)
 {
-	this->s->set_scale(lua_tonumber(L, 1));
+	switch (lua_gettop(L))
+	{
+		case 2:
+			this->s->set_scale(Vec2f(lua_tonumber(L, 1), lua_tonumber(L, 2)));
+			break;
+		case 1:
+			this->s->set_scale(lua_tonumber(L, 1));
+			break;
+		default:
+			LUA_ASSERT(lua_gettop(L) == 1 || lua_gettop(L) == 2, "<sprite>:set_scale(fx [, fy])");
+			break;
+	}
 	return 0;
 }
 
