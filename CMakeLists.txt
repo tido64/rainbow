@@ -8,6 +8,9 @@ option(MINGW "Cross compile with MinGW" OFF)
 # Features
 option(PHYSICS "Use physics (Box2D)" OFF)
 
+# Auto-generate files
+execute_process(COMMAND tools/shaders-gen.py WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+
 # Target
 file(GLOB_RECURSE RAINBOW_CPP src/*.cpp)
 add_executable(rainbow ${RAINBOW_CPP} ${RAINBOW_H})
