@@ -33,7 +33,7 @@ namespace ConFuoco
 		audio_format.mFormatFlags = kAudioFormatFlagIsSignedInteger | kAudioFormatFlagIsPacked | kAudioFormatFlagsNativeEndian;
 		audio_format.mBytesPerPacket = 2; // * audio_format.mChannelsPerFrame;
 		audio_format.mFramesPerPacket = 1;
-		audio_format.mBytesPerFrame = audio_format.mBytesPerPacket / audio_format.mFramesPerPacket;
+		audio_format.mBytesPerFrame = audio_format.mBytesPerPacket; // / audio_format.mFramesPerPacket;
 		audio_format.mChannelsPerFrame = 1;  // Force mono output
 		audio_format.mBitsPerChannel = 16;
 

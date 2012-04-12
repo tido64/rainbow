@@ -18,6 +18,8 @@ const char* Data::get_path(const char *const file)
 
 Data::Data(const char *const file) : data(nil)
 {
+	R_ASSERT(file, "No file to open");
+
 	NSError *err = nil;
 	NSString *path = [NSString stringWithUTF8String:file];
 	this->data = [[NSMutableData alloc] initWithContentsOfFile:path options:NSDataReadingUncached error:&err];

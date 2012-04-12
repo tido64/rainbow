@@ -1,8 +1,8 @@
 // Copyright 2012 Bifrost Entertainment. All rights reserved.
 
 #include "Platform.h"
-
 #ifdef RAINBOW_IOS
+
 #include <UIKit/UIAlertView.h>
 #include "Common/ShutdownSequence.h"
 
@@ -22,6 +22,11 @@
 
 void ShutdownSequence::operator()()
 {
+	static bool crashed = false;
+	if (crashed)
+		return;
+	crashed = true;
+
 	RainbowAlertViewDelegate *rad = [RainbowAlertViewDelegate alloc];
 
 	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Crashed! >_<"
