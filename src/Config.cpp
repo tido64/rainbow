@@ -9,6 +9,9 @@
 Config::Config() : accelerometer(true), width(0), height(0)
 {
 	const char *const path = Data::get_path("config");
+	if (!path)
+		return;
+
 	Data config(path);
 	Data::free(path);
 	if (!config)
