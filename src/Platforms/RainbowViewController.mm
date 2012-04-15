@@ -12,6 +12,7 @@
 
 @interface RainbowViewController()
 {
+	CGFloat scale;
 	Director *director;  ///< Rainbow director.
 }
 
@@ -41,11 +42,11 @@
 			{
 				CGPoint p = [touch locationInView:nil];
 				t->hash = [touch hash];
-				t->x = p.x;
-				t->y = size.height - p.y;
+				t->x = p.x * self->scale;
+				t->y = (size.height - p.y) * self->scale;
 				p = [touch previousLocationInView:nil];
-				t->x0 = p.x;
-				t->y0 = size.height - p.y;
+				t->x0 = p.x * self->scale;
+				t->y0 = (size.height - p.y) * self->scale;
 				++t;
 			}
 			break;
@@ -54,11 +55,11 @@
 			{
 				CGPoint p = [touch locationInView:nil];
 				t->hash = [touch hash];
-				t->x = size.width - p.x;
-				t->y = p.y;
+				t->x = (size.width - p.x) * self->scale;
+				t->y = p.y * self->scale;
 				p = [touch previousLocationInView:nil];
-				t->x0 = size.width - p.x;
-				t->y0 = p.y;
+				t->x0 = (size.width - p.x) * self->scale;
+				t->y0 = p.y * self->scale;
 				++t;
 			}
 			break;
@@ -67,11 +68,11 @@
 			{
 				CGPoint p = [touch locationInView:nil];
 				t->hash = [touch hash];
-				t->x = size.height - p.y;
-				t->y = size.width - p.x;
+				t->x = (size.height - p.y) * self->scale;
+				t->y = (size.width - p.x) * self->scale;
 				p = [touch previousLocationInView:nil];
-				t->x0 = size.height - p.y;
-				t->y0 = size.width - p.x;
+				t->x0 = (size.height - p.y) * self->scale;
+				t->y0 = (size.width - p.x) * self->scale;
 				++t;
 			}
 			break;
@@ -80,11 +81,11 @@
 			{
 				CGPoint p = [touch locationInView:nil];
 				t->hash = [touch hash];
-				t->x = p.y;
-				t->y = p.x;
+				t->x = p.y * self->scale;
+				t->y = p.x * self->scale;
 				p = [touch previousLocationInView:nil];
-				t->x0 = p.y;
-				t->y0 = p.x;
+				t->x0 = p.y * self->scale;
+				t->y0 = p.x * self->scale;
 				++t;
 			}
 			break;
@@ -131,6 +132,9 @@
 		size.width = size.height;
 		size.height = tmp;
 	}
+	self->scale = [[UIScreen mainScreen] scale];
+	size.width *= self->scale;
+	size.height *= self->scale;
 
 	// Set screen resolution.
 	Renderer::resize(size.width, size.height);
@@ -162,8 +166,8 @@
 		case UIInterfaceOrientationLandscapeLeft:
 		case UIInterfaceOrientationLandscapeRight:
 			supported = YES;
-		case UIInterfaceOrientationPortrait:
-		case UIInterfaceOrientationPortraitUpsideDown:
+		//case UIInterfaceOrientationPortrait:
+		//case UIInterfaceOrientationPortraitUpsideDown:
 		default:
 			break;
 	}
