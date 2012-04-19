@@ -3,10 +3,17 @@
 --! Copyright 2012 Bifrost Entertainment. All rights reserved.
 --! \author Tommy Nguyen
 
+local frame_ms = 60 / 1000
+local max_dt = 50
+
 Parallax = {}
 Parallax.__index = Parallax
 
-function Parallax.new(layers)
+function Parallax.new(parent, layers)
+	if not parent or not layers then
+		return
+	end
+
 	local self = {}
 	setmetatable(self, Parallax)
 
@@ -16,7 +23,8 @@ function Parallax.new(layers)
 
 	-- Create parallax root node
 	self.scene = rainbow.scenegraph
-	self.root = self.scene:add_node()
+	self.root = self.scene:add_node(parent)
+	self.parent = parent
 
 	-- Create all the layer nodes
 	self.layer_count = layers
@@ -46,7 +54,8 @@ function Parallax:add(layer, texture, x, y, width, height, hint)
 end
 
 function Parallax:destruct()
-	self.scene:remove(self.root)
+	self.scene:remove(self.parent, self.root)
+	self.parent = nil
 	self.root = nil
 	self.layers = nil
 	for i = 1, self.count do
@@ -68,8 +77,9 @@ function Parallax:show()
 end
 
 function Parallax:update(dt)
+	local scale = math.min(max_dt, dt * frame_ms)
 	for i = 1, self.layer_count do
 		local v = self.velocities[i]
-		self.scene:move(self.layers[i], v[1], v[2])
+		self.scene:move(self.layers[i], v[1] * scale, v[2] * scale)
 	end
 end
