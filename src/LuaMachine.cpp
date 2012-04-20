@@ -41,7 +41,7 @@ void LuaMachine::dump_stack(lua_State *L)
 				puts("(table)");
 				break;
 			case LUA_TFUNCTION:
-				printf("%p\n", lua_tocfunction(L, l));
+				printf("%p\n", lua_topointer(L, l));
 				break;
 			case LUA_TUSERDATA:
 				printf("%p\n", lua_touserdata(L, l));

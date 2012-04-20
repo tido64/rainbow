@@ -119,10 +119,7 @@ bool Data::save(const char *const file) const
 	// Write buffer to file
 	const unsigned int written = fwrite(this->data, sizeof(unsigned char), this->sz, fp);
 	fclose(fp);
-	if (written != this->sz)
-		return false;
-
-	return true;
+	return written == this->sz;
 }
 
 void Data::set(unsigned char *data, const unsigned int length)
