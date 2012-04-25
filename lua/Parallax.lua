@@ -4,7 +4,6 @@
 --! \author Tommy Nguyen
 
 local frame_ms = 60 / 1000
-local max_dt = 50
 
 Parallax = {}
 Parallax.__index = Parallax
@@ -77,7 +76,7 @@ function Parallax:show()
 end
 
 function Parallax:update(dt)
-	local scale = math.min(max_dt, dt * frame_ms)
+	local scale = dt * frame_ms
 	for i = 1, self.layer_count do
 		local v = self.velocities[i]
 		self.scene:move(self.layers[i], v[1] * scale, v[2] * scale)
