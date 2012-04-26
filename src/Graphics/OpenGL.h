@@ -12,6 +12,9 @@
 #	include <GLES2/gl2.h>
 #elif defined(RAINBOW_IOS)
 #	include <OpenGLES/ES2/gl.h>
+#	define glBindVertexArray     glBindVertexArrayOES
+#	define glDeleteVertexArrays  glDeleteVertexArraysOES
+#	define glGenVertexArrays     glGenVertexArraysOES
 #elif defined(RAINBOW_WIN)
 #	ifndef WIN32
 #		define WIN32
