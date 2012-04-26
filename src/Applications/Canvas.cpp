@@ -1,5 +1,6 @@
 // Copyright 2012 Bifrost Entertainment. All rights reserved.
 
+#include "Algorithm.h"
 #include "Applications/Canvas.h"
 #include "Graphics/OpenGL.h"
 #include "Graphics/Renderer.h"
@@ -239,7 +240,7 @@ void Canvas::update()
 		const int dt_x = this->touch.x - this->prev_point.x;
 		const int dt_y = this->touch.y - this->prev_point.y;
 
-		const int points = (fabsf(dt_x) < fabsf(dt_y)) ? fabsf(dt_y) : fabsf(dt_x);
+		const int points = Rainbow::min<int>(256, (fabsf(dt_x) < fabsf(dt_y)) ? fabsf(dt_y) : fabsf(dt_x));
 		R_ASSERT(points > 0, "update: No points to draw");
 
 		Vector<SpriteVertex> vertices(points * 4);
