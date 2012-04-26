@@ -79,6 +79,12 @@ namespace Rainbow
 		return str;
 	}
 
+	template<class T>
+	inline const T& min(const T &a, const T &b)
+	{
+		return (a < b) ? a : b;
+	}
+
 	/// Calculate the next power of 2.
 	/// \note 0 is incorrectly considered a power of 2.
 	inline unsigned int next_pow2(unsigned int i)
