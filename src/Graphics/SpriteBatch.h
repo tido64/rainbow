@@ -50,7 +50,9 @@ protected:
 	void push_back(Sprite *s);
 
 private:
+	unsigned int array_object;       ///< GL vertex array object.
 	unsigned int buffer;             ///< GL vertex buffer.
+
 	unsigned int batch_vertices;     ///< Total number of vertices in this batch.
 	unsigned int reserved;           ///< Allocated memory for sprite vertices.
 	SpriteVertex *vertex_buffer;     ///< Common vertex array for all sprites in the batch.

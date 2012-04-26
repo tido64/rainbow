@@ -4,11 +4,11 @@
 #include "Graphics/SpriteBatch.h"
 
 SpriteBatch::SpriteBatch(const unsigned int hint) :
-	buffer(0), batch_vertices(0), reserved(hint << 2),
+	array_object(0), buffer(0), batch_vertices(0), reserved(hint << 2),
 	vertex_buffer(nullptr), sprites(hint)
 {
 	this->vertex_buffer = new SpriteVertex[this->reserved];
-	Renderer::create_buffer(this->buffer);
+	Renderer::create_buffer(this->buffer, this->array_object);
 }
 
 SpriteBatch::~SpriteBatch()
@@ -16,7 +16,7 @@ SpriteBatch::~SpriteBatch()
 	for (unsigned int i = 0; i < this->sprites.size(); ++i)
 		delete this->sprites[i];
 	delete[] this->vertex_buffer;
-	Renderer::delete_buffer(this->buffer);
+	Renderer::delete_buffer(this->buffer, this->array_object);
 }
 
 Sprite* SpriteBatch::add(const int x, const int y, const int w, const int h)
@@ -30,7 +30,7 @@ Sprite* SpriteBatch::add(const int x, const int y, const int w, const int h)
 void SpriteBatch::draw()
 {
 	this->texture->bind();
-	Renderer::draw_buffer(this->buffer, this->batch_vertices);
+	Renderer::draw_buffer(this->array_object, this->batch_vertices);
 }
 
 TextureAtlas* SpriteBatch::set_texture(const Data &texture)

@@ -109,9 +109,26 @@ void Renderer::bind_texture(const unsigned int texture)
 	bound = texture;
 }
 
-void Renderer::create_buffer(unsigned int &buffer)
+void Renderer::create_buffer(unsigned int &buffer, unsigned int &array_object)
 {
 	glGenBuffers(1, &buffer);
+	bind_buffer(buffer);
+
+	glGenVertexArrays(1, &array_object);
+	glBindVertexArray(array_object);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffer);
+
+	glVertexAttribPointer(Pipeline::COLOR_LOCATION, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(SpriteVertex), 0);
+	glEnableVertexAttribArray(Pipeline::COLOR_LOCATION);
+
+	glVertexAttribPointer(Pipeline::TEXCOORD_LOCATION, 2, GL_FLOAT, GL_FALSE, sizeof(SpriteVertex), SpriteVertex::tx_offset);
+	glEnableVertexAttribArray(Pipeline::TEXCOORD_LOCATION);
+
+	glVertexAttribPointer(Pipeline::VERTEX_LOCATION, 2, GL_FLOAT, GL_TRUE, sizeof(SpriteVertex), SpriteVertex::vx_offset);
+	glEnableVertexAttribArray(Pipeline::VERTEX_LOCATION);
+
+	glBindVertexArray(0);
 }
 
 void Renderer::create_texture(unsigned int &texture, const unsigned int internal_format,
@@ -121,7 +138,7 @@ void Renderer::create_texture(unsigned int &texture, const unsigned int internal
 	glGenTextures(1, &texture);
 	bind_texture(texture);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glTexImage2D(GL_TEXTURE_2D, 0, internal_format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
@@ -129,8 +146,9 @@ void Renderer::create_texture(unsigned int &texture, const unsigned int internal
 	R_ASSERT(glGetError() == GL_NO_ERROR, "Failed to create texture");
 }
 
-void Renderer::delete_buffer(const unsigned int buffer)
+void Renderer::delete_buffer(const unsigned int buffer, const unsigned int array_object)
 {
+	glDeleteVertexArrays(1, &array_object);
 	glDeleteBuffers(1, &buffer);
 }
 
@@ -139,15 +157,11 @@ void Renderer::delete_texture(const unsigned int texture)
 	glDeleteTextures(1, &texture);
 }
 
-void Renderer::draw_buffer(const unsigned int buffer, const unsigned int count)
+void Renderer::draw_buffer(const unsigned int array_object, const unsigned int count)
 {
-	bind_buffer(buffer);
-
-	glVertexAttribPointer(Pipeline::COLOR_LOCATION, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(SpriteVertex), 0);
-	glVertexAttribPointer(Pipeline::TEXCOORD_LOCATION, 2, GL_FLOAT, GL_FALSE, sizeof(SpriteVertex), SpriteVertex::tx_offset);
-	glVertexAttribPointer(Pipeline::VERTEX_LOCATION, 2, GL_FLOAT, GL_TRUE, sizeof(SpriteVertex), SpriteVertex::vx_offset);
-
+	glBindVertexArray(array_object);
 	glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_SHORT, nullptr);
+	glBindVertexArray(0);
 
 	R_ASSERT(glGetError() == GL_NO_ERROR, "Failed to draw buffer");
 }
