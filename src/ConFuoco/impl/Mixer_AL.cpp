@@ -82,7 +82,7 @@ namespace ConFuoco
 		if (result != 0)
 			NSLog(@"Rainbow::ConFuoco::iOS::Mixer: Failed to find out whether audio device is in use (%ld)\n", result);
 
-		property = property ? kAudioSessionCategory_AmbientSound : kAudioSessionCategory_SoloAmbientSound;
+		property = kAudioSessionCategory_PlayAndRecord;
 		result = AudioSessionSetProperty(kAudioSessionProperty_AudioCategory, sizeof(property), &property);
 		if (result != 0)
 		{
@@ -93,6 +93,11 @@ namespace ConFuoco
 		#endif
 				NSLog(@"Rainbow::ConFuoco::iOS::Mixer: Failed to set audio session category (%ld)\n", result);
 		}
+
+		property = kAudioSessionOverrideAudioRoute_Speaker;
+		result = AudioSessionSetProperty(kAudioSessionProperty_OverrideAudioRoute, sizeof(property), &property);
+		if (result != 0)
+			NSLog(@"Rainbow::ConFuoco::iOS::Mixer: Failed to override audio route (%ld)\n", result);
 
 		result = AudioSessionAddPropertyListener(kAudioSessionProperty_AudioRouteChange, RouteChangeListener, this);
 		if (result != 0)
