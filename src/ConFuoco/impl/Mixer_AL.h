@@ -54,6 +54,10 @@ namespace ConFuoco
 		/// Prepare to stream from file.
 		Wave* load_stream(const char *const file);
 
+		/// Remove sound/stream and release any resources associated.
+		template<class T>
+		inline void remove(const T *);
+
 		/// Update all streams.
 		inline void update();
 
@@ -85,6 +89,12 @@ namespace ConFuoco
 	bool Mixer::is_available() const
 	{
 		return this->context;
+	}
+
+	template<class T>
+	void Mixer::remove(const T *s)
+	{
+		this->bank.remove(s);
 	}
 
 	void Mixer::set_gain(const float gain) const

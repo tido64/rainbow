@@ -13,6 +13,8 @@ public:
 	static int set_pitch(lua_State *);
 
 	static int clear(lua_State *);
+	static int delete_sfx(lua_State *);
+	static int delete_stream(lua_State *);
 
 	static int load_sfx(lua_State *);
 	static int load_stream(lua_State *);

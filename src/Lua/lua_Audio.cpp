@@ -6,6 +6,8 @@
 #include "Lua/lua_Recorder.h"
 
 using ConFuoco::Mixer;
+using ConFuoco::Sound;
+using ConFuoco::Stream;
 using ConFuoco::Wave;
 
 void lua_Audio::init(lua_State *L)
@@ -25,6 +27,12 @@ void lua_Audio::init(lua_State *L)
 
 	lua_pushcclosure(L, &lua_Audio::clear, 0);
 	lua_setfield(L, -2, "clear");
+
+	lua_pushcclosure(L, &lua_Audio::delete_sfx, 0);
+	lua_setfield(L, -2, "delete_sfx");
+
+	lua_pushcclosure(L, &lua_Audio::delete_stream, 0);
+	lua_setfield(L, -2, "delete_stream");
 
 	lua_pushcclosure(L, &lua_Audio::load_sfx, 0);
 	lua_setfield(L, -2, "load_sfx");
@@ -67,6 +75,24 @@ int lua_Audio::set_pitch(lua_State *L)
 int lua_Audio::clear(lua_State *)
 {
 	Mixer::Instance().clear();
+	return 0;
+}
+
+int lua_Audio::delete_sfx(lua_State *L)
+{
+	LUA_ASSERT(lua_gettop(L) == 1, "rainbow.audio.delete_sfx(sfx)");
+
+	const Sound *s = static_cast<const Sound*>(lua_topointer(L, 1));
+	Mixer::Instance().remove(s);
+	return 0;
+}
+
+int lua_Audio::delete_stream(lua_State *L)
+{
+	LUA_ASSERT(lua_gettop(L) == 1, "rainbow.audio.delete_stream(stream)");
+
+	const Stream *s = static_cast<const Stream*>(lua_topointer(L, 1));
+	Mixer::Instance().remove(s);
 	return 0;
 }
 
