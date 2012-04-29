@@ -28,6 +28,9 @@ end
 
 --! Add an object that needs to be notified.
 function Scheduler:add(obj)
+	if self.count == 0 then
+		self.elapsed = 0
+	end
 	self.count = self.count + 1
 	self.subscribers[self.count] = obj
 end
@@ -50,7 +53,6 @@ function Scheduler:remove_all()
 		self.subscribers[i] = nil
 	end
 	self.count = 0
-	self.elapsed = 0
 end
 
 --! Notify all objects at specified interval.
