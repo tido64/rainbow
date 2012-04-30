@@ -63,9 +63,9 @@ function Scheduler:update(dt)
 
 	self.elapsed = self.elapsed + dt
 	while self.elapsed >= self.timeout do
+		self.elapsed = self.elapsed - self.timeout
 		for i = self.count, 1, -1 do
 			self.subscribers[i]:tick()
 		end
-		self.elapsed = self.elapsed - self.timeout
 	end
 end
