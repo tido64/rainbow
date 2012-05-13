@@ -16,6 +16,13 @@ local __count = 0
 local __list  = {}
 local effects = rainbow.transition.effects
 
+function rainbow.transition.clear()
+	for i = 1, __count do
+		__list[i] = nil
+	end
+	__count = 0
+end
+
 function rainbow.transition.update(dt)
 	for i = __count, 1, -1 do
 		__list[i]:tick(dt)
