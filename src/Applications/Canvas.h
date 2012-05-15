@@ -72,8 +72,10 @@ private:
 	int width, height;        ///< Width and height of canvas.
 
 	unsigned int background_tex;  ///< Background texture.
+	unsigned int canvas_buffer;   ///< Canvas buffer.
 	unsigned int canvas_fb;       ///< Canvas frame buffer.
 	unsigned int canvas_tex;      ///< Canvas texture.
+	unsigned int canvas_vao;      ///< Canvas vertex array object.
 
 	const Shader *vsh;       ///< Canvas vertex shader.
 	const Shader *function;  ///< Function (fragment shader).

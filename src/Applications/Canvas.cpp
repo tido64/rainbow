@@ -75,6 +75,8 @@ Canvas::Canvas() :
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, 0, 0);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
+	Renderer::create_buffer(this->canvas_buffer, this->canvas_vao);
+
 	this->sprite[0].texcoord.x = 0.0f;
 	this->sprite[0].texcoord.y = 0.0f;
 	this->sprite[0].position.x = 0;
@@ -103,6 +105,7 @@ Canvas::~Canvas()
 	Input::Instance().unsubscribe(this);
 	this->release();
 
+	Renderer::delete_buffer(this->canvas_buffer, this->canvas_vao);
 	delete this->function;
 	delete this->vsh;
 }
@@ -114,7 +117,9 @@ void Canvas::clear()
 	Renderer::clear();
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, 0, 0);
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+	this->changed = false;
 	this->fill = 0.0f;
+	this->touch_canceled();
 }
 
 float Canvas::get_filled()
@@ -253,7 +258,8 @@ void Canvas::update()
 			vertices.push_back(vx[2]);
 			vertices.push_back(vx[3]);
 		}
-		Renderer::draw_elements(vertices.begin(), points * 6);
+		Renderer::update_buffer(this->canvas_buffer, (points << 2) * sizeof(SpriteVertex), vertices.begin());
+		Renderer::draw_buffer(this->canvas_vao, points * 6);
 
 		// Update previous point. We use this method because input events might
 		// occur several times between frames, so (x0,y0) becomes unreliable.
@@ -293,30 +299,9 @@ void Canvas::touch_canceled()
 #endif
 }
 
-void Canvas::touch_ended(const Touch *const touches, const unsigned int count)
+void Canvas::touch_ended(const Touch *const, const unsigned int)
 {
-#ifdef RAINBOW_SDL
-	if (!this->down)
-		return;
-#endif
-
-	for (unsigned int i = 0; i < count; ++i)
-	{
-		if (touches[i] == this->touch)
-		{
-			if (this->touch.x != touches->x || this->touch.y != touches->y)
-			{
-				this->touch = *touches;
-				this->changed = true;
-			}
-			this->touch.hash = 0;
-			break;
-		}
-	}
-
-#ifdef RAINBOW_SDL
-	this->down = false;
-#endif
+	this->touch_canceled();
 }
 
 void Canvas::touch_moved(const Touch *const touches, const unsigned int count)
