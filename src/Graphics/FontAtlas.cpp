@@ -136,24 +136,22 @@ bool FontAtlas::load(const Data &font)
 
 	#endif
 
-		// Vertices
-		fg.quad[0].position.x = static_cast<float>(bitmap.width + margin);
-		fg.quad[0].position.y = static_cast<float>(slot->bitmap_top + margin);
-		fg.quad[1].position.x = -margin;
+		fg.quad[0].position.x = -margin;
+		fg.quad[0].position.y = static_cast<float>(slot->bitmap_top - bitmap.rows - margin);
+		fg.quad[1].position.x = static_cast<float>(bitmap.width + margin);
 		fg.quad[1].position.y = fg.quad[0].position.y;
-		fg.quad[2].position.x = fg.quad[0].position.x;
-		fg.quad[2].position.y = static_cast<float>(slot->bitmap_top - bitmap.rows - margin);
-		fg.quad[3].position.x = fg.quad[1].position.x;
+		fg.quad[2].position.x = fg.quad[1].position.x;
+		fg.quad[2].position.y = static_cast<float>(slot->bitmap_top + margin);
+		fg.quad[3].position.x = fg.quad[0].position.x;
 		fg.quad[3].position.y = fg.quad[2].position.y;
 
-		// Texture coordinates
-		fg.quad[0].texcoord.x = (padding + bitmap.width + margin + w_offset) * tex_w_fraction;
-		fg.quad[0].texcoord.y = (padding - margin + h_offset) * tex_h_fraction;
-		fg.quad[1].texcoord.x = (padding - margin + w_offset) * tex_w_fraction;
+		fg.quad[0].texcoord.x = (padding - margin + w_offset) * tex_w_fraction;
+		fg.quad[0].texcoord.y = (padding + bitmap.rows + margin + h_offset) * tex_h_fraction;
+		fg.quad[1].texcoord.x = (padding + bitmap.width + margin + w_offset) * tex_w_fraction;
 		fg.quad[1].texcoord.y = fg.quad[0].texcoord.y;
-		fg.quad[2].texcoord.x = fg.quad[0].texcoord.x;
-		fg.quad[2].texcoord.y = (padding + bitmap.rows + margin + h_offset) * tex_h_fraction;
-		fg.quad[3].texcoord.x = fg.quad[1].texcoord.x;
+		fg.quad[2].texcoord.x = fg.quad[1].texcoord.x;
+		fg.quad[2].texcoord.y = (padding - margin + h_offset) * tex_h_fraction;
+		fg.quad[3].texcoord.x = fg.quad[0].texcoord.x;
 		fg.quad[3].texcoord.y = fg.quad[2].texcoord.y;
 
 		// Advance to next "slot" in texture
