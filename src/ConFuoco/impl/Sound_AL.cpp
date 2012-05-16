@@ -23,7 +23,6 @@ namespace ConFuoco
 			fprintf(stderr, "Rainbow::ConFuoco::AL: Failed to generate buffers\n");
 			return;
 		}
-		alSourcei(this->sid, AL_BUFFER, this->bid);
 	}
 
 	Sound::~Sound()
@@ -43,8 +42,10 @@ namespace ConFuoco
 		char *data = 0;
 		const unsigned int size = Decoder::open_wave(&data, channels, rate, file);
 
+		alSourcei(this->sid, AL_BUFFER, 0);
 		alBufferData(this->bid, (channels == 1) ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16, data, size, rate);
 		delete[] data;
+		alSourcei(this->sid, AL_BUFFER, this->bid);
 		return alGetError() == AL_NO_ERROR;
 	}
 }
