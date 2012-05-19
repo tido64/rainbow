@@ -8,21 +8,13 @@
 
 /// Label for displaying text.
 ///
-/// \note Current algorithm is not optimized in any way. Text is rendered
-///       character by character (ie. a glDraw per character) without any form
-///       of caching.
-///
 /// Copyright 2011-12 Bifrost Entertainment. All rights reserved.
 /// \author Tommy Nguyen
 class Label : public Drawable
 {
 public:
 	inline Label();
-	Label(const char *);
-	~Label();
-
-	/// Draw text at previously set position.
-	virtual void draw();
+	virtual ~Label();
 
 	/// Set text color.
 	inline void set_color(const Colorb &);
@@ -35,6 +27,9 @@ public:
 
 	/// Set text to display.
 	void set_text(const char *);
+
+	/// Draw text at previously set position.
+	virtual void draw();
 
 	/// Populate the vertex array.
 	virtual void update();

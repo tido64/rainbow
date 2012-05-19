@@ -6,18 +6,17 @@
 
 const char lua_SceneGraph::class_name[] = "scenegraph";
 const LuaMachine::Method<lua_SceneGraph> lua_SceneGraph::methods[] = {
-	{ "add_animation",   &lua_SceneGraph::add_animation },
-	{ "add_batch",   &lua_SceneGraph::add_batch },
-	{ "add_label",   &lua_SceneGraph::add_label },
-	{ "add_node",    &lua_SceneGraph::add_node },
-	{ "add_sprite",  &lua_SceneGraph::add_sprite },
-	{ "enable",      &lua_SceneGraph::enable },
-	{ "disable",     &lua_SceneGraph::disable },
-	{ "remove",      &lua_SceneGraph::remove },
-	{ "set_parent",  &lua_SceneGraph::set_parent },
-	{ "move",        &lua_SceneGraph::move },
-	{ "rotate",      &lua_SceneGraph::rotate },
-	{ "scale",       &lua_SceneGraph::scale },
+	{ "add_animation",  &lua_SceneGraph::add_animation },
+	{ "add_batch",      &lua_SceneGraph::add_batch },
+	{ "add_label",      &lua_SceneGraph::add_label },
+	{ "add_node",       &lua_SceneGraph::add_node },
+	{ "enable",         &lua_SceneGraph::enable },
+	{ "disable",        &lua_SceneGraph::disable },
+	{ "remove",         &lua_SceneGraph::remove },
+	{ "set_parent",     &lua_SceneGraph::set_parent },
+	{ "move",           &lua_SceneGraph::move },
+	{ "rotate",         &lua_SceneGraph::rotate },
+	{ "scale",          &lua_SceneGraph::scale },
 	{ 0, 0 }
 };
 
@@ -38,16 +37,11 @@ int lua_SceneGraph::add_label(lua_State *L)
 
 int lua_SceneGraph::add_node(lua_State *L)
 {
-	LUA_ASSERT(lua_gettop(L) == 0 || lua_gettop(L) == 1, "rainbow.scenegraph:add_node([parent,] node)");
+	LUA_ASSERT(lua_gettop(L) == 0 || lua_gettop(L) == 1, "rainbow.scenegraph:add_node([parent])");
 
 	SceneGraph::Node *node = (!lua_gettop(L)) ? this->root : this->to_node(L, 1);
 	lua_pushlightuserdata(L, node->add_child(new SceneGraph::Node()));
 	return 1;
-}
-
-int lua_SceneGraph::add_sprite(lua_State *L)
-{
-	return this->add_child<Sprite, lua_Sprite>(L);
 }
 
 int lua_SceneGraph::enable(lua_State *L)

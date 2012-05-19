@@ -19,7 +19,7 @@ class SpriteBatch : public Drawable
 
 public:
 	SpriteBatch(const unsigned int hint = 8);
-	~SpriteBatch();
+	virtual ~SpriteBatch();
 
 	Sprite* add(const int x, const int y, const int width, const int height);
 

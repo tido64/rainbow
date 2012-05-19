@@ -12,15 +12,17 @@ const LuaMachine::Method<lua_Canvas> lua_Canvas::methods[] = {
 	{ 0, 0 }
 };
 
+lua_Canvas::~lua_Canvas() { }
+
 int lua_Canvas::clear(lua_State *)
 {
-	this->canvas->clear();
+	Canvas::clear();
 	return 0;
 }
 
 int lua_Canvas::get_filled(lua_State *L)
 {
-	lua_pushnumber(L, this->canvas->get_filled());
+	lua_pushnumber(L, Canvas::get_filled());
 	return 1;
 }
 
@@ -29,7 +31,7 @@ int lua_Canvas::set_background(lua_State *L)
 	switch (lua_gettop(L))
 	{
 		case 1:
-			this->canvas->set_background(lua_tointeger(L, 1));
+			Canvas::set_background(lua_tointeger(L, 1));
 			break;
 		case 4:
 			{
@@ -38,7 +40,7 @@ int lua_Canvas::set_background(lua_State *L)
 				const int h = lua_tointeger(L, 4);
 				lua_pop(L, 3);
 				lua_Texture *texture = LuaMachine::wrapper<lua_Texture>(L);
-				this->canvas->set_background((*texture->raw_ptr())[i], w, h);
+				Canvas::set_background((*texture->raw_ptr())[i], w, h);
 			}
 			break;
 		default:
@@ -54,20 +56,20 @@ int lua_Canvas::set_brush(lua_State *L)
 	const int i = lua_tointeger(L, 2);
 	lua_pop(L, 1);
 	lua_Texture *texture = LuaMachine::wrapper<lua_Texture>(L);
-	this->canvas->set_brush((*texture->raw_ptr())[i]);
+	Canvas::set_brush((*texture->raw_ptr())[i]);
 	return 0;
 }
 
 int lua_Canvas::set_brush_size(lua_State *L)
 {
 	LUA_ASSERT(lua_gettop(L) == 1, "<canvas>:set_brush_size(diameter)");
-	this->canvas->set_brush_size(lua_tointeger(L, 1));
+	Canvas::set_brush_size(lua_tointeger(L, 1));
 	return 0;
 }
 
 int lua_Canvas::set_foreground(lua_State *L)
 {
 	LUA_ASSERT(lua_gettop(L) == 1, "<canvas>:set_foreground(0xrrggbbaa)");
-	this->canvas->set_foreground(lua_tointeger(L, 1));
+	Canvas::set_foreground(lua_tointeger(L, 1));
 	return 0;
 }

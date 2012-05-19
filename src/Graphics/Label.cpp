@@ -2,22 +2,10 @@
 
 #include "Graphics/Label.h"
 
-Label::Label(const char *s) :
-	length(0), size(0), text(nullptr), vx(nullptr)
-{
-	this->set_text(s);
-}
-
 Label::~Label()
 {
 	delete[] this->text;
 	delete[] this->vx;
-}
-
-void Label::draw()
-{
-	this->font->bind();
-	Renderer::draw_elements(this->vx, (this->length << 2) + (this->length << 1));
 }
 
 void Label::set_text(const char *text)
@@ -32,6 +20,12 @@ void Label::set_text(const char *text)
 	memcpy(this->text, text, len);
 	this->text[len] = '\0';
 	this->stale = stale_position;
+}
+
+void Label::draw()
+{
+	this->font->bind();
+	Renderer::draw_elements(this->vx, (this->length << 2) + (this->length << 1));
 }
 
 void Label::update()

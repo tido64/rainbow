@@ -4,14 +4,14 @@
 #include "LuaMachine.h"
 #include "Applications/Canvas.h"
 
-class lua_Canvas
+class lua_Canvas : public Canvas
 {
 public:
 	static const char class_name[];
 	static const LuaMachine::Method<lua_Canvas> methods[];
 
 	inline lua_Canvas(lua_State *);
-	inline ~lua_Canvas();
+	virtual ~lua_Canvas();
 
 	inline Drawable* raw_ptr();
 
@@ -21,21 +21,13 @@ public:
 	int set_brush(lua_State *);
 	int set_brush_size(lua_State *);
 	int set_foreground(lua_State *);
-
-private:
-	Canvas *canvas;
 };
 
-lua_Canvas::lua_Canvas(lua_State *) : canvas(new Canvas()) { }
-
-lua_Canvas::~lua_Canvas()
-{
-	delete this->canvas;
-}
+lua_Canvas::lua_Canvas(lua_State *) { }
 
 Drawable* lua_Canvas::raw_ptr()
 {
-	return static_cast<Drawable*>(this->canvas);
+	return this;
 }
 
 #endif

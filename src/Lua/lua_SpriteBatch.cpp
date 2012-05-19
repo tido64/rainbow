@@ -6,9 +6,7 @@
 const char lua_SpriteBatch::class_name[] = "spritebatch";
 const LuaMachine::Method<lua_SpriteBatch> lua_SpriteBatch::methods[] = {
 	{ "add",          &lua_SpriteBatch::add },
-	{ "draw",         &lua_SpriteBatch::draw },
 	{ "set_texture",  &lua_SpriteBatch::set_texture },
-	{ "update",       &lua_SpriteBatch::update },
 	{ 0, 0 }
 };
 
@@ -20,14 +18,8 @@ int lua_SpriteBatch::add(lua_State *L)
 	const int y = lua_tointeger(L, 2);
 	const int w = lua_tointeger(L, 3);
 	const int h = lua_tointeger(L, 4);
-	lua_pushlightuserdata(L, this->s.add(x, y, w, h));
+	lua_pushlightuserdata(L, SpriteBatch::add(x, y, w, h));
 	return LuaMachine::alloc<lua_Sprite>(L);
-}
-
-int lua_SpriteBatch::draw(lua_State *)
-{
-	this->s.draw();
-	return 0;
 }
 
 int lua_SpriteBatch::set_texture(lua_State *L)
@@ -43,24 +35,18 @@ int lua_SpriteBatch::set_texture(lua_State *L)
 				Data::free(path);
 				if (!t)
 					return luaL_error(L, "rainbow.spritebatch:set_texture: Failed to load texture");
-				lua_pushlightuserdata(L, this->s.set_texture(t));
+				lua_pushlightuserdata(L, SpriteBatch::set_texture(t));
 			}
 			return LuaMachine::alloc<lua_Texture>(L);
 		case LUA_TTABLE:
 			{
 				lua_Texture *texture = LuaMachine::wrapper<lua_Texture>(L);
-				this->s.set_texture(texture->raw_ptr());
+				SpriteBatch::set_texture(texture->raw_ptr());
 			}
 			break;
 		default:
 			LUA_ASSERT(false, "<spritebatch>:set_texture(<path to texture>|<texture>)");
 			break;
 	}
-	return 0;
-}
-
-int lua_SpriteBatch::update(lua_State *)
-{
-	this->s.update();
 	return 0;
 }

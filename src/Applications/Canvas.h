@@ -21,7 +21,7 @@ class Canvas : public Drawable, public Touchable
 {
 public:
 	Canvas();
-	~Canvas();
+	virtual ~Canvas();
 
 	/// Clear the canvas.
 	void clear();

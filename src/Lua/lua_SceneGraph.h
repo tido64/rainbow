@@ -16,7 +16,7 @@ public:
 	int add_batch(lua_State *);
 	int add_label(lua_State *);
 	int add_node(lua_State *);
-	int add_sprite(lua_State *);
+
 	int enable(lua_State *);
 	int disable(lua_State *);
 	int remove(lua_State *);

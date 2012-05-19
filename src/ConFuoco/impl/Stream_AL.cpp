@@ -31,7 +31,8 @@ namespace ConFuoco
 		if (!this->sid)
 			return;
 
-		this->release();
+		if (this->handle)
+			this->release();
 		alDeleteBuffers(CONFUOCO_STREAM_AL_BUFFERS, this->bid);
 	}
 

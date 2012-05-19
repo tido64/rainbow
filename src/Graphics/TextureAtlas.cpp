@@ -45,7 +45,7 @@ TextureAtlas::TextureAtlas(const Data &img) : name(0), width(0), height(0)
 	this->width = CGImageGetWidth(image.CGImage);
 	this->height = CGImageGetHeight(image.CGImage);
 	R_ASSERT(this->is_valid(this->width) && this->is_valid(this->height),
-	         "Texture dimension is not a power of 2.");
+	         "Texture dimension must be divisible by 4 and greater than 64.");
 	CGRect bounds = CGRectMake(0, 0, this->width, this->height);
 
 	CGColorSpaceRef color_space = CGColorSpaceCreateDeviceRGB();
@@ -177,5 +177,5 @@ unsigned int TextureAtlas::define(const int x, const int y, const int w, const i
 
 bool TextureAtlas::is_valid(const unsigned int i)
 {
-	return (i < 64) ? false : Rainbow::is_pow2(i);
+	return (i < 64) ? false : i % 4 == 0;
 }

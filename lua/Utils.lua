@@ -1,11 +1,7 @@
 --! Rainbow Lua utilities
-
+--!
 --! Copyright 2011-12 Bifrost Entertainment. All rights reserved.
 --! \author Tommy Nguyen
-
-rainbow.utils = {};
-
---require("Accelerometer");  -- Include the accelerometer helper
 
 --! Dump all symbols in a table. To dump all global variables, specify _G.
 --! \param story   Table to dump
