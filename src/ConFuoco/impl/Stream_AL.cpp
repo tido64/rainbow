@@ -64,13 +64,13 @@ namespace ConFuoco
 		{
 			if (!Decoder::read(this->buffer, this->handle, this->buffer_size))
 			{
-				if (this->loops > 0)
+				if (!this->loops)
 				{
-					if (!this->loops)
-						break;
-
-					--this->loops;
+					processed = i;
+					break;
 				}
+				else if (this->loops > 0)
+					--this->loops;
 				Decoder::reset(this->handle);
 				Decoder::read(this->buffer, this->handle, this->buffer_size);
 			}

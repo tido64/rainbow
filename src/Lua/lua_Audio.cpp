@@ -1,7 +1,7 @@
 #include "Common/Data.h"
 #include "Common/RainbowAssert.h"
 #include "ConFuoco/Mixer.h"
-#include "ConFuoco/Wave.h"
+#include "ConFuoco/Stream.h"
 #include "Lua/lua_Audio.h"
 #include "Lua/lua_Recorder.h"
 
@@ -109,12 +109,15 @@ int lua_Audio::load_sfx(lua_State *L)
 
 int lua_Audio::load_stream(lua_State *L)
 {
-	LUA_ASSERT(lua_gettop(L) == 1, "rainbow.audio.load_stream(file)");
+	LUA_ASSERT(lua_gettop(L) == 1 || lua_gettop(L) == 2, "rainbow.audio.load_stream(file, loops)");
 
 	const char *file = lua_tolstring(L, 1, nullptr);
 	const char *path = Data::get_path(file);
-	lua_pushlightuserdata(L, Mixer::Instance().load_stream(path));
+	Stream* s = static_cast<Stream*>(Mixer::Instance().load_stream(path));
 	Data::free(path);
+	if (lua_gettop(L) == 2)
+		s->set_loops(lua_tointeger(L, 2));
+	lua_pushlightuserdata(L, s);
 	return 1;
 }
 
