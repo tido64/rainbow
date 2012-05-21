@@ -19,7 +19,7 @@ void Label::set_text(const char *text)
 	}
 	memcpy(this->text, text, len);
 	this->text[len] = '\0';
-	this->stale = stale_position;
+	this->stale |= stale_position;
 }
 
 void Label::draw()
@@ -34,11 +34,6 @@ void Label::update()
 	if (this->stale)
 	{
 		const unsigned int str_sz = this->length << 2;
-		if (this->stale & stale_color)
-		{
-			for (unsigned int i = 0; i < str_sz; ++i)
-				this->vx[i].color = this->color;
-		}
 		if (this->stale & stale_position)
 		{
 			if (str_sz > this->size)
@@ -66,6 +61,11 @@ void Label::update()
 				pen.x += glyph.advance - glyph.left;
 			}
 		}
-		this->stale = false;
+		if (this->stale & stale_color)
+		{
+			for (unsigned int i = 0; i < str_sz; ++i)
+				this->vx[i].color = this->color;
+		}
+		this->stale = 0u;
 	}
 }

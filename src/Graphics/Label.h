@@ -55,7 +55,7 @@ Label::Label() :
 void Label::set_color(const Colorb &c)
 {
 	this->color = c;
-	this->stale = stale_color;
+	this->stale |= stale_color;
 }
 
 void Label::set_font(FontAtlas *f)
@@ -67,7 +67,7 @@ void Label::set_position(const int x, const int y)
 {
 	this->position.x = x;
 	this->position.y = y;
-	this->stale = stale_position;
+	this->stale |= stale_position;
 }
 
 #endif
