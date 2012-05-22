@@ -41,6 +41,7 @@ void Label::update()
 				delete[] this->vx;
 				this->vx = new SpriteVertex[str_sz];
 				this->size = str_sz;
+				this->stale |= stale_color;
 			}
 
 			SpriteVertex *vx = this->vx;
@@ -63,7 +64,7 @@ void Label::update()
 		}
 		if (this->stale & stale_color)
 		{
-			for (unsigned int i = 0; i < str_sz; ++i)
+			for (unsigned int i = 0; i < this->size; ++i)
 				this->vx[i].color = this->color;
 		}
 		this->stale = 0u;
