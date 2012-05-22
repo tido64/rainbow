@@ -33,11 +33,9 @@ bool FontAtlas::load(const Data &font)
 
 	FT_Set_Char_Size(face, 0, static_cast<int>(this->pt * 64), 96, 96);
 
-	// Simple algorithm for calculating texture size
+	// Naive algorithm for calculating texture size
 	unsigned int max_width = 0;
 	unsigned int max_height = 0;
-	unsigned int w_offset = 0;
-	unsigned int h_offset = 0;
 	for (unsigned int i = 0; i < chars; ++i)
 	{
 		if (FT_Load_Char(face, i + ascii_offset, FT_LOAD_RENDER))
@@ -54,20 +52,18 @@ bool FontAtlas::load(const Data &font)
 		const unsigned int height = bitmap.rows + (padding << 1);
 		if (width > max_width) max_width = width;
 		if (height > max_height) max_height = height;
-		w_offset += width;
-		h_offset += height;
 	}
-	const unsigned int tex_width = next_pow2(w_offset / chars * 10);
-	const unsigned int tex_height = next_pow2(h_offset / chars * 10);
+	const unsigned int tex_width = next_pow2(max_width * 10);
+	const unsigned int tex_height = next_pow2(max_height * 10);
 
 	// GL_LUMINANCE8_ALPHA8 buffer
-	w_offset = (tex_width * tex_height) << 1;
+	unsigned int w_offset = (tex_width * tex_height) << 1;
 	GLubyte *tex_buf = new GLubyte[w_offset];
 	memset(tex_buf, 0, w_offset);
 
 	// Read all glyph bitmaps and copy them to our texture
 	w_offset = 0;
-	h_offset = 0;
+	unsigned int h_offset = 0;
 	const float tex_w_fraction = 1.0f / tex_width;
 	const float tex_h_fraction = 1.0f / tex_height;
 	for (unsigned int i = 0; i < chars; ++i)
