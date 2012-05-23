@@ -100,19 +100,20 @@ public:
 private:
 	unsigned char stale;         ///< Sprite is stale if its properties have changed.
 
-	float angle;                 ///< Sprite rotation angle.
+	float angle;                 ///< Angle of rotation.
 	float cos_r;                 ///< Cosine of angle.
 	float sin_r;                 ///< Sine of angle.
 
 	SpriteVertex *vertex_array;  ///< Vertex array or, if buffered, the sprite batch's buffer.
 	const SpriteBatch *parent;   ///< Pointer to sprite batch.
 
+	Vec2f center;                ///< Committed position.
 	Vec2f pivot;                 ///< Pivot point (normalised).
-	Vec2f position;              ///< Current position.
-	Vec2f position_d;            ///< Position after next update.
+	Vec2f position;              ///< Uncommitted position.
 	Vec2f scale_f;               ///< Scaling factor.
 	Vec2f origin[4];             ///< Original rendering at origo.
 
+	/// Intentionally left undefined.
 	Sprite& operator=(const Sprite &);
 };
 
@@ -128,7 +129,7 @@ const Colorb& Sprite::get_color() const
 
 const Vec2f& Sprite::get_position() const
 {
-	return this->position_d;
+	return this->position;
 }
 
 void Sprite::set_color0(const unsigned int c)
