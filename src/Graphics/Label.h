@@ -37,11 +37,12 @@ public:
 protected:
 	static const unsigned char stale_color    = 0x01;
 	static const unsigned char stale_position = 0x02;
+	static const unsigned char stale_vbo      = 0x04;
 
 private:
 	unsigned char stale;       ///< Flags indicating need for update.
-	unsigned int length;       ///< Length of the string.
-	unsigned int size;         ///< Size of the vertex array.
+	unsigned int size;         ///< Size of the char array.
+	unsigned int vertices;     ///< Number of vertices to draw.
 	char *text;                ///< Content of this label.
 	SpriteVertex *vx;          ///< Vertex array containing the text.
 	SmartPtr<FontAtlas> font;  ///< The font used in this label.
@@ -50,7 +51,7 @@ private:
 };
 
 Label::Label() :
-	stale(0), length(0), size(0), text(nullptr), vx(nullptr) { }
+	stale(0), size(0), vertices(0), text(nullptr), vx(nullptr) { }
 
 void Label::set_color(const Colorb &c)
 {

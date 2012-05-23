@@ -11,11 +11,12 @@ Label::~Label()
 void Label::set_text(const char *text)
 {
 	const unsigned int len = strlen(text);
-	if (len > this->length)
+	if (len > this->size)
 	{
 		delete[] this->text;
 		this->text = new char[len + 1];
-		this->length = len;
+		this->size = len;
+		this->stale |= stale_vbo;
 	}
 	memcpy(this->text, text, len);
 	this->text[len] = '\0';
@@ -25,7 +26,7 @@ void Label::set_text(const char *text)
 void Label::draw()
 {
 	this->font->bind();
-	Renderer::draw_elements(this->vx, (this->length << 2) + (this->length << 1));
+	Renderer::draw_elements(this->vx, this->vertices);
 }
 
 void Label::update()
@@ -33,17 +34,16 @@ void Label::update()
 	// Note: This algorithm currently does not support font kerning.
 	if (this->stale)
 	{
-		const unsigned int str_sz = this->length << 2;
 		if (this->stale & stale_position)
 		{
-			if (str_sz > this->size)
+			if (this->stale & stale_vbo)
 			{
 				delete[] this->vx;
-				this->vx = new SpriteVertex[str_sz];
-				this->size = str_sz;
+				this->vx = new SpriteVertex[this->size << 2];
 				this->stale |= stale_color;
 			}
 
+			this->vertices = 0;
 			SpriteVertex *vx = this->vx;
 			Vec2f pen = this->position;
 			for (const char *text = this->text; *text; ++text)
@@ -60,11 +60,13 @@ void Label::update()
 				}
 
 				pen.x += glyph.advance - glyph.left;
+				++this->vertices;
 			}
+			this->vertices = (this->vertices << 2) + (this->vertices << 1);
 		}
 		if (this->stale & stale_color)
 		{
-			for (unsigned int i = 0; i < this->size; ++i)
+			for (unsigned int i = 0; i < (this->size << 2); ++i)
 				this->vx[i].color = this->color;
 		}
 		this->stale = 0u;
