@@ -128,7 +128,7 @@ const Colorb& Sprite::get_color() const
 
 const Vec2f& Sprite::get_position() const
 {
-	return this->position;
+	return this->position_d;
 }
 
 void Sprite::set_color0(const unsigned int c)
