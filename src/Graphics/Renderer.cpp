@@ -8,6 +8,11 @@
 #include "Graphics/Shader.h"
 #include "Graphics/Shaders/Shaders.h"
 
+#ifndef NDEBUG
+static double gpu_tex_mem = 0.0;
+static double tex_sz[256];
+#endif
+
 bool Renderer::init()
 {
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
@@ -143,7 +148,13 @@ void Renderer::create_texture(unsigned int &texture, const unsigned int internal
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glTexImage2D(GL_TEXTURE_2D, 0, internal_format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
 
+#ifndef NDEBUG
 	R_ASSERT(glGetError() == GL_NO_ERROR, "Failed to create texture");
+
+	tex_sz[texture] = width * height * 4e-6;
+	gpu_tex_mem += tex_sz[texture];
+	printf("[Rainbow] GPU: %.2f MBs of textures\n", gpu_tex_mem);
+#endif
 }
 
 void Renderer::delete_buffer(const unsigned int buffer, const unsigned int array_object)
@@ -155,6 +166,11 @@ void Renderer::delete_buffer(const unsigned int buffer, const unsigned int array
 void Renderer::delete_texture(const unsigned int texture)
 {
 	glDeleteTextures(1, &texture);
+
+#ifndef NDEBUG
+	gpu_tex_mem -= tex_sz[texture];
+	printf("[Rainbow] GPU: %.2f MBs of textures\n", gpu_tex_mem);
+#endif
 }
 
 void Renderer::draw_buffer(const unsigned int array_object, const unsigned int count)
