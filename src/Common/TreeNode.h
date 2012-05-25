@@ -50,7 +50,7 @@ void TreeNode<T>::remove_child(T *n)
 	if (!n)
 		return;
 #ifndef NDEBUG
-	unsigned int removed =
+	size_t removed =
 #endif
 	this->children.remove(n);
 	R_ASSERT(removed, "remove_child: Node does not exist.");

@@ -128,14 +128,14 @@ float Canvas::get_filled()
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, this->canvas_fb);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, this->canvas_tex, 0);
-		const unsigned int size = (this->width * this->height) << 2;
+		const size_t size = (this->width * this->height) << 2;
 		unsigned char *data = new unsigned char[size];
 		glReadPixels(0, 0, this->width, this->height, GL_RGBA, GL_UNSIGNED_BYTE, data);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, 0, 0);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 		unsigned int sum = 0;
-		for (unsigned int i = 0; i < size; i += 4)
+		for (size_t i = 0; i < size; i += 4)
 			sum += data[i + 3] > 0;
 		delete[] data;
 		this->fill = static_cast<float>(sum) / static_cast<float>(size >> 2);
@@ -163,7 +163,7 @@ void Canvas::set_background(const unsigned int color)
 void Canvas::set_background(const Texture &texture, const int width, const int height)
 {
 	SpriteVertex vx[4];
-	for (unsigned int i = 0; i < 4; ++i)
+	for (size_t i = 0; i < 4; ++i)
 		vx[i].texcoord = texture.vx[i];
 
 	if (width < height)
@@ -275,7 +275,7 @@ void Canvas::update()
 	this->fill = -1.0f;
 }
 
-void Canvas::touch_began(const Touch *const touches, const unsigned int)
+void Canvas::touch_began(const Touch *const touches, const size_t)
 {
 	if (this->touch.hash)
 		return;
@@ -299,19 +299,19 @@ void Canvas::touch_canceled()
 #endif
 }
 
-void Canvas::touch_ended(const Touch *const, const unsigned int)
+void Canvas::touch_ended(const Touch *const, const size_t)
 {
 	this->touch_canceled();
 }
 
-void Canvas::touch_moved(const Touch *const touches, const unsigned int count)
+void Canvas::touch_moved(const Touch *const touches, const size_t count)
 {
 #ifdef RAINBOW_SDL
 	if (!this->down)
 		return;
 #endif
 
-	for (unsigned int i = 0; i < count; ++i)
+	for (size_t i = 0; i < count; ++i)
 	{
 		if (touches[i] == this->touch)
 		{

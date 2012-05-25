@@ -10,7 +10,7 @@ unsigned char* Data::bytes() const
 	return static_cast<unsigned char *>(data.mutableBytes);
 }
 
-unsigned int Data::size() const
+size_t Data::size() const
 {
 	return data.length;
 }
@@ -54,7 +54,7 @@ unsigned char* Data::bytes() const
 	return this->data;
 }
 
-unsigned int Data::size() const
+size_t Data::size() const
 {
 	return this->sz;
 }

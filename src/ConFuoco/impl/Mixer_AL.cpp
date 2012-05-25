@@ -53,7 +53,7 @@ namespace ConFuoco
 		}
 	}
 
-	void Mixer::RouteChangeListener(void *client, AudioSessionPropertyID id, UInt32 data_size, const void *data)
+	void Mixer::RouteChangeListener(void *, AudioSessionPropertyID, UInt32, const void *data)
 	{
 		CFDictionaryRef dict = (CFDictionaryRef)data;
 		CFStringRef old_route = (CFStringRef)CFDictionaryGetValue(dict, CFSTR(kAudioSession_AudioRouteChangeKey_OldRoute));

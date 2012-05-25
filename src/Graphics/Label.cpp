@@ -10,7 +10,7 @@ Label::~Label()
 
 void Label::set_text(const char *text)
 {
-	const unsigned int len = strlen(text);
+	const size_t len = strlen(text);
 	if (len > this->size)
 	{
 		delete[] this->text;
@@ -51,7 +51,7 @@ void Label::update()
 				const FontGlyph &glyph = this->font->get_glyph(*text);
 				pen.x += glyph.left;
 
-				for (unsigned int i = 0; i < 4; ++i)
+				for (size_t i = 0; i < 4; ++i)
 				{
 					vx->texcoord = glyph.quad[i].texcoord;
 					vx->position = glyph.quad[i].position;
@@ -66,7 +66,7 @@ void Label::update()
 		}
 		if (this->stale & stale_color)
 		{
-			for (unsigned int i = 0; i < (this->size << 2); ++i)
+			for (size_t i = 0; i < (this->size << 2); ++i)
 				this->vx[i].color = this->color;
 		}
 		this->stale = 0u;

@@ -31,7 +31,7 @@ namespace ConFuoco
 		/// \param[out] rate       Sampling rate of the bitstream.
 		/// \param      file       Path to the bitstream to open.
 		/// \return Size of the stream buffer.
-		static unsigned int open_stream(void **handle, char **buffer, int &channels, int &rate, const char *const file);
+		static size_t open_stream(void **handle, char **buffer, int &channels, int &rate, const char *const file);
 
 		/// Load entire audio file into buffer.
 		/// \param[out] buffer     Output buffer.
@@ -39,14 +39,14 @@ namespace ConFuoco
 		/// \param[out] rate       Sampling rate of the bitstream.
 		/// \param      file       Path to the bitstream to open.
 		/// \return Size of the decoded bitstream.
-		static unsigned int open_wave(char **buffer, int &channels, int &rate, const char *const file);
+		static size_t open_wave(char **buffer, int &channels, int &rate, const char *const file);
 
 		/// Read (and decode) audio frames till buffer is full.
 		/// \param[out] dst   Destination for decoded bitstream.
 		/// \param      src   Codec-specific handle for source bitstream.
 		/// \param      size  Size of destination buffer.
 		/// \return Bytes written to the buffer.
-		static unsigned int read(char *dst, void *src, const unsigned int size);
+		static size_t read(char *dst, void *src, const size_t size);
 
 		/// Rewind stream to the beginning.
 		/// \param handle  Codec-specific handle.

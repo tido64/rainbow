@@ -36,9 +36,9 @@ namespace ConFuoco
 		int rate;                  ///< Sampling rate of the stream.
 		int loops;                 ///< The number of times a sound will loop.
 
-		unsigned int buffer_size;  ///< Size of the stream buffer.
-		char *buffer;              ///< Stream buffers.
-		void *handle;              ///< Codec-specific handle.
+		size_t buffer_size;  ///< Size of the stream buffer.
+		char *buffer;        ///< Stream buffers.
+		void *handle;        ///< Codec-specific handle.
 
 		bool preload();
 		void release();

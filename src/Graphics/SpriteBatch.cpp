@@ -3,7 +3,7 @@
 #include "Common/SpriteVertex.h"
 #include "Graphics/SpriteBatch.h"
 
-SpriteBatch::SpriteBatch(const unsigned int hint) :
+SpriteBatch::SpriteBatch(const size_t hint) :
 	array_object(0), buffer(0), batch_vertices(0), reserved(hint << 2),
 	vertex_buffer(nullptr), sprites(hint)
 {
@@ -13,7 +13,7 @@ SpriteBatch::SpriteBatch(const unsigned int hint) :
 
 SpriteBatch::~SpriteBatch()
 {
-	for (unsigned int i = 0; i < this->sprites.size(); ++i)
+	for (size_t i = 0; i < this->sprites.size(); ++i)
 		delete this->sprites[i];
 	delete[] this->vertex_buffer;
 	Renderer::delete_buffer(this->buffer, this->array_object);
@@ -54,7 +54,7 @@ void SpriteBatch::push_back(Sprite *s)
 {
 	R_ASSERT(this->sprites.size() <= 256, "Hard-coded limit reached.");
 
-	const unsigned int index = this->sprites.size() << 2;
+	const size_t index = this->sprites.size() << 2;
 	if (index >= this->reserved)
 	{
 		this->reserved <<= 1;
@@ -64,7 +64,7 @@ void SpriteBatch::push_back(Sprite *s)
 		this->vertex_buffer = batch;
 
 		// Assign new sprite buffers
-		for (unsigned int i = 0; i < this->sprites.size(); ++i)
+		for (size_t i = 0; i < this->sprites.size(); ++i)
 			this->sprites[i]->vertex_array = this->vertex_buffer + (i << 2);
 	}
 
@@ -77,7 +77,7 @@ void SpriteBatch::push_back(Sprite *s)
 void SpriteBatch::update()
 {
 	// Update all sprite vertices
-	for (unsigned int i = 0; i < this->sprites.size(); ++i)
+	for (size_t i = 0; i < this->sprites.size(); ++i)
 		this->sprites[i]->update();
 
 	// Update vertex buffer

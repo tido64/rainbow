@@ -19,7 +19,7 @@ void lua_Input::accelerated(lua_State *L, const Acceleration &acceleration)
 	lua_pop(L, 3);
 }
 
-void lua_Input::touch_began(lua_State *L, const Touch *const touches, const unsigned int count)
+void lua_Input::touch_began(lua_State *L, const Touch *const touches, const size_t count)
 {
 	touch_event(L, "touch_began", touches, count);
 }
@@ -37,12 +37,12 @@ void lua_Input::touch_canceled(lua_State *L)
 	lua_pop(L, 2);
 }
 
-void lua_Input::touch_ended(lua_State *L, const Touch *const touches, const unsigned int count)
+void lua_Input::touch_ended(lua_State *L, const Touch *const touches, const size_t count)
 {
 	touch_event(L, "touch_ended", touches, count);
 }
 
-void lua_Input::touch_moved(lua_State *L, const Touch *const touches, const unsigned int count)
+void lua_Input::touch_moved(lua_State *L, const Touch *const touches, const size_t count)
 {
 	touch_event(L, "touch_moved", touches, count);
 }
@@ -67,7 +67,7 @@ void lua_Input::init(lua_State *L)
 	lua_pop(L, 1);
 }
 
-void lua_Input::touch_event(lua_State *L, const char *const type, const Touch *const touches, const unsigned int count)
+void lua_Input::touch_event(lua_State *L, const char *const type, const Touch *const touches, const size_t count)
 {
 	getfield(L, type);
 	if (!lua_isfunction(L, -1))
@@ -77,7 +77,7 @@ void lua_Input::touch_event(lua_State *L, const char *const type, const Touch *c
 	}
 
 	lua_createtable(L, 0, count);
-	for (unsigned int i = 0; i < count; ++i)
+	for (size_t i = 0; i < count; ++i)
 	{
 		lua_createtable(L, 0, 2);
 		lua_pushvalue(L, -1);

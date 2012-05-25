@@ -8,8 +8,8 @@
 
 #include "Common/RainbowAssert.h"
 
-unsigned int Data::data_path_length = 0;
-unsigned int Data::userdata_path_length = 0;
+size_t Data::data_path_length = 0;
+size_t Data::userdata_path_length = 0;
 char Data::data_path[] = { 0 };
 char Data::userdata_path[] = { 0 };
 
@@ -31,7 +31,7 @@ const char* Data::get_path(const char *const file)
 
 const char* Data::set_datapath(const char *const path)
 {
-	const unsigned int length = strlen(path);
+	const size_t length = strlen(path);
 	if (length >= RAINBOW_PATH_LENGTH + 1)
 		return nullptr;
 	Data::data_path_length = length + 2;
@@ -42,7 +42,7 @@ const char* Data::set_datapath(const char *const path)
 
 const char* Data::set_userdatapath(const char *const path)
 {
-	const unsigned int length = strlen(path);
+	const size_t length = strlen(path);
 	if (length >= RAINBOW_PATH_LENGTH + 1)
 		return nullptr;
 	Data::userdata_path_length = length + 2;
@@ -56,18 +56,18 @@ Data::Data(const char *const file) : allocated(0), sz(0), data(nullptr)
 	FILE *fp = fopen(file, "rb");
 	if (!fp)
 	{
-		fprintf(stderr, "Rainbow::Data: Failed to open '%s'\n", file);
+		fprintf(stderr, "[Rainbow] Data: Failed to open '%s'\n", file);
 		return;
 	}
 
 	// Get size of file
 	fseek(fp, 0, SEEK_END);
-	const unsigned int size = ftell(fp);
+	const size_t size = ftell(fp);
 	this->allocate(size);
 
 	// Fill buffer
 	fseek(fp, 0, SEEK_SET);
-	const unsigned int read = fread(this->data, 1, size, fp);
+	const size_t read = fread(this->data, 1, size, fp);
 	fclose(fp);
 	if (read != size)
 	{
@@ -85,7 +85,7 @@ Data::~Data()
 	delete[] this->data;
 }
 
-void Data::allocate(const unsigned int size)
+void Data::allocate(const size_t size)
 {
 	if (size >= this->allocated)  // Data needs a bigger buffer
 	{
@@ -98,7 +98,7 @@ void Data::allocate(const unsigned int size)
 		memset(this->data + size, 0, this->allocated - size);
 }
 
-void Data::copy(const void *const data, const unsigned int length)
+void Data::copy(const void *const data, const size_t length)
 {
 	this->allocate(length);
 	memcpy(this->data, data, length);
@@ -117,12 +117,12 @@ bool Data::save(const char *const file) const
 		return false;
 
 	// Write buffer to file
-	const unsigned int written = fwrite(this->data, sizeof(unsigned char), this->sz, fp);
+	const size_t written = fwrite(this->data, sizeof(unsigned char), this->sz, fp);
 	fclose(fp);
 	return written == this->sz;
 }
 
-void Data::set(unsigned char *data, const unsigned int length)
+void Data::set(unsigned char *data, const size_t length)
 {
 	delete[] this->data;
 	this->data = data;

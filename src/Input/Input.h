@@ -52,10 +52,10 @@ public:
 	void key_up(const Key &k);
 #endif
 
-	void touch_began(Touch *const touches, const unsigned int count);
+	void touch_began(Touch *const touches, const size_t count);
 	void touch_canceled();
-	void touch_ended(Touch *const touches, const unsigned int count);
-	void touch_moved(Touch *const touches, const unsigned int count);
+	void touch_ended(Touch *const touches, const size_t count);
+	void touch_moved(Touch *const touches, const size_t count);
 
 private:
 	lua_State *lua_state;

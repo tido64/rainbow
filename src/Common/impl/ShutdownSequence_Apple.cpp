@@ -12,7 +12,7 @@
 
 @implementation RainbowAlertViewDelegate
 
-- (void)alertView:(UIAlertView*)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+- (void)alertView
 {
 	//[[UIApplication sharedApplication] applicationWillTerminate];
 	exit(1);

@@ -33,30 +33,30 @@ void Input::key_up(const Key &k)
 
 #endif
 
-void Input::touch_began(Touch *const touches, const unsigned int count)
+void Input::touch_began(Touch *const touches, const size_t count)
 {
-	for (unsigned int i = 0; i < this->touch_subscribers.size(); ++i)
+	for (size_t i = 0; i < this->touch_subscribers.size(); ++i)
 		this->touch_subscribers[i]->touch_began(touches, count);
 	lua_Input::touch_began(this->lua_state, touches, count);
 }
 
 void Input::touch_canceled()
 {
-	for (unsigned int i = 0; i < this->touch_subscribers.size(); ++i)
+	for (size_t i = 0; i < this->touch_subscribers.size(); ++i)
 		this->touch_subscribers[i]->touch_canceled();
 	lua_Input::touch_canceled(this->lua_state);
 }
 
-void Input::touch_ended(Touch *const touches, const unsigned int count)
+void Input::touch_ended(Touch *const touches, const size_t count)
 {
-	for (unsigned int i = 0; i < this->touch_subscribers.size(); ++i)
+	for (size_t i = 0; i < this->touch_subscribers.size(); ++i)
 		this->touch_subscribers[i]->touch_ended(touches, count);
 	lua_Input::touch_ended(this->lua_state, touches, count);
 }
 
-void Input::touch_moved(Touch *const touches, const unsigned int count)
+void Input::touch_moved(Touch *const touches, const size_t count)
 {
-	for (unsigned int i = 0; i < this->touch_subscribers.size(); ++i)
+	for (size_t i = 0; i < this->touch_subscribers.size(); ++i)
 		this->touch_subscribers[i]->touch_moved(touches, count);
 	lua_Input::touch_moved(this->lua_state, touches, count);
 }

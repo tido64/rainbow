@@ -33,17 +33,17 @@ public:
 	/// \param value  The value to remove from the list.
 	/// \param count  Number of elements to remove from the list.
 	/// \return Number of elements removed.
-	unsigned int remove(const T &value, unsigned int count = 1);
+	size_t remove(const T &value, size_t count = 1);
 
 	/// Return size of list.
-	inline unsigned int size();
+	inline size_t size();
 
 private:
 	class Element;
 
-	unsigned int count;  ///< Element count
-	Element *first;      ///< Pointer to the first element
-	Element *last;       ///< Pointer to the last element
+	size_t count;    ///< Element count
+	Element *first;  ///< Pointer to the first element
+	Element *last;   ///< Pointer to the last element
 
 	/// Intentionally left undefined.
 	List(const List &);
@@ -139,9 +139,9 @@ void List<T>::push_back(const T &value)
 }
 
 template<class T>
-unsigned int List<T>::remove(const T &value, unsigned int count)
+size_t List<T>::remove(const T &value, size_t count)
 {
-	unsigned int removed = 0;
+	size_t removed = 0;
 	Element *e = this->first;
 	while (e)
 	{
@@ -182,7 +182,7 @@ unsigned int List<T>::remove(const T &value, unsigned int count)
 }
 
 template<class T>
-unsigned int List<T>::size()
+size_t List<T>::size()
 {
 	return this->count;
 }

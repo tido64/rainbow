@@ -16,7 +16,7 @@
 /// \author Tommy Nguyen
 struct png_read_struct
 {
-	unsigned int offset;
+	size_t offset;
 	const unsigned char *data;
 
 	png_read_struct(unsigned char *data) : offset(8), data(data) { }
@@ -137,7 +137,7 @@ TextureAtlas::TextureAtlas(const Data &img) : name(0), width(0), height(0)
 
 	// Allocate memory for bitmap
 	png_read_update_info(png_ptr, info_ptr);
-	const unsigned int rowbytes = png_get_rowbytes(png_ptr, info_ptr);
+	const size_t rowbytes = png_get_rowbytes(png_ptr, info_ptr);
 	unsigned char *data = new unsigned char[this->height * rowbytes];
 
 	// Allocate row pointer array
@@ -169,7 +169,7 @@ unsigned int TextureAtlas::define(const int x, const int y, const int w, const i
 	const float y0 = y / static_cast<float>(this->height);
 	const float y1 = (y + h) / static_cast<float>(this->height);
 
-	const unsigned int i = this->textures.size();
+	const size_t i = this->textures.size();
 	this->textures.push_back(Texture(x0, y0, x1, y1));
 	this->textures[i].atlas = this->name;
 	return i;

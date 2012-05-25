@@ -1,6 +1,8 @@
 #ifndef DATA_H_
 #define DATA_H_
 
+#include <cstddef>
+
 #include "Platform.h"
 
 #define RAINBOW_PATH_LENGTH 512  ///< Max string length, including null-terminator.
@@ -56,7 +58,7 @@ public:
 	/// Make full copy of data set.
 	/// \param data    Data to take make copy of.
 	/// \param length  Length of data.
-	void copy(const void *const data, const unsigned int length);
+	void copy(const void *const data, const size_t length);
 
 	/// Save data to file.
 	/// \return \c true on success, \c false otherwise.
@@ -65,10 +67,10 @@ public:
 	/// Take ownership of data set.
 	/// \param data    Data to take ownership of.
 	/// \param length  Length of data.
-	void set(unsigned char *data, const unsigned int length);
+	void set(unsigned char *data, const size_t length);
 
 	/// Return the size of this buffer.
-	inline unsigned int size() const;
+	inline size_t size() const;
 
 	inline operator bool() const;
 	inline operator void*() const;
@@ -86,21 +88,21 @@ private:
 #else
 
 private:
-	static unsigned int data_path_length;            ///< Length of data path string.
-	static unsigned int userdata_path_length;        ///< Length of user path string.
+	static size_t data_path_length;                  ///< Length of data path string.
+	static size_t userdata_path_length;              ///< Length of user path string.
 	static char data_path[RAINBOW_PATH_LENGTH];      ///< Path to data files.
 	static char userdata_path[RAINBOW_PATH_LENGTH];  ///< Path to user files.
 
-	unsigned int allocated;  ///< Allocated memory size.
-	unsigned int sz;         ///< Size of used buffer, not necessarily equal to allocated.
-	unsigned char *data;     ///< Actual buffer, implemented as a C-array.
+	size_t allocated;     ///< Allocated memory size.
+	size_t sz;            ///< Size of used buffer, not necessarily equal to allocated.
+	unsigned char *data;  ///< Actual buffer, implemented as a C-array.
 
 	/// Intentionally left undefined.
 	Data(const Data &);
 
 	/// Resize allocated memory segment. If the requested allocation size is
 	/// smaller than current allocated size, nothing will happen.
-	void allocate(const unsigned int size);
+	void allocate(const size_t size);
 
 	/// Intentionally left undefined.
 	Data& operator=(const Data &);

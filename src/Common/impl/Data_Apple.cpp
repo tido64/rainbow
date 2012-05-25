@@ -5,7 +5,7 @@
 
 #ifdef RAINBOW_IOS
 
-void Data::free(const void *const p) { /* This is not needed */ }
+void Data::free(const void *const) { /* This is not needed */ }
 
 const char* Data::get_path(const char *const file)
 {
@@ -25,14 +25,14 @@ Data::Data(const char *const file) : data(nil)
 	this->data = [[NSMutableData alloc] initWithContentsOfFile:path options:NSDataReadingUncached error:&err];
 	if (err != nil)
 	{
-		NSLog(@"Rainbow::Data: Failed to read file");
+		NSLog(@"[Rainbow] Data: Failed to read file");
 		this->data = nil;
 	}
 }
 
 Data::~Data() { }
 
-void Data::copy(const void *const data, const unsigned int length)
+void Data::copy(const void *const data, const size_t length)
 {
 	R_ASSERT(false, "copy: Not implemented yet");
 }

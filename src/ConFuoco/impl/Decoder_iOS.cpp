@@ -7,7 +7,7 @@
 
 namespace ConFuoco
 {
-	unsigned int Decoder::open_wave(char **buffer, int &channels, int &rate, const char *const file)
+	size_t Decoder::open_wave(char **buffer, int &channels, int &rate, const char *const file)
 	{
 		CFURLRef url = CFURLCreateFromFileSystemRepresentation(0, reinterpret_cast<const UInt8 *>(file), strlen(file), false);
 

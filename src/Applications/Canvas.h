@@ -58,10 +58,10 @@ public:
 
 	// Implement Touchable
 
-	virtual void touch_began(const Touch *const touches, const unsigned int count);
+	virtual void touch_began(const Touch *const touches, const size_t count);
 	virtual void touch_canceled();
-	virtual void touch_ended(const Touch *const touches, const unsigned int count);
-	virtual void touch_moved(const Touch *const touches, const unsigned int count);
+	virtual void touch_ended(const Touch *const touches, const size_t count);
+	virtual void touch_moved(const Touch *const touches, const size_t count);
 
 private:
 	bool changed;             ///< Whether an update is needed.

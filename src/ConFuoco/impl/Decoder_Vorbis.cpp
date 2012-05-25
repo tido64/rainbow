@@ -43,25 +43,25 @@ namespace ConFuoco
 		}
 	}
 
-	unsigned int Decoder::open_stream(void **handle, char **buffer, int &channels, int &rate, const char *const file)
+	size_t Decoder::open_stream(void **handle, char **buffer, int &channels, int &rate, const char *const file)
 	{
 		OggVorbis_File *vf = Vorbis::open(file, channels, rate);
 		if (!vf)
 			return 0;
 		*handle = vf;
 
-		const unsigned int size = 4096 * channels * 2;
+		const size_t size = 4096 * channels * 2;
 		*buffer = new char[size];
 		return size;
 	}
 
-	unsigned int Decoder::open_wave(char **buffer, int &channels, int &rate, const char *const file)
+	size_t Decoder::open_wave(char **buffer, int &channels, int &rate, const char *const file)
 	{
 		OggVorbis_File *vf = Vorbis::open(file, channels, rate);
 		if (!vf)
 			return 0;
 
-		const unsigned int size = static_cast<unsigned int>(ov_pcm_total(vf, -1)) * channels * 2;
+		const size_t size = static_cast<size_t>(ov_pcm_total(vf, -1)) * channels * 2;
 		*buffer = new char[size];
 		read(*buffer, vf, size);
 
@@ -79,11 +79,11 @@ namespace ConFuoco
 		delete vf;
 	}
 
-	unsigned int Decoder::read(char *dst, void *src, const unsigned int size)
+	size_t Decoder::read(char *dst, void *src, const size_t size)
 	{
 		int bitstream = 0;
 		int read = 0;
-		unsigned int offset = 0;
+		size_t offset = 0;
 		OggVorbis_File *vf = static_cast<OggVorbis_File*>(src);
 
 		// Read until buffer is full

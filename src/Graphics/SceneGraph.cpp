@@ -31,7 +31,7 @@ namespace SceneGraph
 			case SpriteBatchNode:
 				{
 					Vector<Sprite*> &sprites = this->sprite_batch->get_sprites();
-					for (unsigned int i = 0; i < sprites.size(); ++i)
+					for (size_t i = 0; i < sprites.size(); ++i)
 						sprites[i]->move(x, y);
 				}
 				break;
@@ -53,7 +53,7 @@ namespace SceneGraph
 			case SpriteBatchNode:
 				{
 					Vector<Sprite*> &sprites = this->sprite_batch->get_sprites();
-					for (unsigned int i = 0; i < sprites.size(); ++i)
+					for (size_t i = 0; i < sprites.size(); ++i)
 						sprites[i]->rotate(r);
 				}
 				break;
@@ -74,7 +74,7 @@ namespace SceneGraph
 			case SpriteBatchNode:
 				{
 					Vector<Sprite*> &sprites = this->sprite_batch->get_sprites();
-					for (unsigned int i = 0; i < sprites.size(); ++i)
+					for (size_t i = 0; i < sprites.size(); ++i)
 						sprites[i]->set_scale(f);
 				}
 				break;

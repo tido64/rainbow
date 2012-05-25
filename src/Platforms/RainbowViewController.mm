@@ -176,7 +176,7 @@
 
 #pragma mark - GLKViewDelegate
 
-- (void)glkView:(GLKView *)view drawInRect:(CGRect)rect
+- (void)glkView
 {
 	glClear(GL_COLOR_BUFFER_BIT);
 	self->director->draw();
@@ -199,26 +199,27 @@
 
 #pragma mark - UIResponder
 
-- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+- (void)touchesBegan:(NSSet *)touches
 {
 	Touch *t = [self getTouches:touches];
 	Input::Instance().touch_began(t, touches.count);
 	delete[] t;
 }
 
-- (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
+- (void)touchesCancelled
 {
 	Input::Instance().touch_canceled();
 }
 
-- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
+- (void)touchesEnded:(NSSet *)touches
+
 {
 	Touch *t = [self getTouches:touches];
 	Input::Instance().touch_ended(t, touches.count);
 	delete[] t;
 }
 
-- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
+- (void)touchesMoved:(NSSet *)touches
 {
 	Touch *t = [self getTouches:touches];
 	Input::Instance().touch_moved(t, touches.count);

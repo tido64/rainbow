@@ -41,8 +41,8 @@ protected:
 
 private:
 	unsigned char stale;       ///< Flags indicating need for update.
-	unsigned int size;         ///< Size of the char array.
-	unsigned int vertices;     ///< Number of vertices to draw.
+	size_t size;               ///< Size of the char array.
+	size_t vertices;           ///< Number of vertices to draw.
 	char *text;                ///< Content of this label.
 	SpriteVertex *vx;          ///< Vertex array containing the text.
 	SmartPtr<FontAtlas> font;  ///< The font used in this label.

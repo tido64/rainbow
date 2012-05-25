@@ -24,13 +24,13 @@ public:
 	~Vector();
 
 	/// Return the element stored at index.
-	inline T& at(const unsigned int i);
+	inline T& at(const size_t i);
 
 	/// Return a pointer to the first element.
 	inline T* begin() const;
 
 	/// Return size of allocated storage capacity.
-	inline unsigned int capacity() const;
+	inline size_t capacity() const;
 
 	/// Empties the vector.
 	void clear();
@@ -47,18 +47,18 @@ public:
 	/// \note On failure, the vector will remain untouched.
 	/// \param i  The size of the new capacity. If less than the number of
 	///           elements in the container, the container is simply tightened.
-	void reserve(unsigned int i);
+	void reserve(size_t i);
 
 	/// Return the number of elements in this vector.
-	inline unsigned int size() const;
+	inline size_t size() const;
 
 	/// Return the element stored at index.
-	inline T& operator[](const unsigned int i) const;
+	inline T& operator[](const size_t i) const;
 
 protected:
-	unsigned int count;     ///< Number of elements in the array.
-	unsigned int reserved;  ///< Size of allocated memory.
-	T *c_array;             ///< Actual C-array.
+	size_t count;     ///< Number of elements in the array.
+	size_t reserved;  ///< Size of allocated memory.
+	T *c_array;       ///< Actual C-array.
 
 	Vector(const Vector &v);
 	Vector& operator=(const Vector &v);
@@ -80,7 +80,7 @@ Vector<T>::~Vector()
 }
 
 template<class T>
-T& Vector<T>::at(const unsigned int i)
+T& Vector<T>::at(const size_t i)
 {
 	R_ASSERT(i < this->count, "at: Tried to access an element out of range");
 	return this->c_array[i];
@@ -93,7 +93,7 @@ T* Vector<T>::begin() const
 }
 
 template<class T>
-unsigned int Vector<T>::capacity() const
+size_t Vector<T>::capacity() const
 {
 	return this->reserved;
 }
@@ -101,7 +101,7 @@ unsigned int Vector<T>::capacity() const
 template<class T>
 void Vector<T>::clear()
 {
-	for (unsigned int i = 0; i < this->count; ++i)
+	for (size_t i = 0; i < this->count; ++i)
 		this->c_array[i].~T();
 	this->count = 0;
 }
@@ -120,7 +120,7 @@ void Vector<T>::push_back(const T &element)
 template<class T>
 void Vector<T>::quick_remove(const T &element)
 {
-	for (unsigned int i = 0; i < this->count; ++i)
+	for (size_t i = 0; i < this->count; ++i)
 	{
 		if (this->c_array[i] == element)
 		{
@@ -132,7 +132,7 @@ void Vector<T>::quick_remove(const T &element)
 }
 
 template<class T>
-void Vector<T>::reserve(unsigned int i)
+void Vector<T>::reserve(size_t i)
 {
 	if (i < this->count)
 		i = this->count;
@@ -153,13 +153,13 @@ void Vector<T>::reserve(unsigned int i)
 }
 
 template<class T>
-unsigned int Vector<T>::size() const
+size_t Vector<T>::size() const
 {
 	return this->count;
 }
 
 template<class T>
-T& Vector<T>::operator[](const unsigned int i) const
+T& Vector<T>::operator[](const size_t i) const
 {
 	R_ASSERT(i < this->count, "operator[]: Tried to access an element out of range");
 	return this->c_array[i];

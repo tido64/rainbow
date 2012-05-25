@@ -40,7 +40,7 @@ namespace ConFuoco
 		int channels = 0;
 		int rate = 0;
 		char *data = 0;
-		const unsigned int size = Decoder::open_wave(&data, channels, rate, file);
+		const size_t size = Decoder::open_wave(&data, channels, rate, file);
 
 		alSourcei(this->sid, AL_BUFFER, 0);
 		alBufferData(this->bid, (channels == 1) ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16, data, size, rate);

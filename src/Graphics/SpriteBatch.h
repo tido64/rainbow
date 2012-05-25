@@ -18,7 +18,7 @@ class SpriteBatch : public Drawable
 	friend void Sprite::set_texture(const unsigned int id);
 
 public:
-	SpriteBatch(const unsigned int hint = 8);
+	SpriteBatch(const size_t hint = 8);
 	virtual ~SpriteBatch();
 
 	Sprite* add(const int x, const int y, const int width, const int height);
@@ -36,7 +36,7 @@ public:
 	SmartPtr<TextureAtlas>& set_texture(SmartPtr<TextureAtlas> &texture);
 
 	/// Return the number of sprites.
-	inline unsigned int size();
+	inline size_t size();
 
 	/// Draw the batch of sprites.
 	virtual void draw();
@@ -53,8 +53,8 @@ private:
 	unsigned int array_object;       ///< GL vertex array object.
 	unsigned int buffer;             ///< GL vertex buffer.
 
-	unsigned int batch_vertices;     ///< Total number of vertices in this batch.
-	unsigned int reserved;           ///< Allocated memory for sprite vertices.
+	size_t batch_vertices;           ///< Total number of vertices in this batch.
+	size_t reserved;                 ///< Allocated memory for sprite vertices.
 	SpriteVertex *vertex_buffer;     ///< Common vertex array for all sprites in the batch.
 	SmartPtr<TextureAtlas> texture;  ///< Texture atlas used by all sprites in the batch.
 	Vector<Sprite*> sprites;         ///< Vector storing all sprites.
@@ -71,7 +71,7 @@ Vector<Sprite*>& SpriteBatch::get_sprites()
 	return this->sprites;
 }
 
-unsigned int SpriteBatch::size()
+size_t SpriteBatch::size()
 {
 	return this->sprites.size();
 }

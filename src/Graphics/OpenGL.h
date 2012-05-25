@@ -20,6 +20,10 @@
 #		define WIN32
 #	endif
 #	include <GL/GLee.h>
+#	undef GL_LINES_ADJACENCY_EXT
+#	undef GL_LINE_STRIP_ADJACENCY_EXT
+#	undef GL_TRIANGLES_ADJACENCY_EXT
+#	undef GL_TRIANGLE_STRIP_ADJACENCY_EXT
 #	include <GL/glext.h>
 #else
 #	define GL_GLEXT_PROTOTYPES 1
