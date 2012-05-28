@@ -49,7 +49,7 @@ namespace ConFuoco
 		inline void set_pitch(const float pitch) const;
 
 		/// Load audio file into buffer.
-		Wave* load_sfx(const char *const file);
+		Wave* load_sfx(const char *const file, const unsigned int instances = 1);
 
 		/// Prepare to stream from file.
 		Wave* load_stream(const char *const file);

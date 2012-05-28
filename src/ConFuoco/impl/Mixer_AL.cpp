@@ -19,9 +19,9 @@ namespace ConFuoco
 		alcCloseDevice(device);
 	}
 
-	Wave* Mixer::load_sfx(const char *const file)
+	Wave* Mixer::load_sfx(const char *const file, const unsigned int instances)
 	{
-		Sound *s = this->bank.create_sound();
+		Sound *s = this->bank.create_sound(instances);
 		s->load(file);
 		return s;
 	}

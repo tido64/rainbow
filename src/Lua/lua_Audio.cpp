@@ -98,18 +98,19 @@ int lua_Audio::delete_stream(lua_State *L)
 
 int lua_Audio::load_sfx(lua_State *L)
 {
-	LUA_ASSERT(lua_gettop(L) == 1, "rainbow.audio.load_sfx(file)");
+	LUA_ASSERT(lua_gettop(L) == 1 || lua_gettop(L) == 2, "rainbow.audio.load_sfx(file[, instances])");
 
 	const char *file = lua_tolstring(L, 1, nullptr);
 	const char *path = Data::get_path(file);
-	lua_pushlightuserdata(L, Mixer::Instance().load_sfx(path));
+	const unsigned int instances = (lua_gettop(L) == 2) ? lua_tointeger(L, 2) : 1;
+	lua_pushlightuserdata(L, Mixer::Instance().load_sfx(path, instances));
 	Data::free(path);
 	return 1;
 }
 
 int lua_Audio::load_stream(lua_State *L)
 {
-	LUA_ASSERT(lua_gettop(L) == 1 || lua_gettop(L) == 2, "rainbow.audio.load_stream(file, loops)");
+	LUA_ASSERT(lua_gettop(L) == 1 || lua_gettop(L) == 2, "rainbow.audio.load_stream(file[, loops])");
 
 	const char *file = lua_tolstring(L, 1, nullptr);
 	const char *path = Data::get_path(file);

@@ -20,7 +20,7 @@ namespace ConFuoco
 		this->stream_count = 0;
 	}
 
-	Sound* WaveBank::create_sound()
+	Sound* WaveBank::create_sound(const unsigned int instances)
 	{
 		if (this->sound_count + this->stream_count >= size)
 		{
@@ -28,7 +28,7 @@ namespace ConFuoco
 			return nullptr;
 		}
 
-		Sound *s = new Sound();
+		Sound *s = new Sound(instances);
 		this->bank[this->sound_count] = s;
 		++this->sound_count;
 		return s;

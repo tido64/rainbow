@@ -23,7 +23,7 @@ namespace ConFuoco
 		void clear();
 
 		/// Create a sound.
-		Sound* create_sound();
+		Sound* create_sound(const unsigned int instances);
 
 		/// Create a stream.
 		Stream* create_stream();
