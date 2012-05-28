@@ -4,6 +4,7 @@
 #ifdef RAINBOW_SDL
 
 #include <cstdio>
+#include <cstring>
 
 #include "Common/RainbowAssert.h"
 #include "ConFuoco/Decoder.h"
@@ -12,18 +13,27 @@
 namespace ConFuoco
 {
 	Stream::Stream() :
-		format(0), rate(0), loops(-1), buffer_size(0), buffer(nullptr), handle(nullptr)
+		sid(0), format(0), rate(0), loops(-1), buffer_size(0), buffer(nullptr), handle(nullptr)
 	{
-		R_ASSERT(this->sid, "Failed to generate source.");
-
 		alGenBuffers(CONFUOCO_STREAM_AL_BUFFERS, this->bid);
 		if (alGetError() != AL_NO_ERROR)
 		{
-			alDeleteSources(1, &this->sid);
-			this->sid = 0;
 			fprintf(stderr, "Rainbow::ConFuoco::AL: Failed to generate buffers\n");
 			return;
 		}
+
+		alGenSources(1, &this->sid);
+		if (alGetError() != AL_NO_ERROR)
+		{
+			alDeleteBuffers(CONFUOCO_STREAM_AL_BUFFERS, this->bid);
+			memset(this->bid, 0, CONFUOCO_STREAM_AL_BUFFERS * sizeof(*this->bid));
+
+			fprintf(stderr, "Rainbow::ConFuoco::AL: Failed to generate source\n");
+			return;
+		}
+
+		alSourcei(this->sid, AL_SOURCE_RELATIVE, AL_TRUE);
+		alSourcef(this->sid, AL_ROLLOFF_FACTOR, 0.0f);
 	}
 
 	Stream::~Stream()
@@ -33,27 +43,9 @@ namespace ConFuoco
 
 		if (this->handle)
 			this->release();
+
+		alDeleteSources(1, &this->sid);
 		alDeleteBuffers(CONFUOCO_STREAM_AL_BUFFERS, this->bid);
-	}
-
-	bool Stream::load(const char *const file)
-	{
-		int type = 0;
-		alGetSourcei(this->sid, AL_SOURCE_TYPE, &type);
-		if (type != AL_UNDETERMINED)
-			this->release();
-
-		// Load file
-		this->buffer_size = Decoder::open_stream(&this->handle, &this->buffer, this->format, this->rate, file);
-		if (!this->buffer_size)
-			return false;
-		this->format = (this->format == 1) ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16;
-		return this->preload();
-	}
-
-	void Stream::set_loops(const int loops)
-	{
-		this->loops = loops;
 	}
 
 	void Stream::update()
@@ -85,6 +77,57 @@ namespace ConFuoco
 			if(processed != AL_PLAYING)
 				alSourcePlay(this->sid);
 		}
+	}
+
+	bool Stream::load(const char *const file)
+	{
+		int type = 0;
+		alGetSourcei(this->sid, AL_SOURCE_TYPE, &type);
+		if (type != AL_UNDETERMINED)
+			this->release();
+
+		// Load file
+		this->buffer_size = Decoder::open_stream(&this->handle, &this->buffer, this->format, this->rate, file);
+		if (!this->buffer_size)
+			return false;
+		this->format = (this->format == 1) ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16;
+		return this->preload();
+	}
+
+	void Stream::set_gain(const float gain)
+	{
+		alSourcef(this->sid, AL_GAIN, gain);
+	}
+
+	void Stream::set_loops(const int loops)
+	{
+		this->loops = loops;
+	}
+
+	void Stream::pause() const
+	{
+		int state = 0;
+		alGetSourcei(this->sid, AL_SOURCE_STATE, &state);
+		if (state == AL_STOPPED)
+			return;
+
+		alSourcePause(this->sid);
+	}
+
+	void Stream::play(const float x, const float y, const float z) const
+	{
+		int state = 0;
+		alGetSourcei(this->sid, AL_SOURCE_STATE, &state);
+		if (state == AL_PLAYING)
+			return;
+
+		alSource3f(this->sid, AL_POSITION, x, y, z);
+		alSourcePlay(this->sid);
+	}
+
+	void Stream::stop() const
+	{
+		alSourceStop(this->sid);
 	}
 
 	bool Stream::preload()
