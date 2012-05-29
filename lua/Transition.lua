@@ -45,6 +45,58 @@ local function unregister(t)
 end
 
 do
+	local audio = rainbow.audio
+
+	local function fadein(self, dt)
+		if self.elapsed == 0 then
+			audio.play(self.source)
+		end
+		self.elapsed = self.elapsed + dt
+		local progress = self.elapsed / self.duration
+		if progress >= 1.0 then
+			unregister(self)
+		else
+			audio.set_gain(self.source, progress)
+		end
+	end
+
+	local function fadeout(self, dt)
+		self.elapsed = self.elapsed + dt
+		local progress = self.elapsed / self.duration
+		if progress >= 1.0 then
+			audio.stop(self.source)
+			unregister(self)
+		else
+			audio.set_gain(self.source, 1.0 - progress)
+		end
+	end
+
+	local function new(source, duration)
+		local self = {
+			cancel = unregister,
+			transition = effects.linear
+		}
+		self.duration = duration
+		self.elapsed = 0
+		self.source = source
+		register(self)
+		return self
+	end
+
+	function rainbow.transition.fadein(source, duration)
+		local self = new(source, duration)
+		self.tick = fadein
+		return self
+	end
+
+	function rainbow.transition.fadeout(source, duration)
+		local self = new(source, duration)
+		self.tick = fadeout
+		return self
+	end
+end
+
+do
 	local function move(self, dt)
 		self.elapsed = self.elapsed + dt
 		local progress = self.elapsed / self.duration
