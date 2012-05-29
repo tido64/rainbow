@@ -56,7 +56,15 @@ void lua_Audio::init(lua_State *L)
 
 int lua_Audio::set_gain(lua_State *L)
 {
-	Mixer::Instance().set_gain(lua_tonumber(L, 1));
+	LUA_ASSERT(lua_gettop(L) == 1 || lua_gettop(L) == 2, "rainbow.audio.set_gain(volume) or rainbow.audio.set_gain(source, volume)");
+
+	if (lua_gettop(L) == 2)
+	{
+		Wave *w = static_cast<Wave*>(lua_touserdata(L, 1));
+		w->set_gain(lua_tonumber(L, 2));
+	}
+	else
+		Mixer::Instance().set_gain(lua_tonumber(L, 1));
 	return 0;
 }
 
