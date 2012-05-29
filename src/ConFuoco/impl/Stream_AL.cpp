@@ -13,7 +13,8 @@
 namespace ConFuoco
 {
 	Stream::Stream() :
-		sid(0), format(0), rate(0), loops(-1), buffer_size(0), buffer(nullptr), handle(nullptr)
+		playing(false), sid(0), format(0), rate(0), loops(-1), buffer_size(0),
+		buffer(nullptr), handle(nullptr)
 	{
 		alGenBuffers(CONFUOCO_STREAM_AL_BUFFERS, this->bid);
 		if (alGetError() != AL_NO_ERROR)
@@ -50,6 +51,9 @@ namespace ConFuoco
 
 	void Stream::update()
 	{
+		if (!this->playing)
+			return;
+
 		int processed = 0;
 		alGetSourcei(this->sid, AL_BUFFERS_PROCESSED, &processed);
 		for (int i = 0; i < processed; ++i)
@@ -112,6 +116,7 @@ namespace ConFuoco
 			return;
 
 		alSourcePause(this->sid);
+		this->playing = false;
 	}
 
 	void Stream::play(const float x, const float y, const float z) const
@@ -123,11 +128,13 @@ namespace ConFuoco
 
 		alSource3f(this->sid, AL_POSITION, x, y, z);
 		alSourcePlay(this->sid);
+		this->playing = true;
 	}
 
 	void Stream::stop() const
 	{
 		alSourceStop(this->sid);
+		this->playing = false;
 	}
 
 	bool Stream::preload()

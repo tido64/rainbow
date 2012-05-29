@@ -28,6 +28,8 @@ namespace ConFuoco
 		virtual void stop() const;
 
 	private:
+		mutable bool playing;
+
 		unsigned int bid[CONFUOCO_STREAM_AL_BUFFERS];  ///< alBuffer ids.
 		unsigned int sid;                              ///< alSource id.
 
