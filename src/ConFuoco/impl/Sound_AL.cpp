@@ -82,7 +82,7 @@ namespace ConFuoco
 
 	void Sound::set_loops(const int) { }
 
-	void Sound::pause() const
+	void Sound::pause()
 	{
 		int state = 0;
 		for (unsigned int i = 0; i < this->sid_count; ++i)
@@ -96,7 +96,7 @@ namespace ConFuoco
 		}
 	}
 
-	void Sound::play(const float x, const float y, const float z) const
+	void Sound::play(const float x, const float y, const float z)
 	{
 		int state = 0;
 		if (this->paused)
@@ -125,7 +125,7 @@ namespace ConFuoco
 		}
 	}
 
-	void Sound::stop() const
+	void Sound::stop()
 	{
 		for (unsigned int i = 0; i < this->sid_count; ++i)
 			alSourceStop(this->sids[i]);

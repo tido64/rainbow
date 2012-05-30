@@ -23,9 +23,9 @@ namespace ConFuoco
 		virtual void set_gain(const float gain);
 		virtual void set_loops(const int loops);
 
-		virtual void pause() const;
-		virtual void play(const float x = 0.0f, const float y = 0.0f, const float z = 0.0f) const;
-		virtual void stop() const;
+		virtual void pause();
+		virtual void play(const float x = 0.0f, const float y = 0.0f, const float z = 0.0f);
+		virtual void stop();
 
 	private:
 		mutable bool playing;

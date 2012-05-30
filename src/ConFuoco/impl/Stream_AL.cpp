@@ -108,7 +108,7 @@ namespace ConFuoco
 		this->loops = loops;
 	}
 
-	void Stream::pause() const
+	void Stream::pause()
 	{
 		int state = 0;
 		alGetSourcei(this->sid, AL_SOURCE_STATE, &state);
@@ -119,21 +119,36 @@ namespace ConFuoco
 		this->playing = false;
 	}
 
-	void Stream::play(const float x, const float y, const float z) const
+	void Stream::play(const float x, const float y, const float z)
 	{
+		if (!this->buffer_size)
+			return;
+
 		int state = 0;
 		alGetSourcei(this->sid, AL_SOURCE_STATE, &state);
 		if (state == AL_PLAYING)
 			return;
+
+		int queued;
+		alGetSourcei(this->sid, AL_BUFFERS_QUEUED, &queued);
+		if (!queued)
+			this->preload();
 
 		alSource3f(this->sid, AL_POSITION, x, y, z);
 		alSourcePlay(this->sid);
 		this->playing = true;
 	}
 
-	void Stream::stop() const
+	void Stream::stop()
 	{
 		alSourceStop(this->sid);
+
+		int buffers;
+		alGetSourcei(this->sid, AL_BUFFERS_PROCESSED, &buffers);
+		if (buffers > 0)
+			alSourceUnqueueBuffers(this->sid, buffers, this->bid);
+		R_ASSERT(alGetError() == AL_NO_ERROR, "[Rainbow::ConFuoco] AL: Failed to unqueue buffers");
+
 		this->playing = false;
 	}
 
@@ -156,7 +171,7 @@ namespace ConFuoco
 	void Stream::release()
 	{
 		this->stop();
-		alSourceUnqueueBuffers(this->sid, CONFUOCO_STREAM_AL_BUFFERS, this->bid);
+
 		Decoder::close(this->handle);
 		delete[] this->buffer;
 		this->buffer = nullptr;

@@ -43,12 +43,12 @@ namespace ConFuoco
 		this->player.numberOfLoops = loops;
 	}
 
-	void Stream::pause() const
+	void Stream::pause()
 	{
 		[this->player pause];
 	}
 
-	void Stream::play(const float, const float, const float) const
+	void Stream::play(const float, const float, const float)
 	{
 		if (this->player.playing)
 			return;
@@ -56,7 +56,7 @@ namespace ConFuoco
 		[this->player play];
 	}
 
-	void Stream::stop() const
+	void Stream::stop()
 	{
 		[this->player stop];
 	}

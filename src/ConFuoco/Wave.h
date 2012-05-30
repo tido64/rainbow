@@ -38,14 +38,14 @@ namespace ConFuoco
 
 		/// Pause playback; sound remains ready to resume playback from where
 		/// it left off.
-		virtual void pause() const = 0;
+		virtual void pause() = 0;
 
 		/// Play a sound asynchronously.
 		/// \param x,y,z  Position of the sound.
-		virtual void play(const float x = 0.0f, const float y = 0.0f, const float z = 0.0f) const = 0;
+		virtual void play(const float x = 0.0f, const float y = 0.0f, const float z = 0.0f) = 0;
 
 		/// Stop playback and undo the setup needed for playback.
-		virtual void stop() const = 0;
+		virtual void stop() = 0;
 	};
 }
 
