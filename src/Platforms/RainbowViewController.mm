@@ -96,6 +96,12 @@
 	return t_arr;
 }
 
+- (void)didReceiveMemoryWarning
+{
+	self->director->on_memory_warning();
+	[self didReceiveMemoryWarning];
+}
+
 - (void)viewDidLoad
 {
 	[super viewDidLoad];
@@ -176,7 +182,7 @@
 
 #pragma mark - GLKViewDelegate
 
-- (void)glkView
+- (void)glkView:(GLKView *)view drawInRect:(CGRect)rect
 {
 	glClear(GL_COLOR_BUFFER_BIT);
 	self->director->draw();
@@ -199,27 +205,26 @@
 
 #pragma mark - UIResponder
 
-- (void)touchesBegan:(NSSet *)touches
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
 	Touch *t = [self getTouches:touches];
 	Input::Instance().touch_began(t, touches.count);
 	delete[] t;
 }
 
-- (void)touchesCancelled
+- (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
 {
 	Input::Instance().touch_canceled();
 }
 
-- (void)touchesEnded:(NSSet *)touches
-
+- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
 	Touch *t = [self getTouches:touches];
 	Input::Instance().touch_ended(t, touches.count);
 	delete[] t;
 }
 
-- (void)touchesMoved:(NSSet *)touches
+- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
 {
 	Touch *t = [self getTouches:touches];
 	Input::Instance().touch_moved(t, touches.count);

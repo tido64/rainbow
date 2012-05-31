@@ -37,3 +37,8 @@ void Director::update(const unsigned long t)
 	else
 		this->scenegraph.update();
 }
+
+void Director::on_memory_warning()
+{
+	lua_gc(this->lua.L, LUA_GCCOLLECT, 0);
+}

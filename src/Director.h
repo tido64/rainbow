@@ -26,6 +26,9 @@ public:
 	/// \param t  Current time or milliseconds since last frame (platform-dependent).
 	void update(const unsigned long t = 0);
 
+	/// Called when a low memory warning has been issued.
+	void on_memory_warning();
+
 private:
 	ShutdownSequence shutdown;
 	LuaMachine lua;
