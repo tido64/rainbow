@@ -49,6 +49,7 @@ int lua_SceneGraph::add_child(lua_State *L)
 
 	// Retrieve Lua wrapper
 	const int n = lua_gettop(L);
+	LUA_CHECK(L, lua_type(L, n) != LUA_TNIL, "rainbow.scenegraph: Invalid child node specified");
 	lua_rawgeti(L, n, 0);
 	W **w = static_cast<W**>(luaL_checkudata(L, -1, W::class_name));
 
@@ -69,7 +70,9 @@ void lua_SceneGraph::set_root(SceneGraph::Node *r)
 
 SceneGraph::Node* lua_SceneGraph::to_node(lua_State *L, const int n)
 {
-	return static_cast<SceneGraph::Node*>(lua_touserdata(L, n));
+	SceneGraph::Node *node = static_cast<SceneGraph::Node*>(lua_touserdata(L, n));
+	LUA_CHECK(L, node, "rainbow.scenegraph: Invalid node specified");
+	return node;
 }
 
 #endif

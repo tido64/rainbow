@@ -38,6 +38,10 @@ namespace Rainbow
 		} \
 	} while (0)
 
+#define LUA_CHECK(L, expr, reason) \
+	if (!(expr)) \
+		luaL_error(L, reason)
+
 #define R_ASSERT(expr, reason) \
 	do \
 	{ \
@@ -52,9 +56,10 @@ namespace Rainbow
 
 #else
 
-#define LUA_ASSERT(expr, syntax) static_cast<void>(0)
-#define R_ASSERT(expr, reason)   static_cast<void>(0)
-#define static_assert(expr)      static_cast<void>(0)
+#define LUA_ASSERT(expr, syntax)   static_cast<void>(0)
+#define LUA_CHECK(L, expr, reason) static_cast<void>(0)
+#define R_ASSERT(expr, reason)     static_cast<void>(0)
+#define static_assert(expr)        static_cast<void>(0)
 
 #endif  // !NDEBUG
 #endif  // RAINBOW_ASSERT_H_

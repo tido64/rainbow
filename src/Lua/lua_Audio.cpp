@@ -56,11 +56,12 @@ void lua_Audio::init(lua_State *L)
 
 int lua_Audio::set_gain(lua_State *L)
 {
-	LUA_ASSERT(lua_gettop(L) == 1 || lua_gettop(L) == 2, "rainbow.audio.set_gain(volume) or rainbow.audio.set_gain(source, volume)");
+	LUA_ASSERT(lua_gettop(L) == 1 || lua_gettop(L) == 2, "rainbow.audio.set_gain([source,] volume)");
 
 	if (lua_gettop(L) == 2)
 	{
 		Wave *w = static_cast<Wave*>(lua_touserdata(L, 1));
+		LUA_CHECK(L, w, "rainbow.audio.set_gain: Invalid source specified");
 		w->set_gain(lua_tonumber(L, 2));
 	}
 	else
@@ -88,18 +89,20 @@ int lua_Audio::clear(lua_State *)
 
 int lua_Audio::delete_sfx(lua_State *L)
 {
-	LUA_ASSERT(lua_gettop(L) == 1, "rainbow.audio.delete_sfx(sfx)");
+	LUA_ASSERT(lua_gettop(L) == 1, "rainbow.audio.delete_sfx(source)");
 
 	const Sound *s = static_cast<const Sound*>(lua_topointer(L, 1));
+	LUA_CHECK(L, s, "rainbow.audio.delete_sfx: Invalid source specified");
 	Mixer::Instance().remove(s);
 	return 0;
 }
 
 int lua_Audio::delete_stream(lua_State *L)
 {
-	LUA_ASSERT(lua_gettop(L) == 1, "rainbow.audio.delete_stream(stream)");
+	LUA_ASSERT(lua_gettop(L) == 1, "rainbow.audio.delete_stream(source)");
 
 	const Stream *s = static_cast<const Stream*>(lua_topointer(L, 1));
+	LUA_CHECK(L, s, "rainbow.audio.delete_stream: Invalid source specified");
 	Mixer::Instance().remove(s);
 	return 0;
 }
@@ -134,7 +137,9 @@ int lua_Audio::pause(lua_State *L)
 {
 	LUA_ASSERT(lua_gettop(L) == 1, "rainbow.audio.pause(id)");
 
-	static_cast<Wave*>(lua_touserdata(L, 1))->pause();
+	Wave *w = static_cast<Wave*>(lua_touserdata(L, 1));
+	LUA_CHECK(L, w, "rainbow.audio.pause: Invalid source specified");
+	w->pause();
 	return 0;
 }
 
@@ -142,7 +147,9 @@ int lua_Audio::play(lua_State *L)
 {
 	LUA_ASSERT(lua_gettop(L) == 1, "rainbow.audio.play(id)");
 
-	static_cast<Wave*>(lua_touserdata(L, 1))->play();
+	Wave *w = static_cast<Wave*>(lua_touserdata(L, 1));
+	LUA_CHECK(L, w, "rainbow.audio.play: Invalid source specified");
+	w->play();
 	return 0;
 }
 
@@ -150,6 +157,8 @@ int lua_Audio::stop(lua_State *L)
 {
 	LUA_ASSERT(lua_gettop(L) == 1, "rainbow.audio.stop(id)");
 
-	static_cast<Wave*>(lua_touserdata(L, 1))->stop();
+	Wave *w = static_cast<Wave*>(lua_touserdata(L, 1));
+	LUA_CHECK(L, w, "rainbow.audio.stop: Invalid source specified");
+	w->stop();
 	return 0;
 }
