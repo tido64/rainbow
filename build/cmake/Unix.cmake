@@ -1,7 +1,7 @@
 if(UNIX)
 	if(NOT MINGW)
 		set(RAINBOW_CSTD   "-std=c99")
-		set(RAINBOW_CXXSTD "-std=c++0x")
+		set(RAINBOW_CXXSTD "-std=c++11")
 	endif()
 
 	# Common C-/C++ compiler flags
@@ -22,7 +22,7 @@ if(UNIX)
 	set(CMAKE_C_FLAGS "-pipe ${RAINBOW_CSTD} -w ${RAINBOW_COMMON_CFLAGS}")
 
 	# Set CXXFLAGS
-	set(CMAKE_CXX_FLAGS "-pipe ${RAINBOW_CXXSTD} ${RAINBOW_CXX_WARNINGS} -U__GXX_EXPERIMENTAL_CXX0X__ ${RAINBOW_COMMON_CFLAGS}")
+	set(CMAKE_CXX_FLAGS "-pipe ${RAINBOW_CXXSTD} ${RAINBOW_CXX_WARNINGS} ${RAINBOW_COMMON_CFLAGS}")
 	if(CMAKE_CXX_COMPILER MATCHES "clang")
 		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libstdc++")
 	endif()

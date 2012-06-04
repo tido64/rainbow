@@ -52,14 +52,19 @@ namespace Rainbow
 		} \
 	} while (0)
 
-#define static_assert(expr) Rainbow::_static_assert<(expr)>()
+#ifndef __GXX_EXPERIMENTAL_CXX0X__
+#	define static_assert(expr, reason) Rainbow::_static_assert<(expr)>()
+#endif
 
 #else
 
 #define LUA_ASSERT(expr, syntax)   static_cast<void>(0)
 #define LUA_CHECK(L, expr, reason) static_cast<void>(0)
 #define R_ASSERT(expr, reason)     static_cast<void>(0)
-#define static_assert(expr)        static_cast<void>(0)
+
+#ifndef __GXX_EXPERIMENTAL_CXX0X__
+#	define RS_ASSERT(expr, reason) static_cast<void>(0)
+#endif
 
 #endif  // !NDEBUG
 #endif  // RAINBOW_ASSERT_H_

@@ -31,7 +31,7 @@ namespace Rainbow
 
 		_Color<unsigned char>& operator=(const unsigned int c)
 		{
-			static_assert(sizeof(unsigned int) >= 4);
+			static_assert(sizeof(unsigned int) >= 4, "int is less than 32-bits");
 			this->r = 0xff & (c >> 24);
 			this->g = 0xff & (c >> 16);
 			this->b = 0xff & (c >> 8);
@@ -62,7 +62,7 @@ namespace Rainbow
 
 		_Color<float>& operator=(const unsigned int c)
 		{
-			static_assert(sizeof(unsigned int) >= 4);
+			static_assert(sizeof(unsigned int) >= 4, "int is less than 32-bits");
 			const float white = 1.0f / 255.0f;
 			this->r = (0xff & (c >> 24)) * white;
 			this->g = (0xff & (c >> 16)) * white;
