@@ -86,10 +86,10 @@ namespace SceneGraph
 		Node& operator=(const Node &);
 
 		/// Draw this node and all its enabled children.
-		virtual void draw();
+		virtual void draw() override;
 
 		/// Update this node and all its enabled children.
-		virtual void update();
+		virtual void update() override;
 	};
 
 	Node::Node() :

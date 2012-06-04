@@ -53,15 +53,15 @@ public:
 
 	// Implement Drawable
 
-	virtual void draw();
-	virtual void update();
+	virtual void draw() override;
+	virtual void update() override;
 
 	// Implement Touchable
 
-	virtual void touch_began(const Touch *const touches, const size_t count);
-	virtual void touch_canceled();
-	virtual void touch_ended(const Touch *const touches, const size_t count);
-	virtual void touch_moved(const Touch *const touches, const size_t count);
+	virtual void touch_began(const Touch *const touches, const size_t count) override;
+	virtual void touch_canceled() override;
+	virtual void touch_ended(const Touch *const touches, const size_t count) override;
+	virtual void touch_moved(const Touch *const touches, const size_t count) override;
 
 private:
 	bool changed;             ///< Whether an update is needed.

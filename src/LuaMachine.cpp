@@ -119,7 +119,7 @@ LuaMachine::LuaMachine() : scenegraph(nullptr), L(luaL_newstate())
 	strcat(lua_path, pkg_path);
 
 	lua_pushstring(this->L, lua_path);
-	Data::free(lua_path);
+	delete[] lua_path;
 	lua_setfield(this->L, -3, "path");
 	lua_pop(this->L, 2);
 

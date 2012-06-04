@@ -35,7 +35,7 @@ public:
 
 	inline void set_sprite(Sprite *);
 
-	virtual void tick();
+	virtual void tick() override;
 
 private:
 	int delay;                   ///< Number of ticks to delay before the animation loops. Negative numbers disable looping.

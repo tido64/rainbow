@@ -6,6 +6,7 @@ fi
 cd lib/libpng
 rm -fr \
 	*-sh \
+	*.dfa \
 	*.jpg \
 	*.png \
 	*.sh \
@@ -30,5 +31,6 @@ rm -fr \
 	missing \
 	png.5 \
 	pngtest.c \
+	pngwrite.c \
 	projects \
 	TODO

@@ -39,7 +39,7 @@
 #define RAINBOW_BUILD "Rainbow / Bifrost Entertainment Property / Built " __DATE__
 
 // Retrieve GCC compiler version
-#if __GNUC__
+#ifdef __GNUC__
 #	ifndef __GNUC_PATCHLEVEL__
 #		define __GNUC_VERSION__ (__GNUC__ * 10000 + __GNUC_MINOR__ * 100)
 #	else
@@ -49,8 +49,9 @@
 #	define __GNUC_VERSION__ 0
 #endif
 
-// Define nullptr for non-C++0x-compliant compilers
+// Define nullptr for non-C++11-compliant compilers
 #if __cplusplus <= 19971 && __GNUC_VERSION__ < 40600
+#	define override
 
 const
 class nullptr_t
@@ -68,6 +69,7 @@ private:
 
 #elif __MINGW32__
 #	define nullptr 0
+#	define override
 #endif
 
 #endif  // PLATFORM_H_

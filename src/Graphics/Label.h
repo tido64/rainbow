@@ -29,10 +29,10 @@ public:
 	void set_text(const char *);
 
 	/// Draw text at previously set position.
-	virtual void draw();
+	virtual void draw() override;
 
 	/// Populate the vertex array.
-	virtual void update();
+	virtual void update() override;
 
 protected:
 	static const unsigned char stale_color    = 0x01;
@@ -41,13 +41,13 @@ protected:
 
 private:
 	unsigned char stale;       ///< Flags indicating need for update.
+	Colorb color;              ///< Color of the text.
+	Vec2f position;            ///< Position of the text (top left).
 	size_t size;               ///< Size of the char array.
 	size_t vertices;           ///< Number of vertices to draw.
 	char *text;                ///< Content of this label.
 	SpriteVertex *vx;          ///< Vertex array containing the text.
 	SmartPtr<FontAtlas> font;  ///< The font used in this label.
-	Vec2f position;            ///< Position of the text (top left).
-	Colorb color;              ///< Color of the text.
 };
 
 Label::Label() :

@@ -39,10 +39,10 @@ public:
 	inline size_t size();
 
 	/// Draw the batch of sprites.
-	virtual void draw();
+	virtual void draw() override;
 
 	/// Update the batch of sprites.
-	virtual void update();
+	virtual void update() override;
 
 protected:
 	/// Add a sprite to the batch.

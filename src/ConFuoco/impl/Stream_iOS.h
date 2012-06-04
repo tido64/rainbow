@@ -17,14 +17,14 @@ namespace ConFuoco
 		inline Stream();
 		virtual ~Stream();
 
-		virtual bool load(const char *const file);
+		virtual bool load(const char *const file) override;
 
-		virtual void set_gain(const float gain);
-		virtual void set_loops(const int loops);
+		virtual void set_gain(const float gain) override;
+		virtual void set_loops(const int loops) override;
 
-		virtual void pause();
-		virtual void play(const float x = 0.0f, const float y = 0.0f, const float z = 0.0f);
-		virtual void stop();
+		virtual void pause() override;
+		virtual void play(const float x = 0.0f, const float y = 0.0f, const float z = 0.0f) override;
+		virtual void stop() override;
 
 		inline void update();
 

@@ -10,6 +10,8 @@
 #include "Input/Input.h"
 #include "Input/Touch.h"
 
+#pragma clang diagnostic ignored "-Wunused-parameter"
+
 @interface RainbowViewController()
 {
 	CGFloat scale;
@@ -98,7 +100,9 @@
 
 - (void)didReceiveMemoryWarning
 {
-	self->director->on_memory_warning();
+	// Don't propagate the warning to Director. It will force Lua to collect
+	// garbage and mess up iPad 1's OpenGL driver.
+	//self->director->on_memory_warning();
 	[self didReceiveMemoryWarning];
 }
 
