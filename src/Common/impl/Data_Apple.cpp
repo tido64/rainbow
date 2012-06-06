@@ -34,7 +34,7 @@ Data::~Data() { }
 
 void Data::copy(const void *const data, const size_t length)
 {
-	R_ASSERT(false, "copy: Not implemented yet");
+	[this->data replaceBytesInRange:NSMakeRange(0, this->data.length) withBytes:data length:length];
 }
 
 bool Data::save(const char *const file) const
