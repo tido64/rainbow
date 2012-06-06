@@ -38,17 +38,16 @@ namespace Rainbow
 	}
 
 	/// Compare two floating point numbers and approximate.
-	/// \return True when approximately equal
+	/// \return \c true when approximately equal.
 	inline bool equalf(const float a, const float b)
 	{
 		return fabs(a - b) <= ((fabs(a) < fabs(b) ? fabs(b) : fabs(a)) * FLT_EPSILON);
 	}
 
 	/// Determine whether an integer is a power of 2.
-	/// \note 0 is incorrectly considered a power of 2.
 	inline bool is_pow2(const unsigned int i)
 	{
-		return (i & (i - 1)) == 0;
+		return i && !(i & (i - 1));
 	}
 
 	/// Convert an integer to a C-string.

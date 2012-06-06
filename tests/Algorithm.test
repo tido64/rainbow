@@ -26,6 +26,32 @@ TEST(AlgorithmTest, IntegerToString)
 	delete[] number;
 }
 
+TEST(AlgorithmTest, IsPowerOfTwo)
+{
+	unsigned int p = 1;
+	for (unsigned int i = 0; i < 100; ++i)
+	{
+		if (i == p)
+		{
+			ASSERT_TRUE(Rainbow::is_pow2(i));
+			p *= 2;
+		}
+		else
+			ASSERT_FALSE(Rainbow::is_pow2(i));
+	}
+}
+
+TEST(AlgorithmTest, NextPowerOfTwo)
+{
+	unsigned int p = 1;
+	for (unsigned int i = 1; i < 100; ++i)
+	{
+		ASSERT_EQ(p, Rainbow::next_pow2(i));
+		if (i == p)
+			p *= 2;
+	}
+}
+
 TEST(AlgorithmTest, RadiansToDegrees)
 {
 	ASSERT_TRUE(Rainbow::equalf(0.05483f, Rainbow::degrees(Rainbow::radians(0.05483f))));
