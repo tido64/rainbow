@@ -19,9 +19,9 @@ TEST_F(ListTest, Iterators)
 	ASSERT_EQ(this->test_size, this->intlist.size());
 
 	List<unsigned int>::Iterator i = this->intlist.begin();
-	ASSERT_EQ(true, i);
+	ASSERT_TRUE(i);
 	ASSERT_EQ(this->intlist.end(), --i);
-	ASSERT_EQ(false, i);
+	ASSERT_FALSE(i);
 
 	unsigned int count = 0;
 	i = this->intlist.begin();

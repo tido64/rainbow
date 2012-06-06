@@ -1,7 +1,7 @@
 #include <unistd.h>
 #include "Common/Chrono.h"
 
-TEST(ChronoTest, Sleep)
+TEST(ChronoTest, DISABLED_Sleep)
 {
 	Chrono::Instance().update();
 	usleep(16000);

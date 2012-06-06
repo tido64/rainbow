@@ -7,7 +7,7 @@ TEST(AlgorithmTest, ApproximatelyEqualFloats)
 
 TEST(AlgorithmTest, DegreesToRadians)
 {
-	ASSERT_EQ(3.14f, Rainbow::deg2rad(Rainbow::rad2deg(3.14f)));
+	ASSERT_TRUE(Rainbow::equalf(3.14f, Rainbow::radians(Rainbow::degrees(3.14f))));
 }
 
 TEST(AlgorithmTest, DistanceBetweenTwoPoints)
@@ -24,4 +24,9 @@ TEST(AlgorithmTest, IntegerToString)
 	number = Rainbow::itoa(-65535);
 	ASSERT_STREQ("-65535", number);
 	delete[] number;
+}
+
+TEST(AlgorithmTest, RadiansToDegrees)
+{
+	ASSERT_TRUE(Rainbow::equalf(0.05483f, Rainbow::degrees(Rainbow::radians(0.05483f))));
 }
