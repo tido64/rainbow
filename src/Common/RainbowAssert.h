@@ -63,7 +63,7 @@ namespace Rainbow
 #define R_ASSERT(expr, reason)     static_cast<void>(0)
 
 #ifndef __GXX_EXPERIMENTAL_CXX0X__
-#	define RS_ASSERT(expr, reason) static_cast<void>(0)
+#	define static_assert(expr, reason) static_cast<void>(0)
 #endif
 
 #endif  // !NDEBUG
