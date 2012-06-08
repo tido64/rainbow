@@ -34,8 +34,6 @@ include \$(CLEAR_VARS)
 LOCAL_MODULE := $TARGET
 LOCAL_SRC_FILES := $SRC_FILES
 
-#LOCAL_CPP_EXTENSION := .c .cpp
-#LOCAL_CPP_FEATURES := exceptions  # Required by Lua
 LOCAL_C_INCLUDES := $PROJECT/src $PROJECT/lib $PROJECT/lib/FreeType/include $PROJECT/lib/libpng $PROJECT/lib/Lua
 LOCAL_CFLAGS := -finline-functions -ftree-vectorize
 

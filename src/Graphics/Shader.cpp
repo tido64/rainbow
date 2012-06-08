@@ -1,5 +1,7 @@
 // Copyright 2012 Bifrost Entertainment. All rights reserved.
 
+#include <cstdio>
+
 #include "Common/RainbowAssert.h"
 #include "Graphics/OpenGL.h"
 #include "Graphics/Shader.h"

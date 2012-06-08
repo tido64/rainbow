@@ -45,7 +45,7 @@ Data::operator NSMutableData*() const
 	return this->data;
 }
 
-#elif defined(RAINBOW_UNIX) || defined(RAINBOW_WIN)
+#elif defined(RAINBOW_ANDROID) || defined(RAINBOW_UNIX) || defined(RAINBOW_WIN)
 
 Data::Data() : allocated(0), sz(0), data(nullptr) { }
 

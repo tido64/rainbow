@@ -9,7 +9,13 @@
 #include "Platform.h"
 
 #if defined(RAINBOW_ANDROID)
+#	define GL_GLEXT_PROTOTYPES 1
 #	include <GLES2/gl2.h>
+#	include <GLES2/gl2ext.h>
+#	define GL_DRAW_FRAMEBUFFER GL_FRAMEBUFFER
+#	define glBindVertexArray     glBindVertexArrayOES
+#	define glDeleteVertexArrays  glDeleteVertexArraysOES
+#	define glGenVertexArrays     glGenVertexArraysOES
 #elif defined(RAINBOW_IOS)
 #	include <OpenGLES/ES2/gl.h>
 #	define glBindVertexArray     glBindVertexArrayOES
