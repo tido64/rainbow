@@ -37,6 +37,86 @@ TEST_F(VectorTest, PushBackPastCapacity)
 		ASSERT_EQ(i, intvec[i]);
 }
 
+TEST_F(VectorTest, QuickRemoveFirstElement)
+{
+	for (unsigned int i = 0; i < intvec.size(); ++i)
+		ASSERT_EQ(i, intvec[i]);
+
+	const unsigned int last = intvec[intvec.size() - 1];
+	intvec.qremove(0);
+	ASSERT_EQ(last, intvec[0]);
+
+	for (unsigned int i = 1; i < intvec.size(); ++i)
+		ASSERT_EQ(i, intvec[i]);
+}
+
+TEST_F(VectorTest, QuickRemoveLastElement)
+{
+	for (unsigned int i = 0; i < intvec.size(); ++i)
+		ASSERT_EQ(i, intvec[i]);
+
+	const unsigned int last = intvec[intvec.size() - 1];
+	intvec.qremove(last);
+
+	for (unsigned int i = 0; i < intvec.size(); ++i)
+		ASSERT_EQ(i, intvec[i]);
+}
+
+TEST_F(VectorTest, QuickRemoveMiddleElement)
+{
+	for (unsigned int i = 0; i < intvec.size(); ++i)
+		ASSERT_EQ(i, intvec[i]);
+
+	const unsigned int height = 2469;
+	const unsigned int last = intvec[intvec.size() - 1];
+	intvec.qremove(height);
+
+	for (unsigned int i = 0; i < height; ++i)
+		ASSERT_EQ(i, intvec[i]);
+	ASSERT_EQ(last, intvec[height]);
+	for (unsigned int i = height + 1; i < intvec.size(); ++i)
+		ASSERT_EQ(i, intvec[i]);
+}
+
+TEST_F(VectorTest, RemoveFirstElement)
+{
+	for (unsigned int i = 0; i < intvec.size(); ++i)
+		ASSERT_EQ(i, intvec[i]);
+
+	intvec.remove(0);
+
+	for (unsigned int i = 0; i < intvec.size(); ++i)
+		ASSERT_EQ(i + 1, intvec[i]);
+}
+
+TEST_F(VectorTest, RemoveLastElement)
+{
+	for (unsigned int i = 0; i < intvec.size(); ++i)
+		ASSERT_EQ(i, intvec[i]);
+
+	intvec.remove(intvec.size() - 1);
+
+	for (unsigned int i = 0; i < intvec.size(); ++i)
+		ASSERT_EQ(i, intvec[i]);
+}
+
+TEST_F(VectorTest, RemoveMiddleElement)
+{
+	for (unsigned int i = 0; i < intvec.size(); ++i)
+		ASSERT_EQ(i, intvec[i]);
+
+	const size_t fifth = 5;
+	intvec.remove(fifth);
+
+	for (unsigned int i = 0; i < intvec.size(); ++i)
+	{
+		if (i >= fifth)
+			ASSERT_EQ(i + 1, intvec[i]);
+		else
+			ASSERT_EQ(i, intvec[i]);
+	}
+}
+
 TEST_F(VectorTest, ReserveLessThanSize)
 {
 	intvec.reserve(0);

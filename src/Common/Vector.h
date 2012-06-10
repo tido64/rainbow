@@ -36,12 +36,24 @@ public:
 	void clear();
 
 	/// Add an element to the vector.
-	void push_back(const T &element);
+	void push_back(const T &value);
+
+	/// Remove the element at index by swapping it with the last element. Don't
+	/// use this if you need to maintain the element order.
+	void qremove(const size_t i);
 
 	/// Remove the first element that equals a value by swapping it with the
 	/// last element. Don't use this if you need to maintain the element order.
-	/// \param element  The value to remove.
-	void quick_remove(const T &element);
+	/// \param value  The value to remove.
+	void qremove_val(const T &value);
+
+	/// Remove the element at index while preserving the order of elements.
+	void remove(const size_t i);
+
+	/// Remove the first element that equals a value while preserving the order
+	/// of elements.
+	/// \param value  The value to remove.
+	void remove_val(const T &value);
 
 	/// Increase or decrease the capacity of the vector.
 	/// \note On failure, the vector will remain untouched.
@@ -118,14 +130,42 @@ void Vector<T>::push_back(const T &element)
 }
 
 template<class T>
-void Vector<T>::quick_remove(const T &element)
+void Vector<T>::qremove(const size_t i)
+{
+	this->c_array[i].~T();
+	if (--this->count != i)
+		memmove(this->c_array + i, this->c_array + this->count, sizeof(T));
+}
+
+template<class T>
+void Vector<T>::qremove_val(const T &element)
 {
 	for (size_t i = 0; i < this->count; ++i)
 	{
 		if (this->c_array[i] == element)
 		{
-			this->c_array[i].~T();
-			memmove(this->c_array + i, this->c_array + (--this->count), sizeof(T));
+			this->qremove(i);
+			break;
+		}
+	}
+}
+
+template<class T>
+void Vector<T>::remove(const size_t i)
+{
+	this->c_array[i].~T();
+	T *arr = this->c_array + i;
+	memmove(arr, arr + 1, (--this->count - i) * sizeof(T));
+}
+
+template<class T>
+void Vector<T>::remove_val(const T &element)
+{
+	for (size_t i = 0; i < this->count; ++i)
+	{
+		if (this->c_array[i] == element)
+		{
+			this->remove(i);
 			break;
 		}
 	}
