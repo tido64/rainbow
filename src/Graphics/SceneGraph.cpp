@@ -12,8 +12,8 @@ namespace SceneGraph
 {
 	Node::~Node()
 	{
-		for (List<Node*>::Iterator i = this->children.begin(); i != this->children.end(); ++i)
-			delete *i;
+		for (size_t i = 0; i < this->children.size(); ++i)
+			delete this->children[i];
 	}
 
 	void Node::move(const float x, const float y)
@@ -21,8 +21,6 @@ namespace SceneGraph
 		if (equalf(x, 0.0f) && equalf(y, 0.0f))
 			return;
 
-		for (List<Node*>::Iterator i = this->children.begin(); i != this->children.end(); ++i)
-			i->move(x, y);
 		switch (this->type)
 		{
 			case SpriteNode:
@@ -38,6 +36,8 @@ namespace SceneGraph
 			default:
 				break;
 		}
+		for (size_t i = 0; i < this->children.size(); ++i)
+			this->children[i]->move(x, y);
 	}
 
 	void Node::rotate(const float r)
@@ -60,8 +60,8 @@ namespace SceneGraph
 			default:
 				break;
 		}
-		for (List<Node*>::Iterator i = this->children.begin(); i != this->children.end(); ++i)
-			i->rotate(r);
+		for (size_t i = 0; i < this->children.size(); ++i)
+			this->children[i]->rotate(r);
 	}
 
 	void Node::scale(const float f)
@@ -81,8 +81,8 @@ namespace SceneGraph
 			default:
 				break;
 		}
-		for (List<Node*>::Iterator i = this->children.begin(); i != this->children.end(); ++i)
-			i->scale(f);
+		for (size_t i = 0; i < this->children.size(); ++i)
+			this->children[i]->scale(f);
 	}
 
 	Node& Node::operator=(const Node &n)
@@ -107,8 +107,8 @@ namespace SceneGraph
 			default:
 				break;
 		}
-		for (List<Node*>::Iterator i = this->children.begin(); i != this->children.end(); ++i)
-			i->draw();
+		for (size_t i = 0; i < this->children.size(); ++i)
+			this->children[i]->draw();
 	}
 
 	void Node::update()
@@ -129,7 +129,7 @@ namespace SceneGraph
 			default:
 				break;
 		}
-		for (List<Node*>::Iterator i = this->children.begin(); i != this->children.end(); ++i)
-			i->update();
+		for (size_t i = 0; i < this->children.size(); ++i)
+			this->children[i]->update();
 	}
 }

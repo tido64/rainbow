@@ -1,8 +1,7 @@
 #ifndef TREENODE_H_
 #define TREENODE_H_
 
-#include "Common/List.h"
-#include "Common/RainbowAssert.h"
+#include "Common/Vector.h"
 
 /// A barebone implementation of a tree node.
 ///
@@ -27,8 +26,8 @@ public:
 	void set_parent(T *);
 
 protected:
-	T *parent;          ///< This node's parent.
-	List<T*> children;  ///< This node's children.
+	T *parent;            ///< This node's parent.
+	Vector<T*> children;  ///< This node's children.
 };
 
 template<class T>
@@ -49,11 +48,7 @@ void TreeNode<T>::remove_child(T *n)
 {
 	if (!n)
 		return;
-#ifndef NDEBUG
-	size_t removed =
-#endif
-	this->children.remove(n);
-	R_ASSERT(removed, "remove_child: Node does not exist.");
+	this->children.remove_val(n);
 	delete n;
 }
 
