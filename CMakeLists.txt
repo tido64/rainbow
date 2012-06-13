@@ -11,18 +11,20 @@ option(PHYSICS "Use physics (Box2D)" OFF)
 # Auto-generate files
 execute_process(COMMAND tools/shaders-gen.py WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 
-# Target
-file(GLOB_RECURSE RAINBOW_CPP src/*.cpp)
-add_executable(rainbow ${RAINBOW_CPP} ${RAINBOW_H})
-
 # Common variables
 set(LOCAL_LIBRARY lib)
 set(LOCAL_LIBRARY_BUILD ${CMAKE_SOURCE_DIR}/build/cmake)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${LOCAL_LIBRARY_BUILD})
 set(CMAKE_BUILD_TYPE Debug)
 
-# Cross compile definitions
+# Platform-specifics
 include(${LOCAL_LIBRARY_BUILD}/MinGW.cmake)
+include(${LOCAL_LIBRARY_BUILD}/MSVC.cmake)
+include(${LOCAL_LIBRARY_BUILD}/Unix.cmake)
+
+# Target
+file(GLOB_RECURSE RAINBOW_CPP src/*.cpp)
+add_executable(rainbow ${RAINBOW_CPP} ${RAINBOW_H})
 
 # Dynamic libraries
 find_package(OpenAL REQUIRED)
@@ -42,10 +44,6 @@ if(GTEST)
 	include(${LOCAL_LIBRARY_BUILD}/gtest.cmake)
 endif()
 
-# Platform-specifics
-include(${LOCAL_LIBRARY_BUILD}/MSVC.cmake)
-include(${LOCAL_LIBRARY_BUILD}/Unix.cmake)
-
 # Rainbow
 include_directories(src
 	${LOCAL_LIBRARY}
@@ -55,8 +53,8 @@ include_directories(src
 	${ZLIB_INCLUDE_DIRS}
 	${GTEST_INCLUDE_DIRS}
 )
-if(MINGW)
-	target_link_libraries(rainbow ${RAINBOW_LIBRARIES} dxguid gdi32 winmm)
-else()
-	target_link_libraries(rainbow ${RAINBOW_LIBRARIES})
-endif()
+target_link_libraries(rainbow
+	${GTEST_LIBRARY} freetype lua ${PHYSICS_LIBRARY}
+	${SDL_LIBRARY} ${VORBISFILE_LIBRARY}
+	${OPENAL_LIBRARY} ${OPENGL_ext_LIBRARY} ${OPENGL_gl_LIBRARY}
+	png ${ZLIB_LIBRARIES} ${PLATFORM_LIBRARIES})

@@ -40,8 +40,6 @@ if(UNIX)
 	set(CMAKE_CXX_FLAGS_RELEASE "-O2 -D_FORTIFY_SOURCE=2 -finline-functions")
 
 	if(NOT MINGW)
-		set(RAINBOW_LIBRARIES ${GTEST_LIBRARY} freetype lua ${PHYSICS_LIBRARY} ${SDL_LIBRARY}
-		    ${VORBISFILE_LIBRARY} ${OPENAL_LIBRARY} ${OPENGL_gl_LIBRARY} png
-		    ${ZLIB_LIBRARIES} m rt stdc++)
+		set(PLATFORM_LIBRARIES m rt stdc++)
 	endif()
 endif()

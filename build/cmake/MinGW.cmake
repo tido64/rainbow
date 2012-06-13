@@ -23,5 +23,8 @@ if(MINGW)
 	set(CMAKE_SHARED_LIBRARY_LINK_C_FLAGS  )
 	set(CMAKE_SHARED_LIBRARY_LINK_CXX_FLAGS  )
 
+	# Set platform libraries
+	set(PLATFORM_LIBRARIES dxguid gdi32 winmm)
+
 	message(STATUS "Set up environment for cross compiling - done")
 endif()
