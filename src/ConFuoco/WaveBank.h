@@ -13,11 +13,19 @@ namespace ConFuoco
 	/// \author Tommy Nguyen
 	class WaveBank
 	{
+		friend class Mixer;
+
 	public:
 		static const unsigned int size = 16;  ///< Maximum number of audio sources.
 
-		inline WaveBank();
 		inline ~WaveBank();
+
+	private:
+		unsigned int sound_count;   ///< Number of sounds in the wave bank.
+		unsigned int stream_count;  ///< Number of streams in the wave bank.
+		Wave *bank[size << 1];      ///< Wave storage.
+
+		inline WaveBank();
 
 		/// Clear out the wave bank.
 		void clear();
@@ -36,11 +44,6 @@ namespace ConFuoco
 
 		/// Update all streams.
 		void update();
-
-	private:
-		unsigned int sound_count;   ///< Number of sounds in the wave bank.
-		unsigned int stream_count;  ///< Number of streams in the wave bank.
-		Wave *bank[size << 1];      ///< Wave storage.
 	};
 
 	WaveBank::WaveBank() : sound_count(0), stream_count(0) { }

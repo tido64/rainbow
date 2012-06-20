@@ -2,6 +2,8 @@
 #define CONFUOCO_STREAM_AL_H_
 #define CONFUOCO_STREAM_AL_BUFFERS 3
 
+#include <cstddef>
+
 #include "ConFuoco/Wave.h"
 
 namespace ConFuoco
