@@ -3,7 +3,7 @@
 
 #include "Platform.h"
 #if defined(RAINBOW_ANDROID)
-#	include "ConFuoco/impl/Stream_Android.h"
+#	include "ConFuoco/impl/Stream_SL.h"
 #elif defined(RAINBOW_IOS)
 #	include "ConFuoco/impl/Stream_iOS.h"
 #elif defined(RAINBOW_SDL)

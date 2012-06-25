@@ -1,7 +1,7 @@
 // Copyright 2011-12 Bifrost Entertainment. All rights reserved.
 
 #include "Common/Data.h"
-#if defined(RAINBOW_UNIX) || defined(RAINBOW_WIN)
+#if defined(RAINBOW_ANDROID) || defined(RAINBOW_UNIX) || defined(RAINBOW_WIN)
 
 #include <cstdio>
 #include <cstring>
