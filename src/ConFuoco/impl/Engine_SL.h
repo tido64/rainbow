@@ -59,7 +59,7 @@ namespace ConFuoco
 		(*this->mix_volume)->SetVolumeLevel(this->mix_volume, (1.0f - gain) * -100);
 	}
 
-	void Engine::set_orientation(const float r) const
+	void Engine::set_orientation(const float) const
 	{
 		//float ori[] = { cosf(r + kPi_2), sinf(r + kPi_2), 0.0f, 0.0f, 0.0f, 1.0f };
 		//alListenerfv(AL_ORIENTATION, ori);

@@ -9,7 +9,7 @@ namespace ConFuoco
 {
 	Engine::Engine() :
 		engine_obj(nullptr), engine(nullptr), mix_obj(nullptr),
-		mix_pitch(nullptr), mix_volume(nullptr)
+		mix_volume(nullptr), mix_pitch(nullptr)
 	{
 		const SLInterfaceID iids[] = {
 			SL_IID_VOLUME,

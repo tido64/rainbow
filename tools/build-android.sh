@@ -6,6 +6,9 @@ NDK_HOME="$HOME/bin/android-ndk"
 PROJECT="$(cd -P "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 TARGET=rainbow
 
+# Create project files
+$NDK_HOME/../android-sdk/tools/android -s create project --name "Rainbow" --target "android-15" --path . --package "com.bifrostentertainment.rainbow" --activity "Rainbow" || exit 1
+
 echo -n "Generating jni/Android.mk..."
 
 # Gather Rainbow source files
@@ -22,6 +25,7 @@ SRC_FILES="$SRC_FILES lib/FreeType/src/autofit/autofit.c lib/FreeType/src/base/f
 
 cd $BUILD_DIR
 mkdir -p jni
+
 echo "\
 $COPYRIGHT
 $HEADER
@@ -36,8 +40,9 @@ LOCAL_SRC_FILES := $SRC_FILES
 
 LOCAL_C_INCLUDES := $PROJECT/src $PROJECT/lib $PROJECT/lib/FreeType/include $PROJECT/lib/libpng $PROJECT/lib/Lua $NDK_HOME/sources/android/native_app_glue
 LOCAL_CFLAGS := -DDARWIN_NO_CARBON -DFT2_BUILD_LIBRARY -finline-functions -ftree-vectorize
+LOCAL_CPPFLAGS := -Wall -Wextra -Wno-variadic-macros -Woverloaded-virtual -Wsign-promo -fno-rtti
 
-LOCAL_LDLIBS := -landroid -lEGL -lGLESv2 -lOpenSLES -ldl -llog -lz
+LOCAL_LDLIBS := -landroid -lEGL -lGLESv2 -lOpenSLES -llog -lz
 LOCAL_STATIC_LIBRARIES := android_native_app_glue
 
 include \$(BUILD_SHARED_LIBRARY)
@@ -50,9 +55,9 @@ echo "\
 $COPYRIGHT
 $HEADER
 
-APP_PLATFORM := android-14
+APP_PLATFORM := android-11
 APP_ABI := x86  # armeabi-v7a  # all
-APP_STL := stlport_static  # Required by Box2D" \
+APP_STL := stlport_shared  # Required by Box2D" \
 > jni/Application.mk
 echo " done"
 
@@ -63,19 +68,27 @@ echo "\
           package=\"com.bifrostentertainment.rainbow\"
           android:versionCode=\"1\"
           android:versionName=\"1.0\">
-	<application android:icon=\"@drawable/icon\" android:label=\"@string/app_name\" android:debuggable=\"true\">
-		<activity android:name=\"android.app.NativeActivity\" android:label=\"@string/app_name\">
-			<meta-data android:name=\"android.app.lib_name\" android:value=\"rainbow\" />
+	<uses-sdk android:minSdkVersion=\"11\" />
+	<uses-feature android:name=\"android.hardware.screen.portrait\"
+	              android:glEsVersion=\"0x00020000\" />
+	<application android:hasCode=\"false\"
+	             android:icon=\"@drawable/icon\"
+	             android:label=\"@string/app_name\"
+	             android:theme=\"@android:style/Theme.NoTitleBar.Fullscreen\">
+		<activity android:label=\"@string/app_name\"
+		          android:launchMode=\"singleTop\"
+		          android:name=\"android.app.NativeActivity\"
+		          android:screenOrientation=\"sensorLandscape\">
 			<intent-filter>
 				<action android:name=\"android.intent.action.MAIN\" />
 				<category android:name=\"android.intent.category.LAUNCHER\" />
 			</intent-filter>
+			<meta-data android:name=\"android.app.lib_name\" android:value=\"rainbow\" />
 		</activity>
 	</application>
-	<uses-feature android:glEsVersion=\"0x00020000\" />
-	<uses-sdk android:minSdkVersion=\"14\" />
 </manifest>" \
 > AndroidManifest.xml
 echo " done"
 
-$NDK_HOME/ndk-build $@
+$NDK_HOME/ndk-build $@ &&
+JAVA_HOME=/usr/lib/jvm/java-7-openjdk /usr/bin/ant debug
