@@ -8,7 +8,6 @@
 
 #if defined(__ANDROID__)
 #	define RAINBOW_ANDROID
-#	define RAINBOW_ZIP
 #elif defined(__APPLE__)
 #	define RAINBOW_IOS
 #elif defined(__linux)

@@ -3,8 +3,9 @@
 #include "Platform.h"
 #ifdef RAINBOW_ANDROID
 
-#include <jni.h>
+#include <sys/types.h>
 #include <EGL/egl.h>
+#include <android/asset_manager.h>
 #include <android/input.h>
 #include <android/sensor.h>
 #include <android_native_app_glue.h>
@@ -18,19 +19,18 @@
 #include "Input/Input.h"
 #include "Input/Touch.h"
 
-bool active = true;  ///< Whether the window is in focus
-bool done = false;   ///< Whether the user has requested to quit
+bool active = false;  ///< Whether the window is in focus.
+bool done = false;    ///< Whether the user has requested to quit.
 
 struct AInstance
 {
 	uint32_t width;
 	uint32_t height;
 
-	AAssetManager *assetManager;
-	AInputQueue *inputQueue;
+	//AAssetManager *assetManager;  // Accessed through this->app->activity->assetManager
 	ASensorManager *sensorManager;
-	const ASensor *accelerometerSensor;
 	ASensorEventQueue *sensorEventQueue;
+	const ASensor *accelerometerSensor;
 	struct android_app *app;
 
 	EGLDisplay display;
@@ -40,7 +40,7 @@ struct AInstance
 };
 
 void android_destroy_display(AInstance *ainstance);
-int android_init_display(AInstance *ainstance);
+void android_init_display(AInstance *ainstance);
 void android_handle_event(struct android_app *app, int32_t cmd);
 int32_t android_handle_input(struct android_app *app, AInputEvent *event);
 int32_t android_handle_motion(AInputEvent *event);
@@ -58,6 +58,12 @@ void android_main(struct android_app *state)
 	state->onInputEvent = android_handle_input;
 	ainstance.app = state;
 
+	// Prepare to monitor accelerometer
+	ainstance.sensorManager = ASensorManager_getInstance();
+	ainstance.accelerometerSensor = ASensorManager_getDefaultSensor(ainstance.sensorManager, ASENSOR_TYPE_ACCELEROMETER);
+	if (ainstance.accelerometerSensor)
+		ainstance.sensorEventQueue = ASensorManager_createEventQueue(ainstance.sensorManager, state->looper, LOOPER_ID_USER, NULL, NULL);
+
 	Chrono::Instance().update();
 	while (!done)
 	{
@@ -69,6 +75,18 @@ void android_main(struct android_app *state)
 		{
 			if (source)
 				source->process(state, source);
+
+			// If a sensor has data, process it now.
+			if (ident == LOOPER_ID_USER && ainstance.accelerometerSensor)
+			{
+				ASensorEvent event;
+				while (ASensorEventQueue_getEvents(ainstance.sensorEventQueue, &event, 1) > 0)
+					Input::Instance().accelerated(
+						event.acceleration.x,
+						event.acceleration.y,
+						event.acceleration.z,
+						event.timestamp);
+			}
 		}
 
 		if (!active)
@@ -108,9 +126,8 @@ void android_destroy_display(AInstance *ainstance)
 	active = false;
 }
 
-int android_init_display(AInstance *ainstance)
+void android_init_display(AInstance *ainstance)
 {
-	active = true;
 	EGLDisplay &dpy = ainstance->display;
 	EGLSurface &surface = ainstance->surface;
 	EGLContext &ctx = ainstance->context;
@@ -131,13 +148,15 @@ int android_init_display(AInstance *ainstance)
 	EGLint nconfigs;
 	eglChooseConfig(dpy, attribs, &config, 1, &nconfigs);
 
-	// ...
+	EGLint format;
+	eglGetConfigAttrib(dpy, config, EGL_NATIVE_VISUAL_ID, &format);
+	ANativeWindow_setBuffersGeometry(ainstance->app->window, 0, 0, format);
 
 	surface = eglCreateWindowSurface(dpy, config, ainstance->app->window, NULL);
 	ctx = eglCreateContext(dpy, config, NULL, NULL);
-
-	if (eglMakeCurrent(dpy, surface, surface, ctx) == EGL_FALSE)
-		return -1;
+	done = eglMakeCurrent(dpy, surface, surface, ctx) == EGL_FALSE;
+	if (done)
+		return;
 
 	Renderer::init();
 
@@ -148,6 +167,8 @@ int android_init_display(AInstance *ainstance)
 	ainstance->height = value;
 	Renderer::resize(ainstance->width, ainstance->height);
 	ainstance->director.set_video(ainstance->width, ainstance->height);
+
+	active = true;
 }
 
 void android_handle_event(struct android_app *app, int32_t cmd)
@@ -194,7 +215,7 @@ void android_handle_event(struct android_app *app, int32_t cmd)
 	}
 }
 
-int32_t android_handle_input(struct android_app *app, AInputEvent *event)
+int32_t android_handle_input(struct android_app *, AInputEvent *event)
 {
 	switch (AInputEvent_getType(event))
 	{
@@ -205,7 +226,6 @@ int32_t android_handle_input(struct android_app *app, AInputEvent *event)
 		default:
 			return 0;
 	}
-	return 0;
 }
 
 int32_t android_handle_motion(AInputEvent *event)
@@ -245,6 +265,24 @@ int32_t android_handle_motion(AInputEvent *event)
 	}
 	delete[] touches;
 	return 1;
+}
+
+unsigned char* android_open(AInstance *ainstance, const char *file)
+{
+	AAsset *asset = AAssetManager_open(ainstance->app->activity->assetManager, file, AASSET_MODE_UNKNOWN);
+	if (!asset)
+		return nullptr;
+
+	size_t size = AAsset_getLength(asset);
+	unsigned char *buffer = new unsigned char[size];
+	int read = AAsset_read(asset, buffer, size);
+	if (read < 0)
+	{
+		delete[] buffer;
+		return nullptr;
+	}
+	AAsset_close(asset);
+	return buffer;
 }
 
 #endif

@@ -259,7 +259,11 @@ void Canvas::update()
 			vertices.push_back(vx[3]);
 		}
 		Renderer::update_buffer(this->canvas_buffer, (points << 2) * sizeof(SpriteVertex), vertices.begin());
+	#ifndef RAINBOW_ANDROID
 		Renderer::draw_buffer(this->canvas_vao, points * 6);
+	#else
+		Renderer::draw_buffer(this->canvas_buffer, points * 6);
+	#endif
 
 		// Update previous point. We use this method because input events might
 		// occur several times between frames, so (x0,y0) becomes unreliable.

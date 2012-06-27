@@ -117,6 +117,9 @@ void Renderer::bind_texture(const unsigned int texture)
 void Renderer::create_buffer(unsigned int &buffer, unsigned int &array_object)
 {
 	glGenBuffers(1, &buffer);
+
+#ifndef RAINBOW_ANDROID
+
 	bind_buffer(buffer);
 
 	glGenVertexArrays(1, &array_object);
@@ -134,6 +137,8 @@ void Renderer::create_buffer(unsigned int &buffer, unsigned int &array_object)
 	glEnableVertexAttribArray(Pipeline::VERTEX_LOCATION);
 
 	glBindVertexArray(0);
+
+#endif
 }
 
 void Renderer::create_texture(unsigned int &texture, const unsigned int internal_format,
@@ -159,7 +164,9 @@ void Renderer::create_texture(unsigned int &texture, const unsigned int internal
 
 void Renderer::delete_buffer(const unsigned int buffer, const unsigned int array_object)
 {
+#ifndef RAINBOW_ANDROID
 	glDeleteVertexArrays(1, &array_object);
+#endif
 	glDeleteBuffers(1, &buffer);
 }
 
@@ -175,9 +182,23 @@ void Renderer::delete_texture(const unsigned int texture)
 
 void Renderer::draw_buffer(const unsigned int array_object, const unsigned int count)
 {
+#ifndef RAINBOW_ANDROID
+
 	glBindVertexArray(array_object);
 	glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_SHORT, nullptr);
 	glBindVertexArray(0);
+
+#else
+
+	bind_buffer(array_object);
+
+	glVertexAttribPointer(Pipeline::COLOR_LOCATION, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(SpriteVertex), 0);
+	glVertexAttribPointer(Pipeline::TEXCOORD_LOCATION, 2, GL_FLOAT, GL_FALSE, sizeof(SpriteVertex), SpriteVertex::tx_offset);
+	glVertexAttribPointer(Pipeline::VERTEX_LOCATION, 2, GL_FLOAT, GL_TRUE, sizeof(SpriteVertex), SpriteVertex::vx_offset);
+
+	glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_SHORT, nullptr);
+
+#endif
 
 	R_ASSERT(glGetError() == GL_NO_ERROR, "Failed to draw buffer");
 }

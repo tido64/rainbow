@@ -8,6 +8,8 @@ TARGET=rainbow
 
 # Create project files
 $NDK_HOME/../android-sdk/tools/android -s create project --name "Rainbow" --target "android-15" --path . --package "com.bifrostentertainment.rainbow" --activity "Rainbow" || exit 1
+rm -r src/*
+mkdir -p jni
 
 echo -n "Generating jni/Android.mk..."
 
@@ -24,7 +26,6 @@ done
 SRC_FILES="$SRC_FILES lib/FreeType/src/autofit/autofit.c lib/FreeType/src/base/ftbase.c lib/FreeType/src/base/ftbbox.c lib/FreeType/src/base/ftbitmap.c lib/FreeType/src/base/ftdebug.c lib/FreeType/src/base/ftglyph.c lib/FreeType/src/base/ftinit.c lib/FreeType/src/base/ftsystem.c lib/FreeType/src/cff/cff.c lib/FreeType/src/pshinter/pshinter.c lib/FreeType/src/psnames/psnames.c lib/FreeType/src/sfnt/sfnt.c lib/FreeType/src/smooth/smooth.c lib/FreeType/src/truetype/truetype.c"
 
 cd $BUILD_DIR
-mkdir -p jni
 
 echo "\
 $COPYRIGHT
@@ -56,8 +57,8 @@ $COPYRIGHT
 $HEADER
 
 APP_PLATFORM := android-11
-APP_ABI := x86  # armeabi-v7a  # all
-APP_STL := stlport_shared  # Required by Box2D" \
+APP_ABI := armeabi-v7a  # all
+APP_STL := stlport_static  # Required by Box2D" \
 > jni/Application.mk
 echo " done"
 
@@ -71,8 +72,7 @@ echo "\
 	<uses-sdk android:minSdkVersion=\"11\" />
 	<uses-feature android:name=\"android.hardware.screen.portrait\"
 	              android:glEsVersion=\"0x00020000\" />
-	<application android:hasCode=\"false\"
-	             android:icon=\"@drawable/icon\"
+	<application android:icon=\"@drawable/ic_launcher\"
 	             android:label=\"@string/app_name\"
 	             android:theme=\"@android:style/Theme.NoTitleBar.Fullscreen\">
 		<activity android:label=\"@string/app_name\"
@@ -90,5 +90,5 @@ echo "\
 > AndroidManifest.xml
 echo " done"
 
-$NDK_HOME/ndk-build $@ &&
+NDK_DEBUG=1 $NDK_HOME/ndk-build $@ &&
 JAVA_HOME=/usr/lib/jvm/java-7-openjdk /usr/bin/ant debug

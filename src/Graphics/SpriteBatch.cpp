@@ -30,7 +30,11 @@ Sprite* SpriteBatch::add(const int x, const int y, const int w, const int h)
 void SpriteBatch::draw()
 {
 	this->texture->bind();
+#ifndef RAINBOW_ANDROID
 	Renderer::draw_buffer(this->array_object, this->batch_vertices);
+#else
+	Renderer::draw_buffer(this->buffer, this->batch_vertices);
+#endif
 }
 
 TextureAtlas* SpriteBatch::set_texture(const Data &texture)
