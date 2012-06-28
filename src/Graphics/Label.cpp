@@ -1,5 +1,6 @@
 // Copyright 2011-12 Bifrost Entertainment. All rights reserved.
 
+#include "Algorithm.h"
 #include "Graphics/Label.h"
 
 Label::~Label()
@@ -46,20 +47,29 @@ void Label::update()
 			this->vertices = 0;
 			SpriteVertex *vx = this->vx;
 			Vec2f pen = this->position;
-			for (const char *text = this->text; *text; ++text)
+			for (const unsigned char *text = reinterpret_cast<unsigned char*>(this->text); *text;)
 			{
-				const FontGlyph &glyph = this->font->get_glyph(*text);
-				pen.x += glyph.left;
+				size_t bytes;
+				const unsigned long c = Rainbow::utf8_decode(text, bytes);
+				if (!bytes)
+					break;
+				text += bytes;
+
+				const FontGlyph *glyph = this->font->get_glyph(c);
+				if (!glyph)
+					continue;
+
+				pen.x += glyph->left;
 
 				for (size_t i = 0; i < 4; ++i)
 				{
-					vx->texcoord = glyph.quad[i].texcoord;
-					vx->position = glyph.quad[i].position;
+					vx->texcoord = glyph->quad[i].texcoord;
+					vx->position = glyph->quad[i].position;
 					vx->position += pen;
 					++vx;
 				}
 
-				pen.x += glyph.advance - glyph.left;
+				pen.x += glyph->advance - glyph->left;
 				++this->vertices;
 			}
 			this->vertices = (this->vertices << 2) + (this->vertices << 1);

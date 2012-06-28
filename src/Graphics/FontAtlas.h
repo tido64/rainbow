@@ -1,6 +1,7 @@
 #ifndef FONTATLAS_H_
 #define FONTATLAS_H_
-#define FONTATLAS_KERNING
+#define FONTATLAS_EXTENDED 6
+//#define FONTATLAS_KERNING
 
 #include "Common/SmartPtr.h"
 #include "Graphics/FontGlyph.h"
@@ -38,7 +39,7 @@ public:
 
 	inline void bind() const;
 
-	inline const FontGlyph& get_glyph(const char c) const;
+	inline const FontGlyph* get_glyph(const unsigned long c) const;
 
 	/// Load font and create a texture atlas.
 	bool load(const Data &font);
@@ -49,16 +50,12 @@ protected:
 	static const unsigned short int padding = 3;  ///< Padding around font glyph texture.
 
 private:
-	unsigned int texture;      ///< Texture name.
-	Colorb color;              ///< Font colour.
-	FontGlyph charset[chars];  ///< Character set.
+	unsigned int texture;  ///< Texture name.
+	Colorb color;          ///< Font colour.
+	FontGlyph charset[chars + FONTATLAS_EXTENDED];  ///< Character set.
 
 	/// Intentionally left undefined.
 	FontAtlas(const FontAtlas &);
-
-	/// Find the next power of 2 greater than given number.
-	/// \return Power of 2, greater than 16 (minimum GL texture size)
-	inline int next_pow2(const int a);
 
 	/// Intentionally left undefined.
 	FontAtlas& operator=(const FontAtlas &);
@@ -69,16 +66,21 @@ void FontAtlas::bind() const
 	Renderer::bind_texture(this->texture);
 }
 
-const FontGlyph& FontAtlas::get_glyph(const char c) const
+const FontGlyph* FontAtlas::get_glyph(const unsigned long c) const
 {
-	return this->charset[static_cast<unsigned int>(c - ascii_offset)];
-}
+#if FONTATLAS_EXTENDED > 0
 
-int FontAtlas::next_pow2(const int a)
-{
-	int p = 16;
-	for (; p < a; p <<= 1);
-	return p;
+	if (c >= 0x80u)
+	{
+		for (size_t i = chars; i < chars + FONTATLAS_EXTENDED; ++i)
+			if (this->charset[i].code == c)
+				return &this->charset[i];
+		return nullptr;
+	}
+
+#endif
+
+	return &this->charset[static_cast<unsigned char>(c) - ascii_offset];
 }
 
 #endif

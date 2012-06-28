@@ -4,21 +4,43 @@
 #include FT_FREETYPE_H
 #include FT_GLYPH_H
 
+#include "Algorithm.h"
 #include "Common/Data.h"
 #include "Graphics/FontAtlas.h"
 #include "Graphics/OpenGL.h"
 
-FontAtlas::FontAtlas(const float pt) : pt(pt), texture(0) { }
+FontAtlas::FontAtlas(const float pt) : pt(pt), texture(0)
+{
+	for (size_t i = 0; i < chars; ++i)
+		this->charset[i].code = i + ascii_offset;
+
+#if FONTATLAS_EXTENDED > 0
+
+	const unsigned long characters[] = {
+		0x00c5,  // LATIN CAPITAL LETTER A WITH RING ABOVE
+		0x00c6,  // LATIN CAPITAL LETTER AE
+		0x00d8,  // LATIN CAPITAL LETTER O WITH STROKE
+		0x00e5,  // LATIN SMALL LETTER A WITH RING ABOVE
+		0x00e6,  // LATIN SMALL LETTER AE
+		0x00f8,  // LATIN SMALL LETTER O WITH STROKE
+		0
+	};
+
+	for (size_t i = 0; characters[i]; ++i)
+		this->charset[chars + i].code = characters[i];
+
+#endif
+}
 
 bool FontAtlas::load(const Data &font)
 {
-	R_ASSERT(font, "load: No data provided.");
+	R_ASSERT(font, "No data provided");
 
 	// Instantiate FreeType
 	FT_Library lib;
 	if (FT_Init_FreeType(&lib))
 	{
-		R_ASSERT(false, "load: Failed to initialise FreeType.");
+		R_ASSERT(false, "Failed to initialise FreeType");
 		return false;
 	}
 
@@ -27,7 +49,15 @@ bool FontAtlas::load(const Data &font)
 	if (FT_New_Memory_Face(lib, static_cast<const FT_Byte*>(font.bytes()), font.size(), 0, &face))
 	{
 		FT_Done_FreeType(lib);
-		R_ASSERT(false, "load: Failed to load font face.");
+		R_ASSERT(false, "Failed to load font face");
+		return false;
+	}
+
+	if (FT_Select_Charmap(face, FT_ENCODING_UNICODE))
+	{
+		FT_Done_Face(face);
+		FT_Done_FreeType(lib);
+		R_ASSERT(false, "Failed to select character map");
 		return false;
 	}
 
@@ -42,19 +72,22 @@ bool FontAtlas::load(const Data &font)
 		{
 			FT_Done_Face(face);
 			FT_Done_FreeType(lib);
-			R_ASSERT(false, "load: Failed to load characters.");
+			R_ASSERT(false, "Failed to load characters");
 			return false;
 		}
 
 		const FT_Bitmap &bitmap = face->glyph->bitmap;
 
 		const unsigned int width = bitmap.width + (padding << 1);
+		if (width > max_width)
+			max_width = width;
+
 		const unsigned int height = bitmap.rows + (padding << 1);
-		if (width > max_width) max_width = width;
-		if (height > max_height) max_height = height;
+		if (height > max_height)
+			max_height = height;
 	}
-	const unsigned int tex_width = next_pow2(max_width * 10);
-	const unsigned int tex_height = next_pow2(max_height * 10);
+	const unsigned int tex_width = Rainbow::next_pow2(max_width * 12);
+	const unsigned int tex_height = Rainbow::next_pow2(max_height * 12);
 
 	// GL_LUMINANCE8_ALPHA8 buffer
 	unsigned int w_offset = (tex_width * tex_height) << 1;
@@ -66,9 +99,10 @@ bool FontAtlas::load(const Data &font)
 	unsigned int h_offset = 0;
 	const float tex_w_fraction = 1.0f / tex_width;
 	const float tex_h_fraction = 1.0f / tex_height;
-	for (unsigned int i = 0; i < chars; ++i)
+	for (unsigned int i = 0; i < chars + FONTATLAS_EXTENDED; ++i)
 	{
-		FT_Load_Char(face, i + ascii_offset, FT_LOAD_RENDER);
+		const unsigned int idx = FT_Get_Char_Index(face, this->charset[i].code);
+		FT_Load_Glyph(face, idx, FT_LOAD_RENDER);
 
 		const FT_GlyphSlot &slot = face->glyph;
 		const FT_Bitmap &bitmap = slot->bitmap;

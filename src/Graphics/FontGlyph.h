@@ -9,12 +9,13 @@
 /// \author Tommy Nguyen
 struct FontGlyph
 {
-	unsigned short int advance;  ///< Horizontal advancement
-	short int left;              ///< Left alignment
-	SpriteVertex quad[4];        ///< Sprite vertices
+	unsigned short int advance;  ///< Horizontal advancement.
+	short int left;              ///< Left alignment.
+	unsigned long code;          ///< UTF-32 code.
+	SpriteVertex quad[4];        ///< Sprite vertices.
 
 #ifdef FONTATLAS_KERNING
-	short int kern[95];          ///< Font kerning information for each character
+	short int kern[95];          ///< Font kerning information for each character.
 #endif
 };
 
