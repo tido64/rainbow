@@ -10,6 +10,7 @@
 
 #include <cfloat>
 #include <cmath>
+#include <cstdlib>
 
 #include "Common/Constants.h"
 
@@ -101,6 +102,61 @@ namespace Rainbow
 	inline float radians(const float d)
 	{
 		return d * kDegree;
+	}
+
+	/// Convert a UTF-8 character to UTF-32.
+	/// \param[in]  str    UTF-8 encoded string.
+	/// \param[out] bytes  Number of bytes consumed.
+	/// \return UTF-32 character. Otherwise -1.
+	inline unsigned long utf8_decode(const unsigned char *str, size_t &bytes)
+	{
+		bytes = 0;
+		if (!(str[0] & 0x80))
+		{
+			bytes = 1;
+			return str[0];
+		}
+		else if ((str[0] & 0xe0) == 0xc0)
+		{
+			if ((str[1] & 0xc0) != 0x80)
+				return -1;
+
+			bytes = 2;
+			unsigned long ucs = str[0] & 0x1f;
+			ucs <<= 6;
+			ucs |= str[1] & 0x3f;
+			return ucs;
+		}
+		else if ((str[0] & 0xf0) == 0xe0)
+		{
+			if ((str[1] & 0xc0) != 0x80 || (str[2] & 0xc0) != 0x80)
+				return -1;
+
+			bytes = 3;
+			unsigned long ucs = str[0] & 0x0f;
+			ucs <<= 6;
+			ucs |= str[1] & 0x3f;
+			ucs <<= 6;
+			ucs |= str[2] & 0x3f;
+			return ucs;
+		}
+		else if ((str[0] & 0xf8) == 0xf0)
+		{
+			if ((str[1] & 0xc0) != 0x80 || (str[2] & 0xc0) != 0x80 || (str[3] & 0xc0) != 0x80)
+				return -1;
+
+			bytes = 4;
+			unsigned long ucs = str[0] & 0x0e;
+			ucs <<= 6;
+			ucs |= str[1] & 0x3f;
+			ucs <<= 6;
+			ucs |= str[2] & 0x3f;
+			ucs <<= 6;
+			ucs |= str[3] & 0x3f;
+			return ucs;
+		}
+		else
+			return -1;
 	}
 }
 
