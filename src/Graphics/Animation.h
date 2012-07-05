@@ -43,6 +43,12 @@ private:
 	const unsigned int *frame;   ///< Current frame.
 	const unsigned int *frames;  ///< Null-terminated array of texture ids to be used as frames.
 	Sprite *sprite;              ///< The sprite to animate.
+
+	// Intentionally left undefined.
+	Animation(const Animation &);
+
+	// Intentionally left undefined.
+	Animation& operator=(const Animation &);
 };
 
 Animation::Animation(Sprite *s, const unsigned int *const fs, const unsigned int fps, const int d) :

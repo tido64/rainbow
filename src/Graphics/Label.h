@@ -48,6 +48,12 @@ private:
 	char *text;                ///< Content of this label.
 	SpriteVertex *vx;          ///< Vertex array containing the text.
 	SmartPtr<FontAtlas> font;  ///< The font used in this label.
+
+	// Intentionally left undefined.
+	Label(const Label &);
+
+	// Intentionally left undefined.
+	Label& operator=(const Label &);
 };
 
 Label::Label() :

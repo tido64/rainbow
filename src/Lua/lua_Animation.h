@@ -27,6 +27,12 @@ public:
 
 private:
 	Animation *animation;
+
+	// Intentionally left undefined.
+	lua_Animation(const lua_Animation &);
+
+	// Intentionally left undefined.
+	lua_Animation& operator=(const lua_Animation &);
 };
 
 Animation* lua_Animation::raw_ptr() const

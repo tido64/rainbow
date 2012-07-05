@@ -31,10 +31,6 @@ class Data;
 class FontAtlas : public SmartPtrFriendly
 {
 public:
-	static const unsigned char ascii_offset = 32;  ///< Start loading from character 32.
-
-	const float pt;
-
 	FontAtlas(const float pt);
 
 	inline void bind() const;
@@ -45,11 +41,13 @@ public:
 	bool load(const Data &font);
 
 protected:
-	static const unsigned char chars = 95;        ///< Load characters through 126 from the ASCII table.
-	static const unsigned short int margin = 2;   ///< Drawn margin around font glyph.
-	static const unsigned short int padding = 3;  ///< Padding around font glyph texture.
+	static const unsigned char ascii_offset = 32;  ///< Start loading from character 32.
+	static const unsigned char chars = 95;         ///< Load characters through 126 from the ASCII table.
+	static const unsigned short int margin = 2;    ///< Drawn margin around font glyph.
+	static const unsigned short int padding = 3;   ///< Padding around font glyph texture.
 
 private:
+	const float pt;
 	unsigned int texture;  ///< Texture name.
 	Colorb color;          ///< Font colour.
 	FontGlyph charset[chars + FONTATLAS_EXTENDED];  ///< Character set.

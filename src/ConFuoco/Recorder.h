@@ -54,6 +54,12 @@ namespace ConFuoco
 		float low_pass;  ///< Low-pass filtered power in decibels.
 		float peak;      ///< Peak power in decibels.
 		AudioRecorder *recorder;
+
+		// Intentionally left undefined.
+		Recorder(const Recorder &);
+
+		// Intentionally left undefined.
+		Recorder& operator=(const Recorder &);
 	};
 
 	float Recorder::get_average_power() const

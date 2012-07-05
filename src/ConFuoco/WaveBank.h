@@ -27,6 +27,9 @@ namespace ConFuoco
 
 		inline WaveBank();
 
+		// Intentionally left undefined.
+		WaveBank(const WaveBank &);
+
 		/// Clear out the wave bank.
 		void clear();
 
@@ -44,6 +47,9 @@ namespace ConFuoco
 
 		/// Update all streams.
 		void update();
+
+		// Intentionally left undefined.
+		WaveBank& operator=(const WaveBank &);
 	};
 
 	WaveBank::WaveBank() : sound_count(0), stream_count(0) { }

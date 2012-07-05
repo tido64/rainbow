@@ -129,6 +129,7 @@ namespace ConFuoco
 	{
 		for (unsigned int i = 0; i < this->sid_count; ++i)
 			alSourceStop(this->sids[i]);
+		this->paused = false;
 	}
 }
 

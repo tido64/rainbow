@@ -46,7 +46,8 @@ namespace SceneGraph
 		/// Create a group node.
 		inline Node();
 
-		/// Create a node with another node's type and data.
+		/// Create a node with another node's type and data. This node will be
+		/// an orphan with no children.
 		inline Node(const Node &);
 
 		/// Create an animation node.
@@ -96,7 +97,7 @@ namespace SceneGraph
 		enabled(true), type(GroupNode), data(nullptr) { }
 
 	Node::Node(const Node &n) :
-		enabled(true), type(n.type), data(n.data) { }
+		TreeNode(), enabled(true), type(n.type), data(n.data) { }
 
 	Node::Node(Animation *a) :
 		enabled(true), type(AnimationNode), data(a) { }

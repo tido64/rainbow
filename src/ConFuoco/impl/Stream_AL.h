@@ -43,8 +43,14 @@ namespace ConFuoco
 		char *buffer;        ///< Stream buffers.
 		void *handle;        ///< Codec-specific handle.
 
+		// Intentionally left undefined.
+		Stream(const Stream &);
+
 		bool preload();
 		void release();
+
+		// Intentionally left undefined.
+		Stream& operator=(const Stream &);
 	};
 }
 

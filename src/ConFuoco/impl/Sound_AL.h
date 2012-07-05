@@ -36,6 +36,12 @@ namespace ConFuoco
 		unsigned int bid;           ///< alBuffer id.
 		unsigned int sid_count;     ///< Number of sources (for mixing).
 		unsigned int *sids;         ///< alSource ids.
+
+		// Intentionally left undefined.
+		Sound(const Sound &);
+
+		// Intentionally left undefined.
+		Sound& operator=(const Sound &);
 	};
 }
 
