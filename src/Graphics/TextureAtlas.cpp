@@ -155,7 +155,7 @@ TextureAtlas::TextureAtlas(const Data &img) : name(0), width(0), height(0)
 
 #endif
 
-	Renderer::create_texture(this->name, GL_RGBA, this->width, this->height, format, data);
+	this->name = TextureManager::Instance().create(GL_RGBA, this->width, this->height, format, data);
 	delete[] data;
 }
 

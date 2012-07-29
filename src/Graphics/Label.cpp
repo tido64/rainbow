@@ -2,6 +2,7 @@
 
 #include "Algorithm.h"
 #include "Graphics/Label.h"
+#include "Graphics/Renderer.h"
 
 Label::~Label()
 {

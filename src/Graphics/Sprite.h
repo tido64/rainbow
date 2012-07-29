@@ -2,7 +2,6 @@
 #define SPRITE_H_
 
 #include "Common/SpriteVertex.h"
-#include "Common/Vec2.h"
 
 class  SpriteBatch;
 struct SpriteVertex;

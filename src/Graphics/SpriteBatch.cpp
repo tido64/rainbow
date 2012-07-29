@@ -1,6 +1,6 @@
 // Copyright 2010-12 Bifrost Entertainment. All rights reserved.
 
-#include "Common/SpriteVertex.h"
+#include "Graphics/Renderer.h"
 #include "Graphics/SpriteBatch.h"
 
 SpriteBatch::SpriteBatch(const size_t hint) :

@@ -205,7 +205,7 @@ bool FontAtlas::load(const Data &font)
 	}
 	 */
 
-	Renderer::create_texture(this->texture, GL_LUMINANCE_ALPHA, tex_width, tex_height, GL_LUMINANCE_ALPHA, tex_buf);
+	this->texture = TextureManager::Instance().create(GL_LUMINANCE_ALPHA, tex_width, tex_height, GL_LUMINANCE_ALPHA, tex_buf);
 	delete[] tex_buf;
 	return true;
 }

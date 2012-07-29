@@ -7,6 +7,7 @@
 #include "Graphics/Shader.h"
 #include "Graphics/Shaders/Shaders.h"
 #include "Graphics/Texture.h"
+#include "Graphics/TextureManager.h"
 #include "Input/Input.h"
 
 Canvas::Canvas() :
@@ -59,8 +60,8 @@ Canvas::Canvas() :
 	glGenFramebuffers(1, &this->canvas_fb);
 	glBindFramebuffer(GL_FRAMEBUFFER, this->canvas_fb);
 
-	Renderer::create_texture(this->background_tex, GL_RGBA, this->width, this->height, GL_RGBA, nullptr);
-	Renderer::create_texture(this->canvas_tex, GL_RGBA, this->width, this->height, GL_RGBA, nullptr);
+	this->background_tex = TextureManager::Instance().create(GL_RGBA, this->width, this->height, GL_RGBA, nullptr);
+	this->canvas_tex = TextureManager::Instance().create(GL_RGBA, this->width, this->height, GL_RGBA, nullptr);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, this->canvas_tex, 0);
 
 	GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
@@ -193,7 +194,7 @@ void Canvas::set_background(const Texture &texture, const int width, const int h
 	         "set_background: Failed to set background");
 
 	Renderer::clear();
-	Renderer::bind_texture(texture);
+	TextureManager::Instance().bind(texture);
 	Renderer::draw_elements(vx, 6);
 
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, 0, 0);
@@ -210,13 +211,13 @@ void Canvas::set_foreground(const unsigned int color)
 void Canvas::draw()
 {
 	Renderer::attach_pipeline(this->draw_program);
-	Renderer::bind_texture(this->canvas_tex);
+	TextureManager::Instance().bind(this->canvas_tex);
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, this->background_tex);
 	Renderer::draw_elements(this->sprite, 6);
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glActiveTexture(GL_TEXTURE0);
-	Renderer::bind_texture(0);
+	TextureManager::Instance().bind();
 	Renderer::detach_pipeline();
 }
 
@@ -226,7 +227,7 @@ void Canvas::update()
 		return;
 
 	glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-	Renderer::bind_texture(*this->brush);
+	TextureManager::Instance().bind(*this->brush);
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, this->canvas_fb);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, this->canvas_tex, 0);
 
@@ -359,12 +360,12 @@ void Canvas::release()
 	}
 	if (this->canvas_tex)
 	{
-		Renderer::delete_texture(this->canvas_tex);
+		TextureManager::Instance().remove(this->canvas_tex);
 		this->canvas_tex = 0;
 	}
 	if (this->background_tex)
 	{
-		Renderer::delete_texture(this->background_tex);
+		TextureManager::Instance().remove(this->background_tex);
 		this->background_tex = 0;
 	}
 }

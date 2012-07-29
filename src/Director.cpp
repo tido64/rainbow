@@ -4,6 +4,7 @@
 #include "Physics.h"
 #include "Common/Chrono.h"
 #include "ConFuoco/Mixer.h"
+#include "Graphics/TextureManager.h"
 #include "Input/Input.h"
 #include "Lua/lua_Platform.h"
 
@@ -41,4 +42,5 @@ void Director::update(const unsigned long t)
 void Director::on_memory_warning()
 {
 	lua_gc(this->lua.L, LUA_GCCOLLECT, 0);
+	TextureManager::Instance().purge();
 }

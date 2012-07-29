@@ -5,7 +5,7 @@
 
 #include "Common/SmartPtr.h"
 #include "Graphics/FontGlyph.h"
-#include "Graphics/Renderer.h"
+#include "Graphics/TextureManager.h"
 
 class Data;
 
@@ -32,6 +32,7 @@ class FontAtlas : public SmartPtrFriendly
 {
 public:
 	FontAtlas(const float pt);
+	inline ~FontAtlas();
 
 	inline void bind() const;
 
@@ -59,9 +60,14 @@ private:
 	FontAtlas& operator=(const FontAtlas &);
 };
 
+FontAtlas::~FontAtlas()
+{
+	TextureManager::Instance().remove(this->texture);
+}
+
 void FontAtlas::bind() const
 {
-	Renderer::bind_texture(this->texture);
+	TextureManager::Instance().bind(this->texture);
 }
 
 const FontGlyph* FontAtlas::get_glyph(const unsigned long c) const

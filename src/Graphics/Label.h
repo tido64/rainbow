@@ -1,8 +1,6 @@
 #ifndef LABEL_H_
 #define LABEL_H_
 
-#include <cstring>
-
 #include "Graphics/Drawable.h"
 #include "Graphics/FontAtlas.h"
 

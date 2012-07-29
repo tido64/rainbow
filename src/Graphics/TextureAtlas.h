@@ -2,9 +2,8 @@
 #define TEXTUREATLAS_H_
 
 #include "Common/SmartPtr.h"
-#include "Common/Vector.h"
-#include "Graphics/Renderer.h"
 #include "Graphics/Texture.h"
+#include "Graphics/TextureManager.h"
 
 class Data;
 
@@ -54,12 +53,12 @@ private:
 
 TextureAtlas::~TextureAtlas()
 {
-	Renderer::delete_texture(this->name);
+	TextureManager::Instance().remove(this->name);
 }
 
 void TextureAtlas::bind() const
 {
-	Renderer::bind_texture(this->name);
+	TextureManager::Instance().bind(this->name);
 }
 
 void TextureAtlas::trim()

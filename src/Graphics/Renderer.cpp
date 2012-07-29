@@ -8,11 +8,6 @@
 #include "Graphics/Shader.h"
 #include "Graphics/Shaders/Shaders.h"
 
-#ifndef NDEBUG
-static double gpu_tex_mem = 0.0;
-static double tex_sz[256];
-#endif
-
 bool Renderer::init()
 {
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
@@ -104,16 +99,6 @@ void Renderer::bind_buffer(const unsigned int buffer)
 	bound = buffer;
 }
 
-void Renderer::bind_texture(const unsigned int texture)
-{
-	static unsigned int bound = 0;
-	if (texture == bound)
-		return;
-
-	glBindTexture(GL_TEXTURE_2D, texture);
-	bound = texture;
-}
-
 void Renderer::create_buffer(unsigned int &buffer, unsigned int &array_object)
 {
 	glGenBuffers(1, &buffer);
@@ -141,43 +126,12 @@ void Renderer::create_buffer(unsigned int &buffer, unsigned int &array_object)
 #endif
 }
 
-void Renderer::create_texture(unsigned int &texture, const unsigned int internal_format,
-                              const unsigned int width, const unsigned int height,
-                              const unsigned int format, const void *data)
-{
-	glGenTextures(1, &texture);
-	bind_texture(texture);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glTexImage2D(GL_TEXTURE_2D, 0, internal_format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
-
-#ifndef NDEBUG
-	R_ASSERT(glGetError() == GL_NO_ERROR, "Failed to create texture");
-
-	tex_sz[texture] = width * height * 4e-6;
-	gpu_tex_mem += tex_sz[texture];
-	printf("[Rainbow] GPU: %.2f MBs of textures\n", gpu_tex_mem);
-#endif
-}
-
 void Renderer::delete_buffer(const unsigned int buffer, const unsigned int array_object)
 {
 #ifndef RAINBOW_ANDROID
 	glDeleteVertexArrays(1, &array_object);
 #endif
 	glDeleteBuffers(1, &buffer);
-}
-
-void Renderer::delete_texture(const unsigned int texture)
-{
-	glDeleteTextures(1, &texture);
-
-#ifndef NDEBUG
-	gpu_tex_mem -= tex_sz[texture];
-	printf("[Rainbow] GPU: %.2f MBs of textures\n", gpu_tex_mem);
-#endif
 }
 
 void Renderer::draw_buffer(const unsigned int array_object, const unsigned int count)

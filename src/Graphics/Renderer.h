@@ -18,15 +18,9 @@ public:
 	static void detach_pipeline();
 
 	static void bind_buffer(const unsigned int buffer);
-	static void bind_texture(const unsigned int texture);
 
 	static void create_buffer(unsigned int &buffer, unsigned int &array_object);
-	static void create_texture(unsigned int &texture, const unsigned int internal_format,
-	                           const unsigned int width, const unsigned int height,
-	                           const unsigned int format, const void *data);
-
 	static void delete_buffer(const unsigned int buffer, const unsigned int array_object);
-	static void delete_texture(const unsigned int texture);
 
 	static void draw_buffer(const unsigned int array_object, const unsigned int count);
 	static void draw_elements(const SpriteVertex *vertices, const unsigned int count);
