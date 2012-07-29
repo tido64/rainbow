@@ -187,7 +187,7 @@ Shader* Renderer::load_shader(const unsigned int type, const char *const src_pat
 	{
 		delete shader;
 		shader = nullptr;
-		R_ASSERT(shader, "load_shader: Failed to compile shader");
+		R_ASSERT(shader, "Failed to compile shader");
 	}
 	return shader;
 }

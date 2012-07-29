@@ -59,7 +59,7 @@ void ChronoTrigger::set_timeout(const unsigned int timeout)
 
 void ChronoTrigger::start()
 {
-	R_ASSERT(this->trigger > 0, "start: No time out set.");
+	R_ASSERT(this->trigger > 0, "No time out set");
 	this->stopped = false;
 }
 

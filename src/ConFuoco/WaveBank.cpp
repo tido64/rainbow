@@ -24,7 +24,7 @@ namespace ConFuoco
 	{
 		if (this->sound_count + this->stream_count >= size)
 		{
-			fprintf(stderr, "Rainbow::ConFuoco::WaveBank::create_sound: Max number of sources reached\n");
+			fprintf(stderr, "[Rainbow::ConFuoco] WaveBank: Max number of sources reached\n");
 			return nullptr;
 		}
 
@@ -38,7 +38,7 @@ namespace ConFuoco
 	{
 		if (this->sound_count + this->stream_count >= size)
 		{
-			fprintf(stderr, "Rainbow::ConFuoco::WaveBank::create_stream: Max number of sources reached\n");
+			fprintf(stderr, "[Rainbow::ConFuoco] WaveBank: Max number of sources reached\n");
 			return nullptr;
 		}
 

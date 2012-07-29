@@ -242,8 +242,8 @@ List<T>::Element::Element(const T &v, Element *const p, Element *const n) :
 template<class T>
 void List<T>::Iterator::swap(Iterator &i)
 {
-	R_ASSERT(this->list && i.list, "swap: Swapping between different lists is not supported");
-	R_ASSERT(this->ptr && i.ptr, "swap: Iterator is a nullptr");
+	R_ASSERT(this->list && i.list, "Swapping between different lists is not supported");
+	R_ASSERT(this->ptr && i.ptr, "Iterator is a nullptr");
 
 	this->ptr->swap(i.ptr);
 	if (this->ptr == this->list->first)

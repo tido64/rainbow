@@ -110,7 +110,7 @@ bool Data::save(const char *const file) const
 	if (!this->data)
 		return false;
 
-	R_ASSERT(this->sz > 0, "save: Data is set but size is 0.");
+	R_ASSERT(this->sz > 0, "Data is set but size is 0");
 
 	FILE *fp = fopen(file, "wb");
 	if (!fp)

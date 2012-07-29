@@ -17,7 +17,7 @@ namespace ConFuoco
 			FILE *vorb = fopen(file, "rb");
 			if (!vorb)
 			{
-				fprintf(stderr, "Rainbow::ConFuoco::Decoder::open: Failed to open file\n");
+				fprintf(stderr, "[Rainbow::ConFuoco] Vorbis: Failed to open file\n");
 				return nullptr;
 			}
 
@@ -25,7 +25,7 @@ namespace ConFuoco
 			if (ov_open_callbacks(vorb, vf, 0, 0, OV_CALLBACKS_DEFAULT) < 0)
 			{
 				fclose(vorb);
-				fprintf(stderr, "Rainbow::ConFuoco::Decoder::Vorbis::open: Does not appear to be an Ogg bitstream\n");
+				fprintf(stderr, "[Rainbow::ConFuoco] Vorbis: Does not appear to be an Ogg bitstream\n");
 				return nullptr;
 			}
 
@@ -34,7 +34,7 @@ namespace ConFuoco
 			{
 				delete vf;
 				fclose(vorb);
-				fprintf(stderr, "Rainbow::ConFuoco::Decoder::Vorbis::open: Failed to retrieve Ogg bitstream info\n");
+				fprintf(stderr, "[Rainbow::ConFuoco] Vorbis: Failed to retrieve Ogg bitstream info\n");
 				return nullptr;
 			}
 			channels = vi->channels;
@@ -72,7 +72,7 @@ namespace ConFuoco
 
 	void Decoder::close(void *handle)
 	{
-		R_ASSERT(handle, "close: Missing handle.");
+		R_ASSERT(handle, "Missing handle");
 
 		OggVorbis_File *vf = static_cast<OggVorbis_File*>(handle);
 		ov_clear(vf);
@@ -113,25 +113,25 @@ namespace ConFuoco
 			switch (failed)
 			{
 				case OV_ENOSEEK:
-					fprintf(stderr, "Rainbow::ConFuoco::Decoder::Vorbis:OV_ENOSEEK\n");
+					fprintf(stderr, "[Rainbow::ConFuoco] Vorbis: OV_ENOSEEK\n");
 					break;
 				case OV_EINVAL:
-					fprintf(stderr, "Rainbow::ConFuoco::Decoder::Vorbis:OV_EINVAL\n");
+					fprintf(stderr, "[Rainbow::ConFuoco] Vorbis: OV_EINVAL\n");
 					break;
 				case OV_EREAD:
-					fprintf(stderr, "Rainbow::ConFuoco::Decoder::Vorbis:OV_EREAD\n");
+					fprintf(stderr, "[Rainbow::ConFuoco] Vorbis: OV_EREAD\n");
 					break;
 				case OV_EFAULT:
-					fprintf(stderr, "Rainbow::ConFuoco::Decoder::Vorbis:OV_EFAULT\n");
+					fprintf(stderr, "[Rainbow::ConFuoco] Vorbis: OV_EFAULT\n");
 					break;
 				case OV_EBADLINK:
-					fprintf(stderr, "Rainbow::ConFuoco::Decoder::Vorbis:OV_EBADLINK\n");
+					fprintf(stderr, "[Rainbow::ConFuoco] Vorbis: OV_EBADLINK\n");
 					break;
 				default:
-					fprintf(stderr, "Rainbow::ConFuoco::Decoder::Vorbis:OV_EUNKNOWN\n");
+					fprintf(stderr, "[Rainbow::ConFuoco] Vorbis: OV_EUNKNOWN\n");
 					break;
 			}
-			R_ASSERT(false, "reset: Failed to reset stream.");
+			R_ASSERT(false, "Failed to reset stream");
 		}
 
 	#endif

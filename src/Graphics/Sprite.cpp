@@ -64,7 +64,7 @@ void Sprite::set_color(const unsigned int c)
 
 void Sprite::set_pivot(const float x, const float y)
 {
-	R_ASSERT(x >= 0.0f && x <= 1.0f && y >= 0.0f && y <= 1.0f, "set_pivot: Invalid pivot point.");
+	R_ASSERT(x >= 0.0f && x <= 1.0f && y >= 0.0f && y <= 1.0f, "Invalid pivot point");
 
 	this->pivot.x = x;
 	this->pivot.y = y;
@@ -92,7 +92,7 @@ void Sprite::set_rotation(const float r)
 
 void Sprite::set_scale(const float f)
 {
-	R_ASSERT(f > 0.0f, "set_scale: Can't scale with a factor of zero or less.");
+	R_ASSERT(f > 0.0f, "Can't scale with a factor of zero or less");
 
 	this->scale_f.x = f;
 	this->scale_f.y = f;
@@ -101,7 +101,7 @@ void Sprite::set_scale(const float f)
 
 void Sprite::set_scale(const Vec2f &f)
 {
-	R_ASSERT(f.x > 0.0f && f.y > 0.0f, "set_scale: Can't scale with a factor of zero or less.");
+	R_ASSERT(f.x > 0.0f && f.y > 0.0f, "Can't scale with a factor of zero or less");
 
 	this->scale_f = f;
 	this->stale |= stale_scale;

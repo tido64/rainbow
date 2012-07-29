@@ -16,6 +16,9 @@ namespace Rainbow
 }
 
 #ifndef NDEBUG
+#	ifndef __GNUC__
+#		define __PRETTY_FUNCTION__ __FUNCTION__
+#	endif
 
 #include <cstdio>
 #include <cstdlib>
@@ -47,7 +50,7 @@ namespace Rainbow
 	{ \
 		if (!(expr)) \
 		{ \
-			fprintf(stderr, "[Rainbow] Assertion failed in '%s' at line %i: %s (%s)\n", __FILE__, __LINE__, reason, #expr); \
+			fprintf(stderr, "[Rainbow] %s: %s (aborted at %s:%i: %s)\n", __PRETTY_FUNCTION__, reason, __FILE__, __LINE__, #expr); \
 			abort(); \
 		} \
 	} while (0)

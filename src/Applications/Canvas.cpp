@@ -190,8 +190,7 @@ void Canvas::set_background(const Texture &texture, const int width, const int h
 
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, this->canvas_fb);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, this->background_tex, 0);
-	R_ASSERT(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE,
-	         "set_background: Failed to set background");
+	R_ASSERT(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE, "Failed to set background");
 
 	Renderer::clear();
 	TextureManager::Instance().bind(texture);
@@ -200,7 +199,7 @@ void Canvas::set_background(const Texture &texture, const int width, const int h
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, 0, 0);
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 
-	R_ASSERT(glGetError() == GL_NO_ERROR, "GL: Failed to set background");
+	R_ASSERT(glGetError() == GL_NO_ERROR, "Failed to set background");
 }
 
 void Canvas::set_foreground(const unsigned int color)
@@ -247,7 +246,7 @@ void Canvas::update()
 		const int dt_y = this->touch.y - this->prev_point.y;
 
 		const int points = Rainbow::min<int>(256, (fabsf(dt_x) < fabsf(dt_y)) ? fabsf(dt_y) : fabsf(dt_x));
-		R_ASSERT(points > 0, "update: No points to draw");
+		R_ASSERT(points > 0, "No points to draw");
 
 		Vector<SpriteVertex> vertices(points * 4);
 		for (int i = 0; i < points; ++i)
@@ -329,7 +328,7 @@ void Canvas::touch_moved(const Touch *const touches, const size_t count)
 
 void Canvas::create_point(SpriteVertex *vertex, const int x, const int y)
 {
-	R_ASSERT(this->brush, "create_point: No brush assigned");
+	R_ASSERT(this->brush, "No brush assigned");
 
 	const int a_x = x - (this->brush_size >> 1);
 	const int a_y = y - (this->brush_size >> 1);

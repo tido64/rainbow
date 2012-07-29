@@ -45,7 +45,7 @@ public:
 	template<class T>
 	T next(const T &n1, const T &n2)
 	{
-		R_ASSERT(n1 < n2, "next: Parameters must be in ascending order.");
+		R_ASSERT(n1 < n2, "Parameters must be in ascending order");
 		return static_cast<T>(this->next() * (n2 - n1)) + n1;
 	}
 

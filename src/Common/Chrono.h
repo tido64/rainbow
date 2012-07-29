@@ -53,7 +53,7 @@ namespace Rainbow
 	template<class T>
 	unsigned long _Chrono<T>::current()
 	{
-		R_ASSERT(this->tm_current > 0, "current: Current time has not been updated.");
+		R_ASSERT(this->tm_current > 0, "Current time has not been updated");
 		return this->tm_current;
 	}
 
@@ -66,7 +66,7 @@ namespace Rainbow
 	template<class T>
 	unsigned long _Chrono<T>::previous()
 	{
-		R_ASSERT(this->tm_previous > 0, "previous: Previous frame time has not been saved.");
+		R_ASSERT(this->tm_previous > 0, "Previous frame time has not been saved");
 		return this->tm_previous;
 	}
 

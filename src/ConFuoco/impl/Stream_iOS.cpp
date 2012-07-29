@@ -23,8 +23,8 @@ namespace ConFuoco
 		fileURL = nil;
 		if (!this->player)
 		{
-			NSLog(@"Rainbow::ConFuoco::iOS::load: %@", [error description]);
-			R_ASSERT(this->player, "load: Failed to create player.");
+			NSLog(@"[Rainbow::ConFuoco] Stream: %@", [error description]);
+			R_ASSERT(this->player, "Failed to create player");
 			return false;
 		}
 

@@ -45,7 +45,7 @@ private:
 template<class T, class W>
 int lua_SceneGraph::add_child(lua_State *L)
 {
-	R_ASSERT(lua_gettop(L) == 1 || lua_gettop(L) == 2, "add_child: Invalid parameters");
+	R_ASSERT(lua_gettop(L) == 1 || lua_gettop(L) == 2, "Invalid parameters");
 
 	// Retrieve Lua wrapper
 	const int n = lua_gettop(L);

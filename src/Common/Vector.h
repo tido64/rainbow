@@ -94,7 +94,7 @@ Vector<T>::~Vector()
 template<class T>
 T& Vector<T>::at(const size_t i)
 {
-	R_ASSERT(i < this->count, "at: Tried to access an element out of range");
+	R_ASSERT(i < this->count, "Tried to access an element out of range");
 	return this->c_array[i];
 }
 
@@ -177,7 +177,7 @@ void Vector<T>::reserve(size_t i)
 	if (i < this->count)
 		i = this->count;
 
-	R_ASSERT(i > 0, "reserve: Can't reserve an empty block of memory");
+	R_ASSERT(i > 0, "Can't reserve an empty block of memory");
 
 	T *arr = static_cast<T*>(malloc(i * sizeof(T)));
 	if (!arr)
@@ -201,7 +201,7 @@ size_t Vector<T>::size() const
 template<class T>
 T& Vector<T>::operator[](const size_t i) const
 {
-	R_ASSERT(i < this->count, "operator[]: Tried to access an element out of range");
+	R_ASSERT(i < this->count, "Tried to access an element out of range");
 	return this->c_array[i];
 }
 

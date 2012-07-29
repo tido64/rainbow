@@ -42,7 +42,7 @@ bool Data::save(const char *const file) const
 	if (!this->data)
 		return false;
 
-	R_ASSERT(false, "save: Not implemented yet");
+	R_ASSERT(false, "Not implemented yet");
 
 	return true;
 }

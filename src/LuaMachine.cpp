@@ -128,7 +128,7 @@ LuaMachine::LuaMachine() : scenegraph(nullptr), L(luaL_newstate())
 
 int LuaMachine::call(const char *const k, int nargs, int nresults)
 {
-	R_ASSERT(lua_gettop(L) == nargs, "call: Number of arguments != stack size");
+	R_ASSERT(lua_gettop(L) == nargs, "Number of arguments != stack size");
 
 	lua_getglobal(this->L, k);
 	lua_insert(this->L, 1);
@@ -151,7 +151,7 @@ int LuaMachine::call(const char *const k, int nargs, int nresults)
 
 void LuaMachine::err(const int lua_e)
 {
-	R_ASSERT(lua_e != LUA_OK, "err: No error to report");
+	R_ASSERT(lua_e != LUA_OK, "No error to report");
 
 	const char *err_general = "general";
 	const char *err_runtime = "runtime";

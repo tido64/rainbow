@@ -78,14 +78,14 @@ SmartPtr<T>::SmartPtr() : ptr(nullptr) { }
 template<class T>
 SmartPtr<T>::SmartPtr(const SmartPtr<T> &smart_ptr) : ptr(smart_ptr.ptr)
 {
-	R_ASSERT(this->ptr, "No reference to pointer.");
+	R_ASSERT(this->ptr, "No reference to pointer");
 	++this->ptr->refs;
 }
 
 template<class T>
 SmartPtr<T>::SmartPtr(T *ptr) : ptr(ptr)
 {
-	R_ASSERT(this->ptr, "No reference to pointer.");
+	R_ASSERT(this->ptr, "No reference to pointer");
 	++this->ptr->refs;
 }
 
@@ -119,14 +119,14 @@ SmartPtr<T>& SmartPtr<T>::operator=(T *ptr)
 template<class T>
 T& SmartPtr<T>::operator*() const
 {
-	R_ASSERT(this->ptr, "operator*: No reference to pointer.");
+	R_ASSERT(this->ptr, "No reference to pointer");
 	return *static_cast<T*>(this->ptr);
 }
 
 template<class T>
 T* SmartPtr<T>::operator->() const
 {
-	R_ASSERT(this->ptr, "operator->: No reference to pointer.");
+	R_ASSERT(this->ptr, "No reference to pointer");
 	return static_cast<T*>(this->ptr);
 }
 
@@ -134,7 +134,7 @@ template<class T>
 void SmartPtr<T>::release()
 {
 	R_ASSERT(!this->ptr || this->ptr->refs > 0,
-	         "release: This object should've been deleted by now.");
+	         "This object should've been deleted by now");
 
 	if (this->ptr && !--this->ptr->refs)
 	{
