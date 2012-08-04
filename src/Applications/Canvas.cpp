@@ -1,5 +1,6 @@
 // Copyright 2012 Bifrost Entertainment. All rights reserved.
 
+#ifdef USE_CANVAS
 #include "Algorithm.h"
 #include "Applications/Canvas.h"
 #include "Graphics/OpenGL.h"
@@ -368,3 +369,5 @@ void Canvas::release()
 		this->background_tex = 0;
 	}
 }
+
+#endif

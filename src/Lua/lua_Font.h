@@ -4,23 +4,29 @@
 #include "LuaMachine.h"
 #include "Graphics/FontAtlas.h"
 
-class lua_Font
+namespace Rainbow
 {
-public:
-	static const char class_name[];
-	static const LuaMachine::Method<lua_Font> methods[];
+	namespace Lua
+	{
+		class Font
+		{
+		public:
+			static const char class_name[];
+			static const LuaMachine::Method<Font> methods[];
 
-	lua_Font(lua_State *);
+			Font(lua_State *);
 
-	inline FontAtlas* raw_ptr() const;
+			inline FontAtlas* raw_ptr() const;
 
-private:
-	SmartPtr<FontAtlas> font;
-};
+		private:
+			SmartPtr<FontAtlas> font;
+		};
 
-FontAtlas* lua_Font::raw_ptr() const
-{
-	return this->font.raw_ptr();
+		FontAtlas* Font::raw_ptr() const
+		{
+			return this->font.raw_ptr();
+		}
+	}
 }
 
 #endif

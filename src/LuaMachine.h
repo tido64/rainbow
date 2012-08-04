@@ -5,8 +5,8 @@
 
 #include <lua.hpp>
 
+namespace Rainbow { namespace Lua { class SceneGraph; } }
 namespace SceneGraph { class Node; }
-class lua_SceneGraph;
 
 /// Embeds Lua scripting engine.
 ///
@@ -61,7 +61,7 @@ private:
 	template<class T>
 	static int dealloc(lua_State *L);
 
-	lua_SceneGraph *scenegraph;
+	Rainbow::Lua::SceneGraph *scenegraph;
 	lua_State *L;
 
 	LuaMachine();
@@ -117,7 +117,7 @@ int LuaMachine::alloc(lua_State *L)
 template<class T>
 int LuaMachine::dealloc(lua_State *L)
 {
-	T **ptr = static_cast<T **>(luaL_checkudata(L, -1, T::class_name));
+	T **ptr = static_cast<T**>(luaL_checkudata(L, -1, T::class_name));
 	delete *ptr;
 	return 0;
 }

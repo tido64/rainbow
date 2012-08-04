@@ -97,7 +97,7 @@ namespace SceneGraph
 		enabled(true), type(GroupNode), data(nullptr) { }
 
 	Node::Node(const Node &n) :
-		TreeNode(), enabled(true), type(n.type), data(n.data) { }
+		TreeNode<Node>(), enabled(true), type(n.type), data(n.data) { }
 
 	Node::Node(Animation *a) :
 		enabled(true), type(AnimationNode), data(a) { }

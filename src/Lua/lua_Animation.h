@@ -5,39 +5,45 @@
 
 class Animation;
 
-class lua_Animation
+namespace Rainbow
 {
-public:
-	static const char class_name[];
-	static const LuaMachine::Method<lua_Animation> methods[];
+	namespace Lua
+	{
+		class Animation
+		{
+		public:
+			static const char class_name[];
+			static const LuaMachine::Method<Animation> methods[];
 
-	lua_Animation(lua_State *);
-	~lua_Animation();
-	inline Animation* raw_ptr() const;
+			Animation(lua_State *);
+			~Animation();
+			inline ::Animation* raw_ptr() const;
 
-	int is_stopped(lua_State *);
+			int is_stopped(lua_State *);
 
-	int set_delay(lua_State *);
-	int set_fps(lua_State *);
-	int set_frames(lua_State *);
-	int set_sprite(lua_State *);
+			int set_delay(lua_State *);
+			int set_fps(lua_State *);
+			int set_frames(lua_State *);
+			int set_sprite(lua_State *);
 
-	int play(lua_State *);
-	int stop(lua_State *);
+			int play(lua_State *);
+			int stop(lua_State *);
 
-private:
-	Animation *animation;
+		private:
+			::Animation *animation;
 
-	// Intentionally left undefined.
-	lua_Animation(const lua_Animation &);
+			// Intentionally left undefined.
+			Animation(const Animation &);
 
-	// Intentionally left undefined.
-	lua_Animation& operator=(const lua_Animation &);
-};
+			// Intentionally left undefined.
+			Animation& operator=(const Animation &);
+		};
 
-Animation* lua_Animation::raw_ptr() const
-{
-	return this->animation;
+		::Animation* Animation::raw_ptr() const
+		{
+			return this->animation;
+		}
+	}
 }
 
 #endif

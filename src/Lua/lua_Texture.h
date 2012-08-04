@@ -4,26 +4,32 @@
 #include "LuaMachine.h"
 #include "Graphics/TextureAtlas.h"
 
-class lua_Texture
+namespace Rainbow
 {
-public:
-	static const char class_name[];
-	static const LuaMachine::Method<lua_Texture> methods[];
+	namespace Lua
+	{
+		class Texture
+		{
+		public:
+			static const char class_name[];
+			static const LuaMachine::Method<Texture> methods[];
 
-	lua_Texture(lua_State *);
+			Texture(lua_State *);
 
-	inline TextureAtlas* raw_ptr() const;
+			inline TextureAtlas* raw_ptr() const;
 
-	int create(lua_State *);
-	int trim(lua_State *);
+			int create(lua_State *);
+			int trim(lua_State *);
 
-private:
-	SmartPtr<TextureAtlas> texture;
-};
+		private:
+			SmartPtr<TextureAtlas> texture;
+		};
 
-TextureAtlas* lua_Texture::raw_ptr() const
-{
-	return this->texture.raw_ptr();
+		TextureAtlas* Texture::raw_ptr() const
+		{
+			return this->texture.raw_ptr();
+		}
+	}
 }
 
 #endif

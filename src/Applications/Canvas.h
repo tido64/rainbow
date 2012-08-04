@@ -1,6 +1,7 @@
 #ifndef RAINBOW_CANVAS_H_
 #define RAINBOW_CANVAS_H_
 
+#ifdef USE_CANVAS
 #include "Common/SpriteVertex.h"
 #include "Graphics/Drawable.h"
 #include "Graphics/Pipeline.h"
@@ -114,4 +115,5 @@ Canvas::operator bool() const
 	return this->canvas_fb;
 }
 
+#endif  // USE_CANVAS
 #endif

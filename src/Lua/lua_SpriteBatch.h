@@ -4,26 +4,32 @@
 #include "LuaMachine.h"
 #include "Graphics/SpriteBatch.h"
 
-class lua_SpriteBatch : public SpriteBatch
+namespace Rainbow
 {
-public:
-	static const char class_name[];
-	static const LuaMachine::Method<lua_SpriteBatch> methods[];
+	namespace Lua
+	{
+		class SpriteBatch : public ::SpriteBatch
+		{
+		public:
+			static const char class_name[];
+			static const LuaMachine::Method<SpriteBatch> methods[];
 
-	inline lua_SpriteBatch(lua_State *L);
+			inline SpriteBatch(lua_State *L);
 
-	inline SpriteBatch* raw_ptr();
+			inline ::SpriteBatch* raw_ptr();
 
-	int add(lua_State *);
-	int set_texture(lua_State *);
-};
+			int add(lua_State *);
+			int set_texture(lua_State *);
+		};
 
-lua_SpriteBatch::lua_SpriteBatch(lua_State *L) :
-	SpriteBatch(lua_tointeger(L, 1)) { }
+		SpriteBatch::SpriteBatch(lua_State *L) :
+			::SpriteBatch(lua_tointeger(L, 1)) { }
 
-SpriteBatch* lua_SpriteBatch::raw_ptr()
-{
-	return this;
+		::SpriteBatch* SpriteBatch::raw_ptr()
+		{
+			return this;
+		}
+	}
 }
 
 #endif

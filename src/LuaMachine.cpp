@@ -1,21 +1,7 @@
 // Copyright 2011-12 Bifrost Entertainment. All rights reserved.
 
 #include "Common/Data.h"
-#include "Lua/lua_Animation.h"
-#include "Lua/lua_Audio.h"
-#include "Lua/lua_Font.h"
-#include "Lua/lua_Input.h"
-#include "Lua/lua_Label.h"
-#include "Lua/lua_Platform.h"
-#include "Lua/lua_Random.h"
-#include "Lua/lua_SceneGraph.h"
-#include "Lua/lua_Sprite.h"
-#include "Lua/lua_SpriteBatch.h"
-#include "Lua/lua_Texture.h"
-
-#ifdef USE_PHYSICS
-#	include "Lua/lua_Physics.h"
-#endif
+#include "Lua/Modules.h"
 
 void LuaMachine::dump_stack(lua_State *L)
 {
@@ -81,26 +67,13 @@ LuaMachine::LuaMachine() : scenegraph(nullptr), L(luaL_newstate())
 	lua_createtable(this->L, 0, 16);
 	lua_pushvalue(this->L, -1);
 	lua_setglobal(this->L, "rainbow");
-
-	lua_Platform::init(this->L);  // Initialize "rainbow.platform" namespace
-	lua_Random::init(this->L);    // Initialize "rainbow.random" function
-	lua_Input::init(this->L);     // Initialize "rainbow.input" namespace
-	lua_Audio::init(this->L);     // Initialize "rainbow.audio" namespace
-
-#ifdef USE_PHYSICS
-	lua_Physics::init(this->L);   // Initialize "rainbow.physics" namespace
-#endif
+	Rainbow::Lua::init(this->L);
 
 	// Initialize "rainbow.scenegraph"
-	this->scenegraph = new lua_SceneGraph(this->L);
+	this->scenegraph = new Rainbow::Lua::SceneGraph(this->L);
 
 	// Bind C++ objects
-	wrap<lua_Animation>(this->L);
-	wrap<lua_Font>(this->L);
-	wrap<lua_Label>(this->L);
-	wrap<lua_Sprite>(this->L);
-	wrap<lua_SpriteBatch>(this->L);
-	wrap<lua_Texture>(this->L);
+	Rainbow::Lua::bind(this->L);
 
 	// Clean up the stack
 	lua_pop(this->L, 1);

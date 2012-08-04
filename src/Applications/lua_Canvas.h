@@ -1,33 +1,48 @@
 #ifndef LUA_CANVAS_H_
 #define LUA_CANVAS_H_
 
+#ifdef USE_CANVAS
 #include "LuaMachine.h"
 #include "Applications/Canvas.h"
 
-class lua_Canvas : public Canvas
+namespace Rainbow
 {
-public:
-	static const char class_name[];
-	static const LuaMachine::Method<lua_Canvas> methods[];
+	namespace Lua
+	{
+		class Canvas : public ::Canvas
+		{
+		public:
+			static const char class_name[];
+			static const LuaMachine::Method<Canvas> methods[];
 
-	inline lua_Canvas(lua_State *);
-	virtual ~lua_Canvas();
+			inline Canvas(lua_State *);
+			virtual ~Canvas();
 
-	inline Drawable* raw_ptr();
+			inline Drawable* raw_ptr();
 
-	int clear(lua_State *);
-	int get_filled(lua_State *);
-	int set_background(lua_State *);
-	int set_brush(lua_State *);
-	int set_brush_size(lua_State *);
-	int set_foreground(lua_State *);
-};
+			int get_filled(lua_State *);
+			int set_background(lua_State *);
+			int set_brush(lua_State *);
+			int set_brush_size(lua_State *);
+			int set_foreground(lua_State *);
 
-lua_Canvas::lua_Canvas(lua_State *) { }
+			inline int clear(lua_State *);
+		};
 
-Drawable* lua_Canvas::raw_ptr()
-{
-	return this;
+		Canvas::Canvas(lua_State *) { }
+
+		Drawable* Canvas::raw_ptr()
+		{
+			return this;
+		}
+
+		int Canvas::clear(lua_State *)
+		{
+			::Canvas::clear();
+			return 0;
+		}
+	}
 }
 
+#endif  // USE_CANVAS
 #endif

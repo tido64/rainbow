@@ -3,19 +3,25 @@
 
 struct lua_State;
 
-class lua_Random
+namespace Rainbow
 {
-	friend class LuaMachine;
+	namespace Lua
+	{
+		class Random
+		{
+			friend void init(lua_State *);
 
-public:
-	static int random(lua_State *);
+		public:
+			static int random(lua_State *);
 
-private:
-	static void init(lua_State *);
+		private:
+			static void init(lua_State *);
 
-	lua_Random();
-	lua_Random(const lua_Random &);
-	lua_Random& operator=(const lua_Random &);
-};
+			Random();
+			Random(const Random &);
+			Random& operator=(const Random &);
+		};
+	}
+}
 
 #endif

@@ -6,37 +6,43 @@
 struct lua_State;
 class  Sprite;
 
-class lua_Sprite
+namespace Rainbow
 {
-public:
-	static const char class_name[];
-	static const LuaMachine::Method<lua_Sprite> methods[];
+	namespace Lua
+	{
+		class Sprite
+		{
+		public:
+			static const char class_name[];
+			static const LuaMachine::Method<Sprite> methods[];
 
-	lua_Sprite(lua_State *);
+			Sprite(lua_State *);
 
-	inline Sprite* raw_ptr() const;
+			inline ::Sprite* raw_ptr() const;
 
-	int get_angle(lua_State *);
-	int get_color(lua_State *);
-	int get_position(lua_State *);
-	int set_color(lua_State *);
-	int set_pivot(lua_State *);
-	int set_position(lua_State *);
-	int set_rotation(lua_State *);
-	int set_scale(lua_State *);
-	int set_texture(lua_State *);
+			int get_angle(lua_State *);
+			int get_color(lua_State *);
+			int get_position(lua_State *);
+			int set_color(lua_State *);
+			int set_pivot(lua_State *);
+			int set_position(lua_State *);
+			int set_rotation(lua_State *);
+			int set_scale(lua_State *);
+			int set_texture(lua_State *);
 
-	int mirror(lua_State *);
-	int move(lua_State *);
-	int rotate(lua_State *);
+			int mirror(lua_State *);
+			int move(lua_State *);
+			int rotate(lua_State *);
 
-private:
-	Sprite *s;
-};
+		private:
+			::Sprite *sprite;
+		};
 
-Sprite* lua_Sprite::raw_ptr() const
-{
-	return this->s;
+		::Sprite* Sprite::raw_ptr() const
+		{
+			return this->sprite;
+		}
+	}
 }
 
 #endif

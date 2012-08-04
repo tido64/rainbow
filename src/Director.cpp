@@ -23,7 +23,7 @@ void Director::init(const char *const script)
 
 void Director::set_video(const int w, const int h)
 {
-	lua_Platform::update(this->lua.L, w, h);
+	Rainbow::Lua::Platform::update(this->lua.L, w, h);
 }
 
 void Director::update(const unsigned long t)
