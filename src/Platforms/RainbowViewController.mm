@@ -152,7 +152,8 @@
 
 	// Load and initialise script.
 	const char *script = Data::get_path("main.lua");
-	self->director->init(script);
+	Data main(script);
+	self->director->init(main);
 }
 
 - (void)viewDidUnload

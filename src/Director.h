@@ -16,8 +16,8 @@ public:
 
 	inline void draw();
 
-	/// Load and initialise game script.
-	void init(const char *const);
+	/// Load and initialise main script.
+	void init(const Data &);
 
 	/// Set screen resolution.
 	void set_video(const int width, const int height);

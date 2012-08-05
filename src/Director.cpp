@@ -8,14 +8,15 @@
 #include "Input/Input.h"
 #include "Lua/lua_Platform.h"
 
-Director::Director()
+Director::Director() : lua(&this->scenegraph)
 {
-	Input::Instance().set_state(this->lua.L);
+	Input::Instance().set_state(this->lua);
 }
 
-void Director::init(const char *const script)
+void Director::init(const Data &main)
 {
-	if (this->lua.load(&this->scenegraph, script) || this->lua.call("init") || this->lua.update(0))
+	LuaMachine::load(this->lua, main, "main");
+	if (this->lua.call("init") != LUA_OK || this->lua.update(0) != LUA_OK)
 		this->shutdown();
 	else
 		this->scenegraph.update();
@@ -23,7 +24,7 @@ void Director::init(const char *const script)
 
 void Director::set_video(const int w, const int h)
 {
-	Rainbow::Lua::Platform::update(this->lua.L, w, h);
+	Rainbow::Lua::Platform::update(this->lua, w, h);
 }
 
 void Director::update(const unsigned long t)
@@ -31,7 +32,7 @@ void Director::update(const unsigned long t)
 	Chrono::Instance().update(t);
 	ConFuoco::Mixer::Instance().update();
 #ifdef USE_PHYSICS
-	Physics::Instance().step(Chrono::Instance().diff() * (1.0f / 1000.0f));
+	Physics::Instance().step(Chrono::Instance().diff() * 0.001f);
 #endif
 	if (this->lua.update(Chrono::Instance().diff()))
 		this->shutdown();
@@ -41,6 +42,6 @@ void Director::update(const unsigned long t)
 
 void Director::on_memory_warning()
 {
-	lua_gc(this->lua.L, LUA_GCCOLLECT, 0);
+	lua_gc(this->lua, LUA_GCCOLLECT, 0);
 	TextureManager::Instance().purge();
 }

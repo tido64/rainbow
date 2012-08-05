@@ -53,13 +53,79 @@ lua_Debug* LuaMachine::getinfo(lua_State *L)
 	return d;
 }
 
+int LuaMachine::load(lua_State *L, const Data &chunk, const char *name, const bool load)
+{
+	int e = luaL_loadbuffer(L, chunk, chunk.size(), name);
+	if (e || (load && (e = lua_pcall(L, 0, LUA_MULTRET, 0))))
+	{
+		err(L, e);
+		return luaL_error(L, "Failed to load '%s'", name);
+	}
+	return 1;
+}
+
 LuaMachine::~LuaMachine()
 {
 	delete this->scenegraph;
 	lua_close(this->L);
 }
 
-LuaMachine::LuaMachine() : scenegraph(nullptr), L(luaL_newstate())
+int LuaMachine::update(const unsigned long t)
+{
+	lua_pushinteger(this->L, t);
+	return this->call("update", 1);
+}
+
+void LuaMachine::err(lua_State *L, const int lua_e)
+{
+	R_ASSERT(lua_e != LUA_OK, "No error to report");
+
+	const char *err_general = "general";
+	const char *err_runtime = "runtime";
+	const char *err_syntax  = "syntax";
+	const char *err_memory  = "memory allocation";
+	const char *err_errfunc = "error handling";
+
+	const char *desc = err_general;
+	const char *const m = lua_tolstring(L, -1, nullptr);
+	lua_pop(L, 1);
+	switch (lua_e)
+	{
+		case LUA_ERRRUN:
+			desc = err_runtime;
+			break;
+		case LUA_ERRSYNTAX:
+			desc = err_syntax;
+			break;
+		case LUA_ERRMEM:
+			desc = err_memory;
+			break;
+		case LUA_ERRERR:
+			desc = err_errfunc;
+			break;
+		default:
+			break;
+	}
+	fprintf(stderr, "Lua %s error: %s\n", desc, m);
+	dump_stack(L);
+}
+
+int LuaMachine::load(lua_State *L)
+{
+	const char *module = lua_tostring(L, -1);
+	char *filename = new char[strlen(module) + 5];
+	strcpy(filename, module);
+	strcat(filename, ".lua");
+
+	const char *path = Data::get_path(filename);
+	Data file(path);
+	Data::free(path);
+	delete[] filename;
+
+	return (!file) ? 0 : LuaMachine::load(L, file, module, false);
+}
+
+LuaMachine::LuaMachine(SceneGraph::Node *root) : scenegraph(nullptr), L(luaL_newstate())
 {
 	luaL_openlibs(this->L);
 
@@ -70,32 +136,32 @@ LuaMachine::LuaMachine() : scenegraph(nullptr), L(luaL_newstate())
 	Rainbow::Lua::init(this->L);
 
 	// Initialize "rainbow.scenegraph"
-	this->scenegraph = new Rainbow::Lua::SceneGraph(this->L);
+	this->scenegraph = new Rainbow::Lua::SceneGraph(this->L, root);
 
 	// Bind C++ objects
 	Rainbow::Lua::bind(this->L);
 
 	// Clean up the stack
 	lua_pop(this->L, 1);
+	R_ASSERT(lua_gettop(L) == 0, "Stack not empty");
 
-	// We need to set LUA_PATH
-	const char *const bundle = Data::get_path();
-
+	// Set up custom loader
 	lua_getglobal(this->L, "package");
-	lua_getfield(this->L, -1, "path");
+	R_ASSERT(!lua_isnil(this->L, -1), "package table does not exist");
+	lua_getfield(this->L, -1, "searchers");
+	R_ASSERT(!lua_isnil(this->L, -1), "package.searchers table does not exist");
 
-	size_t path_len = 0;
-	const char *const pkg_path = lua_tolstring(this->L, -1, &path_len);
-	char *const lua_path = new char[strlen(bundle) + 8 + path_len];
-	strcpy(lua_path, bundle);
-	strcat(lua_path, "/?.lua;");
-	strcat(lua_path, pkg_path);
+	// Make space in the second slot for our loader
+	for (size_t i = lua_rawlen(L, -1); i > 1; --i)
+	{
+		lua_rawgeti(this->L, -1, i);
+		lua_rawseti(this->L, -2, i + 1);
+	}
+	lua_pushcfunction(this->L, load);
+	lua_rawseti(this->L, -2, 1);
 
-	lua_pushstring(this->L, lua_path);
-	delete[] lua_path;
-	lua_setfield(this->L, -3, "path");
+	// Clean up the stack
 	lua_pop(this->L, 2);
-
 	R_ASSERT(lua_gettop(L) == 0, "Stack not empty");
 }
 
@@ -117,58 +183,10 @@ int LuaMachine::call(const char *const k, int nargs, int nresults)
 	const int lua_e = lua_pcall(this->L, nargs, nresults, 0);
 #endif
 
-	if (lua_e)
-		this->err(lua_e);
-	return lua_e;
-}
-
-void LuaMachine::err(const int lua_e)
-{
-	R_ASSERT(lua_e != LUA_OK, "No error to report");
-
-	const char *err_general = "general";
-	const char *err_runtime = "runtime";
-	const char *err_syntax  = "syntax";
-	const char *err_memory  = "memory allocation";
-	const char *err_errfunc = "error handling";
-
-	const char *desc = err_general;
-	const char *const m = lua_tolstring(this->L, -1, nullptr);
-	lua_pop(this->L, 1);
-	switch (lua_e)
+	if (lua_e != LUA_OK)
 	{
-		case LUA_ERRRUN:
-			desc = err_runtime;
-			break;
-		case LUA_ERRSYNTAX:
-			desc = err_syntax;
-			break;
-		case LUA_ERRMEM:
-			desc = err_memory;
-			break;
-		case LUA_ERRERR:
-			desc = err_errfunc;
-			break;
-		default:
-			break;
+		err(this->L, lua_e);
+		return luaL_error(L, "Failed to call '%s'", k);
 	}
-	fprintf(stderr, "Lua %s error: %s\n", desc, m);
-	dump_stack(this->L);
-}
-
-int LuaMachine::load(SceneGraph::Node *root, const char *const lua)
-{
-	// Load Lua script
-	int lua_e = luaL_loadfile(this->L, lua);
-	if (lua_e || (lua_e = lua_pcall(this->L, 0, LUA_MULTRET, 0)))
-		this->err(lua_e);
-	else
-		this->scenegraph->set_root(root);
-	return lua_e;
-}
-
-int LuaMachine::update(const unsigned long t)
-{
-	lua_pushinteger(this->L, t);
-	return this->call("update", 1);
+	return LUA_OK;
 }

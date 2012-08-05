@@ -34,13 +34,12 @@ namespace Rainbow
 			SceneGraph **ptr;
 			::SceneGraph::Node *root;
 
-			SceneGraph(lua_State *);
+			SceneGraph(lua_State *, ::SceneGraph::Node *);
 			SceneGraph(const SceneGraph &);
 
 			template<class T, class W>
 			int add_child(lua_State *);
 
-			inline void set_root(::SceneGraph::Node *);
 			inline ::SceneGraph::Node* to_node(lua_State *, const int);
 
 			SceneGraph& operator=(const SceneGraph &);
@@ -65,11 +64,6 @@ namespace Rainbow
 			lua_pop(L, 1);
 			lua_pushlightuserdata(L, node->add_child(s));
 			return 1;
-		}
-
-		void SceneGraph::set_root(::SceneGraph::Node *r)
-		{
-			this->root = r;
 		}
 
 		::SceneGraph::Node* SceneGraph::to_node(lua_State *L, const int n)

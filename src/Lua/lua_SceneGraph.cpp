@@ -110,7 +110,8 @@ namespace Rainbow
 			return 0;
 		}
 
-		SceneGraph::SceneGraph(lua_State *L) : ptr(nullptr), root(nullptr)
+		SceneGraph::SceneGraph(lua_State *L, ::SceneGraph::Node *root) :
+			ptr(nullptr), root(root)
 		{
 			lua_createtable(L, 0, 16);
 			lua_pushvalue(L, -1);

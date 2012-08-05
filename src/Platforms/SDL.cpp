@@ -89,9 +89,12 @@ int main(int argc, char *argv[])
 	resize(director, screen_width, screen_height);
 
 	// Load game
-	const char *const path = Data::get_path("main.lua");
-	director.init(path);
-	Data::free(path);
+	{
+		const char *const path = Data::get_path("main.lua");
+		Data main(path);
+		Data::free(path);
+		director.init(main);
+	}
 
 	Chrono::Instance().update();
 	while (!done)

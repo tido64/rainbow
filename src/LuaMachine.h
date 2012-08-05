@@ -7,6 +7,7 @@
 
 namespace Rainbow { namespace Lua { class SceneGraph; } }
 namespace SceneGraph { class Node; }
+class Data;
 
 /// Embeds Lua scripting engine.
 ///
@@ -39,6 +40,14 @@ public:
 	/// Return information about a specific function or function invocation.
 	static lua_Debug* getinfo(lua_State *L);
 
+	/// Load buffer as a Lua chunk.
+	/// \param chunk  Buffer to load.
+	/// \param name   Name of the chunk. Used for debug information.
+	/// \param load   For internal use only! Whether to execute the loaded
+	///               chunk. Only used by Lua package loaders.
+	/// \return See \c luaL_loadbuffer().
+	static int load(lua_State *L, const Data &chunk, const char *name, const bool load = true);
+
 	template<class T>
 	static int thunk(lua_State *L);
 
@@ -57,14 +66,22 @@ public:
 	/// Call game update function.
 	int update(const unsigned long t);
 
+	inline operator lua_State*() const;
+
 private:
 	template<class T>
 	static int dealloc(lua_State *L);
 
+	/// Output information about the error, and dump the stack if applicable.
+	static void err(lua_State *L, const int lua_error);
+
+	/// Custom Lua package loader.
+	static int load(lua_State *L);
+
 	Rainbow::Lua::SceneGraph *scenegraph;
 	lua_State *L;
 
-	LuaMachine();
+	LuaMachine(SceneGraph::Node *root);
 
 	/// Intentionally left undefined.
 	LuaMachine(const LuaMachine &);
@@ -75,13 +92,6 @@ private:
 	/// \param nresults  Number of results to push to the stack; LUA_MULTRET for all.
 	/// \return Lua error code (defined in lua.h).
 	int call(const char *const, int nargs = 0, int nresults = 0);
-
-	/// Output information about the error, and dump the stack if applicable.
-	void err(const int lua_error);
-
-	/// Load specified Lua script.
-	/// \return Lua error code (defined in lua.h).
-	int load(SceneGraph::Node *root, const char *const);
 
 	/// Intentionally left undefined.
 	LuaMachine& operator=(const LuaMachine &);
@@ -126,10 +136,8 @@ template<class T>
 int LuaMachine::thunk(lua_State *L)
 {
 #ifndef NDEBUG
-
 	if (lua_type(L, 1) != LUA_TTABLE)
 		return luaL_error(L, "Called a class function using '.' instead of ':'");
-
 #endif
 
 	const int i = static_cast<int>(lua_tonumber(L, lua_upvalueindex(1)));
@@ -162,6 +170,11 @@ T* LuaMachine::wrapper(lua_State *L, const int index)
 	void *ptr = luaL_checkudata(L, -1, T::class_name);
 	lua_pop(L, 1);
 	return *static_cast<T**>(ptr);
+}
+
+LuaMachine::operator lua_State*() const
+{
+	return this->L;
 }
 
 #endif
