@@ -1,5 +1,5 @@
 #include "Common/Data.h"
-#include "Common/RainbowAssert.h"
+#include "Common/Debug.h"
 #include "ConFuoco/Mixer.h"
 #include "ConFuoco/Stream.h"
 #include "Lua/lua_Audio.h"

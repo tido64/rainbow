@@ -1,7 +1,7 @@
 #ifndef COLOR_H_
 #define COLOR_H_
 
-#include "Common/RainbowAssert.h"
+#include "Common/Debug.h"
 
 namespace Rainbow
 {

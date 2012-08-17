@@ -3,7 +3,7 @@
 #include "ConFuoco/Mixer.h"
 #ifdef RAINBOW_ANDROID
 
-#include "Common/RainbowAssert.h"
+#include "Common/Debug.h"
 
 namespace ConFuoco
 {

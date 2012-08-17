@@ -1,4 +1,4 @@
-#include "Common/RainbowAssert.h"
+#include "Common/Debug.h"
 #include "Graphics/Sprite.h"
 #include "Lua/lua_Sprite.h"
 

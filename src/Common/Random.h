@@ -4,7 +4,7 @@
 #include <ctime>
 
 #include "Platform.h"
-#include "Common/RainbowAssert.h"
+#include "Common/Debug.h"
 
 #if defined(RAINBOW_UNIX)
 #	pragma GCC diagnostic push

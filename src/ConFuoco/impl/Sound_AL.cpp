@@ -5,7 +5,7 @@
 
 #include <cstdio>
 
-#include "Common/RainbowAssert.h"
+#include "Common/Debug.h"
 #include "ConFuoco/Decoder.h"
 #include "ConFuoco/impl/Sound_AL.h"
 

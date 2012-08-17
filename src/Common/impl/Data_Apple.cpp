@@ -1,7 +1,7 @@
 // Copyright 2011-12 Bifrost Entertainment. All rights reserved.
 
 #include "Common/Data.h"
-#include "Common/RainbowAssert.h"
+#include "Common/Debug.h"
 
 #ifdef RAINBOW_IOS
 

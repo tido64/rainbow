@@ -6,7 +6,7 @@
 #include <cstdio>
 #include <cstring>
 
-#include "Common/RainbowAssert.h"
+#include "Common/Debug.h"
 
 size_t Data::data_path_length = 0;
 size_t Data::userdata_path_length = 0;

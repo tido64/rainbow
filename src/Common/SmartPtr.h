@@ -2,7 +2,7 @@
 #define SMARTPTR_H_
 
 #include "Platform.h"
-#include "Common/RainbowAssert.h"
+#include "Common/Debug.h"
 
 /// Make a class SmartPtr-friendly.
 ///

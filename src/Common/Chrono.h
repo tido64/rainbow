@@ -1,7 +1,7 @@
 #ifndef CHRONO_H_
 #define CHRONO_H_
 
-#include "Common/RainbowAssert.h"
+#include "Common/Debug.h"
 
 namespace Rainbow
 {

@@ -3,7 +3,7 @@
 #include "Platform.h"
 #ifdef RAINBOW_IOS
 
-#include "Common/RainbowAssert.h"
+#include "Common/Debug.h"
 #include "ConFuoco/impl/Stream_iOS.h"
 
 namespace ConFuoco

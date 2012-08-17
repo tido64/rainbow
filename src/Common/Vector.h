@@ -5,7 +5,7 @@
 #include <new>
 
 #include "Platform.h"
-#include "Common/RainbowAssert.h"
+#include "Common/Debug.h"
 
 /// Simple vector class, mimicking STL::vector.
 ///

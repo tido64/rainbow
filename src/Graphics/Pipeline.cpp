@@ -2,7 +2,7 @@
 
 #include <cstdio>
 
-#include "Common/RainbowAssert.h"
+#include "Common/Debug.h"
 #include "Graphics/OpenGL.h"
 #include "Graphics/Pipeline.h"
 #include "Graphics/Shader.h"

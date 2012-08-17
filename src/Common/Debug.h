@@ -1,5 +1,5 @@
-#ifndef RAINBOW_ASSERT_H_
-#define RAINBOW_ASSERT_H_
+#ifndef RAINBOW_DEBUG_H_
+#define RAINBOW_DEBUG_H_
 
 namespace Rainbow
 {
@@ -70,4 +70,4 @@ namespace Rainbow
 #endif
 
 #endif  // !NDEBUG
-#endif  // RAINBOW_ASSERT_H_
+#endif  // RAINBOW_DEBUG_H_

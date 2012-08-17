@@ -6,7 +6,7 @@
 #include <cstdio>
 #include <cstring>
 
-#include "Common/RainbowAssert.h"
+#include "Common/Debug.h"
 #include "ConFuoco/Decoder.h"
 #include "ConFuoco/impl/Stream_AL.h"
 

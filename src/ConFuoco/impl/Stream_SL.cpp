@@ -5,7 +5,7 @@
 
 #include <cstring>
 
-#include "Common/RainbowAssert.h"
+#include "Common/Debug.h"
 #include "ConFuoco/impl/Stream_SL.h"
 
 namespace ConFuoco
