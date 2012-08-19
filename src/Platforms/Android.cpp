@@ -3,6 +3,7 @@
 #include "Platform.h"
 #ifdef RAINBOW_ANDROID
 
+#include <unistd.h>
 #include <sys/types.h>
 #include <EGL/egl.h>
 #include <android/asset_manager.h>
@@ -21,13 +22,14 @@
 
 bool active = false;  ///< Whether the window is in focus.
 bool done = false;    ///< Whether the user has requested to quit.
+AAssetManager *g_asset_manager;
 
 struct AInstance
 {
+	bool initialised;
 	uint32_t width;
 	uint32_t height;
 
-	//AAssetManager *assetManager;  // Accessed through this->app->activity->assetManager
 	ASensorManager *sensorManager;
 	ASensorEventQueue *sensorEventQueue;
 	const ASensor *accelerometerSensor;
@@ -37,6 +39,11 @@ struct AInstance
 	EGLSurface surface;
 	EGLContext context;
 	Director director;
+
+	AInstance() :
+		initialised(false), width(0), height(0), sensorManager(nullptr),
+		sensorEventQueue(nullptr), accelerometerSensor(nullptr),
+		app(nullptr) { }
 };
 
 void android_destroy_display(AInstance *ainstance);
@@ -49,20 +56,21 @@ int32_t android_handle_motion(AInputEvent *event);
 void android_main(struct android_app *state)
 {
 	app_dummy();
+	//sleep(5);  // Sleep a little so GDB can attach itself
 
 	AInstance ainstance;
-	memset(&ainstance, 0, sizeof(ainstance));
 
 	state->userData = &ainstance;
 	state->onAppCmd = android_handle_event;
 	state->onInputEvent = android_handle_input;
 	ainstance.app = state;
+	Data::set_datapath(reinterpret_cast<char*>(state->activity->assetManager));
 
 	// Prepare to monitor accelerometer
 	ainstance.sensorManager = ASensorManager_getInstance();
 	ainstance.accelerometerSensor = ASensorManager_getDefaultSensor(ainstance.sensorManager, ASENSOR_TYPE_ACCELEROMETER);
 	if (ainstance.accelerometerSensor)
-		ainstance.sensorEventQueue = ASensorManager_createEventQueue(ainstance.sensorManager, state->looper, LOOPER_ID_USER, NULL, NULL);
+		ainstance.sensorEventQueue = ASensorManager_createEventQueue(ainstance.sensorManager, state->looper, LOOPER_ID_USER, nullptr, nullptr);
 
 	Chrono::Instance().update();
 	while (!done)
@@ -71,13 +79,13 @@ void android_main(struct android_app *state)
 		int events;
 		struct android_poll_source* source;
 
-		while ((ident = ALooper_pollAll(!active ? -1 : 0, NULL, &events, reinterpret_cast<void**>(&source))) >= 0)
+		while ((ident = ALooper_pollAll(!active ? -1 : 0, nullptr, &events, reinterpret_cast<void**>(&source))) >= 0)
 		{
 			if (source)
 				source->process(state, source);
 
 			// If a sensor has data, process it now.
-			if (ident == LOOPER_ID_USER && ainstance.accelerometerSensor)
+			if (active && ident == LOOPER_ID_USER && ainstance.accelerometerSensor)
 			{
 				ASensorEvent event;
 				while (ASensorEventQueue_getEvents(ainstance.sensorEventQueue, &event, 1) > 0)
@@ -89,7 +97,7 @@ void android_main(struct android_app *state)
 			}
 		}
 
-		if (!active)
+		if (!(ainstance.initialised & active))
 		{
 			Chrono::Instance().update();
 			continue;
@@ -102,6 +110,7 @@ void android_main(struct android_app *state)
 		eglSwapBuffers(ainstance.display, ainstance.surface);
 	}
 	android_destroy_display(&ainstance);
+	ANativeActivity_finish(state->activity);
 }
 
 void android_destroy_display(AInstance *ainstance)
@@ -123,6 +132,7 @@ void android_destroy_display(AInstance *ainstance)
 		eglTerminate(ainstance->display);
 		ainstance->display = EGL_NO_DISPLAY;
 	}
+	ainstance->initialised = false;
 	active = false;
 }
 
@@ -152,13 +162,21 @@ void android_init_display(AInstance *ainstance)
 	eglGetConfigAttrib(dpy, config, EGL_NATIVE_VISUAL_ID, &format);
 	ANativeWindow_setBuffersGeometry(ainstance->app->window, 0, 0, format);
 
-	surface = eglCreateWindowSurface(dpy, config, ainstance->app->window, NULL);
-	ctx = eglCreateContext(dpy, config, NULL, NULL);
+	surface = eglCreateWindowSurface(dpy, config, ainstance->app->window, nullptr);
+	ctx = eglCreateContext(dpy, config, nullptr, nullptr);
 	done = eglMakeCurrent(dpy, surface, surface, ctx) == EGL_FALSE;
 	if (done)
+	{
+		R_ERROR("[Rainbow] Failed to bind context to the current rendering thread");
 		return;
+	}
 
-	Renderer::init();
+	if (!Renderer::init())
+	{
+		R_ERROR("[Rainbow] Failed to initialise renderer");
+		done = true;
+		return;
+	}
 
 	EGLint value;
 	eglQuerySurface(dpy, surface, EGL_WIDTH, &value);
@@ -168,7 +186,12 @@ void android_init_display(AInstance *ainstance)
 	Renderer::resize(ainstance->width, ainstance->height);
 	ainstance->director.set_video(ainstance->width, ainstance->height);
 
-	active = true;
+	// Load game
+	Data main("main.lua");
+	R_ASSERT(main, "Failed to load 'main'");
+	ainstance->director.init(main);
+
+	ainstance->initialised = true;
 }
 
 void android_handle_event(struct android_app *app, int32_t cmd)
@@ -184,21 +207,20 @@ void android_handle_event(struct android_app *app, int32_t cmd)
 			break;
 		case APP_CMD_GAINED_FOCUS:
 			// When our app gains focus, we start monitoring the accelerometer.
-			if (ainstance->accelerometerSensor != NULL)
+			if (ainstance->accelerometerSensor)
 			{
 				ASensorEventQueue_enableSensor(ainstance->sensorEventQueue, ainstance->accelerometerSensor);
 				// We'd like to get 60 events per second (in us).
-				ASensorEventQueue_setEventRate(ainstance->sensorEventQueue, ainstance->accelerometerSensor, (1000L/60)*1000);
+				ASensorEventQueue_setEventRate(ainstance->sensorEventQueue, ainstance->accelerometerSensor, (1000L / 60) * 1000);
 			}
 			active = true;
 			break;
 		case APP_CMD_LOST_FOCUS:
 			// When our app loses focus, we stop monitoring the accelerometer.
 			// This is to avoid consuming battery while not being used.
-			if (ainstance->accelerometerSensor != NULL)
+			if (ainstance->accelerometerSensor)
 				ASensorEventQueue_disableSensor(ainstance->sensorEventQueue, ainstance->accelerometerSensor);
 			Renderer::clear();
-			eglSwapBuffers(ainstance->display, ainstance->surface);
 			active = false;
 			break;
 		case APP_CMD_LOW_MEMORY:
@@ -265,24 +287,6 @@ int32_t android_handle_motion(AInputEvent *event)
 	}
 	delete[] touches;
 	return 1;
-}
-
-unsigned char* android_open(AInstance *ainstance, const char *file)
-{
-	AAsset *asset = AAssetManager_open(ainstance->app->activity->assetManager, file, AASSET_MODE_UNKNOWN);
-	if (!asset)
-		return nullptr;
-
-	size_t size = AAsset_getLength(asset);
-	unsigned char *buffer = new unsigned char[size];
-	int read = AAsset_read(asset, buffer, size);
-	if (read < 0)
-	{
-		delete[] buffer;
-		return nullptr;
-	}
-	AAsset_close(asset);
-	return buffer;
 }
 
 #endif

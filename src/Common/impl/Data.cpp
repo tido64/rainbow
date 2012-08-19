@@ -1,11 +1,20 @@
 // Copyright 2011-12 Bifrost Entertainment. All rights reserved.
 
-#include "Common/Data.h"
+#include "Platform.h"
 #if defined(RAINBOW_ANDROID) || defined(RAINBOW_UNIX) || defined(RAINBOW_WIN)
 
 #include <cstdio>
 #include <cstring>
 
+#include "Common/Data.h"
+
+#ifdef RAINBOW_ANDROID
+#include <android/asset_manager.h>
+#include "LuaMachine.h"
+
+struct AAssetManager *Data::asset_manager = nullptr;
+
+#else
 #include "Common/Debug.h"
 
 size_t Data::data_path_length = 0;
@@ -13,13 +22,22 @@ size_t Data::userdata_path_length = 0;
 char Data::data_path[] = { 0 };
 char Data::userdata_path[] = { 0 };
 
+#endif
+
 void Data::free(const void *const p)
 {
+#ifdef RAINBOW_ANDROID
+	static_cast<void>(p);
+#else
 	delete[] static_cast<const char *const>(p);
+#endif
 }
 
 const char* Data::get_path(const char *const file)
 {
+#ifdef RAINBOW_ANDROID
+	return file;
+#else
 	if (!file)
 		return Data::data_path;
 
@@ -27,10 +45,15 @@ const char* Data::get_path(const char *const file)
 	strcpy(path, Data::data_path);
 	strcat(path, file);
 	return path;
+#endif
 }
 
 const char* Data::set_datapath(const char *const path)
 {
+#ifdef RAINBOW_ANDROID
+	asset_manager = reinterpret_cast<AAssetManager*>(const_cast<char*>(path));
+	return nullptr;
+#else
 	const size_t length = strlen(path);
 	if (length >= RAINBOW_PATH_LENGTH + 1)
 		return nullptr;
@@ -38,10 +61,14 @@ const char* Data::set_datapath(const char *const path)
 	Data::data_path[length] = '/';
 	Data::data_path[length + 1] = '\0';
 	return static_cast<const char*>(memcpy(Data::data_path, path, length));
+#endif
 }
 
 const char* Data::set_userdatapath(const char *const path)
 {
+#ifdef RAINBOW_ANDROID
+	return path;
+#else
 	const size_t length = strlen(path);
 	if (length >= RAINBOW_PATH_LENGTH + 1)
 		return nullptr;
@@ -49,14 +76,27 @@ const char* Data::set_userdatapath(const char *const path)
 	Data::userdata_path[length] = '/';
 	Data::userdata_path[length + 1] = '\0';
 	return static_cast<const char*>(memcpy(Data::userdata_path, path, length));
+#endif
 }
 
 Data::Data(const char *const file) : allocated(0), sz(0), data(nullptr)
 {
+#ifdef RAINBOW_ANDROID
+	AAsset *asset = AAssetManager_open(asset_manager, file, AASSET_MODE_UNKNOWN);
+	if (!asset)
+		return;
+
+	const size_t size = AAsset_getLength(asset);
+	this->allocate(size);
+
+	const int read = AAsset_read(asset, this->data, size);
+	AAsset_close(asset);
+	if (read < 0 || static_cast<size_t>(read) != size)
+#else
 	FILE *fp = fopen(file, "rb");
 	if (!fp)
 	{
-		fprintf(stderr, "[Rainbow] Data: Failed to open '%s'\n", file);
+		R_ERROR("[Rainbow] Data: Failed to open '%s'\n", file);
 		return;
 	}
 
@@ -70,11 +110,11 @@ Data::Data(const char *const file) : allocated(0), sz(0), data(nullptr)
 	const size_t read = fread(this->data, 1, size, fp);
 	fclose(fp);
 	if (read != size)
+#endif
 	{
 		delete[] this->data;
 		this->data = nullptr;
 		this->allocated = 0;
-		this->sz = 0;
 	}
 	else
 		this->sz = size;
@@ -107,6 +147,10 @@ void Data::copy(const void *const data, const size_t length)
 
 bool Data::save(const char *const file) const
 {
+#ifdef RAINBOW_ANDROID
+	static_cast<void>(file);
+	return false;
+#else
 	if (!this->data)
 		return false;
 
@@ -120,6 +164,7 @@ bool Data::save(const char *const file) const
 	const size_t written = fwrite(this->data, sizeof(unsigned char), this->sz, fp);
 	fclose(fp);
 	return written == this->sz;
+#endif
 }
 
 void Data::set(unsigned char *data, const size_t length)

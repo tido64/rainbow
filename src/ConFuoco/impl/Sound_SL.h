@@ -20,7 +20,7 @@ namespace ConFuoco
 	{
 	public:
 		Sound(const unsigned int i);
-		virtual ~Sound() override;
+		virtual ~Sound();
 
 		virtual bool load(const char *const file) override;
 

@@ -88,26 +88,30 @@ private:
 #else
 
 private:
+#ifdef RAINBOW_ANDROID
+	static struct AAssetManager *asset_manager;      ///< Android asset manager.
+#else
 	static size_t data_path_length;                  ///< Length of data path string.
 	static size_t userdata_path_length;              ///< Length of user path string.
 	static char data_path[RAINBOW_PATH_LENGTH];      ///< Path to data files.
 	static char userdata_path[RAINBOW_PATH_LENGTH];  ///< Path to user files.
+#endif
 
 	size_t allocated;     ///< Allocated memory size.
 	size_t sz;            ///< Size of used buffer, not necessarily equal to allocated.
 	unsigned char *data;  ///< Actual buffer, implemented as a C-array.
 
-	/// Intentionally left undefined.
-	Data(const Data &);
-
 	/// Resize allocated memory segment. If the requested allocation size is
 	/// smaller than current allocated size, nothing will happen.
 	void allocate(const size_t size);
 
+#endif
+
+	/// Intentionally left undefined.
+	Data(const Data &);
+
 	/// Intentionally left undefined.
 	Data& operator=(const Data &);
-
-#endif
 };
 
 #include "Common/impl/Data-inl.h"

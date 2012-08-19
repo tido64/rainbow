@@ -21,7 +21,7 @@ namespace ConFuoco
 	{
 	public:
 		Stream();
-		virtual ~Stream() override;
+		virtual ~Stream();
 
 		size_t get(char *&buffer);
 
