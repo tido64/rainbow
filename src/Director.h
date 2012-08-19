@@ -23,7 +23,7 @@ public:
 	void set_video(const int width, const int height);
 
 	/// Update world.
-	/// \param t  Current time or milliseconds since last frame (platform-dependent).
+	/// \param t  Current time or milliseconds since last frame.
 	void update(const unsigned long t = 0);
 
 	/// Called when a low memory warning has been issued.

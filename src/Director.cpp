@@ -8,7 +8,7 @@
 #include "Input/Input.h"
 #include "Lua/lua_Platform.h"
 
-Director::Director() : lua(&this->scenegraph)
+Director::Director() : lua(&scenegraph)
 {
 	Input::Instance().set_state(this->lua);
 }
@@ -31,9 +31,6 @@ void Director::update(const unsigned long t)
 {
 	Chrono::Instance().update(t);
 	ConFuoco::Mixer::Instance().update();
-#ifdef USE_PHYSICS
-	Physics::Instance().step(Chrono::Instance().diff() * 0.001f);
-#endif
 	if (this->lua.update(Chrono::Instance().diff()))
 		this->shutdown();
 	else
