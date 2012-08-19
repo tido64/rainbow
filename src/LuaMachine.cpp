@@ -87,8 +87,6 @@ void LuaMachine::err(lua_State *L, const int lua_e)
 	const char *err_errfunc = "error handling";
 
 	const char *desc = err_general;
-	const char *const m = lua_tolstring(L, -1, nullptr);
-	lua_pop(L, 1);
 	switch (lua_e)
 	{
 		case LUA_ERRRUN:
@@ -106,7 +104,8 @@ void LuaMachine::err(lua_State *L, const int lua_e)
 		default:
 			break;
 	}
-	fprintf(stderr, "Lua %s error: %s\n", desc, m);
+	R_ERROR("Lua %s error: %s\n", desc, lua_tolstring(L, -1, nullptr));
+	lua_pop(L, 1);
 	dump_stack(L);
 }
 

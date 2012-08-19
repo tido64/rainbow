@@ -49,8 +49,11 @@
 #endif
 
 // Define nullptr for non-C++11-compliant compilers
-#if __cplusplus <= 19971 && __GNUC_VERSION__ < 40600
+#if __MINGW32__
+#	define nullptr 0
 #	define override
+#elif __cplusplus <= 19971
+#	if __GNUC_VERSION__ < 40600
 
 const
 class nullptr_t
@@ -66,9 +69,10 @@ private:
 	void operator&() const;
 } nullptr = {};
 
-#elif __MINGW32__
-#	define nullptr 0
-#	define override
+#	endif
+#	if __GNUC_VERSION__ < 40700
+#		define override
+#	endif
 #endif
 
 #endif  // PLATFORM_H_
