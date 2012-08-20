@@ -1,7 +1,6 @@
 // Copyright 2012 Bifrost Entertainment. All rights reserved.
 
-#include <cstdio>
-
+#include "Common/Debug.h"
 #include "ConFuoco/Sound.h"
 #include "ConFuoco/Stream.h"
 #include "ConFuoco/WaveBank.h"
@@ -24,7 +23,7 @@ namespace ConFuoco
 	{
 		if (this->sound_count + this->stream_count >= size)
 		{
-			fprintf(stderr, "[Rainbow::ConFuoco] WaveBank: Max number of sources reached\n");
+			R_ERROR("[Rainbow::ConFuoco] WaveBank: Max number of sources reached\n");
 			return nullptr;
 		}
 
@@ -38,7 +37,7 @@ namespace ConFuoco
 	{
 		if (this->sound_count + this->stream_count >= size)
 		{
-			fprintf(stderr, "[Rainbow::ConFuoco] WaveBank: Max number of sources reached\n");
+			R_ERROR("[Rainbow::ConFuoco] WaveBank: Max number of sources reached\n");
 			return nullptr;
 		}
 

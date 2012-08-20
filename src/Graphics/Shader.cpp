@@ -1,7 +1,5 @@
 // Copyright 2012 Bifrost Entertainment. All rights reserved.
 
-#include <cstdio>
-
 #include "Common/Debug.h"
 #include "Graphics/OpenGL.h"
 #include "Graphics/Shader.h"
@@ -24,7 +22,7 @@ Shader::Shader(const unsigned int type, const char *shader) :
 			char *log = new char[info_len + 1];
 			glGetShaderInfoLog(id, info_len, nullptr, log);
 			log[info_len] = '\0';
-			fprintf(stderr, "[Rainbow] GLSL: Failed to compile %s shader: %s\n", (type == GL_VERTEX_SHADER) ? "vertex" : "fragment", log);
+			R_ERROR("[Rainbow] GLSL: Failed to compile %s shader: %s\n", (type == GL_VERTEX_SHADER) ? "vertex" : "fragment", log);
 			delete[] log;
 		}
 		glDeleteShader(id);

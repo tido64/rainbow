@@ -17,7 +17,7 @@ namespace ConFuoco
 			FILE *vorb = fopen(file, "rb");
 			if (!vorb)
 			{
-				fprintf(stderr, "[Rainbow::ConFuoco] Vorbis: Failed to open file\n");
+				R_ERROR("[Rainbow::ConFuoco] Vorbis: Failed to open file\n");
 				return nullptr;
 			}
 
@@ -25,7 +25,7 @@ namespace ConFuoco
 			if (ov_open_callbacks(vorb, vf, 0, 0, OV_CALLBACKS_DEFAULT) < 0)
 			{
 				fclose(vorb);
-				fprintf(stderr, "[Rainbow::ConFuoco] Vorbis: Does not appear to be an Ogg bitstream\n");
+				R_ERROR("[Rainbow::ConFuoco] Vorbis: Does not appear to be an Ogg bitstream\n");
 				return nullptr;
 			}
 
@@ -34,7 +34,7 @@ namespace ConFuoco
 			{
 				delete vf;
 				fclose(vorb);
-				fprintf(stderr, "[Rainbow::ConFuoco] Vorbis: Failed to retrieve Ogg bitstream info\n");
+				R_ERROR("[Rainbow::ConFuoco] Vorbis: Failed to retrieve Ogg bitstream info\n");
 				return nullptr;
 			}
 			channels = vi->channels;
@@ -113,22 +113,22 @@ namespace ConFuoco
 			switch (failed)
 			{
 				case OV_ENOSEEK:
-					fprintf(stderr, "[Rainbow::ConFuoco] Vorbis: OV_ENOSEEK\n");
+					R_ERROR("[Rainbow::ConFuoco] Vorbis: OV_ENOSEEK\n");
 					break;
 				case OV_EINVAL:
-					fprintf(stderr, "[Rainbow::ConFuoco] Vorbis: OV_EINVAL\n");
+					R_ERROR("[Rainbow::ConFuoco] Vorbis: OV_EINVAL\n");
 					break;
 				case OV_EREAD:
-					fprintf(stderr, "[Rainbow::ConFuoco] Vorbis: OV_EREAD\n");
+					R_ERROR("[Rainbow::ConFuoco] Vorbis: OV_EREAD\n");
 					break;
 				case OV_EFAULT:
-					fprintf(stderr, "[Rainbow::ConFuoco] Vorbis: OV_EFAULT\n");
+					R_ERROR("[Rainbow::ConFuoco] Vorbis: OV_EFAULT\n");
 					break;
 				case OV_EBADLINK:
-					fprintf(stderr, "[Rainbow::ConFuoco] Vorbis: OV_EBADLINK\n");
+					R_ERROR("[Rainbow::ConFuoco] Vorbis: OV_EBADLINK\n");
 					break;
 				default:
-					fprintf(stderr, "[Rainbow::ConFuoco] Vorbis: OV_EUNKNOWN\n");
+					R_ERROR("[Rainbow::ConFuoco] Vorbis: OV_EUNKNOWN\n");
 					break;
 			}
 			R_ASSERT(false, "Failed to reset stream");

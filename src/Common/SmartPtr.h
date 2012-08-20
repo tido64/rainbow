@@ -1,7 +1,6 @@
 #ifndef SMARTPTR_H_
 #define SMARTPTR_H_
 
-#include "Platform.h"
 #include "Common/Debug.h"
 
 /// Make a class SmartPtr-friendly.

@@ -1,7 +1,5 @@
 // Copyright 2012 Bifrost Entertainment. All rights reserved.
 
-#include <cstdio>
-
 #include "Common/Debug.h"
 #include "Graphics/OpenGL.h"
 #include "Graphics/Pipeline.h"
@@ -58,7 +56,7 @@ bool Pipeline::link()
 			char *log = new char[info_len + 1];
 			glGetProgramInfoLog(this->program, info_len, nullptr, log);
 			log[info_len] = '\0';
-			fprintf(stderr, "[Rainbow] GLSL: Failed to link program: %s\n", log);
+			R_ERROR("[Rainbow] GLSL: Failed to link program: %s\n", log);
 			delete[] log;
 		}
 		return false;

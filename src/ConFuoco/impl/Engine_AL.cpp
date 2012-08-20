@@ -1,9 +1,8 @@
 // Copyright 2011-12 Bifrost Entertainment. All rights reserved.
 
-#include "ConFuoco/Mixer.h"
+#include "Common/Debug.h"
 #if defined(RAINBOW_IOS) || defined(RAINBOW_SDL)
-
-#include <cstdio>
+#	include "ConFuoco/Mixer.h"
 
 namespace ConFuoco
 {
@@ -94,14 +93,14 @@ namespace ConFuoco
 		ALCdevice *device = alcOpenDevice(0);
 		if (!device)
 		{
-			fprintf(stderr, "[Rainbow::ConFuoco] Engine: alcOpenDevice error code %x\n", alGetError());
+			R_ERROR("[Rainbow::ConFuoco] Engine: alcOpenDevice error code %x\n", alGetError());
 			return;
 		}
 
 		this->context = alcCreateContext(device, 0);
 		if (!this->context)
 		{
-			fprintf(stderr, "[Rainbow::ConFuoco] Engine: alcCreateContext error code %x\n", alGetError());
+			R_ERROR("[Rainbow::ConFuoco] Engine: alcCreateContext error code %x\n", alGetError());
 			return;
 		}
 		alcMakeContextCurrent(this->context);

@@ -3,7 +3,6 @@
 
 #include <ctime>
 
-#include "Platform.h"
 #include "Common/Debug.h"
 
 #if defined(RAINBOW_UNIX)

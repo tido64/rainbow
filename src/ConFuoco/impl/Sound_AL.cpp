@@ -2,12 +2,9 @@
 
 #include "ConFuoco/OpenAL.h"
 #if defined(RAINBOW_IOS) || defined(RAINBOW_SDL)
-
-#include <cstdio>
-
-#include "Common/Debug.h"
-#include "ConFuoco/Decoder.h"
-#include "ConFuoco/impl/Sound_AL.h"
+#	include "Common/Debug.h"
+#	include "ConFuoco/Decoder.h"
+#	include "ConFuoco/impl/Sound_AL.h"
 
 namespace ConFuoco
 {
@@ -17,7 +14,7 @@ namespace ConFuoco
 		alGenBuffers(1, &this->bid);
 		if (alGetError() != AL_NO_ERROR)
 		{
-			fprintf(stderr, "[Rainbow::ConFuoco] AL: Failed to generate buffer\n");
+			R_ERROR("[Rainbow::ConFuoco] AL: Failed to generate buffer\n");
 			return;
 		}
 
@@ -29,7 +26,7 @@ namespace ConFuoco
 			this->sids = nullptr;
 			alDeleteBuffers(1, &this->bid);
 
-			fprintf(stderr, "[Rainbow::ConFuoco] AL: Failed to generate sources\n");
+			R_ERROR("[Rainbow::ConFuoco] AL: Failed to generate sources\n");
 			return;
 		}
 

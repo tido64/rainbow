@@ -61,7 +61,7 @@ int main(int argc, char *argv[])
 
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
 	{
-		fprintf(stderr, "Unable to initialise SDL: %s\n", SDL_GetError());
+		R_ERROR("Unable to initialise SDL: %s\n", SDL_GetError());
 		exit(1);
 	}
 	SDL_SetEventFilter(&sdl_eventfilter);
@@ -71,7 +71,7 @@ int main(int argc, char *argv[])
 	SDL_Surface *surface = SDL_SetVideoMode(screen_width, screen_height, 0, video_mode);
 	if (!surface)
 	{
-		fprintf(stderr, "SDL unable to set video mode: %s\n", SDL_GetError());
+		R_ERROR("SDL unable to set video mode: %s\n", SDL_GetError());
 		SDL_Quit();
 		exit(1);
 	}
@@ -79,7 +79,7 @@ int main(int argc, char *argv[])
 
 	if (!Renderer::init())
 	{
-		fprintf(stderr, "[Rainbow] Failed to initialise OpenGL\n");
+		R_ERROR("[Rainbow] Failed to initialise OpenGL\n");
 		Renderer::release();
 		SDL_Quit();
 		exit(1);
@@ -136,7 +136,7 @@ int main(int argc, char *argv[])
 					surface = SDL_SetVideoMode(event.resize.w, event.resize.h, 0, video_mode);
 					if (!surface)
 					{
-						fprintf(stderr, "SDL unable to set video mode: %s\n", SDL_GetError());
+						R_ERROR("SDL unable to set video mode: %s\n", SDL_GetError());
 						active = false;
 						done = true;
 					}

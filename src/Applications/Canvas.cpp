@@ -69,7 +69,7 @@ Canvas::Canvas() :
 	if (status != GL_FRAMEBUFFER_COMPLETE)
 	{
 		this->release();
-		fprintf(stderr, "[Rainbow] GL: Failed to create framebuffer\n");
+		R_ERROR("[Rainbow] GL: Failed to create framebuffer\n");
 		return;
 	}
 

@@ -3,7 +3,6 @@
 #include "ConFuoco/OpenAL.h"
 #ifdef RAINBOW_SDL
 
-#include <cstdio>
 #include <cstring>
 
 #include "Common/Debug.h"
@@ -19,7 +18,7 @@ namespace ConFuoco
 		alGenBuffers(CONFUOCO_STREAM_AL_BUFFERS, this->bid);
 		if (alGetError() != AL_NO_ERROR)
 		{
-			fprintf(stderr, "[Rainbow::ConFuoco] Stream: Failed to generate buffers\n");
+			R_ERROR("[Rainbow::ConFuoco] Stream: Failed to generate buffers\n");
 			return;
 		}
 
@@ -29,7 +28,7 @@ namespace ConFuoco
 			alDeleteBuffers(CONFUOCO_STREAM_AL_BUFFERS, this->bid);
 			memset(this->bid, 0, CONFUOCO_STREAM_AL_BUFFERS * sizeof(*this->bid));
 
-			fprintf(stderr, "[Rainbow::ConFuoco] Stream: Failed to generate source\n");
+			R_ERROR("[Rainbow::ConFuoco] Stream: Failed to generate source\n");
 			return;
 		}
 
@@ -160,7 +159,7 @@ namespace ConFuoco
 			alBufferData(this->bid[i], this->format, this->buffer, this->buffer_size, this->rate);
 			if (alGetError() != AL_NO_ERROR)
 			{
-				fprintf(stderr, "[Rainbow::ConFuoco] Stream: Failed to buffer data\n");
+				R_ERROR("[Rainbow::ConFuoco] Stream: Failed to buffer data\n");
 				return false;
 			}
 		}

@@ -3,7 +3,6 @@
 #include "Platform.h"
 #if defined(RAINBOW_ANDROID) || defined(RAINBOW_UNIX) || defined(RAINBOW_WIN)
 
-#include <cstdio>
 #include <cstring>
 
 #include "Common/Data.h"

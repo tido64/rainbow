@@ -1,7 +1,6 @@
 #ifndef LIST_H_
 #define LIST_H_
 
-#include "Platform.h"
 #include "Common/Debug.h"
 
 /// Simple double-linked list container, mimicking STL::list.

@@ -4,7 +4,6 @@
 #include <cstring>
 #include <new>
 
-#include "Platform.h"
 #include "Common/Debug.h"
 
 /// Simple vector class, mimicking STL::vector.
