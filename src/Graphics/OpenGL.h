@@ -11,12 +11,16 @@
 #if defined(RAINBOW_ANDROID)
 #	include <GLES2/gl2.h>
 #	include <GLES2/gl2ext.h>
+#	define GL_RGB8               GL_RGB
+#	define GL_RGBA8              GL_RGBA
 #	define GL_DRAW_FRAMEBUFFER   GL_FRAMEBUFFER
 #	define glBindVertexArray     glBindVertexArrayOES
 #	define glDeleteVertexArrays  glDeleteVertexArraysOES
 #	define glGenVertexArrays     glGenVertexArraysOES
 #elif defined(RAINBOW_IOS)
 #	include <OpenGLES/ES2/gl.h>
+#	define GL_RGB8               GL_RGB
+#	define GL_RGBA8              GL_RGBA
 #	define glBindVertexArray     glBindVertexArrayOES
 #	define glDeleteVertexArrays  glDeleteVertexArraysOES
 #	define glGenVertexArrays     glGenVertexArraysOES

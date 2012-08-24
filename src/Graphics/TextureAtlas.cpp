@@ -35,6 +35,7 @@ TextureAtlas::TextureAtlas(const Data &img) : name(0), width(0), height(0)
 {
 	R_ASSERT(img, "No data provided");
 
+	GLint internal = GL_RGBA8;
 	GLint format = GL_RGBA;
 
 #if defined(RAINBOW_IOS)
@@ -106,27 +107,31 @@ TextureAtlas::TextureAtlas(const Data &img) : name(0), width(0), height(0)
 
 	// Retrieve PNG info
 	png_read_info(png_ptr, info_ptr);
-	if (png_get_channels(png_ptr, info_ptr) != 4)
+	const png_byte color_type = png_get_color_type(png_ptr, info_ptr);
+	if (color_type != PNG_COLOR_TYPE_RGB_ALPHA)
 	{
-		switch(png_get_color_type(png_ptr, info_ptr))
+		switch(color_type)
 		{
 			case PNG_COLOR_TYPE_GRAY:
 				if (png_get_bit_depth(png_ptr, info_ptr) < 8)
 					png_set_expand_gray_1_2_4_to_8(png_ptr);
+				internal = GL_LUMINANCE;
 				format = GL_LUMINANCE;
 				break;
 			case PNG_COLOR_TYPE_PALETTE:
 				png_set_palette_to_rgb(png_ptr);
 			case PNG_COLOR_TYPE_RGB:
+				internal = GL_RGB8;
 				format = GL_RGB;
 				break;
 			case PNG_COLOR_TYPE_GRAY_ALPHA:
 				if (png_get_bit_depth(png_ptr, info_ptr) < 8)
 					png_set_expand_gray_1_2_4_to_8(png_ptr);
+				internal = GL_LUMINANCE_ALPHA;
 				format = GL_LUMINANCE_ALPHA;
 				break;
 			default:
-				printf("Unknown PNG color type: %u\n", png_get_color_type(png_ptr, info_ptr));
+				R_ERROR("Unknown PNG color type: %u\n", color_type);
 				break;
 		}
 	}
@@ -155,7 +160,7 @@ TextureAtlas::TextureAtlas(const Data &img) : name(0), width(0), height(0)
 
 #endif
 
-	this->name = TextureManager::Instance().create(GL_RGBA, this->width, this->height, format, data);
+	this->name = TextureManager::Instance().create(internal, this->width, this->height, format, data);
 	delete[] data;
 }
 
