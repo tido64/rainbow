@@ -35,11 +35,24 @@ public:
 	/// \param format           Format of the bitmap data.
 	/// \param data             Bitmap data.
 	/// \return Texture id.
-    unsigned int create(const unsigned int internal_format,
-                        const unsigned int width,
-                        const unsigned int height,
-                        const unsigned int format,
+	unsigned int create(const unsigned int internal_format,
+	                    const unsigned int width,
+	                    const unsigned int height,
+	                    const unsigned int format,
 	                    const void *data);
+
+	/// Create texture from a compressed format.
+	/// \param format  Compression format.
+	/// \param width   Width of the texture.
+	/// \param height  Height of the texture.
+	/// \param size    Data size.
+	/// \param data    Compressed bitmap data.
+	/// \return Texture id.
+	unsigned int create_compressed(const unsigned int format,
+	                               const unsigned int width,
+	                               const unsigned int height,
+	                               const size_t size,
+	                               const void *data);
 
 	/// Purge unused texture memory.
 	inline void purge();

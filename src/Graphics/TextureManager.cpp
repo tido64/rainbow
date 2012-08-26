@@ -40,6 +40,40 @@ unsigned int TextureManager::create(const unsigned int internal_format,
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glTexImage2D(GL_TEXTURE_2D, 0, internal_format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+	R_ASSERT(glGetError() == GL_NO_ERROR, "Failed to load texture");
+
+	this->textures.push_back(tex);
+
+#ifndef NDEBUG
+	this->print_usage();
+#endif
+
+	return tex.id;
+}
+
+unsigned int TextureManager::create_compressed(const unsigned int format,
+                                               const unsigned int width,
+                                               const unsigned int height,
+                                               const size_t size,
+                                               const void *data)
+{
+	TextureId tex = { 0, 0 };
+	if (!this->recycled.size())
+		glGenTextures(1, &tex.id);
+	else
+	{
+		tex = this->recycled[0];
+		this->recycled.qremove(0);
+	}
+	tex.sz = width * height >> 1;
+
+	this->bind(tex.id);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glCompressedTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, size, data);
+	R_ASSERT(glGetError() == GL_NO_ERROR, "Failed to load compressed texture");
 
 	this->textures.push_back(tex);
 

@@ -2,166 +2,80 @@
 
 #include "Algorithm.h"
 #include "Common/Data.h"
+#include "Graphics/ImageLoader.h"
 #include "Graphics/OpenGL.h"
 #include "Graphics/TextureAtlas.h"
-
-#if defined(RAINBOW_IOS)
-#	include <UIKit/UIKit.h>
-#else
-#	include <png.h>
-
-/// Structure for reading PNG bitmaps.
-///
-/// Copyright 2010-12 Bifrost Entertainment. All rights reserved.
-/// \author Tommy Nguyen
-struct png_read_struct
-{
-	size_t offset;
-	const unsigned char *data;
-
-	png_read_struct(unsigned char *data) : offset(8), data(data) { }
-};
-
-static void mem_fread(png_structp png_ptr, png_bytep data, png_size_t length)
-{
-	png_read_struct *read_struct = static_cast<png_read_struct*>(png_get_io_ptr(png_ptr));
-	memcpy(data, read_struct->data + read_struct->offset, length);
-	read_struct->offset += length;
-}
-
-#endif
 
 TextureAtlas::TextureAtlas(const Data &img) : name(0), width(0), height(0)
 {
 	R_ASSERT(img, "No data provided");
 
-	GLint internal = GL_RGBA8;
-	GLint format = GL_RGBA;
+	void *data;
+	ImageInfo info;
+	if (!ImageLoader::load(data, info, img))
+		return;
 
-#if defined(RAINBOW_IOS)
-
-	UIImage *image = [[UIImage alloc] initWithData:(NSData*)img];
-	R_ASSERT(image, "Failed to load file");
-
-	this->width = CGImageGetWidth(image.CGImage);
-	this->height = CGImageGetHeight(image.CGImage);
-	R_ASSERT(this->is_valid(this->width) && this->is_valid(this->height),
-	         "Texture dimension must be divisible by 4 and greater than 64");
-	CGRect bounds = CGRectMake(0, 0, this->width, this->height);
-
-	CGColorSpaceRef color_space = CGColorSpaceCreateDeviceRGB();
-	unsigned char *data = new unsigned char[this->height * this->width * 4];
-
-	CGContextRef context = CGBitmapContextCreate(data, this->width, this->height, 8, 4 * this->width, color_space, kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big);
-	CGColorSpaceRelease(color_space);
-
-	CGContextClearRect(context, bounds);
-	CGContextTranslateCTM(context, 0, 0);
-	CGContextDrawImage(context, bounds, image.CGImage);
-	CGContextRelease(context);
-
-	image = nil;
-
-#else
-
-	// Prepare for decoding PNG data
-	png_read_struct texture(img);
-
-	// Look for PNG signature
 #ifndef NDEBUG
-	int png_error =
-#endif
-	png_sig_cmp(texture.data, 0, texture.offset);
-	R_ASSERT(!png_error, "File is not PNG");
-
-	png_structp png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
-	if (!png_ptr)
-	{
-		R_ASSERT(false, "Failed to create PNG reading structure");
-		return;
-	}
-
-	png_infop info_ptr = png_create_info_struct(png_ptr);
-	if (!info_ptr)
-	{
-		png_destroy_read_struct(&png_ptr, nullptr, nullptr);
-		R_ASSERT(false, "Failed to initialize PNG information structure");
-		return;
-	}
-
-	if (setjmp(png_jmpbuf(png_ptr)))
-	{
-		png_destroy_read_struct(&png_ptr, &info_ptr, nullptr);
-		R_ASSERT(false, "Failed to read PNG");
-		return;
-	}
-
-	// Offset because we've read the signature
-	png_set_sig_bytes(png_ptr, texture.offset);
-
-	// Texture can't be greater than what the hardware supports
-	png_set_user_limits(png_ptr, GL_MAX_TEXTURE_SIZE, GL_MAX_TEXTURE_SIZE);
-
-	// Set reading function
-	png_set_read_fn(png_ptr, &texture, mem_fread);
-
-	// Retrieve PNG info
-	png_read_info(png_ptr, info_ptr);
-	const png_byte color_type = png_get_color_type(png_ptr, info_ptr);
-	if (color_type != PNG_COLOR_TYPE_RGB_ALPHA)
-	{
-		switch(color_type)
-		{
-			case PNG_COLOR_TYPE_GRAY:
-				if (png_get_bit_depth(png_ptr, info_ptr) < 8)
-					png_set_expand_gray_1_2_4_to_8(png_ptr);
-				internal = GL_LUMINANCE;
-				format = GL_LUMINANCE;
-				break;
-			case PNG_COLOR_TYPE_PALETTE:
-				png_set_palette_to_rgb(png_ptr);
-			case PNG_COLOR_TYPE_RGB:
-				internal = GL_RGB8;
-				format = GL_RGB;
-				break;
-			case PNG_COLOR_TYPE_GRAY_ALPHA:
-				if (png_get_bit_depth(png_ptr, info_ptr) < 8)
-					png_set_expand_gray_1_2_4_to_8(png_ptr);
-				internal = GL_LUMINANCE_ALPHA;
-				format = GL_LUMINANCE_ALPHA;
-				break;
-			default:
-				R_ERROR("Unknown PNG color type: %u\n", color_type);
-				break;
-		}
-	}
-
-	this->width = png_get_image_width(png_ptr, info_ptr);
-	this->height = png_get_image_height(png_ptr, info_ptr);
-	R_ASSERT(this->width > 0 && this->height > 0, "Invalid texture dimensions");
-
-	// Allocate memory for bitmap
-	png_read_update_info(png_ptr, info_ptr);
-	const size_t rowbytes = png_get_rowbytes(png_ptr, info_ptr);
-	unsigned char *data = new unsigned char[this->height * rowbytes];
-
-	// Allocate row pointer array
-	png_bytep *row_pointers = new png_bytep[this->height];
-
-	png_byte *b = static_cast<png_byte*>(data);
-	row_pointers[0] = b;
-	for (int i = 1; i < this->height; ++i)
-		row_pointers[i] = row_pointers[i - 1] + rowbytes;
-
-	png_read_image(png_ptr, row_pointers);
-	delete[] row_pointers;
-
-	png_destroy_read_struct(&png_ptr, &info_ptr, nullptr);
-
+	// Ensure texture dimension is supported by the hardware
+	int max_texture_size;
+	glGetIntegerv(GL_MAX_TEXTURE_SIZE, &max_texture_size);
+	R_ASSERT(info.width <= static_cast<unsigned int>(max_texture_size)
+	         && info.height <= static_cast<unsigned int>(max_texture_size),
+	         "Texture dimension exceeds max texture size supported by hardware");
+	//R_ASSERT(this->is_valid(info.width) && this->is_valid(info.height),
+	//         "Texture dimension must be divisible by 4 and greater than 64");
 #endif
 
-	this->name = TextureManager::Instance().create(internal, this->width, this->height, format, data);
-	delete[] data;
+	this->width = info.width;
+	this->height = info.height;
+
+	GLint format, internal;
+	switch (info.compressed)
+	{
+	#ifdef GL_OES_compressed_ETC1_RGB8_texture
+		case ImageLoader::ETC1:
+			this->name = TextureManager::Instance().create_compressed(GL_ETC1_RGB8_OES, info.width, info.height, info.size, data);
+			break;
+	#endif // ETC1
+	#ifdef GL_IMG_texture_compression_pvrtc
+		case ImageLoader::PVRTC:
+			R_ASSERT(info.depth == 2 || info.depth == 4, "Invalid colour depth");
+			R_ASSERT(info.channels == 3 || info.channels == 4, "Invalid number of colour channels");
+			if (info.channels == 3)
+				internal = (info.depth == 2) ? GL_COMPRESSED_RGB_PVRTC_2BPPV1_IMG : GL_COMPRESSED_RGB_PVRTC_4BPPV1_IMG;
+			else
+				internal = (info.depth == 2) ? GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG : GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG;
+			this->name = TextureManager::Instance().create_compressed(internal, info.width, info.height, info.size, data);
+			break;
+	#endif // PVRTC
+		default:
+			switch (info.channels)
+			{
+				case 1:
+					R_ASSERT(info.depth == 8, "Invalid colour depth");
+					format = GL_LUMINANCE;
+					internal = GL_LUMINANCE;
+					break;
+				case 2:
+					R_ASSERT(info.depth == 16, "Invalid colour depth");
+					format = GL_LUMINANCE_ALPHA;
+					internal = GL_LUMINANCE_ALPHA;
+					break;
+				case 3:
+					R_ASSERT(info.depth == 16 || info.depth == 24, "Invalid colour depth");
+					format = GL_RGB;
+					internal = (info.depth == 16) ? GL_RGB565 : GL_RGB8;
+					break;
+				case 4:
+					R_ASSERT(info.depth == 16 || info.depth == 32, "Invalid colour depth");
+					format = GL_RGBA;
+					internal = (info.depth == 16) ? GL_RGBA4 : GL_RGBA8;
+					break;
+			}
+			this->name = TextureManager::Instance().create(internal, this->width, this->height, format, data);
+			break;
+	}
+	ImageLoader::release(data);
 }
 
 unsigned int TextureAtlas::define(const int x, const int y, const int w, const int h)
@@ -182,5 +96,5 @@ unsigned int TextureAtlas::define(const int x, const int y, const int w, const i
 
 bool TextureAtlas::is_valid(const unsigned int i)
 {
-	return (i < 64) ? false : i % 4 == 0;
+	return (i < 64) ? false : (i & 0x03) == 0;
 }
