@@ -13,5 +13,4 @@ foreach(file ${LUA_CORE_SRC} ${LUA_LIB_SRC})
 endforeach()
 
 add_library(lua STATIC ${LUA_SRC})
-add_definitions(-DLUA_COMPAT_ALL)
 add_dependencies(rainbow lua)

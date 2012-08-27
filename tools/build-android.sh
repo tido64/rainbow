@@ -6,6 +6,11 @@ NDK_HOME="$HOME/bin/android-ndk"
 PROJECT="$(cd -P "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 TARGET=rainbow
 
+# Auto-generate files
+cd $PROJECT
+tools/shaders-gen.py
+cd $BUILD_DIR
+
 # Create project files
 $NDK_HOME/../android-sdk/tools/android -s create project --name "Rainbow" --target "android-15" --path . --package "com.bifrostentertainment.rainbow" --activity "Rainbow" || exit 1
 rm -r src/*
@@ -40,8 +45,8 @@ LOCAL_MODULE := $TARGET
 LOCAL_SRC_FILES := $SRC_FILES
 
 LOCAL_C_INCLUDES := $PROJECT/src $PROJECT/lib $PROJECT/lib/FreeType/include $PROJECT/lib/libpng $PROJECT/lib/Lua $NDK_HOME/sources/android/native_app_glue
-LOCAL_CFLAGS := -DDARWIN_NO_CARBON -DFT2_BUILD_LIBRARY -finline-functions -ftree-vectorize
-LOCAL_CPPFLAGS := -Wall -Wextra -Wno-variadic-macros -Woverloaded-virtual -Wsign-promo -fno-rtti
+LOCAL_CFLAGS := -DDARWIN_NO_CARBON -DFT2_BUILD_LIBRARY $@ -finline-functions -ftree-vectorize
+LOCAL_CPPFLAGS := -std=gnu++11 -Wall -Wextra -Woverloaded-virtual -Wsign-promo -fno-rtti
 
 LOCAL_LDLIBS := -landroid -lEGL -lGLESv2 -lOpenSLES -llog -lz
 LOCAL_STATIC_LIBRARIES := android_native_app_glue
@@ -90,5 +95,5 @@ echo "\
 > AndroidManifest.xml
 echo " done"
 
-NDK_DEBUG=1 $NDK_HOME/ndk-build $@ &&
+NDK_DEBUG=1 $NDK_HOME/ndk-build &&
 JAVA_HOME=/usr/lib/jvm/java-7-openjdk /usr/bin/ant debug

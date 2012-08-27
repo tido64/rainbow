@@ -6,6 +6,7 @@ option(MINGW "Cross compile with MinGW" OFF)
 #option(PROFILING "Compile with profiling" OFF)
 
 # Features
+option(CANVAS  "Use canvas" OFF)
 option(PHYSICS "Use physics (Box2D)" OFF)
 
 # Auto-generate files
@@ -42,6 +43,14 @@ include(${LOCAL_LIBRARY_BUILD}/FreeType.cmake)
 include(${LOCAL_LIBRARY_BUILD}/libpng.cmake)
 if(GTEST)
 	include(${LOCAL_LIBRARY_BUILD}/gtest.cmake)
+endif()
+
+# Features
+if(CANVAS)
+	add_definitions(-DUSE_CANVAS)
+endif()
+if(PHYSICS)
+	add_definitions(-DUSE_PHYSICS)
 endif()
 
 # Rainbow

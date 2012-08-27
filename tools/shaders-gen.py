@@ -44,12 +44,12 @@ def main():
 			f.close()
 			shaders_h.append("\n".join(shader) + ";\n")
 	f = open(os.path.join(shaders_dir, "Shaders.h"), 'w')
-	f.write("// This file was auto-generated with shaders-gen.lua.\n")
+	f.write("// This file was auto-generated with shaders-gen.py.\n")
 	f.write("// Copyright " + str(date.today().year) + " Bifrost Entertainment AS. All rights reserved.\n\n")
 	f.write("#ifdef RAINBOW_IOS\n")
-	f.write("#define GL_DRAW_FRAMEBUFFER GL_DRAW_FRAMEBUFFER_APPLE\n\n")
+	f.write("#	define GL_DRAW_FRAMEBUFFER GL_DRAW_FRAMEBUFFER_APPLE\n")
+	f.write("#endif\n\n")
 	f.write("\n".join(shaders_h))
-	f.write("\n#endif\n")
 	f.close()
 	return 0
 

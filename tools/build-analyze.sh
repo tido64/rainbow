@@ -16,7 +16,7 @@ function compile {
 		return
 	fi
 	rm -fr $REMOVABLE && \
-	CC=$CC CXX=$CXX cmake $3 $PROJECT && \
+	CC=$CC CXX=$CXX cmake $3 -DCANVAS=ON $PROJECT && \
 	$MAKE
 	if [ ! -x $OUTPUT ]; then
 		echo $1 pass: Failed
