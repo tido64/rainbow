@@ -1,5 +1,5 @@
 /*
-** $Id: loslib.c,v 1.38 2011/11/30 12:35:05 roberto Exp $
+** $Id: loslib.c,v 1.39 2012/05/23 15:37:09 roberto Exp $
 ** Standard Operating System library
 ** See Copyright Notice in lua.h
 */
@@ -26,11 +26,12 @@
 #if !defined(LUA_STRFTIMEOPTIONS)
 
 #if !defined(LUA_USE_POSIX)
-#define LUA_STRFTIMEOPTIONS     { "aAbBcdHIjmMpSUwWxXyYz%", "" }
+#define LUA_STRFTIMEOPTIONS	{ "aAbBcdHIjmMpSUwWxXyYz%", "" }
 #else
-#define LUA_STRFTIMEOPTIONS     { "aAbBcCdDeFgGhHIjmMnprRStTuUVwWxXyYzZ%", "", \
-                                "E", "cCxXyY",  \
-                                "O", "deHImMSuUVwWy" }
+#define LUA_STRFTIMEOPTIONS \
+	{ "aAbBcCdDeFgGhHIjmMnprRStTuUVwWxXyYzZ%", "" \
+	  "", "E", "cCxXyY",  \
+	  "O", "deHImMSuUVwWy" }
 #endif
 
 #endif
@@ -43,7 +44,7 @@
 */
 #if defined(LUA_USE_MKSTEMP)
 #include <unistd.h>
-#define LUA_TMPNAMBUFSIZE       32
+#define LUA_TMPNAMBUFSIZE	32
 #define lua_tmpnam(b,e) { \
         strcpy(b, "/tmp/lua_XXXXXX"); \
         e = mkstemp(b); \
@@ -52,8 +53,8 @@
 
 #elif !defined(lua_tmpnam)
 
-#define LUA_TMPNAMBUFSIZE       L_tmpnam
-#define lua_tmpnam(b,e)         { e = (tmpnam(b) == NULL); }
+#define LUA_TMPNAMBUFSIZE	L_tmpnam
+#define lua_tmpnam(b,e)		{ e = (tmpnam(b) == NULL); }
 
 #endif
 
@@ -262,6 +263,12 @@ static int os_time (lua_State *L) {
 }
 
 
+static int os_difftime (lua_State *L) {
+  lua_pushnumber(L, difftime((time_t)(luaL_checknumber(L, 1)),
+                             (time_t)(luaL_optnumber(L, 2, 0))));
+  return 1;
+}
+
 /* }====================================================== */
 
 
@@ -293,6 +300,7 @@ static int os_exit (lua_State *L) {
 static const luaL_Reg syslib[] = {
   {"clock",     os_clock},
   {"date",      os_date},
+  {"difftime",  os_difftime},
   {"execute",   os_execute},
   {"exit",      os_exit},
   {"getenv",    os_getenv},
