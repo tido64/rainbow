@@ -99,12 +99,12 @@ Canvas::Canvas() :
 	this->sprite[3].position.x = 0;
 	this->sprite[3].position.y = this->height;
 
-	Input::Instance().subscribe(this, RAINBOW_TOUCH_EVENTS);
+	Input::Instance->subscribe(this, RAINBOW_TOUCH_EVENTS);
 }
 
 Canvas::~Canvas()
 {
-	Input::Instance().unsubscribe(this);
+	Input::Instance->unsubscribe(this);
 	this->release();
 
 	Renderer::delete_buffer(this->canvas_buffer, this->canvas_vao);

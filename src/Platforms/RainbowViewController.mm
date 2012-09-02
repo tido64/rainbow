@@ -204,7 +204,7 @@
 
 - (void)accelerometer:(UIAccelerometer *)accelerometer didAccelerate:(UIAcceleration *)acceleration
 {
-	Input::Instance().accelerated(
+	Input::Instance->accelerated(
 		acceleration.x, acceleration.y, acceleration.z, acceleration.timestamp);
 }
 
@@ -213,26 +213,26 @@
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
 	Touch *t = [self getTouches:touches];
-	Input::Instance().touch_began(t, touches.count);
+	Input::Instance->touch_began(t, touches.count);
 	delete[] t;
 }
 
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
 {
-	Input::Instance().touch_canceled();
+	Input::Instance->touch_canceled();
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
 	Touch *t = [self getTouches:touches];
-	Input::Instance().touch_ended(t, touches.count);
+	Input::Instance->touch_ended(t, touches.count);
 	delete[] t;
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
 {
 	Touch *t = [self getTouches:touches];
-	Input::Instance().touch_moved(t, touches.count);
+	Input::Instance->touch_moved(t, touches.count);
 	delete[] t;
 }
 

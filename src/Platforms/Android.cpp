@@ -89,7 +89,7 @@ void android_main(struct android_app *state)
 			{
 				ASensorEvent event;
 				while (ASensorEventQueue_getEvents(ainstance.sensorEventQueue, &event, 1) > 0)
-					Input::Instance().accelerated(
+					Input::Instance->accelerated(
 						event.acceleration.x,
 						event.acceleration.y,
 						event.acceleration.z,
@@ -269,18 +269,18 @@ int32_t android_handle_motion(AInputEvent *event)
 	switch (action)
 	{
 		case AMOTION_EVENT_ACTION_DOWN:
-			Input::Instance().touch_began(touches, count);
+			Input::Instance->touch_began(touches, count);
 			break;
 		case AMOTION_EVENT_ACTION_UP:
-			Input::Instance().touch_ended(touches, count);
+			Input::Instance->touch_ended(touches, count);
 			break;
 		case AMOTION_EVENT_ACTION_MOVE:
-			Input::Instance().touch_moved(touches, count);
+			Input::Instance->touch_moved(touches, count);
 			break;
 		case AMOTION_EVENT_ACTION_CANCEL:
 		case AMOTION_EVENT_ACTION_OUTSIDE:
-			//Input::Instance().touch_canceled(touches, count);
-			Input::Instance().touch_canceled();
+			//Input::Instance->touch_canceled(touches, count);
+			Input::Instance->touch_canceled();
 			break;
 		default:
 			break;

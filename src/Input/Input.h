@@ -25,7 +25,9 @@ class  Touchable;
 class Input
 {
 public:
-	static inline Input& Instance();
+	static Input *Instance;
+
+	inline Input(lua_State *);
 
 	/// Reset input subscription list.
 	inline void reset();
@@ -62,8 +64,6 @@ private:
 	Acceleration acceleration;  ///< Accelerometer data
 	Vector<Touchable*> touch_subscribers;
 
-	inline Input();
-
 	/// Intentionally left undefined.
 	Input(const Input &);
 
@@ -71,11 +71,7 @@ private:
 	Input& operator=(const Input &);
 };
 
-Input& Input::Instance()
-{
-	static Input i;
-	return i;
-}
+Input::Input(lua_State *L) : lua_state(L) { }
 
 void Input::reset()
 {
@@ -91,7 +87,5 @@ void Input::unsubscribe(Touchable *const t)
 {
 	this->touch_subscribers.qremove_val(t);
 }
-
-Input::Input() : lua_state(nullptr) { }
 
 #endif

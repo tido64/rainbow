@@ -5,13 +5,7 @@
 #include "Common/Chrono.h"
 #include "ConFuoco/Mixer.h"
 #include "Graphics/TextureManager.h"
-#include "Input/Input.h"
 #include "Lua/lua_Platform.h"
-
-Director::Director() : lua(&scenegraph)
-{
-	Input::Instance().set_state(this->lua);
-}
 
 void Director::init(const Data &main)
 {

@@ -5,6 +5,8 @@
 #include "Input/Touchable.h"
 #include "Lua/lua_Input.h"
 
+Input *Input::Instance = nullptr;
+
 void Input::subscribe(Touchable *const t, unsigned int flags)
 {
 	//if (flags & RAINBOW_KEY_EVENTS)

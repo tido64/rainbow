@@ -4,6 +4,7 @@
 #include "LuaMachine.h"
 #include "Common/ShutdownSequence.h"
 #include "Graphics/SceneGraph.h"
+#include "Input/Input.h"
 
 /// Simple game loop for Lua-scripted games.
 ///
@@ -12,7 +13,7 @@
 class Director
 {
 public:
-	Director();
+	inline Director();
 
 	inline void draw();
 
@@ -33,6 +34,7 @@ private:
 	ShutdownSequence shutdown;
 	LuaMachine lua;
 	SceneGraph::Node scenegraph;
+	Input input;
 
 	/// Intentionally left undefined.
 	Director(const Director &);
@@ -40,6 +42,11 @@ private:
 	/// Intentionally left undefined.
 	Director& operator=(const Director &);
 };
+
+Director::Director() : lua(&scenegraph), input(lua)
+{
+	Input::Instance = &this->input;
+}
 
 void Director::draw()
 {
