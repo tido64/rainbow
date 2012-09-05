@@ -151,9 +151,7 @@
 	self->director->set_video(size.width, size.height);
 
 	// Load and initialise script.
-	const char *script = Data::get_path("main.lua");
-	Data main(script);
-	self->director->init(main);
+	self->director->init(Data("main.lua"));
 }
 
 - (void)viewDidUnload

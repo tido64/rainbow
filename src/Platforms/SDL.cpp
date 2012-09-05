@@ -29,6 +29,9 @@ const double fps = 1000.0 / 60.0;    ///< Preferred frames per second
 const float milli = 1.0f / 1000.0f;  ///< 1 millisecond
 Touch mouse_input;                   ///< Mouse input
 
+char data_path[256] = { 0 };
+char userdata_path[256] = { 0 };
+
 void on_mouse_button_down(SDL_MouseButtonEvent &);  ///< Handle mouse button down event
 void on_mouse_button_up(SDL_MouseButtonEvent &);    ///< Handle mouse button up event
 void on_mouse_motion(SDL_MouseMotionEvent &);       ///< Handle mouse motion event
@@ -47,7 +50,10 @@ int main(int argc, char *argv[])
 		return 0;
 	#endif
 	}
-	Data::set_datapath(argv[1]);  // Set data path
+	strcpy(data_path, argv[1]);  // Set data path
+	strcat(data_path, "/");
+	strcpy(userdata_path, data_path);  // Set user data path
+	strcat(userdata_path, "user/");
 
 	if (!ConFuoco::Mixer::Instance().is_available())
 		return 1;
@@ -89,12 +95,7 @@ int main(int argc, char *argv[])
 	resize(director, screen_width, screen_height);
 
 	// Load game
-	{
-		const char *const path = Data::get_path("main.lua");
-		Data main(path);
-		Data::free(path);
-		director.init(main);
-	}
+	director.init(Data("main.lua"));
 
 	Chrono::Instance().update();
 	while (!done)

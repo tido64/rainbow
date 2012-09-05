@@ -6,110 +6,25 @@
 #include <cstring>
 
 #include "Common/Data.h"
-
-#ifdef RAINBOW_ANDROID
-#include <android/asset_manager.h>
-#include "LuaMachine.h"
-
-struct AAssetManager *Data::asset_manager = nullptr;
-
-#else
 #include "Common/Debug.h"
-
-size_t Data::data_path_length = 0;
-size_t Data::userdata_path_length = 0;
-char Data::data_path[] = { 0 };
-char Data::userdata_path[] = { 0 };
-
-#endif
-
-void Data::free(const void *const p)
-{
-#ifdef RAINBOW_ANDROID
-	static_cast<void>(p);
-#else
-	delete[] static_cast<const char *const>(p);
-#endif
-}
-
-const char* Data::get_path(const char *const file)
-{
-#ifdef RAINBOW_ANDROID
-	return file;
-#else
-	if (!file)
-		return Data::data_path;
-
-	char *path = new char[strlen(file) + Data::data_path_length];
-	strcpy(path, Data::data_path);
-	strcat(path, file);
-	return path;
-#endif
-}
-
-const char* Data::set_datapath(const char *const path)
-{
-#ifdef RAINBOW_ANDROID
-	asset_manager = reinterpret_cast<AAssetManager*>(const_cast<char*>(path));
-	return nullptr;
-#else
-	const size_t length = strlen(path);
-	if (length >= RAINBOW_PATH_LENGTH + 1)
-		return nullptr;
-	Data::data_path_length = length + 2;
-	Data::data_path[length] = '/';
-	Data::data_path[length + 1] = '\0';
-	return static_cast<const char*>(memcpy(Data::data_path, path, length));
-#endif
-}
-
-const char* Data::set_userdatapath(const char *const path)
-{
-#ifdef RAINBOW_ANDROID
-	return path;
-#else
-	const size_t length = strlen(path);
-	if (length >= RAINBOW_PATH_LENGTH + 1)
-		return nullptr;
-	Data::userdata_path_length = length + 2;
-	Data::userdata_path[length] = '/';
-	Data::userdata_path[length + 1] = '\0';
-	return static_cast<const char*>(memcpy(Data::userdata_path, path, length));
-#endif
-}
+#include "Common/IO.h"
 
 Data::Data(const char *const file) : allocated(0), sz(0), data(nullptr)
 {
-#ifdef RAINBOW_ANDROID
-	AAsset *asset = AAssetManager_open(asset_manager, file, AASSET_MODE_UNKNOWN);
-	if (!asset)
-		return;
-
-	const size_t size = AAsset_getLength(asset);
-	this->allocate(size);
-
-	const int read = AAsset_read(asset, this->data, size);
-	AAsset_close(asset);
-	if (read < 0 || static_cast<size_t>(read) != size)
-#else
-	FILE *fp = fopen(file, "rb");
-	if (!fp)
+	Rainbow::IO::FileHandle fh = Rainbow::IO::open(file, Rainbow::IO::ASSET);
+	if (!fh)
 	{
 		R_ERROR("[Rainbow] Data: Failed to open '%s'\n", file);
 		return;
 	}
 
-	// Get size of file
-	fseek(fp, 0, SEEK_END);
-	const size_t size = ftell(fp);
+	const size_t size = Rainbow::IO::size(fh);
 	this->allocate(size);
 
-	// Fill buffer
-	fseek(fp, 0, SEEK_SET);
-	const size_t read = fread(this->data, 1, size, fp);
-	fclose(fp);
+	const size_t read = Rainbow::IO::read(this->data, size, fh);
+	Rainbow::IO::close(fh);
+
 	if (read != size)
-#endif
 	{
 		delete[] this->data;
 		this->data = nullptr;
@@ -117,6 +32,17 @@ Data::Data(const char *const file) : allocated(0), sz(0), data(nullptr)
 	}
 	else
 		this->sz = size;
+}
+
+Data::Data(const char *const file, unsigned int) :
+	allocated(0), sz(0), data(nullptr)
+{
+	Rainbow::IO::FileHandle fh = Rainbow::IO::open(file, Rainbow::IO::SUPPORT);
+	if (!fh)
+	{
+		R_ERROR("[Rainbow] Data: Failed to open '%s'\n", file);
+		return;
+	}
 }
 
 Data::~Data()
@@ -150,18 +76,16 @@ bool Data::save(const char *const file) const
 	static_cast<void>(file);
 	return false;
 #else
-	if (!this->data)
-		return false;
-
+	R_ASSERT(this->data, "Can't save without destination");
 	R_ASSERT(this->sz > 0, "Data is set but size is 0");
 
-	FILE *fp = fopen(file, "wb");
-	if (!fp)
+	Rainbow::IO::FileHandle fh = Rainbow::IO::open(file, Rainbow::IO::SUPPORT);
+	if (!fh)
 		return false;
 
 	// Write buffer to file
-	const size_t written = fwrite(this->data, sizeof(unsigned char), this->sz, fp);
-	fclose(fp);
+	const size_t written = Rainbow::IO::write(this->data, this->sz, fh);
+	Rainbow::IO::close(fh);
 	return written == this->sz;
 #endif
 }

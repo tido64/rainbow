@@ -12,9 +12,7 @@ namespace Rainbow
 
 		Font::Font(lua_State *L) : font(new FontAtlas(lua_tonumber(L, 2)))
 		{
-			const char *const path = Data::get_path(lua_tolstring(L, 1, nullptr));
-			Data font(path);
-			Data::free(path);
+			Data font(lua_tolstring(L, 1, nullptr));
 			if (!font)
 				luaL_error(L, "rainbow.font: Failed to load font");
 			if (!this->font->load(font))

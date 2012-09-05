@@ -80,15 +80,15 @@ struct ImageLoader
 	{
 	#ifdef GL_IMG_texture_compression_pvrtc
 		if (*(uint32_t*)img.bytes() == 0x03525650)
-			return ImageFormat::PVRTC;
+			return PVRTC;
 	#endif
 
 	#ifdef PNG_LIBPNG_VER_STRING
 		if (png_sig_cmp(img, 0, 8) == 0)
-			return ImageFormat::PNG;
+			return PNG;
 	#endif
 
-		return ImageFormat::UNKNOWN;
+		return UNKNOWN;
 	}
 
 	/// Decode image data.
@@ -112,8 +112,8 @@ struct ImageLoader
 		memset(&image_info, 0, sizeof(image_info));
 		switch (get_format(img))
 		{
-			case ImageFormat::PVRTC:
-				image_info.compressed = ImageFormat::PVRTC;
+			case PVRTC:
+				image_info.compressed = PVRTC;
 				#ifdef RAINBOW_IOS
 				{
 					PVRTexHeader *header = (PVRTexHeader*)img.bytes();
@@ -138,7 +138,7 @@ struct ImageLoader
 				}
 				#endif
 				break;
-			case ImageFormat::PNG:
+			case PNG:
 				#ifdef PNG_LIBPNG_VER_STRING
 				{
 					// Prepare for decoding PNG data
@@ -230,7 +230,7 @@ struct ImageLoader
 			default:
 				#ifdef RAINBOW_IOS
 				{
-					UIImage *image = [[UIImage alloc] initWithData:(NSData*)img];
+					UIImage *image = [UIImage imageWithData:img];
 					if (!image)
 					{
 						R_ASSERT(image, "Unknown texture format");

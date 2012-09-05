@@ -22,7 +22,7 @@
 
 bool active = false;  ///< Whether the window is in focus.
 bool done = false;    ///< Whether the user has requested to quit.
-AAssetManager *g_asset_manager;
+struct AAssetManager *g_asset_manager;
 
 struct AInstance
 {
@@ -64,7 +64,7 @@ void android_main(struct android_app *state)
 	state->onAppCmd = android_handle_event;
 	state->onInputEvent = android_handle_input;
 	ainstance.app = state;
-	Data::set_datapath(reinterpret_cast<char*>(state->activity->assetManager));
+	g_asset_manager = state->activity->assetManager;
 
 	// Prepare to monitor accelerometer
 	ainstance.sensorManager = ASensorManager_getInstance();

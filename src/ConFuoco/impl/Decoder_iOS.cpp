@@ -9,11 +9,14 @@ namespace ConFuoco
 {
 	size_t Decoder::open_wave(char **buffer, int &channels, int &rate, const char *const file)
 	{
-		CFURLRef url = CFURLCreateFromFileSystemRepresentation(0, reinterpret_cast<const UInt8 *>(file), strlen(file), false);
+		NSString *path = [NSString stringWithUTF8String:file];
+		path = [[NSBundle mainBundle] pathForResource:[path stringByDeletingPathExtension] ofType:[path pathExtension]];
+		CFURLRef url = (__bridge CFURLRef)[NSURL fileURLWithPath:path];
+		path = nil;
 
 		ExtAudioFileRef ext_audio = 0;
 		OSStatus status = ExtAudioFileOpenURL(url, &ext_audio);
-		CFRelease(url);
+		url = nil;
 		if (status != noErr)
 		{
 			NSLog(@"Rainbow::ConFuoco::Decoder::iOS: Failed to open %s\n", file);

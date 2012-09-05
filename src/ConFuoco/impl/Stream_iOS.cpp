@@ -18,9 +18,10 @@ namespace ConFuoco
 		this->release();
 
 		NSError *error;
-		NSURL *fileURL = [[NSURL alloc] initFileURLWithPath:[NSString stringWithUTF8String:file]];
-		this->player = [[AVAudioPlayer alloc] initWithContentsOfURL:fileURL error:&error];
-		fileURL = nil;
+		NSString *path = [NSString stringWithUTF8String:file];
+		path = [[NSBundle mainBundle] pathForResource:[path stringByDeletingPathExtension] ofType:[path pathExtension]];
+		this->player = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL fileURLWithPath:path] error:&error];
+		path = nil;
 		if (!this->player)
 		{
 			NSLog(@"[Rainbow::ConFuoco] Stream: %@", [error description]);

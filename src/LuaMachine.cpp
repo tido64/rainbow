@@ -116,11 +116,8 @@ int LuaMachine::load(lua_State *L)
 	strcpy(filename, module);
 	strcat(filename, ".lua");
 
-	const char *path = Data::get_path(filename);
-	Data file(path);
-	Data::free(path);
+	Data file(filename);
 	delete[] filename;
-
 	return (!file) ? 0 : LuaMachine::load(L, file, module, false);
 }
 

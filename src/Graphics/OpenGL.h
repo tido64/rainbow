@@ -29,6 +29,7 @@
 #		define WIN32
 #	endif
 #	include <GL/GLee.h>
+#	undef GL_ARB_ES2_compatibility
 #	undef GL_LINES_ADJACENCY_EXT
 #	undef GL_LINE_STRIP_ADJACENCY_EXT
 #	undef GL_TRIANGLES_ADJACENCY_EXT

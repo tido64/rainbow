@@ -34,9 +34,7 @@ namespace Rainbow
 			{
 				case LUA_TSTRING:
 					{
-						const char *const path = Data::get_path(lua_tolstring(L, 1, nullptr));
-						Data t(path);
-						Data::free(path);
+						Data t(lua_tolstring(L, 1, nullptr));
 						if (!t)
 							return luaL_error(L, "rainbow.spritebatch:set_texture: Failed to load texture");
 						lua_pushlightuserdata(L, ::SpriteBatch::set_texture(t));

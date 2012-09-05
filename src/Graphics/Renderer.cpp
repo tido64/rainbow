@@ -73,6 +73,7 @@ void Renderer::resize(const unsigned int width, const unsigned int height)
 		0.0f, 0.0f,  0.0f,  1.0f
 	};
 
+	R_ASSERT(pipeline, "Pipeline uninitialised");
 	glUniformMatrix4fv(glGetUniformLocation(*pipeline, "mvp_matrix"), 1, GL_FALSE, ortho);
 	glViewport(0, 0, width, height);
 
@@ -175,9 +176,7 @@ Shader* Renderer::load_shader(const unsigned int type, const char *const src_pat
 #ifdef RAINBOW_IOS
 	const char *source = src_path;
 #else
-	const char *full_path = Data::get_path(src_path);
-	Data source(full_path);
-	Data::free(full_path);
+	Data source(src_path);
 	if (!source)
 		return nullptr;
 #endif

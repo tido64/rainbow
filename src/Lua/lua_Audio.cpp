@@ -116,10 +116,8 @@ namespace Rainbow
 			LUA_ASSERT(lua_gettop(L) == 1 || lua_gettop(L) == 2, "rainbow.audio.load_sfx(file[, instances])");
 
 			const char *file = lua_tolstring(L, 1, nullptr);
-			const char *path = Data::get_path(file);
 			const unsigned int instances = (lua_gettop(L) == 2) ? lua_tointeger(L, 2) : 1;
-			lua_pushlightuserdata(L, Mixer::Instance().load_sfx(path, instances));
-			Data::free(path);
+			lua_pushlightuserdata(L, Mixer::Instance().load_sfx(file, instances));
 			return 1;
 		}
 
@@ -128,9 +126,7 @@ namespace Rainbow
 			LUA_ASSERT(lua_gettop(L) == 1 || lua_gettop(L) == 2, "rainbow.audio.load_stream(file[, loops])");
 
 			const char *file = lua_tolstring(L, 1, nullptr);
-			const char *path = Data::get_path(file);
-			Stream* s = static_cast<Stream*>(Mixer::Instance().load_stream(path));
-			Data::free(path);
+			Stream* s = static_cast<Stream*>(Mixer::Instance().load_stream(file));
 			if (lua_gettop(L) == 2)
 				s->set_loops(lua_tointeger(L, 2));
 			lua_pushlightuserdata(L, s);

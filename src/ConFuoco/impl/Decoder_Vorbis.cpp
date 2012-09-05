@@ -6,6 +6,7 @@
 #include <vorbis/vorbisfile.h>
 
 #include "Common/Debug.h"
+#include "Common/IO.h"
 #include "ConFuoco/Decoder.h"
 
 namespace ConFuoco
@@ -14,18 +15,18 @@ namespace ConFuoco
 	{
 		static OggVorbis_File* open(const char *const file, int &channels, int &rate)
 		{
-			FILE *vorb = fopen(file, "rb");
+			Rainbow::IO::FileHandle vorb = Rainbow::IO::open(file, Rainbow::IO::ASSET);
 			if (!vorb)
 			{
-				R_ERROR("[Rainbow::ConFuoco] Vorbis: Failed to open file\n");
+				R_ERROR("[Rainbow::ConFuoco] Vorbis: Failed to open '%s'\n", file);
 				return nullptr;
 			}
 
 			OggVorbis_File *vf = new OggVorbis_File();
 			if (ov_open_callbacks(vorb, vf, 0, 0, OV_CALLBACKS_DEFAULT) < 0)
 			{
-				fclose(vorb);
-				R_ERROR("[Rainbow::ConFuoco] Vorbis: Does not appear to be an Ogg bitstream\n");
+				Rainbow::IO::close(vorb);
+				R_ERROR("[Rainbow::ConFuoco] Vorbis: '%s' does not appear to be an Ogg bitstream\n", file);
 				return nullptr;
 			}
 
@@ -33,7 +34,7 @@ namespace ConFuoco
 			if (!vi)
 			{
 				delete vf;
-				fclose(vorb);
+				Rainbow::IO::close(vorb);
 				R_ERROR("[Rainbow::ConFuoco] Vorbis: Failed to retrieve Ogg bitstream info\n");
 				return nullptr;
 			}

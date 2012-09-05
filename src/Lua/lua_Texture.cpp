@@ -21,9 +21,7 @@ namespace Rainbow
 					break;
 				case LUA_TSTRING:
 					{
-						const char *const path = Data::get_path(lua_tolstring(L, -1, nullptr));
-						Data tex_data(path);
-						Data::free(path);
+						Data tex_data(lua_tolstring(L, -1, nullptr));
 						if (!tex_data)
 							luaL_error(L, "rainbow.texture: Failed to load texture");
 						this->texture = new TextureAtlas(tex_data);

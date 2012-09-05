@@ -5,8 +5,6 @@
 
 #include "Platform.h"
 
-#define RAINBOW_PATH_LENGTH 512  ///< Max string length, including null-terminator.
-
 /// Wrapper for byte buffers.
 ///
 /// Data objects are used to read from disk into memory or to save files to
@@ -23,31 +21,16 @@
 class Data
 {
 public:
-	/// Free memory allocated by Data::get_path().
-	static void free(const void *const data);
-
-	/// Convenience method for getting the full path to a data file.
-	/// \param file  The file to obtain full path for. If \c nullptr, the path
-	///              is returned.
-	/// \return Full path to file. Returned string must be freed with
-	///         Data::free() unless \p file was a \c nullptr.
-	static const char* get_path(const char *const file = nullptr);
-
-	/// Set the path where all data files reside.
-	/// \param path  Path to data files.
-	/// \return Path string.
-	static const char* set_datapath(const char *const path);
-
-	/// Set the path where all user files reside.
-	/// \param path  Path to user files.
-	/// \return Path string.
-	static const char* set_userdatapath(const char *const path);
-
 	/// Construct an empty data object. No memory will be allocated.
 	inline Data();
 
-	/// Construct a data object with the contents of the file.
+	/// Construct a data object with the contents of the file. The file will be
+	/// loaded from the application directory.
 	explicit Data(const char *const file);
+
+	/// Construct a data object with the contents of the file. The file will be
+	/// loaded from the user directory.
+	Data(const char *const file, unsigned int flags);
 
 	~Data();
 
@@ -88,15 +71,6 @@ private:
 #else
 
 private:
-#ifdef RAINBOW_ANDROID
-	static struct AAssetManager *asset_manager;      ///< Android asset manager.
-#else
-	static size_t data_path_length;                  ///< Length of data path string.
-	static size_t userdata_path_length;              ///< Length of user path string.
-	static char data_path[RAINBOW_PATH_LENGTH];      ///< Path to data files.
-	static char userdata_path[RAINBOW_PATH_LENGTH];  ///< Path to user files.
-#endif
-
 	size_t allocated;     ///< Allocated memory size.
 	size_t sz;            ///< Size of used buffer, not necessarily equal to allocated.
 	unsigned char *data;  ///< Actual buffer, implemented as a C-array.
