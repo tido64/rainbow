@@ -87,7 +87,7 @@ template<class T>
 Vector<T>::~Vector()
 {
 	this->clear();
-	free(this->c_array);
+	operator delete(this->c_array);
 }
 
 template<class T>
@@ -178,7 +178,7 @@ void Vector<T>::reserve(size_t i)
 
 	R_ASSERT(i > 0, "Can't reserve an empty block of memory");
 
-	T *arr = static_cast<T*>(malloc(i * sizeof(T)));
+	T *arr = static_cast<T*>(operator new(i * sizeof(T)));
 	if (!arr)
 	{
 		// FIXME: Handle exception.
@@ -186,7 +186,7 @@ void Vector<T>::reserve(size_t i)
 	}
 
 	memcpy(arr, this->c_array, this->count * sizeof(T));
-	free(this->c_array);
+	operator delete(this->c_array);
 	this->c_array = arr;
 	this->reserved = i;
 }
