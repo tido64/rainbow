@@ -11,6 +11,9 @@ cd $PROJECT
 tools/shaders-gen.py
 cd $BUILD_DIR
 
+# Clean the folder
+rm -fr AndroidManifest.xml ant.properties bin build.xml jni libs local.properties obj proguard-project.txt project.properties res src
+
 # Create project files
 $NDK_HOME/../android-sdk/tools/android -s create project --name "Rainbow" --target "android-15" --path . --package "com.bifrostentertainment.rainbow" --activity "Rainbow" || exit 1
 rm -r src/*

@@ -19,7 +19,7 @@ bool Renderer::init()
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-#ifdef RAINBOW_IOS
+#ifndef RAINBOW_SDL
 	vertex_shader = load_shader(GL_VERTEX_SHADER, fixed2d_vsh);
 #else
 	vertex_shader = load_shader(GL_VERTEX_SHADER, "Shaders/Fixed2D.vsh");
@@ -27,7 +27,7 @@ bool Renderer::init()
 	if (!vertex_shader)
 		return false;
 
-#ifdef RAINBOW_IOS
+#ifndef RAINBOW_SDL
 	fragment_shader = load_shader(GL_FRAGMENT_SHADER, fixed2d_fsh);
 #else
 	fragment_shader = load_shader(GL_FRAGMENT_SHADER, "Shaders/Fixed2D.fsh");
@@ -173,7 +173,7 @@ void Renderer::draw_elements(const SpriteVertex *vertices, const unsigned int co
 
 Shader* Renderer::load_shader(const unsigned int type, const char *const src_path)
 {
-#ifdef RAINBOW_IOS
+#ifndef RAINBOW_SDL
 	const char *source = src_path;
 #else
 	Data source(src_path);

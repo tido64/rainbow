@@ -219,8 +219,14 @@
 @@ luai_writestringerror defines how to print error messages.
 ** (A format string with one argument is enough for Lua...)
 */
+#ifdef __ANDROID__
+#include <android/log.h>
+#define luai_writestringerror(s,p) \
+	(__android_log_print(ANDROID_LOG_ERROR, "Rainbow", (s), (p)))
+#else
 #define luai_writestringerror(s,p) \
 	(fprintf(stderr, (s), (p)), fflush(stderr))
+#endif
 
 
 /*
@@ -383,8 +389,8 @@
 ** ===================================================================
 */
 
-#define LUA_NUMBER_FLOAT
-#define LUA_NUMBER	float
+#define LUA_NUMBER_DOUBLE
+#define LUA_NUMBER	double
 
 /*
 @@ LUAI_UACNUMBER is the result of an 'usual argument conversion'
@@ -399,10 +405,10 @@
 @@ lua_number2str converts a number to a string.
 @@ LUAI_MAXNUMBER2STR is maximum size of previous conversion.
 */
-#define LUA_NUMBER_SCAN		"%f"
-#define LUA_NUMBER_FMT		"%.7g"
+#define LUA_NUMBER_SCAN		"%lf"
+#define LUA_NUMBER_FMT		"%.14g"
 #define lua_number2str(s,n)	sprintf((s), LUA_NUMBER_FMT, (n))
-#define LUAI_MAXNUMBER2STR	16 /* 8 digits, sign, point, and \0 */
+#define LUAI_MAXNUMBER2STR	32 /* 16 digits, sign, point, and \0 */
 
 
 /*
@@ -427,8 +433,8 @@
 /* the following operations need the math library */
 #if defined(lobject_c) || defined(lvm_c)
 #include <math.h>
-#define luai_nummod(L,a,b)	((a) - floorf((a)/(b))*(b))
-#define luai_numpow(L,a,b)	(powf(a,b))
+#define luai_nummod(L,a,b)	((a) - floor((a)/(b))*(b))
+#define luai_numpow(L,a,b)	(pow(a,b))
 #endif
 
 /* these are quite standard operations */
