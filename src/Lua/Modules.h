@@ -5,6 +5,7 @@
 #include "Lua/lua_Audio.h"
 #include "Lua/lua_Font.h"
 #include "Lua/lua_Input.h"
+#include "Lua/lua_IO.h"
 #include "Lua/lua_Label.h"
 #include "Lua/lua_Physics.h"
 #include "Lua/lua_Platform.h"
@@ -37,6 +38,7 @@ namespace Rainbow
 		inline void init(lua_State *L)
 		{
 			Platform::init(L);  // Initialize "rainbow.platform" namespace
+			IO::init(L);        // Initialize "rainbow.io" namespace
 			Random::init(L);    // Initialize "rainbow.random" function
 			Input::init(L);     // Initialize "rainbow.input" namespace
 			Audio::init(L);     // Initialize "rainbow.audio" namespace
