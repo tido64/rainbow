@@ -39,7 +39,7 @@ public:
 	inline unsigned char* bytes() const;
 
 	/// Make full copy of data set.
-	/// \param data    Data to take make copy of.
+	/// \param data    Data to make a copy of.
 	/// \param length  Length of data.
 	void copy(const void *const data, const size_t length);
 

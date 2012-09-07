@@ -1,38 +1,43 @@
 #include "Common/Data.h"
 
+extern char userdata_path[];
+
 class DataTest : public testing::Test
 {
 protected:
 	const char *const file;
-	const char *const path;
 	const char *const secret;
-	Data data;
 
 	DataTest() :
-		file("Data.test"),
-		path(RAINBOW_DATA_USER_PATH "Data.test"),
+		file("Rainbow__Data.test"),
 		secret("It's a double-rainbow!\n")
-	{ }
+	{
+		strcpy(userdata_path, "/tmp/");
+	}
 };
 
-TEST_F(DataTest, GetPath)
+TEST_F(DataTest, Copy)
 {
-	const char *const construct = Data::get_path(file, true);
-	ASSERT_STREQ(path, construct);
-	Data::free(construct);
+	Data blob;
+	blob.copy(secret, strlen(secret));
+	ASSERT_EQ(strlen(secret), blob.size());
+	ASSERT_STREQ(secret, blob);
 }
 
-TEST_F(DataTest, CopyAndSave)
+TEST_F(DataTest, SaveAndLoad)
 {
-	data.copy(secret, strlen(secret));
-	ASSERT_EQ(strlen(secret), data.size());
-	ASSERT_STREQ(secret, reinterpret_cast<char *>(data.bytes()));
-	ASSERT_TRUE(data.save(file));
-}
-
-TEST_F(DataTest, Load)
-{
-	ASSERT_TRUE(data.load(file));
-	ASSERT_STREQ(secret, reinterpret_cast<char *>(data.bytes()));
-	remove(file);
+	{
+		Data blob;
+		blob.copy(secret, strlen(secret));
+		ASSERT_EQ(strlen(secret), blob.size());
+		ASSERT_STREQ(secret, blob);
+		ASSERT_TRUE(blob.save(file));
+	}
+	{
+		Data blob(file, 0);
+		ASSERT_TRUE(blob);
+		ASSERT_STREQ(secret, blob);
+	}
+	strcat(userdata_path, file);
+	remove(userdata_path);
 }

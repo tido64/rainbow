@@ -9,8 +9,13 @@
 
 extern struct AAssetManager *g_asset_manager;
 
+#elif defined(RAINBOW_IOS)
+
+extern NSString *supportDir;
+
 #else
 #	include <cstddef>
+#	include <cstring>
 
 extern char data_path[];      ///< Path to asset data.
 extern char userdata_path[];  ///< Path to user-specific data.
@@ -23,6 +28,8 @@ namespace Rainbow
 	{
 	#if defined(RAINBOW_ANDROID)
 		typedef AAsset* FileHandle;
+	#elif defined(RAINBOW_IOS)
+		typedef NSString* FileHandle;
 	#else
 		typedef FILE* FileHandle;
 	#endif
@@ -30,7 +37,8 @@ namespace Rainbow
 		enum Type
 		{
 			ASSET,
-			SUPPORT,
+			USER,
+			WRITE,
 			INTERNAL
 		};
 
@@ -38,6 +46,8 @@ namespace Rainbow
 		{
 		#if defined(RAINBOW_ANDROID)
 			AAsset_close(fh);
+		#elif defined(RAINBOW_IOS)
+			static_cast<void>(fh);
 		#else
 			fclose(fh);
 		#endif
@@ -46,11 +56,44 @@ namespace Rainbow
 		inline FileHandle open(const char *const file, unsigned int flag)
 		{
 		#if defined(RAINBOW_ANDROID)
+
 			static_cast<void>(flag);
 			return AAssetManager_open(g_asset_manager, file, AASSET_MODE_UNKNOWN);
+
+		#elif defined(RAINBOW_IOS)
+
+			NSString *path = [NSString stringWithUTF8String:file];
+			switch (flag)
+			{
+				case ASSET:
+					path = [[NSBundle mainBundle]
+						pathForResource:[path stringByDeletingPathExtension]
+						ofType:[path pathExtension]];
+					break;
+				case USER:
+					if (!supportDir)
+					{
+						NSError *err = nil;
+						supportDir = [[[NSFileManager defaultManager]
+							URLForDirectory:NSLibraryDirectory
+							inDomain:NSUserDomainMask appropriateForURL:nil
+							create:YES error:&err] path];
+
+						if (!supportDir)
+							return nil;
+
+						//supportDir = [supportDir stringByAppendingPathComponent:@"Preferences"];
+					}
+					path = [supportDir stringByAppendingPathComponent:path];
+					break;
+			}
+			return path;
+
 		#else
+
 			const char asset[] = "rb";
-			const char support[] = "r+b";
+			const char user[] = "r+b";
+			const char write[] = "wb";
 
 			const char *mode = nullptr;
 			char path[256];
@@ -60,17 +103,22 @@ namespace Rainbow
 					strcpy(path, data_path);
 					mode = asset;
 					break;
-				case SUPPORT:
+				case USER:
 					strcpy(path, userdata_path);
-					mode = support;
+					mode = user;
+					break;
+				case WRITE:
+					strcpy(path, userdata_path);
+					mode = write;
 					break;
 				default:
 					path[0] = '\0';
-					mode = support;
+					mode = write;
 					break;
 			}
 			strcat(path, file);
 			return fopen(path, mode);
+
 		#endif
 		}
 
@@ -78,6 +126,11 @@ namespace Rainbow
 		{
 		#if defined(RAINBOW_ANDROID)
 			return AAsset_read(fh, dst, size);
+		#elif defined(RAINBOW_IOS)
+			static_cast<void>(dst);
+			static_cast<void>(size);
+			static_cast<void>(fh);
+			return 0;
 		#else
 			return fread(dst, sizeof(unsigned char), size, fh);
 		#endif
@@ -87,6 +140,10 @@ namespace Rainbow
 		{
 		#if defined(RAINBOW_ANDROID)
 			return AAsset_seek(fh, offset, SEEK_SET);
+		#elif defined(RAINBOW_IOS)
+			static_cast<void>(fh);
+			static_cast<void>(offset);
+			return 0;
 		#else
 			return fseek(fh, offset, SEEK_SET);
 		#endif
@@ -96,6 +153,9 @@ namespace Rainbow
 		{
 		#if defined(RAINBOW_ANDROID)
 			return AAsset_getLength(fh);
+		#elif defined(RAINBOW_IOS)
+			static_cast<void>(fh);
+			return 0;
 		#else
 			fseek(fh, 0, SEEK_END);
 			const size_t size = ftell(fh);
