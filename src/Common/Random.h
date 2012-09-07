@@ -4,6 +4,7 @@
 #include <ctime>
 
 #include "Common/Debug.h"
+#include "Common/NonCopyable.h"
 
 #if defined(RAINBOW_UNIX)
 #	pragma GCC diagnostic push
@@ -28,7 +29,7 @@ typedef float float_p;
 ///
 /// Copyright 2010-12 Bifrost Entertainment. All rights reserved.
 /// \author Tommy Nguyen
-class Random
+class Random : public NonCopyable<Random>
 {
 public:
 	static inline Random& Instance();
@@ -51,12 +52,6 @@ public:
 private:
 	inline Random(uint32_t seed = 0);
 	inline Random(uint32_t init_key[], int key_length);
-
-	/// Intentionally left undefined.
-	Random(const Random &);
-
-	/// Intentionally left undefined.
-	Random& operator=(const Random &);
 };
 
 Random& Random::Instance()

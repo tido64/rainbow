@@ -22,7 +22,7 @@ class  Touchable;
 ///
 /// Copyright 2010-12 Bifrost Entertainment. All rights reserved.
 /// \author Tommy Nguyen
-class Input
+class Input : public NonCopyable<Input>
 {
 public:
 	static Input *Instance;
@@ -63,12 +63,6 @@ private:
 	lua_State *lua_state;
 	Acceleration acceleration;  ///< Accelerometer data
 	Vector<Touchable*> touch_subscribers;
-
-	/// Intentionally left undefined.
-	Input(const Input &);
-
-	/// Intentionally left undefined.
-	Input& operator=(const Input &);
 };
 
 Input::Input(lua_State *L) : lua_state(L) { }

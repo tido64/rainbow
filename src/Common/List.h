@@ -2,6 +2,7 @@
 #define LIST_H_
 
 #include "Common/Debug.h"
+#include "Common/NonCopyable.h"
 
 /// Simple double-linked list container, mimicking STL::list.
 ///
@@ -11,7 +12,7 @@
 /// Copyright 2011-12 Bifrost Entertainment. All rights reserved.
 /// \author Tommy Nguyen
 template<class T>
-class List
+class List : public NonCopyable<List<T> >
 {
 public:
 	class Iterator;
@@ -43,12 +44,6 @@ private:
 	size_t count;    ///< Element count
 	Element *first;  ///< Pointer to the first element
 	Element *last;   ///< Pointer to the last element
-
-	/// Intentionally left undefined.
-	List(const List &);
-
-	/// Intentionally left undefined.
-	List& operator=(const List &);
 };
 
 template<class T>

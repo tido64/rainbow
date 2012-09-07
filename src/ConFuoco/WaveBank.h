@@ -1,6 +1,8 @@
 #ifndef CONFUOCO_WAVEBANK_H_
 #define CONFUOCO_WAVEBANK_H_
 
+#include "Common/NonCopyable.h"
+
 namespace ConFuoco
 {
 	class Sound;
@@ -11,7 +13,7 @@ namespace ConFuoco
 	///
 	/// Copyright 2012 Bifrost Entertainment. All rights reserved.
 	/// \author Tommy Nguyen
-	class WaveBank
+	class WaveBank : public NonCopyable<WaveBank>
 	{
 		friend class Mixer;
 
@@ -26,9 +28,6 @@ namespace ConFuoco
 		Wave *bank[size << 1];      ///< Wave storage.
 
 		inline WaveBank();
-
-		// Intentionally left undefined.
-		WaveBank(const WaveBank &);
 
 		/// Clear out the wave bank.
 		void clear();
@@ -47,9 +46,6 @@ namespace ConFuoco
 
 		/// Update all streams.
 		void update();
-
-		// Intentionally left undefined.
-		WaveBank& operator=(const WaveBank &);
 	};
 
 	WaveBank::WaveBank() : sound_count(0), stream_count(0) { }

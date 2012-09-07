@@ -17,7 +17,7 @@
 ///
 /// Copyright 2012 Bifrost Entertainment. All rights reserved.
 /// \author Tommy Nguyen
-class TextureManager
+class TextureManager : public NonCopyable<TextureManager>
 {
 public:
 	static inline TextureManager& Instance();
@@ -79,17 +79,11 @@ private:
 
 	inline TextureManager();
 
-	/// Intentionally left undefined.
-	TextureManager(const TextureManager &);
-
 	/// Print the total video memory used by textures.
 	void print_usage() const;
 
 	/// Clear and delete textures.
 	void purge(Vector<TextureId> &textures);
-
-	/// Intentionally left undefined.
-	TextureManager& operator=(const TextureManager &);
 };
 
 TextureManager& TextureManager::Instance()

@@ -19,7 +19,7 @@ class Data;
 ///
 /// Copyright 2010-12 Bifrost Entertainment. All rights reserved.
 /// \author Tommy Nguyen
-class TextureAtlas : public SmartPtrFriendly
+class TextureAtlas : public NonCopyable<TextureAtlas>, public SmartPtrFriendly
 {
 public:
 	explicit TextureAtlas(const Data &img);

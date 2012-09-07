@@ -13,7 +13,7 @@
 ///
 /// Copyright 2010-12 Bifrost Entertainment. All rights reserved.
 /// \author Tommy Nguyen
-class SpriteBatch : public Drawable
+class SpriteBatch : public Drawable, public NonCopyable<SpriteBatch>
 {
 	friend void Sprite::set_texture(const unsigned int id);
 
@@ -58,12 +58,6 @@ private:
 	SpriteVertex *vertex_buffer;     ///< Common vertex array for all sprites in the batch.
 	SmartPtr<TextureAtlas> texture;  ///< Texture atlas used by all sprites in the batch.
 	Vector<Sprite*> sprites;         ///< Vector storing all sprites.
-
-	/// Intentionally left undefined.
-	SpriteBatch(const SpriteBatch &);
-
-	/// Intentionally left undefined.
-	SpriteBatch& operator=(const SpriteBatch &);
 };
 
 Vector<Sprite*>& SpriteBatch::get_sprites()

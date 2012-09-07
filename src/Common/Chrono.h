@@ -2,6 +2,7 @@
 #define CHRONO_H_
 
 #include "Common/Debug.h"
+#include "Common/NonCopyable.h"
 
 namespace Rainbow
 {
@@ -12,7 +13,7 @@ namespace Rainbow
 	/// Copyright 2011-12 Bifrost Entertainment. All rights reserved.
 	/// \author Tommy Nguyen
 	template<class T>
-	class _Chrono
+	class _Chrono : public NonCopyable<_Chrono<T> >
 	{
 	public:
 		static inline T& Instance();

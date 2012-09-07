@@ -9,6 +9,8 @@ typedef AVAudioRecorder AudioRecorder;
 typedef void* AudioRecorder;
 #endif
 
+#include "Common/NonCopyable.h"
+
 namespace ConFuoco
 {
 	/// Provides audio recording capabilities.
@@ -17,7 +19,7 @@ namespace ConFuoco
 	///
 	/// Copyright 2012 Bifrost Entertainment. All rights reserved.
 	/// \author Tommy Nguyen
-	class Recorder
+	class Recorder : public NonCopyable<Recorder>
 	{
 	public:
 		Recorder();
@@ -54,12 +56,6 @@ namespace ConFuoco
 		float low_pass;  ///< Low-pass filtered power in decibels.
 		float peak;      ///< Peak power in decibels.
 		AudioRecorder *recorder;
-
-		// Intentionally left undefined.
-		Recorder(const Recorder &);
-
-		// Intentionally left undefined.
-		Recorder& operator=(const Recorder &);
 	};
 
 	float Recorder::get_average_power() const

@@ -28,7 +28,7 @@ class Data;
 ///
 /// Copyright 2010-12 Bifrost Entertainment. All rights reserved.
 /// \author Tommy Nguyen
-class FontAtlas : public SmartPtrFriendly
+class FontAtlas : public NonCopyable<FontAtlas>, public SmartPtrFriendly
 {
 public:
 	FontAtlas(const float pt);
@@ -52,12 +52,6 @@ private:
 	unsigned int texture;  ///< Texture name.
 	Colorb color;          ///< Font colour.
 	FontGlyph charset[chars + FONTATLAS_EXTENDED];  ///< Character set.
-
-	/// Intentionally left undefined.
-	FontAtlas(const FontAtlas &);
-
-	/// Intentionally left undefined.
-	FontAtlas& operator=(const FontAtlas &);
 };
 
 FontAtlas::~FontAtlas()

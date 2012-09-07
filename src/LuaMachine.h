@@ -5,6 +5,8 @@
 
 #include <lua.hpp>
 
+#include "Common/NonCopyable.h"
+
 namespace Rainbow { namespace Lua { class SceneGraph; } }
 namespace SceneGraph { class Node; }
 class Data;
@@ -18,7 +20,7 @@ class Data;
 ///
 /// Copyright 2011-12 Bifrost Entertainment. All rights reserved.
 /// \author Tommy Nguyen
-class LuaMachine
+class LuaMachine : public NonCopyable<LuaMachine>
 {
 	friend class Director;
 
@@ -83,18 +85,12 @@ private:
 
 	LuaMachine(SceneGraph::Node *root);
 
-	/// Intentionally left undefined.
-	LuaMachine(const LuaMachine &);
-
 	/// Call a function with no parameters or return value.
 	/// \param k         Name of the function to call.
 	/// \param nargs     Number of arguments pushed to the stack.
 	/// \param nresults  Number of results to push to the stack; LUA_MULTRET for all.
 	/// \return Lua error code (defined in lua.h).
 	int call(const char *const, int nargs = 0, int nresults = 0);
-
-	/// Intentionally left undefined.
-	LuaMachine& operator=(const LuaMachine &);
 };
 
 template<class T>

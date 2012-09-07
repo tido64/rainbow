@@ -8,7 +8,7 @@
 ///
 /// Copyright 2011-12 Bifrost Entertainment. All rights reserved.
 /// \author Tommy Nguyen
-class Label : public Drawable
+class Label : public Drawable, public NonCopyable<Label>
 {
 public:
 	inline Label();
@@ -46,12 +46,6 @@ private:
 	char *text;                ///< Content of this label.
 	SpriteVertex *vx;          ///< Vertex array containing the text.
 	SmartPtr<FontAtlas> font;  ///< The font used in this label.
-
-	// Intentionally left undefined.
-	Label(const Label &);
-
-	// Intentionally left undefined.
-	Label& operator=(const Label &);
 };
 
 Label::Label() :

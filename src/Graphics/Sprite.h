@@ -1,6 +1,7 @@
 #ifndef SPRITE_H_
 #define SPRITE_H_
 
+#include "Common/NonCopyable.h"
 #include "Common/SpriteVertex.h"
 
 class  SpriteBatch;
@@ -26,7 +27,7 @@ struct SpriteVertex;
 ///
 /// Copyright 2010-12 Bifrost Entertainment. All rights reserved.
 /// \author Tommy Nguyen
-class Sprite
+class Sprite : public NonCopyable<Sprite>
 {
 	friend class SpriteBatch;
 
@@ -111,9 +112,6 @@ private:
 	Vec2f position;              ///< Uncommitted position.
 	Vec2f scale_f;               ///< Scaling factor.
 	Vec2f origin[4];             ///< Original rendering at origo.
-
-	/// Intentionally left undefined.
-	Sprite& operator=(const Sprite &);
 };
 
 const float& Sprite::get_angle() const

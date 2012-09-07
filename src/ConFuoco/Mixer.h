@@ -20,7 +20,7 @@ namespace ConFuoco
 	///
 	/// Copyright 2012 Bifrost Entertainment. All rights reserved.
 	/// \author Tommy Nguyen
-	class Mixer
+	class Mixer : public NonCopyable<Mixer>
 	{
 	public:
 		static inline Mixer& Instance();
@@ -65,12 +65,6 @@ namespace ConFuoco
 		WaveBank bank;  ///< Sound and stream factory.
 
 		inline Mixer();
-
-		/// Intentionally left undefined.
-		Mixer(const Mixer &);
-
-		/// Intentionally left undefined.
-		Mixer& operator=(const Mixer &);
 	};
 
 	Mixer& Mixer::Instance()

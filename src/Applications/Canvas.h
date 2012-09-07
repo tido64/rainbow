@@ -18,7 +18,7 @@ struct Texture;
 ///
 /// Copyright 2012 Bifrost Entertainment. All rights reserved.
 /// \author Tommy Nguyen
-class Canvas : public Drawable, public Touchable
+class Canvas : public Drawable, public NonCopyable<Canvas>, public Touchable
 {
 public:
 	Canvas();
@@ -87,17 +87,11 @@ private:
 	SpriteVertex sprite[4];   ///< Canvas sprite.
 	Touch touch;              ///< Current touch point.
 
-	/// Intentionally left undefined.
-	Canvas(const Canvas &c);
-
 	/// Create a sprite from a point.
 	void create_point(SpriteVertex *vertex, const int x, const int y);
 
 	/// Release all resources.
 	void release();
-
-	/// Intentionally left undefined.
-	Canvas& operator=(const Canvas &c);
 };
 
 void Canvas::set_brush(const Texture &brush)

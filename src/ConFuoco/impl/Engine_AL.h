@@ -8,6 +8,7 @@
 #endif
 
 #include "Common/Constants.h"
+#include "Common/NonCopyable.h"
 #include "ConFuoco/OpenAL.h"
 
 namespace ConFuoco
@@ -16,7 +17,7 @@ namespace ConFuoco
 	///
 	/// Copyright 2011-2012 Bifrost Entertainment. All rights reserved.
 	/// \author Tommy Nguyen
-	class Engine
+	class Engine : public NonCopyable<Engine>
 	{
 		friend class Mixer;
 
@@ -32,8 +33,6 @@ namespace ConFuoco
 		ALCcontext *context;  ///< Active OpenAL context.
 
 		Engine();
-		Engine(const Engine &);
-		Engine& operator=(const Engine &);
 
 		inline bool is_available() const;
 

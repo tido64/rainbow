@@ -1,13 +1,15 @@
 #ifndef GRAPHICS_PIPELINE_H_
 #define GRAPHICS_PIPELINE_H_
 
+#include "Common/NonCopyable.h"
+
 class Shader;
 
 /// A pipeline is a combination of a vertex and a fragment shader.
 ///
 /// Copyright 2012 Bifrost Entertainment. All rights reserved.
 /// \author Tommy Nguyen
-class Pipeline
+class Pipeline : public NonCopyable<Pipeline>
 {
 public:
 	enum Attribute

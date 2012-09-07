@@ -4,6 +4,7 @@
 #include <cstddef>
 
 #include "Platform.h"
+#include "Common/NonCopyable.h"
 
 /// Wrapper for byte buffers.
 ///
@@ -18,7 +19,7 @@
 ///
 /// Copyright 2011-12 Bifrost Entertainment. All rights reserved.
 /// \author Tommy Nguyen
-class Data
+class Data : public NonCopyable<Data>
 {
 public:
 	/// Construct an empty data object. No memory will be allocated.
@@ -80,12 +81,6 @@ private:
 	void allocate(const size_t size);
 
 #endif
-
-	/// Intentionally left undefined.
-	Data(const Data &);
-
-	/// Intentionally left undefined.
-	Data& operator=(const Data &);
 };
 
 #include "Common/impl/Data-inl.h"

@@ -10,7 +10,7 @@
 /// Copyright 2011-12 Bifrost Entertainment. All rights reserved.
 /// \author Tommy Nguyen
 template<class T>
-class TreeNode
+class TreeNode : public NonCopyable<TreeNode<T> >
 {
 public:
 	TreeNode();
@@ -28,13 +28,6 @@ public:
 protected:
 	T *parent;            ///< This node's parent.
 	Vector<T*> children;  ///< This node's children.
-
-private:
-	// Intentionally left undefined.
-	TreeNode(const TreeNode &);
-
-	// Intentionally left undefined.
-	TreeNode& operator=(const TreeNode &);
 };
 
 template<class T>

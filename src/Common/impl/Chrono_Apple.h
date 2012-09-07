@@ -10,13 +10,6 @@ public:
 	Chrono() { }
 	unsigned long get_time();
 	void update(const unsigned int t);
-
-private:
-	/// Intentionally left undefined.
-	Chrono(const Chrono &);
-
-	/// Intentionally left undefined.
-	Chrono& operator=(const Chrono &);
 };
 
 #endif

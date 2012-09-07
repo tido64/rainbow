@@ -5,6 +5,7 @@
 #include <new>
 
 #include "Common/Debug.h"
+#include "Common/NonCopyable.h"
 
 /// Simple vector class, mimicking STL::vector.
 ///
@@ -15,7 +16,7 @@
 /// Copyright 2010-12 Bifrost Entertainment. All rights reserved.
 /// \author Tommy Nguyen
 template<class T>
-class Vector
+class Vector : public NonCopyable<Vector<T> >
 {
 public:
 	Vector(const int reserve = 8);
@@ -70,9 +71,6 @@ protected:
 	size_t count;     ///< Number of elements in the array.
 	size_t reserved;  ///< Size of allocated memory.
 	T *c_array;       ///< Actual C-array.
-
-	Vector(const Vector &v);
-	Vector& operator=(const Vector &v);
 };
 
 template<class T>

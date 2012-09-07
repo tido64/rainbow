@@ -10,7 +10,7 @@
 ///
 /// Copyright 2011-12 Bifrost Entertainment. All rights reserved.
 /// \author Tommy Nguyen
-class Director
+class Director : public NonCopyable<Director>
 {
 public:
 	inline Director();
@@ -35,12 +35,6 @@ private:
 	LuaMachine lua;
 	SceneGraph::Node scenegraph;
 	Input input;
-
-	/// Intentionally left undefined.
-	Director(const Director &);
-
-	/// Intentionally left undefined.
-	Director& operator=(const Director &);
 };
 
 Director::Director() : lua(&scenegraph), input(lua)

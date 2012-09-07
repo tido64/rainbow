@@ -31,12 +31,6 @@ namespace Rainbow
 
 		private:
 			::Animation *animation;
-
-			// Intentionally left undefined.
-			Animation(const Animation &);
-
-			// Intentionally left undefined.
-			Animation& operator=(const Animation &);
 		};
 
 		::Animation* Animation::raw_ptr() const

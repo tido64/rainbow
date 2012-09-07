@@ -1,6 +1,8 @@
 #ifndef CONFUOCO_WAVE_H_
 #define CONFUOCO_WAVE_H_
 
+#include "Common/NonCopyable.h"
+
 namespace ConFuoco
 {
 	/// Base wave class for static and streaming audio.
@@ -11,7 +13,7 @@ namespace ConFuoco
 	///
 	/// Copyright 2012 Bifrost Entertainment. All rights reserved.
 	/// \author Tommy Nguyen
-	class Wave
+	class Wave : public NonCopyable<Wave>
 	{
 	public:
 		virtual ~Wave() { }
