@@ -11,6 +11,17 @@ SpriteBatch::SpriteBatch(const size_t hint) :
 	Renderer::create_buffer(this->buffer, this->array_object);
 }
 
+SpriteBatch::SpriteBatch(const SpriteBatch &sb) :
+	array_object(0), buffer(0), batch_vertices(0),
+	reserved(sb.sprites.size() << 2), vertex_buffer(nullptr),
+	sprites(sb.sprites.size())
+{
+	this->vertex_buffer = new SpriteVertex[this->reserved];
+	Renderer::create_buffer(this->buffer, this->array_object);
+	for (size_t i = 0; i < sb.sprites.size(); ++i)
+		this->push_back(new Sprite(*sb.sprites[i], this));
+}
+
 SpriteBatch::~SpriteBatch()
 {
 	for (size_t i = 0; i < this->sprites.size(); ++i)
@@ -49,11 +60,6 @@ TextureAtlas* SpriteBatch::set_texture(TextureAtlas *t)
 	return this->texture.raw_ptr();
 }
 
-SmartPtr<TextureAtlas>& SpriteBatch::set_texture(SmartPtr<TextureAtlas> &t)
-{
-	return this->texture = t;
-}
-
 void SpriteBatch::push_back(Sprite *s)
 {
 	R_ASSERT(this->sprites.size() <= 256, "Hard-coded limit reached");
@@ -67,7 +73,7 @@ void SpriteBatch::push_back(Sprite *s)
 		delete[] this->vertex_buffer;
 		this->vertex_buffer = batch;
 
-		// Assign new sprite buffers
+		// Assign new buffers
 		for (size_t i = 0; i < this->sprites.size(); ++i)
 			this->sprites[i]->vertex_array = this->vertex_buffer + (i << 2);
 	}

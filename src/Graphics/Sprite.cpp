@@ -12,17 +12,15 @@ const unsigned char stale_scale    = 1u << 2;
 const unsigned char stale_angle    = 1u << 3;
 
 Sprite::Sprite(const unsigned int w, const unsigned int h, const SpriteBatch *p) :
-	width(w), height(h), stale(0xff), angle(0.0f),
-	cos_r(1.0f), sin_r(0.0f), vertex_array(nullptr), parent(p),
-	pivot(0.5f, 0.5f), scale_f(1.0f, 1.0f) { }
+	width(w), height(h), angle(0.0f), stale(-1), vertex_array(nullptr),
+	parent(p), pivot(0.5f, 0.5f), scale_f(1.0f, 1.0f) { }
 
-Sprite::Sprite(const Sprite &s) :
-	width(s.width), height(s.height), stale(s.stale), angle(s.angle),
-	cos_r(s.cos_r), sin_r(s.sin_r),	vertex_array(nullptr), parent(s.parent),
-	center(s.center), pivot(s.pivot), position(s.position),
-	scale_f(s.scale_f)
+Sprite::Sprite(const Sprite &s, const SpriteBatch *p) :
+	width(s.width), height(s.height), angle(s.angle), stale(-1),
+	vertex_array(nullptr), parent(p), center(s.center), pivot(s.pivot),
+	position(s.position), scale_f(s.scale_f)
 {
-	memcpy(this->origin, s.origin, 4 * sizeof(Vec2f));
+	memcpy(this->origin, s.origin, sizeof(this->origin));
 }
 
 void Sprite::mirror()
@@ -56,10 +54,10 @@ void Sprite::rotate(const float r)
 
 void Sprite::set_color(const unsigned int c)
 {
-	this->vertex_array[0].color = c;
-	this->vertex_array[1].color = c;
-	this->vertex_array[2].color = c;
-	this->vertex_array[3].color = c;
+	this->set_color<0>(c);
+	this->set_color<1>(c);
+	this->set_color<2>(c);
+	this->set_color<3>(c);
 }
 
 void Sprite::set_pivot(const float x, const float y)
@@ -75,12 +73,6 @@ void Sprite::set_position(const float x, const float y)
 {
 	this->position.x = x;
 	this->position.y = y;
-	this->stale |= stale_position;
-}
-
-void Sprite::set_position(const Vec2f &p)
-{
-	this->position = p;
 	this->stale |= stale_position;
 }
 
@@ -140,17 +132,14 @@ void Sprite::update()
 
 		if (!equalf(this->angle, 0.0f))
 		{
-			if (this->stale & stale_angle)
-			{
-				this->cos_r = cosf(-this->angle);
-				this->sin_r = sinf(-this->angle);
-			}
+			const float cos_r = cosf(-this->angle);
+			const float sin_r = sinf(-this->angle);
 
 		#if 0 //defined(__SSE3__)
 
 			// sx*cos(r), sx*sin(r), sy*sin(r), sy*cos(r)
 			__m128 factor = _mm_set_ps(this->scale_f.y, this->scale_f.y, this->scale_f.x, this->scale_f.x);
-			__m128 vx0 = _mm_set_ps(this->cos_r, this->sin_r, this->sin_r, this->cos_r);
+			__m128 vx0 = _mm_set_ps(cos_r, sin_r, sin_r, cos_r);
 			__m128 pos = _mm_set_ps(this->center.y, this->center.x, this->center.y, this->center.x);
 			__m128 vx1, tmp;
 			factor = _mm_mul_ps(factor, vx0);
@@ -190,10 +179,10 @@ void Sprite::update()
 
 		#else
 
-			const float sx_cos_r = this->scale_f.x * this->cos_r;
-			const float sx_sin_r = this->scale_f.x * this->sin_r;
-			const float sy_sin_r = this->scale_f.y * this->sin_r;
-			const float sy_cos_r = this->scale_f.y * this->cos_r;
+			const float sx_cos_r = this->scale_f.x * cos_r;
+			const float sx_sin_r = this->scale_f.x * sin_r;
+			const float sy_sin_r = this->scale_f.y * sin_r;
+			const float sy_cos_r = this->scale_f.y * cos_r;
 
 			this->vertex_array[0].position.x = sx_cos_r * this->origin[0].x - sx_sin_r * this->origin[0].y + this->center.x;
 			this->vertex_array[0].position.y = sy_sin_r * this->origin[0].x + sy_cos_r * this->origin[0].y + this->center.y;

@@ -4,8 +4,7 @@
 #include "Common/NonCopyable.h"
 #include "Common/SpriteVertex.h"
 
-class  SpriteBatch;
-struct SpriteVertex;
+class SpriteBatch;
 
 /// A sprite is a textured quad.
 ///
@@ -36,10 +35,10 @@ public:
 	const unsigned int height;  ///< Height of sprite (not scaled).
 
 	Sprite(const unsigned int width, const unsigned int height, const SpriteBatch *parent);
-	Sprite(const Sprite &);
+	Sprite(const Sprite &, const SpriteBatch *parent);
 
 	/// Return the current angle of the sprite.
-	inline const float& get_angle() const;
+	inline float get_angle() const;
 
 	/// Return vertex 0's colour.
 	inline const Colorb& get_color() const;
@@ -59,17 +58,9 @@ public:
 	/// Set sprite colour.
 	void set_color(const unsigned int c);
 
-	/// Set vertex 0 colour;
-	inline void set_color0(const unsigned int c);
-
-	/// Set vertex 1 colour;
-	inline void set_color1(const unsigned int c);
-
-	/// Set vertex 2 colour;
-	inline void set_color2(const unsigned int c);
-
-	/// Set vertex 3 colour;
-	inline void set_color3(const unsigned int c);
+	/// Set colour of vertex \p n.
+	template<size_t n>
+	inline void set_color(const unsigned int c);
 
 	/// Set the pivot point for rotation and translation.
 	/// \param x,y  Normalised pivot point.
@@ -78,14 +69,11 @@ public:
 	/// Set sprite position (absolute).
 	void set_position(const float x, const float y);
 
-	/// Set sprite position (absolute).
-	void set_position(const Vec2f &);
-
 	/// Set angle of rotation (in radian).
-	void set_rotation(const float);
+	void set_rotation(const float r);
 
 	/// Uniform scaling of sprite (does not affect width and height properties).
-	void set_scale(const float);
+	void set_scale(const float f);
 
 	/// Non-uniform scaling of sprite (does not affect width and height properties).
 	void set_scale(const Vec2f &);
@@ -98,11 +86,8 @@ public:
 	void update();
 
 private:
-	unsigned char stale;         ///< Sprite is stale if its properties have changed.
-
 	float angle;                 ///< Angle of rotation.
-	float cos_r;                 ///< Cosine of angle.
-	float sin_r;                 ///< Sine of angle.
+	unsigned int stale;          ///< Sprite is stale if its properties have changed.
 
 	SpriteVertex *vertex_array;  ///< Vertex array or, if buffered, the sprite batch's buffer.
 	const SpriteBatch *parent;   ///< Pointer to sprite batch.
@@ -111,10 +96,10 @@ private:
 	Vec2f pivot;                 ///< Pivot point (normalised).
 	Vec2f position;              ///< Uncommitted position.
 	Vec2f scale_f;               ///< Scaling factor.
-	Vec2f origin[4];             ///< Original rendering at origo.
+	Vec2f origin[4];             ///< Reference sprite at origo.
 };
 
-const float& Sprite::get_angle() const
+float Sprite::get_angle() const
 {
 	return this->angle;
 }
@@ -129,24 +114,11 @@ const Vec2f& Sprite::get_position() const
 	return this->position;
 }
 
-void Sprite::set_color0(const unsigned int c)
+template<size_t n>
+void Sprite::set_color(const unsigned int c)
 {
-	this->vertex_array[0].color = c;
-}
-
-void Sprite::set_color1(const unsigned int c)
-{
-	this->vertex_array[1].color = c;
-}
-
-void Sprite::set_color2(const unsigned int c)
-{
-	this->vertex_array[2].color = c;
-}
-
-void Sprite::set_color3(const unsigned int c)
-{
-	this->vertex_array[3].color = c;
+	static_assert(n < 4, "Invalid vertex");
+	this->vertex_array[n].color = c;
 }
 
 #endif

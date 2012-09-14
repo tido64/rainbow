@@ -5,6 +5,8 @@
 #include "Graphics/Sprite.h"
 #include "Graphics/TextureAtlas.h"
 
+namespace SceneGraph { class Node; }
+
 /// A drawable batch of sprites.
 ///
 /// All sprites share a common vertex buffer object (at different offsets) and
@@ -13,27 +15,34 @@
 ///
 /// Copyright 2010-12 Bifrost Entertainment. All rights reserved.
 /// \author Tommy Nguyen
-class SpriteBatch : public Drawable, public NonCopyable<SpriteBatch>
+class SpriteBatch : public Drawable
 {
+	friend class SceneGraph::Node;
 	friend void Sprite::set_texture(const unsigned int id);
 
 public:
+	/// Create a batch of sprites.
+	/// \param hint  If you know in advance how many sprites you'll need, set
+	///              \p hint for more efficient storage.
 	SpriteBatch(const size_t hint = 8);
+
+	/// Make a deep copy of a SpriteBatch.
+	SpriteBatch(const SpriteBatch &);
+
 	virtual ~SpriteBatch();
 
+	/// Add a sprite to the batch given texture coordinates.
+	/// \param x,y     Position of the texture assigned to the sprite.
+	/// \param width   Width of the texture and, consequently, the sprite.
+	/// \param height  Height of the texture and, consequently, the sprite.
+	/// \return The newly created sprite, at position (0,0).
 	Sprite* add(const int x, const int y, const int width, const int height);
-
-	/// Return all sprites within this batch.
-	inline Vector<Sprite*>& get_sprites();
 
 	/// Load texture data.
 	TextureAtlas* set_texture(const Data &texture);
 
 	/// Re-use a texture atlas.
 	TextureAtlas* set_texture(TextureAtlas *texture);
-
-	/// Re-use a texture atlas.
-	SmartPtr<TextureAtlas>& set_texture(SmartPtr<TextureAtlas> &texture);
 
 	/// Return the number of sprites.
 	inline size_t size();
@@ -44,11 +53,6 @@ public:
 	/// Update the batch of sprites.
 	virtual void update() override;
 
-protected:
-	/// Add a sprite to the batch.
-	/// \param s  The sprite to add
-	void push_back(Sprite *s);
-
 private:
 	unsigned int array_object;       ///< GL vertex array object.
 	unsigned int buffer;             ///< GL vertex buffer.
@@ -58,12 +62,14 @@ private:
 	SpriteVertex *vertex_buffer;     ///< Common vertex array for all sprites in the batch.
 	SmartPtr<TextureAtlas> texture;  ///< Texture atlas used by all sprites in the batch.
 	Vector<Sprite*> sprites;         ///< Vector storing all sprites.
-};
 
-Vector<Sprite*>& SpriteBatch::get_sprites()
-{
-	return this->sprites;
-}
+	/// Add a sprite to the batch.
+	/// \param s  The sprite to add.
+	void push_back(Sprite *s);
+
+	/// One does not simply assign a SpriteBatch.
+	SpriteBatch& operator=(const SpriteBatch &);
+};
 
 size_t SpriteBatch::size()
 {
