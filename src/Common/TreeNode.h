@@ -48,7 +48,7 @@ void TreeNode<T>::remove_child(T *n)
 {
 	if (!n)
 		return;
-	this->children.remove_val(n);
+	this->children.remove(n);
 	delete n;
 }
 

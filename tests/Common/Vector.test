@@ -3,21 +3,20 @@
 class VectorTest : public testing::Test
 {
 protected:
-	const unsigned int test_capacity;
-	const unsigned int test_size;
-	Vector<unsigned int> intvec;
+	const size_t test_size;
+	Vector<size_t> intvec;
 
-	VectorTest() : test_capacity(16384), test_size(10000)
+	VectorTest() : test_size(100)
 	{
 		// Initialise vector with some content
-		for (unsigned int i = 0; i < this->test_size; ++i)
+		for (size_t i = 0; i < this->test_size; ++i)
 			this->intvec.push_back(i);
 	}
 };
 
 TEST_F(VectorTest, Access)
 {
-	for (unsigned int i = 0; i < test_size; ++i)
+	for (size_t i = 0; i < test_size; ++i)
 	{
 		ASSERT_EQ(i, intvec.at(i));
 		ASSERT_EQ(i, intvec[i]);
@@ -29,86 +28,58 @@ TEST_F(VectorTest, Begin)
 	ASSERT_EQ(&intvec[0], intvec.begin());
 }
 
+TEST_F(VectorTest, Clear)
+{
+	const size_t capacity = intvec.capacity();
+	ASSERT_EQ(test_size, intvec.size());
+	intvec.clear();
+	ASSERT_EQ(0u, intvec.size());
+	ASSERT_EQ(capacity, intvec.capacity());
+}
+
 TEST_F(VectorTest, PushBackPastCapacity)
 {
-	ASSERT_EQ(test_capacity, intvec.capacity());
+	ASSERT_LT(test_size, intvec.capacity());
 	ASSERT_EQ(test_size, intvec.size());
-	for (unsigned int i = 0; i < test_size; ++i)
+	for (size_t i = 0; i < test_size; ++i)
 		ASSERT_EQ(i, intvec[i]);
 }
 
-TEST_F(VectorTest, QuickRemoveFirstElement)
+TEST_F(VectorTest, EraseFirstElement)
 {
-	for (unsigned int i = 0; i < intvec.size(); ++i)
+	for (size_t i = 0; i < intvec.size(); ++i)
 		ASSERT_EQ(i, intvec[i]);
 
-	const unsigned int last = intvec[intvec.size() - 1];
-	intvec.qremove(0);
-	ASSERT_EQ(last, intvec[0]);
+	intvec.erase(0);
+	ASSERT_EQ(-1, intvec.find(0));
 
-	for (unsigned int i = 1; i < intvec.size(); ++i)
-		ASSERT_EQ(i, intvec[i]);
-}
-
-TEST_F(VectorTest, QuickRemoveLastElement)
-{
-	for (unsigned int i = 0; i < intvec.size(); ++i)
-		ASSERT_EQ(i, intvec[i]);
-
-	const unsigned int last = intvec[intvec.size() - 1];
-	intvec.qremove(last);
-
-	for (unsigned int i = 0; i < intvec.size(); ++i)
-		ASSERT_EQ(i, intvec[i]);
-}
-
-TEST_F(VectorTest, QuickRemoveMiddleElement)
-{
-	for (unsigned int i = 0; i < intvec.size(); ++i)
-		ASSERT_EQ(i, intvec[i]);
-
-	const unsigned int height = 2469;
-	const unsigned int last = intvec[intvec.size() - 1];
-	intvec.qremove(height);
-
-	for (unsigned int i = 0; i < height; ++i)
-		ASSERT_EQ(i, intvec[i]);
-	ASSERT_EQ(last, intvec[height]);
-	for (unsigned int i = height + 1; i < intvec.size(); ++i)
-		ASSERT_EQ(i, intvec[i]);
-}
-
-TEST_F(VectorTest, RemoveFirstElement)
-{
-	for (unsigned int i = 0; i < intvec.size(); ++i)
-		ASSERT_EQ(i, intvec[i]);
-
-	intvec.remove(0);
-
-	for (unsigned int i = 0; i < intvec.size(); ++i)
+	for (size_t i = 0; i < intvec.size(); ++i)
 		ASSERT_EQ(i + 1, intvec[i]);
 }
 
-TEST_F(VectorTest, RemoveLastElement)
+TEST_F(VectorTest, EraseLastElement)
 {
-	for (unsigned int i = 0; i < intvec.size(); ++i)
+	for (size_t i = 0; i < intvec.size(); ++i)
 		ASSERT_EQ(i, intvec[i]);
 
-	intvec.remove(intvec.size() - 1);
+	const size_t last = intvec.size() - 1;
+	intvec.erase(last);
+	ASSERT_EQ(-1, intvec.find(last));
 
-	for (unsigned int i = 0; i < intvec.size(); ++i)
+	for (size_t i = 0; i < intvec.size(); ++i)
 		ASSERT_EQ(i, intvec[i]);
 }
 
-TEST_F(VectorTest, RemoveMiddleElement)
+TEST_F(VectorTest, EraseMiddleElement)
 {
-	for (unsigned int i = 0; i < intvec.size(); ++i)
+	for (size_t i = 0; i < intvec.size(); ++i)
 		ASSERT_EQ(i, intvec[i]);
 
 	const size_t fifth = 5;
-	intvec.remove(fifth);
+	intvec.erase(fifth);
+	ASSERT_EQ(-1, intvec.find(fifth));
 
-	for (unsigned int i = 0; i < intvec.size(); ++i)
+	for (size_t i = 0; i < intvec.size(); ++i)
 	{
 		if (i >= fifth)
 			ASSERT_EQ(i + 1, intvec[i]);
@@ -117,22 +88,79 @@ TEST_F(VectorTest, RemoveMiddleElement)
 	}
 }
 
+TEST_F(VectorTest, QuickEraseFirstElement)
+{
+	for (size_t i = 0; i < intvec.size(); ++i)
+		ASSERT_EQ(i, intvec[i]);
+
+	const size_t last = intvec.size() - 1;
+	intvec.qerase(0);
+	ASSERT_EQ(last, intvec[0]);
+	ASSERT_EQ(-1, intvec.find(0));
+
+	for (size_t i = 1; i < intvec.size(); ++i)
+		ASSERT_EQ(i, intvec[i]);
+}
+
+TEST_F(VectorTest, QuickEraseLastElement)
+{
+	for (size_t i = 0; i < intvec.size(); ++i)
+		ASSERT_EQ(i, intvec[i]);
+
+	const size_t last = intvec.size() - 1;
+	intvec.qerase(last);
+	ASSERT_EQ(-1, intvec.find(last));
+
+	for (size_t i = 0; i < intvec.size(); ++i)
+		ASSERT_EQ(i, intvec[i]);
+}
+
+TEST_F(VectorTest, QuickEraseMiddleElement)
+{
+	for (size_t i = 0; i < intvec.size(); ++i)
+		ASSERT_EQ(i, intvec[i]);
+
+	const size_t height = intvec.size() >> 1;
+	const size_t last = intvec.size() - 1;
+	intvec.qerase(height);
+	ASSERT_EQ(-1, intvec.find(height));
+
+	for (size_t i = 0; i < height; ++i)
+		ASSERT_EQ(i, intvec[i]);
+	ASSERT_EQ(last, intvec[height]);
+	for (size_t i = height + 1; i < intvec.size(); ++i)
+		ASSERT_EQ(i, intvec[i]);
+}
+
+TEST_F(VectorTest, Find)
+{
+	ASSERT_EQ(-1, intvec.find(-1));
+	size_t i = 0;
+	for (; i < intvec.size(); ++i)
+	{
+		const int needle = intvec.find(i);
+		ASSERT_LE(0, needle);
+		ASSERT_EQ(i, static_cast<size_t>(i));
+	}
+	ASSERT_EQ(-1, intvec.find(i));
+}
+
 TEST_F(VectorTest, ReserveLessThanSize)
 {
 	intvec.reserve(0);
 	ASSERT_EQ(test_size, intvec.capacity());
 	ASSERT_EQ(test_size, intvec.size());
-	for (unsigned int i = 0; i < test_size; ++i)
+	for (size_t i = 0; i < test_size; ++i)
 		ASSERT_EQ(i, intvec[i]);
 }
 
 TEST_F(VectorTest, ReserveGreaterThanSize)
 {
-	const unsigned int cap = test_capacity + 10;
+	const size_t cap = test_size + 10;
 	intvec.reserve(cap);
 	ASSERT_EQ(cap, intvec.capacity());
 	ASSERT_EQ(test_size, intvec.size());
-	for (unsigned int i = test_size; i < cap; ++i)
+	for (size_t i = test_size; i < cap; ++i)
 		intvec.push_back(i);
 	ASSERT_EQ(cap, intvec.capacity());
 	ASSERT_EQ(cap, intvec.size());
@@ -140,8 +168,8 @@ TEST_F(VectorTest, ReserveGreaterThanSize)
 
 TEST_F(VectorTest, Assignment)
 {
-	for (unsigned int i = 0; i < test_size; ++i)
+	for (size_t i = 0; i < test_size; ++i)
 		intvec[i] = 0xdeadbeef;
-	for (unsigned int i = 0; i < test_size; ++i)
+	for (size_t i = 0; i < test_size; ++i)
 		ASSERT_EQ(0xdeadbeef, intvec[i]);
 }

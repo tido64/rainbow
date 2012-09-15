@@ -30,7 +30,7 @@ unsigned int TextureManager::create(const unsigned int internal_format,
 	else
 	{
 		tex = this->recycled[0];
-		this->recycled.qremove(0);
+		this->recycled.qerase(0);
 	}
 	tex.sz = width * height;
 
@@ -63,7 +63,7 @@ unsigned int TextureManager::create_compressed(const unsigned int format,
 	else
 	{
 		tex = this->recycled[0];
-		this->recycled.qremove(0);
+		this->recycled.qerase(0);
 	}
 	tex.sz = width * height >> 1;
 
@@ -95,7 +95,7 @@ void TextureManager::remove(const unsigned int id)
 			             GL_LUMINANCE, GL_UNSIGNED_BYTE, nullptr);
 			this->bind();
 			this->recycled.push_back(this->textures[i]);
-			this->textures.qremove(i);
+			this->textures.qerase(i);
 			break;
 		}
 	}

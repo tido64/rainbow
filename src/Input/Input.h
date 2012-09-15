@@ -79,7 +79,7 @@ void Input::set_state(lua_State *L)
 
 void Input::unsubscribe(Touchable *const t)
 {
-	this->touch_subscribers.qremove_val(t);
+	this->touch_subscribers.qremove(t);
 }
 
 #endif

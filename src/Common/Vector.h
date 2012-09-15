@@ -7,11 +7,10 @@
 #include "Common/Debug.h"
 #include "Common/NonCopyable.h"
 
-/// Simple vector class, mimicking STL::vector.
+/// Simple vector class, mimicking std::vector.
 ///
 /// This class is mainly for the lack of full STL implementation on some
-/// platforms, such as Android. And for some bizarre reason, it is also faster
-/// than STL::vector.
+/// platforms, such as Android. (And because we don't like iterators.)
 ///
 /// Copyright 2010-12 Bifrost Entertainment. All rights reserved.
 /// \author Tommy Nguyen
@@ -35,25 +34,31 @@ public:
 	/// Empties the vector.
 	void clear();
 
+	/// Erase the element at index while preserving the order.
+	void erase(const size_t i);
+
+	/// Find an element with given value.
+	/// \param value  The value of the element to find.
+	/// \return Index to the first element whose value matches; -1 otherwise.
+	int find(const T &value) const;
+
 	/// Add an element to the vector.
 	void push_back(const T &value);
 
-	/// Remove the element at index by swapping it with the last element. Don't
-	/// use this if you need to maintain the element order.
-	void qremove(const size_t i);
+	/// Quick erase the element at index by swapping it out with the last
+	/// element. Don't use this if you need to maintain the element order.
+	void qerase(const size_t i);
 
-	/// Remove the first element that equals a value by swapping it with the
-	/// last element. Don't use this if you need to maintain the element order.
+	/// Quick remove a value from the vector by swapping it out with the last
+	/// element. Deletes only the first element found by @c find(). Don't use
+	/// this if you need to maintain the element order.
 	/// \param value  The value to remove.
-	void qremove_val(const T &value);
+	void qremove(const T &value);
 
-	/// Remove the element at index while preserving the order of elements.
-	void remove(const size_t i);
-
-	/// Remove the first element that equals a value while preserving the order
-	/// of elements.
+	/// Remove a value from the vector while preserving the order of elements.
+	/// Deletes only the first element found by @c find().
 	/// \param value  The value to remove.
-	void remove_val(const T &value);
+	void remove(const T &value);
 
 	/// Increase or decrease the capacity of the vector.
 	/// \note On failure, the vector will remain untouched.
@@ -67,7 +72,7 @@ public:
 	/// Return the element stored at index.
 	inline T& operator[](const size_t i) const;
 
-protected:
+private:
 	size_t count;     ///< Number of elements in the array.
 	size_t reserved;  ///< Size of allocated memory.
 	T *c_array;       ///< Actual C-array.
@@ -77,7 +82,6 @@ template<class T>
 Vector<T>::Vector(const int reserve) :
 	count(0), reserved(0), c_array(nullptr)
 {
-	R_ASSERT(reserve > 0, "Can't reserve an empty block of memory");
 	this->reserve(reserve);
 }
 
@@ -91,8 +95,7 @@ Vector<T>::~Vector()
 template<class T>
 T& Vector<T>::at(const size_t i)
 {
-	R_ASSERT(i < this->count, "Tried to access an element out of range");
-	return this->c_array[i];
+	return (*this)[i];
 }
 
 template<class T>
@@ -110,9 +113,27 @@ size_t Vector<T>::capacity() const
 template<class T>
 void Vector<T>::clear()
 {
+	while (this->count)
+		this->c_array[--this->count].~T();
+	R_ASSERT(!this->count, "Failed to clear vector");
+}
+
+template<class T>
+void Vector<T>::erase(const size_t i)
+{
+	R_ASSERT(i < this->count, "Can't erase a non-existing element");
+	this->c_array[i].~T();
+	T *arr = this->c_array + i;
+	memmove(arr, arr + 1, (--this->count - i) * sizeof(T));
+}
+
+template<class T>
+int Vector<T>::find(const T &element) const
+{
 	for (size_t i = 0; i < this->count; ++i)
-		this->c_array[i].~T();
-	this->count = 0;
+		if (this->c_array[i] == element)
+			return i;
+	return -1;
 }
 
 template<class T>
@@ -120,52 +141,37 @@ void Vector<T>::push_back(const T &element)
 {
 	// Verify that there is enough space
 	if (this->count == this->reserved)
-		this->reserve(this->reserved <<= 1);
+		this->reserve(this->reserved += (this->reserved + 1) >> 1);
 
 	new (this->c_array + this->count) T(element);
 	++this->count;
 }
 
 template<class T>
-void Vector<T>::qremove(const size_t i)
+void Vector<T>::qerase(const size_t i)
 {
+	R_ASSERT(i < this->count, "Can't erase a non-existing element");
 	this->c_array[i].~T();
 	if (--this->count != i)
-		memmove(this->c_array + i, this->c_array + this->count, sizeof(T));
+		memcpy(this->c_array + i, this->c_array + this->count, sizeof(T));
 }
 
 template<class T>
-void Vector<T>::qremove_val(const T &element)
+void Vector<T>::qremove(const T &element)
 {
-	for (size_t i = 0; i < this->count; ++i)
-	{
-		if (this->c_array[i] == element)
-		{
-			this->qremove(i);
-			break;
-		}
-	}
+	const int i = this->find(element);
+	if (i < 0)
+		return;
+	this->qerase(i);
 }
 
 template<class T>
-void Vector<T>::remove(const size_t i)
+void Vector<T>::remove(const T &element)
 {
-	this->c_array[i].~T();
-	T *arr = this->c_array + i;
-	memmove(arr, arr + 1, (--this->count - i) * sizeof(T));
-}
-
-template<class T>
-void Vector<T>::remove_val(const T &element)
-{
-	for (size_t i = 0; i < this->count; ++i)
-	{
-		if (this->c_array[i] == element)
-		{
-			this->remove(i);
-			break;
-		}
-	}
+	const int i = this->find(element);
+	if (i < 0)
+		return;
+	this->erase(i);
 }
 
 template<class T>

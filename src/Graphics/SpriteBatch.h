@@ -58,10 +58,9 @@ private:
 	unsigned int buffer;             ///< GL vertex buffer.
 
 	size_t batch_vertices;           ///< Total number of vertices in this batch.
-	size_t reserved;                 ///< Allocated memory for sprite vertices.
-	SpriteVertex *vertex_buffer;     ///< Common vertex array for all sprites in the batch.
 	SmartPtr<TextureAtlas> texture;  ///< Texture atlas used by all sprites in the batch.
 	Vector<Sprite*> sprites;         ///< Vector storing all sprites.
+	Vector<SpriteVertex> vertices;   ///< Common vertex array for all sprites in the batch.
 
 	/// Add a sprite to the batch.
 	/// \param s  The sprite to add.
