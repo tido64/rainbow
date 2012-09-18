@@ -26,7 +26,7 @@ class SpriteBatch;
 ///
 /// Copyright 2010-12 Bifrost Entertainment. All rights reserved.
 /// \author Tommy Nguyen
-class Sprite : public NonCopyable<Sprite>
+class Sprite
 {
 	friend class SpriteBatch;
 
