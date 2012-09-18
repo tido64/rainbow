@@ -10,7 +10,15 @@
 Data::Data(const char *const file) : allocated(0), sz(0), data(nullptr)
 {
 	Rainbow::IO::FileHandle fh = Rainbow::IO::open(file, Rainbow::IO::ASSET);
-	R_ASSERT(fh, "Failed to open asset");
+
+#ifndef NDEBUG
+	if (!fh)
+	{
+		R_ERROR("[Rainbow] Data: Failed to open '%s'\n", file);
+		R_ASSERT(fh, "Failed to open asset (see above)");
+		return;
+	}
+#endif
 
 	const size_t size = Rainbow::IO::size(fh);
 	this->allocate(size);
