@@ -34,7 +34,7 @@ public:
 
 	/// Create a Lua wrapped object.
 	template<class T>
-    static int alloc(lua_State *L);
+	static int alloc(lua_State *L);
 
 	/// Dump Lua stack to stdout.
 	static void dump_stack(lua_State *L);
@@ -161,7 +161,7 @@ void LuaMachine::wrap(lua_State *L)
 template<class T>
 T* LuaMachine::wrapper(lua_State *L, const int index)
 {
-	// Get user data from table
+	// Get user data from table.
 	lua_rawgeti(L, index, 0);
 	void *ptr = luaL_checkudata(L, -1, T::class_name);
 	lua_pop(L, 1);

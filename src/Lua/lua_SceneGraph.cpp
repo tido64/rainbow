@@ -12,6 +12,7 @@ namespace Rainbow
 		const LuaMachine::Method<SceneGraph> SceneGraph::methods[] = {
 			{ "add_animation",  &SceneGraph::add_animation },
 			{ "add_batch",      &SceneGraph::add_batch },
+			{ "add_drawable",   &SceneGraph::add_drawable },
 			{ "add_label",      &SceneGraph::add_label },
 			{ "add_node",       &SceneGraph::add_node },
 			{ "enable",         &SceneGraph::enable },
@@ -26,17 +27,22 @@ namespace Rainbow
 
 		int SceneGraph::add_animation(lua_State *L)
 		{
-			return this->add_child< ::Animation, Animation>(L);
+			return this->add_child<Animation, false>(L);
 		}
 
 		int SceneGraph::add_batch(lua_State *L)
 		{
-			return this->add_child< ::SpriteBatch, SpriteBatch>(L);
+			return this->add_child<SpriteBatch, false>(L);
+		}
+
+		int SceneGraph::add_drawable(lua_State *L)
+		{
+			return this->add_child<Drawable, true>(L);
 		}
 
 		int SceneGraph::add_label(lua_State *L)
 		{
-			return this->add_child< ::Label, Label>(L);
+			return this->add_child<Label, false>(L);
 		}
 
 		int SceneGraph::add_node(lua_State *L)
@@ -111,15 +117,15 @@ namespace Rainbow
 		}
 
 		SceneGraph::SceneGraph(lua_State *L, ::SceneGraph::Node *root) :
-			ptr(nullptr), root(root)
+			root(root)
 		{
 			lua_createtable(L, 0, 16);
 			lua_pushvalue(L, -1);
 			lua_setfield(L, -3, class_name);
 			lua_pushnumber(L, 0);
 
-			this->ptr = static_cast<SceneGraph**>(lua_newuserdata(L, sizeof(this)));
-			*this->ptr = this;
+			SceneGraph **ptr = static_cast<SceneGraph**>(lua_newuserdata(L, sizeof(this)));
+			*ptr = this;
 
 			luaL_newmetatable(L, class_name);
 			lua_setmetatable(L, -2);

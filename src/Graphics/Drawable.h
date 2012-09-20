@@ -8,7 +8,12 @@
 class Drawable
 {
 public:
+	static const char class_name[];
+
 	virtual ~Drawable() { }
+
+	Drawable* raw_ptr() { return this; }
+
 	virtual void draw() = 0;
 	virtual void update() = 0;
 };

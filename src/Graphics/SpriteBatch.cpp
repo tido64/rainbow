@@ -3,6 +3,8 @@
 #include "Graphics/Renderer.h"
 #include "Graphics/SpriteBatch.h"
 
+const char Drawable::class_name[] = "Drawable";
+
 SpriteBatch::SpriteBatch(const size_t hint) :
 	array_object(0), buffer(0), batch_vertices(0), sprites(hint),
 	vertices(hint << 2)

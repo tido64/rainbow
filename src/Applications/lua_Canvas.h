@@ -18,8 +18,6 @@ namespace Rainbow
 			inline Canvas(lua_State *);
 			virtual ~Canvas();
 
-			inline Drawable* raw_ptr();
-
 			int get_filled(lua_State *);
 			int set_background(lua_State *);
 			int set_brush(lua_State *);
@@ -30,11 +28,6 @@ namespace Rainbow
 		};
 
 		Canvas::Canvas(lua_State *) { }
-
-		Drawable* Canvas::raw_ptr()
-		{
-			return this;
-		}
 
 		int Canvas::clear(lua_State *)
 		{

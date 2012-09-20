@@ -8,7 +8,31 @@ namespace Rainbow
 {
 	namespace Lua
 	{
-		class SceneGraph
+		namespace Helper
+		{
+			template<class T, bool unsafe>
+			struct ToUserData;
+
+			template<class T>
+			struct ToUserData<T, false>
+			{
+				static inline T* Cast(lua_State *L, const int n)
+				{
+					return *static_cast<T**>(luaL_checkudata(L, n, T::class_name));
+				}
+			};
+
+			template<class T>
+			struct ToUserData<T, true>
+			{
+				static inline T* Cast(lua_State *L, const int n)
+				{
+					return *static_cast<T**>(lua_touserdata(L, n));
+				}
+			};
+		}
+
+		class SceneGraph : public NonCopyable<SceneGraph>
 		{
 			friend class ::LuaMachine;
 
@@ -18,6 +42,7 @@ namespace Rainbow
 
 			int add_animation(lua_State *);
 			int add_batch(lua_State *);
+			int add_drawable(lua_State *);
 			int add_label(lua_State *);
 			int add_node(lua_State *);
 
@@ -31,38 +56,34 @@ namespace Rainbow
 			int scale(lua_State *);
 
 		private:
-			SceneGraph **ptr;
 			::SceneGraph::Node *root;
 
 			SceneGraph(lua_State *, ::SceneGraph::Node *);
-			SceneGraph(const SceneGraph &);
 
-			template<class T, class W>
+			template<class T, bool unsafe>
 			int add_child(lua_State *);
 
 			inline ::SceneGraph::Node* to_node(lua_State *, const int);
-
-			SceneGraph& operator=(const SceneGraph &);
 		};
 
-		template<class T, class W>
+		template<class T, bool unsafe>
 		int SceneGraph::add_child(lua_State *L)
 		{
 			R_ASSERT(lua_gettop(L) == 1 || lua_gettop(L) == 2, "Invalid parameters");
 
-			// Retrieve Lua wrapper
+			// Ensure it's not a nil value.
 			const int n = lua_gettop(L);
 			LUA_CHECK(L, lua_type(L, n) != LUA_TNIL, "rainbow.scenegraph: Invalid child node specified");
+
+			// Retrieve Lua wrapper.
 			lua_rawgeti(L, n, 0);
-			W **w = static_cast<W**>(luaL_checkudata(L, -1, W::class_name));
-
-			// Retrieve and add element
-			T *s = (*w)->raw_ptr();
-			::SceneGraph::Node *node = (n & 1) ? this->root : this->to_node(L, 1);
-
-			// Clean up and return node
+			T *obj = Helper::ToUserData<T, unsafe>::Cast(L, -1);
 			lua_pop(L, 1);
-			lua_pushlightuserdata(L, node->add_child(s));
+
+			// Retrieve and add element.
+			::SceneGraph::Node *node = (n & 1) ? this->root : this->to_node(L, 1);
+			lua_pushlightuserdata(L, node->add_child(obj->raw_ptr()));
+
 			return 1;
 		}
 
