@@ -31,11 +31,6 @@ public:
 
 	virtual ~SpriteBatch();
 
-	/// Add a sprite to the batch.
-	/// \param width   Width of the texture and, consequently, the sprite.
-	/// \param height  Height of the texture and, consequently, the sprite.
-	void add(const unsigned int width, const unsigned int height);
-
 	/// Add a sprite to the batch given texture coordinates.
 	/// \param x,y     Position of the texture assigned to the sprite.
 	/// \param width   Width of the texture and, consequently, the sprite.
@@ -49,6 +44,9 @@ public:
 	/// Re-use a texture atlas.
 	TextureAtlas* set_texture(TextureAtlas *texture);
 
+	/// Return the number of sprites.
+	inline size_t size();
+
 	/// Draw the batch of sprites.
 	virtual void draw() override;
 
@@ -61,11 +59,20 @@ private:
 
 	size_t batch_vertices;           ///< Total number of vertices in this batch.
 	SmartPtr<TextureAtlas> texture;  ///< Texture atlas used by all sprites in the batch.
-	Vector<Sprite> sprites;          ///< Vector storing all sprites.
+	Vector<Sprite*> sprites;         ///< Vector storing all sprites.
 	Vector<SpriteVertex> vertices;   ///< Common vertex array for all sprites in the batch.
+
+	/// Add a sprite to the batch.
+	/// \param s  The sprite to add.
+	void push_back(Sprite *s);
 
 	/// One does not simply assign a SpriteBatch.
 	SpriteBatch& operator=(const SpriteBatch &);
 };
+
+size_t SpriteBatch::size()
+{
+	return this->sprites.size();
+}
 
 #endif
