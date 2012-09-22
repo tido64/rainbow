@@ -38,14 +38,13 @@ public:
 	/// \return The newly created sprite, at position (0,0).
 	Sprite* add(const int x, const int y, const int width, const int height);
 
+	Sprite* add(const unsigned int width, const unsigned int height);
+
 	/// Load texture data.
 	TextureAtlas* set_texture(const Data &texture);
 
 	/// Re-use a texture atlas.
 	TextureAtlas* set_texture(TextureAtlas *texture);
-
-	/// Return the number of sprites.
-	inline size_t size();
 
 	/// Draw the batch of sprites.
 	virtual void draw() override;
@@ -62,17 +61,8 @@ private:
 	Vector<Sprite*> sprites;         ///< Vector storing all sprites.
 	Vector<SpriteVertex> vertices;   ///< Common vertex array for all sprites in the batch.
 
-	/// Add a sprite to the batch.
-	/// \param s  The sprite to add.
-	void push_back(Sprite *s);
-
 	/// One does not simply assign a SpriteBatch.
 	SpriteBatch& operator=(const SpriteBatch &);
 };
-
-size_t SpriteBatch::size()
-{
-	return this->sprites.size();
-}
 
 #endif
