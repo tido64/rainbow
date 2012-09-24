@@ -11,34 +11,29 @@
 #if defined(RAINBOW_ANDROID)
 #	include <GLES2/gl2.h>
 #	include <GLES2/gl2ext.h>
-#	define GL_RGB8               GL_RGB
-#	define GL_RGBA8              GL_RGBA
-#	define GL_DRAW_FRAMEBUFFER   GL_FRAMEBUFFER
-#	define glBindVertexArray     glBindVertexArrayOES
-#	define glDeleteVertexArrays  glDeleteVertexArraysOES
-#	define glGenVertexArrays     glGenVertexArraysOES
+#	define GL_DRAW_FRAMEBUFFER GL_FRAMEBUFFER
 #elif defined(RAINBOW_IOS)
 #	include <OpenGLES/ES2/gl.h>
-#	define GL_RGB8               GL_RGB
-#	define GL_RGBA8              GL_RGBA
-#	define glBindVertexArray     glBindVertexArrayOES
-#	define glDeleteVertexArrays  glDeleteVertexArraysOES
-#	define glGenVertexArrays     glGenVertexArraysOES
 #elif defined(RAINBOW_WIN)
 #	ifndef WIN32
-#		define WIN32
+#		define WIN32 1
 #	endif
-#	include <GL/GLee.h>
-#	undef GL_ARB_ES2_compatibility
-#	undef GL_LINES_ADJACENCY_EXT
-#	undef GL_LINE_STRIP_ADJACENCY_EXT
-#	undef GL_TRIANGLES_ADJACENCY_EXT
-#	undef GL_TRIANGLE_STRIP_ADJACENCY_EXT
+#	define GLEW_NO_GLU
+#	define GLEW_STATIC
+#	include <GL/glew.h>
 #	include <GL/glext.h>
 #else
 #	define GL_GLEXT_PROTOTYPES 1
 #	include <GL/gl.h>
 #	include <GL/glext.h>
+#endif
+
+#if defined(RAINBOW_ANDROID) || defined(RAINBOW_IOS)
+#	define GL_RGB8               GL_RGB
+#	define GL_RGBA8              GL_RGBA
+#	define glBindVertexArray     glBindVertexArrayOES
+#	define glDeleteVertexArrays  glDeleteVertexArraysOES
+#	define glGenVertexArrays     glGenVertexArraysOES
 #endif
 
 #endif

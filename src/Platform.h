@@ -19,7 +19,6 @@
 #	elif !defined(WINVER)
 #		define WINVER 0x0501
 #	endif
-#	define VC_EXTRALEAN
 #endif
 
 // Platforms that make use of physical buttons (keyboards, gamepads, etc.)

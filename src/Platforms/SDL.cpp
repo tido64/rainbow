@@ -3,8 +3,12 @@
 #include "Platform.h"
 #ifdef RAINBOW_SDL
 
+#ifdef RAINBOW_WIN
+#	include "Graphics/OpenGL.h"
+#	include <GL/glew.c>
+#endif
+
 #include <SDL/SDL.h>
-#include <SDL/SDL_thread.h>
 
 #ifdef RAINBOW_TEST
 #	include "../tests/test.h"

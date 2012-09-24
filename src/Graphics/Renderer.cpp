@@ -10,6 +10,15 @@
 
 bool Renderer::init()
 {
+#ifdef __glew_h__
+	GLenum err = glewInit();
+	if (err != GLEW_OK)
+	{
+		R_ERROR("[Rainbow] Failed to initialise GLEW: %s\n", glewGetErrorString(err));
+		return false;
+	}
+#endif
+
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
 	glEnable(GL_CULL_FACE);
