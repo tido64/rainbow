@@ -15,7 +15,7 @@ namespace SceneGraph { class Node; }
 ///
 /// Copyright 2010-12 Bifrost Entertainment. All rights reserved.
 /// \author Tommy Nguyen
-class SpriteBatch : public Drawable
+class SpriteBatch
 {
 	friend class SceneGraph::Node;
 	friend void Sprite::set_texture(const unsigned int id);
@@ -29,7 +29,7 @@ public:
 	/// Make a deep copy of a SpriteBatch.
 	SpriteBatch(const SpriteBatch &);
 
-	virtual ~SpriteBatch();
+	~SpriteBatch();
 
 	/// Add a sprite to the batch given texture coordinates.
 	/// \param x,y     Position of the texture assigned to the sprite.
@@ -47,10 +47,10 @@ public:
 	TextureAtlas* set_texture(TextureAtlas *texture);
 
 	/// Draw the batch of sprites.
-	virtual void draw() override;
+	void draw();
 
 	/// Update the batch of sprites.
-	virtual void update() override;
+	void update();
 
 private:
 	unsigned int array_object;       ///< GL vertex array object.

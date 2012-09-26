@@ -16,6 +16,27 @@ namespace SceneGraph
 			delete this->children[i];
 	}
 
+	void Node::draw()
+	{
+		if (!this->enabled)
+			return;
+
+		switch (this->type)
+		{
+			case DrawableNode:
+			case LabelNode:
+				this->drawable->draw();
+				break;
+			case SpriteBatchNode:
+				this->sprite_batch->draw();
+				break;
+			default:
+				break;
+		}
+		for (size_t i = 0; i < this->children.size(); ++i)
+			this->children[i]->draw();
+	}
+
 	void Node::move(const float x, const float y)
 	{
 		if (equalf(x, 0.0f) && equalf(y, 0.0f))
@@ -85,32 +106,6 @@ namespace SceneGraph
 			this->children[i]->scale(f);
 	}
 
-	Node& Node::operator=(const Node &n)
-	{
-		this->type = n.type;
-		this->data = n.data;
-		return *this;
-	}
-
-	void Node::draw()
-	{
-		if (!this->enabled)
-			return;
-
-		switch (this->type)
-		{
-			case DrawableNode:
-			case LabelNode:
-			case SpriteBatchNode:
-				this->drawable->draw();
-				break;
-			default:
-				break;
-		}
-		for (size_t i = 0; i < this->children.size(); ++i)
-			this->children[i]->draw();
-	}
-
 	void Node::update()
 	{
 		if (!this->enabled)
@@ -123,13 +118,22 @@ namespace SceneGraph
 				break;
 			case DrawableNode:
 			case LabelNode:
-			case SpriteBatchNode:
 				this->drawable->update();
+				break;
+			case SpriteBatchNode:
+				this->sprite_batch->update();
 				break;
 			default:
 				break;
 		}
 		for (size_t i = 0; i < this->children.size(); ++i)
 			this->children[i]->update();
+	}
+
+	Node& Node::operator=(const Node &n)
+	{
+		this->type = n.type;
+		this->data = n.data;
+		return *this;
 	}
 }

@@ -19,7 +19,7 @@ namespace SceneGraph
 	///
 	/// Copyright 2011-12 Bifrost Entertainment. All rights reserved.
 	/// \author Tommy Nguyen
-	class Node : public Drawable, public TreeNode<Node>
+	class Node : public TreeNode<Node>
 	{
 	public:
 		bool enabled;  ///< Whether or not this node should be updated and/or drawn.
@@ -71,6 +71,9 @@ namespace SceneGraph
 		template<class T>
 		Node* add_child(T *p);
 
+		/// Draw this node and all its enabled children.
+		void draw();
+
 		/// Recursively move all sprites by (x,y).
 		void move(const float x, const float y);
 
@@ -83,14 +86,11 @@ namespace SceneGraph
 		/// Recursively scale all sprites by f.
 		void scale(const float f);
 
+		/// Update this node and all its enabled children.
+		void update();
+
 		/// Copies a node's type and data.
 		Node& operator=(const Node &);
-
-		/// Draw this node and all its enabled children.
-		virtual void draw() override;
-
-		/// Update this node and all its enabled children.
-		virtual void update() override;
 	};
 
 	Node::Node() :
