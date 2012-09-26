@@ -12,10 +12,13 @@ tools/shaders-gen.py
 cd $BUILD_DIR
 
 # Clean the folder
-rm -fr AndroidManifest.xml ant.properties bin build.xml jni libs local.properties obj proguard-project.txt project.properties res src
+rm -fr AndroidManifest.xml ant.properties bin build.xml jni libs \
+	local.properties obj proguard-project.txt project.properties res src
 
 # Create project files
-$NDK_HOME/../android-sdk/tools/android -s create project --name "Rainbow" --target "android-15" --path . --package "com.bifrostentertainment.rainbow" --activity "Rainbow" || exit 1
+$NDK_HOME/../android-sdk/tools/android -s create project --name "Rainbow" \
+	--target "android-15" --path . --package "com.bifrostentertainment.rainbow" \
+	--activity "Rainbow" || exit 1
 rm -r src/*
 mkdir -p jni
 
@@ -31,11 +34,11 @@ for lib in Box2D Lua libpng; do
 done
 
 # Manually include FreeType source
-SRC_FILES="$SRC_FILES lib/FreeType/src/autofit/autofit.c lib/FreeType/src/base/ftbase.c lib/FreeType/src/base/ftbbox.c lib/FreeType/src/base/ftbitmap.c lib/FreeType/src/base/ftdebug.c lib/FreeType/src/base/ftglyph.c lib/FreeType/src/base/ftinit.c lib/FreeType/src/base/ftsystem.c lib/FreeType/src/cff/cff.c lib/FreeType/src/pshinter/pshinter.c lib/FreeType/src/psnames/psnames.c lib/FreeType/src/sfnt/sfnt.c lib/FreeType/src/smooth/smooth.c lib/FreeType/src/truetype/truetype.c"
+SRC_FILES="$SRC_FILES lib/FreeType/src/freetype.c"
 
 cd $BUILD_DIR
 
-echo "\
+cat > jni/Android.mk << ANDROID_MK
 $COPYRIGHT
 $HEADER
 
@@ -47,55 +50,57 @@ include \$(CLEAR_VARS)
 LOCAL_MODULE := $TARGET
 LOCAL_SRC_FILES := $SRC_FILES
 
-LOCAL_C_INCLUDES := $PROJECT/src $PROJECT/lib $PROJECT/lib/FreeType/include $PROJECT/lib/libpng $PROJECT/lib/Lua $NDK_HOME/sources/android/native_app_glue
-LOCAL_CFLAGS := -DDARWIN_NO_CARBON -DFT2_BUILD_LIBRARY $@ -finline-functions -ftree-vectorize
+LOCAL_C_INCLUDES := $PROJECT/src $PROJECT/lib $PROJECT/lib/FreeType/include \
+                    $PROJECT/lib/libpng $PROJECT/lib/Lua \
+                    $NDK_HOME/sources/android/native_app_glue
+LOCAL_CFLAGS := $@ -finline-functions -ftree-vectorize
 LOCAL_CPPFLAGS := -std=gnu++11 -Wall -Wextra -Woverloaded-virtual -Wsign-promo -fno-rtti
 
 LOCAL_LDLIBS := -landroid -lEGL -lGLESv2 -lOpenSLES -llog -lz
 LOCAL_STATIC_LIBRARIES := android_native_app_glue
 
 include \$(BUILD_SHARED_LIBRARY)
-\$(call import-module,android/native_app_glue)" \
-> jni/Android.mk
+\$(call import-module,android/native_app_glue)
+ANDROID_MK
 echo " done"
 
 echo -n "Generating jni/Application.mk..."
-echo "\
+cat > jni/Application.mk << APPLICATION_MK
 $COPYRIGHT
 $HEADER
 
 APP_PLATFORM := android-11
 APP_ABI := armeabi-v7a  # all
-APP_STL := stlport_static  # Required by Box2D" \
-> jni/Application.mk
+APP_STL := stlport_static  # Required by Box2D
+APPLICATION_MK
 echo " done"
 
 echo -n "Generating AndroidManifest.xml..."
-echo "\
-<?xml version=\"1.0\" encoding=\"utf-8\"?>
-<manifest xmlns:android=\"http://schemas.android.com/apk/res/android\"
-          package=\"com.bifrostentertainment.rainbow\"
-          android:versionCode=\"1\"
-          android:versionName=\"1.0\">
-	<uses-sdk android:minSdkVersion=\"11\" />
-	<uses-feature android:name=\"android.hardware.screen.portrait\"
-	              android:glEsVersion=\"0x00020000\" />
-	<application android:icon=\"@drawable/ic_launcher\"
-	             android:label=\"@string/app_name\"
-	             android:theme=\"@android:style/Theme.NoTitleBar.Fullscreen\">
-		<activity android:label=\"@string/app_name\"
-		          android:launchMode=\"singleTop\"
-		          android:name=\"android.app.NativeActivity\"
-		          android:screenOrientation=\"sensorLandscape\">
+cat > AndroidManifest.xml << ANDROIDMANIFEST_XML
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="com.bifrostentertainment.rainbow"
+          android:versionCode="1"
+          android:versionName="1.0">
+	<uses-sdk android:minSdkVersion="11" />
+	<uses-feature android:name="android.hardware.screen.portrait"
+	              android:glEsVersion="0x00020000" />
+	<application android:icon="@drawable/ic_launcher"
+	             android:label="@string/app_name"
+	             android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
+		<activity android:label="@string/app_name"
+		          android:launchMode="singleTop"
+		          android:name="android.app.NativeActivity"
+		          android:screenOrientation="sensorLandscape">
 			<intent-filter>
-				<action android:name=\"android.intent.action.MAIN\" />
-				<category android:name=\"android.intent.category.LAUNCHER\" />
+				<action android:name="android.intent.action.MAIN" />
+				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
-			<meta-data android:name=\"android.app.lib_name\" android:value=\"rainbow\" />
+			<meta-data android:name="android.app.lib_name" android:value="rainbow" />
 		</activity>
 	</application>
-</manifest>" \
-> AndroidManifest.xml
+</manifest>
+ANDROIDMANIFEST_XML
 echo " done"
 
 NDK_DEBUG=1 $NDK_HOME/ndk-build &&

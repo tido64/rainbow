@@ -1,5 +1,7 @@
 // This FreeType custom build will only support OpenType and TrueType
 
+#define FT2_BUILD_LIBRARY 1
+
 // Base components
 #include "base/ftsystem.c"
 #include "base/ftinit.c"
