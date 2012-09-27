@@ -145,7 +145,7 @@ void android_init_display(AInstance *ainstance)
 	dpy = eglGetDisplay(EGL_DEFAULT_DISPLAY);
 	eglInitialize(dpy, 0, 0);
 
-	const EGLint attribs[] = {
+	const EGLint attrib_list[] = {
 		EGL_ALPHA_SIZE, 8,
 		EGL_BLUE_SIZE, 8,
 		EGL_GREEN_SIZE, 8,
@@ -156,14 +156,27 @@ void android_init_display(AInstance *ainstance)
 	};
 	EGLConfig config;
 	EGLint nconfigs;
-	eglChooseConfig(dpy, attribs, &config, 1, &nconfigs);
+	eglChooseConfig(dpy, attrib_list, &config, 1, &nconfigs);
 
 	EGLint format;
 	eglGetConfigAttrib(dpy, config, EGL_NATIVE_VISUAL_ID, &format);
 	ANativeWindow_setBuffersGeometry(ainstance->app->window, 0, 0, format);
 
 	surface = eglCreateWindowSurface(dpy, config, ainstance->app->window, nullptr);
-	ctx = eglCreateContext(dpy, config, nullptr, nullptr);
+	if (surface == EGL_NO_SURFACE)
+	{
+		R_ERROR("[Rainbow] Failed to create EGL window surface");
+		return;
+	}
+
+	const EGLint gles_attrib[] = { EGL_CONTEXT_CLIENT_VERSION, 2, EGL_NONE };
+	ctx = eglCreateContext(dpy, config, EGL_NO_CONTEXT, gles_attrib);
+	if (ctx == EGL_NO_CONTEXT)
+	{
+		R_ERROR("[Rainbow] Failed to create EGL rendering context");
+		return;
+	}
+
 	done = eglMakeCurrent(dpy, surface, surface, ctx) == EGL_FALSE;
 	if (done)
 	{
