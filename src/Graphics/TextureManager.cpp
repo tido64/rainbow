@@ -34,6 +34,10 @@ unsigned int TextureManager::create(const unsigned int internal_format,
 	}
 	tex.sz = width * height;
 
+	this->mem_used += tex.sz;
+	if (this->mem_used > this->mem_peak)
+		this->mem_peak = this->mem_used;
+
 	this->bind(tex.id);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -67,6 +71,10 @@ unsigned int TextureManager::create_compressed(const unsigned int format,
 	}
 	tex.sz = width * height >> 1;
 
+	this->mem_used += tex.sz;
+	if (this->mem_used > this->mem_peak)
+		this->mem_peak = this->mem_used;
+
 	this->bind(tex.id);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -84,6 +92,13 @@ unsigned int TextureManager::create_compressed(const unsigned int format,
 	return tex.id;
 }
 
+void TextureManager::get_usage(double &used, double &unused, double &peak) const
+{
+	unused = this->recycled.size() * 64 * 64 * 1e-6;
+	used = this->mem_used * 4e-6 + unused;
+	peak = this->mem_peak * 4e-6;
+}
+
 void TextureManager::remove(const unsigned int id)
 {
 	for (size_t i = 0; i < this->textures.size(); ++i)
@@ -95,6 +110,7 @@ void TextureManager::remove(const unsigned int id)
 			             GL_LUMINANCE, GL_UNSIGNED_BYTE, nullptr);
 			this->bind();
 			this->recycled.push_back(this->textures[i]);
+			this->mem_used -= this->textures[i].sz;
 			this->textures.qerase(i);
 			break;
 		}
@@ -104,14 +120,9 @@ void TextureManager::remove(const unsigned int id)
 #ifndef NDEBUG
 void TextureManager::print_usage() const
 {
-	const double mb = 4e-6;
-	const double recycled = this->recycled.size() * 64 * 64 * mb;
-	double total = recycled;
-	for (size_t i = 0; i < this->textures.size(); ++i)
-		total += this->textures[i].sz;
-
-	printf("[Rainbow] Video: %.2f MBs of textures (%.2f MBs unused)\n",
-	       total * mb, recycled);
+	double used, unused, peak;
+	this->get_usage(used, unused, peak);
+	printf("[Rainbow] Video: %.2f MBs of textures (%.2f MBs unused)\n", used, unused);
 }
 #endif
 

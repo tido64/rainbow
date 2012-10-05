@@ -54,6 +54,9 @@ public:
 	                               const size_t size,
 	                               const void *data);
 
+	/// Return total video memory used (and unused) by textures.
+	void get_usage(double &used, double &unused, double &peak) const;
+
 	/// Purge unused texture memory.
 	inline void purge();
 
@@ -74,12 +77,14 @@ private:
 	};
 
 	unsigned int active;
+	double mem_peak;
+	double mem_used;
 	Vector<TextureId> recycled;  ///< Stores reusable texture ids.
 	Vector<TextureId> textures;  ///< Stores texture ids currently in use.
 
 	inline TextureManager();
 
-	/// Print the total video memory used by textures.
+	/// Print total video memory used by textures.
 	void print_usage() const;
 
 	/// Clear and delete textures.
@@ -97,7 +102,7 @@ void TextureManager::purge()
 	this->purge(this->recycled);
 }
 
-TextureManager::TextureManager() : active(0) { }
+TextureManager::TextureManager() : active(0), mem_peak(0.0), mem_used(0.0) { }
 
 bool TextureManager::TextureId::operator==(const TextureId &tex)
 {
