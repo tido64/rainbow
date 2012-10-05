@@ -100,10 +100,11 @@
 
 - (void)didReceiveMemoryWarning
 {
+	[super didReceiveMemoryWarning];
+
 	// Don't propagate the warning to Director. It will force Lua to collect
 	// garbage and mess up iPad 1's OpenGL driver.
 	//self->director->on_memory_warning();
-	[self didReceiveMemoryWarning];
 }
 
 - (void)viewDidLoad
