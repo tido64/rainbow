@@ -4,11 +4,6 @@
 #include "Common/Vector.h"
 #include "Input/Acceleration.h"
 
-// Rainbow input events
-#define RAINBOW_ALL_EVENTS    -1
-#define RAINBOW_KEY_EVENTS    (1 << 0)
-#define RAINBOW_TOUCH_EVENTS  (1 << 1)
-
 class  Key;
 struct lua_State;
 struct Touch;
@@ -25,6 +20,13 @@ class  Touchable;
 class Input : public NonCopyable<Input>
 {
 public:
+	enum
+	{
+		KEY_EVENTS    = 1u << 0,
+		TOUCH_EVENTS  = 1u << 1,
+		ALL_EVENTS    = KEY_EVENTS | TOUCH_EVENTS
+	};
+
 	static Input *Instance;
 
 	inline Input(lua_State *);

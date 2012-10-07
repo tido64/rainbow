@@ -5,6 +5,7 @@
 #include "Common/SpriteVertex.h"
 #include "Graphics/Drawable.h"
 #include "Graphics/Pipeline.h"
+#include "Input/Touch.h"
 #include "Input/Touchable.h"
 
 class  Shader;

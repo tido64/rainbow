@@ -99,7 +99,7 @@ Canvas::Canvas() :
 	this->sprite[3].position.x = 0;
 	this->sprite[3].position.y = this->height;
 
-	Input::Instance->subscribe(this, RAINBOW_TOUCH_EVENTS);
+	Input::Instance->subscribe(this, Input::TOUCH_EVENTS);
 }
 
 Canvas::~Canvas()

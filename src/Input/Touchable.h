@@ -1,7 +1,7 @@
 #ifndef TOUCHABLE_H_
 #define TOUCHABLE_H_
 
-#include "Input/Touch.h"
+struct Touch;
 
 /// Interface for touchable objects.
 ///

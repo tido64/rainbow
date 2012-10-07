@@ -9,9 +9,9 @@ Input *Input::Instance = nullptr;
 
 void Input::subscribe(Touchable *const t, unsigned int flags)
 {
-	//if (flags & RAINBOW_KEY_EVENTS)
+	//if (flags & KEY_EVENTS)
 
-	if (flags & RAINBOW_TOUCH_EVENTS)
+	if (flags & TOUCH_EVENTS)
 		this->touch_subscribers.push_back(t);
 }
 
