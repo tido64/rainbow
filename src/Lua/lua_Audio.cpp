@@ -53,7 +53,7 @@ namespace Rainbow
 			lua_pushcclosure(L, &Audio::stop, 0);
 			lua_setfield(L, -2, "stop");
 
-			LuaMachine::wrap<lua_Recorder>(L);
+			LuaMachine::wrap<Recorder>(L);
 
 			lua_pop(L, 1);
 		}

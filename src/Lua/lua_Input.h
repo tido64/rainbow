@@ -4,11 +4,12 @@
 class  Acceleration;
 class  Key;
 struct lua_State;
-class  LuaMachine;
 struct Touch;
 
 namespace Rainbow
 {
+	class LuaMachine;
+
 	namespace Lua
 	{
 		class Input

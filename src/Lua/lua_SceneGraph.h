@@ -34,7 +34,7 @@ namespace Rainbow
 
 		class SceneGraph : public NonCopyable<SceneGraph>
 		{
-			friend class ::LuaMachine;
+			friend class Rainbow::LuaMachine;
 
 		public:
 			static const char class_name[];

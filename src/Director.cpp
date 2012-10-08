@@ -7,32 +7,35 @@
 #include "Graphics/TextureManager.h"
 #include "Lua/lua_Platform.h"
 
-void Director::init(const Data &main)
+namespace Rainbow
 {
-	LuaMachine::load(this->lua, main, "main");
-	if (this->lua.call("init") != LUA_OK || this->lua.update(0) != LUA_OK)
-		this->shutdown();
-	else
-		this->scenegraph.update();
-}
+	void Director::init(const Data &main)
+	{
+		LuaMachine::load(this->lua, main, "main");
+		if (this->lua.call("init") != LUA_OK || this->lua.update(0) != LUA_OK)
+			this->shutdown();
+		else
+			this->scenegraph.update();
+	}
 
-void Director::set_video(const int w, const int h)
-{
-	Rainbow::Lua::Platform::update(this->lua, w, h);
-}
+	void Director::set_video(const int w, const int h)
+	{
+		Lua::Platform::update(this->lua, w, h);
+	}
 
-void Director::update(const unsigned long t)
-{
-	Chrono::Instance().update(t);
-	ConFuoco::Mixer::Instance().update();
-	if (this->lua.update(Chrono::Instance().diff()))
-		this->shutdown();
-	else
-		this->scenegraph.update();
-}
+	void Director::update(const unsigned long t)
+	{
+		Chrono::Instance().update(t);
+		ConFuoco::Mixer::Instance().update();
+		if (this->lua.update(Chrono::Instance().diff()))
+			this->shutdown();
+		else
+			this->scenegraph.update();
+	}
 
-void Director::on_memory_warning()
-{
-	lua_gc(this->lua, LUA_GCCOLLECT, 0);
-	TextureManager::Instance().purge();
+	void Director::on_memory_warning()
+	{
+		lua_gc(this->lua, LUA_GCCOLLECT, 0);
+		TextureManager::Instance().purge();
+	}
 }
