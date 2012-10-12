@@ -16,6 +16,7 @@ namespace Rainbow
 
 			Label(lua_State *);
 
+			int set_alignment(lua_State *);
 			int set_color(lua_State *);
 			int set_font(lua_State *);
 			int set_position(lua_State *);

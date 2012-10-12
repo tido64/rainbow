@@ -22,7 +22,7 @@ void Label::set_text(const char *text)
 	}
 	memcpy(this->text, text, len);
 	this->text[len] = '\0';
-	this->stale |= stale_position;
+	this->stale |= stale_buffer;
 }
 
 void Label::draw()
@@ -36,7 +36,7 @@ void Label::update()
 	// Note: This algorithm currently does not support font kerning.
 	if (this->stale)
 	{
-		if (this->stale & stale_position)
+		if (this->stale & stale_buffer)
 		{
 			if (this->stale & stale_vbo)
 			{
@@ -74,6 +74,16 @@ void Label::update()
 				++this->vertices;
 			}
 			this->vertices = (this->vertices << 2) + (this->vertices << 1);
+
+			if (this->alignment != LEFT)
+			{
+				float offset = this->position.x - pen.x;
+				if (this->alignment == CENTER)
+					offset *= 0.5f;
+
+				for (size_t i = 0; i < (this->size << 2); ++i)
+					this->vx[i].position.x += offset;
+			}
 		}
 		if (this->stale & stale_color)
 		{
