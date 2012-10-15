@@ -36,6 +36,8 @@ public:
 	/// Set text to display.
 	void set_text(const char *);
 
+	inline void move(const int x, const int y);
+
 	/// Draw text at previously set position.
 	virtual void draw() override;
 
@@ -83,6 +85,13 @@ void Label::set_position(const int x, const int y)
 {
 	this->position.x = x;
 	this->position.y = y;
+	this->stale |= stale_buffer;
+}
+
+void Label::move(const int x, const int y)
+{
+	this->position.x += x;
+	this->position.y += y;
 	this->stale |= stale_buffer;
 }
 

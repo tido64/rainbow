@@ -12,6 +12,7 @@ namespace Rainbow
 			{ "set_font",       &Label::set_font },
 			{ "set_position",   &Label::set_position },
 			{ "set_text",       &Label::set_text },
+			{ "move",           &Label::move },
 			{ 0, 0 }
 		};
 
@@ -66,6 +67,12 @@ namespace Rainbow
 		int Label::set_text(lua_State *L)
 		{
 			::Label::set_text(lua_tolstring(L, 1, nullptr));
+			return 0;
+		}
+
+		int Label::move(lua_State *L)
+		{
+			::Label::move(lua_tonumber(L, 1), lua_tonumber(L, 2));
 			return 0;
 		}
 	}

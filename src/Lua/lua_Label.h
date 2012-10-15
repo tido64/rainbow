@@ -16,12 +16,21 @@ namespace Rainbow
 
 			Label(lua_State *);
 
+			inline ::Label* raw_ptr();
+
 			int set_alignment(lua_State *);
 			int set_color(lua_State *);
 			int set_font(lua_State *);
 			int set_position(lua_State *);
 			int set_text(lua_State *);
+
+			int move(lua_State *);
 		};
+
+		::Label* Label::raw_ptr()
+		{
+			return this;
+		}
 	}
 }
 

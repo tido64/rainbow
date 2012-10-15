@@ -44,6 +44,9 @@ namespace SceneGraph
 
 		switch (this->type)
 		{
+			case LabelNode:
+				this->label->move(x, y);
+				break;
 			case SpriteNode:
 				this->sprite->move(x, y);
 				break;

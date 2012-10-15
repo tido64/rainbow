@@ -39,6 +39,7 @@ namespace SceneGraph
 			void *data;
 			Animation *animation;
 			Drawable *drawable;
+			Label *label;
 			Sprite *sprite;
 			SpriteBatch *sprite_batch;
 		};  ///< Graphical element represented by this node.
@@ -103,7 +104,7 @@ namespace SceneGraph
 		enabled(true), type(AnimationNode), data(a) { }
 
 	Node::Node(Label *l) :
-		enabled(true), type(LabelNode), data(l) { }
+		enabled(true), type(LabelNode), label(l) { }
 
 	Node::Node(Sprite *s) :
 		enabled(true), type(SpriteNode), data(s) { }
