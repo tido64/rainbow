@@ -36,6 +36,7 @@ public:
 	/// Set text to display.
 	void set_text(const char *);
 
+	/// Move label by (x,y).
 	inline void move(const int x, const int y);
 
 	/// Draw text at previously set position.

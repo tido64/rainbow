@@ -3,7 +3,14 @@
 
 //#version 100
 
-#ifndef GL_ES
+#ifdef GL_ES
+#	ifdef GL_FRAGMENT_PRECISION_HIGH
+precision highp float;
+#	else
+precision mediump float;
+#	endif
+precision lowp sampler2D;
+#else
 #	define lowp
 #endif
 
@@ -14,7 +21,7 @@ attribute vec2 vertex;
 uniform mat4 mvp_matrix;
 
 varying lowp vec4 v_color;
-varying lowp vec2 v_texcoord;
+varying vec2 v_texcoord;
 
 void main()
 {
