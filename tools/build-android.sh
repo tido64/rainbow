@@ -42,11 +42,9 @@ cat > jni/Android.mk << ANDROID_MK
 $COPYRIGHT
 $HEADER
 
-#LOCAL_PATH := \$(call my-dir)
-LOCAL_PATH := $PROJECT
-
 include \$(CLEAR_VARS)
 
+LOCAL_PATH := $PROJECT
 LOCAL_MODULE := $TARGET
 LOCAL_SRC_FILES := $SRC_FILES
 
@@ -56,8 +54,8 @@ LOCAL_C_INCLUDES := $PROJECT/src $PROJECT/lib $PROJECT/lib/FreeType/include \
 LOCAL_CFLAGS := $@ -finline-functions -ftree-vectorize
 LOCAL_CPPFLAGS := -std=gnu++11 -Wall -Wextra -Woverloaded-virtual -Wsign-promo -fno-rtti
 
-LOCAL_LDLIBS := -landroid -lEGL -lGLESv2 -lOpenSLES -llog -lz
 LOCAL_STATIC_LIBRARIES := android_native_app_glue
+LOCAL_LDLIBS := -landroid -lEGL -lGLESv2 -lOpenSLES -llog -lz
 
 include \$(BUILD_SHARED_LIBRARY)
 \$(call import-module,android/native_app_glue)
@@ -69,7 +67,7 @@ cat > jni/Application.mk << APPLICATION_MK
 $COPYRIGHT
 $HEADER
 
-APP_PLATFORM := android-11
+APP_PLATFORM := android-9
 APP_ABI := armeabi-v7a  # all
 APP_STL := stlport_static  # Required by Box2D
 APPLICATION_MK
@@ -103,5 +101,5 @@ cat > AndroidManifest.xml << ANDROIDMANIFEST_XML
 ANDROIDMANIFEST_XML
 echo " done"
 
-NDK_DEBUG=1 $NDK_HOME/ndk-build &&
+NDK_DEBUG=1 $NDK_HOME/ndk-build -j &&
 JAVA_HOME=/usr/lib/jvm/java-7-openjdk /usr/bin/ant debug
