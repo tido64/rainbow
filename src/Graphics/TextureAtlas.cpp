@@ -1,7 +1,6 @@
 // Copyright 2010-12 Bifrost Entertainment. All rights reserved.
 
 #include "Algorithm.h"
-#include "Common/Data.h"
 #include "Graphics/ImageLoader.h"
 #include "Graphics/OpenGL.h"
 #include "Graphics/TextureAtlas.h"

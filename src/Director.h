@@ -50,6 +50,10 @@ namespace Rainbow
 	}
 }
 
+#ifdef USE_HEIMDALL
+#	include "Heimdall/Gatekeeper.h"
+#else
 typedef Rainbow::Director Director;
+#endif
 
 #endif

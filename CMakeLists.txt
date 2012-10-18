@@ -6,8 +6,9 @@ option(MINGW "Cross compile with MinGW" OFF)
 #option(PROFILING "Compile with profiling" OFF)
 
 # Features
-option(CANVAS  "Use canvas" OFF)
-option(PHYSICS "Use physics (Box2D)" OFF)
+option(CANVAS   "Use canvas" OFF)
+option(HEIMDALL "Use Heimdall" OFF)
+option(PHYSICS  "Use physics (Box2D)" OFF)
 
 # Auto-generate files
 execute_process(COMMAND tools/shaders-gen.py WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
@@ -48,6 +49,9 @@ endif()
 # Features
 if(CANVAS)
 	add_definitions(-DUSE_CANVAS)
+endif()
+if(HEIMDALL)
+	add_definitions(-DUSE_HEIMDALL)
 endif()
 if(PHYSICS)
 	add_definitions(-DUSE_PHYSICS)

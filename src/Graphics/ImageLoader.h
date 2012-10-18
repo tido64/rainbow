@@ -1,6 +1,7 @@
 #ifndef IMAGELOADER_H_
 #define IMAGELOADER_H_
 
+#include "Common/Data.h"
 #include "Common/Debug.h"
 #if defined(RAINBOW_IOS)
 #	include <UIKit/UIKit.h>

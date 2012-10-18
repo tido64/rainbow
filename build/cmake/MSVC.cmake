@@ -17,6 +17,9 @@ if(MINGW OR WIN32)
 	file(GLOB RAINBOW_GRAPHICS_SRC src/Graphics/impl/*)
 	source_group("Source Files\\Graphics\\impl" FILES ${RAINBOW_GRAPHICS_SRC})
 
+	file(GLOB RAINBOW_HEIMDALL_SRC src/Heimdall/*)
+	source_group("Source Files\\Heimdall" FILES ${RAINBOW_HEIMDALL_SRC})
+
 	file(GLOB RAINBOW_INPUT_SRC src/Input/*)
 	source_group("Source Files\\Input" FILES ${RAINBOW_INPUT_SRC})
 	file(GLOB RAINBOW_INPUT_SRC src/Input/impl/*)

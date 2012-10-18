@@ -80,7 +80,6 @@ namespace Rainbow
 	}
 }
 
-#include "Platform.h"
 #include "Common/impl/Chrono_Android.h"
 #include "Common/impl/Chrono_Apple.h"
 #include "Common/impl/Chrono_SDL.h"
