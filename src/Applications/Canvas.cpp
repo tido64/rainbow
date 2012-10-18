@@ -23,7 +23,7 @@ Canvas::Canvas() :
 	R_ASSERT(this->width  > 0, "Invalid framebuffer width");
 	R_ASSERT(this->height > 0, "Invalid framebuffer height");
 
-#ifdef RAINBOW_IOS
+#ifdef GL_ES_VERSION_2_0
 	this->vsh = Renderer::load_shader(GL_VERTEX_SHADER, canvas_vsh);
 #else
 	this->vsh = Renderer::load_shader(GL_VERTEX_SHADER, "Shaders/Canvas.vsh");
@@ -31,7 +31,7 @@ Canvas::Canvas() :
 	if (!this->vsh)
 		return;
 
-#ifdef RAINBOW_IOS
+#ifdef GL_ES_VERSION_2_0
 	this->function = Renderer::load_shader(GL_FRAGMENT_SHADER, canvaseraser_fsh);
 #else
 	this->function = Renderer::load_shader(GL_FRAGMENT_SHADER, "Shaders/CanvasEraser.fsh");
