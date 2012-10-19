@@ -6,10 +6,16 @@
 #include "Graphics/OpenGL.h"
 #include "Graphics/Renderer.h"
 #include "Graphics/Shader.h"
-#include "Graphics/Shaders/Shaders.h"
 #include "Graphics/Texture.h"
 #include "Graphics/TextureManager.h"
 #include "Input/Input.h"
+
+#ifdef GL_ES_VERSION_2_0
+#	include "Graphics/Shaders/Shaders.h"
+#else
+#	define canvas_vsh       "Shaders/Canvas.vsh"
+#	define canvaseraser_fsh "Shaders/CanvasEraser.fsh"
+#endif
 
 Canvas::Canvas() :
 	changed(false), down(false), fill(0.0f), brush_size(7),
@@ -23,19 +29,11 @@ Canvas::Canvas() :
 	R_ASSERT(this->width  > 0, "Invalid framebuffer width");
 	R_ASSERT(this->height > 0, "Invalid framebuffer height");
 
-#ifdef GL_ES_VERSION_2_0
 	this->vsh = Renderer::load_shader(GL_VERTEX_SHADER, canvas_vsh);
-#else
-	this->vsh = Renderer::load_shader(GL_VERTEX_SHADER, "Shaders/Canvas.vsh");
-#endif
 	if (!this->vsh)
 		return;
 
-#ifdef GL_ES_VERSION_2_0
 	this->function = Renderer::load_shader(GL_FRAGMENT_SHADER, canvaseraser_fsh);
-#else
-	this->function = Renderer::load_shader(GL_FRAGMENT_SHADER, "Shaders/CanvasEraser.fsh");
-#endif
 	if (!this->function)
 		return;
 

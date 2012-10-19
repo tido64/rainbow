@@ -6,7 +6,13 @@
 #include "Graphics/Pipeline.h"
 #include "Graphics/Renderer.h"
 #include "Graphics/Shader.h"
-#include "Graphics/Shaders/Shaders.h"
+
+#ifdef GL_ES_VERSION_2_0
+#	include "Graphics/Shaders/Shaders.h"
+#else
+#	define fixed2d_vsh "Shaders/Fixed2D.vsh"
+#	define fixed2d_fsh "Shaders/Fixed2D.fsh"
+#endif
 
 bool Renderer::init()
 {
@@ -28,19 +34,11 @@ bool Renderer::init()
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-#ifdef GL_ES_VERSION_2_0
 	vertex_shader = load_shader(GL_VERTEX_SHADER, fixed2d_vsh);
-#else
-	vertex_shader = load_shader(GL_VERTEX_SHADER, "Shaders/Fixed2D.vsh");
-#endif
 	if (!vertex_shader)
 		return false;
 
-#ifdef GL_ES_VERSION_2_0
 	fragment_shader = load_shader(GL_FRAGMENT_SHADER, fixed2d_fsh);
-#else
-	fragment_shader = load_shader(GL_FRAGMENT_SHADER, "Shaders/Fixed2D.fsh");
-#endif
 	if (!fragment_shader)
 		return false;
 
@@ -60,10 +58,28 @@ bool Renderer::init()
 
 void Renderer::release()
 {
+	if (index_buffer)
+	{
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+		glDeleteBuffers(1, &index_buffer);
+	}
 	glUseProgram(0);
 	delete pipeline;
 	delete fragment_shader;
 	delete vertex_shader;
+}
+
+Shader* Renderer::get_default_shader(const unsigned int type)
+{
+	switch (type)
+	{
+		case GL_FRAGMENT_SHADER:
+			return fragment_shader;
+		case GL_VERTEX_SHADER:
+			return vertex_shader;
+		default:
+			return nullptr;
+	}
 }
 
 void Renderer::clear()
@@ -73,6 +89,8 @@ void Renderer::clear()
 
 void Renderer::resize(const unsigned int width, const unsigned int height)
 {
+	R_ASSERT(pipeline, "Pipeline uninitialised");
+
 	const float u = 2.0f / width;
 	const float v = 2.0f / height;
 	const float ortho[] = {
@@ -81,8 +99,6 @@ void Renderer::resize(const unsigned int width, const unsigned int height)
 		0.0f, 0.0f, -1.0f,  0.0f,
 		0.0f, 0.0f,  0.0f,  1.0f
 	};
-
-	R_ASSERT(pipeline, "Pipeline uninitialised");
 	glUniformMatrix4fv(glGetUniformLocation(*pipeline, "mvp_matrix"), 1, GL_FALSE, ortho);
 	glViewport(0, 0, width, height);
 
@@ -91,22 +107,25 @@ void Renderer::resize(const unsigned int width, const unsigned int height)
 
 void Renderer::attach_pipeline(const Pipeline &program)
 {
+	if (program == bound_prg)
+		return;
+
 	glUseProgram(program);
+	bound_prg = program;
 }
 
 void Renderer::detach_pipeline()
 {
-	glUseProgram(*pipeline);
+	attach_pipeline(*pipeline);
 }
 
 void Renderer::bind_buffer(const unsigned int buffer)
 {
-	static unsigned int bound = 0;
-	if (buffer == bound)
+	if (buffer == bound_vbo)
 		return;
 
 	glBindBuffer(GL_ARRAY_BUFFER, buffer);
-	bound = buffer;
+	bound_vbo = buffer;
 }
 
 void Renderer::create_buffer(unsigned int &buffer, unsigned int &array_object)
@@ -209,10 +228,15 @@ void Renderer::update_buffer(const unsigned int buffer, const unsigned int size,
 	R_ASSERT(glGetError() == GL_NO_ERROR, "Failed to update buffer");
 }
 
+unsigned int Renderer::bound_prg = 0;
+unsigned int Renderer::bound_vbo = 0;
+
 unsigned int Renderer::index_buffer = 0;
+
 Pipeline *Renderer::pipeline = nullptr;
 Shader *Renderer::vertex_shader = nullptr;
 Shader *Renderer::fragment_shader = nullptr;
+
 const unsigned short Renderer::default_indices[] = {
 	  0,   1,   2,   2,   3,   0,   4,   5,   6,   6,   7,   4,
 	  8,   9,  10,  10,  11,   8,  12,  13,  14,  14,  15,  12,
