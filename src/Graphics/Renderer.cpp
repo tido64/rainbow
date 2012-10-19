@@ -152,6 +152,8 @@ void Renderer::create_buffer(unsigned int &buffer, unsigned int &array_object)
 
 	glBindVertexArray(0);
 
+#else
+	static_cast<void>(array_object);
 #endif
 }
 
@@ -159,6 +161,8 @@ void Renderer::delete_buffer(const unsigned int buffer, const unsigned int array
 {
 #ifndef RAINBOW_ANDROID
 	glDeleteVertexArrays(1, &array_object);
+#else
+	static_cast<void>(array_object);
 #endif
 	glDeleteBuffers(1, &buffer);
 }

@@ -50,7 +50,7 @@ void android_destroy_display(AInstance *ainstance);
 void android_init_display(AInstance *ainstance);
 void android_handle_event(struct android_app *app, int32_t cmd);
 int32_t android_handle_input(struct android_app *app, AInputEvent *event);
-int32_t android_handle_motion(AInputEvent *event);
+int32_t android_handle_motion(struct android_app *app, AInputEvent *event);
 
 
 void android_main(struct android_app *state)
@@ -250,34 +250,35 @@ void android_handle_event(struct android_app *app, int32_t cmd)
 	}
 }
 
-int32_t android_handle_input(struct android_app *, AInputEvent *event)
+int32_t android_handle_input(struct android_app *app, AInputEvent *event)
 {
 	switch (AInputEvent_getType(event))
 	{
 		case AINPUT_EVENT_TYPE_KEY:
 			return 0;
 		case AINPUT_EVENT_TYPE_MOTION:
-			return android_handle_motion(event);
+			return android_handle_motion(app, event);
 		default:
 			return 0;
 	}
 }
 
-int32_t android_handle_motion(AInputEvent *event)
+int32_t android_handle_motion(struct android_app *app, AInputEvent *event)
 {
 	const int32_t action = AMotionEvent_getAction(event);
 	if (action == AMOTION_EVENT_ACTION_POINTER_DOWN || action == AMOTION_EVENT_ACTION_POINTER_UP)
 		return 0;
 
+	const uint32_t height = static_cast<AInstance*>(app->userData)->height;
 	const size_t count = AMotionEvent_getPointerCount(event);
 	Touch *touches = new Touch[count];
 	for (size_t i = 0; i < count; ++i)
 	{
 		touches[i].hash = AMotionEvent_getPointerId(event, i);
 		touches[i].x    = AMotionEvent_getX(event, i);
-		touches[i].y    = AMotionEvent_getY(event, i);
+		touches[i].y    = height - AMotionEvent_getY(event, i);
 		touches[i].x0   = AMotionEvent_getHistoricalX(event, i, 0);
-		touches[i].y0   = AMotionEvent_getHistoricalY(event, i, 0);
+		touches[i].y0   = height - AMotionEvent_getHistoricalY(event, i, 0);
 	}
 	switch (action)
 	{
