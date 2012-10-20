@@ -25,6 +25,8 @@ namespace ConFuoco
 	public:
 		static inline Mixer& Instance();
 
+		Engine engine;  ///< Platform-specific audio engine.
+
 		/// Clear the wave bank.
 		inline void clear();
 
@@ -61,7 +63,6 @@ namespace ConFuoco
 		inline void update();
 
 	private:
-		Engine engine;  ///< Platform-specific audio engine.
 		WaveBank bank;  ///< Sound and stream factory.
 
 		inline Mixer();

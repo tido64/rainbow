@@ -1,19 +1,14 @@
 #ifndef CONFUOCO_STREAM_SL_H_
 #define CONFUOCO_STREAM_SL_H_
 
-#include <cstdio>
 #include <SLES/OpenSLES.h>
 
 #include "ConFuoco/Wave.h"
+#include "ConFuoco/impl/Engine_SL.h"
 
 namespace ConFuoco
 {
-	const size_t kAudioBufferSize = 4096;
-	const size_t kAudioBuffers = 4;
-
 	/// Stream a wave from disk.
-	///
-	/// \see http://opensource.apple.com/source/file/file-23/file/magic/magic.mime
 	///
 	/// Copyright 2012 Bifrost Entertainment. All rights reserved.
 	/// \author Tommy Nguyen
@@ -23,9 +18,9 @@ namespace ConFuoco
 		Stream();
 		virtual ~Stream();
 
-		size_t get(char *&buffer);
-
 		inline void update();
+
+		/* Implement Wave. */
 
 		virtual bool load(const char *const file) override;
 
@@ -38,17 +33,8 @@ namespace ConFuoco
 
 	private:
 		int loops;
-		size_t buffer_ptr;
-		FILE *file;
+		AudioPlayer player;
 
-		SLObjectItf player;
-		SLPlayItf play_itf;
-		SLVolumeItf volume_itf;
-		SLBufferQueueItf buffer_queue_itf;
-
-		char buffers[kAudioBuffers][kAudioBufferSize];
-
-		void preload();
 		void release();
 	};
 

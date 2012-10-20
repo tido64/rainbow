@@ -3,17 +3,13 @@
 #include "Platform.h"
 #ifdef RAINBOW_ANDROID
 
-#include <cstdio>
-
 #include "ConFuoco/impl/Sound_SL.h"
 
 namespace ConFuoco
 {
 	Sound::Sound(const unsigned int i) :
-		paused(false), count(i), current(0), size(0), buffer(nullptr)
-	{
-		this->players = new Player[this->count];
-	}
+		loaded(false), paused(false), count(i), current(0),
+		players(new AudioPlayer[this->count]) { }
 
 	Sound::~Sound()
 	{
@@ -23,54 +19,35 @@ namespace ConFuoco
 
 	bool Sound::load(const char *const file)
 	{
-		return false;
-
 		this->release();
-
-		FILE *fd = fopen(file, "rb");
-		if (!fd)
-			return false;
-
-		fseek(fd, 0, SEEK_END);
-		this->size = ftell(fd);
-		rewind(fd);
-
-		this->buffer = new char[this->size];
-		fread(this->buffer, 1, this->size, fd);
-		fclose(fd);
-
 		for (size_t i = 0; i < this->count; ++i)
 		{
-			/// stuff
+			if (!this->players[i].load(file))
+			{
+				this->release();
+				return false;
+			}
 		}
-
+		this->loaded = true;
 		return true;
 	}
 
 	void Sound::set_gain(const float gain)
 	{
-		if (!this->players)
-			return;
-
 		for (size_t i = 0; i < this->count; ++i)
-		{
-			SLVolumeItf &volume_itf = this->players[i].volume_itf;
-			(*volume_itf)->SetVolumeLevel(volume_itf, (1.0f - gain) * -100);
-		}
+			this->players[i].set_gain(gain);
 	}
 
 	void Sound::set_loops(const int) { }
 
 	void Sound::pause()
 	{
-		if (!this->players || this->paused)
+		if (this->paused)
 			return;
 
 		for (size_t i = 0; i < this->count; ++i)
-		{
-			Player &p = this->players[i];
-			(*p.play_itf)->SetPlayState(p.play_itf, SL_PLAYSTATE_PAUSED);
-		}
+			if (this->players[i].get_state() == SL_PLAYSTATE_PLAYING)
+				this->players[i].pause();
 		this->paused = true;
 	}
 
@@ -79,61 +56,34 @@ namespace ConFuoco
 		if (this->paused)
 		{
 			for (size_t i = 0; i < this->count; ++i)
-			{
-				SLuint32 state;
-				SLPlayItf &play_itf = this->players[i].play_itf;
-				(*play_itf)->GetPlayState(play_itf, &state);
-				if (state == SL_PLAYSTATE_PAUSED)
-					(*play_itf)->SetPlayState(play_itf, SL_PLAYSTATE_PLAYING);
-			}
+				if (this->players[i].get_state() == SL_PLAYSTATE_PAUSED)
+					this->players[i].play();
 			this->paused = false;
 		}
 		else
 		{
-			SLuint32 state;
-			Player &p = this->players[this->current];
-			(*p.play_itf)->GetPlayState(p.play_itf, &state);
-			if (state == SL_PLAYSTATE_PLAYING)
-			{
-				(*p.play_itf)->SetPlayState(p.play_itf, SL_PLAYSTATE_STOPPED);
-				(*p.buffer_queue_itf)->Clear(p.buffer_queue_itf);
-			}
-			(*p.buffer_queue_itf)->Enqueue(p.buffer_queue_itf, this->buffer, this->size);
-			(*p.play_itf)->SetPlayState(p.play_itf, SL_PLAYSTATE_PLAYING);
+			AudioPlayer &p = this->players[this->current];
+			p.stop();
+			p.play();
 			++this->current %= this->count;
 		}
 	}
 
 	void Sound::stop()
 	{
-		if (!this->players)
-			return;
-
 		for (size_t i = 0; i < this->count; ++i)
-		{
-			Player &p = this->players[i];
-			(*p.play_itf)->SetPlayState(p.play_itf, SL_PLAYSTATE_STOPPED);
-			(*p.buffer_queue_itf)->Clear(p.buffer_queue_itf);
-		}
+			this->players[i].stop();
 		this->paused = false;
 	}
 
 	void Sound::release()
 	{
-		this->stop();
-		if (this->players)
+		if (this->loaded)
 		{
 			for (size_t i = 0; i < this->count; ++i)
-			{
-				SLObjectItf &player = this->players[i].player;
-				(*player)->Destroy(player);
-			}
-			memset(this->players, 0, this->count * sizeof(Player));
-		}
-		if (this->buffer)
-		{
-			delete[] this->buffer;
-			this->buffer = nullptr;
+				this->players[i].release();
+			this->current = 0;
+			this->loaded = false;
 		}
 	}
 }

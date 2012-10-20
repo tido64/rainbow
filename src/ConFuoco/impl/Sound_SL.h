@@ -1,26 +1,25 @@
 #ifndef CONFUOCO_SOUND_SL_H_
 #define CONFUOCO_SOUND_SL_H_
 
-#include <cstdlib>
 #include <SLES/OpenSLES.h>
 
 #include "ConFuoco/Wave.h"
+#include "ConFuoco/impl/Engine_SL.h"
 
 namespace ConFuoco
 {
-	struct Player
-	{
-		SLObjectItf player;
-		SLPlayItf play_itf;
-		SLVolumeItf volume_itf;
-		SLBufferQueueItf buffer_queue_itf;
-	};
-
+	/// Sound uses the same interface as Stream but can have multiple instances
+	/// that can be played simultaneously.
+	///
+	/// Copyright 2012 Bifrost Entertainment. All rights reserved.
+	/// \author Tommy Nguyen
 	class Sound : public Wave
 	{
 	public:
 		Sound(const unsigned int i);
 		virtual ~Sound();
+
+		/* Implement Wave. */
 
 		virtual bool load(const char *const file) override;
 
@@ -32,12 +31,11 @@ namespace ConFuoco
 		virtual void stop() override;
 
 	private:
+		bool loaded;
 		bool paused;
 		const size_t count;
 		size_t current;
-		size_t size;
-		char *buffer;
-		Player *players;
+		AudioPlayer *players;
 
 		void release();
 	};
