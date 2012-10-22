@@ -6,9 +6,8 @@ if(UNIX)
 	else()
 		set(RAINBOW_CSTD   "-std=c99")
 		set(RAINBOW_CXXSTD "-std=c++11")
-
-		# Common C-/C++ compiler flags
 		if(NOT APPLE)
+			# Common C-/C++ compiler flags
 			set(RAINBOW_COMMON_CFLAGS "${RAINBOW_COMMON_CFLAGS} -fstack-protector -fpie -march=native")
 		endif()
 
@@ -19,12 +18,11 @@ if(UNIX)
 		endif()
 	endif()
 
-	# Set CFLAGS
-	set(CMAKE_C_FLAGS "-pipe ${RAINBOW_CSTD} -w ${RAINBOW_COMMON_CFLAGS}")
+	# Set CFLAGS and CXXFLAGS
+	set(CMAKE_C_FLAGS   "-pipe ${RAINBOW_CSTD} -w ${RAINBOW_COMMON_CFLAGS}")
+	set(CMAKE_CXX_FLAGS "-pipe ${RAINBOW_CXXSTD} ${RAINBOW_CXX_WARNINGS} ${RAINBOW_COMMON_CFLAGS}")
 
 	if(NOT APPLE)
-		# Set CXXFLAGS
-		set(CMAKE_CXX_FLAGS "-pipe ${RAINBOW_CXXSTD} ${RAINBOW_CXX_WARNINGS} ${RAINBOW_COMMON_CFLAGS}")
 		if(CMAKE_CXX_COMPILER MATCHES "clang")
 			set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libstdc++")
 		endif()

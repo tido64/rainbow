@@ -12,11 +12,7 @@
 #endif
 
 #define DSFMT_MEXP 19937
-#ifndef RAINBOW_IOS  // Workaround Xcode's super inclusion algorithm
-#	include <dSFMT/dSFMT.h>
-#else
-#	include "dSFMT.h"
-#endif
+#include <dSFMT/dSFMT.h>
 
 #if defined(RAINBOW_UNIX)
 #	pragma GCC diagnostic pop

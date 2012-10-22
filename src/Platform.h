@@ -9,7 +9,12 @@
 #if defined(__ANDROID__)
 #	define RAINBOW_ANDROID
 #elif defined(__APPLE__)
-#	define RAINBOW_IOS
+#	if !defined(__IPHONE_OS_VERSION_MIN_REQUIRED)
+#		define RAINBOW_MAC
+#		define RAINBOW_UNIX
+#	else
+#		define RAINBOW_IOS
+#	endif
 #elif defined(__linux)
 #	define RAINBOW_UNIX
 #elif defined(_WIN32)

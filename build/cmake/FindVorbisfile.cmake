@@ -10,6 +10,7 @@
 
 find_path(VORBISFILE_INCLUDE_DIR "vorbis/vorbisfile.h"
 	/usr/include               # Linux
+	/opt/local/usr/include     # Mac OS X (MacPorts)
 	/usr/i486-mingw32/include  # MinGW
 	../libs/include            # Windows
 )
