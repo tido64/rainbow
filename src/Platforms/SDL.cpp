@@ -8,7 +8,7 @@
 #	include <GL/glew.c>
 #endif
 
-#include <SDL/SDL.h>
+#include <SDL.h>
 
 #ifdef RAINBOW_TEST
 #	include "../tests/test.h"

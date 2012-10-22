@@ -1,5 +1,5 @@
 #ifdef RAINBOW_SDL
-#include <SDL/SDL_timer.h>
+#include <SDL_timer.h>
 
 /// SDL-implementation of Chrono.
 ///

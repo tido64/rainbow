@@ -5,7 +5,7 @@
 #ifdef RAINBOW_BUTTONS
 #ifdef RAINBOW_SDL
 
-#include <SDL/SDL_keyboard.h>
+#include <SDL_keyboard.h>
 
 Key Key::from_raw(const SDL_keysym *keysym)
 {
