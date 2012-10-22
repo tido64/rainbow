@@ -56,7 +56,7 @@ template<class T>
 void TreeNode<T>::set_parent(T *n)
 {
 	if (this->parent)
-		this->parent->remove_child(static_cast<T*>(this));
+		this->parent->children.remove(static_cast<T*>(this));
 	n->add_child(static_cast<T*>(this));
 }
 
