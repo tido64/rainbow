@@ -20,7 +20,7 @@ function init()
 	batch:set_texture(assets)
 	kim = Kim.new(batch:add(448, 108, 100, 100))
 
-	rainbow.scenegraph:add_batch(batch)
+	kim.node = rainbow.scenegraph:add_batch(batch)
 end
 
 function update(dt)

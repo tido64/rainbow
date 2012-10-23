@@ -1,4 +1,4 @@
---! Transition of sprite properties.
+--! Transition of node properties.
 --!
 --! There is no clean way to implement this in C++ because it doesn't really
 --! fit into the architecture anywhere. There are many situations where
@@ -101,16 +101,17 @@ do
 		self.elapsed = self.elapsed + dt
 		local progress = self.elapsed / self.duration
 		if progress >= 1.0 then
-			self.sprite:set_position(self.final_x, self.final_y)
+			self.move(self.node, self.x1 - self.x, self.y1 - self.y)
 			unregister(self)
 		else
-			local x = self.transition(self.x, self.final_x, progress)
-			local y = self.transition(self.y, self.final_y, progress)
-			self.sprite:set_position(x, y)
+			local x = self.transition(self.x0, self.x1, progress)
+			local y = self.transition(self.y0, self.y1, progress)
+			self.move(self.node, x - self.x, y - self.y)
+			self.x, self.y = x, y
 		end
 	end
 
-	function rainbow.transition.move(sprite, x, y, duration, method)
+	function rainbow.transition.move(node, x, y, duration, method)
 		method = method or effects.linear
 		local self = {
 			cancel = unregister,
@@ -119,9 +120,19 @@ do
 		}
 		self.duration = duration
 		self.elapsed = 0
-		self.final_x, self.final_y = x, y
-		self.x, self.y = sprite:get_position()
-		self.sprite = sprite
+		self.x1, self.y1 = x, y
+		if type(node) == "table" then
+			assert(node.get_position, "Object must implement :get_position()")
+			self.move = function(sprite, x, y) sprite:move(x, y) end
+			self.x0, self.y0 = node:get_position()
+		elseif type(node) == "userdata" then
+			self.move = function(node, x, y) rainbow.scenegraph:move(node, x, y) end
+			self.x0, self.y0 = 0, 0
+		else
+			error("Invalid object")
+		end
+		self.x, self.y = self.x0, self.y0
+		self.node = node
 		register(self)
 		return self
 	end
