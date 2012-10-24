@@ -37,7 +37,7 @@ public:
 	void set_text(const char *);
 
 	/// Move label by (x,y).
-	inline void move(const int x, const int y);
+	inline void move(const float x, const float y);
 
 	/// Draw text at previously set position.
 	virtual void draw() override;
@@ -89,7 +89,7 @@ void Label::set_position(const int x, const int y)
 	this->stale |= stale_buffer;
 }
 
-void Label::move(const int x, const int y)
+void Label::move(const float x, const float y)
 {
 	this->position.x += x;
 	this->position.y += y;
