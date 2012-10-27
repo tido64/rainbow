@@ -9,7 +9,7 @@
 #include "Graphics/FontAtlas.h"
 #include "Graphics/OpenGL.h"
 
-FontAtlas::FontAtlas(const float pt) : pt(pt), texture(0)
+FontAtlas::FontAtlas(const float pt) : height(0), pt(pt), texture(0)
 {
 	for (size_t i = 0; i < chars; ++i)
 		this->charset[i].code = i + ascii_offset;
@@ -187,6 +187,7 @@ bool FontAtlas::load(const Data &font)
 		// Advance to next "slot" in texture
 		w_offset += width;
 	}
+	this->height = face->size->metrics.height / 64;
 	FT_Done_Face(face);
 	FT_Done_FreeType(lib);
 

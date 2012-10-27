@@ -46,10 +46,21 @@ void Label::update()
 			}
 
 			this->vertices = 0;
+			size_t start = 0;
 			SpriteVertex *vx = this->vx;
 			Vec2f pen = this->position;
 			for (const unsigned char *text = reinterpret_cast<unsigned char*>(this->text); *text;)
 			{
+				if (*text == 0xa)
+				{
+					this->align(this->position.x - pen.x, start, this->vertices);
+					pen.x = this->position.x;
+					start = this->vertices;
+					pen.y -= this->font->get_height();
+					++text;
+					continue;
+				}
+
 				size_t bytes;
 				const unsigned long c = Rainbow::utf8_decode(text, bytes);
 				if (!bytes)
@@ -73,17 +84,8 @@ void Label::update()
 				pen.x += glyph->advance - glyph->left;
 				++this->vertices;
 			}
+			this->align(this->position.x - pen.x, start, this->vertices);
 			this->vertices = (this->vertices << 2) + (this->vertices << 1);
-
-			if (this->alignment != LEFT)
-			{
-				float offset = this->position.x - pen.x;
-				if (this->alignment == CENTER)
-					offset *= 0.5f;
-
-				for (size_t i = 0; i < (this->size << 2); ++i)
-					this->vx[i].position.x += offset;
-			}
 		}
 		if (this->stale & stale_color)
 		{
@@ -91,5 +93,19 @@ void Label::update()
 				this->vx[i].color = this->color;
 		}
 		this->stale = 0u;
+	}
+}
+
+void Label::align(float offset, size_t start, size_t end)
+{
+	if (this->alignment != LEFT)
+	{
+		if (this->alignment == CENTER)
+			offset *= 0.5f;
+
+		start <<= 2;
+		end <<= 2;
+		for (size_t i = start; i < end; ++i)
+			this->vx[i].position.x += offset;
 	}
 }

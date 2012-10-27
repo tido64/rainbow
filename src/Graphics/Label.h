@@ -60,6 +60,12 @@ private:
 	SpriteVertex *vx;          ///< Vertex array containing the text.
 	SmartPtr<FontAtlas> font;  ///< The font used in this label.
 	Vec2f position;            ///< Position of the text (top left).
+
+	/// Align individual characters.
+	/// \param length  Negative length of characters from \p start to \p end.
+	/// \param start   First character to align.
+	/// \param end     End character.
+	void align(float length, size_t start, size_t end);
 };
 
 Label::Label() :

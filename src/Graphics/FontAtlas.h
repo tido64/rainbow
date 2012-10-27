@@ -37,6 +37,7 @@ public:
 	inline void bind() const;
 
 	inline const FontGlyph* get_glyph(const unsigned long c) const;
+	inline short get_height() const;
 
 	/// Load font and create a texture atlas.
 	bool load(const Data &font);
@@ -48,7 +49,8 @@ protected:
 	static const unsigned short int padding = 3;   ///< Padding around font glyph texture.
 
 private:
-	const float pt;
+	short height;          ///< Font line height.
+	const float pt;        ///< Font point size.
 	unsigned int texture;  ///< Texture name.
 	Colorb color;          ///< Font colour.
 	FontGlyph charset[chars + FONTATLAS_EXTENDED];  ///< Character set.
@@ -79,6 +81,11 @@ const FontGlyph* FontAtlas::get_glyph(const unsigned long c) const
 #endif
 
 	return &this->charset[static_cast<unsigned char>(c) - ascii_offset];
+}
+
+short FontAtlas::get_height() const
+{
+	return this->height;
 }
 
 #endif
