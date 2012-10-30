@@ -8,17 +8,20 @@
 
 namespace Heimdall
 {
-	Gatekeeper::Gatekeeper() :
-		paused(false), width(0), height(0), time_i(10), director(nullptr),
-		info_node(nullptr)
-	{
-		this->fps_label.set_color(Colorb(0xff, 0x00, 0x00));
-		this->fps_label.set_text("FPS: 60.0");
-		this->tex_label.set_color(Colorb(0xff, 0x00, 0x00));
+	const float kFrames = 10.0f;
+	const float kThreshold = 1000.0f / 60.0f * kFrames;
+	//const char kControlFormat[] = "\u009b \u00bb";
+	const char kInfoFormat[] = "FPS: %.1f\nVMEM: %.2f MBs (peaked at %.2f MBs)";
 
+	Gatekeeper::Gatekeeper() :
+		time(0.0f), width(0), height(0), director(nullptr), info_node(nullptr)
+	{
+		sprintf(this->info_text, kInfoFormat, 60.0f, 0.0f, 0.0f);
+		this->info_label.set_color(Colorb(0xff, 0x00, 0x00));
+		this->info_label.set_text(this->info_text);
 		this->info_node = new SceneGraph::Node();
-		this->info_node->add_child(&this->fps_label);
-		this->info_node->add_child(&this->tex_label);
+		this->info_node->add_child(&this->info_label);
+
 		this->scenegraph.add_child(this->info_node);
 	}
 
@@ -48,39 +51,24 @@ namespace Heimdall
 			type.copy(Inconsolata_otf, sizeof(Inconsolata_otf));
 			this->font->load(type);
 		}
-		this->fps_label.set_font(this->font.raw_ptr());
-		this->tex_label.set_font(this->font.raw_ptr());
-
-		const int x = this->width / 128;
-		const int y = pt + (pt >> 1);
-		this->fps_label.set_position(x, this->height - y);
-		this->tex_label.set_position(x, this->height - y - y);
+		this->info_label.set_font(this->font.raw_ptr());
+		this->info_label.set_position(this->width / 128, this->height - this->font->get_height());
 	}
 
 	void Gatekeeper::update(const unsigned long t)
 	{
-		if (!this->paused)
-			this->director->update(t);
+		this->director->update(t);
 
-		// Update frames/second
-		this->time[--this->time_i] = Chrono::Instance().diff();
-		if (!this->time_i)
-		{
-			float fps = 0.0f;
-			for (; this->time_i < 10; ++this->time_i)
-				fps += this->time[this->time_i];
-			sprintf(this->fps_text, "FPS: %.1f", 10000.0f / fps);
-			this->fps_label.set_text(this->fps_text);
-			this->time_i = 10;
-		}
-
-		// Update texture memory usage
-		if (this->info_node->enabled)
+		this->time += Chrono::Instance().diff();
+		if (this->time >= kThreshold)
 		{
 			double used, peak;
 			TextureManager::Instance().get_usage(used, peak, peak);
-			sprintf(this->tex_text, "VMEM: %.2f MBs (peaked at %.2f MBs)", used, peak);
-			this->tex_label.set_text(this->tex_text);
+
+			sprintf(this->info_text, kInfoFormat, 1000.0f / (this->time / kFrames), used, peak);
+			this->info_label.set_text(this->info_text);
+
+			this->time = 0.0f;
 		}
 
 		this->scenegraph.update();

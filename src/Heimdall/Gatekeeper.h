@@ -25,9 +25,6 @@ namespace Heimdall
 		void init(const Data &);
 		void set_video(const int width, const int height);
 
-		inline void pause();
-		inline void step();
-
 		inline void toggle_info();
 
 		void update(const unsigned long t = 0);
@@ -35,10 +32,9 @@ namespace Heimdall
 		inline void on_memory_warning();
 
 	private:
-		bool paused;
+		float time;
 		int width;
 		int height;
-		size_t time_i;
 
 		Rainbow::Director *director;
 		SmartPtr<FontAtlas> font;
@@ -46,12 +42,9 @@ namespace Heimdall
 		SceneGraph::Node *info_node;
 		SceneGraph::Node scenegraph;
 
-		char fps_text[64];
-		char tex_text[64];
-		Label fps_label;
-		Label tex_label;
+		Label info_label;
 
-		unsigned long time[10];
+		char info_text[128];
 	};
 
 	void Gatekeeper::draw()
@@ -60,20 +53,9 @@ namespace Heimdall
 		this->scenegraph.draw();
 	}
 
-	void Gatekeeper::pause()
-	{
-		this->paused = !this->paused;
-	}
-
 	void Gatekeeper::toggle_info()
 	{
 		this->info_node->enabled = !this->info_node->enabled;
-	}
-
-	void Gatekeeper::step()
-	{
-		this->update(1000 / 60);
-		this->paused = true;
 	}
 
 	void Gatekeeper::on_memory_warning()
