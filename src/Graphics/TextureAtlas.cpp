@@ -9,7 +9,7 @@ TextureAtlas::TextureAtlas(const Data &img) : name(0), width(0), height(0)
 {
 	R_ASSERT(img, "No data provided");
 
-	void *data;
+	void *data = nullptr;
 	ImageInfo info;
 	if (!ImageLoader::load(data, info, img))
 		return;
@@ -28,7 +28,7 @@ TextureAtlas::TextureAtlas(const Data &img) : name(0), width(0), height(0)
 	this->width = info.width;
 	this->height = info.height;
 
-	GLint format, internal;
+	GLint format = -1, internal = -1;
 	switch (info.compressed)
 	{
 	#ifdef GL_OES_compressed_ETC1_RGB8_texture

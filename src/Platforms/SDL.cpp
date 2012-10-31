@@ -10,6 +10,12 @@
 
 #include <SDL.h>
 
+#ifdef RAINBOW_MAC
+#	define R_META KMOD_META
+#else
+#	define R_META KMOD_LCTRL
+#endif
+
 #ifdef RAINBOW_TEST
 #	include "../tests/test.h"
 #endif
@@ -113,7 +119,7 @@ int main(int argc, char *argv[])
 					active = (event.active.gain != 0);
 					break;
 				case SDL_KEYDOWN:
-					if (event.key.keysym.sym == SDLK_q && (event.key.keysym.mod & KMOD_LCTRL))
+					if (event.key.keysym.sym == SDLK_q && (event.key.keysym.mod & R_META))
 					{
 						active = false;
 						done = true;

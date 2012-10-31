@@ -21,7 +21,7 @@ set(CMAKE_BUILD_TYPE Debug)
 
 # Platform-specifics
 include(${LOCAL_LIBRARY_BUILD}/MinGW.cmake)
-include(${LOCAL_LIBRARY_BUILD}/MSVC.cmake)
+include(${LOCAL_LIBRARY_BUILD}/Project.cmake)
 include(${LOCAL_LIBRARY_BUILD}/Unix.cmake)
 
 # Target
