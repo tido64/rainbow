@@ -12,10 +12,7 @@ if(UNIX)
 		endif()
 
 		# Compiler warning flags
-		set(RAINBOW_CXX_WARNINGS "-Wall -Wextra -Wold-style-cast -Woverloaded-virtual -Wsign-promo -pedantic")
-		if(CMAKE_CXX_COMPILER MATCHES "clang")
-			set(RAINBOW_CXX_WARNINGS "${RAINBOW_CXX_WARNINGS} -Werror")
-		endif()
+		set(RAINBOW_CXX_WARNINGS "-Werror -pedantic -Wall -Wextra -Wold-style-cast -Woverloaded-virtual -Wsign-promo")
 	endif()
 
 	# Set CFLAGS and CXXFLAGS
