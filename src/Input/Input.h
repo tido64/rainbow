@@ -34,9 +34,6 @@ public:
 	/// Reset input subscription list.
 	inline void reset();
 
-	/// Set active Lua state.
-	inline void set_state(lua_State *L);
-
 	/// Subscribe to input events.
 	/// \param t      The object that wants to subscribe.
 	/// \param flags  Events to subscribe to.
@@ -72,11 +69,6 @@ Input::Input(lua_State *L) : lua_state(L) { }
 void Input::reset()
 {
 	this->touch_subscribers.clear();
-}
-
-void Input::set_state(lua_State *L)
-{
-	this->lua_state = L;
 }
 
 void Input::unsubscribe(Touchable *const t)

@@ -37,9 +37,9 @@
 		} \
 	} while (0)
 
-#define LUA_CHECK(L, expr, reason) \
+#define LUA_CHECK(L, expr, ...) \
 	if (!(expr)) \
-		luaL_error(L, reason)
+		luaL_error(L, __VA_ARGS__)
 
 #define R_ASSERT(expr, reason) \
 	do \
