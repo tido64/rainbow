@@ -3,9 +3,8 @@
 #ifdef USE_CANVAS
 #include "Algorithm.h"
 #include "Applications/Canvas.h"
-#include "Graphics/OpenGL.h"
 #include "Graphics/Renderer.h"
-#include "Graphics/Shader.h"
+#include "Graphics/ShaderManager.h"
 #include "Graphics/Texture.h"
 #include "Graphics/TextureManager.h"
 #include "Input/Input.h"
@@ -17,10 +16,12 @@
 #	define canvaseraser_fsh "Shaders/CanvasEraser.fsh"
 #endif
 
+int Canvas::canvas_program = -1;
+
 Canvas::Canvas() :
 	changed(false), down(false), fill(0.0f), brush_size(7),
-	width(0), height(0), background_tex(0), canvas_fb(0), canvas_tex(0),
-	vsh(nullptr), function(nullptr), brush(nullptr)
+	width(0), height(0), background_tex(0), canvas_buffer(0), canvas_fb(0),
+	canvas_tex(0), canvas_vao(0), brush(nullptr)
 {
 	GLint viewport[4];
 	glGetIntegerv(GL_VIEWPORT, viewport);
@@ -29,32 +30,30 @@ Canvas::Canvas() :
 	R_ASSERT(this->width  > 0, "Invalid framebuffer width");
 	R_ASSERT(this->height > 0, "Invalid framebuffer height");
 
-	this->vsh = Renderer::load_shader(GL_VERTEX_SHADER, canvas_vsh);
-	if (!this->vsh)
-		return;
+	if (canvas_program < 0)
+	{
+		int shaders[2];
+		shaders[0] = ShaderManager::Instance->create_shader(
+				Shader::VERTEX_SHADER, canvas_vsh);
+		shaders[1] = ShaderManager::Instance->create_shader(
+				Shader::FRAGMENT_SHADER, canvaseraser_fsh);
+		canvas_program = ShaderManager::Instance->create_program(shaders, 2);
 
-	this->function = Renderer::load_shader(GL_FRAGMENT_SHADER, canvaseraser_fsh);
-	if (!this->function)
-		return;
+		const float u = 2.0f / this->width;
+		const float v = 2.0f / this->height;
+		const float ortho[] = {
+			   u, 0.0f,  0.0f, -1.0f,
+			0.0f,    v,  0.0f, -1.0f,
+			0.0f, 0.0f, -1.0f,  0.0f,
+			0.0f, 0.0f,  0.0f,  1.0f
+		};
 
-	this->draw_program.attach_shader(this->vsh);
-	this->draw_program.attach_shader(this->function);
-	if (!this->draw_program.link())
-		return;
-
-	const float u = 2.0f / this->width;
-	const float v = 2.0f / this->height;
-	const float ortho[] = {
-		   u, 0.0f,  0.0f, -1.0f,
-		0.0f,    v,  0.0f, -1.0f,
-		0.0f, 0.0f, -1.0f,  0.0f,
-		0.0f, 0.0f,  0.0f,  1.0f
-	};
-
-	Renderer::attach_pipeline(this->draw_program);
-	glUniformMatrix4fv(glGetUniformLocation(this->draw_program, "mvp_matrix"), 1, GL_FALSE, ortho);
-	glUniform1i(glGetUniformLocation(this->draw_program, "canvas"), 1);
-	Renderer::detach_pipeline();
+		const unsigned int gl_program = ShaderManager::Instance->get_program(canvas_program);
+		ShaderManager::Instance->use(canvas_program);
+		glUniformMatrix4fv(glGetUniformLocation(gl_program, "mvp_matrix"), 1, GL_FALSE, ortho);
+		glUniform1i(glGetUniformLocation(gl_program, "canvas"), 1);
+		ShaderManager::Instance->reset();
+	}
 
 	glGenFramebuffers(1, &this->canvas_fb);
 	glBindFramebuffer(GL_FRAMEBUFFER, this->canvas_fb);
@@ -104,10 +103,7 @@ Canvas::~Canvas()
 {
 	Input::Instance->unsubscribe(this);
 	this->release();
-
 	Renderer::delete_buffer(this->canvas_buffer, this->canvas_vao);
-	delete this->function;
-	delete this->vsh;
 }
 
 void Canvas::clear()
@@ -208,7 +204,7 @@ void Canvas::set_foreground(const unsigned int color)
 
 void Canvas::draw()
 {
-	Renderer::attach_pipeline(this->draw_program);
+	ShaderManager::Instance->use(canvas_program);
 	TextureManager::Instance().bind(this->canvas_tex);
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, this->background_tex);
@@ -216,7 +212,7 @@ void Canvas::draw()
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glActiveTexture(GL_TEXTURE0);
 	TextureManager::Instance().bind();
-	Renderer::detach_pipeline();
+	ShaderManager::Instance->reset();
 }
 
 void Canvas::update()

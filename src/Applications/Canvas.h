@@ -4,11 +4,9 @@
 #ifdef USE_CANVAS
 #include "Common/SpriteVertex.h"
 #include "Graphics/Drawable.h"
-#include "Graphics/Pipeline.h"
 #include "Input/Touch.h"
 #include "Input/Touchable.h"
 
-class  Shader;
 struct Texture;
 
 /// Canvas is a painting application.
@@ -66,6 +64,8 @@ public:
 	virtual void touch_moved(const Touch *const touches, const size_t count) override;
 
 private:
+	static int canvas_program;
+
 	bool changed;             ///< Whether an update is needed.
 	bool down;                ///< Whether the brush is down.
 	Colorb foreground_color;  ///< Brush colour.
@@ -79,12 +79,9 @@ private:
 	unsigned int canvas_tex;      ///< Canvas texture.
 	unsigned int canvas_vao;      ///< Canvas vertex array object.
 
-	const Shader *vsh;       ///< Canvas vertex shader.
-	const Shader *function;  ///< Function (fragment shader).
 	const Texture *brush;    ///< Brush texture.
 
 	Vec2f prev_point;         ///< Previous touch point.
-	Pipeline draw_program;    ///< Canvas draw pipeline.
 	SpriteVertex sprite[4];   ///< Canvas sprite.
 	Touch touch;              ///< Current touch point.
 

@@ -2,10 +2,8 @@
 
 #include "Common/Data.h"
 #include "Common/SpriteVertex.h"
-#include "Graphics/OpenGL.h"
-#include "Graphics/Pipeline.h"
 #include "Graphics/Renderer.h"
-#include "Graphics/Shader.h"
+#include "Graphics/ShaderManager.h"
 
 #ifdef GL_ES_VERSION_2_0
 #	include "Graphics/Shaders/Shaders.h"
@@ -34,20 +32,13 @@ bool Renderer::init()
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	vertex_shader = load_shader(GL_VERTEX_SHADER, fixed2d_vsh);
-	if (!vertex_shader)
+	const char *shaders[] = { fixed2d_vsh, fixed2d_fsh };
+	ShaderManager::Instance = new ShaderManager(shaders, 2);
+	if (!*ShaderManager::Instance)
+	{
+		delete ShaderManager::Instance;
 		return false;
-
-	fragment_shader = load_shader(GL_FRAGMENT_SHADER, fixed2d_fsh);
-	if (!fragment_shader)
-		return false;
-
-	pipeline = new Pipeline();
-	pipeline->attach_shader(vertex_shader);
-	pipeline->attach_shader(fragment_shader);
-	if (!pipeline->link())
-		return false;
-	pipeline->use();
+	}
 
 	glGenBuffers(1, &index_buffer);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffer);
@@ -64,22 +55,7 @@ void Renderer::release()
 		glDeleteBuffers(1, &index_buffer);
 	}
 	glUseProgram(0);
-	delete pipeline;
-	delete fragment_shader;
-	delete vertex_shader;
-}
-
-Shader* Renderer::get_default_shader(const unsigned int type)
-{
-	switch (type)
-	{
-		case GL_FRAGMENT_SHADER:
-			return fragment_shader;
-		case GL_VERTEX_SHADER:
-			return vertex_shader;
-		default:
-			return nullptr;
-	}
+	delete ShaderManager::Instance;
 }
 
 void Renderer::clear()
@@ -89,8 +65,6 @@ void Renderer::clear()
 
 void Renderer::resize(const unsigned int width, const unsigned int height)
 {
-	R_ASSERT(pipeline, "Pipeline uninitialised");
-
 	const float u = 2.0f / width;
 	const float v = 2.0f / height;
 	const float ortho[] = {
@@ -99,24 +73,11 @@ void Renderer::resize(const unsigned int width, const unsigned int height)
 		0.0f, 0.0f, -1.0f,  0.0f,
 		0.0f, 0.0f,  0.0f,  1.0f
 	};
-	glUniformMatrix4fv(glGetUniformLocation(*pipeline, "mvp_matrix"), 1, GL_FALSE, ortho);
+	glUniformMatrix4fv(glGetUniformLocation(
+			ShaderManager::Instance->get_program(0), "mvp_matrix"), 1, GL_FALSE, ortho);
 	glViewport(0, 0, width, height);
 
 	R_ASSERT(glGetError() == GL_NO_ERROR, "Failed to initialise OpenGL viewport");
-}
-
-void Renderer::attach_pipeline(const Pipeline &program)
-{
-	if (program == bound_prg)
-		return;
-
-	glUseProgram(program);
-	bound_prg = program;
-}
-
-void Renderer::detach_pipeline()
-{
-	attach_pipeline(*pipeline);
 }
 
 void Renderer::bind_buffer(const unsigned int buffer)
@@ -141,14 +102,14 @@ void Renderer::create_buffer(unsigned int &buffer, unsigned int &array_object)
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffer);
 
-	glVertexAttribPointer(Pipeline::COLOR_LOCATION, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(SpriteVertex), 0);
-	glEnableVertexAttribArray(Pipeline::COLOR_LOCATION);
+	glVertexAttribPointer(Shader::COLOR, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(SpriteVertex), 0);
+	glEnableVertexAttribArray(Shader::COLOR);
 
-	glVertexAttribPointer(Pipeline::TEXCOORD_LOCATION, 2, GL_FLOAT, GL_FALSE, sizeof(SpriteVertex), SpriteVertex::tx_offset);
-	glEnableVertexAttribArray(Pipeline::TEXCOORD_LOCATION);
+	glVertexAttribPointer(Shader::TEXCOORD, 2, GL_FLOAT, GL_FALSE, sizeof(SpriteVertex), SpriteVertex::tx_offset);
+	glEnableVertexAttribArray(Shader::TEXCOORD);
 
-	glVertexAttribPointer(Pipeline::VERTEX_LOCATION, 2, GL_FLOAT, GL_TRUE, sizeof(SpriteVertex), SpriteVertex::vx_offset);
-	glEnableVertexAttribArray(Pipeline::VERTEX_LOCATION);
+	glVertexAttribPointer(Shader::VERTEX, 2, GL_FLOAT, GL_TRUE, sizeof(SpriteVertex), SpriteVertex::vx_offset);
+	glEnableVertexAttribArray(Shader::VERTEX);
 
 	glBindVertexArray(0);
 
@@ -179,9 +140,9 @@ void Renderer::draw_buffer(const unsigned int array_object, const unsigned int c
 
 	bind_buffer(array_object);
 
-	glVertexAttribPointer(Pipeline::COLOR_LOCATION, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(SpriteVertex), 0);
-	glVertexAttribPointer(Pipeline::TEXCOORD_LOCATION, 2, GL_FLOAT, GL_FALSE, sizeof(SpriteVertex), SpriteVertex::tx_offset);
-	glVertexAttribPointer(Pipeline::VERTEX_LOCATION, 2, GL_FLOAT, GL_TRUE, sizeof(SpriteVertex), SpriteVertex::vx_offset);
+	glVertexAttribPointer(Shader::COLOR, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(SpriteVertex), 0);
+	glVertexAttribPointer(Shader::TEXCOORD, 2, GL_FLOAT, GL_FALSE, sizeof(SpriteVertex), SpriteVertex::tx_offset);
+	glVertexAttribPointer(Shader::VERTEX, 2, GL_FLOAT, GL_TRUE, sizeof(SpriteVertex), SpriteVertex::vx_offset);
 
 	glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_SHORT, nullptr);
 
@@ -194,33 +155,13 @@ void Renderer::draw_elements(const SpriteVertex *vertices, const unsigned int co
 {
 	bind_buffer(0);
 
-	glVertexAttribPointer(Pipeline::COLOR_LOCATION, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(SpriteVertex), &vertices->color);
-	glVertexAttribPointer(Pipeline::TEXCOORD_LOCATION, 2, GL_FLOAT, GL_FALSE, sizeof(SpriteVertex), &vertices->texcoord);
-	glVertexAttribPointer(Pipeline::VERTEX_LOCATION, 2, GL_FLOAT, GL_TRUE, sizeof(SpriteVertex), &vertices->position);
+	glVertexAttribPointer(Shader::COLOR, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(SpriteVertex), &vertices->color);
+	glVertexAttribPointer(Shader::TEXCOORD, 2, GL_FLOAT, GL_FALSE, sizeof(SpriteVertex), &vertices->texcoord);
+	glVertexAttribPointer(Shader::VERTEX, 2, GL_FLOAT, GL_TRUE, sizeof(SpriteVertex), &vertices->position);
 
 	glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_SHORT, nullptr);
 
 	R_ASSERT(glGetError() == GL_NO_ERROR, "Failed to draw elements");
-}
-
-Shader* Renderer::load_shader(const unsigned int type, const char *const src_path)
-{
-#ifdef GL_ES_VERSION_2_0
-	const char *source = src_path;
-#else
-	Data source(src_path);
-	if (!source)
-		return nullptr;
-#endif
-
-	Shader *shader = new Shader(type, source);
-	if (!*shader)
-	{
-		delete shader;
-		shader = nullptr;
-		R_ASSERT(shader, "Failed to compile shader");
-	}
-	return shader;
 }
 
 void Renderer::update_buffer(const unsigned int buffer, const unsigned int size, const void *data)
@@ -232,15 +173,8 @@ void Renderer::update_buffer(const unsigned int buffer, const unsigned int size,
 	R_ASSERT(glGetError() == GL_NO_ERROR, "Failed to update buffer");
 }
 
-unsigned int Renderer::bound_prg = 0;
 unsigned int Renderer::bound_vbo = 0;
-
 unsigned int Renderer::index_buffer = 0;
-
-Pipeline *Renderer::pipeline = nullptr;
-Shader *Renderer::vertex_shader = nullptr;
-Shader *Renderer::fragment_shader = nullptr;
-
 const unsigned short Renderer::default_indices[] = {
 	  0,   1,   2,   2,   3,   0,   4,   5,   6,   6,   7,   4,
 	  8,   9,  10,  10,  11,   8,  12,  13,  14,  14,  15,  12,
