@@ -22,6 +22,7 @@ ShaderManager::ShaderManager(const char **shaders, const size_t count)
 	if (!this->programs.size())
 		return;
 
+	this->active.id = -1;
 	this->reset();
 	Instance = this;
 }
