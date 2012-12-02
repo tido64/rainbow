@@ -7,10 +7,12 @@ namespace Rainbow
 	{
 		const char Label::class_name[] = "label";
 		const LuaMachine::Method<Label> Label::methods[] = {
+			{ "get_color",      &Label::get_color },
 			{ "set_alignment",  &Label::set_alignment },
 			{ "set_color",      &Label::set_color },
 			{ "set_font",       &Label::set_font },
 			{ "set_position",   &Label::set_position },
+			{ "set_scale",      &Label::set_scale },
 			{ "set_text",       &Label::set_text },
 			{ "move",           &Label::move },
 			{ 0, 0 }
@@ -20,6 +22,16 @@ namespace Rainbow
 		{
 			if (lua_gettop(L))
 				this->set_text(L);
+		}
+
+		int Label::get_color(lua_State *L)
+		{
+			const Colorb& c = ::Label::get_color();
+			lua_pushinteger(L, c.r);
+			lua_pushinteger(L, c.g);
+			lua_pushinteger(L, c.b);
+			lua_pushinteger(L, c.a);
+			return 4;
 		}
 
 		int Label::set_alignment(lua_State *L)
@@ -61,6 +73,12 @@ namespace Rainbow
 			const int x = static_cast<int>(lua_tonumber(L, 1) + 0.5f);
 			const int y = static_cast<int>(lua_tonumber(L, 2) + 0.5f);
 			::Label::set_position(x, y);
+			return 0;
+		}
+
+		int Label::set_scale(lua_State *L)
+		{
+			::Label::set_scale(lua_tonumber(L, 1));
 			return 0;
 		}
 

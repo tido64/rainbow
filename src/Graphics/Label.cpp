@@ -10,6 +10,21 @@ Label::~Label()
 	delete[] this->vx;
 }
 
+void Label::set_scale(const float f)
+{
+	if (Rainbow::equalf(this->scale, f))
+		return;
+
+	if (f >= 1.0f)
+		this->scale = 1.0f;
+	else if (f <= 0.01f)
+		this->scale = 0.01f;
+	else
+		this->scale = f;
+
+	this->stale |= stale_buffer;
+}
+
 void Label::set_text(const char *text)
 {
 	const size_t len = strlen(text);
@@ -51,12 +66,12 @@ void Label::update()
 			Vec2f pen = this->position;
 			for (const unsigned char *text = reinterpret_cast<unsigned char*>(this->text); *text;)
 			{
-				if (*text == 0xa)
+				if (*text == '\n')
 				{
 					this->align(this->position.x - pen.x, start, this->vertices);
 					pen.x = this->position.x;
 					start = this->vertices;
-					pen.y -= this->font->get_height();
+					pen.y -= this->font->get_height() * this->scale;
 					++text;
 					continue;
 				}
@@ -71,17 +86,18 @@ void Label::update()
 				if (!glyph)
 					continue;
 
-				pen.x += glyph->left;
+				pen.x += glyph->left * this->scale;
 
 				for (size_t i = 0; i < 4; ++i)
 				{
 					vx->texcoord = glyph->quad[i].texcoord;
 					vx->position = glyph->quad[i].position;
+					vx->position *= this->scale;
 					vx->position += pen;
 					++vx;
 				}
 
-				pen.x += glyph->advance - glyph->left;
+				pen.x += (glyph->advance - glyph->left) * this->scale;
 				++this->vertices;
 			}
 			this->align(this->position.x - pen.x, start, this->vertices);

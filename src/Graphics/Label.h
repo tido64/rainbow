@@ -21,6 +21,9 @@ public:
 	inline Label();
 	virtual ~Label();
 
+	/// Return label text color.
+	inline const Colorb& get_color() const;
+
 	/// Set text alignment.
 	inline void set_alignment(const Alignment);
 
@@ -32,6 +35,9 @@ public:
 
 	/// Set position of text.
 	inline void set_position(const int x, const int y);
+
+	/// Set label scale. Value is clamped between 0.01 and 1.0.
+	void set_scale(const float f);
 
 	/// Set text to display.
 	void set_text(const char *);
@@ -53,6 +59,7 @@ protected:
 private:
 	unsigned char stale;       ///< Flags indicating need for update.
 	Colorb color;              ///< Color of the text.
+	float scale;               ///< Label scale factor.
 	Alignment alignment;       ///< Text alignment.
 	size_t size;               ///< Size of the char array.
 	size_t vertices;           ///< Number of vertices to draw.
@@ -69,9 +76,15 @@ private:
 };
 
 Label::Label() :
-	stale(0), alignment(Label::LEFT), size(0), vertices(0), text(nullptr), vx(nullptr) { }
+	stale(0), scale(1.0f), alignment(Label::LEFT), size(0), vertices(0),
+	text(nullptr), vx(nullptr) { }
 
-void Label::set_alignment(const Alignment a)
+const Colorb& Label::get_color() const
+{
+	return this->color;
+}
+
+void Label::set_alignment(const Label::Alignment a)
 {
 	this->alignment = a;
 	this->stale |= stale_buffer;
@@ -86,6 +99,7 @@ void Label::set_color(const Colorb &c)
 void Label::set_font(FontAtlas *f)
 {
 	this->font = f;
+	this->stale |= stale_buffer;
 }
 
 void Label::set_position(const int x, const int y)

@@ -18,10 +18,12 @@ namespace Rainbow
 
 			inline ::Label* raw_ptr();
 
+			int get_color(lua_State *);
 			int set_alignment(lua_State *);
 			int set_color(lua_State *);
 			int set_font(lua_State *);
 			int set_position(lua_State *);
+			int set_scale(lua_State *);
 			int set_text(lua_State *);
 
 			int move(lua_State *);
