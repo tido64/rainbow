@@ -1,13 +1,18 @@
 #include "Algorithm.h"
 
+using Rainbow::equalf;
+
 TEST(AlgorithmTest, ApproximatelyEqualFloats)
 {
-	ASSERT_TRUE(Rainbow::equalf(3.14285714f, 22.0f / 7.0f));
+	ASSERT_TRUE(equalf(0.0f, 0.0f));
+	ASSERT_FALSE(equalf(0.0f, 0.1f));
+	ASSERT_FALSE(equalf(0.0f, -0.1f));
+	ASSERT_TRUE(equalf(3.14285714f, 22.0f / 7.0f));
 }
 
 TEST(AlgorithmTest, DegreesToRadians)
 {
-	ASSERT_TRUE(Rainbow::equalf(3.14f, Rainbow::radians(Rainbow::degrees(3.14f))));
+	ASSERT_TRUE(equalf(3.14f, Rainbow::radians(Rainbow::degrees(3.14f))));
 }
 
 TEST(AlgorithmTest, DistanceBetweenTwoPoints)
@@ -54,7 +59,7 @@ TEST(AlgorithmTest, NextPowerOfTwo)
 
 TEST(AlgorithmTest, RadiansToDegrees)
 {
-	ASSERT_TRUE(Rainbow::equalf(0.05483f, Rainbow::degrees(Rainbow::radians(0.05483f))));
+	ASSERT_TRUE(equalf(0.05483f, Rainbow::degrees(Rainbow::radians(0.05483f))));
 }
 
 TEST(AlgorithmTest, UTF8ToUTF32)
