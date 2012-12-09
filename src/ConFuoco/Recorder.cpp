@@ -12,10 +12,11 @@ namespace ConFuoco
 	{
 		NSURL *dev_null = [NSURL fileURLWithPath:@"/dev/null"];
 		NSDictionary *settings = [NSDictionary dictionaryWithObjectsAndKeys:
-			[NSNumber numberWithInt: kAudioFormatAppleLossless], AVFormatIDKey,
-			[NSNumber numberWithFloat: 22050.0],                 AVSampleRateKey,
-			[NSNumber numberWithInt: 1],                         AVNumberOfChannelsKey,
-			[NSNumber numberWithInt: AVAudioQualityHigh],        AVEncoderAudioQualityKey,
+			[NSNumber numberWithInt: kAudioFormatLinearPCM], AVFormatIDKey,
+			[NSNumber numberWithFloat: 44100.0],             AVSampleRateKey,
+			[NSNumber numberWithInt: 1],                     AVNumberOfChannelsKey,
+			[NSNumber numberWithInt: 16],                    AVLinearPCMBitDepthKey,
+			[NSNumber numberWithInt: AVAudioQualityHigh],    AVEncoderAudioQualityKey,
 			nil];
 		NSError *error;
 		this->recorder = [[AVAudioRecorder alloc] initWithURL:dev_null settings:settings error:&error];
@@ -35,10 +36,11 @@ namespace ConFuoco
 	{
 		[recorder updateMeters];
 
-		const float alpha = 0.05f;
 		this->average = [recorder averagePowerForChannel:0];
 		this->peak = [recorder peakPowerForChannel:0];
-		this->low_pass = alpha * powf(10.0f, this->average * alpha) + (1.0f - alpha) * this->low_pass;
+
+		const float alpha = 0.05f;
+		this->low_pass = alpha * powf(10.0f, this->peak * alpha) + (1.0f - alpha) * this->low_pass;
 	}
 }
 
