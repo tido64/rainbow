@@ -10,9 +10,6 @@
 /// \author Tommy Nguyen
 struct SpriteVertex
 {
-	static const void *tx_offset;  ///< Offset to texture coordinates.
-	static const void *vx_offset;  ///< Offset to vertex position.
-
 	Colorb color;    ///< Texture colour, usually white.
 	Vec2f texcoord;  ///< Texture coordinates.
 	Vec2f position;  ///< Position of vertex.

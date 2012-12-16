@@ -102,13 +102,19 @@ void Renderer::create_buffer(unsigned int &buffer, unsigned int &array_object)
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffer);
 
-	glVertexAttribPointer(Shader::COLOR, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(SpriteVertex), 0);
+	glVertexAttribPointer(
+			Shader::COLOR, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(SpriteVertex),
+			reinterpret_cast<void*>(offsetof(SpriteVertex, color)));
 	glEnableVertexAttribArray(Shader::COLOR);
 
-	glVertexAttribPointer(Shader::TEXCOORD, 2, GL_FLOAT, GL_FALSE, sizeof(SpriteVertex), SpriteVertex::tx_offset);
+	glVertexAttribPointer(
+			Shader::TEXCOORD, 2, GL_FLOAT, GL_FALSE, sizeof(SpriteVertex),
+			reinterpret_cast<void*>(offsetof(SpriteVertex, texcoord)));
 	glEnableVertexAttribArray(Shader::TEXCOORD);
 
-	glVertexAttribPointer(Shader::VERTEX, 2, GL_FLOAT, GL_TRUE, sizeof(SpriteVertex), SpriteVertex::vx_offset);
+	glVertexAttribPointer(
+			Shader::VERTEX, 2, GL_FLOAT, GL_TRUE, sizeof(SpriteVertex),
+			reinterpret_cast<void*>(offsetof(SpriteVertex, position)));
 	glEnableVertexAttribArray(Shader::VERTEX);
 
 	glBindVertexArray(0);
@@ -140,9 +146,15 @@ void Renderer::draw_buffer(const unsigned int array_object, const unsigned int c
 
 	bind_buffer(array_object);
 
-	glVertexAttribPointer(Shader::COLOR, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(SpriteVertex), 0);
-	glVertexAttribPointer(Shader::TEXCOORD, 2, GL_FLOAT, GL_FALSE, sizeof(SpriteVertex), SpriteVertex::tx_offset);
-	glVertexAttribPointer(Shader::VERTEX, 2, GL_FLOAT, GL_TRUE, sizeof(SpriteVertex), SpriteVertex::vx_offset);
+	glVertexAttribPointer(
+			Shader::COLOR, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(SpriteVertex),
+			reinterpret_cast<void*>(offsetof(SpriteVertex, color)));
+	glVertexAttribPointer(
+			Shader::TEXCOORD, 2, GL_FLOAT, GL_FALSE, sizeof(SpriteVertex),
+			reinterpret_cast<void*>(offsetof(SpriteVertex, texcoord)));
+	glVertexAttribPointer(
+			Shader::VERTEX, 2, GL_FLOAT, GL_TRUE, sizeof(SpriteVertex),
+			reinterpret_cast<void*>(offsetof(SpriteVertex, position)));
 
 	glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_SHORT, nullptr);
 
