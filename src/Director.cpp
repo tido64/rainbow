@@ -1,7 +1,6 @@
 // Copyright 2011-12 Bifrost Entertainment. All rights reserved.
 
 #include "Director.h"
-#include "Physics.h"
 #include "Common/Chrono.h"
 #include "ConFuoco/Mixer.h"
 #include "Graphics/TextureManager.h"
@@ -26,7 +25,7 @@ namespace Rainbow
 	void Director::update(const unsigned long t)
 	{
 		Chrono::Instance().update(t);
-		ConFuoco::Mixer::Instance().update();
+		ConFuoco::Mixer::Instance->update();
 		if (this->lua.update(Chrono::Instance().diff()))
 			this->shutdown();
 		else

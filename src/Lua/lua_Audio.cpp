@@ -1,166 +1,169 @@
+#include <cstring>
+
 #include "Common/Data.h"
 #include "Common/Debug.h"
 #include "ConFuoco/Mixer.h"
-#include "ConFuoco/Stream.h"
+#include "ConFuoco/Sound.h"
 #include "Lua/lua_Audio.h"
 #include "Lua/lua_Recorder.h"
 
+using ConFuoco::Channel;
 using ConFuoco::Mixer;
 using ConFuoco::Sound;
-using ConFuoco::Stream;
-using ConFuoco::Wave;
 
 namespace Rainbow
 {
 	namespace Lua
 	{
-		void Audio::init(lua_State *L)
+		namespace Audio
 		{
-			lua_createtable(L, 0, 32);
-			lua_pushvalue(L, -1);
-			lua_setfield(L, -3, "audio");
-
-			lua_pushcclosure(L, &Audio::set_gain, 0);
-			lua_setfield(L, -2, "set_gain");
-
-			lua_pushcclosure(L, &Audio::set_orientation, 0);
-			lua_setfield(L, -2, "set_orientation");
-
-			lua_pushcclosure(L, &Audio::set_pitch, 0);
-			lua_setfield(L, -2, "set_pitch");
-
-			lua_pushcclosure(L, &Audio::clear, 0);
-			lua_setfield(L, -2, "clear");
-
-			lua_pushcclosure(L, &Audio::delete_sfx, 0);
-			lua_setfield(L, -2, "delete_sfx");
-
-			lua_pushcclosure(L, &Audio::delete_stream, 0);
-			lua_setfield(L, -2, "delete_stream");
-
-			lua_pushcclosure(L, &Audio::load_sfx, 0);
-			lua_setfield(L, -2, "load_sfx");
-
-			lua_pushcclosure(L, &Audio::load_stream, 0);
-			lua_setfield(L, -2, "load_stream");
-
-			lua_pushcclosure(L, &Audio::pause, 0);
-			lua_setfield(L, -2, "pause");
-
-			lua_pushcclosure(L, &Audio::play, 0);
-			lua_setfield(L, -2, "play");
-
-			lua_pushcclosure(L, &Audio::stop, 0);
-			lua_setfield(L, -2, "stop");
-
-			LuaMachine::wrap<Recorder>(L);
-
-			lua_pop(L, 1);
-		}
-
-		int Audio::set_gain(lua_State *L)
-		{
-			LUA_ASSERT(lua_gettop(L) == 1 || lua_gettop(L) == 2, "rainbow.audio.set_gain([source,] volume)");
-
-			if (lua_gettop(L) == 2)
+			namespace
 			{
-				Wave *w = static_cast<Wave*>(lua_touserdata(L, 1));
-				LUA_CHECK(L, w, "rainbow.audio.set_gain: Invalid source specified");
-				w->set_gain(lua_tonumber(L, 2));
+				const char channel_type[] = "channel";
+				const char sound_type[] = "sound";
+				const char type_field[] = "__type";
+
+				void pushpointer(lua_State *L, void *ptr, const char *name)
+				{
+				#ifndef NDEBUG
+					lua_createtable(L, 1, 1);
+					lua_pushlightuserdata(L, ptr);
+					lua_rawseti(L, -2, 0);
+					lua_pushstring(L, name);
+					lua_setfield(L, -2, type_field);
+				#else
+					static_cast<void>(name);
+					lua_pushlightuserdata(L, ptr);
+				#endif
+				}
+
+				void* topointer(lua_State *L, const char *name)
+				{
+				#ifndef NDEBUG
+					LUA_CHECK(L, !lua_isnil(L, -1), "Parameter is a nil value");
+					LUA_CHECK(L, lua_istable(L, -1), "Object is not of type '%s'", name);
+					lua_getfield(L, -1, type_field);
+					LUA_CHECK(L, memcmp(lua_tolstring(L, -1, nullptr), name, strlen(name)) == 0, "Object is not of type '%s'", name);
+					lua_rawgeti(L, -2, 0);
+					void *ptr = lua_touserdata(L, -1);
+					lua_pop(L, 2);
+					return ptr;
+				#else
+					static_cast<void>(name);
+					return lua_touserdata(L, -1);
+				#endif
+				}
 			}
-			else
-				Mixer::Instance().set_gain(lua_tonumber(L, 1));
-			return 0;
-		}
 
-		int Audio::set_orientation(lua_State *L)
-		{
-			Mixer::Instance().set_orientation(lua_tonumber(L, 1));
-			return 0;
-		}
+			void init(lua_State *L)
+			{
+				lua_createtable(L, 0, 32);
+				lua_pushvalue(L, -1);
+				lua_setfield(L, -3, "audio");
 
-		int Audio::set_pitch(lua_State *L)
-		{
-			Mixer::Instance().set_pitch(lua_tonumber(L, 1));
-			return 0;
-		}
+				lua_pushcclosure(L, &set_gain, 0);
+				lua_setfield(L, -2, "set_gain");
 
-		int Audio::clear(lua_State *)
-		{
-			Mixer::Instance().clear();
-			return 0;
-		}
+				lua_pushcclosure(L, &set_pitch, 0);
+				lua_setfield(L, -2, "set_pitch");
 
-		int Audio::delete_sfx(lua_State *L)
-		{
-			LUA_ASSERT(lua_gettop(L) == 1, "rainbow.audio.delete_sfx(source)");
+				lua_pushcclosure(L, &clear, 0);
+				lua_setfield(L, -2, "clear");
 
-			const Sound *s = static_cast<const Sound*>(lua_topointer(L, 1));
-			LUA_CHECK(L, s, "rainbow.audio.delete_sfx: Invalid source specified");
-			Mixer::Instance().remove(s);
-			return 0;
-		}
+				lua_pushcclosure(L, &create_sound, 0);
+				lua_setfield(L, -2, "create_sound");
 
-		int Audio::delete_stream(lua_State *L)
-		{
-			LUA_ASSERT(lua_gettop(L) == 1, "rainbow.audio.delete_stream(source)");
+				lua_pushcclosure(L, &delete_sound, 0);
+				lua_setfield(L, -2, "delete_sound");
 
-			const Stream *s = static_cast<const Stream*>(lua_topointer(L, 1));
-			LUA_CHECK(L, s, "rainbow.audio.delete_stream: Invalid source specified");
-			Mixer::Instance().remove(s);
-			return 0;
-		}
+				lua_pushcclosure(L, &pause, 0);
+				lua_setfield(L, -2, "pause");
 
-		int Audio::load_sfx(lua_State *L)
-		{
-			LUA_ASSERT(lua_gettop(L) == 1 || lua_gettop(L) == 2, "rainbow.audio.load_sfx(file[, instances])");
+				lua_pushcclosure(L, &play, 0);
+				lua_setfield(L, -2, "play");
 
-			const char *file = lua_tolstring(L, 1, nullptr);
-			const unsigned int instances = (lua_gettop(L) == 2) ? lua_tointeger(L, 2) : 1;
-			lua_pushlightuserdata(L, Mixer::Instance().load_sfx(file, instances));
-			return 1;
-		}
+				lua_pushcclosure(L, &stop, 0);
+				lua_setfield(L, -2, "stop");
 
-		int Audio::load_stream(lua_State *L)
-		{
-			LUA_ASSERT(lua_gettop(L) == 1 || lua_gettop(L) == 2, "rainbow.audio.load_stream(file[, loops])");
+				LuaMachine::wrap<Recorder>(L);
 
-			const char *file = lua_tolstring(L, 1, nullptr);
-			Stream* s = static_cast<Stream*>(Mixer::Instance().load_stream(file));
-			if (lua_gettop(L) == 2)
-				s->set_loops(lua_tointeger(L, 2));
-			lua_pushlightuserdata(L, s);
-			return 1;
-		}
+				lua_pop(L, 1);
+			}
 
-		int Audio::pause(lua_State *L)
-		{
-			LUA_ASSERT(lua_gettop(L) == 1, "rainbow.audio.pause(id)");
+			int set_gain(lua_State *L)
+			{
+				LUA_ASSERT(lua_gettop(L) == 1 || lua_gettop(L) == 2,
+				           "rainbow.audio.set_gain([source,] volume)");
 
-			Wave *w = static_cast<Wave*>(lua_touserdata(L, 1));
-			LUA_CHECK(L, w, "rainbow.audio.pause: Invalid source specified");
-			w->pause();
-			return 0;
-		}
+				if (lua_gettop(L) == 2)
+				{
+					const float gain = lua_tonumber(L, 2);
+					lua_pop(L, 1);
+					Channel *ch = static_cast<Channel*>(topointer(L, channel_type));
+					ch->set_gain(gain);
+				}
+				else
+					Mixer::Instance->set_gain(lua_tonumber(L, 1));
+				return 0;
+			}
 
-		int Audio::play(lua_State *L)
-		{
-			LUA_ASSERT(lua_gettop(L) == 1, "rainbow.audio.play(id)");
+			int set_pitch(lua_State *L)
+			{
+				Mixer::Instance->set_pitch(lua_tonumber(L, 1));
+				return 0;
+			}
 
-			Wave *w = static_cast<Wave*>(lua_touserdata(L, 1));
-			LUA_CHECK(L, w, "rainbow.audio.play: Invalid source specified");
-			w->play();
-			return 0;
-		}
+			int clear(lua_State *)
+			{
+				Mixer::Instance->clear();
+				return 0;
+			}
 
-		int Audio::stop(lua_State *L)
-		{
-			LUA_ASSERT(lua_gettop(L) == 1, "rainbow.audio.stop(id)");
+			int create_sound(lua_State *L)
+			{
+				LUA_ASSERT(lua_gettop(L) >= 1 && lua_gettop(L) <= 3, "rainbow.audio.create_sound(file[, type, loops])");
 
-			Wave *w = static_cast<Wave*>(lua_touserdata(L, 1));
-			LUA_CHECK(L, w, "rainbow.audio.stop: Invalid source specified");
-			w->stop();
-			return 0;
+				const char *file = lua_tolstring(L, 1, nullptr);
+				const int type = (lua_gettop(L) >= 2) ? lua_tointeger(L, 2) : ConFuoco::STATIC;
+				const int loops = (lua_gettop(L) == 3) ? lua_tointeger(L, 3) : -1;
+				pushpointer(L, Mixer::Instance->create_sound(file, type, loops), sound_type);
+				return 1;
+			}
+
+			int delete_sound(lua_State *L)
+			{
+				LUA_ASSERT(lua_gettop(L) == 1, "rainbow.audio.delete_sound(sound)");
+
+				delete static_cast<Sound*>(topointer(L, sound_type));
+				return 0;
+			}
+
+			int pause(lua_State *L)
+			{
+				LUA_ASSERT(lua_gettop(L) == 1, "rainbow.audio.pause(channel)");
+
+				Channel *ch = static_cast<Channel*>(topointer(L, channel_type));
+				ch->pause();
+				return 0;
+			}
+
+			int play(lua_State *L)
+			{
+				LUA_ASSERT(lua_gettop(L) == 1, "rainbow.audio.play(sound)");
+
+				Sound *snd = static_cast<Sound*>(topointer(L, sound_type));
+				pushpointer(L, Mixer::Instance->play(snd), channel_type);
+				return 1;
+			}
+
+			int stop(lua_State *L)
+			{
+				LUA_ASSERT(lua_gettop(L) == 1, "rainbow.audio.stop(channel)");
+
+				Channel *ch = static_cast<Channel*>(topointer(L, channel_type));
+				ch->stop();
+				return 0;
+			}
 		}
 	}
 }

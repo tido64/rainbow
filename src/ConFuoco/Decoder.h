@@ -1,6 +1,8 @@
 #ifndef CONFUOCO_DECODER_H_
 #define CONFUOCO_DECODER_H_
 
+#include <cstdlib>
+
 namespace ConFuoco
 {
 	/// Audio file decoder.
@@ -17,12 +19,19 @@ namespace ConFuoco
 	///
 	/// Copyright 2011-12 Bifrost Entertainment. All rights reserved.
 	/// \author Tommy Nguyen
-	class Decoder
+	namespace Decoder
 	{
-	public:
 		/// Close stream and release any resources.
 		/// \param handle  Codec-specific handle.
-		static void close(void *handle);
+		void close(void *handle);
+
+		/// Load entire audio file into buffer.
+		/// \param[out] buffer     Output buffer.
+		/// \param[out] channels   Number of channels in the bitstream.
+		/// \param[out] rate       Sampling rate of the bitstream.
+		/// \param      file       Path to the bitstream to open.
+		/// \return Size of the decoded bitstream.
+		size_t open(char **buffer, int &channels, int &rate, const char *const file);
 
 		/// Stream from file.
 		/// \param[out] handle     Codec-specific handle.
@@ -31,27 +40,19 @@ namespace ConFuoco
 		/// \param[out] rate       Sampling rate of the bitstream.
 		/// \param      file       Path to the bitstream to open.
 		/// \return Size of the stream buffer.
-		static size_t open_stream(void **handle, char **buffer, int &channels, int &rate, const char *const file);
-
-		/// Load entire audio file into buffer.
-		/// \param[out] buffer     Output buffer.
-		/// \param[out] channels   Number of channels in the bitstream.
-		/// \param[out] rate       Sampling rate of the bitstream.
-		/// \param      file       Path to the bitstream to open.
-		/// \return Size of the decoded bitstream.
-		static size_t open_wave(char **buffer, int &channels, int &rate, const char *const file);
+		size_t open(void **handle, char **buffer, int &channels, int &rate, const char *const file);
 
 		/// Read (and decode) audio frames till buffer is full.
 		/// \param[out] dst   Destination for decoded bitstream.
 		/// \param      src   Codec-specific handle for source bitstream.
 		/// \param      size  Size of destination buffer.
 		/// \return Bytes written to the buffer.
-		static size_t read(char *dst, void *src, const size_t size);
+		size_t read(char *dst, void *src, const size_t size);
 
 		/// Rewind stream to the beginning.
 		/// \param handle  Codec-specific handle.
-		static void reset(void *handle);
-	};
+		void rewind(void *handle);
+	}
 }
 
 #endif

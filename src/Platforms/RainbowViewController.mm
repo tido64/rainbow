@@ -6,6 +6,7 @@
 #include "Config.h"
 #include "Director.h"
 #include "Common/Data.h"
+#include "ConFuoco/Mixer.h"
 #include "Graphics/Renderer.h"
 #include "Input/Input.h"
 #include "Input/Touch.h"
@@ -16,6 +17,7 @@
 {
 	CGFloat scale;
 	Director *director;  ///< Rainbow director.
+	ConFuoco::Mixer mixer;
 }
 
 @property (strong, nonatomic) EAGLContext *context;

@@ -39,6 +39,7 @@ struct AInstance
 	EGLSurface surface;
 	EGLContext context;
 	Director director;
+	ConFuoco::Mixer mixer;
 
 	AInstance() :
 		initialised(false), width(0), height(0), sensorManager(nullptr),
@@ -226,15 +227,17 @@ void android_handle_event(struct android_app *app, int32_t cmd)
 				// We'd like to get 60 events per second (in us).
 				ASensorEventQueue_setEventRate(ainstance->sensorEventQueue, ainstance->accelerometerSensor, (1000L / 60) * 1000);
 			}
+			ConFuoco::Mixer::Instance->suspend(false);
 			active = true;
 			break;
 		case APP_CMD_LOST_FOCUS:
+			active = false;
 			// When our app loses focus, we stop monitoring the accelerometer.
 			// This is to avoid consuming battery while not being used.
 			if (ainstance->accelerometerSensor)
 				ASensorEventQueue_disableSensor(ainstance->sensorEventQueue, ainstance->accelerometerSensor);
+			ConFuoco::Mixer::Instance->suspend(true);
 			Renderer::clear();
-			active = false;
 			break;
 		case APP_CMD_LOW_MEMORY:
 			ainstance->director.on_memory_warning();

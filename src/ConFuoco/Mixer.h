@@ -1,45 +1,39 @@
 #ifndef CONFUOCO_MIXER_H_
 #define CONFUOCO_MIXER_H_
 
-#include "Platform.h"
-#if defined(RAINBOW_ANDROID)
-#	include "ConFuoco/impl/Engine_SL.h"
-#elif defined(RAINBOW_IOS) || defined(RAINBOW_SDL)
-#	include "ConFuoco/impl/Engine_AL.h"
-#else
-#	error "Unknown platform"
-#endif
-
-#include "ConFuoco/Sound.h"
-#include "ConFuoco/Stream.h"
-#include "ConFuoco/WaveBank.h"
+#include "Common/Vector.h"
+#include "ConFuoco/Channel.h"
 
 namespace ConFuoco
 {
+	class Sound;
+
+	enum Type
+	{
+		STATIC,
+		STREAM
+	};
+
 	/// Audio mixer.
 	///
 	/// Copyright 2012 Bifrost Entertainment. All rights reserved.
 	/// \author Tommy Nguyen
 	class Mixer : public NonCopyable<Mixer>
 	{
+		friend class Channel;
+
 	public:
-		static inline Mixer& Instance();
+		static const size_t num_channels = 32;
+		static Mixer* Instance;
 
-		Engine engine;  ///< Platform-specific audio engine.
-
-		/// Clear the wave bank.
-		inline void clear();
-
-		/// Whether an audio device is available.
-		inline bool is_available() const;
+		Mixer();
+		~Mixer();
 
 		/// Set master gain.
 		/// \param gain  Scalar amplitude multiplier. The default 1.0 means
 		///              that the sound is unattenuated. The value zero equals
 		///              silence (no contribution to the output mix).
-		inline void set_gain(const float gain) const;
-
-		inline void set_orientation(const float r) const;
+		void set_gain(const float gain);
 
 		/// Set global pitch shift.
 		/// \param pitch  Desired pitch shift, where 1.0 equals identity. Each
@@ -47,83 +41,53 @@ namespace ConFuoco
 		///               semitones (one octave reduction). Each doubling
 		///               equals a pitch shift of 12 semitones (one octave
 		///               increase). Zero is not a legal value.
-		inline void set_pitch(const float pitch) const;
+		void set_pitch(const float pitch);
 
-		/// Load audio file into buffer.
-		inline Wave* load_sfx(const char *const file, const unsigned int instances = 1);
+		/// Stop and delete all sounds.
+		void clear();
 
-		/// Prepare to stream from file.
-		inline Wave* load_stream(const char *const file);
+		/// Create a sound object from audio file. Deleting a sound object will
+		/// automatically stop all channels from playing it.
+		Sound* create_sound(const char *const file, const int type = STATIC, const int loops = -1);
 
-		/// Remove sound/stream and release any associated resources.
-		template<class S>
-		inline void remove(const S *);
+		/// Start playback of the sound object and return the channel on which
+		/// it is played. Channels may vary with each playback.
+		Channel* play(Sound *);
 
-		/// Update all streams.
-		inline void update();
+		/// Release any resources associated with the sound object.
+		void release(Sound *);
+
+		/// Suspend/continue processing of audio streams.
+		void suspend(const bool);
+
+		/// Update platform-specific internals.
+		void update();
 
 	private:
-		WaveBank bank;  ///< Sound and stream factory.
+		float master_gain;               ///< Master gain/volume.
+		void *context;                   ///< Platform-specific audio context.
+		Vector<Sound*> sounds;           ///< Stores all loaded sounds.
+		Channel channels[num_channels];  ///< Channels on which sounds are played.
 
-		inline Mixer();
+		/// Return the next free channel.
+		inline Channel* next_channel();
+
+		/* Implement Channel interface. */
+
+		bool is_paused(Channel *);
+		bool is_playing(Channel *);
+		void set_gain(Channel *, const float gain);
+		void pause(Channel *);
+		void play(Channel *);
+		void stop(Channel *);
 	};
 
-	Mixer& Mixer::Instance()
+	Channel* Mixer::next_channel()
 	{
-		static Mixer mixer;
-		return mixer;
-	}
-
-	Mixer::Mixer() { }
-
-	void Mixer::clear()
-	{
-		this->bank.clear();
-	}
-
-	bool Mixer::is_available() const
-	{
-		return this->engine.is_available();
-	}
-
-	Wave* Mixer::load_sfx(const char *const file, const unsigned int instances)
-	{
-		Sound *s = this->bank.create_sound(instances);
-		s->load(file);
-		return s;
-	}
-
-	Wave* Mixer::load_stream(const char *const file)
-	{
-		Stream *s = this->bank.create_stream();
-		s->load(file);
-		return s;
-	}
-
-	template<class S>
-	void Mixer::remove(const S *s)
-	{
-		this->bank.remove(s);
-	}
-
-	void Mixer::set_gain(const float gain) const
-	{
-		this->engine.set_gain(gain);
-	}
-
-	void Mixer::set_orientation(const float r) const
-	{
-		this->engine.set_orientation(r);
-	}
-
-	void Mixer::set_pitch(const float pitch) const
-	{
-		this->engine.set_pitch(pitch);
-	}
-
-	void Mixer::update()
-	{
-		this->bank.update();
+		for (size_t i = 0; i < num_channels; ++i)
+			if (!this->channels[i].sound || !this->channels[i].is_playing())
+				return this->channels + i;
+		return nullptr;
 	}
 }
 

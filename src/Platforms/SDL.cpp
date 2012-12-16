@@ -65,7 +65,8 @@ int main(int argc, char *argv[])
 	strcpy(userdata_path, data_path);  // Set user data path
 	strcat(userdata_path, "user/");
 
-	if (!ConFuoco::Mixer::Instance().is_available())
+	ConFuoco::Mixer mixer;
+	if (!ConFuoco::Mixer::Instance)
 		return 1;
 
 	Config config;
@@ -117,6 +118,7 @@ int main(int argc, char *argv[])
 			{
 				case SDL_ACTIVEEVENT:
 					active = (event.active.gain != 0);
+					ConFuoco::Mixer::Instance->suspend(!active);
 					break;
 				case SDL_KEYDOWN:
 					if (event.key.keysym.sym == SDLK_q && (event.key.keysym.mod & R_META))

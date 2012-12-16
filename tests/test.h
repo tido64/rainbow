@@ -8,4 +8,5 @@
 #include "Common/Vec2.test.cpp"
 #include "Common/Vec3.test.cpp"
 #include "Common/Vector.test.cpp"
+#include "ConFuoco/ConFuoco.test.cpp"
 #include "Input/Touch.test.cpp"
