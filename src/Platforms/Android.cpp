@@ -43,11 +43,13 @@ struct AInstance
 
 	AInstance() :
 		initialised(false), width(0), height(0), sensorManager(nullptr),
-		sensorEventQueue(nullptr), accelerometerSensor(nullptr),
-		app(nullptr) { }
+		sensorEventQueue(nullptr), accelerometerSensor(nullptr), app(nullptr),
+		display(EGL_NO_DISPLAY), surface(EGL_NO_SURFACE),
+		context(EGL_NO_CONTEXT) { }
 };
 
 void android_destroy_display(AInstance *ainstance);
+void android_handle_display(AInstance *ainstance);
 void android_init_display(AInstance *ainstance);
 void android_handle_event(struct android_app *app, int32_t cmd);
 int32_t android_handle_input(struct android_app *app, AInputEvent *event);
@@ -114,37 +116,65 @@ void android_main(struct android_app *state)
 	ANativeActivity_finish(state->activity);
 }
 
-void android_destroy_display(AInstance *ainstance)
+void android_destroy_display(AInstance *a)
 {
-	if (ainstance->display != EGL_NO_DISPLAY)
+	if (a->display != EGL_NO_DISPLAY)
 	{
 		Renderer::release();
-		eglMakeCurrent(ainstance->display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
-		if (ainstance->context != EGL_NO_CONTEXT)
+		eglMakeCurrent(a->display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
+		if (a->context != EGL_NO_CONTEXT)
 		{
-			eglDestroyContext(ainstance->display, ainstance->context);
-			ainstance->context = EGL_NO_CONTEXT;
+			eglDestroyContext(a->display, a->context);
+			a->context = EGL_NO_CONTEXT;
 		}
-		if (ainstance->surface != EGL_NO_SURFACE)
+		if (a->surface != EGL_NO_SURFACE)
 		{
-			eglDestroySurface(ainstance->display, ainstance->surface);
-			ainstance->surface = EGL_NO_SURFACE;
+			eglDestroySurface(a->display, a->surface);
+			a->surface = EGL_NO_SURFACE;
 		}
-		eglTerminate(ainstance->display);
-		ainstance->display = EGL_NO_DISPLAY;
+		eglTerminate(a->display);
+		a->display = EGL_NO_DISPLAY;
 	}
-	ainstance->initialised = false;
+	a->initialised = false;
 	active = false;
 }
 
-void android_init_display(AInstance *ainstance)
+void android_handle_display(AInstance *a)
 {
-	EGLDisplay &dpy = ainstance->display;
-	EGLSurface &surface = ainstance->surface;
-	EGLContext &ctx = ainstance->context;
+	if (a->initialised)
+		return;
 
-	dpy = eglGetDisplay(EGL_DEFAULT_DISPLAY);
-	eglInitialize(dpy, 0, 0);
+	if (!Renderer::init())
+	{
+		R_ERROR("[Rainbow] Failed to initialise renderer");
+		done = true;
+		return;
+	}
+
+	EGLint value;
+	eglQuerySurface(a->display, a->surface, EGL_WIDTH, &value);
+	a->width = value;
+	eglQuerySurface(a->display, a->surface, EGL_HEIGHT, &value);
+	a->height = value;
+	Renderer::resize(a->width, a->height);
+	a->director.set_video(a->width, a->height);
+
+	// Load game
+	Data main("main.lua");
+	R_ASSERT(main, "Failed to load 'main'");
+	a->director.init(main);
+
+	a->initialised = true;
+}
+
+void android_init_display(AInstance *a)
+{
+	EGLDisplay &dpy = a->display;
+	if (dpy == EGL_NO_DISPLAY)
+	{
+		dpy = eglGetDisplay(EGL_DEFAULT_DISPLAY);
+		eglInitialize(dpy, 0, 0);
+	}
 
 	const EGLint attrib_list[] = {
 		EGL_ALPHA_SIZE, 8,
@@ -159,73 +189,62 @@ void android_init_display(AInstance *ainstance)
 	EGLint nconfigs;
 	eglChooseConfig(dpy, attrib_list, &config, 1, &nconfigs);
 
-	EGLint format;
-	eglGetConfigAttrib(dpy, config, EGL_NATIVE_VISUAL_ID, &format);
-	ANativeWindow_setBuffersGeometry(ainstance->app->window, 0, 0, format);
-
-	surface = eglCreateWindowSurface(dpy, config, ainstance->app->window, nullptr);
+	EGLSurface &surface = a->surface;
 	if (surface == EGL_NO_SURFACE)
 	{
-		R_ERROR("[Rainbow] Failed to create EGL window surface");
-		return;
+		EGLint format;
+		eglGetConfigAttrib(dpy, config, EGL_NATIVE_VISUAL_ID, &format);
+		ANativeWindow_setBuffersGeometry(a->app->window, 0, 0, format);
+
+		surface = eglCreateWindowSurface(dpy, config, a->app->window, nullptr);
+		if (surface == EGL_NO_SURFACE)
+		{
+			R_ERROR("[Rainbow] Failed to create EGL window surface");
+			return;
+		}
 	}
 
-	const EGLint gles_attrib[] = { EGL_CONTEXT_CLIENT_VERSION, 2, EGL_NONE };
-	ctx = eglCreateContext(dpy, config, EGL_NO_CONTEXT, gles_attrib);
+	EGLContext &ctx = a->context;
 	if (ctx == EGL_NO_CONTEXT)
 	{
-		R_ERROR("[Rainbow] Failed to create EGL rendering context");
-		return;
+		const EGLint gles_attrib[] = { EGL_CONTEXT_CLIENT_VERSION, 2, EGL_NONE };
+		ctx = eglCreateContext(dpy, config, EGL_NO_CONTEXT, gles_attrib);
+		if (ctx == EGL_NO_CONTEXT)
+		{
+			R_ERROR("[Rainbow] Failed to create EGL rendering context");
+			return;
+		}
 	}
 
 	done = eglMakeCurrent(dpy, surface, surface, ctx) == EGL_FALSE;
 	if (done)
-	{
 		R_ERROR("[Rainbow] Failed to bind context to the current rendering thread");
-		return;
-	}
-
-	if (!Renderer::init())
-	{
-		R_ERROR("[Rainbow] Failed to initialise renderer");
-		done = true;
-		return;
-	}
-
-	EGLint value;
-	eglQuerySurface(dpy, surface, EGL_WIDTH, &value);
-	ainstance->width = value;
-	eglQuerySurface(dpy, surface, EGL_HEIGHT, &value);
-	ainstance->height = value;
-	Renderer::resize(ainstance->width, ainstance->height);
-	ainstance->director.set_video(ainstance->width, ainstance->height);
-
-	// Load game
-	Data main("main.lua");
-	R_ASSERT(main, "Failed to load 'main'");
-	ainstance->director.init(main);
-
-	ainstance->initialised = true;
+	else
+		android_handle_display(a);
 }
 
 void android_handle_event(struct android_app *app, int32_t cmd)
 {
-	AInstance* ainstance = static_cast<AInstance*>(app->userData);
+	AInstance* a = static_cast<AInstance*>(app->userData);
 	switch (cmd)
 	{
 		case APP_CMD_INIT_WINDOW:
-			android_init_display(ainstance);
+			android_init_display(a);
 			break;
 		case APP_CMD_TERM_WINDOW:
-			android_destroy_display(ainstance);
+			eglDestroySurface(a->display, a->surface);
+			a->surface = EGL_NO_SURFACE;
+			break;
+		case APP_CMD_WINDOW_RESIZED:
+			android_handle_display(a);
 			break;
 		case APP_CMD_GAINED_FOCUS:
 			// When our app gains focus, we start monitoring the accelerometer.
-			if (ainstance->accelerometerSensor)
+			if (a->accelerometerSensor)
 			{
-				ASensorEventQueue_enableSensor(ainstance->sensorEventQueue, ainstance->accelerometerSensor);
+				ASensorEventQueue_enableSensor(a->sensorEventQueue, a->accelerometerSensor);
 				// We'd like to get 60 events per second (in us).
-				ASensorEventQueue_setEventRate(ainstance->sensorEventQueue, ainstance->accelerometerSensor, (1000L / 60) * 1000);
+				ASensorEventQueue_setEventRate(a->sensorEventQueue, a->accelerometerSensor, (1000L / 60) * 1000);
 			}
 			ConFuoco::Mixer::Instance->suspend(false);
 			active = true;
@@ -234,15 +253,22 @@ void android_handle_event(struct android_app *app, int32_t cmd)
 			active = false;
 			// When our app loses focus, we stop monitoring the accelerometer.
 			// This is to avoid consuming battery while not being used.
-			if (ainstance->accelerometerSensor)
-				ASensorEventQueue_disableSensor(ainstance->sensorEventQueue, ainstance->accelerometerSensor);
+			if (a->accelerometerSensor)
+				ASensorEventQueue_disableSensor(a->sensorEventQueue, a->accelerometerSensor);
 			ConFuoco::Mixer::Instance->suspend(true);
 			Renderer::clear();
 			break;
 		case APP_CMD_LOW_MEMORY:
-			ainstance->director.on_memory_warning();
+			a->director.on_memory_warning();
+			break;
+		case APP_CMD_RESUME:
+			if (a->surface)
+				eglMakeCurrent(a->display, a->surface, a->surface, a->context);
 			break;
 		case APP_CMD_SAVE_STATE:
+			break;
+		case APP_CMD_PAUSE:
+			eglMakeCurrent(a->display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
 			break;
 		case APP_CMD_DESTROY:
 			active = false;
@@ -258,7 +284,7 @@ int32_t android_handle_input(struct android_app *app, AInputEvent *event)
 	switch (AInputEvent_getType(event))
 	{
 		case AINPUT_EVENT_TYPE_KEY:
-			return 0;
+			return AKeyEvent_getKeyCode(event) == AKEYCODE_BACK;
 		case AINPUT_EVENT_TYPE_MOTION:
 			return android_handle_motion(app, event);
 		default:
