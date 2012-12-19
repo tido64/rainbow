@@ -101,6 +101,7 @@ void Label::update()
 				++this->vertices;
 			}
 			this->align(this->position.x - pen.x, start, this->vertices);
+			this->width = pen.x - this->position.x;
 			this->vertices = (this->vertices << 2) + (this->vertices << 1);
 		}
 		if (this->stale & stale_color)
