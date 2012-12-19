@@ -1,7 +1,7 @@
 #ifndef TEXTUREATLAS_H_
 #define TEXTUREATLAS_H_
 
-#include "Common/SmartPtr.h"
+#include "Common/SharedPtr.h"
 #include "Graphics/Texture.h"
 #include "Graphics/TextureManager.h"
 
@@ -19,7 +19,7 @@ class Data;
 ///
 /// Copyright 2010-12 Bifrost Entertainment. All rights reserved.
 /// \author Tommy Nguyen
-class TextureAtlas : public NonCopyable<TextureAtlas>, public SmartPtrFriendly
+class TextureAtlas : public RefCounted
 {
 public:
 	explicit TextureAtlas(const Data &img);

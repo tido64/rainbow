@@ -1,62 +1,56 @@
-#ifndef SMARTPTR_H_
-#define SMARTPTR_H_
+#ifndef SHAREDPTR_H_
+#define SHAREDPTR_H_
 
 #include "Common/Debug.h"
+#include "Common/NonCopyable.h"
 
-/// Make a class SmartPtr-friendly.
+/// Make a class reference countable.
 ///
-/// Subclasses of SmartPtrFriendly can be wrapped with SmartPtr.
+/// Subclasses of RefCounted can be wrapped with SharedPtr.
 ///
 /// Copyright 2012 Bifrost Entertainment. All rights reserved.
 /// \author Tommy Nguyen
-class SmartPtrFriendly
+class RefCounted : private NonCopyable<RefCounted>
 {
-	template<class T> friend class SmartPtr;
+	template<class T> friend class SharedPtr;
 
 public:
-	SmartPtrFriendly() : refs(0) { }
+	RefCounted() : refs(0) { }
 
 private:
 	unsigned int refs;
-
-	SmartPtrFriendly(const SmartPtrFriendly &);
-	SmartPtrFriendly& operator=(const SmartPtrFriendly &);
 };
 
-/// Smart pointer automatically releases the allocated memory when it no longer
+/// Shared pointers automatically release the allocated memory when it no longer
 /// is referenced.
 ///
-/// Classes that need to use this class must subclass SmartPtrFriendly.
-///
-/// The rationale for this design is to keep things simple and stupid, and
-/// prevent frivolous use of this pointer type. Whenever possible, use \c new
-/// and \c delete.
+/// Classes that need to be shared this way must subclass RefCounted.
 ///
 /// Copyright 2011-12 Bifrost Entertainment. All rights reserved.
 /// \author Tommy Nguyen
 template<class T>
-class SmartPtr
+class SharedPtr
 {
 public:
-	/// Construct an empty smart pointer.
-	SmartPtr();
+	/// Construct an empty shared pointer.
+	SharedPtr();
 
 	/// Copy pointer and increment its reference counter.
-	SmartPtr(const SmartPtr<T> &);
+	SharedPtr(const SharedPtr<T> &);
 
 	/// Set pointer and increment its reference counter.
-	explicit SmartPtr(T *);
+	explicit SharedPtr(T *);
 
-	~SmartPtr();
+	~SharedPtr();
 
 	/// Return the actual pointer.
 	inline T* raw_ptr() const;
 
 	/// Release the current pointer and copy the new one.
-	SmartPtr<T>& operator=(const SmartPtr<T> &);
+	SharedPtr<T>& operator=(const SharedPtr<T> &);
 
 	/// Release the current pointer and assign the new one.
-	SmartPtr<T>& operator=(T *);
+	SharedPtr<T>& operator=(T *);
 
 	/// Dereferencing this pointer returns the actual pointer.
 	inline T& operator*() const;
@@ -65,49 +59,49 @@ public:
 	inline T* operator->() const;
 
 private:
-	SmartPtrFriendly *ptr;  ///< Actual pointer managed by this smart pointer.
+	RefCounted *ptr;  ///< Actual pointer managed by this shared pointer.
 
 	/// Decrement reference counter and release memory if the count hits 0.
 	void release();
 };
 
 template<class T>
-SmartPtr<T>::SmartPtr() : ptr(nullptr) { }
+SharedPtr<T>::SharedPtr() : ptr(nullptr) { }
 
 template<class T>
-SmartPtr<T>::SmartPtr(const SmartPtr<T> &smart_ptr) : ptr(smart_ptr.ptr)
+SharedPtr<T>::SharedPtr(const SharedPtr<T> &shared_ptr) : ptr(shared_ptr.ptr)
 {
 	R_ASSERT(this->ptr, "No reference to pointer");
 	++this->ptr->refs;
 }
 
 template<class T>
-SmartPtr<T>::SmartPtr(T *ptr) : ptr(ptr)
+SharedPtr<T>::SharedPtr(T *ptr) : ptr(ptr)
 {
 	R_ASSERT(this->ptr, "No reference to pointer");
 	++this->ptr->refs;
 }
 
 template<class T>
-SmartPtr<T>::~SmartPtr()
+SharedPtr<T>::~SharedPtr()
 {
 	this->release();
 }
 
 template<class T>
-T* SmartPtr<T>::raw_ptr() const
+T* SharedPtr<T>::raw_ptr() const
 {
 	return static_cast<T*>(this->ptr);
 }
 
 template<class T>
-SmartPtr<T>& SmartPtr<T>::operator=(const SmartPtr<T> &smart_ptr)
+SharedPtr<T>& SharedPtr<T>::operator=(const SharedPtr<T> &shared_ptr)
 {
-	return *this = static_cast<T*>(smart_ptr.ptr);
+	return *this = static_cast<T*>(shared_ptr.ptr);
 }
 
 template<class T>
-SmartPtr<T>& SmartPtr<T>::operator=(T *ptr)
+SharedPtr<T>& SharedPtr<T>::operator=(T *ptr)
 {
 	this->release();
 	this->ptr = ptr;
@@ -116,21 +110,21 @@ SmartPtr<T>& SmartPtr<T>::operator=(T *ptr)
 }
 
 template<class T>
-T& SmartPtr<T>::operator*() const
+T& SharedPtr<T>::operator*() const
 {
 	R_ASSERT(this->ptr, "No reference to pointer");
 	return *static_cast<T*>(this->ptr);
 }
 
 template<class T>
-T* SmartPtr<T>::operator->() const
+T* SharedPtr<T>::operator->() const
 {
 	R_ASSERT(this->ptr, "No reference to pointer");
 	return static_cast<T*>(this->ptr);
 }
 
 template<class T>
-void SmartPtr<T>::release()
+void SharedPtr<T>::release()
 {
 	R_ASSERT(!this->ptr || this->ptr->refs > 0,
 	         "This object should've been deleted by now");

@@ -60,17 +60,17 @@ protected:
 	static const unsigned char stale_vbo    = 1u << 2;
 
 private:
-	unsigned char stale;       ///< Flags indicating need for update.
-	Colorb color;              ///< Color of the text.
-	float scale;               ///< Label scale factor.
-	Alignment alignment;       ///< Text alignment.
-	unsigned int width;        ///< Label width.
-	size_t size;               ///< Size of the char array.
-	size_t vertices;           ///< Number of vertices to draw.
-	char *text;                ///< Content of this label.
-	SpriteVertex *vx;          ///< Vertex array containing the text.
-	SmartPtr<FontAtlas> font;  ///< The font used in this label.
-	Vec2f position;            ///< Position of the text (top left).
+	unsigned char stale;        ///< Flags indicating need for update.
+	Colorb color;               ///< Color of the text.
+	float scale;                ///< Label scale factor.
+	Alignment alignment;        ///< Text alignment.
+	unsigned int width;         ///< Label width.
+	size_t size;                ///< Size of the char array.
+	size_t vertices;            ///< Number of vertices to draw.
+	char *text;                 ///< Content of this label.
+	SpriteVertex *vx;           ///< Vertex array containing the text.
+	SharedPtr<FontAtlas> font;  ///< The font used in this label.
+	Vec2f position;             ///< Position of the text (top left).
 
 	/// Align individual characters.
 	/// \param length  Negative length of characters from \p start to \p end.

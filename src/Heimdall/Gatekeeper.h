@@ -43,8 +43,8 @@ namespace Heimdall
 		Touch touches[2];
 
 		Rainbow::Director *director;
-		SmartPtr<FontAtlas> console_font;
-		SmartPtr<FontAtlas> ui_font;
+		SharedPtr<FontAtlas> console_font;
+		SharedPtr<FontAtlas> ui_font;
 
 		SceneGraph::Node *overlay_node;
 		SceneGraph::Node scenegraph;

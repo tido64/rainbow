@@ -53,13 +53,13 @@ public:
 	void update();
 
 private:
-	unsigned int array_object;       ///< GL vertex array object.
-	unsigned int buffer;             ///< GL vertex buffer.
+	unsigned int array_object;        ///< GL vertex array object.
+	unsigned int buffer;              ///< GL vertex buffer.
 
-	size_t batch_vertices;           ///< Total number of vertices in this batch.
-	SmartPtr<TextureAtlas> texture;  ///< Texture atlas used by all sprites in the batch.
-	Vector<Sprite*> sprites;         ///< Vector storing all sprites.
-	Vector<SpriteVertex> vertices;   ///< Common vertex array for all sprites in the batch.
+	size_t batch_vertices;            ///< Total number of vertices in this batch.
+	SharedPtr<TextureAtlas> texture;  ///< Texture atlas used by all sprites in the batch.
+	Vector<Sprite*> sprites;          ///< Vector storing all sprites.
+	Vector<SpriteVertex> vertices;    ///< Common vertex array for all sprites in the batch.
 
 	/// One does not simply assign a SpriteBatch.
 	SpriteBatch& operator=(const SpriteBatch &);

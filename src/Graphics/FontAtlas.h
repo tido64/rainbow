@@ -3,7 +3,7 @@
 #define FONTATLAS_EXTENDED 6
 //#define FONTATLAS_KERNING
 
-#include "Common/SmartPtr.h"
+#include "Common/SharedPtr.h"
 #include "Graphics/FontGlyph.h"
 #include "Graphics/TextureManager.h"
 
@@ -28,7 +28,7 @@ class Data;
 ///
 /// Copyright 2010-12 Bifrost Entertainment. All rights reserved.
 /// \author Tommy Nguyen
-class FontAtlas : public NonCopyable<FontAtlas>, public SmartPtrFriendly
+class FontAtlas : public RefCounted
 {
 public:
 	FontAtlas(const float pt);

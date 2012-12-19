@@ -22,7 +22,7 @@ namespace Rainbow
 			int trim(lua_State *);
 
 		private:
-			SmartPtr<TextureAtlas> texture;
+			SharedPtr<TextureAtlas> texture;
 		};
 
 		TextureAtlas* Texture::raw_ptr() const

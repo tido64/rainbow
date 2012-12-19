@@ -19,7 +19,7 @@ namespace Rainbow
 			inline FontAtlas* raw_ptr() const;
 
 		private:
-			SmartPtr<FontAtlas> font;
+			SharedPtr<FontAtlas> font;
 		};
 
 		FontAtlas* Font::raw_ptr() const
