@@ -1,8 +1,8 @@
 #ifndef HEIMDALL_OVERLAY_H_
 #define HEIMDALL_OVERLAY_H_
 
-#include "Common/SpriteVertex.h"
 #include "Graphics/Drawable.h"
+#include "Graphics/SpriteVertex.h"
 
 namespace Heimdall
 {

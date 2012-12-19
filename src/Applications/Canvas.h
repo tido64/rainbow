@@ -2,8 +2,8 @@
 #define RAINBOW_CANVAS_H_
 
 #ifdef USE_CANVAS
-#include "Common/SpriteVertex.h"
 #include "Graphics/Drawable.h"
+#include "Graphics/SpriteVertex.h"
 #include "Input/Touch.h"
 #include "Input/Touchable.h"
 

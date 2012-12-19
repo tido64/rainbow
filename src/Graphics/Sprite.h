@@ -2,7 +2,7 @@
 #define SPRITE_H_
 
 #include "Common/NonCopyable.h"
-#include "Common/SpriteVertex.h"
+#include "Graphics/SpriteVertex.h"
 
 class SpriteBatch;
 

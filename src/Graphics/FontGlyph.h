@@ -1,7 +1,7 @@
 #ifndef FONTGLYPH_H_
 #define FONTGLYPH_H_
 
-#include "Common/SpriteVertex.h"
+#include "Graphics/SpriteVertex.h"
 
 /// Font glyph structure for storing advance and a textured sprite.
 ///

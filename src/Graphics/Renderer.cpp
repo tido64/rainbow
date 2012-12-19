@@ -1,9 +1,9 @@
 // Copyright 2012 Bifrost Entertainment. All rights reserved.
 
 #include "Common/Data.h"
-#include "Common/SpriteVertex.h"
 #include "Graphics/Renderer.h"
 #include "Graphics/ShaderManager.h"
+#include "Graphics/SpriteVertex.h"
 
 #ifdef GL_ES_VERSION_2_0
 #	include "Graphics/Shaders/Shaders.h"
