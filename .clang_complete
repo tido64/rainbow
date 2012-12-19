@@ -1,14 +1,18 @@
 -std=c++11
+-Werror
+-pedantic
 -Wall
 -Wextra
+-Wno-invalid-offsetof
 -Wold-style-cast
 -Woverloaded-virtual
 -Wsign-promo
--Wno-variadic-macros
--Werror
 -I src
 -I lib
 -I lib/Lua
 -I lib/FreeType/include
 -I lib/libpng
+-D USE_CANVAS
+-D USE_HEIMDALL
 -D USE_PHYSICS
+-fno-rtti

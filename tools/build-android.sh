@@ -17,7 +17,7 @@ rm -fr AndroidManifest.xml ant.properties bin build.xml jni libs \
 
 # Create project files
 $NDK_HOME/../android-sdk/tools/android -s create project --name "Rainbow" \
-	--target "android-15" --path . --package "com.bifrostentertainment.rainbow" \
+	--target "android-16" --path . --package "com.bifrostentertainment.rainbow" \
 	--activity "Rainbow" || exit 1
 rm -r src/*
 mkdir -p jni
@@ -52,7 +52,7 @@ LOCAL_C_INCLUDES := $PROJECT/src $PROJECT/lib $PROJECT/lib/FreeType/include \
                     $PROJECT/lib/libpng $PROJECT/lib/Lua \
                     $NDK_HOME/sources/android/native_app_glue
 LOCAL_CFLAGS := $@ -finline-functions -ftree-vectorize
-LOCAL_CPPFLAGS := -std=gnu++11 -Wall -Wextra -Woverloaded-virtual -Wsign-promo -fno-rtti
+LOCAL_CPPFLAGS := -std=gnu++11 -Wall -Wextra -Wno-psabi -Woverloaded-virtual -Wsign-promo -fno-rtti
 
 LOCAL_STATIC_LIBRARIES := android_native_app_glue
 LOCAL_LDLIBS := -landroid -lEGL -lGLESv2 -lOpenSLES -llog -lz
@@ -80,7 +80,7 @@ cat > AndroidManifest.xml << ANDROIDMANIFEST_XML
           package="com.bifrostentertainment.rainbow"
           android:versionCode="1"
           android:versionName="1.0">
-	<uses-sdk android:minSdkVersion="11" />
+	<uses-sdk android:minSdkVersion="9" />
 	<uses-feature android:name="android.hardware.screen.portrait"
 	              android:glEsVersion="0x00020000" />
 	<application android:icon="@drawable/ic_launcher"
@@ -102,4 +102,4 @@ ANDROIDMANIFEST_XML
 echo " done"
 
 NDK_DEBUG=1 $NDK_HOME/ndk-build -j &&
-JAVA_HOME=/usr/lib/jvm/java-7-openjdk /usr/bin/ant debug
+/usr/bin/ant debug

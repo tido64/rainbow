@@ -15,7 +15,7 @@
 #	else
 #		define RAINBOW_IOS
 #	endif
-#elif defined(__linux)
+#elif defined(__linux__)
 #	define RAINBOW_UNIX
 #elif defined(_WIN32)
 #	define RAINBOW_WIN

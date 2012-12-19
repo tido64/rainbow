@@ -3,7 +3,6 @@ MAKE="make -j1"
 OUTPUT=rainbow
 PROJECT="$(cd -P "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 REMOVABLE="CMake* cmake_install.cmake *.a Makefile $OUTPUT"
-SCAN_BUILD=/usr/lib/clang-analyzer/scan-build
 
 if [ ! -d $SCAN_BUILD ]; then
 	echo "'$SCAN_BUILD' does not exist. Please set SCAN_BUILD appropriately."
@@ -28,7 +27,7 @@ function compile {
 # Cross compile pass
 CC=
 CXX=
-compile "Cross compile" i486-mingw32-c++ -DMINGW=ON
+compile "Cross compile" i486-mingw32-c++ "-DHEIMDALL=ON -DMINGW=ON"
 mv rainbow rainbow.exe
 
 # GCC compile pass
@@ -38,7 +37,7 @@ compile "GCC compile" $CC
 
 # Clang compile pass
 # Also performs static analysis and generates a report
-CC=$SCAN_BUILD/ccc-analyzer
-CXX=$SCAN_BUILD/c++-analyzer
+CC=ccc-analyzer
+CXX=c++-analyzer
 MAKE="scan-build -o report --use-cc=clang --use-c++=clang make $@"
 compile "Clang compile" scan-build #-DGTEST=ON
