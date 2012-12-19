@@ -4,9 +4,10 @@
 #ifdef USE_HEIMDALL
 
 #include "Director.h"
-#include "Common/Vector.h"
-#include "Graphics/Label.h"
-#include "Graphics/SpriteBatch.h"
+#include "Heimdall/DebugInfo.h"
+#include "Heimdall/Overlay.h"
+#include "Input/Touch.h"
+#include "Input/Touchable.h"
 
 namespace Heimdall
 {
@@ -14,7 +15,7 @@ namespace Heimdall
 	///
 	/// Copyright 2012 Bifrost Entertainment. All rights reserved.
 	/// \author Tommy Nguyen
-	class Gatekeeper : public NonCopyable<Gatekeeper>
+	class Gatekeeper : public Touchable, private NonCopyable<Gatekeeper>
 	{
 	public:
 		Gatekeeper();
@@ -25,26 +26,33 @@ namespace Heimdall
 		void init(const Data &);
 		void set_video(const int width, const int height);
 
-		inline void toggle_info();
-
 		void update(const unsigned long t = 0);
 
 		inline void on_memory_warning();
 
+		virtual void touch_began(const Touch *const touches, const size_t count);
+		virtual void touch_canceled();
+		virtual void touch_ended(const Touch *const touches, const size_t count);
+		virtual void touch_moved(const Touch *const touches, const size_t count);
+
 	private:
-		float time;
 		int width;
 		int height;
+		unsigned int touch_count;
+		unsigned long touch_held;
+		Touch touches[2];
 
 		Rainbow::Director *director;
-		SmartPtr<FontAtlas> font;
+		SmartPtr<FontAtlas> console_font;
+		SmartPtr<FontAtlas> ui_font;
 
-		SceneGraph::Node *info_node;
+		SceneGraph::Node *overlay_node;
 		SceneGraph::Node scenegraph;
 
-		Label info_label;
+		Overlay overlay;
+		DebugInfo info;
 
-		char info_text[128];
+		inline void toggle_overlay();
 	};
 
 	void Gatekeeper::draw()
@@ -53,9 +61,9 @@ namespace Heimdall
 		this->scenegraph.draw();
 	}
 
-	void Gatekeeper::toggle_info()
+	void Gatekeeper::toggle_overlay()
 	{
-		this->info_node->enabled = !this->info_node->enabled;
+		this->overlay_node->enabled = !this->overlay_node->enabled;
 	}
 
 	void Gatekeeper::on_memory_warning()
