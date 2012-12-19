@@ -54,6 +54,13 @@ void android_init_display(AInstance *ainstance);
 void android_handle_event(struct android_app *app, int32_t cmd);
 int32_t android_handle_input(struct android_app *app, AInputEvent *event);
 int32_t android_handle_motion(struct android_app *app, AInputEvent *event);
+Touch get_touch_event(AInstance *ainstance,
+                      AInputEvent *event,
+                      const int32_t index);
+Touch get_touch_event(AInstance *ainstance,
+                      AInputEvent *event,
+                      const int32_t index,
+                      const size_t history);
 
 
 void android_main(struct android_app *state)
@@ -294,31 +301,44 @@ int32_t android_handle_input(struct android_app *app, AInputEvent *event)
 
 int32_t android_handle_motion(struct android_app *app, AInputEvent *event)
 {
-	const int32_t action = AMotionEvent_getAction(event);
-	if (action == AMOTION_EVENT_ACTION_POINTER_DOWN || action == AMOTION_EVENT_ACTION_POINTER_UP)
-		return 0;
-
-	const uint32_t height = static_cast<AInstance*>(app->userData)->height;
-	const size_t count = AMotionEvent_getPointerCount(event);
-	Touch *touches = new Touch[count];
-	for (size_t i = 0; i < count; ++i)
-	{
-		touches[i].hash = AMotionEvent_getPointerId(event, i);
-		touches[i].x    = AMotionEvent_getX(event, i);
-		touches[i].y    = height - AMotionEvent_getY(event, i);
-		touches[i].x0   = AMotionEvent_getHistoricalX(event, i, 0);
-		touches[i].y0   = height - AMotionEvent_getHistoricalY(event, i, 0);
-	}
-	switch (action)
+	AInstance* a = static_cast<AInstance*>(app->userData);
+	switch (AMotionEvent_getAction(event) & AMOTION_EVENT_ACTION_MASK)
 	{
 		case AMOTION_EVENT_ACTION_DOWN:
-			Input::Instance->touch_began(touches, count);
+		case AMOTION_EVENT_ACTION_POINTER_DOWN:
+			{
+				const int32_t index
+						= (AMotionEvent_getAction(event) & AMOTION_EVENT_ACTION_POINTER_INDEX_MASK)
+						>> AMOTION_EVENT_ACTION_POINTER_INDEX_SHIFT;
+				Touch t = get_touch_event(a, event, index);
+				Input::Instance->touch_began(&t, 1);
+			}
 			break;
 		case AMOTION_EVENT_ACTION_UP:
-			Input::Instance->touch_ended(touches, count);
+		case AMOTION_EVENT_ACTION_POINTER_UP:
+			{
+				const int32_t index
+						= (AMotionEvent_getAction(event) & AMOTION_EVENT_ACTION_POINTER_INDEX_MASK)
+						>> AMOTION_EVENT_ACTION_POINTER_INDEX_SHIFT;
+				Touch t = get_touch_event(a, event, index);
+				Input::Instance->touch_ended(&t, 1);
+			}
 			break;
 		case AMOTION_EVENT_ACTION_MOVE:
-			Input::Instance->touch_moved(touches, count);
+			{
+				size_t history = AMotionEvent_getHistorySize(event);
+				if (!history)
+					break;
+				--history;
+
+				const size_t count = AMotionEvent_getPointerCount(event);
+				Touch *touches = new Touch[count];
+
+				for (size_t i = 0; i < count; ++i)
+					touches[i] = get_touch_event(a, event, i, history);
+				Input::Instance->touch_moved(touches, count);
+				delete[] touches;
+			}
 			break;
 		case AMOTION_EVENT_ACTION_CANCEL:
 		case AMOTION_EVENT_ACTION_OUTSIDE:
@@ -328,8 +348,26 @@ int32_t android_handle_motion(struct android_app *app, AInputEvent *event)
 		default:
 			break;
 	}
-	delete[] touches;
 	return 1;
+}
+
+Touch get_touch_event(AInstance *a, AInputEvent *event, const int32_t index)
+{
+	Touch t(AMotionEvent_getX(event, index),
+	        a->height - AMotionEvent_getY(event, index));
+	t.hash = AMotionEvent_getPointerId(event, index);
+	return t;
+}
+
+Touch get_touch_event(AInstance *a,
+                      AInputEvent *event,
+                      const int32_t index,
+                      const size_t history)
+{
+	Touch t = get_touch_event(a, event, index);
+	t.x0 = AMotionEvent_getHistoricalX(event, index, history);
+	t.y0 = a->height - AMotionEvent_getHistoricalY(event, index, history);
+	return t;
 }
 
 #endif
