@@ -13,11 +13,11 @@ namespace Rainbow
 			switch (lua_gettop(L))
 			{
 				case 1:
-					r = ::Random::Instance().next<float_p>(lua_tonumber(L, 1));
+					r = ::Random::Instance().next<Number>(lua_tonumber(L, 1));
 					break;
 				case 2:
 					r = lua_tonumber(L, 1);
-					r = ::Random::Instance().next<float_p>(r, lua_tonumber(L, 2));
+					r = ::Random::Instance().next<Number>(r, lua_tonumber(L, 2));
 					break;
 				default:
 					r = ::Random::Instance().next();
