@@ -3,6 +3,7 @@
 
 #include "Common/Data.h"
 #include "Common/Debug.h"
+#include "Graphics/OpenGL.h"
 #if defined(RAINBOW_IOS)
 #	include <UIKit/UIKit.h>
 #else

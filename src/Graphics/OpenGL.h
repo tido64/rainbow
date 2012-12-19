@@ -14,6 +14,7 @@
 #	define GL_DRAW_FRAMEBUFFER GL_FRAMEBUFFER
 #elif defined(RAINBOW_IOS)
 #	include <OpenGLES/ES2/gl.h>
+#	include <OpenGLES/ES2/glext.h>
 #	define GL_DRAW_FRAMEBUFFER GL_DRAW_FRAMEBUFFER_APPLE
 #elif defined(RAINBOW_MAC)
 #	include <OpenGL/gl.h>

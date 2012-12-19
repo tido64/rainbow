@@ -2,7 +2,6 @@
 
 #include "Algorithm.h"
 #include "Graphics/ImageLoader.h"
-#include "Graphics/OpenGL.h"
 #include "Graphics/TextureAtlas.h"
 
 TextureAtlas::TextureAtlas(const Data &img) : name(0), width(0), height(0)
