@@ -7,30 +7,33 @@ namespace Rainbow
 {
 	namespace Lua
 	{
-		int Random::random(lua_State *L)
+		namespace Random
 		{
-			float r = 0.0f;
-			switch (lua_gettop(L))
+			void init(lua_State *L)
 			{
-				case 1:
-					r = ::Random::Instance().next<Number>(lua_tonumber(L, 1));
-					break;
-				case 2:
-					r = lua_tonumber(L, 1);
-					r = ::Random::Instance().next<Number>(r, lua_tonumber(L, 2));
-					break;
-				default:
-					r = ::Random::Instance().next();
-					break;
+				lua_pushcclosure(L, &random, 0);
+				lua_setfield(L, -2, "random");
 			}
-			lua_pushnumber(L, r);
-			return 1;
-		}
 
-		void Random::init(lua_State *L)
-		{
-			lua_pushcclosure(L, &Random::random, 0);
-			lua_setfield(L, -2, "random");
+			int random(lua_State *L)
+			{
+				Number r = 0.0f;
+				switch (lua_gettop(L))
+				{
+					case 1:
+						r = ::Random::Instance().next<Number>(lua_tonumber(L, 1));
+						break;
+					case 2:
+						r = lua_tonumber(L, 1);
+						r = ::Random::Instance().next<Number>(r, lua_tonumber(L, 2));
+						break;
+					default:
+						r = ::Random::Instance().next();
+						break;
+				}
+				lua_pushnumber(L, r);
+				return 1;
+			}
 		}
 	}
 }

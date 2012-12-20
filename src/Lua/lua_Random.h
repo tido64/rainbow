@@ -7,20 +7,12 @@ namespace Rainbow
 {
 	namespace Lua
 	{
-		class Random
+		namespace Random
 		{
-			friend void init(lua_State *);
+			void init(lua_State *);
 
-		public:
-			static int random(lua_State *);
-
-		private:
-			static void init(lua_State *);
-
-			Random();
-			Random(const Random &);
-			Random& operator=(const Random &);
-		};
+			int random(lua_State *);
+		}
 	}
 }
 
