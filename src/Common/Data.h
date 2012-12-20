@@ -19,7 +19,7 @@
 ///
 /// Copyright 2011-12 Bifrost Entertainment. All rights reserved.
 /// \author Tommy Nguyen
-class Data : public NonCopyable<Data>
+class Data : private NonCopyable<Data>
 {
 public:
 	/// Construct an empty data object. No memory will be allocated.

@@ -1,5 +1,4 @@
 #include "Common/Data.h"
-#include "Graphics/OpenGL.h"
 #include "Graphics/ShaderManager.h"
 
 ShaderManager *ShaderManager::Instance = nullptr;

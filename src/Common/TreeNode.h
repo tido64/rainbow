@@ -10,7 +10,7 @@
 /// Copyright 2011-12 Bifrost Entertainment. All rights reserved.
 /// \author Tommy Nguyen
 template<class T>
-class TreeNode : public NonCopyable<TreeNode<T> >
+class TreeNode : private NonCopyable<TreeNode<T> >
 {
 public:
 	TreeNode();

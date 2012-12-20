@@ -1,10 +1,9 @@
 #ifndef HEIMDALL_DEBUGINFO_H_
 #define HEIMDALL_DEBUGINFO_H_
 
-#include "Common/NonCopyable.h"
-#include "Common/Vec2.h"
-#include "Input/Touchable.h"
 #include "Graphics/Label.h"
+
+struct Touch;
 
 namespace SceneGraph { class Node; }
 
@@ -14,7 +13,7 @@ namespace Heimdall
 	///
 	/// Copyright 2012 Bifrost Entertainment. All rights reserved.
 	/// \author Tommy Nguyen
-	class DebugInfo : public NonCopyable<DebugInfo>
+	class DebugInfo : private NonCopyable<DebugInfo>
 	{
 	public:
 		DebugInfo();

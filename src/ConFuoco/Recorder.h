@@ -19,7 +19,7 @@ namespace ConFuoco
 	///
 	/// Copyright 2012 Bifrost Entertainment. All rights reserved.
 	/// \author Tommy Nguyen
-	class Recorder : public NonCopyable<Recorder>
+	class Recorder : private NonCopyable<Recorder>
 	{
 	public:
 		Recorder();

@@ -17,7 +17,7 @@ class  Touchable;
 ///
 /// Copyright 2010-12 Bifrost Entertainment. All rights reserved.
 /// \author Tommy Nguyen
-class Input : public NonCopyable<Input>
+class Input : private NonCopyable<Input>
 {
 public:
 	enum

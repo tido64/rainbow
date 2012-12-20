@@ -18,7 +18,7 @@ namespace ConFuoco
 	///
 	/// Copyright 2012 Bifrost Entertainment. All rights reserved.
 	/// \author Tommy Nguyen
-	class Mixer : public NonCopyable<Mixer>
+	class Mixer : private NonCopyable<Mixer>
 	{
 		friend class Channel;
 

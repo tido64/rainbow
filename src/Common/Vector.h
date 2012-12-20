@@ -15,7 +15,7 @@
 /// Copyright 2010-12 Bifrost Entertainment. All rights reserved.
 /// \author Tommy Nguyen
 template<class T>
-class Vector : public NonCopyable<Vector<T> >
+class Vector : private NonCopyable<Vector<T> >
 {
 public:
 	Vector(const int reserve = 8);

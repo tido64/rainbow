@@ -9,7 +9,7 @@ class Sprite;
 ///
 /// Copyright 2011-12 Bifrost Entertainment. All rights reserved.
 /// \author Tommy Nguyen
-class Animation : public ChronoTrigger, public NonCopyable<Animation>
+class Animation : public ChronoTrigger, private NonCopyable<Animation>
 {
 public:
 	/// \param s       The sprite to animate.

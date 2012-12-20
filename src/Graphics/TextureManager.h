@@ -17,7 +17,7 @@
 ///
 /// Copyright 2012 Bifrost Entertainment. All rights reserved.
 /// \author Tommy Nguyen
-class TextureManager : public NonCopyable<TextureManager>
+class TextureManager : private NonCopyable<TextureManager>
 {
 public:
 	static inline TextureManager& Instance();

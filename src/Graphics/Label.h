@@ -8,7 +8,7 @@
 ///
 /// Copyright 2011-12 Bifrost Entertainment. All rights reserved.
 /// \author Tommy Nguyen
-class Label : public Drawable, public NonCopyable<Label>
+class Label : public Drawable, private NonCopyable<Label>
 {
 public:
 	enum Alignment

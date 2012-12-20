@@ -14,7 +14,7 @@ namespace Rainbow
 	///
 	/// Copyright 2011-12 Bifrost Entertainment. All rights reserved.
 	/// \author Tommy Nguyen
-	class Director : public NonCopyable<Director>
+	class Director : private NonCopyable<Director>
 	{
 	public:
 		inline Director();

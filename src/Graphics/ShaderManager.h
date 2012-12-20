@@ -24,7 +24,7 @@ namespace Shader
 	};
 }
 
-class ShaderManager : public NonCopyable<ShaderManager>
+class ShaderManager : private NonCopyable<ShaderManager>
 {
 public:
 	static ShaderManager *Instance;

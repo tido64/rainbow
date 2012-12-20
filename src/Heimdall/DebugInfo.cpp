@@ -1,7 +1,6 @@
 #ifdef USE_HEIMDALL
 
 #include "Graphics/SceneGraph.h"
-#include "Graphics/TextureManager.h"
 #include "Heimdall/DebugInfo.h"
 #include "Heimdall/Resources.h"
 #include "Input/Touch.h"
