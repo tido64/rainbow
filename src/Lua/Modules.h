@@ -23,15 +23,15 @@ namespace Rainbow
 	{
 		inline void bind(lua_State *L)
 		{
-			LuaMachine::wrap<Animation>(L);
-			LuaMachine::wrap<Font>(L);
-			LuaMachine::wrap<Label>(L);
-			LuaMachine::wrap<Sprite>(L);
-			LuaMachine::wrap<SpriteBatch>(L);
-			LuaMachine::wrap<Texture>(L);
+			wrap<Animation>(L);
+			wrap<Font>(L);
+			wrap<Label>(L);
+			wrap<Sprite>(L);
+			wrap<SpriteBatch>(L);
+			wrap<Texture>(L);
 
 		#ifdef USE_CANVAS
-			LuaMachine::wrap<Canvas>(L);
+			wrap<Canvas>(L);
 		#endif
 		}
 

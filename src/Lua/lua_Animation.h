@@ -1,7 +1,7 @@
 #ifndef LUA_ANIMATION_H_
 #define LUA_ANIMATION_H_
 
-#include "LuaMachine.h"
+#include "Lua/LuaHelper.h"
 
 class Animation;
 
@@ -13,7 +13,7 @@ namespace Rainbow
 		{
 		public:
 			static const char class_name[];
-			static const LuaMachine::Method<Animation> methods[];
+			static const Method<Animation> methods[];
 
 			Animation(lua_State *);
 			~Animation();

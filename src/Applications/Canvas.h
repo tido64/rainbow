@@ -2,6 +2,7 @@
 #define RAINBOW_CANVAS_H_
 
 #ifdef USE_CANVAS
+#include "Common/NonCopyable.h"
 #include "Graphics/Drawable.h"
 #include "Graphics/SpriteVertex.h"
 #include "Input/Touch.h"
@@ -17,7 +18,7 @@ struct Texture;
 ///
 /// Copyright 2012 Bifrost Entertainment. All rights reserved.
 /// \author Tommy Nguyen
-class Canvas : public Drawable, public NonCopyable<Canvas>, public Touchable
+class Canvas : public Drawable, public Touchable, private NonCopyable<Canvas>
 {
 public:
 	Canvas();

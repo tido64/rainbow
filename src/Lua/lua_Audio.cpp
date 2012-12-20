@@ -21,38 +21,6 @@ namespace Rainbow
 			{
 				const char channel_type[] = "channel";
 				const char sound_type[] = "sound";
-				const char type_field[] = "__type";
-
-				void pushpointer(lua_State *L, void *ptr, const char *name)
-				{
-				#ifndef NDEBUG
-					lua_createtable(L, 1, 1);
-					lua_pushlightuserdata(L, ptr);
-					lua_rawseti(L, -2, 0);
-					lua_pushstring(L, name);
-					lua_setfield(L, -2, type_field);
-				#else
-					static_cast<void>(name);
-					lua_pushlightuserdata(L, ptr);
-				#endif
-				}
-
-				void* topointer(lua_State *L, const char *name)
-				{
-				#ifndef NDEBUG
-					LUA_CHECK(L, !lua_isnil(L, -1), "Parameter is a nil value");
-					LUA_CHECK(L, lua_istable(L, -1), "Object is not of type '%s'", name);
-					lua_getfield(L, -1, type_field);
-					LUA_CHECK(L, memcmp(lua_tolstring(L, -1, nullptr), name, strlen(name)) == 0, "Object is not of type '%s'", name);
-					lua_rawgeti(L, -2, 0);
-					void *ptr = lua_touserdata(L, -1);
-					lua_pop(L, 2);
-					return ptr;
-				#else
-					static_cast<void>(name);
-					return lua_touserdata(L, -1);
-				#endif
-				}
 			}
 
 			void init(lua_State *L)
@@ -85,7 +53,7 @@ namespace Rainbow
 				lua_pushcclosure(L, &stop, 0);
 				lua_setfield(L, -2, "stop");
 
-				LuaMachine::wrap<Recorder>(L);
+				wrap<Recorder>(L);
 
 				lua_pop(L, 1);
 			}

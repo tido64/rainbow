@@ -6,7 +6,7 @@ namespace Rainbow
 	namespace Lua
 	{
 		const char Label::class_name[] = "label";
-		const LuaMachine::Method<Label> Label::methods[] = {
+		const Method<Label> Label::methods[] = {
 			{ "get_color",      &Label::get_color },
 			{ "set_alignment",  &Label::set_alignment },
 			{ "set_color",      &Label::set_color },
@@ -63,7 +63,7 @@ namespace Rainbow
 
 		int Label::set_font(lua_State *L)
 		{
-			Font *font = LuaMachine::wrapper<Font>(L);
+			Font *font = wrapper<Font>(L);
 			::Label::set_font(font->raw_ptr());
 			return 0;
 		}

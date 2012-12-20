@@ -5,7 +5,7 @@ namespace Rainbow
 	namespace Lua
 	{
 		const char Recorder::class_name[] = "recorder";
-		const LuaMachine::Method<Recorder> Recorder::methods[] = {
+		const Method<Recorder> Recorder::methods[] = {
 			{ "get_average_power", &Recorder::get_average_power },
 			{ "get_low_pass",      &Recorder::get_low_pass },
 			{ "get_peak_power",    &Recorder::get_peak_power },

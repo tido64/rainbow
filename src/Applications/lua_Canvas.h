@@ -2,8 +2,8 @@
 #define LUA_CANVAS_H_
 
 #ifdef USE_CANVAS
-#include "LuaMachine.h"
 #include "Applications/Canvas.h"
+#include "Lua/LuaHelper.h"
 
 namespace Rainbow
 {
@@ -13,7 +13,7 @@ namespace Rainbow
 		{
 		public:
 			static const char class_name[];
-			static const LuaMachine::Method<Canvas> methods[];
+			static const Method<Canvas> methods[];
 
 			inline Canvas(lua_State *);
 			virtual ~Canvas();

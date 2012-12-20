@@ -9,7 +9,7 @@ namespace Rainbow
 	namespace Lua
 	{
 		const char SceneGraph::class_name[] = "scenegraph";
-		const LuaMachine::Method<SceneGraph> SceneGraph::methods[] = {
+		const Method<SceneGraph> SceneGraph::methods[] = {
 			{ "add_animation",  &SceneGraph::add_animation },
 			{ "add_batch",      &SceneGraph::add_batch },
 			{ "add_drawable",   &SceneGraph::add_drawable },
@@ -135,7 +135,7 @@ namespace Rainbow
 			{
 				lua_pushstring(L, methods[i].name);
 				lua_pushnumber(L, i);
-				lua_pushcclosure(L, &LuaMachine::thunk<SceneGraph>, 1);
+				lua_pushcclosure(L, &thunk<SceneGraph>, 1);
 				lua_settable(L, -3);
 			}
 

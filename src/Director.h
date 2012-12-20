@@ -6,6 +6,8 @@
 #include "Graphics/SceneGraph.h"
 #include "Input/Input.h"
 
+class Data;
+
 namespace Rainbow
 {
 	/// Simple game loop for Lua-scripted games.

@@ -3,6 +3,7 @@
 
 #include "LuaMachine.h"
 #include "Graphics/SceneGraph.h"
+#include "Lua/LuaHelper.h"
 
 namespace Rainbow
 {
@@ -32,13 +33,13 @@ namespace Rainbow
 			};
 		}
 
-		class SceneGraph : public NonCopyable<SceneGraph>
+		class SceneGraph : private NonCopyable<SceneGraph>
 		{
 			friend class Rainbow::LuaMachine;
 
 		public:
 			static const char class_name[];
-			static const LuaMachine::Method<SceneGraph> methods[];
+			static const Method<SceneGraph> methods[];
 
 			int add_animation(lua_State *);
 			int add_batch(lua_State *);

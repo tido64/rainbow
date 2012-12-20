@@ -5,13 +5,14 @@
 #include "ConFuoco/Mixer.h"
 #include "Graphics/TextureManager.h"
 #include "Lua/lua_Platform.h"
+#include "Lua/LuaHelper.h"
 
 namespace Rainbow
 {
 	void Director::init(const Data &main)
 	{
-		LuaMachine::load(this->lua, main, "main");
-		if (this->lua.call("init") != LUA_OK || this->lua.update(0) != LUA_OK)
+		Lua::load(this->lua, main, "main");
+		if (Lua::call(this->lua, "init") != LUA_OK || this->lua.update(0) != LUA_OK)
 			this->shutdown();
 		else
 			this->scenegraph.update();

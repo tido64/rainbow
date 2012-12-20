@@ -6,7 +6,7 @@ namespace Rainbow
 	namespace Lua
 	{
 		const char Texture::class_name[] = "texture";
-		const LuaMachine::Method<Texture> Texture::methods[] = {
+		const Method<Texture> Texture::methods[] = {
 			{ "create",  &Texture::create },
 			{ "trim",    &Texture::trim },
 			{ 0, 0 }

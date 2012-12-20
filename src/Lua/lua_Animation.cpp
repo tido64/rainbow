@@ -7,7 +7,7 @@ namespace Rainbow
 	namespace Lua
 	{
 		const char Animation::class_name[] = "animation";
-		const LuaMachine::Method<Animation> Animation::methods[] = {
+		const Method<Animation> Animation::methods[] = {
 			{ "is_stopped",  &Animation::is_stopped },
 			{ "set_delay",   &Animation::set_delay },
 			{ "set_fps",     &Animation::set_fps },
@@ -23,7 +23,7 @@ namespace Rainbow
 			LUA_ASSERT(lua_gettop(L) == 3 || lua_gettop(L) == 4,
 					   "rainbow.animation(sprite, frames{}, fps, loop delay)");
 
-			::Sprite *sprite = lua_isnil(L, 1) ? nullptr : LuaMachine::wrapper<Sprite>(L, 1)->raw_ptr();
+			::Sprite *sprite = lua_isnil(L, 1) ? nullptr : wrapper<Sprite>(L, 1)->raw_ptr();
 
 			// Count number of frames
 			unsigned int count = 0;
@@ -97,7 +97,7 @@ namespace Rainbow
 		{
 			LUA_ASSERT(lua_gettop(L) == 1, "<animation>:set_sprite(sprite)");
 
-			::Sprite *sprite = LuaMachine::wrapper<Sprite>(L, 1)->raw_ptr();
+			::Sprite *sprite = wrapper<Sprite>(L, 1)->raw_ptr();
 			this->animation->set_sprite(sprite);
 			return 0;
 		}

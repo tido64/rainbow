@@ -1,8 +1,8 @@
 #ifndef LUA_LABEL_H_
 #define LUA_LABEL_H_
 
-#include "LuaMachine.h"
 #include "Graphics/Label.h"
+#include "Lua/LuaHelper.h"
 
 namespace Rainbow
 {
@@ -12,7 +12,7 @@ namespace Rainbow
 		{
 		public:
 			static const char class_name[];
-			static const LuaMachine::Method<Label> methods[];
+			static const Method<Label> methods[];
 
 			Label(lua_State *);
 

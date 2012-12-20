@@ -7,7 +7,7 @@ namespace Rainbow
 	namespace Lua
 	{
 		const char Canvas::class_name[] = "canvas";
-		const LuaMachine::Method<Canvas> Canvas::methods[] = {
+		const Method<Canvas> Canvas::methods[] = {
 			{ "clear",          &Canvas::clear },
 			{ "get_filled",     &Canvas::get_filled },
 			{ "set_background", &Canvas::set_background },
@@ -38,7 +38,7 @@ namespace Rainbow
 						const int w = lua_tointeger(L, 3);
 						const int h = lua_tointeger(L, 4);
 						lua_pop(L, 3);
-						Texture *texture = LuaMachine::wrapper<Texture>(L);
+						Texture *texture = wrapper<Texture>(L);
 						::Canvas::set_background((*texture->raw_ptr())[i], w, h);
 					}
 					break;
@@ -54,7 +54,7 @@ namespace Rainbow
 			LUA_ASSERT(lua_gettop(L) == 2, "<canvas>:set_brush(texture_atlas, texture_id)");
 			const int i = lua_tointeger(L, 2);
 			lua_pop(L, 1);
-			Texture *texture = LuaMachine::wrapper<Texture>(L);
+			Texture *texture = wrapper<Texture>(L);
 			::Canvas::set_brush((*texture->raw_ptr())[i]);
 			return 0;
 		}

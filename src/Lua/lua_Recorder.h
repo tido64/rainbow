@@ -1,8 +1,8 @@
 #ifndef LUA_RECORDER_H_
 #define LUA_RECORDER_H_
 
-#include "LuaMachine.h"
 #include "ConFuoco/Recorder.h"
+#include "Lua/LuaHelper.h"
 
 namespace Rainbow
 {
@@ -12,7 +12,7 @@ namespace Rainbow
 		{
 		public:
 			static const char class_name[];
-			static const LuaMachine::Method<Recorder> methods[];
+			static const Method<Recorder> methods[];
 
 			Recorder(lua_State *);
 

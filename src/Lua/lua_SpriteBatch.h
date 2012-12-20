@@ -1,8 +1,8 @@
 #ifndef LUA_SPRITEBATCH_H_
 #define LUA_SPRITEBATCH_H_
 
-#include "LuaMachine.h"
 #include "Graphics/SpriteBatch.h"
+#include "Lua/LuaHelper.h"
 
 namespace Rainbow
 {
@@ -12,7 +12,7 @@ namespace Rainbow
 		{
 		public:
 			static const char class_name[];
-			static const LuaMachine::Method<SpriteBatch> methods[];
+			static const Method<SpriteBatch> methods[];
 
 			inline SpriteBatch(lua_State *L);
 

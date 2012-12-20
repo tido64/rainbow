@@ -8,7 +8,7 @@ namespace Rainbow
 	namespace Lua
 	{
 		const char SpriteBatch::class_name[] = "spritebatch";
-		const LuaMachine::Method<SpriteBatch> SpriteBatch::methods[] = {
+		const Method<SpriteBatch> SpriteBatch::methods[] = {
 			{ "add",          &SpriteBatch::add },
 			{ "set_texture",  &SpriteBatch::set_texture },
 			{ 0, 0 }
@@ -23,7 +23,7 @@ namespace Rainbow
 			const int w = lua_tointeger(L, 3);
 			const int h = lua_tointeger(L, 4);
 			lua_pushlightuserdata(L, ::SpriteBatch::add(x, y, w, h));
-			return LuaMachine::alloc<Sprite>(L);
+			return alloc<Sprite>(L);
 		}
 
 		int SpriteBatch::set_texture(lua_State *L)
@@ -39,10 +39,10 @@ namespace Rainbow
 							return luaL_error(L, "rainbow.spritebatch:set_texture: Failed to load texture");
 						lua_pushlightuserdata(L, ::SpriteBatch::set_texture(t));
 					}
-					return LuaMachine::alloc<Texture>(L);
+					return alloc<Texture>(L);
 				case LUA_TTABLE:
 					{
-						Texture *texture = LuaMachine::wrapper<Texture>(L);
+						Texture *texture = wrapper<Texture>(L);
 						::SpriteBatch::set_texture(texture->raw_ptr());
 					}
 					break;

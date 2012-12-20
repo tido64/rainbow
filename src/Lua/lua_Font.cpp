@@ -6,7 +6,7 @@ namespace Rainbow
 	namespace Lua
 	{
 		const char Font::class_name[] = "font";
-		const LuaMachine::Method<Font> Font::methods[] = {
+		const Method<Font> Font::methods[] = {
 			{ 0, 0 }
 		};
 

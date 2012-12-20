@@ -1,7 +1,7 @@
 #ifndef LUA_SPRITE_H_
 #define LUA_SPRITE_H_
 
-#include "LuaMachine.h"
+#include "Lua/LuaHelper.h"
 
 struct lua_State;
 class  Sprite;
@@ -14,7 +14,7 @@ namespace Rainbow
 		{
 		public:
 			static const char class_name[];
-			static const LuaMachine::Method<Sprite> methods[];
+			static const Method<Sprite> methods[];
 
 			Sprite(lua_State *);
 

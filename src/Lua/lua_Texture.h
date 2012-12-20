@@ -1,8 +1,8 @@
 #ifndef LUA_TEXTURE_H_
 #define LUA_TEXTURE_H_
 
-#include "LuaMachine.h"
 #include "Graphics/TextureAtlas.h"
+#include "Lua/LuaHelper.h"
 
 namespace Rainbow
 {
@@ -12,7 +12,7 @@ namespace Rainbow
 		{
 		public:
 			static const char class_name[];
-			static const LuaMachine::Method<Texture> methods[];
+			static const Method<Texture> methods[];
 
 			Texture(lua_State *);
 

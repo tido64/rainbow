@@ -1,8 +1,8 @@
 #ifndef LUA_FONT_H_
 #define LUA_FONT_H_
 
-#include "LuaMachine.h"
 #include "Graphics/FontAtlas.h"
+#include "Lua/LuaHelper.h"
 
 namespace Rainbow
 {
@@ -12,7 +12,7 @@ namespace Rainbow
 		{
 		public:
 			static const char class_name[];
-			static const LuaMachine::Method<Font> methods[];
+			static const Method<Font> methods[];
 
 			Font(lua_State *);
 
