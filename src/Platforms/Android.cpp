@@ -353,10 +353,10 @@ int32_t android_handle_motion(struct android_app *app, AInputEvent *event)
 
 Touch get_touch_event(AInstance *a, AInputEvent *event, const int32_t index)
 {
-	Touch t(AMotionEvent_getX(event, index),
-	        a->height - AMotionEvent_getY(event, index));
-	t.hash = AMotionEvent_getPointerId(event, index);
-	return t;
+	return Touch(AMotionEvent_getPointerId(event, index),
+	             AMotionEvent_getX(event, index),
+	             a->height - AMotionEvent_getY(event, index),
+	             AMotionEvent_getEventTime(event));
 }
 
 Touch get_touch_event(AInstance *a,

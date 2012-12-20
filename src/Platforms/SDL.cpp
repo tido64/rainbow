@@ -187,6 +187,9 @@ void on_mouse_button_down(SDL_MouseButtonEvent &mouse)
 {
 	mouse_input.x = mouse.x;
 	mouse_input.y = screen_height - mouse.y;
+	mouse_input.x0 = mouse_input.x;
+	mouse_input.y0 = mouse_input.y;
+	mouse_input.timestamp = Chrono::Instance().current();
 	Input::Instance->touch_began(&mouse_input, 1);
 }
 
@@ -194,13 +197,19 @@ void on_mouse_button_up(SDL_MouseButtonEvent &mouse)
 {
 	mouse_input.x = mouse.x;
 	mouse_input.y = screen_height - mouse.y;
+	mouse_input.x0 = mouse_input.x;
+	mouse_input.y0 = mouse_input.y;
+	mouse_input.timestamp = Chrono::Instance().current();
 	Input::Instance->touch_ended(&mouse_input, 1);
 }
 
 void on_mouse_motion(SDL_MouseMotionEvent &mouse)
 {
+	mouse_input.x0 = mouse_input.x;
+	mouse_input.y0 = mouse_input.y;
 	mouse_input.x = mouse.x;
 	mouse_input.y = screen_height - mouse.y;
+	mouse_input.timestamp = Chrono::Instance().current();
 	Input::Instance->touch_moved(&mouse_input, 1);
 }
 

@@ -1,13 +1,8 @@
-#include "Director.h"
+#include <lua.hpp>
+
 #include "Input/Input.h"
 #include "Input/Touch.h"
 #include "Input/Touchable.h"
-
-#ifdef USE_HEIMDALL
-#	define DISABLE_IF_USING_HEIMDALL(name) DISABLED_##name
-#else
-#	define DISABLE_IF_USING_HEIMDALL(name) name
-#endif
 
 class TouchTest : public Touchable, public testing::Test
 {
@@ -20,19 +15,32 @@ public:
 		TOUCH_MOVED    = 1u << 3
 	};
 
-	TouchTest() : flags(0)
+	TouchTest() : flags(0), L(luaL_newstate()), input(L)
 	{
-		Input::Instance->subscribe(this, Input::ALL_EVENTS);
+		// Mock "rainbow.input" namespace
+		lua_createtable(this->L, 0, 1);
+		lua_createtable(this->L, 0, 0);
+		lua_setfield(this->L, -2, "input");
+		lua_setglobal(this->L, "rainbow");
+		ASSERT_TRUE(lua_gettop(this->L) == 0);
+
+		this->input.subscribe(this, Input::ALL_EVENTS);
 	}
 
 	~TouchTest()
 	{
-		Input::Instance->reset();
+		lua_close(this->L);
 	}
 
 	bool is_invalid(const Touch *const touches, const unsigned int count)
 	{
-		return count != 1 || touches[0].hash != 1 || touches[0].x != 2 || touches[0].y != 3;
+		return count != 1
+		    || touches[0].hash != 1
+		    || touches[0].x != 2
+		    || touches[0].y != 3
+		    || touches[0].x0 != touches[0].x
+		    || touches[0].y0 != touches[0].y
+		    || touches[0].timestamp != 0;
 	}
 
 	bool is_triggered(const unsigned int flags)
@@ -66,43 +74,35 @@ public:
 		this->flags |= TOUCH_MOVED;
 	}
 
-private:
+protected:
 	unsigned int flags;
-	Director director;
+	lua_State *L;
+	Input input;
 };
 
-TEST_F(TouchTest, DISABLE_IF_USING_HEIMDALL(TouchBeganEvent))
+TEST_F(TouchTest, TouchBeganEvent)
 {
-	ASSERT_NE(nullptr, Input::Instance);
-	Touch t1(2, 3);
-	t1.hash = 1;
-	Input::Instance->touch_began(&t1, 1);
+	Touch t1(1, 2, 3, 0);
+	this->input.touch_began(&t1, 1);
 	ASSERT_TRUE(is_triggered(TOUCH_BEGAN));
 }
 
-TEST_F(TouchTest, DISABLE_IF_USING_HEIMDALL(TouchCanceledEvent))
+TEST_F(TouchTest, TouchCanceledEvent)
 {
-	ASSERT_NE(nullptr, Input::Instance);
-	Input::Instance->touch_canceled();
+	this->input.touch_canceled();
 	ASSERT_TRUE(is_triggered(TOUCH_CANCELED));
 }
 
-TEST_F(TouchTest, DISABLE_IF_USING_HEIMDALL(TouchEndedEvent))
+TEST_F(TouchTest, TouchEndedEvent)
 {
-	ASSERT_NE(nullptr, Input::Instance);
-	Touch t1(2, 3);
-	t1.hash = 1;
-	Input::Instance->touch_ended(&t1, 1);
+	Touch t1(1, 2, 3, 0);
+	this->input.touch_ended(&t1, 1);
 	ASSERT_TRUE(is_triggered(TOUCH_ENDED));
 }
 
-TEST_F(TouchTest, DISABLE_IF_USING_HEIMDALL(TouchMovedEvent))
+TEST_F(TouchTest, TouchMovedEvent)
 {
-	ASSERT_NE(nullptr, Input::Instance);
-	Touch t1(2, 3);
-	t1.hash = 1;
-	Input::Instance->touch_moved(&t1, 1);
+	Touch t1(1, 2, 3, 0);
+	this->input.touch_moved(&t1, 1);
 	ASSERT_TRUE(is_triggered(TOUCH_MOVED));
 }
-
-#undef DISABLE_IF_USING_HEIMDALL

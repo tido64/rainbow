@@ -49,6 +49,7 @@
 				p = [touch previousLocationInView:nil];
 				t->x0 = p.x * self->scale;
 				t->y0 = (size.height - p.y) * self->scale;
+				t->timestamp = [touch timestamp] * 1000.0;
 				++t;
 			}
 			break;
@@ -62,6 +63,7 @@
 				p = [touch previousLocationInView:nil];
 				t->x0 = (size.width - p.x) * self->scale;
 				t->y0 = p.y * self->scale;
+				t->timestamp = [touch timestamp] * 1000.0;
 				++t;
 			}
 			break;
@@ -75,6 +77,7 @@
 				p = [touch previousLocationInView:nil];
 				t->x0 = (size.height - p.y) * self->scale;
 				t->y0 = (size.width - p.x) * self->scale;
+				t->timestamp = [touch timestamp] * 1000.0;
 				++t;
 			}
 			break;
@@ -88,6 +91,7 @@
 				p = [touch previousLocationInView:nil];
 				t->x0 = p.y * self->scale;
 				t->y0 = p.x * self->scale;
+				t->timestamp = [touch timestamp] * 1000.0;
 				++t;
 			}
 			break;

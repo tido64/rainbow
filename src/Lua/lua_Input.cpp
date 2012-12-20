@@ -55,7 +55,7 @@ namespace Rainbow
 					lua_createtable(L, 0, count);
 					for (size_t i = 0; i < count; ++i)
 					{
-						lua_createtable(L, 0, 2);
+						lua_createtable(L, 0, 5);
 						lua_pushvalue(L, -1);
 						const char *const hash = Rainbow::itoa(touches[i].hash);
 						lua_setfield(L, -3, hash);
@@ -64,6 +64,12 @@ namespace Rainbow
 						lua_setfield(L, -2, "x");
 						lua_pushinteger(L, touches[i].y);
 						lua_setfield(L, -2, "y");
+						lua_pushinteger(L, touches[i].x0);
+						lua_setfield(L, -2, "x0");
+						lua_pushinteger(L, touches[i].y0);
+						lua_setfield(L, -2, "y0");
+						lua_pushinteger(L, touches[i].timestamp);
+						lua_setfield(L, -2, "timestamp");
 						lua_pop(L, 1);
 					}
 					lua_call(L, 1, 0);
