@@ -7,9 +7,9 @@
 #include "Lua/lua_Input.h"
 #include "Lua/lua_IO.h"
 #include "Lua/lua_Label.h"
-#include "Lua/lua_Physics.h"
 #include "Lua/lua_Platform.h"
 #include "Lua/lua_Random.h"
+#include "Lua/lua_Renderer.h"
 #include "Lua/lua_SceneGraph.h"
 #include "Lua/lua_Sprite.h"
 #include "Lua/lua_SpriteBatch.h"
@@ -38,14 +38,11 @@ namespace Rainbow
 		inline void init(lua_State *L)
 		{
 			Platform::init(L);  // Initialize "rainbow.platform" namespace
+			Renderer::init(L);  // Initialize "rainbow.renderer" namespace
 			IO::init(L);        // Initialize "rainbow.io" namespace
 			Random::init(L);    // Initialize "rainbow.random" function
 			Input::init(L);     // Initialize "rainbow.input" namespace
 			Audio::init(L);     // Initialize "rainbow.audio" namespace
-
-		#ifdef USE_PHYSICS
-			Physics::init(L);   // Initialize "rainbow.physics" namespace
-		#endif
 		}
 	}
 }
