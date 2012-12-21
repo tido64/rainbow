@@ -9,7 +9,6 @@ precision highp float;
 #	else
 precision mediump float;
 #	endif
-precision lowp sampler2D;
 #else
 #	define lowp
 #endif

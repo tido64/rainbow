@@ -9,7 +9,6 @@ precision highp float;
 #	else
 precision mediump float;
 #	endif
-precision lowp sampler2D;
 #endif
 
 uniform sampler2D canvas;
