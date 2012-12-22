@@ -3,6 +3,10 @@
 #include "Graphics/OpenGL.h"
 #include "Graphics/TextureManager.h"
 
+TextureManager::TextureManager() :
+	active(0), mag_filter(GL_LINEAR), min_filter(GL_LINEAR), mem_peak(0.0),
+	mem_used(0.0) { }
+
 TextureManager::~TextureManager()
 {
 	this->purge(this->recycled);
@@ -39,8 +43,8 @@ unsigned int TextureManager::create(const unsigned int internal_format,
 		this->mem_peak = this->mem_used;
 
 	this->bind(tex.id);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, this->min_filter);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, this->mag_filter);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glTexImage2D(GL_TEXTURE_2D, 0, internal_format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
@@ -76,8 +80,8 @@ unsigned int TextureManager::create_compressed(const unsigned int format,
 		this->mem_peak = this->mem_used;
 
 	this->bind(tex.id);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, this->min_filter);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, this->mag_filter);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glCompressedTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, size, data);
@@ -115,6 +119,15 @@ void TextureManager::remove(const unsigned int id)
 			break;
 		}
 	}
+}
+
+void TextureManager::set_filter(const int filter)
+{
+	R_ASSERT(filter == GL_NEAREST || filter == GL_LINEAR,
+	         "Invalid texture filter");
+
+	this->mag_filter = filter;
+	this->min_filter = filter;
 }
 
 #ifndef NDEBUG

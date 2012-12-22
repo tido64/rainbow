@@ -7,7 +7,9 @@ namespace Rainbow
 	{
 		namespace Renderer
 		{
-			void init(lua_State *L);
+			void init(lua_State *);
+
+			int set_filter(lua_State *);
 		}
 	}
 }

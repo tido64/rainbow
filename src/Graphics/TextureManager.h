@@ -65,6 +65,8 @@ public:
 	/// \param id  Texture to delete.
 	void remove(const unsigned int id);
 
+	void set_filter(const int filter);
+
 private:
 	/// Structure storing a texture's id and area.
 	struct TextureId
@@ -77,12 +79,14 @@ private:
 	};
 
 	unsigned int active;
+	int mag_filter;
+	int min_filter;
 	double mem_peak;
 	double mem_used;
 	Vector<TextureId> recycled;  ///< Stores reusable texture ids.
 	Vector<TextureId> textures;  ///< Stores texture ids currently in use.
 
-	inline TextureManager();
+	TextureManager();
 
 	/// Print total video memory used by textures.
 	void print_usage() const;
@@ -101,8 +105,6 @@ void TextureManager::purge()
 {
 	this->purge(this->recycled);
 }
-
-TextureManager::TextureManager() : active(0), mem_peak(0.0), mem_used(0.0) { }
 
 bool TextureManager::TextureId::operator==(const TextureId &tex)
 {
