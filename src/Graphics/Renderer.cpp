@@ -208,17 +208,8 @@ namespace Renderer
 
 	void resize(const unsigned int width, const unsigned int height)
 	{
-		const float u = 2.0f / width;
-		const float v = 2.0f / height;
-		const float ortho[] = {
-			   u, 0.0f,  0.0f, -1.0f,
-			0.0f,    v,  0.0f, -1.0f,
-			0.0f, 0.0f, -1.0f,  0.0f,
-			0.0f, 0.0f,  0.0f,  1.0f
-		};
-		glUniformMatrix4fv(glGetUniformLocation(
-				ShaderManager::Instance->get_program(0), "mvp_matrix"), 1,
-				GL_FALSE, ortho);
+		ShaderManager::Instance->set(width, height);
+		ShaderManager::Instance->reset();
 		glViewport(0, 0, width, height);
 
 		R_ASSERT(glGetError() == GL_NO_ERROR,

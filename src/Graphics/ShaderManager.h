@@ -50,6 +50,9 @@ public:
 	/// Reset to default shaders.
 	inline void reset();
 
+	/// Set viewport.
+	void set(const float width, const float height);
+
 	/// Use program.
 	void use(const int program);
 
@@ -63,6 +66,8 @@ private:
 
 	Vector<unsigned int> shaders;
 	Vector<Program> programs;
+
+	float ortho[16];
 };
 
 unsigned int ShaderManager::get_program(const unsigned int pid) const

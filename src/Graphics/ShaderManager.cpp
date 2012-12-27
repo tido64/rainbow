@@ -20,9 +20,16 @@ ShaderManager::ShaderManager(const char **shaders, const size_t count)
 	this->create_program(tmp, count);
 	if (!this->programs.size())
 		return;
-
 	this->active.id = -1;
-	this->reset();
+
+	memset(this->ortho, 0, sizeof(this->ortho));
+	this->ortho[ 0] =  1.0f;
+	this->ortho[ 3] = -1.0f;
+	this->ortho[ 5] =  1.0f;
+	this->ortho[ 7] = -1.0f;
+	this->ortho[10] = -1.0f;
+	this->ortho[15] =  1.0f;
+
 	Instance = this;
 }
 
@@ -107,6 +114,12 @@ int ShaderManager::create_shader(int type, const char *src)
 	return this->shaders.size() - 1;
 }
 
+void ShaderManager::set(const float width, const float height)
+{
+	this->ortho[0] = 2.0f / width;
+	this->ortho[5] = 2.0f / height;
+}
+
 void ShaderManager::use(const int program)
 {
 	if (this->programs[program].id == this->active.id)
@@ -115,10 +128,20 @@ void ShaderManager::use(const int program)
 	this->active = this->programs[program];
 	glUseProgram(this->active.id);
 
+	int u = glGetUniformLocation(this->active.id, "mvp_matrix");
+	R_ASSERT(u >= 0, "Shader is missing an orthographic projection matrix");
+	glUniformMatrix4fv(u, 1, GL_FALSE, this->ortho);
+
 	glEnableVertexAttribArray(Shader::VERTEX);
 	glEnableVertexAttribArray(Shader::COLOR);
 
-	glActiveTexture(GL_TEXTURE0);
-	glUniform1i(glGetUniformLocation(this->active.id, "texture"), 0);
-	glEnableVertexAttribArray(Shader::TEXCOORD);
+	u = glGetUniformLocation(this->active.id, "texture");
+	if (u < 0)
+		glDisableVertexAttribArray(Shader::TEXCOORD);
+	else
+	{
+		glActiveTexture(GL_TEXTURE0);
+		glUniform1i(u, 0);
+		glEnableVertexAttribArray(Shader::TEXCOORD);
+	}
 }
