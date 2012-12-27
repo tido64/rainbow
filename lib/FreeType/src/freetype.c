@@ -15,6 +15,7 @@
 #include "cff/cff.c"
 #include "sfnt/sfnt.c"
 #include "truetype/truetype.c"
+#include "truetype/ttsubpix.c"
 
 // Rasterizer
 #include "smooth/smooth.c"
