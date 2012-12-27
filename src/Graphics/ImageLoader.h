@@ -9,46 +9,52 @@
 #else
 #	include <png.h>
 
-/// Structure for reading PNG bitmaps.
-///
-/// Copyright 2010-12 Bifrost Entertainment. All rights reserved.
-/// \author Tommy Nguyen
-struct png_read_struct
+namespace
 {
-	size_t offset;
-	const unsigned char *data;
+	/// Structure for reading PNG bitmaps.
+	///
+	/// Copyright 2010-12 Bifrost Entertainment. All rights reserved.
+	/// \author Tommy Nguyen
+	struct png_read_struct
+	{
+		size_t offset;
+		const unsigned char *data;
 
-	png_read_struct(unsigned char *data) : offset(8), data(data) { }
-};
+		png_read_struct(unsigned char *data) : offset(8), data(data) { }
+	};
 
-static void mem_fread(png_structp png_ptr, png_bytep data, png_size_t length)
-{
-	png_read_struct *read_struct = static_cast<png_read_struct*>(png_get_io_ptr(png_ptr));
-	memcpy(data, read_struct->data + read_struct->offset, length);
-	read_struct->offset += length;
+	void mem_fread(png_structp png_ptr, png_bytep data, png_size_t length)
+	{
+		png_read_struct *read_struct = static_cast<png_read_struct*>(png_get_io_ptr(png_ptr));
+		memcpy(data, read_struct->data + read_struct->offset, length);
+		read_struct->offset += length;
+	}
 }
 
 #endif
 
 #ifdef GL_IMG_texture_compression_pvrtc
 
-/// PVRTC texture header, as specified by Imagination Technologies Ltd.
-/// \see http://www.imgtec.net/powervr/insider/docs/PVR%20File%20Format.Specification.1.0.11.External.pdf
-struct PVRTexHeader
+namespace
 {
-	uint32_t version;
-	uint32_t flags;
-	uint64_t pixel_format;
-	uint32_t colour_space;
-	uint32_t channel_type;
-	uint32_t height;
-	uint32_t width;
-	uint32_t depth;
-	uint32_t num_surfaces;
-	uint32_t num_faces;
-	uint32_t mipmap_count;
-	uint32_t metadata_size;
-};
+	/// PVRTC texture header, as specified by Imagination Technologies Ltd.
+	/// \see http://www.imgtec.net/powervr/insider/docs/PVR%20File%20Format.Specification.1.0.11.External.pdf
+	struct PVRTexHeader
+	{
+		uint32_t version;
+		uint32_t flags;
+		uint64_t pixel_format;
+		uint32_t colour_space;
+		uint32_t channel_type;
+		uint32_t height;
+		uint32_t width;
+		uint32_t depth;
+		uint32_t num_surfaces;
+		uint32_t num_faces;
+		uint32_t mipmap_count;
+		uint32_t metadata_size;
+	};
+}
 
 #endif
 
@@ -62,23 +68,22 @@ struct ImageInfo
 	size_t size;
 };
 
-struct ImageLoader
+namespace ImageLoader
 {
 	enum ImageFormat
 	{
 		UNKNOWN,
 		ATITC,  // Adreno
 		ETC1,   // OpenGL ES standard, Android
-		PVRTC,  // iOS, OMAP43xx
+		PVRTC,  // iOS, OMAP43xx, PowerVR
 		S3TC,   // Desktops, Tegra
-		PNG,
-		BMP
+		PNG
 	};
 
 	/// Attempt to retrieve the image format.
 	/// \param img Encoded image data.
 	/// \return Image format; \c ImageFormat::UNKNOWN if unknown.
-	static ImageFormat get_format(const Data &img)
+	ImageFormat get_format(const Data &img)
 	{
 	#ifdef GL_IMG_texture_compression_pvrtc
 		if (*(uint32_t*)img.bytes() == 0x03525650)
@@ -106,10 +111,10 @@ struct ImageLoader
 	/// \param[out] data        Output data array. Can be passed directly to
 	///                         renderer. Caller is responsible for cleaning up
 	///                         the array using \c ImageLoader::release().
-	/// \param[out] image_info  Struct containing information regarding the deocded image.
+	/// \param[out] image_info  Struct containing information on the decoded image.
 	/// \param[in]  img         Encoded image data.
 	/// \return \c true on success, \c false otherwise.
-	static bool load(void *&data, ImageInfo &image_info, const Data &img)
+	bool load(void *&data, ImageInfo &image_info, const Data &img)
 	{
 		memset(&image_info, 0, sizeof(image_info));
 		switch (get_format(img))
@@ -119,11 +124,13 @@ struct ImageLoader
 				#ifdef RAINBOW_IOS
 				{
 					PVRTexHeader *header = (PVRTexHeader*)img.bytes();
-					R_ASSERT(CFSwapInt32LittleToHost(header->mipmap_count) == 1, "Mipmaps are not supported yet");
+					R_ASSERT(CFSwapInt32LittleToHost(header->mipmap_count) == 1,
+					         "Mipmaps are not supported");
 
 					image_info.height = CFSwapInt32LittleToHost(header->height);
 					image_info.width = CFSwapInt32LittleToHost(header->width);
-					R_ASSERT(image_info.width == image_info.height, "Compressed textures *must* be square");
+					R_ASSERT(image_info.width == image_info.height,
+					         "Compressed textures *must* be square");
 
 					const uint64_t format = CFSwapInt32LittleToHost(header->pixel_format);
 					R_ASSERT(format < 4, "Invalid PVRTC format type");
@@ -208,7 +215,8 @@ struct ImageLoader
 
 					image_info.width = png_get_image_width(png_ptr, info_ptr);
 					image_info.height = png_get_image_height(png_ptr, info_ptr);
-					R_ASSERT(image_info.width > 0 && image_info.height > 0, "Invalid texture dimension");
+					R_ASSERT(image_info.width > 0 && image_info.height > 0,
+					         "Invalid texture dimension");
 
 					// Allocate memory for bitmap
 					png_read_update_info(png_ptr, info_ptr);
@@ -255,7 +263,10 @@ struct ImageLoader
 					CGColorSpaceRef color_space = CGColorSpaceCreateDeviceRGB();
 					data = new unsigned char[image_info.height * image_info.width * 4];
 
-					CGContextRef context = CGBitmapContextCreate(data, image_info.width, image_info.height, 8, 4 * image_info.width, color_space, kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big);
+					CGContextRef context = CGBitmapContextCreate(
+							data, image_info.width, image_info.height, 8,
+							image_info.width << 2, color_space,
+							kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big);
 					CGColorSpaceRelease(color_space);
 
 					CGContextClearRect(context, bounds);
@@ -271,7 +282,7 @@ struct ImageLoader
 		return true;
 	}
 
-	static inline void release(void *data)
+	inline void release(void *data)
 	{
 		delete[] static_cast<unsigned char*>(data);
 	}

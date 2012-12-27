@@ -46,9 +46,6 @@ private:
 	int width;                 ///< Width of texture atlas.
 	int height;                ///< Height of texture atlas.
 	Vector<Texture> textures;  ///< Defined textures.
-
-	/// Return \c true if the integer is a power of 2 and not less than 64.
-	bool is_valid(const unsigned int);
 };
 
 TextureAtlas::~TextureAtlas()
