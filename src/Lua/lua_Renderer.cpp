@@ -28,6 +28,8 @@ namespace Rainbow
 				lua_pushboolean(L, strstr(extensions, "GL_IMG_texture_compression_pvrtc") != nullptr);
 				lua_setfield(L, -2, "supports_pvrtc");
 
+				lua_pushcclosure(L, &set_clear_color, 0);
+				lua_setfield(L, -2, "set_clear_color");
 				lua_pushcclosure(L, &set_filter, 0);
 				lua_setfield(L, -2, "set_filter");
 
@@ -40,6 +42,18 @@ namespace Rainbow
 				lua_pushinteger(L, GL_LINEAR);
 				lua_setfield(L, -2, "LINEAR");
 				lua_setglobal(L, "gl");
+			}
+
+			int set_clear_color(lua_State *L)
+			{
+				LUA_ASSERT(lua_gettop(L) == 3,
+				           "rainbow.renderer.set_clear_color(0xrr, 0xgg, 0xbb)");
+
+				const float r = lua_tointeger(L, 1) / 255;
+				const float g = lua_tointeger(L, 2) / 255;
+				const float b = lua_tointeger(L, 3) / 255;
+				glClearColor(r, g, b, 1.0f);
+				return 0;
 			}
 
 			int set_filter(lua_State *L)
