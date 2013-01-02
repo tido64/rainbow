@@ -1,7 +1,6 @@
-#include <lua.hpp>
-
 #include "Common/Data.h"
 #include "Common/Debug.h"
+#include "Lua/LuaHelper.h"
 #include "Lua/lua_IO.h"
 
 namespace Rainbow
@@ -12,17 +11,11 @@ namespace Rainbow
 		{
 			void init(lua_State *L)
 			{
+				lua_pushliteral(L, "io");
 				lua_createtable(L, 0, 2);
-				lua_pushvalue(L, -1);
-				lua_setfield(L, -3, "io");
-
-				lua_pushcclosure(L, &load, 0);
-				lua_setfield(L, -2, "load");
-
-				lua_pushcclosure(L, &save, 0);
-				lua_setfield(L, -2, "save");
-
-				lua_pop(L, 1);
+				lua_rawsetcclosurefield(L, &load, 0, "load");
+				lua_rawsetcclosurefield(L, &save, 0, "save");
+				lua_rawset(L, -3);
 			}
 
 			int load(lua_State *L)

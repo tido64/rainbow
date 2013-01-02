@@ -9,9 +9,8 @@
 #	include <windows.h>
 #endif
 
-#include <lua.hpp>
-
 #include "Common/Debug.h"
+#include "Lua/LuaHelper.h"
 #include "Lua/lua_Platform.h"
 
 namespace Rainbow
@@ -22,14 +21,13 @@ namespace Rainbow
 		{
 			void init(lua_State *L)
 			{
+				lua_pushliteral(L, "platform");
 				lua_createtable(L, 0, 4);
-				lua_pushvalue(L, -1);
-				lua_setfield(L, -3, "platform");
 
-				lua_pushboolean(L, RAINBOW_ACCELERATED);
-				lua_setfield(L, -2, "accelerometer");
+				lua_rawsetfield(L, lua_pushboolean, RAINBOW_ACCELERATED, "accelerometer");
 
 				// Retrieve physical memory
+				lua_pushliteral(L, "memory");
 				{
 					int memory = static_cast<unsigned int>(-1) >> 1;
 					R_ASSERT(memory > 0, "Failed to determine INT_MAX");
@@ -64,30 +62,27 @@ namespace Rainbow
 
 					lua_pushinteger(L, memory);
 				}
-				lua_setfield(L, -2, "memory");
+				lua_rawset(L, -3);
 
 				// rainbow.platform.screen
-				lua_createtable(L, 0, 2);
-				lua_pushvalue(L, -1);
-				lua_setfield(L, -3, "screen");
+				lua_pushliteral(L, "screen");
+				lua_createtable(L, 0, 3);
+				lua_rawsetfield(L, lua_pushboolean, RAINBOW_TOUCHED, "touch");
+				lua_rawset(L, -3);
 
-				lua_pushboolean(L, RAINBOW_TOUCHED);
-				lua_setfield(L, -2, "touch");
-
-				lua_pop(L, 2);
+				lua_rawset(L, -3);
 			}
 
 			void update(lua_State *L, const unsigned int width, const unsigned int height)
 			{
 				lua_getglobal(L, "rainbow");
-				lua_getfield(L, -1, "platform");
-				lua_getfield(L, -1, "screen");
+				lua_pushliteral(L, "platform");
+				lua_rawget(L, -2);
+				lua_pushliteral(L, "screen");
+				lua_rawget(L, -2);
 
-				lua_pushnumber(L, width);
-				lua_setfield(L, -2, "width");
-
-				lua_pushnumber(L, height);
-				lua_setfield(L, -2, "height");
+				lua_rawsetfield(L, lua_pushnumber, width, "width");
+				lua_rawsetfield(L, lua_pushnumber, height, "height");
 
 				lua_pop(L, 3);
 			}

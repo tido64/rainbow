@@ -22,37 +22,21 @@ namespace Rainbow
 
 			void init(lua_State *L)
 			{
+				lua_pushliteral(L, "audio");
 				lua_createtable(L, 0, 32);
-				lua_pushvalue(L, -1);
-				lua_setfield(L, -3, "audio");
 
-				lua_pushcclosure(L, &set_gain, 0);
-				lua_setfield(L, -2, "set_gain");
-
-				lua_pushcclosure(L, &set_pitch, 0);
-				lua_setfield(L, -2, "set_pitch");
-
-				lua_pushcclosure(L, &clear, 0);
-				lua_setfield(L, -2, "clear");
-
-				lua_pushcclosure(L, &create_sound, 0);
-				lua_setfield(L, -2, "create_sound");
-
-				lua_pushcclosure(L, &delete_sound, 0);
-				lua_setfield(L, -2, "delete_sound");
-
-				lua_pushcclosure(L, &pause, 0);
-				lua_setfield(L, -2, "pause");
-
-				lua_pushcclosure(L, &play, 0);
-				lua_setfield(L, -2, "play");
-
-				lua_pushcclosure(L, &stop, 0);
-				lua_setfield(L, -2, "stop");
+				lua_rawsetcclosurefield(L, &set_gain, 0, "set_gain");
+				lua_rawsetcclosurefield(L, &set_pitch, 0, "set_pitch");
+				lua_rawsetcclosurefield(L, &clear, 0, "clear");
+				lua_rawsetcclosurefield(L, &create_sound, 0, "create_sound");
+				lua_rawsetcclosurefield(L, &delete_sound, 0, "delete_sound");
+				lua_rawsetcclosurefield(L, &pause, 0, "pause");
+				lua_rawsetcclosurefield(L, &play, 0, "play");
+				lua_rawsetcclosurefield(L, &stop, 0, "stop");
 
 				wrap<Recorder>(L);
 
-				lua_pop(L, 1);
+				lua_rawset(L, -3);
 			}
 
 			int set_gain(lua_State *L)

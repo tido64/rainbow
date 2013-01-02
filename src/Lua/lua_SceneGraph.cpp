@@ -119,9 +119,8 @@ namespace Rainbow
 		SceneGraph::SceneGraph(lua_State *L, ::SceneGraph::Node *root) :
 			root(root)
 		{
+			lua_pushlstring(L, class_name, sizeof(class_name) / sizeof(char) - 1);
 			lua_createtable(L, 0, 16);
-			lua_pushvalue(L, -1);
-			lua_setfield(L, -3, class_name);
 			lua_pushnumber(L, 0);
 
 			SceneGraph **ptr = static_cast<SceneGraph**>(lua_newuserdata(L, sizeof(this)));
@@ -129,17 +128,17 @@ namespace Rainbow
 
 			luaL_newmetatable(L, class_name);
 			lua_setmetatable(L, -2);
-			lua_settable(L, -3);
+			lua_rawset(L, -3);
 
 			for (int i = 0; methods[i].name; ++i)
 			{
 				lua_pushstring(L, methods[i].name);
 				lua_pushnumber(L, i);
 				lua_pushcclosure(L, &thunk<SceneGraph>, 1);
-				lua_settable(L, -3);
+				lua_rawset(L, -3);
 			}
 
-			lua_pop(L, 1);
+			lua_rawset(L, -3);
 		}
 	}
 }

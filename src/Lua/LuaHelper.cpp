@@ -146,8 +146,7 @@ namespace Rainbow
 			lua_createtable(L, 1, 1);
 			lua_pushlightuserdata(L, ptr);
 			lua_rawseti(L, -2, 0);
-			lua_pushstring(L, name);
-			lua_setfield(L, -2, "__type");
+			lua_rawsetfield(L, lua_pushstring, name, "__type");
 		#else
 			static_cast<void>(name);
 			lua_pushlightuserdata(L, ptr);
@@ -159,7 +158,8 @@ namespace Rainbow
 		#ifndef NDEBUG
 			LUA_CHECK(L, !lua_isnil(L, -1), "Parameter is a nil value");
 			LUA_CHECK(L, lua_istable(L, -1), "Object is not of type '%s'", name);
-			lua_getfield(L, -1, "__type");
+			lua_pushliteral(L, "__type");
+			lua_rawget(L, -2);
 			LUA_CHECK(L, memcmp(lua_tolstring(L, -1, nullptr), name, strlen(name)) == 0, "Object is not of type '%s'", name);
 			lua_rawgeti(L, -2, 0);
 			void *ptr = lua_touserdata(L, -1);

@@ -3,6 +3,26 @@
 
 #include <lua.hpp>
 
+#define lua_rawgetfield(L, k, type) \
+	lua_pushliteral(L, k); \
+	lua_rawget(L, -2); \
+	LUA_CHECK(L, !lua_isnil(L, -1), "%s is missing field '%s'", type, k)
+
+#define lua_rawsetcclosurefield(L, fn, n, k) \
+	lua_pushliteral(L, k); \
+	lua_pushcclosure(L, fn, n); \
+	lua_rawset(L, -3)
+
+#define lua_rawsetfield(L, pushvalue, v, k) \
+	lua_pushliteral(L, k); \
+	pushvalue(L, v); \
+	lua_rawset(L, -3)
+
+#define lua_rawsetnilfield(L, k) \
+	lua_pushliteral(L, k); \
+	lua_pushnil(L); \
+	lua_rawset(L, -3)
+
 class Data;
 
 namespace Rainbow
@@ -44,6 +64,11 @@ namespace Rainbow
 			lua_pop(L, lua_gettop(L));
 
 			lua_createtable(L, 0, 0);
+		#ifndef NDEBUG
+			lua_pushliteral(L, "__type");
+			lua_pushstring(L, T::class_name);
+			lua_rawset(L, -3);
+		#endif
 			lua_pushnumber(L, 0);
 
 			T **ptr = static_cast<T**>(lua_newuserdata(L, sizeof(T*)));
@@ -51,20 +76,15 @@ namespace Rainbow
 
 			lua_getfield(L, LUA_REGISTRYINDEX, T::class_name);
 			lua_setmetatable(L, -2);
-			lua_settable(L, -3);
+			lua_rawset(L, -3);
 
 			for (int i = 0; T::methods[i].name; ++i)
 			{
 				lua_pushstring(L, T::methods[i].name);
 				lua_pushnumber(L, i);
 				lua_pushcclosure(L, &thunk<T>, 1);
-				lua_settable(L, -3);
+				lua_rawset(L, -3);
 			}
-
-		#ifndef NDEBUG
-			lua_pushstring(L, T::class_name);
-			lua_setfield(L, -2, "__type");
-		#endif
 
 			return 1;
 		}
@@ -136,12 +156,13 @@ namespace Rainbow
 		template<class T>
 		void wrap(lua_State *L)
 		{
+			lua_pushstring(L, T::class_name);
 			lua_pushcclosure(L, &alloc<T>, 0);
-			lua_setfield(L, -2, T::class_name);
+			lua_rawset(L, -3);
 			luaL_newmetatable(L, T::class_name);
-			lua_pushstring(L, "__gc");
+			lua_pushliteral(L, "__gc");
 			lua_pushcclosure(L, &dealloc<T>, 0);
-			lua_settable(L, -3);
+			lua_rawset(L, -3);
 			lua_pop(L, 1);
 		}
 

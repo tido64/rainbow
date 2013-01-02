@@ -1,9 +1,8 @@
-#include <lua.hpp>
-
 #include "Algorithm.h"
 #include "Input/Input.h"
 #include "Input/Key.h"
 #include "Input/Touch.h"
+#include "Lua/LuaHelper.h"
 #include "Lua/lua_Input.h"
 
 namespace Rainbow
@@ -17,8 +16,10 @@ namespace Rainbow
 				void getfield(lua_State *L, const char *const field)
 				{
 					lua_getglobal(L, "rainbow");
-					lua_getfield(L, -1, "input");
-					lua_getfield(L, -1, field);
+					lua_pushliteral(L, "input");
+					lua_rawget(L, -2);
+					lua_pushstring(L, field);
+					lua_rawget(L, -2);
 				}
 
 			#ifdef RAINBOW_BUTTONS
@@ -55,22 +56,14 @@ namespace Rainbow
 					lua_createtable(L, 0, count);
 					for (size_t i = 0; i < count; ++i)
 					{
+						lua_pushinteger(L, touches[i].hash);
 						lua_createtable(L, 0, 5);
-						lua_pushvalue(L, -1);
-						const char *const hash = Rainbow::itoa(touches[i].hash);
-						lua_setfield(L, -3, hash);
-						delete[] hash;
-						lua_pushinteger(L, touches[i].x);
-						lua_setfield(L, -2, "x");
-						lua_pushinteger(L, touches[i].y);
-						lua_setfield(L, -2, "y");
-						lua_pushinteger(L, touches[i].x0);
-						lua_setfield(L, -2, "x0");
-						lua_pushinteger(L, touches[i].y0);
-						lua_setfield(L, -2, "y0");
-						lua_pushinteger(L, touches[i].timestamp);
-						lua_setfield(L, -2, "timestamp");
-						lua_pop(L, 1);
+						lua_rawsetfield(L, lua_pushinteger, touches[i].x, "x");
+						lua_rawsetfield(L, lua_pushinteger, touches[i].y, "y");
+						lua_rawsetfield(L, lua_pushinteger, touches[i].x0, "x0");
+						lua_rawsetfield(L, lua_pushinteger, touches[i].y0, "y0");
+						lua_rawsetfield(L, lua_pushinteger, touches[i].timestamp, "timestamp");
+						lua_rawset(L, -3);
 					}
 					lua_call(L, 1, 0);
 					lua_pop(L, 2);
@@ -79,28 +72,24 @@ namespace Rainbow
 
 			void init(lua_State *L)
 			{
+				lua_pushliteral(L, "input");
 				lua_createtable(L, 0, 2);
-				lua_pushvalue(L, -1);
-				lua_setfield(L, -3, "input");
 
 				// rainbow.input.acceleration
+				lua_pushliteral(L, "acceleration");
 				lua_createtable(L, 0, 2);
-				lua_setfield(L, -2, "acceleration");
+				lua_rawset(L, -3);
 
-				lua_pop(L, 1);
+				lua_rawset(L, -3);
 			}
 
 			void accelerated(lua_State *L, const Acceleration &acceleration)
 			{
 				getfield(L, "acceleration");
-				lua_pushnumber(L, acceleration.timestamp);
-				lua_setfield(L, -2, "timestamp");
-				lua_pushnumber(L, acceleration.x);
-				lua_setfield(L, -2, "x");
-				lua_pushnumber(L, acceleration.y);
-				lua_setfield(L, -2, "y");
-				lua_pushnumber(L, acceleration.z);
-				lua_setfield(L, -2, "z");
+				lua_rawsetfield(L, lua_pushnumber, acceleration.timestamp, "timestamp");
+				lua_rawsetfield(L, lua_pushnumber, acceleration.x, "x");
+				lua_rawsetfield(L, lua_pushnumber, acceleration.y, "y");
+				lua_rawsetfield(L, lua_pushnumber, acceleration.z, "z");
 				lua_pop(L, 3);
 			}
 

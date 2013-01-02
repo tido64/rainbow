@@ -1,10 +1,9 @@
 #include <cstring>
 
-#include <lua.hpp>
-
 #include "Graphics/OpenGL.h"
 #include "Graphics/Renderer.h"
 #include "Graphics/TextureManager.h"
+#include "Lua/LuaHelper.h"
 #include "Lua/lua_Renderer.h"
 
 namespace Rainbow
@@ -16,31 +15,29 @@ namespace Rainbow
 			void init(lua_State *L)
 			{
 				// Initialise "rainbow.renderer" namespace
+				lua_pushliteral(L, "renderer");
 				lua_createtable(L, 0, 4);
 
 				int max_texture_size;
 				glGetIntegerv(GL_MAX_TEXTURE_SIZE, &max_texture_size);
-				lua_pushinteger(L, max_texture_size);
-				lua_setfield(L, -2, "max_texture_size");
+				lua_rawsetfield(L, lua_pushinteger, max_texture_size, "max_texture_size");
 
 				const char *extensions = reinterpret_cast<const char*>(glGetString(GL_EXTENSIONS));
 
-				lua_pushboolean(L, strstr(extensions, "GL_IMG_texture_compression_pvrtc") != nullptr);
-				lua_setfield(L, -2, "supports_pvrtc");
+				lua_rawsetfield(
+						L, lua_pushboolean,
+						strstr(extensions, "GL_IMG_texture_compression_pvrtc") != nullptr,
+						"supports_pvrtc");
 
-				lua_pushcclosure(L, &set_clear_color, 0);
-				lua_setfield(L, -2, "set_clear_color");
-				lua_pushcclosure(L, &set_filter, 0);
-				lua_setfield(L, -2, "set_filter");
+				lua_rawsetcclosurefield(L, &set_clear_color, 0, "set_clear_color");
+				lua_rawsetcclosurefield(L, &set_filter, 0, "set_filter");
 
-				lua_setfield(L, -2, "renderer");
+				lua_rawset(L, -3);
 
 				// Initialise "gl" namespace
 				lua_createtable(L, 0, 2);
-				lua_pushinteger(L, GL_NEAREST);
-				lua_setfield(L, -2, "NEAREST");
-				lua_pushinteger(L, GL_LINEAR);
-				lua_setfield(L, -2, "LINEAR");
+				lua_rawsetfield(L, lua_pushinteger, GL_NEAREST, "NEAREST");
+				lua_rawsetfield(L, lua_pushinteger, GL_LINEAR, "LINEAR");
 				lua_setglobal(L, "gl");
 			}
 

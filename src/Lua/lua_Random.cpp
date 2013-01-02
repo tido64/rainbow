@@ -1,6 +1,5 @@
-#include <lua.hpp>
-
 #include "Common/Random.h"
+#include "Lua/LuaHelper.h"
 #include "Lua/lua_Random.h"
 
 namespace Rainbow
@@ -11,8 +10,7 @@ namespace Rainbow
 		{
 			void init(lua_State *L)
 			{
-				lua_pushcclosure(L, &random, 0);
-				lua_setfield(L, -2, "random");
+				lua_rawsetcclosurefield(L, &random, 0, "random");
 			}
 
 			int random(lua_State *L)

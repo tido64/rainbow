@@ -23,8 +23,6 @@ namespace Rainbow
 
 		// Initialize "rainbow" namespace
 		lua_createtable(this->L, 0, 16);
-		lua_pushvalue(this->L, -1);
-		lua_setglobal(this->L, "rainbow");
 		Lua::init(this->L);
 
 		// Initialize "rainbow.scenegraph"
@@ -33,14 +31,14 @@ namespace Rainbow
 		// Bind C++ objects
 		Lua::bind(this->L);
 
-		// Clean up the stack
-		lua_pop(this->L, 1);
+		lua_setglobal(this->L, "rainbow");
 		R_ASSERT(lua_gettop(this->L) == 0, "Stack not empty");
 
 		// Set up custom loader
 		lua_getglobal(this->L, "package");
 		R_ASSERT(!lua_isnil(this->L, -1), "package table does not exist");
-		lua_getfield(this->L, -1, "searchers");
+		lua_pushliteral(L, "searchers");
+		lua_rawget(L, -2);
 		R_ASSERT(!lua_isnil(this->L, -1), "package.searchers table does not exist");
 
 		// Make space in the second slot for our loader
