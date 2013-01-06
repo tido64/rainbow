@@ -60,7 +60,7 @@
 #else
 
 #define LUA_ASSERT(expr, syntax)   static_cast<void>(0)
-#define LUA_CHECK(L, expr, reason) static_cast<void>(0)
+#define LUA_CHECK(L, expr, ...)    static_cast<void>(0)
 #define R_ASSERT(expr, reason)     static_cast<void>(0)
 #define R_DEBUG(...)               static_cast<void>(0)
 

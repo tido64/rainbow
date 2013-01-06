@@ -8,6 +8,7 @@
 #include "Common/Data.h"
 #include "ConFuoco/Mixer.h"
 #include "Graphics/Renderer.h"
+#include "Input/Touch.h"
 
 #pragma clang diagnostic ignored "-Wunused-parameter"
 
