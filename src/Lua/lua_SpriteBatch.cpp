@@ -9,13 +9,15 @@ namespace Rainbow
 	{
 		const char SpriteBatch::class_name[] = "spritebatch";
 		const Method<SpriteBatch> SpriteBatch::methods[] = {
-			{ "add",          &SpriteBatch::add },
-			{ "set_texture",  &SpriteBatch::set_texture },
+			{ "add",            &SpriteBatch::add },
+			{ "create_sprite",  &SpriteBatch::create_sprite },
+			{ "set_texture",    &SpriteBatch::set_texture },
 			{ 0, 0 }
 		};
 
 		int SpriteBatch::add(lua_State *L)
 		{
+			R_DEBUG("[Rainbow] <spritebatch>:add() is deprecated, use <spritebatch>:create_sprite() and <sprite>:set_texture() instead.\n");
 			LUA_ASSERT(lua_gettop(L) == 4, "<spritebatch>:add(x, y, width, height)");
 
 			const int x = lua_tointeger(L, 1);
@@ -23,6 +25,16 @@ namespace Rainbow
 			const int w = lua_tointeger(L, 3);
 			const int h = lua_tointeger(L, 4);
 			lua_pushlightuserdata(L, ::SpriteBatch::add(x, y, w, h));
+			return alloc<Sprite>(L);
+		}
+
+		int SpriteBatch::create_sprite(lua_State *L)
+		{
+			LUA_ASSERT(lua_gettop(L) == 2, "<spritebatch>:create_sprite(width, height)");
+
+			const int w = lua_tointeger(L, 1);
+			const int h = lua_tointeger(L, 2);
+			lua_pushlightuserdata(L, ::SpriteBatch::create_sprite(w, h));
 			return alloc<Sprite>(L);
 		}
 

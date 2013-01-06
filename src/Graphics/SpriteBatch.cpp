@@ -35,12 +35,12 @@ SpriteBatch::~SpriteBatch()
 
 Sprite* SpriteBatch::add(const int x, const int y, const int w, const int h)
 {
-	Sprite *s = this->add(w, h);
+	Sprite *s = this->create_sprite(w, h);
 	s->set_texture(this->texture->define(x, y, w, h));
 	return s;
 }
 
-Sprite* SpriteBatch::add(const unsigned int width, const unsigned int height)
+Sprite* SpriteBatch::create_sprite(const unsigned int width, const unsigned int height)
 {
 	R_ASSERT(this->sprites.size() <= 256, "Hard-coded limit reached");
 

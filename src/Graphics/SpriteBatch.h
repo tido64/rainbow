@@ -31,14 +31,18 @@ public:
 
 	~SpriteBatch();
 
-	/// Add a sprite to the batch given texture coordinates.
+	/// Add a textured sprite to the batch given texture coordinates.
 	/// \param x,y     Position of the texture assigned to the sprite.
 	/// \param width   Width of the texture and, consequently, the sprite.
 	/// \param height  Height of the texture and, consequently, the sprite.
 	/// \return The newly created sprite, at position (0,0).
 	Sprite* add(const int x, const int y, const int width, const int height);
 
-	Sprite* add(const unsigned int width, const unsigned int height);
+	/// Create a sprite.
+	/// \param width   Width of the sprite.
+	/// \param height  Height of the sprite.
+	/// \return The newly created sprite, at position (0,0).
+	Sprite* create_sprite(const unsigned int width, const unsigned int height);
 
 	/// Load texture data.
 	TextureAtlas* set_texture(const Data &texture);
