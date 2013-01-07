@@ -26,7 +26,7 @@ namespace Rainbow
 			wrap<Animation>(L);
 			wrap<Font>(L);
 			wrap<Label>(L);
-			wrap<Sprite>(L);
+			wrap<Sprite>(L, true);
 			wrap<SpriteBatch>(L);
 			wrap<Texture>(L);
 

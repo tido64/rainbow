@@ -50,7 +50,11 @@ namespace Rainbow
 			lua_rawgeti(L, 1, 0);
 			lua_remove(L, 1);
 
+		#ifndef NDEBUG
 			T **ptr = static_cast<T**>(luaL_checkudata(L, -1, T::class_name));
+		#else
+			T **ptr = static_cast<T**>(lua_touserdata(L, -1));
+		#endif
 			lua_pop(L, 1);
 
 			return ((*ptr)->*(T::methods[i].lua_CFunction))(L);
@@ -61,7 +65,6 @@ namespace Rainbow
 		int alloc(lua_State *L)
 		{
 			T *obj = new T(L);
-			lua_pop(L, lua_gettop(L));
 
 			lua_createtable(L, 0, 0);
 		#ifndef NDEBUG
@@ -75,16 +78,10 @@ namespace Rainbow
 			*ptr = obj;
 
 			lua_getfield(L, LUA_REGISTRYINDEX, T::class_name);
+			lua_rawgeti(L, -1, 1);
+			lua_setmetatable(L, -5);
 			lua_setmetatable(L, -2);
 			lua_rawset(L, -3);
-
-			for (int i = 0; T::methods[i].name; ++i)
-			{
-				lua_pushstring(L, T::methods[i].name);
-				lua_pushnumber(L, i);
-				lua_pushcclosure(L, &thunk<T>, 1);
-				lua_rawset(L, -3);
-			}
 
 			return 1;
 		}
@@ -154,15 +151,29 @@ namespace Rainbow
 		/// \see http://www.lua.org/manual/5.2/
 		/// \see http://lua-users.org/wiki/LunaWrapper
 		template<class T>
-		void wrap(lua_State *L)
+		void wrap(lua_State *L, const bool internal = false)
 		{
-			lua_pushstring(L, T::class_name);
-			lua_pushcclosure(L, &alloc<T>, 0);
-			lua_rawset(L, -3);
+			if (!internal)
+			{
+				lua_pushstring(L, T::class_name);
+				lua_pushcclosure(L, &alloc<T>, 0);
+				lua_rawset(L, -3);
+			}
 			luaL_newmetatable(L, T::class_name);
-			lua_pushliteral(L, "__gc");
-			lua_pushcclosure(L, &dealloc<T>, 0);
+			lua_pushnumber(L, 1);
+			lua_createtable(L, 0, 1);
+			lua_pushliteral(L, "__index");
+			lua_createtable(L, 0, 0);
+			for (int i = 0; T::methods[i].name; ++i)
+			{
+				lua_pushstring(L, T::methods[i].name);
+				lua_pushnumber(L, i);
+				lua_pushcclosure(L, &thunk<T>, 1);
+				lua_rawset(L, -3);
+			}
 			lua_rawset(L, -3);
+			lua_rawset(L, -3);
+			lua_rawsetcclosurefield(L, &dealloc<T>, 0, "__gc");
 			lua_pop(L, 1);
 		}
 

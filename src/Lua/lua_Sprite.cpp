@@ -5,7 +5,7 @@ namespace Rainbow
 {
 	namespace Lua
 	{
-		const char Sprite::class_name[] = "_sprite";
+		const char Sprite::class_name[] = "sprite";
 		const Method<Sprite> Sprite::methods[] = {
 			{ "get_angle",    &Sprite::get_angle },
 			{ "get_color",    &Sprite::get_color },
