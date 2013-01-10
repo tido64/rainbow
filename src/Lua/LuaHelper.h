@@ -36,30 +36,6 @@ namespace Rainbow
 			int (T::*lua_CFunction)(lua_State *);
 		};
 
-		/// Call a function in a wrapped object. The first parameter passed must
-		/// be the \c self object.
-		template<class T>
-		int thunk(lua_State *L)
-		{
-		#ifndef NDEBUG
-			if (lua_type(L, 1) != LUA_TTABLE)
-				return luaL_error(L, "Called a class function using '.' instead of ':'");
-		#endif
-
-			const int i = static_cast<int>(lua_tonumber(L, lua_upvalueindex(1)));
-			lua_rawgeti(L, 1, 0);
-			lua_remove(L, 1);
-
-		#ifndef NDEBUG
-			T **ptr = static_cast<T**>(luaL_checkudata(L, -1, T::class_name));
-		#else
-			T **ptr = static_cast<T**>(lua_touserdata(L, -1));
-		#endif
-			lua_pop(L, 1);
-
-			return ((*ptr)->*(T::methods[i].lua_CFunction))(L);
-		}
-
 		/// Create a Lua wrapped object.
 		template<class T>
 		int alloc(lua_State *L)
@@ -85,13 +61,6 @@ namespace Rainbow
 
 			return 1;
 		}
-
-		/// Call a function with \p nargs parameters and \p nresults return values.
-		/// \param k         Name of the function to call.
-		/// \param nargs     Number of arguments pushed to the stack.
-		/// \param nresults  Number of results to push to the stack; LUA_MULTRET for all.
-		/// \return Lua error code (defined in lua.h).
-		int call(lua_State *L, const char *const k, int nargs = 0, int nresults = 0);
 
 		template<class T>
 		int dealloc(lua_State *L)
@@ -130,6 +99,30 @@ namespace Rainbow
 		/// \param ptr   The pointer to push on the stack.
 		/// \param name  Name of the pointer type.
 		void pushpointer(lua_State *L, void *ptr, const char *name);
+
+		/// Call a function in a wrapped object. The first parameter passed must
+		/// be the \c self object.
+		template<class T>
+		int thunk(lua_State *L)
+		{
+		#ifndef NDEBUG
+			if (lua_type(L, 1) != LUA_TTABLE)
+				return luaL_error(L, "Called a class function using '.' instead of ':'");
+		#endif
+
+			const int i = static_cast<int>(lua_tonumber(L, lua_upvalueindex(1)));
+			lua_rawgeti(L, 1, 0);
+			lua_remove(L, 1);
+
+		#ifndef NDEBUG
+			T **ptr = static_cast<T**>(luaL_checkudata(L, -1, T::class_name));
+		#else
+			T **ptr = static_cast<T**>(lua_touserdata(L, -1));
+		#endif
+			lua_pop(L, 1);
+
+			return ((*ptr)->*(T::methods[i].lua_CFunction))(L);
+		}
 
 		/// Return the pointer on top of the stack.
 		///

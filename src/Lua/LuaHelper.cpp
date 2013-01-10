@@ -8,32 +8,6 @@ namespace Rainbow
 {
 	namespace Lua
 	{
-		int call(lua_State *L, const char *const k, int nargs, int nresults)
-		{
-			R_ASSERT(lua_gettop(L) == nargs, "Number of arguments != stack size");
-
-			lua_getglobal(L, k);
-			lua_insert(L, 1);
-
-		#ifndef NDEBUG
-			lua_getglobal(L, "debug");
-			lua_getfield(L, -1, "traceback");
-			lua_insert(L, 1);
-			lua_pop(L, 1);
-			const int lua_e = lua_pcall(L, nargs, nresults, 1);
-			lua_remove(L, 1);
-		#else
-			const int lua_e = lua_pcall(L, nargs, nresults, 0);
-		#endif
-
-			if (lua_e != LUA_OK)
-			{
-				error(L, lua_e);
-				return luaL_error(L, "Failed to call '%s'", k);
-			}
-			return LUA_OK;
-		}
-
 		void dump_stack(lua_State *L)
 		{
 			R_DEBUG("Lua stack size: %i\n", lua_gettop(L));

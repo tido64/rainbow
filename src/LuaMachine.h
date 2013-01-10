@@ -7,6 +7,7 @@
 
 #include "Common/NonCopyable.h"
 
+class Data;
 namespace SceneGraph { class Node; }
 
 namespace Rainbow
@@ -24,6 +25,9 @@ namespace Rainbow
 
 	public:
 		~LuaMachine();
+
+		/// Load and initialise game script.
+		int init(const Data &main);
 
 		/// Call game update function.
 		int update(const unsigned long t);

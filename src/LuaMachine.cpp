@@ -10,6 +10,28 @@ namespace Rainbow
 		lua_close(this->L);
 	}
 
+	int LuaMachine::init(const Data &main)
+	{
+		Lua::load(this->L, main, "main");
+
+	#ifndef NDEBUG
+		lua_rawgeti(this->L, LUA_REGISTRYINDEX, this->traceback);
+	#endif
+		lua_getglobal(this->L, "init");
+	#ifndef NDEBUG
+		const int lua_e = lua_pcall(this->L, 0, 0, 1);
+		lua_remove(L, 1);
+	#else
+		const int lua_e = lua_pcall(this->L, 0, 0, 0);
+	#endif
+		if (lua_e != LUA_OK)
+		{
+			Lua::error(this->L, lua_e);
+			return luaL_error(this->L, "Failed to initialise main script");
+		}
+		return LUA_OK;
+	}
+
 	int LuaMachine::update(const unsigned long t)
 	{
 	#ifndef NDEBUG
@@ -17,14 +39,12 @@ namespace Rainbow
 	#endif
 		lua_rawgeti(this->L, LUA_REGISTRYINDEX, this->internal);
 		lua_pushinteger(this->L, t);
-
 	#ifndef NDEBUG
 		const int lua_e = lua_pcall(this->L, 1, 0, 1);
 		lua_remove(this->L, 1);
 	#else
 		const int lua_e = lua_pcall(this->L, 1, 0, 0);
 	#endif
-
 		if (lua_e != LUA_OK)
 		{
 			Lua::error(this->L, lua_e);
