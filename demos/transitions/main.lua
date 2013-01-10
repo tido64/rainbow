@@ -2,7 +2,7 @@
 --!
 --! Resolution: 960x640
 --!
---! Copyright 2012 Bifrost Entertainment. All rights reserved.
+--! Copyright 2012-13 Bifrost Entertainment. All rights reserved.
 --! \author Tommy Nguyen
 
 require("Input")
@@ -10,9 +10,8 @@ require("Kim")
 require("Math")
 require("Transition")
 
-local batch    = nil  -- Sprite batch
-local kim      = nil  -- Kim so happy
-local t_update = rainbow.transition.update
+local batch = nil  -- Sprite batch
+local kim   = nil  -- Kim so happy
 
 function init()
 	local assets = rainbow.texture("canvas.png")
@@ -24,5 +23,4 @@ function init()
 end
 
 function update(dt)
-	t_update(dt)
 end

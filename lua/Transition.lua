@@ -5,15 +5,14 @@
 --! transitions must be handled in some way or another, and the game engine
 --! is not supposed to handle game logic.
 --!
---! Copyright 2012 Bifrost Entertainment. All rights reserved.
+--! Copyright 2012-13 Bifrost Entertainment. All rights reserved.
 --! \author Tommy Nguyen
-
-require("TransitionEffects")
-
-rainbow.transition = rainbow.transition or {}
 
 local __count = 0
 local __list  = {}
+
+rainbow.transition = {}
+require("TransitionEffects")
 local effects = rainbow.transition.effects
 
 function rainbow.transition.clear()
@@ -21,12 +20,6 @@ function rainbow.transition.clear()
 		__list[i] = nil
 	end
 	__count = 0
-end
-
-function rainbow.transition.update(dt)
-	for i = __count, 1, -1 do
-		__list[i]:tick(dt)
-	end
 end
 
 local function register(t)
@@ -71,28 +64,25 @@ do
 		end
 	end
 
-	local function new(source, duration)
+	local function new(source, duration, fade)
 		local self = {
 			cancel = unregister,
+			duration = duration,
+			elapsed = 0,
+			source = source,
+			tick = fade,
 			transition = effects.linear
 		}
-		self.duration = duration
-		self.elapsed = 0
-		self.source = source
 		register(self)
 		return self
 	end
 
 	function rainbow.transition.fadein(source, duration)
-		local self = new(source, duration)
-		self.tick = fadein
-		return self
+		return new(source, duration, fadein)
 	end
 
 	function rainbow.transition.fadeout(source, duration)
-		local self = new(source, duration)
-		self.tick = fadeout
-		return self
+		return new(source, duration, fadeout)
 	end
 end
 
@@ -111,28 +101,36 @@ do
 		end
 	end
 
+	local function move_sprite(sprite, x, y)
+		sprite:move(x, y)
+	end
+
+	local function move_node(node, x, y)
+		rainbow.scenegraph:move(node, x, y)
+	end
+
 	function rainbow.transition.move(node, x, y, duration, method)
-		method = method or effects.linear
 		local self = {
 			cancel = unregister,
+			duration = duration,
+			elapsed = 0,
+			node = node,
 			tick = move,
-			transition = method
+			transition = method or effects.linear,
+			x1 = x,
+			y1 = y
 		}
-		self.duration = duration
-		self.elapsed = 0
-		self.x1, self.y1 = x, y
 		if type(node) == "table" then
 			assert(node.get_position, "Object must implement :get_position()")
-			self.move = function(sprite, x, y) sprite:move(x, y) end
+			self.move = move_sprite
 			self.x0, self.y0 = node:get_position()
 		elseif type(node) == "userdata" then
-			self.move = function(node, x, y) rainbow.scenegraph:move(node, x, y) end
+			self.move = move_node
 			self.x0, self.y0 = 0, 0
 		else
 			error("Invalid object")
 		end
 		self.x, self.y = self.x0, self.y0
-		self.node = node
 		register(self)
 		return self
 	end
@@ -143,25 +141,24 @@ do
 		self.elapsed = self.elapsed + dt
 		local progress = self.elapsed / self.duration
 		if progress >= 1.0 then
-			self.sprite:set_rotation(self.final_r)
+			self.sprite:set_rotation(self.r1)
 			unregister(self)
 		else
-			self.sprite:set_rotation(self.transition(self.r, self.final_r, progress))
+			self.sprite:set_rotation(self.transition(self.r0, self.r1, progress))
 		end
 	end
 
 	function rainbow.transition.rotate(sprite, r, duration, method)
-		method = method or effects.linear
 		local self = {
 			cancel = unregister,
+			duration = duration,
+			elapsed = 0,
+			r0 = sprite:get_angle(),
+			r1 = r,
+			sprite = sprite,
 			tick = rotate,
-			transition = method
+			transition = method or effects.linear
 		}
-		self.duration = duration
-		self.elapsed = 0
-		self.final_r = r
-		self.r = sprite:get_angle()
-		self.sprite = sprite
 		register(self)
 		return self
 	end
@@ -180,17 +177,16 @@ do
 	end
 
 	function rainbow.transition.scaleto(sprite, start, final, duration, method)
-		method = method or effects.linear
 		local self = {
 			cancel = unregister,
+			duration = duration,
+			elapsed = 0,
+			final = final,
+			sprite = sprite,
+			start = start,
 			tick = scaleto,
-			transition = method
+			transition = method or effects.linear
 		}
-		self.duration = duration
-		self.elapsed = 0
-		self.final = final
-		self.start = start
-		self.sprite = sprite
 		register(self)
 		return self
 	end
@@ -209,18 +205,24 @@ do
 	end
 
 	function rainbow.transition.fadeto(sprite, alpha, duration, method)
-		method = method or effects.linear
 		local self = {
 			cancel = unregister,
+			duration = duration,
+			elapsed = 0,
+			final_a = alpha,
+			sprite = sprite,
 			tick = fadeto,
-			transition = method
+			transition = method or effects.linear
 		}
-		self.duration = duration
-		self.elapsed = 0
-		self.final_a = alpha
 		self.r, self.g, self.b, self.a = sprite:get_color()
-		self.sprite = sprite
 		register(self)
 		return self
 	end
 end
+
+local function update(dt)
+	for i = __count, 1, -1 do
+		__list[i]:tick(dt)
+	end
+end
+__rainbow_modules[#__rainbow_modules + 1] = update
