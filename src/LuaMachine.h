@@ -16,7 +16,7 @@ namespace Rainbow
 
 	/// Embeds Lua scripting engine.
 	///
-	/// Copyright 2011-12 Bifrost Entertainment. All rights reserved.
+	/// Copyright 2011-13 Bifrost Entertainment. All rights reserved.
 	/// \author Tommy Nguyen
 	class LuaMachine : private NonCopyable<LuaMachine>
 	{
@@ -31,6 +31,8 @@ namespace Rainbow
 		inline operator lua_State*() const;
 
 	private:
+		int internal;
+		int traceback;
 		Lua::SceneGraph *scenegraph;
 		lua_State *L;
 
