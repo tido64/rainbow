@@ -16,6 +16,7 @@
 #include "Lua/lua_Texture.h"
 
 #include "Applications/lua_Canvas.h"
+#include "Physics/lua_Box2D.h"
 
 namespace Rainbow
 {
@@ -43,6 +44,10 @@ namespace Rainbow
 			Random::init(L);    // Initialize "rainbow.random" function
 			Input::init(L);     // Initialize "rainbow.input" namespace
 			Audio::init(L);     // Initialize "rainbow.audio" namespace
+
+		#ifdef USE_PHYSICS
+			b2::Lua::Init(L);   // Initialize "b2" namespace
+		#endif
 		}
 	}
 }
