@@ -26,19 +26,30 @@
 --!
 --! Do also note that the loops in these examples are utterly useless.
 --!
---! Copyright 2012 Bifrost Entertainment. All rights reserved.
+--! Copyright 2012-13 Bifrost Entertainment. All rights reserved.
 --! \author Tommy Nguyen
 
 rainbow.math = rainbow.math or {}
 
+-- The universal gravitation constant, defined as G = 6.67384 * 10^-11 N(m/kg)^2
+G = 6.67384e-11
+
 local kRadian = 180 / math.pi
 local kDegree = math.pi / 180
-local atan    = math.atan
+local abs     = math.abs
+local atan2   = math.atan2
+local max     = math.max
+local min     = math.min
 local sqrt    = math.sqrt
 
---! Calculate the angle between two points with bearing north.
+--! Calculate the angle between two points.
 function rainbow.math.angle(a_x, a_y, b_x, b_y)
-	return atan((b_y - a_y) / (b_x - a_x))
+	return atan2(b_y - a_y, b_x - a_x)
+end
+
+--! Clamp value between a range.
+function rainbow.math.clamp(x, min_val, max_val)
+	return min(max(x, min_val), max_val)
 end
 
 --! Convert radians to degrees.
@@ -52,7 +63,13 @@ end
 function rainbow.math.distance(a_x, a_y, b_x, b_y)
 	local s1 = b_x - a_x
 	local s2 = b_y - a_y
-	return sqrt(s1 * s1, s2 * s2)
+	return sqrt(s1 * s1 + s2 * s2)
+end
+
+--! Newton's law of universal gravitation:
+--! F = G * (m1 * m2) / r^2
+function rainbow.math.gravitation(m1, m2, r)
+	return G * m1 * m2 / (r * r)
 end
 
 --! Calculate the hitbox.

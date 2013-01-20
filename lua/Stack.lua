@@ -1,48 +1,64 @@
 --! Good, old fashioned stack.
 --!
---! Stack is a last in, first out (LIFO) data type and linear data structure.
---! A stack can store any element but only the top element is available at any
---! time. Two fundamental operations characterise a stack:
+--! Stack is a last in, first out (LIFO) data type and linear data structure. A
+--! stack can store any element but only the top element is available at any
+--! time.
 --!
---! - \c push(item) adds \c item on top of the stack.
---! - \c pop() removes the top element.
+--! \code
+--! local mystack = rainbow.stack()
+--! mystack:push(1)  # Stack is now { 1 }
+--! mystack:push(2)  # Stack is now { 1, 2 }
+--! mystack:push(3)  # Stack is now { 1, 2, 3 }
+--! mystack:push(4)  # Stack is now { 1, 2, 3, 4 }
 --!
---! The top element is accessed by \c :top().
+--! local value = mystack:top()  # 'value' is 4
 --!
---! Copyright 2012 Bifrost Entertainment. All rights reserved.
+--! mystack:pop()          # Stack is now { 1, 2, 3 }
+--! value = mystack:top()  # 'value' is 3
+--! mystack:pop()          # Stack is now { 1, 2 }
+--! value = mystack:top()  # 'value' is 2
+--! mystack:pop()          # Stack is now { 1 }
+--! value = mystack:top()  # 'value' is 1
+--! mystack:pop()          # Stack is now empty
+--! \endcode
+--!
+--! Copyright 2012-13 Bifrost Entertainment. All rights reserved.
 --! \author Tommy Nguyen
 
-Stack = {}
+local Stack = {}
 Stack.__index = Stack
+rainbow.stack = Stack
 
-function Stack.new(secs)
-	local self = {}
+local function create(Stack)
+	local self = {
+		__count = 0,
+		__store = {}
+	}
 	setmetatable(self, Stack)
-	self.count = 0
-	self.store = {}
 	return self
 end
+setmetatable(Stack, { __call = create })
 
 function Stack:pop()
-	if self.count == 0 then
+	if self.__count == 0 then
 		return
 	end
-	self.store[self.count] = nil
-	self.count = self.count - 1
+	self.__store[self.__count] = nil
+	self.__count = self.__count - 1
 end
 
 function Stack:push(item)
-	self.count = self.count + 1
-	self.store[self.count] = item
+	self.__count = self.__count + 1
+	self.__store[self.__count] = item
 end
 
 function Stack:top()
-	return self.store[self.count]
+	return self.__store[self.__count]
 end
 
 --[[
 function Stack.unit_test()
-	local stack = Stack.new()
+	local stack = rainbow.stack()
 	for i = 1, 10 do
 		stack:push(i)
 		if stack:top() ~= i then
@@ -50,22 +66,22 @@ function Stack.unit_test()
 			error("stack:push(i) failed", 2)
 		end
 	end
-	if stack.count ~= 10 then
-		error("stack.count != 10", 2)
+	if stack.__count ~= 10 then
+		error("stack.__count != 10", 2)
 	end
 	for i = 10, 1, -1 do
 		stack:pop()
-		if stack:pop() and stack:top() ~= stack.count then
-			print("Expected " .. stack.count .. ", got " .. stack:top())
+		if stack:pop() and stack:top() ~= stack.__count then
+			print("Expected " .. stack.__count .. ", got " .. stack:top())
 			error("stack:pop() failed", 2)
 		end
 	end
-	if stack.count ~= 0 then
-		error("stack.count != 0", 2)
+	if stack.__count ~= 0 then
+		error("stack.__count != 0", 2)
 	end
 	stack:pop()
-	if stack.count ~= 0 then
-		error("stack.count < 0", 2)
+	if stack.__count ~= 0 then
+		error("stack.__count < 0", 2)
 	end
 	print("Stack passed all tests")
 end

@@ -10,7 +10,7 @@
 --! - touch_ended()
 --! - touch_moved()
 --!
---! Copyright 2011-12 Bifrost Entertainment. All rights reserved.
+--! Copyright 2011-13 Bifrost Entertainment. All rights reserved.
 --! \author Tommy Nguyen
 
 require("Keyboard")  -- Table of raw keycodes
@@ -65,9 +65,11 @@ end
 
 --! Notify all listeners of a touch began event.
 function rainbow.input.touch_began(touches)
-	--for h,t in pairs(touches) do
-	--	print("Touch event #" .. h .. " began at (" .. t.x .. "," .. t.y .. ")")
-	--end
+	--[[
+	for h,t in pairs(touches) do
+		print("Touch event #" .. h .. " began at (" .. t.x .. "," .. t.y .. ")")
+	end
+	--]]
 
 	__down = true
 	for i = __count, 1, -1 do
@@ -87,9 +89,11 @@ end
 
 --! Notify all listeners of a touch ended event.
 function rainbow.input.touch_ended(touches)
-	--for h,t in pairs(touches) do
-	--	print("Touch event #" .. h .. " ended at (" .. t.x .. "," .. t.y .. ")")
-	--end
+	--[[
+	for h,t in pairs(touches) do
+		print("Touch event #" .. h .. " ended at (" .. t.x .. "," .. t.y .. ")")
+	end
+	--]]
 
 	__down = false
 	for i = __count, 1, -1 do
@@ -99,11 +103,13 @@ end
 
 --! Notify all listeners of a touch moved event.
 function rainbow.input.touch_moved(touches)
-	--if __down then
-	--	for h,t in pairs(touches) do
-	--		print("Touch event #" .. h .. " moved to (" .. t.x .. "," .. t.y .. ")")
-	--	end
-	--end
+	--[[
+	if __down then
+		for h,t in pairs(touches) do
+			print("Touch event #" .. h .. " moved to (" .. t.x .. "," .. t.y .. ")")
+		end
+	end
+	--]]
 
 	for i = __count, 1, -1 do
 		__listeners[i]:touch_moved(touches)
