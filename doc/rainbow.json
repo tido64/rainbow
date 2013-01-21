@@ -1,0 +1,726 @@
+rainbow = {
+	"modules": [
+		{
+			"name": "animation",
+			"description": "<p>Sprite animations use separate textures within a <a href=\"#rainbow.texture\">texture atlas</a> as animation frames. Since animations are bound to a <a href=\"#rainbow.sprite\">sprite</a>, which in turn is bound to a <a href=\"#rainbow.spritebatch\">sprite batch</a>, they are also bound to the <a href=\"#rainbow.texture\">texture atlas</a> the batch is using.</p>",
+			"functions": [
+				{
+					"name": "__call",
+					"parameters": [
+						"sprite", "The sprite object to animate.",
+						"frames", "Array of frames that make up the animation.",
+						"fps", "Number of frames per second to animate at.",
+						"delay", "Number of frames to delay before looping. Negative numbers disable looping. Default: 0.",
+					],
+					"description": "Create a sprite animation.",
+				},
+				{
+					"name": ":is_stopped",
+					"description": "Return whether the animation has stopped.",
+				},
+				{
+					"name": ":set_delay",
+					"parameters": [
+						"delay", "Number of milliseconds to delay before looping.",
+					],
+					"description": "Set the number of milliseconds to delay before looping.",
+				},
+				{
+					"name": ":set_fps",
+					"parameters": [
+						"fps", "Number of frames per second to animate at.",
+					],
+					"description": "Set the number of frames per second to animate at.",
+				},
+				{
+					"name": ":set_frames",
+					"parameters": [
+						"frames", "Table of texture indices that make up the animation.",
+					],
+					"description": "Set table of animation frames.",
+				},
+				{
+					"name": ":set_sprite",
+					"parameters": [
+						"sprite", "The sprite to animate.",
+					],
+					"description": "Set the sprite to animate.",
+				},
+				{
+					"name": ":play",
+					"description": "Start the animation.",
+				},
+				{
+					"name": ":stop",
+					"description": "Stop the animation.",
+				},
+			],
+		},
+		{
+			"name": "audio",
+			"description": "<p>Audio consists mainly of the sound object and the audio channel. The sound object is basically an audio buffer. It can be wholly loaded, or it can stream from disk. A sound object is played on an audio channel. An audio channel can only play one sound object at a time but the sound object can be used by any number of channels. As raw audio data can take a large amount of memory, it is recommended to only create static sound objects for short audio files (such as sound effects).</p><p>Officially, Rainbow supports only <a href=\"http://en.wikipedia.org/wiki/Vorbis\">Ogg Vorbis</a> audio format. However, on iOS, the <a href=\"http://developer.apple.com/library/ios/#documentation/AudioVideo/Conceptual/MultimediaPG/UsingAudio/UsingAudio.html#//apple_ref/doc/uid/TP40009767-CH2-SW9\">list of supported audio formats</a> includes AAC (MPEG-4 Advanced Audio Coding), ALAC (Apple Lossless), HE-AAC (MPEG-4 High Efficiency AAC), iLBC (internet Low Bit Rate Codec), IMA4 (IMA/ADPCM), Linear PCM (uncompressed, linear pulse code modulation), MP3, µ-law and a-law. Of these, AAC, ALAC, HE-AAC and MP3 are hardware-assisted. On Android, the list of supported audio formats vary with each device but MP3 and Ogg Vorbis are both safe bets.</p>",
+			"functions": [
+				{
+					"name": ".clear",
+					"description": "Stop and delete all sound objects.",
+				},
+				{
+					"name": ".create_sound",
+					"parameters": [
+						"path", "Path to audio source, relative to the location of the main script.",
+						"+mode", "Load into buffer (0), or stream from disk (1). Default: 0.",
+						"+loops", "Number of times to loop. Only applicable if streaming. Default: -1.",
+					],
+					"description": "Create a sound object. This object is just a reference to the audio source and cannot be manipulated in any way.",
+				},
+				{
+					"name": ".delete_sound",
+					"parameters": [
+						"sound", "The sound object to delete.",
+					],
+					"description": "Delete sound object. This will stop all channels from using the object and release all related resources.",
+				},
+				{
+					"name": ".pause",
+					"parameters": [
+						"channel", "The channel to pause playback.",
+					],
+					"description": "Set channel on pause.",
+				},
+				{
+					"name": ".play",
+					"parameters": [
+						"sound", "The sound object to play.",
+					],
+					"description": "Start playback of the sound object and return the channel on which it is played. Channels may vary with each playback.",
+				},
+				{
+					"name": ".set_gain",
+					"parameters": [
+						"+channel", "The channel to change gain/volume. Default: master channel.",
+						"volume", "Desired gain/volume. Valid values: 0.0-1.0.",
+					],
+					"description": "Set channel gain/volume.",
+				},
+				{
+					"name": ".set_pitch",
+					"parameters": [
+						"pitch", "Desired pitch shift, where 1.0 equals identify. Each reduction by 50 percent equals a pitch shift of -12 semitones (one octave reduction). Each doubling equals a pitch shift of 12 semitones (one octave increase). Zero is not a legal value.",
+					],
+					"description": "Set global pitch shift.",
+				},
+				{
+					"name": ".stop",
+					"parameters": [
+						"channel", "The channel to stop playback.",
+					],
+					"description": "Stop channel.",
+				},
+			],
+		},
+		{
+			"name": "font",
+			"description": "<p>Font objects are used by <a href=\"#rainbow.label\">labels</a> to display text. Like textures, it is recommended to reuse them whenever possible. A font object is created with a fixed point size and cannot be resized. If a different size is desired, a new font object must be created.</p>",
+			"functions": [
+				{
+					"name": "__call",
+					"parameters": [
+						"path", "Path to font, relative to the location of the main script.",
+						"size", "Point size.",
+					],
+					"description": "Create a font with a fixed point size.",
+				},
+			],
+		},
+		{
+			"name": "input",
+			"description": "<p>Input events are only sent to objects that subscribe to them. Such objects are called event listeners. A listener can be implemented as follows.</p><div class=\"code\">InputListener = {}<br>InputListener.__index = InputListener<br><br>function InputListener:key_down(key, modifiers) end<br>function InputListener:key_up(key, modifiers) end<br>function InputListener:touch_ended(touches) end<br>function InputListener:touch_canceled() end<br>function InputListener:touch_moved(touches) end<br><br># Create our listener and let it subscribe to input events.<br>local mylistener = setmetatable({}, InputListener)<br>rainbow.input.subscribe(mylistener)<br><br># We're only interested in touch began events.<br>function mylistener:touch_began(touches)<br>	for hash,touch in pairs(touches) do<br>		# Handle event here<br>	end<br>end</div><p>As seen in the example, the easiest way is to define an <span class=\"mono\">InputListener</span> and inherit from it, then define the functions that are needed. The important point here is that all event handlers must be implemented even if they'll do nothing.</p><p>For touch events, a table of events are sent with each notification. It is iterated as above. The <span class=\"mono\">hash</span> value uniquely identifies a touch (or mouse button) for the duration of it touching the screen (or mouse button being held). Touch (or mouse click) location is stored in <span class=\"mono\">touch</span>:</p><div class=\"code\">touch.x          # For the x-coordinate.<br>touch.y          # For the y-coordinate.<br>touch.timestamp  # For the relative time at which the event occurred.<br></div><p><span class=\"emphasize\">Desktop-only:</span> Keyboard event listeners receive the key value (the actual key that was pressed/released) of the event and, if available, its modifiers (i.e. ctrl, alt or shift).</p>",
+			"functions": [
+				{
+					"name": ".subscribe",
+					"parameters": [
+						"listener", "Input listener object.",
+					],
+					"description": "Add an input listener.",
+				},
+				{
+					"name": ".unsubscribe",
+					"parameters": [
+						"listener", "Input listener object.",
+					],
+					"description": "Remove an input listener.",
+				},
+				{
+					"name": ".unsubscribe_all",
+					"description": "Remove all input listeners.",
+				},
+			],
+		},
+		{
+			"name": "io",
+			"functions": [
+				{
+					"name": ".load",
+				},
+				{
+					"name": ".save",
+				},
+			],
+		},
+		{
+			"name": "label",
+			"description": "A label is used to display text.",
+			"functions": [
+				{
+					"name": "__call",
+					"parameters": [
+						"+text", "The text to be displayed on the label. Default: \"\".",
+					],
+				},
+				{
+					"name": ":get_color",
+					"description": "Get the font colour in separate channels (RGBA).",
+				},
+				{
+					"name": ":set_alignment",
+					"parameters": [
+						"align", "Text alignment. Valid values: 'l', 'c', 'r'. Default: 'l'.",
+					],
+					"description": "Set text alignment.",
+				},
+				{
+					"name": ":set_color",
+					"parameters": [
+						"r", "Amount of red. Valid values: 0-255.",
+						"g", "Amount of green. Valid values: 0-255.",
+						"b", "Amount of blue. Valid values: 0-255.",
+						"+a", "Amount of opacity. Valid values: 0-255. Default: 255.",
+					],
+					"description": "Set text colour.",
+				},
+				{
+					"name": ":set_font",
+					"parameters": [
+						"font", "<a href=\"#rainbow.font\">Font type</a> to use.",
+					],
+					"description": "Set font type.",
+				},
+				{
+					"name": ":set_position",
+					"parameters": [
+						"x, y", "Position.",
+					],
+					"description": "Set label position.",
+				},
+				{
+					"name": ":set_scale",
+					"parameters": [
+						"scale", "Factor to scale label by. Valid values: 0.01-1.0.",
+					],
+					"description": "Set label scale. Values are clamped between 0.01-1.0.",
+				},
+				{
+					"name": ":set_text",
+					"parameters": [
+						"text", "Text to be displayed on the label.",
+					],
+					"description": "Set the text to be displayed on the label.",
+				},
+			],
+		},
+		{
+			"name": "math",
+			"description": "Useful mathematical functions.",
+			"properties": [
+				"G", "The universal gravitation constant, defined as G = 6.67384 * 10<sup>-11</sup> N(m/kg)<sup>2</sup>.",
+			],
+			"functions": [
+				{
+					"name": ".angle",
+					"parameters": [
+						"a.x, a.y", "The first point.",
+						"b.x, b.y", "The second point.",
+					],
+					"description": "Calculate the angle between two points.",
+				},
+				{
+					"name": ".clamp",
+					"parameters": [
+						"x", "The value to clamp.",
+						"min", "Lowest acceptable value.",
+						"max", "Highest acceptable value.",
+					],
+					"description": "Return the input value clamped between a range [<span class=\"mono\">min</span>, <span class=\"mono\">max</span>].",
+				},
+				{
+					"name": ".degrees",
+					"parameters": [
+						"radians", "The value to convert to degrees.",
+					],
+					"description": "Convert radians to degrees.",
+				},
+				{
+					"name": ".distance",
+					"parameters": [
+						"a.x, a.y", "The first point.",
+						"b.x, b.y", "The second point.",
+					],
+					"description": "Calculate the distance between two points.",
+				},
+				{
+					"name": ".gravitation",
+					"parameters": [
+						"m1", "The first mass.",
+						"m2", "The second mass.",
+						"r", "Distance between the centers of the masses.",
+					],
+					"description": "Newton's law of universal gravitation: F = G * (m<sub>1</sub> * m<sub>2</sub>) / r<sup>2</sup>.",
+				},
+				{
+					"name": ".hitbox",
+					"parameters": [
+						"x, y", "Centre of the box.",
+						"width,height", "Dimension of the box.",
+						"scale", "Scaling factor for on-screen box size.",
+					],
+					"description": "Create a hitbox.",
+				},
+				{
+					"name": ".is_inside",
+					"parameters": [
+						"box", "Table with the upper-left and lower-right points of the box.",
+						"point", "The point to check.",
+					],
+					"description": "Check whether a point is inside a box.",
+				},
+				{
+					"name": ".radians",
+					"parameters": [
+						"degrees", "The value to convert to radians.",
+					],
+					"description": "Convert degrees to radians.",
+				},
+			],
+		},
+		{
+			"name": "platform",
+			"description": "Query the system for capabilities or sensor readings.",
+			"properties": [
+				"accelerometer", [
+					"timestamp", "The relative time at which the acceleration event occurred.",
+					"x", "The acceleration value for the x axis of the device. With the device held in portrait orientation and the screen facing you, the x axis runs from left (negative values) to right (positive values) across the face of the device.",
+					"y", "The acceleration value for the y axis of the device. With the device held in portrait orientation and the screen facing you, the y axis runs from bottom (negative values) to top (positive values) across the face of the device.",
+					"z", "The acceleration value for the z axis of the device. With the device held in portrait orientation and the screen facing you, the z axis runs from back (negative values) to front (positive values) through the device.",
+				],
+				"screen", [
+					"width", "Screen width in pixels.",
+					"height", "Screen height in pixels.",
+					"touch", "Whether the screen has touch capabilities.",
+				],
+				"memory", "Total amount of RAM in MB.",
+			],
+		},
+		{
+			"name": "random",
+			"description": "Rainbow's pseudo-random number generator is the <a href=\"http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/SFMT/\">Double precision SIMD-oriented Fast Mersenne Twister</a> developed by Mutsuo Saito and Makoto Matsumoto at Hiroshima University and University of Tokyo. The implementation in use supports a period of 2<sup>19937</sup> - 1.",
+			"functions": [
+				{
+					"name": "__call",
+					"description": "Return a random number in interval (0, 1).",
+				},
+				{
+					"name": "__call",
+					"parameters": [
+						"max", "Maximum value.",
+					],
+					"description": "Return a random number in interval (0, <span class=\"mono\">max</span>).",
+				},
+				{
+					"name": "__call",
+					"parameters": [
+						"min", "Minimum value.",
+						"max", "Maximum value.",
+					],
+					"description": "Return a random number in interval (<span class=\"mono\">min</span>, <span class=\"mono\">max</span>).",
+				},
+			],
+		},
+		{
+			"name": "renderer",
+			"description": "Access low-level graphics methods and properties.",
+			"properties": [
+				"max_texture_size", "Rough estimate of the largest texture that the platform can handle.",
+				"supports_pvrtc", "Whether the platform supports PVRTC textures.",
+			],
+			"functions": [
+				{
+					"name": ".set_clear_color",
+					"parameters": [
+						"r", "Amount of red. Valid values: 0-255.",
+						"g", "Amount of green. Valid values: 0-255.",
+						"b", "Amount of blue. Valid values: 0-255.",
+					],
+					"description": "Set clear colour. Clearing occurs at the start of each drawn frame.",
+				},
+				{
+					"name": ".set_filter",
+					"parameters": [
+						"filter", "Texture filtering method. Valid values: <span class=\"mono\">gl.NEAREST</span>, <span class=\"mono\">gl.LINEAR</span>.",
+					],
+					"description": "Set texture filtering method. Only affects new textures.",
+				},
+			],
+		},
+		{
+			"name": "scenegraph",
+			"description": "Drawables must be attached to the scene graph in order to be updated and drawn. The scene graph is traversed in a depth-first manner. In a single node, this means that its children are updated and drawn in the order they were created.",
+			"functions": [
+				{
+					"name": ":add_animation",
+					"parameters": [
+						"+parent", "Parent node to attach to. Default: root.",
+						"animation", "The <a href=\"#rainbow.animation\">animation</a> to attach to the graph.",
+					],
+					"description": "Create a node containing a <a href=\"#rainbow.animation\">sprite animation</a>.",
+				},
+				{
+					"name": ":add_batch",
+					"parameters": [
+						"+parent", "Parent node to attach to. Default: root.",
+						"spritebatch", "The <a href=\"#rainbow.spritebatch\">sprite batch</a> to attach to the graph.",
+					],
+					"description": "Create a node containing a <a href=\"#rainbow.spritebatch\">sprite batch</a>.",
+				},
+				{
+					"name": ":add_drawable",
+					"parameters": [
+						"+parent", "Parent node to attach to. Default: root.",
+						"drawable", "The drawable object to attach to the graph.",
+					],
+					"description": "Create a node containing a drawable.",
+				},
+				{
+					"name": ":add_node",
+					"parameters": [
+						"+parent", "Parent node to attach to. Default: root.",
+					],
+					"description": "Create a group node.",
+				},
+				{
+					"name": ":add_label",
+					"parameters": [
+						"+parent", "Parent node to attach to. Default: root.",
+						"label", "The <a href=\"#rainbow.label\">label</a> to attach to the graph.",
+					],
+					"description": "Create a node containing a <a href=\"#rainbow.label\">label</a>.",
+				},
+				{
+					"name": ":disable",
+					"parameters": [
+						"node", "The node to disable.",
+					],
+					"description": "Disable a node. Disabling a node will cut short the graph traversal, effectively disabling all children nodes but still maintain their states.",
+				},
+				{
+					"name": ":enable",
+					"parameters": [
+						"node", "The node to enable.",
+					],
+					"description": "Enable a node. Enabling a node will open up the path in the graph, effectively enabling all children nodes but still maintain their states.",
+				},
+				{
+					"name": ":move",
+					"parameters": [
+						"node", "The node to move.",
+						"x, y", "Amount to move the node by.",
+					],
+					"description": "Move a node and all of its children by (x,y).",
+				},
+				{
+					"name": ":remove",
+					"parameters": [
+						"node", "The node to remove.",
+					],
+					"description": "Remove a node and all of its children from the graph.",
+				},
+				{
+					"name": ":rotate",
+					"parameters": [
+						"node", "The node to move.",
+						"r", "Angle of rotation in radians.",
+					],
+					"description": "Rotate a node and all of its children by given angle.",
+				},
+				{
+					"name": ":set_parent",
+					"parameters": [
+						"parent", "The new parent.",
+						"node", "The node to move.",
+					],
+					"description": "Move node to a new parent node.",
+				},
+				{
+					"name": ":scale",
+					"parameters": [
+						"node", "The node to scale.",
+						"f", "Scale factor.",
+					],
+					"description": "Scale a node and all of its children by given factor.",
+				},
+			],
+		},
+		{
+			"name": "sprite",
+			"description": "<p>A sprite is a textured quad in a coordinate system with the origin at the lower left corner of the screen. Sprites are created by a <a href=\"#rainbow.spritebatch\">sprite batch</a> and uses the <a href=\"#rainbow.texture\">texture atlas</a> assigned to the batch.</p>",
+			"functions": [
+				{
+					"name": ":get_angle",
+					"description": "Get sprite orientation in radians.",
+				},
+				{
+					"name": ":get_color",
+					"description": "Get sprite colour in separate channels (RGBA).",
+				},
+				{
+					"name": ":get_position",
+					"description": "Get sprite position.",
+				},
+				{
+					"name": ":set_color",
+					"parameters": [
+						"colour", "Sprite colour, formatted as <span class=\"\">0xrrggbbaa</span>.",
+					],
+					"description": "Set sprite colour.",
+				},
+				{
+					"name": ":set_pivot",
+					"parameters": [
+						"x, y", "Pivot point. Default: 0.5, 0.5.",
+					],
+					"description": "Set sprite's pivot point.",
+				},
+				{
+					"name": ":set_position",
+					"parameters": [
+						"x, y", "Position. Default: 0, 0.",
+					],
+					"description": "Set sprite position.",
+				},
+				{
+					"name": ":set_rotation",
+					"parameters": [
+						"r", "Angle in radians. Default: 0.0.",
+					],
+					"description": "Set sprite rotation.",
+				},
+				{
+					"name": ":set_scale",
+					"parameters": [
+						"f", "Scale factor. Default: 1.0.",
+					],
+					"description": "Set sprite scale.",
+				},
+				{
+					"name": ":set_texture",
+					"parameters": [
+						"texture", "Texture id.",
+					],
+					"description": "Assign texture to sprite.",
+				},
+
+				{
+					"name": ":mirror",
+					"parameters": [],
+					"description": "Horizontally mirror sprite's current texture.",
+				},
+				{
+					"name": ":move",
+					"parameters": [
+						"x, y", "Amount to move sprite by.",
+					],
+					"description": "Move sprite by (x,y).",
+				},
+				{
+					"name": ":rotate",
+					"parameters": [
+						"r", "Amount to rotate sprite by.",
+					],
+					"description": "Rotate sprite by given angle.",
+				},
+			],
+		},
+		{
+			"name": "spritebatch",
+			"description": "<p>Sprite batches are meant to enforce grouping of <a href=\"#rainbow.sprite\">sprites</a> in order to avoid drawing each <a href=\"#rainbow.sprite\">sprite</a> separately.</p><p>The sprites in a batch are drawn using <a href=\"http://en.wikipedia.org/wiki/Painter's_algorithm\">painter's algorithm</a> and should therefore be created in the order they want to be drawn.</p>",
+			"functions": [
+				{
+					"name": "__call",
+					"parameters": [
+						"+hint", "Number of <a href=\"#rainbow.sprite\">sprites</a> to make space for. Default: 8.",
+					],
+					"description": "Create a batch of <a href=\"#rainbow.sprite\">sprites</a>.",
+				},
+				{
+					"name": ":create_sprite",
+					"parameters": [
+						"width, height", "Dimension of the <a href=\"#rainbow.sprite\">sprite</a> to create."
+					],
+					"description": "Create an untextured <a href=\"#rainbow.sprite\">sprite</a> with given dimension and place it at origin.",
+				},
+				{
+					"name": ":set_texture",
+					"parameters": [
+						"texture", "<a href=\"#rainbow.texture\">Texture atlas</a> used by all <a href=\"#rainbow.sprite\">sprites</a> in the batch."
+					],
+					"description": "Set <a href=\"#rainbow.texture\">texture atlas</a>.",
+				},
+			],
+		},
+		{
+			"name": "stack",
+			"description": "<p>Stack is a last in, first out (LIFO) data type and linear data structure. A stack can store any element but only the top element is available at any time.</p><div class=\"code\">local mystack = rainbow.stack()<br>mystack:push(1)  # Stack is now { 1 }<br>mystack:push(2)  # Stack is now { 1, 2 }<br>mystack:push(3)  # Stack is now { 1, 2, 3 }<br>mystack:push(4)  # Stack is now { 1, 2, 3, 4 }<br><br>local value = mystack:top()  # 'value' is 4<br><br>mystack:pop()          # Stack is now { 1, 2, 3 }<br>value = mystack:top()  # 'value' is 3<br>mystack:pop()          # Stack is now { 1, 2 }<br>value = mystack:top()  # 'value' is 2<br>mystack:pop()          # Stack is now { 1 }<br>value = mystack:top()  # 'value' is 1<br>mystack:pop()          # Stack is now empty</div>",
+			"functions": [
+				{
+					"name": "__call",
+					"description": "Create a stack.",
+				},
+				{
+					"name": ":pop",
+					"description": "Pop an element from the top of the stack.",
+				},
+				{
+					"name": ":push",
+					"description": "Push an element on top of the stack.",
+				},
+				{
+					"name": ":top",
+					"description": "Return the element on top of the stack.",
+				},
+			],
+		},
+		{
+			"name": "texture",
+			"description": "<p>Texture objects are images decoded and sent to the graphics card as texture. Textures are normally stored as raw bitmaps unless they were stored in a compressed format supported by the platform (e.g. ETC1 or PVRTC). This means that a 1024x1024 texture will normally occupy 4MB. In order to save memory, they are assumed to be <a href=\"http://en.wikipedia.org/wiki/Texture_atlas\">atlases</a> and should be reused whenever possible.</p><p><span class=\"emphasize\">Note:</span> Textures should be square and its sides a power of two (greater than or equal to 64). This is due to how the graphics pipeline works. Even if textures do not meet this recommendation, the graphics drivers will enlarge a texture in order to do so anyway, wasting memory. The maximum size of a texture can be queried in <a href=\"#rainbow.renderer\"><span class=\"mono\">rainbow.renderer</span></a>.</p>",
+			"functions": [
+				{
+					"name": "__call",
+					"parameters": [
+						"path", "Path to texture to load.",
+					],
+					"description": "Create a texture object, usable in <a href=\"#rainbow.spritebatch\">sprite batches</a>.",
+				},
+				{
+					"name": ":create",
+					"parameters": [
+						"x, y", "Upper left point of texture.",
+						"width, height", "Dimension of texture.",
+					],
+					"description": "Create/define a texture in the atlas. The unique identifier returned can be used in <a href=\"#rainbow.sprite\">sprites</a>.",
+				},
+			],
+		},
+		{
+			"name": "timer",
+			"description": "Timers execute a function once after a set time, or any number of times at given intervals.",
+			"functions": [
+				{
+					"name": "__call",
+					"description": "Create a timer.",
+					"parameters": [
+						"callback", "The callback function or object implementing <span class=\"mono\">:tick()</span>.",
+						"delay", "Time in milliseconds to delay call.",
+						"+times", "Number of times to call. Infinite if omitted.",
+					],
+				},
+				{
+					"name": ".clear",
+					"description": "Clear all timers.",
+				},
+				{
+					"name": ":cancel",
+					"description": "Cancel timer.",
+				},
+				{
+					"name": ":reset",
+					"description": "Reset a canceled timer. Restores it to its initial state.",
+				},
+			],
+		},
+		{
+			"name": "transition",
+			"functions": [
+				{
+					"name": ".clear",
+					"description": "Cancel all transitions.",
+				},
+				{
+					"name": ".fadein",
+					"parameters": [
+						"source", "The audio channel to fade in.",
+						"duration", "Duration of the transition in milliseconds.",
+					],
+					"description": "Fade in an audio channel.",
+				},
+				{
+					"name": ".fadeout",
+					"parameters": [
+						"source", "The audio channel to fade out.",
+						"duration", "Duration of the transition in milliseconds.",
+					],
+					"description": "Fade out an audio channel.",
+				},
+				{
+					"name": ".fadeto",
+					"parameters": [
+						"sprite", "The sprite to fade.",
+						"alpha", "Final alpha value.",
+						"duration", "Duration of the transition in milliseconds.",
+						"method", "The equation to use for the transition.",
+					],
+					"description": "Fade a sprite to a given alpha value.",
+				},
+				{
+					"name": ".move",
+					"parameters": [
+						"drawable", "An object that supports <span class=\"mono\">:get_position()</span> and <span class=\"mono\">:move()</span>.",
+						"x, y", "Final destination.",
+						"duration", "Duration of the transition in milliseconds.",
+						"method", "The equation to use for the transition.",
+					],
+					"description": "Move a drawable to given position.",
+				},
+				{
+					"name": ".rotate",
+					"parameters": [
+						"drawable", "An object that supports <span class=\"mono\">:get_angle()</span> and <span class=\"mono\">:rotate()</span>.",
+						"r", "Final angle.",
+						"duration", "Duration of the transition in milliseconds.",
+						"method", "The equation to use for the transition.",
+					],
+					"description": "Rotate a drawable to given angle.",
+				},
+				{
+					"name": ".scale",
+					"parameters": [
+						"drawable", "An object that supports <span class=\"mono\">:set_scale()</span>.",
+						"start", "Start scale factor.",
+						"final", "Final scale factor.",
+						"duration", "Duration of the transition in milliseconds.",
+						"method", "The equation to use for the transition.",
+					],
+					"description": "Scale a drawable from a given start factor to a given final factor.",
+				},
+			],
+		},
+	],
+	"libraries": [
+		{
+			"name": "Box2D",
+			"url": "http://box2d.org/documentation/",
+		},
+		{
+			"name": "dkjson",
+			"url": "http://chiselapp.com/user/dhkolf/repository/dkjson/wiki?name=Documentation",
+		},
+	],
+};
