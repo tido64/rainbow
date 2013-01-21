@@ -72,11 +72,9 @@ namespace Rainbow
 
 		int SceneGraph::remove(lua_State *L)
 		{
-			LUA_ASSERT(lua_gettop(L) == 1 || lua_gettop(L) == 2, "rainbow.scenegraph:remove([parent,] node)");
+			LUA_ASSERT(lua_gettop(L) == 1, "rainbow.scenegraph:remove(node)");
 
-			const int top = lua_gettop(L);
-			::SceneGraph::Node *node = (top == 1) ? this->root : this->to_node(L, 1);
-			node->remove_child(this->to_node(L, top));
+			this->to_node(L, 1)->remove();
 			return 0;
 		}
 

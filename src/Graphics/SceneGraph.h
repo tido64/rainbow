@@ -78,6 +78,8 @@ namespace SceneGraph
 		/// Recursively move all sprites by (x,y).
 		void move(const float x, const float y);
 
+		inline void remove();
+
 		/// Recursively rotate all sprites by r.
 		/// \note All sprites will rotate about their own pivot points. This
 		///       means that currently, it is not possible to rotate the
@@ -128,6 +130,11 @@ namespace SceneGraph
 	{
 		TreeNode<Node>::add_child(n);
 		return n;
+	}
+
+	void Node::remove()
+	{
+		this->parent->remove_child(this);
 	}
 }
 
