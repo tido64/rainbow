@@ -1,12 +1,12 @@
 # Generated files
-\.orig
-doc/
+\.(?:orig|swp)
+doc/(?:html|old)
 lua/Keyboard\.lua
 src/Graphics/Shaders/Shaders.h
 
 # Libraries
 \.(?:git|hg|svn)
-lib/.*(?:\.cmake|\.txt|docs|html|Makefile|makefile|LICENSE|README)
+lib/.*(?:\.cmake|\.txt|docs|html|LICENSE|Makefile|makefile|README)
 lib/dSFMT/check.sh
 lib/dSFMT/test.c
 lib/gtest/

@@ -53,9 +53,6 @@ endif()
 if(HEIMDALL)
 	add_definitions(-DUSE_HEIMDALL)
 endif()
-if(PHYSICS)
-	add_definitions(-DUSE_PHYSICS)
-endif()
 
 # Rainbow
 include_directories(src
