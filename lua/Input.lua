@@ -1,32 +1,65 @@
 --! Rainbow Lua input subscription class.
 --!
---! Lets objects subscribe to and be notified of input events. All listeners
---! must implement the following methods:
+--! Input events are only sent to objects that subscribe to them. Such objects
+--! are called event listeners. A listener can be implemented as follows.
 --!
---! - key_down()
---! - key_up()
---! - touch_began()
---! - touch_canceled()
---! - touch_ended()
---! - touch_moved()
+--! \code
+--! InputListener = {}
+--! InputListener.__index = InputListener
+--!
+--! function InputListener:key_down(key, modifiers) end
+--! function InputListener:key_up(key, modifiers) end
+--! function InputListener:touch_ended(touches) end
+--! function InputListener:touch_canceled() end
+--! function InputListener:touch_moved(touches) end
+--!
+--! # Create our listener and let it subscribe to input events.
+--! local mylistener = setmetatable({}, InputListener)
+--! rainbow.input.subscribe(mylistener)
+--!
+--! # We're only interested in touch began events.
+--! function mylistener:touch_began(touches)
+--! 	for hash,touch in pairs(touches) do
+--! 		# Handle event here
+--! 	end
+--! end
+--! \endcode
+--!
+--! As seen in the example, the easiest way is to define an \c InputListener
+--! and inherit from it, then define the functions that are needed. The
+--! important point here is that all event handlers must be implemented even if
+--! they'll do nothing.
+--!
+--! For touch events, a table of events are sent with each notification. It is
+--! iterated as above. The \c hash value uniquely identifies a touch (or mouse
+--! button) for the duration of it touching the screen (or mouse button being
+--! held). Touch (or mouse click) location is stored in \c touch:
+--!
+--! \code
+--! touch.x          # For the x-coordinate.
+--! touch.y          # For the y-coordinate.
+--! touch.timestamp  # For the relative time at which the event occurred.
+--! \endcode
 --!
 --! Copyright 2011-13 Bifrost Entertainment. All rights reserved.
 --! \author Tommy Nguyen
 
-require("Keyboard")  -- Table of raw keycodes
+--require("Keyboard")  -- Table of raw keycodes
+
+local Input = rainbow.input
 
 local __count     = 0
 local __down      = false
 local __listeners = {}
 
 --! Add an object as input listener.
-function rainbow.input.subscribe(obj)
+function Input.subscribe(obj)
 	__count = __count + 1
 	__listeners[__count] = obj
 end
 
 --! Remove a listener.
-function rainbow.input.unsubscribe(obj)
+function Input.unsubscribe(obj)
 	for i = __count, 1, -1 do
 		if __listeners[i] == obj then
 			__listeners[i] = __listeners[__count]
@@ -38,7 +71,7 @@ function rainbow.input.unsubscribe(obj)
 end
 
 --! Remove all listeners.
-function rainbow.input.unsubscribe_all()
+function Input.unsubscribe_all()
 	for i = 1, __count do
 		__listeners[i] = nil
 	end
@@ -46,7 +79,8 @@ function rainbow.input.unsubscribe_all()
 end
 
 --! Notify all listeners of a key down event.
-function rainbow.input.key_down(key, mod)
+function Input.key_down(keys)
+	local key, mod = keys[1], keys[2]
 	print("Key down: " .. mod .. "+" .. key)
 
 	for i = __count, 1, -1 do
@@ -55,7 +89,8 @@ function rainbow.input.key_down(key, mod)
 end
 
 --! Notify all listeners of a key up event.
-function rainbow.input.key_up(key, mod)
+function Input.key_up(keys)
+	local key, mod = keys[1], keys[2]
 	print("Key up: " .. mod .. "+" .. key)
 
 	for i = __count, 1, -1 do
@@ -64,7 +99,7 @@ function rainbow.input.key_up(key, mod)
 end
 
 --! Notify all listeners of a touch began event.
-function rainbow.input.touch_began(touches)
+function Input.touch_began(touches)
 	--[[
 	for h,t in pairs(touches) do
 		print("Touch event #" .. h .. " began at (" .. t.x .. "," .. t.y .. ")")
@@ -78,7 +113,7 @@ function rainbow.input.touch_began(touches)
 end
 
 --! Notify all listeners of a touch canceled event.
-function rainbow.input.touch_canceled()
+function Input.touch_canceled()
 	--print("Touch events canceled")
 
 	__down = false
@@ -88,7 +123,7 @@ function rainbow.input.touch_canceled()
 end
 
 --! Notify all listeners of a touch ended event.
-function rainbow.input.touch_ended(touches)
+function Input.touch_ended(touches)
 	--[[
 	for h,t in pairs(touches) do
 		print("Touch event #" .. h .. " ended at (" .. t.x .. "," .. t.y .. ")")
@@ -102,7 +137,7 @@ function rainbow.input.touch_ended(touches)
 end
 
 --! Notify all listeners of a touch moved event.
-function rainbow.input.touch_moved(touches)
+function Input.touch_moved(touches)
 	--[[
 	if __down then
 		for h,t in pairs(touches) do
@@ -115,3 +150,15 @@ function rainbow.input.touch_moved(touches)
 		__listeners[i]:touch_moved(touches)
 	end
 end
+
+local function fireevents()
+	local events = Input.__events;
+	for i = 1, #events do
+		local e = events[i]
+		Input[e[1]](e[2])
+	end
+	for i = #events, 1, -1 do
+		events[i] = nil
+	end
+end
+__rainbow_modules[#__rainbow_modules + 1] = fireevents
