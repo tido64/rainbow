@@ -2,4 +2,5 @@ set(LIBPNG_INCLUDE_DIR ${LOCAL_LIBRARY}/libpng)
 file(GLOB_RECURSE LIBPNG_SRC ${LIBPNG_INCLUDE_DIR}/*.c)
 
 add_library(png STATIC ${LIBPNG_SRC})
+set_property(TARGET png APPEND PROPERTY INCLUDE_DIRECTORIES ${LIBPNG_INCLUDE_DIR})
 add_dependencies(rainbow png)
