@@ -8,8 +8,9 @@
 
 namespace Rainbow
 {
-	void Director::init(const Data &main)
+	void Director::init(const Data &main, const int width, const int height)
 	{
+		this->set_video(width, height);
 		if (this->lua.init(main) != LUA_OK || this->lua.update(0) != LUA_OK)
 			this->shutdown();
 		else

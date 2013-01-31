@@ -13,7 +13,7 @@ namespace Heimdall
 {
 	/// Overlay for debugging options.
 	///
-	/// Copyright 2012 Bifrost Entertainment. All rights reserved.
+	/// Copyright 2012-13 Bifrost Entertainment. All rights reserved.
 	/// \author Tommy Nguyen
 	class Gatekeeper : public Touchable, private NonCopyable<Gatekeeper>
 	{
@@ -23,7 +23,7 @@ namespace Heimdall
 
 		inline void draw();
 
-		void init(const Data &);
+		void init(const Data &, const int width, const int height);
 		void set_video(const int width, const int height);
 
 		void update(const unsigned long t = 0);

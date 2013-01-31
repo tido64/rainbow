@@ -10,9 +10,10 @@ class Data;
 
 namespace Rainbow
 {
-	/// Simple game loop for Lua-scripted games.
+	/// Simple game loop for Lua-scripted games. Must be created after having
+	/// set up an OpenGL context.
 	///
-	/// Copyright 2011-12 Bifrost Entertainment. All rights reserved.
+	/// Copyright 2011-13 Bifrost Entertainment. All rights reserved.
 	/// \author Tommy Nguyen
 	class Director : private NonCopyable<Director>
 	{
@@ -22,7 +23,7 @@ namespace Rainbow
 		inline void draw();
 
 		/// Load and initialise main script.
-		void init(const Data &);
+		void init(const Data &, const int width, const int height);
 
 		/// Set screen resolution.
 		void set_video(const int width, const int height);

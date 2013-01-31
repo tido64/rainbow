@@ -1,14 +1,15 @@
-// Copyright 2010-12 Bifrost Entertainment. All rights reserved.
+// Copyright 2010-13 Bifrost Entertainment. All rights reserved.
 
 #include "Platform.h"
 #ifdef RAINBOW_SDL
+
+#include <SDL.h>
+#if SDL_COMPILEDVERSION < SDL_VERSIONNUM(2,0,0)
 
 #ifdef RAINBOW_WIN
 #	include "Graphics/OpenGL.h"
 #	include <GL/glew.c>
 #endif
-
-#include <SDL.h>
 
 #ifdef RAINBOW_MAC
 #	define R_META KMOD_META
@@ -101,12 +102,11 @@ int main(int argc, char *argv[])
 		SDL_Quit();
 		exit(1);
 	}
-
-	Director director;
-	resize(director, screen_width, screen_height);
+	Renderer::resize(screen_width, screen_height);
 
 	// Load game
-	director.init(Data("main.lua"));
+	Director director;
+	director.init(Data("main.lua"), screen_width, screen_height);
 
 	Chrono::Instance().update();
 	while (!done)
@@ -237,4 +237,5 @@ int sdl_eventfilter(const SDL_Event *e)
 	}
 }
 
-#endif
+#endif  // SDL_COMPILEDVERSION < SDL_VERSIONNUM(2,0,0)
+#endif  // RAINBOW_SDL

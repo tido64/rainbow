@@ -37,12 +37,12 @@ namespace Heimdall
 		delete this->director;
 	}
 
-	void Gatekeeper::init(const Data &script)
+	void Gatekeeper::init(const Data &script, const int width, const int height)
 	{
+		this->set_video(width, height);
 		delete this->director;
 		this->director = new Rainbow::Director();
-		this->director->set_video(this->width, this->height);
-		this->director->init(script);
+		this->director->init(script, this->width, this->height);
 		Input::Instance->subscribe(this, Input::TOUCH_EVENTS);
 	}
 

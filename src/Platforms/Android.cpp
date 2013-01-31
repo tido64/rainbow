@@ -1,4 +1,4 @@
-// Copyright 2012 Bifrost Entertainment. All rights reserved.
+// Copyright 2012-13 Bifrost Entertainment. All rights reserved.
 
 #include "Platform.h"
 #ifdef RAINBOW_ANDROID
@@ -38,7 +38,7 @@ struct AInstance
 	EGLDisplay display;
 	EGLSurface surface;
 	EGLContext context;
-	Director director;
+	Director *director;
 	ConFuoco::Mixer mixer;
 
 	AInstance() :
@@ -113,12 +113,13 @@ void android_main(struct android_app *state)
 			continue;
 		}
 
-		ainstance.director.update();
+		ainstance.director->update();
 
 		Renderer::clear();
-		ainstance.director.draw();
+		ainstance.director->draw();
 		eglSwapBuffers(ainstance.display, ainstance.surface);
 	}
+	delete ainstance.director;
 	android_destroy_display(&ainstance);
 	ANativeActivity_finish(state->activity);
 }
@@ -164,12 +165,10 @@ void android_handle_display(AInstance *a)
 	eglQuerySurface(a->display, a->surface, EGL_HEIGHT, &value);
 	a->height = value;
 	Renderer::resize(a->width, a->height);
-	a->director.set_video(a->width, a->height);
 
 	// Load game
-	Data main("main.lua");
-	R_ASSERT(main, "Failed to load 'main'");
-	a->director.init(main);
+	a->director = new Director();
+	a->director->init(Data("main.lua"), a->width, a->height);
 
 	a->initialised = true;
 }
@@ -266,7 +265,7 @@ void android_handle_event(struct android_app *app, int32_t cmd)
 			Renderer::clear();
 			break;
 		case APP_CMD_LOW_MEMORY:
-			a->director.on_memory_warning();
+			a->director->on_memory_warning();
 			break;
 		case APP_CMD_RESUME:
 			if (a->surface)

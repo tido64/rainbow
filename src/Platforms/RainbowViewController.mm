@@ -1,5 +1,4 @@
-// Copyright 2012 Bifrost Entertainment. All rights reserved.
-// \author Tommy Nguyen
+// Copyright 2012-13 Bifrost Entertainment. All rights reserved.
 
 #import "RainbowViewController.h"
 
@@ -154,10 +153,9 @@
 
 	// Set screen resolution.
 	Renderer::resize(size.width, size.height);
-	self->director->set_video(size.width, size.height);
 
 	// Load and initialise script.
-	self->director->init(Data("main.lua"));
+	self->director->init(Data("main.lua"), size.width, size.height);
 }
 
 - (void)viewDidUnload
