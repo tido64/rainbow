@@ -94,6 +94,9 @@ void android_main(struct android_app *state)
 			if (source)
 				source->process(state, source);
 
+			if (done)
+				break;
+
 			// If a sensor has data, process it now.
 			if (active && ident == LOOPER_ID_USER && ainstance.accelerometerSensor)
 			{
@@ -121,7 +124,6 @@ void android_main(struct android_app *state)
 	}
 	delete ainstance.director;
 	android_destroy_display(&ainstance);
-	ANativeActivity_finish(state->activity);
 }
 
 void android_destroy_display(AInstance *a)
@@ -238,6 +240,7 @@ void android_handle_event(struct android_app *app, int32_t cmd)
 			android_init_display(a);
 			break;
 		case APP_CMD_TERM_WINDOW:
+			eglMakeCurrent(a->display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
 			eglDestroySurface(a->display, a->surface);
 			a->surface = EGL_NO_SURFACE;
 			break;
@@ -257,24 +260,32 @@ void android_handle_event(struct android_app *app, int32_t cmd)
 			break;
 		case APP_CMD_LOST_FOCUS:
 			active = false;
-			// When our app loses focus, we stop monitoring the accelerometer.
-			// This is to avoid consuming battery while not being used.
-			if (a->accelerometerSensor)
-				ASensorEventQueue_disableSensor(a->sensorEventQueue, a->accelerometerSensor);
-			ConFuoco::Mixer::Instance->suspend(true);
-			Renderer::clear();
 			break;
 		case APP_CMD_LOW_MEMORY:
 			a->director->on_memory_warning();
 			break;
 		case APP_CMD_RESUME:
 			if (a->surface)
+			{
 				eglMakeCurrent(a->display, a->surface, a->surface, a->context);
+
+				// From NVIDIA:
+				// Note that in some cases, only the onPause is received on suspend, in which case, the
+				// focus lost callback actually comes when the device is resumed to the lock screen. In
+				// other words, resuming sends an indication that you have been resumed (onResume)
+				// and then an indication that you are hidden (focus lost). And the unlock case remains
+				// unchanged (focus regained).
+				if (active)
+					android_handle_event(app, APP_CMD_GAINED_FOCUS);
+			}
 			break;
 		case APP_CMD_SAVE_STATE:
 			break;
 		case APP_CMD_PAUSE:
 			eglMakeCurrent(a->display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
+			if (a->accelerometerSensor)
+				ASensorEventQueue_disableSensor(a->sensorEventQueue, a->accelerometerSensor);
+			ConFuoco::Mixer::Instance->suspend(true);
 			break;
 		case APP_CMD_DESTROY:
 			active = false;

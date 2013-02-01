@@ -86,7 +86,8 @@ cat > AndroidManifest.xml << ANDROIDMANIFEST_XML
 	<application android:icon="@drawable/ic_launcher"
 	             android:label="@string/app_name"
 	             android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
-		<activity android:label="@string/app_name"
+		<activity android:configChanges="orientation|screenSize"
+		          android:label="@string/app_name"
 		          android:launchMode="singleTop"
 		          android:name="android.app.NativeActivity"
 		          android:screenOrientation="sensorLandscape">
