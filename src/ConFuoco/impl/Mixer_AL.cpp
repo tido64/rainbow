@@ -195,7 +195,7 @@ namespace ConFuoco
 				return create_sound(nullptr, STATIC, 0);
 			}
 			snd = s;
-			R_DEBUG("[Rainbow::ConFuoco/AL] '%s' => %p (stream)\n", file, snd);
+			R_DEBUG("[Rainbow::ConFuoco/AL] '%s' => %p (stream)\n", file, static_cast<void*>(snd));
 		}
 		else
 		{
@@ -207,7 +207,7 @@ namespace ConFuoco
 			alBufferData(wave->bid, (channels == 1) ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16, data, size, rate);
 			delete[] data;
 			snd = wave;
-			R_DEBUG("[Rainbow::ConFuoco/AL] '%s' => %p (static)\n", file, snd);
+			R_DEBUG("[Rainbow::ConFuoco/AL] '%s' => %p (static)\n", file, static_cast<void*>(snd));
 		}
 		this->sounds.push_back(snd);
 		return snd;
@@ -254,7 +254,7 @@ namespace ConFuoco
 			this->set_gain(channel, 1.0f);
 			this->play(channel);
 		}
-		R_DEBUG("[Rainbow::ConFuoco/AL] %p -> %u\n", snd, channel->ch);
+		R_DEBUG("[Rainbow::ConFuoco/AL] %p -> %u\n", static_cast<void*>(snd), channel->ch);
 		return channel;
 	}
 
@@ -271,7 +271,7 @@ namespace ConFuoco
 			}
 		}
 		this->sounds.qremove(snd);
-		R_DEBUG("[Rainbow::ConFuoco/AL] <- %p\n", snd);
+		R_DEBUG("[Rainbow::ConFuoco/AL] <- %p\n", static_cast<void*>(snd));
 	}
 
 	void Mixer::suspend(const bool suspend)

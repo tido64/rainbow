@@ -3,7 +3,14 @@
 
 #include <cstring>
 
+#ifdef RAINBOW_MAC  // Seriously, Xcode?
+#	pragma GCC diagnostic push
+#	pragma GCC diagnostic ignored "-Wunused-variable"
+#endif
 #include <vorbis/vorbisfile.h>
+#ifdef RAINBOW_MAC
+#	pragma GCC diagnostic pop
+#endif
 
 #include "Common/Debug.h"
 #include "Common/IO.h"

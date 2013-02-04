@@ -1,5 +1,5 @@
 if(UNIX)
-	set(RAINBOW_COMMON_CFLAGS "-fno-rtti")
+	set(RAINBOW_COMMON_CFLAGS "-fno-rtti -fno-exceptions")
 	if(MINGW)
 		set(RAINBOW_CSTD   "-std=gnu99")
 		set(RAINBOW_CXXSTD "-std=gnu++11")

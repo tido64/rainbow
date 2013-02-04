@@ -2,14 +2,14 @@
 ///
 /// \see http://graphics.stanford.edu/~seander/bithacks.html
 ///
-/// Copyright 2010-12 Bifrost Entertainment. All rights reserved.
+/// Copyright 2010-13 Bifrost Entertainment. All rights reserved.
 /// \author Tommy Nguyen
 
 #ifndef ALGORITHM_H_
 #define ALGORITHM_H_
 
-#include <cfloat>
 #include <cmath>
+#include <cfloat>
 #include <cstdlib>
 
 #include "Common/Constants.h"
@@ -82,7 +82,7 @@ namespace Rainbow
 	template<class T>
 	inline const T& min(const T &a, const T &b)
 	{
-		return (a < b) ? a : b;
+		return (a > b) ? b : a;
 	}
 
 	/// Calculate the next power of 2.

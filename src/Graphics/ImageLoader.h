@@ -13,7 +13,7 @@ namespace
 {
 	/// Structure for reading PNG bitmaps.
 	///
-	/// Copyright 2010-12 Bifrost Entertainment. All rights reserved.
+	/// Copyright 2010-13 Bifrost Entertainment. All rights reserved.
 	/// \author Tommy Nguyen
 	struct png_read_struct
 	{
@@ -286,6 +286,6 @@ namespace ImageLoader
 	{
 		delete[] static_cast<unsigned char*>(data);
 	}
-};
+}
 
 #endif
