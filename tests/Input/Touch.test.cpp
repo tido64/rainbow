@@ -3,6 +3,7 @@
 #include "Input/Input.h"
 #include "Input/Touch.h"
 #include "Input/Touchable.h"
+#include "Lua/lua_Input.h"
 
 class TouchTest : public Touchable, public testing::Test
 {
@@ -17,12 +18,9 @@ public:
 
 	TouchTest() : flags(0), L(luaL_newstate()), input(L)
 	{
-		// Mock "rainbow.input" namespace
 		lua_createtable(this->L, 0, 1);
-		lua_createtable(this->L, 0, 0);
-		lua_setfield(this->L, -2, "input");
+		Rainbow::Lua::Input::init(L);
 		lua_setglobal(this->L, "rainbow");
-		ASSERT_TRUE(lua_gettop(this->L) == 0);
 
 		this->input.subscribe(this, Input::ALL_EVENTS);
 	}
