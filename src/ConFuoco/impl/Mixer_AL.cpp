@@ -1,3 +1,5 @@
+/// Copyright 2012-13 Bifrost Entertainment. All rights reserved.
+
 #include "Platform.h"
 #if defined(RAINBOW_IOS) || defined(RAINBOW_SDL)
 
@@ -230,6 +232,9 @@ namespace ConFuoco
 			else
 			{
 				channel = this->next_channel();
+				if (!channel)
+					return nullptr;
+
 				channel->sound = snd;
 				stream->channel = channel;
 			}

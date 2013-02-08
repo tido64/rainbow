@@ -1,3 +1,5 @@
+/// Copyright 2012-13 Bifrost Entertainment. All rights reserved.
+
 #include "Platform.h"
 #ifdef RAINBOW_ANDROID
 
@@ -124,6 +126,7 @@ namespace ConFuoco
 		struct StreamPlayer
 		{
 			bool focus;
+			bool paused;
 			int loops;
 			Stream *stream;
 			SLObjectItf player;
@@ -131,8 +134,8 @@ namespace ConFuoco
 			SLVolumeItf volume_itf;
 
 			StreamPlayer() :
-				focus(true), loops(-1), stream(nullptr), player(nullptr),
-				play_itf(nullptr), volume_itf(nullptr) { }
+				focus(true), paused(false), loops(-1), stream(nullptr),
+				player(nullptr), play_itf(nullptr), volume_itf(nullptr) { }
 
 			bool load(SLContext *context, Stream *stream)
 			{
@@ -281,8 +284,13 @@ namespace ConFuoco
 		else
 		{
 			ch = this->next_channel();
+			if (!ch)
+				return nullptr;
+
 			s->channel = ch->ch;
-			players[s->channel].load(static_cast<SLContext*>(this->context), s);
+			bool success = players[s->channel].load(static_cast<SLContext*>(this->context), s);
+			if (!success)
+				return nullptr;
 		}
 		if (!ch)
 			return nullptr;
@@ -343,10 +351,7 @@ namespace ConFuoco
 
 	bool Mixer::is_paused(Channel *ch)
 	{
-		SLuint32 state;
-		SLPlayItf &itf = players[ch->ch].play_itf;
-		(*itf)->GetPlayState(itf, &state);
-		return state == SL_PLAYSTATE_PAUSED;
+		return players[ch->ch].paused;
 	}
 
 	bool Mixer::is_playing(Channel *ch)
@@ -354,7 +359,7 @@ namespace ConFuoco
 		SLuint32 state;
 		SLPlayItf &itf = players[ch->ch].play_itf;
 		(*itf)->GetPlayState(itf, &state);
-		return state == SL_PLAYSTATE_PAUSED || state == SL_PLAYSTATE_PLAYING;
+		return players[ch->ch].paused || state == SL_PLAYSTATE_PLAYING;
 	}
 
 	void Mixer::set_gain(Channel *ch, const float gain)
@@ -366,16 +371,19 @@ namespace ConFuoco
 	void Mixer::pause(Channel *ch)
 	{
 		SetPlayState(players[ch->ch].play_itf, SL_PLAYSTATE_PAUSED);
+		players[ch->ch].paused = true;
 	}
 
 	void Mixer::play(Channel *ch)
 	{
 		SetPlayState(players[ch->ch].play_itf, SL_PLAYSTATE_PLAYING);
+		players[ch->ch].paused = false;
 	}
 
 	void Mixer::stop(Channel *ch)
 	{
 		SetPlayState(players[ch->ch].play_itf, SL_PLAYSTATE_STOPPED);
+		players[ch->ch].paused = false;
 	}
 }
 

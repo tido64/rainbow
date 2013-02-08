@@ -48,7 +48,11 @@ namespace Rainbow
 				{
 					const float gain = lua_tonumber(L, 2);
 					lua_pop(L, 1);
+
 					Channel *ch = static_cast<Channel*>(topointer(L, channel_type));
+					if (!ch)
+						return 0;
+
 					ch->set_gain(gain);
 				}
 				else
@@ -92,6 +96,9 @@ namespace Rainbow
 				LUA_ASSERT(lua_gettop(L) == 1, "rainbow.audio.pause(channel)");
 
 				Channel *ch = static_cast<Channel*>(topointer(L, channel_type));
+				if (!ch)
+					return 0;
+
 				ch->pause();
 				return 0;
 			}
@@ -110,6 +117,9 @@ namespace Rainbow
 				LUA_ASSERT(lua_gettop(L) == 1, "rainbow.audio.stop(channel)");
 
 				Channel *ch = static_cast<Channel*>(topointer(L, channel_type));
+				if (!ch)
+					return 0;
+
 				ch->stop();
 				return 0;
 			}
