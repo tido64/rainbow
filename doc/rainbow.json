@@ -625,12 +625,12 @@ rainbow = {
 			"functions": [
 				{
 					"name": "__call",
-					"description": "Create a timer.",
 					"parameters": [
 						"callback", "The callback function or object implementing <span class=\"mono\">:tick()</span>.",
 						"delay", "Time in milliseconds to delay call.",
 						"+times", "Number of times to call. Infinite if omitted.",
 					],
+					"description": "Create a timer.",
 				},
 				{
 					"name": ".clear",
@@ -642,7 +642,10 @@ rainbow = {
 				},
 				{
 					"name": ":reset",
-					"description": "Reset a canceled timer. Restores it to its initial state.",
+					"parameters": [
+						"+delay", "Set new delay.",
+					],
+					"description": "Reset a timer. Restores it to its initial state.",
 				},
 			],
 		},
