@@ -369,6 +369,16 @@ rainbow = {
 					],
 					"description": "Set texture filtering method. Only affects new textures.",
 				},
+				{
+					"name": ".set_ortho",
+					"parameters": [
+						"left", "Leftmost point in pixels. Default: 0.",
+						"right", "Rightmost point in pixels. Default: <a class=\"mono\" href=\"#rainbow.platform\">rainbow.platform.screen.width</a>.",
+						"bottom", "Bottommost point in pixels. Default: 0.",
+						"top", "Topmost point in pixels. Default: <a class=\"mono\" href=\"#rainbow.platform\">rainbow.platform.screen.height</a>.",
+					],
+					"description": "Set orthographic projection.",
+				},
 			],
 		},
 		{

@@ -120,6 +120,18 @@ void ShaderManager::set(const float width, const float height)
 	this->ortho[5] = 2.0f / height;
 }
 
+void ShaderManager::set_ortho(const float left, const float right, const float bottom, const float top)
+{
+	this->ortho[0] = 2.0f / (right - left);
+	this->ortho[3] = -(right + left) / (right - left);
+	this->ortho[5] = 2.0f / (top - bottom);
+	this->ortho[7] = -(top + bottom) / (top - bottom);
+
+	int u = glGetUniformLocation(this->active.id, "mvp_matrix");
+	R_ASSERT(u >= 0, "Shader is missing an orthographic projection matrix");
+	glUniformMatrix4fv(u, 1, GL_FALSE, this->ortho);
+}
+
 void ShaderManager::use(const int program)
 {
 	if (this->programs[program].id == this->active.id)

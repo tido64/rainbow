@@ -53,6 +53,9 @@ public:
 	/// Set viewport.
 	void set(const float width, const float height);
 
+	/// Set orthographic projection.
+	void set_ortho(const float left, const float right, const float bottom, const float top);
+
 	/// Use program.
 	void use(const int program);
 

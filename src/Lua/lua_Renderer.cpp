@@ -2,6 +2,7 @@
 
 #include "Graphics/OpenGL.h"
 #include "Graphics/Renderer.h"
+#include "Graphics/ShaderManager.h"
 #include "Graphics/TextureManager.h"
 #include "Lua/LuaHelper.h"
 #include "Lua/lua_Renderer.h"
@@ -23,14 +24,13 @@ namespace Rainbow
 				lua_rawsetfield(L, lua_pushinteger, max_texture_size, "max_texture_size");
 
 				const char *extensions = reinterpret_cast<const char*>(glGetString(GL_EXTENSIONS));
-
-				lua_rawsetfield(
-						L, lua_pushboolean,
-						strstr(extensions, "GL_IMG_texture_compression_pvrtc") != nullptr,
-						"supports_pvrtc");
+				R_ASSERT(extensions, "OpenGL context not set up");
+				bool support = strstr(extensions, "GL_IMG_texture_compression_pvrtc") != nullptr;
+				lua_rawsetfield(L, lua_pushboolean, support, "supports_pvrtc");
 
 				lua_rawsetcclosurefield(L, &set_clear_color, 0, "set_clear_color");
 				lua_rawsetcclosurefield(L, &set_filter, 0, "set_filter");
+				lua_rawsetcclosurefield(L, &set_ortho, 0, "set_ortho");
 
 				lua_rawset(L, -3);
 
@@ -62,6 +62,17 @@ namespace Rainbow
 				LUA_CHECK(L, filter == GL_NEAREST || filter == GL_LINEAR,
 				          "Invalid texture filter");
 				TextureManager::Instance().set_filter(filter);
+				return 0;
+			}
+
+			int set_ortho(lua_State *L)
+			{
+				LUA_ASSERT(lua_gettop(L) == 4,
+				           "rainbow.renderer.set_ortho(left, right, bottom, top)");
+
+				ShaderManager::Instance->set_ortho(
+						lua_tonumber(L, 1), lua_tonumber(L, 2),
+						lua_tonumber(L, 3), lua_tonumber(L, 4));
 				return 0;
 			}
 		}
