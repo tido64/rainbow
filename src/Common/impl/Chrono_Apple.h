@@ -1,15 +1,27 @@
-#ifdef RAINBOW_IOS
+#ifdef RAINBOW_MAC
+#include <mach/mach_time.h>
 
-/// Apple-implementation of Chrono.
-///
-/// Copyright 2011-12 Bifrost Entertainment. All rights reserved.
-/// \author Tommy Nguyen
-class Chrono : public Rainbow::_Chrono<Chrono>
+namespace Rainbow
 {
-public:
-	Chrono() { }
-	unsigned long get_time();
-	void update(const unsigned int t);
-};
+	/// Apple-implementation of 'get_time' operator.
+	///
+	/// This method is compatible with iOS as well but we don't need it there
+	/// because we're using GLKit.
+	///
+	/// Copyright 2011-13 Bifrost Entertainment. All rights reserved.
+	/// \author Tommy Nguyen
+	struct GetTimeApple
+	{
+		unsigned long operator()() const
+		{
+			mach_timebase_info_data_t info;
+			mach_timebase_info(&info);
+			const uint64_t t = mach_absolute_time();
+			return (double)t * (double)info.numer / (double)(info.denom * 1.0e6);
+		}
+	};
+}
+
+typedef Rainbow::ChronoBase<Rainbow::GetTimeApple> Chrono;
 
 #endif

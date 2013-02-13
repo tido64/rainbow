@@ -2,12 +2,13 @@
 #define ANIMATION_H_
 
 #include "Common/ChronoTrigger.h"
+#include "Common/NonCopyable.h"
 
 class Sprite;
 
 /// Sprite animation using sprite sheets.
 ///
-/// Copyright 2011-12 Bifrost Entertainment. All rights reserved.
+/// Copyright 2011-13 Bifrost Entertainment. All rights reserved.
 /// \author Tommy Nguyen
 class Animation : public ChronoTrigger, private NonCopyable<Animation>
 {

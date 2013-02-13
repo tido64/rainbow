@@ -26,7 +26,7 @@ namespace Heimdall
 		void init(const Data &, const int width, const int height);
 		void set_video(const int width, const int height);
 
-		void update(const unsigned long t = 0);
+		void update(const unsigned long dt);
 
 		inline void on_memory_warning();
 

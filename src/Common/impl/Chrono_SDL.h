@@ -1,22 +1,21 @@
-#ifdef RAINBOW_SDL
+#ifdef RAINBOW_WIN
 #include <SDL_timer.h>
 
-/// SDL-implementation of Chrono.
-///
-/// Copyright 2011-12 Bifrost Entertainment. All rights reserved.
-/// \author Tommy Nguyen
-class Chrono : public Rainbow::_Chrono<Chrono>
+namespace Rainbow
 {
-public:
-	inline Chrono();
-	inline unsigned long get_time();
-};
-
-Chrono::Chrono() { }
-
-unsigned long Chrono::get_time()
-{
-	return SDL_GetTicks();
+	/// SDL-implementation of 'get_time' operator.
+	///
+	/// Copyright 2011-13 Bifrost Entertainment. All rights reserved.
+	/// \author Tommy Nguyen
+	struct GetTimeSDL
+	{
+		unsigned long operator()() const
+		{
+			return SDL_GetTicks();
+		}
+	};
 }
+
+typedef Rainbow::ChronoBase<Rainbow::GetTimeSDL> Chrono;
 
 #endif

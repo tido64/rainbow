@@ -1,11 +1,11 @@
 #ifndef CHRONOTRIGGER_H_
 #define CHRONOTRIGGER_H_
 
-#include "Common/Chrono.h"
+#include "Common/Debug.h"
 
 /// A ticker with a configurable time interval.
 ///
-/// Copyright 2011-12 Bifrost Entertainment. All rights reserved.
+/// Copyright 2011-13 Bifrost Entertainment. All rights reserved.
 /// \author Tommy Nguyen
 class ChronoTrigger
 {
@@ -32,7 +32,7 @@ public:
 	virtual void tick() = 0;
 
 	/// Accumulate time and trigger when it reaches time out.
-	void update();
+	void update(const unsigned long dt);
 
 private:
 	bool stopped;              ///< Whether time is accumulating.

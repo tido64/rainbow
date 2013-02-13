@@ -39,6 +39,7 @@ unsigned int screen_height = 640;    ///< Window height
 const double fps = 1000.0 / 60.0;    ///< Preferred frames per second
 const float milli = 1.0f / 1000.0f;  ///< 1 millisecond
 Touch mouse_input;                   ///< Mouse input
+Chrono chrono;                       ///< Clock.
 
 char data_path[256] = { 0 };
 char userdata_path[256] = { 0 };
@@ -108,7 +109,7 @@ int main(int argc, char *argv[])
 	Director director;
 	director.init(Data("main.lua"), screen_width, screen_height);
 
-	Chrono::Instance().update();
+	chrono.update();
 	while (!done)
 	{
 		SDL_Event event;
@@ -159,18 +160,18 @@ int main(int argc, char *argv[])
 					break;
 			}
 		}
+		chrono.update();
 		if (!active)
 		{
 			if (done)
 				break;
 
-			Chrono::Instance().update();
 			SDL_Delay(static_cast<Uint32>(fps));
 		}
 		else
 		{
 			// Update game logic
-			director.update();
+			director.update(chrono.diff());
 
 			// Draw
 			Renderer::clear();
@@ -189,7 +190,7 @@ void on_mouse_button_down(SDL_MouseButtonEvent &mouse)
 	mouse_input.y = screen_height - mouse.y;
 	mouse_input.x0 = mouse_input.x;
 	mouse_input.y0 = mouse_input.y;
-	mouse_input.timestamp = Chrono::Instance().current();
+	mouse_input.timestamp = chrono.current();
 	Input::Instance->touch_began(&mouse_input, 1);
 }
 
@@ -199,7 +200,7 @@ void on_mouse_button_up(SDL_MouseButtonEvent &mouse)
 	mouse_input.y = screen_height - mouse.y;
 	mouse_input.x0 = mouse_input.x;
 	mouse_input.y0 = mouse_input.y;
-	mouse_input.timestamp = Chrono::Instance().current();
+	mouse_input.timestamp = chrono.current();
 	Input::Instance->touch_ended(&mouse_input, 1);
 }
 
@@ -209,7 +210,7 @@ void on_mouse_motion(SDL_MouseMotionEvent &mouse)
 	mouse_input.y0 = mouse_input.y;
 	mouse_input.x = mouse.x;
 	mouse_input.y = screen_height - mouse.y;
-	mouse_input.timestamp = Chrono::Instance().current();
+	mouse_input.timestamp = chrono.current();
 	Input::Instance->touch_moved(&mouse_input, 1);
 }
 

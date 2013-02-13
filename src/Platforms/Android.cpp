@@ -82,7 +82,8 @@ void android_main(struct android_app *state)
 	if (ainstance.accelerometerSensor)
 		ainstance.sensorEventQueue = ASensorManager_createEventQueue(ainstance.sensorManager, state->looper, LOOPER_ID_USER, nullptr, nullptr);
 
-	Chrono::Instance().update();
+	Chrono chrono;
+	chrono.update();
 	while (!done)
 	{
 		int ident;
@@ -110,13 +111,11 @@ void android_main(struct android_app *state)
 			}
 		}
 
+		chrono.update();
 		if (!(ainstance.initialised & active))
-		{
-			Chrono::Instance().update();
 			continue;
-		}
 
-		ainstance.director->update();
+		ainstance.director->update(chrono.diff());
 
 		Renderer::clear();
 		ainstance.director->draw();

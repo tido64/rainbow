@@ -1,15 +1,15 @@
-// Copyright 2011-12 Bifrost Entertainment. All rights reserved.
+// Copyright 2011-13 Bifrost Entertainment. All rights reserved.
 
 #include "Common/ChronoTrigger.h"
 
 ChronoTrigger::~ChronoTrigger() { }
 
-void ChronoTrigger::update()
+void ChronoTrigger::update(const unsigned long dt)
 {
 	if (this->stopped)
 		return;
 
-	this->accumulated += Chrono::Instance().diff();
+	this->accumulated += dt;
 	while (this->accumulated >= this->trigger)
 	{
 		this->tick();

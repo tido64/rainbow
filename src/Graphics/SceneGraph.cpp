@@ -1,4 +1,4 @@
-// Copyright 2011-12 Bifrost Entertainment. All rights reserved.
+// Copyright 2011-13 Bifrost Entertainment. All rights reserved.
 
 #include "Algorithm.h"
 #include "Graphics/Animation.h"
@@ -109,7 +109,7 @@ namespace SceneGraph
 			this->children[i]->scale(f);
 	}
 
-	void Node::update()
+	void Node::update(const unsigned long dt)
 	{
 		if (!this->enabled)
 			return;
@@ -117,7 +117,7 @@ namespace SceneGraph
 		switch (this->type)
 		{
 			case AnimationNode:
-				this->animation->update();
+				this->animation->update(dt);
 				break;
 			case DrawableNode:
 			case LabelNode:
@@ -130,7 +130,7 @@ namespace SceneGraph
 				break;
 		}
 		for (size_t i = 0; i < this->children.size(); ++i)
-			this->children[i]->update();
+			this->children[i]->update(dt);
 	}
 
 	Node& Node::operator=(const Node &n)

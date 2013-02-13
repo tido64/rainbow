@@ -17,7 +17,7 @@ namespace SceneGraph
 	/// no limits to how many children a node can have. Nodes may point to the
 	/// same set of data.
 	///
-	/// Copyright 2011-12 Bifrost Entertainment. All rights reserved.
+	/// Copyright 2011-13 Bifrost Entertainment. All rights reserved.
 	/// \author Tommy Nguyen
 	class Node : public TreeNode<Node>
 	{
@@ -90,7 +90,7 @@ namespace SceneGraph
 		void scale(const float f);
 
 		/// Update this node and all its enabled children.
-		void update();
+		void update(const unsigned long dt);
 
 		/// Copies a node's type and data.
 		Node& operator=(const Node &);

@@ -1,6 +1,5 @@
 #ifdef USE_HEIMDALL
 
-#include "Common/Chrono.h"
 #include "Common/Data.h"
 #include "Heimdall/Gatekeeper.h"
 #include "Heimdall/Resources.h"
@@ -74,11 +73,10 @@ namespace Heimdall
 				this->height - this->console_font->get_height());
 	}
 
-	void Gatekeeper::update(const unsigned long t)
+	void Gatekeeper::update(const unsigned long dt)
 	{
 		//if (!this->overlay_node->enabled)
-			this->director->update(t);
-		const unsigned long dt = Chrono::Instance().diff();
+			this->director->update(dt);
 		if (!this->overlay_node->enabled && this->touch_count == 2)
 		{
 			this->touch_held += dt;
@@ -86,7 +84,7 @@ namespace Heimdall
 				this->toggle_overlay();
 		}
 		this->info.update(dt);
-		this->scenegraph.update();
+		this->scenegraph.update(dt);
 	}
 
 	void Gatekeeper::touch_began(const Touch *const touches, const size_t count)

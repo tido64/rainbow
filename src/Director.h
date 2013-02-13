@@ -29,8 +29,8 @@ namespace Rainbow
 		void set_video(const int width, const int height);
 
 		/// Update world.
-		/// \param t  Current time or milliseconds since last frame.
-		void update(const unsigned long t = 0);
+		/// \param dt  Milliseconds since last frame.
+		void update(const unsigned long dt);
 
 		/// Called when a low memory warning has been issued.
 		void on_memory_warning();
