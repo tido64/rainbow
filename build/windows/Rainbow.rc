@@ -26,7 +26,7 @@ BEGIN
 			VALUE "FileDescription",   "Internal build of Rainbow [DO NOT DISTRIBUTE]"
 			VALUE "FileVersion",       RAINBOW_VERSION_STR
 			VALUE "InternalName",      "Rainbow"
-			VALUE "LegalCopyright",    "Copyright \251 2012 Bifrost Entertainment AS"
+			VALUE "LegalCopyright",    "Copyright \251 2012-13 Bifrost Entertainment AS"
 			VALUE "OriginalFilename",  "rainbow.exe"
 			VALUE "ProductName",       "Rainbow"
 			VALUE "ProductVersion",    RAINBOW_VERSION_STR

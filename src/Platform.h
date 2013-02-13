@@ -22,7 +22,7 @@
 #	if defined(_MSC_VER) && (defined(_M_X64) || _M_IX86_FP >= 2)
 #		define __SSE2__ 1
 #	elif !defined(WINVER)
-#		define WINVER 0x0501
+#		define WINVER 0x0502
 #	endif
 #endif
 
