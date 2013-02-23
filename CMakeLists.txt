@@ -1,8 +1,12 @@
 cmake_minimum_required(VERSION 2.8)
+
 project(Rainbow)
+set(CMAKE_BUILD_TYPE Debug)
+set(LOCAL_MODULE_PATH ${CMAKE_SOURCE_DIR}/build/cmake)
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${LOCAL_MODULE_PATH})
+set(LOCAL_LIBRARY ${PROJECT_SOURCE_DIR}/lib)
 
 option(GTEST "Compile with Google C++ Testing Framework" OFF)
-option(MINGW "Cross compile with MinGW" OFF)
 #option(PROFILING "Compile with profiling" OFF)
 
 # Features
@@ -13,16 +17,10 @@ option(PHYSICS  "Use physics (Box2D)" OFF)
 # Auto-generate files
 execute_process(COMMAND tools/shaders-gen.py WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 
-# Common variables
-set(LOCAL_LIBRARY ${PROJECT_SOURCE_DIR}/lib)
-set(LOCAL_LIBRARY_BUILD ${CMAKE_SOURCE_DIR}/build/cmake)
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${LOCAL_LIBRARY_BUILD})
-set(CMAKE_BUILD_TYPE Debug)
-
 # Platform-specifics
-include(${LOCAL_LIBRARY_BUILD}/MinGW.cmake)
-include(${LOCAL_LIBRARY_BUILD}/Project.cmake)
-include(${LOCAL_LIBRARY_BUILD}/Unix.cmake)
+include(${LOCAL_MODULE_PATH}/Project.cmake)
+include(${LOCAL_MODULE_PATH}/Unix.cmake)
+include(${LOCAL_MODULE_PATH}/Windows.cmake)
 
 # Target
 file(GLOB_RECURSE RAINBOW_CPP src/*.cpp)
@@ -31,19 +29,19 @@ add_executable(rainbow ${RAINBOW_CPP} ${RAINBOW_H})
 # Dynamic libraries
 find_package(OpenAL REQUIRED)
 find_package(OpenGL REQUIRED)
-find_package(SDL REQUIRED)
 find_package(Vorbisfile REQUIRED)
 find_package(ZLIB REQUIRED)
 
 # Static libraries
 if(PHYSICS)
-	include(${LOCAL_LIBRARY_BUILD}/Box2D.cmake)
+	include(${LOCAL_MODULE_PATH}/Box2D.cmake)
 endif()
-include(${LOCAL_LIBRARY_BUILD}/Lua.cmake)
-include(${LOCAL_LIBRARY_BUILD}/FreeType.cmake)
-include(${LOCAL_LIBRARY_BUILD}/libpng.cmake)
+include(${LOCAL_MODULE_PATH}/FreeType.cmake)
+include(${LOCAL_MODULE_PATH}/libpng.cmake)
+include(${LOCAL_MODULE_PATH}/Lua.cmake)
+include(${LOCAL_MODULE_PATH}/SDL2.cmake)
 if(GTEST)
-	include(${LOCAL_LIBRARY_BUILD}/gtest.cmake)
+	include(${LOCAL_MODULE_PATH}/gtest.cmake)
 endif()
 
 # Features
@@ -61,14 +59,14 @@ set_property(TARGET rainbow APPEND PROPERTY INCLUDE_DIRECTORIES
 	${FREETYPE_INCLUDE_DIR}
 	${LIBPNG_INCLUDE_DIR}
 	${LUA_INCLUDE_DIR}
-	${SDL_INCLUDE_DIR}
+	${SDL2_INCLUDE_DIR}
 	${VORBISFILE_INCLUDE_DIR}
 	${ZLIB_INCLUDE_DIRS}
 	${GTEST_INCLUDE_DIRS}
 )
 target_link_libraries(rainbow
-	${GTEST_LIBRARY} freetype lua ${PHYSICS_LIBRARY}
-	${SDL_LIBRARY} ${VORBISFILE_LIBRARY}
+	${GTEST_LIBRARY}
+	freetype lua ${PHYSICS_LIBRARY} png ${SDL2_LIBRARIES} ${VORBISFILE_LIBRARY}
 	${OPENAL_LIBRARY} ${OPENGL_ext_LIBRARY} ${OPENGL_gl_LIBRARY}
-	png ${ZLIB_LIBRARIES} ${PLATFORM_LIBRARIES}
+	${ZLIB_LIBRARIES} ${PLATFORM_LIBRARIES}
 )

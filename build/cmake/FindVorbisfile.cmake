@@ -9,33 +9,45 @@
 # 	VORBISFILE_LIBRARY, where to find the Vorbisfile library.
 
 find_path(VORBISFILE_INCLUDE_DIR "vorbis/vorbisfile.h"
-	/usr/include               # Linux
-	/opt/local/usr/include     # Mac OS X (MacPorts)
-	/usr/i486-mingw32/include  # MinGW
-	../libs/include            # Windows
+	/usr/include                     # Linux
+	/opt/local/usr/include           # Mac OS X (MacPorts)
+	/usr/i486-mingw32/include        # MinGW
+	/usr/x86_64-w64-mingw32/include  # MinGW-w64 x64
+	../libs/include                  # Windows
 )
 find_library(VORBISFILE_LIBRARY NAMES vorbisfile libvorbisfile
                                 HINTS ../libs/Win32)
 
 if(MINGW)
 	find_path(VORBIS_INCLUDE_DIR "vorbis/codec.h"
-		/usr/include               # Linux
-		/usr/i486-mingw32/include  # MinGW
-		../libs/include            # Windows
+		/usr/include                     # Linux
+		/usr/i486-mingw32/include        # MinGW
+		/usr/x86_64-w64-mingw32/include  # MinGW-w64 x64
+		../libs/include                  # Windows
 	)
 	find_library(VORBIS_LIBRARY NAMES vorbis libvorbis
 	                            HINTS ../libs/Win32)
 
 	find_path(OGG_INCLUDE_DIR "ogg/ogg.h"
-		/usr/include               # Linux
-		/usr/i486-mingw32/include  # MinGW
-		../libs/include            # Windows
+		/usr/include                     # Linux
+		/usr/i486-mingw32/include        # MinGW
+		/usr/x86_64-w64-mingw32/include  # MinGW-w64 x64
+		../libs/include                  # Windows
 	)
 	find_library(OGG_LIBRARY NAMES ogg libogg
 	                         HINTS ../libs/Win32)
 
 	set(VORBISFILE_INCLUDE_DIR ${VORBISFILE_INCLUDE_DIR} ${VORBIS_INCLUDE_DIR} ${OGG_INCLUDE_DIR})
 	set(VORBISFILE_LIBRARY ${VORBISFILE_LIBRARY} ${VORBIS_LIBRARY} ${OGG_LIBRARY})
+
+	# Force use of found libraries (because sometimes it just won't obey)
+	foreach(lib ${VORBISFILE_LIBRARY})
+		get_filename_component(libname ${lib} NAME_WE)
+		add_library(${libname} STATIC IMPORTED)
+		set_target_properties(${libname} PROPERTIES IMPORTED_LOCATION ${lib})
+		list(APPEND VORBIS_LIBRARIES ${libname})
+	endforeach()
+	set(VORBISFILE_LIBRARY ${VORBIS_LIBRARIES})
 endif()
 
 include(FindPackageHandleStandardArgs)

@@ -7,8 +7,8 @@
 
 #if defined(RAINBOW_SDL)
 
-struct SDL_keysym;
-typedef SDL_keysym RawKeysym;
+struct SDL_Keysym;
+typedef SDL_Keysym RawKeysym;
 
 #else
 #	error "This platform is not supposed to use SDL."
@@ -16,7 +16,7 @@ typedef SDL_keysym RawKeysym;
 
 /// Keyboard input.
 ///
-/// Copyright 2011-12 Bifrost Entertainment. All rights reserved.
+/// Copyright 2011-13 Bifrost Entertainment. All rights reserved.
 /// \author Tommy Nguyen
 class Key
 {
@@ -26,58 +26,81 @@ public:
 
 	enum Keys
 	{
-		key_none = 0,
-		key_tab = 9,
-		key_enter = 13,
-		key_escape = 27,
-		key_space = 32,
-		key_asterisk = 42,
-		key_plus,
-		key_comma,
-		key_dash,
-		key_period,
-		key_slash,
-		key_0,
-		key_1,
-		key_2,
-		key_3,
-		key_4,
-		key_5,
-		key_6,
-		key_7,
-		key_8,
-		key_9,
-		key_colon,
-		key_semicolon,
-		key_less,
-		key_equals,
-		key_greater,
-		key_a = 97,
-		key_b,
-		key_c,
-		key_d,
-		key_e,
-		key_f,
-		key_g,
-		key_h,
-		key_i,
-		key_j,
-		key_k,
-		key_l,
-		key_m,
-		key_n,
-		key_o,
-		key_p,
-		key_q,
-		key_r,
-		key_s,
-		key_t,
-		key_u,
-		key_v,
-		key_w,
-		key_x,
-		key_y,
-		key_z,
+		key_none = '\0',
+		key_backspace = '\b',
+		key_tab = '\t',
+		key_return = '\r',
+		key_escape = '\033',
+		key_space = ' ',
+		key_exclamation = '!',
+		key_quotation = '"',
+		key_number = '#',
+		key_dollar = '$',
+		key_percent = '%',
+		key_ampersand = '&',
+		key_apostrophe = '\'',
+		key_lparenthesis = '(',
+		key_rparenthesis = ')',
+		key_asterisk = '*',
+		key_plus = '+',
+		key_comma = ',',
+		key_hyphen = '-',
+		key_fullstop = '.',
+		key_slash = '/',
+		key_0 = '0',
+		key_1 = '1',
+		key_2 = '2',
+		key_3 = '3',
+		key_4 = '4',
+		key_5 = '5',
+		key_6 = '6',
+		key_7 = '7',
+		key_8 = '8',
+		key_9 = '9',
+		key_colon = ':',
+		key_semicolon = ';',
+		key_less = '<',
+		key_equals = '=',
+		key_greater = '>',
+		key_question = '?',
+		key_at = '@',
+		key_lbracket = '[',
+		key_backslash = '\\',
+		key_rbracket = ']',
+		key_caret = '^',
+		key_underscore = '_',
+		key_accent = '`',
+		key_a = 'a',
+		key_b = 'b',
+		key_c = 'c',
+		key_d = 'd',
+		key_e = 'e',
+		key_f = 'f',
+		key_g = 'g',
+		key_h = 'h',
+		key_i = 'i',
+		key_j = 'j',
+		key_k = 'k',
+		key_l = 'l',
+		key_m = 'm',
+		key_n = 'n',
+		key_o = 'o',
+		key_p = 'p',
+		key_q = 'q',
+		key_r = 'r',
+		key_s = 's',
+		key_t = 't',
+		key_u = 'u',
+		key_v = 'v',
+		key_w = 'w',
+		key_x = 'x',
+		key_y = 'y',
+		key_z = 'z',
+		key_lbrace = '{',
+		key_vertical = '|',
+		key_rbrace = '}',
+		key_tilde = '~',
+		key_delete = '\177',
 		numpad_0 = 256,
 		numpad_1,
 		numpad_2,
@@ -112,43 +135,38 @@ public:
 		key_f13,
 		key_f14,
 		key_f15,
-		key_rshift = 303,
-		key_lshift,
-		key_rctrl,
+		key_lshift = 303,
+		key_rshift,
 		key_lctrl,
-		key_ralt,
+		key_rctrl,
 		key_lalt,
-		key_rmeta,
-		key_lmeta,
-		key_lsuper,  ///< Left Windows-key
-		key_rsuper,  ///< Right Windows-key
-		key_mode     ///< Alt Gr
+		key_ralt,
+		key_lgui,  ///< Left Command/Windows key
+		key_rgui,  ///< Right Command/Windows key
+		key_mode   ///< Alt Gr
 	};
 
 	enum Mods
 	{
 		mod_none,
-		mod_lctrl = 1,       // 00000001
-		mod_rctrl = 1 << 1,  // 00000010
-		mod_ctrl  = 3,       // 00000011
-		mod_lalt = 1 << 2,   // 00000100
-		mod_ralt = 1 << 3,   // 00001000
-		mod_alt  = 3 << 2,   // 00001100
-		mod_lshift = 1 << 4, // 00010000
-		mod_rshift = 1 << 5, // 00100000
-		mod_shift  = 3 << 4, // 00110000
-		mod_lmeta = 1 << 6,  // 01000000
-		mod_rmeta = 1 << 7,  // 10000000
-		mod_meta  = 3 << 6   // 11000000
+		mod_lshift = 1 << 0,  // 00000001
+		mod_rshift = 1 << 1,  // 00000010
+		mod_shift  = 3 << 0,  // 00000011
+		mod_lctrl  = 1 << 2,  // 00000100
+		mod_rctrl  = 1 << 3,  // 00001000
+		mod_ctrl   = 3 << 2,  // 00001100
+		mod_lalt   = 1 << 4,  // 00010000
+		mod_ralt   = 1 << 5,  // 00100000
+		mod_alt    = 3 << 4,  // 00110000
+		mod_lgui   = 1 << 6,  // 01000000
+		mod_rgui   = 1 << 7,  // 10000000
+		mod_gui    = 3 << 6   // 11000000
 	};
 
 	Keys key;
 	unsigned int modifier;
 
 	inline Key();
-
-	/// Get the string literal of a key.
-	const char* to_literal(const Key &k);
 };
 
 Key::Key() : key(key_none), modifier(mod_none) { }

@@ -1,4 +1,4 @@
-if(UNIX)
+if(MINGW OR UNIX)
 	set(RAINBOW_COMMON_CFLAGS "-fno-rtti -fno-exceptions")
 	if(MINGW)
 		set(RAINBOW_CSTD   "-std=gnu99")
@@ -20,23 +20,13 @@ if(UNIX)
 	set(CMAKE_CXX_FLAGS "-pipe ${RAINBOW_CXXSTD} ${RAINBOW_CXX_WARNINGS} ${RAINBOW_COMMON_CFLAGS}")
 
 	if(NOT APPLE)
-		if(CMAKE_CXX_COMPILER MATCHES "clang")
-			set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libstdc++")
-		endif()
-
-		# Set LDFLAGS
-		if(NOT MINGW)
-			set(CMAKE_EXE_LINKER_FLAGS "-pie -Wl,-z,now -Wl,-z,relro")
-			if(CMAKE_CXX_COMPILER MATCHES "clang")
-				set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -pthreads")
-			endif()
-		endif()
-
 		# Debug- and release-specific flags
 		set(CMAKE_CXX_FLAGS_DEBUG   "-g -O0 -ftrapv")
 		set(CMAKE_CXX_FLAGS_RELEASE "-O2 -D_FORTIFY_SOURCE=2 -finline-functions")
 
+		# Set LDFLAGS
 		if(NOT MINGW)
+			set(CMAKE_EXE_LINKER_FLAGS "-Wl,-z,now -Wl,-z,relro -pie -pthread")
 			set(PLATFORM_LIBRARIES m rt stdc++)
 		endif()
 	endif()

@@ -1,4 +1,4 @@
-if(APPLE OR MINGW OR WIN32)
+if(MSVC OR XCODE)
 	file(GLOB RAINBOW_APPS_SRC src/Applications/*)
 	source_group("Source Files\\Applications" FILES ${RAINBOW_APPS_SRC})
 
@@ -28,20 +28,11 @@ if(APPLE OR MINGW OR WIN32)
 	file(GLOB RAINBOW_LUA_SRC src/Lua/*)
 	source_group("Source Files\\Lua" FILES ${RAINBOW_LUA_SRC})
 
+	file(GLOB RAINBOW_PHYSICS_SRC src/Physics/*)
+	source_group("Source Files\\Physics" FILES ${RAINBOW_PHYSICS_SRC})
+
 	file(GLOB RAINBOW_PLATFORMS_SRC src/Platforms/*)
 	source_group("Source Files\\Platforms" FILES ${RAINBOW_PLATFORMS_SRC})
 
-	if(MINGW OR WIN32)
-		file(GLOB_RECURSE RAINBOW_H src/*.h)
-		list(APPEND RAINBOW_H ${LOCAL_LIBRARY_BUILD}/../windows/Rainbow.rc)
-
-		add_definitions(-D_CRT_SECURE_NO_WARNINGS -DVC_EXTRALEAN)
-		if(NOT MINGW)
-			string(REPLACE "/EHsc" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
-			set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4244 /wd4305 /wd4800 /GR- /Oi")
-			set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /NODEFAULTLIB:msvcrt.lib")
-			# FIXME: Don't hardcode external library paths
-			include_directories(${PROJECT_SOURCE_DIR}/../libs/include)
-		endif()
-	endif()
+	file(GLOB_RECURSE RAINBOW_H src/*.h)
 endif()
