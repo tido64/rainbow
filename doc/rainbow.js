@@ -4,9 +4,9 @@ var properties = {};
 var tablesofcontent = {};
 
 function generatefunctions(funcs, module) {
-	var content = ''
+	var content = '';
 	var toc = '';
-	for (f in funcs) {
+	for (var f in funcs) {
 		var func = funcs[f];
 		var entry;
 		var name;
@@ -29,7 +29,7 @@ function generatefunctions(funcs, module) {
 		var optional = false;
 		var param = false;
 		var params = '';
-		for (p in func.parameters) {
+		for (var p in func.parameters) {
 			param = !param;
 			if (!param) {
 				if (optional) {
@@ -75,15 +75,15 @@ function generatefunctions(funcs, module) {
 
 function generatelibraries(libs) {
 	var list = '<ul>';
-	for (i in libs)
+	for (var i in libs)
 		list += '<li><a href="' + libs[i].url + '">' + libs[i].name + '</a></li>';
 	return list + '</ul>';
 }
 
 function generatemodule(module, data) {
-	header[module] = '<h2>' + module + '</h2>'
+	header[module] = '<h2>' + module + '</h2>';
 	if (data.hasOwnProperty('description')) {
-		header[module] += '<div class="description">' + data.description + '</div>'
+		header[module] += '<div class="description">' + data.description + '</div>';
 	}
 	tablesofcontent[module] = '';
 	properties[module] = '';
@@ -95,7 +95,7 @@ function generateproperties(props, module) {
 	var prop;
 	var content = '';
 	var toc = '';
-	for (p in props) {
+	for (var p in props) {
 		isprop = !isprop;
 		if (isprop) {
 			prop = props[p];
@@ -107,7 +107,7 @@ function generateproperties(props, module) {
 			if (typeof props[p] === 'object') {
 				content += '<table>';
 				var odd = false;
-				for (v in props[p]) {
+				for (var v in props[p]) {
 					odd = !odd;
 					if (odd) {
 						content += '<tr><td class="mono">' + props[p][v] + '</td>';
@@ -131,7 +131,7 @@ function generateproperties(props, module) {
 
 function generate(modules, level) {
 	var overview = '<ul>';
-	for (field in modules) {
+	for (var field in modules) {
 		var module = level + '.' + modules[field].name;
 		overview += '<li><a href="#' + module + '">' + modules[field].name + "</a></li>";
 		generatemodule(module, modules[field]);
@@ -150,7 +150,7 @@ function scrollTo(id) {
 }
 
 function show(module) {
-	if (module.length == 0) {
+	if (module.length === 0) {
 		document.getElementById('content').innerHTML
 				= '<object data="gfx/angry-y-u-no.svg" type="image/svg+xml"></object>';
 		return;
