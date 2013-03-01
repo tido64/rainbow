@@ -33,6 +33,8 @@ if(MSVC OR XCODE)
 
 	file(GLOB RAINBOW_PLATFORMS_SRC src/Platforms/*)
 	source_group("Source Files\\Platforms" FILES ${RAINBOW_PLATFORMS_SRC})
+	file(GLOB RAINBOW_PLATFORMS_SRC src/Platforms/impl/*)
+	source_group("Source Files\\Platforms\\impl" FILES ${RAINBOW_PLATFORMS_SRC})
 
 	file(GLOB_RECURSE RAINBOW_H src/*.h)
 endif()

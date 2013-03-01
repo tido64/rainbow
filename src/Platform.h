@@ -21,8 +21,6 @@
 #	define RAINBOW_WIN
 #	if defined(_MSC_VER) && (defined(_M_X64) || _M_IX86_FP >= 2)
 #		define __SSE2__ 1
-#	elif !defined(WINVER)
-#		define WINVER 0x0502
 #	endif
 #endif
 
@@ -31,15 +29,6 @@
 #if defined(RAINBOW_UNIX) || defined(RAINBOW_WIN)
 #	define RAINBOW_BUTTONS
 #	define RAINBOW_SDL
-#endif
-
-// Platforms with accelerometer and touch screen.
-#if defined(RAINBOW_ANDROID) || defined(RAINBOW_IOS)
-#	define RAINBOW_ACCELERATED 1
-#	define RAINBOW_TOUCHED 1
-#else
-#	define RAINBOW_ACCELERATED 0
-#	define RAINBOW_TOUCHED 0
 #endif
 
 #define RAINBOW_BUILD "Rainbow / Bifrost Entertainment Property / Built " __DATE__

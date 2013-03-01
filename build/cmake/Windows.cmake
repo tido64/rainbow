@@ -8,7 +8,9 @@ if(WIN32)
 		# FIXME: Don't hardcode external library paths
 		include_directories(${PROJECT_SOURCE_DIR}/../libs/include)
 	else()
-		add_definitions(-D__MSVCRT__ -D__MSVCRT_VERSION__=0x800)
+		add_definitions(-D__MSVCRT__ -D__MSVCRT_VERSION__=0x800
+		                -D_WIN32_WINNT=0x0600 -DNTDDI_VERSION=0x06000000
+		                -DWINVER=0x0600)
 		set(CMAKE_FIND_LIBRARY_SUFFIXES ".a" ".lib" ".dll.a" ".dll")
 	endif()
 endif()
