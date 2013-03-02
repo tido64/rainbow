@@ -7,6 +7,7 @@
 #if defined(RAINBOW_IOS)
 #	include <UIKit/UIKit.h>
 #else
+#	include <cstring>
 #	include <png.h>
 
 namespace
