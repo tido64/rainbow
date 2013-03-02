@@ -5,7 +5,7 @@
 #include <sys/sysctl.h>
 #include <CoreFoundation/CoreFoundation.h>
 
-#include "Platforms/SysUtil.h"
+#include "Platform/SysUtil.h"
 
 namespace Rainbow
 {

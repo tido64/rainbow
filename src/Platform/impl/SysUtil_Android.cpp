@@ -1,7 +1,7 @@
 #include "Platform.h"
 #if defined(RAINBOW_ANDROID)
 
-#include "Platforms/SysUtil.h"
+#include "Platform/SysUtil.h"
 
 namespace Rainbow
 {

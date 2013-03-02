@@ -4,7 +4,7 @@
 #include <locale.h>
 #include <unistd.h>
 
-#include "Platforms/SysUtil.h"
+#include "Platform/SysUtil.h"
 
 namespace Rainbow
 {

@@ -3,7 +3,7 @@
 
 #include <windows.h>
 
-#include "Platforms/SysUtil.h"
+#include "Platform/SysUtil.h"
 
 namespace Rainbow
 {

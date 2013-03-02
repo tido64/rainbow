@@ -1,7 +1,7 @@
 #include "Common/Debug.h"
 #include "Lua/LuaHelper.h"
 #include "Lua/lua_Platform.h"
-#include "Platforms/SysUtil.h"
+#include "Platform/SysUtil.h"
 
 namespace Rainbow
 {
