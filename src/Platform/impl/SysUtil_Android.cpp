@@ -1,4 +1,4 @@
-#include "Platform.h"
+#include "Platform/Definitions.h"
 #if defined(RAINBOW_ANDROID)
 
 #include "Platform/SysUtil.h"

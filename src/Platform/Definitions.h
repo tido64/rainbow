@@ -1,10 +1,10 @@
 /// Platform specific definitions. Makes sure correct code is being compiled.
 ///
-/// Copyright 2010-12 Bifrost Entertainment. All rights reserved.
+/// Copyright 2010-13 Bifrost Entertainment. All rights reserved.
 /// \author Tommy Nguyen
 
-#ifndef PLATFORM_H_
-#define PLATFORM_H_
+#ifndef PLATFORM_DEFINITIONS_H_
+#define PLATFORM_DEFINITIONS_H_
 
 #if defined(__ANDROID__)
 #	define RAINBOW_ANDROID
@@ -33,7 +33,7 @@
 
 #define RAINBOW_BUILD "Rainbow / Bifrost Entertainment Property / Built " __DATE__
 
-// Define keyword override for pre-C++11 compilers.
+// Define keyword 'override' for pre-C++11 compilers.
 #ifdef __GNUC__
 #	ifndef __GNUC_PATCHLEVEL__
 #		define __GNUC_VERSION__ (__GNUC__ * 10000 + __GNUC_MINOR__ * 100)
@@ -45,4 +45,4 @@
 #	endif
 #endif
 
-#endif  // PLATFORM_H_
+#endif  // PLATFORM_DEFINITIONS_H_

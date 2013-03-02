@@ -6,7 +6,7 @@
 #ifndef OPENGL_H_
 #define OPENGL_H_
 
-#include "Platform.h"
+#include "Platform/Definitions.h"
 
 #if defined(RAINBOW_ANDROID)
 #	include <GLES2/gl2.h>

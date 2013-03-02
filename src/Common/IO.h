@@ -3,7 +3,7 @@
 
 #include <cstdio>
 
-#include "Platform.h"
+#include "Platform/Definitions.h"
 #if defined(RAINBOW_ANDROID)
 #	include <android/asset_manager.h>
 

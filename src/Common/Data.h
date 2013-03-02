@@ -3,7 +3,7 @@
 
 #include <cstddef>
 
-#include "Platform.h"
+#include "Platform/Definitions.h"
 #include "Common/NonCopyable.h"
 
 /// Wrapper for byte buffers.

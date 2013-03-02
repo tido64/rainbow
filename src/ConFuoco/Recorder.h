@@ -1,7 +1,7 @@
 #ifndef CONFUOCO_RECORDER_H_
 #define CONFUOCO_RECORDER_H_
 
-#include "Platform.h"
+#include "Platform/Definitions.h"
 #ifdef RAINBOW_IOS
 #	include <AVFoundation/AVAudioRecorder.h>
 typedef AVAudioRecorder AudioRecorder;

@@ -1,4 +1,4 @@
-#include "Platform.h"
+#include "Platform/Definitions.h"
 #ifdef RAINBOW_IOS
 
 #include <AudioToolbox/ExtendedAudioFile.h>

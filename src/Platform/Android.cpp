@@ -1,6 +1,6 @@
 // Copyright 2012-13 Bifrost Entertainment. All rights reserved.
 
-#include "Platform.h"
+#include "Platform/Definitions.h"
 #ifdef RAINBOW_ANDROID
 
 #include <unistd.h>

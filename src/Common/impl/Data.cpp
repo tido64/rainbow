@@ -1,6 +1,6 @@
 // Copyright 2011-12 Bifrost Entertainment. All rights reserved.
 
-#include "Platform.h"
+#include "Platform/Definitions.h"
 #if defined(RAINBOW_ANDROID) || defined(RAINBOW_UNIX) || defined(RAINBOW_WIN)
 
 #include <cstring>

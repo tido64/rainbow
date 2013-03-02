@@ -1,6 +1,6 @@
 // Copyright 2011-12 Bifrost Entertainment. All rights reserved.
 
-#include "Platform.h"
+#include "Platform/Definitions.h"
 #ifdef RAINBOW_IOS
 
 #include "Common/Data.h"

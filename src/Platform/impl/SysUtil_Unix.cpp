@@ -1,4 +1,4 @@
-#include "Platform.h"
+#include "Platform/Definitions.h"
 #if defined(RAINBOW_ANDROID) || (defined(RAINBOW_UNIX) && !defined(RAINBOW_MAC))
 
 #include <locale.h>
