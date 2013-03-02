@@ -163,7 +163,7 @@
 
 	self.motionManager = [[CMMotionManager alloc] init];
 
-	Config config;
+	Rainbow::Config config;
 	if (config.needs_accelerometer())
 	{
 		// Enable accelerometer.

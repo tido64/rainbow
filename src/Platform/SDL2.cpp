@@ -66,7 +66,7 @@ int main(int argc, char *argv[])
 	if (!ConFuoco::Mixer::Instance)
 		return 1;
 
-	Config config;
+	Rainbow::Config config;
 	if (config.get_width() && config.get_height())
 	{
 		screen_width = config.get_width();

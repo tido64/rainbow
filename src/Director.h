@@ -3,8 +3,8 @@
 
 #include "Common/ShutdownSequence.h"
 #include "Graphics/SceneGraph.h"
-#include "Lua/LuaMachine.h"
 #include "Input/Input.h"
+#include "Lua/LuaMachine.h"
 
 class Data;
 
