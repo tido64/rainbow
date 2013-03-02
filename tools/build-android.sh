@@ -27,7 +27,7 @@ echo -n "Generating jni/Android.mk..."
 
 # Gather Rainbow source files
 cd $PROJECT
-SRC_FILES=$(find src -name 'Platform' -prune -o -name '*.cpp' | xargs)
+SRC_FILES=$(find src -name '*.cpp' | xargs)
 
 # Include libraries
 for lib in Box2D Lua libpng; do
