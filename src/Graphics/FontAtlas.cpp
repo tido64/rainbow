@@ -1,10 +1,10 @@
-// Copyright 2010-12 Bifrost Entertainment. All rights reserved.
+// Copyright 2010-13 Bifrost Entertainment. All rights reserved.
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include FT_GLYPH_H
 
-#include "Algorithm.h"
+#include "Common/Algorithm.h"
 #include "Common/Data.h"
 #include "Graphics/FontAtlas.h"
 #include "Graphics/OpenGL.h"

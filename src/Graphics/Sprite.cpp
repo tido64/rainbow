@@ -1,6 +1,6 @@
-// Copyright 2010-12 Bifrost Entertainment. All rights reserved.
+// Copyright 2010-13 Bifrost Entertainment. All rights reserved.
 
-#include "Algorithm.h"
+#include "Common/Algorithm.h"
 #include "Common/Intrinsics.h"
 #include "Graphics/SpriteBatch.h"
 

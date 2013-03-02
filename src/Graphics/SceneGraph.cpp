@@ -1,6 +1,6 @@
 // Copyright 2011-13 Bifrost Entertainment. All rights reserved.
 
-#include "Algorithm.h"
+#include "Common/Algorithm.h"
 #include "Graphics/Animation.h"
 #include "Graphics/Label.h"
 #include "Graphics/SceneGraph.h"

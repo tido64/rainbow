@@ -1,8 +1,8 @@
-// Copyright 2012 Bifrost Entertainment. All rights reserved.
+// Copyright 2013 Bifrost Entertainment. All rights reserved.
 
 #ifdef USE_CANVAS
-#include "Algorithm.h"
 #include "Applications/Canvas.h"
+#include "Common/Algorithm.h"
 #include "Graphics/Renderer.h"
 #include "Graphics/ShaderManager.h"
 #include "Graphics/Texture.h"

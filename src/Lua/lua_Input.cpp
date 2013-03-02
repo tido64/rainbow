@@ -1,4 +1,3 @@
-#include "Algorithm.h"
 #include "Input/Input.h"
 #include "Input/Key.h"
 #include "Input/Touch.h"
