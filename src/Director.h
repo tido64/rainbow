@@ -1,9 +1,9 @@
 #ifndef DIRECTOR_H_
 #define DIRECTOR_H_
 
-#include "LuaMachine.h"
 #include "Common/ShutdownSequence.h"
 #include "Graphics/SceneGraph.h"
+#include "Lua/LuaMachine.h"
 #include "Input/Input.h"
 
 class Data;

@@ -1,6 +1,6 @@
 // Copyright 2011-13 Bifrost Entertainment. All rights reserved.
 
-#include "Lua/Modules.h"
+#include "Lua/LuaModules.h"
 
 namespace Rainbow
 {

@@ -1,9 +1,9 @@
 #ifndef LUA_SCENEGRAPH_H_
 #define LUA_SCENEGRAPH_H_
 
-#include "LuaMachine.h"
 #include "Graphics/SceneGraph.h"
 #include "Lua/LuaHelper.h"
+#include "Lua/LuaMachine.h"
 
 namespace Rainbow
 {
