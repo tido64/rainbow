@@ -3,6 +3,7 @@
 doc/(?:html|old)
 lua/Keyboard\.lua
 src/Graphics/Shaders/Shaders.h
+xcuserdata
 
 # Libraries
 \.(?:git|hg|svn)
@@ -11,7 +12,3 @@ lib/dSFMT/check.sh
 lib/dSFMT/test.c
 lib/gtest/
 lib/libpng/scripts/
-
-# Xcode-specific
-xcuserdata
-xcode4  # temporary
