@@ -5,15 +5,15 @@ namespace Rainbow
 {
 	/// Structure for storing a three-dimensional vector.
 	///
-	/// Copyright 2010-12 Bifrost Entertainment. All rights reserved.
+	/// Copyright 2010-13 Bifrost Entertainment. All rights reserved.
 	/// \author Tommy Nguyen
 	template<typename T>
-	struct _Vec3
+	struct Vec3
 	{
 		T x, y, z;
 
-		_Vec3() : x(0), y(0), z(0) { }
-		_Vec3(const T x, const T y, const T z) : x(x), y(y), z(z) { }
+		Vec3() : x(0), y(0), z(0) { }
+		Vec3(const T x, const T y, const T z) : x(x), y(y), z(z) { }
 
 		/// Determine whether the vector is zero.
 		bool is_zero() const
@@ -29,7 +29,7 @@ namespace Rainbow
 			this->z = 0;
 		}
 
-		_Vec3<T>& operator+=(const _Vec3<T> &v)
+		Vec3<T>& operator+=(const Vec3<T> &v)
 		{
 			this->x += v.x;
 			this->y += v.y;
@@ -37,7 +37,7 @@ namespace Rainbow
 			return *this;
 		}
 
-		_Vec3<T>& operator-=(const _Vec3<T> &v)
+		Vec3<T>& operator-=(const Vec3<T> &v)
 		{
 			this->x -= v.x;
 			this->y -= v.y;
@@ -45,7 +45,7 @@ namespace Rainbow
 			return *this;
 		}
 
-		_Vec3<T>& operator*=(const T &f)
+		Vec3<T>& operator*=(const T &f)
 		{
 			this->x *= f;
 			this->y *= f;
@@ -55,7 +55,7 @@ namespace Rainbow
 	};
 }
 
-typedef Rainbow::_Vec3<double> Vec3d;
-typedef Rainbow::_Vec3<float> Vec3f;
+typedef Rainbow::Vec3<double> Vec3d;
+typedef Rainbow::Vec3<float> Vec3f;
 
 #endif

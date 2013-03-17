@@ -50,6 +50,7 @@ namespace Rainbow
 			LUA_ASSERT(lua_gettop(L) == 0 || lua_gettop(L) == 1, "rainbow.scenegraph:add_node([parent])");
 
 			::SceneGraph::Node *node = (!lua_gettop(L)) ? this->root : this->to_node(L, 1);
+			R_ASSERT(node, "This shouldn't ever happen.");
 			lua_pushlightuserdata(L, node->add_child(new ::SceneGraph::Node()));
 			return 1;
 		}

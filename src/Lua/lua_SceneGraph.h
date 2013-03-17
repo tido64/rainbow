@@ -83,6 +83,7 @@ namespace Rainbow
 
 			// Retrieve and add element.
 			::SceneGraph::Node *node = (n & 1) ? this->root : this->to_node(L, 1);
+			R_ASSERT(node, "This shouldn't ever happen.");
 			lua_pushlightuserdata(L, node->add_child(obj->raw_ptr()));
 
 			return 1;

@@ -1,4 +1,4 @@
-#include "Algorithm.h"
+#include "Common/Algorithm.h"
 
 using Rainbow::equalf;
 
@@ -13,22 +13,6 @@ TEST(AlgorithmTest, ApproximatelyEqualFloats)
 TEST(AlgorithmTest, DegreesToRadians)
 {
 	ASSERT_TRUE(equalf(3.14f, Rainbow::radians(Rainbow::degrees(3.14f))));
-}
-
-TEST(AlgorithmTest, DistanceBetweenTwoPoints)
-{
-	ASSERT_EQ(5.0f, Rainbow::distance(0.0f, 0.0f, 3.0f, 4.0f));
-}
-
-TEST(AlgorithmTest, IntegerToString)
-{
-	char *number = Rainbow::itoa(65535);
-	ASSERT_STREQ("65535", number);
-	delete[] number;
-
-	number = Rainbow::itoa(-65535);
-	ASSERT_STREQ("-65535", number);
-	delete[] number;
 }
 
 TEST(AlgorithmTest, IsPowerOfTwo)

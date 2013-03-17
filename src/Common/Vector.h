@@ -12,9 +12,9 @@
 /// This class is mainly for the lack of full STL implementation on some
 /// platforms, such as Android. (And because we don't like iterators.)
 ///
-/// Copyright 2010-12 Bifrost Entertainment. All rights reserved.
+/// Copyright 2010-13 Bifrost Entertainment. All rights reserved.
 /// \author Tommy Nguyen
-template<class T>
+template<typename T>
 class Vector : private NonCopyable<Vector<T> >
 {
 public:
@@ -78,39 +78,39 @@ private:
 	T *c_array;       ///< Actual C-array.
 };
 
-template<class T>
+template<typename T>
 Vector<T>::Vector(const int reserve) :
 	count(0), reserved(0), c_array(nullptr)
 {
 	this->reserve(reserve);
 }
 
-template<class T>
+template<typename T>
 Vector<T>::~Vector()
 {
 	this->clear();
 	operator delete(this->c_array);
 }
 
-template<class T>
+template<typename T>
 T& Vector<T>::at(const size_t i)
 {
 	return (*this)[i];
 }
 
-template<class T>
+template<typename T>
 T* Vector<T>::begin() const
 {
 	return this->c_array;
 }
 
-template<class T>
+template<typename T>
 size_t Vector<T>::capacity() const
 {
 	return this->reserved;
 }
 
-template<class T>
+template<typename T>
 void Vector<T>::clear()
 {
 	while (this->count)
@@ -118,7 +118,7 @@ void Vector<T>::clear()
 	R_ASSERT(!this->count, "Failed to clear vector");
 }
 
-template<class T>
+template<typename T>
 void Vector<T>::erase(const size_t i)
 {
 	R_ASSERT(i < this->count, "Can't erase a non-existing element");
@@ -127,7 +127,7 @@ void Vector<T>::erase(const size_t i)
 	memmove(arr, arr + 1, (--this->count - i) * sizeof(T));
 }
 
-template<class T>
+template<typename T>
 int Vector<T>::find(const T &element) const
 {
 	for (size_t i = 0; i < this->count; ++i)
@@ -136,7 +136,7 @@ int Vector<T>::find(const T &element) const
 	return -1;
 }
 
-template<class T>
+template<typename T>
 void Vector<T>::push_back(const T &element)
 {
 	// Verify that there is enough space
@@ -147,7 +147,7 @@ void Vector<T>::push_back(const T &element)
 	++this->count;
 }
 
-template<class T>
+template<typename T>
 void Vector<T>::qerase(const size_t i)
 {
 	R_ASSERT(i < this->count, "Can't erase a non-existing element");
@@ -156,7 +156,7 @@ void Vector<T>::qerase(const size_t i)
 		memcpy(this->c_array + i, this->c_array + this->count, sizeof(T));
 }
 
-template<class T>
+template<typename T>
 void Vector<T>::qremove(const T &element)
 {
 	const int i = this->find(element);
@@ -165,7 +165,7 @@ void Vector<T>::qremove(const T &element)
 	this->qerase(i);
 }
 
-template<class T>
+template<typename T>
 void Vector<T>::remove(const T &element)
 {
 	const int i = this->find(element);
@@ -174,7 +174,7 @@ void Vector<T>::remove(const T &element)
 	this->erase(i);
 }
 
-template<class T>
+template<typename T>
 void Vector<T>::reserve(size_t i)
 {
 	if (i < this->count)
@@ -195,13 +195,13 @@ void Vector<T>::reserve(size_t i)
 	this->reserved = i;
 }
 
-template<class T>
+template<typename T>
 size_t Vector<T>::size() const
 {
 	return this->count;
 }
 
-template<class T>
+template<typename T>
 T& Vector<T>::operator[](const size_t i) const
 {
 	R_ASSERT(i < this->count, "Tried to access an element out of range");
