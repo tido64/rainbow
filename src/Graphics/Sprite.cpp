@@ -33,13 +33,12 @@ void Sprite::mirror()
 	this->vertex_array[3].texcoord = tmp;
 }
 
-void Sprite::move(const float x, const float y)
+void Sprite::move(const Vec2f &delta)
 {
-	if (equalf(x, 0.0f) && equalf(y, 0.0f))
+	if (delta.is_zero())
 		return;
 
-	this->position.x += x;
-	this->position.y += y;
+	this->position += delta;
 	this->stale |= stale_position;
 }
 
@@ -60,19 +59,18 @@ void Sprite::set_color(const unsigned int c)
 	this->set_color<3>(c);
 }
 
-void Sprite::set_pivot(const float x, const float y)
+void Sprite::set_pivot(const Vec2f &pivot)
 {
-	R_ASSERT(x >= 0.0f && x <= 1.0f && y >= 0.0f && y <= 1.0f, "Invalid pivot point");
+	R_ASSERT(pivot.x >= 0.0f && pivot.x <= 1.0f && pivot.y >= 0.0f && pivot.y <= 1.0f,
+	         "Invalid pivot point");
 
-	this->pivot.x = x;
-	this->pivot.y = y;
+	this->pivot = pivot;
 	this->stale |= stale_pivot | stale_scale;
 }
 
-void Sprite::set_position(const float x, const float y)
+void Sprite::set_position(const Vec2f &position)
 {
-	this->position.x = x;
-	this->position.y = y;
+	this->position = position;
 	this->stale |= stale_position;
 }
 

@@ -302,7 +302,8 @@ namespace b2
 					b->SetTransform(v, r);
 				else
 				{
-					d->sprite->set_position(v.x * ptm_ratio, v.y * ptm_ratio);
+					const Vec2f position(v.x * ptm_ratio, v.y * ptm_ratio);
+					d->sprite->set_position(position);
 					d->sprite->set_rotation(r);
 				}
 			}
@@ -320,7 +321,8 @@ namespace b2
 					b->SetTransform(d->curr_p, d->curr_r);
 				else
 				{
-					d->sprite->set_position(d->curr_p.x * ptm_ratio, d->curr_p.y * ptm_ratio);
+					const Vec2f position(d->curr_p.x * ptm_ratio, d->curr_p.y * ptm_ratio);
+					d->sprite->set_position(position);
 					d->sprite->set_rotation(d->curr_r);
 				}
 			}

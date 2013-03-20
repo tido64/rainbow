@@ -50,7 +50,7 @@ public:
 	void mirror();
 
 	/// Move sprite by (x,y).
-	void move(const float x, const float y);
+	void move(const Vec2f &);
 
 	/// Rotate sprite by r.
 	void rotate(const float r);
@@ -64,10 +64,10 @@ public:
 
 	/// Set the pivot point for rotation and translation.
 	/// \param x,y  Normalised pivot point.
-	void set_pivot(const float x, const float y);
+	void set_pivot(const Vec2f &);
 
 	/// Set sprite position (absolute).
-	void set_position(const float x, const float y);
+	void set_position(const Vec2f &);
 
 	/// Set angle of rotation (in radian).
 	void set_rotation(const float r);

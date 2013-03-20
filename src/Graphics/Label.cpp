@@ -10,6 +10,13 @@ Label::~Label()
 	delete[] this->vx;
 }
 
+void Label::set_position(const Vec2f &position)
+{
+	this->position.x = static_cast<int>(position.x + 0.5);
+	this->position.y = static_cast<int>(position.y + 0.5);
+	this->stale |= stale_buffer;
+}
+
 void Label::set_scale(const float f)
 {
 	if (Rainbow::equalf(this->scale, f))

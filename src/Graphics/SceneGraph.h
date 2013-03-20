@@ -2,6 +2,7 @@
 #define SCENEGRAPH_NODE_H_
 
 #include "Common/TreeNode.h"
+#include "Common/Vec2.h"
 #include "Graphics/Drawable.h"
 
 class Animation;
@@ -76,7 +77,7 @@ namespace SceneGraph
 		void draw();
 
 		/// Recursively move all sprites by (x,y).
-		void move(const float x, const float y);
+		void move(const Vec2f &);
 
 		inline void remove();
 

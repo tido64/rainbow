@@ -36,7 +36,7 @@ SpriteBatch::~SpriteBatch()
 Sprite* SpriteBatch::add(const int x, const int y, const int w, const int h)
 {
 	Sprite *s = this->create_sprite(w, h);
-	s->set_texture(this->texture->define(x, y, w, h));
+	s->set_texture(this->texture->define(Vec2i(x, y), w, h));
 	return s;
 }
 

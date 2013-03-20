@@ -70,9 +70,8 @@ namespace Rainbow
 
 		int Label::set_position(lua_State *L)
 		{
-			const int x = static_cast<int>(lua_tonumber(L, 1) + 0.5f);
-			const int y = static_cast<int>(lua_tonumber(L, 2) + 0.5f);
-			::Label::set_position(x, y);
+			const Vec2f position(lua_tonumber(L, 1), lua_tonumber(L, 2));
+			::Label::set_position(position);
 			return 0;
 		}
 
@@ -90,7 +89,8 @@ namespace Rainbow
 
 		int Label::move(lua_State *L)
 		{
-			::Label::move(lua_tonumber(L, 1), lua_tonumber(L, 2));
+			const Vec2f delta(lua_tonumber(L, 1), lua_tonumber(L, 2));
+			::Label::move(delta);
 			return 0;
 		}
 	}

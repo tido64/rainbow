@@ -33,7 +33,7 @@ public:
 	/// \param width   Width of the texture.
 	/// \param height  Height of the texture.
 	/// \return The id of the texture.
-	unsigned int define(const int x, const int y, const int width, const int height);
+	unsigned int define(const Vec2i &origin, const int width, const int height);
 
 	/// Trim the internal texture storage.
 	inline void trim();

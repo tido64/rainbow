@@ -37,7 +37,7 @@ public:
 	inline void set_font(FontAtlas *);
 
 	/// Set position of text.
-	inline void set_position(const int x, const int y);
+	void set_position(const Vec2f &);
 
 	/// Set label scale. Value is clamped between 0.01 and 1.0.
 	void set_scale(const float f);
@@ -46,7 +46,7 @@ public:
 	void set_text(const char *);
 
 	/// Move label by (x,y).
-	inline void move(const float x, const float y);
+	inline void move(const Vec2f &);
 
 	/// Draw text at previously set position.
 	virtual void draw() override;
@@ -111,17 +111,9 @@ void Label::set_font(FontAtlas *f)
 	this->stale |= stale_buffer;
 }
 
-void Label::set_position(const int x, const int y)
+void Label::move(const Vec2f &delta)
 {
-	this->position.x = x;
-	this->position.y = y;
-	this->stale |= stale_buffer;
-}
-
-void Label::move(const float x, const float y)
-{
-	this->position.x += x;
-	this->position.y += y;
+	this->position += delta;
 	this->stale |= stale_buffer;
 }
 

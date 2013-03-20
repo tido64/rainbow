@@ -93,7 +93,8 @@ namespace Rainbow
 			LUA_ASSERT(lua_gettop(L) == 3, "rainbow.scenegraph:move(node, x, y)");
 
 			::SceneGraph::Node *node = this->to_node(L, 1);
-			node->move(lua_tonumber(L, 2), lua_tonumber(L, 3));
+			const Vec2f delta(lua_tonumber(L, 2), lua_tonumber(L, 3));
+			node->move(delta);
 			return 0;
 		}
 

@@ -93,15 +93,15 @@ TextureAtlas::TextureAtlas(const Data &img) : name(0), width(0), height(0)
 	ImageLoader::release(data);
 }
 
-unsigned int TextureAtlas::define(const int x, const int y, const int w, const int h)
+unsigned int TextureAtlas::define(const Vec2i &origin, const int w, const int h)
 {
-	R_ASSERT(x >= 0 && (x + w) <= this->width && y >= 0 && (y + h) <= this->height,
+	R_ASSERT(origin.x >= 0 && (origin.x + w) <= this->width && origin.y >= 0 && (origin.y + h) <= this->height,
 	         "Invalid dimensions");
 
-	const float x0 = x / static_cast<float>(this->width);
-	const float x1 = (x + w) / static_cast<float>(this->width);
-	const float y0 = y / static_cast<float>(this->height);
-	const float y1 = (y + h) / static_cast<float>(this->height);
+	const float x0 = origin.x / static_cast<float>(this->width);
+	const float x1 = (origin.x + w) / static_cast<float>(this->width);
+	const float y0 = origin.y / static_cast<float>(this->height);
+	const float y1 = (origin.y + h) / static_cast<float>(this->height);
 
 	const size_t i = this->textures.size();
 	this->textures.push_back(Texture(x0, y0, x1, y1));

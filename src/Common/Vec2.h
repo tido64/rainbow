@@ -1,7 +1,7 @@
 #ifndef VEC2_H_
 #define VEC2_H_
 
-#include <cmath>
+#include "Common/Algorithm.h"
 
 namespace Rainbow
 {
@@ -12,7 +12,17 @@ namespace Rainbow
 	template<typename T>
 	struct Vec2
 	{
-		T x, y;
+		union
+		{
+			T x;
+			T width;
+		};
+
+		union
+		{
+			T y;
+			T height;
+		};
 
 		Vec2() : x(0), y(0) { }
 		Vec2(const T x, const T y) : x(x), y(y) { }
@@ -71,6 +81,12 @@ namespace Rainbow
 			return *this;
 		}
 	};
+
+	template<>
+	inline bool Vec2<float>::is_zero() const
+	{
+		return equalf(0.0f, this->x) && equalf(0.0f, this->y);
+	}
 }
 
 typedef Rainbow::Vec2<float> Vec2f;

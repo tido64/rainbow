@@ -37,31 +37,31 @@ namespace SceneGraph
 			this->children[i]->draw();
 	}
 
-	void Node::move(const float x, const float y)
+	void Node::move(const Vec2f &delta)
 	{
-		if (equalf(x, 0.0f) && equalf(y, 0.0f))
+		if (delta.is_zero())
 			return;
 
 		switch (this->type)
 		{
 			case LabelNode:
-				this->label->move(x, y);
+				this->label->move(delta);
 				break;
 			case SpriteNode:
-				this->sprite->move(x, y);
+				this->sprite->move(delta);
 				break;
 			case SpriteBatchNode:
 				{
 					Vector<Sprite*> &sprites = this->sprite_batch->sprites;
 					for (size_t i = 0; i < sprites.size(); ++i)
-						sprites[i]->move(x, y);
+						sprites[i]->move(delta);
 				}
 				break;
 			default:
 				break;
 		}
 		for (size_t i = 0; i < this->children.size(); ++i)
-			this->children[i]->move(x, y);
+			this->children[i]->move(delta);
 	}
 
 	void Node::rotate(const float r)

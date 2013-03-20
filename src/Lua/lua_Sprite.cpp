@@ -61,13 +61,15 @@ namespace Rainbow
 
 		int Sprite::set_pivot(lua_State *L)
 		{
-			this->sprite->set_pivot(lua_tonumber(L, 1), lua_tonumber(L, 2));
+			const Vec2f pivot(lua_tonumber(L, 1), lua_tonumber(L, 2));
+			this->sprite->set_pivot(pivot);
 			return 0;
 		}
 
 		int Sprite::set_position(lua_State *L)
 		{
-			this->sprite->set_position(lua_tonumber(L, 1), lua_tonumber(L, 2));
+			const Vec2f position(lua_tonumber(L, 1), lua_tonumber(L, 2));
+			this->sprite->set_position(position);
 			return 0;
 		}
 
@@ -110,7 +112,8 @@ namespace Rainbow
 		{
 			LUA_ASSERT(lua_gettop(L) == 2, "<sprite>:move(x, y)");
 
-			this->sprite->move(lua_tonumber(L, 1), lua_tonumber(L, 2));
+			const Vec2f delta(lua_tonumber(L, 1), lua_tonumber(L, 2));
+			this->sprite->move(delta);
 			return 0;
 		}
 

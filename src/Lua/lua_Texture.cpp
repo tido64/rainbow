@@ -39,11 +39,10 @@ namespace Rainbow
 		{
 			LUA_ASSERT(lua_gettop(L) == 4, "<texture>:create(x, y, width, height)");
 
-			const int x = lua_tointeger(L, 1);
-			const int y = lua_tointeger(L, 2);
+			const Vec2i origin(lua_tointeger(L, 1), lua_tointeger(L, 2));
 			const int w = lua_tointeger(L, 3);
 			const int h = lua_tointeger(L, 4);
-			lua_pushinteger(L, this->texture->define(x, y, w, h));
+			lua_pushinteger(L, this->texture->define(origin, w, h));
 			return 1;
 		}
 

@@ -220,7 +220,7 @@ namespace b2
 			data->sprite = Rainbow::Lua::wrapper<Rainbow::Lua::Sprite>(L)->raw_ptr();
 			b2Vec2 pos = this->body->GetPosition();
 			pos *= ptm_ratio;
-			data->sprite->set_position(pos.x, pos.y);
+			data->sprite->set_position(Vec2f(pos.x, pos.y));
 			data->sprite->set_rotation(this->body->GetAngle());
 			return 0;
 		}
@@ -284,7 +284,7 @@ namespace b2
 				d->curr_r = body_def.angle;
 				if (d->sprite)
 				{
-					d->sprite->set_position(x, y);
+					d->sprite->set_position(Vec2f(x, y));
 					d->sprite->set_rotation(body_def.angle);
 				}
 			}
