@@ -24,7 +24,7 @@ class SpriteBatch;
 /// \see http://iphonedevelopment.blogspot.com/2009/06/opengl-es-from-ground-up-part-8.html
 /// \see http://mathforum.org/mathimages/index.php/Transformation_Matrix
 ///
-/// Copyright 2010-12 Bifrost Entertainment. All rights reserved.
+/// Copyright 2010-13 Bifrost Entertainment. All rights reserved.
 /// \author Tommy Nguyen
 class Sprite : private NonCopyable<Sprite>
 {
@@ -95,7 +95,7 @@ private:
 	Vec2f center;                ///< Committed position.
 	Vec2f pivot;                 ///< Pivot point (normalised).
 	Vec2f position;              ///< Uncommitted position.
-	Vec2f scale_f;               ///< Scaling factor.
+	Vec2f scale;                 ///< Scaling factor.
 	Vec2f origin[4];             ///< Reference sprite at origo.
 };
 

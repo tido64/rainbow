@@ -4,17 +4,42 @@
 #include "Graphics/Label.h"
 #include "Graphics/Renderer.h"
 
+namespace
+{
+	const unsigned int kStaleBuffer  = 1u << 0;
+	const unsigned int kStaleColor   = 1u << 1;
+	const unsigned int kStaleVBO     = 1u << 2;
+}
+
 Label::~Label()
 {
 	delete[] this->text;
 	delete[] this->vx;
 }
 
+void Label::set_alignment(const Label::Alignment a)
+{
+	this->alignment = a;
+	this->stale |= kStaleBuffer;
+}
+
+void Label::set_color(const Colorb &c)
+{
+	this->color = c;
+	this->stale |= kStaleColor;
+}
+
+void Label::set_font(FontAtlas *f)
+{
+	this->font = f;
+	this->stale |= kStaleBuffer;
+}
+
 void Label::set_position(const Vec2f &position)
 {
 	this->position.x = static_cast<int>(position.x + 0.5);
 	this->position.y = static_cast<int>(position.y + 0.5);
-	this->stale |= stale_buffer;
+	this->stale |= kStaleBuffer;
 }
 
 void Label::set_scale(const float f)
@@ -29,7 +54,7 @@ void Label::set_scale(const float f)
 	else
 		this->scale = f;
 
-	this->stale |= stale_buffer;
+	this->stale |= kStaleBuffer;
 }
 
 void Label::set_text(const char *text)
@@ -40,11 +65,17 @@ void Label::set_text(const char *text)
 		delete[] this->text;
 		this->text = new char[len + 1];
 		this->size = len;
-		this->stale |= stale_vbo;
+		this->stale |= kStaleVBO;
 	}
 	memcpy(this->text, text, len);
 	this->text[len] = '\0';
-	this->stale |= stale_buffer;
+	this->stale |= kStaleBuffer;
+}
+
+void Label::move(const Vec2f &delta)
+{
+	this->position += delta;
+	this->stale |= kStaleBuffer;
 }
 
 void Label::draw()
@@ -58,13 +89,13 @@ void Label::update()
 	// Note: This algorithm currently does not support font kerning.
 	if (this->stale)
 	{
-		if (this->stale & stale_buffer)
+		if (this->stale & kStaleBuffer)
 		{
-			if (this->stale & stale_vbo)
+			if (this->stale & kStaleVBO)
 			{
 				delete[] this->vx;
 				this->vx = new SpriteVertex[this->size << 2];
-				this->stale |= stale_color;
+				this->stale |= kStaleColor;
 			}
 
 			this->vertices = 0;
@@ -111,20 +142,20 @@ void Label::update()
 			this->width = pen.x - this->position.x;
 			this->vertices = (this->vertices << 2) + (this->vertices << 1);
 		}
-		if (this->stale & stale_color)
+		if (this->stale & kStaleColor)
 		{
 			for (size_t i = 0; i < (this->size << 2); ++i)
 				this->vx[i].color = this->color;
 		}
-		this->stale = 0u;
+		this->stale = 0;
 	}
 }
 
 void Label::align(float offset, size_t start, size_t end)
 {
-	if (this->alignment != LEFT)
+	if (this->alignment != kLeftTextAlignment)
 	{
-		if (this->alignment == CENTER)
+		if (this->alignment == kCenterTextAlignment)
 			offset *= 0.5f;
 
 		start <<= 2;

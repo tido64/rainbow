@@ -39,13 +39,13 @@ namespace Rainbow
 			switch (*lua_tolstring(L, 1, nullptr))
 			{
 				case 'c':
-					::Label::set_alignment(Label::CENTER);
+					::Label::set_alignment(Label::kCenterTextAlignment);
 					break;
 				case 'r':
-					::Label::set_alignment(Label::RIGHT);
+					::Label::set_alignment(Label::kRightTextAlignment);
 					break;
 				default:
-					::Label::set_alignment(Label::LEFT);
+					::Label::set_alignment(Label::kLeftTextAlignment);
 					break;
 			}
 			return 0;
