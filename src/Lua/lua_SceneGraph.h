@@ -9,30 +9,6 @@ namespace Rainbow
 {
 	namespace Lua
 	{
-		namespace Helper
-		{
-			template<class T, bool unsafe>
-			struct ToUserData;
-
-			template<class T>
-			struct ToUserData<T, false>
-			{
-				static inline T* Cast(lua_State *L, const int n)
-				{
-					return *static_cast<T**>(luaL_checkudata(L, n, T::class_name));
-				}
-			};
-
-			template<class T>
-			struct ToUserData<T, true>
-			{
-				static inline T* Cast(lua_State *L, const int n)
-				{
-					return *static_cast<T**>(lua_touserdata(L, n));
-				}
-			};
-		}
-
 		class SceneGraph : private NonCopyable<SceneGraph>
 		{
 			friend class Rainbow::LuaMachine;
@@ -61,40 +37,8 @@ namespace Rainbow
 
 			SceneGraph(lua_State *, ::SceneGraph::Node *);
 
-			template<class T, bool unsafe>
-			int add_child(lua_State *);
-
-			inline ::SceneGraph::Node* to_node(lua_State *, const int);
+			void unregister(lua_State *);
 		};
-
-		template<class T, bool unsafe>
-		int SceneGraph::add_child(lua_State *L)
-		{
-			R_ASSERT(lua_gettop(L) == 1 || lua_gettop(L) == 2, "Invalid parameters");
-
-			// Ensure it's not a nil value.
-			const int n = lua_gettop(L);
-			LUA_CHECK(L, lua_type(L, n) != LUA_TNIL, "rainbow.scenegraph: Invalid child node specified");
-
-			// Retrieve Lua wrapper.
-			lua_rawgeti(L, n, 0);
-			T *obj = Helper::ToUserData<T, unsafe>::Cast(L, -1);
-			lua_pop(L, 1);
-
-			// Retrieve and add element.
-			::SceneGraph::Node *node = (n & 1) ? this->root : this->to_node(L, 1);
-			R_ASSERT(node, "This shouldn't ever happen.");
-			lua_pushlightuserdata(L, node->add_child(obj->raw_ptr()));
-
-			return 1;
-		}
-
-		::SceneGraph::Node* SceneGraph::to_node(lua_State *L, const int n)
-		{
-			::SceneGraph::Node *node = static_cast< ::SceneGraph::Node*>(lua_touserdata(L, n));
-			LUA_CHECK(L, node, "rainbow.scenegraph: Invalid node specified");
-			return node;
-		}
 	}
 }
 

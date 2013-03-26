@@ -6,6 +6,7 @@ namespace Rainbow
 {
 	LuaMachine::~LuaMachine()
 	{
+		this->scenegraph->unregister(this->L);
 		delete this->scenegraph;
 		lua_close(this->L);
 	}
