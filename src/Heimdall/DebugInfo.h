@@ -21,8 +21,8 @@ namespace Heimdall
 		inline Label* get_button();
 		inline SceneGraph::Node* get_node();
 
-		void set_button(const int x, const int y);
-		void set_console(const int x, const int y);
+		void set_button(const Vec2f &position);
+		void set_console(const Vec2f &position);
 
 		void update(const unsigned long t);
 

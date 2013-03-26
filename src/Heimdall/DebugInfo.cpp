@@ -26,18 +26,17 @@ namespace Heimdall
 		this->node->add_child(&this->label);
 	}
 
-	void DebugInfo::set_button(const int x, const int y)
+	void DebugInfo::set_button(const Vec2f &position)
 	{
 		this->button.set_font(Resources::UIFont);
-		this->button.set_position(x, y);
-		this->button_pos.x = x;
-		this->button_pos.y = y;
+		this->button.set_position(position);
+		this->button_pos = position;
 	}
 
-	void DebugInfo::set_console(const int x, const int y)
+	void DebugInfo::set_console(const Vec2f &position)
 	{
 		this->label.set_font(Resources::ConsoleFont);
-		this->label.set_position(x, y);
+		this->label.set_position(position);
 	}
 
 	void DebugInfo::update(const unsigned long t)
