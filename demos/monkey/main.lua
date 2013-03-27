@@ -2,47 +2,50 @@
 --!
 --! Resolution: 960x640
 --!
---! Copyright 2011-12 Bifrost Entertainment. All rights reserved.
+--! Copyright 2011-13 Bifrost Entertainment. All rights reserved.
 --! \author Tommy Nguyen
 
-require("Utils");  -- Rainbow (debugging) utilities
-require("Input");  -- Input event handler
+-- Import essential libraries
+require("Input")  -- Input event handler
+require("Prose")  -- Prose module lets you create scenes from a table
+require("Timer")
 
-global_scale = 3;  -- Global scaling factor
-threepwood = nil;  -- Guybrush Threepwood
+-- Declare globals used throughout
+global_scale = 3  -- Global scaling factor
+threepwood = nil  -- Guybrush Threepwood should always be loaded
 
-local assets = nil;  -- Sprite sheet
-local scene = nil;   -- Current scene
-local scenes = {};   -- Table o'scenes
+-- Import scenes
+require("intro")     -- Intro scene
+require("scummbar")  -- SCUMM Bar
 
-require("threepwood");  -- I'm Guybrush Threepwood. A mighty pirate.
-require("intro");       -- Intro scene
-require("scummbar");    -- SCUMM Bar scene
+-- Import protagonist
+require("threepwood")
+
+local scene = nil   -- Current scene
+local scenes = {}   -- Table o'scenes
 
 function init()
-	-- Declare all scenes
-	scenes["opening"] = SceneIntro;
-	scenes["scummbar"] = SceneSCUMMBar;
+	-- Turn off texture filtering.
+	rainbow.renderer.set_filter(gl.NEAREST)
 
-	-- Load common assets
-	assets = rainbow.texture("monkey.png");
+	-- Declare all scenes.
+	scenes["opening"] = SceneIntro
+	scenes["scummbar"] = SceneSCUMMBar
 
-	-- Load Guybrush Threepwood. He should be reusable in all scenes.
-	threepwood = Threepwood.new(assets);
-
-	-- Load opening scene
-	scene = scenes["opening"].new(assets);
-	scene:init();
+	-- Load opening scene.
+	scene = scenes["opening"]()
+	scene:init()
 end
 
 function update(dt)
-	local next_scene = scene:update(dt);
+	local next_scene = scene:update(dt)
 	if next_scene then
-		-- Delete current scene
-		scene:destruct();
+		-- Destroy and collect the current scene.
+		scene:destruct()
+		collectgarbage("collect")
 
-		-- Load and initialize next scene
-		scene = scenes[next_scene].new(assets);
-		scene:init();
+		-- Load and initialize next scene.
+		scene = scenes[next_scene]()
+		scene:init()
 	end
 end

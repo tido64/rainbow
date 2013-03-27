@@ -1,62 +1,66 @@
 --! Monkey Demo: Guybrush Threepwood
 --!
---! Copyright 2011-12 Bifrost Entertainment. All rights reserved.
+--! Copyright 2011-13 Bifrost Entertainment. All rights reserved.
 --! \author Tommy Nguyen
 
-Threepwood = {};
-Threepwood.__index = Threepwood;
+Threepwood = {}
+Threepwood.__index = Threepwood
 
-function Threepwood.new(assets)
-	local guybrush = {};
-	setmetatable(guybrush, Threepwood);
+function Threepwood:new(assets)
+	local self = setmetatable({
+		animating = false,
+		batch = rainbow.spritebatch(1),
+		direction = false,
+		face = 1,
+		lock = false,
+		node = false,
+		sprite = false,
+		standingl = assets:create(504, 875, 104, 149),
+		standingr = assets:create(400, 875, 104, 149),
+		walk = false,
+		walking = false,
+		walkingl = {},
+		walkingr = {},
+		x = 0,
+		y = 0
+	}, Threepwood)
 
-	-- Load Guybrush standing, facing left or right
-	guybrush.standingr = assets:create(400, 875, 104, 149);
-	guybrush.standingl = assets:create(504, 875, 104, 149);
+	self.batch:set_texture(assets)
+	self.sprite = self.batch:create_sprite(104, 149)
+	self.sprite:set_texture(self.standingr)
+	self.direction = self.standingr
 
 	-- Load Guybrush walking, facing left or right
-	guybrush.walkingl = {};
-	guybrush.walkingr = {};
-	local x = 400;
+	local x = 400
 	for i = 1,6 do
-		guybrush.walkingl[i] = assets:create(x, 724, 104, 149);
-		guybrush.walkingr[i] = assets:create(x, 575, 104, 149);
-		x = x + 104;
+		self.walkingl[i] = assets:create(x, 724, 104, 149)
+		self.walkingr[i] = assets:create(x, 575, 104, 149)
+		x = x + 104
 	end
-	guybrush.walkingl = rainbow.animation(nil, guybrush.walkingl, 7);
-	guybrush.walkingr = rainbow.animation(nil, guybrush.walkingr, 7);
+	self.walkingl = rainbow.animation(self.sprite, self.walkingl, 7)
+	self.walkingr = rainbow.animation(self.sprite, self.walkingr, 7)
 
-	-- Variables for controlling animations
-	guybrush.walk = nil;
-	guybrush.walking = nil;
-	guybrush.direction = nil;
-	guybrush.face = 1;
-	guybrush.lock = false;
-
-	return guybrush;
+	return self
 end
 
-function Threepwood:deinit()
-	rainbow.scenegraph:remove(self.parent_node, self.node);
-	rainbow.input.unsubscribe(self);
+setmetatable(Threepwood, { __call = Threepwood.new })
+
+function Threepwood:destruct()
+	self.batch = nil
+	self.node = nil
+	self.walkingl = nil
+	self.walkingr = nil
+end
+
+function Threepwood:init(parent, x, y)
+	self.x = x
+	self.y = y
+	self.sprite:set_position(self.x, self.y)
+	self.node = rainbow.scenegraph:add_batch(parent, self.batch)
 end
 
 function Threepwood:get_position()
-	return self.x, self.y;
-end
-
-function Threepwood:init(parent, spritebatch, x, y)
-	-- Add Guybrush to the sprite batch.
-	self.sprite = spritebatch:add(400, 875, 104, 149);
-	self.x = x;
-	self.y = y;
-	self.sprite:set_position(self.x, self.y);
-
-	-- Bind the animation to the sprite.
-	self.walkingl:set_sprite(self.sprite);
-	self.walkingr:set_sprite(self.sprite);
-
-	self.parent_node = parent;
+	return self.x, self.y
 end
 
 function Threepwood:move(pos)
@@ -65,44 +69,44 @@ function Threepwood:move(pos)
 	end
 
 	-- Determine the direction Guybrush is facing and start the walking animation.
-	if self.animation_node then
-		rainbow.scenegraph:remove(self.parent_node, self.animation_node);
+	if self.animating then
+		rainbow.scenegraph:remove(self.animating)
 	end
-	self.walk = pos;
+	self.walk = pos
 	if self.x < self.walk.x then
-		self.direction = self.standingr;
-		self.face = 1;
-		self.walking = self.walkingr;
+		self.direction = self.standingr
+		self.face = 1
+		self.walking = self.walkingr
 	else
-		self.direction = self.standingl;
-		self.face = -1;
-		self.walking = self.walkingl;
+		self.direction = self.standingl
+		self.face = -1
+		self.walking = self.walkingl
 	end
-	self.animation_node = rainbow.scenegraph:add_animation(self.parent_node, self.walking);
+	self.animating = rainbow.scenegraph:add_animation(self.node, self.walking)
 end
 
 function Threepwood:stop()
-	rainbow.scenegraph:remove(self.parent_node, self.animation_node);
-	self.animation_node = nil;
-	self.sprite:set_texture(self.direction);
-	self.walk = nil;
+	rainbow.scenegraph:remove(self.animating)
+	self.animating = false
+	self.sprite:set_texture(self.direction)
+	self.walk = false
 end
 
-function Threepwood:update()
+function Threepwood:update(dt)
 	if self.walk then
-		-- While Guybrush is walking check for when he reaches his destination
+		-- While Guybrush is walking, check for when he reaches his destination
 		-- and stop the animation.
-		local diff_x = global_scale * self.face;
-		self.x = self.x + diff_x;
+		local dx = global_scale * self.face
+		self.x = self.x + dx
 		if self.face > 0 and self.x >= self.walk.x or self.face < 0 and self.x <= self.walk.x then
-			diff_x = diff_x - (self.x - self.walk.x);
-			self.x = self.walk.x;
-			self.walk = nil;
-			self:stop();
+			dx = dx - (self.x - self.walk.x)
+			self.x = self.walk.x
+			self.walk = false
+			self:stop()
 		end
-		self.sprite:move(diff_x, 0);
+		self.sprite:move(dx, 0)
 	elseif self.lock then
-		-- While Guybrush is locked, get his screen position
-		self.x, self.y = self.sprite:get_position();
+		-- While Guybrush is locked, get his screen position.
+		self.x, self.y = self.sprite:get_position()
 	end
 end

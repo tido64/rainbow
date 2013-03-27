@@ -1,2 +1,2 @@
-accelerometer: 0
-resolution: 960x640
+accelerometer = false
+resolution = { 960, 640 }

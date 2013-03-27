@@ -1,100 +1,66 @@
 --! Monkey Demo: Intro
 --!
---! Copyright 2011-12 Bifrost Entertainment. All rights reserved.
+--! Copyright 2011-13 Bifrost Entertainment. All rights reserved.
 --! \author Tommy Nguyen
 
-require("Scheduler");  -- Time trigger
+local scenedef = require("intro.prose")
 
-SceneIntro = {};
-SceneIntro.__index = SceneIntro;
+SceneIntro = {}
+SceneIntro.__index = SceneIntro
 
-function SceneIntro.new(assets)
-	local s = {};
-	setmetatable(s, SceneIntro);
+function SceneIntro:new()
+	--[[
+	This is just a short-hand version of writing:
 
-	s.spritebatch = rainbow.spritebatch(2);
-	s.spritebatch:set_texture(assets);
-
-	s.bg_island = s.spritebatch:add(0, 0, 320, 200);
-	s.bg_title = nil;
-
-	s.bgm = rainbow.audio.load_stream("opening.ogg");
-	s.node = nil;
-	s.sched = Scheduler.new(22);
-
-	return s;
+		local self = {}
+		setmetatable(self, SceneIntro)
+		self.scene = etc.
+	--]]
+	local self = setmetatable({
+		scene = rainbow.prose.from_table(scenedef),
+		timer = 0
+	}, SceneIntro)
+	rainbow.scenegraph:disable(self.scene.objects.logo_batch.node)
+	return self
 end
+
+--[[
+This here lets you create a SceneIntro object without calling .new:
+
+	local scene = SceneIntro()
+--]]
+setmetatable(SceneIntro, { __call = SceneIntro.new })
 
 function SceneIntro:destruct()
-	self.bg_island = nil;
-	self.bg_title = nil;
-	self.sched = nil;
-	self.spritebatch = nil;
-end
-
-function SceneIntro:key_down()
-end
-
-function SceneIntro:key_up()
+	--[[
+		We've already marked self.scene for collection. There's nothing else to
+		do here.
+	--]]
 end
 
 function SceneIntro:init()
-	if self.node then
-		return
-	end
-
-	-- Start opening theme
-	rainbow.audio.play(self.bgm);
-
-	-- Scale and position island
-	self.bg_island:set_scale(global_scale);
-	local screen = rainbow.platform.screen;
-	self.bg_island:set_position(screen.width * 0.5, screen.height * 0.5);
-
-	-- Add this sprite batch to the scene graph
-	self.node = rainbow.scenegraph:add_batch(self.spritebatch);
-
-	-- Add timer to display logo
-	self.sched:add(self);
-
-	-- Enable input
-	rainbow.input.subscribe(self);
+	rainbow.audio.play(self.scene.resources.bgm)
+	self.timer = rainbow.timer(self, 22000, 1)
 end
 
 function SceneIntro:tick()
-	-- Remove all timed event subscribers
-	self.sched:remove_all();
-
-	-- Add logo
-	self.bg_title = self.spritebatch:add(16, 202, 216, 120);
-	self.bg_title:set_scale(global_scale);
-
-	-- Place logo
-	local screen = rainbow.platform.screen;
-	local title_offset_x = global_scale * -4;
-	local title_offset_y = global_scale * 16;
-	self.bg_title:set_position(screen.width * 0.5 + title_offset_x, screen.height * 0.5 + title_offset_y);
+	rainbow.input.subscribe(self)
+	rainbow.scenegraph:enable(self.scene.objects.logo_batch.node)
 end
 
 function SceneIntro:touch_began()
 	rainbow.input.unsubscribe(self);
-	rainbow.audio.clear();
-	rainbow.scenegraph:remove(self.node);
-	self.node = nil;
-end
-
-function SceneIntro:touch_canceled()
-end
-
-function SceneIntro:touch_ended()
-end
-
-function SceneIntro:touch_moved()
+	self.scene = nil;
 end
 
 function SceneIntro:update(dt)
-	if not self.node then
+	if not self.scene then
 		return "scummbar";
 	end
-	self.sched:update(dt);
 end
+
+function SceneIntro:key_down() end
+function SceneIntro:key_up() end
+function SceneIntro:touch_canceled() end
+function SceneIntro:touch_ended() end
+function SceneIntro:touch_moved() end
