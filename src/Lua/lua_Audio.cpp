@@ -25,14 +25,14 @@ namespace Rainbow
 				lua_pushliteral(L, "audio");
 				lua_createtable(L, 0, 32);
 
-				lua_rawsetcclosurefield(L, &set_gain, 0, "set_gain");
-				lua_rawsetcclosurefield(L, &set_pitch, 0, "set_pitch");
-				lua_rawsetcclosurefield(L, &clear, 0, "clear");
-				lua_rawsetcclosurefield(L, &create_sound, 0, "create_sound");
-				lua_rawsetcclosurefield(L, &delete_sound, 0, "delete_sound");
-				lua_rawsetcclosurefield(L, &pause, 0, "pause");
-				lua_rawsetcclosurefield(L, &play, 0, "play");
-				lua_rawsetcclosurefield(L, &stop, 0, "stop");
+				luaR_rawsetcclosurefield(L, &set_gain, 0, "set_gain");
+				luaR_rawsetcclosurefield(L, &set_pitch, 0, "set_pitch");
+				luaR_rawsetcclosurefield(L, &clear, 0, "clear");
+				luaR_rawsetcclosurefield(L, &create_sound, 0, "create_sound");
+				luaR_rawsetcclosurefield(L, &delete_sound, 0, "delete_sound");
+				luaR_rawsetcclosurefield(L, &pause, 0, "pause");
+				luaR_rawsetcclosurefield(L, &play, 0, "play");
+				luaR_rawsetcclosurefield(L, &stop, 0, "stop");
 
 				wrap<Recorder>(L);
 
@@ -46,7 +46,7 @@ namespace Rainbow
 
 				if (lua_gettop(L) == 2)
 				{
-					const float gain = lua_tonumber(L, 2);
+					const float gain = luaR_tonumber(L, 2);
 					lua_pop(L, 1);
 
 					Channel *ch = static_cast<Channel*>(topointer(L, channel_type));
@@ -56,13 +56,13 @@ namespace Rainbow
 					ch->set_gain(gain);
 				}
 				else
-					Mixer::Instance->set_gain(lua_tonumber(L, 1));
+					Mixer::Instance->set_gain(luaR_tonumber(L, 1));
 				return 0;
 			}
 
 			int set_pitch(lua_State *L)
 			{
-				Mixer::Instance->set_pitch(lua_tonumber(L, 1));
+				Mixer::Instance->set_pitch(luaR_tonumber(L, 1));
 				return 0;
 			}
 
@@ -76,9 +76,9 @@ namespace Rainbow
 			{
 				LUA_ASSERT(lua_gettop(L) >= 1 && lua_gettop(L) <= 3, "rainbow.audio.create_sound(file[, type, loops])");
 
-				const char *file = lua_tolstring(L, 1, nullptr);
-				const int type = (lua_gettop(L) >= 2) ? lua_tointeger(L, 2) : ConFuoco::STATIC;
-				const int loops = (lua_gettop(L) == 3) ? lua_tointeger(L, 3) : -1;
+				const char *file = luaR_tostring(L, 1);
+				const int type = luaR_optinteger(L, 2, ConFuoco::STATIC);
+				const int loops = luaR_optinteger(L, 3, -1);
 				pushpointer(L, Mixer::Instance->create_sound(file, type, loops), sound_type);
 				return 1;
 			}

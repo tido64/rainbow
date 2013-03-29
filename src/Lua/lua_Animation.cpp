@@ -42,14 +42,14 @@ namespace Rainbow
 			lua_pushnil(L);
 			while (lua_next(L, 2))
 			{
-				*frame = lua_tointeger(L, -1);
+				*frame = luaR_tointeger(L, -1);
 				++frame;
 				lua_pop(L, 1);
 			}
 			frames[count] = 0;
 
-			const unsigned int fps = lua_tointeger(L, 3);
-			const int delay = (lua_gettop(L) == 4) ? lua_tointeger(L, 4) : 0;
+			const unsigned int fps = luaR_tointeger(L, 3);
+			const int delay = luaR_optinteger(L, 4, 0);
 			this->animation = new ::Animation(sprite, frames, fps, delay);
 		}
 
@@ -68,7 +68,7 @@ namespace Rainbow
 		{
 			LUA_ASSERT(lua_gettop(L) == 1, "<animation>:set_loop(delay in milliseconds)");
 
-			this->animation->set_delay(lua_tointeger(L, 1));
+			this->animation->set_delay(luaR_tointeger(L, 1));
 			return 0;
 		}
 
@@ -76,7 +76,7 @@ namespace Rainbow
 		{
 			LUA_ASSERT(lua_gettop(L) == 1, "<animation>:set_fps(fps)");
 
-			this->animation->set_timeout(1000.0f / lua_tointeger(L, 1));
+			this->animation->set_timeout(1000.0f / luaR_tointeger(L, 1));
 			return 0;
 		}
 
@@ -87,7 +87,7 @@ namespace Rainbow
 			const unsigned int framec = lua_gettop(L);
 			unsigned int *const frames = new unsigned int[framec + 1];
 			for (unsigned int i = 0; i < framec; ++i)
-				frames[i] = lua_tointeger(L, i);
+				frames[i] = luaR_tointeger(L, i);
 			frames[framec] = 0;
 			this->animation->set_frames(frames);
 			return 0;

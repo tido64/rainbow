@@ -105,7 +105,7 @@ namespace b2
 			}
 			lua_rawgeti(L, LUA_REGISTRYINDEX, g_fixture);
 			lua_rawgeti(L, -1, 0);
-			Fixture **fix = static_cast<Fixture**>(lua_touserdata(L, -1));
+			Fixture **fix = static_cast<Fixture**>(luaR_touserdata(L, -1, Fixture::class_name));
 			(*fix)->fixture = fixture;
 			lua_pop(L, 1);
 			return 1;

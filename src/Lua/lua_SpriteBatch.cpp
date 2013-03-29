@@ -20,10 +20,10 @@ namespace Rainbow
 			R_DEBUG("[Rainbow] <spritebatch>:add() is deprecated, use <spritebatch>:create_sprite() and <sprite>:set_texture() instead.\n");
 			LUA_ASSERT(lua_gettop(L) == 4, "<spritebatch>:add(x, y, width, height)");
 
-			const int x = lua_tointeger(L, 1);
-			const int y = lua_tointeger(L, 2);
-			const int w = lua_tointeger(L, 3);
-			const int h = lua_tointeger(L, 4);
+			const int x = luaR_tointeger(L, 1);
+			const int y = luaR_tointeger(L, 2);
+			const int w = luaR_tointeger(L, 3);
+			const int h = luaR_tointeger(L, 4);
 			lua_pushlightuserdata(L, ::SpriteBatch::add(x, y, w, h));
 			return alloc<Sprite>(L);
 		}
@@ -32,8 +32,8 @@ namespace Rainbow
 		{
 			LUA_ASSERT(lua_gettop(L) == 2, "<spritebatch>:create_sprite(width, height)");
 
-			const int w = lua_tointeger(L, 1);
-			const int h = lua_tointeger(L, 2);
+			const int w = luaR_tointeger(L, 1);
+			const int h = luaR_tointeger(L, 2);
 			lua_pushlightuserdata(L, ::SpriteBatch::create_sprite(w, h));
 			return alloc<Sprite>(L);
 		}
@@ -44,20 +44,19 @@ namespace Rainbow
 
 			switch (lua_type(L, 1))
 			{
-				case LUA_TSTRING:
-					{
-						Data t(lua_tolstring(L, 1, nullptr));
+				case LUA_TSTRING: {
+
+						Data t(luaR_tostring(L, 1));
 						if (!t)
 							return luaL_error(L, "rainbow.spritebatch:set_texture: Failed to load texture");
 						lua_pushlightuserdata(L, ::SpriteBatch::set_texture(t));
-					}
 					return alloc<Texture>(L);
-				case LUA_TTABLE:
-					{
+				}
+				case LUA_TTABLE: {
 						Texture *texture = wrapper<Texture>(L);
 						::SpriteBatch::set_texture(texture->raw_ptr());
-					}
 					break;
+				}
 				default:
 					LUA_ASSERT(false, "<spritebatch>:set_texture(<path to texture>|<texture>)");
 					break;

@@ -26,7 +26,7 @@ namespace Rainbow
 						R_DEBUG("%s\n", lua_toboolean(L, l) ? "true" : "false");
 						break;
 					case LUA_TSTRING:
-						R_DEBUG("%s\n", lua_tolstring(L, l, nullptr));
+						R_DEBUG("%s\n", lua_tostring(L, l));
 						break;
 					case LUA_TTABLE:
 						R_DEBUG("(table)\n");
@@ -78,7 +78,7 @@ namespace Rainbow
 				default:
 					break;
 			}
-			R_ERROR("Lua %s error: %s\n", desc, lua_tolstring(L, -1, nullptr));
+			R_ERROR("Lua %s error: %s\n", desc, lua_tostring(L, -1));
 			lua_pop(L, 1);
 			dump_stack(L);
 		}
@@ -120,7 +120,7 @@ namespace Rainbow
 			lua_createtable(L, 1, 1);
 			lua_pushlightuserdata(L, ptr);
 			lua_rawseti(L, -2, 0);
-			lua_rawsetfield(L, lua_pushstring, name, "__type");
+			luaR_rawsetfield(L, lua_pushstring, name, "__type");
 		#else
 			static_cast<void>(name);
 			lua_pushlightuserdata(L, ptr);
@@ -134,7 +134,7 @@ namespace Rainbow
 			LUA_CHECK(L, lua_istable(L, -1), "Object is not of type '%s'", name);
 			lua_pushliteral(L, "__type");
 			lua_rawget(L, -2);
-			LUA_CHECK(L, memcmp(lua_tolstring(L, -1, nullptr), name, strlen(name)) == 0, "Object is not of type '%s'", name);
+			LUA_CHECK(L, memcmp(lua_tostring(L, -1), name, strlen(name)) == 0, "Object is not of type '%s'", name);
 			lua_rawgeti(L, -2, 0);
 			void *ptr = lua_touserdata(L, -1);
 			lua_pop(L, 2);

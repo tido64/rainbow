@@ -498,7 +498,10 @@ rainbow = {
 				{
 					"name": ":set_color",
 					"parameters": [
-						"colour", "Sprite colour, formatted as <span class=\"\">0xrrggbbaa</span>.",
+						"r", "Amount of red. Valid values: 0-255.",
+						"g", "Amount of green. Valid values: 0-255.",
+						"b", "Amount of blue. Valid values: 0-255.",
+						"+a", "Amount of opacity. Valid values: 0-255. Default: 255.",
 					],
 					"description": "Set sprite colour.",
 				},

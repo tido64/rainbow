@@ -41,7 +41,7 @@ namespace Rainbow
 					lua_rawgeti(L, LUA_REGISTRYINDEX, events);
 
 					lua_len(L, -1);
-					const int index = lua_tointeger(L, -1) + 1;
+					const int index = luaR_tointeger(L, -1) + 1;
 					lua_pop(L, 1);
 
 					lua_createtable(L, 2, 0);
@@ -70,7 +70,7 @@ namespace Rainbow
 					lua_rawgeti(L, LUA_REGISTRYINDEX, events);
 
 					lua_len(L, -1);
-					const int index = lua_tointeger(L, -1) + 1;
+					const int index = luaR_tointeger(L, -1) + 1;
 					lua_pop(L, 1);
 
 					lua_createtable(L, 2, 0);
@@ -86,11 +86,11 @@ namespace Rainbow
 						{
 							lua_pushinteger(L, touches[i].hash);
 							lua_createtable(L, 0, 5);
-							lua_rawsetfield(L, lua_pushinteger, touches[i].x, "x");
-							lua_rawsetfield(L, lua_pushinteger, touches[i].y, "y");
-							lua_rawsetfield(L, lua_pushinteger, touches[i].x0, "x0");
-							lua_rawsetfield(L, lua_pushinteger, touches[i].y0, "y0");
-							lua_rawsetfield(L, lua_pushinteger, touches[i].timestamp, "timestamp");
+							luaR_rawsetfield(L, lua_pushinteger, touches[i].x, "x");
+							luaR_rawsetfield(L, lua_pushinteger, touches[i].y, "y");
+							luaR_rawsetfield(L, lua_pushinteger, touches[i].x0, "x0");
+							luaR_rawsetfield(L, lua_pushinteger, touches[i].y0, "y0");
+							luaR_rawsetfield(L, lua_pushinteger, touches[i].timestamp, "timestamp");
 							lua_rawset(L, -3);
 						}
 					}
@@ -125,10 +125,10 @@ namespace Rainbow
 			void accelerated(lua_State *L, const Acceleration &a)
 			{
 				lua_rawgeti(L, LUA_REGISTRYINDEX, acceleration);
-				lua_rawsetfield(L, lua_pushnumber, a.timestamp, "timestamp");
-				lua_rawsetfield(L, lua_pushnumber, a.x, "x");
-				lua_rawsetfield(L, lua_pushnumber, a.y, "y");
-				lua_rawsetfield(L, lua_pushnumber, a.z, "z");
+				luaR_rawsetfield(L, lua_pushnumber, a.timestamp, "timestamp");
+				luaR_rawsetfield(L, lua_pushnumber, a.x, "x");
+				luaR_rawsetfield(L, lua_pushnumber, a.y, "y");
+				luaR_rawsetfield(L, lua_pushnumber, a.z, "z");
 				lua_pop(L, 1);
 			}
 

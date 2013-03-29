@@ -28,7 +28,7 @@ namespace b2
 			{
 				LUA_ASSERT(lua_gettop(L) == 1, "b2.SetPTMRatio(r)");
 
-				ptm_ratio = lua_tonumber(L, 1);
+				ptm_ratio = luaR_tonumber(L, 1);
 				return 0;
 			}
 		}
@@ -41,27 +41,27 @@ namespace b2
 
 			lua_createtable(L, 0, 16);
 
-			lua_rawsetcclosurefield(L, &set_ptm_ratio, 0, "SetPTMRatio");
+			luaR_rawsetcclosurefield(L, &set_ptm_ratio, 0, "SetPTMRatio");
 
 			// b2CircleShape
-			lua_rawsetcclosurefield(L, &CircleShape, 0, "CircleShape");
+			luaR_rawsetcclosurefield(L, &CircleShape, 0, "CircleShape");
 
 			// b2PolygonShape
 			Rainbow::Lua::wrap<PolygonShape>(L);
 
 			// b2BodyType
-			lua_rawsetfield(L, lua_pushinteger, b2_staticBody, "staticBody");
-			lua_rawsetfield(L, lua_pushinteger, b2_kinematicBody, "kinematicBody");
-			lua_rawsetfield(L, lua_pushinteger, b2_dynamicBody, "dynamicBody");
+			luaR_rawsetfield(L, lua_pushinteger, b2_staticBody, "staticBody");
+			luaR_rawsetfield(L, lua_pushinteger, b2_kinematicBody, "kinematicBody");
+			luaR_rawsetfield(L, lua_pushinteger, b2_dynamicBody, "dynamicBody");
 
 			// b2BodyDef
-			lua_rawsetcclosurefield(L, &BodyDef, 0, "BodyDef");
+			luaR_rawsetcclosurefield(L, &BodyDef, 0, "BodyDef");
 
 			// b2Body
 			Rainbow::Lua::wrap<Body>(L);
 
 			// b2FixtureDef
-			lua_rawsetcclosurefield(L, &FixtureDef, 0, "FixtureDef");
+			luaR_rawsetcclosurefield(L, &FixtureDef, 0, "FixtureDef");
 
 			// b2Fixture
 			Rainbow::Lua::wrap<Fixture>(L, true);

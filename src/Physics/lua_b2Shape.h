@@ -6,13 +6,13 @@ namespace b2
 		{
 			lua_createtable(L, 0, 4);
 
-			lua_rawsetfield(L, lua_pushinteger, b2Shape::e_circle, "m_type");
-			lua_rawsetfield(L, lua_pushnumber, 0.0f, "m_radius");
+			luaR_rawsetfield(L, lua_pushinteger, b2Shape::e_circle, "m_type");
+			luaR_rawsetfield(L, lua_pushnumber, 0.0f, "m_radius");
 
 			lua_pushliteral(L, "m_p");
 			lua_createtable(L, 0, 2);
-			lua_rawsetfield(L, lua_pushnumber, 0.0f, "x");
-			lua_rawsetfield(L, lua_pushnumber, 0.0f, "y");
+			luaR_rawsetfield(L, lua_pushnumber, 0.0f, "x");
+			luaR_rawsetfield(L, lua_pushnumber, 0.0f, "y");
 			lua_rawset(L, -3);
 
 			return 1;
@@ -57,9 +57,9 @@ namespace b2
 			count = 0;
 			while (lua_next(L, 1))
 			{
-				points[count].x = lua_tonumber(L, -1) / ptm_ratio;
+				points[count].x = luaR_tonumber(L, -1) / ptm_ratio;
 				lua_next(L, 1);
-				points[count].y = lua_tonumber(L, -1) / ptm_ratio;
+				points[count].y = luaR_tonumber(L, -1) / ptm_ratio;
 				lua_pop(L, 2);
 				++count;
 			}
@@ -73,13 +73,13 @@ namespace b2
 			LUA_ASSERT(lua_gettop(L) == 2 || lua_gettop(L) == 5,
 			           "<b2.PolygonShape>:SetAsBox(half-width, half-height[, center.x, center.y, angle])");
 
-			const float hx = lua_tonumber(L, 1) / ptm_ratio;
-			const float hy = lua_tonumber(L, 2) / ptm_ratio;
+			const float hx = luaR_tonumber(L, 1) / ptm_ratio;
+			const float hy = luaR_tonumber(L, 2) / ptm_ratio;
 			if (lua_gettop(L) == 5)
 			{
-				const float cx = lua_tonumber(L, 3) / ptm_ratio;
-				const float cy = lua_tonumber(L, 4) / ptm_ratio;
-				const float r = lua_tonumber(L, 5);
+				const float cx = luaR_tonumber(L, 3) / ptm_ratio;
+				const float cy = luaR_tonumber(L, 4) / ptm_ratio;
+				const float r = luaR_tonumber(L, 5);
 				this->shape.SetAsBox(hx, hy, b2Vec2(cx, cy), r);
 			}
 			else
@@ -92,7 +92,7 @@ namespace b2
 			LUA_ASSERT(lua_gettop(L) == 2, "<b2.PolygonShape>:SetCenter(x, y)");
 
 			this->shape.m_centroid.Set(
-					lua_tonumber(L, 1) / ptm_ratio, lua_tonumber(L, 2) / ptm_ratio);
+					luaR_tonumber(L, 1) / ptm_ratio, luaR_tonumber(L, 2) / ptm_ratio);
 			return 0;
 		}
 
@@ -104,24 +104,24 @@ namespace b2
 			static_cast<void>(type);
 
 			b2Shape *shape = nullptr;
-			lua_rawgetfield(L, "m_type", type);
-			const b2Shape::Type m_type = static_cast<b2Shape::Type>(lua_tointeger(L, -1));
+			luaR_rawgetfield(L, "m_type", type);
+			const b2Shape::Type m_type = static_cast<b2Shape::Type>(luaR_tointeger(L, -1));
 			lua_pop(L, 1);
 			switch (m_type)
 			{
 				case b2Shape::e_circle:
 					{
 						b2CircleShape *circle = new b2CircleShape();
-						lua_rawgetfield(L, "m_radius", type);
-						circle->m_radius = lua_tonumber(L, -1) / ptm_ratio;
+						luaR_rawgetfield(L, "m_radius", type);
+						circle->m_radius = luaR_tonumber(L, -1) / ptm_ratio;
 						lua_pop(L, 1);
-						lua_rawgetfield(L, "m_p", type);
+						luaR_rawgetfield(L, "m_p", type);
 						lua_pushliteral(L, "x");
 						lua_rawget(L, -2);
-						circle->m_p.x = lua_tonumber(L, -1) / ptm_ratio;
+						circle->m_p.x = luaR_tonumber(L, -1) / ptm_ratio;
 						lua_pushliteral(L, "y");
 						lua_rawget(L, -3);
-						circle->m_p.y = lua_tonumber(L, -1) / ptm_ratio;
+						circle->m_p.y = luaR_tonumber(L, -1) / ptm_ratio;
 						lua_pop(L, 3);
 						shape = circle;
 					}

@@ -147,7 +147,7 @@ namespace Rainbow
 			LUA_ASSERT(lua_gettop(L) == 3, "rainbow.scenegraph:move(node, x, y)");
 
 			::SceneGraph::Node *node = check_node(L, 1);
-			const Vec2f delta(lua_tonumber(L, 2), lua_tonumber(L, 3));
+			const Vec2f delta(luaR_tonumber(L, 2), luaR_tonumber(L, 3));
 			node->move(delta);
 			return 0;
 		}
@@ -157,7 +157,7 @@ namespace Rainbow
 			LUA_ASSERT(lua_gettop(L) == 2, "rainbow.scenegraph:rotate(node, r)");
 
 			::SceneGraph::Node *node = check_node(L, 1);
-			node->rotate(lua_tonumber(L, 2));
+			node->rotate(luaR_tonumber(L, 2));
 			return 0;
 		}
 
@@ -166,7 +166,7 @@ namespace Rainbow
 			LUA_ASSERT(lua_gettop(L) == 2, "rainbow.scenegraph:scale(node, f)");
 
 			::SceneGraph::Node *node = check_node(L, 1);
-			node->scale(lua_tonumber(L, 2));
+			node->scale(luaR_tonumber(L, 2));
 			return 0;
 		}
 

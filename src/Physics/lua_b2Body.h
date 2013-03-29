@@ -20,31 +20,31 @@ namespace b2
 		{
 			lua_createtable(L, 0, 16);
 
-			lua_rawsetfield(L, lua_pushinteger, b2_staticBody, "type");
+			luaR_rawsetfield(L, lua_pushinteger, b2_staticBody, "type");
 
 			lua_pushliteral(L, "position");
 			lua_createtable(L, 0, 2);
-			lua_rawsetfield(L, lua_pushnumber, 0.0f, "x");
-			lua_rawsetfield(L, lua_pushnumber, 0.0f, "y");
+			luaR_rawsetfield(L, lua_pushnumber, 0.0f, "x");
+			luaR_rawsetfield(L, lua_pushnumber, 0.0f, "y");
 			lua_rawset(L, -3);
 
-			lua_rawsetfield(L, lua_pushnumber, 0.0f, "angle");
+			luaR_rawsetfield(L, lua_pushnumber, 0.0f, "angle");
 
 			lua_pushliteral(L, "linearVelocity");
 			lua_createtable(L, 0, 2);
-			lua_rawsetfield(L, lua_pushnumber, 0.0f, "x");
-			lua_rawsetfield(L, lua_pushnumber, 0.0f, "y");
+			luaR_rawsetfield(L, lua_pushnumber, 0.0f, "x");
+			luaR_rawsetfield(L, lua_pushnumber, 0.0f, "y");
 			lua_rawset(L, -3);
 
-			lua_rawsetfield(L, lua_pushnumber, 0.0f, "angularVelocity");
-			lua_rawsetfield(L, lua_pushnumber, 0.0f, "linearDamping");
-			lua_rawsetfield(L, lua_pushnumber, 0.0f, "angularDamping");
-			lua_rawsetfield(L, lua_pushboolean, true, "allowSleep");
-			lua_rawsetfield(L, lua_pushboolean, true, "awake");
-			lua_rawsetfield(L, lua_pushboolean, false, "fixedRotation");
-			lua_rawsetfield(L, lua_pushboolean, false, "bullet");
-			lua_rawsetfield(L, lua_pushboolean, true, "active");
-			lua_rawsetfield(L, lua_pushnumber, 1.0f, "gravityScale");
+			luaR_rawsetfield(L, lua_pushnumber, 0.0f, "angularVelocity");
+			luaR_rawsetfield(L, lua_pushnumber, 0.0f, "linearDamping");
+			luaR_rawsetfield(L, lua_pushnumber, 0.0f, "angularDamping");
+			luaR_rawsetfield(L, lua_pushboolean, true, "allowSleep");
+			luaR_rawsetfield(L, lua_pushboolean, true, "awake");
+			luaR_rawsetfield(L, lua_pushboolean, false, "fixedRotation");
+			luaR_rawsetfield(L, lua_pushboolean, false, "bullet");
+			luaR_rawsetfield(L, lua_pushboolean, true, "active");
+			luaR_rawsetfield(L, lua_pushnumber, 1.0f, "gravityScale");
 
 			return 1;
 		}
@@ -54,62 +54,62 @@ namespace b2
 			const char type[] = "BodyDef";
 			static_cast<void>(type);
 
-			lua_rawgetfield(L, "type", type);
-			def.type = static_cast<b2BodyType>(lua_tointeger(L, -1));
+			luaR_rawgetfield(L, "type", type);
+			def.type = static_cast<b2BodyType>(luaR_tointeger(L, -1));
 			lua_pop(L, 1);
 
-			lua_rawgetfield(L, "position", type);
+			luaR_rawgetfield(L, "position", type);
 			lua_pushliteral(L, "x");
 			lua_rawget(L, -2);
-			def.position.x = lua_tonumber(L, -1) / ptm_ratio;
+			def.position.x = luaR_tonumber(L, -1) / ptm_ratio;
 			lua_pushliteral(L, "y");
 			lua_rawget(L, -3);
-			def.position.y = lua_tonumber(L, -1) / ptm_ratio;
+			def.position.y = luaR_tonumber(L, -1) / ptm_ratio;
 			lua_pop(L, 3);
 
-			lua_rawgetfield(L, "angle", type);
-			def.angle = lua_tonumber(L, -1);
+			luaR_rawgetfield(L, "angle", type);
+			def.angle = luaR_tonumber(L, -1);
 			lua_pop(L, 1);
 
-			lua_rawgetfield(L, "linearVelocity", type);
+			luaR_rawgetfield(L, "linearVelocity", type);
 			lua_pushliteral(L, "x");
 			lua_rawget(L, -2);
-			def.linearVelocity.x = lua_tonumber(L, -1);
+			def.linearVelocity.x = luaR_tonumber(L, -1);
 			lua_pushliteral(L, "y");
 			lua_rawget(L, -3);
-			def.linearVelocity.y = lua_tonumber(L, -1);
+			def.linearVelocity.y = luaR_tonumber(L, -1);
 			lua_pop(L, 3);
 
-			lua_rawgetfield(L, "linearDamping", type);
-			def.linearDamping = lua_tonumber(L, -1);
+			luaR_rawgetfield(L, "linearDamping", type);
+			def.linearDamping = luaR_tonumber(L, -1);
 			lua_pop(L, 1);
 
-			lua_rawgetfield(L, "angularDamping", type);
-			def.angularDamping = lua_tonumber(L, -1);
+			luaR_rawgetfield(L, "angularDamping", type);
+			def.angularDamping = luaR_tonumber(L, -1);
 			lua_pop(L, 1);
 
-			lua_rawgetfield(L, "allowSleep", type);
+			luaR_rawgetfield(L, "allowSleep", type);
 			def.allowSleep = lua_toboolean(L, -1);
 			lua_pop(L, 1);
 
-			lua_rawgetfield(L, "awake", type);
+			luaR_rawgetfield(L, "awake", type);
 			def.awake = lua_toboolean(L, -1);
 			lua_pop(L, 1);
 
-			lua_rawgetfield(L, "fixedRotation", type);
+			luaR_rawgetfield(L, "fixedRotation", type);
 			def.fixedRotation = lua_toboolean(L, -1);
 			lua_pop(L, 1);
 
-			lua_rawgetfield(L, "bullet", type);
+			luaR_rawgetfield(L, "bullet", type);
 			def.bullet = lua_toboolean(L, -1);
 			lua_pop(L, 1);
 
-			lua_rawgetfield(L, "active", type);
+			luaR_rawgetfield(L, "active", type);
 			def.active = lua_toboolean(L, -1);
 			lua_pop(L, 1);
 
-			lua_rawgetfield(L, "gravityScale", type);
-			def.gravityScale = lua_tonumber(L, -1);
+			luaR_rawgetfield(L, "gravityScale", type);
+			def.gravityScale = luaR_tonumber(L, -1);
 			lua_pop(L, 1);
 		}
 
@@ -229,9 +229,9 @@ namespace b2
 		{
 			LUA_ASSERT(lua_gettop(L) == 3, "<b2.Body>:ScaleAndPosition(scale, x, y)");
 
-			const lua_Number scale = lua_tonumber(L, 1);
-			const lua_Number x = lua_tonumber(L, 2);
-			const lua_Number y = lua_tonumber(L, 3);
+			const lua_Number scale = luaR_tonumber(L, 1);
+			const lua_Number x = luaR_tonumber(L, 2);
+			const lua_Number y = luaR_tonumber(L, 3);
 
 			b2BodyDef body_def;
 			body_def.type = this->body->GetType();
@@ -321,7 +321,7 @@ namespace b2
 					break;
 				case 2:
 					{
-						const float density = lua_tonumber(L, 2);
+						const float density = luaR_tonumber(L, 2);
 						lua_pop(L, 1);
 						b2Shape *shape = parse_Shape(L);
 						fixture = this->body->CreateFixture(shape, density);
@@ -351,8 +351,8 @@ namespace b2
 			LUA_ASSERT(lua_gettop(L) == 3, "<b2.Body>:SetTransform(x, y, r)");
 
 			this->body->SetTransform(
-					b2Vec2(lua_tonumber(L, 1) / ptm_ratio, lua_tonumber(L, 2) / ptm_ratio),
-					lua_tonumber(L, 3));
+					b2Vec2(luaR_tonumber(L, 1) / ptm_ratio, luaR_tonumber(L, 2) / ptm_ratio),
+					luaR_tonumber(L, 3));
 			return 0;
 		}
 
@@ -391,7 +391,7 @@ namespace b2
 			LUA_ASSERT(lua_gettop(L) == 2, "<b2.Body>:SetLinearVelocity(x, y)");
 
 			this->body->SetLinearVelocity(
-					b2Vec2(lua_tonumber(L, 1), lua_tonumber(L, 2)));
+					b2Vec2(luaR_tonumber(L, 1), luaR_tonumber(L, 2)));
 			return 0;
 		}
 
@@ -407,7 +407,7 @@ namespace b2
 		{
 			LUA_ASSERT(lua_gettop(L) == 1, "<b2.Body>:SetAngularVelocity(v)");
 
-			this->body->SetAngularVelocity(lua_tonumber(L, 1));
+			this->body->SetAngularVelocity(luaR_tonumber(L, 1));
 			return 0;
 		}
 
@@ -423,8 +423,8 @@ namespace b2
 			           "<b2.Body>:ApplyForce(impulse.x, impulse.y, point.x, point.y, wake)");
 
 			this->body->ApplyForce(
-					b2Vec2(lua_tonumber(L, 1), lua_tonumber(L, 2)),
-					b2Vec2(lua_tonumber(L, 3) / ptm_ratio, lua_tonumber(L, 4) / ptm_ratio),
+					b2Vec2(luaR_tonumber(L, 1), luaR_tonumber(L, 2)),
+					b2Vec2(luaR_tonumber(L, 3) / ptm_ratio, luaR_tonumber(L, 4) / ptm_ratio),
 					lua_toboolean(L, 5));
 			return 0;
 		}
@@ -435,7 +435,7 @@ namespace b2
 			           "<b2.Body>:ApplyForceToCenter(impulse.x, impulse.y, wake)");
 
 			this->body->ApplyForceToCenter(
-					b2Vec2(lua_tonumber(L, 1), lua_tonumber(L, 2)),
+					b2Vec2(luaR_tonumber(L, 1), luaR_tonumber(L, 2)),
 					lua_toboolean(L, 3));
 			return 0;
 		}
@@ -445,7 +445,7 @@ namespace b2
 			LUA_ASSERT(lua_gettop(L) == 2,
 			           "<b2.Body>:ApplyTorque(torque, wake)");
 
-			this->body->ApplyTorque(lua_tonumber(L, 1), lua_toboolean(L, 2));
+			this->body->ApplyTorque(luaR_tonumber(L, 1), lua_toboolean(L, 2));
 			return 0;
 		}
 
@@ -455,8 +455,8 @@ namespace b2
 			           "<b2.Body>:ApplyLinearImpulse(impulse.x, impulse.y, point.x, point.y, wake)");
 
 			this->body->ApplyLinearImpulse(
-					b2Vec2(lua_tonumber(L, 1), lua_tonumber(L, 2)),
-					b2Vec2(lua_tonumber(L, 3) / ptm_ratio, lua_tonumber(L, 4) / ptm_ratio),
+					b2Vec2(luaR_tonumber(L, 1), luaR_tonumber(L, 2)),
+					b2Vec2(luaR_tonumber(L, 3) / ptm_ratio, luaR_tonumber(L, 4) / ptm_ratio),
 					lua_toboolean(L, 5));
 			return 0;
 		}
@@ -466,7 +466,7 @@ namespace b2
 			LUA_ASSERT(lua_gettop(L) == 2,
 			           "<b2.Body>:ApplyAngularImpulse(impulse, wake)");
 
-			this->body->ApplyAngularImpulse(lua_tonumber(L, 1), lua_toboolean(L, 2));
+			this->body->ApplyAngularImpulse(luaR_tonumber(L, 1), lua_toboolean(L, 2));
 			return 0;
 		}
 
@@ -481,7 +481,7 @@ namespace b2
 			LUA_ASSERT(lua_gettop(L) == 1,
 			           "<b2.Body>:SetLinearDamping(damping)");
 
-			this->body->SetLinearDamping(lua_tonumber(L, 1) / ptm_ratio);
+			this->body->SetLinearDamping(luaR_tonumber(L, 1) / ptm_ratio);
 			return 0;
 		}
 
@@ -496,7 +496,7 @@ namespace b2
 			LUA_ASSERT(lua_gettop(L) == 1,
 			           "<b2.Body>:SetAngularDamping(damping)");
 
-			this->body->SetAngularDamping(lua_tonumber(L, 1));
+			this->body->SetAngularDamping(luaR_tonumber(L, 1));
 			return 0;
 		}
 
@@ -510,7 +510,7 @@ namespace b2
 		{
 			LUA_ASSERT(lua_gettop(L) == 1, "<b2.Body>:SetGravityScale(scale)");
 
-			this->body->SetGravityScale(lua_tonumber(L, 1));
+			this->body->SetGravityScale(luaR_tonumber(L, 1));
 			return 0;
 		}
 

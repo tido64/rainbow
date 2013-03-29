@@ -13,8 +13,8 @@ namespace Rainbow
 			{
 				lua_pushliteral(L, "io");
 				lua_createtable(L, 0, 2);
-				lua_rawsetcclosurefield(L, &load, 0, "load");
-				lua_rawsetcclosurefield(L, &save, 0, "save");
+				luaR_rawsetcclosurefield(L, &load, 0, "load");
+				luaR_rawsetcclosurefield(L, &save, 0, "save");
 				lua_rawset(L, -3);
 			}
 
@@ -22,7 +22,7 @@ namespace Rainbow
 			{
 				LUA_ASSERT(lua_gettop(L) == 1, "rainbow.io.load(filename)");
 
-				Data blob(lua_tolstring(L, 1, nullptr), 1);
+				Data blob(luaR_tostring(L, 1), 1);
 				if (!blob)
 					lua_pushnil(L);
 				else
@@ -35,8 +35,8 @@ namespace Rainbow
 				LUA_ASSERT(lua_gettop(L) == 3, "rainbow.io.save(filename, data, size)");
 
 				Data blob;
-				blob.copy(lua_tolstring(L, 2, nullptr), lua_tointeger(L, 3));
-				lua_pushboolean(L, blob.save(lua_tolstring(L, 1, nullptr)));
+				blob.copy(luaR_tostring(L, 2), luaR_tointeger(L, 3));
+				lua_pushboolean(L, blob.save(luaR_tostring(L, 1)));
 				return 1;
 			}
 		}

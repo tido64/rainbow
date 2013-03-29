@@ -36,7 +36,7 @@ namespace Rainbow
 
 		int Label::set_alignment(lua_State *L)
 		{
-			switch (*lua_tolstring(L, 1, nullptr))
+			switch (*luaR_tostring(L, 1))
 			{
 				case 'c':
 					::Label::set_alignment(Label::kCenterTextAlignment);
@@ -53,10 +53,10 @@ namespace Rainbow
 
 		int Label::set_color(lua_State *L)
 		{
-			const unsigned char r = lua_tointeger(L, 1);
-			const unsigned char g = lua_tointeger(L, 2);
-			const unsigned char b = lua_tointeger(L, 3);
-			const unsigned char a = (lua_gettop(L) == 4) ? lua_tointeger(L, 4) : 0xff;
+			const unsigned char r = luaR_tointeger(L, 1);
+			const unsigned char g = luaR_tointeger(L, 2);
+			const unsigned char b = luaR_tointeger(L, 3);
+			const unsigned char a = luaR_optinteger(L, 4, 0xff);
 			::Label::set_color(Colorb(r, g, b, a));
 			return 0;
 		}
@@ -70,26 +70,26 @@ namespace Rainbow
 
 		int Label::set_position(lua_State *L)
 		{
-			const Vec2f position(lua_tonumber(L, 1), lua_tonumber(L, 2));
+			const Vec2f position(luaR_tonumber(L, 1), luaR_tonumber(L, 2));
 			::Label::set_position(position);
 			return 0;
 		}
 
 		int Label::set_scale(lua_State *L)
 		{
-			::Label::set_scale(lua_tonumber(L, 1));
+			::Label::set_scale(luaR_tonumber(L, 1));
 			return 0;
 		}
 
 		int Label::set_text(lua_State *L)
 		{
-			::Label::set_text(lua_tolstring(L, 1, nullptr));
+			::Label::set_text(luaR_tostring(L, 1));
 			return 0;
 		}
 
 		int Label::move(lua_State *L)
 		{
-			const Vec2f delta(lua_tonumber(L, 1), lua_tonumber(L, 2));
+			const Vec2f delta(luaR_tonumber(L, 1), luaR_tonumber(L, 2));
 			::Label::move(delta);
 			return 0;
 		}

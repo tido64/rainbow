@@ -14,7 +14,7 @@ namespace Rainbow
 				lua_pushliteral(L, "platform");
 				lua_createtable(L, 0, 4);
 
-				lua_rawsetfield(L, lua_pushboolean, SysUtil::has_accelerometer(), "accelerometer");
+				luaR_rawsetfield(L, lua_pushboolean, SysUtil::has_accelerometer(), "accelerometer");
 
 				// Retrieve locale
 				lua_pushliteral(L, "locale");
@@ -39,7 +39,7 @@ namespace Rainbow
 				// rainbow.platform.screen
 				lua_pushliteral(L, "screen");
 				lua_createtable(L, 0, 3);
-				lua_rawsetfield(L, lua_pushboolean, SysUtil::has_touchscreen(), "touch");
+				luaR_rawsetfield(L, lua_pushboolean, SysUtil::has_touchscreen(), "touch");
 				lua_rawset(L, -3);
 
 				lua_rawset(L, -3);
@@ -53,8 +53,8 @@ namespace Rainbow
 				lua_pushliteral(L, "screen");
 				lua_rawget(L, -2);
 
-				lua_rawsetfield(L, lua_pushnumber, width, "width");
-				lua_rawsetfield(L, lua_pushnumber, height, "height");
+				luaR_rawsetfield(L, lua_pushnumber, width, "width");
+				luaR_rawsetfield(L, lua_pushnumber, height, "height");
 
 				lua_pop(L, 3);
 			}

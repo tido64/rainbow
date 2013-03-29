@@ -10,7 +10,7 @@ namespace Rainbow
 		{
 			void init(lua_State *L)
 			{
-				lua_rawsetcclosurefield(L, &random, 0, "random");
+				luaR_rawsetcclosurefield(L, &random, 0, "random");
 			}
 
 			int random(lua_State *L)
@@ -19,11 +19,11 @@ namespace Rainbow
 				switch (lua_gettop(L))
 				{
 					case 1:
-						r = ::Random::Instance().next<Number>(lua_tonumber(L, 1));
+						r = ::Random::Instance().next<Number>(luaR_tonumber(L, 1));
 						break;
 					case 2:
-						r = lua_tonumber(L, 1);
-						r = ::Random::Instance().next<Number>(r, lua_tonumber(L, 2));
+						r = luaR_tonumber(L, 1);
+						r = ::Random::Instance().next<Number>(r, luaR_tonumber(L, 2));
 						break;
 					default:
 						r = ::Random::Instance().next();

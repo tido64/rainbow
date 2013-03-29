@@ -19,7 +19,7 @@ namespace b2
 				}
 				lua_rawgeti(L, LUA_REGISTRYINDEX, g_contact);
 				lua_rawgeti(L, -1, 0);
-				Contact **ptr = static_cast<Contact**>(lua_touserdata(L, -1));
+				Contact **ptr = static_cast<Contact**>(luaR_touserdata(L, -1, Contact::class_name));
 				(*ptr)->contact = contact;
 				lua_pop(L, 1);
 			}
@@ -110,7 +110,7 @@ namespace b2
 			debug_draw(ptm_ratio), world(b2Vec2(0.0f, kStandardGravity))
 		{
 			if (lua_gettop(L) >= 2)
-				this->world.SetGravity(b2Vec2(lua_tonumber(L, 1), lua_tonumber(L, 2)));
+				this->world.SetGravity(b2Vec2(luaR_tonumber(L, 1), luaR_tonumber(L, 2)));
 
 			this->world.SetDebugDraw(&this->debug_draw);
 			this->debug_draw.SetFlags(b2Draw::e_shapeBit);
@@ -183,7 +183,7 @@ namespace b2
 			LUA_ASSERT(lua_gettop(L) == 1 || lua_gettop(L) == 3,
 			           "<b2.World>:Step(dt[, velocityIterations, positionIterations])");
 
-			this->elapsed += lua_tonumber(L, 1);
+			this->elapsed += luaR_tonumber(L, 1);
 			unsigned int steps = static_cast<unsigned int>(this->elapsed * fpms);
 			if (!steps)
 				this->restore_state();
@@ -193,12 +193,8 @@ namespace b2
 				if (steps > max_steps)
 					steps = max_steps;
 
-				int v_iter = 8, p_iter = 3;
-				if (lua_gettop(L) == 3)
-				{
-					v_iter = lua_tointeger(L, 2);
-					p_iter = lua_tointeger(L, 3);
-				}
+				const int v_iter = luaR_optinteger(L, 2, 8);
+				const int p_iter = luaR_optinteger(L, 3, 3);
 
 				this->restore_state();
 				for (unsigned int i = 0; i < steps; ++i)
@@ -222,7 +218,7 @@ namespace b2
 		{
 			LUA_ASSERT(lua_gettop(L) == 2, "<b2.World>:SetGravity(x, y)");
 
-			this->world.SetGravity(b2Vec2(lua_tonumber(L, 1), lua_tonumber(L, 2)));
+			this->world.SetGravity(b2Vec2(luaR_tonumber(L, 1), luaR_tonumber(L, 2)));
 			return 0;
 		}
 

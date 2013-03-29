@@ -3,25 +3,39 @@
 
 #include <lua.hpp>
 
-#define lua_rawgetfield(L, k, type) \
+#define luaR_rawgetfield(L, k, type) \
 	lua_pushliteral(L, k); \
 	lua_rawget(L, -2); \
 	LUA_CHECK(L, !lua_isnil(L, -1), "%s is missing field '%s'", type, k)
 
-#define lua_rawsetcclosurefield(L, fn, n, k) \
+#define luaR_rawsetcclosurefield(L, fn, n, k) \
 	lua_pushliteral(L, k); \
 	lua_pushcclosure(L, fn, n); \
 	lua_rawset(L, -3)
 
-#define lua_rawsetfield(L, pushvalue, v, k) \
+#define luaR_rawsetfield(L, pushvalue, v, k) \
 	lua_pushliteral(L, k); \
 	pushvalue(L, v); \
 	lua_rawset(L, -3)
 
-#define lua_rawsetnilfield(L, k) \
+#define luaR_rawsetnilfield(L, k) \
 	lua_pushliteral(L, k); \
 	lua_pushnil(L); \
 	lua_rawset(L, -3)
+
+#ifndef NDEBUG
+#	define luaR_optinteger(L, narg, def)    luaL_optinteger(L, narg, def)
+#	define luaR_tointeger(L, narg)          luaL_checkinteger(L, narg)
+#	define luaR_tonumber(L, narg)           luaL_checknumber(L, narg)
+#	define luaR_tostring(L, narg)           luaL_checkstring(L, narg)
+#	define luaR_touserdata(L, narg, tname)  luaL_checkudata(L, narg, tname)
+#else
+#	define luaR_optinteger(L, narg, def)    luaL_opt(L, lua_tointeger, narg, def)
+#	define luaR_tointeger(L, narg)          lua_tointeger(L, narg)
+#	define luaR_tonumber(L, narg)           lua_tonumber(L, narg)
+#	define luaR_tostring(L, narg)           lua_tostring(L, narg)
+#	define luaR_touserdata(L, narg, tname)  lua_touserdata(L, narg)
+#endif
 
 class Data;
 
@@ -65,7 +79,7 @@ namespace Rainbow
 		template<class T>
 		int dealloc(lua_State *L)
 		{
-			T **ptr = static_cast<T**>(luaL_checkudata(L, -1, T::class_name));
+			T **ptr = static_cast<T**>(luaR_touserdata(L, -1, T::class_name));
 			delete *ptr;
 			return 0;
 		}
@@ -114,11 +128,7 @@ namespace Rainbow
 			lua_rawgeti(L, 1, 0);
 			lua_remove(L, 1);
 
-		#ifndef NDEBUG
-			T **ptr = static_cast<T**>(luaL_checkudata(L, -1, T::class_name));
-		#else
-			T **ptr = static_cast<T**>(lua_touserdata(L, -1));
-		#endif
+			T **ptr = static_cast<T**>(luaR_touserdata(L, -1, T::class_name));
 			lua_pop(L, 1);
 
 			return ((*ptr)->*(T::methods[i].lua_CFunction))(L);
@@ -166,7 +176,7 @@ namespace Rainbow
 			}
 			lua_rawset(L, -3);
 			lua_rawset(L, -3);
-			lua_rawsetcclosurefield(L, &dealloc<T>, 0, "__gc");
+			luaR_rawsetcclosurefield(L, &dealloc<T>, 0, "__gc");
 			lua_pop(L, 1);
 		}
 
@@ -177,7 +187,7 @@ namespace Rainbow
 		{
 			// Get user data from table.
 			lua_rawgeti(L, index, 0);
-			void *ptr = luaL_checkudata(L, -1, T::class_name);
+			void *ptr = luaR_touserdata(L, -1, T::class_name);
 			lua_pop(L, 1);
 			return *static_cast<T**>(ptr);
 		}

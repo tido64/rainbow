@@ -20,9 +20,9 @@ namespace Rainbow
 		if (lua_istable(L, -1))
 		{
 			lua_rawgeti(L, -1, 1);
-			this->width = lua_tointeger(L, -1);
+			this->width = luaR_tointeger(L, -1);
 			lua_rawgeti(L, -2, 2);
-			this->height = lua_tointeger(L, -1);
+			this->height = luaR_tointeger(L, -1);
 		}
 		lua_close(L);
 	}

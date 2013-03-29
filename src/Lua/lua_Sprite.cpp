@@ -51,31 +51,31 @@ namespace Rainbow
 
 		int Sprite::set_color(lua_State *L)
 		{
-			unsigned int color = lua_tointeger(L, 1) << 24;
-			color += lua_tointeger(L, 2) << 16;
-			color += lua_tointeger(L, 3) << 8;
-			color += lua_tointeger(L, 4);
+			unsigned int color = luaR_tointeger(L, 1) << 24;
+			color += luaR_tointeger(L, 2) << 16;
+			color += luaR_tointeger(L, 3) << 8;
+			color += luaR_optinteger(L, 4, 0xff);
 			this->sprite->set_color(color);
 			return 0;
 		}
 
 		int Sprite::set_pivot(lua_State *L)
 		{
-			const Vec2f pivot(lua_tonumber(L, 1), lua_tonumber(L, 2));
+			const Vec2f pivot(luaR_tonumber(L, 1), luaR_tonumber(L, 2));
 			this->sprite->set_pivot(pivot);
 			return 0;
 		}
 
 		int Sprite::set_position(lua_State *L)
 		{
-			const Vec2f position(lua_tonumber(L, 1), lua_tonumber(L, 2));
+			const Vec2f position(luaR_tonumber(L, 1), luaR_tonumber(L, 2));
 			this->sprite->set_position(position);
 			return 0;
 		}
 
 		int Sprite::set_rotation(lua_State *L)
 		{
-			this->sprite->set_rotation(lua_tonumber(L, 1));
+			this->sprite->set_rotation(luaR_tonumber(L, 1));
 			return 0;
 		}
 
@@ -84,10 +84,10 @@ namespace Rainbow
 			switch (lua_gettop(L))
 			{
 				case 2:
-					this->sprite->set_scale(Vec2f(lua_tonumber(L, 1), lua_tonumber(L, 2)));
+					this->sprite->set_scale(Vec2f(luaR_tonumber(L, 1), luaR_tonumber(L, 2)));
 					break;
 				case 1:
-					this->sprite->set_scale(lua_tonumber(L, 1));
+					this->sprite->set_scale(luaR_tonumber(L, 1));
 					break;
 				default:
 					LUA_ASSERT(lua_gettop(L) == 1 || lua_gettop(L) == 2, "<sprite>:set_scale(fx [, fy])");
@@ -98,7 +98,7 @@ namespace Rainbow
 
 		int Sprite::set_texture(lua_State *L)
 		{
-			this->sprite->set_texture(lua_tointeger(L, 1));
+			this->sprite->set_texture(luaR_tointeger(L, 1));
 			return 0;
 		}
 
@@ -112,7 +112,7 @@ namespace Rainbow
 		{
 			LUA_ASSERT(lua_gettop(L) == 2, "<sprite>:move(x, y)");
 
-			const Vec2f delta(lua_tonumber(L, 1), lua_tonumber(L, 2));
+			const Vec2f delta(luaR_tonumber(L, 1), luaR_tonumber(L, 2));
 			this->sprite->move(delta);
 			return 0;
 		}
@@ -121,7 +121,7 @@ namespace Rainbow
 		{
 			LUA_ASSERT(lua_gettop(L) == 1, "<sprite>:rotate(r)");
 
-			this->sprite->rotate(lua_tonumber(L, 1));
+			this->sprite->rotate(luaR_tonumber(L, 1));
 			return 0;
 		}
 	}

@@ -21,7 +21,7 @@ namespace Rainbow
 					break;
 				case LUA_TSTRING:
 					{
-						Data tex_data(lua_tolstring(L, -1, nullptr));
+						Data tex_data(luaR_tostring(L, -1));
 						if (!tex_data)
 							luaL_error(L, "rainbow.texture: Failed to load texture");
 						this->texture = new TextureAtlas(tex_data);
@@ -39,9 +39,9 @@ namespace Rainbow
 		{
 			LUA_ASSERT(lua_gettop(L) == 4, "<texture>:create(x, y, width, height)");
 
-			const Vec2i origin(lua_tointeger(L, 1), lua_tointeger(L, 2));
-			const int w = lua_tointeger(L, 3);
-			const int h = lua_tointeger(L, 4);
+			const Vec2i origin(luaR_tointeger(L, 1), luaR_tointeger(L, 2));
+			const int w = luaR_tointeger(L, 3);
+			const int h = luaR_tointeger(L, 4);
 			lua_pushinteger(L, this->texture->define(origin, w, h));
 			return 1;
 		}

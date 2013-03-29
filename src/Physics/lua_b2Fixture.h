@@ -6,9 +6,9 @@ namespace b2
 		{
 			lua_createtable(L, 0, 3);
 
-			lua_rawsetfield(L, lua_pushinteger, 0x0001, "categoryBits");
-			lua_rawsetfield(L, lua_pushinteger, 0xFFFF, "maskBits");
-			lua_rawsetfield(L, lua_pushinteger, 0, "groupIndex");
+			luaR_rawsetfield(L, lua_pushinteger, 0x0001, "categoryBits");
+			luaR_rawsetfield(L, lua_pushinteger, 0xFFFF, "maskBits");
+			luaR_rawsetfield(L, lua_pushinteger, 0, "groupIndex");
 
 			return 1;
 		}
@@ -18,16 +18,16 @@ namespace b2
 			const char type[] = "Filter";
 			static_cast<void>(type);
 
-			lua_rawgetfield(L, "categoryBits", type);
-			filter.categoryBits = lua_tointeger(L, -1);
+			luaR_rawgetfield(L, "categoryBits", type);
+			filter.categoryBits = luaR_tointeger(L, -1);
 			lua_pop(L, 1);
 
-			lua_rawgetfield(L, "maskBits", type);
-			filter.maskBits = lua_tointeger(L, -1);
+			luaR_rawgetfield(L, "maskBits", type);
+			filter.maskBits = luaR_tointeger(L, -1);
 			lua_pop(L, 1);
 
-			lua_rawgetfield(L, "groupIndex", type);
-			filter.groupIndex = lua_tointeger(L, -1);
+			luaR_rawgetfield(L, "groupIndex", type);
+			filter.groupIndex = luaR_tointeger(L, -1);
 			lua_pop(L, 1);
 		}
 
@@ -35,11 +35,11 @@ namespace b2
 		{
 			lua_createtable(L, 0, 6);
 
-			lua_rawsetnilfield(L, "shape");
-			lua_rawsetfield(L, lua_pushnumber, 0.2f, "friction");
-			lua_rawsetfield(L, lua_pushnumber, 0.0f, "restitution");
-			lua_rawsetfield(L, lua_pushnumber, 0.0f, "density");
-			lua_rawsetfield(L, lua_pushboolean, false, "isSensor");
+			luaR_rawsetnilfield(L, "shape");
+			luaR_rawsetfield(L, lua_pushnumber, 0.2f, "friction");
+			luaR_rawsetfield(L, lua_pushnumber, 0.0f, "restitution");
+			luaR_rawsetfield(L, lua_pushnumber, 0.0f, "density");
+			luaR_rawsetfield(L, lua_pushboolean, false, "isSensor");
 
 			lua_pushliteral(L, "filter");
 			Filter(L);
@@ -53,27 +53,27 @@ namespace b2
 			const char type[] = "FixtureDef";
 			static_cast<void>(type);
 
-			lua_rawgetfield(L, "shape", type);
+			luaR_rawgetfield(L, "shape", type);
 			def.shape = parse_Shape(L);
 			lua_pop(L, 1);
 
-			lua_rawgetfield(L, "friction", type);
-			def.friction = lua_tonumber(L, -1);
+			luaR_rawgetfield(L, "friction", type);
+			def.friction = luaR_tonumber(L, -1);
 			lua_pop(L, 1);
 
-			lua_rawgetfield(L, "restitution", type);
-			def.restitution = lua_tonumber(L, -1);
+			luaR_rawgetfield(L, "restitution", type);
+			def.restitution = luaR_tonumber(L, -1);
 			lua_pop(L, 1);
 
-			lua_rawgetfield(L, "density", type);
-			def.density = lua_tonumber(L, -1);
+			luaR_rawgetfield(L, "density", type);
+			def.density = luaR_tonumber(L, -1);
 			lua_pop(L, 1);
 
-			lua_rawgetfield(L, "isSensor", type);
+			luaR_rawgetfield(L, "isSensor", type);
 			def.isSensor = lua_toboolean(L, -1);
 			lua_pop(L, 1);
 
-			lua_rawgetfield(L, "filter", type);
+			luaR_rawgetfield(L, "filter", type);
 			parse_Filter(L, def.filter);
 			lua_pop(L, 1);
 		}
