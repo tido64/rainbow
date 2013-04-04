@@ -45,7 +45,7 @@ Data::operator NSMutableData*() const
 	return this->data;
 }
 
-#elif defined(RAINBOW_ANDROID) || defined(RAINBOW_UNIX) || defined(RAINBOW_WIN)
+#else
 
 Data::Data() : allocated(0), sz(0), data(nullptr) { }
 
@@ -79,6 +79,4 @@ Data::operator unsigned char*() const
 	return this->data;
 }
 
-#else
-#	error "Unknown platform"
 #endif

@@ -4,7 +4,7 @@
 #ifdef RAINBOW_SDL
 
 #include <SDL.h>
-#if SDL_VERSION_ATLEAST(2,0,0)
+#if SDL_VERSION_ATLEAST(1,3,0)
 
 #ifdef RAINBOW_WIN
 #	include "Graphics/OpenGL.h"
@@ -94,6 +94,7 @@ int main(int argc, char *argv[])
 	SDL_GLContext context = SDL_GL_CreateContext(window);
 	if (!context)
 		return sdl_exit("[SDL] Failed to create GL context: %s\n", window);
+	SDL_GL_SetSwapInterval(1);
 
 	if (!Renderer::init())
 	{

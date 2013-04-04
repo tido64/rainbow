@@ -1,4 +1,4 @@
-#ifdef RAINBOW_WIN
+#if defined(RAINBOW_JS) || defined(RAINBOW_WIN)
 #include <SDL_timer.h>
 
 namespace Rainbow

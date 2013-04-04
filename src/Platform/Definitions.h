@@ -6,6 +6,8 @@
 #ifndef PLATFORM_DEFINITIONS_H_
 #define PLATFORM_DEFINITIONS_H_
 
+#include <cstddef>
+
 #if defined(__ANDROID__)
 #	define RAINBOW_ANDROID
 #elif defined(__APPLE__)
@@ -22,11 +24,13 @@
 #	if defined(_MSC_VER) && (defined(_M_X64) || _M_IX86_FP >= 2)
 #		define __SSE2__ 1
 #	endif
+#elif defined(EMSCRIPTEN)
+#	define RAINBOW_JS
 #endif
 
 // Platforms that make use of physical buttons (keyboards, gamepads, etc.)
 // and of SDL.
-#if defined(RAINBOW_UNIX) || defined(RAINBOW_WIN)
+#if defined(RAINBOW_JS) || defined(RAINBOW_UNIX) || defined(RAINBOW_WIN)
 #	define RAINBOW_BUTTONS
 #	define RAINBOW_SDL
 #endif

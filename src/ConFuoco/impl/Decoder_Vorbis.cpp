@@ -1,5 +1,7 @@
+/// Copyright 2012-13 Bifrost Entertainment. All rights reserved.
+
 #include "Platform/Definitions.h"
-#ifdef RAINBOW_SDL
+#if !defined(RAINBOW_JS) && defined(RAINBOW_SDL)
 
 #include <cstring>
 
@@ -15,6 +17,11 @@
 #include "Common/Debug.h"
 #include "Common/IO.h"
 #include "ConFuoco/Decoder.h"
+
+namespace
+{
+	const size_t kAudioBufferSize = 2048;
+}
 
 namespace ConFuoco
 {
@@ -100,6 +107,7 @@ namespace ConFuoco
 				}
 				channels = vi->channels;
 				rate = vi->rate;
+				ov_raw_seek(vf, 0);
 				return vf;
 			}
 		}
@@ -139,7 +147,7 @@ namespace ConFuoco
 				return 0;
 			*handle = vf;
 
-			const size_t size = 4096 * channels * 2;
+			const size_t size = kAudioBufferSize * channels * 2;
 			*buffer = new char[size];
 			return size;
 		}

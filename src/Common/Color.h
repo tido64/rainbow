@@ -35,6 +35,11 @@ namespace Rainbow
 			this->a = 0xff & c;
 			return *this;
 		}
+
+		bool operator==(const Color<unsigned char> &c)
+		{
+			return (this->r == c.r) && (this->g == c.g) && (this->b == c.b) && (this->a == c.a);
+		}
 	};
 
 	/// Structure for storing a colour (RGBA) using floats.

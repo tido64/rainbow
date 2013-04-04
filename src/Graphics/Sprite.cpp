@@ -8,9 +8,9 @@ using Rainbow::equalf;
 
 namespace
 {
-	const unsigned int kStaleBuffer    = 1u << 2;
-	const unsigned int kStalePivot     = (1u << 0) | kStaleBuffer;
-	const unsigned int kStalePosition  = 1u << 1;
+	const unsigned int kStaleBuffer    = 1u << 0;
+	const unsigned int kStalePivot     = (1u << 1) | kStaleBuffer;
+	const unsigned int kStalePosition  = 1u << 2;
 
 	inline void transform_rst(Vec2f &dst, const Vec2f &pt, const Vec2f &s_sin_r,
 	                          const Vec2f &s_cos_r, const Vec2f &center)

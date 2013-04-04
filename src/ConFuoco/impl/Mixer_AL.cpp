@@ -1,7 +1,7 @@
 /// Copyright 2012-13 Bifrost Entertainment. All rights reserved.
 
 #include "Platform/Definitions.h"
-#if defined(RAINBOW_IOS) || defined(RAINBOW_SDL)
+#if !defined(RAINBOW_JS) && (defined(RAINBOW_IOS) || defined(RAINBOW_SDL))
 
 #if defined(RAINBOW_IOS) || defined(RAINBOW_MAC)
 #	include <OpenAL/al.h>
@@ -93,8 +93,8 @@ namespace ConFuoco
 			{
 				for (size_t i = 0; i < AL_NUM_BUFFERS; ++i)
 				{
-					Decoder::read(this->buffer, this->handle, this->buf_sz);
-					alBufferData(this->bids[i], this->format, this->buffer, this->buf_sz, this->rate);
+					const size_t size = Decoder::read(this->buffer, this->handle, this->buf_sz);
+					alBufferData(this->bids[i], this->format, this->buffer, size, this->rate);
 				}
 			}
 
