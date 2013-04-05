@@ -5,6 +5,7 @@
 #include "Graphics/SpriteBatch.h"
 
 using Rainbow::equalf;
+using Rainbow::swap;
 
 namespace
 {
@@ -40,12 +41,8 @@ Sprite::Sprite(const Sprite &s, const SpriteBatch *p) :
 
 void Sprite::mirror()
 {
-	Vec2f tmp = this->vertex_array[0].texcoord;
-	this->vertex_array[0].texcoord = this->vertex_array[1].texcoord;
-	this->vertex_array[1].texcoord = tmp;
-	tmp = this->vertex_array[2].texcoord;
-	this->vertex_array[2].texcoord = this->vertex_array[3].texcoord;
-	this->vertex_array[3].texcoord = tmp;
+	swap(this->vertex_array[0].texcoord, this->vertex_array[1].texcoord);
+	swap(this->vertex_array[2].texcoord, this->vertex_array[3].texcoord);
 }
 
 void Sprite::move(const Vec2f &delta)

@@ -50,13 +50,13 @@ public:
 	void qerase(const size_t i);
 
 	/// Quick remove a value from the vector by swapping it out with the last
-	/// element. Deletes only the first element found by @c find(). Don't use
+	/// element. Deletes only the first element found by \c find(). Don't use
 	/// this if you need to maintain the element order.
 	/// \param value  The value to remove.
 	void qremove(const T &value);
 
 	/// Remove a value from the vector while preserving the order of elements.
-	/// Deletes only the first element found by @c find().
+	/// Deletes only the first element found by \c find().
 	/// \param value  The value to remove.
 	void remove(const T &value);
 

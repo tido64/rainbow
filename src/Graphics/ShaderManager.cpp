@@ -1,3 +1,5 @@
+// Copyright 2012-13 Bifrost Entertainment. All rights reserved.
+
 #include "Common/Data.h"
 #include "Graphics/ShaderManager.h"
 

@@ -12,7 +12,9 @@ namespace ConFuoco
 		size_t open(char **buffer, int &channels, int &rate, const char *const file)
 		{
 			NSString *path = [NSString stringWithUTF8String:file];
-			path = [[NSBundle mainBundle] pathForResource:[path stringByDeletingPathExtension] ofType:[path pathExtension]];
+			path = [[NSBundle mainBundle]
+					pathForResource:[path stringByDeletingPathExtension]
+					         ofType:[path pathExtension]];
 			CFURLRef url = (__bridge CFURLRef)[NSURL fileURLWithPath:path];
 			path = nil;
 
@@ -35,8 +37,9 @@ namespace ConFuoco
 			}
 
 			audio_format.mFormatID = kAudioFormatLinearPCM;
-			audio_format.mFormatFlags
-					= kAudioFormatFlagIsSignedInteger | kAudioFormatFlagIsPacked | kAudioFormatFlagsNativeEndian;
+			audio_format.mFormatFlags = kAudioFormatFlagIsSignedInteger
+			                          | kAudioFormatFlagIsPacked
+			                          | kAudioFormatFlagsNativeEndian;
 			audio_format.mBytesPerPacket = 2; // * audio_format.mChannelsPerFrame;
 			audio_format.mFramesPerPacket = 1;
 			audio_format.mBytesPerFrame = audio_format.mBytesPerPacket; // / audio_format.mFramesPerPacket;
@@ -44,7 +47,8 @@ namespace ConFuoco
 			audio_format.mBitsPerChannel = 16;
 
 			status = ExtAudioFileSetProperty(
-					ext_audio, kExtAudioFileProperty_ClientDataFormat, sizeof(audio_format), &audio_format);
+					ext_audio, kExtAudioFileProperty_ClientDataFormat,
+					sizeof(audio_format), &audio_format);
 			if (status != noErr)
 			{
 				NSLog(@"[Rainbow::ConFuoco/iOS] Failed to set client data format\n");

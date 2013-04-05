@@ -1,4 +1,4 @@
-// Copyright 2010-12 Bifrost Entertainment. All rights reserved.
+// Copyright 2010-13 Bifrost Entertainment. All rights reserved.
 
 #include "Graphics/ImageLoader.h"
 #include "Graphics/TextureAtlas.h"
@@ -98,13 +98,13 @@ unsigned int TextureAtlas::define(const Vec2i &origin, const int w, const int h)
 	R_ASSERT(origin.x >= 0 && (origin.x + w) <= this->width && origin.y >= 0 && (origin.y + h) <= this->height,
 	         "Invalid dimensions");
 
-	const float x0 = origin.x / static_cast<float>(this->width);
-	const float x1 = (origin.x + w) / static_cast<float>(this->width);
-	const float y0 = origin.y / static_cast<float>(this->height);
-	const float y1 = (origin.y + h) / static_cast<float>(this->height);
+	const Vec2f v0(origin.x / static_cast<float>(this->width),
+	               origin.y / static_cast<float>(this->height));
+	const Vec2f v1((origin.x + w) / static_cast<float>(this->width),
+	               (origin.y + h) / static_cast<float>(this->height));
 
 	const size_t i = this->textures.size();
-	this->textures.push_back(Texture(x0, y0, x1, y1));
+	this->textures.push_back(Texture(v0, v1));
 	this->textures[i].atlas = this->name;
 	return i;
 }

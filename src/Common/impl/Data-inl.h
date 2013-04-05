@@ -1,4 +1,4 @@
-/// Copyright 2011-12 Bifrost Entertainment. All rights reserved.
+/// Copyright 2011-13 Bifrost Entertainment. All rights reserved.
 /// \author Tommy Nguyen
 
 #if defined(RAINBOW_IOS)
@@ -7,7 +7,7 @@ Data::Data() : data(nil) { }
 
 unsigned char* Data::bytes() const
 {
-	return static_cast<unsigned char *>(data.mutableBytes);
+	return static_cast<unsigned char*>(data.mutableBytes);
 }
 
 size_t Data::size() const
@@ -37,7 +37,7 @@ Data::operator unsigned char*() const
 
 Data::operator NSData*() const
 {
-	return static_cast<NSData *>(this->data);
+	return static_cast<NSData*>(this->data);
 }
 
 Data::operator NSMutableData*() const

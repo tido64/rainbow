@@ -11,14 +11,11 @@
 #	include <AL/alc.h>
 #endif
 
-#include "Common/Constants.h"
 #include "Common/Debug.h"
 #include "ConFuoco/Decoder.h"
 #include "ConFuoco/Mixer.h"
 #include "ConFuoco/Sound.h"
 #include "ConFuoco/impl/Mixer_iOS.h"
-
-#define AL_NUM_BUFFERS 3
 
 namespace ConFuoco
 {
@@ -26,6 +23,8 @@ namespace ConFuoco
 
 	namespace
 	{
+		const size_t kALNumBuffers = 3;
+
 		struct Wave : public Sound
 		{
 			unsigned int bid;
@@ -60,14 +59,14 @@ namespace ConFuoco
 			void *handle;
 
 			Channel *channel;
-			unsigned int bids[AL_NUM_BUFFERS];
+			unsigned int bids[kALNumBuffers];
 
 			Stream(Mixer *m, const char *const file, const int loops) :
 				Sound(STREAM, m), playing(false), format(0), rate(0),
 				loops(loops), buf_sz(0), buffer(nullptr), handle(nullptr),
 				channel(nullptr)
 			{
-				alGenBuffers(AL_NUM_BUFFERS, this->bids);
+				alGenBuffers(kALNumBuffers, this->bids);
 				if (alGetError() != AL_NO_ERROR)
 					R_ERROR("[Rainbow::ConFuoco/AL] Failed to generate buffers\n");
 
@@ -84,14 +83,14 @@ namespace ConFuoco
 			{
 				streams.qremove(this);
 				this->mixer->release(this);
-				alDeleteBuffers(AL_NUM_BUFFERS, this->bids);
+				alDeleteBuffers(kALNumBuffers, this->bids);
 				Decoder::close(this->handle);
 				delete[] this->buffer;
 			}
 
 			void preload()
 			{
-				for (size_t i = 0; i < AL_NUM_BUFFERS; ++i)
+				for (size_t i = 0; i < kALNumBuffers; ++i)
 				{
 					const size_t size = Decoder::read(this->buffer, this->handle, this->buf_sz);
 					alBufferData(this->bids[i], this->format, this->buffer, size, this->rate);
@@ -243,7 +242,7 @@ namespace ConFuoco
 			stream->play();
 		#else
 			alSourcei(channel->ch, AL_BUFFER, 0);
-			alSourceQueueBuffers(channel->ch, AL_NUM_BUFFERS, stream->bids);
+			alSourceQueueBuffers(channel->ch, kALNumBuffers, stream->bids);
 			this->play(channel);
 			stream->playing = true;
 		#endif

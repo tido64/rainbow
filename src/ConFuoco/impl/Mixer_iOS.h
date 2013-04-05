@@ -19,10 +19,10 @@ namespace ConFuoco
 				NSString *path = [NSString stringWithUTF8String:file];
 				path = [[NSBundle mainBundle]
 						pathForResource:[path stringByDeletingPathExtension]
-						ofType:[path pathExtension]];
+						         ofType:[path pathExtension]];
 				this->player = [[AVAudioPlayer alloc]
 						initWithContentsOfURL:[NSURL fileURLWithPath:path]
-						error:&err];
+						                error:&err];
 				path = nil;
 				if (!this->player)
 				{
