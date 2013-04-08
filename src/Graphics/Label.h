@@ -3,6 +3,7 @@
 
 #include "Graphics/Drawable.h"
 #include "Graphics/FontAtlas.h"
+#include "Graphics/VertexArray.h"
 
 /// Label for displaying text.
 ///
@@ -55,17 +56,17 @@ public:
 	virtual void update() override;
 
 private:
-	Colorb color;               ///< Color of the text.
-	float scale;                ///< Label scale factor.
-	Alignment alignment;        ///< Text alignment.
-	unsigned int stale;         ///< Flags indicating need for update.
-	unsigned int width;         ///< Label width.
-	size_t size;                ///< Size of the char array.
-	size_t vertices;            ///< Number of vertices to draw.
-	char *text;                 ///< Content of this label.
-	SpriteVertex *vx;           ///< Vertex array containing the text.
-	SharedPtr<FontAtlas> font;  ///< The font used in this label.
-	Vec2f position;             ///< Position of the text (top left).
+	Colorb color;                 ///< Color of the text.
+	float scale;                  ///< Label scale factor.
+	Alignment alignment;          ///< Text alignment.
+	unsigned int stale;           ///< Flags indicating need for update.
+	unsigned int width;           ///< Label width.
+	size_t size;                  ///< Size of the char array.
+	char *text;                   ///< Content of this label.
+	SpriteVertex *vx;             ///< Vertex array containing the text.
+	Vec2f position;               ///< Position of the text (top left).
+	SharedPtr<FontAtlas> font;    ///< The font used in this label.
+	Renderer::VertexArray array;  ///< Vertex array object.
 
 	/// Align individual characters.
 	/// \param length  Negative length of characters from \p start to \p end.
@@ -76,7 +77,7 @@ private:
 
 Label::Label() :
 	scale(1.0f), alignment(kLeftTextAlignment), stale(0), width(0), size(0),
-	vertices(0), text(nullptr), vx(nullptr) { }
+	text(nullptr), vx(nullptr) { }
 
 const Colorb& Label::get_color() const
 {

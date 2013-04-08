@@ -6,9 +6,9 @@
 
 namespace
 {
-	const unsigned int kStaleBuffer  = 1u << 0;
-	const unsigned int kStaleColor   = 1u << 1;
-	const unsigned int kStaleVBO     = 1u << 2;
+	const unsigned int kStaleBuffer      = 1u << 0;
+	const unsigned int kStaleBufferSize  = 1u << 1;
+	const unsigned int kStaleColor       = 1u << 2;
 }
 
 Label::~Label()
@@ -65,7 +65,7 @@ void Label::set_text(const char *text)
 		delete[] this->text;
 		this->text = new char[len + 1];
 		this->size = len;
-		this->stale |= kStaleVBO;
+		this->stale |= kStaleBufferSize;
 	}
 	memcpy(this->text, text, len);
 	this->text[len] = '\0';
@@ -81,7 +81,7 @@ void Label::move(const Vec2f &delta)
 void Label::draw()
 {
 	this->font->bind();
-	Renderer::draw_elements(this->vx, this->vertices);
+	Renderer::draw(this->array);
 }
 
 void Label::update()
@@ -91,14 +91,14 @@ void Label::update()
 	{
 		if (this->stale & kStaleBuffer)
 		{
-			if (this->stale & kStaleVBO)
+			if (this->stale & kStaleBufferSize)
 			{
 				delete[] this->vx;
 				this->vx = new SpriteVertex[this->size << 2];
 				this->stale |= kStaleColor;
 			}
 
-			this->vertices = 0;
+			this->array.count = 0;
 			size_t start = 0;
 			SpriteVertex *vx = this->vx;
 			Vec2f pen = this->position;
@@ -106,9 +106,9 @@ void Label::update()
 			{
 				if (*text == '\n')
 				{
-					this->align(this->position.x - pen.x, start, this->vertices);
+					this->align(this->position.x - pen.x, start, this->array.count);
 					pen.x = this->position.x;
-					start = this->vertices;
+					start = this->array.count;
 					pen.y -= this->font->get_height() * this->scale;
 					++text;
 					continue;
@@ -136,17 +136,18 @@ void Label::update()
 				}
 
 				pen.x += (glyph->advance - glyph->left) * this->scale;
-				++this->vertices;
+				++this->array.count;
 			}
-			this->align(this->position.x - pen.x, start, this->vertices);
+			this->align(this->position.x - pen.x, start, this->array.count);
 			this->width = pen.x - this->position.x;
-			this->vertices = (this->vertices << 2) + (this->vertices << 1);
+			this->array.count = (this->array.count << 2) + (this->array.count << 1);
 		}
 		if (this->stale & kStaleColor)
 		{
 			for (size_t i = 0; i < (this->size << 2); ++i)
 				this->vx[i].color = this->color;
 		}
+		this->array.update(this->vx, (this->size << 2) * sizeof(SpriteVertex));
 		this->stale = 0;
 	}
 }
