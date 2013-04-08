@@ -5,6 +5,7 @@
 #include "Common/NonCopyable.h"
 #include "Graphics/Drawable.h"
 #include "Graphics/SpriteVertex.h"
+#include "Graphics/VertexArray.h"
 #include "Input/Touch.h"
 #include "Input/Touchable.h"
 
@@ -16,7 +17,9 @@ struct Texture;
 /// the background. However, its function is entirely determined by the
 /// fragment shader.
 ///
-/// Copyright 2012 Bifrost Entertainment. All rights reserved.
+/// Consider using http://codercareer.blogspot.no/2011/12/no-27-area-of-rectangles.html
+///
+/// Copyright 2012-13 Bifrost Entertainment. All rights reserved.
 /// \author Tommy Nguyen
 class Canvas : public Drawable, public Touchable, private NonCopyable<Canvas>
 {
@@ -75,10 +78,9 @@ private:
 	int width, height;        ///< Width and height of canvas.
 
 	unsigned int background_tex;  ///< Background texture.
-	unsigned int canvas_buffer;   ///< Canvas buffer.
 	unsigned int canvas_fb;       ///< Canvas frame buffer.
 	unsigned int canvas_tex;      ///< Canvas texture.
-	unsigned int canvas_vao;      ///< Canvas vertex array object.
+	Renderer::VertexArray array;  ///< Canvas vertex array object.
 
 	const Texture *brush;    ///< Brush texture.
 

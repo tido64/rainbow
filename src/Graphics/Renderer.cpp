@@ -1,9 +1,11 @@
-// Copyright 2012 Bifrost Entertainment. All rights reserved.
+// Copyright 2012-13 Bifrost Entertainment. All rights reserved.
 
 #include "Common/Data.h"
 #include "Graphics/Renderer.h"
 #include "Graphics/ShaderManager.h"
 #include "Graphics/SpriteVertex.h"
+#include "Graphics/TextureAtlas.h"
+#include "Graphics/VertexArray.h"
 
 #ifdef GL_ES_VERSION_2_0
 #	include "Graphics/Shaders/Shaders.h"
@@ -14,12 +16,11 @@
 
 namespace Renderer
 {
+	unsigned int g_index_buffer = 0;  ///< Index buffer object.
+
 	namespace
 	{
-		unsigned int bound_vbo = 0;     ///< Currently bound vertex buffer object.
-		unsigned int index_buffer = 0;  ///< Index buffer object.
-
-		/// Global vertex indices (currently limited to 384 vertices, or 64 sprites).
+		/// Global vertex indices (currently limited to 1024 vertices, or 256 sprites).
 		const unsigned short default_indices[] = {
 			  0,   1,   2,   2,   3,   0,   4,   5,   6,   6,   7,   4,
 			  8,   9,  10,  10,  11,   8,  12,  13,  14,  14,  15,  12,
@@ -181,8 +182,8 @@ namespace Renderer
 			return false;
 		}
 
-		glGenBuffers(1, &index_buffer);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffer);
+		glGenBuffers(1, &g_index_buffer);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, g_index_buffer);
 		glBufferData(
 				GL_ELEMENT_ARRAY_BUFFER, 1536 * sizeof(unsigned short),
 				default_indices, GL_STATIC_DRAW);
@@ -192,10 +193,10 @@ namespace Renderer
 
 	void release()
 	{
-		if (index_buffer)
+		if (g_index_buffer)
 		{
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-			glDeleteBuffers(1, &index_buffer);
+			glDeleteBuffers(1, &g_index_buffer);
 		}
 		glUseProgram(0);
 		delete ShaderManager::Instance;
@@ -216,93 +217,21 @@ namespace Renderer
 		         "Failed to initialise OpenGL viewport");
 	}
 
-	void bind_buffer(const unsigned int buffer)
+	void draw(const VertexArray &array)
 	{
-		if (buffer == bound_vbo)
-			return;
-
-		glBindBuffer(GL_ARRAY_BUFFER, buffer);
-		bound_vbo = buffer;
-	}
-
-	void create_buffer(unsigned int &buffer, unsigned int &array_object)
-	{
-		glGenBuffers(1, &buffer);
-
-	#ifndef RAINBOW_ANDROID
-
-		bind_buffer(buffer);
-
-		glGenVertexArrays(1, &array_object);
-		glBindVertexArray(array_object);
-
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffer);
-
-		glVertexAttribPointer(
-				Shader::COLOR, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(SpriteVertex),
-				reinterpret_cast<void*>(offsetof(SpriteVertex, color)));
-		glEnableVertexAttribArray(Shader::COLOR);
-
-		glVertexAttribPointer(
-				Shader::TEXCOORD, 2, GL_FLOAT, GL_FALSE, sizeof(SpriteVertex),
-				reinterpret_cast<void*>(offsetof(SpriteVertex, texcoord)));
-		glEnableVertexAttribArray(Shader::TEXCOORD);
-
-		glVertexAttribPointer(
-				Shader::VERTEX, 2, GL_FLOAT, GL_TRUE, sizeof(SpriteVertex),
-				reinterpret_cast<void*>(offsetof(SpriteVertex, position)));
-		glEnableVertexAttribArray(Shader::VERTEX);
-
-		glBindVertexArray(0);
-
-	#else
-		static_cast<void>(array_object);
-	#endif
-	}
-
-	void delete_buffer(const unsigned int buffer, const unsigned int array_object)
-	{
-	#ifndef RAINBOW_ANDROID
-		glDeleteVertexArrays(1, &array_object);
-	#else
-		static_cast<void>(array_object);
-	#endif
-		glDeleteBuffers(1, &buffer);
-	}
-
-	void draw_buffer(const unsigned int array_object, const unsigned int count)
-	{
-	#ifndef RAINBOW_ANDROID
-
-		glBindVertexArray(array_object);
-		glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_SHORT, nullptr);
-		glBindVertexArray(0);
-
-	#else
-
-		bind_buffer(array_object);
-
-		glVertexAttribPointer(
-				Shader::COLOR, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(SpriteVertex),
-				reinterpret_cast<void*>(offsetof(SpriteVertex, color)));
-		glVertexAttribPointer(
-				Shader::TEXCOORD, 2, GL_FLOAT, GL_FALSE, sizeof(SpriteVertex),
-				reinterpret_cast<void*>(offsetof(SpriteVertex, texcoord)));
-		glVertexAttribPointer(
-				Shader::VERTEX, 2, GL_FLOAT, GL_TRUE, sizeof(SpriteVertex),
-				reinterpret_cast<void*>(offsetof(SpriteVertex, position)));
-
-		glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_SHORT, nullptr);
-
-	#endif
-
+		BindVertexArray bind(array);
+		glDrawElements(GL_TRIANGLES, array.count, GL_UNSIGNED_SHORT, nullptr);
 		R_ASSERT(glGetError() == GL_NO_ERROR, "Failed to draw buffer");
+	}
+
+	void draw(const VertexArray &array, const TextureAtlas *texture)
+	{
+		texture->bind();
+		draw(array);
 	}
 
 	void draw_elements(const SpriteVertex *vertices, const unsigned int count)
 	{
-		bind_buffer(0);
-
 		glVertexAttribPointer(
 				Shader::COLOR, 4, GL_UNSIGNED_BYTE, GL_TRUE,
 				sizeof(SpriteVertex), &vertices->color);
@@ -316,14 +245,5 @@ namespace Renderer
 		glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_SHORT, nullptr);
 
 		R_ASSERT(glGetError() == GL_NO_ERROR, "Failed to draw elements");
-	}
-
-	void update_buffer(const unsigned int buffer, const unsigned int size, const void *data)
-	{
-		bind_buffer(buffer);
-		glBufferData(GL_ARRAY_BUFFER, size, data, GL_DYNAMIC_DRAW);
-		bind_buffer(0);
-
-		R_ASSERT(glGetError() == GL_NO_ERROR, "Failed to update buffer");
 	}
 }

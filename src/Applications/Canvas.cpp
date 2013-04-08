@@ -1,4 +1,4 @@
-// Copyright 2013 Bifrost Entertainment. All rights reserved.
+// Copyright 2012-13 Bifrost Entertainment. All rights reserved.
 
 #ifdef USE_CANVAS
 #include "Applications/Canvas.h"
@@ -19,9 +19,8 @@
 int Canvas::canvas_program = -1;
 
 Canvas::Canvas() :
-	changed(false), down(false), fill(0.0f), brush_size(7),
-	width(0), height(0), background_tex(0), canvas_buffer(0), canvas_fb(0),
-	canvas_tex(0), canvas_vao(0), brush(nullptr)
+	changed(false), down(false), fill(0.0f), brush_size(7), width(0), height(0),
+	background_tex(0), canvas_fb(0), canvas_tex(0), brush(nullptr)
 {
 	GLint viewport[4];
 	glGetIntegerv(GL_VIEWPORT, viewport);
@@ -74,8 +73,6 @@ Canvas::Canvas() :
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, 0, 0);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-	Renderer::create_buffer(this->canvas_buffer, this->canvas_vao);
-
 	this->sprite[0].texcoord.x = 0.0f;
 	this->sprite[0].texcoord.y = 0.0f;
 	this->sprite[0].position.x = 0;
@@ -103,7 +100,6 @@ Canvas::~Canvas()
 {
 	Input::Instance->unsubscribe(this);
 	this->release();
-	Renderer::delete_buffer(this->canvas_buffer, this->canvas_vao);
 }
 
 void Canvas::clear()
@@ -240,7 +236,7 @@ void Canvas::update()
 		const int dt_x = this->touch.x - this->prev_point.x;
 		const int dt_y = this->touch.y - this->prev_point.y;
 
-		const int points = Rainbow::min<int>(256, (fabsf(dt_x) < fabsf(dt_y)) ? fabsf(dt_y) : fabsf(dt_x));
+		const int points = Rainbow::min<int>(256, Rainbow::max(fabsf(dt_x), fabsf(dt_y)));
 		R_ASSERT(points > 0, "No points to draw");
 
 		Vector<SpriteVertex> vertices(points * 4);
@@ -253,12 +249,9 @@ void Canvas::update()
 			vertices.push_back(vx[2]);
 			vertices.push_back(vx[3]);
 		}
-		Renderer::update_buffer(this->canvas_buffer, (points << 2) * sizeof(SpriteVertex), vertices.begin());
-	#ifndef RAINBOW_ANDROID
-		Renderer::draw_buffer(this->canvas_vao, points * 6);
-	#else
-		Renderer::draw_buffer(this->canvas_buffer, points * 6);
-	#endif
+		this->array.update(vertices.begin(), (points << 2) * sizeof(SpriteVertex));
+		this->array.count = points * 6;
+		Renderer::draw(this->array);
 
 		// Update previous point. We use this method because input events might
 		// occur several times between frames, so (x0,y0) becomes unreliable.

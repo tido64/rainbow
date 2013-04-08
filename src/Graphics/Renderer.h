@@ -2,23 +2,22 @@
 #define RENDERER_H_
 
 struct SpriteVertex;
+class TextureAtlas;
 
 namespace Renderer
 {
+	class VertexArray;
+
 	bool init();
 	void release();
 
 	void clear();
 	void resize(const unsigned int width, const unsigned int height);
 
-	void bind_buffer(const unsigned int buffer);
-	void create_buffer(unsigned int &buffer, unsigned int &array_object);
-	void delete_buffer(const unsigned int buffer, const unsigned int array_object);
+	void draw(const VertexArray &array);
+	void draw(const VertexArray &array, const TextureAtlas *texture);
 
-	void draw_buffer(const unsigned int array_object, const unsigned int count);
 	void draw_elements(const SpriteVertex *vertices, const unsigned int count);
-
-	void update_buffer(const unsigned int buffer, const unsigned int size, const void *data);
 }
 
 #endif

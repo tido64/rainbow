@@ -4,6 +4,7 @@
 #include "Graphics/Drawable.h"
 #include "Graphics/Sprite.h"
 #include "Graphics/TextureAtlas.h"
+#include "Graphics/VertexArray.h"
 
 namespace SceneGraph { class Node; }
 
@@ -13,7 +14,7 @@ namespace SceneGraph { class Node; }
 /// are drawn with a single glDraw call. The sprites must use the same texture
 /// atlas.
 ///
-/// Copyright 2010-12 Bifrost Entertainment. All rights reserved.
+/// Copyright 2010-13 Bifrost Entertainment. All rights reserved.
 /// \author Tommy Nguyen
 class SpriteBatch
 {
@@ -57,10 +58,8 @@ public:
 	void update();
 
 private:
-	unsigned int array_object;        ///< GL vertex array object.
-	unsigned int buffer;              ///< GL vertex buffer.
+	Renderer::VertexArray array;
 
-	size_t batch_vertices;            ///< Total number of vertices in this batch.
 	SharedPtr<TextureAtlas> texture;  ///< Texture atlas used by all sprites in the batch.
 	Vector<Sprite*> sprites;          ///< Vector storing all sprites.
 	Vector<SpriteVertex> vertices;    ///< Common vertex array for all sprites in the batch.

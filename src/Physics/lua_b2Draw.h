@@ -28,7 +28,6 @@ namespace b2
 		void draw()
 		{
 			ShaderManager::Instance->use(this->program);
-			Renderer::bind_buffer(0);
 
 			for (size_t i = 0; i < num_worlds; ++i)
 				if (this->worlds[i])
