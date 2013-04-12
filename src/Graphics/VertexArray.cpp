@@ -1,6 +1,5 @@
 /// Copyright 2013 Bifrost Entertainment. All rights reserved.
 
-#include "Graphics/OpenGL.h"
 #include "Graphics/ShaderManager.h"
 #include "Graphics/SpriteVertex.h"
 #include "Graphics/VertexArray.h"

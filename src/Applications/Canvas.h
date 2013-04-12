@@ -13,11 +13,9 @@ struct Texture;
 
 /// Canvas is a painting application.
 ///
-/// Currently setup to "erase" the foreground, giving the illusion of revealing
+/// Currently set up to "erase" the foreground, giving the illusion of revealing
 /// the background. However, its function is entirely determined by the
 /// fragment shader.
-///
-/// Consider using http://codercareer.blogspot.no/2011/12/no-27-area-of-rectangles.html
 ///
 /// Copyright 2012-13 Bifrost Entertainment. All rights reserved.
 /// \author Tommy Nguyen
@@ -68,8 +66,6 @@ public:
 	virtual void touch_moved(const Touch *const touches, const size_t count) override;
 
 private:
-	static int canvas_program;
-
 	bool changed;             ///< Whether an update is needed.
 	bool down;                ///< Whether the brush is down.
 	Colorb foreground_color;  ///< Brush colour.
@@ -82,14 +78,15 @@ private:
 	unsigned int canvas_tex;      ///< Canvas texture.
 	Renderer::VertexArray array;  ///< Canvas vertex array object.
 
-	const Texture *brush;    ///< Brush texture.
+	const Texture *brush;  ///< Brush texture.
+	bool *filled;          ///< Canvas fill.
 
-	Vec2f prev_point;         ///< Previous touch point.
-	SpriteVertex sprite[4];   ///< Canvas sprite.
-	Touch touch;              ///< Current touch point.
+	Vec2f prev_point;        ///< Previous touch point.
+	SpriteVertex sprite[4];  ///< Canvas sprite.
+	Touch touch;             ///< Current touch point.
 
-	/// Create a sprite from a point.
-	void create_point(SpriteVertex *vertex, const int x, const int y);
+	/// Create a sprite from a point and mark area as filled.
+	void create_point_and_mark(SpriteVertex *vertex, const int x, const int y);
 
 	/// Release all resources.
 	void release();

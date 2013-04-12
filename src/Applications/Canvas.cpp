@@ -16,11 +16,31 @@
 #	define canvaseraser_fsh "Shaders/CanvasEraser.fsh"
 #endif
 
-int Canvas::canvas_program = -1;
+namespace
+{
+	int g_canvas_program = -1;
+
+	struct BindFramebuffer
+	{
+		BindFramebuffer(const unsigned int framebuffer, const unsigned int texture)
+		{
+			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, framebuffer);
+			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
+		}
+
+		~BindFramebuffer()
+		{
+			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, 0, 0);
+			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+		}
+	};
+
+}
 
 Canvas::Canvas() :
 	changed(false), down(false), fill(0.0f), brush_size(7), width(0), height(0),
-	background_tex(0), canvas_fb(0), canvas_tex(0), brush(nullptr)
+	background_tex(0), canvas_fb(0), canvas_tex(0), brush(nullptr),
+	filled(nullptr)
 {
 	GLint viewport[4];
 	glGetIntegerv(GL_VIEWPORT, viewport);
@@ -29,14 +49,14 @@ Canvas::Canvas() :
 	R_ASSERT(this->width  > 0, "Invalid framebuffer width");
 	R_ASSERT(this->height > 0, "Invalid framebuffer height");
 
-	if (canvas_program < 0)
+	if (g_canvas_program < 0)
 	{
 		int shaders[2];
 		shaders[0] = ShaderManager::Instance->create_shader(
-				Shader::VERTEX_SHADER, canvas_vsh);
+			Shader::VERTEX_SHADER, canvas_vsh);
 		shaders[1] = ShaderManager::Instance->create_shader(
-				Shader::FRAGMENT_SHADER, canvaseraser_fsh);
-		canvas_program = ShaderManager::Instance->create_program(shaders, 2);
+			Shader::FRAGMENT_SHADER, canvaseraser_fsh);
+		g_canvas_program = ShaderManager::Instance->create_program(shaders, 2);
 
 		const float u = 2.0f / this->width;
 		const float v = 2.0f / this->height;
@@ -47,31 +67,35 @@ Canvas::Canvas() :
 			0.0f, 0.0f,  0.0f,  1.0f
 		};
 
-		const unsigned int gl_program = ShaderManager::Instance->get_program(canvas_program);
-		ShaderManager::Instance->use(canvas_program);
-		glUniformMatrix4fv(glGetUniformLocation(gl_program, "mvp_matrix"), 1, GL_FALSE, ortho);
+		const unsigned int gl_program =
+			ShaderManager::Instance->get_program(g_canvas_program);
+		ShaderManager::Instance->use(g_canvas_program);
+		glUniformMatrix4fv(
+			glGetUniformLocation(gl_program, "mvp_matrix"), 1, GL_FALSE, ortho);
 		glUniform1i(glGetUniformLocation(gl_program, "canvas"), 1);
 		ShaderManager::Instance->reset();
 	}
 
+	this->background_tex = TextureManager::Instance().create(
+		GL_RGBA, this->width, this->height, GL_RGBA, nullptr);
+	this->canvas_tex = TextureManager::Instance().create(
+		GL_RGBA, this->width, this->height, GL_RGBA, nullptr);
+
 	glGenFramebuffers(1, &this->canvas_fb);
-	glBindFramebuffer(GL_FRAMEBUFFER, this->canvas_fb);
-
-	this->background_tex = TextureManager::Instance().create(GL_RGBA, this->width, this->height, GL_RGBA, nullptr);
-	this->canvas_tex = TextureManager::Instance().create(GL_RGBA, this->width, this->height, GL_RGBA, nullptr);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, this->canvas_tex, 0);
-
-	GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-	if (status != GL_FRAMEBUFFER_COMPLETE)
 	{
-		this->release();
-		R_ERROR("[Rainbow] GL: Failed to create framebuffer\n");
-		return;
+		BindFramebuffer bind(this->canvas_fb, this->canvas_tex);
+		GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+		if (status != GL_FRAMEBUFFER_COMPLETE)
+		{
+			this->release();
+			R_ERROR("[Rainbow] GL: Failed to create framebuffer\n");
+			return;
+		}
+		Renderer::clear();
 	}
 
-	Renderer::clear();
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, 0, 0);
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	this->filled = new bool[width * height];
+	memset(this->filled, 0, width * height * sizeof(bool));
 
 	this->sprite[0].texcoord.x = 0.0f;
 	this->sprite[0].texcoord.y = 0.0f;
@@ -104,11 +128,9 @@ Canvas::~Canvas()
 
 void Canvas::clear()
 {
-	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, this->canvas_fb);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, this->canvas_tex, 0);
+	BindFramebuffer bind(this->canvas_fb, this->canvas_tex);
 	Renderer::clear();
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, 0, 0);
-	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+	memset(this->filled, 0, width * height * sizeof(bool));
 	this->changed = false;
 	this->fill = 0.0f;
 	this->touch_canceled();
@@ -118,19 +140,12 @@ float Canvas::get_filled()
 {
 	if (this->fill < 0.0f)
 	{
-		glBindFramebuffer(GL_FRAMEBUFFER, this->canvas_fb);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, this->canvas_tex, 0);
-		const size_t size = (this->width * this->height) << 2;
-		unsigned char *data = new unsigned char[size];
-		glReadPixels(0, 0, this->width, this->height, GL_RGBA, GL_UNSIGNED_BYTE, data);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, 0, 0);
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-		unsigned int sum = 0;
-		for (size_t i = 0; i < size; i += 4)
-			sum += data[i + 3] > 0;
-		delete[] data;
-		this->fill = static_cast<float>(sum) / static_cast<float>(size >> 2);
+		int sum = 0;
+		const int size = this->width * this->height;
+		for (int i = 0; i < size; ++i)
+			// Guarantee that true == 1 and not 255 like on some Android devices.
+			sum += static_cast<int>(this->filled[i]) & 1;
+		this->fill = static_cast<float>(sum) / static_cast<float>(size);
 	}
 	return this->fill;
 }
@@ -142,11 +157,8 @@ void Canvas::set_background(const unsigned int color)
 	glClearColor(c.r, c.g, c.b, c.a);
 
 	// Change background colour.
-	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, this->canvas_fb);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, this->background_tex, 0);
+	BindFramebuffer bind(this->canvas_fb, this->background_tex);
 	Renderer::clear();
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, 0, 0);
-	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 
 	// Reset clear colour.
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
@@ -162,7 +174,9 @@ void Canvas::set_background(const Texture &texture, const int width, const int h
 	{
 		vx[0].position.y = 0;
 		vx[2].position.y = this->height;
-		vx[2].position.x = static_cast<float>(this->height) * static_cast<float>(width) / static_cast<float>(height);
+		vx[2].position.x = static_cast<float>(this->height)
+		                 * static_cast<float>(width)
+		                 / static_cast<float>(height);
 		vx[0].position.x = (this->width - vx[2].position.x) / 2.0f;
 		vx[2].position.x += vx[0].position.x;
 	}
@@ -170,7 +184,9 @@ void Canvas::set_background(const Texture &texture, const int width, const int h
 	{
 		vx[0].position.x = 0;
 		vx[2].position.x = this->width;
-		vx[2].position.y = static_cast<float>(this->width) * static_cast<float>(height) / static_cast<float>(width);
+		vx[2].position.y = static_cast<float>(this->width)
+		                 * static_cast<float>(height)
+		                 / static_cast<float>(width);
 		vx[0].position.y = (this->height - vx[2].position.y) / 2.0f;
 		vx[2].position.y += vx[0].position.y;
 	}
@@ -179,16 +195,13 @@ void Canvas::set_background(const Texture &texture, const int width, const int h
 	vx[3].position.x = vx[0].position.x;
 	vx[3].position.y = vx[2].position.y;
 
-	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, this->canvas_fb);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, this->background_tex, 0);
-	R_ASSERT(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE, "Failed to set background");
+	BindFramebuffer bind(this->canvas_fb, this->background_tex);
+	R_ASSERT(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE,
+	         "Failed to set background");
 
 	Renderer::clear();
 	TextureManager::Instance().bind(texture);
 	Renderer::draw_elements(vx, 6);
-
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, 0, 0);
-	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 
 	R_ASSERT(glGetError() == GL_NO_ERROR, "Failed to set background");
 }
@@ -200,7 +213,7 @@ void Canvas::set_foreground(const unsigned int color)
 
 void Canvas::draw()
 {
-	ShaderManager::Instance->use(canvas_program);
+	ShaderManager::Instance->use(g_canvas_program);
 	TextureManager::Instance().bind(this->canvas_tex);
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, this->background_tex);
@@ -218,8 +231,7 @@ void Canvas::update()
 
 	glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 	TextureManager::Instance().bind(*this->brush);
-	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, this->canvas_fb);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, this->canvas_tex, 0);
+	BindFramebuffer bind(this->canvas_fb, this->canvas_tex);
 
 	SpriteVertex vx[4];
 	vx[0].color = this->foreground_color;
@@ -228,22 +240,23 @@ void Canvas::update()
 	vx[3].color = this->foreground_color;
 	if (this->touch.x == this->prev_point.x && this->touch.y == this->prev_point.y)
 	{
-		this->create_point(vx, this->touch.x, this->touch.y);
+		this->create_point_and_mark(vx, this->touch.x, this->touch.y);
 		Renderer::draw_elements(vx, 6);
 	}
 	else
 	{
-		const int dt_x = this->touch.x - this->prev_point.x;
-		const int dt_y = this->touch.y - this->prev_point.y;
+		const int dx = this->touch.x - this->prev_point.x;
+		const int dy = this->touch.y - this->prev_point.y;
 
-		const int points = Rainbow::min<int>(256, Rainbow::max(fabsf(dt_x), fabsf(dt_y)));
+		const int points = Rainbow::min<int>(256, Rainbow::max(fabsf(dx), fabsf(dy)));
 		R_ASSERT(points > 0, "No points to draw");
 
 		Vector<SpriteVertex> vertices(points * 4);
 		for (int i = 0; i < points; ++i)
 		{
 			const float p = static_cast<float>(i) / static_cast<float>(points);
-			this->create_point(vx, this->prev_point.x + dt_x * p, this->prev_point.y + dt_y * p);
+			this->create_point_and_mark(
+				vx, this->prev_point.x + dx * p, this->prev_point.y + dy * p);
 			vertices.push_back(vx[0]);
 			vertices.push_back(vx[1]);
 			vertices.push_back(vx[2]);
@@ -259,8 +272,6 @@ void Canvas::update()
 		this->prev_point.y = this->touch.y;
 	}
 
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, 0, 0);
-	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	this->changed = false;
@@ -314,28 +325,42 @@ void Canvas::touch_moved(const Touch *const touches, const size_t count)
 	}
 }
 
-void Canvas::create_point(SpriteVertex *vertex, const int x, const int y)
+void Canvas::create_point_and_mark(SpriteVertex *vertex, const int x, const int y)
 {
 	R_ASSERT(this->brush, "No brush assigned");
 
-	const int a_x = x - (this->brush_size >> 1);
-	const int a_y = y - (this->brush_size >> 1);
+	int left = x - (this->brush_size >> 1);
+	int right = left + this->brush_size;
+	int bottom = y - (this->brush_size >> 1);
+	int top = bottom + this->brush_size;
+
+	left = Rainbow::max<int>(0.0, left);
+	bottom = Rainbow::max<int>(0.0, bottom);
+	right = Rainbow::min<int>(this->width, right);
+	top = Rainbow::min<int>(this->height, top);
 
 	vertex[0].texcoord = this->brush->vx[0];
-	vertex[0].position.x = a_x;
-	vertex[0].position.y = a_y;
+	vertex[0].position.x = left;
+	vertex[0].position.y = bottom;
 
 	vertex[1].texcoord = this->brush->vx[1];
-	vertex[1].position.x = a_x + this->brush_size;
-	vertex[1].position.y = a_y;
+	vertex[1].position.x = right;
+	vertex[1].position.y = bottom;
 
 	vertex[2].texcoord = this->brush->vx[2];
-	vertex[2].position.x = vertex[1].position.x;
-	vertex[2].position.y = a_y + this->brush_size;
+	vertex[2].position.x = right;
+	vertex[2].position.y = top;
 
 	vertex[3].texcoord = this->brush->vx[3];
-	vertex[3].position.x = vertex[0].position.x;
-	vertex[3].position.y = vertex[2].position.y;
+	vertex[3].position.x = left;
+	vertex[3].position.y = top;
+
+	const size_t num = (right - left) * sizeof(bool);
+	for (int i = bottom; i < top; ++i)
+	{
+		const size_t offset = left + this->width * i;
+		memset(this->filled + offset, 0xff, num);
+	}
 }
 
 void Canvas::release()
