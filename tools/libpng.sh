@@ -33,4 +33,5 @@ rm -fr \
 	pngtest.c \
 	pngwrite.c \
 	projects \
+	tests \
 	TODO

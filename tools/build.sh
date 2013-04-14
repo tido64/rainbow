@@ -3,7 +3,7 @@ GENERATOR=${GENERATOR:-Unix Makefiles}
 RB=$(cd -P "$(dirname $0)/.." && pwd)
 
 function compile {
-	case $1 in
+	case "$1" in
 		"Ninja")
 			ninja
 			;;
