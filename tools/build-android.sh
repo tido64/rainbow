@@ -100,6 +100,7 @@ cat > AndroidManifest.xml << ANDROIDMANIFEST_XML
           package="com.bifrostentertainment.rainbow"
           android:versionCode="1"
           android:versionName="1.0">
+	<uses-permission android:name="android.permission.RECORD_AUDIO" />
 	<uses-sdk android:minSdkVersion="9" android:targetSdkVersion="14" />
 	<uses-feature android:name="android.hardware.screen.portrait"
 	              android:glEsVersion="0x00020000" />

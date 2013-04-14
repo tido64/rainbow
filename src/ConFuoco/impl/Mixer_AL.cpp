@@ -107,6 +107,8 @@ namespace ConFuoco
 
 	Mixer::Mixer() : master_gain(1.0f), context(nullptr), sounds(num_channels)
 	{
+		R_ASSERT(!Instance, "An instance of ConFuoco::Mixer already exists");
+
 	#ifdef RAINBOW_IOS
 		InitAudioSession(this);
 	#endif
@@ -147,8 +149,7 @@ namespace ConFuoco
 
 	Mixer::~Mixer()
 	{
-		if (Instance == this)
-			Instance = nullptr;
+		Instance = nullptr;
 
 		this->clear();
 		for (size_t i = 0; i < num_channels; ++i)

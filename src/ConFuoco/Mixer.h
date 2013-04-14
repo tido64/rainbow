@@ -46,6 +46,9 @@ namespace ConFuoco
 		/// Stop and delete all sounds.
 		void clear();
 
+		/// Create audio recorder. Used by Recorder to set up platform-specifics.
+		void* create_recorder();
+
 		/// Create a sound object from audio file. Deleting a sound object will
 		/// automatically stop all channels from playing it.
 		Sound* create_sound(const char *const file, const int type = STATIC, const int loops = -1);

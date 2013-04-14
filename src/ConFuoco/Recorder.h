@@ -2,9 +2,15 @@
 #define CONFUOCO_RECORDER_H_
 
 #include "Platform/Definitions.h"
-#ifdef RAINBOW_IOS
-#	include <AVFoundation/AVAudioRecorder.h>
-typedef AVAudioRecorder AudioRecorder;
+#if defined(RAINBOW_ANDROID)
+namespace ConFuoco
+{
+	struct SLRecorder;
+	typedef ConFuoco::SLRecorder* AudioRecorder;
+}
+#elif defined(RAINBOW_IOS)
+@class AVAudioRecorder;
+typedef AVAudioRecorder* AudioRecorder;
 #else
 typedef void* AudioRecorder;
 #endif
@@ -17,7 +23,7 @@ namespace ConFuoco
 	///
 	/// \note Current implementation does not save to a file.
 	///
-	/// Copyright 2012 Bifrost Entertainment. All rights reserved.
+	/// Copyright 2012-13 Bifrost Entertainment. All rights reserved.
 	/// \author Tommy Nguyen
 	class Recorder : private NonCopyable<Recorder>
 	{
@@ -35,15 +41,15 @@ namespace ConFuoco
 		inline float get_peak_power() const;
 
 		/// Pause recording.
-		inline void pause();
+		void pause();
 
 		/// Start or resume recording.
 		/// \param duration  Maximum duration, in seconds, for the recording.
 		/// \return \c true on success; otherwise \c false.
-		inline bool record(const unsigned long duration = 0);
+		bool record(const unsigned long duration = 0);
 
 		/// Stop recording and close the audio file.
-		inline void stop();
+		void stop();
 
 		/// Refresh the average and peak power values of an audio recorder.
 		void update();
@@ -55,7 +61,7 @@ namespace ConFuoco
 		float average;   ///< Average power in decibels.
 		float low_pass;  ///< Low-pass filtered power in decibels.
 		float peak;      ///< Peak power in decibels.
-		AudioRecorder *recorder;
+		AudioRecorder recorder;
 	};
 
 	float Recorder::get_average_power() const
@@ -72,31 +78,6 @@ namespace ConFuoco
 	{
 		return this->peak;
 	}
-
-#ifdef RAINBOW_IOS
-
-	void Recorder::pause()
-	{
-		[recorder pause];
-	}
-
-	bool Recorder::record(const unsigned long duration)
-	{
-		return duration ? [recorder recordForDuration:duration] : [recorder record];
-	}
-
-	void Recorder::stop()
-	{
-		[recorder stop];
-	}
-
-#else
-
-	void Recorder::pause() { }
-	bool Recorder::record(const unsigned long) { return false; }
-	void Recorder::stop() { }
-
-#endif  // RAINBOW_IOS
 
 	Recorder::operator bool() const
 	{

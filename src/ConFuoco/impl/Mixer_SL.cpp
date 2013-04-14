@@ -3,17 +3,36 @@
 #include "Platform/Definitions.h"
 #ifdef RAINBOW_ANDROID
 
-#include <SLES/OpenSLES.h>
-#include <SLES/OpenSLES_Android.h>
-
 #include "Common/IO.h"
 #include "ConFuoco/Mixer.h"
 #include "ConFuoco/Sound.h"
+#include "ConFuoco/impl/Recorder_SL.h"
+
+#define slCreateAudioPlayer(self, player, source, sink, interfaces, iids, req) \
+	(*self)->CreateAudioPlayer(self, player, source, sink, interfaces, iids, req)
+#define slCreateAudioRecorder(self, recorder, source, sink, interfaces, iids, req) \
+	(*self)->CreateAudioRecorder(self, recorder, source, sink, interfaces, iids, req)
+#define slCreateOutputMix(self, mix, interfaces, iids, req) \
+	(*self)->CreateOutputMix(self, mix, interfaces, iids, req)
+#define slDestroy(self) \
+	(*self)->Destroy(self)
+#define slGetInterface(self, iid, interface) \
+	(*self)->GetInterface(self, iid, interface)
+#define slGetPlayState(self, state) \
+	(*self)->GetPlayState(self, state);
+#define slRealize(self, async) \
+	(*self)->Realize(self, async)
+#define slRegisterCallback(self, callback, context) \
+	(*self)->RegisterCallback(self, callback, context)
+#define slSetCallbackEventsMask(self, flags) \
+	(*self)->SetCallbackEventsMask(self, flags)
+#define slSetPlayState(self, state) \
+	(*self)->SetPlayState(self, state);
+#define slSetVolumeLevel(self, level) \
+	(*self)->SetVolumeLevel(self, level)
 
 namespace ConFuoco
 {
-	Mixer *Mixer::Instance = nullptr;
-
 	namespace
 	{
 	#if 0  // Only used when creating an audio player with SLDataLocator_URI
@@ -53,13 +72,8 @@ namespace ConFuoco
 				return;
 			if (loops > 0)
 				--loops;
-			(*caller)->SetPlayState(caller, SL_PLAYSTATE_STOPPED);
-			(*caller)->SetPlayState(caller, SL_PLAYSTATE_PLAYING);
-		}
-
-		void SetPlayState(SLPlayItf &itf, SLuint32 state)
-		{
-			(*itf)->SetPlayState(itf, state);
+			slSetPlayState(caller, SL_PLAYSTATE_STOPPED);
+			slSetPlayState(caller, SL_PLAYSTATE_PLAYING);
 		}
 
 		struct SLContext
@@ -75,24 +89,24 @@ namespace ConFuoco
 					R_ERROR("[Rainbow::ConFuoco] Failed to create SL engine\n");
 					return;
 				}
-				if ((*this->engine_obj)->Realize(this->engine_obj, SL_BOOLEAN_FALSE) != SL_RESULT_SUCCESS)
+				if (slRealize(this->engine_obj, SL_BOOLEAN_FALSE) != SL_RESULT_SUCCESS)
 				{
 					R_ERROR("[Rainbow::ConFuoco] Failed to realize SL engine\n");
 					return;
 				}
-				if ((*this->engine_obj)->GetInterface(this->engine_obj, SL_IID_ENGINE, &this->engine) != SL_RESULT_SUCCESS)
+				if (slGetInterface(this->engine_obj, SL_IID_ENGINE, &this->engine) != SL_RESULT_SUCCESS)
 				{
 					R_ERROR("[Rainbow::ConFuoco] Failed to get interface for SL engine\n");
 					return;
 				}
 				const SLInterfaceID iids[] = { SL_IID_ENVIRONMENTALREVERB };
 				const SLboolean req[] = { SL_BOOLEAN_FALSE };
-				if ((*this->engine)->CreateOutputMix(this->engine, &this->mix_obj, 1, iids, req) != SL_RESULT_SUCCESS)
+				if (slCreateOutputMix(this->engine, &this->mix_obj, 1, iids, req) != SL_RESULT_SUCCESS)
 				{
 					R_ERROR("[Rainbow::ConFuoco] Failed to create SL output mix\n");
 					return;
 				}
-				if ((*this->mix_obj)->Realize(this->mix_obj, SL_BOOLEAN_FALSE) != SL_RESULT_SUCCESS)
+				if (slRealize(this->mix_obj, SL_BOOLEAN_FALSE) != SL_RESULT_SUCCESS)
 				{
 					R_ERROR("[Rainbow::ConFuoco] Failed to realize SL output mix\n");
 					return;
@@ -102,9 +116,9 @@ namespace ConFuoco
 			~SLContext()
 			{
 				if (this->mix_obj)
-					(*this->mix_obj)->Destroy(this->mix_obj);
+					slDestroy(this->mix_obj);
 				if (this->engine_obj)
-					(*this->engine_obj)->Destroy(this->engine_obj);
+					slDestroy(this->engine_obj);
 			}
 		};
 
@@ -150,21 +164,19 @@ namespace ConFuoco
 				SLDataLocator_OutputMix output_mix = { SL_DATALOCATOR_OUTPUTMIX, context->mix_obj };
 				SLDataSink sink = { &output_mix, nullptr };
 
-				if ((*context->engine)->CreateAudioPlayer(
-						context->engine, &this->player, &source, &sink,
-						1, iids, req) != SL_RESULT_SUCCESS)
+				if (slCreateAudioPlayer(context->engine, &this->player, &source, &sink, 1, iids, req) != SL_RESULT_SUCCESS)
 				{
 					R_ERROR("[Rainbow::ConFuoco] Failed to create audio player (%p)\n", stream);
 					this->release();
 					return false;
 				}
-				if ((*this->player)->Realize(this->player, SL_BOOLEAN_FALSE) != SL_RESULT_SUCCESS)
+				if (slRealize(this->player, SL_BOOLEAN_FALSE) != SL_RESULT_SUCCESS)
 				{
 					R_ERROR("[Rainbow::ConFuoco] Failed to realize audio player (%p)\n", stream);
 					this->release();
 					return false;
 				}
-				if ((*this->player)->GetInterface(this->player, SL_IID_PLAY, &this->play_itf) != SL_RESULT_SUCCESS)
+				if (slGetInterface(this->player, SL_IID_PLAY, &this->play_itf) != SL_RESULT_SUCCESS)
 					R_ERROR("[Rainbow::ConFuoco] Failed to get playback interface (%p)\n", stream);
 				if (!this->play_itf)
 				{
@@ -174,14 +186,14 @@ namespace ConFuoco
 				if (stream->type == STREAM)
 				{
 					this->loops = stream->loops;
-					if ((*this->play_itf)->SetCallbackEventsMask(this->play_itf, SL_PLAYEVENT_HEADATEND) != SL_RESULT_SUCCESS
-					    || (*this->play_itf)->RegisterCallback(this->play_itf, PlayCallback, &this->loops) != SL_RESULT_SUCCESS)
+					if (slSetCallbackEventsMask(this->play_itf, SL_PLAYEVENT_HEADATEND) != SL_RESULT_SUCCESS
+					    || slRegisterCallback(this->play_itf, PlayCallback, &this->loops) != SL_RESULT_SUCCESS)
 					{
 						this->release();
 						return false;
 					}
 				}
-				if ((*this->player)->GetInterface(this->player, SL_IID_VOLUME, &this->volume_itf) != SL_RESULT_SUCCESS)
+				if (slGetInterface(this->player, SL_IID_VOLUME, &this->volume_itf) != SL_RESULT_SUCCESS)
 					R_ERROR("[Rainbow::ConFuoco] Failed to get volume interface (%p)\n", stream);
 				return true;
 			}
@@ -192,7 +204,7 @@ namespace ConFuoco
 				this->stream = nullptr;
 				if (this->player)
 				{
-					(*this->player)->Destroy(this->player);
+					slDestroy(this->player);
 					this->player = nullptr;
 					this->play_itf = nullptr;
 					this->volume_itf = nullptr;
@@ -208,8 +220,12 @@ namespace ConFuoco
 		StreamPlayer players[Mixer::num_channels];
 	}
 
+	Mixer *Mixer::Instance = nullptr;
+
 	Mixer::Mixer() : master_gain(1.0f), context(new SLContext())
 	{
+		R_ASSERT(!Instance, "An instance of ConFuoco::Mixer already exists");
+
 		for (size_t i = 0; i < num_channels; ++i)
 		{
 			this->channels[i].ch = i;
@@ -220,6 +236,7 @@ namespace ConFuoco
 
 	Mixer::~Mixer()
 	{
+		Instance = nullptr;
 		this->clear();
 		delete static_cast<SLContext*>(this->context);
 	}
@@ -238,6 +255,11 @@ namespace ConFuoco
 			this->channels[i].sound = nullptr;
 			players[i].release();
 		}
+	}
+
+	void* Mixer::create_recorder()
+	{
+		return new SLRecorder(static_cast<SLContext*>(this->context)->engine);
 	}
 
 	Sound* Mixer::create_sound(const char *const file, const int type, const int loops)
@@ -325,7 +347,7 @@ namespace ConFuoco
 				StreamPlayer &player = players[i];
 				if (!player.play_itf)
 					continue;
-				(*player.play_itf)->GetPlayState(player.play_itf, &state);
+				slGetPlayState(player.play_itf, &state);
 				if (state == SL_PLAYSTATE_PLAYING)
 				{
 					this->pause(this->channels + i);
@@ -358,33 +380,114 @@ namespace ConFuoco
 	{
 		SLuint32 state;
 		SLPlayItf &itf = players[ch->ch].play_itf;
-		(*itf)->GetPlayState(itf, &state);
+		slGetPlayState(itf, &state);
 		return players[ch->ch].paused || state == SL_PLAYSTATE_PLAYING;
 	}
 
 	void Mixer::set_gain(Channel *ch, const float gain)
 	{
 		SLVolumeItf &itf = players[ch->ch].volume_itf;
-		(*itf)->SetVolumeLevel(itf, (1.0f - gain) * -100 * this->master_gain);
+		slSetVolumeLevel(itf, (1.0f - gain) * -100 * this->master_gain);
 	}
 
 	void Mixer::pause(Channel *ch)
 	{
-		SetPlayState(players[ch->ch].play_itf, SL_PLAYSTATE_PAUSED);
+		slSetPlayState(players[ch->ch].play_itf, SL_PLAYSTATE_PAUSED);
 		players[ch->ch].paused = true;
 	}
 
 	void Mixer::play(Channel *ch)
 	{
-		SetPlayState(players[ch->ch].play_itf, SL_PLAYSTATE_PLAYING);
+		slSetPlayState(players[ch->ch].play_itf, SL_PLAYSTATE_PLAYING);
 		players[ch->ch].paused = false;
 	}
 
 	void Mixer::stop(Channel *ch)
 	{
-		SetPlayState(players[ch->ch].play_itf, SL_PLAYSTATE_STOPPED);
+		slSetPlayState(players[ch->ch].play_itf, SL_PLAYSTATE_STOPPED);
 		players[ch->ch].paused = false;
+	}
+
+	SLRecorder::SLRecorder(SLEngineItf engine) :
+		active_buffer(0), object(nullptr), interface(nullptr), buffer(nullptr), samples(nullptr)
+	{
+		SLDataLocator_IODevice iodev = {
+			SL_DATALOCATOR_IODEVICE,
+			SL_IODEVICE_AUDIOINPUT,
+			SL_DEFAULTDEVICEID_AUDIOINPUT,
+			nullptr
+		};
+		SLDataSource source = { &iodev, nullptr };
+
+		SLDataLocator_AndroidSimpleBufferQueue buffer_queue = {
+			SL_DATALOCATOR_ANDROIDSIMPLEBUFFERQUEUE, kNumInputSampleBuffers
+		};
+		SLDataFormat_PCM pcm_format = {
+			SL_DATAFORMAT_PCM,
+			1,
+			SL_SAMPLINGRATE_16,
+			SL_PCMSAMPLEFORMAT_FIXED_16,
+			SL_PCMSAMPLEFORMAT_FIXED_16,
+			SL_SPEAKER_FRONT_CENTER,
+			SL_BYTEORDER_LITTLEENDIAN
+		};
+		SLDataSink sink = { &buffer_queue, &pcm_format };
+
+		const SLInterfaceID iids[] = { SL_IID_ANDROIDSIMPLEBUFFERQUEUE };
+		const SLboolean req[] = { SL_BOOLEAN_TRUE };
+
+		if (slCreateAudioRecorder(engine, &(this->object), &source, &sink, 1, iids, req) != SL_RESULT_SUCCESS)
+		{
+			R_ERROR("[Rainbow::ConFuoco] Failed to create audio recorder\n");
+			return;
+		}
+		if (slRealize(this->object, SL_BOOLEAN_FALSE) != SL_RESULT_SUCCESS)
+		{
+			R_ERROR("[Rainbow::ConFuoco] Failed to realize audio recorder\n");
+			return;
+		}
+		if (slGetInterface(this->object, SL_IID_RECORD, &this->interface) != SL_RESULT_SUCCESS)
+		{
+			R_ERROR("[Rainbow::ConFuoco] Failed to get audio recorder interface\n");
+			return;
+		}
+
+		const size_t sz = kInputSamples * kNumInputSampleBuffers;
+		this->buffer = new short[sz];
+		memset(this->buffer, 0, sz);
+	}
+
+	SLRecorder::~SLRecorder()
+	{
+		if (this->object)
+			slDestroy(this->object);
+		delete this->buffer;
+	}
+
+	void SLRecorder::set_callback(slAndroidSimpleBufferQueueCallback callback, void *context)
+	{
+		if (slGetInterface(this->object, SL_IID_ANDROIDSIMPLEBUFFERQUEUE, &this->buffer_queue) != SL_RESULT_SUCCESS)
+		{
+			R_ERROR("[Rainbow::ConFuoco] Failed to get buffer queue interface\n");
+			return;
+		}
+		if (slRegisterCallback(buffer_queue, callback, context) != SL_RESULT_SUCCESS)
+		{
+			R_ERROR("[Rainbow::ConFuoco] Failed to set audio recorder callback\n");
+			return;
+		}
 	}
 }
 
+#undef slSetVolumeLevel
+#undef slSetPlayState
+#undef slSetCallbackEventsMask
+#undef slRegisterCallback
+#undef slRealize
+#undef slGetPlayState
+#undef slGetInterface
+#undef slDestroy
+#undef slCreateOutputMix
+#undef slCreateAudioRecorder
+#undef slCreateAudioPlayer
 #endif

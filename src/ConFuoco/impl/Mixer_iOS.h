@@ -12,24 +12,27 @@ namespace ConFuoco
 			AVAudioPlayer *player;
 			Channel *channel;
 
-			Stream(Mixer *m, const char *const file, const int loops) :
+			Stream(Mixer *m, const char *const filename, const int loops) :
 				Sound(STREAM, m), paused(false), player(nil), channel(nullptr)
 			{
-				NSError *err;
-				NSString *path = [NSString stringWithUTF8String:file];
-				path = [[NSBundle mainBundle]
-						pathForResource:[path stringByDeletingPathExtension]
-						         ofType:[path pathExtension]];
+				NSString *file = [NSString stringWithUTF8String:filename];
+				NSString *path = [[NSBundle mainBundle]
+						pathForResource:[file stringByDeletingPathExtension]
+						         ofType:[file pathExtension]];
+				if (!path)
+				{
+					NSLog(@"[Rainbow::ConFuoco/iOS] Failed to locate '%@'", file);
+					return;
+				}
+				NSError *err = nil;
 				this->player = [[AVAudioPlayer alloc]
 						initWithContentsOfURL:[NSURL fileURLWithPath:path]
 						                error:&err];
-				path = nil;
 				if (!this->player)
 				{
 					NSLog(@"[Rainbow::ConFuoco/iOS] %@", [err description]);
 					return;
 				}
-
 				this->player.numberOfLoops = loops;
 				[this->player prepareToPlay];
 			}

@@ -29,10 +29,26 @@ namespace Rainbow
 		return fabs(a - b) <= ((fabs(a) < fabs(b) ? fabs(b) : fabs(a)) * FLT_EPSILON);
 	}
 
+	/// Fast inverse square root by 0x5f3759df.
+	inline float fast_invsqrt(float x)
+	{
+		float xhalf = x * 0.5f;
+		int i = *reinterpret_cast<int*>(&x);
+		i = 0x5f3759df - (i >> 1);
+		x = *reinterpret_cast<float*>(&i);
+		return x * (1.5f - (xhalf * x * x));
+	}
+
 	/// Determine whether an integer is a power of 2.
 	inline bool is_pow2(const unsigned int i)
 	{
 		return i && !(i & (i - 1));
+	}
+
+	/// Low-pass filter.
+	inline float low_pass(const float value, const float low_pass)
+	{
+		return kLowPassAlpha * powf(10.0f, value * kLowPassAlpha) + (1.0f - kLowPassAlpha) * low_pass;
 	}
 
 	template<typename T>
