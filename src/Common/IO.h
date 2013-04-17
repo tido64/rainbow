@@ -5,6 +5,7 @@
 
 #include "Platform/Definitions.h"
 #if defined(RAINBOW_ANDROID)
+#	include <cstring>
 #	include <android/asset_manager.h>
 
 extern struct AAssetManager *g_asset_manager;
@@ -57,8 +58,18 @@ namespace Rainbow
 		{
 		#if defined(RAINBOW_ANDROID)
 
+			// Android doesn't ignore multiple '/' in paths.
+			int j = -1;
+			char path[256];
+			for (size_t i = 0; i < strlen(file); ++i)
+			{
+				if (file[i] == '/' && file[i + 1] == '/')
+					continue;
+				path[++j] = file[i];
+			}
+			path[j] = '\0';
+			return AAssetManager_open(g_asset_manager, path, AASSET_MODE_UNKNOWN);
 			static_cast<void>(flag);
-			return AAssetManager_open(g_asset_manager, file, AASSET_MODE_UNKNOWN);
 
 		#elif defined(RAINBOW_IOS)
 
