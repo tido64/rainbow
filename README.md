@@ -16,7 +16,8 @@ Rainbow is a scriptable, cross-platform, 2D rendering engine written in C++.
 
 - OpenAL as backend on most platforms.
   [OpenSL ES](http://www.khronos.org/opensles/) on Android.
-- [Ogg Vorbis](http://www.vorbis.com/) on most platforms. On iOS, see the
+- [Ogg Vorbis](http://www.vorbis.com/) on most platforms. On iOS (exclusively)
+  and Mac OS X (in addition), see the
   [Multimedia Programming Guide](http://developer.apple.com/library/ios/#documentation/AudioVideo/Conceptual/MultimediaPG/UsingAudio/UsingAudio.html).
 
 ### Graphics

@@ -1,6 +1,9 @@
 #ifdef RAINBOW_IOS
+
 #include <AudioToolbox/AudioServices.h>
 #include <AVFoundation/AVAudioPlayer.h>
+
+#include "Common/IO.h"
 
 namespace ConFuoco
 {
@@ -12,16 +15,13 @@ namespace ConFuoco
 			AVAudioPlayer *player;
 			Channel *channel;
 
-			Stream(Mixer *m, const char *const filename, const int loops) :
+			Stream(Mixer *m, const char *const file, const int loops) :
 				Sound(STREAM, m), paused(false), player(nil), channel(nullptr)
 			{
-				NSString *file = [NSString stringWithUTF8String:filename];
-				NSString *path = [[NSBundle mainBundle]
-						pathForResource:[file stringByDeletingPathExtension]
-						         ofType:[file pathExtension]];
+				NSString *path = Rainbow::IO::open(file, Rainbow::IO::ASSET);
 				if (!path)
 				{
-					NSLog(@"[Rainbow::ConFuoco/iOS] Failed to locate '%@'", file);
+					NSLog(@"[Rainbow::ConFuoco/AVFoundation] Failed to locate '%s'", file);
 					return;
 				}
 				NSError *err = nil;
@@ -30,7 +30,7 @@ namespace ConFuoco
 						                error:&err];
 				if (!this->player)
 				{
-					NSLog(@"[Rainbow::ConFuoco/iOS] %@", [err description]);
+					NSLog(@"[Rainbow::ConFuoco/AVFoundation] %@", [err description]);
 					return;
 				}
 				this->player.numberOfLoops = loops;
@@ -78,7 +78,7 @@ namespace ConFuoco
 					break;
 				case kAudioSessionEndInterruption:
 					if (AudioSessionSetActive(true))
-						NSLog(@"[Rainbow::ConFuoco/iOS] Failed to activate audio session\n");
+						NSLog(@"[Rainbow::ConFuoco/AVFoundation] Failed to activate audio session\n");
 					mixer->suspend(false);
 					break;
 				default:
@@ -95,7 +95,7 @@ namespace ConFuoco
 			CFStringRef new_route;
 			OSStatus result = AudioSessionGetProperty(
 					kAudioSessionProperty_AudioRoute, &size, &new_route);
-			NSLog(@"[Rainbow::ConFuoco/iOS] Route changed from %@ to %@ (%ld)\n",
+			NSLog(@"[Rainbow::ConFuoco/AVFoundation] Route changed from %@ to %@ (%ld)\n",
 			      old_route, new_route, result);
 		}
 
@@ -104,7 +104,7 @@ namespace ConFuoco
 			OSStatus result = AudioSessionInitialize(0, 0, InterruptionListener, mixer);
 			if (result != 0 && result != kAudioSessionAlreadyInitialized)
 			{
-				NSLog(@"[Rainbow::ConFuoco/iOS] Failed to initialise audio device (%ld)\n", result);
+				NSLog(@"[Rainbow::ConFuoco/AVFoundation] Failed to initialise audio device (%ld)\n", result);
 				return;
 			}
 
@@ -113,7 +113,7 @@ namespace ConFuoco
 			result = AudioSessionGetProperty(
 					kAudioSessionProperty_OtherAudioIsPlaying, &propertySize, &property);
 			if (result != 0)
-				NSLog(@"[Rainbow::ConFuoco/iOS] Failed to find out whether audio device is in use (%ld)\n", result);
+				NSLog(@"[Rainbow::ConFuoco/AVFoundation] Failed to find out whether audio device is in use (%ld)\n", result);
 
 			property = kAudioSessionCategory_PlayAndRecord;
 			result = AudioSessionSetProperty(
@@ -126,23 +126,23 @@ namespace ConFuoco
 						kAudioSessionProperty_AudioCategory, sizeof(property), &property);
 				if (result != 0)
 			#endif
-					NSLog(@"[Rainbow::ConFuoco/iOS] Failed to set audio session category (%ld)\n", result);
+					NSLog(@"[Rainbow::ConFuoco/AVFoundation] Failed to set audio session category (%ld)\n", result);
 			}
 
 			property = kAudioSessionOverrideAudioRoute_Speaker;
 			result = AudioSessionSetProperty(
 					kAudioSessionProperty_OverrideAudioRoute, sizeof(property), &property);
 			if (result != 0)
-				NSLog(@"[Rainbow::ConFuoco/iOS] Failed to override audio route (%ld)\n", result);
+				NSLog(@"[Rainbow::ConFuoco/AVFoundation] Failed to override audio route (%ld)\n", result);
 
 			result = AudioSessionAddPropertyListener(
 					kAudioSessionProperty_AudioRouteChange, RouteChangeListener, mixer);
 			if (result != 0)
-				NSLog(@"[Rainbow::ConFuoco/iOS] Failed to add audio route change listener (%ld)\n", result);
+				NSLog(@"[Rainbow::ConFuoco/AVFoundation] Failed to add audio route change listener (%ld)\n", result);
 
 			result = AudioSessionSetActive(true);
 			if (result != 0)
-				NSLog(@"[Rainbow::ConFuoco/iOS] Failed to activate audio session (%ld)\n", result);
+				NSLog(@"[Rainbow::ConFuoco/AVFoundation] Failed to activate audio session (%ld)\n", result);
 		}
 	}
 }

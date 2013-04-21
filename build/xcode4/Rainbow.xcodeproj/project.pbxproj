@@ -151,9 +151,10 @@
 		19905B8D152C50FA00BDD15C /* Utils.lua in Resources */ = {isa = PBXBuildFile; fileRef = 19905B83152C50FA00BDD15C /* Utils.lua */; };
 		19AF589F167FFA0800F54B27 /* DebugInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19AF589A167FFA0800F54B27 /* DebugInfo.cpp */; };
 		19AF58A0167FFA0800F54B27 /* Overlay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19AF589C167FFA0800F54B27 /* Overlay.cpp */; };
+		19CEDD71172422DC008B73B5 /* AudioFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19CEDD6A172422DC008B73B5 /* AudioFile.cpp */; };
+		19CEDD72172422DC008B73B5 /* AppleAudioFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19CEDD6D172422DC008B73B5 /* AppleAudioFile.cpp */; };
 		19E91FC21682B1460054D61F /* LuaHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19E91FC01682B1460054D61F /* LuaHelper.cpp */; };
 		19EBC54416599D5100D3B5D7 /* Channel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19EBC54216599D5100D3B5D7 /* Channel.cpp */; };
-		19EBC54B16599D7000D3B5D7 /* Decoder_iOS.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19EBC54616599D7000D3B5D7 /* Decoder_iOS.cpp */; };
 		19EBC54D16599D7000D3B5D7 /* Mixer_AL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19EBC54816599D7000D3B5D7 /* Mixer_AL.cpp */; };
 		19EBC55116599D9F00D3B5D7 /* ShaderManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19EBC54F16599D9F00D3B5D7 /* ShaderManager.cpp */; };
 		19ED191C1682247D00AAA323 /* lua_Renderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19ED191A1682247D00AAA323 /* lua_Renderer.cpp */; };
@@ -466,7 +467,6 @@
 		1939A19F152C425D00494609 /* Vector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Vector.h; sourceTree = "<group>"; };
 		1939A1A0152C425D00494609 /* Config.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; name = Config.cpp; path = ../../../src/Config.cpp; sourceTree = "<group>"; };
 		1939A1A1152C425D00494609 /* Config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Config.h; path = ../../../src/Config.h; sourceTree = "<group>"; };
-		1939A1A3152C425D00494609 /* Decoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Decoder.h; sourceTree = "<group>"; };
 		1939A1B1152C425D00494609 /* Mixer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Mixer.h; sourceTree = "<group>"; };
 		1939A1B4152C425D00494609 /* Recorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Recorder.h; sourceTree = "<group>"; };
 		1939A1B5152C425D00494609 /* Sound.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Sound.h; sourceTree = "<group>"; };
@@ -557,11 +557,14 @@
 		19AF589C167FFA0800F54B27 /* Overlay.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Overlay.cpp; sourceTree = "<group>"; };
 		19AF589D167FFA0800F54B27 /* Overlay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Overlay.h; sourceTree = "<group>"; };
 		19AF589E167FFA0800F54B27 /* Resources.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Resources.h; sourceTree = "<group>"; };
+		19CEDD6A172422DC008B73B5 /* AudioFile.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = AudioFile.cpp; sourceTree = "<group>"; };
+		19CEDD6B172422DC008B73B5 /* AudioFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioFile.h; sourceTree = "<group>"; };
+		19CEDD6D172422DC008B73B5 /* AppleAudioFile.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = AppleAudioFile.cpp; sourceTree = "<group>"; };
+		19CEDD6E172422DC008B73B5 /* AppleAudioFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppleAudioFile.h; sourceTree = "<group>"; };
 		19E91FC01682B1460054D61F /* LuaHelper.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = LuaHelper.cpp; sourceTree = "<group>"; };
 		19E91FC11682B1460054D61F /* LuaHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LuaHelper.h; sourceTree = "<group>"; };
 		19EBC54216599D5100D3B5D7 /* Channel.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = Channel.cpp; sourceTree = "<group>"; };
 		19EBC54316599D5100D3B5D7 /* Channel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Channel.h; sourceTree = "<group>"; };
-		19EBC54616599D7000D3B5D7 /* Decoder_iOS.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = Decoder_iOS.cpp; sourceTree = "<group>"; };
 		19EBC54816599D7000D3B5D7 /* Mixer_AL.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = Mixer_AL.cpp; sourceTree = "<group>"; };
 		19EBC54916599D7000D3B5D7 /* Mixer_iOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Mixer_iOS.h; sourceTree = "<group>"; };
 		19EBC54F16599D9F00D3B5D7 /* ShaderManager.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = ShaderManager.cpp; sourceTree = "<group>"; };
@@ -1064,9 +1067,11 @@
 			isa = PBXGroup;
 			children = (
 				1939A1A4152C425D00494609 /* impl */,
+				19CEDD6C172422DC008B73B5 /* Codecs */,
+				19CEDD6A172422DC008B73B5 /* AudioFile.cpp */,
+				19CEDD6B172422DC008B73B5 /* AudioFile.h */,
 				19EBC54216599D5100D3B5D7 /* Channel.cpp */,
 				19EBC54316599D5100D3B5D7 /* Channel.h */,
-				1939A1A3152C425D00494609 /* Decoder.h */,
 				1939A1B1152C425D00494609 /* Mixer.h */,
 				1939A1B4152C425D00494609 /* Recorder.h */,
 				1939A1B5152C425D00494609 /* Sound.h */,
@@ -1078,7 +1083,6 @@
 		1939A1A4152C425D00494609 /* impl */ = {
 			isa = PBXGroup;
 			children = (
-				19EBC54616599D7000D3B5D7 /* Decoder_iOS.cpp */,
 				19EBC54816599D7000D3B5D7 /* Mixer_AL.cpp */,
 				19EBC54916599D7000D3B5D7 /* Mixer_iOS.h */,
 				19F98DA0171970C000A85873 /* Recorder_iOS.mm */,
@@ -1322,6 +1326,15 @@
 			path = Rainbow;
 			sourceTree = "<group>";
 		};
+		19CEDD6C172422DC008B73B5 /* Codecs */ = {
+			isa = PBXGroup;
+			children = (
+				19CEDD6D172422DC008B73B5 /* AppleAudioFile.cpp */,
+				19CEDD6E172422DC008B73B5 /* AppleAudioFile.h */,
+			);
+			path = Codecs;
+			sourceTree = "<group>";
+		};
 		19F98DA4171B5DC000A85873 /* impl */ = {
 			isa = PBXGroup;
 			children = (
@@ -1517,7 +1530,6 @@
 				196CB728161E4ADD0068C809 /* Gatekeeper.cpp in Sources */,
 				196CB72F161E4D940068C809 /* b2MotorJoint.cpp in Sources */,
 				19EBC54416599D5100D3B5D7 /* Channel.cpp in Sources */,
-				19EBC54B16599D7000D3B5D7 /* Decoder_iOS.cpp in Sources */,
 				19EBC54D16599D7000D3B5D7 /* Mixer_AL.cpp in Sources */,
 				19EBC55116599D9F00D3B5D7 /* ShaderManager.cpp in Sources */,
 				19AF589F167FFA0800F54B27 /* DebugInfo.cpp in Sources */,
@@ -1534,6 +1546,8 @@
 				193929BF16E3511F0018340B /* freetype.c in Sources */,
 				196911CD1713564A002BC2E4 /* VertexArray.cpp in Sources */,
 				19F98DA1171970C000A85873 /* Recorder_iOS.mm in Sources */,
+				19CEDD71172422DC008B73B5 /* AudioFile.cpp in Sources */,
+				19CEDD72172422DC008B73B5 /* AppleAudioFile.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

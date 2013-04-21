@@ -279,7 +279,10 @@ namespace ConFuoco
 
 		Rainbow::IO::FileHandle asset = Rainbow::IO::open(file, 0);
 		if (!asset)
+		{
+			R_DEBUG("[Rainbow::ConFuoco/SL] Failed to open '%s'\n", file);
 			return nullptr;
+		}
 
 		off_t offset, length;
 		int fd = AAsset_openFileDescriptor(asset, &offset, &length);
@@ -289,6 +292,7 @@ namespace ConFuoco
 
 		Stream *stream = new Stream(type, this, android_fd, loops);
 		this->sounds.push_back(stream);
+		R_DEBUG("[Rainbow::ConFuoco/SL] '%s' => %p (stream)\n", file, static_cast<void*>(stream));
 		return stream;
 	}
 
@@ -307,19 +311,23 @@ namespace ConFuoco
 		{
 			ch = this->next_channel();
 			if (!ch)
+			{
+				R_DEBUG("[Rainbow::ConFuoco/SL] All channels are busy\n");
 				return nullptr;
+			}
 
 			s->channel = ch->ch;
 			bool success = players[s->channel].load(static_cast<SLContext*>(this->context), s);
 			if (!success)
+			{
+				R_DEBUG("[Rainbow::ConFuoco/SL] Failed to load %p\n", static_cast<void*>(snd));
 				return nullptr;
+			}
 		}
-		if (!ch)
-			return nullptr;
-
 		ch->sound = snd;
 		this->set_gain(ch, this->master_gain);
 		this->play(ch);
+		R_DEBUG("[Rainbow::ConFuoco/SL] %p -> %u\n", static_cast<void*>(snd), ch->ch);
 		return ch;
 	}
 
@@ -335,6 +343,7 @@ namespace ConFuoco
 				players[i].release();
 			}
 		}
+		R_DEBUG("[Rainbow::ConFuoco/SL] <- %p\n", static_cast<void*>(snd));
 	}
 
 	void Mixer::suspend(const bool suspend)

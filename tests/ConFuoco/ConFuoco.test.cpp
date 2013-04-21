@@ -117,7 +117,7 @@ TEST(ConFuocoTest, MixedPlayback)
 	ConFuoco::Mixer mixer;
 	ConFuoco::Channel *ch[4];
 
-	ConFuoco::Sound *stream = mixer.create_sound(silence, ConFuoco::STREAM);
+	ConFuoco::Sound *stream = mixer.create_sound(silence, ConFuoco::STATIC);
 	ch[0] = mixer.play(stream);
 	ASSERT_TRUE(!ch[0]->is_paused() && ch[0]->is_playing());
 	ch[0]->stop();
