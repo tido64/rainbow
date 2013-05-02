@@ -55,7 +55,7 @@ case $1 in
 		$SHELL $0 --help
 		;;
 	"linux")
-		CC=${CC:-clang} CXX=${CXX:-clang} cmake $ARGS -G "$GENERATOR" "$RB" &&
+		CC=${CC:-clang} CXX=${CXX:-clang++} cmake $ARGS -G "$GENERATOR" "$RB" &&
 		compile "$GENERATOR"
 		;;
 	"mac")

@@ -1,4 +1,5 @@
 #ifdef RAINBOW_MAC
+#include <ctime>
 #include <mach/mach_time.h>
 
 namespace Rainbow
@@ -20,6 +21,13 @@ namespace Rainbow
 			return (double)t * (double)info.numer / (double)(info.denom * 1.0e6);
 		}
 	};
+
+	template<class T>
+	void ChronoBase<T>::sleep(const unsigned int ms)
+	{
+		const struct timespec request = { 0, ms * 1000000l };
+		nanosleep(&request, nullptr);
+	}
 }
 
 typedef Rainbow::ChronoBase<Rainbow::GetTimeApple> Chrono;

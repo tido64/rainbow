@@ -1,11 +1,10 @@
-#include <unistd.h>
 #include "Common/Chrono.h"
 
-TEST(ChronoTest, DISABLED_Sleep)
+TEST(ChronoTest, Diff)
 {
 	Chrono chrono;
 	chrono.update();
-	usleep(16000);
+	Chrono::sleep(16);
 	chrono.update();
-	ASSERT_FLOAT_EQ(16.0f, static_cast<const float>(chrono.diff()));
+	ASSERT_LE(16.0f, chrono.diff());
 }

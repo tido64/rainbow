@@ -5,14 +5,14 @@ using Rainbow::equalf;
 TEST(AlgorithmTest, ApproximatelyEqualFloats)
 {
 	ASSERT_TRUE(equalf(0.0f, 0.0f));
-	ASSERT_FALSE(equalf(0.0f, 0.1f));
-	ASSERT_FALSE(equalf(0.0f, -0.1f));
+	ASSERT_FALSE(equalf(0.0f, 0.00001f));
+	ASSERT_FALSE(equalf(0.0f, -0.00001f));
 	ASSERT_TRUE(equalf(3.14285714f, 22.0f / 7.0f));
 }
 
 TEST(AlgorithmTest, DegreesToRadians)
 {
-	ASSERT_TRUE(equalf(3.14f, Rainbow::radians(Rainbow::degrees(3.14f))));
+	ASSERT_TRUE(equalf(kPi, Rainbow::radians(Rainbow::degrees(kPi))));
 }
 
 TEST(AlgorithmTest, IsPowerOfTwo)
@@ -30,6 +30,16 @@ TEST(AlgorithmTest, IsPowerOfTwo)
 	}
 }
 
+TEST(AlgorithmTest, MaxMin)
+{
+	ASSERT_EQ(2, Rainbow::max(1, 2));
+	ASSERT_EQ(1, Rainbow::max(1, 1));
+	ASSERT_EQ(1, Rainbow::max(1, 0));
+	ASSERT_EQ(1, Rainbow::min(1, 2));
+	ASSERT_EQ(1, Rainbow::min(1, 1));
+	ASSERT_EQ(0, Rainbow::min(1, 0));
+}
+
 TEST(AlgorithmTest, NextPowerOfTwo)
 {
 	unsigned int p = 1;
@@ -44,6 +54,18 @@ TEST(AlgorithmTest, NextPowerOfTwo)
 TEST(AlgorithmTest, RadiansToDegrees)
 {
 	ASSERT_TRUE(equalf(0.05483f, Rainbow::degrees(Rainbow::radians(0.05483f))));
+}
+
+TEST(AlgorithmTest, Swap)
+{
+	float a = kPi;
+	float b = kPi_2;
+	Rainbow::swap(a, b);
+	ASSERT_EQ(kPi, b);
+	ASSERT_EQ(kPi_2, a);
+	Rainbow::swap(a, b);
+	ASSERT_EQ(kPi, a);
+	ASSERT_EQ(kPi_2, b);
 }
 
 TEST(AlgorithmTest, UTF8ToUTF32)

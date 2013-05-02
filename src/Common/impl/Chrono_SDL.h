@@ -14,6 +14,12 @@ namespace Rainbow
 			return SDL_GetTicks();
 		}
 	};
+
+	template<class T>
+	void ChronoBase<T>::sleep(const unsigned int ms)
+	{
+		SDL_Delay(ms);
+	}
 }
 
 typedef Rainbow::ChronoBase<Rainbow::GetTimeSDL> Chrono;

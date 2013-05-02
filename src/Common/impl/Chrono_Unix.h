@@ -1,6 +1,5 @@
 #if defined(RAINBOW_ANDROID) || (defined(RAINBOW_UNIX) && !defined(RAINBOW_MAC))
 #include <ctime>
-#include <unistd.h>
 
 namespace Rainbow
 {
@@ -17,6 +16,13 @@ namespace Rainbow
 			return t.tv_sec * 1000 + t.tv_nsec / 1e6;
 		}
 	};
+
+	template<class T>
+	void ChronoBase<T>::sleep(const unsigned int ms)
+	{
+		const struct timespec request = { 0, ms * 1000000l };
+		nanosleep(&request, nullptr);
+	}
 }
 
 typedef Rainbow::ChronoBase<Rainbow::GetTimeUnix> Chrono;

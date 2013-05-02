@@ -34,7 +34,7 @@ namespace
 		return node;
 	}
 
-	template<class T, bool unsafe = false>
+	template<class T, bool unsafe>
 	int add_child(SceneGraph::Node *root, lua_State *L)
 	{
 		R_ASSERT(lua_gettop(L) == 1 || lua_gettop(L) == 2, "Invalid parameters");
@@ -80,12 +80,12 @@ namespace Rainbow
 
 		int SceneGraph::add_animation(lua_State *L)
 		{
-			return add_child<Animation>(this->root, L);
+			return add_child<Animation, false>(this->root, L);
 		}
 
 		int SceneGraph::add_batch(lua_State *L)
 		{
-			return add_child<SpriteBatch>(this->root, L);
+			return add_child<SpriteBatch, false>(this->root, L);
 		}
 
 		int SceneGraph::add_drawable(lua_State *L)
@@ -95,7 +95,7 @@ namespace Rainbow
 
 		int SceneGraph::add_label(lua_State *L)
 		{
-			return add_child<Label>(this->root, L);
+			return add_child<Label, false>(this->root, L);
 		}
 
 		int SceneGraph::add_node(lua_State *L)

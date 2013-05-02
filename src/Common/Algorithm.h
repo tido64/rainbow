@@ -14,23 +14,65 @@
 
 #include "Common/Constants.h"
 
+#ifndef _MSC_VER
+#	define pure __attribute__((const))
+#else
+#	define pure
+#	undef max
+#	undef min
+#endif
+
 namespace Rainbow
 {
 	/// Convert radians to degrees.
-	inline float degrees(const float r)
+	inline float degrees(const float r) pure;
+
+	/// Compare two floating point numbers and approximate.
+	/// \return \c true when approximately equal.
+	inline bool equalf(const float a, const float b) pure;
+
+	/// Fast inverse square root by 0x5f3759df.
+	inline float fast_invsqrt(float x) pure;
+
+	/// Determine whether an integer is a power of 2.
+	inline bool is_pow2(const unsigned int i) pure;
+
+	/// Low-pass filter.
+	inline float low_pass(const float value, const float low_pass) pure;
+
+	template<typename T>
+	inline const T& max(const T &a, const T &b) pure;
+
+	template<typename T>
+	inline const T& min(const T &a, const T &b) pure;
+
+	/// Calculate the next power of 2.
+	/// \note 0 is incorrectly considered a power of 2.
+	inline unsigned int next_pow2(unsigned int i) pure;
+
+	/// Convert degrees to radians.
+	inline float radians(const float d) pure;
+
+	template<typename T>
+	inline void swap(T &a, T &b);
+
+	/// Convert a UTF-8 character to UTF-32.
+	/// \param[in]  str    UTF-8 encoded string.
+	/// \param[out] bytes  Number of bytes consumed.
+	/// \return UTF-32 character. Otherwise -1.
+	inline unsigned long utf8_decode(const unsigned char *str, size_t &bytes);
+
+	float degrees(const float r)
 	{
 		return r * kRadian;
 	}
 
-	/// Compare two floating point numbers and approximate.
-	/// \return \c true when approximately equal.
-	inline bool equalf(const float a, const float b)
+	bool equalf(const float a, const float b)
 	{
 		return fabs(a - b) <= ((fabs(a) < fabs(b) ? fabs(b) : fabs(a)) * FLT_EPSILON);
 	}
 
-	/// Fast inverse square root by 0x5f3759df.
-	inline float fast_invsqrt(float x)
+	float fast_invsqrt(float x)
 	{
 		float xhalf = x * 0.5f;
 		int i = *reinterpret_cast<int*>(&x);
@@ -39,33 +81,29 @@ namespace Rainbow
 		return x * (1.5f - (xhalf * x * x));
 	}
 
-	/// Determine whether an integer is a power of 2.
-	inline bool is_pow2(const unsigned int i)
+	bool is_pow2(const unsigned int i)
 	{
 		return i && !(i & (i - 1));
 	}
 
-	/// Low-pass filter.
-	inline float low_pass(const float value, const float low_pass)
+	float low_pass(const float value, const float low_pass)
 	{
 		return kLowPassAlpha * powf(10.0f, value * kLowPassAlpha) + (1.0f - kLowPassAlpha) * low_pass;
 	}
 
 	template<typename T>
-	inline const T& max(const T &a, const T &b)
+	const T& max(const T &a, const T &b)
 	{
 		return (a < b) ? b : a;
 	}
 
 	template<typename T>
-	inline const T& min(const T &a, const T &b)
+	const T& min(const T &a, const T &b)
 	{
 		return (b < a) ? b : a;
 	}
 
-	/// Calculate the next power of 2.
-	/// \note 0 is incorrectly considered a power of 2.
-	inline unsigned int next_pow2(unsigned int i)
+	unsigned int next_pow2(unsigned int i)
 	{
 		--i;
 		i |= i >>  1;
@@ -76,25 +114,20 @@ namespace Rainbow
 		return ++i;
 	}
 
-	/// Convert degrees to radians.
-	inline float radians(const float d)
+	float radians(const float d)
 	{
 		return d * kDegree;
 	}
 
 	template<typename T>
-	inline void swap(T &a, T &b)
+	void swap(T &a, T &b)
 	{
 		T tmp = a;
 		a = b;
 		b = tmp;
 	}
 
-	/// Convert a UTF-8 character to UTF-32.
-	/// \param[in]  str    UTF-8 encoded string.
-	/// \param[out] bytes  Number of bytes consumed.
-	/// \return UTF-32 character. Otherwise -1.
-	inline unsigned long utf8_decode(const unsigned char *str, size_t &bytes)
+	unsigned long utf8_decode(const unsigned char *str, size_t &bytes)
 	{
 		bytes = 0;
 		if (!(str[0] & 0x80))
@@ -146,4 +179,5 @@ namespace Rainbow
 	}
 }
 
+#undef pure
 #endif

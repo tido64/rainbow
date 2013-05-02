@@ -16,6 +16,8 @@ namespace Rainbow
 	class ChronoBase : private NonCopyable<ChronoBase<T> >
 	{
 	public:
+		static void sleep(const unsigned int milliseconds);
+
 		inline ChronoBase();
 
 		/// Return timestamp of current frame.

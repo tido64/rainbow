@@ -31,7 +31,6 @@ namespace SceneGraph
 			DrawableNode,
 			GroupNode,
 			LabelNode,
-			SpriteNode,
 			SpriteBatchNode
 		} type;  ///< Defines what type of graphical element this node represents.
 
@@ -108,9 +107,6 @@ namespace SceneGraph
 
 	Node::Node(Label *l) :
 		enabled(true), type(LabelNode), label(l) { }
-
-	Node::Node(Sprite *s) :
-		enabled(true), type(SpriteNode), data(s) { }
 
 	Node::Node(SpriteBatch *b) :
 		enabled(true), type(SpriteBatchNode), data(b) { }

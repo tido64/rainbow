@@ -47,9 +47,6 @@ namespace SceneGraph
 			case LabelNode:
 				this->label->move(delta);
 				break;
-			case SpriteNode:
-				this->sprite->move(delta);
-				break;
 			case SpriteBatchNode: {
 				Vector<Sprite*> &sprites = this->sprite_batch->sprites;
 				for (size_t i = 0; i < sprites.size(); ++i)
@@ -70,9 +67,6 @@ namespace SceneGraph
 
 		switch (this->type)
 		{
-			case SpriteNode:
-				this->sprite->rotate(r);
-				break;
 			case SpriteBatchNode: {
 				Vector<Sprite*> &sprites = this->sprite_batch->sprites;
 				for (size_t i = 0; i < sprites.size(); ++i)
@@ -90,9 +84,6 @@ namespace SceneGraph
 	{
 		switch (this->type)
 		{
-			case SpriteNode:
-				this->sprite->set_scale(f);
-				break;
 			case SpriteBatchNode: {
 				Vector<Sprite*> &sprites = this->sprite_batch->sprites;
 				for (size_t i = 0; i < sprites.size(); ++i)

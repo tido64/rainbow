@@ -96,8 +96,9 @@ namespace Rainbow
 		const char Rainbow_lua[] =
 				"__rainbow_modules = {}\n"
 				"function __update(dt)\n"
-					"for i = 1, #__rainbow_modules do\n"
-						"__rainbow_modules[i](dt)\n"
+					"local modules = __rainbow_modules\n"
+					"for i = 1, #modules do\n"
+						"modules[i](dt)\n"
 					"end\n"
 					"update(dt)\n"
 				"end\n";

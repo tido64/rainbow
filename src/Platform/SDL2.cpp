@@ -7,8 +7,13 @@
 #if SDL_VERSION_ATLEAST(1,3,0)
 
 #ifdef RAINBOW_WIN
+#	include <direct.h>
 #	include "Graphics/OpenGL.h"
 #	include <GL/glew.c>
+#	define PATH_SEP "\\"
+#	define getcwd(buf, size) _getcwd(buf, size)
+#else
+#	define PATH_SEP "/"
 #endif
 
 #ifdef RAINBOW_TEST
@@ -28,43 +33,170 @@
 bool active = true;  ///< Whether the window is in focus.
 bool done = false;   ///< Whether the user has requested to quit.
 
-unsigned int screen_width = 1280;    ///< Window width.
-unsigned int screen_height = 720;    ///< Window height.
-const double fps = 1000.0 / 60.0;    ///< Preferred frames per second.
-const float milli = 1.0f / 1000.0f;  ///< 1 millisecond.
-Touch mouse_input;                   ///< Mouse input.
-Chrono chrono;                       ///< Clock.
-
 char data_path[256] = { 0 };
 char userdata_path[256] = { 0 };
 
-void on_mouse_button_down(SDL_MouseButtonEvent &);  ///< Handle mouse button down event.
-void on_mouse_button_up(SDL_MouseButtonEvent &);    ///< Handle mouse button up event.
-void on_mouse_motion(SDL_MouseMotionEvent &);       ///< Handle mouse motion event.
-int sdl_exit(const char *const msg = nullptr,
-             SDL_Window *window = nullptr,
-             SDL_GLContext context = nullptr);
+namespace
+{
+	const double fps = 1000.0 / 60.0;    ///< Preferred frames per second.
+	Chrono chrono;                       ///< Clock.
 
+	void setcwd(const char *const path)
+	{
+		strcpy(data_path, path);  // Set data path
+		strcat(data_path, "/");
+		strcpy(userdata_path, data_path);  // Set user data path
+		strcat(userdata_path, "user/");
+	}
+
+	class RenderWindow
+	{
+	public:
+		RenderWindow(const unsigned int width, const unsigned int height);
+		~RenderWindow();
+
+		inline void swap();
+
+		void on_mouse_down(const SDL_MouseButtonEvent &mouse);
+		void on_mouse_motion(const SDL_MouseMotionEvent &mouse);
+		void on_mouse_up(const SDL_MouseButtonEvent &mouse);
+
+		inline operator bool() const;
+
+	private:
+		bool initialised;
+		const unsigned int height;
+		SDL_GLContext context;
+		SDL_Window *window;
+		Touch mouse;
+	};
+
+	RenderWindow::RenderWindow(const unsigned int width, const unsigned int height) :
+		initialised(false), height(height), context(nullptr), window(nullptr)
+	{
+		if (SDL_Init(SDL_INIT_VIDEO) < 0)
+		{
+			R_ERROR("[SDL] Unable to initialise video: %s\n", SDL_GetError());
+			return;
+		}
+
+		SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 5);
+		SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 6);
+		SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 5);
+		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+		SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 0);
+
+		this->window = SDL_CreateWindow(
+				RAINBOW_BUILD, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+				width, height, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
+		if (!this->window)
+		{
+			R_ERROR("[SDL] Failed to create window: %s\n", SDL_GetError());
+			return;
+		}
+
+		this->context = SDL_GL_CreateContext(this->window);
+		if (!this->window)
+		{
+			R_ERROR("[SDL] Failed to create GL context: %s\n", SDL_GetError());
+			return;
+		}
+		SDL_GL_SetSwapInterval(1);
+
+		this->initialised = Renderer::init();
+		if (!this->initialised)
+		{
+			R_ERROR("[Rainbow] Failed to initialise OpenGL\n");
+			return;
+		}
+		Renderer::resize(width, height);
+	}
+
+	RenderWindow::~RenderWindow()
+	{
+		if (this->initialised)
+			Renderer::release();
+		if (this->window)
+		{
+			if (this->context)
+				SDL_GL_DeleteContext(this->context);
+			SDL_DestroyWindow(this->window);
+		}
+		if (SDL_WasInit(SDL_INIT_VIDEO))
+			SDL_Quit();
+	}
+
+	void RenderWindow::swap()
+	{
+		SDL_GL_SwapWindow(this->window);
+	}
+
+	void RenderWindow::on_mouse_down(const SDL_MouseButtonEvent &mouse)
+	{
+		this->mouse.x = mouse.x;
+		this->mouse.y = this->height - mouse.y;
+		this->mouse.x0 = this->mouse.x;
+		this->mouse.y0 = this->mouse.y;
+		this->mouse.timestamp = chrono.current();
+		Input::Instance->touch_began(&this->mouse, 1);
+	}
+
+	void RenderWindow::on_mouse_motion(const SDL_MouseMotionEvent &mouse)
+	{
+		this->mouse.x0 = this->mouse.x;
+		this->mouse.y0 = this->mouse.y;
+		this->mouse.x = mouse.x;
+		this->mouse.y = this->height - mouse.y;
+		this->mouse.timestamp = chrono.current();
+		Input::Instance->touch_moved(&this->mouse, 1);
+	}
+
+	void RenderWindow::on_mouse_up(const SDL_MouseButtonEvent &mouse)
+	{
+		this->mouse.x = mouse.x;
+		this->mouse.y = this->height - mouse.y;
+		this->mouse.x0 = this->mouse.x;
+		this->mouse.y0 = this->mouse.y;
+		this->mouse.timestamp = chrono.current();
+		Input::Instance->touch_ended(&this->mouse, 1);
+	}
+
+	RenderWindow::operator bool() const
+	{
+		return this->initialised;
+	}
+}
 
 int main(int argc, char *argv[])
 {
 	if (argc < 2)
 	{
-	#ifdef RAINBOW_TEST
-		testing::InitGoogleTest(&argc, argv);
-		return RUN_ALL_TESTS();
-	#else
-		return 0;
-	#endif
+		const size_t size = 256;
+		char cwd[size];
+		getcwd(cwd, size);
+		setcwd(cwd);
+		strcat(cwd, PATH_SEP "main.lua");
+		FILE *file = fopen(cwd, "rb");
+		if (!file)
+		{
+		#ifdef RAINBOW_TEST
+			testing::InitGoogleTest(&argc, argv);
+			return RUN_ALL_TESTS();
+		#else
+			return 0;
+		#endif
+		}
+		fclose(file);
 	}
-	strcpy(data_path, argv[1]);  // Set data path
-	strcat(data_path, "/");
-	strcpy(userdata_path, data_path);  // Set user data path
-	strcat(userdata_path, "user/");
+	else
+		setcwd(argv[1]);
 
 	ConFuoco::Mixer mixer;
 	if (!ConFuoco::Mixer::Instance)
 		return 1;
+
+	unsigned int screen_width = 1280;
+	unsigned int screen_height = 720;
 
 	Rainbow::Config config;
 	if (config.get_width() && config.get_height())
@@ -73,37 +205,9 @@ int main(int argc, char *argv[])
 		screen_height = config.get_height();
 	}
 
-	if (SDL_Init(SDL_INIT_VIDEO) < 0)
-	{
-		R_ERROR("[SDL] Unable to initialise video: %s\n", SDL_GetError());
-		return 1;
-	}
-
-	SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 5);
-	SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 6);
-	SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 5);
-	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 0);
-
-	SDL_Window *window = SDL_CreateWindow(
-			RAINBOW_BUILD, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-			screen_width, screen_height, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
+	RenderWindow window(screen_width, screen_height);
 	if (!window)
-		return sdl_exit("[SDL] Failed to create window: %s\n");
-
-	SDL_GLContext context = SDL_GL_CreateContext(window);
-	if (!context)
-		return sdl_exit("[SDL] Failed to create GL context: %s\n", window);
-	SDL_GL_SetSwapInterval(1);
-
-	if (!Renderer::init())
-	{
-		R_ERROR("[Rainbow] Failed to initialise OpenGL\n");
-		Renderer::release();
-		sdl_exit(nullptr, window, context);
 		return 1;
-	}
-	Renderer::resize(screen_width, screen_height);
 
 	// Load game
 	Director director;
@@ -155,13 +259,13 @@ int main(int argc, char *argv[])
 					Input::Instance->key_up(Key::from_raw(&event.key.keysym));
 					break;
 				case SDL_MOUSEMOTION:
-					on_mouse_motion(event.motion);
+					window.on_mouse_motion(event.motion);
 					break;
 				case SDL_MOUSEBUTTONDOWN:
-					on_mouse_button_down(event.button);
+					window.on_mouse_down(event.button);
 					break;
 				case SDL_MOUSEBUTTONUP:
-					on_mouse_button_up(event.button);
+					window.on_mouse_up(event.button);
 					break;
 				default:
 					break;
@@ -173,7 +277,7 @@ int main(int argc, char *argv[])
 			if (done)
 				break;
 
-			SDL_Delay(static_cast<Uint32>(fps));
+			Chrono::sleep(static_cast<unsigned int>(fps));
 		}
 		else
 		{
@@ -183,56 +287,12 @@ int main(int argc, char *argv[])
 			// Draw
 			Renderer::clear();
 			director.draw();
-			SDL_GL_SwapWindow(window);
+			window.swap();
 		}
 	}
-	Renderer::release();
-	return sdl_exit(nullptr, window, context);
+	return 0;
 }
 
-void on_mouse_button_down(SDL_MouseButtonEvent &mouse)
-{
-	mouse_input.x = mouse.x;
-	mouse_input.y = screen_height - mouse.y;
-	mouse_input.x0 = mouse_input.x;
-	mouse_input.y0 = mouse_input.y;
-	mouse_input.timestamp = chrono.current();
-	Input::Instance->touch_began(&mouse_input, 1);
-}
-
-void on_mouse_button_up(SDL_MouseButtonEvent &mouse)
-{
-	mouse_input.x = mouse.x;
-	mouse_input.y = screen_height - mouse.y;
-	mouse_input.x0 = mouse_input.x;
-	mouse_input.y0 = mouse_input.y;
-	mouse_input.timestamp = chrono.current();
-	Input::Instance->touch_ended(&mouse_input, 1);
-}
-
-void on_mouse_motion(SDL_MouseMotionEvent &mouse)
-{
-	mouse_input.x0 = mouse_input.x;
-	mouse_input.y0 = mouse_input.y;
-	mouse_input.x = mouse.x;
-	mouse_input.y = screen_height - mouse.y;
-	mouse_input.timestamp = chrono.current();
-	Input::Instance->touch_moved(&mouse_input, 1);
-}
-
-int sdl_exit(const char *const msg, SDL_Window *window, SDL_GLContext context)
-{
-	if (msg)
-		R_ERROR(msg, SDL_GetError());
-	if (window)
-	{
-		if (context)
-			SDL_GL_DeleteContext(context);
-		SDL_DestroyWindow(window);
-	}
-	SDL_Quit();
-	return msg ? 1 : 0;
-}
-
-#endif  // SDL_VERSION_ATLEAST(2,0,0)
+#undef PATH_SEP
+#endif  // SDL_VERSION_ATLEAST(1,3,0)
 #endif  // RAINBOW_SDL
