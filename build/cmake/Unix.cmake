@@ -1,4 +1,6 @@
 if(MINGW OR UNIX)
+	find_package(OpenAL REQUIRED)
+	find_package(ZLIB REQUIRED)
 	set(RAINBOW_COMMON_CFLAGS "-fno-rtti -fno-exceptions")
 	if(MINGW)
 		set(RAINBOW_CSTD   "-std=gnu99")

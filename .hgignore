@@ -8,6 +8,8 @@ xcuserdata
 
 # Libraries
 \.(?:git|hg|svn)
+build/windows/include/AL
+build/windows/lib/libOpenAL32.dll.a
 lib/.*(?:\.cmake|\.txt|docs|html|LICENSE|Makefile|makefile|README)
 lib/dSFMT/check.sh
 lib/dSFMT/test.c

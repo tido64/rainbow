@@ -89,12 +89,12 @@ installed through [MacPorts](http://www.macports.org/).
 
 ### Windows
 
-Compiling with Visual Studio is supported but requires prebuilt `libogg`,
-`libvorbis`, `libvorbisfile` and `zlib`. Prebuilt
+Compiling with Visual Studio is supported using prebuilt `libogg`, `libvorbis`,
+`libvorbisfile` and `zlib`. Prebuilt
 [OpenAL Soft](http://kcat.strangesoft.net/openal.html) binary is offered at its
-official home page. Use the Windows build script to generate a Visual Studio
-project:
+official home page. Download it and place it with the others. Use the Windows
+build script to generate a Visual Studio project:
 
-	> \path\to\rainbow\tools\build-windows.bat
+	> \path\to\rainbow\tools\build.bat
 
 See Linux for an alternative method.

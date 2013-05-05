@@ -13,29 +13,29 @@ find_path(VORBISFILE_INCLUDE_DIR "vorbis/vorbisfile.h"
 	/opt/local/usr/include           # Mac OS X (MacPorts)
 	/usr/i486-mingw32/include        # MinGW
 	/usr/x86_64-w64-mingw32/include  # MinGW-w64 x64
-	../libs/include                  # Windows
+	build/windows/include            # Windows
 )
-find_library(VORBISFILE_LIBRARY NAMES vorbisfile libvorbisfile
-                                HINTS ../libs/Win32)
+find_library(VORBISFILE_LIBRARY NAMES vorbisfile libvorbisfile libvorbisfile_static
+                                HINTS build/windows/lib)
 
-if(MINGW)
+if(MINGW OR WIN32)
 	find_path(VORBIS_INCLUDE_DIR "vorbis/codec.h"
 		/usr/include                     # Linux
 		/usr/i486-mingw32/include        # MinGW
 		/usr/x86_64-w64-mingw32/include  # MinGW-w64 x64
-		../libs/include                  # Windows
+		build/windows/include            # Windows
 	)
-	find_library(VORBIS_LIBRARY NAMES vorbis libvorbis
-	                            HINTS ../libs/Win32)
+	find_library(VORBIS_LIBRARY NAMES vorbis libvorbis libvorbis_static
+	                            HINTS build/windows/lib)
 
 	find_path(OGG_INCLUDE_DIR "ogg/ogg.h"
 		/usr/include                     # Linux
 		/usr/i486-mingw32/include        # MinGW
 		/usr/x86_64-w64-mingw32/include  # MinGW-w64 x64
-		../libs/include                  # Windows
+		build/windows/include            # Windows
 	)
-	find_library(OGG_LIBRARY NAMES ogg libogg
-	                         HINTS ../libs/Win32)
+	find_library(OGG_LIBRARY NAMES ogg libogg libogg_static
+	                         HINTS build/windows/lib)
 
 	set(VORBISFILE_INCLUDE_DIR ${VORBISFILE_INCLUDE_DIR} ${VORBIS_INCLUDE_DIR} ${OGG_INCLUDE_DIR})
 	set(VORBISFILE_LIBRARY ${VORBISFILE_LIBRARY} ${VORBIS_LIBRARY} ${OGG_LIBRARY})
