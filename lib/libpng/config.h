@@ -63,7 +63,7 @@
 #define PACKAGE_NAME "libpng"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "libpng 1.6.0"
+#define PACKAGE_STRING "libpng 1.6.2"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "libpng"
@@ -72,7 +72,7 @@
 #define PACKAGE_URL ""
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "1.6.0"
+#define PACKAGE_VERSION "1.6.2"
 
 /* Align row buffers */
 #define PNG_ALIGNED_MEMORY_SUPPORTED 1
@@ -87,7 +87,7 @@
 /* #undef TM_IN_SYS_TIME */
 
 /* Version number of package */
-#define VERSION "1.6.0"
+#define VERSION "1.6.2"
 
 /* Define to empty if `const' does not conform to ANSI C. */
 /* #undef const */
