@@ -60,43 +60,6 @@ namespace SceneGraph
 			this->children[i]->move(delta);
 	}
 
-	void Node::rotate(const float r)
-	{
-		if (equalf(r, 0.0f))
-			return;
-
-		switch (this->type)
-		{
-			case SpriteBatchNode: {
-				Vector<Sprite*> &sprites = this->sprite_batch->sprites;
-				for (size_t i = 0; i < sprites.size(); ++i)
-					sprites[i]->rotate(r);
-				break;
-			}
-			default:
-				break;
-		}
-		for (size_t i = 0; i < this->children.size(); ++i)
-			this->children[i]->rotate(r);
-	}
-
-	void Node::scale(const float f)
-	{
-		switch (this->type)
-		{
-			case SpriteBatchNode: {
-				Vector<Sprite*> &sprites = this->sprite_batch->sprites;
-				for (size_t i = 0; i < sprites.size(); ++i)
-					sprites[i]->set_scale(f);
-				break;
-			}
-			default:
-				break;
-		}
-		for (size_t i = 0; i < this->children.size(); ++i)
-			this->children[i]->scale(f);
-	}
-
 	void Node::update(const unsigned long dt)
 	{
 		if (!this->enabled)

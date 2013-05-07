@@ -6,11 +6,17 @@
 
 namespace
 {
-	template<class T, bool unsafe = false>
+	enum CastingMethod
+	{
+		kCastingUnsafe,
+		kCastingSafe
+	};
+
+	template<class T, CastingMethod C>
 	struct ToUserData;
 
 	template<class T>
-	struct ToUserData<T, false>
+	struct ToUserData<T, kCastingSafe>
 	{
 		static T* Cast(lua_State *L, const int n)
 		{
@@ -19,7 +25,7 @@ namespace
 	};
 
 	template<class T>
-	struct ToUserData<T, true>
+	struct ToUserData<T, kCastingUnsafe>
 	{
 		static T* Cast(lua_State *L, const int n)
 		{
@@ -34,7 +40,7 @@ namespace
 		return node;
 	}
 
-	template<class T, bool unsafe>
+	template<class T, CastingMethod C>
 	int add_child(SceneGraph::Node *root, lua_State *L)
 	{
 		R_ASSERT(lua_gettop(L) == 1 || lua_gettop(L) == 2, "Invalid parameters");
@@ -45,7 +51,7 @@ namespace
 
 		// Retrieve Lua wrapper.
 		lua_rawgeti(L, n, 0);
-		T *obj = ToUserData<T, unsafe>::Cast(L, -1);
+		T *obj = ToUserData<T, C>::Cast(L, -1);
 		lua_pop(L, 1);
 
 		// Retrieve and add element.
@@ -73,29 +79,27 @@ namespace Rainbow
 			{ "remove",         &SceneGraph::remove },
 			{ "set_parent",     &SceneGraph::set_parent },
 			{ "move",           &SceneGraph::move },
-			{ "rotate",         &SceneGraph::rotate },
-			{ "scale",          &SceneGraph::scale },
 			{ 0, 0 }
 		};
 
 		int SceneGraph::add_animation(lua_State *L)
 		{
-			return add_child<Animation, false>(this->root, L);
+			return add_child<Animation, kCastingSafe>(this->root, L);
 		}
 
 		int SceneGraph::add_batch(lua_State *L)
 		{
-			return add_child<SpriteBatch, false>(this->root, L);
+			return add_child<SpriteBatch, kCastingSafe>(this->root, L);
 		}
 
 		int SceneGraph::add_drawable(lua_State *L)
 		{
-			return add_child<Drawable, true>(this->root, L);
+			return add_child<Drawable, kCastingUnsafe>(this->root, L);
 		}
 
 		int SceneGraph::add_label(lua_State *L)
 		{
-			return add_child<Label, false>(this->root, L);
+			return add_child<Label, kCastingSafe>(this->root, L);
 		}
 
 		int SceneGraph::add_node(lua_State *L)
@@ -149,24 +153,6 @@ namespace Rainbow
 			::SceneGraph::Node *node = check_node(L, 1);
 			const Vec2f delta(luaR_tonumber(L, 2), luaR_tonumber(L, 3));
 			node->move(delta);
-			return 0;
-		}
-
-		int SceneGraph::rotate(lua_State *L)
-		{
-			LUA_ASSERT(lua_gettop(L) == 2, "rainbow.scenegraph:rotate(node, r)");
-
-			::SceneGraph::Node *node = check_node(L, 1);
-			node->rotate(luaR_tonumber(L, 2));
-			return 0;
-		}
-
-		int SceneGraph::scale(lua_State *L)
-		{
-			LUA_ASSERT(lua_gettop(L) == 2, "rainbow.scenegraph:scale(node, f)");
-
-			::SceneGraph::Node *node = check_node(L, 1);
-			node->scale(luaR_tonumber(L, 2));
 			return 0;
 		}
 

@@ -7,16 +7,15 @@
 
 class Animation;
 class Label;
-class Sprite;
 class SpriteBatch;
 
 namespace SceneGraph
 {
 	/// A single node in a scene graph.
 	///
-	/// May represent either a sprite, sprite batch, or a group node. There are
-	/// no limits to how many children a node can have. Nodes may point to the
-	/// same set of data.
+	/// May represent an animation, label, sprite batch, or a group node. There
+	/// are no limits to how many children a node can have. Nodes may point to
+	/// the same set of data.
 	///
 	/// Copyright 2011-13 Bifrost Entertainment. All rights reserved.
 	/// \author Tommy Nguyen
@@ -40,7 +39,6 @@ namespace SceneGraph
 			Animation *animation;
 			Drawable *drawable;
 			Label *label;
-			Sprite *sprite;
 			SpriteBatch *sprite_batch;
 		};  ///< Graphical element represented by this node.
 
@@ -56,9 +54,6 @@ namespace SceneGraph
 
 		/// Create a label node.
 		inline explicit Node(Label *);
-
-		/// Create a sprite node.
-		inline explicit Node(Sprite *);
 
 		/// Create a sprite batch node.
 		inline explicit Node(SpriteBatch *);
@@ -78,16 +73,8 @@ namespace SceneGraph
 		/// Recursively move all sprites by (x,y).
 		void move(const Vec2f &);
 
+		/// Remove node from the graph and delete it.
 		inline void remove();
-
-		/// Recursively rotate all sprites by r.
-		/// \note All sprites will rotate about their own pivot points. This
-		///       means that currently, it is not possible to rotate the
-		///       whole screen "correctly".
-		void rotate(const float r);
-
-		/// Recursively scale all sprites by f.
-		void scale(const float f);
 
 		/// Update this node and all its enabled children.
 		void update(const unsigned long dt);

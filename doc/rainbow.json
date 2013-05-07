@@ -454,28 +454,12 @@ rainbow = {
 					"description": "Remove a node and all of its children from the graph.",
 				},
 				{
-					"name": ":rotate",
-					"parameters": [
-						"node", "The node to move.",
-						"r", "Angle of rotation in radians.",
-					],
-					"description": "Rotate a node and all of its children by given angle.",
-				},
-				{
 					"name": ":set_parent",
 					"parameters": [
 						"parent", "The new parent.",
 						"node", "The node to move.",
 					],
 					"description": "Move node to a new parent node.",
-				},
-				{
-					"name": ":scale",
-					"parameters": [
-						"node", "The node to scale.",
-						"f", "Scale factor.",
-					],
-					"description": "Scale a node and all of its children by given factor.",
 				},
 			],
 		},

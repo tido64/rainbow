@@ -29,8 +29,6 @@ namespace Rainbow
 			int set_parent(lua_State *);
 
 			int move(lua_State *);
-			int rotate(lua_State *);
-			int scale(lua_State *);
 
 		private:
 			::SceneGraph::Node *root;
