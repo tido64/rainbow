@@ -138,14 +138,14 @@ namespace ConFuoco
 		ALCdevice *device = alcOpenDevice(0);
 		if (!device)
 		{
-			R_ERROR("[Rainbow::ConFuoco/AL] alcOpenDevice error code %x\n", alGetError());
+			R_ERROR("[Rainbow::ConFuoco/AL] alcOpenDevice error code 0x%x\n", alGetError());
 			return;
 		}
 
 		ALCcontext *ctx = alcCreateContext(device, 0);
 		if (!ctx)
 		{
-			R_ERROR("[Rainbow::ConFuoco/AL] alcCreateContext error code %x\n", alGetError());
+			R_ERROR("[Rainbow::ConFuoco/AL] alcCreateContext error code 0x%x\n", alGetError());
 			return;
 		}
 		alcMakeContextCurrent(ctx);

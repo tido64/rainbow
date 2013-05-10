@@ -1,7 +1,6 @@
 #ifndef LABEL_H_
 #define LABEL_H_
 
-#include "Graphics/Drawable.h"
 #include "Graphics/FontAtlas.h"
 #include "Graphics/VertexArray.h"
 
@@ -9,7 +8,7 @@
 ///
 /// Copyright 2011-13 Bifrost Entertainment. All rights reserved.
 /// \author Tommy Nguyen
-class Label : public Drawable, private NonCopyable<Label>
+class Label : private NonCopyable<Label>
 {
 public:
 	enum Alignment
@@ -50,10 +49,10 @@ public:
 	void move(const Vec2f &);
 
 	/// Draw text at previously set position.
-	virtual void draw() override;
+	void draw();
 
 	/// Populate the vertex array.
-	virtual void update() override;
+	void update();
 
 private:
 	Colorb color;                 ///< Color of the text.

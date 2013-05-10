@@ -24,8 +24,10 @@ namespace SceneGraph
 		switch (this->type)
 		{
 			case DrawableNode:
-			case LabelNode:
 				this->drawable->draw();
+				break;
+			case LabelNode:
+				this->label->draw();
 				break;
 			case SpriteBatchNode:
 				this->sprite_batch->draw();
@@ -71,8 +73,10 @@ namespace SceneGraph
 				this->animation->update(dt);
 				break;
 			case DrawableNode:
-			case LabelNode:
 				this->drawable->update();
+				break;
+			case LabelNode:
+				this->label->update();
 				break;
 			case SpriteBatchNode:
 				this->sprite_batch->update();
@@ -82,12 +86,5 @@ namespace SceneGraph
 		}
 		for (size_t i = 0; i < this->children.size(); ++i)
 			this->children[i]->update(dt);
-	}
-
-	Node& Node::operator=(const Node &n)
-	{
-		this->type = n.type;
-		this->data = n.data;
-		return *this;
 	}
 }

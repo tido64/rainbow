@@ -73,7 +73,11 @@ namespace Rainbow
 
 		#elif defined(RAINBOW_IOS)
 
-			NSString *path = [NSString stringWithUTF8String:file];
+			NSString *path = [[NSString alloc]
+					initWithBytesNoCopy:(void*)file
+					             length:strlen(file)
+					           encoding:NSUTF8StringEncoding
+					       freeWhenDone:NO];
 			switch (flag)
 			{
 				case ASSET:

@@ -24,23 +24,14 @@ namespace SceneGraph
 	public:
 		bool enabled;  ///< Whether or not this node should be updated and/or drawn.
 
-		enum
+		const enum
 		{
+			GroupNode,
 			AnimationNode,
 			DrawableNode,
-			GroupNode,
 			LabelNode,
 			SpriteBatchNode
 		} type;  ///< Defines what type of graphical element this node represents.
-
-		union
-		{
-			void *data;
-			Animation *animation;
-			Drawable *drawable;
-			Label *label;
-			SpriteBatch *sprite_batch;
-		};  ///< Graphical element represented by this node.
 
 		/// Create a group node.
 		inline Node();
@@ -79,8 +70,15 @@ namespace SceneGraph
 		/// Update this node and all its enabled children.
 		void update(const unsigned long dt);
 
-		/// Copies a node's type and data.
-		Node& operator=(const Node &);
+	private:
+		union
+		{
+			void *data;
+			Animation *animation;
+			Drawable *drawable;
+			Label *label;
+			SpriteBatch *sprite_batch;
+		};  ///< Graphical element represented by this node.
 	};
 
 	Node::Node() :
