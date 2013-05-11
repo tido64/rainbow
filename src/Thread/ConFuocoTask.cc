@@ -5,7 +5,7 @@
 
 namespace Rainbow
 {
-	void ConFuocoTask::run()
+	void ConFuocoTask::run_impl()
 	{
 		this->mixer.update();
 	}

@@ -30,11 +30,6 @@ namespace Heimdall
 
 		inline void on_memory_warning();
 
-		virtual void touch_began(const Touch *const touches, const size_t count);
-		virtual void touch_canceled();
-		virtual void touch_ended(const Touch *const touches, const size_t count);
-		virtual void touch_moved(const Touch *const touches, const size_t count);
-
 	private:
 		int width;
 		int height;
@@ -53,6 +48,13 @@ namespace Heimdall
 		DebugInfo info;
 
 		inline void toggle_overlay();
+
+		/* Implement Touchable */
+
+		virtual void touch_began_impl(const Touch *const touches, const size_t count) override;
+		virtual void touch_canceled_impl() override;
+		virtual void touch_ended_impl(const Touch *const touches, const size_t count) override;
+		virtual void touch_moved_impl(const Touch *const touches, const size_t count) override;
 	};
 
 	void Gatekeeper::draw()

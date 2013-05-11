@@ -87,7 +87,7 @@ namespace Heimdall
 		this->scenegraph.update(dt);
 	}
 
-	void Gatekeeper::touch_began(const Touch *const touches, const size_t count)
+	void Gatekeeper::touch_began_impl(const Touch *const touches, const size_t count)
 	{
 		if (this->overlay_node->enabled)
 			return;
@@ -112,14 +112,14 @@ namespace Heimdall
 		}
 	}
 
-	void Gatekeeper::touch_canceled()
+	void Gatekeeper::touch_canceled_impl()
 	{
 		this->touch_count = 0;
 		this->touches[0].hash = -1;
 		this->touches[1].hash = -1;
 	}
 
-	void Gatekeeper::touch_ended(const Touch *const touches, const size_t count)
+	void Gatekeeper::touch_ended_impl(const Touch *const touches, const size_t count)
 	{
 		if (this->overlay_node->enabled && !this->touch_count)
 		{
@@ -144,7 +144,7 @@ namespace Heimdall
 		}
 	}
 
-	void Gatekeeper::touch_moved(const Touch *const, const size_t) { }
+	void Gatekeeper::touch_moved_impl(const Touch *const, const size_t) { }
 }
 
 #endif

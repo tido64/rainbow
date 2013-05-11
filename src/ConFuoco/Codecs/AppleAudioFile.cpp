@@ -83,7 +83,7 @@ namespace ConFuoco
 			ExtAudioFileDispose(this->ref);
 	}
 
-	int AppleAudioFile::get_channels() const
+	int AppleAudioFile::get_channels_impl() const
 	{
 		if (!this->ref)
 			return AudioFile::get_channels();
@@ -91,7 +91,7 @@ namespace ConFuoco
 		return this->format.mChannelsPerFrame;
 	}
 
-	int AppleAudioFile::get_rate() const
+	int AppleAudioFile::get_rate_impl() const
 	{
 		if (!this->ref)
 			return AudioFile::get_rate();
@@ -99,7 +99,7 @@ namespace ConFuoco
 		return this->format.mSampleRate;
 	}
 
-	size_t AppleAudioFile::read(char **dst)
+	size_t AppleAudioFile::read_impl(char **dst)
 	{
 		if (!this->ref)
 			return AudioFile::read(dst);
@@ -118,7 +118,7 @@ namespace ConFuoco
 		return this->read(*dst, size);
 	}
 
-	size_t AppleAudioFile::read(char *dst, const size_t size)
+	size_t AppleAudioFile::read_impl(char *dst, const size_t size)
 	{
 		if (!this->ref)
 			return AudioFile::read(dst, size);
@@ -134,7 +134,7 @@ namespace ConFuoco
 		return frames * this->format.mBytesPerFrame;
 	}
 
-	void AppleAudioFile::rewind()
+	void AppleAudioFile::rewind_impl()
 	{
 		if (!this->ref)
 			return AudioFile::rewind();

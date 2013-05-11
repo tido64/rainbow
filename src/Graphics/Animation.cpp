@@ -19,7 +19,7 @@ void Animation::set_frames(const unsigned int *const frames)
 	this->reset();
 }
 
-void Animation::tick()
+void Animation::tick_impl()
 {
 	this->sprite->set_texture(*this->frame);
 	if (!*(this->frame + 1))

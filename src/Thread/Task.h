@@ -7,9 +7,9 @@ namespace Rainbow
 {
 	/// A dispatchable task.
 	///
-	/// The main method to override here is \c run(). It will be executed on a
-	/// worker thread. If post-processing on the main thread is required,
-	/// \c end() should be overridden.
+	/// The main method to override here is \c run_impl(). It will be executed
+	/// on a worker thread. If post-processing on the main thread is required,
+	/// \c end_impl() should be overridden.
 	///
 	/// Copyright 2013 Bifrost Entertainment. All rights reserved.
 	/// \author Tommy Nguyen
@@ -19,11 +19,25 @@ namespace Rainbow
 		virtual ~Task() { }
 
 		/// End task. This is called on the main thread, after \c run().
-		virtual void end() { }
+		inline void end();
 
 		/// Run task. This is called on a worker thread.
-		virtual void run() = 0;
+		inline void run();
+
+	private:
+		virtual void end_impl() { }
+		virtual void run_impl() = 0;
 	};
+
+	void Task::end()
+	{
+		this->end_impl();
+	}
+
+	void Task::run()
+	{
+		this->run_impl();
+	}
 }
 
 #endif

@@ -5,12 +5,12 @@
 
 namespace Rainbow
 {
-	void SpriteBatchTask::end()
+	void SpriteBatchTask::end_impl()
 	{
 		this->batch.upload();
 	}
 
-	void SpriteBatchTask::run()
+	void SpriteBatchTask::run_impl()
 	{
 		this->batch.update();
 	}

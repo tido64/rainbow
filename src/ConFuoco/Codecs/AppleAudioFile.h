@@ -19,17 +19,17 @@ namespace ConFuoco
 		AppleAudioFile(const char *const file, const int mode);
 		virtual ~AppleAudioFile();
 
-		/* Implement AudioFile */
-
-		virtual int get_channels() const override;
-		virtual int get_rate() const override;
-		virtual size_t read(char **dst) override;
-		virtual size_t read(char *dst, const size_t size) override;
-		virtual void rewind() override;
-
 	private:
 		AudioStreamBasicDescription format;
 		ExtAudioFileRef ref;
+
+		/* Implement AudioFile */
+
+		virtual int get_channels_impl() const override;
+		virtual int get_rate_impl() const override;
+		virtual size_t read_impl(char **dst) override;
+		virtual size_t read_impl(char *dst, const size_t size) override;
+		virtual void rewind_impl() override;
 	};
 }
 

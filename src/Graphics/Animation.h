@@ -36,14 +36,14 @@ public:
 
 	inline void set_sprite(Sprite *);
 
-	virtual void tick() override;
-
 private:
 	int delay;                   ///< Number of ticks to delay before the animation loops. Negative numbers disable looping.
 	int idled;                   ///< Number of ticks idled.
 	const unsigned int *frame;   ///< Current frame.
 	const unsigned int *frames;  ///< Null-terminated array of texture ids to be used as frames.
 	Sprite *sprite;              ///< The sprite to animate.
+
+	virtual void tick_impl() override;
 };
 
 Animation::Animation(Sprite *s, const unsigned int *const fs, const unsigned int fps, const int d) :

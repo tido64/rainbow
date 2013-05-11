@@ -14,14 +14,14 @@ namespace Heimdall
 
 		void setup(const int width, const int height);
 
-		/* Implement Drawable. */
-
-		virtual void draw();
-		virtual void update();
-
 	private:
 		unsigned int texture;
 		SpriteVertex vertices[4];
+
+		/* Implement Drawable. */
+
+		virtual void draw_impl() override;
+		virtual void update_impl() override;
 	};
 
 	Overlay::Overlay() : texture(0) { }

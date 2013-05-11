@@ -15,11 +15,12 @@ namespace Rainbow
 	{
 	public:
 		inline SpriteBatchTask(SpriteBatch &batch);
-		virtual void end() override;
-		virtual void run() override;
 
 	private:
 		SpriteBatch &batch;
+
+		virtual void end_impl() override;
+		virtual void run_impl() override;
 	};
 
 	SpriteBatchTask::SpriteBatchTask(SpriteBatch &batch) : batch(batch) { }

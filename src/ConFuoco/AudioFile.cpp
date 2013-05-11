@@ -24,17 +24,17 @@ namespace ConFuoco
 
 	AudioFile::~AudioFile() { }
 
-	int AudioFile::get_channels() const
+	int AudioFile::get_channels_impl() const
 	{
 		return kFallbackChannels;
 	}
 
-	int AudioFile::get_rate() const
+	int AudioFile::get_rate_impl() const
 	{
 		return kFallbackSampleRate;
 	}
 
-	size_t AudioFile::read(char **dst)
+	size_t AudioFile::read_impl(char **dst)
 	{
 		R_DEBUG("[Rainbow::ConFuoco] Loading fallback\n");
 
@@ -43,10 +43,10 @@ namespace ConFuoco
 		return kFallbackBufferSize;
 	}
 
-	size_t AudioFile::read(char *, const size_t)
+	size_t AudioFile::read_impl(char *, const size_t)
 	{
 		return 0;
 	}
 
-	void AudioFile::rewind() { }
+	void AudioFile::rewind_impl() { }
 }

@@ -13,7 +13,9 @@ namespace Rainbow
 	{
 	public:
 		virtual ~NoopTask() { }
-		virtual void run() { }
+
+	private:
+		virtual void run_impl() { }
 	};
 }
 

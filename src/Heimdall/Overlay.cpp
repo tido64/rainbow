@@ -32,13 +32,13 @@ namespace Heimdall
 		this->vertices[3].position.y  = height;
 	}
 
-	void Overlay::draw()
+	void Overlay::draw_impl()
 	{
 		TextureManager::Instance().bind(this->texture);
 		Renderer::draw_elements(this->vertices, 6);
 	}
 
-	void Overlay::update() { }
+	void Overlay::update_impl() { }
 }
 
 #endif

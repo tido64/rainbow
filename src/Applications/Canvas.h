@@ -53,18 +53,6 @@ public:
 	/// Returns \c true if the canvas was successfully created, otherwise \c false.
 	inline operator bool() const;
 
-	// Implement Drawable
-
-	virtual void draw() override;
-	virtual void update() override;
-
-	// Implement Touchable
-
-	virtual void touch_began(const Touch *const touches, const size_t count) override;
-	virtual void touch_canceled() override;
-	virtual void touch_ended(const Touch *const touches, const size_t count) override;
-	virtual void touch_moved(const Touch *const touches, const size_t count) override;
-
 private:
 	bool changed;             ///< Whether an update is needed.
 	bool down;                ///< Whether the brush is down.
@@ -90,6 +78,18 @@ private:
 
 	/// Release all resources.
 	void release();
+
+	/* Implement Drawable */
+
+	virtual void draw_impl() override;
+	virtual void update_impl() override;
+
+	/* Implement Touchable */
+
+	virtual void touch_began_impl(const Touch *const touches, const size_t count) override;
+	virtual void touch_canceled_impl() override;
+	virtual void touch_ended_impl(const Touch *const touches, const size_t count) override;
+	virtual void touch_moved_impl(const Touch *const touches, const size_t count) override;
 };
 
 void Canvas::set_brush(const Texture &brush)

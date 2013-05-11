@@ -18,10 +18,11 @@ namespace Rainbow
 	{
 	public:
 		inline ConFuocoTask(ConFuoco::Mixer &mixer);
-		virtual void run() override;
 
 	private:
 		ConFuoco::Mixer &mixer;
+
+		virtual void run_impl() override;
 	};
 
 	ConFuocoTask::ConFuocoTask(ConFuoco::Mixer &mixer) : mixer(mixer) { }

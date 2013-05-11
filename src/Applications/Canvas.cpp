@@ -211,120 +211,6 @@ void Canvas::set_foreground(const unsigned int color)
 	this->foreground_color = color;
 }
 
-void Canvas::draw()
-{
-	ShaderManager::Instance->use(g_canvas_program);
-	TextureManager::Instance().bind(this->canvas_tex);
-	glActiveTexture(GL_TEXTURE1);
-	glBindTexture(GL_TEXTURE_2D, this->background_tex);
-	Renderer::draw_elements(this->sprite, 6);
-	glBindTexture(GL_TEXTURE_2D, 0);
-	glActiveTexture(GL_TEXTURE0);
-	TextureManager::Instance().bind();
-	ShaderManager::Instance->reset();
-}
-
-void Canvas::update()
-{
-	if (!this->changed)
-		return;
-
-	glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-	TextureManager::Instance().bind(*this->brush);
-	BindFramebuffer bind(this->canvas_fb, this->canvas_tex);
-
-	SpriteVertex vx[4];
-	vx[0].color = this->foreground_color;
-	vx[1].color = this->foreground_color;
-	vx[2].color = this->foreground_color;
-	vx[3].color = this->foreground_color;
-	if (this->touch.x == this->prev_point.x && this->touch.y == this->prev_point.y)
-	{
-		this->create_point_and_mark(vx, this->touch.x, this->touch.y);
-		Renderer::draw_elements(vx, 6);
-	}
-	else
-	{
-		const int dx = this->touch.x - this->prev_point.x;
-		const int dy = this->touch.y - this->prev_point.y;
-
-		const int points = Rainbow::min<int>(256, Rainbow::max(fabsf(dx), fabsf(dy)));
-		R_ASSERT(points > 0, "No points to draw");
-
-		Vector<SpriteVertex> vertices(points * 4);
-		for (int i = 0; i < points; ++i)
-		{
-			const float p = static_cast<float>(i) / static_cast<float>(points);
-			this->create_point_and_mark(
-				vx, this->prev_point.x + dx * p, this->prev_point.y + dy * p);
-			vertices.push_back(vx[0]);
-			vertices.push_back(vx[1]);
-			vertices.push_back(vx[2]);
-			vertices.push_back(vx[3]);
-		}
-		this->array.update(vertices.begin(), (points << 2) * sizeof(SpriteVertex));
-		this->array.count = points * 6;
-		Renderer::draw(this->array);
-
-		// Update previous point. We use this method because input events might
-		// occur several times between frames, so (x0,y0) becomes unreliable.
-		this->prev_point.x = this->touch.x;
-		this->prev_point.y = this->touch.y;
-	}
-
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-	this->changed = false;
-	this->fill = -1.0f;
-}
-
-void Canvas::touch_began(const Touch *const touches, const size_t)
-{
-	if (this->touch.hash)
-		return;
-
-	this->touch = *touches;
-	this->prev_point.x = this->touch.x;
-	this->prev_point.y = this->touch.y;
-	this->changed = true;
-
-#ifdef RAINBOW_SDL
-	this->down = true;
-#endif
-}
-
-void Canvas::touch_canceled()
-{
-	this->touch.hash = 0;
-
-#ifdef RAINBOW_SDL
-	this->down = false;
-#endif
-}
-
-void Canvas::touch_ended(const Touch *const, const size_t)
-{
-	this->touch_canceled();
-}
-
-void Canvas::touch_moved(const Touch *const touches, const size_t count)
-{
-#ifdef RAINBOW_SDL
-	if (!this->down)
-		return;
-#endif
-
-	for (size_t i = 0; i < count; ++i)
-	{
-		if (touches[i] == this->touch)
-		{
-			this->touch = *touches;
-			this->changed = true;
-			break;
-		}
-	}
-}
-
 void Canvas::create_point_and_mark(SpriteVertex *vertex, const int x, const int y)
 {
 	R_ASSERT(this->brush, "No brush assigned");
@@ -379,6 +265,120 @@ void Canvas::release()
 	{
 		TextureManager::Instance().remove(this->background_tex);
 		this->background_tex = 0;
+	}
+}
+
+void Canvas::draw_impl()
+{
+	ShaderManager::Instance->use(g_canvas_program);
+	TextureManager::Instance().bind(this->canvas_tex);
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, this->background_tex);
+	Renderer::draw_elements(this->sprite, 6);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glActiveTexture(GL_TEXTURE0);
+	TextureManager::Instance().bind();
+	ShaderManager::Instance->reset();
+}
+
+void Canvas::update_impl()
+{
+	if (!this->changed)
+		return;
+
+	glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+	TextureManager::Instance().bind(*this->brush);
+	BindFramebuffer bind(this->canvas_fb, this->canvas_tex);
+
+	SpriteVertex vx[4];
+	vx[0].color = this->foreground_color;
+	vx[1].color = this->foreground_color;
+	vx[2].color = this->foreground_color;
+	vx[3].color = this->foreground_color;
+	if (this->touch.x == this->prev_point.x && this->touch.y == this->prev_point.y)
+	{
+		this->create_point_and_mark(vx, this->touch.x, this->touch.y);
+		Renderer::draw_elements(vx, 6);
+	}
+	else
+	{
+		const int dx = this->touch.x - this->prev_point.x;
+		const int dy = this->touch.y - this->prev_point.y;
+
+		const int points = Rainbow::min<int>(256, Rainbow::max(fabsf(dx), fabsf(dy)));
+		R_ASSERT(points > 0, "No points to draw");
+
+		Vector<SpriteVertex> vertices(points * 4);
+		for (int i = 0; i < points; ++i)
+		{
+			const float p = static_cast<float>(i) / static_cast<float>(points);
+			this->create_point_and_mark(
+				vx, this->prev_point.x + dx * p, this->prev_point.y + dy * p);
+			vertices.push_back(vx[0]);
+			vertices.push_back(vx[1]);
+			vertices.push_back(vx[2]);
+			vertices.push_back(vx[3]);
+		}
+		this->array.update(vertices.begin(), (points << 2) * sizeof(SpriteVertex));
+		this->array.count = points * 6;
+		Renderer::draw(this->array);
+
+		// Update previous point. We use this method because input events might
+		// occur several times between frames, so (x0,y0) becomes unreliable.
+		this->prev_point.x = this->touch.x;
+		this->prev_point.y = this->touch.y;
+	}
+
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	this->changed = false;
+	this->fill = -1.0f;
+}
+
+void Canvas::touch_began_impl(const Touch *const touches, const size_t)
+{
+	if (this->touch.hash)
+		return;
+
+	this->touch = *touches;
+	this->prev_point.x = this->touch.x;
+	this->prev_point.y = this->touch.y;
+	this->changed = true;
+
+#ifdef RAINBOW_SDL
+	this->down = true;
+#endif
+}
+
+void Canvas::touch_canceled_impl()
+{
+	this->touch.hash = 0;
+
+#ifdef RAINBOW_SDL
+	this->down = false;
+#endif
+}
+
+void Canvas::touch_ended_impl(const Touch *const, const size_t)
+{
+	this->touch_canceled();
+}
+
+void Canvas::touch_moved_impl(const Touch *const touches, const size_t count)
+{
+#ifdef RAINBOW_SDL
+	if (!this->down)
+		return;
+#endif
+
+	for (size_t i = 0; i < count; ++i)
+	{
+		if (touches[i] == this->touch)
+		{
+			this->touch = *touches;
+			this->changed = true;
+			break;
+		}
 	}
 }
 

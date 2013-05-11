@@ -79,7 +79,7 @@ namespace ConFuoco
 			ov_clear(&this->vf);
 	}
 
-	int OggVorbisAudioFile::get_channels() const
+	int OggVorbisAudioFile::get_channels_impl() const
 	{
 		if (!this->vi)
 			return AudioFile::get_channels();
@@ -87,7 +87,7 @@ namespace ConFuoco
 		return this->vi->channels;
 	}
 
-	int OggVorbisAudioFile::get_rate() const
+	int OggVorbisAudioFile::get_rate_impl() const
 	{
 		if (!this->vi)
 			return AudioFile::get_rate();
@@ -95,7 +95,7 @@ namespace ConFuoco
 		return this->vi->rate;
 	}
 
-	size_t OggVorbisAudioFile::read(char **dst)
+	size_t OggVorbisAudioFile::read_impl(char **dst)
 	{
 		if (!this->vi)
 			return AudioFile::read(dst);
@@ -107,7 +107,7 @@ namespace ConFuoco
 		return this->read(*dst, size);
 	}
 
-	size_t OggVorbisAudioFile::read(char *dst, const size_t size)
+	size_t OggVorbisAudioFile::read_impl(char *dst, const size_t size)
 	{
 		if (!this->vi)
 			return AudioFile::read(dst, size);
@@ -129,7 +129,7 @@ namespace ConFuoco
 		return offset;
 	}
 
-	void OggVorbisAudioFile::rewind()
+	void OggVorbisAudioFile::rewind_impl()
 	{
 		if (!this->vi)
 			return AudioFile::rewind();

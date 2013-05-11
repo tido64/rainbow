@@ -29,7 +29,7 @@ public:
 	inline void stop();
 
 	/// Called every tick.
-	virtual void tick() = 0;
+	inline void tick();
 
 	/// Accumulate time and trigger when it reaches time out.
 	void update(const unsigned long dt);
@@ -38,6 +38,8 @@ private:
 	bool stopped;              ///< Whether time is accumulating.
 	unsigned int accumulated;  ///< Accumulated, monotonic time.
 	unsigned int trigger;      ///< Time till a tick.
+
+	virtual void tick_impl() = 0;
 };
 
 ChronoTrigger::ChronoTrigger() :
@@ -66,6 +68,11 @@ void ChronoTrigger::start()
 void ChronoTrigger::stop()
 {
 	this->stopped = true;
+}
+
+void ChronoTrigger::tick()
+{
+	this->tick_impl();
 }
 
 #endif

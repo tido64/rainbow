@@ -26,17 +26,17 @@ namespace ConFuoco
 		OggVorbisAudioFile(const char *const file);
 		virtual ~OggVorbisAudioFile();
 
-		/* Implement AudioFile */
-
-		virtual int get_channels() const override;
-		virtual int get_rate() const override;
-		virtual size_t read(char **dst) override;
-		virtual size_t read(char *dst, const size_t size) override;
-		virtual void rewind() override;
-
 	private:
 		OggVorbis_File vf;
 		vorbis_info *vi;
+
+		/* Implement AudioFile */
+
+		virtual int get_channels_impl() const override;
+		virtual int get_rate_impl() const override;
+		virtual size_t read_impl(char **dst) override;
+		virtual size_t read_impl(char *dst, const size_t size) override;
+		virtual void rewind_impl() override;
 	};
 }
 

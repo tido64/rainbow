@@ -38,26 +38,58 @@ namespace ConFuoco
 		virtual ~AudioFile();
 
 		/// Return number of channels.
-		virtual int get_channels() const;
+		inline int get_channels() const;
 
 		/// Return sample rate.
-		virtual int get_rate() const;
+		inline int get_rate() const;
 
 		/// Read whole file into buffer.
 		/// \param[out] dst  Destination buffer.
 		/// \return Size of returned buffer.
-		virtual size_t read(char **dst);
+		inline size_t read(char **dst);
 
 		/// Read \p size bytes into \p dst.
 		/// \param dst   Destination buffer.
 		/// \param size  Number of bytes to read. Must be equal to or less than
 		///              the size allocated for buffer.
 		/// \return Number of bytes read.
-		virtual size_t read(char *dst, const size_t size);
+		inline size_t read(char *dst, const size_t size);
 
 		/// Rewind audio file to start.
-		virtual void rewind();
+		inline void rewind();
+
+	private:
+		virtual int get_channels_impl() const;
+		virtual int get_rate_impl() const;
+		virtual size_t read_impl(char **dst);
+		virtual size_t read_impl(char *dst, const size_t size);
+		virtual void rewind_impl();
 	};
+
+	int AudioFile::get_channels() const
+	{
+		return this->get_channels_impl();
+	}
+
+	int AudioFile::get_rate() const
+	{
+		return this->get_rate_impl();
+	}
+
+	size_t AudioFile::read(char **dst)
+	{
+		return this->read_impl(dst);
+	}
+
+	size_t AudioFile::read(char *dst, const size_t size)
+	{
+		return this->read_impl(dst, size);
+	}
+
+	void AudioFile::rewind()
+	{
+		this->rewind_impl();
+	}
 }
 
 #endif
