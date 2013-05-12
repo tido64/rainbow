@@ -21,6 +21,8 @@ namespace Heimdall
 		Gatekeeper();
 		~Gatekeeper();
 
+		/* Director shim */
+
 		inline void draw();
 
 		void init(const Data &, const int width, const int height);
@@ -29,6 +31,15 @@ namespace Heimdall
 		void update(const unsigned long dt);
 
 		inline void on_memory_warning();
+
+		/* Terminable shim */
+
+		inline bool has_terminated() const;
+		inline bool is_active() const;
+
+		inline void activate();
+		inline void deactivate();
+		inline void terminate();
 
 	private:
 		int width;
@@ -71,6 +82,31 @@ namespace Heimdall
 	void Gatekeeper::on_memory_warning()
 	{
 		this->director->on_memory_warning();
+	}
+
+	bool Gatekeeper::has_terminated() const
+	{
+		return this->director->has_terminated();
+	}
+
+	bool Gatekeeper::is_active() const
+	{
+		return this->director->is_active();
+	}
+
+	void Gatekeeper::activate()
+	{
+		this->director->activate();
+	}
+
+	void Gatekeeper::deactivate()
+	{
+		this->director->deactivate();
+	}
+
+	void Gatekeeper::terminate()
+	{
+		this->director->terminate();
 	}
 }
 

@@ -1,7 +1,7 @@
 #ifndef DIRECTOR_H_
 #define DIRECTOR_H_
 
-#include "Common/ShutdownSequence.h"
+#include "Common/Terminable.h"
 #include "Graphics/SceneGraph.h"
 #include "Input/Input.h"
 #include "Lua/LuaMachine.h"
@@ -15,7 +15,7 @@ namespace Rainbow
 	///
 	/// Copyright 2011-13 Bifrost Entertainment. All rights reserved.
 	/// \author Tommy Nguyen
-	class Director : private NonCopyable<Director>
+	class Director : public Terminable, private NonCopyable<Director>
 	{
 	public:
 		inline Director();
@@ -36,7 +36,6 @@ namespace Rainbow
 		void on_memory_warning();
 
 	private:
-		ShutdownSequence shutdown;
 		LuaMachine lua;
 		SceneGraph::Node scenegraph;
 		Input input;

@@ -11,7 +11,7 @@ namespace Rainbow
 	{
 		this->set_video(width, height);
 		if (this->lua.init(main) != LUA_OK || this->lua.update(0) != LUA_OK)
-			this->shutdown();
+			this->terminate();
 		else
 			this->scenegraph.update(0);
 	}
@@ -25,7 +25,7 @@ namespace Rainbow
 	{
 		ConFuoco::Mixer::Instance->update();
 		if (this->lua.update(dt))
-			this->shutdown();
+			this->terminate();
 		else
 			this->scenegraph.update(dt);
 	}

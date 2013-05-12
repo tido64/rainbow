@@ -13,6 +13,7 @@
 #	define PATH_SEP "\\"
 #	define getcwd(buf, size) _getcwd(buf, size)
 #else
+#	include <unistd.h>
 #	define PATH_SEP "/"
 #endif
 
@@ -26,20 +27,17 @@
 #include "Common/Data.h"
 #include "ConFuoco/Mixer.h"
 #include "Graphics/Renderer.h"
-#include "Input/Key.h"
 #include "Input/Input.h"
+#include "Input/Key.h"
 #include "Input/Touch.h"
-
-bool active = true;  ///< Whether the window is in focus.
-bool done = false;   ///< Whether the user has requested to quit.
 
 char data_path[256] = { 0 };
 char userdata_path[256] = { 0 };
 
 namespace
 {
-	const double fps = 1000.0 / 60.0;    ///< Preferred frames per second.
-	Chrono chrono;                       ///< Clock.
+	const double fps = 1000.0 / 60.0;  ///< Preferred frames per second.
+	Chrono chrono;                     ///< Clock.
 
 	void setcwd(const char *const path)
 	{
@@ -57,9 +55,9 @@ namespace
 
 		inline void swap();
 
-		void on_mouse_down(const SDL_MouseButtonEvent &mouse);
-		void on_mouse_motion(const SDL_MouseMotionEvent &mouse);
-		void on_mouse_up(const SDL_MouseButtonEvent &mouse);
+		void on_mouse_down(const SDL_MouseButtonEvent &event);
+		void on_mouse_motion(const SDL_MouseMotionEvent &event);
+		void on_mouse_up(const SDL_MouseButtonEvent &event);
 
 		inline operator bool() const;
 
@@ -131,30 +129,30 @@ namespace
 		SDL_GL_SwapWindow(this->window);
 	}
 
-	void RenderWindow::on_mouse_down(const SDL_MouseButtonEvent &mouse)
+	void RenderWindow::on_mouse_down(const SDL_MouseButtonEvent &event)
 	{
-		this->mouse.x = mouse.x;
-		this->mouse.y = this->height - mouse.y;
+		this->mouse.x = event.x;
+		this->mouse.y = this->height - event.y;
 		this->mouse.x0 = this->mouse.x;
 		this->mouse.y0 = this->mouse.y;
 		this->mouse.timestamp = chrono.current();
 		Input::Instance->touch_began(&this->mouse, 1);
 	}
 
-	void RenderWindow::on_mouse_motion(const SDL_MouseMotionEvent &mouse)
+	void RenderWindow::on_mouse_motion(const SDL_MouseMotionEvent &event)
 	{
 		this->mouse.x0 = this->mouse.x;
 		this->mouse.y0 = this->mouse.y;
-		this->mouse.x = mouse.x;
-		this->mouse.y = this->height - mouse.y;
+		this->mouse.x = event.x;
+		this->mouse.y = this->height - event.y;
 		this->mouse.timestamp = chrono.current();
 		Input::Instance->touch_moved(&this->mouse, 1);
 	}
 
-	void RenderWindow::on_mouse_up(const SDL_MouseButtonEvent &mouse)
+	void RenderWindow::on_mouse_up(const SDL_MouseButtonEvent &event)
 	{
-		this->mouse.x = mouse.x;
-		this->mouse.y = this->height - mouse.y;
+		this->mouse.x = event.x;
+		this->mouse.y = this->height - event.y;
 		this->mouse.x0 = this->mouse.x;
 		this->mouse.y0 = this->mouse.y;
 		this->mouse.timestamp = chrono.current();
@@ -214,7 +212,7 @@ int main(int argc, char *argv[])
 	director.init(Data("main.lua"), screen_width, screen_height);
 
 	chrono.update();
-	while (!done)
+	while (!director.has_terminated())
 	{
 		SDL_Event event;
 		while (SDL_PollEvent(&event))
@@ -222,23 +220,21 @@ int main(int argc, char *argv[])
 			switch (event.type)
 			{
 				case SDL_QUIT:
-					active = false;
-					done = true;
+					director.terminate();
 					break;
 				case SDL_WINDOWEVENT:
 					switch (event.type)
 					{
 						case SDL_WINDOWEVENT_FOCUS_GAINED:
-							active = true;
+							director.activate();
 							ConFuoco::Mixer::Instance->suspend(false);
 							break;
 						case SDL_WINDOWEVENT_FOCUS_LOST:
-							active = false;
+							director.deactivate();
 							ConFuoco::Mixer::Instance->suspend(true);
 							break;
 						case SDL_WINDOWEVENT_CLOSE:
-							active = false;
-							done = true;
+							director.terminate();
 							break;
 						default:
 							break;
@@ -248,8 +244,7 @@ int main(int argc, char *argv[])
 				#ifndef RAINBOW_MAC
 					if (event.key.keysym.sym == SDLK_q && (event.key.keysym.mod & KMOD_LCTRL))
 					{
-						active = false;
-						done = true;
+						director.terminate();
 						break;
 					}
 				#endif
@@ -272,9 +267,9 @@ int main(int argc, char *argv[])
 			}
 		}
 		chrono.update();
-		if (!active)
+		if (!director.is_active())
 		{
-			if (done)
+			if (director.has_terminated())
 				break;
 
 			Chrono::sleep(static_cast<unsigned int>(fps));
