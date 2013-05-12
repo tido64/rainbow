@@ -46,36 +46,37 @@ public:
 		return this->flags & flags;
 	}
 
-	virtual void touch_began(const Touch *const touches, const size_t count) override
+protected:
+	unsigned int flags;
+	lua_State *L;
+	Input input;
+
+private:
+	virtual void touch_began_impl(const Touch *const touches, const size_t count) override
 	{
 		if (is_invalid(touches, count))
 			return;
 		this->flags |= TOUCH_BEGAN;
 	}
 
-	virtual void touch_canceled() override
+	virtual void touch_canceled_impl() override
 	{
 		this->flags |= TOUCH_CANCELED;
 	}
 
-	virtual void touch_ended(const Touch *const touches, const size_t count) override
+	virtual void touch_ended_impl(const Touch *const touches, const size_t count) override
 	{
 		if (is_invalid(touches, count))
 			return;
 		this->flags |= TOUCH_ENDED;
 	}
 
-	virtual void touch_moved(const Touch *const touches, const size_t count) override
+	virtual void touch_moved_impl(const Touch *const touches, const size_t count) override
 	{
 		if (is_invalid(touches, count))
 			return;
 		this->flags |= TOUCH_MOVED;
 	}
-
-protected:
-	unsigned int flags;
-	lua_State *L;
-	Input input;
 };
 
 TEST_F(TouchTest, TouchBeganEvent)
