@@ -13,31 +13,46 @@
 
 #pragma clang diagnostic ignored "-Wunused-parameter"
 
+namespace
+{
+	const size_t kMaxTouches = 32;
+}
+
 @interface RainbowViewController () {
 @private
-	ConFuoco::Mixer mixer;
+	ConFuoco::Mixer _mixer;
+	Touch _touchesArray[kMaxTouches];
 }
 @property (strong, nonatomic) EAGLContext *context;
-@property (assign, nonatomic) Director *director;
+@property (readonly, nonatomic) Director *director;
 @property (strong, nonatomic) CMMotionManager *motionManager;
-@property (assign, nonatomic) CGFloat scale;
-
-- (Touch *)touchesArrayFromSet:(NSSet *)touches;
-@end
-
-@implementation RainbowViewController
+@property (readonly, nonatomic) CGFloat scale;
 
 /// Convert an NSSet of touches to an array.
 /// \note The dimension of the screen does not change with its orientation.
 ///       Since the iPad is in portrait mode by default, the resolution is
 ///       768x1024 in landscape mode as well.
 /// \param touches  Set of touches to convert.
-/// \return Array of touches.
+/// \return Array of touches. Must not be deleted.
+- (Touch *)touchesArrayFromSet:(NSSet *)touches;
+@end
+
+@implementation RainbowViewController
+
+- (void)dealloc
+{
+	delete self.director;
+	Renderer::release();
+
+	if ([EAGLContext currentContext] == self.context)
+		[EAGLContext setCurrentContext:nil];
+}
+
 - (Touch *)touchesArrayFromSet:(NSSet *)touches
 {
-	Touch *array = new Touch[touches.count];
-	Touch *arrayRef = array;
+	R_ASSERT(touches.count <= kMaxTouches, "Unsupported number of touches");
 
+	Touch *arrayRef = _touchesArray;
 	const CGSize size = [[UIScreen mainScreen] bounds].size;
 	switch ([[UIApplication sharedApplication] statusBarOrientation])
 	{
@@ -45,13 +60,13 @@
 			for (UITouch *touch in touches)
 			{
 				CGPoint p = [touch locationInView:nil];
-				arrayRef->hash = [touch hash];
+				arrayRef->hash = touch.hash;
 				arrayRef->x = p.x * self.scale;
 				arrayRef->y = (size.height - p.y) * self.scale;
 				p = [touch previousLocationInView:nil];
 				arrayRef->x0 = p.x * self.scale;
 				arrayRef->y0 = (size.height - p.y) * self.scale;
-				arrayRef->timestamp = [touch timestamp] * 1000.0;
+				arrayRef->timestamp = touch.timestamp * 1000.0;
 				++arrayRef;
 			}
 			break;
@@ -59,13 +74,13 @@
 			for (UITouch *touch in touches)
 			{
 				CGPoint p = [touch locationInView:nil];
-				arrayRef->hash = [touch hash];
+				arrayRef->hash = touch.hash;
 				arrayRef->x = (size.width - p.x) * self.scale;
 				arrayRef->y = p.y * self.scale;
 				p = [touch previousLocationInView:nil];
 				arrayRef->x0 = (size.width - p.x) * self.scale;
 				arrayRef->y0 = p.y * self.scale;
-				arrayRef->timestamp = [touch timestamp] * 1000.0;
+				arrayRef->timestamp = touch.timestamp * 1000.0;
 				++arrayRef;
 			}
 			break;
@@ -73,13 +88,13 @@
 			for (UITouch *touch in touches)
 			{
 				CGPoint p = [touch locationInView:nil];
-				arrayRef->hash = [touch hash];
+				arrayRef->hash = touch.hash;
 				arrayRef->x = (size.height - p.y) * self.scale;
 				arrayRef->y = (size.width - p.x) * self.scale;
 				p = [touch previousLocationInView:nil];
 				arrayRef->x0 = (size.height - p.y) * self.scale;
 				arrayRef->y0 = (size.width - p.x) * self.scale;
-				arrayRef->timestamp = [touch timestamp] * 1000.0;
+				arrayRef->timestamp = touch.timestamp * 1000.0;
 				++arrayRef;
 			}
 			break;
@@ -87,13 +102,13 @@
 			for (UITouch *touch in touches)
 			{
 				CGPoint p = [touch locationInView:nil];
-				arrayRef->hash = [touch hash];
+				arrayRef->hash = touch.hash;
 				arrayRef->x = p.y * self.scale;
 				arrayRef->y = p.x * self.scale;
 				p = [touch previousLocationInView:nil];
 				arrayRef->x0 = p.y * self.scale;
 				arrayRef->y0 = p.x * self.scale;
-				arrayRef->timestamp = [touch timestamp] * 1000.0;
+				arrayRef->timestamp = touch.timestamp * 1000.0;
 				++arrayRef;
 			}
 			break;
@@ -102,7 +117,7 @@
 			break;
 	}
 
-	return array;
+	return _touchesArray;
 }
 
 #pragma mark - GLKViewControllerDelegate
@@ -133,21 +148,18 @@
 {
 	Touch *t = [self touchesArrayFromSet:touches];
 	Input::Instance->touch_began(t, touches.count);
-	delete[] t;
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
 {
 	Touch *t = [self touchesArrayFromSet:touches];
 	Input::Instance->touch_moved(t, touches.count);
-	delete[] t;
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
 	Touch *t = [self touchesArrayFromSet:touches];
 	Input::Instance->touch_ended(t, touches.count);
-	delete[] t;
 }
 
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
@@ -161,16 +173,16 @@
 {
 	[super viewDidLoad];
 
-	self.motionManager = [[CMMotionManager alloc] init];
-
 	Rainbow::Config config;
 	if (config.needs_accelerometer())
 	{
 		// Enable accelerometer.
+		self.motionManager = [[CMMotionManager alloc] init];
 		self.motionManager.accelerometerUpdateInterval = 1.0 / 60.0;
 		[self.motionManager startAccelerometerUpdates];
 	}
-	[[self view] setMultipleTouchEnabled:YES];
+
+	self.view.multipleTouchEnabled = YES;
 
 	// Set up OpenGL ES 2.0 context.
 	self.context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
@@ -180,22 +192,18 @@
 		return;
 	}
 	((GLKView *)self.view).context = self.context;
-	[self setPreferredFramesPerSecond:60];
+	self.preferredFramesPerSecond = 60;
 	[EAGLContext setCurrentContext:self.context];
 
 	// Prepare graphics and initialise the director.
 	Renderer::init();
-	self.director = new Director();
+	_director = new Director();
 
 	// Swap screen width and height. See comments for touchesArrayFromSet:.
 	CGSize size = [[UIScreen mainScreen] bounds].size;
 	if (UIInterfaceOrientationIsLandscape([[UIApplication sharedApplication] statusBarOrientation]))
-	{
-		CGFloat tmp = size.width;
-		size.width = size.height;
-		size.height = tmp;
-	}
-	self.scale = [[UIScreen mainScreen] scale];
+		Rainbow::swap(size.width, size.height);
+	_scale = [[UIScreen mainScreen] scale];
 	size.width *= self.scale;
 	size.height *= self.scale;
 
@@ -225,10 +233,10 @@
 
 - (void)viewDidDisappear:(BOOL)animated
 {
-	[super viewDidDisappear:animated];
-
 	if (self.motionManager)
 		[self.motionManager stopAccelerometerUpdates];
+
+	[super viewDidDisappear:animated];
 }
 
 - (NSUInteger)supportedInterfaceOrientations
@@ -237,18 +245,6 @@
 }
 
 // TODO: Deprecated in iOS 6.0
-
-- (void)viewDidUnload
-{
-	delete self.director;
-	Renderer::release();
-
-	if ([EAGLContext currentContext] == self.context)
-		[EAGLContext setCurrentContext:nil];
-	self.context = nil;
-
-	[super viewDidUnload];
-}
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
