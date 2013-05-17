@@ -20,6 +20,9 @@ namespace Rainbow
 
 			inline ::Sprite* raw_ptr() const;
 
+		private:
+			::Sprite *sprite;
+
 			int get_angle(lua_State *);
 			int get_color(lua_State *);
 			int get_position(lua_State *);
@@ -33,9 +36,6 @@ namespace Rainbow
 			int mirror(lua_State *);
 			int move(lua_State *);
 			int rotate(lua_State *);
-
-		private:
-			::Sprite *sprite;
 		};
 
 		::Sprite* Sprite::raw_ptr() const

@@ -18,11 +18,11 @@ namespace Rainbow
 
 			inline TextureAtlas* raw_ptr() const;
 
-			int create(lua_State *);
-			int trim(lua_State *);
-
 		private:
 			SharedPtr<TextureAtlas> texture;
+
+			int create(lua_State *);
+			int trim(lua_State *);
 		};
 
 		TextureAtlas* Texture::raw_ptr() const

@@ -19,6 +19,9 @@ namespace Rainbow
 			~Animation();
 			inline ::Animation* raw_ptr() const;
 
+		private:
+			::Animation *animation;
+
 			int is_stopped(lua_State *);
 
 			int set_delay(lua_State *);
@@ -28,9 +31,6 @@ namespace Rainbow
 
 			int play(lua_State *);
 			int stop(lua_State *);
-
-		private:
-			::Animation *animation;
 		};
 
 		::Animation* Animation::raw_ptr() const

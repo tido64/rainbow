@@ -9,6 +9,31 @@ namespace Rainbow
 	{
 		namespace IO
 		{
+			namespace
+			{
+				int load(lua_State *L)
+				{
+					LUA_ASSERT(lua_gettop(L) == 1, "rainbow.io.load(filename)");
+
+					Data blob(luaR_tostring(L, 1), 1);
+					if (!blob)
+						lua_pushnil(L);
+					else
+						lua_pushlstring(L, blob, blob.size());
+					return 1;
+				}
+
+				int save(lua_State *L)
+				{
+					LUA_ASSERT(lua_gettop(L) == 3, "rainbow.io.save(filename, data, size)");
+
+					Data blob;
+					blob.copy(luaR_tostring(L, 2), luaR_tointeger(L, 3));
+					lua_pushboolean(L, blob.save(luaR_tostring(L, 1)));
+					return 1;
+				}
+			}
+
 			void init(lua_State *L)
 			{
 				lua_pushliteral(L, "io");
@@ -16,28 +41,6 @@ namespace Rainbow
 				luaR_rawsetcclosurefield(L, &load, 0, "load");
 				luaR_rawsetcclosurefield(L, &save, 0, "save");
 				lua_rawset(L, -3);
-			}
-
-			int load(lua_State *L)
-			{
-				LUA_ASSERT(lua_gettop(L) == 1, "rainbow.io.load(filename)");
-
-				Data blob(luaR_tostring(L, 1), 1);
-				if (!blob)
-					lua_pushnil(L);
-				else
-					lua_pushlstring(L, blob, blob.size());
-				return 1;
-			}
-
-			int save(lua_State *L)
-			{
-				LUA_ASSERT(lua_gettop(L) == 3, "rainbow.io.save(filename, data, size)");
-
-				Data blob;
-				blob.copy(luaR_tostring(L, 2), luaR_tointeger(L, 3));
-				lua_pushboolean(L, blob.save(luaR_tostring(L, 1)));
-				return 1;
 			}
 		}
 	}

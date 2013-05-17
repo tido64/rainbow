@@ -305,7 +305,7 @@ void Canvas::update_impl()
 		const int dx = this->touch.x - this->prev_point.x;
 		const int dy = this->touch.y - this->prev_point.y;
 
-		const int points = Rainbow::min<int>(256, Rainbow::max(fabsf(dx), fabsf(dy)));
+		const int points = Rainbow::min<int>(256, Rainbow::max<float>(fabsf(dx), fabsf(dy)));
 		R_ASSERT(points > 0, "No points to draw");
 
 		Vector<SpriteVertex> vertices(points * 4);

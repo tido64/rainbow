@@ -18,6 +18,7 @@ namespace Rainbow
 
 			inline ::SpriteBatch* raw_ptr();
 
+		private:
 			int add(lua_State *);
 			int create_sprite(lua_State *);
 			int set_texture(lua_State *);

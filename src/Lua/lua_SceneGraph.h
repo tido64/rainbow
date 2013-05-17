@@ -17,6 +17,11 @@ namespace Rainbow
 			static const char class_name[];
 			static const Method<SceneGraph> methods[];
 
+		private:
+			::SceneGraph::Node *root;
+
+			SceneGraph(lua_State *, ::SceneGraph::Node *);
+
 			int add_animation(lua_State *);
 			int add_batch(lua_State *);
 			int add_drawable(lua_State *);
@@ -29,11 +34,6 @@ namespace Rainbow
 			int set_parent(lua_State *);
 
 			int move(lua_State *);
-
-		private:
-			::SceneGraph::Node *root;
-
-			SceneGraph(lua_State *, ::SceneGraph::Node *);
 
 			void unregister(lua_State *);
 		};

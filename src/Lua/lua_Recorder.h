@@ -16,6 +16,9 @@ namespace Rainbow
 
 			Recorder(lua_State *);
 
+		private:
+			ConFuoco::Recorder recorder;
+
 			int get_average_power(lua_State *);
 			int get_low_pass(lua_State *);
 			int get_peak_power(lua_State *);
@@ -25,9 +28,6 @@ namespace Rainbow
 			inline int stop(lua_State *);
 
 			inline int update(lua_State *);
-
-		private:
-			ConFuoco::Recorder recorder;
 		};
 
 		int Recorder::pause(lua_State *)

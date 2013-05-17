@@ -10,8 +10,6 @@ namespace Rainbow
 		namespace Random
 		{
 			void init(lua_State *);
-
-			int random(lua_State *);
 		}
 	}
 }
