@@ -26,7 +26,7 @@ private:
 ///
 /// Classes that need to be shared this way must subclass RefCounted.
 ///
-/// Copyright 2011-12 Bifrost Entertainment. All rights reserved.
+/// Copyright 2011-13 Bifrost Entertainment. All rights reserved.
 /// \author Tommy Nguyen
 template<class T>
 class SharedPtr
@@ -43,19 +43,19 @@ public:
 
 	~SharedPtr();
 
-	/// Return the actual pointer.
-	inline T* raw_ptr() const;
+	/// Return pointer to the managed object.
+	inline T* get() const;
 
-	/// Release the current pointer and copy the new one.
+	/// Release the current pointer and retain the new one.
 	SharedPtr<T>& operator=(const SharedPtr<T> &);
 
 	/// Release the current pointer and assign the new one.
 	SharedPtr<T>& operator=(T *);
 
-	/// Dereferencing this pointer returns the actual pointer.
+	/// Dereference pointer to the managed object.
 	inline T& operator*() const;
 
-	/// Dereferencing this pointer returns the actual pointer.
+	/// Dereference pointer to the managed object.
 	inline T* operator->() const;
 
 private:
@@ -89,7 +89,7 @@ SharedPtr<T>::~SharedPtr()
 }
 
 template<class T>
-T* SharedPtr<T>::raw_ptr() const
+T* SharedPtr<T>::get() const
 {
 	return static_cast<T*>(this->ptr);
 }

@@ -54,7 +54,7 @@ namespace Rainbow
 
 			T* get() const
 			{
-				return this->ptr.raw_ptr();
+				return this->ptr.get();
 			}
 
 		protected:

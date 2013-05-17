@@ -64,19 +64,19 @@ Sprite* SpriteBatch::create_sprite(const unsigned int width, const unsigned int 
 
 void SpriteBatch::draw()
 {
-	Renderer::draw(this->array, this->texture.raw_ptr());
+	Renderer::draw(this->array, this->texture.get());
 }
 
 TextureAtlas* SpriteBatch::set_texture(const Data &texture)
 {
 	this->texture = new TextureAtlas(texture);
-	return this->texture.raw_ptr();
+	return this->texture.get();
 }
 
 TextureAtlas* SpriteBatch::set_texture(TextureAtlas *t)
 {
 	this->texture = t;
-	return this->texture.raw_ptr();
+	return this->texture.get();
 }
 
 void SpriteBatch::update()

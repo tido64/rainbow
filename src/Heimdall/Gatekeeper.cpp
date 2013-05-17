@@ -60,8 +60,8 @@ namespace Heimdall
 			this->console_font->load(type);
 			type.copy(NewsCycle_Regular_ttf, sizeof(NewsCycle_Regular_ttf));
 			this->ui_font->load(type);
-			Resources::ConsoleFont = this->console_font.raw_ptr();
-			Resources::UIFont = this->ui_font.raw_ptr();
+			Resources::ConsoleFont = this->console_font.get();
+			Resources::UIFont = this->ui_font.get();
 		}
 
 		this->overlay.setup(width, height);
