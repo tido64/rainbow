@@ -1,3 +1,4 @@
+#include "Lua/LuaHelper.h"
 #include "Lua/lua_Font.h"
 #include "Lua/lua_Label.h"
 
@@ -5,8 +6,13 @@ namespace Rainbow
 {
 	namespace Lua
 	{
-		const char Label::class_name[] = "label";
-		const Method<Label> Label::methods[] = {
+		typedef Bind<Label, ::Label, kBindTypeDerived> LuaLabel;
+
+		template<>
+		const char LuaLabel::class_name[] = "label";
+
+		template<>
+		const Method<Label> LuaLabel::methods[] = {
 			{ "get_color",      &Label::get_color },
 			{ "set_alignment",  &Label::set_alignment },
 			{ "set_color",      &Label::set_color },
@@ -39,13 +45,13 @@ namespace Rainbow
 			switch (*luaR_tostring(L, 1))
 			{
 				case 'c':
-					::Label::set_alignment(Label::kCenterTextAlignment);
+					::Label::set_alignment(::Label::kCenterTextAlignment);
 					break;
 				case 'r':
-					::Label::set_alignment(Label::kRightTextAlignment);
+					::Label::set_alignment(::Label::kRightTextAlignment);
 					break;
 				default:
-					::Label::set_alignment(Label::kLeftTextAlignment);
+					::Label::set_alignment(::Label::kLeftTextAlignment);
 					break;
 			}
 			return 0;
@@ -64,7 +70,7 @@ namespace Rainbow
 		int Label::set_font(lua_State *L)
 		{
 			Font *font = wrapper<Font>(L);
-			::Label::set_font(font->raw_ptr());
+			::Label::set_font(font->get());
 			return 0;
 		}
 

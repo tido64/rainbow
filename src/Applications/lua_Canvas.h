@@ -18,6 +18,7 @@ namespace Rainbow
 			inline Canvas(lua_State *);
 			virtual ~Canvas();
 
+		private:
 			int get_filled(lua_State *);
 			int set_background(lua_State *);
 			int set_brush(lua_State *);

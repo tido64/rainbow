@@ -1,7 +1,6 @@
 #include <cstring>
 
 #include "Common/Data.h"
-#include "Common/Debug.h"
 #include "Lua/LuaHelper.h"
 
 namespace Rainbow

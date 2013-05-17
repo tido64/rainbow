@@ -2,21 +2,20 @@
 #define LUA_LABEL_H_
 
 #include "Graphics/Label.h"
-#include "Lua/LuaHelper.h"
+#include "Lua/LuaBind.h"
 
 namespace Rainbow
 {
 	namespace Lua
 	{
-		class Label : public ::Label
+		class Label :
+			public ::Label,
+			public Bind<Label, ::Label, kBindTypeDerived>
 		{
+			friend class Bind<Label, ::Label, kBindTypeDerived>;
+
 		public:
-			static const char class_name[];
-			static const Method<Label> methods[];
-
 			Label(lua_State *);
-
-			inline ::Label* raw_ptr();
 
 		private:
 			int get_color(lua_State *);
@@ -29,11 +28,6 @@ namespace Rainbow
 
 			int move(lua_State *);
 		};
-
-		::Label* Label::raw_ptr()
-		{
-			return this;
-		}
 	}
 }
 

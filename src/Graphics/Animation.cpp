@@ -1,6 +1,5 @@
 // Copyright 2011-13 Bifrost Entertainment. All rights reserved.
 
-#include "Common/Algorithm.h"
 #include "Graphics/Animation.h"
 #include "Graphics/Sprite.h"
 
@@ -22,7 +21,7 @@ void Animation::set_frames(const unsigned int *const frames)
 void Animation::tick_impl()
 {
 	this->sprite->set_texture(*this->frame);
-	if (!*(this->frame + 1))
+	if (*(this->frame + 1) == kAnimationEnd)
 	{
 		if (this->delay < 0)
 			this->stop();

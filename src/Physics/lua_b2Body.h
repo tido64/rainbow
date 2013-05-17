@@ -217,7 +217,7 @@ namespace b2
 			LUA_ASSERT(lua_gettop(L) == 1, "<b2.Body>:Bind(<rainbow.sprite>)");
 
 			BodyData *data = static_cast<BodyData*>(this->body->GetUserData());
-			data->sprite = Rainbow::Lua::wrapper<Rainbow::Lua::Sprite>(L)->raw_ptr();
+			data->sprite = Rainbow::Lua::wrapper<Rainbow::Lua::Sprite>(L)->get();
 			b2Vec2 pos = this->body->GetPosition();
 			pos *= ptm_ratio;
 			data->sprite->set_position(Vec2f(pos.x, pos.y));

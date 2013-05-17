@@ -2,24 +2,21 @@
 #define LUA_SCENEGRAPH_H_
 
 #include "Graphics/SceneGraph.h"
-#include "Lua/LuaHelper.h"
+#include "Lua/LuaBind.h"
 #include "Lua/LuaMachine.h"
 
 namespace Rainbow
 {
 	namespace Lua
 	{
-		class SceneGraph : private NonCopyable<SceneGraph>
+		class SceneGraph :
+			public Bind<SceneGraph, ::SceneGraph::Node, kBindTypeWeak>,
+			private NonCopyable<SceneGraph>
 		{
+			friend class Bind<SceneGraph, ::SceneGraph::Node, kBindTypeWeak>;
 			friend class Rainbow::LuaMachine;
 
-		public:
-			static const char class_name[];
-			static const Method<SceneGraph> methods[];
-
 		private:
-			::SceneGraph::Node *root;
-
 			SceneGraph(lua_State *, ::SceneGraph::Node *);
 
 			int add_animation(lua_State *);

@@ -1,7 +1,7 @@
 #ifndef LUA_SPRITE_H_
 #define LUA_SPRITE_H_
 
-#include "Lua/LuaHelper.h"
+#include "Lua/LuaBind.h"
 
 struct lua_State;
 class  Sprite;
@@ -10,19 +10,14 @@ namespace Rainbow
 {
 	namespace Lua
 	{
-		class Sprite
+		class Sprite : public Bind<Sprite, ::Sprite, kBindTypeWeak>
 		{
-		public:
-			static const char class_name[];
-			static const Method<Sprite> methods[];
+			friend class Bind<Sprite, ::Sprite, kBindTypeWeak>;
 
+		public:
 			Sprite(lua_State *);
 
-			inline ::Sprite* raw_ptr() const;
-
 		private:
-			::Sprite *sprite;
-
 			int get_angle(lua_State *);
 			int get_color(lua_State *);
 			int get_position(lua_State *);
@@ -37,11 +32,6 @@ namespace Rainbow
 			int move(lua_State *);
 			int rotate(lua_State *);
 		};
-
-		::Sprite* Sprite::raw_ptr() const
-		{
-			return this->sprite;
-		}
 	}
 }
 

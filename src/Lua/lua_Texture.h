@@ -2,33 +2,23 @@
 #define LUA_TEXTURE_H_
 
 #include "Graphics/TextureAtlas.h"
-#include "Lua/LuaHelper.h"
+#include "Lua/LuaBind.h"
 
 namespace Rainbow
 {
 	namespace Lua
 	{
-		class Texture
+		class Texture : public Bind<Texture, TextureAtlas, kBindTypeStrong>
 		{
-		public:
-			static const char class_name[];
-			static const Method<Texture> methods[];
+			friend class Bind<Texture, TextureAtlas, kBindTypeStrong>;
 
+		public:
 			Texture(lua_State *);
 
-			inline TextureAtlas* raw_ptr() const;
-
 		private:
-			SharedPtr<TextureAtlas> texture;
-
 			int create(lua_State *);
 			int trim(lua_State *);
 		};
-
-		TextureAtlas* Texture::raw_ptr() const
-		{
-			return this->texture.raw_ptr();
-		}
 	}
 }
 

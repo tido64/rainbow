@@ -1,3 +1,4 @@
+#include "Lua/LuaHelper.h"
 #include "Lua/lua_Animation.h"
 #include "Lua/lua_Label.h"
 #include "Lua/lua_SceneGraph.h"
@@ -57,7 +58,7 @@ namespace
 		// Retrieve and add element.
 		SceneGraph::Node *node = (n == 1) ? root : check_node(L, 1);
 		R_ASSERT(node, "This shouldn't ever happen.");
-		lua_pushlightuserdata(L, node->add_child(obj->raw_ptr()));
+		lua_pushlightuserdata(L, node->add_child(obj->get()));
 
 		return 1;
 	}
@@ -67,8 +68,13 @@ namespace Rainbow
 {
 	namespace Lua
 	{
-		const char SceneGraph::class_name[] = "scenegraph";
-		const Method<SceneGraph> SceneGraph::methods[] = {
+		typedef Bind<SceneGraph, ::SceneGraph::Node, kBindTypeWeak> LuaSceneGraph;
+
+		template<>
+		const char LuaSceneGraph::class_name[] = "scenegraph";
+
+		template<>
+		const Method<SceneGraph> LuaSceneGraph::methods[] = {
 			{ "add_animation",  &SceneGraph::add_animation },
 			{ "add_batch",      &SceneGraph::add_batch },
 			{ "add_drawable",   &SceneGraph::add_drawable },
@@ -82,7 +88,7 @@ namespace Rainbow
 			{ 0, 0 }
 		};
 
-		SceneGraph::SceneGraph(lua_State *L, ::SceneGraph::Node *root) : root(root)
+		SceneGraph::SceneGraph(lua_State *L, ::SceneGraph::Node *root) : Bind(root)
 		{
 			lua_pushlstring(L, class_name, sizeof(class_name) / sizeof(char) - 1);
 			lua_createtable(L, 0, 16);
@@ -108,22 +114,22 @@ namespace Rainbow
 
 		int SceneGraph::add_animation(lua_State *L)
 		{
-			return add_child<Animation, kCastingSafe>(this->root, L);
+			return add_child<Animation, kCastingSafe>(this->ptr, L);
 		}
 
 		int SceneGraph::add_batch(lua_State *L)
 		{
-			return add_child<SpriteBatch, kCastingSafe>(this->root, L);
+			return add_child<SpriteBatch, kCastingSafe>(this->ptr, L);
 		}
 
 		int SceneGraph::add_drawable(lua_State *L)
 		{
-			return add_child<Drawable, kCastingUnsafe>(this->root, L);
+			return add_child<Drawable, kCastingUnsafe>(this->ptr, L);
 		}
 
 		int SceneGraph::add_label(lua_State *L)
 		{
-			return add_child<Label, kCastingSafe>(this->root, L);
+			return add_child<Label, kCastingSafe>(this->ptr, L);
 		}
 
 		int SceneGraph::add_node(lua_State *L)
@@ -131,7 +137,7 @@ namespace Rainbow
 			LUA_ASSERT(lua_gettop(L) == 0 || lua_gettop(L) == 1,
 			           "rainbow.scenegraph:add_node([parent])");
 
-			::SceneGraph::Node *node = (!lua_gettop(L)) ? this->root : check_node(L, 1);
+			::SceneGraph::Node *node = (!lua_gettop(L)) ? this->ptr : check_node(L, 1);
 			R_ASSERT(node, "This shouldn't ever happen.");
 			lua_pushlightuserdata(L, node->add_child(new ::SceneGraph::Node()));
 			return 1;

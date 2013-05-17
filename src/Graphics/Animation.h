@@ -13,6 +13,8 @@ class Sprite;
 class Animation : public ChronoTrigger, private NonCopyable<Animation>
 {
 public:
+	static const unsigned int kAnimationEnd = static_cast<unsigned int>(-1);
+
 	/// \param s       The sprite to animate.
 	/// \param frames  Null-terminated array of texture ids to be used as frames.
 	/// \param fps     Frames per second.

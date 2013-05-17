@@ -1,5 +1,4 @@
 #include "Common/Data.h"
-#include "Common/Debug.h"
 #include "Lua/LuaHelper.h"
 #include "Lua/lua_IO.h"
 

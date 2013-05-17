@@ -1,12 +1,18 @@
 #include "Graphics/Sprite.h"
+#include "Lua/LuaHelper.h"
 #include "Lua/lua_Sprite.h"
 
 namespace Rainbow
 {
 	namespace Lua
 	{
-		const char Sprite::class_name[] = "sprite";
-		const Method<Sprite> Sprite::methods[] = {
+		typedef Bind<Sprite, ::Sprite, kBindTypeWeak> LuaSprite;
+
+		template<>
+		const char LuaSprite::class_name[] = "sprite";
+
+		template<>
+		const Method<Sprite> LuaSprite::methods[] = {
 			{ "get_angle",    &Sprite::get_angle },
 			{ "get_color",    &Sprite::get_color },
 			{ "get_position", &Sprite::get_position },
@@ -23,17 +29,17 @@ namespace Rainbow
 		};
 
 		Sprite::Sprite(lua_State *L) :
-			sprite(static_cast< ::Sprite*>(lua_touserdata(L, -1))) { }
+			Bind(static_cast< ::Sprite*>(lua_touserdata(L, -1))) { }
 
 		int Sprite::get_angle(lua_State *L)
 		{
-			lua_pushnumber(L, this->sprite->get_angle());
+			lua_pushnumber(L, this->ptr->get_angle());
 			return 1;
 		}
 
 		int Sprite::get_color(lua_State *L)
 		{
-			const Colorb& c = this->sprite->get_color();
+			const Colorb& c = this->ptr->get_color();
 			lua_pushinteger(L, c.r);
 			lua_pushinteger(L, c.g);
 			lua_pushinteger(L, c.b);
@@ -43,7 +49,7 @@ namespace Rainbow
 
 		int Sprite::get_position(lua_State *L)
 		{
-			const Vec2f &v = this->sprite->get_position();
+			const Vec2f &v = this->ptr->get_position();
 			lua_pushnumber(L, v.x);
 			lua_pushnumber(L, v.y);
 			return 2;
@@ -55,27 +61,27 @@ namespace Rainbow
 			color += luaR_tointeger(L, 2) << 16;
 			color += luaR_tointeger(L, 3) << 8;
 			color += luaR_optinteger(L, 4, 0xff);
-			this->sprite->set_color(color);
+			this->ptr->set_color(color);
 			return 0;
 		}
 
 		int Sprite::set_pivot(lua_State *L)
 		{
 			const Vec2f pivot(luaR_tonumber(L, 1), luaR_tonumber(L, 2));
-			this->sprite->set_pivot(pivot);
+			this->ptr->set_pivot(pivot);
 			return 0;
 		}
 
 		int Sprite::set_position(lua_State *L)
 		{
 			const Vec2f position(luaR_tonumber(L, 1), luaR_tonumber(L, 2));
-			this->sprite->set_position(position);
+			this->ptr->set_position(position);
 			return 0;
 		}
 
 		int Sprite::set_rotation(lua_State *L)
 		{
-			this->sprite->set_rotation(luaR_tonumber(L, 1));
+			this->ptr->set_rotation(luaR_tonumber(L, 1));
 			return 0;
 		}
 
@@ -84,10 +90,10 @@ namespace Rainbow
 			switch (lua_gettop(L))
 			{
 				case 2:
-					this->sprite->set_scale(Vec2f(luaR_tonumber(L, 1), luaR_tonumber(L, 2)));
+					this->ptr->set_scale(Vec2f(luaR_tonumber(L, 1), luaR_tonumber(L, 2)));
 					break;
 				case 1:
-					this->sprite->set_scale(luaR_tonumber(L, 1));
+					this->ptr->set_scale(luaR_tonumber(L, 1));
 					break;
 				default:
 					LUA_ASSERT(lua_gettop(L) == 1 || lua_gettop(L) == 2, "<sprite>:set_scale(fx [, fy])");
@@ -98,13 +104,13 @@ namespace Rainbow
 
 		int Sprite::set_texture(lua_State *L)
 		{
-			this->sprite->set_texture(luaR_tointeger(L, 1));
+			this->ptr->set_texture(luaR_tointeger(L, 1));
 			return 0;
 		}
 
 		int Sprite::mirror(lua_State *)
 		{
-			this->sprite->mirror();
+			this->ptr->mirror();
 			return 0;
 		}
 
@@ -113,7 +119,7 @@ namespace Rainbow
 			LUA_ASSERT(lua_gettop(L) == 2, "<sprite>:move(x, y)");
 
 			const Vec2f delta(luaR_tonumber(L, 1), luaR_tonumber(L, 2));
-			this->sprite->move(delta);
+			this->ptr->move(delta);
 			return 0;
 		}
 
@@ -121,7 +127,7 @@ namespace Rainbow
 		{
 			LUA_ASSERT(lua_gettop(L) == 1, "<sprite>:rotate(r)");
 
-			this->sprite->rotate(luaR_tonumber(L, 1));
+			this->ptr->rotate(luaR_tonumber(L, 1));
 			return 0;
 		}
 	}

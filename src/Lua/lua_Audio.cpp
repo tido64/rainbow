@@ -1,6 +1,7 @@
 #include "Common/Data.h"
 #include "ConFuoco/Mixer.h"
 #include "ConFuoco/Sound.h"
+#include "Lua/LuaHelper.h"
 #include "Lua/lua_Audio.h"
 #include "Lua/lua_Recorder.h"
 

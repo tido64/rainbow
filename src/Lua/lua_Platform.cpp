@@ -1,4 +1,3 @@
-#include "Common/Debug.h"
 #include "Lua/LuaHelper.h"
 #include "Lua/lua_Platform.h"
 #include "Platform/SysUtil.h"

@@ -39,7 +39,7 @@ namespace Rainbow
 						const int h = lua_tointeger(L, 4);
 						lua_pop(L, 3);
 						Texture *texture = wrapper<Texture>(L);
-						::Canvas::set_background((*texture->raw_ptr())[i], w, h);
+						::Canvas::set_background((*texture->get())[i], w, h);
 					}
 					break;
 				default:
@@ -55,7 +55,7 @@ namespace Rainbow
 			const int i = lua_tointeger(L, 2);
 			lua_pop(L, 1);
 			Texture *texture = wrapper<Texture>(L);
-			::Canvas::set_brush((*texture->raw_ptr())[i]);
+			::Canvas::set_brush((*texture->get())[i]);
 			return 0;
 		}
 

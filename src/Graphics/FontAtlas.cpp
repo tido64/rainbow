@@ -4,7 +4,6 @@
 #include FT_FREETYPE_H
 #include FT_GLYPH_H
 
-#include "Common/Algorithm.h"
 #include "Common/Data.h"
 #include "Graphics/FontAtlas.h"
 #include "Graphics/OpenGL.h"

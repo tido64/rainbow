@@ -1,4 +1,5 @@
 #include "Common/Data.h"
+#include "Lua/LuaHelper.h"
 #include "Lua/lua_Sprite.h"
 #include "Lua/lua_SpriteBatch.h"
 #include "Lua/lua_Texture.h"
@@ -7,13 +8,21 @@ namespace Rainbow
 {
 	namespace Lua
 	{
-		const char SpriteBatch::class_name[] = "spritebatch";
-		const Method<SpriteBatch> SpriteBatch::methods[] = {
+		typedef Bind<SpriteBatch, ::SpriteBatch, kBindTypeDerived> LuaSpriteBatch;
+
+		template<>
+		const char LuaSpriteBatch::class_name[] = "spritebatch";
+
+		template<>
+		const Method<SpriteBatch> LuaSpriteBatch::methods[] = {
 			{ "add",            &SpriteBatch::add },
 			{ "create_sprite",  &SpriteBatch::create_sprite },
 			{ "set_texture",    &SpriteBatch::set_texture },
 			{ 0, 0 }
 		};
+
+		SpriteBatch::SpriteBatch(lua_State *L) :
+			::SpriteBatch(luaR_tointeger(L, 1)) { }
 
 		int SpriteBatch::add(lua_State *L)
 		{
@@ -54,7 +63,7 @@ namespace Rainbow
 				}
 				case LUA_TTABLE: {
 						Texture *texture = wrapper<Texture>(L);
-						::SpriteBatch::set_texture(texture->raw_ptr());
+						::SpriteBatch::set_texture(texture->get());
 					break;
 				}
 				default:

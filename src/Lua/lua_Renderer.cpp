@@ -1,6 +1,3 @@
-#include <cstring>
-
-#include "Graphics/OpenGL.h"
 #include "Graphics/Renderer.h"
 #include "Graphics/ShaderManager.h"
 #include "Graphics/TextureManager.h"

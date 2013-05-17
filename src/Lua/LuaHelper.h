@@ -3,6 +3,8 @@
 
 #include <lua.hpp>
 
+#include "Lua/LuaBind.h"
+
 #define luaR_rawgetfield(L, k, type) \
 	lua_pushliteral(L, k); \
 	lua_rawget(L, -2); \
@@ -43,13 +45,6 @@ namespace Rainbow
 {
 	namespace Lua
 	{
-		template<class T>
-		struct Method
-		{
-			const char *const name;
-			int (T::*lua_CFunction)(lua_State *);
-		};
-
 		/// Create a Lua wrapped object.
 		template<class T>
 		int alloc(lua_State *L)

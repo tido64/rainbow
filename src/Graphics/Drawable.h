@@ -12,7 +12,7 @@ public:
 
 	virtual ~Drawable() { }
 
-	inline Drawable* raw_ptr();
+	inline Drawable* get();
 
 	inline void draw();
 	inline void update();
@@ -22,7 +22,7 @@ private:
 	virtual void update_impl() = 0;
 };
 
-Drawable* Drawable::raw_ptr()
+Drawable* Drawable::get()
 {
 	return this;
 }

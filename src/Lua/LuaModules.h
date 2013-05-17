@@ -1,6 +1,7 @@
 #ifndef LUA_MODULES_H_
 #define LUA_MODULES_H_
 
+#include "Lua/LuaHelper.h"
 #include "Lua/lua_Animation.h"
 #include "Lua/lua_Audio.h"
 #include "Lua/lua_Font.h"

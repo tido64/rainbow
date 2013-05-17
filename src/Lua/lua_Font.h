@@ -2,30 +2,17 @@
 #define LUA_FONT_H_
 
 #include "Graphics/FontAtlas.h"
-#include "Lua/LuaHelper.h"
+#include "Lua/LuaBind.h"
 
 namespace Rainbow
 {
 	namespace Lua
 	{
-		class Font
+		class Font : public Bind<Font, FontAtlas, kBindTypeStrong>
 		{
 		public:
-			static const char class_name[];
-			static const Method<Font> methods[];
-
 			Font(lua_State *);
-
-			inline FontAtlas* raw_ptr() const;
-
-		private:
-			SharedPtr<FontAtlas> font;
 		};
-
-		FontAtlas* Font::raw_ptr() const
-		{
-			return this->font.raw_ptr();
-		}
 	}
 }
 
