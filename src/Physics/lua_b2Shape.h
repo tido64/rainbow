@@ -18,27 +18,19 @@ namespace b2
 			return 1;
 		}
 
-		struct PolygonShape
+		class PolygonShape :
+			public b2PolygonShape,
+			public Rainbow::Lua::Bind<PolygonShape , b2PolygonShape, Rainbow::Lua::kBindTypeDerived>
 		{
-			static const char class_name[];
-			static const Rainbow::Lua::Method<PolygonShape> methods[];
+			friend class Rainbow::Lua::Bind<PolygonShape , b2PolygonShape, Rainbow::Lua::kBindTypeDerived>;
 
-			static int create(lua_State *);
-
-			b2PolygonShape shape;
-
+		public:
 			PolygonShape(lua_State *);
+
+		private:
 			int set(lua_State *);
 			int set_as_box(lua_State *);
 			int set_center(lua_State *);
-		};
-
-		const char PolygonShape::class_name[] = "PolygonShape";
-		const Rainbow::Lua::Method<PolygonShape> PolygonShape::methods[] = {
-			{ "Set",        &PolygonShape::set },
-			{ "SetAsBox",   &PolygonShape::set_as_box },
-			{ "SetCenter",  &PolygonShape::set_center },
-			{ nullptr,      nullptr }
 		};
 
 		PolygonShape::PolygonShape(lua_State *) { }
@@ -63,7 +55,7 @@ namespace b2
 				lua_pop(L, 2);
 				++count;
 			}
-			this->shape.Set(points, count);
+			b2PolygonShape::Set(points, count);
 			delete[] points;
 			return 0;
 		}
@@ -80,10 +72,10 @@ namespace b2
 				const float cx = luaR_tonumber(L, 3) / ptm_ratio;
 				const float cy = luaR_tonumber(L, 4) / ptm_ratio;
 				const float r = luaR_tonumber(L, 5);
-				this->shape.SetAsBox(hx, hy, b2Vec2(cx, cy), r);
+				b2PolygonShape::SetAsBox(hx, hy, b2Vec2(cx, cy), r);
 			}
 			else
-				this->shape.SetAsBox(hx, hy);
+				b2PolygonShape::SetAsBox(hx, hy);
 			return 0;
 		}
 
@@ -91,7 +83,7 @@ namespace b2
 		{
 			LUA_ASSERT(lua_gettop(L) == 2, "<b2.PolygonShape>:SetCenter(x, y)");
 
-			this->shape.m_centroid.Set(
+			b2PolygonShape::m_centroid.Set(
 					luaR_tonumber(L, 1) / ptm_ratio, luaR_tonumber(L, 2) / ptm_ratio);
 			return 0;
 		}
@@ -132,7 +124,7 @@ namespace b2
 					break;
 				case b2Shape::e_polygon:
 					shape = new b2PolygonShape(
-							Rainbow::Lua::wrapper<PolygonShape>(L)->shape);
+							*Rainbow::Lua::wrapper<PolygonShape>(L)->get());
 					break;
 				case b2Shape::e_chain:
 					LUA_ASSERT(m_type != b2Shape::e_chain,
@@ -144,5 +136,24 @@ namespace b2
 			}
 			return shape;
 		}
+	}
+}
+
+namespace Rainbow
+{
+	namespace Lua
+	{
+		typedef Bind<b2::Lua::PolygonShape, b2PolygonShape, kBindTypeDerived> b2LuaPolygonShape;
+
+		template<>
+		const char b2LuaPolygonShape::class_name[] = "PolygonShape";
+
+		template<>
+		const Method<b2::Lua::PolygonShape> b2LuaPolygonShape::methods[] = {
+			{ "Set",        &b2::Lua::PolygonShape::set },
+			{ "SetAsBox",   &b2::Lua::PolygonShape::set_as_box },
+			{ "SetCenter",  &b2::Lua::PolygonShape::set_center },
+			{ nullptr,      nullptr }
+		};
 	}
 }

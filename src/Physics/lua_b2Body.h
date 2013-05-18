@@ -113,15 +113,15 @@ namespace b2
 			lua_pop(L, 1);
 		}
 
-		struct Body
+		class Body :
+			public Rainbow::Lua::Bind<Body , b2Body, Rainbow::Lua::kBindTypeWeak>
 		{
-			static const char class_name[];
-			static const Rainbow::Lua::Method<Body> methods[];
+			friend class Rainbow::Lua::Bind<Body , b2Body, Rainbow::Lua::kBindTypeWeak>;
 
-			b2Body *body;
-
+		public:
 			Body(lua_State *);
 
+		private:
 			int bind(lua_State *);
 			int scale_and_position(lua_State *);
 
@@ -169,59 +169,19 @@ namespace b2
 			int dump(lua_State *);
 		};
 
-		const char Body::class_name[] = "Body";
-		const Rainbow::Lua::Method<Body> Body::methods[] = {
-			{ "Bind",                 &Body::bind },
-			{ "ScaleAndPosition",     &Body::scale_and_position },
-			{ "CreateFixture",        &Body::create_fixture },
-			{ "DestroyFixture",       &Body::destroy_fixture },
-			{ "SetTransform",         &Body::set_transform },
-			{ "GetPosition",          &Body::get_position },
-			{ "GetAngle",             &Body::get_angle },
-			{ "GetWorldCenter",       &Body::get_world_center },
-			{ "GetLocalCenter",       &Body::get_local_center },
-			{ "SetLinearVelocity",    &Body::set_linear_velocity },
-			{ "GetLinearVelocity",    &Body::get_linear_velocity },
-			{ "SetAngularVelocity",   &Body::set_angular_velocity },
-			{ "GetAngularVelocity",   &Body::get_angular_velocity },
-			{ "ApplyForce",           &Body::apply_force },
-			{ "ApplyForceToCenter",   &Body::apply_force_to_center },
-			{ "ApplyTorque",          &Body::apply_torque },
-			{ "ApplyLinearImpulse",   &Body::apply_linear_impulse },
-			{ "ApplyAngularImpulse",  &Body::apply_angular_impulse },
-			{ "GetLinearDamping",     &Body::get_linear_damping },
-			{ "SetLinearDamping",     &Body::set_linear_damping },
-			{ "GetAngularDamping",    &Body::get_angular_damping },
-			{ "SetAngularDamping",    &Body::set_angular_damping },
-			{ "GetGravityScale",      &Body::get_gravity_scale },
-			{ "SetGravityScale",      &Body::set_gravity_scale },
-			{ "SetBullet",            &Body::set_bullet },
-			{ "IsBullet",             &Body::is_bullet },
-			{ "SetSleepingAllowed",   &Body::set_sleeping_allowed },
-			{ "IsSleepingAllowed",    &Body::is_sleeping_allowed },
-			{ "SetAwake",             &Body::set_awake },
-			{ "IsAwake",              &Body::is_awake },
-			{ "SetActive",            &Body::set_active },
-			{ "IsActive",             &Body::is_active },
-			{ "SetFixedRotation",     &Body::set_fixed_rotation },
-			{ "IsFixedRotation",      &Body::is_fixed_rotation },
-			{ "Dump",                 &Body::dump },
-			{ nullptr,                nullptr }
-		};
-
 		Body::Body(lua_State *L) :
-			body(static_cast<b2Body*>(lua_touserdata(L, -1))) { }
+			Bind(static_cast<b2Body*>(lua_touserdata(L, -1))) { }
 
 		int Body::bind(lua_State *L)
 		{
 			LUA_ASSERT(lua_gettop(L) == 1, "<b2.Body>:Bind(<rainbow.sprite>)");
 
-			BodyData *data = static_cast<BodyData*>(this->body->GetUserData());
+			BodyData *data = static_cast<BodyData*>(this->ptr->GetUserData());
 			data->sprite = Rainbow::Lua::wrapper<Rainbow::Lua::Sprite>(L)->get();
-			b2Vec2 pos = this->body->GetPosition();
+			b2Vec2 pos = this->ptr->GetPosition();
 			pos *= ptm_ratio;
 			data->sprite->set_position(Vec2f(pos.x, pos.y));
-			data->sprite->set_rotation(this->body->GetAngle());
+			data->sprite->set_rotation(this->ptr->GetAngle());
 			return 0;
 		}
 
@@ -234,28 +194,28 @@ namespace b2
 			const lua_Number y = luaR_tonumber(L, 3);
 
 			b2BodyDef body_def;
-			body_def.type = this->body->GetType();
+			body_def.type = this->ptr->GetType();
 			body_def.position.Set(x / ptm_ratio, y / ptm_ratio);
-			body_def.angle = this->body->GetAngle();
-			body_def.linearVelocity = this->body->GetLinearVelocity();
-			body_def.angularVelocity = this->body->GetAngularVelocity();
-			body_def.linearDamping = this->body->GetLinearDamping();
-			body_def.angularDamping = this->body->GetAngularDamping();
-			body_def.allowSleep = this->body->IsSleepingAllowed();
-			body_def.awake = this->body->IsAwake();
-			body_def.fixedRotation = this->body->IsFixedRotation();
-			body_def.bullet = this->body->IsBullet();
-			body_def.active = this->body->IsActive();
-			body_def.userData = this->body->GetUserData();
-			body_def.gravityScale = this->body->GetGravityScale();
+			body_def.angle = this->ptr->GetAngle();
+			body_def.linearVelocity = this->ptr->GetLinearVelocity();
+			body_def.angularVelocity = this->ptr->GetAngularVelocity();
+			body_def.linearDamping = this->ptr->GetLinearDamping();
+			body_def.angularDamping = this->ptr->GetAngularDamping();
+			body_def.allowSleep = this->ptr->IsSleepingAllowed();
+			body_def.awake = this->ptr->IsAwake();
+			body_def.fixedRotation = this->ptr->IsFixedRotation();
+			body_def.bullet = this->ptr->IsBullet();
+			body_def.active = this->ptr->IsActive();
+			body_def.userData = this->ptr->GetUserData();
+			body_def.gravityScale = this->ptr->GetGravityScale();
 
-			b2World *world = this->body->GetWorld();
+			b2World *world = this->ptr->GetWorld();
 			b2Body *new_body = world->CreateBody(&body_def);
 
 			b2FixtureDef fixture;
 			b2CircleShape shape;
 			fixture.shape = &shape;
-			for (b2Fixture *f = this->body->GetFixtureList(); f; f = f->GetNext())
+			for (b2Fixture *f = this->ptr->GetFixtureList(); f; f = f->GetNext())
 			{
 				if (f->GetType() != b2Shape::e_circle)
 				{
@@ -291,18 +251,18 @@ namespace b2
 
 			// Re-register body
 			lua_rawgeti(L, LUA_REGISTRYINDEX, g_body_list);
-			lua_pushinteger(L, reinterpret_cast<lua_Integer>(this->body));
+			lua_pushinteger(L, reinterpret_cast<lua_Integer>(this->ptr));
 			lua_rawget(L, -2);
 			lua_pushinteger(L, reinterpret_cast<lua_Integer>(new_body));
 			lua_insert(L, -2);
 			lua_rawset(L, -3);
-			lua_pushinteger(L, reinterpret_cast<lua_Integer>(this->body));
+			lua_pushinteger(L, reinterpret_cast<lua_Integer>(this->ptr));
 			lua_pushnil(L);
 			lua_rawset(L, -3);
 			lua_pop(L, 1);
 
-			world->DestroyBody(this->body);
-			this->body = new_body;
+			world->DestroyBody(this->ptr);
+			this->ptr = new_body;
 			return 0;
 		}
 
@@ -315,7 +275,7 @@ namespace b2
 					{
 						b2FixtureDef def;
 						parse_FixtureDef(L, def);
-						fixture = this->body->CreateFixture(&def);
+						fixture = this->ptr->CreateFixture(&def);
 						delete def.shape;
 					}
 					break;
@@ -324,7 +284,7 @@ namespace b2
 						const float density = luaR_tonumber(L, 2);
 						lua_pop(L, 1);
 						b2Shape *shape = parse_Shape(L);
-						fixture = this->body->CreateFixture(shape, density);
+						fixture = this->ptr->CreateFixture(shape, density);
 						delete shape;
 					}
 					break;
@@ -342,7 +302,7 @@ namespace b2
 			LUA_ASSERT(lua_gettop(L) == 1,
 			           "<b2.Body>:DestroyFixture(b2.Fixture)");
 
-			this->body->DestroyFixture(static_cast<b2Fixture*>(lua_touserdata(L, 1)));
+			this->ptr->DestroyFixture(static_cast<b2Fixture*>(lua_touserdata(L, 1)));
 			return 0;
 		}
 
@@ -350,7 +310,7 @@ namespace b2
 		{
 			LUA_ASSERT(lua_gettop(L) == 3, "<b2.Body>:SetTransform(x, y, r)");
 
-			this->body->SetTransform(
+			this->ptr->SetTransform(
 					b2Vec2(luaR_tonumber(L, 1) / ptm_ratio, luaR_tonumber(L, 2) / ptm_ratio),
 					luaR_tonumber(L, 3));
 			return 0;
@@ -358,7 +318,7 @@ namespace b2
 
 		int Body::get_position(lua_State *L)
 		{
-			const b2Vec2 &pos = this->body->GetPosition();
+			const b2Vec2 &pos = this->ptr->GetPosition();
 			lua_pushnumber(L, pos.x * ptm_ratio);
 			lua_pushnumber(L, pos.y * ptm_ratio);
 			return 2;
@@ -366,13 +326,13 @@ namespace b2
 
 		int Body::get_angle(lua_State *L)
 		{
-			lua_pushnumber(L, this->body->GetAngle());
+			lua_pushnumber(L, this->ptr->GetAngle());
 			return 1;
 		}
 
 		int Body::get_world_center(lua_State *L)
 		{
-			const b2Vec2 &center = this->body->GetWorldCenter();
+			const b2Vec2 &center = this->ptr->GetWorldCenter();
 			lua_pushnumber(L, center.x * ptm_ratio);
 			lua_pushnumber(L, center.y * ptm_ratio);
 			return 2;
@@ -380,7 +340,7 @@ namespace b2
 
 		int Body::get_local_center(lua_State *L)
 		{
-			const b2Vec2 &center = this->body->GetLocalCenter();
+			const b2Vec2 &center = this->ptr->GetLocalCenter();
 			lua_pushnumber(L, center.x * ptm_ratio);
 			lua_pushnumber(L, center.y * ptm_ratio);
 			return 2;
@@ -390,14 +350,14 @@ namespace b2
 		{
 			LUA_ASSERT(lua_gettop(L) == 2, "<b2.Body>:SetLinearVelocity(x, y)");
 
-			this->body->SetLinearVelocity(
+			this->ptr->SetLinearVelocity(
 					b2Vec2(luaR_tonumber(L, 1), luaR_tonumber(L, 2)));
 			return 0;
 		}
 
 		int Body::get_linear_velocity(lua_State *L)
 		{
-			const b2Vec2 &v = this->body->GetLinearVelocity();
+			const b2Vec2 &v = this->ptr->GetLinearVelocity();
 			lua_pushnumber(L, v.x);
 			lua_pushnumber(L, v.y);
 			return 2;
@@ -407,13 +367,13 @@ namespace b2
 		{
 			LUA_ASSERT(lua_gettop(L) == 1, "<b2.Body>:SetAngularVelocity(v)");
 
-			this->body->SetAngularVelocity(luaR_tonumber(L, 1));
+			this->ptr->SetAngularVelocity(luaR_tonumber(L, 1));
 			return 0;
 		}
 
 		int Body::get_angular_velocity(lua_State *L)
 		{
-			lua_pushnumber(L, this->body->GetAngularVelocity());
+			lua_pushnumber(L, this->ptr->GetAngularVelocity());
 			return 1;
 		}
 
@@ -422,7 +382,7 @@ namespace b2
 			LUA_ASSERT(lua_gettop(L) == 5,
 			           "<b2.Body>:ApplyForce(impulse.x, impulse.y, point.x, point.y, wake)");
 
-			this->body->ApplyForce(
+			this->ptr->ApplyForce(
 					b2Vec2(luaR_tonumber(L, 1), luaR_tonumber(L, 2)),
 					b2Vec2(luaR_tonumber(L, 3) / ptm_ratio, luaR_tonumber(L, 4) / ptm_ratio),
 					lua_toboolean(L, 5));
@@ -434,7 +394,7 @@ namespace b2
 			LUA_ASSERT(lua_gettop(L) == 3,
 			           "<b2.Body>:ApplyForceToCenter(impulse.x, impulse.y, wake)");
 
-			this->body->ApplyForceToCenter(
+			this->ptr->ApplyForceToCenter(
 					b2Vec2(luaR_tonumber(L, 1), luaR_tonumber(L, 2)),
 					lua_toboolean(L, 3));
 			return 0;
@@ -445,7 +405,7 @@ namespace b2
 			LUA_ASSERT(lua_gettop(L) == 2,
 			           "<b2.Body>:ApplyTorque(torque, wake)");
 
-			this->body->ApplyTorque(luaR_tonumber(L, 1), lua_toboolean(L, 2));
+			this->ptr->ApplyTorque(luaR_tonumber(L, 1), lua_toboolean(L, 2));
 			return 0;
 		}
 
@@ -454,7 +414,7 @@ namespace b2
 			LUA_ASSERT(lua_gettop(L) == 5,
 			           "<b2.Body>:ApplyLinearImpulse(impulse.x, impulse.y, point.x, point.y, wake)");
 
-			this->body->ApplyLinearImpulse(
+			this->ptr->ApplyLinearImpulse(
 					b2Vec2(luaR_tonumber(L, 1), luaR_tonumber(L, 2)),
 					b2Vec2(luaR_tonumber(L, 3) / ptm_ratio, luaR_tonumber(L, 4) / ptm_ratio),
 					lua_toboolean(L, 5));
@@ -466,13 +426,13 @@ namespace b2
 			LUA_ASSERT(lua_gettop(L) == 2,
 			           "<b2.Body>:ApplyAngularImpulse(impulse, wake)");
 
-			this->body->ApplyAngularImpulse(luaR_tonumber(L, 1), lua_toboolean(L, 2));
+			this->ptr->ApplyAngularImpulse(luaR_tonumber(L, 1), lua_toboolean(L, 2));
 			return 0;
 		}
 
 		int Body::get_linear_damping(lua_State *L)
 		{
-			lua_pushnumber(L, this->body->GetLinearDamping() * ptm_ratio);
+			lua_pushnumber(L, this->ptr->GetLinearDamping() * ptm_ratio);
 			return 1;
 		}
 
@@ -481,13 +441,13 @@ namespace b2
 			LUA_ASSERT(lua_gettop(L) == 1,
 			           "<b2.Body>:SetLinearDamping(damping)");
 
-			this->body->SetLinearDamping(luaR_tonumber(L, 1) / ptm_ratio);
+			this->ptr->SetLinearDamping(luaR_tonumber(L, 1) / ptm_ratio);
 			return 0;
 		}
 
 		int Body::get_angular_damping(lua_State *L)
 		{
-			lua_pushnumber(L, this->body->GetAngularDamping());
+			lua_pushnumber(L, this->ptr->GetAngularDamping());
 			return 1;
 		}
 
@@ -496,13 +456,13 @@ namespace b2
 			LUA_ASSERT(lua_gettop(L) == 1,
 			           "<b2.Body>:SetAngularDamping(damping)");
 
-			this->body->SetAngularDamping(luaR_tonumber(L, 1));
+			this->ptr->SetAngularDamping(luaR_tonumber(L, 1));
 			return 0;
 		}
 
 		int Body::get_gravity_scale(lua_State *L)
 		{
-			lua_pushnumber(L, this->body->GetGravityScale());
+			lua_pushnumber(L, this->ptr->GetGravityScale());
 			return 1;
 		}
 
@@ -510,7 +470,7 @@ namespace b2
 		{
 			LUA_ASSERT(lua_gettop(L) == 1, "<b2.Body>:SetGravityScale(scale)");
 
-			this->body->SetGravityScale(luaR_tonumber(L, 1));
+			this->ptr->SetGravityScale(luaR_tonumber(L, 1));
 			return 0;
 		}
 
@@ -518,13 +478,13 @@ namespace b2
 		{
 			LUA_ASSERT(lua_gettop(L) == 1, "<b2.Body>:SetBullet(flag)");
 
-			this->body->SetBullet(lua_toboolean(L, 1));
+			this->ptr->SetBullet(lua_toboolean(L, 1));
 			return 0;
 		}
 
 		int Body::is_bullet(lua_State *L)
 		{
-			lua_pushboolean(L, this->body->IsBullet());
+			lua_pushboolean(L, this->ptr->IsBullet());
 			return 1;
 		}
 
@@ -533,13 +493,13 @@ namespace b2
 			LUA_ASSERT(lua_gettop(L) == 1,
 			           "<b2.Body>:SetSleepingAllowed(flag)");
 
-			this->body->SetSleepingAllowed(lua_toboolean(L, 1));
+			this->ptr->SetSleepingAllowed(lua_toboolean(L, 1));
 			return 0;
 		}
 
 		int Body::is_sleeping_allowed(lua_State *L)
 		{
-			lua_pushboolean(L, this->body->IsSleepingAllowed());
+			lua_pushboolean(L, this->ptr->IsSleepingAllowed());
 			return 1;
 		}
 
@@ -547,13 +507,13 @@ namespace b2
 		{
 			LUA_ASSERT(lua_gettop(L) == 1, "<b2.Body>:SetAwake(flag)");
 
-			this->body->SetAwake(lua_toboolean(L, 1));
+			this->ptr->SetAwake(lua_toboolean(L, 1));
 			return 0;
 		}
 
 		int Body::is_awake(lua_State *L)
 		{
-			lua_pushboolean(L, this->body->IsAwake());
+			lua_pushboolean(L, this->ptr->IsAwake());
 			return 1;
 		}
 
@@ -561,13 +521,13 @@ namespace b2
 		{
 			LUA_ASSERT(lua_gettop(L) == 1, "<b2.Body>:SetActive(flag)");
 
-			this->body->SetActive(lua_toboolean(L, 1));
+			this->ptr->SetActive(lua_toboolean(L, 1));
 			return 0;
 		}
 
 		int Body::is_active(lua_State *L)
 		{
-			lua_pushboolean(L, this->body->IsActive());
+			lua_pushboolean(L, this->ptr->IsActive());
 			return 0;
 		}
 
@@ -575,20 +535,71 @@ namespace b2
 		{
 			LUA_ASSERT(lua_gettop(L) == 1, "<b2.Body>:SetFixedRotation(flag)");
 
-			this->body->SetFixedRotation(lua_toboolean(L, 1));
+			this->ptr->SetFixedRotation(lua_toboolean(L, 1));
 			return 0;
 		}
 
 		int Body::is_fixed_rotation(lua_State *L)
 		{
-			lua_pushboolean(L, this->body->IsFixedRotation());
+			lua_pushboolean(L, this->ptr->IsFixedRotation());
 			return 0;
 		}
 
 		int Body::dump(lua_State *)
 		{
-			this->body->Dump();
+			this->ptr->Dump();
 			return 0;
 		}
+	}
+}
+
+namespace Rainbow
+{
+	namespace Lua
+	{
+		typedef Bind<b2::Lua::Body, b2Body, kBindTypeWeak> b2LuaBody;
+
+		template<>
+		const char b2LuaBody::class_name[] = "Body";
+
+		template<>
+		const Method<b2::Lua::Body> b2LuaBody::methods[] = {
+			{ "Bind",                 &b2::Lua::Body::bind },
+			{ "ScaleAndPosition",     &b2::Lua::Body::scale_and_position },
+			{ "CreateFixture",        &b2::Lua::Body::create_fixture },
+			{ "DestroyFixture",       &b2::Lua::Body::destroy_fixture },
+			{ "SetTransform",         &b2::Lua::Body::set_transform },
+			{ "GetPosition",          &b2::Lua::Body::get_position },
+			{ "GetAngle",             &b2::Lua::Body::get_angle },
+			{ "GetWorldCenter",       &b2::Lua::Body::get_world_center },
+			{ "GetLocalCenter",       &b2::Lua::Body::get_local_center },
+			{ "SetLinearVelocity",    &b2::Lua::Body::set_linear_velocity },
+			{ "GetLinearVelocity",    &b2::Lua::Body::get_linear_velocity },
+			{ "SetAngularVelocity",   &b2::Lua::Body::set_angular_velocity },
+			{ "GetAngularVelocity",   &b2::Lua::Body::get_angular_velocity },
+			{ "ApplyForce",           &b2::Lua::Body::apply_force },
+			{ "ApplyForceToCenter",   &b2::Lua::Body::apply_force_to_center },
+			{ "ApplyTorque",          &b2::Lua::Body::apply_torque },
+			{ "ApplyLinearImpulse",   &b2::Lua::Body::apply_linear_impulse },
+			{ "ApplyAngularImpulse",  &b2::Lua::Body::apply_angular_impulse },
+			{ "GetLinearDamping",     &b2::Lua::Body::get_linear_damping },
+			{ "SetLinearDamping",     &b2::Lua::Body::set_linear_damping },
+			{ "GetAngularDamping",    &b2::Lua::Body::get_angular_damping },
+			{ "SetAngularDamping",    &b2::Lua::Body::set_angular_damping },
+			{ "GetGravityScale",      &b2::Lua::Body::get_gravity_scale },
+			{ "SetGravityScale",      &b2::Lua::Body::set_gravity_scale },
+			{ "SetBullet",            &b2::Lua::Body::set_bullet },
+			{ "IsBullet",             &b2::Lua::Body::is_bullet },
+			{ "SetSleepingAllowed",   &b2::Lua::Body::set_sleeping_allowed },
+			{ "IsSleepingAllowed",    &b2::Lua::Body::is_sleeping_allowed },
+			{ "SetAwake",             &b2::Lua::Body::set_awake },
+			{ "IsAwake",              &b2::Lua::Body::is_awake },
+			{ "SetActive",            &b2::Lua::Body::set_active },
+			{ "IsActive",             &b2::Lua::Body::is_active },
+			{ "SetFixedRotation",     &b2::Lua::Body::set_fixed_rotation },
+			{ "IsFixedRotation",      &b2::Lua::Body::is_fixed_rotation },
+			{ "Dump",                 &b2::Lua::Body::dump },
+			{ nullptr,                nullptr }
+		};
 	}
 }

@@ -20,7 +20,7 @@ namespace b2
 				lua_rawgeti(L, LUA_REGISTRYINDEX, g_contact);
 				lua_rawgeti(L, -1, 0);
 				Contact **ptr = static_cast<Contact**>(luaR_touserdata(L, -1, Contact::class_name));
-				(*ptr)->contact = contact;
+				(*ptr)->set(contact);
 				lua_pop(L, 1);
 			}
 
@@ -42,14 +42,31 @@ namespace b2
 			}
 		}
 
-		class World : public b2ContactListener
+		class World :
+			public b2ContactListener,
+			public b2World,
+			public Rainbow::Lua::Bind<World , b2World, Rainbow::Lua::kBindTypeDerived>
 		{
-		public:
-			static const char class_name[];
-			static const Rainbow::Lua::Method<World> methods[];
+			friend class Rainbow::Lua::Bind<World , b2World, Rainbow::Lua::kBindTypeDerived>;
 
+		public:
 			World(lua_State *);
 			virtual ~World();
+
+			/* Implement b2ContactListener. */
+
+			virtual void BeginContact(b2Contact* contact);
+			virtual void EndContact(b2Contact* contact);
+			virtual void PreSolve(b2Contact* contact, const b2Manifold* oldManifold);
+			virtual void PostSolve(b2Contact* contact, const b2ContactImpulse* impulse);
+
+		private:
+			float elapsed;
+			int contact_listener;
+
+			lua_State *L;
+
+			RainbowDraw debug_draw;
 
 			int set_contact_listener(lua_State *);
 
@@ -68,22 +85,6 @@ namespace b2
 
 			int dump(lua_State *);
 
-			/* Implement b2ContactListener. */
-
-			virtual void BeginContact(b2Contact* contact);
-			virtual void EndContact(b2Contact* contact);
-			virtual void PreSolve(b2Contact* contact, const b2Manifold* oldManifold);
-			virtual void PostSolve(b2Contact* contact, const b2ContactImpulse* impulse);
-
-		private:
-			float elapsed;
-			int contact_listener;
-
-			lua_State *L;
-
-			RainbowDraw debug_draw;
-			b2World world;
-
 			void interpolate();
 			void restore_state();
 			void save_state();
@@ -93,34 +94,22 @@ namespace b2
 		const float fpms = 0.06f;
 		const unsigned int max_steps = 5;
 
-		const char World::class_name[] = "World";
-		const Rainbow::Lua::Method<World> World::methods[] = {
-			{ "SetContactListener",  &World::set_contact_listener },
-			{ "CreateBody",          &World::create_body },
-			{ "DestroyBody",         &World::destroy_body },
-			{ "Step",                &World::step },
-			{ "SetGravity",          &World::set_gravity },
-			{ "GetGravity",          &World::get_gravity },
-			{ "Dump",                &World::dump },
-			{ nullptr,               nullptr }
-		};
-
 		World::World(lua_State *L) :
-			elapsed(0.0f), contact_listener(LUA_REFNIL), L(L),
-			debug_draw(ptm_ratio), world(b2Vec2(0.0f, kStandardGravity))
+			b2World(b2Vec2(0.0f, kStandardGravity)), elapsed(0.0f),
+			contact_listener(LUA_REFNIL), L(L), debug_draw(ptm_ratio)
 		{
 			if (lua_gettop(L) >= 2)
-				this->world.SetGravity(b2Vec2(luaR_tonumber(L, 1), luaR_tonumber(L, 2)));
+				b2World::SetGravity(b2Vec2(luaR_tonumber(L, 1), luaR_tonumber(L, 2)));
 
-			this->world.SetDebugDraw(&this->debug_draw);
+			b2World::SetDebugDraw(&this->debug_draw);
 			this->debug_draw.SetFlags(b2Draw::e_shapeBit);
 
-			g_debug_data->push_back(&this->world);
+			g_debug_data->push_back(this);
 		}
 
 		World::~World()
 		{
-			g_debug_data->erase(&this->world);
+			g_debug_data->erase(this);
 			if (this->contact_listener != LUA_REFNIL)
 				luaL_unref(L, LUA_REGISTRYINDEX, this->contact_listener);
 		}
@@ -131,7 +120,7 @@ namespace b2
 			           "<b2.World>:SetContactListener(listener)");
 
 			if (this->contact_listener == LUA_REFNIL)
-				this->world.SetContactListener(this);
+				b2World::SetContactListener(this);
 			else
 				luaL_unref(L, LUA_REGISTRYINDEX, this->contact_listener);
 			this->contact_listener = luaL_ref(L, LUA_REGISTRYINDEX);
@@ -146,7 +135,7 @@ namespace b2
 			b2BodyDef def;
 			parse_BodyDef(L, def);
 			def.userData = new BodyData(def);
-			b2Body *body = this->world.CreateBody(&def);
+			b2Body *body = b2World::CreateBody(&def);
 			lua_pushlightuserdata(L, body);
 			Rainbow::Lua::alloc<Body>(L);
 
@@ -164,7 +153,7 @@ namespace b2
 		{
 			LUA_ASSERT(lua_gettop(L) == 1, "<b2.World>:DestroyBody(b2.Body)");
 
-			b2Body *body = Rainbow::Lua::wrapper<Body>(L)->body;
+			b2Body *body = Rainbow::Lua::wrapper<Body>(L)->get();
 
 			// Unregister body
 			lua_rawgeti(L, LUA_REGISTRYINDEX, g_body_list);
@@ -174,7 +163,7 @@ namespace b2
 			lua_pop(L, 1);
 
 			delete static_cast<BodyData*>(body->GetUserData());
-			this->world.DestroyBody(body);
+			b2World::DestroyBody(body);
 			return 0;
 		}
 
@@ -199,10 +188,10 @@ namespace b2
 				this->restore_state();
 				for (unsigned int i = 0; i < steps; ++i)
 				{
-					this->world.Step(fixed_step, v_iter, p_iter);
+					b2World::Step(fixed_step, v_iter, p_iter);
 					this->save_state();
 				}
-				this->world.ClearForces();
+				b2World::ClearForces();
 				this->interpolate();
 			}
 			return 0;
@@ -210,7 +199,7 @@ namespace b2
 
 		int World::clear_forces(lua_State *)
 		{
-			this->world.ClearForces();
+			b2World::ClearForces();
 			return 0;
 		}
 
@@ -218,13 +207,13 @@ namespace b2
 		{
 			LUA_ASSERT(lua_gettop(L) == 2, "<b2.World>:SetGravity(x, y)");
 
-			this->world.SetGravity(b2Vec2(luaR_tonumber(L, 1), luaR_tonumber(L, 2)));
+			b2World::SetGravity(b2Vec2(luaR_tonumber(L, 1), luaR_tonumber(L, 2)));
 			return 0;
 		}
 
 		int World::get_gravity(lua_State *L)
 		{
-			b2Vec2 gravity = this->world.GetGravity();
+			b2Vec2 gravity = b2World::GetGravity();
 			lua_pushnumber(L, gravity.x);
 			lua_pushnumber(L, gravity.y);
 			return 2;
@@ -232,7 +221,7 @@ namespace b2
 
 		int World::dump(lua_State *)
 		{
-			this->world.Dump();
+			b2World::Dump();
 			return 0;
 		}
 
@@ -286,47 +275,41 @@ namespace b2
 		{
 			const float ratio = this->elapsed * fpms;
 			const float rest = 1.0f - ratio;
-			for (b2Body *b = this->world.GetBodyList(); b; b = b->GetNext())
+			for (b2Body *b = b2World::GetBodyList(); b; b = b->GetNext())
 			{
 				if (b->GetType() == b2_staticBody || !b->IsAwake())
 					continue;
 
 				BodyData *d = static_cast<BodyData*>(b->GetUserData());
-				const b2Vec2 v = ratio * d->curr_p + rest * d->prev_p;
-				const float r = ratio * d->curr_r + rest * d->prev_r;
 				if (!d->sprite)
-					b->SetTransform(v, r);
-				else
-				{
-					const Vec2f position(v.x * ptm_ratio, v.y * ptm_ratio);
-					d->sprite->set_position(position);
-					d->sprite->set_rotation(r);
-				}
+					continue;
+
+				const b2Vec2 v = ptm_ratio * (ratio * d->curr_p + rest * d->prev_p);
+				d->sprite->set_position(Vec2f(v.x, v.y));
+				d->sprite->set_rotation(ratio * d->curr_r + rest * d->prev_r);
 			}
 		}
 
 		void World::restore_state()
 		{
-			for (b2Body *b = this->world.GetBodyList(); b; b = b->GetNext())
+			for (b2Body *b = b2World::GetBodyList(); b; b = b->GetNext())
 			{
 				if (b->GetType() == b2_staticBody)
 					continue;
 
 				BodyData *d = static_cast<BodyData*>(b->GetUserData());
 				if (!d->sprite)
-					b->SetTransform(d->curr_p, d->curr_r);
-				else
-				{
-					const Vec2f position(d->curr_p.x * ptm_ratio, d->curr_p.y * ptm_ratio);
-					d->sprite->set_position(position);
-					d->sprite->set_rotation(d->curr_r);
-				}
+					continue;
+
+				const Vec2f position(d->curr_p.x * ptm_ratio, d->curr_p.y * ptm_ratio);
+				d->sprite->set_position(position);
+				d->sprite->set_rotation(d->curr_r);
 			}
 		}
 
 		void World::save_state()
 		{
-			for (b2Body *b = this->world.GetBodyList(); b; b = b->GetNext())
+			for (b2Body *b = b2World::GetBodyList(); b; b = b->GetNext())
 			{
 				if (b->GetType() == b2_staticBody)
 					continue;
@@ -339,5 +322,28 @@ namespace b2
 				d->curr_r = t.q.GetAngle();
 			}
 		}
+	}
+}
+
+namespace Rainbow
+{
+	namespace Lua
+	{
+		typedef Bind<b2::Lua::World, b2World, kBindTypeDerived> b2LuaWorld;
+
+		template<>
+		const char b2LuaWorld::class_name[] = "World";
+
+		template<>
+		const Method<b2::Lua::World> b2LuaWorld::methods[] = {
+			{ "SetContactListener",  &b2::Lua::World::set_contact_listener },
+			{ "CreateBody",          &b2::Lua::World::create_body },
+			{ "DestroyBody",         &b2::Lua::World::destroy_body },
+			{ "Step",                &b2::Lua::World::step },
+			{ "SetGravity",          &b2::Lua::World::set_gravity },
+			{ "GetGravity",          &b2::Lua::World::get_gravity },
+			{ "Dump",                &b2::Lua::World::dump },
+			{ nullptr,               nullptr }
+		};
 	}
 }

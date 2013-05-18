@@ -9,16 +9,16 @@ namespace b2
 			int g_fixture = -1;
 		}
 
-		class Contact
+		class Contact :
+			public Rainbow::Lua::Bind<Contact , b2Contact, Rainbow::Lua::kBindTypeWeak>
 		{
+			friend class Rainbow::Lua::Bind<Contact , b2Contact, Rainbow::Lua::kBindTypeWeak>;
+
 		public:
-			static const char class_name[];
-			static const Rainbow::Lua::Method<Contact> methods[];
+			inline Contact(lua_State *);
+			inline void set(b2Contact *contact);
 
-			b2Contact *contact;
-
-			Contact(lua_State *);
-
+		private:
 			int is_touching(lua_State *);
 			int set_enabled(lua_State *);
 			int is_enabled(lua_State *);
@@ -38,26 +38,19 @@ namespace b2
 			int set_tangent_speed(lua_State *);
 			int get_tangent_speed(lua_State *);
 
-		private:
 			int get_fixture(lua_State *, b2Fixture *);
 		};
 
-		const char Contact::class_name[] = "Contact";
-		const Rainbow::Lua::Method<Contact> Contact::methods[] = {
-			{ "IsTouching",   &Contact::is_touching },
-			{ "SetEnabled",   &Contact::set_enabled },
-			{ "IsEnabled",    &Contact::is_enabled },
-			{ "GetNext",      &Contact::get_next },
-			{ "GetFixtureA",  &Contact::get_fixture_a },
-			{ "GetFixtureB",  &Contact::get_fixture_b },
-			{ nullptr,        nullptr }
-		};
+		Contact::Contact(lua_State *) { }
 
-		Contact::Contact(lua_State *) : contact(nullptr) { }
+		void Contact::set(b2Contact *contact)
+		{
+			this->ptr = contact;
+		}
 
 		int Contact::is_touching(lua_State *L)
 		{
-			lua_pushboolean(L, this->contact->IsTouching());
+			lua_pushboolean(L, this->ptr->IsTouching());
 			return 1;
 		}
 
@@ -65,35 +58,35 @@ namespace b2
 		{
 			LUA_ASSERT(lua_gettop(L) == 1, "<b2.contact>:set_enabled(bool)");
 
-			this->contact->SetEnabled(lua_toboolean(L, 1));
+			this->ptr->SetEnabled(lua_toboolean(L, 1));
 			return 0;
 		}
 
 		int Contact::is_enabled(lua_State *L)
 		{
-			lua_pushboolean(L, this->contact->IsEnabled());
+			lua_pushboolean(L, this->ptr->IsEnabled());
 			return 1;
 		}
 
 		int Contact::get_next(lua_State *L)
 		{
-			this->contact = this->contact->GetNext();
-			lua_pushboolean(L, !!this->contact);
+			this->ptr = this->ptr->GetNext();
+			lua_pushboolean(L, !!this->ptr);
 			return 1;
 		}
 
 		int Contact::get_fixture_a(lua_State *L)
 		{
-			if (!this->contact)
+			if (!this->ptr)
 				return 0;
-			return this->get_fixture(L, this->contact->GetFixtureA());
+			return this->get_fixture(L, this->ptr->GetFixtureA());
 		}
 
 		int Contact::get_fixture_b(lua_State *L)
 		{
-			if (!this->contact)
+			if (!this->ptr)
 				return 0;
-			return this->get_fixture(L, this->contact->GetFixtureB());
+			return this->get_fixture(L, this->ptr->GetFixtureB());
 		}
 
 		int Contact::get_fixture(lua_State *L, b2Fixture *fixture)
@@ -106,9 +99,31 @@ namespace b2
 			lua_rawgeti(L, LUA_REGISTRYINDEX, g_fixture);
 			lua_rawgeti(L, -1, 0);
 			Fixture **fix = static_cast<Fixture**>(luaR_touserdata(L, -1, Fixture::class_name));
-			(*fix)->fixture = fixture;
+			(*fix)->set(fixture);
 			lua_pop(L, 1);
 			return 1;
 		}
+	}
+}
+
+namespace Rainbow
+{
+	namespace Lua
+	{
+		typedef Bind<b2::Lua::Contact, b2Contact, kBindTypeWeak> b2LuaContact;
+
+		template<>
+		const char b2LuaContact::class_name[] = "Contact";
+
+		template<>
+		const Method<b2::Lua::Contact> b2LuaContact::methods[] = {
+			{ "IsTouching",   &b2::Lua::Contact::is_touching },
+			{ "SetEnabled",   &b2::Lua::Contact::set_enabled },
+			{ "IsEnabled",    &b2::Lua::Contact::is_enabled },
+			{ "GetNext",      &b2::Lua::Contact::get_next },
+			{ "GetFixtureA",  &b2::Lua::Contact::get_fixture_a },
+			{ "GetFixtureB",  &b2::Lua::Contact::get_fixture_b },
+			{ nullptr,        nullptr }
+		};
 	}
 }

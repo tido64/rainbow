@@ -78,38 +78,52 @@ namespace b2
 			lua_pop(L, 1);
 		}
 
-		class Fixture
+		class Fixture :
+			public Rainbow::Lua::Bind<Fixture , b2Fixture, Rainbow::Lua::kBindTypeWeak>
 		{
 			friend class Contact;
+			friend class Rainbow::Lua::Bind<Fixture , b2Fixture, Rainbow::Lua::kBindTypeWeak>;
 
 		public:
-			static const char class_name[];
-			static const Rainbow::Lua::Method<Fixture> methods[];
-
 			Fixture(lua_State *);
 
+			inline void set(b2Fixture *fixture);
+
 			int get_body(lua_State *);
-
-		private:
-			b2Fixture *fixture;
 		};
 
-		const char Fixture::class_name[] = "Fixture";
-		const Rainbow::Lua::Method<Fixture> Fixture::methods[] = {
-			{ "GetBody",  &Fixture::get_body },
-			{ nullptr,    nullptr }
-		};
+		Fixture::Fixture(lua_State *) { }
 
-		Fixture::Fixture(lua_State *) : fixture(nullptr) { }
+		void Fixture::set(b2Fixture *fixture)
+		{
+			this->ptr = fixture;
+		}
 
 		int Fixture::get_body(lua_State *L)
 		{
 			lua_rawgeti(L, LUA_REGISTRYINDEX, g_body_list);
-			lua_pushinteger(L, reinterpret_cast<lua_Integer>(this->fixture->GetBody()));
+			lua_pushinteger(L, reinterpret_cast<lua_Integer>(this->ptr->GetBody()));
 			lua_gettable(L, -2);
 			lua_remove(L, -2);
 			R_ASSERT(lua_istable(L, 1), "Body wasn't properly registered");
 			return 1;
 		}
+	}
+}
+
+namespace Rainbow
+{
+	namespace Lua
+	{
+		typedef Bind<b2::Lua::Fixture, b2Fixture, kBindTypeWeak> b2LuaFixture;
+
+		template<>
+		const char b2LuaFixture::class_name[] = "Fixture";
+
+		template<>
+		const Method<b2::Lua::Fixture> b2LuaFixture::methods[] = {
+			{ "GetBody",  &b2::Lua::Fixture::get_body },
+			{ nullptr,    nullptr }
+		};
 	}
 }
