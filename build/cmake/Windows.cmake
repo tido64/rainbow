@@ -8,7 +8,7 @@ if(WIN32)
 		# /GR-: Disable Run-Time Type Information
 		# /Oi: Generate Intrinsic Functions
 		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4244 /wd4800 /GR- /Oi")
-		set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /INCREMENTAL:NO /NODEFAULTLIB:msvcrt.lib")
+		set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /INCREMENTAL:NO /LTCG /NODEFAULTLIB:msvcrt.lib")
 
 		# Use prebuilt libraries
 		find_library(OPENAL_LIBRARY NAMES libOpenAL32 HINTS build/windows/lib)

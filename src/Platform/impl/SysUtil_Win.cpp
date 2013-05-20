@@ -11,7 +11,10 @@ namespace Rainbow
 	{
 		bool HasGetUserDefaultLocaleName()
 		{
-			return !!GetProcAddress(GetModuleHandle(TEXT("kernel32.dll")), "GetUserDefaultLocaleName");
+			HMODULE hModule = GetModuleHandle(TEXT("kernel32.dll"));
+			if (!hModule)
+				return false;
+			return !!GetProcAddress(hModule, "GetUserDefaultLocaleName");
 		}
 
 		bool has_accelerometer()

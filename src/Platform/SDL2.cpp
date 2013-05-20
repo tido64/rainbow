@@ -171,7 +171,8 @@ int main(int argc, char *argv[])
 	{
 		const size_t size = 256;
 		char cwd[size];
-		getcwd(cwd, size);
+		if (getcwd(cwd, size) != cwd)
+			return 0;
 		setcwd(cwd);
 		strcat(cwd, PATH_SEP "main.lua");
 		FILE *file = fopen(cwd, "rb");
