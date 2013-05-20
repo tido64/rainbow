@@ -63,9 +63,9 @@ namespace Rainbow
 				bool support = strstr(extensions, "GL_IMG_texture_compression_pvrtc") != nullptr;
 				luaR_rawsetfield(L, lua_pushboolean, support, "supports_pvrtc");
 
-				luaR_rawsetcclosurefield(L, &set_clear_color, 0, "set_clear_color");
-				luaR_rawsetcclosurefield(L, &set_filter, 0, "set_filter");
-				luaR_rawsetcclosurefield(L, &set_ortho, 0, "set_ortho");
+				luaR_rawsetcclosurefield(L, &set_clear_color, "set_clear_color");
+				luaR_rawsetcclosurefield(L, &set_filter, "set_filter");
+				luaR_rawsetcclosurefield(L, &set_ortho, "set_ortho");
 
 				lua_rawset(L, -3);
 

@@ -33,7 +33,7 @@ namespace Rainbow
 
 			void init(lua_State *L)
 			{
-				luaR_rawsetcclosurefield(L, &random, 0, "random");
+				luaR_rawsetcclosurefield(L, &random, "random");
 			}
 		}
 	}

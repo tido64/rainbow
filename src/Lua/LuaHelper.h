@@ -10,9 +10,9 @@
 	lua_rawget(L, -2); \
 	LUA_CHECK(L, !lua_isnil(L, -1), "%s is missing field '%s'", type, k)
 
-#define luaR_rawsetcclosurefield(L, fn, n, k) \
+#define luaR_rawsetcclosurefield(L, fn, k) \
 	lua_pushliteral(L, k); \
-	lua_pushcclosure(L, fn, n); \
+	lua_pushcclosure(L, fn, 0); \
 	lua_rawset(L, -3)
 
 #define luaR_rawsetfield(L, pushvalue, v, k) \
@@ -51,22 +51,15 @@ namespace Rainbow
 		{
 			T *obj = new T(L);
 
-			lua_createtable(L, 0, 0);
-		#ifndef NDEBUG
-			lua_pushliteral(L, "__type");
-			lua_pushstring(L, T::class_name);
-			lua_rawset(L, -3);
-		#endif
-			lua_pushnumber(L, 0);
-
+			lua_createtable(L, 0, 0);  // object = {}
 			T **ptr = static_cast<T**>(lua_newuserdata(L, sizeof(T*)));
 			*ptr = obj;
 
-			lua_getfield(L, LUA_REGISTRYINDEX, T::class_name);
-			lua_rawgeti(L, -1, 1);
-			lua_setmetatable(L, -5);
-			lua_setmetatable(L, -2);
-			lua_rawset(L, -3);
+			luaL_getmetatable(L, T::class_name);  // udata_mt
+			lua_rawgeti(L, -1, 0);                // mt = udata_mt[0]
+			lua_setmetatable(L, -4);              // setmetatable(object, mt)
+			lua_setmetatable(L, -2);              // setmetatable(userdata, udata_mt)
+			lua_rawseti(L, -2, 0);                // object[0] = userdata
 
 			return 1;
 		}
@@ -99,11 +92,11 @@ namespace Rainbow
 		/// \return See \c luaL_loadbuffer().
 		int load(lua_State *L, const Data &chunk, const char *name, const bool load = true);
 
-		/// Push a pointer on the stack.
+		/// Push a collectable pointer on the stack.
 		///
-		/// Equivalent to calling \c lua_pushlightuserdata() but if \c NDEBUG is
-		/// not defined, attaches a \c __type field to the pointer for easier
-		/// debugging.
+		/// Wraps pointer in a table so that one can attach an arbitrary
+		/// metatable and have the garbage collector clean it up. Also sets the
+		/// \c __type field for type checking.
 		///
 		/// \param ptr   The pointer to push on the stack.
 		/// \param name  Name of the pointer type.
@@ -131,15 +124,36 @@ namespace Rainbow
 
 		/// Return the pointer on top of the stack.
 		///
-		/// Equivalent to calling \c lua_touserdata() but if \c NDEBUG is not
-		/// defined, ensures that \p name matches the pointer's \c __type field
-		/// before returning it.
+		/// Unwraps the pointer while checking for nil value and type. This
+		/// method may return a nullptr.
 		///
 		/// \see pushpointer()
 		///
 		/// \param name  Name of the pointer type to return.
 		/// \return The pointer on the top of the stack if valid, else \c nullptr.
 		void* topointer(lua_State *L, const char *name);
+
+		/// Return the wrapper of the object on top of the stack.
+		/// \return Pointer to wrapper.
+		template<class T>
+		T* wrapper(lua_State *L, const int index = -1)
+		{
+			// Get user data from table.
+			lua_rawgeti(L, index, 0);
+			void *ptr = luaR_touserdata(L, -1, T::class_name);
+			lua_pop(L, 1);
+			return *static_cast<T**>(ptr);
+		}
+
+		/// Return the string representing a Lua wrapped object. The format of
+		/// the string is "<type name>: <address>". Normally only available for
+		/// debug builds.
+		template<class T>
+		int tostring(lua_State *L)
+		{
+			lua_pushfstring(L, "%s: %p", T::class_name, wrapper<T>(L)->get());
+			return 1;
+		}
 
 		/// Simple C++-wrapper, adapted from lua-users.org.
 		///
@@ -157,9 +171,8 @@ namespace Rainbow
 				lua_pushcclosure(L, &alloc<T>, 0);
 				lua_rawset(L, -3);
 			}
-			luaL_newmetatable(L, T::class_name);
-			lua_pushnumber(L, 1);
-			lua_createtable(L, 0, 1);
+			luaL_newmetatable(L, T::class_name);  // metatable = {}
+			lua_createtable(L, 0, 3);             // mt = {}
 			lua_pushliteral(L, "__index");
 			lua_createtable(L, 0, 0);
 			for (int i = 0; T::methods[i].name; ++i)
@@ -169,22 +182,16 @@ namespace Rainbow
 				lua_pushcclosure(L, &thunk<T>, 1);
 				lua_rawset(L, -3);
 			}
-			lua_rawset(L, -3);
-			lua_rawset(L, -3);
-			luaR_rawsetcclosurefield(L, &dealloc<T>, 0, "__gc");
+			lua_rawset(L, -3);  // mt.__index = { .. }
+			lua_pushliteral(L, "__metatable");
+			lua_createtable(L, 0, 0);
+			lua_rawset(L, -3);  // mt.__metatable = {}
+		#ifndef NDEBUG
+			luaR_rawsetcclosurefield(L, &tostring<T>, "__tostring");
+		#endif
+			lua_rawseti(L, -2, 0);  // metatable[0] = mt
+			luaR_rawsetcclosurefield(L, &dealloc<T>, "__gc");
 			lua_pop(L, 1);
-		}
-
-		/// Return the wrapper of the object on top of the stack.
-		/// \return Pointer to wrapper.
-		template<class T>
-		T* wrapper(lua_State *L, const int index = -1)
-		{
-			// Get user data from table.
-			lua_rawgeti(L, index, 0);
-			void *ptr = luaR_touserdata(L, -1, T::class_name);
-			lua_pop(L, 1);
-			return *static_cast<T**>(ptr);
 		}
 	}
 }

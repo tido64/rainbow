@@ -41,10 +41,10 @@ namespace b2
 
 			lua_createtable(L, 0, 16);
 
-			luaR_rawsetcclosurefield(L, &set_ptm_ratio, 0, "SetPTMRatio");
+			luaR_rawsetcclosurefield(L, &set_ptm_ratio, "SetPTMRatio");
 
 			// b2CircleShape
-			luaR_rawsetcclosurefield(L, &CircleShape, 0, "CircleShape");
+			luaR_rawsetcclosurefield(L, &CircleShape, "CircleShape");
 
 			// b2PolygonShape
 			Rainbow::Lua::wrap<PolygonShape>(L);
@@ -55,13 +55,13 @@ namespace b2
 			luaR_rawsetfield(L, lua_pushinteger, b2_dynamicBody, "dynamicBody");
 
 			// b2BodyDef
-			luaR_rawsetcclosurefield(L, &BodyDef, 0, "BodyDef");
+			luaR_rawsetcclosurefield(L, &BodyDef, "BodyDef");
 
 			// b2Body
 			Rainbow::Lua::wrap<Body>(L);
 
 			// b2FixtureDef
-			luaR_rawsetcclosurefield(L, &FixtureDef, 0, "FixtureDef");
+			luaR_rawsetcclosurefield(L, &FixtureDef, "FixtureDef");
 
 			// b2Fixture
 			Rainbow::Lua::wrap<Fixture>(L, true);

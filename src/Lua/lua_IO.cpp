@@ -37,8 +37,8 @@ namespace Rainbow
 			{
 				lua_pushliteral(L, "io");
 				lua_createtable(L, 0, 2);
-				luaR_rawsetcclosurefield(L, &load, 0, "load");
-				luaR_rawsetcclosurefield(L, &save, 0, "save");
+				luaR_rawsetcclosurefield(L, &load, "load");
+				luaR_rawsetcclosurefield(L, &save, "save");
 				lua_rawset(L, -3);
 			}
 		}

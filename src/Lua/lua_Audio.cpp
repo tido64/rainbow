@@ -17,8 +17,8 @@ namespace Rainbow
 		{
 			namespace
 			{
-				const char channel_type[] = "channel";
-				const char sound_type[] = "sound";
+				const char kChannelType[] = "channel";
+				const char kSoundType[] = "sound";
 
 				int set_gain(lua_State *L)
 				{
@@ -30,7 +30,7 @@ namespace Rainbow
 						const float gain = luaR_tonumber(L, 2);
 						lua_pop(L, 1);
 
-						Channel *ch = static_cast<Channel*>(topointer(L, channel_type));
+						Channel *ch = static_cast<Channel*>(topointer(L, kChannelType));
 						if (!ch)
 							return 0;
 
@@ -61,7 +61,7 @@ namespace Rainbow
 					const char *file = luaR_tostring(L, 1);
 					const int type = luaR_optinteger(L, 2, ConFuoco::STATIC);
 					const int loops = luaR_optinteger(L, 3, -1);
-					pushpointer(L, Mixer::Instance->create_sound(file, type, loops), sound_type);
+					pushpointer(L, Mixer::Instance->create_sound(file, type, loops), kSoundType);
 					return 1;
 				}
 
@@ -69,7 +69,7 @@ namespace Rainbow
 				{
 					LUA_ASSERT(lua_gettop(L) == 1, "rainbow.audio.delete_sound(sound)");
 
-					delete static_cast<Sound*>(topointer(L, sound_type));
+					delete static_cast<Sound*>(topointer(L, kSoundType));
 					return 0;
 				}
 
@@ -77,7 +77,7 @@ namespace Rainbow
 				{
 					LUA_ASSERT(lua_gettop(L) == 1, "rainbow.audio.pause(channel)");
 
-					Channel *ch = static_cast<Channel*>(topointer(L, channel_type));
+					Channel *ch = static_cast<Channel*>(topointer(L, kChannelType));
 					if (!ch)
 						return 0;
 
@@ -89,8 +89,8 @@ namespace Rainbow
 				{
 					LUA_ASSERT(lua_gettop(L) == 1, "rainbow.audio.play(sound)");
 
-					Sound *snd = static_cast<Sound*>(topointer(L, sound_type));
-					pushpointer(L, Mixer::Instance->play(snd), channel_type);
+					Sound *snd = static_cast<Sound*>(topointer(L, kSoundType));
+					pushpointer(L, Mixer::Instance->play(snd), kChannelType);
 					return 1;
 				}
 
@@ -98,7 +98,7 @@ namespace Rainbow
 				{
 					LUA_ASSERT(lua_gettop(L) == 1, "rainbow.audio.stop(channel)");
 
-					Channel *ch = static_cast<Channel*>(topointer(L, channel_type));
+					Channel *ch = static_cast<Channel*>(topointer(L, kChannelType));
 					if (!ch)
 						return 0;
 
@@ -112,14 +112,14 @@ namespace Rainbow
 				lua_pushliteral(L, "audio");
 				lua_createtable(L, 0, 32);
 
-				luaR_rawsetcclosurefield(L, &set_gain, 0, "set_gain");
-				luaR_rawsetcclosurefield(L, &set_pitch, 0, "set_pitch");
-				luaR_rawsetcclosurefield(L, &clear, 0, "clear");
-				luaR_rawsetcclosurefield(L, &create_sound, 0, "create_sound");
-				luaR_rawsetcclosurefield(L, &delete_sound, 0, "delete_sound");
-				luaR_rawsetcclosurefield(L, &pause, 0, "pause");
-				luaR_rawsetcclosurefield(L, &play, 0, "play");
-				luaR_rawsetcclosurefield(L, &stop, 0, "stop");
+				luaR_rawsetcclosurefield(L, &set_gain, "set_gain");
+				luaR_rawsetcclosurefield(L, &set_pitch, "set_pitch");
+				luaR_rawsetcclosurefield(L, &clear, "clear");
+				luaR_rawsetcclosurefield(L, &create_sound, "create_sound");
+				luaR_rawsetcclosurefield(L, &delete_sound, "delete_sound");
+				luaR_rawsetcclosurefield(L, &pause, "pause");
+				luaR_rawsetcclosurefield(L, &play, "play");
+				luaR_rawsetcclosurefield(L, &stop, "stop");
 
 				wrap<Recorder>(L);
 
