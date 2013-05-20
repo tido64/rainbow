@@ -14,10 +14,14 @@ namespace Rainbow
 			private NonCopyable<SceneGraph>
 		{
 			friend class Bind<SceneGraph, ::SceneGraph::Node, kBindTypeWeak>;
-			friend class Rainbow::LuaMachine;
+
+		public:
+			static SceneGraph* create(lua_State *, ::SceneGraph::Node *);
+			static void destroy(lua_State *, SceneGraph *);
 
 		private:
-			SceneGraph(lua_State *, ::SceneGraph::Node *);
+			SceneGraph(::SceneGraph::Node *);
+			~SceneGraph() { }
 
 			int add_animation(lua_State *);
 			int add_batch(lua_State *);
@@ -31,8 +35,6 @@ namespace Rainbow
 			int set_parent(lua_State *);
 
 			int move(lua_State *);
-
-			void unregister(lua_State *);
 		};
 	}
 }

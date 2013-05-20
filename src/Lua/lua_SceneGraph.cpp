@@ -21,7 +21,7 @@ namespace
 	{
 		static T* Cast(lua_State *L, const int n)
 		{
-			return *static_cast<T**>(luaL_checkudata(L, n, T::class_name));
+			return static_cast<T*>(luaL_checkudata(L, n, T::class_name));
 		}
 	};
 
@@ -30,7 +30,7 @@ namespace
 	{
 		static T* Cast(lua_State *L, const int n)
 		{
-			return *static_cast<T**>(lua_touserdata(L, n));
+			return static_cast<T*>(lua_touserdata(L, n));
 		}
 	};
 
@@ -88,19 +88,19 @@ namespace Rainbow
 			{ 0, 0 }
 		};
 
-		SceneGraph::SceneGraph(lua_State *L, ::SceneGraph::Node *root) : Bind(root)
+		SceneGraph* SceneGraph::create(lua_State *L, ::SceneGraph::Node *root)
 		{
 			lua_pushlstring(L, class_name, sizeof(class_name) / sizeof(char) - 1);
+			lua_createtable(L, 1, 0);  // scenegraph = {}
+
+			SceneGraph *ptr = static_cast<SceneGraph*>(lua_newuserdata(L, sizeof(SceneGraph)));
+			luaL_newmetatable(L, class_name);  // mt = {}
+			lua_setmetatable(L, -2);           // setmetatable(udata, mt)
+			lua_rawseti(L, -2, 0);             // scenegraph[0] = udata
+
+			lua_createtable(L, 0, 2);  // mt = {}
+			lua_pushliteral(L, "__index");
 			lua_createtable(L, 0, 16);
-			lua_pushnumber(L, 0);
-
-			SceneGraph **ptr = static_cast<SceneGraph**>(lua_newuserdata(L, sizeof(this)));
-			*ptr = this;
-
-			luaL_newmetatable(L, class_name);
-			lua_setmetatable(L, -2);
-			lua_rawset(L, -3);
-
 			for (int i = 0; methods[i].name; ++i)
 			{
 				lua_pushstring(L, methods[i].name);
@@ -108,9 +108,28 @@ namespace Rainbow
 				lua_pushcclosure(L, &thunk<SceneGraph>, 1);
 				lua_rawset(L, -3);
 			}
+			lua_rawset(L, -3);        // mt.__index = { .. }
+			lua_pushliteral(L, "__metatable");
+			lua_createtable(L, 0, 0);
+			lua_rawset(L, -3);        // mt.__metatable = {}
+			lua_setmetatable(L, -2);  // setmetatable(scenegraph, mt)
 
-			lua_rawset(L, -3);
+			lua_rawset(L, -3);        // rainbow.scenegraph = scenegraph
+
+			return new (ptr) SceneGraph(root);
 		}
+
+		void SceneGraph::destroy(lua_State *L, SceneGraph *scenegraph)
+		{
+			lua_getglobal(L, "rainbow");
+			lua_pushlstring(L, class_name, sizeof(class_name) / sizeof(char) - 1);
+			lua_pushnil(L);
+			lua_rawset(L, -3);
+			lua_pop(L, 1);
+			scenegraph->~SceneGraph();
+		}
+
+		SceneGraph::SceneGraph(::SceneGraph::Node *root) : Bind(root) { }
 
 		int SceneGraph::add_animation(lua_State *L)
 		{
@@ -184,15 +203,6 @@ namespace Rainbow
 			const Vec2f delta(luaR_tonumber(L, 2), luaR_tonumber(L, 3));
 			node->move(delta);
 			return 0;
-		}
-
-		void SceneGraph::unregister(lua_State *L)
-		{
-			lua_getglobal(L, "rainbow");
-			lua_pushlstring(L, class_name, sizeof(class_name) / sizeof(char) - 1);
-			lua_pushnil(L);
-			lua_rawset(L, -3);
-			lua_pop(L, 1);
 		}
 	}
 }

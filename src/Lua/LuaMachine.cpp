@@ -6,8 +6,7 @@ namespace Rainbow
 {
 	LuaMachine::~LuaMachine()
 	{
-		this->scenegraph->unregister(this->L);
-		delete this->scenegraph;
+		Lua::SceneGraph::destroy(this->L, this->scenegraph);
 		lua_close(this->L);
 	}
 
@@ -64,7 +63,7 @@ namespace Rainbow
 		Lua::init(this->L);
 
 		// Initialize "rainbow.scenegraph"
-		this->scenegraph = new Lua::SceneGraph(this->L, root);
+		this->scenegraph = Lua::SceneGraph::create(this->L, root);
 
 		// Bind C++ objects
 		Lua::bind(this->L);
@@ -86,7 +85,7 @@ namespace Rainbow
 			lua_rawseti(this->L, -2, i + 1);
 		}
 		lua_pushcfunction(this->L, Lua::load);
-		lua_rawseti(this->L, -2, 1);
+		lua_rawseti(this->L, -2, 2);
 
 		// Clean up the stack
 		lua_pop(this->L, 2);
@@ -104,7 +103,7 @@ namespace Rainbow
 				"end\n";
 		int e = luaL_loadbuffer(this->L, Rainbow_lua, sizeof(Rainbow_lua) / sizeof(char) - 1, "Rainbow");
 		R_ASSERT(e == LUA_OK, "Failed to load internal Lua script");
-		e = lua_pcall(this->L, 0, LUA_MULTRET, 0);
+		e = lua_pcall(this->L, 0, 0, 0);
 		R_ASSERT(e == LUA_OK, "Failed to execute internal Lua script");
 		lua_getglobal(this->L, "__update");
 		R_ASSERT(lua_isfunction(this->L, -1), "Failed to get internal Lua script");
