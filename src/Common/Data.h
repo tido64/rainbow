@@ -3,7 +3,7 @@
 
 #include <cstddef>
 
-#include "Platform/Definitions.h"
+#include "Platform/Macros.h"
 #include "Common/NonCopyable.h"
 
 /// Wrapper for byte buffers.
@@ -17,7 +17,7 @@
 /// On any other platforms, it can be casted to a void pointer or an unsigned
 /// char pointer.
 ///
-/// Copyright 2011-12 Bifrost Entertainment. All rights reserved.
+/// Copyright 2011-13 Bifrost Entertainment. All rights reserved.
 /// \author Tommy Nguyen
 class Data : private NonCopyable<Data>
 {

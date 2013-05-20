@@ -1,4 +1,4 @@
-#include "Platform/Definitions.h"
+#include "Platform/Macros.h"
 #if defined(RAINBOW_IOS) || defined(RAINBOW_MAC)
 
 #include <sys/types.h>

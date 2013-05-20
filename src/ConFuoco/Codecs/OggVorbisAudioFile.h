@@ -1,7 +1,7 @@
 #ifndef CONFUOCO_OGGVORBISAUDIOFILE_H_
 #define CONFUOCO_OGGVORBISAUDIOFILE_H_
 
-#include "Platform/Definitions.h"
+#include "Platform/Macros.h"
 #if !defined(RAINBOW_JS) && defined(RAINBOW_SDL)
 
 #ifdef RAINBOW_MAC  // Seriously, Apple?

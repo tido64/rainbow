@@ -3,7 +3,7 @@
 
 #include <cstdio>
 
-#include "Platform/Definitions.h"
+#include "Platform/Macros.h"
 #ifdef RAINBOW_ANDROID
 #	include <android/log.h>
 #	define R_ERROR(...) __android_log_print(ANDROID_LOG_ERROR, "Rainbow", __VA_ARGS__)

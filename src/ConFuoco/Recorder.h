@@ -1,7 +1,7 @@
 #ifndef CONFUOCO_RECORDER_H_
 #define CONFUOCO_RECORDER_H_
 
-#include "Platform/Definitions.h"
+#include "Platform/Macros.h"
 #if defined(RAINBOW_ANDROID)
 namespace ConFuoco
 {

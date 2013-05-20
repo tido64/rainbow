@@ -1,12 +1,12 @@
 /// Includes correct OpenGL ES headers for corresponding platforms.
 ///
-/// Copyright 2010-12 Bifrost Entertainment. All rights reserved.
+/// Copyright 2010-13 Bifrost Entertainment. All rights reserved.
 /// \author Tommy Nguyen
 
 #ifndef OPENGL_H_
 #define OPENGL_H_
 
-#include "Platform/Definitions.h"
+#include "Platform/Macros.h"
 
 #if defined(RAINBOW_ANDROID)
 #	include <GLES2/gl2.h>

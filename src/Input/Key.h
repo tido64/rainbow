@@ -1,7 +1,7 @@
 #ifndef KEY_H_
 #define KEY_H_
 
-#include "Platform/Definitions.h"
+#include "Platform/Macros.h"
 
 #ifdef RAINBOW_BUTTONS
 

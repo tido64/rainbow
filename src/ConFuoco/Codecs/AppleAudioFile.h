@@ -1,7 +1,7 @@
 #ifndef CONFUOCO_APPLEAUDIOFILE_H_
 #define CONFUOCO_APPLEAUDIOFILE_H_
 
-#include "Platform/Definitions.h"
+#include "Platform/Macros.h"
 #if defined(RAINBOW_IOS) || defined(RAINBOW_MAC)
 
 #include <AudioToolbox/ExtendedAudioFile.h>

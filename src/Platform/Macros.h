@@ -1,10 +1,12 @@
-/// Platform specific definitions. Makes sure correct code is being compiled.
+/// Platform-specific macros. Makes sure correct code is being compiled.
+///
+/// \see http://sourceforge.net/p/predef/wiki/Home/
 ///
 /// Copyright 2010-13 Bifrost Entertainment. All rights reserved.
 /// \author Tommy Nguyen
 
-#ifndef PLATFORM_DEFINITIONS_H_
-#define PLATFORM_DEFINITIONS_H_
+#ifndef PLATFORM_MACROS_H_
+#define PLATFORM_MACROS_H_
 
 #include <cstddef>
 
@@ -46,4 +48,4 @@
 #	endif
 #endif
 
-#endif  // PLATFORM_DEFINITIONS_H_
+#endif  // PLATFORM_MACROS_H_

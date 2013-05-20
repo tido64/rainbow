@@ -1,4 +1,4 @@
-#include "Platform/Definitions.h"
+#include "Platform/Macros.h"
 #ifdef RAINBOW_WIN
 
 #include <windows.h>

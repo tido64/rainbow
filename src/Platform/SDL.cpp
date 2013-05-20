@@ -1,6 +1,6 @@
 // Copyright 2010-13 Bifrost Entertainment. All rights reserved.
 
-#include "Platform/Definitions.h"
+#include "Platform/Macros.h"
 #ifdef RAINBOW_SDL
 
 #include <SDL.h>

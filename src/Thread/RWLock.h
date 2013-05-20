@@ -1,7 +1,7 @@
 #ifndef THREAD_RWLOCK_H_
 #define THREAD_RWLOCK_H_
 
-#include "Platform/Definitions.h"
+#include "Platform/Macros.h"
 #ifdef RAINBOW_WIN
 #	include <windows.h>
 #	define rb_rwlock_lock           AcquireSRWLockExclusive
