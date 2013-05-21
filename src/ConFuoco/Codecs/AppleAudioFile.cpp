@@ -86,7 +86,7 @@ namespace ConFuoco
 	int AppleAudioFile::get_channels_impl() const
 	{
 		if (!this->ref)
-			return AudioFile::get_channels();
+			return AudioFile::get_channels_impl();
 
 		return this->format.mChannelsPerFrame;
 	}
@@ -94,7 +94,7 @@ namespace ConFuoco
 	int AppleAudioFile::get_rate_impl() const
 	{
 		if (!this->ref)
-			return AudioFile::get_rate();
+			return AudioFile::get_rate_impl();
 
 		return this->format.mSampleRate;
 	}
@@ -102,7 +102,7 @@ namespace ConFuoco
 	size_t AppleAudioFile::read_impl(char **dst)
 	{
 		if (!this->ref)
-			return AudioFile::read(dst);
+			return AudioFile::read_impl(dst);
 
 		SInt64 frames = 0;
 		UInt32 size = sizeof(frames);
@@ -121,7 +121,7 @@ namespace ConFuoco
 	size_t AppleAudioFile::read_impl(char *dst, const size_t size)
 	{
 		if (!this->ref)
-			return AudioFile::read(dst, size);
+			return AudioFile::read_impl(dst, size);
 
 		UInt32 frames = size / this->format.mBytesPerFrame;
 		AudioBufferList buffer;
@@ -137,7 +137,7 @@ namespace ConFuoco
 	void AppleAudioFile::rewind_impl()
 	{
 		if (!this->ref)
-			return AudioFile::rewind();
+			return AudioFile::rewind_impl();
 
 		ExtAudioFileSeek(this->ref, 0);
 	}

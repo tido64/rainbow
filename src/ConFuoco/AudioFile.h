@@ -58,7 +58,7 @@ namespace ConFuoco
 		/// Rewind audio file to start.
 		inline void rewind();
 
-	private:
+	protected:
 		virtual int get_channels_impl() const;
 		virtual int get_rate_impl() const;
 		virtual size_t read_impl(char **dst);
