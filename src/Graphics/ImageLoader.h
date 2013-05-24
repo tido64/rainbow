@@ -241,7 +241,10 @@ namespace ImageLoader
 			default:
 				#ifdef RAINBOW_IOS
 				{
-					UIImage *image = [UIImage imageWithData:img];
+					UIImage *image = [UIImage imageWithData:
+							[NSData dataWithBytesNoCopy:img
+							                     length:img.size()
+							               freeWhenDone:NO]];
 					if (!image)
 					{
 						R_ASSERT(image, "Unknown texture format");

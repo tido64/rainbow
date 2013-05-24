@@ -22,17 +22,18 @@
 class Data : private NonCopyable<Data>
 {
 public:
+	enum Type
+	{
+		kDataTypeAsset,
+		kDataTypeDocument
+	};
+
 	/// Construct an empty data object. No memory will be allocated.
 	inline Data();
 
-	/// Construct a data object with the contents of the file. The file will be
-	/// loaded from the application directory.
-	explicit Data(const char *const file);
-
-	/// Construct a data object with the contents of the file. The file will be
-	/// loaded from the user directory.
-	Data(const char *const file, unsigned int flags);
-
+	/// Construct a data object with the contents of the file. The file's
+	/// location will be determined by its type.
+	Data(const char *const file, const Type type = kDataTypeAsset);
 	~Data();
 
 	/// Return raw byte array.

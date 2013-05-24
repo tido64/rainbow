@@ -14,7 +14,7 @@ namespace Rainbow
 				{
 					LUA_ASSERT(lua_gettop(L) == 1, "rainbow.io.load(filename)");
 
-					Data blob(luaR_tostring(L, 1), 1);
+					Data blob(luaR_tostring(L, 1), Data::kDataTypeDocument);
 					if (!blob)
 						lua_pushnil(L);
 					else

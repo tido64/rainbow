@@ -23,7 +23,8 @@ namespace ConFuoco
 	{
 	#ifndef RAINBOW_IOS
 		char id[8];
-		Rainbow::IO::FileHandle fh = Rainbow::IO::open(file, Rainbow::IO::ASSET);
+		Rainbow::IO::FileHandle fh =
+				Rainbow::IO::find_and_open(file, Rainbow::IO::kIOTypeAsset);
 		if (fh)
 		{
 			Rainbow::IO::read(id, 8, fh);
@@ -39,7 +40,13 @@ namespace ConFuoco
 	AppleAudioFile::AppleAudioFile(const char *const file, const int mode) : ref(nullptr)
 	{
 	#ifdef RAINBOW_IOS
-		NSString *path = Rainbow::IO::open(file, Rainbow::IO::ASSET);
+		char buf[256];
+		Rainbow::IO::find(buf, file, Rainbow::IO::kIOTypeAsset);
+		NSString *path = [[NSString alloc]
+				initWithBytesNoCopy:buf
+				             length:strlen(buf)
+				           encoding:NSUTF8StringEncoding
+				       freeWhenDone:NO];
 		CFURLRef url = CFURLCreateWithString(
 				kCFAllocatorDefault, reinterpret_cast<CFStringRef>(path), nullptr);
 	#else

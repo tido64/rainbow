@@ -16,7 +16,7 @@ namespace
 
 TextureAtlas::TextureAtlas(const Data &img) : name(0), width(0), height(0)
 {
-	R_ASSERT(img, "No data provided");
+	R_ASSERT(img, "Failed to load texture");
 
 	void *data = nullptr;
 	ImageInfo info;

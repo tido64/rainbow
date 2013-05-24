@@ -47,7 +47,8 @@ namespace ConFuoco
 
 	OggVorbisAudioFile::OggVorbisAudioFile(const char *const file) : vi(nullptr)
 	{
-		Rainbow::IO::FileHandle fh = Rainbow::IO::open(file, Rainbow::IO::ASSET);
+		Rainbow::IO::FileHandle fh =
+				Rainbow::IO::find_and_open(file, Rainbow::IO::kIOTypeAsset);
 		if (!fh)
 		{
 			R_ERROR("[Rainbow::ConFuoco/Vorbis] Failed to open '%s'\n", file);

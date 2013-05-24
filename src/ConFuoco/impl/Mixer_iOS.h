@@ -18,7 +18,13 @@ namespace ConFuoco
 			Stream(Mixer *m, const char *const file, const int loops) :
 				Sound(STREAM, m), paused(false), player(nil), channel(nullptr)
 			{
-				NSString *path = Rainbow::IO::open(file, Rainbow::IO::ASSET);
+				char buf[256];
+				Rainbow::IO::find(buf, file, Rainbow::IO::kIOTypeAsset);
+				NSString *path = [[NSString alloc]
+						initWithBytesNoCopy:buf
+						             length:strlen(buf)
+						           encoding:NSUTF8StringEncoding
+						       freeWhenDone:NO];
 				if (!path)
 				{
 					NSLog(@"[Rainbow::ConFuoco/AVFoundation] Failed to locate '%s'", file);

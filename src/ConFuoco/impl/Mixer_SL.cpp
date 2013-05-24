@@ -277,7 +277,8 @@ namespace ConFuoco
 			SLDataSource source = { &uri, &format };
 		#endif
 
-		Rainbow::IO::FileHandle asset = Rainbow::IO::open(file, 0);
+		Rainbow::IO::FileHandle asset =
+				Rainbow::IO::find_and_open(file, Rainbow::IO::kIOTypeAsset);
 		if (!asset)
 		{
 			R_DEBUG("[Rainbow::ConFuoco/SL] Failed to open '%s'\n", file);

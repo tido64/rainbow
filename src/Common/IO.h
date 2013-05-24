@@ -1,22 +1,21 @@
 #ifndef COMMON_IO_H_
 #define COMMON_IO_H_
 
+#include <cstddef>
 #include <cstdio>
+#include <cstring>
+#include <sys/stat.h>
 
 #include "Platform/Macros.h"
 #if defined(RAINBOW_ANDROID)
-#	include <cstring>
 #	include <android/asset_manager.h>
 
 extern struct AAssetManager *g_asset_manager;
 
-#elif defined(RAINBOW_IOS)
-
-extern NSString *supportDir;
-
 #else
-#	include <cstddef>
-#	include <cstring>
+#	ifdef RAINBOW_WIN
+#		define fileno _fileno
+#	endif
 
 extern char data_path[];      ///< Path to asset data.
 extern char userdata_path[];  ///< Path to user-specific data.
@@ -29,178 +28,183 @@ namespace Rainbow
 	{
 	#if defined(RAINBOW_ANDROID)
 		typedef AAsset* FileHandle;
-	#elif defined(RAINBOW_IOS)
-		typedef NSString* FileHandle;
 	#else
 		typedef FILE* FileHandle;
 	#endif
 
 		enum Type
 		{
-			ASSET,
-			USER,
-			WRITE,
-			INTERNAL
+			kIOTypeAsset,     ///< Open file as read-only.
+			kIOTypeDocument,  ///< Open file as read-write.
+			kIOTypeWrite      ///< Create/open file for writing.
 		};
 
-		inline void close(FileHandle fh)
+		/// Close the file handle.
+		inline void close(FileHandle fh);
+
+		/// Find and return the full path for file.
+		inline void find(char *result, const char *const file, const Type type);
+
+		/// Find and open a file.
+		inline FileHandle find_and_open(const char *const file, const Type type);
+
+		/// Open file at path.
+		inline FileHandle open(const char *const file, const Type type);
+
+		/// Read \p size bytes from file into buffer \p dst.
+		/// \param[out] dst   Destination buffer.
+		/// \param      size  Number of bytes to read.
+		/// \param      fh    Handle of file to read from.
+		/// \return Number of bytes read.
+		inline size_t read(void *dst, const size_t size, FileHandle fh);
+
+		/// Return the file size.
+		inline size_t size(FileHandle fh);
+
+		inline size_t write(const void *ptr, const size_t size, FileHandle fh);
+
+		void close(FileHandle fh)
 		{
 		#if defined(RAINBOW_ANDROID)
 			AAsset_close(fh);
-		#elif defined(RAINBOW_IOS)
-			static_cast<void>(fh);
 		#else
 			fclose(fh);
 		#endif
 		}
 
-		inline FileHandle open(const char *const file, unsigned int flag)
+		void find(char *result, const char *const file, const Type type)
 		{
-		#if defined(RAINBOW_ANDROID)
-
-			// Android doesn't ignore multiple '/' in paths.
-			int j = -1;
-			char path[256];
-			for (size_t i = 0; i < strlen(file); ++i)
+			result[0] = '\0';
+			switch (type)
 			{
-				if (file[i] == '/' && file[i + 1] == '/')
-					continue;
-				path[++j] = file[i];
-			}
-			path[j] = '\0';
-			return AAssetManager_open(g_asset_manager, path, AASSET_MODE_UNKNOWN);
-			static_cast<void>(flag);
-
-		#elif defined(RAINBOW_IOS)
-
-			NSString *path = [[NSString alloc]
-					initWithBytesNoCopy:(void*)file
-					             length:strlen(file)
-					           encoding:NSUTF8StringEncoding
-					       freeWhenDone:NO];
-			switch (flag)
-			{
-				case ASSET:
-					path = [[NSBundle mainBundle]
-						pathForResource:[path stringByDeletingPathExtension]
-						ofType:[path pathExtension]];
+				case kIOTypeAsset: {
+					#if defined(RAINBOW_ANDROID)
+						// Android doesn't ignore multiple '/' in paths.
+						int j = -1;
+						for (size_t i = 0; i < strlen(file); ++i)
+						{
+							if (file[i] == '/' && file[i + 1] == '/')
+								continue;
+							result[++j] = file[i];
+						}
+						result[j] = '\0';
+					#elif defined(RAINBOW_IOS)
+						NSString *path = [[NSString alloc]
+								initWithBytesNoCopy:(void*)file
+								             length:strlen(file)
+								           encoding:NSUTF8StringEncoding
+								       freeWhenDone:NO];
+						path = [[NSBundle mainBundle]
+								pathForResource:[path stringByDeletingPathExtension]
+								         ofType:[path pathExtension]];
+						if (!path)
+							break;
+						strcpy(result, [path UTF8String]);
+					#else
+						strcpy(result, data_path);
+						strcat(result, file);
+					#endif
 					break;
-				case USER:
-					if (!supportDir)
-					{
+				}
+				case kIOTypeDocument: {
+					#if defined(RAINBOW_ANDROID)
+					#elif defined(RAINBOW_IOS)
 						NSError *err = nil;
-						supportDir = [[[NSFileManager defaultManager]
-							URLForDirectory:NSLibraryDirectory
-							inDomain:NSUserDomainMask appropriateForURL:nil
-							create:YES error:&err] path];
-
+						NSString *supportDir = [[[NSFileManager defaultManager]
+								    URLForDirectory:NSLibraryDirectory
+								           inDomain:NSUserDomainMask
+								  appropriateForURL:nil
+								             create:YES
+								              error:&err] path];
 						if (!supportDir)
-							return nil;
-
-						//supportDir = [supportDir stringByAppendingPathComponent:@"Preferences"];
-					}
-					path = [supportDir stringByAppendingPathComponent:path];
+							return;
+						NSString *path = [[NSString alloc]
+								initWithBytesNoCopy:(void*)file
+								             length:strlen(file)
+								           encoding:NSUTF8StringEncoding
+								       freeWhenDone:NO];
+						path = [supportDir stringByAppendingPathComponent:path];
+						strcpy(result, [path UTF8String]);
+					#else
+						strcpy(result, userdata_path);
+						strcat(result, file);
+					#endif
 					break;
-			}
-			return path;
-
-		#else
-
-			const char asset[] = "rb";
-			const char user[] = "r+b";
-			const char write[] = "wb";
-
-			const char *mode = nullptr;
-			char path[256];
-			switch (flag)
-			{
-				case ASSET:
-					strcpy(path, data_path);
-					mode = asset;
-					break;
-				case USER:
-					strcpy(path, userdata_path);
-					mode = user;
-					break;
-				case WRITE:
-					strcpy(path, userdata_path);
-					mode = write;
-					break;
+				}
 				default:
-					path[0] = '\0';
-					mode = write;
 					break;
 			}
-			strcat(path, file);
-			return fopen(path, mode);
-
-		#endif
 		}
 
-		inline size_t read(void *dst, const size_t size, FileHandle fh)
+		FileHandle find_and_open(const char *const file, const Type type)
+		{
+			char path[256];
+			find(path, file, (type == kIOTypeWrite) ? kIOTypeDocument : type);
+			return (path[0] == '\0') ? nullptr : open(path, type);
+		}
+
+		FileHandle open(const char *const file, const Type type)
+		{
+			switch (type)
+			{
+				case kIOTypeAsset:
+					#if defined(RAINBOW_ANDROID)
+						return AAssetManager_open(g_asset_manager, file, AASSET_MODE_UNKNOWN);
+					#else
+						return fopen(file, "rb");
+					#endif
+				case kIOTypeDocument:
+					#if defined(RAINBOW_ANDROID)
+						return nullptr;
+					#else
+						return fopen(file, "r+b");
+					#endif
+				case kIOTypeWrite:
+					#if defined(RAINBOW_ANDROID)
+						return nullptr;
+					#else
+						return fopen(file, "wb");
+					#endif
+				default:
+					return nullptr;
+			}
+		}
+
+		size_t read(void *dst, const size_t size, FileHandle fh)
 		{
 		#if defined(RAINBOW_ANDROID)
 			return AAsset_read(fh, dst, size);
-		#elif defined(RAINBOW_IOS)
-			static_cast<void>(dst);
-			static_cast<void>(size);
-			static_cast<void>(fh);
-			return 0;
 		#else
-			return fread(dst, sizeof(unsigned char), size, fh);
+			return fread(dst, sizeof(char), size, fh);
 		#endif
 		}
 
-		inline int seek(FileHandle fh, const size_t offset)
-		{
-		#if defined(RAINBOW_ANDROID)
-			return AAsset_seek(fh, offset, SEEK_SET);
-		#elif defined(RAINBOW_IOS)
-			static_cast<void>(fh);
-			static_cast<void>(offset);
-			return 0;
-		#else
-			return fseek(fh, offset, SEEK_SET);
-		#endif
-		}
-
-		inline size_t size(FileHandle fh)
+		size_t size(FileHandle fh)
 		{
 		#if defined(RAINBOW_ANDROID)
 			return AAsset_getLength(fh);
-		#elif defined(RAINBOW_IOS)
-			static_cast<void>(fh);
-			return 0;
 		#else
-			fseek(fh, 0, SEEK_END);
-			const size_t size = ftell(fh);
-			fseek(fh, 0, SEEK_SET);
-			return size;
+			struct stat file_status;
+			return (fstat(fileno(fh), &file_status) != 0) ? 0 : file_status.st_size;
 		#endif
 		}
 
-		inline size_t tell(FileHandle fh)
+		size_t write(const void *ptr, const size_t size, FileHandle fh)
 		{
 		#if defined(RAINBOW_ANDROID) || defined(RAINBOW_IOS)
-			static_cast<void>(fh);
 			return 0;
-		#else
-			return ftell(fh);
-		#endif
-		}
-
-		inline size_t write(const void *ptr, const size_t size, FileHandle fh)
-		{
-		#if defined(RAINBOW_ANDROID) || defined(RAINBOW_IOS)
 			static_cast<void>(ptr);
 			static_cast<void>(size);
 			static_cast<void>(fh);
-			return 0;
 		#else
-			return fwrite(ptr, sizeof(unsigned char), size, fh);
+			return fwrite(ptr, sizeof(char), size, fh);
 		#endif
 		}
 	}
 }
+
+#ifdef RAINBOW_WIN
+#	undef fileno
+#endif
 
 #endif

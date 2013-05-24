@@ -27,10 +27,10 @@ namespace Rainbow
 					break;
 				case LUA_TSTRING:
 					{
-						Data tex_data(luaR_tostring(L, -1));
-						if (!tex_data)
+						Data data(luaR_tostring(L, -1));
+						if (!data)
 							luaL_error(L, "rainbow.texture: Failed to load texture");
-						this->ptr = new TextureAtlas(tex_data);
+						this->ptr = new TextureAtlas(data);
 						if (!*this->ptr)
 							luaL_error(L, "rainbow.texture: Failed to create texture");
 					}

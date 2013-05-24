@@ -4,28 +4,28 @@
 #ifdef RAINBOW_IOS
 
 #include "Common/Data.h"
+#include "Common/Debug.h"
 #include "Common/IO.h"
 
-NSString *supportDir = nil;
-
-Data::Data(const char *const file) : data(nil)
+namespace
 {
-	NSString *path = Rainbow::IO::open(file, Rainbow::IO::ASSET);
-	if (!path)
-	{
-		NSLog(@"Failed to open '%s'", file);
-		return;
-	}
-
-	NSError *err = nil;
-	this->data = [NSMutableData dataWithContentsOfFile:path
-	                                           options:NSDataReadingUncached
-	                                             error:&err];
+	const char kErrorOpenFile[] = "[Rainbow] Failed to open '%s'";
 }
 
-Data::Data(const char *const file, unsigned int) : data(nil)
+Data::Data(const char *const file, const Type type) : data(nil)
 {
-	NSString *path = Rainbow::IO::open(file, Rainbow::IO::USER);
+	char buf[256];
+	Rainbow::IO::find(buf, file, static_cast<Rainbow::IO::Type>(type));
+	if (buf[0] == '\0')
+	{
+		R_ERROR(kErrorOpenFile, file);
+		return;
+	}
+	NSString *path = [[NSString alloc]
+			initWithBytesNoCopy:buf
+			             length:strlen(buf)
+			           encoding:NSUTF8StringEncoding
+			       freeWhenDone:NO];
 	NSError *err = nil;
 	this->data = [NSMutableData dataWithContentsOfFile:path
 	                                           options:NSDataReadingUncached
@@ -48,17 +48,28 @@ bool Data::save(const char *const file) const
 	if (!this->data)
 		return false;
 
-	NSError *err = nil;
-	NSString *path = Rainbow::IO::open(file, Rainbow::IO::USER);
+	char buf[256];
+	Rainbow::IO::find(buf, file, Rainbow::IO::kIOTypeDocument);
+	NSString *path = [[NSString alloc]
+			initWithBytesNoCopy:buf
+			             length:strlen(buf)
+			           encoding:NSUTF8StringEncoding
+			       freeWhenDone:NO];
+	if (buf[0] == '\0')
+	{
+		R_ERROR(kErrorOpenFile, file);
+		return false;
+	}
 	BOOL success = [[NSFileManager defaultManager] createFileAtPath:path
 	                                                       contents:nil
 	                                                     attributes:nil];
-
+	NSError *err = nil;
 	if (!success)
-		NSLog(@"Failed to open '%@'", path);
+		R_ERROR(kErrorOpenFile, [path UTF8String]);
 	else if (![data writeToFile:path options:0 error:&err])
 	{
-		NSLog(@"Failed to write '%@': %@", path, [err localizedDescription]);
+		R_ERROR("[Rainbow] Failed to write '%s': %s",
+		        [path UTF8String], [[err localizedDescription] UTF8String]);
 		success = NO;
 	}
 	return success;

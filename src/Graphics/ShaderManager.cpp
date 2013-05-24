@@ -85,7 +85,10 @@ int ShaderManager::create_shader(int type, const char *src)
 #else
 	Data glsl(src);
 	if (!glsl)
+	{
+		R_ASSERT(glsl, "Failed to load shader");
 		return Shader::INVALID;
+	}
 	const char *source = glsl;
 #endif
 
