@@ -1,12 +1,18 @@
 // Copyright 2010-13 Bifrost Entertainment. All rights reserved.
 
 #include <ft2build.h>
-#include FT_FREETYPE_H
+#include FT_CFF_DRIVER_H
 #include FT_GLYPH_H
+#include FT_MODULE_H
 
 #include "Common/Data.h"
 #include "Graphics/FontAtlas.h"
 #include "Graphics/OpenGL.h"
+
+namespace
+{
+	const unsigned int kNumGlyphsPerColRow = 12;
+}
 
 FontAtlas::FontAtlas(const float pt) : height(0), pt(pt), texture(0)
 {
@@ -33,7 +39,7 @@ FontAtlas::FontAtlas(const float pt) : height(0), pt(pt), texture(0)
 
 bool FontAtlas::load(const Data &font)
 {
-	R_ASSERT(font, "No data provided");
+	R_ASSERT(font, "Failed to load font");
 
 	// Instantiate FreeType
 	FT_Library lib;
@@ -42,6 +48,14 @@ bool FontAtlas::load(const Data &font)
 		R_ASSERT(false, "Failed to initialise FreeType");
 		return false;
 	}
+
+#ifndef RAINBOW_WIN
+	// FIXME: On Windows, enabling the new hinting engine will return unusually
+	//        large glyph sizes, resulting in too much memory being allocated
+	//        and crashing (as of FreeType 2.4.12).
+	const FT_UInt hinting_engine = FT_CFF_HINTING_ADOBE;
+	FT_Property_Set(lib, "cff", "hinting-engine", &hinting_engine);
+#endif
 
 	// Load font face
 	FT_Face face;
@@ -85,8 +99,8 @@ bool FontAtlas::load(const Data &font)
 		if (height > max_height)
 			max_height = height;
 	}
-	const unsigned int tex_width = Rainbow::next_pow2(max_width * 12);
-	const unsigned int tex_height = Rainbow::next_pow2(max_height * 12);
+	const unsigned int tex_width = Rainbow::next_pow2(max_width * kNumGlyphsPerColRow);
+	const unsigned int tex_height = Rainbow::next_pow2(max_height * kNumGlyphsPerColRow);
 
 	// GL_LUMINANCE8_ALPHA8 buffer
 	unsigned int w_offset = (tex_width * tex_height) << 1;
