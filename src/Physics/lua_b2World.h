@@ -19,8 +19,8 @@ namespace b2
 				}
 				lua_rawgeti(L, LUA_REGISTRYINDEX, g_contact);
 				lua_rawgeti(L, -1, 0);
-				Contact **ptr = static_cast<Contact**>(luaR_touserdata(L, -1, Contact::class_name));
-				(*ptr)->set(contact);
+				Contact *c = static_cast<Contact*>(luaR_touserdata(L, -1, Contact::class_name));
+				c->set(contact);
 				lua_pop(L, 1);
 			}
 
