@@ -25,16 +25,15 @@ namespace Rainbow
 				case LUA_TLIGHTUSERDATA:
 					this->ptr = static_cast<TextureAtlas*>(lua_touserdata(L, -1));
 					break;
-				case LUA_TSTRING:
-					{
-						DataMap data(luaR_tostring(L, -1));
-						if (!data)
-							luaL_error(L, "rainbow.texture: Failed to load texture");
-						this->ptr = new TextureAtlas(data);
-						if (!*this->ptr)
-							luaL_error(L, "rainbow.texture: Failed to create texture");
-					}
+				case LUA_TSTRING: {
+					DataMap data(luaR_tostring(L, -1));
+					if (!data)
+						luaL_error(L, "rainbow.texture: Failed to load texture");
+					this->ptr = new TextureAtlas(data);
+					if (!*this->ptr)
+						luaL_error(L, "rainbow.texture: Failed to create texture");
 					break;
+				}
 				default:
 					LUA_ASSERT(lua_gettop(L) == 4, "rainbow.texture(<path to texture>)");
 					break;

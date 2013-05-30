@@ -54,16 +54,15 @@ namespace Rainbow
 			switch (lua_type(L, 1))
 			{
 				case LUA_TSTRING: {
-
-						DataMap data(luaR_tostring(L, 1));
-						if (!data)
-							return luaL_error(L, "rainbow.spritebatch:set_texture: Failed to load texture");
-						lua_pushlightuserdata(L, ::SpriteBatch::set_texture(data));
+					DataMap data(luaR_tostring(L, 1));
+					if (!data)
+						return luaL_error(L, "rainbow.spritebatch:set_texture: Failed to load texture");
+					lua_pushlightuserdata(L, ::SpriteBatch::set_texture(data));
 					return alloc<Texture>(L);
 				}
 				case LUA_TTABLE: {
-						Texture *texture = wrapper<Texture>(L);
-						::SpriteBatch::set_texture(texture->get());
+					Texture *texture = wrapper<Texture>(L);
+					::SpriteBatch::set_texture(texture->get());
 					break;
 				}
 				default:
