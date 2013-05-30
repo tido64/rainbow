@@ -67,7 +67,7 @@ void SpriteBatch::draw()
 	Renderer::draw(this->array, this->texture.get());
 }
 
-TextureAtlas* SpriteBatch::set_texture(const Data &texture)
+TextureAtlas* SpriteBatch::set_texture(const DataMap &texture)
 {
 	this->texture = new TextureAtlas(texture);
 	return this->texture.get();

@@ -80,14 +80,15 @@ namespace Rainbow
 				case kIOTypeAsset: {
 					#if defined(RAINBOW_ANDROID)
 						// Android doesn't ignore multiple '/' in paths.
+						int i = -1;
 						int j = -1;
-						for (size_t i = 0; i < strlen(file); ++i)
+						while (file[++i] != '\0')
 						{
 							if (file[i] == '/' && file[i + 1] == '/')
 								continue;
 							result[++j] = file[i];
 						}
-						result[j] = '\0';
+						result[++j] = '\0';
 					#elif defined(RAINBOW_IOS)
 						NSString *path = [[NSString alloc]
 								initWithBytesNoCopy:(void*)file
@@ -202,9 +203,5 @@ namespace Rainbow
 		}
 	}
 }
-
-#ifdef RAINBOW_WIN
-#	undef fileno
-#endif
 
 #endif

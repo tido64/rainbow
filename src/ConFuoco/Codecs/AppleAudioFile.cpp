@@ -17,6 +17,16 @@ namespace ConFuoco
 		const unsigned int kAudioChannelsMono = 1;
 		const unsigned int kAudioChannelsStereo = 2;
 		const unsigned int kBitsPerChannel = 16;
+
+		template<class C, class T>
+		C bridge_cast(T &var)
+		{
+		#ifdef RAINBOW_IOS
+			return (__bridge C)var;
+		#else
+			return (C)var;
+		#endif
+		}
 	}
 
 	AudioFile* AudioFile::Open(const char *const file, const Mode mode)
@@ -39,27 +49,28 @@ namespace ConFuoco
 
 	AppleAudioFile::AppleAudioFile(const char *const file, const int mode) : ref(nullptr)
 	{
-	#ifdef RAINBOW_IOS
 		char buf[256];
 		Rainbow::IO::find(buf, file, Rainbow::IO::kIOTypeAsset);
+	#ifdef RAINBOW_MAC
+		CFStringRef str = CFStringCreateWithBytesNoCopy(
+				kCFAllocatorDefault, (const UInt8*)buf, strlen(buf),
+				kCFStringEncodingUTF8, false, kCFAllocatorNull);
+		CFURLRef url = CFURLCreateWithFileSystemPath(
+				kCFAllocatorDefault, str, kCFURLPOSIXPathStyle, false);
+	#else
 		NSString *path = [[NSString alloc]
 				initWithBytesNoCopy:buf
 				             length:strlen(buf)
 				           encoding:NSUTF8StringEncoding
 				       freeWhenDone:NO];
-		CFURLRef url = CFURLCreateWithString(
-				kCFAllocatorDefault, reinterpret_cast<CFStringRef>(path), nullptr);
-	#else
-		CFMutableStringRef path = CFStringCreateMutable(kCFAllocatorDefault, 256);
-		CFStringAppendCString(path, data_path, kCFStringEncodingUTF8);
-		CFStringAppendCString(path, file, kCFStringEncodingUTF8);
-		CFURLRef url = CFURLCreateWithFileSystemPath(
-				kCFAllocatorDefault, path, kCFURLPOSIXPathStyle, false);
-		CFRelease(path);
+		NSURL *url = [NSURL fileURLWithPath:path isDirectory:NO];
 	#endif
-		if (ExtAudioFileOpenURL(url, &this->ref) != noErr)
+		if (ExtAudioFileOpenURL(bridge_cast<CFURLRef>(url), &this->ref) != noErr)
 			R_ERROR("[Rainbow::ConFuoco/AudioToolbox] Failed to open '%s'\n", file);
+	#ifdef RAINBOW_MAC
 		CFRelease(url);
+		CFRelease(str);
+	#endif
 		if (!this->ref)
 			return;
 

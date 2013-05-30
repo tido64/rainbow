@@ -1,4 +1,4 @@
-#include "Common/Data.h"
+#include "Common/DataMap.h"
 #include "Lua/LuaHelper.h"
 #include "Lua/lua_Sprite.h"
 #include "Lua/lua_SpriteBatch.h"
@@ -55,10 +55,10 @@ namespace Rainbow
 			{
 				case LUA_TSTRING: {
 
-						Data t(luaR_tostring(L, 1));
-						if (!t)
+						DataMap data(luaR_tostring(L, 1));
+						if (!data)
 							return luaL_error(L, "rainbow.spritebatch:set_texture: Failed to load texture");
-						lua_pushlightuserdata(L, ::SpriteBatch::set_texture(t));
+						lua_pushlightuserdata(L, ::SpriteBatch::set_texture(data));
 					return alloc<Texture>(L);
 				}
 				case LUA_TTABLE: {

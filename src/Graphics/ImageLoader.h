@@ -1,7 +1,7 @@
 #ifndef IMAGELOADER_H_
 #define IMAGELOADER_H_
 
-#include "Common/Data.h"
+#include "Common/DataMap.h"
 #include "Common/Debug.h"
 #include "Graphics/OpenGL.h"
 #if defined(RAINBOW_IOS)
@@ -21,7 +21,7 @@ namespace
 		size_t offset;
 		const unsigned char *data;
 
-		png_read_struct(unsigned char *data) : offset(8), data(data) { }
+		png_read_struct(const unsigned char *data) : offset(8), data(data) { }
 	};
 
 	void mem_fread(png_structp png_ptr, png_bytep data, png_size_t length)
@@ -66,6 +66,7 @@ struct ImageInfo
 	unsigned int depth;
 	unsigned int channels;
 	unsigned int compressed;
+	size_t offset;
 	size_t size;
 };
 
@@ -84,7 +85,7 @@ namespace ImageLoader
 	/// Attempt to retrieve the image format.
 	/// \param img Encoded image data.
 	/// \return Image format; \c ImageFormat::UNKNOWN if unknown.
-	ImageFormat get_format(const Data &img)
+	ImageFormat get_format(const DataMap &img)
 	{
 	#ifdef GL_IMG_texture_compression_pvrtc
 		if (*(uint32_t*)img.bytes() == 0x03525650)
@@ -115,7 +116,7 @@ namespace ImageLoader
 	/// \param[out] image_info  Struct containing information on the decoded image.
 	/// \param[in]  img         Encoded image data.
 	/// \return \c true on success, \c false otherwise.
-	bool load(void *&data, ImageInfo &image_info, const Data &img)
+	bool load(void *&data, ImageInfo &image_info, const DataMap &img)
 	{
 		memset(&image_info, 0, sizeof(image_info));
 		switch (get_format(img))
@@ -138,13 +139,9 @@ namespace ImageLoader
 					image_info.depth = (format < 2) ? 2 : 4;
 					image_info.channels = ((format & 0x01) == 0) ? 3 : 4;
 
+					image_info.offset = sizeof(*header) + CFSwapInt32LittleToHost(header->metadata_size);
 					image_info.size = image_info.width * image_info.height * image_info.depth >> 3;
-					const size_t header_size = sizeof(*header) + CFSwapInt32LittleToHost(header->metadata_size);
-					R_ASSERT(header_size + image_info.size == img.size(), "Unsupported PVR file format");
-
-					unsigned char *bytes = new unsigned char[image_info.size];
-					memcpy(bytes, img.bytes() + header_size, image_info.size);
-					data = bytes;
+					R_ASSERT(image_info.offset + image_info.size == img.size(), "Unsupported PVR file format");
 				}
 				#endif
 				break;
@@ -242,7 +239,7 @@ namespace ImageLoader
 				#ifdef RAINBOW_IOS
 				{
 					UIImage *image = [UIImage imageWithData:
-							[NSData dataWithBytesNoCopy:img
+							[NSData dataWithBytesNoCopy:const_cast<void*>(static_cast<const void*>(img))
 							                     length:img.size()
 							               freeWhenDone:NO]];
 					if (!image)

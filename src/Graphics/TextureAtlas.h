@@ -1,11 +1,10 @@
 #ifndef TEXTUREATLAS_H_
 #define TEXTUREATLAS_H_
 
+#include "Common/DataMap.h"
 #include "Common/SharedPtr.h"
 #include "Graphics/Texture.h"
 #include "Graphics/TextureManager.h"
-
-class Data;
 
 /// Texture atlas loaded from an image file.
 ///
@@ -22,7 +21,7 @@ class Data;
 class TextureAtlas : public RefCounted
 {
 public:
-	explicit TextureAtlas(const Data &img);
+	explicit TextureAtlas(const DataMap &img);
 	inline ~TextureAtlas();
 
 	/// Bind this texture.

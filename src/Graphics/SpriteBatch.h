@@ -46,7 +46,7 @@ public:
 	Sprite* create_sprite(const unsigned int width, const unsigned int height);
 
 	/// Load texture data.
-	TextureAtlas* set_texture(const Data &texture);
+	TextureAtlas* set_texture(const DataMap &texture);
 
 	/// Re-use a texture atlas.
 	TextureAtlas* set_texture(TextureAtlas *texture);

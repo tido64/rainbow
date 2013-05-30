@@ -1,4 +1,4 @@
-#include "Common/Data.h"
+#include "Common/DataMap.h"
 #include "Lua/LuaHelper.h"
 #include "Lua/lua_Texture.h"
 
@@ -27,7 +27,7 @@ namespace Rainbow
 					break;
 				case LUA_TSTRING:
 					{
-						Data data(luaR_tostring(L, -1));
+						DataMap data(luaR_tostring(L, -1));
 						if (!data)
 							luaL_error(L, "rainbow.texture: Failed to load texture");
 						this->ptr = new TextureAtlas(data);
