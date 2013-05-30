@@ -7,15 +7,12 @@
 ///
 /// This class does not hold any data and is meant to be sub-classed.
 ///
-/// Copyright 2011-12 Bifrost Entertainment. All rights reserved.
+/// Copyright 2011-13 Bifrost Entertainment. All rights reserved.
 /// \author Tommy Nguyen
 template<class T>
 class TreeNode : private NonCopyable<TreeNode<T> >
 {
 public:
-	TreeNode();
-	virtual ~TreeNode();
-
 	/// Add a node as child.
 	void add_child(T *);
 
@@ -28,13 +25,10 @@ public:
 protected:
 	T *parent;            ///< This node's parent.
 	Vector<T*> children;  ///< This node's children.
+
+	TreeNode();
+	~TreeNode();
 };
-
-template<class T>
-TreeNode<T>::TreeNode() : parent(nullptr) { }
-
-template<class T>
-TreeNode<T>::~TreeNode() { }
 
 template<class T>
 void TreeNode<T>::add_child(T *n)
@@ -59,5 +53,11 @@ void TreeNode<T>::set_parent(T *n)
 		this->parent->children.remove(static_cast<T*>(this));
 	n->add_child(static_cast<T*>(this));
 }
+
+template<class T>
+TreeNode<T>::TreeNode() : parent(nullptr) { }
+
+template<class T>
+TreeNode<T>::~TreeNode() { }
 
 #endif

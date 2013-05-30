@@ -28,9 +28,13 @@ namespace Rainbow
 			if (!lc)
 				lc = setlocale(LC_MESSAGES, nullptr);
 			else
-				lc = strstr(lc, "LC_MESSAGES") + 12;
+			{
+				char *lc_msg = strstr(lc, "LC_MESSAGES");
+				if (lc_msg)
+					lc = lc_msg + 12;
+			}
 			char *locale = new char[6];
-			if (!lc)
+			if (!lc || strcmp("C", lc) == 0)
 				strcpy(locale, "en");
 			else
 			{
