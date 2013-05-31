@@ -21,6 +21,11 @@ void Input::accelerated(const double x, const double y, const double z, const do
 	Rainbow::Lua::Input::accelerated(this->lua_state, this->acceleration);
 }
 
+void Input::clear()
+{
+	Rainbow::Lua::Input::clear(this->lua_state);
+}
+
 #ifdef RAINBOW_BUTTONS
 
 void Input::key_down(const Key &k)

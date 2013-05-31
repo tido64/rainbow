@@ -31,6 +31,7 @@ namespace Rainbow
 			this->terminate();
 		else
 			this->scenegraph.update(dt);
+		this->input.clear();
 	}
 
 	void Director::on_memory_warning()

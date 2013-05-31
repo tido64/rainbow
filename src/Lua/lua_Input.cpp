@@ -12,20 +12,21 @@ namespace Rainbow
 		{
 			namespace
 			{
-				enum
+				enum Event
 				{
-					KEY_DOWN,
-					KEY_UP,
-					TOUCH_BEGAN,
-					TOUCH_CANCELED,
-					TOUCH_ENDED,
-					TOUCH_MOVED,
-					EVENT_TYPES
+					kEventKeyDown,
+					kEventKeyUp,
+					kEventTouchBegan,
+					kEventTouchCanceled,
+					kEventTouchEnded,
+					kEventTouchMoved
 				};
 
 				int acceleration = -1;
 				int events = -1;
-				const char *const event_names[] = {
+				size_t event_count = -1;
+
+				const char *const kInputEvents[] = {
 					"key_down",
 					"key_up",
 					"touch_began",
@@ -34,19 +35,29 @@ namespace Rainbow
 					"touch_moved"
 				};
 
-			#ifdef RAINBOW_BUTTONS
-
-				void key_event(lua_State *L, const int event, const Key &key)
+				void push_event(lua_State *L, const Event event)
 				{
 					lua_rawgeti(L, LUA_REGISTRYINDEX, events);
+					lua_pushinteger(L, ++event_count);
+					lua_rawseti(L, -2, 0);
 
-					lua_len(L, -1);
-					const int index = luaR_tointeger(L, -1) + 1;
-					lua_pop(L, 1);
-
-					lua_createtable(L, 2, 0);
-					lua_pushstring(L, event_names[event]);
+					lua_rawgeti(L, -1, event_count);
+					if (lua_type(L, -1) != LUA_TTABLE)
+					{
+						lua_pop(L, 1);
+						lua_createtable(L, 2, 0);
+						lua_pushvalue(L, -1);
+						lua_rawseti(L, -3, event_count);
+					}
+					lua_pushstring(L, kInputEvents[event]);
 					lua_rawseti(L, -2, 1);
+				}
+
+			#ifdef RAINBOW_BUTTONS
+
+				void key_event(lua_State *L, const Event event, const Key &key)
+				{
+					push_event(L, event);
 
 					lua_createtable(L, 2, 0);
 					lua_pushinteger(L, key.key);
@@ -55,27 +66,17 @@ namespace Rainbow
 					lua_rawseti(L, -2, 2);
 
 					lua_rawseti(L, -2, 2);
-
-					lua_rawseti(L, -2, index);
-					lua_pop(L, 1);
+					lua_pop(L, 2);
 				}
 
 			#endif  // RAINBOW_BUTTONS
 
 				void touch_event(lua_State *L,
-				                 const int event,
+				                 const Event event,
 				                 const Touch *const touches,
 				                 const size_t count)
 				{
-					lua_rawgeti(L, LUA_REGISTRYINDEX, events);
-
-					lua_len(L, -1);
-					const int index = luaR_tointeger(L, -1) + 1;
-					lua_pop(L, 1);
-
-					lua_createtable(L, 2, 0);
-					lua_pushstring(L, event_names[event]);
-					lua_rawseti(L, -2, 1);
+					push_event(L, event);
 
 					if (!count)
 						lua_pushnil(L);
@@ -94,10 +95,9 @@ namespace Rainbow
 							lua_rawset(L, -3);
 						}
 					}
-					lua_rawseti(L, -2, 2);
 
-					lua_rawseti(L, -2, index);
-					lua_pop(L, 1);
+					lua_rawseti(L, -2, 2);
+					lua_pop(L, 2);
 				}
 			}
 
@@ -120,6 +120,7 @@ namespace Rainbow
 				lua_rawset(L, -3);
 
 				lua_rawset(L, -3);
+				clear(L);
 			}
 
 			void accelerated(lua_State *L, const Acceleration &a)
@@ -132,38 +133,50 @@ namespace Rainbow
 				lua_pop(L, 1);
 			}
 
+			void clear(lua_State *L)
+			{
+				if (event_count == 0)
+					return;
+
+				lua_rawgeti(L, LUA_REGISTRYINDEX, events);
+				lua_pushinteger(L, 0);
+				lua_rawseti(L, -2, 0);
+				lua_pop(L, 1);
+				event_count = 0;
+			}
+
 		#ifdef RAINBOW_BUTTONS
 
 			void key_down(lua_State *L, const Key &key)
 			{
-				key_event(L, KEY_DOWN, key);
+				key_event(L, kEventKeyDown, key);
 			}
 
 			void key_up(lua_State *L, const Key &key)
 			{
-				key_event(L, KEY_UP, key);
+				key_event(L, kEventKeyUp, key);
 			}
 
 		#endif  // RAINBOW_BUTTONS
 
 			void touch_began(lua_State *L, const Touch *const touches, const size_t count)
 			{
-				touch_event(L, TOUCH_BEGAN, touches, count);
+				touch_event(L, kEventTouchBegan, touches, count);
 			}
 
 			void touch_canceled(lua_State *L)
 			{
-				touch_event(L, TOUCH_CANCELED, nullptr, 0);
+				touch_event(L, kEventTouchCanceled, nullptr, 0);
 			}
 
 			void touch_ended(lua_State *L, const Touch *const touches, const size_t count)
 			{
-				touch_event(L, TOUCH_ENDED, touches, count);
+				touch_event(L, kEventTouchEnded, touches, count);
 			}
 
 			void touch_moved(lua_State *L, const Touch *const touches, const size_t count)
 			{
-				touch_event(L, TOUCH_MOVED, touches, count);
+				touch_event(L, kEventTouchMoved, touches, count);
 			}
 		}
 	}

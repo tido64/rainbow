@@ -48,6 +48,9 @@ public:
 	/// \param t      The relative time at which the acceleration event occurred.
 	void accelerated(const double x, const double y, const double z, const double t);
 
+	/// Clear all events.
+	void clear();
+
 #ifdef RAINBOW_BUTTONS
 	void key_down(const Key &k);
 	void key_up(const Key &k);

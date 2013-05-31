@@ -153,12 +153,9 @@ end
 
 local function fireevents()
 	local events = Input.__events;
-	for i = 1, #events do
+	for i = 1, events[0] do
 		local e = events[i]
 		Input[e[1]](e[2])
-	end
-	for i = #events, 1, -1 do
-		events[i] = nil
 	end
 end
 __rainbow_modules[#__rainbow_modules + 1] = fireevents

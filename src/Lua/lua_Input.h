@@ -16,6 +16,8 @@ namespace Rainbow
 
 			void accelerated(lua_State *L, const Acceleration &acceleration);
 
+			void clear(lua_State *L);
+
 		#ifdef RAINBOW_BUTTONS
 			void key_down(lua_State *L, const Key &key);
 			void key_up(lua_State *L, const Key &key);
