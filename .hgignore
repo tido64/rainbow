@@ -15,3 +15,4 @@ lib/dSFMT/check.sh
 lib/dSFMT/test.c
 lib/gtest/
 lib/libpng/scripts/
+lib/TestFlight/

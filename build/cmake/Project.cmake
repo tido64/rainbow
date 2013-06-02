@@ -41,6 +41,9 @@ if(MSVC OR XCODE)
 	file(GLOB RAINBOW_SRC src/Resources/*)
 	source_group("Source Files\\Resources" FILES ${RAINBOW_SRC})
 
+	file(GLOB RAINBOW_SRC src/Services/*)
+	source_group("Source Files\\Services" FILES ${RAINBOW_SRC})
+
 	file(GLOB RAINBOW_SRC src/Thread/*)
 	source_group("Source Files\\Thread" FILES ${RAINBOW_SRC})
 

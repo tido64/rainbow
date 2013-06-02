@@ -104,7 +104,6 @@
 		1939A206152C425D00494609 /* lua_Canvas.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1939A17E152C425D00494609 /* lua_Canvas.cpp */; };
 		1939A207152C425D00494609 /* ChronoTrigger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1939A182152C425D00494609 /* ChronoTrigger.cpp */; };
 		1939A20B152C425D00494609 /* Data_Apple.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1939A18F152C425D00494609 /* Data_Apple.cpp */; };
-		1939A20C152C425D00494609 /* ShutdownSequence_Apple.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1939A190152C425D00494609 /* ShutdownSequence_Apple.cpp */; };
 		1939A20F152C425D00494609 /* Random.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1939A196152C425D00494609 /* Random.cpp */; };
 		1939A211152C425D00494609 /* Config.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1939A1A0152C425D00494609 /* Config.cpp */; };
 		1939A21B152C425D00494609 /* Director.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1939A1BA152C425D00494609 /* Director.cpp */; };
@@ -137,6 +136,7 @@
 		1948C02D152C397D00E9B854 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1948C02B152C397D00E9B854 /* InfoPlist.strings */; };
 		1948C02F152C397D00E9B854 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1948C02E152C397D00E9B854 /* main.m */; };
 		1948C033152C397D00E9B854 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1948C032152C397D00E9B854 /* AppDelegate.m */; };
+		1949374D1756795900CF3FC6 /* DataMap_Unix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1949374B1756795900CF3FC6 /* DataMap_Unix.cpp */; };
 		196911CD1713564A002BC2E4 /* VertexArray.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 196911CB1713564A002BC2E4 /* VertexArray.cpp */; };
 		196CB728161E4ADD0068C809 /* Gatekeeper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 196CB725161E4ADD0068C809 /* Gatekeeper.cpp */; };
 		196CB72F161E4D940068C809 /* b2MotorJoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 196CB72D161E4D940068C809 /* b2MotorJoint.cpp */; };
@@ -153,6 +153,10 @@
 		19AF58A0167FFA0800F54B27 /* Overlay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19AF589C167FFA0800F54B27 /* Overlay.cpp */; };
 		19CEDD71172422DC008B73B5 /* AudioFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19CEDD6A172422DC008B73B5 /* AudioFile.cpp */; };
 		19CEDD72172422DC008B73B5 /* AppleAudioFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19CEDD6D172422DC008B73B5 /* AppleAudioFile.cpp */; };
+		19DCB27117419B1800660000 /* TestFlight.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19DCB26F17419B1800660000 /* TestFlight.cpp */; };
+		19DCB2731741A1D000660000 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 19DCB2721741A1D000660000 /* libz.dylib */; };
+		19DCB2751741A23400660000 /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19DCB2741741A23400660000 /* libTestFlight.a */; };
+		19DCB2771742BC4500660000 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 19DCB2761742BC4500660000 /* AdSupport.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		19E91FC21682B1460054D61F /* LuaHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19E91FC01682B1460054D61F /* LuaHelper.cpp */; };
 		19EBC54416599D5100D3B5D7 /* Channel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19EBC54216599D5100D3B5D7 /* Channel.cpp */; };
 		19EBC54D16599D7000D3B5D7 /* Mixer_AL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19EBC54816599D7000D3B5D7 /* Mixer_AL.cpp */; };
@@ -184,7 +188,6 @@
 		193929B416E23D410018340B /* RainbowViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RainbowViewController.h; path = ../../../src/Platform/RainbowViewController.h; sourceTree = "<group>"; };
 		193929B516E23D410018340B /* RainbowViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = RainbowViewController.mm; path = ../../../src/Platform/RainbowViewController.mm; sourceTree = "<group>"; };
 		193929B716E23D5F0018340B /* SysUtil_Apple.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SysUtil_Apple.cpp; path = ../../../src/Platform/impl/SysUtil_Apple.cpp; sourceTree = "<group>"; };
-		193929B916E243D70018340B /* Definitions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Definitions.h; path = ../../../src/Platform/Definitions.h; sourceTree = "<group>"; };
 		193929BA16E243E90018340B /* LuaMachine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LuaMachine.cpp; sourceTree = "<group>"; };
 		193929BB16E243E90018340B /* LuaMachine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LuaMachine.h; sourceTree = "<group>"; };
 		193929BC16E243E90018340B /* LuaModules.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LuaModules.h; sourceTree = "<group>"; };
@@ -455,12 +458,10 @@
 		1939A18B152C425D00494609 /* Chrono_Apple.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Chrono_Apple.h; sourceTree = "<group>"; };
 		1939A18D152C425D00494609 /* Data-inl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Data-inl.h"; sourceTree = "<group>"; };
 		1939A18F152C425D00494609 /* Data_Apple.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = Data_Apple.cpp; sourceTree = "<group>"; };
-		1939A190152C425D00494609 /* ShutdownSequence_Apple.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = ShutdownSequence_Apple.cpp; sourceTree = "<group>"; };
 		1939A192152C425D00494609 /* Intrinsics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Intrinsics.h; sourceTree = "<group>"; };
 		1939A193152C425D00494609 /* List.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = List.h; sourceTree = "<group>"; };
 		1939A196152C425D00494609 /* Random.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Random.cpp; sourceTree = "<group>"; };
 		1939A197152C425D00494609 /* Random.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Random.h; sourceTree = "<group>"; };
-		1939A198152C425D00494609 /* ShutdownSequence.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShutdownSequence.h; sourceTree = "<group>"; };
 		1939A19C152C425D00494609 /* TreeNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TreeNode.h; sourceTree = "<group>"; };
 		1939A19D152C425D00494609 /* Vec2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Vec2.h; sourceTree = "<group>"; };
 		1939A19E152C425D00494609 /* Vec3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Vec3.h; sourceTree = "<group>"; };
@@ -534,6 +535,9 @@
 		1948C030152C397D00E9B854 /* Rainbow-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Rainbow-Prefix.pch"; sourceTree = "<group>"; };
 		1948C031152C397D00E9B854 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		1948C032152C397D00E9B854 /* AppDelegate.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; path = AppDelegate.m; sourceTree = "<group>"; };
+		1949374B1756795900CF3FC6 /* DataMap_Unix.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = DataMap_Unix.cpp; sourceTree = "<group>"; };
+		1949374C1756795900CF3FC6 /* DataMap_Unix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataMap_Unix.h; sourceTree = "<group>"; };
+		1949374E1756796D00CF3FC6 /* DataMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataMap.h; sourceTree = "<group>"; };
 		1954201415F676340049C278 /* IO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IO.h; sourceTree = "<group>"; };
 		196911CB1713564A002BC2E4 /* VertexArray.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = VertexArray.cpp; sourceTree = "<group>"; };
 		196911CC1713564A002BC2E4 /* VertexArray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VertexArray.h; sourceTree = "<group>"; };
@@ -544,6 +548,7 @@
 		196CB72E161E4D940068C809 /* b2MotorJoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = b2MotorJoint.h; sourceTree = "<group>"; };
 		197396DB15A505F60064BF7D /* TextureManager.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = TextureManager.cpp; sourceTree = "<group>"; };
 		197396DC15A505F60064BF7D /* TextureManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextureManager.h; sourceTree = "<group>"; };
+		198BE0A7174A5F420036055E /* Macros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Macros.h; path = ../../../src/Platform/Macros.h; sourceTree = "<group>"; };
 		19905B7A152C50FA00BDD15C /* Accelerometer.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Accelerometer.lua; path = ../../../lua/Accelerometer.lua; sourceTree = "<group>"; };
 		19905B7B152C50FA00BDD15C /* Input.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Input.lua; path = ../../../lua/Input.lua; sourceTree = "<group>"; };
 		19905B7D152C50FA00BDD15C /* Math.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Math.lua; path = ../../../lua/Math.lua; sourceTree = "<group>"; };
@@ -557,10 +562,18 @@
 		19AF589C167FFA0800F54B27 /* Overlay.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Overlay.cpp; sourceTree = "<group>"; };
 		19AF589D167FFA0800F54B27 /* Overlay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Overlay.h; sourceTree = "<group>"; };
 		19AF589E167FFA0800F54B27 /* Resources.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Resources.h; sourceTree = "<group>"; };
+		19B1E56017403E3900BC21A0 /* Terminable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Terminable.h; sourceTree = "<group>"; };
 		19CEDD6A172422DC008B73B5 /* AudioFile.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = AudioFile.cpp; sourceTree = "<group>"; };
 		19CEDD6B172422DC008B73B5 /* AudioFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioFile.h; sourceTree = "<group>"; };
 		19CEDD6D172422DC008B73B5 /* AppleAudioFile.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = AppleAudioFile.cpp; sourceTree = "<group>"; };
 		19CEDD6E172422DC008B73B5 /* AppleAudioFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppleAudioFile.h; sourceTree = "<group>"; };
+		19DCB26E17419B1800660000 /* Services.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Services.h; sourceTree = "<group>"; };
+		19DCB26F17419B1800660000 /* TestFlight.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = TestFlight.cpp; sourceTree = "<group>"; };
+		19DCB27017419B1800660000 /* TestFlight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestFlight.h; sourceTree = "<group>"; };
+		19DCB2721741A1D000660000 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
+		19DCB2741741A23400660000 /* libTestFlight.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libTestFlight.a; path = ../../lib/TestFlight/libTestFlight.a; sourceTree = "<group>"; };
+		19DCB2761742BC4500660000 /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
+		19DCB2831746AB7C00660000 /* LuaBind.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LuaBind.h; sourceTree = "<group>"; };
 		19E91FC01682B1460054D61F /* LuaHelper.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = LuaHelper.cpp; sourceTree = "<group>"; };
 		19E91FC11682B1460054D61F /* LuaHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LuaHelper.h; sourceTree = "<group>"; };
 		19EBC54216599D5100D3B5D7 /* Channel.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = Channel.cpp; sourceTree = "<group>"; };
@@ -584,6 +597,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				19DCB2771742BC4500660000 /* AdSupport.framework in Frameworks */,
 				1939A23E152C432A00494609 /* AudioToolbox.framework in Frameworks */,
 				1939A240152C435000494609 /* AVFoundation.framework in Frameworks */,
 				1948C027152C397D00E9B854 /* CoreGraphics.framework in Frameworks */,
@@ -593,6 +607,8 @@
 				1939A23C152C42ED00494609 /* OpenAL.framework in Frameworks */,
 				1939A179152C41C000494609 /* OpenGLES.framework in Frameworks */,
 				1948C023152C397D00E9B854 /* UIKit.framework in Frameworks */,
+				19DCB2751741A23400660000 /* libTestFlight.a in Frameworks */,
+				19DCB2731741A1D000660000 /* libz.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1034,6 +1050,7 @@
 				1939A184152C425D00494609 /* Color.h */,
 				1939A185152C425D00494609 /* Constants.h */,
 				1939A186152C425D00494609 /* Data.h */,
+				1949374E1756796D00CF3FC6 /* DataMap.h */,
 				190A0ADA15E0294C0088D8B7 /* Debug.h */,
 				1939A192152C425D00494609 /* Intrinsics.h */,
 				1954201415F676340049C278 /* IO.h */,
@@ -1042,7 +1059,7 @@
 				1939A196152C425D00494609 /* Random.cpp */,
 				1939A197152C425D00494609 /* Random.h */,
 				192A0B9A1681EF75009218EB /* SharedPtr.h */,
-				1939A198152C425D00494609 /* ShutdownSequence.h */,
+				19B1E56017403E3900BC21A0 /* Terminable.h */,
 				1939A19C152C425D00494609 /* TreeNode.h */,
 				1939A19D152C425D00494609 /* Vec2.h */,
 				1939A19E152C425D00494609 /* Vec3.h */,
@@ -1058,7 +1075,8 @@
 				1939A18B152C425D00494609 /* Chrono_Apple.h */,
 				1939A18D152C425D00494609 /* Data-inl.h */,
 				1939A18F152C425D00494609 /* Data_Apple.cpp */,
-				1939A190152C425D00494609 /* ShutdownSequence_Apple.cpp */,
+				1949374B1756795900CF3FC6 /* DataMap_Unix.cpp */,
+				1949374C1756795900CF3FC6 /* DataMap_Unix.h */,
 			);
 			path = impl;
 			sourceTree = "<group>";
@@ -1151,6 +1169,12 @@
 		1939A1E6152C425D00494609 /* Lua */ = {
 			isa = PBXGroup;
 			children = (
+				19DCB2831746AB7C00660000 /* LuaBind.h */,
+				19E91FC01682B1460054D61F /* LuaHelper.cpp */,
+				19E91FC11682B1460054D61F /* LuaHelper.h */,
+				193929BA16E243E90018340B /* LuaMachine.cpp */,
+				193929BB16E243E90018340B /* LuaMachine.h */,
+				193929BC16E243E90018340B /* LuaModules.h */,
 				1939A1E7152C425D00494609 /* lua_Animation.cpp */,
 				1939A1E8152C425D00494609 /* lua_Animation.h */,
 				1939A1E9152C425D00494609 /* lua_Audio.cpp */,
@@ -1179,11 +1203,6 @@
 				1939A1FD152C425D00494609 /* lua_SpriteBatch.h */,
 				1939A1FE152C425D00494609 /* lua_Texture.cpp */,
 				1939A1FF152C425D00494609 /* lua_Texture.h */,
-				19E91FC01682B1460054D61F /* LuaHelper.cpp */,
-				19E91FC11682B1460054D61F /* LuaHelper.h */,
-				193929BA16E243E90018340B /* LuaMachine.cpp */,
-				193929BB16E243E90018340B /* LuaMachine.h */,
-				193929BC16E243E90018340B /* LuaModules.h */,
 			);
 			name = Lua;
 			path = ../../../src/Lua;
@@ -1210,6 +1229,7 @@
 		1948C021152C397D00E9B854 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				19DCB2761742BC4500660000 /* AdSupport.framework */,
 				1939A23D152C432900494609 /* AudioToolbox.framework */,
 				1939A23F152C435000494609 /* AVFoundation.framework */,
 				1948C026152C397D00E9B854 /* CoreGraphics.framework */,
@@ -1219,6 +1239,8 @@
 				1939A23B152C42EC00494609 /* OpenAL.framework */,
 				1939A178152C41C000494609 /* OpenGLES.framework */,
 				1948C022152C397D00E9B854 /* UIKit.framework */,
+				19DCB2741741A23400660000 /* libTestFlight.a */,
+				19DCB2721741A1D000660000 /* libz.dylib */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1272,6 +1294,7 @@
 				1939A1E6152C425D00494609 /* Lua */,
 				190D6FE316964AA100C9ED26 /* Physics */,
 				1986919F16DED44D00BC4830 /* Platform */,
+				19DCB26D17419B1800660000 /* Services */,
 				1939A1A0152C425D00494609 /* Config.cpp */,
 				1939A1A1152C425D00494609 /* Config.h */,
 				1939A1BA152C425D00494609 /* Director.cpp */,
@@ -1299,7 +1322,7 @@
 			isa = PBXGroup;
 			children = (
 				19F98DA4171B5DC000A85873 /* impl */,
-				193929B916E243D70018340B /* Definitions.h */,
+				198BE0A7174A5F420036055E /* Macros.h */,
 				193929B416E23D410018340B /* RainbowViewController.h */,
 				193929B516E23D410018340B /* RainbowViewController.mm */,
 				19F98DA5171B5DDF00A85873 /* SysUtil.h */,
@@ -1333,6 +1356,17 @@
 				19CEDD6E172422DC008B73B5 /* AppleAudioFile.h */,
 			);
 			path = Codecs;
+			sourceTree = "<group>";
+		};
+		19DCB26D17419B1800660000 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				19DCB26E17419B1800660000 /* Services.h */,
+				19DCB26F17419B1800660000 /* TestFlight.cpp */,
+				19DCB27017419B1800660000 /* TestFlight.h */,
+			);
+			name = Services;
+			path = ../../../src/Services;
 			sourceTree = "<group>";
 		};
 		19F98DA4171B5DC000A85873 /* impl */ = {
@@ -1502,7 +1536,6 @@
 				1939A206152C425D00494609 /* lua_Canvas.cpp in Sources */,
 				1939A207152C425D00494609 /* ChronoTrigger.cpp in Sources */,
 				1939A20B152C425D00494609 /* Data_Apple.cpp in Sources */,
-				1939A20C152C425D00494609 /* ShutdownSequence_Apple.cpp in Sources */,
 				1939A20F152C425D00494609 /* Random.cpp in Sources */,
 				1939A211152C425D00494609 /* Config.cpp in Sources */,
 				1939A21B152C425D00494609 /* Director.cpp in Sources */,
@@ -1548,6 +1581,8 @@
 				19F98DA1171970C000A85873 /* Recorder_iOS.mm in Sources */,
 				19CEDD71172422DC008B73B5 /* AudioFile.cpp in Sources */,
 				19CEDD72172422DC008B73B5 /* AppleAudioFile.cpp in Sources */,
+				19DCB27117419B1800660000 /* TestFlight.cpp in Sources */,
+				1949374D1756795900CF3FC6 /* DataMap_Unix.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1576,9 +1611,10 @@
 				GCC_ENABLE_CPP_EXCEPTIONS = NO;
 				GCC_ENABLE_CPP_RTTI = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = (
-					"NDEBUG=1",
-					"USE_CANVAS=0",
+					"DEBUG=1",
+					"USE_HEIMDALL=1",
 					"USE_PHYSICS=1",
+					"USE_TESTFLIGHT_SDK=1",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
@@ -1608,6 +1644,10 @@
 					../../lib/FreeType/include,
 				);
 				INFOPLIST_FILE = "Rainbow/Rainbow-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../../lib/TestFlight\"",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = "Ad Hoc";
@@ -1626,7 +1666,6 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
-					"USE_CANVAS=0",
 					"USE_HEIMDALL=1",
 					"USE_PHYSICS=1",
 				);
@@ -1657,7 +1696,6 @@
 				GCC_ENABLE_CPP_RTTI = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"NDEBUG=1",
-					"USE_CANVAS=0",
 					"USE_PHYSICS=1",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
@@ -1687,6 +1725,10 @@
 					../../lib/FreeType/include,
 				);
 				INFOPLIST_FILE = "Rainbow/Rainbow-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../../lib/TestFlight\"",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -1703,6 +1745,10 @@
 					../../lib/FreeType/include,
 				);
 				INFOPLIST_FILE = "Rainbow/Rainbow-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../../lib/TestFlight\"",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
