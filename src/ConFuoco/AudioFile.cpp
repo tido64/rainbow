@@ -43,9 +43,10 @@ namespace ConFuoco
 		return kFallbackBufferSize;
 	}
 
-	size_t AudioFile::read_impl(char *, const size_t)
+	size_t AudioFile::read_impl(char *dst, const size_t size)
 	{
-		return 0;
+		memset(dst, 0, size);
+		return size;
 	}
 
 	void AudioFile::rewind_impl() { }

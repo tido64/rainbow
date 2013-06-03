@@ -31,8 +31,11 @@
 
 rainbow.math = rainbow.math or {}
 
--- The universal gravitation constant, defined as G = 6.67384 * 10^-11 N(m/kg)^2
+-- The universal gravitation constant, defined as G = 6.67384 * 10^-11 N(m/kg)^2.
 G = 6.67384e-11
+
+-- Standard gravitational acceleration, defined in m/s^2.
+g = 9.80665
 
 local kRadian = 180 / math.pi
 local kDegree = math.pi / 180

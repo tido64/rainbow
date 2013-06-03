@@ -53,7 +53,7 @@ function Parallax:add(layer, texture, x, y, width, height, hint)
 end
 
 function Parallax:destruct()
-	self.scene:remove(self.parent, self.root)
+	self.scene:remove(self.root)
 	self.parent = nil
 	self.root = nil
 	self.layers = nil

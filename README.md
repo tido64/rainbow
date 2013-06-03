@@ -68,7 +68,6 @@ an installable APK.
 Use the provided Xcode project. As of writing, the build script won't compile
 iOS builds.
 
-
 ### Linux (and cross-compiling for Windows)
 
 Make sure to have [Mesa](http://www.mesa3d.org/),

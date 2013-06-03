@@ -34,7 +34,7 @@ TEST_F(DataTest, SaveAndLoad)
 		ASSERT_TRUE(blob.save(file));
 	}
 	{
-		Data blob(file, 0);
+		Data blob(file, Data::kDataTypeDocument);
 		ASSERT_TRUE(blob);
 		ASSERT_STREQ(secret, blob);
 	}
