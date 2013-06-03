@@ -14,6 +14,10 @@ function generatefunctions(funcs, module) {
 			entry = module;
 			name = entry + '(';
 		}
+		else if (func.name.charAt(0) == '#') {
+			entry = 'rainbow.' + func.name.substring(1);
+			name = entry + '(';
+		}
 		else if (func.name.charAt(0) == '.') {
 			entry = module + func.name;
 			name = entry + '(';

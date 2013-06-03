@@ -322,18 +322,18 @@ rainbow = {
 		},
 		{
 			"name": "random",
-			"description": "Rainbow's pseudo-random number generator is the <a href=\"http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/SFMT/\">Double precision SIMD-oriented Fast Mersenne Twister</a> developed by Mutsuo Saito and Makoto Matsumoto at Hiroshima University and University of Tokyo. The implementation in use supports a period of 2<sup>19937</sup> - 1.",
+			"description": "<p>Rainbow's pseudo-random number generator is the <a href=\"http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/SFMT/\">Double precision SIMD-oriented Fast Mersenne Twister</a> developed by Mutsuo Saito and Makoto Matsumoto at Hiroshima University and University of Tokyo. The implementation in use supports a period of 2<sup>19937</sup> - 1.</p><p><span class=\"mono\">rainbow.seed()</span> must be called before using this module.</p>",
 			"functions": [
 				{
 					"name": "__call",
-					"description": "Return a random number in interval (0, 1).",
+					"description": "Return a random number in interval [0, 1).",
 				},
 				{
 					"name": "__call",
 					"parameters": [
 						"max", "Maximum value.",
 					],
-					"description": "Return a random number in interval (0, <span class=\"mono\">max</span>).",
+					"description": "Return a random number in interval [0, <span class=\"mono\">max</span>).",
 				},
 				{
 					"name": "__call",
@@ -341,7 +341,14 @@ rainbow = {
 						"min", "Minimum value.",
 						"max", "Maximum value.",
 					],
-					"description": "Return a random number in interval (<span class=\"mono\">min</span>, <span class=\"mono\">max</span>).",
+					"description": "Return a random number in interval [<span class=\"mono\">min</span>, <span class=\"mono\">max</span>).",
+				},
+				{
+					"name": "#seed",
+					"parameters": [
+						"+seed", "Random number generator seed. Default: 0 (current system time).",
+					],
+					"description": "Set the random number generator seed. Must be called before any other calls.",
 				},
 			],
 		},

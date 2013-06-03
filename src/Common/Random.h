@@ -4,7 +4,6 @@
 #include <ctime>
 
 #include "Common/Debug.h"
-#include "Common/NonCopyable.h"
 
 #if defined(RAINBOW_UNIX)
 #	pragma GCC diagnostic push
@@ -18,65 +17,48 @@
 #	pragma GCC diagnostic pop
 #endif
 
-/// Define floating point precision for pseudo-random generated numbers.
-typedef float Number;
-
 /// C++ wrapper for dSFMT random number generator.
 ///
-/// Copyright 2010-12 Bifrost Entertainment. All rights reserved.
+/// Copyright 2010-13 Bifrost Entertainment. All rights reserved.
 /// \author Tommy Nguyen
-class Random : private NonCopyable<Random>
+namespace Random
 {
-public:
-	static inline Random& Instance();
+	/// Return the next generated random number in [0, 1).
+	inline double next();
 
-	inline Number next();
+	/// Return the next generated random number in [0, n).
+	template<class T>
+	inline T next(const T &n);
+
+	/// Return the next generated random number in [n1, n2).
+	template<class T>
+	inline T next(const T &n1, const T &n2);
+
+	/// Set the random number generator seed. Must be called before any other calls.
+	inline void seed(const uint32_t seed);
+
+	double next()
+	{
+		return dsfmt_gv_genrand_close_open();
+	}
 
 	template<class T>
-	T next(const T &n);
+	T next(const T &n)
+	{
+		return static_cast<T>(next() * n);
+	}
 
 	template<class T>
-	T next(const T &n1, const T &n2);
+	T next(const T &n1, const T &n2)
+	{
+		R_ASSERT(n1 < n2, "Parameters must be in ascending order");
+		return static_cast<T>(next() * (n2 - n1) + n1);
+	}
 
-private:
-	inline Random(uint32_t seed = 0);
-	inline Random(uint32_t init_key[], int key_length);
-};
-
-Random& Random::Instance()
-{
-	static Random rand;
-	return rand;
-}
-
-Number Random::next()
-{
-	return static_cast<Number>(dsfmt_genrand_close1_open2(&dsfmt_global_data) - 1.0);
-}
-
-template<class T>
-T Random::next(const T &n)
-{
-	return static_cast<T>(this->next() * n);
-}
-
-template<class T>
-T Random::next(const T &n1, const T &n2)
-{
-	R_ASSERT(n1 < n2, "Parameters must be in ascending order");
-	return static_cast<T>(this->next() * (n2 - n1)) + n1;
-}
-
-Random::Random(uint32_t seed)
-{
-	if (!seed)
-		seed = static_cast<uint32_t>(time(nullptr));
-	dsfmt_init_gen_rand(&dsfmt_global_data, seed);
-}
-
-Random::Random(uint32_t init_key[], int key_length)
-{
-	dsfmt_init_by_array(&dsfmt_global_data, init_key, key_length);
+	void seed(const uint32_t seed)
+	{
+		dsfmt_gv_init_gen_rand((seed == 0) ? static_cast<uint32_t>(time(nullptr)) : seed);
+	}
 }
 
 #endif
