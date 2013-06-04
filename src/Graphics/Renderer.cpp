@@ -1,6 +1,5 @@
 // Copyright 2012-13 Bifrost Entertainment. All rights reserved.
 
-#include "Common/Data.h"
 #include "Graphics/Renderer.h"
 #include "Graphics/ShaderManager.h"
 #include "Graphics/SpriteVertex.h"

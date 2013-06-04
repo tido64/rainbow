@@ -55,11 +55,10 @@ namespace Heimdall
 		this->console_font = new FontAtlas(pt);
 		this->ui_font = new FontAtlas((pt << 1) + (pt >> 1));
 		{
-			Data type;
-			type.copy(Inconsolata_otf, sizeof(Inconsolata_otf));
-			this->console_font->load(type);
-			type.copy(NewsCycle_Regular_ttf, sizeof(NewsCycle_Regular_ttf));
-			this->ui_font->load(type);
+			this->console_font->load(
+					Data(Inconsolata_otf, sizeof(Inconsolata_otf), Data::kDataReference));
+			this->ui_font->load(
+					Data(NewsCycle_Regular_ttf, sizeof(NewsCycle_Regular_ttf), Data::kDataReference));
 			Resources::ConsoleFont = this->console_font.get();
 			Resources::UIFont = this->ui_font.get();
 		}

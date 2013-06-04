@@ -3,8 +3,8 @@
 
 #include <cstddef>
 
-#include "Platform/Macros.h"
 #include "Common/NonCopyable.h"
+#include "Platform/Macros.h"
 
 /// Wrapper for byte buffers.
 ///
@@ -22,6 +22,12 @@
 class Data : private NonCopyable<Data>
 {
 public:
+	enum Ownership
+	{
+		kDataOwner,
+		kDataReference
+	};
+
 	enum Type
 	{
 		kDataTypeAsset,
@@ -34,25 +40,19 @@ public:
 	/// Construct a data object with the contents of the file. The file's
 	/// location will be determined by its type.
 	Data(const char *const file, const Type type = kDataTypeAsset);
+
+	/// Construct a wrapper around a buffer.
+	inline Data(const void *buffer, const size_t size, const Ownership ownership);
+
 	~Data();
 
 	/// Return raw byte array.
-	/// \return Pointer to array. Returns 0 if buffer is empty.
-	inline unsigned char* bytes() const;
-
-	/// Make full copy of data set.
-	/// \param data    Data to make a copy of.
-	/// \param length  Length of data.
-	void copy(const void *const data, const size_t length);
+	/// \return Pointer to array. Returns \c nullptr if buffer is empty.
+	inline void* bytes() const;
 
 	/// Save data to file.
 	/// \return \c true on success, \c false otherwise.
 	bool save(const char *const file) const;
-
-	/// Take ownership of data set.
-	/// \param data    Data to take ownership of.
-	/// \param length  Length of data.
-	void set(unsigned char *data, const size_t length);
 
 	/// Return the size of this buffer.
 	inline size_t size() const;
@@ -63,27 +63,68 @@ public:
 	inline operator unsigned char*() const;
 
 #ifdef RAINBOW_IOS
-
 	inline operator NSData*() const;
 	inline operator NSMutableData*() const;
+#endif
 
 private:
-	NSMutableData *data;
-
-#else
-
-private:
+	Ownership ownership;  ///< Decides whether to free the buffer on destruction.
 	size_t allocated;     ///< Allocated memory size.
 	size_t sz;            ///< Size of used buffer, not necessarily equal to allocated.
-	unsigned char *data;  ///< Actual buffer, implemented as a C-array.
+	void *data;           ///< Actual buffer, implemented as a C-array.
 
 	/// Resize allocated memory segment. If the requested allocation size is
 	/// smaller than current allocated size, nothing will happen.
 	void allocate(const size_t size);
-
-#endif
 };
 
-#include "Common/impl/Data-inl.h"
+Data::Data() : ownership(kDataOwner), allocated(0), sz(0), data(nullptr) { }
 
-#endif
+Data::Data(const void *buffer, const size_t size, const Ownership ownership) :
+	ownership(ownership), allocated(size), sz(size),
+	data(const_cast<void*>(buffer)) { }
+
+void* Data::bytes() const
+{
+	return this->data;
+}
+
+size_t Data::size() const
+{
+	return this->sz;
+}
+
+Data::operator bool() const
+{
+	return this->data;
+}
+
+Data::operator void*() const
+{
+	return this->data;
+}
+
+Data::operator char*() const
+{
+	return static_cast<char*>(this->data);
+}
+
+Data::operator unsigned char*() const
+{
+	return static_cast<unsigned char*>(this->data);
+}
+
+#ifdef RAINBOW_IOS
+
+Data::operator NSData*() const
+{
+	return [NSData dataWithBytesNoCopy:this->data length:this->sz freeWhenDone:NO];
+}
+
+Data::operator NSMutableData*() const
+{
+	return [NSMutableData dataWithBytesNoCopy:this->data length:this->sz freeWhenDone:NO];
+}
+
+#endif  // RAINBOW_IOS
+#endif  // DATA_H_

@@ -26,8 +26,7 @@ namespace Rainbow
 				{
 					LUA_ASSERT(lua_gettop(L) == 3, "rainbow.io.save(filename, data, size)");
 
-					Data blob;
-					blob.copy(luaR_tostring(L, 2), luaR_tointeger(L, 3));
+					Data blob(luaR_tostring(L, 2), luaR_tointeger(L, 3), Data::kDataReference);
 					lua_pushboolean(L, blob.save(luaR_tostring(L, 1)));
 					return 1;
 				}

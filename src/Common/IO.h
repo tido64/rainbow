@@ -192,7 +192,7 @@ namespace Rainbow
 
 		size_t write(const void *ptr, const size_t size, FileHandle fh)
 		{
-		#if defined(RAINBOW_ANDROID) || defined(RAINBOW_IOS)
+		#ifdef RAINBOW_ANDROID
 			return 0;
 			static_cast<void>(ptr);
 			static_cast<void>(size);

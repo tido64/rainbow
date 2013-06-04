@@ -18,8 +18,7 @@ protected:
 
 TEST_F(DataTest, Copy)
 {
-	Data blob;
-	blob.copy(secret, strlen(secret));
+	Data blob(secret, strlen(secret), Data::kDataReference);
 	ASSERT_EQ(strlen(secret), blob.size());
 	ASSERT_STREQ(secret, blob);
 }
@@ -27,8 +26,7 @@ TEST_F(DataTest, Copy)
 TEST_F(DataTest, SaveAndLoad)
 {
 	{
-		Data blob;
-		blob.copy(secret, strlen(secret));
+		Data blob(secret, strlen(secret), Data::kDataReference);
 		ASSERT_EQ(strlen(secret), blob.size());
 		ASSERT_STREQ(secret, blob);
 		ASSERT_TRUE(blob.save(file));

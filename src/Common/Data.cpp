@@ -1,14 +1,11 @@
 // Copyright 2011-13 Bifrost Entertainment. All rights reserved.
 
-#include "Platform/Macros.h"
-#if defined(RAINBOW_ANDROID) || defined(RAINBOW_UNIX) || defined(RAINBOW_WIN)
-
 #include "Common/Data.h"
 #include "Common/Debug.h"
 #include "Common/IO.h"
 
 Data::Data(const char *const file, const Type type) :
-	allocated(0), sz(0), data(nullptr)
+	ownership(kDataOwner), allocated(0), sz(0), data(nullptr)
 {
 	Rainbow::IO::FileHandle fh =
 			Rainbow::IO::find_and_open(file, static_cast<Rainbow::IO::Type>(type));
@@ -26,7 +23,7 @@ Data::Data(const char *const file, const Type type) :
 
 	if (read != size)
 	{
-		delete[] this->data;
+		operator delete(this->data);
 		this->data = nullptr;
 		this->allocated = 0;
 	}
@@ -36,36 +33,15 @@ Data::Data(const char *const file, const Type type) :
 
 Data::~Data()
 {
-	delete[] this->data;
-}
+	if (this->ownership != kDataOwner)
+		return;
 
-void Data::allocate(const size_t size)
-{
-	if (size >= this->allocated)  // Data needs a bigger buffer
-	{
-		delete[] this->data;
-		this->allocated = size + 1;
-		this->data = new unsigned char[this->allocated];
-		this->data[size] = 0;
-	}
-	else  // Pad with zeros
-		memset(this->data + size, 0, this->allocated - size);
-}
-
-void Data::copy(const void *const data, const size_t length)
-{
-	this->allocate(length);
-	memcpy(this->data, data, length);
-	this->sz = length;
+	operator delete(this->data);
 }
 
 bool Data::save(const char *const file) const
 {
-#ifdef RAINBOW_ANDROID
-	static_cast<void>(file);
-	return false;
-#else
-	R_ASSERT(this->data, "Can't save without destination");
+	R_ASSERT(this->data, "No data to save");
 	R_ASSERT(this->sz > 0, "Data is set but size is 0");
 
 	Rainbow::IO::FileHandle fh =
@@ -73,19 +49,22 @@ bool Data::save(const char *const file) const
 	if (!fh)
 		return false;
 
-	// Write buffer to file
 	const size_t written = Rainbow::IO::write(this->data, this->sz, fh);
 	Rainbow::IO::close(fh);
 	return written == this->sz;
-#endif
 }
 
-void Data::set(unsigned char *data, const size_t length)
+void Data::allocate(const size_t size)
 {
-	delete[] this->data;
-	this->data = data;
-	this->allocated = length;
-	this->sz = length;
-}
+	R_ASSERT(this->ownership == kDataOwner, "Cannot reallocate a read-only buffer");
 
-#endif
+	if (size >= this->allocated)
+	{
+		operator delete(this->data);
+		this->allocated = size + 1;
+		this->data = operator new(this->allocated);
+		static_cast<char*>(this->data)[size] = 0;
+	}
+	else  // Pad with zeros.
+		memset(static_cast<char*>(this->data) + size, 0, this->allocated - size);
+}

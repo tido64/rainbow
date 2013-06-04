@@ -103,7 +103,6 @@
 		1939A205152C425D00494609 /* Canvas.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1939A17C152C425D00494609 /* Canvas.cpp */; };
 		1939A206152C425D00494609 /* lua_Canvas.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1939A17E152C425D00494609 /* lua_Canvas.cpp */; };
 		1939A207152C425D00494609 /* ChronoTrigger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1939A182152C425D00494609 /* ChronoTrigger.cpp */; };
-		1939A20B152C425D00494609 /* Data_Apple.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1939A18F152C425D00494609 /* Data_Apple.cpp */; };
 		1939A20F152C425D00494609 /* Random.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1939A196152C425D00494609 /* Random.cpp */; };
 		1939A211152C425D00494609 /* Config.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1939A1A0152C425D00494609 /* Config.cpp */; };
 		1939A21B152C425D00494609 /* Director.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1939A1BA152C425D00494609 /* Director.cpp */; };
@@ -141,6 +140,7 @@
 		196CB728161E4ADD0068C809 /* Gatekeeper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 196CB725161E4ADD0068C809 /* Gatekeeper.cpp */; };
 		196CB72F161E4D940068C809 /* b2MotorJoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 196CB72D161E4D940068C809 /* b2MotorJoint.cpp */; };
 		197396DD15A505F60064BF7D /* TextureManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 197396DB15A505F60064BF7D /* TextureManager.cpp */; };
+		19865982175E98F700723171 /* Data.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19865981175E98F700723171 /* Data.cpp */; };
 		19905B84152C50FA00BDD15C /* Accelerometer.lua in Resources */ = {isa = PBXBuildFile; fileRef = 19905B7A152C50FA00BDD15C /* Accelerometer.lua */; };
 		19905B85152C50FA00BDD15C /* Input.lua in Resources */ = {isa = PBXBuildFile; fileRef = 19905B7B152C50FA00BDD15C /* Input.lua */; };
 		19905B87152C50FA00BDD15C /* Math.lua in Resources */ = {isa = PBXBuildFile; fileRef = 19905B7D152C50FA00BDD15C /* Math.lua */; };
@@ -456,8 +456,6 @@
 		1939A185152C425D00494609 /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		1939A186152C425D00494609 /* Data.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Data.h; sourceTree = "<group>"; };
 		1939A18B152C425D00494609 /* Chrono_Apple.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Chrono_Apple.h; sourceTree = "<group>"; };
-		1939A18D152C425D00494609 /* Data-inl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Data-inl.h"; sourceTree = "<group>"; };
-		1939A18F152C425D00494609 /* Data_Apple.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = Data_Apple.cpp; sourceTree = "<group>"; };
 		1939A192152C425D00494609 /* Intrinsics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Intrinsics.h; sourceTree = "<group>"; };
 		1939A193152C425D00494609 /* List.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = List.h; sourceTree = "<group>"; };
 		1939A196152C425D00494609 /* Random.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Random.cpp; sourceTree = "<group>"; };
@@ -548,6 +546,7 @@
 		196CB72E161E4D940068C809 /* b2MotorJoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = b2MotorJoint.h; sourceTree = "<group>"; };
 		197396DB15A505F60064BF7D /* TextureManager.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = TextureManager.cpp; sourceTree = "<group>"; };
 		197396DC15A505F60064BF7D /* TextureManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextureManager.h; sourceTree = "<group>"; };
+		19865981175E98F700723171 /* Data.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = Data.cpp; sourceTree = "<group>"; };
 		198BE0A7174A5F420036055E /* Macros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Macros.h; path = ../../../src/Platform/Macros.h; sourceTree = "<group>"; };
 		19905B7A152C50FA00BDD15C /* Accelerometer.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Accelerometer.lua; path = ../../../lua/Accelerometer.lua; sourceTree = "<group>"; };
 		19905B7B152C50FA00BDD15C /* Input.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Input.lua; path = ../../../lua/Input.lua; sourceTree = "<group>"; };
@@ -1049,6 +1048,7 @@
 				1939A183152C425D00494609 /* ChronoTrigger.h */,
 				1939A184152C425D00494609 /* Color.h */,
 				1939A185152C425D00494609 /* Constants.h */,
+				19865981175E98F700723171 /* Data.cpp */,
 				1939A186152C425D00494609 /* Data.h */,
 				1949374E1756796D00CF3FC6 /* DataMap.h */,
 				190A0ADA15E0294C0088D8B7 /* Debug.h */,
@@ -1073,8 +1073,6 @@
 			isa = PBXGroup;
 			children = (
 				1939A18B152C425D00494609 /* Chrono_Apple.h */,
-				1939A18D152C425D00494609 /* Data-inl.h */,
-				1939A18F152C425D00494609 /* Data_Apple.cpp */,
 				1949374B1756795900CF3FC6 /* DataMap_Unix.cpp */,
 				1949374C1756795900CF3FC6 /* DataMap_Unix.h */,
 			);
@@ -1535,7 +1533,6 @@
 				1939A205152C425D00494609 /* Canvas.cpp in Sources */,
 				1939A206152C425D00494609 /* lua_Canvas.cpp in Sources */,
 				1939A207152C425D00494609 /* ChronoTrigger.cpp in Sources */,
-				1939A20B152C425D00494609 /* Data_Apple.cpp in Sources */,
 				1939A20F152C425D00494609 /* Random.cpp in Sources */,
 				1939A211152C425D00494609 /* Config.cpp in Sources */,
 				1939A21B152C425D00494609 /* Director.cpp in Sources */,
@@ -1583,6 +1580,7 @@
 				19CEDD72172422DC008B73B5 /* AppleAudioFile.cpp in Sources */,
 				19DCB27117419B1800660000 /* TestFlight.cpp in Sources */,
 				1949374D1756795900CF3FC6 /* DataMap_Unix.cpp in Sources */,
+				19865982175E98F700723171 /* Data.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
