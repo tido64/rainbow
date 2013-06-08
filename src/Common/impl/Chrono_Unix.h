@@ -1,30 +1,35 @@
-#if defined(RAINBOW_ANDROID) || (defined(RAINBOW_UNIX) && !defined(RAINBOW_MAC))
+#if defined(RAINBOW_ANDROID) || defined(RAINBOW_UNIX)
 #include <ctime>
 
-namespace Rainbow
-{
-	/// Unix-implementation of 'get_time' operator.
-	///
-	/// Copyright 2011-13 Bifrost Entertainment. All rights reserved.
-	/// \author Tommy Nguyen
-	struct GetTimeUnix
-	{
-		unsigned long operator()() const
-		{
-			timespec t;
-			clock_gettime(CLOCK_MONOTONIC, &t);
-			return t.tv_sec * 1000 + t.tv_nsec / 1e6;
-		}
-	};
+#ifdef RAINBOW_MAC
+#	include <mach/mach_time.h>
+#endif
 
-	template<class T>
-	void ChronoBase<T>::sleep(const unsigned int ms)
-	{
-		const struct timespec request = { 0, ms * 1000000l };
-		nanosleep(&request, nullptr);
-	}
+namespace
+{
+	const time_t kMilliseconds = 1000;
 }
 
-typedef Rainbow::ChronoBase<Rainbow::GetTimeUnix> Chrono;
+void Chrono::sleep(const unsigned int ms)
+{
+	const time_t sec = ms / kMilliseconds;
+	const time_t msec = ms - sec * kMilliseconds;
+	const timespec request = { sec, msec * kMilliseconds * kMilliseconds };
+	nanosleep(&request, nullptr);
+}
+
+unsigned long Chrono::time()
+{
+#ifdef RAINBOW_MAC
+	mach_timebase_info_data_t info;
+	mach_timebase_info(&info);
+	const uint64_t t = mach_absolute_time();
+	return (double)t * (double)info.numer / (double)(info.denom * 1.0e6);
+#else
+	timespec t;
+	clock_gettime(CLOCK_MONOTONIC, &t);
+	return t.tv_sec * kMilliseconds + t.tv_nsec / 1e6;
+#endif
+}
 
 #endif

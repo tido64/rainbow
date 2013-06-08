@@ -455,7 +455,6 @@
 		1939A184152C425D00494609 /* Color.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Color.h; sourceTree = "<group>"; };
 		1939A185152C425D00494609 /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		1939A186152C425D00494609 /* Data.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Data.h; sourceTree = "<group>"; };
-		1939A18B152C425D00494609 /* Chrono_Apple.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Chrono_Apple.h; sourceTree = "<group>"; };
 		1939A192152C425D00494609 /* Intrinsics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Intrinsics.h; sourceTree = "<group>"; };
 		1939A193152C425D00494609 /* List.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = List.h; sourceTree = "<group>"; };
 		1939A196152C425D00494609 /* Random.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Random.cpp; sourceTree = "<group>"; };
@@ -556,6 +555,7 @@
 		19905B81152C50FA00BDD15C /* Transition.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Transition.lua; path = ../../../lua/Transition.lua; sourceTree = "<group>"; };
 		19905B82152C50FA00BDD15C /* TransitionEffects.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = TransitionEffects.lua; path = ../../../lua/TransitionEffects.lua; sourceTree = "<group>"; };
 		19905B83152C50FA00BDD15C /* Utils.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Utils.lua; path = ../../../lua/Utils.lua; sourceTree = "<group>"; };
+		19ADF9EB1763E8A0008C1465 /* Chrono_Unix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Chrono_Unix.h; sourceTree = "<group>"; };
 		19AF589A167FFA0800F54B27 /* DebugInfo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DebugInfo.cpp; sourceTree = "<group>"; };
 		19AF589B167FFA0800F54B27 /* DebugInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DebugInfo.h; sourceTree = "<group>"; };
 		19AF589C167FFA0800F54B27 /* Overlay.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Overlay.cpp; sourceTree = "<group>"; };
@@ -1072,7 +1072,7 @@
 		1939A187152C425D00494609 /* impl */ = {
 			isa = PBXGroup;
 			children = (
-				1939A18B152C425D00494609 /* Chrono_Apple.h */,
+				19ADF9EB1763E8A0008C1465 /* Chrono_Unix.h */,
 				1949374B1756795900CF3FC6 /* DataMap_Unix.cpp */,
 				1949374C1756795900CF3FC6 /* DataMap_Unix.h */,
 			);
