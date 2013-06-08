@@ -8,9 +8,11 @@
 
 #include "Platform/Macros.h"
 #if defined(RAINBOW_ANDROID)
-#	include <android/asset_manager.h>
+#	include <cerrno>
+#	include <android/native_activity.h>
+#	include "Common/Debug.h"
 
-extern struct AAssetManager *g_asset_manager;
+extern ANativeActivity *gNativeActivity;
 
 #else
 #	ifdef RAINBOW_WIN
@@ -26,18 +28,18 @@ namespace Rainbow
 {
 	namespace IO
 	{
-	#if defined(RAINBOW_ANDROID)
-		typedef AAsset* FileHandle;
-	#else
-		typedef FILE* FileHandle;
-	#endif
-
 		enum Type
 		{
 			kIOTypeAsset,     ///< Open file as read-only.
 			kIOTypeDocument,  ///< Open file as read-write.
 			kIOTypeWrite      ///< Create/open file for writing.
 		};
+
+	#if defined(RAINBOW_ANDROID)
+	#	include "Common/impl/IO_Android.inc"
+	#else
+		typedef FILE* FileHandle;
+	#endif
 
 		/// Close the file handle.
 		inline void close(FileHandle fh);
@@ -66,10 +68,11 @@ namespace Rainbow
 		void close(FileHandle fh)
 		{
 		#if defined(RAINBOW_ANDROID)
-			AAsset_close(fh);
-		#else
-			fclose(fh);
+			if (fh.type == kIOTypeAsset)
+				AAsset_close(fh);
+			else
 		#endif
+				fclose(fh);
 		}
 
 		void find(char *result, const char *const file, const Type type)
@@ -77,8 +80,9 @@ namespace Rainbow
 			result[0] = '\0';
 			switch (type)
 			{
-				case kIOTypeAsset: {
+				case kIOTypeAsset:
 					#if defined(RAINBOW_ANDROID)
+					{
 						// Android doesn't ignore multiple '/' in paths.
 						int i = -1;
 						int j = -1;
@@ -89,7 +93,9 @@ namespace Rainbow
 							result[++j] = file[i];
 						}
 						result[++j] = '\0';
+					}
 					#elif defined(RAINBOW_IOS)
+					{
 						NSString *path = [[NSString alloc]
 								initWithBytesNoCopy:(void*)file
 								             length:strlen(file)
@@ -101,15 +107,38 @@ namespace Rainbow
 						if (!path)
 							break;
 						strcpy(result, [path UTF8String]);
+					}
 					#else
+					{
 						strcpy(result, data_path);
 						strcat(result, file);
+					}
 					#endif
 					break;
-				}
-				case kIOTypeDocument: {
+				case kIOTypeDocument:
 					#if defined(RAINBOW_ANDROID)
+					{
+						const char *userdata_path = gNativeActivity->externalDataPath;
+						if (!userdata_path)
+						{
+							userdata_path = gNativeActivity->internalDataPath;
+							if (!userdata_path)
+								break;
+						}
+						struct stat sb;
+						if (stat(userdata_path, &sb) != 0)
+						{
+							if (errno != ENOENT || mkdirp(userdata_path, S_IRWXU | S_IRWXG) != 0)
+								break;
+						}
+						else if ((sb.st_mode & S_IFDIR) == 0)
+							break;
+						strcpy(result, userdata_path);
+						strcat(result, "/");
+						strcat(result, file);
+					}
 					#elif defined(RAINBOW_IOS)
+					{
 						NSError *err = nil;
 						NSString *supportDir = [[[NSFileManager defaultManager]
 								    URLForDirectory:NSLibraryDirectory
@@ -126,12 +155,14 @@ namespace Rainbow
 								       freeWhenDone:NO];
 						path = [supportDir stringByAppendingPathComponent:path];
 						strcpy(result, [path UTF8String]);
+					}
 					#else
+					{
 						strcpy(result, userdata_path);
 						strcat(result, file);
+					}
 					#endif
 					break;
-				}
 				default:
 					break;
 			}
@@ -146,60 +177,51 @@ namespace Rainbow
 
 		FileHandle open(const char *const file, const Type type)
 		{
+			FileHandle fh = nullptr;
 			switch (type)
 			{
 				case kIOTypeAsset:
 					#if defined(RAINBOW_ANDROID)
-						return AAssetManager_open(g_asset_manager, file, AASSET_MODE_UNKNOWN);
+						fh = AAssetManager_open(gNativeActivity->assetManager, file, AASSET_MODE_UNKNOWN);
 					#else
-						return fopen(file, "rb");
+						fh = fopen(file, "rb");
 					#endif
+					break;
 				case kIOTypeDocument:
-					#if defined(RAINBOW_ANDROID)
-						return nullptr;
-					#else
-						return fopen(file, "r+b");
-					#endif
+					fh = fopen(file, "r+b");
+					break;
 				case kIOTypeWrite:
-					#if defined(RAINBOW_ANDROID)
-						return nullptr;
-					#else
-						return fopen(file, "wb");
-					#endif
+					fh = fopen(file, "wb");
+					break;
 				default:
-					return nullptr;
+					break;
 			}
+			return fh;
 		}
 
 		size_t read(void *dst, const size_t size, FileHandle fh)
 		{
 		#if defined(RAINBOW_ANDROID)
-			return AAsset_read(fh, dst, size);
-		#else
-			return fread(dst, sizeof(char), size, fh);
+			if (fh.type == kIOTypeAsset)
+				return AAsset_read(fh, dst, size);
 		#endif
+			return fread(dst, sizeof(char), size, fh);
 		}
 
 		size_t size(FileHandle fh)
 		{
 		#if defined(RAINBOW_ANDROID)
-			return AAsset_getLength(fh);
-		#else
-			struct stat file_status;
-			return (fstat(fileno(fh), &file_status) != 0) ? 0 : file_status.st_size;
+			if (fh.type == kIOTypeAsset)
+				return AAsset_getLength(fh);
 		#endif
+			const int fd = fileno(static_cast<FILE*>(fh));
+			struct stat file_status;
+			return (fstat(fd, &file_status) != 0) ? 0 : file_status.st_size;
 		}
 
 		size_t write(const void *ptr, const size_t size, FileHandle fh)
 		{
-		#ifdef RAINBOW_ANDROID
-			return 0;
-			static_cast<void>(ptr);
-			static_cast<void>(size);
-			static_cast<void>(fh);
-		#else
 			return fwrite(ptr, sizeof(char), size, fh);
-		#endif
 		}
 	}
 }

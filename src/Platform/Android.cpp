@@ -6,7 +6,6 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <EGL/egl.h>
-#include <android/asset_manager.h>
 #include <android/input.h>
 #include <android/sensor.h>
 #include <android_native_app_glue.h>
@@ -22,7 +21,7 @@
 
 bool active = false;  ///< Whether the window is in focus.
 bool done = false;    ///< Whether the user has requested to quit.
-struct AAssetManager *g_asset_manager;
+ANativeActivity *gNativeActivity;
 
 struct AInstance
 {
@@ -74,7 +73,7 @@ void android_main(struct android_app *state)
 	state->onAppCmd = android_handle_event;
 	state->onInputEvent = android_handle_input;
 	ainstance.app = state;
-	g_asset_manager = state->activity->assetManager;
+	gNativeActivity = state->activity;
 
 	// Prepare to monitor accelerometer
 	ainstance.sensorManager = ASensorManager_getInstance();
