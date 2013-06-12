@@ -1,6 +1,8 @@
 #include "ConFuoco/Codecs/OggVorbisAudioFile.h"
 #if !defined(RAINBOW_JS) && defined(RAINBOW_SDL)
 
+#include <cstring>
+
 #include "Common/Debug.h"
 #include "Common/IO.h"
 

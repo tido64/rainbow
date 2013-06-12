@@ -10,11 +10,11 @@
 #	include <direct.h>
 #	include "Graphics/OpenGL.h"
 #	include <GL/glew.c>
-#	define PATH_SEP "\\"
+#	define kPathSeparator "\\"
 #	define getcwd(buf, size) _getcwd(buf, size)
 #else
 #	include <unistd.h>
-#	define PATH_SEP "/"
+#	define kPathSeparator "/"
 #endif
 
 #ifdef RAINBOW_TEST
@@ -44,7 +44,7 @@ namespace
 		strcpy(data_path, path);  // Set data path
 		strcat(data_path, "/");
 		strcpy(userdata_path, data_path);  // Set user data path
-		strcat(userdata_path, "user/");
+		strcat(userdata_path, "user");
 	}
 
 	class RenderWindow
@@ -174,7 +174,7 @@ int main(int argc, char *argv[])
 		if (getcwd(cwd, size) != cwd)
 			return 0;
 		setcwd(cwd);
-		strcat(cwd, PATH_SEP "main.lua");
+		strcat(cwd, kPathSeparator "main.lua");
 		FILE *file = fopen(cwd, "rb");
 		if (!file)
 		{
@@ -289,6 +289,6 @@ int main(int argc, char *argv[])
 	return 0;
 }
 
-#undef PATH_SEP
+#undef kPathSeparator
 #endif  // SDL_VERSION_ATLEAST(1,3,0)
 #endif  // RAINBOW_SDL

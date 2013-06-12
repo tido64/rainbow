@@ -1,5 +1,7 @@
 // Copyright 2011-13 Bifrost Entertainment. All rights reserved.
 
+#include <cstring>
+
 #include "Common/Data.h"
 #include "Common/Debug.h"
 #include "Common/IO.h"

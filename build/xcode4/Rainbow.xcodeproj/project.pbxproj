@@ -136,6 +136,7 @@
 		1948C02F152C397D00E9B854 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1948C02E152C397D00E9B854 /* main.m */; };
 		1948C033152C397D00E9B854 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1948C032152C397D00E9B854 /* AppDelegate.m */; };
 		1949374D1756795900CF3FC6 /* DataMap_Unix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1949374B1756795900CF3FC6 /* DataMap_Unix.cpp */; };
+		1949E96B176907100088E1CC /* IO.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1949E96A176907100088E1CC /* IO.cpp */; };
 		196911CD1713564A002BC2E4 /* VertexArray.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 196911CB1713564A002BC2E4 /* VertexArray.cpp */; };
 		196CB728161E4ADD0068C809 /* Gatekeeper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 196CB725161E4ADD0068C809 /* Gatekeeper.cpp */; };
 		196CB72F161E4D940068C809 /* b2MotorJoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 196CB72D161E4D940068C809 /* b2MotorJoint.cpp */; };
@@ -535,6 +536,7 @@
 		1949374B1756795900CF3FC6 /* DataMap_Unix.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = DataMap_Unix.cpp; sourceTree = "<group>"; };
 		1949374C1756795900CF3FC6 /* DataMap_Unix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataMap_Unix.h; sourceTree = "<group>"; };
 		1949374E1756796D00CF3FC6 /* DataMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataMap.h; sourceTree = "<group>"; };
+		1949E96A176907100088E1CC /* IO.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = IO.cpp; sourceTree = "<group>"; };
 		1954201415F676340049C278 /* IO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IO.h; sourceTree = "<group>"; };
 		196911CB1713564A002BC2E4 /* VertexArray.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = VertexArray.cpp; sourceTree = "<group>"; };
 		196911CC1713564A002BC2E4 /* VertexArray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VertexArray.h; sourceTree = "<group>"; };
@@ -1053,6 +1055,7 @@
 				1949374E1756796D00CF3FC6 /* DataMap.h */,
 				190A0ADA15E0294C0088D8B7 /* Debug.h */,
 				1939A192152C425D00494609 /* Intrinsics.h */,
+				1949E96A176907100088E1CC /* IO.cpp */,
 				1954201415F676340049C278 /* IO.h */,
 				1939A193152C425D00494609 /* List.h */,
 				19F9890C15FBBB3B005A5F69 /* NonCopyable.h */,
@@ -1581,6 +1584,7 @@
 				19DCB27117419B1800660000 /* TestFlight.cpp in Sources */,
 				1949374D1756795900CF3FC6 /* DataMap_Unix.cpp in Sources */,
 				19865982175E98F700723171 /* Data.cpp in Sources */,
+				1949E96B176907100088E1CC /* IO.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
