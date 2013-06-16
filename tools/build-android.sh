@@ -35,12 +35,12 @@ cd $PROJECT
 SRC_FILES=$(find src -name '*.cpp' | xargs)
 
 # Include libraries
-for lib in Box2D Lua libpng; do
-	SRC_FILES="$SRC_FILES \\"$'\n'$(find lib/$lib -name '*.c' -and ! -name 'lua.c' -and ! -name 'luac.c' -and ! -name 'pngwutil.c' -or -name '*.cpp' | xargs)
+for lib in Box2D Lua; do
+	SRC_FILES="$SRC_FILES \\"$'\n'$(find lib/$lib -name '*.c' -and ! -name 'lua.c' -and ! -name 'luac.c' -or -name '*.cpp' | xargs)
 done
 
-# Manually include FreeType source
-SRC_FILES="$SRC_FILES lib/FreeType/src/freetype.c"
+# Include FreeType and libpng
+SRC_FILES="$SRC_FILES lib/FreeType/src/freetype.c lib/libpng/libpng.c"
 
 cd $BUILD_DIR
 
