@@ -132,7 +132,12 @@ namespace Rainbow
 			lua_pushliteral(L, "__type");
 			lua_rawget(L, -2);
 			const char *type = lua_tostring(L, -1);
-			LUA_CHECK(L, type, kLuaErrorType, name);
+			if (!type)
+			{
+				LUA_CHECK(L, type, kLuaErrorType, name);
+				lua_pop(L, 1);
+				return nullptr;
+			}
 			LUA_CHECK(L, strcmp(type, name) == 0, kLuaErrorType, name);
 			lua_rawgeti(L, -2, 0);
 			void *ptr = lua_touserdata(L, -1);

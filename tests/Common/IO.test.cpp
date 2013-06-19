@@ -25,7 +25,8 @@ TEST(IOTest, CreateDirectories)
 		{
 			path[i] = '\0';
 			ASSERT_EQ(0, stat(path, &sb));
-			ASSERT_EQ(S_IFDIR, sb.st_mode & S_IFDIR);
+			ASSERT_EQ(static_cast<unsigned int>(S_IFDIR),
+			          static_cast<unsigned int>(sb.st_mode & S_IFDIR));
 			rmdir(path);
 		}
 	}

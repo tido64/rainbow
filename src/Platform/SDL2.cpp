@@ -224,7 +224,7 @@ int main(int argc, char *argv[])
 					director.terminate();
 					break;
 				case SDL_WINDOWEVENT:
-					switch (event.type)
+					switch (event.window.event)
 					{
 						case SDL_WINDOWEVENT_FOCUS_GAINED:
 							director.activate();

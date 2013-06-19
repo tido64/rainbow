@@ -52,7 +52,7 @@ namespace Rainbow
 			{
 				// Initialise "rainbow.renderer" namespace
 				lua_pushliteral(L, "renderer");
-				lua_createtable(L, 0, 4);
+				lua_createtable(L, 0, 5);
 
 				int max_texture_size;
 				glGetIntegerv(GL_MAX_TEXTURE_SIZE, &max_texture_size);
