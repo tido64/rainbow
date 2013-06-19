@@ -6,7 +6,7 @@ namespace b2
 		{
 			/// Cached fixture object for Contact::GetFixtureA() and
 			/// Contact::GetFixtureB().
-			int g_fixture = -1;
+			int g_fixture = LUA_REFNIL;
 		}
 
 		class Contact :
@@ -91,7 +91,7 @@ namespace b2
 
 		int Contact::get_fixture(lua_State *L, b2Fixture *fixture)
 		{
-			if (g_fixture < 0)
+			if (g_fixture == LUA_REFNIL)
 			{
 				Rainbow::Lua::alloc<Fixture>(L);
 				g_fixture = luaL_ref(L, LUA_REGISTRYINDEX);

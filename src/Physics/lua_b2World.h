@@ -8,11 +8,11 @@ namespace b2
 	{
 		namespace
 		{
-			int g_contact = -1;  ///< Cached contact object for all contact events.
+			int g_contact = LUA_REFNIL;  ///< Cached contact object for all contact events.
 
 			void CreateContactList(lua_State *L, b2Contact* contact)
 			{
-				if (g_contact < 0)
+				if (g_contact == LUA_REFNIL)
 				{
 					Rainbow::Lua::alloc<Contact>(L);
 					g_contact = luaL_ref(L, LUA_REGISTRYINDEX);
@@ -45,9 +45,9 @@ namespace b2
 		class World :
 			public b2ContactListener,
 			public b2World,
-			public Rainbow::Lua::Bind<World , b2World, Rainbow::Lua::kBindTypeDerived>
+			public Rainbow::Lua::Bind<World, b2World, Rainbow::Lua::kBindTypeDerived>
 		{
-			friend class Rainbow::Lua::Bind<World , b2World, Rainbow::Lua::kBindTypeDerived>;
+			friend class Rainbow::Lua::Bind<World, b2World, Rainbow::Lua::kBindTypeDerived>;
 
 		public:
 			World(lua_State *);
@@ -61,8 +61,8 @@ namespace b2
 			virtual void PostSolve(b2Contact* contact, const b2ContactImpulse* impulse);
 
 		private:
-			float elapsed;
 			int contact_listener;
+			lua_Number elapsed;
 
 			lua_State *L;
 
@@ -90,13 +90,13 @@ namespace b2
 			void save_state();
 		};
 
-		const float fixed_step = 1.0f / 60.0f;
-		const float fpms = 0.06f;
-		const unsigned int max_steps = 5;
+		const unsigned int kMaxSteps = 5;
+		const lua_Number kFixedStep = 1.0 / 60.0;
+		const lua_Number kFramesPerMs = 60.0 / 1000.0;
 
 		World::World(lua_State *L) :
-			b2World(b2Vec2(0.0f, kStandardGravity)), elapsed(0.0f),
-			contact_listener(LUA_REFNIL), L(L), debug_draw(ptm_ratio)
+			b2World(b2Vec2(0.0f, kStandardGravity)), contact_listener(LUA_REFNIL),
+			elapsed(0.0), L(L), debug_draw(ptm_ratio)
 		{
 			if (lua_gettop(L) >= 2)
 				b2World::SetGravity(b2Vec2(luaR_tonumber(L, 1), luaR_tonumber(L, 2)));
@@ -173,14 +173,14 @@ namespace b2
 			           "<b2.World>:Step(dt[, velocityIterations, positionIterations])");
 
 			this->elapsed += luaR_tonumber(L, 1);
-			unsigned int steps = static_cast<unsigned int>(this->elapsed * fpms);
+			unsigned int steps = static_cast<unsigned int>(this->elapsed * kFramesPerMs);
 			if (!steps)
 				this->restore_state();
 			else
 			{
-				this->elapsed -= steps / fpms;
-				if (steps > max_steps)
-					steps = max_steps;
+				this->elapsed -= steps / kFramesPerMs;
+				if (steps > kMaxSteps)
+					steps = kMaxSteps;
 
 				const int v_iter = luaR_optinteger(L, 2, 8);
 				const int p_iter = luaR_optinteger(L, 3, 3);
@@ -188,7 +188,7 @@ namespace b2
 				this->restore_state();
 				for (unsigned int i = 0; i < steps; ++i)
 				{
-					b2World::Step(fixed_step, v_iter, p_iter);
+					b2World::Step(kFixedStep, v_iter, p_iter);
 					this->save_state();
 				}
 				b2World::ClearForces();
@@ -273,7 +273,7 @@ namespace b2
 
 		void World::interpolate()
 		{
-			const float ratio = this->elapsed * fpms;
+			const float ratio = this->elapsed * kFramesPerMs;
 			const float rest = 1.0f - ratio;
 			for (b2Body *b = b2World::GetBodyList(); b; b = b->GetNext())
 			{
