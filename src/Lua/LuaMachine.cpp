@@ -4,6 +4,19 @@
 
 namespace Rainbow
 {
+	namespace
+	{
+		int breakpoint(lua_State *L)
+		{
+		#ifndef NDEBUG
+			Lua::sethook(L);
+		#else
+			static_cast<void>(L);
+		#endif
+			return 0;
+		}
+	}
+
 	LuaMachine::~LuaMachine()
 	{
 		Lua::SceneGraph::destroy(this->L, this->scenegraph);
@@ -61,6 +74,9 @@ namespace Rainbow
 		// Initialize "rainbow" namespace
 		lua_createtable(this->L, 0, 16);
 		Lua::init(this->L);
+
+		// Set "rainbow.breakpoint"
+		luaR_rawsetcclosurefield(L, breakpoint, "breakpoint");
 
 		// Initialize "rainbow.scenegraph"
 		this->scenegraph = Lua::SceneGraph::create(this->L, root);

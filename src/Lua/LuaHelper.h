@@ -52,14 +52,8 @@ namespace Rainbow
 		template<class T>
 		int dealloc(lua_State *L);
 
-		/// Dump Lua stack to stdout.
-		void dump_stack(lua_State *L);
-
 		/// Output information about the error, and dump the stack if applicable.
 		void error(lua_State *L, const int lua_error);
-
-		/// Return information about a specific function or function invocation.
-		lua_Debug* getinfo(lua_State *L);
 
 		/// Custom Lua package loader.
 		int load(lua_State *L);
@@ -81,6 +75,9 @@ namespace Rainbow
 		/// \param ptr   The pointer to push on the stack.
 		/// \param name  Name of the pointer type.
 		void pushpointer(lua_State *L, void *ptr, const char *name);
+
+		/// Set debugging hook.
+		int sethook(lua_State *L, const int mask = LUA_MASKCALL | LUA_MASKRET | LUA_MASKLINE);
 
 		/// Call a function in a wrapped object. The first parameter passed must
 		/// be the \c self object.
