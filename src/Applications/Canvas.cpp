@@ -140,11 +140,20 @@ float Canvas::get_filled()
 {
 	if (this->fill < 0.0f)
 	{
-		int sum = 0;
+		volatile int sum = 0;
 		const int size = this->width * this->height;
 		for (int i = 0; i < size; ++i)
+		{
+		#ifdef RAINBOW_IOS
+			// TODO: In Xcode 4.6.3, turning on optimisations (-Os) will break
+			//       this loop unless we branch and increment.
+			if (this->filled[i])
+				++sum;
+		#else
 			// Guarantee that true == 1 and not 255 like on some Android devices.
 			sum += static_cast<int>(this->filled[i]) & 1;
+		#endif
+		}
 		this->fill = static_cast<float>(sum) / static_cast<float>(size);
 	}
 	return this->fill;
