@@ -2,6 +2,7 @@
 #define ANIMATION_H_
 
 #include "Common/ChronoTrigger.h"
+#include "Common/Constants.h"
 #include "Common/NonCopyable.h"
 
 class Sprite;
@@ -13,7 +14,7 @@ class Sprite;
 class Animation : public ChronoTrigger, private NonCopyable<Animation>
 {
 public:
-	static const unsigned int kAnimationEnd = static_cast<unsigned int>(-1);
+	static const unsigned int kAnimationEnd = kMaxInt;
 
 	/// \param s       The sprite to animate.
 	/// \param frames  Null-terminated array of texture ids to be used as frames.

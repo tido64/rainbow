@@ -3,6 +3,7 @@
 
 #include <lua.hpp>
 
+#include "Common/Constants.h"
 #include "Common/Debug.h"
 
 namespace Rainbow
@@ -25,7 +26,7 @@ namespace Rainbow
 			};
 
 			char g_command = 0;
-			int g_finish = static_cast<unsigned int>(-1) >> 1;
+			int g_finish = kMaxInt;
 			int g_level = -1;
 			Line g_callstack[kLuaMaxStack] = { { 0, 0, nullptr } };
 		}
@@ -115,7 +116,7 @@ namespace Rainbow
 						--g_level;
 						if (g_level == g_finish)
 						{
-							g_finish = static_cast<unsigned int>(-1) >> 1;
+							g_finish = kMaxInt;
 							break;
 						}
 						// fall through

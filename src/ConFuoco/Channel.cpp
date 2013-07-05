@@ -1,3 +1,4 @@
+#include "Common/Constants.h"
 #include "ConFuoco/Mixer.h"
 
 namespace ConFuoco
@@ -14,7 +15,7 @@ namespace ConFuoco
 
 	void Channel::set_gain(const float gain)
 	{
-		if (this->ch == static_cast<unsigned int>(-1))
+		if (this->ch == kMaxInt)
 			R_ERROR("[Rainbow::ConFuoco] No sound set to this channel");
 
 		this->mixer->set_gain(this, gain);
@@ -22,7 +23,7 @@ namespace ConFuoco
 
 	void Channel::pause()
 	{
-		R_ASSERT(this->ch != static_cast<unsigned int>(-1),
+		R_ASSERT(this->ch != kMaxInt,
 		         "No sound set to this channel");
 
 		if (this->is_paused())
@@ -33,7 +34,7 @@ namespace ConFuoco
 
 	void Channel::stop()
 	{
-		R_ASSERT(this->ch != static_cast<unsigned int>(-1),
+		R_ASSERT(this->ch != kMaxInt,
 		         "No sound set to this channel");
 
 		this->mixer->stop(this);
