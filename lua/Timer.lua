@@ -15,10 +15,11 @@ function Timer.clear()
 end
 
 --! Create a timer.
---! \param callback  The callback function or object implementing \c tick().
+--! \param callback  The function to call on time-out.
 --! \param delay     Time in milliseconds to delay call.
 --! \param times     Number of times to call. Infinite if omitted.
 local function create(Timer, callback, delay, times)
+	assert(type(callback) == "function", "Invalid callback")
 	local self = {
 		__id = __count + 1,
 		__delay = delay,
@@ -72,11 +73,7 @@ local function test(self, dt)
 			self.__times = self.__times + 1
 		end
 		self.__delay = self.delay
-		if type(self.callback) == "table" then
-			self.callback:tick()
-		else
-			self.callback()
-		end
+		self.callback()
 	end
 end
 

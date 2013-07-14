@@ -40,7 +40,10 @@ end
 
 function SceneIntro:init()
 	rainbow.audio.play(self.scene.resources.bgm)
-	self.timer = rainbow.timer(self, 22000, 1)
+	local callback = function()
+		self:tick()
+	end
+	self.timer = rainbow.timer(callback, 22000, 1)
 end
 
 function SceneIntro:tick()

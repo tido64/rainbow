@@ -19,7 +19,10 @@ function TimerResetTest.new(times)
 		timer = nil,
 		times = times
 	}, TimerResetTest)
-	self.timer = rainbow.timer(self, 200, times)
+	local callback = function()
+		self:tick()
+	end
+	self.timer = rainbow.timer(callback, 200, times)
 	timers[#timers + 1] = self.timer
 	return self
 end
@@ -46,7 +49,10 @@ function TimerTimesTest.new(times)
 		done = false,
 		times = times
 	}, TimerTimesTest)
-	timers[#timers + 1] = rainbow.timer(self, 200, times)
+	local callback = function()
+		self:tick()
+	end
+	timers[#timers + 1] = rainbow.timer(callback, 200, times)
 	return self
 end
 

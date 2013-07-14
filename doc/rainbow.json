@@ -630,7 +630,7 @@ rainbow = {
 				{
 					"name": "__call",
 					"parameters": [
-						"callback", "The callback function or object implementing <span class=\"mono\">:tick()</span>.",
+						"callback", "The function to call on time-out.",
 						"delay", "Time in milliseconds to delay call.",
 						"+times", "Number of times to call. Infinite if omitted.",
 					],
