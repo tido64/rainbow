@@ -26,7 +26,7 @@ class Data;
 /// \see http://ftgl.sourceforge.net/docs/html/ftgl-tutorial.html
 /// \see Beginning OpenGL Game Programming 2nd Edition (2009)
 ///
-/// Copyright 2010-12 Bifrost Entertainment. All rights reserved.
+/// Copyright 2010-13 Bifrost Entertainment. All rights reserved.
 /// \author Tommy Nguyen
 class FontAtlas : public RefCounted
 {
@@ -58,12 +58,12 @@ private:
 
 FontAtlas::~FontAtlas()
 {
-	TextureManager::Instance().remove(this->texture);
+	TextureManager::Instance->remove(this->texture);
 }
 
 void FontAtlas::bind() const
 {
-	TextureManager::Instance().bind(this->texture);
+	TextureManager::Instance->bind(this->texture);
 }
 
 const FontGlyph* FontAtlas::get_glyph(const unsigned long c) const

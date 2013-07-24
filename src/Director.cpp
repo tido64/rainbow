@@ -37,6 +37,6 @@ namespace Rainbow
 	void Director::on_memory_warning()
 	{
 		lua_gc(this->lua, LUA_GCCOLLECT, 0);
-		TextureManager::Instance().purge();
+		TextureManager::Instance->purge();
 	}
 }

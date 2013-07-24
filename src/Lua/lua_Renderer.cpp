@@ -32,7 +32,7 @@ namespace Rainbow
 					const int filter = luaR_tointeger(L, 1);
 					LUA_CHECK(L, filter == GL_NEAREST || filter == GL_LINEAR,
 					          "Invalid texture filter");
-					TextureManager::Instance().set_filter(filter);
+					TextureManager::Instance->set_filter(filter);
 					return 0;
 				}
 

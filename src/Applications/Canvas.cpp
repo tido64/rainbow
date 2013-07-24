@@ -76,9 +76,9 @@ Canvas::Canvas() :
 		ShaderManager::Instance->reset();
 	}
 
-	this->background_tex = TextureManager::Instance().create(
+	this->background_tex = TextureManager::Instance->create(
 		GL_RGBA, this->width, this->height, GL_RGBA, nullptr);
-	this->canvas_tex = TextureManager::Instance().create(
+	this->canvas_tex = TextureManager::Instance->create(
 		GL_RGBA, this->width, this->height, GL_RGBA, nullptr);
 
 	glGenFramebuffers(1, &this->canvas_fb);
@@ -209,7 +209,7 @@ void Canvas::set_background(const Texture &texture, const int width, const int h
 	         "Failed to set background");
 
 	Renderer::clear();
-	TextureManager::Instance().bind(texture);
+	TextureManager::Instance->bind(texture);
 	Renderer::draw_elements(vx, 6);
 
 	R_ASSERT(glGetError() == GL_NO_ERROR, "Failed to set background");
@@ -267,12 +267,12 @@ void Canvas::release()
 	}
 	if (this->canvas_tex)
 	{
-		TextureManager::Instance().remove(this->canvas_tex);
+		TextureManager::Instance->remove(this->canvas_tex);
 		this->canvas_tex = 0;
 	}
 	if (this->background_tex)
 	{
-		TextureManager::Instance().remove(this->background_tex);
+		TextureManager::Instance->remove(this->background_tex);
 		this->background_tex = 0;
 	}
 }
@@ -280,13 +280,13 @@ void Canvas::release()
 void Canvas::draw_impl()
 {
 	ShaderManager::Instance->use(g_canvas_program);
-	TextureManager::Instance().bind(this->canvas_tex);
+	TextureManager::Instance->bind(this->canvas_tex);
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, this->background_tex);
 	Renderer::draw_elements(this->sprite, 6);
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glActiveTexture(GL_TEXTURE0);
-	TextureManager::Instance().bind();
+	TextureManager::Instance->bind();
 	ShaderManager::Instance->reset();
 }
 
@@ -296,7 +296,7 @@ void Canvas::update_impl()
 		return;
 
 	glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-	TextureManager::Instance().bind(*this->brush);
+	TextureManager::Instance->bind(*this->brush);
 	BindFramebuffer bind(this->canvas_fb, this->canvas_tex);
 
 	SpriteVertex vx[4];

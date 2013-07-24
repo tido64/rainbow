@@ -10,13 +10,13 @@ namespace Heimdall
 	Overlay::~Overlay()
 	{
 		if (this->texture)
-			TextureManager::Instance().remove(this->texture);
+			TextureManager::Instance->remove(this->texture);
 	}
 
 	void Overlay::setup(const int width, const int height)
 	{
 		const unsigned char white[4096] = { 0xff };
-		this->texture = TextureManager::Instance().create(
+		this->texture = TextureManager::Instance->create(
 				GL_LUMINANCE, 64, 64, GL_LUMINANCE, white);
 
 		this->vertices[0].color       = 0x00000080;
@@ -34,7 +34,7 @@ namespace Heimdall
 
 	void Overlay::draw_impl()
 	{
-		TextureManager::Instance().bind(this->texture);
+		TextureManager::Instance->bind(this->texture);
 		Renderer::draw_elements(this->vertices, 6);
 	}
 

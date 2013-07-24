@@ -42,7 +42,7 @@ TextureAtlas::TextureAtlas(const DataMap &img) : name(0), width(0), height(0)
 	{
 	#ifdef GL_OES_compressed_ETC1_RGB8_texture
 		case ImageLoader::ETC1:
-			this->name = TextureManager::Instance().create_compressed(
+			this->name = TextureManager::Instance->create_compressed(
 					GL_ETC1_RGB8_OES, info.width, info.height, info.size, img.bytes() + info.offset);
 			break;
 	#endif // ETC1
@@ -58,7 +58,7 @@ TextureAtlas::TextureAtlas(const DataMap &img) : name(0), width(0), height(0)
 				internal = (info.depth == 2)
 						? GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG
 						: GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG;
-			this->name = TextureManager::Instance().create_compressed(
+			this->name = TextureManager::Instance->create_compressed(
 					internal, info.width, info.height, info.size, img.bytes() + info.offset);
 			break;
 	#endif // PVRTC
@@ -86,7 +86,7 @@ TextureAtlas::TextureAtlas(const DataMap &img) : name(0), width(0), height(0)
 					internal = (info.depth == 16) ? GL_RGBA4 : GL_RGBA8;
 					break;
 			}
-			this->name = TextureManager::Instance().create(
+			this->name = TextureManager::Instance->create(
 					internal, this->width, this->height, format, data);
 			break;
 	}

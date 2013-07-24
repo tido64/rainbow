@@ -4,6 +4,7 @@
 #include "Graphics/ShaderManager.h"
 #include "Graphics/SpriteVertex.h"
 #include "Graphics/TextureAtlas.h"
+#include "Graphics/TextureManager.h"
 #include "Graphics/VertexArray.h"
 
 #ifdef GL_ES_VERSION_2_0
@@ -181,6 +182,8 @@ namespace Renderer
 			return false;
 		}
 
+		TextureManager::Instance = new TextureManager();
+
 		glGenBuffers(1, &g_index_buffer);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, g_index_buffer);
 		glBufferData(
@@ -198,6 +201,7 @@ namespace Renderer
 			glDeleteBuffers(1, &g_index_buffer);
 		}
 		glUseProgram(0);
+		delete TextureManager::Instance;
 		delete ShaderManager::Instance;
 	}
 

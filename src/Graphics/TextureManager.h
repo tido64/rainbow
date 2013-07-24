@@ -3,6 +3,12 @@
 
 #include "Common/Vector.h"
 
+namespace Renderer
+{
+	bool init();
+	void release();
+}
+
 /// Manages texture resources.
 ///
 /// Generates and reuses texture ids whenever possible. This should eliminate
@@ -15,14 +21,15 @@
 /// avoid problems, this should only occur when you're done loading textures
 /// for a while.
 ///
-/// Copyright 2012 Bifrost Entertainment. All rights reserved.
+/// Copyright 2012-13 Bifrost Entertainment. All rights reserved.
 /// \author Tommy Nguyen
 class TextureManager : private NonCopyable<TextureManager>
 {
-public:
-	static inline TextureManager& Instance();
+	friend bool Renderer::init();
+	friend void Renderer::release();
 
-	~TextureManager();
+public:
+	static TextureManager* Instance;
 
 	/// Make texture active on current rendering target.
 	/// \param id  Texture id to bind. If omitted, bind the default texture.
@@ -87,6 +94,7 @@ private:
 	Vector<TextureId> textures;  ///< Stores texture ids currently in use.
 
 	TextureManager();
+	~TextureManager();
 
 	/// Print total video memory used by textures.
 	void print_usage() const;
@@ -94,12 +102,6 @@ private:
 	/// Clear and delete textures.
 	void purge(Vector<TextureId> &textures);
 };
-
-TextureManager& TextureManager::Instance()
-{
-	static TextureManager manager;
-	return manager;
-}
 
 void TextureManager::purge()
 {

@@ -16,7 +16,7 @@
 ///      http://developer.android.com/guide/topics/resources/providing-resources.html
 ///      http://en.wikibooks.org/wiki/OpenGL_Programming/Intermediate/Textures
 ///
-/// Copyright 2010-12 Bifrost Entertainment. All rights reserved.
+/// Copyright 2010-13 Bifrost Entertainment. All rights reserved.
 /// \author Tommy Nguyen
 class TextureAtlas : public RefCounted
 {
@@ -49,12 +49,12 @@ private:
 
 TextureAtlas::~TextureAtlas()
 {
-	TextureManager::Instance().remove(this->name);
+	TextureManager::Instance->remove(this->name);
 }
 
 void TextureAtlas::bind() const
 {
-	TextureManager::Instance().bind(this->name);
+	TextureManager::Instance->bind(this->name);
 }
 
 void TextureAtlas::trim()

@@ -4,6 +4,12 @@
 #include "Common/Vector.h"
 #include "Graphics/OpenGL.h"
 
+namespace Renderer
+{
+	bool init();
+	void release();
+}
+
 namespace Shader
 {
 	enum Attribute
@@ -26,11 +32,11 @@ namespace Shader
 
 class ShaderManager : private NonCopyable<ShaderManager>
 {
+	friend bool Renderer::init();
+	friend void Renderer::release();
+
 public:
 	static ShaderManager *Instance;
-
-	ShaderManager(const char **shaders = nullptr, const size_t count = 0);
-	~ShaderManager();
 
 	/// Return the real program id.
 	inline unsigned int get_program(const unsigned int pid) const;
@@ -71,6 +77,9 @@ private:
 	Vector<Program> programs;
 
 	float ortho[16];
+
+	ShaderManager(const char **shaders = nullptr, const size_t count = 0);
+	~ShaderManager();
 };
 
 unsigned int ShaderManager::get_program(const unsigned int pid) const

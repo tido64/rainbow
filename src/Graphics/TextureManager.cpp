@@ -1,7 +1,9 @@
-// Copyright 2012 Bifrost Entertainment. All rights reserved.
+// Copyright 2012-13 Bifrost Entertainment. All rights reserved.
 
 #include "Graphics/OpenGL.h"
 #include "Graphics/TextureManager.h"
+
+ TextureManager* TextureManager::Instance = nullptr;
 
 TextureManager::TextureManager() :
 	active(0), mag_filter(GL_LINEAR), min_filter(GL_LINEAR), mem_peak(0.0),

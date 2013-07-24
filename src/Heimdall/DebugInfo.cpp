@@ -48,7 +48,7 @@ namespace Heimdall
 		if (this->time >= kThreshold)
 		{
 			double used, peak;
-			TextureManager::Instance().get_usage(used, peak, peak);
+			TextureManager::Instance->get_usage(used, peak, peak);
 
 			sprintf(this->text, kInfoFormat, 1000.0f / (this->time / kFrames), used, peak);
 			this->label.set_text(this->text);
