@@ -16,7 +16,7 @@ namespace SceneGraph { class Node; }
 ///
 /// Copyright 2010-13 Bifrost Entertainment. All rights reserved.
 /// \author Tommy Nguyen
-class SpriteBatch
+class SpriteBatch : private NonCopyable<SpriteBatch>
 {
 	friend class SceneGraph::Node;
 	friend void Sprite::set_texture(const unsigned int id);
@@ -26,10 +26,6 @@ public:
 	/// \param hint  If you know in advance how many sprites you'll need, set
 	///              \p hint for more efficient storage.
 	SpriteBatch(const size_t hint = 8);
-
-	/// Make a deep copy of a SpriteBatch.
-	SpriteBatch(const SpriteBatch &);
-
 	~SpriteBatch();
 
 	/// Add a textured sprite to the batch given texture coordinates.
@@ -63,9 +59,6 @@ private:
 	SharedPtr<TextureAtlas> texture;  ///< Texture atlas used by all sprites in the batch.
 	Vector<Sprite*> sprites;          ///< Vector storing all sprites.
 	Vector<SpriteVertex> vertices;    ///< Common vertex array for all sprites in the batch.
-
-	/// One does not simply assign a SpriteBatch.
-	SpriteBatch& operator=(const SpriteBatch &);
 };
 
 #endif

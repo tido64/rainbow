@@ -235,7 +235,8 @@ namespace Rainbow
 			while (true)
 			{
 				R_DEBUG("(rdb) ");
-				fgets(input, sizeof(input), stdin);
+				if (!fgets(input, sizeof(input), stdin))
+					break;
 				// TODO: Handle CTRL+C, CTRL+D, CTRL+Z etc.
 				if (input[0] != '\n' && input[0] != '\r')
 					g_command = input[0];

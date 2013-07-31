@@ -91,11 +91,11 @@ bool FontAtlas::load(const Data &font)
 
 		const FT_Bitmap &bitmap = face->glyph->bitmap;
 
-		const unsigned int width = bitmap.width + (padding << 1);
+		const unsigned int width = bitmap.width + padding * 2;
 		if (width > max_width)
 			max_width = width;
 
-		const unsigned int height = bitmap.rows + (padding << 1);
+		const unsigned int height = bitmap.rows + padding * 2;
 		if (height > max_height)
 			max_height = height;
 	}
@@ -103,7 +103,7 @@ bool FontAtlas::load(const Data &font)
 	const unsigned int tex_height = Rainbow::next_pow2(max_height * kNumGlyphsPerColRow);
 
 	// GL_LUMINANCE8_ALPHA8 buffer
-	unsigned int w_offset = (tex_width * tex_height) << 1;
+	unsigned int w_offset = tex_width * tex_height * 2;
 	GLubyte *tex_buf = new GLubyte[w_offset];
 	memset(tex_buf, 0, w_offset);
 
@@ -121,7 +121,7 @@ bool FontAtlas::load(const Data &font)
 		const FT_Bitmap &bitmap = slot->bitmap;
 
 		// Make sure bitmap data has enough space
-		const int width = bitmap.width + (padding << 1);
+		const int width = bitmap.width + padding * 2;
 		if (w_offset + width > tex_width)
 		{
 			w_offset = 0;
@@ -132,7 +132,7 @@ bool FontAtlas::load(const Data &font)
 		if (bitmap.buffer)
 		{
 			const unsigned char *buf = bitmap.buffer;
-			unsigned char *d_ptr = tex_buf + ((h_offset * tex_width + w_offset) << 1) + ((padding << 1) * (tex_width + 1));
+			unsigned char *d_ptr = tex_buf + (h_offset * tex_width + w_offset) * 2 + (padding * 2) * (tex_width + 1);
 			unsigned int tmp = (tex_width - bitmap.width) * 2;
 			for (int y = 0; y < bitmap.rows; ++y)
 			{

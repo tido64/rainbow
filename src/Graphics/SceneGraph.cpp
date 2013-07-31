@@ -11,8 +11,8 @@ namespace SceneGraph
 {
 	Node::~Node()
 	{
-		for (size_t i = 0; i < this->children.size(); ++i)
-			delete this->children[i];
+		for (auto child : this->children)
+			delete child;
 	}
 
 	void Node::draw()
@@ -34,8 +34,8 @@ namespace SceneGraph
 			default:
 				break;
 		}
-		for (size_t i = 0; i < this->children.size(); ++i)
-			this->children[i]->draw();
+		for (auto child : this->children)
+			child->draw();
 	}
 
 	void Node::move(const Vec2f &delta)
@@ -49,16 +49,15 @@ namespace SceneGraph
 				this->label->move(delta);
 				break;
 			case SpriteBatchNode: {
-				Vector<Sprite*> &sprites = this->sprite_batch->sprites;
-				for (size_t i = 0; i < sprites.size(); ++i)
-					sprites[i]->move(delta);
+				for (auto sprite : this->sprite_batch->sprites)
+					sprite->move(delta);
 				break;
 			}
 			default:
 				break;
 		}
-		for (size_t i = 0; i < this->children.size(); ++i)
-			this->children[i]->move(delta);
+		for (auto child : this->children)
+			child->move(delta);
 	}
 
 	void Node::update(const unsigned long dt)
@@ -83,7 +82,7 @@ namespace SceneGraph
 			default:
 				break;
 		}
-		for (size_t i = 0; i < this->children.size(); ++i)
-			this->children[i]->update(dt);
+		for (auto child : this->children)
+			child->update(dt);
 	}
 }

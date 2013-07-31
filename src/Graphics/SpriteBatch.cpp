@@ -6,25 +6,12 @@
 const char Drawable::class_name[] = "Drawable";
 
 SpriteBatch::SpriteBatch(const size_t hint) :
-	sprites(hint), vertices(hint << 2) { }
-
-SpriteBatch::SpriteBatch(const SpriteBatch &sb) :
-	sprites(sb.sprites.size()), vertices(sb.sprites.size() << 2)
-{
-	for (size_t i = 0; i < this->vertices.capacity(); ++i)
-		this->vertices.push_back(SpriteVertex());
-	for (size_t i = 0; i < this->sprites.capacity(); ++i)
-	{
-		this->sprites.push_back(new Sprite(*sb.sprites[i], this));
-		this->sprites[i]->vertex_array = &this->vertices[i << 2];
-	}
-	this->array.count = this->sprites.size() * 6;
-}
+	sprites(hint), vertices(hint * 4) { }
 
 SpriteBatch::~SpriteBatch()
 {
-	for (size_t i = 0; i < this->sprites.size(); ++i)
-		delete this->sprites[i];
+	for (auto sprite : this->sprites)
+		delete sprite;
 }
 
 Sprite* SpriteBatch::add(const int x, const int y, const int w, const int h)
@@ -48,13 +35,13 @@ Sprite* SpriteBatch::create_sprite(const unsigned int width, const unsigned int 
 	this->sprites.push_back(s);
 	this->array.count += 6;
 
-	R_ASSERT(this->sprites.size() << 2 == this->vertices.size(),
+	R_ASSERT(this->sprites.size() * 4 == this->vertices.size(),
 	         "Sprite and vertex buffer are unsynchronized");
 
 	// If the vertex buffer was resized, we'll need to reassign buffers.
 	if (this->vertices.capacity() != current_capacity)
 		for (size_t i = 0; i < this->sprites.size(); ++i)
-			this->sprites[i]->vertex_array = &this->vertices[i << 2];
+			this->sprites[i]->vertex_array = &this->vertices[i * 4];
 	else
 		// Assign the batch's buffer to the sprite.
 		s->vertex_array = &this->vertices[this->vertices.size() - 4];
@@ -82,8 +69,8 @@ TextureAtlas* SpriteBatch::set_texture(TextureAtlas *t)
 void SpriteBatch::update()
 {
 	// Update all sprite vertices
-	for (size_t i = 0; i < this->sprites.size(); ++i)
-		this->sprites[i]->update();
+	for (auto sprite : this->sprites)
+		sprite->update();
 
 	// Update vertex buffer
 	this->array.update(this->vertices.begin(), this->vertices.size() * sizeof(SpriteVertex));

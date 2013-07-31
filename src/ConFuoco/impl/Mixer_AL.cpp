@@ -309,9 +309,8 @@ namespace ConFuoco
 	void Mixer::update()
 	{
 	#ifndef RAINBOW_IOS
-		for (size_t i = 0; i < streams.size(); ++i)
+		for (auto s : streams)
 		{
-			Stream *s = streams[i];
 			if (!s->playing)
 				continue;
 

@@ -93,7 +93,7 @@ void Label::update()
 			if (this->stale & kStaleBufferSize)
 			{
 				delete[] this->vx;
-				this->vx = new SpriteVertex[this->size << 2];
+				this->vx = new SpriteVertex[this->size * 4];
 				this->stale |= kStaleColor;
 			}
 
@@ -139,14 +139,14 @@ void Label::update()
 			}
 			this->align(this->position.x - pen.x, start, this->array.count);
 			this->width = pen.x - this->position.x;
-			this->array.count = (this->array.count << 2) + (this->array.count << 1);
+			this->array.count = this->array.count * 4 + this->array.count * 2;
 		}
 		if (this->stale & kStaleColor)
 		{
-			for (size_t i = 0; i < (this->size << 2); ++i)
+			for (size_t i = 0; i < this->size * 4; ++i)
 				this->vx[i].color = this->color;
 		}
-		this->array.update(this->vx, (this->size << 2) * sizeof(SpriteVertex));
+		this->array.update(this->vx, this->size * 4 * sizeof(SpriteVertex));
 		this->stale = 0;
 	}
 }

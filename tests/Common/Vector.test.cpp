@@ -37,12 +37,18 @@ TEST_F(VectorTest, Clear)
 	ASSERT_EQ(capacity, intvec.capacity());
 }
 
-TEST_F(VectorTest, PushBackPastCapacity)
+TEST_F(VectorTest, End)
 {
-	ASSERT_LT(test_size, intvec.capacity());
-	ASSERT_EQ(test_size, intvec.size());
-	for (size_t i = 0; i < test_size; ++i)
-		ASSERT_EQ(i, intvec[i]);
+	size_t count = 0;
+	for (auto i : intvec)
+	{
+		ASSERT_EQ(count, i);
+		++count;
+	}
+	ASSERT_EQ(test_size, count);
+	ASSERT_NE(intvec.begin(), intvec.end());
+	intvec.clear();
+	ASSERT_EQ(intvec.begin(), intvec.end());
 }
 
 TEST_F(VectorTest, EraseFirstElement)
@@ -86,6 +92,14 @@ TEST_F(VectorTest, EraseMiddleElement)
 		else
 			ASSERT_EQ(i, intvec[i]);
 	}
+}
+
+TEST_F(VectorTest, PushBackPastCapacity)
+{
+	ASSERT_LT(test_size, intvec.capacity());
+	ASSERT_EQ(test_size, intvec.size());
+	for (size_t i = 0; i < test_size; ++i)
+		ASSERT_EQ(i, intvec[i]);
 }
 
 TEST_F(VectorTest, QuickEraseFirstElement)
@@ -168,8 +182,8 @@ TEST_F(VectorTest, ReserveGreaterThanSize)
 
 TEST_F(VectorTest, Assignment)
 {
-	for (size_t i = 0; i < test_size; ++i)
-		intvec[i] = 0xdeadbeef;
-	for (size_t i = 0; i < test_size; ++i)
-		ASSERT_EQ(0xdeadbeef, intvec[i]);
+	for (auto &i : intvec)
+		i = 0xb00bbabe;
+	for (const auto &i : intvec)
+		ASSERT_EQ(0xb00bbabe, i);
 }

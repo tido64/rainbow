@@ -34,6 +34,9 @@ public:
 	/// Empties the vector.
 	void clear();
 
+	/// Return a pointer to the end of the vector.
+	inline T* end() const;
+
 	/// Erase the element at index while preserving the order.
 	void erase(const size_t i);
 
@@ -116,6 +119,12 @@ void Vector<T>::clear()
 	while (this->count)
 		this->c_array[--this->count].~T();
 	R_ASSERT(!this->count, "Failed to clear vector");
+}
+
+template<typename T>
+T* Vector<T>::end() const
+{
+	return this->c_array + this->count;
 }
 
 template<typename T>

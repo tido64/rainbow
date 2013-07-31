@@ -66,7 +66,7 @@ namespace Heimdall
 		this->overlay.setup(width, height);
 		Vec2f position(
 			this->width / 128,
-			this->height - (this->console_font->get_height() << 1) - this->ui_font->get_height());
+			this->height - this->console_font->get_height() * 2 - this->ui_font->get_height());
 		this->info.set_button(position);
 		position.y = this->height - this->console_font->get_height();
 		this->info.set_console(position);

@@ -37,10 +37,10 @@ ShaderManager::ShaderManager(const char **shaders, const size_t count)
 
 ShaderManager::~ShaderManager()
 {
-	for (size_t i = 0; i < this->programs.size(); ++i)
-		glDeleteProgram(this->programs[i].id);
-	for (size_t i = 0; i < this->shaders.size(); ++i)
-		glDeleteShader(this->shaders[i]);
+	for (const auto &program : this->programs)
+		glDeleteProgram(program.id);
+	for (const auto &shader : this->shaders)
+		glDeleteShader(shader);
 	Instance = nullptr;
 }
 

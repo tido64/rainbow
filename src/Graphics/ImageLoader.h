@@ -266,7 +266,7 @@ namespace ImageLoader
 
 					CGContextRef context = CGBitmapContextCreate(
 							data, image_info.width, image_info.height, 8,
-							image_info.width << 2, color_space,
+							image_info.width * 4, color_space,
 							kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big);
 					CGColorSpaceRelease(color_space);
 

@@ -42,28 +42,28 @@ void Input::key_up(const Key &k)
 
 void Input::touch_began(Touch *const touches, const size_t count)
 {
-	for (size_t i = 0; i < this->touch_subscribers.size(); ++i)
-		this->touch_subscribers[i]->touch_began(touches, count);
+	for (auto subscriber : this->touch_subscribers)
+		subscriber->touch_began(touches, count);
 	Rainbow::Lua::Input::touch_began(this->lua_state, touches, count);
 }
 
 void Input::touch_canceled()
 {
-	for (size_t i = 0; i < this->touch_subscribers.size(); ++i)
-		this->touch_subscribers[i]->touch_canceled();
+	for (auto subscriber : this->touch_subscribers)
+		subscriber->touch_canceled();
 	Rainbow::Lua::Input::touch_canceled(this->lua_state);
 }
 
 void Input::touch_ended(Touch *const touches, const size_t count)
 {
-	for (size_t i = 0; i < this->touch_subscribers.size(); ++i)
-		this->touch_subscribers[i]->touch_ended(touches, count);
+	for (auto subscriber : this->touch_subscribers)
+		subscriber->touch_ended(touches, count);
 	Rainbow::Lua::Input::touch_ended(this->lua_state, touches, count);
 }
 
 void Input::touch_moved(Touch *const touches, const size_t count)
 {
-	for (size_t i = 0; i < this->touch_subscribers.size(); ++i)
-		this->touch_subscribers[i]->touch_moved(touches, count);
+	for (auto subscriber : this->touch_subscribers)
+		subscriber->touch_moved(touches, count);
 	Rainbow::Lua::Input::touch_moved(this->lua_state, touches, count);
 }
