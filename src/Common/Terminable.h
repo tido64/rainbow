@@ -8,14 +8,15 @@
 class Terminable
 {
 public:
-	inline Terminable();
-
 	inline bool has_terminated() const;
 	inline bool is_active() const;
 
 	inline void activate();
 	inline void deactivate();
 	inline void terminate();
+
+protected:
+	inline Terminable();
 
 private:
 	bool active;

@@ -36,13 +36,15 @@ char userdata_path[256] = { 0 };
 
 namespace
 {
-	const double fps = 1000.0 / 60.0;  ///< Preferred frames per second.
-	Chrono chrono;                     ///< Clock.
+	typedef unsigned int uint_t;
+
+	const double kFramesPerSecond = 1000.0 / 60.0;
+	Chrono chrono;
 
 	void setcwd(const char *const path)
 	{
 		strcpy(data_path, path);  // Set data path
-		strcat(data_path, "/");
+		strcat(data_path, kPathSeparator);
 		strcpy(userdata_path, data_path);  // Set user data path
 		strcat(userdata_path, "user");
 	}
@@ -50,7 +52,7 @@ namespace
 	class RenderWindow
 	{
 	public:
-		RenderWindow(const unsigned int width, const unsigned int height);
+		RenderWindow(const uint_t width, const uint_t height);
 		~RenderWindow();
 
 		inline void swap();
@@ -63,14 +65,16 @@ namespace
 
 	private:
 		bool initialised;
-		const unsigned int height;
+		bool vsync;
+		const uint_t height;
 		SDL_GLContext context;
 		SDL_Window *window;
 		Touch mouse;
 	};
 
-	RenderWindow::RenderWindow(const unsigned int width, const unsigned int height) :
-		initialised(false), height(height), context(nullptr), window(nullptr)
+	RenderWindow::RenderWindow(const uint_t width, const uint_t height) :
+		initialised(false), vsync(false), height(height), context(nullptr),
+		window(nullptr)
 	{
 		if (SDL_Init(SDL_INIT_VIDEO) < 0)
 		{
@@ -94,12 +98,16 @@ namespace
 		}
 
 		this->context = SDL_GL_CreateContext(this->window);
-		if (!this->window)
+		if (!this->context)
 		{
 			R_ERROR("[SDL] Failed to create GL context: %s\n", SDL_GetError());
 			return;
 		}
+
 		SDL_GL_SetSwapInterval(1);
+		this->vsync = SDL_GL_GetSwapInterval() == 1;
+		R_DEBUG("[SDL] Sync with vertical retrace: %s\n",
+		        this->vsync ? "Yes" : "No");
 
 		this->initialised = Renderer::init();
 		if (!this->initialised)
@@ -107,6 +115,7 @@ namespace
 			R_ERROR("[Rainbow] Failed to initialise OpenGL\n");
 			return;
 		}
+
 		Renderer::resize(width, height);
 	}
 
@@ -126,6 +135,8 @@ namespace
 
 	void RenderWindow::swap()
 	{
+		if (!this->vsync)
+			Chrono::sleep(0);
 		SDL_GL_SwapWindow(this->window);
 	}
 
@@ -194,8 +205,8 @@ int main(int argc, char *argv[])
 	if (!ConFuoco::Mixer::Instance)
 		return 1;
 
-	unsigned int screen_width = 1280;
-	unsigned int screen_height = 720;
+	uint_t screen_width = 1280;
+	uint_t screen_height = 720;
 
 	Rainbow::Config config;
 	if (config.get_width() && config.get_height())
@@ -273,7 +284,7 @@ int main(int argc, char *argv[])
 			if (director.has_terminated())
 				break;
 
-			Chrono::sleep(static_cast<unsigned int>(fps));
+			Chrono::sleep(static_cast<uint_t>(kFramesPerSecond));
 		}
 		else
 		{
