@@ -27,4 +27,4 @@ echo
 echo "Also disable any files in cff/, pshinter/, psnames/, raster/, sfnt/, smooth/,"
 echo "truetype/ that do not match <dirname>.c"
 echo
-echo "Finally, add the following C flags: -DFT2_BUILD_LIBRARY -DDARWIN_NO_CARBON"
+echo "Finally, add the following C flags: -DFT2_BUILD_LIBRARY"

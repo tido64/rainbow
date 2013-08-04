@@ -43,17 +43,15 @@ public:
 	bool load(const Data &font);
 
 protected:
-	static const unsigned char ascii_offset = 32;  ///< Start loading from character 32.
-	static const unsigned char chars = 95;         ///< Load characters through 126 from the ASCII table.
-	static const unsigned short int margin = 2;    ///< Drawn margin around font glyph.
-	static const unsigned short int padding = 3;   ///< Padding around font glyph texture.
+	static const unsigned int kASCIIOffset = 32;    ///< Start loading from character 32.
+	static const unsigned int kNumCharacters = 95;  ///< Load characters through 126 from the ASCII table.
 
 private:
 	short height;          ///< Font line height.
 	const float pt;        ///< Font point size.
 	unsigned int texture;  ///< Texture name.
 	Colorb color;          ///< Font colour.
-	FontGlyph charset[chars + FONTATLAS_EXTENDED];  ///< Character set.
+	FontGlyph charset[kNumCharacters + FONTATLAS_EXTENDED];  ///< Character set.
 };
 
 FontAtlas::~FontAtlas()
@@ -72,7 +70,7 @@ const FontGlyph* FontAtlas::get_glyph(const unsigned long c) const
 
 	if (c >= 0x80u)
 	{
-		for (size_t i = chars; i < chars + FONTATLAS_EXTENDED; ++i)
+		for (size_t i = kNumCharacters; i < kNumCharacters + FONTATLAS_EXTENDED; ++i)
 			if (this->charset[i].code == c)
 				return &this->charset[i];
 		return nullptr;
@@ -80,7 +78,7 @@ const FontGlyph* FontAtlas::get_glyph(const unsigned long c) const
 
 #endif
 
-	return &this->charset[static_cast<unsigned char>(c) - ascii_offset];
+	return &this->charset[static_cast<unsigned char>(c) - kASCIIOffset];
 }
 
 short FontAtlas::get_height() const

@@ -11,13 +11,17 @@
 
 namespace
 {
-	const unsigned int kNumGlyphsPerColRow = 12;
+	typedef unsigned int uint_t;
+
+	const float kGlyphMargin = 2.0f;        ///< Margin around rendered font glyph.
+	const uint_t kGlyphPadding = 3;         ///< Padding around font glyph texture.
+	const uint_t kNumGlyphsPerColRow = 12;  ///< Number of glyphs per column/row on texture.
 }
 
 FontAtlas::FontAtlas(const float pt) : height(0), pt(pt), texture(0)
 {
-	for (size_t i = 0; i < chars; ++i)
-		this->charset[i].code = i + ascii_offset;
+	for (size_t i = 0; i < kNumCharacters; ++i)
+		this->charset[i].code = i + kASCIIOffset;
 
 #if FONTATLAS_EXTENDED > 0
 
@@ -32,7 +36,7 @@ FontAtlas::FontAtlas(const float pt) : height(0), pt(pt), texture(0)
 	};
 
 	for (size_t i = 0; characters[i]; ++i)
-		this->charset[chars + i].code = characters[i];
+		this->charset[kNumCharacters + i].code = characters[i];
 
 #endif
 }
@@ -77,11 +81,11 @@ bool FontAtlas::load(const Data &font)
 	FT_Set_Char_Size(face, 0, static_cast<int>(this->pt * 64), 96, 96);
 
 	// Naive algorithm for calculating texture size
-	unsigned int max_width = 0;
-	unsigned int max_height = 0;
-	for (unsigned int i = 0; i < chars; ++i)
+	uint_t max_width = 0;
+	uint_t max_height = 0;
+	for (uint_t i = 0; i < kNumCharacters; ++i)
 	{
-		if (FT_Load_Char(face, i + ascii_offset, FT_LOAD_RENDER))
+		if (FT_Load_Char(face, i + kASCIIOffset, FT_LOAD_RENDER))
 		{
 			FT_Done_Face(face);
 			FT_Done_FreeType(lib);
@@ -91,37 +95,37 @@ bool FontAtlas::load(const Data &font)
 
 		const FT_Bitmap &bitmap = face->glyph->bitmap;
 
-		const unsigned int width = bitmap.width + padding * 2;
+		const uint_t width = bitmap.width + kGlyphPadding * 2;
 		if (width > max_width)
 			max_width = width;
 
-		const unsigned int height = bitmap.rows + padding * 2;
+		const uint_t height = bitmap.rows + kGlyphPadding * 2;
 		if (height > max_height)
 			max_height = height;
 	}
-	const unsigned int tex_width = Rainbow::next_pow2(max_width * kNumGlyphsPerColRow);
-	const unsigned int tex_height = Rainbow::next_pow2(max_height * kNumGlyphsPerColRow);
+	const uint_t tex_width = Rainbow::next_pow2(max_width * kNumGlyphsPerColRow);
+	const uint_t tex_height = Rainbow::next_pow2(max_height * kNumGlyphsPerColRow);
 
 	// GL_LUMINANCE8_ALPHA8 buffer
-	unsigned int w_offset = tex_width * tex_height * 2;
+	uint_t w_offset = tex_width * tex_height * 2;
 	GLubyte *tex_buf = new GLubyte[w_offset];
 	memset(tex_buf, 0, w_offset);
 
 	// Read all glyph bitmaps and copy them to our texture
 	w_offset = 0;
-	unsigned int h_offset = 0;
+	uint_t h_offset = 0;
 	const float tex_w_fraction = 1.0f / tex_width;
 	const float tex_h_fraction = 1.0f / tex_height;
-	for (unsigned int i = 0; i < chars + FONTATLAS_EXTENDED; ++i)
+	for (uint_t i = 0; i < kNumCharacters + FONTATLAS_EXTENDED; ++i)
 	{
-		const unsigned int idx = FT_Get_Char_Index(face, this->charset[i].code);
+		const uint_t idx = FT_Get_Char_Index(face, this->charset[i].code);
 		FT_Load_Glyph(face, idx, FT_LOAD_RENDER);
 
 		const FT_GlyphSlot &slot = face->glyph;
 		const FT_Bitmap &bitmap = slot->bitmap;
 
 		// Make sure bitmap data has enough space
-		const int width = bitmap.width + padding * 2;
+		const int width = bitmap.width + kGlyphPadding * 2;
 		if (w_offset + width > tex_width)
 		{
 			w_offset = 0;
@@ -132,8 +136,8 @@ bool FontAtlas::load(const Data &font)
 		if (bitmap.buffer)
 		{
 			const unsigned char *buf = bitmap.buffer;
-			unsigned char *d_ptr = tex_buf + (h_offset * tex_width + w_offset) * 2 + (padding * 2) * (tex_width + 1);
-			unsigned int tmp = (tex_width - bitmap.width) * 2;
+			unsigned char *d_ptr = tex_buf + (h_offset * tex_width + w_offset) * 2 + (kGlyphPadding * 2) * (tex_width + 1);
+			uint_t tmp = (tex_width - bitmap.width) * 2;
 			for (int y = 0; y < bitmap.rows; ++y)
 			{
 				for (int x = 0; x < bitmap.width; ++x)
@@ -161,39 +165,39 @@ bool FontAtlas::load(const Data &font)
 
 		// Save font glyph
 		FontGlyph &fg = this->charset[i];
-		fg.advance = static_cast<short>(slot->advance.x >> 6);
+		fg.advance = static_cast<short>(slot->advance.x / 64);
 		fg.left = slot->bitmap_left;
 
 	#ifdef FONTATLAS_KERNING
 
 		if (FT_HAS_KERNING(face))
 		{
-			unsigned int glyph = i + ascii_offset;
+			uint_t glyph = i + kASCIIOffset;
 			FT_Vector kerning;
-			for (unsigned int j = 0; j < chars; ++j)
+			for (uint_t j = 0; j < kNumCharacters; ++j)
 			{
-				FT_Get_Kerning(face, j + ascii_offset, glyph, FT_KERNING_DEFAULT, &kerning);
-				fg.kern[j] = static_cast<short>(kerning.x >> 6);
+				FT_Get_Kerning(face, j + kASCIIOffset, glyph, FT_KERNING_DEFAULT, &kerning);
+				fg.kern[j] = static_cast<short>(kerning.x / 64);
 			}
 		}
 
 	#endif
 
-		fg.quad[0].position.x = -margin;
-		fg.quad[0].position.y = static_cast<float>(slot->bitmap_top - bitmap.rows - margin);
-		fg.quad[1].position.x = static_cast<float>(bitmap.width + margin);
+		fg.quad[0].position.x = -kGlyphMargin;
+		fg.quad[0].position.y = static_cast<float>(slot->bitmap_top - bitmap.rows) - kGlyphMargin;
+		fg.quad[1].position.x = static_cast<float>(bitmap.width) + kGlyphMargin;
 		fg.quad[1].position.y = fg.quad[0].position.y;
 		fg.quad[2].position.x = fg.quad[1].position.x;
-		fg.quad[2].position.y = static_cast<float>(slot->bitmap_top + margin);
+		fg.quad[2].position.y = static_cast<float>(slot->bitmap_top) + kGlyphMargin;
 		fg.quad[3].position.x = fg.quad[0].position.x;
 		fg.quad[3].position.y = fg.quad[2].position.y;
 
-		fg.quad[0].texcoord.x = (padding - margin + w_offset) * tex_w_fraction;
-		fg.quad[0].texcoord.y = (padding + bitmap.rows + margin + h_offset) * tex_h_fraction;
-		fg.quad[1].texcoord.x = (padding + bitmap.width + margin + w_offset) * tex_w_fraction;
+		fg.quad[0].texcoord.x = (kGlyphPadding - kGlyphMargin + w_offset) * tex_w_fraction;
+		fg.quad[0].texcoord.y = (kGlyphPadding + bitmap.rows + kGlyphMargin + h_offset) * tex_h_fraction;
+		fg.quad[1].texcoord.x = (kGlyphPadding + bitmap.width + kGlyphMargin + w_offset) * tex_w_fraction;
 		fg.quad[1].texcoord.y = fg.quad[0].texcoord.y;
 		fg.quad[2].texcoord.x = fg.quad[1].texcoord.x;
-		fg.quad[2].texcoord.y = (padding - margin + h_offset) * tex_h_fraction;
+		fg.quad[2].texcoord.y = (kGlyphPadding - kGlyphMargin + h_offset) * tex_h_fraction;
 		fg.quad[3].texcoord.x = fg.quad[0].texcoord.x;
 		fg.quad[3].texcoord.y = fg.quad[2].texcoord.y;
 
@@ -208,9 +212,9 @@ bool FontAtlas::load(const Data &font)
 	 * For printing out texture buffer
 	 *
 	const GLubyte *i = tex_buf;
-	for (unsigned int y = 0; y < tex_height; ++y)
+	for (uint_t y = 0; y < tex_height; ++y)
 	{
-		for (unsigned int x = 0; x < tex_width; ++x)
+		for (uint_t x = 0; x < tex_width; ++x)
 		{
 			printf("%c", (*i > 0) ? 'X' : ' ');
 			i += 2;
