@@ -53,14 +53,6 @@ bool FontAtlas::load(const Data &font)
 		return false;
 	}
 
-#ifndef RAINBOW_WIN
-	// FIXME: On Windows, enabling the new hinting engine will return unusually
-	//        large glyph sizes, resulting in too much memory being allocated
-	//        and crashing (as of FreeType 2.4.12).
-	const FT_UInt hinting_engine = FT_CFF_HINTING_ADOBE;
-	FT_Property_Set(lib, "cff", "hinting-engine", &hinting_engine);
-#endif
-
 	// Load font face
 	FT_Face face;
 	if (FT_New_Memory_Face(lib, static_cast<const FT_Byte*>(font.bytes()), font.size(), 0, &face))
