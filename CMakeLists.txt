@@ -10,9 +10,9 @@ option(GTEST "Compile with Google C++ Testing Framework" OFF)
 #option(PROFILING "Compile with profiling" OFF)
 
 # Features
-option(CANVAS   "Use canvas" OFF)
-option(HEIMDALL "Use Heimdall" OFF)
-option(PHYSICS  "Use physics (Box2D)" OFF)
+option(USE_CANVAS    "Enable canvas module" OFF)
+option(USE_HEIMDALL  "Enable Heimdall debugging facilities" OFF)
+option(USE_PHYSICS   "Enable physics module (Box2D)" OFF)
 
 # Auto-generate files
 execute_process(COMMAND tools/shaders-gen.py WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
@@ -31,7 +31,7 @@ find_package(OpenGL REQUIRED)
 find_package(Vorbisfile REQUIRED)
 
 # Static libraries
-if(PHYSICS)
+if(USE_PHYSICS)
 	include(${LOCAL_MODULE_PATH}/Box2D.cmake)
 endif()
 include(${LOCAL_MODULE_PATH}/FreeType.cmake)
@@ -43,10 +43,10 @@ if(GTEST)
 endif()
 
 # Features
-if(CANVAS)
+if(USE_CANVAS)
 	add_definitions(-DUSE_CANVAS)
 endif()
-if(HEIMDALL)
+if(USE_HEIMDALL)
 	add_definitions(-DUSE_HEIMDALL)
 endif()
 

@@ -19,7 +19,7 @@ rm -fr AndroidManifest.xml ant.properties bin build.xml gen jni libs \
 # Create project files
 mkdir jni
 $NDK_HOME/../sdk/tools/android -s create project --name "Rainbow" \
-	--target "android-17" --path jni \
+	--target "android-18" --path jni \
 	--package "com.bifrostentertainment.rainbow" --activity "Rainbow" || exit 1
 rm -r jni/src/*
 mv jni/* .
