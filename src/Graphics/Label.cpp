@@ -43,7 +43,7 @@ void Label::set_position(const Vec2f &position)
 
 void Label::set_scale(const float f)
 {
-	if (Rainbow::equalf(this->scale, f))
+	if (Rainbow::equal(this->scale, f))
 		return;
 
 	if (f >= 1.0f)

@@ -9,8 +9,8 @@
 #define ALGORITHM_H_
 
 #include <cmath>
-#include <cfloat>
 #include <cstdlib>
+#include <limits>
 
 #include "Common/Constants.h"
 
@@ -29,7 +29,8 @@ namespace Rainbow
 
 	/// Compare two floating point numbers and approximate.
 	/// \return \c true when approximately equal.
-	inline bool equalf(const float a, const float b) pure;
+	template<typename T>
+	inline bool equal(const T &a, const T &b) pure;
 
 	/// Fast inverse square root by 0x5f3759df.
 	inline float fast_invsqrt(float x) pure;
@@ -67,9 +68,10 @@ namespace Rainbow
 		return r * kRadian;
 	}
 
-	bool equalf(const float a, const float b)
+	template<typename T>
+	bool equal(const T &a, const T &b)
 	{
-		return fabs(a - b) <= ((fabs(a) < fabs(b) ? fabs(b) : fabs(a)) * FLT_EPSILON);
+		return fabs(a - b) <= max(fabs(a), fabs(b)) * std::numeric_limits<T>::epsilon();
 	}
 
 	float fast_invsqrt(float x)

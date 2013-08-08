@@ -3,8 +3,6 @@
 #include "Graphics/Animation.h"
 #include "Graphics/Sprite.h"
 
-using Rainbow::equalf;
-
 Animation::~Animation()
 {
 	delete[] this->frames;

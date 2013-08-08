@@ -2,7 +2,7 @@
 
 #include "Graphics/SpriteBatch.h"
 
-using Rainbow::equalf;
+using Rainbow::equal;
 using Rainbow::swap;
 
 namespace
@@ -54,7 +54,7 @@ void Sprite::move(const Vec2f &delta)
 
 void Sprite::rotate(const float r)
 {
-	if (equalf(r, 0.0f))
+	if (equal(r, 0.0f))
 		return;
 
 	this->angle += r;
@@ -138,7 +138,7 @@ void Sprite::update()
 		if (this->stale & kStalePosition)
 			this->center = this->position;
 
-		if (!equalf(this->angle, 0.0f))
+		if (!equal(this->angle, 0.0f))
 		{
 			const float cos_r = cosf(-this->angle);
 			const float sin_r = sinf(-this->angle);

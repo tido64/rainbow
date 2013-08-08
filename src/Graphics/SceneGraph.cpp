@@ -5,8 +5,6 @@
 #include "Graphics/SceneGraph.h"
 #include "Graphics/SpriteBatch.h"
 
-using Rainbow::equalf;
-
 namespace SceneGraph
 {
 	Node::~Node()
