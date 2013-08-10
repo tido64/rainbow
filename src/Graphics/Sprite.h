@@ -6,7 +6,7 @@
 
 class SpriteBatch;
 
-/// A sprite is a textured quad.
+/// A textured quad.
 ///
 /// 3 ┌─────┐ 2
 ///   │     │
@@ -58,10 +58,6 @@ public:
 	/// Set sprite colour.
 	void set_color(const unsigned int c);
 
-	/// Set colour of vertex \p n.
-	template<size_t n>
-	inline void set_color(const unsigned int c);
-
 	/// Set the pivot point for rotation and translation.
 	/// \param x,y  Normalised pivot point.
 	void set_pivot(const Vec2f &);
@@ -96,7 +92,6 @@ private:
 	Vec2f pivot;                 ///< Pivot point (normalised).
 	Vec2f position;              ///< Uncommitted position.
 	Vec2f scale;                 ///< Scaling factor.
-	Vec2f origin[4];             ///< Reference sprite at origo.
 };
 
 float Sprite::get_angle() const
@@ -112,13 +107,6 @@ const Colorb& Sprite::get_color() const
 const Vec2f& Sprite::get_position() const
 {
 	return this->position;
-}
-
-template<size_t n>
-void Sprite::set_color(const unsigned int c)
-{
-	static_assert(n < 4, "Invalid vertex");
-	this->vertex_array[n].color = c;
 }
 
 #endif

@@ -8,20 +8,17 @@ using Rainbow::swap;
 namespace
 {
 	const unsigned int kStaleBuffer    = 1u << 0;
-	const unsigned int kStalePivot     = (1u << 1) | kStaleBuffer;
-	const unsigned int kStalePosition  = 1u << 2;
+	const unsigned int kStalePosition  = 1u << 1;
 
-	inline void transform_rst(Vec2f &dst, const Vec2f &pt, const Vec2f &s_sin_r,
-	                          const Vec2f &s_cos_r, const Vec2f &center)
+	inline Vec2f transform_rst(const Vec2f &p, const Vec2f &s_sin_r, const Vec2f &s_cos_r, const Vec2f &center)
 	{
-		dst.x = s_cos_r.x * pt.x - s_sin_r.x * pt.y + center.x;
-		dst.y = s_sin_r.y * pt.x + s_cos_r.y * pt.y + center.y;
+		return Vec2f(s_cos_r.x * p.x - s_sin_r.x * p.y + center.x,
+		             s_sin_r.y * p.x + s_cos_r.y * p.y + center.y);
 	}
 
-	inline void transform_st(Vec2f &dst, const Vec2f &pt, const Vec2f &scale, const Vec2f &center)
+	inline Vec2f transform_st(const Vec2f &p, const Vec2f &scale, const Vec2f &center)
 	{
-		dst.x = scale.x * pt.x + center.x;
-		dst.y = scale.y * pt.y + center.y;
+		return Vec2f(scale.x * p.x + center.x, scale.y * p.y + center.y);
 	}
 }
 
@@ -32,10 +29,7 @@ Sprite::Sprite(const unsigned int w, const unsigned int h, const SpriteBatch *p)
 Sprite::Sprite(const Sprite &s, const SpriteBatch *p) :
 	width(s.width), height(s.height), angle(s.angle), stale(-1),
 	vertex_array(nullptr), parent(p), center(s.center), pivot(s.pivot),
-	position(s.position), scale(s.scale)
-{
-	memcpy(this->origin, s.origin, sizeof(this->origin));
-}
+	position(s.position), scale(s.scale) { }
 
 void Sprite::mirror()
 {
@@ -63,10 +57,10 @@ void Sprite::rotate(const float r)
 
 void Sprite::set_color(const unsigned int c)
 {
-	this->set_color<0>(c);
-	this->set_color<1>(c);
-	this->set_color<2>(c);
-	this->set_color<3>(c);
+	this->vertex_array[0].color = c;
+	this->vertex_array[1].color = c;
+	this->vertex_array[2].color = c;
+	this->vertex_array[3].color = c;
 }
 
 void Sprite::set_pivot(const Vec2f &pivot)
@@ -74,8 +68,16 @@ void Sprite::set_pivot(const Vec2f &pivot)
 	R_ASSERT(pivot.x >= 0.0f && pivot.x <= 1.0f && pivot.y >= 0.0f && pivot.y <= 1.0f,
 	         "Invalid pivot point");
 
+	Vec2f diff = pivot;
+	diff -= this->pivot;
+	if (diff.is_zero())
+		return;
+
+	diff.x *= this->width;
+	diff.y *= this->height;
+	this->center += diff;
+	this->position += diff;
 	this->pivot = pivot;
-	this->stale |= kStalePivot;
 }
 
 void Sprite::set_position(const Vec2f &position)
@@ -123,20 +125,18 @@ void Sprite::update()
 
 	if (this->stale & kStaleBuffer)
 	{
-		if (this->stale & kStalePivot)
-		{
-			this->origin[0].x = this->width * -this->pivot.x;
-			this->origin[0].y = this->height * -(1 - this->pivot.y);
-			this->origin[1].x = this->origin[0].x + this->width;
-			this->origin[1].y = this->origin[0].y;
-			this->origin[2].x = this->origin[1].x;
-			this->origin[2].y = this->origin[1].y + this->height;
-			this->origin[3].x = this->origin[0].x;
-			this->origin[3].y = this->origin[2].y;
-		}
-
 		if (this->stale & kStalePosition)
 			this->center = this->position;
+
+		Vec2f origin[4];
+		origin[0].x = this->width * -this->pivot.x;
+		origin[0].y = this->height * -(1 - this->pivot.y);
+		origin[1].x = origin[0].x + this->width;
+		origin[1].y = origin[0].y;
+		origin[2].x = origin[1].x;
+		origin[2].y = origin[1].y + this->height;
+		origin[3].x = origin[0].x;
+		origin[3].y = origin[2].y;
 
 		if (!equal(this->angle, 0.0f))
 		{
@@ -146,25 +146,25 @@ void Sprite::update()
 			const Vec2f s_sin_r(this->scale.x * sin_r, this->scale.y * sin_r);
 			const Vec2f s_cos_r(this->scale.x * cos_r, this->scale.y * cos_r);
 
-			transform_rst(this->vertex_array[0].position, this->origin[0],
-			              s_sin_r, s_cos_r, this->center);
-			transform_rst(this->vertex_array[1].position, this->origin[1],
-			              s_sin_r, s_cos_r, this->center);
-			transform_rst(this->vertex_array[2].position, this->origin[2],
-			              s_sin_r, s_cos_r, this->center);
-			transform_rst(this->vertex_array[3].position, this->origin[3],
-			              s_sin_r, s_cos_r, this->center);
+			this->vertex_array[0].position = transform_rst(
+					origin[0], s_sin_r, s_cos_r, this->center);
+			this->vertex_array[1].position = transform_rst(
+					origin[1], s_sin_r, s_cos_r, this->center);
+			this->vertex_array[2].position = transform_rst(
+					origin[2], s_sin_r, s_cos_r, this->center);
+			this->vertex_array[3].position = transform_rst(
+					origin[3], s_sin_r, s_cos_r, this->center);
 		}
 		else
 		{
-			transform_st(this->vertex_array[0].position, this->origin[0],
-			             this->scale, this->center);
-			transform_st(this->vertex_array[1].position, this->origin[1],
-			             this->scale, this->center);
-			transform_st(this->vertex_array[2].position, this->origin[2],
-			             this->scale, this->center);
-			transform_st(this->vertex_array[3].position, this->origin[3],
-			             this->scale, this->center);
+			this->vertex_array[0].position = transform_st(
+					origin[0], this->scale, this->center);
+			this->vertex_array[1].position = transform_st(
+					origin[1], this->scale, this->center);
+			this->vertex_array[2].position = transform_st(
+					origin[2], this->scale, this->center);
+			this->vertex_array[3].position = transform_st(
+					origin[3], this->scale, this->center);
 		}
 		this->stale = 0;
 	}
