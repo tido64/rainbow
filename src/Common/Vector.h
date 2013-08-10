@@ -25,6 +25,9 @@ public:
 	/// Return the element stored at index.
 	inline T& at(const size_t i);
 
+	/// Return the last element.
+	inline T& back();
+
 	/// Return a pointer to the first element.
 	inline T* begin() const;
 
@@ -46,7 +49,10 @@ public:
 	int find(const T &value) const;
 
 	/// Add an element to the vector.
-	void push_back(const T &value);
+	void push_back(const T &element);
+
+	/// Add an element to the vector.
+	void push_back(T &&element);
 
 	/// Quick erase the element at index by swapping it out with the last
 	/// element. Don't use this if you need to maintain the element order.
@@ -102,6 +108,13 @@ T& Vector<T>::at(const size_t i)
 }
 
 template<typename T>
+T& Vector<T>::back()
+{
+	R_ASSERT(this->count > 0, "Tried to access an empty vector");
+	return (*this)[this->count - 1];
+}
+
+template<typename T>
 T* Vector<T>::begin() const
 {
 	return this->c_array;
@@ -137,10 +150,10 @@ void Vector<T>::erase(const size_t i)
 }
 
 template<typename T>
-int Vector<T>::find(const T &element) const
+int Vector<T>::find(const T &value) const
 {
 	for (size_t i = 0; i < this->count; ++i)
-		if (this->c_array[i] == element)
+		if (this->c_array[i] == value)
 			return i;
 	return -1;
 }
@@ -157,6 +170,17 @@ void Vector<T>::push_back(const T &element)
 }
 
 template<typename T>
+void Vector<T>::push_back(T &&element)
+{
+	// Verify that there is enough space
+	if (this->count == this->reserved)
+		this->reserve(this->reserved += (this->reserved + 1) >> 1);
+
+	new (this->c_array + this->count) T(static_cast<T&&>(element));
+	++this->count;
+}
+
+template<typename T>
 void Vector<T>::qerase(const size_t i)
 {
 	R_ASSERT(i < this->count, "Can't erase a non-existing element");
@@ -166,18 +190,18 @@ void Vector<T>::qerase(const size_t i)
 }
 
 template<typename T>
-void Vector<T>::qremove(const T &element)
+void Vector<T>::qremove(const T &value)
 {
-	const int i = this->find(element);
+	const int i = this->find(value);
 	if (i < 0)
 		return;
 	this->qerase(i);
 }
 
 template<typename T>
-void Vector<T>::remove(const T &element)
+void Vector<T>::remove(const T &value)
 {
-	const int i = this->find(element);
+	const int i = this->find(value);
 	if (i < 0)
 		return;
 	this->erase(i);
