@@ -58,6 +58,11 @@ template<class T>
 TreeNode<T>::TreeNode() : parent(nullptr) { }
 
 template<class T>
-TreeNode<T>::~TreeNode() { }
+TreeNode<T>::~TreeNode()
+{
+	for (auto child : this->children)
+		delete child;
+}
+
 
 #endif

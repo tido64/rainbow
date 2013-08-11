@@ -7,6 +7,7 @@
 #include "Graphics/VertexArray.h"
 
 namespace SceneGraph { class Node; }
+namespace Renderer { void draw(const SpriteBatch &); }
 
 /// A drawable batch of sprites.
 ///
@@ -19,6 +20,7 @@ namespace SceneGraph { class Node; }
 class SpriteBatch : private NonCopyable<SpriteBatch>
 {
 	friend class SceneGraph::Node;
+	friend void Renderer::draw(const SpriteBatch &);
 	friend void Sprite::set_texture(const unsigned int id);
 
 public:
@@ -45,9 +47,6 @@ public:
 
 	/// Re-use a texture atlas.
 	TextureAtlas* set_texture(TextureAtlas *texture);
-
-	/// Draw the batch of sprites.
-	void draw();
 
 	/// Update the batch of sprites.
 	void update();

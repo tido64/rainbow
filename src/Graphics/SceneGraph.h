@@ -9,6 +9,9 @@ class Animation;
 class Label;
 class SpriteBatch;
 
+namespace SceneGraph { class Node; }
+namespace Renderer { void draw(const SceneGraph::Node &); }
+
 namespace SceneGraph
 {
 	/// A single node in a scene graph.
@@ -21,6 +24,8 @@ namespace SceneGraph
 	/// \author Tommy Nguyen
 	class Node : public TreeNode<Node>
 	{
+		friend void Renderer::draw(const SceneGraph::Node &);
+
 	public:
 		bool enabled;  ///< Whether or not this node should be updated and/or drawn.
 
@@ -52,14 +57,9 @@ namespace SceneGraph
 		/// Create a generic drawable node.
 		inline Node(Drawable *);
 
-		virtual ~Node();
-
 		/// Add a child node.
 		template<class T>
 		Node* add_child(T *p);
-
-		/// Draw this node and all its enabled children.
-		void draw();
 
 		/// Recursively move all sprites by (x,y).
 		void move(const Vec2f &);

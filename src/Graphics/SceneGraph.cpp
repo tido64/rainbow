@@ -7,35 +7,6 @@
 
 namespace SceneGraph
 {
-	Node::~Node()
-	{
-		for (auto child : this->children)
-			delete child;
-	}
-
-	void Node::draw()
-	{
-		if (!this->enabled)
-			return;
-
-		switch (this->type)
-		{
-			case DrawableNode:
-				this->drawable->draw();
-				break;
-			case LabelNode:
-				this->label->draw();
-				break;
-			case SpriteBatchNode:
-				this->sprite_batch->draw();
-				break;
-			default:
-				break;
-		}
-		for (auto child : this->children)
-			child->draw();
-	}
-
 	void Node::move(const Vec2f &delta)
 	{
 		if (delta.is_zero())
@@ -46,11 +17,10 @@ namespace SceneGraph
 			case LabelNode:
 				this->label->move(delta);
 				break;
-			case SpriteBatchNode: {
+			case SpriteBatchNode:
 				for (auto &sprite : this->sprite_batch->sprites)
 					sprite.move(delta);
 				break;
-			}
 			default:
 				break;
 		}

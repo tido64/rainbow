@@ -48,7 +48,7 @@ namespace Rainbow
 
 	void Director::draw()
 	{
-		this->scenegraph.draw();
+		Renderer::draw(this->scenegraph);
 	}
 }
 

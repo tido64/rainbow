@@ -1,7 +1,6 @@
 // Copyright 2011-13 Bifrost Entertainment. All rights reserved.
 
 #include "Graphics/Label.h"
-#include "Graphics/Renderer.h"
 
 namespace
 {
@@ -75,12 +74,6 @@ void Label::move(const Vec2f &delta)
 {
 	this->position += delta;
 	this->stale |= kStaleBuffer;
-}
-
-void Label::draw()
-{
-	this->font->bind();
-	Renderer::draw(this->array);
 }
 
 void Label::update()

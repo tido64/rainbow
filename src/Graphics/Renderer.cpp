@@ -1,11 +1,11 @@
 // Copyright 2012-13 Bifrost Entertainment. All rights reserved.
 
+#include "Graphics/Label.h"
 #include "Graphics/Renderer.h"
+#include "Graphics/SceneGraph.h"
 #include "Graphics/ShaderManager.h"
-#include "Graphics/SpriteVertex.h"
-#include "Graphics/TextureAtlas.h"
+#include "Graphics/SpriteBatch.h"
 #include "Graphics/TextureManager.h"
-#include "Graphics/VertexArray.h"
 
 #ifdef GL_ES_VERSION_2_0
 #	include "Graphics/Shaders/Shaders.h"
@@ -220,17 +220,46 @@ namespace Renderer
 		         "Failed to initialise OpenGL viewport");
 	}
 
+	void draw(const Label &label)
+	{
+		label.font->bind();
+		draw(label.array);
+	}
+
+	void draw(const SceneGraph::Node &node)
+	{
+		if (!node.enabled)
+			return;
+
+		switch (node.type)
+		{
+			case SceneGraph::Node::DrawableNode:
+				node.drawable->draw();
+				break;
+			case SceneGraph::Node::LabelNode:
+				Renderer::draw(*node.label);
+				break;
+			case SceneGraph::Node::SpriteBatchNode:
+				Renderer::draw(*node.sprite_batch);
+				break;
+			default:
+				break;
+		}
+		for (auto child : node.children)
+			draw(*child);
+	}
+
+	void draw(const SpriteBatch &batch)
+	{
+		batch.texture->bind();
+		draw(batch.array);
+	}
+
 	void draw(const VertexArray &array)
 	{
 		BindVertexArray bind(array);
 		glDrawElements(GL_TRIANGLES, array.count, GL_UNSIGNED_SHORT, nullptr);
 		R_ASSERT(glGetError() == GL_NO_ERROR, "Failed to draw buffer");
-	}
-
-	void draw(const VertexArray &array, const TextureAtlas *texture)
-	{
-		texture->bind();
-		draw(array);
 	}
 
 	void draw_elements(const SpriteVertex *vertices, const unsigned int count)

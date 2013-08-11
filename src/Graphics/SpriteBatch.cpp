@@ -1,6 +1,5 @@
 // Copyright 2010-13 Bifrost Entertainment. All rights reserved.
 
-#include "Graphics/Renderer.h"
 #include "Graphics/SpriteBatch.h"
 
 const char Drawable::class_name[] = "Drawable";
@@ -43,11 +42,6 @@ Sprite& SpriteBatch::create_sprite(const unsigned int width, const unsigned int 
 	Sprite &sprite = this->sprites.back();
 	sprite.vertex_array = &this->vertices[this->vertices.size() - 4];
 	return sprite;
-}
-
-void SpriteBatch::draw()
-{
-	Renderer::draw(this->array, this->texture.get());
 }
 
 TextureAtlas* SpriteBatch::set_texture(const DataMap &texture)

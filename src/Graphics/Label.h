@@ -4,12 +4,17 @@
 #include "Graphics/FontAtlas.h"
 #include "Graphics/VertexArray.h"
 
+class Label;
+namespace Renderer { void draw(const Label &); }
+
 /// Label for displaying text.
 ///
 /// Copyright 2011-13 Bifrost Entertainment. All rights reserved.
 /// \author Tommy Nguyen
 class Label : private NonCopyable<Label>
 {
+	friend void Renderer::draw(const Label &);
+
 public:
 	enum Alignment
 	{
@@ -47,9 +52,6 @@ public:
 
 	/// Move label by (x,y).
 	void move(const Vec2f &);
-
-	/// Draw text at previously set position.
-	void draw();
 
 	/// Populate the vertex array.
 	void update();
