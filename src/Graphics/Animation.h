@@ -1,5 +1,5 @@
-#ifndef ANIMATION_H_
-#define ANIMATION_H_
+#ifndef GRAPHICS_ANIMATION_H_
+#define GRAPHICS_ANIMATION_H_
 
 #include "Common/ChronoTrigger.h"
 #include "Common/Constants.h"
@@ -25,14 +25,14 @@ public:
 
 	virtual ~Animation();
 
-	/// Reset sprite animation.
+	/// Resets sprite animation.
 	inline void reset();
 
-	/// Set number of ticks to delay before the animation loops.
-	/// Negative numbers disable looping.
+	/// Sets number of ticks to delay before the animation loops. Negative
+	/// numbers disable looping.
 	inline void set_delay(const int delay);
 
-	/// Set animation frames.
+	/// Sets animation frames.
 	/// \note This method takes ownership of the array.
 	/// \param frames  Null-terminated array of texture ids to be used as frames.
 	void set_frames(const unsigned int *const frames);

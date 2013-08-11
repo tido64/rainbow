@@ -1,6 +1,6 @@
-// Copyright 2010-12 Bifrost Entertainment. All rights reserved.
+// Copyright 2010-13 Bifrost Entertainment. All rights reserved.
 
-#include "Random.h"
+#include "Common/Random.h"
 
 #ifndef RAINBOW_IOS
 #	ifdef RAINBOW_UNIX

@@ -114,6 +114,7 @@ namespace Rainbow
 			void *ptr = lua_touserdata(L, -1);
 			lua_pop(L, 2);
 			return ptr;
+			static_cast<void>(name);
 		}
 	}
 }

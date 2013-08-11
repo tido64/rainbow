@@ -1,5 +1,5 @@
-#ifndef IO_ANDROID_INC_
-#define IO_ANDROID_INC_
+#ifndef COMMON_IMPL_IO_ANDROID_INC_
+#define COMMON_IMPL_IO_ANDROID_INC_
 
 struct FileHandle
 {

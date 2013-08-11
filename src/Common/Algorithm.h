@@ -5,8 +5,8 @@
 /// Copyright 2010-13 Bifrost Entertainment. All rights reserved.
 /// \author Tommy Nguyen
 
-#ifndef ALGORITHM_H_
-#define ALGORITHM_H_
+#ifndef COMMON_ALGORITHM_H_
+#define COMMON_ALGORITHM_H_
 
 #include <cmath>
 #include <cstdlib>
@@ -24,10 +24,10 @@
 
 namespace Rainbow
 {
-	/// Convert radians to degrees.
+	/// Converts radians to degrees.
 	inline float degrees(const float r) pure;
 
-	/// Compare two floating point numbers and approximate.
+	/// Compares two floating point numbers and approximate.
 	/// \return \c true when approximately equal.
 	template<typename T>
 	inline bool equal(const T &a, const T &b) pure;
@@ -35,7 +35,7 @@ namespace Rainbow
 	/// Fast inverse square root by 0x5f3759df.
 	inline float fast_invsqrt(float x) pure;
 
-	/// Determine whether an integer is a power of 2.
+	/// Determines whether an integer is a power of 2.
 	inline bool is_pow2(const unsigned int i) pure;
 
 	/// Low-pass filter.
@@ -47,17 +47,17 @@ namespace Rainbow
 	template<typename T>
 	inline const T& min(const T &a, const T &b) pure;
 
-	/// Calculate the next power of 2.
+	/// Calculates the next power of 2.
 	/// \note 0 is incorrectly considered a power of 2.
 	inline unsigned int next_pow2(unsigned int i) pure;
 
-	/// Convert degrees to radians.
+	/// Converts degrees to radians.
 	inline float radians(const float d) pure;
 
 	template<typename T>
 	inline void swap(T &a, T &b);
 
-	/// Convert a UTF-8 character to UTF-32.
+	/// Converts a UTF-8 character to UTF-32.
 	/// \param[in]  str    UTF-8 encoded string.
 	/// \param[out] bytes  Number of bytes consumed.
 	/// \return UTF-32 character. Otherwise -1.

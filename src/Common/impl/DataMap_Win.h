@@ -1,5 +1,5 @@
-#ifndef DATAMAP_WIN_H_
-#define DATAMAP_WIN_H_
+#ifndef COMMON_IMPL_DATAMAP_WIN_H_
+#define COMMON_IMPL_DATAMAP_WIN_H_
 
 #include "Common/DataMap.h"
 

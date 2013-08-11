@@ -23,7 +23,7 @@ namespace ConFuoco
 			kAudioFileStream
 		};
 
-		/// Create buffer fit for audio streaming.
+		/// Creates buffer fit for audio streaming.
 		/// \param[out] buffer    Created buffer.
 		/// \param[in]  channels  Number of channels to output.
 		/// \return Size of buffer.
@@ -37,25 +37,25 @@ namespace ConFuoco
 
 		virtual ~AudioFile();
 
-		/// Return number of channels.
+		/// Returns number of channels.
 		inline int get_channels() const;
 
-		/// Return sample rate.
+		/// Returns sample rate.
 		inline int get_rate() const;
 
-		/// Read whole file into buffer.
+		/// Reads whole file into buffer.
 		/// \param[out] dst  Destination buffer.
 		/// \return Size of returned buffer.
 		inline size_t read(char **dst);
 
-		/// Read \p size bytes into \p dst.
+		/// Reads \p size bytes into \p dst.
 		/// \param dst   Destination buffer.
 		/// \param size  Number of bytes to read. Must be equal to or less than
 		///              the size allocated for buffer.
 		/// \return Number of bytes read.
 		inline size_t read(char *dst, const size_t size);
 
-		/// Rewind audio file to start.
+		/// Rewinds audio file to start.
 		inline void rewind();
 
 	protected:

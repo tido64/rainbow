@@ -1,5 +1,5 @@
-#ifndef VECTOR_H_
-#define VECTOR_H_
+#ifndef COMMON_VECTOR_H_
+#define COMMON_VECTOR_H_
 
 #include <cstring>
 #include <new>
@@ -22,63 +22,63 @@ public:
 
 	~Vector();
 
-	/// Return the element stored at index.
+	/// Returns the element stored at index.
 	inline T& at(const size_t i);
 
-	/// Return the last element.
+	/// Returns the last element.
 	inline T& back();
 
-	/// Return a pointer to the first element.
+	/// Returns a pointer to the first element.
 	inline T* begin() const;
 
-	/// Return size of allocated storage capacity.
+	/// Returns size of allocated storage capacity.
 	inline size_t capacity() const;
 
 	/// Empties the vector.
 	void clear();
 
-	/// Return a pointer to the end of the vector.
+	/// Returns a pointer to the end of the vector.
 	inline T* end() const;
 
-	/// Erase the element at index while preserving the order.
+	/// Erases the element at index while preserving the order.
 	void erase(const size_t i);
 
-	/// Find an element with given value.
+	/// Finds an element with given value.
 	/// \param value  The value of the element to find.
 	/// \return Index to the first element whose value matches; -1 otherwise.
 	int find(const T &value) const;
 
-	/// Add an element to the vector.
+	/// Adds an element to the vector.
 	void push_back(const T &element);
 
-	/// Add an element to the vector.
+	/// Adds an element to the vector.
 	void push_back(T &&element);
 
-	/// Quick erase the element at index by swapping it out with the last
+	/// Quick erases the element at index by swapping it out with the last
 	/// element. Don't use this if you need to maintain the element order.
 	void qerase(const size_t i);
 
-	/// Quick remove a value from the vector by swapping it out with the last
+	/// Quick removes a value from the vector by swapping it out with the last
 	/// element. Deletes only the first element found by \c find(). Don't use
 	/// this if you need to maintain the element order.
 	/// \param value  The value to remove.
 	void qremove(const T &value);
 
-	/// Remove a value from the vector while preserving the order of elements.
+	/// Removes a value from the vector while preserving the order of elements.
 	/// Deletes only the first element found by \c find().
 	/// \param value  The value to remove.
 	void remove(const T &value);
 
-	/// Increase or decrease the capacity of the vector.
+	/// Increases or decreases the capacity of the vector.
 	/// \note On failure, the vector will remain untouched.
 	/// \param i  The size of the new capacity. If less than the number of
 	///           elements in the container, the container is simply tightened.
 	void reserve(size_t i);
 
-	/// Return the number of elements in this vector.
+	/// Returns the number of elements in this vector.
 	inline size_t size() const;
 
-	/// Return the element stored at index.
+	/// Returns the element stored at index.
 	inline T& operator[](const size_t i) const;
 
 private:

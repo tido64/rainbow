@@ -1,5 +1,5 @@
-#ifndef LUA_HELPER_H_
-#define LUA_HELPER_H_
+#ifndef LUA_LUAHELPER_H_
+#define LUA_LUAHELPER_H_
 
 #include <lua.hpp>
 
@@ -45,20 +45,20 @@ namespace Rainbow
 {
 	namespace Lua
 	{
-		/// Create a Lua wrapped object.
+		/// Creates a Lua wrapped object.
 		template<class T>
 		int alloc(lua_State *L);
 
 		template<class T>
 		int dealloc(lua_State *L);
 
-		/// Output information about the error, and dump the stack if applicable.
+		/// Outputs information about the error, and dumps the stack if applicable.
 		void error(lua_State *L, const int lua_error);
 
 		/// Custom Lua package loader.
 		int load(lua_State *L);
 
-		/// Load buffer as a Lua chunk.
+		/// Loads buffer as a Lua chunk.
 		/// \param chunk  Buffer to load.
 		/// \param name   Name of the chunk. Used for debug information.
 		/// \param load   For internal use only! Whether to execute the loaded
@@ -66,7 +66,7 @@ namespace Rainbow
 		/// \return See \c luaL_loadbuffer().
 		int load(lua_State *L, const Data &chunk, const char *name, const bool load = true);
 
-		/// Push a collectable pointer on the stack.
+		/// Pushes a collectable pointer on the stack.
 		///
 		/// Wraps pointer in a table so that one can attach an arbitrary
 		/// metatable and have the garbage collector clean it up. Also sets the
@@ -76,15 +76,15 @@ namespace Rainbow
 		/// \param name  Name of the pointer type.
 		void pushpointer(lua_State *L, void *ptr, const char *name);
 
-		/// Set debugging hook.
+		/// Sets debugging hook.
 		int sethook(lua_State *L, const int mask = LUA_MASKCALL | LUA_MASKRET | LUA_MASKLINE);
 
-		/// Call a function in a wrapped object. The first parameter passed must
-		/// be the \c self object.
+		/// Calls a function in a wrapped object. The first parameter passed
+		/// must be the \c self object.
 		template<class T>
 		int thunk(lua_State *L);
 
-		/// Return the pointer on top of the stack.
+		/// Returns the pointer on top of the stack.
 		///
 		/// Unwraps the pointer while checking for nil value and type. This
 		/// method may return a nullptr.
@@ -95,7 +95,7 @@ namespace Rainbow
 		/// \return The pointer on the top of the stack if valid, else \c nullptr.
 		void* topointer(lua_State *L, const char *name);
 
-		/// Return the string representing a Lua wrapped object. The format of
+		/// Returns the string representing a Lua wrapped object. The format of
 		/// the string is "<type name>: <address>". Normally only available for
 		/// debug builds.
 		template<class T>
@@ -103,15 +103,15 @@ namespace Rainbow
 
 		/// Simple C++-wrapper, adapted from lua-users.org.
 		///
-		/// Wrap a C++ object and make its methods available in the namespace on
-		/// top of the stack.
+		/// Wraps a C++ object and makes its methods available in the namespace
+		/// on top of the stack.
 		///
 		/// \see http://www.lua.org/manual/5.2/
 		/// \see http://lua-users.org/wiki/LunaWrapper
 		template<class T>
 		void wrap(lua_State *L, const bool internal = false);
 
-		/// Return the wrapper of the object on top of the stack.
+		/// Returns the wrapper of the object on top of the stack.
 		/// \return Pointer to wrapper.
 		template<class T>
 		T* wrapper(lua_State *L, const int index = -1);

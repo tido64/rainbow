@@ -1,5 +1,5 @@
-#ifndef LABEL_H_
-#define LABEL_H_
+#ifndef GRAPHICS_LABEL_H_
+#define GRAPHICS_LABEL_H_
 
 #include "Graphics/FontAtlas.h"
 #include "Graphics/VertexArray.h"
@@ -26,34 +26,34 @@ public:
 	inline Label();
 	virtual ~Label();
 
-	/// Return label text color.
+	/// Returns label text color.
 	inline const Colorb& get_color() const;
 
-	/// Return label width.
+	/// Returns label width.
 	inline unsigned int get_width() const;
 
-	/// Set text alignment.
+	/// Sets text alignment.
 	void set_alignment(const Alignment);
 
-	/// Set text color.
+	/// Sets text color.
 	void set_color(const Colorb &);
 
-	/// Set text font.
+	/// Sets text font.
 	void set_font(FontAtlas *);
 
-	/// Set position of text.
+	/// Sets position of text.
 	void set_position(const Vec2f &);
 
-	/// Set label scale. Value is clamped between 0.01 and 1.0.
+	/// Sets label scale. Value is clamped between 0.01 and 1.0.
 	void set_scale(const float f);
 
-	/// Set text to display.
+	/// Sets text to display.
 	void set_text(const char *);
 
-	/// Move label by (x,y).
+	/// Moves label by (x,y).
 	void move(const Vec2f &);
 
-	/// Populate the vertex array.
+	/// Populates the vertex array.
 	void update();
 
 private:
@@ -69,7 +69,7 @@ private:
 	SharedPtr<FontAtlas> font;    ///< The font used in this label.
 	Renderer::VertexArray array;  ///< Vertex array object.
 
-	/// Align individual characters.
+	/// Aligns individual characters.
 	/// \param length  Negative length of characters from \p start to \p end.
 	/// \param start   First character to align.
 	/// \param end     End character.

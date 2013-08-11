@@ -18,10 +18,10 @@ namespace Rainbow
 	public:
 		virtual ~Task() { }
 
-		/// End task. This is called on the main thread, after \c run().
+		/// Ends task. This is called on the main thread, after \c run().
 		inline void end();
 
-		/// Run task. This is called on a worker thread.
+		/// Runs task. This is called on a worker thread.
 		inline void run();
 
 	private:

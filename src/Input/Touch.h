@@ -1,9 +1,9 @@
-#ifndef TOUCH_H_
-#define TOUCH_H_
+#ifndef INPUT_TOUCH_H_
+#define INPUT_TOUCH_H_
 
 /// Structure for keeping track of touches.
 ///
-/// Copyright 2010-12 Bifrost Entertainment. All rights reserved.
+/// Copyright 2010-13 Bifrost Entertainment. All rights reserved.
 /// \author Tommy Nguyen
 struct Touch
 {

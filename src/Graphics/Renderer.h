@@ -1,5 +1,5 @@
-#ifndef RENDERER_H_
-#define RENDERER_H_
+#ifndef GRAPHICS_RENDERER_H_
+#define GRAPHICS_RENDERER_H_
 
 struct SpriteVertex;
 class Label;

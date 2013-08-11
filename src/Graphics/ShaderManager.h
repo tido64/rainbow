@@ -1,5 +1,5 @@
-#ifndef SHADERMANAGER_H_
-#define SHADERMANAGER_H_
+#ifndef GRAPHICS_SHADERMANAGER_H_
+#define GRAPHICS_SHADERMANAGER_H_
 
 #include "Common/Vector.h"
 #include "Graphics/OpenGL.h"
@@ -38,31 +38,31 @@ class ShaderManager : private NonCopyable<ShaderManager>
 public:
 	static ShaderManager *Instance;
 
-	/// Return the real program id.
+	/// Returns the real program id.
 	inline unsigned int get_program(const unsigned int pid) const;
 
-	/// Create program.
+	/// Creates program.
 	/// \param shaders  Shader ids to attach.
 	/// \param count    Number of shader ids.
 	/// \return Unique program identifier.
 	int create_program(const int *shaders, const size_t count);
 
-	/// Create shader.
+	/// Creates shader.
 	/// \param type    Shader type.
 	/// \param source  Shader source code.
 	/// \return Unique shader identifier.
 	int create_shader(int type, const char *source);
 
-	/// Reset to default shaders.
+	/// Resets to default shaders.
 	inline void reset();
 
-	/// Set viewport.
+	/// Sets viewport.
 	void set(const float width, const float height);
 
-	/// Set orthographic projection.
+	/// Sets orthographic projection.
 	void set_ortho(const float left, const float right, const float bottom, const float top);
 
-	/// Use program.
+	/// Activates program.
 	void use(const int program);
 
 	inline operator bool() const;

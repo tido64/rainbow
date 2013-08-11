@@ -1,5 +1,5 @@
-#ifndef VERTEXARRAY_H_
-#define VERTEXARRAY_H_
+#ifndef GRAPHICS_VERTEXARRAY_H_
+#define GRAPHICS_VERTEXARRAY_H_
 
 namespace Renderer
 {

@@ -1,8 +1,8 @@
-/// Copyright 2010-12 Bifrost Entertainment. All rights reserved.
+/// Copyright 2010-13 Bifrost Entertainment. All rights reserved.
 /// \author Tommy Nguyen
 
-#ifndef CONSTANTS_H_
-#define CONSTANTS_H_
+#ifndef COMMON_CONSTANTS_H_
+#define COMMON_CONSTANTS_H_
 
 // Mathematical constants
 const float kPi            = 3.14159265f;

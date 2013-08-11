@@ -22,13 +22,13 @@ namespace Rainbow
 
 		inline void draw();
 
-		/// Load and initialise main script.
+		/// Loads and initialises main script.
 		void init(const Data &, const int width, const int height);
 
-		/// Set screen resolution.
+		/// Sets screen resolution.
 		void set_video(const int width, const int height);
 
-		/// Update world.
+		/// Updates world.
 		/// \param dt  Milliseconds since last frame.
 		void update(const unsigned long dt);
 

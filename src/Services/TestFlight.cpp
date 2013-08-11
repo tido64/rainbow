@@ -28,6 +28,7 @@ namespace Rainbow
 					R_DEBUG("%s\n", message);
 				#endif  // USE_TESTFLIGHT_SDK
 					return 0;
+					static_cast<void>(message);
 				}
 
 				int pass_checkpoint(lua_State *L)
@@ -46,6 +47,7 @@ namespace Rainbow
 					R_DEBUG("Passed checkpoint: \"%s\"\n", checkpoint);
 				#endif  // USE_TESTFLIGHT_SDK
 					return 0;
+					static_cast<void>(checkpoint);
 				}
 			}
 

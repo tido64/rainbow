@@ -26,31 +26,31 @@ namespace Rainbow
 	class ThreadPool
 	{
 	public:
-		/// Return number of hardware threads available on the current system
+		/// Returns number of hardware threads available on the current system
 		/// (e.g. number of CPUs or cores or hyperthreading units), or 0 if this
 		/// information is not available.
 		static unsigned int hardware_concurrency();
 
-		/// Construct a pool of \p num_threads threads.
+		/// Constructs a pool of \p num_threads threads.
 		ThreadPool(const size_t num_threads);
 		~ThreadPool();
 
-		/// Clear the task queue. Does not delete the task objects.
+		/// Clears the task queue. Does not delete the task objects.
 		void clear();
 
-		/// Dispatch a task to a worker thread. Task must stay alive until the
+		/// Dispatches a task to a worker thread. Task must stay alive until the
 		/// main thread has returned from \c finish() or the task queued has
 		/// been cleared.
 		void dispatch(Task *task);
 
-		/// Wait for all tasks to finish. Task queue is cleared and individual
+		/// Waits for all tasks to finish. Task queue is cleared and individual
 		/// tasks can be safely deleted when this call returns.
 		void finish();
 
 		/// Called by a worker to hand in a task and get or wait for a new one.
 		void report(Worker *thread);
 
-		/// Pre-allocate memory for \p num_tasks tasks in queue.
+		/// Pre-allocates memory for \p num_tasks tasks in queue.
 		void reserve(const size_t num_tasks);
 
 	private:

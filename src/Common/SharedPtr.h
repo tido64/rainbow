@@ -1,14 +1,14 @@
-#ifndef SHAREDPTR_H_
-#define SHAREDPTR_H_
+#ifndef COMMON_SHAREDPTR_H_
+#define COMMON_SHAREDPTR_H_
 
 #include "Common/Debug.h"
 #include "Common/NonCopyable.h"
 
-/// Make a class reference countable.
+/// Makes a class reference countable.
 ///
 /// Subclasses of RefCounted can be wrapped with SharedPtr.
 ///
-/// Copyright 2012 Bifrost Entertainment. All rights reserved.
+/// Copyright 2012-13 Bifrost Entertainment. All rights reserved.
 /// \author Tommy Nguyen
 class RefCounted : private NonCopyable<RefCounted>
 {
@@ -32,36 +32,36 @@ template<class T>
 class SharedPtr
 {
 public:
-	/// Construct an empty shared pointer.
+	/// Constructs an empty shared pointer.
 	SharedPtr();
 
-	/// Copy pointer and increment its reference counter.
+	/// Copies pointer and increments its reference counter.
 	SharedPtr(const SharedPtr<T> &);
 
-	/// Set pointer and increment its reference counter.
+	/// Sets pointer and increment its reference counter.
 	explicit SharedPtr(T *);
 
 	~SharedPtr();
 
-	/// Return pointer to the managed object.
+	/// Returns pointer to the managed object.
 	inline T* get() const;
 
-	/// Release the current pointer and retain the new one.
+	/// Releases the current pointer and retains the new one.
 	SharedPtr<T>& operator=(const SharedPtr<T> &);
 
-	/// Release the current pointer and assign the new one.
+	/// Releases the current pointer and assigns the new one.
 	SharedPtr<T>& operator=(T *);
 
-	/// Dereference pointer to the managed object.
+	/// Dereferences pointer to the managed object.
 	inline T& operator*() const;
 
-	/// Dereference pointer to the managed object.
+	/// Dereferences pointer to the managed object.
 	inline T* operator->() const;
 
 private:
 	RefCounted *ptr;  ///< Actual pointer managed by this shared pointer.
 
-	/// Decrement reference counter and release memory if the count hits 0.
+	/// Decrements reference counter and releases memory if the count hits 0.
 	void release();
 };
 

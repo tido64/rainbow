@@ -1,5 +1,5 @@
-#ifndef COLOR_H_
-#define COLOR_H_
+#ifndef COMMON_COLOR_H_
+#define COMMON_COLOR_H_
 
 #include "Common/Debug.h"
 

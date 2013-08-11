@@ -1,5 +1,5 @@
-#ifndef LUA_MODULES_H_
-#define LUA_MODULES_H_
+#ifndef LUA_LUAMODULES_H_
+#define LUA_LUAMODULES_H_
 
 #include "Lua/LuaHelper.h"
 #include "Lua/lua_Animation.h"
@@ -40,16 +40,16 @@ namespace Rainbow
 
 		inline void init(lua_State *L)
 		{
-			Platform::init(L);  // Initialize "rainbow.platform" namespace
-			Renderer::init(L);  // Initialize "rainbow.renderer" namespace
-			IO::init(L);        // Initialize "rainbow.io" namespace
-			Random::init(L);    // Initialize "rainbow.random" function
-			Input::init(L);     // Initialize "rainbow.input" namespace
-			Audio::init(L);     // Initialize "rainbow.audio" namespace
-			Services::init(L);  // Initialize third-party services
+			Platform::init(L);  // Initialise "rainbow.platform" namespace
+			Renderer::init(L);  // Initialise "rainbow.renderer" namespace
+			IO::init(L);        // Initialise "rainbow.io" namespace
+			Random::init(L);    // Initialise "rainbow.random" function
+			Input::init(L);     // Initialise "rainbow.input" namespace
+			Audio::init(L);     // Initialise "rainbow.audio" namespace
+			Services::init(L);  // Initialise third-party services
 
 		#ifdef USE_PHYSICS
-			b2::Lua::Init(L);   // Initialize "b2" namespace
+			b2::Lua::Init(L);   // Initialise "b2" namespace
 		#endif
 		}
 	}

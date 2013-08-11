@@ -1,5 +1,5 @@
-#ifndef DATA_H_
-#define DATA_H_
+#ifndef COMMON_DATA_H_
+#define COMMON_DATA_H_
 
 #include <cstddef>
 
@@ -34,27 +34,27 @@ public:
 		kDataTypeDocument
 	};
 
-	/// Construct an empty data object. No memory will be allocated.
+	/// Constructs an empty data object. No memory will be allocated.
 	inline Data();
 
-	/// Construct a data object with the contents of the file. The file's
+	/// Constructs a data object with the contents of the file. The file's
 	/// location will be determined by its type.
 	Data(const char *const file, const Type type = kDataTypeAsset);
 
-	/// Construct a wrapper around a buffer.
+	/// Constructs a wrapper around a buffer.
 	inline Data(const void *buffer, const size_t size, const Ownership ownership);
 
 	~Data();
 
-	/// Return raw byte array.
+	/// Returns raw byte array.
 	/// \return Pointer to array. Returns \c nullptr if buffer is empty.
 	inline void* bytes() const;
 
-	/// Save data to file.
+	/// Saves data to file.
 	/// \return \c true on success, \c false otherwise.
 	bool save(const char *const file) const;
 
-	/// Return the size of this buffer.
+	/// Returns the size of this buffer.
 	inline size_t size() const;
 
 	inline operator bool() const;
@@ -73,7 +73,7 @@ private:
 	size_t sz;            ///< Size of used buffer, not necessarily equal to allocated.
 	void *data;           ///< Actual buffer, implemented as a C-array.
 
-	/// Resize allocated memory segment. If the requested allocation size is
+	/// Resizes allocated memory segment. If the requested allocation size is
 	/// smaller than current allocated size, nothing will happen.
 	void allocate(const size_t size);
 };

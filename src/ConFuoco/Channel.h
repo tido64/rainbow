@@ -11,20 +11,20 @@ namespace ConFuoco
 		friend class Mixer;
 
 	public:
-		/// Whether this channel is paused.
+		/// Returns whether this channel is paused.
 		bool is_paused();
 
-		/// Whether this channel is playing. Note that this function returns
-		/// \c true as long as the channel is not stopped.
+		/// Returns whether this channel is playing. Note that this function
+		/// returns \c true as long as the channel is not stopped.
 		bool is_playing();
 
-		/// Set channel gain/volume.
+		/// Sets channel gain/volume.
 		void set_gain(const float gain);
 
-		/// Set channel on pause.
+		/// Sets channel on pause.
 		void pause();
 
-		/// Stop channel.
+		/// Stops playback.
 		void stop();
 
 	private:

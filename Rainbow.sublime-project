@@ -30,7 +30,7 @@
 			"name": "C++11",
 			"cmd":
 			[
-				"clang",
+				"clang++",
 				"-c",
 				"-std=c++11",
 				"-Werror",
@@ -38,6 +38,7 @@
 				"-Wall",
 				"-Wextra",
 				"-Wno-invalid-offsetof",
+				"-Weffc++",
 				"-Wold-style-cast",
 				"-Woverloaded-virtual",
 				"-Wsign-promo",

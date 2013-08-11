@@ -1,5 +1,5 @@
-#ifndef FONTATLAS_H_
-#define FONTATLAS_H_
+#ifndef GRAPHICS_FONTATLAS_H_
+#define GRAPHICS_FONTATLAS_H_
 #define FONTATLAS_EXTENDED 6
 //#define FONTATLAS_KERNING
 
@@ -18,7 +18,7 @@ class Data;
 /// - Anti-aliasing
 /// - Kerning
 ///
-/// FIXME: Optimise texture size by sorting glyphs.
+/// TODO: Optimise texture size by sorting glyphs.
 ///
 /// \see http://iphone-3d-programming.labs.oreilly.com/ch07.html
 /// \see http://www.alfredrossi.com/?p=73
@@ -39,7 +39,7 @@ public:
 	inline const FontGlyph* get_glyph(const unsigned long c) const;
 	inline short get_height() const;
 
-	/// Load font and create a texture atlas.
+	/// Loads font and creates a texture atlas.
 	bool load(const Data &font);
 
 protected:

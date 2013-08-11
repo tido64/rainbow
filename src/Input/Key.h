@@ -1,5 +1,5 @@
-#ifndef KEY_H_
-#define KEY_H_
+#ifndef INPUT_KEY_H_
+#define INPUT_KEY_H_
 
 #include "Platform/Macros.h"
 
@@ -21,7 +21,7 @@ typedef SDL_Keysym RawKeysym;
 class Key
 {
 public:
-	/// Convert raw keysym to a Rainbow::Key.
+	/// Converts raw keysym to a Rainbow::Key.
 	static Key from_raw(const RawKeysym *keysym);
 
 	enum Keys

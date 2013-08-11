@@ -3,8 +3,8 @@
 /// Copyright 2010-13 Bifrost Entertainment. All rights reserved.
 /// \author Tommy Nguyen
 
-#ifndef OPENGL_H_
-#define OPENGL_H_
+#ifndef GRAPHICS_OPENGL_H_
+#define GRAPHICS_OPENGL_H_
 
 #include "Platform/Macros.h"
 

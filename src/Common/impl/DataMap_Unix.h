@@ -1,5 +1,5 @@
-#ifndef DATAMAP_UNIX_H_
-#define DATAMAP_UNIX_H_
+#ifndef COMMON_IMPL_DATAMAP_UNIX_H_
+#define COMMON_IMPL_DATAMAP_UNIX_H_
 
 #include "Common/DataMap.h"
 

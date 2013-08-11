@@ -1,5 +1,5 @@
-#ifndef TEXTUREMANAGER_H_
-#define TEXTUREMANAGER_H_
+#ifndef GRAPHICS_TEXTUREMANAGER_H_
+#define GRAPHICS_TEXTUREMANAGER_H_
 
 #include "Common/Vector.h"
 
@@ -31,11 +31,11 @@ class TextureManager : private NonCopyable<TextureManager>
 public:
 	static TextureManager* Instance;
 
-	/// Make texture active on current rendering target.
+	/// Makes texture active on current rendering target.
 	/// \param id  Texture id to bind. If omitted, bind the default texture.
 	void bind(const unsigned int id = 0);
 
-	/// Create a texture.
+	/// Creates a texture.
 	/// \param internal_format  Preferred renderer's internal format.
 	/// \param width            Width of the texture.
 	/// \param height           Height of the texture.
@@ -48,7 +48,7 @@ public:
 	                    const unsigned int format,
 	                    const void *data);
 
-	/// Create texture from a compressed format.
+	/// Creates texture from a compressed format.
 	/// \param format  Compression format.
 	/// \param width   Width of the texture.
 	/// \param height  Height of the texture.
@@ -61,13 +61,13 @@ public:
 	                               const size_t size,
 	                               const void *data);
 
-	/// Return total video memory used (and unused) by textures.
+	/// Returns total video memory used (and unused) by textures.
 	void get_usage(double &used, double &unused, double &peak) const;
 
-	/// Purge unused texture memory.
+	/// Purges unused texture memory.
 	inline void purge();
 
-	/// Delete texture. In reality, the texture is put in a recycle bin and may
+	/// Deletes texture. In reality, the texture is put in a recycle bin and may
 	/// be reused unless purged.
 	/// \param id  Texture to delete.
 	void remove(const unsigned int id);
@@ -96,10 +96,10 @@ private:
 	TextureManager();
 	~TextureManager();
 
-	/// Print total video memory used by textures.
+	/// Prints total video memory used by textures.
 	void print_usage() const;
 
-	/// Clear and delete textures.
+	/// Clears and deletes textures.
 	void purge(Vector<TextureId> &textures);
 };
 

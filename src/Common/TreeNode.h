@@ -1,5 +1,5 @@
-#ifndef TREENODE_H_
-#define TREENODE_H_
+#ifndef COMMON_TREENODE_H_
+#define COMMON_TREENODE_H_
 
 #include "Common/Vector.h"
 
@@ -13,13 +13,13 @@ template<class T>
 class TreeNode : private NonCopyable<TreeNode<T> >
 {
 public:
-	/// Add a node as child.
+	/// Adds a node as child.
 	void add_child(T *);
 
-	/// Remove a child node.
+	/// Removes a child node.
 	void remove_child(T *);
 
-	/// Set parent node.
+	/// Sets parent node.
 	void set_parent(T *);
 
 protected:

@@ -1,5 +1,5 @@
-#ifndef ACCELERATION_H_
-#define ACCELERATION_H_
+#ifndef INPUT_ACCELERATION_H_
+#define INPUT_ACCELERATION_H_
 
 #include "Common/Vec3.h"
 
@@ -10,7 +10,7 @@
 /// Implements a simple high-pass filter that removes the gravity component from
 /// the acceleration data.
 ///
-/// Copyright 2011-12 Bifrost Entertainment. All rights reserved.
+/// Copyright 2011-13 Bifrost Entertainment. All rights reserved.
 /// \author Tommy Nguyen
 class Acceleration
 {
@@ -20,7 +20,7 @@ public:
 
 	inline Acceleration();
 
-	/// Update acceleration data.
+	/// Updates acceleration data.
 	/// \param x,y,z  Raw acceleration data.
 	/// \param t      The relative time at which the acceleration event occurred.
 	inline void update(const double x, const double y, const double z, const double t);

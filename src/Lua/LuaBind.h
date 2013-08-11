@@ -1,5 +1,5 @@
-#ifndef LUABIND_H_
-#define LUABIND_H_
+#ifndef LUA_LUABIND_H_
+#define LUA_LUABIND_H_
 
 #include "Common/SharedPtr.h"
 

@@ -1,5 +1,5 @@
-#ifndef RANDOM_H_
-#define RANDOM_H_
+#ifndef COMMON_RANDOM_H_
+#define COMMON_RANDOM_H_
 
 #include <ctime>
 
@@ -23,18 +23,18 @@
 /// \author Tommy Nguyen
 namespace Random
 {
-	/// Return the next generated random number in [0, 1).
+	/// Returns the next generated random number in [0, 1).
 	inline double next();
 
-	/// Return the next generated random number in [0, n).
+	/// Returns the next generated random number in [0, n).
 	template<class T>
 	inline T next(const T &n);
 
-	/// Return the next generated random number in [n1, n2).
+	/// Returns the next generated random number in [n1, n2).
 	template<class T>
 	inline T next(const T &n1, const T &n2);
 
-	/// Set the random number generator seed. Must be called before any other calls.
+	/// Sets the random number generator seed. Must be called before any other calls.
 	inline void seed(const uint32_t seed);
 
 	double next()

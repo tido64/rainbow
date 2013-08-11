@@ -28,7 +28,7 @@ namespace Rainbow
 		typedef FILE* FileHandle;
 	#endif
 
-		/// Close the file handle.
+		/// Closes the file handle.
 		inline void close(FileHandle fh)
 		{
 		#if defined(RAINBOW_ANDROID)
@@ -39,13 +39,13 @@ namespace Rainbow
 				fclose(fh);
 		}
 
-		/// Find and return the full path for file.
+		/// Finds and returns the full path for file.
 		void find(char *result, const char *const file, const Type type);
 
-		/// Find and open a file.
+		/// Finds and opens a file.
 		FileHandle find_and_open(const char *const file, const Type type);
 
-		/// Make a directory, including any intermediate directories.
+		/// Makes a directory, including any intermediate directories.
 		/// \see mkdir()
 		/// \see stat()
 		/// \param path  Directory path to make.
@@ -54,10 +54,10 @@ namespace Rainbow
 		///         indicate the error.
 		int mkdirp(const char *const path, const mode_t mode);
 
-		/// Open file at path.
+		/// Opens file at path.
 		FileHandle open(const char *const file, const Type type);
 
-		/// Read \p size bytes from file into buffer \p dst.
+		/// Reads \p size bytes from file into buffer \p dst.
 		/// \param[out] dst   Destination buffer.
 		/// \param      size  Number of bytes to read.
 		/// \param      fh    Handle of file to read from.
@@ -71,7 +71,7 @@ namespace Rainbow
 			return fread(dst, sizeof(char), size, fh);
 		}
 
-		/// Return the file size.
+		/// Returns the file size.
 		size_t size(FileHandle fh);
 
 		inline size_t write(const void *ptr, const size_t size, FileHandle fh)

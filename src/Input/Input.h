@@ -1,5 +1,5 @@
-#ifndef INPUT_H_
-#define INPUT_H_
+#ifndef INPUT_INPUT_H_
+#define INPUT_INPUT_H_
 
 #include "Common/Vector.h"
 #include "Input/Acceleration.h"
@@ -15,7 +15,7 @@ class  Touchable;
 ///
 /// \see http://developer.apple.com/library/ios/#documentation/UIKit/Reference/UIAcceleration_Class/Reference/UIAcceleration.html
 ///
-/// Copyright 2010-12 Bifrost Entertainment. All rights reserved.
+/// Copyright 2010-13 Bifrost Entertainment. All rights reserved.
 /// \author Tommy Nguyen
 class Input : private NonCopyable<Input>
 {
@@ -31,16 +31,16 @@ public:
 
 	inline Input(lua_State *);
 
-	/// Reset input subscription list.
+	/// Resets input subscription list.
 	inline void reset();
 
-	/// Subscribe to input events.
+	/// Subscribes to input events.
 	/// \param t      The object that wants to subscribe.
 	/// \param flags  Events to subscribe to.
 	void subscribe(Touchable *const t, unsigned int flags);
 
-	/// Unsubscribe the object from input events.
-	/// \param t  The object to unsubscribe.
+	/// Unsubscribes the object from input events.
+	/// \params t  The object to unsubscribe.
 	inline void unsubscribe(Touchable *const t);
 
 	/// Acceleration event.
@@ -48,7 +48,7 @@ public:
 	/// \param t      The relative time at which the acceleration event occurred.
 	void accelerated(const double x, const double y, const double z, const double t);
 
-	/// Clear all events.
+	/// Clears all events.
 	void clear();
 
 #ifdef RAINBOW_BUTTONS

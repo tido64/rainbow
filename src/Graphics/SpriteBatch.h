@@ -1,5 +1,5 @@
-#ifndef SPRITEBATCH_H_
-#define SPRITEBATCH_H_
+#ifndef GRAPHICS_SPRITEBATCH_H_
+#define GRAPHICS_SPRITEBATCH_H_
 
 #include "Graphics/Drawable.h"
 #include "Graphics/Sprite.h"
@@ -24,31 +24,31 @@ class SpriteBatch : private NonCopyable<SpriteBatch>
 	friend void Sprite::set_texture(const unsigned int id);
 
 public:
-	/// Create a batch of sprites.
+	/// Creates a batch of sprites.
 	/// \param hint  If you know in advance how many sprites you'll need, set
 	///              \p hint for more efficient storage.
 	SpriteBatch(const size_t hint = 8);
 
-	/// Add a textured sprite to the batch given texture coordinates.
+	/// Adds a textured sprite to the batch given texture coordinates.
 	/// \param x,y     Position of the texture assigned to the sprite.
 	/// \param width   Width of the texture and, consequently, the sprite.
 	/// \param height  Height of the texture and, consequently, the sprite.
 	/// \return The newly created sprite, at position (0,0).
 	Sprite& add(const int x, const int y, const int width, const int height);
 
-	/// Create a sprite.
+	/// Creates a sprite.
 	/// \param width   Width of the sprite.
 	/// \param height  Height of the sprite.
 	/// \return The newly created sprite, at position (0,0).
 	Sprite& create_sprite(const unsigned int width, const unsigned int height);
 
-	/// Load texture data.
+	/// Loads texture data.
 	TextureAtlas* set_texture(const DataMap &texture);
 
-	/// Re-use a texture atlas.
+	/// Reuses a texture atlas.
 	TextureAtlas* set_texture(TextureAtlas *texture);
 
-	/// Update the batch of sprites.
+	/// Updates the batch of sprites.
 	void update();
 
 private:

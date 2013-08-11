@@ -1,5 +1,5 @@
-#ifndef DRAWABLE_H_
-#define DRAWABLE_H_
+#ifndef GRAPHICS_DRAWABLE_H_
+#define GRAPHICS_DRAWABLE_H_
 
 /// A drawable interface.
 ///

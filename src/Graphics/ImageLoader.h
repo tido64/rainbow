@@ -1,5 +1,5 @@
-#ifndef IMAGELOADER_H_
-#define IMAGELOADER_H_
+#ifndef GRAPHICS_IMAGELOADER_H_
+#define GRAPHICS_IMAGELOADER_H_
 
 #include "Common/DataMap.h"
 #include "Common/Debug.h"
@@ -82,7 +82,7 @@ namespace ImageLoader
 		PNG
 	};
 
-	/// Attempt to retrieve the image format.
+	/// Attempts to retrieve the image format.
 	/// \param img Encoded image data.
 	/// \return Image format; \c ImageFormat::UNKNOWN if unknown.
 	ImageFormat get_format(const DataMap &img)
@@ -100,7 +100,7 @@ namespace ImageLoader
 		return UNKNOWN;
 	}
 
-	/// Decode image data.
+	/// Decodes image data.
 	///
 	/// Supports
 	/// - iOS: PVRTC and whatever UIImage devours.

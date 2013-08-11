@@ -1,5 +1,5 @@
-#ifndef TEXTUREATLAS_H_
-#define TEXTUREATLAS_H_
+#ifndef GRAPHICS_TEXTUREATLAS_H_
+#define GRAPHICS_TEXTUREATLAS_H_
 
 #include "Common/DataMap.h"
 #include "Common/SharedPtr.h"
@@ -24,17 +24,17 @@ public:
 	explicit TextureAtlas(const DataMap &img);
 	inline ~TextureAtlas();
 
-	/// Bind this texture.
+	/// Binds this texture.
 	inline void bind() const;
 
-	/// Define a texture within the atlas.
+	/// Defines a texture within the atlas.
 	/// \param x,y     Starting point of the texture.
 	/// \param width   Width of the texture.
 	/// \param height  Height of the texture.
 	/// \return The id of the texture.
 	unsigned int define(const Vec2i &origin, const int width, const int height);
 
-	/// Trim the internal texture storage.
+	/// Trims the internal texture storage.
 	inline void trim();
 
 	inline const Texture& operator[](const unsigned int i) const;

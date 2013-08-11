@@ -1,5 +1,5 @@
-#ifndef RAINBOW_DEBUG_H_
-#define RAINBOW_DEBUG_H_
+#ifndef COMMON_DEBUG_H_
+#define COMMON_DEBUG_H_
 
 #include <cstdio>
 

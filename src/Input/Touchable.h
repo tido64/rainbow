@@ -1,5 +1,5 @@
-#ifndef TOUCHABLE_H_
-#define TOUCHABLE_H_
+#ifndef INPUT_TOUCHABLE_H_
+#define INPUT_TOUCHABLE_H_
 
 struct Touch;
 

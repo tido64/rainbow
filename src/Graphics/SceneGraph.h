@@ -1,5 +1,5 @@
-#ifndef SCENEGRAPH_NODE_H_
-#define SCENEGRAPH_NODE_H_
+#ifndef GRAPHICS_SCENEGRAPH_NODE_H_
+#define GRAPHICS_SCENEGRAPH_NODE_H_
 
 #include "Common/TreeNode.h"
 #include "Common/Vec2.h"
@@ -27,7 +27,7 @@ namespace SceneGraph
 		friend void Renderer::draw(const SceneGraph::Node &);
 
 	public:
-		bool enabled;  ///< Whether or not this node should be updated and/or drawn.
+		bool enabled;  ///< Whether this node should be updated and/or drawn.
 
 		const enum
 		{
@@ -38,36 +38,36 @@ namespace SceneGraph
 			SpriteBatchNode
 		} type;  ///< Defines what type of graphical element this node represents.
 
-		/// Create a group node.
+		/// Creates a group node.
 		inline Node();
 
-		/// Create a node with another node's type and data. This node will be
+		/// Creates a node with another node's type and data. This node will be
 		/// an orphan with no children.
 		inline Node(const Node &);
 
-		/// Create an animation node.
+		/// Creates an animation node.
 		inline explicit Node(Animation *);
 
-		/// Create a label node.
+		/// Creates a label node.
 		inline explicit Node(Label *);
 
-		/// Create a sprite batch node.
+		/// Creates a sprite batch node.
 		inline explicit Node(SpriteBatch *);
 
-		/// Create a generic drawable node.
+		/// Creates a generic drawable node.
 		inline Node(Drawable *);
 
-		/// Add a child node.
+		/// Adds a child node.
 		template<class T>
 		Node* add_child(T *p);
 
-		/// Recursively move all sprites by (x,y).
+		/// Recursively moves all sprites by (x,y).
 		void move(const Vec2f &);
 
-		/// Remove node from the graph and delete it.
+		/// Removes node from the graph and deletes it.
 		inline void remove();
 
-		/// Update this node and all its enabled children.
+		/// Updates this node and all its enabled children.
 		void update(const unsigned long dt);
 
 	private:

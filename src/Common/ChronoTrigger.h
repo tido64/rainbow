@@ -1,5 +1,5 @@
-#ifndef CHRONOTRIGGER_H_
-#define CHRONOTRIGGER_H_
+#ifndef COMMON_CHRONOTRIGGER_H_
+#define COMMON_CHRONOTRIGGER_H_
 
 #include "Common/Debug.h"
 
@@ -16,22 +16,22 @@ public:
 
 	virtual ~ChronoTrigger();
 
-	/// Whether this ticker is running.
+	/// Returns whether this ticker is running.
 	inline bool is_stopped();
 
-	/// Set time till a tick.
+	/// Sets time till a tick.
 	inline void set_timeout(const unsigned int timeout);
 
-	/// Start accumulating time.
+	/// Starts accumulating time.
 	inline void start();
 
-	/// Stop accumulating time.
+	/// Stops accumulating time.
 	inline void stop();
 
 	/// Called every tick.
 	inline void tick();
 
-	/// Accumulate time and trigger when it reaches time out.
+	/// Accumulates time and calls \c tick() when time is up.
 	void update(const unsigned long dt);
 
 private:

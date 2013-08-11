@@ -1,5 +1,5 @@
-#ifndef LUA_DEBUGGING_H_
-#define LUA_DEBUGGING_H_
+#ifndef LUA_LUADEBUGGING_H_
+#define LUA_LUADEBUGGING_H_
 
 #include <lua.hpp>
 
@@ -31,19 +31,19 @@ namespace Rainbow
 			Line g_callstack[kLuaMaxStack] = { { 0, 0, nullptr } };
 		}
 
-		/// Dump stack traceback to stdout.
+		/// Dumps stack traceback to stdout.
 		void backtrace(lua_State *L);
 
-		/// Dump locals to stdout.
+		/// Dumps locals to stdout.
 		void dump_locals(lua_State *L, lua_Debug *ar);
 
-		/// Dump stack to stdout.
+		/// Dumps stack to stdout.
 		void dump_stack(lua_State *L);
 
 		/// Passed to \c lua_sethook(). Not to be called directly.
 		void lua_Hook(lua_State *L, lua_Debug *ar);
 
-		/// Print the value at index \p n.
+		/// Prints the value at index \p n.
 		void print_value(lua_State *L, const int n);
 
 		void backtrace(lua_State *L)
@@ -75,10 +75,10 @@ namespace Rainbow
 					break;
 				}
 				if (i == 1)
-					R_DEBUG("* locals\n");
-				R_DEBUG("    %i: %s = ", i, local);
+					printf("* locals\n");
+				printf("    %i: %s = ", i, local);
 				print_value(L, -1);
-				R_DEBUG("\n");
+				printf("\n");
 				lua_pop(L, 1);
 				local = lua_getlocal(L, ar, ++i);
 			}
@@ -90,12 +90,12 @@ namespace Rainbow
 			if (top == 0)
 				return;
 
-			R_DEBUG("* stack\n");
+			printf("* stack\n");
 			for (int i = 1; i <= top; ++i)
 			{
-				R_DEBUG("    %i: ", i);
+				printf("    %i: ", i);
 				print_value(L, i);
-				R_DEBUG("\n");
+				printf("\n");
 			}
 		}
 
@@ -182,10 +182,10 @@ namespace Rainbow
 			}
 
 			/* (ar->namewhat && ar->namewhat[0] != '\0') ? ar->namewhat : kLuaHookNames[ar->event] */
-			R_DEBUG("* %s ", kLuaHookNames[ar->event]);
+			printf("* %s ", kLuaHookNames[ar->event]);
 			if (ar->name)
 			{
-				R_DEBUG("%s(", ar->name);
+				printf("%s(", ar->name);
 
 				const int nparams = (ar->event == 1)
 				                  ? g_callstack[g_level + 1].nparams
@@ -195,9 +195,9 @@ namespace Rainbow
 					for (int i = 1; i <= nparams; ++i)
 					{
 						if (i == 1)
-							R_DEBUG("[1]=");
+							printf("[1]=");
 						else
-							R_DEBUG(", [%i]=", i);
+							printf(", [%i]=", i);
 						print_value(L, i);
 					}
 				}
@@ -212,29 +212,29 @@ namespace Rainbow
 							break;
 						}
 						else if (i == 1)
-							R_DEBUG("%s=", local);
+							printf("%s=", local);
 						else
-							R_DEBUG(", %s=", local);
+							printf(", %s=", local);
 						print_value(L, -1);
 						lua_pop(L, 1);
 					}
 				}
-				R_DEBUG(") ");
+				printf(") ");
 			}
 
 			if (jump)
 			{
 				g_finish = g_level - 1;
-				R_DEBUG("at %s:%i\n", g_callstack[g_finish].source, g_callstack[g_finish].currentline);
+				printf("at %s:%i\n", g_callstack[g_finish].source, g_callstack[g_finish].currentline);
 				return;
 			}
 			else
-				R_DEBUG("at %s:%i\n", g_callstack[g_level].source, g_callstack[g_level].currentline);
+				printf("at %s:%i\n", g_callstack[g_level].source, g_callstack[g_level].currentline);
 
 			char input[16];
 			while (true)
 			{
-				R_DEBUG("(rdb) ");
+				printf("(rdb) ");
 				if (!fgets(input, sizeof(input), stdin))
 					break;
 				// TODO: Handle CTRL+C, CTRL+D, CTRL+Z etc.
@@ -253,14 +253,14 @@ namespace Rainbow
 						g_finish = g_level - 1;
 						return;
 					case 'h':
-						R_DEBUG("Available debugger commands\n\n");
-						R_DEBUG("backtrace  -- Dump stack traceback.\n");
-						R_DEBUG("continue   -- Continue execution.\n");
-						R_DEBUG("finish     -- Finish the current function call.\n");
-						R_DEBUG("next       -- Step over current line.\n");
-						R_DEBUG("print      -- Dump local variables.\n");
-						R_DEBUG("quit       -- Abort execution.\n");
-						R_DEBUG("stack      -- Dump the stack.\n\n");
+						printf("Available debugger commands\n\n");
+						printf("backtrace  -- Dump stack traceback.\n");
+						printf("continue   -- Continue execution.\n");
+						printf("finish     -- Finish the current function call.\n");
+						printf("next       -- Step over current line.\n");
+						printf("print      -- Dump local variables.\n");
+						printf("quit       -- Abort execution.\n");
+						printf("stack      -- Dump the stack.\n\n");
 						break;
 					case 'n':
 						return;
@@ -286,34 +286,34 @@ namespace Rainbow
 			switch (lua_type(L, n))
 			{
 				case LUA_TNIL:
-					R_DEBUG("nil");
+					printf("nil");
 					break;
 				case LUA_TNUMBER:
-					R_DEBUG(LUA_NUMBER_FMT, lua_tonumber(L, n));
+					printf(LUA_NUMBER_FMT, lua_tonumber(L, n));
 					break;
 				case LUA_TBOOLEAN:
-					R_DEBUG("%s", lua_toboolean(L, n) ? "true" : "false");
+					printf("%s", lua_toboolean(L, n) ? "true" : "false");
 					break;
 				case LUA_TSTRING:
-					R_DEBUG("\"%s\"", lua_tostring(L, n));
+					printf("\"%s\"", lua_tostring(L, n));
 					break;
 				case LUA_TTABLE:
-					R_DEBUG("[table]");
+					printf("[table]");
 					break;
 				case LUA_TFUNCTION:
-					R_DEBUG("[function: %p]", lua_topointer(L, n));
+					printf("[function: %p]", lua_topointer(L, n));
 					break;
 				case LUA_TUSERDATA:
-					R_DEBUG("[userdata: %p]", lua_touserdata(L, n));
+					printf("[userdata: %p]", lua_touserdata(L, n));
 					break;
 				case LUA_TTHREAD:
-					R_DEBUG("[thread]");
+					printf("[thread]");
 					break;
 				case LUA_TLIGHTUSERDATA:
-					R_DEBUG("[lightuserdata: %p]", lua_topointer(L, n));
+					printf("[lightuserdata: %p]", lua_topointer(L, n));
 					break;
 				default:
-					R_DEBUG("[unknown]");
+					printf("[unknown]");
 					break;
 			}
 		}

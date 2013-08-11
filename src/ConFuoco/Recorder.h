@@ -31,27 +31,27 @@ namespace ConFuoco
 		Recorder();
 		~Recorder();
 
-		/// Return the average power, in decibels, for the sound being recorded.
+		/// Returns the average power, in decibels, for the sound being recorded.
 		inline float get_average_power() const;
 
-		/// Return low-pass filtered power, in decibels, for the sound being recorded.
+		/// Returns low-pass filtered power, in decibels, for the sound being recorded.
 		inline float get_low_pass() const;
 
-		/// Return the peak power, in decibels, for the sound being recorded.
+		/// Returns the peak power, in decibels, for the sound being recorded.
 		inline float get_peak_power() const;
 
-		/// Pause recording.
+		/// Pauses recording.
 		void pause();
 
-		/// Start or resume recording.
+		/// Starts or resumes recording.
 		/// \param duration  Maximum duration, in seconds, for the recording.
 		/// \return \c true on success; otherwise \c false.
 		bool record(const unsigned long duration = 0);
 
-		/// Stop recording and close the audio file.
+		/// Stops recording and closes the audio file.
 		void stop();
 
-		/// Refresh the average and peak power values of an audio recorder.
+		/// Refreshes the average and peak power values of an audio recorder.
 		void update();
 
 		/// \c true if the recorder is successfully initialised; otherwise \c false.

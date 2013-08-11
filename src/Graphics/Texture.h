@@ -1,10 +1,8 @@
-#ifndef TEXTURE_H_
-#define TEXTURE_H_
+#ifndef GRAPHICS_TEXTURE_H_
+#define GRAPHICS_TEXTURE_H_
 
 #include "Common/Vec2.h"
 
-/// Texture.
-///
 /// Stores texture id and UV coordinates.
 ///
 /// 3 ┌─────┐ 2

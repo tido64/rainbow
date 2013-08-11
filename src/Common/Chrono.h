@@ -1,5 +1,5 @@
-#ifndef CHRONO_H_
-#define CHRONO_H_
+#ifndef COMMON_CHRONO_H_
+#define COMMON_CHRONO_H_
 
 #include "Common/Debug.h"
 #include "Common/NonCopyable.h"
@@ -18,16 +18,16 @@ public:
 
 	inline Chrono();
 
-	/// Return timestamp of current frame.
+	/// Returns timestamp of current frame.
 	inline unsigned long current() const;
 
-	/// Return the time difference between current and previous frame.
+	/// Returns the time difference between current and previous frame.
 	inline unsigned long diff() const;
 
-	/// Return timestamp of previous frame.
+	/// Returns timestamp of previous frame.
 	inline unsigned long previous() const;
 
-	/// Update the clock.
+	/// Updates the clock.
 	void update();
 
 protected:

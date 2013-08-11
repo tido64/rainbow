@@ -16,7 +16,7 @@ namespace ConFuoco
 
 	/// Audio mixer.
 	///
-	/// Copyright 2012 Bifrost Entertainment. All rights reserved.
+	/// Copyright 2012-13 Bifrost Entertainment. All rights reserved.
 	/// \author Tommy Nguyen
 	class Mixer : private NonCopyable<Mixer>
 	{
@@ -29,13 +29,13 @@ namespace ConFuoco
 		Mixer();
 		~Mixer();
 
-		/// Set master gain.
+		/// Sets master gain.
 		/// \param gain  Scalar amplitude multiplier. The default 1.0 means
 		///              that the sound is unattenuated. The value zero equals
 		///              silence (no contribution to the output mix).
 		void set_gain(const float gain);
 
-		/// Set global pitch shift.
+		/// Sets global pitch shift.
 		/// \param pitch  Desired pitch shift, where 1.0 equals identity. Each
 		///               reduction by 50 percent equals a pitch shift of -12
 		///               semitones (one octave reduction). Each doubling
@@ -43,27 +43,27 @@ namespace ConFuoco
 		///               increase). Zero is not a legal value.
 		void set_pitch(const float pitch);
 
-		/// Stop and delete all sounds.
+		/// Stops and deletes all sounds.
 		void clear();
 
-		/// Create audio recorder. Used by Recorder to set up platform-specifics.
+		/// Creates audio recorder. Used by Recorder to set up platform-specifics.
 		void* create_recorder();
 
-		/// Create a sound object from audio file. Deleting a sound object will
-		/// automatically stop all channels from playing it.
+		/// Creates a sound object from audio file. Deleting a sound object will
+		/// automatically stop all channels playing it.
 		Sound* create_sound(const char *const file, const int type = STATIC, const int loops = -1);
 
-		/// Start playback of the sound object and return the channel on which
+		/// Starts playback of the sound object and returns the channel on which
 		/// it is played. Channels may vary with each playback.
 		Channel* play(Sound *);
 
-		/// Release any resources associated with the sound object.
+		/// Releases any resources associated with the sound object.
 		void release(Sound *);
 
-		/// Suspend/continue processing of audio streams.
+		/// Suspends/continues processing of audio streams.
 		void suspend(const bool);
 
-		/// Update platform-specific internals.
+		/// Updates platform-specific internals.
 		void update();
 
 	private:
@@ -72,7 +72,7 @@ namespace ConFuoco
 		Vector<Sound*> sounds;           ///< Stores all loaded sounds.
 		Channel channels[num_channels];  ///< Channels on which sounds are played.
 
-		/// Return the next free channel.
+		/// Returns the next free channel.
 		inline Channel* next_channel();
 
 		/* Implement Channel interface. */

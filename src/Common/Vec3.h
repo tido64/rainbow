@@ -1,5 +1,5 @@
-#ifndef VEC3_H_
-#define VEC3_H_
+#ifndef COMMON_VEC3_H_
+#define COMMON_VEC3_H_
 
 namespace Rainbow
 {
@@ -15,13 +15,13 @@ namespace Rainbow
 		Vec3() : x(0), y(0), z(0) { }
 		Vec3(const T x, const T y, const T z) : x(x), y(y), z(z) { }
 
-		/// Determine whether the vector is zero.
+		/// Returns whether the vector is zero.
 		bool is_zero() const
 		{
 			return !this->x && !this->y && !this->z;
 		}
 
-		/// Zero the vector.
+		/// Zeros the vector.
 		void zero()
 		{
 			this->x = 0;

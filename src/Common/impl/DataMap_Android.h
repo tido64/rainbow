@@ -1,5 +1,5 @@
-#ifndef DATAMAP_ANDROID_H_
-#define DATAMAP_ANDROID_H_
+#ifndef COMMON_IMPL_DATAMAP_ANDROID_H_
+#define COMMON_IMPL_DATAMAP_ANDROID_H_
 
 #include "Common/DataMap.h"
 

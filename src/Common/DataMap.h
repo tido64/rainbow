@@ -1,5 +1,5 @@
-#ifndef DATAMAP_H_
-#define DATAMAP_H_
+#ifndef COMMON_DATAMAP_H_
+#define COMMON_DATAMAP_H_
 
 #include <cstddef>
 
@@ -16,14 +16,14 @@ namespace Rainbow
 	public:
 		inline DataMapBase(const char *const file);
 
-		/// Return offset raw byte array.
-		/// \return Pointer to array. Returns nullptr if buffer is empty.
+		/// Returns offset raw byte array.
+		/// \return Pointer to array. Returns \c nullptr if buffer is empty.
 		inline const unsigned char* bytes() const;
 
-		/// Offset data map's start address.
+		/// Offsets data map's start address.
 		inline void offset(const size_t offset);
 
-		/// Return offset buffer size.
+		/// Returns offset buffer size.
 		inline size_t size() const;
 
 		inline operator bool() const;

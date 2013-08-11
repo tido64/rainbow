@@ -1,11 +1,11 @@
-#ifndef FONTGLYPH_H_
-#define FONTGLYPH_H_
+#ifndef GRAPHICS_FONTGLYPH_H_
+#define GRAPHICS_FONTGLYPH_H_
 
 #include "Graphics/SpriteVertex.h"
 
 /// Font glyph structure for storing advance and a textured sprite.
 ///
-/// Copyright 2010-12 Bifrost Entertainment. All rights reserved.
+/// Copyright 2010-13 Bifrost Entertainment. All rights reserved.
 /// \author Tommy Nguyen
 struct FontGlyph
 {

@@ -1,5 +1,5 @@
-#ifndef LUAMACHINE_H_
-#define LUAMACHINE_H_
+#ifndef LUA_LUAMACHINE_H_
+#define LUA_LUAMACHINE_H_
 
 #include <cstring>
 
@@ -26,10 +26,10 @@ namespace Rainbow
 	public:
 		~LuaMachine();
 
-		/// Load and initialise game script.
+		/// Loads and initialises game script.
 		int init(const Data &main);
 
-		/// Call game update function.
+		/// Calls game update function.
 		int update(const unsigned long t);
 
 		inline operator lua_State*() const;

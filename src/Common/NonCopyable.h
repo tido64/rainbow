@@ -1,10 +1,10 @@
-#ifndef NONCOPYABLE_H_
-#define NONCOPYABLE_H_
+#ifndef COMMON_NONCOPYABLE_H_
+#define COMMON_NONCOPYABLE_H_
 
-/// Prevent objects of a class from being copy-constructed or assigned to
+/// Prevents objects of a class from being copy-constructed or assigned to
 /// each other.
 ///
-/// Copyright 2012 Bifrost Entertainment. All rights reserved.
+/// Copyright 2012-13 Bifrost Entertainment. All rights reserved.
 /// \author Tommy Nguyen
 template<class T>
 class NonCopyable

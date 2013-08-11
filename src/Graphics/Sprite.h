@@ -1,5 +1,5 @@
-#ifndef SPRITE_H_
-#define SPRITE_H_
+#ifndef GRAPHICS_SPRITE_H_
+#define GRAPHICS_SPRITE_H_
 
 #include "Common/NonCopyable.h"
 #include "Graphics/SpriteVertex.h"
@@ -37,35 +37,35 @@ public:
 	Sprite(const unsigned int width, const unsigned int height, const SpriteBatch *parent);
 	Sprite(Sprite &&);
 
-	/// Return the current angle of the sprite.
+	/// Returns the current angle of the sprite.
 	inline float get_angle() const;
 
-	/// Return vertex 0's colour.
+	/// Returns vertex 0's colour.
 	inline const Colorb& get_color() const;
 
-	/// Return the current position of the sprite.
+	/// Returns the current position of the sprite.
 	inline const Vec2f& get_position() const;
 
-	/// Mirror sprite.
+	/// Mirrors sprite.
 	void mirror();
 
-	/// Move sprite by (x,y).
+	/// Moves sprite by (x,y).
 	void move(const Vec2f &);
 
-	/// Rotate sprite by r.
+	/// Rotates sprite by r.
 	void rotate(const float r);
 
-	/// Set sprite colour.
+	/// Sets sprite colour.
 	void set_color(const unsigned int c);
 
-	/// Set the pivot point for rotation and translation.
+	/// Sets the pivot point for rotation and translation.
 	/// \param x,y  Normalised pivot point.
 	void set_pivot(const Vec2f &);
 
-	/// Set sprite position (absolute).
+	/// Sets sprite position (absolute).
 	void set_position(const Vec2f &);
 
-	/// Set angle of rotation (in radian).
+	/// Sets angle of rotation (in radian).
 	void set_rotation(const float r);
 
 	/// Uniform scaling of sprite (does not affect width and height properties).
@@ -74,11 +74,11 @@ public:
 	/// Non-uniform scaling of sprite (does not affect width and height properties).
 	void set_scale(const Vec2f &);
 
-	/// Set the texture.
+	/// Sets the texture.
 	/// \param id  Id of texture to use.
 	void set_texture(const unsigned int id);
 
-	/// Update the vertices of this sprite.
+	/// Updates the vertices of this sprite.
 	void update();
 
 private:

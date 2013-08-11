@@ -1,5 +1,5 @@
-#ifndef TERMINABLE_H_
-#define TERMINABLE_H_
+#ifndef COMMON_TERMINABLE_H_
+#define COMMON_TERMINABLE_H_
 
 /// Terminable classes control the lifetime of an application.
 ///

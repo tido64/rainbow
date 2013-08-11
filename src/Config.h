@@ -27,16 +27,16 @@ namespace Rainbow
 	public:
 		Config();
 
-		/// Return the width of the screen.
+		/// Returns the width of the screen.
 		inline int get_width() const;
 
-		/// Return the height of the screen.
+		/// Returns the height of the screen.
 		inline int get_height() const;
 
-		/// Whether the screen is in portrait mode.
+		/// Returns whether the screen is in portrait mode.
 		inline bool is_portrait() const;
 
-		/// Whether we need to use the accelerometer.
+		/// Returns whether we need to use the accelerometer.
 		inline bool needs_accelerometer() const;
 
 	private:
