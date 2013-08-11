@@ -35,7 +35,7 @@ public:
 	const unsigned int height;  ///< Height of sprite (not scaled).
 
 	Sprite(const unsigned int width, const unsigned int height, const SpriteBatch *parent);
-	Sprite(const Sprite &, const SpriteBatch *parent);
+	Sprite(Sprite &&);
 
 	/// Return the current angle of the sprite.
 	inline float get_angle() const;

@@ -26,20 +26,19 @@ public:
 	/// \param hint  If you know in advance how many sprites you'll need, set
 	///              \p hint for more efficient storage.
 	SpriteBatch(const size_t hint = 8);
-	~SpriteBatch();
 
 	/// Add a textured sprite to the batch given texture coordinates.
 	/// \param x,y     Position of the texture assigned to the sprite.
 	/// \param width   Width of the texture and, consequently, the sprite.
 	/// \param height  Height of the texture and, consequently, the sprite.
 	/// \return The newly created sprite, at position (0,0).
-	Sprite* add(const int x, const int y, const int width, const int height);
+	Sprite& add(const int x, const int y, const int width, const int height);
 
 	/// Create a sprite.
 	/// \param width   Width of the sprite.
 	/// \param height  Height of the sprite.
 	/// \return The newly created sprite, at position (0,0).
-	Sprite* create_sprite(const unsigned int width, const unsigned int height);
+	Sprite& create_sprite(const unsigned int width, const unsigned int height);
 
 	/// Load texture data.
 	TextureAtlas* set_texture(const DataMap &texture);
@@ -57,7 +56,7 @@ private:
 	Renderer::VertexArray array;
 
 	SharedPtr<TextureAtlas> texture;  ///< Texture atlas used by all sprites in the batch.
-	Vector<Sprite*> sprites;          ///< Vector storing all sprites.
+	Vector<Sprite> sprites;           ///< Vector storing all sprites.
 	Vector<SpriteVertex> vertices;    ///< Common vertex array for all sprites in the batch.
 };
 

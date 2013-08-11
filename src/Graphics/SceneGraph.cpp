@@ -47,8 +47,8 @@ namespace SceneGraph
 				this->label->move(delta);
 				break;
 			case SpriteBatchNode: {
-				for (auto sprite : this->sprite_batch->sprites)
-					sprite->move(delta);
+				for (auto &sprite : this->sprite_batch->sprites)
+					sprite.move(delta);
 				break;
 			}
 			default:

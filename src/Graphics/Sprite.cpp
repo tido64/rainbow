@@ -26,10 +26,14 @@ Sprite::Sprite(const unsigned int w, const unsigned int h, const SpriteBatch *p)
 	width(w), height(h), angle(0.0f), stale(-1), vertex_array(nullptr),
 	parent(p), pivot(0.5f, 0.5f), scale(1.0f, 1.0f) { }
 
-Sprite::Sprite(const Sprite &s, const SpriteBatch *p) :
-	width(s.width), height(s.height), angle(s.angle), stale(-1),
-	vertex_array(nullptr), parent(p), center(s.center), pivot(s.pivot),
-	position(s.position), scale(s.scale) { }
+Sprite::Sprite(Sprite &&s) :
+	width(s.width), height(s.height), angle(s.angle), stale(s.stale),
+	vertex_array(s.vertex_array), parent(s.parent), center(s.center),
+	pivot(s.pivot), position(s.position), scale(s.scale)
+{
+	s.vertex_array = nullptr;
+	s.parent = nullptr;
+}
 
 void Sprite::mirror()
 {
