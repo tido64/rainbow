@@ -2,6 +2,8 @@
 
 #include "Graphics/SpriteBatch.h"
 
+namespace Renderer { extern const int kNumSprites; }
+
 const char Drawable::class_name[] = "Drawable";
 
 SpriteBatch::SpriteBatch(const size_t hint) :
@@ -16,7 +18,8 @@ Sprite& SpriteBatch::add(const int x, const int y, const int w, const int h)
 
 Sprite& SpriteBatch::create_sprite(const unsigned int width, const unsigned int height)
 {
-	R_ASSERT(this->sprites.size() <= 256, "Hard-coded limit reached");
+	R_ASSERT(this->sprites.size() <= static_cast<size_t>(Renderer::kNumSprites),
+	         "Hard-coded limit reached");
 
 	const size_t current_capacity = this->vertices.capacity();
 	this->vertices.push_back(SpriteVertex());
