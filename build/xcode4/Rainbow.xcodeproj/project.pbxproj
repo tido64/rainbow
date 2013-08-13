@@ -102,7 +102,6 @@
 		1939A179152C41C000494609 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1939A178152C41C000494609 /* OpenGLES.framework */; };
 		1939A205152C425D00494609 /* Canvas.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1939A17C152C425D00494609 /* Canvas.cpp */; };
 		1939A206152C425D00494609 /* lua_Canvas.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1939A17E152C425D00494609 /* lua_Canvas.cpp */; };
-		1939A207152C425D00494609 /* ChronoTrigger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1939A182152C425D00494609 /* ChronoTrigger.cpp */; };
 		1939A20F152C425D00494609 /* Random.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1939A196152C425D00494609 /* Random.cpp */; };
 		1939A211152C425D00494609 /* Config.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1939A1A0152C425D00494609 /* Config.cpp */; };
 		1939A21B152C425D00494609 /* Director.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1939A1BA152C425D00494609 /* Director.cpp */; };
@@ -451,8 +450,6 @@
 		1939A17E152C425D00494609 /* lua_Canvas.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = lua_Canvas.cpp; sourceTree = "<group>"; };
 		1939A17F152C425D00494609 /* lua_Canvas.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lua_Canvas.h; sourceTree = "<group>"; };
 		1939A181152C425D00494609 /* Chrono.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Chrono.h; sourceTree = "<group>"; };
-		1939A182152C425D00494609 /* ChronoTrigger.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = ChronoTrigger.cpp; sourceTree = "<group>"; };
-		1939A183152C425D00494609 /* ChronoTrigger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChronoTrigger.h; sourceTree = "<group>"; };
 		1939A184152C425D00494609 /* Color.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Color.h; sourceTree = "<group>"; };
 		1939A185152C425D00494609 /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		1939A186152C425D00494609 /* Data.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Data.h; sourceTree = "<group>"; };
@@ -543,6 +540,7 @@
 		196CB726161E4ADD0068C809 /* Gatekeeper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Gatekeeper.h; sourceTree = "<group>"; };
 		196CB72D161E4D940068C809 /* b2MotorJoint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = b2MotorJoint.cpp; sourceTree = "<group>"; };
 		196CB72E161E4D940068C809 /* b2MotorJoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = b2MotorJoint.h; sourceTree = "<group>"; };
+		1970946217BAF222006810E9 /* TimedEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimedEvent.h; sourceTree = "<group>"; };
 		197396DB15A505F60064BF7D /* TextureManager.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = TextureManager.cpp; sourceTree = "<group>"; };
 		197396DC15A505F60064BF7D /* TextureManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextureManager.h; sourceTree = "<group>"; };
 		19865981175E98F700723171 /* Data.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = Data.cpp; sourceTree = "<group>"; };
@@ -1044,8 +1042,6 @@
 				1939A187152C425D00494609 /* impl */,
 				193929C816E3527F0018340B /* Algorithm.h */,
 				1939A181152C425D00494609 /* Chrono.h */,
-				1939A182152C425D00494609 /* ChronoTrigger.cpp */,
-				1939A183152C425D00494609 /* ChronoTrigger.h */,
 				1939A184152C425D00494609 /* Color.h */,
 				1939A185152C425D00494609 /* Constants.h */,
 				19865981175E98F700723171 /* Data.cpp */,
@@ -1059,6 +1055,7 @@
 				1939A197152C425D00494609 /* Random.h */,
 				192A0B9A1681EF75009218EB /* SharedPtr.h */,
 				19B1E56017403E3900BC21A0 /* Terminable.h */,
+				1970946217BAF222006810E9 /* TimedEvent.h */,
 				1939A19C152C425D00494609 /* TreeNode.h */,
 				1939A19D152C425D00494609 /* Vec2.h */,
 				1939A19E152C425D00494609 /* Vec3.h */,
@@ -1531,7 +1528,6 @@
 				1939A174152C401300494609 /* lzio.c in Sources */,
 				1939A205152C425D00494609 /* Canvas.cpp in Sources */,
 				1939A206152C425D00494609 /* lua_Canvas.cpp in Sources */,
-				1939A207152C425D00494609 /* ChronoTrigger.cpp in Sources */,
 				1939A20F152C425D00494609 /* Random.cpp in Sources */,
 				1939A211152C425D00494609 /* Config.cpp in Sources */,
 				1939A21B152C425D00494609 /* Director.cpp in Sources */,

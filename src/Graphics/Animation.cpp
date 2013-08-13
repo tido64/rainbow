@@ -8,7 +8,7 @@ Animation::~Animation()
 	delete[] this->frames;
 }
 
-void Animation::set_frames(const unsigned int *const frames)
+void Animation::set_frames(const uint_t *const frames)
 {
 	delete[] this->frames;
 
@@ -16,7 +16,7 @@ void Animation::set_frames(const unsigned int *const frames)
 	this->reset();
 }
 
-void Animation::tick_impl()
+void Animation::tick()
 {
 	this->sprite->set_texture(*this->frame);
 	if (*(this->frame + 1) == kAnimationEnd)

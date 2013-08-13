@@ -3,6 +3,7 @@
 #include "Platform/Macros.h"
 #ifdef RAINBOW_SDL
 
+#include <SDL_config.h>
 #include <SDL.h>
 #if SDL_VERSION_ATLEAST(1,3,0)
 
