@@ -4,20 +4,27 @@
 #include "Lua/LuaBind.h"
 
 struct lua_State;
-class  Sprite;
+class Sprite;
+class SpriteBatch;
 
 namespace Rainbow
 {
 	namespace Lua
 	{
-		class Sprite : public Bind<Sprite, ::Sprite, kBindTypeWeak>
+		class Sprite
 		{
-			friend class Bind<Sprite, ::Sprite, kBindTypeWeak>;
-
 		public:
+			static const char class_name[];
+			static const Method<Sprite> methods[];
+
 			Sprite(lua_State *);
 
+			::Sprite* get() const;
+
 		private:
+			const unsigned int id;
+			const SpriteBatch *batch;
+
 			int get_angle(lua_State *);
 			int get_color(lua_State *);
 			int get_position(lua_State *);

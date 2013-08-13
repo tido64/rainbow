@@ -33,7 +33,8 @@ namespace Rainbow
 			const int y = luaR_tointeger(L, 2);
 			const int w = luaR_tointeger(L, 3);
 			const int h = luaR_tointeger(L, 4);
-			lua_pushlightuserdata(L, &::SpriteBatch::add(x, y, w, h));
+			lua_pushlightuserdata(L, this);
+			lua_pushinteger(L, ::SpriteBatch::add(x, y, w, h));
 			return alloc<Sprite>(L);
 		}
 
@@ -43,7 +44,8 @@ namespace Rainbow
 
 			const int w = luaR_tointeger(L, 1);
 			const int h = luaR_tointeger(L, 2);
-			lua_pushlightuserdata(L, &::SpriteBatch::create_sprite(w, h));
+			lua_pushlightuserdata(L, this);
+			lua_pushinteger(L, ::SpriteBatch::create_sprite(w, h));
 			return alloc<Sprite>(L);
 		}
 

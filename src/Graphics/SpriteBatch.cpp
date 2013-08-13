@@ -9,14 +9,14 @@ const char Drawable::class_name[] = "Drawable";
 SpriteBatch::SpriteBatch(const size_t hint) :
 	sprites(hint), vertices(hint * 4) { }
 
-Sprite& SpriteBatch::add(const int x, const int y, const int w, const int h)
+unsigned int SpriteBatch::add(const int x, const int y, const int w, const int h)
 {
-	Sprite &sprite = this->create_sprite(w, h);
-	sprite.set_texture(this->texture->define(Vec2i(x, y), w, h));
-	return sprite;
+	const unsigned int idx = this->create_sprite(w, h);
+	this->sprites[idx].set_texture(this->texture->define(Vec2i(x, y), w, h));
+	return idx;
 }
 
-Sprite& SpriteBatch::create_sprite(const unsigned int width, const unsigned int height)
+unsigned int SpriteBatch::create_sprite(const unsigned int width, const unsigned int height)
 {
 	R_ASSERT(this->sprites.size() <= static_cast<size_t>(Renderer::kNumSprites),
 	         "Hard-coded limit reached");
@@ -27,6 +27,7 @@ Sprite& SpriteBatch::create_sprite(const unsigned int width, const unsigned int 
 	this->vertices.push_back(SpriteVertex());
 	this->vertices.push_back(SpriteVertex());
 
+	const unsigned int idx = this->sprites.size();
 	this->sprites.push_back(Sprite(width, height, this));
 	this->array.count += 6;
 
@@ -38,13 +39,11 @@ Sprite& SpriteBatch::create_sprite(const unsigned int width, const unsigned int 
 	{
 		for (size_t i = 0; i < this->sprites.size(); ++i)
 			this->sprites[i].vertex_array = &this->vertices[i * 4];
-		return this->sprites.back();
 	}
+	else  // Assign the batch's buffer to the sprite.
+		this->sprites[idx].vertex_array = &this->vertices[this->vertices.size() - 4];
 
-	// Assign the batch's buffer to the sprite.
-	Sprite &sprite = this->sprites.back();
-	sprite.vertex_array = &this->vertices[this->vertices.size() - 4];
-	return sprite;
+	return idx;
 }
 
 TextureAtlas* SpriteBatch::set_texture(const DataMap &texture)
