@@ -7,6 +7,21 @@
 
 namespace SceneGraph
 {
+	Node::Node() :
+		enabled(true), type(GroupNode), data(nullptr) { }
+
+	Node::Node(Animation *a) :
+		enabled(true), type(AnimationNode), animation(a) { }
+
+	Node::Node(Label *l) :
+		enabled(true), type(LabelNode), label(l) { }
+
+	Node::Node(SpriteBatch *b) :
+		enabled(true), type(SpriteBatchNode), sprite_batch(b) { }
+
+	Node::Node(Drawable *d) :
+		enabled(true), type(DrawableNode), drawable(d) { }
+
 	void Node::move(const Vec2f &delta)
 	{
 		if (delta.is_zero())

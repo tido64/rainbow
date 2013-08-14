@@ -16,6 +16,9 @@ public:
 	/// Adds a node as child.
 	void add_child(T *);
 
+	/// Removes node from the tree and deletes it.
+	void remove();
+
 	/// Removes a child node.
 	void remove_child(T *);
 
@@ -31,27 +34,33 @@ protected:
 };
 
 template<class T>
-void TreeNode<T>::add_child(T *n)
+void TreeNode<T>::add_child(T *node)
 {
-	n->parent = static_cast<T*>(this);
-	this->children.push_back(n);
+	node->parent = static_cast<T*>(this);
+	this->children.push_back(node);
 }
 
 template<class T>
-void TreeNode<T>::remove_child(T *n)
+void TreeNode<T>::remove()
 {
-	if (!n)
+	this->parent->remove_child(static_cast<T*>(this));
+}
+
+template<class T>
+void TreeNode<T>::remove_child(T *node)
+{
+	if (!node)
 		return;
-	this->children.remove(n);
-	delete n;
+	this->children.remove(node);
+	delete node;
 }
 
 template<class T>
-void TreeNode<T>::set_parent(T *n)
+void TreeNode<T>::set_parent(T *node)
 {
+	node->add_child(static_cast<T*>(this));
 	if (this->parent)
 		this->parent->children.remove(static_cast<T*>(this));
-	n->add_child(static_cast<T*>(this));
 }
 
 template<class T>

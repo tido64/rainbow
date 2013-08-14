@@ -19,7 +19,7 @@ class Vector : private NonCopyable<Vector<T> >
 {
 public:
 	Vector(const int reserve = 8);
-
+	Vector(Vector<T> &&);
 	~Vector();
 
 	/// Returns the element stored at index.
@@ -78,6 +78,8 @@ public:
 	/// Returns the number of elements in this vector.
 	inline size_t size() const;
 
+	inline bool operator==(const Vector<T> &) const;
+
 	/// Returns the element stored at index.
 	inline T& operator[](const size_t i) const;
 
@@ -92,6 +94,15 @@ Vector<T>::Vector(const int reserve) :
 	count(0), reserved(0), c_array(nullptr)
 {
 	this->reserve(reserve);
+}
+
+template<typename T>
+Vector<T>::Vector(Vector<T> &&v) :
+	count(v.count), reserved(v.reserved), c_array(v.c_array)
+{
+	v.count = 0;
+	v.reserved = 0;
+	v.c_array = nullptr;
 }
 
 template<typename T>
@@ -232,6 +243,12 @@ template<typename T>
 size_t Vector<T>::size() const
 {
 	return this->count;
+}
+
+template<typename T>
+bool Vector<T>::operator==(const Vector<T> &v) const
+{
+	return this->c_array == v.c_array;
 }
 
 template<typename T>

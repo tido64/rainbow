@@ -39,23 +39,22 @@ namespace SceneGraph
 		} type;  ///< Defines what type of graphical element this node represents.
 
 		/// Creates a group node.
-		inline Node();
-
-		/// Creates a node with another node's type and data. This node will be
-		/// an orphan with no children.
-		inline Node(const Node &);
+		Node();
 
 		/// Creates an animation node.
-		inline explicit Node(Animation *);
+		explicit Node(Animation *);
 
 		/// Creates a label node.
-		inline explicit Node(Label *);
+		explicit Node(Label *);
 
 		/// Creates a sprite batch node.
-		inline explicit Node(SpriteBatch *);
+		explicit Node(SpriteBatch *);
 
 		/// Creates a generic drawable node.
-		inline Node(Drawable *);
+		Node(Drawable *);
+
+		/// Adds a child node.
+		inline Node* add_child(Node *n);
 
 		/// Adds a child node.
 		template<class T>
@@ -63,9 +62,6 @@ namespace SceneGraph
 
 		/// Recursively moves all sprites by (x,y).
 		void move(const Vec2f &);
-
-		/// Removes node from the graph and deletes it.
-		inline void remove();
 
 		/// Updates this node and all its enabled children.
 		void update(const unsigned long dt);
@@ -81,42 +77,16 @@ namespace SceneGraph
 		};  ///< Graphical element represented by this node.
 	};
 
-	Node::Node() :
-		enabled(true), type(GroupNode), data(nullptr) { }
-
-	Node::Node(const Node &n) :
-		TreeNode<Node>(), enabled(true), type(n.type), data(n.data) { }
-
-	Node::Node(Animation *a) :
-		enabled(true), type(AnimationNode), data(a) { }
-
-	Node::Node(Label *l) :
-		enabled(true), type(LabelNode), label(l) { }
-
-	Node::Node(SpriteBatch *b) :
-		enabled(true), type(SpriteBatchNode), data(b) { }
-
-	Node::Node(Drawable *d) :
-		enabled(true), type(DrawableNode), data(d) { }
-
-	template<class T>
-	Node* Node::add_child(T *p)
-	{
-		Node *n = new Node(p);
-		this->add_child(n);
-		return n;
-	}
-
-	template<>
-	inline Node* Node::add_child<Node>(Node *n)
+	Node* Node::add_child(Node *n)
 	{
 		TreeNode<Node>::add_child(n);
 		return n;
 	}
 
-	void Node::remove()
+	template<class T>
+	Node* Node::add_child(T *p)
 	{
-		this->parent->remove_child(this);
+		return this->add_child(new Node(p));
 	}
 }
 
