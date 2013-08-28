@@ -36,7 +36,7 @@ public:
 
 	inline void bind() const;
 
-	inline const FontGlyph* get_glyph(const unsigned long c) const;
+	inline const FontGlyph* get_glyph(const unsigned int c) const;
 	inline short get_height() const;
 
 	/// Loads font and creates a texture atlas.
@@ -64,7 +64,7 @@ void FontAtlas::bind() const
 	TextureManager::Instance->bind(this->texture);
 }
 
-const FontGlyph* FontAtlas::get_glyph(const unsigned long c) const
+const FontGlyph* FontAtlas::get_glyph(const unsigned int c) const
 {
 #if FONTATLAS_EXTENDED > 0
 

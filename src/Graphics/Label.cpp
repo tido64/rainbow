@@ -106,11 +106,10 @@ void Label::update()
 					continue;
 				}
 
-				size_t bytes;
-				const unsigned long c = Rainbow::utf8_decode(text, bytes);
-				if (!bytes)
+				const Rainbow::utf_t &c = Rainbow::utf8_decode(text);
+				if (c.bytes == 0)
 					break;
-				text += bytes;
+				text += c.bytes;
 
 				const FontGlyph *glyph = this->font->get_glyph(c);
 				if (!glyph)

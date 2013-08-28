@@ -13,17 +13,56 @@
 #include <limits>
 
 #include "Common/Constants.h"
+#include "Common/Functional.h"
 
-#ifndef _MSC_VER
-#	define pure __attribute__((const))
-#else
-#	define pure
+#ifdef _MSC_VER
 #	undef max
 #	undef min
 #endif
 
 namespace Rainbow
 {
+	namespace
+	{
+		// Copyright (c) 2008-2010 Bjoern Hoehrmann <bjoern@hoehrmann.de>
+		// See http://bjoern.hoehrmann.de/utf-8/decoder/dfa/ for details.
+
+		const unsigned int kUTF8Accept = 0;
+		const unsigned int kUTF8Reject = 12;
+
+		const unsigned char kUTF8DecoderTable[] = {
+			// The first part of the table maps bytes to character classes that
+			// to reduce the size of the transition table and create bitmasks.
+			 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+			 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+			 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+			 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+			 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,  9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,
+			 7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,  7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,
+			 8,8,2,2,2,2,2,2,2,2,2,2,2,2,2,2,  2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,
+			10,3,3,3,3,3,3,3,3,3,3,3,3,4,3,3, 11,6,6,6,5,8,8,8,8,8,8,8,8,8,8,8,
+
+			// The second part is a transition table that maps a combination
+			// of a state of the automaton and a character class to a state.
+			 0,12,24,36,60,96,84,12,12,12,48,72, 12,12,12,12,12,12,12,12,12,12,12,12,
+			12, 0,12,12,12,12,12, 0,12, 0,12,12, 12,24,12,12,12,12,12,24,12,24,12,12,
+			12,12,12,12,12,12,12,24,12,12,12,12, 12,24,12,12,12,12,12,12,12,24,12,12,
+			12,12,12,12,12,12,12,36,12,36,12,12, 12,36,12,12,12,12,12,36,12,36,12,12,
+			12,36,12,12,12,12,12,12,12,12,12,12,
+		};
+	}
+
+	struct utf_t
+	{
+		unsigned int code;
+		unsigned int bytes;
+
+		operator unsigned int() const
+		{
+			return this->code;
+		}
+	};
+
 	/// Converts radians to degrees.
 	inline float degrees(const float r) pure;
 
@@ -58,10 +97,7 @@ namespace Rainbow
 	inline void swap(T &a, T &b);
 
 	/// Converts a UTF-8 character to UTF-32.
-	/// \param[in]  str    UTF-8 encoded string.
-	/// \param[out] bytes  Number of bytes consumed.
-	/// \return UTF-32 character. Otherwise -1.
-	inline unsigned long utf8_decode(const unsigned char *str, size_t &bytes);
+	inline utf_t utf8_decode(const unsigned char *str) pure;
 
 	float degrees(const float r)
 	{
@@ -129,57 +165,24 @@ namespace Rainbow
 		b = tmp;
 	}
 
-	unsigned long utf8_decode(const unsigned char *str, size_t &bytes)
+	utf_t utf8_decode(const unsigned char *str)
 	{
-		bytes = 0;
-		if (!(str[0] & 0x80))
+		unsigned int state = kUTF8Accept;
+		utf_t c = { 0, 0 };
+		do
 		{
-			bytes = 1;
-			return str[0];
-		}
-		else if ((str[0] & 0xe0) == 0xc0)
-		{
-			if ((str[1] & 0xc0) != 0x80)
-				return -1;
-
-			bytes = 2;
-			unsigned long ucs = str[0] & 0x1f;
-			ucs <<= 6;
-			ucs |= str[1] & 0x3f;
-			return ucs;
-		}
-		else if ((str[0] & 0xf0) == 0xe0)
-		{
-			if ((str[1] & 0xc0) != 0x80 || (str[2] & 0xc0) != 0x80)
-				return -1;
-
-			bytes = 3;
-			unsigned long ucs = str[0] & 0x0f;
-			ucs <<= 6;
-			ucs |= str[1] & 0x3f;
-			ucs <<= 6;
-			ucs |= str[2] & 0x3f;
-			return ucs;
-		}
-		else if ((str[0] & 0xf8) == 0xf0)
-		{
-			if ((str[1] & 0xc0) != 0x80 || (str[2] & 0xc0) != 0x80 || (str[3] & 0xc0) != 0x80)
-				return -1;
-
-			bytes = 4;
-			unsigned long ucs = str[0] & 0x0e;
-			ucs <<= 6;
-			ucs |= str[1] & 0x3f;
-			ucs <<= 6;
-			ucs |= str[2] & 0x3f;
-			ucs <<= 6;
-			ucs |= str[3] & 0x3f;
-			return ucs;
-		}
-		else
-			return -1;
+			const unsigned int type = kUTF8DecoderTable[*str];
+			c.code = (state != kUTF8Accept)
+					? (*str & 0x3fu) | (c.code << 6)
+					: (0xff >> type) & (*str);
+			state = kUTF8DecoderTable[256 + state + type];
+			if (state == kUTF8Reject)
+				return { 0, 0 };
+			++c.bytes;
+			++str;
+		} while (state != kUTF8Accept);
+		return c;
 	}
 }
 
-#undef pure
 #endif

@@ -70,6 +70,7 @@ TEST(AlgorithmTest, Swap)
 
 TEST(AlgorithmTest, UTF8ToUTF32)
 {
+	const unsigned int kInvalidCharacter = 0xb00bbabe;
 	const unsigned char utf8[] = {
 		0x41,        // LATIN CAPITAL LETTER A
 		0x7f,        // <control>
@@ -84,11 +85,11 @@ TEST(AlgorithmTest, UTF8ToUTF32)
 		0xe2, 0x82, 0xac,  // EURO SIGN
 		0xf0, 0xa4, 0xad, 0xa2  // RANDOM CHINESE CHARACTER
 	};
-	const unsigned long utf32[] = {
+	const unsigned int utf32[] = {
 		utf8[0],
 		utf8[1],
-		static_cast<unsigned long>(-1),
-		static_cast<unsigned long>(-1),
+		kInvalidCharacter,
+		kInvalidCharacter,
 		0x00c5,
 		0x00c6,
 		0x00d8,
@@ -100,11 +101,17 @@ TEST(AlgorithmTest, UTF8ToUTF32)
 		0
 	};
 
-	size_t bytes;
 	const unsigned char *l = utf8;
 	for (size_t i = 0; utf32[i]; ++i)
 	{
-		ASSERT_EQ(utf32[i], Rainbow::utf8_decode(l, bytes));
-		l += !bytes ? 1 : bytes;
+		const Rainbow::utf_t &c = Rainbow::utf8_decode(l);
+		if (c.bytes == 0)
+		{
+			ASSERT_EQ(utf32[i], kInvalidCharacter);
+			++l;
+			continue;
+		}
+		ASSERT_EQ(utf32[i], c.code);
+		l += c.bytes;
 	}
 }

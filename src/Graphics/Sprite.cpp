@@ -1,5 +1,6 @@
 // Copyright 2010-13 Bifrost Entertainment. All rights reserved.
 
+#include "Common/Functional.h"
 #include "Graphics/SpriteBatch.h"
 
 using Rainbow::equal;
@@ -10,13 +11,16 @@ namespace
 	const unsigned int kStaleBuffer    = 1u << 0;
 	const unsigned int kStalePosition  = 1u << 1;
 
-	inline Vec2f transform_rst(const Vec2f &p, const Vec2f &s_sin_r, const Vec2f &s_cos_r, const Vec2f &center)
+	inline Vec2f transform_rst(const Vec2f &p, const Vec2f &s_sin_r, const Vec2f &s_cos_r, const Vec2f &center) pure;
+	inline Vec2f transform_st(const Vec2f &p, const Vec2f &scale, const Vec2f &center) pure;
+
+	Vec2f transform_rst(const Vec2f &p, const Vec2f &s_sin_r, const Vec2f &s_cos_r, const Vec2f &center)
 	{
 		return Vec2f(s_cos_r.x * p.x - s_sin_r.x * p.y + center.x,
 		             s_sin_r.y * p.x + s_cos_r.y * p.y + center.y);
 	}
 
-	inline Vec2f transform_st(const Vec2f &p, const Vec2f &scale, const Vec2f &center)
+	Vec2f transform_st(const Vec2f &p, const Vec2f &scale, const Vec2f &center)
 	{
 		return Vec2f(scale.x * p.x + center.x, scale.y * p.y + center.y);
 	}
