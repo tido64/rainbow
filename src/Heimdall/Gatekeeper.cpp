@@ -52,16 +52,14 @@ namespace Heimdall
 
 		const unsigned int pt = this->height / 64;
 
-		this->console_font = new FontAtlas(pt);
-		this->ui_font = new FontAtlas((pt << 1) + (pt >> 1));
-		{
-			this->console_font->load(
-					Data(Inconsolata_otf, sizeof(Inconsolata_otf), Data::kDataReference));
-			this->ui_font->load(
-					Data(NewsCycle_Regular_ttf, sizeof(NewsCycle_Regular_ttf), Data::kDataReference));
-			Resources::ConsoleFont = this->console_font.get();
-			Resources::UIFont = this->ui_font.get();
-		}
+		this->console_font = new FontAtlas(
+				Data(Inconsolata_otf, sizeof(Inconsolata_otf), Data::kDataReference),
+				pt);
+		this->ui_font = new FontAtlas(
+				Data(NewsCycle_Regular_ttf, sizeof(NewsCycle_Regular_ttf), Data::kDataReference),
+				(pt << 1) + (pt >> 1));
+		Resources::ConsoleFont = this->console_font.get();
+		Resources::UIFont = this->ui_font.get();
 
 		this->overlay.setup(width, height);
 		Vec2f position(

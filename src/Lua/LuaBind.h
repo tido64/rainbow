@@ -50,7 +50,6 @@ namespace Rainbow
 			static const Method<L> methods[];
 
 			Bind() { }
-			Bind(T *ptr) : ptr(ptr) { }
 
 			T* get() const
 			{

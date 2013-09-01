@@ -18,8 +18,10 @@ namespace
 	const uint_t kNumGlyphsPerColRow = 12;  ///< Number of glyphs per column/row on texture.
 }
 
-FontAtlas::FontAtlas(const float pt) : height(0), pt(pt), texture(0)
+FontAtlas::FontAtlas(const Data &font, const float pt) : height(0), pt(pt), texture(0)
 {
+	R_ASSERT(font, "Failed to load font");
+
 	for (size_t i = 0; i < kNumCharacters; ++i)
 		this->charset[i].code = i + kASCIIOffset;
 
@@ -39,18 +41,13 @@ FontAtlas::FontAtlas(const float pt) : height(0), pt(pt), texture(0)
 		this->charset[kNumCharacters + i].code = characters[i];
 
 #endif
-}
-
-bool FontAtlas::load(const Data &font)
-{
-	R_ASSERT(font, "Failed to load font");
 
 	// Instantiate FreeType
 	FT_Library lib;
 	if (FT_Init_FreeType(&lib))
 	{
 		R_ASSERT(false, "Failed to initialise FreeType");
-		return false;
+		return;
 	}
 
 	// Load font face
@@ -59,7 +56,7 @@ bool FontAtlas::load(const Data &font)
 	{
 		FT_Done_FreeType(lib);
 		R_ASSERT(false, "Failed to load font face");
-		return false;
+		return;
 	}
 
 	if (FT_Select_Charmap(face, FT_ENCODING_UNICODE))
@@ -67,10 +64,10 @@ bool FontAtlas::load(const Data &font)
 		FT_Done_Face(face);
 		FT_Done_FreeType(lib);
 		R_ASSERT(false, "Failed to select character map");
-		return false;
+		return;
 	}
 
-	FT_Set_Char_Size(face, 0, static_cast<int>(this->pt * 64), 96, 96);
+	FT_Set_Char_Size(face, 0, this->pt * 64, 96, 96);
 
 	// Naive algorithm for calculating texture size
 	uint_t max_width = 0;
@@ -82,7 +79,7 @@ bool FontAtlas::load(const Data &font)
 			FT_Done_Face(face);
 			FT_Done_FreeType(lib);
 			R_ASSERT(false, "Failed to load characters");
-			return false;
+			return;
 		}
 
 		const FT_Bitmap &bitmap = face->glyph->bitmap;
@@ -219,5 +216,21 @@ bool FontAtlas::load(const Data &font)
 			GL_LUMINANCE_ALPHA, tex_width, tex_height,
 			GL_LUMINANCE_ALPHA, tex_buf);
 	delete[] tex_buf;
-	return true;
+}
+
+const FontGlyph* FontAtlas::get_glyph(const unsigned int c) const
+{
+#if FONTATLAS_EXTENDED > 0
+
+	if (c >= 0x80u)
+	{
+		for (size_t i = kNumCharacters; i < kNumCharacters + FONTATLAS_EXTENDED; ++i)
+			if (this->charset[i].code == c)
+				return &this->charset[i];
+		return nullptr;
+	}
+
+#endif
+
+	return &this->charset[static_cast<unsigned char>(c) - kASCIIOffset];
 }

@@ -31,16 +31,16 @@ class Data;
 class FontAtlas : public RefCounted
 {
 public:
-	FontAtlas(const float pt);
+	FontAtlas(const Data &font, const float pt);
+
 	inline ~FontAtlas();
 
 	inline void bind() const;
 
-	inline const FontGlyph* get_glyph(const unsigned int c) const;
+	const FontGlyph* get_glyph(const unsigned int c) const;
 	inline short get_height() const;
 
-	/// Loads font and creates a texture atlas.
-	bool load(const Data &font);
+	inline operator bool() const;
 
 protected:
 	static const unsigned int kASCIIOffset = 32;    ///< Start loading from character 32.
@@ -64,26 +64,14 @@ void FontAtlas::bind() const
 	TextureManager::Instance->bind(this->texture);
 }
 
-const FontGlyph* FontAtlas::get_glyph(const unsigned int c) const
-{
-#if FONTATLAS_EXTENDED > 0
-
-	if (c >= 0x80u)
-	{
-		for (size_t i = kNumCharacters; i < kNumCharacters + FONTATLAS_EXTENDED; ++i)
-			if (this->charset[i].code == c)
-				return &this->charset[i];
-		return nullptr;
-	}
-
-#endif
-
-	return &this->charset[static_cast<unsigned char>(c) - kASCIIOffset];
-}
-
 short FontAtlas::get_height() const
 {
 	return this->height;
+}
+
+FontAtlas::operator bool() const
+{
+	return this->texture != 0;
 }
 
 #endif
