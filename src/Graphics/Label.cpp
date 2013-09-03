@@ -9,12 +9,6 @@ namespace
 	const unsigned int kStaleColor       = 1u << 2;
 }
 
-Label::~Label()
-{
-	delete[] this->text;
-	delete[] this->vx;
-}
-
 void Label::set_alignment(const Label::Alignment a)
 {
 	this->alignment = a;
@@ -60,12 +54,11 @@ void Label::set_text(const char *text)
 	const size_t len = strlen(text);
 	if (len > this->size)
 	{
-		delete[] this->text;
-		this->text = new char[len + 1];
+		this->text.reset(new char[len + 1]);
 		this->size = len;
 		this->stale |= kStaleBufferSize;
 	}
-	memcpy(this->text, text, len);
+	memcpy(this->text.get(), text, len);
 	this->text[len] = '\0';
 	this->stale |= kStaleBuffer;
 }
@@ -85,16 +78,15 @@ void Label::update()
 		{
 			if (this->stale & kStaleBufferSize)
 			{
-				delete[] this->vx;
-				this->vx = new SpriteVertex[this->size * 4];
+				this->vx.reset(new SpriteVertex[this->size * 4]);
 				this->stale |= kStaleColor;
 			}
 
 			this->array.count = 0;
 			size_t start = 0;
-			SpriteVertex *vx = this->vx;
+			SpriteVertex *vx = this->vx.get();
 			Vec2f pen = this->position;
-			for (const unsigned char *text = reinterpret_cast<unsigned char*>(this->text); *text;)
+			for (const unsigned char *text = reinterpret_cast<unsigned char*>(this->text.get()); *text;)
 			{
 				if (*text == '\n')
 				{
@@ -138,7 +130,7 @@ void Label::update()
 			for (size_t i = 0; i < this->size * 4; ++i)
 				this->vx[i].color = this->color;
 		}
-		this->array.update(this->vx, this->size * 4 * sizeof(SpriteVertex));
+		this->array.update(this->vx.get(), this->size * 4 * sizeof(SpriteVertex));
 		this->stale = 0;
 	}
 }

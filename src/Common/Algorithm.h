@@ -93,9 +93,6 @@ namespace Rainbow
 	/// Converts degrees to radians.
 	inline float radians(const float d) pure;
 
-	template<typename T>
-	inline void swap(T &a, T &b);
-
 	/// Converts a UTF-8 character to UTF-32.
 	inline utf_t utf8_decode(const unsigned char *str) pure;
 
@@ -155,14 +152,6 @@ namespace Rainbow
 	float radians(const float d)
 	{
 		return d * kDegree;
-	}
-
-	template<typename T>
-	void swap(T &a, T &b)
-	{
-		T tmp = a;
-		a = b;
-		b = tmp;
 	}
 
 	utf_t utf8_decode(const unsigned char *str)

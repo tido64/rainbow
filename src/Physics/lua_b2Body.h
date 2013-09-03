@@ -283,9 +283,8 @@ namespace b2
 					{
 						const float density = luaR_tonumber(L, 2);
 						lua_pop(L, 1);
-						b2Shape *shape = parse_Shape(L);
-						fixture = this->ptr->CreateFixture(shape, density);
-						delete shape;
+						std::unique_ptr<b2Shape> shape(parse_Shape(L));
+						fixture = this->ptr->CreateFixture(shape.get(), density);
 					}
 					break;
 				default:

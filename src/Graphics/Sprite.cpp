@@ -1,10 +1,11 @@
 // Copyright 2010-13 Bifrost Entertainment. All rights reserved.
 
+#include <utility>
+
 #include "Common/Functional.h"
 #include "Graphics/SpriteBatch.h"
 
 using Rainbow::equal;
-using Rainbow::swap;
 
 namespace
 {
@@ -41,8 +42,8 @@ Sprite::Sprite(Sprite &&s) :
 
 void Sprite::mirror()
 {
-	swap(this->vertex_array[0].texcoord, this->vertex_array[1].texcoord);
-	swap(this->vertex_array[2].texcoord, this->vertex_array[3].texcoord);
+	std::swap(this->vertex_array[0].texcoord, this->vertex_array[1].texcoord);
+	std::swap(this->vertex_array[2].texcoord, this->vertex_array[3].texcoord);
 }
 
 void Sprite::move(const Vec2f &delta)

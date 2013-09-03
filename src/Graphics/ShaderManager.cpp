@@ -1,5 +1,7 @@
 // Copyright 2012-13 Bifrost Entertainment. All rights reserved.
 
+#include <memory>
+
 #include "Common/Data.h"
 #include "Graphics/ShaderManager.h"
 
@@ -64,11 +66,10 @@ int ShaderManager::create_program(const int *shaders, const size_t count)
 		glGetProgramiv(program.id, GL_INFO_LOG_LENGTH, &info_len);
 		if (info_len > 0)
 		{
-			char *log = new char[info_len + 1];
-			glGetProgramInfoLog(program.id, info_len, nullptr, log);
+			std::unique_ptr<char[]> log(new char[info_len + 1]);
+			glGetProgramInfoLog(program.id, info_len, nullptr, log.get());
 			log[info_len] = '\0';
-			R_ERROR("[Rainbow] GLSL: Failed to link program: %s\n", log);
-			delete[] log;
+			R_ERROR("[Rainbow] GLSL: Failed to link program: %s\n", log.get());
 		}
 		glDeleteProgram(program.id);
 		return Shader::INVALID;
@@ -104,12 +105,11 @@ int ShaderManager::create_shader(int type, const char *src)
 		glGetShaderiv(id, GL_INFO_LOG_LENGTH, &info_len);
 		if (info_len > 0)
 		{
-			char *log = new char[info_len + 1];
-			glGetShaderInfoLog(id, info_len, nullptr, log);
+			std::unique_ptr<char[]> log(new char[info_len + 1]);
+			glGetShaderInfoLog(id, info_len, nullptr, log.get());
 			log[info_len] = '\0';
 			R_ERROR("[Rainbow] GLSL: Failed to compile %s shader: %s\n",
-			        (type == GL_VERTEX_SHADER) ? "vertex" : "fragment", log);
-			delete[] log;
+			        (type == GL_VERTEX_SHADER) ? "vertex" : "fragment", log.get());
 		}
 		glDeleteShader(id);
 		return Shader::INVALID;

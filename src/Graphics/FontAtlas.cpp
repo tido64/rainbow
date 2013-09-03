@@ -1,5 +1,7 @@
 // Copyright 2010-13 Bifrost Entertainment. All rights reserved.
 
+#include <memory>
+
 #include <ft2build.h>
 #include FT_CFF_DRIVER_H
 #include FT_GLYPH_H
@@ -97,8 +99,8 @@ FontAtlas::FontAtlas(const Data &font, const float pt) : height(0), pt(pt), text
 
 	// GL_LUMINANCE8_ALPHA8 buffer
 	uint_t w_offset = tex_width * tex_height * 2;
-	GLubyte *tex_buf = new GLubyte[w_offset];
-	memset(tex_buf, 0, w_offset);
+	std::unique_ptr<GLubyte[]> tex_buf(new GLubyte[w_offset]);
+	memset(tex_buf.get(), 0, w_offset);
 
 	// Read all glyph bitmaps and copy them to our texture
 	w_offset = 0;
@@ -125,7 +127,9 @@ FontAtlas::FontAtlas(const Data &font, const float pt) : height(0), pt(pt), text
 		if (bitmap.buffer)
 		{
 			const unsigned char *buf = bitmap.buffer;
-			unsigned char *d_ptr = tex_buf + (h_offset * tex_width + w_offset) * 2 + (kGlyphPadding * 2) * (tex_width + 1);
+			unsigned char *d_ptr = tex_buf.get()
+			                     + (h_offset * tex_width + w_offset) * 2
+			                     + (kGlyphPadding * 2) * (tex_width + 1);
 			uint_t tmp = (tex_width - bitmap.width) * 2;
 			for (int y = 0; y < bitmap.rows; ++y)
 			{
@@ -200,7 +204,7 @@ FontAtlas::FontAtlas(const Data &font, const float pt) : height(0), pt(pt), text
 	/**
 	 * For printing out texture buffer
 	 *
-	const GLubyte *i = tex_buf;
+	const GLubyte *i = tex_buf.get();
 	for (uint_t y = 0; y < tex_height; ++y)
 	{
 		for (uint_t x = 0; x < tex_width; ++x)
@@ -214,8 +218,7 @@ FontAtlas::FontAtlas(const Data &font, const float pt) : height(0), pt(pt), text
 
 	this->texture = TextureManager::Instance->create(
 			GL_LUMINANCE_ALPHA, tex_width, tex_height,
-			GL_LUMINANCE_ALPHA, tex_buf);
-	delete[] tex_buf;
+			GL_LUMINANCE_ALPHA, tex_buf.get());
 }
 
 const FontGlyph* FontAtlas::get_glyph(const unsigned int c) const

@@ -56,18 +56,6 @@ TEST(AlgorithmTest, RadiansToDegrees)
 	ASSERT_TRUE(equal(0.05483f, Rainbow::degrees(Rainbow::radians(0.05483f))));
 }
 
-TEST(AlgorithmTest, Swap)
-{
-	float a = kPi;
-	float b = kPi_2;
-	Rainbow::swap(a, b);
-	ASSERT_EQ(kPi, b);
-	ASSERT_EQ(kPi_2, a);
-	Rainbow::swap(a, b);
-	ASSERT_EQ(kPi, a);
-	ASSERT_EQ(kPi_2, b);
-}
-
 TEST(AlgorithmTest, UTF8ToUTF32)
 {
 	const unsigned int kInvalidCharacter = 0xb00bbabe;

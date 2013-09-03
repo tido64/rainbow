@@ -3,16 +3,9 @@
 #include "Graphics/Animation.h"
 #include "Graphics/Sprite.h"
 
-Animation::~Animation()
-{
-	delete[] this->frames;
-}
-
 void Animation::set_frames(const uint_t *const frames)
 {
-	delete[] this->frames;
-
-	this->frames = frames;
+	this->frames.reset(frames);
 	this->reset();
 }
 

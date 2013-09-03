@@ -13,9 +13,9 @@ namespace Rainbow
 
 	ThreadPool::ThreadPool(const size_t num_threads) :
 		terminate(false), finished(0), next_task(0), num_threads(num_threads),
-		threads(nullptr), taskqueue(0)
+		taskqueue(0)
 	{
-		this->threads = new std::thread[this->num_threads];
+		this->threads.reset(new std::thread[this->num_threads]);
 		for (size_t i = 0; i < this->num_threads; ++i)
 			this->threads[i] = std::thread(Worker(this, i + 2));
 	}
@@ -26,7 +26,6 @@ namespace Rainbow
 		this->taskqueue.post_all();
 		for (size_t i = 0; i < this->num_threads; ++i)
 			this->threads[i].join();
-		delete[] this->threads;
 	}
 
 	void ThreadPool::clear()

@@ -17,8 +17,7 @@ namespace Heimdall
 	}
 
 	Gatekeeper::Gatekeeper() :
-		width(0), height(0), touch_count(0), director(nullptr),
-		overlay_node(nullptr)
+		width(0), height(0), touch_count(0), overlay_node(nullptr)
 	{
 		this->scenegraph.add_child(this->info.get_node());
 
@@ -33,14 +32,12 @@ namespace Heimdall
 	{
 		Resources::ConsoleFont = nullptr;
 		Resources::UIFont = nullptr;
-		delete this->director;
 	}
 
 	void Gatekeeper::init(const Data &script, const int width, const int height)
 	{
 		this->set_video(width, height);
-		delete this->director;
-		this->director = new Rainbow::Director();
+		this->director.reset(new Rainbow::Director());
 		this->director->init(script, this->width, this->height);
 		Input::Instance->subscribe(this, Input::TOUCH_EVENTS);
 	}

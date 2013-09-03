@@ -3,8 +3,10 @@
 #include "Platform/Macros.h"
 #ifdef RAINBOW_ANDROID
 
+#include <memory>
 #include <unistd.h>
 #include <sys/types.h>
+
 #include <EGL/egl.h>
 #include <android/input.h>
 #include <android/sensor.h>
@@ -37,7 +39,7 @@ struct AInstance
 	EGLDisplay display;
 	EGLSurface surface;
 	EGLContext context;
-	Director *director;
+	std::unique_ptr<Director> director;
 	ConFuoco::Mixer mixer;
 
 	AInstance() :
@@ -120,12 +122,12 @@ void android_main(struct android_app *state)
 		ainstance.director->draw();
 		eglSwapBuffers(ainstance.display, ainstance.surface);
 	}
-	delete ainstance.director;
 	android_destroy_display(&ainstance);
 }
 
 void android_destroy_display(AInstance *a)
 {
+	a->director.reset();
 	if (a->display != EGL_NO_DISPLAY)
 	{
 		Renderer::release();
@@ -167,7 +169,7 @@ void android_handle_display(AInstance *a)
 	Renderer::resize(a->width, a->height);
 
 	// Load game
-	a->director = new Director();
+	a->director.reset(new Director());
 	a->director->init(Data("main.lua"), a->width, a->height);
 
 	a->initialised = true;
@@ -340,12 +342,11 @@ int32_t android_handle_motion(struct android_app *app, AInputEvent *event)
 				--history;
 
 				const size_t count = AMotionEvent_getPointerCount(event);
-				Touch *touches = new Touch[count];
+				std::unique_ptr<Touch[]> touches(new Touch[count]);
 
 				for (size_t i = 0; i < count; ++i)
 					touches[i] = get_touch_event(a, event, i, history);
-				Input::Instance->touch_moved(touches, count);
-				delete[] touches;
+				Input::Instance->touch_moved(touches.get(), count);
 			}
 			break;
 		case AMOTION_EVENT_ACTION_CANCEL:

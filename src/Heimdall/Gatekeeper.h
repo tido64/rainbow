@@ -48,7 +48,7 @@ namespace Heimdall
 		unsigned long touch_held;
 		Touch touches[2];
 
-		Rainbow::Director *director;
+		std::unique_ptr<Rainbow::Director> director;
 		SharedPtr<FontAtlas> console_font;
 		SharedPtr<FontAtlas> ui_font;
 

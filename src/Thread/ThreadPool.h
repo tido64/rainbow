@@ -1,6 +1,7 @@
 #ifndef THREAD_THREADPOOL_H_
 #define THREAD_THREADPOOL_H_
 
+#include <memory>
 #include <thread>
 
 #include "Common/Vector.h"
@@ -54,14 +55,14 @@ namespace Rainbow
 		void reserve(const size_t num_tasks);
 
 	private:
-		bool terminate;                 ///< Whether the thread pool is being destructed.
-		std::atomic<size_t> finished;   ///< Number of finished tasks.
-		std::atomic<size_t> next_task;  ///< Next task to grab.
-		const size_t num_threads;       ///< Number of threads in the pool.
-		std::thread *threads;           ///< Pool of threads.
-		RWLock queue;                   ///< Readers/writer lock for locking the task queue.
-		Semaphore taskqueue;            ///< Semaphore to wake up threads when tasks are queued.
-		Vector<Task*> tasks;            ///< Tasks in queue.
+		bool terminate;                          ///< Whether the thread pool is being destructed.
+		std::atomic<size_t> finished;            ///< Number of finished tasks.
+		std::atomic<size_t> next_task;           ///< Next task to grab.
+		const size_t num_threads;                ///< Number of threads in the pool.
+		std::unique_ptr<std::thread[]> threads;  ///< Pool of threads.
+		RWLock queue;                            ///< Readers/writer lock for locking the task queue.
+		Semaphore taskqueue;                     ///< Semaphore to wake up threads when tasks are queued.
+		Vector<Task*> tasks;                     ///< Tasks in queue.
 
 		/// Workaround for the case where some threads are put on hold for other
 		/// threads and these finish quickly, bringing the semaphore down to 0

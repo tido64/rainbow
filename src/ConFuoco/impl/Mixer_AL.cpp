@@ -3,6 +3,8 @@
 #include "Platform/Macros.h"
 #if !defined(RAINBOW_JS) && (defined(RAINBOW_IOS) || defined(RAINBOW_SDL))
 
+#include <memory>
+
 #if defined(RAINBOW_IOS) || defined(RAINBOW_MAC)
 #	include <OpenAL/al.h>
 #	include <OpenAL/alc.h>
@@ -35,7 +37,7 @@ namespace ConFuoco
 				if (alGetError() != AL_NO_ERROR)
 					R_ERROR("[Rainbow::ConFuoco/AL] Failed to generate buffer\n");
 
-				AudioFile *audio_file = AudioFile::Open(file, AudioFile::kAudioFileStatic);
+				std::unique_ptr<AudioFile> audio_file(AudioFile::Open(file, AudioFile::kAudioFileStatic));
 				char *data;
 				const size_t size = audio_file->read(&data);
 				alBufferData(
@@ -45,7 +47,6 @@ namespace ConFuoco
 					size,
 					audio_file->get_rate());
 				delete[] data;
-				delete audio_file;
 			}
 
 			virtual ~Wave()
@@ -68,21 +69,20 @@ namespace ConFuoco
 
 			size_t buf_sz;
 			char *buffer;
-			AudioFile *audio_file;
+			std::unique_ptr<AudioFile> audio_file;
 
 			Channel *channel;
 			unsigned int bids[kALNumBuffers];
 
 			Stream(Mixer *m, const char *const file, const int loops) :
 				Sound(STREAM, m), playing(false), format(0), rate(0),
-				loops(loops), buf_sz(0), buffer(nullptr), audio_file(nullptr),
-				channel(nullptr)
+				loops(loops), buf_sz(0), buffer(nullptr), channel(nullptr)
 			{
 				alGenBuffers(kALNumBuffers, this->bids);
 				if (alGetError() != AL_NO_ERROR)
 					R_ERROR("[Rainbow::ConFuoco/AL] Failed to generate buffers\n");
 
-				this->audio_file = AudioFile::Open(file, AudioFile::kAudioFileStream);
+				this->audio_file.reset(AudioFile::Open(file, AudioFile::kAudioFileStream));
 				int channels = this->audio_file->get_channels();
 				this->buf_sz = AudioFile::CreateBuffer(&this->buffer, channels);
 				this->format = (channels == 1)
@@ -98,7 +98,6 @@ namespace ConFuoco
 				streams.qremove(this);
 				this->mixer->release(this);
 				alDeleteBuffers(kALNumBuffers, this->bids);
-				delete this->audio_file;
 				delete[] this->buffer;
 			}
 

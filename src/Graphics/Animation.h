@@ -1,6 +1,8 @@
 #ifndef GRAPHICS_ANIMATION_H_
 #define GRAPHICS_ANIMATION_H_
 
+#include <memory>
+
 #include "Common/Constants.h"
 #include "Common/NonCopyable.h"
 #include "Common/TimedEvent.h"
@@ -24,8 +26,6 @@ public:
 	/// \param delay   Number of ticks to delay before the animation loops. Negative numbers disable looping.
 	inline Animation(Sprite *s, const uint_t *const frames, const uint_t fps, const int delay = 0);
 
-	~Animation();
-
 	/// Resets sprite animation.
 	inline void reset();
 
@@ -45,11 +45,11 @@ public:
 	void tick();
 
 private:
-	int delay;             ///< Number of ticks to delay before the animation loops. Negative numbers disable looping.
-	int idled;             ///< Number of ticks idled.
-	const uint_t *frame;   ///< Current frame.
-	const uint_t *frames;  ///< Null-terminated array of texture ids to be used as frames.
-	Sprite *sprite;        ///< The sprite to animate.
+	int delay;            ///< Number of ticks to delay before the animation loops. Negative numbers disable looping.
+	int idled;            ///< Number of ticks idled.
+	const uint_t *frame;  ///< Current frame.
+	std::unique_ptr<const uint_t[]> frames;  ///< Null-terminated array of texture ids to be used as frames.
+	Sprite *sprite;       ///< The sprite to animate.
 };
 
 Animation::Animation(Sprite *s, const uint_t *const fs, const uint_t fps, const int d) :
@@ -57,7 +57,7 @@ Animation::Animation(Sprite *s, const uint_t *const fs, const uint_t fps, const 
 
 void Animation::reset()
 {
-	this->frame = this->frames;
+	this->frame = this->frames.get();
 	this->idled = 0;
 }
 

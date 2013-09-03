@@ -1,6 +1,8 @@
 #ifndef GRAPHICS_LABEL_H_
 #define GRAPHICS_LABEL_H_
 
+#include <memory>
+
 #include "Graphics/FontAtlas.h"
 #include "Graphics/VertexArray.h"
 
@@ -24,7 +26,6 @@ public:
 	};
 
 	inline Label();
-	virtual ~Label();
 
 	/// Returns label text color.
 	inline const Colorb& get_color() const;
@@ -57,17 +58,17 @@ public:
 	void update();
 
 private:
-	Colorb color;                 ///< Color of the text.
-	float scale;                  ///< Label scale factor.
-	Alignment alignment;          ///< Text alignment.
-	unsigned int stale;           ///< Flags indicating need for update.
-	unsigned int width;           ///< Label width.
-	size_t size;                  ///< Size of the char array.
-	char *text;                   ///< Content of this label.
-	SpriteVertex *vx;             ///< Vertex array containing the text.
-	Vec2f position;               ///< Position of the text (top left).
-	SharedPtr<FontAtlas> font;    ///< The font used in this label.
-	Renderer::VertexArray array;  ///< Vertex array object.
+	Colorb color;                        ///< Color of the text.
+	float scale;                         ///< Label scale factor.
+	Alignment alignment;                 ///< Text alignment.
+	unsigned int stale;                  ///< Flags indicating need for update.
+	unsigned int width;                  ///< Label width.
+	size_t size;                         ///< Size of the char array.
+	std::unique_ptr<char[]> text;        ///< Content of this label.
+	std::unique_ptr<SpriteVertex[]> vx;  ///< Vertex array containing the text.
+	Vec2f position;                      ///< Position of the text (top left).
+	SharedPtr<FontAtlas> font;           ///< The font used in this label.
+	Renderer::VertexArray array;         ///< Vertex array object.
 
 	/// Aligns individual characters.
 	/// \param length  Negative length of characters from \p start to \p end.
@@ -77,8 +78,7 @@ private:
 };
 
 Label::Label() :
-	scale(1.0f), alignment(kLeftTextAlignment), stale(0), width(0), size(0),
-	text(nullptr), vx(nullptr) { }
+	scale(1.0f), alignment(kLeftTextAlignment), stale(0), width(0), size(0) { }
 
 const Colorb& Label::get_color() const
 {

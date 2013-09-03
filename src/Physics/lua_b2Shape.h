@@ -45,7 +45,7 @@ namespace b2
 				++count;
 			lua_pop(L, count);
 
-			b2Vec2 *points = new b2Vec2[count >> 1];
+			std::unique_ptr<b2Vec2[]> points(new b2Vec2[count >> 1]);
 			count = 0;
 			while (lua_next(L, 1))
 			{
@@ -55,8 +55,7 @@ namespace b2
 				lua_pop(L, 2);
 				++count;
 			}
-			b2PolygonShape::Set(points, count);
-			delete[] points;
+			b2PolygonShape::Set(points.get(), count);
 			return 0;
 		}
 
