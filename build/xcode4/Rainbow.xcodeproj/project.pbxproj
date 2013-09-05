@@ -175,7 +175,6 @@
 		190D6FE516964AA100C9ED26 /* lua_b2Contact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lua_b2Contact.h; sourceTree = "<group>"; };
 		190D6FE616964AA100C9ED26 /* lua_b2Draw.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lua_b2Draw.h; sourceTree = "<group>"; };
 		190D6FE716964AA100C9ED26 /* lua_b2Fixture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lua_b2Fixture.h; sourceTree = "<group>"; };
-		190D6FE816964AA100C9ED26 /* lua_b2MouseJoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lua_b2MouseJoint.h; sourceTree = "<group>"; };
 		190D6FE916964AA100C9ED26 /* lua_b2Shape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lua_b2Shape.h; sourceTree = "<group>"; };
 		190D6FEA16964AA100C9ED26 /* lua_b2World.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lua_b2World.h; sourceTree = "<group>"; };
 		190D6FEB16964AA100C9ED26 /* lua_Box2D.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = lua_Box2D.cpp; sourceTree = "<group>"; };
@@ -533,6 +532,8 @@
 		1949374E1756796D00CF3FC6 /* DataMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataMap.h; sourceTree = "<group>"; };
 		1949E96A176907100088E1CC /* IO.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = IO.cpp; sourceTree = "<group>"; };
 		1954201415F676340049C278 /* IO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IO.h; sourceTree = "<group>"; };
+		195D565617D90DD100C78117 /* Functional.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Functional.h; sourceTree = "<group>"; };
+		195D565717D90E0D00C78117 /* LuaDebugging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LuaDebugging.h; sourceTree = "<group>"; };
 		196911CB1713564A002BC2E4 /* VertexArray.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = VertexArray.cpp; sourceTree = "<group>"; };
 		196911CC1713564A002BC2E4 /* VertexArray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VertexArray.h; sourceTree = "<group>"; };
 		196CB725161E4ADD0068C809 /* Gatekeeper.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = Gatekeeper.cpp; sourceTree = "<group>"; };
@@ -622,7 +623,6 @@
 				190D6FE516964AA100C9ED26 /* lua_b2Contact.h */,
 				190D6FE616964AA100C9ED26 /* lua_b2Draw.h */,
 				190D6FE716964AA100C9ED26 /* lua_b2Fixture.h */,
-				190D6FE816964AA100C9ED26 /* lua_b2MouseJoint.h */,
 				190D6FE916964AA100C9ED26 /* lua_b2Shape.h */,
 				190D6FEA16964AA100C9ED26 /* lua_b2World.h */,
 				190D6FEB16964AA100C9ED26 /* lua_Box2D.cpp */,
@@ -1051,6 +1051,7 @@
 				1939A186152C425D00494609 /* Data.h */,
 				1949374E1756796D00CF3FC6 /* DataMap.h */,
 				190A0ADA15E0294C0088D8B7 /* Debug.h */,
+				195D565617D90DD100C78117 /* Functional.h */,
 				1949E96A176907100088E1CC /* IO.cpp */,
 				1954201415F676340049C278 /* IO.h */,
 				19F9890C15FBBB3B005A5F69 /* NonCopyable.h */,
@@ -1168,6 +1169,7 @@
 			isa = PBXGroup;
 			children = (
 				19DCB2831746AB7C00660000 /* LuaBind.h */,
+				195D565717D90E0D00C78117 /* LuaDebugging.h */,
 				19E91FC01682B1460054D61F /* LuaHelper.cpp */,
 				19E91FC11682B1460054D61F /* LuaHelper.h */,
 				193929BA16E243E90018340B /* LuaMachine.cpp */,
@@ -1613,6 +1615,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_ARC = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_C_LANGUAGE_STANDARD = c99;
@@ -1665,6 +1668,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_ARC = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
@@ -1697,6 +1701,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_ARC = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_C_LANGUAGE_STANDARD = c99;

@@ -3,7 +3,7 @@
 #include "Graphics/OpenGL.h"
 #include "Graphics/TextureManager.h"
 
- TextureManager* TextureManager::Instance = nullptr;
+TextureManager* TextureManager::Instance = nullptr;
 
 TextureManager::TextureManager() :
 	active(0), mag_filter(GL_LINEAR), min_filter(GL_LINEAR), mem_peak(0.0),
@@ -30,35 +30,13 @@ unsigned int TextureManager::create(const unsigned int internal_format,
                                     const unsigned int format,
                                     const void *data)
 {
-	TextureId tex = { 0, 0 };
-	if (!this->recycled.size())
-		glGenTextures(1, &tex.id);
-	else
-	{
-		tex = this->recycled[0];
-		this->recycled.qerase(0);
-	}
-	tex.sz = width * height;
-
-	this->mem_used += tex.sz;
-	if (this->mem_used > this->mem_peak)
-		this->mem_peak = this->mem_used;
-
-	this->bind(tex.id);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, this->min_filter);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, this->mag_filter);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	TextureId texture = this->create_texture(width * height);
 	glTexImage2D(GL_TEXTURE_2D, 0, internal_format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
 	R_ASSERT(glGetError() == GL_NO_ERROR, "Failed to load texture");
 
-	this->textures.push_back(tex);
-
-#ifndef NDEBUG
+	this->textures.push_back(texture);
 	this->print_usage();
-#endif
-
-	return tex.id;
+	return texture.id;
 }
 
 unsigned int TextureManager::create_compressed(const unsigned int format,
@@ -67,35 +45,13 @@ unsigned int TextureManager::create_compressed(const unsigned int format,
                                                const size_t size,
                                                const void *data)
 {
-	TextureId tex = { 0, 0 };
-	if (!this->recycled.size())
-		glGenTextures(1, &tex.id);
-	else
-	{
-		tex = this->recycled[0];
-		this->recycled.qerase(0);
-	}
-	tex.sz = width * height >> 1;
-
-	this->mem_used += tex.sz;
-	if (this->mem_used > this->mem_peak)
-		this->mem_peak = this->mem_used;
-
-	this->bind(tex.id);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, this->min_filter);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, this->mag_filter);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	TextureId texture = this->create_texture(width * height >> 1);
 	glCompressedTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, size, data);
 	R_ASSERT(glGetError() == GL_NO_ERROR, "Failed to load compressed texture");
 
-	this->textures.push_back(tex);
-
-#ifndef NDEBUG
+	this->textures.push_back(texture);
 	this->print_usage();
-#endif
-
-	return tex.id;
+	return texture.id;
 }
 
 void TextureManager::get_usage(double &used, double &unused, double &peak) const
@@ -132,14 +88,37 @@ void TextureManager::set_filter(const int filter)
 	this->min_filter = filter;
 }
 
-#ifndef NDEBUG
+TextureManager::TextureId TextureManager::create_texture(const unsigned int size)
+{
+	TextureId texture = { 0, size };
+	if (!this->recycled.size())
+		glGenTextures(1, &texture.id);
+	else
+	{
+		texture.id = this->recycled[0].id;
+		this->recycled.qerase(0);
+	}
+	this->mem_used += texture.sz;
+	if (this->mem_used > this->mem_peak)
+		this->mem_peak = this->mem_used;
+
+	this->bind(texture.id);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, this->min_filter);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, this->mag_filter);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+	return texture;
+}
+
 void TextureManager::print_usage() const
 {
+#ifndef NDEBUG
 	double used, unused, peak;
 	this->get_usage(used, unused, peak);
 	printf("[Rainbow] Video: %.2f MBs of textures (%.2f MBs unused)\n", used, unused);
-}
 #endif
+}
 
 void TextureManager::purge(Vector<TextureId> &t)
 {
@@ -161,7 +140,5 @@ void TextureManager::purge(Vector<TextureId> &t)
 	glDeleteTextures(t.size(), textures);
 	t.clear();
 
-#ifndef NDEBUG
 	this->print_usage();
-#endif
 }

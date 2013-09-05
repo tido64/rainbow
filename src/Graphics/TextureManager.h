@@ -96,6 +96,9 @@ private:
 	TextureManager();
 	~TextureManager();
 
+	/// Returns a recycled texture id or creates a new one, ready for upload.
+	TextureId create_texture(const unsigned int size);
+
 	/// Prints total video memory used by textures.
 	void print_usage() const;
 

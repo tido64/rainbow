@@ -2,11 +2,15 @@
 #include <png.h>
 
 #include "Common/Debug.h"
+#include "Common/Functional.h"
 
 #define USE_PNG
 
 namespace PNG
 {
+	bool check(const DataMap &data) pure;
+	Rainbow::Image decode(const DataMap &data) pure;
+
 	namespace
 	{
 		struct png_read_struct

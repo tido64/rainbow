@@ -1,11 +1,14 @@
 #include <UIKit/UIKit.h>
 
 #include "Common/Debug.h"
+#include "Common/Functional.h"
 
 #define USE_UIKIT
 
 namespace UIKit
 {
+	Rainbow::Image decode(const DataMap &data) pure;
+
 	Rainbow::Image decode(const DataMap &data)
 	{
 		Rainbow::Image image;

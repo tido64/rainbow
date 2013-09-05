@@ -1,11 +1,15 @@
 #include <stdint.h>
 
 #include "Common/Debug.h"
+#include "Common/Functional.h"
 
 #define USE_PVRTC
 
 namespace PVRTC
 {
+	bool check(const DataMap &data) pure;
+	Rainbow::Image decode(const DataMap &data) pure;
+
 	namespace
 	{
 		const unsigned int kPVRHeaderVersion3 = 0x03525650;  // = "PVR3"

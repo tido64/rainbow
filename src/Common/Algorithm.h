@@ -57,6 +57,8 @@ namespace Rainbow
 		unsigned int code;
 		unsigned int bytes;
 
+		utf_t() : code(0), bytes(0) { }
+
 		operator unsigned int() const
 		{
 			return this->code;
@@ -157,7 +159,7 @@ namespace Rainbow
 	utf_t utf8_decode(const unsigned char *str)
 	{
 		unsigned int state = kUTF8Accept;
-		utf_t c = { 0, 0 };
+		utf_t c;
 		do
 		{
 			const unsigned int type = kUTF8DecoderTable[*str];
@@ -166,7 +168,7 @@ namespace Rainbow
 					: (0xff >> type) & (*str);
 			state = kUTF8DecoderTable[256 + state + type];
 			if (state == kUTF8Reject)
-				return { 0, 0 };
+				return utf_t();
 			++c.bytes;
 			++str;
 		} while (state != kUTF8Accept);

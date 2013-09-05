@@ -1,8 +1,5 @@
 // Copyright 2010-13 Bifrost Entertainment. All rights reserved.
 
-#include <utility>
-
-#include "Common/Functional.h"
 #include "Graphics/SpriteBatch.h"
 
 using Rainbow::equal;

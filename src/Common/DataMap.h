@@ -1,9 +1,8 @@
 #ifndef COMMON_DATAMAP_H_
 #define COMMON_DATAMAP_H_
 
-#include <cstddef>
-
 #include "Common/NonCopyable.h"
+#include "Platform/Macros.h"
 
 namespace Rainbow
 {
@@ -78,7 +77,6 @@ namespace Rainbow
 	}
 }
 
-#include "Platform/Macros.h"
 #if defined(RAINBOW_ANDROID)
 #	include "Common/impl/DataMap_Android.h"
 #elif defined(RAINBOW_WIN)

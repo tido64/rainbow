@@ -1,8 +1,6 @@
 #ifndef PLATFORM_SYSUTIL_H_
 #define PLATFORM_SYSUTIL_H_
 
-#include <cstddef>
-
 #include "Common/Vector.h"
 
 namespace Rainbow

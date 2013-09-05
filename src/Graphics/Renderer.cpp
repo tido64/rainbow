@@ -5,7 +5,6 @@
 #include "Graphics/SceneGraph.h"
 #include "Graphics/ShaderManager.h"
 #include "Graphics/SpriteBatch.h"
-#include "Graphics/TextureManager.h"
 
 #ifdef GL_ES_VERSION_2_0
 #	include "Graphics/Shaders/Shaders.h"

@@ -2,7 +2,6 @@
 
 #include <Box2D/Box2D.h>
 
-#include "Common/Debug.h"
 #include "Lua/LuaHelper.h"
 
 namespace b2

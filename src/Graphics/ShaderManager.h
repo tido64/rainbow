@@ -60,7 +60,7 @@ public:
 	void set(const float width, const float height);
 
 	/// Sets orthographic projection.
-	void set_ortho(const float left, const float right, const float bottom, const float top);
+	void set_projection(const float left, const float right, const float bottom, const float top);
 
 	/// Activates program.
 	void use(const int program);

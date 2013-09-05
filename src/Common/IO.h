@@ -1,7 +1,6 @@
 #ifndef COMMON_IO_H_
 #define COMMON_IO_H_
 
-#include <cstddef>
 #include <cstdio>
 
 #include "Platform/Macros.h"

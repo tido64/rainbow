@@ -1,7 +1,6 @@
 // Copyright 2010-13 Bifrost Entertainment. All rights reserved.
 
 #include "Graphics/Image.h"
-#include "Graphics/OpenGL.h"
 #include "Graphics/TextureAtlas.h"
 
 namespace

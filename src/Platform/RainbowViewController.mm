@@ -202,7 +202,7 @@ namespace
 	// Swap screen width and height. See comments for touchesArrayFromSet:.
 	CGSize size = [[UIScreen mainScreen] bounds].size;
 	if (UIInterfaceOrientationIsLandscape([[UIApplication sharedApplication] statusBarOrientation]))
-		Rainbow::swap(size.width, size.height);
+		std::swap(size.width, size.height);
 	_scale = [[UIScreen mainScreen] scale];
 	size.width *= self.scale;
 	size.height *= self.scale;

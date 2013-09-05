@@ -36,12 +36,12 @@ namespace Rainbow
 					return 0;
 				}
 
-				int set_ortho(lua_State *L)
+				int set_projection(lua_State *L)
 				{
 					LUA_ASSERT(lua_gettop(L) == 4,
-					           "rainbow.renderer.set_ortho(left, right, bottom, top)");
+					           "rainbow.renderer.set_projection(left, right, bottom, top)");
 
-					ShaderManager::Instance->set_ortho(
+					ShaderManager::Instance->set_projection(
 							luaR_tonumber(L, 1), luaR_tonumber(L, 2),
 							luaR_tonumber(L, 3), luaR_tonumber(L, 4));
 					return 0;
@@ -65,7 +65,7 @@ namespace Rainbow
 
 				luaR_rawsetcclosurefield(L, &set_clear_color, "set_clear_color");
 				luaR_rawsetcclosurefield(L, &set_filter, "set_filter");
-				luaR_rawsetcclosurefield(L, &set_ortho, "set_ortho");
+				luaR_rawsetcclosurefield(L, &set_projection, "set_projection");
 
 				lua_rawset(L, -3);
 

@@ -3,6 +3,7 @@
 
 #include <cstring>
 #include <new>
+#include <utility>
 
 #include "Common/Debug.h"
 #include "Common/NonCopyable.h"
@@ -187,7 +188,7 @@ void Vector<T>::push_back(T &&element)
 	if (this->count == this->reserved)
 		this->reserve(this->reserved += (this->reserved + 1) >> 1);
 
-	new (this->c_array + this->count) T(static_cast<T&&>(element));
+	new (this->c_array + this->count) T(std::move(element));
 	++this->count;
 }
 

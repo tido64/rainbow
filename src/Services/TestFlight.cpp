@@ -1,6 +1,4 @@
-#include "Common/Debug.h"
 #include "Lua/LuaHelper.h"
-#include "Platform/Macros.h"
 #include "Services/TestFlight.h"
 
 #ifdef USE_TESTFLIGHT_SDK
