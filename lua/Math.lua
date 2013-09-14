@@ -1,6 +1,6 @@
 --! Rainbow math helper.
 --!
---! Because none of us have a PhD in math.
+--! Because none of us have a PhD in math (or physics).
 --!
 --! Note that if you're going to use any of these in a loop, it is better to
 --! inline them, e.g.:
@@ -32,10 +32,10 @@
 rainbow.math = rainbow.math or {}
 
 -- The universal gravitation constant, defined as G = 6.67384 * 10^-11 N(m/kg)^2.
-G = 6.67384e-11
+local G = 6.67384e-11
 
 -- Standard gravitational acceleration, defined in m/s^2.
-g = 9.80665
+local g = 9.80665
 
 local kRadian = 180 / math.pi
 local kDegree = math.pi / 180
@@ -83,12 +83,12 @@ function rainbow.math.hitbox(x, y, width, height, scale)
 	scale = scale or 1.0
 	local half_w = width * scale * 0.5
 	local half_h = height * scale * 0.5
-	local hitbox = {}
-	hitbox.x0 = x - half_w
-	hitbox.y0 = y - half_h
-	hitbox.x1 = x + half_w
-	hitbox.y1 = y + half_h
-	return hitbox
+	return {
+		x0 = x - half_w,
+		y0 = y - half_h,
+		x1 = x + half_w,
+		y1 = y + half_h
+	}
 end
 
 --! Check whether a point is inside a box.
