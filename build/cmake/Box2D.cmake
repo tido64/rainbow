@@ -10,4 +10,4 @@ add_definitions(-DUSE_PHYSICS)
 add_dependencies(rainbow box2d)
 
 set(PHYSICS_LIBRARY box2d)
-message(STATUS "Compile with physics (Box2D)")
+message(STATUS "Compile with physics: Box2D")

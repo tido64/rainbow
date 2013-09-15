@@ -17,7 +17,6 @@
 
 #ifdef _MSC_VER
 #	undef max
-#	undef min
 #endif
 
 namespace Rainbow
@@ -85,9 +84,6 @@ namespace Rainbow
 	template<typename T>
 	inline const T& max(const T &a, const T &b) pure;
 
-	template<typename T>
-	inline const T& min(const T &a, const T &b) pure;
-
 	/// Calculates the next power of 2.
 	/// \note 0 is incorrectly considered a power of 2.
 	inline unsigned int next_pow2(unsigned int i) pure;
@@ -132,12 +128,6 @@ namespace Rainbow
 	const T& max(const T &a, const T &b)
 	{
 		return (a < b) ? b : a;
-	}
-
-	template<typename T>
-	const T& min(const T &a, const T &b)
-	{
-		return (b < a) ? b : a;
 	}
 
 	unsigned int next_pow2(unsigned int i)

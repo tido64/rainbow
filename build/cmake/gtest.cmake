@@ -10,5 +10,5 @@ if(NOT CMAKE_BUILD_TYPE STREQUAL Release)
 	add_definitions(-DGTEST_HAS_RTTI=0 -DRAINBOW_TEST)
 	set(GTEST_LIBRARY gtest)
 
-	message(STATUS "Google C++ Testing Framework is enabled")
+	message(STATUS "Compile with tests: Google C++ Testing Framework")
 endif(NOT CMAKE_BUILD_TYPE STREQUAL Release)

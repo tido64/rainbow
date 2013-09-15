@@ -30,14 +30,11 @@ TEST(AlgorithmTest, IsPowerOfTwo)
 	}
 }
 
-TEST(AlgorithmTest, MaxMin)
+TEST(AlgorithmTest, Max)
 {
 	ASSERT_EQ(2, Rainbow::max(1, 2));
 	ASSERT_EQ(1, Rainbow::max(1, 1));
 	ASSERT_EQ(1, Rainbow::max(1, 0));
-	ASSERT_EQ(1, Rainbow::min(1, 2));
-	ASSERT_EQ(1, Rainbow::min(1, 1));
-	ASSERT_EQ(0, Rainbow::min(1, 0));
 }
 
 TEST(AlgorithmTest, NextPowerOfTwo)

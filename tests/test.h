@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "Algorithm.test.cpp"
+#include "Common/Algorithm.test.cpp"
 #include "Common/Chrono.test.cpp"
 #include "Common/Color.test.cpp"
 #include "Common/Data.test.cpp"
