@@ -48,7 +48,7 @@ namespace Rainbow
 		}
 
 	private:
-		std::atomic<int> count;
+		std::atomic_int count;
 		std::condition_variable cond;
 		std::mutex mutex;
 	};

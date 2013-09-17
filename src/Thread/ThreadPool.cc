@@ -1,22 +1,26 @@
 // Copyright 2013 Bifrost Entertainment. All rights reserved.
 
-#include "Thread/Task.h"
+#include <algorithm>
+
 #include "Thread/ThreadPool.h"
 #include "Thread/Worker.h"
 
 namespace Rainbow
 {
-	unsigned int ThreadPool::hardware_concurrency()
+	unsigned int ThreadPool::recommended_pool_size()
 	{
-		return std::thread::hardware_concurrency();
+		const unsigned int num_threads = std::thread::hardware_concurrency();
+		return (num_threads == 0) ? 1 : num_threads - 1;
 	}
 
-	ThreadPool::ThreadPool(const size_t num_threads) :
-		terminate(false), finished(0), next_task(0), num_threads(num_threads),
-		taskqueue(0)
+	ThreadPool::ThreadPool(const unsigned int num_threads) :
+		terminate(false), num_threads(num_threads), next_task(0), taskqueue(0)
 	{
+		R_DEBUG("[Rainbow] Number of hardware threads: %u\n",
+		        std::thread::hardware_concurrency());
+
 		this->threads.reset(new std::thread[this->num_threads]);
-		for (size_t i = 0; i < this->num_threads; ++i)
+		for (unsigned int i = 0; i < this->num_threads; ++i)
 			this->threads[i] = std::thread(Worker(this, i + 2));
 	}
 
@@ -24,7 +28,7 @@ namespace Rainbow
 	{
 		this->terminate = true;
 		this->taskqueue.post_all();
-		for (size_t i = 0; i < this->num_threads; ++i)
+		for (unsigned int i = 0; i < this->num_threads; ++i)
 			this->threads[i].join();
 	}
 
@@ -32,10 +36,9 @@ namespace Rainbow
 	{
 		this->tasks.clear();
 		this->next_task = 0;
-		this->finished = 0;
 	}
 
-	void ThreadPool::dispatch(Task *task)
+	void ThreadPool::dispatch(const Task &task)
 	{
 		if (this->tasks.size() == this->tasks.capacity())
 		{
@@ -51,53 +54,41 @@ namespace Rainbow
 
 	void ThreadPool::finish()
 	{
-		// Run post on finished tasks while waiting for all threads to return.
-		for (size_t i = 0; i < this->tasks.size();)
+		// Run a few tasks while waiting for all threads to return.
+		while (this->taskqueue != static_cast<int>(this->num_threads) * -1)
 		{
-			for (; i < this->finished; ++i)
-				this->tasks[i]->end();
-			// If the main thread can pick up a task, do so.
-			if (this->next_task < this->tasks.size())
-			{
-				const size_t t = this->next_task++;
-				if (t < this->tasks.size())
-				{
-					this->tasks[t]->run();
-					++this->finished;
-				}
-			}
+			for (size_t t = this->next_task++; t < this->tasks.size(); t = this->next_task++)
+				this->tasks[t]();
 		}
 		this->clear();
 	}
 
-	void ThreadPool::report(Worker *worker)
+	void ThreadPool::report(Worker &worker)
 	{
 		if (this->terminate)
 		{
 			this->taskqueue.post();
-			worker->task = nullptr;
+			worker.task = nullptr;
 			return;
 		}
-		if (worker->task)
-			++this->finished;
 		size_t t = this->next_task++;
 		while (t >= this->tasks.size())
 		{
 			this->post_if_starved();
 			this->taskqueue.wait();
-			this->post_if_starved();
 			if (this->terminate)
 			{
 				this->taskqueue.post();
-				worker->task = nullptr;
+				worker.task = nullptr;
 				return;
 			}
 			// Check whether the task queue was emptied.
 			if (t >= this->next_task)
 				t = this->next_task++;
 		}
+		this->post_if_starved();
 		this->queue.lock_shared();
-		worker->task = this->tasks[t];
+		worker.task = this->tasks[t];
 		this->queue.unlock_shared();
 	}
 
@@ -108,7 +99,7 @@ namespace Rainbow
 
 	void ThreadPool::post_if_starved()
 	{
-		if (this->taskqueue < 0 && this->finished < this->tasks.size())
+		if (this->taskqueue < 0 && this->next_task < this->tasks.size())
 			this->taskqueue.post();
 	}
 }

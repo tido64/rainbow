@@ -1,11 +1,12 @@
 #ifndef THREAD_WORKER_H_
 #define THREAD_WORKER_H_
 
-#include <cstddef>
+#include <functional>
 
 namespace Rainbow
 {
-	class Task;
+	typedef std::function<void()> Task;
+
 	class ThreadPool;
 
 	/// Worker perform tasks in a thread.
@@ -25,12 +26,12 @@ namespace Rainbow
 		void operator()();
 
 	private:
-		unsigned int count;  ///< Number of tasks completed. For debugging purposes.
-		const size_t id;     ///< Worker id.
-		Task *task;          ///< Task to execute. \c nullptr if terminating.
-		ThreadPool *pool;    ///< The thread pool this worker belongs to.
+		unsigned int count;     ///< Number of tasks completed. For debugging purposes.
+		const unsigned int id;  ///< Worker id.
+		ThreadPool *pool;       ///< The thread pool this worker belongs to.
+		Task task;              ///< Task to execute. \c nullptr if terminating.
 
-		Worker(ThreadPool *pool, const size_t id);
+		Worker(ThreadPool *pool, const unsigned int id);
 	};
 }
 
