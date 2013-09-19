@@ -1,6 +1,7 @@
 // Copyright 2011-13 Bifrost Entertainment. All rights reserved.
 
 #include "Lua/LuaModules.h"
+#include "Lua/lua_Rainbow.h"
 
 namespace Rainbow
 {
@@ -108,15 +109,6 @@ namespace Rainbow
 		R_ASSERT(lua_gettop(this->L) == 0, "Stack not empty");
 
 		// Load our internal script
-		const char Rainbow_lua[] =
-				"__rainbow_modules = {}\n"
-				"function __update(dt)\n"
-					"local modules = __rainbow_modules\n"
-					"for i = 1, #modules do\n"
-						"modules[i](dt)\n"
-					"end\n"
-					"update(dt)\n"
-				"end\n";
 		int e = luaL_loadbuffer(this->L, Rainbow_lua, sizeof(Rainbow_lua) / sizeof(char) - 1, "Rainbow");
 		R_ASSERT(e == LUA_OK, "Failed to load internal Lua script");
 		e = lua_pcall(this->L, 0, 0, 0);
