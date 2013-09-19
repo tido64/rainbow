@@ -1,5 +1,6 @@
-local Parser = require("Prose/Parser")
-local Prose = require("Prose/Prose")
+local module_path = ...
+local Parser = require(module_path .. "/Parser")
+local Prose = require(module_path .. "/Prose")
 
 rainbow.prose = rainbow.prose or {}
 function rainbow.prose.from_table(t)
