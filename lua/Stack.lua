@@ -5,7 +5,9 @@
 --! time.
 --!
 --! \code
---! local mystack = rainbow.stack()
+--! local Stack = require(module_path .. "Stack")
+--!
+--! local mystack = Stack()
 --! mystack:push(1)  # Stack is now { 1 }
 --! mystack:push(2)  # Stack is now { 1, 2 }
 --! mystack:push(3)  # Stack is now { 1, 2, 3 }
@@ -25,19 +27,24 @@
 --! Copyright 2012-13 Bifrost Entertainment. All rights reserved.
 --! \author Tommy Nguyen
 
-local Stack = {}
-Stack.__index = Stack
-rainbow.stack = Stack
+local setmetatable = setmetatable
 
-local function create(Stack)
-	local self = {
-		__count = 0,
-		__store = {}
-	}
-	setmetatable(self, Stack)
-	return self
-end
-setmetatable(Stack, { __call = create })
+local Stack = {
+	__index = nil,
+	pop = nil,
+	push = nil,
+	top = nil
+}
+Stack.__index = Stack
+
+setmetatable(Stack, {
+	__call = function(Stack)
+		return setmetatable({
+			__count = 0,
+			__store = {}
+		}, Stack)
+	end
+})
 
 function Stack:pop()
 	if self.__count == 0 then
@@ -56,9 +63,11 @@ function Stack:top()
 	return self.__store[self.__count]
 end
 
+return Stack
+
 --[[
 function Stack.unit_test()
-	local stack = rainbow.stack()
+	local stack = Stack()
 	for i = 1, 10 do
 		stack:push(i)
 		if stack:top() ~= i then

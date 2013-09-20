@@ -53,13 +53,13 @@
   * [scenegraph](#rainbow.scenegraph)
   * [sprite](#rainbow.sprite)
   * [spritebatch](#rainbow.spritebatch)
-  * [stack](#rainbow.stack)
   * [texture](#rainbow.texture)
   * [timer](#rainbow.timer)
   * [transition](#rainbow.transition)
   * &mdash;
   * [Functional](#Functional)
   * [Math](#Math)
+  * [Stack](#Stack)
   * &mdash;
   * [Box2D](http://box2d.org/documentation/)
 
@@ -986,47 +986,6 @@ Creates an untextured [sprite](#rainbow.sprite) with given dimension and places 
 
 Sets [texture atlas](#rainbow.texture).
 
-<a id="rainbow.stack"></a>
-## rainbow.stack
-
-Stack is a last in, first out (LIFO) data type and linear data structure. A stack can store any element but only the top element is available at any time.
-
-	local mystack = rainbow.stack()
-	mystack:push(1)  # Stack is now { 1 }
-	mystack:push(2)  # Stack is now { 1, 2 }
-	mystack:push(3)  # Stack is now { 1, 2, 3 }
-	mystack:push(4)  # Stack is now { 1, 2, 3, 4 }
-
-	local value = mystack:top()  # 'value' is 4
-
-	mystack:pop()          # Stack is now { 1, 2, 3 }
-	value = mystack:top()  # 'value' is 3
-	mystack:pop()          # Stack is now { 1, 2 }
-	value = mystack:top()  # 'value' is 2
-	mystack:pop()          # Stack is now { 1 }
-	value = mystack:top()  # 'value' is 1
-	mystack:pop()          # Stack is now empty
-
-<a id="rainbow.stack()"></a>
-### rainbow.stack()
-
-Creates a stack.
-
-<a id="rainbow.stack:pop"></a>
-### &lt;rainbow.stack&gt;:pop()
-
-Pops an element from the top of the stack.
-
-<a id="rainbow.stack:push"></a>
-### &lt;rainbow.stack&gt;:push()
-
-Pushes an element on top of the stack.
-
-<a id="rainbow.stack:top"></a>
-### &lt;rainbow.stack&gt;:top()
-
-Returns the element on top of the stack.
-
 <a id="rainbow.texture"></a>
 ## rainbow.texture
 
@@ -1473,6 +1432,49 @@ Checks whether a point is inside a box.
 </table>
 
 Converts degrees to radians.
+
+<a id="Stack"></a>
+## Stack
+
+	local Stack = require(module_path .. "Stack")
+
+Stack is a last in, first out (LIFO) data type and linear data structure. A stack can store any element but only the top element is available at any time.
+
+	local mystack = Stack()
+	mystack:push(1)  # Stack is now { 1 }
+	mystack:push(2)  # Stack is now { 1, 2 }
+	mystack:push(3)  # Stack is now { 1, 2, 3 }
+	mystack:push(4)  # Stack is now { 1, 2, 3, 4 }
+
+	local value = mystack:top()  # 'value' is 4
+
+	mystack:pop()          # Stack is now { 1, 2, 3 }
+	value = mystack:top()  # 'value' is 3
+	mystack:pop()          # Stack is now { 1, 2 }
+	value = mystack:top()  # 'value' is 2
+	mystack:pop()          # Stack is now { 1 }
+	value = mystack:top()  # 'value' is 1
+	mystack:pop()          # Stack is now empty
+
+<a id="Stack()"></a>
+### Stack()
+
+Creates a stack.
+
+<a id="Stack:pop"></a>
+### &lt;Stack&gt;:pop()
+
+Pops an element from the top of the stack.
+
+<a id="Stack:push"></a>
+### &lt;Stack&gt;:push(element)
+
+Pushes <var>element</var> on top of the stack.
+
+<a id="Stack:top"></a>
+### &lt;Stack&gt;:top()
+
+Returns the element on top of the stack.
 
 </xmp>
 <div id="top"><a href="javascript:window.scroll(0,0);">Top &uarr;</a></div>
