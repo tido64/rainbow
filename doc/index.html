@@ -47,7 +47,6 @@
   * [input](#rainbow.input)
   * [io](#rainbow.io)
   * [label](#rainbow.label)
-  * [math](#rainbow.math)
   * [platform](#rainbow.platform)
   * [random](#rainbow.random)
   * [renderer](#rainbow.renderer)
@@ -58,6 +57,9 @@
   * [texture](#rainbow.texture)
   * [timer](#rainbow.timer)
   * [transition](#rainbow.transition)
+  * &mdash;
+  * [Functional](#Functional)
+  * [Math](#Math)
   * &mdash;
   * [Box2D](http://box2d.org/documentation/)
 
@@ -485,148 +487,6 @@ Sets label scale. Values are clamped between 0.01-1.0.
 </table>
 
 Sets the text to be displayed on the label.
-
-<a id="rainbow.math"></a>
-## rainbow.math
-
-Useful mathematical functions.
-
-<a id="rainbow.math.G"></a>
-### rainbow.math.G
-
-The universal gravitation constant, defined as G = 6.67384 * 10<sup>-11</sup> N(m/kg)<sup>2</sup>.
-
-<a id="rainbow.math.angle"></a>
-### rainbow.math.angle(a.x, a.y, b.x, b.y)
-
-<table>
-	<tr>
-		<td><var>a.x, a.y</var></td>
-		<td>The first point.</td>
-	</tr>
-	<tr>
-		<td><var>b.x, b.y</var></td>
-		<td>The second point.</td>
-	</tr>
-</table>
-
-Calculates the angle between two points.
-
-<a id="rainbow.math.clamp"></a>
-### rainbow.math.clamp(x, min, max)
-
-<table>
-	<tr>
-		<td><var>x</var></td>
-		<td>The value to clamp.</td>
-	</tr>
-	<tr>
-		<td><var>min</var></td>
-		<td>Lowest acceptable value.</td>
-	</tr>
-	<tr>
-		<td><var>max</var></td>
-		<td>Highest acceptable value.</td>
-	</tr>
-</table>
-
-Returns the input value clamped between a range [<var>min</var>, <var>max</var>].
-
-<a id="rainbow.math.degrees"></a>
-### rainbow.math.degrees(radians)
-
-<table>
-	<tr>
-		<td><var>radians</var></td>
-		<td>The value to convert to degrees.</td>
-	</tr>
-</table>
-
-Converts radians to degrees.
-
-<a id="rainbow.math.distance"></a>
-### rainbow.math.distance(a.x, a.y, b.x, b.y)
-
-<table>
-	<tr>
-		<td><var>a.x, a.y</var></td>
-		<td>The first point.</td>
-	</tr>
-	<tr>
-		<td><var>b.x, b.y</var></td>
-		<td>The second point.</td>
-	</tr>
-</table>
-
-Calculates the distance between two points.
-
-<a id="rainbow.math.gravitation"></a>
-### rainbow.math.gravitation(m1, m2, r)
-
-<table>
-	<tr>
-		<td><var>m1</var></td>
-		<td>The first mass.</td>
-	</tr>
-	<tr>
-		<td><var>m2</var></td>
-		<td>The second mass.</td>
-	</tr>
-	<tr>
-		<td><var>r</var></td>
-		<td>Distance between the centers of the masses.</td>
-	</tr>
-</table>
-
-Newton's law of universal gravitation: F = G * (m<sub>1</sub> * m<sub>2</sub>) / r<sup>2</sup>.
-
-<a id="rainbow.math.hitbox"></a>
-### rainbow.math.hitbox(x, y, width,height, scale)
-
-<table>
-	<tr>
-		<td><var>x, y</var></td>
-		<td>Centre of the box.</td>
-	</tr>
-	<tr>
-		<td><var>width,height</var></td>
-		<td>Dimension of the box.</td>
-	</tr>
-	<tr>
-		<td><var>scale</var></td>
-		<td>Scaling factor for on-screen box size.</td>
-	</tr>
-</table>
-
-Creates a hitbox.
-
-<a id="rainbow.math.is_inside"></a>
-### rainbow.math.is_inside(box, point)
-
-<table>
-	<tr>
-		<td><var>box</var></td>
-		<td>Table with the upper-left and lower-right points of the box.</td>
-	</tr>
-	<tr>
-		<td><var>point</var></td>
-		<td>The point to check.</td>
-	</tr>
-</table>
-
-Checks whether a point is inside a box.
-
-<a id="rainbow.math.radians"></a>
-### rainbow.math.radians(degrees)
-
-<table>
-	<tr>
-		<td><var>degrees</var></td>
-		<td>The value to convert to radians.</td>
-	</tr>
-</table>
-
-Converts degrees to radians.
 
 <a id="rainbow.platform"></a>
 ## rainbow.platform
@@ -1388,6 +1248,231 @@ Rotates a drawable to given angle.
 </table>
 
 Scales a drawable from a given start factor to a given final factor.
+
+<a id="Functional"></a>
+## Functional
+
+	local Functional = require(module_path .. "Functional")
+
+Functions from functional programming languages such as Haskell and Scheme.
+
+<a id="Functional.compose"></a>
+### Functional.compose(f, g)
+
+Returns <var>f ∘ g</var>, i.e. the composition of two functions so that the result of function <var>g</var> becomes the input to function <var>f</var>. Example:
+
+	local printf = Functional.compose(io.write, string.format)
+	printf("a = %i, b = %i, c = %i\n", 1, 2, 3)
+	> a = 1, b = 2, c = 3
+
+<a id="Functional.filter"></a>
+### Functional.filter(pred, list)
+
+Returns a copy of the list containing only the elements that satisfy the predicate.
+
+<a id="Functional.filterh"></a>
+### Functional.filterh(pred, table)
+
+Returns a copy of the hash table containing only the elements that satisfy the predicate.
+
+<a id="Functional.foldl"></a>
+### Functional.foldl(op, z, list)
+
+Reduces the list using the binary operator, from left to right, with <var>z</var> as starting value.
+
+<a id="Functional.foldl1"></a>
+### Functional.foldl1(op, list)
+
+A variant of <code>foldl</code> that uses the leftmost element as starting value.
+
+<a id="Functional.foldr"></a>
+### Functional.foldr(op, z, list)
+
+Reduces the list using the binary operator, from right to left, with <var>z</var> as starting value.
+
+<a id="Functional.foldr1"></a>
+### Functional.foldr1(op, list)
+
+A variant of <code>foldr</code> that uses the rightmost element as starting value.
+
+<a id="Functional.map"></a>
+### Functional.map(f, list)
+
+Returns a copy of the list with the function <var>f</var> applied to each element.
+
+<a id="Functional.maph"></a>
+### Functional.maph(f, table)
+
+Returns a copy of the hash table with the function <var>f</var> applied to each element.
+
+<a id="Functional.difference"></a>
+### Functional.difference(list)
+
+Computes the difference of a finite list of numbers; the first value being the minuend.
+
+<a id="Functional.product"></a>
+### Functional.product(list)
+
+Computes the product of a finite list of numbers.
+
+<a id="Functional.quotient"></a>
+### Functional.quotient(list)
+
+Computes the quotient of a finite list of numbers; the first value being the numerator.
+
+<a id="Functional.sum"></a>
+### Functional.sum(list)
+
+Computes the sum of a finite list of numbers.
+
+<a id="Math"></a>
+## Math
+
+	local Math = require(module_path .. "Math")
+
+Useful mathematical functions.
+
+<a id="Math.G"></a>
+### Math.G
+
+The universal gravitation constant, defined as G = 6.67384 * 10<sup>-11</sup> N(m/kg)<sup>2</sup>.
+
+<a id="Math.g"></a>
+### Math.g
+
+Standard gravitational acceleration, defined in m/s<sup>2</sup>.
+
+<a id="Math.angle"></a>
+### Math.angle(a.x, a.y, b.x, b.y)
+
+<table>
+	<tr>
+		<td><var>a.x, a.y</var></td>
+		<td>The first point.</td>
+	</tr>
+	<tr>
+		<td><var>b.x, b.y</var></td>
+		<td>The second point.</td>
+	</tr>
+</table>
+
+Calculates the angle between two points.
+
+<a id="Math.clamp"></a>
+### Math.clamp(x, min, max)
+
+<table>
+	<tr>
+		<td><var>x</var></td>
+		<td>The value to clamp.</td>
+	</tr>
+	<tr>
+		<td><var>min</var></td>
+		<td>Lowest acceptable value.</td>
+	</tr>
+	<tr>
+		<td><var>max</var></td>
+		<td>Highest acceptable value.</td>
+	</tr>
+</table>
+
+Returns the input value clamped between a range [<var>min</var>, <var>max</var>].
+
+<a id="Math.degrees"></a>
+### Math.degrees(radians)
+
+<table>
+	<tr>
+		<td><var>radians</var></td>
+		<td>The value to convert to degrees.</td>
+	</tr>
+</table>
+
+Converts radians to degrees.
+
+<a id="Math.distance"></a>
+### Math.distance(a.x, a.y, b.x, b.y)
+
+<table>
+	<tr>
+		<td><var>a.x, a.y</var></td>
+		<td>The first point.</td>
+	</tr>
+	<tr>
+		<td><var>b.x, b.y</var></td>
+		<td>The second point.</td>
+	</tr>
+</table>
+
+Calculates the distance between two points.
+
+<a id="Math.gravitation"></a>
+### Math.gravitation(m1, m2, r)
+
+<table>
+	<tr>
+		<td><var>m1</var></td>
+		<td>The first mass.</td>
+	</tr>
+	<tr>
+		<td><var>m2</var></td>
+		<td>The second mass.</td>
+	</tr>
+	<tr>
+		<td><var>r</var></td>
+		<td>Distance between the centers of the masses.</td>
+	</tr>
+</table>
+
+Newton's law of universal gravitation: F = G * (m<sub>1</sub> * m<sub>2</sub>) / r<sup>2</sup>.
+
+<a id="Math.hitbox"></a>
+### Math.hitbox(x, y, width,height, scale)
+
+<table>
+	<tr>
+		<td><var>x, y</var></td>
+		<td>Centre of the box.</td>
+	</tr>
+	<tr>
+		<td><var>width,height</var></td>
+		<td>Dimension of the box.</td>
+	</tr>
+	<tr>
+		<td><var>scale</var></td>
+		<td>Scaling factor for on-screen box size. Default: 1.0.</td>
+	</tr>
+</table>
+
+Creates a hitbox.
+
+<a id="Math.is_inside"></a>
+### Math.is_inside(box, point)
+
+<table>
+	<tr>
+		<td><var>box</var></td>
+		<td>Table with the upper-left and lower-right points of the box.</td>
+	</tr>
+	<tr>
+		<td><var>point</var></td>
+		<td>The point to check.</td>
+	</tr>
+</table>
+
+Checks whether a point is inside a box.
+
+<a id="Math.radians"></a>
+### Math.radians(degrees)
+
+<table>
+	<tr>
+		<td><var>degrees</var></td>
+		<td>The value to convert to radians.</td>
+	</tr>
+</table>
+
+Converts degrees to radians.
 
 </xmp>
 <div id="top"><a href="javascript:window.scroll(0,0);">Top &uarr;</a></div>
