@@ -1,84 +1,88 @@
---! Parallax
+--! Simple parallax controller.
 --!
---! Copyright 2012 Bifrost Entertainment. All rights reserved.
+--! \code
+--! local Parallax = require(module_path .. "Parallax")
+--!
+--! local layers = {
+--! 	-- A layer is defined by a batch and its velocity on the x- and y-axis
+--! 	{ batch1, 0.5, 0 }  -- background
+--! 	{ batch2, 0.8, 0 }  -- midground
+--! 	{ batch3, 1.0, 0 }  -- foreground
+--! }
+--! local pax = Parallax(layers)
+--! pax:move(0.7 * dt)
+--! \endcode
+--!
+--! Limitations:
+--!   - Does not handle loops.
+--!   - There's a 1:1 mapping between batches and layers even though, logically,
+--!     batches can be on the same layer.
+--!
+--! Copyright 2012-13 Bifrost Entertainment. All rights reserved.
 --! \author Tommy Nguyen
 
-local frame_ms = 60 / 1000
+local module_path = (...):match("(.*[./\\])[^./\\]+") or ""
+local setmetatable = setmetatable
+local table_unpack = table.unpack or unpack
 
-Parallax = {}
+local F = require(module_path .. "Functional")
+local scenegraph = rainbow.scenegraph
+
+local Parallax = {
+	__index = nil,
+	hide = nil,
+	move = nil,
+	set_layer_velocity = nil,
+	set_parent = nil,
+	show = nil
+}
 Parallax.__index = Parallax
 
-function Parallax.new(parent, layers)
-	if not parent or not layers then
-		return
+setmetatable(Parallax, {
+	__call = function(Parallax, layers)
+		local self = setmetatable({
+			layers = nil,
+			node = scenegraph:add_node()
+		}, Parallax)
+		local f = function(layer)
+			local batch, vx, vy = table_unpack(layer)
+			return { scenegraph:add_batch(self.node, batch), vx, vy }
+		end
+		self.layers = F.map(f, layers)
+		return self
+	end,
+	__gc = function(self)
+		scenegraph:remove(self.node)
+		for i = 1, #self.layers do
+			self.layers[i] = nil
+		end
+		self.layers = nil
 	end
-
-	local self = {}
-	setmetatable(self, Parallax)
-
-	self.batches = {}
-	self.count = 0
-	self.last_texture = nil
-
-	-- Create parallax root node
-	self.scene = rainbow.scenegraph
-	self.root = self.scene:add_node(parent)
-	self.parent = parent
-
-	-- Create all the layer nodes
-	self.layer_count = layers
-	self.layers = {}
-	self.velocities = {}
-	for i = layers, 1, -1 do
-		self.layers[i] = self.scene:add_node(self.root)
-		self.velocities[i] = { 0, 0 }
-	end
-
-	return self
-end
-
-function Parallax:add(layer, texture, x, y, width, height, hint)
-	if texture and texture ~= self.last_texture then
-		local rainbow = rainbow
-		local i = self.count + 1
-
-		self.batches[i] = rainbow.spritebatch(hint or 1)
-		self.batches[i]:set_texture(texture)
-		self.scene:add_batch(self.layers[layer], self.batches[i])
-
-		self.last_texture = texture
-		self.count = i
-	end
-	return self.batches[self.count]:add(x, y, width, height)
-end
-
-function Parallax:destruct()
-	self.scene:remove(self.root)
-	self.parent = nil
-	self.root = nil
-	self.layers = nil
-	for i = 1, self.count do
-		self.batches[i] = nil
-	end
-	self.last_texture = nil
-end
+})
 
 function Parallax:hide()
-	self.scene:disable(self.root)
+	scenegraph:disable(self.node)
 end
 
-function Parallax:set_layer_velocity(layer, x, y)
-	self.velocities[layer] = { x, y }
+function Parallax:move(v)
+	for i = 1, #self.layers do
+		local layer, vx, vy = table_unpack(self.layers[i])
+		scenegraph:move(layer, v * vx, v * vy)
+	end
+end
+
+function Parallax:set_layer_velocity(layer, vx, vy)
+	layer = self.layers[layer]
+	layer[2] = vx
+	layer[3] = vy or 0
+end
+
+function Parallax:set_parent(parent)
+	scenegraph:set_parent(parent, self.node)
 end
 
 function Parallax:show()
-	self.scene:enable(self.root)
+	scenegraph:enable(self.node)
 end
 
-function Parallax:update(dt)
-	local scale = dt * frame_ms
-	for i = 1, self.layer_count do
-		local v = self.velocities[i]
-		self.scene:move(self.layers[i], v[1] * scale, v[2] * scale)
-	end
-end
+return Parallax

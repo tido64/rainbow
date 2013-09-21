@@ -28,7 +28,7 @@
 		}
 		h2 { margin-top: 63px !important; }
 		h3 { margin-top: 37px !important; }
-		ul {
+		ul:first-child {
 			-moz-column-count: 4;     /* Firefox */
 			-webkit-column-count: 4;  /* Safari and Chrome */
 			column-count: 4;
@@ -59,6 +59,7 @@
   * &mdash;
   * [Functional](#Functional)
   * [Math](#Math)
+  * [Parallax](#Parallax)
   * [Stack](#Stack)
   * &mdash;
   * [Box2D](http://box2d.org/documentation/)
@@ -1432,6 +1433,68 @@ Checks whether a point is inside a box.
 </table>
 
 Converts degrees to radians.
+
+<a id="Parallax"></a>
+## Parallax
+
+	local Parallax = require(module_path .. "Parallax")
+
+Simple parallax controller.
+
+	local layers = {
+		-- A layer is defined by a batch and its velocity on the x- and y-axis
+		{ batch1, 0.5, 0 }  -- background
+		{ batch2, 0.8, 0 }  -- midground
+		{ batch3, 1.0, 0 }  -- foreground
+	}
+	local pax = Parallax(layers)
+	pax:move(0.7 * dt)
+
+Limitations:
+
+  * Does not handle loops.
+  * There's a 1:1 mapping between batches and layers even though, logically,
+    batches can be on the same layer.
+
+<a id="Parallax:hide"></a>
+### &lt;Parallax&gt;:hide()
+
+Hides the parallax from view.
+
+<a id="Parallax:move"></a>
+### &lt;Parallax&gt;:move(v)
+
+Move layers relatively by <var>v</var> pixels.
+
+<a id="Parallax:set_layer_velocity"></a>
+### &lt;Parallax&gt;:set_layer_velocity(layer, vx, +vy)
+
+<table>
+	<tr>
+		<td><var>layer</var></td>
+		<td>The layer number to change velocity.</td>
+	</tr>
+	<tr>
+		<td><var>vx</var></td>
+		<td>Relative velocity on the x-axis.</td>
+	</tr>
+	<tr>
+		<td><var>vy</var></td>
+		<td class="optional">Relative velocity on the y-axis. Default: 0.</td>
+	</tr>
+</table>
+
+Sets relative layer velocity.
+
+<a id="Parallax:set_parent"></a>
+### &lt;Parallax&gt;:set_parent(parent)
+
+Adds parallax to a child node under <var>parent</var>.
+
+<a id="Parallax:show"></a>
+### &lt;Parallax&gt;:show()
+
+Unhides the parallax.
 
 <a id="Stack"></a>
 ## Stack
