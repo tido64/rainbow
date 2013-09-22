@@ -1,7 +1,7 @@
 --! Copyright 2013 Bifrost Entertainment. All rights reserved.
 --! \author Tommy Nguyen
 
-require("Timer")
+local Timer = require("Timer")
 
 local timers = {}
 
@@ -22,7 +22,7 @@ function TimerResetTest.new(times)
 	local callback = function()
 		self:tick()
 	end
-	self.timer = rainbow.timer(callback, 200, times)
+	self.timer = Timer(callback, 200, times)
 	timers[#timers + 1] = self.timer
 	return self
 end
@@ -52,7 +52,7 @@ function TimerTimesTest.new(times)
 	local callback = function()
 		self:tick()
 	end
-	timers[#timers + 1] = rainbow.timer(callback, 200, times)
+	timers[#timers + 1] = Timer(callback, 200, times)
 	return self
 end
 

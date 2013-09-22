@@ -42,7 +42,6 @@
 
   * [animation](#rainbow.animation)
   * [audio](#rainbow.audio)
-  * [coroutine](#rainbow.coroutine)
   * [font](#rainbow.font)
   * [input](#rainbow.input)
   * [io](#rainbow.io)
@@ -54,13 +53,14 @@
   * [sprite](#rainbow.sprite)
   * [spritebatch](#rainbow.spritebatch)
   * [texture](#rainbow.texture)
-  * [timer](#rainbow.timer)
   * [transition](#rainbow.transition)
   * &mdash;
+  * [Coroutine](#Coroutine)
   * [Functional](#Functional)
   * [Math](#Math)
   * [Parallax](#Parallax)
   * [Stack](#Stack)
+  * [Timer](#Timer)
   * &mdash;
   * [Box2D](http://box2d.org/documentation/)
 
@@ -263,33 +263,6 @@ Sets global pitch shift.
 </table>
 
 Stops channel.
-
-<a id="rainbow.coroutine"></a>
-## rainbow.coroutine
-
-<a id="rainbow.coroutine.start"></a>
-### rainbow.coroutine.start(function)
-
-<table>
-	<tr>
-		<td><var>function</var></td>
-		<td>Function to execute in a coroutine.</td>
-	</tr>
-</table>
-
-Creates and starts a coroutine.
-
-<a id="rainbow.coroutine.wait"></a>
-### rainbow.coroutine.wait(milliseconds)
-
-<table>
-	<tr>
-		<td><var>milliseconds</var></td>
-		<td>Number of milliseconds to wait before continuing.</td>
-	</tr>
-</table>
-
-Blocks a coroutine for a certain amount of time.
 
 <a id="rainbow.font"></a>
 ## rainbow.font
@@ -1022,53 +995,6 @@ Creates a texture object, usable in [sprite batches](#rainbow.spritebatch).
 
 Creates/defines a texture in the atlas. The unique identifier returned can be used in [sprites](#rainbow.sprite).
 
-<a id="rainbow.timer"></a>
-## rainbow.timer
-
-Timers execute a function once after a set time, or any number of times at given intervals.
-
-<a id="rainbow.timer()"></a>
-### rainbow.timer(callback, delay, +times)
-
-<table>
-	<tr>
-		<td><var>callback</var></td>
-		<td>The function to call on time-out.</td>
-	</tr>
-	<tr>
-		<td><var>delay</var></td>
-		<td>Time in milliseconds to delay call.</td>
-	</tr>
-	<tr>
-		<td><var>times</var></td>
-		<td class="optional">Number of times to call. Infinite if omitted.</td>
-	</tr>
-</table>
-
-Creates a timer.
-
-<a id="rainbow.timer.clear"></a>
-### rainbow.timer.clear()
-
-Clears all timers.
-
-<a id="rainbow.timer:cancel"></a>
-### &lt;rainbow.timer&gt;:cancel()
-
-Cancels timer.
-
-<a id="rainbow.timer:reset"></a>
-### &lt;rainbow.timer&gt;:reset(+delay)
-
-<table>
-	<tr>
-		<td><var>delay</var></td>
-		<td class="optional">Set new delay.</td>
-	</tr>
-</table>
-
-Resets a timer. Restores it to its initial state.
-
 <a id="rainbow.transition"></a>
 ## rainbow.transition
 
@@ -1208,6 +1134,37 @@ Rotates a drawable to given angle.
 </table>
 
 Scales a drawable from a given start factor to a given final factor.
+
+<a id="Coroutine"></a>
+## Coroutine
+
+	local Coroutine = require(module_path .. "Coroutine")
+
+Wrapper around Lua [Coroutines](http://lua-users.org/wiki/CoroutinesTutorial)
+
+<a id="Coroutine.start"></a>
+### Coroutine.start(function)
+
+<table>
+	<tr>
+		<td><var>function</var></td>
+		<td>Function to execute in a coroutine.</td>
+	</tr>
+</table>
+
+Creates and starts a coroutine.
+
+<a id="Coroutine.wait"></a>
+### Coroutine.wait(milliseconds)
+
+<table>
+	<tr>
+		<td><var>milliseconds</var></td>
+		<td>Number of milliseconds to wait before continuing.</td>
+	</tr>
+</table>
+
+Blocks a coroutine for a certain amount of time.
 
 <a id="Functional"></a>
 ## Functional
@@ -1538,6 +1495,55 @@ Pushes <var>element</var> on top of the stack.
 ### &lt;Stack&gt;:top()
 
 Returns the element on top of the stack.
+
+<a id="Timer"></a>
+## Timer
+
+	local Timer = require(module_path .. "Timer")
+
+Timers execute a function once after a set time, or any number of times at given intervals.
+
+<a id="Timer()"></a>
+### Timer(callback, delay, +times)
+
+<table>
+	<tr>
+		<td><var>callback</var></td>
+		<td>The function to call on time-out.</td>
+	</tr>
+	<tr>
+		<td><var>delay</var></td>
+		<td>Time in milliseconds to delay call.</td>
+	</tr>
+	<tr>
+		<td><var>times</var></td>
+		<td class="optional">Number of times to call. Infinite if omitted.</td>
+	</tr>
+</table>
+
+Creates a timer.
+
+<a id="Timer.clear"></a>
+### Timer.clear()
+
+Clears all timers.
+
+<a id="Timer:cancel"></a>
+### &lt;Timer&gt;:cancel()
+
+Cancels timer.
+
+<a id="Timer:reset"></a>
+### &lt;Timer&gt;:reset(+delay)
+
+<table>
+	<tr>
+		<td><var>delay</var></td>
+		<td class="optional">Set new delay.</td>
+	</tr>
+</table>
+
+Resets a timer. Restores it to its initial state.
 
 </xmp>
 <div id="top"><a href="javascript:window.scroll(0,0);">Top &uarr;</a></div>

@@ -9,28 +9,37 @@
 --! \author Tommy Nguyen
 
 local __count = 0
-local __list  = {}
+local __transitions  = {}
 
-rainbow.transition = {}
+rainbow.transition = {
+	clear = nil,
+	effects = nil,
+	fadein = nil,
+	fadeout = nil,
+	fadeto = nil,
+	move = nil,
+	rotate = nil,
+	scaleto = nil
+}
 require("TransitionEffects")
 local effects = rainbow.transition.effects
 
 function rainbow.transition.clear()
 	for i = 1, __count do
-		__list[i] = nil
+		__transitions[i] = nil
 	end
 	__count = 0
 end
 
 local function register(t)
 	__count = __count + 1
-	__list[__count] = t
+	__transitions[__count] = t
 end
 
 local function unregister(t)
 	for i = __count, 1, -1 do
-		if __list[i] == t then
-			__list[i] = __list[__count]
+		if __transitions[i] == t then
+			__transitions[i] = __transitions[__count]
 			__count = __count - 1
 			break
 		end
@@ -220,9 +229,12 @@ do
 	end
 end
 
-local function update(dt)
-	for i = __count, 1, -1 do
-		__list[i]:tick(dt)
+setmetatable(rainbow.transition, {
+	__update = function(dt)
+		for i = __count, 1, -1 do
+			__transitions[i]:tick(dt)
+		end
 	end
-end
-__rainbow_modules[#__rainbow_modules + 1] = update
+})
+
+rainbow.module.register(rainbow.transition)

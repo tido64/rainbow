@@ -3,6 +3,8 @@
 --! Copyright 2012 Bifrost Entertainment. All rights reserved.
 --! \author Tommy Nguyen
 
+local Math = require("Math")
+
 Kim = {}
 Kim.__index = Kim
 
@@ -41,7 +43,7 @@ function Kim:touch_began(touches)
 
 	if self.alternate then
 		-- Rotate 360 degrees in 1 second. Linear effect.
-		local angle = self.sprite:get_angle() + rainbow.math.radians(360)
+		local angle = self.sprite:get_angle() + Math.radians(360)
 		self.moving = transition.rotate(self.sprite, angle, 1000)
 		self.alpha = transition.fadeto(self.sprite, 0x40, 1000)
 		self.alternate = false
