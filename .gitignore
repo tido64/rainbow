@@ -1,0 +1,27 @@
+# Generated files
+*.orig
+*.swp
+lua/Keyboard.lua
+Rainbow.sublime-workspace
+src/Graphics/Shaders/Shaders.h
+xcuserdata/
+
+# Libraries
+build/windows/include/AL/
+build/windows/lib/libOpenAL32.dll.a
+lib/**/*.cmake
+lib/**/*.txt
+lib/**/.git*
+lib/**/.hg*
+lib/**/.svn
+lib/**/LICENSE
+lib/**/Makefile*
+lib/**/README
+lib/**/docs/
+lib/**/html/
+lib/**/makefile
+lib/dSFMT/check.sh
+lib/dSFMT/test.c
+lib/gtest/
+lib/libpng/scripts/
+lib/TestFlight/
