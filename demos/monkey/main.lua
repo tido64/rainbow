@@ -6,9 +6,7 @@
 --! \author Tommy Nguyen
 
 -- Import essential libraries
-require("Input")  -- Input event handler
 require("Prose")  -- Prose module lets you create scenes from a table
-require("Timer")
 
 -- Declare globals used throughout
 global_scale = 3  -- Global scaling factor

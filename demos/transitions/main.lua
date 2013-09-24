@@ -6,7 +6,6 @@
 --! \author Tommy Nguyen
 
 require("Kim")
-require("Transition")
 
 local batch = nil  -- Sprite batch
 local kim   = nil  -- Kim so happy

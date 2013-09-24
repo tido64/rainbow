@@ -53,7 +53,6 @@
   * [sprite](#rainbow.sprite)
   * [spritebatch](#rainbow.spritebatch)
   * [texture](#rainbow.texture)
-  * [transition](#rainbow.transition)
   * &mdash;
   * [Coroutine](#Coroutine)
   * [Functional](#Functional)
@@ -61,6 +60,7 @@
   * [Parallax](#Parallax)
   * [Stack](#Stack)
   * [Timer](#Timer)
+  * [Transition](#Transition)
   * &mdash;
   * [Box2D](http://box2d.org/documentation/)
 
@@ -995,146 +995,6 @@ Creates a texture object, usable in [sprite batches](#rainbow.spritebatch).
 
 Creates/defines a texture in the atlas. The unique identifier returned can be used in [sprites](#rainbow.sprite).
 
-<a id="rainbow.transition"></a>
-## rainbow.transition
-
-<a id="rainbow.transition.clear"></a>
-### rainbow.transition.clear()
-
-Cancels all transitions.
-
-<a id="rainbow.transition.fadein"></a>
-### rainbow.transition.fadein(source, duration)
-
-<table>
-	<tr>
-		<td><var>source</var></td>
-		<td>The audio channel to fade in.</td>
-	</tr>
-	<tr>
-		<td><var>duration</var></td>
-		<td>Duration of the transition in milliseconds.</td>
-	</tr>
-</table>
-
-Fades in an audio channel.
-
-<a id="rainbow.transition.fadeout"></a>
-### rainbow.transition.fadeout(source, duration)
-
-<table>
-	<tr>
-		<td><var>source</var></td>
-		<td>The audio channel to fade out.</td>
-	</tr>
-	<tr>
-		<td><var>duration</var></td>
-		<td>Duration of the transition in milliseconds.</td>
-	</tr>
-</table>
-
-Fades out an audio channel.
-
-<a id="rainbow.transition.fadeto"></a>
-### rainbow.transition.fadeto(sprite, alpha, duration, method)
-
-<table>
-	<tr>
-		<td><var>sprite</var></td>
-		<td>The sprite to fade.</td>
-	</tr>
-	<tr>
-		<td><var>alpha</var></td>
-		<td>Final alpha value.</td>
-	</tr>
-	<tr>
-		<td><var>duration</var></td>
-		<td>Duration of the transition in milliseconds.</td>
-	</tr>
-	<tr>
-		<td><var>method</var></td>
-		<td>The equation to use for the transition.</td>
-	</tr>
-</table>
-
-Fades a sprite to a given alpha value.
-
-<a id="rainbow.transition.move"></a>
-### rainbow.transition.move(drawable, x, y, duration, method)
-
-<table>
-	<tr>
-		<td><var>drawable</var></td>
-		<td>An object that implements ``:get_position()`` and ``:move()``.</td>
-	</tr>
-	<tr>
-		<td><var>x, y</var></td>
-		<td>Final destination.</td>
-	</tr>
-	<tr>
-		<td><var>duration</var></td>
-		<td>Duration of the transition in milliseconds.</td>
-	</tr>
-	<tr>
-		<td><var>method</var></td>
-		<td>The equation to use for the transition.</td>
-	</tr>
-</table>
-
-Moves a drawable to given position.
-
-<a id="rainbow.transition.rotate"></a>
-### rainbow.transition.rotate(drawable, r, duration, method)
-
-<table>
-	<tr>
-		<td><var>drawable</var></td>
-		<td>An object that implements ``:get_angle()`` and ``:rotate()``.</td>
-	</tr>
-	<tr>
-		<td><var>r</var></td>
-		<td>Final angle.</td>
-	</tr>
-	<tr>
-		<td><var>duration</var></td>
-		<td>Duration of the transition in milliseconds.</td>
-	</tr>
-	<tr>
-		<td><var>method</var></td>
-		<td>The equation to use for the transition.</td>
-	</tr>
-</table>
-
-Rotates a drawable to given angle.
-
-<a id="rainbow.transition.scale"></a>
-### rainbow.transition.scale(drawable, start, final, duration, method)
-
-<table>
-	<tr>
-		<td><var>drawable</var></td>
-		<td>An object that implements ``:set_scale()``.</td>
-	</tr>
-	<tr>
-		<td><var>start</var></td>
-		<td>Start scale factor.</td>
-	</tr>
-	<tr>
-		<td><var>final</var></td>
-		<td>Final scale factor.</td>
-	</tr>
-	<tr>
-		<td><var>duration</var></td>
-		<td>Duration of the transition in milliseconds.</td>
-	</tr>
-	<tr>
-		<td><var>method</var></td>
-		<td>The equation to use for the transition.</td>
-	</tr>
-</table>
-
-Scales a drawable from a given start factor to a given final factor.
-
 <a id="Coroutine"></a>
 ## Coroutine
 
@@ -1544,6 +1404,149 @@ Cancels timer.
 </table>
 
 Resets a timer. Restores it to its initial state.
+
+<a id="Transition"></a>
+
+	local Transition = require(module_path .. "Transition")
+
+## Transition
+
+<a id="Transition.clear"></a>
+### Transition.clear()
+
+Cancels all transitions.
+
+<a id="Transition.fadein"></a>
+### Transition.fadein(source, duration)
+
+<table>
+	<tr>
+		<td><var>source</var></td>
+		<td>The audio channel to fade in.</td>
+	</tr>
+	<tr>
+		<td><var>duration</var></td>
+		<td>Duration of the transition in milliseconds.</td>
+	</tr>
+</table>
+
+Fades in an audio channel.
+
+<a id="Transition.fadeout"></a>
+### Transition.fadeout(source, duration)
+
+<table>
+	<tr>
+		<td><var>source</var></td>
+		<td>The audio channel to fade out.</td>
+	</tr>
+	<tr>
+		<td><var>duration</var></td>
+		<td>Duration of the transition in milliseconds.</td>
+	</tr>
+</table>
+
+Fades out an audio channel.
+
+<a id="Transition.fadeto"></a>
+### Transition.fadeto(sprite, alpha, duration, method)
+
+<table>
+	<tr>
+		<td><var>sprite</var></td>
+		<td>The sprite to fade.</td>
+	</tr>
+	<tr>
+		<td><var>alpha</var></td>
+		<td>Final alpha value.</td>
+	</tr>
+	<tr>
+		<td><var>duration</var></td>
+		<td>Duration of the transition in milliseconds.</td>
+	</tr>
+	<tr>
+		<td><var>method</var></td>
+		<td>The equation to use for the transition.</td>
+	</tr>
+</table>
+
+Fades a sprite to a given alpha value.
+
+<a id="Transition.move"></a>
+### Transition.move(drawable, x, y, duration, method)
+
+<table>
+	<tr>
+		<td><var>drawable</var></td>
+		<td>An object that implements ``:get_position()`` and ``:move()``.</td>
+	</tr>
+	<tr>
+		<td><var>x, y</var></td>
+		<td>Final destination.</td>
+	</tr>
+	<tr>
+		<td><var>duration</var></td>
+		<td>Duration of the transition in milliseconds.</td>
+	</tr>
+	<tr>
+		<td><var>method</var></td>
+		<td>The equation to use for the transition.</td>
+	</tr>
+</table>
+
+Moves a drawable to given position.
+
+<a id="Transition.rotate"></a>
+### Transition.rotate(drawable, r, duration, method)
+
+<table>
+	<tr>
+		<td><var>drawable</var></td>
+		<td>An object that implements ``:get_angle()`` and ``:rotate()``.</td>
+	</tr>
+	<tr>
+		<td><var>r</var></td>
+		<td>Final angle.</td>
+	</tr>
+	<tr>
+		<td><var>duration</var></td>
+		<td>Duration of the transition in milliseconds.</td>
+	</tr>
+	<tr>
+		<td><var>method</var></td>
+		<td>The equation to use for the transition.</td>
+	</tr>
+</table>
+
+Rotates a drawable to given angle.
+
+<a id="Transition.scaleto"></a>
+### Transition.scaleto(drawable, start, final, duration, method)
+
+<table>
+	<tr>
+		<td><var>drawable</var></td>
+		<td>An object that implements ``:set_scale()``.</td>
+	</tr>
+	<tr>
+		<td><var>start</var></td>
+		<td>Start scale factor.</td>
+	</tr>
+	<tr>
+		<td><var>final</var></td>
+		<td>Final scale factor.</td>
+	</tr>
+	<tr>
+		<td><var>duration</var></td>
+		<td>Duration of the transition in milliseconds.</td>
+	</tr>
+	<tr>
+		<td><var>method</var></td>
+		<td>The equation to use for the transition.</td>
+	</tr>
+</table>
+
+Scales a drawable from a given start factor to a given final factor.
 
 </xmp>
 <div id="top"><a href="javascript:window.scroll(0,0);">Top &uarr;</a></div>

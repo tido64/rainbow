@@ -3,6 +3,7 @@
 --! Copyright 2011-13 Bifrost Entertainment. All rights reserved.
 --! \author Tommy Nguyen
 
+local Timer = require("Timer")
 local scenedef = require("intro.prose")
 
 SceneIntro = {}
@@ -43,7 +44,7 @@ function SceneIntro:init()
 	local callback = function()
 		self:tick()
 	end
-	self.timer = rainbow.timer(callback, 22000, 1)
+	self.timer = Timer(callback, 22000, 1)
 end
 
 function SceneIntro:tick()
