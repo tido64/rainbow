@@ -1,6 +1,8 @@
 #include <cstring>
+#include <memory>
 
 #include "Common/Data.h"
+#include "Common/IO.h"
 #include "Lua/LuaDebugging.h"
 #include "Lua/LuaHelper.h"
 
@@ -16,6 +18,18 @@ namespace Rainbow
 			const char kLuaErrorMemory[]  = "memory allocation";
 			const char kLuaErrorErrorHandling[] = "error handling";
 			const char kLuaErrorType[] = "Object is not of type '%s'";
+
+			int load_module(lua_State *L,
+			                char *const path,
+			                const char *const module,
+			                const char *const suffix)
+			{
+				strcpy(path, module);
+				strcat(path, suffix);
+				IO::FileHandle fh = IO::find_and_open(path, IO::kIOTypeAsset);
+				IO::close(fh);
+				return (!fh) ? 0 : load(L, Data(path), module, false);
+			}
 		}
 
 		void error(lua_State *L, const int lua_e)
@@ -48,13 +62,11 @@ namespace Rainbow
 		int load(lua_State *L)
 		{
 			const char *module = lua_tostring(L, -1);
-			char *filename = new char[strlen(module) + 5];
-			strcpy(filename, module);
-			strcat(filename, ".lua");
-
-			Data file(filename);
-			delete[] filename;
-			return (!file) ? 0 : load(L, file, module, false);
+			std::unique_ptr<char[]> path(new char[strlen(module) + 10]);
+			const int result = load_module(L, path.get(), module, ".lua");
+			return (result == 0)
+					? load_module(L, path.get(), module, "/init.lua")
+					: result;
 		}
 
 		int load(lua_State *L, const Data &chunk, const char *name, const bool load)
