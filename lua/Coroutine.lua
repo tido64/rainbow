@@ -15,9 +15,8 @@ local Coroutine = {
 	start = nil,
 	wait = nil
 }
-Coroutine.__index = Coroutine
 
-setmetatable(Coroutine, {
+Coroutine.__index = setmetatable(Coroutine, {
 	__update = function(dt)
 		for i = __count, 1, -1 do
 			if not coroutine_resume(__coroutines[i], dt) then

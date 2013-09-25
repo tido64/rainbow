@@ -3,6 +3,7 @@
 --! Copyright 2011-13 Bifrost Entertainment. All rights reserved.
 --! \author Tommy Nguyen
 
+local Prose = require("Prose")  -- Prose module lets you create scenes from a table
 local scenedef = require("scummbar.prose")
 local screen = rainbow.platform.screen
 
@@ -11,7 +12,7 @@ SceneSCUMMBar.__index = SceneSCUMMBar
 
 function SceneSCUMMBar:new()
 	local self = setmetatable({
-		scene = rainbow.prose.from_table(scenedef),
+		scene = Prose.from_table(scenedef),
 		edge_margin = 24 * global_scale,
 		screen = screen.width,
 		split = screen.width

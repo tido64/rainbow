@@ -5,9 +5,6 @@
 --! Copyright 2011-13 Bifrost Entertainment. All rights reserved.
 --! \author Tommy Nguyen
 
--- Import essential libraries
-require("Prose")  -- Prose module lets you create scenes from a table
-
 -- Declare globals used throughout
 global_scale = 3  -- Global scaling factor
 threepwood = nil  -- Guybrush Threepwood should always be loaded

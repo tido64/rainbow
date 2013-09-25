@@ -1,3 +1,8 @@
+local format = string.format
+local pairs = pairs
+local tonumber = tonumber
+local type = type
+
 local rainbow = rainbow
 local scenegraph = rainbow.scenegraph
 
@@ -8,12 +13,12 @@ local SoundFinalizer = {
 }
 
 local function endswith(str, ending)
-	return ending == '' or string.sub(str, -string.len(ending)) == ending
+	return ending == '' or str:sub(-ending:len()) == ending
 end
 
 local function insert(t, k, v)
 	if t[k] then
-		error(string.format("'%s' is defined twice", k))
+		error(format("'%s' is defined twice", k))
 	end
 	t[k] = v
 end

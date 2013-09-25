@@ -29,7 +29,6 @@ local Timer = {
 	clear = nil,
 	reset = nil
 }
-Timer.__index = Timer
 
 --! Clears all timers.
 function Timer.clear()
@@ -37,7 +36,7 @@ function Timer.clear()
 	__timers = {}
 end
 
-setmetatable(Timer, {
+Timer.__index = setmetatable(Timer, {
 	--! Creates a timer.
 	--! \param callback  The function to call on time-out.
 	--! \param delay     Time in milliseconds to delay call.

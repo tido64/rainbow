@@ -36,9 +36,8 @@ local Parallax = {
 	set_parent = nil,
 	show = nil
 }
-Parallax.__index = Parallax
 
-setmetatable(Parallax, {
+Parallax.__index = setmetatable(Parallax, {
 	__call = function(Parallax, layers)
 		local self = setmetatable({
 			layers = nil,

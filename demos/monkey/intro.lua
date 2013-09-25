@@ -3,6 +3,7 @@
 --! Copyright 2011-13 Bifrost Entertainment. All rights reserved.
 --! \author Tommy Nguyen
 
+local Prose = require("Prose")  -- Prose module lets you create scenes from a table
 local Timer = require("Timer")
 local scenedef = require("intro.prose")
 
@@ -18,7 +19,7 @@ function SceneIntro:new()
 		self.scene = etc.
 	--]]
 	local self = setmetatable({
-		scene = rainbow.prose.from_table(scenedef),
+		scene = Prose.from_table(scenedef),
 		timer = 0
 	}, SceneIntro)
 	rainbow.scenegraph:disable(self.scene.objects.logo_batch.node)
