@@ -3,6 +3,7 @@
 *.swp
 Rainbow.sublime-workspace
 project.xcworkspace/
+src/.ycm_extra_conf.pyc
 src/Graphics/Shaders/Shaders.h
 xcuserdata/
 
