@@ -141,13 +141,15 @@
 		196CB72F161E4D940068C809 /* b2MotorJoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 196CB72D161E4D940068C809 /* b2MotorJoint.cpp */; };
 		197396DD15A505F60064BF7D /* TextureManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 197396DB15A505F60064BF7D /* TextureManager.cpp */; };
 		19865982175E98F700723171 /* Data.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19865981175E98F700723171 /* Data.cpp */; };
+		1988802817F84AFD009F4587 /* Coroutine.lua in Resources */ = {isa = PBXBuildFile; fileRef = 1988802417F84AFD009F4587 /* Coroutine.lua */; };
+		1988802917F84AFD009F4587 /* Functional.lua in Resources */ = {isa = PBXBuildFile; fileRef = 1988802517F84AFD009F4587 /* Functional.lua */; };
+		1988802A17F84AFD009F4587 /* Strict.lua in Resources */ = {isa = PBXBuildFile; fileRef = 1988802617F84AFD009F4587 /* Strict.lua */; };
+		1988802B17F84AFD009F4587 /* TransitionFunctions.lua in Resources */ = {isa = PBXBuildFile; fileRef = 1988802717F84AFD009F4587 /* TransitionFunctions.lua */; };
 		19905B84152C50FA00BDD15C /* Accelerometer.lua in Resources */ = {isa = PBXBuildFile; fileRef = 19905B7A152C50FA00BDD15C /* Accelerometer.lua */; };
-		19905B85152C50FA00BDD15C /* Input.lua in Resources */ = {isa = PBXBuildFile; fileRef = 19905B7B152C50FA00BDD15C /* Input.lua */; };
 		19905B87152C50FA00BDD15C /* Math.lua in Resources */ = {isa = PBXBuildFile; fileRef = 19905B7D152C50FA00BDD15C /* Math.lua */; };
 		19905B88152C50FA00BDD15C /* Parallax.lua in Resources */ = {isa = PBXBuildFile; fileRef = 19905B7E152C50FA00BDD15C /* Parallax.lua */; };
 		19905B8A152C50FA00BDD15C /* Stack.lua in Resources */ = {isa = PBXBuildFile; fileRef = 19905B80152C50FA00BDD15C /* Stack.lua */; };
 		19905B8B152C50FA00BDD15C /* Transition.lua in Resources */ = {isa = PBXBuildFile; fileRef = 19905B81152C50FA00BDD15C /* Transition.lua */; };
-		19905B8C152C50FA00BDD15C /* TransitionEffects.lua in Resources */ = {isa = PBXBuildFile; fileRef = 19905B82152C50FA00BDD15C /* TransitionEffects.lua */; };
 		19905B8D152C50FA00BDD15C /* Utils.lua in Resources */ = {isa = PBXBuildFile; fileRef = 19905B83152C50FA00BDD15C /* Utils.lua */; };
 		19AF589F167FFA0800F54B27 /* DebugInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19AF589A167FFA0800F54B27 /* DebugInfo.cpp */; };
 		19AF58A0167FFA0800F54B27 /* Overlay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19AF589C167FFA0800F54B27 /* Overlay.cpp */; };
@@ -164,7 +166,6 @@
 		19ED191C1682247D00AAA323 /* lua_Renderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19ED191A1682247D00AAA323 /* lua_Renderer.cpp */; };
 		19F98DA1171970C000A85873 /* Recorder_iOS.mm in Sources */ = {isa = PBXBuildFile; fileRef = 19F98DA0171970C000A85873 /* Recorder_iOS.mm */; };
 		19F98DA8171B5E1500A85873 /* Prose in Resources */ = {isa = PBXBuildFile; fileRef = 19F98DA6171B5E1500A85873 /* Prose */; };
-		19F98DA9171B5E1500A85873 /* Prose.lua in Resources */ = {isa = PBXBuildFile; fileRef = 19F98DA7171B5E1500A85873 /* Prose.lua */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -544,14 +545,16 @@
 		197396DB15A505F60064BF7D /* TextureManager.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = TextureManager.cpp; sourceTree = "<group>"; };
 		197396DC15A505F60064BF7D /* TextureManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextureManager.h; sourceTree = "<group>"; };
 		19865981175E98F700723171 /* Data.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = Data.cpp; sourceTree = "<group>"; };
+		1988802417F84AFD009F4587 /* Coroutine.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Coroutine.lua; path = ../../../lua/Coroutine.lua; sourceTree = "<group>"; };
+		1988802517F84AFD009F4587 /* Functional.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Functional.lua; path = ../../../lua/Functional.lua; sourceTree = "<group>"; };
+		1988802617F84AFD009F4587 /* Strict.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Strict.lua; path = ../../../lua/Strict.lua; sourceTree = "<group>"; };
+		1988802717F84AFD009F4587 /* TransitionFunctions.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = TransitionFunctions.lua; path = ../../../lua/TransitionFunctions.lua; sourceTree = "<group>"; };
 		198BE0A7174A5F420036055E /* Macros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Macros.h; path = ../../../src/Platform/Macros.h; sourceTree = "<group>"; };
 		19905B7A152C50FA00BDD15C /* Accelerometer.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Accelerometer.lua; path = ../../../lua/Accelerometer.lua; sourceTree = "<group>"; };
-		19905B7B152C50FA00BDD15C /* Input.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Input.lua; path = ../../../lua/Input.lua; sourceTree = "<group>"; };
 		19905B7D152C50FA00BDD15C /* Math.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Math.lua; path = ../../../lua/Math.lua; sourceTree = "<group>"; };
 		19905B7E152C50FA00BDD15C /* Parallax.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Parallax.lua; path = ../../../lua/Parallax.lua; sourceTree = "<group>"; };
 		19905B80152C50FA00BDD15C /* Stack.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Stack.lua; path = ../../../lua/Stack.lua; sourceTree = "<group>"; };
 		19905B81152C50FA00BDD15C /* Transition.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Transition.lua; path = ../../../lua/Transition.lua; sourceTree = "<group>"; };
-		19905B82152C50FA00BDD15C /* TransitionEffects.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = TransitionEffects.lua; path = ../../../lua/TransitionEffects.lua; sourceTree = "<group>"; };
 		19905B83152C50FA00BDD15C /* Utils.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Utils.lua; path = ../../../lua/Utils.lua; sourceTree = "<group>"; };
 		19ADF9EB1763E8A0008C1465 /* Chrono_Unix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Chrono_Unix.h; sourceTree = "<group>"; };
 		19AF589A167FFA0800F54B27 /* DebugInfo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DebugInfo.cpp; sourceTree = "<group>"; };
@@ -590,7 +593,6 @@
 		19F98DA0171970C000A85873 /* Recorder_iOS.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Recorder_iOS.mm; sourceTree = "<group>"; };
 		19F98DA5171B5DDF00A85873 /* SysUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SysUtil.h; path = ../../../src/Platform/SysUtil.h; sourceTree = "<group>"; };
 		19F98DA6171B5E1500A85873 /* Prose */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Prose; path = ../../../lua/Prose; sourceTree = "<group>"; };
-		19F98DA7171B5E1500A85873 /* Prose.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Prose.lua; path = ../../../lua/Prose.lua; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1335,14 +1337,15 @@
 			children = (
 				19F98DA6171B5E1500A85873 /* Prose */,
 				19905B7A152C50FA00BDD15C /* Accelerometer.lua */,
-				19905B7B152C50FA00BDD15C /* Input.lua */,
+				1988802417F84AFD009F4587 /* Coroutine.lua */,
+				1988802517F84AFD009F4587 /* Functional.lua */,
 				19905B7D152C50FA00BDD15C /* Math.lua */,
 				19905B7E152C50FA00BDD15C /* Parallax.lua */,
-				19F98DA7171B5E1500A85873 /* Prose.lua */,
 				19905B80152C50FA00BDD15C /* Stack.lua */,
+				1988802617F84AFD009F4587 /* Strict.lua */,
 				193929C616E352540018340B /* Timer.lua */,
 				19905B81152C50FA00BDD15C /* Transition.lua */,
-				19905B82152C50FA00BDD15C /* TransitionEffects.lua */,
+				1988802717F84AFD009F4587 /* TransitionFunctions.lua */,
 				19905B83152C50FA00BDD15C /* Utils.lua */,
 			);
 			name = Resources;
@@ -1439,19 +1442,20 @@
 			files = (
 				1948C02D152C397D00E9B854 /* InfoPlist.strings in Resources */,
 				19905B84152C50FA00BDD15C /* Accelerometer.lua in Resources */,
-				19905B85152C50FA00BDD15C /* Input.lua in Resources */,
 				19905B87152C50FA00BDD15C /* Math.lua in Resources */,
 				19905B88152C50FA00BDD15C /* Parallax.lua in Resources */,
 				19905B8A152C50FA00BDD15C /* Stack.lua in Resources */,
 				19905B8B152C50FA00BDD15C /* Transition.lua in Resources */,
-				19905B8C152C50FA00BDD15C /* TransitionEffects.lua in Resources */,
 				19905B8D152C50FA00BDD15C /* Utils.lua in Resources */,
+				1988802817F84AFD009F4587 /* Coroutine.lua in Resources */,
 				193929C316E351F40018340B /* Default-568h@2x.png in Resources */,
+				1988802917F84AFD009F4587 /* Functional.lua in Resources */,
 				193929C416E351F40018340B /* Default.png in Resources */,
+				1988802B17F84AFD009F4587 /* TransitionFunctions.lua in Resources */,
 				193929C516E351F40018340B /* Default@2x.png in Resources */,
+				1988802A17F84AFD009F4587 /* Strict.lua in Resources */,
 				193929C716E352540018340B /* Timer.lua in Resources */,
 				19F98DA8171B5E1500A85873 /* Prose in Resources */,
-				19F98DA9171B5E1500A85873 /* Prose.lua in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

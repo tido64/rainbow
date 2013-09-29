@@ -1,8 +1,8 @@
 # Generated files
 *.orig
 *.swp
-lua/Keyboard.lua
 Rainbow.sublime-workspace
+project.xcworkspace/
 src/Graphics/Shaders/Shaders.h
 xcuserdata/
 
