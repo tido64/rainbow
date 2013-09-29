@@ -31,29 +31,23 @@ class Sprite : private NonCopyable<Sprite>
 	friend class SpriteBatch;
 
 public:
-	const unsigned int width;   ///< Width of sprite (not scaled).
-	const unsigned int height;  ///< Height of sprite (not scaled).
-
 	Sprite(const unsigned int width, const unsigned int height, const SpriteBatch *parent);
 	Sprite(Sprite &&);
 
-	/// Returns the current angle of the sprite.
-	inline float get_angle() const;
+	/// Returns the sprite's current angle.
+	inline float angle() const;
 
-	/// Returns vertex 0's colour.
-	inline const Colorb& get_color() const;
+	/// Returns the sprite's colour.
+	inline const Colorb& color() const;
 
-	/// Returns the current position of the sprite.
-	inline const Vec2f& get_position() const;
+	/// Returns the sprite's height.
+	inline unsigned int height() const;
 
-	/// Mirrors sprite.
-	void mirror();
+	/// Returns the sprite's current position.
+	inline const Vec2f& position() const;
 
-	/// Moves sprite by (x,y).
-	void move(const Vec2f &);
-
-	/// Rotates sprite by r.
-	void rotate(const float r);
+	/// Returns the sprite's width.
+	inline unsigned int width() const;
 
 	/// Sets sprite colour.
 	void set_color(const unsigned int c);
@@ -78,35 +72,56 @@ public:
 	/// \param id  Id of texture to use.
 	void set_texture(const unsigned int id);
 
+	/// Mirrors sprite.
+	void mirror();
+
+	/// Moves sprite by (x,y).
+	void move(const Vec2f &);
+
+	/// Rotates sprite by r.
+	void rotate(const float r);
+
 	/// Updates the vertices of this sprite.
 	void update();
 
 private:
-	float angle;                 ///< Angle of rotation.
-	unsigned int stale;          ///< Sprite is stale if its properties have changed.
+	float angle_;                 ///< Angle of rotation.
+	const unsigned int width_;    ///< Width of sprite (not scaled).
+	const unsigned int height_;   ///< Height of sprite (not scaled).
+	unsigned int stale_;          ///< Sprite is stale if its properties have changed.
 
-	SpriteVertex *vertex_array;  ///< Vertex array or, if buffered, the sprite batch's buffer.
-	const SpriteBatch *parent;   ///< Pointer to sprite batch.
+	SpriteVertex *vertex_array_;  ///< Vertex array or, if buffered, the sprite batch's buffer.
+	const SpriteBatch *parent_;   ///< Pointer to sprite batch.
 
-	Vec2f center;                ///< Committed position.
-	Vec2f pivot;                 ///< Pivot point (normalised).
-	Vec2f position;              ///< Uncommitted position.
-	Vec2f scale;                 ///< Scaling factor.
+	Vec2f center_;                ///< Committed position.
+	Vec2f pivot_;                 ///< Pivot point (normalised).
+	Vec2f position_;              ///< Uncommitted position.
+	Vec2f scale_;                 ///< Scaling factor.
 };
 
-float Sprite::get_angle() const
+float Sprite::angle() const
 {
-	return this->angle;
+	return this->angle_;
 }
 
-const Colorb& Sprite::get_color() const
+const Colorb& Sprite::color() const
 {
-	return this->vertex_array[0].color;
+	return this->vertex_array_[0].color;
 }
 
-const Vec2f& Sprite::get_position() const
+unsigned int Sprite::height() const
 {
-	return this->position;
+	return this->height_;
+}
+
+const Vec2f& Sprite::position() const
+{
+	return this->position_;
+}
+
+unsigned int Sprite::width() const
+{
+	return this->width_;
 }
 
 #endif

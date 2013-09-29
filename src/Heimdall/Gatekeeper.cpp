@@ -19,11 +19,11 @@ namespace Heimdall
 	Gatekeeper::Gatekeeper() :
 		width(0), height(0), touch_count(0), overlay_node(nullptr)
 	{
-		this->scenegraph.add_child(this->info.get_node());
+		this->scenegraph.add_child(this->info.node());
 
 		this->overlay_node = this->scenegraph.add_child(&this->overlay);
 		this->overlay_node->enabled = false;
-		this->overlay_node->add_child(this->info.get_button());
+		this->overlay_node->add_child(this->info.button());
 
 		this->touch_canceled();
 	}
@@ -61,9 +61,9 @@ namespace Heimdall
 		this->overlay.setup(width, height);
 		Vec2f position(
 			this->width / 128,
-			this->height - this->console_font->get_height() * 2 - this->ui_font->get_height());
+			this->height - this->console_font->height() * 2 - this->ui_font->height());
 		this->info.set_button(position);
-		position.y = this->height - this->console_font->get_height();
+		position.y = this->height - this->console_font->height();
 		this->info.set_console(position);
 	}
 

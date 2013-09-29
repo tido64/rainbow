@@ -20,12 +20,12 @@ namespace
 	const uint_t kNumGlyphsPerColRow = 12;  ///< Number of glyphs per column/row on texture.
 }
 
-FontAtlas::FontAtlas(const Data &font, const float pt) : height(0), pt(pt), texture(0)
+FontAtlas::FontAtlas(const Data &font, const float pt) : height_(0), pt_(pt), texture_(0)
 {
 	R_ASSERT(font, "Failed to load font");
 
 	for (size_t i = 0; i < kNumCharacters; ++i)
-		this->charset[i].code = i + kASCIIOffset;
+		this->charset_[i].code = i + kASCIIOffset;
 
 #if FONTATLAS_EXTENDED > 0
 
@@ -40,7 +40,7 @@ FontAtlas::FontAtlas(const Data &font, const float pt) : height(0), pt(pt), text
 	};
 
 	for (size_t i = 0; characters[i]; ++i)
-		this->charset[kNumCharacters + i].code = characters[i];
+		this->charset_[kNumCharacters + i].code = characters[i];
 
 #endif
 
@@ -69,7 +69,7 @@ FontAtlas::FontAtlas(const Data &font, const float pt) : height(0), pt(pt), text
 		return;
 	}
 
-	FT_Set_Char_Size(face, 0, this->pt * 64, 96, 96);
+	FT_Set_Char_Size(face, 0, this->pt_ * 64, 96, 96);
 
 	// Naive algorithm for calculating texture size
 	uint_t max_width = 0;
@@ -109,7 +109,7 @@ FontAtlas::FontAtlas(const Data &font, const float pt) : height(0), pt(pt), text
 	const float tex_h_fraction = 1.0f / tex_height;
 	for (uint_t i = 0; i < kNumCharacters + FONTATLAS_EXTENDED; ++i)
 	{
-		const uint_t idx = FT_Get_Char_Index(face, this->charset[i].code);
+		const uint_t idx = FT_Get_Char_Index(face, this->charset_[i].code);
 		FT_Load_Glyph(face, idx, FT_LOAD_RENDER);
 
 		const FT_GlyphSlot &slot = face->glyph;
@@ -157,7 +157,7 @@ FontAtlas::FontAtlas(const Data &font, const float pt) : height(0), pt(pt), text
 		}
 
 		// Save font glyph
-		FontGlyph &fg = this->charset[i];
+		FontGlyph &fg = this->charset_[i];
 		fg.advance = static_cast<short>(slot->advance.x / 64);
 		fg.left = slot->bitmap_left;
 
@@ -197,7 +197,7 @@ FontAtlas::FontAtlas(const Data &font, const float pt) : height(0), pt(pt), text
 		// Advance to next "slot" in texture
 		w_offset += width;
 	}
-	this->height = face->size->metrics.height / 64;
+	this->height_ = face->size->metrics.height / 64;
 	FT_Done_Face(face);
 	FT_Done_FreeType(lib);
 
@@ -216,7 +216,7 @@ FontAtlas::FontAtlas(const Data &font, const float pt) : height(0), pt(pt), text
 	}
 	 */
 
-	this->texture = TextureManager::Instance->create(
+	this->texture_ = TextureManager::Instance->create(
 			GL_LUMINANCE_ALPHA, tex_width, tex_height,
 			GL_LUMINANCE_ALPHA, tex_buf.get());
 }
@@ -228,12 +228,12 @@ const FontGlyph* FontAtlas::get_glyph(const unsigned int c) const
 	if (c >= 0x80u)
 	{
 		for (size_t i = kNumCharacters; i < kNumCharacters + FONTATLAS_EXTENDED; ++i)
-			if (this->charset[i].code == c)
-				return &this->charset[i];
+			if (this->charset_[i].code == c)
+				return &this->charset_[i];
 		return nullptr;
 	}
 
 #endif
 
-	return &this->charset[static_cast<unsigned char>(c) - kASCIIOffset];
+	return &this->charset_[static_cast<unsigned char>(c) - kASCIIOffset];
 }

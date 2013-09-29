@@ -28,10 +28,10 @@ namespace Rainbow
 		Config();
 
 		/// Returns the width of the screen.
-		inline int get_width() const;
+		inline int width() const;
 
 		/// Returns the height of the screen.
-		inline int get_height() const;
+		inline int height() const;
 
 		/// Returns whether the screen is in portrait mode.
 		inline bool is_portrait() const;
@@ -40,29 +40,29 @@ namespace Rainbow
 		inline bool needs_accelerometer() const;
 
 	private:
-		bool accelerometer;
-		int width;
-		int height;
+		bool accelerometer_;
+		int width_;
+		int height_;
 	};
 
-	int Config::get_width() const
+	int Config::width() const
 	{
-		return this->width;
+		return this->width_;
 	}
 
-	int Config::get_height() const
+	int Config::height() const
 	{
-		return this->height;
+		return this->height_;
 	}
 
 	bool Config::is_portrait() const
 	{
-		return this->width < this->height;
+		return this->width_ < this->height_;
 	}
 
 	bool Config::needs_accelerometer() const
 	{
-		return this->accelerometer;
+		return this->accelerometer_;
 	}
 }
 

@@ -1,13 +1,12 @@
 #ifndef GRAPHICS_SPRITEBATCH_H_
 #define GRAPHICS_SPRITEBATCH_H_
 
-#include "Graphics/Drawable.h"
 #include "Graphics/Sprite.h"
 #include "Graphics/TextureAtlas.h"
 #include "Graphics/VertexArray.h"
 
-namespace SceneGraph { class Node; }
 namespace Renderer { void draw(const SpriteBatch &); }
+namespace SceneGraph { class Node; }
 
 /// A drawable batch of sprites.
 ///
@@ -42,14 +41,14 @@ public:
 	/// \return The index of the newly created sprite, positioned at (0,0).
 	unsigned int create_sprite(const unsigned int width, const unsigned int height);
 
+	/// Returns the sprite at index \p i.
+	inline Sprite& get_sprite(const unsigned int i) const;
+
 	/// Loads texture data.
 	TextureAtlas* set_texture(const DataMap &texture);
 
 	/// Reuses a texture atlas.
 	TextureAtlas* set_texture(TextureAtlas *texture);
-
-	/// Returns the sprite at index \p i.
-	inline Sprite& sprite(const unsigned int i) const;
 
 	/// Updates the batch of sprites.
 	void update();
@@ -62,7 +61,7 @@ private:
 	Vector<SpriteVertex> vertices;    ///< Common vertex array for all sprites in the batch.
 };
 
-Sprite& SpriteBatch::sprite(const unsigned int i) const
+Sprite& SpriteBatch::get_sprite(const unsigned int i) const
 {
 	return this->sprites[i];
 }

@@ -32,7 +32,7 @@ namespace Rainbow
 
 		int Label::get_color(lua_State *L)
 		{
-			const Colorb& c = ::Label::get_color();
+			const Colorb& c = ::Label::color();
 			lua_pushinteger(L, c.r);
 			lua_pushinteger(L, c.g);
 			lua_pushinteger(L, c.b);

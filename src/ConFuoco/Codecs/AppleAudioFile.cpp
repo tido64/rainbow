@@ -101,18 +101,18 @@ namespace ConFuoco
 			ExtAudioFileDispose(this->ref);
 	}
 
-	int AppleAudioFile::get_channels_impl() const
+	int AppleAudioFile::channels_impl() const
 	{
 		if (!this->ref)
-			return AudioFile::get_channels_impl();
+			return AudioFile::channels_impl();
 
 		return this->format.mChannelsPerFrame;
 	}
 
-	int AppleAudioFile::get_rate_impl() const
+	int AppleAudioFile::rate_impl() const
 	{
 		if (!this->ref)
-			return AudioFile::get_rate_impl();
+			return AudioFile::rate_impl();
 
 		return this->format.mSampleRate;
 	}

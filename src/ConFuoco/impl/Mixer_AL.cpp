@@ -42,10 +42,10 @@ namespace ConFuoco
 				const size_t size = audio_file->read(&data);
 				alBufferData(
 					this->bid,
-					(audio_file->get_channels() == 1) ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16,
+					(audio_file->channels() == 1) ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16,
 					data,
 					size,
-					audio_file->get_rate());
+					audio_file->rate());
 				delete[] data;
 			}
 
@@ -83,11 +83,11 @@ namespace ConFuoco
 					R_ERROR("[Rainbow::ConFuoco/AL] Failed to generate buffers\n");
 
 				this->audio_file.reset(AudioFile::Open(file, AudioFile::kAudioFileStream));
-				int channels = this->audio_file->get_channels();
+				int channels = this->audio_file->channels();
 				this->buf_sz = AudioFile::CreateBuffer(&this->buffer, channels);
 				this->format = (channels == 1)
 				             ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16;
-				this->rate = this->audio_file->get_rate();
+				this->rate = this->audio_file->rate();
 
 				this->preload();
 				streams.push_back(this);

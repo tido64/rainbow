@@ -82,18 +82,18 @@ namespace ConFuoco
 			ov_clear(&this->vf);
 	}
 
-	int OggVorbisAudioFile::get_channels_impl() const
+	int OggVorbisAudioFile::channels_impl() const
 	{
 		if (!this->vi)
-			return AudioFile::get_channels_impl();
+			return AudioFile::channels_impl();
 
 		return this->vi->channels;
 	}
 
-	int OggVorbisAudioFile::get_rate_impl() const
+	int OggVorbisAudioFile::rate_impl() const
 	{
 		if (!this->vi)
-			return AudioFile::get_rate_impl();
+			return AudioFile::rate_impl();
 
 		return this->vi->rate;
 	}

@@ -38,10 +38,10 @@ namespace ConFuoco
 		virtual ~AudioFile();
 
 		/// Returns number of channels.
-		inline int get_channels() const;
+		inline int channels() const;
 
 		/// Returns sample rate.
-		inline int get_rate() const;
+		inline int rate() const;
 
 		/// Reads whole file into buffer.
 		/// \param[out] dst  Destination buffer.
@@ -59,21 +59,21 @@ namespace ConFuoco
 		inline void rewind();
 
 	protected:
-		virtual int get_channels_impl() const;
-		virtual int get_rate_impl() const;
+		virtual int channels_impl() const;
+		virtual int rate_impl() const;
 		virtual size_t read_impl(char **dst);
 		virtual size_t read_impl(char *dst, const size_t size);
 		virtual void rewind_impl();
 	};
 
-	int AudioFile::get_channels() const
+	int AudioFile::channels() const
 	{
-		return this->get_channels_impl();
+		return this->channels_impl();
 	}
 
-	int AudioFile::get_rate() const
+	int AudioFile::rate() const
 	{
-		return this->get_rate_impl();
+		return this->rate_impl();
 	}
 
 	size_t AudioFile::read(char **dst)

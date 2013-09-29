@@ -54,7 +54,7 @@ unsigned int TextureManager::create_compressed(const unsigned int format,
 	return texture.id;
 }
 
-void TextureManager::get_usage(double &used, double &unused, double &peak) const
+void TextureManager::memory_usage(double &used, double &unused, double &peak) const
 {
 	unused = this->recycled.size() * 64 * 64 * 1e-6;
 	used = this->mem_used * 4e-6 + unused;
@@ -115,8 +115,8 @@ void TextureManager::print_usage() const
 {
 #ifndef NDEBUG
 	double used, unused, peak;
-	this->get_usage(used, unused, peak);
-	printf("[Rainbow] Video: %.2f MBs of textures (%.2f MBs unused)\n", used, unused);
+	this->memory_usage(used, unused, peak);
+	R_DEBUG("[Rainbow] Video: %.2f MBs of textures (%.2f MBs unused)\n", used, unused);
 #endif
 }
 

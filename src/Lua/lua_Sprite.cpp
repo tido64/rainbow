@@ -30,18 +30,18 @@ namespace Rainbow
 
 		::Sprite* Sprite::get() const
 		{
-			return &this->batch->sprite(this->id);
+			return &this->batch->get_sprite(this->id);
 		}
 
 		int Sprite::get_angle(lua_State *L)
 		{
-			lua_pushnumber(L, this->get()->get_angle());
+			lua_pushnumber(L, this->get()->angle());
 			return 1;
 		}
 
 		int Sprite::get_color(lua_State *L)
 		{
-			const Colorb& c = this->get()->get_color();
+			const Colorb& c = this->get()->color();
 			lua_pushinteger(L, c.r);
 			lua_pushinteger(L, c.g);
 			lua_pushinteger(L, c.b);
@@ -51,7 +51,7 @@ namespace Rainbow
 
 		int Sprite::get_position(lua_State *L)
 		{
-			const Vec2f &v = this->get()->get_position();
+			const Vec2f &v = this->get()->position();
 			lua_pushnumber(L, v.x);
 			lua_pushnumber(L, v.y);
 			return 2;

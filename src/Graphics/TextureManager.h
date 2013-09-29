@@ -62,7 +62,7 @@ public:
 	                               const void *data);
 
 	/// Returns total video memory used (and unused) by textures.
-	void get_usage(double &used, double &unused, double &peak) const;
+	void memory_usage(double &used, double &unused, double &peak) const;
 
 	/// Purges unused texture memory.
 	inline void purge();

@@ -1,5 +1,6 @@
 // Copyright 2010-13 Bifrost Entertainment. All rights reserved.
 
+#include "Graphics/Drawable.h"
 #include "Graphics/SpriteBatch.h"
 
 namespace Renderer { extern const int kNumSprites; }
@@ -38,10 +39,10 @@ unsigned int SpriteBatch::create_sprite(const unsigned int width, const unsigned
 	if (this->vertices.capacity() != current_capacity)
 	{
 		for (size_t i = 0; i < this->sprites.size(); ++i)
-			this->sprites[i].vertex_array = &this->vertices[i * 4];
+			this->sprites[i].vertex_array_ = &this->vertices[i * 4];
 	}
 	else  // Assign the batch's buffer to the sprite.
-		this->sprites[idx].vertex_array = &this->vertices[this->vertices.size() - 4];
+		this->sprites[idx].vertex_array_ = &this->vertices[this->vertices.size() - 4];
 
 	return idx;
 }

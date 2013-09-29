@@ -28,10 +28,10 @@ public:
 	inline Label();
 
 	/// Returns label text color.
-	inline const Colorb& get_color() const;
+	inline const Colorb& color() const;
 
 	/// Returns label width.
-	inline unsigned int get_width() const;
+	inline unsigned int width() const;
 
 	/// Sets text alignment.
 	void set_alignment(const Alignment);
@@ -58,17 +58,17 @@ public:
 	void update();
 
 private:
-	Colorb color;                        ///< Color of the text.
-	float scale;                         ///< Label scale factor.
-	Alignment alignment;                 ///< Text alignment.
-	unsigned int stale;                  ///< Flags indicating need for update.
-	unsigned int width;                  ///< Label width.
-	size_t size;                         ///< Size of the char array.
-	std::unique_ptr<char[]> text;        ///< Content of this label.
-	std::unique_ptr<SpriteVertex[]> vx;  ///< Vertex array containing the text.
-	Vec2f position;                      ///< Position of the text (top left).
-	SharedPtr<FontAtlas> font;           ///< The font used in this label.
-	Renderer::VertexArray array;         ///< Vertex array object.
+	Colorb color_;                        ///< Color of the text.
+	float scale_;                         ///< Label scale factor.
+	Alignment alignment_;                 ///< Text alignment.
+	unsigned int stale_;                  ///< Flags indicating need for update.
+	unsigned int width_;                  ///< Label width.
+	size_t size_;                         ///< Size of the char array.
+	std::unique_ptr<char[]> text_;        ///< Content of this label.
+	std::unique_ptr<SpriteVertex[]> vx_;  ///< Vertex array containing the text.
+	Vec2f position_;                      ///< Position of the text (top left).
+	SharedPtr<FontAtlas> font_;           ///< The font used in this label.
+	Renderer::VertexArray array_;         ///< Vertex array object.
 
 	/// Aligns individual characters.
 	/// \param length  Negative length of characters from \p start to \p end.
@@ -78,16 +78,16 @@ private:
 };
 
 Label::Label() :
-	scale(1.0f), alignment(kLeftTextAlignment), stale(0), width(0), size(0) { }
+	scale_(1.0f), alignment_(kLeftTextAlignment), stale_(0), width_(0), size_(0) { }
 
-const Colorb& Label::get_color() const
+const Colorb& Label::color() const
 {
-	return this->color;
+	return this->color_;
 }
 
-unsigned int Label::get_width() const
+unsigned int Label::width() const
 {
-	return this->width;
+	return this->width_;
 }
 
 #endif

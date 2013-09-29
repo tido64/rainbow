@@ -18,8 +18,8 @@ namespace Heimdall
 	public:
 		DebugInfo();
 
-		inline Label* get_button();
-		inline SceneGraph::Node* get_node();
+		inline Label* button();
+		inline SceneGraph::Node* node();
 
 		void set_button(const Vec2f &position);
 		void set_console(const Vec2f &position);
@@ -29,22 +29,22 @@ namespace Heimdall
 		bool on_touch(const Touch *const touches, const size_t count);
 
 	private:
-		float time;
-		Vec2f button_pos;
-		SceneGraph::Node *node;
-		Label button;
-		Label label;
-		char text[128];
+		float time_;
+		Vec2f position_;
+		SceneGraph::Node *node_;
+		Label button_;
+		Label label_;
+		char text_[128];
 	};
 
-	Label* DebugInfo::get_button()
+	Label* DebugInfo::button()
 	{
-		return &this->button;
+		return &this->button_;
 	}
 
-	SceneGraph::Node* DebugInfo::get_node()
+	SceneGraph::Node* DebugInfo::node()
 	{
-		return this->node;
+		return this->node_;
 	}
 }
 

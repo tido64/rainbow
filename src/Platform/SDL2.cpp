@@ -210,10 +210,10 @@ int main(int argc, char *argv[])
 	uint_t screen_height = 720;
 
 	Rainbow::Config config;
-	if (config.get_width() && config.get_height())
+	if (config.width() && config.height())
 	{
-		screen_width = config.get_width();
-		screen_height = config.get_height();
+		screen_width = config.width();
+		screen_height = config.height();
 	}
 
 	RenderWindow window(screen_width, screen_height);

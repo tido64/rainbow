@@ -23,12 +23,12 @@ namespace ConFuoco
 
 	AudioFile::~AudioFile() { }
 
-	int AudioFile::get_channels_impl() const
+	int AudioFile::channels_impl() const
 	{
 		return kFallbackChannels;
 	}
 
-	int AudioFile::get_rate_impl() const
+	int AudioFile::rate_impl() const
 	{
 		return kFallbackSampleRate;
 	}
