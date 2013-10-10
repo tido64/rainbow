@@ -1,17 +1,16 @@
 #include "Common/Chrono.h"
 
-TEST(ChronoTest, Diff)
+TEST(ChronoTest, Delta)
 {
-	const unsigned long threshold = 20;
-	const unsigned long times[] = { 16, 1000, 0 };
+	const Chrono::duration::rep threshold = 20;
+	const Chrono::duration::rep times[] = { 16, 1000, 0 };
 
 	Chrono chrono;
-	chrono.update();
 	for (int i = 0; times[i] > 0; ++i)
 	{
 		Chrono::sleep(times[i]);
 		chrono.update();
-		ASSERT_LE(times[i], chrono.diff());
-		ASSERT_GT(times[i] + threshold, chrono.diff());
+		ASSERT_LE(times[i], chrono.delta());
+		ASSERT_GT(times[i] + threshold, chrono.delta());
 	}
 }

@@ -290,7 +290,7 @@ int main(int argc, char *argv[])
 		else
 		{
 			// Update game logic
-			director.update(chrono.diff());
+			director.update(chrono.delta());
 
 			// Draw
 			Renderer::clear();

@@ -155,6 +155,7 @@
 		19AF58A0167FFA0800F54B27 /* Overlay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19AF589C167FFA0800F54B27 /* Overlay.cpp */; };
 		19CEDD71172422DC008B73B5 /* AudioFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19CEDD6A172422DC008B73B5 /* AudioFile.cpp */; };
 		19CEDD72172422DC008B73B5 /* AppleAudioFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19CEDD6D172422DC008B73B5 /* AppleAudioFile.cpp */; };
+		19D045AA18071D6D00968F00 /* Chrono.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19D045A918071D6D00968F00 /* Chrono.cpp */; };
 		19DCB27117419B1800660000 /* TestFlight.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19DCB26F17419B1800660000 /* TestFlight.cpp */; };
 		19DCB2731741A1D000660000 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 19DCB2721741A1D000660000 /* libz.dylib */; };
 		19DCB2751741A23400660000 /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19DCB2741741A23400660000 /* libTestFlight.a */; };
@@ -556,7 +557,6 @@
 		19905B80152C50FA00BDD15C /* Stack.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Stack.lua; path = ../../../lua/Stack.lua; sourceTree = "<group>"; };
 		19905B81152C50FA00BDD15C /* Transition.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Transition.lua; path = ../../../lua/Transition.lua; sourceTree = "<group>"; };
 		19905B83152C50FA00BDD15C /* Utils.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Utils.lua; path = ../../../lua/Utils.lua; sourceTree = "<group>"; };
-		19ADF9EB1763E8A0008C1465 /* Chrono_Unix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Chrono_Unix.h; sourceTree = "<group>"; };
 		19AF589A167FFA0800F54B27 /* DebugInfo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DebugInfo.cpp; sourceTree = "<group>"; };
 		19AF589B167FFA0800F54B27 /* DebugInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DebugInfo.h; sourceTree = "<group>"; };
 		19AF589C167FFA0800F54B27 /* Overlay.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Overlay.cpp; sourceTree = "<group>"; };
@@ -567,6 +567,7 @@
 		19CEDD6B172422DC008B73B5 /* AudioFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioFile.h; sourceTree = "<group>"; };
 		19CEDD6D172422DC008B73B5 /* AppleAudioFile.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = AppleAudioFile.cpp; sourceTree = "<group>"; };
 		19CEDD6E172422DC008B73B5 /* AppleAudioFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppleAudioFile.h; sourceTree = "<group>"; };
+		19D045A918071D6D00968F00 /* Chrono.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Chrono.cpp; sourceTree = "<group>"; };
 		19D3204717BD6BD4007BDC67 /* UIKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIKit.h; sourceTree = "<group>"; };
 		19D3204817BD6BD4007BDC67 /* PVRTC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PVRTC.h; sourceTree = "<group>"; };
 		19D3204917BD6BD4007BDC67 /* PNG.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNG.h; sourceTree = "<group>"; };
@@ -1046,6 +1047,7 @@
 			children = (
 				1939A187152C425D00494609 /* impl */,
 				193929C816E3527F0018340B /* Algorithm.h */,
+				19D045A918071D6D00968F00 /* Chrono.cpp */,
 				1939A181152C425D00494609 /* Chrono.h */,
 				1939A184152C425D00494609 /* Color.h */,
 				1939A185152C425D00494609 /* Constants.h */,
@@ -1074,7 +1076,6 @@
 		1939A187152C425D00494609 /* impl */ = {
 			isa = PBXGroup;
 			children = (
-				19ADF9EB1763E8A0008C1465 /* Chrono_Unix.h */,
 				1949374B1756795900CF3FC6 /* DataMap_Unix.cpp */,
 				1949374C1756795900CF3FC6 /* DataMap_Unix.h */,
 			);
@@ -1586,6 +1587,7 @@
 				190D6FED16964AA100C9ED26 /* lua_Box2D.cpp in Sources */,
 				190D6FF116964B2500C9ED26 /* RainbowDraw.cpp in Sources */,
 				193929B616E23D410018340B /* RainbowViewController.mm in Sources */,
+				19D045AA18071D6D00968F00 /* Chrono.cpp in Sources */,
 				193929B816E23D5F0018340B /* SysUtil_Apple.cpp in Sources */,
 				193929BD16E243E90018340B /* LuaMachine.cpp in Sources */,
 				193929BF16E3511F0018340B /* freetype.c in Sources */,
