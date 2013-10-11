@@ -9,13 +9,15 @@ if(MSVC OR XCODE)
 
 	file(GLOB RAINBOW_SRC src/ConFuoco/*)
 	source_group("Source Files\\ConFuoco" FILES ${RAINBOW_SRC})
-	file(GLOB RAINBOW_SRC src/ConFuoco/impl/*)
-	source_group("Source Files\\ConFuoco\\impl" FILES ${RAINBOW_SRC})
 	file(GLOB RAINBOW_SRC src/ConFuoco/Codecs/*)
 	source_group("Source Files\\ConFuoco\\Codecs" FILES ${RAINBOW_SRC})
+	file(GLOB RAINBOW_SRC src/ConFuoco/impl/*)
+	source_group("Source Files\\ConFuoco\\impl" FILES ${RAINBOW_SRC})
 
 	file(GLOB RAINBOW_SRC src/Graphics/*)
 	source_group("Source Files\\Graphics" FILES ${RAINBOW_SRC})
+	file(GLOB RAINBOW_SRC src/Graphics/Decoders/*)
+	source_group("Source Files\\Graphics\\Decoders" FILES ${RAINBOW_SRC})
 	file(GLOB RAINBOW_SRC src/Graphics/impl/*)
 	source_group("Source Files\\Graphics\\impl" FILES ${RAINBOW_SRC})
 

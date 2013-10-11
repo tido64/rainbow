@@ -73,5 +73,4 @@ TreeNode<T>::~TreeNode()
 		delete child;
 }
 
-
 #endif

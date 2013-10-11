@@ -11,7 +11,7 @@ function compile {
 			make
 			;;
 		"Xcode")
-			xcodebuild -project Rainbow.xcodeproj -arch $(uname -m) build
+			xcrun xcodebuild -project Rainbow.xcodeproj -arch $(uname -m) build
 			;;
 		*)
 			;;
