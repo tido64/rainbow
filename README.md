@@ -73,9 +73,12 @@ iOS builds.
 Make sure to have [Mesa](http://www.mesa3d.org/),
 [OpenAL Soft](http://kcat.strangesoft.net/openal.html) and
 [Vorbis](http://www.vorbis.com/) (particularly Vorbisfile) installed in order to
-properly link Rainbow. [Clang](http://clang.llvm.org/) is the default compiler
-but you can use [GCC](http://gcc.gnu.org/), or any other compiler for that
-matter, by prefixing `CC=gcc CXX=g++`.
+properly link Rainbow. Download [SDL](http://libsdl.org/) source code and move
+its contents to `lib/SDL/`.
+
+[Clang](http://clang.llvm.org/) is the default compiler but you can use
+[GCC](http://gcc.gnu.org/), or any other compiler for that matter, by prefixing
+`CC=gcc CXX=g++`.
 
 Windows builds can be built using [MinGW](http://www.mingw.org/) or
 [MinGW-w64](http://mingw-w64.sourceforge.net/) by issuing `windows` as platform.
@@ -84,15 +87,20 @@ Windows builds can be built using [MinGW](http://www.mingw.org/) or
 
 Xcode and the Command Line Tools package must be installed. Additionally,
 [CMake](http://www.cmake.org/) and [Vorbis](http://www.vorbis.com/) should be
-installed through [MacPorts](http://www.macports.org/).
+installed through [Homebrew](brew.sh) or [MacPorts](http://www.macports.org/).
+Download [SDL](http://libsdl.org/) source code and move its contents to
+`lib/SDL/`.
 
 ### Windows
 
 Compiling with Visual Studio is supported using prebuilt `libogg`, `libvorbis`,
 `libvorbisfile` and `zlib`. Prebuilt
 [OpenAL Soft](http://kcat.strangesoft.net/openal.html) binary is offered at its
-official home page. Download it and place it with the others. Use the Windows
-build script to generate a Visual Studio project:
+official home page. Download it and place it with the others. Finally, download
+[SDL](http://libsdl.org/) development libraries and move its contents to
+`lib/SDL/`.
+
+Use the Windows build script to generate a Visual Studio project:
 
 	> \path\to\rainbow\tools\build.bat
 
