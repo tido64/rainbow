@@ -64,7 +64,4 @@ TEST(Vec2Test, Zero)
 	v0.x = 1;
 	v0.y = 1;
 	ASSERT_FALSE(v0.is_zero());
-
-	v0.zero();
-	ASSERT_TRUE(v0.is_zero());
 }

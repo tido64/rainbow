@@ -53,13 +53,6 @@ namespace Rainbow
 			return !this->x && !this->y;
 		}
 
-		/// Zeros the vector.
-		void zero()
-		{
-			this->x = 0;
-			this->y = 0;
-		}
-
 		Vec2<T>& operator+=(const Vec2<T> &v)
 		{
 			this->x += v.x;

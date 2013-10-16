@@ -1,6 +1,8 @@
 #ifndef COMMON_VEC3_H_
 #define COMMON_VEC3_H_
 
+#include "Common/Algorithm.h"
+
 namespace Rainbow
 {
 	/// Structure for storing a three-dimensional vector.
@@ -19,14 +21,6 @@ namespace Rainbow
 		bool is_zero() const
 		{
 			return !this->x && !this->y && !this->z;
-		}
-
-		/// Zeros the vector.
-		void zero()
-		{
-			this->x = 0;
-			this->y = 0;
-			this->z = 0;
 		}
 
 		Vec3<T>& operator+=(const Vec3<T> &v)
@@ -53,6 +47,18 @@ namespace Rainbow
 			return *this;
 		}
 	};
+
+	template<>
+	inline bool Vec3<double>::is_zero() const
+	{
+		return equal(0.0, this->x) && equal(0.0, this->y) && equal(0.0, this->z);
+	}
+
+	template<>
+	inline bool Vec3<float>::is_zero() const
+	{
+		return equal(0.0f, this->x) && equal(0.0f, this->y) && equal(0.0f, this->z);
+	}
 }
 
 typedef Rainbow::Vec3<double> Vec3d;

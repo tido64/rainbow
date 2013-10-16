@@ -50,7 +50,4 @@ TEST(Vec3Test, Zero)
 	v0.y = 2.0f;
 	v0.z = 3.0f;
 	ASSERT_FALSE(v0.is_zero());
-
-	v0.zero();
-	ASSERT_TRUE(v0.is_zero());
 }
