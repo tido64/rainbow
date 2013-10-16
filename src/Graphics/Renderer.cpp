@@ -136,8 +136,8 @@ namespace Renderer
 
 	void draw(const SpriteBatch &batch)
 	{
-		batch.texture->bind();
-		draw(batch.array);
+		batch.texture().bind();
+		draw(batch.vertex_array());
 	}
 
 	void draw(const VertexArray &array)

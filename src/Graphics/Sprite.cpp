@@ -76,11 +76,7 @@ void Sprite::set_rotation(const float r)
 
 void Sprite::set_scale(const float f)
 {
-	R_ASSERT(f > 0.0f, "Can't scale with a factor of zero or less");
-
-	this->scale_.x = f;
-	this->scale_.y = f;
-	this->stale_ |= kStaleBuffer;
+	this->set_scale(Vec2f(f, f));
 }
 
 void Sprite::set_scale(const Vec2f &f)
@@ -93,7 +89,7 @@ void Sprite::set_scale(const Vec2f &f)
 
 void Sprite::set_texture(const unsigned int id)
 {
-	const Texture &tx = (*this->parent_->texture)[id];
+	const Texture &tx = this->parent_->texture()[id];
 	this->vertex_array_[0].texcoord = tx.vx[0];
 	this->vertex_array_[1].texcoord = tx.vx[1];
 	this->vertex_array_[2].texcoord = tx.vx[2];

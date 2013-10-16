@@ -30,7 +30,7 @@ namespace Rainbow
 
 		::Sprite* Sprite::get() const
 		{
-			return &this->batch->get_sprite(this->id);
+			return &this->batch->sprites()[this->id];
 		}
 
 		int Sprite::get_angle(lua_State *L)
