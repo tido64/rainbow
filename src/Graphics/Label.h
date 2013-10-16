@@ -6,17 +6,12 @@
 #include "Graphics/FontAtlas.h"
 #include "Graphics/VertexArray.h"
 
-class Label;
-namespace Renderer { void draw(const Label &); }
-
 /// Label for displaying text.
 ///
 /// Copyright 2011-13 Bifrost Entertainment. All rights reserved.
 /// \author Tommy Nguyen
 class Label : private NonCopyable<Label>
 {
-	friend void Renderer::draw(const Label &);
-
 public:
 	enum Alignment
 	{
@@ -29,6 +24,12 @@ public:
 
 	/// Returns label text color.
 	inline const Colorb& color() const;
+
+	/// Returns label font.
+	inline const FontAtlas& font() const;
+
+	/// Returns the vertex array object.
+	inline const Renderer::VertexArray& vertex_array() const;
 
 	/// Returns label width.
 	inline unsigned int width() const;
@@ -83,6 +84,16 @@ Label::Label() :
 const Colorb& Label::color() const
 {
 	return this->color_;
+}
+
+const FontAtlas& Label::font() const
+{
+	return *this->font_.get();
+}
+
+const Renderer::VertexArray& Label::vertex_array() const
+{
+	return this->array_;
 }
 
 unsigned int Label::width() const

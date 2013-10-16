@@ -107,8 +107,8 @@ namespace Renderer
 
 	void draw(const Label &label)
 	{
-		label.font_->bind();
-		draw(label.array_);
+		label.font().bind();
+		draw(label.vertex_array());
 	}
 
 	void draw(const SceneGraph::Node &node)
