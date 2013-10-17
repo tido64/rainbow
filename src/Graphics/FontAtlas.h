@@ -35,20 +35,22 @@ public:
 
 	inline ~FontAtlas();
 
+	/// Returns the line height.
+	inline int height() const;
+
 	inline void bind() const;
 
+	/// Returns the glyph for a character.
 	const FontGlyph* get_glyph(const unsigned int c) const;
-	inline short height() const;
 
 	inline operator bool() const;
 
 protected:
-	static const unsigned int kASCIIOffset = 32;    ///< Start loading from character 32.
 	static const unsigned int kNumCharacters = 95;  ///< Load characters through 126 from the ASCII table.
 
 private:
-	short height_;          ///< Font line height.
 	const float pt_;        ///< Font point size.
+	int height_;            ///< Font line height.
 	unsigned int texture_;  ///< Texture name.
 	Colorb color_;          ///< Font colour.
 	FontGlyph charset_[kNumCharacters + FONTATLAS_EXTENDED];  ///< Character set.
@@ -64,7 +66,7 @@ void FontAtlas::bind() const
 	TextureManager::Instance->bind(this->texture_);
 }
 
-short FontAtlas::height() const
+int FontAtlas::height() const
 {
 	return this->height_;
 }
