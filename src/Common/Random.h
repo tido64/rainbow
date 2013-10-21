@@ -1,19 +1,21 @@
 #ifndef COMMON_RANDOM_H_
 #define COMMON_RANDOM_H_
 
-#include <ctime>
-
+#include "Common/Chrono.h"
 #include "Common/Debug.h"
 
-#if defined(RAINBOW_UNIX)
+#define DSFMT_MEXP 19937
+#if defined(__SSE2__) || (defined(_M_IX86_FP) && _M_IX86_FP >= 2) || defined(_M_X64)
+#	define HAVE_SSE2
+#elif defined(__ALTIVEC__)
+#	define HAVE_ALTIVEC
+#endif
+#ifdef RAINBOW_UNIX
 #	pragma GCC diagnostic push
 #	pragma GCC diagnostic ignored "-Wlong-long"
 #endif
-
-#define DSFMT_MEXP 19937
 #include <dSFMT/dSFMT.h>
-
-#if defined(RAINBOW_UNIX)
+#ifdef RAINBOW_UNIX
 #	pragma GCC diagnostic pop
 #endif
 
@@ -27,12 +29,12 @@ namespace Random
 	inline double next();
 
 	/// Returns the next generated random number in [0, n).
-	template<class T>
-	inline T next(const T &n);
+	template<typename T>
+	inline T next(const T n);
 
 	/// Returns the next generated random number in [n1, n2).
-	template<class T>
-	inline T next(const T &n1, const T &n2);
+	template<typename T>
+	inline T next(const T n1, const T n2);
 
 	/// Sets the random number generator seed. Must be called before any other calls.
 	inline void seed(const uint32_t seed);
@@ -42,14 +44,14 @@ namespace Random
 		return dsfmt_gv_genrand_close_open();
 	}
 
-	template<class T>
-	T next(const T &n)
+	template<typename T>
+	T next(const T n)
 	{
 		return static_cast<T>(next() * n);
 	}
 
-	template<class T>
-	T next(const T &n1, const T &n2)
+	template<typename T>
+	T next(const T n1, const T n2)
 	{
 		R_ASSERT(n1 < n2, "Parameters must be in ascending order");
 		return static_cast<T>(next() * (n2 - n1) + n1);
@@ -57,7 +59,10 @@ namespace Random
 
 	void seed(const uint32_t seed)
 	{
-		dsfmt_gv_init_gen_rand((seed == 0) ? static_cast<uint32_t>(time(nullptr)) : seed);
+		dsfmt_gv_init_gen_rand(
+				(seed == 0)
+				? Chrono::clock::now().time_since_epoch().count()
+				: seed);
 	}
 }
 

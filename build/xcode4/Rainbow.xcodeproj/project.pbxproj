@@ -65,7 +65,6 @@
 		1939A075152C401300494609 /* b2WeldJoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19399E6E152C401300494609 /* b2WeldJoint.cpp */; };
 		1939A076152C401300494609 /* b2WheelJoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19399E70152C401300494609 /* b2WheelJoint.cpp */; };
 		1939A078152C401300494609 /* b2Rope.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19399E74152C401300494609 /* b2Rope.cpp */; };
-		1939A07B152C401300494609 /* dSFMT-Xcode.mm in Sources */ = {isa = PBXBuildFile; fileRef = 19399E84152C401300494609 /* dSFMT-Xcode.mm */; };
 		1939A152152C401300494609 /* lapi.c in Sources */ = {isa = PBXBuildFile; fileRef = 1939A00C152C401300494609 /* lapi.c */; };
 		1939A153152C401300494609 /* lauxlib.c in Sources */ = {isa = PBXBuildFile; fileRef = 1939A00E152C401300494609 /* lauxlib.c */; };
 		1939A154152C401300494609 /* lbaselib.c in Sources */ = {isa = PBXBuildFile; fileRef = 1939A010152C401300494609 /* lbaselib.c */; };
@@ -300,7 +299,6 @@
 		19399E81152C401300494609 /* dSFMT-params44497.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "dSFMT-params44497.h"; sourceTree = "<group>"; };
 		19399E82152C401300494609 /* dSFMT-params521.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "dSFMT-params521.h"; sourceTree = "<group>"; };
 		19399E83152C401300494609 /* dSFMT-params86243.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "dSFMT-params86243.h"; sourceTree = "<group>"; };
-		19399E84152C401300494609 /* dSFMT-Xcode.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "dSFMT-Xcode.mm"; sourceTree = "<group>"; };
 		19399E90152C401300494609 /* dSFMT.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dSFMT.h; sourceTree = "<group>"; };
 		19399ECC152C401300494609 /* ftconfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ftconfig.h; sourceTree = "<group>"; };
 		19399ECD152C401300494609 /* ftheader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ftheader.h; sourceTree = "<group>"; };
@@ -808,7 +806,6 @@
 				19399E81152C401300494609 /* dSFMT-params44497.h */,
 				19399E82152C401300494609 /* dSFMT-params521.h */,
 				19399E83152C401300494609 /* dSFMT-params86243.h */,
-				19399E84152C401300494609 /* dSFMT-Xcode.mm */,
 				19399E90152C401300494609 /* dSFMT.h */,
 			);
 			name = dSFMT;
@@ -1514,7 +1511,6 @@
 				1939A075152C401300494609 /* b2WeldJoint.cpp in Sources */,
 				1939A076152C401300494609 /* b2WheelJoint.cpp in Sources */,
 				1939A078152C401300494609 /* b2Rope.cpp in Sources */,
-				1939A07B152C401300494609 /* dSFMT-Xcode.mm in Sources */,
 				1939A152152C401300494609 /* lapi.c in Sources */,
 				1939A153152C401300494609 /* lauxlib.c in Sources */,
 				1939A154152C401300494609 /* lbaselib.c in Sources */,
