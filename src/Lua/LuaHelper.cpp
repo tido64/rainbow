@@ -28,7 +28,12 @@ namespace Rainbow
 				strcat(path, suffix);
 				IO::FileHandle fh = IO::find_and_open(path, IO::kIOTypeAsset);
 				IO::close(fh);
-				return (!fh) ? 0 : load(L, Data(path), module, false);
+				if (!fh)
+					return 0;
+				const int result = load(L, Data(path), module, false);
+				if (result == 0)
+					return luaL_error(L, "Failed to load '%s'", module);
+				return result;
 			}
 		}
 
@@ -69,13 +74,13 @@ namespace Rainbow
 					: result;
 		}
 
-		int load(lua_State *L, const Data &chunk, const char *name, const bool load)
+		int load(lua_State *L, const Data &chunk, const char *name, const bool exec)
 		{
 			int e = luaL_loadbuffer(L, chunk, chunk.size(), name);
-			if (e || (load && (e = lua_pcall(L, 0, LUA_MULTRET, 0))))
+			if (e || (exec && (e = lua_pcall(L, 0, LUA_MULTRET, 0))))
 			{
 				error(L, e);
-				return luaL_error(L, "Failed to load '%s'", name);
+				return 0;
 			}
 			return 1;
 		}

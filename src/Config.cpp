@@ -13,7 +13,8 @@ namespace Rainbow
 			return;
 
 		lua_State *L = luaL_newstate();
-		Rainbow::Lua::load(L, config, "config");
+		if (Rainbow::Lua::load(L, config, "config") == 0)
+			return;
 		lua_getglobal(L, "accelerometer");
 		this->accelerometer_ = lua_toboolean(L, -1);
 		lua_getglobal(L, "resolution");

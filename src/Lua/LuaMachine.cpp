@@ -1,5 +1,6 @@
 // Copyright 2011-13 Bifrost Entertainment. All rights reserved.
 
+#include "Common/Data.h"
 #include "Lua/LuaModules.h"
 #include "Lua/lua_Rainbow.h"
 
@@ -26,7 +27,8 @@ namespace Rainbow
 
 	int LuaMachine::init(const Data &main)
 	{
-		Lua::load(this->L, main, "main");
+		if (Lua::load(this->L, main, "main") == 0)
+			return luaL_error(this->L, "Failed to load main script");
 
 	#ifndef NDEBUG
 		lua_rawgeti(this->L, LUA_REGISTRYINDEX, this->traceback);
@@ -72,30 +74,31 @@ namespace Rainbow
 	{
 		luaL_openlibs(this->L);
 
-		// Initialize "rainbow" namespace
+		// Initialize "rainbow" namespace.
 		lua_createtable(this->L, 0, 16);
 		Lua::init(this->L);
 
-		// Set "rainbow.breakpoint"
+		// Set "rainbow.breakpoint".
 		luaR_rawsetcclosurefield(L, breakpoint, "breakpoint");
 
-		// Initialize "rainbow.scenegraph"
+		// Initialize "rainbow.scenegraph".
 		this->scenegraph = Lua::SceneGraph::create(this->L, root);
 
-		// Bind C++ objects
+		// Bind C++ objects.
 		Lua::bind(this->L);
 
-		lua_setglobal(this->L, "rainbow");
+		const char rainbow[] = "rainbow";
+		lua_setglobal(this->L, rainbow);
 		R_ASSERT(lua_gettop(this->L) == 0, "Stack not empty");
 
-		// Set up custom loader
+		// Set up custom loader.
 		lua_getglobal(this->L, "package");
 		R_ASSERT(!lua_isnil(this->L, -1), "package table does not exist");
 		lua_pushliteral(this->L, "searchers");
 		lua_rawget(this->L, -2);
 		R_ASSERT(!lua_isnil(this->L, -1), "package.searchers table does not exist");
 
-		// Make space in the second slot for our loader
+		// Make space in the second slot for our loader.
 		for (size_t i = lua_rawlen(this->L, -1); i > 1; --i)
 		{
 			lua_rawgeti(this->L, -1, i);
@@ -103,19 +106,20 @@ namespace Rainbow
 		}
 		lua_pushcfunction(this->L, Lua::load);
 		lua_rawseti(this->L, -2, 2);
-
-		// Clean up the stack
 		lua_pop(this->L, 2);
 		R_ASSERT(lua_gettop(this->L) == 0, "Stack not empty");
 
-		// Load our internal script
-		int e = luaL_loadbuffer(this->L, Rainbow_lua, sizeof(Rainbow_lua) / sizeof(char) - 1, "Rainbow");
-		R_ASSERT(e == LUA_OK, "Failed to load internal Lua script");
-		e = lua_pcall(this->L, 0, 0, 0);
-		R_ASSERT(e == LUA_OK, "Failed to execute internal Lua script");
+		// Load our internal script.
+		const size_t length = sizeof(Rainbow_lua) / sizeof(char) - 1;
+		if (Lua::load(this->L, Data(Rainbow_lua, length, Data::kDataReference), rainbow) == 0)
+		{
+			luaL_error(this->L, "Failed to load internal Lua script");
+			return;
+		}
 		lua_getglobal(this->L, "__update");
 		R_ASSERT(lua_isfunction(this->L, -1), "Failed to get internal Lua script");
 		this->internal = luaL_ref(this->L, LUA_REGISTRYINDEX);
+		R_ASSERT(lua_gettop(this->L) == 0, "Stack not empty");
 
 	#ifndef NDEBUG
 		lua_getglobal(this->L, "debug");
@@ -123,6 +127,7 @@ namespace Rainbow
 		lua_rawget(this->L, -2);
 		this->traceback = luaL_ref(this->L, LUA_REGISTRYINDEX);
 		lua_pop(this->L, 1);
+		R_ASSERT(lua_gettop(this->L) == 0, "Stack not empty");
 	#endif
 	}
 }

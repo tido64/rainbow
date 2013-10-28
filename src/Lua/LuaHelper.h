@@ -61,10 +61,10 @@ namespace Rainbow
 		/// Loads buffer as a Lua chunk.
 		/// \param chunk  Buffer to load.
 		/// \param name   Name of the chunk. Used for debug information.
-		/// \param load   For internal use only! Whether to execute the loaded
+		/// \param exec   For internal use only! Whether to execute the loaded
 		///               chunk. Only used by Lua package loaders.
-		/// \return See \c luaL_loadbuffer().
-		int load(lua_State *L, const Data &chunk, const char *name, const bool load = true);
+		/// \return Number of successfully loaded chunks.
+		int load(lua_State *L, const Data &chunk, const char *name, const bool exec = true);
 
 		/// Pushes a collectable pointer on the stack.
 		///
