@@ -29,11 +29,14 @@ public:
 	enum Type
 	{
 		kDataTypeAsset,
-		kDataTypeDocument
+		kDataTypeDocument,
+		kDataTypeSystem
 	};
 
 	/// Constructs an empty data object. No memory will be allocated.
 	inline Data();
+
+	inline Data(Data &&);
 
 	/// Constructs a data object with the contents of the file. The file's
 	/// location will be determined by its type.
@@ -78,6 +81,13 @@ private:
 
 Data::Data() : ownership(kDataOwner), allocated(0), sz(0), data(nullptr) { }
 
+Data::Data(Data &&d) : ownership(d.ownership), allocated(d.allocated), sz(d.sz), data(d.data)
+{
+	d.allocated = 0;
+	d.sz = 0;
+	d.data = nullptr;
+}
+
 Data::Data(const void *buffer, const size_t size, const Ownership ownership) :
 	ownership(ownership), allocated(size), sz(size),
 	data(const_cast<void*>(buffer)) { }
@@ -116,12 +126,16 @@ Data::operator unsigned char*() const
 
 Data::operator NSData*() const
 {
-	return [NSData dataWithBytesNoCopy:this->data length:this->sz freeWhenDone:NO];
+	return [NSData dataWithBytesNoCopy:this->data
+	                            length:this->sz
+	                      freeWhenDone:NO];
 }
 
 Data::operator NSMutableData*() const
 {
-	return [NSMutableData dataWithBytesNoCopy:this->data length:this->sz freeWhenDone:NO];
+	return [NSMutableData dataWithBytesNoCopy:this->data
+	                                   length:this->sz
+	                             freeWhenDone:NO];
 }
 
 #endif  // RAINBOW_IOS

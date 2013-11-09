@@ -9,8 +9,9 @@
 Data::Data(const char *const file, const Type type) :
 	ownership(kDataOwner), allocated(0), sz(0), data(nullptr)
 {
-	Rainbow::IO::FileHandle fh =
-			Rainbow::IO::find_and_open(file, static_cast<Rainbow::IO::Type>(type));
+	Rainbow::IO::FileHandle fh = (type == kDataTypeSystem)
+			? Rainbow::IO::open(file, Rainbow::IO::kIOTypeAsset)
+			: Rainbow::IO::find_and_open(file, static_cast<Rainbow::IO::Type>(type));
 	if (!fh)
 	{
 		R_ERROR("[Rainbow] Data: Failed to open '%s'\n", file);
