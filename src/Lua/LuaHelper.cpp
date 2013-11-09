@@ -93,6 +93,19 @@ namespace Rainbow
 			luaR_rawsetfield(L, lua_pushstring, name, "__type");
 		}
 
+		int reload(lua_State *L, const Data &chunk, const char *name)
+		{
+			lua_getglobal(L, "package");
+			lua_pushliteral(L, "loaded");
+			lua_rawget(L, -2);
+			R_ASSERT(lua_istable(L, -1), "Missing control table 'package.loaded'");
+			lua_pushstring(L, name);
+			lua_pushnil(L);
+			lua_rawset(L, -3);
+			lua_pop(L, 2);
+			return load(L, chunk, name, true);
+		}
+
 		int sethook(lua_State *L, const int mask)
 		{
 			if (g_level >= 0)

@@ -76,6 +76,12 @@ namespace Rainbow
 		/// \param name  Name of the pointer type.
 		void pushpointer(lua_State *L, void *ptr, const char *name);
 
+		/// Reloads a previously loaded Lua chunk.
+		/// \param chunk  Buffer to load.
+		/// \param name   Name of the chunk. Used for debug information.
+		/// \return Number of successfully reloaded chunks.
+		int reload(lua_State *L, const Data &chunk, const char *name);
+
 		/// Sets debugging hook.
 		int sethook(lua_State *L, const int mask = LUA_MASKCALL | LUA_MASKRET | LUA_MASKLINE);
 
