@@ -23,6 +23,8 @@ if(MSVC OR XCODE)
 
 	file(GLOB RAINBOW_SRC src/Heimdall/*)
 	source_group("Source Files\\Heimdall" FILES ${RAINBOW_SRC})
+	file(GLOB RAINBOW_SRC src/Heimdall/impl/*)
+	source_group("Source Files\\Heimdall\\impl" FILES ${RAINBOW_SRC})
 
 	file(GLOB RAINBOW_SRC src/Input/*)
 	source_group("Source Files\\Input" FILES ${RAINBOW_SRC})

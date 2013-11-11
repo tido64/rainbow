@@ -3,8 +3,81 @@
 #include "Common/Data.h"
 #include "Heimdall/Gatekeeper.h"
 #include "Heimdall/Resources.h"
+#include "Lua/LuaHelper.h"
 #include "Resources/Inconsolata.otf.h"
 #include "Resources/NewsCycle-Regular.ttf.h"
+
+extern char data_path[];  ///< Path to asset data.
+
+namespace
+{
+	const char* basename(const char *const path) pure;
+
+	const char* basename(const char *const path)
+	{
+		const char *basename = path;
+		for (const char *c = path; *c; ++c)
+		{
+			if (*c == '/' || *c == ':' || *c == '\\')
+			{
+				basename = ++c;
+				continue;
+			}
+		}
+		return basename;
+	}
+
+	class Library
+	{
+	public:
+		Library(const char *const path);
+
+		inline const char* name() const;
+
+		inline operator bool() const;
+		inline operator Data() const;
+
+	private:
+		std::unique_ptr<char[]> name_;
+		const char *path_;
+	};
+
+	Library::Library(const char *const path) : path_(path)
+	{
+		const char *filename = basename(this->path_);
+		size_t length = strlen(filename);
+		if (length < 5 || memcmp(filename + length - 4, ".lua", 4) != 0)
+		{
+			this->path_ = nullptr;
+			return;
+		}
+		length -= 4;
+		this->name_.reset(new char[length + 1]);
+		strncpy(this->name_.get(), filename, length);
+		this->name_[length] = '\0';
+	}
+
+	const char* Library::name() const
+	{
+		return this->name_.get();
+	}
+
+	Library::operator bool() const
+	{
+		return this->path_;
+	}
+
+	Library::operator Data() const
+	{
+	#if defined(RAINBOW_MAC)
+		return Data(this->path_, Data::kDataTypeSystem);
+	#elif defined(RAINBOW_WIN)
+		return Data(this->path_);
+	#else
+		return Data();
+	#endif
+	}
+}
 
 namespace Heimdall
 {
@@ -17,13 +90,20 @@ namespace Heimdall
 	}
 
 	Gatekeeper::Gatekeeper() :
-		width(0), height(0), touch_count(0), overlay_node(nullptr)
+		width(0), height(0), touch_count(0), overlay_node(nullptr),
+		monitor(data_path)
 	{
 		this->scenegraph.add_child(this->info.node());
 
 		this->overlay_node = this->scenegraph.add_child(&this->overlay);
 		this->overlay_node->enabled = false;
 		this->overlay_node->add_child(this->info.button());
+
+		this->monitor.set_callback([this](const char *path) {
+			char *file = new char[strlen(path) + 1];
+			strcpy(file, path);
+			this->queue.push(file);
+		});
 
 		this->touch_canceled();
 	}
@@ -48,7 +128,6 @@ namespace Heimdall
 		this->height = height;
 
 		const unsigned int pt = this->height / 64;
-
 		this->console_font = new FontAtlas(
 				Data(Inconsolata_otf, sizeof(Inconsolata_otf), Data::kDataReference),
 				pt);
@@ -69,6 +148,17 @@ namespace Heimdall
 
 	void Gatekeeper::update(const unsigned long dt)
 	{
+		const char *file = nullptr;
+		while (this->queue.pop(file))
+		{
+			std::unique_ptr<const char[]> path(file);
+			Library library(path.get());
+			if (!library)
+				continue;
+
+			R_DEBUG("[Rainbow] Reloading '%s'...\n", library.name());
+			Rainbow::Lua::reload(this->director->state(), library, library.name());
+		}
 		//if (!this->overlay_node->enabled)
 			this->director->update(dt);
 		if (!this->overlay_node->enabled && this->touch_count == 2)

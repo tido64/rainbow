@@ -3,7 +3,17 @@
 
 #ifdef USE_HEIMDALL
 
+#ifdef __GNUC__
+#	pragma GCC diagnostic push
+#	pragma GCC diagnostic ignored "-Wunused-parameter"
+#endif
+#include <boost/lockfree/spsc_queue.hpp>
+#ifdef __GNUC__
+#	pragma GCC diagnostic pop
+#endif
+
 #include "Director.h"
+#include "Heimdall/ChangeMonitor.h"
 #include "Heimdall/DebugInfo.h"
 #include "Heimdall/Overlay.h"
 #include "Input/Touch.h"
@@ -55,8 +65,13 @@ namespace Heimdall
 		SceneGraph::Node *overlay_node;
 		SceneGraph::Node scenegraph;
 
+		ChangeMonitor monitor;
+
 		Overlay overlay;
 		DebugInfo info;
+
+		boost::lockfree::spsc_queue<const char *,
+		                            boost::lockfree::capacity<1024>> queue;
 
 		inline void toggle_overlay();
 

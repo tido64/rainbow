@@ -20,6 +20,11 @@ namespace Rainbow
 	public:
 		inline Director();
 
+	#ifdef USE_HEIMDALL
+		/// Used by Heimdall::Gatekeeper to retrieve Lua state.
+		struct lua_State* state() const { return this->lua; }
+	#endif
+
 		inline void draw();
 
 		/// Loads and initialises main script.

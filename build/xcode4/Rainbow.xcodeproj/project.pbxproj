@@ -155,6 +155,7 @@
 		19CEDD71172422DC008B73B5 /* AudioFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19CEDD6A172422DC008B73B5 /* AudioFile.cpp */; };
 		19CEDD72172422DC008B73B5 /* AppleAudioFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19CEDD6D172422DC008B73B5 /* AppleAudioFile.cpp */; };
 		19D045AA18071D6D00968F00 /* Chrono.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19D045A918071D6D00968F00 /* Chrono.cpp */; };
+		19D9318A1834AFCE00F0137E /* ChangeMonitor_Stub.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19D931871834AFCE00F0137E /* ChangeMonitor_Stub.cpp */; };
 		19DCB27117419B1800660000 /* TestFlight.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19DCB26F17419B1800660000 /* TestFlight.cpp */; };
 		19DCB2731741A1D000660000 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 19DCB2721741A1D000660000 /* libz.dylib */; };
 		19DCB2751741A23400660000 /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19DCB2741741A23400660000 /* libTestFlight.a */; };
@@ -188,7 +189,7 @@
 		193929B416E23D410018340B /* RainbowViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RainbowViewController.h; path = ../../../src/Platform/RainbowViewController.h; sourceTree = "<group>"; };
 		193929B516E23D410018340B /* RainbowViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = RainbowViewController.mm; path = ../../../src/Platform/RainbowViewController.mm; sourceTree = "<group>"; };
 		193929B716E23D5F0018340B /* SysUtil_Apple.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SysUtil_Apple.cpp; path = ../../../src/Platform/impl/SysUtil_Apple.cpp; sourceTree = "<group>"; };
-		193929BA16E243E90018340B /* LuaMachine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LuaMachine.cpp; sourceTree = "<group>"; };
+		193929BA16E243E90018340B /* LuaMachine.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = LuaMachine.cpp; sourceTree = "<group>"; };
 		193929BB16E243E90018340B /* LuaMachine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LuaMachine.h; sourceTree = "<group>"; };
 		193929BC16E243E90018340B /* LuaModules.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LuaModules.h; sourceTree = "<group>"; };
 		193929BE16E3511F0018340B /* freetype.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = freetype.c; sourceTree = "<group>"; };
@@ -570,6 +571,8 @@
 		19D3204817BD6BD4007BDC67 /* PVRTC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PVRTC.h; sourceTree = "<group>"; };
 		19D3204917BD6BD4007BDC67 /* PNG.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNG.h; sourceTree = "<group>"; };
 		19D3204A17BD6BD4007BDC67 /* Image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Image.h; sourceTree = "<group>"; };
+		19D931841834AFC200F0137E /* ChangeMonitor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChangeMonitor.h; sourceTree = "<group>"; };
+		19D931871834AFCE00F0137E /* ChangeMonitor_Stub.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = ChangeMonitor_Stub.cpp; sourceTree = "<group>"; };
 		19DCB26E17419B1800660000 /* Services.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Services.h; sourceTree = "<group>"; };
 		19DCB26F17419B1800660000 /* TestFlight.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = TestFlight.cpp; sourceTree = "<group>"; };
 		19DCB27017419B1800660000 /* TestFlight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestFlight.h; sourceTree = "<group>"; };
@@ -1306,6 +1309,8 @@
 		196CB724161E4ADD0068C809 /* Heimdall */ = {
 			isa = PBXGroup;
 			children = (
+				19D931851834AFCE00F0137E /* impl */,
+				19D931841834AFC200F0137E /* ChangeMonitor.h */,
 				19AF589A167FFA0800F54B27 /* DebugInfo.cpp */,
 				19AF589B167FFA0800F54B27 /* DebugInfo.h */,
 				196CB725161E4ADD0068C809 /* Gatekeeper.cpp */,
@@ -1367,6 +1372,14 @@
 				19D3204717BD6BD4007BDC67 /* UIKit.h */,
 			);
 			path = Decoders;
+			sourceTree = "<group>";
+		};
+		19D931851834AFCE00F0137E /* impl */ = {
+			isa = PBXGroup;
+			children = (
+				19D931871834AFCE00F0137E /* ChangeMonitor_Stub.cpp */,
+			);
+			path = impl;
 			sourceTree = "<group>";
 		};
 		19DCB26D17419B1800660000 /* Services */ = {
@@ -1483,6 +1496,7 @@
 				1939A059152C401300494609 /* b2Math.cpp in Sources */,
 				1939A05A152C401300494609 /* b2Settings.cpp in Sources */,
 				1939A05B152C401300494609 /* b2StackAllocator.cpp in Sources */,
+				19D9318A1834AFCE00F0137E /* ChangeMonitor_Stub.cpp in Sources */,
 				1939A05C152C401300494609 /* b2Timer.cpp in Sources */,
 				1939A05D152C401300494609 /* b2Body.cpp in Sources */,
 				1939A05E152C401300494609 /* b2ContactManager.cpp in Sources */,
