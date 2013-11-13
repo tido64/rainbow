@@ -1,5 +1,5 @@
 #include "Platform/Macros.h"
-#ifdef RAINBOW_WIN
+#ifdef RAINBOW_OS_WINDOWS
 
 #include <io.h>
 #include <windows.h>

@@ -69,9 +69,9 @@ namespace
 
 	Library::operator Data() const
 	{
-	#if defined(RAINBOW_MAC)
+	#if defined(RAINBOW_OS_MACOS)
 		return Data(this->path_, Data::kDataTypeSystem);
-	#elif defined(RAINBOW_WIN)
+	#elif defined(RAINBOW_OS_WINDOWS)
 		return Data(this->path_);
 	#else
 		return Data();

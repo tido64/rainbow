@@ -1,5 +1,5 @@
 #include "ConFuoco/Codecs/AppleAudioFile.h"
-#if defined(RAINBOW_IOS) || defined(RAINBOW_MAC)
+#if defined(RAINBOW_OS_IOS) || defined(RAINBOW_OS_MACOS)
 
 #include <CoreFoundation/CoreFoundation.h>
 
@@ -21,7 +21,7 @@ namespace ConFuoco
 		template<class C, class T>
 		C bridge_cast(T &var)
 		{
-		#ifdef RAINBOW_IOS
+		#ifdef RAINBOW_OS_IOS
 			return (__bridge C)var;
 		#else
 			return (C)var;
@@ -31,7 +31,7 @@ namespace ConFuoco
 
 	AudioFile* AudioFile::Open(const char *const file, const Mode mode)
 	{
-	#ifndef RAINBOW_IOS
+	#ifndef RAINBOW_OS_IOS
 		char id[8];
 		Rainbow::IO::FileHandle fh =
 				Rainbow::IO::find_and_open(file, Rainbow::IO::kIOTypeAsset);
@@ -51,7 +51,7 @@ namespace ConFuoco
 	{
 		char buf[256];
 		Rainbow::IO::find(buf, file, Rainbow::IO::kIOTypeAsset);
-	#ifdef RAINBOW_MAC
+	#ifdef RAINBOW_OS_MACOS
 		CFStringRef str = CFStringCreateWithBytesNoCopy(
 				kCFAllocatorDefault, (const UInt8*)buf, strlen(buf),
 				kCFStringEncodingUTF8, false, kCFAllocatorNull);
@@ -67,7 +67,7 @@ namespace ConFuoco
 	#endif
 		if (ExtAudioFileOpenURL(bridge_cast<CFURLRef>(url), &this->ref) != noErr)
 			R_ERROR("[Rainbow::ConFuoco/AudioToolbox] Failed to open '%s'\n", file);
-	#ifdef RAINBOW_MAC
+	#ifdef RAINBOW_OS_MACOS
 		CFRelease(url);
 		CFRelease(str);
 	#endif

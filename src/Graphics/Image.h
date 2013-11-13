@@ -44,7 +44,7 @@ namespace Rainbow
 }
 
 #include "Graphics/OpenGL.h"
-#if defined(RAINBOW_IOS)
+#if defined(RAINBOW_OS_IOS)
 #	include "Graphics/Decoders/UIKit.h"
 #else
 #	include "Graphics/Decoders/PNG.h"

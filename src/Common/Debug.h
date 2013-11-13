@@ -4,7 +4,7 @@
 #include <cstdio>
 
 #include "Platform/Macros.h"
-#ifdef RAINBOW_ANDROID
+#ifdef RAINBOW_OS_ANDROID
 #	include <android/log.h>
 #	define R_ERROR(...) __android_log_print(ANDROID_LOG_ERROR, "Rainbow", __VA_ARGS__)
 #else
@@ -51,7 +51,7 @@
 		} \
 	} while (0)
 
-#ifdef RAINBOW_ANDROID
+#ifdef RAINBOW_OS_ANDROID
 #	define R_DEBUG(...) __android_log_print(ANDROID_LOG_DEBUG, "Rainbow", __VA_ARGS__)
 #else
 #	define R_DEBUG(...) do { fprintf(stdout, __VA_ARGS__); fflush(stdout); } while (0)

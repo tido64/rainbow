@@ -2,11 +2,11 @@
 
 #include "Common/Random.h"
 
-#ifdef RAINBOW_UNIX
+#ifdef __GNUC__
 #	pragma GCC diagnostic push
 #	pragma GCC diagnostic ignored "-Wold-style-cast"
 #endif
 #include <dSFMT/dSFMT.c>
-#ifdef RAINBOW_UNIX
+#ifdef __GNUC__
 #	pragma GCC diagnostic pop
 #endif

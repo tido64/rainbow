@@ -2,7 +2,7 @@
 #define THREAD_RWLOCK_H_
 
 #include "Platform/Macros.h"
-#ifdef RAINBOW_WIN
+#ifdef RAINBOW_OS_WINDOWS
 #	include <windows.h>
 #	define r_rwlock_lock           AcquireSRWLockExclusive
 #	define r_rwlock_lock_shared    AcquireSRWLockShared
@@ -27,7 +27,7 @@ namespace Rainbow
 	class RWLock
 	{
 	public:
-	#ifdef RAINBOW_WIN
+	#ifdef RAINBOW_OS_WINDOWS
 		RWLock() { InitializeSRWLock(&this->shared_lock); }
 	#else
 		RWLock() : shared_lock(PTHREAD_RWLOCK_INITIALIZER) { }

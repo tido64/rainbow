@@ -8,21 +8,21 @@
 
 #include "Platform/Macros.h"
 
-#if defined(RAINBOW_ANDROID)
+#if defined(RAINBOW_OS_ANDROID)
 #	include <GLES2/gl2.h>
 #	include <GLES2/gl2ext.h>
 #	define GL_DRAW_FRAMEBUFFER GL_FRAMEBUFFER
-#elif defined(RAINBOW_IOS)
+#elif defined(RAINBOW_OS_IOS)
 #	include <OpenGLES/ES2/gl.h>
 #	include <OpenGLES/ES2/glext.h>
 #	define GL_DRAW_FRAMEBUFFER GL_DRAW_FRAMEBUFFER_APPLE
-#elif defined(RAINBOW_MAC)
+#elif defined(RAINBOW_OS_MACOS)
 #	include <OpenGL/gl.h>
 #	define GL_RGB565             GL_RGB
 #	define glBindVertexArray     glBindVertexArrayAPPLE
 #	define glDeleteVertexArrays  glDeleteVertexArraysAPPLE
 #	define glGenVertexArrays     glGenVertexArraysAPPLE
-#elif defined(RAINBOW_WIN)
+#elif defined(RAINBOW_OS_WINDOWS)
 #	include <windows.h>
 #	define GLEW_NO_GLU
 #	define GLEW_STATIC
@@ -34,7 +34,7 @@
 #	include <GL/glext.h>
 #endif
 
-#if defined(RAINBOW_ANDROID) || defined(RAINBOW_IOS)
+#ifdef GL_ES_VERSION_2_0
 #	define GL_RGB8               GL_RGB
 #	define GL_RGBA8              GL_RGBA
 #	define glBindVertexArray     glBindVertexArrayOES

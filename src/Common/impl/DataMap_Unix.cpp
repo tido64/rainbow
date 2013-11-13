@@ -1,5 +1,5 @@
 #include "Platform/Macros.h"
-#if defined(RAINBOW_IOS) || defined(RAINBOW_UNIX)
+#if defined(RAINBOW_OS_IOS) || defined(RAINBOW_OS_UNIX)
 
 #include <errno.h>
 #include <fcntl.h>
@@ -27,7 +27,7 @@ namespace Rainbow
 		else
 		{
 			const int fd = fileno(fh);
-		#if defined(RAINBOW_IOS) || defined(RAINBOW_MAC)
+		#if defined(RAINBOW_OS_IOS) || defined(RAINBOW_OS_MACOS)
 			fcntl(fd, F_NOCACHE, 1);
 			fcntl(fd, F_RDAHEAD, 1);
 		#endif

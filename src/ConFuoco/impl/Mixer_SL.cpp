@@ -1,7 +1,7 @@
 /// Copyright 2012-13 Bifrost Entertainment. All rights reserved.
 
 #include "Platform/Macros.h"
-#ifdef RAINBOW_ANDROID
+#ifdef RAINBOW_OS_ANDROID
 
 #include "Common/IO.h"
 #include "ConFuoco/Mixer.h"

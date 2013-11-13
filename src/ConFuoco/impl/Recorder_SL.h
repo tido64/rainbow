@@ -1,7 +1,7 @@
 #ifndef CONFUOCO_IMPL_RECORDER_SL_H_
 #define CONFUOCO_IMPL_RECORDER_SL_H_
 
-#ifdef RAINBOW_ANDROID
+#ifdef RAINBOW_OS_ANDROID
 
 #include <SLES/OpenSLES.h>
 #include <SLES/OpenSLES_Android.h>
@@ -32,5 +32,5 @@ namespace ConFuoco
 	}
 }
 
-#endif  // RAINBOW_ANDROID
+#endif  // RAINBOW_OS_ANDROID
 #endif  // CONFUOCO_RECORDER_SL_H_

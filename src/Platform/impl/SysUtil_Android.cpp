@@ -1,5 +1,5 @@
 #include "Platform/Macros.h"
-#if defined(RAINBOW_ANDROID)
+#if defined(RAINBOW_OS_ANDROID)
 
 #include "Platform/SysUtil.h"
 

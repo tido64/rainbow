@@ -4,12 +4,12 @@
 #include "Platform/Macros.h"
 #if !defined(RAINBOW_JS) && defined(RAINBOW_SDL)
 
-#ifdef RAINBOW_MAC  // Seriously, Apple?
+#ifdef RAINBOW_OS_MACOS
 #	pragma GCC diagnostic push
 #	pragma GCC diagnostic ignored "-Wunused-variable"
 #endif
 #include <vorbis/vorbisfile.h>
-#ifdef RAINBOW_MAC
+#ifdef RAINBOW_OS_MACOS
 #	pragma GCC diagnostic pop
 #endif
 

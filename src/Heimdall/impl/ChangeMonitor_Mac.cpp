@@ -1,7 +1,7 @@
 #ifdef USE_HEIMDALL
 
 #include "Heimdall/ChangeMonitor.h"
-#ifdef RAINBOW_MAC
+#ifdef RAINBOW_OS_MACOS
 
 #include <memory>
 #include <CoreFoundation/CoreFoundation.h>
@@ -75,5 +75,5 @@ ChangeMonitor::~ChangeMonitor()
 	FSEventStreamRelease(this->stream);
 }
 
-#endif  // RAINBOW_MAC
+#endif  // RAINBOW_OS_MACOS
 #endif  // USE_HEIMDALL

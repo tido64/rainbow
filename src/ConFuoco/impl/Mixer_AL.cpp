@@ -1,11 +1,11 @@
 /// Copyright 2012-13 Bifrost Entertainment. All rights reserved.
 
 #include "Platform/Macros.h"
-#if !defined(RAINBOW_JS) && (defined(RAINBOW_IOS) || defined(RAINBOW_SDL))
+#if !defined(RAINBOW_JS) && (defined(RAINBOW_OS_IOS) || defined(RAINBOW_SDL))
 
 #include <memory>
 
-#if defined(RAINBOW_IOS) || defined(RAINBOW_MAC)
+#if defined(RAINBOW_OS_IOS) || defined(RAINBOW_OS_MACOS)
 #	include <OpenAL/al.h>
 #	include <OpenAL/alc.h>
 #else
@@ -56,7 +56,7 @@ namespace ConFuoco
 			}
 		};
 
-	#ifndef RAINBOW_IOS
+	#ifndef RAINBOW_OS_IOS
 		struct Stream;
 		Vector<Stream*> streams;
 
@@ -130,7 +130,7 @@ namespace ConFuoco
 	{
 		R_ASSERT(!Instance, "An instance of ConFuoco::Mixer already exists");
 
-	#ifdef RAINBOW_IOS
+	#ifdef RAINBOW_OS_IOS
 		InitAudioSession(this);
 	#endif
 
@@ -198,7 +198,7 @@ namespace ConFuoco
 
 	void Mixer::clear()
 	{
-	#ifndef RAINBOW_IOS
+	#ifndef RAINBOW_OS_IOS
 		streams.clear();
 	#endif
 
@@ -250,7 +250,7 @@ namespace ConFuoco
 				stream->channel = channel;
 			}
 			this->set_gain(channel, 1.0f);
-		#ifdef RAINBOW_IOS
+		#ifdef RAINBOW_OS_IOS
 			stream->play();
 		#else
 			alSourcei(channel->ch, AL_BUFFER, 0);
@@ -307,7 +307,7 @@ namespace ConFuoco
 
 	void Mixer::update()
 	{
-	#ifndef RAINBOW_IOS
+	#ifndef RAINBOW_OS_IOS
 		for (auto s : streams)
 		{
 			if (!s->playing)
@@ -343,7 +343,7 @@ namespace ConFuoco
 
 	bool Mixer::is_paused(Channel *ch)
 	{
-	#ifdef RAINBOW_IOS
+	#ifdef RAINBOW_OS_IOS
 		if (ch->sound->type != STATIC)
 			return static_cast<Stream*>(ch->sound)->paused;
 	#endif
@@ -355,7 +355,7 @@ namespace ConFuoco
 
 	bool Mixer::is_playing(Channel *ch)
 	{
-	#ifdef RAINBOW_IOS
+	#ifdef RAINBOW_OS_IOS
 		if (ch->sound->type != STATIC)
 		{
 			Stream *s = static_cast<Stream*>(ch->sound);
@@ -370,7 +370,7 @@ namespace ConFuoco
 
 	void Mixer::set_gain(Channel *ch, const float gain)
 	{
-	#ifdef RAINBOW_IOS
+	#ifdef RAINBOW_OS_IOS
 		if (ch->sound->type != STATIC)
 		{
 			static_cast<Stream*>(ch->sound)->player.volume = gain;
@@ -383,7 +383,7 @@ namespace ConFuoco
 
 	void Mixer::pause(Channel *ch)
 	{
-	#ifdef RAINBOW_IOS
+	#ifdef RAINBOW_OS_IOS
 		if (ch->sound->type != STATIC)
 		{
 			static_cast<Stream*>(ch->sound)->pause();
@@ -396,7 +396,7 @@ namespace ConFuoco
 
 	void Mixer::play(Channel *ch)
 	{
-	#ifdef RAINBOW_IOS
+	#ifdef RAINBOW_OS_IOS
 		if (ch->sound->type != STATIC)
 		{
 			static_cast<Stream*>(ch->sound)->play();
@@ -409,7 +409,7 @@ namespace ConFuoco
 
 	void Mixer::stop(Channel *ch)
 	{
-	#ifdef RAINBOW_IOS
+	#ifdef RAINBOW_OS_IOS
 		if (ch->sound->type != STATIC)
 		{
 			static_cast<Stream*>(ch->sound)->stop();
@@ -419,7 +419,7 @@ namespace ConFuoco
 
 		alSourceStop(ch->ch);
 
-	#ifndef RAINBOW_IOS
+	#ifndef RAINBOW_OS_IOS
 		if (ch->sound->type != STATIC)
 		{
 			Stream *s = static_cast<Stream*>(ch->sound);

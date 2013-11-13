@@ -144,7 +144,7 @@ float Canvas::get_filled()
 		const int size = this->width * this->height;
 		for (int i = 0; i < size; ++i)
 		{
-		#ifdef RAINBOW_IOS
+		#ifdef RAINBOW_OS_IOS
 			// TODO: In Xcode 4.6.3, turning on optimisations (-Os) will break
 			//       this loop unless we branch and increment.
 			if (this->filled[i])

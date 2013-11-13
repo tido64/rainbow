@@ -5,7 +5,7 @@
 #include "Common/Debug.h"
 #include "Common/IO.h"
 
-#ifdef RAINBOW_WIN
+#ifdef RAINBOW_OS_WINDOWS
 #	include <direct.h>
 #	define S_IRWXU 0000700
 #	define S_IRWXG 0000070
@@ -14,16 +14,16 @@
 #	define kPathSeparatorLit "\\"
 #	define mkdir(dirname, mode) _mkdir(dirname)
 #else
-#	ifdef RAINBOW_ANDROID
+#	ifdef RAINBOW_OS_ANDROID
 #		include <android/native_activity.h>
 #	endif
 #	define kPathSeparator '/'
 #	define kPathSeparatorLit "/"
 #endif
 
-#if defined(RAINBOW_ANDROID)
+#if defined(RAINBOW_OS_ANDROID)
 extern ANativeActivity *gNativeActivity;
-#elif !defined(RAINBOW_IOS)
+#elif !defined(RAINBOW_OS_IOS)
 extern char data_path[];      ///< Path to asset data.
 extern char userdata_path[];  ///< Path to user-specific data.
 #endif
@@ -45,7 +45,7 @@ namespace Rainbow
 			switch (type)
 			{
 				case kIOTypeAsset:
-					#if defined(RAINBOW_ANDROID)
+					#if defined(RAINBOW_OS_ANDROID)
 					{
 						// Android doesn't ignore multiple '/' in paths.
 						int i = -1;
@@ -58,7 +58,7 @@ namespace Rainbow
 						}
 						result[++j] = '\0';
 					}
-					#elif defined(RAINBOW_IOS)
+					#elif defined(RAINBOW_OS_IOS)
 					{
 						NSString *path = [[NSString alloc]
 								initWithBytesNoCopy:(void*)file
@@ -80,7 +80,7 @@ namespace Rainbow
 					#endif
 					break;
 				case kIOTypeDocument:
-					#ifdef RAINBOW_IOS
+					#ifdef RAINBOW_OS_IOS
 					{
 						NSError *err = nil;
 						NSString *libraryDir = [[[NSFileManager defaultManager]
@@ -101,7 +101,7 @@ namespace Rainbow
 					}
 					#else
 					{
-					#ifdef RAINBOW_ANDROID
+					#ifdef RAINBOW_OS_ANDROID
 						const char *userdata_path = gNativeActivity->externalDataPath;
 						if (!userdata_path)
 						{
@@ -109,7 +109,7 @@ namespace Rainbow
 							if (!userdata_path)
 								break;
 						}
-					#endif  // RAINBOW_ANDROID
+					#endif  // RAINBOW_OS_ANDROID
 						struct stat sb;
 						if (stat(userdata_path, &sb) != 0)
 						{
@@ -122,7 +122,7 @@ namespace Rainbow
 						strcat(result, kPathSeparatorLit);
 						strcat(result, file);
 					}
-					#endif  // RAINBOW_IOS
+					#endif  // RAINBOW_OS_IOS
 					break;
 				default:
 					break;
@@ -147,7 +147,7 @@ namespace Rainbow
 				end = dir[i] == '\0';
 				if (dir[i] == kPathSeparator || end)
 				{
-				#ifdef RAINBOW_WIN
+				#ifdef RAINBOW_OS_WINDOWS
 					// Windows' stat() doesn't handle trailing backslash.
 					if (dir[i - 1] == ':' || dir[i - 1] == kPathSeparator)
 						continue;
@@ -183,7 +183,7 @@ namespace Rainbow
 			switch (type)
 			{
 				case kIOTypeAsset:
-					#ifdef RAINBOW_ANDROID
+					#ifdef RAINBOW_OS_ANDROID
 						fh = AAssetManager_open(gNativeActivity->assetManager, file, AASSET_MODE_UNKNOWN);
 					#else
 						fh = fopen(file, "rb");
@@ -203,7 +203,7 @@ namespace Rainbow
 
 		size_t size(FileHandle fh)
 		{
-		#ifdef RAINBOW_ANDROID
+		#ifdef RAINBOW_OS_ANDROID
 			if (fh.type == kIOTypeAsset)
 				return AAsset_getLength(fh);
 		#endif

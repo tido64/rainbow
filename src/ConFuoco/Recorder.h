@@ -2,13 +2,13 @@
 #define CONFUOCO_RECORDER_H_
 
 #include "Platform/Macros.h"
-#if defined(RAINBOW_ANDROID)
+#if defined(RAINBOW_OS_ANDROID)
 namespace ConFuoco
 {
 	struct SLRecorder;
 	typedef ConFuoco::SLRecorder* AudioRecorder;
 }
-#elif defined(RAINBOW_IOS)
+#elif defined(RAINBOW_OS_IOS)
 @class AVAudioRecorder;
 typedef AVAudioRecorder* AudioRecorder;
 #else

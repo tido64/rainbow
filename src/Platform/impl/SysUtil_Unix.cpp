@@ -1,5 +1,5 @@
 #include "Platform/Macros.h"
-#if defined(RAINBOW_ANDROID) || (defined(RAINBOW_UNIX) && !defined(RAINBOW_MAC))
+#if defined(RAINBOW_OS_ANDROID) || defined(RAINBOW_OS_LINUX)
 
 #include <locale.h>
 #include <unistd.h>
@@ -10,7 +10,7 @@ namespace Rainbow
 {
 	namespace SysUtil
 	{
-	#ifdef RAINBOW_UNIX
+	#ifdef RAINBOW_OS_UNIX
 
 		bool has_accelerometer()
 		{

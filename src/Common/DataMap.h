@@ -77,9 +77,9 @@ namespace Rainbow
 	}
 }
 
-#if defined(RAINBOW_ANDROID)
+#if defined(RAINBOW_OS_ANDROID)
 #	include "Common/impl/DataMap_Android.h"
-#elif defined(RAINBOW_WIN)
+#elif defined(RAINBOW_OS_WINDOWS)
 #	include "Common/impl/DataMap_Win.h"
 #else
 #	include "Common/impl/DataMap_Unix.h"

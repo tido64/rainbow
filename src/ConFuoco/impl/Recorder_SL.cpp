@@ -1,7 +1,7 @@
 // Copyright 2013 Bifrost Entertainment. All rights reserved.
 
 #include "ConFuoco/Recorder.h"
-#ifdef RAINBOW_ANDROID
+#ifdef RAINBOW_OS_ANDROID
 
 #include <climits>
 #include <cmath>

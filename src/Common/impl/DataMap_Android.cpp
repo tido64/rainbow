@@ -1,5 +1,5 @@
 #include "Platform/Macros.h"
-#ifdef RAINBOW_ANDROID
+#ifdef RAINBOW_OS_ANDROID
 
 #include <android/asset_manager.h>
 

@@ -2,7 +2,7 @@
 #include "Services/TestFlight.h"
 
 #ifdef USE_TESTFLIGHT_SDK
-#	ifdef RAINBOW_IOS
+#	ifdef RAINBOW_OS_IOS
 #		import <TestFlight/TestFlight.h>
 #	endif
 #endif
@@ -19,9 +19,9 @@ namespace Rainbow
 				{
 					const char *message = luaR_tostring(L, -1);
 				#ifdef USE_TESTFLIGHT_SDK
-				#ifdef RAINBOW_IOS
+				#ifdef RAINBOW_OS_IOS
 					TFLog(@"%s", message);
-				#endif  // RAINBOW_IOS
+				#endif  // RAINBOW_OS_IOS
 				#else
 					R_DEBUG("%s\n", message);
 				#endif  // USE_TESTFLIGHT_SDK
@@ -33,14 +33,14 @@ namespace Rainbow
 				{
 					const char *checkpoint = luaR_tostring(L, -1);
 				#ifdef USE_TESTFLIGHT_SDK
-				#ifdef RAINBOW_IOS
+				#ifdef RAINBOW_OS_IOS
 					NSString *checkpointName = [[NSString alloc]
 							initWithBytesNoCopy:(void*)checkpoint
 							             length:strlen(checkpoint)
 							           encoding:NSUTF8StringEncoding
 							       freeWhenDone:NO];
 					[::TestFlight passCheckpoint:checkpointName];
-				#endif  // RAINBOW_IOS
+				#endif  // RAINBOW_OS_IOS
 				#else
 					R_DEBUG("Passed checkpoint: \"%s\"\n", checkpoint);
 				#endif  // USE_TESTFLIGHT_SDK

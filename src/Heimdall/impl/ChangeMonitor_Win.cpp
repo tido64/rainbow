@@ -1,7 +1,7 @@
 #ifdef USE_HEIMDALL
 
 #include "Heimdall/ChangeMonitor.h"
-#ifdef RAINBOW_WIN
+#ifdef RAINBOW_OS_WINDOWS
 
 #include "Common/Debug.h"
 #include "Lua/LuaHelper.h"
@@ -75,5 +75,5 @@ ChangeMonitor::~ChangeMonitor()
 	CloseHandle(this->hDirectory);
 }
 
-#endif  // RAINBOW_WIN
+#endif  // RAINBOW_OS_WINDOWS
 #endif  // USE_HEIMDALL

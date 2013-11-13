@@ -1,7 +1,7 @@
 // Copyright 2012-13 Bifrost Entertainment. All rights reserved.
 
 #include "ConFuoco/Recorder.h"
-#ifdef RAINBOW_IOS
+#ifdef RAINBOW_OS_IOS
 
 #include <AVFoundation/AVAudioRecorder.h>
 #include <CoreAudio/CoreAudioTypes.h>

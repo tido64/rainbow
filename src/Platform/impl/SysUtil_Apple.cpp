@@ -1,5 +1,5 @@
 #include "Platform/Macros.h"
-#if defined(RAINBOW_IOS) || defined(RAINBOW_MAC)
+#if defined(RAINBOW_OS_IOS) || defined(RAINBOW_OS_MACOS)
 
 #include <sys/types.h>
 #include <sys/sysctl.h>
@@ -13,7 +13,7 @@ namespace Rainbow
 	{
 		bool has_accelerometer()
 		{
-		#ifdef RAINBOW_IOS
+		#ifdef RAINBOW_OS_IOS
 			return true;
 		#else
 			return false;
@@ -22,7 +22,7 @@ namespace Rainbow
 
 		bool has_touchscreen()
 		{
-		#ifdef RAINBOW_IOS
+		#ifdef RAINBOW_OS_IOS
 			return true;
 		#else
 			return false;

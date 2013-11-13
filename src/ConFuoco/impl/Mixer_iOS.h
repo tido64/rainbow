@@ -1,4 +1,4 @@
-#ifdef RAINBOW_IOS
+#ifdef RAINBOW_OS_IOS
 
 #include <AudioToolbox/AudioServices.h>
 #include <AVFoundation/AVAudioPlayer.h>

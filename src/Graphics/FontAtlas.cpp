@@ -186,7 +186,7 @@ FontAtlas::FontAtlas(const Data &font, const float pt) : pt_(pt), height_(0), te
 			{
 				for (int x = 0; x < bitmap.width; ++x)
 				{
-				#ifdef RAINBOW_IOS
+				#ifdef RAINBOW_OS_IOS
 					*buf = *(buf + 1) = *bit;
 				#else
 					if (*bit)

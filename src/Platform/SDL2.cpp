@@ -7,7 +7,7 @@
 #include <SDL.h>
 #if SDL_VERSION_ATLEAST(1,3,0)
 
-#ifdef RAINBOW_WIN
+#ifdef RAINBOW_OS_WINDOWS
 #	include <direct.h>
 #	include "Graphics/OpenGL.h"
 #	include <GL/glew.c>
@@ -254,7 +254,7 @@ int main(int argc, char *argv[])
 					}
 					break;
 				case SDL_KEYDOWN:
-				#ifndef RAINBOW_MAC
+				#ifndef RAINBOW_OS_MACOS
 					if (event.key.keysym.sym == SDLK_q && (event.key.keysym.mod & KMOD_LCTRL))
 					{
 						director.terminate();

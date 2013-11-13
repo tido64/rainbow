@@ -10,12 +10,12 @@
 #elif defined(__ALTIVEC__)
 #	define HAVE_ALTIVEC
 #endif
-#ifdef RAINBOW_UNIX
+#ifdef __GNUC__
 #	pragma GCC diagnostic push
 #	pragma GCC diagnostic ignored "-Wlong-long"
 #endif
 #include <dSFMT/dSFMT.h>
-#ifdef RAINBOW_UNIX
+#ifdef __GNUC__
 #	pragma GCC diagnostic pop
 #endif
 

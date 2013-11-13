@@ -4,9 +4,9 @@
 #include <cstdio>
 
 #include "Platform/Macros.h"
-#if defined(RAINBOW_ANDROID)
+#if defined(RAINBOW_OS_ANDROID)
 #	include <android/asset_manager.h>
-#elif defined(RAINBOW_WIN)
+#elif defined(RAINBOW_OS_WINDOWS)
 typedef int mode_t;
 #endif
 
@@ -21,7 +21,7 @@ namespace Rainbow
 			kIOTypeWrite      ///< Create/open file for writing.
 		};
 
-	#if defined(RAINBOW_ANDROID)
+	#if defined(RAINBOW_OS_ANDROID)
 	#	include "Common/impl/IO_Android.inc"
 	#else
 		typedef FILE* FileHandle;
@@ -30,7 +30,7 @@ namespace Rainbow
 		/// Closes the file handle.
 		inline void close(FileHandle fh)
 		{
-		#if defined(RAINBOW_ANDROID)
+		#if defined(RAINBOW_OS_ANDROID)
 			if (fh.type == kIOTypeAsset)
 				AAsset_close(fh);
 			else
@@ -63,7 +63,7 @@ namespace Rainbow
 		/// \return Number of bytes read.
 		inline size_t read(void *dst, const size_t size, FileHandle fh)
 		{
-		#if defined(RAINBOW_ANDROID)
+		#if defined(RAINBOW_OS_ANDROID)
 			if (fh.type == kIOTypeAsset)
 				return AAsset_read(fh, dst, size);
 		#endif

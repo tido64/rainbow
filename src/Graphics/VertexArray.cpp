@@ -5,7 +5,7 @@
 #include "Graphics/VertexArray.h"
 
 #ifndef USE_VERTEX_ARRAY_OBJECTS
-#	ifndef RAINBOW_ANDROID
+#	ifndef RAINBOW_OS_ANDROID
 #		define USE_VERTEX_ARRAY_OBJECTS 1
 #	endif
 #endif

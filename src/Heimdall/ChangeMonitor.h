@@ -6,9 +6,9 @@
 #include <functional>
 
 #include "Platform/Macros.h"
-#if defined(RAINBOW_MAC)
+#if defined(RAINBOW_OS_MACOS)
 #	include <CoreServices/CoreServices.h>
-#elif defined(RAINBOW_WIN)
+#elif defined(RAINBOW_OS_WINDOWS)
 #	include <future>
 #	include <Windows.h>
 #endif
@@ -30,10 +30,10 @@ public:
 	inline void on_modified(const char *path);
 
 private:
-#if defined(RAINBOW_MAC)
+#if defined(RAINBOW_OS_MACOS)
 	FSEventStreamRef stream;
 	FSEventStreamContext context;
-#elif defined(RAINBOW_WIN)
+#elif defined(RAINBOW_OS_WINDOWS)
 	bool monitoring;
 	HANDLE hDirectory;
 	std::future<void> worker;

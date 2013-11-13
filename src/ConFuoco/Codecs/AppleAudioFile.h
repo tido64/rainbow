@@ -2,7 +2,7 @@
 #define CONFUOCO_CODECS_APPLEAUDIOFILE_H_
 
 #include "Platform/Macros.h"
-#if defined(RAINBOW_IOS) || defined(RAINBOW_MAC)
+#if defined(RAINBOW_OS_IOS) || defined(RAINBOW_OS_MACOS)
 
 #include <AudioToolbox/ExtendedAudioFile.h>
 
@@ -33,5 +33,5 @@ namespace ConFuoco
 	};
 }
 
-#endif  // RAINBOW_IOS || RAINBOW_MAC
+#endif  // RAINBOW_OS_IOS || RAINBOW_OS_MACOS
 #endif  // CONFUOCO_APPLEAUDIOFILE_H_

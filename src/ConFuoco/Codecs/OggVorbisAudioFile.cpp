@@ -40,7 +40,7 @@ namespace ConFuoco
 		}
 	}
 
-#ifndef RAINBOW_MAC
+#ifndef RAINBOW_OS_MACOS
 	AudioFile* AudioFile::Open(const char *const file, const Mode)
 	{
 		return new OggVorbisAudioFile(file);

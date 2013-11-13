@@ -11,25 +11,26 @@
 #include <cstddef>
 
 #if defined(__ANDROID__)
-#	define RAINBOW_ANDROID
+#	define RAINBOW_OS_ANDROID
 #elif defined(__APPLE__)
 #	if !defined(__IPHONE_OS_VERSION_MIN_REQUIRED)
-#		define RAINBOW_MAC
-#		define RAINBOW_UNIX
+#		define RAINBOW_OS_MACOS
+#		define RAINBOW_OS_UNIX
 #	else
-#		define RAINBOW_IOS
+#		define RAINBOW_OS_IOS
 #	endif
 #elif defined(__linux__)
-#	define RAINBOW_UNIX
+#	define RAINBOW_OS_LINUX
+#	define RAINBOW_OS_UNIX
 #elif defined(_WIN32)
-#	define RAINBOW_WIN
+#	define RAINBOW_OS_WINDOWS
 #elif defined(EMSCRIPTEN)
 #	define RAINBOW_JS
 #endif
 
 // Platforms that make use of physical buttons (keyboards, gamepads, etc.)
 // and of SDL.
-#if defined(RAINBOW_JS) || defined(RAINBOW_UNIX) || defined(RAINBOW_WIN)
+#if defined(RAINBOW_JS) || defined(RAINBOW_OS_UNIX) || defined(RAINBOW_OS_WINDOWS)
 #	define RAINBOW_BUTTONS
 #	define RAINBOW_SDL
 #endif

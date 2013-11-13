@@ -43,7 +43,7 @@ namespace PVRTC
 		Rainbow::Image image;
 		image.format = Rainbow::Image::Format::PVRTC;
 
-	#ifdef RAINBOW_IOS
+	#ifdef RAINBOW_OS_IOS
 		PVRTexHeader *header = (PVRTexHeader*)data.bytes();
 		R_ASSERT(CFSwapInt32LittleToHost(header->mipmap_count) == 1,
 		         "Mipmaps are not supported");

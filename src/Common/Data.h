@@ -63,7 +63,7 @@ public:
 	inline operator char*() const;
 	inline operator unsigned char*() const;
 
-#ifdef RAINBOW_IOS
+#ifdef RAINBOW_OS_IOS
 	inline operator NSData*() const;
 	inline operator NSMutableData*() const;
 #endif
@@ -122,7 +122,7 @@ Data::operator unsigned char*() const
 	return static_cast<unsigned char*>(this->data);
 }
 
-#ifdef RAINBOW_IOS
+#ifdef RAINBOW_OS_IOS
 
 Data::operator NSData*() const
 {
@@ -138,5 +138,5 @@ Data::operator NSMutableData*() const
 	                             freeWhenDone:NO];
 }
 
-#endif  // RAINBOW_IOS
+#endif  // RAINBOW_OS_IOS
 #endif  // DATA_H_
