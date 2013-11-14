@@ -13,12 +13,15 @@ namespace Rainbow
 	/// - <tt>resolution = { width, height }</tt>
 	///   Specifies the preferred screen resolution or window size. It also
 	///   determines whether we are in landscape or portrait mode.
+	/// - <tt>suspend_on_focus_lost = false|true</tt>
+	///   Specifies whether to suspend when focus is lost.
 	///
 	/// If no configuration file is present, or the file is somehow unavailable,
 	/// the following are the default values:
 	///
 	/// - <tt>accelerometer = true</tt>
 	/// - <tt>resolution = { 0, 0 }</tt> (which also implies landscape mode)
+	/// - <tt>suspend_on_focus_lost = true</tt>
 	///
 	/// Copyright 2012-13 Bifrost Entertainment. All rights reserved.
 	/// \author Tommy Nguyen
@@ -39,8 +42,12 @@ namespace Rainbow
 		/// Returns whether we need to use the accelerometer.
 		inline bool needs_accelerometer() const;
 
+		/// Returns whether to suspend when focus is lost.
+		inline bool suspend() const;
+
 	private:
 		bool accelerometer_;
+		bool suspend_;
 		int width_;
 		int height_;
 	};
@@ -63,6 +70,11 @@ namespace Rainbow
 	bool Config::needs_accelerometer() const
 	{
 		return this->accelerometer_;
+	}
+
+	bool Config::suspend() const
+	{
+		return this->suspend_;
 	}
 }
 

@@ -239,12 +239,18 @@ int main(int argc, char *argv[])
 					switch (event.window.event)
 					{
 						case SDL_WINDOWEVENT_FOCUS_GAINED:
-							director.activate();
-							ConFuoco::Mixer::Instance->suspend(false);
+							if (config.suspend())
+							{
+								director.activate();
+								ConFuoco::Mixer::Instance->suspend(false);
+							}
 							break;
 						case SDL_WINDOWEVENT_FOCUS_LOST:
-							director.deactivate();
-							ConFuoco::Mixer::Instance->suspend(true);
+							if (config.suspend())
+							{
+								director.deactivate();
+								ConFuoco::Mixer::Instance->suspend(true);
+							}
 							break;
 						case SDL_WINDOWEVENT_CLOSE:
 							director.terminate();
