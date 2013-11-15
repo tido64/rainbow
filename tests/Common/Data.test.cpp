@@ -1,6 +1,5 @@
 #include "Common/Data.h"
-
-extern char userdata_path[];
+#include "FileSystem/Path.h"
 
 class DataTest : public testing::Test
 {
@@ -12,7 +11,7 @@ protected:
 		file("Rainbow__Data.test"),
 		secret("It's a double-rainbow!\n")
 	{
-		strcpy(userdata_path, "/tmp/");
+		Path::set_current("/tmp");
 	}
 };
 
@@ -32,10 +31,10 @@ TEST_F(DataTest, SaveAndLoad)
 		ASSERT_TRUE(blob.save(file));
 	}
 	{
-		Data blob(file, Data::kDataTypeDocument);
+		const Data &blob = Data::load_document(file);
 		ASSERT_TRUE(blob);
 		ASSERT_STREQ(secret, blob);
 	}
-	strcat(userdata_path, file);
-	remove(userdata_path);
+	Path path(file, Path::RelativeTo::UserDataPath);
+	remove(path);
 }

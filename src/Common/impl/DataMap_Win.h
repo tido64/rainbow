@@ -8,7 +8,7 @@ namespace Rainbow
 	class DataMapWin
 	{
 	protected:
-		DataMapWin(const char *const file);
+		DataMapWin(const Path &path);
 		~DataMapWin();
 
 		inline const unsigned char* bytes() const;

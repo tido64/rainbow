@@ -1,3 +1,4 @@
+#include "FileSystem/Path.h"
 #include "Lua/LuaHelper.h"
 #include "Lua/lua_Sprite.h"
 #include "Lua/lua_SpriteBatch.h"
@@ -55,7 +56,7 @@ namespace Rainbow
 			switch (lua_type(L, 1))
 			{
 				case LUA_TSTRING: {
-					DataMap data(luaR_tostring(L, 1));
+					DataMap data(Path(luaR_tostring(L, 1)));
 					if (!data)
 						return luaL_error(L, "rainbow.spritebatch:set_texture: Failed to load texture");
 					lua_pushlightuserdata(L, ::SpriteBatch::set_texture(data));

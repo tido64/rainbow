@@ -4,6 +4,8 @@
 #include "Common/NonCopyable.h"
 #include "Platform/Macros.h"
 
+class File;
+
 /// Wrapper for byte buffers.
 ///
 /// Data objects are used to read from disk into memory or to save files to
@@ -26,21 +28,16 @@ public:
 		kDataReference
 	};
 
-	enum Type
-	{
-		kDataTypeAsset,
-		kDataTypeDocument,
-		kDataTypeSystem
-	};
+	static Data load_asset(const char *const asset);
+	static Data load_document(const char *const document);
 
 	/// Constructs an empty data object. No memory will be allocated.
 	inline Data();
 
 	inline Data(Data &&);
 
-	/// Constructs a data object with the contents of the file. The file's
-	/// location will be determined by its type.
-	Data(const char *const file, const Type type = kDataTypeAsset);
+	/// Constructs a data object with the contents of the file.
+	Data(const File &);
 
 	/// Constructs a wrapper around a buffer.
 	inline Data(const void *buffer, const size_t size, const Ownership ownership);
@@ -53,7 +50,7 @@ public:
 
 	/// Saves data to file.
 	/// \return \c true on success, \c false otherwise.
-	bool save(const char *const file) const;
+	bool save(const char *const path) const;
 
 	/// Returns the size of this buffer.
 	inline size_t size() const;

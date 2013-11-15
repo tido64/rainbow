@@ -1,6 +1,10 @@
 #ifndef CONFUOCO_AUDIOFILE_H_
 #define CONFUOCO_AUDIOFILE_H_
 
+#include <utility>
+
+#include "FileSystem/File.h"
+
 namespace ConFuoco
 {
 	namespace Codecs
@@ -59,11 +63,16 @@ namespace ConFuoco
 		inline void rewind();
 
 	protected:
+		const File file;
+
 		virtual int channels_impl() const;
 		virtual int rate_impl() const;
 		virtual size_t read_impl(char **dst);
 		virtual size_t read_impl(char *dst, const size_t size);
 		virtual void rewind_impl();
+
+		inline AudioFile();
+		inline AudioFile(File &&file);
 	};
 
 	int AudioFile::channels() const
@@ -90,6 +99,9 @@ namespace ConFuoco
 	{
 		this->rewind_impl();
 	}
+
+	AudioFile::AudioFile() { }
+	AudioFile::AudioFile(File &&file) : file(std::forward<File>(file)) { }
 }
 
 #endif

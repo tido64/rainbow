@@ -23,7 +23,7 @@ namespace ConFuoco
 	class OggVorbisAudioFile : public AudioFile
 	{
 	public:
-		OggVorbisAudioFile(const char *const file);
+		OggVorbisAudioFile(File &&file);
 		virtual ~OggVorbisAudioFile();
 
 	private:

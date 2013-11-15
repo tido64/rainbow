@@ -3,7 +3,7 @@
 #include <AudioToolbox/AudioServices.h>
 #include <AVFoundation/AVAudioPlayer.h>
 
-#include "Common/IO.h"
+#include "FileSystem/Path.h"
 
 namespace ConFuoco
 {
@@ -18,21 +18,10 @@ namespace ConFuoco
 			Stream(Mixer *m, const char *const file, const int loops) :
 				Sound(STREAM, m), paused(false), player(nil), channel(nullptr)
 			{
-				char buf[256];
-				Rainbow::IO::find(buf, file, Rainbow::IO::kIOTypeAsset);
-				NSString *path = [[NSString alloc]
-						initWithBytesNoCopy:buf
-						             length:strlen(buf)
-						           encoding:NSUTF8StringEncoding
-						       freeWhenDone:NO];
-				if (!path)
-				{
-					NSLog(@"[Rainbow::ConFuoco/AVFoundation] Failed to locate '%s'", file);
-					return;
-				}
+				const Path path(file);
 				NSError *err = nil;
 				this->player = [[AVAudioPlayer alloc]
-						initWithContentsOfURL:[NSURL fileURLWithPath:path]
+						initWithContentsOfURL:path
 						                error:&err];
 				if (!this->player)
 				{

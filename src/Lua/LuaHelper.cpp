@@ -2,7 +2,7 @@
 #include <memory>
 
 #include "Common/Data.h"
-#include "Common/IO.h"
+#include "FileSystem/File.h"
 #include "Lua/LuaDebugging.h"
 #include "Lua/LuaHelper.h"
 
@@ -26,11 +26,10 @@ namespace Rainbow
 			{
 				strcpy(path, module);
 				strcat(path, suffix);
-				IO::FileHandle fh = IO::find_and_open(path, IO::kIOTypeAsset);
-				IO::close(fh);
-				if (!fh)
+				const File &file = File::open_asset(path);
+				if (!file)
 					return 0;
-				const int result = load(L, Data(path), module, false);
+				const int result = load(L, Data(file), module, false);
 				if (result == 0)
 					return luaL_error(L, "Failed to load '%s'", module);
 				return result;

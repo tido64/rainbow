@@ -2,16 +2,14 @@
 #define COMMON_IMPL_DATAMAP_ANDROID_H_
 
 #include "Common/DataMap.h"
-
-struct AAsset;
+#include "FileSystem/File.h"
 
 namespace Rainbow
 {
 	class DataMapAndroid
 	{
 	protected:
-		DataMapAndroid(const char *const file);
-		~DataMapAndroid();
+		DataMapAndroid(const Path &path);
 
 		const unsigned char* bytes() const;
 		inline void offset(const size_t offset);
@@ -24,7 +22,7 @@ namespace Rainbow
 
 	private:
 		size_t off;
-		AAsset *asset;
+		const File asset;
 	};
 
 	void DataMapAndroid::offset(const size_t offset)

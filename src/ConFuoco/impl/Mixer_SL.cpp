@@ -3,10 +3,12 @@
 #include "Platform/Macros.h"
 #ifdef RAINBOW_OS_ANDROID
 
-#include "Common/IO.h"
+#include <android/asset_manager.h>
+
 #include "ConFuoco/Mixer.h"
 #include "ConFuoco/Sound.h"
 #include "ConFuoco/impl/Recorder_SL.h"
+#include "FileSystem/File.h"
 
 #define slCreateAudioPlayer(self, player, source, sink, interfaces, iids, req) \
 	(*self)->CreateAudioPlayer(self, player, source, sink, interfaces, iids, req)
@@ -277,17 +279,17 @@ namespace ConFuoco
 			SLDataSource source = { &uri, &format };
 		#endif
 
-		Rainbow::IO::FileHandle asset =
-				Rainbow::IO::find_and_open(file, Rainbow::IO::kIOTypeAsset);
-		if (!asset)
-		{
-			R_DEBUG("[Rainbow::ConFuoco/SL] Failed to open '%s'\n", file);
-			return nullptr;
-		}
-
 		off_t offset, length;
-		int fd = AAsset_openFileDescriptor(asset, &offset, &length);
-		Rainbow::IO::close(asset);
+		int fd = 0;
+		{
+			const File &asset = File::open_asset(file);
+			if (!asset)
+			{
+				R_DEBUG("[Rainbow::ConFuoco/SL] Failed to open '%s'\n", file);
+				return nullptr;
+			}
+			fd = AAsset_openFileDescriptor(asset, &offset, &length);
+		}
 
 		SLDataLocator_AndroidFD android_fd = { SL_DATALOCATOR_ANDROIDFD, fd, offset, length };
 

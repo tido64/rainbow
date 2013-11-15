@@ -18,7 +18,7 @@ namespace Rainbow
 
 		Font::Font(lua_State *L)
 		{
-			Data font(luaR_tostring(L, 1));
+			const Data &font = Data::load_asset(luaR_tostring(L, 1));
 			if (!font)
 				luaL_error(L, "rainbow.font: Failed to load font");
 			this->ptr = new FontAtlas(font, luaR_tonumber(L, 2));

@@ -4,23 +4,13 @@
 #include <android/asset_manager.h>
 
 #include "Common/Debug.h"
-#include "Common/IO.h"
 #include "Common/impl/DataMap_Android.h"
+#include "FileSystem/Path.h"
 
 namespace Rainbow
 {
-	DataMapAndroid::DataMapAndroid(const char *const file) : off(0)
-	{
-		this->asset = Rainbow::IO::find_and_open(file, Rainbow::IO::kIOTypeAsset);
-		if (!this->asset)
-			R_ERROR("[Rainbow] Failed to open '%s'\n", file);
-	}
-
-	DataMapAndroid::~DataMapAndroid()
-	{
-		if (this->asset)
-			Rainbow::IO::close(this->asset);
-	}
+	DataMapAndroid::DataMapAndroid(const Path &path) :
+		off(0), asset(File::open(path)) { }
 
 	const unsigned char* DataMapAndroid::bytes() const
 	{

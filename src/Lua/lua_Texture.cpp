@@ -1,3 +1,4 @@
+#include "FileSystem/Path.h"
 #include "Lua/LuaHelper.h"
 #include "Lua/lua_Texture.h"
 
@@ -25,7 +26,7 @@ namespace Rainbow
 					this->ptr = static_cast<TextureAtlas*>(lua_touserdata(L, -1));
 					break;
 				case LUA_TSTRING: {
-					DataMap data(luaR_tostring(L, -1));
+					DataMap data(Path(luaR_tostring(L, -1)));
 					if (!data)
 						luaL_error(L, "rainbow.texture: Failed to load texture");
 					this->ptr = new TextureAtlas(data);

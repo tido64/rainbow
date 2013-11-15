@@ -4,27 +4,26 @@
 
 #include "Common/Data.h"
 #include "Common/Debug.h"
-#include "Common/IO.h"
+#include "FileSystem/File.h"
 
-Data::Data(const char *const file, const Type type) :
-	ownership(kDataOwner), allocated(0), sz(0), data(nullptr)
+Data Data::load_asset(const char *const asset)
 {
-	Rainbow::IO::FileHandle fh = (type == kDataTypeSystem)
-			? Rainbow::IO::open(file, Rainbow::IO::kIOTypeAsset)
-			: Rainbow::IO::find_and_open(file, static_cast<Rainbow::IO::Type>(type));
-	if (!fh)
-	{
-		R_ERROR("[Rainbow] Data: Failed to open '%s'\n", file);
+	return Data(File::open_asset(asset));
+}
+
+Data Data::load_document(const char *const document)
+{
+	return Data(File::open_document(document));
+}
+
+Data::Data(const File &file) : ownership(kDataOwner), allocated(0), sz(0), data(nullptr)
+{
+	if (!file)
 		return;
-	}
 
-	const size_t size = Rainbow::IO::size(fh);
+	const size_t size = file.size();
 	this->allocate(size);
-
-	const size_t read = Rainbow::IO::read(this->data, size, fh);
-	Rainbow::IO::close(fh);
-
-	if (read != size)
+	if (file.read(this->data, size) != size)
 	{
 		operator delete(this->data);
 		this->data = nullptr;
@@ -42,19 +41,16 @@ Data::~Data()
 	operator delete(this->data);
 }
 
-bool Data::save(const char *const file) const
+bool Data::save(const char *const path) const
 {
 	R_ASSERT(this->data, "No data to save");
 	R_ASSERT(this->sz > 0, "Data is set but size is 0");
 
-	Rainbow::IO::FileHandle fh =
-			Rainbow::IO::find_and_open(file, Rainbow::IO::kIOTypeWrite);
-	if (!fh)
+	const File &file = File::open_write(path);
+	if (!file)
 		return false;
 
-	const size_t written = Rainbow::IO::write(this->data, this->sz, fh);
-	Rainbow::IO::close(fh);
-	return written == this->sz;
+	return file.write(this->data, this->sz) == this->sz;
 }
 
 void Data::allocate(const size_t size)

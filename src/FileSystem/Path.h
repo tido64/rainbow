@@ -1,0 +1,55 @@
+#ifndef FILESYSTEM_PATH_H_
+#define FILESYSTEM_PATH_H_
+
+#include "Platform/Macros.h"
+#ifdef RAINBOW_OS_MACOS
+#include <CoreFoundation/CoreFoundation.h>
+#endif
+
+#include "Common/NonCopyable.h"
+
+class Path
+{
+public:
+	enum class RelativeTo
+	{
+		CurrentPath,
+		UserDataPath,
+		Root
+	};
+
+	static const char* current();
+	static void set_current();
+	static void set_current(const char *const path);
+
+	Path();
+	Path(const char *const file,
+	     const RelativeTo rel = RelativeTo::CurrentPath);
+
+#ifdef RAINBOW_TEST
+	int create();
+#endif
+
+#ifdef RAINBOW_OS_MACOS
+	CFURLRef CreateCFURL() const;
+#endif
+
+	Path& operator=(const char *const path);
+	Path& operator+=(const char *const path);
+
+	inline operator const char*() const;
+
+#ifdef RAINBOW_OS_IOS
+	operator NSURL*() const;
+#endif
+
+private:
+	char path[256];
+};
+
+Path::operator const char*() const
+{
+	return this->path;
+}
+
+#endif

@@ -121,7 +121,7 @@ int ShaderManager::create_shader(int type, const char *src)
 #ifdef GL_ES_VERSION_2_0
 	const char *source = src;
 #else
-	Data glsl(src);
+	const Data &glsl = Data::load_asset(src);
 	if (!glsl)
 	{
 		R_ASSERT(glsl, "Failed to load shader");

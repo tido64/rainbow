@@ -8,14 +8,8 @@
 #if SDL_VERSION_ATLEAST(1,3,0)
 
 #ifdef RAINBOW_OS_WINDOWS
-#	include <direct.h>
 #	include "Graphics/OpenGL.h"
 #	include <GL/glew.c>
-#	define kPathSeparator "\\"
-#	define getcwd(buf, size) _getcwd(buf, size)
-#else
-#	include <unistd.h>
-#	define kPathSeparator "/"
 #endif
 
 #ifdef RAINBOW_TEST
@@ -27,13 +21,12 @@
 #include "Common/Chrono.h"
 #include "Common/Data.h"
 #include "ConFuoco/Mixer.h"
+#include "FileSystem/File.h"
+#include "FileSystem/Path.h"
 #include "Graphics/Renderer.h"
 #include "Input/Input.h"
 #include "Input/Key.h"
 #include "Input/Touch.h"
-
-char data_path[256] = { 0 };
-char userdata_path[256] = { 0 };
 
 namespace
 {
@@ -41,14 +34,6 @@ namespace
 
 	const double kFramesPerSecond = 1000.0 / 60.0;
 	Chrono chrono;
-
-	void setcwd(const char *const path)
-	{
-		strcpy(data_path, path);  // Set data path
-		strcat(data_path, kPathSeparator);
-		strcpy(userdata_path, data_path);  // Set user data path
-		strcat(userdata_path, "user");
-	}
 
 	class RenderWindow
 	{
@@ -181,14 +166,9 @@ int main(int argc, char *argv[])
 {
 	if (argc < 2)
 	{
-		const size_t size = 256;
-		char cwd[size];
-		if (getcwd(cwd, size) != cwd)
-			return 0;
-		setcwd(cwd);
-		strcat(cwd, kPathSeparator "main.lua");
-		FILE *file = fopen(cwd, "rb");
-		if (!file)
+		Path::set_current();
+		const File &main = File::open_asset("main.lua");
+		if (!main)
 		{
 		#ifdef RAINBOW_TEST
 			testing::InitGoogleTest(&argc, argv);
@@ -197,10 +177,9 @@ int main(int argc, char *argv[])
 			return 0;
 		#endif
 		}
-		fclose(file);
 	}
 	else
-		setcwd(argv[1]);
+		Path::set_current(argv[1]);
 
 	ConFuoco::Mixer mixer;
 	if (!ConFuoco::Mixer::Instance)
@@ -222,7 +201,7 @@ int main(int argc, char *argv[])
 
 	// Load game
 	Director director;
-	director.init(Data("main.lua"), screen_width, screen_height);
+	director.init(Data::load_asset("main.lua"), screen_width, screen_height);
 
 	chrono.update();
 	while (!director.has_terminated())

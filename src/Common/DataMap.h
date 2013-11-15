@@ -4,6 +4,8 @@
 #include "Common/NonCopyable.h"
 #include "Platform/Macros.h"
 
+class Path;
+
 namespace Rainbow
 {
 	// TODO: Move error strings to a separate header.
@@ -13,7 +15,7 @@ namespace Rainbow
 	class DataMapBase : private T, private NonCopyable<DataMapBase<T> >
 	{
 	public:
-		inline DataMapBase(const char *const file);
+		inline DataMapBase(const Path &path);
 
 		/// Returns offset raw byte array.
 		/// \return Pointer to array. Returns \c nullptr if buffer is empty.
@@ -32,7 +34,7 @@ namespace Rainbow
 	};
 
 	template<class T>
-	DataMapBase<T>::DataMapBase(const char *const file) : T(file) { }
+	DataMapBase<T>::DataMapBase(const Path &path) : T(path) { }
 
 	template<class T>
 	const unsigned char* DataMapBase<T>::bytes() const

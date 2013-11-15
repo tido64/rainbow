@@ -1,13 +1,12 @@
 #include "ConFuoco/Codecs/AppleAudioFile.h"
 #if defined(RAINBOW_OS_IOS) || defined(RAINBOW_OS_MACOS)
 
-#include <CoreFoundation/CoreFoundation.h>
-
 #include "Common/Debug.h"
-#include "Common/IO.h"
 #include "ConFuoco/Codecs/OggVorbisAudioFile.h"
+#include "FileSystem/File.h"
+#include "FileSystem/Path.h"
 
-#define litlen(literal) sizeof(literal) / sizeof(char) - sizeof(char)
+#define strllen(literal) sizeof(literal) / sizeof(char) - sizeof(char)
 
 namespace ConFuoco
 {
@@ -32,16 +31,15 @@ namespace ConFuoco
 	AudioFile* AudioFile::Open(const char *const file, const Mode mode)
 	{
 	#ifndef RAINBOW_OS_IOS
-		char id[8];
-		Rainbow::IO::FileHandle fh =
-				Rainbow::IO::find_and_open(file, Rainbow::IO::kIOTypeAsset);
-		if (fh)
+		char id[8] = { 0 };
+		File f = File::open_asset(file);
+		if (f)
 		{
-			Rainbow::IO::read(id, 8, fh);
-			Rainbow::IO::close(fh);
+			f.read(id, sizeof(id));
+			f.seek(0, SEEK_SET);
 		}
-		if (strncmp(Codecs::kCodecOggVorbis, id, litlen(Codecs::kCodecOggVorbis)) == 0)
-			return new OggVorbisAudioFile(file);
+		if (strncmp(Codecs::kCodecOggVorbis, id, strllen(Codecs::kCodecOggVorbis)) == 0)
+			return new OggVorbisAudioFile(std::move(f));
 		else
 	#endif
 			return new AppleAudioFile(file, mode);
@@ -49,27 +47,16 @@ namespace ConFuoco
 
 	AppleAudioFile::AppleAudioFile(const char *const file, const int mode) : ref(nullptr)
 	{
-		char buf[256];
-		Rainbow::IO::find(buf, file, Rainbow::IO::kIOTypeAsset);
+		const Path path(file);
 	#ifdef RAINBOW_OS_MACOS
-		CFStringRef str = CFStringCreateWithBytesNoCopy(
-				kCFAllocatorDefault, (const UInt8*)buf, strlen(buf),
-				kCFStringEncodingUTF8, false, kCFAllocatorNull);
-		CFURLRef url = CFURLCreateWithFileSystemPath(
-				kCFAllocatorDefault, str, kCFURLPOSIXPathStyle, false);
+		CFURLRef url = path.CreateCFURL();
 	#else
-		NSString *path = [[NSString alloc]
-				initWithBytesNoCopy:buf
-				             length:strlen(buf)
-				           encoding:NSUTF8StringEncoding
-				       freeWhenDone:NO];
-		NSURL *url = [NSURL fileURLWithPath:path isDirectory:NO];
+		NSURL *url = path;
 	#endif
 		if (ExtAudioFileOpenURL(bridge_cast<CFURLRef>(url), &this->ref) != noErr)
 			R_ERROR("[Rainbow::ConFuoco/AudioToolbox] Failed to open '%s'\n", file);
 	#ifdef RAINBOW_OS_MACOS
 		CFRelease(url);
-		CFRelease(str);
 	#endif
 		if (!this->ref)
 			return;
@@ -161,5 +148,5 @@ namespace ConFuoco
 	}
 }
 
-#undef litlen
+#undef strllen
 #endif

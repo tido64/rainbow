@@ -211,7 +211,7 @@ namespace
 	Renderer::resize(size.width, size.height);
 
 	// Load and initialise script.
-	self.director->init(Data("main.lua"), size.width, size.height);
+	self.director->init(Data::load_asset("main.lua"), size.width, size.height);
 }
 
 - (void)didReceiveMemoryWarning

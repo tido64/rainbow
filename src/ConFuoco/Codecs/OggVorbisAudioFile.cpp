@@ -4,7 +4,7 @@
 #include <cstring>
 
 #include "Common/Debug.h"
-#include "Common/IO.h"
+#include "FileSystem/File.h"
 
 namespace ConFuoco
 {
@@ -43,36 +43,27 @@ namespace ConFuoco
 #ifndef RAINBOW_OS_MACOS
 	AudioFile* AudioFile::Open(const char *const file, const Mode)
 	{
-		return new OggVorbisAudioFile(file);
+		File f = File::open_asset(file);
+		if (!f)
+			R_ERROR("[Rainbow::ConFuoco/Vorbis] Failed to open '%s'\n", file);
+		return new OggVorbisAudioFile(std::move(f));
 	}
 #endif
 
-	OggVorbisAudioFile::OggVorbisAudioFile(const char *const file) : vi(nullptr)
+	OggVorbisAudioFile::OggVorbisAudioFile(File &&file) :
+		AudioFile(std::forward<File>(file)), vi(nullptr)
 	{
-		Rainbow::IO::FileHandle fh =
-				Rainbow::IO::find_and_open(file, Rainbow::IO::kIOTypeAsset);
-		if (!fh)
-		{
-			R_ERROR("[Rainbow::ConFuoco/Vorbis] Failed to open '%s'\n", file);
-			return;
-		}
-
-		int code = ov_open_callbacks(fh, &this->vf, 0, 0, OV_CALLBACKS_DEFAULT);
+		int code = ov_open_callbacks(static_cast<FILE*>(this->file), &this->vf, 0, 0, OV_CALLBACKS_DEFAULT);
 		if (code < 0)
 		{
-			Rainbow::IO::close(fh);
-			R_ERROR("[Rainbow::ConFuoco/Vorbis] Failed to open '%s'\n", file);
 			ov_error(code);
 			return;
 		}
-
 		this->vi = ov_info(&this->vf, -1);
 		if (!this->vi)
 		{
 			this->vi = nullptr;
-			Rainbow::IO::close(fh);
 			R_ERROR("[Rainbow::ConFuoco/Vorbis] Failed to retrieve Ogg bitstream info\n");
-			return;
 		}
 	}
 

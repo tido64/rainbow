@@ -127,6 +127,8 @@
 		1939A23C152C42ED00494609 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1939A23B152C42EC00494609 /* OpenAL.framework */; };
 		1939A23E152C432A00494609 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1939A23D152C432900494609 /* AudioToolbox.framework */; };
 		1939A240152C435000494609 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1939A23F152C435000494609 /* AVFoundation.framework */; };
+		1946B7AE1836E54600F74A3B /* File.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1946B7AA1836E54600F74A3B /* File.cpp */; };
+		1946B7AF1836E54600F74A3B /* Path.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1946B7AC1836E54600F74A3B /* Path.cpp */; };
 		1948C023152C397D00E9B854 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1948C022152C397D00E9B854 /* UIKit.framework */; };
 		1948C025152C397D00E9B854 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1948C024152C397D00E9B854 /* Foundation.framework */; };
 		1948C027152C397D00E9B854 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1948C026152C397D00E9B854 /* CoreGraphics.framework */; };
@@ -134,7 +136,6 @@
 		1948C02F152C397D00E9B854 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1948C02E152C397D00E9B854 /* main.m */; };
 		1948C033152C397D00E9B854 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1948C032152C397D00E9B854 /* AppDelegate.m */; };
 		1949374D1756795900CF3FC6 /* DataMap_Unix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1949374B1756795900CF3FC6 /* DataMap_Unix.cpp */; };
-		1949E96B176907100088E1CC /* IO.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1949E96A176907100088E1CC /* IO.cpp */; };
 		196911CD1713564A002BC2E4 /* VertexArray.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 196911CB1713564A002BC2E4 /* VertexArray.cpp */; };
 		196CB728161E4ADD0068C809 /* Gatekeeper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 196CB725161E4ADD0068C809 /* Gatekeeper.cpp */; };
 		196CB72F161E4D940068C809 /* b2MotorJoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 196CB72D161E4D940068C809 /* b2MotorJoint.cpp */; };
@@ -518,6 +519,10 @@
 		1939A23B152C42EC00494609 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
 		1939A23D152C432900494609 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		1939A23F152C435000494609 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		1946B7AA1836E54600F74A3B /* File.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = File.cpp; sourceTree = "<group>"; };
+		1946B7AB1836E54600F74A3B /* File.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = File.h; sourceTree = "<group>"; };
+		1946B7AC1836E54600F74A3B /* Path.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = Path.cpp; sourceTree = "<group>"; };
+		1946B7AD1836E54600F74A3B /* Path.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Path.h; sourceTree = "<group>"; };
 		1948C01E152C397D00E9B854 /* Rainbow.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Rainbow.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1948C022152C397D00E9B854 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		1948C024152C397D00E9B854 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -531,8 +536,6 @@
 		1949374B1756795900CF3FC6 /* DataMap_Unix.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = DataMap_Unix.cpp; sourceTree = "<group>"; };
 		1949374C1756795900CF3FC6 /* DataMap_Unix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataMap_Unix.h; sourceTree = "<group>"; };
 		1949374E1756796D00CF3FC6 /* DataMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataMap.h; sourceTree = "<group>"; };
-		1949E96A176907100088E1CC /* IO.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = IO.cpp; sourceTree = "<group>"; };
-		1954201415F676340049C278 /* IO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IO.h; sourceTree = "<group>"; };
 		195D565617D90DD100C78117 /* Functional.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Functional.h; sourceTree = "<group>"; };
 		195D565717D90E0D00C78117 /* LuaDebugging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LuaDebugging.h; sourceTree = "<group>"; };
 		196911CB1713564A002BC2E4 /* VertexArray.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = VertexArray.cpp; sourceTree = "<group>"; };
@@ -1056,8 +1059,6 @@
 				1949374E1756796D00CF3FC6 /* DataMap.h */,
 				190A0ADA15E0294C0088D8B7 /* Debug.h */,
 				195D565617D90DD100C78117 /* Functional.h */,
-				1949E96A176907100088E1CC /* IO.cpp */,
-				1954201415F676340049C278 /* IO.h */,
 				19F9890C15FBBB3B005A5F69 /* NonCopyable.h */,
 				1939A196152C425D00494609 /* Random.cpp */,
 				1939A197152C425D00494609 /* Random.h */,
@@ -1211,6 +1212,18 @@
 			path = ../../../src/Lua;
 			sourceTree = "<group>";
 		};
+		1946B7A91836E54600F74A3B /* FileSystem */ = {
+			isa = PBXGroup;
+			children = (
+				1946B7AA1836E54600F74A3B /* File.cpp */,
+				1946B7AB1836E54600F74A3B /* File.h */,
+				1946B7AC1836E54600F74A3B /* Path.cpp */,
+				1946B7AD1836E54600F74A3B /* Path.h */,
+			);
+			name = FileSystem;
+			path = ../../../src/FileSystem;
+			sourceTree = "<group>";
+		};
 		1948C013152C397D00E9B854 = {
 			isa = PBXGroup;
 			children = (
@@ -1291,6 +1304,7 @@
 				1939A17B152C425D00494609 /* Applications */,
 				1939A180152C425D00494609 /* Common */,
 				1939A1A2152C425D00494609 /* ConFuoco */,
+				1946B7A91836E54600F74A3B /* FileSystem */,
 				1939A1BC152C425D00494609 /* Graphics */,
 				196CB724161E4ADD0068C809 /* Heimdall */,
 				1939A1DB152C425D00494609 /* Input */,
@@ -1489,6 +1503,7 @@
 				1939A052152C401300494609 /* b2TimeOfImpact.cpp in Sources */,
 				1939A053152C401300494609 /* b2ChainShape.cpp in Sources */,
 				1939A054152C401300494609 /* b2CircleShape.cpp in Sources */,
+				1946B7AF1836E54600F74A3B /* Path.cpp in Sources */,
 				1939A055152C401300494609 /* b2EdgeShape.cpp in Sources */,
 				1939A056152C401300494609 /* b2PolygonShape.cpp in Sources */,
 				1939A057152C401300494609 /* b2BlockAllocator.cpp in Sources */,
@@ -1602,13 +1617,13 @@
 				193929BD16E243E90018340B /* LuaMachine.cpp in Sources */,
 				193929BF16E3511F0018340B /* freetype.c in Sources */,
 				196911CD1713564A002BC2E4 /* VertexArray.cpp in Sources */,
+				1946B7AE1836E54600F74A3B /* File.cpp in Sources */,
 				19F98DA1171970C000A85873 /* Recorder_iOS.mm in Sources */,
 				19CEDD71172422DC008B73B5 /* AudioFile.cpp in Sources */,
 				19CEDD72172422DC008B73B5 /* AppleAudioFile.cpp in Sources */,
 				19DCB27117419B1800660000 /* TestFlight.cpp in Sources */,
 				1949374D1756795900CF3FC6 /* DataMap_Unix.cpp in Sources */,
 				19865982175E98F700723171 /* Data.cpp in Sources */,
-				1949E96B176907100088E1CC /* IO.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

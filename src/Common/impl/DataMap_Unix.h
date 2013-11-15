@@ -8,7 +8,7 @@ namespace Rainbow
 	class DataMapUnix
 	{
 	protected:
-		DataMapUnix(const char *const file);
+		DataMapUnix(const Path &path);
 		~DataMapUnix();
 
 		inline const unsigned char* bytes() const;

@@ -17,6 +17,7 @@
 #include "Common/Chrono.h"
 #include "Common/Data.h"
 #include "ConFuoco/Mixer.h"
+#include "FileSystem/Path.h"
 #include "Graphics/Renderer.h"
 #include "Input/Input.h"
 #include "Input/Touch.h"
@@ -70,12 +71,12 @@ void android_main(struct android_app *state)
 	//sleep(5);  // Sleep a little so GDB can attach itself
 
 	AInstance ainstance;
-
 	state->userData = &ainstance;
 	state->onAppCmd = android_handle_event;
 	state->onInputEvent = android_handle_input;
 	ainstance.app = state;
 	gNativeActivity = state->activity;
+	Path::set_current();
 
 	// Prepare to monitor accelerometer
 	ainstance.sensorManager = ASensorManager_getInstance();
@@ -169,7 +170,7 @@ void android_handle_display(AInstance *a)
 
 	// Load game
 	a->director.reset(new Director());
-	a->director->init(Data("main.lua"), a->width, a->height);
+	a->director->init(Data::load_asset("main.lua"), a->width, a->height);
 
 	a->initialised = true;
 }

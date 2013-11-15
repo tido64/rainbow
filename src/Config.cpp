@@ -8,7 +8,7 @@ namespace Rainbow
 {
 	Config::Config() : accelerometer_(true), suspend_(true), width_(0), height_(0)
 	{
-		Data config("config");
+		const Data &config = Data::load_asset("config");
 		if (!config)
 			return;
 

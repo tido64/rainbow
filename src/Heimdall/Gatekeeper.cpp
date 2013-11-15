@@ -1,13 +1,13 @@
 #ifdef USE_HEIMDALL
 
 #include "Common/Data.h"
+#include "FileSystem/File.h"
+#include "FileSystem/Path.h"
 #include "Heimdall/Gatekeeper.h"
 #include "Heimdall/Resources.h"
 #include "Lua/LuaHelper.h"
 #include "Resources/Inconsolata.otf.h"
 #include "Resources/NewsCycle-Regular.ttf.h"
-
-extern char data_path[];  ///< Path to asset data.
 
 namespace
 {
@@ -70,9 +70,9 @@ namespace
 	Library::operator Data() const
 	{
 	#if defined(RAINBOW_OS_MACOS)
-		return Data(this->path_, Data::kDataTypeSystem);
+		return Data(File::open(this->path_));
 	#elif defined(RAINBOW_OS_WINDOWS)
-		return Data(this->path_);
+		return Data::load_asset(this->path_);
 	#else
 		return Data();
 	#endif
@@ -91,7 +91,7 @@ namespace Heimdall
 
 	Gatekeeper::Gatekeeper() :
 		width(0), height(0), touch_count(0), overlay_node(nullptr),
-		monitor(data_path)
+		monitor(Path::current())
 	{
 		this->scenegraph.add_child(this->info.node());
 

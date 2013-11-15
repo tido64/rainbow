@@ -14,6 +14,9 @@ if(MSVC OR XCODE)
 	file(GLOB RAINBOW_SRC src/ConFuoco/impl/*)
 	source_group("Source Files\\ConFuoco\\impl" FILES ${RAINBOW_SRC})
 
+	file(GLOB RAINBOW_SRC src/FileSystem/*)
+	source_group("Source Files\\FileSystem" FILES ${RAINBOW_SRC})
+
 	file(GLOB RAINBOW_SRC src/Graphics/*)
 	source_group("Source Files\\Graphics" FILES ${RAINBOW_SRC})
 	file(GLOB RAINBOW_SRC src/Graphics/Decoders/*)
