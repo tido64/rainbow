@@ -1,3 +1,7 @@
+// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Distributed under the MIT License.
+// (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
+
 #ifndef GRAPHICS_SPRITE_H_
 #define GRAPHICS_SPRITE_H_
 
@@ -23,9 +27,6 @@ class SpriteBatch;
 /// \see http://developer.apple.com/library/ios/#documentation/3DDrawing/Conceptual/OpenGLES_ProgrammingGuide/TechniquesforWorkingwithVertexData/TechniquesforWorkingwithVertexData.html
 /// \see http://iphonedevelopment.blogspot.com/2009/06/opengl-es-from-ground-up-part-8.html
 /// \see http://mathforum.org/mathimages/index.php/Transformation_Matrix
-///
-/// Copyright 2010-13 Bifrost Entertainment. All rights reserved.
-/// \author Tommy Nguyen
 class Sprite : private NonCopyable<Sprite>
 {
 	friend class SpriteBatch;

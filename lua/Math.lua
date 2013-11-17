@@ -1,33 +1,34 @@
---! Rainbow math helper.
---!
---! Because none of us have a PhD in math (or physics).
---!
---! Note that if you're going to use any of these in a loop, it is better to
---! inline them, e.g.:
---!
---! \code
---! local Math = require(module_path .. "Math")
---!
---! function bad_code()
---! 	local d = 1.0
---! 	while true do
---! 		d = Math.radians(d)  -- This is BAD!
---! 	end
---! end
---!
---! function good_code()
---! 	local d = 1.0
---! 	local radians = Math.radians  -- This is GOOD!
---! 	while true do
---! 		d = radians(d)
---! 	end
---! end
---! \endcode
---!
---! Do also note that the loops in these examples are utterly useless.
---!
---! Copyright 2012-13 Bifrost Entertainment. All rights reserved.
---! \author Tommy Nguyen
+-- Rainbow math helper.
+--
+-- Because none of us have a PhD in math (or physics).
+--
+-- Note that if you're going to use any of these in a loop, it is better to
+-- inline them, e.g.:
+--
+-- \code
+-- local Math = require(module_path .. "Math")
+--
+-- function bad_code()
+--   local d = 1.0
+--   while true do
+--     d = Math.radians(d)  -- This is BAD!
+--   end
+-- end
+--
+-- function good_code()
+--   local d = 1.0
+--   local radians = Math.radians  -- This is GOOD!
+--   while true do
+--     d = radians(d)
+--   end
+-- end
+-- \endcode
+--
+-- Do also note that the loops in these examples are utterly useless.
+--
+-- Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+-- Distributed under the MIT License.
+-- (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
 local atan2   = math.atan2
 local max     = math.max

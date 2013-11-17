@@ -1,3 +1,7 @@
+// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Distributed under the MIT License.
+// (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
+
 #ifndef COMMON_RANDOM_H_
 #define COMMON_RANDOM_H_
 
@@ -20,9 +24,6 @@
 #endif
 
 /// C++ wrapper for dSFMT random number generator.
-///
-/// Copyright 2010-13 Bifrost Entertainment. All rights reserved.
-/// \author Tommy Nguyen
 namespace Random
 {
 	/// Returns the next generated random number in [0, 1).

@@ -1,13 +1,14 @@
---! Copyright 2013 Bifrost Entertainment. All rights reserved.
---! \author Tommy Nguyen
+-- Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+-- Distributed under the MIT License.
+-- (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
 local table_remove = table.remove
 
 local __count = 0
 local __timers = {}
 
---! Checks whether it is time to call the callback. If the number of called
---! times is up, the timer is effectively canceled.
+-- Checks whether it is time to call the callback. If the number of called
+-- times is up, the timer is effectively canceled.
 local function test(self, dt)
 	self.__delay = self.__delay - dt
 	if self.__delay <= 0 then
@@ -30,17 +31,17 @@ local Timer = {
 	reset = nil
 }
 
---! Clears all timers.
+-- Clears all timers.
 function Timer.clear()
 	__count = 0
 	__timers = {}
 end
 
 Timer.__index = setmetatable(Timer, {
-	--! Creates a timer.
-	--! \param callback  The function to call on time-out.
-	--! \param delay     Time in milliseconds to delay call.
-	--! \param times     Number of times to call. Infinite if omitted.
+	-- Creates a timer.
+	-- \param callback  The function to call on time-out.
+	-- \param delay     Time in milliseconds to delay call.
+	-- \param times     Number of times to call. Infinite if omitted.
 	__call = function(Timer, callback, delay, times)
 		assert(type(callback) == "function", "Invalid callback")
 		local self = setmetatable({
@@ -54,7 +55,7 @@ Timer.__index = setmetatable(Timer, {
 		__timers[__count] = self
 		return self
 	end,
-	--! Iterate over and test all active timers.
+	-- Iterate over and test all active timers.
 	__update = function(dt)
 		for i = __count, 1, -1 do
 			test(__timers[i], dt)
@@ -62,7 +63,7 @@ Timer.__index = setmetatable(Timer, {
 	end
 })
 
---! Cancels timer.
+-- Cancels timer.
 function Timer:cancel()
 	for i = 1, __count do
 		if __timers[i] == self then
@@ -73,8 +74,8 @@ function Timer:cancel()
 	end
 end
 
---! Resets a timer, restoring its initial state.
---! \param delay  Optional new delay.
+-- Resets a timer, restoring its initial state.
+-- \param delay  Optional new delay.
 function Timer:reset(delay)
 	self.delay = delay or self.delay
 	self.__delay = self.delay

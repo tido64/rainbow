@@ -1,3 +1,7 @@
+// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Distributed under the MIT License.
+// (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
+
 #ifndef THREAD_RWLOCK_H_
 #define THREAD_RWLOCK_H_
 
@@ -21,9 +25,6 @@
 namespace Rainbow
 {
 	/// Wrapper around platform-implementation of readers/writer lock.
-	///
-	/// Copyright 2013 Bifrost Entertainment. All rights reserved.
-	/// \author Tommy Nguyen
 	class RWLock
 	{
 	public:

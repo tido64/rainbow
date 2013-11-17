@@ -1,4 +1,8 @@
 #!/usr/bin/python
+# Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+# Distributed under the MIT License.
+# (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
+
 from datetime import date
 import os
 import re
@@ -35,7 +39,7 @@ def main():
 			shaders_h.append("\n".join(shader) + ";\n")
 	f = open(os.path.join(shaders_dir, "Shaders.h"), 'w')
 	f.write("// This file was auto-generated with shaders-gen.py.\n")
-	f.write("// Copyright " + str(date.today().year) + " Bifrost Entertainment AS. All rights reserved.\n\n")
+	f.write("// Copyright (c) " + str(date.today().year) + " Bifrost Entertainment AS and Tommy Nguyen. All rights reserved.\n\n")
 	f.write("\n".join(shaders_h))
 	f.close()
 	return 0

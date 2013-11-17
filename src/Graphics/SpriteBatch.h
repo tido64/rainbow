@@ -1,3 +1,7 @@
+// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Distributed under the MIT License.
+// (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
+
 #ifndef GRAPHICS_SPRITEBATCH_H_
 #define GRAPHICS_SPRITEBATCH_H_
 
@@ -10,9 +14,6 @@
 /// All sprites share a common vertex buffer object (at different offsets) and
 /// are drawn with a single glDraw call. The sprites must use the same texture
 /// atlas.
-///
-/// Copyright 2010-13 Bifrost Entertainment. All rights reserved.
-/// \author Tommy Nguyen
 class SpriteBatch : private NonCopyable<SpriteBatch>
 {
 public:

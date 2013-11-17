@@ -1,3 +1,7 @@
+// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Distributed under the MIT License.
+// (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
+
 #ifndef INPUT_ACCELERATION_H_
 #define INPUT_ACCELERATION_H_
 
@@ -9,9 +13,6 @@
 ///
 /// Implements a simple high-pass filter that removes the gravity component from
 /// the acceleration data.
-///
-/// Copyright 2011-13 Bifrost Entertainment. All rights reserved.
-/// \author Tommy Nguyen
 class Acceleration
 {
 public:

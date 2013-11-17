@@ -2,8 +2,9 @@
 ///
 /// \see http://sourceforge.net/p/predef/wiki/Home/
 ///
-/// Copyright 2010-13 Bifrost Entertainment. All rights reserved.
-/// \author Tommy Nguyen
+/// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+/// Distributed under the MIT License.
+/// (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
 #ifndef PLATFORM_MACROS_H_
 #define PLATFORM_MACROS_H_

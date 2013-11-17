@@ -1,3 +1,7 @@
+// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Distributed under the MIT License.
+// (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
+
 #ifndef CONFUOCO_MIXER_H_
 #define CONFUOCO_MIXER_H_
 
@@ -7,9 +11,6 @@
 namespace ConFuoco
 {
 	/// Audio mixer.
-	///
-	/// Copyright 2012-13 Bifrost Entertainment. All rights reserved.
-	/// \author Tommy Nguyen
 	template<typename T>
 	class MixerBase : private NonCopyable<MixerBase<T>>
 	{

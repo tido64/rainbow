@@ -1,3 +1,7 @@
+// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Distributed under the MIT License.
+// (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
+
 #ifndef COMMON_TREENODE_H_
 #define COMMON_TREENODE_H_
 
@@ -6,9 +10,6 @@
 /// A barebone implementation of a tree node.
 ///
 /// This class does not hold any data and is meant to be sub-classed.
-///
-/// Copyright 2011-13 Bifrost Entertainment. All rights reserved.
-/// \author Tommy Nguyen
 template<class T>
 class TreeNode : private NonCopyable<TreeNode<T> >
 {

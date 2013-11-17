@@ -1,9 +1,8 @@
---! Monkey Demo
---!
---! Resolution: 960x640
---!
---! Copyright 2011-13 Bifrost Entertainment. All rights reserved.
---! \author Tommy Nguyen
+-- Monkey Demo
+--
+-- Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+-- Distributed under the MIT License.
+-- (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
 -- Declare globals used throughout
 global_scale = 3  -- Global scaling factor

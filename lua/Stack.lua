@@ -1,31 +1,32 @@
---! Good, old fashioned stack.
---!
---! Stack is a last in, first out (LIFO) data type and linear data structure. A
---! stack can store any element but only the top element is available at any
---! time.
---!
---! \code
---! local Stack = require(module_path .. "Stack")
---!
---! local mystack = Stack()
---! mystack:push(1)  # Stack is now { 1 }
---! mystack:push(2)  # Stack is now { 1, 2 }
---! mystack:push(3)  # Stack is now { 1, 2, 3 }
---! mystack:push(4)  # Stack is now { 1, 2, 3, 4 }
---!
---! local value = mystack:top()  # 'value' is 4
---!
---! mystack:pop()          # Stack is now { 1, 2, 3 }
---! value = mystack:top()  # 'value' is 3
---! mystack:pop()          # Stack is now { 1, 2 }
---! value = mystack:top()  # 'value' is 2
---! mystack:pop()          # Stack is now { 1 }
---! value = mystack:top()  # 'value' is 1
---! mystack:pop()          # Stack is now empty
---! \endcode
---!
---! Copyright 2012-13 Bifrost Entertainment. All rights reserved.
---! \author Tommy Nguyen
+-- Good, old fashioned stack.
+--
+-- Stack is a last in, first out (LIFO) data type and linear data structure. A
+-- stack can store any element but only the top element is available at any
+-- time.
+--
+-- \code
+-- local Stack = require(module_path .. "Stack")
+--
+-- local mystack = Stack()
+-- mystack:push(1)  # Stack is now { 1 }
+-- mystack:push(2)  # Stack is now { 1, 2 }
+-- mystack:push(3)  # Stack is now { 1, 2, 3 }
+-- mystack:push(4)  # Stack is now { 1, 2, 3, 4 }
+--
+-- local value = mystack:top()  # 'value' is 4
+--
+-- mystack:pop()          # Stack is now { 1, 2, 3 }
+-- value = mystack:top()  # 'value' is 3
+-- mystack:pop()          # Stack is now { 1, 2 }
+-- value = mystack:top()  # 'value' is 2
+-- mystack:pop()          # Stack is now { 1 }
+-- value = mystack:top()  # 'value' is 1
+-- mystack:pop()          # Stack is now empty
+-- \endcode
+--
+-- Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+-- Distributed under the MIT License.
+-- (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
 local setmetatable = setmetatable
 

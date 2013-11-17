@@ -1,9 +1,8 @@
---! Canvas Demo
---!
---! Resolution: 960x640
---!
---! Copyright 2012 Bifrost Entertainment. All rights reserved.
---! \author Tommy Nguyen
+-- Canvas Demo
+--
+-- Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+-- Distributed under the MIT License.
+-- (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
 require("Utils")  -- Rainbow (debugging) utilities
 require("Input")  -- Input event handler

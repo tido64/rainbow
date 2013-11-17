@@ -1,3 +1,7 @@
+// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Distributed under the MIT License.
+// (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
+
 #ifndef COMMON_VECTOR_H_
 #define COMMON_VECTOR_H_
 
@@ -12,9 +16,6 @@
 ///
 /// This class is mainly for the lack of full STL implementation on some
 /// platforms, such as Android. (And because we don't like iterators.)
-///
-/// Copyright 2010-13 Bifrost Entertainment. All rights reserved.
-/// \author Tommy Nguyen
 template<typename T>
 class Vector : private NonCopyable<Vector<T> >
 {

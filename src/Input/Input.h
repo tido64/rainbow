@@ -1,3 +1,7 @@
+// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Distributed under the MIT License.
+// (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
+
 #ifndef INPUT_INPUT_H_
 #define INPUT_INPUT_H_
 
@@ -14,9 +18,6 @@ class  Touchable;
 /// Subscribable input events. There are no accelerometer events.
 ///
 /// \see http://developer.apple.com/library/ios/#documentation/UIKit/Reference/UIAcceleration_Class/Reference/UIAcceleration.html
-///
-/// Copyright 2010-13 Bifrost Entertainment. All rights reserved.
-/// \author Tommy Nguyen
 class Input : private NonCopyable<Input>
 {
 public:

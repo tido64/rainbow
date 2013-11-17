@@ -1,3 +1,7 @@
+// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Distributed under the MIT License.
+// (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
+
 #ifndef COMMON_VEC3_H_
 #define COMMON_VEC3_H_
 
@@ -6,9 +10,6 @@
 namespace Rainbow
 {
 	/// Structure for storing a three-dimensional vector.
-	///
-	/// Copyright 2010-13 Bifrost Entertainment. All rights reserved.
-	/// \author Tommy Nguyen
 	template<typename T>
 	struct Vec3
 	{

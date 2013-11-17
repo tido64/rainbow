@@ -1,12 +1,13 @@
+// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Distributed under the MIT License.
+// (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
+
 #ifndef COMMON_TIMEDEVENT_H_
 #define COMMON_TIMEDEVENT_H_
 
 #include "Common/Debug.h"
 
 /// A ticker with a configurable time interval.
-///
-/// Copyright 2011-13 Bifrost Entertainment. All rights reserved.
-/// \author Tommy Nguyen
 template<class T>
 class TimedEvent
 {

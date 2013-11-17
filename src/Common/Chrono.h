@@ -1,3 +1,7 @@
+// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Distributed under the MIT License.
+// (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
+
 #ifndef COMMON_CHRONO_H_
 #define COMMON_CHRONO_H_
 
@@ -8,9 +12,6 @@
 /// Simple class for keeping time.
 ///
 /// Resolution of time is in milliseconds.
-///
-/// Copyright 2011-13 Bifrost Entertainment. All rights reserved.
-/// \author Tommy Nguyen
 class Chrono : private NonCopyable<Chrono>
 {
 public:

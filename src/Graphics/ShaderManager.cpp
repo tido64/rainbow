@@ -1,4 +1,6 @@
-// Copyright 2012-13 Bifrost Entertainment. All rights reserved.
+// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Distributed under the MIT License.
+// (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
 // TODO: The Visual C++ compiler doesn't handle function pointers as template
 // parameters very well so we pass them as method parameters instead. This may

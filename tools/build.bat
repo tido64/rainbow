@@ -1,3 +1,7 @@
+:: Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+:: Distributed under the MIT License.
+:: (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
+
 @ECHO OFF
 SET MSVC_VER="Visual Studio 12"
 SET SOURCE_DIR=%~dp0\..

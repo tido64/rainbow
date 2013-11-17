@@ -1,7 +1,8 @@
---! Perform soft transitions of properties in one state to another.
---!
---! Copyright 2012-13 Bifrost Entertainment. All rights reserved.
---! \author Tommy Nguyen
+-- Perform soft transitions of properties in one state to another.
+--
+-- Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+-- Distributed under the MIT License.
+-- (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
 local module_path = (...):match("(.*[./\\])[^./\\]+") or ""
 

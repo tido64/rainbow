@@ -1,3 +1,7 @@
+// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Distributed under the MIT License.
+// (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
+
 #ifndef COMMON_SHAREDPTR_H_
 #define COMMON_SHAREDPTR_H_
 
@@ -7,9 +11,6 @@
 /// Makes a class reference countable.
 ///
 /// Subclasses of RefCounted can be wrapped with SharedPtr.
-///
-/// Copyright 2012-13 Bifrost Entertainment. All rights reserved.
-/// \author Tommy Nguyen
 class RefCounted : private NonCopyable<RefCounted>
 {
 	template<class T> friend class SharedPtr;
@@ -26,9 +27,6 @@ private:
 /// is referenced.
 ///
 /// Classes that need to be shared this way must subclass RefCounted.
-///
-/// Copyright 2011-13 Bifrost Entertainment. All rights reserved.
-/// \author Tommy Nguyen
 template<class T>
 class SharedPtr
 {

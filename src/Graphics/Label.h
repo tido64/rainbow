@@ -1,3 +1,7 @@
+// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Distributed under the MIT License.
+// (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
+
 #ifndef GRAPHICS_LABEL_H_
 #define GRAPHICS_LABEL_H_
 
@@ -7,9 +11,6 @@
 #include "Graphics/VertexArray.h"
 
 /// Label for displaying text.
-///
-/// Copyright 2011-13 Bifrost Entertainment. All rights reserved.
-/// \author Tommy Nguyen
 class Label : private NonCopyable<Label>
 {
 public:

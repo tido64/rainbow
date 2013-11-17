@@ -1,3 +1,7 @@
+// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Distributed under the MIT License.
+// (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
+
 #ifndef GRAPHICS_SCENEGRAPH_NODE_H_
 #define GRAPHICS_SCENEGRAPH_NODE_H_
 
@@ -19,9 +23,6 @@ namespace SceneGraph
 	/// May represent an animation, label, sprite batch, or a group node. There
 	/// are no limits to how many children a node can have. Nodes may point to
 	/// the same set of data.
-	///
-	/// Copyright 2011-13 Bifrost Entertainment. All rights reserved.
-	/// \author Tommy Nguyen
 	class Node : public TreeNode<Node>
 	{
 		friend void Renderer::draw(const SceneGraph::Node &);

@@ -1,3 +1,7 @@
+// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Distributed under the MIT License.
+// (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
+
 #ifndef GRAPHICS_TEXTUREMANAGER_H_
 #define GRAPHICS_TEXTUREMANAGER_H_
 
@@ -20,9 +24,6 @@ namespace Renderer
 /// course, it is also possible to purge this storage by issuing \c purge(). To
 /// avoid problems, this should only occur when you're done loading textures
 /// for a while.
-///
-/// Copyright 2012-13 Bifrost Entertainment. All rights reserved.
-/// \author Tommy Nguyen
 class TextureManager : private NonCopyable<TextureManager>
 {
 	friend bool Renderer::init();

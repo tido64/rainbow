@@ -1,3 +1,7 @@
+// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Distributed under the MIT License.
+// (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
+
 #ifndef CONFIG_H_
 #define CONFIG_H_
 
@@ -22,9 +26,6 @@ namespace Rainbow
 	/// - <tt>accelerometer = true</tt>
 	/// - <tt>resolution = { 0, 0 }</tt> (which also implies landscape mode)
 	/// - <tt>suspend_on_focus_lost = true</tt>
-	///
-	/// Copyright 2012-13 Bifrost Entertainment. All rights reserved.
-	/// \author Tommy Nguyen
 	class Config
 	{
 	public:

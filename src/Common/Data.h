@@ -1,3 +1,7 @@
+// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Distributed under the MIT License.
+// (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
+
 #ifndef COMMON_DATA_H_
 #define COMMON_DATA_H_
 
@@ -16,9 +20,6 @@ class File;
 /// NSMutableData (which in turn can be cast to a CFData or CFMutableData).
 /// On any other platforms, it can be casted to a void pointer or an unsigned
 /// char pointer.
-///
-/// Copyright 2011-13 Bifrost Entertainment. All rights reserved.
-/// \author Tommy Nguyen
 class Data : private NonCopyable<Data>
 {
 public:

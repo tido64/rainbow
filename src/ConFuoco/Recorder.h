@@ -1,3 +1,7 @@
+// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Distributed under the MIT License.
+// (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
+
 #ifndef CONFUOCO_RECORDER_H_
 #define CONFUOCO_RECORDER_H_
 
@@ -9,9 +13,6 @@ namespace ConFuoco
 	/// Provides audio recording capabilities.
 	///
 	/// \note Current implementation does not save to a file.
-	///
-	/// Copyright 2012-13 Bifrost Entertainment. All rights reserved.
-	/// \author Tommy Nguyen
 	template<typename T>
 	class RecorderBase : private NonCopyable<RecorderBase<T>>
 	{

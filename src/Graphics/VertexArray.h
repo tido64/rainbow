@@ -1,12 +1,13 @@
+// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Distributed under the MIT License.
+// (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
+
 #ifndef GRAPHICS_VERTEXARRAY_H_
 #define GRAPHICS_VERTEXARRAY_H_
 
 namespace Renderer
 {
 	/// Implements the equivalent of OpenGL's vertex array object.
-	///
-	/// Copyright 2013 Bifrost Entertainment. All rights reserved.
-	/// \author Tommy Nguyen
 	class VertexArray
 	{
 	public:

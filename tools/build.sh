@@ -1,4 +1,8 @@
 #!/bin/bash
+# Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+# Distributed under the MIT License.
+# (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
+
 GENERATOR=${GENERATOR:-Unix Makefiles}
 IS_INSIDE=$(git rev-parse --show-toplevel 2> /dev/null)
 RAINBOW=$(cd -P "$(dirname $0)/.." && pwd)

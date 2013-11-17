@@ -1,25 +1,26 @@
---! Simple parallax controller.
---!
---! \code
---! local Parallax = require(module_path .. "Parallax")
---!
---! local layers = {
---! 	-- A layer is defined by a batch and its velocity on the x- and y-axis
---! 	{ batch1, 0.5, 0 }  -- background
---! 	{ batch2, 0.8, 0 }  -- midground
---! 	{ batch3, 1.0, 0 }  -- foreground
---! }
---! local pax = Parallax(layers)
---! pax:move(0.7 * dt)
---! \endcode
---!
---! Limitations:
---!   - Does not handle loops.
---!   - There's a 1:1 mapping between batches and layers even though, logically,
---!     batches can be on the same layer.
---!
---! Copyright 2012-13 Bifrost Entertainment. All rights reserved.
---! \author Tommy Nguyen
+-- Simple parallax controller.
+--
+-- \code
+-- local Parallax = require(module_path .. "Parallax")
+--
+-- local layers = {
+--   -- A layer is defined by a batch and its velocity on the x- and y-axis
+--   { batch1, 0.5, 0 }  -- background
+--   { batch2, 0.8, 0 }  -- midground
+--   { batch3, 1.0, 0 }  -- foreground
+-- }
+-- local pax = Parallax(layers)
+-- pax:move(0.7 * dt)
+-- \endcode
+--
+-- Limitations:
+--   - Does not handle loops.
+--   - There's a 1:1 mapping between batches and layers even though, logically,
+--     batches can be on the same layer.
+--
+-- Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+-- Distributed under the MIT License.
+-- (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
 local module_path = (...):match("(.*[./\\])[^./\\]+") or ""
 local setmetatable = setmetatable

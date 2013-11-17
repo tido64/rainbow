@@ -1,3 +1,7 @@
+// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Distributed under the MIT License.
+// (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
+
 #ifndef GRAPHICS_TEXTUREATLAS_H_
 #define GRAPHICS_TEXTUREATLAS_H_
 
@@ -15,9 +19,6 @@
 /// \see http://iphonedevelopment.blogspot.com/2009/05/opengl-es-from-ground-up-part-6_25.html
 ///      http://developer.android.com/guide/topics/resources/providing-resources.html
 ///      http://en.wikibooks.org/wiki/OpenGL_Programming/Intermediate/Textures
-///
-/// Copyright 2010-13 Bifrost Entertainment. All rights reserved.
-/// \author Tommy Nguyen
 class TextureAtlas : public RefCounted
 {
 public:

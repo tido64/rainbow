@@ -1,3 +1,7 @@
+// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Distributed under the MIT License.
+// (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
+
 #ifndef DIRECTOR_H_
 #define DIRECTOR_H_
 
@@ -12,9 +16,6 @@ namespace Rainbow
 {
 	/// Simple game loop for Lua-scripted games. Must be created after having
 	/// set up an OpenGL context.
-	///
-	/// Copyright 2011-13 Bifrost Entertainment. All rights reserved.
-	/// \author Tommy Nguyen
 	class Director : public Terminable, private NonCopyable<Director>
 	{
 	public:

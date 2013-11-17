@@ -1,7 +1,8 @@
---! Monkey Demo: Intro
---!
---! Copyright 2011-13 Bifrost Entertainment. All rights reserved.
---! \author Tommy Nguyen
+-- Monkey Demo: Intro
+--
+-- Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+-- Distributed under the MIT License.
+-- (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
 local Prose = require("Prose")  -- Prose module lets you create scenes from a table
 local Timer = require("Timer")

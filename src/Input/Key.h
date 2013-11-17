@@ -1,3 +1,7 @@
+// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Distributed under the MIT License.
+// (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
+
 #ifndef INPUT_KEY_H_
 #define INPUT_KEY_H_
 
@@ -15,9 +19,6 @@ typedef SDL_Keysym RawKeysym;
 #endif
 
 /// Keyboard input.
-///
-/// Copyright 2011-13 Bifrost Entertainment. All rights reserved.
-/// \author Tommy Nguyen
 class Key
 {
 public:

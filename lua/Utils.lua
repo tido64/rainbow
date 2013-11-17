@@ -1,14 +1,15 @@
---! Rainbow Lua utilities
---!
---! Copyright 2011-13 Bifrost Entertainment. All rights reserved.
---! \author Tommy Nguyen
+-- Rainbow Lua utilities
+--
+-- Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+-- Distributed under the MIT License.
+-- (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
---! The C printf equivalent of Lua
+-- The C printf equivalent of Lua
 function printf(s,...)
 	return io.write(s:format(...));
 end
 
---! Override Lua's setmetatable to support nested metatables.
+-- Override Lua's setmetatable to support nested metatables.
 local lua_setmetatable = setmetatable
 function setmetatable(t, mt)
 	local _mt = getmetatable(t)

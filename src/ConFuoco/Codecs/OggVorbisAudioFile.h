@@ -1,3 +1,7 @@
+// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Distributed under the MIT License.
+// (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
+
 #ifndef CONFUOCO_CODECS_OGGVORBISAUDIOFILE_H_
 #define CONFUOCO_CODECS_OGGVORBISAUDIOFILE_H_
 
@@ -18,8 +22,6 @@
 namespace ConFuoco
 {
 	/// Ogg Vorbis implementation of AudioFile.
-	///
-	/// Copyright 2013 Bifrost Entertainment. All rights reserved.
 	class OggVorbisAudioFile : public AudioFile
 	{
 	public:

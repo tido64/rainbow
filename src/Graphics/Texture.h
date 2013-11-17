@@ -1,3 +1,7 @@
+// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Distributed under the MIT License.
+// (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
+
 #ifndef GRAPHICS_TEXTURE_H_
 #define GRAPHICS_TEXTURE_H_
 
@@ -12,9 +16,6 @@
 ///
 /// Textures are read into memory upside-down. Therefore, the order of the UV
 /// coordinates are flipped vertically, giving us 3,2,1 and 1,0,3.
-///
-/// Copyright 2012-13 Bifrost Entertainment. All rights reserved.
-/// \author Tommy Nguyen
 struct Texture
 {
 	unsigned int atlas;

@@ -1,3 +1,7 @@
+// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Distributed under the MIT License.
+// (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
+
 #ifndef GRAPHICS_ANIMATION_H_
 #define GRAPHICS_ANIMATION_H_
 
@@ -12,9 +16,6 @@ class Sprite;
 typedef unsigned int uint_t;
 
 /// Sprite animation using sprite sheets.
-///
-/// Copyright 2011-13 Bifrost Entertainment. All rights reserved.
-/// \author Tommy Nguyen
 class Animation : public TimedEvent<Animation>, private NonCopyable<Animation>
 {
 public:

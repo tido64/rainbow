@@ -1,3 +1,7 @@
+// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Distributed under the MIT License.
+// (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
+
 #ifndef THREAD_THREADPOOL_H_
 #define THREAD_THREADPOOL_H_
 
@@ -22,9 +26,6 @@ namespace Rainbow
 	/// \see http://en.wikipedia.org/wiki/Read_write_lock_pattern
 	/// \see http://en.wikipedia.org/wiki/Spurious_wakeup
 	/// \see http://en.wikipedia.org/wiki/Thread_pool_pattern
-	///
-	/// Copyright 2013 Bifrost Entertainment. All rights reserved.
-	/// \author Tommy Nguyen
 	class ThreadPool
 	{
 	public:
