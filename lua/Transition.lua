@@ -3,6 +3,8 @@
 --! Copyright 2012-13 Bifrost Entertainment. All rights reserved.
 --! \author Tommy Nguyen
 
+local module_path = (...):match("(.*[./\\])[^./\\]+") or ""
+
 local __count = 0
 local __transitions = {}
 
@@ -29,7 +31,7 @@ local function unregister(t)
 end
 
 local Transition = {
-	Functions = require("TransitionFunctions"),
+	Functions = require(module_path .. "TransitionFunctions"),
 	clear = clear,
 	fadein = nil,
 	fadeout = nil,
