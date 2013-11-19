@@ -24,12 +24,11 @@ namespace Heimdall
 		void set_button(const Vec2f &position);
 		void set_console(const Vec2f &position);
 
-		void update(const unsigned long t);
+		void update(const unsigned long dt);
 
 		bool on_touch(const Touch *const touches, const size_t count);
 
 	private:
-		float time_;
 		Vec2f position_;
 		SceneGraph::Node *node_;
 		Label button_;

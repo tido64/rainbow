@@ -9,6 +9,8 @@
 #include "Resources/Inconsolata.otf.h"
 #include "Resources/NewsCycle-Regular.ttf.h"
 
+#define DataRef(ref) Data(ref, sizeof(ref), Data::kDataReference)
+
 namespace
 {
 	const char* basename(const char *const path) pure;
@@ -128,21 +130,17 @@ namespace Heimdall
 		this->height = height;
 
 		const unsigned int pt = this->height / 64;
-		this->console_font = new FontAtlas(
-				Data(Inconsolata_otf, sizeof(Inconsolata_otf), Data::kDataReference),
-				pt);
-		this->ui_font = new FontAtlas(
-				Data(NewsCycle_Regular_ttf, sizeof(NewsCycle_Regular_ttf), Data::kDataReference),
-				(pt << 1) + (pt >> 1));
+		this->console_font = new FontAtlas(DataRef(Inconsolata_otf), pt);
+		this->ui_font = new FontAtlas(DataRef(NewsCycle_Regular_ttf), (pt << 1) + (pt >> 1));
 		Resources::ConsoleFont = this->console_font.get();
 		Resources::UIFont = this->ui_font.get();
 
 		this->overlay.setup(width, height);
-		Vec2f position(
-			this->width / 128,
-			this->height - this->console_font->height() * 2 - this->ui_font->height());
+		const float y = this->height - this->console_font->height();
+		Vec2f position(this->width / 128,
+		               y - this->console_font->height() - this->ui_font->height());
 		this->info.set_button(position);
-		position.y = this->height - this->console_font->height();
+		position.y = y;
 		this->info.set_console(position);
 	}
 

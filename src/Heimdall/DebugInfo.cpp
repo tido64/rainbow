@@ -9,19 +9,16 @@ namespace Heimdall
 {
 	namespace
 	{
-		const float kFrames = 10.0f;
-		const float kThreshold = 1000.0f / 60.0f * kFrames;
-		const char kHideDebug[] = "Hide debug information";
-		const char kInfoFormat[]
-				= "FPS: %.1f\nVMEM: %.2f MBs (peaked at %.2f MBs)";
-		const char kShowDebug[] = "Show debug information";
+		const char kStringHideDebug[] = "Hide debug information";
+		const char kStringInfoFormat[] = "PERF: %lu ms/frame\nVMEM: %.2f MBs (peaked at %.2f MBs)";
+		const char kStringShowDebug[] = "Show debug information";
 	}
 
-	DebugInfo::DebugInfo() : time_(0.0f), node_(new SceneGraph::Node())
+	DebugInfo::DebugInfo() : node_(new SceneGraph::Node())
 	{
 		this->node_->enabled = false;
 		this->button_.set_color(Resources::kColorDisabled);
-		this->button_.set_text(kShowDebug);
+		this->button_.set_text(kStringShowDebug);
 		this->label_.set_color(Colorb(0xff, 0x00, 0x00));
 		this->node_->add_child(&this->label_);
 	}
@@ -39,22 +36,15 @@ namespace Heimdall
 		this->label_.set_position(position);
 	}
 
-	void DebugInfo::update(const unsigned long t)
+	void DebugInfo::update(const unsigned long dt)
 	{
 		if (!this->node_->enabled)
 			return;
 
-		this->time_ += t;
-		if (this->time_ >= kThreshold)
-		{
-			double used, peak;
-			TextureManager::Instance->memory_usage(used, peak, peak);
-
-			sprintf(this->text_, kInfoFormat, 1000.0f / (this->time_ / kFrames), used, peak);
-			this->label_.set_text(this->text_);
-
-			this->time_ = 0.0f;
-		}
+		double used, peak;
+		TextureManager::Instance->memory_usage(used, peak, peak);
+		sprintf(this->text_, kStringInfoFormat, dt, used, peak);
+		this->label_.set_text(this->text_);
 	}
 
 	bool DebugInfo::on_touch(const Touch *const touches, const size_t count)
@@ -70,13 +60,12 @@ namespace Heimdall
 				if (this->node_->enabled)
 				{
 					this->button_.set_color(Resources::kColorEnabled);
-					this->button_.set_text(kHideDebug);
-					this->time_ = kThreshold;
+					this->button_.set_text(kStringHideDebug);
 				}
 				else
 				{
 					this->button_.set_color(Resources::kColorDisabled);
-					this->button_.set_text(kShowDebug);
+					this->button_.set_text(kStringShowDebug);
 				}
 				return true;
 			}
