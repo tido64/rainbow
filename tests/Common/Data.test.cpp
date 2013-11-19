@@ -9,10 +9,7 @@ protected:
 
 	DataTest() :
 		file("Rainbow__Data.test"),
-		secret("It's a double-rainbow!\n")
-	{
-		Path::set_current("/tmp");
-	}
+		secret("It's a double-rainbow!\n") { }
 };
 
 TEST_F(DataTest, Copy)
