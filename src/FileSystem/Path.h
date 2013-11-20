@@ -34,6 +34,9 @@ public:
 	CFURLRef CreateCFURL() const;
 #endif
 
+	/// Returns whether there is a file at this path.
+	bool is_file() const;
+
 	Path& operator=(const char *const path);
 	Path& operator+=(const char *const path);
 

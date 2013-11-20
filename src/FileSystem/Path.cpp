@@ -7,6 +7,8 @@
 #	include <direct.h>
 #	define S_IRWXU 0000700
 #	define S_IRWXG 0000070
+#	define S_ISDIR(m) (((m) & S_IFMT) == S_IFDIR)  // directory
+#	define S_ISREG(m) (((m) & S_IFMT) == S_IFREG)  // regular file
 #	define getcwd(buf, size) _getcwd(buf, size)
 #	define kPathSeparator '\\'
 #	define kPathSeparatorLiteral "\\"
@@ -74,7 +76,7 @@ namespace
 						return -1;
 					}
 				}
-				if ((sb.st_mode & S_IFDIR) == 0)
+				if (!S_ISDIR(sb.st_mode))
 				{
 					R_ERROR(kErrorInvalidDirectory, dir);
 					return -1;
@@ -190,7 +192,7 @@ Path::Path(const char *const file, const RelativeTo rel)
 					if (errno != ENOENT || create_directories(g_user_data_path, S_IRWXU | S_IRWXG) != 0)
 						break;
 				}
-				else if ((sb.st_mode & S_IFDIR) == 0)
+				else if (!S_ISDIR(sb.st_mode))
 					break;
 				*this = g_user_data_path;
 				*this += file;
@@ -228,6 +230,14 @@ CFURLRef Path::CreateCFURL() const
 }
 
 #endif
+
+bool Path::is_file() const
+{
+	struct stat sb;
+	if (stat(this->path, &sb) != 0)
+		return false;
+	return S_ISREG(sb.st_mode);
+}
 
 Path& Path::operator=(const char *const path)
 {

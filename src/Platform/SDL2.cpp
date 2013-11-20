@@ -21,7 +21,6 @@
 #include "Common/Chrono.h"
 #include "Common/Data.h"
 #include "ConFuoco/Mixer.h"
-#include "FileSystem/File.h"
 #include "FileSystem/Path.h"
 #include "Graphics/Renderer.h"
 #include "Input/Input.h"
@@ -165,12 +164,17 @@ namespace
 int main(int argc, char *argv[])
 {
 	if (argc < 2)
-	{
 		Path::set_current();
-		const File &main = File::open_asset("main.lua");
-		if (!main)
+	else
+		Path::set_current(argv[1]);
+
+	// Look for 'main.lua'.
+	{
+		const Path main("main.lua");
+		if (!main.is_file())
 		{
 		#ifdef RAINBOW_TEST
+			Path::set_current(Path());
 			testing::InitGoogleTest(&argc, argv);
 			return RUN_ALL_TESTS();
 		#else
@@ -178,8 +182,6 @@ int main(int argc, char *argv[])
 		#endif
 		}
 	}
-	else
-		Path::set_current(argv[1]);
 
 	ConFuoco::Mixer mixer;
 	if (!ConFuoco::Mixer::Instance)
