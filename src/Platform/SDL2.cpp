@@ -31,8 +31,17 @@ namespace
 {
 	typedef unsigned int uint_t;
 
-	const double kFramesPerSecond = 1000.0 / 60.0;
-	Chrono chrono;
+	const double kMsPerFrame = 1000.0 / 60.0;
+
+	bool is_quit(const SDL_Keysym &keysym)
+	{
+	#ifndef RAINBOW_OS_MACOS
+		return keysym.sym == SDLK_q && (keysym.mod & KMOD_LCTRL);
+	#else
+		return false;
+		static_cast<void>(keysym);
+	#endif
+	}
 
 	class RenderWindow
 	{
@@ -42,9 +51,12 @@ namespace
 
 		inline void swap();
 
-		void on_mouse_down(const SDL_MouseButtonEvent &event);
-		void on_mouse_motion(const SDL_MouseMotionEvent &event);
-		void on_mouse_up(const SDL_MouseButtonEvent &event);
+		void on_mouse_down(const SDL_MouseButtonEvent &event,
+		                   const unsigned long timestamp);
+		void on_mouse_motion(const SDL_MouseMotionEvent &event,
+		                     const unsigned long timestamp);
+		void on_mouse_up(const SDL_MouseButtonEvent &event,
+		                 const unsigned long timestamp);
 
 		inline operator bool() const;
 
@@ -56,109 +68,6 @@ namespace
 		SDL_Window *window;
 		Touch mouse;
 	};
-
-	RenderWindow::RenderWindow(const uint_t width, const uint_t height) :
-		initialised(false), vsync(false), height(height), context(nullptr),
-		window(nullptr)
-	{
-		if (SDL_Init(SDL_INIT_VIDEO) < 0)
-		{
-			R_ERROR("[SDL] Unable to initialise video: %s\n", SDL_GetError());
-			return;
-		}
-
-		SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 5);
-		SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 6);
-		SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 5);
-		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-		SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 0);
-
-		this->window = SDL_CreateWindow(
-				RAINBOW_BUILD, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-				width, height, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
-		if (!this->window)
-		{
-			R_ERROR("[SDL] Failed to create window: %s\n", SDL_GetError());
-			return;
-		}
-
-		this->context = SDL_GL_CreateContext(this->window);
-		if (!this->context)
-		{
-			R_ERROR("[SDL] Failed to create GL context: %s\n", SDL_GetError());
-			return;
-		}
-
-		SDL_GL_SetSwapInterval(1);
-		this->vsync = SDL_GL_GetSwapInterval() == 1;
-		R_DEBUG("[SDL] Sync with vertical retrace: %s\n",
-		        this->vsync ? "Yes" : "No");
-
-		this->initialised = Renderer::init();
-		if (!this->initialised)
-		{
-			R_ERROR("[Rainbow] Failed to initialise OpenGL\n");
-			return;
-		}
-
-		Renderer::resize(width, height);
-	}
-
-	RenderWindow::~RenderWindow()
-	{
-		if (this->initialised)
-			Renderer::release();
-		if (this->window)
-		{
-			if (this->context)
-				SDL_GL_DeleteContext(this->context);
-			SDL_DestroyWindow(this->window);
-		}
-		if (SDL_WasInit(SDL_INIT_VIDEO))
-			SDL_Quit();
-	}
-
-	void RenderWindow::swap()
-	{
-		if (!this->vsync)
-			Chrono::sleep(0);
-		SDL_GL_SwapWindow(this->window);
-	}
-
-	void RenderWindow::on_mouse_down(const SDL_MouseButtonEvent &event)
-	{
-		this->mouse.x = event.x;
-		this->mouse.y = this->height - event.y;
-		this->mouse.x0 = this->mouse.x;
-		this->mouse.y0 = this->mouse.y;
-		this->mouse.timestamp = chrono.current();
-		Input::Instance->touch_began(&this->mouse, 1);
-	}
-
-	void RenderWindow::on_mouse_motion(const SDL_MouseMotionEvent &event)
-	{
-		this->mouse.x0 = this->mouse.x;
-		this->mouse.y0 = this->mouse.y;
-		this->mouse.x = event.x;
-		this->mouse.y = this->height - event.y;
-		this->mouse.timestamp = chrono.current();
-		Input::Instance->touch_moved(&this->mouse, 1);
-	}
-
-	void RenderWindow::on_mouse_up(const SDL_MouseButtonEvent &event)
-	{
-		this->mouse.x = event.x;
-		this->mouse.y = this->height - event.y;
-		this->mouse.x0 = this->mouse.x;
-		this->mouse.y0 = this->mouse.y;
-		this->mouse.timestamp = chrono.current();
-		Input::Instance->touch_ended(&this->mouse, 1);
-	}
-
-	RenderWindow::operator bool() const
-	{
-		return this->initialised;
-	}
 }
 
 int main(int argc, char *argv[])
@@ -205,10 +114,10 @@ int main(int argc, char *argv[])
 	Director director;
 	director.init(Data::load_asset("main.lua"), screen_width, screen_height);
 
-	chrono.update();
+	Chrono chrono;
+	SDL_Event event;
 	while (!director.has_terminated())
 	{
-		SDL_Event event;
 		while (SDL_PollEvent(&event))
 		{
 			switch (event.type)
@@ -240,27 +149,25 @@ int main(int argc, char *argv[])
 							break;
 					}
 					break;
-				case SDL_KEYDOWN:
-				#ifndef RAINBOW_OS_MACOS
-					if (event.key.keysym.sym == SDLK_q && (event.key.keysym.mod & KMOD_LCTRL))
-					{
+				case SDL_KEYDOWN: {
+					const SDL_Keysym &keysym = event.key.keysym;
+					if (is_quit(keysym))
 						director.terminate();
-						break;
-					}
-				#endif
-					Input::Instance->key_down(Key::from_raw(&event.key.keysym));
+					else
+						Input::Instance->key_down(Key::from_raw(&keysym));
 					break;
+				}
 				case SDL_KEYUP:
 					Input::Instance->key_up(Key::from_raw(&event.key.keysym));
 					break;
 				case SDL_MOUSEMOTION:
-					window.on_mouse_motion(event.motion);
+					window.on_mouse_motion(event.motion, chrono.current());
 					break;
 				case SDL_MOUSEBUTTONDOWN:
-					window.on_mouse_down(event.button);
+					window.on_mouse_down(event.button, chrono.current());
 					break;
 				case SDL_MOUSEBUTTONUP:
-					window.on_mouse_up(event.button);
+					window.on_mouse_up(event.button, chrono.current());
 					break;
 				default:
 					break;
@@ -272,7 +179,7 @@ int main(int argc, char *argv[])
 			if (director.has_terminated())
 				break;
 
-			Chrono::sleep(static_cast<uint_t>(kFramesPerSecond));
+			Chrono::sleep(static_cast<uint_t>(kMsPerFrame));
 		}
 		else
 		{
@@ -288,6 +195,115 @@ int main(int argc, char *argv[])
 	return 0;
 }
 
-#undef kPathSeparator
+RenderWindow::RenderWindow(const uint_t width, const uint_t height) :
+	initialised(false), vsync(false), height(height), context(nullptr),
+	window(nullptr)
+{
+	if (SDL_Init(SDL_INIT_VIDEO) < 0)
+	{
+		R_ERROR("[SDL] Unable to initialise video: %s\n", SDL_GetError());
+		return;
+	}
+
+	SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 5);
+	SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 6);
+	SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 5);
+	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 0);
+
+	this->window = SDL_CreateWindow(
+			RAINBOW_BUILD, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+			width, height, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
+	if (!this->window)
+	{
+		R_ERROR("[SDL] Failed to create window: %s\n", SDL_GetError());
+		return;
+	}
+
+	this->context = SDL_GL_CreateContext(this->window);
+	if (!this->context)
+	{
+		R_ERROR("[SDL] Failed to create GL context: %s\n", SDL_GetError());
+		return;
+	}
+
+	SDL_GL_SetSwapInterval(1);
+	this->vsync = SDL_GL_GetSwapInterval() == 1;
+	R_DEBUG("[SDL] Sync with vertical retrace: %s\n",
+	        this->vsync ? "Yes" : "No");
+
+	this->initialised = Renderer::init();
+	if (!this->initialised)
+	{
+		R_ERROR("[Rainbow] Failed to initialise OpenGL\n");
+		return;
+	}
+
+	Renderer::resize(width, height);
+}
+
+RenderWindow::~RenderWindow()
+{
+	if (!SDL_WasInit(SDL_INIT_VIDEO))
+		return;
+
+	if (this->window)
+	{
+		if (this->context)
+		{
+			if (this->initialised)
+				Renderer::release();
+			SDL_GL_DeleteContext(this->context);
+		}
+		SDL_DestroyWindow(this->window);
+	}
+	SDL_Quit();
+}
+
+void RenderWindow::swap()
+{
+	if (!this->vsync)
+		Chrono::sleep(0);
+	SDL_GL_SwapWindow(this->window);
+}
+
+void RenderWindow::on_mouse_down(const SDL_MouseButtonEvent &event,
+                                 const unsigned long timestamp)
+{
+	this->mouse.x = event.x;
+	this->mouse.y = this->height - event.y;
+	this->mouse.x0 = this->mouse.x;
+	this->mouse.y0 = this->mouse.y;
+	this->mouse.timestamp = timestamp;
+	Input::Instance->touch_began(&this->mouse, 1);
+}
+
+void RenderWindow::on_mouse_motion(const SDL_MouseMotionEvent &event,
+                                   const unsigned long timestamp)
+{
+	this->mouse.x0 = this->mouse.x;
+	this->mouse.y0 = this->mouse.y;
+	this->mouse.x = event.x;
+	this->mouse.y = this->height - event.y;
+	this->mouse.timestamp = timestamp;
+	Input::Instance->touch_moved(&this->mouse, 1);
+}
+
+void RenderWindow::on_mouse_up(const SDL_MouseButtonEvent &event,
+                               const unsigned long timestamp)
+{
+	this->mouse.x = event.x;
+	this->mouse.y = this->height - event.y;
+	this->mouse.x0 = this->mouse.x;
+	this->mouse.y0 = this->mouse.y;
+	this->mouse.timestamp = timestamp;
+	Input::Instance->touch_ended(&this->mouse, 1);
+}
+
+RenderWindow::operator bool() const
+{
+	return this->initialised;
+}
+
 #endif  // SDL_VERSION_ATLEAST(1,3,0)
 #endif  // RAINBOW_SDL
