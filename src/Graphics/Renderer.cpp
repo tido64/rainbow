@@ -13,30 +13,16 @@
 #	define fixed2d_fsh "Shaders/Fixed2D.fsh"
 #endif
 
+#define S4(i)       S1((i))  //S1((i) +   1),   S1((i) +   2),   S1((i) +   3)
+#define S16(i)      S4((i)),   S4((i) +   4),   S4((i) +   8),   S4((i) +  12)
+#define S64(i)     S16((i)),  S16((i) +  16),  S16((i) +  32),  S16((i) +  48)
+#define S256(i)    S64((i)),  S64((i) +  64),  S64((i) + 128),  S64((i) + 192)
+#define S1024(i)  S256((i)), S256((i) + 256), S256((i) + 512), S256((i) + 768)
+
 namespace Renderer
 {
 	extern const int kNumSprites = 256;  ///< Hard-coded limit on number of sprites.
 	unsigned int g_index_buffer = 0;     ///< Index buffer object.
-
-	namespace
-	{
-		/// Default vertex indices (currently limited to \c kNumSprites sprites).
-		template<typename T>
-		const T* default_indices(T *buffer)
-		{
-			int i = -1;
-			for (int j = 0; j < kNumSprites * 4; j += 4)
-			{
-				buffer[++i] = j;
-				buffer[++i] = j + 1;
-				buffer[++i] = j + 2;
-				buffer[++i] = j + 2;
-				buffer[++i] = j + 3;
-				buffer[++i] = j;
-			}
-			return buffer;
-		}
-	}
 
 	bool init()
 	{
@@ -69,11 +55,15 @@ namespace Renderer
 
 		TextureManager::Instance = new TextureManager();
 
-		unsigned short buffer[kNumSprites * 6];
+		const unsigned short kDefaultIndices[] = {
+		#define S1(i) (i), (i) + 1, (i) + 2, (i) + 2, (i) + 3, (i)
+			S256(0)
+		#undef S1
+		};
 		glGenBuffers(1, &g_index_buffer);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, g_index_buffer);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(buffer),
-		             default_indices(buffer), GL_STATIC_DRAW);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(kDefaultIndices),
+		             kDefaultIndices, GL_STATIC_DRAW);
 
 		return glGetError() == GL_NO_ERROR;
 	}
