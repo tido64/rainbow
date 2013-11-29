@@ -103,6 +103,10 @@ namespace Renderer
 		if (!node.enabled)
 			return;
 
+		ShaderManager::Context context;
+		if (node.program >= 0)
+			ShaderManager::Instance->use(node.program);
+
 		switch (node.type)
 		{
 			case SceneGraph::Node::DrawableNode:

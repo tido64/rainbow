@@ -61,6 +61,11 @@ namespace SceneGraph
 		template<class T>
 		Node* add_child(T *p);
 
+		/// Attach a program to this node. The program will be used to draw this
+		/// node and any of its descendants unless they also have an attached
+		/// shader.
+		inline void attach_program(const int program);
+
 		/// Recursively moves all sprites by (x,y).
 		void move(const Vec2f &);
 
@@ -68,6 +73,7 @@ namespace SceneGraph
 		void update(const unsigned long dt);
 
 	private:
+		int program;  ///< The active program for this node and its descendants.
 		union
 		{
 			void *data;
@@ -88,6 +94,11 @@ namespace SceneGraph
 	Node* Node::add_child(T *p)
 	{
 		return this->add_child(new Node(p));
+	}
+
+	void Node::attach_program(const int program)
+	{
+		this->program = program;
 	}
 }
 
