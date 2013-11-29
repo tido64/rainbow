@@ -23,7 +23,7 @@
 #include <Box2D/RainbowDraw.h>
 
 #include <Graphics/OpenGL.h>
-#include <Graphics/ShaderManager.h>
+#include <Graphics/ShaderDetails.h>
 
 namespace
 {

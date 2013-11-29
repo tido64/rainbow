@@ -7,31 +7,12 @@
 
 #include "Common/Vector.h"
 #include "Graphics/OpenGL.h"
+#include "Graphics/ShaderDetails.h"
 
 namespace Renderer
 {
 	bool init();
 	void release();
-}
-
-namespace Shader
-{
-	enum Attribute
-	{
-		VERTEX,
-		COLOR,
-		TEXCOORD
-	};
-
-	enum Type
-	{
-		FRAGMENT_SHADER = GL_FRAGMENT_SHADER,
-		VERTEX_SHADER = GL_VERTEX_SHADER,
-	#ifdef GL_GEOMETRY_SHADER
-		GEOMETRY_SHADER = GL_GEOMETRY_SHADER,
-	#endif
-		INVALID = -1
-	};
 }
 
 class ShaderManager : private NonCopyable<ShaderManager>
@@ -41,9 +22,6 @@ class ShaderManager : private NonCopyable<ShaderManager>
 
 public:
 	static ShaderManager *Instance;
-
-	/// Returns the real program id.
-	inline unsigned int get_program(const unsigned int pid) const;
 
 	/// Creates program.
 	/// \param shaders  Shader ids to attach.
@@ -57,43 +35,44 @@ public:
 	/// \return Unique shader identifier.
 	int create_shader(int type, const char *source);
 
-	/// Resets to default shaders.
-	inline void reset();
+	/// Returns program details.
+	inline Shader::Details& get_program(const int pid) const;
 
 	/// Sets viewport.
+	/// TODO: Setting the viewport after changing the projection won't work. For
+	///       now, this function works only because we don't change resolution
+	///       on the devices.
 	void set(const float width, const float height);
 
 	/// Sets orthographic projection.
-	void set_projection(const float left, const float right, const float bottom, const float top);
+	void set_projection(const float left, const float right,
+	                    const float bottom, const float top);
 
 	/// Activates program.
 	void use(const int program);
 
+	/// Returns whether ShaderManager was properly constructed.
 	inline operator bool() const;
 
 private:
-	struct Program
-	{
-		unsigned int id;
-	} active;  ///< Currently active program.
+	int active;  ///< Currently active program.
 
 	Vector<unsigned int> shaders;
-	Vector<Program> programs;
+	Vector<Shader::Details> programs;
 
 	float ortho[16];
 
-	ShaderManager(const char **shaders = nullptr, const size_t count = 0);
+	ShaderManager(const char *shaders[2]);
 	~ShaderManager();
+
+	/// Initialises shaders. Run when setting the viewport for the first time.
+	void initialise();
 };
 
-unsigned int ShaderManager::get_program(const unsigned int pid) const
+Shader::Details& ShaderManager::get_program(const int pid) const
 {
-	return this->programs[pid].id;
-}
-
-void ShaderManager::reset()
-{
-	this->use(0);
+	R_ASSERT(pid >= 0, "Invalid shader program id");
+	return this->programs[pid];
 }
 
 ShaderManager::operator bool() const

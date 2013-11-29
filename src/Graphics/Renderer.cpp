@@ -15,7 +15,7 @@
 #	define fixed2d_fsh "Shaders/Fixed2D.fsh"
 #endif
 
-#define S4(i)       S1((i))  //S1((i) +   1),   S1((i) +   2),   S1((i) +   3)
+#define S4(i)       S1((i)),   S1((i) +   1),   S1((i) +   2),   S1((i) +   3)
 #define S16(i)      S4((i)),   S4((i) +   4),   S4((i) +   8),   S4((i) +  12)
 #define S64(i)     S16((i)),  S16((i) +  16),  S16((i) +  32),  S16((i) +  48)
 #define S256(i)    S64((i)),  S64((i) +  64),  S64((i) + 128),  S64((i) + 192)
@@ -48,8 +48,8 @@ namespace Renderer
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 		const char *shaders[] = { fixed2d_vsh, fixed2d_fsh };
-		ShaderManager::Instance = new ShaderManager(shaders, 2);
-		if (!*ShaderManager::Instance)
+		ShaderManager::Instance = new ShaderManager(shaders);
+		if (!ShaderManager::Instance || !*ShaderManager::Instance)
 		{
 			delete ShaderManager::Instance;
 			return false;
@@ -58,10 +58,15 @@ namespace Renderer
 		TextureManager::Instance = new TextureManager();
 
 		const unsigned short kDefaultIndices[] = {
-		#define S1(i) (i), (i) + 1, (i) + 2, (i) + 2, (i) + 3, (i)
+		#define S0(i) (i) * 4
+		#define S1(i) S0(i), S0(i) + 1, S0(i) + 2, S0(i) + 2, S0(i) + 3, S0(i)
 			S256(0)
 		#undef S1
+		#undef S0
 		};
+		static_assert(sizeof(kDefaultIndices) ==
+		                  kNumSprites * 6 * sizeof(kDefaultIndices[0]),
+		              "Number of indices do not match set number of sprites");
 		glGenBuffers(1, &g_index_buffer);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, g_index_buffer);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(kDefaultIndices),
@@ -77,9 +82,8 @@ namespace Renderer
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 			glDeleteBuffers(1, &g_index_buffer);
 		}
-		glUseProgram(0);
-		delete TextureManager::Instance;
 		delete ShaderManager::Instance;
+		delete TextureManager::Instance;
 	}
 
 	void clear()
@@ -90,7 +94,6 @@ namespace Renderer
 	void resize(const unsigned int width, const unsigned int height)
 	{
 		ShaderManager::Instance->set(width, height);
-		ShaderManager::Instance->reset();
 		glViewport(0, 0, width, height);
 
 		R_ASSERT(glGetError() == GL_NO_ERROR,

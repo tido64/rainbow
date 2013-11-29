@@ -178,6 +178,7 @@
 		190D6FEC16964AA100C9ED26 /* lua_Box2D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lua_Box2D.h; sourceTree = "<group>"; };
 		190D6FEF16964B2500C9ED26 /* RainbowDraw.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = RainbowDraw.cpp; sourceTree = "<group>"; };
 		190D6FF016964B2500C9ED26 /* RainbowDraw.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RainbowDraw.h; sourceTree = "<group>"; };
+		191484E61891BD87004014D7 /* ShaderDetails.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShaderDetails.h; sourceTree = "<group>"; };
 		192A0B9A1681EF75009218EB /* SharedPtr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SharedPtr.h; sourceTree = "<group>"; };
 		192A0B9B1681EF84009218EB /* SpriteVertex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpriteVertex.h; sourceTree = "<group>"; };
 		193929B216E1932E0018340B /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
@@ -882,6 +883,7 @@
 				1939A1C9152C425D00494609 /* Renderer.h */,
 				1939A1CA152C425D00494609 /* SceneGraph.cpp */,
 				1939A1CB152C425D00494609 /* SceneGraph.h */,
+				191484E61891BD87004014D7 /* ShaderDetails.h */,
 				19EBC54F16599D9F00D3B5D7 /* ShaderManager.cpp */,
 				19EBC55016599D9F00D3B5D7 /* ShaderManager.h */,
 				1939A1D4152C425D00494609 /* Sprite.cpp */,

@@ -21,12 +21,14 @@ namespace b2
 		{
 			memset(this->worlds, 0, sizeof(this->worlds));
 
-			int shaders[2];
-			shaders[0] = ShaderManager::Instance->create_shader(
-					Shader::VERTEX_SHADER, simple2d_vsh);
-			shaders[1] = ShaderManager::Instance->create_shader(
-					Shader::FRAGMENT_SHADER, simple_fsh);
+			int shaders[2] = {
+				ShaderManager::Instance->create_shader(Shader::VERTEX_SHADER, simple2d_vsh),
+				ShaderManager::Instance->create_shader(Shader::FRAGMENT_SHADER, simple_fsh)
+			};
 			this->program = ShaderManager::Instance->create_program(shaders, 2);
+			Shader::Details &details =
+					ShaderManager::Instance->get_program(this->program);
+			details.texture0 = false;
 		}
 
 		void draw()

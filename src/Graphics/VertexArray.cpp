@@ -2,7 +2,7 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
-#include "Graphics/ShaderManager.h"
+#include "Graphics/ShaderDetails.h"
 #include "Graphics/SpriteVertex.h"
 #include "Graphics/VertexArray.h"
 
