@@ -14,6 +14,7 @@ namespace Shader
 		kAttributeVertex,
 		kAttributeColor,
 		kAttributeTexCoord,
+		kAttributeNormal,
 		kAttributeNone
 	};
 
