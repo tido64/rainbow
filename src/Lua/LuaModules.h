@@ -16,6 +16,7 @@
 #include "Lua/lua_Random.h"
 #include "Lua/lua_Renderer.h"
 #include "Lua/lua_SceneGraph.h"
+#include "Lua/lua_Shaders.h"
 #include "Lua/lua_Sprite.h"
 #include "Lua/lua_SpriteBatch.h"
 #include "Lua/lua_Texture.h"
@@ -41,6 +42,7 @@ namespace Rainbow
 		{
 			Platform::init(L);  // Initialise "rainbow.platform" namespace
 			Renderer::init(L);  // Initialise "rainbow.renderer" namespace
+			Shaders::init(L);   // Initialise "rainbow.shaders" namespace
 			IO::init(L);        // Initialise "rainbow.io" namespace
 			Random::init(L);    // Initialise "rainbow.random" function
 			Input::init(L);     // Initialise "rainbow.input" namespace

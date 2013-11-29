@@ -130,6 +130,8 @@
 		1948C02F152C397D00E9B854 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1948C02E152C397D00E9B854 /* main.m */; };
 		1948C033152C397D00E9B854 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1948C032152C397D00E9B854 /* AppDelegate.m */; };
 		1949374D1756795900CF3FC6 /* DataMap_Unix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1949374B1756795900CF3FC6 /* DataMap_Unix.cpp */; };
+		1962F1E7184930D900E1CAF4 /* Diffuse.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1962F1E5184930D900E1CAF4 /* Diffuse.cpp */; };
+		1962F1EA184930FA00E1CAF4 /* lua_Shaders.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1962F1E8184930FA00E1CAF4 /* lua_Shaders.cpp */; };
 		19655DEB187C65AF0053C398 /* freetype.c in Sources */ = {isa = PBXBuildFile; fileRef = 19655DE9187C65AF0053C398 /* freetype.c */; };
 		196911CD1713564A002BC2E4 /* VertexArray.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 196911CB1713564A002BC2E4 /* VertexArray.cpp */; };
 		196C0A72189082860042190D /* Shaders.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 196C0A70189082860042190D /* Shaders.cpp */; };
@@ -441,6 +443,10 @@
 		1949374E1756796D00CF3FC6 /* DataMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataMap.h; sourceTree = "<group>"; };
 		195D565617D90DD100C78117 /* Functional.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Functional.h; sourceTree = "<group>"; };
 		195D565717D90E0D00C78117 /* LuaDebugging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LuaDebugging.h; sourceTree = "<group>"; };
+		1962F1E5184930D900E1CAF4 /* Diffuse.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Diffuse.cpp; sourceTree = "<group>"; };
+		1962F1E6184930D900E1CAF4 /* Diffuse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Diffuse.h; sourceTree = "<group>"; };
+		1962F1E8184930FA00E1CAF4 /* lua_Shaders.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = lua_Shaders.cpp; sourceTree = "<group>"; };
+		1962F1E9184930FA00E1CAF4 /* lua_Shaders.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lua_Shaders.h; sourceTree = "<group>"; };
 		19655DE9187C65AF0053C398 /* freetype.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = freetype.c; path = ../../src/ThirdParty/FreeType/freetype.c; sourceTree = "<group>"; };
 		19655DEA187C65AF0053C398 /* ftmodule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ftmodule.h; path = ../../src/ThirdParty/FreeType/ftmodule.h; sourceTree = "<group>"; };
 		196911CB1713564A002BC2E4 /* VertexArray.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = VertexArray.cpp; sourceTree = "<group>"; };
@@ -911,6 +917,8 @@
 		1939A1CE152C425D00494609 /* Shaders */ = {
 			isa = PBXGroup;
 			children = (
+				1962F1E5184930D900E1CAF4 /* Diffuse.cpp */,
+				1962F1E6184930D900E1CAF4 /* Diffuse.h */,
 				1939A1D3152C425D00494609 /* Shaders.h */,
 			);
 			path = Shaders;
@@ -932,6 +940,8 @@
 		1939A1E6152C425D00494609 /* Lua */ = {
 			isa = PBXGroup;
 			children = (
+				1962F1E8184930FA00E1CAF4 /* lua_Shaders.cpp */,
+				1962F1E9184930FA00E1CAF4 /* lua_Shaders.h */,
 				19DCB2831746AB7C00660000 /* LuaBind.h */,
 				195D565717D90E0D00C78117 /* LuaDebugging.h */,
 				19E91FC01682B1460054D61F /* LuaHelper.cpp */,
@@ -1319,6 +1329,7 @@
 				1939A169152C401300494609 /* lparser.c in Sources */,
 				1939A16A152C401300494609 /* lstate.c in Sources */,
 				1939A16B152C401300494609 /* lstring.c in Sources */,
+				1962F1E7184930D900E1CAF4 /* Diffuse.cpp in Sources */,
 				1939A16C152C401300494609 /* lstrlib.c in Sources */,
 				1939A16D152C401300494609 /* ltable.c in Sources */,
 				1939A16E152C401300494609 /* ltablib.c in Sources */,
@@ -1327,6 +1338,7 @@
 				1939A173152C401300494609 /* lvm.c in Sources */,
 				1939A174152C401300494609 /* lzio.c in Sources */,
 				1939A20F152C425D00494609 /* Random.cpp in Sources */,
+				1962F1EA184930FA00E1CAF4 /* lua_Shaders.cpp in Sources */,
 				1939A211152C425D00494609 /* Config.cpp in Sources */,
 				1939A21B152C425D00494609 /* Director.cpp in Sources */,
 				1939A21C152C425D00494609 /* Animation.cpp in Sources */,

@@ -33,8 +33,9 @@ namespace Rainbow
 			int add_label(lua_State *);
 			int add_node(lua_State *);
 
-			int enable(lua_State *);
+			int attach_program(lua_State *);
 			int disable(lua_State *);
+			int enable(lua_State *);
 			int remove(lua_State *);
 			int set_parent(lua_State *);
 
