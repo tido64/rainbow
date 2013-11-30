@@ -41,6 +41,7 @@
 	<true/>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
+		<string>opengles-2</string>
 		<string>armv7</string>
 	</array>
 	<key>UIStatusBarHidden</key>
@@ -55,5 +56,7 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<false/>
 </dict>
 </plist>
