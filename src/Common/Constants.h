@@ -5,16 +5,16 @@
 #define COMMON_CONSTANTS_H_
 
 // Mathematical constants
-const float kPi            = 3.14159265f;
-const float kPi_2          = kPi / 2;
-const float kDegree        = kPi / 180;
-const float kLowPassAlpha  = 0.5f;
-const float kRadian        = 180 / kPi;
+const double kDegree  = 1.74532925199432957692369076848861271344287188854172545609719144017100911460344944368224156963450948221230449251e-02;
+const double kPi      = 3.14159265358979323846264338327950288419716939937510582097494459230781640628620899862803482534211706798214808651e+00;
+const double kPi_2    = 1.57079632679489661923132169163975144209858469968755291048747229615390820314310449931401741267105853399107404326e+00;
+const double kRadian  = 5.72957795130823208767981548141051703324054724665643215491602438612028471483215526324409689958511109441862233816e+01;
 
 // Physical constants
 const float kStandardGravity = -9.80665f;  ///< Standard gravitational acceleration value
 
 // Platform constants
+const float kLowPassAlpha = 0.5f;
 const int kMaxInt = static_cast<unsigned int>(-1) >> 1;
 
 #endif

@@ -12,7 +12,7 @@ TEST(AlgorithmTest, ApproximatelyEqualFloats)
 
 TEST(AlgorithmTest, DegreesToRadians)
 {
-	ASSERT_TRUE(equal(kPi, Rainbow::radians(Rainbow::degrees(kPi))));
+	ASSERT_TRUE(equal(static_cast<float>(kPi), Rainbow::radians(Rainbow::degrees(kPi))));
 }
 
 TEST(AlgorithmTest, IsPowerOfTwo)

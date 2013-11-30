@@ -70,7 +70,7 @@ namespace Rainbow
 	/// Compares two floating point numbers and approximate.
 	/// \return \c true when approximately equal.
 	template<typename T>
-	inline bool equal(const T &a, const T &b) pure;
+	bool equal(const T &a, const T &b) pure;
 
 	/// Fast inverse square root by 0x5f3759df.
 	inline float fast_invsqrt(float x) pure;
@@ -82,7 +82,7 @@ namespace Rainbow
 	inline float low_pass(const float value, const float low_pass) pure;
 
 	template<typename T>
-	inline const T& max(const T &a, const T &b) pure;
+	const T& max(const T &a, const T &b) pure;
 
 	/// Calculates the next power of 2.
 	/// \note 0 is incorrectly considered a power of 2.
@@ -96,7 +96,7 @@ namespace Rainbow
 
 	float degrees(const float r)
 	{
-		return r * kRadian;
+		return r * static_cast<float>(kRadian);
 	}
 
 	template<typename T>
@@ -143,7 +143,7 @@ namespace Rainbow
 
 	float radians(const float d)
 	{
-		return d * kDegree;
+		return d * static_cast<float>(kDegree);
 	}
 
 	utf_t utf8_decode(const unsigned char *str)
