@@ -11,6 +11,7 @@
 		190497E41682963F0037F5EC /* lua_Platform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 190497E31682963F0037F5EC /* lua_Platform.cpp */; };
 		190D6FED16964AA100C9ED26 /* lua_Box2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 190D6FEB16964AA100C9ED26 /* lua_Box2D.cpp */; };
 		190D6FF116964B2500C9ED26 /* RainbowDraw.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 190D6FEF16964B2500C9ED26 /* RainbowDraw.cpp */; };
+		1918EBC7184CD94F00180752 /* dkjson.lua in Resources */ = {isa = PBXBuildFile; fileRef = 1918EBC6184CD94F00180752 /* dkjson.lua */; };
 		193929B316E1932E0018340B /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 193929B216E1932E0018340B /* CoreMotion.framework */; };
 		193929B616E23D410018340B /* RainbowViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 193929B516E23D410018340B /* RainbowViewController.mm */; };
 		193929B816E23D5F0018340B /* SysUtil_Apple.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 193929B716E23D5F0018340B /* SysUtil_Apple.cpp */; };
@@ -140,6 +141,57 @@
 		196CB728161E4ADD0068C809 /* Gatekeeper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 196CB725161E4ADD0068C809 /* Gatekeeper.cpp */; };
 		196CB72F161E4D940068C809 /* b2MotorJoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 196CB72D161E4D940068C809 /* b2MotorJoint.cpp */; };
 		197396DD15A505F60064BF7D /* TextureManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 197396DB15A505F60064BF7D /* TextureManager.cpp */; };
+		19835627176F7C2A00A03A6F /* Scheduler.lua in Resources */ = {isa = PBXBuildFile; fileRef = 19835625176F7C2A00A03A6F /* Scheduler.lua */; };
+		1983565A176F7C4E00A03A6F /* Alegreya-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 19835628176F7C4E00A03A6F /* Alegreya-Regular.otf */; };
+		1983565B176F7C4E00A03A6F /* audio in Resources */ = {isa = PBXBuildFile; fileRef = 19835629176F7C4E00A03A6F /* audio */; };
+		1983565C176F7C4E00A03A6F /* back_town.lua in Resources */ = {isa = PBXBuildFile; fileRef = 1983562A176F7C4E00A03A6F /* back_town.lua */; };
+		1983565D176F7C4E00A03A6F /* cave_door.lua in Resources */ = {isa = PBXBuildFile; fileRef = 1983562B176F7C4E00A03A6F /* cave_door.lua */; };
+		1983565E176F7C4E00A03A6F /* cave_game.lua in Resources */ = {isa = PBXBuildFile; fileRef = 1983562C176F7C4E00A03A6F /* cave_game.lua */; };
+		1983565F176F7C4E00A03A6F /* cave_travel.lua in Resources */ = {isa = PBXBuildFile; fileRef = 1983562D176F7C4E00A03A6F /* cave_travel.lua */; };
+		19835660176F7C4E00A03A6F /* CharacterPrototype.lua in Resources */ = {isa = PBXBuildFile; fileRef = 1983562E176F7C4E00A03A6F /* CharacterPrototype.lua */; };
+		19835661176F7C4E00A03A6F /* ConnectTheDots.lua in Resources */ = {isa = PBXBuildFile; fileRef = 1983562F176F7C4E00A03A6F /* ConnectTheDots.lua */; };
+		19835662176F7C4E00A03A6F /* Eliksia.lua in Resources */ = {isa = PBXBuildFile; fileRef = 19835630176F7C4E00A03A6F /* Eliksia.lua */; };
+		19835663176F7C4E00A03A6F /* forest_game.lua in Resources */ = {isa = PBXBuildFile; fileRef = 19835631176F7C4E00A03A6F /* forest_game.lua */; };
+		19835664176F7C4E00A03A6F /* forest_travel.lua in Resources */ = {isa = PBXBuildFile; fileRef = 19835632176F7C4E00A03A6F /* forest_travel.lua */; };
+		19835665176F7C4E00A03A6F /* frame.lua in Resources */ = {isa = PBXBuildFile; fileRef = 19835633176F7C4E00A03A6F /* frame.lua */; };
+		19835666176F7C4E00A03A6F /* gfx in Resources */ = {isa = PBXBuildFile; fileRef = 19835634176F7C4E00A03A6F /* gfx */; };
+		19835667176F7C4E00A03A6F /* lake_game.lua in Resources */ = {isa = PBXBuildFile; fileRef = 19835635176F7C4E00A03A6F /* lake_game.lua */; };
+		19835668176F7C4E00A03A6F /* lake_travel.lua in Resources */ = {isa = PBXBuildFile; fileRef = 19835636176F7C4E00A03A6F /* lake_travel.lua */; };
+		19835669176F7C4E00A03A6F /* main_menu.lua in Resources */ = {isa = PBXBuildFile; fileRef = 19835637176F7C4E00A03A6F /* main_menu.lua */; };
+		1983566A176F7C4E00A03A6F /* main.lua in Resources */ = {isa = PBXBuildFile; fileRef = 19835638176F7C4E00A03A6F /* main.lua */; };
+		1983566B176F7C4E00A03A6F /* Maja.lua in Resources */ = {isa = PBXBuildFile; fileRef = 19835639176F7C4E00A03A6F /* Maja.lua */; };
+		1983566C176F7C4E00A03A6F /* MajaCloseUp.lua in Resources */ = {isa = PBXBuildFile; fileRef = 1983563A176F7C4E00A03A6F /* MajaCloseUp.lua */; };
+		1983566D176F7C4E00A03A6F /* manuscript.lua in Resources */ = {isa = PBXBuildFile; fileRef = 1983563B176F7C4E00A03A6F /* manuscript.lua */; };
+		1983566E176F7C4E00A03A6F /* mirror_reward.lua in Resources */ = {isa = PBXBuildFile; fileRef = 1983563C176F7C4E00A03A6F /* mirror_reward.lua */; };
+		1983566F176F7C4E00A03A6F /* reflektor.lua in Resources */ = {isa = PBXBuildFile; fileRef = 1983563D176F7C4E00A03A6F /* reflektor.lua */; };
+		19835670176F7C4E00A03A6F /* scene01.lua in Resources */ = {isa = PBXBuildFile; fileRef = 1983563E176F7C4E00A03A6F /* scene01.lua */; };
+		19835671176F7C4E00A03A6F /* scene03.lua in Resources */ = {isa = PBXBuildFile; fileRef = 1983563F176F7C4E00A03A6F /* scene03.lua */; };
+		19835672176F7C4E00A03A6F /* scene04.lua in Resources */ = {isa = PBXBuildFile; fileRef = 19835640176F7C4E00A03A6F /* scene04.lua */; };
+		19835673176F7C4E00A03A6F /* scene05.lua in Resources */ = {isa = PBXBuildFile; fileRef = 19835641176F7C4E00A03A6F /* scene05.lua */; };
+		19835674176F7C4E00A03A6F /* scene06.lua in Resources */ = {isa = PBXBuildFile; fileRef = 19835642176F7C4E00A03A6F /* scene06.lua */; };
+		19835675176F7C4E00A03A6F /* scene07.lua in Resources */ = {isa = PBXBuildFile; fileRef = 19835643176F7C4E00A03A6F /* scene07.lua */; };
+		19835676176F7C4E00A03A6F /* scene09.lua in Resources */ = {isa = PBXBuildFile; fileRef = 19835644176F7C4E00A03A6F /* scene09.lua */; };
+		19835677176F7C4E00A03A6F /* scene10.lua in Resources */ = {isa = PBXBuildFile; fileRef = 19835645176F7C4E00A03A6F /* scene10.lua */; };
+		19835678176F7C4E00A03A6F /* scene11.lua in Resources */ = {isa = PBXBuildFile; fileRef = 19835646176F7C4E00A03A6F /* scene11.lua */; };
+		19835679176F7C4E00A03A6F /* scene15.lua in Resources */ = {isa = PBXBuildFile; fileRef = 19835647176F7C4E00A03A6F /* scene15.lua */; };
+		1983567A176F7C4E00A03A6F /* scene16.lua in Resources */ = {isa = PBXBuildFile; fileRef = 19835648176F7C4E00A03A6F /* scene16.lua */; };
+		1983567B176F7C4E00A03A6F /* scene17.lua in Resources */ = {isa = PBXBuildFile; fileRef = 19835649176F7C4E00A03A6F /* scene17.lua */; };
+		1983567C176F7C4E00A03A6F /* scene18.lua in Resources */ = {isa = PBXBuildFile; fileRef = 1983564A176F7C4E00A03A6F /* scene18.lua */; };
+		1983567D176F7C4E00A03A6F /* scene20.lua in Resources */ = {isa = PBXBuildFile; fileRef = 1983564B176F7C4E00A03A6F /* scene20.lua */; };
+		1983567E176F7C4E00A03A6F /* scene21.lua in Resources */ = {isa = PBXBuildFile; fileRef = 1983564C176F7C4E00A03A6F /* scene21.lua */; };
+		1983567F176F7C4E00A03A6F /* scene22.lua in Resources */ = {isa = PBXBuildFile; fileRef = 1983564D176F7C4E00A03A6F /* scene22.lua */; };
+		19835680176F7C4E00A03A6F /* scene25.lua in Resources */ = {isa = PBXBuildFile; fileRef = 1983564E176F7C4E00A03A6F /* scene25.lua */; };
+		19835681176F7C4E00A03A6F /* scene27.lua in Resources */ = {isa = PBXBuildFile; fileRef = 1983564F176F7C4E00A03A6F /* scene27.lua */; };
+		19835682176F7C4E00A03A6F /* scene28.lua in Resources */ = {isa = PBXBuildFile; fileRef = 19835650176F7C4E00A03A6F /* scene28.lua */; };
+		19835683176F7C4E00A03A6F /* Script_EN.lua in Resources */ = {isa = PBXBuildFile; fileRef = 19835651176F7C4E00A03A6F /* Script_EN.lua */; };
+		19835684176F7C4E00A03A6F /* Script_NO.lua in Resources */ = {isa = PBXBuildFile; fileRef = 19835652176F7C4E00A03A6F /* Script_NO.lua */; };
+		19835685176F7C4E00A03A6F /* TextBox.lua in Resources */ = {isa = PBXBuildFile; fileRef = 19835653176F7C4E00A03A6F /* TextBox.lua */; };
+		19835686176F7C4E00A03A6F /* the_dock.lua in Resources */ = {isa = PBXBuildFile; fileRef = 19835654176F7C4E00A03A6F /* the_dock.lua */; };
+		19835687176F7C4E00A03A6F /* the_end.lua in Resources */ = {isa = PBXBuildFile; fileRef = 19835655176F7C4E00A03A6F /* the_end.lua */; };
+		19835688176F7C4E00A03A6F /* TheStudents.lua in Resources */ = {isa = PBXBuildFile; fileRef = 19835656176F7C4E00A03A6F /* TheStudents.lua */; };
+		19835689176F7C4E00A03A6F /* Town.lua in Resources */ = {isa = PBXBuildFile; fileRef = 19835657176F7C4E00A03A6F /* Town.lua */; };
+		1983568A176F7C4E00A03A6F /* TownOverview.lua in Resources */ = {isa = PBXBuildFile; fileRef = 19835658176F7C4E00A03A6F /* TownOverview.lua */; };
+		1983568B176F7C4E00A03A6F /* Wraith.lua in Resources */ = {isa = PBXBuildFile; fileRef = 19835659176F7C4E00A03A6F /* Wraith.lua */; };
 		19865982175E98F700723171 /* Data.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19865981175E98F700723171 /* Data.cpp */; };
 		19905B84152C50FA00BDD15C /* Accelerometer.lua in Resources */ = {isa = PBXBuildFile; fileRef = 19905B7A152C50FA00BDD15C /* Accelerometer.lua */; };
 		19905B85152C50FA00BDD15C /* Input.lua in Resources */ = {isa = PBXBuildFile; fileRef = 19905B7B152C50FA00BDD15C /* Input.lua */; };
@@ -182,6 +234,7 @@
 		190D6FEC16964AA100C9ED26 /* lua_Box2D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lua_Box2D.h; sourceTree = "<group>"; };
 		190D6FEF16964B2500C9ED26 /* RainbowDraw.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = RainbowDraw.cpp; sourceTree = "<group>"; };
 		190D6FF016964B2500C9ED26 /* RainbowDraw.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RainbowDraw.h; sourceTree = "<group>"; };
+		1918EBC6184CD94F00180752 /* dkjson.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = dkjson.lua; path = ../../../../Maja/dkjson.lua; sourceTree = "<group>"; };
 		192A0B9A1681EF75009218EB /* SharedPtr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SharedPtr.h; sourceTree = "<group>"; };
 		192A0B9B1681EF84009218EB /* SpriteVertex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpriteVertex.h; sourceTree = "<group>"; };
 		193929B216E1932E0018340B /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
@@ -542,6 +595,57 @@
 		1970946217BAF222006810E9 /* TimedEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimedEvent.h; sourceTree = "<group>"; };
 		197396DB15A505F60064BF7D /* TextureManager.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = TextureManager.cpp; sourceTree = "<group>"; };
 		197396DC15A505F60064BF7D /* TextureManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextureManager.h; sourceTree = "<group>"; };
+		19835625176F7C2A00A03A6F /* Scheduler.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Scheduler.lua; path = ../../../lua/Scheduler.lua; sourceTree = "<group>"; };
+		19835628176F7C4E00A03A6F /* Alegreya-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Alegreya-Regular.otf"; path = "../../../../Maja/Alegreya-Regular.otf"; sourceTree = "<group>"; };
+		19835629176F7C4E00A03A6F /* audio */ = {isa = PBXFileReference; lastKnownFileType = folder; name = audio; path = ../../../../Maja/audio; sourceTree = "<group>"; };
+		1983562A176F7C4E00A03A6F /* back_town.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = back_town.lua; path = ../../../../Maja/back_town.lua; sourceTree = "<group>"; };
+		1983562B176F7C4E00A03A6F /* cave_door.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = cave_door.lua; path = ../../../../Maja/cave_door.lua; sourceTree = "<group>"; };
+		1983562C176F7C4E00A03A6F /* cave_game.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = cave_game.lua; path = ../../../../Maja/cave_game.lua; sourceTree = "<group>"; };
+		1983562D176F7C4E00A03A6F /* cave_travel.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = cave_travel.lua; path = ../../../../Maja/cave_travel.lua; sourceTree = "<group>"; };
+		1983562E176F7C4E00A03A6F /* CharacterPrototype.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = CharacterPrototype.lua; path = ../../../../Maja/CharacterPrototype.lua; sourceTree = "<group>"; };
+		1983562F176F7C4E00A03A6F /* ConnectTheDots.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = ConnectTheDots.lua; path = ../../../../Maja/ConnectTheDots.lua; sourceTree = "<group>"; };
+		19835630176F7C4E00A03A6F /* Eliksia.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Eliksia.lua; path = ../../../../Maja/Eliksia.lua; sourceTree = "<group>"; };
+		19835631176F7C4E00A03A6F /* forest_game.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = forest_game.lua; path = ../../../../Maja/forest_game.lua; sourceTree = "<group>"; };
+		19835632176F7C4E00A03A6F /* forest_travel.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = forest_travel.lua; path = ../../../../Maja/forest_travel.lua; sourceTree = "<group>"; };
+		19835633176F7C4E00A03A6F /* frame.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = frame.lua; path = ../../../../Maja/frame.lua; sourceTree = "<group>"; };
+		19835634176F7C4E00A03A6F /* gfx */ = {isa = PBXFileReference; lastKnownFileType = folder; name = gfx; path = ../../../../Maja/gfx; sourceTree = "<group>"; };
+		19835635176F7C4E00A03A6F /* lake_game.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = lake_game.lua; path = ../../../../Maja/lake_game.lua; sourceTree = "<group>"; };
+		19835636176F7C4E00A03A6F /* lake_travel.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = lake_travel.lua; path = ../../../../Maja/lake_travel.lua; sourceTree = "<group>"; };
+		19835637176F7C4E00A03A6F /* main_menu.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = main_menu.lua; path = ../../../../Maja/main_menu.lua; sourceTree = "<group>"; };
+		19835638176F7C4E00A03A6F /* main.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = main.lua; path = ../../../../Maja/main.lua; sourceTree = "<group>"; };
+		19835639176F7C4E00A03A6F /* Maja.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Maja.lua; path = ../../../../Maja/Maja.lua; sourceTree = "<group>"; };
+		1983563A176F7C4E00A03A6F /* MajaCloseUp.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = MajaCloseUp.lua; path = ../../../../Maja/MajaCloseUp.lua; sourceTree = "<group>"; };
+		1983563B176F7C4E00A03A6F /* manuscript.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = manuscript.lua; path = ../../../../Maja/manuscript.lua; sourceTree = "<group>"; };
+		1983563C176F7C4E00A03A6F /* mirror_reward.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = mirror_reward.lua; path = ../../../../Maja/mirror_reward.lua; sourceTree = "<group>"; };
+		1983563D176F7C4E00A03A6F /* reflektor.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = reflektor.lua; path = ../../../../Maja/reflektor.lua; sourceTree = "<group>"; };
+		1983563E176F7C4E00A03A6F /* scene01.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = scene01.lua; path = ../../../../Maja/scene01.lua; sourceTree = "<group>"; };
+		1983563F176F7C4E00A03A6F /* scene03.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = scene03.lua; path = ../../../../Maja/scene03.lua; sourceTree = "<group>"; };
+		19835640176F7C4E00A03A6F /* scene04.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = scene04.lua; path = ../../../../Maja/scene04.lua; sourceTree = "<group>"; };
+		19835641176F7C4E00A03A6F /* scene05.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = scene05.lua; path = ../../../../Maja/scene05.lua; sourceTree = "<group>"; };
+		19835642176F7C4E00A03A6F /* scene06.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = scene06.lua; path = ../../../../Maja/scene06.lua; sourceTree = "<group>"; };
+		19835643176F7C4E00A03A6F /* scene07.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = scene07.lua; path = ../../../../Maja/scene07.lua; sourceTree = "<group>"; };
+		19835644176F7C4E00A03A6F /* scene09.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = scene09.lua; path = ../../../../Maja/scene09.lua; sourceTree = "<group>"; };
+		19835645176F7C4E00A03A6F /* scene10.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = scene10.lua; path = ../../../../Maja/scene10.lua; sourceTree = "<group>"; };
+		19835646176F7C4E00A03A6F /* scene11.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = scene11.lua; path = ../../../../Maja/scene11.lua; sourceTree = "<group>"; };
+		19835647176F7C4E00A03A6F /* scene15.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = scene15.lua; path = ../../../../Maja/scene15.lua; sourceTree = "<group>"; };
+		19835648176F7C4E00A03A6F /* scene16.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = scene16.lua; path = ../../../../Maja/scene16.lua; sourceTree = "<group>"; };
+		19835649176F7C4E00A03A6F /* scene17.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = scene17.lua; path = ../../../../Maja/scene17.lua; sourceTree = "<group>"; };
+		1983564A176F7C4E00A03A6F /* scene18.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = scene18.lua; path = ../../../../Maja/scene18.lua; sourceTree = "<group>"; };
+		1983564B176F7C4E00A03A6F /* scene20.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = scene20.lua; path = ../../../../Maja/scene20.lua; sourceTree = "<group>"; };
+		1983564C176F7C4E00A03A6F /* scene21.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = scene21.lua; path = ../../../../Maja/scene21.lua; sourceTree = "<group>"; };
+		1983564D176F7C4E00A03A6F /* scene22.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = scene22.lua; path = ../../../../Maja/scene22.lua; sourceTree = "<group>"; };
+		1983564E176F7C4E00A03A6F /* scene25.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = scene25.lua; path = ../../../../Maja/scene25.lua; sourceTree = "<group>"; };
+		1983564F176F7C4E00A03A6F /* scene27.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = scene27.lua; path = ../../../../Maja/scene27.lua; sourceTree = "<group>"; };
+		19835650176F7C4E00A03A6F /* scene28.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = scene28.lua; path = ../../../../Maja/scene28.lua; sourceTree = "<group>"; };
+		19835651176F7C4E00A03A6F /* Script_EN.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Script_EN.lua; path = ../../../../Maja/Script_EN.lua; sourceTree = "<group>"; };
+		19835652176F7C4E00A03A6F /* Script_NO.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Script_NO.lua; path = ../../../../Maja/Script_NO.lua; sourceTree = "<group>"; };
+		19835653176F7C4E00A03A6F /* TextBox.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = TextBox.lua; path = ../../../../Maja/TextBox.lua; sourceTree = "<group>"; };
+		19835654176F7C4E00A03A6F /* the_dock.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = the_dock.lua; path = ../../../../Maja/the_dock.lua; sourceTree = "<group>"; };
+		19835655176F7C4E00A03A6F /* the_end.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = the_end.lua; path = ../../../../Maja/the_end.lua; sourceTree = "<group>"; };
+		19835656176F7C4E00A03A6F /* TheStudents.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = TheStudents.lua; path = ../../../../Maja/TheStudents.lua; sourceTree = "<group>"; };
+		19835657176F7C4E00A03A6F /* Town.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Town.lua; path = ../../../../Maja/Town.lua; sourceTree = "<group>"; };
+		19835658176F7C4E00A03A6F /* TownOverview.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = TownOverview.lua; path = ../../../../Maja/TownOverview.lua; sourceTree = "<group>"; };
+		19835659176F7C4E00A03A6F /* Wraith.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Wraith.lua; path = ../../../../Maja/Wraith.lua; sourceTree = "<group>"; };
 		19865981175E98F700723171 /* Data.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = Data.cpp; sourceTree = "<group>"; };
 		198BE0A7174A5F420036055E /* Macros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Macros.h; path = ../../../src/Platform/Macros.h; sourceTree = "<group>"; };
 		19905B7A152C50FA00BDD15C /* Accelerometer.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Accelerometer.lua; path = ../../../lua/Accelerometer.lua; sourceTree = "<group>"; };
@@ -1316,6 +1420,65 @@
 			path = ../../../src/Heimdall;
 			sourceTree = "<group>";
 		};
+		19835623176F7BBB00A03A6F /* Maja */ = {
+			isa = PBXGroup;
+			children = (
+				19835629176F7C4E00A03A6F /* audio */,
+				19835634176F7C4E00A03A6F /* gfx */,
+				19835628176F7C4E00A03A6F /* Alegreya-Regular.otf */,
+				1983562A176F7C4E00A03A6F /* back_town.lua */,
+				1983562B176F7C4E00A03A6F /* cave_door.lua */,
+				1983562C176F7C4E00A03A6F /* cave_game.lua */,
+				1983562D176F7C4E00A03A6F /* cave_travel.lua */,
+				1983562E176F7C4E00A03A6F /* CharacterPrototype.lua */,
+				1983562F176F7C4E00A03A6F /* ConnectTheDots.lua */,
+				1918EBC6184CD94F00180752 /* dkjson.lua */,
+				19835630176F7C4E00A03A6F /* Eliksia.lua */,
+				19835631176F7C4E00A03A6F /* forest_game.lua */,
+				19835632176F7C4E00A03A6F /* forest_travel.lua */,
+				19835633176F7C4E00A03A6F /* frame.lua */,
+				19835635176F7C4E00A03A6F /* lake_game.lua */,
+				19835636176F7C4E00A03A6F /* lake_travel.lua */,
+				19835638176F7C4E00A03A6F /* main.lua */,
+				19835637176F7C4E00A03A6F /* main_menu.lua */,
+				19835639176F7C4E00A03A6F /* Maja.lua */,
+				1983563A176F7C4E00A03A6F /* MajaCloseUp.lua */,
+				1983563B176F7C4E00A03A6F /* manuscript.lua */,
+				1983563C176F7C4E00A03A6F /* mirror_reward.lua */,
+				1983563D176F7C4E00A03A6F /* reflektor.lua */,
+				1983563E176F7C4E00A03A6F /* scene01.lua */,
+				1983563F176F7C4E00A03A6F /* scene03.lua */,
+				19835640176F7C4E00A03A6F /* scene04.lua */,
+				19835641176F7C4E00A03A6F /* scene05.lua */,
+				19835642176F7C4E00A03A6F /* scene06.lua */,
+				19835643176F7C4E00A03A6F /* scene07.lua */,
+				19835644176F7C4E00A03A6F /* scene09.lua */,
+				19835645176F7C4E00A03A6F /* scene10.lua */,
+				19835646176F7C4E00A03A6F /* scene11.lua */,
+				19835647176F7C4E00A03A6F /* scene15.lua */,
+				19835648176F7C4E00A03A6F /* scene16.lua */,
+				19835649176F7C4E00A03A6F /* scene17.lua */,
+				1983564A176F7C4E00A03A6F /* scene18.lua */,
+				1983564B176F7C4E00A03A6F /* scene20.lua */,
+				1983564C176F7C4E00A03A6F /* scene21.lua */,
+				1983564D176F7C4E00A03A6F /* scene22.lua */,
+				1983564E176F7C4E00A03A6F /* scene25.lua */,
+				1983564F176F7C4E00A03A6F /* scene27.lua */,
+				19835650176F7C4E00A03A6F /* scene28.lua */,
+				19835625176F7C2A00A03A6F /* Scheduler.lua */,
+				19835651176F7C4E00A03A6F /* Script_EN.lua */,
+				19835652176F7C4E00A03A6F /* Script_NO.lua */,
+				19835653176F7C4E00A03A6F /* TextBox.lua */,
+				19835654176F7C4E00A03A6F /* the_dock.lua */,
+				19835655176F7C4E00A03A6F /* the_end.lua */,
+				19835656176F7C4E00A03A6F /* TheStudents.lua */,
+				19835657176F7C4E00A03A6F /* Town.lua */,
+				19835658176F7C4E00A03A6F /* TownOverview.lua */,
+				19835659176F7C4E00A03A6F /* Wraith.lua */,
+			);
+			name = Maja;
+			sourceTree = "<group>";
+		};
 		1986919F16DED44D00BC4830 /* Platform */ = {
 			isa = PBXGroup;
 			children = (
@@ -1331,6 +1494,7 @@
 		19905B73152C50C100BDD15C /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				19835623176F7BBB00A03A6F /* Maja */,
 				19F98DA6171B5E1500A85873 /* Prose */,
 				19905B7A152C50FA00BDD15C /* Accelerometer.lua */,
 				19905B7B152C50FA00BDD15C /* Input.lua */,
@@ -1450,6 +1614,58 @@
 				193929C716E352540018340B /* Timer.lua in Resources */,
 				19F98DA8171B5E1500A85873 /* Prose in Resources */,
 				19F98DA9171B5E1500A85873 /* Prose.lua in Resources */,
+				19835627176F7C2A00A03A6F /* Scheduler.lua in Resources */,
+				1983565A176F7C4E00A03A6F /* Alegreya-Regular.otf in Resources */,
+				1983565B176F7C4E00A03A6F /* audio in Resources */,
+				1983565C176F7C4E00A03A6F /* back_town.lua in Resources */,
+				1983565D176F7C4E00A03A6F /* cave_door.lua in Resources */,
+				1983565E176F7C4E00A03A6F /* cave_game.lua in Resources */,
+				1983565F176F7C4E00A03A6F /* cave_travel.lua in Resources */,
+				19835660176F7C4E00A03A6F /* CharacterPrototype.lua in Resources */,
+				19835661176F7C4E00A03A6F /* ConnectTheDots.lua in Resources */,
+				19835662176F7C4E00A03A6F /* Eliksia.lua in Resources */,
+				19835663176F7C4E00A03A6F /* forest_game.lua in Resources */,
+				19835664176F7C4E00A03A6F /* forest_travel.lua in Resources */,
+				19835665176F7C4E00A03A6F /* frame.lua in Resources */,
+				19835666176F7C4E00A03A6F /* gfx in Resources */,
+				19835667176F7C4E00A03A6F /* lake_game.lua in Resources */,
+				19835668176F7C4E00A03A6F /* lake_travel.lua in Resources */,
+				19835669176F7C4E00A03A6F /* main_menu.lua in Resources */,
+				1983566A176F7C4E00A03A6F /* main.lua in Resources */,
+				1983566B176F7C4E00A03A6F /* Maja.lua in Resources */,
+				1983566C176F7C4E00A03A6F /* MajaCloseUp.lua in Resources */,
+				1983566D176F7C4E00A03A6F /* manuscript.lua in Resources */,
+				1983566E176F7C4E00A03A6F /* mirror_reward.lua in Resources */,
+				1983566F176F7C4E00A03A6F /* reflektor.lua in Resources */,
+				19835670176F7C4E00A03A6F /* scene01.lua in Resources */,
+				19835671176F7C4E00A03A6F /* scene03.lua in Resources */,
+				19835672176F7C4E00A03A6F /* scene04.lua in Resources */,
+				19835673176F7C4E00A03A6F /* scene05.lua in Resources */,
+				19835674176F7C4E00A03A6F /* scene06.lua in Resources */,
+				19835675176F7C4E00A03A6F /* scene07.lua in Resources */,
+				19835676176F7C4E00A03A6F /* scene09.lua in Resources */,
+				19835677176F7C4E00A03A6F /* scene10.lua in Resources */,
+				19835678176F7C4E00A03A6F /* scene11.lua in Resources */,
+				19835679176F7C4E00A03A6F /* scene15.lua in Resources */,
+				1983567A176F7C4E00A03A6F /* scene16.lua in Resources */,
+				1983567B176F7C4E00A03A6F /* scene17.lua in Resources */,
+				1983567C176F7C4E00A03A6F /* scene18.lua in Resources */,
+				1983567D176F7C4E00A03A6F /* scene20.lua in Resources */,
+				1983567E176F7C4E00A03A6F /* scene21.lua in Resources */,
+				1983567F176F7C4E00A03A6F /* scene22.lua in Resources */,
+				19835680176F7C4E00A03A6F /* scene25.lua in Resources */,
+				19835681176F7C4E00A03A6F /* scene27.lua in Resources */,
+				19835682176F7C4E00A03A6F /* scene28.lua in Resources */,
+				19835683176F7C4E00A03A6F /* Script_EN.lua in Resources */,
+				19835684176F7C4E00A03A6F /* Script_NO.lua in Resources */,
+				19835685176F7C4E00A03A6F /* TextBox.lua in Resources */,
+				1918EBC7184CD94F00180752 /* dkjson.lua in Resources */,
+				19835686176F7C4E00A03A6F /* the_dock.lua in Resources */,
+				19835687176F7C4E00A03A6F /* the_end.lua in Resources */,
+				19835688176F7C4E00A03A6F /* TheStudents.lua in Resources */,
+				19835689176F7C4E00A03A6F /* Town.lua in Resources */,
+				1983568A176F7C4E00A03A6F /* TownOverview.lua in Resources */,
+				1983568B176F7C4E00A03A6F /* Wraith.lua in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1620,8 +1836,8 @@
 				GCC_ENABLE_CPP_RTTI = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
+					"USE_CANVAS=1",
 					"USE_HEIMDALL=1",
-					"USE_PHYSICS=1",
 					"USE_TESTFLIGHT_SDK=1",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
@@ -1674,8 +1890,8 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
+					"USE_CANVAS=1",
 					"USE_HEIMDALL=1",
-					"USE_PHYSICS=1",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				ONLY_ACTIVE_ARCH = YES;
@@ -1704,7 +1920,7 @@
 				GCC_ENABLE_CPP_RTTI = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"NDEBUG=1",
-					"USE_PHYSICS=1",
+					"USE_CANVAS=1",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
