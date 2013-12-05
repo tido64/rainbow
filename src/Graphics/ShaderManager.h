@@ -21,6 +21,17 @@ class ShaderManager : private NonCopyable<ShaderManager>
 	friend void Renderer::release();
 
 public:
+	/// Saves the current shader context and restores it when exiting scope.
+	class Context
+	{
+	public:
+		inline Context();
+		inline ~Context();
+
+	private:
+		int program;
+	};
+
 	static ShaderManager *Instance;
 
 	/// Creates program.
@@ -68,6 +79,13 @@ private:
 	/// Initialises shaders. Run when setting the viewport for the first time.
 	void initialise();
 };
+
+ShaderManager::Context::Context() : program(ShaderManager::Instance->active) { }
+
+ShaderManager::Context::~Context()
+{
+	ShaderManager::Instance->use(this->program);
+}
 
 Shader::Details& ShaderManager::get_program(const int pid) const
 {

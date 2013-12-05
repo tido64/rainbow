@@ -33,13 +33,12 @@ namespace b2
 
 		void draw()
 		{
+			ShaderManager::Context context;
 			ShaderManager::Instance->use(this->program);
 
 			for (size_t i = 0; i < num_worlds; ++i)
 				if (this->worlds[i])
 					this->worlds[i]->DrawDebugData();
-
-			ShaderManager::Instance->reset();
 		}
 
 		void erase(b2World *world)
