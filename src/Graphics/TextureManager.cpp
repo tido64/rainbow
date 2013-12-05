@@ -8,8 +8,10 @@
 TextureManager* TextureManager::Instance = nullptr;
 
 TextureManager::TextureManager() :
-	active(0), mag_filter(GL_LINEAR), min_filter(GL_LINEAR), mem_peak(0.0),
-	mem_used(0.0) { }
+	mag_filter(GL_LINEAR), min_filter(GL_LINEAR), mem_peak(0.0), mem_used(0.0)
+{
+	memset(this->active, 0, sizeof(this->active));
+}
 
 TextureManager::~TextureManager()
 {
@@ -19,11 +21,24 @@ TextureManager::~TextureManager()
 
 void TextureManager::bind(const unsigned int id)
 {
-	if (id == this->active)
+	if (id == this->active[0])
 		return;
 
 	glBindTexture(GL_TEXTURE_2D, id);
-	this->active = id;
+	this->active[0] = id;
+}
+
+void TextureManager::bind(const unsigned int id, const unsigned int unit)
+{
+	R_ASSERT(unit < kNumTextureUnits, "Invalid texture unit");
+
+	if (id == this->active[unit])
+		return;
+
+	glActiveTexture(GL_TEXTURE0 + unit);
+	glBindTexture(GL_TEXTURE_2D, id);
+	glActiveTexture(GL_TEXTURE0);
+	this->active[unit] = id;
 }
 
 unsigned int TextureManager::create(const unsigned int internal_format,

@@ -27,6 +27,7 @@ public:
 
 	/// Binds this texture.
 	inline void bind() const;
+	inline void bind(const unsigned int unit) const;
 
 	/// Defines a texture within the atlas.
 	/// \param x,y     Starting point of the texture.
@@ -56,6 +57,11 @@ TextureAtlas::~TextureAtlas()
 void TextureAtlas::bind() const
 {
 	TextureManager::Instance->bind(this->name);
+}
+
+void TextureAtlas::bind(const unsigned int unit) const
+{
+	TextureManager::Instance->bind(this->name, unit);
 }
 
 void TextureAtlas::trim()

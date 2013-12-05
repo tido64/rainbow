@@ -36,6 +36,11 @@ public:
 	/// \param id  Texture id to bind. If omitted, bind the default texture.
 	void bind(const unsigned int id = 0);
 
+	/// Makes texture active on specified unit.
+	/// \param id    Texture id to bind.
+	/// \param unit  Texture unit to bind on.
+	void bind(const unsigned int id, const unsigned int unit);
+
 	/// Creates a texture.
 	/// \param internal_format  Preferred renderer's internal format.
 	/// \param width            Width of the texture.
@@ -76,6 +81,8 @@ public:
 	void set_filter(const int filter);
 
 private:
+	static const size_t kNumTextureUnits = 2;
+
 	/// Structure storing a texture's id and area.
 	struct TextureId
 	{
@@ -86,11 +93,11 @@ private:
 		inline bool operator>(const TextureId &tex);
 	};
 
-	unsigned int active;
 	int mag_filter;
 	int min_filter;
 	double mem_peak;
 	double mem_used;
+	unsigned int active[kNumTextureUnits];
 	Vector<TextureId> recycled;  ///< Stores reusable texture ids.
 	Vector<TextureId> textures;  ///< Stores texture ids currently in use.
 
