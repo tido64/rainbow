@@ -10,7 +10,6 @@ option(GTEST "Compile with Google C++ Testing Framework" OFF)
 #option(PROFILING "Compile with profiling" OFF)
 
 # Features
-option(USE_CANVAS    "Enable canvas module" OFF)
 option(USE_HEIMDALL  "Enable Heimdall debugging facilities" OFF)
 option(USE_PHYSICS   "Enable physics module (Box2D)" OFF)
 
@@ -43,9 +42,6 @@ if(GTEST)
 endif()
 
 # Features
-if(USE_CANVAS)
-	add_definitions(-DUSE_CANVAS)
-endif()
 if(USE_HEIMDALL)
 	add_definitions(-DUSE_HEIMDALL)
 endif()

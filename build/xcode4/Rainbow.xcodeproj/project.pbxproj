@@ -99,8 +99,6 @@
 		1939A174152C401300494609 /* lzio.c in Sources */ = {isa = PBXBuildFile; fileRef = 1939A046152C401300494609 /* lzio.c */; };
 		1939A177152C418700494609 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1939A176152C418700494609 /* GLKit.framework */; };
 		1939A179152C41C000494609 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1939A178152C41C000494609 /* OpenGLES.framework */; };
-		1939A205152C425D00494609 /* Canvas.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1939A17C152C425D00494609 /* Canvas.cpp */; };
-		1939A206152C425D00494609 /* lua_Canvas.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1939A17E152C425D00494609 /* lua_Canvas.cpp */; };
 		1939A20F152C425D00494609 /* Random.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1939A196152C425D00494609 /* Random.cpp */; };
 		1939A211152C425D00494609 /* Config.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1939A1A0152C425D00494609 /* Config.cpp */; };
 		1939A21B152C425D00494609 /* Director.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1939A1BA152C425D00494609 /* Director.cpp */; };
@@ -446,10 +444,6 @@
 		1939A047152C401300494609 /* lzio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lzio.h; sourceTree = "<group>"; };
 		1939A176152C418700494609 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
 		1939A178152C41C000494609 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
-		1939A17C152C425D00494609 /* Canvas.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = Canvas.cpp; sourceTree = "<group>"; };
-		1939A17D152C425D00494609 /* Canvas.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Canvas.h; sourceTree = "<group>"; };
-		1939A17E152C425D00494609 /* lua_Canvas.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = lua_Canvas.cpp; sourceTree = "<group>"; };
-		1939A17F152C425D00494609 /* lua_Canvas.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lua_Canvas.h; sourceTree = "<group>"; };
 		1939A181152C425D00494609 /* Chrono.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Chrono.h; sourceTree = "<group>"; };
 		1939A184152C425D00494609 /* Color.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Color.h; sourceTree = "<group>"; };
 		1939A185152C425D00494609 /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
@@ -1033,18 +1027,6 @@
 			path = ../../../lib/Lua;
 			sourceTree = "<group>";
 		};
-		1939A17B152C425D00494609 /* Applications */ = {
-			isa = PBXGroup;
-			children = (
-				1939A17C152C425D00494609 /* Canvas.cpp */,
-				1939A17D152C425D00494609 /* Canvas.h */,
-				1939A17E152C425D00494609 /* lua_Canvas.cpp */,
-				1939A17F152C425D00494609 /* lua_Canvas.h */,
-			);
-			name = Applications;
-			path = ../../../src/Applications;
-			sourceTree = "<group>";
-		};
 		1939A180152C425D00494609 /* Common */ = {
 			isa = PBXGroup;
 			children = (
@@ -1301,7 +1283,6 @@
 		1948C03A152C3A3600E9B854 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				1939A17B152C425D00494609 /* Applications */,
 				1939A180152C425D00494609 /* Common */,
 				1939A1A2152C425D00494609 /* ConFuoco */,
 				1946B7A91836E54600F74A3B /* FileSystem */,
@@ -1572,8 +1553,6 @@
 				1939A172152C401300494609 /* lundump.c in Sources */,
 				1939A173152C401300494609 /* lvm.c in Sources */,
 				1939A174152C401300494609 /* lzio.c in Sources */,
-				1939A205152C425D00494609 /* Canvas.cpp in Sources */,
-				1939A206152C425D00494609 /* lua_Canvas.cpp in Sources */,
 				1939A20F152C425D00494609 /* Random.cpp in Sources */,
 				1939A211152C425D00494609 /* Config.cpp in Sources */,
 				1939A21B152C425D00494609 /* Director.cpp in Sources */,

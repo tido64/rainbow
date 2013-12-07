@@ -14,7 +14,7 @@ if(MINGW OR UNIX)
 		endif()
 
 		# Compiler warning flags
-		set(RAINBOW_CXX_WARNINGS "-Werror -pedantic -Wall -Wextra -Wno-invalid-offsetof -Wold-style-cast -Woverloaded-virtual -Wsign-promo")
+		set(RAINBOW_CXX_WARNINGS "-Werror -pedantic -Wall -Wextra -Wold-style-cast -Woverloaded-virtual -Wsign-promo")
 	endif()
 
 	# Set CFLAGS and CXXFLAGS

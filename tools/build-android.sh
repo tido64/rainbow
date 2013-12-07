@@ -18,8 +18,8 @@ rm -fr AndroidManifest.xml ant.properties bin build.xml gen jni libs \
 
 # Create project files
 mkdir jni
-$NDK_HOME/../sdk/tools/android -s create project --name "Rainbow" \
-	--target "android-18" --path jni \
+android -s create project --name "Rainbow" \
+	--target "android-19" --path jni \
 	--package "com.bifrostentertainment.rainbow" --activity "Rainbow" || exit 1
 rm -r jni/src/*
 mv jni/* .
@@ -35,7 +35,11 @@ cd $PROJECT
 SRC_FILES=$(find src -name '*.cpp' | xargs)
 
 # Include libraries
-for lib in Box2D Lua; do
+libraries=("Lua")
+if [[ $@ = *USE_PHYSICS* ]]; then
+	libraries+=("Box2D")
+fi
+for lib in "${libraries[@]}"; do
 	SRC_FILES="$SRC_FILES \\"$'\n'$(find lib/$lib -name '*.c' -and ! -name 'lua.c' -and ! -name 'luac.c' -or -name '*.cpp' | xargs)
 done
 
@@ -105,7 +109,7 @@ cat > AndroidManifest.xml << ANDROIDMANIFEST_XML
           package="com.bifrostentertainment.rainbow"
           android:versionCode="1"
           android:versionName="1.0">
-	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+	<uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
 	<uses-permission android:name="android.permission.RECORD_AUDIO" />
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 	<uses-sdk android:minSdkVersion="9" android:targetSdkVersion="14" />
@@ -130,5 +134,5 @@ cat > AndroidManifest.xml << ANDROIDMANIFEST_XML
 ANDROIDMANIFEST_XML
 echo " done"
 
-NDK_DEBUG=${NDK_DEBUG:-1} NDK_TOOLCHAIN_VERSION=${NDK_TOOLCHAIN_VERSION:-clang} $NDK_HOME/ndk-build -j &&
+NDK_DEBUG=${NDK_DEBUG:-1} NDK_TOOLCHAIN_VERSION=${NDK_TOOLCHAIN_VERSION:-clang} ndk-build -j &&
 ant debug

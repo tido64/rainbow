@@ -16,7 +16,6 @@
 #include "Lua/lua_SpriteBatch.h"
 #include "Lua/lua_Texture.h"
 
-#include "Applications/lua_Canvas.h"
 #include "Physics/lua_Box2D.h"
 #include "Services/Services.h"
 
@@ -32,10 +31,6 @@ namespace Rainbow
 			wrap<Sprite>(L, true);
 			wrap<SpriteBatch>(L);
 			wrap<Texture>(L);
-
-		#ifdef USE_CANVAS
-			wrap<Canvas>(L);
-		#endif
 		}
 
 		inline void init(lua_State *L)

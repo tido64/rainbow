@@ -2,7 +2,7 @@
 PROJECT_NAME           = "Rainbow"
 PROJECT_NUMBER         = 1.0
 PROJECT_LOGO           =
-OUTPUT_DIRECTORY       = /tmp/Rainbow-doc
+OUTPUT_DIRECTORY       = Rainbow-doc
 CREATE_SUBDIRS         = YES
 JAVADOC_AUTOBRIEF      = YES
 QT_AUTOBRIEF           = YES
