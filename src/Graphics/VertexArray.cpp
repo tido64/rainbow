@@ -10,28 +10,28 @@
 #	endif
 #endif
 
+namespace
+{
+	void rbBindBuffer(const unsigned int buffer)
+	{
+		glBindBuffer(GL_ARRAY_BUFFER, buffer);
+		glVertexAttribPointer(
+			Shader::COLOR, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(SpriteVertex),
+			reinterpret_cast<void*>(offsetof(SpriteVertex, color)));
+		glVertexAttribPointer(
+			Shader::TEXCOORD, 2, GL_FLOAT, GL_FALSE, sizeof(SpriteVertex),
+			reinterpret_cast<void*>(offsetof(SpriteVertex, texcoord)));
+		glVertexAttribPointer(
+			Shader::VERTEX, 2, GL_FLOAT, GL_TRUE, sizeof(SpriteVertex),
+			reinterpret_cast<void*>(offsetof(SpriteVertex, position)));
+	}
+}
+
 namespace Renderer
 {
 	extern unsigned int g_index_buffer;
 
-	namespace
-	{
-		void rbBindBuffer(const unsigned int buffer)
-		{
-			glBindBuffer(GL_ARRAY_BUFFER, buffer);
-			glVertexAttribPointer(
-				Shader::COLOR, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(SpriteVertex),
-				reinterpret_cast<void*>(offsetof(SpriteVertex, color)));
-			glVertexAttribPointer(
-				Shader::TEXCOORD, 2, GL_FLOAT, GL_FALSE, sizeof(SpriteVertex),
-				reinterpret_cast<void*>(offsetof(SpriteVertex, texcoord)));
-			glVertexAttribPointer(
-				Shader::VERTEX, 2, GL_FLOAT, GL_TRUE, sizeof(SpriteVertex),
-				reinterpret_cast<void*>(offsetof(SpriteVertex, position)));
-		}
-	}
-
-	BindVertexArray::BindVertexArray(const VertexArray &array)
+	VertexArray::Bind::Bind(const VertexArray &array)
 	{
 	#ifdef USE_VERTEX_ARRAY_OBJECTS
 		glBindVertexArray(array.array);
@@ -40,7 +40,7 @@ namespace Renderer
 	#endif
 	}
 
-	BindVertexArray::~BindVertexArray()
+	VertexArray::Bind::~Bind()
 	{
 	#ifdef USE_VERTEX_ARRAY_OBJECTS
 		glBindVertexArray(0);

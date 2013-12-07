@@ -132,8 +132,9 @@ namespace Renderer
 
 	void draw(const VertexArray &array)
 	{
-		BindVertexArray bind(array);
+		VertexArray::Bind bind(array);
 		glDrawElements(GL_TRIANGLES, array.count, GL_UNSIGNED_SHORT, nullptr);
+
 		R_ASSERT(glGetError() == GL_NO_ERROR, "Failed to draw buffer");
 	}
 
