@@ -1,57 +1,73 @@
-local ch = nil
-local count = 0
-local file = "maja_id.ogg"
-local next_stage = 5000
-local music = nil
-local sound = nil
-local stage = 1
-
-function init()
-	print("Test: Load music")
-	music = rainbow.audio.create_sound(file, 1)
-	print("Test: Play music")
-	ch = rainbow.audio.play(music)
-end
+local Coroutine = require('Coroutine')
 
 function test()
-	if stage == 1 then
-		print("Test: Pause music")
-		rainbow.audio.pause(ch)
-	elseif stage == 2 then
-		print("Test: Resume music")
-		rainbow.audio.pause(ch)
-	elseif stage == 3 then
-		print("Test: Stop music")
-		rainbow.audio.stop(ch)
-		next_stage = 500
-	elseif stage == 4 then
-		print("Test: Load sfx")
-		sound = rainbow.audio.create_sound(file)
-		print("Test: Play sfx")
-		rainbow.audio.play(sound)
-		next_stage = 5000
-	elseif stage == 5 then
-		print("Test: Play music (different channel)")
-		ch = rainbow.audio.play(music)
-	elseif stage == 6 then
-		print("Test: Delete music (while it's playing)")
-		rainbow.audio.delete_sound(music)
-	elseif stage == 7 then
-		print("Test: Clear")
-		rainbow.audio.clear()
-	elseif stage == 8 then
-		print("Test: Loop test (once)")
-		music = rainbow.audio.create_sound(file, 1, 1)
-		ch = rainbow.audio.play(music)
-		next_stage = 2147483646
+	local rainbow_audio = rainbow.audio
+	local file = "maja_id.ogg"
+
+	print("Test: Load music")
+	local music = rainbow_audio.create_sound(file, 1)
+	Coroutine.wait(5000)
+
+	print("Test: Play music")
+	local ch = rainbow_audio.play(music)
+	Coroutine.wait(5000)
+
+	print("Test: Pause music")
+	rainbow_audio.pause(ch)
+	Coroutine.wait(3000)
+
+	print("Test: Resume music")
+	rainbow_audio.pause(ch)
+	Coroutine.wait(5000)
+
+	print("Test: Stop music")
+	rainbow_audio.stop(ch)
+	Coroutine.wait(500)
+
+	print("Test: Load sfx")
+	local sound = { rainbow_audio.create_sound(file) }
+	Coroutine.wait(3000)
+
+	print("Test: Play sfx")
+	ch = rainbow_audio.play(sound[1])
+	Coroutine.wait(5000)
+
+	print("Test: Pause sfx")
+	rainbow_audio.pause(ch)
+	Coroutine.wait(3000)
+
+	print("Test: Resume sfx")
+	rainbow_audio.pause(ch)
+	Coroutine.wait(5000)
+
+	print("Test: Play music (different channel)")
+	ch = rainbow_audio.play(music)
+	Coroutine.wait(5000)
+
+	print("Test: Delete music (while it's playing)")
+	rainbow_audio.delete_sound(music)
+	Coroutine.wait(5000)
+
+	print("Test: Load and play sfx (overflow)")
+	for i = 2, 40 do  -- ConFuoco is currently hardwired to 32 channels
+		sound[i] = rainbow_audio.create_sound(file)
+		rainbow_audio.play(sound[i])
 	end
-	stage = stage + 1
+	Coroutine.wait(5000)
+
+	print("Test: Clear")
+	rainbow_audio.clear()
+	sound = nil
+	Coroutine.wait(3000)
+
+	print("Test: Loop test (once)")
+	music = rainbow_audio.create_sound(file, 1, 1)
+	ch = rainbow_audio.play(music)
+	Coroutine.wait(1000 * 60 * 10)
 end
 
-function update(dt)
-	count = count + dt
-	if count > next_stage then
-		test()
-		count = 0
-	end
+function init()
+	Coroutine.start(test)
 end
+
+function update(dt) end

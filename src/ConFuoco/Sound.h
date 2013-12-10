@@ -6,14 +6,18 @@ namespace ConFuoco
 	class Sound
 	{
 	public:
-		const int type;
+		enum class Type
+		{
+			Static,
+			Stream
+		};
+
+		const Type type;
 
 		virtual ~Sound() { }
 
 	protected:
-		Mixer *mixer;
-
-		Sound(const int t, Mixer *m) : type(t), mixer(m) { }
+		Sound(const Type t) : type(t) { }
 	};
 }
 

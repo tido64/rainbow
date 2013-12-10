@@ -7,27 +7,38 @@
 #include <cmath>
 
 #include "Common/Algorithm.h"
-#include "ConFuoco/Mixer.h"
+#include "ConFuoco/impl/Mixer_SL.h"
 #include "ConFuoco/impl/Recorder_SL.h"
 
-#define slClear(self)                   (*self)->Clear(self)
-#define slEnqueue(self, buffer, size)   (*self)->Enqueue(self, buffer, size)
-#define slGetRecordState(self, state)   (*self)->GetRecordState(self, state)
-#define slSetDurationLimit(self, msec)  (*self)->SetDurationLimit(self, msec)
-#define slSetRecordState(self, state)   (*self)->SetRecordState(self, state)
+#define CF_TAG "[Rainbow::ConFuoco/SL] "
+
+#define slClear(self)                         (*self)->Clear(self)
+#define slCreateAudioRecorder(self, recorder, source, sink, interfaces, iids, req) \
+	(*self)->CreateAudioRecorder(self, recorder, source, sink, interfaces, iids, req)
+#define slDestroy(self)                       (*self)->Destroy(self)
+#define slEnqueue(self, buffer, size)         (*self)->Enqueue(self, buffer, size)
+#define slGetInterface(self, iid, interface)  (*self)->GetInterface(self, iid, interface)
+#define slGetRecordState(self, state)         (*self)->GetRecordState(self, state)
+#define slRealize(self, async)                (*self)->Realize(self, async)
+#define slRegisterCallback(self, callback, context) \
+	(*self)->RegisterCallback(self, callback, context)
+#define slSetDurationLimit(self, msec)        (*self)->SetDurationLimit(self, msec)
+#define slSetRecordState(self, state)         (*self)->SetRecordState(self, state)
 
 namespace ConFuoco
 {
 	namespace
 	{
 		const float kNormalizeSample = 1.0f / SHRT_MAX;
+		const size_t kInputSamples = 512;
+		const size_t kNumInputSampleBuffers = 2;
 
-		inline short* active_buffer(const SLRecorder *recorder)
+		short* active_buffer(const SLRecorder *recorder)
 		{
 			return recorder->buffer + kInputSamples * recorder->active_buffer;
 		}
 
-		inline float decibels(const float amplitude)
+		float decibels(const float amplitude)
 		{
 			return 20 * log10f(amplitude);
 		}
@@ -41,10 +52,81 @@ namespace ConFuoco
 		}
 	}
 
+	SLRecorder::SLRecorder() :
+		active_buffer(0), object(nullptr), interface(nullptr), buffer(nullptr), samples(nullptr)
+	{
+		SLDataLocator_IODevice iodev = {
+			SL_DATALOCATOR_IODEVICE,
+			SL_IODEVICE_AUDIOINPUT,
+			SL_DEFAULTDEVICEID_AUDIOINPUT,
+			nullptr
+		};
+		SLDataSource source = { &iodev, nullptr };
+
+		SLDataLocator_AndroidSimpleBufferQueue buffer_queue = {
+			SL_DATALOCATOR_ANDROIDSIMPLEBUFFERQUEUE, kNumInputSampleBuffers
+		};
+		SLDataFormat_PCM pcm_format = {
+			SL_DATAFORMAT_PCM,
+			1,
+			SL_SAMPLINGRATE_16,
+			SL_PCMSAMPLEFORMAT_FIXED_16,
+			SL_PCMSAMPLEFORMAT_FIXED_16,
+			SL_SPEAKER_FRONT_CENTER,
+			SL_BYTEORDER_LITTLEENDIAN
+		};
+		SLDataSink sink = { &buffer_queue, &pcm_format };
+
+		const SLInterfaceID iids[] = { SL_IID_ANDROIDSIMPLEBUFFERQUEUE };
+		const SLboolean req[] = { SL_BOOLEAN_TRUE };
+
+		SLEngineItf engine = static_cast<ConFuoco::MixerSL*>(ConFuoco::Mixer::Instance)->interface();
+		if (slCreateAudioRecorder(engine, &(this->object), &source, &sink, 1, iids, req) != SL_RESULT_SUCCESS)
+		{
+			R_ERROR(CF_TAG "Failed to create audio recorder\n");
+			return;
+		}
+		if (slRealize(this->object, SL_BOOLEAN_FALSE) != SL_RESULT_SUCCESS)
+		{
+			R_ERROR(CF_TAG "Failed to realize audio recorder\n");
+			return;
+		}
+		if (slGetInterface(this->object, SL_IID_RECORD, &this->interface) != SL_RESULT_SUCCESS)
+		{
+			R_ERROR(CF_TAG "Failed to get audio recorder interface\n");
+			return;
+		}
+
+		const size_t sz = kInputSamples * kNumInputSampleBuffers;
+		this->buffer = new short[sz];
+		memset(this->buffer, 0, sz);
+	}
+
+	SLRecorder::~SLRecorder()
+	{
+		if (this->object)
+			slDestroy(this->object);
+		delete this->buffer;
+	}
+
+	void SLRecorder::set_callback(slAndroidSimpleBufferQueueCallback callback, void *context)
+	{
+		if (slGetInterface(this->object, SL_IID_ANDROIDSIMPLEBUFFERQUEUE, &this->buffer_queue) != SL_RESULT_SUCCESS)
+		{
+			R_ERROR(CF_TAG "Failed to get buffer queue interface\n");
+			return;
+		}
+		if (slRegisterCallback(buffer_queue, callback, context) != SL_RESULT_SUCCESS)
+		{
+			R_ERROR(CF_TAG "Failed to set audio recorder callback\n");
+			return;
+		}
+	}
+
 	Recorder::Recorder() :
 		average(0.0f), low_pass(0.0f), peak(0.0f), recorder(nullptr)
 	{
-		this->recorder = static_cast<SLRecorder*>(Mixer::Instance->create_recorder());
+		this->recorder = new SLRecorder();
 		if (!this->recorder)
 		{
 			delete static_cast<SLRecorder*>(this->recorder);
@@ -104,9 +186,4 @@ namespace ConFuoco
 	}
 }
 
-#undef slSetRecordState
-#undef slSetDurationLimit
-#undef slGetRecordState
-#undef slEnqueue
-#undef slClear
 #endif

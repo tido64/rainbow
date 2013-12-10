@@ -1,145 +1,192 @@
-#ifdef RAINBOW_OS_IOS
-
-#include <AudioToolbox/AudioServices.h>
 #include <AVFoundation/AVAudioPlayer.h>
+#include <AVFoundation/AVAudioSession.h>
 
 #include "FileSystem/Path.h"
 
-namespace ConFuoco
+namespace
 {
-	namespace
+	class Stream : public ConFuoco::Sound
 	{
-		struct Stream : public Sound
-		{
-			bool paused;
-			AVAudioPlayer *player;
-			Channel *channel;
+	public:
+		const ConFuoco::Mixer::Channel *channel;
 
-			Stream(Mixer *m, const char *const file, const int loops) :
-				Sound(STREAM, m), paused(false), player(nil), channel(nullptr)
-			{
-				const Path path(file);
-				NSError *err = nil;
-				this->player = [[AVAudioPlayer alloc]
-						initWithContentsOfURL:path
-						                error:&err];
-				if (!this->player)
-				{
-					NSLog(@"[Rainbow::ConFuoco/AVFoundation] %@", [err description]);
-					return;
-				}
-				this->player.numberOfLoops = loops;
-				[this->player prepareToPlay];
-			}
+		Stream(const char *const file, const int loops);
+		virtual ~Stream();
 
-			virtual ~Stream()
-			{
-				this->mixer->release(this);
-				this->player = nil;
-			}
+		bool is_paused() const;
+		bool is_playing() const;
+		void set_channel(const ConFuoco::Mixer::Channel *channel);
+		void set_volume(const float volume);
 
-			void pause()
-			{
-				[this->player pause];
-				this->paused = true;
-			}
+		void pause();
+		void play();
+		void stop();
 
-			void play()
-			{
-				[this->player play];
-				this->paused = false;
-			}
+		operator bool() const;
 
-			void stop()
-			{
-				[this->player stop];
-				this->paused = false;
-				this->player.currentTime = 0;
-			}
+	private:
+		bool paused;
+		AVAudioPlayer *player;
+	};
+}
 
-			operator bool() const
-			{
-				return this->player;
-			}
-		};
+@interface AudioSession (Private)
+- (void)setActive;
+- (void)didChangeRoute:(NSDictionary*)notification;
+- (void)didInterrupt:(NSDictionary*)notification;
+@end
 
-		void InterruptionListener(void *client, UInt32 state)
-		{
-			Mixer *mixer = static_cast<Mixer*>(client);
-			switch (state)
-			{
-				case kAudioSessionBeginInterruption:
-					mixer->suspend(true);
-					break;
-				case kAudioSessionEndInterruption:
-					if (AudioSessionSetActive(true))
-						NSLog(@"[Rainbow::ConFuoco/AVFoundation] Failed to activate audio session\n");
-					mixer->suspend(false);
-					break;
-				default:
-					break;
-			}
-		}
+@implementation AudioSession
 
-		void RouteChangeListener(void *, AudioSessionPropertyID, UInt32, const void *data)
-		{
-			CFDictionaryRef dict = (CFDictionaryRef)data;
-			CFStringRef old_route = (CFStringRef)CFDictionaryGetValue(
-					dict, CFSTR(kAudioSession_AudioRouteChangeKey_OldRoute));
-			UInt32 size = sizeof(CFStringRef);
-			CFStringRef new_route;
-			OSStatus result = AudioSessionGetProperty(
-					kAudioSessionProperty_AudioRoute, &size, &new_route);
-			NSLog(@"[Rainbow::ConFuoco/AVFoundation] Route changed from %@ to %@ (%ld)\n",
-			      old_route, new_route, result);
-		}
+- (id)init
+{
+	if (self = [super init])
+	{
+		[[NSNotificationCenter defaultCenter]
+				addObserver:self
+				   selector:@selector(didInterrupt:)
+				       name:AVAudioSessionInterruptionNotification
+				     object:nil];
+		[[NSNotificationCenter defaultCenter]
+				addObserver:self
+				   selector:@selector(didChangeRoute:)
+				       name:AVAudioSessionRouteChangeNotification
+				     object:nil];
+		[self setActive];
+	}
+	return self;
+}
 
-		void InitAudioSession(Mixer *mixer)
-		{
-			OSStatus result = AudioSessionInitialize(0, 0, InterruptionListener, mixer);
-			if (result != 0 && result != kAudioSessionAlreadyInitialized)
-			{
-				NSLog(@"[Rainbow::ConFuoco/AVFoundation] Failed to initialise audio device (%ld)\n", result);
-				return;
-			}
+- (void)dealloc
+{
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+}
 
-			UInt32 property = 0;
-			UInt32 propertySize = sizeof(property);
-			result = AudioSessionGetProperty(
-					kAudioSessionProperty_OtherAudioIsPlaying, &propertySize, &property);
-			if (result != 0)
-				NSLog(@"[Rainbow::ConFuoco/AVFoundation] Failed to find out whether audio device is in use (%ld)\n", result);
+- (BOOL)setCategory:(NSString*)category
+{
+	NSError *error = nil;
+	if (!category)
+		category = AVAudioSessionCategorySoloAmbient;
+	BOOL success = [[AVAudioSession sharedInstance] setCategory:category
+	                                                      error:&error];
+	if (success && category == AVAudioSessionCategoryPlayAndRecord)
+	{
+		success = [[AVAudioSession sharedInstance]
+				overrideOutputAudioPort:AVAudioSessionPortOverrideSpeaker
+				                  error:&error];
+		if (!success)
+			NSLog(@"%@", error);
+	}
+	return success;
+}
 
-			property = kAudioSessionCategory_PlayAndRecord;
-			result = AudioSessionSetProperty(
-					kAudioSessionProperty_AudioCategory, sizeof(property), &property);
-			if (result != 0)
-			{
-			#if TARGET_IPHONE_SIMULATOR
-				property = kAudioSessionCategory_AmbientSound;
-				result = AudioSessionSetProperty(
-						kAudioSessionProperty_AudioCategory, sizeof(property), &property);
-				if (result != 0)
-			#endif
-					NSLog(@"[Rainbow::ConFuoco/AVFoundation] Failed to set audio session category (%ld)\n", result);
-			}
+- (void)setActive
+{
+	NSError *error = nil;
+	if (![[AVAudioSession sharedInstance] setActive:YES error:&error])
+		NSLog(@"%@", error);
+}
 
-			property = kAudioSessionOverrideAudioRoute_Speaker;
-			result = AudioSessionSetProperty(
-					kAudioSessionProperty_OverrideAudioRoute, sizeof(property), &property);
-			if (result != 0)
-				NSLog(@"[Rainbow::ConFuoco/AVFoundation] Failed to override audio route (%ld)\n", result);
-
-			result = AudioSessionAddPropertyListener(
-					kAudioSessionProperty_AudioRouteChange, RouteChangeListener, mixer);
-			if (result != 0)
-				NSLog(@"[Rainbow::ConFuoco/AVFoundation] Failed to add audio route change listener (%ld)\n", result);
-
-			result = AudioSessionSetActive(true);
-			if (result != 0)
-				NSLog(@"[Rainbow::ConFuoco/AVFoundation] Failed to activate audio session (%ld)\n", result);
-		}
+- (void)didChangeRoute:(NSNotification*)notification
+{
+	NSNumber *reason = [notification.userInfo objectForKey:AVAudioSessionRouteChangeReasonKey];
+	switch (reason.integerValue)
+	{
+		case AVAudioSessionRouteChangeReasonUnknown:
+			NSLog(@"The reason for the change is unknown.");
+			break;
+		case AVAudioSessionRouteChangeReasonNewDeviceAvailable:
+			NSLog(@"A user action (such as plugging in a headset) has made a preferred audio route available.");
+			break;
+		case AVAudioSessionRouteChangeReasonOldDeviceUnavailable:
+			NSLog(@"The previous audio output path is no longer available.");
+			break;
+		case AVAudioSessionRouteChangeReasonCategoryChange:
+			NSLog(@"The category of the session object changed. Also used when the session is first activated.");
+			break;
+		case AVAudioSessionRouteChangeReasonOverride:
+			NSLog(@"The output route was overridden by the app.");
+			break;
+		case AVAudioSessionRouteChangeReasonWakeFromSleep:
+			NSLog(@"The route changed when the device woke up from sleep.");
+			break;
+		case AVAudioSessionRouteChangeReasonNoSuitableRouteForCategory:
+			NSLog(@"The route changed because no suitable route is now available for the specified category.");
+			break;
+		case AVAudioSessionRouteChangeReasonRouteConfigurationChange:
+			NSLog(@"The set of input and output ports has not changed, but their configuration has - for example, a port’s selected data source has changed.");
+			break;
 	}
 }
 
-#endif
+- (void)didInterrupt:(NSNotification*)notification
+{
+	NSNumber *interuptionType = [notification.userInfo objectForKey:AVAudioSessionInterruptionTypeKey];
+	const bool suspend = interuptionType.integerValue == AVAudioSessionInterruptionTypeBegan;
+	if (!suspend)
+		[self setActive];
+	ConFuoco::Mixer::Instance->suspend(suspend);
+}
+
+@end
+
+Stream::Stream(const char *const file, const int loops) :
+	ConFuoco::Sound(ConFuoco::Sound::Type::Stream), channel(nullptr),
+	paused(false), player(nil)
+{
+	const Path path(file);
+	NSError *error = nil;
+	this->player = [[AVAudioPlayer alloc] initWithContentsOfURL:path
+	                                                      error:&error];
+	if (!this->player)
+	{
+		NSLog(@"%@", error);
+		return;
+	}
+	this->player.numberOfLoops = loops;
+	[this->player prepareToPlay];
+}
+
+Stream::~Stream()
+{
+	ConFuoco::Mixer::Instance->release(this);
+}
+
+bool Stream::is_paused() const
+{
+	return this->paused;
+}
+
+bool Stream::is_playing() const
+{
+	return this->player.playing;
+}
+
+void Stream::set_volume(const float volume)
+{
+	this->player.volume = volume;
+}
+
+void Stream::pause()
+{
+	this->paused = true;
+	[this->player pause];
+}
+
+void Stream::play()
+{
+	this->paused = false;
+	[this->player play];
+}
+
+void Stream::stop()
+{
+	[this->player stop];
+	this->paused = false;
+	this->player.currentTime = 0;
+}
+
+Stream::operator bool() const
+{
+	return this->player;
+}

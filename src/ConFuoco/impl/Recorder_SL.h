@@ -8,9 +8,6 @@
 
 namespace ConFuoco
 {
-	static const size_t kInputSamples = 512;
-	static const size_t kNumInputSampleBuffers = 2;
-
 	struct SLRecorder
 	{
 		size_t active_buffer;
@@ -20,7 +17,7 @@ namespace ConFuoco
 		short *buffer;
 		short *samples;
 
-		SLRecorder(SLEngineItf engine);
+		SLRecorder();
 		~SLRecorder();
 		void set_callback(slAndroidSimpleBufferQueueCallback callback, void *context);
 		inline operator bool() const;

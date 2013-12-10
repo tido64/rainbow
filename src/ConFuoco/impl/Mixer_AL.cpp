@@ -1,7 +1,7 @@
 /// Copyright 2012-13 Bifrost Entertainment. All rights reserved.
 
 #include "Platform/Macros.h"
-#if !defined(RAINBOW_JS) && (defined(RAINBOW_OS_IOS) || defined(RAINBOW_SDL))
+#if defined(RAINBOW_OS_IOS) || (defined(RAINBOW_SDL) && !defined(RAINBOW_JS))
 
 #include <memory>
 
@@ -13,195 +13,132 @@
 #	include <AL/alc.h>
 #endif
 
-#include "Common/Debug.h"
 #include "ConFuoco/AudioFile.h"
 #include "ConFuoco/Mixer.h"
-#include "ConFuoco/Sound.h"
-#include "ConFuoco/impl/Mixer_iOS.h"
+#ifdef RAINBOW_OS_IOS
+#	include "ConFuoco/impl/Mixer_iOS.h"
+#endif
+
+#define CF_TAG "[Rainbow::ConFuoco/AL] "
+
+namespace
+{
+	int alGetSourceState(const unsigned int sid)
+	{
+		int value = 0;
+		alGetSourcei(sid, AL_SOURCE_STATE, &value);
+		return value;
+	}
+
+	struct Wave : public ConFuoco::Sound
+	{
+		unsigned int bid;
+
+		Wave(const char *const file);
+		virtual ~Wave();
+	};
+
+#ifndef RAINBOW_OS_IOS
+
+	const size_t kAudioBufferSize = 4096;
+	const size_t kNumALBuffers = 3;
+
+	char g_audio_buffer[kAudioBufferSize];
+
+	struct Stream : public ConFuoco::Sound
+	{
+		bool playing;
+		int format;
+		int rate;
+		int loops;
+
+		const ConFuoco::Mixer::Channel *channel;
+		std::unique_ptr<ConFuoco::AudioFile> audio_file;
+
+		unsigned int bids[kNumALBuffers];
+
+		Stream(const char *const file, const int loops);
+		virtual ~Stream();
+
+		void preload();
+		size_t read();
+		void rewind();
+	};
+
+#endif
+}
 
 namespace ConFuoco
 {
-	Mixer* Mixer::Instance = nullptr;
-
-	namespace
+	MixerAL::MixerAL() : context_(nullptr)
 	{
-		const size_t kALNumBuffers = 3;
-
-		struct Wave : public Sound
-		{
-			unsigned int bid;
-
-			Wave(Mixer *m, const char *const file) : Sound(STATIC, m), bid(0)
-			{
-				alGenBuffers(1, &this->bid);
-				if (alGetError() != AL_NO_ERROR)
-					R_ERROR("[Rainbow::ConFuoco/AL] Failed to generate buffer\n");
-
-				std::unique_ptr<AudioFile> audio_file(AudioFile::Open(file, AudioFile::kAudioFileStatic));
-				char *data;
-				const size_t size = audio_file->read(&data);
-				alBufferData(
-					this->bid,
-					(audio_file->channels() == 1) ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16,
-					data,
-					size,
-					audio_file->rate());
-				delete[] data;
-			}
-
-			virtual ~Wave()
-			{
-				this->mixer->release(this);
-				alDeleteBuffers(1, &this->bid);
-			}
-		};
-
-	#ifndef RAINBOW_OS_IOS
-		struct Stream;
-		Vector<Stream*> streams;
-
-		struct Stream : public Sound
-		{
-			bool playing;
-			int format;
-			int rate;
-			int loops;
-
-			size_t buf_sz;
-			char *buffer;
-			std::unique_ptr<AudioFile> audio_file;
-
-			Channel *channel;
-			unsigned int bids[kALNumBuffers];
-
-			Stream(Mixer *m, const char *const file, const int loops) :
-				Sound(STREAM, m), playing(false), format(0), rate(0),
-				loops(loops), buf_sz(0), buffer(nullptr), channel(nullptr)
-			{
-				alGenBuffers(kALNumBuffers, this->bids);
-				if (alGetError() != AL_NO_ERROR)
-					R_ERROR("[Rainbow::ConFuoco/AL] Failed to generate buffers\n");
-
-				this->audio_file.reset(AudioFile::Open(file, AudioFile::kAudioFileStream));
-				int channels = this->audio_file->channels();
-				this->buf_sz = AudioFile::CreateBuffer(&this->buffer, channels);
-				this->format = (channels == 1)
-				             ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16;
-				this->rate = this->audio_file->rate();
-
-				this->preload();
-				streams.push_back(this);
-			}
-
-			virtual ~Stream()
-			{
-				streams.qremove(this);
-				this->mixer->release(this);
-				alDeleteBuffers(kALNumBuffers, this->bids);
-				delete[] this->buffer;
-			}
-
-			void preload()
-			{
-				this->rewind();
-				for (size_t i = 0; i < kALNumBuffers; ++i)
-				{
-					const size_t size = this->audio_file->read(this->buffer, this->buf_sz);
-					if (!size)
-						break;
-					alBufferData(this->bids[i], this->format, this->buffer, size, this->rate);
-				}
-			}
-
-			size_t read()
-			{
-				return this->audio_file->read(this->buffer, this->buf_sz);
-			}
-
-			void rewind()
-			{
-				this->audio_file->rewind();
-			}
-		};
-	#endif
-	}
-
-	Mixer::Mixer() : master_gain(1.0f), context(nullptr), sounds(num_channels)
-	{
-		R_ASSERT(!Instance, "An instance of ConFuoco::Mixer already exists");
-
 	#ifdef RAINBOW_OS_IOS
-		InitAudioSession(this);
+		this->session_ = [[AudioSession alloc] init];
 	#endif
 
 		ALCdevice *device = alcOpenDevice(0);
 		if (!device)
 		{
-			R_ERROR("[Rainbow::ConFuoco/AL] alcOpenDevice error code 0x%x\n", alGetError());
+			R_ERROR(CF_TAG "alcOpenDevice error code 0x%x\n", alGetError());
 			return;
 		}
 
-		ALCcontext *ctx = alcCreateContext(device, 0);
-		if (!ctx)
+		ALCcontext *context = alcCreateContext(device, 0);
+		if (!context)
 		{
-			R_ERROR("[Rainbow::ConFuoco/AL] alcCreateContext error code 0x%x\n", alGetError());
+			R_ERROR(CF_TAG "alcCreateContext error code 0x%x\n", alGetError());
 			return;
 		}
-		alcMakeContextCurrent(ctx);
-		this->context = ctx;
+		alcMakeContextCurrent(context);
 
 		// Mac: Clear any errors from previous sessions.
 		alGetError();
 
-		unsigned int sids[num_channels];
-		alGenSources(num_channels, sids);
+		unsigned int sids[kNumChannels];
+		alGenSources(kNumChannels, sids);
 		if (alGetError() != AL_NO_ERROR)
 		{
-			R_ERROR("[Rainbow::ConFuoco/AL] Failed to generate sources\n");
+			R_ERROR(CF_TAG "Failed to generate sources\n");
+			alcDestroyContext(context);
 			return;
 		}
-		for (size_t i = 0; i < num_channels; ++i)
+		for (size_t i = 0; i < kNumChannels; ++i)
 		{
 			alSourcei(sids[i], AL_SOURCE_RELATIVE, AL_TRUE);
 			alSourcef(sids[i], AL_ROLLOFF_FACTOR, 0.0f);
 			this->channels[i].ch = sids[i];
-			this->channels[i].mixer = this;
 		}
-
-		Instance = this;
+		this->context_ = context;
+		this->init();
 	}
 
-	Mixer::~Mixer()
+	MixerAL::~MixerAL()
 	{
-		Instance = nullptr;
+		if (!this->context_)
+			return;
 
 		this->clear();
-		for (size_t i = 0; i < num_channels; ++i)
-			alDeleteSources(1, &this->channels[i].ch);
+		for (auto &channel : this->channels)
+			alDeleteSources(1, &channel.ch);
 
-		ALCdevice *device = alcGetContextsDevice(static_cast<ALCcontext*>(this->context));
+		ALCdevice *device = alcGetContextsDevice(this->context_);
 		this->suspend(true);
-		alcDestroyContext(static_cast<ALCcontext*>(this->context));
+		alcDestroyContext(this->context_);
 		alcCloseDevice(device);
 	}
 
-	void Mixer::set_gain(const float gain)
+	void MixerAL::set_gain_impl(const float gain)
 	{
 		alListenerf(AL_GAIN, gain);
-		this->master_gain = gain;
 	}
 
-	void Mixer::set_pitch(const float pitch)
+	void MixerAL::set_pitch_impl(const float pitch)
 	{
 		alListenerf(AL_PITCH, (pitch < 0.01f) ? 0.01f : pitch);
 	}
 
-	void Mixer::clear()
+	void MixerAL::clear_impl()
 	{
-	#ifndef RAINBOW_OS_IOS
-		streams.clear();
-	#endif
-
 		size_t i = this->sounds.size();
 		while (i)
 			delete this->sounds[--i];
@@ -209,226 +146,264 @@ namespace ConFuoco
 		R_ASSERT(this->sounds.size() == 0, "Failed to clear sound bank");
 	}
 
-	Sound* Mixer::create_sound(const char *const file, const int type, const int loops)
+	void MixerAL::suspend_impl(const bool suspend)
 	{
-		Sound *snd = nullptr;
-		if (type != STATIC)
+		if (suspend)
 		{
-			snd = new Stream(this, file, loops);
-			R_DEBUG("[Rainbow::ConFuoco/AL] '%s' => %p (stream)\n", file, static_cast<void*>(snd));
+			alcSuspendContext(this->context_);
+			alcMakeContextCurrent(nullptr);
 		}
 		else
 		{
-			snd = new Wave(this, file);
-			R_DEBUG("[Rainbow::ConFuoco/AL] '%s' => %p (static)\n", file, static_cast<void*>(snd));
+			alcMakeContextCurrent(this->context_);
+			alcProcessContext(this->context_);
 		}
-		this->sounds.push_back(snd);
-		return snd;
 	}
 
-	Channel* Mixer::play(Sound *snd)
+	void MixerAL::update_impl()
 	{
-		if (!snd)
-			return nullptr;
-
-		Channel *channel = nullptr;
-		if (snd->type != STATIC)
+	#ifndef RAINBOW_OS_IOS
+		for (auto sound : this->sounds)
 		{
-			Stream *stream = static_cast<Stream*>(snd);
-			if (stream->channel && stream->channel->sound == stream)
-			{
-				channel = stream->channel;
-				this->stop(channel);
-			}
-			else
-			{
-				channel = this->next_channel();
-				if (!channel)
-					return nullptr;
+			if (sound->type != Sound::Type::Stream)
+				continue;
 
-				channel->sound = snd;
-				stream->channel = channel;
+			Stream *stream = static_cast<Stream*>(sound);
+			if (!stream->playing)
+				continue;
+
+			int processed = 0;
+			alGetSourcei(stream->channel->ch, AL_BUFFERS_PROCESSED, &processed);
+			for (int i = 0; i < processed; ++i)
+			{
+				size_t read = stream->read();
+				if (read == 0)
+				{
+					if (!stream->loops)
+					{
+						processed = i;
+						stream->playing = false;
+						break;
+					}
+					else if (stream->loops > 0)
+						--stream->loops;
+					stream->rewind();
+					read = stream->read();
+				}
+				unsigned int buffer = 0;
+				alSourceUnqueueBuffers(stream->channel->ch, 1, &buffer);
+				alBufferData(buffer, stream->format, g_audio_buffer, read, stream->rate);
+				alSourceQueueBuffers(stream->channel->ch, 1, &buffer);
 			}
-			this->set_gain(channel, 1.0f);
+			if (processed > 0 && alGetSourceState(stream->channel->ch) == AL_STOPPED)
+				alSourcePlay(stream->channel->ch);
+		}
+	#endif
+	}
+
+	/* Channel interface */
+
+	bool MixerAL::is_paused_impl(const Channel *c)
+	{
+	#ifdef RAINBOW_OS_IOS
+		if (c->sound->type != Sound::Type::Static)
+			return static_cast<Stream*>(c->sound)->is_paused();
+	#endif
+		return alGetSourceState(c->ch) == AL_PAUSED;
+	}
+
+	bool MixerAL::is_playing_impl(const Channel *c)
+	{
+	#ifdef RAINBOW_OS_IOS
+		if (c->sound->type != Sound::Type::Static)
+			return static_cast<Stream*>(c->sound)->is_playing();
+	#endif
+		return alGetSourceState(c->ch) == AL_PLAYING;
+	}
+
+	void MixerAL::set_gain_impl(const Channel *c, const float gain)
+	{
+	#ifdef RAINBOW_OS_IOS
+		if (c->sound->type != Sound::Type::Static)
+		{
+			static_cast<Stream*>(c->sound)->set_volume(gain);
+			return;
+		}
+	#endif
+		alSourcef(c->ch, AL_GAIN, gain);
+	}
+
+	void MixerAL::pause_impl(const Channel *c)
+	{
+	#ifdef RAINBOW_OS_IOS
+		if (c->sound->type != Sound::Type::Static)
+		{
+			Stream *sound = static_cast<Stream*>(c->sound);
+			if (sound->is_paused())
+				sound->play();
+			else if (sound->is_playing())
+				sound->pause();
+			return;
+		}
+	#endif
+
+		const int state = alGetSourceState(c->ch);
+		if (state == AL_STOPPED)
+			return;
+
+		if (state == AL_PAUSED)
+			alSourcePlay(c->ch);
+		else
+			alSourcePause(c->ch);
+	}
+
+	void MixerAL::play_impl(const Channel *c)
+	{
+		if (c->sound->type != Sound::Type::Static)
+		{
+			Stream *stream = static_cast<Stream*>(c->sound);
+			if (stream->channel && stream->channel->sound == stream)
+				this->stop(stream->channel);
+			stream->channel = c;
+			this->set_gain(c, 1.0f);
 		#ifdef RAINBOW_OS_IOS
 			stream->play();
 		#else
-			alSourcei(channel->ch, AL_BUFFER, 0);
-			alSourceQueueBuffers(channel->ch, kALNumBuffers, stream->bids);
-			this->play(channel);
+			alSourcei(c->ch, AL_BUFFER, 0);
+			alSourceQueueBuffers(c->ch, kNumALBuffers, stream->bids);
+			alSourcePlay(c->ch);
 			stream->playing = true;
 		#endif
 		}
 		else
 		{
-			channel = this->next_channel();
-			if (!channel)
-				return nullptr;
-
-			alSourcei(channel->ch, AL_BUFFER, static_cast<Wave*>(snd)->bid);
-			channel->sound = snd;
-			this->set_gain(channel, 1.0f);
-			this->play(channel);
-		}
-		R_DEBUG("[Rainbow::ConFuoco/AL] %p -> %u\n", static_cast<void*>(snd), channel->ch);
-		return channel;
-	}
-
-	void Mixer::release(Sound *snd)
-	{
-		Channel *ch = this->channels;
-		for (size_t i = 0; i < num_channels; ++i, ++ch)
-		{
-			if (ch->sound == snd)
-			{
-				this->stop(ch);
-				alSourcei(ch->ch, AL_BUFFER, 0);
-				ch->sound = nullptr;
-			}
-		}
-		this->sounds.qremove(snd);
-		R_DEBUG("[Rainbow::ConFuoco/AL] <- %p\n", static_cast<void*>(snd));
-	}
-
-	void Mixer::suspend(const bool suspend)
-	{
-		ALCcontext *context = static_cast<ALCcontext*>(this->context);
-		if (suspend)
-		{
-			alcSuspendContext(context);
-			alcMakeContextCurrent(nullptr);
-		}
-		else
-		{
-			alcMakeContextCurrent(context);
-			alcProcessContext(context);
+			alSourcei(c->ch, AL_BUFFER, static_cast<Wave*>(c->sound)->bid);
+			this->set_gain(c, 1.0f);
+			alSourcePlay(c->ch);
 		}
 	}
 
-	void Mixer::update()
+	void MixerAL::stop_impl(const Channel *c)
 	{
+	#ifdef RAINBOW_OS_IOS
+		if (c->sound->type != Sound::Type::Static)
+		{
+			static_cast<Stream*>(c->sound)->stop();
+			return;
+		}
+	#endif
+		alSourceStop(c->ch);
 	#ifndef RAINBOW_OS_IOS
-		for (auto s : streams)
+		if (c->sound->type != Sound::Type::Static)
 		{
-			if (!s->playing)
-				continue;
-
-			int processed = 0;
-			alGetSourcei(s->channel->ch, AL_BUFFERS_PROCESSED, &processed);
-			for (int i = 0; i < processed; ++i)
-			{
-				if (!s->read())
-				{
-					if (!s->loops)
-					{
-						processed = i;
-						s->playing = false;
-						break;
-					}
-					else if (s->loops > 0)
-						--s->loops;
-					s->rewind();
-					s->read();
-				}
-				unsigned int buffer = 0;
-				alSourceUnqueueBuffers(s->channel->ch, 1, &buffer);
-				alBufferData(buffer, s->format, s->buffer, s->buf_sz, s->rate);
-				alSourceQueueBuffers(s->channel->ch, 1, &buffer);
-			}
-			if (processed > 0 && !this->is_playing(s->channel))
-				this->play(s->channel);
-		}
-	#endif
-	}
-
-	bool Mixer::is_paused(Channel *ch)
-	{
-	#ifdef RAINBOW_OS_IOS
-		if (ch->sound->type != STATIC)
-			return static_cast<Stream*>(ch->sound)->paused;
-	#endif
-
-		int state = 0;
-		alGetSourcei(ch->ch, AL_SOURCE_STATE, &state);
-		return state == AL_PAUSED;
-	}
-
-	bool Mixer::is_playing(Channel *ch)
-	{
-	#ifdef RAINBOW_OS_IOS
-		if (ch->sound->type != STATIC)
-		{
-			Stream *s = static_cast<Stream*>(ch->sound);
-			return s->paused || s->player.playing;
-		}
-	#endif
-
-		int state = 0;
-		alGetSourcei(ch->ch, AL_SOURCE_STATE, &state);
-		return state == AL_PAUSED || state == AL_PLAYING;
-	}
-
-	void Mixer::set_gain(Channel *ch, const float gain)
-	{
-	#ifdef RAINBOW_OS_IOS
-		if (ch->sound->type != STATIC)
-		{
-			static_cast<Stream*>(ch->sound)->player.volume = gain;
-			return;
-		}
-	#endif
-
-		alSourcef(ch->ch, AL_GAIN, gain);
-	}
-
-	void Mixer::pause(Channel *ch)
-	{
-	#ifdef RAINBOW_OS_IOS
-		if (ch->sound->type != STATIC)
-		{
-			static_cast<Stream*>(ch->sound)->pause();
-			return;
-		}
-	#endif
-
-		alSourcePause(ch->ch);
-	}
-
-	void Mixer::play(Channel *ch)
-	{
-	#ifdef RAINBOW_OS_IOS
-		if (ch->sound->type != STATIC)
-		{
-			static_cast<Stream*>(ch->sound)->play();
-			return;
-		}
-	#endif
-
-		alSourcePlay(ch->ch);
-	}
-
-	void Mixer::stop(Channel *ch)
-	{
-	#ifdef RAINBOW_OS_IOS
-		if (ch->sound->type != STATIC)
-		{
-			static_cast<Stream*>(ch->sound)->stop();
-			return;
-		}
-	#endif
-
-		alSourceStop(ch->ch);
-
-	#ifndef RAINBOW_OS_IOS
-		if (ch->sound->type != STATIC)
-		{
-			Stream *s = static_cast<Stream*>(ch->sound);
+			alSourcei(c->ch, AL_BUFFER, 0);
+			Stream *s = static_cast<Stream*>(c->sound);
 			s->playing = false;
-			alSourcei(ch->ch, AL_BUFFER, 0);
 			s->preload();
 		}
 	#endif
 	}
+
+	/* Sound interface */
+
+	Sound* MixerAL::create_sound_impl(const char *const file,
+	                                  const Sound::Type type,
+	                                  const int loops)
+	{
+		Sound *sound = nullptr;
+		if (type != Sound::Type::Static)
+			sound = new Stream(file, loops);
+		else
+			sound = new Wave(file);
+		this->sounds.push_back(sound);
+		return sound;
+	}
+
+	void MixerAL::release_impl(Sound *s)
+	{
+		for (auto &channel : this->channels)
+		{
+			if (channel.sound == s)
+			{
+				this->stop(&channel);
+				channel.sound = nullptr;
+				alSourcei(channel.ch, AL_BUFFER, 0);
+			}
+		}
+	}
 }
 
-#endif
+Wave::Wave(const char *const file) :
+	ConFuoco::Sound(ConFuoco::Sound::Type::Static), bid(0)
+{
+	alGenBuffers(1, &this->bid);
+	if (alGetError() != AL_NO_ERROR)
+		R_ERROR(CF_TAG "Failed to generate buffer\n");
+
+	std::unique_ptr<ConFuoco::AudioFile> audio_file(
+			ConFuoco::AudioFile::Open(file, ConFuoco::AudioFile::kAudioFileStatic));
+	char *data;
+	const size_t size = audio_file->read(&data);
+	alBufferData(this->bid,
+	             (audio_file->channels() == 1) ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16,
+	             data,
+	             size,
+	             audio_file->rate());
+	delete[] data;
+}
+
+Wave::~Wave()
+{
+	ConFuoco::Mixer::Instance->release(this);
+	alDeleteBuffers(1, &this->bid);
+}
+
+#ifndef RAINBOW_OS_IOS
+
+Stream::Stream(const char *const file, const int loops) :
+	ConFuoco::Sound(ConFuoco::Sound::Type::Stream), playing(false), format(0),
+	rate(0), loops(loops), channel(nullptr)
+{
+	alGenBuffers(kNumALBuffers, this->bids);
+	if (alGetError() != AL_NO_ERROR)
+		R_ERROR(CF_TAG "Failed to generate buffers\n");
+
+	this->audio_file.reset(
+			ConFuoco::AudioFile::Open(file, ConFuoco::AudioFile::kAudioFileStream));
+	this->format = (this->audio_file->channels() == 1)
+	             ? AL_FORMAT_MONO16
+	             : AL_FORMAT_STEREO16;
+	this->rate = this->audio_file->rate();
+
+	this->preload();
+}
+
+Stream::~Stream()
+{
+	ConFuoco::Mixer::Instance->release(this);
+	alDeleteBuffers(kNumALBuffers, this->bids);
+}
+
+void Stream::preload()
+{
+	this->rewind();
+	for (size_t i = 0; i < kNumALBuffers; ++i)
+	{
+		if (!this->audio_file->read(g_audio_buffer, kAudioBufferSize))
+			break;
+		alBufferData(this->bids[i], this->format, g_audio_buffer, kAudioBufferSize, this->rate);
+	}
+}
+
+size_t Stream::read()
+{
+	return this->audio_file->read(g_audio_buffer, kAudioBufferSize);
+}
+
+void Stream::rewind()
+{
+	this->audio_file->rewind();
+}
+
+#endif  // !RAINBOW_OS_IOS
+#endif  // RAINBOW_OS_IOS || (RAINBOW_SDL && !RAINBOW_JS)

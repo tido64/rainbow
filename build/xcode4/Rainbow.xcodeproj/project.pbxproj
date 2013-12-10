@@ -158,7 +158,6 @@
 		19DCB2771742BC4500660000 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 19DCB2761742BC4500660000 /* AdSupport.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		19E85AA91858DCBD00D8B170 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 19E85AA81858DCBD00D8B170 /* Images.xcassets */; };
 		19E91FC21682B1460054D61F /* LuaHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19E91FC01682B1460054D61F /* LuaHelper.cpp */; };
-		19EBC54416599D5100D3B5D7 /* Channel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19EBC54216599D5100D3B5D7 /* Channel.cpp */; };
 		19EBC54D16599D7000D3B5D7 /* Mixer_AL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19EBC54816599D7000D3B5D7 /* Mixer_AL.cpp */; };
 		19EBC55116599D9F00D3B5D7 /* ShaderManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19EBC54F16599D9F00D3B5D7 /* ShaderManager.cpp */; };
 		19ED191C1682247D00AAA323 /* lua_Renderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19ED191A1682247D00AAA323 /* lua_Renderer.cpp */; };
@@ -563,6 +562,7 @@
 		19D3204817BD6BD4007BDC67 /* PVRTC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PVRTC.h; sourceTree = "<group>"; };
 		19D3204917BD6BD4007BDC67 /* PNG.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNG.h; sourceTree = "<group>"; };
 		19D3204A17BD6BD4007BDC67 /* Image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Image.h; sourceTree = "<group>"; };
+		19D3C03A1857E6DD00D1603D /* Mixer_AL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Mixer_AL.h; sourceTree = "<group>"; };
 		19D931841834AFC200F0137E /* ChangeMonitor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChangeMonitor.h; sourceTree = "<group>"; };
 		19D931871834AFCE00F0137E /* ChangeMonitor_Stub.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = ChangeMonitor_Stub.cpp; sourceTree = "<group>"; };
 		19DCB26E17419B1800660000 /* Services.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Services.h; sourceTree = "<group>"; };
@@ -575,7 +575,6 @@
 		19E85AA81858DCBD00D8B170 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		19E91FC01682B1460054D61F /* LuaHelper.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = LuaHelper.cpp; sourceTree = "<group>"; };
 		19E91FC11682B1460054D61F /* LuaHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LuaHelper.h; sourceTree = "<group>"; };
-		19EBC54216599D5100D3B5D7 /* Channel.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = Channel.cpp; sourceTree = "<group>"; };
 		19EBC54316599D5100D3B5D7 /* Channel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Channel.h; sourceTree = "<group>"; };
 		19EBC54816599D7000D3B5D7 /* Mixer_AL.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = Mixer_AL.cpp; sourceTree = "<group>"; };
 		19EBC54916599D7000D3B5D7 /* Mixer_iOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Mixer_iOS.h; sourceTree = "<group>"; };
@@ -1068,7 +1067,6 @@
 				19CEDD6C172422DC008B73B5 /* Codecs */,
 				19CEDD6A172422DC008B73B5 /* AudioFile.cpp */,
 				19CEDD6B172422DC008B73B5 /* AudioFile.h */,
-				19EBC54216599D5100D3B5D7 /* Channel.cpp */,
 				19EBC54316599D5100D3B5D7 /* Channel.h */,
 				1939A1B1152C425D00494609 /* Mixer.h */,
 				1939A1B4152C425D00494609 /* Recorder.h */,
@@ -1082,6 +1080,7 @@
 			isa = PBXGroup;
 			children = (
 				19EBC54816599D7000D3B5D7 /* Mixer_AL.cpp */,
+				19D3C03A1857E6DD00D1603D /* Mixer_AL.h */,
 				19EBC54916599D7000D3B5D7 /* Mixer_iOS.h */,
 				19F98DA0171970C000A85873 /* Recorder_iOS.mm */,
 			);
@@ -1571,7 +1570,6 @@
 				197396DD15A505F60064BF7D /* TextureManager.cpp in Sources */,
 				196CB728161E4ADD0068C809 /* Gatekeeper.cpp in Sources */,
 				196CB72F161E4D940068C809 /* b2MotorJoint.cpp in Sources */,
-				19EBC54416599D5100D3B5D7 /* Channel.cpp in Sources */,
 				19EBC54D16599D7000D3B5D7 /* Mixer_AL.cpp in Sources */,
 				19EBC55116599D9F00D3B5D7 /* ShaderManager.cpp in Sources */,
 				19AF589F167FFA0800F54B27 /* DebugInfo.cpp in Sources */,
