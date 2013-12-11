@@ -582,6 +582,7 @@
 		19EBC55016599D9F00D3B5D7 /* ShaderManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShaderManager.h; sourceTree = "<group>"; };
 		19ED191A1682247D00AAA323 /* lua_Renderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = lua_Renderer.cpp; sourceTree = "<group>"; };
 		19ED191B1682247D00AAA323 /* lua_Renderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lua_Renderer.h; sourceTree = "<group>"; };
+		19EEC4BC18592896005D93E3 /* Recorder_iOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Recorder_iOS.h; sourceTree = "<group>"; };
 		19F9890715F924E8005A5F69 /* lua_IO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lua_IO.h; sourceTree = "<group>"; };
 		19F9890C15FBBB3B005A5F69 /* NonCopyable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NonCopyable.h; sourceTree = "<group>"; };
 		19F98DA0171970C000A85873 /* Recorder_iOS.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Recorder_iOS.mm; sourceTree = "<group>"; };
@@ -1082,6 +1083,7 @@
 				19EBC54816599D7000D3B5D7 /* Mixer_AL.cpp */,
 				19D3C03A1857E6DD00D1603D /* Mixer_AL.h */,
 				19EBC54916599D7000D3B5D7 /* Mixer_iOS.h */,
+				19EEC4BC18592896005D93E3 /* Recorder_iOS.h */,
 				19F98DA0171970C000A85873 /* Recorder_iOS.mm */,
 			);
 			path = impl;

@@ -1,20 +1,7 @@
 #ifndef CONFUOCO_RECORDER_H_
 #define CONFUOCO_RECORDER_H_
 
-#include "Platform/Macros.h"
-#if defined(RAINBOW_OS_ANDROID)
-namespace ConFuoco
-{
-	struct SLRecorder;
-	typedef ConFuoco::SLRecorder* AudioRecorder;
-}
-#elif defined(RAINBOW_OS_IOS)
-@class AVAudioRecorder;
-typedef AVAudioRecorder* AudioRecorder;
-#else
-typedef void* AudioRecorder;
-#endif
-
+#include "Common/Algorithm.h"
 #include "Common/NonCopyable.h"
 
 namespace ConFuoco
@@ -25,20 +12,18 @@ namespace ConFuoco
 	///
 	/// Copyright 2012-13 Bifrost Entertainment. All rights reserved.
 	/// \author Tommy Nguyen
-	class Recorder : private NonCopyable<Recorder>
+	template<typename T>
+	class RecorderBase : private NonCopyable<RecorderBase<T>>
 	{
 	public:
-		Recorder();
-		~Recorder();
-
 		/// Returns the average power, in decibels, for the sound being recorded.
-		inline float get_average_power() const;
+		float average_power() const;
 
 		/// Returns low-pass filtered power, in decibels, for the sound being recorded.
-		inline float get_low_pass() const;
+		float low_pass() const;
 
 		/// Returns the peak power, in decibels, for the sound being recorded.
-		inline float get_peak_power() const;
+		float peak_power() const;
 
 		/// Pauses recording.
 		void pause();
@@ -51,38 +36,90 @@ namespace ConFuoco
 		/// Stops recording and closes the audio file.
 		void stop();
 
-		/// Refreshes the average and peak power values of an audio recorder.
+		/// Refreshes the average and peak power values of the recording.
 		void update();
 
-		/// \c true if the recorder is successfully initialised; otherwise \c false.
-		inline operator bool() const;
+	protected:
+		float average;  ///< Average power in decibels.
+		float low;      ///< Low-pass filtered power in decibels.
+		float peak;     ///< Peak power in decibels.
 
-	private:
-		float average;   ///< Average power in decibels.
-		float low_pass;  ///< Low-pass filtered power in decibels.
-		float peak;      ///< Peak power in decibels.
-		AudioRecorder recorder;
+		RecorderBase();
+		~RecorderBase();
 	};
 
-	float Recorder::get_average_power() const
+	template<typename T>
+	float RecorderBase<T>::average_power() const
 	{
 		return this->average;
 	}
 
-	float Recorder::get_low_pass() const
+	template<typename T>
+	float RecorderBase<T>::low_pass() const
 	{
-		return this->low_pass;
+		return this->low;
 	}
 
-	float Recorder::get_peak_power() const
+	template<typename T>
+	float RecorderBase<T>::peak_power() const
 	{
 		return this->peak;
 	}
 
-	Recorder::operator bool() const
+	template<typename T>
+	void RecorderBase<T>::pause()
 	{
-		return this->recorder;
+		static_cast<T*>(this)->pause_impl();
 	}
+
+	template<typename T>
+	bool RecorderBase<T>::record(const unsigned long duration)
+	{
+		return static_cast<T*>(this)->record_impl(duration);
+	}
+
+	template<typename T>
+	void RecorderBase<T>::stop()
+	{
+		static_cast<T*>(this)->stop_impl();
+	}
+
+	template<typename T>
+	void RecorderBase<T>::update()
+	{
+		static_cast<T*>(this)->update_impl();
+		this->low = Rainbow::low_pass(this->peak, this->low);
+	}
+
+	template<typename T>
+	RecorderBase<T>::RecorderBase() : average(-160.0f), low(-160.0f), peak(-160.0f) { }
+
+	template<typename T>
+	RecorderBase<T>::~RecorderBase() { }
 }
+
+#include "Platform/Macros.h"
+#if defined(RAINBOW_OS_ANDROID)
+#	include "ConFuoco/impl/Recorder_SL.h"
+#elif defined(RAINBOW_OS_IOS)
+#	include "ConFuoco/impl/Recorder_iOS.h"
+#else
+
+namespace ConFuoco
+{
+	class RecorderStub : public RecorderBase<RecorderStub>
+	{
+		friend RecorderBase<RecorderStub>;
+
+		void pause_impl() { }
+		bool record_impl(const unsigned long) { return false; }
+		void stop_impl() { }
+		void update_impl() { }
+	};
+
+	typedef RecorderStub Recorder;
+}
+
+#endif
 
 #endif

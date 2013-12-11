@@ -22,27 +22,23 @@ namespace Rainbow
 			{ 0, 0 }
 		};
 
-		Recorder::Recorder(lua_State *L)
-		{
-			if (!*this)
-				luaL_error(L, "rainbow.audio.recorder: Failed to initialise recorder");
-		}
+		Recorder::Recorder(lua_State *) { }
 
 		int Recorder::get_average_power(lua_State *L)
 		{
-			lua_pushnumber(L, ConFuoco::Recorder::get_average_power());
+			lua_pushnumber(L, ConFuoco::Recorder::average_power());
 			return 1;
 		}
 
 		int Recorder::get_low_pass(lua_State *L)
 		{
-			lua_pushnumber(L, ConFuoco::Recorder::get_low_pass());
+			lua_pushnumber(L, ConFuoco::Recorder::low_pass());
 			return 1;
 		}
 
 		int Recorder::get_peak_power(lua_State *L)
 		{
-			lua_pushnumber(L, ConFuoco::Recorder::get_peak_power());
+			lua_pushnumber(L, ConFuoco::Recorder::peak_power());
 			return 1;
 		}
 

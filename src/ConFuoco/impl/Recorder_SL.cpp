@@ -8,7 +8,6 @@
 
 #include "Common/Algorithm.h"
 #include "ConFuoco/impl/Mixer_SL.h"
-#include "ConFuoco/impl/Recorder_SL.h"
 
 #define CF_TAG "[Rainbow::ConFuoco/SL] "
 
@@ -30,13 +29,6 @@ namespace ConFuoco
 	namespace
 	{
 		const float kNormalizeSample = 1.0f / SHRT_MAX;
-		const size_t kInputSamples = 512;
-		const size_t kNumInputSampleBuffers = 2;
-
-		short* active_buffer(const SLRecorder *recorder)
-		{
-			return recorder->buffer + kInputSamples * recorder->active_buffer;
-		}
 
 		float decibels(const float amplitude)
 		{
@@ -45,15 +37,13 @@ namespace ConFuoco
 
 		void AndroidSimpleBufferQueueCallback(SLAndroidSimpleBufferQueueItf, void *pContext)
 		{
-			SLRecorder *recorder = static_cast<SLRecorder*>(pContext);
-			recorder->samples = active_buffer(recorder);
-			recorder->active_buffer = (recorder->active_buffer + 1) % kNumInputSampleBuffers;
-			slEnqueue(recorder->buffer_queue, active_buffer(recorder), kInputSamples * sizeof(short));
+			static_cast<RecorderSL*>(pContext)->swap();
 		}
 	}
 
-	SLRecorder::SLRecorder() :
-		active_buffer(0), object(nullptr), interface(nullptr), buffer(nullptr), samples(nullptr)
+	RecorderSL::RecorderSL() :
+		current(kNumInputSampleBuffers), object(nullptr), interface(nullptr),
+		buffer_queue(nullptr)
 	{
 		SLDataLocator_IODevice iodev = {
 			SL_DATALOCATOR_IODEVICE,
@@ -80,8 +70,8 @@ namespace ConFuoco
 		const SLInterfaceID iids[] = { SL_IID_ANDROIDSIMPLEBUFFERQUEUE };
 		const SLboolean req[] = { SL_BOOLEAN_TRUE };
 
-		SLEngineItf engine = static_cast<ConFuoco::MixerSL*>(ConFuoco::Mixer::Instance)->interface();
-		if (slCreateAudioRecorder(engine, &(this->object), &source, &sink, 1, iids, req) != SL_RESULT_SUCCESS)
+		SLEngineItf engine = ConFuoco::Mixer::Instance->interface();
+		if (slCreateAudioRecorder(engine, &this->object, &source, &sink, 1, iids, req) != SL_RESULT_SUCCESS)
 		{
 			R_ERROR(CF_TAG "Failed to create audio recorder\n");
 			return;
@@ -96,93 +86,95 @@ namespace ConFuoco
 			R_ERROR(CF_TAG "Failed to get audio recorder interface\n");
 			return;
 		}
-
-		const size_t sz = kInputSamples * kNumInputSampleBuffers;
-		this->buffer = new short[sz];
-		memset(this->buffer, 0, sz);
-	}
-
-	SLRecorder::~SLRecorder()
-	{
-		if (this->object)
-			slDestroy(this->object);
-		delete this->buffer;
-	}
-
-	void SLRecorder::set_callback(slAndroidSimpleBufferQueueCallback callback, void *context)
-	{
 		if (slGetInterface(this->object, SL_IID_ANDROIDSIMPLEBUFFERQUEUE, &this->buffer_queue) != SL_RESULT_SUCCESS)
 		{
 			R_ERROR(CF_TAG "Failed to get buffer queue interface\n");
 			return;
 		}
-		if (slRegisterCallback(buffer_queue, callback, context) != SL_RESULT_SUCCESS)
+		if (slRegisterCallback(this->buffer_queue, AndroidSimpleBufferQueueCallback, this) != SL_RESULT_SUCCESS)
 		{
 			R_ERROR(CF_TAG "Failed to set audio recorder callback\n");
 			return;
 		}
+
+		memset(this->buffer, 0, sizeof(this->buffer));
+		this->current = 0;
 	}
 
-	Recorder::Recorder() :
-		average(0.0f), low_pass(0.0f), peak(0.0f), recorder(nullptr)
+	RecorderSL::~RecorderSL()
 	{
-		this->recorder = new SLRecorder();
-		if (!this->recorder)
+		if (this->object)
 		{
-			delete static_cast<SLRecorder*>(this->recorder);
-			this->recorder = nullptr;
-			return;
+			if (this->current < kNumInputSampleBuffers)
+				this->stop();
+			slDestroy(this->object);
 		}
-		this->recorder->set_callback(AndroidSimpleBufferQueueCallback, this->recorder);
 	}
 
-	Recorder::~Recorder()
+	void RecorderSL::swap()
 	{
-		this->stop();
-		delete this->recorder;
+		this->current = this->next();
+		slEnqueue(this->buffer_queue, this->get_buffer(this->next()), kInputSamples * sizeof(short));
 	}
 
-	void Recorder::pause()
+	short* RecorderSL::get_buffer(const unsigned int i)
 	{
-		slSetRecordState(this->recorder->interface, SL_RECORDSTATE_PAUSED);
+		return this->buffer + kInputSamples * i;
 	}
 
-	bool Recorder::record(const unsigned long duration)
+	unsigned int RecorderSL::next() const
 	{
+		return (this->current + 1) % kNumInputSampleBuffers;
+	}
+
+	void RecorderSL::pause_impl()
+	{
+		if (this->current == kNumInputSampleBuffers)
+			return;
+
+		slSetRecordState(this->interface, SL_RECORDSTATE_PAUSED);
+	}
+
+	bool RecorderSL::record_impl(const unsigned long duration)
+	{
+		if (this->current == kNumInputSampleBuffers)
+			return false;
+
 		SLuint32 state = SL_RECORDSTATE_STOPPED;
-		slGetRecordState(this->recorder->interface, &state);
+		slGetRecordState(this->interface, &state);
 		if (state == SL_RECORDSTATE_RECORDING)
 			return true;
 
-		slEnqueue(this->recorder->buffer_queue, this->recorder->buffer, kInputSamples * sizeof(short));
-		slSetDurationLimit(this->recorder->interface, duration ? duration : SL_TIME_UNKNOWN);
-		return slSetRecordState(this->recorder->interface, SL_RECORDSTATE_RECORDING) == SL_RESULT_SUCCESS;
+		slEnqueue(this->buffer_queue, this->buffer, kInputSamples * sizeof(short));
+		slSetDurationLimit(this->interface, (duration) ? duration : SL_TIME_UNKNOWN);
+		return slSetRecordState(this->interface, SL_RECORDSTATE_RECORDING) == SL_RESULT_SUCCESS;
 	}
 
-	void Recorder::stop()
+	void RecorderSL::stop_impl()
 	{
-		slSetRecordState(this->recorder->interface, SL_RECORDSTATE_STOPPED);
-		slClear(this->recorder->buffer_queue);
-		this->recorder->active_buffer = 0;
-	}
-
-	void Recorder::update()
-	{
-		if (!this->recorder->samples)
+		if (this->current == kNumInputSampleBuffers)
 			return;
 
+		slSetRecordState(this->interface, SL_RECORDSTATE_STOPPED);
+		slClear(this->buffer_queue);
+		this->current = 0;
+	}
+
+	void RecorderSL::update_impl()
+	{
+		if (this->current == kNumInputSampleBuffers)
+			return;
+
+		const short *samples = this->get_buffer(this->current);
 		for (size_t i = 0; i < kInputSamples; ++i)
 		{
-			const float power = fabsf(this->recorder->samples[i]);
+			const float power = fabsf(samples[i]);
 			this->average += power;
 			if (power > this->peak)
 				this->peak = power;
 		}
 		this->average = decibels(this->average * (kNormalizeSample / kInputSamples));
 		this->peak = decibels(this->peak * kNormalizeSample);
-		this->recorder->samples = nullptr;
-
-		this->low_pass = Rainbow::low_pass(this->peak, this->low_pass);
 	}
 }
 

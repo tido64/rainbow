@@ -102,7 +102,7 @@ namespace
 			NSLog(@"The previous audio output path is no longer available.");
 			break;
 		case AVAudioSessionRouteChangeReasonCategoryChange:
-			NSLog(@"The category of the session object changed. Also used when the session is first activated.");
+			NSLog(@"The category of the session object changed.");
 			break;
 		case AVAudioSessionRouteChangeReasonOverride:
 			NSLog(@"The output route was overridden by the app.");
@@ -114,7 +114,7 @@ namespace
 			NSLog(@"The route changed because no suitable route is now available for the specified category.");
 			break;
 		case AVAudioSessionRouteChangeReasonRouteConfigurationChange:
-			NSLog(@"The set of input and output ports has not changed, but their configuration has - for example, a port’s selected data source has changed.");
+			NSLog(@"The set of input and output ports has not changed, but their configuration has.");
 			break;
 	}
 }
