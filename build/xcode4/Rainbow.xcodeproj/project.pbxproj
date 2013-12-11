@@ -16,9 +16,6 @@
 		193929B816E23D5F0018340B /* SysUtil_Apple.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 193929B716E23D5F0018340B /* SysUtil_Apple.cpp */; };
 		193929BD16E243E90018340B /* LuaMachine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 193929BA16E243E90018340B /* LuaMachine.cpp */; };
 		193929BF16E3511F0018340B /* freetype.c in Sources */ = {isa = PBXBuildFile; fileRef = 193929BE16E3511F0018340B /* freetype.c */; };
-		193929C316E351F40018340B /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 193929C016E351F40018340B /* Default-568h@2x.png */; };
-		193929C416E351F40018340B /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 193929C116E351F40018340B /* Default.png */; };
-		193929C516E351F40018340B /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 193929C216E351F40018340B /* Default@2x.png */; };
 		193929C716E352540018340B /* Timer.lua in Resources */ = {isa = PBXBuildFile; fileRef = 193929C616E352540018340B /* Timer.lua */; };
 		1939A04B152C401300494609 /* b2BroadPhase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19399E15152C401300494609 /* b2BroadPhase.cpp */; };
 		1939A04C152C401300494609 /* b2CollideCircle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19399E17152C401300494609 /* b2CollideCircle.cpp */; };
@@ -159,6 +156,7 @@
 		19DCB2731741A1D000660000 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 19DCB2721741A1D000660000 /* libz.dylib */; };
 		19DCB2751741A23400660000 /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19DCB2741741A23400660000 /* libTestFlight.a */; };
 		19DCB2771742BC4500660000 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 19DCB2761742BC4500660000 /* AdSupport.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		19E85AA91858DCBD00D8B170 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 19E85AA81858DCBD00D8B170 /* Images.xcassets */; };
 		19E91FC21682B1460054D61F /* LuaHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19E91FC01682B1460054D61F /* LuaHelper.cpp */; };
 		19EBC54416599D5100D3B5D7 /* Channel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19EBC54216599D5100D3B5D7 /* Channel.cpp */; };
 		19EBC54D16599D7000D3B5D7 /* Mixer_AL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19EBC54816599D7000D3B5D7 /* Mixer_AL.cpp */; };
@@ -192,9 +190,6 @@
 		193929BB16E243E90018340B /* LuaMachine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LuaMachine.h; sourceTree = "<group>"; };
 		193929BC16E243E90018340B /* LuaModules.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LuaModules.h; sourceTree = "<group>"; };
 		193929BE16E3511F0018340B /* freetype.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = freetype.c; sourceTree = "<group>"; };
-		193929C016E351F40018340B /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
-		193929C116E351F40018340B /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
-		193929C216E351F40018340B /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		193929C616E352540018340B /* Timer.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Timer.lua; path = ../../../lua/Timer.lua; sourceTree = "<group>"; };
 		193929C816E3527F0018340B /* Algorithm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Algorithm.h; sourceTree = "<group>"; };
 		19399E11152C401300494609 /* Box2D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Box2D.h; sourceTree = "<group>"; };
@@ -577,6 +572,7 @@
 		19DCB2741741A23400660000 /* libTestFlight.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libTestFlight.a; path = ../../lib/TestFlight/libTestFlight.a; sourceTree = "<group>"; };
 		19DCB2761742BC4500660000 /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
 		19DCB2831746AB7C00660000 /* LuaBind.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LuaBind.h; sourceTree = "<group>"; };
+		19E85AA81858DCBD00D8B170 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		19E91FC01682B1460054D61F /* LuaHelper.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = LuaHelper.cpp; sourceTree = "<group>"; };
 		19E91FC11682B1460054D61F /* LuaHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LuaHelper.h; sourceTree = "<group>"; };
 		19EBC54216599D5100D3B5D7 /* Channel.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = Channel.cpp; sourceTree = "<group>"; };
@@ -1250,6 +1246,7 @@
 				1948C032152C397D00E9B854 /* AppDelegate.m */,
 				1948C039152C3A2600E9B854 /* Libraries */,
 				1948C03A152C3A3600E9B854 /* Source */,
+				19E85AA81858DCBD00D8B170 /* Images.xcassets */,
 				1948C029152C397D00E9B854 /* Supporting Files */,
 			);
 			path = Rainbow;
@@ -1262,9 +1259,6 @@
 				1948C02B152C397D00E9B854 /* InfoPlist.strings */,
 				1948C02E152C397D00E9B854 /* main.m */,
 				1948C030152C397D00E9B854 /* Rainbow-Prefix.pch */,
-				193929C116E351F40018340B /* Default.png */,
-				193929C216E351F40018340B /* Default@2x.png */,
-				193929C016E351F40018340B /* Default-568h@2x.png */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -1454,11 +1448,9 @@
 				19905B8B152C50FA00BDD15C /* Transition.lua in Resources */,
 				19905B8D152C50FA00BDD15C /* Utils.lua in Resources */,
 				1988802817F84AFD009F4587 /* Coroutine.lua in Resources */,
-				193929C316E351F40018340B /* Default-568h@2x.png in Resources */,
 				1988802917F84AFD009F4587 /* Functional.lua in Resources */,
-				193929C416E351F40018340B /* Default.png in Resources */,
+				19E85AA91858DCBD00D8B170 /* Images.xcassets in Resources */,
 				1988802B17F84AFD009F4587 /* TransitionFunctions.lua in Resources */,
-				193929C516E351F40018340B /* Default@2x.png in Resources */,
 				1988802A17F84AFD009F4587 /* Strict.lua in Resources */,
 				193929C716E352540018340B /* Timer.lua in Resources */,
 				19F98DA8171B5E1500A85873 /* Prose in Resources */,
@@ -1656,6 +1648,8 @@
 		1945808D15361BA900C25D18 /* Ad Hoc */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Rainbow/Rainbow-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
@@ -1665,6 +1659,7 @@
 					../../lib/FreeType/include,
 				);
 				INFOPLIST_FILE = "Rainbow/Rainbow-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../../lib/TestFlight\"",
@@ -1739,6 +1734,8 @@
 		1948C037152C397D00E9B854 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Rainbow/Rainbow-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
@@ -1748,6 +1745,7 @@
 					../../lib/FreeType/include,
 				);
 				INFOPLIST_FILE = "Rainbow/Rainbow-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../../lib/TestFlight\"",
@@ -1759,6 +1757,8 @@
 		1948C038152C397D00E9B854 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Rainbow/Rainbow-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
@@ -1768,6 +1768,7 @@
 					../../lib/FreeType/include,
 				);
 				INFOPLIST_FILE = "Rainbow/Rainbow-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../../lib/TestFlight\"",

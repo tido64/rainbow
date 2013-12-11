@@ -22,16 +22,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
 #ifdef USE_TESTFLIGHT_SDK
-	NSString *deviceIdentifier = nil;
-	if (!NSClassFromString(@"ASIdentifierManager"))
-	{
-		_Pragma("clang diagnostic push");
-		_Pragma("clang diagnostic ignored \"-Wdeprecated-declarations\"");
-		deviceIdentifier = [[UIDevice currentDevice] uniqueIdentifier];
-		_Pragma("clang diagnostic pop");
-	}
-	else
-		deviceIdentifier = [[[ASIdentifierManager sharedManager] advertisingIdentifier] UUIDString];
+	NSString *deviceIdentifier = [[[ASIdentifierManager sharedManager] advertisingIdentifier] UUIDString];
 	[TestFlight setDeviceIdentifier:deviceIdentifier];
 	[TestFlight takeOff:kRainbowAppToken];
 #endif
