@@ -1,5 +1,5 @@
 /*
-** $Id: luaconf.h,v 1.176 2013/03/16 21:10:18 roberto Exp $
+** $Id: luaconf.h,v 1.176.1.1 2013/04/12 18:48:47 roberto Exp $
 ** Configuration file for Lua
 ** See Copyright Notice in lua.h
 */
@@ -219,14 +219,8 @@
 @@ luai_writestringerror defines how to print error messages.
 ** (A format string with one argument is enough for Lua...)
 */
-#ifdef __ANDROID__
-#include <android/log.h>
-#define luai_writestringerror(s,p) \
-	(__android_log_print(ANDROID_LOG_ERROR, "Rainbow", (s), (p)))
-#else
 #define luai_writestringerror(s,p) \
 	(fprintf(stderr, (s), (p)), fflush(stderr))
-#endif
 
 
 /*

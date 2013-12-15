@@ -1,5 +1,5 @@
 /*
-** $Id: llex.c,v 2.63 2013/03/16 21:10:18 roberto Exp $
+** $Id: llex.c,v 2.63.1.2 2013/08/30 15:49:41 roberto Exp $
 ** Lexical Analyzer
 ** See Copyright Notice in lua.h
 */
@@ -133,6 +133,9 @@ TString *luaX_newstring (LexState *ls, const char *str, size_t l) {
     setbvalue(o, 1);  /* t[string] = true */
     luaC_checkGC(L);
   }
+  else {  /* string already present */
+    ts = rawtsvalue(keyfromval(o));  /* re-use value previously stored */
+  }
   L->top--;  /* remove string from stack */
   return ts;
 }
@@ -199,7 +202,11 @@ static void buffreplace (LexState *ls, char from, char to) {
 
 
 #if !defined(getlocaledecpoint)
-#define getlocaledecpoint()	'.'
+#  if defined(__ANDROID__)
+#    define getlocaledecpoint()	'.'
+#  else
+#    define getlocaledecpoint()	(localeconv()->decimal_point[0])
+#  endif
 #endif
 
 
