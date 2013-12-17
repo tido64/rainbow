@@ -60,7 +60,7 @@ namespace Rainbow
 					push_event(L, event);
 
 					lua_createtable(L, 2, 0);
-					lua_pushinteger(L, key.key);
+					lua_pushinteger(L, static_cast<lua_Integer>(key.key));
 					lua_rawseti(L, -2, 1);
 					lua_pushinteger(L, key.modifier);
 					lua_rawseti(L, -2, 2);
