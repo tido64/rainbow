@@ -20,24 +20,25 @@ class  Touchable;
 class Input : private NonCopyable<Input>
 {
 public:
-	enum
+	struct Events
 	{
-		KEY_EVENTS    = 1u << 0,
-		TOUCH_EVENTS  = 1u << 1,
-		ALL_EVENTS    = KEY_EVENTS | TOUCH_EVENTS
+		static const unsigned int Key    = 1u << 0;
+		static const unsigned int Touch  = 1u << 1;
+		static const unsigned int All    = Key | Touch;
 	};
 
 	static Input *Instance;
 
 	inline Input(lua_State *);
+	inline ~Input();
 
 	/// Resets input subscription list.
 	inline void reset();
 
 	/// Subscribes to input events.
-	/// \param t      The object that wants to subscribe.
-	/// \param flags  Events to subscribe to.
-	void subscribe(Touchable *const t, unsigned int flags);
+	/// \param t       The object that wants to subscribe.
+	/// \param events  Events to subscribe to.
+	void subscribe(Touchable *const t, const unsigned int events);
 
 	/// Unsubscribes the object from input events.
 	/// \params t  The object to unsubscribe.
@@ -67,7 +68,15 @@ private:
 	Vector<Touchable*> touch_subscribers;
 };
 
-Input::Input(lua_State *L) : lua_state(L) { }
+Input::Input(lua_State *L) : lua_state(L)
+{
+	Instance = this;
+}
+
+Input::~Input()
+{
+	Instance = nullptr;
+}
 
 void Input::reset()
 {

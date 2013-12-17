@@ -8,12 +8,12 @@
 class TouchTest : public Touchable, public testing::Test
 {
 public:
-	enum Events
+	struct Events
 	{
-		TOUCH_BEGAN    = 1u << 0,
-		TOUCH_CANCELED = 1u << 1,
-		TOUCH_ENDED    = 1u << 2,
-		TOUCH_MOVED    = 1u << 3
+		static const unsigned int TouchBegan     = 1u << 0;
+		static const unsigned int TouchCanceled  = 1u << 1;
+		static const unsigned int TouchEnded     = 1u << 2;
+		static const unsigned int TouchMoved     = 1u << 3;
 	};
 
 	TouchTest() : flags(0), L(luaL_newstate()), input(L)
@@ -22,7 +22,7 @@ public:
 		Rainbow::Lua::Input::init(L);
 		lua_setglobal(this->L, "rainbow");
 
-		this->input.subscribe(this, Input::ALL_EVENTS);
+		this->input.subscribe(this, Input::Events::All);
 	}
 
 	~TouchTest()
@@ -56,26 +56,26 @@ private:
 	{
 		if (is_invalid(touches, count))
 			return;
-		this->flags |= TOUCH_BEGAN;
+		this->flags |= Events::TouchBegan;
 	}
 
 	virtual void touch_canceled_impl() override
 	{
-		this->flags |= TOUCH_CANCELED;
+		this->flags |= Events::TouchCanceled;
 	}
 
 	virtual void touch_ended_impl(const Touch *const touches, const size_t count) override
 	{
 		if (is_invalid(touches, count))
 			return;
-		this->flags |= TOUCH_ENDED;
+		this->flags |= Events::TouchEnded;
 	}
 
 	virtual void touch_moved_impl(const Touch *const touches, const size_t count) override
 	{
 		if (is_invalid(touches, count))
 			return;
-		this->flags |= TOUCH_MOVED;
+		this->flags |= Events::TouchMoved;
 	}
 };
 
@@ -83,25 +83,25 @@ TEST_F(TouchTest, TouchBeganEvent)
 {
 	Touch t1(1, 2, 3, 0);
 	this->input.touch_began(&t1, 1);
-	ASSERT_TRUE(is_triggered(TOUCH_BEGAN));
+	ASSERT_TRUE(is_triggered(Events::TouchBegan));
 }
 
 TEST_F(TouchTest, TouchCanceledEvent)
 {
 	this->input.touch_canceled();
-	ASSERT_TRUE(is_triggered(TOUCH_CANCELED));
+	ASSERT_TRUE(is_triggered(Events::TouchCanceled));
 }
 
 TEST_F(TouchTest, TouchEndedEvent)
 {
 	Touch t1(1, 2, 3, 0);
 	this->input.touch_ended(&t1, 1);
-	ASSERT_TRUE(is_triggered(TOUCH_ENDED));
+	ASSERT_TRUE(is_triggered(Events::TouchEnded));
 }
 
 TEST_F(TouchTest, TouchMovedEvent)
 {
 	Touch t1(1, 2, 3, 0);
 	this->input.touch_moved(&t1, 1);
-	ASSERT_TRUE(is_triggered(TOUCH_MOVED));
+	ASSERT_TRUE(is_triggered(Events::TouchMoved));
 }

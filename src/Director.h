@@ -46,10 +46,7 @@ namespace Rainbow
 		Input input;
 	};
 
-	Director::Director() : lua(&scenegraph), input(lua)
-	{
-		Input::Instance = &this->input;
-	}
+	Director::Director() : lua(&scenegraph), input(lua) { }
 
 	void Director::draw()
 	{

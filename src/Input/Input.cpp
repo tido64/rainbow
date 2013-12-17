@@ -7,11 +7,11 @@
 
 Input *Input::Instance = nullptr;
 
-void Input::subscribe(Touchable *const t, unsigned int flags)
+void Input::subscribe(Touchable *const t, const unsigned int events)
 {
-	//if (flags & KEY_EVENTS)
+	//if (events & Events::Key)
 
-	if (flags & TOUCH_EVENTS)
+	if (events & Events::Touch)
 		this->touch_subscribers.push_back(t);
 }
 

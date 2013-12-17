@@ -121,7 +121,7 @@ namespace Heimdall
 		this->set_video(width, height);
 		this->director.reset(new Rainbow::Director());
 		this->director->init(script, this->width, this->height);
-		Input::Instance->subscribe(this, Input::TOUCH_EVENTS);
+		Input::Instance->subscribe(this, Input::Events::Touch);
 	}
 
 	void Gatekeeper::set_video(const int width, const int height)
