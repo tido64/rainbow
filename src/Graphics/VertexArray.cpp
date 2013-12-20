@@ -12,7 +12,9 @@
 
 namespace
 {
-	void rbBindBuffer(const unsigned int buffer)
+	unsigned int g_active_buffer = 0;  ///< Currently bound vertex array/buffer.
+
+	void rBindBuffer(const unsigned int buffer)
 	{
 		glBindBuffer(GL_ARRAY_BUFFER, buffer);
 		glVertexAttribPointer(
@@ -31,22 +33,34 @@ namespace Renderer
 {
 	extern unsigned int g_index_buffer;
 
-	VertexArray::Bind::Bind(const VertexArray &array)
+	void VertexArray::bind(const VertexArray &array)
 	{
 	#ifdef USE_VERTEX_ARRAY_OBJECTS
+		if (array.array == g_active_buffer)
+			return;
+
 		glBindVertexArray(array.array);
+		g_active_buffer = array.array;
 	#else
-		rbBindBuffer(array.buffer);
+		if (array.buffer == g_active_buffer)
+			return;
+
+		rBindBuffer(array.buffer);
+		g_active_buffer = array.buffer;
 	#endif
 	}
 
-	VertexArray::Bind::~Bind()
+	void VertexArray::unbind()
 	{
+		if (g_active_buffer == 0)
+			return;
+
 	#ifdef USE_VERTEX_ARRAY_OBJECTS
 		glBindVertexArray(0);
 	#else
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	#endif
+		g_active_buffer = 0;
 	}
 
 	VertexArray::VertexArray() : count(0), array(0), buffer(0)
@@ -54,20 +68,18 @@ namespace Renderer
 		glGenBuffers(1, &this->buffer);
 
 	#ifdef USE_VERTEX_ARRAY_OBJECTS
-
 		glGenVertexArrays(1, &this->array);
 		glBindVertexArray(this->array);
 
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, g_index_buffer);
 
-		rbBindBuffer(this->buffer);
+		rBindBuffer(this->buffer);
 		glEnableVertexAttribArray(Shader::COLOR);
 		glEnableVertexAttribArray(Shader::TEXCOORD);
 		glEnableVertexAttribArray(Shader::VERTEX);
 
 		glBindVertexArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
-
 	#endif
 	}
 
@@ -84,6 +96,9 @@ namespace Renderer
 		glBindBuffer(GL_ARRAY_BUFFER, this->buffer);
 		glBufferData(GL_ARRAY_BUFFER, size, data, GL_DYNAMIC_DRAW);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
+	#ifndef USE_VERTEX_ARRAY_OBJECTS
+		g_active_buffer = 0;
+	#endif
 
 		R_ASSERT(glGetError() == GL_NO_ERROR, "Failed to update buffer");
 	}

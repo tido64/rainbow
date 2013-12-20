@@ -8,6 +8,7 @@ namespace
 {
 	const unsigned int kStaleBuffer    = 1u << 0;
 	const unsigned int kStalePosition  = 1u << 1;
+	const unsigned int kStaleTexture   = 1u << 2;
 
 	inline Vec2f transform_rst(const Vec2f &p, const Vec2f &s_sin_r, const Vec2f &s_cos_r, const Vec2f &center) pure;
 	inline Vec2f transform_st(const Vec2f &p, const Vec2f &scale, const Vec2f &center) pure;
@@ -94,6 +95,7 @@ void Sprite::set_texture(const unsigned int id)
 	this->vertex_array_[1].texcoord = tx.vx[1];
 	this->vertex_array_[2].texcoord = tx.vx[2];
 	this->vertex_array_[3].texcoord = tx.vx[3];
+	this->stale_ |= kStaleTexture;
 }
 
 void Sprite::mirror()
@@ -120,10 +122,10 @@ void Sprite::rotate(const float r)
 	this->stale_ |= kStaleBuffer;
 }
 
-void Sprite::update()
+bool Sprite::update()
 {
 	if (!this->stale_)
-		return;
+		return false;
 
 	if (this->stale_ & kStaleBuffer)
 	{
@@ -168,9 +170,8 @@ void Sprite::update()
 			this->vertex_array_[3].position = transform_st(
 					origin[3], this->scale_, this->center_);
 		}
-		this->stale_ = 0;
 	}
-	else
+	else if (this->stale_ & kStalePosition)
 	{
 		this->position_ -= this->center_;
 		this->vertex_array_[0].position += this->position_;
@@ -179,6 +180,7 @@ void Sprite::update()
 		this->vertex_array_[3].position += this->position_;
 		this->center_ += this->position_;
 		this->position_ = this->center_;
-		this->stale_ = 0;
 	}
+	this->stale_ = 0;
+	return true;
 }

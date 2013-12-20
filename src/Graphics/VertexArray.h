@@ -3,8 +3,6 @@
 
 namespace Renderer
 {
-	class VertexArray;
-
 	/// Implements the equivalent of OpenGL's vertex array object.
 	///
 	/// Copyright 2013 Bifrost Entertainment. All rights reserved.
@@ -12,15 +10,8 @@ namespace Renderer
 	class VertexArray
 	{
 	public:
-		/// Helper class for binding a VertexArray.
-		///
-		/// Copyright 2013 Bifrost Entertainment. All rights reserved.
-		/// \author Tommy Nguyen
-		struct Bind
-		{
-			Bind(const VertexArray &array);
-			~Bind();
-		};
+		static void bind(const VertexArray &array);
+		static void unbind();
 
 		unsigned int count;  ///< Vertex count.
 

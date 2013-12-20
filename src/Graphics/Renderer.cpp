@@ -132,7 +132,7 @@ namespace Renderer
 
 	void draw(const VertexArray &array)
 	{
-		VertexArray::Bind bind(array);
+		VertexArray::bind(array);
 		glDrawElements(GL_TRIANGLES, array.count, GL_UNSIGNED_SHORT, nullptr);
 
 		R_ASSERT(glGetError() == GL_NO_ERROR, "Failed to draw buffer");
@@ -140,6 +140,7 @@ namespace Renderer
 
 	void draw_elements(const SpriteVertex *vertices, const unsigned int count)
 	{
+		VertexArray::unbind();
 		glVertexAttribPointer(
 				Shader::COLOR, 4, GL_UNSIGNED_BYTE, GL_TRUE,
 				sizeof(SpriteVertex), &vertices->color);

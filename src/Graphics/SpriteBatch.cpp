@@ -62,9 +62,14 @@ unsigned int SpriteBatch::create_sprite(const unsigned int width, const unsigned
 void SpriteBatch::update()
 {
 	// Update all sprite vertices
+	bool needs_update = false;
 	for (auto &sprite : this->sprites_)
-		sprite.update();
+		needs_update = sprite.update() || needs_update;
 
 	// Update vertex buffer
-	this->array_.update(this->vertices_.begin(), this->vertices_.size() * sizeof(SpriteVertex));
+	if (needs_update)
+	{
+		this->array_.update(this->vertices_.begin(),
+		                    this->vertices_.size() * sizeof(SpriteVertex));
+	}
 }

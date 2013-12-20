@@ -82,7 +82,7 @@ public:
 	void rotate(const float r);
 
 	/// Updates the vertices of this sprite.
-	void update();
+	bool update();
 
 private:
 	float angle_;                 ///< Angle of rotation.
