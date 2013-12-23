@@ -4,12 +4,6 @@
 #include "Graphics/SpriteVertex.h"
 #include "Graphics/VertexArray.h"
 
-#ifndef USE_VERTEX_ARRAY_OBJECTS
-#	ifndef RAINBOW_OS_ANDROID
-#		define USE_VERTEX_ARRAY_OBJECTS 1
-#	endif
-#endif
-
 namespace
 {
 	unsigned int g_active_buffer = 0;  ///< Currently bound vertex array/buffer.
@@ -35,7 +29,7 @@ namespace Renderer
 
 	void VertexArray::bind(const VertexArray &array)
 	{
-	#ifdef USE_VERTEX_ARRAY_OBJECTS
+	#ifdef USE_VERTEX_ARRAY_OBJECT
 		if (array.array == g_active_buffer)
 			return;
 
@@ -55,7 +49,7 @@ namespace Renderer
 		if (g_active_buffer == 0)
 			return;
 
-	#ifdef USE_VERTEX_ARRAY_OBJECTS
+	#ifdef USE_VERTEX_ARRAY_OBJECT
 		glBindVertexArray(0);
 	#else
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -67,7 +61,7 @@ namespace Renderer
 	{
 		glGenBuffers(1, &this->buffer);
 
-	#ifdef USE_VERTEX_ARRAY_OBJECTS
+	#ifdef USE_VERTEX_ARRAY_OBJECT
 		glGenVertexArrays(1, &this->array);
 		glBindVertexArray(this->array);
 
@@ -80,12 +74,14 @@ namespace Renderer
 
 		glBindVertexArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
+	#else
+		static_cast<void>(this->array);  // Silence -Wunused-private-field
 	#endif
 	}
 
 	VertexArray::~VertexArray()
 	{
-	#ifdef USE_VERTEX_ARRAY_OBJECTS
+	#ifdef USE_VERTEX_ARRAY_OBJECT
 		glDeleteVertexArrays(1, &this->array);
 	#endif
 		glDeleteBuffers(1, &this->buffer);
@@ -96,7 +92,7 @@ namespace Renderer
 		glBindBuffer(GL_ARRAY_BUFFER, this->buffer);
 		glBufferData(GL_ARRAY_BUFFER, size, data, GL_DYNAMIC_DRAW);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
-	#ifndef USE_VERTEX_ARRAY_OBJECTS
+	#ifndef USE_VERTEX_ARRAY_OBJECT
 		g_active_buffer = 0;
 	#endif
 

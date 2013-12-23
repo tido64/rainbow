@@ -1,7 +1,7 @@
 /// Copyright 2012-13 Bifrost Entertainment. All rights reserved.
 
 #include "Platform/Macros.h"
-#if defined(RAINBOW_OS_IOS) || (defined(RAINBOW_SDL) && !defined(RAINBOW_JS))
+#if defined(RAINBOW_OS_IOS) || defined(RAINBOW_SDL)
 
 #include <memory>
 
@@ -406,4 +406,4 @@ void Stream::rewind()
 }
 
 #endif  // !RAINBOW_OS_IOS
-#endif  // RAINBOW_OS_IOS || (RAINBOW_SDL && !RAINBOW_JS)
+#endif  // RAINBOW_OS_IOS || RAINBOW_SDL

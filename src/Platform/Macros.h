@@ -26,11 +26,12 @@
 #	define RAINBOW_OS_WINDOWS
 #elif defined(EMSCRIPTEN)
 #	define RAINBOW_JS
+#	define RAINBOW_OS_UNIX
 #endif
 
 // Platforms that make use of physical buttons (keyboards, gamepads, etc.)
 // and of SDL.
-#if defined(RAINBOW_JS) || defined(RAINBOW_OS_UNIX) || defined(RAINBOW_OS_WINDOWS)
+#if defined(RAINBOW_OS_UNIX) || defined(RAINBOW_OS_WINDOWS)
 #	define RAINBOW_BUTTONS
 #	define RAINBOW_SDL
 #endif

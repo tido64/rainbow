@@ -42,4 +42,8 @@
 #	define glGenVertexArrays     glGenVertexArraysOES
 #endif
 
+#if !defined(RAINBOW_OS_ANDROID) && !defined(RAINBOW_JS)
+#	define USE_VERTEX_ARRAY_OBJECT 1
+#endif
+
 #endif

@@ -1,3 +1,5 @@
+if(NOT EMSCRIPTEN)
+
 set(SDL2_SOURCE_DIR ${LOCAL_LIBRARY}/SDL)
 if(MSVC)
 	set(SDL2_INCLUDE_DIR ${SDL2_SOURCE_DIR}/include)
@@ -53,3 +55,5 @@ else()
 	add_definitions(-DUSING_GENERATED_CONFIG_H)
 endif()
 add_dependencies(rainbow SDL2-static SDL2main)
+
+endif(NOT EMSCRIPTEN)

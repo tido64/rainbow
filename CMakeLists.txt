@@ -27,8 +27,13 @@ file(GLOB_RECURSE RAINBOW_CPP src/*.cpp)
 add_executable(rainbow ${RAINBOW_CPP} ${RAINBOW_H})
 
 # Dynamic libraries
-find_package(OpenGL REQUIRED)
-find_package(Vorbisfile REQUIRED)
+if(EMSCRIPTEN)
+	set(OPENGL_gl_LIBRARY)
+	set(VORBISFILE_LIBRARIES)
+else()
+	find_package(OpenGL REQUIRED)
+	find_package(Vorbisfile REQUIRED)
+endif()
 
 # Static libraries
 if(USE_PHYSICS)

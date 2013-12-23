@@ -1,5 +1,5 @@
 #include "Platform/Macros.h"
-#if defined(RAINBOW_OS_ANDROID) || defined(RAINBOW_OS_LINUX)
+#if defined(RAINBOW_OS_ANDROID) || defined(RAINBOW_OS_LINUX) || defined(RAINBOW_JS)
 
 #include <locale.h>
 #include <unistd.h>

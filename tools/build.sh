@@ -4,6 +4,12 @@ RAINBOW=$(cd -P "$(dirname $0)/.." && pwd)
 
 function compile {
 	case "$1" in
+		"Emscripten")
+			make && [[ -f rainbow ]] || exit 1
+			mv rainbow rainbow.bc
+			em++ -v rainbow.bc -o rainbow.html
+			mv rainbow.bc rainbow
+			;;
 		"Ninja")
 			ninja
 			;;
@@ -48,7 +54,19 @@ case $1 in
 		;;
 	"clean")
 		rm -fr CMakeFiles CMakeScripts Debug Rainbow.* Release lib
-		rm -f .ninja_log CMakeCache.txt Makefile {build,rules}.ninja cmake_install.cmake lib*.a rainbow rainbow.exe
+		rm -f .ninja_log CMakeCache.txt Makefile {build,rules}.ninja cmake_install.cmake lib*.a rainbow*
+		;;
+	"emscripten")
+		EMSCRIPTEN=$(em-config EMSCRIPTEN_ROOT)
+		if [[ ! -d "$EMSCRIPTEN" ]]; then
+			echo "$0: Could not find Emscripten"
+			exit 1
+		fi
+		cmake -DCMAKE_TOOLCHAIN_FILE="$EMSCRIPTEN/cmake/Platform/Emscripten.cmake" \
+		      -DCMAKE_MODULE_PATH="$EMSCRIPTEN/cmake" \
+		      -DEMSCRIPTEN=1 \
+		      $ARGS "$RAINBOW" &&
+		compile Emscripten
 		;;
 	"help")
 		$SHELL $0 --help

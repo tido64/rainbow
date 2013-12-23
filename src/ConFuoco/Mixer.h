@@ -245,7 +245,7 @@ namespace ConFuoco
 
 #if defined(RAINBOW_OS_ANDROID)
 #	include "ConFuoco/impl/Mixer_SL.h"
-#elif defined(RAINBOW_OS_IOS) || (defined(RAINBOW_SDL) && !defined(RAINBOW_JS))
+#elif defined(RAINBOW_OS_IOS) || defined(RAINBOW_SDL)
 #	include "ConFuoco/impl/Mixer_AL.h"
 #else
 #	include "ConFuoco/impl/Mixer_Stub.h"
