@@ -12,7 +12,6 @@ if(WIN32)
 
 		# Use prebuilt libraries
 		find_library(OPENAL_LIBRARY NAMES libOpenAL32 HINTS build/windows/lib)
-		find_library(ZLIB_LIBRARIES NAMES zlibstat HINTS build/windows/lib)
 		include_directories(build/windows/include)
 	else()
 		add_definitions(-D__MSVCRT__ -D__MSVCRT_VERSION__=0x800

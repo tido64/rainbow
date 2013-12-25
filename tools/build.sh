@@ -58,7 +58,7 @@ case $1 in
 		compile "$GENERATOR"
 		;;
 	"mac")
-		cmake -DZLIB_INCLUDE_DIR=$(xcrun --show-sdk-path)/usr/include $ARGS -G Xcode "$RAINBOW" &&
+		cmake $ARGS -G Xcode "$RAINBOW" &&
 		compile Xcode
 		;;
 	"windows")

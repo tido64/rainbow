@@ -4,3 +4,6 @@
 [submodule "lib/libpng"]
 	path = lib/libpng
 	url = git://git.code.sf.net/p/libpng/code
+[submodule "lib/zlib"]
+	path = lib/zlib
+	url = git://github.com/madler/zlib.git

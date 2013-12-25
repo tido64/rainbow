@@ -35,9 +35,10 @@ if(USE_PHYSICS)
 	include(${LOCAL_MODULE_PATH}/Box2D.cmake)
 endif()
 include(${LOCAL_MODULE_PATH}/FreeType.cmake)
-include(${LOCAL_MODULE_PATH}/libpng.cmake)
 include(${LOCAL_MODULE_PATH}/Lua.cmake)
 include(${LOCAL_MODULE_PATH}/SDL2.cmake)
+include(${LOCAL_MODULE_PATH}/zlib.cmake)
+include(${LOCAL_MODULE_PATH}/libpng.cmake)
 if(GTEST)
 	include(${LOCAL_MODULE_PATH}/gtest.cmake)
 endif()
@@ -56,12 +57,12 @@ set_property(TARGET rainbow APPEND PROPERTY INCLUDE_DIRECTORIES
 	${LUA_INCLUDE_DIR}
 	${SDL2_INCLUDE_DIR}
 	${VORBISFILE_INCLUDE_DIR}
-	${ZLIB_INCLUDE_DIRS}
+	${ZLIB_INCLUDE_DIR}
 	${GTEST_INCLUDE_DIRS}
 )
 target_link_libraries(rainbow
 	${GTEST_LIBRARY}
 	freetype lua ${PHYSICS_LIBRARY} png ${SDL2_LIBRARIES} ${VORBISFILE_LIBRARIES}
 	${OPENAL_LIBRARY} ${OPENGL_ext_LIBRARY} ${OPENGL_gl_LIBRARY}
-	${ZLIB_LIBRARIES} ${PLATFORM_LIBRARIES}
+	${ZLIB_LIBRARY} ${PLATFORM_LIBRARIES}
 )
