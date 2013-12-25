@@ -57,6 +57,6 @@ namespace ConFuoco
 	};
 
 	typedef MixerAL Mixer;
-};
+}
 
 #endif

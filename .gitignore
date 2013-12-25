@@ -1,6 +1,6 @@
 # Generated files
-*.orig
 *.swp
+.DS_Store
 Rainbow.sublime-workspace
 project.xcworkspace/
 src/.ycm_extra_conf.pyc
@@ -21,8 +21,9 @@ lib/**/README
 lib/**/docs/
 lib/**/html/
 lib/**/makefile
+lib/SDL/
+lib/TestFlight/
+lib/boost/
 lib/dSFMT/check.sh
 lib/dSFMT/test.c
 lib/gtest/
-lib/libpng/scripts/
-lib/TestFlight/

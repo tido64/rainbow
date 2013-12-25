@@ -74,6 +74,6 @@ namespace ConFuoco
 	}
 
 	typedef MixerSL Mixer;
-};
+}
 
 #endif
