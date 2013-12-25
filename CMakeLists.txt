@@ -5,6 +5,7 @@ set(CMAKE_BUILD_TYPE Debug)
 set(LOCAL_MODULE_PATH ${CMAKE_SOURCE_DIR}/build/cmake)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${LOCAL_MODULE_PATH})
 set(LOCAL_LIBRARY ${PROJECT_SOURCE_DIR}/lib)
+set(THIRD_PARTY ${PROJECT_SOURCE_DIR}/src/ThirdParty)
 
 option(GTEST "Compile with Google C++ Testing Framework" OFF)
 #option(PROFILING "Compile with profiling" OFF)
