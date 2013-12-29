@@ -13,9 +13,8 @@
 namespace
 {
 	const FSEventStreamEventFlags kFileModified = kFSEventStreamEventFlagItemModified
-	                                            | kFSEventStreamEventFlagItemXattrMod
 	                                            | kFSEventStreamEventFlagItemIsFile;
-	const CFTimeInterval kFSEventLatency = 1.0;
+	const CFTimeInterval kFSEventLatency = 0.5;
 
 	void callback(ConstFSEventStreamRef /*streamRef*/,
 	              void *clientCallBackInfo,
