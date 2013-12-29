@@ -4,21 +4,43 @@
 #include "Lua/LuaModules.h"
 #include "Lua/lua_Rainbow.h"
 
-namespace Rainbow
+namespace
 {
-	namespace
+	int breakpoint(lua_State *L)
 	{
-		int breakpoint(lua_State *L)
-		{
-		#ifndef NDEBUG
-			Lua::sethook(L);
-		#else
-			static_cast<void>(L);
-		#endif
-			return 0;
-		}
+	#ifndef NDEBUG
+		Rainbow::Lua::sethook(L);
+	#else
+		static_cast<void>(L);
+	#endif
+		return 0;
 	}
 
+	// Partially copied from 'linit.c'.
+	void luaR_openlibs(lua_State *L)
+	{
+		const luaL_Reg loadedlibs[] = {
+			{ "_G", luaopen_base },
+			{ LUA_LOADLIBNAME, luaopen_package },
+			{ LUA_COLIBNAME, luaopen_coroutine },
+			{ LUA_TABLIBNAME, luaopen_table },
+			{ LUA_STRLIBNAME, luaopen_string },
+			{ LUA_BITLIBNAME, luaopen_bit32 },
+			{ LUA_MATHLIBNAME, luaopen_math },
+			{ LUA_DBLIBNAME, luaopen_debug },
+			{ nullptr, nullptr }
+		};
+		/* call open functions from 'loadedlibs' and set results to global table */
+		for (const luaL_Reg *lib = loadedlibs; lib->func; lib++)
+		{
+			luaL_requiref(L, lib->name, lib->func, 1);
+			lua_pop(L, 1);  /* remove lib */
+		}
+	}
+}
+
+namespace Rainbow
+{
 	LuaMachine::~LuaMachine()
 	{
 		Lua::SceneGraph::destroy(this->L, this->scenegraph);
@@ -72,7 +94,7 @@ namespace Rainbow
 	LuaMachine::LuaMachine(SceneGraph::Node *root) :
 		internal(0), traceback(0), scenegraph(nullptr), L(luaL_newstate())
 	{
-		luaL_openlibs(this->L);
+		luaR_openlibs(this->L);
 
 		// Initialize "rainbow" namespace.
 		lua_createtable(this->L, 0, 16);
