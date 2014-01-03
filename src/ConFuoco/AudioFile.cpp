@@ -20,8 +20,6 @@ namespace ConFuoco
 		return size;
 	}
 
-	AudioFile::~AudioFile() { }
-
 	int AudioFile::channels_impl() const
 	{
 		return kFallbackChannels;

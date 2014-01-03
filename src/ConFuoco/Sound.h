@@ -14,7 +14,7 @@ namespace ConFuoco
 
 		const Type type;
 
-		virtual ~Sound() { }
+		virtual ~Sound() = default;
 
 	protected:
 		Sound(const Type t) : type(t) { }

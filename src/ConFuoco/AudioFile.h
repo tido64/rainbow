@@ -39,7 +39,7 @@ namespace ConFuoco
 		/// \return Audio file handler.
 		static AudioFile* Open(const char *const file, const Mode mode);
 
-		virtual ~AudioFile();
+		virtual ~AudioFile() = default;
 
 		/// Returns number of channels.
 		inline int channels() const;
@@ -71,7 +71,7 @@ namespace ConFuoco
 		virtual size_t read_impl(char *dst, const size_t size);
 		virtual void rewind_impl();
 
-		inline AudioFile();
+		AudioFile() = default;
 		inline AudioFile(File &&file);
 	};
 
@@ -100,7 +100,6 @@ namespace ConFuoco
 		this->rewind_impl();
 	}
 
-	AudioFile::AudioFile() { }
 	AudioFile::AudioFile(File &&file) : file(std::forward<File>(file)) { }
 }
 

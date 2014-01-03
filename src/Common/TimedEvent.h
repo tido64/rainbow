@@ -28,6 +28,7 @@ public:
 
 protected:
 	inline TimedEvent(const unsigned int timeout);
+	~TimedEvent() = default;
 
 private:
 	bool stopped;              ///< Whether time is accumulating.

@@ -95,7 +95,7 @@ namespace ConFuoco
 	RecorderBase<T>::RecorderBase() : average(-160.0f), low(-160.0f), peak(-160.0f) { }
 
 	template<typename T>
-	RecorderBase<T>::~RecorderBase() { }
+	RecorderBase<T>::~RecorderBase() = default;
 }
 
 #include "Platform/Macros.h"

@@ -21,7 +21,7 @@ namespace Rainbow
 
 		private:
 			SceneGraph(::SceneGraph::Node *);
-			~SceneGraph() { }
+			~SceneGraph() = default;
 
 			int add_animation(lua_State *);
 			int add_batch(lua_State *);

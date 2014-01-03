@@ -39,7 +39,7 @@ namespace Rainbow
 			}
 
 		protected:
-			~Bind() { }
+			~Bind() = default;
 		};
 
 		template<class L, class T>
@@ -49,7 +49,7 @@ namespace Rainbow
 			static const char class_name[];
 			static const Method<L> methods[];
 
-			Bind() { }
+			Bind() = default;
 
 			T* get() const
 			{
@@ -59,7 +59,7 @@ namespace Rainbow
 		protected:
 			SharedPtr<T> ptr;
 
-			~Bind() { }
+			~Bind() = default;
 		};
 
 		template<class L, class T>
@@ -80,7 +80,7 @@ namespace Rainbow
 		protected:
 			T *ptr;
 
-			~Bind() { }
+			~Bind() = default;
 		};
 	}
 }

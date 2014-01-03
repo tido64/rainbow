@@ -10,7 +10,7 @@ class Drawable
 public:
 	static const char class_name[];
 
-	virtual ~Drawable() { }
+	virtual ~Drawable() = default;
 
 	inline Drawable* get();
 

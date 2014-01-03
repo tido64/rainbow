@@ -12,7 +12,7 @@ struct Touch;
 class Touchable
 {
 public:
-	virtual ~Touchable() { }
+	virtual ~Touchable() = default;
 
 	/// User puts finger down on the device.
 	/// \param touches  The id and position of each touch
