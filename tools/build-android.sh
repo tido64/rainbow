@@ -44,7 +44,7 @@ for lib in "${libraries[@]}"; do
 done
 
 # Include FreeType and libpng
-SRC_FILES="$SRC_FILES lib/FreeType/src/freetype.c lib/libpng/libpng.c"
+SRC_FILES="$SRC_FILES src/ThirdParty/FreeType/freetype.c src/ThirdParty/libpng/libpng.c"
 
 cd $BUILD_DIR
 
@@ -58,11 +58,13 @@ LOCAL_PATH := $PROJECT
 LOCAL_MODULE := $TARGET
 LOCAL_SRC_FILES := $SRC_FILES
 
-LOCAL_C_INCLUDES := $PROJECT/src $PROJECT/lib $PROJECT/lib/FreeType/include \
-                    $PROJECT/lib/libpng $PROJECT/lib/Lua \
+LOCAL_C_INCLUDES := $PROJECT/src $PROJECT/lib \
+                    $PROJECT/src/ThirdParty/FreeType $PROJECT/lib/FreeType/include $PROJECT/lib/FreeType/src \
+                    $PROJECT/lib/Lua \
+                    $PROJECT/src/ThirdParty/libpng $PROJECT/lib/libpng \
                     $NDK_HOME/sources/android/native_app_glue
-LOCAL_CFLAGS := $@ -finline-functions
-LOCAL_CPPFLAGS := -std=c++11 -Wall -Wextra -Woverloaded-virtual -Wsign-promo -fno-rtti -fno-exceptions
+LOCAL_CFLAGS := $@
+LOCAL_CPPFLAGS := -std=c++11 -Wall -Wextra -Wold-style-cast -Woverloaded-virtual -Wsign-promo -fno-rtti -fno-exceptions
 
 LOCAL_STATIC_LIBRARIES := android_native_app_glue
 LOCAL_LDLIBS := -landroid -lEGL -lGLESv2 -lOpenSLES -llog -lz
