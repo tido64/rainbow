@@ -269,6 +269,8 @@ Stops channel.
 
 Font objects are used by [labels](#rainbow.label) to display text. Like textures, it is recommended to reuse them whenever possible. A font object is created with a fixed point size and cannot be resized. If a different size is desired, a new font object must be created.
 
+Rainbow currently supports OpenType and TrueType fonts.
+
 <a id="rainbow.font()"></a>
 ### rainbow.font(path, size)
 
@@ -964,6 +966,8 @@ Sets [texture atlas](#rainbow.texture).
 ## rainbow.texture
 
 Texture objects are images decoded and sent to the graphics card as texture. Textures are normally stored as raw bitmaps unless they were stored in a compressed format supported by the platform (e.g. ETC1 or PVRTC). This means that a 1024x1024 texture will normally occupy 4MB. In order to save memory, they are assumed to be [atlases](http://en.wikipedia.org/wiki/Texture_atlas) and should be reused whenever possible.
+
+Rainbow currently supports PNG and PVRTC.
 
 _Note:_ Textures should be square and its sides a power of two (greater than or equal to 64). This is due to how the graphics pipeline works. Even if textures do not meet this recommendation, the graphics drivers will enlarge a texture in order to do so anyway, wasting memory. The maximum size of a texture can be queried in [``rainbow.renderer``](#rainbow.renderer.max_texture_size).
 

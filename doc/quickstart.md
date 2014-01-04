@@ -1,0 +1,76 @@
+# Rainbow: Quick Start
+
+Before you start, please make sure you've read `README.md`. The following
+tutorials will assume that you've already built Rainbow.
+
+## Demo Time
+
+Pick a demo under `demos`. For the purpose of this tutorial, we'll try to get
+`transitions` running.
+
+### Android
+
+1. Create a folder to contain Android files.
+2. Copy `transitions` into this folder.
+3. Follow steps 2-4 for Linux/Mac OS X/Windows.
+4. Rename `transitions` `assets`.
+
+From the folder in step 1, run the build script:
+
+	$ /path/to/rainbow/tools/build.sh android
+
+Connect your device and install it:
+
+	$ adb install -r bin/Rainbow-debug.apk
+
+Start the app on your device.
+
+### iOS
+
+1. Open `build/xcode4/Rainbow.xcodeproj` in Xcode.
+2. Expand `Resources` to see all the convenience libraries.
+3. Right-click `Resources` and choose "Add Files to Rainbow...".
+4. Navigate to `demos` and select `transitions`. Leave "Destination" unchecked
+   and "Create groups for any added folders" selected. Click "Add".
+5. You should now see `transitions` under `Resources`. Right-click it and choose
+   "Add Files to Rainbow...".
+6. This time, navigate to `demos/canvas` and add `canvas.png`.
+
+You should now be able to run this demo in the simulator or on your device.
+
+#### TestFlight
+
+In the top left corner of Xcode, next to the Run and Stop buttons, click on
+'Rainbow' and choose 'Edit Scheme...'. Select 'Archive' and set 'Build
+Configuration' to 'Ad Hoc'. Now you can create an archive and upload it to
+TestFlight.
+
+If you don't want to use TestFlight, simply remove the library from the project.
+
+### Linux / Mac OS X / Windows
+
+1. Copy this folder somewhere. In the following steps, we'll be copying more
+   stuff into this folder.
+2. The `transitions` demo uses some convenience libraries, so navigate to the
+   `lua` folder and copy all the Lua files. (The demo doesn't actually use all
+   of them but we'll just copy all for simplicity's sake.)
+3. We'll also need to copy some basic shaders before we can start Rainbow.
+   Navigate to `src/Graphics/`. Copy the `Shaders` folder (wholesale).
+4. `transitions` also needs a texture. This texture is located in
+   `demos/canvas/`. Copy `canvas.png`.
+
+Now your demo folder should contain at least the following files:
+
+- `Kim.lua`
+- `Math.lua`
+- `Shaders`
+- `Transition.lua`
+- `TransitionEffects.lua`
+- `canvas.png`
+- `main.lua`
+
+Start the demo:
+
+	$ rainbow /path/to/demo
+
+Or if you're on Windows, drag and drop the folder on `rainbow.exe`.

@@ -1,6 +1,6 @@
 # Rainbow
 
-Rainbow is a scriptable, cross-platform, 2D rendering engine written in C++.
+Rainbow is a scriptable, cross-platform, 2D game engine written in C++.
 
 ## Features
 
@@ -14,34 +14,61 @@ Rainbow is a scriptable, cross-platform, 2D rendering engine written in C++.
 
 ### Audio
 
-- OpenAL as backend on most platforms.
-  [OpenSL ES](http://www.khronos.org/opensles/) on Android.
-- [Ogg Vorbis](http://www.vorbis.com/) on most platforms. On iOS (exclusively)
-  and Mac OS X (in addition), see the
-  [Multimedia Programming Guide](http://developer.apple.com/library/ios/#documentation/AudioVideo/Conceptual/MultimediaPG/UsingAudio/UsingAudio.html).
+Implemented on top of OpenAL and [OpenSL ES](http://www.khronos.org/opensles/)
+(Android-only). Support for the following formats:
+
+- Android: Any format supported by Android's
+  [OpenSL ES](http://www.khronos.org/opensles/) implementation
+- Linux/Mac OS X/Windows: [Ogg Vorbis](http://www.vorbis.com/)
+- iOS/Mac OS X (additionally): Any format listed in the
+  [Multimedia Programming Guide](https://developer.apple.com/library/ios/documentation/AudioVideo/Conceptual/MultimediaPG/UsingAudio/UsingAudio.html#//apple_ref/doc/uid/TP40009767-CH2-SW33)
 
 ### Graphics
 
-- [OpenGL](http://www.opengl.org/) and
-  [OpenGL ES 2.0](http://www.khronos.org/opengles/2_X/)
+Uses mostly [OpenGL ES 2.0](http://www.khronos.org/opengles/2_X/) compatible
+features:
+
 - Shaders
-- Sprites-based rendering, with implicit batching
-- Text rendering (TrueType and OpenType through [FreeType](http://www.freetype.org/))
+- Sprites-based rendering with implicit batching
+- Text rendering (supports TrueType and OpenType through
+  [FreeType](http://www.freetype.org/))
 - Texture atlas ([PNG](http://www.libpng.org/pub/png/) and PVRTC)
 
 ### Input
 
-- Accelerometer on Android and iOS.
-- Keyboard and mouse on desktop platforms.
-- Touch on Android and iOS.
+- Accelerometer (Android and iOS)
+- Keyboard and mouse (Linux/Mac OS X/Windows)
+- Microphone (Android and iOS)
+- Touch (Android and iOS)
 
 ### Others
 
+- [Lua](http://www.lua.org/) scripting language with debugging console and hot
+  reloading
+- Physics ([Box2D](http://box2d.org/))
 - Scene graph
-- Embedded [Lua](http://www.lua.org/) scripting language
-- Physics ([Box2D](http://http://box2d.org/))
+- [TestFlight](https://testflightapp.com/) integration
 
-## Building Instructions
+## Structure
+
+- `build` - Contains compilation-related files.
+- `demos` - Demos.
+- `doc` - Documentation.
+- `lib` - Libraries necessary to compile Rainbow.
+- `lua` - Convenience libraries for implementing apps or games.
+- `src` - Rainbow source files.
+- `tests` - Rainbow unit tests.
+- `tools` - Tools such as the build script.
+
+## Building
+
+First of all, clone the repository:
+
+	$ git clone --recursive https://bitbucket.org/tido/rainbow.git
+
+The repository only includes some of the libraries required to build Rainbow.
+The remaining requisites is listed on each platform's section. They must be
+installed or copied into the repository before you can start building Rainbow.
 
 Easiest way to build Rainbow is to use the provided build scripts:
 
@@ -49,59 +76,114 @@ Easiest way to build Rainbow is to use the provided build scripts:
 	$ cd rainbow-build
 	$ /path/to/rainbow/tools/build.sh [platform] [options]
 
-Run `tools/build.sh help` to get an overview of options and configurations.
-`platform` can be omitted if compiling a native build (i.e. not
-cross-compiling).
+Run `build.sh help` to get an overview of options and configurations. `platform`
+can be omitted if compiling a native build (i.e. not cross-compiling).
 
-The repository will include some of the libraries required to build Rainbow.
-[CMake](http://www.cmake.org/) is required if compiling a desktop build. Each
-platform has different requirements as listed below.
+If you have problems running `build.sh`, please make sure it has execution
+permissions:
+
+	$ chmod +x /path/to/rainbow/tools/build.sh
+
+Windows-users have to use `build.bat` instead. For iOS builds, see the
+corresponding section.
 
 ### Android
 
-Requires only [Android SDK](http://developer.android.com/sdk/) and
-[NDK](http://developer.android.com/tools/sdk/ndk/). The build script will create
-an installable APK.
+- [Android NDK](http://developer.android.com/tools/sdk/ndk/)
+- [Android SDK](http://developer.android.com/sdk/)
+
+Once you've installed both, open `rainbow/tools/build-android.sh` and change
+`NDK_HOME` to point at the NDK. The build script will create a debuggable and
+installable APK but is currently only available on Linux/Mac OS X. You can still
+compile for Android on Windows, it just requires some manual labour.
+
+Follow the steps outlined earlier and specify `android` for `platform`:
+
+	$ /path/to/rainbow/tools/build.sh android [options]
 
 ### iOS
 
-Use the provided Xcode project. As of writing, the build script won't compile
-iOS builds.
+- [Xcode](https://itunes.apple.com/no/app/xcode/id497799835?mt=12)
+
+Use the provided Xcode project under `rainbow/build/xcode4/`.
 
 ### Linux (and cross-compiling for Windows)
 
-Make sure to have [Mesa](http://www.mesa3d.org/),
-[OpenAL Soft](http://kcat.strangesoft.net/openal.html) and
-[Vorbis](http://www.vorbis.com/) (particularly Vorbisfile) installed in order to
-properly link Rainbow. Download [SDL](http://libsdl.org/) source code and move
-its contents to `lib/SDL/`.
+- [Boost](http://www.boost.org/) (debug-only)
+- [Clang](http://clang.llvm.org/)
+- [CMake](http://www.cmake.org/)
+- [Mesa](http://www.mesa3d.org/)
+- [Ogg Vorbis](http://www.vorbis.com/)
+- [OpenAL Soft](http://kcat.strangesoft.net/openal.html)
+- [SDL](http://libsdl.org/)
+- [MinGW](http://www.mingw.org/) or
+  [MinGW-w64](http://mingw-w64.sourceforge.net/) (optional)
 
-[Clang](http://clang.llvm.org/) is the default compiler but you can use
-[GCC](http://gcc.gnu.org/), or any other compiler for that matter, by prefixing
-`CC=gcc CXX=g++`.
+You can install most of these using your favourite package manager. For SDL,
+download the source code and extract its content to `rainbow/lib/SDL/`.
 
-Windows builds can be built using [MinGW](http://www.mingw.org/) or
-[MinGW-w64](http://mingw-w64.sourceforge.net/) by issuing `windows` as platform.
+Clang is the default compiler but you can use [GCC](http://gcc.gnu.org/), or any
+other compiler for that matter, by prefixing `CC=gcc CXX=g++`.
+
+Windows builds can be built using MinGW or MinGW-w64 by issuing `windows` as
+platform. However, this method hasn't been maintained in quite some time and may
+no longer work.
 
 ### Mac OS X
 
-Xcode and the Command Line Tools package must be installed. Additionally,
-[CMake](http://www.cmake.org/) and [Vorbis](http://www.vorbis.com/) should be
-installed through [Homebrew](brew.sh) or [MacPorts](http://www.macports.org/).
-Download [SDL](http://libsdl.org/) source code and move its contents to
-`lib/SDL/`.
+- [Boost](http://www.boost.org/) (debug-only)
+- [CMake](http://www.cmake.org/)
+- [Ogg Vorbis](http://www.vorbis.com/)
+- [SDL](http://libsdl.org/)
+- [Xcode](https://itunes.apple.com/no/app/xcode/id497799835?mt=12)
+
+Boost, CMake and Ogg Vorbis can be installed through [Homebrew](http://brew.sh/)
+or [MacPorts](http://www.macports.org/). Download SDL source code and extract
+its content to `rainbow/lib/SDL/`. Xcode's Command Line Tools must be installed.
+
+Warning: If you've downloaded SDL 2.0.x, you may have to manually patch a file.
+In `SDL/cmake/macros.cmake`, near the bottom of the file, there's a line that
+says:
+
+	set(CMAKE_REQUIRED_DEFINITIONS "-ObjC ${PREV_REQUIRED_DEFS}")
+
+Change it to:
+
+	set(CMAKE_REQUIRED_DEFINITIONS "-x objective-c ${PREV_REQUIRED_DEFS}")
 
 ### Windows
 
-Compiling with Visual Studio is supported using prebuilt `libogg`, `libvorbis`,
-`libvorbisfile` and `zlib`. Prebuilt
-[OpenAL Soft](http://kcat.strangesoft.net/openal.html) binary is offered at its
-official home page. Download it and place it with the others. Finally, download
-[SDL](http://libsdl.org/) development libraries and move its contents to
-`lib/SDL/`.
+- [Boost](http://www.boost.org/) (debug-only)
+- [CMake](http://www.cmake.org/)
+- [OpenAL Soft](http://kcat.strangesoft.net/openal.html)
+- [SDL](http://libsdl.org/)
+- [Visual Studio Express for Windows Desktop](http://microsoft.com/express/)
+  (2013 or later)
 
-Use the Windows build script to generate a Visual Studio project:
+Download Boost and extract it. Copy/move the headers folder (usually named
+`boost`) into `rainbow\lib`. Download OpenAL Soft and place the files under
+`rainbow\build\windows\include\` or `rainbow\build\windows\lib\`. Finally,
+download SDL development libraries and move its content to `rainbow\lib\SDL\`.
 
-	> \path\to\rainbow\tools\build.bat
+Alternatively, see "Linux" for cross-compilation.
 
-See Linux for an alternative method.
+## Learning
+
+See documentation (`doc/index.html`) and the demos under `demos`. Note: In order
+to run a demo, you'll need to copy some files into the folder of the demo you
+want to run:
+
+- `lua/*` (you may not need all but it's easier to just copy everything)
+- `src/Graphics/Shaders` (copy the folder, not needed for Android/iOS)
+
+Some demos may use resources that (unfortunately) cannot be distributed with
+Rainbow.
+
+Once you've copied all the necessary files, run `rainbow` inside the folder:
+
+	$ cd /path/to/demo
+	$ rainbow
+
+Or with the path as argument:
+
+	$ rainbow /path/to/demo
