@@ -29,6 +29,7 @@ local F = require(module_path .. "Functional")
 local scenegraph = rainbow.scenegraph
 
 local Parallax = {
+	__gc = nil,
 	__index = nil,
 	hide = nil,
 	move = nil,
@@ -49,15 +50,16 @@ Parallax.__index = setmetatable(Parallax, {
 		end
 		self.layers = F.map(f, layers)
 		return self
-	end,
-	__gc = function(self)
-		scenegraph:remove(self.node)
-		for i = 1, #self.layers do
-			self.layers[i] = nil
-		end
-		self.layers = nil
 	end
 })
+
+function Parallax:__gc()
+	scenegraph:remove(self.node)
+	for i = 1, #self.layers do
+		self.layers[i] = nil
+	end
+	self.layers = nil
+end
 
 function Parallax:hide()
 	scenegraph:disable(self.node)
