@@ -1,6 +1,11 @@
 #!/bin/bash
 GENERATOR=${GENERATOR:-Unix Makefiles}
+IS_INSIDE=$(git rev-parse --show-toplevel 2> /dev/null)
 RAINBOW=$(cd -P "$(dirname $0)/.." && pwd)
+if [[ "$IS_INSIDE" == "$RAINBOW" ]]; then
+	echo "$0: Cannot run while still inside the repository"
+	exit 0
+fi
 
 function compile {
 	case "$1" in
@@ -17,7 +22,11 @@ function compile {
 			make
 			;;
 		"Xcode")
-			xcrun xcodebuild -project Rainbow.xcodeproj -arch $(uname -m) build
+			local configuration="Debug"
+			if [[ "$ARGS" =~ CMAKE_BUILD_TYPE=([A-za-z]+) ]]; then
+				configuration=${BASH_REMATCH[1]}
+			fi
+			xcrun xcodebuild -project Rainbow.xcodeproj -configuration $configuration -arch $(uname -m) build
 			;;
 		*)
 			;;
@@ -38,6 +47,9 @@ case $1 in
 		echo "  -DGTEST=1                Enable Google C++ Testing Framework"
 		echo "  -DUSE_HEIMDALL=1         Enable Heimdall debugging facilities"
 		echo "  -DUSE_PHYSICS=1          Enable physics module (Box2D)"
+		echo
+		echo "  CMake options are passed directly to CMake so you can set variables like"
+		echo "  -DCMAKE_BUILD_TYPE=<type> among others."
 		echo
 		echo "Environment variables:"
 		echo "  CC                       C compiler command"

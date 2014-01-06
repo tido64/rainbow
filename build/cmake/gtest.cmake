@@ -4,7 +4,7 @@ if(NOT CMAKE_BUILD_TYPE STREQUAL Release)
 
 	add_library(gtest STATIC ${GTEST_SOURCE_DIR}/src/gtest-all.cc)
 	if(NOT WIN32)
-		set_target_properties(gtest PROPERTIES COMPILE_FLAGS "-Wno-old-style-cast")
+		set_target_properties(gtest PROPERTIES COMPILE_FLAGS "-w")
 	endif()
 	set_property(TARGET gtest APPEND PROPERTY INCLUDE_DIRECTORIES ${GTEST_INCLUDE_DIRS})
 	add_definitions(-DGTEST_HAS_RTTI=0 -DRAINBOW_TEST)
