@@ -2,15 +2,9 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
-#include <Graphics/Renderer.h>
+#include "Graphics/Renderer.h"
 #include "Graphics/ShaderManager.h"
-
-#ifdef GL_ES_VERSION_2_0
-#	include "Graphics/Shaders/Shaders.h"
-#else
-#	define simple2d_vsh  "Shaders/Simple2D.vsh"
-#	define simple_fsh    "Shaders/Simple.fsh"
-#endif
+#include "Graphics/Shaders.h"
 
 namespace b2
 {
@@ -22,8 +16,8 @@ namespace b2
 			memset(this->worlds, 0, sizeof(this->worlds));
 
 			Shader::ShaderParams shaders[] = {
-				{ Shader::kTypeVertex, 0, simple2d_vsh },
-				{ Shader::kTypeFragment, 0, simple_fsh },
+				{ Shader::kTypeVertex, 0, Rainbow::Shaders::kSimple2Dv },
+				{ Shader::kTypeFragment, 0, Rainbow::Shaders::kSimplef },
 				{ Shader::kTypeInvalid, 0, nullptr }
 			};
 			const Shader::AttributeParams attributes[] = {

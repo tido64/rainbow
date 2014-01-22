@@ -19,8 +19,8 @@ def main():
 			if not filename.endswith('fsh') and not filename.endswith('vsh'):
 				continue
 			level = 0
-			shader = [ 'const char ' + filename.lower() + '[] =' ]
-			shader[0] = shader[0].replace('.', '_')
+			shader = [ 'const char *const k' + filename + ' =' ]
+			shader[0] = re.sub(r"\.([fv])sh", r"\1", shader[0])
 			f = open(os.path.join(dirname, filename), 'r')
 			for line in f:
 				if comment.search(line):

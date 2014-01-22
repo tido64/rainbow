@@ -132,6 +132,7 @@
 		1949374D1756795900CF3FC6 /* DataMap_Unix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1949374B1756795900CF3FC6 /* DataMap_Unix.cpp */; };
 		19655DEB187C65AF0053C398 /* freetype.c in Sources */ = {isa = PBXBuildFile; fileRef = 19655DE9187C65AF0053C398 /* freetype.c */; };
 		196911CD1713564A002BC2E4 /* VertexArray.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 196911CB1713564A002BC2E4 /* VertexArray.cpp */; };
+		196C0A72189082860042190D /* Shaders.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 196C0A70189082860042190D /* Shaders.cpp */; };
 		196CB728161E4ADD0068C809 /* Gatekeeper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 196CB725161E4ADD0068C809 /* Gatekeeper.cpp */; };
 		196CB72F161E4D940068C809 /* b2MotorJoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 196CB72D161E4D940068C809 /* b2MotorJoint.cpp */; };
 		197396DD15A505F60064BF7D /* TextureManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 197396DB15A505F60064BF7D /* TextureManager.cpp */; };
@@ -444,6 +445,8 @@
 		19655DEA187C65AF0053C398 /* ftmodule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ftmodule.h; path = ../../src/ThirdParty/FreeType/ftmodule.h; sourceTree = "<group>"; };
 		196911CB1713564A002BC2E4 /* VertexArray.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = VertexArray.cpp; sourceTree = "<group>"; };
 		196911CC1713564A002BC2E4 /* VertexArray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VertexArray.h; sourceTree = "<group>"; };
+		196C0A70189082860042190D /* Shaders.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Shaders.cpp; sourceTree = "<group>"; };
+		196C0A71189082860042190D /* Shaders.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Shaders.h; sourceTree = "<group>"; };
 		196CB725161E4ADD0068C809 /* Gatekeeper.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = Gatekeeper.cpp; sourceTree = "<group>"; };
 		196CB726161E4ADD0068C809 /* Gatekeeper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Gatekeeper.h; sourceTree = "<group>"; };
 		196CB72D161E4D940068C809 /* b2MotorJoint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = b2MotorJoint.cpp; sourceTree = "<group>"; };
@@ -886,6 +889,8 @@
 				191484E61891BD87004014D7 /* ShaderDetails.h */,
 				19EBC54F16599D9F00D3B5D7 /* ShaderManager.cpp */,
 				19EBC55016599D9F00D3B5D7 /* ShaderManager.h */,
+				196C0A70189082860042190D /* Shaders.cpp */,
+				196C0A71189082860042190D /* Shaders.h */,
 				1939A1D4152C425D00494609 /* Sprite.cpp */,
 				1939A1D5152C425D00494609 /* Sprite.h */,
 				1939A1D6152C425D00494609 /* SpriteBatch.cpp */,
@@ -1284,6 +1289,7 @@
 				1939A071152C401300494609 /* b2PrismaticJoint.cpp in Sources */,
 				1939A072152C401300494609 /* b2PulleyJoint.cpp in Sources */,
 				1939A073152C401300494609 /* b2RevoluteJoint.cpp in Sources */,
+				196C0A72189082860042190D /* Shaders.cpp in Sources */,
 				1939A074152C401300494609 /* b2RopeJoint.cpp in Sources */,
 				1939A075152C401300494609 /* b2WeldJoint.cpp in Sources */,
 				1939A076152C401300494609 /* b2WheelJoint.cpp in Sources */,

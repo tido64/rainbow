@@ -6,13 +6,7 @@
 
 #include "Common/Data.h"
 #include "Graphics/ShaderManager.h"
-
-#ifdef GL_ES_VERSION_2_0
-#	include "Graphics/Shaders/Shaders.h"
-#else
-#	define fixed2d_vsh "Shaders/Fixed2D.vsh"
-#	define fixed2d_fsh "Shaders/Fixed2D.fsh"
-#endif
+#include "Graphics/Shaders.h"
 
 // For platforms not using GLEW.
 #ifndef GLAPIENTRY
@@ -191,8 +185,8 @@ ShaderManager::ShaderManager() : active(-1)
 	R_ASSERT(Instance == nullptr, "There can be only one ShaderManager");
 
 	Shader::ShaderParams shaders[] = {
-		{ Shader::kTypeVertex, 0, fixed2d_vsh },
-		{ Shader::kTypeFragment, 0, fixed2d_fsh },
+		{ Shader::kTypeVertex, 0, Rainbow::Shaders::kFixed2Dv },
+		{ Shader::kTypeFragment, 0, Rainbow::Shaders::kFixed2Df },
 		{ Shader::kTypeInvalid, 0, nullptr }
 	};
 	const int pid = this->compile(shaders, nullptr);
