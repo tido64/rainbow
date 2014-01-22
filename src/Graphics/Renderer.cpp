@@ -8,13 +8,6 @@
 #include "Graphics/ShaderManager.h"
 #include "Graphics/SpriteBatch.h"
 
-#ifdef GL_ES_VERSION_2_0
-#	include "Graphics/Shaders/Shaders.h"
-#else
-#	define fixed2d_vsh "Shaders/Fixed2D.vsh"
-#	define fixed2d_fsh "Shaders/Fixed2D.fsh"
-#endif
-
 #define S4(i)       S1((i)),   S1((i) +   1),   S1((i) +   2),   S1((i) +   3)
 #define S16(i)      S4((i)),   S4((i) +   4),   S4((i) +   8),   S4((i) +  12)
 #define S64(i)     S16((i)),  S16((i) +  16),  S16((i) +  32),  S16((i) +  48)
@@ -47,8 +40,7 @@ namespace Renderer
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		const char *shaders[] = { fixed2d_vsh, fixed2d_fsh };
-		ShaderManager::Instance = new ShaderManager(shaders);
+		ShaderManager::Instance = new ShaderManager();
 		if (!ShaderManager::Instance || !*ShaderManager::Instance)
 		{
 			delete ShaderManager::Instance;
@@ -147,14 +139,14 @@ namespace Renderer
 	{
 		VertexArray::unbind();
 		glVertexAttribPointer(
-				Shader::COLOR, 4, GL_UNSIGNED_BYTE, GL_TRUE,
-				sizeof(SpriteVertex), &vertices->color);
+		    Shader::kAttributeColor, 4, GL_UNSIGNED_BYTE, GL_TRUE,
+		    sizeof(SpriteVertex), &vertices->color);
 		glVertexAttribPointer(
-				Shader::TEXCOORD, 2, GL_FLOAT, GL_FALSE, sizeof(SpriteVertex),
-				&vertices->texcoord);
+		    Shader::kAttributeTexCoord, 2, GL_FLOAT, GL_FALSE,
+		    sizeof(SpriteVertex), &vertices->texcoord);
 		glVertexAttribPointer(
-				Shader::VERTEX, 2, GL_FLOAT, GL_TRUE, sizeof(SpriteVertex),
-				&vertices->position);
+		    Shader::kAttributeVertex, 2, GL_FLOAT, GL_TRUE,
+		    sizeof(SpriteVertex), &vertices->position);
 
 		glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_SHORT, nullptr);
 

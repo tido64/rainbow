@@ -34,17 +34,12 @@ public:
 
 	static ShaderManager *Instance;
 
-	/// Creates program.
-	/// \param shaders  Shader ids to attach.
-	/// \param count    Number of shader ids.
-	/// \return Unique program identifier.
-	int create_program(const int *shaders, const size_t count);
-
-	/// Creates shader.
-	/// \param type    Shader type.
-	/// \param source  Shader source code.
-	/// \return Unique shader identifier.
-	int create_shader(int type, const char *source);
+	/// Compiles program.
+	/// \param shaders     Shader parameters.
+	/// \param attributes  Shader attributes.
+	/// \return Unique program identifier; -1 if unsuccessful.
+	int compile(Shader::ShaderParams *shaders,
+	            const Shader::AttributeParams *attributes);
 
 	/// Returns program details.
 	inline Shader::Details& get_program(const int pid) const;
@@ -73,7 +68,7 @@ private:
 
 	float ortho[16];
 
-	ShaderManager(const char *shaders[2]);
+	ShaderManager();
 	~ShaderManager();
 
 	/// Initialises shaders. Run when setting the viewport for the first time.

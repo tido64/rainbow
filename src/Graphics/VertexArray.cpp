@@ -14,13 +14,13 @@ namespace
 	{
 		glBindBuffer(GL_ARRAY_BUFFER, buffer);
 		glVertexAttribPointer(
-			Shader::COLOR, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(SpriteVertex),
+			Shader::kAttributeColor, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(SpriteVertex),
 			reinterpret_cast<void*>(offsetof(SpriteVertex, color)));
 		glVertexAttribPointer(
-			Shader::TEXCOORD, 2, GL_FLOAT, GL_FALSE, sizeof(SpriteVertex),
+			Shader::kAttributeTexCoord, 2, GL_FLOAT, GL_FALSE, sizeof(SpriteVertex),
 			reinterpret_cast<void*>(offsetof(SpriteVertex, texcoord)));
 		glVertexAttribPointer(
-			Shader::VERTEX, 2, GL_FLOAT, GL_TRUE, sizeof(SpriteVertex),
+			Shader::kAttributeVertex, 2, GL_FLOAT, GL_TRUE, sizeof(SpriteVertex),
 			reinterpret_cast<void*>(offsetof(SpriteVertex, position)));
 	}
 }
@@ -70,9 +70,9 @@ namespace Renderer
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, g_index_buffer);
 
 		rBindBuffer(this->buffer);
-		glEnableVertexAttribArray(Shader::COLOR);
-		glEnableVertexAttribArray(Shader::TEXCOORD);
-		glEnableVertexAttribArray(Shader::VERTEX);
+		glEnableVertexAttribArray(Shader::kAttributeColor);
+		glEnableVertexAttribArray(Shader::kAttributeTexCoord);
+		glEnableVertexAttribArray(Shader::kAttributeVertex);
 
 		glBindVertexArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);

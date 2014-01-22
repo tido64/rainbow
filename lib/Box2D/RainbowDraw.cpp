@@ -152,8 +152,12 @@ void RainbowDraw::PopulateCircleBuffer(const b2Vec2& center, float32 radius, con
 
 void RainbowDraw::SetBuffer()
 {
-	glVertexAttribPointer(Shader::COLOR, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), &this->vertices->color);
-	glVertexAttribPointer(Shader::VERTEX, 2, GL_FLOAT, GL_TRUE, sizeof(Vertex), &this->vertices->vertex);
+	glVertexAttribPointer(
+	    Shader::kAttributeColor, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+	    &this->vertices->color);
+	glVertexAttribPointer(
+	    Shader::kAttributeVertex, 2, GL_FLOAT, GL_TRUE, sizeof(Vertex),
+	    &this->vertices->vertex);
 }
 
 #endif

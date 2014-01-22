@@ -7,6 +7,13 @@
 #include "Common/Data.h"
 #include "Graphics/ShaderManager.h"
 
+#ifdef GL_ES_VERSION_2_0
+#	include "Graphics/Shaders/Shaders.h"
+#else
+#	define fixed2d_vsh "Shaders/Fixed2D.vsh"
+#	define fixed2d_fsh "Shaders/Fixed2D.fsh"
+#endif
+
 // For platforms not using GLEW.
 #ifndef GLAPIENTRY
 #	define GLAPIENTRY
@@ -16,6 +23,13 @@ typedef std::unique_ptr<char[]> unique_str;
 
 namespace
 {
+	const Shader::AttributeParams kAttributeDefaultParams[] = {
+		{ Shader::kAttributeVertex, "vertex" },
+		{ Shader::kAttributeColor, "color" },
+		{ Shader::kAttributeTexCoord, "texcoord" },
+		{ Shader::kAttributeNone, nullptr }
+	};
+
 	void set_projection_matrix(const GLuint program, const GLfloat *ortho)
 	{
 		const int location = glGetUniformLocation(program, "mvp_matrix");
@@ -43,66 +57,91 @@ namespace
 		}
 		return unique_str();
 	};
+
+	int compile_shader(const Shader::ShaderParams &shader)
+	{
+	#ifdef GL_ES_VERSION_2_0
+		const char *source = shader.source;
+	#else
+		const Data &glsl = Data::load_asset(shader.source);
+		if (!glsl)
+		{
+			R_ASSERT(glsl, "Failed to load shader");
+			return -1;
+		}
+		const char *source = glsl;
+	#endif
+
+		const GLuint id = glCreateShader(shader.type);
+		glShaderSource(id, 1, &source, nullptr);
+		glCompileShader(id);
+
+		const unique_str &error =
+		    verify(id, GL_COMPILE_STATUS, glGetShaderiv, glGetShaderInfoLog);
+		if (error.get())
+		{
+			R_ERROR("[Rainbow] GLSL: Failed to compile %s shader: %s\n",
+			        (shader.type == Shader::kTypeVertex) ? "vertex"
+			                                             : "fragment",
+			        error.get());
+			glDeleteShader(id);
+			return -1;
+		}
+
+		return id;
+	}
+
+	int link_program(const Shader::ShaderParams *shaders,
+	                 const Shader::AttributeParams *attributes)
+	{
+		const GLuint program = glCreateProgram();
+		for (auto shader = shaders; shader->type != Shader::kTypeInvalid; ++shader)
+			glAttachShader(program, shader->id);
+		for (auto attrib = attributes; attrib->name; ++attrib)
+			glBindAttribLocation(program, attrib->index, attrib->name);
+		glLinkProgram(program);
+
+		const unique_str &error =
+		    verify(program, GL_LINK_STATUS, glGetProgramiv, glGetProgramInfoLog);
+		if (error.get())
+		{
+			R_ERROR("[Rainbow] GLSL: Failed to link program: %s\n",
+			        error.get());
+			glDeleteProgram(program);
+			return -1;
+		}
+
+		return program;
+	}
 }
 
 ShaderManager *ShaderManager::Instance = nullptr;
 
-int ShaderManager::create_program(const int *shaders, const size_t count)
+int ShaderManager::compile(Shader::ShaderParams *shaders,
+                           const Shader::AttributeParams *attributes)
 {
-	const GLuint program = glCreateProgram();
-	for (size_t i = 0; i < count; ++i)
-		glAttachShader(program, this->shaders[shaders[i]]);
-
-	glBindAttribLocation(program, Shader::VERTEX, "vertex");
-	glBindAttribLocation(program, Shader::COLOR, "color");
-	glBindAttribLocation(program, Shader::TEXCOORD, "texcoord");
-
-	glLinkProgram(program);
-
-	const unique_str &error =
-			verify(program, GL_LINK_STATUS, glGetProgramiv, glGetProgramInfoLog);
-	if (error.get())
+	for (auto shader = shaders; shader->type != Shader::kTypeInvalid; ++shader)
 	{
-		R_ERROR("[Rainbow] GLSL: Failed to link program: %s\n", error.get());
-		glDeleteProgram(program);
-		return Shader::INVALID;
+		if (!shader->source)
+		{
+			shader->id = this->shaders[shader->id];
+			continue;
+		}
+		if (shader->id > 0)
+			continue;
+		const int id = compile_shader(*shader);
+		if (id < 0)
+			return id;
+		this->shaders.push_back(id);
+		shader->id = id;
 	}
-
+	if (!attributes)
+		attributes = kAttributeDefaultParams;
+	const int program = link_program(shaders, attributes);
+	if (program < 0)
+		return program;
 	this->programs.push_back(Shader::Details(program));
 	return this->programs.size() - 1;
-}
-
-int ShaderManager::create_shader(int type, const char *src)
-{
-#ifdef GL_ES_VERSION_2_0
-	const char *source = src;
-#else
-	const Data &glsl = Data::load_asset(src);
-	if (!glsl)
-	{
-		R_ASSERT(glsl, "Failed to load shader");
-		return Shader::INVALID;
-	}
-	const char *source = glsl;
-#endif
-
-	const GLuint id = glCreateShader(type);
-	glShaderSource(id, 1, &source, nullptr);
-	glCompileShader(id);
-
-	const unique_str &error =
-			verify(id, GL_COMPILE_STATUS, glGetShaderiv, glGetShaderInfoLog);
-	if (error.get())
-	{
-		R_ERROR("[Rainbow] GLSL: Failed to compile %s shader: %s\n",
-		        (type == GL_VERTEX_SHADER) ? "vertex" : "fragment",
-		        error.get());
-		glDeleteShader(id);
-		return Shader::INVALID;
-	}
-
-	this->shaders.push_back(id);
-	return this->shaders.size() - 1;
 }
 
 void ShaderManager::set(const float width, const float height)
@@ -138,29 +177,26 @@ void ShaderManager::use(const int program)
 
 	set_projection_matrix(details.program, this->ortho);
 
-	glEnableVertexAttribArray(Shader::VERTEX);
-	glEnableVertexAttribArray(Shader::COLOR);
+	glEnableVertexAttribArray(Shader::kAttributeVertex);
+	glEnableVertexAttribArray(Shader::kAttributeColor);
 
 	if (!details.texture0)
-		glDisableVertexAttribArray(Shader::TEXCOORD);
+		glDisableVertexAttribArray(Shader::kAttributeTexCoord);
 	else
-		glEnableVertexAttribArray(Shader::TEXCOORD);
+		glEnableVertexAttribArray(Shader::kAttributeTexCoord);
 }
 
-ShaderManager::ShaderManager(const char *shaders[2]) : active(-1)
+ShaderManager::ShaderManager() : active(-1)
 {
 	R_ASSERT(Instance == nullptr, "There can be only one ShaderManager");
-	R_ASSERT(shaders[0] && shaders[1],
-	         "No vertex and/or fragment shaders specified");
 
-	const int tmp[] = {
-		this->create_shader(Shader::VERTEX_SHADER, shaders[0]),
-		this->create_shader(Shader::FRAGMENT_SHADER, shaders[1])
+	Shader::ShaderParams shaders[] = {
+		{ Shader::kTypeVertex, 0, fixed2d_vsh },
+		{ Shader::kTypeFragment, 0, fixed2d_fsh },
+		{ Shader::kTypeInvalid, 0, nullptr }
 	};
-	R_ASSERT(tmp[0] != Shader::INVALID && tmp[1] != Shader::INVALID,
-	         "Failed to compile default shader");
-	const int pid = this->create_program(tmp, 2);
-	R_ASSERT(pid != Shader::INVALID, "Failed to compile default shader");
+	const int pid = this->compile(shaders, nullptr);
+	R_ASSERT(pid >= 0, "Failed to compile default shader");
 
 	memset(this->ortho, 0, sizeof(this->ortho));
 	this->ortho[ 0] =  1.0f;

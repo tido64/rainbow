@@ -21,13 +21,20 @@ namespace b2
 		{
 			memset(this->worlds, 0, sizeof(this->worlds));
 
-			int shaders[2] = {
-				ShaderManager::Instance->create_shader(Shader::VERTEX_SHADER, simple2d_vsh),
-				ShaderManager::Instance->create_shader(Shader::FRAGMENT_SHADER, simple_fsh)
+			Shader::ShaderParams shaders[] = {
+				{ Shader::kTypeVertex, 0, simple2d_vsh },
+				{ Shader::kTypeFragment, 0, simple_fsh },
+				{ Shader::kTypeInvalid, 0, nullptr }
 			};
-			this->program = ShaderManager::Instance->create_program(shaders, 2);
+			const Shader::AttributeParams attributes[] = {
+				{ Shader::kAttributeVertex, "vertex" },
+				{ Shader::kAttributeColor, "color" },
+				{ Shader::kAttributeNone, nullptr }
+			};
+			this->program =
+			    ShaderManager::Instance->compile(shaders, attributes);
 			Shader::Details &details =
-					ShaderManager::Instance->get_program(this->program);
+			    ShaderManager::Instance->get_program(this->program);
 			details.texture0 = false;
 		}
 

@@ -9,21 +9,28 @@
 
 namespace Shader
 {
-	enum Attribute
+	enum Attribute : unsigned int
 	{
-		VERTEX,
-		COLOR,
-		TEXCOORD
+		kAttributeVertex,
+		kAttributeColor,
+		kAttributeTexCoord,
+		kAttributeNone
 	};
 
-	enum Type
+	enum Type : unsigned int
 	{
-		FRAGMENT_SHADER = GL_FRAGMENT_SHADER,
-		VERTEX_SHADER = GL_VERTEX_SHADER,
+		kTypeInvalid = 0,
+		kTypeFragment = GL_FRAGMENT_SHADER,
+		kTypeVertex = GL_VERTEX_SHADER
 	#ifdef GL_GEOMETRY_SHADER
-		GEOMETRY_SHADER = GL_GEOMETRY_SHADER,
+		, kTypeGeometry = GL_GEOMETRY_SHADER
 	#endif
-		INVALID = -1
+	};
+
+	struct AttributeParams
+	{
+		unsigned int index;
+		const char *name;
 	};
 
 	struct Details
@@ -34,6 +41,13 @@ namespace Shader
 
 		Details(const unsigned int program) :
 			texture0(true), texture1(false), program(program) { }
+	};
+
+	struct ShaderParams
+	{
+		Type type;
+		unsigned int id;
+		const char *source;
 	};
 }
 
