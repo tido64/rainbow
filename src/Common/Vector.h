@@ -20,7 +20,7 @@ template<typename T>
 class Vector : private NonCopyable<Vector<T> >
 {
 public:
-	Vector(const int reserve = 8);
+	Vector(const size_t reserve = 4);
 	Vector(Vector<T> &&);
 	~Vector();
 
@@ -92,7 +92,7 @@ private:
 };
 
 template<typename T>
-Vector<T>::Vector(const int reserve) :
+Vector<T>::Vector(const size_t reserve) :
 	count(0), reserved(0), c_array(nullptr)
 {
 	this->reserve(reserve);
