@@ -165,19 +165,20 @@ void ShaderManager::use(const int program)
 	if (program == this->active)
 		return;
 
+	const Shader::Details &current = this->programs[this->active];
 	this->active = program;
 	const Shader::Details &details = this->programs[this->active];
 	glUseProgram(details.program);
 
 	set_projection_matrix(details.program, this->ortho);
 
-	glEnableVertexAttribArray(Shader::kAttributeVertex);
-	glEnableVertexAttribArray(Shader::kAttributeColor);
-
-	if (!details.texture0)
-		glDisableVertexAttribArray(Shader::kAttributeTexCoord);
-	else
-		glEnableVertexAttribArray(Shader::kAttributeTexCoord);
+	if (details.texture0 != current.texture0)
+	{
+		if (!details.texture0)
+			glDisableVertexAttribArray(Shader::kAttributeTexCoord);
+		else
+			glEnableVertexAttribArray(Shader::kAttributeTexCoord);
+	}
 }
 
 ShaderManager::ShaderManager() : active(-1)
@@ -217,6 +218,12 @@ void ShaderManager::initialise()
 {
 	R_ASSERT(this->active < 0, "ShaderManager is already initialised");
 
-	this->use(0);
+	this->active = 0;
+	const Shader::Details &details = this->programs[this->active];
+	glUseProgram(details.program);
+	set_projection_matrix(details.program, this->ortho);
 	glUniform1i(glGetUniformLocation(this->programs[0].program, "texture"), 0);
+	glEnableVertexAttribArray(Shader::kAttributeVertex);
+	glEnableVertexAttribArray(Shader::kAttributeColor);
+	glEnableVertexAttribArray(Shader::kAttributeTexCoord);
 }
