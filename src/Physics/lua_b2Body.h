@@ -118,9 +118,9 @@ namespace b2
 		}
 
 		class Body :
-			public Rainbow::Lua::Bind<Body , b2Body, Rainbow::Lua::kBindTypeWeak>
+			public Rainbow::Lua::Bind<Body, b2Body, Rainbow::Lua::kBindTypeWeak>
 		{
-			friend class Rainbow::Lua::Bind<Body , b2Body, Rainbow::Lua::kBindTypeWeak>;
+			friend class Rainbow::Lua::Bind<Body, b2Body, Rainbow::Lua::kBindTypeWeak>;
 
 		public:
 			Body(lua_State *);

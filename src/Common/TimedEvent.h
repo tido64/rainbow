@@ -8,27 +8,27 @@
 #include "Common/Debug.h"
 
 /// A ticker with a configurable time interval.
-template<class T>
+template<typename T>
 class TimedEvent
 {
 public:
 	/// Returns whether this ticker is running.
-	inline bool is_stopped();
+	bool is_stopped() const;
 
 	/// Sets time till a tick.
-	inline void set_timeout(const unsigned int timeout);
+	void set_timeout(const unsigned int timeout);
 
 	/// Starts accumulating time.
-	inline void start();
+	void start();
 
 	/// Stops accumulating time.
-	inline void stop();
+	void stop();
 
 	/// Accumulates time and calls \c tick() when time is up.
 	void update(const unsigned long dt);
 
 protected:
-	inline TimedEvent(const unsigned int timeout);
+	TimedEvent(const unsigned int timeout);
 	~TimedEvent() = default;
 
 private:
@@ -37,33 +37,33 @@ private:
 	unsigned int timeout;      ///< Time till a tick.
 };
 
-template<class T>
-bool TimedEvent<T>::is_stopped()
+template<typename T>
+bool TimedEvent<T>::is_stopped() const
 {
 	return this->stopped;
 }
 
-template<class T>
+template<typename T>
 void TimedEvent<T>::set_timeout(const unsigned int timeout)
 {
 	this->timeout = timeout;
 	this->accumulated = 0;
 }
 
-template<class T>
+template<typename T>
 void TimedEvent<T>::start()
 {
 	R_ASSERT(this->timeout > 0, "No time out set");
 	this->stopped = false;
 }
 
-template<class T>
+template<typename T>
 void TimedEvent<T>::stop()
 {
 	this->stopped = true;
 }
 
-template<class T>
+template<typename T>
 void TimedEvent<T>::update(const unsigned long dt)
 {
 	if (this->stopped)
@@ -77,7 +77,7 @@ void TimedEvent<T>::update(const unsigned long dt)
 	}
 }
 
-template<class T>
+template<typename T>
 TimedEvent<T>::TimedEvent(const unsigned int timeout) :
 	stopped(false), accumulated(0), timeout(timeout) { }
 

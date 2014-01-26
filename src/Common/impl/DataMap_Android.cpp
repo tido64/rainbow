@@ -18,7 +18,8 @@ namespace Rainbow
 
 	const unsigned char* DataMapAndroid::bytes() const
 	{
-		return static_cast<const unsigned char*>(AAsset_getBuffer(this->asset)) + this->off;
+		return static_cast<const unsigned char*>(AAsset_getBuffer(this->asset))
+		       + this->off;
 	}
 
 	size_t DataMapAndroid::size() const
@@ -28,7 +29,8 @@ namespace Rainbow
 
 	DataMapAndroid::operator const char*() const
 	{
-		return static_cast<const char*>(AAsset_getBuffer(this->asset)) + this->off;
+		return static_cast<const char*>(AAsset_getBuffer(this->asset))
+		       + this->off;
 	}
 }
 

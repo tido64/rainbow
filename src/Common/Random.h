@@ -37,7 +37,8 @@ namespace Random
 	template<typename T>
 	inline T next(const T n1, const T n2);
 
-	/// Sets the random number generator seed. Must be called before any other calls.
+	/// Sets the random number generator seed. Must be called before any other
+	/// calls.
 	inline void seed(const uint32_t seed);
 
 	double next()
@@ -61,9 +62,8 @@ namespace Random
 	void seed(const uint32_t seed)
 	{
 		dsfmt_gv_init_gen_rand(
-				(seed == 0)
-				? Chrono::clock::now().time_since_epoch().count()
-				: seed);
+		    (seed == 0) ? Chrono::clock::now().time_since_epoch().count()
+		                : seed);
 	}
 }
 

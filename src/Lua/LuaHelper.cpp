@@ -10,36 +10,36 @@
 #include "Lua/LuaDebugging.h"
 #include "Lua/LuaHelper.h"
 
+namespace
+{
+	const char kLuaErrorGeneral[] = "general";
+	const char kLuaErrorRuntime[] = "runtime";
+	const char kLuaErrorSyntax[]  = "syntax";
+	const char kLuaErrorMemory[]  = "memory allocation";
+	const char kLuaErrorErrorHandling[] = "error handling";
+	const char kLuaErrorType[] = "Object is not of type '%s'";
+
+	int load_module(lua_State *L,
+	                char *const path,
+	                const char *const module,
+	                const char *const suffix)
+	{
+		strcpy(path, module);
+		strcat(path, suffix);
+		const File &file = File::open_asset(path);
+		if (!file)
+			return 0;
+		const int result = Rainbow::Lua::load(L, Data(file), module, false);
+		if (result == 0)
+			return luaL_error(L, "Failed to load '%s'", module);
+		return result;
+	}
+}
+
 namespace Rainbow
 {
 	namespace Lua
 	{
-		namespace
-		{
-			const char kLuaErrorGeneral[] = "general";
-			const char kLuaErrorRuntime[] = "runtime";
-			const char kLuaErrorSyntax[]  = "syntax";
-			const char kLuaErrorMemory[]  = "memory allocation";
-			const char kLuaErrorErrorHandling[] = "error handling";
-			const char kLuaErrorType[] = "Object is not of type '%s'";
-
-			int load_module(lua_State *L,
-			                char *const path,
-			                const char *const module,
-			                const char *const suffix)
-			{
-				strcpy(path, module);
-				strcat(path, suffix);
-				const File &file = File::open_asset(path);
-				if (!file)
-					return 0;
-				const int result = load(L, Data(file), module, false);
-				if (result == 0)
-					return luaL_error(L, "Failed to load '%s'", module);
-				return result;
-			}
-		}
-
 		void error(lua_State *L, const int lua_e)
 		{
 			R_ASSERT(lua_e != LUA_OK, "No error to report");
@@ -77,7 +77,8 @@ namespace Rainbow
 					: result;
 		}
 
-		int load(lua_State *L, const Data &chunk, const char *name, const bool exec)
+		int
+		load(lua_State *L, const Data &chunk, const char *name, const bool exec)
 		{
 			int e = luaL_loadbuffer(L, chunk, chunk.size(), name);
 			if (e || (exec && (e = lua_pcall(L, 0, LUA_MULTRET, 0))))
@@ -101,7 +102,8 @@ namespace Rainbow
 			lua_getglobal(L, "package");
 			lua_pushliteral(L, "loaded");
 			lua_rawget(L, -2);
-			R_ASSERT(lua_istable(L, -1), "Missing control table 'package.loaded'");
+			R_ASSERT(lua_istable(L, -1),
+			         "Missing control table 'package.loaded'");
 			lua_pushstring(L, name);
 			lua_pushnil(L);
 			lua_rawset(L, -3);

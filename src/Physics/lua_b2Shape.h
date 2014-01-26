@@ -24,9 +24,9 @@ namespace b2
 
 		class PolygonShape :
 			public b2PolygonShape,
-			public Rainbow::Lua::Bind<PolygonShape , b2PolygonShape, Rainbow::Lua::kBindTypeDerived>
+			public Rainbow::Lua::Bind<PolygonShape, b2PolygonShape, Rainbow::Lua::kBindTypeDerived>
 		{
-			friend class Rainbow::Lua::Bind<PolygonShape , b2PolygonShape, Rainbow::Lua::kBindTypeDerived>;
+			friend class Rainbow::Lua::Bind<PolygonShape, b2PolygonShape, Rainbow::Lua::kBindTypeDerived>;
 
 		public:
 			PolygonShape(lua_State *);

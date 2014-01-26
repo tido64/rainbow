@@ -5,8 +5,7 @@
 #ifndef COMMON_NONCOPYABLE_H_
 #define COMMON_NONCOPYABLE_H_
 
-/// Prevents objects of a class from being copy-constructed or assigned to
-/// each other.
+/// Prevents objects of a class from being copy-constructed or assigned.
 template<class T>
 class NonCopyable
 {

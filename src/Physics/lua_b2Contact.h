@@ -14,9 +14,9 @@ namespace b2
 		}
 
 		class Contact :
-			public Rainbow::Lua::Bind<Contact , b2Contact, Rainbow::Lua::kBindTypeWeak>
+			public Rainbow::Lua::Bind<Contact, b2Contact, Rainbow::Lua::kBindTypeWeak>
 		{
-			friend class Rainbow::Lua::Bind<Contact , b2Contact, Rainbow::Lua::kBindTypeWeak>;
+			friend class Rainbow::Lua::Bind<Contact, b2Contact, Rainbow::Lua::kBindTypeWeak>;
 
 		public:
 			inline Contact(lua_State *);

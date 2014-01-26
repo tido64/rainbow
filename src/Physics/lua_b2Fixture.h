@@ -83,10 +83,10 @@ namespace b2
 		}
 
 		class Fixture :
-			public Rainbow::Lua::Bind<Fixture , b2Fixture, Rainbow::Lua::kBindTypeWeak>
+			public Rainbow::Lua::Bind<Fixture, b2Fixture, Rainbow::Lua::kBindTypeWeak>
 		{
 			friend class Contact;
-			friend class Rainbow::Lua::Bind<Fixture , b2Fixture, Rainbow::Lua::kBindTypeWeak>;
+			friend class Rainbow::Lua::Bind<Fixture, b2Fixture, Rainbow::Lua::kBindTypeWeak>;
 
 		public:
 			Fixture(lua_State *);

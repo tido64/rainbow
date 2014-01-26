@@ -13,70 +13,71 @@ class Path;
 namespace Rainbow
 {
 	// TODO: Move error strings to a separate header.
-	static const char kErrorMapFailed[] = "[Rainbow] Failed to memory map '%s' (%x)\n";
+	static const char kErrorMapFailed[] =
+	    "[Rainbow] Failed to memory map '%s' (%x)\n";
 
-	template<class T>
-	class DataMapBase : private T, private NonCopyable<DataMapBase<T> >
+	template<typename T>
+	class DataMapBase : private T, private NonCopyable<DataMapBase<T>>
 	{
 	public:
-		inline DataMapBase(const Path &path);
+		DataMapBase(const Path &path);
 
 		/// Returns offset raw byte array.
 		/// \return Pointer to array. Returns \c nullptr if buffer is empty.
-		inline const unsigned char* bytes() const;
+		const unsigned char* bytes() const;
 
 		/// Offsets data map's start address.
-		inline void offset(const size_t offset);
+		void offset(const size_t offset);
 
 		/// Returns offset buffer size.
-		inline size_t size() const;
+		size_t size() const;
 
-		inline operator bool() const;
-		inline operator const void*() const;
-		inline operator const char*() const;
-		inline operator const unsigned char*() const;
+		operator bool() const;
+		operator const void*() const;
+		operator const char*() const;
+		operator const unsigned char*() const;
 	};
 
-	template<class T>
+	template<typename T>
 	DataMapBase<T>::DataMapBase(const Path &path) : T(path) { }
 
-	template<class T>
+	template<typename T>
 	const unsigned char* DataMapBase<T>::bytes() const
 	{
 		return T::bytes();
 	}
 
-	template<class T>
+	template<typename T>
 	void DataMapBase<T>::offset(const size_t offset)
 	{
 		return T::offset(offset);
 	}
 
-	template<class T>
+	template<typename T>
 	size_t DataMapBase<T>::size() const
 	{
 		return T::size();
 	}
 
-	template<class T>
+	template<typename T>
 	DataMapBase<T>::operator bool() const
 	{
 		return T::operator bool();
 	}
 
-	template<class T>
+	template<typename T>
 	DataMapBase<T>::operator const void*() const
 	{
 		return T::operator const void*();
 	}
 
-	template<class T>
+	template<typename T>
 	DataMapBase<T>::operator const char*() const
 	{
 		return T::operator const char*();
 	}
 
-	template<class T>
+	template<typename T>
 	DataMapBase<T>::operator const unsigned char*() const
 	{
 		return T::operator const unsigned char*();

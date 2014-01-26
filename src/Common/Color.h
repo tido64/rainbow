@@ -21,22 +21,22 @@ namespace Rainbow
 
 		Color() : r(0xff), g(0xff), b(0xff), a(0xff) { }
 
-		Color(const unsigned char r, const unsigned char g, const unsigned char b, const unsigned char a = 0xff) :
+		Color(const unsigned char r,
+		      const unsigned char g,
+		      const unsigned char b,
+		      const unsigned char a = 0xff) :
 			r(r), g(g), b(b), a(a) { }
 
 		Color<unsigned char>& operator=(const unsigned int c)
 		{
-			static_assert(sizeof(unsigned int) >= 4, "int is less than 32-bits");
+			static_assert(sizeof(unsigned int) >= 4,
+			              "int is less than 32-bits");
+
 			this->r = 0xff & (c >> 24);
 			this->g = 0xff & (c >> 16);
 			this->b = 0xff & (c >> 8);
 			this->a = 0xff & c;
 			return *this;
-		}
-
-		bool operator==(const Color<unsigned char> &c)
-		{
-			return (this->r == c.r) && (this->g == c.g) && (this->b == c.b) && (this->a == c.a);
 		}
 	};
 
@@ -54,12 +54,17 @@ namespace Rainbow
 			b((0xff & (c >> 8)) * 1.0f / 255.0f),
 			a((0xff & (c)) * 1.0f / 255.0f) { }
 
-		Color(const float r, const float g, const float b, const float a = 1.0f) :
+		Color(const float r,
+		      const float g,
+		      const float b,
+		      const float a = 1.0f) :
 			r(r), g(g), b(b), a(a) { }
 
 		Color<float>& operator=(const unsigned int c)
 		{
-			static_assert(sizeof(unsigned int) >= 4, "int is less than 32-bits");
+			static_assert(sizeof(unsigned int) >= 4,
+			              "int is less than 32-bits");
+
 			const float white = 1.0f / 255.0f;
 			this->r = (0xff & (c >> 24)) * white;
 			this->g = (0xff & (c >> 16)) * white;
