@@ -12,8 +12,12 @@ namespace
 }
 
 Label::Label() :
-	scale_(1.0f), alignment_(kLeftTextAlignment), stale_(0), width_(0),
-	size_(0) { }
+	scale_(1.0f), alignment_(kLeftTextAlignment), count_(0), stale_(0),
+	width_(0), size_(0),
+	array_([this]() {
+		this->font_->bind();
+		this->buffer_.bind();
+	}) { }
 
 void Label::set_alignment(const Label::Alignment a)
 {
@@ -129,16 +133,17 @@ void Label::update()
 				pen.x += (glyph->advance - glyph->left) * this->scale_;
 				++count;
 			}
+			this->count_ = count * 4;
 			this->align(this->position_.x - pen.x, start, count);
 			this->width_ = pen.x - this->position_.x;
 		}
 		if (this->stale_ & kStaleColor)
 		{
 			SpriteVertex *buffer = this->buffer_.storage().begin();
-			for (size_t i = 0; i < this->size_ * 4; ++i)
+			for (size_t i = 0; i < this->count_; ++i)
 				buffer[i].color = this->color_;
 		}
-		this->buffer_.upload();
+		this->buffer_.upload(this->count_);
 		this->stale_ = 0;
 	}
 }

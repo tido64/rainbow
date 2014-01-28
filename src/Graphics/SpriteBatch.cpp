@@ -3,6 +3,7 @@
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
 #include "Graphics/Drawable.h"
+#include "Graphics/ShaderDetails.h"
 #include "Graphics/SpriteBatch.h"
 
 namespace Renderer { extern const size_t kNumSprites; }
@@ -47,7 +48,16 @@ namespace
 const char Drawable::class_name[] = "Drawable";
 
 SpriteBatch::SpriteBatch(const size_t hint) :
-	sprites_(hint), vertices_(hint * 4) { }
+	sprites_(hint), vertices_(hint * 4),
+	array_([this]() {
+		this->texture_->bind();
+		this->vertices_.bind();
+		if (this->normal_.get())
+		{
+			this->normal_->bind(1);
+			this->normals_.bind(Shader::kAttributeNormal);
+		}
+	}) { }
 
 TextureAtlas* SpriteBatch::set_normal(TextureAtlas *texture)
 {

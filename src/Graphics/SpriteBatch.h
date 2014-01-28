@@ -8,6 +8,7 @@
 #include "Graphics/Buffer.h"
 #include "Graphics/Sprite.h"
 #include "Graphics/TextureAtlas.h"
+#include "Graphics/VertexArray.h"
 
 /// A drawable batch of sprites.
 ///
@@ -28,17 +29,14 @@ public:
 	/// Returns current normal map.
 	inline const TextureAtlas& normal() const;
 
-	/// Returns the normal buffer.
-	inline const Renderer::Buffer<Vec2f>& normal_buffer() const;
-
 	/// Returns the sprites vector.
 	inline const Vector<Sprite>& sprites() const;
 
 	/// Returns current texture.
 	inline const TextureAtlas& texture() const;
 
-	/// Returns the vertex buffer.
-	inline const Renderer::Buffer<SpriteVertex>& vertex_buffer() const;
+	/// Returns the vertex array object.
+	inline const Renderer::VertexArray& vertex_array() const;
 
 	/// Assigns a normal map.
 	TextureAtlas* set_normal(TextureAtlas *texture);
@@ -72,6 +70,7 @@ private:
 	Vector<Sprite> sprites_;                   ///< Vector storing all sprites.
 	Renderer::Buffer<Vec2f> normals_;          ///< Shared normal buffer.
 	Renderer::Buffer<SpriteVertex> vertices_;  ///< Shared, interleaved vertex buffer.
+	Renderer::VertexArray array_;              ///< Vertex array object.
 };
 
 size_t SpriteBatch::count() const
@@ -85,11 +84,6 @@ const TextureAtlas& SpriteBatch::normal() const
 	return *this->normal_.get();
 }
 
-const Renderer::Buffer<Vec2f>& SpriteBatch::normal_buffer() const
-{
-	return this->normals_;
-}
-
 const Vector<Sprite>& SpriteBatch::sprites() const
 {
 	return this->sprites_;
@@ -100,9 +94,9 @@ const TextureAtlas& SpriteBatch::texture() const
 	return *this->texture_.get();
 }
 
-const Renderer::Buffer<SpriteVertex>& SpriteBatch::vertex_buffer() const
+const Renderer::VertexArray& SpriteBatch::vertex_array() const
 {
-	return this->vertices_;
+	return this->array_;
 }
 
 #endif

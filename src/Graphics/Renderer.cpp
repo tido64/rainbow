@@ -92,11 +92,11 @@ namespace Renderer
 		         "Failed to initialise OpenGL viewport");
 	}
 
-	void draw(const Label &label)
+	template<typename T>
+	void draw(const T &obj)
 	{
-		label.font().bind();
-		label.vertex_buffer().bind();
-		glDrawElements(GL_TRIANGLES, label.count(), GL_UNSIGNED_SHORT, nullptr);
+		obj.vertex_array().bind();
+		glDrawElements(GL_TRIANGLES, obj.count(), GL_UNSIGNED_SHORT, nullptr);
 	}
 
 	void draw(const SceneGraph::Node &node)
@@ -126,21 +126,9 @@ namespace Renderer
 			draw(*child);
 	}
 
-	void draw(const SpriteBatch &batch)
-	{
-		batch.texture().bind();
-		batch.vertex_buffer().bind();
-		if (ShaderManager::Instance->get_program().texture1)
-		{
-			batch.normal().bind(1);
-			batch.normal_buffer().bind(Shader::kAttributeNormal);
-		}
-		glDrawElements(GL_TRIANGLES, batch.count(), GL_UNSIGNED_SHORT, nullptr);
-	}
-
 	void draw_elements(const SpriteVertex *vertices, const unsigned int count)
 	{
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		VertexArray::unbind();
 		glVertexAttribPointer(
 		    Shader::kAttributeColor, 4, GL_UNSIGNED_BYTE, GL_TRUE,
 		    sizeof(SpriteVertex), &vertices->color);
