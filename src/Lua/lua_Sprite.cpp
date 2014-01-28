@@ -17,6 +17,7 @@ namespace Rainbow
 			{ "get_color",    &Sprite::get_color },
 			{ "get_position", &Sprite::get_position },
 			{ "set_color",    &Sprite::set_color },
+			{ "set_normal",   &Sprite::set_normal },
 			{ "set_pivot",    &Sprite::set_pivot },
 			{ "set_position", &Sprite::set_position },
 			{ "set_rotation", &Sprite::set_rotation },
@@ -68,6 +69,12 @@ namespace Rainbow
 			color += luaR_tointeger(L, 3) << 8;
 			color += luaR_optinteger(L, 4, 0xff);
 			this->get()->set_color(color);
+			return 0;
+		}
+
+		int Sprite::set_normal(lua_State *L)
+		{
+			this->get()->set_normal(luaR_tointeger(L, 1));
 			return 0;
 		}
 

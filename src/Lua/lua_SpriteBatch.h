@@ -24,6 +24,7 @@ namespace Rainbow
 		private:
 			int add(lua_State *);
 			int create_sprite(lua_State *);
+			int set_normal(lua_State *);
 			int set_texture(lua_State *);
 		};
 	}

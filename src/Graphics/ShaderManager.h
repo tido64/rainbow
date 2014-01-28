@@ -41,6 +41,9 @@ public:
 	int compile(Shader::ShaderParams *shaders,
 	            const Shader::AttributeParams *attributes);
 
+	/// Returns current program details.
+	inline Shader::Details& get_program() const;
+
 	/// Returns program details.
 	inline Shader::Details& get_program(const int pid) const;
 
@@ -80,6 +83,12 @@ ShaderManager::Context::Context() : program(ShaderManager::Instance->active) { }
 ShaderManager::Context::~Context()
 {
 	ShaderManager::Instance->use(this->program);
+}
+
+Shader::Details& ShaderManager::get_program() const
+{
+	R_ASSERT(this->active >= 0, "ShaderManager is uninitialised");
+	return this->get_program(this->active);
 }
 
 Shader::Details& ShaderManager::get_program(const int pid) const

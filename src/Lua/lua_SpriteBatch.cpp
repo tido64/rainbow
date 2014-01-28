@@ -21,6 +21,7 @@ namespace Rainbow
 		const Method<SpriteBatch> LuaSpriteBatch::methods[] = {
 			{ "add",            &SpriteBatch::add },
 			{ "create_sprite",  &SpriteBatch::create_sprite },
+			{ "set_normal",     &SpriteBatch::set_normal },
 			{ "set_texture",    &SpriteBatch::set_texture },
 			{ 0, 0 }
 		};
@@ -51,6 +52,16 @@ namespace Rainbow
 			lua_pushlightuserdata(L, this);
 			lua_pushinteger(L, ::SpriteBatch::create_sprite(w, h));
 			return alloc<Sprite>(L);
+		}
+
+		int SpriteBatch::set_normal(lua_State *L)
+		{
+			LUA_ASSERT(lua_gettop(L) == 1 && lua_type(L, 1) == LUA_TTABLE,
+			           "<spritebatch>:set_normal(<texture>)");
+
+			Texture *texture = wrapper<Texture>(L);
+			::SpriteBatch::set_normal(texture->get());
+			return 0;
 		}
 
 		int SpriteBatch::set_texture(lua_State *L)

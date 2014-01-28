@@ -29,8 +29,6 @@ class SpriteBatch;
 /// \see http://mathforum.org/mathimages/index.php/Transformation_Matrix
 class Sprite : private NonCopyable<Sprite>
 {
-	friend class SpriteBatch;
-
 public:
 	Sprite(const unsigned int width, const unsigned int height, const SpriteBatch *parent);
 	Sprite(Sprite &&);
@@ -53,6 +51,13 @@ public:
 	/// Sets sprite colour.
 	void set_color(const unsigned int c);
 
+	/// Sets normal map.
+	/// \param id  Id of normal map to use.
+	void set_normal(const unsigned int id);
+
+	/// Sets buffer used to store UV coordinates.
+	inline void set_normal_buffer(Vec2f *);
+
 	/// Sets the pivot point for rotation and translation.
 	/// \param x,y  Normalised pivot point.
 	void set_pivot(const Vec2f &);
@@ -73,6 +78,9 @@ public:
 	/// \param id  Id of texture to use.
 	void set_texture(const unsigned int id);
 
+	/// Sets vertex array buffer.
+	inline void set_vertex_array(SpriteVertex *);
+
 	/// Mirrors sprite.
 	void mirror();
 
@@ -91,8 +99,9 @@ private:
 	const unsigned int height_;   ///< Height of sprite (not scaled).
 	unsigned int stale_;          ///< Sprite is stale if its properties have changed.
 
-	SpriteVertex *vertex_array_;  ///< Vertex array or, if buffered, the sprite batch's buffer.
+	SpriteVertex *vertex_array_;  ///< Interleaved vertex array.
 	const SpriteBatch *parent_;   ///< Pointer to sprite batch.
+	Vec2f *normal_map_;           ///< Normal map UV coordinates.
 
 	Vec2f center_;                ///< Committed position.
 	Vec2f pivot_;                 ///< Pivot point (normalised).
@@ -123,6 +132,16 @@ const Vec2f& Sprite::position() const
 unsigned int Sprite::width() const
 {
 	return this->width_;
+}
+
+void Sprite::set_normal_buffer(Vec2f *buffer)
+{
+	this->normal_map_ = buffer;
+}
+
+void Sprite::set_vertex_array(SpriteVertex *buffer)
+{
+	this->vertex_array_ = buffer;
 }
 
 #endif

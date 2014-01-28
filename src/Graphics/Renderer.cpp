@@ -16,8 +16,8 @@
 
 namespace Renderer
 {
-	extern const int kNumSprites = 256;  ///< Hard-coded limit on number of sprites.
-	unsigned int g_index_buffer = 0;     ///< Index buffer object.
+	extern const size_t kNumSprites = 256;  ///< Hard-coded limit on number of sprites.
+	unsigned int g_index_buffer = 0;        ///< Index buffer object.
 
 	bool init()
 	{
@@ -127,8 +127,15 @@ namespace Renderer
 
 	void draw(const SpriteBatch &batch)
 	{
+		VertexArray::unbind();
 		batch.texture().bind();
-		draw(batch.vertex_array());
+		batch.vertex_buffer().bind();
+		if (ShaderManager::Instance->get_program().texture1)
+		{
+			batch.normal().bind(1);
+			batch.normal_buffer().bind(Shader::kAttributeNormal);
+		}
+		glDrawElements(GL_TRIANGLES, batch.count(), GL_UNSIGNED_SHORT, nullptr);
 	}
 
 	void draw(const VertexArray &array)

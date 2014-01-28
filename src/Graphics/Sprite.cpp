@@ -8,9 +8,10 @@ using Rainbow::equal;
 
 namespace
 {
-	const unsigned int kStaleBuffer    = 1u << 0;
-	const unsigned int kStalePosition  = 1u << 1;
-	const unsigned int kStaleTexture   = 1u << 2;
+	const unsigned int kStaleBuffer     = 1u << 0;
+	const unsigned int kStaleNormalMap  = 1u << 1;
+	const unsigned int kStalePosition   = 1u << 2;
+	const unsigned int kStaleTexture    = 1u << 3;
 
 	inline Vec2f transform_rst(const Vec2f &p, const Vec2f &s_sin_r, const Vec2f &s_cos_r, const Vec2f &center) pure;
 	inline Vec2f transform_st(const Vec2f &p, const Vec2f &scale, const Vec2f &center) pure;
@@ -42,10 +43,24 @@ Sprite::Sprite(Sprite &&s) :
 
 void Sprite::set_color(const unsigned int c)
 {
+	R_ASSERT(this->vertex_array_, "Missing vertex array buffer");
+
 	this->vertex_array_[0].color = c;
 	this->vertex_array_[1].color = c;
 	this->vertex_array_[2].color = c;
 	this->vertex_array_[3].color = c;
+}
+
+void Sprite::set_normal(const unsigned int id)
+{
+	R_ASSERT(this->normal_map_, "Missing normal map buffer");
+
+	const Texture &normal = this->parent_->normal()[id];
+	this->normal_map_[0] = normal.vx[0];
+	this->normal_map_[1] = normal.vx[1];
+	this->normal_map_[2] = normal.vx[2];
+	this->normal_map_[3] = normal.vx[3];
+	this->stale_ |= kStaleNormalMap;
 }
 
 void Sprite::set_pivot(const Vec2f &pivot)
@@ -128,6 +143,8 @@ bool Sprite::update()
 {
 	if (!this->stale_)
 		return false;
+
+	R_ASSERT(this->vertex_array_, "Missing vertex array buffer");
 
 	if (this->stale_ & kStaleBuffer)
 	{

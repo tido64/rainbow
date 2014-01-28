@@ -5,12 +5,68 @@
 #include "Graphics/Drawable.h"
 #include "Graphics/SpriteBatch.h"
 
-namespace Renderer { extern const int kNumSprites; }
+namespace Renderer { extern const size_t kNumSprites; }
+
+namespace
+{
+	template<typename T>
+	bool push_back(Vector<T> &vector)
+	{
+		const size_t current_capacity = vector.capacity();
+		vector.push_back(T());
+		vector.push_back(T());
+		vector.push_back(T());
+		vector.push_back(T());
+		return vector.capacity() != current_capacity;
+	}
+
+	template<void (*set)(Sprite&, void*), typename T>
+	void assign(Vector<Sprite> &sprites, Vector<T> &buffer)
+	{
+		// If the buffer was resized, we'll need to reassign.
+		if (push_back<T>(buffer))
+		{
+			for (size_t i = 0; i < sprites.size(); ++i)
+				set(sprites[i], &buffer[i * 4]);
+		}
+		else  // Assign the buffer to the last sprite.
+			set(sprites.back(), &buffer[buffer.size() - 4]);
+	}
+
+	void set_normal_buffer(Sprite &sprite, void *buf)
+	{
+		sprite.set_normal_buffer(static_cast<Vec2f*>(buf));
+	}
+
+	void set_vertex_array(Sprite &sprite, void *buf)
+	{
+		sprite.set_vertex_array(static_cast<SpriteVertex*>(buf));
+	}
+}
 
 const char Drawable::class_name[] = "Drawable";
 
 SpriteBatch::SpriteBatch(const size_t hint) :
 	sprites_(hint), vertices_(hint * 4) { }
+
+TextureAtlas* SpriteBatch::set_normal(TextureAtlas *texture)
+{
+	const auto &vertex_buffer = this->vertices_.storage();
+	auto &normal_buffer = this->normals_.storage();
+	if (normal_buffer.size() < vertex_buffer.size())
+	{
+		normal_buffer.reserve(vertex_buffer.capacity());
+		while (normal_buffer.size() < vertex_buffer.size())
+			normal_buffer.push_back(Vec2f());
+		for (size_t i = 0; i < this->sprites_.size(); ++i)
+			this->sprites_[i].set_normal_buffer(&normal_buffer[i * 4]);
+
+		R_ASSERT(normal_buffer.size() == vertex_buffer.size(),
+		         "Normal and vertex buffer are unsynchronized");
+	}
+	this->normal_ = texture;
+	return this->normal_.get();
+}
 
 TextureAtlas* SpriteBatch::set_texture(const DataMap &texture)
 {
@@ -18,9 +74,9 @@ TextureAtlas* SpriteBatch::set_texture(const DataMap &texture)
 	return this->texture_.get();
 }
 
-TextureAtlas* SpriteBatch::set_texture(TextureAtlas *t)
+TextureAtlas* SpriteBatch::set_texture(TextureAtlas *texture)
 {
-	this->texture_ = t;
+	this->texture_ = texture;
 	return this->texture_.get();
 }
 
@@ -31,32 +87,26 @@ unsigned int SpriteBatch::add(const int x, const int y, const int w, const int h
 	return idx;
 }
 
-unsigned int SpriteBatch::create_sprite(const unsigned int width, const unsigned int height)
+unsigned int SpriteBatch::create_sprite(const unsigned int width,
+                                        const unsigned int height)
 {
-	R_ASSERT(this->sprites_.size() <= static_cast<size_t>(Renderer::kNumSprites),
+	R_ASSERT(this->sprites_.size() <= Renderer::kNumSprites,
 	         "Hard-coded limit reached");
-
-	const size_t current_capacity = this->vertices_.capacity();
-	this->vertices_.push_back(SpriteVertex());
-	this->vertices_.push_back(SpriteVertex());
-	this->vertices_.push_back(SpriteVertex());
-	this->vertices_.push_back(SpriteVertex());
 
 	const unsigned int idx = this->sprites_.size();
 	this->sprites_.push_back(Sprite(width, height, this));
-	this->array_.count += 6;
 
-	R_ASSERT(this->sprites_.size() * 4 == this->vertices_.size(),
+	assign<set_vertex_array>(this->sprites_, this->vertices_.storage());
+	R_ASSERT(this->sprites_.size() * 4 == this->vertices_.storage().size(),
 	         "Sprite and vertex buffer are unsynchronized");
 
-	// If the vertex buffer was resized, we'll need to reassign buffers.
-	if (this->vertices_.capacity() != current_capacity)
+	if (this->normal_.get())
 	{
-		for (size_t i = 0; i < this->sprites_.size(); ++i)
-			this->sprites_[i].vertex_array_ = &this->vertices_[i * 4];
+		assign<set_normal_buffer>(this->sprites_, this->normals_.storage());
+		R_ASSERT(this->normals_.storage().size() ==
+		             this->vertices_.storage().size(),
+		         "Normal and vertex buffer are unsynchronized");
 	}
-	else  // Assign the batch's buffer to the sprite.
-		this->sprites_[idx].vertex_array_ = &this->vertices_[this->vertices_.size() - 4];
 
 	return idx;
 }
@@ -66,12 +116,12 @@ void SpriteBatch::update()
 	// Update all sprite vertices
 	bool needs_update = false;
 	for (auto &sprite : this->sprites_)
-		needs_update = sprite.update() || needs_update;
+		needs_update |= sprite.update();
 
 	// Update vertex buffer
 	if (needs_update)
 	{
-		this->array_.update(this->vertices_.begin(),
-		                    this->vertices_.size() * sizeof(SpriteVertex));
+		this->vertices_.commit();
+		this->normals_.commit();
 	}
 }

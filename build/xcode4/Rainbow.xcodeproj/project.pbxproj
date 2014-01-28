@@ -121,6 +121,7 @@
 		1939A23C152C42ED00494609 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1939A23B152C42EC00494609 /* OpenAL.framework */; };
 		1939A23E152C432A00494609 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1939A23D152C432900494609 /* AudioToolbox.framework */; };
 		1939A240152C435000494609 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1939A23F152C435000494609 /* AVFoundation.framework */; };
+		1942A50A18985D450050CF5C /* Buffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1942A50818985D450050CF5C /* Buffer.cpp */; };
 		1946B7AE1836E54600F74A3B /* File.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1946B7AA1836E54600F74A3B /* File.cpp */; };
 		1946B7AF1836E54600F74A3B /* Path.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1946B7AC1836E54600F74A3B /* Path.cpp */; };
 		1948C023152C397D00E9B854 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1948C022152C397D00E9B854 /* UIKit.framework */; };
@@ -424,6 +425,8 @@
 		1939A23B152C42EC00494609 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
 		1939A23D152C432900494609 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		1939A23F152C435000494609 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		1942A50818985D450050CF5C /* Buffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Buffer.cpp; sourceTree = "<group>"; };
+		1942A50918985D450050CF5C /* Buffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Buffer.h; sourceTree = "<group>"; };
 		1946B7AA1836E54600F74A3B /* File.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = File.cpp; sourceTree = "<group>"; };
 		1946B7AB1836E54600F74A3B /* File.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = File.h; sourceTree = "<group>"; };
 		1946B7AC1836E54600F74A3B /* Path.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = Path.cpp; sourceTree = "<group>"; };
@@ -880,6 +883,8 @@
 				1939A1CE152C425D00494609 /* Shaders */,
 				1939A1BD152C425D00494609 /* Animation.cpp */,
 				1939A1BE152C425D00494609 /* Animation.h */,
+				1942A50818985D450050CF5C /* Buffer.cpp */,
+				1942A50918985D450050CF5C /* Buffer.h */,
 				1939A1BF152C425D00494609 /* Drawable.h */,
 				1939A1C0152C425D00494609 /* FontAtlas.cpp */,
 				1939A1C1152C425D00494609 /* FontAtlas.h */,
@@ -1317,6 +1322,7 @@
 				1939A15C152C401300494609 /* ldump.c in Sources */,
 				1939A15D152C401300494609 /* lfunc.c in Sources */,
 				1939A15E152C401300494609 /* lgc.c in Sources */,
+				1942A50A18985D450050CF5C /* Buffer.cpp in Sources */,
 				1939A160152C401300494609 /* linit.c in Sources */,
 				1939A161152C401300494609 /* liolib.c in Sources */,
 				1939A162152C401300494609 /* llex.c in Sources */,

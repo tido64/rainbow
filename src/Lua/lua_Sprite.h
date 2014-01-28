@@ -33,6 +33,7 @@ namespace Rainbow
 			int get_color(lua_State *);
 			int get_position(lua_State *);
 			int set_color(lua_State *);
+			int set_normal(lua_State *);
 			int set_pivot(lua_State *);
 			int set_position(lua_State *);
 			int set_rotation(lua_State *);
