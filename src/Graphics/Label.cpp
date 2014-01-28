@@ -11,6 +11,10 @@ namespace
 	const unsigned int kStaleColor       = 1u << 2;
 }
 
+Label::Label() :
+	scale_(1.0f), alignment_(kLeftTextAlignment), stale_(0), width_(0),
+	size_(0) { }
+
 void Label::set_alignment(const Label::Alignment a)
 {
 	this->alignment_ = a;
@@ -78,23 +82,25 @@ void Label::update()
 	{
 		if (this->stale_ & kStaleBuffer)
 		{
+			Vector<SpriteVertex> &buffer = this->buffer_.storage();
 			if (this->stale_ & kStaleBufferSize)
 			{
-				this->vx_.reset(new SpriteVertex[this->size_ * 4]);
+				buffer.reserve(this->size_ * 4);
 				this->stale_ |= kStaleColor;
 			}
-
-			this->array_.count = 0;
+			size_t count = 0;
 			size_t start = 0;
-			SpriteVertex *vx = this->vx_.get();
+			SpriteVertex *vx = buffer.begin();
 			Vec2f pen = this->position_;
-			for (const unsigned char *text = reinterpret_cast<unsigned char*>(this->text_.get()); *text;)
+			for (const unsigned char *text =
+			         reinterpret_cast<unsigned char*>(this->text_.get());
+			     *text;)
 			{
 				if (*text == '\n')
 				{
-					this->align(this->position_.x - pen.x, start, this->array_.count);
+					this->align(this->position_.x - pen.x, start, count);
 					pen.x = this->position_.x;
-					start = this->array_.count;
+					start = count;
 					pen.y -= this->font_->height() * this->scale_;
 					++text;
 					continue;
@@ -121,18 +127,18 @@ void Label::update()
 				}
 
 				pen.x += (glyph->advance - glyph->left) * this->scale_;
-				++this->array_.count;
+				++count;
 			}
-			this->align(this->position_.x - pen.x, start, this->array_.count);
+			this->align(this->position_.x - pen.x, start, count);
 			this->width_ = pen.x - this->position_.x;
-			this->array_.count = this->array_.count * 4 + this->array_.count * 2;
 		}
 		if (this->stale_ & kStaleColor)
 		{
+			SpriteVertex *buffer = this->buffer_.storage().begin();
 			for (size_t i = 0; i < this->size_ * 4; ++i)
-				this->vx_[i].color = this->color_;
+				buffer[i].color = this->color_;
 		}
-		this->array_.update(this->vx_.get(), this->size_ * 4 * sizeof(SpriteVertex));
+		this->buffer_.upload();
 		this->stale_ = 0;
 	}
 }
@@ -146,7 +152,8 @@ void Label::align(float offset, size_t start, size_t end)
 
 		start <<= 2;
 		end <<= 2;
+		SpriteVertex *buffer = this->buffer_.storage().begin();
 		for (size_t i = start; i < end; ++i)
-			this->vx_[i].position.x += offset;
+			buffer[i].position.x += offset;
 	}
 }

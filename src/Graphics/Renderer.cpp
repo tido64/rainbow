@@ -95,7 +95,8 @@ namespace Renderer
 	void draw(const Label &label)
 	{
 		label.font().bind();
-		draw(label.vertex_array());
+		label.vertex_buffer().bind();
+		glDrawElements(GL_TRIANGLES, label.count(), GL_UNSIGNED_SHORT, nullptr);
 	}
 
 	void draw(const SceneGraph::Node &node)
@@ -127,7 +128,6 @@ namespace Renderer
 
 	void draw(const SpriteBatch &batch)
 	{
-		VertexArray::unbind();
 		batch.texture().bind();
 		batch.vertex_buffer().bind();
 		if (ShaderManager::Instance->get_program().texture1)
@@ -138,17 +138,9 @@ namespace Renderer
 		glDrawElements(GL_TRIANGLES, batch.count(), GL_UNSIGNED_SHORT, nullptr);
 	}
 
-	void draw(const VertexArray &array)
-	{
-		VertexArray::bind(array);
-		glDrawElements(GL_TRIANGLES, array.count, GL_UNSIGNED_SHORT, nullptr);
-
-		R_ASSERT(glGetError() == GL_NO_ERROR, "Failed to draw buffer");
-	}
-
 	void draw_elements(const SpriteVertex *vertices, const unsigned int count)
 	{
-		VertexArray::unbind();
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glVertexAttribPointer(
 		    Shader::kAttributeColor, 4, GL_UNSIGNED_BYTE, GL_TRUE,
 		    sizeof(SpriteVertex), &vertices->color);

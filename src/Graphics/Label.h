@@ -7,8 +7,8 @@
 
 #include <memory>
 
+#include "Graphics/Buffer.h"
 #include "Graphics/FontAtlas.h"
-#include "Graphics/VertexArray.h"
 
 /// Label for displaying text.
 class Label : private NonCopyable<Label>
@@ -21,16 +21,19 @@ public:
 		kCenterTextAlignment
 	};
 
-	inline Label();
+	Label();
 
 	/// Returns label text color.
 	inline const Colorb& color() const;
 
+	/// Returns the vertex count.
+	inline size_t count() const;
+
 	/// Returns label font.
 	inline const FontAtlas& font() const;
 
-	/// Returns the vertex array object.
-	inline const Renderer::VertexArray& vertex_array() const;
+	/// Returns the vertex buffer.
+	inline const Renderer::Buffer<SpriteVertex>& vertex_buffer() const;
 
 	/// Returns label width.
 	inline unsigned int width() const;
@@ -60,17 +63,16 @@ public:
 	void update();
 
 private:
-	Colorb color_;                        ///< Color of the text.
-	float scale_;                         ///< Label scale factor.
-	Alignment alignment_;                 ///< Text alignment.
-	unsigned int stale_;                  ///< Flags indicating need for update.
-	unsigned int width_;                  ///< Label width.
-	size_t size_;                         ///< Size of the char array.
-	std::unique_ptr<char[]> text_;        ///< Content of this label.
-	std::unique_ptr<SpriteVertex[]> vx_;  ///< Vertex array containing the text.
-	Vec2f position_;                      ///< Position of the text (top left).
-	SharedPtr<FontAtlas> font_;           ///< The font used in this label.
-	Renderer::VertexArray array_;         ///< Vertex array object.
+	Colorb color_;                           ///< Color of the text.
+	float scale_;                            ///< Label scale factor.
+	Alignment alignment_;                    ///< Text alignment.
+	unsigned int stale_;                     ///< Flags indicating need for update.
+	unsigned int width_;                     ///< Label width.
+	size_t size_;                            ///< Size of the char array.
+	std::unique_ptr<char[]> text_;           ///< Content of this label.
+	Vec2f position_;                         ///< Position of the text (top left).
+	SharedPtr<FontAtlas> font_;              ///< The font used in this label.
+	Renderer::Buffer<SpriteVertex> buffer_;  ///< Vertex buffer.
 
 	/// Aligns individual characters.
 	/// \param length  Negative length of characters from \p start to \p end.
@@ -79,12 +81,15 @@ private:
 	void align(float length, size_t start, size_t end);
 };
 
-Label::Label() :
-	scale_(1.0f), alignment_(kLeftTextAlignment), stale_(0), width_(0), size_(0) { }
-
 const Colorb& Label::color() const
 {
 	return this->color_;
+}
+
+size_t Label::count() const
+{
+	const size_t count = this->buffer_.storage().capacity();
+	return count + (count >> 1);
 }
 
 const FontAtlas& Label::font() const
@@ -92,9 +97,9 @@ const FontAtlas& Label::font() const
 	return *this->font_.get();
 }
 
-const Renderer::VertexArray& Label::vertex_array() const
+const Renderer::Buffer<SpriteVertex>& Label::vertex_buffer() const
 {
-	return this->array_;
+	return this->buffer_;
 }
 
 unsigned int Label::width() const

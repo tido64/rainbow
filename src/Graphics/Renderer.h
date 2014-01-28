@@ -14,8 +14,6 @@ namespace SceneGraph { class Node; }
 
 namespace Renderer
 {
-	class VertexArray;
-
 	bool init();
 	void release();
 
@@ -25,7 +23,6 @@ namespace Renderer
 	void draw(const Label &);
 	void draw(const SceneGraph::Node &);
 	void draw(const SpriteBatch &);
-	void draw(const VertexArray &);
 
 	void draw_elements(const SpriteVertex *vertices, const unsigned int count);
 }
