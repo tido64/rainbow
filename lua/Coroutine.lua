@@ -29,11 +29,11 @@ Coroutine.__index = setmetatable(Coroutine, {
 })
 
 --! Creates and starts a coroutine executing \p fn.
-function Coroutine.start(fn)
+function Coroutine.start(fn, ...)
 	__count = __count + 1
 	local co = coroutine_create(fn)
 	__coroutines[__count] = co
-	return coroutine_resume(co, dt)
+	return coroutine_resume(co, dt, ...)
 end
 
 --! Blocks execution for \p t milliseconds.
