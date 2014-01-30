@@ -9,7 +9,14 @@ local table_remove = table.remove
 
 local __coroutines = {}
 local __count = 0
-local __index = -1
+
+local function resume(routine, ...)
+	local resumable, reason = coroutine_resume(routine, ...)
+	if not resumable and reason ~= "cannot resume dead coroutine" then
+		error(reason, 2)
+	end
+	return resumable
+end
 
 local Coroutine = {
 	__index = nil,
@@ -20,7 +27,7 @@ local Coroutine = {
 Coroutine.__index = setmetatable(Coroutine, {
 	__update = function(dt)
 		for i = __count, 1, -1 do
-			if not coroutine_resume(__coroutines[i], dt) then
+			if not resume(__coroutines[i], dt) then
 				table_remove(__coroutines, i)
 				__count = __count - 1
 			end
@@ -32,8 +39,11 @@ Coroutine.__index = setmetatable(Coroutine, {
 function Coroutine.start(fn, ...)
 	__count = __count + 1
 	local co = coroutine_create(fn)
-	__coroutines[__count] = co
-	return coroutine_resume(co, dt, ...)
+	local success = resume(co, dt, ...)
+	if success then
+		__coroutines[__count] = co
+	end
+	return success
 end
 
 --! Blocks execution for \p t milliseconds.
