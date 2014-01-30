@@ -115,8 +115,8 @@ do  -- move
 	end
 
 	local function iterate(self, progress)
-		local x = self.transition(self.x0, self.x1, progress)
-		local y = self.transition(self.y0, self.y1, progress)
+		local x = self.transition(0, self.x1, progress)
+		local y = self.transition(0, self.y1, progress)
 		self.move(self.node, x - self.x, y - self.y)
 		self.x, self.y = x, y
 	end
@@ -138,20 +138,14 @@ do  -- move
 			transition = method or LinearFunction,
 			x = 0,
 			y = 0,
-			x0 = 0,
-			y0 = 0,
 			x1 = x,
 			y1 = y
 		}
-		if type(node) == "table" then
-			assert(node.get_position, "Object must implement :get_position()")
-			assert(node.move, "Object must implement :move()")
-			self.x0, self.y0 = node:get_position()
-			self.x, self.y = self.x0, self.y0
-		elseif type(node) == "userdata" then
+		if type(node) == "userdata" then
 			self.move = move_node
 		else
-			error("Invalid object")
+			assert(type(node) == "table", "Invalid object");
+			assert(node.move, "Object must implement :move()")
 		end
 		register(self)
 		return self

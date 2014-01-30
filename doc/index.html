@@ -1482,11 +1482,11 @@ Fades a sprite to a given alpha value.
 <table>
 	<tr>
 		<td><var>drawable</var></td>
-		<td>An object that implements ``:get_position()`` and ``:move()``.</td>
+		<td>A scene graph node or an object that implements ``:move()``.</td>
 	</tr>
 	<tr>
 		<td><var>x, y</var></td>
-		<td>Final destination.</td>
+		<td>Number of units to move drawable(s) by, relative to its/their current position(s).</td>
 	</tr>
 	<tr>
 		<td><var>duration</var></td>
@@ -1498,7 +1498,7 @@ Fades a sprite to a given alpha value.
 	</tr>
 </table>
 
-Moves a drawable to given position.
+Moves a node (and its children) or a drawable.
 
 <a id="Transition.rotate"></a>
 ### Transition.rotate(drawable, r, duration, method)
