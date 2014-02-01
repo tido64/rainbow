@@ -45,6 +45,11 @@ public:
 	/// Returns pointer to the managed object.
 	inline T* get() const;
 
+#ifdef RAINBOW_TEST
+	/// Returns the number of references to this object.
+	unsigned int ref_count() const { return this->ptr->refs; }
+#endif
+
 	/// Releases the current pointer and retains the new one.
 	SharedPtr<T>& operator=(const SharedPtr<T> &);
 
@@ -102,6 +107,8 @@ SharedPtr<T>& SharedPtr<T>::operator=(const SharedPtr<T> &shared_ptr)
 template<class T>
 SharedPtr<T>& SharedPtr<T>::operator=(T *ptr)
 {
+	if (ptr == this->ptr)
+		return *this;
 	this->release();
 	this->ptr = ptr;
 	++this->ptr->refs;
