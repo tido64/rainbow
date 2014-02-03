@@ -7,8 +7,8 @@
 
 namespace Rainbow
 {
-	Worker::Worker(ThreadPool *pool, const unsigned int id) :
-		count(0), id(id), pool(pool) { }
+	Worker::Worker(ThreadPool *pool, const unsigned int id)
+	    : count(0), id(id), pool(pool) { }
 
 	Worker::~Worker()
 	{

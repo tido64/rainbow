@@ -15,8 +15,8 @@ namespace Rainbow
 		return (num_threads == 0) ? 1 : num_threads - 1;
 	}
 
-	ThreadPool::ThreadPool(const unsigned int num_threads) :
-		terminate(false), num_threads(num_threads), next_task(0), taskqueue(0)
+	ThreadPool::ThreadPool(const unsigned int num_threads)
+	    : terminate(false), num_threads(num_threads), next_task(0), taskqueue(0)
 	{
 		R_DEBUG("[Rainbow] Number of hardware threads: %u\n",
 		        std::thread::hardware_concurrency());

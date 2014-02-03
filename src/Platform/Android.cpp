@@ -45,11 +45,11 @@ struct AInstance
 	std::unique_ptr<Director> director;
 	ConFuoco::Mixer mixer;
 
-	AInstance() :
-		initialised(false), width(0), height(0), sensorManager(nullptr),
-		sensorEventQueue(nullptr), accelerometerSensor(nullptr), app(nullptr),
-		display(EGL_NO_DISPLAY), surface(EGL_NO_SURFACE),
-		context(EGL_NO_CONTEXT) { }
+	AInstance()
+	    : initialised(false), width(0), height(0), sensorManager(nullptr),
+	      sensorEventQueue(nullptr), accelerometerSensor(nullptr), app(nullptr),
+	      display(EGL_NO_DISPLAY), surface(EGL_NO_SURFACE),
+	      context(EGL_NO_CONTEXT) { }
 };
 
 void android_destroy_display(AInstance *ainstance);

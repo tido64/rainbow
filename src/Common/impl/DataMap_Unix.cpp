@@ -16,8 +16,7 @@
 
 namespace Rainbow
 {
-	DataMapUnix::DataMapUnix(const Path &path) :
-		len(0), off(0), addr(nullptr)
+	DataMapUnix::DataMapUnix(const Path &path) : len(0), off(0), addr(nullptr)
 	{
 		const File &f = File::open(path);
 		if (!f)

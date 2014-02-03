@@ -15,9 +15,9 @@ namespace b2
 			Sprite *sprite;
 			b2Vec2 curr_p, prev_p;
 
-			BodyData(const b2BodyDef &d) :
-				curr_r(d.angle), prev_r(d.angle), sprite(nullptr),
-				curr_p(d.position), prev_p(d.position) { }
+			BodyData(const b2BodyDef &d)
+			    : curr_r(d.angle), prev_r(d.angle), sprite(nullptr),
+			      curr_p(d.position), prev_p(d.position) { }
 		};
 
 		int BodyDef(lua_State *L)
@@ -173,8 +173,8 @@ namespace b2
 			int dump(lua_State *);
 		};
 
-		Body::Body(lua_State *L) :
-			Bind(static_cast<b2Body*>(lua_touserdata(L, -1))) { }
+		Body::Body(lua_State *L)
+		    : Bind(static_cast<b2Body*>(lua_touserdata(L, -1))) { }
 
 		int Body::bind(lua_State *L)
 		{

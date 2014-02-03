@@ -13,8 +13,8 @@
 
 namespace Rainbow
 {
-	DataMapAndroid::DataMapAndroid(const Path &path) :
-		off(0), asset(File::open(path)) { }
+	DataMapAndroid::DataMapAndroid(const Path &path)
+	    : off(0), asset(File::open(path)) { }
 
 	const unsigned char* DataMapAndroid::bytes() const
 	{

@@ -98,9 +98,10 @@ namespace b2
 		const lua_Number kFixedStep = 1.0 / 60.0;
 		const lua_Number kFramesPerMs = 60.0 / 1000.0;
 
-		World::World(lua_State *L) :
-			b2World(b2Vec2(0.0f, kStandardGravity)), contact_listener(LUA_REFNIL),
-			elapsed(0.0), L(L), debug_draw(ptm_ratio)
+		World::World(lua_State *L)
+		    : b2World(b2Vec2(0.0f, kStandardGravity)),
+		      contact_listener(LUA_REFNIL), elapsed(0.0), L(L),
+		      debug_draw(ptm_ratio)
 		{
 			if (lua_gettop(L) >= 2)
 				b2World::SetGravity(b2Vec2(luaR_tonumber(L, 1), luaR_tonumber(L, 2)));

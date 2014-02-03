@@ -9,20 +9,20 @@
 
 namespace SceneGraph
 {
-	Node::Node() :
-		enabled(true), type(GroupNode), program(-1), data(nullptr) { }
+	Node::Node()
+	    : enabled(true), type(GroupNode), program(-1), data(nullptr) { }
 
-	Node::Node(Animation *a) :
-		enabled(true), type(AnimationNode), program(-1), animation(a) { }
+	Node::Node(Animation *a)
+	    : enabled(true), type(AnimationNode), program(-1), animation(a) { }
 
-	Node::Node(Label *l) :
-		enabled(true), type(LabelNode), program(-1), label(l) { }
+	Node::Node(Label *l)
+	    : enabled(true), type(LabelNode), program(-1), label(l) { }
 
-	Node::Node(SpriteBatch *b) :
-		enabled(true), type(SpriteBatchNode), program(-1), sprite_batch(b) { }
+	Node::Node(SpriteBatch *b)
+	    : enabled(true), type(SpriteBatchNode), program(-1), sprite_batch(b) { }
 
-	Node::Node(Drawable *d) :
-		enabled(true), type(DrawableNode), program(-1), drawable(d) { }
+	Node::Node(Drawable *d)
+	    : enabled(true), type(DrawableNode), program(-1), drawable(d) { }
 
 	void Node::move(const Vec2f &delta)
 	{

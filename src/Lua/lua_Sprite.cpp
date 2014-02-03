@@ -29,9 +29,9 @@ namespace Rainbow
 			{ 0, 0 }
 		};
 
-		Sprite::Sprite(lua_State *L) :
-			id(lua_tointeger(L, -1)),
-			batch(static_cast<SpriteBatch*>(lua_touserdata(L, -2))) { }
+		Sprite::Sprite(lua_State *L)
+		    : id(lua_tointeger(L, -1)),
+		      batch(static_cast<SpriteBatch*>(lua_touserdata(L, -2))) { }
 
 		::Sprite* Sprite::get() const
 		{

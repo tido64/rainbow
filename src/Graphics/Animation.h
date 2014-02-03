@@ -53,8 +53,12 @@ private:
 	Sprite *sprite;       ///< The sprite to animate.
 };
 
-Animation::Animation(Sprite *s, const uint_t *const fs, const uint_t fps, const int d) :
-	TimedEvent(1000.0f / fps), delay(d), idled(0), frame(fs), frames(fs), sprite(s) { }
+Animation::Animation(Sprite *sprite,
+                     const uint_t *const frames,
+                     const uint_t fps,
+                     const int delay)
+    : TimedEvent(1000.0f / fps), delay(delay), idled(0), frame(frames),
+      frames(frames), sprite(sprite) { }
 
 void Animation::reset()
 {

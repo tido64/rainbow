@@ -241,9 +241,9 @@ namespace ConFuoco
 		}
 	}
 
-	MixerSL::SLAudioPlayer::SLAudioPlayer() :
-		suspended(false), loops(0), channel(nullptr), player(nullptr),
-		play_itf(nullptr), volume_itf(nullptr) { }
+	MixerSL::SLAudioPlayer::SLAudioPlayer()
+	    : suspended(false), loops(0), channel(nullptr), player(nullptr),
+	      play_itf(nullptr), volume_itf(nullptr) { }
 
 	MixerSL::SLAudioPlayer::~SLAudioPlayer()
 	{
@@ -341,9 +341,12 @@ namespace ConFuoco
 	}
 }
 
-Stream::Stream(const int fd, const off_t offset, const off_t length, const int loops) :
-	ConFuoco::Sound(ConFuoco::Sound::Type::Stream), loops(loops), fd(fd),
-	offset(offset), length(length) { }
+Stream::Stream(const int fd,
+               const off_t offset,
+               const off_t length,
+               const int loops)
+    : ConFuoco::Sound(ConFuoco::Sound::Type::Stream), loops(loops), fd(fd),
+      offset(offset), length(length) { }
 
 Stream::~Stream()
 {

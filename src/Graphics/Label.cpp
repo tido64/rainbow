@@ -11,13 +11,13 @@ namespace
 	const unsigned int kStaleColor       = 1u << 2;
 }
 
-Label::Label() :
-	scale_(1.0f), alignment_(kLeftTextAlignment), count_(0), stale_(0),
-	width_(0), size_(0),
-	array_([this]() {
-		this->font_->bind();
-		this->buffer_.bind();
-	}) { }
+Label::Label()
+    : scale_(1.0f), alignment_(kLeftTextAlignment), count_(0), stale_(0),
+      width_(0), size_(0),
+      array_([this]() {
+      	this->font_->bind();
+      	this->buffer_.bind();
+      }) { }
 
 void Label::set_alignment(const Label::Alignment a)
 {

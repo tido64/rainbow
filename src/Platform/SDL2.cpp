@@ -197,9 +197,9 @@ int main(int argc, char *argv[])
 	return 0;
 }
 
-RenderWindow::RenderWindow(const uint_t width, const uint_t height) :
-	initialised(false), vsync(false), height(height), context(nullptr),
-	window(nullptr)
+RenderWindow::RenderWindow(const uint_t width, const uint_t height)
+    : initialised(false), vsync(false), height(height), context(nullptr),
+      window(nullptr)
 {
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
 	{

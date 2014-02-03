@@ -335,8 +335,8 @@ namespace ConFuoco
 	}
 }
 
-Wave::Wave(const char *const file) :
-	ConFuoco::Sound(ConFuoco::Sound::Type::Static), bid(0)
+Wave::Wave(const char *const file)
+    : ConFuoco::Sound(ConFuoco::Sound::Type::Static), bid(0)
 {
 	alGenBuffers(1, &this->bid);
 	if (alGetError() != AL_NO_ERROR)
@@ -362,9 +362,9 @@ Wave::~Wave()
 
 #ifndef RAINBOW_OS_IOS
 
-Stream::Stream(const char *const file, const int loops) :
-	ConFuoco::Sound(ConFuoco::Sound::Type::Stream), playing(false), format(0),
-	rate(0), loops(loops), channel(nullptr)
+Stream::Stream(const char *const file, const int loops)
+    : ConFuoco::Sound(ConFuoco::Sound::Type::Stream), playing(false), format(0),
+      rate(0), loops(loops), channel(nullptr)
 {
 	alGenBuffers(kNumALBuffers, this->bids);
 	if (alGetError() != AL_NO_ERROR)

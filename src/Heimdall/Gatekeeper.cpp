@@ -95,9 +95,9 @@ namespace Heimdall
 		FontAtlas *UIFont = nullptr;
 	}
 
-	Gatekeeper::Gatekeeper() :
-		width(0), height(0), touch_count(0), overlay_node(nullptr),
-		monitor(Path::current())
+	Gatekeeper::Gatekeeper()
+	    : width(0), height(0), touch_count(0), overlay_node(nullptr),
+	      monitor(Path::current())
 	{
 		this->scenegraph.add_child(this->info.node());
 

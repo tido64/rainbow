@@ -43,9 +43,9 @@ namespace ConFuoco
 		}
 	}
 
-	RecorderSL::RecorderSL() :
-		current(kNumInputSampleBuffers), object(nullptr), interface(nullptr),
-		buffer_queue(nullptr)
+	RecorderSL::RecorderSL()
+	    : current(kNumInputSampleBuffers), object(nullptr), interface(nullptr),
+	      buffer_queue(nullptr)
 	{
 		SLDataLocator_IODevice iodev = {
 			SL_DATALOCATOR_IODEVICE,

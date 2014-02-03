@@ -78,7 +78,7 @@ void TimedEvent<T>::update(const unsigned long dt)
 }
 
 template<typename T>
-TimedEvent<T>::TimedEvent(const unsigned int timeout) :
-	stopped(false), accumulated(0), timeout(timeout) { }
+TimedEvent<T>::TimedEvent(const unsigned int timeout)
+    : stopped(false), accumulated(0), timeout(timeout) { }
 
 #endif

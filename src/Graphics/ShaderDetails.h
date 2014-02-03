@@ -40,8 +40,8 @@ namespace Shader
 		bool texture1;
 		const unsigned int program;
 
-		Details(const unsigned int program) :
-			texture0(true), texture1(false), program(program) { }
+		Details(const unsigned int program)
+		    : texture0(true), texture1(false), program(program) { }
 	};
 
 	struct ShaderParams

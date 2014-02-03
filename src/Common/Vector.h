@@ -92,15 +92,15 @@ private:
 };
 
 template<typename T>
-Vector<T>::Vector(const size_t reserve) :
-	count(0), reserved(0), c_array(nullptr)
+Vector<T>::Vector(const size_t reserve)
+    : count(0), reserved(0), c_array(nullptr)
 {
 	this->reserve(reserve);
 }
 
 template<typename T>
-Vector<T>::Vector(Vector<T> &&v) :
-	count(v.count), reserved(v.reserved), c_array(v.c_array)
+Vector<T>::Vector(Vector<T> &&v)
+    : count(v.count), reserved(v.reserved), c_array(v.c_array)
 {
 	v.count = 0;
 	v.reserved = 0;

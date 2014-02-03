@@ -134,9 +134,9 @@ namespace
 
 @end
 
-Stream::Stream(const char *const file, const int loops) :
-	ConFuoco::Sound(ConFuoco::Sound::Type::Stream), channel(nullptr),
-	paused(false), player(nil)
+Stream::Stream(const char *const file, const int loops)
+    : ConFuoco::Sound(ConFuoco::Sound::Type::Stream), channel(nullptr),
+      paused(false), player(nil)
 {
 	const Path path(file);
 	NSError *error = nil;

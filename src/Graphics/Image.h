@@ -41,9 +41,9 @@ namespace Rainbow
 		size_t size;
 		void *data;
 
-		Image() :
-			format(Format::UNKNOWN), width(0), height(0), depth(0), channels(0),
-			size(0), data(nullptr) { }
+		Image()
+		    : format(Format::UNKNOWN), width(0), height(0), depth(0),
+		      channels(0), size(0), data(nullptr) { }
 	};
 }
 

@@ -10,8 +10,8 @@
 #include "Common/Debug.h"
 #include "Lua/LuaHelper.h"
 
-ChangeMonitor::ChangeMonitor(const char *const directory) :
-	monitoring(false), callback([](const char *) { })
+ChangeMonitor::ChangeMonitor(const char *const directory)
+    : monitoring(false), callback([](const char *) { })
 {
 	this->hDirectory = CreateFileA(directory,
 	                               FILE_LIST_DIRECTORY,

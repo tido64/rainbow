@@ -11,9 +11,8 @@ protected:
 	const char *const file;
 	const char *const secret;
 
-	DataTest() :
-		file("Rainbow__Data.test"),
-		secret("It's a double-rainbow!\n") { }
+	DataTest()
+	    : file("Rainbow__Data.test"), secret("It's a double-rainbow!\n") { }
 };
 
 TEST_F(DataTest, Copy)

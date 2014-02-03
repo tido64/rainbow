@@ -28,14 +28,14 @@ namespace
 	}
 }
 
-Sprite::Sprite(const unsigned int w, const unsigned int h, const SpriteBatch *p) :
-	angle_(0.0f), width_(w), height_(h), stale_(-1), vertex_array_(nullptr),
-	parent_(p), pivot_(0.5f, 0.5f), scale_(1.0f, 1.0f) { }
+Sprite::Sprite(const unsigned int w, const unsigned int h, const SpriteBatch *p)
+    : angle_(0.0f), width_(w), height_(h), stale_(-1), vertex_array_(nullptr),
+      parent_(p), pivot_(0.5f, 0.5f), scale_(1.0f, 1.0f) { }
 
-Sprite::Sprite(Sprite &&s) :
-	angle_(s.angle_), width_(s.width_), height_(s.height_), stale_(s.stale_),
-	vertex_array_(s.vertex_array_), parent_(s.parent_), center_(s.center_),
-	pivot_(s.pivot_), position_(s.position_), scale_(s.scale_)
+Sprite::Sprite(Sprite &&s)
+    : angle_(s.angle_), width_(s.width_), height_(s.height_), stale_(s.stale_),
+      vertex_array_(s.vertex_array_), parent_(s.parent_), center_(s.center_),
+      pivot_(s.pivot_), position_(s.position_), scale_(s.scale_)
 {
 	s.vertex_array_ = nullptr;
 	s.parent_ = nullptr;

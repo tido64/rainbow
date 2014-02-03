@@ -79,16 +79,17 @@ private:
 
 Data::Data() : ownership(kDataOwner), allocated(0), sz(0), data(nullptr) { }
 
-Data::Data(Data &&d) : ownership(d.ownership), allocated(d.allocated), sz(d.sz), data(d.data)
+Data::Data(Data &&d)
+    : ownership(d.ownership), allocated(d.allocated), sz(d.sz), data(d.data)
 {
 	d.allocated = 0;
 	d.sz = 0;
 	d.data = nullptr;
 }
 
-Data::Data(const void *buffer, const size_t size, const Ownership ownership) :
-	ownership(ownership), allocated(size), sz(size),
-	data(const_cast<void*>(buffer)) { }
+Data::Data(const void *buffer, const size_t size, const Ownership ownership)
+    : ownership(ownership), allocated(size), sz(size),
+      data(const_cast<void*>(buffer)) { }
 
 void* Data::bytes() const
 {

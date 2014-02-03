@@ -14,8 +14,8 @@
 
 namespace Rainbow
 {
-	DataMapWin::DataMapWin(const Path &path) :
-		len(0), off(0), addr(nullptr), handle(nullptr)
+	DataMapWin::DataMapWin(const Path &path)
+	    : len(0), off(0), addr(nullptr), handle(nullptr)
 	{
 		HANDLE fh = CreateFile(
 				path, GENERIC_READ, 0, nullptr, OPEN_EXISTING,

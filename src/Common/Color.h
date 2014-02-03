@@ -24,8 +24,8 @@ namespace Rainbow
 		Color(const unsigned char r,
 		      const unsigned char g,
 		      const unsigned char b,
-		      const unsigned char a = 0xff) :
-			r(r), g(g), b(b), a(a) { }
+		      const unsigned char a = 0xff)
+		    : r(r), g(g), b(b), a(a) { }
 
 		Color<unsigned char>& operator=(const unsigned int c)
 		{
@@ -48,17 +48,17 @@ namespace Rainbow
 
 		Color() : r(1.0f), g(1.0f), b(1.0f), a(1.0f) { }
 
-		Color(const unsigned int c) :
-			r((0xff & (c >> 24)) * 1.0f / 255.0f),
-			g((0xff & (c >> 16)) * 1.0f / 255.0f),
-			b((0xff & (c >> 8)) * 1.0f / 255.0f),
-			a((0xff & (c)) * 1.0f / 255.0f) { }
+		Color(const unsigned int c)
+		    : r((0xff & (c >> 24)) * 1.0f / 255.0f),
+		      g((0xff & (c >> 16)) * 1.0f / 255.0f),
+		      b((0xff & (c >> 8)) * 1.0f / 255.0f),
+		      a((0xff & (c)) * 1.0f / 255.0f) { }
 
 		Color(const float r,
 		      const float g,
 		      const float b,
-		      const float a = 1.0f) :
-			r(r), g(g), b(b), a(a) { }
+		      const float a = 1.0f)
+		    : r(r), g(g), b(b), a(a) { }
 
 		Color<float>& operator=(const unsigned int c)
 		{

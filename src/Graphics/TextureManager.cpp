@@ -7,8 +7,8 @@
 
 TextureManager* TextureManager::Instance = nullptr;
 
-TextureManager::TextureManager() :
-	mag_filter(GL_LINEAR), min_filter(GL_LINEAR), mem_peak(0.0), mem_used(0.0)
+TextureManager::TextureManager()
+    : mag_filter(GL_LINEAR), min_filter(GL_LINEAR), mem_peak(0.0), mem_used(0.0)
 {
 	memset(this->active, 0, sizeof(this->active));
 }

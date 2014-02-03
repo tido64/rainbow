@@ -23,8 +23,8 @@ namespace Rainbow
 {
 	namespace Shaders
 	{
-		Diffuse::Diffuse(const bool normal) :
-			cutoff(0), radius(0), position(0), program(-1)
+		Diffuse::Diffuse(const bool normal)
+		    : cutoff(0), radius(0), position(0), program(-1)
 		{
 			if (normal)
 			{

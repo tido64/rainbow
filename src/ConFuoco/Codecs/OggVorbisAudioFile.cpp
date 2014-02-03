@@ -54,8 +54,8 @@ namespace ConFuoco
 	}
 #endif
 
-	OggVorbisAudioFile::OggVorbisAudioFile(File &&file) :
-		AudioFile(std::forward<File>(file)), vi(nullptr)
+	OggVorbisAudioFile::OggVorbisAudioFile(File &&file)
+	    : AudioFile(std::forward<File>(file)), vi(nullptr)
 	{
 		int code = ov_open_callbacks(static_cast<FILE*>(this->file), &this->vf, 0, 0, OV_CALLBACKS_DEFAULT);
 		if (code < 0)

@@ -30,8 +30,8 @@ private:
 	Vec3d pass;  ///< Filtered acceleration data.
 };
 
-Acceleration::Acceleration() :
-	timestamp(0.0), x(pass.x), y(pass.y), z(pass.z) { }
+Acceleration::Acceleration()
+    : timestamp(0.0), x(pass.x), y(pass.y), z(pass.z) { }
 
 void Acceleration::update(const double x, const double y, const double z, const double t)
 {

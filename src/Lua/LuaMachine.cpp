@@ -93,8 +93,8 @@ namespace Rainbow
 		return LUA_OK;
 	}
 
-	LuaMachine::LuaMachine(SceneGraph::Node *root) :
-		internal(0), traceback(0), scenegraph(nullptr), L(luaL_newstate())
+	LuaMachine::LuaMachine(SceneGraph::Node *root)
+	    : internal(0), traceback(0), scenegraph(nullptr), L(luaL_newstate())
 	{
 		luaR_openlibs(this->L);
 

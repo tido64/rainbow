@@ -26,8 +26,8 @@ namespace Rainbow
 			{ 0, 0 }
 		};
 
-		SpriteBatch::SpriteBatch(lua_State *L) :
-			::SpriteBatch(luaR_optinteger(L, 1, 8)) { }
+		SpriteBatch::SpriteBatch(lua_State *L)
+		    : ::SpriteBatch(luaR_optinteger(L, 1, 8)) { }
 
 		int SpriteBatch::add(lua_State *L)
 		{
