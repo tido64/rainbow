@@ -8,15 +8,22 @@ using Rainbow::equal;
 
 namespace
 {
-	const unsigned int kStaleBuffer     = 1u << 0;
-	const unsigned int kStaleNormalMap  = 1u << 1;
-	const unsigned int kStalePosition   = 1u << 2;
-	const unsigned int kStaleTexture    = 1u << 3;
+	const unsigned int kStaleBuffer       = 1u << 0;
+	const unsigned int kStalePosition     = 1u << 1;
+	const unsigned int kStaleFrontBuffer  = 1u << 2;
 
-	inline Vec2f transform_rst(const Vec2f &p, const Vec2f &s_sin_r, const Vec2f &s_cos_r, const Vec2f &center) pure;
-	inline Vec2f transform_st(const Vec2f &p, const Vec2f &scale, const Vec2f &center) pure;
+	inline Vec2f transform_rst(const Vec2f &p,
+	                           const Vec2f &s_sin_r,
+	                           const Vec2f &s_cos_r,
+	                           const Vec2f &center) pure;
+	inline Vec2f transform_st(const Vec2f &p,
+	                          const Vec2f &scale,
+	                          const Vec2f &center) pure;
 
-	Vec2f transform_rst(const Vec2f &p, const Vec2f &s_sin_r, const Vec2f &s_cos_r, const Vec2f &center)
+	Vec2f transform_rst(const Vec2f &p,
+	                    const Vec2f &s_sin_r,
+	                    const Vec2f &s_cos_r,
+	                    const Vec2f &center)
 	{
 		return Vec2f(s_cos_r.x * p.x - s_sin_r.x * p.y + center.x,
 		             s_sin_r.y * p.x + s_cos_r.y * p.y + center.y);
@@ -49,6 +56,7 @@ void Sprite::set_color(const unsigned int c)
 	this->vertex_array_[1].color = c;
 	this->vertex_array_[2].color = c;
 	this->vertex_array_[3].color = c;
+	this->stale_ |= kStaleFrontBuffer;
 }
 
 void Sprite::set_normal(const unsigned int id)
@@ -60,7 +68,7 @@ void Sprite::set_normal(const unsigned int id)
 	this->normal_map_[1] = normal.vx[1];
 	this->normal_map_[2] = normal.vx[2];
 	this->normal_map_[3] = normal.vx[3];
-	this->stale_ |= kStaleNormalMap;
+	this->stale_ |= kStaleFrontBuffer;
 }
 
 void Sprite::set_pivot(const Vec2f &pivot)
@@ -112,7 +120,7 @@ void Sprite::set_texture(const unsigned int id)
 	this->vertex_array_[1].texcoord = tx.vx[1];
 	this->vertex_array_[2].texcoord = tx.vx[2];
 	this->vertex_array_[3].texcoord = tx.vx[3];
-	this->stale_ |= kStaleTexture;
+	this->stale_ |= kStaleFrontBuffer;
 }
 
 void Sprite::mirror()
