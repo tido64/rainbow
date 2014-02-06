@@ -24,20 +24,18 @@
 #include "Input/Input.h"
 #include "Input/Touch.h"
 
-bool active = false;  ///< Whether the window is in focus.
-bool done = false;    ///< Whether the user has requested to quit.
 ANativeActivity *gNativeActivity;
 
 struct AInstance
 {
+	bool active;  ///< Whether the window is in focus.
+	bool done;    ///< Whether the user has requested to quit.
 	bool initialised;
-	uint32_t width;
-	uint32_t height;
 
-	ASensorManager *sensorManager;
-	ASensorEventQueue *sensorEventQueue;
-	const ASensor *accelerometerSensor;
 	struct android_app *app;
+	ASensorManager *sensorManager;
+	const ASensor *accelerometerSensor;
+	ASensorEventQueue *sensorEventQueue;
 
 	EGLDisplay display;
 	EGLSurface surface;
@@ -46,10 +44,10 @@ struct AInstance
 	ConFuoco::Mixer mixer;
 
 	AInstance()
-	    : initialised(false), width(0), height(0), sensorManager(nullptr),
-	      sensorEventQueue(nullptr), accelerometerSensor(nullptr), app(nullptr),
-	      display(EGL_NO_DISPLAY), surface(EGL_NO_SURFACE),
-	      context(EGL_NO_CONTEXT) { }
+	    : active(false), done(false), initialised(false), app(nullptr),
+	      sensorManager(nullptr), accelerometerSensor(nullptr),
+	      sensorEventQueue(nullptr), display(EGL_NO_DISPLAY),
+	      surface(EGL_NO_SURFACE), context(EGL_NO_CONTEXT) { }
 };
 
 void android_destroy_display(AInstance *ainstance);
@@ -58,11 +56,8 @@ void android_init_display(AInstance *ainstance);
 void android_handle_event(struct android_app *app, int32_t cmd);
 int32_t android_handle_input(struct android_app *app, AInputEvent *event);
 int32_t android_handle_motion(struct android_app *app, AInputEvent *event);
-Touch get_touch_event(AInstance *ainstance,
-                      AInputEvent *event,
-                      const int32_t index);
-Touch get_touch_event(AInstance *ainstance,
-                      AInputEvent *event,
+Touch get_touch_event(AInputEvent *event, const int32_t index);
+Touch get_touch_event(AInputEvent *event,
                       const int32_t index,
                       const size_t history);
 
@@ -87,22 +82,22 @@ void android_main(struct android_app *state)
 		ainstance.sensorEventQueue = ASensorManager_createEventQueue(ainstance.sensorManager, state->looper, LOOPER_ID_USER, nullptr, nullptr);
 
 	Chrono chrono;
-	while (!done)
+	while (!ainstance.done)
 	{
 		int ident;
 		int events;
 		struct android_poll_source* source;
 
-		while ((ident = ALooper_pollAll(!active ? -1 : 0, nullptr, &events, reinterpret_cast<void**>(&source))) >= 0)
+		while ((ident = ALooper_pollAll(!ainstance.active ? -1 : 0, nullptr, &events, reinterpret_cast<void**>(&source))) >= 0)
 		{
 			if (source)
 				source->process(state, source);
 
-			if (done)
+			if (ainstance.done)
 				break;
 
 			// If a sensor has data, process it now.
-			if (active && ident == LOOPER_ID_USER && ainstance.accelerometerSensor)
+			if (ainstance.active && ident == LOOPER_ID_USER && ainstance.accelerometerSensor)
 			{
 				ASensorEvent event;
 				while (ASensorEventQueue_getEvents(ainstance.sensorEventQueue, &event, 1) > 0)
@@ -115,7 +110,7 @@ void android_main(struct android_app *state)
 		}
 
 		chrono.update();
-		if (!(ainstance.initialised & active))
+		if (!(ainstance.initialised & ainstance.active))
 			continue;
 
 		ainstance.director->update(chrono.delta());
@@ -148,7 +143,7 @@ void android_destroy_display(AInstance *a)
 		a->display = EGL_NO_DISPLAY;
 	}
 	a->initialised = false;
-	active = false;
+	a->active = false;
 }
 
 void android_handle_display(AInstance *a)
@@ -159,22 +154,20 @@ void android_handle_display(AInstance *a)
 	if (!Renderer::init())
 	{
 		R_ERROR("[Rainbow] Failed to initialise renderer");
-		done = true;
+		a->done = true;
 		return;
 	}
 
-	EGLint value;
-	eglQuerySurface(a->display, a->surface, EGL_WIDTH, &value);
-	a->width = value;
-	eglQuerySurface(a->display, a->surface, EGL_HEIGHT, &value);
-	a->height = value;
-	Renderer::resize(a->width, a->height);
+	EGLint width = 0;
+	EGLint height = 0;
+	eglQuerySurface(a->display, a->surface, EGL_WIDTH, &width);
+	eglQuerySurface(a->display, a->surface, EGL_HEIGHT, &height);
+	Renderer::set_resolution(width, height);
 
 	// Load game
 	a->director.reset(new Director());
-	a->director->init(Data::load_asset("main.lua"), a->width, a->height);
-
-	a->initialised = true;
+	a->director->init(Data::load_asset("main.lua"), width, height);
+	a->initialised = !a->director->terminated();
 }
 
 void android_init_display(AInstance *a)
@@ -226,8 +219,8 @@ void android_init_display(AInstance *a)
 		}
 	}
 
-	done = eglMakeCurrent(dpy, surface, surface, ctx) == EGL_FALSE;
-	if (done)
+	a->done = eglMakeCurrent(dpy, surface, surface, ctx) == EGL_FALSE;
+	if (a->done)
 		R_ERROR("[Rainbow] Failed to bind context to the current rendering thread");
 	else
 		android_handle_display(a);
@@ -258,10 +251,10 @@ void android_handle_event(struct android_app *app, int32_t cmd)
 				ASensorEventQueue_setEventRate(a->sensorEventQueue, a->accelerometerSensor, (1000L / 60) * 1000);
 			}
 			ConFuoco::Mixer::Instance->suspend(false);
-			active = true;
+			a->active = true;
 			break;
 		case APP_CMD_LOST_FOCUS:
-			active = false;
+			a->active = false;
 			break;
 		case APP_CMD_LOW_MEMORY:
 			a->director->on_memory_warning();
@@ -277,7 +270,7 @@ void android_handle_event(struct android_app *app, int32_t cmd)
 				// other words, resuming sends an indication that you have been resumed (onResume)
 				// and then an indication that you are hidden (focus lost). And the unlock case remains
 				// unchanged (focus regained).
-				if (active)
+				if (a->active)
 					android_handle_event(app, APP_CMD_GAINED_FOCUS);
 			}
 			break;
@@ -290,8 +283,8 @@ void android_handle_event(struct android_app *app, int32_t cmd)
 			ConFuoco::Mixer::Instance->suspend(true);
 			break;
 		case APP_CMD_DESTROY:
-			active = false;
-			done = true;
+			a->active = false;
+			a->done = true;
 			break;
 		default:
 			break;
@@ -311,9 +304,8 @@ int32_t android_handle_input(struct android_app *app, AInputEvent *event)
 	}
 }
 
-int32_t android_handle_motion(struct android_app *app, AInputEvent *event)
+int32_t android_handle_motion(struct android_app *, AInputEvent *event)
 {
-	AInstance* a = static_cast<AInstance*>(app->userData);
 	switch (AMotionEvent_getAction(event) & AMOTION_EVENT_ACTION_MASK)
 	{
 		case AMOTION_EVENT_ACTION_DOWN:
@@ -322,7 +314,7 @@ int32_t android_handle_motion(struct android_app *app, AInputEvent *event)
 				const int32_t index
 						= (AMotionEvent_getAction(event) & AMOTION_EVENT_ACTION_POINTER_INDEX_MASK)
 						>> AMOTION_EVENT_ACTION_POINTER_INDEX_SHIFT;
-				Touch t = get_touch_event(a, event, index);
+				Touch t = get_touch_event(event, index);
 				Input::Instance->touch_began(&t, 1);
 			}
 			break;
@@ -332,7 +324,7 @@ int32_t android_handle_motion(struct android_app *app, AInputEvent *event)
 				const int32_t index
 						= (AMotionEvent_getAction(event) & AMOTION_EVENT_ACTION_POINTER_INDEX_MASK)
 						>> AMOTION_EVENT_ACTION_POINTER_INDEX_SHIFT;
-				Touch t = get_touch_event(a, event, index);
+				Touch t = get_touch_event(event, index);
 				Input::Instance->touch_ended(&t, 1);
 			}
 			break;
@@ -347,7 +339,7 @@ int32_t android_handle_motion(struct android_app *app, AInputEvent *event)
 				std::unique_ptr<Touch[]> touches(new Touch[count]);
 
 				for (size_t i = 0; i < count; ++i)
-					touches[i] = get_touch_event(a, event, i, history);
+					touches[i] = get_touch_event(event, i, history);
 				Input::Instance->touch_moved(touches.get(), count);
 			}
 			break;
@@ -362,22 +354,27 @@ int32_t android_handle_motion(struct android_app *app, AInputEvent *event)
 	return 1;
 }
 
-Touch get_touch_event(AInstance *a, AInputEvent *event, const int32_t index)
+Touch get_touch_event(AInputEvent *event, const int32_t index)
 {
+	const Vec2i &point = Renderer::convert_to_flipped_view(
+	    Vec2i(AMotionEvent_getX(event, index),
+	          AMotionEvent_getY(event, index)));
 	return Touch(AMotionEvent_getPointerId(event, index),
-	             AMotionEvent_getX(event, index),
-	             a->height - AMotionEvent_getY(event, index),
+	             point.x,
+	             point.y,
 	             AMotionEvent_getEventTime(event));
 }
 
-Touch get_touch_event(AInstance *a,
-                      AInputEvent *event,
+Touch get_touch_event(AInputEvent *event,
                       const int32_t index,
                       const size_t history)
 {
-	Touch t = get_touch_event(a, event, index);
-	t.x0 = AMotionEvent_getHistoricalX(event, index, history);
-	t.y0 = a->height - AMotionEvent_getHistoricalY(event, index, history);
+	Touch t = get_touch_event(event, index);
+	const Vec2i &point = Renderer::convert_to_flipped_view(
+	    Vec2i(AMotionEvent_getHistoricalX(event, index, history),
+	          AMotionEvent_getHistoricalY(event, index, history)));
+	t.x0 = point.x;
+	t.y0 = point.y;
 	return t;
 }
 

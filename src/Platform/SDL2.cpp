@@ -39,6 +39,16 @@ namespace
 
 	const double kMsPerFrame = 1000.0 / 60.0;
 
+	bool is_fullscreen(const SDL_Keysym &keysym)
+	{
+		return keysym.sym == SDLK_RETURN
+	#ifdef RAINBOW_OS_MACOS
+		    && (keysym.mod & KMOD_LGUI);
+	#else
+		    && (keysym.mod & KMOD_LALT);
+	#endif
+	}
+
 	bool is_quit(const SDL_Keysym &keysym)
 	{
 	#ifndef RAINBOW_OS_MACOS
@@ -55,7 +65,8 @@ namespace
 		RenderWindow(const uint_t width, const uint_t height);
 		~RenderWindow();
 
-		void swap();
+		void swap() const;
+		void toggle_fullscreen();
 
 		void on_mouse_down(const SDL_MouseButtonEvent &event,
 		                   const unsigned long timestamp);
@@ -63,16 +74,19 @@ namespace
 		                     const unsigned long timestamp);
 		void on_mouse_up(const SDL_MouseButtonEvent &event,
 		                 const unsigned long timestamp);
+		void on_window_resized();
 
 		operator bool() const;
+		operator SDL_Window*();
 
 	private:
-		bool initialised;
-		bool vsync;
-		const uint_t height;
-		SDL_GLContext context;
-		SDL_Window *window;
-		Touch mouse;
+		bool initialised;           ///< Whether the renderer is properly initialised.
+		bool vsync;                 ///< Whether vertical sync is enabled.
+		uint_t fullscreen;          ///< Whether the window is in full screen mode.
+		SDL_GLContext context;      ///< OpenGL context handle.
+		SDL_Window *window;         ///< Window handle.
+		SDL_Point window_position;  ///< Window's position while windowed.
+		Touch mouse;                ///< Current mouse events.
 	};
 }
 
@@ -102,23 +116,23 @@ int main(int argc, char *argv[])
 	if (!ConFuoco::Mixer::Instance)
 		return 1;
 
-	uint_t screen_width = 1280;
-	uint_t screen_height = 720;
+	uint_t window_width = 1280;
+	uint_t window_height = 720;
 
 	Rainbow::Config config;
 	if (config.width() && config.height())
 	{
-		screen_width = config.width();
-		screen_height = config.height();
+		window_width = config.width();
+		window_height = config.height();
 	}
 
-	RenderWindow window(screen_width, screen_height);
+	RenderWindow window(window_width, window_height);
 	if (!window)
 		return 1;
 
 	// Load game
 	Director director;
-	director.init(Data::load_asset("main.lua"), screen_width, screen_height);
+	director.init(Data::load_asset("main.lua"), window_width, window_height);
 
 	Chrono chrono;
 	SDL_Event event;
@@ -134,6 +148,10 @@ int main(int argc, char *argv[])
 				case SDL_WINDOWEVENT:
 					switch (event.window.event)
 					{
+						case SDL_WINDOWEVENT_SIZE_CHANGED:
+							window.on_window_resized();
+							director.on_focus_gained();
+							break;
 						case SDL_WINDOWEVENT_FOCUS_GAINED:
 							if (config.suspend())
 								director.on_focus_gained();
@@ -153,6 +171,14 @@ int main(int argc, char *argv[])
 					const SDL_Keysym &keysym = event.key.keysym;
 					if (is_quit(keysym))
 						director.terminate();
+					else if (is_fullscreen(keysym))
+					{
+						// Unfocus Director while we resize the window to avoid
+						// glitches. Focus is restored when we receive an
+						// SDL_WINDOWEVENT_SIZE_CHANGED.
+						director.on_focus_lost();
+						window.toggle_fullscreen();
+					}
 					else
 						Input::Instance->key_down(Key::from_raw(&keysym));
 					break;
@@ -196,8 +222,9 @@ int main(int argc, char *argv[])
 }
 
 RenderWindow::RenderWindow(const uint_t width, const uint_t height)
-    : initialised(false), vsync(false), height(height), context(nullptr),
-      window(nullptr)
+    : initialised(false), vsync(false), fullscreen(0), context(nullptr),
+      window(nullptr),
+      window_position({ SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED })
 {
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
 	{
@@ -205,6 +232,10 @@ RenderWindow::RenderWindow(const uint_t width, const uint_t height)
 		return;
 	}
 
+#ifdef RAINBOW_OS_MACOS
+	// Prevent the full screen window from being minimized when losing focus.
+	SDL_SetHint(SDL_HINT_VIDEO_MINIMIZE_ON_FOCUS_LOSS, "0");
+#endif
 	SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 5);
 	SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 6);
 	SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 5);
@@ -212,7 +243,7 @@ RenderWindow::RenderWindow(const uint_t width, const uint_t height)
 	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 0);
 
 	this->window = SDL_CreateWindow(
-	    RAINBOW_BUILD, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+	    RAINBOW_BUILD, this->window_position.x, this->window_position.y,
 	    width, height, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
 	if (!this->window)
 	{
@@ -235,11 +266,11 @@ RenderWindow::RenderWindow(const uint_t width, const uint_t height)
 	this->initialised = Renderer::init();
 	if (!this->initialised)
 	{
-		R_ERROR("[Rainbow] Failed to initialise OpenGL\n");
+		R_ERROR("[Rainbow] Failed to initialize OpenGL\n");
 		return;
 	}
 
-	Renderer::resize(width, height);
+	Renderer::set_resolution(width, height);
 }
 
 RenderWindow::~RenderWindow()
@@ -260,18 +291,48 @@ RenderWindow::~RenderWindow()
 	SDL_Quit();
 }
 
-void RenderWindow::swap()
+void RenderWindow::swap() const
 {
 	if (!this->vsync)
 		Chrono::sleep(0);
 	SDL_GL_SwapWindow(this->window);
 }
 
+void RenderWindow::toggle_fullscreen()
+{
+	this->fullscreen ^= SDL_WINDOW_FULLSCREEN_DESKTOP;
+#ifdef RAINBOW_OS_MACOS
+	// We can't do borderless windowed mode on Mac OS X because the Apple menu
+	// is always on top.
+	SDL_SetWindowFullscreen(this->window, this->fullscreen);
+#else
+	SDL_bool bordered = SDL_TRUE;
+	const Vec2i &resolution = Renderer::resolution();
+	SDL_Rect window_rect{this->window_position.x, this->window_position.y,
+	                     resolution.width, resolution.height};
+	if (this->fullscreen)
+	{
+		SDL_GetWindowPosition(
+		    this->window, &this->window_position.x, &this->window_position.y);
+		bordered = SDL_FALSE;
+		SDL_GetDisplayBounds(
+		    SDL_GetWindowDisplayIndex(this->window), &window_rect);
+		window_rect.x = SDL_WINDOWPOS_CENTERED;
+		window_rect.y = SDL_WINDOWPOS_CENTERED;
+	}
+	SDL_SetWindowBordered(this->window, bordered);
+	SDL_SetWindowSize(this->window, window_rect.w, window_rect.h);
+	SDL_SetWindowPosition(this->window, window_rect.x, window_rect.y);
+#endif
+}
+
 void RenderWindow::on_mouse_down(const SDL_MouseButtonEvent &event,
                                  const unsigned long timestamp)
 {
-	this->mouse.x = event.x;
-	this->mouse.y = this->height - event.y;
+	const Vec2i &point =
+	    Renderer::convert_to_flipped_view(Vec2i(event.x, event.y));
+	this->mouse.x = point.x;
+	this->mouse.y = point.y;
 	this->mouse.x0 = this->mouse.x;
 	this->mouse.y0 = this->mouse.y;
 	this->mouse.timestamp = timestamp;
@@ -283,8 +344,10 @@ void RenderWindow::on_mouse_motion(const SDL_MouseMotionEvent &event,
 {
 	this->mouse.x0 = this->mouse.x;
 	this->mouse.y0 = this->mouse.y;
-	this->mouse.x = event.x;
-	this->mouse.y = this->height - event.y;
+	const Vec2i &point =
+	    Renderer::convert_to_flipped_view(Vec2i(event.x, event.y));
+	this->mouse.x = point.x;
+	this->mouse.y = point.y;
 	this->mouse.timestamp = timestamp;
 	Input::Instance->touch_moved(&this->mouse, 1);
 }
@@ -292,17 +355,34 @@ void RenderWindow::on_mouse_motion(const SDL_MouseMotionEvent &event,
 void RenderWindow::on_mouse_up(const SDL_MouseButtonEvent &event,
                                const unsigned long timestamp)
 {
-	this->mouse.x = event.x;
-	this->mouse.y = this->height - event.y;
+	const Vec2i &point =
+	    Renderer::convert_to_flipped_view(Vec2i(event.x, event.y));
+	this->mouse.x = point.x;
+	this->mouse.y = point.y;
 	this->mouse.x0 = this->mouse.x;
 	this->mouse.y0 = this->mouse.y;
 	this->mouse.timestamp = timestamp;
 	Input::Instance->touch_ended(&this->mouse, 1);
 }
 
+void RenderWindow::on_window_resized()
+{
+	int width, height;
+	SDL_GetWindowSize(this->window, &width, &height);
+	const Vec2i &window_size = Renderer::window_size();
+	if (width == window_size.width && height == window_size.height)
+		return;
+	Renderer::set_window_size(width, height);
+}
+
 RenderWindow::operator bool() const
 {
 	return this->initialised;
+}
+
+RenderWindow::operator SDL_Window*()
+{
+	return this->window;
 }
 
 #endif  // SDL_VERSION_ATLEAST(1,3,0)

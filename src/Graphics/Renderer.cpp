@@ -14,6 +14,21 @@
 #define S256(i)    S64((i)),  S64((i) +  64),  S64((i) + 128),  S64((i) + 192)
 #define S1024(i)  S256((i)), S256((i) + 256), S256((i) + 512), S256((i) + 768)
 
+namespace
+{
+	// TODO: REFACTOR!
+
+	int g_origin_x = 0;
+	int g_origin_y = 0;
+	int g_view_width = 0;
+	int g_view_height = 0;
+	int g_window_width = 0;
+	int g_window_height = 0;
+	float g_scale_x = 1.0f;
+	float g_scale_y = 1.0f;
+	Renderer::ZoomMode g_zoom_mode = Renderer::ZoomMode::LetterBox;
+}
+
 namespace Renderer
 {
 	extern const size_t kNumSprites = 256;  ///< Hard-coded limit on number of sprites.
@@ -41,7 +56,7 @@ namespace Renderer
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 		ShaderManager::Instance = new ShaderManager();
-		if (!ShaderManager::Instance || !*ShaderManager::Instance)
+		if (!*ShaderManager::Instance)
 		{
 			delete ShaderManager::Instance;
 			return false;
@@ -78,18 +93,96 @@ namespace Renderer
 		delete TextureManager::Instance;
 	}
 
+	Vec2i resolution()
+	{
+		return Vec2i(g_view_width, g_view_height);
+	}
+
+	Vec2i window_size()
+	{
+		return Vec2i(g_window_width, g_window_height);
+	}
+
+	void set_resolution(const int width, const int height)
+	{
+		R_ASSERT(ShaderManager::Instance,
+		         "Cannot set resolution with an uninitialized renderer");
+
+		g_view_width = width;
+		g_view_height = height;
+		ShaderManager::Instance->set(width, height);
+		if ((g_window_width | g_window_height) == 0)
+		{
+			g_window_width = g_view_width;
+			g_window_height = g_view_height;
+		}
+		set_window_size(g_window_width, g_window_height);
+
+		R_ASSERT(glGetError() == GL_NO_ERROR, "Failed to set resolution");
+	}
+
+	void set_window_size(const int width, const int height)
+	{
+		R_ASSERT(ShaderManager::Instance,
+		         "Cannot set window size with an uninitialized renderer");
+
+		if (g_zoom_mode == ZoomMode::Stretch
+		    || (width == g_view_width && height == g_view_height))
+		{
+			g_origin_x = 0;
+			g_origin_y = 0;
+			g_window_width = width;
+			g_window_height = height;
+		}
+		else
+		{
+			const Vec2f ratio(width / static_cast<float>(g_view_width),
+			                  height / static_cast<float>(g_view_height));
+			if ((g_zoom_mode == ZoomMode::Zoom && ratio.x < ratio.y)
+			    || (g_zoom_mode == ZoomMode::LetterBox && ratio.x > ratio.y))
+			{
+				g_window_width = g_view_width * ratio.y;
+				g_window_height = height;
+				g_origin_x = (width - g_window_width) / 2;
+				g_origin_y = 0;
+			}
+			else
+			{
+				g_window_width = width;
+				g_window_height = g_view_height * ratio.x;
+				g_origin_x = 0;
+				g_origin_y = (height - g_window_height) / 2;
+			}
+		}
+		glViewport(g_origin_x, g_origin_y, g_window_width, g_window_height);
+		g_scale_x = static_cast<float>(g_view_width) / g_window_width;
+		g_scale_y = static_cast<float>(g_view_height) / g_window_height;
+		g_window_height = height;
+	}
+
+	void set_zoom_mode(const ZoomMode zoom)
+	{
+		if (zoom == g_zoom_mode)
+			return;
+
+		g_zoom_mode = zoom;
+		set_window_size(g_window_width, g_window_height);
+	}
+
 	void clear()
 	{
 		glClear(GL_COLOR_BUFFER_BIT);
 	}
 
-	void resize(const unsigned int width, const unsigned int height)
+	Vec2i convert_to_flipped_view(const Vec2i &p)
 	{
-		ShaderManager::Instance->set(width, height);
-		glViewport(0, 0, width, height);
+		return convert_to_view(Vec2i(p.x, g_window_height - p.y));
+	}
 
-		R_ASSERT(glGetError() == GL_NO_ERROR,
-		         "Failed to initialise OpenGL viewport");
+	Vec2i convert_to_view(const Vec2i &p)
+	{
+		return Vec2i((p.x - g_origin_x) * g_scale_x,
+		             (p.y - g_origin_y) * g_scale_y);
 	}
 
 	template<typename T>

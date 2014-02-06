@@ -15,7 +15,7 @@ namespace ConFuoco
 	class MixerBase : private NonCopyable<MixerBase<T>>
 	{
 	public:
-		static T* Instance;
+		static T *Instance;
 
 		class Channel
 		{

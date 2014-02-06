@@ -30,7 +30,7 @@ class TextureManager : private NonCopyable<TextureManager>
 	friend void Renderer::release();
 
 public:
-	static TextureManager* Instance;
+	static TextureManager *Instance;
 
 	/// Makes texture active on current rendering target.
 	/// \param id  Texture id to bind. If omitted, bind the default texture.

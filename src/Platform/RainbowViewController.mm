@@ -210,7 +210,7 @@ namespace
 	size.height *= self.scale;
 
 	// Set screen resolution.
-	Renderer::resize(size.width, size.height);
+	Renderer::set_resolution(size.width, size.height);
 
 	// Load and initialise script.
 	self.director->init(Data::load_asset("main.lua"), size.width, size.height);
