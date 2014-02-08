@@ -191,7 +191,11 @@ ShaderManager::ShaderManager() : active(-1)
 		{ Shader::kTypeInvalid, 0, nullptr }
 	};
 	const int pid = this->compile(shaders, nullptr);
-	R_ASSERT(pid >= 0, "Failed to compile default shader");
+	if (pid < 0)
+	{
+		R_ASSERT(pid >= 0, "Failed to compile default shader");
+		return;
+	}
 
 	memset(this->ortho, 0, sizeof(this->ortho));
 	this->ortho[ 0] =  1.0f;
