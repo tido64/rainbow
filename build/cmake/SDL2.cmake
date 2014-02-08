@@ -25,7 +25,7 @@ else()
 		                                  ${SDL2_BUILD_DIR}/RelWithDebInfo/${SDL2_LIBRARY})
 		set(SDL2_LIBRARIES SDL2)
 	else()
-		set(SDL2_LIBRARIES ${SDL2_LIBRARY})
+		set(SDL2_LIBRARIES ${SDL2_BUILD_DIR}/${SDL2_LIBRARY})
 	endif()
 
 	execute_process(COMMAND rm -f include WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
