@@ -50,7 +50,7 @@ namespace
 			return unique_str(log);
 		}
 		return unique_str();
-	};
+	}
 
 	int compile_shader(const Shader::ShaderParams &shader)
 	{

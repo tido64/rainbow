@@ -20,10 +20,10 @@ function compile {
 			mv rainbow.bc rainbow
 			;;
 		"Ninja")
-			ninja
+			$ANALYZER ninja
 			;;
 		"Unix Makefiles")
-			make
+			$ANALYZER make
 			;;
 		"Xcode")
 			local configuration="Debug"
@@ -63,7 +63,7 @@ case $1 in
 		echo "  NDK_TOOLCHAIN_VERSION    Android: Compiler used by ndk-build"
 		;;
 	"analyze")
-		CC=ccc-analyzer CXX=c++-analyzer $SHELL $0 $ARGS
+		ANALYZER=scan-build CC=ccc-analyzer CXX=c++-analyzer $SHELL $0 $ARGS
 		;;
 	"android")
 		$SHELL "$RAINBOW/tools/build-android.sh" $ARGS
