@@ -1,1275 +1,883 @@
 <!DOCTYPE html>
-<html>
-<head>
-	<meta charset="utf-8">
-	<title>Rainbow API Reference</title>
-	<link rel="stylesheet" type="text/css" href="style.css">
-	<style type="text/css">
-		#top {
-			position: fixed;
-			bottom: 16px;
-			right: 16px;
-		}
-		.optional:before {
-			font-size: 0.7em;
-			font-weight: bold;
-			content: '[optional] ';
-		}
-		h1 {  /* RAINBOW! */
-			color: #ffffff !important;
-			text-shadow:
-				 2px  1px 0 #dd0000,  4px  2px 0 #dd0000,
-				 6px  3px 0 #fe6230,  8px  4px 0 #fe6230,
-				10px  5px 0 #fef600, 12px  6px 0 #fef600,
-				14px  7px 0 #00bc00, 16px  8px 0 #00bc00,
-				18px  9px 0 #009bfe, 20px 10px 0 #009bfe,
-				22px 11px 0 #000083, 24px 12px 0 #000083,
-				26px 13px 0 #30009b, 28px 14px 0 #30009b !important;
-		}
-		h2 { margin-top: 63px !important; }
-		h3 { margin-top: 37px !important; }
-		ul:first-child {
-			-moz-column-count: 4;     /* Firefox */
-			-webkit-column-count: 4;  /* Safari and Chrome */
-			column-count: 4;
-			list-style: none;
-		}
-		xmp { display: none; }
-	</style>
-</head>
-<body>
-<xmp id="content" theme="simplex">
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Rainbow API Reference</title>
+    <meta name="viewport" content="width=device-width">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/monokai_sublime.css">
+    <link rel="stylesheet" href="css/main.css">
+  </head>
+  <body>
+    <div class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="javascript:window.scroll(0,0);">Rainbow API Reference</a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" href="#" id="internal-api">
+                Internal API <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="internal-api">
+                <li><a href="#rainbow-animation">animation</a></li>
+                <li><a href="#rainbow-audio">audio</a></li>
+                <li><a href="#rainbow-font">font</a></li>
+                <li><a href="#rainbow-input">input</a></li>
+                <li><a href="#rainbow-io">io</a></li>
+                <li><a href="#rainbow-label">label</a></li>
+                <li><a href="#rainbow-platform">platform</a></li>
+                <li><a href="#rainbow-random">random</a></li>
+                <li><a href="#rainbow-renderer">renderer</a></li>
+                <li><a href="#rainbow-scenegraph">scenegraph</a></li>
+                <li><a href="#rainbow-sprite">sprite</a></li>
+                <li><a href="#rainbow-spritebatch">spritebatch</a></li>
+                <li><a href="#rainbow-texture">texture</a></li>
+              </ul>
+            </li>
+            <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" href="#" id="libraries">
+                Libraries <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="libraries">
+                <li><a href="#coroutine">Coroutine</a></li>
+                <li><a href="#functional">Functional</a></li>
+                <li><a href="#math">Math</a></li>
+                <li><a href="#parallax">Parallax</a></li>
+                <li><a href="#stack">Stack</a></li>
+                <li><a href="#timer">Timer</a></li>
+                <li><a href="#transition">Transition</a></li>
+                <li class="divider"></li>
+                <li><a href="http://box2d.org/documentation/">Box2D</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div><!--/.navbar-collapse -->
+      </div>
+    </div>
+    <div id="top"><a href="javascript:window.scroll(0,0);">Top &uarr;</a></div>
+    <div id="content" class="container">
 
-  * [animation](#rainbow.animation)
-  * [audio](#rainbow.audio)
-  * [font](#rainbow.font)
-  * [input](#rainbow.input)
-  * [io](#rainbow.io)
-  * [label](#rainbow.label)
-  * [platform](#rainbow.platform)
-  * [random](#rainbow.random)
-  * [renderer](#rainbow.renderer)
-  * [scenegraph](#rainbow.scenegraph)
-  * [sprite](#rainbow.sprite)
-  * [spritebatch](#rainbow.spritebatch)
-  * [texture](#rainbow.texture)
+  * [animation](#rainbow-animation)
+  * [audio](#rainbow-audio)
+  * [font](#rainbow-font)
+  * [input](#rainbow-input)
+  * [io](#rainbow-io)
+  * [label](#rainbow-label)
+  * [platform](#rainbow-platform)
+  * [random](#rainbow-random)
+  * [renderer](#rainbow-renderer)
+  * [scenegraph](#rainbow-scenegraph)
+  * [sprite](#rainbow-sprite)
+  * [spritebatch](#rainbow-spritebatch)
+  * [texture](#rainbow-texture)
   * &mdash;
-  * [Coroutine](#Coroutine)
-  * [Functional](#Functional)
-  * [Math](#Math)
-  * [Parallax](#Parallax)
-  * [Stack](#Stack)
-  * [Timer](#Timer)
-  * [Transition](#Transition)
+  * [Coroutine](#coroutine)
+  * [Functional](#functional)
+  * [Math](#math)
+  * [Parallax](#parallax)
+  * [Stack](#stack)
+  * [Timer](#timer)
+  * [Transition](#transition)
   * &mdash;
   * [Box2D](http://box2d.org/documentation/)
 
-<a id="rainbow.animation"></a>
 ## rainbow.animation
 
-Sprite animations use separate textures within a [texture atlas](#rainbow.texture) as animation frames. Since animations are bound to a [sprite](#rainbow.sprite), which in turn is bound to a [sprite batch](#rainbow.spritebatch), they are also bound to the [texture atlas](#rainbow.texture) the batch is using.
+Sprite animations use separate textures within a [texture atlas](#rainbow-texture) as animation frames. Since animations are bound to a [sprite](#rainbow-sprite), which in turn is bound to a [sprite batch](#rainbow-spritebatch), they are also bound to the [texture atlas](#rainbow-texture) the batch is using.
 
-<a id="rainbow.animation()"></a>
 ### rainbow.animation(sprite, frames, fps, delay)
 
-<table>
-	<tr>
-		<td><var>sprite</var></td>
-		<td>The sprite object to animate.</td>
-	</tr>
-	<tr>
-		<td><var>frames</var></td>
-		<td>Array of frames that make up the animation.</td>
-	</tr>
-	<tr>
-		<td><var>fps</var></td>
-		<td>Number of frames per second to animate at.</td>
-	</tr>
-	<tr>
-		<td><var>delay</var></td>
-		<td>Number of frames to delay before looping. Negative numbers disable looping. Default: 0.</td>
-	</tr>
-</table>
+| Parameter | Description |
+|-----------|-------------|
+| <var>sprite</var> | The sprite object to animate. |
+| <var>frames</var> | Array of frames that make up the animation. |
+| <var>fps</var> | Number of frames per second to animate at. |
+| <var>delay</var> | Number of frames to delay before looping. Negative numbers disable looping. Default: 0. |
 
 Creates a sprite animation.
 
-<a id="rainbow.animation:is_stopped"></a>
 ### &lt;rainbow.animation&gt;:is_stopped()
 
 Returns whether the animation has stopped.
 
-<a id="rainbow.animation:set_delay"></a>
 ### &lt;rainbow.animation&gt;:set_delay(delay)
 
-<table>
-	<tr>
-		<td><var>delay</var></td>
-		<td>Number of milliseconds to delay before looping.</td>
-	</tr>
-</table>
+| Parameter | Description |
+|-----------|-------------|
+| <var>delay</var> | Number of milliseconds to delay before looping. |
 
 Sets the number of milliseconds to delay before looping.
 
-<a id="rainbow.animation:set_fps"></a>
 ### &lt;rainbow.animation&gt;:set_fps(fps)
 
-<table>
-	<tr>
-		<td><var>fps</var></td>
-		<td>Number of frames per second to animate at.</td>
-	</tr>
-</table>
+| Parameter | Description |
+|-----------|-------------|
+| <var>fps</var> | Number of frames per second to animate at. |
 
 Sets the number of frames per second to animate at.
 
-<a id="rainbow.animation:set_frames"></a>
 ### &lt;rainbow.animation&gt;:set_frames(frames)
 
-<table>
-	<tr>
-		<td><var>frames</var></td>
-		<td>Table of texture indices that make up the animation.</td>
-	</tr>
-</table>
+| Parameter | Description |
+|-----------|-------------|
+| <var>frames</var> | Table of texture indices that make up the animation. |
 
 Sets table of animation frames.
 
-<a id="rainbow.animation:set_sprite"></a>
 ### &lt;rainbow.animation&gt;:set_sprite(sprite)
 
-<table>
-	<tr>
-		<td><var>sprite</var></td>
-		<td>The sprite to animate.</td>
-	</tr>
-</table>
+| Parameter | Description |
+|-----------|-------------|
+| <var>sprite</var> | The sprite to animate. |
 
 Sets the sprite to animate.
 
-<a id="rainbow.animation:play"></a>
 ### &lt;rainbow.animation&gt;:play()
 
 Starts the animation.
 
-<a id="rainbow.animation:stop"></a>
 ### &lt;rainbow.animation&gt;:stop()
 
 Stops the animation.
 
-<a id="rainbow.audio"></a>
 ## rainbow.audio
 
 Audio consists mainly of the sound object and the audio channel. The sound object is basically an audio buffer. It can be wholly loaded, or it can stream from disk. A sound object is played on an audio channel. An audio channel can only play one sound object at a time but the sound object can be used by any number of channels. As raw audio data can take a large amount of memory, it is recommended to only create static sound objects for short audio files (such as sound effects).
 
 Officially, Rainbow supports only [Ogg Vorbis](http://en.wikipedia.org/wiki/Vorbis) audio format. However, on iOS, the [list of supported audio formats](http://developer.apple.com/library/ios/#documentation/AudioVideo/Conceptual/MultimediaPG/UsingAudio/UsingAudio.html#//apple_ref/doc/uid/TP40009767-CH2-SW9) includes AAC (MPEG-4 Advanced Audio Coding), ALAC (Apple Lossless), HE-AAC (MPEG-4 High Efficiency AAC), iLBC (internet Low Bit Rate Codec), IMA4 (IMA/ADPCM), Linear PCM (uncompressed, linear pulse code modulation), MP3, µ-law and a-law. Of these, AAC, ALAC, HE-AAC and MP3 are hardware-assisted. Mac OS X also supports these in addition to [Ogg Vorbis](http://en.wikipedia.org/wiki/Vorbis). On Android, the list of supported audio formats vary with each device but MP3 and Ogg Vorbis are both safe bets.
 
-<a id="rainbow.audio.clear"></a>
 ### rainbow.audio.clear()
 
 Stops and deletes all sound objects.
 
-<a id="rainbow.audio.create_sound"></a>
 ### rainbow.audio.create_sound(path, +mode, +loops)
 
-<table>
-	<tr>
-		<td><var>path</var></td>
-		<td>Path to audio source, relative to the location of the main script.</td>
-	</tr>
-	<tr>
-		<td><var>mode</var></td>
-		<td class="optional">Load into buffer (0), or stream from disk (1). Default: 0.</td>
-	</tr>
-	<tr>
-		<td><var>loops</var></td>
-		<td class="optional">Number of times to loop. Only applicable if streaming. Default: -1.</td>
-	</tr>
-</table>
+| Parameter | Description |
+|-----------|-------------|
+| <var>path</var> | Path to audio source, relative to the location of the main script. |
+| <var>mode</var> | <span class="optional">Load into buffer (0), or stream from disk (1). Default: 0.</span> |
+| <var>loops</var> | <span class="optional">Number of times to loop. Only applicable if streaming. Default: -1.</span> |
 
 Creates a sound object. This object is just a reference to the audio source and cannot be manipulated in any way.
 
-<a id="rainbow.audio.delete_sound"></a>
 ### rainbow.audio.delete_sound(sound)
 
-<table>
-	<tr>
-		<td><var>sound</var></td>
-		<td>The sound object to delete.</td>
-	</tr>
-</table>
+| Parameter | Description |
+|-----------|-------------|
+| <var>sound</var> | The sound object to delete. |
 
 Deletes sound object. This will stop all channels from using the object and release all related resources.
 
-<a id="rainbow.audio.pause"></a>
 ### rainbow.audio.pause(channel)
 
-<table>
-	<tr>
-		<td><var>channel</var></td>
-		<td>The channel to pause playback.</td>
-	</tr>
-</table>
+| Parameter | Description |
+|-----------|-------------|
+| <var>channel</var> | The channel to pause playback. |
 
 Sets channel on pause.
 
-<a id="rainbow.audio.play"></a>
 ### rainbow.audio.play(sound)
 
-<table>
-	<tr>
-		<td><var>sound</var></td>
-		<td>The sound object to play.</td>
-	</tr>
-</table>
+| Parameter | Description |
+|-----------|-------------|
+| <var>sound</var> | The sound object to play. |
 
 Starts playback of the sound object and returns the channel on which it is played. Channels may vary with each playback.
 
-<a id="rainbow.audio.set_gain"></a>
 ### rainbow.audio.set_gain(+channel, volume)
 
-<table>
-	<tr>
-		<td><var>channel</var></td>
-		<td class="optional">The channel to change gain/volume. Default: master channel.</td>
-	</tr>
-	<tr>
-		<td><var>volume</var></td>
-		<td>Desired gain/volume. Valid values: 0.0-1.0.</td>
-	</tr>
-</table>
+| Parameter | Description |
+|-----------|-------------|
+| <var>channel</var> | <span class="optional">The channel to change gain/volume. Default: master channel.</span> |
+| <var>volume</var> | Desired gain/volume. Valid values: 0.0-1.0. |
 
 Sets channel gain/volume.
 
-<a id="rainbow.audio.set_pitch"></a>
 ### rainbow.audio.set_pitch(pitch)
 
-<table>
-	<tr>
-		<td><var>pitch</var></td>
-		<td>Desired pitch shift, where 1.0 equals identify. Each reduction by 50 percent equals a pitch shift of -12 semitones (one octave reduction). Each doubling equals a pitch shift of 12 semitones (one octave increase). Zero is not a legal value.</td>
-	</tr>
-</table>
+| Parameter | Description |
+|-----------|-------------|
+| <var>pitch</var> | Desired pitch shift, where 1.0 equals identify. Each reduction by 50 percent equals a pitch shift of -12 semitones (one octave reduction). Each doubling equals a pitch shift of 12 semitones (one octave increase). Zero is not a legal value. |
 
 Sets global pitch shift.
 
-<a id="rainbow.audio.stop"></a>
 ### rainbow.audio.stop(channel)
 
-<table>
-	<tr>
-		<td><var>channel</var></td>
-		<td>The channel to stop playback.</td>
-	</tr>
-</table>
+| Parameter | Description |
+|-----------|-------------|
+| <var>channel</var> | The channel to stop playback. |
 
 Stops channel.
 
-<a id="rainbow.font"></a>
 ## rainbow.font
 
-Font objects are used by [labels](#rainbow.label) to display text. Like textures, it is recommended to reuse them whenever possible. A font object is created with a fixed point size and cannot be resized. If a different size is desired, a new font object must be created.
+Font objects are used by [labels](#rainbow-label) to display text. Like textures, it is recommended to reuse them whenever possible. A font object is created with a fixed point size and cannot be resized. If a different size is desired, a new font object must be created.
 
 Rainbow currently supports OpenType and TrueType fonts.
 
-<a id="rainbow.font()"></a>
 ### rainbow.font(path, size)
 
-<table>
-	<tr>
-		<td><var>path</var></td>
-		<td>Path to font, relative to the location of the main script.</td>
-	</tr>
-	<tr>
-		<td><var>size</var></td>
-		<td>Point size.</td>
-	</tr>
-</table>
+| Parameter | Description |
+|-----------|-------------|
+| <var>path</var> | Path to font, relative to the location of the main script. |
+| <var>size</var> | Point size. |
 
 Creates a font with a fixed point size.
 
-<a id="rainbow.input"></a>
 ## rainbow.input
 
 Input events are only sent to objects that subscribe to them. Such objects are called event listeners. A listener can be implemented as follows.
 
-	InputListener = {}
-	InputListener.__index = InputListener
+    InputListener = {}
+    InputListener.__index = InputListener
 
-	function InputListener:key_down(key, modifiers) end
-	function InputListener:key_up(key, modifiers) end
-	function InputListener:touch_ended(touches) end
-	function InputListener:touch_canceled() end
-	function InputListener:touch_moved(touches) end
+    function InputListener:key_down(key, modifiers) end
+    function InputListener:key_up(key, modifiers) end
+    function InputListener:touch_ended(touches) end
+    function InputListener:touch_canceled() end
+    function InputListener:touch_moved(touches) end
 
-	# Create our listener and let it subscribe to input events.
-	local mylistener = setmetatable({}, InputListener)
-	rainbow.input.subscribe(mylistener)
+    # Create our listener and let it subscribe to input events.
+    local mylistener = setmetatable({}, InputListener)
+    rainbow.input.subscribe(mylistener)
 
-	# We're only interested in touch began events.
-	function mylistener:touch_began(touches)
-		for hash,touch in pairs(touches) do
-			# Handle event here
-		end
-	end
+    # We're only interested in touch began events.
+    function mylistener:touch_began(touches)
+      for hash,touch in pairs(touches) do
+        # Handle event here
+      end
+    end
 
 As seen in the example, the easiest way is to define an ``InputListener`` and inherit from it, then define the functions that are needed. The important point here is that all event handlers must be implemented even if they'll do nothing.
 
 For touch events, a table of events are sent with each notification. It is iterated as above. The ``hash`` value uniquely identifies a touch (or mouse button) for the duration of it touching the screen (or mouse button being held). Touch (or mouse click) location is stored in ``touch``:
 
-	touch.x          # For the x-coordinate.
-	touch.y          # For the y-coordinate.
-	touch.timestamp  # For the relative time at which the event occurred.
+    touch.x          # For the x-coordinate.
+    touch.y          # For the y-coordinate.
+    touch.timestamp  # For the relative time at which the event occurred.
 
 _Desktop-only:_ Keyboard event listeners receive the key value (the actual key that was pressed/released) of the event and, if available, its modifiers (i.e. ctrl, alt or shift).
 
-<a id="rainbow.input.subscribe"></a>
 ### rainbow.input.subscribe(listener)
 
-<table>
-	<tr>
-		<td><var>listener</var></td>
-		<td>Input listener object.</td>
-	</tr>
-</table>
+| Parameter | Description |
+|-----------|-------------|
+| <var>listener</var> | Input listener object. |
 
 Adds an input listener.
 
-<a id="rainbow.input.unsubscribe"></a>
 ### rainbow.input.unsubscribe(listener)
 
-<table>
-	<tr>
-		<td><var>listener</var></td>
-		<td>Input listener object.</td>
-	</tr>
-</table>
+| Parameter | Description |
+|-----------|-------------|
+| <var>listener</var> | Input listener object. |
 
 Removes an input listener.
 
-<a id="rainbow.input.unsubscribe_all"></a>
 ### rainbow.input.unsubscribe_all()
 
 Removes all input listeners.
 
-<a id="rainbow.io"></a>
 ## rainbow.io
 
-<a id="rainbow.io.load"></a>
 ### rainbow.io.load()
 
-<a id="rainbow.io.save"></a>
 ### rainbow.io.save()
 
-<a id="rainbow.label"></a>
 ## rainbow.label
 
 A label is used to display text.
 
-<a id="rainbow.label()"></a>
 ### rainbow.label(+text)
 
-<table>
-	<tr>
-		<td><var>text</var></td>
-		<td class="optional">The text to be displayed on the label. Default: "".</td>
-	</tr>
-</table>
+| Parameter | Description |
+|-----------|-------------|
+| <var>text</var> | <span class="optional">The text to be displayed on the label. Default: "".</span> |
 
-<a id="rainbow.label:get_color"></a>
 ### &lt;rainbow.label&gt;:get_color()
 
 Returns the font colour in separate channels (RGBA).
 
-<a id="rainbow.label:set_alignment"></a>
 ### &lt;rainbow.label&gt;:set_alignment(align)
 
-<table>
-	<tr>
-		<td><var>align</var></td>
-		<td>Text alignment. Valid values: 'l', 'c', 'r'. Default: 'l'.</td>
-	</tr>
-</table>
+| Parameter | Description |
+|-----------|-------------|
+| <var>align</var> | Text alignment. Valid values: 'l', 'c', 'r'. Default: 'l'. |
 
 Sets text alignment.
 
-<a id="rainbow.label:set_color"></a>
 ### &lt;rainbow.label&gt;:set_color(r, g, b, +a)
 
-<table>
-	<tr>
-		<td><var>r</var></td>
-		<td>Amount of red. Valid values: 0-255.</td>
-	</tr>
-	<tr>
-		<td><var>g</var></td>
-		<td>Amount of green. Valid values: 0-255.</td>
-	</tr>
-	<tr>
-		<td><var>b</var></td>
-		<td>Amount of blue. Valid values: 0-255.</td>
-	</tr>
-	<tr>
-		<td><var>a</var></td>
-		<td class="optional">Amount of opacity. Valid values: 0-255. Default: 255.</td>
-	</tr>
-</table>
+| Parameter | Description |
+|-----------|-------------|
+| <var>r</var> | Amount of red. Valid values: 0-255. |
+| <var>g</var> | Amount of green. Valid values: 0-255. |
+| <var>b</var> | Amount of blue. Valid values: 0-255. |
+| <var>a</var> | <span class="optional">Amount of opacity. Valid values: 0-255. Default: 255.</span> |
 
 Sets text colour.
 
-<a id="rainbow.label:set_font"></a>
 ### &lt;rainbow.label&gt;:set_font(font)
 
-<table>
-	<tr>
-		<td><var>font</var></td>
-		<td>[Font type](#rainbow.font) to use.</td>
-	</tr>
-</table>
+| Parameter | Description |
+|-----------|-------------|
+| <var>r</var> | [Font type](#rainbow-font) to use. |
 
 Sets font type.
 
-<a id="rainbow.label:set_position"></a>
 ### &lt;rainbow.label&gt;:set_position(x, y)
 
-<table>
-	<tr>
-		<td><var>x, y</var></td>
-		<td>Position.</td>
-	</tr>
-</table>
+| Parameter | Description |
+|-----------|-------------|
+| <var>x, y</var> | Position. |
 
 Sets label position.
 
-<a id="rainbow.label:set_scale"></a>
 ### &lt;rainbow.label&gt;:set_scale(scale)
 
-<table>
-	<tr>
-		<td><var>scale</var></td>
-		<td>Factor to scale label by. Valid values: 0.01-1.0.</td>
-	</tr>
-</table>
+| Parameter | Description |
+|-----------|-------------|
+| <var>scale</var> | Factor to scale label by. Valid values: 0.01-1.0. |
 
 Sets label scale. Values are clamped between 0.01-1.0.
 
-<a id="rainbow.label:set_text"></a>
 ### &lt;rainbow.label&gt;:set_text(text)
 
-<table>
-	<tr>
-		<td><var>text</var></td>
-		<td>Text to be displayed on the label.</td>
-	</tr>
-</table>
+| Parameter | Description |
+|-----------|-------------|
+| <var>text</var> | Text to be displayed on the label. |
 
 Sets the text to be displayed on the label.
 
-<a id="rainbow.platform"></a>
 ## rainbow.platform
 
 Query the system for capabilities or sensor readings.
 
-<a id="rainbow.platform.accelerometer"></a>
 ### rainbow.platform.accelerometer
 
-<table>
-	<tr>
-		<td><var>timestamp</var></td>
-		<td>The relative time at which the acceleration event occurred.</td>
-	</tr>
-	<tr>
-		<td><var>x</var></td>
-		<td>The acceleration value for the x axis of the device. With the device held in portrait orientation and the screen facing you, the x axis runs from left (negative values) to right (positive values) across the face of the device.</td>
-	</tr>
-	<tr>
-		<td><var>y</var></td>
-		<td>The acceleration value for the y axis of the device. With the device held in portrait orientation and the screen facing you, the y axis runs from bottom (negative values) to top (positive values) across the face of the device.</td>
-	</tr>
-	<tr>
-		<td><var>z</var></td>
-		<td>The acceleration value for the z axis of the device. With the device held in portrait orientation and the screen facing you, the z axis runs from back (negative values) to front (positive values) through the device.</td>
-	</tr>
-</table>
+| Parameter | Description |
+|-----------|-------------|
+| <var>timestamp</var> | The relative time at which the acceleration event occurred. |
+| <var>x</var> | The acceleration value for the x axis of the device. With the device held in portrait orientation and the screen facing you, the x axis runs from left (negative values) to right (positive values) across the face of the device. |
+| <var>y</var> | The acceleration value for the y axis of the device. With the device held in portrait orientation and the screen facing you, the y axis runs from bottom (negative values) to top (positive values) across the face of the device. |
+| <var>z</var> | The acceleration value for the z axis of the device. With the device held in portrait orientation and the screen facing you, the z axis runs from back (negative values) to front (positive values) through the device. |
 
-<a id="rainbow.platform.screen"></a>
 ### rainbow.platform.screen
 
-<table>
-	<tr>
-		<td><var>width</var></td>
-		<td>Screen width in pixels.</td>
-	</tr>
-	<tr>
-		<td><var>height</var></td>
-		<td>Screen height in pixels.</td>
-	</tr>
-	<tr>
-		<td><var>touch</var></td>
-		<td>Whether the screen has touch capabilities.</td>
-	</tr>
-</table>
+| Parameter | Description |
+|-----------|-------------|
+| <var>width</var> | Screen width in pixels. |
+| <var>height</var> | Screen height in pixels. |
+| <var>touch</var> | Whether the screen has touch capabilities. |
 
-<a id="rainbow.platform.memory"></a>
 ### rainbow.platform.memory
 
 Total amount of RAM in MB.
 
-<a id="rainbow.random"></a>
 ## rainbow.random
 
 Rainbow's pseudo-random number generator is the [Double precision SIMD-oriented Fast Mersenne Twister](http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/SFMT/) developed by Mutsuo Saito and Makoto Matsumoto at Hiroshima University and University of Tokyo. The implementation in use supports a period of 2<sup>19937</sup> - 1.
 
 ``rainbow.seed()`` must be called before using this module.
 
-<a id="rainbow.random()"></a>
 ### rainbow.random()
 
 Returns a random number in interval [0, 1).
 
-<a id="rainbow.random()"></a>
 ### rainbow.random(max)
 
-<table>
-	<tr>
-		<td><var>max</var></td>
-		<td>Maximum value.</td>
-	</tr>
-</table>
+| Parameter | Description |
+|-----------|-------------|
+| <var>max</var> | Maximum value. |
 
 Returns a random number in interval [0, <var>max</var>).
 
-<a id="rainbow.random()"></a>
 ### rainbow.random(min, max)
 
-<table>
-	<tr>
-		<td><var>min</var></td>
-		<td>Minimum value.</td>
-	</tr>
-	<tr>
-		<td><var>max</var></td>
-		<td>Maximum value.</td>
-	</tr>
-</table>
+| Parameter | Description |
+|-----------|-------------|
+| <var>min</var> | Minimum value. |
+| <var>max</var> | Maximum value. |
 
 Returns a random number in interval [<var>min</var>, <var>max</var>).
 
-<a id="rainbow.random#seed"></a>
 ### rainbow.seed(+seed)
 
-<table>
-	<tr>
-		<td><var>seed</var></td>
-		<td class="optional">Random number generator seed. Default: 0 (current system time).</td>
-	</tr>
-</table>
+| Parameter | Description |
+|-----------|-------------|
+| <var>seed</var> | <span class="optional">Random number generator seed. Default: 0 (current system time).</span> |
 
 Sets the random number generator seed. Must be called before any other calls.
 
-<a id="rainbow.renderer"></a>
 ## rainbow.renderer
 
 Access low-level graphics methods and properties.
 
-<a id="rainbow.renderer.max_texture_size"></a>
 ### rainbow.renderer.max_texture_size
 
 Rough estimate of the largest texture that the platform can handle.
 
-<a id="rainbow.renderer.supports_pvrtc"></a>
 ### rainbow.renderer.supports_pvrtc
 
 Whether the platform supports PVRTC textures.
 
-<a id="rainbow.renderer.set_clear_color"></a>
 ### rainbow.renderer.set_clear_color(r, g, b)
 
-<table>
-	<tr>
-		<td><var>r</var></td>
-		<td>Amount of red. Valid values: 0-255.</td>
-	</tr>
-	<tr>
-		<td><var>g</var></td>
-		<td>Amount of green. Valid values: 0-255.</td>
-	</tr>
-	<tr>
-		<td><var>b</var></td>
-		<td>Amount of blue. Valid values: 0-255.</td>
-	</tr>
-</table>
+| Parameter | Description |
+|-----------|-------------|
+| <var>r</var> | Amount of red. Valid values: 0-255. |
+| <var>g</var> | Amount of green. Valid values: 0-255. |
+| <var>b</var> | Amount of blue. Valid values: 0-255. |
 
 Sets clear colour. Clearing occurs at the start of each drawn frame.
 
-<a id="rainbow.renderer.set_filter"></a>
 ### rainbow.renderer.set_filter(filter)
 
-<table>
-	<tr>
-		<td><var>filter</var></td>
-		<td>Texture filtering method. Valid values: ``gl.NEAREST``, ``gl.LINEAR``.</td>
-	</tr>
-</table>
+| Parameter | Description |
+|-----------|-------------|
+| <var>filter</var> | Texture filtering method. Valid values: ``gl.NEAREST``, ``gl.LINEAR``. |
 
 Sets texture filtering method. Only affects new textures.
 
-<a id="rainbow.renderer.set_projection"></a>
 ### rainbow.renderer.set_projection(left, right, bottom, top)
 
-<table>
-	<tr>
-		<td><var>left</var></td>
-		<td>Leftmost point in pixels. Default: 0.</td>
-	</tr>
-	<tr>
-		<td><var>right</var></td>
-		<td>Rightmost point in pixels. Default: [``rainbow.platform.screen.width``](#rainbow.platform.screen).</td>
-	</tr>
-	<tr>
-		<td><var>bottom</var></td>
-		<td>Bottommost point in pixels. Default: 0.</td>
-	</tr>
-	<tr>
-		<td><var>top</var></td>
-		<td>Topmost point in pixels. Default: [``rainbow.platform.screen.height``](#rainbow.platform.screen).</td>
-	</tr>
-</table>
+| Parameter | Description |
+|-----------|-------------|
+| <var>left</var> | Leftmost point in pixels. Default: 0. |
+| <var>right</var> | Rightmost point in pixels. Default: [``rainbow.platform.screen.width``](#rainbow-platform-screen). |
+| <var>bottom</var> | Bottommost point in pixels. Default: 0. |
+| <var>top</var> | Topmost point in pixels. Default: [``rainbow.platform.screen.height``](#rainbow-platform-screen). |
 
 Sets orthographic projection.
 
-<a id="rainbow.scenegraph"></a>
 ## rainbow.scenegraph
 
 Drawables must be attached to the scene graph in order to be updated and drawn. The scene graph is traversed in a depth-first manner. In a single node, this means that its children are updated and drawn in the order they were created.
 
-<a id="rainbow.scenegraph:add_animation"></a>
 ### &lt;rainbow.scenegraph&gt;:add_animation(+parent, animation)
 
-<table>
-	<tr>
-		<td><var>parent</var></td>
-		<td class="optional">Parent node to attach to. Default: root.</td>
-	</tr>
-	<tr>
-		<td><var>animation</var></td>
-		<td>The [animation](#rainbow.animation) to attach to the graph.</td>
-	</tr>
-</table>
+| Parameter | Description |
+|-----------|-------------|
+| <var>parent</var> | <span class="optional">Parent node to attach to. Default: root.</span> |
+| <var>animation</var> | The [animation](#rainbow-animation) to attach to the graph. |
 
-Creates a node containing a [sprite animation](#rainbow.animation).
+Creates a node containing a [sprite animation](#rainbow-animation).
 
-<a id="rainbow.scenegraph:add_batch"></a>
 ### &lt;rainbow.scenegraph&gt;:add_batch(+parent, spritebatch)
 
-<table>
-	<tr>
-		<td><var>parent</var></td>
-		<td class="optional">Parent node to attach to. Default: root.</td>
-	</tr>
-	<tr>
-		<td><var>spritebatch</var></td>
-		<td>The [sprite batch](#rainbow.spritebatch) to attach to the graph.</td>
-	</tr>
-</table>
+| Parameter | Description |
+|-----------|-------------|
+| <var>parent</var> | <span class="optional">Parent node to attach to. Default: root.</span> |
+| <var>spritebatch</var> | The [sprite batch](#rainbow-spritebatch) to attach to the graph. |
 
-Creates a node containing a [sprite batch](#rainbow.spritebatch).
+Creates a node containing a [sprite batch](#rainbow-spritebatch).
 
-<a id="rainbow.scenegraph:add_drawable"></a>
 ### &lt;rainbow.scenegraph&gt;:add_drawable(+parent, drawable)
 
-<table>
-	<tr>
-		<td><var>parent</var></td>
-		<td class="optional">Parent node to attach to. Default: root.</td>
-	</tr>
-	<tr>
-		<td><var>drawable</var></td>
-		<td>The drawable object to attach to the graph.</td>
-	</tr>
-</table>
+| Parameter | Description |
+|-----------|-------------|
+| <var>parent</var> | <span class="optional">Parent node to attach to. Default: root.</span> |
+| <var>drawable</var> | The drawable object to attach to the graph. |
 
 Creates a node containing a drawable.
 
-<a id="rainbow.scenegraph:add_node"></a>
 ### &lt;rainbow.scenegraph&gt;:add_node(+parent)
 
-<table>
-	<tr>
-		<td><var>parent</var></td>
-		<td class="optional">Parent node to attach to. Default: root.</td>
-	</tr>
-</table>
+| Parameter | Description |
+|-----------|-------------|
+| <var>parent</var> | <span class="optional">Parent node to attach to. Default: root.</span> |
 
 Creates a group node.
 
-<a id="rainbow.scenegraph:add_label"></a>
 ### &lt;rainbow.scenegraph&gt;:add_label(+parent, label)
 
-<table>
-	<tr>
-		<td><var>parent</var></td>
-		<td class="optional">Parent node to attach to. Default: root.</td>
-	</tr>
-	<tr>
-		<td><var>label</var></td>
-		<td>The [label](#rainbow.label) to attach to the graph.</td>
-	</tr>
-</table>
+| Parameter | Description |
+|-----------|-------------|
+| <var>parent</var> | <span class="optional">Parent node to attach to. Default: root.</span> |
+| <var>label</var> | The [label](#rainbow-label) to attach to the graph. |
 
-Creates a node containing a [label](#rainbow.label).
+Creates a node containing a [label](#rainbow-label).
 
-<a id="rainbow.scenegraph:disable"></a>
 ### &lt;rainbow.scenegraph&gt;:disable(node)
 
-<table>
-	<tr>
-		<td><var>node</var></td>
-		<td>The node to disable.</td>
-	</tr>
-</table>
+| Parameter | Description |
+|-----------|-------------|
+| <var>node</var> | The node to disable. |
 
 Disables a node. Disabling a node will cut short the graph traversal, effectively disabling all children nodes but still maintain their states.
 
-<a id="rainbow.scenegraph:enable"></a>
 ### &lt;rainbow.scenegraph&gt;:enable(node)
 
-<table>
-	<tr>
-		<td><var>node</var></td>
-		<td>The node to enable.</td>
-	</tr>
-</table>
+| Parameter | Description |
+|-----------|-------------|
+| <var>node</var> | The node to enable. |
 
 Enables a node. Enabling a node will open up the path in the graph, effectively enabling all children nodes but still maintain their states.
 
-<a id="rainbow.scenegraph:move"></a>
 ### &lt;rainbow.scenegraph&gt;:move(node, x, y)
 
-<table>
-	<tr>
-		<td><var>node</var></td>
-		<td>The node to move.</td>
-	</tr>
-	<tr>
-		<td><var>x, y</var></td>
-		<td>Amount to move the node by.</td>
-	</tr>
-</table>
+| Parameter | Description |
+|-----------|-------------|
+| <var>node</var> | The node to move. |
+| <var>x, y</var> | Amount to move the node by. |
 
 Moves a node and all of its children by (x,y).
 
-<a id="rainbow.scenegraph:remove"></a>
 ### &lt;rainbow.scenegraph&gt;:remove(node)
 
-<table>
-	<tr>
-		<td><var>node</var></td>
-		<td>The node to remove.</td>
-	</tr>
-</table>
+| Parameter | Description |
+|-----------|-------------|
+| <var>node</var> | The node to remove. |
 
 Removes a node and all of its children from the graph.
 
-<a id="rainbow.scenegraph:set_parent"></a>
 ### &lt;rainbow.scenegraph&gt;:set_parent(parent, node)
 
-<table>
-	<tr>
-		<td><var>parent</var></td>
-		<td>The new parent.</td>
-	</tr>
-	<tr>
-		<td><var>node</var></td>
-		<td>The node to move.</td>
-	</tr>
-</table>
+| Parameter | Description |
+|-----------|-------------|
+| <var>parent</var> | The new parent. |
+| <var>node</var> | The node to move. |
 
 Moves node to a new parent node.
 
-<a id="rainbow.sprite"></a>
 ## rainbow.sprite
 
-A sprite is a textured quad in a coordinate system with the origin at the lower left corner of the screen. Sprites are created by a [sprite batch](#rainbow.spritebatch) and uses the [texture atlas](#rainbow.texture) assigned to the batch.
+A sprite is a textured quad in a coordinate system with the origin at the lower left corner of the screen. Sprites are created by a [sprite batch](#rainbow-spritebatch) and uses the [texture atlas](#rainbow-texture) assigned to the batch.
 
-<a id="rainbow.sprite:get_angle"></a>
 ### &lt;rainbow.sprite&gt;:get_angle()
 
 Returns sprite orientation in radians.
 
-<a id="rainbow.sprite:get_color"></a>
 ### &lt;rainbow.sprite&gt;:get_color()
 
 Returns sprite colour in separate channels (RGBA).
 
-<a id="rainbow.sprite:get_position"></a>
 ### &lt;rainbow.sprite&gt;:get_position()
 
 Returns sprite position.
 
-<a id="rainbow.sprite:set_color"></a>
 ### &lt;rainbow.sprite&gt;:set_color(r, g, b, +a)
 
-<table>
-	<tr>
-		<td><var>r</var></td>
-		<td>Amount of red. Valid values: 0-255.</td>
-	</tr>
-	<tr>
-		<td><var>g</var></td>
-		<td>Amount of green. Valid values: 0-255.</td>
-	</tr>
-	<tr>
-		<td><var>b</var></td>
-		<td>Amount of blue. Valid values: 0-255.</td>
-	</tr>
-	<tr>
-		<td><var>a</var></td>
-		<td class="optional">Amount of opacity. Valid values: 0-255. Default: 255.</td>
-	</tr>
-</table>
+| Parameter | Description |
+|-----------|-------------|
+| <var>r</var> | Amount of red. Valid values: 0-255. |
+| <var>g</var> | Amount of green. Valid values: 0-255. |
+| <var>b</var> | Amount of blue. Valid values: 0-255. |
+| <var>a</var> | <span class="optional">Amount of opacity. Valid values: 0-255. Default: 255.</span> |
 
 Sets sprite colour.
 
-<a id="rainbow.sprite:set_pivot"></a>
 ### &lt;rainbow.sprite&gt;:set_pivot(x, y)
 
-<table>
-	<tr>
-		<td><var>x, y</var></td>
-		<td>Pivot point. Default: 0.5, 0.5.</td>
-	</tr>
-</table>
+| Parameter | Description |
+|-----------|-------------|
+| <var>x, y</var> | Pivot point. Default: 0.5, 0.5. |
 
 Sets sprite's pivot point.
 
-<a id="rainbow.sprite:set_position"></a>
 ### &lt;rainbow.sprite&gt;:set_position(x, y)
 
-<table>
-	<tr>
-		<td><var>x, y</var></td>
-		<td>Position. Default: 0, 0.</td>
-	</tr>
-</table>
+| Parameter | Description |
+|-----------|-------------|
+| <var>x, y</var> | Position. Default: 0, 0. |
 
 Sets sprite position.
 
-<a id="rainbow.sprite:set_rotation"></a>
 ### &lt;rainbow.sprite&gt;:set_rotation(r)
 
-<table>
-	<tr>
-		<td><var>r</var></td>
-		<td>Angle in radians. Default: 0.0.</td>
-	</tr>
-</table>
+| Parameter | Description |
+|-----------|-------------|
+| <var>r</var> | Angle in radians. Default: 0.0. |
 
 Sets sprite rotation.
 
-<a id="rainbow.sprite:set_scale"></a>
 ### &lt;rainbow.sprite&gt;:set_scale(f)
 
-<table>
-	<tr>
-		<td><var>f</var></td>
-		<td>Scale factor. Default: 1.0.</td>
-	</tr>
-</table>
+| Parameter | Description |
+|-----------|-------------|
+| <var>f</var> | Scale factor. Default: 1.0. |
 
 Sets sprite scale.
 
-<a id="rainbow.sprite:set_texture"></a>
 ### &lt;rainbow.sprite&gt;:set_texture(texture)
 
-<table>
-	<tr>
-		<td><var>texture</var></td>
-		<td>Texture id.</td>
-	</tr>
-</table>
+| Parameter | Description |
+|-----------|-------------|
+| <var>texture</var> | Texture id. |
 
 Assigns texture to sprite.
 
-<a id="rainbow.sprite:mirror"></a>
 ### &lt;rainbow.sprite&gt;:mirror()
 
 Horizontally mirrors sprite's current texture.
 
-<a id="rainbow.sprite:move"></a>
 ### &lt;rainbow.sprite&gt;:move(x, y)
 
-<table>
-	<tr>
-		<td><var>x, y</var></td>
-		<td>Amount to move sprite by.</td>
-	</tr>
-</table>
+| Parameter | Description |
+|-----------|-------------|
+| <var>x, y</var> | Amount to move sprite by. |
 
 Moves sprite by (x,y).
 
-<a id="rainbow.sprite:rotate"></a>
 ### &lt;rainbow.sprite&gt;:rotate(r)
 
-<table>
-	<tr>
-		<td><var>r</var></td>
-		<td>Amount to rotate sprite by.</td>
-	</tr>
-</table>
+| Parameter | Description |
+|-----------|-------------|
+| <var>r</var> | Amount to rotate sprite by. |
 
 Rotates sprite by given angle.
 
-<a id="rainbow.spritebatch"></a>
 ## rainbow.spritebatch
 
-Sprite batches are meant to enforce grouping of [sprites](#rainbow.sprite) in order to avoid drawing each [sprite](#rainbow.sprite) separately.
+Sprite batches are meant to enforce grouping of [sprites](#rainbow-sprite) in order to avoid drawing each [sprite](#rainbow-sprite) separately.
 
 The sprites in a batch are drawn using [painter's algorithm](http://en.wikipedia.org/wiki/Painter's_algorithm) and should therefore be created in the order they want to be drawn.
 
-<a id="rainbow.spritebatch()"></a>
 ### rainbow.spritebatch(+hint)
 
-<table>
-	<tr>
-		<td><var>hint</var></td>
-		<td class="optional">Number of [sprites](#rainbow.sprite) to make space for. Default: 8.</td>
-	</tr>
-</table>
+| Parameter | Description |
+|-----------|-------------|
+| <var>hint</var> | <span class="optional">Number of [sprites](#rainbow-sprite) to make space for. Default: 4.</span> |
 
-Creates a batch of [sprites](#rainbow.sprite).
+Creates a batch of [sprites](#rainbow-sprite).
 
-<a id="rainbow.spritebatch:create_sprite"></a>
 ### &lt;rainbow.spritebatch&gt;:create_sprite(width, height)
 
-<table>
-	<tr>
-		<td><var>width, height</var></td>
-		<td>Dimension of the [sprite](#rainbow.sprite) to create.</td>
-	</tr>
-</table>
+| Parameter | Description |
+|-----------|-------------|
+| <var>width, height</var> | Dimension of the [sprite](#rainbow-sprite) to create. |
 
-Creates an untextured [sprite](#rainbow.sprite) with given dimension and places it at origin.
+Creates an untextured [sprite](#rainbow-sprite) with given dimension and places it at origin.
 
-<a id="rainbow.spritebatch:set_texture"></a>
 ### &lt;rainbow.spritebatch&gt;:set_texture(texture)
 
-<table>
-	<tr>
-		<td><var>texture</var></td>
-		<td>[Texture atlas](#rainbow.texture) used by all [sprites](#rainbow.sprite) in the batch.</td>
-	</tr>
-</table>
+| Parameter | Description |
+|-----------|-------------|
+| <var>texture</var> | [Texture atlas](#rainbow-texture) used by all [sprites](#rainbow-sprite) in the batch. |
 
-Sets [texture atlas](#rainbow.texture).
+Sets [texture atlas](#rainbow-texture).
 
-<a id="rainbow.texture"></a>
 ## rainbow.texture
 
 Texture objects are images decoded and sent to the graphics card as texture. Textures are normally stored as raw bitmaps unless they were stored in a compressed format supported by the platform (e.g. ETC1 or PVRTC). This means that a 1024x1024 texture will normally occupy 4MB. In order to save memory, they are assumed to be [atlases](http://en.wikipedia.org/wiki/Texture_atlas) and should be reused whenever possible.
 
 Rainbow currently supports PNG and PVRTC.
 
-_Note:_ Textures should be square and its sides a power of two (greater than or equal to 64). This is due to how the graphics pipeline works. Even if textures do not meet this recommendation, the graphics drivers will enlarge a texture in order to do so anyway, wasting memory. The maximum size of a texture can be queried in [``rainbow.renderer``](#rainbow.renderer.max_texture_size).
+_Note:_ Textures should be square and its sides a power of two (greater than or equal to 64). This is due to how the graphics pipeline works. Even if textures do not meet this recommendation, the graphics drivers will enlarge a texture in order to do so anyway, wasting memory. The maximum size of a texture can be queried in [``rainbow.renderer``](#rainbow-renderer-max_texture_size).
 
-<a id="rainbow.texture()"></a>
 ### rainbow.texture(path)
 
-<table>
-	<tr>
-		<td><var>path</var></td>
-		<td>Path to texture to load.</td>
-	</tr>
-</table>
+| Parameter | Description |
+|-----------|-------------|
+| <var>path</var> | Path to texture to load. |
 
-Creates a texture object, usable in [sprite batches](#rainbow.spritebatch).
+Creates a texture object, usable in [sprite batches](#rainbow-spritebatch).
 
-<a id="rainbow.texture:create"></a>
 ### &lt;rainbow.texture&gt;:create(x, y, width, height)
 
-<table>
-	<tr>
-		<td><var>x, y</var></td>
-		<td>Upper left point of texture.</td>
-	</tr>
-	<tr>
-		<td><var>width, height</var></td>
-		<td>Dimension of texture.</td>
-	</tr>
-</table>
+| Parameter | Description |
+|-----------|-------------|
+| <var>x, y</var> | Upper left point of texture. |
+| <var>width, height</var> | Dimension of texture. |
 
-Creates/defines a texture in the atlas. The unique identifier returned can be used in [sprites](#rainbow.sprite).
+Creates/defines a texture in the atlas. The unique identifier returned can be used in [sprites](#rainbow-sprite).
 
-<a id="Coroutine"></a>
 ## Coroutine
 
-	local Coroutine = require(module_path .. "Coroutine")
+    local Coroutine = require(module_path .. "Coroutine")
 
 Wrapper around Lua [Coroutines](http://lua-users.org/wiki/CoroutinesTutorial)
 
-<a id="Coroutine.start"></a>
 ### Coroutine.start(function)
 
-<table>
-	<tr>
-		<td><var>function</var></td>
-		<td>Function to execute in a coroutine.</td>
-	</tr>
-</table>
+| Parameter | Description |
+|-----------|-------------|
+| <var>function</var> | Function to execute in a coroutine. |
 
 Creates and starts a coroutine.
 
-<a id="Coroutine.wait"></a>
 ### Coroutine.wait(milliseconds)
 
-<table>
-	<tr>
-		<td><var>milliseconds</var></td>
-		<td>Number of milliseconds to wait before continuing.</td>
-	</tr>
-</table>
+| Parameter | Description |
+|-----------|-------------|
+| <var>milliseconds</var> | Number of milliseconds to wait before continuing. |
 
 Blocks a coroutine for a certain amount of time.
 
-<a id="Functional"></a>
 ## Functional
 
-	local Functional = require(module_path .. "Functional")
+    local Functional = require(module_path .. "Functional")
 
 Functions from functional programming languages such as Haskell and Scheme.
 
-<a id="Functional.compose"></a>
 ### Functional.compose(f, g)
 
 Returns <var>f ∘ g</var>, i.e. the composition of two functions so that the result of function <var>g</var> becomes the input to function <var>f</var>. Example:
 
-	local printf = Functional.compose(io.write, string.format)
-	printf("a = %i, b = %i, c = %i\n", 1, 2, 3)
-	> a = 1, b = 2, c = 3
+    local printf = Functional.compose(io.write, string.format)
+    printf("a = %i, b = %i, c = %i\n", 1, 2, 3)
+    > a = 1, b = 2, c = 3
 
-<a id="Functional.filter"></a>
 ### Functional.filter(pred, list)
 
 Returns a copy of the list containing only the elements that satisfy the predicate.
 
-<a id="Functional.filterh"></a>
 ### Functional.filterh(pred, table)
 
 Returns a copy of the hash table containing only the elements that satisfy the predicate.
 
-<a id="Functional.foldl"></a>
 ### Functional.foldl(op, z, list)
 
 Reduces the list using the binary operator, from left to right, with <var>z</var> as starting value.
 
-<a id="Functional.foldl1"></a>
 ### Functional.foldl1(op, list)
 
 A variant of <code>foldl</code> that uses the leftmost element as starting value.
 
-<a id="Functional.foldr"></a>
 ### Functional.foldr(op, z, list)
 
 Reduces the list using the binary operator, from right to left, with <var>z</var> as starting value.
 
-<a id="Functional.foldr1"></a>
 ### Functional.foldr1(op, list)
 
 A variant of <code>foldr</code> that uses the rightmost element as starting value.
 
-<a id="Functional.map"></a>
 ### Functional.map(f, list)
 
 Returns a copy of the list with the function <var>f</var> applied to each element.
 
-<a id="Functional.maph"></a>
 ### Functional.maph(f, table)
 
 Returns a copy of the hash table with the function <var>f</var> applied to each element.
 
-<a id="Functional.difference"></a>
 ### Functional.difference(list)
 
 Computes the difference of a finite list of numbers; the first value being the minuend.
 
-<a id="Functional.product"></a>
 ### Functional.product(list)
 
 Computes the product of a finite list of numbers.
 
-<a id="Functional.quotient"></a>
 ### Functional.quotient(list)
 
 Computes the quotient of a finite list of numbers; the first value being the numerator.
 
-<a id="Functional.sum"></a>
 ### Functional.sum(list)
 
 Computes the sum of a finite list of numbers.
 
-<a id="Math"></a>
 ## Math
 
-	local Math = require(module_path .. "Math")
+    local Math = require(module_path .. "Math")
 
 Useful mathematical functions.
 
-<a id="Math.G"></a>
 ### Math.G
 
 The universal gravitation constant, defined as G = 6.67384 * 10<sup>-11</sup> N(m/kg)<sup>2</sup>.
 
-<a id="Math.g"></a>
 ### Math.g
 
 Standard gravitational acceleration, defined in m/s<sup>2</sup>.
 
-<a id="Math.angle"></a>
 ### Math.angle(a.x, a.y, b.x, b.y)
 
-<table>
-	<tr>
-		<td><var>a.x, a.y</var></td>
-		<td>The first point.</td>
-	</tr>
-	<tr>
-		<td><var>b.x, b.y</var></td>
-		<td>The second point.</td>
-	</tr>
-</table>
+| Parameter | Description |
+|-----------|-------------|
+| <var>a.x, a.y</var> | The first point. |
+| <var>b.x, b.y</var> | The second point. |
 
 Calculates the angle between two points.
 
-<a id="Math.clamp"></a>
 ### Math.clamp(x, min, max)
 
-<table>
-	<tr>
-		<td><var>x</var></td>
-		<td>The value to clamp.</td>
-	</tr>
-	<tr>
-		<td><var>min</var></td>
-		<td>Lowest acceptable value.</td>
-	</tr>
-	<tr>
-		<td><var>max</var></td>
-		<td>Highest acceptable value.</td>
-	</tr>
-</table>
+| Parameter | Description |
+|-----------|-------------|
+| <var>x</var> | The value to clamp. |
+| <var>min</var> | Lowest acceptable value. |
+| <var>max</var> | Highest acceptable value. |
 
 Returns the input value clamped between a range [<var>min</var>, <var>max</var>].
 
-<a id="Math.degrees"></a>
 ### Math.degrees(radians)
 
-<table>
-	<tr>
-		<td><var>radians</var></td>
-		<td>The value to convert to degrees.</td>
-	</tr>
-</table>
+| Parameter | Description |
+|-----------|-------------|
+| <var>radians</var> | The value to convert to degrees. |
 
 Converts radians to degrees.
 
-<a id="Math.distance"></a>
 ### Math.distance(a.x, a.y, b.x, b.y)
 
-<table>
-	<tr>
-		<td><var>a.x, a.y</var></td>
-		<td>The first point.</td>
-	</tr>
-	<tr>
-		<td><var>b.x, b.y</var></td>
-		<td>The second point.</td>
-	</tr>
-</table>
+| Parameter | Description |
+|-----------|-------------|
+| <var>a.x, a.y</var> | The first point. |
+| <var>b.x, b.y</var> | The second point. |
 
 Calculates the distance between two points.
 
-<a id="Math.gravitation"></a>
 ### Math.gravitation(m1, m2, r)
 
-<table>
-	<tr>
-		<td><var>m1</var></td>
-		<td>The first mass.</td>
-	</tr>
-	<tr>
-		<td><var>m2</var></td>
-		<td>The second mass.</td>
-	</tr>
-	<tr>
-		<td><var>r</var></td>
-		<td>Distance between the centers of the masses.</td>
-	</tr>
-</table>
+| Parameter | Description |
+|-----------|-------------|
+| <var>m1</var> | The first mass. |
+| <var>m2</var> | The second mass. |
+| <var>r</var> | Distance between the centers of the masses. |
 
 Newton's law of universal gravitation: F = G * (m<sub>1</sub> * m<sub>2</sub>) / r<sup>2</sup>.
 
-<a id="Math.hitbox"></a>
 ### Math.hitbox(x, y, width,height, scale)
 
-<table>
-	<tr>
-		<td><var>x, y</var></td>
-		<td>Centre of the box.</td>
-	</tr>
-	<tr>
-		<td><var>width,height</var></td>
-		<td>Dimension of the box.</td>
-	</tr>
-	<tr>
-		<td><var>scale</var></td>
-		<td>Scaling factor for on-screen box size. Default: 1.0.</td>
-	</tr>
-</table>
+| Parameter | Description |
+|-----------|-------------|
+| <var>x, y</var> | Centre of the box. |
+| <var>width,height</var> | Dimension of the box. |
+| <var>scale</var> | Scaling factor for on-screen box size. Default: 1.0. |
 
 Creates a hitbox.
 
-<a id="Math.is_inside"></a>
 ### Math.is_inside(box, point)
 
-<table>
-	<tr>
-		<td><var>box</var></td>
-		<td>Table with the upper-left and lower-right points of the box.</td>
-	</tr>
-	<tr>
-		<td><var>point</var></td>
-		<td>The point to check.</td>
-	</tr>
-</table>
+| Parameter | Description |
+|-----------|-------------|
+| <var>box</var> | Table with the upper-left and lower-right points of the box. |
+| <var>point</var> | The point to check. |
 
 Checks whether a point is inside a box.
 
-<a id="Math.radians"></a>
 ### Math.radians(degrees)
 
-<table>
-	<tr>
-		<td><var>degrees</var></td>
-		<td>The value to convert to radians.</td>
-	</tr>
-</table>
+| Parameter | Description |
+|-----------|-------------|
+| <var>degrees</var> | The value to convert to radians. |
 
 Converts degrees to radians.
 
-<a id="Parallax"></a>
 ## Parallax
 
-	local Parallax = require(module_path .. "Parallax")
+    local Parallax = require(module_path .. "Parallax")
 
 Simple parallax controller.
 
-	local layers = {
-		-- A layer is defined by a batch and its velocity on the x- and y-axis
-		{ batch1, 0.5, 0 }  -- background
-		{ batch2, 0.8, 0 }  -- midground
-		{ batch3, 1.0, 0 }  -- foreground
-	}
-	local pax = Parallax(layers)
-	pax:move(0.7 * dt)
+    local layers = {
+      -- A layer is defined by a batch and its velocity on the x- and y-axis
+      { batch1, 0.5, 0 }  -- background
+      { batch2, 0.8, 0 }  -- midground
+      { batch3, 1.0, 0 }  -- foreground
+    }
+    local pax = Parallax(layers)
+    pax:move(0.7 * dt)
 
 Limitations:
 
@@ -1277,283 +885,182 @@ Limitations:
   * There's a 1:1 mapping between batches and layers even though, logically,
     batches can be on the same layer.
 
-<a id="Parallax:hide"></a>
 ### &lt;Parallax&gt;:hide()
 
 Hides the parallax from view.
 
-<a id="Parallax:move"></a>
 ### &lt;Parallax&gt;:move(v)
 
 Move layers relatively by <var>v</var> pixels.
 
-<a id="Parallax:set_layer_velocity"></a>
 ### &lt;Parallax&gt;:set_layer_velocity(layer, vx, +vy)
 
-<table>
-	<tr>
-		<td><var>layer</var></td>
-		<td>The layer number to change velocity.</td>
-	</tr>
-	<tr>
-		<td><var>vx</var></td>
-		<td>Relative velocity on the x-axis.</td>
-	</tr>
-	<tr>
-		<td><var>vy</var></td>
-		<td class="optional">Relative velocity on the y-axis. Default: 0.</td>
-	</tr>
-</table>
+| Parameter | Description |
+|-----------|-------------|
+| <var>layer</var> | The layer number to change velocity. |
+| <var>vx</var> | Relative velocity on the x-axis. |
+| <var>vy</var> | <span class="optional">Relative velocity on the y-axis. Default: 0.</span> |
 
 Sets relative layer velocity.
 
-<a id="Parallax:set_parent"></a>
 ### &lt;Parallax&gt;:set_parent(parent)
 
 Adds parallax to a child node under <var>parent</var>.
 
-<a id="Parallax:show"></a>
 ### &lt;Parallax&gt;:show()
 
 Unhides the parallax.
 
-<a id="Stack"></a>
 ## Stack
 
-	local Stack = require(module_path .. "Stack")
+    local Stack = require(module_path .. "Stack")
 
 Stack is a last in, first out (LIFO) data type and linear data structure. A stack can store any element but only the top element is available at any time.
 
-	local mystack = Stack()
-	mystack:push(1)  # Stack is now { 1 }
-	mystack:push(2)  # Stack is now { 1, 2 }
-	mystack:push(3)  # Stack is now { 1, 2, 3 }
-	mystack:push(4)  # Stack is now { 1, 2, 3, 4 }
+    local mystack = Stack()
+    mystack:push(1)  # Stack is now { 1 }
+    mystack:push(2)  # Stack is now { 1, 2 }
+    mystack:push(3)  # Stack is now { 1, 2, 3 }
+    mystack:push(4)  # Stack is now { 1, 2, 3, 4 }
 
-	local value = mystack:top()  # 'value' is 4
+    local value = mystack:top()  # 'value' is 4
 
-	mystack:pop()          # Stack is now { 1, 2, 3 }
-	value = mystack:top()  # 'value' is 3
-	mystack:pop()          # Stack is now { 1, 2 }
-	value = mystack:top()  # 'value' is 2
-	mystack:pop()          # Stack is now { 1 }
-	value = mystack:top()  # 'value' is 1
-	mystack:pop()          # Stack is now empty
+    mystack:pop()          # Stack is now { 1, 2, 3 }
+    value = mystack:top()  # 'value' is 3
+    mystack:pop()          # Stack is now { 1, 2 }
+    value = mystack:top()  # 'value' is 2
+    mystack:pop()          # Stack is now { 1 }
+    value = mystack:top()  # 'value' is 1
+    mystack:pop()          # Stack is now empty
 
-<a id="Stack()"></a>
 ### Stack()
 
 Creates a stack.
 
-<a id="Stack:pop"></a>
 ### &lt;Stack&gt;:pop()
 
 Pops an element from the top of the stack.
 
-<a id="Stack:push"></a>
 ### &lt;Stack&gt;:push(element)
 
 Pushes <var>element</var> on top of the stack.
 
-<a id="Stack:top"></a>
 ### &lt;Stack&gt;:top()
 
 Returns the element on top of the stack.
 
-<a id="Timer"></a>
 ## Timer
 
-	local Timer = require(module_path .. "Timer")
+    local Timer = require(module_path .. "Timer")
 
 Timers execute a function once after a set time, or any number of times at given intervals.
 
-<a id="Timer()"></a>
 ### Timer(callback, delay, +times)
 
-<table>
-	<tr>
-		<td><var>callback</var></td>
-		<td>The function to call on time-out.</td>
-	</tr>
-	<tr>
-		<td><var>delay</var></td>
-		<td>Time in milliseconds to delay call.</td>
-	</tr>
-	<tr>
-		<td><var>times</var></td>
-		<td class="optional">Number of times to call. Infinite if omitted.</td>
-	</tr>
-</table>
+| Parameter | Description |
+|-----------|-------------|
+| <var>callback</var> | The function to call on time-out. |
+| <var>delay</var> | Time in milliseconds to delay call. |
+| <var>times</var> | <span class="optional">Number of times to call. Infinite if omitted.</span> |
 
 Creates a timer.
 
-<a id="Timer.clear"></a>
 ### Timer.clear()
 
 Clears all timers.
 
-<a id="Timer:cancel"></a>
 ### &lt;Timer&gt;:cancel()
 
 Cancels timer.
 
-<a id="Timer:reset"></a>
 ### &lt;Timer&gt;:reset(+delay)
 
-<table>
-	<tr>
-		<td><var>delay</var></td>
-		<td class="optional">Set new delay.</td>
-	</tr>
-</table>
+| Parameter | Description |
+|-----------|-------------|
+| <var>delay</var> | <span class="optional">Set new delay.</span>
 
 Resets a timer. Restores it to its initial state.
 
-<a id="Transition"></a>
-
-	local Transition = require(module_path .. "Transition")
-
 ## Transition
 
-<a id="Transition.clear"></a>
+    local Transition = require(module_path .. "Transition")
+
 ### Transition.clear()
 
 Cancels all transitions.
 
-<a id="Transition.fadein"></a>
 ### Transition.fadein(source, duration)
 
-<table>
-	<tr>
-		<td><var>source</var></td>
-		<td>The audio channel to fade in.</td>
-	</tr>
-	<tr>
-		<td><var>duration</var></td>
-		<td>Duration of the transition in milliseconds.</td>
-	</tr>
-</table>
+| Parameter | Description |
+|-----------|-------------|
+| <var>source</var> | The audio channel to fade in. |
+| <var>duration</var> | Duration of the transition in milliseconds. |
 
 Fades in an audio channel.
 
-<a id="Transition.fadeout"></a>
 ### Transition.fadeout(source, duration)
 
-<table>
-	<tr>
-		<td><var>source</var></td>
-		<td>The audio channel to fade out.</td>
-	</tr>
-	<tr>
-		<td><var>duration</var></td>
-		<td>Duration of the transition in milliseconds.</td>
-	</tr>
-</table>
+| Parameter | Description |
+|-----------|-------------|
+| <var>source</var> | The audio channel to fade out. |
+| <var>duration</var> | Duration of the transition in milliseconds. |
 
 Fades out an audio channel.
 
-<a id="Transition.fadeto"></a>
 ### Transition.fadeto(sprite, alpha, duration, method)
 
-<table>
-	<tr>
-		<td><var>sprite</var></td>
-		<td>The sprite to fade.</td>
-	</tr>
-	<tr>
-		<td><var>alpha</var></td>
-		<td>Final alpha value.</td>
-	</tr>
-	<tr>
-		<td><var>duration</var></td>
-		<td>Duration of the transition in milliseconds.</td>
-	</tr>
-	<tr>
-		<td><var>method</var></td>
-		<td>The equation to use for the transition.</td>
-	</tr>
-</table>
+| Parameter | Description |
+|-----------|-------------|
+| <var>sprite</var> | The sprite to fade. |
+| <var>alpha</var> | Final alpha value. |
+| <var>duration</var> | Duration of the transition in milliseconds. |
+| <var>method</var> | The equation to use for the transition. |
 
 Fades a sprite to a given alpha value.
 
-<a id="Transition.move"></a>
 ### Transition.move(drawable, x, y, duration, method)
 
-<table>
-	<tr>
-		<td><var>drawable</var></td>
-		<td>A scene graph node or an object that implements ``:move()``.</td>
-	</tr>
-	<tr>
-		<td><var>x, y</var></td>
-		<td>Number of units to move drawable(s) by, relative to its/their current position(s).</td>
-	</tr>
-	<tr>
-		<td><var>duration</var></td>
-		<td>Duration of the transition in milliseconds.</td>
-	</tr>
-	<tr>
-		<td><var>method</var></td>
-		<td>The equation to use for the transition.</td>
-	</tr>
-</table>
+| Parameter | Description |
+|-----------|-------------|
+| <var>drawable</var> | A scene graph node or an object that implements ``:move()``. |
+| <var>x, y</var> | Number of units to move drawable(s) by, relative to its/their current position(s). |
+| <var>duration</var> | Duration of the transition in milliseconds. |
+| <var>method</var> | The equation to use for the transition. |
 
 Moves a node (and its children) or a drawable.
 
-<a id="Transition.rotate"></a>
 ### Transition.rotate(drawable, r, duration, method)
 
-<table>
-	<tr>
-		<td><var>drawable</var></td>
-		<td>An object that implements ``:get_angle()`` and ``:rotate()``.</td>
-	</tr>
-	<tr>
-		<td><var>r</var></td>
-		<td>Final angle.</td>
-	</tr>
-	<tr>
-		<td><var>duration</var></td>
-		<td>Duration of the transition in milliseconds.</td>
-	</tr>
-	<tr>
-		<td><var>method</var></td>
-		<td>The equation to use for the transition.</td>
-	</tr>
-</table>
+| Parameter | Description |
+|-----------|-------------|
+| <var>drawable</var> | An object that implements ``:get_angle()`` and ``:rotate()``. |
+| <var>r</var> | Final angle. |
+| <var>duration</var> | Duration of the transition in milliseconds. |
+| <var>method</var> | The equation to use for the transition. |
 
 Rotates a drawable to given angle.
 
-<a id="Transition.scaleto"></a>
 ### Transition.scaleto(drawable, start, final, duration, method)
 
-<table>
-	<tr>
-		<td><var>drawable</var></td>
-		<td>An object that implements ``:set_scale()``.</td>
-	</tr>
-	<tr>
-		<td><var>start</var></td>
-		<td>Start scale factor.</td>
-	</tr>
-	<tr>
-		<td><var>final</var></td>
-		<td>Final scale factor.</td>
-	</tr>
-	<tr>
-		<td><var>duration</var></td>
-		<td>Duration of the transition in milliseconds.</td>
-	</tr>
-	<tr>
-		<td><var>method</var></td>
-		<td>The equation to use for the transition.</td>
-	</tr>
-</table>
+| Parameter | Description |
+|-----------|-------------|
+| <var>drawable</var> | An object that implements ``:set_scale()``. |
+| <var>start</var> | Start scale factor. |
+| <var>final</var> | Final scale factor. |
+| <var>duration</var> | Duration of the transition in milliseconds. |
+| <var>method</var> | The equation to use for the transition. |
 
 Scales a drawable from a given start factor to a given final factor.
 
-</xmp>
-<div id="top"><a href="javascript:window.scroll(0,0);">Top &uarr;</a></div>
-<script src="http://strapdownjs.com/v/0.2/strapdown.js"></script>
-</body>
+    </div>
+    <footer class="container">
+      <hr>
+      <p>Copyright &copy; 2010-14 Bifrost Entertainment AS and Tommy Nguyen. Distributed under the <a href="http://opensource.org/licenses/MIT">MIT License</a>.</p>
+    </footer>
+    <script src="js/vendor/jquery-1.11.0.min.js"></script>
+    <script src="js/vendor/bootstrap.min.js"></script>
+    <script src="js/vendor/marked.js"></script>
+    <script src="js/vendor/highlight.pack.js"></script>
+    <script src="js/main.js"></script>
+  </body>
 </html>

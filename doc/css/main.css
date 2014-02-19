@@ -1,0 +1,46 @@
+h1 {  /* RAINBOW! */
+  color: #ffffff;
+  text-shadow:  2px  1px 0 #dd0000,  4px  2px 0 #dd0000,
+                6px  3px 0 #fe6230,  8px  4px 0 #fe6230,
+               10px  5px 0 #fef600, 12px  6px 0 #fef600,
+               14px  7px 0 #00bc00, 16px  8px 0 #00bc00,
+               18px  9px 0 #009bfe, 20px 10px 0 #009bfe,
+               22px 11px 0 #000083, 24px 12px 0 #000083,
+               26px 13px 0 #30009b, 28px 14px 0 #30009b;
+}
+
+h2 {
+  margin-top: 63px;
+}
+
+h3 {
+  margin-top: 37px;
+}
+
+thead {
+  display: none;
+}
+
+#content > ul:first-child {
+  margin-top: 70px;
+  list-style: none;
+  -webkit-column-count: 4;  /* Safari and Chrome */
+     -moz-column-count: 4;  /* Firefox */
+          column-count: 4;
+}
+
+#top {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+}
+
+.optional:before {
+  font-size: 0.7em;
+  font-weight: bold;
+  content: '[optional] ';
+}
+
+.table {
+  width: auto;
+}
