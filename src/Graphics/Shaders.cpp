@@ -12,13 +12,13 @@ namespace Rainbow
 	#ifdef GL_ES_VERSION_2_0
 	#	include "Graphics/Shaders/Shaders.h"
 	#else
-		const char *const kDiffuseLight2Df      = "Shaders/DiffuseLight2D.fsh";
-		const char *const kDiffuseLightNormalf  = "Shaders/DiffuseLightNormal.fsh";
-		const char *const kFixed2Df             = "Shaders/Fixed2D.fsh";
-		const char *const kFixed2Dv             = "Shaders/Fixed2D.vsh";
-		const char *const kNormalMappedv        = "Shaders/NormalMapped.vsh";
-		const char *const kSimple2Dv            = "Shaders/Simple2D.vsh";
-		const char *const kSimplef              = "Shaders/Simple.fsh";
+		const char kDiffuseLight2Df[]      = "Shaders/DiffuseLight2D.fsh";
+		const char kDiffuseLightNormalf[]  = "Shaders/DiffuseLightNormal.fsh";
+		const char kFixed2Df[]             = "Shaders/Fixed2D.fsh";
+		const char kFixed2Dv[]             = "Shaders/Fixed2D.vsh";
+		const char kNormalMappedv[]        = "Shaders/NormalMapped.vsh";
+		const char kSimple2Dv[]            = "Shaders/Simple2D.vsh";
+		const char kSimplef[]              = "Shaders/Simple.fsh";
 	#endif
 	}
 }

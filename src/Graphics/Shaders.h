@@ -9,13 +9,13 @@ namespace Rainbow
 {
 	namespace Shaders
 	{
-		extern const char *const kDiffuseLight2Df;
-		extern const char *const kDiffuseLightNormalf;
-		extern const char *const kFixed2Df;
-		extern const char *const kFixed2Dv;
-		extern const char *const kNormalMappedv;
-		extern const char *const kSimple2Dv;
-		extern const char *const kSimplef;
+		extern const char kDiffuseLight2Df[];
+		extern const char kDiffuseLightNormalf[];
+		extern const char kFixed2Df[];
+		extern const char kFixed2Dv[];
+		extern const char kNormalMappedv[];
+		extern const char kSimple2Dv[];
+		extern const char kSimplef[];
 	}
 }
 
