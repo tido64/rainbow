@@ -479,7 +479,6 @@
 		19AF589C167FFA0800F54B27 /* Overlay.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Overlay.cpp; sourceTree = "<group>"; };
 		19AF589D167FFA0800F54B27 /* Overlay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Overlay.h; sourceTree = "<group>"; };
 		19AF589E167FFA0800F54B27 /* Resources.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Resources.h; sourceTree = "<group>"; };
-		19B1E56017403E3900BC21A0 /* Terminable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Terminable.h; sourceTree = "<group>"; };
 		19CEDD6A172422DC008B73B5 /* AudioFile.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = AudioFile.cpp; sourceTree = "<group>"; };
 		19CEDD6B172422DC008B73B5 /* AudioFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioFile.h; sourceTree = "<group>"; };
 		19CEDD6D172422DC008B73B5 /* AppleAudioFile.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = AppleAudioFile.cpp; sourceTree = "<group>"; };
@@ -828,7 +827,6 @@
 				1939A196152C425D00494609 /* Random.cpp */,
 				1939A197152C425D00494609 /* Random.h */,
 				192A0B9A1681EF75009218EB /* SharedPtr.h */,
-				19B1E56017403E3900BC21A0 /* Terminable.h */,
 				1970946217BAF222006810E9 /* TimedEvent.h */,
 				1939A19C152C425D00494609 /* TreeNode.h */,
 				1939A19D152C425D00494609 /* Vec2.h */,

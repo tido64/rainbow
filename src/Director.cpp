@@ -10,35 +10,56 @@
 
 namespace Rainbow
 {
+	Director::Director()
+	    : active_(true), terminated_(false), lua_(&scenegraph_), input_(lua_)
+	{ }
+
 	void Director::init(const Data &main, const int width, const int height)
 	{
 		R_ASSERT(main, "Failed to load 'main.lua'");
 
-		this->set_video(width, height);
-		if (this->lua.init(main) != LUA_OK || this->lua.update(0) != LUA_OK)
+		Lua::Platform::update(this->lua_, width, height);
+		if (this->lua_.init(main) != LUA_OK || this->lua_.update(0) != LUA_OK)
+		{
 			this->terminate();
-		else
-			this->scenegraph.update(0);
-	}
-
-	void Director::set_video(const int w, const int h)
-	{
-		Lua::Platform::update(this->lua, w, h);
+			return;
+		}
+		this->scenegraph_.update(0);
 	}
 
 	void Director::update(const unsigned long dt)
 	{
+		R_ASSERT(!this->terminated_, "App should have terminated by now");
+
 		ConFuoco::Mixer::Instance->update();
-		if (this->lua.update(dt))
+		if (this->lua_.update(dt))
+		{
 			this->terminate();
-		else
-			this->scenegraph.update(dt);
-		this->input.clear();
+			return;
+		}
+		this->scenegraph_.update(dt);
+		this->input_.clear();
+	}
+
+	void Director::on_focus_gained()
+	{
+		R_ASSERT(!this->terminated_, "App should have terminated by now");
+
+		this->active_ = true;
+		ConFuoco::Mixer::Instance->suspend(false);
+	}
+
+	void Director::on_focus_lost()
+	{
+		this->active_ = false;
+		ConFuoco::Mixer::Instance->suspend(true);
 	}
 
 	void Director::on_memory_warning()
 	{
-		lua_gc(this->lua, LUA_GCCOLLECT, 0);
+		R_ASSERT(!this->terminated_, "App should have terminated by now");
+
+		lua_gc(this->lua_, LUA_GCCOLLECT, 0);
 		TextureManager::Instance->purge();
 	}
 }

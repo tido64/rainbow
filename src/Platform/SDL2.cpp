@@ -51,7 +51,7 @@ namespace
 		RenderWindow(const uint_t width, const uint_t height);
 		~RenderWindow();
 
-		inline void swap();
+		void swap();
 
 		void on_mouse_down(const SDL_MouseButtonEvent &event,
 		                   const unsigned long timestamp);
@@ -60,7 +60,7 @@ namespace
 		void on_mouse_up(const SDL_MouseButtonEvent &event,
 		                 const unsigned long timestamp);
 
-		inline operator bool() const;
+		operator bool() const;
 
 	private:
 		bool initialised;
@@ -118,7 +118,7 @@ int main(int argc, char *argv[])
 
 	Chrono chrono;
 	SDL_Event event;
-	while (!director.has_terminated())
+	while (!director.terminated())
 	{
 		while (SDL_PollEvent(&event))
 		{
@@ -132,17 +132,11 @@ int main(int argc, char *argv[])
 					{
 						case SDL_WINDOWEVENT_FOCUS_GAINED:
 							if (config.suspend())
-							{
-								director.activate();
-								ConFuoco::Mixer::Instance->suspend(false);
-							}
+								director.on_focus_gained();
 							break;
 						case SDL_WINDOWEVENT_FOCUS_LOST:
 							if (config.suspend())
-							{
-								director.deactivate();
-								ConFuoco::Mixer::Instance->suspend(true);
-							}
+								director.on_focus_lost();
 							break;
 						case SDL_WINDOWEVENT_CLOSE:
 							director.terminate();
@@ -176,9 +170,9 @@ int main(int argc, char *argv[])
 			}
 		}
 		chrono.update();
-		if (!director.is_active())
+		if (!director.active())
 		{
-			if (director.has_terminated())
+			if (director.terminated())
 				break;
 
 			Chrono::sleep(static_cast<uint_t>(kMsPerFrame));
@@ -214,8 +208,8 @@ RenderWindow::RenderWindow(const uint_t width, const uint_t height)
 	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 0);
 
 	this->window = SDL_CreateWindow(
-			RAINBOW_BUILD, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-			width, height, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
+	    RAINBOW_BUILD, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+	    width, height, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
 	if (!this->window)
 	{
 		R_ERROR("[SDL] Failed to create window: %s\n", SDL_GetError());

@@ -34,23 +34,16 @@ namespace Heimdall
 
 		/* Director shim */
 
+		inline bool active() const;
+		inline bool terminated() const;
 		inline void draw();
-
 		void init(const Data &, const int width, const int height);
 		void set_video(const int width, const int height);
-
-		void update(const unsigned long dt);
-
-		inline void on_memory_warning();
-
-		/* Terminable shim */
-
-		inline bool has_terminated() const;
-		inline bool is_active() const;
-
-		inline void activate();
-		inline void deactivate();
 		inline void terminate();
+		void update(const unsigned long dt);
+		inline void on_focus_gained();
+		inline void on_focus_lost();
+		inline void on_memory_warning();
 
 	private:
 		int width;
@@ -84,15 +77,35 @@ namespace Heimdall
 		virtual void touch_moved_impl(const Touch *const touches, const size_t count) override;
 	};
 
+	bool Gatekeeper::active() const
+	{
+		return this->director->active();
+	}
+
+	bool Gatekeeper::terminated() const
+	{
+		return this->director->terminated();
+	}
+
 	void Gatekeeper::draw()
 	{
 		this->director->draw();
 		Renderer::draw(scenegraph);
 	}
 
-	void Gatekeeper::toggle_overlay()
+	void Gatekeeper::terminate()
 	{
-		this->overlay_node->enabled = !this->overlay_node->enabled;
+		return this->director->terminate();
+	}
+
+	void Gatekeeper::on_focus_gained()
+	{
+		this->director->on_focus_gained();
+	}
+
+	void Gatekeeper::on_focus_lost()
+	{
+		this->director->on_focus_lost();
 	}
 
 	void Gatekeeper::on_memory_warning()
@@ -100,29 +113,9 @@ namespace Heimdall
 		this->director->on_memory_warning();
 	}
 
-	bool Gatekeeper::has_terminated() const
+	void Gatekeeper::toggle_overlay()
 	{
-		return this->director->has_terminated();
-	}
-
-	bool Gatekeeper::is_active() const
-	{
-		return this->director->is_active();
-	}
-
-	void Gatekeeper::activate()
-	{
-		this->director->activate();
-	}
-
-	void Gatekeeper::deactivate()
-	{
-		this->director->deactivate();
-	}
-
-	void Gatekeeper::terminate()
-	{
-		this->director->terminate();
+		this->overlay_node->enabled = !this->overlay_node->enabled;
 	}
 }
 
