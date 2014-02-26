@@ -10,6 +10,10 @@
 #if SDL_VERSION_ATLEAST(1,3,0)
 
 #ifdef RAINBOW_OS_WINDOWS
+#	if defined(_MSC_VER) && defined(NDEBUG)
+		// TODO: http://public.kitware.com/Bug/view.php?id=12566
+#		pragma comment(linker, "/SUBSYSTEM:WINDOWS")
+#	endif
 #	include "Graphics/OpenGL.h"
 #	include <GL/glew.c>
 #endif
