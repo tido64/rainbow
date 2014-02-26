@@ -26,38 +26,31 @@
 namespace Heimdall
 {
 	/// Overlay for debugging options.
-	class Gatekeeper : public Touchable, private NonCopyable<Gatekeeper>
+	class Gatekeeper : public Rainbow::Director, public Touchable
 	{
 	public:
 		Gatekeeper();
 		~Gatekeeper();
 
-		/* Director shim */
+		/* Director overrides */
 
-		inline bool active() const;
-		inline bool terminated() const;
 		inline void draw();
 		void init(const Data &, const int width, const int height);
-		void set_video(const int width, const int height);
-		inline void terminate();
 		void update(const unsigned long dt);
-		inline void on_focus_gained();
-		inline void on_focus_lost();
-		inline void on_memory_warning();
 
 	private:
 		int width;
 		int height;
 		unsigned int touch_count;
 		unsigned long touch_held;
-		Touch touches[2];
 
-		std::unique_ptr<Rainbow::Director> director;
 		SharedPtr<FontAtlas> console_font;
 		SharedPtr<FontAtlas> ui_font;
 
 		SceneGraph::Node *overlay_node;
 		SceneGraph::Node scenegraph;
+
+		Touch touches[2];
 
 		ChangeMonitor monitor;
 
@@ -77,40 +70,10 @@ namespace Heimdall
 		virtual void touch_moved_impl(const Touch *const touches, const size_t count) override;
 	};
 
-	bool Gatekeeper::active() const
-	{
-		return this->director->active();
-	}
-
-	bool Gatekeeper::terminated() const
-	{
-		return this->director->terminated();
-	}
-
 	void Gatekeeper::draw()
 	{
-		this->director->draw();
+		Director::draw();
 		Renderer::draw(scenegraph);
-	}
-
-	void Gatekeeper::terminate()
-	{
-		return this->director->terminate();
-	}
-
-	void Gatekeeper::on_focus_gained()
-	{
-		this->director->on_focus_gained();
-	}
-
-	void Gatekeeper::on_focus_lost()
-	{
-		this->director->on_focus_lost();
-	}
-
-	void Gatekeeper::on_memory_warning()
-	{
-		this->director->on_memory_warning();
 	}
 
 	void Gatekeeper::toggle_overlay()

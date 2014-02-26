@@ -47,42 +47,6 @@ namespace
 		std::unique_ptr<char[]> name_;
 		const char *path_;
 	};
-
-	Library::Library(const char *const path) : path_(path)
-	{
-		const char *filename = basename(this->path_);
-		size_t length = strlen(filename);
-		if (length < 5 || memcmp(filename + length - 4, ".lua", 4) != 0)
-		{
-			this->path_ = nullptr;
-			return;
-		}
-		length -= 4;
-		this->name_.reset(new char[length + 1]);
-		strncpy(this->name_.get(), filename, length);
-		this->name_[length] = '\0';
-	}
-
-	const char* Library::name() const
-	{
-		return this->name_.get();
-	}
-
-	Library::operator bool() const
-	{
-		return this->path_;
-	}
-
-	Library::operator Data() const
-	{
-	#if defined(RAINBOW_OS_MACOS)
-		return Data(File::open(this->path_));
-	#elif defined(RAINBOW_OS_WINDOWS)
-		return Data::load_asset(this->path_);
-	#else
-		return Data();
-	#endif
-	}
 }
 
 namespace Heimdall
@@ -122,20 +86,13 @@ namespace Heimdall
 
 	void Gatekeeper::init(const Data &script, const int width, const int height)
 	{
-		this->set_video(width, height);
-		this->director.reset(new Rainbow::Director());
-		this->director->init(script, this->width, this->height);
-		Input::Instance->subscribe(this, Input::Events::Touch);
-	}
-
-	void Gatekeeper::set_video(const int width, const int height)
-	{
 		this->width = width;
 		this->height = height;
 
 		const unsigned int pt = this->height / 64;
 		this->console_font = new FontAtlas(DataRef(Inconsolata_otf), pt);
-		this->ui_font = new FontAtlas(DataRef(NewsCycle_Regular_ttf), (pt << 1) + (pt >> 1));
+		this->ui_font = new FontAtlas(DataRef(NewsCycle_Regular_ttf),
+		                              (pt << 1) + (pt >> 1));
 		Resources::ConsoleFont = this->console_font.get();
 		Resources::UIFont = this->ui_font.get();
 
@@ -146,6 +103,9 @@ namespace Heimdall
 		this->info.set_button(position);
 		position.y = y;
 		this->info.set_console(position);
+
+		Director::init(script, this->width, this->height);
+		Input::Instance->subscribe(this, Input::Events::Touch);
 	}
 
 	void Gatekeeper::update(const unsigned long dt)
@@ -159,10 +119,9 @@ namespace Heimdall
 				continue;
 
 			R_DEBUG("[Rainbow] Reloading '%s'...\n", library.name());
-			Rainbow::Lua::reload(this->director->state(), library, library.name());
+			Rainbow::Lua::reload(this->state(), library, library.name());
 		}
-		//if (!this->overlay_node->enabled)
-			this->director->update(dt);
+		Director::update(dt);
 		if (!this->overlay_node->enabled && this->touch_count == 2)
 		{
 			this->touch_held += dt;
@@ -173,7 +132,8 @@ namespace Heimdall
 		this->scenegraph.update(dt);
 	}
 
-	void Gatekeeper::touch_began_impl(const Touch *const touches, const size_t count)
+	void Gatekeeper::touch_began_impl(const Touch *const touches,
+	                                  const size_t count)
 	{
 		if (this->overlay_node->enabled)
 			return;
@@ -205,7 +165,8 @@ namespace Heimdall
 		this->touches[1].hash = -1;
 	}
 
-	void Gatekeeper::touch_ended_impl(const Touch *const touches, const size_t count)
+	void Gatekeeper::touch_ended_impl(const Touch *const touches,
+	                                  const size_t count)
 	{
 		if (this->overlay_node->enabled && !this->touch_count)
 		{
@@ -231,6 +192,42 @@ namespace Heimdall
 	}
 
 	void Gatekeeper::touch_moved_impl(const Touch *const, const size_t) { }
+}
+
+Library::Library(const char *const path) : path_(path)
+{
+	const char *filename = basename(this->path_);
+	size_t length = strlen(filename);
+	if (length < 5 || memcmp(filename + length - 4, ".lua", 4) != 0)
+	{
+		this->path_ = nullptr;
+		return;
+	}
+	length -= 4;
+	this->name_.reset(new char[length + 1]);
+	strncpy(this->name_.get(), filename, length);
+	this->name_[length] = '\0';
+}
+
+const char* Library::name() const
+{
+	return this->name_.get();
+}
+
+Library::operator bool() const
+{
+	return this->path_;
+}
+
+Library::operator Data() const
+{
+#if defined(RAINBOW_OS_MACOS)
+	return Data(File::open(this->path_));
+#elif defined(RAINBOW_OS_WINDOWS)
+	return Data::load_asset(this->path_);
+#else
+	return Data();
+#endif
 }
 
 #endif

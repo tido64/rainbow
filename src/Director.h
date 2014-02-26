@@ -21,10 +21,6 @@ namespace Rainbow
 		Director();
 
 		inline bool active() const;
-	#ifdef USE_HEIMDALL
-		/// Used by Heimdall::Gatekeeper to retrieve Lua state.
-		struct lua_State* state() const { return this->lua_; }
-	#endif
 		inline bool terminated() const;
 
 		inline void draw();
@@ -43,6 +39,12 @@ namespace Rainbow
 
 		/// Called when a low memory warning has been issued.
 		void on_memory_warning();
+
+#ifdef USE_HEIMDALL
+	protected:
+		/// Used by Heimdall::Gatekeeper to retrieve Lua state.
+		struct lua_State* state() const { return this->lua_; }
+#endif
 
 	private:
 		bool active_;
