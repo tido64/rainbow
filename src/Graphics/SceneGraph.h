@@ -6,15 +6,14 @@
 #define GRAPHICS_SCENEGRAPH_NODE_H_
 
 #include "Common/TreeNode.h"
-#include "Common/Vec2.h"
 #include "Graphics/Drawable.h"
+#include "Graphics/Renderer.h"
 
 class Animation;
 class Label;
 class SpriteBatch;
 
 namespace SceneGraph { class Node; }
-namespace Renderer { void draw(const SceneGraph::Node &); }
 
 namespace SceneGraph
 {

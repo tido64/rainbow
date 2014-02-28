@@ -2,6 +2,8 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
+#include <lua.hpp>
+
 #include "Common/Data.h"
 #include "ConFuoco/Mixer.h"
 #include "Director.h"
@@ -11,17 +13,39 @@
 namespace Rainbow
 {
 	Director::Director()
-	    : active_(true), terminated_(false), lua_(&scenegraph_), input_(lua_)
-	{ }
+	    : active_(true), terminated_(false), error_(nullptr), input_(lua_)
+	{
+		if (!this->renderer_.init())
+			this->terminate("Failed to initialise renderer");
+		else if (this->lua_.init(&this->scenegraph_) != LUA_OK)
+			this->terminate("Failed to initialise Lua");
+	}
 
-	void Director::init(const Data &main, const int width, const int height)
+	Director::~Director()
+	{
+		if (!ShaderManager::Instance)
+			return;
+
+		// Lua must be allowed to clean up before we tear down the graphics
+		// context.
+		this->lua_.terminate();
+	}
+
+	void Director::draw()
+	{
+		Renderer::clear();
+		Renderer::draw(this->scenegraph_);
+	}
+
+	void Director::init(const Data &main, const Vec2i &screen)
 	{
 		R_ASSERT(main, "Failed to load 'main.lua'");
 
-		Lua::Platform::update(this->lua_, width, height);
-		if (this->lua_.init(main) != LUA_OK || this->lua_.update(0) != LUA_OK)
+		this->renderer_.set_resolution(screen);
+		Lua::Platform::update(this->lua_, screen);
+		if (this->lua_.start(main) != LUA_OK || this->lua_.update(0) != LUA_OK)
 		{
-			this->terminate();
+			this->terminate("Failed to start 'main.lua'");
 			return;
 		}
 		this->scenegraph_.update(0);
@@ -61,5 +85,11 @@ namespace Rainbow
 
 		lua_gc(this->lua_, LUA_GCCOLLECT, 0);
 		TextureManager::Instance->purge();
+	}
+
+	void Director::terminate(const char *error)
+	{
+		this->terminate();
+		this->error_ = error;
 	}
 }

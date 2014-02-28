@@ -54,6 +54,11 @@ namespace Rainbow
 			return !this->x && !this->y;
 		}
 
+		bool operator==(const Vec2<T> &v) const
+		{
+			return this->x == v.x && this->y == v.y;
+		}
+
 		Vec2<T>& operator+=(const Vec2<T> &v)
 		{
 			this->x += v.x;

@@ -5,19 +5,7 @@
 #include "Graphics/OpenGL.h"
 #include "Graphics/TextureManager.h"
 
-TextureManager* TextureManager::Instance = nullptr;
-
-TextureManager::TextureManager()
-    : mag_filter(GL_LINEAR), min_filter(GL_LINEAR), mem_peak(0.0), mem_used(0.0)
-{
-	memset(this->active, 0, sizeof(this->active));
-}
-
-TextureManager::~TextureManager()
-{
-	this->purge(this->recycled);
-	this->purge(this->textures);
-}
+TextureManager *TextureManager::Instance = nullptr;
 
 void TextureManager::bind(const unsigned int id)
 {
@@ -63,7 +51,8 @@ unsigned int TextureManager::create_compressed(const unsigned int format,
                                                const void *data)
 {
 	TextureId texture = this->create_texture(width * height >> 1);
-	glCompressedTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, size, data);
+	glCompressedTexImage2D(
+	    GL_TEXTURE_2D, 0, format, width, height, 0, size, data);
 	R_ASSERT(glGetError() == GL_NO_ERROR, "Failed to load compressed texture");
 
 	this->textures.push_back(texture);
@@ -105,6 +94,21 @@ void TextureManager::set_filter(const int filter)
 	this->min_filter = filter;
 }
 
+TextureManager::TextureManager()
+    : mag_filter(GL_LINEAR), min_filter(GL_LINEAR), mem_peak(0.0), mem_used(0.0)
+{
+	R_ASSERT(Instance == nullptr, "There can be only one TextureManager");
+	memset(this->active, 0, sizeof(this->active));
+	Instance = this;
+}
+
+TextureManager::~TextureManager()
+{
+	Instance = nullptr;
+	this->purge(this->recycled);
+	this->purge(this->textures);
+}
+
 TextureManager::TextureId TextureManager::create_texture(const unsigned int size)
 {
 	TextureId texture = { 0, size };
@@ -133,7 +137,8 @@ void TextureManager::print_usage() const
 #ifndef NDEBUG
 	double used, unused, peak;
 	this->memory_usage(used, unused, peak);
-	R_DEBUG("[Rainbow] Video: %.2f MBs of textures (%.2f MBs unused)\n", used, unused);
+	R_DEBUG("[Rainbow] Video: %.2f MBs of textures (%.2f MBs unused)\n",
+	        used, unused);
 #endif
 }
 

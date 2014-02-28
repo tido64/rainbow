@@ -5,6 +5,8 @@
 #ifndef LUA_PLATFORM_H_
 #define LUA_PLATFORM_H_
 
+#include "Common/Vec2.h"
+
 struct lua_State;
 
 namespace Rainbow
@@ -16,7 +18,7 @@ namespace Rainbow
 			void init(lua_State *L);
 
 			/// Updates rainbow.platform.screen.
-			void update(lua_State *L, const unsigned int width, const unsigned int height);
+			void update(lua_State *L, const Vec2i &screen);
 		}
 	}
 }

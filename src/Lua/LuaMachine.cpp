@@ -2,6 +2,8 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
+#include <lua.hpp>
+
 #include "Common/Data.h"
 #include "Lua/LuaModules.h"
 #include "Lua/lua_Rainbow.h"
@@ -43,13 +45,7 @@ namespace
 
 namespace Rainbow
 {
-	LuaMachine::~LuaMachine()
-	{
-		Lua::SceneGraph::destroy(this->L, this->scenegraph);
-		lua_close(this->L);
-	}
-
-	int LuaMachine::init(const Data &main)
+	int LuaMachine::start(const Data &main)
 	{
 		if (Lua::load(this->L, main, "main") == 0)
 			return luaL_error(this->L, "Failed to load main script");
@@ -93,8 +89,16 @@ namespace Rainbow
 		return LUA_OK;
 	}
 
-	LuaMachine::LuaMachine(SceneGraph::Node *root)
-	    : internal(0), traceback(0), scenegraph(nullptr), L(luaL_newstate())
+	LuaMachine::LuaMachine()
+	    : internal(0), traceback(0), scenegraph(nullptr), L(luaL_newstate()) { }
+
+	LuaMachine::~LuaMachine()
+	{
+		R_ASSERT(!this->L,
+		         "LuaMachine must be terminated before the graphics context");
+	}
+
+	int LuaMachine::init(SceneGraph::Node *root)
 	{
 		luaR_openlibs(this->L);
 
@@ -120,7 +124,8 @@ namespace Rainbow
 		R_ASSERT(!lua_isnil(this->L, -1), "package table does not exist");
 		lua_pushliteral(this->L, "searchers");
 		lua_rawget(this->L, -2);
-		R_ASSERT(!lua_isnil(this->L, -1), "package.searchers table does not exist");
+		R_ASSERT(!lua_isnil(this->L, -1),
+		         "package.searchers table does not exist");
 
 		// Make space in the second slot for our loader.
 		for (size_t i = lua_rawlen(this->L, -1); i > 1; --i)
@@ -135,13 +140,15 @@ namespace Rainbow
 
 		// Load our internal script.
 		const size_t length = sizeof(Rainbow_lua) / sizeof(char) - 1;
-		if (Lua::load(this->L, Data(Rainbow_lua, length, Data::kDataReference), rainbow) == 0)
+		if (Lua::load(this->L,
+		              Data(Rainbow_lua, length, Data::kDataReference),
+		              rainbow) == 0)
 		{
-			luaL_error(this->L, "Failed to load internal Lua script");
-			return;
+			return luaL_error(this->L, "Failed to load internal Lua script");
 		}
 		lua_getglobal(this->L, "__update");
-		R_ASSERT(lua_isfunction(this->L, -1), "Failed to get internal Lua script");
+		R_ASSERT(lua_isfunction(this->L, -1),
+		         "Failed to get internal Lua script");
 		this->internal = luaL_ref(this->L, LUA_REGISTRYINDEX);
 		R_ASSERT(lua_gettop(this->L) == 0, "Stack not empty");
 
@@ -153,5 +160,17 @@ namespace Rainbow
 		lua_pop(this->L, 1);
 		R_ASSERT(lua_gettop(this->L) == 0, "Stack not empty");
 	#endif
+
+		return LUA_OK;
+	}
+
+	void LuaMachine::terminate()
+	{
+		if (!this->L)
+			return;
+
+		Lua::SceneGraph::destroy(this->L, this->scenegraph);
+		lua_close(this->L);
+		this->L = nullptr;
 	}
 }

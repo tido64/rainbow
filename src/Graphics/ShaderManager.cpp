@@ -95,8 +95,8 @@ namespace
 			glBindAttribLocation(program, attrib->index, attrib->name);
 		glLinkProgram(program);
 
-		const unique_str &error =
-		    verify(program, GL_LINK_STATUS, glGetProgramiv, glGetProgramInfoLog);
+		const unique_str &error = verify(
+		    program, GL_LINK_STATUS, glGetProgramiv, glGetProgramInfoLog);
 		if (error.get())
 		{
 			R_ERROR("[Rainbow] GLSL: Failed to link program: %s\n",
@@ -138,13 +138,21 @@ int ShaderManager::compile(Shader::ShaderParams *shaders,
 	return this->programs.size() - 1;
 }
 
-void ShaderManager::set(const float width, const float height)
+void ShaderManager::set(const Vec2i &resolution)
 {
-	this->ortho[0] = 2.0f / width;
-	this->ortho[5] = 2.0f / height;
+	this->ortho[0] = 2.0f / resolution.width;
+	this->ortho[5] = 2.0f / resolution.height;
 	if (this->active < 0)
 	{
-		this->initialise();
+		this->active = 0;
+		const Shader::Details &details = this->programs[this->active];
+		glUseProgram(details.program);
+		set_projection_matrix(details.program, this->ortho);
+		glUniform1i(glGetUniformLocation(this->programs[0].program, "texture"),
+		            0);
+		glEnableVertexAttribArray(Shader::kAttributeVertex);
+		glEnableVertexAttribArray(Shader::kAttributeColor);
+		glEnableVertexAttribArray(Shader::kAttributeTexCoord);
 		return;
 	}
 	set_projection_matrix(this->programs[this->active].program, this->ortho);
@@ -184,6 +192,24 @@ void ShaderManager::use(const int program)
 ShaderManager::ShaderManager() : active(-1)
 {
 	R_ASSERT(Instance == nullptr, "There can be only one ShaderManager");
+}
+
+ShaderManager::~ShaderManager()
+{
+	if (this->active < 0)
+		return;
+
+	Instance = nullptr;
+	glUseProgram(0);
+	for (const auto &details : this->programs)
+		glDeleteProgram(details.program);
+	for (const auto shader : this->shaders)
+		glDeleteShader(shader);
+}
+
+void ShaderManager::init()
+{
+	R_ASSERT(Instance == nullptr, "ShaderManager is already initialised");
 
 	Shader::ShaderParams shaders[] = {
 		{ Shader::kTypeVertex, 0, Rainbow::Shaders::kFixed2Dv },
@@ -206,28 +232,4 @@ ShaderManager::ShaderManager() : active(-1)
 	this->ortho[15] =  1.0f;
 
 	Instance = this;
-}
-
-ShaderManager::~ShaderManager()
-{
-	Instance = nullptr;
-	glUseProgram(0);
-	for (const auto &details : this->programs)
-		glDeleteProgram(details.program);
-	for (const auto shader : this->shaders)
-		glDeleteShader(shader);
-}
-
-void ShaderManager::initialise()
-{
-	R_ASSERT(this->active < 0, "ShaderManager is already initialised");
-
-	this->active = 0;
-	const Shader::Details &details = this->programs[this->active];
-	glUseProgram(details.program);
-	set_projection_matrix(details.program, this->ortho);
-	glUniform1i(glGetUniformLocation(this->programs[0].program, "texture"), 0);
-	glEnableVertexAttribArray(Shader::kAttributeVertex);
-	glEnableVertexAttribArray(Shader::kAttributeColor);
-	glEnableVertexAttribArray(Shader::kAttributeTexCoord);
 }

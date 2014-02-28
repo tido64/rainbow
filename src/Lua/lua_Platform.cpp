@@ -48,7 +48,7 @@ namespace Rainbow
 				lua_rawset(L, -3);
 			}
 
-			void update(lua_State *L, const unsigned int width, const unsigned int height)
+			void update(lua_State *L, const Vec2i &screen)
 			{
 				lua_getglobal(L, "rainbow");
 				lua_pushliteral(L, "platform");
@@ -56,8 +56,8 @@ namespace Rainbow
 				lua_pushliteral(L, "screen");
 				lua_rawget(L, -2);
 
-				luaR_rawsetfield(L, lua_pushnumber, width, "width");
-				luaR_rawsetfield(L, lua_pushnumber, height, "height");
+				luaR_rawsetfield(L, lua_pushnumber, screen.width, "width");
+				luaR_rawsetfield(L, lua_pushnumber, screen.height, "height");
 
 				lua_pop(L, 3);
 			}

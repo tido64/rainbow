@@ -35,25 +35,19 @@ namespace Heimdall
 		/* Director overrides */
 
 		inline void draw();
-		void init(const Data &, const int width, const int height);
+		void init(const Data &main, const Vec2i &screen);
 		void update(const unsigned long dt);
 
 	private:
-		int width;
-		int height;
 		unsigned int touch_count;
 		unsigned long touch_held;
-
 		SharedPtr<FontAtlas> console_font;
 		SharedPtr<FontAtlas> ui_font;
-
 		SceneGraph::Node *overlay_node;
+		Vec2i screen;
 		SceneGraph::Node scenegraph;
-
 		Touch touches[2];
-
 		ChangeMonitor monitor;
-
 		Overlay overlay;
 		DebugInfo info;
 
@@ -64,10 +58,13 @@ namespace Heimdall
 
 		/* Implement Touchable */
 
-		virtual void touch_began_impl(const Touch *const touches, const size_t count) override;
+		virtual void touch_began_impl(const Touch *const touches,
+		                              const size_t count) override;
 		virtual void touch_canceled_impl() override;
-		virtual void touch_ended_impl(const Touch *const touches, const size_t count) override;
-		virtual void touch_moved_impl(const Touch *const touches, const size_t count) override;
+		virtual void touch_ended_impl(const Touch *const touches,
+		                              const size_t count) override;
+		virtual void touch_moved_impl(const Touch *const touches,
+		                              const size_t count) override;
 	};
 
 	void Gatekeeper::draw()

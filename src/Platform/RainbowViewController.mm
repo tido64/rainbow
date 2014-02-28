@@ -44,8 +44,6 @@ namespace
 - (void)dealloc
 {
 	delete self.director;
-	Renderer::release();
-
 	if ([EAGLContext currentContext] == self.context)
 		[EAGLContext setCurrentContext:nil];
 }
@@ -130,8 +128,8 @@ namespace
 	{
 		const CMAccelerometerData *data = self.motionManager.accelerometerData;
 		Input::Instance->accelerated(
-				data.acceleration.x, data.acceleration.y, data.acceleration.z,
-				data.timestamp);
+		    data.acceleration.x, data.acceleration.y, data.acceleration.z,
+		    data.timestamp);
 	}
 	self.director->update(self.timeSinceLastDraw * 1000);
 }
@@ -140,7 +138,6 @@ namespace
 
 - (void)glkView:(GLKView *)view drawInRect:(CGRect)rect
 {
-	glClear(GL_COLOR_BUFFER_BIT);
 	self.director->draw();
 }
 
@@ -148,20 +145,20 @@ namespace
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
-	Touch *t = [self touchesArrayFromSet:touches];
-	Input::Instance->touch_began(t, touches.count);
+	Input::Instance->touch_began([self touchesArrayFromSet:touches],
+	                             touches.count);
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
 {
-	Touch *t = [self touchesArrayFromSet:touches];
-	Input::Instance->touch_moved(t, touches.count);
+	Input::Instance->touch_moved([self touchesArrayFromSet:touches],
+	                             touches.count);
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
-	Touch *t = [self touchesArrayFromSet:touches];
-	Input::Instance->touch_ended(t, touches.count);
+	Input::Instance->touch_ended([self touchesArrayFromSet:touches],
+	                             touches.count);
 }
 
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
@@ -193,27 +190,27 @@ namespace
 		NSLog(@"[Rainbow] Failed to create ES context");
 		return;
 	}
-	((GLKView *)self.view).context = self.context;
+	((GLKView*)self.view).context = self.context;
 	self.preferredFramesPerSecond = 60;
 	[EAGLContext setCurrentContext:self.context];
 
 	// Prepare graphics and initialise the director.
-	Renderer::init();
 	_director = new Director();
 
 	// Swap screen width and height. See comments for touchesArrayFromSet:.
-	CGSize size = [[UIScreen mainScreen] bounds].size;
-	if (UIInterfaceOrientationIsLandscape([[UIApplication sharedApplication] statusBarOrientation]))
+	CGSize size = [UIScreen mainScreen].bounds.size;
+	if (UIInterfaceOrientationIsLandscape(
+	        [[UIApplication sharedApplication] statusBarOrientation]))
+	{
 		std::swap(size.width, size.height);
-	_scale = [[UIScreen mainScreen] scale];
+	}
+	_scale = [UIScreen mainScreen].scale;
 	size.width *= self.scale;
 	size.height *= self.scale;
 
-	// Set screen resolution.
-	Renderer::set_resolution(size.width, size.height);
-
 	// Load and initialise script.
-	self.director->init(Data::load_asset("main.lua"), size.width, size.height);
+	const Vec2i screen(size.width, size.height);
+	self.director->init(Data::load_asset("main.lua"), screen);
 }
 
 - (void)didReceiveMemoryWarning
@@ -244,23 +241,6 @@ namespace
 - (NSUInteger)supportedInterfaceOrientations
 {
 	return UIInterfaceOrientationMaskLandscape;
-}
-
-// TODO: Deprecated in iOS 6.0
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-	BOOL supported = NO;
-	switch (interfaceOrientation) {
-		case UIInterfaceOrientationLandscapeLeft:
-		case UIInterfaceOrientationLandscapeRight:
-			supported = YES;
-		//case UIInterfaceOrientationPortrait:
-		//case UIInterfaceOrientationPortraitUpsideDown:
-		default:
-			break;
-	}
-	return supported;
 }
 
 @end

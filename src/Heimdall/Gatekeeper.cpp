@@ -60,7 +60,7 @@ namespace Heimdall
 	}
 
 	Gatekeeper::Gatekeeper()
-	    : width(0), height(0), touch_count(0), overlay_node(nullptr),
+	    : touch_count(0), touch_held(0), overlay_node(nullptr),
 	      monitor(Path::current())
 	{
 		this->scenegraph.add_child(this->info.node());
@@ -84,27 +84,26 @@ namespace Heimdall
 		Resources::UIFont = nullptr;
 	}
 
-	void Gatekeeper::init(const Data &script, const int width, const int height)
+	void Gatekeeper::init(const Data &main, const Vec2i &screen)
 	{
-		this->width = width;
-		this->height = height;
+		this->screen = screen;
 
-		const unsigned int pt = this->height / 64;
+		const unsigned int pt = this->screen.height / 64;
 		this->console_font = new FontAtlas(DataRef(Inconsolata_otf), pt);
 		this->ui_font = new FontAtlas(DataRef(NewsCycle_Regular_ttf),
 		                              (pt << 1) + (pt >> 1));
 		Resources::ConsoleFont = this->console_font.get();
 		Resources::UIFont = this->ui_font.get();
 
-		this->overlay.setup(width, height);
-		const float y = this->height - this->console_font->height();
-		Vec2f position(this->width / 128,
+		this->overlay.setup(this->screen);
+		const float y = this->screen.height - this->console_font->height();
+		Vec2f position(this->screen.width / 128,
 		               y - this->console_font->height() - this->ui_font->height());
 		this->info.set_button(position);
 		position.y = y;
 		this->info.set_console(position);
 
-		Director::init(script, this->width, this->height);
+		Director::init(main, this->screen);
 		Input::Instance->subscribe(this, Input::Events::Touch);
 	}
 

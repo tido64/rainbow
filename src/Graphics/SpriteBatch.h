@@ -36,7 +36,7 @@ public:
 	inline const TextureAtlas& texture() const;
 
 	/// Returns the vertex array object.
-	inline const Renderer::VertexArray& vertex_array() const;
+	inline const VertexArray& vertex_array() const;
 
 	/// Assigns a normal map.
 	TextureAtlas* set_normal(TextureAtlas *texture);
@@ -65,12 +65,12 @@ public:
 	void update();
 
 private:
-	SharedPtr<TextureAtlas> normal_;           ///< Normal map used by all sprites in the batch.
-	SharedPtr<TextureAtlas> texture_;          ///< Texture atlas used by all sprites in the batch.
-	Vector<Sprite> sprites_;                   ///< Vector storing all sprites.
-	Renderer::Buffer<Vec2f> normals_;          ///< Shared normal buffer.
-	Renderer::Buffer<SpriteVertex> vertices_;  ///< Shared, interleaved vertex buffer.
-	Renderer::VertexArray array_;              ///< Vertex array object.
+	SharedPtr<TextureAtlas> normal_;   ///< Normal map used by all sprites in the batch.
+	SharedPtr<TextureAtlas> texture_;  ///< Texture atlas used by all sprites in the batch.
+	Vector<Sprite> sprites_;           ///< Vector storing all sprites.
+	Buffer<Vec2f> normals_;            ///< Shared normal buffer.
+	Buffer<SpriteVertex> vertices_;    ///< Shared, interleaved vertex buffer.
+	VertexArray array_;                ///< Vertex array object.
 };
 
 size_t SpriteBatch::count() const
@@ -94,7 +94,7 @@ const TextureAtlas& SpriteBatch::texture() const
 	return *this->texture_.get();
 }
 
-const Renderer::VertexArray& SpriteBatch::vertex_array() const
+const VertexArray& SpriteBatch::vertex_array() const
 {
 	return this->array_;
 }

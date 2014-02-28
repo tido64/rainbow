@@ -5,6 +5,7 @@
 #ifndef DIRECTOR_H_
 #define DIRECTOR_H_
 
+#include "Graphics/Renderer.h"
 #include "Graphics/SceneGraph.h"
 #include "Input/Input.h"
 #include "Lua/LuaMachine.h"
@@ -19,14 +20,17 @@ namespace Rainbow
 	{
 	public:
 		Director();
+		~Director();
 
 		inline bool active() const;
+		inline const char* error() const;
+		inline Renderer& renderer();
 		inline bool terminated() const;
 
-		inline void draw();
+		void draw();
 
 		/// Loads and initialises main script.
-		void init(const Data &, const int width, const int height);
+		void init(const Data &main, const Vec2i &screen);
 
 		inline void terminate();
 
@@ -49,9 +53,13 @@ namespace Rainbow
 	private:
 		bool active_;
 		bool terminated_;
+		const char *error_;
 		LuaMachine lua_;
 		SceneGraph::Node scenegraph_;
 		Input input_;
+		Renderer renderer_;
+
+		void terminate(const char *error);
 	};
 
 	bool Director::active() const
@@ -59,14 +67,19 @@ namespace Rainbow
 		return this->active_;
 	}
 
+	const char* Director::error() const
+	{
+		return this->error_;
+	}
+
+	Renderer& Director::renderer()
+	{
+		return this->renderer_;
+	}
+
 	bool Director::terminated() const
 	{
 		return this->terminated_;
-	}
-
-	void Director::draw()
-	{
-		Renderer::draw(this->scenegraph_);
 	}
 
 	void Director::terminate()

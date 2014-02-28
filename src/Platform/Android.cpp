@@ -56,8 +56,11 @@ void android_init_display(AInstance *ainstance);
 void android_handle_event(struct android_app *app, int32_t cmd);
 int32_t android_handle_input(struct android_app *app, AInputEvent *event);
 int32_t android_handle_motion(struct android_app *app, AInputEvent *event);
-Touch get_touch_event(AInputEvent *event, const int32_t index);
-Touch get_touch_event(AInputEvent *event,
+Touch get_touch_event(Renderer &renderer,
+                      AInputEvent *event,
+                      const int32_t index);
+Touch get_touch_event(Renderer &renderer,
+                      AInputEvent *event,
                       const int32_t index,
                       const size_t history);
 
@@ -114,8 +117,6 @@ void android_main(struct android_app *state)
 			continue;
 
 		ainstance.director->update(chrono.delta());
-
-		Renderer::clear();
 		ainstance.director->draw();
 		eglSwapBuffers(ainstance.display, ainstance.surface);
 	}
@@ -127,7 +128,6 @@ void android_destroy_display(AInstance *a)
 	a->director.reset();
 	if (a->display != EGL_NO_DISPLAY)
 	{
-		Renderer::release();
 		eglMakeCurrent(a->display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
 		if (a->context != EGL_NO_CONTEXT)
 		{
@@ -151,9 +151,10 @@ void android_handle_display(AInstance *a)
 	if (a->initialised)
 		return;
 
-	if (!Renderer::init())
+	a->director.reset(new Director());
+	if (a->director->terminated())
 	{
-		R_ERROR("[Rainbow] Failed to initialise renderer");
+		R_ERROR("[Rainbow] %s", a->director->error());
 		a->done = true;
 		return;
 	}
@@ -162,11 +163,9 @@ void android_handle_display(AInstance *a)
 	EGLint height = 0;
 	eglQuerySurface(a->display, a->surface, EGL_WIDTH, &width);
 	eglQuerySurface(a->display, a->surface, EGL_HEIGHT, &height);
-	Renderer::set_resolution(width, height);
 
 	// Load game
-	a->director.reset(new Director());
-	a->director->init(Data::load_asset("main.lua"), width, height);
+	a->director->init(Data::load_asset("main.lua"), Vec2i(width, height));
 	a->initialised = !a->director->terminated();
 }
 
@@ -304,45 +303,46 @@ int32_t android_handle_input(struct android_app *app, AInputEvent *event)
 	}
 }
 
-int32_t android_handle_motion(struct android_app *, AInputEvent *event)
+int32_t android_handle_motion(struct android_app *app, AInputEvent *event)
 {
+	Renderer &renderer =
+	    static_cast<AInstance*>(app->userData)->director->renderer();
 	switch (AMotionEvent_getAction(event) & AMOTION_EVENT_ACTION_MASK)
 	{
 		case AMOTION_EVENT_ACTION_DOWN:
-		case AMOTION_EVENT_ACTION_POINTER_DOWN:
-			{
-				const int32_t index
-						= (AMotionEvent_getAction(event) & AMOTION_EVENT_ACTION_POINTER_INDEX_MASK)
-						>> AMOTION_EVENT_ACTION_POINTER_INDEX_SHIFT;
-				Touch t = get_touch_event(event, index);
-				Input::Instance->touch_began(&t, 1);
-			}
+		case AMOTION_EVENT_ACTION_POINTER_DOWN: {
+			const int32_t index =
+			    (AMotionEvent_getAction(event)
+			        & AMOTION_EVENT_ACTION_POINTER_INDEX_MASK)
+			    >> AMOTION_EVENT_ACTION_POINTER_INDEX_SHIFT;
+			Touch t = get_touch_event(renderer, event, index);
+			Input::Instance->touch_began(&t, 1);
 			break;
+		}
 		case AMOTION_EVENT_ACTION_UP:
-		case AMOTION_EVENT_ACTION_POINTER_UP:
-			{
-				const int32_t index
-						= (AMotionEvent_getAction(event) & AMOTION_EVENT_ACTION_POINTER_INDEX_MASK)
-						>> AMOTION_EVENT_ACTION_POINTER_INDEX_SHIFT;
-				Touch t = get_touch_event(event, index);
-				Input::Instance->touch_ended(&t, 1);
-			}
+		case AMOTION_EVENT_ACTION_POINTER_UP: {
+			const int32_t index =
+			    (AMotionEvent_getAction(event)
+			        & AMOTION_EVENT_ACTION_POINTER_INDEX_MASK)
+			    >> AMOTION_EVENT_ACTION_POINTER_INDEX_SHIFT;
+			Touch t = get_touch_event(renderer, event, index);
+			Input::Instance->touch_ended(&t, 1);
 			break;
-		case AMOTION_EVENT_ACTION_MOVE:
-			{
-				size_t history = AMotionEvent_getHistorySize(event);
-				if (!history)
-					break;
-				--history;
+		}
+		case AMOTION_EVENT_ACTION_MOVE: {
+			size_t history = AMotionEvent_getHistorySize(event);
+			if (!history)
+				break;
+			--history;
 
-				const size_t count = AMotionEvent_getPointerCount(event);
-				std::unique_ptr<Touch[]> touches(new Touch[count]);
+			const size_t count = AMotionEvent_getPointerCount(event);
+			std::unique_ptr<Touch[]> touches(new Touch[count]);
 
-				for (size_t i = 0; i < count; ++i)
-					touches[i] = get_touch_event(event, i, history);
-				Input::Instance->touch_moved(touches.get(), count);
-			}
+			for (size_t i = 0; i < count; ++i)
+				touches[i] = get_touch_event(renderer, event, i, history);
+			Input::Instance->touch_moved(touches.get(), count);
 			break;
+		}
 		case AMOTION_EVENT_ACTION_CANCEL:
 		case AMOTION_EVENT_ACTION_OUTSIDE:
 			//Input::Instance->touch_canceled(touches, count);
@@ -354,9 +354,11 @@ int32_t android_handle_motion(struct android_app *, AInputEvent *event)
 	return 1;
 }
 
-Touch get_touch_event(AInputEvent *event, const int32_t index)
+Touch get_touch_event(Renderer &renderer,
+                      AInputEvent *event,
+                      const int32_t index)
 {
-	const Vec2i &point = Renderer::convert_to_flipped_view(
+	const Vec2i &point = renderer.convert_to_flipped_view(
 	    Vec2i(AMotionEvent_getX(event, index),
 	          AMotionEvent_getY(event, index)));
 	return Touch(AMotionEvent_getPointerId(event, index),
@@ -365,12 +367,13 @@ Touch get_touch_event(AInputEvent *event, const int32_t index)
 	             AMotionEvent_getEventTime(event));
 }
 
-Touch get_touch_event(AInputEvent *event,
+Touch get_touch_event(Renderer &renderer,
+                      AInputEvent *event,
                       const int32_t index,
                       const size_t history)
 {
-	Touch t = get_touch_event(event, index);
-	const Vec2i &point = Renderer::convert_to_flipped_view(
+	Touch t = get_touch_event(renderer, event, index);
+	const Vec2i &point = renderer.convert_to_flipped_view(
 	    Vec2i(AMotionEvent_getHistoricalX(event, index, history),
 	          AMotionEvent_getHistoricalY(event, index, history)));
 	t.x0 = point.x;

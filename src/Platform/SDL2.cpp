@@ -62,19 +62,16 @@ namespace
 	class RenderWindow
 	{
 	public:
-		RenderWindow(const uint_t width, const uint_t height);
+		RenderWindow(const Vec2i &window_size);
 		~RenderWindow();
 
 		void swap() const;
 		void toggle_fullscreen();
 
-		void on_mouse_down(const SDL_MouseButtonEvent &event,
-		                   const unsigned long timestamp);
-		void on_mouse_motion(const SDL_MouseMotionEvent &event,
-		                     const unsigned long timestamp);
-		void on_mouse_up(const SDL_MouseButtonEvent &event,
-		                 const unsigned long timestamp);
-		void on_window_resized();
+		void on_mouse_down(const Vec2i &point, const unsigned long timestamp);
+		void on_mouse_motion(const Vec2i &point, const unsigned long timestamp);
+		void on_mouse_up(const Vec2i &point, const unsigned long timestamp);
+		void on_window_resized(Renderer &renderer);
 
 		operator bool() const;
 		operator SDL_Window*();
@@ -86,6 +83,7 @@ namespace
 		SDL_GLContext context;      ///< OpenGL context handle.
 		SDL_Window *window;         ///< Window handle.
 		SDL_Point window_position;  ///< Window's position while windowed.
+		Vec2i window_size;          ///< Window's size while windowed.
 		Touch mouse;                ///< Current mouse events.
 	};
 }
@@ -116,23 +114,28 @@ int main(int argc, char *argv[])
 	if (!ConFuoco::Mixer::Instance)
 		return 1;
 
-	uint_t window_width = 1280;
-	uint_t window_height = 720;
+	Vec2i window_size(1280, 720);
 
 	Rainbow::Config config;
 	if (config.width() && config.height())
 	{
-		window_width = config.width();
-		window_height = config.height();
+		window_size.width = config.width();
+		window_size.height = config.height();
 	}
 
-	RenderWindow window(window_width, window_height);
+	RenderWindow window(window_size);
 	if (!window)
 		return 1;
 
 	// Load game
 	Director director;
-	director.init(Data::load_asset("main.lua"), window_width, window_height);
+	if (director.terminated()
+	    || (director.init(Data::load_asset("main.lua"), window_size),
+	        director.terminated()))
+	{
+		R_ERROR("[Rainbow] %s\n", director.error());
+		return 1;
+	}
 
 	Chrono chrono;
 	SDL_Event event;
@@ -149,7 +152,7 @@ int main(int argc, char *argv[])
 					switch (event.window.event)
 					{
 						case SDL_WINDOWEVENT_SIZE_CHANGED:
-							window.on_window_resized();
+							window.on_window_resized(director.renderer());
 							director.on_focus_gained();
 							break;
 						case SDL_WINDOWEVENT_FOCUS_GAINED:
@@ -186,15 +189,27 @@ int main(int argc, char *argv[])
 				case SDL_KEYUP:
 					Input::Instance->key_up(Key::from_raw(&event.key.keysym));
 					break;
-				case SDL_MOUSEMOTION:
-					window.on_mouse_motion(event.motion, chrono.current());
+				case SDL_MOUSEMOTION: {
+					const Vec2i &point =
+					    director.renderer().convert_to_flipped_view(
+					        Vec2i(event.motion.x, event.motion.y));
+					window.on_mouse_motion(point, chrono.current());
 					break;
-				case SDL_MOUSEBUTTONDOWN:
-					window.on_mouse_down(event.button, chrono.current());
+				}
+				case SDL_MOUSEBUTTONDOWN: {
+					const Vec2i &point =
+					    director.renderer().convert_to_flipped_view(
+					        Vec2i(event.button.x, event.button.y));
+					window.on_mouse_down(point, chrono.current());
 					break;
-				case SDL_MOUSEBUTTONUP:
-					window.on_mouse_up(event.button, chrono.current());
+				}
+				case SDL_MOUSEBUTTONUP: {
+					const Vec2i &point =
+					    director.renderer().convert_to_flipped_view(
+					        Vec2i(event.button.x, event.button.y));
+					window.on_mouse_up(point, chrono.current());
 					break;
+				}
 				default:
 					break;
 			}
@@ -213,7 +228,6 @@ int main(int argc, char *argv[])
 			director.update(chrono.delta());
 
 			// Draw
-			Renderer::clear();
 			director.draw();
 			window.swap();
 		}
@@ -221,10 +235,11 @@ int main(int argc, char *argv[])
 	return 0;
 }
 
-RenderWindow::RenderWindow(const uint_t width, const uint_t height)
+RenderWindow::RenderWindow(const Vec2i &window_size)
     : initialised(false), vsync(false), fullscreen(0), context(nullptr),
       window(nullptr),
-      window_position({ SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED })
+      window_position({ SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED }),
+      window_size(window_size)
 {
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
 	{
@@ -244,7 +259,8 @@ RenderWindow::RenderWindow(const uint_t width, const uint_t height)
 
 	this->window = SDL_CreateWindow(
 	    RAINBOW_BUILD, this->window_position.x, this->window_position.y,
-	    width, height, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
+	    this->window_size.width, this->window_size.height,
+	    SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
 	if (!this->window)
 	{
 		R_ERROR("[SDL] Failed to create window: %s\n", SDL_GetError());
@@ -262,15 +278,6 @@ RenderWindow::RenderWindow(const uint_t width, const uint_t height)
 	this->vsync = SDL_GL_GetSwapInterval() == 1;
 	R_DEBUG("[SDL] Sync with vertical retrace: %s\n",
 	        this->vsync ? "Yes" : "No");
-
-	this->initialised = Renderer::init();
-	if (!this->initialised)
-	{
-		R_ERROR("[Rainbow] Failed to initialize OpenGL\n");
-		return;
-	}
-
-	Renderer::set_resolution(width, height);
 }
 
 RenderWindow::~RenderWindow()
@@ -281,11 +288,7 @@ RenderWindow::~RenderWindow()
 	if (this->window)
 	{
 		if (this->context)
-		{
-			if (this->initialised)
-				Renderer::release();
 			SDL_GL_DeleteContext(this->context);
-		}
 		SDL_DestroyWindow(this->window);
 	}
 	SDL_Quit();
@@ -307,16 +310,15 @@ void RenderWindow::toggle_fullscreen()
 	SDL_SetWindowFullscreen(this->window, this->fullscreen);
 #else
 	SDL_bool bordered = SDL_TRUE;
-	const Vec2i &resolution = Renderer::resolution();
 	SDL_Rect window_rect{this->window_position.x, this->window_position.y,
-	                     resolution.width, resolution.height};
+	                     this->window_size.width, this->window_size.height};
 	if (this->fullscreen)
 	{
 		SDL_GetWindowPosition(
 		    this->window, &this->window_position.x, &this->window_position.y);
 		bordered = SDL_FALSE;
-		SDL_GetDisplayBounds(
-		    SDL_GetWindowDisplayIndex(this->window), &window_rect);
+		SDL_GetDisplayBounds(SDL_GetWindowDisplayIndex(this->window),
+		                     &window_rect);
 		window_rect.x = SDL_WINDOWPOS_CENTERED;
 		window_rect.y = SDL_WINDOWPOS_CENTERED;
 	}
@@ -326,11 +328,9 @@ void RenderWindow::toggle_fullscreen()
 #endif
 }
 
-void RenderWindow::on_mouse_down(const SDL_MouseButtonEvent &event,
+void RenderWindow::on_mouse_down(const Vec2i &point,
                                  const unsigned long timestamp)
 {
-	const Vec2i &point =
-	    Renderer::convert_to_flipped_view(Vec2i(event.x, event.y));
 	this->mouse.x = point.x;
 	this->mouse.y = point.y;
 	this->mouse.x0 = this->mouse.x;
@@ -339,24 +339,20 @@ void RenderWindow::on_mouse_down(const SDL_MouseButtonEvent &event,
 	Input::Instance->touch_began(&this->mouse, 1);
 }
 
-void RenderWindow::on_mouse_motion(const SDL_MouseMotionEvent &event,
+void RenderWindow::on_mouse_motion(const Vec2i &point,
                                    const unsigned long timestamp)
 {
 	this->mouse.x0 = this->mouse.x;
 	this->mouse.y0 = this->mouse.y;
-	const Vec2i &point =
-	    Renderer::convert_to_flipped_view(Vec2i(event.x, event.y));
 	this->mouse.x = point.x;
 	this->mouse.y = point.y;
 	this->mouse.timestamp = timestamp;
 	Input::Instance->touch_moved(&this->mouse, 1);
 }
 
-void RenderWindow::on_mouse_up(const SDL_MouseButtonEvent &event,
+void RenderWindow::on_mouse_up(const Vec2i &point,
                                const unsigned long timestamp)
 {
-	const Vec2i &point =
-	    Renderer::convert_to_flipped_view(Vec2i(event.x, event.y));
 	this->mouse.x = point.x;
 	this->mouse.y = point.y;
 	this->mouse.x0 = this->mouse.x;
@@ -365,14 +361,14 @@ void RenderWindow::on_mouse_up(const SDL_MouseButtonEvent &event,
 	Input::Instance->touch_ended(&this->mouse, 1);
 }
 
-void RenderWindow::on_window_resized()
+void RenderWindow::on_window_resized(Renderer &renderer)
 {
 	int width, height;
 	SDL_GetWindowSize(this->window, &width, &height);
-	const Vec2i &window_size = Renderer::window_size();
+	const Vec2i &window_size = renderer.window_size();
 	if (width == window_size.width && height == window_size.height)
 		return;
-	Renderer::set_window_size(width, height);
+	renderer.set_window_size(Vec2i(width, height));
 }
 
 RenderWindow::operator bool() const

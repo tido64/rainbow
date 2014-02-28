@@ -5,13 +5,10 @@
 #ifndef LUA_LUAMACHINE_H_
 #define LUA_LUAMACHINE_H_
 
-#include <cstring>
-
-#include <lua.hpp>
-
 #include "Common/NonCopyable.h"
 
 class Data;
+struct lua_State;
 namespace SceneGraph { class Node; }
 
 namespace Rainbow
@@ -25,10 +22,8 @@ namespace Rainbow
 		friend class Director;
 
 	public:
-		~LuaMachine();
-
 		/// Loads and initialises game script.
-		int init(const Data &main);
+		int start(const Data &main);
 
 		/// Calls game update function.
 		int update(const unsigned long t);
@@ -41,7 +36,11 @@ namespace Rainbow
 		Lua::SceneGraph *scenegraph;
 		lua_State *L;
 
-		LuaMachine(SceneGraph::Node *root);
+		LuaMachine();
+		~LuaMachine();
+
+		int init(SceneGraph::Node *root);
+		void terminate();
 	};
 
 	LuaMachine::operator lua_State*() const

@@ -31,7 +31,7 @@ public:
 	inline size_t count() const;
 
 	/// Returns the vertex array object.
-	inline const Renderer::VertexArray& vertex_array() const;
+	inline const VertexArray& vertex_array() const;
 
 	/// Returns label width.
 	inline unsigned int width() const;
@@ -61,18 +61,18 @@ public:
 	void update();
 
 private:
-	Colorb color_;                           ///< Color of the text.
-	float scale_;                            ///< Label scale factor.
-	Alignment alignment_;                    ///< Text alignment.
-	unsigned int count_;                     ///< Number of characters * 4 (i.e. vertices).
-	unsigned int stale_;                     ///< Flags indicating need for update.
-	unsigned int width_;                     ///< Label width.
-	size_t size_;                            ///< Size of the char array.
-	std::unique_ptr<char[]> text_;           ///< Content of this label.
-	Vec2f position_;                         ///< Position of the text (top left).
-	SharedPtr<FontAtlas> font_;              ///< The font used in this label.
-	Renderer::Buffer<SpriteVertex> buffer_;  ///< Vertex buffer.
-	Renderer::VertexArray array_;            ///< Vertex array object.
+	Colorb color_;                  ///< Color of the text.
+	float scale_;                   ///< Label scale factor.
+	Alignment alignment_;           ///< Text alignment.
+	unsigned int count_;            ///< Number of characters * 4 (i.e. vertices).
+	unsigned int stale_;            ///< Flags indicating need for update.
+	unsigned int width_;            ///< Label width.
+	size_t size_;                   ///< Size of the char array.
+	std::unique_ptr<char[]> text_;  ///< Content of this label.
+	Vec2f position_;                ///< Position of the text (top left).
+	SharedPtr<FontAtlas> font_;     ///< The font used in this label.
+	Buffer<SpriteVertex> buffer_;   ///< Vertex buffer.
+	VertexArray array_;             ///< Vertex array object.
 
 	/// Aligns individual characters.
 	/// \param length  Negative length of characters from \p start to \p end.
@@ -91,7 +91,7 @@ size_t Label::count() const
 	return this->count_ + (this->count_ >> 1);
 }
 
-const Renderer::VertexArray& Label::vertex_array() const
+const VertexArray& Label::vertex_array() const
 {
 	return this->array_;
 }

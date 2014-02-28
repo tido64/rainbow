@@ -7,12 +7,6 @@
 
 #include "Common/Vector.h"
 
-namespace Renderer
-{
-	bool init();
-	void release();
-}
-
 /// Manages texture resources.
 ///
 /// Generates and reuses texture ids whenever possible. This should eliminate
@@ -26,8 +20,7 @@ namespace Renderer
 /// for a while.
 class TextureManager : private NonCopyable<TextureManager>
 {
-	friend bool Renderer::init();
-	friend void Renderer::release();
+	friend class Renderer;
 
 public:
 	static TextureManager *Instance;

@@ -5,20 +5,14 @@
 #ifndef GRAPHICS_SHADERMANAGER_H_
 #define GRAPHICS_SHADERMANAGER_H_
 
+#include "Common/Vec2.h"
 #include "Common/Vector.h"
 #include "Graphics/OpenGL.h"
 #include "Graphics/ShaderDetails.h"
 
-namespace Renderer
-{
-	bool init();
-	void release();
-}
-
 class ShaderManager : private NonCopyable<ShaderManager>
 {
-	friend bool Renderer::init();
-	friend void Renderer::release();
+	friend class Renderer;
 
 public:
 	/// Saves the current shader context and restores it when exiting scope.
@@ -48,10 +42,7 @@ public:
 	inline Shader::Details& get_program(const int pid) const;
 
 	/// Sets viewport.
-	/// TODO: Setting the viewport after changing the projection won't work. For
-	///       now, this function works only because we don't change resolution
-	///       on the devices.
-	void set(const float width, const float height);
+	void set(const Vec2i &);
 
 	/// Sets orthographic projection.
 	void set_projection(const float left, const float right,
@@ -59,9 +50,6 @@ public:
 
 	/// Activates program.
 	void use(const int program);
-
-	/// Returns whether ShaderManager was properly constructed.
-	inline operator bool() const;
 
 private:
 	int active;  ///< Currently active program.
@@ -74,8 +62,7 @@ private:
 	ShaderManager();
 	~ShaderManager();
 
-	/// Initialises shaders. Run when setting the viewport for the first time.
-	void initialise();
+	void init();
 };
 
 ShaderManager::Context::Context() : program(ShaderManager::Instance->active) { }
@@ -95,11 +82,6 @@ Shader::Details& ShaderManager::get_program(const int pid) const
 {
 	R_ASSERT(pid >= 0, "Invalid shader program id");
 	return this->programs[pid];
-}
-
-ShaderManager::operator bool() const
-{
-	return this->programs.size();
 }
 
 #endif

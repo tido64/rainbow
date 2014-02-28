@@ -3,10 +3,9 @@
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
 #include "Graphics/Drawable.h"
+#include "Graphics/Renderer.h"
 #include "Graphics/ShaderDetails.h"
 #include "Graphics/SpriteBatch.h"
-
-namespace Renderer { extern const size_t kNumSprites; }
 
 namespace
 {

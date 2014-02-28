@@ -10,34 +10,31 @@
 #include "Graphics/OpenGL.h"
 #undef USE_VERTEX_ARRAY_OBJECT  // TODO
 
-namespace Renderer
+/// Implements the equivalent of OpenGL's vertex array object.
+class VertexArray
 {
-	/// Implements the equivalent of OpenGL's vertex array object.
-	class VertexArray
-	{
-	public:
-		static void unbind();
+public:
+	static void unbind();
 
-		VertexArray(std::function<void()> &&f);
-		~VertexArray();
+	VertexArray(std::function<void()> &&f);
+	~VertexArray();
 
-		void bind() const;
+	void bind() const;
 
-		inline operator bool() const;
+	inline operator bool() const;
 
-	private:
-		bool valid_;
-	#ifdef USE_VERTEX_ARRAY_OBJECT
-		unsigned int array_;
-	#else
-		std::function<void()> bind_;
-	#endif
-	};
+private:
+	bool valid_;
+#ifdef USE_VERTEX_ARRAY_OBJECT
+	unsigned int array_;
+#else
+	std::function<void()> bind_;
+#endif
+};
 
-	VertexArray::operator bool() const
-	{
-		return this->valid_;
-	}
+VertexArray::operator bool() const
+{
+	return this->valid_;
 }
 
 #endif

@@ -16,7 +16,7 @@ namespace Heimdall
 		inline Overlay();
 		virtual ~Overlay();
 
-		void setup(const int width, const int height);
+		void setup(const Vec2i &screen);
 
 	private:
 		unsigned int texture;

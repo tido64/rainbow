@@ -17,7 +17,7 @@ namespace Heimdall
 			TextureManager::Instance->remove(this->texture);
 	}
 
-	void Overlay::setup(const int width, const int height)
+	void Overlay::setup(const Vec2i &screen)
 	{
 		const unsigned char white[4096] = { 0xff };
 		this->texture = TextureManager::Instance->create(
@@ -27,13 +27,13 @@ namespace Heimdall
 		this->vertices[0].texcoord    = Vec2f(0.5f, 0.5f);
 		this->vertices[1].color       = this->vertices[0].color;
 		this->vertices[1].texcoord    = this->vertices[0].texcoord;
-		this->vertices[1].position.x  = width;
+		this->vertices[1].position.x  = screen.width;
 		this->vertices[2].color       = this->vertices[0].color;
 		this->vertices[2].texcoord    = this->vertices[0].texcoord;
-		this->vertices[2].position    = Vec2f(width, height);
+		this->vertices[2].position    = Vec2f(screen.width, screen.height);
 		this->vertices[3].color       = this->vertices[0].color;
 		this->vertices[3].texcoord    = this->vertices[0].texcoord;
-		this->vertices[3].position.y  = height;
+		this->vertices[3].position.y  = screen.height;
 	}
 
 	void Overlay::draw_impl()

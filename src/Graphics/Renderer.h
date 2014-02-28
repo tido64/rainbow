@@ -6,13 +6,19 @@
 #define GRAPHICS_RENDERER_H_
 
 #include "Common/Vec2.h"
+#include "Graphics/ShaderManager.h"
+#include "Graphics/TextureManager.h"
 
 struct SpriteVertex;
 
+namespace Rainbow { class Director; }
 namespace SceneGraph { class Node; }
 
-namespace Renderer
+class Renderer
 {
+	friend class Rainbow::Director;
+
+public:
 	enum class ZoomMode
 	{
 		LetterBox,  // Keeps aspect ratio, creating black borders if necessary.
@@ -20,26 +26,45 @@ namespace Renderer
 		Zoom        // Zooms in to fill the screen, cropping excess pixels.
 	};
 
-	bool init();
-	void release();
+	static const size_t kNumSprites = 256;  ///< Hard-coded limit on number of sprites.
 
-	Vec2i resolution();
-	Vec2i window_size();
-
-	void set_resolution(const int width, const int height);
-	void set_window_size(const int width, const int height);
-	void set_zoom_mode(const ZoomMode zoom);
-
-	void clear();
-
-	Vec2i convert_to_flipped_view(const Vec2i &);
-	Vec2i convert_to_view(const Vec2i &);
+	static void clear();
 
 	template<typename T>
-	void draw(const T &);
-	void draw(const SceneGraph::Node &);
+	static void draw(const T &);
+	static void draw(const SceneGraph::Node &);
 
-	void draw_elements(const SpriteVertex *vertices, const unsigned int count);
+	static void draw_elements(const SpriteVertex *vertices,
+	                          const unsigned int count);
+
+	inline const Vec2i& window_size() const;
+
+	void set_resolution(const Vec2i &resolution);
+	void set_window_size(const Vec2i &size);
+	void set_zoom_mode(const ZoomMode zoom);
+
+	Vec2i convert_to_flipped_view(const Vec2i &) const;
+	Vec2i convert_to_view(const Vec2i &) const;
+
+private:
+	ZoomMode zoom_mode;
+	unsigned int index_buffer;
+	Vec2f scale;
+	Vec2i origin;
+	Vec2i view;
+	Vec2i window;
+	TextureManager texture_manager;
+	ShaderManager shader_manager;
+
+	Renderer();
+	~Renderer();
+
+	bool init();
+};
+
+const Vec2i& Renderer::window_size() const
+{
+	return this->window;
 }
 
 #endif
