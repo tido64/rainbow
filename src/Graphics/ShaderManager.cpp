@@ -24,11 +24,12 @@ namespace
 		{ Shader::kAttributeNone, nullptr }
 	};
 
-	void set_projection_matrix(const GLuint program, const GLfloat *ortho)
+	void set_projection_matrix(const Shader::Details &details,
+	                           const std::array<float, 16> &ortho)
 	{
-		const int location = glGetUniformLocation(program, "mvp_matrix");
+		const int location = glGetUniformLocation(details.program, "mvp_matrix");
 		R_ASSERT(location >= 0, "Shader is missing a projection matrix");
-		glUniformMatrix4fv(location, 1, GL_FALSE, ortho);
+		glUniformMatrix4fv(location, 1, GL_FALSE, ortho.data());
 	}
 
 	unique_str verify(const GLuint id,
@@ -147,7 +148,7 @@ void ShaderManager::set(const Vec2i &resolution)
 		this->active = 0;
 		const Shader::Details &details = this->programs[this->active];
 		glUseProgram(details.program);
-		set_projection_matrix(details.program, this->ortho);
+		set_projection_matrix(details, this->ortho);
 		glUniform1i(glGetUniformLocation(this->programs[0].program, "texture"),
 		            0);
 		glEnableVertexAttribArray(Shader::kAttributeVertex);
@@ -155,17 +156,17 @@ void ShaderManager::set(const Vec2i &resolution)
 		glEnableVertexAttribArray(Shader::kAttributeTexCoord);
 		return;
 	}
-	set_projection_matrix(this->programs[this->active].program, this->ortho);
+	set_projection_matrix(this->programs[this->active], this->ortho);
 }
 
 void ShaderManager::set_projection(const float left, const float right,
                                    const float bottom, const float top)
 {
-	this->ortho[0] = 2.0f / (right - left);
-	this->ortho[3] = -(right + left) / (right - left);
-	this->ortho[5] = 2.0f / (top - bottom);
-	this->ortho[7] = -(top + bottom) / (top - bottom);
-	set_projection_matrix(this->programs[this->active].program, this->ortho);
+	this->ortho[ 0] = 2.0f / (right - left);
+	this->ortho[ 5] = 2.0f / (top - bottom);
+	this->ortho[12] = -(right + left) / (right - left);
+	this->ortho[13] = -(top + bottom) / (top - bottom);
+	set_projection_matrix(this->programs[this->active], this->ortho);
 }
 
 void ShaderManager::use(const int program)
@@ -178,7 +179,7 @@ void ShaderManager::use(const int program)
 	const Shader::Details &details = this->programs[this->active];
 	glUseProgram(details.program);
 
-	set_projection_matrix(details.program, this->ortho);
+	set_projection_matrix(details, this->ortho);
 
 	if (details.texture0 != current.texture0)
 	{
@@ -189,7 +190,11 @@ void ShaderManager::use(const int program)
 	}
 }
 
-ShaderManager::ShaderManager() : active(-1)
+ShaderManager::ShaderManager()
+    : active(-1), ortho{{ 1.0f,  0.0f,  0.0f, 0.0f,
+                          0.0f,  1.0f,  0.0f, 0.0f,
+                          0.0f,  0.0f, -1.0f, 0.0f,
+                         -1.0f, -1.0f,  0.0f, 1.0f }}
 {
 	R_ASSERT(Instance == nullptr, "There can be only one ShaderManager");
 }
@@ -222,14 +227,5 @@ void ShaderManager::init()
 		R_ASSERT(pid >= 0, "Failed to compile default shader");
 		return;
 	}
-
-	memset(this->ortho, 0, sizeof(this->ortho));
-	this->ortho[ 0] =  1.0f;
-	this->ortho[ 3] = -1.0f;
-	this->ortho[ 5] =  1.0f;
-	this->ortho[ 7] = -1.0f;
-	this->ortho[10] = -1.0f;
-	this->ortho[15] =  1.0f;
-
 	Instance = this;
 }

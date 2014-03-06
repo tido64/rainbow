@@ -5,6 +5,8 @@
 #ifndef GRAPHICS_SHADERMANAGER_H_
 #define GRAPHICS_SHADERMANAGER_H_
 
+#include <array>
+
 #include "Common/Vec2.h"
 #include "Common/Vector.h"
 #include "Graphics/OpenGL.h"
@@ -57,7 +59,14 @@ private:
 	Vector<unsigned int> shaders;
 	Vector<Shader::Details> programs;
 
-	float ortho[16];
+	/// The orthographic projection matrix is defined as:
+	///   | 2 / (r - l)        0             0       -(r + l) / (r - l) |
+	///   |      0        2 / (t - b)        0       -(t + b) / (t - b) |
+	///   |      0             0       -2 / (f - n)  -(f + n) / (f - n) |
+	///   |      0             0             0                0         |
+	/// Where b = bottom, f = far, l = left, n = near, r = right, t = top, and
+	/// near = -1.0 and far = 1.0. The matrix is stored in column-major order.
+	std::array<float, 16> ortho;
 
 	ShaderManager();
 	~ShaderManager();
