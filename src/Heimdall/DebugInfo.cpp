@@ -6,7 +6,7 @@
 
 #include "Graphics/SceneGraph.h"
 #include "Heimdall/DebugInfo.h"
-#include "Heimdall/Resources.h"
+#include "Heimdall/Style.h"
 #include "Input/Touch.h"
 
 namespace Heimdall
@@ -21,22 +21,22 @@ namespace Heimdall
 	DebugInfo::DebugInfo() : node_(new SceneGraph::Node())
 	{
 		this->node_->enabled = false;
-		this->button_.set_color(Resources::kColorDisabled);
+		this->button_.set_color(Color::InactiveFont());
 		this->button_.set_text(kStringShowDebug);
-		this->label_.set_color(Colorb(0xff, 0x00, 0x00));
+		this->label_.set_color(Color::DebugInfoFont());
 		this->node_->add_child(&this->label_);
 	}
 
-	void DebugInfo::set_button(const Vec2f &position)
+	void DebugInfo::set_button(const Vec2f &position, FontAtlas *font)
 	{
-		this->button_.set_font(Resources::UIFont);
+		this->button_.set_font(font);
 		this->button_.set_position(position);
 		this->position_ = position;
 	}
 
-	void DebugInfo::set_console(const Vec2f &position)
+	void DebugInfo::set_console(const Vec2f &position, FontAtlas *font)
 	{
-		this->label_.set_font(Resources::ConsoleFont);
+		this->label_.set_font(font);
 		this->label_.set_position(position);
 	}
 
@@ -54,7 +54,7 @@ namespace Heimdall
 	bool DebugInfo::on_touch(const Touch *const touches, const size_t count)
 	{
 		const int x1 = this->position_.x + this->button_.width();
-		const int y1 = this->position_.y + Resources::UIFont->height();
+		const int y1 = this->position_.y + this->button_.font()->height();
 		for (size_t i = 0; i < count; ++i)
 		{
 			if (touches[0].x >= this->position_.x && touches[0].x <= x1
@@ -63,12 +63,12 @@ namespace Heimdall
 				this->node_->enabled = !this->node_->enabled;
 				if (this->node_->enabled)
 				{
-					this->button_.set_color(Resources::kColorEnabled);
+					this->button_.set_color(Color::NormalFont());
 					this->button_.set_text(kStringHideDebug);
 				}
 				else
 				{
-					this->button_.set_color(Resources::kColorDisabled);
+					this->button_.set_color(Color::InactiveFont());
 					this->button_.set_text(kStringShowDebug);
 				}
 				return true;

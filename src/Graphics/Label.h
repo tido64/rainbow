@@ -30,6 +30,9 @@ public:
 	/// Returns the vertex count.
 	inline size_t count() const;
 
+	/// Returns the assigned font.
+	inline const FontAtlas* font() const;
+
 	/// Returns the vertex array object.
 	inline const VertexArray& vertex_array() const;
 
@@ -89,6 +92,11 @@ const Colorb& Label::color() const
 size_t Label::count() const
 {
 	return this->count_ + (this->count_ >> 1);
+}
+
+const FontAtlas* Label::font() const
+{
+	return this->font_.get();
 }
 
 const VertexArray& Label::vertex_array() const

@@ -8,7 +8,6 @@
 #include "FileSystem/File.h"
 #include "FileSystem/Path.h"
 #include "Heimdall/Gatekeeper.h"
-#include "Heimdall/Resources.h"
 #include "Lua/LuaHelper.h"
 #include "Resources/Inconsolata.otf.h"
 #include "Resources/NewsCycle-Regular.ttf.h"
@@ -51,14 +50,6 @@ namespace
 
 namespace Heimdall
 {
-	namespace Resources
-	{
-		const Colorb kColorDisabled(0xff, 0xff, 0xff, 0xb0);
-		const Colorb kColorEnabled;
-		FontAtlas *ConsoleFont = nullptr;
-		FontAtlas *UIFont = nullptr;
-	}
-
 	Gatekeeper::Gatekeeper()
 	    : touch_count(0), touch_held(0), overlay_node(nullptr),
 	      monitor(Path::current())
@@ -78,32 +69,22 @@ namespace Heimdall
 		this->touch_canceled();
 	}
 
-	Gatekeeper::~Gatekeeper()
-	{
-		Resources::ConsoleFont = nullptr;
-		Resources::UIFont = nullptr;
-	}
-
 	void Gatekeeper::init(const Data &main, const Vec2i &screen)
 	{
-		this->screen = screen;
+		this->overlay.setup(screen);
 
-		const unsigned int pt = this->screen.height / 64;
-		this->console_font = new FontAtlas(DataRef(Inconsolata_otf), pt);
-		this->ui_font = new FontAtlas(DataRef(NewsCycle_Regular_ttf),
-		                              (pt << 1) + (pt >> 1));
-		Resources::ConsoleFont = this->console_font.get();
-		Resources::UIFont = this->ui_font.get();
-
-		this->overlay.setup(this->screen);
-		const float y = this->screen.height - this->console_font->height();
-		Vec2f position(this->screen.width / 128,
-		               y - this->console_font->height() - this->ui_font->height());
-		this->info.set_button(position);
+		const unsigned int pt = screen.height / 64;
+		FontAtlas *console_font = new FontAtlas(DataRef(Inconsolata_otf), pt);
+		FontAtlas *ui_font = new FontAtlas(DataRef(NewsCycle_Regular_ttf),
+		                                   (pt << 1) + (pt >> 1));
+		const float y = screen.height - console_font->height();
+		Vec2f position(screen.width / 128,
+		               y - console_font->height() - ui_font->height());
+		this->info.set_button(position, ui_font);
 		position.y = y;
-		this->info.set_console(position);
+		this->info.set_console(position, console_font);
 
-		Director::init(main, this->screen);
+		Director::init(main, screen);
 		Input::Instance->subscribe(this, Input::Events::Touch);
 	}
 

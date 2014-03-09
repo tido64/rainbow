@@ -51,4 +51,10 @@
 #	endif
 #endif
 
+// Workaround for warning C4425:
+//     'constexpr' was ignored (class literal types are not yet supported)
+#if defined(_MSC_VER) && _MSC_VER <= 1800
+#	define constexpr inline
+#endif
+
 #endif  // PLATFORM_MACROS_H_

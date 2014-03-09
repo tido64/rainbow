@@ -6,6 +6,7 @@
 #define COMMON_COLOR_H_
 
 #include "Common/Debug.h"
+#include "Platform/Macros.h"  // TODO: Remove when MSVC implements 'constexpr'
 
 namespace Rainbow
 {
@@ -19,12 +20,12 @@ namespace Rainbow
 	{
 		unsigned char r, g, b, a;
 
-		Color() : r(0xff), g(0xff), b(0xff), a(0xff) { }
+		constexpr Color() : r(0xff), g(0xff), b(0xff), a(0xff) { }
 
-		Color(const unsigned char r,
-		      const unsigned char g,
-		      const unsigned char b,
-		      const unsigned char a = 0xff)
+		constexpr Color(const unsigned char r,
+		                const unsigned char g,
+		                const unsigned char b,
+		                const unsigned char a = 0xff)
 		    : r(r), g(g), b(b), a(a) { }
 
 		Color<unsigned char>& operator=(const unsigned int c)
@@ -46,18 +47,18 @@ namespace Rainbow
 	{
 		float r, g, b, a;
 
-		Color() : r(1.0f), g(1.0f), b(1.0f), a(1.0f) { }
+		constexpr Color() : r(1.0f), g(1.0f), b(1.0f), a(1.0f) { }
 
-		Color(const unsigned int c)
+		constexpr Color(const unsigned int c)
 		    : r((0xff & (c >> 24)) * 1.0f / 255.0f),
 		      g((0xff & (c >> 16)) * 1.0f / 255.0f),
 		      b((0xff & (c >> 8)) * 1.0f / 255.0f),
 		      a((0xff & (c)) * 1.0f / 255.0f) { }
 
-		Color(const float r,
-		      const float g,
-		      const float b,
-		      const float a = 1.0f)
+		constexpr Color(const float r,
+		                const float g,
+		                const float b,
+		                const float a = 1.0f)
 		    : r(r), g(g), b(b), a(a) { }
 
 		Color<float>& operator=(const unsigned int c)

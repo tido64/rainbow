@@ -22,16 +22,16 @@ namespace Heimdall
 		inline Label* button();
 		inline SceneGraph::Node* node();
 
-		void set_button(const Vec2f &position);
-		void set_console(const Vec2f &position);
+		void set_button(const Vec2f &position, FontAtlas *font);
+		void set_console(const Vec2f &position, FontAtlas *font);
 
 		void update(const unsigned long dt);
 
 		bool on_touch(const Touch *const touches, const size_t count);
 
 	private:
-		Vec2f position_;
 		SceneGraph::Node *node_;
+		Vec2f position_;
 		Label button_;
 		Label label_;
 		char text_[128];

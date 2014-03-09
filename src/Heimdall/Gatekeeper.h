@@ -30,7 +30,6 @@ namespace Heimdall
 	{
 	public:
 		Gatekeeper();
-		~Gatekeeper();
 
 		/* Director overrides */
 
@@ -41,10 +40,7 @@ namespace Heimdall
 	private:
 		unsigned int touch_count;
 		unsigned long touch_held;
-		SharedPtr<FontAtlas> console_font;
-		SharedPtr<FontAtlas> ui_font;
 		SceneGraph::Node *overlay_node;
-		Vec2i screen;
 		SceneGraph::Node scenegraph;
 		Touch touches[2];
 		ChangeMonitor monitor;

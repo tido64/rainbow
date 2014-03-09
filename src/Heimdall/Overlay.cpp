@@ -8,6 +8,7 @@
 #include "Graphics/Renderer.h"
 #include "Graphics/TextureManager.h"
 #include "Heimdall/Overlay.h"
+#include "Heimdall/Style.h"
 
 namespace Heimdall
 {
@@ -23,7 +24,7 @@ namespace Heimdall
 		this->texture = TextureManager::Instance->create(
 				GL_LUMINANCE, 64, 64, GL_LUMINANCE, white);
 
-		this->vertices[0].color       = 0x00000080;
+		this->vertices[0].color       = Color::Overlay();
 		this->vertices[0].texcoord    = Vec2f(0.5f, 0.5f);
 		this->vertices[1].color       = this->vertices[0].color;
 		this->vertices[1].texcoord    = this->vertices[0].texcoord;
