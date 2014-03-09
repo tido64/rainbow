@@ -4,6 +4,8 @@
 
 #include "Common/Data.h"
 #include "Config.h"
+#include "FileSystem/File.h"
+#include "FileSystem/Path.h"
 #include "Lua/LuaHelper.h"
 
 namespace Rainbow
@@ -11,12 +13,21 @@ namespace Rainbow
 	Config::Config()
 	    : accelerometer_(true), suspend_(true), width_(0), height_(0)
 	{
-		const Data &config = Data::load_asset("config");
+		const char kConfigModule[] = "config";
+
+		const Path path(kConfigModule, Path::RelativeTo::CurrentPath);
+		if (!path.is_file())
+		{
+			R_DEBUG("[Rainbow] No config file was found\n");
+			return;
+		}
+
+		const Data config(File::open(path));
 		if (!config)
 			return;
 
 		lua_State *L = luaL_newstate();
-		if (Rainbow::Lua::load(L, config, "config") == 0)
+		if (Rainbow::Lua::load(L, config, kConfigModule) == 0)
 			return;
 
 		lua_getglobal(L, "accelerometer");

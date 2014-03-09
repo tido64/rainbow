@@ -7,17 +7,18 @@
 
 #include "Common/Data.h"
 #include "FileSystem/File.h"
+#include "FileSystem/Path.h"
 #include "Lua/LuaDebugging.h"
 #include "Lua/LuaHelper.h"
 
 namespace
 {
-	const char kLuaErrorGeneral[] = "general";
-	const char kLuaErrorRuntime[] = "runtime";
-	const char kLuaErrorSyntax[]  = "syntax";
-	const char kLuaErrorMemory[]  = "memory allocation";
-	const char kLuaErrorErrorHandling[] = "error handling";
-	const char kLuaErrorType[] = "Object is not of type '%s'";
+	const char kLuaErrorErrorHandling[]  = "error handling";
+	const char kLuaErrorGeneral[]        = "general";
+	const char kLuaErrorMemory[]         = "memory allocation";
+	const char kLuaErrorRuntime[]        = "runtime";
+	const char kLuaErrorSyntax[]         = "syntax";
+	const char kLuaErrorType[]           = "Object is not of type '%s'";
 
 	int load_module(lua_State *L,
 	                char *const path,
@@ -26,7 +27,10 @@ namespace
 	{
 		strcpy(path, module);
 		strcat(path, suffix);
-		const File &file = File::open_asset(path);
+		const Path asset(path, Path::RelativeTo::CurrentPath);
+		if (!asset.is_file())
+			return 0;
+		const File &file = File::open(asset);
 		if (!file)
 			return 0;
 		const int result = Rainbow::Lua::load(L, Data(file), module, false);
@@ -72,9 +76,8 @@ namespace Rainbow
 			const char *module = lua_tostring(L, -1);
 			std::unique_ptr<char[]> path(new char[strlen(module) + 10]);
 			const int result = load_module(L, path.get(), module, ".lua");
-			return (result == 0)
-					? load_module(L, path.get(), module, "/init.lua")
-					: result;
+			return (!result) ? load_module(L, path.get(), module, "/init.lua")
+			                 : result;
 		}
 
 		int
