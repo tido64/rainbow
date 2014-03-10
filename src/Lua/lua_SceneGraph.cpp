@@ -89,6 +89,8 @@ NS_RAINBOW_LUA_BEGIN
 	void SceneGraph::destroy(lua_State *L, SceneGraph *scenegraph)
 	{
 		lua_getglobal(L, "rainbow");
+		if (!lua_istable(L, -1))
+			return;
 		lua_pushlstring(L, class_name, sizeof(class_name) / sizeof(char) - 1);
 		lua_pushnil(L);
 		lua_rawset(L, -3);

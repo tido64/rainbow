@@ -5,7 +5,6 @@
 #include <lua.hpp>
 
 #include "Common/Data.h"
-#include "ConFuoco/Mixer.h"
 #include "Director.h"
 #include "Graphics/TextureManager.h"
 #include "Lua/lua_Platform.h"
@@ -15,7 +14,9 @@ namespace Rainbow
 	Director::Director()
 	    : active_(true), terminated_(false), error_(nullptr), input_(lua_)
 	{
-		if (!this->renderer_.init())
+		if (!ConFuoco::Mixer::Instance)
+			this->terminate("Failed to initialise audio engine");
+		else if (!this->renderer_.init())
 			this->terminate("Failed to initialise renderer");
 		else if (this->lua_.init(&this->scenegraph_) != LUA_OK)
 			this->terminate("Failed to initialise Lua");
@@ -23,9 +24,6 @@ namespace Rainbow
 
 	Director::~Director()
 	{
-		if (!ShaderManager::Instance)
-			return;
-
 		// Lua must be allowed to clean up before we tear down the graphics
 		// context.
 		this->lua_.terminate();
@@ -55,7 +53,7 @@ namespace Rainbow
 	{
 		R_ASSERT(!this->terminated_, "App should have terminated by now");
 
-		ConFuoco::Mixer::Instance->update();
+		this->mixer_.update();
 		if (this->lua_.update(dt))
 		{
 			this->terminate();
@@ -70,13 +68,13 @@ namespace Rainbow
 		R_ASSERT(!this->terminated_, "App should have terminated by now");
 
 		this->active_ = true;
-		ConFuoco::Mixer::Instance->suspend(false);
+		this->mixer_.suspend(false);
 	}
 
 	void Director::on_focus_lost()
 	{
 		this->active_ = false;
-		ConFuoco::Mixer::Instance->suspend(true);
+		this->mixer_.suspend(true);
 	}
 
 	void Director::on_memory_warning()

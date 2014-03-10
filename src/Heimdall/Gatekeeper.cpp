@@ -54,11 +54,15 @@ namespace Heimdall
 	    : touch_count(0), touch_held(0), overlay_node(nullptr),
 	      monitor(Path::current())
 	{
-		this->scenegraph.add_child(this->info.node());
+		if (this->terminated())
+			return;
+
+		this->info.reset(new DebugInfo());
+		this->scenegraph.add_child(this->info->node());
 
 		this->overlay_node = this->scenegraph.add_child(&this->overlay);
 		this->overlay_node->enabled = false;
-		this->overlay_node->add_child(this->info.button());
+		this->overlay_node->add_child(this->info->button());
 
 		this->monitor.set_callback([this](const char *path) {
 			char *file = new char[strlen(path) + 1];
@@ -80,9 +84,9 @@ namespace Heimdall
 		const float y = screen.height - console_font->height();
 		Vec2f position(screen.width / 128,
 		               y - console_font->height() - ui_font->height());
-		this->info.set_button(position, ui_font);
+		this->info->set_button(position, ui_font);
 		position.y = y;
-		this->info.set_console(position, console_font);
+		this->info->set_console(position, console_font);
 
 		Director::init(main, screen);
 		Input::Instance->subscribe(this, Input::Events::Touch);
@@ -108,7 +112,7 @@ namespace Heimdall
 			if (this->touch_held > 2000)
 				this->toggle_overlay();
 		}
-		this->info.update(dt);
+		this->info->update(dt);
 		this->scenegraph.update(dt);
 	}
 
@@ -150,7 +154,7 @@ namespace Heimdall
 	{
 		if (this->overlay_node->enabled && !this->touch_count)
 		{
-			if (!this->info.on_touch(touches, count))
+			if (!this->info->on_touch(touches, count))
 				this->toggle_overlay();
 			return;
 		}

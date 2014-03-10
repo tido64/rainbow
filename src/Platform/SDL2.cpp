@@ -22,11 +22,10 @@
 #	include "../tests/test.h"
 #endif
 
-#include "Config.h"
-#include "Director.h"
 #include "Common/Chrono.h"
 #include "Common/Data.h"
-#include "ConFuoco/Mixer.h"
+#include "Config.h"
+#include "Director.h"
 #include "FileSystem/Path.h"
 #include "Graphics/Renderer.h"
 #include "Input/Input.h"
@@ -109,10 +108,6 @@ int main(int argc, char *argv[])
 		#endif
 		}
 	}
-
-	ConFuoco::Mixer mixer;
-	if (!ConFuoco::Mixer::Instance)
-		return 1;
 
 	Vec2i window_size(1280, 720);
 

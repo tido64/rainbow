@@ -40,12 +40,12 @@ namespace Heimdall
 	private:
 		unsigned int touch_count;
 		unsigned long touch_held;
+		std::unique_ptr<DebugInfo> info;
 		SceneGraph::Node *overlay_node;
 		SceneGraph::Node scenegraph;
 		Touch touches[2];
 		ChangeMonitor monitor;
 		Overlay overlay;
-		DebugInfo info;
 
 		boost::lockfree::spsc_queue<const char *,
 		                            boost::lockfree::capacity<1024>> queue;

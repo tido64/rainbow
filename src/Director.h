@@ -5,6 +5,7 @@
 #ifndef DIRECTOR_H_
 #define DIRECTOR_H_
 
+#include "ConFuoco/Mixer.h"
 #include "Graphics/Renderer.h"
 #include "Graphics/SceneGraph.h"
 #include "Input/Input.h"
@@ -58,6 +59,7 @@ namespace Rainbow
 		SceneGraph::Node scenegraph_;
 		Input input_;
 		Renderer renderer_;
+		ConFuoco::Mixer mixer_;
 
 		void terminate(const char *error);
 	};

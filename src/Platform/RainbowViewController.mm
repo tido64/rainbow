@@ -6,10 +6,9 @@
 
 #import <CoreMotion/CoreMotion.h>
 
+#include "Common/Data.h"
 #include "Config.h"
 #include "Director.h"
-#include "Common/Data.h"
-#include "ConFuoco/Mixer.h"
 #include "Graphics/Renderer.h"
 #include "Input/Touch.h"
 
@@ -22,7 +21,6 @@ namespace
 
 @interface RainbowViewController () {
 @private
-	ConFuoco::Mixer _mixer;
 	Touch _touchesArray[kMaxTouches];
 }
 @property (strong, nonatomic) EAGLContext *context;

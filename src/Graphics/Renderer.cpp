@@ -75,7 +75,8 @@ void Renderer::draw_elements(const SpriteVertex *vertices,
 	R_ASSERT(glGetError() == GL_NO_ERROR, "Failed to draw elements");
 }
 
-Renderer::Renderer() : zoom_mode(ZoomMode::LetterBox), scale(1.0f, 1.0f) { }
+Renderer::Renderer()
+    : zoom_mode(ZoomMode::LetterBox), index_buffer(0), scale(1.0f, 1.0f) { }
 
 Renderer::~Renderer()
 {

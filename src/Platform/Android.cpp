@@ -14,11 +14,10 @@
 #include <android/sensor.h>
 #include <android_native_app_glue.h>
 
-#include "Config.h"
-#include "Director.h"
 #include "Common/Chrono.h"
 #include "Common/Data.h"
-#include "ConFuoco/Mixer.h"
+#include "Config.h"
+#include "Director.h"
 #include "FileSystem/Path.h"
 #include "Graphics/Renderer.h"
 #include "Input/Input.h"
@@ -41,7 +40,6 @@ struct AInstance
 	EGLSurface surface;
 	EGLContext context;
 	std::unique_ptr<Director> director;
-	ConFuoco::Mixer mixer;
 
 	AInstance()
 	    : active(false), done(false), initialised(false), app(nullptr),
