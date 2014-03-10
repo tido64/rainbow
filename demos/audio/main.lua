@@ -9,7 +9,7 @@ function test()
 	local file = "maja_id.ogg"
 
 	print("Test: Load music")
-	local music = rainbow_audio.create_sound(file, 1)
+	local music = rainbow_audio.create_sound(file, rainbow_audio.STREAM)
 	Coroutine.wait(5000)
 
 	print("Test: Play music")
@@ -65,7 +65,7 @@ function test()
 	Coroutine.wait(3000)
 
 	print("Test: Loop test (once)")
-	music = rainbow_audio.create_sound(file, 1, 1)
+	music = rainbow_audio.create_sound(file, rainbow_audio.STREAM, 1)
 	ch = rainbow_audio.play(music)
 	Coroutine.wait(1000 * 60 * 10)
 end
