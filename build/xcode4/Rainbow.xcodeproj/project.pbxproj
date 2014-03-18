@@ -148,7 +148,6 @@
 		19905B88152C50FA00BDD15C /* Parallax.lua in Resources */ = {isa = PBXBuildFile; fileRef = 19905B7E152C50FA00BDD15C /* Parallax.lua */; };
 		19905B8A152C50FA00BDD15C /* Stack.lua in Resources */ = {isa = PBXBuildFile; fileRef = 19905B80152C50FA00BDD15C /* Stack.lua */; };
 		19905B8B152C50FA00BDD15C /* Transition.lua in Resources */ = {isa = PBXBuildFile; fileRef = 19905B81152C50FA00BDD15C /* Transition.lua */; };
-		19905B8D152C50FA00BDD15C /* Utils.lua in Resources */ = {isa = PBXBuildFile; fileRef = 19905B83152C50FA00BDD15C /* Utils.lua */; };
 		19AF589F167FFA0800F54B27 /* DebugInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19AF589A167FFA0800F54B27 /* DebugInfo.cpp */; };
 		19AF58A0167FFA0800F54B27 /* Overlay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19AF589C167FFA0800F54B27 /* Overlay.cpp */; };
 		19CEDD71172422DC008B73B5 /* AudioFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19CEDD6A172422DC008B73B5 /* AudioFile.cpp */; };
@@ -473,7 +472,6 @@
 		19905B7E152C50FA00BDD15C /* Parallax.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Parallax.lua; path = ../../../lua/Parallax.lua; sourceTree = "<group>"; };
 		19905B80152C50FA00BDD15C /* Stack.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Stack.lua; path = ../../../lua/Stack.lua; sourceTree = "<group>"; };
 		19905B81152C50FA00BDD15C /* Transition.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Transition.lua; path = ../../../lua/Transition.lua; sourceTree = "<group>"; };
-		19905B83152C50FA00BDD15C /* Utils.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Utils.lua; path = ../../../lua/Utils.lua; sourceTree = "<group>"; };
 		19AF589A167FFA0800F54B27 /* DebugInfo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DebugInfo.cpp; sourceTree = "<group>"; };
 		19AF589B167FFA0800F54B27 /* DebugInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DebugInfo.h; sourceTree = "<group>"; };
 		19AF589C167FFA0800F54B27 /* Overlay.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Overlay.cpp; sourceTree = "<group>"; };
@@ -1132,7 +1130,6 @@
 				193929C616E352540018340B /* Timer.lua */,
 				19905B81152C50FA00BDD15C /* Transition.lua */,
 				1988802717F84AFD009F4587 /* TransitionFunctions.lua */,
-				19905B83152C50FA00BDD15C /* Utils.lua */,
 			);
 			name = Resources;
 			path = Rainbow;
@@ -1239,7 +1236,6 @@
 				19905B88152C50FA00BDD15C /* Parallax.lua in Resources */,
 				19905B8A152C50FA00BDD15C /* Stack.lua in Resources */,
 				19905B8B152C50FA00BDD15C /* Transition.lua in Resources */,
-				19905B8D152C50FA00BDD15C /* Utils.lua in Resources */,
 				1988802817F84AFD009F4587 /* Coroutine.lua in Resources */,
 				1988802917F84AFD009F4587 /* Functional.lua in Resources */,
 				19E85AA91858DCBD00D8B170 /* Images.xcassets in Resources */,
