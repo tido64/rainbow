@@ -20,8 +20,12 @@ found in file `THIRDPARTY`.
 
 ### Audio
 
-Implemented on top of OpenAL and [OpenSL ES](http://www.khronos.org/opensles/)
-(Android-only). Support for the following formats:
+Rainbow integrates [FMOD Studio](http://www.fmod.org/). Its API is available at
+the scripting layer.
+
+A custom solution based on OpenAL and
+[OpenSL ES](http://www.khronos.org/opensles/) (Android-only) is also available,
+with support for the following formats:
 
 - Android: Any format supported by Android's
   [OpenSL ES](http://www.khronos.org/opensles/) implementation
@@ -86,12 +90,21 @@ Run `build.sh help` to get an overview of options and configurations. `platform`
 can be omitted if compiling a native build (i.e. not cross-compiling).
 
 If you have problems running `build.sh`, please make sure it has execution
-permissions:
+permission:
 
 	$ chmod +x /path/to/rainbow/tools/build.sh
 
 Windows-users have to use `build.bat` instead. For iOS builds, see the
 corresponding section.
+
+### Building with FMOD Studio
+
+The default audio backend for desktop builds is currently FMOD Studio.
+[Download](http://www.fmod.org/download/) and extract/install it, then copy the
+header files to `rainbow/lib/FMOD/inc/` and the libraries to
+`rainbow/lib/FMOD/lib/`.
+
+If you don't want to use FMOD Studio, run `build.sh` with `-DUSE_FMOD_STUDIO=0`.
 
 ### Android
 
@@ -119,8 +132,9 @@ Use the provided Xcode project under `rainbow/build/xcode4/`.
 - [Clang](http://clang.llvm.org/)
 - [CMake](http://www.cmake.org/)
 - [Mesa](http://www.mesa3d.org/)
-- [Ogg Vorbis](http://www.vorbis.com/)
-- [OpenAL Soft](http://kcat.strangesoft.net/openal.html)
+- [Ogg Vorbis](http://www.vorbis.com/) (only with `-DUSE_FMOD_STUDIO=0`)
+- [OpenAL Soft](http://kcat.strangesoft.net/openal.html) (only with
+  `-DUSE_FMOD_STUDIO=0`)
 - [SDL](http://libsdl.org/)
 - [MinGW](http://www.mingw.org/) or
   [MinGW-w64](http://mingw-w64.sourceforge.net/) (optional)
@@ -139,7 +153,7 @@ no longer work.
 
 - [Boost](http://www.boost.org/) (debug-only)
 - [CMake](http://www.cmake.org/)
-- [Ogg Vorbis](http://www.vorbis.com/)
+- [Ogg Vorbis](http://www.vorbis.com/) (only with `-DUSE_FMOD_STUDIO=0`)
 - [SDL](http://libsdl.org/)
 - [Xcode](https://itunes.apple.com/no/app/xcode/id497799835?mt=12)
 
@@ -147,21 +161,12 @@ Boost, CMake and Ogg Vorbis can be installed through [Homebrew](http://brew.sh/)
 or [MacPorts](http://www.macports.org/). Download SDL source code and extract
 its content to `rainbow/lib/SDL/`. Xcode's Command Line Tools must be installed.
 
-Warning: If you've downloaded SDL 2.0.x, you may have to manually patch a file.
-In `SDL/cmake/macros.cmake`, near the bottom of the file, there's a line that
-says:
-
-	set(CMAKE_REQUIRED_DEFINITIONS "-ObjC ${PREV_REQUIRED_DEFS}")
-
-Change it to:
-
-	set(CMAKE_REQUIRED_DEFINITIONS "-x objective-c ${PREV_REQUIRED_DEFS}")
-
 ### Windows
 
 - [Boost](http://www.boost.org/) (debug-only)
 - [CMake](http://www.cmake.org/)
-- [OpenAL Soft](http://kcat.strangesoft.net/openal.html)
+- [OpenAL Soft](http://kcat.strangesoft.net/openal.html) (only with
+  `-DUSE_FMOD_STUDIO=0`)
 - [SDL](http://libsdl.org/)
 - [Visual Studio Express for Windows Desktop](http://microsoft.com/express/)
   (2013 or later)
@@ -175,9 +180,9 @@ Alternatively, see "Linux" for cross-compilation.
 
 ## Learning
 
-See documentation (`doc/index.html`) and the demos under `demos`. Note: In order
-to run a demo, you'll need to copy some files into the folder of the demo you
-want to run:
+See documentation under `doc`, and the demos under `demos`. Note: In order to
+run a demo, you'll need to copy some files into the folder of the demo you want
+to run:
 
 - `lua/*` (you may not need all but it's easier to just copy everything)
 - `src/Graphics/Shaders` (copy the folder, not needed for Android/iOS)
