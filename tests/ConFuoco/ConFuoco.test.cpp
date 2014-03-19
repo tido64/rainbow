@@ -3,6 +3,8 @@
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
 #include "ConFuoco/Mixer.h"
+
+#ifndef USE_FMOD_STUDIO
 #include "ConFuoco/Sound.h"
 
 namespace
@@ -148,3 +150,5 @@ TEST(ConFuocoTest, MixedPlayback)
 	ASSERT_TRUE(mixer.is_paused(ch[1]) && !mixer.is_playing(ch[1]));
 	ASSERT_TRUE(mixer.is_paused(ch[3]) && !mixer.is_playing(ch[3]));
 }
+
+#endif

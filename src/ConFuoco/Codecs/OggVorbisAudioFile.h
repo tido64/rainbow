@@ -6,7 +6,9 @@
 #define CONFUOCO_CODECS_OGGVORBISAUDIOFILE_H_
 
 #include "Platform/Macros.h"
-#if !defined(RAINBOW_JS) && defined(RAINBOW_SDL)
+#define USE_OGGVORBISAUDIOFILE \
+    !defined(RAINBOW_JS) && defined(RAINBOW_SDL) && !defined(USE_FMOD_STUDIO)
+#if USE_OGGVORBISAUDIOFILE
 
 #ifdef RAINBOW_OS_MACOS
 #	pragma GCC diagnostic push
@@ -42,5 +44,5 @@ namespace ConFuoco
 	};
 }
 
-#endif  // !RAINBOW_JS && RAINBOW_SDL
+#endif  // USE_OGGVORBISAUDIOFILE
 #endif  // CONFUOCO_OGGVORBISAUDIOFILE_H_

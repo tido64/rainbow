@@ -23,10 +23,6 @@ if(WIN32)
 		set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /INCREMENTAL:NO /LTCG /NODEFAULTLIB:msvcrt.lib")
 		set(CMAKE_EXE_LINKER_FLAGS_DEBUG "${CMAKE_EXE_LINKER_FLAGS_DEBUG} /NODEFAULTLIB:libcmt.lib")
 		set(CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO "${CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO} /NODEFAULTLIB:libcmt.lib")
-
-		# Use prebuilt libraries
-		find_library(OPENAL_LIBRARY NAMES libOpenAL32 HINTS build/windows/lib)
-		include_directories(build/windows/include)
 	else()
 		add_definitions(-D__MSVCRT__ -D__MSVCRT_VERSION__=0x800
 		                -D_WIN32_WINNT=0x0600 -DNTDDI_VERSION=0x06000000

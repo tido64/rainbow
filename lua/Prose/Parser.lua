@@ -8,12 +8,12 @@ local tonumber = tonumber
 local type = type
 
 local rainbow = rainbow
+local audio = rainbow.audio
 local scenegraph = rainbow.scenegraph
 
 local SoundFinalizer = {
-	__gc = function(self)
-		rainbow.audio.delete_sound(self)
-	end
+	__gc = audio and function(self) audio.delete_sound(self) end
+	              or nil
 }
 
 local function endswith(str, ending)
@@ -32,10 +32,7 @@ local function extend(data)
 end
 
 local function insert(t, k, v)
-	if t[k] then
-		error(format("'%s' is defined twice", k))
-	end
-	t[k] = v
+	t[k] = t[k] and error(format("'%s' is defined twice", k)) or v
 end
 
 local function merge(t1, t2)
@@ -46,7 +43,7 @@ end
 
 local function setproperties(obj, def)
 	if def.alignment then
-		obj:set_alignment(def.alignment);
+		obj:set_alignment(def.alignment)
 	end
 	if def.color then
 		local r = tonumber(def.color:sub(1, 2), 16)
@@ -111,9 +108,9 @@ local function createlabel(def, resources)
 end
 
 local function createsound(def)
-	local sound = rainbow.audio.create_sound(def)
-	return setmetatable(sound, SoundFinalizer);
+	return setmetatable(audio.create_sound(def), SoundFinalizer)
 end
+createsound = audio and createsound or function() end
 
 local function createtexture(def)
 	local path = 1

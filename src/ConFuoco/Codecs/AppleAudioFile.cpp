@@ -3,7 +3,7 @@
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
 #include "ConFuoco/Codecs/AppleAudioFile.h"
-#if defined(RAINBOW_OS_IOS) || defined(RAINBOW_OS_MACOS)
+#if USE_APPLEAUDIOFILE
 
 #include "Common/Debug.h"
 #include "ConFuoco/Codecs/OggVorbisAudioFile.h"

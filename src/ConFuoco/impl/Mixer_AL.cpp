@@ -3,7 +3,7 @@
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
 #include "Platform/Macros.h"
-#if defined(RAINBOW_OS_IOS) || defined(RAINBOW_SDL)
+#if (defined(RAINBOW_OS_IOS) || defined(RAINBOW_SDL)) && !defined(USE_FMOD_STUDIO)
 
 #include <memory>
 
@@ -408,4 +408,4 @@ void Stream::rewind()
 }
 
 #endif  // !RAINBOW_OS_IOS
-#endif  // RAINBOW_OS_IOS || RAINBOW_SDL
+#endif  // (RAINBOW_OS_IOS || RAINBOW_SDL) && !USE_FMOD_STUDIO

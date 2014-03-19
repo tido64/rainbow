@@ -10,8 +10,9 @@ option(GTEST "Compile with Google C++ Testing Framework" OFF)
 #option(PROFILING "Compile with profiling" OFF)
 
 # Features
-option(USE_HEIMDALL  "Enable Heimdall debugging facilities" OFF)
-option(USE_PHYSICS   "Enable physics module (Box2D)" OFF)
+option(USE_FMOD_STUDIO  "Enable FMOD Studio audio engine" ON)
+option(USE_HEIMDALL     "Enable Heimdall debugging facilities" OFF)
+option(USE_PHYSICS      "Enable physics module (Box2D)" OFF)
 
 # Auto-generate files
 execute_process(COMMAND tools/shaders-gen.py WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
@@ -26,12 +27,11 @@ file(GLOB_RECURSE RAINBOW_CPP src/*.cpp)
 add_executable(rainbow ${RAINBOW_CPP} ${RAINBOW_H})
 
 # Dynamic libraries
+include(${LOCAL_MODULE_PATH}/Audio.cmake)
 if(EMSCRIPTEN)
 	set(OPENGL_gl_LIBRARY)
-	set(VORBISFILE_LIBRARIES)
 else()
 	find_package(OpenGL REQUIRED)
-	find_package(Vorbisfile REQUIRED)
 endif()
 
 # Static libraries
@@ -60,13 +60,12 @@ set_property(TARGET rainbow APPEND PROPERTY INCLUDE_DIRECTORIES
 	${LIBPNG_INCLUDE_DIR}
 	${LUA_INCLUDE_DIR}
 	${SDL2_INCLUDE_DIR}
-	${VORBISFILE_INCLUDE_DIR}
 	${ZLIB_INCLUDE_DIR}
+	${AUDIO_INCLUDE_DIRS}
 	${GTEST_INCLUDE_DIRS}
 )
 target_link_libraries(rainbow
-	${GTEST_LIBRARY}
-	freetype lua ${PHYSICS_LIBRARY} png ${SDL2_LIBRARIES} ${VORBISFILE_LIBRARIES}
-	${OPENAL_LIBRARY} ${OPENGL_ext_LIBRARY} ${OPENGL_gl_LIBRARY}
+	${GTEST_LIBRARY} freetype lua ${PHYSICS_LIBRARY} png ${SDL2_LIBRARIES}
+	${AUDIO_LIBRARIES} ${OPENGL_ext_LIBRARY} ${OPENGL_gl_LIBRARY}
 	${ZLIB_LIBRARY} ${PLATFORM_LIBRARIES}
 )

@@ -4,6 +4,7 @@
 
 #ifndef CONFUOCO_AUDIOFILE_H_
 #define CONFUOCO_AUDIOFILE_H_
+#ifndef USE_FMOD_STUDIO
 
 #include <utility>
 
@@ -105,4 +106,5 @@ namespace ConFuoco
 	AudioFile::AudioFile(File &&file) : file(std::forward<File>(file)) { }
 }
 
-#endif
+#endif  // !USE_FMOD_STUDIO
+#endif  // CONFUOCO_AUDIOFILE_H_

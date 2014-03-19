@@ -3,7 +3,7 @@
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
 #include "ConFuoco/Codecs/OggVorbisAudioFile.h"
-#if !defined(RAINBOW_JS) && defined(RAINBOW_SDL)
+#if USE_OGGVORBISAUDIOFILE
 
 #include <cstring>
 

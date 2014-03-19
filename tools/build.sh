@@ -49,6 +49,7 @@ case $1 in
 		echo
 		echo "Options:"
 		echo "  -DGTEST=1                Enable Google C++ Testing Framework"
+		echo "  -DUSE_FMOD_STUDIO=1      Enable FMOD Studio audio engine"
 		echo "  -DUSE_HEIMDALL=1         Enable Heimdall debugging facilities"
 		echo "  -DUSE_PHYSICS=1          Enable physics module (Box2D)"
 		echo

@@ -2,6 +2,8 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
+#ifndef USE_FMOD_STUDIO
+
 #include <cstring>
 
 #include "Common/Debug.h"
@@ -51,3 +53,5 @@ namespace ConFuoco
 
 	void AudioFile::rewind_impl() { }
 }
+
+#endif

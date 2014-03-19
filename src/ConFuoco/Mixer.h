@@ -5,6 +5,7 @@
 #ifndef CONFUOCO_MIXER_H_
 #define CONFUOCO_MIXER_H_
 
+#ifndef USE_FMOD_STUDIO
 #include "Common/Vector.h"
 #include "ConFuoco/Sound.h"
 
@@ -29,8 +30,8 @@ namespace ConFuoco
 		};
 
 		/// Sets master gain.
-		/// \param gain  Scalar amplitude multiplier. The default 1.0 means
-		///              that the sound is unattenuated. The value zero equals
+		/// \param gain  Scalar amplitude multiplier. The default 1.0 means that
+		///              the sound is unattenuated. The value zero equals
 		///              silence (no contribution to the output mix).
 		void set_gain(const float gain);
 
@@ -173,7 +174,9 @@ namespace ConFuoco
 
 		static_cast<T*>(this)->play_impl(c);
 
-		R_DEBUG("[Rainbow::ConFuoco] Playing %p (channel %u)\n", static_cast<void*>(c->sound), c->ch);
+		R_DEBUG("[Rainbow::ConFuoco] Playing %p (channel %u)\n",
+		        static_cast<void*>(c->sound),
+		        c->ch);
 	}
 
 	template<typename T>
@@ -189,7 +192,8 @@ namespace ConFuoco
 	                                  const Sound::Type type,
 	                                  const int loops)
 	{
-		Sound *sound = static_cast<T*>(this)->create_sound_impl(file, type, loops);
+		Sound *sound =
+		    static_cast<T*>(this)->create_sound_impl(file, type, loops);
 	#ifndef NDEBUG
 		if (!sound)
 			R_DEBUG("[Rainbow::ConFuoco] Failed to open '%s'\n", file);
@@ -237,14 +241,22 @@ namespace ConFuoco
 	typename MixerBase<T>::Channel* MixerBase<T>::next_channel()
 	{
 		for (auto &channel : this->channels)
-			if (!channel.sound || (!this->is_paused(&channel) && !this->is_playing(&channel)))
+		{
+			if (!channel.sound ||
+			        (!this->is_paused(&channel) && !this->is_playing(&channel)))
+			{
 				return &channel;
+			}
+		}
 		R_DEBUG("[Rainbow::ConFuoco] All channels are busy\n");
 		return nullptr;
 	}
 }
+#endif  // !USE_FMOD_STUDIO
 
-#if defined(RAINBOW_OS_ANDROID)
+#if defined(USE_FMOD_STUDIO)
+#	include "ConFuoco/impl/Mixer_FMOD.h"
+#elif defined(RAINBOW_OS_ANDROID)
 #	include "ConFuoco/impl/Mixer_SL.h"
 #elif defined(RAINBOW_OS_IOS) || defined(RAINBOW_SDL)
 #	include "ConFuoco/impl/Mixer_AL.h"

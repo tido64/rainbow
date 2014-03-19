@@ -499,7 +499,6 @@
 		19E85AA81858DCBD00D8B170 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		19E91FC01682B1460054D61F /* LuaHelper.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = LuaHelper.cpp; sourceTree = "<group>"; };
 		19E91FC11682B1460054D61F /* LuaHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LuaHelper.h; sourceTree = "<group>"; };
-		19EBC54316599D5100D3B5D7 /* Channel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Channel.h; sourceTree = "<group>"; };
 		19EBC54816599D7000D3B5D7 /* Mixer_AL.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = Mixer_AL.cpp; sourceTree = "<group>"; };
 		19EBC54916599D7000D3B5D7 /* Mixer_iOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Mixer_iOS.h; sourceTree = "<group>"; };
 		19EBC54F16599D9F00D3B5D7 /* ShaderManager.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = ShaderManager.cpp; sourceTree = "<group>"; };
@@ -851,7 +850,6 @@
 				19CEDD6C172422DC008B73B5 /* Codecs */,
 				19CEDD6A172422DC008B73B5 /* AudioFile.cpp */,
 				19CEDD6B172422DC008B73B5 /* AudioFile.h */,
-				19EBC54316599D5100D3B5D7 /* Channel.h */,
 				1939A1B1152C425D00494609 /* Mixer.h */,
 				1939A1B4152C425D00494609 /* Recorder.h */,
 				1939A1B5152C425D00494609 /* Sound.h */,

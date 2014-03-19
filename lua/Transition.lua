@@ -66,7 +66,7 @@ end
 
 local LinearFunction = Transition.Functions.linear
 
-do  -- fadein, fadeout
+if rainbow.audio then  -- fadein, fadeout
 	local audio = rainbow.audio
 	local play = audio.play
 	local set_gain = audio.set_gain
@@ -110,6 +110,8 @@ do  -- fadein, fadeout
 end
 
 do  -- move
+	local scenegraph = rainbow.scenegraph
+
 	local function finalize(self)
 		self.move(self.node, self.x1 - self.x, self.y1 - self.y)
 	end
@@ -126,7 +128,7 @@ do  -- move
 	end
 
 	local function move_node(node, x, y)
-		rainbow.scenegraph:move(node, x, y)
+		scenegraph:move(node, x, y)
 	end
 
 	function Transition.move(node, x, y, duration, method)
