@@ -5,17 +5,13 @@
 #ifndef LUA_AUDIO_H_
 #define LUA_AUDIO_H_
 
+#include "Lua/LuaMacros.h"
+
 struct lua_State;
 
-namespace Rainbow
+NS_RAINBOW_LUA_MODULE_BEGIN(Audio)
 {
-	namespace Lua
-	{
-		namespace Audio
-		{
-			void init(lua_State *);
-		}
-	}
-}
+	void init(lua_State *);
+} NS_RAINBOW_LUA_MODULE_END(Audio)
 
 #endif

@@ -5,17 +5,13 @@
 #ifndef LUA_RANDOM_H_
 #define LUA_RANDOM_H_
 
+#include "Lua/LuaMacros.h"
+
 struct lua_State;
 
-namespace Rainbow
+NS_RAINBOW_LUA_MODULE_BEGIN(Random)
 {
-	namespace Lua
-	{
-		namespace Random
-		{
-			void init(lua_State *);
-		}
-	}
-}
+	void init(lua_State *);
+} NS_RAINBOW_LUA_MODULE_END(Random)
 
 #endif

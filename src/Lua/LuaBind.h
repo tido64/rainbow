@@ -6,87 +6,85 @@
 #define LUA_LUABIND_H_
 
 #include "Common/SharedPtr.h"
+#include "Lua/LuaMacros.h"
 
 struct lua_State;
 
-namespace Rainbow
+NS_RAINBOW_LUA_BEGIN
 {
-	namespace Lua
+	enum BindType
 	{
-		enum BindType
+		kBindTypeDerived,  ///< Binding object is derived from class.
+		kBindTypeStrong,   ///< Binding object has a strong reference to class instance.
+		kBindTypeWeak      ///< Binding object has a weak reference to class instance.
+	};
+
+	template<class L, class T, BindType type>
+	class Bind;
+
+	template<class T>
+	struct Method
+	{
+		const char *const name;
+		int (T::*lua_CFunction)(lua_State *);
+	};
+
+	template<class L, class T>
+	class Bind<L, T, kBindTypeDerived>
+	{
+	public:
+		static const char class_name[];
+		static const Method<L> methods[];
+
+		T* get()
 		{
-			kBindTypeDerived,  ///< Binding object is derived from class.
-			kBindTypeStrong,   ///< Binding object has a strong reference to class instance.
-			kBindTypeWeak      ///< Binding object has a weak reference to class instance.
-		};
+			return static_cast<T*>(static_cast<L*>(this));
+		}
 
-		template<class L, class T, BindType type>
-		class Bind;
+	protected:
+		~Bind() = default;
+	};
 
-		template<class T>
-		struct Method
+	template<class L, class T>
+	class Bind<L, T, kBindTypeStrong>
+	{
+	public:
+		static const char class_name[];
+		static const Method<L> methods[];
+
+		Bind() = default;
+
+		T* get() const
 		{
-			const char *const name;
-			int (T::*lua_CFunction)(lua_State *);
-		};
+			return this->ptr.get();
+		}
 
-		template<class L, class T>
-		class Bind<L, T, kBindTypeDerived>
+	protected:
+		SharedPtr<T> ptr;
+
+		~Bind() = default;
+	};
+
+	template<class L, class T>
+	class Bind<L, T, kBindTypeWeak>
+	{
+	public:
+		static const char class_name[];
+		static const Method<L> methods[];
+
+		Bind() : ptr(nullptr) { }
+		Bind(T *ptr) : ptr(ptr) { }
+
+		T* get() const
 		{
-		public:
-			static const char class_name[];
-			static const Method<L> methods[];
+			return this->ptr;
+		}
 
-			T* get()
-			{
-				return static_cast<T*>(static_cast<L*>(this));
-			}
+	protected:
+		T *ptr;
 
-		protected:
-			~Bind() = default;
-		};
-
-		template<class L, class T>
-		class Bind<L, T, kBindTypeStrong>
-		{
-		public:
-			static const char class_name[];
-			static const Method<L> methods[];
-
-			Bind() = default;
-
-			T* get() const
-			{
-				return this->ptr.get();
-			}
-
-		protected:
-			SharedPtr<T> ptr;
-
-			~Bind() = default;
-		};
-
-		template<class L, class T>
-		class Bind<L, T, kBindTypeWeak>
-		{
-		public:
-			static const char class_name[];
-			static const Method<L> methods[];
-
-			Bind() : ptr(nullptr) { }
-			Bind(T *ptr) : ptr(ptr) { }
-
-			T* get() const
-			{
-				return this->ptr;
-			}
-
-		protected:
-			T *ptr;
-
-			~Bind() = default;
-		};
-	}
-}
+		~Bind() = default;
+	};
+} NS_RAINBOW_LUA_END
 
 #endif

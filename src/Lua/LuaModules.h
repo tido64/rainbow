@@ -24,36 +24,33 @@
 #include "Physics/lua_Box2D.h"
 #include "Services/Services.h"
 
-namespace Rainbow
+NS_RAINBOW_LUA_BEGIN
 {
-	namespace Lua
+	inline void bind(lua_State *L)
 	{
-		inline void bind(lua_State *L)
-		{
-			wrap<Animation>(L);
-			wrap<Font>(L);
-			wrap<Label>(L);
-			wrap<Sprite>(L, true);
-			wrap<SpriteBatch>(L);
-			wrap<Texture>(L);
-		}
-
-		inline void init(lua_State *L)
-		{
-			Platform::init(L);  // Initialise "rainbow.platform" namespace
-			Renderer::init(L);  // Initialise "rainbow.renderer" namespace
-			Shaders::init(L);   // Initialise "rainbow.shaders" namespace
-			IO::init(L);        // Initialise "rainbow.io" namespace
-			Random::init(L);    // Initialise "rainbow.random" function
-			Input::init(L);     // Initialise "rainbow.input" namespace
-			Audio::init(L);     // Initialise "rainbow.audio" namespace
-			Services::init(L);  // Initialise third-party services
-
-		#ifdef USE_PHYSICS
-			b2::Lua::Init(L);   // Initialise "b2" namespace
-		#endif
-		}
+		wrap<Animation>(L);
+		wrap<Font>(L);
+		wrap<Label>(L);
+		wrap<Sprite>(L, true);
+		wrap<SpriteBatch>(L);
+		wrap<Texture>(L);
 	}
-}
+
+	inline void init(lua_State *L)
+	{
+		Platform::init(L);  // Initialise "rainbow.platform" namespace
+		Renderer::init(L);  // Initialise "rainbow.renderer" namespace
+		Shaders::init(L);   // Initialise "rainbow.shaders" namespace
+		IO::init(L);        // Initialise "rainbow.io" namespace
+		Random::init(L);    // Initialise "rainbow.random" function
+		Input::init(L);     // Initialise "rainbow.input" namespace
+		Audio::init(L);     // Initialise "rainbow.audio" namespace
+		Services::init(L);  // Initialise third-party services
+
+	#ifdef USE_PHYSICS
+		b2::Lua::Init(L);   // Initialise "b2" namespace
+	#endif
+	}
+} NS_RAINBOW_LUA_END
 
 #endif

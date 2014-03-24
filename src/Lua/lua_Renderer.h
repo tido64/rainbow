@@ -5,15 +5,11 @@
 #ifndef LUA_RENDERER_H_
 #define LUA_RENDERER_H_
 
-namespace Rainbow
+#include "Lua/LuaMacros.h"
+
+NS_RAINBOW_LUA_MODULE_BEGIN(Renderer)
 {
-	namespace Lua
-	{
-		namespace Renderer
-		{
-			void init(lua_State *);
-		}
-	}
-}
+	void init(lua_State *);
+} NS_RAINBOW_LUA_MODULE_END(Renderer)
 
 #endif

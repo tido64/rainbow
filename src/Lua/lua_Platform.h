@@ -6,21 +6,16 @@
 #define LUA_PLATFORM_H_
 
 #include "Common/Vec2.h"
+#include "Lua/LuaMacros.h"
 
 struct lua_State;
 
-namespace Rainbow
+NS_RAINBOW_LUA_MODULE_BEGIN(Platform)
 {
-	namespace Lua
-	{
-		namespace Platform
-		{
-			void init(lua_State *L);
+	void init(lua_State *L);
 
-			/// Updates rainbow.platform.screen.
-			void update(lua_State *L, const Vec2i &screen);
-		}
-	}
-}
+	/// Updates rainbow.platform.screen.
+	void update(lua_State *L, const Vec2i &screen);
+} NS_RAINBOW_LUA_MODULE_END(Platform)
 
 #endif

@@ -8,16 +8,13 @@
 #include "Graphics/FontAtlas.h"
 #include "Lua/LuaBind.h"
 
-namespace Rainbow
+NS_RAINBOW_LUA_BEGIN
 {
-	namespace Lua
+	class Font : public Bind<Font, FontAtlas, kBindTypeStrong>
 	{
-		class Font : public Bind<Font, FontAtlas, kBindTypeStrong>
-		{
-		public:
-			Font(lua_State *);
-		};
-	}
-}
+	public:
+		Font(lua_State *);
+	};
+} NS_RAINBOW_LUA_END
 
 #endif

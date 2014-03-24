@@ -116,39 +116,33 @@ namespace
 	}
 }
 
-namespace Rainbow
+NS_RAINBOW_LUA_MODULE_BEGIN(Audio)
 {
-	namespace Lua
+	void init(lua_State *L)
 	{
-		namespace Audio
-		{
-			void init(lua_State *L)
-			{
-				lua_pushliteral(L, "audio");
-				lua_createtable(L, 0, 16);
+		lua_pushliteral(L, "audio");
+		lua_createtable(L, 0, 16);
 
-				luaR_rawsetfield(L,
-				                 lua_pushinteger,
-				                 static_cast<int>(Sound::Type::Static),
-				                 "STATIC");
-				luaR_rawsetfield(L,
-				                 lua_pushinteger,
-				                 static_cast<int>(Sound::Type::Stream),
-				                 "STREAM");
+		luaR_rawsetfield(L,
+		                 lua_pushinteger,
+		                 static_cast<int>(Sound::Type::Static),
+		                 "STATIC");
+		luaR_rawsetfield(L,
+		                 lua_pushinteger,
+		                 static_cast<int>(Sound::Type::Stream),
+		                 "STREAM");
 
-				luaR_rawsetcclosurefield(L, &set_gain, "set_gain");
-				luaR_rawsetcclosurefield(L, &set_pitch, "set_pitch");
-				luaR_rawsetcclosurefield(L, &clear, "clear");
-				luaR_rawsetcclosurefield(L, &create_sound, "create_sound");
-				luaR_rawsetcclosurefield(L, &delete_sound, "delete_sound");
-				luaR_rawsetcclosurefield(L, &pause, "pause");
-				luaR_rawsetcclosurefield(L, &play, "play");
-				luaR_rawsetcclosurefield(L, &stop, "stop");
+		luaR_rawsetcclosurefield(L, &set_gain, "set_gain");
+		luaR_rawsetcclosurefield(L, &set_pitch, "set_pitch");
+		luaR_rawsetcclosurefield(L, &clear, "clear");
+		luaR_rawsetcclosurefield(L, &create_sound, "create_sound");
+		luaR_rawsetcclosurefield(L, &delete_sound, "delete_sound");
+		luaR_rawsetcclosurefield(L, &pause, "pause");
+		luaR_rawsetcclosurefield(L, &play, "play");
+		luaR_rawsetcclosurefield(L, &stop, "stop");
 
-				wrap<Recorder>(L);
+		wrap<Recorder>(L);
 
-				lua_rawset(L, -3);
-			}
-		}
+		lua_rawset(L, -3);
 	}
-}
+} NS_RAINBOW_LUA_MODULE_END(Audio)

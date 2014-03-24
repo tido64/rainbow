@@ -12,7 +12,6 @@
 
 #include "Common/Debug.h"
 #include "Common/NonCopyable.h"
-#include "Lua/LuaHelper.h"
 
 namespace
 {

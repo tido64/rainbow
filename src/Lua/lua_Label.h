@@ -8,31 +8,27 @@
 #include "Graphics/Label.h"
 #include "Lua/LuaBind.h"
 
-namespace Rainbow
+NS_RAINBOW_LUA_BEGIN
 {
-	namespace Lua
+	class Label : public ::Label, public Bind<Label, ::Label, kBindTypeDerived>
 	{
-		class Label :
-			public ::Label,
-			public Bind<Label, ::Label, kBindTypeDerived>
-		{
-			friend class Bind<Label, ::Label, kBindTypeDerived>;
+		friend Label::Bind;
 
-		public:
-			Label(lua_State *);
+	public:
+		Label(lua_State *);
 
-		private:
-			int get_color(lua_State *);
-			int set_alignment(lua_State *);
-			int set_color(lua_State *);
-			int set_font(lua_State *);
-			int set_position(lua_State *);
-			int set_scale(lua_State *);
-			int set_text(lua_State *);
+	private:
+		int get_color(lua_State *);
+		int set_alignment(lua_State *);
+		int set_color(lua_State *);
+		int set_font(lua_State *);
+		int set_position(lua_State *);
+		int set_scale(lua_State *);
+		int set_text(lua_State *);
 
-			int move(lua_State *);
-		};
-	}
+		int move(lua_State *);
+	};
 }
+NS_RAINBOW_LUA_END
 
 #endif

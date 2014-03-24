@@ -2,50 +2,45 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
+#include <lua.hpp>
+
 #include "Common/Random.h"
-#include "Lua/LuaHelper.h"
 #include "Lua/lua_Random.h"
 
-namespace Rainbow
+NS_RAINBOW_LUA_MODULE_BEGIN(Random)
 {
-	namespace Lua
+	namespace
 	{
-		namespace Random
+		int random(lua_State *L)
 		{
-			namespace
+			lua_Number r = 0.0f;
+			switch (lua_gettop(L))
 			{
-				int random(lua_State *L)
-				{
-					lua_Number r = 0.0f;
-					switch (lua_gettop(L))
-					{
-						case 1:
-							r = ::Random::next<lua_Number>(luaR_tonumber(L, 1));
-							break;
-						case 2:
-							r = ::Random::next<lua_Number>(
-									luaR_tonumber(L, 1), luaR_tonumber(L, 2));
-							break;
-						default:
-							r = ::Random::next();
-							break;
-					}
-					lua_pushnumber(L, r);
-					return 1;
-				}
-
-				int seed(lua_State *L)
-				{
-					::Random::seed(luaR_optinteger(L, 1, 0));
-					return 0;
-				}
+				case 1:
+					r = ::Random::next<lua_Number>(luaR_tonumber(L, 1));
+					break;
+				case 2:
+					r = ::Random::next<lua_Number>(
+							luaR_tonumber(L, 1), luaR_tonumber(L, 2));
+					break;
+				default:
+					r = ::Random::next();
+					break;
 			}
+			lua_pushnumber(L, r);
+			return 1;
+		}
 
-			void init(lua_State *L)
-			{
-				luaR_rawsetcclosurefield(L, &random, "random");
-				luaR_rawsetcclosurefield(L, &seed, "seed");
-			}
+		int seed(lua_State *L)
+		{
+			::Random::seed(luaR_optinteger(L, 1, 0));
+			return 0;
 		}
 	}
-}
+
+	void init(lua_State *L)
+	{
+		luaR_rawsetcclosurefield(L, &random, "random");
+		luaR_rawsetcclosurefield(L, &seed, "seed");
+	}
+} NS_RAINBOW_LUA_MODULE_END(Random)

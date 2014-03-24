@@ -11,40 +11,37 @@ struct lua_State;
 class Sprite;
 class SpriteBatch;
 
-namespace Rainbow
+NS_RAINBOW_LUA_BEGIN
 {
-	namespace Lua
+	class Sprite
 	{
-		class Sprite
-		{
-		public:
-			static const char class_name[];
-			static const Method<Sprite> methods[];
+	public:
+		static const char class_name[];
+		static const Method<Sprite> methods[];
 
-			Sprite(lua_State *);
+		Sprite(lua_State *);
 
-			::Sprite* get() const;
+		::Sprite* get() const;
 
-		private:
-			const unsigned int id;
-			const SpriteBatch *batch;
+	private:
+		const unsigned int id;
+		const SpriteBatch *batch;
 
-			int get_angle(lua_State *);
-			int get_color(lua_State *);
-			int get_position(lua_State *);
-			int set_color(lua_State *);
-			int set_normal(lua_State *);
-			int set_pivot(lua_State *);
-			int set_position(lua_State *);
-			int set_rotation(lua_State *);
-			int set_scale(lua_State *);
-			int set_texture(lua_State *);
+		int get_angle(lua_State *);
+		int get_color(lua_State *);
+		int get_position(lua_State *);
+		int set_color(lua_State *);
+		int set_normal(lua_State *);
+		int set_pivot(lua_State *);
+		int set_position(lua_State *);
+		int set_rotation(lua_State *);
+		int set_scale(lua_State *);
+		int set_texture(lua_State *);
 
-			int mirror(lua_State *);
-			int move(lua_State *);
-			int rotate(lua_State *);
-		};
-	}
-}
+		int mirror(lua_State *);
+		int move(lua_State *);
+		int rotate(lua_State *);
+	};
+} NS_RAINBOW_LUA_END
 
 #endif

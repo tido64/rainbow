@@ -9,39 +9,36 @@
 #include "Lua/LuaBind.h"
 #include "Lua/LuaMachine.h"
 
-namespace Rainbow
+NS_RAINBOW_LUA_BEGIN
 {
-	namespace Lua
+	class SceneGraph
+	    : public Bind<SceneGraph, ::SceneGraph::Node, kBindTypeWeak>,
+	      private NonCopyable<SceneGraph>
 	{
-		class SceneGraph :
-			public Bind<SceneGraph, ::SceneGraph::Node, kBindTypeWeak>,
-			private NonCopyable<SceneGraph>
-		{
-			friend class Bind<SceneGraph, ::SceneGraph::Node, kBindTypeWeak>;
+		friend SceneGraph::Bind;
 
-		public:
-			static SceneGraph* create(lua_State *, ::SceneGraph::Node *);
-			static void destroy(lua_State *, SceneGraph *);
+	public:
+		static SceneGraph* create(lua_State *, ::SceneGraph::Node *);
+		static void destroy(lua_State *, SceneGraph *);
 
-		private:
-			SceneGraph(::SceneGraph::Node *);
-			~SceneGraph() = default;
+	private:
+		SceneGraph(::SceneGraph::Node *);
+		~SceneGraph() = default;
 
-			int add_animation(lua_State *);
-			int add_batch(lua_State *);
-			int add_drawable(lua_State *);
-			int add_label(lua_State *);
-			int add_node(lua_State *);
+		int add_animation(lua_State *);
+		int add_batch(lua_State *);
+		int add_drawable(lua_State *);
+		int add_label(lua_State *);
+		int add_node(lua_State *);
 
-			int attach_program(lua_State *);
-			int disable(lua_State *);
-			int enable(lua_State *);
-			int remove(lua_State *);
-			int set_parent(lua_State *);
+		int attach_program(lua_State *);
+		int disable(lua_State *);
+		int enable(lua_State *);
+		int remove(lua_State *);
+		int set_parent(lua_State *);
 
-			int move(lua_State *);
-		};
-	}
-}
+		int move(lua_State *);
+	};
+} NS_RAINBOW_LUA_END
 
 #endif

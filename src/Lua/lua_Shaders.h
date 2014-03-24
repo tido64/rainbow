@@ -6,47 +6,45 @@
 #define LUA_SHADERS_H_
 
 #include "Graphics/Shaders/Diffuse.h"
+#include "Lua/LuaMacros.h"
 
 struct lua_State;
 
-namespace Rainbow
+NS_RAINBOW_LUA_BEGIN
 {
-	namespace Lua
+	class Shader
 	{
-		class Shader
-		{
-		public:
-			virtual int id() const = 0;
+	public:
+		virtual int id() const = 0;
 
-		protected:
-			~Shader() { }
-		};
+	protected:
+		~Shader() { }
+	};
+} NS_RAINBOW_LUA_END
 
-		namespace Shaders
-		{
-			void init(lua_State *);
+NS_RAINBOW_LUA_MODULE_BEGIN(Shaders)
+{
+	void init(lua_State *);
 
-			class Diffuse : public Shader
-			{
-			public:
-				static const char class_name[];
-				static const Rainbow::Lua::Method<Diffuse> methods[];
+	class Diffuse : public Shader
+	{
+	public:
+		static const char class_name[];
+		static const Rainbow::Lua::Method<Diffuse> methods[];
 
-				Diffuse(lua_State *);
+		Diffuse(lua_State *);
 
-				const Rainbow::Shaders::Diffuse* get() const;
+		const Rainbow::Shaders::Diffuse* get() const;
 
-				virtual int id() const override;
+		virtual int id() const override;
 
-			private:
-				Rainbow::Shaders::Diffuse lighting;
+	private:
+		Rainbow::Shaders::Diffuse lighting;
 
-				int set_cutoff(lua_State *);
-				int set_radius(lua_State *);
-				int set_position(lua_State *);
-			};
-		}
-	}
-}
+		int set_cutoff(lua_State *);
+		int set_radius(lua_State *);
+		int set_position(lua_State *);
+	};
+} NS_RAINBOW_LUA_MODULE_END(Shaders)
 
 #endif

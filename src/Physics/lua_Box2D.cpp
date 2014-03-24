@@ -8,6 +8,9 @@
 
 #include "Lua/LuaHelper.h"
 
+#define NS_B2_LUA_BEGIN namespace b2 { namespace Lua
+#define NS_B2_LUA_END }
+
 namespace b2
 {
 	float ptm_ratio = 32.0f;
@@ -21,63 +24,60 @@ namespace b2
 #include "Physics/lua_b2Contact.h"
 #include "Physics/lua_b2World.h"
 
-namespace b2
+NS_B2_LUA_BEGIN
 {
-	namespace Lua
+	namespace
 	{
-		namespace
+		int set_ptm_ratio(lua_State *L)
 		{
-			int set_ptm_ratio(lua_State *L)
-			{
-				LUA_ASSERT(lua_gettop(L) == 1, "b2.SetPTMRatio(r)");
+			LUA_ASSERT(lua_gettop(L) == 1, "b2.SetPTMRatio(r)");
 
-				ptm_ratio = luaR_tonumber(L, 1);
-				return 0;
-			}
-		}
-
-		void Init(lua_State *L)
-		{
-			lua_createtable(L, 0, 0);
-			g_body_list = luaL_ref(L, LUA_REGISTRYINDEX);
-			g_debug_data = new DebugData();
-
-			lua_createtable(L, 0, 16);
-
-			luaR_rawsetcclosurefield(L, &set_ptm_ratio, "SetPTMRatio");
-
-			// b2CircleShape
-			luaR_rawsetcclosurefield(L, &CircleShape, "CircleShape");
-
-			// b2PolygonShape
-			Rainbow::Lua::wrap<PolygonShape>(L);
-
-			// b2BodyType
-			luaR_rawsetfield(L, lua_pushinteger, b2_staticBody, "staticBody");
-			luaR_rawsetfield(L, lua_pushinteger, b2_kinematicBody, "kinematicBody");
-			luaR_rawsetfield(L, lua_pushinteger, b2_dynamicBody, "dynamicBody");
-
-			// b2BodyDef
-			luaR_rawsetcclosurefield(L, &BodyDef, "BodyDef");
-
-			// b2Body
-			Rainbow::Lua::wrap<Body>(L);
-
-			// b2FixtureDef
-			luaR_rawsetcclosurefield(L, &FixtureDef, "FixtureDef");
-
-			// b2Fixture
-			Rainbow::Lua::wrap<Fixture>(L, true);
-
-			// b2World
-			Rainbow::Lua::wrap<World>(L);
-
-			// b2Contact
-			Rainbow::Lua::wrap<Contact>(L, true);
-
-			lua_setglobal(L, "b2");
+			ptm_ratio = luaR_tonumber(L, 1);
+			return 0;
 		}
 	}
-}
+
+	void Init(lua_State *L)
+	{
+		lua_createtable(L, 0, 0);
+		g_body_list = luaL_ref(L, LUA_REGISTRYINDEX);
+		g_debug_data = new DebugData();
+
+		lua_createtable(L, 0, 16);
+
+		luaR_rawsetcclosurefield(L, &set_ptm_ratio, "SetPTMRatio");
+
+		// b2CircleShape
+		luaR_rawsetcclosurefield(L, &CircleShape, "CircleShape");
+
+		// b2PolygonShape
+		Rainbow::Lua::wrap<PolygonShape>(L);
+
+		// b2BodyType
+		luaR_rawsetfield(L, lua_pushinteger, b2_staticBody, "staticBody");
+		luaR_rawsetfield(L, lua_pushinteger, b2_kinematicBody, "kinematicBody");
+		luaR_rawsetfield(L, lua_pushinteger, b2_dynamicBody, "dynamicBody");
+
+		// b2BodyDef
+		luaR_rawsetcclosurefield(L, &BodyDef, "BodyDef");
+
+		// b2Body
+		Rainbow::Lua::wrap<Body>(L);
+
+		// b2FixtureDef
+		luaR_rawsetcclosurefield(L, &FixtureDef, "FixtureDef");
+
+		// b2Fixture
+		Rainbow::Lua::wrap<Fixture>(L, true);
+
+		// b2World
+		Rainbow::Lua::wrap<World>(L);
+
+		// b2Contact
+		Rainbow::Lua::wrap<Contact>(L, true);
+
+		lua_setglobal(L, "b2");
+	}
+} NS_B2_LUA_END
 
 #endif

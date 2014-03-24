@@ -8,31 +8,27 @@
 #include "ConFuoco/Recorder.h"
 #include "Lua/LuaBind.h"
 
-namespace Rainbow
+NS_RAINBOW_LUA_BEGIN
 {
-	namespace Lua
+	class Recorder : public ConFuoco::Recorder,
+	                 public Bind<Recorder, ConFuoco::Recorder, kBindTypeDerived>
 	{
-		class Recorder :
-			public ConFuoco::Recorder,
-			public Bind<Recorder, ConFuoco::Recorder, kBindTypeDerived>
-		{
-			friend class Bind<Recorder, ConFuoco::Recorder, kBindTypeDerived>;
+		friend Recorder::Bind;
 
-		public:
-			Recorder(lua_State *);
+	public:
+		Recorder(lua_State *);
 
-		private:
-			int get_average_power(lua_State *);
-			int get_low_pass(lua_State *);
-			int get_peak_power(lua_State *);
+	private:
+		int get_average_power(lua_State *);
+		int get_low_pass(lua_State *);
+		int get_peak_power(lua_State *);
 
-			int pause(lua_State *);
-			int record(lua_State *);
-			int stop(lua_State *);
+		int pause(lua_State *);
+		int record(lua_State *);
+		int stop(lua_State *);
 
-			int update(lua_State *);
-		};
-	}
-}
+		int update(lua_State *);
+	};
+} NS_RAINBOW_LUA_END
 
 #endif

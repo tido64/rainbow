@@ -8,26 +8,23 @@
 #include "Graphics/SpriteBatch.h"
 #include "Lua/LuaBind.h"
 
-namespace Rainbow
+NS_RAINBOW_LUA_BEGIN
 {
-	namespace Lua
+	class SpriteBatch
+	    : public ::SpriteBatch,
+	      public Bind<SpriteBatch, ::SpriteBatch, kBindTypeDerived>
 	{
-		class SpriteBatch :
-			public ::SpriteBatch,
-			public Bind<SpriteBatch, ::SpriteBatch, kBindTypeDerived>
-		{
-			friend class Bind<SpriteBatch, ::SpriteBatch, kBindTypeDerived>;
+		friend SpriteBatch::Bind;
 
-		public:
-			SpriteBatch(lua_State *L);
+	public:
+		SpriteBatch(lua_State *L);
 
-		private:
-			int add(lua_State *);
-			int create_sprite(lua_State *);
-			int set_normal(lua_State *);
-			int set_texture(lua_State *);
-		};
-	}
-}
+	private:
+		int add(lua_State *);
+		int create_sprite(lua_State *);
+		int set_normal(lua_State *);
+		int set_texture(lua_State *);
+	};
+} NS_RAINBOW_LUA_END
 
 #endif

@@ -8,22 +8,19 @@
 #include "Graphics/TextureAtlas.h"
 #include "Lua/LuaBind.h"
 
-namespace Rainbow
+NS_RAINBOW_LUA_BEGIN
 {
-	namespace Lua
+	class Texture : public Bind<Texture, TextureAtlas, kBindTypeStrong>
 	{
-		class Texture : public Bind<Texture, TextureAtlas, kBindTypeStrong>
-		{
-			friend class Bind<Texture, TextureAtlas, kBindTypeStrong>;
+		friend Texture::Bind;
 
-		public:
-			Texture(lua_State *);
+	public:
+		Texture(lua_State *);
 
-		private:
-			int create(lua_State *);
-			int trim(lua_State *);
-		};
-	}
-}
+	private:
+		int create(lua_State *);
+		int trim(lua_State *);
+	};
+} NS_RAINBOW_LUA_END
 
 #endif

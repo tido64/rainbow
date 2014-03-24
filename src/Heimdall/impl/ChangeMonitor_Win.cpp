@@ -8,7 +8,6 @@
 #ifdef RAINBOW_OS_WINDOWS
 
 #include "Common/Debug.h"
-#include "Lua/LuaHelper.h"
 
 ChangeMonitor::ChangeMonitor(const char *const directory)
     : monitoring(false), callback([](const char *) { })

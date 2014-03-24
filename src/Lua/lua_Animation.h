@@ -9,30 +9,27 @@
 
 class Animation;
 
-namespace Rainbow
+NS_RAINBOW_LUA_BEGIN
 {
-	namespace Lua
+	class Animation : public Bind<Animation, ::Animation, kBindTypeWeak>
 	{
-		class Animation : public Bind<Animation, ::Animation, kBindTypeWeak>
-		{
-			friend class Bind<Animation, ::Animation, kBindTypeWeak>;
+		friend Animation::Bind;
 
-		public:
-			Animation(lua_State *);
-			~Animation();
+	public:
+		Animation(lua_State *);
+		~Animation();
 
-		private:
-			int is_stopped(lua_State *);
+	private:
+		int is_stopped(lua_State *);
 
-			int set_delay(lua_State *);
-			int set_fps(lua_State *);
-			int set_frames(lua_State *);
-			int set_sprite(lua_State *);
+		int set_delay(lua_State *);
+		int set_fps(lua_State *);
+		int set_frames(lua_State *);
+		int set_sprite(lua_State *);
 
-			int play(lua_State *);
-			int stop(lua_State *);
-		};
-	}
-}
+		int play(lua_State *);
+		int stop(lua_State *);
+	};
+} NS_RAINBOW_LUA_END
 
 #endif
