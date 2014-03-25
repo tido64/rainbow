@@ -16,9 +16,7 @@ namespace ConFuoco
 {
 	namespace
 	{
-		const size_t kAudioBufferSize = 8192;
 		const unsigned int kAudioChannelsMono = 1;
-		const unsigned int kAudioChannelsStereo = 2;
 		const unsigned int kBitsPerChannel = 16;
 
 		template<class C, class T>
