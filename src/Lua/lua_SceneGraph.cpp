@@ -2,6 +2,7 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
+#include "Graphics/SceneGraph.h"
 #include "Lua/LuaHelper.h"
 #include "Lua/lua_Animation.h"
 #include "Lua/lua_Label.h"
@@ -12,17 +13,11 @@
 
 namespace
 {
-	enum CastingMethod
-	{
-		kCastingUnsafe,
-		kCastingSafe
-	};
-
-	template<class T, CastingMethod C>
+	template<class T, Rainbow::Lua::SceneGraph::CastingMethod C>
 	struct luaR_cast;
 
 	template<class T>
-	struct luaR_cast<T, kCastingSafe>
+	struct luaR_cast<T, Rainbow::Lua::SceneGraph::kCastingSafe>
 	{
 		static T* from(lua_State *L, const int n)
 		{
@@ -31,7 +26,7 @@ namespace
 	};
 
 	template<class T>
-	struct luaR_cast<T, kCastingUnsafe>
+	struct luaR_cast<T, Rainbow::Lua::SceneGraph::kCastingUnsafe>
 	{
 		static T* from(lua_State *L, const int n)
 		{
@@ -41,33 +36,10 @@ namespace
 
 	SceneGraph::Node* luaR_tonode(lua_State *L, const int n)
 	{
-		SceneGraph::Node *node = luaR_cast<SceneGraph::Node, kCastingUnsafe>::from(L, n);
+		SceneGraph::Node *node =
+		    luaR_cast<SceneGraph::Node, Rainbow::Lua::SceneGraph::kCastingUnsafe>::from(L, n);
 		LUA_CHECK(L, node, "rainbow.scenegraph: Invalid node specified");
 		return node;
-	}
-
-	template<class T, CastingMethod C>
-	int add_child(SceneGraph::Node *root, lua_State *L)
-	{
-		R_ASSERT(lua_gettop(L) == 1 || lua_gettop(L) == 2,
-		         "Invalid parameters");
-
-		// Ensure it's not a nil value.
-		const int n = lua_gettop(L);
-		LUA_CHECK(L, lua_type(L, n) != LUA_TNIL,
-		          "rainbow.scenegraph: Invalid child node specified");
-
-		// Retrieve Lua wrapper.
-		lua_rawgeti(L, n, 0);
-		T *obj = luaR_cast<T, C>::from(L, -1);
-		lua_pop(L, 1);
-
-		// Retrieve and add element.
-		SceneGraph::Node *node = (n == 1) ? root : luaR_tonode(L, 1);
-		R_ASSERT(node, "This shouldn't ever happen.");
-		lua_pushlightuserdata(L, node->add_child(obj->get()));
-
-		return 1;
 	}
 }
 
@@ -77,7 +49,10 @@ NS_RAINBOW_LUA_BEGIN
 	const char SceneGraph::Bind::class_name[] = "scenegraph";
 
 	template<>
-	const Method<SceneGraph> SceneGraph::Bind::methods[] = {
+	const bool SceneGraph::Bind::is_constructible = false;
+
+	template<>
+	const luaL_Reg SceneGraph::Bind::functions[] = {
 		{ "add_animation",   &SceneGraph::add_animation },
 		{ "add_batch",       &SceneGraph::add_batch },
 		{ "add_drawable",    &SceneGraph::add_drawable },
@@ -89,38 +64,26 @@ NS_RAINBOW_LUA_BEGIN
 		{ "remove",          &SceneGraph::remove },
 		{ "set_parent",      &SceneGraph::set_parent },
 		{ "move",            &SceneGraph::move },
-		{ 0, 0 }
+		{ nullptr, nullptr }
 	};
 
 	SceneGraph* SceneGraph::create(lua_State *L, ::SceneGraph::Node *root)
 	{
 		lua_pushlstring(L, class_name, sizeof(class_name) / sizeof(char) - 1);
-		lua_createtable(L, 1, 0);  // scenegraph = {}
-
-		SceneGraph *ptr = static_cast<SceneGraph*>(lua_newuserdata(L, sizeof(SceneGraph)));
-		luaL_newmetatable(L, class_name);  // mt = {}
-		lua_setmetatable(L, -2);           // setmetatable(udata, mt)
-		lua_rawseti(L, -2, 0);             // scenegraph[0] = udata
-
-		lua_createtable(L, 0, 2);  // mt = {}
+		void *data = lua_newuserdata(L, sizeof(SceneGraph));
+		luaL_newmetatable(L, class_name);  // metatable = {}
+		luaL_setfuncs(L, functions, 0);
+		luaR_rawsetcclosurefield(L, &tostring<SceneGraph>, "__tostring");
 		lua_pushliteral(L, "__index");
-		lua_createtable(L, 0, 16);
-		for (int i = 0; methods[i].name; ++i)
-		{
-			lua_pushstring(L, methods[i].name);
-			lua_pushnumber(L, i);
-			lua_pushcclosure(L, &thunk<SceneGraph>, 1);
-			lua_rawset(L, -3);
-		}
-		lua_rawset(L, -3);        // mt.__index = { .. }
+		lua_pushvalue(L, -2);
+		lua_rawset(L, -3);  // metatable.__index = metatable
 		lua_pushliteral(L, "__metatable");
 		lua_createtable(L, 0, 0);
-		lua_rawset(L, -3);        // mt.__metatable = {}
-		lua_setmetatable(L, -2);  // setmetatable(scenegraph, mt)
+		lua_rawset(L, -3);  // metatable.__metatable = {}
+		lua_setmetatable(L, -2);
+		lua_rawset(L, -3);
 
-		lua_rawset(L, -3);        // rainbow.scenegraph = scenegraph
-
-		return new (ptr) SceneGraph(root);
+		return static_cast<SceneGraph*>(new (data) SceneGraph(root));
 	}
 
 	void SceneGraph::destroy(lua_State *L, SceneGraph *scenegraph)
@@ -133,34 +96,64 @@ NS_RAINBOW_LUA_BEGIN
 		scenegraph->~SceneGraph();
 	}
 
-	SceneGraph::SceneGraph(::SceneGraph::Node *root) : Bind(root) { }
+	SceneGraph::SceneGraph(::SceneGraph::Node *root) : node(root) { }
+
+	template<class T, SceneGraph::CastingMethod C>
+	int SceneGraph::add_child(lua_State *L)
+	{
+		R_ASSERT(luaR_isuserdata(L, 2) &&
+		         (luaR_isuserdata(L, 3) || lua_isnone(L, 3)),
+		         "rainbow.scenegraph: Invalid parameters");
+
+		SceneGraph *self = Bind::self(L);
+		if (!self)
+			return 0;
+
+		replacetable(L, 2);
+		replacetable(L, 3);
+
+		// Retrieve Lua wrapper.
+		T *obj = luaR_cast<T, C>::from(L, -1);
+
+		// Retrieve and add element.
+		::SceneGraph::Node *node = lua_isnone(L, 3) ? self->node
+		                                            : luaR_tonode(L, 2);
+		R_ASSERT(node, "This shouldn't ever happen.");
+		lua_pushlightuserdata(L, node->add_child(obj->get()));
+		return 1;
+	}
 
 	int SceneGraph::add_animation(lua_State *L)
 	{
-		return add_child<Animation, kCastingSafe>(this->ptr, L);
+		return add_child<Animation, kCastingSafe>(L);
 	}
 
 	int SceneGraph::add_batch(lua_State *L)
 	{
-		return add_child<SpriteBatch, kCastingSafe>(this->ptr, L);
+		return add_child<SpriteBatch, kCastingSafe>(L);
 	}
 
 	int SceneGraph::add_drawable(lua_State *L)
 	{
-		return add_child<Drawable, kCastingUnsafe>(this->ptr, L);
+		return add_child<Drawable, kCastingUnsafe>(L);
 	}
 
 	int SceneGraph::add_label(lua_State *L)
 	{
-		return add_child<Label, kCastingSafe>(this->ptr, L);
+		return add_child<Label, kCastingSafe>(L);
 	}
 
 	int SceneGraph::add_node(lua_State *L)
 	{
-		LUA_ASSERT(lua_gettop(L) == 0 || lua_gettop(L) == 1,
+		LUA_ASSERT(lua_isuserdata(L, 2) || lua_isnone(L, 2),
 		           "rainbow.scenegraph:add_node([parent])");
 
-		::SceneGraph::Node *node = (!lua_gettop(L)) ? this->ptr : luaR_tonode(L, 1);
+		SceneGraph *self = Bind::self(L);
+		if (!self)
+			return 0;
+
+		::SceneGraph::Node *node = lua_isuserdata(L, 2) ? luaR_tonode(L, 2)
+		                                                : self->node;
 		R_ASSERT(node, "This shouldn't ever happen.");
 		lua_pushlightuserdata(L, node->add_child(new ::SceneGraph::Node()));
 		return 1;
@@ -168,69 +161,62 @@ NS_RAINBOW_LUA_BEGIN
 
 	int SceneGraph::attach_program(lua_State *L)
 	{
-		LUA_ASSERT(lua_gettop(L) == 2,
+		LUA_ASSERT(lua_isuserdata(L, 2) &&
+		           ((lua_isnumber(L, 3) && lua_tointeger(L, 3) == 0) ||
+		                lua_isuserdata(L, 3)),
 		           "rainbow.scenegraph:attach_program(node, program)");
 
-		if ((lua_isnumber(L, 2) && lua_tointeger(L, 2) != 0) || !lua_istable(L, 2))
-		{
-			R_ERROR("[Rainbow] rainbow.scenegraph:attach_program(): Invalid program");
+		SceneGraph *self = Bind::self(L);
+		if (!self)
 			return 0;
-		}
-		int program = 0;
-		if (lua_istable(L, 2))
-		{
-			// Retrieve shader object and get the program id.
-			lua_rawgeti(L, 2, 0);  // userdata = table[0]
-			program = luaR_cast<Shader, kCastingUnsafe>::from(L, 3)->id();
-			lua_pop(L, 1);
-		}
-		::SceneGraph::Node *node = luaR_tonode(L, 1);
-		node->attach_program(program);
+
+		int program = lua_isuserdata(L, 3) ? luaR_cast<Shader, kCastingUnsafe>::from(L, 3)->id()
+		                                   : 0;
+		luaR_tonode(L, 2)->attach_program(program);
 		return 0;
 	}
 
 	int SceneGraph::disable(lua_State *L)
 	{
-		LUA_ASSERT(lua_gettop(L) == 1, "rainbow.scenegraph:disable(node)");
+		LUA_ASSERT(lua_isuserdata(L, 2), "rainbow.scenegraph:disable(node)");
 
-		luaR_tonode(L, 1)->enabled = false;
+		luaR_tonode(L, 2)->enabled = false;
 		return 0;
 	}
 
 	int SceneGraph::enable(lua_State *L)
 	{
-		LUA_ASSERT(lua_gettop(L) == 1, "rainbow.scenegraph:enable(node)");
+		LUA_ASSERT(lua_isuserdata(L, 2), "rainbow.scenegraph:enable(node)");
 
-		luaR_tonode(L, 1)->enabled = true;
+		luaR_tonode(L, 2)->enabled = true;
 		return 0;
 	}
 
 	int SceneGraph::remove(lua_State *L)
 	{
-		LUA_ASSERT(lua_gettop(L) == 1, "rainbow.scenegraph:remove(node)");
+		LUA_ASSERT(lua_isuserdata(L, 2), "rainbow.scenegraph:remove(node)");
 
-		luaR_tonode(L, 1)->remove();
+		luaR_tonode(L, 2)->remove();
 		return 0;
 	}
 
 	int SceneGraph::set_parent(lua_State *L)
 	{
-		LUA_ASSERT(lua_gettop(L) == 2,
+		LUA_ASSERT(lua_isuserdata(L, 2) && lua_isuserdata(L, 3),
 		           "rainbow.scenegraph:set_parent(parent, child)");
 
-		::SceneGraph::Node *child = luaR_tonode(L, 2);
-		child->set_parent(luaR_tonode(L, 1));
+		luaR_tonode(L, 3)->set_parent(luaR_tonode(L, 2));
 		return 0;
 	}
 
 	int SceneGraph::move(lua_State *L)
 	{
-		LUA_ASSERT(lua_gettop(L) == 3,
+		LUA_ASSERT(lua_isuserdata(L, 2) &&
+		           lua_isnumber(L, 3) &&
+		           lua_isnumber(L, 4),
 		           "rainbow.scenegraph:move(node, x, y)");
 
-		::SceneGraph::Node *node = luaR_tonode(L, 1);
-		const Vec2f delta(luaR_tonumber(L, 2), luaR_tonumber(L, 3));
-		node->move(delta);
+		luaR_tonode(L, 2)->move(Vec2f(lua_tonumber(L, 3), lua_tonumber(L, 4)));
 		return 0;
 	}
 } NS_RAINBOW_LUA_END

@@ -6,10 +6,13 @@
 
 #include <Box2D/Box2D.h>
 
+#include "Lua/LuaBind.h"
 #include "Lua/LuaHelper.h"
 
 #define NS_B2_LUA_BEGIN namespace b2 { namespace Lua
 #define NS_B2_LUA_END }
+
+using Rainbow::Lua::Bind;
 
 namespace b2
 {
@@ -30,9 +33,9 @@ NS_B2_LUA_BEGIN
 	{
 		int set_ptm_ratio(lua_State *L)
 		{
-			LUA_ASSERT(lua_gettop(L) == 1, "b2.SetPTMRatio(r)");
+			LUA_ASSERT(lua_isnumber(L, 1), "b2.SetPTMRatio(r)");
 
-			ptm_ratio = luaR_tonumber(L, 1);
+			ptm_ratio = lua_tonumber(L, 1);
 			return 0;
 		}
 	}
@@ -51,7 +54,7 @@ NS_B2_LUA_BEGIN
 		luaR_rawsetcclosurefield(L, &CircleShape, "CircleShape");
 
 		// b2PolygonShape
-		Rainbow::Lua::wrap<PolygonShape>(L);
+		Rainbow::Lua::reg<PolygonShape>(L);
 
 		// b2BodyType
 		luaR_rawsetfield(L, lua_pushinteger, b2_staticBody, "staticBody");
@@ -62,19 +65,19 @@ NS_B2_LUA_BEGIN
 		luaR_rawsetcclosurefield(L, &BodyDef, "BodyDef");
 
 		// b2Body
-		Rainbow::Lua::wrap<Body>(L);
+		Rainbow::Lua::reg<Body>(L);
 
 		// b2FixtureDef
 		luaR_rawsetcclosurefield(L, &FixtureDef, "FixtureDef");
 
 		// b2Fixture
-		Rainbow::Lua::wrap<Fixture>(L, true);
+		Rainbow::Lua::reg<Fixture>(L);
 
 		// b2World
-		Rainbow::Lua::wrap<World>(L);
+		Rainbow::Lua::reg<World>(L);
 
 		// b2Contact
-		Rainbow::Lua::wrap<Contact>(L, true);
+		Rainbow::Lua::reg<Contact>(L);
 
 		lua_setglobal(L, "b2");
 	}

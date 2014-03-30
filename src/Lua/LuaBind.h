@@ -5,83 +5,29 @@
 #ifndef LUA_LUABIND_H_
 #define LUA_LUABIND_H_
 
-#include "Common/SharedPtr.h"
+extern "C" {
+#include <lauxlib.h>
+}
+
 #include "Lua/LuaMacros.h"
 
 struct lua_State;
 
 NS_RAINBOW_LUA_BEGIN
 {
-	enum BindType
-	{
-		kBindTypeDerived,  ///< Binding object is derived from class.
-		kBindTypeStrong,   ///< Binding object has a strong reference to class instance.
-		kBindTypeWeak      ///< Binding object has a weak reference to class instance.
-	};
-
-	template<class L, class T, BindType type>
-	class Bind;
-
-	template<class T>
-	struct Method
-	{
-		const char *const name;
-		int (T::*lua_CFunction)(lua_State *);
-	};
-
-	template<class L, class T>
-	class Bind<L, T, kBindTypeDerived>
+	template<typename T>
+	class Bind
 	{
 	public:
 		static const char class_name[];
-		static const Method<L> methods[];
-
-		T* get()
-		{
-			return static_cast<T*>(static_cast<L*>(this));
-		}
+		static const bool is_constructible;
+		static const luaL_Reg functions[];
 
 	protected:
-		~Bind() = default;
-	};
-
-	template<class L, class T>
-	class Bind<L, T, kBindTypeStrong>
-	{
-	public:
-		static const char class_name[];
-		static const Method<L> methods[];
-
-		Bind() = default;
-
-		T* get() const
+		static T* self(lua_State *L)
 		{
-			return this->ptr.get();
+			return static_cast<T*>(luaR_touserdata(L, 1, class_name));
 		}
-
-	protected:
-		SharedPtr<T> ptr;
-
-		~Bind() = default;
-	};
-
-	template<class L, class T>
-	class Bind<L, T, kBindTypeWeak>
-	{
-	public:
-		static const char class_name[];
-		static const Method<L> methods[];
-
-		Bind() : ptr(nullptr) { }
-		Bind(T *ptr) : ptr(ptr) { }
-
-		T* get() const
-		{
-			return this->ptr;
-		}
-
-	protected:
-		T *ptr;
 
 		~Bind() = default;
 	};

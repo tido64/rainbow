@@ -7,41 +7,46 @@
 
 #include "Lua/LuaBind.h"
 
-struct lua_State;
 class Sprite;
 class SpriteBatch;
 
 NS_RAINBOW_LUA_BEGIN
 {
-	class Sprite
+	class Sprite : public Bind<Sprite>
 	{
-	public:
-		static const char class_name[];
-		static const Method<Sprite> methods[];
+		friend Bind;
 
+	public:
 		Sprite(lua_State *);
 
-		::Sprite* get() const;
+		inline ::Sprite* get() const;
 
 	private:
+		static int get_angle(lua_State *);
+		static int get_color(lua_State *);
+		static int get_position(lua_State *);
+		static int set_color(lua_State *);
+		static int set_normal(lua_State *);
+		static int set_pivot(lua_State *);
+		static int set_position(lua_State *);
+		static int set_rotation(lua_State *);
+		static int set_scale(lua_State *);
+		static int set_texture(lua_State *);
+
+		static int mirror(lua_State *);
+		static int move(lua_State *);
+		static int rotate(lua_State *);
+
 		const unsigned int id;
 		const SpriteBatch *batch;
 
-		int get_angle(lua_State *);
-		int get_color(lua_State *);
-		int get_position(lua_State *);
-		int set_color(lua_State *);
-		int set_normal(lua_State *);
-		int set_pivot(lua_State *);
-		int set_position(lua_State *);
-		int set_rotation(lua_State *);
-		int set_scale(lua_State *);
-		int set_texture(lua_State *);
-
-		int mirror(lua_State *);
-		int move(lua_State *);
-		int rotate(lua_State *);
+		::Sprite& sprite() const;
 	};
+
+	::Sprite* Sprite::get() const
+	{
+		return &this->sprite();
+	}
 } NS_RAINBOW_LUA_END
 
 #endif

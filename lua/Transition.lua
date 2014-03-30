@@ -142,7 +142,10 @@ do  -- move
 			y1 = y
 		}
 		if type(node) == "userdata" then
-			self.move = move_node
+			-- Nodes don't have a metatable as opposed to e.g. sprites
+			if not getmetatable(node) then
+				self.move = move_node
+			end
 		else
 			assert(type(node) == "table", "Invalid object");
 			assert(node.move, "Object must implement :move()")

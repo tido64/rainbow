@@ -11,8 +11,7 @@ NS_B2_LUA_BEGIN
 		int g_fixture = LUA_REFNIL;
 	}
 
-	class Contact
-	    : public Rainbow::Lua::Bind<Contact, b2Contact, Rainbow::Lua::kBindTypeWeak>
+	class Contact : public Bind<Contact>
 	{
 		friend Bind;
 
@@ -21,74 +20,96 @@ NS_B2_LUA_BEGIN
 		inline void set(b2Contact *contact);
 
 	private:
-		int is_touching(lua_State *);
-		int set_enabled(lua_State *);
-		int is_enabled(lua_State *);
+		static int is_touching(lua_State *);
+		static int set_enabled(lua_State *);
+		static int is_enabled(lua_State *);
 
-		int get_next(lua_State *);
-		int get_fixture_a(lua_State *);
-		int get_fixture_b(lua_State *);
+		static int get_next(lua_State *);
+		static int get_fixture_a(lua_State *);
+		static int get_fixture_b(lua_State *);
 
-		int set_friction(lua_State *);
-		int get_friction(lua_State *);
-		int reset_friction(lua_State *);
+		static int set_friction(lua_State *);
+		static int get_friction(lua_State *);
+		static int reset_friction(lua_State *);
 
-		int set_restitution(lua_State *);
-		int get_restitution(lua_State *);
-		int reset_restitution(lua_State *);
+		static int set_restitution(lua_State *);
+		static int get_restitution(lua_State *);
+		static int reset_restitution(lua_State *);
 
-		int set_tangent_speed(lua_State *);
-		int get_tangent_speed(lua_State *);
+		static int set_tangent_speed(lua_State *);
+		static int get_tangent_speed(lua_State *);
 
-		int get_fixture(lua_State *, b2Fixture *);
+		static int get_fixture(lua_State *, b2Fixture *);
+
+		b2Contact *contact;
 	};
 
-	Contact::Contact(lua_State *) { }
+	Contact::Contact(lua_State *) : contact(nullptr) { }
 
 	void Contact::set(b2Contact *contact)
 	{
-		this->ptr = contact;
+		this->contact = contact;
 	}
 
 	int Contact::is_touching(lua_State *L)
 	{
-		lua_pushboolean(L, this->ptr->IsTouching());
+		Contact *self = Bind::self(L);
+		if (!self)
+			return 0;
+
+		lua_pushboolean(L, self->contact->IsTouching());
 		return 1;
 	}
 
 	int Contact::set_enabled(lua_State *L)
 	{
-		LUA_ASSERT(lua_gettop(L) == 1, "<b2.contact>:set_enabled(bool)");
+		LUA_ASSERT(lua_isboolean(L, 2), "<b2.contact>:set_enabled(bool)");
 
-		this->ptr->SetEnabled(lua_toboolean(L, 1));
+		Contact *self = Bind::self(L);
+		if (!self)
+			return 0;
+
+		self->contact->SetEnabled(lua_toboolean(L, 2));
 		return 0;
 	}
 
 	int Contact::is_enabled(lua_State *L)
 	{
-		lua_pushboolean(L, this->ptr->IsEnabled());
+		Contact *self = Bind::self(L);
+		if (!self)
+			return 0;
+
+		lua_pushboolean(L, self->contact->IsEnabled());
 		return 1;
 	}
 
 	int Contact::get_next(lua_State *L)
 	{
-		this->ptr = this->ptr->GetNext();
-		lua_pushboolean(L, !!this->ptr);
+		Contact *self = Bind::self(L);
+		if (!self)
+			return 0;
+
+		self->contact = self->contact->GetNext();
+		lua_pushboolean(L, !!self->contact);
 		return 1;
 	}
 
 	int Contact::get_fixture_a(lua_State *L)
 	{
-		if (!this->ptr)
+		Contact *self = Bind::self(L);
+		if (!self || !self->contact)
 			return 0;
-		return this->get_fixture(L, this->ptr->GetFixtureA());
+
+		return get_fixture(L, self->contact->GetFixtureA());
 	}
 
 	int Contact::get_fixture_b(lua_State *L)
 	{
-		if (!this->ptr)
+		Contact *self = Bind::self(L);
+		if (!self || !self->contact)
 			return 0;
-		return this->get_fixture(L, this->ptr->GetFixtureB());
+
+		return get_fixture(L, self->contact->GetFixtureB());
 	}
 
 	int Contact::get_fixture(lua_State *L, b2Fixture *fixture)
@@ -99,9 +120,7 @@ NS_B2_LUA_BEGIN
 			g_fixture = luaL_ref(L, LUA_REGISTRYINDEX);
 		}
 		lua_rawgeti(L, LUA_REGISTRYINDEX, g_fixture);
-		lua_rawgeti(L, -1, 0);
-		Fixture *f = static_cast<Fixture*>(luaR_touserdata(L, -1, Fixture::class_name));
-		f->set(fixture);
+		Rainbow::Lua::touserdata<Fixture>(L, -1)->set(fixture);
 		lua_pop(L, 1);
 		return 1;
 	}
@@ -115,7 +134,10 @@ NS_RAINBOW_LUA_BEGIN
 	const char Contact::Bind::class_name[] = "Contact";
 
 	template<>
-	const Method<Contact> Contact::Bind::methods[] = {
+	const bool Contact::Bind::is_constructible = false;
+
+	template<>
+	const luaL_Reg Contact::Bind::functions[] = {
 		{ "IsTouching",   &Contact::is_touching },
 		{ "SetEnabled",   &Contact::set_enabled },
 		{ "IsEnabled",    &Contact::is_enabled },

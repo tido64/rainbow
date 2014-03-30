@@ -11,25 +11,32 @@ class Animation;
 
 NS_RAINBOW_LUA_BEGIN
 {
-	class Animation : public Bind<Animation, ::Animation, kBindTypeWeak>
+	class Animation : public Bind<Animation>
 	{
-		friend Animation::Bind;
+		friend Bind;
 
 	public:
 		Animation(lua_State *);
 		~Animation();
 
+		inline ::Animation* get();
+
 	private:
-		int is_stopped(lua_State *);
+		static int is_stopped(lua_State *);
+		static int set_delay(lua_State *);
+		static int set_fps(lua_State *);
+		static int set_frames(lua_State *);
+		static int set_sprite(lua_State *);
+		static int play(lua_State *);
+		static int stop(lua_State *);
 
-		int set_delay(lua_State *);
-		int set_fps(lua_State *);
-		int set_frames(lua_State *);
-		int set_sprite(lua_State *);
-
-		int play(lua_State *);
-		int stop(lua_State *);
+		::Animation *animation;
 	};
+
+	::Animation* Animation::get()
+	{
+		return this->animation;
+	}
 } NS_RAINBOW_LUA_END
 
 #endif

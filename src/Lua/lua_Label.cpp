@@ -12,7 +12,10 @@ NS_RAINBOW_LUA_BEGIN
 	const char Label::Bind::class_name[] = "label";
 
 	template<>
-	const Method<Label> Label::Bind::methods[] = {
+	const bool Label::Bind::is_constructible = true;
+
+	template<>
+	const luaL_Reg Label::Bind::functions[] = {
 		{ "get_color",      &Label::get_color },
 		{ "set_alignment",  &Label::set_alignment },
 		{ "set_color",      &Label::set_color },
@@ -21,18 +24,22 @@ NS_RAINBOW_LUA_BEGIN
 		{ "set_scale",      &Label::set_scale },
 		{ "set_text",       &Label::set_text },
 		{ "move",           &Label::move },
-		{ 0, 0 }
+		{ nullptr, nullptr }
 	};
 
 	Label::Label(lua_State *L)
 	{
-		if (lua_gettop(L))
-			this->set_text(L);
+		if (lua_isstring(L, 1))
+			this->label.set_text(lua_tostring(L, 1));
 	}
 
 	int Label::get_color(lua_State *L)
 	{
-		const Colorb& c = ::Label::color();
+		Label *self = Bind::self(L);
+		if (!self)
+			return 0;
+
+		const Colorb& c = self->label.color();
 		lua_pushinteger(L, c.r);
 		lua_pushinteger(L, c.g);
 		lua_pushinteger(L, c.b);
@@ -42,16 +49,23 @@ NS_RAINBOW_LUA_BEGIN
 
 	int Label::set_alignment(lua_State *L)
 	{
-		switch (*luaR_tostring(L, 1))
+		LUA_ASSERT(lua_isstring(L, 2),
+		           "<label>:set_alignment('l' | 'c' | 'r')");
+
+		Label *self = Bind::self(L);
+		if (!self)
+			return 0;
+
+		switch (*lua_tostring(L, 2))
 		{
 			case 'c':
-				::Label::set_alignment(::Label::kCenterTextAlignment);
+				self->label.set_alignment(::Label::kCenterTextAlignment);
 				break;
 			case 'r':
-				::Label::set_alignment(::Label::kRightTextAlignment);
+				self->label.set_alignment(::Label::kRightTextAlignment);
 				break;
 			default:
-				::Label::set_alignment(::Label::kLeftTextAlignment);
+				self->label.set_alignment(::Label::kLeftTextAlignment);
 				break;
 		}
 		return 0;
@@ -59,44 +73,84 @@ NS_RAINBOW_LUA_BEGIN
 
 	int Label::set_color(lua_State *L)
 	{
-		const unsigned char r = luaR_tointeger(L, 1);
-		const unsigned char g = luaR_tointeger(L, 2);
-		const unsigned char b = luaR_tointeger(L, 3);
-		const unsigned char a = luaR_optinteger(L, 4, 0xff);
-		::Label::set_color(Colorb(r, g, b, a));
+		LUA_ASSERT(lua_isnumber(L, 2) &&
+		           lua_isnumber(L, 3) &&
+		           lua_isnumber(L, 4) &&
+		           (lua_isnumber(L, 5) || lua_isnone(L, 5)),
+		           "<label>:set_color(r, g, b, a = 255)");
+
+		Label *self = Bind::self(L);
+		if (!self)
+			return 0;
+
+		const unsigned char r = lua_tointeger(L, 2);
+		const unsigned char g = lua_tointeger(L, 3);
+		const unsigned char b = lua_tointeger(L, 4);
+		const unsigned char a = luaR_optinteger(L, 5, 0xff);
+		self->label.set_color(Colorb(r, g, b, a));
 		return 0;
 	}
 
 	int Label::set_font(lua_State *L)
 	{
-		Font *font = wrapper<Font>(L);
-		::Label::set_font(font->get());
+		LUA_ASSERT(lua_isuserdata(L, 2), "<label>:set_font(<font>)");
+
+		Label *self = Bind::self(L);
+		if (!self)
+			return 0;
+
+		self->label.set_font(touserdata<Font>(L, 2)->get());
 		return 0;
 	}
 
 	int Label::set_position(lua_State *L)
 	{
-		const Vec2f position(luaR_tonumber(L, 1), luaR_tonumber(L, 2));
-		::Label::set_position(position);
+		LUA_ASSERT(lua_isnumber(L, 2) && lua_isnumber(L, 3),
+		           "<label>:set_position(x, y)");
+
+		Label *self = Bind::self(L);
+		if (!self)
+			return 0;
+
+		self->label.set_position(
+		    Vec2f(lua_tonumber(L, 2), lua_tonumber(L, 3)));
 		return 0;
 	}
 
 	int Label::set_scale(lua_State *L)
 	{
-		::Label::set_scale(luaR_tonumber(L, 1));
+		LUA_ASSERT(lua_isnumber(L, 2), "<label>:set_scale(f)");
+
+		Label *self = Bind::self(L);
+		if (!self)
+			return 0;
+
+		self->label.set_scale(lua_tonumber(L, 2));
 		return 0;
 	}
 
 	int Label::set_text(lua_State *L)
 	{
-		::Label::set_text(luaR_tostring(L, 1));
+		LUA_ASSERT(lua_isstring(L, 2), "<label>:set_text(\"string\")");
+
+		Label *self = Bind::self(L);
+		if (!self)
+			return 0;
+
+		self->label.set_text(lua_tostring(L, 2));
 		return 0;
 	}
 
 	int Label::move(lua_State *L)
 	{
-		const Vec2f delta(luaR_tonumber(L, 1), luaR_tonumber(L, 2));
-		::Label::move(delta);
+		LUA_ASSERT(lua_isnumber(L, 2) && lua_isnumber(L, 3),
+		           "<label>:move(x, y)");
+
+		Label *self = Bind::self(L);
+		if (!self)
+			return 0;
+
+		self->label.move(Vec2f(lua_tonumber(L, 2), lua_tonumber(L, 3)));
 		return 0;
 	}
 } NS_RAINBOW_LUA_END

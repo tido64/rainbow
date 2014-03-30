@@ -20,78 +20,104 @@ NS_B2_LUA_BEGIN
 		return 1;
 	}
 
-	class PolygonShape :
-		public b2PolygonShape,
-		public Rainbow::Lua::Bind<PolygonShape, b2PolygonShape, Rainbow::Lua::kBindTypeDerived>
+	class PolygonShape : public Bind<PolygonShape>
 	{
 		friend Bind;
 
 	public:
 		PolygonShape(lua_State *);
 
+		inline b2PolygonShape& get();
+
 	private:
-		int set(lua_State *);
-		int set_as_box(lua_State *);
-		int set_center(lua_State *);
+		static int set(lua_State *);
+		static int set_as_box(lua_State *);
+		static int set_center(lua_State *);
+
+		b2PolygonShape shape;
 	};
 
 	PolygonShape::PolygonShape(lua_State *) { }
 
+	b2PolygonShape& PolygonShape::get()
+	{
+		return this->shape;
+	}
+
 	int PolygonShape::set(lua_State *L)
 	{
-		LUA_ASSERT(lua_type(L, 1) == LUA_TTABLE,
-		           "<b2.PolygonShape>:Set(table { x, y })");
+		LUA_ASSERT(lua_istable(L, 2),
+		           "<b2.PolygonShape>:Set({ x1, y1, x2, y2, ... })");
+
+		PolygonShape *self = Bind::self(L);
+		if (!self)
+			return 0;
 
 		int count = 0;
-		while (lua_next(L, 1))
+		while (lua_next(L, 2))
 			++count;
 		lua_pop(L, count);
 
 		std::unique_ptr<b2Vec2[]> points(new b2Vec2[count >> 1]);
 		count = 0;
-		while (lua_next(L, 1))
+		while (lua_next(L, 2))
 		{
 			points[count].x = luaR_tonumber(L, -1) / ptm_ratio;
-			lua_next(L, 1);
+			lua_next(L, 2);
 			points[count].y = luaR_tonumber(L, -1) / ptm_ratio;
 			lua_pop(L, 2);
 			++count;
 		}
-		b2PolygonShape::Set(points.get(), count);
+		self->shape.Set(points.get(), count);
 		return 0;
 	}
 
 	int PolygonShape::set_as_box(lua_State *L)
 	{
-		LUA_ASSERT(lua_gettop(L) == 2 || lua_gettop(L) == 5,
-		           "<b2.PolygonShape>:SetAsBox(half-width, half-height[, center.x, center.y, angle])");
+		const char err[] = "<b2.PolygonShape>:SetAsBox(half_width, half_height"
+		                   "[, center.x, center.y, angle])";
+		LUA_ASSERT(lua_isnumber(L, 2) && lua_isnumber(L, 3), err);
 
-		const float hx = luaR_tonumber(L, 1) / ptm_ratio;
-		const float hy = luaR_tonumber(L, 2) / ptm_ratio;
-		if (lua_gettop(L) == 5)
+		PolygonShape *self = Bind::self(L);
+		if (!self)
+			return 0;
+
+		const float hx = lua_tonumber(L, 2) / ptm_ratio;
+		const float hy = lua_tonumber(L, 3) / ptm_ratio;
+		if (lua_gettop(L) > 3)
 		{
-			const float cx = luaR_tonumber(L, 3) / ptm_ratio;
-			const float cy = luaR_tonumber(L, 4) / ptm_ratio;
-			const float r = luaR_tonumber(L, 5);
-			b2PolygonShape::SetAsBox(hx, hy, b2Vec2(cx, cy), r);
+			LUA_ASSERT(lua_isnumber(L, 4) &&
+			           lua_isnumber(L, 5) &&
+			           lua_isnumber(L, 6),
+			           err);
+
+			const float cx = lua_tonumber(L, 4) / ptm_ratio;
+			const float cy = lua_tonumber(L, 5) / ptm_ratio;
+			const float r = lua_tonumber(L, 6);
+			self->shape.SetAsBox(hx, hy, b2Vec2(cx, cy), r);
 		}
 		else
-			b2PolygonShape::SetAsBox(hx, hy);
+			self->shape.SetAsBox(hx, hy);
 		return 0;
 	}
 
 	int PolygonShape::set_center(lua_State *L)
 	{
-		LUA_ASSERT(lua_gettop(L) == 2, "<b2.PolygonShape>:SetCenter(x, y)");
+		LUA_ASSERT(lua_isnumber(L, 2) && lua_isnumber(L, 3),
+		           "<b2.PolygonShape>:SetCenter(x, y)");
 
-		b2PolygonShape::m_centroid.Set(
-		    luaR_tonumber(L, 1) / ptm_ratio, luaR_tonumber(L, 2) / ptm_ratio);
+		PolygonShape *self = Bind::self(L);
+		if (!self)
+			return 0;
+
+		self->shape.m_centroid.Set(
+		    lua_tonumber(L, 2) / ptm_ratio, lua_tonumber(L, 3) / ptm_ratio);
 		return 0;
 	}
 
 	b2Shape* parse_Shape(lua_State *L)
 	{
-		LUA_CHECK(L, lua_type(L, -1) == LUA_TTABLE, "Not a Shape");
+		LUA_CHECK(L, lua_istable(L, -1), "Not a Shape");
 
 		const char type[] = "Shape";
 		static_cast<void>(type);
@@ -124,7 +150,7 @@ NS_B2_LUA_BEGIN
 				break;
 			case b2Shape::e_polygon:
 				shape = new b2PolygonShape(
-				    *Rainbow::Lua::wrapper<PolygonShape>(L)->get());
+				    Rainbow::Lua::touserdata<PolygonShape>(L, -1)->get());
 				break;
 			case b2Shape::e_chain:
 				LUA_ASSERT(m_type != b2Shape::e_chain, "Not implemented yet");
@@ -145,7 +171,10 @@ NS_RAINBOW_LUA_BEGIN
 	const char PolygonShape::Bind::class_name[] = "PolygonShape";
 
 	template<>
-	const Method<PolygonShape> PolygonShape::Bind::methods[] = {
+	const bool PolygonShape::Bind::is_constructible = true;
+
+	template<>
+	const luaL_Reg PolygonShape::Bind::functions[] = {
 		{ "Set",        &PolygonShape::set },
 		{ "SetAsBox",   &PolygonShape::set_as_box },
 		{ "SetCenter",  &PolygonShape::set_center },

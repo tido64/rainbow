@@ -81,6 +81,7 @@ size_t SpriteBatch::count() const
 
 const TextureAtlas& SpriteBatch::normal() const
 {
+	R_ASSERT(this->normal_.get(), "Normal texture is not set");
 	return *this->normal_.get();
 }
 
@@ -91,6 +92,7 @@ const Vector<Sprite>& SpriteBatch::sprites() const
 
 const TextureAtlas& SpriteBatch::texture() const
 {
+	R_ASSERT(this->texture_.get(), "Texture is not set");
 	return *this->texture_.get();
 }
 

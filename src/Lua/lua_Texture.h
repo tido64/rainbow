@@ -10,17 +10,26 @@
 
 NS_RAINBOW_LUA_BEGIN
 {
-	class Texture : public Bind<Texture, TextureAtlas, kBindTypeStrong>
+	class Texture : public Bind<Texture>
 	{
-		friend Texture::Bind;
+		friend Bind;
 
 	public:
 		Texture(lua_State *);
 
+		inline TextureAtlas* get();
+
 	private:
-		int create(lua_State *);
-		int trim(lua_State *);
+		static int create(lua_State *);
+		static int trim(lua_State *);
+
+		SharedPtr<TextureAtlas> texture;
 	};
+
+	TextureAtlas* Texture::get()
+	{
+		return this->texture.get();
+	}
 } NS_RAINBOW_LUA_END
 
 #endif

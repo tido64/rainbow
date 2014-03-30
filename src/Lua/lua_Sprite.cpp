@@ -9,43 +9,51 @@
 
 NS_RAINBOW_LUA_BEGIN
 {
-	const char Sprite::class_name[] = "sprite";
+	template<>
+	const char Sprite::Bind::class_name[] = "sprite";
 
-	const Method<Sprite> Sprite::methods[] = {
-		{ "get_angle",    &Sprite::get_angle },
-		{ "get_color",    &Sprite::get_color },
-		{ "get_position", &Sprite::get_position },
-		{ "set_color",    &Sprite::set_color },
-		{ "set_normal",   &Sprite::set_normal },
-		{ "set_pivot",    &Sprite::set_pivot },
-		{ "set_position", &Sprite::set_position },
-		{ "set_rotation", &Sprite::set_rotation },
-		{ "set_scale",    &Sprite::set_scale },
-		{ "set_texture",  &Sprite::set_texture },
-		{ "mirror",       &Sprite::mirror },
-		{ "move",         &Sprite::move },
-		{ "rotate",       &Sprite::rotate },
-		{ 0, 0 }
+	template<>
+	const bool Sprite::Bind::is_constructible = false;
+
+	template<>
+	const luaL_Reg Sprite::Bind::functions[] = {
+		{ "get_angle",     &Sprite::get_angle },
+		{ "get_color",     &Sprite::get_color },
+		{ "get_position",  &Sprite::get_position },
+		{ "set_color",     &Sprite::set_color },
+		{ "set_normal",    &Sprite::set_normal },
+		{ "set_pivot",     &Sprite::set_pivot },
+		{ "set_position",  &Sprite::set_position },
+		{ "set_rotation",  &Sprite::set_rotation },
+		{ "set_scale",     &Sprite::set_scale },
+		{ "set_texture",   &Sprite::set_texture },
+		{ "mirror",        &Sprite::mirror },
+		{ "move",          &Sprite::move },
+		{ "rotate",        &Sprite::rotate },
+		{ nullptr, nullptr }
 	};
 
 	Sprite::Sprite(lua_State *L)
-	    : id(lua_tointeger(L, -1)),
-	      batch(static_cast<SpriteBatch*>(lua_touserdata(L, -2))) { }
-
-	::Sprite* Sprite::get() const
-	{
-		return &this->batch->sprites()[this->id];
-	}
+	    : id(lua_tointeger(L, 2)),
+	      batch(static_cast<SpriteBatch*>(lua_touserdata(L, 1))) { }
 
 	int Sprite::get_angle(lua_State *L)
 	{
-		lua_pushnumber(L, this->get()->angle());
+		Sprite *self = Bind::self(L);
+		if (!self)
+			return 0;
+
+		lua_pushnumber(L, self->sprite().angle());
 		return 1;
 	}
 
 	int Sprite::get_color(lua_State *L)
 	{
-		const Colorb& c = this->get()->color();
+		Sprite *self = Bind::self(L);
+		if (!self)
+			return 0;
+
+		const Colorb& c = self->sprite().color();
 		lua_pushinteger(L, c.r);
 		lua_pushinteger(L, c.g);
 		lua_pushinteger(L, c.b);
@@ -55,7 +63,11 @@ NS_RAINBOW_LUA_BEGIN
 
 	int Sprite::get_position(lua_State *L)
 	{
-		const Vec2f &v = this->get()->position();
+		Sprite *self = Bind::self(L);
+		if (!self)
+			return 0;
+
+		const Vec2f &v = self->sprite().position();
 		lua_pushnumber(L, v.x);
 		lua_pushnumber(L, v.y);
 		return 2;
@@ -63,80 +75,139 @@ NS_RAINBOW_LUA_BEGIN
 
 	int Sprite::set_color(lua_State *L)
 	{
-		unsigned int color = luaR_tointeger(L, 1) << 24;
-		color += luaR_tointeger(L, 2) << 16;
-		color += luaR_tointeger(L, 3) << 8;
-		color += luaR_optinteger(L, 4, 0xff);
-		this->get()->set_color(color);
+		LUA_ASSERT(lua_isnumber(L, 2) &&
+		           lua_isnumber(L, 3) &&
+		           lua_isnumber(L, 4) &&
+		           lua_isnumber(L, 5),
+		           "<sprite>:set_color(r, g, b, a = 255)");
+
+		Sprite *self = Bind::self(L);
+		if (!self)
+			return 0;
+
+		unsigned int color = lua_tointeger(L, 2) << 24;
+		color += lua_tointeger(L, 3) << 16;
+		color += lua_tointeger(L, 4) << 8;
+		color += luaR_optinteger(L, 5, 0xff);
+		self->sprite().set_color(color);
 		return 0;
 	}
 
 	int Sprite::set_normal(lua_State *L)
 	{
-		this->get()->set_normal(luaR_tointeger(L, 1));
+		LUA_ASSERT(lua_isnumber(L, 2), "<sprite>:set_normal(<texture>)");
+
+		Sprite *self = Bind::self(L);
+		if (!self)
+			return 0;
+
+		self->sprite().set_normal(lua_tointeger(L, 2));
 		return 0;
 	}
 
 	int Sprite::set_pivot(lua_State *L)
 	{
-		this->get()->set_pivot(Vec2f(luaR_tonumber(L, 1), luaR_tonumber(L, 2)));
+		LUA_ASSERT(lua_isnumber(L, 2) && lua_isnumber(L, 3),
+		           "<sprite>:set_pivot(x, y)");
+
+		Sprite *self = Bind::self(L);
+		if (!self)
+			return 0;
+
+		self->sprite().set_pivot(Vec2f(lua_tonumber(L, 2), lua_tonumber(L, 3)));
 		return 0;
 	}
 
 	int Sprite::set_position(lua_State *L)
 	{
-		this->get()->set_position(Vec2f(luaR_tonumber(L, 1), luaR_tonumber(L, 2)));
+		LUA_ASSERT(lua_isnumber(L, 2) && lua_isnumber(L, 3),
+		           "<sprite>:set_position(x, y)");
+
+		Sprite *self = Bind::self(L);
+		if (!self)
+			return 0;
+
+		self->sprite().set_position(
+		    Vec2f(lua_tonumber(L, 2), lua_tonumber(L, 3)));
 		return 0;
 	}
 
 	int Sprite::set_rotation(lua_State *L)
 	{
-		this->get()->set_rotation(luaR_tonumber(L, 1));
+		LUA_ASSERT(lua_isnumber(L, 2), "<sprite>:set_rotation(r)");
+
+		Sprite *self = Bind::self(L);
+		if (!self)
+			return 0;
+
+		self->sprite().set_rotation(lua_tonumber(L, 2));
 		return 0;
 	}
 
 	int Sprite::set_scale(lua_State *L)
 	{
-		switch (lua_gettop(L))
-		{
-			case 2:
-				this->get()->set_scale(Vec2f(luaR_tonumber(L, 1), luaR_tonumber(L, 2)));
-				break;
-			case 1:
-				this->get()->set_scale(luaR_tonumber(L, 1));
-				break;
-			default:
-				LUA_ASSERT(lua_gettop(L) == 1 || lua_gettop(L) == 2, "<sprite>:set_scale(fx [, fy])");
-				break;
-		}
+		LUA_ASSERT(lua_isnumber(L, 2) &&
+		           (lua_isnumber(L, 3) || lua_isnone(L, 3)),
+		           "<sprite>:set_scale(fx, fy = fx)");
+
+		Sprite *self = Bind::self(L);
+		if (!self)
+			return 0;
+
+		const float fx = lua_tonumber(L, 2);
+		self->sprite().set_scale(Vec2f(fx, luaR_optnumber(L, 3, fx)));
 		return 0;
 	}
 
 	int Sprite::set_texture(lua_State *L)
 	{
-		this->get()->set_texture(luaR_tointeger(L, 1));
+		LUA_ASSERT(lua_isnumber(L, 2), "<sprite>:set_texture(<texture>)");
+
+		Sprite *self = Bind::self(L);
+		if (!self)
+			return 0;
+
+		self->sprite().set_texture(lua_tointeger(L, 2));
 		return 0;
 	}
 
-	int Sprite::mirror(lua_State *)
+	int Sprite::mirror(lua_State *L)
 	{
-		this->get()->mirror();
+		Sprite *self = Bind::self(L);
+		if (!self)
+			return 0;
+
+		self->sprite().mirror();
 		return 0;
 	}
 
 	int Sprite::move(lua_State *L)
 	{
-		LUA_ASSERT(lua_gettop(L) == 2, "<sprite>:move(x, y)");
+		LUA_ASSERT(lua_isnumber(L, 2) && lua_isnumber(L, 3),
+		           "<sprite>:move(x, y)");
 
-		this->get()->move(Vec2f(luaR_tonumber(L, 1), luaR_tonumber(L, 2)));
+		Sprite *self = Bind::self(L);
+		if (!self)
+			return 0;
+
+		self->sprite().move(Vec2f(lua_tonumber(L, 2), lua_tonumber(L, 3)));
 		return 0;
 	}
 
 	int Sprite::rotate(lua_State *L)
 	{
-		LUA_ASSERT(lua_gettop(L) == 1, "<sprite>:rotate(r)");
+		LUA_ASSERT(lua_isnumber(L, 2), "<sprite>:rotate(r)");
 
-		this->get()->rotate(luaR_tonumber(L, 1));
+		Sprite *self = Bind::self(L);
+		if (!self)
+			return 0;
+
+		self->sprite().rotate(lua_tonumber(L, 2));
 		return 0;
+	}
+
+	::Sprite& Sprite::sprite() const
+	{
+		return this->batch->sprites()[this->id];
 	}
 } NS_RAINBOW_LUA_END

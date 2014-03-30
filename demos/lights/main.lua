@@ -20,7 +20,7 @@ function init()
 	sprite:set_position(screen.width * 0.5, screen.height * 0.5)
 	sprite:set_normal(assets:create(515, 341, 450, 338))
 	sprite:set_texture(assets:create(515, 1, 450, 338))
-	sprite.node = rainbow.scenegraph:add_batch(background)
+	local sprite_node = rainbow.scenegraph:add_batch(background)
 	g_scene.background = background
 
 	local diffuse = rainbow.shaders.diffuse(true)
@@ -28,7 +28,7 @@ function init()
 	local screen = rainbow.platform.screen
 	diffuse:set_position(screen.width * 0.5, screen.height * 0.5)
 	diffuse:set_radius(1000)
-	rainbow.scenegraph:attach_program(sprite.node, diffuse)
+	rainbow.scenegraph:attach_program(sprite_node, diffuse)
 	g_scene.lighting = diffuse
 
 	g_scene.delegate = {

@@ -20,6 +20,17 @@ local function endswith(str, ending)
 	return ending == '' or str:sub(-ending:len()) == ending
 end
 
+local function extend(data)
+	return setmetatable({ __userdata = data }, { __index = function(self, key)
+		local field = self.__userdata[key]
+		if not field then
+			return nil
+		end
+		self[key] = function(self, ...) return field(self.__userdata, ...) end
+		return self[key]
+	end })
+end
+
 local function insert(t, k, v)
 	if t[k] then
 		error(format("'%s' is defined twice", k))
@@ -73,12 +84,13 @@ end
 
 local function createbatch(node, resources)
 	local width, height = 1, 2
-	local batch = rainbow.spritebatch(#node.sprites)
+	local batch = extend(rainbow.spritebatch(#node.sprites))
 	batch:set_texture(resources[node.texture])
 	local sprites = {}
 	for i = 1, #node.sprites do
 		local def = node.sprites[i]
-		local sprite = batch:create_sprite(def.size[width], def.size[height])
+		local sprite =
+		    extend(batch:create_sprite(def.size[width], def.size[height]))
 		setproperties(sprite, def)
 		insert(sprites, def.name, sprite)
 	end
@@ -91,7 +103,8 @@ local function createfont(def)
 end
 
 local function createlabel(def, resources)
-	local label = def.text and rainbow.label(def.text) or rainbow.label()
+	local label = extend(def.text and rainbow.label(def.text)
+	                               or rainbow.label())
 	label:set_font(resources[def.font])
 	setproperties(label, def)
 	return label

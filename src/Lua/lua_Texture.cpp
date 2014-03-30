@@ -13,48 +13,53 @@ NS_RAINBOW_LUA_BEGIN
 	const char Texture::Bind::class_name[] = "texture";
 
 	template<>
-	const Method<Texture> Texture::Bind::methods[] = {
+	const bool Texture::Bind::is_constructible = true;
+
+	template<>
+	const luaL_Reg Texture::Bind::functions[] = {
 		{ "create",  &Texture::create },
 		{ "trim",    &Texture::trim },
-		{ 0, 0 }
+		{ nullptr, nullptr }
 	};
 
 	Texture::Texture(lua_State *L)
 	{
-		switch (lua_type(L, -1))
-		{
-			case LUA_TLIGHTUSERDATA:
-				this->ptr = static_cast<TextureAtlas*>(lua_touserdata(L, -1));
-				break;
-			case LUA_TSTRING: {
-				DataMap data(Path(luaR_tostring(L, -1)));
-				if (!data)
-					luaL_error(L, "rainbow.texture: Failed to load texture");
-				this->ptr = new TextureAtlas(data);
-				if (!*this->ptr)
-					luaL_error(L, "rainbow.texture: Failed to create texture");
-				break;
-			}
-			default:
-				LUA_ASSERT(lua_gettop(L) == 4, "rainbow.texture(<path to texture>)");
-				break;
-		}
+		LUA_ASSERT(lua_isstring(L, 1), "rainbow.texture(\"/path/to/texture\")");
+
+		DataMap data(Path(lua_tostring(L, 1)));
+		if (!data)
+			luaL_error(L, "rainbow.texture: Failed to load texture");
+		this->texture = new TextureAtlas(data);
+		if (!*this->texture)
+			luaL_error(L, "rainbow.texture: Failed to create texture");
 	}
 
 	int Texture::create(lua_State *L)
 	{
-		LUA_ASSERT(lua_gettop(L) == 4, "<texture>:create(x, y, width, height)");
+		LUA_ASSERT(lua_isnumber(L, 2) &&
+		           lua_isnumber(L, 3) &&
+		           lua_isnumber(L, 4) &&
+		           lua_isnumber(L, 5),
+		           "<texture>:create(x, y, width, height)");
 
-		const Vec2i origin(luaR_tointeger(L, 1), luaR_tointeger(L, 2));
-		const int w = luaR_tointeger(L, 3);
-		const int h = luaR_tointeger(L, 4);
-		lua_pushinteger(L, this->ptr->define(origin, w, h));
+		Texture *self = Bind::self(L);
+		if (!self)
+			return 0;
+
+		const Vec2i origin(lua_tointeger(L, 2), lua_tointeger(L, 3));
+		const int w = lua_tointeger(L, 4);
+		const int h = lua_tointeger(L, 5);
+		lua_pushinteger(L, self->texture->define(origin, w, h));
 		return 1;
 	}
 
-	int Texture::trim(lua_State *)
+	int Texture::trim(lua_State *L)
 	{
-		this->ptr->trim();
+		Texture *self = Bind::self(L);
+		if (!self)
+			return 0;
+
+		self->texture->trim();
 		return 0;
 	}
 } NS_RAINBOW_LUA_END

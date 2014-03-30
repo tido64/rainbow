@@ -3,6 +3,7 @@
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
 #include "Common/Data.h"
+#include "Common/Debug.h"
 #include "Config.h"
 #include "FileSystem/File.h"
 #include "FileSystem/Path.h"

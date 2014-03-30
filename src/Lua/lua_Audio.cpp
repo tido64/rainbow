@@ -141,7 +141,7 @@ NS_RAINBOW_LUA_MODULE_BEGIN(Audio)
 		luaR_rawsetcclosurefield(L, &play, "play");
 		luaR_rawsetcclosurefield(L, &stop, "stop");
 
-		wrap<Recorder>(L);
+		reg<Recorder>(L);
 
 		lua_rawset(L, -3);
 	}

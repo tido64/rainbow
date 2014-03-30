@@ -10,24 +10,32 @@
 
 NS_RAINBOW_LUA_BEGIN
 {
-	class Label : public ::Label, public Bind<Label, ::Label, kBindTypeDerived>
+	class Label : public Bind<Label>
 	{
-		friend Label::Bind;
+		friend Bind;
 
 	public:
 		Label(lua_State *);
 
-	private:
-		int get_color(lua_State *);
-		int set_alignment(lua_State *);
-		int set_color(lua_State *);
-		int set_font(lua_State *);
-		int set_position(lua_State *);
-		int set_scale(lua_State *);
-		int set_text(lua_State *);
+		inline ::Label* get();
 
-		int move(lua_State *);
+	private:
+		static int get_color(lua_State *);
+		static int set_alignment(lua_State *);
+		static int set_color(lua_State *);
+		static int set_font(lua_State *);
+		static int set_position(lua_State *);
+		static int set_scale(lua_State *);
+		static int set_text(lua_State *);
+		static int move(lua_State *);
+
+		::Label label;
 	};
+
+	::Label* Label::get()
+	{
+		return &this->label;
+	}
 }
 NS_RAINBOW_LUA_END
 

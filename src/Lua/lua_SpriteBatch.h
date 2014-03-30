@@ -10,21 +10,28 @@
 
 NS_RAINBOW_LUA_BEGIN
 {
-	class SpriteBatch
-	    : public ::SpriteBatch,
-	      public Bind<SpriteBatch, ::SpriteBatch, kBindTypeDerived>
+	class SpriteBatch : public Bind<SpriteBatch>
 	{
-		friend SpriteBatch::Bind;
+		friend Bind;
 
 	public:
 		SpriteBatch(lua_State *L);
 
+		inline ::SpriteBatch* get();
+
 	private:
-		int add(lua_State *);
-		int create_sprite(lua_State *);
-		int set_normal(lua_State *);
-		int set_texture(lua_State *);
+		static int add(lua_State *);
+		static int create_sprite(lua_State *);
+		static int set_normal(lua_State *);
+		static int set_texture(lua_State *);
+
+		::SpriteBatch batch;
 	};
+
+	::SpriteBatch* SpriteBatch::get()
+	{
+		return &this->batch;
+	}
 } NS_RAINBOW_LUA_END
 
 #endif

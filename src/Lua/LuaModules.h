@@ -28,12 +28,12 @@ NS_RAINBOW_LUA_BEGIN
 {
 	inline void bind(lua_State *L)
 	{
-		wrap<Animation>(L);
-		wrap<Font>(L);
-		wrap<Label>(L);
-		wrap<Sprite>(L, true);
-		wrap<SpriteBatch>(L);
-		wrap<Texture>(L);
+		reg<Animation>(L);
+		reg<Font>(L);
+		reg<Label>(L);
+		reg<Sprite>(L);
+		reg<SpriteBatch>(L);
+		reg<Texture>(L);
 	}
 
 	inline void init(lua_State *L)

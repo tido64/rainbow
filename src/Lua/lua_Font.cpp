@@ -13,17 +13,21 @@ NS_RAINBOW_LUA_BEGIN
 	const char Font::Bind::class_name[] = "font";
 
 	template<>
-	const Method<Font> Font::Bind::methods[] = {
-		{ 0, 0 }
-	};
+	const bool Font::Bind::is_constructible = true;
+
+	template<>
+	const luaL_Reg Font::Bind::functions[] = { { 0, 0 } };
 
 	Font::Font(lua_State *L)
 	{
-		const Data &font = Data::load_asset(luaR_tostring(L, 1));
+		LUA_ASSERT(lua_isstring(L, 1) && lua_isnumber(L, 2),
+		           "rainbow.font(\"path/to/fontface\", font_size)");
+
+		const Data &font = Data::load_asset(lua_tostring(L, 1));
 		if (!font)
 			luaL_error(L, "rainbow.font: Failed to load font");
-		this->ptr = new FontAtlas(font, luaR_tonumber(L, 2));
-		if (!*this->ptr)
+		this->font = new FontAtlas(font, lua_tonumber(L, 2));
+		if (!*this->font)
 			luaL_error(L, "rainbow.font: Failed to create font texture");
 	}
 } NS_RAINBOW_LUA_END

@@ -13,7 +13,10 @@ NS_RAINBOW_LUA_BEGIN
 	const char Animation::Bind::class_name[] = "animation";
 
 	template<>
-	const Method<Animation> Animation::Bind::methods[] = {
+	const bool Animation::Bind::is_constructible = true;
+
+	template<>
+	const luaL_Reg Animation::Bind::functions[] = {
 		{ "is_stopped",  &Animation::is_stopped },
 		{ "set_delay",   &Animation::set_delay },
 		{ "set_fps",     &Animation::set_fps },
@@ -21,15 +24,20 @@ NS_RAINBOW_LUA_BEGIN
 		{ "set_sprite",  &Animation::set_sprite },
 		{ "play",        &Animation::play },
 		{ "stop",        &Animation::stop },
-		{ 0, 0 }
+		{ nullptr, nullptr }
 	};
 
-	Animation::Animation(lua_State *L)
+	Animation::Animation(lua_State *L) : animation(nullptr)
 	{
-		LUA_ASSERT(lua_gettop(L) == 3 || lua_gettop(L) == 4,
-				   "rainbow.animation(sprite, frames{}, fps, loop delay)");
+		LUA_ASSERT((luaR_isuserdata(L, 1) || lua_isnil(L, 1)) &&
+		           lua_istable(L, 2) &&
+		           lua_isnumber(L, 3) &&
+		           (lua_isnumber(L, 4) || lua_isnone(L, 4)),
+		           "rainbow.animation(sprite, frames{}, fps, loop_delay = 0)");
 
-		::Sprite *sprite = lua_isnil(L, 1) ? nullptr : wrapper<Sprite>(L, 1)->get();
+		replacetable(L, 1);
+		::Sprite *sprite =
+		    lua_isuserdata(L, 1) ? touserdata<Sprite>(L, 1)->get() : nullptr;
 
 		// Count number of frames
 		unsigned int count = 0;
@@ -54,70 +62,97 @@ NS_RAINBOW_LUA_BEGIN
 		}
 		frames[count] = ::Animation::kAnimationEnd;
 
-		const unsigned int fps = luaR_tointeger(L, 3);
+		const unsigned int fps = lua_tointeger(L, 3);
 		const int delay = luaR_optinteger(L, 4, 0);
-		this->ptr = new ::Animation(sprite, frames, fps, delay);
+		this->animation = new ::Animation(sprite, frames, fps, delay);
 	}
 
 	Animation::~Animation()
 	{
-		delete this->ptr;
+		delete this->animation;
 	}
 
 	int Animation::is_stopped(lua_State *L)
 	{
-		lua_pushboolean(L, this->ptr->is_stopped());
+		Animation *self = Bind::self(L);
+		if (!self)
+			return 0;
+
+		lua_pushboolean(L, self->animation->is_stopped());
 		return 1;
 	}
 
 	int Animation::set_delay(lua_State *L)
 	{
-		LUA_ASSERT(lua_gettop(L) == 1, "<animation>:set_loop(delay in milliseconds)");
+		LUA_ASSERT(lua_isnumber(L, 2), "<animation>:set_loop(delay_in_ms)");
 
-		this->ptr->set_delay(luaR_tointeger(L, 1));
+		Animation *self = Bind::self(L);
+		if (!self)
+			return 0;
+
+		self->animation->set_delay(lua_tointeger(L, 2));
 		return 0;
 	}
 
 	int Animation::set_fps(lua_State *L)
 	{
-		LUA_ASSERT(lua_gettop(L) == 1, "<animation>:set_fps(fps)");
+		LUA_ASSERT(lua_isnumber(L, 2), "<animation>:set_fps(fps)");
 
-		this->ptr->set_timeout(1000.0f / luaR_tointeger(L, 1));
+		Animation *self = Bind::self(L);
+		if (!self)
+			return 0;
+
+		self->animation->set_timeout(1000.0f / lua_tointeger(L, 2));
 		return 0;
 	}
 
 	int Animation::set_frames(lua_State *L)
 	{
-		LUA_ASSERT(lua_gettop(L) > 1, "<animation>:set_frames(table { count > 1 })");
+		LUA_ASSERT(lua_gettop(L) > 2, "<animation>:set_frames(f1, f2, ...)");
 
-		const unsigned int framec = lua_gettop(L);
-		unsigned int *const frames = new unsigned int[framec + 1];
-		for (unsigned int i = 0; i < framec; ++i)
-			frames[i] = luaR_tointeger(L, i);
-		frames[framec] = 0;
-		this->ptr->set_frames(frames);
+		Animation *self = Bind::self(L);
+		if (!self)
+			return 0;
+
+		const int count = lua_gettop(L) - 1;
+		unsigned int *const frames = new unsigned int[count + 1];
+		for (int i = 0; i < count; ++i)
+			frames[i] = luaR_tointeger(L, i + 2);
+		frames[count] = 0;
+		self->animation->set_frames(frames);
 		return 0;
 	}
 
 	int Animation::set_sprite(lua_State *L)
 	{
-		LUA_ASSERT(lua_gettop(L) == 1, "<animation>:set_sprite(sprite)");
+		LUA_ASSERT(lua_isuserdata(L, 2), "<animation>:set_sprite(sprite)");
 
-		::Sprite *sprite = wrapper<Sprite>(L, 1)->get();
-		this->ptr->set_sprite(sprite);
+		Animation *self = Bind::self(L);
+		if (!self)
+			return 0;
+
+		self->animation->set_sprite(touserdata<Sprite>(L, 2)->get());
 		return 0;
 	}
 
-	int Animation::play(lua_State *)
+	int Animation::play(lua_State *L)
 	{
-		this->ptr->start();
+		Animation *self = Bind::self(L);
+		if (!self)
+			return 0;
+
+		self->animation->start();
 		return 0;
 	}
 
-	int Animation::stop(lua_State *)
+	int Animation::stop(lua_State *L)
 	{
-		this->ptr->stop();
-		this->ptr->reset();
+		Animation *self = Bind::self(L);
+		if (!self)
+			return 0;
+
+		self->animation->stop();
+		self->animation->reset();
 		return 0;
 	}
 } NS_RAINBOW_LUA_END

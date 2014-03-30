@@ -10,11 +10,21 @@
 
 NS_RAINBOW_LUA_BEGIN
 {
-	class Font : public Bind<Font, FontAtlas, kBindTypeStrong>
+	class Font : public Bind<Font>
 	{
 	public:
 		Font(lua_State *);
+
+		inline FontAtlas* get();
+
+	private:
+		SharedPtr<FontAtlas> font;
 	};
+
+	FontAtlas* Font::get()
+	{
+		return this->font.get();
+	}
 } NS_RAINBOW_LUA_END
 
 #endif

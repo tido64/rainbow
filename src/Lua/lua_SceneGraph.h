@@ -5,39 +5,47 @@
 #ifndef LUA_SCENEGRAPH_H_
 #define LUA_SCENEGRAPH_H_
 
-#include "Graphics/SceneGraph.h"
+#include "Common/NonCopyable.h"
 #include "Lua/LuaBind.h"
-#include "Lua/LuaMachine.h"
+
+namespace SceneGraph { class Node; }
 
 NS_RAINBOW_LUA_BEGIN
 {
-	class SceneGraph
-	    : public Bind<SceneGraph, ::SceneGraph::Node, kBindTypeWeak>,
-	      private NonCopyable<SceneGraph>
+	class SceneGraph : public Bind<SceneGraph>, private NonCopyable<SceneGraph>
 	{
-		friend SceneGraph::Bind;
+		friend Bind;
 
 	public:
+		enum CastingMethod
+		{
+			kCastingUnsafe,
+			kCastingSafe
+		};
+
 		static SceneGraph* create(lua_State *, ::SceneGraph::Node *);
 		static void destroy(lua_State *, SceneGraph *);
 
 	private:
+		template<class T, CastingMethod C>
+		static int add_child(lua_State *L);
+
+		static int add_animation(lua_State *);
+		static int add_batch(lua_State *);
+		static int add_drawable(lua_State *);
+		static int add_label(lua_State *);
+		static int add_node(lua_State *);
+		static int attach_program(lua_State *);
+		static int disable(lua_State *);
+		static int enable(lua_State *);
+		static int remove(lua_State *);
+		static int set_parent(lua_State *);
+		static int move(lua_State *);
+
+		::SceneGraph::Node *node;
+
 		SceneGraph(::SceneGraph::Node *);
 		~SceneGraph() = default;
-
-		int add_animation(lua_State *);
-		int add_batch(lua_State *);
-		int add_drawable(lua_State *);
-		int add_label(lua_State *);
-		int add_node(lua_State *);
-
-		int attach_program(lua_State *);
-		int disable(lua_State *);
-		int enable(lua_State *);
-		int remove(lua_State *);
-		int set_parent(lua_State *);
-
-		int move(lua_State *);
 	};
 } NS_RAINBOW_LUA_END
 

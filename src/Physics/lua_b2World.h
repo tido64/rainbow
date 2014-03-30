@@ -21,7 +21,7 @@ NS_B2_LUA_BEGIN
 			}
 			lua_rawgeti(L, LUA_REGISTRYINDEX, g_contact);
 			lua_rawgeti(L, -1, 0);
-			Contact *c = static_cast<Contact*>(luaR_touserdata(L, -1, Contact::class_name));
+			Contact *c = Rainbow::Lua::touserdata<Contact>(L, -1);
 			c->set(contact);
 			lua_pop(L, 1);
 		}
@@ -44,10 +44,7 @@ NS_B2_LUA_BEGIN
 		}
 	}
 
-	class World :
-		public b2ContactListener,
-		public b2World,
-		public Rainbow::Lua::Bind<World, b2World, Rainbow::Lua::kBindTypeDerived>
+	class World : public b2ContactListener, public Bind<World>
 	{
 		friend Bind;
 
@@ -65,29 +62,28 @@ NS_B2_LUA_BEGIN
 		                       const b2ContactImpulse *impulse) override;
 
 	private:
+		static int set_contact_listener(lua_State *);
+
+		static int create_body(lua_State *);
+		static int destroy_body(lua_State *);
+
+		static int create_joint(lua_State *);
+		static int destroy_joint(lua_State *);
+
+		static int step(lua_State *);
+
+		static int clear_forces(lua_State *);
+
+		static int set_gravity(lua_State *);
+		static int get_gravity(lua_State *);
+
+		static int dump(lua_State *);
+
 		int contact_listener;
 		lua_Number elapsed;
-
 		lua_State *L;
-
 		RainbowDraw debug_draw;
-
-		int set_contact_listener(lua_State *);
-
-		int create_body(lua_State *);
-		int destroy_body(lua_State *);
-
-		int create_joint(lua_State *);
-		int destroy_joint(lua_State *);
-
-		int step(lua_State *);
-
-		int clear_forces(lua_State *);
-
-		int set_gravity(lua_State *);
-		int get_gravity(lua_State *);
-
-		int dump(lua_State *);
+		b2World world;
 
 		void interpolate();
 		void restore_state();
@@ -99,48 +95,62 @@ NS_B2_LUA_BEGIN
 	const lua_Number kFramesPerMs = 60.0 / 1000.0;
 
 	World::World(lua_State *L)
-	    : b2World(b2Vec2(0.0f, kStandardGravity)),
-	      contact_listener(LUA_REFNIL), elapsed(0.0), L(L),
-	      debug_draw(ptm_ratio)
+	    : contact_listener(LUA_REFNIL), elapsed(0.0), L(L),
+	      debug_draw(ptm_ratio), world(b2Vec2(0.0f, kStandardGravity))
 	{
-		if (lua_gettop(L) >= 2)
-			b2World::SetGravity(b2Vec2(luaR_tonumber(L, 1), luaR_tonumber(L, 2)));
+		LUA_ASSERT(lua_isnone(L, 1) ||
+		           (lua_isnumber(L, 1) && lua_isnumber(L, 2)),
+		           "b2.World(gx = 0.0, gy = -9.80665)");
 
-		b2World::SetDebugDraw(&this->debug_draw);
+		if (lua_gettop(L) >= 1)
+		{
+			const b2Vec2 &gravity = this->world.GetGravity();
+			this->world.SetGravity(b2Vec2(luaR_optnumber(L, 1, gravity.x),
+			                              luaR_optnumber(L, 2, gravity.y)));
+		}
+
 		this->debug_draw.SetFlags(b2Draw::e_shapeBit);
+		this->world.SetDebugDraw(&this->debug_draw);
 
-		g_debug_data->push_back(this);
+		g_debug_data->push_back(&this->world);
 	}
 
 	World::~World()
 	{
-		g_debug_data->erase(this);
+		g_debug_data->erase(&this->world);
 		if (this->contact_listener != LUA_REFNIL)
 			luaL_unref(L, LUA_REGISTRYINDEX, this->contact_listener);
 	}
 
 	int World::set_contact_listener(lua_State *L)
 	{
-		LUA_ASSERT(lua_gettop(L) == 1,
+		LUA_ASSERT(lua_istable(L, 2),
 		           "<b2.World>:SetContactListener(listener)");
 
-		if (this->contact_listener == LUA_REFNIL)
-			b2World::SetContactListener(this);
+		World *self = Bind::self(L);
+		if (!self)
+			return 0;
+
+		if (self->contact_listener == LUA_REFNIL)
+			self->world.SetContactListener(self);
 		else
-			luaL_unref(L, LUA_REGISTRYINDEX, this->contact_listener);
-		this->contact_listener = luaL_ref(L, LUA_REGISTRYINDEX);
+			luaL_unref(L, LUA_REGISTRYINDEX, self->contact_listener);
+		self->contact_listener = luaL_ref(L, LUA_REGISTRYINDEX);
 		return 0;
 	}
 
 	int World::create_body(lua_State *L)
 	{
-		LUA_ASSERT(lua_type(L, 1) == LUA_TTABLE,
-		           "<b2.World>:CreateBody(b2.BodyDef)");
+		LUA_ASSERT(lua_istable(L, 2), "<b2.World>:CreateBody(<b2.BodyDef>)");
+
+		World *self = Bind::self(L);
+		if (!self)
+			return 0;
 
 		b2BodyDef def;
 		parse_BodyDef(L, def);
 		def.userData = new BodyData(def);
-		b2Body *body = b2World::CreateBody(&def);
+		b2Body *body = self->world.CreateBody(&def);
 		lua_pushlightuserdata(L, body);
 		Rainbow::Lua::alloc<Body>(L);
 
@@ -156,9 +166,13 @@ NS_B2_LUA_BEGIN
 
 	int World::destroy_body(lua_State *L)
 	{
-		LUA_ASSERT(lua_gettop(L) == 1, "<b2.World>:DestroyBody(b2.Body)");
+		LUA_ASSERT(lua_isuserdata(L, 2), "<b2.World>:DestroyBody(<b2.Body>)");
 
-		b2Body *body = Rainbow::Lua::wrapper<Body>(L)->get();
+		World *self = Bind::self(L);
+		if (!self)
+			return 0;
+
+		b2Body *body = Rainbow::Lua::touserdata<Body>(L, 2)->get();
 
 		// Unregister body
 		lua_rawgeti(L, LUA_REGISTRYINDEX, g_body_list);
@@ -168,65 +182,88 @@ NS_B2_LUA_BEGIN
 		lua_pop(L, 1);
 
 		delete static_cast<BodyData*>(body->GetUserData());
-		b2World::DestroyBody(body);
+		self->world.DestroyBody(body);
 		return 0;
 	}
 
 	int World::step(lua_State *L)
 	{
-		LUA_ASSERT(lua_gettop(L) == 1 || lua_gettop(L) == 3,
-		           "<b2.World>:Step(dt[, velocityIterations, positionIterations])");
+		LUA_ASSERT(
+		    lua_isnumber(L, 2),
+		    "<b2.World>:Step(dt[, velocityIterations, positionIterations])");
 
-		this->elapsed += luaR_tonumber(L, 1);
-		unsigned int steps = static_cast<unsigned int>(this->elapsed * kFramesPerMs);
+		World *self = Bind::self(L);
+		if (!self)
+			return 0;
+
+		self->elapsed += lua_tonumber(L, 2);
+		unsigned int steps =
+		    static_cast<unsigned int>(self->elapsed * kFramesPerMs);
 		if (!steps)
-			this->restore_state();
+			self->restore_state();
 		else
 		{
-			this->elapsed -= steps / kFramesPerMs;
+			self->elapsed -= steps / kFramesPerMs;
 			if (steps > kMaxSteps)
 				steps = kMaxSteps;
 
 			const int v_iter = luaR_optinteger(L, 2, 8);
 			const int p_iter = luaR_optinteger(L, 3, 3);
 
-			this->restore_state();
+			self->restore_state();
 			for (unsigned int i = 0; i < steps; ++i)
 			{
-				b2World::Step(kFixedStep, v_iter, p_iter);
-				this->save_state();
+				self->world.Step(kFixedStep, v_iter, p_iter);
+				self->save_state();
 			}
-			b2World::ClearForces();
-			this->interpolate();
+			self->world.ClearForces();
+			self->interpolate();
 		}
 		return 0;
 	}
 
-	int World::clear_forces(lua_State *)
+	int World::clear_forces(lua_State *L)
 	{
-		b2World::ClearForces();
+		World *self = Bind::self(L);
+		if (!self)
+			return 0;
+
+		self->world.ClearForces();
 		return 0;
 	}
 
 	int World::set_gravity(lua_State *L)
 	{
-		LUA_ASSERT(lua_gettop(L) == 2, "<b2.World>:SetGravity(x, y)");
+		LUA_ASSERT(lua_isnumber(L, 2) && lua_isnumber(L, 3),
+		           "<b2.World>:SetGravity(x, y)");
 
-		b2World::SetGravity(b2Vec2(luaR_tonumber(L, 1), luaR_tonumber(L, 2)));
+		World *self = Bind::self(L);
+		if (!self)
+			return 0;
+
+		self->world.SetGravity(b2Vec2(lua_tonumber(L, 2), lua_tonumber(L, 3)));
 		return 0;
 	}
 
 	int World::get_gravity(lua_State *L)
 	{
-		b2Vec2 gravity = b2World::GetGravity();
+		World *self = Bind::self(L);
+		if (!self)
+			return 0;
+
+		const b2Vec2 &gravity = self->world.GetGravity();
 		lua_pushnumber(L, gravity.x);
 		lua_pushnumber(L, gravity.y);
 		return 2;
 	}
 
-	int World::dump(lua_State *)
+	int World::dump(lua_State *L)
 	{
-		b2World::Dump();
+		World *self = Bind::self(L);
+		if (!self)
+			return 0;
+
+		self->world.Dump();
 		return 0;
 	}
 
@@ -252,7 +289,7 @@ NS_B2_LUA_BEGIN
 		FireContactEvent(event, this->L, 1);
 	}
 
-	void World::PreSolve(b2Contact *contact, const b2Manifold *oldManifold)
+	void World::PreSolve(b2Contact *contact, const b2Manifold *)
 	{
 		if (this->contact_listener == LUA_REFNIL)
 			return;
@@ -260,11 +297,10 @@ NS_B2_LUA_BEGIN
 		const char event[] = "PreSolve";
 		PreContactEvent(event, this->L, this->contact_listener);
 		CreateContactList(this->L, contact);
-		static_cast<void>(oldManifold);
 		FireContactEvent(event, this->L, 1);
 	}
 
-	void World::PostSolve(b2Contact *contact, const b2ContactImpulse *impulse)
+	void World::PostSolve(b2Contact *contact, const b2ContactImpulse *)
 	{
 		if (this->contact_listener == LUA_REFNIL)
 			return;
@@ -272,7 +308,6 @@ NS_B2_LUA_BEGIN
 		const char event[] = "PostSolve";
 		PreContactEvent(event, this->L, this->contact_listener);
 		CreateContactList(this->L, contact);
-		static_cast<void>(impulse);
 		FireContactEvent(event, this->L, 1);
 	}
 
@@ -280,7 +315,7 @@ NS_B2_LUA_BEGIN
 	{
 		const float ratio = this->elapsed * kFramesPerMs;
 		const float rest = 1.0f - ratio;
-		for (b2Body *b = b2World::GetBodyList(); b; b = b->GetNext())
+		for (b2Body *b = this->world.GetBodyList(); b; b = b->GetNext())
 		{
 			if (b->GetType() == b2_staticBody || !b->IsAwake())
 				continue;
@@ -297,7 +332,7 @@ NS_B2_LUA_BEGIN
 
 	void World::restore_state()
 	{
-		for (b2Body *b = b2World::GetBodyList(); b; b = b->GetNext())
+		for (b2Body *b = this->world.GetBodyList(); b; b = b->GetNext())
 		{
 			if (b->GetType() == b2_staticBody)
 				continue;
@@ -314,7 +349,7 @@ NS_B2_LUA_BEGIN
 
 	void World::save_state()
 	{
-		for (b2Body *b = b2World::GetBodyList(); b; b = b->GetNext())
+		for (b2Body *b = this->world.GetBodyList(); b; b = b->GetNext())
 		{
 			if (b->GetType() == b2_staticBody)
 				continue;
@@ -337,7 +372,10 @@ NS_RAINBOW_LUA_BEGIN
 	const char World::Bind::class_name[] = "World";
 
 	template<>
-	const Method<World> World::Bind::methods[] = {
+	const bool World::Bind::is_constructible = true;
+
+	template<>
+	const luaL_Reg World::Bind::functions[] = {
 		{ "SetContactListener",  &World::set_contact_listener },
 		{ "CreateBody",          &World::create_body },
 		{ "DestroyBody",         &World::destroy_body },

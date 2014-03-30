@@ -110,6 +110,21 @@ NS_RAINBOW_LUA_BEGIN
 		return load(L, chunk, name, true);
 	}
 
+	void replacetable(lua_State *L, const int n)
+	{
+		if (!lua_istable(L, n))
+			return;
+
+		lua_pushliteral(L, "__userdata");
+		lua_rawget(L, n);
+		if (!lua_isuserdata(L, -1))
+		{
+			lua_pop(L, 1);
+			return;
+		}
+		lua_replace(L, n);
+	}
+
 	int sethook(lua_State *L, const int mask)
 	{
 		if (g_level >= 0)

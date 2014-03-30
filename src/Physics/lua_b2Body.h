@@ -115,110 +115,129 @@ NS_B2_LUA_BEGIN
 		lua_pop(L, 1);
 	}
 
-	class Body
-	    : public Rainbow::Lua::Bind<Body, b2Body, Rainbow::Lua::kBindTypeWeak>
+	class Body : public Bind<Body>
 	{
 		friend Bind;
 
 	public:
 		Body(lua_State *);
+		inline b2Body* get();
 
 	private:
-		int bind(lua_State *);
-		int scale_and_position(lua_State *);
+		static int bind(lua_State *);
+		static int scale_and_position(lua_State *);
 
-		int create_fixture(lua_State *);
-		int destroy_fixture(lua_State *);
+		static int create_fixture(lua_State *);
+		static int destroy_fixture(lua_State *);
 
-		int set_transform(lua_State *);
-		int get_position(lua_State *);
-		int get_angle(lua_State *);
-		int get_world_center(lua_State *);
-		int get_local_center(lua_State *);
+		static int set_transform(lua_State *);
+		static int get_position(lua_State *);
+		static int get_angle(lua_State *);
+		static int get_world_center(lua_State *);
+		static int get_local_center(lua_State *);
 
-		int set_linear_velocity(lua_State *);
-		int get_linear_velocity(lua_State *);
-		int set_angular_velocity(lua_State *);
-		int get_angular_velocity(lua_State *);
+		static int set_linear_velocity(lua_State *);
+		static int get_linear_velocity(lua_State *);
+		static int set_angular_velocity(lua_State *);
+		static int get_angular_velocity(lua_State *);
 
-		int apply_force(lua_State *);
-		int apply_force_to_center(lua_State *);
-		int apply_torque(lua_State *);
-		int apply_linear_impulse(lua_State *);
-		int apply_angular_impulse(lua_State *);
+		static int apply_force(lua_State *);
+		static int apply_force_to_center(lua_State *);
+		static int apply_torque(lua_State *);
+		static int apply_linear_impulse(lua_State *);
+		static int apply_angular_impulse(lua_State *);
 
-		int get_linear_damping(lua_State *);
-		int set_linear_damping(lua_State *);
-		int get_angular_damping(lua_State *);
-		int set_angular_damping(lua_State *);
+		static int get_linear_damping(lua_State *);
+		static int set_linear_damping(lua_State *);
+		static int get_angular_damping(lua_State *);
+		static int set_angular_damping(lua_State *);
 
-		int get_gravity_scale(lua_State *);
-		int set_gravity_scale(lua_State *);
+		static int get_gravity_scale(lua_State *);
+		static int set_gravity_scale(lua_State *);
 
-		int set_bullet(lua_State *);
-		int is_bullet(lua_State *);
+		static int set_bullet(lua_State *);
+		static int is_bullet(lua_State *);
 
-		int set_sleeping_allowed(lua_State *);
-		int is_sleeping_allowed(lua_State *);
-		int set_awake(lua_State *);
-		int is_awake(lua_State *);
-		int set_active(lua_State *);
-		int is_active(lua_State *);
+		static int set_sleeping_allowed(lua_State *);
+		static int is_sleeping_allowed(lua_State *);
+		static int set_awake(lua_State *);
+		static int is_awake(lua_State *);
+		static int set_active(lua_State *);
+		static int is_active(lua_State *);
 
-		int set_fixed_rotation(lua_State *);
-		int is_fixed_rotation(lua_State *);
+		static int set_fixed_rotation(lua_State *);
+		static int is_fixed_rotation(lua_State *);
 
-		int dump(lua_State *);
+		static int dump(lua_State *);
+
+		b2Body *body;
 	};
 
 	Body::Body(lua_State *L)
-	    : Bind(static_cast<b2Body*>(lua_touserdata(L, -1))) { }
+	    : body(static_cast<b2Body*>(lua_touserdata(L, -1))) { }
+
+	b2Body* Body::get()
+	{
+		return this->body;
+	}
 
 	int Body::bind(lua_State *L)
 	{
-		LUA_ASSERT(lua_gettop(L) == 1, "<b2.Body>:Bind(<rainbow.sprite>)");
+		LUA_ASSERT(luaR_isuserdata(L, 2), "<b2.Body>:Bind(<rainbow.sprite>)");
 
-		BodyData *data = static_cast<BodyData*>(this->ptr->GetUserData());
-		data->sprite = Rainbow::Lua::wrapper<Rainbow::Lua::Sprite>(L)->get();
-		b2Vec2 pos = this->ptr->GetPosition();
+		Body *self = Bind::self(L);
+		if (!self)
+			return 0;
+
+		BodyData *data = static_cast<BodyData*>(self->body->GetUserData());
+		Rainbow::Lua::replacetable(L, 2);
+		data->sprite =
+		    Rainbow::Lua::touserdata<Rainbow::Lua::Sprite>(L, 2)->get();
+		b2Vec2 pos = self->body->GetPosition();
 		pos *= ptm_ratio;
 		data->sprite->set_position(Vec2f(pos.x, pos.y));
-		data->sprite->set_rotation(this->ptr->GetAngle());
+		data->sprite->set_rotation(self->body->GetAngle());
 		return 0;
 	}
 
 	int Body::scale_and_position(lua_State *L)
 	{
-		LUA_ASSERT(lua_gettop(L) == 3,
+		LUA_ASSERT(lua_isnumber(L, 2) &&
+		           lua_isnumber(L, 3) &&
+		           lua_isnumber(L, 4),
 		           "<b2.Body>:ScaleAndPosition(scale, x, y)");
 
-		const lua_Number scale = luaR_tonumber(L, 1);
-		const lua_Number x = luaR_tonumber(L, 2);
-		const lua_Number y = luaR_tonumber(L, 3);
+		Body *self = Bind::self(L);
+		if (!self)
+			return 0;
+
+		const lua_Number scale = lua_tonumber(L, 2);
+		const lua_Number x = lua_tonumber(L, 3);
+		const lua_Number y = lua_tonumber(L, 4);
 
 		b2BodyDef body_def;
-		body_def.type = this->ptr->GetType();
+		body_def.type = self->body->GetType();
 		body_def.position.Set(x / ptm_ratio, y / ptm_ratio);
-		body_def.angle = this->ptr->GetAngle();
-		body_def.linearVelocity = this->ptr->GetLinearVelocity();
-		body_def.angularVelocity = this->ptr->GetAngularVelocity();
-		body_def.linearDamping = this->ptr->GetLinearDamping();
-		body_def.angularDamping = this->ptr->GetAngularDamping();
-		body_def.allowSleep = this->ptr->IsSleepingAllowed();
-		body_def.awake = this->ptr->IsAwake();
-		body_def.fixedRotation = this->ptr->IsFixedRotation();
-		body_def.bullet = this->ptr->IsBullet();
-		body_def.active = this->ptr->IsActive();
-		body_def.userData = this->ptr->GetUserData();
-		body_def.gravityScale = this->ptr->GetGravityScale();
+		body_def.angle = self->body->GetAngle();
+		body_def.linearVelocity = self->body->GetLinearVelocity();
+		body_def.angularVelocity = self->body->GetAngularVelocity();
+		body_def.linearDamping = self->body->GetLinearDamping();
+		body_def.angularDamping = self->body->GetAngularDamping();
+		body_def.allowSleep = self->body->IsSleepingAllowed();
+		body_def.awake = self->body->IsAwake();
+		body_def.fixedRotation = self->body->IsFixedRotation();
+		body_def.bullet = self->body->IsBullet();
+		body_def.active = self->body->IsActive();
+		body_def.userData = self->body->GetUserData();
+		body_def.gravityScale = self->body->GetGravityScale();
 
-		b2World *world = this->ptr->GetWorld();
+		b2World *world = self->body->GetWorld();
 		b2Body *new_body = world->CreateBody(&body_def);
 
 		b2FixtureDef fixture;
 		b2CircleShape shape;
 		fixture.shape = &shape;
-		for (b2Fixture *f = this->ptr->GetFixtureList(); f; f = f->GetNext())
+		for (b2Fixture *f = self->body->GetFixtureList(); f; f = f->GetNext())
 		{
 			if (f->GetType() != b2Shape::e_circle)
 			{
@@ -255,43 +274,52 @@ NS_B2_LUA_BEGIN
 
 		// Re-register body
 		lua_rawgeti(L, LUA_REGISTRYINDEX, g_body_list);
-		lua_pushinteger(L, reinterpret_cast<lua_Integer>(this->ptr));
+		lua_pushinteger(L, reinterpret_cast<lua_Integer>(self->body));
 		lua_rawget(L, -2);
 		lua_pushinteger(L, reinterpret_cast<lua_Integer>(new_body));
 		lua_insert(L, -2);
 		lua_rawset(L, -3);
-		lua_pushinteger(L, reinterpret_cast<lua_Integer>(this->ptr));
+		lua_pushinteger(L, reinterpret_cast<lua_Integer>(self->body));
 		lua_pushnil(L);
 		lua_rawset(L, -3);
 		lua_pop(L, 1);
 
-		world->DestroyBody(this->ptr);
-		this->ptr = new_body;
+		world->DestroyBody(self->body);
+		self->body = new_body;
 		return 0;
 	}
 
 	int Body::create_fixture(lua_State *L)
 	{
+		const char err[] =
+		    "<b2.Body>:CreateFixture(<b2.FixtureDef> | [<b2.Shape>, density])";
+		LUA_ASSERT(
+		    lua_istable(L, 2) && (lua_isnumber(L, 3) || lua_isnone(L, 3)),
+		    err);
+
+		Body *self = Bind::self(L);
+		if (!self)
+			return 0;
+
 		b2Fixture *fixture = nullptr;
 		switch (lua_gettop(L))
 		{
-			case 1: {
+			case 2: {
 				b2FixtureDef def;
 				parse_FixtureDef(L, def);
-				fixture = this->ptr->CreateFixture(&def);
+				fixture = self->body->CreateFixture(&def);
 				delete def.shape;
 				break;
 			}
-			case 2: {
-				const float density = luaR_tonumber(L, 2);
+			case 3: {
+				const float density = lua_tonumber(L, 3);
 				lua_pop(L, 1);
 				std::unique_ptr<b2Shape> shape(parse_Shape(L));
-				fixture = this->ptr->CreateFixture(shape.get(), density);
+				fixture = self->body->CreateFixture(shape.get(), density);
 				break;
 			}
 			default:
-				LUA_ASSERT(lua_gettop(L) == 1 || lua_gettop(L) == 2,
-				           "<b2.Body>:CreateFixture(b2.FixtureDef | b2.Shape, density)");
+				R_ASSERT(false, err);
 				break;
 		}
 		lua_pushlightuserdata(L, fixture);
@@ -300,25 +328,43 @@ NS_B2_LUA_BEGIN
 
 	int Body::destroy_fixture(lua_State *L)
 	{
-		LUA_ASSERT(lua_gettop(L) == 1, "<b2.Body>:DestroyFixture(b2.Fixture)");
+		LUA_ASSERT(lua_isuserdata(L, 2),
+		           "<b2.Body>:DestroyFixture(<b2.Fixture>)");
 
-		this->ptr->DestroyFixture(static_cast<b2Fixture*>(lua_touserdata(L, 1)));
+		Body *self = Bind::self(L);
+		if (!self)
+			return 0;
+
+		self->body->DestroyFixture(
+		    static_cast<b2Fixture*>(lua_touserdata(L, 2)));
 		return 0;
 	}
 
 	int Body::set_transform(lua_State *L)
 	{
-		LUA_ASSERT(lua_gettop(L) == 3, "<b2.Body>:SetTransform(x, y, r)");
+		LUA_ASSERT(lua_isnumber(L, 2) &&
+		           lua_isnumber(L, 3) &&
+		           lua_isnumber(L, 4),
+		           "<b2.Body>:SetTransform(x, y, r)");
 
-		this->ptr->SetTransform(
-		    b2Vec2(luaR_tonumber(L, 1) / ptm_ratio, luaR_tonumber(L, 2) / ptm_ratio),
-		    luaR_tonumber(L, 3));
+		Body *self = Bind::self(L);
+		if (!self)
+			return 0;
+
+		self->body->SetTransform(
+		    b2Vec2(lua_tonumber(L, 2) / ptm_ratio,
+		           lua_tonumber(L, 3) / ptm_ratio),
+		    lua_tonumber(L, 4));
 		return 0;
 	}
 
 	int Body::get_position(lua_State *L)
 	{
-		const b2Vec2 &pos = this->ptr->GetPosition();
+		Body *self = Bind::self(L);
+		if (!self)
+			return 0;
+
+		const b2Vec2 &pos = self->body->GetPosition();
 		lua_pushnumber(L, pos.x * ptm_ratio);
 		lua_pushnumber(L, pos.y * ptm_ratio);
 		return 2;
@@ -326,13 +372,21 @@ NS_B2_LUA_BEGIN
 
 	int Body::get_angle(lua_State *L)
 	{
-		lua_pushnumber(L, this->ptr->GetAngle());
+		Body *self = Bind::self(L);
+		if (!self)
+			return 0;
+
+		lua_pushnumber(L, self->body->GetAngle());
 		return 1;
 	}
 
 	int Body::get_world_center(lua_State *L)
 	{
-		const b2Vec2 &center = this->ptr->GetWorldCenter();
+		Body *self = Bind::self(L);
+		if (!self)
+			return 0;
+
+		const b2Vec2 &center = self->body->GetWorldCenter();
 		lua_pushnumber(L, center.x * ptm_ratio);
 		lua_pushnumber(L, center.y * ptm_ratio);
 		return 2;
@@ -340,7 +394,11 @@ NS_B2_LUA_BEGIN
 
 	int Body::get_local_center(lua_State *L)
 	{
-		const b2Vec2 &center = this->ptr->GetLocalCenter();
+		Body *self = Bind::self(L);
+		if (!self)
+			return 0;
+
+		const b2Vec2 &center = self->body->GetLocalCenter();
 		lua_pushnumber(L, center.x * ptm_ratio);
 		lua_pushnumber(L, center.y * ptm_ratio);
 		return 2;
@@ -348,16 +406,25 @@ NS_B2_LUA_BEGIN
 
 	int Body::set_linear_velocity(lua_State *L)
 	{
-		LUA_ASSERT(lua_gettop(L) == 2, "<b2.Body>:SetLinearVelocity(x, y)");
+		LUA_ASSERT(lua_isnumber(L, 2) && lua_isnumber(L, 3),
+		           "<b2.Body>:SetLinearVelocity(x, y)");
 
-		this->ptr->SetLinearVelocity(
-		    b2Vec2(luaR_tonumber(L, 1), luaR_tonumber(L, 2)));
+		Body *self = Bind::self(L);
+		if (!self)
+			return 0;
+
+		self->body->SetLinearVelocity(
+		    b2Vec2(lua_tonumber(L, 2), lua_tonumber(L, 3)));
 		return 0;
 	}
 
 	int Body::get_linear_velocity(lua_State *L)
 	{
-		const b2Vec2 &v = this->ptr->GetLinearVelocity();
+		Body *self = Bind::self(L);
+		if (!self)
+			return 0;
+
+		const b2Vec2 &v = self->body->GetLinearVelocity();
 		lua_pushnumber(L, v.x);
 		lua_pushnumber(L, v.y);
 		return 2;
@@ -365,185 +432,295 @@ NS_B2_LUA_BEGIN
 
 	int Body::set_angular_velocity(lua_State *L)
 	{
-		LUA_ASSERT(lua_gettop(L) == 1, "<b2.Body>:SetAngularVelocity(v)");
+		LUA_ASSERT(lua_isnumber(L, 2), "<b2.Body>:SetAngularVelocity(v)");
 
-		this->ptr->SetAngularVelocity(luaR_tonumber(L, 1));
+		Body *self = Bind::self(L);
+		if (!self)
+			return 0;
+
+		self->body->SetAngularVelocity(lua_tonumber(L, 2));
 		return 0;
 	}
 
 	int Body::get_angular_velocity(lua_State *L)
 	{
-		lua_pushnumber(L, this->ptr->GetAngularVelocity());
+		Body *self = Bind::self(L);
+		if (!self)
+			return 0;
+
+		lua_pushnumber(L, self->body->GetAngularVelocity());
 		return 1;
 	}
 
 	int Body::apply_force(lua_State *L)
 	{
-		LUA_ASSERT(lua_gettop(L) == 5,
+		LUA_ASSERT(lua_isnumber(L, 2) &&
+		           lua_isnumber(L, 3) &&
+		           lua_isnumber(L, 4) &&
+		           lua_isnumber(L, 5) &&
+		           lua_isboolean(L, 6),
 		           "<b2.Body>:ApplyForce(impulse.x, impulse.y, point.x, point.y, wake)");
 
-		this->ptr->ApplyForce(
-		    b2Vec2(luaR_tonumber(L, 1), luaR_tonumber(L, 2)),
-		    b2Vec2(luaR_tonumber(L, 3) / ptm_ratio, luaR_tonumber(L, 4) / ptm_ratio),
-		    lua_toboolean(L, 5));
+		Body *self = Bind::self(L);
+		if (!self)
+			return 0;
+
+		self->body->ApplyForce(
+		    b2Vec2(lua_tonumber(L, 2), lua_tonumber(L, 3)),
+		    b2Vec2(lua_tonumber(L, 4) / ptm_ratio,
+		           lua_tonumber(L, 5) / ptm_ratio),
+		    lua_toboolean(L, 6));
 		return 0;
 	}
 
 	int Body::apply_force_to_center(lua_State *L)
 	{
-		LUA_ASSERT(lua_gettop(L) == 3,
+		LUA_ASSERT(lua_isnumber(L, 2) &&
+		           lua_isnumber(L, 3) &&
+		           lua_isboolean(L, 4),
 		           "<b2.Body>:ApplyForceToCenter(impulse.x, impulse.y, wake)");
 
-		this->ptr->ApplyForceToCenter(
-		    b2Vec2(luaR_tonumber(L, 1), luaR_tonumber(L, 2)),
-		    lua_toboolean(L, 3));
+		Body *self = Bind::self(L);
+		if (!self)
+			return 0;
+
+		self->body->ApplyForceToCenter(
+		    b2Vec2(lua_tonumber(L, 2), lua_tonumber(L, 3)),
+		    lua_toboolean(L, 4));
 		return 0;
 	}
 
 	int Body::apply_torque(lua_State *L)
 	{
-		LUA_ASSERT(lua_gettop(L) == 2, "<b2.Body>:ApplyTorque(torque, wake)");
+		LUA_ASSERT(lua_isnumber(L, 2) && lua_isboolean(L, 3),
+		           "<b2.Body>:ApplyTorque(torque, wake)");
 
-		this->ptr->ApplyTorque(luaR_tonumber(L, 1), lua_toboolean(L, 2));
+		Body *self = Bind::self(L);
+		if (!self)
+			return 0;
+
+		self->body->ApplyTorque(lua_tonumber(L, 2), lua_toboolean(L, 3));
 		return 0;
 	}
 
 	int Body::apply_linear_impulse(lua_State *L)
 	{
-		LUA_ASSERT(lua_gettop(L) == 5,
+		LUA_ASSERT(lua_isnumber(L, 2) &&
+		           lua_isnumber(L, 3) &&
+		           lua_isnumber(L, 4) &&
+		           lua_isnumber(L, 5) &&
+		           lua_isboolean(L, 6),
 		           "<b2.Body>:ApplyLinearImpulse(impulse.x, impulse.y, point.x, point.y, wake)");
 
-		this->ptr->ApplyLinearImpulse(
-		    b2Vec2(luaR_tonumber(L, 1), luaR_tonumber(L, 2)),
-		    b2Vec2(luaR_tonumber(L, 3) / ptm_ratio, luaR_tonumber(L, 4) / ptm_ratio),
-		    lua_toboolean(L, 5));
+		Body *self = Bind::self(L);
+		if (!self)
+			return 0;
+
+		self->body->ApplyLinearImpulse(
+		    b2Vec2(lua_tonumber(L, 2), lua_tonumber(L, 3)),
+		    b2Vec2(lua_tonumber(L, 4) / ptm_ratio,
+		           lua_tonumber(L, 5) / ptm_ratio),
+		    lua_toboolean(L, 6));
 		return 0;
 	}
 
 	int Body::apply_angular_impulse(lua_State *L)
 	{
-		LUA_ASSERT(lua_gettop(L) == 2,
+		LUA_ASSERT(lua_isnumber(L, 2) && lua_isboolean(L, 3),
 		           "<b2.Body>:ApplyAngularImpulse(impulse, wake)");
 
-		this->ptr->ApplyAngularImpulse(luaR_tonumber(L, 1), lua_toboolean(L, 2));
+		Body *self = Bind::self(L);
+		if (!self)
+			return 0;
+
+		self->body->ApplyAngularImpulse(lua_tonumber(L, 2),
+		                                lua_toboolean(L, 3));
 		return 0;
 	}
 
 	int Body::get_linear_damping(lua_State *L)
 	{
-		lua_pushnumber(L, this->ptr->GetLinearDamping() * ptm_ratio);
+		Body *self = Bind::self(L);
+		if (!self)
+			return 0;
+
+		lua_pushnumber(L, self->body->GetLinearDamping() * ptm_ratio);
 		return 1;
 	}
 
 	int Body::set_linear_damping(lua_State *L)
 	{
-		LUA_ASSERT(lua_gettop(L) == 1, "<b2.Body>:SetLinearDamping(damping)");
+		LUA_ASSERT(lua_isnumber(L, 2), "<b2.Body>:SetLinearDamping(damping)");
 
-		this->ptr->SetLinearDamping(luaR_tonumber(L, 1) / ptm_ratio);
+		Body *self = Bind::self(L);
+		if (!self)
+			return 0;
+
+		self->body->SetLinearDamping(lua_tonumber(L, 2) / ptm_ratio);
 		return 0;
 	}
 
 	int Body::get_angular_damping(lua_State *L)
 	{
-		lua_pushnumber(L, this->ptr->GetAngularDamping());
+		Body *self = Bind::self(L);
+		if (!self)
+			return 0;
+
+		lua_pushnumber(L, self->body->GetAngularDamping());
 		return 1;
 	}
 
 	int Body::set_angular_damping(lua_State *L)
 	{
-		LUA_ASSERT(lua_gettop(L) == 1, "<b2.Body>:SetAngularDamping(damping)");
+		LUA_ASSERT(lua_isnumber(L, 2), "<b2.Body>:SetAngularDamping(damping)");
 
-		this->ptr->SetAngularDamping(luaR_tonumber(L, 1));
+		Body *self = Bind::self(L);
+		if (!self)
+			return 0;
+
+		self->body->SetAngularDamping(lua_tonumber(L, 2));
 		return 0;
 	}
 
 	int Body::get_gravity_scale(lua_State *L)
 	{
-		lua_pushnumber(L, this->ptr->GetGravityScale());
+		Body *self = Bind::self(L);
+		if (!self)
+			return 0;
+
+		lua_pushnumber(L, self->body->GetGravityScale());
 		return 1;
 	}
 
 	int Body::set_gravity_scale(lua_State *L)
 	{
-		LUA_ASSERT(lua_gettop(L) == 1, "<b2.Body>:SetGravityScale(scale)");
+		LUA_ASSERT(lua_isnumber(L, 2), "<b2.Body>:SetGravityScale(scale)");
 
-		this->ptr->SetGravityScale(luaR_tonumber(L, 1));
+		Body *self = Bind::self(L);
+		if (!self)
+			return 0;
+
+		self->body->SetGravityScale(lua_tonumber(L, 2));
 		return 0;
 	}
 
 	int Body::set_bullet(lua_State *L)
 	{
-		LUA_ASSERT(lua_gettop(L) == 1, "<b2.Body>:SetBullet(flag)");
+		LUA_ASSERT(lua_isboolean(L, 2), "<b2.Body>:SetBullet(bool)");
 
-		this->ptr->SetBullet(lua_toboolean(L, 1));
+		Body *self = Bind::self(L);
+		if (!self)
+			return 0;
+
+		self->body->SetBullet(lua_toboolean(L, 2));
 		return 0;
 	}
 
 	int Body::is_bullet(lua_State *L)
 	{
-		lua_pushboolean(L, this->ptr->IsBullet());
+		Body *self = Bind::self(L);
+		if (!self)
+			return 0;
+
+		lua_pushboolean(L, self->body->IsBullet());
 		return 1;
 	}
 
 	int Body::set_sleeping_allowed(lua_State *L)
 	{
-		LUA_ASSERT(lua_gettop(L) == 1, "<b2.Body>:SetSleepingAllowed(flag)");
+		LUA_ASSERT(lua_isboolean(L, 2), "<b2.Body>:SetSleepingAllowed(bool)");
 
-		this->ptr->SetSleepingAllowed(lua_toboolean(L, 1));
+		Body *self = Bind::self(L);
+		if (!self)
+			return 0;
+
+		self->body->SetSleepingAllowed(lua_toboolean(L, 2));
 		return 0;
 	}
 
 	int Body::is_sleeping_allowed(lua_State *L)
 	{
-		lua_pushboolean(L, this->ptr->IsSleepingAllowed());
+		Body *self = Bind::self(L);
+		if (!self)
+			return 0;
+
+		lua_pushboolean(L, self->body->IsSleepingAllowed());
 		return 1;
 	}
 
 	int Body::set_awake(lua_State *L)
 	{
-		LUA_ASSERT(lua_gettop(L) == 1, "<b2.Body>:SetAwake(flag)");
+		LUA_ASSERT(lua_isboolean(L, 2), "<b2.Body>:SetAwake(bool)");
 
-		this->ptr->SetAwake(lua_toboolean(L, 1));
+		Body *self = Bind::self(L);
+		if (!self)
+			return 0;
+
+		self->body->SetAwake(lua_toboolean(L, 2));
 		return 0;
 	}
 
 	int Body::is_awake(lua_State *L)
 	{
-		lua_pushboolean(L, this->ptr->IsAwake());
+		Body *self = Bind::self(L);
+		if (!self)
+			return 0;
+
+		lua_pushboolean(L, self->body->IsAwake());
 		return 1;
 	}
 
 	int Body::set_active(lua_State *L)
 	{
-		LUA_ASSERT(lua_gettop(L) == 1, "<b2.Body>:SetActive(flag)");
+		LUA_ASSERT(lua_isboolean(L, 2), "<b2.Body>:SetActive(bool)");
 
-		this->ptr->SetActive(lua_toboolean(L, 1));
+		Body *self = Bind::self(L);
+		if (!self)
+			return 0;
+
+		self->body->SetActive(lua_toboolean(L, 2));
 		return 0;
 	}
 
 	int Body::is_active(lua_State *L)
 	{
-		lua_pushboolean(L, this->ptr->IsActive());
+		Body *self = Bind::self(L);
+		if (!self)
+			return 0;
+
+		lua_pushboolean(L, self->body->IsActive());
 		return 0;
 	}
 
 	int Body::set_fixed_rotation(lua_State *L)
 	{
-		LUA_ASSERT(lua_gettop(L) == 1, "<b2.Body>:SetFixedRotation(flag)");
+		LUA_ASSERT(lua_isboolean(L, 2), "<b2.Body>:SetFixedRotation(bool)");
 
-		this->ptr->SetFixedRotation(lua_toboolean(L, 1));
+		Body *self = Bind::self(L);
+		if (!self)
+			return 0;
+
+		self->body->SetFixedRotation(lua_toboolean(L, 2));
 		return 0;
 	}
 
 	int Body::is_fixed_rotation(lua_State *L)
 	{
-		lua_pushboolean(L, this->ptr->IsFixedRotation());
+		Body *self = Bind::self(L);
+		if (!self)
+			return 0;
+
+		lua_pushboolean(L, self->body->IsFixedRotation());
 		return 0;
 	}
 
-	int Body::dump(lua_State *)
+	int Body::dump(lua_State *L)
 	{
-		this->ptr->Dump();
+		Body *self = Bind::self(L);
+		if (!self)
+			return 0;
+
+		self->body->Dump();
 		return 0;
 	}
 } NS_B2_LUA_END
@@ -556,7 +733,10 @@ NS_RAINBOW_LUA_BEGIN
 	const char Body::Bind::class_name[] = "Body";
 
 	template<>
-	const Method<Body> Body::Bind::methods[] = {
+	const bool Body::Bind::is_constructible = true;
+
+	template<>
+	const luaL_Reg Body::Bind::functions[] = {
 		{ "Bind",                 &Body::bind },
 		{ "ScaleAndPosition",     &Body::scale_and_position },
 		{ "CreateFixture",        &Body::create_fixture },

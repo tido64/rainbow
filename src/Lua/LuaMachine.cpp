@@ -3,6 +3,7 @@
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
 #include "Common/Data.h"
+#include "Lua/LuaMachine.h"
 #include "Lua/LuaModules.h"
 #include "Lua/lua_Rainbow.h"
 
@@ -16,6 +17,12 @@ namespace
 		static_cast<void>(L);
 	#endif
 		return 0;
+	}
+
+	int createtable(lua_State *L)
+	{
+		lua_createtable(L, luaR_optinteger(L, 1, 0), luaR_optinteger(L, 2, 0));
+		return 1;
 	}
 
 	// Partially copied from 'linit.c'.
@@ -158,6 +165,14 @@ namespace Rainbow
 		lua_pop(this->L, 1);
 		R_ASSERT(lua_gettop(this->L) == 0, "Stack not empty");
 	#endif
+
+		// Map 'lua_createtable' to 'table.create'
+		lua_getglobal(this->L, "table");
+		lua_pushliteral(this->L, "create");
+		lua_pushcfunction(this->L, createtable);
+		lua_rawset(this->L, -3);
+		lua_pop(this->L, 1);
+		R_ASSERT(lua_gettop(this->L) == 0, "Stack not empty");
 
 		return LUA_OK;
 	}

@@ -80,8 +80,7 @@ NS_B2_LUA_BEGIN
 		lua_pop(L, 1);
 	}
 
-	class Fixture :
-		public Rainbow::Lua::Bind<Fixture, b2Fixture, Rainbow::Lua::kBindTypeWeak>
+	class Fixture : public Bind<Fixture>
 	{
 		friend Bind;
 
@@ -90,23 +89,30 @@ NS_B2_LUA_BEGIN
 
 		inline void set(b2Fixture *fixture);
 
-		int get_body(lua_State *);
+	private:
+		static int get_body(lua_State *);
+
+		b2Fixture *fixture;
 	};
 
-	Fixture::Fixture(lua_State *) { }
+	Fixture::Fixture(lua_State *) : fixture(nullptr) { }
 
 	void Fixture::set(b2Fixture *fixture)
 	{
-		this->ptr = fixture;
+		this->fixture = fixture;
 	}
 
 	int Fixture::get_body(lua_State *L)
 	{
+		Fixture *self = Bind::self(L);
+		if (!self)
+			return 0;
+
 		lua_rawgeti(L, LUA_REGISTRYINDEX, g_body_list);
-		lua_pushinteger(L, reinterpret_cast<lua_Integer>(this->ptr->GetBody()));
+		lua_pushinteger(L, reinterpret_cast<lua_Integer>(self->fixture->GetBody()));
 		lua_gettable(L, -2);
 		lua_remove(L, -2);
-		R_ASSERT(lua_istable(L, 1), "Body wasn't properly registered");
+		R_ASSERT(lua_istable(L, -1), "Body wasn't properly registered");
 		return 1;
 	}
 } NS_B2_LUA_END
@@ -119,7 +125,10 @@ NS_RAINBOW_LUA_BEGIN
 	const char Fixture::Bind::class_name[] = "Fixture";
 
 	template<>
-	const Method<Fixture> Fixture::Bind::methods[] = {
+	const bool Fixture::Bind::is_constructible = false;
+
+	template<>
+	const luaL_Reg Fixture::Bind::functions[] = {
 		{ "GetBody",  &Fixture::get_body },
 		{ nullptr,    nullptr }
 	};
