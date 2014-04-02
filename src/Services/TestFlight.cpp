@@ -14,48 +14,53 @@
 #	endif
 #endif
 
+namespace
+{
+	int log(lua_State *L)
+	{
+		LUA_ASSERT(lua_isstring(L, 1), "TestFlight.log(message)");
+
+		const char *message = lua_tostring(L, 1);
+	#ifdef USE_TESTFLIGHT_SDK
+	#ifdef RAINBOW_OS_IOS
+		TFLog(@"%s", message);
+	#endif  // RAINBOW_OS_IOS
+	#else
+		R_DEBUG("%s\n", message);
+	#endif  // USE_TESTFLIGHT_SDK
+		return 0;
+		static_cast<void>(message);
+	}
+
+	int pass_checkpoint(lua_State *L)
+	{
+		LUA_ASSERT(lua_isstring(L, 1),
+		           "TestFlight.pass_checkpoint(checkpoint)");
+
+		const char *checkpoint = lua_tostring(L, 1);
+	#ifdef USE_TESTFLIGHT_SDK
+	#ifdef RAINBOW_OS_IOS
+		NSString *checkpointName = [[NSString alloc]
+		    initWithBytesNoCopy:(void*)checkpoint
+		                 length:strlen(checkpoint)
+		               encoding:NSUTF8StringEncoding
+		           freeWhenDone:NO];
+		[::TestFlight passCheckpoint:checkpointName];
+	#endif  // RAINBOW_OS_IOS
+	#else
+		R_DEBUG("Passed checkpoint: \"%s\"\n", checkpoint);
+	#endif  // USE_TESTFLIGHT_SDK
+		return 0;
+		static_cast<void>(checkpoint);
+	}
+}
+
 namespace Rainbow
 {
 	namespace Services
 	{
 		namespace TestFlight
 		{
-			namespace
-			{
-				int log(lua_State *L)
-				{
-					const char *message = luaR_tostring(L, -1);
-				#ifdef USE_TESTFLIGHT_SDK
-				#ifdef RAINBOW_OS_IOS
-					TFLog(@"%s", message);
-				#endif  // RAINBOW_OS_IOS
-				#else
-					R_DEBUG("%s\n", message);
-				#endif  // USE_TESTFLIGHT_SDK
-					return 0;
-					static_cast<void>(message);
-				}
-
-				int pass_checkpoint(lua_State *L)
-				{
-					const char *checkpoint = luaR_tostring(L, -1);
-				#ifdef USE_TESTFLIGHT_SDK
-				#ifdef RAINBOW_OS_IOS
-					NSString *checkpointName = [[NSString alloc]
-							initWithBytesNoCopy:(void*)checkpoint
-							             length:strlen(checkpoint)
-							           encoding:NSUTF8StringEncoding
-							       freeWhenDone:NO];
-					[::TestFlight passCheckpoint:checkpointName];
-				#endif  // RAINBOW_OS_IOS
-				#else
-					R_DEBUG("Passed checkpoint: \"%s\"\n", checkpoint);
-				#endif  // USE_TESTFLIGHT_SDK
-					return 0;
-					static_cast<void>(checkpoint);
-				}
-			}
-
 			void init(lua_State *L)
 			{
 				lua_createtable(L, 0, 2);

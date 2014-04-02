@@ -9,46 +9,50 @@
 #include "Graphics/TextureManager.h"
 #include "Lua/lua_Renderer.h"
 
-NS_RAINBOW_LUA_MODULE_BEGIN(Renderer)
+namespace
 {
-	namespace
+	int set_clear_color(lua_State *L)
 	{
-		int set_clear_color(lua_State *L)
-		{
-			LUA_ASSERT(lua_gettop(L) == 3,
-			           "rainbow.renderer.set_clear_color(0xrr, 0xgg, 0xbb)");
+		LUA_ASSERT(lua_isnumber(L, 1) &&
+		           lua_isnumber(L, 2) &&
+		           lua_isnumber(L, 3),
+		           "rainbow.renderer.set_clear_color(0xrr, 0xgg, 0xbb)");
 
-			const float r = luaR_tonumber(L, 1) / 255.0f;
-			const float g = luaR_tonumber(L, 2) / 255.0f;
-			const float b = luaR_tonumber(L, 3) / 255.0f;
-			glClearColor(r, g, b, 1.0f);
-			return 0;
-		}
-
-		int set_filter(lua_State *L)
-		{
-			LUA_ASSERT(lua_gettop(L) == 1,
-			           "rainbow.renderer.set_filter(filter)");
-
-			const int filter = luaR_tointeger(L, 1);
-			LUA_CHECK(L, filter == GL_NEAREST || filter == GL_LINEAR,
-			          "Invalid texture filter");
-			TextureManager::Instance->set_filter(filter);
-			return 0;
-		}
-
-		int set_projection(lua_State *L)
-		{
-			LUA_ASSERT(lua_gettop(L) == 4,
-			           "rainbow.renderer.set_projection(left, right, bottom, top)");
-
-			ShaderManager::Instance->set_projection(
-					luaR_tonumber(L, 1), luaR_tonumber(L, 2),
-					luaR_tonumber(L, 3), luaR_tonumber(L, 4));
-			return 0;
-		}
+		const float r = lua_tonumber(L, 1) / 255.0f;
+		const float g = lua_tonumber(L, 2) / 255.0f;
+		const float b = lua_tonumber(L, 3) / 255.0f;
+		glClearColor(r, g, b, 1.0f);
+		return 0;
 	}
 
+	int set_filter(lua_State *L)
+	{
+		LUA_ASSERT(lua_isnumber(L, 1), "rainbow.renderer.set_filter(filter)");
+
+		const int filter = lua_tointeger(L, 1);
+		LUA_CHECK(L, filter == GL_NEAREST || filter == GL_LINEAR,
+		          "Invalid texture filter");
+		TextureManager::Instance->set_filter(filter);
+		return 0;
+	}
+
+	int set_projection(lua_State *L)
+	{
+		LUA_ASSERT(lua_isnumber(L, 1) &&
+		           lua_isnumber(L, 2) &&
+		           lua_isnumber(L, 3) &&
+		           lua_isnumber(L, 4),
+		           "rainbow.renderer.set_projection(left, right, bottom, top)");
+
+		ShaderManager::Instance->set_projection(
+		    lua_tonumber(L, 1), lua_tonumber(L, 2),
+		    lua_tonumber(L, 3), lua_tonumber(L, 4));
+		return 0;
+	}
+}
+
+NS_RAINBOW_LUA_MODULE_BEGIN(Renderer)
+{
 	void init(lua_State *L)
 	{
 		// Initialise "rainbow.renderer" namespace

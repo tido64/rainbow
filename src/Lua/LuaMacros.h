@@ -39,14 +39,12 @@
 #	define luaR_optnumber(L, narg, def)     luaL_optnumber(L, narg, def)
 #	define luaR_tointeger(L, narg)          luaL_checkinteger(L, narg)
 #	define luaR_tonumber(L, narg)           luaL_checknumber(L, narg)
-#	define luaR_tostring(L, narg)           luaL_checkstring(L, narg)
 #	define luaR_touserdata(L, narg, tname)  luaL_checkudata(L, narg, tname)
 #else
 #	define luaR_optinteger(L, narg, def)    luaL_opt(L, lua_tointeger, narg, def)
 #	define luaR_optnumber(L, narg, def)     luaL_opt(L, lua_tonumber, narg, def)
 #	define luaR_tointeger(L, narg)          lua_tointeger(L, narg)
 #	define luaR_tonumber(L, narg)           lua_tonumber(L, narg)
-#	define luaR_tostring(L, narg)           lua_tostring(L, narg)
 #	define luaR_touserdata(L, narg, tname)  lua_touserdata(L, narg)
 #endif  // NDEBUG
 

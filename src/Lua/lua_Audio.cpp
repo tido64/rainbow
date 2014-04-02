@@ -25,12 +25,13 @@ namespace
 
 	int set_gain(lua_State *L)
 	{
-		LUA_ASSERT(lua_gettop(L) == 1 || lua_gettop(L) == 2,
-		           "rainbow.audio.set_gain([source,] volume)");
+		LUA_ASSERT(lua_isnumber(L, 1) ||
+		           (lua_istable(L, 1) && lua_isnumber(L, 2)),
+		           "rainbow.audio.set_gain([<channel>,] volume)");
 
 		if (lua_gettop(L) == 2)
 		{
-			const float gain = luaR_tonumber(L, 2);
+			const float gain = lua_tonumber(L, 2);
 			lua_pop(L, 1);
 
 			Mixer::Channel *ch = tochannel(L);
@@ -40,13 +41,16 @@ namespace
 			Mixer::Instance->set_gain(ch, gain);
 		}
 		else
-			Mixer::Instance->set_gain(luaR_tonumber(L, 1));
+			Mixer::Instance->set_gain(lua_tonumber(L, 1));
 		return 0;
 	}
 
 	int set_pitch(lua_State *L)
 	{
-		Mixer::Instance->set_pitch(luaR_tonumber(L, 1));
+		LUA_ASSERT(lua_isnumber(L, 1),
+		           "rainbow.audio.set_pitch(pitch)");
+
+		Mixer::Instance->set_pitch(lua_tonumber(L, 1));
 		return 0;
 	}
 
@@ -58,10 +62,12 @@ namespace
 
 	int create_sound(lua_State *L)
 	{
-		LUA_ASSERT(lua_gettop(L) >= 1 && lua_gettop(L) <= 3,
-		           "rainbow.audio.create_sound(file[, type, loops])");
+		LUA_ASSERT(lua_isstring(L, 1) &&
+		           (lua_isnumber(L, 2) || lua_isnone(L, 2)) &&
+		           (lua_isnumber(L, 3) || lua_isnone(L, 3)),
+		           "rainbow.audio.create_sound(file, type = STATIC, loops = -1)");
 
-		const char *file = luaR_tostring(L, 1);
+		const char *file = lua_tostring(L, 1);
 		const int type =
 		    luaR_optinteger(L, 2, static_cast<int>(Sound::Type::Static));
 		const int loops = luaR_optinteger(L, 3, -1);
@@ -75,7 +81,7 @@ namespace
 
 	int delete_sound(lua_State *L)
 	{
-		LUA_ASSERT(lua_gettop(L) == 1, "rainbow.audio.delete_sound(sound)");
+		LUA_ASSERT(lua_istable(L, 1), "rainbow.audio.delete_sound(<sound>)");
 
 		delete static_cast<Sound*>(Rainbow::Lua::topointer(L, kSoundType));
 		return 0;
@@ -83,7 +89,7 @@ namespace
 
 	int pause(lua_State *L)
 	{
-		LUA_ASSERT(lua_gettop(L) == 1, "rainbow.audio.pause(channel)");
+		LUA_ASSERT(lua_istable(L, 1), "rainbow.audio.pause(<channel>)");
 
 		Mixer::Channel *ch = tochannel(L);
 		if (!ch)
@@ -95,7 +101,7 @@ namespace
 
 	int play(lua_State *L)
 	{
-		LUA_ASSERT(lua_gettop(L) == 1, "rainbow.audio.play(sound)");
+		LUA_ASSERT(lua_istable(L, 1), "rainbow.audio.play(<sound>)");
 
 		Sound *snd =
 		    static_cast<Sound*>(Rainbow::Lua::topointer(L, kSoundType));
@@ -105,7 +111,7 @@ namespace
 
 	int stop(lua_State *L)
 	{
-		LUA_ASSERT(lua_gettop(L) == 1, "rainbow.audio.stop(channel)");
+		LUA_ASSERT(lua_istable(L, 1), "rainbow.audio.stop(<sound>)");
 
 		Mixer::Channel *ch = tochannel(L);
 		if (!ch)

@@ -8,32 +8,36 @@
 #include "Common/Debug.h"
 #include "Lua/lua_IO.h"
 
-NS_RAINBOW_LUA_MODULE_BEGIN(IO)
+namespace
 {
-	namespace
+	int load(lua_State *L)
 	{
-		int load(lua_State *L)
-		{
-			LUA_ASSERT(lua_gettop(L) == 1, "rainbow.io.load(filename)");
+		LUA_ASSERT(lua_isstring(L, 1), "rainbow.io.load(filename)");
 
-			Data blob = Data::load_document(luaR_tostring(L, 1));
-			if (!blob)
-				lua_pushnil(L);
-			else
-				lua_pushlstring(L, blob, blob.size());
-			return 1;
-		}
-
-		int save(lua_State *L)
-		{
-			LUA_ASSERT(lua_gettop(L) == 3, "rainbow.io.save(filename, data, size)");
-
-			Data blob(luaR_tostring(L, 2), luaR_tointeger(L, 3), Data::kDataReference);
-			lua_pushboolean(L, blob.save(luaR_tostring(L, 1)));
-			return 1;
-		}
+		Data blob = Data::load_document(lua_tostring(L, 1));
+		if (!blob)
+			lua_pushnil(L);
+		else
+			lua_pushlstring(L, blob, blob.size());
+		return 1;
 	}
 
+	int save(lua_State *L)
+	{
+		LUA_ASSERT(lua_isstring(L, 1) &&
+		           lua_isstring(L, 2) &&
+		           lua_isnumber(L, 3),
+		           "rainbow.io.save(filename, data, size)");
+
+		Data blob(
+		    lua_tostring(L, 2), lua_tointeger(L, 3), Data::kDataReference);
+		lua_pushboolean(L, blob.save(lua_tostring(L, 1)));
+		return 1;
+	}
+}
+
+NS_RAINBOW_LUA_MODULE_BEGIN(IO)
+{
 	void init(lua_State *L)
 	{
 		lua_pushliteral(L, "io");
