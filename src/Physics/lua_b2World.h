@@ -156,7 +156,7 @@ NS_B2_LUA_BEGIN
 
 		// Register body
 		lua_rawgeti(L, LUA_REGISTRYINDEX, g_body_list);
-		lua_pushinteger(L, reinterpret_cast<lua_Integer>(body));
+		lua_pushlightuserdata(L, body);
 		lua_pushvalue(L, -3);
 		lua_rawset(L, -3);
 		lua_pop(L, 1);
@@ -176,7 +176,7 @@ NS_B2_LUA_BEGIN
 
 		// Unregister body
 		lua_rawgeti(L, LUA_REGISTRYINDEX, g_body_list);
-		lua_pushinteger(L, reinterpret_cast<lua_Integer>(body));
+		lua_pushlightuserdata(L, body);
 		lua_pushnil(L);
 		lua_rawset(L, -3);
 		lua_pop(L, 1);

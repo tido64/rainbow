@@ -109,7 +109,7 @@ NS_B2_LUA_BEGIN
 			return 0;
 
 		lua_rawgeti(L, LUA_REGISTRYINDEX, g_body_list);
-		lua_pushinteger(L, reinterpret_cast<lua_Integer>(self->fixture->GetBody()));
+		lua_pushlightuserdata(L, self->fixture->GetBody());
 		lua_gettable(L, -2);
 		lua_remove(L, -2);
 		R_ASSERT(lua_istable(L, -1), "Body wasn't properly registered");
