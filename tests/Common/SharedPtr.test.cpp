@@ -52,6 +52,16 @@ TEST(SharedPtrTest, Counting)
 	ASSERT_TRUE(foo_deleted);
 };
 
+TEST(SharedPtrTest, AssignNullPtr)
+{
+	bool foo_deleted = false;
+	SharedPtr<SharedPtrTestStruct> foo_ptr(
+	    new SharedPtrTestStruct(foo_deleted));
+	foo_ptr = nullptr;
+	ASSERT_EQ(nullptr, foo_ptr.get());
+	ASSERT_TRUE(foo_deleted);
+};
+
 TEST(SharedPtrTest, AssignRawPtr)
 {
 	bool foo_deleted = false;
@@ -112,6 +122,30 @@ TEST(SharedPtrTest, AssignSelf)
 		ASSERT_EQ(1u, foo_ptr.ref_count());
 		foo_ptr = foo_ptr;
 		ASSERT_FALSE(foo_deleted);
+		ASSERT_EQ(foo, foo_ptr.get());
+		ASSERT_EQ(1u, foo_ptr.ref_count());
+	}
+	ASSERT_TRUE(foo_deleted);
+};
+
+TEST(SharedPtrTest, MoveSemantics)
+{
+	bool foo_deleted = false;
+	SharedPtrTestStruct *foo = new SharedPtrTestStruct(foo_deleted);
+	{
+		SharedPtr<SharedPtrTestStruct> foo_ptr(foo);
+		ASSERT_EQ(foo, foo_ptr.get());
+		ASSERT_EQ(1u, foo_ptr.ref_count());
+
+		SharedPtr<SharedPtrTestStruct> bar_ptr(std::move(foo_ptr));
+		ASSERT_FALSE(foo_deleted);
+		ASSERT_EQ(nullptr, foo_ptr.get());
+		ASSERT_EQ(foo, bar_ptr.get());
+		ASSERT_EQ(1u, bar_ptr.ref_count());
+
+		foo_ptr = std::move(bar_ptr);
+		ASSERT_FALSE(foo_deleted);
+		ASSERT_EQ(nullptr, bar_ptr.get());
 		ASSERT_EQ(foo, foo_ptr.get());
 		ASSERT_EQ(1u, foo_ptr.ref_count());
 	}

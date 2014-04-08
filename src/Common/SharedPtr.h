@@ -37,6 +37,10 @@ public:
 	/// Copies pointer and increments its reference counter.
 	SharedPtr(const SharedPtr<T> &);
 
+	/// Takes over pointer. Does not increase its reference count and will leave
+	/// the other pointer empty.
+	SharedPtr(SharedPtr<T> &&);
+
 	/// Sets pointer and increment its reference counter.
 	explicit SharedPtr(T *);
 
@@ -50,8 +54,14 @@ public:
 	unsigned int ref_count() const { return this->ptr->refs; }
 #endif
 
+	/// Returns whether there is an associated managed object.
+	explicit operator bool() const;
+
 	/// Releases the current pointer and retains the new one.
 	SharedPtr<T>& operator=(const SharedPtr<T> &);
+
+	/// Releases the current pointer and takes over the new one.
+	SharedPtr<T>& operator=(SharedPtr<T> &&);
 
 	/// Releases the current pointer and assigns the new one.
 	SharedPtr<T>& operator=(T *);
@@ -75,8 +85,16 @@ SharedPtr<T>::SharedPtr() : ptr(nullptr) { }
 template<class T>
 SharedPtr<T>::SharedPtr(const SharedPtr<T> &shared_ptr) : ptr(shared_ptr.ptr)
 {
-	R_ASSERT(this->ptr, "No reference to pointer");
+	if (!this->ptr)
+		return;
+
 	++this->ptr->refs;
+}
+
+template<class T>
+SharedPtr<T>::SharedPtr(SharedPtr<T> &&shared_ptr) : ptr(shared_ptr.ptr)
+{
+	shared_ptr.ptr = nullptr;
 }
 
 template<class T>
@@ -99,9 +117,24 @@ T* SharedPtr<T>::get() const
 }
 
 template<class T>
+SharedPtr<T>::operator bool() const
+{
+	return this->ptr;
+}
+
+template<class T>
 SharedPtr<T>& SharedPtr<T>::operator=(const SharedPtr<T> &shared_ptr)
 {
 	return *this = static_cast<T*>(shared_ptr.ptr);
+}
+
+template<class T>
+SharedPtr<T>& SharedPtr<T>::operator=(SharedPtr<T> &&shared_ptr)
+{
+	this->release();
+	this->ptr = shared_ptr.ptr;
+	shared_ptr.ptr = nullptr;
+	return *this;
 }
 
 template<class T>
@@ -111,6 +144,8 @@ SharedPtr<T>& SharedPtr<T>::operator=(T *ptr)
 		return *this;
 	this->release();
 	this->ptr = ptr;
+	if (!this->ptr)
+		return *this;
 	++this->ptr->refs;
 	return *this;
 }
