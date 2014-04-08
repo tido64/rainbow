@@ -128,7 +128,6 @@ Use the provided Xcode project under `rainbow/build/xcode4/`.
 
 ### Linux (and cross-compiling for Windows)
 
-- [Boost](http://www.boost.org/) (debug-only)
 - [Clang](http://clang.llvm.org/)
 - [CMake](http://www.cmake.org/)
 - [Mesa](http://www.mesa3d.org/)
@@ -151,19 +150,17 @@ no longer work.
 
 ### Mac OS X
 
-- [Boost](http://www.boost.org/) (debug-only)
 - [CMake](http://www.cmake.org/)
 - [Ogg Vorbis](http://www.vorbis.com/) (only with `-DUSE_FMOD_STUDIO=0`)
 - [SDL](http://libsdl.org/)
 - [Xcode](https://itunes.apple.com/no/app/xcode/id497799835?mt=12)
 
-Boost, CMake and Ogg Vorbis can be installed through [Homebrew](http://brew.sh/)
-or [MacPorts](http://www.macports.org/). Download SDL source code and extract
-its content to `rainbow/lib/SDL/`. Xcode's Command Line Tools must be installed.
+CMake and Ogg Vorbis can be installed through [Homebrew](http://brew.sh/) or
+[MacPorts](http://www.macports.org/). Download SDL source code and extract its
+content to `rainbow/lib/SDL/`. Xcode's Command Line Tools must be installed.
 
 ### Windows
 
-- [Boost](http://www.boost.org/) (debug-only)
 - [CMake](http://www.cmake.org/)
 - [OpenAL Soft](http://kcat.strangesoft.net/openal.html) (only with
   `-DUSE_FMOD_STUDIO=0`)
@@ -171,10 +168,9 @@ its content to `rainbow/lib/SDL/`. Xcode's Command Line Tools must be installed.
 - [Visual Studio Express for Windows Desktop](http://microsoft.com/express/)
   (2013 or later)
 
-Download Boost and extract it. Copy/move the headers folder (usually named
-`boost`) into `rainbow\lib`. Download OpenAL Soft and place the files under
-`rainbow\build\windows\include\` or `rainbow\build\windows\lib\`. Finally,
-download SDL development libraries and move its content to `rainbow\lib\SDL\`.
+Download OpenAL Soft and place the files under `rainbow\build\windows\include\`
+and `rainbow\build\windows\lib\`. Finally, download SDL development libraries
+and move its content to `rainbow\lib\SDL\`.
 
 Alternatively, see "Linux" for cross-compilation.
 

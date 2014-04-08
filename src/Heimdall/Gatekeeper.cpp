@@ -67,7 +67,8 @@ namespace Heimdall
 		this->monitor.set_callback([this](const char *path) {
 			char *file = new char[strlen(path) + 1];
 			strcpy(file, path);
-			this->queue.push(file);
+			std::lock_guard<std::mutex> lock(this->changed_files_mutex);
+			this->changed_files = this->changed_files.push_front(file);
 		});
 
 		this->touch_canceled();
@@ -90,22 +91,33 @@ namespace Heimdall
 
 		Director::init(main, screen);
 		Input::Instance->subscribe(this, Input::Events::Touch);
+
+		lua_State *L = this->state();
+		this->reload = [L](const char *file) {
+			std::unique_ptr<const char[]> path(file);
+			Library library(path.get());
+			if (!library)
+				return;
+
+			R_DEBUG("[Rainbow] Reloading '%s'...\n", library.name());
+			Rainbow::Lua::reload(L, library, library.name());
+		};
 	}
 
 	void Gatekeeper::update(const unsigned long dt)
 	{
-		const char *file = nullptr;
-		while (this->queue.pop(file))
+		// Reload changed files.
 		{
-			std::unique_ptr<const char[]> path(file);
-			Library library(path.get());
-			if (!library)
-				continue;
-
-			R_DEBUG("[Rainbow] Reloading '%s'...\n", library.name());
-			Rainbow::Lua::reload(this->state(), library, library.name());
+			decltype(this->changed_files) files;
+			{
+				std::lock_guard<std::mutex> lock(this->changed_files_mutex);
+				files = std::move(this->changed_files);
+			}
+			for_each(files, this->reload);
 		}
+
 		Director::update(dt);
+
 		if (!this->overlay_node->enabled && this->touch_count == 2)
 		{
 			this->touch_held += dt;

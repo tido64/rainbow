@@ -7,15 +7,9 @@
 
 #ifdef USE_HEIMDALL
 
-#ifdef __GNUC__
-#	pragma GCC diagnostic push
-#	pragma GCC diagnostic ignored "-Wunused-parameter"
-#endif
-#include <boost/lockfree/spsc_queue.hpp>
-#ifdef __GNUC__
-#	pragma GCC diagnostic pop
-#endif
+#include <mutex>
 
+#include "Common/List.h"
 #include "Director.h"
 #include "Heimdall/ChangeMonitor.h"
 #include "Heimdall/DebugInfo.h"
@@ -40,15 +34,15 @@ namespace Heimdall
 	private:
 		unsigned int touch_count;
 		unsigned long touch_held;
+		List<const char*> changed_files;
 		std::unique_ptr<DebugInfo> info;
 		SceneGraph::Node *overlay_node;
+		std::function<void(const char*)> reload;
 		SceneGraph::Node scenegraph;
+		std::mutex changed_files_mutex;
 		Touch touches[2];
 		ChangeMonitor monitor;
 		Overlay overlay;
-
-		boost::lockfree::spsc_queue<const char *,
-		                            boost::lockfree::capacity<1024>> queue;
 
 		inline void toggle_overlay();
 
