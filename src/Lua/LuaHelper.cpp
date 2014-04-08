@@ -28,8 +28,10 @@ namespace
 		strcpy(path, module);
 		strcat(path, suffix);
 		const Path asset(path, Path::RelativeTo::CurrentPath);
+	#ifndef RAINBOW_OS_ANDROID
 		if (!asset.is_file())
 			return 0;
+	#endif  // RAINBOW_OS_ANDROID
 		const File &file = File::open(asset);
 		if (!file)
 			return 0;
