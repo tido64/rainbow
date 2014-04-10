@@ -39,8 +39,9 @@ namespace
 
 		inline const char* name() const;
 
-		inline operator bool() const;
-		inline operator Data() const;
+		inline Data open() const;
+
+		inline explicit operator bool() const;
 
 	private:
 		std::unique_ptr<char[]> name_;
@@ -100,7 +101,7 @@ namespace Heimdall
 				return;
 
 			R_DEBUG("[Rainbow] Reloading '%s'...\n", library.name());
-			Rainbow::Lua::reload(L, library, library.name());
+			Rainbow::Lua::reload(L, library.open(), library.name());
 		};
 	}
 
@@ -210,12 +211,7 @@ const char* Library::name() const
 	return this->name_.get();
 }
 
-Library::operator bool() const
-{
-	return this->path_;
-}
-
-Library::operator Data() const
+Data Library::open() const
 {
 #if defined(RAINBOW_OS_MACOS)
 	return Data(File::open(this->path_));
@@ -224,6 +220,11 @@ Library::operator Data() const
 #else
 	return Data();
 #endif
+}
+
+Library::operator bool() const
+{
+	return this->path_;
 }
 
 #endif
