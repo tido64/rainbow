@@ -39,13 +39,10 @@ public:
 	inline const VertexArray& vertex_array() const;
 
 	/// Assigns a normal map.
-	TextureAtlas* set_normal(TextureAtlas *texture);
-
-	/// Loads texture data and assigns it.
-	TextureAtlas* set_texture(const DataMap &texture);
+	void set_normal(TextureAtlas *texture);
 
 	/// Assigns a texture atlas.
-	TextureAtlas* set_texture(TextureAtlas *texture);
+	inline void set_texture(TextureAtlas *texture);
 
 	/// Adds a textured sprite to the batch given texture coordinates.
 	/// \param x,y     Position of the texture assigned to the sprite.
@@ -99,6 +96,11 @@ const TextureAtlas& SpriteBatch::texture() const
 const VertexArray& SpriteBatch::vertex_array() const
 {
 	return this->array_;
+}
+
+void SpriteBatch::set_texture(TextureAtlas *texture)
+{
+	this->texture_ = texture;
 }
 
 #endif

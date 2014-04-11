@@ -86,30 +86,14 @@ NS_RAINBOW_LUA_BEGIN
 
 	int SpriteBatch::set_texture(lua_State *L)
 	{
-		LUA_ASSERT(lua_isstring(L, 2) || lua_isuserdata(L, 2),
-		           "<spritebatch>:set_texture(\"/path/to/texture\"|<texture>)");
+		LUA_ASSERT(lua_isuserdata(L, 2),
+		           "<spritebatch>:set_texture(<texture>)");
 
 		SpriteBatch *self = Bind::self(L);
 		if (!self)
 			return 0;
 
-		switch (lua_type(L, 2))
-		{
-			case LUA_TSTRING: {
-				DataMap data(Path(lua_tostring(L, 2)));
-				if (!data)
-					return luaL_error(L, "<spritebatch>:set_texture: Failed to load texture");
-				lua_settop(L, 0);
-				lua_pushlightuserdata(L, self->batch.set_texture(data));
-				return alloc<Texture>(L);
-			}
-			case LUA_TUSERDATA:
-				self->batch.set_texture(touserdata<Texture>(L, 2)->get());
-				break;
-			default:
-				R_ASSERT(false, "This shouldn't happen");
-				break;
-		}
+		self->batch.set_texture(touserdata<Texture>(L, 2)->get());
 		return 0;
 	}
 } NS_RAINBOW_LUA_END

@@ -2,6 +2,8 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
+#include <algorithm>
+
 #include "Graphics/Drawable.h"
 #include "Graphics/Renderer.h"
 #include "Graphics/ShaderDetails.h"
@@ -9,6 +11,25 @@
 
 namespace
 {
+	class Update
+	{
+	public:
+		Update() : update(false) { }
+
+		void operator()(Sprite &s)
+		{
+			this->update |= s.update();
+		}
+
+		explicit operator bool() const
+		{
+			return this->update;
+		}
+
+	private:
+		bool update;
+	};
+
 	template<typename T>
 	bool push_back(Vector<T> &vector)
 	{
@@ -20,27 +41,27 @@ namespace
 		return vector.capacity() != current_capacity;
 	}
 
-	template<void (*set)(Sprite&, void*), typename T>
+	void set_buffer(Sprite &sprite, SpriteVertex *buffer)
+	{
+		sprite.set_vertex_array(buffer);
+	}
+
+	void set_buffer(Sprite &sprite, Vec2f *buffer)
+	{
+		sprite.set_normal_buffer(buffer);
+	}
+
+	template<typename T>
 	void assign(Vector<Sprite> &sprites, Vector<T> &buffer)
 	{
-		// If the buffer was resized, we'll need to reassign.
+		// If the buffer was resized, we'll need to reassign all.
 		if (push_back<T>(buffer))
 		{
 			for (size_t i = 0; i < sprites.size(); ++i)
-				set(sprites[i], &buffer[i * 4]);
+				set_buffer(sprites[i], &buffer[i * 4]);
 		}
 		else  // Assign the buffer to the last sprite.
-			set(sprites.back(), &buffer[buffer.size() - 4]);
-	}
-
-	void set_normal_buffer(Sprite &sprite, void *buf)
-	{
-		sprite.set_normal_buffer(static_cast<Vec2f*>(buf));
-	}
-
-	void set_vertex_array(Sprite &sprite, void *buf)
-	{
-		sprite.set_vertex_array(static_cast<SpriteVertex*>(buf));
+			set_buffer(sprites.back(), &buffer[buffer.size() - 4]);
 	}
 }
 
@@ -58,7 +79,7 @@ SpriteBatch::SpriteBatch(const size_t hint)
       	}
       }) { }
 
-TextureAtlas* SpriteBatch::set_normal(TextureAtlas *texture)
+void SpriteBatch::set_normal(TextureAtlas *texture)
 {
 	const auto &vertex_buffer = this->vertices_.storage();
 	auto &normal_buffer = this->normals_.storage();
@@ -74,19 +95,6 @@ TextureAtlas* SpriteBatch::set_normal(TextureAtlas *texture)
 		         "Normal and vertex buffer are unsynchronized");
 	}
 	this->normal_ = texture;
-	return this->normal_.get();
-}
-
-TextureAtlas* SpriteBatch::set_texture(const DataMap &texture)
-{
-	this->texture_ = new TextureAtlas(texture);
-	return this->texture_.get();
-}
-
-TextureAtlas* SpriteBatch::set_texture(TextureAtlas *texture)
-{
-	this->texture_ = texture;
-	return this->texture_.get();
 }
 
 unsigned int SpriteBatch::add(const int x, const int y, const int w, const int h)
@@ -105,13 +113,13 @@ unsigned int SpriteBatch::create_sprite(const unsigned int width,
 	const unsigned int idx = this->sprites_.size();
 	this->sprites_.push_back(Sprite(width, height, this));
 
-	assign<set_vertex_array>(this->sprites_, this->vertices_.storage());
+	assign(this->sprites_, this->vertices_.storage());
 	R_ASSERT(this->sprites_.size() * 4 == this->vertices_.storage().size(),
 	         "Sprite and vertex buffer are unsynchronized");
 
 	if (this->normal_.get())
 	{
-		assign<set_normal_buffer>(this->sprites_, this->normals_.storage());
+		assign(this->sprites_, this->normals_.storage());
 		R_ASSERT(this->normals_.storage().size() ==
 		             this->vertices_.storage().size(),
 		         "Normal and vertex buffer are unsynchronized");
@@ -122,13 +130,8 @@ unsigned int SpriteBatch::create_sprite(const unsigned int width,
 
 void SpriteBatch::update()
 {
-	// Update all sprite vertices
-	bool needs_update = false;
-	for (auto &sprite : this->sprites_)
-		needs_update |= sprite.update();
-
-	// Update vertex buffer
-	if (needs_update)
+	// Update all sprites, then upload the vertex buffer if necessary.
+	if (std::for_each(this->sprites_.begin(), this->sprites_.end(), Update()))
 	{
 		this->vertices_.commit();
 		this->normals_.commit();
