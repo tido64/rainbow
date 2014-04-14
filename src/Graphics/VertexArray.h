@@ -8,33 +8,38 @@
 #include <functional>
 
 #include "Graphics/OpenGL.h"
-#undef USE_VERTEX_ARRAY_OBJECT  // TODO
 
-/// Implements the equivalent of OpenGL's vertex array object.
+/// Manages a vertex array object for any drawable type. On Android, vertex
+/// array objects are emulated.
 class VertexArray
 {
 public:
+	/// Unbinds any bound vertex array object.
 	static void unbind();
 
-	VertexArray(std::function<void()> &&f);
+	VertexArray();
 	~VertexArray();
 
+	/// Binds this vertex array object.
 	void bind() const;
 
-	inline operator bool() const;
+	/// Reconfigures this vertex array object with a new set of states.
+	void reconfigure(std::function<int()> &&array_state);
+
+	/// Returns whether this vertex array object is valid.
+	inline explicit operator bool() const;
 
 private:
-	bool valid_;
 #ifdef USE_VERTEX_ARRAY_OBJECT
 	unsigned int array_;
 #else
-	std::function<void()> bind_;
+	std::function<int()> array_;
 #endif
 };
 
 VertexArray::operator bool() const
 {
-	return this->valid_;
+	return static_cast<const bool>(array_);
 }
 
 #endif

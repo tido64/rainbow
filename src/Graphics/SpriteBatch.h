@@ -42,7 +42,7 @@ public:
 	void set_normal(TextureAtlas *texture);
 
 	/// Assigns a texture atlas.
-	inline void set_texture(TextureAtlas *texture);
+	void set_texture(TextureAtlas *texture);
 
 	/// Adds a textured sprite to the batch given texture coordinates.
 	/// \param x,y     Position of the texture assigned to the sprite.
@@ -68,6 +68,9 @@ private:
 	Buffer<Vec2f> normals_;            ///< Shared normal buffer.
 	Buffer<SpriteVertex> vertices_;    ///< Shared, interleaved vertex buffer.
 	VertexArray array_;                ///< Vertex array object.
+
+	/// Sets the array state for this batch.
+	int bind() const;
 };
 
 size_t SpriteBatch::count() const
@@ -96,11 +99,6 @@ const TextureAtlas& SpriteBatch::texture() const
 const VertexArray& SpriteBatch::vertex_array() const
 {
 	return this->array_;
-}
-
-void SpriteBatch::set_texture(TextureAtlas *texture)
-{
-	this->texture_ = texture;
 }
 
 #endif

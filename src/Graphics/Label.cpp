@@ -3,6 +3,7 @@
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
 #include "Graphics/Label.h"
+#include "Graphics/ShaderDetails.h"
 
 namespace
 {
@@ -13,11 +14,7 @@ namespace
 
 Label::Label()
     : scale_(1.0f), alignment_(kLeftTextAlignment), count_(0), stale_(0),
-      width_(0), size_(0),
-      array_([this]() {
-      	this->font_->bind();
-      	this->buffer_.bind();
-      }) { }
+      width_(0), size_(0) { }
 
 void Label::set_alignment(const Label::Alignment a)
 {
@@ -34,6 +31,7 @@ void Label::set_color(const Colorb &c)
 void Label::set_font(FontAtlas *f)
 {
 	this->font_ = f;
+	this->array_.reconfigure(std::bind(&Label::bind, this));
 	this->stale_ |= kStaleBuffer;
 }
 
@@ -161,4 +159,11 @@ void Label::align(float offset, size_t start, size_t end)
 		for (size_t i = start; i < end; ++i)
 			buffer[i].position.x += offset;
 	}
+}
+
+int Label::bind() const
+{
+	this->font_->bind();
+	this->buffer_.bind();
+	return Shader::kAttributeTexCoord;
 }

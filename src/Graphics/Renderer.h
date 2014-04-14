@@ -28,6 +28,8 @@ public:
 
 	static const size_t kNumSprites = 256;  ///< Hard-coded limit on number of sprites.
 
+	static Renderer *Instance;
+
 	static void clear();
 
 	template<typename T>
@@ -43,6 +45,7 @@ public:
 	void set_window_size(const Vec2i &size);
 	void set_zoom_mode(const ZoomMode zoom);
 
+	void bind_element_array() const;
 	Vec2i convert_to_flipped_view(const Vec2i &) const;
 	Vec2i convert_to_view(const Vec2i &) const;
 

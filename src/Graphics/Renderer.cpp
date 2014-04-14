@@ -17,6 +17,8 @@
 #define S256(i)    S64((i)),  S64((i) +  64),  S64((i) + 128),  S64((i) + 192)
 #define S1024(i)  S256((i)), S256((i) + 256), S256((i) + 512), S256((i) + 768)
 
+Renderer *Renderer::Instance = nullptr;
+
 void Renderer::clear()
 {
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -80,6 +82,7 @@ Renderer::Renderer()
 
 Renderer::~Renderer()
 {
+	Instance = nullptr;
 	if (this->index_buffer)
 	{
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
@@ -121,6 +124,7 @@ bool Renderer::init()
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(kDefaultIndices),
 	             kDefaultIndices, GL_STATIC_DRAW);
 
+	Instance = this;
 	return glGetError() == GL_NO_ERROR;
 }
 
@@ -183,6 +187,11 @@ void Renderer::set_zoom_mode(const ZoomMode zoom)
 
 	this->zoom_mode = zoom;
 	this->set_window_size(this->window);
+}
+
+void Renderer::bind_element_array() const
+{
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->index_buffer);
 }
 
 Vec2i Renderer::convert_to_flipped_view(const Vec2i &p) const

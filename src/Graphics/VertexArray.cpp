@@ -5,6 +5,7 @@
 #include <utility>
 
 #include "Graphics/OpenGL.h"
+#include "Graphics/Renderer.h"
 #include "Graphics/VertexArray.h"
 
 namespace
@@ -17,6 +18,7 @@ void VertexArray::unbind()
 {
 	if (!g_active_array)
 		return;
+
 	g_active_array = nullptr;
 
 #ifdef USE_VERTEX_ARRAY_OBJECT
@@ -26,54 +28,64 @@ void VertexArray::unbind()
 #endif
 }
 
-VertexArray::VertexArray(std::function<void()> &&f)
-    : valid_(false)
+VertexArray::VertexArray()
 #ifdef USE_VERTEX_ARRAY_OBJECT
-    , array_(0)
+    : array_(0)
 #endif
+{ }
+
+VertexArray::~VertexArray()
 {
 #ifdef USE_VERTEX_ARRAY_OBJECT
-	if (!this->valid)
-		glGenVertexArrays(1, &this->array_);
-	else
-	{
-		unbind();
-		unsigned int old_array = this->array_;
-		glGenVertexArrays(1, &this->array_);
-		glDeleteVertexArrays(1, &old_array);
-	}
-	glBindVertexArray(this->array_);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, Renderer::index_buffer());
-	f();
-	// TODO: Allow arbitrary attributes.
-	glEnableVertexAttribArray(Shader::kAttributeVertex);
-	glEnableVertexAttribArray(Shader::kAttributeColor);
-	glEnableVertexAttribArray(Shader::kAttributeTexCoord);
-	glBindVertexArray(0);
-#else
-	this->bind_ = std::move(f);
+	if (!array_)
+		return;
+
+	glDeleteVertexArrays(1, &array_);
 #endif
-	this->valid_ = true;
 }
 
 void VertexArray::bind() const
 {
 	if (this == g_active_array)
 		return;
+
 	g_active_array = this;
 
 #ifdef USE_VERTEX_ARRAY_OBJECT
-	glBindVertexArray(this->array_);
+	glBindVertexArray(array_);
 #else
-	this->bind_();
+	array_();
 #endif
 }
 
-VertexArray::~VertexArray()
+void VertexArray::reconfigure(std::function<int()> &&array_state)
 {
 #ifdef USE_VERTEX_ARRAY_OBJECT
-	if (!this->valid_)
-		return;
-	glDeleteVertexArrays(1, &this->array_);
+	if (!array_)
+		glGenVertexArrays(1, &array_);
+	else
+	{
+		unbind();
+		const unsigned int old_array = array_;
+		glGenVertexArrays(1, &array_);
+		glDeleteVertexArrays(1, &old_array);
+	}
+	glBindVertexArray(array_);
+	Renderer::Instance->bind_element_array();
+	switch (array_state())
+	{
+		case Shader::kAttributeNormal:
+			glEnableVertexAttribArray(Shader::kAttributeNormal);
+		case Shader::kAttributeTexCoord:
+			glEnableVertexAttribArray(Shader::kAttributeTexCoord);
+		case Shader::kAttributeColor:
+			glEnableVertexAttribArray(Shader::kAttributeColor);
+		case Shader::kAttributeVertex:
+			glEnableVertexAttribArray(Shader::kAttributeVertex);
+			break;
+	}
+	glBindVertexArray(0);
+#else
+	array_ = std::move(array_state);
 #endif
 }

@@ -82,6 +82,9 @@ private:
 	/// \param start   First character to align.
 	/// \param end     End character.
 	void align(float length, size_t start, size_t end);
+
+	/// Sets the array state for this label.
+	int bind() const;
 };
 
 const Colorb& Label::color() const

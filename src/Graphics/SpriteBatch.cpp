@@ -68,16 +68,7 @@ namespace
 const char Drawable::class_name[] = "Drawable";
 
 SpriteBatch::SpriteBatch(const size_t hint)
-    : sprites_(hint), vertices_(hint * 4),
-      array_([this]() {
-      	this->texture_->bind();
-      	this->vertices_.bind();
-      	if (this->normal_.get())
-      	{
-      		this->normal_->bind(1);
-      		this->normals_.bind(Shader::kAttributeNormal);
-      	}
-      }) { }
+    : sprites_(hint), vertices_(hint * 4) { }
 
 void SpriteBatch::set_normal(TextureAtlas *texture)
 {
@@ -95,9 +86,21 @@ void SpriteBatch::set_normal(TextureAtlas *texture)
 		         "Normal and vertex buffer are unsynchronized");
 	}
 	this->normal_ = texture;
+
+	if (!this->texture_)
+		return;
+
+	this->array_.reconfigure(std::bind(&SpriteBatch::bind, this));
 }
 
-unsigned int SpriteBatch::add(const int x, const int y, const int w, const int h)
+void SpriteBatch::set_texture(TextureAtlas *texture)
+{
+	this->texture_ = texture;
+	this->array_.reconfigure(std::bind(&SpriteBatch::bind, this));
+}
+
+unsigned int
+SpriteBatch::add(const int x, const int y, const int w, const int h)
 {
 	const unsigned int idx = this->create_sprite(w, h);
 	this->sprites_[idx].set_texture(this->texture_->define(Vec2i(x, y), w, h));
@@ -117,7 +120,7 @@ unsigned int SpriteBatch::create_sprite(const unsigned int width,
 	R_ASSERT(this->sprites_.size() * 4 == this->vertices_.storage().size(),
 	         "Sprite and vertex buffer are unsynchronized");
 
-	if (this->normal_.get())
+	if (this->normal_)
 	{
 		assign(this->sprites_, this->normals_.storage());
 		R_ASSERT(this->normals_.storage().size() ==
@@ -136,4 +139,17 @@ void SpriteBatch::update()
 		this->vertices_.commit();
 		this->normals_.commit();
 	}
+}
+
+int SpriteBatch::bind() const
+{
+	this->vertices_.bind();
+	this->texture_->bind();
+	if (this->normal_)
+	{
+		this->normal_->bind(1);
+		this->normals_.bind(Shader::kAttributeNormal);
+		return Shader::kAttributeNormal;
+	}
+	return Shader::kAttributeTexCoord;
 }
