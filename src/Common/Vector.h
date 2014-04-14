@@ -86,14 +86,14 @@ public:
 	inline T& operator[](const size_t i) const;
 
 private:
+	T *c_array;       ///< Actual C-array.
 	size_t count;     ///< Number of elements in the array.
 	size_t reserved;  ///< Size of allocated memory.
-	T *c_array;       ///< Actual C-array.
 };
 
 template<typename T>
 Vector<T>::Vector(const size_t reserve)
-    : count(0), reserved(0), c_array(nullptr)
+    : c_array(nullptr), count(0), reserved(0)
 {
 	this->reserve(reserve);
 }
