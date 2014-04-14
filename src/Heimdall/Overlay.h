@@ -10,7 +10,7 @@
 
 namespace Heimdall
 {
-	class Overlay : public Drawable
+	class Overlay final : public Drawable
 	{
 	public:
 		inline Overlay();

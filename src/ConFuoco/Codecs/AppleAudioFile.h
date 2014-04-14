@@ -18,7 +18,7 @@
 namespace ConFuoco
 {
 	/// Extended Audio File Services implementation of AudioFile.
-	class AppleAudioFile : public AudioFile
+	class AppleAudioFile final : public AudioFile
 	{
 	public:
 		AppleAudioFile(const char *const file, const int mode);

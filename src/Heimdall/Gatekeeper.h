@@ -20,7 +20,7 @@
 namespace Heimdall
 {
 	/// Overlay for debugging options.
-	class Gatekeeper : public Rainbow::Director, public Touchable
+	class Gatekeeper final : public Rainbow::Director, public Touchable
 	{
 	public:
 		Gatekeeper();

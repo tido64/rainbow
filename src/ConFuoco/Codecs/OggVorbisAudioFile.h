@@ -24,7 +24,7 @@
 namespace ConFuoco
 {
 	/// Ogg Vorbis implementation of AudioFile.
-	class OggVorbisAudioFile : public AudioFile
+	class OggVorbisAudioFile final : public AudioFile
 	{
 	public:
 		OggVorbisAudioFile(File &&file);

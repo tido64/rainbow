@@ -56,7 +56,7 @@ NS_B2_LUA_BEGIN
 		}
 	}
 
-	class World : public b2ContactListener, public Bind<World>
+	class World final : public b2ContactListener, public Bind<World>
 	{
 		friend Bind;
 
