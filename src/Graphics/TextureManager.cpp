@@ -2,6 +2,8 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
+#include <algorithm>
+
 #include "Graphics/OpenGL.h"
 #include "Graphics/TextureManager.h"
 
@@ -36,7 +38,9 @@ unsigned int TextureManager::create(const unsigned int internal_format,
                                     const void *data)
 {
 	TextureId texture = this->create_texture(width * height);
-	glTexImage2D(GL_TEXTURE_2D, 0, internal_format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+	glTexImage2D(
+	    GL_TEXTURE_2D, 0, internal_format, width, height, 0, format,
+	    GL_UNSIGNED_BYTE, data);
 	R_ASSERT(glGetError() == GL_NO_ERROR, "Failed to load texture");
 
 	this->textures.push_back(texture);
@@ -60,29 +64,32 @@ unsigned int TextureManager::create_compressed(const unsigned int format,
 	return texture.id;
 }
 
-void TextureManager::memory_usage(double &used, double &unused, double &peak) const
+#if RECORD_VMEM_USAGE
+void
+TextureManager::memory_usage(double &used, double &unused, double &peak) const
 {
 	unused = this->recycled.size() * 64 * 64 * 1e-6;
 	used = this->mem_used * 4e-6 + unused;
 	peak = this->mem_peak * 4e-6;
 }
+#endif
 
 void TextureManager::remove(const unsigned int id)
 {
-	for (size_t i = 0; i < this->textures.size(); ++i)
-	{
-		if (this->textures[i].id == id)
-		{
-			this->bind(this->textures[i].id);
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE, 64, 64, 0,
-			             GL_LUMINANCE, GL_UNSIGNED_BYTE, nullptr);
-			this->bind();
-			this->recycled.push_back(this->textures[i]);
-			this->mem_used -= this->textures[i].sz;
-			this->textures.qerase(i);
-			break;
-		}
-	}
+	const int i = this->textures.find(TextureId{id, 0});
+	if (i < 0)
+		return;
+
+	this->bind(this->textures[i].id);
+	glTexImage2D(
+	    GL_TEXTURE_2D, 0, GL_LUMINANCE, 64, 64, 0, GL_LUMINANCE,
+	    GL_UNSIGNED_BYTE, nullptr);
+	this->bind();
+	this->recycled.push_back(this->textures[i]);
+#if RECORD_VMEM_USAGE
+	this->mem_used -= this->textures[i].sz;
+#endif
+	this->textures.qerase(i);
 }
 
 void TextureManager::set_filter(const int filter)
@@ -95,10 +102,15 @@ void TextureManager::set_filter(const int filter)
 }
 
 TextureManager::TextureManager()
-    : mag_filter(GL_LINEAR), min_filter(GL_LINEAR), mem_peak(0.0), mem_used(0.0)
+    : mag_filter(GL_LINEAR)
+    , min_filter(GL_LINEAR)
+#if RECORD_VMEM_USAGE
+    , mem_peak(0.0)
+    , mem_used(0.0)
+#endif
 {
 	R_ASSERT(Instance == nullptr, "There can be only one TextureManager");
-	memset(this->active, 0, sizeof(this->active));
+	std::fill_n(this->active, kNumTextureUnits, 0);
 	Instance = this;
 }
 
@@ -109,7 +121,8 @@ TextureManager::~TextureManager()
 	this->purge(this->textures);
 }
 
-TextureManager::TextureId TextureManager::create_texture(const unsigned int size)
+TextureManager::TextureId
+TextureManager::create_texture(const unsigned int size)
 {
 	TextureId texture = { 0, size };
 	if (!this->recycled.size())
@@ -119,9 +132,11 @@ TextureManager::TextureId TextureManager::create_texture(const unsigned int size
 		texture.id = this->recycled[0].id;
 		this->recycled.qerase(0);
 	}
+#if RECORD_VMEM_USAGE
 	this->mem_used += texture.sz;
 	if (this->mem_used > this->mem_peak)
 		this->mem_peak = this->mem_used;
+#endif
 
 	this->bind(texture.id);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, this->min_filter);
@@ -154,7 +169,8 @@ void TextureManager::purge(Vector<TextureId> &t)
 	 * allocating more memory.
 	 */
 	static_assert(sizeof(unsigned int) < sizeof(TextureId),
-	              "int cannot be greater than TextureId");
+	              "sizeof(int) needs to be smaller than sizeof(TextureId)");
+
 	unsigned int *textures = reinterpret_cast<unsigned int*>(t.begin());
 	for (size_t i = 0; i < t.size(); ++i)
 		textures[i] = t[i].id;

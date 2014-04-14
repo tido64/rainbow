@@ -7,6 +7,8 @@
 
 #include "Common/Vector.h"
 
+#define RECORD_VMEM_USAGE !defined(NDEBUG) || defined(USE_HEIMDALL)
+
 /// Manages texture resources.
 ///
 /// Generates and reuses texture ids whenever possible. This should eliminate
@@ -60,8 +62,10 @@ public:
 	                               const size_t size,
 	                               const void *data);
 
+#if RECORD_VMEM_USAGE
 	/// Returns total video memory used (and unused) by textures.
 	void memory_usage(double &used, double &unused, double &peak) const;
+#endif
 
 	/// Purges unused texture memory.
 	inline void purge();
@@ -86,13 +90,16 @@ private:
 		inline bool operator>(const TextureId &tex);
 	};
 
+	unsigned int active[kNumTextureUnits];
+	Vector<TextureId> textures;  ///< Stores texture ids currently in use.
+	Vector<TextureId> recycled;  ///< Stores reusable texture ids.
 	int mag_filter;
 	int min_filter;
+
+#if RECORD_VMEM_USAGE
 	double mem_peak;
 	double mem_used;
-	unsigned int active[kNumTextureUnits];
-	Vector<TextureId> recycled;  ///< Stores reusable texture ids.
-	Vector<TextureId> textures;  ///< Stores texture ids currently in use.
+#endif
 
 	TextureManager();
 	~TextureManager();
