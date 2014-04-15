@@ -35,6 +35,19 @@ namespace
 	}
 }
 
+Sprite::Ref::Ref(const SpriteBatch &batch, const size_t i)
+    : storage(&batch.sprites()), i(i) { }
+
+Sprite& Sprite::Ref::operator*() const
+{
+	return this->storage->at(this->i);
+}
+
+Sprite* Sprite::Ref::operator->() const
+{
+	return &this->storage->at(this->i);
+}
+
 Sprite::Sprite(const unsigned int w, const unsigned int h, const SpriteBatch *p)
     : angle_(0.0f), width_(w), height_(h), stale_(-1), vertex_array_(nullptr),
       parent_(p), pivot_(0.5f, 0.5f), scale_(1.0f, 1.0f) { }
@@ -73,7 +86,8 @@ void Sprite::set_normal(const unsigned int id)
 
 void Sprite::set_pivot(const Vec2f &pivot)
 {
-	R_ASSERT(pivot.x >= 0.0f && pivot.x <= 1.0f && pivot.y >= 0.0f && pivot.y <= 1.0f,
+	R_ASSERT(pivot.x >= 0.0f && pivot.x <= 1.0f &&
+	         pivot.y >= 0.0f && pivot.y <= 1.0f,
 	         "Invalid pivot point");
 
 	Vec2f diff = pivot;
@@ -107,7 +121,8 @@ void Sprite::set_scale(const float f)
 
 void Sprite::set_scale(const Vec2f &f)
 {
-	R_ASSERT(f.x > 0.0f && f.y > 0.0f, "Can't scale with a factor of zero or less");
+	R_ASSERT(f.x > 0.0f && f.y > 0.0f,
+	         "Can't scale with a factor of zero or less");
 
 	this->scale_ = f;
 	this->stale_ |= kStaleBuffer;
@@ -177,25 +192,25 @@ bool Sprite::update()
 			const Vec2f s_sin_r(this->scale_.x * sin_r, this->scale_.y * sin_r);
 			const Vec2f s_cos_r(this->scale_.x * cos_r, this->scale_.y * cos_r);
 
-			this->vertex_array_[0].position = transform_rst(
-					origin[0], s_sin_r, s_cos_r, this->center_);
-			this->vertex_array_[1].position = transform_rst(
-					origin[1], s_sin_r, s_cos_r, this->center_);
-			this->vertex_array_[2].position = transform_rst(
-					origin[2], s_sin_r, s_cos_r, this->center_);
-			this->vertex_array_[3].position = transform_rst(
-					origin[3], s_sin_r, s_cos_r, this->center_);
+			this->vertex_array_[0].position =
+			    transform_rst(origin[0], s_sin_r, s_cos_r, this->center_);
+			this->vertex_array_[1].position =
+			    transform_rst(origin[1], s_sin_r, s_cos_r, this->center_);
+			this->vertex_array_[2].position =
+			    transform_rst(origin[2], s_sin_r, s_cos_r, this->center_);
+			this->vertex_array_[3].position =
+			    transform_rst(origin[3], s_sin_r, s_cos_r, this->center_);
 		}
 		else
 		{
-			this->vertex_array_[0].position = transform_st(
-					origin[0], this->scale_, this->center_);
-			this->vertex_array_[1].position = transform_st(
-					origin[1], this->scale_, this->center_);
-			this->vertex_array_[2].position = transform_st(
-					origin[2], this->scale_, this->center_);
-			this->vertex_array_[3].position = transform_st(
-					origin[3], this->scale_, this->center_);
+			this->vertex_array_[0].position =
+			    transform_st(origin[0], this->scale_, this->center_);
+			this->vertex_array_[1].position =
+			    transform_st(origin[1], this->scale_, this->center_);
+			this->vertex_array_[2].position =
+			    transform_st(origin[2], this->scale_, this->center_);
+			this->vertex_array_[3].position =
+			    transform_st(origin[3], this->scale_, this->center_);
 		}
 	}
 	else if (this->stale_ & kStalePosition)

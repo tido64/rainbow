@@ -32,9 +32,9 @@ protected:
 	~TimedEvent() = default;
 
 private:
-	bool stopped;              ///< Whether time is accumulating.
 	unsigned int accumulated;  ///< Accumulated, monotonic time.
 	unsigned int timeout;      ///< Time till a tick.
+	bool stopped;              ///< Whether time is being accumulated.
 };
 
 template<typename T>
@@ -79,6 +79,6 @@ void TimedEvent<T>::update(const unsigned long dt)
 
 template<typename T>
 TimedEvent<T>::TimedEvent(const unsigned int timeout)
-    : stopped(false), accumulated(0), timeout(timeout) { }
+    : accumulated(0), timeout(timeout), stopped(false) { }
 
 #endif

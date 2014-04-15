@@ -5,10 +5,8 @@
 #ifndef LUA_SPRITE_H_
 #define LUA_SPRITE_H_
 
+#include "Graphics/Sprite.h"
 #include "Lua/LuaBind.h"
-
-class Sprite;
-class SpriteBatch;
 
 NS_RAINBOW_LUA_BEGIN
 {
@@ -19,7 +17,7 @@ NS_RAINBOW_LUA_BEGIN
 	public:
 		Sprite(lua_State *);
 
-		inline ::Sprite* get() const;
+		inline const ::Sprite::Ref& get() const;
 
 	private:
 		static int get_angle(lua_State *);
@@ -37,15 +35,12 @@ NS_RAINBOW_LUA_BEGIN
 		static int move(lua_State *);
 		static int rotate(lua_State *);
 
-		const unsigned int id;
-		const SpriteBatch *batch;
-
-		::Sprite& sprite() const;
+		const ::Sprite::Ref sprite;
 	};
 
-	::Sprite* Sprite::get() const
+	const ::Sprite::Ref& Sprite::get() const
 	{
-		return &this->sprite();
+		return this->sprite;
 	}
 } NS_RAINBOW_LUA_END
 

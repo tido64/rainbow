@@ -9,13 +9,13 @@ NS_B2_LUA_BEGIN
 {
 	struct BodyData
 	{
-		float curr_r, prev_r;
-		Sprite *sprite;
+		Sprite::Ref sprite;
 		b2Vec2 curr_p, prev_p;
+		float curr_r, prev_r;
 
 		BodyData(const b2BodyDef &d)
-		    : curr_r(d.angle), prev_r(d.angle), sprite(nullptr),
-		      curr_p(d.position), prev_p(d.position) { }
+		    : curr_p(d.position), prev_p(d.position), curr_r(d.angle),
+		      prev_r(d.angle) { }
 	};
 
 	int BodyDef(lua_State *L)

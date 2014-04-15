@@ -17,7 +17,7 @@
 /// This class is mainly for the lack of full STL implementation on some
 /// platforms, such as Android. (And because we don't like iterators.)
 template<typename T>
-class Vector : private NonCopyable<Vector<T> >
+class Vector : private NonCopyable<Vector<T>>
 {
 public:
 	Vector(const size_t reserve = 4);
@@ -25,7 +25,7 @@ public:
 	~Vector();
 
 	/// Returns the element stored at index.
-	inline T& at(const size_t i);
+	inline T& at(const size_t i) const;
 
 	/// Returns the last element.
 	inline T& back();
@@ -115,7 +115,7 @@ Vector<T>::~Vector()
 }
 
 template<typename T>
-T& Vector<T>::at(const size_t i)
+T& Vector<T>::at(const size_t i) const
 {
 	return (*this)[i];
 }

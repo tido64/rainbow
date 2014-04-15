@@ -29,6 +29,9 @@ public:
 	/// Returns current normal map.
 	inline const TextureAtlas& normal() const;
 
+	/// Returns a reference to the sprite at index \p i.
+	inline Sprite::Ref sprite(const size_t i) const;
+
 	/// Returns the sprites vector.
 	inline const Vector<Sprite>& sprites() const;
 
@@ -83,6 +86,11 @@ const TextureAtlas& SpriteBatch::normal() const
 {
 	R_ASSERT(this->normal_.get(), "Normal texture is not set");
 	return *this->normal_.get();
+}
+
+Sprite::Ref SpriteBatch::sprite(const size_t i) const
+{
+	return Sprite::Ref(*this, i);
 }
 
 const Vector<Sprite>& SpriteBatch::sprites() const

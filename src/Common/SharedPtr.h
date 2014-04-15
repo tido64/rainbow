@@ -54,9 +54,6 @@ public:
 	unsigned int ref_count() const { return this->ptr->refs; }
 #endif
 
-	/// Returns whether there is an associated managed object.
-	explicit operator bool() const;
-
 	/// Releases the current pointer and retains the new one.
 	SharedPtr<T>& operator=(const SharedPtr<T> &);
 
@@ -71,6 +68,9 @@ public:
 
 	/// Dereferences pointer to the managed object.
 	inline T* operator->() const;
+
+	/// Returns whether there is an associated managed object.
+	explicit operator bool() const;
 
 private:
 	RefCounted *ptr;  ///< Actual pointer managed by this shared pointer.
@@ -117,12 +117,6 @@ T* SharedPtr<T>::get() const
 }
 
 template<class T>
-SharedPtr<T>::operator bool() const
-{
-	return this->ptr;
-}
-
-template<class T>
 SharedPtr<T>& SharedPtr<T>::operator=(const SharedPtr<T> &shared_ptr)
 {
 	return *this = static_cast<T*>(shared_ptr.ptr);
@@ -162,6 +156,12 @@ T* SharedPtr<T>::operator->() const
 {
 	R_ASSERT(this->ptr, "No reference to pointer");
 	return static_cast<T*>(this->ptr);
+}
+
+template<class T>
+SharedPtr<T>::operator bool() const
+{
+	return this->ptr;
 }
 
 template<class T>

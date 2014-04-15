@@ -34,8 +34,8 @@ NS_RAINBOW_LUA_BEGIN
 	};
 
 	Sprite::Sprite(lua_State *L)
-	    : id(lua_tointeger(L, 2)),
-	      batch(static_cast<SpriteBatch*>(lua_touserdata(L, 1))) { }
+	    : sprite(static_cast<SpriteBatch*>(lua_touserdata(L, 1))->
+	                 sprite(lua_tointeger(L, 2))) { }
 
 	int Sprite::get_angle(lua_State *L)
 	{
@@ -43,7 +43,7 @@ NS_RAINBOW_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		lua_pushnumber(L, self->sprite().angle());
+		lua_pushnumber(L, self->sprite->angle());
 		return 1;
 	}
 
@@ -53,7 +53,7 @@ NS_RAINBOW_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		const Colorb& c = self->sprite().color();
+		const Colorb& c = self->sprite->color();
 		lua_pushinteger(L, c.r);
 		lua_pushinteger(L, c.g);
 		lua_pushinteger(L, c.b);
@@ -67,7 +67,7 @@ NS_RAINBOW_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		const Vec2f &v = self->sprite().position();
+		const Vec2f &v = self->sprite->position();
 		lua_pushnumber(L, v.x);
 		lua_pushnumber(L, v.y);
 		return 2;
@@ -89,7 +89,7 @@ NS_RAINBOW_LUA_BEGIN
 		color += lua_tointeger(L, 3) << 16;
 		color += lua_tointeger(L, 4) << 8;
 		color += luaR_optinteger(L, 5, 0xff);
-		self->sprite().set_color(color);
+		self->sprite->set_color(color);
 		return 0;
 	}
 
@@ -101,7 +101,7 @@ NS_RAINBOW_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		self->sprite().set_normal(lua_tointeger(L, 2));
+		self->sprite->set_normal(lua_tointeger(L, 2));
 		return 0;
 	}
 
@@ -114,7 +114,7 @@ NS_RAINBOW_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		self->sprite().set_pivot(Vec2f(lua_tonumber(L, 2), lua_tonumber(L, 3)));
+		self->sprite->set_pivot(Vec2f(lua_tonumber(L, 2), lua_tonumber(L, 3)));
 		return 0;
 	}
 
@@ -127,7 +127,7 @@ NS_RAINBOW_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		self->sprite().set_position(
+		self->sprite->set_position(
 		    Vec2f(lua_tonumber(L, 2), lua_tonumber(L, 3)));
 		return 0;
 	}
@@ -140,7 +140,7 @@ NS_RAINBOW_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		self->sprite().set_rotation(lua_tonumber(L, 2));
+		self->sprite->set_rotation(lua_tonumber(L, 2));
 		return 0;
 	}
 
@@ -155,7 +155,7 @@ NS_RAINBOW_LUA_BEGIN
 			return 0;
 
 		const float fx = lua_tonumber(L, 2);
-		self->sprite().set_scale(Vec2f(fx, luaR_optnumber(L, 3, fx)));
+		self->sprite->set_scale(Vec2f(fx, luaR_optnumber(L, 3, fx)));
 		return 0;
 	}
 
@@ -167,7 +167,7 @@ NS_RAINBOW_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		self->sprite().set_texture(lua_tointeger(L, 2));
+		self->sprite->set_texture(lua_tointeger(L, 2));
 		return 0;
 	}
 
@@ -177,7 +177,7 @@ NS_RAINBOW_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		self->sprite().mirror();
+		self->sprite->mirror();
 		return 0;
 	}
 
@@ -190,7 +190,7 @@ NS_RAINBOW_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		self->sprite().move(Vec2f(lua_tonumber(L, 2), lua_tonumber(L, 3)));
+		self->sprite->move(Vec2f(lua_tonumber(L, 2), lua_tonumber(L, 3)));
 		return 0;
 	}
 
@@ -202,12 +202,7 @@ NS_RAINBOW_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		self->sprite().rotate(lua_tonumber(L, 2));
+		self->sprite->rotate(lua_tonumber(L, 2));
 		return 0;
-	}
-
-	::Sprite& Sprite::sprite() const
-	{
-		return this->batch->sprites()[this->id];
 	}
 } NS_RAINBOW_LUA_END

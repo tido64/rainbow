@@ -9,6 +9,7 @@
 #include "Graphics/SpriteVertex.h"
 
 class SpriteBatch;
+template<typename T> class Vector;
 
 /// A textured quad.
 ///
@@ -21,8 +22,8 @@ class SpriteBatch;
 /// the second.
 ///
 /// The sprite itself does not have a texture. It holds the texture coordinates
-/// but it is the sprite batch that holds the actual texture. That way,
-/// changing textures on a whole batch (i.e. skinning) can be easily achieved.
+/// but it is the sprite batch that holds the actual texture. That way, changing
+/// textures on a whole batch (i.e. skinning) can be easily achieved.
 ///
 /// \see http://developer.apple.com/library/ios/#documentation/3DDrawing/Conceptual/OpenGLES_ProgrammingGuide/TechniquesforWorkingwithVertexData/TechniquesforWorkingwithVertexData.html
 /// \see http://iphonedevelopment.blogspot.com/2009/06/opengl-es-from-ground-up-part-8.html
@@ -30,7 +31,28 @@ class SpriteBatch;
 class Sprite : private NonCopyable<Sprite>
 {
 public:
-	Sprite(const unsigned int width, const unsigned int height, const SpriteBatch *parent);
+	class Ref
+	{
+		friend SpriteBatch;
+
+	public:
+		inline Ref();
+
+		Sprite& operator*() const;
+		Sprite* operator->() const;
+
+		inline explicit operator bool() const;
+
+	private:
+		const Vector<Sprite> *storage;
+		size_t i;
+
+		Ref(const SpriteBatch &batch, const size_t i);
+	};
+
+	Sprite(const unsigned int width,
+	       const unsigned int height,
+	       const SpriteBatch *parent);
 	Sprite(Sprite &&);
 
 	/// Returns the sprite's current angle.
@@ -108,6 +130,13 @@ private:
 	Vec2f position_;              ///< Uncommitted position.
 	Vec2f scale_;                 ///< Scaling factor.
 };
+
+Sprite::Ref::Ref() : storage(nullptr), i(0) { }
+
+Sprite::Ref::operator bool() const
+{
+	return this->batch;
+}
 
 float Sprite::angle() const
 {

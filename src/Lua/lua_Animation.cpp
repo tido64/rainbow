@@ -35,10 +35,6 @@ NS_RAINBOW_LUA_BEGIN
 		           (lua_isnumber(L, 4) || lua_isnone(L, 4)),
 		           "rainbow.animation(sprite, frames{}, fps, loop_delay = 0)");
 
-		replacetable(L, 1);
-		::Sprite *sprite =
-		    lua_isuserdata(L, 1) ? touserdata<Sprite>(L, 1)->get() : nullptr;
-
 		// Count number of frames
 		unsigned int count = 0;
 		lua_pushnil(L);
@@ -62,6 +58,10 @@ NS_RAINBOW_LUA_BEGIN
 		}
 		frames[count] = ::Animation::kAnimationEnd;
 
+		::Sprite::Ref sprite;
+		replacetable(L, 1);
+		if (lua_isuserdata(L, 1))
+			sprite = touserdata<Sprite>(L, 1)->get();
 		const unsigned int fps = lua_tointeger(L, 3);
 		const int delay = luaR_optinteger(L, 4, 0);
 		this->animation = new ::Animation(sprite, frames, fps, delay);
