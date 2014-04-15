@@ -161,7 +161,7 @@ Officially, Rainbow supports only [Ogg Vorbis](http://en.wikipedia.org/wiki/Vorb
 
 Stops and deletes all sound objects.
 
-### rainbow.audio.create_sound(path, +mode, +loops)
+### rainbow.audio.create_sound(path, mode = 0, loops = -1)
 
 | Parameter | Description |
 |-----------|-------------|
@@ -299,7 +299,7 @@ Removes all input listeners.
 
 A label is used to display text.
 
-### rainbow.label(+text)
+### rainbow.label(text = "")
 
 | Parameter | Description |
 |-----------|-------------|
@@ -317,7 +317,7 @@ Returns the font colour in separate channels (RGBA).
 
 Sets text alignment.
 
-### &lt;rainbow.label&gt;:set_color(r, g, b, +a)
+### &lt;rainbow.label&gt;:set_color(r, g, b, a = 255)
 
 | Parameter | Description |
 |-----------|-------------|
@@ -412,7 +412,7 @@ Returns a random number in interval [0, <var>max</var>).
 
 Returns a random number in interval [<var>min</var>, <var>max</var>).
 
-### rainbow.seed(+seed)
+### rainbow.seed(seed = 0)
 
 | Parameter | Description |
 |-----------|-------------|
@@ -567,7 +567,7 @@ Returns sprite colour in separate channels (RGBA).
 
 Returns sprite position.
 
-### &lt;rainbow.sprite&gt;:set_color(r, g, b, +a)
+### &lt;rainbow.sprite&gt;:set_color(r, g, b, a = 255)
 
 | Parameter | Description |
 |-----------|-------------|
@@ -602,11 +602,12 @@ Sets sprite position.
 
 Sets sprite rotation.
 
-### &lt;rainbow.sprite&gt;:set_scale(f)
+### &lt;rainbow.sprite&gt;:set_scale(x, y = x)
 
 | Parameter | Description |
 |-----------|-------------|
-| <var>f</var> | Scale factor. Default: 1.0. |
+| <var>x</var> | Scale factor on x-axis. Default: 1.0. |
+| <var>y</var> | <span class="optional">Scale factor on y-axis. Set to the same value as ``x`` if omitted.</span> |
 
 Sets sprite scale.
 
@@ -644,7 +645,7 @@ Sprite batches are meant to enforce grouping of [sprites](#rainbow-sprite) in or
 
 The sprites in a batch are drawn using [painter's algorithm](http://en.wikipedia.org/wiki/Painter's_algorithm) and should therefore be created in the order they want to be drawn.
 
-### rainbow.spritebatch(+hint)
+### rainbow.spritebatch(hint = 4)
 
 | Parameter | Description |
 |-----------|-------------|
@@ -893,7 +894,7 @@ Hides the parallax from view.
 
 Move layers relatively by <var>v</var> pixels.
 
-### &lt;Parallax&gt;:set_layer_velocity(layer, vx, +vy)
+### &lt;Parallax&gt;:set_layer_velocity(layer, vx, vy = 0)
 
 | Parameter | Description |
 |-----------|-------------|
@@ -955,7 +956,7 @@ Returns the element on top of the stack.
 
 Timers execute a function once after a set time, or any number of times at given intervals.
 
-### Timer(callback, delay, +times)
+### Timer(callback, delay, times = _infinite_)
 
 | Parameter | Description |
 |-----------|-------------|
