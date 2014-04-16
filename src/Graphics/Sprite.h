@@ -44,10 +44,10 @@ public:
 		inline explicit operator bool() const;
 
 	private:
-		const Vector<Sprite> *storage;
+		const SpriteBatch *batch;
 		size_t i;
 
-		Ref(const SpriteBatch &batch, const size_t i);
+		Ref(const SpriteBatch *batch, const size_t i);
 	};
 
 	Sprite(const unsigned int width,
@@ -131,7 +131,7 @@ private:
 	Vec2f scale_;                 ///< Scaling factor.
 };
 
-Sprite::Ref::Ref() : storage(nullptr), i(0) { }
+Sprite::Ref::Ref() : batch(nullptr), i(0) { }
 
 Sprite::Ref::operator bool() const
 {

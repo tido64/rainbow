@@ -64,24 +64,25 @@ public:
 	void update();
 
 private:
+	std::unique_ptr<SpriteVertex[]> vertices_;  ///< Client vertex buffer.
+	std::unique_ptr<char[]> text_;  ///< Content of this label.
+	size_t size_;                   ///< Size of the char array.
+	Vec2f position_;                ///< Position of the text (top left).
 	Colorb color_;                  ///< Color of the text.
 	float scale_;                   ///< Label scale factor.
 	Alignment alignment_;           ///< Text alignment.
 	unsigned int count_;            ///< Number of characters * 4 (i.e. vertices).
 	unsigned int stale_;            ///< Flags indicating need for update.
 	unsigned int width_;            ///< Label width.
-	size_t size_;                   ///< Size of the char array.
-	std::unique_ptr<char[]> text_;  ///< Content of this label.
-	Vec2f position_;                ///< Position of the text (top left).
-	SharedPtr<FontAtlas> font_;     ///< The font used in this label.
-	Buffer<SpriteVertex> buffer_;   ///< Vertex buffer.
+	Buffer buffer_;                 ///< Vertex buffer.
 	VertexArray array_;             ///< Vertex array object.
+	SharedPtr<FontAtlas> font_;     ///< The font used in this label.
 
 	/// Aligns individual characters.
 	/// \param length  Negative length of characters from \p start to \p end.
 	/// \param start   First character to align.
 	/// \param end     End character.
-	void align(float length, size_t start, size_t end);
+	void align(float length, const size_t start, const size_t end);
 
 	/// Sets the array state for this label.
 	int bind() const;
@@ -89,27 +90,27 @@ private:
 
 const Colorb& Label::color() const
 {
-	return this->color_;
+	return color_;
 }
 
 size_t Label::count() const
 {
-	return this->count_ + (this->count_ >> 1);
+	return count_ + (count_ >> 1);
 }
 
 const FontAtlas* Label::font() const
 {
-	return this->font_.get();
+	return font_.get();
 }
 
 const VertexArray& Label::vertex_array() const
 {
-	return this->array_;
+	return array_;
 }
 
 unsigned int Label::width() const
 {
-	return this->width_;
+	return width_;
 }
 
 #endif

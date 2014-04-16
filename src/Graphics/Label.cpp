@@ -2,6 +2,8 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
+#include <algorithm>
+
 #include "Graphics/Label.h"
 #include "Graphics/ShaderDetails.h"
 
@@ -13,97 +15,96 @@ namespace
 }
 
 Label::Label()
-    : scale_(1.0f), alignment_(kLeftTextAlignment), count_(0), stale_(0),
-      width_(0), size_(0) { }
+    : size_(0), scale_(1.0f), alignment_(kLeftTextAlignment), count_(0),
+      stale_(0), width_(0) { }
 
 void Label::set_alignment(const Label::Alignment a)
 {
-	this->alignment_ = a;
-	this->stale_ |= kStaleBuffer;
+	alignment_ = a;
+	stale_ |= kStaleBuffer;
 }
 
 void Label::set_color(const Colorb &c)
 {
-	this->color_ = c;
-	this->stale_ |= kStaleColor;
+	color_ = c;
+	stale_ |= kStaleColor;
 }
 
 void Label::set_font(FontAtlas *f)
 {
-	this->font_ = f;
-	this->array_.reconfigure(std::bind(&Label::bind, this));
-	this->stale_ |= kStaleBuffer;
+	font_ = f;
+	array_.reconfigure(std::bind(&Label::bind, this));
+	stale_ |= kStaleBuffer;
 }
 
 void Label::set_position(const Vec2f &position)
 {
-	this->position_.x = static_cast<int>(position.x + 0.5);
-	this->position_.y = static_cast<int>(position.y + 0.5);
-	this->stale_ |= kStaleBuffer;
+	position_.x = static_cast<int>(position.x + 0.5);
+	position_.y = static_cast<int>(position.y + 0.5);
+	stale_ |= kStaleBuffer;
 }
 
 void Label::set_scale(const float f)
 {
-	if (Rainbow::equal(this->scale_, f))
+	if (Rainbow::equal(scale_, f))
 		return;
 
 	if (f >= 1.0f)
-		this->scale_ = 1.0f;
+		scale_ = 1.0f;
 	else if (f <= 0.01f)
-		this->scale_ = 0.01f;
+		scale_ = 0.01f;
 	else
-		this->scale_ = f;
+		scale_ = f;
 
-	this->stale_ |= kStaleBuffer;
+	stale_ |= kStaleBuffer;
 }
 
 void Label::set_text(const char *text)
 {
 	const size_t len = strlen(text);
-	if (len > this->size_)
+	if (len > size_)
 	{
-		this->text_.reset(new char[len + 1]);
-		this->size_ = len;
-		this->stale_ |= kStaleBufferSize;
+		text_.reset(new char[len + 1]);
+		size_ = len;
+		stale_ |= kStaleBufferSize;
 	}
-	memcpy(this->text_.get(), text, len);
-	this->text_[len] = '\0';
-	this->stale_ |= kStaleBuffer;
+	memcpy(text_.get(), text, len);
+	text_[len] = '\0';
+	stale_ |= kStaleBuffer;
 }
 
 void Label::move(const Vec2f &delta)
 {
-	this->position_ += delta;
-	this->stale_ |= kStaleBuffer;
+	position_ += delta;
+	stale_ |= kStaleBuffer;
 }
 
 void Label::update()
 {
 	// Note: This algorithm currently does not support font kerning.
-	if (this->stale_)
+	if (stale_)
 	{
-		if (this->stale_ & kStaleBuffer)
+		if (stale_ & kStaleBuffer)
 		{
-			Vector<SpriteVertex> &buffer = this->buffer_.storage();
-			if (this->stale_ & kStaleBufferSize)
+			if (stale_ & kStaleBufferSize)
 			{
-				buffer.reserve(this->size_ * 4);
-				this->stale_ |= kStaleColor;
+				vertices_.reset(new SpriteVertex[size_ * 4]);
+				stale_ |= kStaleColor;
 			}
 			size_t count = 0;
 			size_t start = 0;
-			SpriteVertex *vx = buffer.begin();
-			Vec2f pen = this->position_;
+			SpriteVertex *vx = vertices_.get();
+			Vec2f pen = position_;
 			for (const unsigned char *text =
-			         reinterpret_cast<unsigned char*>(this->text_.get());
+			         reinterpret_cast<unsigned char*>(text_.get());
 			     *text;)
 			{
 				if (*text == '\n')
 				{
-					this->align(this->position_.x - pen.x, start, count);
-					pen.x = this->position_.x;
+					align(position_.x - pen.x, start, count);
+					pen.x = position_.x;
 					start = count;
-					pen.y -= this->font_->height() * this->scale_;
+					pen.y -= font_->height() * scale_;
 					++text;
 					continue;
 				}
@@ -113,57 +114,59 @@ void Label::update()
 					break;
 				text += c.bytes;
 
-				const FontGlyph *glyph = this->font_->get_glyph(c);
+				const FontGlyph *glyph = font_->get_glyph(c);
 				if (!glyph)
 					continue;
 
-				pen.x += glyph->left * this->scale_;
+				pen.x += glyph->left * scale_;
 
 				for (size_t i = 0; i < 4; ++i)
 				{
 					vx->texcoord = glyph->quad[i].texcoord;
 					vx->position = glyph->quad[i].position;
-					vx->position *= this->scale_;
+					vx->position *= scale_;
 					vx->position += pen;
 					++vx;
 				}
 
-				pen.x += (glyph->advance - glyph->left) * this->scale_;
+				pen.x += (glyph->advance - glyph->left) * scale_;
 				++count;
 			}
-			this->count_ = count * 4;
-			this->align(this->position_.x - pen.x, start, count);
-			this->width_ = pen.x - this->position_.x;
+			count_ = count * 4;
+			align(position_.x - pen.x, start, count);
+			width_ = pen.x - position_.x;
 		}
-		if (this->stale_ & kStaleColor)
+		if (stale_ & kStaleColor)
 		{
-			SpriteVertex *buffer = this->buffer_.storage().begin();
-			for (size_t i = 0; i < this->count_; ++i)
-				buffer[i].color = this->color_;
+			const Colorb &color = color_;
+			std::for_each(vertices_.get(),
+			              vertices_.get() + count_,
+			              [color](SpriteVertex &v) {
+				v.color = color;
+			});
 		}
-		this->buffer_.upload(this->count_);
-		this->stale_ = 0;
+		buffer_.upload(vertices_.get(), count_ * sizeof(SpriteVertex));
+		stale_ = 0;
 	}
 }
 
-void Label::align(float offset, size_t start, size_t end)
+void Label::align(float offset, const size_t start, const size_t end)
 {
-	if (this->alignment_ != kLeftTextAlignment)
+	if (alignment_ != kLeftTextAlignment)
 	{
-		if (this->alignment_ == kCenterTextAlignment)
+		if (alignment_ == kCenterTextAlignment)
 			offset *= 0.5f;
-
-		start <<= 2;
-		end <<= 2;
-		SpriteVertex *buffer = this->buffer_.storage().begin();
-		for (size_t i = start; i < end; ++i)
-			buffer[i].position.x += offset;
+		std::for_each(vertices_.get() + start * 4,
+		              vertices_.get() + end * 4,
+		              [offset](SpriteVertex &v) {
+			v.position.x += offset;
+		});
 	}
 }
 
 int Label::bind() const
 {
-	this->font_->bind();
-	this->buffer_.bind();
+	font_->bind();
+	buffer_.bind();
 	return Shader::kAttributeTexCoord;
 }

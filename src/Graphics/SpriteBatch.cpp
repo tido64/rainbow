@@ -11,145 +11,176 @@
 
 namespace
 {
+	template<typename T>
+	class SetBuffer
+	{
+	public:
+		SetBuffer(T *buffer);
+		void operator()(Sprite &sprite);
+
+	private:
+		T *buffer_;
+	};
+
 	class Update
 	{
 	public:
-		Update() : update(false) { }
-
-		void operator()(Sprite &s)
-		{
-			this->update |= s.update();
-		}
-
-		explicit operator bool() const
-		{
-			return this->update;
-		}
+		Update();
+		void operator()(Sprite &sprite);
+		explicit operator bool() const;
 
 	private:
-		bool update;
+		bool should_update_;
 	};
-
-	template<typename T>
-	bool push_back(Vector<T> &vector)
-	{
-		const size_t current_capacity = vector.capacity();
-		vector.push_back(T());
-		vector.push_back(T());
-		vector.push_back(T());
-		vector.push_back(T());
-		return vector.capacity() != current_capacity;
-	}
-
-	void set_buffer(Sprite &sprite, SpriteVertex *buffer)
-	{
-		sprite.set_vertex_array(buffer);
-	}
-
-	void set_buffer(Sprite &sprite, Vec2f *buffer)
-	{
-		sprite.set_normal_buffer(buffer);
-	}
-
-	template<typename T>
-	void assign(Vector<Sprite> &sprites, Vector<T> &buffer)
-	{
-		// If the buffer was resized, we'll need to reassign all.
-		if (push_back<T>(buffer))
-		{
-			for (size_t i = 0; i < sprites.size(); ++i)
-				set_buffer(sprites[i], &buffer[i * 4]);
-		}
-		else  // Assign the buffer to the last sprite.
-			set_buffer(sprites.back(), &buffer[buffer.size() - 4]);
-	}
 }
 
 const char Drawable::class_name[] = "Drawable";
 
-SpriteBatch::SpriteBatch(const size_t hint)
-    : sprites_(hint), vertices_(hint * 4) { }
+SpriteBatch::SpriteBatch(const unsigned int hint) : count_(0), reserved_(0)
+{
+	resize(hint);
+}
+
+SpriteBatch::~SpriteBatch()
+{
+	sprites_.release(count_);
+	vertices_.release(count_ * 4);
+	normals_.release(count_ * 4);
+}
 
 void SpriteBatch::set_normal(TextureAtlas *texture)
 {
-	const auto &vertex_buffer = this->vertices_.storage();
-	auto &normal_buffer = this->normals_.storage();
-	if (normal_buffer.size() < vertex_buffer.size())
+	if (!normals_)
 	{
-		normal_buffer.reserve(vertex_buffer.capacity());
-		while (normal_buffer.size() < vertex_buffer.size())
-			normal_buffer.push_back(Vec2f());
-		for (size_t i = 0; i < this->sprites_.size(); ++i)
-			this->sprites_[i].set_normal_buffer(&normal_buffer[i * 4]);
-
-		R_ASSERT(normal_buffer.size() == vertex_buffer.size(),
-		         "Normal and vertex buffer are unsynchronized");
+		normals_.resize(0, reserved_ * 4);
+		std::uninitialized_fill_n(normals_.get(), count_ * 4, Vec2f());
+		set_buffer(normals_.get());
 	}
-	this->normal_ = texture;
+	normal_ = texture;
 
-	if (!this->texture_)
+	if (!texture_)
 		return;
 
-	this->array_.reconfigure(std::bind(&SpriteBatch::bind, this));
+	array_.reconfigure(std::bind(&SpriteBatch::bind, this));
 }
 
 void SpriteBatch::set_texture(TextureAtlas *texture)
 {
-	this->texture_ = texture;
-	this->array_.reconfigure(std::bind(&SpriteBatch::bind, this));
+	texture_ = texture;
+	array_.reconfigure(std::bind(&SpriteBatch::bind, this));
 }
 
 unsigned int
 SpriteBatch::add(const int x, const int y, const int w, const int h)
 {
-	const unsigned int idx = this->create_sprite(w, h);
-	this->sprites_[idx].set_texture(this->texture_->define(Vec2i(x, y), w, h));
+	const unsigned int idx = create_sprite(w, h);
+	sprites_[idx].set_texture(texture_->define(Vec2i(x, y), w, h));
 	return idx;
 }
 
 unsigned int SpriteBatch::create_sprite(const unsigned int width,
                                         const unsigned int height)
 {
-	R_ASSERT(this->sprites_.size() <= Renderer::kNumSprites,
-	         "Hard-coded limit reached");
+	R_ASSERT(count_ <= Renderer::kNumSprites, "Hard-coded limit reached");
 
-	const unsigned int idx = this->sprites_.size();
-	this->sprites_.push_back(Sprite(width, height, this));
-
-	assign(this->sprites_, this->vertices_.storage());
-	R_ASSERT(this->sprites_.size() * 4 == this->vertices_.storage().size(),
-	         "Sprite and vertex buffer are unsynchronized");
-
-	if (this->normal_)
+	if (count_ == reserved_)
 	{
-		assign(this->sprites_, this->normals_.storage());
-		R_ASSERT(this->normals_.storage().size() ==
-		             this->vertices_.storage().size(),
-		         "Normal and vertex buffer are unsynchronized");
+		const unsigned int half = reserved_ / 2;
+		resize(reserved_ + ((half == 0) ? 1 : half));
 	}
-
-	return idx;
+	Sprite &sprite = sprites_[count_];
+	new (&sprite) Sprite(width, height, this);
+	const unsigned int offset = count_ * 4;
+	std::uninitialized_fill_n(vertices_ + offset, 4, SpriteVertex());
+	sprite.set_vertex_array(vertices_ + offset);
+	if (normals_)
+	{
+		std::uninitialized_fill_n(normals_ + offset, 4, Vec2f());
+		sprite.set_normal_buffer(normals_ + offset);
+	}
+	return count_++;
 }
+
+void SpriteBatch::move(const Vec2f &delta)
+{
+	if (delta.is_zero())
+		return;
+
+	std::for_each(sprites_.get(), sprites_ + count_, [&delta](Sprite &sprite) {
+		sprite.move(delta);
+	});
+}
+
 
 void SpriteBatch::update()
 {
 	// Update all sprites, then upload the vertex buffer if necessary.
-	if (std::for_each(this->sprites_.begin(), this->sprites_.end(), Update()))
+	if (std::for_each(sprites_.get(), sprites_ + count_, Update()))
 	{
-		this->vertices_.commit();
-		this->normals_.commit();
+		const unsigned int count = count_ * 4;
+		vertex_buffer_.upload(vertices_.get(), count * sizeof(SpriteVertex));
+		if (normals_)
+			normal_buffer_.upload(normals_.get(), count * sizeof(Vec2f));
 	}
 }
 
 int SpriteBatch::bind() const
 {
-	this->vertices_.bind();
-	this->texture_->bind();
-	if (this->normal_)
+	vertex_buffer_.bind();
+	texture_->bind();
+	if (normal_)
 	{
-		this->normal_->bind(1);
-		this->normals_.bind(Shader::kAttributeNormal);
+		normal_->bind(1);
+		normal_buffer_.bind(Shader::kAttributeNormal);
 		return Shader::kAttributeNormal;
 	}
 	return Shader::kAttributeTexCoord;
+}
+
+void SpriteBatch::resize(const unsigned int size)
+{
+	sprites_.resize(count_, size);
+	vertices_.resize(count_ * 4, size * 4);
+	set_buffer(vertices_.get());
+	if (normals_)
+	{
+		normals_.resize(count_ * 4, size * 4);
+		set_buffer(normals_.get());
+	}
+	reserved_ = size;
+}
+
+template<typename T>
+void SpriteBatch::set_buffer(T *buffer)
+{
+	std::for_each(sprites_.get(), sprites_ + count_, SetBuffer<T>(buffer));
+}
+
+template<typename T>
+SetBuffer<T>::SetBuffer(T *buffer) : buffer_(buffer) { }
+
+template<>
+void SetBuffer<SpriteVertex>::operator()(Sprite &sprite)
+{
+	sprite.set_vertex_array(buffer_);
+	buffer_ += 4;
+}
+
+template<>
+void SetBuffer<Vec2f>::operator()(Sprite &sprite)
+{
+	sprite.set_normal_buffer(buffer_);
+	buffer_ += 4;
+}
+
+Update::Update() : should_update_(false) { }
+
+void Update::operator()(Sprite &sprite)
+{
+	should_update_ |= sprite.update();
+}
+
+Update::operator bool() const
+{
+	return should_update_;
 }

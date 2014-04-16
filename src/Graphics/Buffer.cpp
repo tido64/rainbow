@@ -4,14 +4,23 @@
 
 #include "Common/Vec2.h"
 #include "Graphics/Buffer.h"
+#include "Graphics/OpenGL.h"
 #include "Graphics/ShaderDetails.h"
 #include "Graphics/SpriteVertex.h"
 
-/// Used by Label and SpriteBatch for interleaved vertex buffer.
-template<>
-void Buffer<SpriteVertex>::bind() const
+Buffer::Buffer() : id_(0)
 {
-	glBindBuffer(GL_ARRAY_BUFFER, this->id_);
+	glGenBuffers(1, &id_);
+}
+
+Buffer::~Buffer()
+{
+	glDeleteBuffers(1, &id_);
+}
+
+void Buffer::bind() const
+{
+	glBindBuffer(GL_ARRAY_BUFFER, id_);
 	glVertexAttribPointer(
 	    Shader::kAttributeColor, 4, GL_UNSIGNED_BYTE, GL_TRUE,
 	    sizeof(SpriteVertex),
@@ -26,11 +35,16 @@ void Buffer<SpriteVertex>::bind() const
 	    reinterpret_cast<void*>(offsetof(SpriteVertex, position)));
 }
 
-/// Used by SpriteBatch for normal buffers.
-template<>
-void Buffer<Vec2f>::bind(const unsigned int index) const
+void Buffer::bind(const unsigned int index) const
 {
-	glBindBuffer(GL_ARRAY_BUFFER, this->id_);
+	glBindBuffer(GL_ARRAY_BUFFER, id_);
 	glVertexAttribPointer(index, 2, GL_FLOAT, GL_FALSE, sizeof(Vec2f), nullptr);
 	glEnableVertexAttribArray(index);
+}
+
+void Buffer::upload(const void *const data, const size_t size) const
+{
+	glBindBuffer(GL_ARRAY_BUFFER, id_);
+	glBufferData(GL_ARRAY_BUFFER, size, data, GL_STREAM_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }

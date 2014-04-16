@@ -35,17 +35,17 @@ namespace
 	}
 }
 
-Sprite::Ref::Ref(const SpriteBatch &batch, const size_t i)
-    : storage(&batch.sprites()), i(i) { }
+Sprite::Ref::Ref(const SpriteBatch *batch, const size_t i)
+    : batch(batch), i(i) { }
 
 Sprite& Sprite::Ref::operator*() const
 {
-	return this->storage->at(this->i);
+	return this->batch->sprites()[this->i];
 }
 
 Sprite* Sprite::Ref::operator->() const
 {
-	return &this->storage->at(this->i);
+	return &this->batch->sprites()[this->i];
 }
 
 Sprite::Sprite(const unsigned int w, const unsigned int h, const SpriteBatch *p)

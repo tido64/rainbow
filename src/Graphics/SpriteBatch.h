@@ -5,6 +5,7 @@
 #ifndef GRAPHICS_SPRITEBATCH_H_
 #define GRAPHICS_SPRITEBATCH_H_
 
+#include "Common/Arena.h"
 #include "Graphics/Buffer.h"
 #include "Graphics/Sprite.h"
 #include "Graphics/TextureAtlas.h"
@@ -21,19 +22,20 @@ public:
 	/// Creates a batch of sprites.
 	/// \param hint  If you know in advance how many sprites you'll need, set
 	///              \p hint for more efficient storage.
-	SpriteBatch(const size_t hint = 4);
+	SpriteBatch(const unsigned int hint = 4);
+	~SpriteBatch();
 
 	/// Returns the vertex count.
-	inline size_t count() const;
+	inline unsigned int count() const;
 
 	/// Returns current normal map.
 	inline const TextureAtlas& normal() const;
 
 	/// Returns a reference to the sprite at index \p i.
-	inline Sprite::Ref sprite(const size_t i) const;
+	inline Sprite::Ref sprite(const unsigned int i) const;
 
-	/// Returns the sprites vector.
-	inline const Vector<Sprite>& sprites() const;
+	/// Returns the sprites array.
+	inline Sprite* sprites() const;
 
 	/// Returns current texture.
 	inline const TextureAtlas& texture() const;
@@ -61,52 +63,65 @@ public:
 	unsigned int create_sprite(const unsigned int width,
 	                           const unsigned int height);
 
+	/// Moves all sprites by (x,y).
+	void move(const Vec2f &);
+
 	/// Updates the batch of sprites.
 	void update();
 
 private:
+	Arena<Sprite> sprites_;            ///< Sprite batch.
+	Arena<SpriteVertex> vertices_;     ///< Client vertex buffer.
+	Arena<Vec2f> normals_;             ///< Client normal buffer.
+	unsigned int count_;               ///< Number of sprites.
+	Buffer vertex_buffer_;             ///< Shared, interleaved vertex buffer.
+	Buffer normal_buffer_;             ///< Shared normal buffer.
+	VertexArray array_;                ///< Vertex array object.
 	SharedPtr<TextureAtlas> normal_;   ///< Normal map used by all sprites in the batch.
 	SharedPtr<TextureAtlas> texture_;  ///< Texture atlas used by all sprites in the batch.
-	Vector<Sprite> sprites_;           ///< Vector storing all sprites.
-	Buffer<Vec2f> normals_;            ///< Shared normal buffer.
-	Buffer<SpriteVertex> vertices_;    ///< Shared, interleaved vertex buffer.
-	VertexArray array_;                ///< Vertex array object.
+	unsigned int reserved_;            ///< Number of sprites reserved for.
 
 	/// Sets the array state for this batch.
 	int bind() const;
+
+	/// Resizes all client buffers to \p size.
+	void resize(const unsigned int size);
+
+	/// Sets all sprites to use \p buffer.
+	template<typename T>
+	void set_buffer(T *buffer);
 };
 
-size_t SpriteBatch::count() const
+unsigned int SpriteBatch::count() const
 {
-	const size_t count = this->vertices_.storage().size();
-	return count + (count >> 1);
+	return count_ * 6;
 }
 
 const TextureAtlas& SpriteBatch::normal() const
 {
-	R_ASSERT(this->normal_.get(), "Normal texture is not set");
-	return *this->normal_.get();
+	R_ASSERT(normal_.get(), "Normal texture is not set");
+	return *normal_.get();
 }
 
-Sprite::Ref SpriteBatch::sprite(const size_t i) const
+Sprite::Ref SpriteBatch::sprite(const unsigned int i) const
 {
-	return Sprite::Ref(*this, i);
+	return Sprite::Ref(this, i);
 }
 
-const Vector<Sprite>& SpriteBatch::sprites() const
+Sprite* SpriteBatch::sprites() const
 {
-	return this->sprites_;
+	return sprites_.get();
 }
 
 const TextureAtlas& SpriteBatch::texture() const
 {
-	R_ASSERT(this->texture_.get(), "Texture is not set");
-	return *this->texture_.get();
+	R_ASSERT(texture_.get(), "Texture is not set");
+	return *texture_.get();
 }
 
 const VertexArray& SpriteBatch::vertex_array() const
 {
-	return this->array_;
+	return array_;
 }
 
 #endif
