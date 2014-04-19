@@ -2,6 +2,7 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
+#include <algorithm>
 #include <memory>
 
 #include <ft2build.h>
@@ -12,6 +13,7 @@
 #include "Common/Data.h"
 #include "Graphics/FontAtlas.h"
 #include "Graphics/OpenGL.h"
+#include "Graphics/TextureManager.h"
 
 namespace
 {
@@ -27,84 +29,85 @@ namespace
 	class FontFace
 	{
 	public:
-		FontFace(FT_Library library, const Data &font) : face(nullptr)
+		FontFace(FT_Library library, const Data &font) : face_(nullptr)
 		{
-			FT_Error error = FT_New_Memory_Face(library,
-			                                    static_cast<const FT_Byte*>(font.bytes()),
-			                                    font.size(),
-			                                    0,
-			                                    &this->face);
+			FT_Error error =
+			    FT_New_Memory_Face(
+			        library, static_cast<const FT_Byte*>(font.bytes()),
+			        font.size(), 0, &face_);
 			R_ASSERT(!error, "Failed to load font face");
-			R_ASSERT(FT_IS_SCALABLE(this->face), "Unscalable fonts are not supported");
-			error = FT_Select_Charmap(face, FT_ENCODING_UNICODE);
+			R_ASSERT(FT_IS_SCALABLE(face_),
+			         "Unscalable fonts are not supported");
+			error = FT_Select_Charmap(face_, FT_ENCODING_UNICODE);
 			R_ASSERT(!error, "Failed to select character map");
 		}
 
 		~FontFace()
 		{
-			if (!this->face)
+			if (!face_)
 				return;
 
-			FT_Done_Face(this->face);
+			FT_Done_Face(face_);
 		}
 
 		FT_Face operator->() const
 		{
-			return this->face;
+			return face_;
 		}
 
 		operator bool() const
 		{
-			return this->face != nullptr;
+			return face_ != nullptr;
 		}
 
 		operator FT_Face() const
 		{
-			return this->face;
+			return face_;
 		}
 
 	private:
-		FT_Face face;
+		FT_Face face_;
 	};
 
 	class FontLibrary
 	{
 	public:
-		FontLibrary() : library(nullptr)
+		FontLibrary() : library_(nullptr)
 		{
-			FT_Init_FreeType(&this->library);
-			R_ASSERT(library, "Failed to initialise FreeType");
+			FT_Init_FreeType(&library_);
+			R_ASSERT(library_, "Failed to initialise FreeType");
 		}
 
 		~FontLibrary()
 		{
-			if (!this->library)
+			if (!library_)
 				return;
 
-			FT_Done_FreeType(this->library);
+			FT_Done_FreeType(library_);
 		}
 
 		operator bool() const
 		{
-			return this->library != nullptr;
+			return library_ != nullptr;
 		}
 
 		operator FT_Library() const
 		{
-			return this->library;
+			return library_;
 		}
 
 	private:
-		FT_Library library;
+		FT_Library library_;
 	};
 }
 
-FontAtlas::FontAtlas(const Data &font, const float pt) : pt_(pt), height_(0), texture_(0)
+FontAtlas::FontAtlas(const Data &font, const float pt)
+    : pt_(pt), height_(0), texture_(0)
 {
 	R_ASSERT(font, "Failed to load font");
 
 	for (uint_t i = 0; i < kNumCharacters; ++i)
-		this->charset_[i].code = i + kASCIIOffset;
+		charset_[i].code = i + kASCIIOffset;
 
 #if FONTATLAS_EXTENDED > 0
 	const unsigned long characters[] = {
@@ -117,7 +120,7 @@ FontAtlas::FontAtlas(const Data &font, const float pt) : pt_(pt), height_(0), te
 		0
 	};
 	for (uint_t i = 0; characters[i]; ++i)
-		this->charset_[kNumCharacters + i].code = characters[i];
+		charset_[kNumCharacters + i].code = characters[i];
 #endif
 
 	FontLibrary library;
@@ -128,13 +131,13 @@ FontAtlas::FontAtlas(const Data &font, const float pt) : pt_(pt), height_(0), te
 	if (!face)
 		return;
 
-	FT_Set_Char_Size(face, 0, this->pt_ * kPixelFormat, kDPI, kDPI);
+	FT_Set_Char_Size(face, 0, pt_ * kPixelFormat, kDPI, kDPI);
 	const int padding = kGlyphPadding * 2;
 
 	// Naive algorithm for calculating texture size.
 	int max_width = 0;
 	int max_height = 0;
-	for (const auto &glyph : this->charset_)
+	for (const auto &glyph : charset_)
 	{
 		if (FT_Load_Char(face, glyph.code, FT_LOAD_DEFAULT))
 		{
@@ -155,12 +158,12 @@ FontAtlas::FontAtlas(const Data &font, const float pt) : pt_(pt), height_(0), te
 	// GL_LUMINANCE8_ALPHA8 buffer
 	Vec2i offset(size.width * size.height * 2, 0);
 	std::unique_ptr<GLubyte[]> buffer(new GLubyte[offset.x]);
-	memset(buffer.get(), 0, offset.x);
+	std::fill_n(buffer.get(), offset.x, 0);
 
 	// Copy all glyph bitmaps to our texture.
 	offset.x = 0;
 	const Vec2f pixel(1.0f / size.width, 1.0f / size.height);
-	for (auto &glyph : this->charset_)
+	for (auto &glyph : charset_)
 	{
 		FT_Load_Char(face, glyph.code, FT_LOAD_RENDER);
 
@@ -233,7 +236,7 @@ FontAtlas::FontAtlas(const Data &font, const float pt) : pt_(pt), height_(0), te
 		{
 			int i = -1;
 			FT_Vector kerning;
-			for (auto &left : this->charset_)
+			for (auto &left : charset_)
 			{
 				FT_Get_Kerning(face, left.code, glyph.code, FT_KERNING_DEFAULT, &kerning);
 				glyph.kern[++i] = static_cast<short>(kerning.x / kPixelFormat);
@@ -244,7 +247,7 @@ FontAtlas::FontAtlas(const Data &font, const float pt) : pt_(pt), height_(0), te
 		// Advance to the next "slot" in our texture.
 		offset.x += width;
 	}
-	this->height_ = face->size->metrics.height / kPixelFormat;
+	height_ = face->size->metrics.height / kPixelFormat;
 
 	/**
 	 * For printing out texture buffer
@@ -261,21 +264,34 @@ FontAtlas::FontAtlas(const Data &font, const float pt) : pt_(pt), height_(0), te
 	}
 	 */
 
-	this->texture_ = TextureManager::Instance->create(
-			GL_LUMINANCE_ALPHA, size.width, size.height,
-			GL_LUMINANCE_ALPHA, buffer.get());
+	texture_ =
+	    TextureManager::Instance->create(
+	        GL_LUMINANCE_ALPHA, size.width, size.height, GL_LUMINANCE_ALPHA,
+	        buffer.get());
 }
 
-const FontGlyph* FontAtlas::get_glyph(const unsigned int c) const
+FontAtlas::~FontAtlas()
+{
+	TextureManager::Instance->remove(texture_);
+}
+
+void FontAtlas::bind() const
+{
+	TextureManager::Instance->bind(texture_);
+}
+
+const FontGlyph* FontAtlas::get_glyph(const uint_t c) const
 {
 #if FONTATLAS_EXTENDED > 0
 	if (c >= 0x80u)
 	{
-		for (size_t i = kNumCharacters; i < kNumCharacters + FONTATLAS_EXTENDED; ++i)
-			if (this->charset_[i].code == c)
-				return &this->charset_[i];
-		return nullptr;
+		const auto first = charset_ + kNumCharacters;
+		const auto last = first + FONTATLAS_EXTENDED;
+		const auto i = std::find_if(first, last, [c] (const FontGlyph &glyph) {
+			return glyph.code == c;
+		});
+		return (i == last) ? nullptr : i;
 	}
 #endif
-	return &this->charset_[static_cast<unsigned char>(c) - kASCIIOffset];
+	return &charset_[static_cast<unsigned char>(c) - kASCIIOffset];
 }

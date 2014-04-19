@@ -1,7 +1,7 @@
 if(WIN32)
 	set(CMAKE_FIND_LIBRARY_SUFFIXES ".a" ".lib" ".dll.a" ".dll")
 	list(APPEND RAINBOW_H ${PROJECT_SOURCE_DIR}/build/windows/Rainbow.rc)
-	add_definitions(-D_CRT_SECURE_NO_WARNINGS -DVC_EXTRALEAN)
+	add_definitions(-D_CRT_SECURE_NO_WARNINGS -D_SCL_SECURE_NO_WARNINGS -DVC_EXTRALEAN)
 	if(MSVC)
 		# Warning C4244: 'argument': conversion from 'type1' to 'type2', possible loss of data
 		# Warning C4800: 'type': forcing value to bool 'true' or 'false' (performance warning)

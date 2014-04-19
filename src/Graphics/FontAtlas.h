@@ -9,7 +9,6 @@
 
 #include "Common/SharedPtr.h"
 #include "Graphics/FontGlyph.h"
-#include "Graphics/TextureManager.h"
 
 class Data;
 
@@ -33,48 +32,40 @@ class FontAtlas : public RefCounted
 {
 public:
 	FontAtlas(const Data &font, const float pt);
-
-	inline ~FontAtlas();
+	~FontAtlas();
 
 	/// Returns the line height.
 	inline int height() const;
 
-	inline void bind() const;
+	/// Sets this font as active texture.
+	void bind() const;
 
 	/// Returns the glyph for a character.
 	const FontGlyph* get_glyph(const unsigned int c) const;
 
+	/// Returns whether this FontAtlas is valid.
 	inline operator bool() const;
 
 protected:
-	static const unsigned int kNumCharacters = 95;  ///< Load characters through 126 from the ASCII table.
+	/// Load characters 32 through 126 from the ASCII table.
+	static const unsigned int kNumCharacters = 95;
 
 private:
 	const float pt_;        ///< Font point size.
+	Colorb color_;          ///< Font colour.
 	int height_;            ///< Font line height.
 	unsigned int texture_;  ///< Texture name.
-	Colorb color_;          ///< Font colour.
 	FontGlyph charset_[kNumCharacters + FONTATLAS_EXTENDED];  ///< Character set.
 };
 
-FontAtlas::~FontAtlas()
-{
-	TextureManager::Instance->remove(this->texture_);
-}
-
-void FontAtlas::bind() const
-{
-	TextureManager::Instance->bind(this->texture_);
-}
-
 int FontAtlas::height() const
 {
-	return this->height_;
+	return height_;
 }
 
 FontAtlas::operator bool() const
 {
-	return this->texture_ != 0;
+	return texture_ != 0;
 }
 
 #endif
