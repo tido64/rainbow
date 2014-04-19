@@ -5,12 +5,10 @@
 #ifndef COMMON_VECTOR_H_
 #define COMMON_VECTOR_H_
 
-#include <cstring>
-#include <new>
 #include <utility>
 
+#include "Common/Arena.h"
 #include "Common/Debug.h"
-#include "Common/NonCopyable.h"
 
 /// Simple vector class, mimicking std::vector.
 ///
@@ -20,7 +18,7 @@ template<typename T>
 class Vector : private NonCopyable<Vector<T>>
 {
 public:
-	Vector(const size_t reserve = 4);
+	Vector(const size_t capacity = 4);
 	Vector(Vector<T> &&);
 	~Vector();
 
@@ -73,9 +71,10 @@ public:
 
 	/// Increases or decreases the capacity of the vector.
 	/// \note On failure, the vector will remain untouched.
-	/// \param i  The size of the new capacity. If less than the number of
-	///           elements in the container, the container is simply tightened.
-	void reserve(size_t i);
+	/// \param capacity  The size of the new capacity. If less than the number
+	///                  of elements in the container, the container is simply
+	///                  tightened.
+	void reserve(size_t capacity);
 
 	/// Returns the number of elements in this vector.
 	inline size_t size() const;
@@ -86,32 +85,30 @@ public:
 	inline T& operator[](const size_t i) const;
 
 private:
-	T *c_array;       ///< Actual C-array.
-	size_t count;     ///< Number of elements in the array.
-	size_t reserved;  ///< Size of allocated memory.
+	Arena<T> arena_;   ///< Memory arena.
+	size_t count_;     ///< Number of elements in the array.
+	size_t reserved_;  ///< Size of allocated memory.
 };
 
 template<typename T>
-Vector<T>::Vector(const size_t reserve)
-    : c_array(nullptr), count(0), reserved(0)
+Vector<T>::Vector(const size_t capacity) : count_(0), reserved_(0)
 {
-	this->reserve(reserve);
+	reserve(capacity);
 }
 
 template<typename T>
 Vector<T>::Vector(Vector<T> &&v)
-    : count(v.count), reserved(v.reserved), c_array(v.c_array)
+    : count_(v.count_), reserved_(v.reserved_),
+      arena_(std::forward<Arena<T>>(v.arena_))
 {
-	v.count = 0;
-	v.reserved = 0;
-	v.c_array = nullptr;
+	v.count_ = 0;
+	v.reserved_ = 0;
 }
 
 template<typename T>
 Vector<T>::~Vector()
 {
-	this->clear();
-	operator delete(this->c_array);
+	clear();
 }
 
 template<typename T>
@@ -123,50 +120,50 @@ T& Vector<T>::at(const size_t i) const
 template<typename T>
 T& Vector<T>::back()
 {
-	R_ASSERT(this->count > 0, "Tried to access an empty vector");
-	return (*this)[this->count - 1];
+	R_ASSERT(count_ > 0, "Tried to access an empty vector");
+	return (*this)[count_ - 1];
 }
 
 template<typename T>
 T* Vector<T>::begin() const
 {
-	return this->c_array;
+	return arena_.get();
 }
 
 template<typename T>
 size_t Vector<T>::capacity() const
 {
-	return this->reserved;
+	return reserved_;
 }
 
 template<typename T>
 void Vector<T>::clear()
 {
-	while (this->count)
-		this->c_array[--this->count].~T();
-	R_ASSERT(!this->count, "Failed to clear vector");
+	arena_.release(count_);
+	count_ = 0;
 }
 
 template<typename T>
 T* Vector<T>::end() const
 {
-	return this->c_array + this->count;
+	return arena_ + count_;
 }
 
 template<typename T>
 void Vector<T>::erase(const size_t i)
 {
-	R_ASSERT(i < this->count, "Can't erase a non-existing element");
-	this->c_array[i].~T();
-	T *arr = this->c_array + i;
-	memmove(arr, arr + 1, (--this->count - i) * sizeof(T));
+	R_ASSERT(i < count_, "Can't erase a non-existing element");
+
+	arena_[i].~T();
+	T *ptr = arena_ + i;
+	memcpy(ptr, ptr + 1, (--count_ - i) * sizeof(T));
 }
 
 template<typename T>
 int Vector<T>::find(const T &value) const
 {
-	for (size_t i = 0; i < this->count; ++i)
-		if (this->c_array[i] == value)
+	for (size_t i = 0; i < count_; ++i)
+		if (arena_[i] == value)
 			return i;
 	return -1;
 }
@@ -175,89 +172,82 @@ template<typename T>
 void Vector<T>::push_back(const T &element)
 {
 	// Verify that there is enough space
-	if (this->count == this->reserved)
-		this->reserve(this->reserved += (this->reserved + 1) >> 1);
+	if (count_ == reserved_)
+		reserve(reserved_ += (reserved_ + 1) >> 1);
 
-	new (this->c_array + this->count) T(element);
-	++this->count;
+	new (arena_ + count_) T(element);
+	++count_;
 }
 
 template<typename T>
 void Vector<T>::push_back(T &&element)
 {
 	// Verify that there is enough space
-	if (this->count == this->reserved)
-		this->reserve(this->reserved += (this->reserved + 1) >> 1);
+	if (count_ == reserved_)
+		reserve(reserved_ += (reserved_ + 1) >> 1);
 
-	new (this->c_array + this->count) T(std::move(element));
-	++this->count;
+	new (arena_ + count_) T(std::move(element));
+	++count_;
 }
 
 template<typename T>
 void Vector<T>::qerase(const size_t i)
 {
-	R_ASSERT(i < this->count, "Can't erase a non-existing element");
-	this->c_array[i].~T();
-	if (--this->count != i)
-		memcpy(this->c_array + i, this->c_array + this->count, sizeof(T));
+	R_ASSERT(i < count_, "Can't erase a non-existing element");
+
+	arena_[i].~T();
+	if (--count_ != i)
+		memcpy(arena_ + i, arena_ + count_, sizeof(T));
 }
 
 template<typename T>
 void Vector<T>::qremove(const T &value)
 {
-	const int i = this->find(value);
+	const int i = find(value);
 	if (i < 0)
 		return;
-	this->qerase(i);
+	qerase(i);
 }
 
 template<typename T>
 void Vector<T>::remove(const T &value)
 {
-	const int i = this->find(value);
+	const int i = find(value);
 	if (i < 0)
 		return;
-	this->erase(i);
+	erase(i);
 }
 
 template<typename T>
-void Vector<T>::reserve(size_t i)
+void Vector<T>::reserve(size_t capacity)
 {
-	if (i < this->count)
-		i = this->count;
+	if (capacity < count_)
+		capacity = count_;
 
-	R_ASSERT(i > 0, "Can't reserve an empty block of memory");
+	R_ASSERT(capacity > 0, "Can't reserve an empty block of memory");
 
-	T *arr = static_cast<T*>(operator new(i * sizeof(T)));
-	if (!arr)
-	{
-		// FIXME: Handle exception.
-		return;
-	}
-
-	memcpy(arr, this->c_array, this->count * sizeof(T));
-	operator delete(this->c_array);
-	this->c_array = arr;
-	this->reserved = i;
+	arena_.resize(count_, capacity);
+	reserved_ = capacity;
 }
 
 template<typename T>
 size_t Vector<T>::size() const
 {
-	return this->count;
+	return count_;
 }
 
 template<typename T>
 bool Vector<T>::operator==(const Vector<T> &v) const
 {
-	return this->c_array == v.c_array;
+	return arena_ == v.arena_;
 }
 
 template<typename T>
 T& Vector<T>::operator[](const size_t i) const
 {
-	R_ASSERT(i < this->count, "Tried to access an element out of range");
-	return this->c_array[i];
+	R_ASSERT(i < count_, "Index out of range");
+
+	return arena_[i];
 }
 
 #endif
