@@ -34,28 +34,15 @@ namespace PNG
 
 		image.width = pi.width;
 		image.height = pi.height;
-		switch (PNG_IMAGE_PIXEL_CHANNELS(pi.format))
-		{
-			case 1:
-				pi.format = PNG_FORMAT_RGB;
-				break;
-			case 2:
-				pi.format = PNG_FORMAT_GA;
-				break;
-			case 3:
-				pi.format = PNG_FORMAT_RGB;
-				break;
-			case 4:
-				pi.format = PNG_FORMAT_RGBA;
-				break;
-			default:
-				R_ASSERT(false, "Invalid PNG format");
-				break;
-		}
+		if (PNG_IMAGE_PIXEL_CHANNELS(pi.format) == 2)
+			pi.format = PNG_FORMAT_GA;
+		else
+			pi.format = PNG_FORMAT_RGBA;
 		image.depth = PNG_IMAGE_SAMPLE_SIZE(pi.format) * 8;
 		image.channels = PNG_IMAGE_SAMPLE_CHANNELS(pi.format);
 		image.data = new unsigned char[PNG_IMAGE_SIZE(pi)];
-		png_image_finish_read(&pi, nullptr, image.data, PNG_IMAGE_ROW_STRIDE(pi), nullptr);
+		png_image_finish_read(
+		    &pi, nullptr, image.data, PNG_IMAGE_ROW_STRIDE(pi), nullptr);
 		return image;
 	}
 }

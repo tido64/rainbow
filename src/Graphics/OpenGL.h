@@ -12,14 +12,11 @@
 #if defined(RAINBOW_OS_ANDROID)
 #	include <GLES2/gl2.h>
 #	include <GLES2/gl2ext.h>
-#	define GL_DRAW_FRAMEBUFFER GL_FRAMEBUFFER
 #elif defined(RAINBOW_OS_IOS)
 #	include <OpenGLES/ES2/gl.h>
 #	include <OpenGLES/ES2/glext.h>
-#	define GL_DRAW_FRAMEBUFFER GL_DRAW_FRAMEBUFFER_APPLE
 #elif defined(RAINBOW_OS_MACOS)
 #	include <OpenGL/gl.h>
-#	define GL_RGB565             GL_RGB
 #	define glBindVertexArray     glBindVertexArrayAPPLE
 #	define glDeleteVertexArrays  glDeleteVertexArraysAPPLE
 #	define glGenVertexArrays     glGenVertexArraysAPPLE
@@ -36,7 +33,6 @@
 #endif
 
 #ifdef GL_ES_VERSION_2_0
-#	define GL_RGB8               GL_RGB
 #	define GL_RGBA8              GL_RGBA
 #	define glBindVertexArray     glBindVertexArrayOES
 #	define glDeleteVertexArrays  glDeleteVertexArraysOES

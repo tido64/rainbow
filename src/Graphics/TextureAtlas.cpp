@@ -38,32 +38,42 @@ TextureAtlas::TextureAtlas(const DataMap &img) : name(0), width(0), height(0)
 	this->width = image.width;
 	this->height = image.height;
 
-	GLint format = -1, internal = -1;
 	switch (image.format)
 	{
 	#ifdef GL_OES_compressed_ETC1_RGB8_texture
 		case Rainbow::Image::Format::ETC1:
 			this->name = TextureManager::Instance->create_compressed(
-					GL_ETC1_RGB8_OES, image.width, image.height, image.size, image.data);
+			    GL_ETC1_RGB8_OES, image.width, image.height, image.size,
+			    image.data);
 			break;
-	#endif // ETC1
+	#endif  // ETC1
 	#ifdef GL_IMG_texture_compression_pvrtc
-		case Rainbow::Image::Format::PVRTC:
-			R_ASSERT(image.depth == 2 || image.depth == 4, "Invalid colour depth");
-			R_ASSERT(image.channels == 3 || image.channels == 4, "Invalid number of colour channels");
+		case Rainbow::Image::Format::PVRTC: {
+			R_ASSERT(image.depth == 2 || image.depth == 4,
+			         "Invalid colour depth");
+			R_ASSERT(image.channels == 3 || image.channels == 4,
+			         "Invalid number of colour channels");
+			GLint internal = 0;
 			if (image.channels == 3)
+			{
 				internal = (image.depth == 2)
-						? GL_COMPRESSED_RGB_PVRTC_2BPPV1_IMG
-						: GL_COMPRESSED_RGB_PVRTC_4BPPV1_IMG;
+				    ? GL_COMPRESSED_RGB_PVRTC_2BPPV1_IMG
+				    : GL_COMPRESSED_RGB_PVRTC_4BPPV1_IMG;
+			}
 			else
+			{
 				internal = (image.depth == 2)
-						? GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG
-						: GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG;
+				    ? GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG
+				    : GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG;
+			}
 			this->name = TextureManager::Instance->create_compressed(
-					internal, image.width, image.height, image.size, image.data);
+			    internal, image.width, image.height, image.size, image.data);
 			break;
-	#endif // PVRTC
-		default:
+		}
+	#endif  // PVRTC
+		default: {
+			GLint format = 0;
+			GLint internal = 0;
 			switch (image.channels)
 			{
 				case 1:
@@ -77,26 +87,30 @@ TextureAtlas::TextureAtlas(const DataMap &img) : name(0), width(0), height(0)
 					internal = GL_LUMINANCE_ALPHA;
 					break;
 				case 3:
-					R_ASSERT(image.depth == 16 || image.depth == 24, "Invalid colour depth");
+					R_ASSERT(image.depth == 16 || image.depth == 24,
+					         "Invalid colour depth");
 					format = GL_RGB;
-					internal = (image.depth == 16) ? GL_RGB565 : GL_RGB8;
+					internal = (image.depth == 16) ? GL_RGBA4 : GL_RGBA8;
 					break;
 				case 4:
-					R_ASSERT(image.depth == 16 || image.depth == 32, "Invalid colour depth");
+					R_ASSERT(image.depth == 16 || image.depth == 32,
+					         "Invalid colour depth");
 					format = GL_RGBA;
 					internal = (image.depth == 16) ? GL_RGBA4 : GL_RGBA8;
 					break;
 			}
 			this->name = TextureManager::Instance->create(
-					internal, this->width, this->height, format, image.data);
+			    internal, this->width, this->height, format, image.data);
 			break;
+		}
 	}
 	Rainbow::Image::release(image);
 }
 
 unsigned int TextureAtlas::define(const Vec2i &origin, const int w, const int h)
 {
-	R_ASSERT(origin.x >= 0 && (origin.x + w) <= this->width && origin.y >= 0 && (origin.y + h) <= this->height,
+	R_ASSERT(origin.x >= 0 && (origin.x + w) <= this->width &&
+	         origin.y >= 0 && (origin.y + h) <= this->height,
 	         "Invalid dimensions");
 
 	const Vec2f v0(origin.x / static_cast<float>(this->width),

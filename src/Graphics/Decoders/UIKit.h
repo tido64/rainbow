@@ -18,9 +18,9 @@ namespace UIKit
 		Rainbow::Image image;
 
 		UIImage *uiimage = [UIImage imageWithData:
-				[NSData dataWithBytesNoCopy:const_cast<void*>(static_cast<const void*>(data))
-				                     length:data.size()
-				               freeWhenDone:NO]];
+		    [NSData dataWithBytesNoCopy:const_cast<void*>(static_cast<const void*>(data))
+		                         length:data.size()
+		                   freeWhenDone:NO]];
 		if (!uiimage)
 		{
 			R_ASSERT(uiimage, "Unknown texture format");
@@ -44,9 +44,9 @@ namespace UIKit
 		image.data = new unsigned char[image.height * image.width * 4];
 
 		CGContextRef context = CGBitmapContextCreate(
-				image.data, image.width, image.height, 8,
-				image.width * 4, color_space,
-				kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big);
+		    image.data, image.width, image.height, 8, image.width * 4,
+		    color_space,
+		    kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big);
 		CGColorSpaceRelease(color_space);
 
 		CGContextClearRect(context, bounds);
