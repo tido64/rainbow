@@ -6,5 +6,4 @@
 
 /// View controller implemented with GLKit.
 @interface RainbowViewController : GLKViewController
-
 @end

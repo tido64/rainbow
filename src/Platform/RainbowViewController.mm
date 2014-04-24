@@ -9,35 +9,24 @@
 #include "Common/Data.h"
 #include "Config.h"
 #include "Director.h"
-#include "Graphics/Renderer.h"
 #include "Input/Touch.h"
 
 #pragma clang diagnostic ignored "-Wunused-parameter"
 
 namespace
 {
-	const size_t kMaxTouches = 32;
+	const NSUInteger kMaxTouches = 32;
 }
 
-@interface RainbowViewController () {
-@private
-	Touch _touchesArray[kMaxTouches];
-}
-@property (strong, nonatomic) EAGLContext *context;
+@interface RainbowViewController ()
 @property (readonly, nonatomic) Director *director;
-@property (strong, nonatomic) CMMotionManager *motionManager;
-@property (readonly, nonatomic) CGFloat scale;
-
-/// Convert an NSSet of touches to an array.
-/// \note The dimension of the screen does not change with its orientation.
-///       Since the iPad is in portrait mode by default, the resolution is
-///       768x1024 in landscape mode as well.
-/// \param touches  Set of touches to convert.
-/// \return Array of touches. Must not be deleted.
-- (Touch *)touchesArrayFromSet:(NSSet *)touches;
+@property (readonly, nonatomic) CMMotionManager *motionManager;
+@property (readonly, nonatomic) NSUInteger supportedInterfaceOrientations;
 @end
 
-@implementation RainbowViewController
+@implementation RainbowViewController {
+	Touch _touches[kMaxTouches];
+}
 
 - (void)dealloc
 {
@@ -46,24 +35,49 @@ namespace
 		[EAGLContext setCurrentContext:nil];
 }
 
+- (EAGLContext *)context
+{
+	GLKView *view = (GLKView *)self.view;
+	return view.context;
+}
+
+- (void)setContext:(EAGLContext *)context
+{
+	GLKView *view = (GLKView *)self.view;
+	view.context = context;
+}
+
+- (Touch *)touches
+{
+	return _touches;
+}
+
+/// Converts an NSSet of touches to an array.
+/// \note The dimension of the screen does not change with its orientation.
+///       Since the iPad is in portrait mode by default, the resolution is
+///       768x1024 in landscape mode as well.
+/// \param touches  Set of touches to convert.
+/// \return Array of touches. Must not be deleted.
 - (Touch *)touchesArrayFromSet:(NSSet *)touches
 {
 	R_ASSERT(touches.count <= kMaxTouches, "Unsupported number of touches");
 
-	Touch *arrayRef = _touchesArray;
-	const CGSize size = [[UIScreen mainScreen] bounds].size;
-	switch ([[UIApplication sharedApplication] statusBarOrientation])
+	Touch *arrayRef = self.touches;
+	UIScreen *screen = [UIScreen mainScreen];
+	const CGSize size = screen.bounds.size;
+	const CGFloat scale = screen.scale;
+	switch ([UIApplication sharedApplication].statusBarOrientation)
 	{
 		case UIInterfaceOrientationPortrait:
 			for (UITouch *touch in touches)
 			{
 				CGPoint p = [touch locationInView:nil];
 				arrayRef->hash = touch.hash;
-				arrayRef->x = p.x * self.scale;
-				arrayRef->y = (size.height - p.y) * self.scale;
+				arrayRef->x = p.x * scale;
+				arrayRef->y = (size.height - p.y) * scale;
 				p = [touch previousLocationInView:nil];
-				arrayRef->x0 = p.x * self.scale;
-				arrayRef->y0 = (size.height - p.y) * self.scale;
+				arrayRef->x0 = p.x * scale;
+				arrayRef->y0 = (size.height - p.y) * scale;
 				arrayRef->timestamp = touch.timestamp * 1000.0;
 				++arrayRef;
 			}
@@ -73,11 +87,11 @@ namespace
 			{
 				CGPoint p = [touch locationInView:nil];
 				arrayRef->hash = touch.hash;
-				arrayRef->x = (size.width - p.x) * self.scale;
-				arrayRef->y = p.y * self.scale;
+				arrayRef->x = (size.width - p.x) * scale;
+				arrayRef->y = p.y * scale;
 				p = [touch previousLocationInView:nil];
-				arrayRef->x0 = (size.width - p.x) * self.scale;
-				arrayRef->y0 = p.y * self.scale;
+				arrayRef->x0 = (size.width - p.x) * scale;
+				arrayRef->y0 = p.y * scale;
 				arrayRef->timestamp = touch.timestamp * 1000.0;
 				++arrayRef;
 			}
@@ -87,11 +101,11 @@ namespace
 			{
 				CGPoint p = [touch locationInView:nil];
 				arrayRef->hash = touch.hash;
-				arrayRef->x = (size.height - p.y) * self.scale;
-				arrayRef->y = (size.width - p.x) * self.scale;
+				arrayRef->x = (size.height - p.y) * scale;
+				arrayRef->y = (size.width - p.x) * scale;
 				p = [touch previousLocationInView:nil];
-				arrayRef->x0 = (size.height - p.y) * self.scale;
-				arrayRef->y0 = (size.width - p.x) * self.scale;
+				arrayRef->x0 = (size.height - p.y) * scale;
+				arrayRef->y0 = (size.width - p.x) * scale;
 				arrayRef->timestamp = touch.timestamp * 1000.0;
 				++arrayRef;
 			}
@@ -101,11 +115,11 @@ namespace
 			{
 				CGPoint p = [touch locationInView:nil];
 				arrayRef->hash = touch.hash;
-				arrayRef->x = p.y * self.scale;
-				arrayRef->y = p.x * self.scale;
+				arrayRef->x = p.y * scale;
+				arrayRef->y = p.x * scale;
 				p = [touch previousLocationInView:nil];
-				arrayRef->x0 = p.y * self.scale;
-				arrayRef->y0 = p.x * self.scale;
+				arrayRef->x0 = p.y * scale;
+				arrayRef->y0 = p.x * scale;
 				arrayRef->timestamp = touch.timestamp * 1000.0;
 				++arrayRef;
 			}
@@ -114,8 +128,7 @@ namespace
 			R_ASSERT(false, "Reached unreachable code");
 			break;
 	}
-
-	return _touchesArray;
+	return self.touches;
 }
 
 #pragma mark - GLKViewControllerDelegate
@@ -170,17 +183,6 @@ namespace
 {
 	[super viewDidLoad];
 
-	Rainbow::Config config;
-	if (config.needs_accelerometer())
-	{
-		// Enable accelerometer.
-		self.motionManager = [[CMMotionManager alloc] init];
-		self.motionManager.accelerometerUpdateInterval = 1.0 / 60.0;
-		[self.motionManager startAccelerometerUpdates];
-	}
-
-	self.view.multipleTouchEnabled = YES;
-
 	// Set up OpenGL ES 2.0 context.
 	self.context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
 	if (!self.context)
@@ -188,32 +190,46 @@ namespace
 		NSLog(@"[Rainbow] Failed to create ES context");
 		return;
 	}
-	((GLKView*)self.view).context = self.context;
 	self.preferredFramesPerSecond = 60;
 	[EAGLContext setCurrentContext:self.context];
 
-	// Prepare graphics and initialise the director.
-	_director = new Director();
+	self.view.multipleTouchEnabled = YES;
 
-	// Swap screen width and height. See comments for touchesArrayFromSet:.
-	CGSize size = [UIScreen mainScreen].bounds.size;
-	if (UIInterfaceOrientationIsLandscape(
-	        [[UIApplication sharedApplication] statusBarOrientation]))
+	UIScreen *screen = [UIScreen mainScreen];
+	CGSize size = screen.bounds.size;
+	const CGFloat scale = screen.scale;
+	size.width *= scale;
+	size.height *= scale;
+
+	Rainbow::Config config;
+	if (config.is_portrait())
+		_supportedInterfaceOrientations = UIInterfaceOrientationMaskPortrait;
+	else
 	{
+		_supportedInterfaceOrientations = UIInterfaceOrientationMaskLandscape;
+		// Swap screen width and height. See comments for touchesArrayFromSet:.
 		std::swap(size.width, size.height);
 	}
-	_scale = [UIScreen mainScreen].scale;
-	size.width *= self.scale;
-	size.height *= self.scale;
+	if (config.needs_accelerometer())
+	{
+		// Enable accelerometer.
+		_motionManager = [[CMMotionManager alloc] init];
+		self.motionManager.accelerometerUpdateInterval = 1.0 / 60.0;
+		[self.motionManager startAccelerometerUpdates];
+	}
 
-	// Load and initialise script.
-	const Vec2i screen(size.width, size.height);
-	self.director->init(Data::load_asset("main.lua"), screen);
+	// Prepare graphics and initialise the director.
+	_director = new Director();
+	self.director->init(Data::load_asset("main.lua"),
+	                    Vec2i(size.width, size.height));
 }
 
 - (void)didReceiveMemoryWarning
 {
 	[super didReceiveMemoryWarning];
+
+	// TODO: Investigate whether propagating the warning to Director still has
+	// any bad side effects.
 
 	// Don't propagate the warning to Director. It will force Lua to collect
 	// garbage and mess up iPad 1's OpenGL driver.
@@ -223,22 +239,13 @@ namespace
 - (void)viewDidAppear:(BOOL)animated
 {
 	[super viewDidAppear:animated];
-
-	if (self.motionManager)
-		[self.motionManager startAccelerometerUpdates];
+	[self.motionManager startAccelerometerUpdates];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
 {
-	if (self.motionManager)
-		[self.motionManager stopAccelerometerUpdates];
-
+	[self.motionManager stopAccelerometerUpdates];
 	[super viewDidDisappear:animated];
-}
-
-- (NSUInteger)supportedInterfaceOrientations
-{
-	return UIInterfaceOrientationMaskLandscape;
 }
 
 @end
