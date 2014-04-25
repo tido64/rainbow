@@ -4,6 +4,24 @@
 
 #include "Common/Vector.h"
 
+struct VectorConstructionTest
+{
+	const bool was_constructed;
+	const bool was_copied;
+	const bool was_moved;
+
+	VectorConstructionTest()
+	    : was_constructed(true), was_copied(false), was_moved(false) { }
+
+	VectorConstructionTest(const VectorConstructionTest& v)
+	    : was_constructed(v.was_constructed), was_copied(true),
+	      was_moved(false) { }
+
+	VectorConstructionTest(VectorConstructionTest&& v)
+	    : was_constructed(v.was_constructed), was_copied(false),
+	      was_moved(true) { }
+};
+
 class VectorTest : public testing::Test
 {
 protected:
@@ -190,4 +208,34 @@ TEST_F(VectorTest, Assignment)
 		i = 0xb00bbabe;
 	for (const auto &i : intvec)
 		ASSERT_EQ(0xb00bbabe, i);
+}
+
+TEST(VectorPerfTest, MoveSemantics)
+{
+	VectorConstructionTest obj;
+	ASSERT_TRUE(obj.was_constructed);
+	ASSERT_FALSE(obj.was_copied);
+	ASSERT_FALSE(obj.was_moved);
+
+	Vector<VectorConstructionTest> vec;
+
+	vec.push_back(obj);
+	ASSERT_TRUE(vec[0].was_constructed);
+	ASSERT_TRUE(vec[0].was_copied);
+	ASSERT_FALSE(vec[0].was_moved);
+
+	vec.push_back(std::move(obj));
+	ASSERT_TRUE(vec[1].was_constructed);
+	ASSERT_FALSE(vec[1].was_copied);
+	ASSERT_TRUE(vec[1].was_moved);
+
+	vec.push_back(VectorConstructionTest());
+	ASSERT_TRUE(vec[2].was_constructed);
+	ASSERT_FALSE(vec[2].was_copied);
+	ASSERT_TRUE(vec[2].was_moved);
+
+	vec.emplace_back();
+	ASSERT_TRUE(vec[3].was_constructed);
+	ASSERT_FALSE(vec[3].was_copied);
+	ASSERT_FALSE(vec[3].was_moved);
 }

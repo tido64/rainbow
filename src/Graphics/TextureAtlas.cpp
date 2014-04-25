@@ -119,7 +119,7 @@ unsigned int TextureAtlas::define(const Vec2i &origin, const int w, const int h)
 	               (origin.y + h) / static_cast<float>(this->height));
 
 	const size_t i = this->textures.size();
-	this->textures.push_back(Texture(v0, v1));
+	this->textures.emplace_back(v0, v1);
 	this->textures[i].atlas = this->name;
 	return i;
 }

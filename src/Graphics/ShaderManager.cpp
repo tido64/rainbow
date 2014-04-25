@@ -135,7 +135,7 @@ int ShaderManager::compile(Shader::ShaderParams *shaders,
 	const int program = link_program(shaders, attributes);
 	if (program < 0)
 		return program;
-	this->programs.push_back(Shader::Details(program));
+	this->programs.emplace_back(program);
 	return this->programs.size() - 1;
 }
 

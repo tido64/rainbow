@@ -23,22 +23,29 @@ public:
 	~Vector();
 
 	/// Returns the element stored at index.
-	inline T& at(const size_t i) const;
+	T& at(const size_t i) const;
 
 	/// Returns the last element.
-	inline T& back();
+	T& back();
 
 	/// Returns a pointer to the first element.
-	inline T* begin() const;
+	T* begin() const;
 
 	/// Returns size of allocated storage capacity.
-	inline size_t capacity() const;
+	size_t capacity() const;
+
+	/// Returns a pointer to the end of the vector.
+	T* end() const;
+
+	/// Returns the number of elements in this vector.
+	size_t size() const;
 
 	/// Empties the vector.
 	void clear();
 
-	/// Returns a pointer to the end of the vector.
-	inline T* end() const;
+	/// Constructs an element in-place at the end.
+	template<typename... Args>
+	void emplace_back(Args&&... args);
 
 	/// Erases the element at index while preserving the order.
 	void erase(const size_t i);
@@ -48,10 +55,10 @@ public:
 	/// \return Index to the first element whose value matches; -1 otherwise.
 	int find(const T &value) const;
 
-	/// Adds an element to the vector.
+	/// Adds a copy of \p element at the end.
 	void push_back(const T &element);
 
-	/// Adds an element to the vector.
+	/// Moves \p element into a new element at the end.
 	void push_back(T &&element);
 
 	/// Quick erases the element at index by swapping it out with the last
@@ -76,18 +83,19 @@ public:
 	///                  tightened.
 	void reserve(size_t capacity);
 
-	/// Returns the number of elements in this vector.
-	inline size_t size() const;
-
-	inline bool operator==(const Vector<T> &) const;
+	/// Returns whether the two vectors are the same.
+	bool operator==(const Vector<T> &) const;
 
 	/// Returns the element stored at index.
-	inline T& operator[](const size_t i) const;
+	T& operator[](const size_t i) const;
 
 private:
 	Arena<T> arena_;   ///< Memory arena.
 	size_t count_;     ///< Number of elements in the array.
 	size_t reserved_;  ///< Size of allocated memory.
+
+	/// Returns the recommended capacity size.
+	size_t recommended_size() const;
 };
 
 template<typename T>
@@ -137,6 +145,18 @@ size_t Vector<T>::capacity() const
 }
 
 template<typename T>
+T* Vector<T>::end() const
+{
+	return arena_ + count_;
+}
+
+template<typename T>
+size_t Vector<T>::size() const
+{
+	return count_;
+}
+
+template<typename T>
 void Vector<T>::clear()
 {
 	arena_.release(count_);
@@ -144,9 +164,14 @@ void Vector<T>::clear()
 }
 
 template<typename T>
-T* Vector<T>::end() const
+template<typename... Args>
+void Vector<T>::emplace_back(Args&&... args)
 {
-	return arena_ + count_;
+	if (count_ == reserved_)
+		reserve(recommended_size());
+
+	new (arena_ + count_) T(std::forward<Args>(args)...);
+	++count_;
 }
 
 template<typename T>
@@ -171,9 +196,8 @@ int Vector<T>::find(const T &value) const
 template<typename T>
 void Vector<T>::push_back(const T &element)
 {
-	// Verify that there is enough space
 	if (count_ == reserved_)
-		reserve(reserved_ += (reserved_ + 1) >> 1);
+		reserve(recommended_size());
 
 	new (arena_ + count_) T(element);
 	++count_;
@@ -182,11 +206,10 @@ void Vector<T>::push_back(const T &element)
 template<typename T>
 void Vector<T>::push_back(T &&element)
 {
-	// Verify that there is enough space
 	if (count_ == reserved_)
-		reserve(reserved_ += (reserved_ + 1) >> 1);
+		reserve(recommended_size());
 
-	new (arena_ + count_) T(std::move(element));
+	new (arena_ + count_) T(std::forward<T>(element));
 	++count_;
 }
 
@@ -231,12 +254,6 @@ void Vector<T>::reserve(size_t capacity)
 }
 
 template<typename T>
-size_t Vector<T>::size() const
-{
-	return count_;
-}
-
-template<typename T>
 bool Vector<T>::operator==(const Vector<T> &v) const
 {
 	return arena_ == v.arena_;
@@ -248,6 +265,12 @@ T& Vector<T>::operator[](const size_t i) const
 	R_ASSERT(i < count_, "Index out of range");
 
 	return arena_[i];
+}
+
+template<typename T>
+size_t Vector<T>::recommended_size() const
+{
+	return reserved_ + (reserved_ + 1) / 2;
 }
 
 #endif
