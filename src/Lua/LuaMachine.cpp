@@ -103,6 +103,16 @@ namespace Rainbow
 		         "LuaMachine must be terminated before the graphics context");
 	}
 
+	void LuaMachine::close()
+	{
+		if (!this->L)
+			return;
+
+		Lua::SceneGraph::destroy(this->L, this->scenegraph);
+		lua_close(this->L);
+		this->L = nullptr;
+	}
+
 	int LuaMachine::init(SceneGraph::Node *root)
 	{
 		luaR_openlibs(this->L);
@@ -175,15 +185,5 @@ namespace Rainbow
 		R_ASSERT(lua_gettop(this->L) == 0, "Stack not empty");
 
 		return LUA_OK;
-	}
-
-	void LuaMachine::terminate()
-	{
-		if (!this->L)
-			return;
-
-		Lua::SceneGraph::destroy(this->L, this->scenegraph);
-		lua_close(this->L);
-		this->L = nullptr;
 	}
 }

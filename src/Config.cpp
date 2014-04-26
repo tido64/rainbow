@@ -33,21 +33,21 @@ namespace Rainbow
 
 		lua_getglobal(L, "accelerometer");
 		if (lua_isboolean(L, -1))
-			this->accelerometer_ = lua_toboolean(L, -1);
+			accelerometer_ = lua_toboolean(L, -1);
 
 		lua_getglobal(L, "resolution");
 		if (lua_istable(L, -1))
 		{
 			lua_rawgeti(L, -1, 1);
-			this->width_ = luaR_tointeger(L, -1);
+			width_ = luaR_tointeger(L, -1);
 			lua_rawgeti(L, -2, 2);
-			this->height_ = luaR_tointeger(L, -1);
+			height_ = luaR_tointeger(L, -1);
 		}
 
 	#ifdef RAINBOW_SDL
 		lua_getglobal(L, "suspend_on_focus_lost");
 		if (lua_isboolean(L, -1))
-			this->suspend_ = lua_toboolean(L, -1);
+			suspend_ = lua_toboolean(L, -1);
 	#endif
 
 		lua_close(L);

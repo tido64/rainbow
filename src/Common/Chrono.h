@@ -40,13 +40,13 @@ protected:
 
 Chrono::duration::rep Chrono::current() const
 {
-	const auto t = this->current_.time_since_epoch();
+	const auto t = current_.time_since_epoch();
 	return std::chrono::duration_cast<duration>(t).count();
 }
 
 Chrono::duration::rep Chrono::delta() const
 {
-	return this->delta_.count();
+	return delta_.count();
 }
 
 #endif

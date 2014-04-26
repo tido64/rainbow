@@ -39,8 +39,8 @@ namespace Rainbow
 		LuaMachine();
 		~LuaMachine();
 
+		void close();
 		int init(SceneGraph::Node *root);
-		void terminate();
 	};
 
 	LuaMachine::operator lua_State*() const

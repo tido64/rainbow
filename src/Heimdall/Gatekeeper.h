@@ -53,8 +53,6 @@ namespace Heimdall
 		virtual void touch_canceled_impl() override;
 		virtual void touch_ended_impl(const Touch *const touches,
 		                              const size_t count) override;
-		virtual void touch_moved_impl(const Touch *const touches,
-		                              const size_t count) override;
 	};
 
 	void Gatekeeper::draw()

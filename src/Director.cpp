@@ -15,79 +15,78 @@ namespace Rainbow
 	    : active_(true), terminated_(false), error_(nullptr), input_(lua_)
 	{
 		if (!ConFuoco::Mixer::Instance)
-			this->terminate("Failed to initialise audio engine");
-		else if (!this->renderer_.init())
-			this->terminate("Failed to initialise renderer");
-		else if (this->lua_.init(&this->scenegraph_) != LUA_OK)
-			this->terminate("Failed to initialise Lua");
+			terminate("Failed to initialise audio engine");
+		else if (!renderer_.init())
+			terminate("Failed to initialise renderer");
+		else if (lua_.init(&scenegraph_) != LUA_OK)
+			terminate("Failed to initialise Lua");
 	}
 
 	Director::~Director()
 	{
-		// Lua must be allowed to clean up before we tear down the graphics
-		// context.
-		this->lua_.terminate();
+		// Lua must clean up before we tear down the graphics context.
+		lua_.close();
 	}
 
 	void Director::draw()
 	{
 		Renderer::clear();
-		Renderer::draw(this->scenegraph_);
+		Renderer::draw(scenegraph_);
 	}
 
 	void Director::init(const Data &main, const Vec2i &screen)
 	{
 		R_ASSERT(main, "Failed to load 'main.lua'");
 
-		this->renderer_.set_resolution(screen);
-		Lua::Platform::update(this->lua_, screen);
-		if (this->lua_.start(main) != LUA_OK || this->lua_.update(0) != LUA_OK)
+		renderer_.set_resolution(screen);
+		Lua::Platform::update(lua_, screen);
+		if (lua_.start(main) != LUA_OK || lua_.update(0) != LUA_OK)
 		{
-			this->terminate("Failed to start 'main.lua'");
+			terminate("Failed to start 'main.lua'");
 			return;
 		}
-		this->scenegraph_.update(0);
+		scenegraph_.update(0);
 	}
 
 	void Director::update(const unsigned long dt)
 	{
-		R_ASSERT(!this->terminated_, "App should have terminated by now");
+		R_ASSERT(!terminated_, "App should have terminated by now");
 
-		this->mixer_.update();
-		if (this->lua_.update(dt))
+		mixer_.update();
+		if (lua_.update(dt))
 		{
-			this->terminate();
+			terminate();
 			return;
 		}
-		this->scenegraph_.update(dt);
-		this->input_.clear();
+		scenegraph_.update(dt);
+		input_.clear();
 	}
 
 	void Director::on_focus_gained()
 	{
-		R_ASSERT(!this->terminated_, "App should have terminated by now");
+		R_ASSERT(!terminated_, "App should have terminated by now");
 
-		this->active_ = true;
-		this->mixer_.suspend(false);
+		active_ = true;
+		mixer_.suspend(false);
 	}
 
 	void Director::on_focus_lost()
 	{
-		this->active_ = false;
-		this->mixer_.suspend(true);
+		active_ = false;
+		mixer_.suspend(true);
 	}
 
 	void Director::on_memory_warning()
 	{
-		R_ASSERT(!this->terminated_, "App should have terminated by now");
+		R_ASSERT(!terminated_, "App should have terminated by now");
 
-		lua_gc(this->lua_, LUA_GCCOLLECT, 0);
+		lua_gc(lua_, LUA_GCCOLLECT, 0);
 		TextureManager::Instance->purge();
 	}
 
 	void Director::terminate(const char *error)
 	{
-		this->terminate();
-		this->error_ = error;
+		terminate();
+		error_ = error;
 	}
 }

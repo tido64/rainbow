@@ -39,12 +39,12 @@ namespace Heimdall
 
 	Label* DebugInfo::button()
 	{
-		return &this->button_;
+		return &button_;
 	}
 
 	SceneGraph::Node* DebugInfo::node()
 	{
-		return this->node_;
+		return node_;
 	}
 }
 

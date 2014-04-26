@@ -48,7 +48,7 @@ namespace Rainbow
 #ifdef USE_HEIMDALL
 	protected:
 		/// Used by Heimdall::Gatekeeper to retrieve Lua state.
-		struct lua_State* state() const { return this->lua_; }
+		struct lua_State* state() const { return lua_; }
 #endif
 
 	private:
@@ -66,28 +66,28 @@ namespace Rainbow
 
 	bool Director::active() const
 	{
-		return this->active_;
+		return active_;
 	}
 
 	const char* Director::error() const
 	{
-		return this->error_;
+		return error_;
 	}
 
 	Renderer& Director::renderer()
 	{
-		return this->renderer_;
+		return renderer_;
 	}
 
 	bool Director::terminated() const
 	{
-		return this->terminated_;
+		return terminated_;
 	}
 
 	void Director::terminate()
 	{
-		this->active_ = false;
-		this->terminated_ = true;
+		active_ = false;
+		terminated_ = true;
 	}
 }
 

@@ -24,8 +24,7 @@ Chrono::Chrono() : current_(now()), previous_(current_) { }
 
 void Chrono::update()
 {
-	this->previous_ = this->current_;
-	this->current_ = now();
-	const auto dt = this->current_ - this->previous_;
-	this->delta_ = std::chrono::duration_cast<duration>(dt);
+	previous_ = current_;
+	current_ = now();
+	delta_ = std::chrono::duration_cast<duration>(current_ - previous_);
 }

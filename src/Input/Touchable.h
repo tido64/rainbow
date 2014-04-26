@@ -35,33 +35,30 @@ public:
 	inline void touch_moved(const Touch *const touches, const size_t count);
 
 private:
-	virtual void touch_began_impl(const Touch *const touches,
-	                              const size_t count) = 0;
-	virtual void touch_canceled_impl() = 0;
-	virtual void touch_ended_impl(const Touch *const touches,
-	                              const size_t count) = 0;
-	virtual void touch_moved_impl(const Touch *const touches,
-	                              const size_t count) = 0;
+	virtual void touch_began_impl(const Touch *const, const size_t) { }
+	virtual void touch_canceled_impl() { }
+	virtual void touch_ended_impl(const Touch *const, const size_t) { }
+	virtual void touch_moved_impl(const Touch *const, const size_t) { }
 };
 
 void Touchable::touch_began(const Touch *const touches, const size_t count)
 {
-	this->touch_began_impl(touches, count);
+	touch_began_impl(touches, count);
 }
 
 void Touchable::touch_canceled()
 {
-	this->touch_canceled_impl();
+	touch_canceled_impl();
 }
 
 void Touchable::touch_ended(const Touch *const touches, const size_t count)
 {
-	this->touch_ended_impl(touches, count);
+	touch_ended_impl(touches, count);
 }
 
 void Touchable::touch_moved(const Touch *const touches, const size_t count)
 {
-	this->touch_moved_impl(touches, count);
+	touch_moved_impl(touches, count);
 }
 
 #endif

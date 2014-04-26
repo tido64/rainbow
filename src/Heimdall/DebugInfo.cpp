@@ -20,56 +20,56 @@ namespace Heimdall
 
 	DebugInfo::DebugInfo() : node_(new SceneGraph::Node())
 	{
-		this->node_->enabled = false;
-		this->button_.set_color(Color::InactiveFont());
-		this->button_.set_text(kStringShowDebug);
-		this->label_.set_color(Color::DebugInfoFont());
-		this->node_->add_child(&this->label_);
+		node_->enabled = false;
+		button_.set_color(Color::InactiveFont());
+		button_.set_text(kStringShowDebug);
+		label_.set_color(Color::DebugInfoFont());
+		node_->add_child(&label_);
 	}
 
 	void DebugInfo::set_button(const Vec2f &position, FontAtlas *font)
 	{
-		this->button_.set_font(font);
-		this->button_.set_position(position);
-		this->position_ = position;
+		button_.set_font(font);
+		button_.set_position(position);
+		position_ = position;
 	}
 
 	void DebugInfo::set_console(const Vec2f &position, FontAtlas *font)
 	{
-		this->label_.set_font(font);
-		this->label_.set_position(position);
+		label_.set_font(font);
+		label_.set_position(position);
 	}
 
 	void DebugInfo::update(const unsigned long dt)
 	{
-		if (!this->node_->enabled)
+		if (!node_->enabled)
 			return;
 
 		double used, peak;
 		TextureManager::Instance->memory_usage(used, peak, peak);
-		sprintf(this->text_, kStringInfoFormat, dt, used, peak);
-		this->label_.set_text(this->text_);
+		sprintf(text_, kStringInfoFormat, dt, used, peak);
+		label_.set_text(text_);
 	}
 
 	bool DebugInfo::on_touch(const Touch *const touches, const size_t count)
 	{
-		const int x1 = this->position_.x + this->button_.width();
-		const int y1 = this->position_.y + this->button_.font()->height();
+		const int x1 = position_.x + button_.width();
+		const int y1 = position_.y + button_.font()->height();
 		for (size_t i = 0; i < count; ++i)
 		{
-			if (touches[0].x >= this->position_.x && touches[0].x <= x1
-			    && touches[0].y >= this->position_.y && touches[0].y <= y1)
+			if (touches[0].x >= position_.x && touches[0].x <= x1
+			    && touches[0].y >= position_.y && touches[0].y <= y1)
 			{
-				this->node_->enabled = !this->node_->enabled;
-				if (this->node_->enabled)
+				node_->enabled = !node_->enabled;
+				if (node_->enabled)
 				{
-					this->button_.set_color(Color::NormalFont());
-					this->button_.set_text(kStringHideDebug);
+					button_.set_color(Color::NormalFont());
+					button_.set_text(kStringHideDebug);
 				}
 				else
 				{
-					this->button_.set_color(Color::InactiveFont());
-					this->button_.set_text(kStringShowDebug);
+					button_.set_color(Color::InactiveFont());
+					button_.set_text(kStringShowDebug);
 				}
 				return true;
 			}

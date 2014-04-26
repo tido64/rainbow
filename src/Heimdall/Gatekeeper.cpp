@@ -187,8 +187,6 @@ namespace Heimdall
 			}
 		}
 	}
-
-	void Gatekeeper::touch_moved_impl(const Touch *const, const size_t) { }
 }
 
 Library::Library(const char *const path) : path_(path)

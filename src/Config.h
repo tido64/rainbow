@@ -55,27 +55,27 @@ namespace Rainbow
 
 	int Config::width() const
 	{
-		return this->width_;
+		return width_;
 	}
 
 	int Config::height() const
 	{
-		return this->height_;
+		return height_;
 	}
 
 	bool Config::is_portrait() const
 	{
-		return this->width_ < this->height_;
+		return width_ < height_;
 	}
 
 	bool Config::needs_accelerometer() const
 	{
-		return this->accelerometer_;
+		return accelerometer_;
 	}
 
 	bool Config::suspend() const
 	{
-		return this->suspend_;
+		return suspend_;
 	}
 }
 

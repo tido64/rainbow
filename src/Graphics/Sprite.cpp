@@ -36,16 +36,16 @@ namespace
 }
 
 Sprite::Ref::Ref(const SpriteBatch *batch, const size_t i)
-    : batch(batch), i(i) { }
+    : batch_(batch), i_(i) { }
 
 Sprite& Sprite::Ref::operator*() const
 {
-	return this->batch->sprites()[this->i];
+	return batch_->sprites()[i_];
 }
 
 Sprite* Sprite::Ref::operator->() const
 {
-	return &this->batch->sprites()[this->i];
+	return &batch_->sprites()[i_];
 }
 
 Sprite::Sprite(const unsigned int w, const unsigned int h, const SpriteBatch *p)
@@ -63,25 +63,25 @@ Sprite::Sprite(Sprite &&s)
 
 void Sprite::set_color(const unsigned int c)
 {
-	R_ASSERT(this->vertex_array_, "Missing vertex array buffer");
+	R_ASSERT(vertex_array_, "Missing vertex array buffer");
 
-	this->vertex_array_[0].color = c;
-	this->vertex_array_[1].color = c;
-	this->vertex_array_[2].color = c;
-	this->vertex_array_[3].color = c;
-	this->stale_ |= kStaleFrontBuffer;
+	vertex_array_[0].color = c;
+	vertex_array_[1].color = c;
+	vertex_array_[2].color = c;
+	vertex_array_[3].color = c;
+	stale_ |= kStaleFrontBuffer;
 }
 
 void Sprite::set_normal(const unsigned int id)
 {
-	R_ASSERT(this->normal_map_, "Missing normal map buffer");
+	R_ASSERT(normal_map_, "Missing normal map buffer");
 
-	const Texture &normal = this->parent_->normal()[id];
-	this->normal_map_[0] = normal.vx[0];
-	this->normal_map_[1] = normal.vx[1];
-	this->normal_map_[2] = normal.vx[2];
-	this->normal_map_[3] = normal.vx[3];
-	this->stale_ |= kStaleFrontBuffer;
+	const Texture &normal = parent_->normal()[id];
+	normal_map_[0] = normal.vx[0];
+	normal_map_[1] = normal.vx[1];
+	normal_map_[2] = normal.vx[2];
+	normal_map_[3] = normal.vx[3];
+	stale_ |= kStaleFrontBuffer;
 }
 
 void Sprite::set_pivot(const Vec2f &pivot)
@@ -91,32 +91,32 @@ void Sprite::set_pivot(const Vec2f &pivot)
 	         "Invalid pivot point");
 
 	Vec2f diff = pivot;
-	diff -= this->pivot_;
+	diff -= pivot_;
 	if (diff.is_zero())
 		return;
 
-	diff.x *= this->width_ * this->scale_.x;
-	diff.y *= this->height_ * this->scale_.y;
-	this->center_ += diff;
-	this->position_ += diff;
-	this->pivot_ = pivot;
+	diff.x *= width_ * scale_.x;
+	diff.y *= height_ * scale_.y;
+	center_ += diff;
+	position_ += diff;
+	pivot_ = pivot;
 }
 
 void Sprite::set_position(const Vec2f &position)
 {
-	this->position_ = position;
-	this->stale_ |= kStalePosition;
+	position_ = position;
+	stale_ |= kStalePosition;
 }
 
 void Sprite::set_rotation(const float r)
 {
-	this->angle_ = r;
-	this->stale_ |= kStaleBuffer;
+	angle_ = r;
+	stale_ |= kStaleBuffer;
 }
 
 void Sprite::set_scale(const float f)
 {
-	this->set_scale(Vec2f(f, f));
+	set_scale(Vec2f(f, f));
 }
 
 void Sprite::set_scale(const Vec2f &f)
@@ -124,24 +124,24 @@ void Sprite::set_scale(const Vec2f &f)
 	R_ASSERT(f.x > 0.0f && f.y > 0.0f,
 	         "Can't scale with a factor of zero or less");
 
-	this->scale_ = f;
-	this->stale_ |= kStaleBuffer;
+	scale_ = f;
+	stale_ |= kStaleBuffer;
 }
 
 void Sprite::set_texture(const unsigned int id)
 {
-	const Texture &tx = this->parent_->texture()[id];
-	this->vertex_array_[0].texcoord = tx.vx[0];
-	this->vertex_array_[1].texcoord = tx.vx[1];
-	this->vertex_array_[2].texcoord = tx.vx[2];
-	this->vertex_array_[3].texcoord = tx.vx[3];
-	this->stale_ |= kStaleFrontBuffer;
+	const Texture &tx = parent_->texture()[id];
+	vertex_array_[0].texcoord = tx.vx[0];
+	vertex_array_[1].texcoord = tx.vx[1];
+	vertex_array_[2].texcoord = tx.vx[2];
+	vertex_array_[3].texcoord = tx.vx[3];
+	stale_ |= kStaleFrontBuffer;
 }
 
 void Sprite::mirror()
 {
-	std::swap(this->vertex_array_[0].texcoord, this->vertex_array_[1].texcoord);
-	std::swap(this->vertex_array_[2].texcoord, this->vertex_array_[3].texcoord);
+	std::swap(vertex_array_[0].texcoord, vertex_array_[1].texcoord);
+	std::swap(vertex_array_[2].texcoord, vertex_array_[3].texcoord);
 }
 
 void Sprite::move(const Vec2f &delta)
@@ -149,8 +149,8 @@ void Sprite::move(const Vec2f &delta)
 	if (delta.is_zero())
 		return;
 
-	this->position_ += delta;
-	this->stale_ |= kStalePosition;
+	position_ += delta;
+	stale_ |= kStalePosition;
 }
 
 void Sprite::rotate(const float r)
@@ -158,71 +158,71 @@ void Sprite::rotate(const float r)
 	if (equal(r, 0.0f))
 		return;
 
-	this->angle_ += r;
-	this->stale_ |= kStaleBuffer;
+	angle_ += r;
+	stale_ |= kStaleBuffer;
 }
 
 bool Sprite::update()
 {
-	if (!this->stale_)
+	if (!stale_)
 		return false;
 
-	R_ASSERT(this->vertex_array_, "Missing vertex array buffer");
+	R_ASSERT(vertex_array_, "Missing vertex array buffer");
 
-	if (this->stale_ & kStaleBuffer)
+	if (stale_ & kStaleBuffer)
 	{
-		if (this->stale_ & kStalePosition)
-			this->center_ = this->position_;
+		if (stale_ & kStalePosition)
+			center_ = position_;
 
 		Vec2f origin[4];
-		origin[0].x = this->width_ * -this->pivot_.x;
-		origin[0].y = this->height_ * -(1 - this->pivot_.y);
-		origin[1].x = origin[0].x + this->width_;
+		origin[0].x = width_ * -pivot_.x;
+		origin[0].y = height_ * -(1 - pivot_.y);
+		origin[1].x = origin[0].x + width_;
 		origin[1].y = origin[0].y;
 		origin[2].x = origin[1].x;
-		origin[2].y = origin[1].y + this->height_;
+		origin[2].y = origin[1].y + height_;
 		origin[3].x = origin[0].x;
 		origin[3].y = origin[2].y;
 
-		if (!equal(this->angle_, 0.0f))
+		if (!equal(angle_, 0.0f))
 		{
-			const float cos_r = cosf(-this->angle_);
-			const float sin_r = sinf(-this->angle_);
+			const float cos_r = cosf(-angle_);
+			const float sin_r = sinf(-angle_);
 
-			const Vec2f s_sin_r(this->scale_.x * sin_r, this->scale_.y * sin_r);
-			const Vec2f s_cos_r(this->scale_.x * cos_r, this->scale_.y * cos_r);
+			const Vec2f s_sin_r(scale_.x * sin_r, scale_.y * sin_r);
+			const Vec2f s_cos_r(scale_.x * cos_r, scale_.y * cos_r);
 
-			this->vertex_array_[0].position =
-			    transform_rst(origin[0], s_sin_r, s_cos_r, this->center_);
-			this->vertex_array_[1].position =
-			    transform_rst(origin[1], s_sin_r, s_cos_r, this->center_);
-			this->vertex_array_[2].position =
-			    transform_rst(origin[2], s_sin_r, s_cos_r, this->center_);
-			this->vertex_array_[3].position =
-			    transform_rst(origin[3], s_sin_r, s_cos_r, this->center_);
+			vertex_array_[0].position =
+			    transform_rst(origin[0], s_sin_r, s_cos_r, center_);
+			vertex_array_[1].position =
+			    transform_rst(origin[1], s_sin_r, s_cos_r, center_);
+			vertex_array_[2].position =
+			    transform_rst(origin[2], s_sin_r, s_cos_r, center_);
+			vertex_array_[3].position =
+			    transform_rst(origin[3], s_sin_r, s_cos_r, center_);
 		}
 		else
 		{
-			this->vertex_array_[0].position =
-			    transform_st(origin[0], this->scale_, this->center_);
-			this->vertex_array_[1].position =
-			    transform_st(origin[1], this->scale_, this->center_);
-			this->vertex_array_[2].position =
-			    transform_st(origin[2], this->scale_, this->center_);
-			this->vertex_array_[3].position =
-			    transform_st(origin[3], this->scale_, this->center_);
+			vertex_array_[0].position =
+			    transform_st(origin[0], scale_, center_);
+			vertex_array_[1].position =
+			    transform_st(origin[1], scale_, center_);
+			vertex_array_[2].position =
+			    transform_st(origin[2], scale_, center_);
+			vertex_array_[3].position =
+			    transform_st(origin[3], scale_, center_);
 		}
 	}
-	else if (this->stale_ & kStalePosition)
+	else if (stale_ & kStalePosition)
 	{
-		this->position_ -= this->center_;
-		this->vertex_array_[0].position += this->position_;
-		this->vertex_array_[1].position += this->position_;
-		this->vertex_array_[2].position += this->position_;
-		this->vertex_array_[3].position += this->position_;
-		this->center_ += this->position_;
-		this->position_ = this->center_;
+		position_ -= center_;
+		vertex_array_[0].position += position_;
+		vertex_array_[1].position += position_;
+		vertex_array_[2].position += position_;
+		vertex_array_[3].position += position_;
+		center_ += position_;
+		position_ = center_;
 	}
-	this->stale_ = 0;
+	stale_ = 0;
 	return true;
 }

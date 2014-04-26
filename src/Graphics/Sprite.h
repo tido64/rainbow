@@ -44,8 +44,8 @@ public:
 		inline explicit operator bool() const;
 
 	private:
-		const SpriteBatch *batch;
-		size_t i;
+		const SpriteBatch *batch_;
+		size_t i_;
 
 		Ref(const SpriteBatch *batch, const size_t i);
 	};
@@ -131,46 +131,46 @@ private:
 	Vec2f scale_;                 ///< Scaling factor.
 };
 
-Sprite::Ref::Ref() : batch(nullptr), i(0) { }
+Sprite::Ref::Ref() : batch_(nullptr), i_(0) { }
 
 Sprite::Ref::operator bool() const
 {
-	return this->batch;
+	return batch_;
 }
 
 float Sprite::angle() const
 {
-	return this->angle_;
+	return angle_;
 }
 
 const Colorb& Sprite::color() const
 {
-	return this->vertex_array_[0].color;
+	return vertex_array_[0].color;
 }
 
 unsigned int Sprite::height() const
 {
-	return this->height_;
+	return height_;
 }
 
 const Vec2f& Sprite::position() const
 {
-	return this->position_;
+	return position_;
 }
 
 unsigned int Sprite::width() const
 {
-	return this->width_;
+	return width_;
 }
 
 void Sprite::set_normal_buffer(Vec2f *buffer)
 {
-	this->normal_map_ = buffer;
+	normal_map_ = buffer;
 }
 
 void Sprite::set_vertex_array(SpriteVertex *buffer)
 {
-	this->vertex_array_ = buffer;
+	vertex_array_ = buffer;
 }
 
 #endif
