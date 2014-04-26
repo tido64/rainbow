@@ -1,3 +1,6 @@
+[submodule "lib/Catch"]
+	path = lib/Catch
+	url = git://github.com/philsquared/Catch.git
 [submodule "lib/FreeType"]
 	path = lib/FreeType
 	url = git://git.sv.nongnu.org/freetype/freetype2.git

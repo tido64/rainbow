@@ -4,68 +4,74 @@
 
 #include "Common/Vec2.h"
 
-TEST(Vec2Test, Angle)
+// TODO: The following newlines were added for Catch to create unique names.
+
+
+
+
+TEST_CASE("Angle between two Vec2s", "[vec2]")
 {
 	Vec2i v0;
 	Vec2i v1(1, 1);
-	ASSERT_FLOAT_EQ(0.7853982f, v0.angle(v1));
+	REQUIRE(Rainbow::equal(v0.angle(v1), 0.7853982f));
 }
 
-TEST(Vec2Test, Distance)
+TEST_CASE("Distance between two Vec2s", "[vec2]")
 {
 	Vec2i v0;
 	Vec2i v1(3, 4);
-	ASSERT_FLOAT_EQ(5.0f, v0.distance(v1));
+	REQUIRE(Rainbow::equal(v0.distance(v1), 5.0f));
 }
 
-TEST(Vec2Test, DotProduct)
+TEST_CASE("Dot product of two Vec2s", "[vec2]")
 {
 	Vec2i v0(3, 4);
-	ASSERT_FLOAT_EQ(25.0f, v0.dot(v0));
+	REQUIRE(Rainbow::equal(v0.dot(v0), 25));
 }
 
-TEST(Vec2Test, OperatorAdd)
+TEST_CASE("Vec2s can be checked for zero length", "[vec2]")
 {
-	Vec2i v0(1, 2);
-	Vec2i v1(3, 4);
-	v0 += v1;
-	ASSERT_EQ(4, v0.x);
-	ASSERT_EQ(6, v0.y);
+	Vec2i v0;
+	REQUIRE(v0.is_zero());
+
+	v0.x = 1;
+	v0.y = 1;
+	REQUIRE_FALSE(v0.is_zero());
 }
 
-TEST(Vec2Test, OperatorEq)
+TEST_CASE("Vec2s can be assigned", "[vec2]")
 {
 	Vec2i v0;
 	Vec2i v1(5, 2);
 	v0 = v1;
-	ASSERT_EQ(5, v0.x);
-	ASSERT_EQ(2, v0.y);
+	REQUIRE(v0.x == 5);
+	REQUIRE(v0.y == 2);
 }
 
-TEST(Vec2Test, OperatorMul)
+TEST_CASE("Vec2s can be added to one another", "[vec2]")
 {
-	Vec2i v0(5, 2);
-	v0 *= 2;
-	ASSERT_EQ(10, v0.x);
-	ASSERT_EQ(4, v0.y);
+	Vec2i v0(1, 2);
+	Vec2i v1(3, 4);
+	v0 += v1;
+	REQUIRE(v0.x == 4);
+	REQUIRE(v0.y == 6);
 }
 
-TEST(Vec2Test, OperatorSub)
+// TODO: The following newlines were added for Catch to create unique names.
+
+TEST_CASE("Vec2s can be subtracted from one another", "[vec2]")
 {
 	Vec2i v0(1, 2);
 	Vec2i v1(3, 4);
 	v0 -= v1;
-	ASSERT_EQ(-2, v0.x);
-	ASSERT_EQ(-2, v0.y);
+	REQUIRE(v0.x == -2);
+	REQUIRE(v0.y == -2);
 }
 
-TEST(Vec2Test, Zero)
+TEST_CASE("Vec2s can be multiplied with each other", "[vec2]")
 {
-	Vec2i v0;
-	ASSERT_EQ(0, v0.x);
-	ASSERT_EQ(0, v0.y);
-
-	v0.x = 1;
-	v0.y = 1;
-	ASSERT_FALSE(v0.is_zero());
+	Vec2i v0(5, 2);
+	v0 *= 2;
+	REQUIRE(v0.x == 10);
+	REQUIRE(v0.y == 4);
 }

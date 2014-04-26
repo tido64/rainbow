@@ -35,7 +35,7 @@ namespace Rainbow
 		}
 
 		/// Returns the distance between two points.
-		T distance(const Vec2<T> &v) const
+		float distance(const Vec2<T> &v) const
 		{
 			T dx = v.x - this->x;
 			T dy = v.y - this->y;

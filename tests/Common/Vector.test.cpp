@@ -4,238 +4,239 @@
 
 #include "Common/Vector.h"
 
-struct VectorConstructionTest
+namespace
 {
-	const bool was_constructed;
-	const bool was_copied;
-	const bool was_moved;
-
-	VectorConstructionTest()
-	    : was_constructed(true), was_copied(false), was_moved(false) { }
-
-	VectorConstructionTest(const VectorConstructionTest& v)
-	    : was_constructed(v.was_constructed), was_copied(true),
-	      was_moved(false) { }
-
-	VectorConstructionTest(VectorConstructionTest&& v)
-	    : was_constructed(v.was_constructed), was_copied(false),
-	      was_moved(true) { }
-};
-
-class VectorTest : public testing::Test
-{
-protected:
-	const size_t test_size;
-	Vector<size_t> intvec;
-
-	VectorTest() : test_size(100)
+	struct VectorConstructionTest
 	{
-		// Initialise vector with some content
-		for (size_t i = 0; i < this->test_size; ++i)
-			this->intvec.push_back(i);
-	}
-};
+		const bool was_constructed;
+		const bool was_copied;
+		const bool was_moved;
 
-TEST_F(VectorTest, Access)
-{
-	for (size_t i = 0; i < test_size; ++i)
-	{
-		ASSERT_EQ(i, intvec.at(i));
-		ASSERT_EQ(i, intvec[i]);
-	}
+		VectorConstructionTest()
+		    : was_constructed(true), was_copied(false), was_moved(false) { }
+
+		VectorConstructionTest(const VectorConstructionTest& v)
+		    : was_constructed(v.was_constructed), was_copied(true),
+		      was_moved(false) { }
+
+		VectorConstructionTest(VectorConstructionTest&& v)
+		    : was_constructed(v.was_constructed), was_copied(false),
+		      was_moved(true) { }
+	};
 }
 
-TEST_F(VectorTest, Begin)
+// TODO: The following newlines were added for Catch to create unique names.
+
+TEST_CASE("Vector operations", "[vector]")
 {
-	ASSERT_EQ(&intvec[0], intvec.begin());
-}
-
-TEST_F(VectorTest, Clear)
-{
-	const size_t capacity = intvec.capacity();
-	ASSERT_EQ(test_size, intvec.size());
-	intvec.clear();
-	ASSERT_EQ(0u, intvec.size());
-	ASSERT_EQ(capacity, intvec.capacity());
-}
-
-TEST_F(VectorTest, End)
-{
-	size_t count = 0;
-	for (auto i : intvec)
-	{
-		ASSERT_EQ(count, i);
-		++count;
-	}
-	ASSERT_EQ(test_size, count);
-	ASSERT_NE(intvec.begin(), intvec.end());
-	intvec.clear();
-	ASSERT_EQ(intvec.begin(), intvec.end());
-}
-
-TEST_F(VectorTest, EraseFirstElement)
-{
-	for (size_t i = 0; i < intvec.size(); ++i)
-		ASSERT_EQ(i, intvec[i]);
-
-	intvec.erase(0);
-	ASSERT_EQ(-1, intvec.find(0));
-
-	for (size_t i = 0; i < intvec.size(); ++i)
-		ASSERT_EQ(i + 1, intvec[i]);
-}
-
-TEST_F(VectorTest, EraseLastElement)
-{
-	for (size_t i = 0; i < intvec.size(); ++i)
-		ASSERT_EQ(i, intvec[i]);
-
-	const size_t last = intvec.size() - 1;
-	intvec.erase(last);
-	ASSERT_EQ(-1, intvec.find(last));
-
-	for (size_t i = 0; i < intvec.size(); ++i)
-		ASSERT_EQ(i, intvec[i]);
-}
-
-TEST_F(VectorTest, EraseMiddleElement)
-{
-	for (size_t i = 0; i < intvec.size(); ++i)
-		ASSERT_EQ(i, intvec[i]);
-
-	const size_t fifth = 5;
-	intvec.erase(fifth);
-	ASSERT_EQ(-1, intvec.find(fifth));
-
-	for (size_t i = 0; i < intvec.size(); ++i)
-	{
-		if (i >= fifth)
-			ASSERT_EQ(i + 1, intvec[i]);
-		else
-			ASSERT_EQ(i, intvec[i]);
-	}
-}
-
-TEST_F(VectorTest, PushBackPastCapacity)
-{
-	ASSERT_LT(test_size, intvec.capacity());
-	ASSERT_EQ(test_size, intvec.size());
-	for (size_t i = 0; i < test_size; ++i)
-		ASSERT_EQ(i, intvec[i]);
-}
-
-TEST_F(VectorTest, QuickEraseFirstElement)
-{
-	for (size_t i = 0; i < intvec.size(); ++i)
-		ASSERT_EQ(i, intvec[i]);
-
-	const size_t last = intvec.size() - 1;
-	intvec.qerase(0);
-	ASSERT_EQ(last, intvec[0]);
-	ASSERT_EQ(-1, intvec.find(0));
-
-	for (size_t i = 1; i < intvec.size(); ++i)
-		ASSERT_EQ(i, intvec[i]);
-}
-
-TEST_F(VectorTest, QuickEraseLastElement)
-{
-	for (size_t i = 0; i < intvec.size(); ++i)
-		ASSERT_EQ(i, intvec[i]);
-
-	const size_t last = intvec.size() - 1;
-	intvec.qerase(last);
-	ASSERT_EQ(-1, intvec.find(last));
-
-	for (size_t i = 0; i < intvec.size(); ++i)
-		ASSERT_EQ(i, intvec[i]);
-}
-
-TEST_F(VectorTest, QuickEraseMiddleElement)
-{
-	for (size_t i = 0; i < intvec.size(); ++i)
-		ASSERT_EQ(i, intvec[i]);
-
-	const size_t height = intvec.size() >> 1;
-	const size_t last = intvec.size() - 1;
-	intvec.qerase(height);
-	ASSERT_EQ(-1, intvec.find(height));
-
-	for (size_t i = 0; i < height; ++i)
-		ASSERT_EQ(i, intvec[i]);
-	ASSERT_EQ(last, intvec[height]);
-	for (size_t i = height + 1; i < intvec.size(); ++i)
-		ASSERT_EQ(i, intvec[i]);
-}
-
-TEST_F(VectorTest, Find)
-{
-	ASSERT_EQ(-1, intvec.find(-1));
-	size_t i = 0;
-	for (; i < intvec.size(); ++i)
-	{
-		const int needle = intvec.find(i);
-		ASSERT_LE(0, needle);
-		ASSERT_EQ(i, static_cast<size_t>(i));
-	}
-	ASSERT_EQ(-1, intvec.find(i));
-}
-
-TEST_F(VectorTest, ReserveLessThanSize)
-{
-	intvec.reserve(0);
-	ASSERT_EQ(test_size, intvec.capacity());
-	ASSERT_EQ(test_size, intvec.size());
-	for (size_t i = 0; i < test_size; ++i)
-		ASSERT_EQ(i, intvec[i]);
-}
-
-TEST_F(VectorTest, ReserveGreaterThanSize)
-{
-	const size_t cap = test_size + 10;
-	intvec.reserve(cap);
-	ASSERT_EQ(cap, intvec.capacity());
-	ASSERT_EQ(test_size, intvec.size());
-	for (size_t i = test_size; i < cap; ++i)
+	const size_t kTestSize = 16;
+	Vector<unsigned> intvec;
+	for (size_t i = 0; i < kTestSize; ++i)
 		intvec.push_back(i);
-	ASSERT_EQ(cap, intvec.capacity());
-	ASSERT_EQ(cap, intvec.size());
+
+	SECTION("Access")
+	{
+		for (size_t i = 0; i < kTestSize; ++i)
+		{
+			REQUIRE(intvec.at(i) == i);
+			REQUIRE(intvec[i] == i);
+		}
+	}
+
+	SECTION("begin() returns a pointer to the first element")
+	{
+		REQUIRE(intvec.begin() == &intvec[0]);
+	}
+
+	SECTION("Clear deletes all elements but keeps the block of memory")
+	{
+		const size_t capacity = intvec.capacity();
+		REQUIRE(intvec.size() == kTestSize);
+		intvec.clear();
+		REQUIRE(intvec.size() == 0u);
+		REQUIRE(intvec.capacity() == capacity);
+	}
+
+	SECTION("end() returns a pointer past the last element")
+	{
+		size_t count = 0;
+		for (auto i : intvec)
+		{
+			REQUIRE(i == count);
+			++count;
+		}
+		REQUIRE(count == kTestSize);
+		REQUIRE(intvec.begin() != intvec.end());
+		intvec.clear();
+		REQUIRE(intvec.begin() == intvec.end());
+	}
+
+	SECTION("erase(0) erases first element and keeps the order")
+	{
+		for (size_t i = 0; i < intvec.size(); ++i)
+			REQUIRE(intvec[i] == i);
+
+		intvec.erase(0);
+		REQUIRE(intvec.find(0) == -1);
+
+		for (size_t i = 0; i < intvec.size(); ++i)
+
+
+			REQUIRE(intvec[i] == i + 1);
+	}
+
+	SECTION("erase(size() - 1) erases last element and keeps the order")
+	{
+		for (size_t i = 0; i < intvec.size(); ++i)
+			REQUIRE(intvec[i] == i);
+
+		const size_t last = intvec.size() - 1;
+		intvec.erase(last);
+		REQUIRE(intvec.find(last) == -1);
+
+		for (size_t i = 0; i < intvec.size(); ++i)
+			REQUIRE(intvec[i] == i);
+	}
+
+	SECTION("erase(n) erases an element and keeps the order")
+	{
+		for (size_t i = 0; i < intvec.size(); ++i)
+			REQUIRE(intvec[i] == i);
+
+		const size_t fifth = 5;
+		intvec.erase(fifth);
+		REQUIRE(intvec.find(fifth) == -1);
+
+		for (size_t i = 0; i < intvec.size(); ++i)
+		{
+			if (i >= fifth)
+				REQUIRE(intvec[i] == i + 1);
+			else
+				REQUIRE(intvec[i] == i);
+		}
+	}
+
+	SECTION("Pushing passed capacity increases it")
+	{
+		REQUIRE(intvec.capacity() > kTestSize);
+		REQUIRE(intvec.size() == kTestSize);
+		for (size_t i = 0; i < kTestSize; ++i)
+			REQUIRE(intvec[i] == i);
+	}
+
+	SECTION("qerase(0) replaces first element with last and deletes it")
+	{
+		for (size_t i = 0; i < intvec.size(); ++i)
+			REQUIRE(intvec[i] == i);
+
+		const size_t last = intvec.size() - 1;
+		intvec.qerase(0);
+		REQUIRE(intvec[0] == last);
+		REQUIRE(intvec.find(0) == -1);
+
+		for (size_t i = 1; i < intvec.size(); ++i)
+			REQUIRE(intvec[i] == i);
+	}
+
+	SECTION("qerase(size() - 1) deletes last element")
+	{
+		for (size_t i = 0; i < intvec.size(); ++i)
+			REQUIRE(intvec[i] == i);
+
+		const size_t last = intvec.size() - 1;
+		intvec.qerase(last);
+		REQUIRE(intvec.find(last) == -1);
+
+		for (size_t i = 0; i < intvec.size(); ++i)
+			REQUIRE(intvec[i] == i);
+	}
+
+	SECTION("qerase(n) replaces n-th element with last and deletes it")
+	{
+		for (size_t i = 0; i < intvec.size(); ++i)
+			REQUIRE(intvec[i] == i);
+
+		const size_t height = intvec.size() >> 1;
+		const size_t last = intvec.size() - 1;
+		intvec.qerase(height);
+		REQUIRE(intvec.find(height) == -1);
+
+		for (size_t i = 0; i < height; ++i)
+			REQUIRE(intvec[i] == i);
+		REQUIRE(intvec[height] == last);
+		for (size_t i = height + 1; i < intvec.size(); ++i)
+			REQUIRE(intvec[i] == i);
+	}
+
+	SECTION("Find returns index of value; -1 if not found")
+	{
+		REQUIRE(intvec.find(-1) == -1);
+		size_t i = 0;
+		for (; i < intvec.size(); ++i)
+		{
+			const int needle = intvec.find(i);
+			REQUIRE(needle >= 0);
+			REQUIRE(static_cast<size_t>(i) == i);
+		}
+		REQUIRE(intvec.find(i) == -1);
+	}
+
+	SECTION("Reserving capacity less than size() tightens the vector")
+	{
+		intvec.reserve(0);
+		REQUIRE(intvec.capacity() == kTestSize);
+		REQUIRE(intvec.size() == kTestSize);
+		for (size_t i = 0; i < kTestSize; ++i)
+			REQUIRE(intvec[i] == i);
+	}
+
+	SECTION("Reserving capacity greater than size()")
+	{
+		const size_t cap = kTestSize + 10;
+		intvec.reserve(cap);
+		REQUIRE(intvec.capacity() == cap);
+		REQUIRE(intvec.size() == kTestSize);
+		for (size_t i = kTestSize; i < cap; ++i)
+			intvec.push_back(i);
+		REQUIRE(intvec.capacity() == cap);
+		REQUIRE(intvec.size() == cap);
+	}
+
+	SECTION("Assignment")
+	{
+		for (auto &i : intvec)
+			i = 0xb00bbabe;
+		for (const auto &i : intvec)
+			REQUIRE(i == 0xb00bbabe);
+	}
 }
 
-TEST_F(VectorTest, Assignment)
-{
-	for (auto &i : intvec)
-		i = 0xb00bbabe;
-	for (const auto &i : intvec)
-		ASSERT_EQ(0xb00bbabe, i);
-}
-
-TEST(VectorPerfTest, MoveSemantics)
+TEST_CASE("Vector implements move semantics", "[vector]")
 {
 	VectorConstructionTest obj;
-	ASSERT_TRUE(obj.was_constructed);
-	ASSERT_FALSE(obj.was_copied);
-	ASSERT_FALSE(obj.was_moved);
+	REQUIRE(obj.was_constructed);
+	REQUIRE_FALSE(obj.was_copied);
+	REQUIRE_FALSE(obj.was_moved);
 
 	Vector<VectorConstructionTest> vec;
 
 	vec.push_back(obj);
-	ASSERT_TRUE(vec[0].was_constructed);
-	ASSERT_TRUE(vec[0].was_copied);
-	ASSERT_FALSE(vec[0].was_moved);
+	REQUIRE(vec[0].was_constructed);
+	REQUIRE(vec[0].was_copied);
+	REQUIRE_FALSE(vec[0].was_moved);
 
 	vec.push_back(std::move(obj));
-	ASSERT_TRUE(vec[1].was_constructed);
-	ASSERT_FALSE(vec[1].was_copied);
-	ASSERT_TRUE(vec[1].was_moved);
+	REQUIRE(vec[1].was_constructed);
+	REQUIRE_FALSE(vec[1].was_copied);
+	REQUIRE(vec[1].was_moved);
 
 	vec.push_back(VectorConstructionTest());
-	ASSERT_TRUE(vec[2].was_constructed);
-	ASSERT_FALSE(vec[2].was_copied);
-	ASSERT_TRUE(vec[2].was_moved);
+	REQUIRE(vec[2].was_constructed);
+	REQUIRE_FALSE(vec[2].was_copied);
+	REQUIRE(vec[2].was_moved);
 
 	vec.emplace_back();
-	ASSERT_TRUE(vec[3].was_constructed);
-	ASSERT_FALSE(vec[3].was_copied);
-	ASSERT_FALSE(vec[3].was_moved);
+	REQUIRE(vec[3].was_constructed);
+	REQUIRE_FALSE(vec[3].was_copied);
+	REQUIRE_FALSE(vec[3].was_moved);
 }

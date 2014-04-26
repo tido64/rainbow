@@ -20,7 +20,7 @@
 
 // For tests of File, see DataTest::SaveAndLoad.
 
-TEST(PathTest, CreateDirectories)
+TEST_CASE("Create directories", "[path]")
 {
 	Random::seed(0);
 	char random[32];
@@ -30,7 +30,7 @@ TEST(PathTest, CreateDirectories)
 	const size_t end = strlen(path) - 1;
 	path += "1" kPathSeparator "2" kPathSeparator "3" kPathSeparator "4" kPathSeparator;
 
-	ASSERT_EQ(0, path.create());
+	REQUIRE(path.create() == 0);
 	struct stat sb;
 	for (size_t i = strlen(path) - 1; i > end; --i)
 	{
@@ -38,56 +38,57 @@ TEST(PathTest, CreateDirectories)
 		{
 			char &c = const_cast<char&>(path[i]);
 			c = '\0';
-			ASSERT_EQ(0, stat(path, &sb));
-			ASSERT_EQ(static_cast<unsigned int>(S_IFDIR),
-			          static_cast<unsigned int>(sb.st_mode & S_IFDIR));
+			REQUIRE(stat(path, &sb) == 0);
+			REQUIRE((sb.st_mode & S_IFDIR) == S_IFDIR);
 			rmdir(path);
 		}
 	}
 }
 
-TEST(PathTest, CurrentPath)
+TEST_CASE("Current path", "[path]")
 {
 	char cwd[256];
-	ASSERT_EQ(cwd, getcwd(cwd, sizeof(cwd)));
-	ASSERT_STREQ(cwd, Path::current());
+	REQUIRE(getcwd(cwd, sizeof(cwd)) == cwd);
+	REQUIRE(strcmp(Path::current(), cwd) == 0);
 	const Path path;
-	ASSERT_STREQ(cwd, path);
+	REQUIRE(strcmp(path, cwd) == 0);
 }
 
-TEST(PathTest, RelativeToCurrent)
+// TODO: The following newlines were added for Catch to create unique names.
+
+TEST_CASE("Relative to current path", "[path]")
 {
 	char cwd[256];
-	ASSERT_EQ(cwd, getcwd(cwd, sizeof(cwd)));
+	REQUIRE(getcwd(cwd, sizeof(cwd)) == cwd);
 	strcat(cwd, kPathSeparator kTestFileName);
 
 	const Path path(kTestFileName, Path::RelativeTo::CurrentPath);
-	ASSERT_STREQ(cwd, path);
+	REQUIRE(strcmp(path, cwd) == 0);
 }
 
-TEST(PathTest, RelativeToRoot)
+TEST_CASE("Relative to root", "[path]")
 {
 	const Path path(kTestPath, Path::RelativeTo::Root);
-	ASSERT_STREQ(kTestPath, path);
+	REQUIRE(strcmp(path, kTestPath) == 0);
 }
 
-TEST(PathTest, SetPath)
+TEST_CASE("Set path", "[path]")
 {
 	Path path;
-	ASSERT_STRNE(kTestPath, path);
+	REQUIRE(strcmp(path, kTestPath) != 0);
 	path = kTestPath;
-	ASSERT_STREQ(kTestPath, path);
+	REQUIRE(strcmp(path, kTestPath) == 0);
 }
 
-TEST(PathTest, AppendPathComponent)
+TEST_CASE("Appends path components", "[path]")
 {
 	Path path;
 	path = kTestPath;
-	ASSERT_STREQ(kTestPath, path);
+	REQUIRE(strcmp(path, kTestPath) == 0);
 	path += kTestFileName;
-	ASSERT_STREQ(kTestPath kPathSeparator kTestFileName, path);
+	REQUIRE(strcmp(path, kTestPath kPathSeparator kTestFileName) == 0);
 	path += kPathSeparator;
-	ASSERT_STREQ(kTestPath kPathSeparator kTestFileName kPathSeparator kPathSeparator, path);
+	REQUIRE(strcmp(path, kTestPath kPathSeparator kTestFileName kPathSeparator kPathSeparator) == 0);
 	path += kTestFileName;
-	ASSERT_STREQ(kTestPath kPathSeparator kTestFileName kPathSeparator kPathSeparator kTestFileName, path);
+	REQUIRE(strcmp(path, kTestPath kPathSeparator kTestFileName kPathSeparator kPathSeparator kTestFileName) == 0);
 }

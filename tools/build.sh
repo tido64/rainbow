@@ -48,13 +48,13 @@ case $1 in
 		echo "Syntax: $(basename $0) [analyze|android|clean|linux|mac|windows] [option ...]"
 		echo
 		echo "Options:"
-		echo "  -DGTEST=1                Enable Google C++ Testing Framework"
+		echo "  -DUNIT_TESTS=1           Enable unit tests"
 		echo "  -DUSE_FMOD_STUDIO=1      Enable FMOD Studio audio engine"
 		echo "  -DUSE_HEIMDALL=1         Enable Heimdall debugging facilities"
 		echo "  -DUSE_PHYSICS=1          Enable physics module (Box2D)"
 		echo
-		echo "  CMake options are passed directly to CMake so you can set variables like"
-		echo "  -DCMAKE_BUILD_TYPE=<type> among others."
+		echo "CMake options are passed directly to CMake so you can set variables like"
+		echo "-DCMAKE_BUILD_TYPE=<type> among others."
 		echo
 		echo "Environment variables:"
 		echo "  CC                       C compiler command"

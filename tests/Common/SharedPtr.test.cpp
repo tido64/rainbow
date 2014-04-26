@@ -17,52 +17,54 @@ namespace
 	};
 }
 
-TEST(SharedPtrTest, Default)
+// TODO: The following newlines were added for Catch to create unique names.
+
+TEST_CASE("SharedPtr is empty by default", "[sharedptr]")
 {
 	SharedPtr<SharedPtrTestStruct> empty;
-	ASSERT_EQ(nullptr, empty.get());
+	REQUIRE(empty.get() == nullptr);
 }
 
-TEST(SharedPtrTest, Counting)
+TEST_CASE("SharedPtr manages reference counted objects", "[sharedptr]")
 {
 	bool foo_deleted = false;
 	SharedPtrTestStruct *foo = new SharedPtrTestStruct(foo_deleted);
 	{
 		SharedPtr<SharedPtrTestStruct> foo_ptr1(foo);
-		ASSERT_EQ(foo, foo_ptr1.get());
-		ASSERT_EQ(1u, foo_ptr1.ref_count());
+		REQUIRE(foo_ptr1.get() == foo);
+		REQUIRE(foo_ptr1.ref_count() == 1u);
 		{
 			SharedPtr<SharedPtrTestStruct> foo_ptr2(foo);
-			ASSERT_EQ(foo, foo_ptr2.get());
-			ASSERT_EQ(2u, foo_ptr1.ref_count());
-			ASSERT_EQ(2u, foo_ptr2.ref_count());
+			REQUIRE(foo_ptr2.get() == foo);
+			REQUIRE(foo_ptr1.ref_count() == 2u);
+			REQUIRE(foo_ptr2.ref_count() == 2u);
 			{
 				SharedPtr<SharedPtrTestStruct> foo_ptr3(foo_ptr1);
-				ASSERT_EQ(foo, foo_ptr3.get());
-				ASSERT_EQ(3u, foo_ptr1.ref_count());
-				ASSERT_EQ(3u, foo_ptr2.ref_count());
-				ASSERT_EQ(3u, foo_ptr3.ref_count());
+				REQUIRE(foo_ptr3.get() == foo);
+				REQUIRE(foo_ptr1.ref_count() == 3u);
+				REQUIRE(foo_ptr2.ref_count() == 3u);
+				REQUIRE(foo_ptr3.ref_count() == 3u);
 			}
-			ASSERT_EQ(2u, foo_ptr1.ref_count());
-			ASSERT_EQ(2u, foo_ptr2.ref_count());
+			REQUIRE(foo_ptr1.ref_count() == 2u);
+			REQUIRE(foo_ptr2.ref_count() == 2u);
 		}
-		ASSERT_EQ(1u, foo_ptr1.ref_count());
-		ASSERT_FALSE(foo_deleted);
+		REQUIRE(foo_ptr1.ref_count() == 1u);
+		REQUIRE_FALSE(foo_deleted);
 	}
-	ASSERT_TRUE(foo_deleted);
+	REQUIRE(foo_deleted);
 };
 
-TEST(SharedPtrTest, AssignNullPtr)
+TEST_CASE("SharedPtr deletes managed object when reset", "[sharedptr]")
 {
 	bool foo_deleted = false;
 	SharedPtr<SharedPtrTestStruct> foo_ptr(
 	    new SharedPtrTestStruct(foo_deleted));
 	foo_ptr = nullptr;
-	ASSERT_EQ(nullptr, foo_ptr.get());
-	ASSERT_TRUE(foo_deleted);
+	REQUIRE(foo_ptr.get() == nullptr);
+	REQUIRE(foo_deleted);
 };
 
-TEST(SharedPtrTest, AssignRawPtr)
+TEST_CASE("SharedPtr increments the counter on managed objects", "[sharedptr]")
 {
 	bool foo_deleted = false;
 	bool bar_deleted = false;
@@ -71,21 +73,21 @@ TEST(SharedPtrTest, AssignRawPtr)
 	{
 		SharedPtr<SharedPtrTestStruct> foo_ptr(foo);
 		SharedPtr<SharedPtrTestStruct> bar_ptr(bar);
-		ASSERT_EQ(foo, foo_ptr.get());
-		ASSERT_EQ(bar, bar_ptr.get());
-		ASSERT_EQ(1u, foo_ptr.ref_count());
-		ASSERT_EQ(1u, bar_ptr.ref_count());
+		REQUIRE(foo_ptr.get() == foo);
+		REQUIRE(bar_ptr.get() == bar);
+		REQUIRE(foo_ptr.ref_count() == 1u);
+		REQUIRE(bar_ptr.ref_count() == 1u);
 		bar_ptr = foo;
-		ASSERT_EQ(foo, bar_ptr.get());
-		ASSERT_EQ(foo, foo_ptr.get());
-		ASSERT_EQ(2u, bar_ptr.ref_count());
-		ASSERT_EQ(2u, foo_ptr.ref_count());
-		ASSERT_TRUE(bar_deleted);
+		REQUIRE(bar_ptr.get() == foo);
+		REQUIRE(foo_ptr.get() == foo);
+		REQUIRE(bar_ptr.ref_count() == 2u);
+		REQUIRE(foo_ptr.ref_count() == 2u);
+		REQUIRE(bar_deleted);
 	}
-	ASSERT_TRUE(foo_deleted);
+	REQUIRE(foo_deleted);
 };
 
-TEST(SharedPtrTest, AssignSharedPtr)
+TEST_CASE("SharedPtr can be assigned another SharedPtr", "[sharedptr]")
 {
 	bool foo_deleted = false;
 	bool bar_deleted = false;
@@ -94,60 +96,60 @@ TEST(SharedPtrTest, AssignSharedPtr)
 	{
 		SharedPtr<SharedPtrTestStruct> foo_ptr(foo);
 		SharedPtr<SharedPtrTestStruct> bar_ptr(bar);
-		ASSERT_EQ(foo, foo_ptr.get());
-		ASSERT_EQ(bar, bar_ptr.get());
-		ASSERT_EQ(1u, foo_ptr.ref_count());
-		ASSERT_EQ(1u, bar_ptr.ref_count());
+		REQUIRE(foo_ptr.get() == foo);
+		REQUIRE(bar_ptr.get() == bar);
+		REQUIRE(foo_ptr.ref_count() == 1u);
+		REQUIRE(bar_ptr.ref_count() == 1u);
 		bar_ptr = foo_ptr;
-		ASSERT_EQ(foo, bar_ptr.get());
-		ASSERT_EQ(foo, foo_ptr.get());
-		ASSERT_EQ(2u, bar_ptr.ref_count());
-		ASSERT_EQ(2u, foo_ptr.ref_count());
-		ASSERT_TRUE(bar_deleted);
+		REQUIRE(bar_ptr.get() == foo);
+		REQUIRE(foo_ptr.get() == foo);
+		REQUIRE(bar_ptr.ref_count() == 2u);
+		REQUIRE(foo_ptr.ref_count() == 2u);
+		REQUIRE(bar_deleted);
 	}
-	ASSERT_TRUE(foo_deleted);
+	REQUIRE(foo_deleted);
 };
 
-TEST(SharedPtrTest, AssignSelf)
+TEST_CASE("SharedPtr can assign itself", "[sharedptr]")
 {
 	bool foo_deleted = false;
 	SharedPtrTestStruct *foo = new SharedPtrTestStruct(foo_deleted);
 	{
 		SharedPtr<SharedPtrTestStruct> foo_ptr(foo);
-		ASSERT_EQ(foo, foo_ptr.get());
-		ASSERT_EQ(1u, foo_ptr.ref_count());
+		REQUIRE(foo_ptr.get() == foo);
+		REQUIRE(foo_ptr.ref_count() == 1u);
 		foo_ptr = foo;
-		ASSERT_FALSE(foo_deleted);
-		ASSERT_EQ(foo, foo_ptr.get());
-		ASSERT_EQ(1u, foo_ptr.ref_count());
+		REQUIRE_FALSE(foo_deleted);
+		REQUIRE(foo_ptr.get() == foo);
+		REQUIRE(foo_ptr.ref_count() == 1u);
 		foo_ptr = foo_ptr;
-		ASSERT_FALSE(foo_deleted);
-		ASSERT_EQ(foo, foo_ptr.get());
-		ASSERT_EQ(1u, foo_ptr.ref_count());
+		REQUIRE_FALSE(foo_deleted);
+		REQUIRE(foo_ptr.get() == foo);
+		REQUIRE(foo_ptr.ref_count() == 1u);
 	}
-	ASSERT_TRUE(foo_deleted);
+	REQUIRE(foo_deleted);
 };
 
-TEST(SharedPtrTest, MoveSemantics)
+TEST_CASE("SharedPtr can move other SharedPtrs", "[sharedptr]")
 {
 	bool foo_deleted = false;
 	SharedPtrTestStruct *foo = new SharedPtrTestStruct(foo_deleted);
 	{
 		SharedPtr<SharedPtrTestStruct> foo_ptr(foo);
-		ASSERT_EQ(foo, foo_ptr.get());
-		ASSERT_EQ(1u, foo_ptr.ref_count());
+		REQUIRE(foo_ptr.get() == foo);
+		REQUIRE(foo_ptr.ref_count() == 1u);
 
 		SharedPtr<SharedPtrTestStruct> bar_ptr(std::move(foo_ptr));
-		ASSERT_FALSE(foo_deleted);
-		ASSERT_EQ(nullptr, foo_ptr.get());
-		ASSERT_EQ(foo, bar_ptr.get());
-		ASSERT_EQ(1u, bar_ptr.ref_count());
+		REQUIRE_FALSE(foo_deleted);
+		REQUIRE(foo_ptr.get() == nullptr);
+		REQUIRE(bar_ptr.get() == foo);
+		REQUIRE(bar_ptr.ref_count() == 1u);
 
 		foo_ptr = std::move(bar_ptr);
-		ASSERT_FALSE(foo_deleted);
-		ASSERT_EQ(nullptr, bar_ptr.get());
-		ASSERT_EQ(foo, foo_ptr.get());
-		ASSERT_EQ(1u, foo_ptr.ref_count());
+		REQUIRE_FALSE(foo_deleted);
+		REQUIRE(bar_ptr.get() == nullptr);
+		REQUIRE(foo_ptr.get() == foo);
+		REQUIRE(foo_ptr.ref_count() == 1u);
 	}
-	ASSERT_TRUE(foo_deleted);
+	REQUIRE(foo_deleted);
 };

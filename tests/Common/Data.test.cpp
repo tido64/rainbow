@@ -5,36 +5,29 @@
 #include "Common/Data.h"
 #include "FileSystem/Path.h"
 
-class DataTest : public testing::Test
-{
-protected:
-	const char *const file;
-	const char *const secret;
+// TODO: The following newlines were added for Catch to create unique names.
 
-	DataTest()
-	    : file("Rainbow__Data.test"), secret("It's a double-rainbow!\n") { }
-};
 
-TEST_F(DataTest, Copy)
+TEST_CASE("Data manages data and performs disk operations", "[data]")
 {
+	const char secret[] = "It's a double-rainbow!\n";
 	Data blob(secret, strlen(secret), Data::kDataReference);
-	ASSERT_EQ(strlen(secret), blob.size());
-	ASSERT_STREQ(secret, blob);
-}
 
-TEST_F(DataTest, SaveAndLoad)
-{
+	SECTION("Data manages arbitrary data blobs")
 	{
-		Data blob(secret, strlen(secret), Data::kDataReference);
-		ASSERT_EQ(strlen(secret), blob.size());
-		ASSERT_STREQ(secret, blob);
-		ASSERT_TRUE(blob.save(file));
+		REQUIRE(blob.size() == strlen(secret));
+		REQUIRE(strcmp(blob, secret) == 0);
 	}
+
+	SECTION("Data writes and reads from disk")
 	{
-		const Data &blob = Data::load_document(file);
-		ASSERT_TRUE(blob);
-		ASSERT_STREQ(secret, blob);
+		const char file[] = "Rainbow__Data.test";
+
+		REQUIRE(blob.save(file));
+		const Data &from_disk = Data::load_document(file);
+		REQUIRE(from_disk);
+		REQUIRE(strcmp(from_disk, secret) == 0);
+		Path path(file, Path::RelativeTo::UserDataPath);
+		remove(path);
 	}
-	Path path(file, Path::RelativeTo::UserDataPath);
-	remove(path);
 }

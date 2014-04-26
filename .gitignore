@@ -26,4 +26,3 @@ lib/TestFlight/
 lib/boost/
 lib/dSFMT/check.sh
 lib/dSFMT/test.c
-lib/gtest/

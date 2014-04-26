@@ -6,8 +6,8 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${LOCAL_MODULE_PATH})
 set(LOCAL_LIBRARY ${PROJECT_SOURCE_DIR}/lib)
 set(THIRD_PARTY ${PROJECT_SOURCE_DIR}/src/ThirdParty)
 
-option(GTEST "Compile with Google C++ Testing Framework" OFF)
-#option(PROFILING "Compile with profiling" OFF)
+#option(PROFILING   "Compile with profiling" OFF)
+option(UNIT_TESTS  "Compile unit tests" OFF)
 
 # Features
 option(USE_FMOD_STUDIO  "Enable FMOD Studio audio engine" ON)
@@ -43,11 +43,11 @@ include(${LOCAL_MODULE_PATH}/Lua.cmake)
 include(${LOCAL_MODULE_PATH}/SDL2.cmake)
 include(${LOCAL_MODULE_PATH}/zlib.cmake)
 include(${LOCAL_MODULE_PATH}/libpng.cmake)
-if(GTEST)
-	include(${LOCAL_MODULE_PATH}/gtest.cmake)
-endif()
 
 # Features
+if(UNIT_TESTS)
+	add_definitions(-DRAINBOW_TEST)
+endif()
 if(USE_HEIMDALL)
 	add_definitions(-DUSE_HEIMDALL)
 endif()
@@ -62,10 +62,9 @@ set_property(TARGET rainbow APPEND PROPERTY INCLUDE_DIRECTORIES
 	${SDL2_INCLUDE_DIR}
 	${ZLIB_INCLUDE_DIR}
 	${AUDIO_INCLUDE_DIRS}
-	${GTEST_INCLUDE_DIRS}
 )
 target_link_libraries(rainbow
-	${GTEST_LIBRARY} freetype lua ${PHYSICS_LIBRARY} png ${SDL2_LIBRARIES}
+	freetype lua ${PHYSICS_LIBRARY} png ${SDL2_LIBRARIES}
 	${AUDIO_LIBRARIES} ${OPENGL_ext_LIBRARY} ${OPENGL_gl_LIBRARY}
 	${ZLIB_LIBRARY} ${PLATFORM_LIBRARIES}
 )

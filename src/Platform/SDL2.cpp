@@ -101,8 +101,7 @@ int main(int argc, char *argv[])
 		{
 		#ifdef RAINBOW_TEST
 			Path::set_current(Path());
-			testing::InitGoogleTest(&argc, argv);
-			return RUN_ALL_TESTS();
+			return Catch::Session().run(argc, argv);
 		#else
 			return 0;
 		#endif

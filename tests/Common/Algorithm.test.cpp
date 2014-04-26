@@ -4,60 +4,60 @@
 
 #include "Common/Algorithm.h"
 
-using Rainbow::equal;
-
-TEST(AlgorithmTest, ApproximatelyEqualFloats)
+TEST_CASE("floats are approximately equal", "[algorithm]")
 {
-	ASSERT_TRUE(equal(0.0f, 0.0f));
-	ASSERT_FALSE(equal(0.0f, 0.00001f));
-	ASSERT_FALSE(equal(0.0f, -0.00001f));
-	ASSERT_TRUE(equal(3.14285714f, 22.0f / 7.0f));
+	REQUIRE(Rainbow::equal(0.0f, 0.0f));
+	REQUIRE_FALSE(Rainbow::equal(0.0f, 0.00001f));
+	REQUIRE_FALSE(Rainbow::equal(0.0f, -0.00001f));
+	REQUIRE(Rainbow::equal(3.14285714f, 22.0f / 7.0f));
 }
 
-TEST(AlgorithmTest, DegreesToRadians)
+TEST_CASE("Converts radians to degrees", "[algorithm]")
 {
-	ASSERT_TRUE(equal(static_cast<float>(kPi), Rainbow::radians(Rainbow::degrees(kPi))));
+	REQUIRE(Rainbow::equal(static_cast<float>(kPi),
+	                       Rainbow::radians(Rainbow::degrees(kPi))));
 }
 
-TEST(AlgorithmTest, IsPowerOfTwo)
+TEST_CASE("Determines whether an integer is a power of two", "[algorithm]")
 {
 	unsigned int p = 1;
 	for (unsigned int i = 0; i < 100; ++i)
 	{
 		if (i == p)
 		{
-			ASSERT_TRUE(Rainbow::is_pow2(i));
+			REQUIRE(Rainbow::is_pow2(i));
 			p *= 2;
+			continue;
 		}
-		else
-			ASSERT_FALSE(Rainbow::is_pow2(i));
+		REQUIRE_FALSE(Rainbow::is_pow2(i));
 	}
 }
 
-TEST(AlgorithmTest, Max)
+TEST_CASE("Returns the biggest value", "[algorithm]")
 {
-	ASSERT_EQ(2, Rainbow::max(1, 2));
-	ASSERT_EQ(1, Rainbow::max(1, 1));
-	ASSERT_EQ(1, Rainbow::max(1, 0));
+	REQUIRE(Rainbow::max(1, 2) == 2);
+	REQUIRE(Rainbow::max(1, 1) == 1);
+	REQUIRE(Rainbow::max(1, 0) == 1);
 }
 
-TEST(AlgorithmTest, NextPowerOfTwo)
+TEST_CASE("Returns the next power of two", "[algorithm]")
 {
 	unsigned int p = 1;
 	for (unsigned int i = 1; i < 100; ++i)
 	{
-		ASSERT_EQ(p, Rainbow::next_pow2(i));
+		REQUIRE(Rainbow::next_pow2(i) == p);
 		if (i == p)
 			p *= 2;
 	}
 }
 
-TEST(AlgorithmTest, RadiansToDegrees)
+TEST_CASE("Converts degrees to radians", "[algorithm]")
 {
-	ASSERT_TRUE(equal(0.05483f, Rainbow::degrees(Rainbow::radians(0.05483f))));
+	REQUIRE(Rainbow::equal(0.05483f,
+	                       Rainbow::degrees(Rainbow::radians(0.05483f))));
 }
 
-TEST(AlgorithmTest, UTF8ToUTF32)
+TEST_CASE("Converts UTF-8 characters to UTF-32", "[algorithm]")
 {
 	const unsigned int kInvalidCharacter = 0xb00bbabe;
 	const unsigned char utf8[] = {
@@ -96,11 +96,11 @@ TEST(AlgorithmTest, UTF8ToUTF32)
 		const Rainbow::utf_t &c = Rainbow::utf8_decode(l);
 		if (c.bytes == 0)
 		{
-			ASSERT_EQ(utf32[i], kInvalidCharacter);
+			REQUIRE(utf32[i] == kInvalidCharacter);
 			++l;
 			continue;
 		}
-		ASSERT_EQ(utf32[i], c.code);
+		REQUIRE(utf32[i] == c.code);
 		l += c.bytes;
 	}
 }

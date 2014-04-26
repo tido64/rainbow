@@ -2,7 +2,8 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
-#include <gtest/gtest.h>
+#define CATCH_CONFIG_RUNNER
+#include <Catch/single_include/catch.hpp>
 
 #include "Common/Algorithm.test.cpp"
 #include "Common/Chrono.test.cpp"
