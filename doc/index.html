@@ -58,7 +58,8 @@
                 <li><a href="#timer">Timer</a></li>
                 <li><a href="#transition">Transition</a></li>
                 <li class="divider"></li>
-                <li><a href="http://box2d.org/documentation/">Box2D</a></li>
+                <li><a href="#box2d">Box2D</a></li>
+                <li><a href="#fmod-studio">FMOD Studio</a></li>
               </ul>
             </li>
           </ul>
@@ -90,7 +91,8 @@
   * [Timer](#timer)
   * [Transition](#transition)
   * &mdash;
-  * [Box2D](http://box2d.org/documentation/)
+  * [Box2D](#box2d)
+  * [FMOD Studio](#fmod-studio)
 
 ## rainbow.animation
 
@@ -1052,6 +1054,112 @@ Rotates a drawable to given angle.
 | <var>method</var> | The equation to use for the transition. |
 
 Scales a drawable from a given start factor to a given final factor.
+
+## Box2D
+
+First of all, you'll find the official [Box2D user manual here](http://box2d.org/documentation/).
+
+There isn't much to say about Rainbow's Box2D wrappers. You can easily use the official doc and replace all occurrences of ``b2*`` with ``b2.*`` in Lua. For instance, to create a dynamic body and centre it on the screen:
+
+    local world = b2.World()
+    local bodyDef = b2.BodyDef()
+    bodyDef.body = b2.dynamicBody
+    bodyDef.position.x = 10
+    bodyDef.position.y = 10
+    local body = world:createBody(bodyDef)
+    local x, y = body:getPosition()  -- (2)
+    # x == bodyDef.position.x
+    # y == bodyDef.position.y
+    local screen = rainbow.platform.screen
+    body:setTransform(screen.width * 0.5, screen.height * 0.5, 0)  -- (1)
+
+You'll notice that we haven't wrapped ``b2Vec2``. So for methods that take those, you just pass ``x`` and ``y`` individually (1). Likewise, for return values, use the comma operator to unpack the values into separate variables (2).
+
+## FMOD Studio
+
+### FMOD.loadBank(path)
+
+| Parameter | Description |
+|-----------|-------------|
+| <var>path</var> | Name of the file on disk. |
+
+Loads a Studio event bank from a file.
+
+### FMOD.unloadBank(&lt;bank&gt;)
+
+| Parameter | Description |
+|-----------|-------------|
+| <var>bank</var> | Sound bank to unload. |
+
+Unloads the bank and all of its data.
+
+### FMOD.unloadAll()
+
+Unloads all currently loaded banks.
+
+### FMOD.createInstance(event)
+
+| Parameter | Description |
+|-----------|-------------|
+| <var>event</var> | Address of the event to create an instance of. Path must be in the following format: "event:/UI/Cancel". |
+
+Creates a playable instance of the event.
+
+### &lt;EventInstance&gt;:getVolume()
+
+Returns the volume level set by the API on the event instance.
+
+### &lt;EventInstance&gt;:setVolume(volume)
+
+| Parameter | Description |
+|-----------|-------------|
+| <var>volume</var> | The volume as a linear gain. ``0`` = silent, ``1`` = full volume. |
+
+Sets the volume level on the event instance.
+
+### &lt;EventInstance&gt;:getPitch()
+
+Returns the pitch multiplier set by the API on the event instance.
+
+### &lt;EventInstance&gt;:setPitch(pitch)
+
+| Parameter | Description |
+|-----------|-------------|
+| <var>pitch</var> | The pitch multiplier. ``1`` = normal pitch. |
+
+Sets the pitch multiplier for the event instance.
+
+### &lt;EventInstance&gt;:getPaused()
+
+Returns the pause state of the event instance.
+
+### &lt;EventInstance&gt;:setPaused(paused)
+
+| Parameter | Description |
+|-----------|-------------|
+| <var>paused</var> | The desired pause state. ``true`` = pause, ``false`` = unpause. |
+
+Sets the pause state of the event instance.
+
+### &lt;EventInstance&gt;:start()
+
+Starts playback of the event instance.
+
+### &lt;EventInstance&gt;:stop()
+
+Stops playback of the event instance.
+
+### &lt;EventInstance&gt;:getTimelinePosition()
+
+Returns the position of the event instance's timeline playback cursor.
+
+### &lt;EventInstance&gt;:setTimelinePosition(position)
+
+| Parameter | Description |
+|-----------|-------------|
+| <var>position</var> | Desired timeline position in milliseconds. |
+
+Sets the position of the event instance's timeline playback cursor.
 
     </div>
     <footer class="container">

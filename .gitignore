@@ -23,6 +23,5 @@ lib/**/html/
 lib/**/makefile
 lib/SDL/
 lib/TestFlight/
-lib/boost/
 lib/dSFMT/check.sh
 lib/dSFMT/test.c

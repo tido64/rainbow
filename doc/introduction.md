@@ -30,8 +30,9 @@ and sets the window size (Linux/Mac OS X/Windows).
 
 	resolution = { width, height }
 	-- Specifies the preferred screen resolution or window size. It also
-	-- determines whether we are in landscape or portrait mode. This parameter
-	-- is ignored on smartphones/tablets.
+	-- determines whether we are in landscape or portrait mode. On
+	-- smartphones/tablets, width and height have no meaning as the whole screen
+	-- will always be used.
 
 	suspend_on_focus_lost = false|true
 	-- Specifies whether to suspend when focus is lost. This parameter is
