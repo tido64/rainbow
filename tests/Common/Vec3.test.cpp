@@ -26,9 +26,9 @@ TEST_CASE("Vec3s can be assigned", "[vec3]")
 	Vec3f v0;
 	Vec3f v1(4.0f, 5.0f, 6.0f);
 	v0 = v1;
-	REQUIRE(Rainbow::equal(v0.x, 4.0f));
-	REQUIRE(Rainbow::equal(v0.y, 5.0f));
-	REQUIRE(Rainbow::equal(v0.z, 6.0f));
+	REQUIRE(Rainbow::isequal(v0.x, 4.0f));
+	REQUIRE(Rainbow::isequal(v0.y, 5.0f));
+	REQUIRE(Rainbow::isequal(v0.z, 6.0f));
 }
 
 TEST_CASE("Vec3s can be added to one another", "[vec3]")
@@ -36,9 +36,9 @@ TEST_CASE("Vec3s can be added to one another", "[vec3]")
 	Vec3f v0(1.0f, 2.0f, 3.0f);
 	Vec3f v1(4.0f, 5.0f, 6.0f);
 	v0 += v1;
-	REQUIRE(Rainbow::equal(v0.x, 5.0f));
-	REQUIRE(Rainbow::equal(v0.y, 7.0f));
-	REQUIRE(Rainbow::equal(v0.z, 9.0f));
+	REQUIRE(Rainbow::isequal(v0.x, 5.0f));
+	REQUIRE(Rainbow::isequal(v0.y, 7.0f));
+	REQUIRE(Rainbow::isequal(v0.z, 9.0f));
 }
 
 TEST_CASE("Vec3s can be subtracted from one another", "[vec3]")
@@ -46,9 +46,9 @@ TEST_CASE("Vec3s can be subtracted from one another", "[vec3]")
 	Vec3f v0(1, 2, 3);
 	Vec3f v1(4, 5, 6);
 	v0 -= v1;
-	REQUIRE(Rainbow::equal(v0.x, -3.0f));
-	REQUIRE(Rainbow::equal(v0.y, -3.0f));
-	REQUIRE(Rainbow::equal(v0.z, -3.0f));
+	REQUIRE(Rainbow::isequal(v0.x, -3.0f));
+	REQUIRE(Rainbow::isequal(v0.y, -3.0f));
+	REQUIRE(Rainbow::isequal(v0.z, -3.0f));
 }
 
 // TODO: The following newlines were added for Catch to create unique names.
@@ -57,7 +57,7 @@ TEST_CASE("Vec3s can be multiplied with each other", "[vec3]")
 {
 	Vec3f v0(1.0f, 2.0f, 3.0f);
 	v0 *= 2;
-	REQUIRE(Rainbow::equal(v0.x, 2.0f));
-	REQUIRE(Rainbow::equal(v0.y, 4.0f));
-	REQUIRE(Rainbow::equal(v0.z, 6.0f));
+	REQUIRE(Rainbow::isequal(v0.x, 2.0f));
+	REQUIRE(Rainbow::isequal(v0.y, 4.0f));
+	REQUIRE(Rainbow::isequal(v0.z, 6.0f));
 }

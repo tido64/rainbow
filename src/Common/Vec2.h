@@ -84,7 +84,7 @@ namespace Rainbow
 	template<>
 	inline bool Vec2<float>::is_zero() const
 	{
-		return equal(0.0f, this->x) && equal(0.0f, this->y);
+		return isequal(0.0f, this->x) && isequal(0.0f, this->y);
 	}
 }
 

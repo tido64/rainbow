@@ -52,13 +52,13 @@ namespace Rainbow
 	template<>
 	inline bool Vec3<double>::is_zero() const
 	{
-		return equal(0.0, this->x) && equal(0.0, this->y) && equal(0.0, this->z);
+		return isequal(0.0, this->x) && isequal(0.0, this->y) && isequal(0.0, this->z);
 	}
 
 	template<>
 	inline bool Vec3<float>::is_zero() const
 	{
-		return equal(0.0f, this->x) && equal(0.0f, this->y) && equal(0.0f, this->z);
+		return isequal(0.0f, this->x) && isequal(0.0f, this->y) && isequal(0.0f, this->z);
 	}
 }
 

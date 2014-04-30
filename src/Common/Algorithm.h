@@ -1,24 +1,19 @@
-/// Provides algorithms and mathematical methods.
-///
-/// \see http://graphics.stanford.edu/~seander/bithacks.html
-///
-/// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
-/// Distributed under the MIT License.
-/// (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
+// Provides algorithms and mathematical methods.
+//
+// \see http://graphics.stanford.edu/~seander/bithacks.html
+//
+// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Distributed under the MIT License.
+// (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
 #ifndef COMMON_ALGORITHM_H_
 #define COMMON_ALGORITHM_H_
 
 #include <cmath>
-#include <cstdlib>
 #include <limits>
 
 #include "Common/Constants.h"
 #include "Common/Functional.h"
-
-#ifdef _MSC_VER
-#	undef max
-#endif
 
 namespace Rainbow
 {
@@ -68,22 +63,19 @@ namespace Rainbow
 	/// Converts radians to degrees.
 	inline float degrees(const float r) pure;
 
-	/// Compares two floating point numbers and approximate.
-	/// \return \c true when approximately equal.
-	template<typename T>
-	bool equal(const T &a, const T &b) pure;
-
 	/// Fast inverse square root by 0x5f3759df.
 	inline float fast_invsqrt(float x) pure;
 
+	/// Compares two floating point numbers and approximate their equality.
+	/// \return \c true when approximately equal.
+	template<typename T>
+	bool isequal(const T a, const T b) pure;
+
 	/// Determines whether an integer is a power of 2.
-	inline bool is_pow2(const unsigned int i) pure;
+	inline bool ispow2(const unsigned int i) pure;
 
 	/// Low-pass filter.
 	inline float low_pass(const float value, const float low_pass) pure;
-
-	template<typename T>
-	const T& max(const T &a, const T &b) pure;
 
 	/// Calculates the next power of 2.
 	/// \note 0 is incorrectly considered a power of 2.
@@ -100,12 +92,6 @@ namespace Rainbow
 		return r * static_cast<float>(kRadian);
 	}
 
-	template<typename T>
-	bool equal(const T &a, const T &b)
-	{
-		return fabs(a - b) <= max(fabs(a), fabs(b)) * std::numeric_limits<T>::epsilon();
-	}
-
 	float fast_invsqrt(float x)
 	{
 		float xhalf = x * 0.5f;
@@ -115,7 +101,13 @@ namespace Rainbow
 		return x * (1.5f - (xhalf * x * x));
 	}
 
-	bool is_pow2(const unsigned int i)
+	template<typename T>
+	bool isequal(const T a, const T b)
+	{
+		return fabs(a - b) <= std::fmax(fabs(a), fabs(b)) * std::numeric_limits<T>::epsilon();
+	}
+
+	bool ispow2(const unsigned int i)
 	{
 		return i && !(i & (i - 1));
 	}
@@ -123,12 +115,6 @@ namespace Rainbow
 	float low_pass(const float value, const float low_pass)
 	{
 		return kLowPassAlpha * powf(10.0f, value * kLowPassAlpha) + (1.0f - kLowPassAlpha) * low_pass;
-	}
-
-	template<typename T>
-	const T& max(const T &a, const T &b)
-	{
-		return (a < b) ? b : a;
 	}
 
 	unsigned int next_pow2(unsigned int i)
@@ -154,9 +140,8 @@ namespace Rainbow
 		do
 		{
 			const unsigned int type = kUTF8DecoderTable[*str];
-			c.code = (state != kUTF8Accept)
-					? (*str & 0x3fu) | (c.code << 6)
-					: (0xff >> type) & (*str);
+			c.code = (state != kUTF8Accept) ? (*str & 0x3fu) | (c.code << 6)
+			                                : (0xff >> type) & (*str);
 			state = kUTF8DecoderTable[256 + state + type];
 			if (state == kUTF8Reject)
 				return utf_t();
