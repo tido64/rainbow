@@ -10,14 +10,11 @@
 #include <thread>
 
 #include "Common/Vector.h"
-#include "Thread/RWLock.h"
 #include "Thread/Semaphore.h"
 
 namespace Rainbow
 {
 	typedef std::function<void()> Task;
-
-	class Worker;
 
 	/// Thread pool. Dispatched tasks are run as soon as a thread is available
 	/// and may or may not be completed upon return. The only way to make sure
@@ -46,27 +43,20 @@ namespace Rainbow
 		/// Waits for all tasks to finish. Task queue is cleared after this call.
 		void finish();
 
-		/// Called by a worker to get or wait for a new task.
-		void report(Worker &thread);
-
 		/// Pre-allocates memory for \p num_tasks tasks in queue.
 		void reserve(const size_t num_tasks);
 
-	private:
-		bool terminate;                          ///< Whether the thread pool is being destructed.
-		const unsigned int num_threads;          ///< Number of threads in the pool.
-		std::atomic_uint next_task;              ///< Next task to grab.
-		std::unique_ptr<std::thread[]> threads;  ///< Pool of threads.
-		RWLock queue;                            ///< Readers/writer lock for locking the task queue.
-		Semaphore taskqueue;                     ///< Semaphore to wake up threads when tasks are queued.
-		Vector<Task> tasks;                      ///< Tasks in queue.
+		/// Called by a worker to get or wait for a new task.
+		Task wait_for_work();
 
-		/// Workaround for the case where some threads are put on hold for other
-		/// threads and these finish quickly, bringing the semaphore down to 0
-		/// (or below), preventing earlier threads from ever waking up to run
-		/// their task. Run before and after a wait for signal to make sure a
-		/// thread is not holding back other threads.
-		void post_if_starved();
+	private:
+		Vector<Task> tasks_;                      ///< Tasks in queue.
+		std::atomic_uint next_task_;              ///< Next task to grab.
+		bool shutting_down_;                      ///< Whether the thread pool is being shut down.
+		std::mutex mutex_;                        ///< Task queue mutex.
+		const unsigned int num_threads_;          ///< Number of threads in the pool.
+		Semaphore semaphore_;                     ///< Semaphore to wake up threads when tasks are queued.
+		std::unique_ptr<std::thread[]> threads_;  ///< Pool of threads.
 	};
 }
 

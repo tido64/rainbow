@@ -20,17 +20,17 @@ namespace Rainbow
 	/// one.
 	class Worker
 	{
-		friend class ThreadPool;
+		friend ThreadPool;
 
 	public:
 		~Worker();
 		void operator()();
 
 	private:
-		unsigned int count;     ///< Number of tasks completed. For debugging purposes.
-		const unsigned int id;  ///< Worker id.
-		ThreadPool *pool;       ///< The thread pool this worker belongs to.
-		Task task;              ///< Task to execute. \c nullptr if terminating.
+		unsigned int count_;     ///< Number of tasks completed. For debugging purposes.
+		const unsigned int id_;  ///< Worker id.
+		ThreadPool *pool_;       ///< The thread pool this worker belongs to.
+		Task task_;              ///< Task to execute. \c nullptr if terminating.
 
 		Worker(ThreadPool *pool, const unsigned int id);
 	};

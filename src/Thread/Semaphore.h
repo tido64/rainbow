@@ -20,41 +20,43 @@ namespace Rainbow
 	class Semaphore
 	{
 	public:
-		Semaphore(const int value) : count(value) { }
+		Semaphore() : count_(0) { }
+
+		void consume_one()
+		{
+			--count_;
+		}
 
 		void post()
 		{
-			if (++this->count <= 0)
-			{
-				std::lock_guard<std::mutex> lock(this->mutex);
-				this->cond.notify_one();
-			}
+			if (++count_ <= 0)
+				cond_.notify_one();
 		}
 
 		void post_all()
 		{
-			std::lock_guard<std::mutex> lock(this->mutex);
-			this->cond.notify_all();
+			cond_.notify_all();
 		}
 
-		void wait()
+		template<typename... Args>
+		void wait(Args... args)
 		{
-			if (--this->count < 0)
+			if (--count_ < 0)
 			{
-				std::unique_lock<std::mutex> lock(this->mutex);
-				this->cond.wait(lock);
+				std::unique_lock<std::mutex> lock(mutex_);
+				cond_.wait(lock, std::forward<Args>(args)...);
 			}
 		}
 
 		operator int() const
 		{
-			return this->count;
+			return count_;
 		}
 
 	private:
-		std::atomic_int count;
-		std::condition_variable cond;
-		std::mutex mutex;
+		std::atomic_int count_;
+		std::condition_variable cond_;
+		std::mutex mutex_;
 	};
 }
 

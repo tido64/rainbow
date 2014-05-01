@@ -2,29 +2,30 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
-#include "Thread/ThreadPool.h"
 #include "Thread/Worker.h"
+
+#include "Thread/ThreadPool.h"
 
 namespace Rainbow
 {
 	Worker::Worker(ThreadPool *pool, const unsigned int id)
-	    : count(0), id(id), pool(pool) { }
+	    : count_(0), id_(id), pool_(pool) { }
 
 	Worker::~Worker()
 	{
-		if (this->count > 0)
-			printf("Worker #%u did %u tasks\n", this->id, this->count);
+		if (count_ > 0)
+			printf("Worker #%u did %u tasks\n", id_, count_);
 	}
 
 	void Worker::operator()()
 	{
 		while (true)
 		{
-			this->pool->report(*this);
-			if (!this->task)
+			task_ = pool_->wait_for_work();
+			if (!task_)
 				break;
-			this->task();
-			++count;
+			task_();
+			++count_;
 		}
 	}
 }

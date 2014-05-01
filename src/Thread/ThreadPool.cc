@@ -2,106 +2,107 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
+#include "Thread/ThreadPool.h"
+
 #include <algorithm>
 
-#include "Thread/ThreadPool.h"
+#include "Common/Vector.h"
 #include "Thread/Worker.h"
 
 namespace Rainbow
 {
 	unsigned int ThreadPool::recommended_pool_size()
 	{
-		const unsigned int num_threads = std::thread::hardware_concurrency();
+		const auto num_threads = std::thread::hardware_concurrency();
 		return (num_threads == 0) ? 1 : num_threads - 1;
 	}
 
 	ThreadPool::ThreadPool(const unsigned int num_threads)
-	    : terminate(false), num_threads(num_threads), next_task(0), taskqueue(0)
+	    : next_task_(0), shutting_down_(false), num_threads_(num_threads),
+	      threads_(new std::thread[num_threads_])
 	{
 		R_DEBUG("[Rainbow] Number of hardware threads: %u\n",
 		        std::thread::hardware_concurrency());
 
-		this->threads.reset(new std::thread[this->num_threads]);
-		for (unsigned int i = 0; i < this->num_threads; ++i)
-			this->threads[i] = std::thread(Worker(this, i + 2));
+		unsigned int i = 1;
+		std::generate_n(threads_.get(), num_threads_, [this, &i]() {
+			return std::thread(Worker(this, ++i));
+		});
 	}
 
 	ThreadPool::~ThreadPool()
 	{
-		this->terminate = true;
-		this->taskqueue.post_all();
-		for (unsigned int i = 0; i < this->num_threads; ++i)
-			this->threads[i].join();
+		shutting_down_ = true;
+		semaphore_.post_all();
+		std::for_each(threads_.get(),
+		              threads_.get() + num_threads_,
+		              [](std::thread &t) { t.join(); });
 	}
 
 	void ThreadPool::clear()
 	{
-		this->tasks.clear();
-		this->next_task = 0;
+		tasks_.clear();
+		next_task_ = 0;
 	}
 
 	void ThreadPool::dispatch(const Task &task)
 	{
-		if (this->tasks.size() == this->tasks.capacity())
+		if (tasks_.size() == tasks_.capacity())
 		{
 			// Lock access to the task queue while the vector resizes.
-			this->queue.lock();
-			this->tasks.push_back(task);
-			this->queue.unlock();
+			std::lock_guard<std::mutex> lock(mutex_);
+			tasks_.push_back(task);
 		}
 		else
-			this->tasks.push_back(task);
-		this->taskqueue.post();
+			tasks_.push_back(task);
+		semaphore_.post();
 	}
 
 	void ThreadPool::finish()
 	{
 		// Run a few tasks while waiting for all threads to return.
-		while (this->taskqueue != static_cast<int>(this->num_threads) * -1)
+		const int idle = -static_cast<int>(num_threads_);
+		while (semaphore_ != idle)
 		{
-			for (size_t t = this->next_task++; t < this->tasks.size(); t = this->next_task++)
-				this->tasks[t]();
-		}
-		this->clear();
-	}
-
-	void ThreadPool::report(Worker &worker)
-	{
-		if (this->terminate)
-		{
-			this->taskqueue.post();
-			worker.task = nullptr;
-			return;
-		}
-		size_t t = this->next_task++;
-		while (t >= this->tasks.size())
-		{
-			this->post_if_starved();
-			this->taskqueue.wait();
-			if (this->terminate)
+			for (size_t t = next_task_++; t < tasks_.size(); t = next_task_++)
 			{
-				this->taskqueue.post();
-				worker.task = nullptr;
-				return;
+				semaphore_.consume_one();
+				tasks_[t]();
 			}
-			// Check whether the task queue was emptied.
-			if (t >= this->next_task)
-				t = this->next_task++;
 		}
-		this->post_if_starved();
-		this->queue.lock_shared();
-		worker.task = this->tasks[t];
-		this->queue.unlock_shared();
+		clear();
 	}
 
 	void ThreadPool::reserve(const size_t num_tasks)
 	{
-		this->tasks.reserve(num_tasks);
+		tasks_.reserve(num_tasks);
 	}
 
-	void ThreadPool::post_if_starved()
+	Task ThreadPool::wait_for_work()
 	{
-		if (this->taskqueue < 0 && this->next_task < this->tasks.size())
-			this->taskqueue.post();
+		if (shutting_down_)
+		{
+			semaphore_.post();
+			return {};
+		}
+		size_t t = next_task_++;
+		// Ensure thread doesn't wake up while there are no tasks. This may
+		// occur because the main thread consumes tasks before decrementing the
+		// semaphore.
+		while (t >= tasks_.size())
+		{
+			semaphore_.wait([this, &t] {
+				if (t >= next_task_)
+					t = next_task_++;
+				return shutting_down_ || t < tasks_.size();
+			});
+			if (shutting_down_)
+			{
+				semaphore_.post();
+				return {};
+			}
+		}
+		std::lock_guard<std::mutex> lock(mutex_);
+		return tasks_[t];
 	}
 }
