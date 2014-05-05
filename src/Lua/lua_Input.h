@@ -5,6 +5,8 @@
 #ifndef LUA_INPUT_H_
 #define LUA_INPUT_H_
 
+#include <cstdlib>
+
 #include "Lua/LuaMacros.h"
 
 class  Acceleration;

@@ -2,9 +2,10 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
+#include "Common/Data.h"
+
 #include <cstring>
 
-#include "Common/Data.h"
 #include "Common/Debug.h"
 #include "FileSystem/File.h"
 

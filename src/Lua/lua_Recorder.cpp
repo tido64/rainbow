@@ -2,9 +2,9 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
-#include <lua.hpp>
-
 #include "Lua/lua_Recorder.h"
+
+#include <lua.hpp>
 
 NS_RAINBOW_LUA_BEGIN
 {

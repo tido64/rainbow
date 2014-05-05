@@ -2,10 +2,11 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
+#include "Graphics/TextureManager.h"
+
 #include <algorithm>
 
 #include "Graphics/OpenGL.h"
-#include "Graphics/TextureManager.h"
 
 TextureManager *TextureManager::Instance = nullptr;
 

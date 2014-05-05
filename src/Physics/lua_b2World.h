@@ -2,6 +2,9 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
+#ifndef PHYSICS_LUA_B2WORLD_H_
+#define PHYSICS_LUA_B2WORLD_H_
+
 #include <Box2D/RainbowDraw.h>
 
 #include "Common/Constants.h"
@@ -388,3 +391,5 @@ NS_RAINBOW_LUA_BEGIN
 		{ nullptr,               nullptr }
 	};
 } NS_RAINBOW_LUA_END
+
+#endif

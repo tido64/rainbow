@@ -2,11 +2,12 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
+#include "Lua/lua_IO.h"
+
 #include <lua.hpp>
 
 #include "Common/Data.h"
 #include "Common/Debug.h"
-#include "Lua/lua_IO.h"
 
 namespace
 {

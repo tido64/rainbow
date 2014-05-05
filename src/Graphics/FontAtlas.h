@@ -44,7 +44,7 @@ public:
 	const FontGlyph* get_glyph(const unsigned int c) const;
 
 	/// Returns whether this FontAtlas is valid.
-	inline operator bool() const;
+	inline explicit operator bool() const;
 
 protected:
 	/// Load characters 32 through 126 from the ASCII table.

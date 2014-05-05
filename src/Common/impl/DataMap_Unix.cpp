@@ -2,7 +2,7 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
-#include "Platform/Macros.h"
+#include "Common/DataMap.h"
 #if defined(RAINBOW_OS_IOS) || defined(RAINBOW_OS_UNIX)
 
 #include <errno.h>
@@ -10,7 +10,6 @@
 #include <sys/mman.h>
 
 #include "Common/Debug.h"
-#include "Common/impl/DataMap_Unix.h"
 #include "FileSystem/File.h"
 #include "FileSystem/Path.h"
 

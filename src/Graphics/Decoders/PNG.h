@@ -2,6 +2,9 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
+#ifndef GRAPHICS_DECODERS_PNG_H_
+#define GRAPHICS_DECODERS_PNG_H_
+
 #include <cstring>
 #include <png.h>
 
@@ -46,3 +49,5 @@ namespace PNG
 		return image;
 	}
 }
+
+#endif

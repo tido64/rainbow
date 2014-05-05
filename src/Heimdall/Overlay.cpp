@@ -4,10 +4,11 @@
 
 #ifdef USE_HEIMDALL
 
+#include "Heimdall/Overlay.h"
+
 #include "Graphics/OpenGL.h"
 #include "Graphics/Renderer.h"
 #include "Graphics/TextureManager.h"
-#include "Heimdall/Overlay.h"
 #include "Heimdall/Style.h"
 
 namespace Heimdall

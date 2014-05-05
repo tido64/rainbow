@@ -2,6 +2,9 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
+#ifndef PHYSICS_LUA_B2BODY_H_
+#define PHYSICS_LUA_B2BODY_H_
+
 #include "Graphics/Sprite.h"
 #include "Lua/lua_Sprite.h"
 
@@ -775,3 +778,5 @@ NS_RAINBOW_LUA_BEGIN
 		{ nullptr,                nullptr }
 	};
 } NS_RAINBOW_LUA_END
+
+#endif

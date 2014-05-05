@@ -2,6 +2,9 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
+#ifndef GRAPHICS_DECODERS_UIKIT_H_
+#define GRAPHICS_DECODERS_UIKIT_H_
+
 #include <UIKit/UIKit.h>
 
 #include "Common/Debug.h"
@@ -57,3 +60,5 @@ namespace UIKit
 		return image;
 	}
 }
+
+#endif

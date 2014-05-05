@@ -2,11 +2,12 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
+#include "Lua/lua_SceneGraph.h"
+
 #include "Graphics/SceneGraph.h"
 #include "Lua/LuaHelper.h"
 #include "Lua/lua_Animation.h"
 #include "Lua/lua_Label.h"
-#include "Lua/lua_SceneGraph.h"
 #include "Lua/lua_Shaders.h"
 #include "Lua/lua_Sprite.h"
 #include "Lua/lua_SpriteBatch.h"

@@ -2,12 +2,13 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
+#include "Graphics/SpriteBatch.h"
+
 #include <algorithm>
 
 #include "Graphics/Drawable.h"
 #include "Graphics/Renderer.h"
 #include "Graphics/ShaderDetails.h"
-#include "Graphics/SpriteBatch.h"
 
 namespace
 {
@@ -15,7 +16,7 @@ namespace
 	class SetBuffer
 	{
 	public:
-		SetBuffer(T *buffer);
+		explicit SetBuffer(T *buffer);
 		void operator()(Sprite &sprite);
 
 	private:

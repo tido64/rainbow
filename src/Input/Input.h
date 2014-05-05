@@ -30,7 +30,7 @@ public:
 
 	static Input *Instance;
 
-	inline Input(lua_State *);
+	inline explicit Input(lua_State *);
 	inline ~Input();
 
 	/// Resets input subscription list.

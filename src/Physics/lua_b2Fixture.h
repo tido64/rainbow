@@ -2,6 +2,9 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
+#ifndef PHYSICS_LUA_B2FIXTURE_H_
+#define PHYSICS_LUA_B2FIXTURE_H_
+
 NS_B2_LUA_BEGIN
 {
 	int Filter(lua_State *L)
@@ -133,3 +136,5 @@ NS_RAINBOW_LUA_BEGIN
 		{ nullptr,    nullptr }
 	};
 } NS_RAINBOW_LUA_END
+
+#endif

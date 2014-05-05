@@ -2,6 +2,9 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
+#ifndef CONFUOCO_IMPL_MIXER_IOS_H_
+#define CONFUOCO_IMPL_MIXER_IOS_H_
+
 #include <AVFoundation/AVAudioPlayer.h>
 #include <AVFoundation/AVAudioSession.h>
 
@@ -26,7 +29,7 @@ namespace
 		void play();
 		void stop();
 
-		operator bool() const;
+		explicit operator bool() const;
 
 	private:
 		bool paused;
@@ -194,3 +197,5 @@ Stream::operator bool() const
 {
 	return this->player;
 }
+
+#endif

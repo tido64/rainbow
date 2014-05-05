@@ -2,6 +2,8 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
+#include "Graphics/FontAtlas.h"
+
 #include <algorithm>
 #include <memory>
 
@@ -11,7 +13,6 @@
 #include FT_MODULE_H
 
 #include "Common/Data.h"
-#include "Graphics/FontAtlas.h"
 #include "Graphics/OpenGL.h"
 #include "Graphics/TextureManager.h"
 
@@ -55,7 +56,7 @@ namespace
 			return face_;
 		}
 
-		operator bool() const
+		explicit operator bool() const
 		{
 			return face_ != nullptr;
 		}
@@ -86,7 +87,7 @@ namespace
 			FT_Done_FreeType(library_);
 		}
 
-		operator bool() const
+		explicit operator bool() const
 		{
 			return library_ != nullptr;
 		}

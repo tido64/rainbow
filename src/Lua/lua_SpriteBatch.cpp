@@ -2,10 +2,11 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
+#include "Lua/lua_SpriteBatch.h"
+
 #include "FileSystem/Path.h"
 #include "Lua/LuaHelper.h"
 #include "Lua/lua_Sprite.h"
-#include "Lua/lua_SpriteBatch.h"
 #include "Lua/lua_Texture.h"
 
 NS_RAINBOW_LUA_BEGIN

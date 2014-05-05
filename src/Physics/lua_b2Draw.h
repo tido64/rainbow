@@ -2,6 +2,9 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
+#ifndef PHYSICS_LUA_B2DRAW_H_
+#define PHYSICS_LUA_B2DRAW_H_
+
 #include "Graphics/Renderer.h"
 #include "Graphics/ShaderManager.h"
 #include "Graphics/Shaders.h"
@@ -78,3 +81,5 @@ namespace b2
 		g_debug_data->draw();
 	}
 }
+
+#endif

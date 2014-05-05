@@ -2,11 +2,12 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
+#include "Lua/lua_Shaders.h"
+
 #include "Common/Debug.h"
 #include "Graphics/Shaders/Diffuse.h"
 #include "Lua/LuaBind.h"
 #include "Lua/LuaHelper.h"
-#include "Lua/lua_Shaders.h"
 
 namespace
 {
@@ -16,7 +17,7 @@ namespace
 		friend Bind;
 
 	public:
-		Diffuse(lua_State *);
+		explicit Diffuse(lua_State *);
 
 		const Rainbow::Shaders::Diffuse* get() const;
 

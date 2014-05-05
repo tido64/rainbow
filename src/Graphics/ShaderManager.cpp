@@ -2,10 +2,11 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
+#include "Graphics/ShaderManager.h"
+
 #include <memory>
 
 #include "Common/Data.h"
-#include "Graphics/ShaderManager.h"
 #include "Graphics/Shaders.h"
 
 // For platforms not using GLEW.

@@ -2,9 +2,9 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
-#include <thread>
-
 #include "Common/Chrono.h"
+
+#include <thread>
 
 namespace
 {

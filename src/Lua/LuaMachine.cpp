@@ -2,8 +2,9 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
-#include "Common/Data.h"
 #include "Lua/LuaMachine.h"
+
+#include "Common/Data.h"
 #include "Lua/LuaModules.h"
 #include "Lua/lua_Rainbow.h"
 

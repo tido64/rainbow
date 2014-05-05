@@ -2,6 +2,9 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
+#ifndef GRAPHICS_DECODERS_PVRTC_H_
+#define GRAPHICS_DECODERS_PVRTC_H_
+
 #include <stdint.h>
 
 #include "Common/Debug.h"
@@ -74,3 +77,5 @@ namespace PVRTC
 		return image;
 	}
 }
+
+#endif

@@ -2,10 +2,11 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
+#include "Lua/lua_Audio.h"
+
 #include "Common/Data.h"
 #include "ConFuoco/Mixer.h"
 #include "Lua/LuaHelper.h"
-#include "Lua/lua_Audio.h"
 
 using ConFuoco::Mixer;
 
@@ -177,7 +178,7 @@ namespace
 		friend Bind;
 
 	public:
-		FMODStudioEventInstance(lua_State *);
+		explicit FMODStudioEventInstance(lua_State *);
 		~FMODStudioEventInstance();
 
 	private:

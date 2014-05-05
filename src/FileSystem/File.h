@@ -45,7 +45,7 @@ public:
 	/// \return Number of bytes written.
 	size_t write(const void *buffer, const size_t size) const;
 
-	inline operator bool() const;
+	inline explicit operator bool() const;
 	inline operator AAsset*() const;
 	inline operator FILE*() const;
 
@@ -58,7 +58,7 @@ private:
 		FILE *stream;
 	};
 
-	File(const char *const path);
+	explicit File(const char *const path);
 	File(const char *const path, const char *const mode);
 };
 

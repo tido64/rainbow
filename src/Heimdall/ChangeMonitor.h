@@ -26,7 +26,7 @@ class ChangeMonitor : private NonCopyable<ChangeMonitor>
 public:
 	typedef std::function<void(const char *)> Callback;
 
-	ChangeMonitor(const char *const directory);
+	explicit ChangeMonitor(const char *const directory);
 	~ChangeMonitor();
 
 	inline void set_callback(Callback &&callback);

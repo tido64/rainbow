@@ -5,21 +5,19 @@
 #ifndef COMMON_IMPL_DATAMAP_UNIX_H_
 #define COMMON_IMPL_DATAMAP_UNIX_H_
 
-#include "Common/DataMap.h"
-
 namespace Rainbow
 {
 	class DataMapUnix
 	{
 	protected:
-		DataMapUnix(const Path &path);
+		explicit DataMapUnix(const Path &path);
 		~DataMapUnix();
 
 		inline const unsigned char* bytes() const;
 		inline void offset(const size_t offset);
 		inline size_t size() const;
 
-		inline operator bool() const;
+		inline explicit operator bool() const;
 		inline operator const void*() const;
 		inline operator const char*() const;
 		inline operator const unsigned char*() const;

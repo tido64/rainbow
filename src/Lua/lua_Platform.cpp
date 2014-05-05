@@ -2,9 +2,10 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
+#include "Lua/lua_Platform.h"
+
 #include <lua.hpp>
 
-#include "Lua/lua_Platform.h"
 #include "Platform/SysUtil.h"
 
 NS_RAINBOW_LUA_MODULE_BEGIN(Platform)

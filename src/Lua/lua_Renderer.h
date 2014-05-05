@@ -7,6 +7,8 @@
 
 #include "Lua/LuaMacros.h"
 
+struct lua_State;
+
 NS_RAINBOW_LUA_MODULE_BEGIN(Renderer)
 {
 	void init(lua_State *);

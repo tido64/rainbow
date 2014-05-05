@@ -2,8 +2,9 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
-#include "Common/Vec2.h"
 #include "Graphics/Buffer.h"
+
+#include "Common/Vec2.h"
 #include "Graphics/OpenGL.h"
 #include "Graphics/ShaderDetails.h"
 #include "Graphics/SpriteVertex.h"

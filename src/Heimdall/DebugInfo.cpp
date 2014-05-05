@@ -4,8 +4,9 @@
 
 #ifdef USE_HEIMDALL
 
-#include "Graphics/SceneGraph.h"
 #include "Heimdall/DebugInfo.h"
+
+#include "Graphics/SceneGraph.h"
 #include "Heimdall/Style.h"
 #include "Input/Touch.h"
 

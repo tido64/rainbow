@@ -20,7 +20,7 @@ namespace Rainbow
 	class DataMapBase : private T, private NonCopyable<DataMapBase<T>>
 	{
 	public:
-		DataMapBase(const Path &path);
+		explicit DataMapBase(const Path &path);
 
 		/// Returns offset raw byte array.
 		/// \return Pointer to array. Returns \c nullptr if buffer is empty.
@@ -32,7 +32,7 @@ namespace Rainbow
 		/// Returns offset buffer size.
 		size_t size() const;
 
-		operator bool() const;
+		explicit operator bool() const;
 		operator const void*() const;
 		operator const char*() const;
 		operator const unsigned char*() const;

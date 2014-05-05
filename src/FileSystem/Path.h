@@ -27,8 +27,8 @@ public:
 	static void set_current(const char *const path);
 
 	Path();
-	Path(const char *const file,
-	     const RelativeTo rel = RelativeTo::CurrentPath);
+	explicit Path(const char *const file,
+	              const RelativeTo rel = RelativeTo::CurrentPath);
 
 #ifdef RAINBOW_TEST
 	int create();

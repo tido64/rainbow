@@ -2,8 +2,9 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
-#include "Graphics/Label.h"
 #include "Graphics/Renderer.h"
+
+#include "Graphics/Label.h"
 #include "Graphics/SceneGraph.h"
 #include "Graphics/ShaderManager.h"
 #include "Graphics/SpriteBatch.h"

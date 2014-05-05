@@ -2,12 +2,13 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
+#include "ConFuoco/Recorder.h"
+
 #include <AVFoundation/AVAudioRecorder.h>
 #include <AVFoundation/AVAudioSession.h>
 #include <CoreAudio/CoreAudioTypes.h>
 
 #include "ConFuoco/impl/Mixer_AL.h"
-#include "ConFuoco/Recorder.h"
 
 #define kTemporaryFilePath [NSTemporaryDirectory() \
 	stringByAppendingPathComponent:@"temp.bifrostentertainment.rainbow"]

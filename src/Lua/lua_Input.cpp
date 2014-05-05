@@ -2,12 +2,13 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
+#include "Lua/lua_Input.h"
+
 #include <lua.hpp>
 
 #include "Input/Input.h"
 #include "Input/Key.h"
 #include "Input/Touch.h"
-#include "Lua/lua_Input.h"
 
 NS_RAINBOW_LUA_MODULE_BEGIN(Input)
 {

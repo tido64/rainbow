@@ -2,11 +2,12 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
+#include "Services/TestFlight.h"
+
 #include <lua.hpp>
 
 #include "Common/Debug.h"
 #include "Lua/LuaMacros.h"
-#include "Services/TestFlight.h"
 
 #ifdef USE_TESTFLIGHT_SDK
 #	ifdef RAINBOW_OS_IOS

@@ -2,11 +2,12 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
+#include "Graphics/VertexArray.h"
+
 #include <utility>
 
 #include "Graphics/OpenGL.h"
 #include "Graphics/Renderer.h"
-#include "Graphics/VertexArray.h"
 
 namespace
 {

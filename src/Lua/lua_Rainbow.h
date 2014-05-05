@@ -2,6 +2,9 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
+#ifndef LUA_RAINBOW_H_
+#define LUA_RAINBOW_H_
+
 const char Rainbow_lua[] =
 
 "local assert = assert\n"
@@ -125,3 +128,5 @@ const char Rainbow_lua[] =
 		"Input[e[1]](e[2])\n"
 	"end\n"
 "end\n";
+
+#endif

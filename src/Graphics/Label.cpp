@@ -2,9 +2,10 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
+#include "Graphics/Label.h"
+
 #include <algorithm>
 
-#include "Graphics/Label.h"
 #include "Graphics/ShaderDetails.h"
 
 namespace

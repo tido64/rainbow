@@ -2,11 +2,12 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
+#include "FileSystem/Path.h"
+
 #include <cerrno>
 #include <cstring>
 #include <sys/stat.h>
 
-#include "FileSystem/Path.h"
 #ifdef RAINBOW_OS_WINDOWS
 #	include <direct.h>
 #	define S_IRWXU 0000700

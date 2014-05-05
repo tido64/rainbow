@@ -38,7 +38,7 @@ public:
 	inline Data(Data &&);
 
 	/// Constructs a data object with the contents of the file.
-	Data(const File &);
+	explicit Data(const File &);
 
 	/// Constructs a wrapper around a buffer.
 	inline Data(const void *buffer, const size_t size, const Ownership ownership);
@@ -56,7 +56,7 @@ public:
 	/// Returns the size of this buffer.
 	inline size_t size() const;
 
-	inline operator bool() const;
+	inline explicit operator bool() const;
 	inline operator void*() const;
 	inline operator char*() const;
 	inline operator unsigned char*() const;

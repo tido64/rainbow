@@ -3,6 +3,7 @@
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
 #include "Input/Input.h"
+
 #include "Input/Key.h"
 #include "Input/Touchable.h"
 #include "Lua/lua_Input.h"

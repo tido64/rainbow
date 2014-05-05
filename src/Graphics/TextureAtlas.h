@@ -40,7 +40,7 @@ public:
 	inline void trim();
 
 	inline const Texture& operator[](const unsigned int i) const;
-	inline operator bool() const;
+	inline explicit operator bool() const;
 
 private:
 	unsigned int name;         ///< Texture atlas' id.

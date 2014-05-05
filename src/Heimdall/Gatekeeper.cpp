@@ -4,10 +4,11 @@
 
 #ifdef USE_HEIMDALL
 
+#include "Heimdall/Gatekeeper.h"
+
 #include "Common/Data.h"
 #include "FileSystem/File.h"
 #include "FileSystem/Path.h"
-#include "Heimdall/Gatekeeper.h"
 #include "Lua/LuaHelper.h"
 #include "Resources/Inconsolata.otf.h"
 #include "Resources/NewsCycle-Regular.ttf.h"
@@ -35,7 +36,7 @@ namespace
 	class Library
 	{
 	public:
-		Library(const char *const path);
+		explicit Library(const char *const path);
 
 		inline const char* name() const;
 

@@ -2,12 +2,13 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
+#include "Lua/lua_Renderer.h"
+
 #include <lua.hpp>
 
 #include "Graphics/Renderer.h"
 #include "Graphics/ShaderManager.h"
 #include "Graphics/TextureManager.h"
-#include "Lua/lua_Renderer.h"
 
 namespace
 {

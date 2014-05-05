@@ -2,9 +2,10 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
+#include "Graphics/Shaders/Diffuse.h"
+
 #include "Graphics/ShaderManager.h"
 #include "Graphics/Shaders.h"
-#include "Graphics/Shaders/Diffuse.h"
 
 namespace
 {

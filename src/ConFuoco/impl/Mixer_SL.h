@@ -41,7 +41,7 @@ namespace ConFuoco
 			bool load(SLEngineItf engine, SLObjectItf output_mix);
 			void release();
 
-			operator bool() const;
+			explicit operator bool() const;
 		};
 
 		SLObjectItf engine_obj;  ///< OpenSL engine object.

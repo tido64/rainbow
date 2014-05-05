@@ -2,14 +2,13 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
-#include "Platform/Macros.h"
+#include "Common/DataMap.h"
 #ifdef RAINBOW_OS_WINDOWS
 
 #include <io.h>
 #include <windows.h>
 
 #include "Common/Debug.h"
-#include "Common/impl/DataMap_Win.h"
 #include "FileSystem/Path.h"
 
 namespace Rainbow

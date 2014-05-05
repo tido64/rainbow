@@ -2,6 +2,8 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
+#include "Lua/LuaHelper.h"
+
 #include <cstring>
 #include <memory>
 
@@ -9,7 +11,6 @@
 #include "FileSystem/File.h"
 #include "FileSystem/Path.h"
 #include "Lua/LuaDebugging.h"
-#include "Lua/LuaHelper.h"
 
 namespace
 {

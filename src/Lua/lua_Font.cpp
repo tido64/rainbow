@@ -2,10 +2,11 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
+#include "Lua/lua_Font.h"
+
 #include <lua.hpp>
 
 #include "Common/Data.h"
-#include "Lua/lua_Font.h"
 
 NS_RAINBOW_LUA_BEGIN
 {

@@ -2,10 +2,11 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
+#include "Director.h"
+
 #include <lua.hpp>
 
 #include "Common/Data.h"
-#include "Director.h"
 #include "Graphics/TextureManager.h"
 #include "Lua/lua_Platform.h"
 

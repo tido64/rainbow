@@ -2,6 +2,8 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
+#include "FileSystem/File.h"
+
 #include <sys/stat.h>
 
 #include "Platform/Macros.h"
@@ -10,7 +12,6 @@
 #endif
 
 #include "Common/Debug.h"
-#include "FileSystem/File.h"
 #include "FileSystem/Path.h"
 
 #if defined(RAINBOW_OS_ANDROID)

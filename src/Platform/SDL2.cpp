@@ -61,7 +61,7 @@ namespace
 	class RenderWindow
 	{
 	public:
-		RenderWindow(const Vec2i &window_size);
+		explicit RenderWindow(const Vec2i &window_size);
 		~RenderWindow();
 
 		void swap() const;
@@ -72,7 +72,7 @@ namespace
 		void on_mouse_up(const Vec2i &point, const unsigned long timestamp);
 		void on_window_resized(Renderer &renderer);
 
-		operator bool() const;
+		explicit operator bool() const;
 		operator SDL_Window*();
 
 	private:

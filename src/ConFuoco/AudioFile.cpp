@@ -4,10 +4,11 @@
 
 #ifndef USE_FMOD_STUDIO
 
+#include "ConFuoco/AudioFile.h"
+
 #include <cstring>
 
 #include "Common/Debug.h"
-#include "ConFuoco/AudioFile.h"
 
 namespace ConFuoco
 {

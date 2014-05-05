@@ -36,7 +36,7 @@ namespace
 	{
 		unsigned int bid;
 
-		Wave(const char *const file);
+		explicit Wave(const char *const file);
 		virtual ~Wave();
 	};
 
