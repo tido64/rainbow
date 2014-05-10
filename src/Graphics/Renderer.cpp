@@ -29,6 +29,7 @@ template<typename T>
 void Renderer::draw(const T &obj)
 {
 	obj.vertex_array().bind();
+	obj.bind_textures();
 	glDrawElements(GL_TRIANGLES, obj.count(), GL_UNSIGNED_SHORT, nullptr);
 }
 

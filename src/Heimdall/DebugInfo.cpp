@@ -55,7 +55,7 @@ namespace Heimdall
 	bool DebugInfo::on_touch(const Touch *const touches, const size_t count)
 	{
 		const int x1 = position_.x + button_.width();
-		const int y1 = position_.y + button_.font()->height();
+		const int y1 = position_.y + button_.font().height();
 		for (size_t i = 0; i < count; ++i)
 		{
 			if (touches[0].x >= position_.x && touches[0].x <= x1

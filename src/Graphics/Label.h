@@ -31,7 +31,7 @@ public:
 	inline size_t count() const;
 
 	/// Returns the assigned font.
-	inline const FontAtlas* font() const;
+	inline const FontAtlas& font() const;
 
 	/// Returns the vertex array object.
 	inline const VertexArray& vertex_array() const;
@@ -56,6 +56,9 @@ public:
 
 	/// Sets text to display.
 	void set_text(const char *);
+
+	/// Binds all used textures.
+	void bind_textures() const;
 
 	/// Moves label by (x,y).
 	void move(const Vec2f &);
@@ -83,9 +86,6 @@ private:
 	/// \param start   First character to align.
 	/// \param end     End character.
 	void align(float length, const size_t start, const size_t end);
-
-	/// Sets the array state for this label.
-	void bind() const;
 };
 
 const Colorb& Label::color() const
@@ -98,9 +98,9 @@ size_t Label::count() const
 	return count_ + (count_ >> 1);
 }
 
-const FontAtlas* Label::font() const
+const FontAtlas& Label::font() const
 {
-	return font_.get();
+	return *font_.get();
 }
 
 const VertexArray& Label::vertex_array() const

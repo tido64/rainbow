@@ -15,7 +15,10 @@ namespace
 
 Label::Label()
     : size_(0), scale_(1.0f), alignment_(kLeftTextAlignment), count_(0),
-      stale_(0), width_(0) { }
+      stale_(0), width_(0)
+{
+	array_.reconfigure([=] { buffer_.bind(); });
+}
 
 void Label::set_alignment(const Label::Alignment a)
 {
@@ -32,7 +35,6 @@ void Label::set_color(const Colorb &c)
 void Label::set_font(FontAtlas *f)
 {
 	font_ = f;
-	array_.reconfigure(std::bind(&Label::bind, this));
 	stale_ |= kStaleBuffer;
 }
 
@@ -70,6 +72,11 @@ void Label::set_text(const char *text)
 	memcpy(text_.get(), text, len);
 	text_[len] = '\0';
 	stale_ |= kStaleBuffer;
+}
+
+void Label::bind_textures() const
+{
+	font_->bind();
 }
 
 void Label::move(const Vec2f &delta)
@@ -161,10 +168,4 @@ void Label::align(float offset, const size_t start, const size_t end)
 			v.position.x += offset;
 		});
 	}
-}
-
-void Label::bind() const
-{
-	font_->bind();
-	buffer_.bind();
 }

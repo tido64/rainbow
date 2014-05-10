@@ -40,6 +40,7 @@ const char Drawable::class_name[] = "Drawable";
 SpriteBatch::SpriteBatch(const unsigned int hint) : count_(0), reserved_(0)
 {
 	resize(hint);
+	array_.reconfigure(std::bind(&SpriteBatch::bind_arrays, this));
 }
 
 SpriteBatch::~SpriteBatch()
@@ -56,19 +57,21 @@ void SpriteBatch::set_normal(TextureAtlas *texture)
 		normals_.resize(0, reserved_ * 4);
 		std::uninitialized_fill_n(normals_.get(), count_ * 4, Vec2f());
 		set_buffer(normals_.get());
+		array_.reconfigure(std::bind(&SpriteBatch::bind_arrays, this));
 	}
 	normal_ = texture;
-
-	if (!texture_)
-		return;
-
-	array_.reconfigure(std::bind(&SpriteBatch::bind, this));
 }
 
 void SpriteBatch::set_texture(TextureAtlas *texture)
 {
 	texture_ = texture;
-	array_.reconfigure(std::bind(&SpriteBatch::bind, this));
+}
+
+void SpriteBatch::bind_textures() const
+{
+	if (normal_)
+		normal_->bind(1);
+	texture_->bind();
 }
 
 unsigned int
@@ -125,15 +128,11 @@ void SpriteBatch::update()
 	}
 }
 
-void SpriteBatch::bind() const
+void SpriteBatch::bind_arrays() const
 {
 	vertex_buffer_.bind();
-	texture_->bind();
-	if (normal_)
-	{
-		normal_->bind(1);
+	if (normals_)
 		normal_buffer_.bind(Shader::kAttributeNormal);
-	}
 }
 
 void SpriteBatch::resize(const unsigned int size)

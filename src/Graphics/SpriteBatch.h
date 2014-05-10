@@ -56,6 +56,9 @@ public:
 	/// \return The index of the newly created sprite, positioned at (0,0).
 	unsigned int add(const int x, const int y, const int width, const int height);
 
+	/// Binds all used textures.
+	void bind_textures() const;
+
 	/// Creates a sprite.
 	/// \param width   Width of the sprite.
 	/// \param height  Height of the sprite.
@@ -82,7 +85,7 @@ private:
 	unsigned int reserved_;            ///< Number of sprites reserved for.
 
 	/// Sets the array state for this batch.
-	void bind() const;
+	void bind_arrays() const;
 
 	/// Resizes all client buffers to \p size.
 	void resize(const unsigned int size);
