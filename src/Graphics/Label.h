@@ -85,7 +85,7 @@ private:
 	void align(float length, const size_t start, const size_t end);
 
 	/// Sets the array state for this label.
-	int bind() const;
+	void bind() const;
 };
 
 const Colorb& Label::color() const

@@ -9,19 +9,8 @@
 #include "Graphics/OpenGL.h"
 #include "Graphics/Renderer.h"
 
-namespace
-{
-	/// Currently bound vertex array.
-	const VertexArray *g_active_array = nullptr;
-}
-
 void VertexArray::unbind()
 {
-	if (!g_active_array)
-		return;
-
-	g_active_array = nullptr;
-
 #ifdef USE_VERTEX_ARRAY_OBJECT
 	glBindVertexArray(0);
 #else
@@ -47,11 +36,6 @@ VertexArray::~VertexArray()
 
 void VertexArray::bind() const
 {
-	if (this == g_active_array)
-		return;
-
-	g_active_array = this;
-
 #ifdef USE_VERTEX_ARRAY_OBJECT
 	glBindVertexArray(array_);
 #else
@@ -59,33 +43,18 @@ void VertexArray::bind() const
 #endif
 }
 
-void VertexArray::reconfigure(std::function<int()> &&array_state)
+void VertexArray::reconfigure(std::function<void()> &&array_state)
 {
 #ifdef USE_VERTEX_ARRAY_OBJECT
-	if (!array_)
-		glGenVertexArrays(1, &array_);
-	else
-	{
-		unbind();
-		const unsigned int old_array = array_;
-		glGenVertexArrays(1, &array_);
-		glDeleteVertexArrays(1, &old_array);
-	}
-	glBindVertexArray(array_);
+	GLuint array;
+	glGenVertexArrays(1, &array);
+	glBindVertexArray(array);
 	Renderer::Instance->bind_element_array();
-	switch (array_state())
-	{
-		case Shader::kAttributeNormal:
-			glEnableVertexAttribArray(Shader::kAttributeNormal);
-		case Shader::kAttributeTexCoord:
-			glEnableVertexAttribArray(Shader::kAttributeTexCoord);
-		case Shader::kAttributeColor:
-			glEnableVertexAttribArray(Shader::kAttributeColor);
-		case Shader::kAttributeVertex:
-			glEnableVertexAttribArray(Shader::kAttributeVertex);
-			break;
-	}
+	array_state();
 	glBindVertexArray(0);
+	if (array_)
+		glDeleteVertexArrays(1, &array_);
+	array_ = array;
 #else
 	array_ = std::move(array_state);
 #endif

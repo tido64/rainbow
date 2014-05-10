@@ -6,8 +6,6 @@
 
 #include <algorithm>
 
-#include "Graphics/ShaderDetails.h"
-
 namespace
 {
 	const unsigned int kStaleBuffer      = 1u << 0;
@@ -165,9 +163,8 @@ void Label::align(float offset, const size_t start, const size_t end)
 	}
 }
 
-int Label::bind() const
+void Label::bind() const
 {
 	font_->bind();
 	buffer_.bind();
-	return Shader::kAttributeTexCoord;
 }

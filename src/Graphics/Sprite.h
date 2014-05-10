@@ -9,7 +9,6 @@
 #include "Graphics/SpriteVertex.h"
 
 class SpriteBatch;
-template<typename T> class Vector;
 
 /// A textured quad.
 ///

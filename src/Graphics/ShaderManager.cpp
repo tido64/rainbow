@@ -152,9 +152,6 @@ void ShaderManager::set(const Vec2i &resolution)
 		set_projection_matrix(details, this->ortho);
 		glUniform1i(glGetUniformLocation(this->programs[0].program, "texture"),
 		            0);
-		glEnableVertexAttribArray(Shader::kAttributeVertex);
-		glEnableVertexAttribArray(Shader::kAttributeColor);
-		glEnableVertexAttribArray(Shader::kAttributeTexCoord);
 		return;
 	}
 	set_projection_matrix(this->programs[this->active], this->ortho);

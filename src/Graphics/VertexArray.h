@@ -24,7 +24,7 @@ public:
 	void bind() const;
 
 	/// Reconfigures this vertex array object with a new set of states.
-	void reconfigure(std::function<int()> &&array_state);
+	void reconfigure(std::function<void()> &&array_state);
 
 	/// Returns whether this vertex array object is valid.
 	inline explicit operator bool() const;
@@ -33,7 +33,7 @@ private:
 #ifdef USE_VERTEX_ARRAY_OBJECT
 	unsigned int array_;
 #else
-	std::function<int()> array_;
+	std::function<void()> array_;
 #endif
 };
 

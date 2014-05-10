@@ -82,7 +82,7 @@ private:
 	unsigned int reserved_;            ///< Number of sprites reserved for.
 
 	/// Sets the array state for this batch.
-	int bind() const;
+	void bind() const;
 
 	/// Resizes all client buffers to \p size.
 	void resize(const unsigned int size);

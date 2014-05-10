@@ -22,14 +22,17 @@ Buffer::~Buffer()
 void Buffer::bind() const
 {
 	glBindBuffer(GL_ARRAY_BUFFER, id_);
+	glEnableVertexAttribArray(Shader::kAttributeColor);
 	glVertexAttribPointer(
 	    Shader::kAttributeColor, 4, GL_UNSIGNED_BYTE, GL_TRUE,
 	    sizeof(SpriteVertex),
 	    reinterpret_cast<void*>(offsetof(SpriteVertex, color)));
+	glEnableVertexAttribArray(Shader::kAttributeTexCoord);
 	glVertexAttribPointer(
 	    Shader::kAttributeTexCoord, 2, GL_FLOAT, GL_FALSE,
 	    sizeof(SpriteVertex),
 	    reinterpret_cast<void*>(offsetof(SpriteVertex, texcoord)));
+	glEnableVertexAttribArray(Shader::kAttributeVertex);
 	glVertexAttribPointer(
 	    Shader::kAttributeVertex, 2, GL_FLOAT, GL_TRUE,
 	    sizeof(SpriteVertex),
@@ -39,8 +42,8 @@ void Buffer::bind() const
 void Buffer::bind(const unsigned int index) const
 {
 	glBindBuffer(GL_ARRAY_BUFFER, id_);
-	glVertexAttribPointer(index, 2, GL_FLOAT, GL_FALSE, sizeof(Vec2f), nullptr);
 	glEnableVertexAttribArray(index);
+	glVertexAttribPointer(index, 2, GL_FLOAT, GL_FALSE, sizeof(Vec2f), nullptr);
 }
 
 void Buffer::upload(const void *const data, const size_t size) const

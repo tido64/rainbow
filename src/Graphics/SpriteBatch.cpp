@@ -125,7 +125,7 @@ void SpriteBatch::update()
 	}
 }
 
-int SpriteBatch::bind() const
+void SpriteBatch::bind() const
 {
 	vertex_buffer_.bind();
 	texture_->bind();
@@ -133,9 +133,7 @@ int SpriteBatch::bind() const
 	{
 		normal_->bind(1);
 		normal_buffer_.bind(Shader::kAttributeNormal);
-		return Shader::kAttributeNormal;
 	}
-	return Shader::kAttributeTexCoord;
 }
 
 void SpriteBatch::resize(const unsigned int size)
