@@ -5,69 +5,99 @@
 #include "Graphics/SceneGraph.h"
 
 #include "Graphics/Animation.h"
+#include "Graphics/Drawable.h"
 #include "Graphics/Label.h"
+#include "Graphics/Renderer.h"
 #include "Graphics/SpriteBatch.h"
 
 namespace SceneGraph
 {
 	Node::Node()
-	    : enabled(true), type(GroupNode), program(-1), data(nullptr) { }
+	    : enabled(true), type(GroupNode), program_(-1), data_(nullptr) { }
 
 	Node::Node(Animation *a)
-	    : enabled(true), type(AnimationNode), program(-1), animation(a) { }
+	    : enabled(true), type(AnimationNode), program_(-1), animation_(a) { }
 
 	Node::Node(Label *l)
-	    : enabled(true), type(LabelNode), program(-1), label(l) { }
+	    : enabled(true), type(LabelNode), program_(-1), label_(l) { }
 
 	Node::Node(SpriteBatch *b)
-	    : enabled(true), type(SpriteBatchNode), program(-1), sprite_batch(b) { }
+	    : enabled(true), type(SpriteBatchNode), program_(-1), sprite_batch_(b)
+	{ }
 
 	Node::Node(Drawable *d)
-	    : enabled(true), type(DrawableNode), program(-1), drawable(d) { }
+	    : enabled(true), type(DrawableNode), program_(-1), drawable_(d) { }
 
-	void Node::move(const Vec2f &delta)
+	void Node::draw() const
+	{
+		if (!enabled)
+			return;
+
+		ShaderManager::Context context;
+		if (program_ >= 0)
+			ShaderManager::Instance->use(program_);
+
+		switch (type)
+		{
+			case SceneGraph::Node::DrawableNode:
+				drawable_->draw();
+				break;
+			case SceneGraph::Node::LabelNode:
+				Renderer::draw(*label_);
+				break;
+			case SceneGraph::Node::SpriteBatchNode:
+				Renderer::draw(*sprite_batch_);
+				break;
+			default:
+				break;
+		}
+		for (auto child : children_)
+			child->draw();
+	}
+
+	void Node::move(const Vec2f &delta) const
 	{
 		if (delta.is_zero())
 			return;
 
-		switch (this->type)
+		switch (type)
 		{
 			case LabelNode:
-				this->label->move(delta);
+				label_->move(delta);
 				break;
 			case SpriteBatchNode:
-				this->sprite_batch->move(delta);
+				sprite_batch_->move(delta);
 				break;
 			default:
 				break;
 		}
-		for (auto child : this->children)
+		for (auto child : children_)
 			child->move(delta);
 	}
 
-	void Node::update(const unsigned long dt)
+	void Node::update(const unsigned long dt) const
 	{
-		if (!this->enabled)
+		if (!enabled)
 			return;
 
-		switch (this->type)
+		switch (type)
 		{
 			case AnimationNode:
-				this->animation->update(dt);
+				animation_->update(dt);
 				break;
 			case DrawableNode:
-				this->drawable->update();
+				drawable_->update();
 				break;
 			case LabelNode:
-				this->label->update();
+				label_->update();
 				break;
 			case SpriteBatchNode:
-				this->sprite_batch->update();
+				sprite_batch_->update();
 				break;
 			default:
 				break;
 		}
-		for (auto child : this->children)
+		for (auto child : children_)
 			child->update(dt);
 	}
 }

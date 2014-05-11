@@ -6,14 +6,12 @@
 #define GRAPHICS_SCENEGRAPH_NODE_H_
 
 #include "Common/TreeNode.h"
-#include "Graphics/Drawable.h"
-#include "Graphics/Renderer.h"
+#include "Common/Vec2.h"
 
 class Animation;
+class Drawable;
 class Label;
 class SpriteBatch;
-
-namespace SceneGraph { class Node; }
 
 namespace SceneGraph
 {
@@ -24,8 +22,6 @@ namespace SceneGraph
 	/// the same set of data.
 	class Node : public TreeNode<Node>
 	{
-		friend void Renderer::draw(const SceneGraph::Node &);
-
 	public:
 		bool enabled;  ///< Whether this node should be updated and/or drawn.
 
@@ -65,21 +61,24 @@ namespace SceneGraph
 		/// shader.
 		inline void attach_program(const int program);
 
+		/// Draws this node and all its enabled children.
+		void draw() const;
+
 		/// Recursively moves all sprites by (x,y).
-		void move(const Vec2f &);
+		void move(const Vec2f &) const;
 
 		/// Updates this node and all its enabled children.
-		void update(const unsigned long dt);
+		void update(const unsigned long dt) const;
 
 	private:
-		int program;  ///< The active program for this node and its descendants.
+		int program_;  ///< The active program for this node and its descendants.
 		union
 		{
-			void *data;
-			Animation *animation;
-			Drawable *drawable;
-			Label *label;
-			SpriteBatch *sprite_batch;
+			void *data_;
+			Animation *animation_;
+			Drawable *drawable_;
+			Label *label_;
+			SpriteBatch *sprite_batch_;
 		};  ///< Graphical element represented by this node.
 	};
 
@@ -92,12 +91,12 @@ namespace SceneGraph
 	template<class T>
 	Node* Node::add_child(T *p)
 	{
-		return this->add_child(new Node(p));
+		return add_child(new Node(p));
 	}
 
 	void Node::attach_program(const int program)
 	{
-		this->program = program;
+		program_ = program;
 	}
 }
 

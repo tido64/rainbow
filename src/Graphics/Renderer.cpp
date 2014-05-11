@@ -5,7 +5,6 @@
 #include "Graphics/Renderer.h"
 
 #include "Graphics/Label.h"
-#include "Graphics/SceneGraph.h"
 #include "Graphics/ShaderManager.h"
 #include "Graphics/SpriteBatch.h"
 
@@ -23,41 +22,6 @@ Renderer *Renderer::Instance = nullptr;
 void Renderer::clear()
 {
 	glClear(GL_COLOR_BUFFER_BIT);
-}
-
-template<typename T>
-void Renderer::draw(const T &obj)
-{
-	obj.vertex_array().bind();
-	obj.bind_textures();
-	glDrawElements(GL_TRIANGLES, obj.count(), GL_UNSIGNED_SHORT, nullptr);
-}
-
-void Renderer::draw(const SceneGraph::Node &node)
-{
-	if (!node.enabled)
-		return;
-
-	ShaderManager::Context context;
-	if (node.program >= 0)
-		ShaderManager::Instance->use(node.program);
-
-	switch (node.type)
-	{
-		case SceneGraph::Node::DrawableNode:
-			node.drawable->draw();
-			break;
-		case SceneGraph::Node::LabelNode:
-			Renderer::draw(*node.label);
-			break;
-		case SceneGraph::Node::SpriteBatchNode:
-			Renderer::draw(*node.sprite_batch);
-			break;
-		default:
-			break;
-	}
-	for (auto child : node.children)
-		draw(*child);
 }
 
 void Renderer::draw_elements(const SpriteVertex *vertices,

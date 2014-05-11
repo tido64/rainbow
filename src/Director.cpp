@@ -32,7 +32,7 @@ namespace Rainbow
 	void Director::draw()
 	{
 		Renderer::clear();
-		Renderer::draw(scenegraph_);
+		scenegraph_.draw();
 	}
 
 	void Director::init(const Data &main, const Vec2i &screen)

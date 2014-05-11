@@ -4,6 +4,7 @@
 
 #include "Lua/lua_SceneGraph.h"
 
+#include "Graphics/Drawable.h"
 #include "Graphics/SceneGraph.h"
 #include "Lua/LuaHelper.h"
 #include "Lua/lua_Animation.h"

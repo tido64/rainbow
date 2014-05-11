@@ -12,7 +12,6 @@
 struct SpriteVertex;
 
 namespace Rainbow { class Director; }
-namespace SceneGraph { class Node; }
 
 class Renderer
 {
@@ -34,7 +33,6 @@ public:
 
 	template<typename T>
 	static void draw(const T &);
-	static void draw(const SceneGraph::Node &);
 
 	static void draw_elements(const SpriteVertex *vertices,
 	                          const unsigned int count);
@@ -64,6 +62,14 @@ private:
 
 	bool init();
 };
+
+template<typename T>
+void Renderer::draw(const T &obj)
+{
+	obj.vertex_array().bind();
+	obj.bind_textures();
+	glDrawElements(GL_TRIANGLES, obj.count(), GL_UNSIGNED_SHORT, nullptr);
+}
 
 const Vec2i& Renderer::window_size() const
 {

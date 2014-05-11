@@ -11,7 +11,7 @@
 ///
 /// This class does not hold any data and is meant to be sub-classed.
 template<class T>
-class TreeNode : private NonCopyable<TreeNode<T> >
+class TreeNode : private NonCopyable<TreeNode<T>>
 {
 public:
 	/// Adds a node as child.
@@ -27,8 +27,8 @@ public:
 	void set_parent(T *);
 
 protected:
-	T *parent;            ///< This node's parent.
-	Vector<T*> children;  ///< This node's children.
+	T *parent_;            ///< This node's parent.
+	Vector<T*> children_;  ///< This node's children.
 
 	TreeNode();
 	~TreeNode();
@@ -37,14 +37,14 @@ protected:
 template<class T>
 void TreeNode<T>::add_child(T *node)
 {
-	node->parent = static_cast<T*>(this);
-	this->children.push_back(node);
+	node->parent_ = static_cast<T*>(this);
+	children_.push_back(node);
 }
 
 template<class T>
 void TreeNode<T>::remove()
 {
-	this->parent->remove_child(static_cast<T*>(this));
+	parent_->remove_child(static_cast<T*>(this));
 }
 
 template<class T>
@@ -52,7 +52,7 @@ void TreeNode<T>::remove_child(T *node)
 {
 	if (!node)
 		return;
-	this->children.remove(node);
+	children_.remove(node);
 	delete node;
 }
 
@@ -60,17 +60,17 @@ template<class T>
 void TreeNode<T>::set_parent(T *node)
 {
 	node->add_child(static_cast<T*>(this));
-	if (this->parent)
-		this->parent->children.remove(static_cast<T*>(this));
+	if (parent_)
+		parent_->children_.remove(static_cast<T*>(this));
 }
 
 template<class T>
-TreeNode<T>::TreeNode() : parent(nullptr) { }
+TreeNode<T>::TreeNode() : parent_(nullptr) { }
 
 template<class T>
 TreeNode<T>::~TreeNode()
 {
-	for (auto child : this->children)
+	for (auto child : children_)
 		delete child;
 }
 

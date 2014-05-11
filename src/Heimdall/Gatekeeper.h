@@ -58,7 +58,7 @@ namespace Heimdall
 	void Gatekeeper::draw()
 	{
 		Director::draw();
-		Renderer::draw(scenegraph);
+		this->scenegraph.draw();
 	}
 
 	void Gatekeeper::toggle_overlay()

@@ -7,6 +7,7 @@
 #include "Heimdall/DebugInfo.h"
 
 #include "Graphics/SceneGraph.h"
+#include "Graphics/TextureManager.h"
 #include "Heimdall/Style.h"
 #include "Input/Touch.h"
 
