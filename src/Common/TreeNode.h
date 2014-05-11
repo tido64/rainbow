@@ -23,9 +23,6 @@ public:
 	/// Removes a child node.
 	void remove_child(T *);
 
-	/// Sets parent node.
-	void set_parent(T *);
-
 protected:
 	T *parent_;            ///< This node's parent.
 	Vector<T*> children_;  ///< This node's children.
@@ -37,6 +34,8 @@ protected:
 template<class T>
 void TreeNode<T>::add_child(T *node)
 {
+	if (node->parent_)
+		node->parent_->children_.remove(node);
 	node->parent_ = static_cast<T*>(this);
 	children_.push_back(node);
 }
@@ -54,14 +53,6 @@ void TreeNode<T>::remove_child(T *node)
 		return;
 	children_.remove(node);
 	delete node;
-}
-
-template<class T>
-void TreeNode<T>::set_parent(T *node)
-{
-	node->add_child(static_cast<T*>(this));
-	if (parent_)
-		parent_->children_.remove(static_cast<T*>(this));
 }
 
 template<class T>

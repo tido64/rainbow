@@ -209,7 +209,7 @@ NS_RAINBOW_LUA_BEGIN
 		LUA_ASSERT(lua_isuserdata(L, 2) && lua_isuserdata(L, 3),
 		           "rainbow.scenegraph:set_parent(parent, child)");
 
-		luaR_tonode(L, 3)->set_parent(luaR_tonode(L, 2));
+		luaR_tonode(L, 2)->add_child(luaR_tonode(L, 3));
 		return 0;
 	}
 
