@@ -1186,6 +1186,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1948C036152C397D00E9B854 /* Build configuration list for PBXNativeTarget "Rainbow" */;
 			buildPhases = (
+				198B96C4192286A700A1DFB0 /* ShellScript */,
 				1948C01A152C397D00E9B854 /* Sources */,
 				1948C01B152C397D00E9B854 /* Frameworks */,
 				1948C01C152C397D00E9B854 /* Resources */,
@@ -1245,6 +1246,22 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		198B96C4192286A700A1DFB0 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "../../tools/shaders-gen.py";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		1948C01A152C397D00E9B854 /* Sources */ = {
