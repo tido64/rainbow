@@ -157,7 +157,6 @@
 		19DCB27117419B1800660000 /* TestFlight.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19DCB26F17419B1800660000 /* TestFlight.cpp */; };
 		19DCB2731741A1D000660000 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 19DCB2721741A1D000660000 /* libz.dylib */; };
 		19DCB2751741A23400660000 /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19DCB2741741A23400660000 /* libTestFlight.a */; };
-		19DCB2771742BC4500660000 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 19DCB2761742BC4500660000 /* AdSupport.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		19E85AA91858DCBD00D8B170 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 19E85AA81858DCBD00D8B170 /* Images.xcassets */; };
 		19E91FC21682B1460054D61F /* LuaHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19E91FC01682B1460054D61F /* LuaHelper.cpp */; };
 		19EBC54D16599D7000D3B5D7 /* Mixer_AL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19EBC54816599D7000D3B5D7 /* Mixer_AL.cpp */; };
@@ -518,7 +517,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				19DCB2771742BC4500660000 /* AdSupport.framework in Frameworks */,
 				1939A23E152C432A00494609 /* AudioToolbox.framework in Frameworks */,
 				1939A240152C435000494609 /* AVFoundation.framework in Frameworks */,
 				1948C027152C397D00E9B854 /* CoreGraphics.framework in Frameworks */,

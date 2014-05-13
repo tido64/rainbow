@@ -6,7 +6,6 @@
 #import "RainbowViewController.h"
 
 #ifdef USE_TESTFLIGHT_SDK
-#	import <AdSupport/AdSupport.h>
 #	import <TestFlight/TestFlight.h>
 #	define kRainbowAppToken @"3f3029e5-fa3f-46af-b5fb-bd36d2779e57"
 #endif
@@ -18,16 +17,11 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
 #ifdef USE_TESTFLIGHT_SDK
-	NSString *deviceIdentifier = [[[ASIdentifierManager sharedManager] advertisingIdentifier] UUIDString];
-	[TestFlight setDeviceIdentifier:deviceIdentifier];
 	[TestFlight takeOff:kRainbowAppToken];
 #endif
-
-	[[UIApplication sharedApplication] setStatusBarOrientation:UIInterfaceOrientationLandscapeRight];
 	self.viewController = [[RainbowViewController alloc] init];
-	self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-	[self.window setRootViewController:self.viewController];
-
+	self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+	self.window.rootViewController = self.viewController;
 	self.window.backgroundColor = [UIColor whiteColor];
 	[self.window makeKeyAndVisible];
 	return YES;
