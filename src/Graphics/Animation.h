@@ -16,17 +16,19 @@
 class Animation : public TimedEvent<Animation>, private NonCopyable<Animation>
 {
 public:
+	using Frame = unsigned int;
+
 	enum { kAnimationEnd = kMaxInt };
 
 	/// Constructs a sprite animation.
-	/// \param s       The sprite to animate.
+	/// \param sprite  The sprite to animate.
 	/// \param frames  Null-terminated array of texture ids to be used as
 	///                frames.
 	/// \param fps     Frames per second.
 	/// \param delay   Number of ticks to delay before the animation loops.
 	///                Negative numbers disable looping.
 	Animation(const Sprite::Ref &sprite,
-	          const unsigned int *const frames,
+	          const Frame *const frames,
 	          const unsigned int fps,
 	          const int delay = 0);
 
@@ -38,7 +40,7 @@ public:
 	/// \note This method takes ownership of the array.
 	/// \param frames  Null-terminated array of texture ids to be used as
 	///                frames.
-	void set_frames(const unsigned int *const frames);
+	void set_frames(const Frame *const frames);
 
 	/// Sets the sprite to animate.
 	inline void set_sprite(const Sprite::Ref &sprite);
@@ -50,27 +52,27 @@ public:
 	void tick();
 
 private:
-	unsigned int frame;  ///< Current frame.
-	Sprite::Ref sprite;  ///< The sprite to animate.
-	std::unique_ptr<const unsigned int[]> frames;  ///< Null-terminated array of texture ids to be used as frames.
-	int delay;  ///< Number of ticks to delay before the animation loops. Negative numbers disable looping.
-	int idled;  ///< Number of ticks idled.
+	Frame frame_;  ///< Current frame.
+	Sprite::Ref sprite_;  ///< The sprite to animate.
+	std::unique_ptr<const Frame[]> frames_;  ///< Null-terminated array of texture ids to be used as frames.
+	int delay_;  ///< Number of ticks to delay before the animation loops. Negative numbers disable looping.
+	int idled_;  ///< Number of ticks idled.
 };
 
 void Animation::set_delay(const int delay)
 {
-	this->delay = delay;
+	delay_ = delay;
 }
 
 void Animation::set_sprite(const Sprite::Ref &sprite)
 {
-	this->sprite = sprite;
+	sprite_ = sprite;
 }
 
 void Animation::reset()
 {
-	this->frame = 0;
-	this->idled = 0;
+	frame_ = 0;
+	idled_ = 0;
 }
 
 #endif

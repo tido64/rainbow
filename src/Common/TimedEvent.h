@@ -32,53 +32,53 @@ protected:
 	~TimedEvent() = default;
 
 private:
-	unsigned int accumulated;  ///< Accumulated, monotonic time.
-	unsigned int timeout;      ///< Time till a tick.
-	bool stopped;              ///< Whether time is being accumulated.
+	unsigned int accumulated_;  ///< Accumulated, monotonic time.
+	unsigned int timeout_;      ///< Time till a tick.
+	bool stopped_;              ///< Whether time is being accumulated.
 };
 
 template<typename T>
 bool TimedEvent<T>::is_stopped() const
 {
-	return this->stopped;
+	return stopped_;
 }
 
 template<typename T>
 void TimedEvent<T>::set_timeout(const unsigned int timeout)
 {
-	this->timeout = timeout;
-	this->accumulated = 0;
+	timeout_ = timeout;
+	accumulated_ = 0;
 }
 
 template<typename T>
 void TimedEvent<T>::start()
 {
-	R_ASSERT(this->timeout > 0, "No time out set");
-	this->stopped = false;
+	R_ASSERT(timeout_ > 0, "No time out set");
+	stopped_ = false;
 }
 
 template<typename T>
 void TimedEvent<T>::stop()
 {
-	this->stopped = true;
+	stopped_ = true;
 }
 
 template<typename T>
 void TimedEvent<T>::update(const unsigned long dt)
 {
-	if (this->stopped)
+	if (stopped_)
 		return;
 
-	this->accumulated += dt;
-	while (this->accumulated >= this->timeout)
+	accumulated_ += dt;
+	while (accumulated_ >= timeout_)
 	{
 		static_cast<T*>(this)->tick();
-		this->accumulated -= this->timeout;
+		accumulated_ -= timeout_;
 	}
 }
 
 template<typename T>
 TimedEvent<T>::TimedEvent(const unsigned int timeout)
-    : accumulated(0), timeout(timeout), stopped(false) { }
+    : accumulated_(0), timeout_(timeout), stopped_(false) { }
 
 #endif

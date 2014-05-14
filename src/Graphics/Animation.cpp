@@ -5,30 +5,30 @@
 #include "Graphics/Animation.h"
 
 Animation::Animation(const Sprite::Ref &sprite,
-                     const unsigned int *const frames,
+                     const Frame *const frames,
                      const unsigned int fps,
                      const int delay)
-    : TimedEvent(1000.0f / fps), frame(0), sprite(sprite), frames(frames),
-      delay(delay), idled(0) { }
+    : TimedEvent(1000.0f / fps), frame_(0), sprite_(sprite), frames_(frames),
+      delay_(delay), idled_(0) { }
 
-void Animation::set_frames(const unsigned int *const frames)
+void Animation::set_frames(const Frame *const frames)
 {
-	this->frames.reset(frames);
-	this->reset();
+	frames_.reset(frames);
+	reset();
 }
 
 void Animation::tick()
 {
-	this->sprite->set_texture(this->frames[this->frame]);
-	if (this->frames[this->frame + 1] == kAnimationEnd)
+	sprite_->set_texture(frames_[frame_]);
+	if (frames_[frame_ + 1] == kAnimationEnd)
 	{
-		if (this->delay < 0)
-			this->stop();
-		else if (this->idled < this->delay)
-			++this->idled;
+		if (delay_ < 0)
+			stop();
+		else if (idled_ < delay_)
+			++idled_;
 		else
-			this->reset();
+			reset();
 	}
 	else
-		++this->frame;
+		++frame_;
 }
