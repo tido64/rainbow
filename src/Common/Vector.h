@@ -196,21 +196,13 @@ int Vector<T>::find(const T &value) const
 template<typename T>
 void Vector<T>::push_back(const T &element)
 {
-	if (count_ == reserved_)
-		reserve(recommended_size());
-
-	new (arena_ + count_) T(element);
-	++count_;
+	emplace_back(std::forward<const T>(element));
 }
 
 template<typename T>
 void Vector<T>::push_back(T &&element)
 {
-	if (count_ == reserved_)
-		reserve(recommended_size());
-
-	new (arena_ + count_) T(std::forward<T>(element));
-	++count_;
+	emplace_back(std::forward<T>(element));
 }
 
 template<typename T>
