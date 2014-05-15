@@ -94,24 +94,24 @@ NS_B2_LUA_BEGIN
 
 		static int dump(lua_State *);
 
-		int contact_listener;
-		lua_Number elapsed;
-		lua_State *L;
-		RainbowDraw debug_draw;
-		b2World world;
+		int contact_listener_;
+		lua_Number elapsed_;
+		lua_State *L_;
+		RainbowDraw debug_draw_;
+		b2World world_;
 
 		void interpolate();
 		void restore_state();
 		void save_state();
 	};
 
-	const unsigned int kMaxSteps = 5;
+	const int kMaxSteps = 5;
 	const lua_Number kFixedStep = 1.0 / 60.0;
 	const lua_Number kFramesPerMs = 60.0 / 1000.0;
 
 	World::World(lua_State *L)
-	    : contact_listener(LUA_REFNIL), elapsed(0.0), L(L),
-	      debug_draw(ptm_ratio), world(b2Vec2(0.0f, kStandardGravity))
+	    : contact_listener_(LUA_REFNIL), elapsed_(0.0), L_(L),
+	      debug_draw_(ptm_ratio), world_(b2Vec2(0.0f, kStandardGravity))
 	{
 		LUA_ASSERT(lua_isnone(L, 1) ||
 		           (lua_isnumber(L, 1) && lua_isnumber(L, 2)),
@@ -119,22 +119,22 @@ NS_B2_LUA_BEGIN
 
 		if (lua_gettop(L) >= 1)
 		{
-			const b2Vec2 &gravity = this->world.GetGravity();
-			this->world.SetGravity(b2Vec2(luaR_optnumber(L, 1, gravity.x),
-			                              luaR_optnumber(L, 2, gravity.y)));
+			const b2Vec2 &gravity = world_.GetGravity();
+			world_.SetGravity(b2Vec2(luaR_optnumber(L, 1, gravity.x),
+			                         luaR_optnumber(L, 2, gravity.y)));
 		}
 
-		this->debug_draw.SetFlags(b2Draw::e_shapeBit);
-		this->world.SetDebugDraw(&this->debug_draw);
+		debug_draw_.SetFlags(b2Draw::e_shapeBit);
+		world_.SetDebugDraw(&debug_draw_);
 
-		g_debug_data->push_back(&this->world);
+		g_debug_data->push_back(&world_);
 	}
 
 	World::~World()
 	{
-		g_debug_data->erase(&this->world);
-		if (this->contact_listener != LUA_REFNIL)
-			luaL_unref(L, LUA_REGISTRYINDEX, this->contact_listener);
+		g_debug_data->erase(&world_);
+		if (contact_listener_ != LUA_REFNIL)
+			luaL_unref(L_, LUA_REGISTRYINDEX, contact_listener_);
 	}
 
 	int World::set_contact_listener(lua_State *L)
@@ -146,11 +146,11 @@ NS_B2_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		if (self->contact_listener == LUA_REFNIL)
-			self->world.SetContactListener(self);
+		if (self->contact_listener_ == LUA_REFNIL)
+			self->world_.SetContactListener(self);
 		else
-			luaL_unref(L, LUA_REGISTRYINDEX, self->contact_listener);
-		self->contact_listener = luaL_ref(L, LUA_REGISTRYINDEX);
+			luaL_unref(L, LUA_REGISTRYINDEX, self->contact_listener_);
+		self->contact_listener_ = luaL_ref(L, LUA_REGISTRYINDEX);
 		return 0;
 	}
 
@@ -165,7 +165,7 @@ NS_B2_LUA_BEGIN
 		b2BodyDef def;
 		parse_BodyDef(L, def);
 		def.userData = new BodyData(def);
-		b2Body *body = self->world.CreateBody(&def);
+		b2Body *body = self->world_.CreateBody(&def);
 		lua_pushlightuserdata(L, body);
 		Rainbow::Lua::alloc<Body>(L);
 
@@ -197,7 +197,7 @@ NS_B2_LUA_BEGIN
 		lua_pop(L, 1);
 
 		delete static_cast<BodyData*>(body->GetUserData());
-		self->world.DestroyBody(body);
+		self->world_.DestroyBody(body);
 		return 0;
 	}
 
@@ -211,27 +211,24 @@ NS_B2_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		self->elapsed += lua_tonumber(L, 2);
-		unsigned int steps =
-		    static_cast<unsigned int>(self->elapsed * kFramesPerMs);
+		self->elapsed_ += lua_tonumber(L, 2);
+		int steps = static_cast<int>(self->elapsed_ * kFramesPerMs);
 		if (!steps)
 			self->restore_state();
 		else
 		{
-			self->elapsed -= steps / kFramesPerMs;
+			self->elapsed_ -= steps / kFramesPerMs;
 			if (steps > kMaxSteps)
 				steps = kMaxSteps;
 
 			const int v_iter = luaR_optinteger(L, 2, 8);
 			const int p_iter = luaR_optinteger(L, 3, 3);
-
-			self->restore_state();
-			for (unsigned int i = 0; i < steps; ++i)
+			for (int i = 0; i < steps; ++i)
 			{
-				self->world.Step(kFixedStep, v_iter, p_iter);
+				self->world_.Step(kFixedStep, v_iter, p_iter);
 				self->save_state();
 			}
-			self->world.ClearForces();
+			self->world_.ClearForces();
 			self->interpolate();
 		}
 		return 0;
@@ -243,7 +240,7 @@ NS_B2_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		self->world.ClearForces();
+		self->world_.ClearForces();
 		return 0;
 	}
 
@@ -256,7 +253,7 @@ NS_B2_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		self->world.SetGravity(b2Vec2(lua_tonumber(L, 2), lua_tonumber(L, 3)));
+		self->world_.SetGravity(b2Vec2(lua_tonumber(L, 2), lua_tonumber(L, 3)));
 		return 0;
 	}
 
@@ -266,7 +263,7 @@ NS_B2_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		const b2Vec2 &gravity = self->world.GetGravity();
+		const b2Vec2 &gravity = self->world_.GetGravity();
 		lua_pushnumber(L, gravity.x);
 		lua_pushnumber(L, gravity.y);
 		return 2;
@@ -278,58 +275,58 @@ NS_B2_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		self->world.Dump();
+		self->world_.Dump();
 		return 0;
 	}
 
 	void World::BeginContact(b2Contact *contact)
 	{
-		if (this->contact_listener == LUA_REFNIL)
+		if (contact_listener_ == LUA_REFNIL)
 			return;
 
 		const char event[] = "BeginContact";
-		PreContactEvent(event, this->L, this->contact_listener);
-		CreateContactList(this->L, contact);
-		FireContactEvent(event, this->L, 1);
+		PreContactEvent(event, L_, contact_listener_);
+		CreateContactList(L_, contact);
+		FireContactEvent(event, L_, 1);
 	}
 
 	void World::EndContact(b2Contact *contact)
 	{
-		if (this->contact_listener == LUA_REFNIL)
+		if (contact_listener_ == LUA_REFNIL)
 			return;
 
 		const char event[] = "EndContact";
-		PreContactEvent(event, this->L, this->contact_listener);
-		CreateContactList(this->L, contact);
-		FireContactEvent(event, this->L, 1);
+		PreContactEvent(event, L_, contact_listener_);
+		CreateContactList(L_, contact);
+		FireContactEvent(event, L_, 1);
 	}
 
 	void World::PreSolve(b2Contact *contact, const b2Manifold *)
 	{
-		if (this->contact_listener == LUA_REFNIL)
+		if (contact_listener_ == LUA_REFNIL)
 			return;
 
 		const char event[] = "PreSolve";
-		PreContactEvent(event, this->L, this->contact_listener);
-		CreateContactList(this->L, contact);
-		FireContactEvent(event, this->L, 1);
+		PreContactEvent(event, L_, contact_listener_);
+		CreateContactList(L_, contact);
+		FireContactEvent(event, L_, 1);
 	}
 
 	void World::PostSolve(b2Contact *contact, const b2ContactImpulse *)
 	{
-		if (this->contact_listener == LUA_REFNIL)
+		if (contact_listener_ == LUA_REFNIL)
 			return;
 
 		const char event[] = "PostSolve";
-		PreContactEvent(event, this->L, this->contact_listener);
-		CreateContactList(this->L, contact);
-		FireContactEvent(event, this->L, 1);
+		PreContactEvent(event, L_, contact_listener_);
+		CreateContactList(L_, contact);
+		FireContactEvent(event, L_, 1);
 	}
 
 	void World::interpolate()
 	{
-		const float ratio = this->elapsed * kFramesPerMs;
-		ForEachDynamicBody(this->world, [](b2Body *b, const float ratio, const float rest) {
+		const float ratio = elapsed_ * kFramesPerMs;
+		ForEachDynamicBody(world_, [](b2Body *b, const float ratio, const float rest) {
 			if (!b->IsAwake())
 				return;
 
@@ -345,7 +342,7 @@ NS_B2_LUA_BEGIN
 
 	void World::restore_state()
 	{
-		ForEachDynamicBody(this->world, [](b2Body *b) {
+		ForEachDynamicBody(world_, [](b2Body *b) {
 			BodyData *d = static_cast<BodyData*>(b->GetUserData());
 			if (!d->sprite)
 				return;
@@ -358,7 +355,7 @@ NS_B2_LUA_BEGIN
 
 	void World::save_state()
 	{
-		ForEachDynamicBody(this->world, [](b2Body *b) {
+		ForEachDynamicBody(world_, [](b2Body *b) {
 			BodyData *d = static_cast<BodyData*>(b->GetUserData());
 			b2Transform t = b->GetTransform();
 			d->prev_p = d->curr_p;

@@ -14,9 +14,9 @@ namespace b2
 	class DebugData
 	{
 	public:
-		DebugData() : program(0)
+		DebugData() : program_(0)
 		{
-			memset(this->worlds, 0, sizeof(this->worlds));
+			std::fill_n(worlds_, kNumWorlds, nullptr);
 
 			Shader::ShaderParams shaders[] = {
 				{ Shader::kTypeVertex, 0, Rainbow::Shaders::kSimple2Dv },
@@ -28,52 +28,51 @@ namespace b2
 				{ Shader::kAttributeColor, "color" },
 				{ Shader::kAttributeNone, nullptr }
 			};
-			this->program =
-			    ShaderManager::Instance->compile(shaders, attributes);
+			program_ = ShaderManager::Instance->compile(shaders, attributes);
 			Shader::Details &details =
-			    ShaderManager::Instance->get_program(this->program);
+			    ShaderManager::Instance->get_program(program_);
 			details.texture0 = false;
 		}
 
 		void draw()
 		{
 			ShaderManager::Context context;
-			ShaderManager::Instance->use(this->program);
-
-			for (size_t i = 0; i < num_worlds; ++i)
-				if (this->worlds[i])
-					this->worlds[i]->DrawDebugData();
+			ShaderManager::Instance->use(program_);
+			std::for_each(worlds_, worlds_ + kNumWorlds, [](b2World *world) {
+				if (world)
+					world->DrawDebugData();
+			});
 		}
 
 		void erase(b2World *world)
 		{
-			for (size_t i = 0; i < num_worlds; ++i)
+			for (int i = 0; i < kNumWorlds; ++i)
 			{
-				if (this->worlds[i] == world)
+				if (worlds_[i] == world)
 				{
-					this->worlds[i] = nullptr;
-					break;
+					worlds_[i] = nullptr;
+					return;
 				}
 			}
 		}
 
 		void push_back(b2World *world)
 		{
-			for (size_t i = 0; i < num_worlds; ++i)
+			for (int i = 0; i < kNumWorlds; ++i)
 			{
-				if (!this->worlds[i])
+				if (!worlds_[i])
 				{
-					this->worlds[i] = world;
+					worlds_[i] = world;
 					return;
 				}
 			}
 		}
 
 	private:
-		static const size_t num_worlds = 16;
+		static const int kNumWorlds = 16;
 
-		int program;
-		b2World *worlds[num_worlds];
+		int program_;
+		b2World *worlds_[kNumWorlds];
 	} *g_debug_data;
 
 	void DrawDebugData()
