@@ -9,10 +9,17 @@
 #include "Graphics/ShaderDetails.h"
 #include "Graphics/SpriteVertex.h"
 
-Buffer::Buffer() : id_(0)
+namespace
 {
-	glGenBuffers(1, &id_);
+	unsigned int glGenBuffer()
+	{
+		unsigned int id;
+		glGenBuffers(1, &id);
+		return id;
+	}
 }
+
+Buffer::Buffer() : id_(glGenBuffer()) { }
 
 Buffer::~Buffer()
 {

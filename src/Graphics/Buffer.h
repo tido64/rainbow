@@ -23,7 +23,7 @@ public:
 	void upload(const void *const data, const size_t size) const;
 
 private:
-	unsigned int id_;
+	const unsigned int id_;
 };
 
 #endif
