@@ -15,7 +15,7 @@ namespace Rainbow { class Director; }
 
 class Renderer
 {
-	friend class Rainbow::Director;
+	friend Rainbow::Director;
 
 public:
 	enum class ZoomMode
@@ -51,14 +51,14 @@ public:
 	Vec2i convert_to_view(const Vec2i &) const;
 
 private:
-	ZoomMode zoom_mode;
-	unsigned int index_buffer;
-	Vec2f scale;
-	Vec2i origin;
-	Vec2i view;
-	Vec2i window;
-	TextureManager texture_manager;
-	ShaderManager shader_manager;
+	unsigned int index_buffer_;
+	ZoomMode zoom_mode_;
+	Vec2f scale_;
+	Vec2i origin_;
+	Vec2i view_;
+	Vec2i window_;
+	TextureManager texture_manager_;
+	ShaderManager shader_manager_;
 
 	Renderer();
 	~Renderer();
@@ -76,7 +76,7 @@ void Renderer::draw(const T &obj)
 
 const Vec2i& Renderer::window_size() const
 {
-	return this->window;
+	return window_;
 }
 
 #endif

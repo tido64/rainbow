@@ -43,16 +43,107 @@ void Renderer::draw_elements(const SpriteVertex *vertices,
 	R_ASSERT(glGetError() == GL_NO_ERROR, "Failed to draw elements");
 }
 
+bool Renderer::has_extension(const char *const extension)
+{
+	return strstr(reinterpret_cast<const char*>(glGetString(GL_EXTENSIONS)),
+	              extension);
+}
+
+int Renderer::max_texture_size()
+{
+	static const int max_texture_size = [] {
+		int max_texture_size;
+		glGetIntegerv(GL_MAX_TEXTURE_SIZE, &max_texture_size);
+		return max_texture_size;
+	}();
+	return max_texture_size;
+}
+
+void Renderer::set_resolution(const Vec2i &resolution)
+{
+	R_ASSERT(ShaderManager::Instance,
+	         "Cannot set resolution with an uninitialised renderer");
+
+	view_ = resolution;
+	ShaderManager::Instance->set(resolution);
+	if (window_.is_zero())
+		window_ = view_;
+	set_window_size(window_);
+
+	R_ASSERT(glGetError() == GL_NO_ERROR, "Failed to set resolution");
+}
+
+void Renderer::set_window_size(const Vec2i &size)
+{
+	R_ASSERT(ShaderManager::Instance,
+	         "Cannot set window size with an uninitialised renderer");
+
+	if (zoom_mode_ == ZoomMode::Stretch || size == view_)
+	{
+		origin_.x = 0;
+		origin_.y = 0;
+		window_ = size;
+	}
+	else
+	{
+		const Vec2f ratio(size.width / static_cast<float>(view_.width),
+		                  size.height / static_cast<float>(view_.height));
+		if ((zoom_mode_ == ZoomMode::Zoom && ratio.x < ratio.y)
+		    || (zoom_mode_ == ZoomMode::LetterBox && ratio.x > ratio.y))
+		{
+			window_.width = view_.width * ratio.y;
+			window_.height = size.height;
+			origin_.x = (size.width - window_.width) / 2;
+			origin_.y = 0;
+		}
+		else
+		{
+			window_.width = size.width;
+			window_.height = view_.height * ratio.x;
+			origin_.x = 0;
+			origin_.y = (size.height - window_.height) / 2;
+		}
+	}
+	glViewport(origin_.x, origin_.y, window_.width, window_.height);
+	scale_.x = static_cast<float>(view_.width) / window_.width;
+	scale_.y = static_cast<float>(view_.height) / window_.height;
+	window_.height = size.height;
+}
+
+void Renderer::set_zoom_mode(const ZoomMode zoom)
+{
+	if (zoom == zoom_mode_)
+		return;
+
+	zoom_mode_ = zoom;
+	set_window_size(window_);
+}
+
+void Renderer::bind_element_array() const
+{
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffer_);
+}
+
+Vec2i Renderer::convert_to_flipped_view(const Vec2i &p) const
+{
+	return convert_to_view(Vec2i(p.x, window_.height - p.y));
+}
+
+Vec2i Renderer::convert_to_view(const Vec2i &p) const
+{
+	return Vec2i((p.x - origin_.x) * scale_.x, (p.y - origin_.y) * scale_.y);
+}
+
 Renderer::Renderer()
-    : zoom_mode(ZoomMode::LetterBox), index_buffer(0), scale(1.0f, 1.0f) { }
+    : index_buffer_(0), zoom_mode_(ZoomMode::LetterBox), scale_(1.0f, 1.0f) { }
 
 Renderer::~Renderer()
 {
 	Instance = nullptr;
-	if (this->index_buffer)
+	if (index_buffer_)
 	{
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-		glDeleteBuffers(1, &this->index_buffer);
+		glDeleteBuffers(1, &index_buffer_);
 	}
 }
 
@@ -77,7 +168,7 @@ bool Renderer::init()
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	this->shader_manager.init();
+	shader_manager_.init();
 	if (!ShaderManager::Instance)
 		return false;
 
@@ -85,104 +176,12 @@ bool Renderer::init()
 	static_assert(sizeof(kDefaultIndices) ==
 	                  kNumSprites * 6 * sizeof(kDefaultIndices[0]),
 	              "Number of indices do not match set number of sprites");
-	glGenBuffers(1, &this->index_buffer);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->index_buffer);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(kDefaultIndices),
-	             kDefaultIndices, GL_STATIC_DRAW);
+	glGenBuffers(1, &index_buffer_);
+	bind_element_array();
+	glBufferData(
+	    GL_ELEMENT_ARRAY_BUFFER, sizeof(kDefaultIndices), kDefaultIndices,
+	    GL_STATIC_DRAW);
 
 	Instance = this;
 	return glGetError() == GL_NO_ERROR;
-}
-
-bool Renderer::has_extension(const char *const extension)
-{
-	return strstr(reinterpret_cast<const char*>(glGetString(GL_EXTENSIONS)),
-	              extension);
-}
-
-int Renderer::max_texture_size()
-{
-	static const int max_texture_size = [] {
-		int max_texture_size;
-		glGetIntegerv(GL_MAX_TEXTURE_SIZE, &max_texture_size);
-		return max_texture_size;
-	}();
-	return max_texture_size;
-}
-
-void Renderer::set_resolution(const Vec2i &resolution)
-{
-	R_ASSERT(ShaderManager::Instance,
-	         "Cannot set resolution with an uninitialised renderer");
-
-	this->view = resolution;
-	ShaderManager::Instance->set(resolution);
-	if (this->window.is_zero())
-		this->window = this->view;
-	this->set_window_size(this->window);
-
-	R_ASSERT(glGetError() == GL_NO_ERROR, "Failed to set resolution");
-}
-
-void Renderer::set_window_size(const Vec2i &size)
-{
-	R_ASSERT(ShaderManager::Instance,
-	         "Cannot set window size with an uninitialised renderer");
-
-	if (this->zoom_mode == ZoomMode::Stretch || size == this->view)
-	{
-		this->origin.x = 0;
-		this->origin.y = 0;
-		this->window = size;
-	}
-	else
-	{
-		const Vec2f ratio(size.width / static_cast<float>(this->view.width),
-		                  size.height / static_cast<float>(this->view.height));
-		if ((this->zoom_mode == ZoomMode::Zoom && ratio.x < ratio.y)
-		    || (this->zoom_mode == ZoomMode::LetterBox && ratio.x > ratio.y))
-		{
-			this->window.width = this->view.width * ratio.y;
-			this->window.height = size.height;
-			this->origin.x = (size.width - this->window.width) / 2;
-			this->origin.y = 0;
-		}
-		else
-		{
-			this->window.width = size.width;
-			this->window.height = this->view.height * ratio.x;
-			this->origin.x = 0;
-			this->origin.y = (size.height - this->window.height) / 2;
-		}
-	}
-	glViewport(this->origin.x, this->origin.y,
-	           this->window.width, this->window.height);
-	this->scale.x = static_cast<float>(this->view.width) / this->window.width;
-	this->scale.y = static_cast<float>(this->view.height) / this->window.height;
-	this->window.height = size.height;
-}
-
-void Renderer::set_zoom_mode(const ZoomMode zoom)
-{
-	if (zoom == this->zoom_mode)
-		return;
-
-	this->zoom_mode = zoom;
-	this->set_window_size(this->window);
-}
-
-void Renderer::bind_element_array() const
-{
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->index_buffer);
-}
-
-Vec2i Renderer::convert_to_flipped_view(const Vec2i &p) const
-{
-	return this->convert_to_view(Vec2i(p.x, this->window.height - p.y));
-}
-
-Vec2i Renderer::convert_to_view(const Vec2i &p) const
-{
-	return Vec2i((p.x - this->origin.x) * this->scale.x,
-	             (p.y - this->origin.y) * this->scale.y);
 }
