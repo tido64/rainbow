@@ -181,6 +181,12 @@ SDLContext::SDLContext(const SDL_Point &position, const Vec2i &size)
 	SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
 	SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
 	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 0);
+#ifdef GL_VERSION_3_3
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK,
+	                    SDL_GL_CONTEXT_PROFILE_CORE);
+#endif
 
 	window_ = SDL_CreateWindow(
 	    RAINBOW_BUILD, position.x, position.y, size.width, size.height,

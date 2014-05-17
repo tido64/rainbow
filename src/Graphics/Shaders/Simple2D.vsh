@@ -2,7 +2,7 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
-//#version 100
+#version 100
 
 #ifdef GL_ES
 #	ifdef GL_FRAGMENT_PRECISION_HIGH

@@ -83,8 +83,7 @@ void TextureManager::remove(const unsigned int id)
 
 	this->bind(this->textures[i].id);
 	glTexImage2D(
-	    GL_TEXTURE_2D, 0, GL_LUMINANCE, 64, 64, 0, GL_LUMINANCE,
-	    GL_UNSIGNED_BYTE, nullptr);
+	    GL_TEXTURE_2D, 0, GL_RED, 64, 64, 0, GL_RED, GL_UNSIGNED_BYTE, nullptr);
 	this->bind();
 	this->recycled.push_back(this->textures[i]);
 #if RECORD_VMEM_USAGE

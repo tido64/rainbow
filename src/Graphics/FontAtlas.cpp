@@ -265,10 +265,18 @@ FontAtlas::FontAtlas(const Data &font, const float pt)
 	}
 	 */
 
+#if !RAINBOW_MODERN_GL
 	texture_ =
 	    TextureManager::Instance->create(
 	        GL_LUMINANCE_ALPHA, size.width, size.height, GL_LUMINANCE_ALPHA,
 	        buffer.get());
+#else
+	texture_ =
+	    TextureManager::Instance->create(
+	        GL_RG, size.width, size.height, GL_RG, buffer.get());
+	const GLint swizzle_mask[] = { GL_RED, GL_RED, GL_RED, GL_GREEN };
+	glTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_RGBA, swizzle_mask);
+#endif
 }
 
 FontAtlas::~FontAtlas()

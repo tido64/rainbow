@@ -79,13 +79,13 @@ TextureAtlas::TextureAtlas(const DataMap &img) : name(0), width(0), height(0)
 			{
 				case 1:
 					R_ASSERT(image.depth == 8, "Invalid colour depth");
-					format = GL_LUMINANCE;
-					internal = GL_LUMINANCE;
+					format = GL_RED;
+					internal = GL_RED;
 					break;
 				case 2:
 					R_ASSERT(image.depth == 16, "Invalid colour depth");
-					format = GL_LUMINANCE_ALPHA;
-					internal = GL_LUMINANCE_ALPHA;
+					format = GL_RG;
+					internal = GL_RG;
 					break;
 				case 3:
 					R_ASSERT(image.depth == 16 || image.depth == 24,

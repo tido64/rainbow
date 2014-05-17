@@ -16,10 +16,7 @@
 #	include <OpenGLES/ES2/gl.h>
 #	include <OpenGLES/ES2/glext.h>
 #elif defined(RAINBOW_OS_MACOS)
-#	include <OpenGL/gl.h>
-#	define glBindVertexArray     glBindVertexArrayAPPLE
-#	define glDeleteVertexArrays  glDeleteVertexArraysAPPLE
-#	define glGenVertexArrays     glGenVertexArraysAPPLE
+#	include <OpenGL/gl3.h>
 #elif defined(RAINBOW_OS_WINDOWS)
 #	include <windows.h>
 #	define GLEW_NO_GLU
