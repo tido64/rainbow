@@ -37,6 +37,9 @@ public:
 	static void draw_elements(const SpriteVertex *vertices,
 	                          const unsigned int count);
 
+	static bool has_extension(const char *const extension);
+	static int max_texture_size();
+
 	inline const Vec2i& window_size() const;
 
 	void set_resolution(const Vec2i &resolution);

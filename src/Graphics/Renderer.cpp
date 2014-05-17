@@ -94,6 +94,22 @@ bool Renderer::init()
 	return glGetError() == GL_NO_ERROR;
 }
 
+bool Renderer::has_extension(const char *const extension)
+{
+	return strstr(reinterpret_cast<const char*>(glGetString(GL_EXTENSIONS)),
+	              extension);
+}
+
+int Renderer::max_texture_size()
+{
+	static const int max_texture_size = [] {
+		int max_texture_size;
+		glGetIntegerv(GL_MAX_TEXTURE_SIZE, &max_texture_size);
+		return max_texture_size;
+	}();
+	return max_texture_size;
+}
+
 void Renderer::set_resolution(const Vec2i &resolution)
 {
 	R_ASSERT(ShaderManager::Instance,

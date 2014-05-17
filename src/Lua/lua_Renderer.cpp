@@ -60,14 +60,14 @@ NS_RAINBOW_LUA_MODULE_BEGIN(Renderer)
 		lua_pushliteral(L, "renderer");
 		lua_createtable(L, 0, 5);
 
-		int max_texture_size;
-		glGetIntegerv(GL_MAX_TEXTURE_SIZE, &max_texture_size);
-		luaR_rawsetfield(L, lua_pushinteger, max_texture_size, "max_texture_size");
+		luaR_rawsetfield(
+		    L, lua_pushinteger, ::Renderer::max_texture_size(),
+		    "max_texture_size");
 
-		const char *extensions = reinterpret_cast<const char*>(glGetString(GL_EXTENSIONS));
-		R_ASSERT(extensions, "OpenGL context not set up");
-		bool support = strstr(extensions, "GL_IMG_texture_compression_pvrtc") != nullptr;
-		luaR_rawsetfield(L, lua_pushboolean, support, "supports_pvrtc");
+		luaR_rawsetfield(
+		    L, lua_pushboolean,
+		    ::Renderer::has_extension("GL_IMG_texture_compression_pvrtc"),
+		    "supports_pvrtc");
 
 		luaR_rawsetcclosurefield(L, &set_clear_color, "set_clear_color");
 		luaR_rawsetcclosurefield(L, &set_filter, "set_filter");
