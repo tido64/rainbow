@@ -51,6 +51,9 @@ namespace
 	/// \param mode  Permission bits to set on created directories.
 	/// \return 0 upon success. Otherwise, -1 is returned and errno is set to
 	///         indicate the error.
+#ifdef RAINBOW_OS_IOS
+	int create_directories(const char *const path, const mode_t mode) __attribute__((unused));
+#endif
 	int create_directories(const char *const path, const mode_t mode)
 	{
 		bool end = false;
@@ -123,13 +126,13 @@ void Path::set_current(const char *const path)
 
 Path::Path()
 {
-	if (getcwd(this->path, sizeof(this->path)) != this->path)
-		this->path[0] = '\0';
+	if (getcwd(path_, sizeof(path_)) != path_)
+		path_[0] = '\0';
 }
 
 Path::Path(const char *const file, const RelativeTo rel)
 {
-	this->path[0] = '\0';
+	path_[0] = '\0';
 	switch (rel)
 	{
 		case RelativeTo::CurrentPath:
@@ -142,20 +145,20 @@ Path::Path(const char *const file, const RelativeTo rel)
 				{
 					if (file[i] == '/' && file[i + 1] == '/')
 						continue;
-					this->path[++j] = file[i];
+					path_[++j] = file[i];
 				}
-				this->path[++j] = '\0';
+				path_[++j] = '\0';
 			}
 			#elif defined(RAINBOW_OS_IOS)
 			{
 				NSString *string = [[NSString alloc]
-						initWithBytesNoCopy:(void*)file
-						             length:strlen(file)
-						           encoding:NSUTF8StringEncoding
-						       freeWhenDone:NO];
+				    initWithBytesNoCopy:(void*)file
+				                 length:strlen(file)
+				               encoding:NSUTF8StringEncoding
+				           freeWhenDone:NO];
 				string = [[NSBundle mainBundle]
-						pathForResource:[string stringByDeletingPathExtension]
-						         ofType:[string pathExtension]];
+				    pathForResource:[string stringByDeletingPathExtension]
+				             ofType:[string pathExtension]];
 				if (!string)
 					break;
 
@@ -173,18 +176,18 @@ Path::Path(const char *const file, const RelativeTo rel)
 			{
 				NSError *err = nil;
 				NSString *libraryDir = [[[NSFileManager defaultManager]
-						    URLForDirectory:NSLibraryDirectory
-						           inDomain:NSUserDomainMask
-						  appropriateForURL:nil
-						             create:YES
-						              error:&err] path];
+				    URLForDirectory:NSLibraryDirectory
+				           inDomain:NSUserDomainMask
+				  appropriateForURL:nil
+				             create:YES
+				              error:&err] path];
 				if (!libraryDir)
 					return;
 				NSString *string = [[NSString alloc]
-						initWithBytesNoCopy:(void*)file
-						             length:strlen(file)
-						           encoding:NSUTF8StringEncoding
-						       freeWhenDone:NO];
+				    initWithBytesNoCopy:(void*)file
+				                 length:strlen(file)
+				               encoding:NSUTF8StringEncoding
+				           freeWhenDone:NO];
 				*this = [[libraryDir stringByAppendingPathComponent:string] UTF8String];
 			}
 			#else
@@ -216,7 +219,7 @@ Path::Path(const char *const file, const RelativeTo rel)
 
 int Path::create()
 {
-	return create_directories(this->path, 0775);
+	return create_directories(path_, 0775);
 }
 
 #endif
@@ -226,10 +229,10 @@ int Path::create()
 CFURLRef Path::CreateCFURL() const
 {
 	CFStringRef str = CFStringCreateWithBytesNoCopy(
-			kCFAllocatorDefault, (const UInt8*)this->path, strlen(this->path),
-			kCFStringEncodingUTF8, false, kCFAllocatorNull);
+	    kCFAllocatorDefault, (const UInt8*)path_, strlen(path_),
+	    kCFStringEncodingUTF8, false, kCFAllocatorNull);
 	CFURLRef url = CFURLCreateWithFileSystemPath(
-			kCFAllocatorDefault, str, kCFURLPOSIXPathStyle, false);
+	    kCFAllocatorDefault, str, kCFURLPOSIXPathStyle, false);
 	CFRelease(str);
 	return url;
 }
@@ -239,23 +242,23 @@ CFURLRef Path::CreateCFURL() const
 bool Path::is_file() const
 {
 	struct stat sb;
-	if (stat(this->path, &sb) != 0)
+	if (stat(path_, &sb) != 0)
 		return false;
 	return S_ISREG(sb.st_mode);
 }
 
 Path& Path::operator=(const char *const path)
 {
-	strncpy(this->path, path, sizeof(this->path) - sizeof(this->path[0]));
+	strncpy(path_, path, sizeof(path_) - sizeof(path_[0]));
 	return *this;
 }
 
 Path& Path::operator+=(const char *const path)
 {
-	const size_t last = strlen(this->path) - 1;
-	if (this->path[last] != kPathSeparator)
-		strcat(this->path, kPathSeparatorLiteral);
-	strcat(this->path, path);
+	const size_t last = strlen(path_) - 1;
+	if (path_[last] != kPathSeparator)
+		strcat(path_, kPathSeparatorLiteral);
+	strcat(path_, path);
 	return *this;
 }
 
@@ -263,10 +266,11 @@ Path& Path::operator+=(const char *const path)
 
 Path::operator NSURL*() const
 {
-	NSString *path = [[NSString alloc] initWithBytesNoCopy:(void*)this->path
-	                                                length:strlen(this->path)
-	                                              encoding:NSUTF8StringEncoding
-	                                          freeWhenDone:NO];
+	NSString *path = [[NSString alloc]
+	    initWithBytesNoCopy:(void*)path_
+	                 length:strlen(path_)
+	               encoding:NSUTF8StringEncoding
+	           freeWhenDone:NO];
 	return [NSURL fileURLWithPath:path isDirectory:NO];
 }
 

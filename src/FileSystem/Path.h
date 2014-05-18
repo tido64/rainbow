@@ -51,12 +51,12 @@ public:
 #endif
 
 private:
-	char path[256];
+	char path_[256];
 };
 
 Path::operator const char*() const
 {
-	return this->path;
+	return path_;
 }
 
 #endif

@@ -50,33 +50,33 @@ public:
 	inline operator FILE*() const;
 
 private:
-	bool is_asset;  ///< Whether this file is an asset.
+	bool is_asset_;  ///< Whether this file is an asset.
 
 	union
 	{
-		AAsset *asset;
-		FILE *stream;
+		AAsset *asset_;
+		FILE *stream_;
 	};
 
 	explicit File(const char *const path);
 	File(const char *const path, const char *const mode);
 };
 
-File::File() : is_asset(false), stream(nullptr) { }
+File::File() : is_asset_(false), stream_(nullptr) { }
 
 File::operator bool() const
 {
-	return this->stream;
+	return stream_;
 }
 
 File::operator AAsset*() const
 {
-	return this->asset;
+	return asset_;
 }
 
 File::operator FILE*() const
 {
-	return this->stream;
+	return stream_;
 }
 
 #endif

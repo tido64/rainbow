@@ -40,31 +40,31 @@ File File::open_write(const char *const path)
 	return File(Path(path, Path::RelativeTo::UserDataPath), "wb");
 }
 
-File::File(File &&f) : is_asset(f.is_asset), stream(f.stream)
+File::File(File &&f) : is_asset_(f.is_asset_), stream_(f.stream_)
 {
-	f.stream = nullptr;
+	f.stream_ = nullptr;
 }
 
 File::~File()
 {
-	if (!this->stream)
+	if (!stream_)
 		return;
 
 #if defined(RAINBOW_OS_ANDROID)
-	if (this->is_asset)
-		AAsset_close(this->asset);
+	if (is_asset_)
+		AAsset_close(asset_);
 	else
 #endif
-		fclose(this->stream);
+		fclose(stream_);
 }
 
 size_t File::size() const
 {
 #ifdef RAINBOW_OS_ANDROID
-	if (this->is_asset)
-		return AAsset_getLength(this->asset);
+	if (is_asset_)
+		return AAsset_getLength(asset_);
 #endif
-	const int fd = fileno(this->stream);
+	const int fd = fileno(stream_);
 	struct stat file_status;
 	return (fstat(fd, &file_status) != 0) ? 0 : file_status.st_size;
 }
@@ -72,37 +72,39 @@ size_t File::size() const
 size_t File::read(void *dst, const size_t size) const
 {
 #ifdef RAINBOW_OS_ANDROID
-	if (this->is_asset)
-		return AAsset_read(this->asset, dst, size);
+	if (is_asset_)
+		return AAsset_read(asset_, dst, size);
 #endif
-	return fread(dst, sizeof(char), size, this->stream);
+	return fread(dst, sizeof(char), size, stream_);
 }
 
 int File::seek(const long offset, const int origin) const
 {
-	return fseek(this->stream, offset, origin);
+	return fseek(stream_, offset, origin);
 }
 
 size_t File::write(const void *buffer, const size_t size) const
 {
-	return fwrite(buffer, sizeof(char), size, this->stream);
+	return fwrite(buffer, sizeof(char), size, stream_);
 }
 
-File::File(const char *const path) : is_asset(true), stream(nullptr)
+File::File(const char *const path) : is_asset_(true), stream_(nullptr)
 {
 	if (!path || path[0] == '\0')
 		return;
 
 #ifdef RAINBOW_OS_ANDROID
-	this->asset = AAssetManager_open(gNativeActivity->assetManager, path, AASSET_MODE_UNKNOWN);
+	asset_ = AAssetManager_open(
+	    gNativeActivity->assetManager, path, AASSET_MODE_UNKNOWN);
 #else
-	this->stream = fopen(path, "rb");
+	stream_ = fopen(path, "rb");
 #endif
-	if (!this->stream)
+	if (!stream_)
 		R_ERROR("[Rainbow] File: Failed to open '%s'\n", path);
 }
 
-File::File(const char *const path, const char *const mode) : is_asset(false), stream(nullptr)
+File::File(const char *const path, const char *const mode)
+    : is_asset_(false), stream_(nullptr)
 {
-	this->stream = fopen(path, mode);
+	stream_ = fopen(path, mode);
 }
