@@ -60,7 +60,7 @@ namespace PVRTC
 		R_ASSERT(image.width == image.height,
 		         "Compressed textures *must* be square");
 
-		const uint64_t format = CFSwapInt32LittleToHost(header->pixel_format);
+		const uint64_t format = CFSwapInt64LittleToHost(header->pixel_format);
 		R_ASSERT(format < 4, "Invalid PVRTC format type");
 		image.depth = (format < 2) ? 2 : 4;
 		image.channels = ((format & 0x01) == 0) ? 3 : 4;

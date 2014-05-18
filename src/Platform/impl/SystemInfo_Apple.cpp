@@ -54,10 +54,14 @@ namespace Rainbow
 			size_t length = sizeof(memsize);
 			sysctl(mib, 2, &memsize, &length, nullptr, 0);
 			memsize /= 1024 * 1024;
-			size_t memory = static_cast<size_t>(-1);
-			if (memsize < static_cast<int64_t>(memory))
-				memory = memsize;
-			return memory;
+			if (sizeof(size_t) < sizeof(int64_t))
+			{
+				const size_t memory = std::numeric_limits<size_t>::max();
+				return (memsize < static_cast<int64_t>(memory))
+				    ? static_cast<size_t>(memsize)
+				    : memory;
+			}
+			return static_cast<size_t>(memsize);
 		}
 	}
 }
