@@ -2,20 +2,17 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
-#include "Platform/Macros.h"
+#include "Platform/SystemInfo.h"
 #if defined(RAINBOW_OS_ANDROID) || defined(RAINBOW_OS_LINUX) || defined(RAINBOW_JS)
 
 #include <locale.h>
 #include <unistd.h>
 
-#include "Platform/SysUtil.h"
-
 namespace Rainbow
 {
-	namespace SysUtil
+	namespace SystemInfo
 	{
 	#ifdef RAINBOW_OS_UNIX
-
 		bool has_accelerometer()
 		{
 			return false;
@@ -26,7 +23,7 @@ namespace Rainbow
 			return false;
 		}
 
-		void locales(Vector<char*> &locales)
+		void locales(Vector<std::unique_ptr<char[]>> &locales)
 		{
 			char *lc = setlocale(LC_ALL, nullptr);
 			if (!lc)
@@ -52,9 +49,8 @@ namespace Rainbow
 				}
 				locale[i] = '\0';
 			}
-			locales.push_back(locale);
+			locales.emplace_back(locale);
 		}
-
 	#endif
 
 		size_t memory()

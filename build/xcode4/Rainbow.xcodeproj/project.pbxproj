@@ -13,7 +13,7 @@
 		190D6FF116964B2500C9ED26 /* RainbowDraw.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 190D6FEF16964B2500C9ED26 /* RainbowDraw.cpp */; };
 		193929B316E1932E0018340B /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 193929B216E1932E0018340B /* CoreMotion.framework */; };
 		193929B616E23D410018340B /* RainbowViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 193929B516E23D410018340B /* RainbowViewController.mm */; };
-		193929B816E23D5F0018340B /* SysUtil_Apple.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 193929B716E23D5F0018340B /* SysUtil_Apple.cpp */; };
+		193929B816E23D5F0018340B /* SystemInfo_Apple.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 193929B716E23D5F0018340B /* SystemInfo_Apple.cpp */; };
 		193929BD16E243E90018340B /* LuaMachine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 193929BA16E243E90018340B /* LuaMachine.cpp */; };
 		193929C716E352540018340B /* Timer.lua in Resources */ = {isa = PBXBuildFile; fileRef = 193929C616E352540018340B /* Timer.lua */; };
 		1939A04B152C401300494609 /* b2BroadPhase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19399E15152C401300494609 /* b2BroadPhase.cpp */; };
@@ -186,7 +186,7 @@
 		193929B216E1932E0018340B /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
 		193929B416E23D410018340B /* RainbowViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RainbowViewController.h; path = ../../../src/Platform/RainbowViewController.h; sourceTree = "<group>"; };
 		193929B516E23D410018340B /* RainbowViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = RainbowViewController.mm; path = ../../../src/Platform/RainbowViewController.mm; sourceTree = "<group>"; };
-		193929B716E23D5F0018340B /* SysUtil_Apple.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SysUtil_Apple.cpp; path = ../../../src/Platform/impl/SysUtil_Apple.cpp; sourceTree = "<group>"; };
+		193929B716E23D5F0018340B /* SystemInfo_Apple.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SystemInfo_Apple.cpp; path = ../../../src/Platform/impl/SystemInfo_Apple.cpp; sourceTree = "<group>"; };
 		193929BA16E243E90018340B /* LuaMachine.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = LuaMachine.cpp; sourceTree = "<group>"; };
 		193929BB16E243E90018340B /* LuaMachine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LuaMachine.h; sourceTree = "<group>"; };
 		193929BC16E243E90018340B /* LuaModules.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LuaModules.h; sourceTree = "<group>"; };
@@ -508,7 +508,7 @@
 		19F9890715F924E8005A5F69 /* lua_IO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lua_IO.h; sourceTree = "<group>"; };
 		19F9890C15FBBB3B005A5F69 /* NonCopyable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NonCopyable.h; sourceTree = "<group>"; };
 		19F98DA0171970C000A85873 /* Recorder_iOS.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Recorder_iOS.mm; sourceTree = "<group>"; };
-		19F98DA5171B5DDF00A85873 /* SysUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SysUtil.h; path = ../../../src/Platform/SysUtil.h; sourceTree = "<group>"; };
+		19F98DA5171B5DDF00A85873 /* SystemInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SystemInfo.h; path = ../../../src/Platform/SystemInfo.h; sourceTree = "<group>"; };
 		19F98DA6171B5E1500A85873 /* Prose */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Prose; path = ../../../lua/Prose; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -1108,7 +1108,7 @@
 				198BE0A7174A5F420036055E /* Macros.h */,
 				193929B416E23D410018340B /* RainbowViewController.h */,
 				193929B516E23D410018340B /* RainbowViewController.mm */,
-				19F98DA5171B5DDF00A85873 /* SysUtil.h */,
+				19F98DA5171B5DDF00A85873 /* SystemInfo.h */,
 			);
 			name = Platform;
 			sourceTree = "<group>";
@@ -1172,7 +1172,7 @@
 		19F98DA4171B5DC000A85873 /* impl */ = {
 			isa = PBXGroup;
 			children = (
-				193929B716E23D5F0018340B /* SysUtil_Apple.cpp */,
+				193929B716E23D5F0018340B /* SystemInfo_Apple.cpp */,
 			);
 			name = impl;
 			sourceTree = "<group>";
@@ -1389,7 +1389,7 @@
 				190D6FF116964B2500C9ED26 /* RainbowDraw.cpp in Sources */,
 				193929B616E23D410018340B /* RainbowViewController.mm in Sources */,
 				19D045AA18071D6D00968F00 /* Chrono.cpp in Sources */,
-				193929B816E23D5F0018340B /* SysUtil_Apple.cpp in Sources */,
+				193929B816E23D5F0018340B /* SystemInfo_Apple.cpp in Sources */,
 				193929BD16E243E90018340B /* LuaMachine.cpp in Sources */,
 				196911CD1713564A002BC2E4 /* VertexArray.cpp in Sources */,
 				1946B7AE1836E54600F74A3B /* File.cpp in Sources */,

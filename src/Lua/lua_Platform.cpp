@@ -6,7 +6,7 @@
 
 #include <lua.hpp>
 
-#include "Platform/SysUtil.h"
+#include "Platform/SystemInfo.h"
 
 NS_RAINBOW_LUA_MODULE_BEGIN(Platform)
 {
@@ -15,32 +15,34 @@ NS_RAINBOW_LUA_MODULE_BEGIN(Platform)
 		lua_pushliteral(L, "platform");
 		lua_createtable(L, 0, 4);
 
-		luaR_rawsetfield(L, lua_pushboolean, SysUtil::has_accelerometer(), "accelerometer");
+		luaR_rawsetfield(
+		    L, lua_pushboolean, SystemInfo::has_accelerometer(),
+		    "accelerometer");
 
 		// Retrieve locale
 		lua_pushliteral(L, "locale");
 		{
-			Vector<char*> locales;
-			SysUtil::locales(locales);
+			Vector<std::unique_ptr<char[]>> locales;
+			SystemInfo::locales(locales);
 			lua_createtable(L, locales.size(), 0);
 			for (size_t i = 0; i < locales.size(); ++i)
 			{
-				lua_pushstring(L, locales[i]);
+				lua_pushstring(L, locales[i].get());
 				lua_rawseti(L, -2, i + 1);
-				delete[] locales[i];
 			}
 		}
 		lua_rawset(L, -3);
 
 		// Retrieve physical memory
 		lua_pushliteral(L, "memory");
-		lua_pushinteger(L, SysUtil::memory());
+		lua_pushinteger(L, SystemInfo::memory());
 		lua_rawset(L, -3);
 
 		// rainbow.platform.screen
 		lua_pushliteral(L, "screen");
 		lua_createtable(L, 0, 3);
-		luaR_rawsetfield(L, lua_pushboolean, SysUtil::has_touchscreen(), "touch");
+		luaR_rawsetfield(
+		    L, lua_pushboolean, SystemInfo::has_touchscreen(), "touch");
 		lua_rawset(L, -3);
 
 		lua_rawset(L, -3);

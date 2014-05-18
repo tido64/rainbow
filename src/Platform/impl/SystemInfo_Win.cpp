@@ -2,25 +2,26 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
-#include "Platform/Macros.h"
+#include "Platform/SystemInfo.h"
 #ifdef RAINBOW_OS_WINDOWS
 
 #include <windows.h>
 
-#include "Platform/SysUtil.h"
+namespace
+{
+	bool HasGetUserDefaultLocaleName()
+	{
+		HMODULE hModule = GetModuleHandle(TEXT("kernel32.dll"));
+		if (!hModule)
+			return false;
+		return !!GetProcAddress(hModule, "GetUserDefaultLocaleName");
+	}
+}
 
 namespace Rainbow
 {
-	namespace SysUtil
+	namespace SystemInfo
 	{
-		bool HasGetUserDefaultLocaleName()
-		{
-			HMODULE hModule = GetModuleHandle(TEXT("kernel32.dll"));
-			if (!hModule)
-				return false;
-			return !!GetProcAddress(hModule, "GetUserDefaultLocaleName");
-		}
-
 		bool has_accelerometer()
 		{
 			return false;
@@ -31,7 +32,7 @@ namespace Rainbow
 			return false;
 		}
 
-		void locales(Vector<char*> &locales)
+		void locales(Vector<std::unique_ptr<char[]>> &locales)
 		{
 			char *locale_id;
 			if (!HasGetUserDefaultLocaleName())  // Windows 98, XP
@@ -54,7 +55,7 @@ namespace Rainbow
 				locale_id = new char[length + 1];
 				memcpy(locale_id, locale, length + 1);
 			}
-			locales.push_back(locale_id);
+			locales.emplace_back(locale_id);
 		}
 
 		size_t memory()

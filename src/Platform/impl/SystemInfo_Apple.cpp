@@ -2,18 +2,16 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
-#include "Platform/Macros.h"
+#include "Platform/SystemInfo.h"
 #if defined(RAINBOW_OS_IOS) || defined(RAINBOW_OS_MACOS)
 
 #include <sys/types.h>
 #include <sys/sysctl.h>
 #include <CoreFoundation/CoreFoundation.h>
 
-#include "Platform/SysUtil.h"
-
 namespace Rainbow
 {
-	namespace SysUtil
+	namespace SystemInfo
 	{
 		bool has_accelerometer()
 		{
@@ -33,18 +31,18 @@ namespace Rainbow
 		#endif
 		}
 
-		void locales(Vector<char*> &locales)
+		void locales(Vector<std::unique_ptr<char[]>> &locales)
 		{
 			char tmp[16];
 			CFArrayRef localesArray = CFLocaleCopyPreferredLanguages();
-			const int count = CFArrayGetCount(localesArray);
+			const long count = CFArrayGetCount(localesArray);
 			locales.reserve(count);
-			for (int i = 0; i < count; ++i)
+			for (long i = 0; i < count; ++i)
 			{
 				CFStringRef lang = (CFStringRef)CFArrayGetValueAtIndex(localesArray, i);
 				CFStringGetCString(lang, tmp, sizeof(tmp), kCFStringEncodingUTF8);
-				locales.push_back(new char[sizeof(tmp)]);
-				strcpy(locales[i], tmp);
+				locales.emplace_back(new char[sizeof(tmp)]);
+				strcpy(locales[i].get(), tmp);
 			}
 			CFRelease(localesArray);
 		}

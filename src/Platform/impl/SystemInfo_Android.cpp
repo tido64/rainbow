@@ -2,14 +2,12 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
-#include "Platform/Macros.h"
-#if defined(RAINBOW_OS_ANDROID)
-
-#include "Platform/SysUtil.h"
+#include "Platform/SystemInfo.h"
+#ifdef RAINBOW_OS_ANDROID
 
 namespace Rainbow
 {
-	namespace SysUtil
+	namespace SystemInfo
 	{
 		bool has_accelerometer()
 		{
@@ -21,10 +19,10 @@ namespace Rainbow
 			return true;
 		}
 
-		void locales(Vector<char*> &locales)
+		void locales(Vector<std::unique_ptr<char[]>> &locales)
 		{
-			locales.push_back(new char[3]);
-			strcpy(locales[0], "en");
+			locales.emplace_back(new char[3]);
+			strcpy(locales[0].get(), "en");
 		}
 	}
 }
