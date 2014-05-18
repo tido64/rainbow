@@ -104,7 +104,7 @@ namespace Rainbow
 	template<typename T>
 	bool isequal(const T a, const T b)
 	{
-		return fabs(a - b) <= std::fmax(fabs(a), fabs(b)) * std::numeric_limits<T>::epsilon();
+		return fabs(a - b) <= fmax(fabs(a), fabs(b)) * std::numeric_limits<T>::epsilon();
 	}
 
 	bool ispow2(const unsigned int i)
