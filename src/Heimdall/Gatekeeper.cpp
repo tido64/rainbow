@@ -25,10 +25,7 @@ namespace
 		for (const char *c = path; *c; ++c)
 		{
 			if (*c == '/' || *c == ':' || *c == '\\')
-			{
 				basename = ++c;
-				continue;
-			}
 		}
 		return basename;
 	}
@@ -53,32 +50,32 @@ namespace
 namespace Heimdall
 {
 	Gatekeeper::Gatekeeper()
-	    : touch_count(0), touch_held(0), overlay_node(nullptr),
-	      monitor(Path::current())
+	    : touch_count_(0), touch_held_(0), overlay_node_(nullptr),
+	      monitor_(Path::current())
 	{
-		if (this->terminated())
+		if (terminated())
 			return;
 
-		this->info.reset(new DebugInfo());
-		this->scenegraph.add_child(this->info->node());
+		info_.reset(new DebugInfo());
+		scenegraph_.add_child(info_->node());
 
-		this->overlay_node = this->scenegraph.add_child(&this->overlay);
-		this->overlay_node->enabled = false;
-		this->overlay_node->add_child(this->info->button());
+		overlay_node_ = scenegraph_.add_child(&overlay_);
+		overlay_node_->enabled = false;
+		overlay_node_->add_child(info_->button());
 
-		this->monitor.set_callback([this](const char *path) {
+		monitor_.set_callback([this](const char *path) {
 			char *file = new char[strlen(path) + 1];
 			strcpy(file, path);
-			std::lock_guard<std::mutex> lock(this->changed_files_mutex);
-			this->changed_files = this->changed_files.push_front(file);
+			std::lock_guard<std::mutex> lock(changed_files_mutex_);
+			changed_files_ = changed_files_.push_front(file);
 		});
 
-		this->touch_canceled();
+		touch_canceled();
 	}
 
 	void Gatekeeper::init(const Data &main, const Vec2i &screen)
 	{
-		this->overlay.setup(screen);
+		overlay_.setup(screen);
 
 		const unsigned int pt = screen.height / 64;
 		FontAtlas *console_font = new FontAtlas(DataRef(Inconsolata_otf), pt);
@@ -87,68 +84,66 @@ namespace Heimdall
 		const float y = screen.height - console_font->height();
 		Vec2f position(screen.width / 128,
 		               y - console_font->height() - ui_font->height());
-		this->info->set_button(position, ui_font);
+		info_->set_button(position, ui_font);
 		position.y = y;
-		this->info->set_console(position, console_font);
+		info_->set_console(position, console_font);
 
 		Director::init(main, screen);
 		Input::Instance->subscribe(this, Input::Events::Touch);
-
-		lua_State *L = this->state();
-		this->reload = [L](const char *file) {
-			std::unique_ptr<const char[]> path(file);
-			Library library(path.get());
-			if (!library)
-				return;
-
-			R_DEBUG("[Rainbow] Reloading '%s'...\n", library.name());
-			Rainbow::Lua::reload(L, library.open(), library.name());
-		};
 	}
 
 	void Gatekeeper::update(const unsigned long dt)
 	{
 		// Reload changed files.
 		{
-			decltype(this->changed_files) files;
+			decltype(changed_files_) files;
 			{
-				std::lock_guard<std::mutex> lock(this->changed_files_mutex);
-				files = std::move(this->changed_files);
+				std::lock_guard<std::mutex> lock(changed_files_mutex_);
+				files = std::move(changed_files_);
 			}
-			for_each(files, this->reload);
+			lua_State *L = state();
+			for_each(files, [L](const char *file) {
+				std::unique_ptr<const char[]> path(file);
+				Library library(path.get());
+				if (!library)
+					return;
+
+				R_DEBUG("[Rainbow] Reloading '%s'...\n", library.name());
+				Rainbow::Lua::reload(L, library.open(), library.name());
+			});
 		}
 
 		Director::update(dt);
 
-		if (!this->overlay_node->enabled && this->touch_count == 2)
+		if (!overlay_node_->enabled && touch_count_ == 2)
 		{
-			this->touch_held += dt;
-			if (this->touch_held > 2000)
-				this->toggle_overlay();
+			touch_held_ += dt;
+			if (touch_held_ > 2000)
+				toggle_overlay();
 		}
-		this->info->update(dt);
-		this->scenegraph.update(dt);
+		info_->update(dt);
+		scenegraph_.update(dt);
 	}
 
 	void Gatekeeper::touch_began_impl(const Touch *const touches,
 	                                  const size_t count)
 	{
-		if (this->overlay_node->enabled)
+		if (overlay_node_->enabled)
 			return;
 
 		size_t i = 0;
-		switch (this->touch_count)
+		switch (touch_count_)
 		{
 			case 0:
-				this->touches[0] = touches[0];
-				++this->touch_count;
+				touches_[0] = touches[0];
+				++touch_count_;
 				++i;
 			case 1:
 				if (i < count)
 				{
-					this->touches[1] = touches[i];
-					++this->touch_count;
-					this->touch_held = 0;
+					touches_[1] = touches[i];
+					++touch_count_;
+					touch_held_ = 0;
 				}
 				break;
 			default:
@@ -158,33 +153,33 @@ namespace Heimdall
 
 	void Gatekeeper::touch_canceled_impl()
 	{
-		this->touch_count = 0;
-		this->touches[0].hash = -1;
-		this->touches[1].hash = -1;
+		touch_count_ = 0;
+		touches_[0].hash = -1;
+		touches_[1].hash = -1;
 	}
 
 	void Gatekeeper::touch_ended_impl(const Touch *const touches,
 	                                  const size_t count)
 	{
-		if (this->overlay_node->enabled && !this->touch_count)
+		if (overlay_node_->enabled && !touch_count_)
 		{
-			if (!this->info->on_touch(touches, count))
-				this->toggle_overlay();
+			if (!info_->on_touch(touches, count))
+				toggle_overlay();
 			return;
 		}
 
 		for (size_t i = 0; i < count; ++i)
 		{
-			if (touches[i] == this->touches[0])
+			if (touches[i] == touches_[0])
 			{
-				this->touches[0] = this->touches[1];
-				this->touches[1].hash = -1;
-				--this->touch_count;
+				touches_[0] = touches_[1];
+				touches_[1].hash = -1;
+				--touch_count_;
 			}
-			else if (touches[i] == this->touches[1])
+			else if (touches[i] == touches_[1])
 			{
-				this->touches[1].hash = -1;
-				--this->touch_count;
+				touches_[1].hash = -1;
+				--touch_count_;
 			}
 		}
 	}
@@ -192,30 +187,30 @@ namespace Heimdall
 
 Library::Library(const char *const path) : path_(path)
 {
-	const char *filename = basename(this->path_);
+	const char *filename = basename(path_);
 	size_t length = strlen(filename);
 	if (length < 5 || memcmp(filename + length - 4, ".lua", 4) != 0)
 	{
-		this->path_ = nullptr;
+		path_ = nullptr;
 		return;
 	}
 	length -= 4;
-	this->name_.reset(new char[length + 1]);
-	strncpy(this->name_.get(), filename, length);
-	this->name_[length] = '\0';
+	name_.reset(new char[length + 1]);
+	strncpy(name_.get(), filename, length);
+	name_[length] = '\0';
 }
 
 const char* Library::name() const
 {
-	return this->name_.get();
+	return name_.get();
 }
 
 Data Library::open() const
 {
 #if defined(RAINBOW_OS_MACOS)
-	return Data(File::open(this->path_));
+	return Data(File::open(path_));
 #elif defined(RAINBOW_OS_WINDOWS)
-	return Data::load_asset(this->path_);
+	return Data::load_asset(path_);
 #else
 	return Data();
 #endif
@@ -223,7 +218,7 @@ Data Library::open() const
 
 Library::operator bool() const
 {
-	return this->path_;
+	return path_;
 }
 
 #endif

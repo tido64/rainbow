@@ -32,17 +32,16 @@ namespace Heimdall
 		void update(const unsigned long dt);
 
 	private:
-		unsigned int touch_count;
-		unsigned long touch_held;
-		List<const char*> changed_files;
-		std::unique_ptr<DebugInfo> info;
-		SceneGraph::Node *overlay_node;
-		std::function<void(const char*)> reload;
-		SceneGraph::Node scenegraph;
-		std::mutex changed_files_mutex;
-		Touch touches[2];
-		ChangeMonitor monitor;
-		Overlay overlay;
+		unsigned int touch_count_;
+		unsigned long touch_held_;
+		List<const char*> changed_files_;
+		std::unique_ptr<DebugInfo> info_;
+		SceneGraph::Node *overlay_node_;
+		SceneGraph::Node scenegraph_;
+		std::mutex changed_files_mutex_;
+		Touch touches_[2];
+		ChangeMonitor monitor_;
+		Overlay overlay_;
 
 		inline void toggle_overlay();
 
@@ -58,12 +57,12 @@ namespace Heimdall
 	void Gatekeeper::draw()
 	{
 		Director::draw();
-		this->scenegraph.draw();
+		scenegraph_.draw();
 	}
 
 	void Gatekeeper::toggle_overlay()
 	{
-		this->overlay_node->enabled = !this->overlay_node->enabled;
+		overlay_node_->enabled = !overlay_node_->enabled;
 	}
 }
 
