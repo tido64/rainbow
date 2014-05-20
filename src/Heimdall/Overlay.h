@@ -19,8 +19,8 @@ namespace Heimdall
 		void setup(const Vec2i &screen);
 
 	private:
-		unsigned int texture;
-		SpriteVertex vertices[4];
+		unsigned int texture_;
+		SpriteVertex vertices_[4];
 
 		/* Implement Drawable. */
 
@@ -28,7 +28,7 @@ namespace Heimdall
 		virtual void update_impl() override;
 	};
 
-	Overlay::Overlay() : texture(0) { }
+	Overlay::Overlay() : texture_(0) { }
 }
 
 #endif
