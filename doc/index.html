@@ -98,7 +98,7 @@
 
 Sprite animations use separate textures within a [texture atlas](#rainbow-texture) as animation frames. Since animations are bound to a [sprite](#rainbow-sprite), which in turn is bound to a [sprite batch](#rainbow-spritebatch), they are also bound to the [texture atlas](#rainbow-texture) the batch is using.
 
-### rainbow.animation(sprite, frames, fps, delay)
+### rainbow.animation(sprite, frames, fps, delay = 0)
 
 | Parameter | Description |
 |-----------|-------------|
@@ -844,12 +844,12 @@ Calculates the distance between two points.
 
 Newton's law of universal gravitation: F = G * (m<sub>1</sub> * m<sub>2</sub>) / r<sup>2</sup>.
 
-### Math.hitbox(x, y, width,height, scale)
+### Math.hitbox(x, y, width, height, scale = 1.0)
 
 | Parameter | Description |
 |-----------|-------------|
 | <var>x, y</var> | Centre of the box. |
-| <var>width,height</var> | Dimension of the box. |
+| <var>width, height</var> | Dimension of the box. |
 | <var>scale</var> | Scaling factor for on-screen box size. Default: 1.0. |
 
 Creates a hitbox.
@@ -1014,50 +1014,62 @@ Fades in an audio channel.
 
 Fades out an audio channel.
 
-### Transition.fadeto(sprite, alpha, duration, method)
+### Transition.fadeto(sprite, alpha, duration, transition)
 
 | Parameter | Description |
 |-----------|-------------|
 | <var>sprite</var> | The sprite to fade. |
-| <var>alpha</var> | Final alpha value. |
+| <var>alpha</var> | Desired alpha value. |
 | <var>duration</var> | Duration of the transition in milliseconds. |
-| <var>method</var> | The equation to use for the transition. |
+| <var>transition</var> | The equation to use for the transition. |
 
 Fades a sprite to a given alpha value.
 
-### Transition.move(drawable, x, y, duration, method)
+### Transition.move(drawable, x, y, duration, transition)
 
 | Parameter | Description |
 |-----------|-------------|
-| <var>drawable</var> | A scene graph node or an object that implements ``:move()``. |
+| <var>drawable</var> | A scene graph node or a drawable that implements ``:move()``. |
 | <var>x, y</var> | Number of units to move drawable(s) by, relative to its/their current position(s). |
 | <var>duration</var> | Duration of the transition in milliseconds. |
-| <var>method</var> | The equation to use for the transition. |
+| <var>transition</var> | The equation to use for the transition. |
 
 Moves a node (and its children) or a drawable.
 
-### Transition.rotate(drawable, r, duration, method)
+### Transition.new(target, func, start, desired, duration, transition)
 
 | Parameter | Description |
 |-----------|-------------|
-| <var>drawable</var> | An object that implements ``:get_angle()`` and ``:rotate()``. |
-| <var>r</var> | Final angle. |
+| <var>target</var> | The object to perform transition effects on. |
+| <var>func</var> | Function to call on every step of the transition. The function should at least take two parameters: one for ``target``, and one or more for values at each step. |
+| <var>start</var> | One or more start values. |
+| <var>desired</var> | One or more desired values. |
 | <var>duration</var> | Duration of the transition in milliseconds. |
-| <var>method</var> | The equation to use for the transition. |
+| <var>transition</var> | The equation to use for the transition. |
+
+Performs a transition from start value(s) to desired value(s) over specified duration. All currently implemented transitions wrap this call.
+
+### Transition.rotate(drawable, r, duration, transition)
+
+| Parameter | Description |
+|-----------|-------------|
+| <var>drawable</var> | A drawable that implements ``:get_angle()`` and ``:rotate()``. |
+| <var>r</var> | Desired angle in radians. |
+| <var>duration</var> | Duration of the transition in milliseconds. |
+| <var>transition</var> | The equation to use for the transition. |
 
 Rotates a drawable to given angle.
 
-### Transition.scaleto(drawable, start, final, duration, method)
+### Transition.scaleto(drawable, factor, duration, transition)
 
 | Parameter | Description |
 |-----------|-------------|
-| <var>drawable</var> | An object that implements ``:set_scale()``. |
-| <var>start</var> | Start scale factor. |
-| <var>final</var> | Final scale factor. |
+| <var>drawable</var> | A drawable that implements ``:get_scale()`` and ``:set_scale()``. |
+| <var>factor</var> | Desired scale factor(s). If one value is give, the drawable will be scaled uniformly on both axes. |
 | <var>duration</var> | Duration of the transition in milliseconds. |
-| <var>method</var> | The equation to use for the transition. |
+| <var>transition</var> | The equation to use for the transition. |
 
-Scales a drawable from a given start factor to a given final factor.
+Scales a drawable to given desired factor(s).
 
 ## Box2D
 

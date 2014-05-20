@@ -5,9 +5,32 @@
 -- (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
 local module_path = (...):match("(.*[./\\])[^./\\]+") or ""
+local Functions = require(module_path .. "TransitionFunctions")
+
+local kDefaultTransitionFunction = Functions.linear
 
 local __count = 0
 local __transitions = {}
+local __variadic = {
+	function(start, desired, progress, transition)  -- 1
+		return transition(start, desired, progress)
+	end,
+	function(start, desired, progress, transition)  -- 2
+		return transition(start[1], desired[1], progress),
+		       transition(start[2], desired[2], progress)
+	end,
+	function(start, desired, progress, transition)  -- 3
+		return transition(start[1], desired[1], progress),
+		       transition(start[2], desired[2], progress),
+		       transition(start[3], desired[3], progress)
+	end,
+	function(start, desired, progress, transition)  -- 4
+		return transition(start[1], desired[1], progress),
+		       transition(start[2], desired[2], progress),
+		       transition(start[3], desired[3], progress),
+		       transition(start[4], desired[4], progress)
+	end
+}
 
 local function clear()
 	for i = 1, __count do
@@ -21,210 +44,132 @@ local function register(t)
 	__transitions[__count] = t
 end
 
-local function unregister(t)
+local function unregister(i)
+	__transitions[i] = __transitions[__count]
+	__count = __count - 1
+end
+
+local function cancel(self)
 	for i = 1, __count do
-		if __transitions[i] == t then
-			__transitions[i] = __transitions[__count]
-			__count = __count - 1
+		if __transitions[i] == self then
+			unregister(i)
 			break
 		end
 	end
 end
 
 local Transition = {
-	Functions = require(module_path .. "TransitionFunctions"),
+	Functions = Functions,
 	clear = clear,
 	fadein = nil,
 	fadeout = nil,
 	fadeto = nil,
 	move = nil,
+	new = nil,
 	rotate = nil,
 	scaleto = nil
 }
 
-setmetatable(Transition, {
-	__update = function(dt)
-		for i = __count, 1, -1 do
-			__transitions[i]:tick(dt)
-		end
-	end
-})
-
-local function ticker(iterate, finalize, duration)
+function Transition.new(target, func, start, desired, duration, transition)
 	local elapsed = 0
-	return function(self, dt)
-		elapsed = elapsed + dt
-		local progress = elapsed / duration
-		if progress >= 1.0 then
-			finalize(self)
-			unregister(self)
-		else
-			iterate(self, progress)
+	local iter = __variadic[type(desired) == "table" and #desired or 1]
+	local min = math.min
+	transition = transition or kDefaultTransitionFunction
+	local self = {
+		cancel = cancel,
+		tick = function(dt)
+			elapsed = elapsed + dt
+			func(target, iter(start, desired, min(1.0, elapsed / duration), transition))
+			return elapsed >= duration
 		end
-	end
+	}
+	register(self)
+	return self
 end
 
-local LinearFunction = Transition.Functions.linear
-
-if rainbow.audio then  -- fadein, fadeout
+if rainbow.audio then  -- Rainbow.ConFuoco
 	local audio = rainbow.audio
 	local play = audio.play
 	local set_gain = audio.set_gain
 	local stop = audio.stop
 
-	local function create(source, iterate, finalize, duration)
-		local self = {
-			cancel = unregister,
-			source = source,
-			tick = ticker(iterate, finalize, duration),
-			transition = LinearFunction
-		}
-		register(self)
-		return self
-	end
-
-	local function in_finalize(self)
-		set_gain(self.source, 1.0)
-	end
-
-	local function in_iterate(self, progress)
-		set_gain(self.source, progress)
-	end
-
-	local function out_finalize(self)
-		stop(self.source)
-	end
-
-	local function out_iterate(self, progress)
-		set_gain(self.source, 1.0 - progress)
+	local function set_gain_and_stop(self, progress)
+		set_gain(self, progress)
+		if progress >= 1.0 then
+			stop(self)
+		end
 	end
 
 	function Transition.fadein(source, duration)
 		play(source)
-		return create(source, in_iterate, in_finalize, duration)
+		return Transition.new(source, set_gain, 0.0, 1.0, duration)
 	end
 
 	function Transition.fadeout(source, duration)
-		return create(source, out_iterate, out_finalize, duration)
+		return Transition.new(source, set_gain_and_stop, 1.0, 0.0, duration)
 	end
+else
+	local function noop() end
+	Transition.fadein = noop
+	Transition.fadeout = noop
 end
 
-do  -- move
-	local scenegraph = rainbow.scenegraph
-
-	local function finalize(self)
-		self.move(self.node, self.x1 - self.x, self.y1 - self.y)
+function Transition.fadeto(sprite, alpha, duration, transition)
+	local func = function(self, alpha)
+		local r, g, b, _ = self:get_color()
+		self:set_color(r, g, b, alpha)
 	end
+	local _, _, _, a = sprite:get_color()
+	return Transition.new(sprite, func, a, alpha, duration, transition)
+end
 
-	local function iterate(self, progress)
-		local x = self.transition(0, self.x1, progress)
-		local y = self.transition(0, self.y1, progress)
-		self.move(self.node, x - self.x, y - self.y)
-		self.x, self.y = x, y
+function Transition.move(node, x, y, duration, transition)
+	local x0, y0 = 0, 0
+	local move = function(node, x, y)
+		node:move(x - x0, y - y0)
+		x0 = x
+		y0 = y
 	end
-
-	local function move_drawable(drawable, x, y)
-		drawable:move(x, y)
-	end
-
-	local function move_node(node, x, y)
-		scenegraph:move(node, x, y)
-	end
-
-	function Transition.move(node, x, y, duration, method)
-		local self = {
-			cancel = unregister,
-			move = move_drawable,
-			node = node,
-			tick = ticker(iterate, finalize, duration),
-			transition = method or LinearFunction,
-			x = 0,
-			y = 0,
-			x1 = x,
-			y1 = y
-		}
-		if type(node) == "userdata" then
-			-- Nodes don't have a metatable as opposed to e.g. sprites
-			if not getmetatable(node) then
-				self.move = move_node
+	if type(node) == "userdata" then
+		-- Nodes don't have a metatable as opposed to e.g. sprites
+		if not getmetatable(node) then
+			local scenegraph = rainbow.scenegraph
+			move = function(node, x, y)
+				scenegraph:move(node, x - x0, y - y0)
+				x0 = x
+				y0 = y
 			end
-		else
-			assert(type(node) == "table", "Invalid object");
-			assert(node.move, "Object must implement :move()")
 		end
-		register(self)
-		return self
+	else
+		assert(type(node) == "table", "Invalid object");
+		assert(node.move, "Object must implement :move()")
 	end
+	return Transition.new(node, move, { x0, y0 }, { x, y }, duration, transition)
 end
 
-do  -- rotate
-	local function finalize(self)
-		self.sprite:set_rotation(self.r1)
-	end
-
-	local function iterate(self, progress)
-		self.sprite:set_rotation(self.transition(self.r0, self.r1, progress))
-	end
-
-	function Transition.rotate(sprite, r, duration, method)
-		local self = {
-			cancel = unregister,
-			r0 = sprite:get_angle(),
-			r1 = r,
-			sprite = sprite,
-			tick = ticker(iterate, finalize, duration),
-			transition = method or LinearFunction
-		}
-		register(self)
-		return self
-	end
+function Transition.rotate(sprite, r, duration, transition)
+	return Transition.new(sprite, sprite.set_rotation, sprite:get_angle(), r, duration, transition)
 end
 
-do  -- scaleto
-	local function finalize(self)
-		self.sprite:set_scale(self.final)
+function Transition.scaleto(sprite, factor, duration, transition)
+	if type(factor) == "table" then
+		if #factor == 1 then
+			factor = { factor[1], factor[1] }
+		end
+	else
+		factor = { factor, factor }
 	end
-
-	local function iterate(self, progress)
-		self.sprite:set_scale(self.transition(self.start, self.final, progress))
-	end
-
-	function Transition.scaleto(sprite, start, final, duration, method)
-		local self = {
-			cancel = unregister,
-			final = final,
-			sprite = sprite,
-			start = start,
-			tick = ticker(iterate, finalize, duration),
-			transition = method or LinearFunction
-		}
-		register(self)
-		return self
-	end
+	local x, y = sprite:get_scale()
+	return Transition.new(sprite, sprite.set_scale, { x, y }, factor, duration, transition)
 end
 
-do  -- fadeto
-	local function finalize(self)
-		self.sprite:set_color(self.r, self.g, self.b, self.a1)
+return rainbow.module.register(setmetatable(Transition, {
+	__update = function(dt)
+		for i = __count, 1, -1 do
+			local t = __transitions[i]
+			if t.tick(dt) and t == __transitions[i] then
+				unregister(i)
+			end
+		end
 	end
-
-	local function iterate(self, progress)
-		self.sprite:set_color(self.r, self.g, self.b, self.transition(self.a, self.a1, progress))
-	end
-
-	function Transition.fadeto(sprite, alpha, duration, method)
-		local self = {
-			cancel = unregister,
-			r = 255, g = 255, b = 255, a = 255,
-			a1 = alpha,
-			sprite = sprite,
-			tick = ticker(iterate, finalize, duration),
-			transition = method or LinearFunction
-		}
-		self.r, self.g, self.b, self.a = sprite:get_color()
-		register(self)
-		return self
-	end
-end
-
-return rainbow.module.register(Transition)
+}))
