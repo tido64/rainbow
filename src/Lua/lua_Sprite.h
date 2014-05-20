@@ -23,6 +23,7 @@ NS_RAINBOW_LUA_BEGIN
 		static int get_angle(lua_State *);
 		static int get_color(lua_State *);
 		static int get_position(lua_State *);
+		static int get_scale(lua_State *);
 		static int set_color(lua_State *);
 		static int set_normal(lua_State *);
 		static int set_pivot(lua_State *);

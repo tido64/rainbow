@@ -21,6 +21,7 @@ NS_RAINBOW_LUA_BEGIN
 		{ "get_angle",     &Sprite::get_angle },
 		{ "get_color",     &Sprite::get_color },
 		{ "get_position",  &Sprite::get_position },
+		{ "get_scale",     &Sprite::get_scale },
 		{ "set_color",     &Sprite::set_color },
 		{ "set_normal",    &Sprite::set_normal },
 		{ "set_pivot",     &Sprite::set_pivot },
@@ -71,6 +72,18 @@ NS_RAINBOW_LUA_BEGIN
 		const Vec2f &v = self->sprite->position();
 		lua_pushnumber(L, v.x);
 		lua_pushnumber(L, v.y);
+		return 2;
+	}
+
+	int Sprite::get_scale(lua_State *L)
+	{
+		Sprite *self = Bind::self(L);
+		if (!self)
+			return 0;
+
+		const Vec2f &f = self->sprite->scale();
+		lua_pushnumber(L, f.x);
+		lua_pushnumber(L, f.y);
 		return 2;
 	}
 

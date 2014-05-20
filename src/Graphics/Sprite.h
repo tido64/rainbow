@@ -54,19 +54,11 @@ public:
 	       const SpriteBatch *parent);
 	Sprite(Sprite &&);
 
-	/// Returns the sprite's current angle.
 	inline float angle() const;
-
-	/// Returns the sprite's colour.
 	inline const Colorb& color() const;
-
-	/// Returns the sprite's height.
 	inline unsigned int height() const;
-
-	/// Returns the sprite's current position.
 	inline const Vec2f& position() const;
-
-	/// Returns the sprite's width.
+	inline const Vec2f& scale() const;
 	inline unsigned int width() const;
 
 	/// Sets sprite colour.
@@ -155,6 +147,11 @@ unsigned int Sprite::height() const
 const Vec2f& Sprite::position() const
 {
 	return position_;
+}
+
+const Vec2f& Sprite::scale() const
+{
+	return scale_;
 }
 
 unsigned int Sprite::width() const
