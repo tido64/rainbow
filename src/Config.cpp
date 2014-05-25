@@ -17,7 +17,7 @@ namespace Rainbow
 	{
 		const char kConfigModule[] = "config";
 
-		const Path path(kConfigModule, Path::RelativeTo::CurrentPath);
+		const Path path(kConfigModule);
 		if (!path.is_file())
 		{
 			R_DEBUG("[Rainbow] No config file was found\n");

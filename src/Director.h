@@ -25,6 +25,7 @@ namespace Rainbow
 
 		inline bool active() const;
 		inline const char* error() const;
+		inline Input& input();
 		inline Renderer& renderer();
 		inline bool terminated() const;
 
@@ -72,6 +73,11 @@ namespace Rainbow
 	const char* Director::error() const
 	{
 		return error_;
+	}
+
+	Input& Director::input()
+	{
+		return input_;
 	}
 
 	Renderer& Director::renderer()

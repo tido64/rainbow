@@ -16,8 +16,8 @@ public:
 	virtual ~Touchable() = default;
 
 	/// User puts finger down on the device.
-	/// \param touches  The id and position of each touch
-	/// \param count    Number of touches
+	/// \param touches  The id and position of each touch.
+	/// \param count    Number of touches.
 	inline void touch_began(const Touch *const touches, const size_t count);
 
 	/// Canceled touch event. May occur when the user moves finger off-screen
@@ -25,13 +25,13 @@ public:
 	inline void touch_canceled();
 
 	/// User lifts finger.
-	/// \param touches  The id and position of each touch
-	/// \param count    Number of touches
+	/// \param touches  The id and position of each touch.
+	/// \param count    Number of touches.
 	inline void touch_ended(const Touch *const touches, const size_t count);
 
 	/// User moves finger around while it still is on the device.
-	/// \param touches  The id and position of each touch
-	/// \param count    Number of touches
+	/// \param touches  The id and position of each touch.
+	/// \param count    Number of touches.
 	inline void touch_moved(const Touch *const touches, const size_t count);
 
 private:

@@ -15,9 +15,9 @@
 class Chrono : private NonCopyable<Chrono>
 {
 public:
-	typedef std::chrono::steady_clock clock;
-	typedef std::chrono::milliseconds duration;
-	typedef clock::time_point time_point;
+	using clock = std::chrono::steady_clock;
+	using duration = std::chrono::milliseconds;
+	using time_point = clock::time_point;
 
 	static void sleep(const duration::rep milliseconds);
 
