@@ -89,7 +89,7 @@ namespace Heimdall
 		info_->set_console(position, console_font);
 
 		Director::init(main, screen);
-		Input::Instance->subscribe(this, Input::Events::Touch);
+		input().subscribe(this, Input::Events::Touch);
 	}
 
 	void Gatekeeper::update(const unsigned long dt)

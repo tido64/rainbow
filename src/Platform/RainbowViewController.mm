@@ -138,7 +138,7 @@ namespace
 	if (self.motionManager.accelerometerActive)
 	{
 		const CMAccelerometerData *data = self.motionManager.accelerometerData;
-		Input::Instance->accelerated(
+		self.director->input().accelerated(
 		    data.acceleration.x, data.acceleration.y, data.acceleration.z,
 		    data.timestamp);
 	}
@@ -156,25 +156,25 @@ namespace
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
-	Input::Instance->touch_began([self touchesArrayFromSet:touches],
-	                             touches.count);
+	self.director->input().touch_began([self touchesArrayFromSet:touches],
+	                                   touches.count);
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
 {
-	Input::Instance->touch_moved([self touchesArrayFromSet:touches],
-	                             touches.count);
+	self.director->input().touch_moved([self touchesArrayFromSet:touches],
+	                                   touches.count);
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
-	Input::Instance->touch_ended([self touchesArrayFromSet:touches],
-	                             touches.count);
+	self.director->input().touch_ended([self touchesArrayFromSet:touches],
+	                                   touches.count);
 }
 
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
 {
-	Input::Instance->touch_canceled();
+	self.director->input().touch_canceled();
 }
 
 #pragma mark - UIViewController

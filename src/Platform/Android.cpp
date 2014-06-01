@@ -102,7 +102,7 @@ void android_main(struct android_app *state)
 			{
 				ASensorEvent event;
 				while (ASensorEventQueue_getEvents(ainstance.sensorEventQueue, &event, 1) > 0)
-					Input::Instance->accelerated(
+					ainstance.director->input().accelerated(
 						event.acceleration.x,
 						event.acceleration.y,
 						event.acceleration.z,
@@ -303,8 +303,7 @@ int32_t android_handle_input(struct android_app *app, AInputEvent *event)
 
 int32_t android_handle_motion(struct android_app *app, AInputEvent *event)
 {
-	Renderer &renderer =
-	    static_cast<AInstance*>(app->userData)->director->renderer();
+	Director *director = static_cast<AInstance*>(app->userData)->director.get();
 	switch (AMotionEvent_getAction(event) & AMOTION_EVENT_ACTION_MASK)
 	{
 		case AMOTION_EVENT_ACTION_DOWN:
@@ -313,8 +312,8 @@ int32_t android_handle_motion(struct android_app *app, AInputEvent *event)
 			    (AMotionEvent_getAction(event)
 			        & AMOTION_EVENT_ACTION_POINTER_INDEX_MASK)
 			    >> AMOTION_EVENT_ACTION_POINTER_INDEX_SHIFT;
-			Touch t = get_touch_event(renderer, event, index);
-			Input::Instance->touch_began(&t, 1);
+			Touch t = get_touch_event(director->renderer(), event, index);
+			director->input().touch_began(&t, 1);
 			break;
 		}
 		case AMOTION_EVENT_ACTION_UP:
@@ -323,8 +322,8 @@ int32_t android_handle_motion(struct android_app *app, AInputEvent *event)
 			    (AMotionEvent_getAction(event)
 			        & AMOTION_EVENT_ACTION_POINTER_INDEX_MASK)
 			    >> AMOTION_EVENT_ACTION_POINTER_INDEX_SHIFT;
-			Touch t = get_touch_event(renderer, event, index);
-			Input::Instance->touch_ended(&t, 1);
+			Touch t = get_touch_event(director->renderer(), event, index);
+			director->input().touch_ended(&t, 1);
 			break;
 		}
 		case AMOTION_EVENT_ACTION_MOVE: {
@@ -337,14 +336,17 @@ int32_t android_handle_motion(struct android_app *app, AInputEvent *event)
 			std::unique_ptr<Touch[]> touches(new Touch[count]);
 
 			for (size_t i = 0; i < count; ++i)
-				touches[i] = get_touch_event(renderer, event, i, history);
-			Input::Instance->touch_moved(touches.get(), count);
+			{
+				touches[i] =
+				    get_touch_event(director->renderer(), event, i, history);
+			}
+			director->input().touch_moved(touches.get(), count);
 			break;
 		}
 		case AMOTION_EVENT_ACTION_CANCEL:
 		case AMOTION_EVENT_ACTION_OUTSIDE:
-			//Input::Instance->touch_canceled(touches, count);
-			Input::Instance->touch_canceled();
+			//director->input().touch_canceled(touches, count);
+			director->input().touch_canceled();
 			break;
 		default:
 			break;

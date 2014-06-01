@@ -28,10 +28,7 @@ public:
 		static const unsigned int All    = Key | Touch;
 	};
 
-	static Input *Instance;
-
 	inline explicit Input(lua_State *);
-	inline ~Input();
 
 	/// Resets input subscription list.
 	inline void reset();
@@ -64,29 +61,21 @@ public:
 	void touch_moved(Touch *const touches, const size_t count);
 
 private:
-	lua_State *lua_state;
-	Acceleration acceleration;  ///< Accelerometer data
-	Vector<Touchable*> touch_subscribers;
+	lua_State *lua_state_;
+	Acceleration acceleration_;  ///< Accelerometer data
+	Vector<Touchable*> touch_subscribers_;
 };
 
-Input::Input(lua_State *L) : lua_state(L)
-{
-	Instance = this;
-}
-
-Input::~Input()
-{
-	Instance = nullptr;
-}
+Input::Input(lua_State *L) : lua_state_(L) { }
 
 void Input::reset()
 {
-	this->touch_subscribers.clear();
+	touch_subscribers_.clear();
 }
 
 void Input::unsubscribe(Touchable *const t)
 {
-	this->touch_subscribers.qremove(t);
+	touch_subscribers_.remove(t);
 }
 
 #endif
