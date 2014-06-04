@@ -43,6 +43,7 @@
                 <li><a href="#rainbow-sprite">sprite</a></li>
                 <li><a href="#rainbow-spritebatch">spritebatch</a></li>
                 <li><a href="#rainbow-texture">texture</a></li>
+                <li><a href="#rainbow-time">time</a></li>
               </ul>
             </li>
             <li class="dropdown">
@@ -82,6 +83,7 @@
   * [sprite](#rainbow-sprite)
   * [spritebatch](#rainbow-spritebatch)
   * [texture](#rainbow-texture)
+  * [time](#rainbow-time)
   * &mdash;
   * [Coroutine](#coroutine)
   * [Functional](#functional)
@@ -699,6 +701,12 @@ Creates a texture object, usable in [sprite batches](#rainbow-spritebatch).
 | <var>width, height</var> | Dimension of texture. |
 
 Creates/defines a texture in the atlas. The unique identifier returned can be used in [sprites](#rainbow-sprite).
+
+## rainbow.time
+
+### rainbow.time_since_epoch()
+
+Returns number of seconds elapsed since epoch on a steady clock.
 
 ## Coroutine
 

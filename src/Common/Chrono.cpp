@@ -20,6 +20,14 @@ void Chrono::sleep(const duration::rep ms)
 	std::this_thread::sleep_for(duration(ms));
 }
 
+std::chrono::seconds Chrono::time_since_epoch()
+{
+	const auto now =
+	    std::chrono::time_point_cast<std::chrono::seconds>(
+	        Chrono::clock::now());
+	return now.time_since_epoch();
+}
+
 Chrono::Chrono() : current_(now()), previous_(current_) { }
 
 void Chrono::update()

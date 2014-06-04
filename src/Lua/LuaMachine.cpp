@@ -4,6 +4,7 @@
 
 #include "Lua/LuaMachine.h"
 
+#include "Common/Chrono.h"
 #include "Common/Data.h"
 #include "Lua/LuaModules.h"
 #include "Lua/lua_Rainbow.h"
@@ -46,6 +47,12 @@ namespace
 			luaL_requiref(L, lib->name, lib->func, 1);
 			lua_pop(L, 1);  /* remove lib */
 		}
+	}
+
+	int time_since_epoch(lua_State *L)
+	{
+		lua_pushinteger(L, Chrono::time_since_epoch().count());
+		return 1;
 	}
 }
 
@@ -124,6 +131,9 @@ namespace Rainbow
 
 		// Set "rainbow.breakpoint".
 		luaR_rawsetcclosurefield(L, breakpoint, "breakpoint");
+
+		// Set "rainbow.time_since_epoch".
+		luaR_rawsetcclosurefield(L, time_since_epoch, "time_since_epoch");
 
 		// Initialize "rainbow.scenegraph".
 		this->scenegraph = Lua::SceneGraph::create(this->L, root);

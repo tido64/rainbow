@@ -20,6 +20,7 @@ public:
 	using time_point = clock::time_point;
 
 	static void sleep(const duration::rep milliseconds);
+	static std::chrono::seconds time_since_epoch();
 
 	Chrono();
 
