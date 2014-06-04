@@ -42,7 +42,9 @@ function SceneIntro:destruct()
 end
 
 function SceneIntro:init()
-	rainbow.audio.play(self.scene.resources.bgm)
+	if rainbow.audio then
+		rainbow.audio.play(self.scene.resources.bgm)
+	end
 	local callback = function()
 		self:tick()
 	end

@@ -5,7 +5,7 @@
 local screen = rainbow.platform.screen
 local cx, cy = screen.width * 0.5, screen.height * 0.5
 return {
-	version = "1.0",
+	version = 1.1,
 	resources = {
 		bgm = "scummbar.ogg",
 		monkey = {
@@ -40,7 +40,7 @@ return {
 				{  -- Pirate hanging on the chandelier
 					name = "chandelier",
 					size = { 64, 48 },
-					frames = { 1, 2, 3, 4, 5, 6, fps = 6 },
+					animations = { drink = { 1, 2, 3, 4, 5, 6, fps = 6 } },
 					position = {
 						screen.width - global_scale * 136,
 						cy + global_scale * 24
@@ -51,7 +51,7 @@ return {
 				{  -- Pirates sitting by the window
 					name = "bythewindow",
 					size = { 48, 48 },
-					frames = { 7, 8, 9, fps = 2 },
+					animations = { drink = { 7, 8, 9, fps = 2 } },
 					position = { global_scale * 144, cy + global_scale * -32 },
 					scale = global_scale,
 					texture = 7
@@ -59,7 +59,9 @@ return {
 				{  -- Pirate chillin' in the back
 					name = "intheback",
 					size = { 32, 40 },
-					frames = { 10, 11, 12, 12, 11, 10, fps = 3, delay = 6 },
+					animations = {
+						drink = { 10, 11, 12, 12, 11, 10, fps = 3, delay = 6 }
+					},
 					position = {
 						screen.width - global_scale * 88,
 						cy + global_scale * -4

@@ -4,6 +4,8 @@
 
 #include "Lua/lua_Animation.h"
 
+#include <algorithm>
+
 #include "Graphics/Animation.h"
 #include "Lua/LuaHelper.h"
 #include "Lua/lua_Sprite.h"
@@ -36,36 +38,22 @@ NS_RAINBOW_LUA_BEGIN
 		           (lua_isnumber(L, 4) || lua_isnone(L, 4)),
 		           "rainbow.animation(sprite, frames{}, fps, loop_delay = 0)");
 
-		// Count number of frames
-		unsigned int count = 0;
-		lua_pushnil(L);
-		while (lua_next(L, 2))
-		{
-			++count;
-			lua_pop(L, 1);
-		}
-
-		// Allocate frames array
+		const size_t count = lua_rawlen(L, 2);
 		unsigned int *const frames = new unsigned int[count + 1];
-		unsigned int *frame = frames;
-
-		// Populate frames array
-		lua_pushnil(L);
-		while (lua_next(L, 2))
-		{
-			*frame = luaR_tointeger(L, -1);
-			++frame;
-			lua_pop(L, 1);
-		}
+		int i = 0;
+		std::for_each(frames, frames + count, [L, &i](unsigned int &frame) {
+			lua_rawgeti(L, 2, ++i);
+			frame = lua_tointeger(L, -1);
+		});
+		lua_pop(L, i);
 		frames[count] = ::Animation::kAnimationEnd;
 
 		::Sprite::Ref sprite;
 		replacetable(L, 1);
 		if (lua_isuserdata(L, 1))
 			sprite = touserdata<Sprite>(L, 1)->get();
-		const unsigned int fps = lua_tointeger(L, 3);
-		const int delay = luaR_optinteger(L, 4, 0);
-		this->animation = new ::Animation(sprite, frames, fps, delay);
+		this->animation = new ::Animation(
+		    sprite, frames, lua_tointeger(L, 3), luaR_optinteger(L, 4, 0));
 	}
 
 	Animation::~Animation()

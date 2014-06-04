@@ -50,7 +50,7 @@ Prose.__index = setmetatable(Prose, {
 })
 
 function Prose.from_table(t)
-	if type(t) ~= "table" then
+	if type(t) ~= "table" or t.version < Parser.version then
 		return nil
 	end
 	collectgarbage("stop")

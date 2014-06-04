@@ -5,7 +5,7 @@
 local screen = rainbow.platform.screen
 local cx, cy = screen.width * 0.5, screen.height * 0.5
 return {
-	version = "1.0",
+	version = 1.1,
 	resources = {
 		bgm = "opening.ogg",  -- auto removed :)
 		monkey = {

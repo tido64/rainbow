@@ -21,14 +21,18 @@ local function endswith(str, ending)
 end
 
 local function extend(data)
-	return setmetatable({ __userdata = data }, { __index = function(self, key)
-		local field = self.__userdata[key]
-		if not field then
-			return nil
-		end
-		self[key] = function(self, ...) return field(self.__userdata, ...) end
-		return self[key]
-	end })
+	return setmetatable(
+		{ __userdata = data },
+		{ __index = function(self, key)
+			local field = self.__userdata[key]
+			if not field then
+				return nil
+			end
+			self[key] = function(self, ...)
+				return field(self.__userdata, ...)
+			end
+			return self[key]
+		end })
 end
 
 local function insert(t, k, v)
@@ -45,24 +49,19 @@ local function setproperties(obj, def)
 	if def.alignment then
 		obj:set_alignment(def.alignment)
 	end
+	if def.animations then
+		obj.animations = {}
+		for k,v in pairs(def.animations) do
+			obj.animations[k] = rainbow.animation(obj, v, v.fps, v.delay or 0)
+			obj.animations[k]:stop()
+		end
+	end
 	if def.color then
 		local r = tonumber(def.color:sub(1, 2), 16)
 		local g = tonumber(def.color:sub(3, 4), 16)
 		local b = tonumber(def.color:sub(5, 6), 16)
 		local a = tonumber(def.color:sub(7, 8), 16)
 		obj:set_color(r, g, b, a)
-	end
-	if def.frames then
-		local fps = def.frames.fps
-		local delay = def.frames.delay
-		def.frames.fps = nil
-		def.frames.delay = nil
-		local count = #def.frames
-		if delay then
-			obj.animation = rainbow.animation(obj, def.frames, fps, delay)
-		else
-			obj.animation = rainbow.animation(obj, def.frames, fps)
-		end
 	end
 	if def.position then
 		local x, y = 1, 2
@@ -148,8 +147,8 @@ local function createnodes(parent, resources, nodes)
 			merge(t, sprites)
 			batch.node = scenegraph:add_batch(parent, batch)
 			for _,sprite in pairs(sprites) do
-				if sprite.animation then
-					scenegraph:add_animation(batch.node, sprite.animation)
+				for _,animation in pairs(sprite.animations or {}) do
+					scenegraph:add_animation(batch.node, animation)
 				end
 			end
 			insert(t, node.name, batch)
@@ -170,5 +169,6 @@ end
 
 return {
 	createresources = createresources,
-	createnodes = createnodes
+	createnodes = createnodes,
+	version = 1.1
 }
