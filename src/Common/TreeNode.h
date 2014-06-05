@@ -5,6 +5,8 @@
 #ifndef COMMON_TREENODE_H_
 #define COMMON_TREENODE_H_
 
+#include <functional>
+
 #include "Common/Vector.h"
 
 /// A barebone implementation of a tree node.
@@ -16,6 +18,10 @@ class TreeNode : private NonCopyable<TreeNode<T>>
 public:
 	/// Adds a node as child.
 	void add_child(T *);
+
+	/// Recursively calls function \p func on this node and its children.
+	template<typename F>
+	void for_each(F func);
 
 	/// Removes node from the tree and deletes it.
 	void remove();
@@ -38,6 +44,18 @@ void TreeNode<T>::add_child(T *node)
 		node->parent_->children_.remove(node);
 	node->parent_ = static_cast<T*>(this);
 	children_.push_back(node);
+}
+
+template<class T>
+template<typename F>
+void TreeNode<T>::for_each(F func)
+{
+	static_assert(std::is_convertible<F, std::function<void(T*)>>::value,
+	              "function type void(T*) required");
+
+	func(static_cast<T*>(this));
+	for (auto child : children_)
+		child->for_each(func);
 }
 
 template<class T>

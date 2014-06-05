@@ -4,6 +4,8 @@
 
 #include "Lua/lua_SceneGraph.h"
 
+#include <unordered_set>
+
 #include "Graphics/Drawable.h"
 #include "Graphics/SceneGraph.h"
 #include "Lua/LuaHelper.h"
@@ -13,8 +15,34 @@
 #include "Lua/lua_Sprite.h"
 #include "Lua/lua_SpriteBatch.h"
 
+using SceneGraph::Node;
+
 namespace
 {
+#ifndef NDEBUG
+	std::unordered_set<Node*> g_nodes;
+
+	bool is_valid_node(lua_State *L, const int n, Node *node)
+	{
+		if (!node)
+			return luaL_argerror(L, n, "invalid node");
+		if (!g_nodes.count(node))
+			return luaL_argerror(L, n, "non-existing node");
+		return true;
+	}
+
+	bool register_node(Node *node)
+	{
+		return g_nodes.insert(node).second;
+	}
+
+	bool unregister_node(Node *node)
+	{
+		node->for_each([](Node *node) { g_nodes.erase(node); });
+		return true;
+	}
+#endif
+
 	template<class T, Rainbow::Lua::SceneGraph::CastingMethod C>
 	struct luaR_cast;
 
@@ -36,11 +64,12 @@ namespace
 		}
 	};
 
-	SceneGraph::Node* luaR_tonode(lua_State *L, const int n)
+	Node* luaR_tonode(lua_State *L, const int n)
 	{
-		SceneGraph::Node *node =
-		    luaR_cast<SceneGraph::Node, Rainbow::Lua::SceneGraph::kCastingUnsafe>::from(L, n);
-		LUA_CHECK(L, node, "rainbow.scenegraph: Invalid node specified");
+		Node *node =
+		    luaR_cast<Node, Rainbow::Lua::SceneGraph::kCastingUnsafe>::
+		        from(L, n);
+		R_ASSERT(is_valid_node(L, n, node), "Invalid or non-existing node");
 		return node;
 	}
 }
@@ -69,8 +98,10 @@ NS_RAINBOW_LUA_BEGIN
 		{ nullptr, nullptr }
 	};
 
-	SceneGraph* SceneGraph::create(lua_State *L, ::SceneGraph::Node *root)
+	SceneGraph* SceneGraph::create(lua_State *L, Node *root)
 	{
+		R_ASSERT(register_node(root), "Failed to register root node");
+
 		lua_pushlstring(L, class_name, sizeof(class_name) / sizeof(char) - 1);
 		void *data = lua_newuserdata(L, sizeof(SceneGraph));
 		luaL_newmetatable(L, class_name);  // metatable = {}
@@ -100,14 +131,14 @@ NS_RAINBOW_LUA_BEGIN
 		scenegraph->~SceneGraph();
 	}
 
-	SceneGraph::SceneGraph(::SceneGraph::Node *root) : node(root) { }
+	SceneGraph::SceneGraph(Node *root) : node(root) { }
 
 	template<class T, SceneGraph::CastingMethod C>
 	int SceneGraph::add_child(lua_State *L)
 	{
-		R_ASSERT(luaR_isuserdata(L, 2) &&
-		         (luaR_isuserdata(L, 3) || lua_isnone(L, 3)),
-		         "rainbow.scenegraph: Invalid parameters");
+		LUA_ASSERT(luaR_isuserdata(L, 2) &&
+		           (luaR_isuserdata(L, 3) || lua_isnone(L, 3)),
+		           "rainbow.scenegraph: Invalid parameters");
 
 		SceneGraph *self = Bind::self(L);
 		if (!self)
@@ -120,10 +151,11 @@ NS_RAINBOW_LUA_BEGIN
 		T *obj = luaR_cast<T, C>::from(L, -1);
 
 		// Retrieve and add element.
-		::SceneGraph::Node *node = lua_isnone(L, 3) ? self->node
-		                                            : luaR_tonode(L, 2);
+		Node *node = lua_isnone(L, 3) ? self->node : luaR_tonode(L, 2);
 		R_ASSERT(node, "This shouldn't ever happen.");
-		lua_pushlightuserdata(L, node->add_child(obj->get()));
+		Node *child = node->add_child(obj->get());
+		R_ASSERT(register_node(child), "Failed to register node");
+		lua_pushlightuserdata(L, child);
 		return 1;
 	}
 
@@ -156,10 +188,11 @@ NS_RAINBOW_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		::SceneGraph::Node *node = lua_isuserdata(L, 2) ? luaR_tonode(L, 2)
-		                                                : self->node;
+		Node *node = lua_isuserdata(L, 2) ? luaR_tonode(L, 2) : self->node;
 		R_ASSERT(node, "This shouldn't ever happen.");
-		lua_pushlightuserdata(L, node->add_child(new ::SceneGraph::Node()));
+		Node *child = new Node();
+		R_ASSERT(register_node(child), "Failed to register node");
+		lua_pushlightuserdata(L, node->add_child(child));
 		return 1;
 	}
 
@@ -174,8 +207,9 @@ NS_RAINBOW_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		int program = lua_isuserdata(L, 3) ? luaR_cast<Shader, kCastingUnsafe>::from(L, 3)->id()
-		                                   : 0;
+		int program = lua_isuserdata(L, 3)
+		    ? luaR_cast<Shader, kCastingUnsafe>::from(L, 3)->id()
+		    : 0;
 		luaR_tonode(L, 2)->attach_program(program);
 		return 0;
 	}
@@ -200,7 +234,9 @@ NS_RAINBOW_LUA_BEGIN
 	{
 		LUA_ASSERT(lua_isuserdata(L, 2), "rainbow.scenegraph:remove(node)");
 
-		luaR_tonode(L, 2)->remove();
+		Node *node = luaR_tonode(L, 2);
+		R_ASSERT(unregister_node(node), "Failed to unregister node");
+		node->remove();
 		return 0;
 	}
 
