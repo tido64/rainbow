@@ -63,6 +63,10 @@ local function setproperties(obj, def)
 		local a = tonumber(def.color:sub(7, 8), 16)
 		obj:set_color(r, g, b, a)
 	end
+	if def.pivot then
+		local x, y = 1, 2
+		obj:set_pivot(def.pivot[x], def.pivot[y])
+	end
 	if def.position then
 		local x, y = 1, 2
 		obj:set_position(def.position[x], def.position[y])
