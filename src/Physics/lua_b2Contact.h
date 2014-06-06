@@ -66,7 +66,8 @@ NS_B2_LUA_BEGIN
 
 	int Contact::set_enabled(lua_State *L)
 	{
-		LUA_ASSERT(lua_isboolean(L, 2), "<b2.contact>:set_enabled(bool)");
+		// <b2.contact>:set_enabled(bool)
+		Rainbow::Lua::Argument<bool>::is_required(L, 2);
 
 		Contact *self = Bind::self(L);
 		if (!self)

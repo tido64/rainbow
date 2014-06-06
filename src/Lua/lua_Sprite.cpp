@@ -7,6 +7,7 @@
 #include <lua.hpp>
 
 #include "Graphics/SpriteBatch.h"
+#include "Lua/LuaSyntax.h"
 
 NS_RAINBOW_LUA_BEGIN
 {
@@ -89,11 +90,11 @@ NS_RAINBOW_LUA_BEGIN
 
 	int Sprite::set_color(lua_State *L)
 	{
-		LUA_ASSERT(lua_isnumber(L, 2) &&
-		           lua_isnumber(L, 3) &&
-		           lua_isnumber(L, 4) &&
-		           lua_isnumber(L, 5),
-		           "<sprite>:set_color(r, g, b, a = 255)");
+		// <sprite>:set_color(r, g, b, a = 255)
+		Argument<lua_Number>::is_required(L, 2);
+		Argument<lua_Number>::is_required(L, 3);
+		Argument<lua_Number>::is_required(L, 4);
+		Argument<lua_Number>::is_optional(L, 5);
 
 		Sprite *self = Bind::self(L);
 		if (!self)
@@ -109,7 +110,8 @@ NS_RAINBOW_LUA_BEGIN
 
 	int Sprite::set_normal(lua_State *L)
 	{
-		LUA_ASSERT(lua_isnumber(L, 2), "<sprite>:set_normal(<texture>)");
+		// <sprite>:set_normal(<texture>)
+		Argument<lua_Number>::is_required(L, 2);
 
 		Sprite *self = Bind::self(L);
 		if (!self)
@@ -121,8 +123,9 @@ NS_RAINBOW_LUA_BEGIN
 
 	int Sprite::set_pivot(lua_State *L)
 	{
-		LUA_ASSERT(lua_isnumber(L, 2) && lua_isnumber(L, 3),
-		           "<sprite>:set_pivot(x, y)");
+		// <sprite>:set_pivot(x, y)
+		Argument<lua_Number>::is_required(L, 2);
+		Argument<lua_Number>::is_required(L, 3);
 
 		Sprite *self = Bind::self(L);
 		if (!self)
@@ -134,8 +137,9 @@ NS_RAINBOW_LUA_BEGIN
 
 	int Sprite::set_position(lua_State *L)
 	{
-		LUA_ASSERT(lua_isnumber(L, 2) && lua_isnumber(L, 3),
-		           "<sprite>:set_position(x, y)");
+		// <sprite>:set_position(x, y)
+		Argument<lua_Number>::is_required(L, 2);
+		Argument<lua_Number>::is_required(L, 3);
 
 		Sprite *self = Bind::self(L);
 		if (!self)
@@ -148,7 +152,8 @@ NS_RAINBOW_LUA_BEGIN
 
 	int Sprite::set_rotation(lua_State *L)
 	{
-		LUA_ASSERT(lua_isnumber(L, 2), "<sprite>:set_rotation(r)");
+		// <sprite>:set_rotation(r)
+		Argument<lua_Number>::is_required(L, 2);
 
 		Sprite *self = Bind::self(L);
 		if (!self)
@@ -160,9 +165,9 @@ NS_RAINBOW_LUA_BEGIN
 
 	int Sprite::set_scale(lua_State *L)
 	{
-		LUA_ASSERT(lua_isnumber(L, 2) &&
-		           (lua_isnumber(L, 3) || lua_isnone(L, 3)),
-		           "<sprite>:set_scale(fx, fy = fx)");
+		// <sprite>:set_scale(fx, fy = fx)
+		Argument<lua_Number>::is_required(L, 2);
+		Argument<lua_Number>::is_optional(L, 3);
 
 		Sprite *self = Bind::self(L);
 		if (!self)
@@ -175,7 +180,8 @@ NS_RAINBOW_LUA_BEGIN
 
 	int Sprite::set_texture(lua_State *L)
 	{
-		LUA_ASSERT(lua_isnumber(L, 2), "<sprite>:set_texture(<texture>)");
+		// <sprite>:set_texture(<texture>)
+		Argument<lua_Number>::is_required(L, 2);
 
 		Sprite *self = Bind::self(L);
 		if (!self)
@@ -197,8 +203,9 @@ NS_RAINBOW_LUA_BEGIN
 
 	int Sprite::move(lua_State *L)
 	{
-		LUA_ASSERT(lua_isnumber(L, 2) && lua_isnumber(L, 3),
-		           "<sprite>:move(x, y)");
+		// <sprite>:move(x, y)
+		Argument<lua_Number>::is_required(L, 2);
+		Argument<lua_Number>::is_required(L, 3);
 
 		Sprite *self = Bind::self(L);
 		if (!self)
@@ -210,7 +217,8 @@ NS_RAINBOW_LUA_BEGIN
 
 	int Sprite::rotate(lua_State *L)
 	{
-		LUA_ASSERT(lua_isnumber(L, 2), "<sprite>:rotate(r)");
+		// <sprite>:rotate(r)
+		Argument<lua_Number>::is_required(L, 2);
 
 		Sprite *self = Bind::self(L);
 		if (!self)

@@ -7,6 +7,7 @@
 #include "Common/Data.h"
 #include "ConFuoco/Mixer.h"
 #include "Lua/LuaHelper.h"
+#include "Lua/LuaSyntax.h"
 
 using ConFuoco::Mixer;
 
@@ -14,6 +15,11 @@ using ConFuoco::Mixer;
 
 #include "ConFuoco/Sound.h"
 #include "Lua/lua_Recorder.h"
+
+namespace ConFuoco
+{
+	class Channel;  // Dummy class for syntax checking.
+}
 
 using ConFuoco::Sound;
 
@@ -30,12 +36,13 @@ namespace
 
 	int set_gain(lua_State *L)
 	{
-		LUA_ASSERT(lua_isnumber(L, 1) ||
-		           (lua_istable(L, 1) && lua_isnumber(L, 2)),
-		           "rainbow.audio.set_gain([<channel>,] volume)");
+		// rainbow.audio.set_gain([<channel>,] volume)
 
-		if (lua_gettop(L) == 2)
+		if (lua_gettop(L) >= 2)
 		{
+			Rainbow::Lua::Argument<ConFuoco::Channel>::is_required(L, 1);
+			Rainbow::Lua::Argument<lua_Number>::is_required(L, 2);
+
 			const float gain = lua_tonumber(L, 2);
 			lua_pop(L, 1);
 
@@ -46,14 +53,18 @@ namespace
 			Mixer::Instance->set_gain(ch, gain);
 		}
 		else
+		{
+			Rainbow::Lua::Argument<lua_Number>::is_required(L, 1);
+
 			Mixer::Instance->set_gain(lua_tonumber(L, 1));
+		}
 		return 0;
 	}
 
 	int set_pitch(lua_State *L)
 	{
-		LUA_ASSERT(lua_isnumber(L, 1),
-		           "rainbow.audio.set_pitch(pitch)");
+		// rainbow.audio.set_pitch(pitch)
+		Rainbow::Lua::Argument<lua_Number>::is_required(L, 1);
 
 		Mixer::Instance->set_pitch(lua_tonumber(L, 1));
 		return 0;
@@ -67,10 +78,10 @@ namespace
 
 	int create_sound(lua_State *L)
 	{
-		LUA_ASSERT(lua_isstring(L, 1) &&
-		           (lua_isnumber(L, 2) || lua_isnone(L, 2)) &&
-		           (lua_isnumber(L, 3) || lua_isnone(L, 3)),
-		           "rainbow.audio.create_sound(file, type = STATIC, loops = -1)");
+		// rainbow.audio.create_sound(file, type = STATIC, loops = -1)
+		Rainbow::Lua::Argument<char*>::is_required(L, 1);
+		Rainbow::Lua::Argument<lua_Number>::is_optional(L, 2);
+		Rainbow::Lua::Argument<lua_Number>::is_optional(L, 3);
 
 		const char *file = lua_tostring(L, 1);
 		const int type =
@@ -86,7 +97,8 @@ namespace
 
 	int delete_sound(lua_State *L)
 	{
-		LUA_ASSERT(lua_istable(L, 1), "rainbow.audio.delete_sound(<sound>)");
+		// rainbow.audio.delete_sound(<sound>)
+		Rainbow::Lua::Argument<Sound>::is_required(L, 1);
 
 		delete static_cast<Sound*>(Rainbow::Lua::topointer(L, kSoundType));
 		return 0;
@@ -94,7 +106,8 @@ namespace
 
 	int pause(lua_State *L)
 	{
-		LUA_ASSERT(lua_istable(L, 1), "rainbow.audio.pause(<channel>)");
+		// rainbow.audio.pause(<channel>)
+		Rainbow::Lua::Argument<ConFuoco::Channel>::is_required(L, 1);
 
 		Mixer::Channel *ch = tochannel(L);
 		if (!ch)
@@ -106,7 +119,8 @@ namespace
 
 	int play(lua_State *L)
 	{
-		LUA_ASSERT(lua_istable(L, 1), "rainbow.audio.play(<sound>)");
+		// rainbow.audio.play(<sound>)
+		Rainbow::Lua::Argument<Sound>::is_required(L, 1);
 
 		Sound *snd =
 		    static_cast<Sound*>(Rainbow::Lua::topointer(L, kSoundType));
@@ -116,7 +130,8 @@ namespace
 
 	int stop(lua_State *L)
 	{
-		LUA_ASSERT(lua_istable(L, 1), "rainbow.audio.stop(<sound>)");
+		// rainbow.audio.stop(<sound>)
+		Rainbow::Lua::Argument<Sound>::is_required(L, 1);
 
 		Mixer::Channel *ch = tochannel(L);
 		if (!ch)
@@ -164,8 +179,6 @@ NS_RAINBOW_LUA_MODULE_BEGIN(Audio)
 #include "FileSystem/Path.h"
 #include "Lua/LuaBind.h"
 
-#define FMOD_NS "FMOD"
-
 namespace
 {
 	using FMOD::Studio::Bank;
@@ -198,7 +211,8 @@ namespace
 
 	int loadBank(lua_State *L)
 	{
-		LUA_ASSERT(lua_isstring(L, 1), FMOD_NS ".loadBank(\"path/to/bank\")");
+		// FMOD.loadBank("path/to/bank")
+		Rainbow::Lua::Argument<char*>::is_required(L, 1);
 
 		const char *const file = lua_tostring(L, 1);
 		const Path path(file, Path::RelativeTo::CurrentPath);
@@ -221,7 +235,8 @@ namespace
 
 	int unloadBank(lua_State *L)
 	{
-		LUA_ASSERT(lua_istable(L, 1), FMOD_NS ".unloadBank(<bank>)");
+		// FMOD.unloadBank(<bank>)
+		Rainbow::Lua::Argument<Bank>::is_required(L, 1);
 
 		Bank *bank = static_cast<Bank*>(Rainbow::Lua::topointer(L, kBankType));
 		if (!bank)
@@ -238,7 +253,8 @@ namespace
 
 	int createInstance(lua_State *L)
 	{
-		LUA_ASSERT(lua_isstring(L, 1), FMOD_NS ".createInstance(event)");
+		// FMOD.createInstance(event)
+		Rainbow::Lua::Argument<char*>::is_required(L, 1);
 
 		const char *const event = lua_tostring(L, 1);
 		FMOD::Studio::ID id{ 0, 0, 0, { 0 } };
@@ -276,7 +292,7 @@ NS_RAINBOW_LUA_MODULE_BEGIN(Audio)
 		// Playback control
 		luaR_rawsetcclosurefield(L, &createInstance, "createInstance");
 
-		lua_setglobal(L, FMOD_NS);
+		lua_setglobal(L, "FMOD");
 
 		reg<FMODStudioEventInstance>(L);
 	}
@@ -327,7 +343,8 @@ int FMODStudioEventInstance::getVolume(lua_State *L)
 
 int FMODStudioEventInstance::setVolume(lua_State *L)
 {
-	LUA_ASSERT(lua_isnumber(L, 2), "<eventInstance>:setVolume(volume)");
+	// <eventInstance>:setVolume(volume)
+	Rainbow::Lua::Argument<lua_Number>::is_required(L, 2);
 
 	FMODStudioEventInstance *self = Bind::self(L);
 	if (!self)
@@ -351,7 +368,8 @@ int FMODStudioEventInstance::getPitch(lua_State *L)
 
 int FMODStudioEventInstance::setPitch(lua_State *L)
 {
-	LUA_ASSERT(lua_isnumber(L, 2), "<eventInstance>:setPitch(volume)");
+	// <eventInstance>:setPitch(volume)
+	Rainbow::Lua::Argument<lua_Number>::is_required(L, 2);
 
 	FMODStudioEventInstance *self = Bind::self(L);
 	if (!self)
@@ -375,7 +393,8 @@ int FMODStudioEventInstance::getPaused(lua_State *L)
 
 int FMODStudioEventInstance::setPaused(lua_State *L)
 {
-	LUA_ASSERT(lua_isboolean(L, 2), "<eventInstance>:setPaused(paused)");
+	// <eventInstance>:setPaused(paused)
+	Rainbow::Lua::Argument<bool>::is_required(L, 2);
 
 	FMODStudioEventInstance *self = Bind::self(L);
 	if (!self)
@@ -397,8 +416,8 @@ int FMODStudioEventInstance::start(lua_State *L)
 
 int FMODStudioEventInstance::stop(lua_State *L)
 {
-	LUA_ASSERT(lua_isboolean(L, 2) || lua_isnone(L, 2),
-	           "<eventInstance>:stop(fadeout = false)");
+	// <eventInstance>:stop(fadeout = false)
+	Rainbow::Lua::Argument<bool>::is_optional(L, 2);
 
 	FMODStudioEventInstance *self = Bind::self(L);
 	if (!self)
@@ -423,8 +442,8 @@ int FMODStudioEventInstance::getTimelinePosition(lua_State *L)
 
 int FMODStudioEventInstance::setTimelinePosition(lua_State *L)
 {
-	LUA_ASSERT(lua_isnumber(L, 2),
-	           "<eventInstance>:setTimelinePosition(position)");
+	// <eventInstance>:setTimelinePosition(position)
+	Rainbow::Lua::Argument<lua_Number>::is_required(L, 2);
 
 	FMODStudioEventInstance *self = Bind::self(L);
 	if (!self)

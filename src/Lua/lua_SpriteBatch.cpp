@@ -6,6 +6,7 @@
 
 #include "FileSystem/Path.h"
 #include "Lua/LuaHelper.h"
+#include "Lua/LuaSyntax.h"
 #include "Lua/lua_Sprite.h"
 #include "Lua/lua_Texture.h"
 
@@ -34,11 +35,11 @@ NS_RAINBOW_LUA_BEGIN
 		        "<spritebatch>:create_sprite() and <sprite>:set_texture() "
 		        "instead.\n");
 
-		LUA_ASSERT(lua_isnumber(L, 2) &&
-		           lua_isnumber(L, 3) &&
-		           lua_isnumber(L, 4) &&
-		           lua_isnumber(L, 5),
-		           "<spritebatch>:add(x, y, width, height)");
+		// <spritebatch>:add(x, y, width, height)
+		Argument<lua_Number>::is_required(L, 2);
+		Argument<lua_Number>::is_required(L, 3);
+		Argument<lua_Number>::is_required(L, 4);
+		Argument<lua_Number>::is_required(L, 5);
 
 		SpriteBatch *self = Bind::self(L);
 		if (!self)
@@ -57,8 +58,9 @@ NS_RAINBOW_LUA_BEGIN
 
 	int SpriteBatch::create_sprite(lua_State *L)
 	{
-		LUA_ASSERT(lua_isnumber(L, 2) && lua_isnumber(L, 3),
-		           "<spritebatch>:create_sprite(width, height)");
+		// <spritebatch>:create_sprite(width, height)
+		Argument<lua_Number>::is_required(L, 2);
+		Argument<lua_Number>::is_required(L, 3);
 
 		SpriteBatch *self = Bind::self(L);
 		if (!self)
@@ -75,7 +77,8 @@ NS_RAINBOW_LUA_BEGIN
 
 	int SpriteBatch::set_normal(lua_State *L)
 	{
-		LUA_ASSERT(lua_isuserdata(L, 2), "<spritebatch>:set_normal(<texture>)");
+		// <spritebatch>:set_normal(<texture>)
+		Argument<Texture>::is_required(L, 2);
 
 		SpriteBatch *self = Bind::self(L);
 		if (!self)
@@ -87,8 +90,8 @@ NS_RAINBOW_LUA_BEGIN
 
 	int SpriteBatch::set_texture(lua_State *L)
 	{
-		LUA_ASSERT(lua_isuserdata(L, 2),
-		           "<spritebatch>:set_texture(<texture>)");
+		// <spritebatch>:set_texture(<texture>)
+		Argument<Texture>::is_required(L, 2);
 
 		SpriteBatch *self = Bind::self(L);
 		if (!self)

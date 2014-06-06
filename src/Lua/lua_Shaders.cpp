@@ -4,10 +4,10 @@
 
 #include "Lua/lua_Shaders.h"
 
-#include "Common/Debug.h"
 #include "Graphics/Shaders/Diffuse.h"
 #include "Lua/LuaBind.h"
 #include "Lua/LuaHelper.h"
+#include "Lua/LuaSyntax.h"
 
 namespace
 {
@@ -79,7 +79,8 @@ int Diffuse::id() const
 
 int Diffuse::set_cutoff(lua_State *L)
 {
-	LUA_ASSERT(lua_isnumber(L, 2), "<diffuse>:set_cutoff(cutoff)");
+	// <diffuse>:set_cutoff(cutoff)
+	Rainbow::Lua::Argument<lua_Number>::is_required(L, 2);
 
 	Diffuse *self = Bind::self(L);
 	if (!self)
@@ -91,7 +92,8 @@ int Diffuse::set_cutoff(lua_State *L)
 
 int Diffuse::set_radius(lua_State *L)
 {
-	LUA_ASSERT(lua_isnumber(L, 2), "<diffuse>:set_radius(radius)");
+	// <diffuse>:set_radius(radius)
+	Rainbow::Lua::Argument<lua_Number>::is_required(L, 2);
 
 	Diffuse *self = Bind::self(L);
 	if (!self)
@@ -103,10 +105,10 @@ int Diffuse::set_radius(lua_State *L)
 
 int Diffuse::set_position(lua_State *L)
 {
-	LUA_ASSERT(lua_isnumber(L, 2) &&
-	           lua_isnumber(L, 3) &&
-	           (lua_isnumber(L, 4) || lua_isnone(L, 4)),
-	           "<diffuse>:set_position(x, y, z = 100.0)");
+	// <diffuse>:set_position(x, y, z = 100.0)
+	Rainbow::Lua::Argument<lua_Number>::is_required(L, 2);
+	Rainbow::Lua::Argument<lua_Number>::is_required(L, 3);
+	Rainbow::Lua::Argument<lua_Number>::is_optional(L, 4);
 
 	Diffuse *self = Bind::self(L);
 	if (!self)

@@ -49,8 +49,8 @@ NS_B2_LUA_BEGIN
 
 	int PolygonShape::set(lua_State *L)
 	{
-		LUA_ASSERT(lua_istable(L, 2),
-		           "<b2.PolygonShape>:Set({ x1, y1, x2, y2, ... })");
+		// <b2.PolygonShape>:Set({ x1, y1, x2, y2, ... })
+		Rainbow::Lua::Argument<void*>::is_required(L, 2);
 
 		PolygonShape *self = Bind::self(L);
 		if (!self)
@@ -77,9 +77,9 @@ NS_B2_LUA_BEGIN
 
 	int PolygonShape::set_as_box(lua_State *L)
 	{
-		const char err[] = "<b2.PolygonShape>:SetAsBox(half_width, half_height"
-		                   "[, center.x, center.y, angle])";
-		LUA_ASSERT(lua_isnumber(L, 2) && lua_isnumber(L, 3), err);
+		// <b2.PolygonShape>:SetAsBox(half_width, half_height[, center.x, center.y, angle])
+		Rainbow::Lua::Argument<lua_Number>::is_required(L, 2);
+		Rainbow::Lua::Argument<lua_Number>::is_required(L, 3);
 
 		PolygonShape *self = Bind::self(L);
 		if (!self)
@@ -89,10 +89,9 @@ NS_B2_LUA_BEGIN
 		const float hy = lua_tonumber(L, 3) / ptm_ratio;
 		if (lua_gettop(L) > 3)
 		{
-			LUA_ASSERT(lua_isnumber(L, 4) &&
-			           lua_isnumber(L, 5) &&
-			           lua_isnumber(L, 6),
-			           err);
+			Rainbow::Lua::Argument<lua_Number>::is_required(L, 4);
+			Rainbow::Lua::Argument<lua_Number>::is_required(L, 5);
+			Rainbow::Lua::Argument<lua_Number>::is_required(L, 6);
 
 			const float cx = lua_tonumber(L, 4) / ptm_ratio;
 			const float cy = lua_tonumber(L, 5) / ptm_ratio;
@@ -106,8 +105,9 @@ NS_B2_LUA_BEGIN
 
 	int PolygonShape::set_center(lua_State *L)
 	{
-		LUA_ASSERT(lua_isnumber(L, 2) && lua_isnumber(L, 3),
-		           "<b2.PolygonShape>:SetCenter(x, y)");
+		// <b2.PolygonShape>:SetCenter(x, y)
+		Rainbow::Lua::Argument<lua_Number>::is_required(L, 2);
+		Rainbow::Lua::Argument<lua_Number>::is_required(L, 3);
 
 		PolygonShape *self = Bind::self(L);
 		if (!self)
@@ -149,17 +149,17 @@ NS_B2_LUA_BEGIN
 				break;
 			}
 			case b2Shape::e_edge:
-				LUA_ASSERT(m_type != b2Shape::e_edge, "Not implemented yet");
+				LUA_CHECK(L, m_type != b2Shape::e_edge, "Not implemented yet");
 				break;
 			case b2Shape::e_polygon:
 				shape = new b2PolygonShape(
 				    Rainbow::Lua::touserdata<PolygonShape>(L, -1)->get());
 				break;
 			case b2Shape::e_chain:
-				LUA_ASSERT(m_type != b2Shape::e_chain, "Not implemented yet");
+				LUA_CHECK(L, m_type != b2Shape::e_chain, "Not implemented yet");
 				break;
 			default:
-				LUA_ASSERT(m_type >= b2Shape::e_typeCount, "Invalid shape");
+				LUA_CHECK(L, m_type >= b2Shape::e_typeCount, "Invalid shape");
 				break;
 		}
 		return shape;

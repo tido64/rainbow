@@ -12,8 +12,6 @@
 	namespace Rainbow { namespace Lua { namespace module
 #define NS_RAINBOW_LUA_MODULE_END(module) }}
 
-#define luaR_isuserdata(L, n) (lua_isuserdata(L, n) || lua_istable(L, n))
-
 #define luaR_rawgetfield(L, k, type) \
 	lua_pushliteral(L, k); \
 	lua_rawget(L, -2); \

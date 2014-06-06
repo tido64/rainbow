@@ -7,13 +7,14 @@
 #include <lua.hpp>
 
 #include "Common/Data.h"
-#include "Common/Debug.h"
+#include "Lua/LuaSyntax.h"
 
 namespace
 {
 	int load(lua_State *L)
 	{
-		LUA_ASSERT(lua_isstring(L, 1), "rainbow.io.load(filename)");
+		// rainbow.io.load(filename)
+		Rainbow::Lua::Argument<char*>::is_required(L, 1);
 
 		Data blob = Data::load_document(lua_tostring(L, 1));
 		if (!blob)
@@ -25,10 +26,10 @@ namespace
 
 	int save(lua_State *L)
 	{
-		LUA_ASSERT(lua_isstring(L, 1) &&
-		           lua_isstring(L, 2) &&
-		           lua_isnumber(L, 3),
-		           "rainbow.io.save(filename, data, size)");
+		// rainbow.io.save(filename, data, size)
+		Rainbow::Lua::Argument<char*>::is_required(L, 1);
+		Rainbow::Lua::Argument<char*>::is_required(L, 2);
+		Rainbow::Lua::Argument<lua_Number>::is_required(L, 3);
 
 		Data blob(
 		    lua_tostring(L, 2), lua_tointeger(L, 3), Data::kDataReference);

@@ -23,24 +23,6 @@
 
 #include <cstdlib>
 
-#define LUA_ASSERT(expr, syntax) \
-	do \
-	{ \
-		if (!(expr)) \
-		{ \
-			R_ERROR("[Rainbow] Lua syntax: %s\n", syntax); \
-			unsigned int depth = 0; \
-			lua_Debug entry; \
-			while (lua_getstack(L, depth, &entry)) \
-			{ \
-				lua_getinfo(L, "nSl", &entry); \
-				R_ERROR("%s:%d: %s\n", entry.short_src, entry.currentline, entry.name ? entry.name : ""); \
-				++depth; \
-			} \
-			abort(); \
-		} \
-	} while (0)
-
 #define LUA_CHECK(L, expr, ...) \
 	if (!(expr)) \
 		luaL_error(L, __VA_ARGS__)
@@ -63,7 +45,6 @@
 
 #else
 
-#define LUA_ASSERT(expr, syntax)  static_cast<void>(0)
 #define LUA_CHECK(L, expr, ...)   static_cast<void>(0)
 #define R_ASSERT(expr, reason)    static_cast<void>(0)
 #define R_DEBUG(...)              static_cast<void>(0)

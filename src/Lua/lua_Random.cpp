@@ -7,6 +7,7 @@
 #include <lua.hpp>
 
 #include "Common/Random.h"
+#include "Lua/LuaSyntax.h"
 
 namespace
 {
@@ -15,13 +16,13 @@ namespace
 		lua_Number r = 0.0f;
 		switch (lua_gettop(L))
 		{
-			case 1:
-				LUA_ASSERT(lua_isnumber(L, 1), "rainbow.random(max)");
+			case 1:  // rainbow.random(max)
+				Rainbow::Lua::Argument<lua_Number>::is_required(L, 1);
 				r = Random::next<lua_Number>(lua_tonumber(L, 1));
 				break;
-			case 2:
-				LUA_ASSERT(lua_isnumber(L, 1) && lua_isnumber(L, 2),
-				           "rainbow.random(min, max)");
+			case 2:  // rainbow.random(min, max)
+				Rainbow::Lua::Argument<lua_Number>::is_required(L, 1);
+				Rainbow::Lua::Argument<lua_Number>::is_required(L, 2);
 				r = Random::next<lua_Number>(lua_tonumber(L, 1),
 				                             lua_tonumber(L, 2));
 				break;
@@ -35,8 +36,8 @@ namespace
 
 	int seed(lua_State *L)
 	{
-		LUA_ASSERT(lua_isnumber(L, 1) || lua_isnone(L, 1),
-		           "rainbow.seed(seed = 0)");
+		// rainbow.seed(seed = 0)
+		Rainbow::Lua::Argument<lua_Number>::is_optional(L, 1);
 
 		Random::seed(luaR_optinteger(L, 1, 0));
 		return 0;

@@ -186,7 +186,8 @@ NS_B2_LUA_BEGIN
 
 	int Body::bind(lua_State *L)
 	{
-		LUA_ASSERT(luaR_isuserdata(L, 2), "<b2.Body>:Bind(<rainbow.sprite>)");
+		// <b2.Body>:Bind(<rainbow.sprite>)
+		Rainbow::Lua::Argument<Rainbow::Lua::Sprite>::is_required(L, 2);
 
 		Body *self = Bind::self(L);
 		if (!self)
@@ -205,10 +206,10 @@ NS_B2_LUA_BEGIN
 
 	int Body::scale_and_position(lua_State *L)
 	{
-		LUA_ASSERT(lua_isnumber(L, 2) &&
-		           lua_isnumber(L, 3) &&
-		           lua_isnumber(L, 4),
-		           "<b2.Body>:ScaleAndPosition(scale, x, y)");
+		// <b2.Body>:ScaleAndPosition(scale, x, y)
+		Rainbow::Lua::Argument<lua_Number>::is_required(L, 2);
+		Rainbow::Lua::Argument<lua_Number>::is_required(L, 3);
+		Rainbow::Lua::Argument<lua_Number>::is_required(L, 4);
 
 		Body *self = Bind::self(L);
 		if (!self)
@@ -244,8 +245,8 @@ NS_B2_LUA_BEGIN
 		{
 			if (f->GetType() != b2Shape::e_circle)
 			{
-				LUA_ASSERT(f->GetType() == b2Shape::e_circle,
-				           "Unsupported shape");
+				LUA_CHECK(
+				    L, f->GetType() == b2Shape::e_circle, "Unsupported shape");
 				world->DestroyBody(new_body);
 				return 0;
 			}
@@ -294,11 +295,9 @@ NS_B2_LUA_BEGIN
 
 	int Body::create_fixture(lua_State *L)
 	{
-		const char err[] =
-		    "<b2.Body>:CreateFixture(<b2.FixtureDef> | [<b2.Shape>, density])";
-		LUA_ASSERT(
-		    lua_istable(L, 2) && (lua_isnumber(L, 3) || lua_isnone(L, 3)),
-		    err);
+		// <b2.Body>:CreateFixture(<b2.FixtureDef> | [<b2.Shape>, density])
+		Rainbow::Lua::Argument<void*>::is_required(L, 2);
+		Rainbow::Lua::Argument<lua_Number>::is_optional(L, 3);
 
 		Body *self = Bind::self(L);
 		if (!self)
@@ -322,7 +321,7 @@ NS_B2_LUA_BEGIN
 				break;
 			}
 			default:
-				R_ASSERT(false, err);
+				LUA_CHECK(L, false, "Invalid number of arguments");
 				break;
 		}
 		lua_pushlightuserdata(L, fixture);
@@ -331,8 +330,8 @@ NS_B2_LUA_BEGIN
 
 	int Body::destroy_fixture(lua_State *L)
 	{
-		LUA_ASSERT(lua_isuserdata(L, 2),
-		           "<b2.Body>:DestroyFixture(<b2.Fixture>)");
+		// <b2.Body>:DestroyFixture(<b2.Fixture>)
+		Rainbow::Lua::Argument<b2Fixture>::is_required(L, 2);
 
 		Body *self = Bind::self(L);
 		if (!self)
@@ -345,10 +344,10 @@ NS_B2_LUA_BEGIN
 
 	int Body::set_transform(lua_State *L)
 	{
-		LUA_ASSERT(lua_isnumber(L, 2) &&
-		           lua_isnumber(L, 3) &&
-		           lua_isnumber(L, 4),
-		           "<b2.Body>:SetTransform(x, y, r)");
+		// <b2.Body>:SetTransform(x, y, r)
+		Rainbow::Lua::Argument<lua_Number>::is_required(L, 2);
+		Rainbow::Lua::Argument<lua_Number>::is_required(L, 3);
+		Rainbow::Lua::Argument<lua_Number>::is_required(L, 4);
 
 		Body *self = Bind::self(L);
 		if (!self)
@@ -409,8 +408,9 @@ NS_B2_LUA_BEGIN
 
 	int Body::set_linear_velocity(lua_State *L)
 	{
-		LUA_ASSERT(lua_isnumber(L, 2) && lua_isnumber(L, 3),
-		           "<b2.Body>:SetLinearVelocity(x, y)");
+		// <b2.Body>:SetLinearVelocity(x, y)
+		Rainbow::Lua::Argument<lua_Number>::is_required(L, 2);
+		Rainbow::Lua::Argument<lua_Number>::is_required(L, 3);
 
 		Body *self = Bind::self(L);
 		if (!self)
@@ -435,7 +435,8 @@ NS_B2_LUA_BEGIN
 
 	int Body::set_angular_velocity(lua_State *L)
 	{
-		LUA_ASSERT(lua_isnumber(L, 2), "<b2.Body>:SetAngularVelocity(v)");
+		// <b2.Body>:SetAngularVelocity(v)
+		Rainbow::Lua::Argument<lua_Number>::is_required(L, 2);
 
 		Body *self = Bind::self(L);
 		if (!self)
@@ -457,12 +458,12 @@ NS_B2_LUA_BEGIN
 
 	int Body::apply_force(lua_State *L)
 	{
-		LUA_ASSERT(lua_isnumber(L, 2) &&
-		           lua_isnumber(L, 3) &&
-		           lua_isnumber(L, 4) &&
-		           lua_isnumber(L, 5) &&
-		           lua_isboolean(L, 6),
-		           "<b2.Body>:ApplyForce(impulse.x, impulse.y, point.x, point.y, wake)");
+		// <b2.Body>:ApplyForce(impulse.x, impulse.y, point.x, point.y, wake)
+		Rainbow::Lua::Argument<lua_Number>::is_required(L, 2);
+		Rainbow::Lua::Argument<lua_Number>::is_required(L, 3);
+		Rainbow::Lua::Argument<lua_Number>::is_required(L, 4);
+		Rainbow::Lua::Argument<lua_Number>::is_required(L, 5);
+		Rainbow::Lua::Argument<bool>::is_required(L, 6);
 
 		Body *self = Bind::self(L);
 		if (!self)
@@ -478,10 +479,10 @@ NS_B2_LUA_BEGIN
 
 	int Body::apply_force_to_center(lua_State *L)
 	{
-		LUA_ASSERT(lua_isnumber(L, 2) &&
-		           lua_isnumber(L, 3) &&
-		           lua_isboolean(L, 4),
-		           "<b2.Body>:ApplyForceToCenter(impulse.x, impulse.y, wake)");
+		// <b2.Body>:ApplyForceToCenter(impulse.x, impulse.y, wake)
+		Rainbow::Lua::Argument<lua_Number>::is_required(L, 2);
+		Rainbow::Lua::Argument<lua_Number>::is_required(L, 3);
+		Rainbow::Lua::Argument<bool>::is_required(L, 4);
 
 		Body *self = Bind::self(L);
 		if (!self)
@@ -495,8 +496,9 @@ NS_B2_LUA_BEGIN
 
 	int Body::apply_torque(lua_State *L)
 	{
-		LUA_ASSERT(lua_isnumber(L, 2) && lua_isboolean(L, 3),
-		           "<b2.Body>:ApplyTorque(torque, wake)");
+		// <b2.Body>:ApplyTorque(torque, wake)
+		Rainbow::Lua::Argument<lua_Number>::is_required(L, 2);
+		Rainbow::Lua::Argument<bool>::is_required(L, 3);
 
 		Body *self = Bind::self(L);
 		if (!self)
@@ -508,12 +510,12 @@ NS_B2_LUA_BEGIN
 
 	int Body::apply_linear_impulse(lua_State *L)
 	{
-		LUA_ASSERT(lua_isnumber(L, 2) &&
-		           lua_isnumber(L, 3) &&
-		           lua_isnumber(L, 4) &&
-		           lua_isnumber(L, 5) &&
-		           lua_isboolean(L, 6),
-		           "<b2.Body>:ApplyLinearImpulse(impulse.x, impulse.y, point.x, point.y, wake)");
+		// <b2.Body>:ApplyLinearImpulse(impulse.x, impulse.y, point.x, point.y, wake)
+		Rainbow::Lua::Argument<lua_Number>::is_required(L, 2);
+		Rainbow::Lua::Argument<lua_Number>::is_required(L, 3);
+		Rainbow::Lua::Argument<lua_Number>::is_required(L, 4);
+		Rainbow::Lua::Argument<lua_Number>::is_required(L, 5);
+		Rainbow::Lua::Argument<bool>::is_required(L, 6);
 
 		Body *self = Bind::self(L);
 		if (!self)
@@ -529,8 +531,9 @@ NS_B2_LUA_BEGIN
 
 	int Body::apply_angular_impulse(lua_State *L)
 	{
-		LUA_ASSERT(lua_isnumber(L, 2) && lua_isboolean(L, 3),
-		           "<b2.Body>:ApplyAngularImpulse(impulse, wake)");
+		// <b2.Body>:ApplyAngularImpulse(impulse, wake)
+		Rainbow::Lua::Argument<lua_Number>::is_required(L, 2);
+		Rainbow::Lua::Argument<bool>::is_required(L, 3);
 
 		Body *self = Bind::self(L);
 		if (!self)
@@ -553,7 +556,8 @@ NS_B2_LUA_BEGIN
 
 	int Body::set_linear_damping(lua_State *L)
 	{
-		LUA_ASSERT(lua_isnumber(L, 2), "<b2.Body>:SetLinearDamping(damping)");
+		// <b2.Body>:SetLinearDamping(damping)
+		Rainbow::Lua::Argument<lua_Number>::is_required(L, 2);
 
 		Body *self = Bind::self(L);
 		if (!self)
@@ -575,7 +579,8 @@ NS_B2_LUA_BEGIN
 
 	int Body::set_angular_damping(lua_State *L)
 	{
-		LUA_ASSERT(lua_isnumber(L, 2), "<b2.Body>:SetAngularDamping(damping)");
+		// <b2.Body>:SetAngularDamping(damping)
+		Rainbow::Lua::Argument<lua_Number>::is_required(L, 2);
 
 		Body *self = Bind::self(L);
 		if (!self)
@@ -597,7 +602,8 @@ NS_B2_LUA_BEGIN
 
 	int Body::set_gravity_scale(lua_State *L)
 	{
-		LUA_ASSERT(lua_isnumber(L, 2), "<b2.Body>:SetGravityScale(scale)");
+		// <b2.Body>:SetGravityScale(scale)
+		Rainbow::Lua::Argument<lua_Number>::is_required(L, 2);
 
 		Body *self = Bind::self(L);
 		if (!self)
@@ -609,7 +615,8 @@ NS_B2_LUA_BEGIN
 
 	int Body::set_bullet(lua_State *L)
 	{
-		LUA_ASSERT(lua_isboolean(L, 2), "<b2.Body>:SetBullet(bool)");
+		// <b2.Body>:SetBullet(bool)
+		Rainbow::Lua::Argument<bool>::is_required(L, 2);
 
 		Body *self = Bind::self(L);
 		if (!self)
@@ -631,7 +638,8 @@ NS_B2_LUA_BEGIN
 
 	int Body::set_sleeping_allowed(lua_State *L)
 	{
-		LUA_ASSERT(lua_isboolean(L, 2), "<b2.Body>:SetSleepingAllowed(bool)");
+		// <b2.Body>:SetSleepingAllowed(bool)
+		Rainbow::Lua::Argument<bool>::is_required(L, 2);
 
 		Body *self = Bind::self(L);
 		if (!self)
@@ -653,7 +661,8 @@ NS_B2_LUA_BEGIN
 
 	int Body::set_awake(lua_State *L)
 	{
-		LUA_ASSERT(lua_isboolean(L, 2), "<b2.Body>:SetAwake(bool)");
+		// <b2.Body>:SetAwake(bool)
+		Rainbow::Lua::Argument<bool>::is_required(L, 2);
 
 		Body *self = Bind::self(L);
 		if (!self)
@@ -675,7 +684,8 @@ NS_B2_LUA_BEGIN
 
 	int Body::set_active(lua_State *L)
 	{
-		LUA_ASSERT(lua_isboolean(L, 2), "<b2.Body>:SetActive(bool)");
+		// <b2.Body>:SetActive(bool)
+		Rainbow::Lua::Argument<bool>::is_required(L, 2);
 
 		Body *self = Bind::self(L);
 		if (!self)
@@ -697,7 +707,8 @@ NS_B2_LUA_BEGIN
 
 	int Body::set_fixed_rotation(lua_State *L)
 	{
-		LUA_ASSERT(lua_isboolean(L, 2), "<b2.Body>:SetFixedRotation(bool)");
+		// <b2.Body>:SetFixedRotation(bool)
+		Rainbow::Lua::Argument<bool>::is_required(L, 2);
 
 		Body *self = Bind::self(L);
 		if (!self)

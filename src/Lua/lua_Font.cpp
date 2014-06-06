@@ -7,6 +7,7 @@
 #include <lua.hpp>
 
 #include "Common/Data.h"
+#include "Lua/LuaSyntax.h"
 
 NS_RAINBOW_LUA_BEGIN
 {
@@ -21,8 +22,9 @@ NS_RAINBOW_LUA_BEGIN
 
 	Font::Font(lua_State *L)
 	{
-		LUA_ASSERT(lua_isstring(L, 1) && lua_isnumber(L, 2),
-		           "rainbow.font(\"path/to/fontface\", font_size)");
+		// rainbow.font("path/to/fontface", font_size)
+		Argument<char*>::is_required(L, 1);
+		Argument<lua_Number>::is_required(L, 2);
 
 		const Data &font = Data::load_asset(lua_tostring(L, 1));
 		if (!font)

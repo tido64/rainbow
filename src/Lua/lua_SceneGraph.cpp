@@ -9,6 +9,7 @@
 #include "Graphics/Drawable.h"
 #include "Graphics/SceneGraph.h"
 #include "Lua/LuaHelper.h"
+#include "Lua/LuaSyntax.h"
 #include "Lua/lua_Animation.h"
 #include "Lua/lua_Label.h"
 #include "Lua/lua_Shaders.h"
@@ -136,9 +137,15 @@ NS_RAINBOW_LUA_BEGIN
 	template<class T, SceneGraph::CastingMethod C>
 	int SceneGraph::add_child(lua_State *L)
 	{
-		LUA_ASSERT(luaR_isuserdata(L, 2) &&
-		           (luaR_isuserdata(L, 3) || lua_isnone(L, 3)),
-		           "rainbow.scenegraph: Invalid parameters");
+	#ifndef NDEBUG
+		if (lua_isnoneornil(L, 3))
+			Argument<T>::is_required(L, 2);
+		else
+		{
+			Argument<Node>::is_required(L, 2);
+			Argument<T>::is_required(L, 3);
+		}
+	#endif
 
 		SceneGraph *self = Bind::self(L);
 		if (!self)
@@ -161,28 +168,32 @@ NS_RAINBOW_LUA_BEGIN
 
 	int SceneGraph::add_animation(lua_State *L)
 	{
+		// rainbow.scenegraph:add_animation([node], <animation>)
 		return add_child<Animation, kCastingSafe>(L);
 	}
 
 	int SceneGraph::add_batch(lua_State *L)
 	{
+		// rainbow.scenegraph:add_batch([node], <batch>)
 		return add_child<SpriteBatch, kCastingSafe>(L);
 	}
 
 	int SceneGraph::add_drawable(lua_State *L)
 	{
+		// rainbow.scenegraph:add_drawable([node], <drawable>)
 		return add_child<Drawable, kCastingUnsafe>(L);
 	}
 
 	int SceneGraph::add_label(lua_State *L)
 	{
+		// rainbow.scenegraph:add_label([node], <label>)
 		return add_child<Label, kCastingSafe>(L);
 	}
 
 	int SceneGraph::add_node(lua_State *L)
 	{
-		LUA_ASSERT(lua_isuserdata(L, 2) || lua_isnone(L, 2),
-		           "rainbow.scenegraph:add_node([parent])");
+		// rainbow.scenegraph:add_node([parent])
+		Argument<Node>::is_optional(L, 2);
 
 		SceneGraph *self = Bind::self(L);
 		if (!self)
@@ -198,10 +209,9 @@ NS_RAINBOW_LUA_BEGIN
 
 	int SceneGraph::attach_program(lua_State *L)
 	{
-		LUA_ASSERT(lua_isuserdata(L, 2) &&
-		           ((lua_isnumber(L, 3) && lua_tointeger(L, 3) == 0) ||
-		                lua_isuserdata(L, 3)),
-		           "rainbow.scenegraph:attach_program(node, program)");
+		// rainbow.scenegraph:attach_program(node, program)
+		Argument<Node>::is_required(L, 2);
+		Argument<Shader>::is_required(L, 3);
 
 		SceneGraph *self = Bind::self(L);
 		if (!self)
@@ -216,7 +226,8 @@ NS_RAINBOW_LUA_BEGIN
 
 	int SceneGraph::disable(lua_State *L)
 	{
-		LUA_ASSERT(lua_isuserdata(L, 2), "rainbow.scenegraph:disable(node)");
+		// rainbow.scenegraph:disable(node)
+		Argument<Node>::is_required(L, 2);
 
 		luaR_tonode(L, 2)->enabled = false;
 		return 0;
@@ -224,7 +235,8 @@ NS_RAINBOW_LUA_BEGIN
 
 	int SceneGraph::enable(lua_State *L)
 	{
-		LUA_ASSERT(lua_isuserdata(L, 2), "rainbow.scenegraph:enable(node)");
+		// rainbow.scenegraph:enable(node)
+		Argument<Node>::is_required(L, 2);
 
 		luaR_tonode(L, 2)->enabled = true;
 		return 0;
@@ -232,7 +244,8 @@ NS_RAINBOW_LUA_BEGIN
 
 	int SceneGraph::remove(lua_State *L)
 	{
-		LUA_ASSERT(lua_isuserdata(L, 2), "rainbow.scenegraph:remove(node)");
+		// rainbow.scenegraph:remove(node)
+		Argument<Node>::is_required(L, 2);
 
 		Node *node = luaR_tonode(L, 2);
 		R_ASSERT(unregister_node(node), "Failed to unregister node");
@@ -242,8 +255,9 @@ NS_RAINBOW_LUA_BEGIN
 
 	int SceneGraph::set_parent(lua_State *L)
 	{
-		LUA_ASSERT(lua_isuserdata(L, 2) && lua_isuserdata(L, 3),
-		           "rainbow.scenegraph:set_parent(parent, child)");
+		// rainbow.scenegraph:set_parent(parent, child)
+		Argument<Node>::is_required(L, 2);
+		Argument<Node>::is_required(L, 3);
 
 		luaR_tonode(L, 2)->add_child(luaR_tonode(L, 3));
 		return 0;
@@ -251,10 +265,10 @@ NS_RAINBOW_LUA_BEGIN
 
 	int SceneGraph::move(lua_State *L)
 	{
-		LUA_ASSERT(lua_isuserdata(L, 2) &&
-		           lua_isnumber(L, 3) &&
-		           lua_isnumber(L, 4),
-		           "rainbow.scenegraph:move(node, x, y)");
+		// rainbow.scenegraph:move(node, x, y)
+		Argument<Node>::is_required(L, 2);
+		Argument<lua_Number>::is_required(L, 3);
+		Argument<lua_Number>::is_required(L, 4);
 
 		luaR_tonode(L, 2)->move(Vec2f(lua_tonumber(L, 3), lua_tonumber(L, 4)));
 		return 0;

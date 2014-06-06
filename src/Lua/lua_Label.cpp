@@ -5,6 +5,7 @@
 #include "Lua/lua_Label.h"
 
 #include "Lua/LuaHelper.h"
+#include "Lua/LuaSyntax.h"
 #include "Lua/lua_Font.h"
 
 NS_RAINBOW_LUA_BEGIN
@@ -30,6 +31,9 @@ NS_RAINBOW_LUA_BEGIN
 
 	Label::Label(lua_State *L)
 	{
+		// rainbow.label(["string"])
+		Argument<char*>::is_optional(L, 1);
+
 		if (lua_isstring(L, 1))
 			this->label.set_text(lua_tostring(L, 1));
 	}
@@ -50,8 +54,8 @@ NS_RAINBOW_LUA_BEGIN
 
 	int Label::set_alignment(lua_State *L)
 	{
-		LUA_ASSERT(lua_isstring(L, 2),
-		           "<label>:set_alignment('l' | 'c' | 'r')");
+		// <label>:set_alignment('l' | 'c' | 'r')
+		Argument<char*>::is_required(L, 2);
 
 		Label *self = Bind::self(L);
 		if (!self)
@@ -74,11 +78,11 @@ NS_RAINBOW_LUA_BEGIN
 
 	int Label::set_color(lua_State *L)
 	{
-		LUA_ASSERT(lua_isnumber(L, 2) &&
-		           lua_isnumber(L, 3) &&
-		           lua_isnumber(L, 4) &&
-		           (lua_isnumber(L, 5) || lua_isnone(L, 5)),
-		           "<label>:set_color(r, g, b, a = 255)");
+		// <label>:set_color(r, g, b, a = 255)
+		Argument<lua_Number>::is_required(L, 2);
+		Argument<lua_Number>::is_required(L, 3);
+		Argument<lua_Number>::is_required(L, 4);
+		Argument<lua_Number>::is_optional(L, 5);
 
 		Label *self = Bind::self(L);
 		if (!self)
@@ -94,7 +98,8 @@ NS_RAINBOW_LUA_BEGIN
 
 	int Label::set_font(lua_State *L)
 	{
-		LUA_ASSERT(lua_isuserdata(L, 2), "<label>:set_font(<font>)");
+		// <label>:set_font(<font>)
+		Argument<Font>::is_required(L, 2);
 
 		Label *self = Bind::self(L);
 		if (!self)
@@ -106,8 +111,9 @@ NS_RAINBOW_LUA_BEGIN
 
 	int Label::set_position(lua_State *L)
 	{
-		LUA_ASSERT(lua_isnumber(L, 2) && lua_isnumber(L, 3),
-		           "<label>:set_position(x, y)");
+		// <label>:set_position(x, y)
+		Argument<lua_Number>::is_required(L, 2);
+		Argument<lua_Number>::is_required(L, 3);
 
 		Label *self = Bind::self(L);
 		if (!self)
@@ -120,7 +126,8 @@ NS_RAINBOW_LUA_BEGIN
 
 	int Label::set_scale(lua_State *L)
 	{
-		LUA_ASSERT(lua_isnumber(L, 2), "<label>:set_scale(f)");
+		// <label>:set_scale(f)
+		Argument<lua_Number>::is_required(L, 2);
 
 		Label *self = Bind::self(L);
 		if (!self)
@@ -132,7 +139,8 @@ NS_RAINBOW_LUA_BEGIN
 
 	int Label::set_text(lua_State *L)
 	{
-		LUA_ASSERT(lua_isstring(L, 2), "<label>:set_text(\"string\")");
+		// <label>:set_text("string")
+		Argument<char*>::is_required(L, 2);
 
 		Label *self = Bind::self(L);
 		if (!self)
@@ -144,8 +152,9 @@ NS_RAINBOW_LUA_BEGIN
 
 	int Label::move(lua_State *L)
 	{
-		LUA_ASSERT(lua_isnumber(L, 2) && lua_isnumber(L, 3),
-		           "<label>:move(x, y)");
+		// <label>:move(x, y)
+		Argument<lua_Number>::is_required(L, 2);
+		Argument<lua_Number>::is_required(L, 3);
 
 		Label *self = Bind::self(L);
 		if (!self)

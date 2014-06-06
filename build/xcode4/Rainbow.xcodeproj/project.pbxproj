@@ -164,6 +164,7 @@
 		19ED191C1682247D00AAA323 /* lua_Renderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19ED191A1682247D00AAA323 /* lua_Renderer.cpp */; };
 		19F98DA1171970C000A85873 /* Recorder_iOS.mm in Sources */ = {isa = PBXBuildFile; fileRef = 19F98DA0171970C000A85873 /* Recorder_iOS.mm */; };
 		19F98DA8171B5E1500A85873 /* Prose in Resources */ = {isa = PBXBuildFile; fileRef = 19F98DA6171B5E1500A85873 /* Prose */; };
+		19FDF4961942FCFB00B5F21B /* LuaSyntax.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19FDF4941942FCFB00B5F21B /* LuaSyntax.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -510,6 +511,10 @@
 		19F98DA0171970C000A85873 /* Recorder_iOS.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Recorder_iOS.mm; sourceTree = "<group>"; };
 		19F98DA5171B5DDF00A85873 /* SystemInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SystemInfo.h; path = ../../../src/Platform/SystemInfo.h; sourceTree = "<group>"; };
 		19F98DA6171B5E1500A85873 /* Prose */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Prose; path = ../../../lua/Prose; sourceTree = "<group>"; };
+		19FDF4921942FCFB00B5F21B /* lua_Rainbow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lua_Rainbow.h; sourceTree = "<group>"; };
+		19FDF4931942FCFB00B5F21B /* LuaMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LuaMacros.h; sourceTree = "<group>"; };
+		19FDF4941942FCFB00B5F21B /* LuaSyntax.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LuaSyntax.cpp; sourceTree = "<group>"; };
+		19FDF4951942FCFB00B5F21B /* LuaSyntax.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LuaSyntax.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -937,15 +942,16 @@
 		1939A1E6152C425D00494609 /* Lua */ = {
 			isa = PBXGroup;
 			children = (
-				1962F1E8184930FA00E1CAF4 /* lua_Shaders.cpp */,
-				1962F1E9184930FA00E1CAF4 /* lua_Shaders.h */,
 				19DCB2831746AB7C00660000 /* LuaBind.h */,
 				195D565717D90E0D00C78117 /* LuaDebugging.h */,
 				19E91FC01682B1460054D61F /* LuaHelper.cpp */,
 				19E91FC11682B1460054D61F /* LuaHelper.h */,
 				193929BA16E243E90018340B /* LuaMachine.cpp */,
 				193929BB16E243E90018340B /* LuaMachine.h */,
+				19FDF4931942FCFB00B5F21B /* LuaMacros.h */,
 				193929BC16E243E90018340B /* LuaModules.h */,
+				19FDF4941942FCFB00B5F21B /* LuaSyntax.cpp */,
+				19FDF4951942FCFB00B5F21B /* LuaSyntax.h */,
 				1939A1E7152C425D00494609 /* lua_Animation.cpp */,
 				1939A1E8152C425D00494609 /* lua_Animation.h */,
 				1939A1E9152C425D00494609 /* lua_Audio.cpp */,
@@ -960,6 +966,7 @@
 				1939A1F0152C425D00494609 /* lua_Label.h */,
 				190497E31682963F0037F5EC /* lua_Platform.cpp */,
 				1939A1F3152C425D00494609 /* lua_Platform.h */,
+				19FDF4921942FCFB00B5F21B /* lua_Rainbow.h */,
 				1939A1F4152C425D00494609 /* lua_Random.cpp */,
 				1939A1F5152C425D00494609 /* lua_Random.h */,
 				1939A1F6152C425D00494609 /* lua_Recorder.cpp */,
@@ -968,6 +975,8 @@
 				19ED191B1682247D00AAA323 /* lua_Renderer.h */,
 				1939A1F8152C425D00494609 /* lua_SceneGraph.cpp */,
 				1939A1F9152C425D00494609 /* lua_SceneGraph.h */,
+				1962F1E8184930FA00E1CAF4 /* lua_Shaders.cpp */,
+				1962F1E9184930FA00E1CAF4 /* lua_Shaders.h */,
 				1939A1FA152C425D00494609 /* lua_Sprite.cpp */,
 				1939A1FB152C425D00494609 /* lua_Sprite.h */,
 				1939A1FC152C425D00494609 /* lua_SpriteBatch.cpp */,
@@ -1388,6 +1397,7 @@
 				190D6FED16964AA100C9ED26 /* lua_Box2D.cpp in Sources */,
 				190D6FF116964B2500C9ED26 /* RainbowDraw.cpp in Sources */,
 				193929B616E23D410018340B /* RainbowViewController.mm in Sources */,
+				19FDF4961942FCFB00B5F21B /* LuaSyntax.cpp in Sources */,
 				19D045AA18071D6D00968F00 /* Chrono.cpp in Sources */,
 				193929B816E23D5F0018340B /* SystemInfo_Apple.cpp in Sources */,
 				193929BD16E243E90018340B /* LuaMachine.cpp in Sources */,

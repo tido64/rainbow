@@ -7,7 +7,7 @@
 #include <lua.hpp>
 
 #include "Common/Debug.h"
-#include "Lua/LuaMacros.h"
+#include "Lua/LuaSyntax.h"
 
 #ifdef USE_TESTFLIGHT_SDK
 #	ifdef RAINBOW_OS_IOS
@@ -19,7 +19,8 @@ namespace
 {
 	int log(lua_State *L)
 	{
-		LUA_ASSERT(lua_isstring(L, 1), "TestFlight.log(message)");
+		// TestFlight.log(message)
+		Rainbow::Lua::Argument<char*>::is_required(L, 1);
 
 		const char *message = lua_tostring(L, 1);
 	#ifdef USE_TESTFLIGHT_SDK
@@ -35,8 +36,8 @@ namespace
 
 	int pass_checkpoint(lua_State *L)
 	{
-		LUA_ASSERT(lua_isstring(L, 1),
-		           "TestFlight.pass_checkpoint(checkpoint)");
+		// TestFlight.pass_checkpoint(checkpoint)
+		Rainbow::Lua::Argument<char*>::is_required(L, 1);
 
 		const char *checkpoint = lua_tostring(L, 1);
 	#ifdef USE_TESTFLIGHT_SDK

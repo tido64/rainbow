@@ -113,9 +113,9 @@ NS_B2_LUA_BEGIN
 	    : contact_listener_(LUA_REFNIL), elapsed_(0.0), L_(L),
 	      debug_draw_(ptm_ratio), world_(b2Vec2(0.0f, kStandardGravity))
 	{
-		LUA_ASSERT(lua_isnone(L, 1) ||
-		           (lua_isnumber(L, 1) && lua_isnumber(L, 2)),
-		           "b2.World(gx = 0.0, gy = -9.80665)");
+		// b2.World(gx = 0.0, gy = -9.80665)
+		Rainbow::Lua::Argument<lua_Number>::is_optional(L, 1);
+		Rainbow::Lua::Argument<lua_Number>::is_optional(L, 2);
 
 		if (lua_gettop(L) >= 1)
 		{
@@ -139,8 +139,8 @@ NS_B2_LUA_BEGIN
 
 	int World::set_contact_listener(lua_State *L)
 	{
-		LUA_ASSERT(lua_istable(L, 2),
-		           "<b2.World>:SetContactListener(listener)");
+		// <b2.World>:SetContactListener(listener)
+		Rainbow::Lua::Argument<void*>::is_required(L, 2);
 
 		World *self = Bind::self(L);
 		if (!self)
@@ -156,7 +156,8 @@ NS_B2_LUA_BEGIN
 
 	int World::create_body(lua_State *L)
 	{
-		LUA_ASSERT(lua_istable(L, 2), "<b2.World>:CreateBody(<b2.BodyDef>)");
+		// <b2.World>:CreateBody(<b2.BodyDef>)
+		Rainbow::Lua::Argument<void*>::is_required(L, 2);
 
 		World *self = Bind::self(L);
 		if (!self)
@@ -181,7 +182,8 @@ NS_B2_LUA_BEGIN
 
 	int World::destroy_body(lua_State *L)
 	{
-		LUA_ASSERT(lua_isuserdata(L, 2), "<b2.World>:DestroyBody(<b2.Body>)");
+		// <b2.World>:DestroyBody(<b2.Body>)
+		Rainbow::Lua::Argument<Body>::is_required(L, 2);
 
 		World *self = Bind::self(L);
 		if (!self)
@@ -203,9 +205,10 @@ NS_B2_LUA_BEGIN
 
 	int World::step(lua_State *L)
 	{
-		LUA_ASSERT(
-		    lua_isnumber(L, 2),
-		    "<b2.World>:Step(dt[, velocityIterations, positionIterations])");
+		// <b2.World>:Step(dt[, velocityIterations, positionIterations])
+		Rainbow::Lua::Argument<lua_Number>::is_required(L, 2);
+		Rainbow::Lua::Argument<lua_Number>::is_optional(L, 3);
+		Rainbow::Lua::Argument<lua_Number>::is_optional(L, 4);
 
 		World *self = Bind::self(L);
 		if (!self)
@@ -246,8 +249,9 @@ NS_B2_LUA_BEGIN
 
 	int World::set_gravity(lua_State *L)
 	{
-		LUA_ASSERT(lua_isnumber(L, 2) && lua_isnumber(L, 3),
-		           "<b2.World>:SetGravity(x, y)");
+		// <b2.World>:SetGravity(x, y)
+		Rainbow::Lua::Argument<lua_Number>::is_required(L, 2);
+		Rainbow::Lua::Argument<lua_Number>::is_required(L, 3);
 
 		World *self = Bind::self(L);
 		if (!self)

@@ -8,6 +8,7 @@
 
 #include "Graphics/Animation.h"
 #include "Lua/LuaHelper.h"
+#include "Lua/LuaSyntax.h"
 #include "Lua/lua_Sprite.h"
 
 NS_RAINBOW_LUA_BEGIN
@@ -32,11 +33,11 @@ NS_RAINBOW_LUA_BEGIN
 
 	Animation::Animation(lua_State *L) : animation(nullptr)
 	{
-		LUA_ASSERT((luaR_isuserdata(L, 1) || lua_isnil(L, 1)) &&
-		           lua_istable(L, 2) &&
-		           lua_isnumber(L, 3) &&
-		           (lua_isnumber(L, 4) || lua_isnone(L, 4)),
-		           "rainbow.animation(sprite, frames{}, fps, loop_delay = 0)");
+		// rainbow.animation(<sprite>, frames{}, fps, loop_delay = 0)
+		Argument<Sprite>::is_optional(L, 1);
+		Argument<void*>::is_required(L, 2);
+		Argument<lua_Number>::is_required(L, 3);
+		Argument<lua_Number>::is_optional(L, 4);
 
 		const size_t count = lua_rawlen(L, 2);
 		unsigned int *const frames = new unsigned int[count + 1];
@@ -73,7 +74,8 @@ NS_RAINBOW_LUA_BEGIN
 
 	int Animation::set_delay(lua_State *L)
 	{
-		LUA_ASSERT(lua_isnumber(L, 2), "<animation>:set_loop(delay_in_ms)");
+		// <animation>:set_delay(delay_in_ms)
+		Argument<lua_Number>::is_required(L, 2);
 
 		Animation *self = Bind::self(L);
 		if (!self)
@@ -85,7 +87,8 @@ NS_RAINBOW_LUA_BEGIN
 
 	int Animation::set_fps(lua_State *L)
 	{
-		LUA_ASSERT(lua_isnumber(L, 2), "<animation>:set_fps(fps)");
+		// <animation>:set_fps(fps)
+		Argument<lua_Number>::is_required(L, 2);
 
 		Animation *self = Bind::self(L);
 		if (!self)
@@ -97,7 +100,8 @@ NS_RAINBOW_LUA_BEGIN
 
 	int Animation::set_frames(lua_State *L)
 	{
-		LUA_ASSERT(lua_gettop(L) > 2, "<animation>:set_frames(f1, f2, ...)");
+		// <animation>:set_frames(f1, f2, ...)
+		Argument<lua_Number*>::is_required(L, 2);
 
 		Animation *self = Bind::self(L);
 		if (!self)
@@ -114,7 +118,8 @@ NS_RAINBOW_LUA_BEGIN
 
 	int Animation::set_sprite(lua_State *L)
 	{
-		LUA_ASSERT(lua_isuserdata(L, 2), "<animation>:set_sprite(sprite)");
+		// <animation>:set_sprite(<sprite>)
+		Argument<Sprite>::is_required(L, 2);
 
 		Animation *self = Bind::self(L);
 		if (!self)

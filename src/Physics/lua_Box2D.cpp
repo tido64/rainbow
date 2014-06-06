@@ -8,6 +8,7 @@
 
 #include "Lua/LuaBind.h"
 #include "Lua/LuaHelper.h"
+#include "Lua/LuaSyntax.h"
 
 #define NS_B2_LUA_BEGIN namespace b2 { namespace Lua
 #define NS_B2_LUA_END }
@@ -33,7 +34,8 @@ NS_B2_LUA_BEGIN
 	{
 		int set_ptm_ratio(lua_State *L)
 		{
-			LUA_ASSERT(lua_isnumber(L, 1), "b2.SetPTMRatio(r)");
+			// b2.SetPTMRatio(r)
+			Rainbow::Lua::Argument<lua_Number>::is_required(L, 1);
 
 			ptm_ratio = lua_tonumber(L, 1);
 			return 0;
