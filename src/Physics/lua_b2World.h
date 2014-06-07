@@ -224,8 +224,8 @@ NS_B2_LUA_BEGIN
 			if (steps > kMaxSteps)
 				steps = kMaxSteps;
 
-			const int v_iter = luaR_optinteger(L, 2, 8);
-			const int p_iter = luaR_optinteger(L, 3, 3);
+			const int v_iter = luaR_optinteger(L, 3, 8);
+			const int p_iter = luaR_optinteger(L, 4, 3);
 			for (int i = 0; i < steps; ++i)
 			{
 				self->world_.Step(kFixedStep, v_iter, p_iter);
