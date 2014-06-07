@@ -56,21 +56,17 @@ NS_B2_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		int count = 0;
-		while (lua_next(L, 2))
-			++count;
-		lua_pop(L, count);
-
-		std::unique_ptr<b2Vec2[]> points(new b2Vec2[count >> 1]);
-		count = 0;
-		while (lua_next(L, 2))
+		const int count = static_cast<int>(lua_rawlen(L, 2) / 2);
+		std::unique_ptr<b2Vec2[]> points(new b2Vec2[count]);
+		for (int i = 0; i < count; ++i)
 		{
-			points[count].x = luaR_tonumber(L, -1) / ptm_ratio;
-			lua_next(L, 2);
-			points[count].y = luaR_tonumber(L, -1) / ptm_ratio;
-			lua_pop(L, 2);
-			++count;
+			const int n = i * 2 + 1;
+			lua_rawgeti(L, 2, n);
+			points[i].x = luaR_tonumber(L, -1) / ptm_ratio;
+			lua_rawgeti(L, 2, n + 1);
+			points[i].y = luaR_tonumber(L, -1) / ptm_ratio;
 		}
+		lua_pop(L, count * 2);
 		self->shape.Set(points.get(), count);
 		return 0;
 	}
