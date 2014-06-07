@@ -11,6 +11,23 @@
 #include "Lua/LuaSyntax.h"
 #include "Lua/lua_Sprite.h"
 
+namespace
+{
+	unsigned int* get_frames(lua_State *L, const int n)
+	{
+		const size_t count = lua_rawlen(L, n);
+		unsigned int *const frames = new unsigned int[count + 1];
+		int i = 0;
+		std::for_each(frames, frames + count, [L, n, &i](unsigned int &frame) {
+			lua_rawgeti(L, n, ++i);
+			frame = lua_tointeger(L, -1);
+		});
+		lua_pop(L, i);
+		frames[count] = Animation::kAnimationEnd;
+		return frames;
+	}
+}
+
 NS_RAINBOW_LUA_BEGIN
 {
 	template<>
@@ -39,22 +56,13 @@ NS_RAINBOW_LUA_BEGIN
 		Argument<lua_Number>::is_required(L, 3);
 		Argument<lua_Number>::is_optional(L, 4);
 
-		const size_t count = lua_rawlen(L, 2);
-		unsigned int *const frames = new unsigned int[count + 1];
-		int i = 0;
-		std::for_each(frames, frames + count, [L, &i](unsigned int &frame) {
-			lua_rawgeti(L, 2, ++i);
-			frame = lua_tointeger(L, -1);
-		});
-		lua_pop(L, i);
-		frames[count] = ::Animation::kAnimationEnd;
-
 		::Sprite::Ref sprite;
 		replacetable(L, 1);
 		if (lua_isuserdata(L, 1))
 			sprite = touserdata<Sprite>(L, 1)->get();
 		this->animation = new ::Animation(
-		    sprite, frames, lua_tointeger(L, 3), luaR_optinteger(L, 4, 0));
+		    sprite, get_frames(L, 2), lua_tointeger(L, 3),
+		    luaR_optinteger(L, 4, 0));
 	}
 
 	Animation::~Animation()
@@ -100,19 +108,14 @@ NS_RAINBOW_LUA_BEGIN
 
 	int Animation::set_frames(lua_State *L)
 	{
-		// <animation>:set_frames(f1, f2, ...)
-		Argument<lua_Number*>::is_required(L, 2);
+		// <animation>:set_frames({f1, f2, ...})
+		Argument<void*>::is_required(L, 2);
 
 		Animation *self = Bind::self(L);
 		if (!self)
 			return 0;
 
-		const int count = lua_gettop(L) - 1;
-		unsigned int *const frames = new unsigned int[count + 1];
-		for (int i = 0; i < count; ++i)
-			frames[i] = luaR_tointeger(L, i + 2);
-		frames[count] = 0;
-		self->animation->set_frames(frames);
+		self->animation->set_frames(get_frames(L, 2));
 		return 0;
 	}
 

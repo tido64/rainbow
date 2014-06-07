@@ -121,14 +121,6 @@ NS_RAINBOW_LUA_BEGIN
 		require(L, n, lua_isnumber, "number");
 	}
 
-	template<>
-	void Argument<lua_Number*>::is_required(lua_State *L, const int n)
-	{
-		const int top = lua_gettop(L);
-		for (int i = n; i <= top; ++i)
-			require(L, i, lua_isnumber, "number");
-	}
-
 	/* Rainbow::Lua::Animation */
 
 	class Animation;
