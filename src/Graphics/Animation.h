@@ -7,7 +7,6 @@
 
 #include <memory>
 
-#include "Common/Constants.h"
 #include "Common/NonCopyable.h"
 #include "Common/TimedEvent.h"
 #include "Graphics/Sprite.h"
@@ -18,7 +17,7 @@ class Animation : public TimedEvent<Animation>, private NonCopyable<Animation>
 public:
 	using Frame = unsigned int;
 
-	enum { kAnimationEnd = kMaxInt };
+	static const Frame kAnimationEnd;
 
 	/// Constructs a sprite animation.
 	/// \param sprite  The sprite to animate.
@@ -38,8 +37,8 @@ public:
 
 	/// Sets animation frames.
 	/// \note This method takes ownership of the array.
-	/// \param frames  Null-terminated array of texture ids to be used as
-	///                frames.
+	/// \param frames  Array of texture ids to be used as frames, terminated
+	///                with \c kAnimationEnd.
 	void set_frames(const Frame *const frames);
 
 	/// Sets the sprite to animate.
@@ -54,7 +53,7 @@ public:
 private:
 	Frame frame_;  ///< Current frame.
 	Sprite::Ref sprite_;  ///< The sprite to animate.
-	std::unique_ptr<const Frame[]> frames_;  ///< Null-terminated array of texture ids to be used as frames.
+	std::unique_ptr<const Frame[]> frames_;  ///< Array of texture ids to be used as frames, terminated with \c kAnimationEnd.
 	int delay_;  ///< Number of ticks to delay before the animation loops. Negative numbers disable looping.
 	int idled_;  ///< Number of ticks idled.
 };

@@ -14,8 +14,7 @@ const double kRadian  = 5.729577951308232087679815481410517033240547246656432154
 // Physical constants
 const float kStandardGravity = -9.80665f;  ///< Standard gravitational acceleration value
 
-// Platform constants
+// Other constants
 const float kLowPassAlpha = 0.5f;
-const int kMaxInt = static_cast<unsigned int>(-1) >> 1;
 
 #endif

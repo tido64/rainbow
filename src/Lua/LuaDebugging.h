@@ -5,9 +5,10 @@
 #ifndef LUA_LUADEBUGGING_H_
 #define LUA_LUADEBUGGING_H_
 
+#include <limits>
+
 #include <lua.hpp>
 
-#include "Common/Constants.h"
 #include "Common/Debug.h"
 #include "Lua/LuaMacros.h"
 
@@ -29,7 +30,7 @@ NS_RAINBOW_LUA_BEGIN
 		};
 
 		char g_command = 0;
-		int g_finish = kMaxInt;
+		int g_finish = std::numeric_limits<int>::max();
 		int g_level = -1;
 		Line g_callstack[kLuaMaxStack] = { { 0, 0, nullptr } };
 	}
@@ -119,7 +120,7 @@ NS_RAINBOW_LUA_BEGIN
 					--g_level;
 					if (g_level == g_finish)
 					{
-						g_finish = kMaxInt;
+						g_finish = std::numeric_limits<int>::max();
 						break;
 					}
 					// fall through
