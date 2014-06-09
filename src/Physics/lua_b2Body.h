@@ -245,7 +245,7 @@ NS_B2_LUA_BEGIN
 		{
 			if (f->GetType() != b2Shape::e_circle)
 			{
-				LUA_CHECK(
+				LUA_ASSERT(
 				    L, f->GetType() == b2Shape::e_circle, "Unsupported shape");
 				world->DestroyBody(new_body);
 				return 0;
@@ -321,7 +321,7 @@ NS_B2_LUA_BEGIN
 				break;
 			}
 			default:
-				LUA_CHECK(L, false, "Invalid number of arguments");
+				LUA_ASSERT(L, false, "Invalid number of arguments");
 				break;
 		}
 		lua_pushlightuserdata(L, fixture);

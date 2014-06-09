@@ -116,7 +116,7 @@ NS_B2_LUA_BEGIN
 
 	b2Shape* parse_Shape(lua_State *L)
 	{
-		LUA_CHECK(L, lua_istable(L, -1), "Not a Shape");
+		LUA_ASSERT(L, lua_istable(L, -1), "b2Shape expected");
 
 		const char type[] = "Shape";
 		static_cast<void>(type);
@@ -145,17 +145,17 @@ NS_B2_LUA_BEGIN
 				break;
 			}
 			case b2Shape::e_edge:
-				LUA_CHECK(L, m_type != b2Shape::e_edge, "Not implemented yet");
+				LUA_ASSERT(L, m_type != b2Shape::e_edge, "Not implemented yet");
 				break;
 			case b2Shape::e_polygon:
 				shape = new b2PolygonShape(
 				    Rainbow::Lua::touserdata<PolygonShape>(L, -1)->get());
 				break;
 			case b2Shape::e_chain:
-				LUA_CHECK(L, m_type != b2Shape::e_chain, "Not implemented yet");
+				LUA_ASSERT(L, m_type != b2Shape::e_chain, "Not implemented yet");
 				break;
 			default:
-				LUA_CHECK(L, m_type >= b2Shape::e_typeCount, "Invalid shape");
+				LUA_ASSERT(L, m_type >= b2Shape::e_typeCount, "Invalid shape");
 				break;
 		}
 		return shape;

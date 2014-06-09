@@ -11,6 +11,7 @@
 #include "FileSystem/File.h"
 #include "FileSystem/Path.h"
 #include "Lua/LuaDebugging.h"
+#include "Lua/LuaSyntax.h"
 
 namespace
 {
@@ -150,18 +151,18 @@ NS_RAINBOW_LUA_BEGIN
 
 	void* topointer(lua_State *L, const char *name)
 	{
-		LUA_CHECK(L, !lua_isnil(L, -1), "Parameter is a nil value");
-		LUA_CHECK(L, lua_istable(L, -1), kLuaErrorType, name);
+		LUA_ASSERT(L, !lua_isnil(L, -1), "Unexpected nil value");
+		LUA_ASSERT(L, lua_istable(L, -1), kLuaErrorType, name);
 		lua_pushliteral(L, "__type");
 		lua_rawget(L, -2);
 		const char *type = lua_tostring(L, -1);
 		if (!type)
 		{
-			LUA_CHECK(L, type, kLuaErrorType, name);
+			LUA_ASSERT(L, type, kLuaErrorType, name);
 			lua_pop(L, 1);
 			return nullptr;
 		}
-		LUA_CHECK(L, strcmp(type, name) == 0, kLuaErrorType, name);
+		LUA_ASSERT(L, strcmp(type, name) == 0, kLuaErrorType, name);
 		lua_rawgeti(L, -2, 0);
 		void *ptr = lua_touserdata(L, -1);
 		lua_pop(L, 2);

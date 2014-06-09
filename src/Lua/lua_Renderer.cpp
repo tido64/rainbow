@@ -33,8 +33,8 @@ namespace
 		Rainbow::Lua::Argument<lua_Number>::is_required(L, 1);
 
 		const int filter = lua_tointeger(L, 1);
-		LUA_CHECK(L, filter == GL_NEAREST || filter == GL_LINEAR,
-		          "Invalid texture filter");
+		LUA_ASSERT(L, filter == GL_NEAREST || filter == GL_LINEAR,
+		           "gl.NEAREST or gl.LINEAR expected");
 		TextureManager::Instance->set_filter(filter);
 		return 0;
 	}

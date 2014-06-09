@@ -5,12 +5,35 @@
 #ifndef LUA_LUASYNTAX_H_
 #define LUA_LUASYNTAX_H_
 
+#include <utility>
+
 #include "Lua/LuaMacros.h"
 
-struct lua_State;
+#ifndef NDEBUG
+#	define LUA_ASSERT(L, expr, ...) \
+		Rainbow::Lua::verify(L, (expr), __VA_ARGS__)
+#else
+#	define LUA_ASSERT(L, expr, ...) static_cast<void>(0)
+#endif
+
+extern "C"
+{
+	struct lua_State;
+	extern int (luaL_error) (lua_State *L, const char *fmt, ...);
+}
 
 NS_RAINBOW_LUA_BEGIN
 {
+	template<typename... Args>
+	void verify(lua_State *L,
+	            const bool success,
+	            const char *const error,
+	            Args&&... args)
+	{
+		if (!success)
+			luaL_error(L, error, std::forward<Args>(args)...);
+	}
+
 	template<typename T>
 	struct Argument
 	{

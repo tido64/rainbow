@@ -15,7 +15,7 @@
 #define luaR_rawgetfield(L, k, type) \
 	lua_pushliteral(L, k); \
 	lua_rawget(L, -2); \
-	LUA_CHECK(L, !lua_isnil(L, -1), "%s is missing field '%s'", type, k)
+	LUA_ASSERT(L, !lua_isnil(L, -1), "%s is missing field '%s'", type, k)
 
 #define luaR_rawsetcclosurefield(L, fn, k) \
 	lua_pushliteral(L, k); \
