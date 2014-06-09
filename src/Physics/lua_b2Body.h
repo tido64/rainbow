@@ -303,7 +303,7 @@ NS_B2_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		b2Fixture *fixture = nullptr;
+		b2Fixture *fixture;
 		switch (lua_gettop(L))
 		{
 			case 2: {
@@ -313,16 +313,14 @@ NS_B2_LUA_BEGIN
 				delete def.shape;
 				break;
 			}
-			case 3: {
+			default: {
+				R_ASSERT(lua_gettop(L) > 2, "This shouldn't ever happen");
 				const float density = lua_tonumber(L, 3);
-				lua_pop(L, 1);
+				lua_settop(L, 2);
 				std::unique_ptr<b2Shape> shape(parse_Shape(L));
 				fixture = self->body->CreateFixture(shape.get(), density);
 				break;
 			}
-			default:
-				LUA_ASSERT(L, false, "Invalid number of arguments");
-				break;
 		}
 		lua_pushlightuserdata(L, fixture);
 		return 1;

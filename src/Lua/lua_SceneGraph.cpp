@@ -137,30 +137,27 @@ NS_RAINBOW_LUA_BEGIN
 	template<class T, SceneGraph::CastingMethod C>
 	int SceneGraph::add_child(lua_State *L)
 	{
-	#ifndef NDEBUG
-		if (lua_isnoneornil(L, 3))
-			Argument<T>::is_required(L, 2);
-		else
-		{
-			Argument<Node>::is_required(L, 2);
-			Argument<T>::is_required(L, 3);
-		}
-	#endif
-
 		SceneGraph *self = Bind::self(L);
 		if (!self)
 			return 0;
 
-		replacetable(L, 2);
-		replacetable(L, 3);
-
-		// Retrieve Lua wrapper.
-		T *obj = luaR_cast<T, C>::from(L, -1);
-
-		// Retrieve and add element.
-		Node *node = lua_isnone(L, 3) ? self->node : luaR_tonode(L, 2);
-		R_ASSERT(node, "This shouldn't ever happen.");
-		Node *child = node->add_child(obj->get());
+		Node *node;
+		int obj;
+		if (lua_isnoneornil(L, 3))
+		{
+			Argument<T>::is_required(L, 2);
+			node = self->node;
+			obj = 2;
+		}
+		else
+		{
+			Argument<Node>::is_required(L, 2);
+			Argument<T>::is_required(L, 3);
+			node = luaR_tonode(L, 2);
+			obj = 3;
+		}
+		replacetable(L, obj);
+		Node *child = node->add_child(luaR_cast<T, C>::from(L, obj)->get());
 		R_ASSERT(register_node(child), "Failed to register node");
 		lua_pushlightuserdata(L, child);
 		return 1;

@@ -13,21 +13,21 @@ namespace
 {
 	int random(lua_State *L)
 	{
-		lua_Number r = 0.0f;
+		lua_Number r;
 		switch (lua_gettop(L))
 		{
+			case 0:  // rainbow.random()
+				r = Random::next();
+				break;
 			case 1:  // rainbow.random(max)
 				Rainbow::Lua::Argument<lua_Number>::is_required(L, 1);
 				r = Random::next<lua_Number>(lua_tonumber(L, 1));
 				break;
-			case 2:  // rainbow.random(min, max)
+			default:  // rainbow.random(min, max)
 				Rainbow::Lua::Argument<lua_Number>::is_required(L, 1);
 				Rainbow::Lua::Argument<lua_Number>::is_required(L, 2);
 				r = Random::next<lua_Number>(lua_tonumber(L, 1),
 				                             lua_tonumber(L, 2));
-				break;
-			default:
-				r = Random::next();
 				break;
 		}
 		lua_pushnumber(L, r);
