@@ -5,11 +5,7 @@
 #ifndef LUA_LUABIND_H_
 #define LUA_LUABIND_H_
 
-extern "C" {
-#include <lauxlib.h>
-}
-
-#include "Lua/LuaMacros.h"
+#include "Lua/LuaHelper.h"
 
 struct lua_State;
 
@@ -26,7 +22,7 @@ NS_RAINBOW_LUA_BEGIN
 	protected:
 		static T* self(lua_State *L)
 		{
-			return static_cast<T*>(luaR_touserdata(L, 1, class_name));
+			return touserdata<T>(L, 1);
 		}
 
 		~Bind() = default;

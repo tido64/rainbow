@@ -103,7 +103,7 @@ NS_RAINBOW_LUA_BEGIN
 		unsigned int color = lua_tointeger(L, 2) << 24;
 		color += lua_tointeger(L, 3) << 16;
 		color += lua_tointeger(L, 4) << 8;
-		color += luaR_optinteger(L, 5, 0xff);
+		color += optinteger(L, 5, 0xff);
 		self->sprite->set_color(color);
 		return 0;
 	}
@@ -174,7 +174,7 @@ NS_RAINBOW_LUA_BEGIN
 			return 0;
 
 		const float fx = lua_tonumber(L, 2);
-		self->sprite->set_scale(Vec2f(fx, luaR_optnumber(L, 3, fx)));
+		self->sprite->set_scale(Vec2f(fx, optnumber(L, 3, fx)));
 		return 0;
 	}
 

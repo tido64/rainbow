@@ -5,7 +5,6 @@
 #include "Lua/lua_SpriteBatch.h"
 
 #include "FileSystem/Path.h"
-#include "Lua/LuaHelper.h"
 #include "Lua/LuaSyntax.h"
 #include "Lua/lua_Sprite.h"
 #include "Lua/lua_Texture.h"
@@ -27,7 +26,7 @@ NS_RAINBOW_LUA_BEGIN
 		{ nullptr, nullptr }
 	};
 
-	SpriteBatch::SpriteBatch(lua_State *L) : batch(luaR_optinteger(L, 1, 4)) { }
+	SpriteBatch::SpriteBatch(lua_State *L) : batch(optinteger(L, 1, 4)) { }
 
 	int SpriteBatch::add(lua_State *L)
 	{

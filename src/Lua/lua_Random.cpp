@@ -4,9 +4,8 @@
 
 #include "Lua/lua_Random.h"
 
-#include <lua.hpp>
-
 #include "Common/Random.h"
+#include "Lua/LuaHelper.h"
 #include "Lua/LuaSyntax.h"
 
 namespace
@@ -39,7 +38,7 @@ namespace
 		// rainbow.seed(seed = 0)
 		Rainbow::Lua::Argument<lua_Number>::is_optional(L, 1);
 
-		Random::seed(luaR_optinteger(L, 1, 0));
+		Random::seed(Rainbow::Lua::optinteger(L, 1, 0));
 		return 0;
 	}
 }

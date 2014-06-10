@@ -23,7 +23,8 @@ namespace
 
 	int createtable(lua_State *L)
 	{
-		lua_createtable(L, luaR_optinteger(L, 1, 0), luaR_optinteger(L, 2, 0));
+		using Rainbow::Lua::optinteger;
+		lua_createtable(L, optinteger(L, 1, 0), optinteger(L, 2, 0));
 		return 1;
 	}
 

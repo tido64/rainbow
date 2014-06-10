@@ -7,7 +7,6 @@
 #include <Box2D/Box2D.h>
 
 #include "Lua/LuaBind.h"
-#include "Lua/LuaHelper.h"
 #include "Lua/LuaSyntax.h"
 
 #define NS_B2_LUA_BEGIN namespace b2 { namespace Lua

@@ -4,7 +4,6 @@
 
 #include "Lua/lua_Label.h"
 
-#include "Lua/LuaHelper.h"
 #include "Lua/LuaSyntax.h"
 #include "Lua/lua_Font.h"
 
@@ -91,7 +90,7 @@ NS_RAINBOW_LUA_BEGIN
 		const unsigned char r = lua_tointeger(L, 2);
 		const unsigned char g = lua_tointeger(L, 3);
 		const unsigned char b = lua_tointeger(L, 4);
-		const unsigned char a = luaR_optinteger(L, 5, 0xff);
+		const unsigned char a = optinteger(L, 5, 0xff);
 		self->label.set_color(Colorb(r, g, b, a));
 		return 0;
 	}

@@ -120,8 +120,8 @@ NS_B2_LUA_BEGIN
 		if (lua_gettop(L) >= 1)
 		{
 			const b2Vec2 &gravity = world_.GetGravity();
-			world_.SetGravity(b2Vec2(luaR_optnumber(L, 1, gravity.x),
-			                         luaR_optnumber(L, 2, gravity.y)));
+			world_.SetGravity(b2Vec2(Rainbow::Lua::optnumber(L, 1, gravity.x),
+			                         Rainbow::Lua::optnumber(L, 2, gravity.y)));
 		}
 
 		debug_draw_.SetFlags(b2Draw::e_shapeBit);
@@ -224,8 +224,8 @@ NS_B2_LUA_BEGIN
 			if (steps > kMaxSteps)
 				steps = kMaxSteps;
 
-			const int v_iter = luaR_optinteger(L, 3, 8);
-			const int p_iter = luaR_optinteger(L, 4, 3);
+			const int v_iter = Rainbow::Lua::optinteger(L, 3, 8);
+			const int p_iter = Rainbow::Lua::optinteger(L, 4, 3);
 			for (int i = 0; i < steps; ++i)
 			{
 				self->world_.Step(kFixedStep, v_iter, p_iter);

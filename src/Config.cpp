@@ -29,7 +29,7 @@ namespace Rainbow
 			return;
 
 		lua_State *L = luaL_newstate();
-		if (Rainbow::Lua::load(L, config, kConfigModule) == 0)
+		if (Lua::load(L, config, kConfigModule) == 0)
 			return;
 
 		lua_getglobal(L, "accelerometer");
@@ -40,9 +40,9 @@ namespace Rainbow
 		if (lua_istable(L, -1))
 		{
 			lua_rawgeti(L, -1, 1);
-			width_ = luaR_tointeger(L, -1);
+			width_ = Lua::tointeger(L, -1);
 			lua_rawgeti(L, -2, 2);
-			height_ = luaR_tointeger(L, -1);
+			height_ = Lua::tointeger(L, -1);
 		}
 
 	#ifdef RAINBOW_SDL

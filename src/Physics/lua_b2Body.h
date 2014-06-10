@@ -60,37 +60,37 @@ NS_B2_LUA_BEGIN
 		static_cast<void>(type);
 
 		luaR_rawgetfield(L, "type", type);
-		def.type = static_cast<b2BodyType>(luaR_tointeger(L, -1));
+		def.type = static_cast<b2BodyType>(Rainbow::Lua::tointeger(L, -1));
 		lua_pop(L, 1);
 
 		luaR_rawgetfield(L, "position", type);
 		lua_pushliteral(L, "x");
 		lua_rawget(L, -2);
-		def.position.x = luaR_tonumber(L, -1) / ptm_ratio;
+		def.position.x = Rainbow::Lua::tonumber(L, -1) / ptm_ratio;
 		lua_pushliteral(L, "y");
 		lua_rawget(L, -3);
-		def.position.y = luaR_tonumber(L, -1) / ptm_ratio;
+		def.position.y = Rainbow::Lua::tonumber(L, -1) / ptm_ratio;
 		lua_pop(L, 3);
 
 		luaR_rawgetfield(L, "angle", type);
-		def.angle = luaR_tonumber(L, -1);
+		def.angle = Rainbow::Lua::tonumber(L, -1);
 		lua_pop(L, 1);
 
 		luaR_rawgetfield(L, "linearVelocity", type);
 		lua_pushliteral(L, "x");
 		lua_rawget(L, -2);
-		def.linearVelocity.x = luaR_tonumber(L, -1);
+		def.linearVelocity.x = Rainbow::Lua::tonumber(L, -1);
 		lua_pushliteral(L, "y");
 		lua_rawget(L, -3);
-		def.linearVelocity.y = luaR_tonumber(L, -1);
+		def.linearVelocity.y = Rainbow::Lua::tonumber(L, -1);
 		lua_pop(L, 3);
 
 		luaR_rawgetfield(L, "linearDamping", type);
-		def.linearDamping = luaR_tonumber(L, -1);
+		def.linearDamping = Rainbow::Lua::tonumber(L, -1);
 		lua_pop(L, 1);
 
 		luaR_rawgetfield(L, "angularDamping", type);
-		def.angularDamping = luaR_tonumber(L, -1);
+		def.angularDamping = Rainbow::Lua::tonumber(L, -1);
 		lua_pop(L, 1);
 
 		luaR_rawgetfield(L, "allowSleep", type);
@@ -114,7 +114,7 @@ NS_B2_LUA_BEGIN
 		lua_pop(L, 1);
 
 		luaR_rawgetfield(L, "gravityScale", type);
-		def.gravityScale = luaR_tonumber(L, -1);
+		def.gravityScale = Rainbow::Lua::tonumber(L, -1);
 		lua_pop(L, 1);
 	}
 

@@ -84,9 +84,9 @@ namespace
 		Rainbow::Lua::Argument<lua_Number>::is_optional(L, 3);
 
 		const char *file = lua_tostring(L, 1);
-		const int type =
-		    luaR_optinteger(L, 2, static_cast<int>(Sound::Type::Static));
-		const int loops = luaR_optinteger(L, 3, -1);
+		const int type = Rainbow::Lua::optinteger(
+		    L, 2, static_cast<int>(Sound::Type::Static));
+		const int loops = Rainbow::Lua::optinteger(L, 3, -1);
 		Rainbow::Lua::pushpointer(
 		    L,
 		    Mixer::Instance->create_sound(

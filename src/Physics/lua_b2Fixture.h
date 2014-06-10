@@ -24,15 +24,15 @@ NS_B2_LUA_BEGIN
 		static_cast<void>(type);
 
 		luaR_rawgetfield(L, "categoryBits", type);
-		filter.categoryBits = luaR_tointeger(L, -1);
+		filter.categoryBits = Rainbow::Lua::tointeger(L, -1);
 		lua_pop(L, 1);
 
 		luaR_rawgetfield(L, "maskBits", type);
-		filter.maskBits = luaR_tointeger(L, -1);
+		filter.maskBits = Rainbow::Lua::tointeger(L, -1);
 		lua_pop(L, 1);
 
 		luaR_rawgetfield(L, "groupIndex", type);
-		filter.groupIndex = luaR_tointeger(L, -1);
+		filter.groupIndex = Rainbow::Lua::tointeger(L, -1);
 		lua_pop(L, 1);
 	}
 
@@ -63,15 +63,15 @@ NS_B2_LUA_BEGIN
 		lua_pop(L, 1);
 
 		luaR_rawgetfield(L, "friction", type);
-		def.friction = luaR_tonumber(L, -1);
+		def.friction = Rainbow::Lua::tonumber(L, -1);
 		lua_pop(L, 1);
 
 		luaR_rawgetfield(L, "restitution", type);
-		def.restitution = luaR_tonumber(L, -1);
+		def.restitution = Rainbow::Lua::tonumber(L, -1);
 		lua_pop(L, 1);
 
 		luaR_rawgetfield(L, "density", type);
-		def.density = luaR_tonumber(L, -1);
+		def.density = Rainbow::Lua::tonumber(L, -1);
 		lua_pop(L, 1);
 
 		luaR_rawgetfield(L, "isSensor", type);

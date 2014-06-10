@@ -7,7 +7,6 @@
 #include <algorithm>
 
 #include "Graphics/Animation.h"
-#include "Lua/LuaHelper.h"
 #include "Lua/LuaSyntax.h"
 #include "Lua/lua_Sprite.h"
 
@@ -61,8 +60,7 @@ NS_RAINBOW_LUA_BEGIN
 		if (lua_isuserdata(L, 1))
 			sprite = touserdata<Sprite>(L, 1)->get();
 		this->animation = new ::Animation(
-		    sprite, get_frames(L, 2), lua_tointeger(L, 3),
-		    luaR_optinteger(L, 4, 0));
+		    sprite, get_frames(L, 2), lua_tointeger(L, 3), optinteger(L, 4, 0));
 	}
 
 	Animation::~Animation()

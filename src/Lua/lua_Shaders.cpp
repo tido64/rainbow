@@ -6,7 +6,6 @@
 
 #include "Graphics/Shaders/Diffuse.h"
 #include "Lua/LuaBind.h"
-#include "Lua/LuaHelper.h"
 #include "Lua/LuaSyntax.h"
 
 namespace
@@ -116,6 +115,6 @@ int Diffuse::set_position(lua_State *L)
 
 	self->lighting.set_position(lua_tonumber(L, 2),
 	                            lua_tonumber(L, 3),
-	                            luaR_optnumber(L, 4, 100.0));
+	                            Rainbow::Lua::optnumber(L, 4, 100.0));
 	return 0;
 }

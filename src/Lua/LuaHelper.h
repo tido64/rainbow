@@ -36,6 +36,14 @@ NS_RAINBOW_LUA_BEGIN
 	/// \return Number of successfully loaded chunks.
 	int load(lua_State *L, const Data &chunk, const char *name, const bool exec = true);
 
+	/// Returns the value returned from luaL_optinteger() but without the extra
+	/// type check if NDEBUG is defined.
+	inline lua_Integer optinteger(lua_State *L, const int n, lua_Integer def);
+
+	/// Returns the value returned from luaL_optnumber() but without the extra
+	/// type check if NDEBUG is defined.
+	inline lua_Number optnumber(lua_State *L, const int n, lua_Number def);
+
 	/// Pushes a collectable pointer on the stack.
 	///
 	/// Wraps pointer in a table so that one can attach an arbitrary metatable
@@ -68,6 +76,14 @@ NS_RAINBOW_LUA_BEGIN
 	/// Sets debugging hook.
 	int sethook(lua_State *L, const int mask = LUA_MASKCALL | LUA_MASKRET | LUA_MASKLINE);
 
+	/// Returns the value returned from luaL_checkinteger() or lua_tointeger(),
+	/// depending on whether NDEBUG is defined.
+	inline lua_Integer tointeger(lua_State *L, const int n);
+
+	/// Returns the value returned from luaL_checknumber() or lua_tonumber(),
+	/// depending on whether NDEBUG is defined.
+	inline lua_Number tonumber(lua_State *L, const int n);
+
 	/// Returns the pointer on top of the stack.
 	///
 	/// Unwraps the pointer while checking for nil value and type. This method
@@ -80,12 +96,12 @@ NS_RAINBOW_LUA_BEGIN
 	void* topointer(lua_State *L, const char *name);
 
 	/// Returns the string representing a Lua wrapped object. The format of the
-	/// string is "<type name>: <address>". Normally only available for debug
-	/// builds.
+	/// string is "<type name>: <address>".
 	template<class T>
 	int tostring(lua_State *L);
 
-	/// Returns the pointer returned from luaR_touserdata().
+	/// Returns the pointer returned from luaL_checkudata() or lua_touserdata(),
+	/// depending on whether NDEBUG is defined.
 	template<class T>
 	T* touserdata(lua_State *L, const int n);
 
@@ -107,6 +123,24 @@ NS_RAINBOW_LUA_BEGIN
 	{
 		touserdata<T>(L, 1)->~T();
 		return 0;
+	}
+
+	lua_Integer optinteger(lua_State *L, const int n, lua_Integer def)
+	{
+	#ifndef NDEBUG
+		return luaL_optinteger(L, n, def);
+	#else
+		return luaL_opt(L, lua_tointeger, n, def);
+	#endif
+	}
+
+	lua_Number optnumber(lua_State *L, const int n, lua_Number def)
+	{
+	#ifndef NDEBUG
+		return luaL_optnumber(L, n, def);
+	#else
+		return luaL_opt(L, lua_tonumber, n, def);
+	#endif
 	}
 
 	template<class T>
@@ -131,6 +165,24 @@ NS_RAINBOW_LUA_BEGIN
 		lua_pop(L, 1);
 	}
 
+	lua_Integer tointeger(lua_State *L, const int n)
+	{
+	#ifndef NDEBUG
+		return luaL_checkinteger(L, n);
+	#else
+		return lua_tointeger(L, n);
+	#endif
+	}
+
+	lua_Number tonumber(lua_State *L, const int n)
+	{
+	#ifndef NDEBUG
+		return luaL_checknumber(L, n);
+	#else
+		return lua_tonumber(L, n);
+	#endif
+	}
+
 	template<class T>
 	int tostring(lua_State *L)
 	{
@@ -141,7 +193,11 @@ NS_RAINBOW_LUA_BEGIN
 	template<class T>
 	T* touserdata(lua_State *L, const int n)
 	{
-		return static_cast<T*>(luaR_touserdata(L, n, T::class_name));
+	#ifndef NDEBUG
+		return static_cast<T*>(luaL_checkudata(L, n, T::class_name));
+	#else
+		return static_cast<T*>(lua_touserdata(L, n));
+	#endif
 	}
 } NS_RAINBOW_LUA_END
 
