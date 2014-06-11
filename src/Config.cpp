@@ -4,11 +4,24 @@
 
 #include "Config.h"
 
+#include <memory>
+
 #include "Common/Data.h"
 #include "Common/Debug.h"
 #include "FileSystem/File.h"
 #include "FileSystem/Path.h"
 #include "Lua/LuaHelper.h"
+
+namespace
+{
+	struct LuaStateDeleter
+	{
+		void operator()(lua_State *L) const
+		{
+			lua_close(L);
+		}
+	};
+}
 
 namespace Rainbow
 {
@@ -28,29 +41,27 @@ namespace Rainbow
 		if (!config)
 			return;
 
-		lua_State *L = luaL_newstate();
-		if (Lua::load(L, config, kConfigModule) == 0)
+		std::unique_ptr<lua_State, LuaStateDeleter> L(luaL_newstate());
+		if (Lua::load(L.get(), config, kConfigModule) == 0)
 			return;
 
-		lua_getglobal(L, "accelerometer");
-		if (lua_isboolean(L, -1))
-			accelerometer_ = lua_toboolean(L, -1);
+		lua_getglobal(L.get(), "accelerometer");
+		if (lua_isboolean(L.get(), -1))
+			accelerometer_ = lua_toboolean(L.get(), -1);
 
-		lua_getglobal(L, "resolution");
-		if (lua_istable(L, -1))
+		lua_getglobal(L.get(), "resolution");
+		if (lua_istable(L.get(), -1))
 		{
-			lua_rawgeti(L, -1, 1);
-			width_ = Lua::tointeger(L, -1);
-			lua_rawgeti(L, -2, 2);
-			height_ = Lua::tointeger(L, -1);
+			lua_rawgeti(L.get(), -1, 1);
+			width_ = Lua::tointeger(L.get(), -1);
+			lua_rawgeti(L.get(), -2, 2);
+			height_ = Lua::tointeger(L.get(), -1);
 		}
 
 	#ifdef RAINBOW_SDL
-		lua_getglobal(L, "suspend_on_focus_lost");
-		if (lua_isboolean(L, -1))
-			suspend_ = lua_toboolean(L, -1);
+		lua_getglobal(L.get(), "suspend_on_focus_lost");
+		if (lua_isboolean(L.get(), -1))
+			suspend_ = lua_toboolean(L.get(), -1);
 	#endif
-
-		lua_close(L);
 	}
 }
