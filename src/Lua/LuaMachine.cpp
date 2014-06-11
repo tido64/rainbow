@@ -52,7 +52,7 @@ namespace
 
 	int time_since_epoch(lua_State *L)
 	{
-		lua_pushinteger(L, Chrono::time_since_epoch().count());
+		lua_pushunsigned(L, Chrono::time_since_epoch().count());
 		return 1;
 	}
 }
@@ -61,23 +61,23 @@ namespace Rainbow
 {
 	int LuaMachine::start(const Data &main)
 	{
-		if (Lua::load(this->L, main, "main") == 0)
-			return luaL_error(this->L, "Failed to load main script");
+		if (Lua::load(state_, main, "main") == 0)
+			return luaL_error(state_, "Failed to load main script");
 
 	#ifndef NDEBUG
-		lua_rawgeti(this->L, LUA_REGISTRYINDEX, this->traceback);
+		lua_rawgeti(state_, LUA_REGISTRYINDEX, traceback_);
 	#endif
-		lua_getglobal(this->L, "init");
+		lua_getglobal(state_, "init");
 	#ifndef NDEBUG
-		const int lua_e = lua_pcall(this->L, 0, 0, 1);
-		lua_remove(L, 1);
+		const int lua_e = lua_pcall(state_, 0, 0, 1);
+		lua_remove(state_, 1);
 	#else
-		const int lua_e = lua_pcall(this->L, 0, 0, 0);
+		const int lua_e = lua_pcall(state_, 0, 0, 0);
 	#endif
 		if (lua_e != LUA_OK)
 		{
-			Lua::error(this->L, lua_e);
-			return luaL_error(this->L, "Failed to initialise main script");
+			Lua::error(state_, lua_e);
+			return luaL_error(state_, "Failed to initialise main script");
 		}
 		return LUA_OK;
 	}
@@ -85,116 +85,117 @@ namespace Rainbow
 	int LuaMachine::update(const unsigned long t)
 	{
 	#ifndef NDEBUG
-		lua_rawgeti(this->L, LUA_REGISTRYINDEX, this->traceback);
+		lua_rawgeti(state_, LUA_REGISTRYINDEX, traceback_);
 	#endif
-		lua_rawgeti(this->L, LUA_REGISTRYINDEX, this->internal);
-		lua_pushinteger(this->L, t);
+		lua_rawgeti(state_, LUA_REGISTRYINDEX, internal_);
+		lua_pushunsigned(state_, t);
 	#ifndef NDEBUG
-		const int lua_e = lua_pcall(this->L, 1, 0, 1);
-		lua_remove(this->L, 1);
+		const int lua_e = lua_pcall(state_, 1, 0, 1);
+		lua_remove(state_, 1);
 	#else
-		const int lua_e = lua_pcall(this->L, 1, 0, 0);
+		const int lua_e = lua_pcall(state_, 1, 0, 0);
 	#endif
 		if (lua_e != LUA_OK)
 		{
-			Lua::error(this->L, lua_e);
-			return luaL_error(this->L, "Failed to call 'update'");
+			Lua::error(state_, lua_e);
+			return luaL_error(state_, "Failed to call 'update'");
 		}
 		return LUA_OK;
 	}
 
 	LuaMachine::LuaMachine()
-	    : internal(0), traceback(0), scenegraph(nullptr), L(luaL_newstate()) { }
+	    : state_(luaL_newstate()), internal_(0), traceback_(0),
+	      scenegraph_(nullptr) { }
 
 	LuaMachine::~LuaMachine()
 	{
-		R_ASSERT(!this->L,
+		R_ASSERT(!state_,
 		         "LuaMachine must be terminated before the graphics context");
 	}
 
 	void LuaMachine::close()
 	{
-		if (!this->L)
+		if (!state_)
 			return;
 
-		Lua::SceneGraph::destroy(this->L, this->scenegraph);
-		lua_close(this->L);
-		this->L = nullptr;
+		Lua::SceneGraph::destroy(state_, scenegraph_);
+		lua_close(state_);
+		state_ = nullptr;
 	}
 
 	int LuaMachine::init(SceneGraph::Node *root)
 	{
-		luaR_openlibs(this->L);
+		luaR_openlibs(state_);
 
 		// Initialize "rainbow" namespace.
-		lua_createtable(this->L, 0, 16);
-		Lua::init(this->L);
+		lua_createtable(state_, 0, 16);
+		Lua::init(state_);
 
 		// Set "rainbow.breakpoint".
-		luaR_rawsetcclosurefield(L, breakpoint, "breakpoint");
+		luaR_rawsetcclosurefield(state_, breakpoint, "breakpoint");
 
 		// Set "rainbow.time_since_epoch".
-		luaR_rawsetcclosurefield(L, time_since_epoch, "time_since_epoch");
+		luaR_rawsetcclosurefield(state_, time_since_epoch, "time_since_epoch");
 
 		// Initialize "rainbow.scenegraph".
-		this->scenegraph = Lua::SceneGraph::create(this->L, root);
+		scenegraph_ = Lua::SceneGraph::create(state_, root);
 
 		// Bind C++ objects.
-		Lua::bind(this->L);
+		Lua::bind(state_);
 
 		const char rainbow[] = "rainbow";
-		lua_setglobal(this->L, rainbow);
-		R_ASSERT(lua_gettop(this->L) == 0, "Stack not empty");
+		lua_setglobal(state_, rainbow);
+		R_ASSERT(lua_gettop(state_) == 0, "Stack not empty");
 
 		// Set up custom loader.
-		lua_getglobal(this->L, "package");
-		R_ASSERT(!lua_isnil(this->L, -1), "package table does not exist");
-		lua_pushliteral(this->L, "searchers");
-		lua_rawget(this->L, -2);
-		R_ASSERT(!lua_isnil(this->L, -1),
+		lua_getglobal(state_, "package");
+		R_ASSERT(!lua_isnil(state_, -1), "package table does not exist");
+		lua_pushliteral(state_, "searchers");
+		lua_rawget(state_, -2);
+		R_ASSERT(!lua_isnil(state_, -1),
 		         "package.searchers table does not exist");
 
-		// Make space in the second slot for our loader.
-		for (size_t i = lua_rawlen(this->L, -1); i > 1; --i)
+		// Make space in the top slot for our loader.
+		for (size_t i = lua_rawlen(state_, -1); i > 0; --i)
 		{
-			lua_rawgeti(this->L, -1, i);
-			lua_rawseti(this->L, -2, i + 1);
+			lua_rawgeti(state_, -1, i);
+			lua_rawseti(state_, -2, i + 1);
 		}
-		lua_pushcfunction(this->L, Lua::load);
-		lua_rawseti(this->L, -2, 2);
-		lua_pop(this->L, 2);
-		R_ASSERT(lua_gettop(this->L) == 0, "Stack not empty");
+		lua_pushcfunction(state_, Lua::load);
+		lua_rawseti(state_, -2, 1);
+		lua_pop(state_, 2);
+		R_ASSERT(lua_gettop(state_) == 0, "Stack not empty");
 
 		// Load our internal script.
 		const size_t length = sizeof(Rainbow_lua) / sizeof(char) - 1;
-		if (Lua::load(this->L,
+		if (Lua::load(state_,
 		              Data(Rainbow_lua, length, Data::kDataReference),
 		              rainbow) == 0)
 		{
-			return luaL_error(this->L, "Failed to load internal Lua script");
+			return luaL_error(state_, "Failed to load internal Lua script");
 		}
-		lua_getglobal(this->L, "__update");
-		R_ASSERT(lua_isfunction(this->L, -1),
+		lua_getglobal(state_, "__update");
+		R_ASSERT(lua_isfunction(state_, -1),
 		         "Failed to get internal Lua script");
-		this->internal = luaL_ref(this->L, LUA_REGISTRYINDEX);
-		R_ASSERT(lua_gettop(this->L) == 0, "Stack not empty");
+		internal_ = luaL_ref(state_, LUA_REGISTRYINDEX);
+		R_ASSERT(lua_gettop(state_) == 0, "Stack not empty");
 
 	#ifndef NDEBUG
-		lua_getglobal(this->L, "debug");
-		lua_pushliteral(this->L, "traceback");
-		lua_rawget(this->L, -2);
-		this->traceback = luaL_ref(this->L, LUA_REGISTRYINDEX);
-		lua_pop(this->L, 1);
-		R_ASSERT(lua_gettop(this->L) == 0, "Stack not empty");
+		lua_getglobal(state_, "debug");
+		lua_pushliteral(state_, "traceback");
+		lua_rawget(state_, -2);
+		traceback_ = luaL_ref(state_, LUA_REGISTRYINDEX);
+		lua_pop(state_, 1);
+		R_ASSERT(lua_gettop(state_) == 0, "Stack not empty");
 	#endif
 
 		// Map 'lua_createtable' to 'table.create'
-		lua_getglobal(this->L, "table");
-		lua_pushliteral(this->L, "create");
-		lua_pushcfunction(this->L, createtable);
-		lua_rawset(this->L, -3);
-		lua_pop(this->L, 1);
-		R_ASSERT(lua_gettop(this->L) == 0, "Stack not empty");
+		lua_getglobal(state_, "table");
+		lua_pushliteral(state_, "create");
+		lua_pushcfunction(state_, createtable);
+		lua_rawset(state_, -3);
+		lua_pop(state_, 1);
+		R_ASSERT(lua_gettop(state_) == 0, "Stack not empty");
 
 		return LUA_OK;
 	}

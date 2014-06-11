@@ -31,10 +31,10 @@ namespace Rainbow
 		inline operator lua_State*() const;
 
 	private:
-		int internal;
-		int traceback;
-		Lua::SceneGraph *scenegraph;
-		lua_State *L;
+		lua_State *state_;
+		int internal_;
+		int traceback_;
+		Lua::SceneGraph *scenegraph_;
 
 		LuaMachine();
 		~LuaMachine();
@@ -45,7 +45,7 @@ namespace Rainbow
 
 	LuaMachine::operator lua_State*() const
 	{
-		return this->L;
+		return state_;
 	}
 }
 
