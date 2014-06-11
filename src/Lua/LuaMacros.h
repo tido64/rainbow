@@ -13,23 +13,35 @@
 #define NS_RAINBOW_LUA_MODULE_END(module) }}
 
 #define luaR_rawgetfield(L, k, type) \
-	lua_pushliteral(L, k); \
-	lua_rawget(L, -2); \
-	LUA_ASSERT(L, !lua_isnil(L, -1), "%s is missing field '%s'", type, k)
+	do \
+	{ \
+		lua_pushliteral(L, k); \
+		lua_rawget(L, -2); \
+		LUA_ASSERT(L, !lua_isnil(L, -1), "%s is missing field '%s'", type, k); \
+	} while(0)
 
 #define luaR_rawsetcclosurefield(L, fn, k) \
-	lua_pushliteral(L, k); \
-	lua_pushcclosure(L, fn, 0); \
-	lua_rawset(L, -3)
+	do \
+	{ \
+		lua_pushliteral(L, k); \
+		lua_pushcclosure(L, fn, 0); \
+		lua_rawset(L, -3); \
+	} while(0)
 
 #define luaR_rawsetfield(L, pushvalue, v, k) \
-	lua_pushliteral(L, k); \
-	pushvalue(L, v); \
-	lua_rawset(L, -3)
+	do \
+	{ \
+		lua_pushliteral(L, k); \
+		pushvalue(L, v); \
+		lua_rawset(L, -3); \
+	} while(0)
 
 #define luaR_rawsetnilfield(L, k) \
-	lua_pushliteral(L, k); \
-	lua_pushnil(L); \
-	lua_rawset(L, -3)
+	do \
+	{ \
+		lua_pushliteral(L, k); \
+		lua_pushnil(L); \
+		lua_rawset(L, -3); \
+	} while(0)
 
 #endif  // LUA_LUAMACROS_H_
