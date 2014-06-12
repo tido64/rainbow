@@ -23,45 +23,45 @@ namespace Rainbow
 		inline operator const unsigned char*() const;
 
 	private:
-		size_t len;
-		size_t off;
-		void *addr;
-		void *handle;
+		size_t len_;
+		size_t off_;
+		void *addr_;
+		void *handle_;
 	};
 
 	const unsigned char* DataMapWin::bytes() const
 	{
-		return static_cast<unsigned char*>(this->addr) + this->off;
+		return static_cast<unsigned char*>(addr_) + off_;
 	}
 
 	void DataMapWin::offset(const size_t offset)
 	{
-		this->off = offset;
+		off_ = offset;
 	}
 
 	size_t DataMapWin::size() const
 	{
-		return this->len - this->off;
+		return len_ - off_;
 	}
 
 	DataMapWin::operator bool() const
 	{
-		return this->addr;
+		return addr_;
 	}
 
 	DataMapWin::operator const void*() const
 	{
-		return this->bytes();
+		return bytes();
 	}
 
 	DataMapWin::operator const char*() const
 	{
-		return static_cast<char*>(this->addr) + this->off;
+		return static_cast<char*>(addr_) + off_;
 	}
 
 	DataMapWin::operator const unsigned char*() const
 	{
-		return this->bytes();
+		return bytes();
 	}
 }
 

@@ -27,7 +27,7 @@ namespace
 		static int set_radius(lua_State *);
 		static int set_position(lua_State *);
 
-		Rainbow::Shaders::Diffuse lighting;
+		Rainbow::Shaders::Diffuse lighting_;
 	};
 
 	int diffuse(lua_State *L)
@@ -64,16 +64,16 @@ const luaL_Reg Diffuse::Bind::functions[] = {
 	{ nullptr, nullptr }
 };
 
-Diffuse::Diffuse(lua_State *L) : lighting(lua_toboolean(L, 1)) { }
+Diffuse::Diffuse(lua_State *L) : lighting_(lua_toboolean(L, 1)) { }
 
 const Rainbow::Shaders::Diffuse* Diffuse::get() const
 {
-	return &this->lighting;
+	return &lighting_;
 }
 
 int Diffuse::id() const
 {
-	return this->lighting.id();
+	return lighting_.id();
 }
 
 int Diffuse::set_cutoff(lua_State *L)
@@ -85,7 +85,7 @@ int Diffuse::set_cutoff(lua_State *L)
 	if (!self)
 		return 0;
 
-	self->lighting.set_cutoff(lua_tonumber(L, 2));
+	self->lighting_.set_cutoff(lua_tonumber(L, 2));
 	return 0;
 }
 
@@ -98,7 +98,7 @@ int Diffuse::set_radius(lua_State *L)
 	if (!self)
 		return 0;
 
-	self->lighting.set_radius(lua_tonumber(L, 2));
+	self->lighting_.set_radius(lua_tonumber(L, 2));
 	return 0;
 }
 
@@ -113,7 +113,7 @@ int Diffuse::set_position(lua_State *L)
 	if (!self)
 		return 0;
 
-	self->lighting.set_position(lua_tonumber(L, 2),
+	self->lighting_.set_position(lua_tonumber(L, 2),
 	                            lua_tonumber(L, 3),
 	                            Rainbow::Lua::optnumber(L, 4, 100.0));
 	return 0;

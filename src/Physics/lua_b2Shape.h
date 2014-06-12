@@ -37,14 +37,14 @@ NS_B2_LUA_BEGIN
 		static int set_as_box(lua_State *);
 		static int set_center(lua_State *);
 
-		b2PolygonShape shape;
+		b2PolygonShape shape_;
 	};
 
 	PolygonShape::PolygonShape(lua_State *) { }
 
 	b2PolygonShape& PolygonShape::get()
 	{
-		return this->shape;
+		return shape_;
 	}
 
 	int PolygonShape::set(lua_State *L)
@@ -67,7 +67,7 @@ NS_B2_LUA_BEGIN
 			points[i].y = Rainbow::Lua::tonumber(L, -1) / ptm_ratio;
 		}
 		lua_pop(L, count * 2);
-		self->shape.Set(points.get(), count);
+		self->shape_.Set(points.get(), count);
 		return 0;
 	}
 
@@ -92,10 +92,10 @@ NS_B2_LUA_BEGIN
 			const float cx = lua_tonumber(L, 4) / ptm_ratio;
 			const float cy = lua_tonumber(L, 5) / ptm_ratio;
 			const float r = lua_tonumber(L, 6);
-			self->shape.SetAsBox(hx, hy, b2Vec2(cx, cy), r);
+			self->shape_.SetAsBox(hx, hy, b2Vec2(cx, cy), r);
 		}
 		else
-			self->shape.SetAsBox(hx, hy);
+			self->shape_.SetAsBox(hx, hy);
 		return 0;
 	}
 
@@ -109,7 +109,7 @@ NS_B2_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		self->shape.m_centroid.Set(
+		self->shape_.m_centroid.Set(
 		    lua_tonumber(L, 2) / ptm_ratio, lua_tonumber(L, 3) / ptm_ratio);
 		return 0;
 	}

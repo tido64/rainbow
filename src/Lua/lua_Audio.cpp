@@ -206,7 +206,7 @@ namespace
 		static int getTimelinePosition(lua_State *);
 		static int setTimelinePosition(lua_State *);
 
-		FMOD::Studio::EventInstance *instance;
+		FMOD::Studio::EventInstance *instance_;
 	};
 
 	int loadBank(lua_State *L)
@@ -321,12 +321,12 @@ const luaL_Reg FMODStudioEventInstance::Bind::functions[] = {
 };
 
 FMODStudioEventInstance::FMODStudioEventInstance(lua_State *L)
-    : instance(static_cast<FMOD::Studio::EventInstance*>(lua_touserdata(L, 1)))
+    : instance_(static_cast<FMOD::Studio::EventInstance*>(lua_touserdata(L, 1)))
 { }
 
 FMODStudioEventInstance::~FMODStudioEventInstance()
 {
-	this->instance->release();
+	instance_->release();
 }
 
 int FMODStudioEventInstance::getVolume(lua_State *L)
@@ -336,7 +336,7 @@ int FMODStudioEventInstance::getVolume(lua_State *L)
 		return 0;
 
 	float volume = 0.0f;
-	self->instance->getVolume(&volume);
+	self->instance_->getVolume(&volume);
 	lua_pushnumber(L, volume);
 	return 1;
 }
@@ -350,7 +350,7 @@ int FMODStudioEventInstance::setVolume(lua_State *L)
 	if (!self)
 		return 0;
 
-	self->instance->setVolume(lua_tonumber(L, 2));
+	self->instance_->setVolume(lua_tonumber(L, 2));
 	return 0;
 }
 
@@ -361,7 +361,7 @@ int FMODStudioEventInstance::getPitch(lua_State *L)
 		return 0;
 
 	float pitch = 0.0f;
-	self->instance->getPitch(&pitch);
+	self->instance_->getPitch(&pitch);
 	lua_pushnumber(L, pitch);
 	return 1;
 }
@@ -375,7 +375,7 @@ int FMODStudioEventInstance::setPitch(lua_State *L)
 	if (!self)
 		return 0;
 
-	self->instance->setPitch(lua_tonumber(L, 2));
+	self->instance_->setPitch(lua_tonumber(L, 2));
 	return 0;
 }
 
@@ -386,7 +386,7 @@ int FMODStudioEventInstance::getPaused(lua_State *L)
 		return 0;
 
 	bool paused = false;
-	self->instance->getPaused(&paused);
+	self->instance_->getPaused(&paused);
 	lua_pushboolean(L, paused);
 	return 1;
 }
@@ -400,7 +400,7 @@ int FMODStudioEventInstance::setPaused(lua_State *L)
 	if (!self)
 		return 0;
 
-	self->instance->setPaused(lua_toboolean(L, 2));
+	self->instance_->setPaused(lua_toboolean(L, 2));
 	return 0;
 }
 
@@ -410,7 +410,7 @@ int FMODStudioEventInstance::start(lua_State *L)
 	if (!self)
 		return 0;
 
-	self->instance->start();
+	self->instance_->start();
 	return 0;
 }
 
@@ -423,8 +423,8 @@ int FMODStudioEventInstance::stop(lua_State *L)
 	if (!self)
 		return 0;
 
-	self->instance->stop(lua_toboolean(L, 2) ? FMOD_STUDIO_STOP_ALLOWFADEOUT
-	                                         : FMOD_STUDIO_STOP_IMMEDIATE);
+	self->instance_->stop(lua_toboolean(L, 2) ? FMOD_STUDIO_STOP_ALLOWFADEOUT
+	                                          : FMOD_STUDIO_STOP_IMMEDIATE);
 	return 0;
 }
 
@@ -435,7 +435,7 @@ int FMODStudioEventInstance::getTimelinePosition(lua_State *L)
 		return 0;
 
 	int position = 0;
-	self->instance->getTimelinePosition(&position);
+	self->instance_->getTimelinePosition(&position);
 	lua_pushinteger(L, position);
 	return 1;
 }
@@ -449,7 +449,7 @@ int FMODStudioEventInstance::setTimelinePosition(lua_State *L)
 	if (!self)
 		return 0;
 
-	self->instance->setTimelinePosition(lua_tointeger(L, 2));
+	self->instance_->setTimelinePosition(lua_tointeger(L, 2));
 	return 0;
 }
 

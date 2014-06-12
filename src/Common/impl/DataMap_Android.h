@@ -24,28 +24,28 @@ namespace Rainbow
 		inline operator const unsigned char*() const;
 
 	private:
-		size_t off;
-		const File asset;
+		size_t off_;
+		const File asset_;
 	};
 
 	void DataMapAndroid::offset(const size_t offset)
 	{
-		this->off = offset;
+		off_ = offset;
 	}
 
 	DataMapAndroid::operator bool() const
 	{
-		return static_cast<AAsset*>(this->asset);
+		return static_cast<AAsset*>(asset_);
 	}
 
 	DataMapAndroid::operator const void*() const
 	{
-		return this->bytes();
+		return bytes();
 	}
 
 	DataMapAndroid::operator const unsigned char*() const
 	{
-		return this->bytes();
+		return bytes();
 	}
 }
 

@@ -25,7 +25,7 @@ namespace Rainbow
 	namespace Shaders
 	{
 		Diffuse::Diffuse(const bool normal)
-		    : cutoff(0), radius(0), position(0), program(-1)
+		    : cutoff_(0), radius_(0), position_(0), program_(-1)
 		{
 			if (normal)
 			{
@@ -41,7 +41,7 @@ namespace Rainbow
 					{ Shader::kAttributeNormal, "normal" },
 					{ Shader::kAttributeNone, nullptr }
 				};
-				this->program =
+				program_ =
 				    ShaderManager::Instance->compile(shaders, attributes);
 			}
 			else
@@ -51,19 +51,18 @@ namespace Rainbow
 					sDiffuseLight2Df,
 					{ Shader::kTypeInvalid, 0, nullptr }
 				};
-				this->program =
-				    ShaderManager::Instance->compile(shaders, nullptr);
+				program_ = ShaderManager::Instance->compile(shaders, nullptr);
 			}
-			if (this->program < 0)
+			if (program_ < 0)
 				return;
 
 			ShaderManager::Context context;
-			ShaderManager::Instance->use(this->program);
+			ShaderManager::Instance->use(program_);
 			Shader::Details &details =
-			    ShaderManager::Instance->get_program(this->program);
-			this->cutoff = glGetUniformLocation(details.program, "cutoff");
-			this->radius = glGetUniformLocation(details.program, "radius");
-			this->position = glGetUniformLocation(details.program, "light");
+			    ShaderManager::Instance->get_program(program_);
+			cutoff_ = glGetUniformLocation(details.program, "cutoff");
+			radius_ = glGetUniformLocation(details.program, "radius");
+			position_ = glGetUniformLocation(details.program, "light");
 			glUniform1i(glGetUniformLocation(details.program, "texture"), 0);
 			if (normal)
 			{
@@ -78,22 +77,23 @@ namespace Rainbow
 		void Diffuse::set_cutoff(const float cutoff) const
 		{
 			ShaderManager::Context context;
-			ShaderManager::Instance->use(this->program);
-			glUniform1f(this->cutoff, cutoff);
+			ShaderManager::Instance->use(program_);
+			glUniform1f(cutoff_, cutoff);
 		}
 
 		void Diffuse::set_radius(const float radius) const
 		{
 			ShaderManager::Context context;
-			ShaderManager::Instance->use(this->program);
-			glUniform1f(this->radius, radius);
+			ShaderManager::Instance->use(program_);
+			glUniform1f(radius_, radius);
 		}
 
-		void Diffuse::set_position(const float x, const float y, const float z) const
+		void
+		Diffuse::set_position(const float x, const float y, const float z) const
 		{
 			ShaderManager::Context context;
-			ShaderManager::Instance->use(this->program);
-			glUniform3f(this->position, x, y, z);
+			ShaderManager::Instance->use(program_);
+			glUniform3f(position_, x, y, z);
 		}
 	}
 }

@@ -173,15 +173,15 @@ NS_B2_LUA_BEGIN
 
 		static int dump(lua_State *);
 
-		b2Body *body;
+		b2Body *body_;
 	};
 
 	Body::Body(lua_State *L)
-	    : body(static_cast<b2Body*>(lua_touserdata(L, -1))) { }
+	    : body_(static_cast<b2Body*>(lua_touserdata(L, -1))) { }
 
 	b2Body* Body::get()
 	{
-		return this->body;
+		return body_;
 	}
 
 	int Body::bind(lua_State *L)
@@ -193,14 +193,14 @@ NS_B2_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		BodyData *data = static_cast<BodyData*>(self->body->GetUserData());
+		BodyData *data = static_cast<BodyData*>(self->body_->GetUserData());
 		Rainbow::Lua::replacetable(L, 2);
 		data->sprite =
 		    Rainbow::Lua::touserdata<Rainbow::Lua::Sprite>(L, 2)->get();
-		b2Vec2 pos = self->body->GetPosition();
+		b2Vec2 pos = self->body_->GetPosition();
 		pos *= ptm_ratio;
 		data->sprite->set_position(Vec2f(pos.x, pos.y));
-		data->sprite->set_rotation(self->body->GetAngle());
+		data->sprite->set_rotation(self->body_->GetAngle());
 		return 0;
 	}
 
@@ -220,28 +220,28 @@ NS_B2_LUA_BEGIN
 		const lua_Number y = lua_tonumber(L, 4);
 
 		b2BodyDef body_def;
-		body_def.type = self->body->GetType();
+		body_def.type = self->body_->GetType();
 		body_def.position.Set(x / ptm_ratio, y / ptm_ratio);
-		body_def.angle = self->body->GetAngle();
-		body_def.linearVelocity = self->body->GetLinearVelocity();
-		body_def.angularVelocity = self->body->GetAngularVelocity();
-		body_def.linearDamping = self->body->GetLinearDamping();
-		body_def.angularDamping = self->body->GetAngularDamping();
-		body_def.allowSleep = self->body->IsSleepingAllowed();
-		body_def.awake = self->body->IsAwake();
-		body_def.fixedRotation = self->body->IsFixedRotation();
-		body_def.bullet = self->body->IsBullet();
-		body_def.active = self->body->IsActive();
-		body_def.userData = self->body->GetUserData();
-		body_def.gravityScale = self->body->GetGravityScale();
+		body_def.angle = self->body_->GetAngle();
+		body_def.linearVelocity = self->body_->GetLinearVelocity();
+		body_def.angularVelocity = self->body_->GetAngularVelocity();
+		body_def.linearDamping = self->body_->GetLinearDamping();
+		body_def.angularDamping = self->body_->GetAngularDamping();
+		body_def.allowSleep = self->body_->IsSleepingAllowed();
+		body_def.awake = self->body_->IsAwake();
+		body_def.fixedRotation = self->body_->IsFixedRotation();
+		body_def.bullet = self->body_->IsBullet();
+		body_def.active = self->body_->IsActive();
+		body_def.userData = self->body_->GetUserData();
+		body_def.gravityScale = self->body_->GetGravityScale();
 
-		b2World *world = self->body->GetWorld();
+		b2World *world = self->body_->GetWorld();
 		b2Body *new_body = world->CreateBody(&body_def);
 
 		b2FixtureDef fixture;
 		b2CircleShape shape;
 		fixture.shape = &shape;
-		for (b2Fixture *f = self->body->GetFixtureList(); f; f = f->GetNext())
+		for (b2Fixture *f = self->body_->GetFixtureList(); f; f = f->GetNext())
 		{
 			if (f->GetType() != b2Shape::e_circle)
 			{
@@ -278,18 +278,18 @@ NS_B2_LUA_BEGIN
 
 		// Re-register body
 		lua_rawgeti(L, LUA_REGISTRYINDEX, g_body_list);
-		lua_pushlightuserdata(L, self->body);
+		lua_pushlightuserdata(L, self->body_);
 		lua_rawget(L, -2);
 		lua_pushlightuserdata(L, new_body);
 		lua_insert(L, -2);
 		lua_rawset(L, -3);
-		lua_pushlightuserdata(L, self->body);
+		lua_pushlightuserdata(L, self->body_);
 		lua_pushnil(L);
 		lua_rawset(L, -3);
 		lua_pop(L, 1);
 
-		world->DestroyBody(self->body);
-		self->body = new_body;
+		world->DestroyBody(self->body_);
+		self->body_ = new_body;
 		return 0;
 	}
 
@@ -309,7 +309,7 @@ NS_B2_LUA_BEGIN
 			case 2: {
 				b2FixtureDef def;
 				parse_FixtureDef(L, def);
-				fixture = self->body->CreateFixture(&def);
+				fixture = self->body_->CreateFixture(&def);
 				delete def.shape;
 				break;
 			}
@@ -318,7 +318,7 @@ NS_B2_LUA_BEGIN
 				const float density = lua_tonumber(L, 3);
 				lua_settop(L, 2);
 				std::unique_ptr<b2Shape> shape(parse_Shape(L));
-				fixture = self->body->CreateFixture(shape.get(), density);
+				fixture = self->body_->CreateFixture(shape.get(), density);
 				break;
 			}
 		}
@@ -335,7 +335,7 @@ NS_B2_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		self->body->DestroyFixture(
+		self->body_->DestroyFixture(
 		    static_cast<b2Fixture*>(lua_touserdata(L, 2)));
 		return 0;
 	}
@@ -351,7 +351,7 @@ NS_B2_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		self->body->SetTransform(
+		self->body_->SetTransform(
 		    b2Vec2(lua_tonumber(L, 2) / ptm_ratio,
 		           lua_tonumber(L, 3) / ptm_ratio),
 		    lua_tonumber(L, 4));
@@ -364,7 +364,7 @@ NS_B2_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		const b2Vec2 &pos = self->body->GetPosition();
+		const b2Vec2 &pos = self->body_->GetPosition();
 		lua_pushnumber(L, pos.x * ptm_ratio);
 		lua_pushnumber(L, pos.y * ptm_ratio);
 		return 2;
@@ -376,7 +376,7 @@ NS_B2_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		lua_pushnumber(L, self->body->GetAngle());
+		lua_pushnumber(L, self->body_->GetAngle());
 		return 1;
 	}
 
@@ -386,7 +386,7 @@ NS_B2_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		const b2Vec2 &center = self->body->GetWorldCenter();
+		const b2Vec2 &center = self->body_->GetWorldCenter();
 		lua_pushnumber(L, center.x * ptm_ratio);
 		lua_pushnumber(L, center.y * ptm_ratio);
 		return 2;
@@ -398,7 +398,7 @@ NS_B2_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		const b2Vec2 &center = self->body->GetLocalCenter();
+		const b2Vec2 &center = self->body_->GetLocalCenter();
 		lua_pushnumber(L, center.x * ptm_ratio);
 		lua_pushnumber(L, center.y * ptm_ratio);
 		return 2;
@@ -414,7 +414,7 @@ NS_B2_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		self->body->SetLinearVelocity(
+		self->body_->SetLinearVelocity(
 		    b2Vec2(lua_tonumber(L, 2), lua_tonumber(L, 3)));
 		return 0;
 	}
@@ -425,7 +425,7 @@ NS_B2_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		const b2Vec2 &v = self->body->GetLinearVelocity();
+		const b2Vec2 &v = self->body_->GetLinearVelocity();
 		lua_pushnumber(L, v.x);
 		lua_pushnumber(L, v.y);
 		return 2;
@@ -440,7 +440,7 @@ NS_B2_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		self->body->SetAngularVelocity(lua_tonumber(L, 2));
+		self->body_->SetAngularVelocity(lua_tonumber(L, 2));
 		return 0;
 	}
 
@@ -450,7 +450,7 @@ NS_B2_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		lua_pushnumber(L, self->body->GetAngularVelocity());
+		lua_pushnumber(L, self->body_->GetAngularVelocity());
 		return 1;
 	}
 
@@ -467,7 +467,7 @@ NS_B2_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		self->body->ApplyForce(
+		self->body_->ApplyForce(
 		    b2Vec2(lua_tonumber(L, 2), lua_tonumber(L, 3)),
 		    b2Vec2(lua_tonumber(L, 4) / ptm_ratio,
 		           lua_tonumber(L, 5) / ptm_ratio),
@@ -486,7 +486,7 @@ NS_B2_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		self->body->ApplyForceToCenter(
+		self->body_->ApplyForceToCenter(
 		    b2Vec2(lua_tonumber(L, 2), lua_tonumber(L, 3)),
 		    lua_toboolean(L, 4));
 		return 0;
@@ -502,7 +502,7 @@ NS_B2_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		self->body->ApplyTorque(lua_tonumber(L, 2), lua_toboolean(L, 3));
+		self->body_->ApplyTorque(lua_tonumber(L, 2), lua_toboolean(L, 3));
 		return 0;
 	}
 
@@ -519,7 +519,7 @@ NS_B2_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		self->body->ApplyLinearImpulse(
+		self->body_->ApplyLinearImpulse(
 		    b2Vec2(lua_tonumber(L, 2), lua_tonumber(L, 3)),
 		    b2Vec2(lua_tonumber(L, 4) / ptm_ratio,
 		           lua_tonumber(L, 5) / ptm_ratio),
@@ -537,7 +537,7 @@ NS_B2_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		self->body->ApplyAngularImpulse(lua_tonumber(L, 2),
+		self->body_->ApplyAngularImpulse(lua_tonumber(L, 2),
 		                                lua_toboolean(L, 3));
 		return 0;
 	}
@@ -548,7 +548,7 @@ NS_B2_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		lua_pushnumber(L, self->body->GetLinearDamping() * ptm_ratio);
+		lua_pushnumber(L, self->body_->GetLinearDamping() * ptm_ratio);
 		return 1;
 	}
 
@@ -561,7 +561,7 @@ NS_B2_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		self->body->SetLinearDamping(lua_tonumber(L, 2) / ptm_ratio);
+		self->body_->SetLinearDamping(lua_tonumber(L, 2) / ptm_ratio);
 		return 0;
 	}
 
@@ -571,7 +571,7 @@ NS_B2_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		lua_pushnumber(L, self->body->GetAngularDamping());
+		lua_pushnumber(L, self->body_->GetAngularDamping());
 		return 1;
 	}
 
@@ -584,7 +584,7 @@ NS_B2_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		self->body->SetAngularDamping(lua_tonumber(L, 2));
+		self->body_->SetAngularDamping(lua_tonumber(L, 2));
 		return 0;
 	}
 
@@ -594,7 +594,7 @@ NS_B2_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		lua_pushnumber(L, self->body->GetGravityScale());
+		lua_pushnumber(L, self->body_->GetGravityScale());
 		return 1;
 	}
 
@@ -607,7 +607,7 @@ NS_B2_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		self->body->SetGravityScale(lua_tonumber(L, 2));
+		self->body_->SetGravityScale(lua_tonumber(L, 2));
 		return 0;
 	}
 
@@ -620,7 +620,7 @@ NS_B2_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		self->body->SetBullet(lua_toboolean(L, 2));
+		self->body_->SetBullet(lua_toboolean(L, 2));
 		return 0;
 	}
 
@@ -630,7 +630,7 @@ NS_B2_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		lua_pushboolean(L, self->body->IsBullet());
+		lua_pushboolean(L, self->body_->IsBullet());
 		return 1;
 	}
 
@@ -643,7 +643,7 @@ NS_B2_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		self->body->SetSleepingAllowed(lua_toboolean(L, 2));
+		self->body_->SetSleepingAllowed(lua_toboolean(L, 2));
 		return 0;
 	}
 
@@ -653,7 +653,7 @@ NS_B2_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		lua_pushboolean(L, self->body->IsSleepingAllowed());
+		lua_pushboolean(L, self->body_->IsSleepingAllowed());
 		return 1;
 	}
 
@@ -666,7 +666,7 @@ NS_B2_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		self->body->SetAwake(lua_toboolean(L, 2));
+		self->body_->SetAwake(lua_toboolean(L, 2));
 		return 0;
 	}
 
@@ -676,7 +676,7 @@ NS_B2_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		lua_pushboolean(L, self->body->IsAwake());
+		lua_pushboolean(L, self->body_->IsAwake());
 		return 1;
 	}
 
@@ -689,7 +689,7 @@ NS_B2_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		self->body->SetActive(lua_toboolean(L, 2));
+		self->body_->SetActive(lua_toboolean(L, 2));
 		return 0;
 	}
 
@@ -699,7 +699,7 @@ NS_B2_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		lua_pushboolean(L, self->body->IsActive());
+		lua_pushboolean(L, self->body_->IsActive());
 		return 0;
 	}
 
@@ -712,7 +712,7 @@ NS_B2_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		self->body->SetFixedRotation(lua_toboolean(L, 2));
+		self->body_->SetFixedRotation(lua_toboolean(L, 2));
 		return 0;
 	}
 
@@ -722,7 +722,7 @@ NS_B2_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		lua_pushboolean(L, self->body->IsFixedRotation());
+		lua_pushboolean(L, self->body_->IsFixedRotation());
 		return 0;
 	}
 
@@ -732,7 +732,7 @@ NS_B2_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		self->body->Dump();
+		self->body_->Dump();
 		return 0;
 	}
 } NS_B2_LUA_END

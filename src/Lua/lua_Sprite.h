@@ -36,12 +36,12 @@ NS_RAINBOW_LUA_BEGIN
 		static int move(lua_State *);
 		static int rotate(lua_State *);
 
-		const ::Sprite::Ref sprite;
+		const ::Sprite::Ref sprite_;
 	};
 
 	const ::Sprite::Ref& Sprite::get() const
 	{
-		return this->sprite;
+		return sprite_;
 	}
 } NS_RAINBOW_LUA_END
 

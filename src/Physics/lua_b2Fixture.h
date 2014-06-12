@@ -95,14 +95,14 @@ NS_B2_LUA_BEGIN
 	private:
 		static int get_body(lua_State *);
 
-		b2Fixture *fixture;
+		b2Fixture *fixture_;
 	};
 
-	Fixture::Fixture(lua_State *) : fixture(nullptr) { }
+	Fixture::Fixture(lua_State *) : fixture_(nullptr) { }
 
 	void Fixture::set(b2Fixture *fixture)
 	{
-		this->fixture = fixture;
+		fixture_ = fixture;
 	}
 
 	int Fixture::get_body(lua_State *L)
@@ -112,7 +112,7 @@ NS_B2_LUA_BEGIN
 			return 0;
 
 		lua_rawgeti(L, LUA_REGISTRYINDEX, g_body_list);
-		lua_pushlightuserdata(L, self->fixture->GetBody());
+		lua_pushlightuserdata(L, self->fixture_->GetBody());
 		lua_gettable(L, -2);
 		lua_remove(L, -2);
 		R_ASSERT(lua_istable(L, -1), "Body wasn't properly registered");

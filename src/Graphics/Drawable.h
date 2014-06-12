@@ -30,12 +30,12 @@ Drawable* Drawable::get()
 
 void Drawable::draw()
 {
-	this->draw_impl();
+	draw_impl();
 }
 
 void Drawable::update()
 {
-	this->update_impl();
+	update_impl();
 }
 
 #endif

@@ -35,24 +35,24 @@ public:
 
 private:
 #if defined(RAINBOW_OS_MACOS)
-	FSEventStreamRef stream;
-	FSEventStreamContext context;
+	FSEventStreamRef stream_;
+	FSEventStreamContext context_;
 #elif defined(RAINBOW_OS_WINDOWS)
-	bool monitoring;
-	HANDLE hDirectory;
-	std::future<void> worker;
+	bool monitoring_;
+	HANDLE hDirectory_;
+	std::future<void> worker_;
 #endif
-	Callback callback;
+	Callback callback_;
 };
 
 void ChangeMonitor::set_callback(Callback &&callback)
 {
-	this->callback = callback;
+	callback_ = callback;
 }
 
 void ChangeMonitor::on_modified(const char *path)
 {
-	this->callback(path);
+	callback_(path);
 }
 
 #endif  // USE_HEIMDALL

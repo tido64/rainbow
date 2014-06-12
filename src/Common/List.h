@@ -36,35 +36,35 @@ class List : private NonCopyable<List<T>>
 public:
 	List() = default;
 
-	List(List &&list) : head(std::move(list.head)) { }
+	List(List &&list) : head_(std::move(list.head_)) { }
 
 	bool empty() const
 	{
-		return !this->head;
+		return !head_;
 	}
 
 	T front() const
 	{
-		return this->head->value;
+		return head_->value;
 	}
 
 	List insert(const size_t i, const T &value) const
 	{
 		if (i == 0)
-			return this->push_front(value);
-		return List(this->front(), this->pop_front().insert(i - 1, value));
+			return push_front(value);
+		return List(front(), pop_front().insert(i - 1, value));
 	}
 
 	List pop_front() const
 	{
-		return List(this->head->next);
+		return List(head_->next);
 	}
 
 	List push_back(const T &value) const
 	{
-		if (this->empty())
-			return this->push_front(value);
-		return List(this->front(), this->pop_front().push_back(value));
+		if (empty())
+			return push_front(value);
+		return List(front(), pop_front().push_back(value));
 	}
 
 	List push_front(const T &value) const
@@ -74,17 +74,17 @@ public:
 
 	List& operator=(List &&list)
 	{
-		this->head = std::move(list.head);
+		head_ = std::move(list.head_);
 		return *this;
 	}
 
 private:
-	SharedPtr<Item> head;
+	SharedPtr<Item> head_;
 
-	explicit List(const SharedPtr<Item> &items) : head(items) { }
+	explicit List(const SharedPtr<Item> &items) : head_(items) { }
 
 	List(const T &value, const List &tail)
-	    : head(new Item(value, tail.head)) { }
+	    : head_(new Item(value, tail.head_)) { }
 };
 
 template<typename T, typename F>

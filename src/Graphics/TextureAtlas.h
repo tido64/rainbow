@@ -43,40 +43,40 @@ public:
 	inline explicit operator bool() const;
 
 private:
-	unsigned int name;         ///< Texture atlas' id.
-	int width;                 ///< Width of texture atlas.
-	int height;                ///< Height of texture atlas.
-	Vector<Texture> textures;  ///< Defined textures.
+	unsigned int name_;         ///< Texture atlas' id.
+	int width_;                 ///< Width of texture atlas.
+	int height_;                ///< Height of texture atlas.
+	Vector<Texture> textures_;  ///< Defined textures.
 };
 
 TextureAtlas::~TextureAtlas()
 {
-	TextureManager::Instance->remove(this->name);
+	TextureManager::Instance->remove(name_);
 }
 
 void TextureAtlas::bind() const
 {
-	TextureManager::Instance->bind(this->name);
+	TextureManager::Instance->bind(name_);
 }
 
 void TextureAtlas::bind(const unsigned int unit) const
 {
-	TextureManager::Instance->bind(this->name, unit);
+	TextureManager::Instance->bind(name_, unit);
 }
 
 void TextureAtlas::trim()
 {
-	this->textures.reserve(0);
+	textures_.reserve(0);
 }
 
 const Texture& TextureAtlas::operator[](const unsigned int i) const
 {
-	return this->textures[i];
+	return textures_[i];
 }
 
 TextureAtlas::operator bool() const
 {
-	return this->name;
+	return name_;
 }
 
 #endif

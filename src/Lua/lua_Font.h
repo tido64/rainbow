@@ -18,12 +18,12 @@ NS_RAINBOW_LUA_BEGIN
 		inline FontAtlas* get();
 
 	private:
-		SharedPtr<FontAtlas> font;
+		SharedPtr<FontAtlas> font_;
 	};
 
 	FontAtlas* Font::get()
 	{
-		return this->font.get();
+		return font_.get();
 	}
 } NS_RAINBOW_LUA_END
 

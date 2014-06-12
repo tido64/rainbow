@@ -12,24 +12,24 @@ TextureManager *TextureManager::Instance = nullptr;
 
 void TextureManager::bind(const unsigned int id)
 {
-	if (id == this->active[0])
+	if (id == active_[0])
 		return;
 
 	glBindTexture(GL_TEXTURE_2D, id);
-	this->active[0] = id;
+	active_[0] = id;
 }
 
 void TextureManager::bind(const unsigned int id, const unsigned int unit)
 {
 	R_ASSERT(unit < kNumTextureUnits, "Invalid texture unit");
 
-	if (id == this->active[unit])
+	if (id == active_[unit])
 		return;
 
 	glActiveTexture(GL_TEXTURE0 + unit);
 	glBindTexture(GL_TEXTURE_2D, id);
 	glActiveTexture(GL_TEXTURE0);
-	this->active[unit] = id;
+	active_[unit] = id;
 }
 
 unsigned int TextureManager::create(const unsigned int internal_format,
@@ -38,14 +38,14 @@ unsigned int TextureManager::create(const unsigned int internal_format,
                                     const unsigned int format,
                                     const void *data)
 {
-	TextureId texture = this->create_texture(width * height);
+	TextureId texture = create_texture(width * height);
 	glTexImage2D(
 	    GL_TEXTURE_2D, 0, internal_format, width, height, 0, format,
 	    GL_UNSIGNED_BYTE, data);
 	R_ASSERT(glGetError() == GL_NO_ERROR, "Failed to load texture");
 
-	this->textures.push_back(texture);
-	this->print_usage();
+	textures_.push_back(texture);
+	print_usage();
 	return texture.id;
 }
 
@@ -55,13 +55,13 @@ unsigned int TextureManager::create_compressed(const unsigned int format,
                                                const size_t size,
                                                const void *data)
 {
-	TextureId texture = this->create_texture(width * height >> 1);
+	TextureId texture = create_texture(width * height >> 1);
 	glCompressedTexImage2D(
 	    GL_TEXTURE_2D, 0, format, width, height, 0, size, data);
 	R_ASSERT(glGetError() == GL_NO_ERROR, "Failed to load compressed texture");
 
-	this->textures.push_back(texture);
-	this->print_usage();
+	textures_.push_back(texture);
+	print_usage();
 	return texture.id;
 }
 
@@ -69,28 +69,28 @@ unsigned int TextureManager::create_compressed(const unsigned int format,
 void
 TextureManager::memory_usage(double &used, double &unused, double &peak) const
 {
-	unused = this->recycled.size() * 64 * 64 * 1e-6;
-	used = this->mem_used * 4e-6 + unused;
-	peak = this->mem_peak * 4e-6;
+	unused = recycled_.size() * 64 * 64 * 1e-6;
+	used = mem_used_ * 4e-6 + unused;
+	peak = mem_peak_ * 4e-6;
 }
 #endif
 
 void TextureManager::remove(const unsigned int id)
 {
-	const int i = this->textures.find(TextureId{id, 0});
+	const int i = textures_.find(TextureId{id, 0});
 	if (i < 0)
 		return;
 
-	this->bind(this->textures[i].id);
+	bind(textures_[i].id);
 	glTexImage2D(
 	    GL_TEXTURE_2D, 0, GL_LUMINANCE, 64, 64, 0, GL_LUMINANCE,
 	    GL_UNSIGNED_BYTE, nullptr);
-	this->bind();
-	this->recycled.push_back(this->textures[i]);
+	bind();
+	recycled_.push_back(textures_[i]);
 #if RECORD_VMEM_USAGE
-	this->mem_used -= this->textures[i].sz;
+	mem_used_ -= textures_[i].sz;
 #endif
-	this->textures.qerase(i);
+	textures_.qerase(i);
 }
 
 void TextureManager::set_filter(const int filter)
@@ -98,50 +98,50 @@ void TextureManager::set_filter(const int filter)
 	R_ASSERT(filter == GL_NEAREST || filter == GL_LINEAR,
 	         "Invalid texture filter");
 
-	this->mag_filter = filter;
-	this->min_filter = filter;
+	mag_filter_ = filter;
+	min_filter_ = filter;
 }
 
 TextureManager::TextureManager()
-    : mag_filter(GL_LINEAR)
-    , min_filter(GL_LINEAR)
+    : mag_filter_(GL_LINEAR)
+    , min_filter_(GL_LINEAR)
 #if RECORD_VMEM_USAGE
-    , mem_peak(0.0)
-    , mem_used(0.0)
+    , mem_peak_(0.0)
+    , mem_used_(0.0)
 #endif
 {
 	R_ASSERT(Instance == nullptr, "There can be only one TextureManager");
-	std::fill_n(this->active, kNumTextureUnits, 0);
+	std::fill_n(active_, kNumTextureUnits, 0);
 	Instance = this;
 }
 
 TextureManager::~TextureManager()
 {
 	Instance = nullptr;
-	this->purge(this->recycled);
-	this->purge(this->textures);
+	purge(recycled_);
+	purge(textures_);
 }
 
 TextureManager::TextureId
 TextureManager::create_texture(const unsigned int size)
 {
 	TextureId texture = { 0, size };
-	if (!this->recycled.size())
+	if (!recycled_.size())
 		glGenTextures(1, &texture.id);
 	else
 	{
-		texture.id = this->recycled[0].id;
-		this->recycled.qerase(0);
+		texture.id = recycled_[0].id;
+		recycled_.qerase(0);
 	}
 #if RECORD_VMEM_USAGE
-	this->mem_used += texture.sz;
-	if (this->mem_used > this->mem_peak)
-		this->mem_peak = this->mem_used;
+	mem_used_ += texture.sz;
+	if (mem_used_ > mem_peak_)
+		mem_peak_ = mem_used_;
 #endif
 
-	this->bind(texture.id);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, this->min_filter);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, this->mag_filter);
+	bind(texture.id);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, min_filter_);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, mag_filter_);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
@@ -152,7 +152,7 @@ void TextureManager::print_usage() const
 {
 #ifndef NDEBUG
 	double used, unused, peak;
-	this->memory_usage(used, unused, peak);
+	memory_usage(used, unused, peak);
 	R_DEBUG("[Rainbow] Video: %.2f MBs of textures (%.2f MBs unused)\n",
 	        used, unused);
 #endif
@@ -179,5 +179,5 @@ void TextureManager::purge(Vector<TextureId> &t)
 	glDeleteTextures(t.size(), textures);
 	t.clear();
 
-	this->print_usage();
+	print_usage();
 }

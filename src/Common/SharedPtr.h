@@ -16,11 +16,11 @@ class RefCounted : private NonCopyable<RefCounted>
 	template<class T> friend class SharedPtr;
 
 protected:
-	RefCounted() : refs(0) { }
+	RefCounted() : refs_(0) { }
 	~RefCounted() = default;
 
 private:
-	unsigned int refs;
+	unsigned int refs_;
 };
 
 /// Shared pointers automatically release the allocated memory when it no longer
@@ -51,7 +51,7 @@ public:
 
 #ifdef RAINBOW_TEST
 	/// Returns the number of references to this object.
-	unsigned int ref_count() const { return this->ptr->refs; }
+	unsigned int ref_count() const { return ptr_->refs_; }
 #endif
 
 	/// Releases the current pointer and retains the new one.
@@ -73,107 +73,107 @@ public:
 	explicit operator bool() const;
 
 private:
-	RefCounted *ptr;  ///< Actual pointer managed by this shared pointer.
+	RefCounted *ptr_;  ///< Actual pointer managed by this shared pointer.
 
 	/// Decrements reference counter and releases memory if the count hits 0.
 	void release();
 };
 
 template<class T>
-SharedPtr<T>::SharedPtr() : ptr(nullptr) { }
+SharedPtr<T>::SharedPtr() : ptr_(nullptr) { }
 
 template<class T>
-SharedPtr<T>::SharedPtr(const SharedPtr<T> &shared_ptr) : ptr(shared_ptr.ptr)
+SharedPtr<T>::SharedPtr(const SharedPtr<T> &shared_ptr) : ptr_(shared_ptr.ptr_)
 {
-	if (!this->ptr)
+	if (!ptr_)
 		return;
 
-	++this->ptr->refs;
+	++ptr_->refs_;
 }
 
 template<class T>
-SharedPtr<T>::SharedPtr(SharedPtr<T> &&shared_ptr) : ptr(shared_ptr.ptr)
+SharedPtr<T>::SharedPtr(SharedPtr<T> &&shared_ptr) : ptr_(shared_ptr.ptr_)
 {
-	shared_ptr.ptr = nullptr;
+	shared_ptr.ptr_ = nullptr;
 }
 
 template<class T>
-SharedPtr<T>::SharedPtr(T *ptr) : ptr(ptr)
+SharedPtr<T>::SharedPtr(T *ptr) : ptr_(ptr)
 {
-	R_ASSERT(this->ptr, "No reference to pointer");
-	++this->ptr->refs;
+	R_ASSERT(ptr_, "No reference to pointer");
+	++ptr_->refs_;
 }
 
 template<class T>
 SharedPtr<T>::~SharedPtr()
 {
-	this->release();
+	release();
 }
 
 template<class T>
 T* SharedPtr<T>::get() const
 {
-	return static_cast<T*>(this->ptr);
+	return static_cast<T*>(ptr_);
 }
 
 template<class T>
 SharedPtr<T>& SharedPtr<T>::operator=(const SharedPtr<T> &shared_ptr)
 {
-	return *this = static_cast<T*>(shared_ptr.ptr);
+	return *this = static_cast<T*>(shared_ptr.ptr_);
 }
 
 template<class T>
 SharedPtr<T>& SharedPtr<T>::operator=(SharedPtr<T> &&shared_ptr)
 {
-	this->release();
-	this->ptr = shared_ptr.ptr;
-	shared_ptr.ptr = nullptr;
+	release();
+	ptr_ = shared_ptr.ptr_;
+	shared_ptr.ptr_ = nullptr;
 	return *this;
 }
 
 template<class T>
 SharedPtr<T>& SharedPtr<T>::operator=(T *ptr)
 {
-	if (ptr == this->ptr)
+	if (ptr == ptr_)
 		return *this;
-	this->release();
-	this->ptr = ptr;
-	if (!this->ptr)
+	release();
+	ptr_ = ptr;
+	if (!ptr_)
 		return *this;
-	++this->ptr->refs;
+	++ptr_->refs_;
 	return *this;
 }
 
 template<class T>
 T& SharedPtr<T>::operator*() const
 {
-	R_ASSERT(this->ptr, "No reference to pointer");
-	return *static_cast<T*>(this->ptr);
+	R_ASSERT(ptr_, "No reference to pointer");
+	return *static_cast<T*>(ptr_);
 }
 
 template<class T>
 T* SharedPtr<T>::operator->() const
 {
-	R_ASSERT(this->ptr, "No reference to pointer");
-	return static_cast<T*>(this->ptr);
+	R_ASSERT(ptr_, "No reference to pointer");
+	return static_cast<T*>(ptr_);
 }
 
 template<class T>
 SharedPtr<T>::operator bool() const
 {
-	return this->ptr;
+	return ptr_;
 }
 
 template<class T>
 void SharedPtr<T>::release()
 {
-	R_ASSERT(!this->ptr || this->ptr->refs > 0,
+	R_ASSERT(!ptr_ || ptr_->refs_ > 0,
 	         "This object should've been deleted by now");
 
-	if (this->ptr && !--this->ptr->refs)
+	if (ptr_ && !--ptr_->refs_)
 	{
-		delete static_cast<T*>(this->ptr);
-		this->ptr = nullptr;
+		delete static_cast<T*>(ptr_);
+		ptr_ = nullptr;
 	}
 }
 

@@ -26,7 +26,7 @@ NS_RAINBOW_LUA_BEGIN
 		{ nullptr, nullptr }
 	};
 
-	SpriteBatch::SpriteBatch(lua_State *L) : batch(optinteger(L, 1, 4)) { }
+	SpriteBatch::SpriteBatch(lua_State *L) : batch_(optinteger(L, 1, 4)) { }
 
 	int SpriteBatch::add(lua_State *L)
 	{
@@ -51,7 +51,7 @@ NS_RAINBOW_LUA_BEGIN
 
 		lua_settop(L, 0);
 		lua_pushlightuserdata(L, self->get());
-		lua_pushinteger(L, self->batch.add(x, y, w, h));
+		lua_pushinteger(L, self->batch_.add(x, y, w, h));
 		return alloc<Sprite>(L);
 	}
 
@@ -70,7 +70,7 @@ NS_RAINBOW_LUA_BEGIN
 
 		lua_settop(L, 0);
 		lua_pushlightuserdata(L, self->get());
-		lua_pushinteger(L, self->batch.create_sprite(w, h));
+		lua_pushinteger(L, self->batch_.create_sprite(w, h));
 		return alloc<Sprite>(L);
 	}
 
@@ -83,7 +83,7 @@ NS_RAINBOW_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		self->batch.set_normal(touserdata<Texture>(L, 2)->get());
+		self->batch_.set_normal(touserdata<Texture>(L, 2)->get());
 		return 0;
 	}
 
@@ -96,7 +96,7 @@ NS_RAINBOW_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		self->batch.set_texture(touserdata<Texture>(L, 2)->get());
+		self->batch_.set_texture(touserdata<Texture>(L, 2)->get());
 		return 0;
 	}
 } NS_RAINBOW_LUA_END

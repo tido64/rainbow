@@ -14,11 +14,11 @@
 namespace Rainbow
 {
 	DataMapWin::DataMapWin(const Path &path)
-	    : len(0), off(0), addr(nullptr), handle(nullptr)
+	    : len_(0), off_(0), addr_(nullptr), handle_(nullptr)
 	{
 		HANDLE fh = CreateFile(
-				path, GENERIC_READ, 0, nullptr, OPEN_EXISTING,
-				FILE_ATTRIBUTE_READONLY | FILE_FLAG_SEQUENTIAL_SCAN, nullptr);
+		    path, GENERIC_READ, 0, nullptr, OPEN_EXISTING,
+		    FILE_ATTRIBUTE_READONLY | FILE_FLAG_SEQUENTIAL_SCAN, nullptr);
 		if (fh == INVALID_HANDLE_VALUE)
 		{
 			R_ERROR("[Rainbow] Failed to open '%s' (%x)\n",
@@ -27,22 +27,28 @@ namespace Rainbow
 		}
 		LARGE_INTEGER size;
 		if (!GetFileSizeEx(fh, &size))
+		{
 			R_ERROR("[Rainbow] Failed to read '%s' (%x)\n",
 			        static_cast<const char*>(path), GetLastError());
+		}
 		else
 		{
-			this->handle = CreateFileMapping(fh, nullptr, PAGE_READONLY, 0, 0, nullptr);
-			if (!this->handle)
+			handle_ =
+			    CreateFileMapping(fh, nullptr, PAGE_READONLY, 0, 0, nullptr);
+			if (!handle_)
 			{
 				R_ERROR("[Rainbow] Failed to create file mapping for '%s' (%x)\n",
 				        static_cast<const char*>(path), GetLastError());
 			}
 			else
 			{
-				this->len = size.QuadPart;
-				this->addr = MapViewOfFile(this->handle, FILE_MAP_READ, 0, 0, 0);
-				if (!this->addr)
-					R_ERROR(kErrorMapFailed, static_cast<const char*>(path), GetLastError());
+				len_ = size.QuadPart;
+				addr_ = MapViewOfFile(handle_, FILE_MAP_READ, 0, 0, 0);
+				if (!addr_)
+				{
+					R_ERROR(kErrorMapFailed,
+					        static_cast<const char*>(path), GetLastError());
+				}
 			}
 		}
 		CloseHandle(fh);
@@ -50,10 +56,10 @@ namespace Rainbow
 
 	DataMapWin::~DataMapWin()
 	{
-		if (this->addr)
+		if (addr_)
 		{
-			UnmapViewOfFile(this->addr);
-			CloseHandle(this->handle);
+			UnmapViewOfFile(addr_);
+			CloseHandle(handle_);
 		}
 	}
 }

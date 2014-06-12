@@ -39,10 +39,10 @@ namespace
 }
 
 ChangeMonitor::ChangeMonitor(const char *const directory)
-    : stream(nullptr), callback([](const char *) { })
+    : stream_(nullptr), callback_([](const char *) { })
 {
-	memset(&this->context, 0, sizeof(this->context));
-	this->context.info = this;
+	memset(&context_, 0, sizeof(context_));
+	context_.info = this;
 
 	CFStringRef path = CFStringCreateWithCStringNoCopy(kCFAllocatorDefault,
 	                                                   directory,
@@ -52,9 +52,9 @@ ChangeMonitor::ChangeMonitor(const char *const directory)
 	                                 reinterpret_cast<const void**>(&path),
 	                                 1,
 	                                 nullptr);
-	this->stream = FSEventStreamCreate(kCFAllocatorDefault,
+	stream_ = FSEventStreamCreate(kCFAllocatorDefault,
 	                                   ::callback,
-	                                   &this->context,
+	                                   &context_,
 	                                   paths,
 	                                   kFSEventStreamEventIdSinceNow,
 	                                   kFSEventLatency,
@@ -62,19 +62,19 @@ ChangeMonitor::ChangeMonitor(const char *const directory)
 	CFRelease(paths);
 	CFRelease(path);
 
-	FSEventStreamScheduleWithRunLoop(this->stream,
+	FSEventStreamScheduleWithRunLoop(stream_,
 	                                 CFRunLoopGetCurrent(),
 	                                 kCFRunLoopDefaultMode);
-	FSEventStreamStart(this->stream);
+	FSEventStreamStart(stream_);
 
 	R_DEBUG("[Rainbow] Monitoring %s\n", directory);
 }
 
 ChangeMonitor::~ChangeMonitor()
 {
-	FSEventStreamStop(this->stream);
-	FSEventStreamInvalidate(this->stream);
-	FSEventStreamRelease(this->stream);
+	FSEventStreamStop(stream_);
+	FSEventStreamInvalidate(stream_);
+	FSEventStreamRelease(stream_);
 }
 
 #endif  // RAINBOW_OS_MACOS

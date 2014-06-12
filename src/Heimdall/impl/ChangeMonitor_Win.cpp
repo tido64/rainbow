@@ -10,35 +10,32 @@
 #include "Common/Debug.h"
 
 ChangeMonitor::ChangeMonitor(const char *const directory)
-    : monitoring(false), callback([](const char *) { })
+    : monitoring_(false), callback_([](const char *) { })
 {
-	this->hDirectory = CreateFileA(directory,
-	                               FILE_LIST_DIRECTORY,
-	                               FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE,
-	                               nullptr,
-	                               OPEN_EXISTING,
-	                               FILE_FLAG_OVERLAPPED | FILE_FLAG_SEQUENTIAL_SCAN | FILE_FLAG_BACKUP_SEMANTICS,
-	                               nullptr);
-	if (this->hDirectory == INVALID_HANDLE_VALUE)
+	hDirectory_ = CreateFileA(
+	    directory,
+	    FILE_LIST_DIRECTORY, FILE_SHARE_READ | FILE_SHARE_WRITE |
+	        FILE_SHARE_DELETE,
+	    nullptr,
+	    OPEN_EXISTING, FILE_FLAG_OVERLAPPED | FILE_FLAG_SEQUENTIAL_SCAN |
+	        FILE_FLAG_BACKUP_SEMANTICS,
+	    nullptr);
+	if (hDirectory_ == INVALID_HANDLE_VALUE)
 		return;
 
 	R_DEBUG("[Rainbow] Monitoring %s\n", directory);
-	this->monitoring = true;
-	this->worker = std::async(std::launch::async, [this]() {
+	monitoring_ = true;
+	worker_ = std::async(std::launch::async, [this]() {
 		char lpPath[MAX_PATH * 4];
 		DWORD buffer[16384];
 		do
 		{
 			std::this_thread::sleep_for(std::chrono::seconds(1));
 			DWORD dwBytesReturned = 0;
-			ReadDirectoryChangesW(this->hDirectory,
-			                      buffer,
-			                      sizeof(buffer),
-			                      TRUE,
-			                      FILE_NOTIFY_CHANGE_LAST_WRITE | FILE_NOTIFY_CHANGE_CREATION,
-			                      &dwBytesReturned,
-			                      nullptr,
-			                      nullptr);
+			ReadDirectoryChangesW(
+			    hDirectory_, buffer, sizeof(buffer), TRUE,
+			    FILE_NOTIFY_CHANGE_LAST_WRITE | FILE_NOTIFY_CHANGE_CREATION,
+			    &dwBytesReturned, nullptr, nullptr);
 			if (dwBytesReturned == 0)
 				continue;
 
@@ -46,36 +43,42 @@ ChangeMonitor::ChangeMonitor(const char *const directory)
 			const FILE_NOTIFY_INFORMATION *lpInfo = nullptr;
 			do
 			{
-				if (!this->monitoring)
+				if (!monitoring_)
 					return;
 
-				lpInfo = reinterpret_cast<const FILE_NOTIFY_INFORMATION*>(lpBuffer);
+				lpInfo =
+				    reinterpret_cast<const FILE_NOTIFY_INFORMATION*>(lpBuffer);
 				if (lpInfo->Action != FILE_ACTION_MODIFIED)
 					continue;
 
-				const int cchWideChar = lpInfo->FileNameLength / sizeof(lpInfo->FileName[0]);
-				const int length = WideCharToMultiByte(CP_UTF8, 0, lpInfo->FileName, cchWideChar, nullptr, 0, nullptr, nullptr);
+				const int cchWideChar =
+				    lpInfo->FileNameLength / sizeof(lpInfo->FileName[0]);
+				const int length = WideCharToMultiByte(
+				    CP_UTF8, 0, lpInfo->FileName, cchWideChar, nullptr, 0,
+				    nullptr, nullptr);
 				if (length == 0)
 					continue;
 
-				WideCharToMultiByte(CP_UTF8, 0, lpInfo->FileName, cchWideChar, lpPath, length, nullptr, nullptr);
+				WideCharToMultiByte(
+				    CP_UTF8, 0, lpInfo->FileName, cchWideChar, lpPath, length,
+				    nullptr, nullptr);
 				lpPath[length] = '\0';
-				this->on_modified(lpPath);
+				on_modified(lpPath);
 
 				lpBuffer += lpInfo->NextEntryOffset;
 			} while (lpInfo->NextEntryOffset > 0);
-		} while (this->monitoring);
+		} while (monitoring_);
 	});
 }
 
 ChangeMonitor::~ChangeMonitor()
 {
-	if (!this->monitoring)
+	if (!monitoring_)
 		return;
 
-	this->monitoring = false;
-	CancelIoEx(this->hDirectory, nullptr);
-	CloseHandle(this->hDirectory);
+	monitoring_ = false;
+	CancelIoEx(hDirectory_, nullptr);
+	CloseHandle(hDirectory_);
 }
 
 #endif  // RAINBOW_OS_WINDOWS

@@ -27,19 +27,19 @@ public:
 	inline void update(const double x, const double y, const double z, const double t);
 
 private:
-	Vec3d pass;  ///< Filtered acceleration data.
+	Vec3d pass_;  ///< Filtered acceleration data.
 };
 
 Acceleration::Acceleration()
-    : timestamp(0.0), x(pass.x), y(pass.y), z(pass.z) { }
+    : timestamp(0.0), x(pass_.x), y(pass_.y), z(pass_.z) { }
 
 void Acceleration::update(const double x, const double y, const double z, const double t)
 {
 	// Calculate the low-pass value and subtract it from the measured value.
-	this->pass.x = x - ((x * kFilteringFactor) + (this->pass.x * (1.0 - kFilteringFactor)));
-	this->pass.y = y - ((y * kFilteringFactor) + (this->pass.y * (1.0 - kFilteringFactor)));
-	this->pass.z = z - ((z * kFilteringFactor) + (this->pass.z * (1.0 - kFilteringFactor)));
-	this->timestamp = t;
+	pass_.x = x - ((x * kFilteringFactor) + (pass_.x * (1.0 - kFilteringFactor)));
+	pass_.y = y - ((y * kFilteringFactor) + (pass_.y * (1.0 - kFilteringFactor)));
+	pass_.z = z - ((z * kFilteringFactor) + (pass_.z * (1.0 - kFilteringFactor)));
+	timestamp = t;
 }
 
 #endif

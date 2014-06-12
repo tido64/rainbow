@@ -23,44 +23,44 @@ namespace Rainbow
 		inline operator const unsigned char*() const;
 
 	private:
-		size_t len;
-		size_t off;
-		void *addr;
+		size_t len_;
+		size_t off_;
+		void *addr_;
 	};
 
 	const unsigned char* DataMapUnix::bytes() const
 	{
-		return static_cast<unsigned char*>(this->addr) + this->off;
+		return static_cast<unsigned char*>(addr_) + off_;
 	}
 
 	void DataMapUnix::offset(const size_t offset)
 	{
-		this->off = offset;
+		off_ = offset;
 	}
 
 	size_t DataMapUnix::size() const
 	{
-		return this->len - this->off;
+		return len_ - off_;
 	}
 
 	DataMapUnix::operator bool() const
 	{
-		return this->addr;
+		return addr_;
 	}
 
 	DataMapUnix::operator const void*() const
 	{
-		return this->bytes();
+		return bytes();
 	}
 
 	DataMapUnix::operator const char*() const
 	{
-		return static_cast<char*>(this->addr) + this->off;
+		return static_cast<char*>(addr_) + off_;
 	}
 
 	DataMapUnix::operator const unsigned char*() const
 	{
-		return this->bytes();
+		return bytes();
 	}
 }
 

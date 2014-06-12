@@ -23,12 +23,12 @@ NS_RAINBOW_LUA_BEGIN
 		static int create(lua_State *);
 		static int trim(lua_State *);
 
-		SharedPtr<TextureAtlas> texture;
+		SharedPtr<TextureAtlas> texture_;
 	};
 
 	TextureAtlas* Texture::get()
 	{
-		return this->texture.get();
+		return texture_.get();
 	}
 } NS_RAINBOW_LUA_END
 

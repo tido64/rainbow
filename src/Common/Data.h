@@ -67,74 +67,71 @@ public:
 #endif
 
 private:
-	Ownership ownership;  ///< Decides whether to free the buffer on destruction.
-	size_t allocated;     ///< Allocated memory size.
-	size_t sz;            ///< Size of used buffer, not necessarily equal to allocated.
-	void *data;           ///< Actual buffer, implemented as a C-array.
+	Ownership ownership_;  ///< Decides whether to free the buffer on destruction.
+	size_t allocated_;     ///< Allocated memory size.
+	size_t sz_;            ///< Size of used buffer, not necessarily equal to allocated.
+	void *data_;           ///< Actual buffer, implemented as a C-array.
 
 	/// Resizes allocated memory segment. If the requested allocation size is
 	/// smaller than current allocated size, nothing will happen.
 	void allocate(const size_t size);
 };
 
-Data::Data() : ownership(kDataOwner), allocated(0), sz(0), data(nullptr) { }
+Data::Data() : ownership_(kDataOwner), allocated_(0), sz_(0), data_(nullptr) { }
 
 Data::Data(Data &&d)
-    : ownership(d.ownership), allocated(d.allocated), sz(d.sz), data(d.data)
+    : ownership_(d.ownership_), allocated_(d.allocated_), sz_(d.sz_),
+      data_(d.data_)
 {
-	d.allocated = 0;
-	d.sz = 0;
-	d.data = nullptr;
+	d.allocated_ = 0;
+	d.sz_ = 0;
+	d.data_ = nullptr;
 }
 
 Data::Data(const void *buffer, const size_t size, const Ownership ownership)
-    : ownership(ownership), allocated(size), sz(size),
-      data(const_cast<void*>(buffer)) { }
+    : ownership_(ownership), allocated_(size), sz_(size),
+      data_(const_cast<void*>(buffer)) { }
 
 void* Data::bytes() const
 {
-	return this->data;
+	return data_;
 }
 
 size_t Data::size() const
 {
-	return this->sz;
+	return sz_;
 }
 
 Data::operator bool() const
 {
-	return this->data;
+	return data_;
 }
 
 Data::operator void*() const
 {
-	return this->data;
+	return data_;
 }
 
 Data::operator char*() const
 {
-	return static_cast<char*>(this->data);
+	return static_cast<char*>(data_);
 }
 
 Data::operator unsigned char*() const
 {
-	return static_cast<unsigned char*>(this->data);
+	return static_cast<unsigned char*>(data_);
 }
 
 #ifdef RAINBOW_OS_IOS
 
 Data::operator NSData*() const
 {
-	return [NSData dataWithBytesNoCopy:this->data
-	                            length:this->sz
-	                      freeWhenDone:NO];
+	return [NSData dataWithBytesNoCopy:data_ length:sz_ freeWhenDone:NO];
 }
 
 Data::operator NSMutableData*() const
 {
-	return [NSMutableData dataWithBytesNoCopy:this->data
-	                                   length:this->sz
-	                             freeWhenDone:NO];
+	return [NSMutableData dataWithBytesNoCopy:data_ length:sz_ freeWhenDone:NO];
 }
 
 #endif  // RAINBOW_OS_IOS

@@ -25,7 +25,7 @@ public:
 		inline ~Context();
 
 	private:
-		int program;
+		int program_;
 	};
 
 	static ShaderManager *Instance;
@@ -54,10 +54,10 @@ public:
 	void use(const int program);
 
 private:
-	int active;  ///< Currently active program.
+	int active_;  ///< Currently active program.
 
-	Vector<unsigned int> shaders;
-	Vector<Shader::Details> programs;
+	Vector<unsigned int> shaders_;
+	Vector<Shader::Details> programs_;
 
 	/// The orthographic projection matrix is defined as:
 	///   | 2 / (r - l)        0             0       -(r + l) / (r - l) |
@@ -66,7 +66,7 @@ private:
 	///   |      0             0             0                0         |
 	/// Where b = bottom, f = far, l = left, n = near, r = right, t = top, and
 	/// near = -1.0 and far = 1.0. The matrix is stored in column-major order.
-	std::array<float, 16> ortho;
+	std::array<float, 16> ortho_;
 
 	ShaderManager();
 	~ShaderManager();
@@ -74,23 +74,24 @@ private:
 	void init();
 };
 
-ShaderManager::Context::Context() : program(ShaderManager::Instance->active) { }
+ShaderManager::Context::Context()
+    : program_(ShaderManager::Instance->active_) { }
 
 ShaderManager::Context::~Context()
 {
-	ShaderManager::Instance->use(this->program);
+	ShaderManager::Instance->use(program_);
 }
 
 Shader::Details& ShaderManager::get_program() const
 {
-	R_ASSERT(this->active >= 0, "ShaderManager is uninitialised");
-	return this->get_program(this->active);
+	R_ASSERT(active_ >= 0, "ShaderManager is uninitialised");
+	return get_program(active_);
 }
 
 Shader::Details& ShaderManager::get_program(const int pid) const
 {
 	R_ASSERT(pid >= 0, "Invalid shader program id");
-	return this->programs[pid];
+	return programs_[pid];
 }
 
 #endif

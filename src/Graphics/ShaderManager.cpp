@@ -120,7 +120,7 @@ int ShaderManager::compile(Shader::ShaderParams *shaders,
 	{
 		if (!shader->source)
 		{
-			shader->id = this->shaders[shader->id];
+			shader->id = shaders_[shader->id];
 			continue;
 		}
 		if (shader->id > 0)
@@ -128,7 +128,7 @@ int ShaderManager::compile(Shader::ShaderParams *shaders,
 		const int id = compile_shader(*shader);
 		if (id < 0)
 			return id;
-		this->shaders.push_back(id);
+		shaders_.push_back(id);
 		shader->id = id;
 	}
 	if (!attributes)
@@ -136,48 +136,47 @@ int ShaderManager::compile(Shader::ShaderParams *shaders,
 	const int program = link_program(shaders, attributes);
 	if (program < 0)
 		return program;
-	this->programs.emplace_back(program);
-	return this->programs.size() - 1;
+	programs_.emplace_back(program);
+	return programs_.size() - 1;
 }
 
 void ShaderManager::set(const Vec2i &resolution)
 {
-	this->ortho[0] = 2.0f / resolution.width;
-	this->ortho[5] = 2.0f / resolution.height;
-	if (this->active < 0)
+	ortho_[0] = 2.0f / resolution.width;
+	ortho_[5] = 2.0f / resolution.height;
+	if (active_ < 0)
 	{
-		this->active = 0;
-		const Shader::Details &details = this->programs[this->active];
+		active_ = 0;
+		const Shader::Details &details = programs_[active_];
 		glUseProgram(details.program);
-		set_projection_matrix(details, this->ortho);
-		glUniform1i(glGetUniformLocation(this->programs[0].program, "texture"),
-		            0);
+		set_projection_matrix(details, ortho_);
+		glUniform1i(glGetUniformLocation(programs_[0].program, "texture"), 0);
 		return;
 	}
-	set_projection_matrix(this->programs[this->active], this->ortho);
+	set_projection_matrix(programs_[active_], ortho_);
 }
 
 void ShaderManager::set_projection(const float left, const float right,
                                    const float bottom, const float top)
 {
-	this->ortho[ 0] = 2.0f / (right - left);
-	this->ortho[ 5] = 2.0f / (top - bottom);
-	this->ortho[12] = -(right + left) / (right - left);
-	this->ortho[13] = -(top + bottom) / (top - bottom);
-	set_projection_matrix(this->programs[this->active], this->ortho);
+	ortho_[ 0] = 2.0f / (right - left);
+	ortho_[ 5] = 2.0f / (top - bottom);
+	ortho_[12] = -(right + left) / (right - left);
+	ortho_[13] = -(top + bottom) / (top - bottom);
+	set_projection_matrix(programs_[active_], ortho_);
 }
 
 void ShaderManager::use(const int program)
 {
-	if (program == this->active)
+	if (program == active_)
 		return;
 
-	const Shader::Details &current = this->programs[this->active];
-	this->active = program;
-	const Shader::Details &details = this->programs[this->active];
+	const Shader::Details &current = programs_[active_];
+	active_ = program;
+	const Shader::Details &details = programs_[active_];
 	glUseProgram(details.program);
 
-	set_projection_matrix(details, this->ortho);
+	set_projection_matrix(details, ortho_);
 
 	if (details.texture0 != current.texture0)
 	{
@@ -189,24 +188,24 @@ void ShaderManager::use(const int program)
 }
 
 ShaderManager::ShaderManager()
-    : active(-1), ortho{{ 1.0f,  0.0f,  0.0f, 0.0f,
-                          0.0f,  1.0f,  0.0f, 0.0f,
-                          0.0f,  0.0f, -1.0f, 0.0f,
-                         -1.0f, -1.0f,  0.0f, 1.0f }}
+    : active_(-1), ortho_{{ 1.0f,  0.0f,  0.0f, 0.0f,
+                            0.0f,  1.0f,  0.0f, 0.0f,
+                            0.0f,  0.0f, -1.0f, 0.0f,
+                           -1.0f, -1.0f,  0.0f, 1.0f }}
 {
 	R_ASSERT(Instance == nullptr, "There can be only one ShaderManager");
 }
 
 ShaderManager::~ShaderManager()
 {
-	if (this->active < 0)
+	if (active_ < 0)
 		return;
 
 	Instance = nullptr;
 	glUseProgram(0);
-	for (const auto &details : this->programs)
+	for (const auto &details : programs_)
 		glDeleteProgram(details.program);
-	for (const auto shader : this->shaders)
+	for (const auto shader : shaders_)
 		glDeleteShader(shader);
 }
 
@@ -219,7 +218,7 @@ void ShaderManager::init()
 		{ Shader::kTypeFragment, 0, Rainbow::Shaders::kFixed2Df },
 		{ Shader::kTypeInvalid, 0, nullptr }
 	};
-	const int pid = this->compile(shaders, nullptr);
+	const int pid = compile(shaders, nullptr);
 	if (pid < 0)
 	{
 		R_ASSERT(pid >= 0, "Failed to compile default shader");

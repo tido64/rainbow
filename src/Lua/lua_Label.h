@@ -29,12 +29,12 @@ NS_RAINBOW_LUA_BEGIN
 		static int set_text(lua_State *);
 		static int move(lua_State *);
 
-		::Label label;
+		::Label label_;
 	};
 
 	::Label* Label::get()
 	{
-		return &this->label;
+		return &label_;
 	}
 }
 NS_RAINBOW_LUA_END

@@ -15,17 +15,22 @@
 
 namespace Rainbow
 {
-	DataMapUnix::DataMapUnix(const Path &path) : len(0), off(0), addr(nullptr)
+	DataMapUnix::DataMapUnix(const Path &path)
+	    : len_(0), off_(0), addr_(nullptr)
 	{
 		const File &f = File::open(path);
 		if (!f)
 		{
-			R_ERROR("[Rainbow] Failed to open '%s'\n", static_cast<const char*>(path));
+			R_ERROR("[Rainbow] Failed to open '%s'\n",
+			        static_cast<const char*>(path));
 			return;
 		}
-		this->len = f.size();
-		if (!this->len)
-			R_ERROR("[Rainbow] Failed to read '%s'\n", static_cast<const char*>(path));
+		len_ = f.size();
+		if (!len_)
+		{
+			R_ERROR("[Rainbow] Failed to read '%s'\n",
+			        static_cast<const char*>(path));
+		}
 		else
 		{
 			const int fd = fileno(f);
@@ -33,19 +38,19 @@ namespace Rainbow
 			fcntl(fd, F_NOCACHE, 1);
 			fcntl(fd, F_RDAHEAD, 1);
 		#endif
-			this->addr = mmap(nullptr, this->len, PROT_READ, MAP_PRIVATE, fd, 0);
-			if (this->addr == MAP_FAILED)
+			addr_ = mmap(nullptr, len_, PROT_READ, MAP_PRIVATE, fd, 0);
+			if (addr_ == MAP_FAILED)
 			{
 				R_ERROR(kErrorMapFailed, static_cast<const char*>(path), errno);
-				this->addr = nullptr;
+				addr_ = nullptr;
 			}
 		}
 	}
 
 	DataMapUnix::~DataMapUnix()
 	{
-		if (this->addr)
-			munmap(this->addr, this->len);
+		if (addr_)
+			munmap(addr_, len_);
 	}
 }
 

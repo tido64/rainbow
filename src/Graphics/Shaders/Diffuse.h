@@ -23,15 +23,15 @@ namespace Rainbow
 			inline int id() const;
 
 		private:
-			int cutoff;    ///< Maximum distance of the light's influence.
-			int radius;    ///< Light source's radius.
-			int position;  ///< Position of the light source.
-			int program;
+			int cutoff_;    ///< Maximum distance of the light's influence.
+			int radius_;    ///< Light source's radius.
+			int position_;  ///< Position of the light source.
+			int program_;
 		};
 
 		int Diffuse::id() const
 		{
-			return this->program;
+			return program_;
 		}
 	}
 }

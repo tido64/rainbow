@@ -44,14 +44,14 @@ NS_B2_LUA_BEGIN
 
 		static int get_fixture(lua_State *, b2Fixture *);
 
-		b2Contact *contact;
+		b2Contact *contact_;
 	};
 
-	Contact::Contact(lua_State *) : contact(nullptr) { }
+	Contact::Contact(lua_State *) : contact_(nullptr) { }
 
 	void Contact::set(b2Contact *contact)
 	{
-		this->contact = contact;
+		contact_ = contact;
 	}
 
 	int Contact::is_touching(lua_State *L)
@@ -60,7 +60,7 @@ NS_B2_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		lua_pushboolean(L, self->contact->IsTouching());
+		lua_pushboolean(L, self->contact_->IsTouching());
 		return 1;
 	}
 
@@ -73,7 +73,7 @@ NS_B2_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		self->contact->SetEnabled(lua_toboolean(L, 2));
+		self->contact_->SetEnabled(lua_toboolean(L, 2));
 		return 0;
 	}
 
@@ -83,7 +83,7 @@ NS_B2_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		lua_pushboolean(L, self->contact->IsEnabled());
+		lua_pushboolean(L, self->contact_->IsEnabled());
 		return 1;
 	}
 
@@ -93,27 +93,27 @@ NS_B2_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		self->contact = self->contact->GetNext();
-		lua_pushboolean(L, !!self->contact);
+		self->contact_ = self->contact_->GetNext();
+		lua_pushboolean(L, !!self->contact_);
 		return 1;
 	}
 
 	int Contact::get_fixture_a(lua_State *L)
 	{
 		Contact *self = Bind::self(L);
-		if (!self || !self->contact)
+		if (!self || !self->contact_)
 			return 0;
 
-		return get_fixture(L, self->contact->GetFixtureA());
+		return get_fixture(L, self->contact_->GetFixtureA());
 	}
 
 	int Contact::get_fixture_b(lua_State *L)
 	{
 		Contact *self = Bind::self(L);
-		if (!self || !self->contact)
+		if (!self || !self->contact_)
 			return 0;
 
-		return get_fixture(L, self->contact->GetFixtureB());
+		return get_fixture(L, self->contact_->GetFixtureB());
 	}
 
 	int Contact::get_fixture(lua_State *L, b2Fixture *fixture)

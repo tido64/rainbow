@@ -6,7 +6,6 @@
 
 #include <algorithm>
 
-#include "Graphics/Animation.h"
 #include "Lua/LuaSyntax.h"
 #include "Lua/lua_Sprite.h"
 
@@ -47,7 +46,7 @@ NS_RAINBOW_LUA_BEGIN
 		{ nullptr, nullptr }
 	};
 
-	Animation::Animation(lua_State *L) : animation(nullptr)
+	Animation::Animation(lua_State *L)
 	{
 		// rainbow.animation(<sprite>, frames{}, fps, loop_delay = 0)
 		Argument<Sprite>::is_optional(L, 1);
@@ -59,13 +58,9 @@ NS_RAINBOW_LUA_BEGIN
 		replacetable(L, 1);
 		if (lua_isuserdata(L, 1))
 			sprite = touserdata<Sprite>(L, 1)->get();
-		this->animation = new ::Animation(
-		    sprite, get_frames(L, 2), lua_tointeger(L, 3), optinteger(L, 4, 0));
-	}
-
-	Animation::~Animation()
-	{
-		delete this->animation;
+		animation_.reset(new ::Animation(
+		    sprite, get_frames(L, 2), lua_tointeger(L, 3),
+		    optinteger(L, 4, 0)));
 	}
 
 	int Animation::is_stopped(lua_State *L)
@@ -74,7 +69,7 @@ NS_RAINBOW_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		lua_pushboolean(L, self->animation->is_stopped());
+		lua_pushboolean(L, self->animation_->is_stopped());
 		return 1;
 	}
 
@@ -87,7 +82,7 @@ NS_RAINBOW_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		self->animation->set_delay(lua_tointeger(L, 2));
+		self->animation_->set_delay(lua_tointeger(L, 2));
 		return 0;
 	}
 
@@ -100,7 +95,7 @@ NS_RAINBOW_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		self->animation->set_timeout(1000.0f / lua_tointeger(L, 2));
+		self->animation_->set_timeout(1000.0f / lua_tointeger(L, 2));
 		return 0;
 	}
 
@@ -113,7 +108,7 @@ NS_RAINBOW_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		self->animation->set_frames(get_frames(L, 2));
+		self->animation_->set_frames(get_frames(L, 2));
 		return 0;
 	}
 
@@ -126,7 +121,7 @@ NS_RAINBOW_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		self->animation->set_sprite(touserdata<Sprite>(L, 2)->get());
+		self->animation_->set_sprite(touserdata<Sprite>(L, 2)->get());
 		return 0;
 	}
 
@@ -136,7 +131,7 @@ NS_RAINBOW_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		self->animation->start();
+		self->animation_->start();
 		return 0;
 	}
 
@@ -146,8 +141,8 @@ NS_RAINBOW_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		self->animation->stop();
-		self->animation->reset();
+		self->animation_->stop();
+		self->animation_->reset();
 		return 0;
 	}
 } NS_RAINBOW_LUA_END

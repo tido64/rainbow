@@ -90,15 +90,15 @@ private:
 		inline bool operator>(const TextureId &tex);
 	};
 
-	unsigned int active[kNumTextureUnits];
-	Vector<TextureId> textures;  ///< Stores texture ids currently in use.
-	Vector<TextureId> recycled;  ///< Stores reusable texture ids.
-	int mag_filter;
-	int min_filter;
+	unsigned int active_[kNumTextureUnits];
+	Vector<TextureId> textures_;  ///< Stores texture ids currently in use.
+	Vector<TextureId> recycled_;  ///< Stores reusable texture ids.
+	int mag_filter_;
+	int min_filter_;
 
 #if RECORD_VMEM_USAGE
-	double mem_peak;
-	double mem_used;
+	double mem_peak_;
+	double mem_used_;
 #endif
 
 	TextureManager();
@@ -116,17 +116,17 @@ private:
 
 void TextureManager::purge()
 {
-	this->purge(this->recycled);
+	purge(recycled_);
 }
 
 bool TextureManager::TextureId::operator==(const TextureId &tex)
 {
-	return tex.id == this->id;
+	return tex.id == id;
 }
 
 bool TextureManager::TextureId::operator>(const TextureId &tex)
 {
-	return this->sz > tex.sz;
+	return sz > tex.sz;
 }
 
 #endif

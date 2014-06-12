@@ -34,7 +34,7 @@ NS_RAINBOW_LUA_BEGIN
 		Argument<char*>::is_optional(L, 1);
 
 		if (lua_isstring(L, 1))
-			this->label.set_text(lua_tostring(L, 1));
+			label_.set_text(lua_tostring(L, 1));
 	}
 
 	int Label::get_color(lua_State *L)
@@ -43,7 +43,7 @@ NS_RAINBOW_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		const Colorb& c = self->label.color();
+		const Colorb& c = self->label_.color();
 		lua_pushinteger(L, c.r);
 		lua_pushinteger(L, c.g);
 		lua_pushinteger(L, c.b);
@@ -63,13 +63,13 @@ NS_RAINBOW_LUA_BEGIN
 		switch (*lua_tostring(L, 2))
 		{
 			case 'c':
-				self->label.set_alignment(::Label::kCenterTextAlignment);
+				self->label_.set_alignment(::Label::kCenterTextAlignment);
 				break;
 			case 'r':
-				self->label.set_alignment(::Label::kRightTextAlignment);
+				self->label_.set_alignment(::Label::kRightTextAlignment);
 				break;
 			default:
-				self->label.set_alignment(::Label::kLeftTextAlignment);
+				self->label_.set_alignment(::Label::kLeftTextAlignment);
 				break;
 		}
 		return 0;
@@ -91,7 +91,7 @@ NS_RAINBOW_LUA_BEGIN
 		const unsigned char g = lua_tointeger(L, 3);
 		const unsigned char b = lua_tointeger(L, 4);
 		const unsigned char a = optinteger(L, 5, 0xff);
-		self->label.set_color(Colorb(r, g, b, a));
+		self->label_.set_color(Colorb(r, g, b, a));
 		return 0;
 	}
 
@@ -104,7 +104,7 @@ NS_RAINBOW_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		self->label.set_font(touserdata<Font>(L, 2)->get());
+		self->label_.set_font(touserdata<Font>(L, 2)->get());
 		return 0;
 	}
 
@@ -118,7 +118,7 @@ NS_RAINBOW_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		self->label.set_position(
+		self->label_.set_position(
 		    Vec2f(lua_tonumber(L, 2), lua_tonumber(L, 3)));
 		return 0;
 	}
@@ -132,7 +132,7 @@ NS_RAINBOW_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		self->label.set_scale(lua_tonumber(L, 2));
+		self->label_.set_scale(lua_tonumber(L, 2));
 		return 0;
 	}
 
@@ -145,7 +145,7 @@ NS_RAINBOW_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		self->label.set_text(lua_tostring(L, 2));
+		self->label_.set_text(lua_tostring(L, 2));
 		return 0;
 	}
 
@@ -159,7 +159,7 @@ NS_RAINBOW_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		self->label.move(Vec2f(lua_tonumber(L, 2), lua_tonumber(L, 3)));
+		self->label_.move(Vec2f(lua_tonumber(L, 2), lua_tonumber(L, 3)));
 		return 0;
 	}
 } NS_RAINBOW_LUA_END

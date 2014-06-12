@@ -25,12 +25,12 @@ NS_RAINBOW_LUA_BEGIN
 		static int set_normal(lua_State *);
 		static int set_texture(lua_State *);
 
-		::SpriteBatch batch;
+		::SpriteBatch batch_;
 	};
 
 	::SpriteBatch* SpriteBatch::get()
 	{
-		return &this->batch;
+		return &batch_;
 	}
 } NS_RAINBOW_LUA_END
 

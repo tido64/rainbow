@@ -5,6 +5,7 @@
 #ifndef LUA_ANIMATION_H_
 #define LUA_ANIMATION_H_
 
+#include "Graphics/Animation.h"
 #include "Lua/LuaBind.h"
 
 class Animation;
@@ -17,7 +18,6 @@ NS_RAINBOW_LUA_BEGIN
 
 	public:
 		Animation(lua_State *);
-		~Animation();
 
 		inline ::Animation* get();
 
@@ -30,12 +30,12 @@ NS_RAINBOW_LUA_BEGIN
 		static int play(lua_State *);
 		static int stop(lua_State *);
 
-		::Animation *animation;
+		std::unique_ptr<::Animation> animation_;
 	};
 
 	::Animation* Animation::get()
 	{
-		return this->animation;
+		return animation_.get();
 	}
 } NS_RAINBOW_LUA_END
 

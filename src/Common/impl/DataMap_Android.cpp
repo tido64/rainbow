@@ -13,23 +13,22 @@
 namespace Rainbow
 {
 	DataMapAndroid::DataMapAndroid(const Path &path)
-	    : off(0), asset(File::open(path)) { }
+	    : off_(0), asset_(File::open(path)) { }
 
 	const unsigned char* DataMapAndroid::bytes() const
 	{
-		return static_cast<const unsigned char*>(AAsset_getBuffer(this->asset))
-		       + this->off;
+		return static_cast<const unsigned char*>(AAsset_getBuffer(asset_))
+		       + off_;
 	}
 
 	size_t DataMapAndroid::size() const
 	{
-		return AAsset_getLength(this->asset);
+		return AAsset_getLength(asset_);
 	}
 
 	DataMapAndroid::operator const char*() const
 	{
-		return static_cast<const char*>(AAsset_getBuffer(this->asset))
-		       + this->off;
+		return static_cast<const char*>(AAsset_getBuffer(asset_)) + off_;
 	}
 }
 

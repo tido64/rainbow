@@ -32,8 +32,8 @@ NS_RAINBOW_LUA_BEGIN
 		DataMap data(Path(lua_tostring(L, 1)));
 		if (!data)
 			luaL_error(L, "rainbow.texture: Failed to load texture");
-		this->texture = new TextureAtlas(data);
-		if (!*this->texture)
+		texture_ = new TextureAtlas(data);
+		if (!*texture_)
 			luaL_error(L, "rainbow.texture: Failed to create texture");
 	}
 
@@ -52,7 +52,7 @@ NS_RAINBOW_LUA_BEGIN
 		const Vec2i origin(lua_tointeger(L, 2), lua_tointeger(L, 3));
 		const int w = lua_tointeger(L, 4);
 		const int h = lua_tointeger(L, 5);
-		lua_pushinteger(L, self->texture->define(origin, w, h));
+		lua_pushinteger(L, self->texture_->define(origin, w, h));
 		return 1;
 	}
 
@@ -62,7 +62,7 @@ NS_RAINBOW_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		self->texture->trim();
+		self->texture_->trim();
 		return 0;
 	}
 } NS_RAINBOW_LUA_END
