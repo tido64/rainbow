@@ -10,10 +10,10 @@ namespace ConFuoco
 {
 	MixerFMOD *MixerFMOD::Instance = nullptr;
 
-	MixerFMOD::MixerFMOD() : system(nullptr)
+	MixerFMOD::MixerFMOD() : system_(nullptr)
 	{
-		if (FMOD::Studio::System::create(&this->system) != FMOD_OK
-		    || this->system->initialize(
+		if (FMOD::Studio::System::create(&system_) != FMOD_OK
+		    || system_->initialize(
 		           32, FMOD_STUDIO_INIT_NORMAL, FMOD_INIT_NORMAL, nullptr)
 		       != FMOD_OK)
 		{
@@ -24,11 +24,22 @@ namespace ConFuoco
 
 	MixerFMOD::~MixerFMOD()
 	{
-		if (!this->system)
+		if (!system_)
 			return;
 
 		Instance = nullptr;
-		this->system->release();
+		system_->release();
+	}
+
+	void MixerFMOD::suspend(const bool suspend)
+	{
+		FMOD::System *system;
+		if (system_->getLowLevelSystem(&system) != FMOD_OK)
+			return;
+		if (suspend)
+			system->mixerSuspend();
+		else
+			system->mixerResume();
 	}
 }
 

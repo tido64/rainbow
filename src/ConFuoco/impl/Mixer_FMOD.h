@@ -28,25 +28,23 @@ namespace ConFuoco
 		MixerFMOD();
 		~MixerFMOD();
 
-		inline void suspend(const bool suspend);
+		void suspend(const bool suspend);
 		inline void update();
 
 		inline FMOD::Studio::System* operator->() const;
 
 	private:
-		FMOD::Studio::System *system;
+		FMOD::Studio::System *system_;
 	};
 
 	FMOD::Studio::System* MixerFMOD::operator->() const
 	{
-		return this->system;
+		return system_;
 	}
-
-	void MixerFMOD::suspend(const bool) { }
 
 	void MixerFMOD::update()
 	{
-		this->system->update();
+		system_->update();
 	}
 
 	typedef MixerFMOD Mixer;

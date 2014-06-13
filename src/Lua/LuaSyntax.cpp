@@ -21,7 +21,15 @@ namespace SceneGraph { class Node; }
 class b2Fixture;
 namespace b2 { namespace Lua { class Body; } }
 
-namespace FMOD { namespace Studio { class Bank; } }
+namespace FMOD
+{
+	class Sound;
+
+	namespace Studio
+	{
+		class Bank;
+	}
+}
 
 namespace
 {
@@ -249,6 +257,12 @@ NS_RAINBOW_LUA_BEGIN
 	}
 
 	/* FMOD Studio */
+
+	template<>
+	void Argument<FMOD::Sound>::is_required(lua_State *L, const int n)
+	{
+		require(L, n, is_userdata, "FMOD::Sound");
+	}
 
 	template<>
 	void Argument<FMOD::Studio::Bank>::is_required(lua_State *L, const int n)

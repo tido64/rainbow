@@ -60,7 +60,7 @@
                 <li><a href="#transition">Transition</a></li>
                 <li class="divider"></li>
                 <li><a href="#box2d">Box2D</a></li>
-                <li><a href="#fmod-studio">FMOD Studio</a></li>
+                <li><a href="#fmod">FMOD</a></li>
                 <li><a href="#spine">Spine</a></li>
               </ul>
             </li>
@@ -95,7 +95,7 @@
   * [Transition](#transition)
   * &mdash;
   * [Box2D](#box2d)
-  * [FMOD Studio](#fmod-studio)
+  * [FMOD](#fmod)
   * [Spine](#spine)
 
 ## rainbow.animation
@@ -1101,9 +1101,33 @@ There isn't much to say about Rainbow's Box2D wrappers. You can easily use the o
 
 You'll notice that we haven't wrapped ``b2Vec2``. So for methods that take those, you just pass ``x`` and ``y`` individually (1). Likewise, for return values, use the comma operator to unpack the values into separate variables (2).
 
-## FMOD Studio
+## FMOD
 
-### FMOD.loadBank(path)
+### FMOD.createSound(name) [Low Level API]
+
+| Parameter | Description |
+|-----------|-------------|
+| <var>name</var> | Name of the file or URL to open. |
+
+Loads a sound into memory.
+
+### FMOD.createStream(name) [Low Level API]
+
+| Parameter | Description |
+|-----------|-------------|
+| <var>name</var> | Name of the file or URL to open. |
+
+Opens a sound for streaming.
+
+### FMOD.playSound(&lt;sound&gt;) [Low Level API]
+
+| Parameter | Description |
+|-----------|-------------|
+| <var>name</var> | The sound to play. |
+
+Plays a sound object. Returns the channel that plays the sound.
+
+### FMOD.loadBank(path) [Studio API]
 
 | Parameter | Description |
 |-----------|-------------|
@@ -1111,7 +1135,7 @@ You'll notice that we haven't wrapped ``b2Vec2``. So for methods that take those
 
 Loads a Studio event bank from a file.
 
-### FMOD.unloadBank(&lt;bank&gt;)
+### FMOD.unloadBank(&lt;bank&gt;) [Studio API]
 
 | Parameter | Description |
 |-----------|-------------|
@@ -1119,17 +1143,182 @@ Loads a Studio event bank from a file.
 
 Unloads the bank and all of its data.
 
-### FMOD.unloadAll()
+### FMOD.unloadAll() [Studio API]
 
 Unloads all currently loaded banks.
 
-### FMOD.createInstance(event)
+### FMOD.createInstance(event) [Studio API]
 
 | Parameter | Description |
 |-----------|-------------|
 | <var>event</var> | Address of the event to create an instance of. Path must be in the following format: "event:/UI/Cancel". |
 
 Creates a playable instance of the event.
+
+## FMOD::Channel
+
+### &lt;Channel&gt;:stop()
+
+Stops the channel from playing. Makes it available for re-use by the priority system.
+
+### &lt;Channel&gt;:setPaused(paused)
+
+| Parameter | Description |
+|-----------|-------------|
+| <var>paused</var> | The desired pause state. ``true`` = pause, ``false`` = unpause. |
+
+Sets the paused state.
+
+### &lt;Channel&gt;:getPaused()
+
+Retrieves the paused state.
+
+### &lt;Channel&gt;:setVolume(volume)
+
+| Parameter | Description |
+|-----------|-------------|
+| <var>volume</var> | The volume as a linear gain. ``0`` = silent, ``1`` = full volume. |
+
+Sets the volume level linearly.
+
+### &lt;Channel&gt;:getVolume()
+
+Retrieves the volume level.
+
+### &lt;Channel&gt;:setVolumeRamp(ramp)
+
+| Parameter | Description |
+|-----------|-------------|
+| <var>ramp</var> | Whether to enable volume ramping. |
+
+Sets whether the channel automatically ramps when setting volumes.
+
+### &lt;Channel&gt;:getVolumeRamp()
+
+Retrieves whether volume ramp is enabled.
+
+### &lt;Channel&gt;:getAudibility()
+
+Retrieves the combined volume after 3D spatialization and geometry occlusion calculations including any volumes set via the API.
+
+### &lt;Channel&gt;:setPitch(pitch)
+
+| Parameter | Description |
+|-----------|-------------|
+| <var>pitch</var> | Pitch value, ``0.5`` = half pitch, ``2.0`` = double pitch, etc default = ``1.0``. |
+
+Sets the pitch value.
+
+### &lt;Channel&gt;:getPitch()
+
+Retrieves the pitch value.
+
+### &lt;Channel&gt;:setMute(mute)
+
+| Parameter | Description |
+|-----------|-------------|
+| <var>mute</var> | Mute state, ``true`` = mute (silent), ``false`` = normal volume. |
+
+Sets the mute state effectively silencing it or returning it to its normal volume.
+
+### &lt;Channel&gt;:getMute()
+
+Retrieves the mute state
+
+### &lt;Channel&gt;:setReverbProperties(instance, wet)
+
+| Parameter | Description |
+|-----------|-------------|
+| <var>instance</var> | Index of the particular reverb instance to target, from 0 to 3 inclusive. |
+| <var>wet</var> | Send level for the signal to the reverb, from ``0`` (none) to ``1.0`` (full), default = ``1.0``. |
+
+Sets the wet level (or send level) of a particular reverb instance.
+
+### &lt;Channel&gt;:getReverbProperties(instance)
+
+| Parameter | Description |
+|-----------|-------------|
+| <var>instance</var> | Index of the particular reverb instance to target, from 0 to 3 inclusive. |
+
+Retrieves the wet level (or send level) for a particular reverb instance.
+
+### &lt;Channel&gt;:setLowPassGain(gain)
+
+| Parameter | Description |
+|-----------|-------------|
+| <var>gain</var> | Linear gain level, from ``0`` (silent, full filtering) to ``1.0`` (full volume, no filtering), default = ``1.0``. |
+
+Sets the gain of the dry signal when lowpass filtering is applied
+
+### &lt;Channel&gt;:getLowPassGain()
+
+Retrieves the gain of the dry signal when lowpass filtering is applied.
+
+### &lt;Channel&gt;:isPlaying()
+
+Retrieves the playing state.
+
+### &lt;Channel&gt;:setPan(pan)
+
+| Parameter | Description |
+|-----------|-------------|
+| <var>pan</var> | Pan level, from ``-1.0`` (left) to ``1.0`` (right), default = ``0`` (center). |
+
+Sets the pan level.
+
+### &lt;Channel&gt;:setLoopCount(count)
+
+| Parameter | Description |
+|-----------|-------------|
+| <var>count</var> | Number of times to loop before stopping. ``0`` = oneshot, ``1`` = loop once then stop, ``-1`` = loop forever, default = ``-1``. |
+
+Sets a channel to loop a specified number of times before stopping.
+
+### &lt;Channel&gt;:getLoopCount()
+
+Retrieves the current loop count for the specified channel.
+
+### &lt;Channel&gt;:setLoopPoints(start, end)
+
+| Parameter | Description |
+|-----------|-------------|
+| <var>start</var> | The loop start point in milliseconds. This point in time is played, so it is inclusive. |
+| <var>end</var> | The loop end point in milliseconds. This point in time is played, so it is inclusive. |
+
+Sets the loop points within the channel.
+
+### &lt;Channel&gt;:getLoopPoints()
+
+Retrieves the loop points for the channel.
+
+## FMOD::Sound
+
+### &lt;Sound&gt;:setLoopCount(count)
+
+| Parameter | Description |
+|-----------|-------------|
+| <var>count</var> | Number of times to loop before stopping. ``0`` = oneshot. ``1`` = loop once then stop. ``-1`` = loop forever. Default = ``-1`` |
+
+Sets a sound, by default, to loop a specified number of times before stopping.
+
+### &lt;Sound&gt;:getLoopCount()
+
+Retrieves the current loop count value for the specified sound.
+
+### &lt;Sound&gt;:setLoopPoints(start, end)
+
+| Parameter | Description |
+|-----------|-------------|
+| <var>start</var> | The loop start point in milliseconds. This point in time is played, so it is inclusive. |
+| <var>end</var> | The loop end point in milliseconds. This point in time is played, so it is inclusive. |
+
+Sets the loop points within a sound.
+
+### &lt;Sound&gt;:getLoopPoints()
+
+Retrieves the loop points for a sound.
+
+## FMOD::Studio::EventInstance
 
 ### &lt;EventInstance&gt;:getVolume()
 
