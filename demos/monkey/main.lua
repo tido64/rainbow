@@ -6,6 +6,7 @@
 
 -- Declare globals used throughout
 global_scale = 3  -- Global scaling factor
+playSound = FMOD and FMOD.playSound or rainbow.audio.play
 threepwood = nil  -- Guybrush Threepwood should always be loaded
 
 -- Import scenes

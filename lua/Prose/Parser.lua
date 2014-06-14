@@ -11,9 +11,10 @@ local rainbow = rainbow
 local audio = rainbow.audio
 local scenegraph = rainbow.scenegraph
 
+local FMOD = FMOD
+
 local SoundFinalizer = {
-	__gc = audio and function(self) audio.delete_sound(self) end
-	              or nil
+	__gc = function(self) audio.delete_sound(self) end
 }
 
 local function endswith(str, ending)
@@ -110,10 +111,13 @@ local function createlabel(def, resources)
 	return label
 end
 
-local function createsound(def)
-	return setmetatable(audio.create_sound(def), SoundFinalizer)
-end
-createsound = audio and createsound or function() end
+local createsound =
+    FMOD and function(snd)
+                 return FMOD.createSound(snd)
+             end
+          or function(snd)
+                 return setmetatable(audio.create_sound(snd), SoundFinalizer)
+             end
 
 local function createtexture(def)
 	local path = 1

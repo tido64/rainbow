@@ -27,9 +27,7 @@ end
 setmetatable(SceneSCUMMBar, { __call = SceneSCUMMBar.new })
 
 function SceneSCUMMBar:init()
-	if rainbow.audio then
-		rainbow.audio.play(self.scene.resources.bgm)
-	end
+	playSound(self.scene.resources.bgm)
 	rainbow.input.subscribe(self)
 	threepwood:init(self.scene.node, global_scale * 30, global_scale * 30)
 	local objects = self.scene.objects
