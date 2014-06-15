@@ -100,12 +100,9 @@ corresponding section.
 
 ### Building with FMOD Studio
 
-The default audio backend for desktop builds is currently FMOD Studio.
-[Download](http://www.fmod.org/download/) and extract/install it, then copy the
-header files to `rainbow/lib/FMOD/inc/` and the libraries to
-`rainbow/lib/FMOD/lib/`.
-
-If you don't want to use FMOD Studio, run `build.sh` with `-DUSE_FMOD_STUDIO=0`.
+The default audio backend for desktop builds is currently FMOD Studio. If you
+don't want to use FMOD Studio, run `build.sh` with `-DUSE_FMOD_STUDIO=0` or
+undefine USE_FMOD_STUDIO in the project file.
 
 ### Android
 
