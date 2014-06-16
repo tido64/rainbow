@@ -3,6 +3,7 @@
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
 #include "ConFuoco/Recorder.h"
+#ifndef USE_FMOD_STUDIO
 
 #include <AVFoundation/AVAudioRecorder.h>
 #include <AVFoundation/AVAudioSession.h>
@@ -87,3 +88,5 @@ namespace ConFuoco
 		this->peak = [this->recorder peakPowerForChannel:0];
 	}
 }
+
+#endif  // !USE_FMOD_STUDIO
