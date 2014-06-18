@@ -16,10 +16,12 @@
 class Acceleration
 {
 public:
-	double timestamp;         ///< The relative time at which the acceleration event occurred.
-	const double &x, &y, &z;  ///< Filtered acceleration data.
-
 	inline Acceleration();
+
+	inline double timestamp() const;
+	inline double x() const;
+	inline double y() const;
+	inline double z() const;
 
 	/// Updates acceleration data.
 	/// \param x,y,z  Raw acceleration data.
@@ -27,11 +29,31 @@ public:
 	inline void update(const double x, const double y, const double z, const double t);
 
 private:
-	Vec3d pass_;  ///< Filtered acceleration data.
+	Vec3d pass_;        ///< Filtered acceleration data.
+	double timestamp_;  ///< The relative time at which the acceleration event occurred.
 };
 
-Acceleration::Acceleration()
-    : timestamp(0.0), x(pass_.x), y(pass_.y), z(pass_.z) { }
+Acceleration::Acceleration() : timestamp_(0.0) { }
+
+double Acceleration::timestamp() const
+{
+	return timestamp_;
+}
+
+double Acceleration::x() const
+{
+	return pass_.x;
+}
+
+double Acceleration::y() const
+{
+	return pass_.y;
+}
+
+double Acceleration::z() const
+{
+	return pass_.z;
+}
 
 void Acceleration::update(const double x, const double y, const double z, const double t)
 {
@@ -39,7 +61,7 @@ void Acceleration::update(const double x, const double y, const double z, const 
 	pass_.x = x - ((x * kFilteringFactor) + (pass_.x * (1.0 - kFilteringFactor)));
 	pass_.y = y - ((y * kFilteringFactor) + (pass_.y * (1.0 - kFilteringFactor)));
 	pass_.z = z - ((z * kFilteringFactor) + (pass_.z * (1.0 - kFilteringFactor)));
-	timestamp = t;
+	timestamp_ = t;
 }
 
 #endif

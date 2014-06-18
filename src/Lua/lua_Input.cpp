@@ -128,10 +128,10 @@ NS_RAINBOW_LUA_MODULE_BEGIN(Input)
 	void accelerated(lua_State *L, const Acceleration &a)
 	{
 		lua_rawgeti(L, LUA_REGISTRYINDEX, acceleration);
-		luaR_rawsetfield(L, lua_pushnumber, a.timestamp, "timestamp");
-		luaR_rawsetfield(L, lua_pushnumber, a.x, "x");
-		luaR_rawsetfield(L, lua_pushnumber, a.y, "y");
-		luaR_rawsetfield(L, lua_pushnumber, a.z, "z");
+		luaR_rawsetfield(L, lua_pushnumber, a.x(), "x");
+		luaR_rawsetfield(L, lua_pushnumber, a.y(), "y");
+		luaR_rawsetfield(L, lua_pushnumber, a.z(), "z");
+		luaR_rawsetfield(L, lua_pushnumber, a.timestamp(), "timestamp");
 		lua_pop(L, 1);
 	}
 
