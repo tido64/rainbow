@@ -13,13 +13,7 @@ NS_B2_LUA_BEGIN
 
 		luaR_rawsetfield(L, lua_pushinteger, b2Shape::e_circle, "m_type");
 		luaR_rawsetfield(L, lua_pushnumber, 0.0f, "m_radius");
-
-		lua_pushliteral(L, "m_p");
-		lua_createtable(L, 0, 2);
-		luaR_rawsetfield(L, lua_pushnumber, 0.0f, "x");
-		luaR_rawsetfield(L, lua_pushnumber, 0.0f, "y");
-		lua_rawset(L, -3);
-
+		luaR_rawsetvec2(L, "m_p");
 		return 1;
 	}
 
@@ -62,9 +56,9 @@ NS_B2_LUA_BEGIN
 		{
 			const int n = i * 2 + 1;
 			lua_rawgeti(L, 2, n);
-			points[i].x = Rainbow::Lua::tonumber(L, -1) / ptm_ratio;
+			points[i].x = Rainbow::Lua::tonumber(L, -1) / g_ptm_ratio;
 			lua_rawgeti(L, 2, n + 1);
-			points[i].y = Rainbow::Lua::tonumber(L, -1) / ptm_ratio;
+			points[i].y = Rainbow::Lua::tonumber(L, -1) / g_ptm_ratio;
 		}
 		lua_pop(L, count * 2);
 		self->shape_.Set(points.get(), count);
@@ -81,16 +75,16 @@ NS_B2_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		const float hx = lua_tonumber(L, 2) / ptm_ratio;
-		const float hy = lua_tonumber(L, 3) / ptm_ratio;
+		const float hx = lua_tonumber(L, 2) / g_ptm_ratio;
+		const float hy = lua_tonumber(L, 3) / g_ptm_ratio;
 		if (lua_gettop(L) > 3)
 		{
 			Rainbow::Lua::Argument<lua_Number>::is_required(L, 4);
 			Rainbow::Lua::Argument<lua_Number>::is_required(L, 5);
 			Rainbow::Lua::Argument<lua_Number>::is_required(L, 6);
 
-			const float cx = lua_tonumber(L, 4) / ptm_ratio;
-			const float cy = lua_tonumber(L, 5) / ptm_ratio;
+			const float cx = lua_tonumber(L, 4) / g_ptm_ratio;
+			const float cy = lua_tonumber(L, 5) / g_ptm_ratio;
 			const float r = lua_tonumber(L, 6);
 			self->shape_.SetAsBox(hx, hy, b2Vec2(cx, cy), r);
 		}
@@ -110,7 +104,7 @@ NS_B2_LUA_BEGIN
 			return 0;
 
 		self->shape_.m_centroid.Set(
-		    lua_tonumber(L, 2) / ptm_ratio, lua_tonumber(L, 3) / ptm_ratio);
+		    lua_tonumber(L, 2) / g_ptm_ratio, lua_tonumber(L, 3) / g_ptm_ratio);
 		return 0;
 	}
 
@@ -122,25 +116,17 @@ NS_B2_LUA_BEGIN
 		static_cast<void>(type);
 
 		b2Shape *shape = nullptr;
-		luaR_rawgetfield(L, "m_type", type);
 		const b2Shape::Type m_type =
-		    static_cast<b2Shape::Type>(Rainbow::Lua::tointeger(L, -1));
-		lua_pop(L, 1);
+		    static_cast<b2Shape::Type>(luaR_getinteger(L, "m_type"));
 		switch (m_type)
 		{
 			case b2Shape::e_circle: {
 				b2CircleShape *circle = new b2CircleShape();
-				luaR_rawgetfield(L, "m_radius", type);
-				circle->m_radius = Rainbow::Lua::tonumber(L, -1) / ptm_ratio;
+				circle->m_radius = luaR_getnumber(L, "m_radius") / g_ptm_ratio;
+				luaR_getfield(L, "m_p");
+				circle->m_p.x = luaR_getnumber(L, "x") / g_ptm_ratio;
+				circle->m_p.y = luaR_getnumber(L, "y") / g_ptm_ratio;
 				lua_pop(L, 1);
-				luaR_rawgetfield(L, "m_p", type);
-				lua_pushliteral(L, "x");
-				lua_rawget(L, -2);
-				circle->m_p.x = Rainbow::Lua::tonumber(L, -1) / ptm_ratio;
-				lua_pushliteral(L, "y");
-				lua_rawget(L, -3);
-				circle->m_p.y = Rainbow::Lua::tonumber(L, -1) / ptm_ratio;
-				lua_pop(L, 3);
 				shape = circle;
 				break;
 			}

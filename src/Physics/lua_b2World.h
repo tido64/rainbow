@@ -111,7 +111,7 @@ NS_B2_LUA_BEGIN
 
 	World::World(lua_State *L)
 	    : contact_listener_(LUA_REFNIL), elapsed_(0.0), L_(L),
-	      debug_draw_(ptm_ratio), world_(b2Vec2(0.0f, kStandardGravity))
+	      debug_draw_(g_ptm_ratio), world_(b2Vec2(0.0f, kStandardGravity))
 	{
 		// b2.World(gx = 0.0, gy = -9.80665)
 		Rainbow::Lua::Argument<lua_Number>::is_optional(L, 1);
@@ -164,7 +164,7 @@ NS_B2_LUA_BEGIN
 			return 0;
 
 		b2BodyDef def;
-		parse_BodyDef(L, def);
+		parse(L, def);
 		def.userData = new BodyData(def);
 		b2Body *body = self->world_.CreateBody(&def);
 		lua_pushlightuserdata(L, body);
@@ -338,7 +338,8 @@ NS_B2_LUA_BEGIN
 			if (!d->sprite)
 				return;
 
-			const b2Vec2 v = ptm_ratio * (ratio * d->curr_p + rest * d->prev_p);
+			const b2Vec2 v =
+			    g_ptm_ratio * (ratio * d->curr_p + rest * d->prev_p);
 			d->sprite->set_position(Vec2f(v.x, v.y));
 			d->sprite->set_rotation(ratio * d->curr_r + rest * d->prev_r);
 		}, ratio, 1.0f - ratio);
@@ -351,7 +352,8 @@ NS_B2_LUA_BEGIN
 			if (!d->sprite)
 				return;
 
-			const Vec2f position(d->curr_p.x * ptm_ratio, d->curr_p.y * ptm_ratio);
+			const Vec2f position(d->curr_p.x * g_ptm_ratio,
+			                     d->curr_p.y * g_ptm_ratio);
 			d->sprite->set_position(position);
 			d->sprite->set_rotation(d->curr_r);
 		});

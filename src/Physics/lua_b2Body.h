@@ -24,23 +24,10 @@ NS_B2_LUA_BEGIN
 	int BodyDef(lua_State *L)
 	{
 		lua_createtable(L, 0, 16);
-
 		luaR_rawsetfield(L, lua_pushinteger, b2_staticBody, "type");
-
-		lua_pushliteral(L, "position");
-		lua_createtable(L, 0, 2);
-		luaR_rawsetfield(L, lua_pushnumber, 0.0f, "x");
-		luaR_rawsetfield(L, lua_pushnumber, 0.0f, "y");
-		lua_rawset(L, -3);
-
+		luaR_rawsetvec2(L, "position");
 		luaR_rawsetfield(L, lua_pushnumber, 0.0f, "angle");
-
-		lua_pushliteral(L, "linearVelocity");
-		lua_createtable(L, 0, 2);
-		luaR_rawsetfield(L, lua_pushnumber, 0.0f, "x");
-		luaR_rawsetfield(L, lua_pushnumber, 0.0f, "y");
-		lua_rawset(L, -3);
-
+		luaR_rawsetvec2(L, "linearVelocity");
 		luaR_rawsetfield(L, lua_pushnumber, 0.0f, "angularVelocity");
 		luaR_rawsetfield(L, lua_pushnumber, 0.0f, "linearDamping");
 		luaR_rawsetfield(L, lua_pushnumber, 0.0f, "angularDamping");
@@ -50,72 +37,33 @@ NS_B2_LUA_BEGIN
 		luaR_rawsetfield(L, lua_pushboolean, false, "bullet");
 		luaR_rawsetfield(L, lua_pushboolean, true, "active");
 		luaR_rawsetfield(L, lua_pushnumber, 1.0f, "gravityScale");
-
 		return 1;
 	}
 
-	void parse_BodyDef(lua_State *L, b2BodyDef &def)
+	void parse(lua_State *L, b2BodyDef &def)
 	{
-		const char type[] = "BodyDef";
-		static_cast<void>(type);
+		def.type = static_cast<b2BodyType>(luaR_getinteger(L, "type"));
 
-		luaR_rawgetfield(L, "type", type);
-		def.type = static_cast<b2BodyType>(Rainbow::Lua::tointeger(L, -1));
+		luaR_getfield(L, "position");
+		def.position.x = luaR_getnumber(L, "x") / g_ptm_ratio;
+		def.position.y = luaR_getnumber(L, "y") / g_ptm_ratio;
 		lua_pop(L, 1);
 
-		luaR_rawgetfield(L, "position", type);
-		lua_pushliteral(L, "x");
-		lua_rawget(L, -2);
-		def.position.x = Rainbow::Lua::tonumber(L, -1) / ptm_ratio;
-		lua_pushliteral(L, "y");
-		lua_rawget(L, -3);
-		def.position.y = Rainbow::Lua::tonumber(L, -1) / ptm_ratio;
-		lua_pop(L, 3);
+		def.angle = luaR_getnumber(L, "angle");
 
-		luaR_rawgetfield(L, "angle", type);
-		def.angle = Rainbow::Lua::tonumber(L, -1);
+		luaR_getfield(L, "linearVelocity");
+		def.linearVelocity.x = luaR_getnumber(L, "x");
+		def.linearVelocity.y = luaR_getnumber(L, "y");
 		lua_pop(L, 1);
 
-		luaR_rawgetfield(L, "linearVelocity", type);
-		lua_pushliteral(L, "x");
-		lua_rawget(L, -2);
-		def.linearVelocity.x = Rainbow::Lua::tonumber(L, -1);
-		lua_pushliteral(L, "y");
-		lua_rawget(L, -3);
-		def.linearVelocity.y = Rainbow::Lua::tonumber(L, -1);
-		lua_pop(L, 3);
-
-		luaR_rawgetfield(L, "linearDamping", type);
-		def.linearDamping = Rainbow::Lua::tonumber(L, -1);
-		lua_pop(L, 1);
-
-		luaR_rawgetfield(L, "angularDamping", type);
-		def.angularDamping = Rainbow::Lua::tonumber(L, -1);
-		lua_pop(L, 1);
-
-		luaR_rawgetfield(L, "allowSleep", type);
-		def.allowSleep = lua_toboolean(L, -1);
-		lua_pop(L, 1);
-
-		luaR_rawgetfield(L, "awake", type);
-		def.awake = lua_toboolean(L, -1);
-		lua_pop(L, 1);
-
-		luaR_rawgetfield(L, "fixedRotation", type);
-		def.fixedRotation = lua_toboolean(L, -1);
-		lua_pop(L, 1);
-
-		luaR_rawgetfield(L, "bullet", type);
-		def.bullet = lua_toboolean(L, -1);
-		lua_pop(L, 1);
-
-		luaR_rawgetfield(L, "active", type);
-		def.active = lua_toboolean(L, -1);
-		lua_pop(L, 1);
-
-		luaR_rawgetfield(L, "gravityScale", type);
-		def.gravityScale = Rainbow::Lua::tonumber(L, -1);
-		lua_pop(L, 1);
+		def.linearDamping = luaR_getnumber(L, "linearDamping");
+		def.angularDamping = luaR_getnumber(L, "angularDamping");
+		def.allowSleep = luaR_getboolean(L, "allowSleep");
+		def.awake = luaR_getboolean(L, "awake");
+		def.fixedRotation = luaR_getboolean(L, "fixedRotation");
+		def.bullet = luaR_getboolean(L, "bullet");
+		def.active = luaR_getboolean(L, "active");
+		def.gravityScale = luaR_getnumber(L, "gravityScale");
 	}
 
 	class Body : public Bind<Body>
@@ -198,7 +146,7 @@ NS_B2_LUA_BEGIN
 		data->sprite =
 		    Rainbow::Lua::touserdata<Rainbow::Lua::Sprite>(L, 2)->get();
 		b2Vec2 pos = self->body_->GetPosition();
-		pos *= ptm_ratio;
+		pos *= g_ptm_ratio;
 		data->sprite->set_position(Vec2f(pos.x, pos.y));
 		data->sprite->set_rotation(self->body_->GetAngle());
 		return 0;
@@ -221,7 +169,7 @@ NS_B2_LUA_BEGIN
 
 		b2BodyDef body_def;
 		body_def.type = self->body_->GetType();
-		body_def.position.Set(x / ptm_ratio, y / ptm_ratio);
+		body_def.position.Set(x / g_ptm_ratio, y / g_ptm_ratio);
 		body_def.angle = self->body_->GetAngle();
 		body_def.linearVelocity = self->body_->GetLinearVelocity();
 		body_def.angularVelocity = self->body_->GetAngularVelocity();
@@ -308,7 +256,7 @@ NS_B2_LUA_BEGIN
 		{
 			case 2: {
 				b2FixtureDef def;
-				parse_FixtureDef(L, def);
+				parse(L, def);
 				fixture = self->body_->CreateFixture(&def);
 				delete def.shape;
 				break;
@@ -352,8 +300,8 @@ NS_B2_LUA_BEGIN
 			return 0;
 
 		self->body_->SetTransform(
-		    b2Vec2(lua_tonumber(L, 2) / ptm_ratio,
-		           lua_tonumber(L, 3) / ptm_ratio),
+		    b2Vec2(lua_tonumber(L, 2) / g_ptm_ratio,
+		           lua_tonumber(L, 3) / g_ptm_ratio),
 		    lua_tonumber(L, 4));
 		return 0;
 	}
@@ -365,8 +313,8 @@ NS_B2_LUA_BEGIN
 			return 0;
 
 		const b2Vec2 &pos = self->body_->GetPosition();
-		lua_pushnumber(L, pos.x * ptm_ratio);
-		lua_pushnumber(L, pos.y * ptm_ratio);
+		lua_pushnumber(L, pos.x * g_ptm_ratio);
+		lua_pushnumber(L, pos.y * g_ptm_ratio);
 		return 2;
 	}
 
@@ -387,8 +335,8 @@ NS_B2_LUA_BEGIN
 			return 0;
 
 		const b2Vec2 &center = self->body_->GetWorldCenter();
-		lua_pushnumber(L, center.x * ptm_ratio);
-		lua_pushnumber(L, center.y * ptm_ratio);
+		lua_pushnumber(L, center.x * g_ptm_ratio);
+		lua_pushnumber(L, center.y * g_ptm_ratio);
 		return 2;
 	}
 
@@ -399,8 +347,8 @@ NS_B2_LUA_BEGIN
 			return 0;
 
 		const b2Vec2 &center = self->body_->GetLocalCenter();
-		lua_pushnumber(L, center.x * ptm_ratio);
-		lua_pushnumber(L, center.y * ptm_ratio);
+		lua_pushnumber(L, center.x * g_ptm_ratio);
+		lua_pushnumber(L, center.y * g_ptm_ratio);
 		return 2;
 	}
 
@@ -469,8 +417,8 @@ NS_B2_LUA_BEGIN
 
 		self->body_->ApplyForce(
 		    b2Vec2(lua_tonumber(L, 2), lua_tonumber(L, 3)),
-		    b2Vec2(lua_tonumber(L, 4) / ptm_ratio,
-		           lua_tonumber(L, 5) / ptm_ratio),
+		    b2Vec2(lua_tonumber(L, 4) / g_ptm_ratio,
+		           lua_tonumber(L, 5) / g_ptm_ratio),
 		    lua_toboolean(L, 6));
 		return 0;
 	}
@@ -521,8 +469,8 @@ NS_B2_LUA_BEGIN
 
 		self->body_->ApplyLinearImpulse(
 		    b2Vec2(lua_tonumber(L, 2), lua_tonumber(L, 3)),
-		    b2Vec2(lua_tonumber(L, 4) / ptm_ratio,
-		           lua_tonumber(L, 5) / ptm_ratio),
+		    b2Vec2(lua_tonumber(L, 4) / g_ptm_ratio,
+		           lua_tonumber(L, 5) / g_ptm_ratio),
 		    lua_toboolean(L, 6));
 		return 0;
 	}
@@ -548,7 +496,7 @@ NS_B2_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		lua_pushnumber(L, self->body_->GetLinearDamping() * ptm_ratio);
+		lua_pushnumber(L, self->body_->GetLinearDamping() * g_ptm_ratio);
 		return 1;
 	}
 
@@ -561,7 +509,7 @@ NS_B2_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		self->body_->SetLinearDamping(lua_tonumber(L, 2) / ptm_ratio);
+		self->body_->SetLinearDamping(lua_tonumber(L, 2) / g_ptm_ratio);
 		return 0;
 	}
 

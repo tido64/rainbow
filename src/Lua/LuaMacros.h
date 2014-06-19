@@ -12,14 +12,6 @@
 	namespace Rainbow { namespace Lua { namespace module
 #define NS_RAINBOW_LUA_MODULE_END(module) }}
 
-#define luaR_rawgetfield(L, k, type) \
-	do \
-	{ \
-		lua_pushliteral(L, k); \
-		lua_rawget(L, -2); \
-		LUA_ASSERT(L, !lua_isnil(L, -1), "%s is missing field '%s'", type, k); \
-	} while(0)
-
 #define luaR_rawsetcclosurefield(L, fn, k) \
 	do \
 	{ \
@@ -33,14 +25,6 @@
 	{ \
 		lua_pushliteral(L, k); \
 		pushvalue(L, v); \
-		lua_rawset(L, -3); \
-	} while(0)
-
-#define luaR_rawsetnilfield(L, k) \
-	do \
-	{ \
-		lua_pushliteral(L, k); \
-		lua_pushnil(L); \
 		lua_rawset(L, -3); \
 	} while(0)
 

@@ -1087,15 +1087,15 @@ There isn't much to say about Rainbow's Box2D wrappers. You can easily use the o
 
     local world = b2.World()
     local bodyDef = b2.BodyDef()
-    bodyDef.body = b2.dynamicBody
+    bodyDef.type = b2.dynamicBody
     bodyDef.position.x = 10
     bodyDef.position.y = 10
-    local body = world:createBody(bodyDef)
-    local x, y = body:getPosition()  -- (2)
-    # x == bodyDef.position.x
-    # y == bodyDef.position.y
+    local body = world:CreateBody(bodyDef)
+    local x, y = body:GetPosition()  -- (2)
+    -- x == bodyDef.position.x
+    -- y == bodyDef.position.y
     local screen = rainbow.platform.screen
-    body:setTransform(screen.width * 0.5, screen.height * 0.5, 0)  -- (1)
+    body:SetTransform(screen.width * 0.5, screen.height * 0.5, 0)  -- (1)
 
 You'll notice that we haven't wrapped ``b2Vec2``. So for methods that take those, you just pass ``x`` and ``y`` individually (1). Likewise, for return values, use the comma operator to unpack the values into separate variables (2).
 

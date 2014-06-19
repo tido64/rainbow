@@ -7,16 +7,13 @@
 #include <Box2D/Box2D.h>
 
 #include "Lua/LuaBind.h"
-#include "Lua/LuaSyntax.h"
-
-#define NS_B2_LUA_BEGIN namespace b2 { namespace Lua
-#define NS_B2_LUA_END }
+#include "Physics/b2LuaHelper.h"
 
 using Rainbow::Lua::Bind;
 
 namespace b2
 {
-	float ptm_ratio = 32.0f;
+	float g_ptm_ratio = 32.0f;
 	int g_body_list = -1;     ///< List of Lua::Body objects for retrieval.
 }
 
@@ -36,7 +33,7 @@ NS_B2_LUA_BEGIN
 			// b2.SetPTMRatio(r)
 			Rainbow::Lua::Argument<lua_Number>::is_required(L, 1);
 
-			ptm_ratio = lua_tonumber(L, 1);
+			g_ptm_ratio = lua_tonumber(L, 1);
 			return 0;
 		}
 	}

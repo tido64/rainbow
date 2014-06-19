@@ -18,29 +18,18 @@ NS_B2_LUA_BEGIN
 		return 1;
 	}
 
-	void parse_Filter(lua_State *L, b2Filter &filter)
+	void parse(lua_State *L, b2Filter &filter)
 	{
-		const char type[] = "Filter";
-		static_cast<void>(type);
-
-		luaR_rawgetfield(L, "categoryBits", type);
-		filter.categoryBits = Rainbow::Lua::tointeger(L, -1);
-		lua_pop(L, 1);
-
-		luaR_rawgetfield(L, "maskBits", type);
-		filter.maskBits = Rainbow::Lua::tointeger(L, -1);
-		lua_pop(L, 1);
-
-		luaR_rawgetfield(L, "groupIndex", type);
-		filter.groupIndex = Rainbow::Lua::tointeger(L, -1);
-		lua_pop(L, 1);
+		filter.categoryBits = luaR_getinteger(L, "categoryBits");
+		filter.maskBits = luaR_getinteger(L, "maskBits");
+		filter.groupIndex = luaR_getinteger(L, "groupIndex");
 	}
 
 	int FixtureDef(lua_State *L)
 	{
 		lua_createtable(L, 0, 6);
 
-		luaR_rawsetnilfield(L, "shape");
+		luaR_rawsetnil(L, "shape");
 		luaR_rawsetfield(L, lua_pushnumber, 0.2f, "friction");
 		luaR_rawsetfield(L, lua_pushnumber, 0.0f, "restitution");
 		luaR_rawsetfield(L, lua_pushnumber, 0.0f, "density");
@@ -53,33 +42,19 @@ NS_B2_LUA_BEGIN
 		return 1;
 	}
 
-	void parse_FixtureDef(lua_State *L, b2FixtureDef &def)
+	void parse(lua_State *L, b2FixtureDef &def)
 	{
-		const char type[] = "FixtureDef";
-		static_cast<void>(type);
-
-		luaR_rawgetfield(L, "shape", type);
+		luaR_getfield(L, "shape");
 		def.shape = parse_Shape(L);
 		lua_pop(L, 1);
 
-		luaR_rawgetfield(L, "friction", type);
-		def.friction = Rainbow::Lua::tonumber(L, -1);
-		lua_pop(L, 1);
+		def.friction = luaR_getnumber(L, "friction");
+		def.restitution = luaR_getnumber(L, "restitution");
+		def.density = luaR_getnumber(L, "density");
+		def.isSensor = luaR_getboolean(L, "isSensor");
 
-		luaR_rawgetfield(L, "restitution", type);
-		def.restitution = Rainbow::Lua::tonumber(L, -1);
-		lua_pop(L, 1);
-
-		luaR_rawgetfield(L, "density", type);
-		def.density = Rainbow::Lua::tonumber(L, -1);
-		lua_pop(L, 1);
-
-		luaR_rawgetfield(L, "isSensor", type);
-		def.isSensor = lua_toboolean(L, -1);
-		lua_pop(L, 1);
-
-		luaR_rawgetfield(L, "filter", type);
-		parse_Filter(L, def.filter);
+		luaR_getfield(L, "filter");
+		parse(L, def.filter);
 		lua_pop(L, 1);
 	}
 
