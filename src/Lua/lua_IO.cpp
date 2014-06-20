@@ -4,9 +4,8 @@
 
 #include "Lua/lua_IO.h"
 
-#include <lua.hpp>
-
 #include "Common/Data.h"
+#include "Lua/LuaHelper.h"
 #include "Lua/LuaSyntax.h"
 
 namespace
@@ -44,8 +43,8 @@ NS_RAINBOW_LUA_MODULE_BEGIN(IO)
 	{
 		lua_pushliteral(L, "io");
 		lua_createtable(L, 0, 2);
-		luaR_rawsetcclosurefield(L, &load, "load");
-		luaR_rawsetcclosurefield(L, &save, "save");
+		luaR_rawsetcfunction(L, "load", &::load);
+		luaR_rawsetcfunction(L, "save", &::save);
 		lua_rawset(L, -3);
 	}
 } NS_RAINBOW_LUA_MODULE_END(IO)

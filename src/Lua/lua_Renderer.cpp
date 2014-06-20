@@ -4,11 +4,10 @@
 
 #include "Lua/lua_Renderer.h"
 
-#include <lua.hpp>
-
 #include "Graphics/Renderer.h"
 #include "Graphics/ShaderManager.h"
 #include "Graphics/TextureManager.h"
+#include "Lua/LuaHelper.h"
 #include "Lua/LuaSyntax.h"
 
 namespace
@@ -62,25 +61,23 @@ NS_RAINBOW_LUA_MODULE_BEGIN(Renderer)
 		lua_pushliteral(L, "renderer");
 		lua_createtable(L, 0, 5);
 
-		luaR_rawsetfield(
-		    L, lua_pushinteger, ::Renderer::max_texture_size(),
-		    "max_texture_size");
+		luaR_rawsetinteger(
+		    L, "max_texture_size", ::Renderer::max_texture_size());
 
-		luaR_rawsetfield(
-		    L, lua_pushboolean,
-		    ::Renderer::has_extension("GL_IMG_texture_compression_pvrtc"),
-		    "supports_pvrtc");
+		luaR_rawsetboolean(
+		    L, "supports_pvrtc",
+		    ::Renderer::has_extension("GL_IMG_texture_compression_pvrtc"));
 
-		luaR_rawsetcclosurefield(L, &set_clear_color, "set_clear_color");
-		luaR_rawsetcclosurefield(L, &set_filter, "set_filter");
-		luaR_rawsetcclosurefield(L, &set_projection, "set_projection");
+		luaR_rawsetcfunction(L, "set_clear_color", &set_clear_color);
+		luaR_rawsetcfunction(L, "set_filter", &set_filter);
+		luaR_rawsetcfunction(L, "set_projection", &set_projection);
 
 		lua_rawset(L, -3);
 
 		// Initialise "gl" namespace
 		lua_createtable(L, 0, 2);
-		luaR_rawsetfield(L, lua_pushinteger, GL_NEAREST, "NEAREST");
-		luaR_rawsetfield(L, lua_pushinteger, GL_LINEAR, "LINEAR");
+		luaR_rawsetinteger(L, "NEAREST", GL_NEAREST);
+		luaR_rawsetinteger(L, "LINEAR", GL_LINEAR);
 		lua_setglobal(L, "gl");
 	}
 } NS_RAINBOW_LUA_MODULE_END(Renderer)

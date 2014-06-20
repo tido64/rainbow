@@ -29,7 +29,7 @@ namespace
 	{
 		strcpy(path, module);
 		strcat(path, suffix);
-		const Path asset(path, Path::RelativeTo::CurrentPath);
+		const Path asset(path);
 	#ifndef RAINBOW_OS_ANDROID
 		if (!asset.is_file())
 			return 0;
@@ -93,12 +93,42 @@ NS_RAINBOW_LUA_BEGIN
 		return 1;
 	}
 
+	template<>
+	void push<bool>(lua_State *L, const bool b)
+	{
+		lua_pushboolean(L, b);
+	}
+
+	template<>
+	void push<const char*>(lua_State *L, const char *const str)
+	{
+		lua_pushstring(L, str);
+	}
+
+	template<>
+	void push<lua_CFunction>(lua_State *L, const lua_CFunction c)
+	{
+		lua_pushcfunction(L, c);
+	}
+
+	template<>
+	void push<lua_Integer>(lua_State *L, const lua_Integer i)
+	{
+		lua_pushinteger(L, i);
+	}
+
+	template<>
+	void push<lua_Number>(lua_State *L, const lua_Number n)
+	{
+		lua_pushnumber(L, n);
+	}
+
 	void pushpointer(lua_State *L, void *ptr, const char *name)
 	{
 		lua_createtable(L, 1, 1);
 		lua_pushlightuserdata(L, ptr);
 		lua_rawseti(L, -2, 0);
-		luaR_rawsetfield(L, lua_pushstring, name, "__type");
+		luaR_rawsetstring(L, "__type", name);
 	}
 
 	int reload(lua_State *L, const Data &chunk, const char *name)

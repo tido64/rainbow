@@ -10,11 +10,9 @@ NS_B2_LUA_BEGIN
 	int Filter(lua_State *L)
 	{
 		lua_createtable(L, 0, 3);
-
-		luaR_rawsetfield(L, lua_pushinteger, 0x0001, "categoryBits");
-		luaR_rawsetfield(L, lua_pushinteger, 0xFFFF, "maskBits");
-		luaR_rawsetfield(L, lua_pushinteger, 0, "groupIndex");
-
+		luaR_rawsetinteger(L, "categoryBits", 0x0001);
+		luaR_rawsetinteger(L, "maskBits", 0xFFFF);
+		luaR_rawsetinteger(L, "groupIndex", 0);
 		return 1;
 	}
 
@@ -30,10 +28,10 @@ NS_B2_LUA_BEGIN
 		lua_createtable(L, 0, 6);
 
 		luaR_rawsetnil(L, "shape");
-		luaR_rawsetfield(L, lua_pushnumber, 0.2f, "friction");
-		luaR_rawsetfield(L, lua_pushnumber, 0.0f, "restitution");
-		luaR_rawsetfield(L, lua_pushnumber, 0.0f, "density");
-		luaR_rawsetfield(L, lua_pushboolean, false, "isSensor");
+		luaR_rawsetnumber(L, "friction", 0.2f);
+		luaR_rawsetnumber(L, "restitution", 0.0f);
+		luaR_rawsetnumber(L, "density", 0.0f);
+		luaR_rawsetboolean(L, "isSensor", false);
 
 		lua_pushliteral(L, "filter");
 		Filter(L);

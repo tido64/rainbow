@@ -43,7 +43,7 @@ NS_RAINBOW_LUA_MODULE_BEGIN(Shaders)
 		// Initialise "rainbow.shaders" namespace
 		lua_pushliteral(L, "shaders");
 		lua_createtable(L, 0, 1);
-		luaR_rawsetcclosurefield(L, &diffuse, "diffuse");
+		luaR_rawsetcfunction(L, "diffuse", &diffuse);
 		lua_rawset(L, -3);
 
 		reg<Diffuse>(L);

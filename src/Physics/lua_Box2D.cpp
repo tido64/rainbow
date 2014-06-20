@@ -46,27 +46,27 @@ NS_B2_LUA_BEGIN
 
 		lua_createtable(L, 0, 16);
 
-		luaR_rawsetcclosurefield(L, &set_ptm_ratio, "SetPTMRatio");
+		luaR_rawsetcfunction(L, "SetPTMRatio", &set_ptm_ratio);
 
 		// b2CircleShape
-		luaR_rawsetcclosurefield(L, &CircleShape, "CircleShape");
+		luaR_rawsetcfunction(L, "CircleShape", &CircleShape);
 
 		// b2PolygonShape
 		Rainbow::Lua::reg<PolygonShape>(L);
 
 		// b2BodyType
-		luaR_rawsetfield(L, lua_pushinteger, b2_staticBody, "staticBody");
-		luaR_rawsetfield(L, lua_pushinteger, b2_kinematicBody, "kinematicBody");
-		luaR_rawsetfield(L, lua_pushinteger, b2_dynamicBody, "dynamicBody");
+		luaR_rawsetinteger(L, "staticBody", b2_staticBody);
+		luaR_rawsetinteger(L, "kinematicBody", b2_kinematicBody);
+		luaR_rawsetinteger(L, "dynamicBody", b2_dynamicBody);
 
 		// b2BodyDef
-		luaR_rawsetcclosurefield(L, &BodyDef, "BodyDef");
+		luaR_rawsetcfunction(L, "BodyDef", &BodyDef);
 
 		// b2Body
 		Rainbow::Lua::reg<Body>(L);
 
 		// b2FixtureDef
-		luaR_rawsetcclosurefield(L, &FixtureDef, "FixtureDef");
+		luaR_rawsetcfunction(L, "FixtureDef", &FixtureDef);
 
 		// b2Fixture
 		Rainbow::Lua::reg<Fixture>(L);

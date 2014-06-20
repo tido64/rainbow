@@ -12,20 +12,21 @@
 	namespace Rainbow { namespace Lua { namespace module
 #define NS_RAINBOW_LUA_MODULE_END(module) }}
 
-#define luaR_rawsetcclosurefield(L, fn, k) \
-	do \
-	{ \
-		lua_pushliteral(L, k); \
-		lua_pushcclosure(L, fn, 0); \
-		lua_rawset(L, -3); \
-	} while(0)
+#define strllen(k) (sizeof(k) / sizeof(k[0]) - 1)
 
-#define luaR_rawsetfield(L, pushvalue, v, k) \
-	do \
-	{ \
-		lua_pushliteral(L, k); \
-		pushvalue(L, v); \
-		lua_rawset(L, -3); \
-	} while(0)
+#define luaR_rawsetboolean(L, k, v) \
+	Rainbow::Lua::rawset<bool>(L, k, strllen(k), (v))
+
+#define luaR_rawsetcfunction(L, k, v) \
+	Rainbow::Lua::rawset<lua_CFunction>(L, k, strllen(k), (v))
+
+#define luaR_rawsetinteger(L, k, v) \
+	Rainbow::Lua::rawset<lua_Integer>(L, k, strllen(k), (v))
+
+#define luaR_rawsetnumber(L, k, v) \
+	Rainbow::Lua::rawset<lua_Number>(L, k, strllen(k), (v))
+
+#define luaR_rawsetstring(L, k, v) \
+	Rainbow::Lua::rawset<const char*>(L, k, strllen(k), (v))
 
 #endif  // LUA_LUAMACROS_H_

@@ -4,9 +4,8 @@
 
 #include "Services/TestFlight.h"
 
-#include <lua.hpp>
-
 #include "Common/Debug.h"
+#include "Lua/LuaHelper.h"
 #include "Lua/LuaSyntax.h"
 
 #ifdef USE_TESTFLIGHT_SDK
@@ -66,8 +65,8 @@ namespace Rainbow
 			void init(lua_State *L)
 			{
 				lua_createtable(L, 0, 2);
-				luaR_rawsetcclosurefield(L, &log, "log");
-				luaR_rawsetcclosurefield(L, &pass_checkpoint, "pass_checkpoint");
+				luaR_rawsetcfunction(L, "log", &log);
+				luaR_rawsetcfunction(L, "pass_checkpoint", &pass_checkpoint);
 				lua_setglobal(L, "testflight");
 			}
 		}

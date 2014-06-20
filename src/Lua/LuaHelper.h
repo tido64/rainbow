@@ -34,7 +34,10 @@ NS_RAINBOW_LUA_BEGIN
 	/// \param exec   For internal use only! Whether to execute the loaded
 	///               chunk. Only used by Lua package loaders.
 	/// \return Number of successfully loaded chunks.
-	int load(lua_State *L, const Data &chunk, const char *name, const bool exec = true);
+	int load(lua_State *L,
+	         const Data &chunk,
+	         const char *name,
+	         const bool exec = true);
 
 	/// Returns the value returned from luaL_optinteger() but without the extra
 	/// type check if NDEBUG is defined.
@@ -43,6 +46,9 @@ NS_RAINBOW_LUA_BEGIN
 	/// Returns the value returned from luaL_optnumber() but without the extra
 	/// type check if NDEBUG is defined.
 	inline lua_Number optnumber(lua_State *L, const int n, lua_Number def);
+
+	template<typename T>
+	void push(lua_State *L, const T value);
 
 	/// Pushes a collectable pointer on the stack.
 	///
@@ -53,6 +59,17 @@ NS_RAINBOW_LUA_BEGIN
 	/// \param ptr   The pointer to push on the stack.
 	/// \param name  Name of the pointer type.
 	void pushpointer(lua_State *L, void *ptr, const char *name);
+
+	/// Does the equivalent of <tt>t[field] = value</tt>, where \c t is the
+	/// table at the top of the stack, without metamethods.
+	/// \param field   Name of the index.
+	/// \param length  Length of \p field.
+	/// \param value   The value to assign.
+	template<typename T>
+	void rawset(lua_State *L,
+	            const char *const field,
+	            const size_t length,
+	            const T value);
 
 	/// Simple C++-wrapper, loosely based on LunaWrapper.
 	///
@@ -74,7 +91,8 @@ NS_RAINBOW_LUA_BEGIN
 	void replacetable(lua_State *L, const int n);
 
 	/// Sets debugging hook.
-	int sethook(lua_State *L, const int mask = LUA_MASKCALL | LUA_MASKRET | LUA_MASKLINE);
+	int sethook(lua_State *L,
+	            const int mask = LUA_MASKCALL | LUA_MASKRET | LUA_MASKLINE);
 
 	/// Returns the value returned from luaL_checkinteger() or lua_tointeger(),
 	/// depending on whether NDEBUG is defined.
@@ -143,6 +161,17 @@ NS_RAINBOW_LUA_BEGIN
 	#endif
 	}
 
+	template<typename T>
+	void rawset(lua_State *L,
+	            const char *const field,
+	            const size_t length,
+	            const T value)
+	{
+		lua_pushlstring(L, field, length);
+		push<T>(L, value);
+		lua_rawset(L, -3);
+	}
+
 	template<class T>
 	void reg(lua_State *L)
 	{
@@ -154,8 +183,8 @@ NS_RAINBOW_LUA_BEGIN
 		}
 		luaL_newmetatable(L, T::class_name);  // metatable = {}
 		luaL_setfuncs(L, T::functions, 0);
-		luaR_rawsetcclosurefield(L, &dealloc<T>, "__gc");
-		luaR_rawsetcclosurefield(L, &tostring<T>, "__tostring");
+		luaR_rawsetcfunction(L, "__gc", &dealloc<T>);
+		luaR_rawsetcfunction(L, "__tostring", &tostring<T>);
 		lua_pushliteral(L, "__index");
 		lua_pushvalue(L, -2);
 		lua_rawset(L, -3);  // metatable.__index = metatable

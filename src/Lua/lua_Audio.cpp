@@ -149,23 +149,17 @@ NS_RAINBOW_LUA_MODULE_BEGIN(Audio)
 		lua_pushliteral(L, "audio");
 		lua_createtable(L, 0, 16);
 
-		luaR_rawsetfield(L,
-		                 lua_pushinteger,
-		                 static_cast<int>(Sound::Type::Static),
-		                 "STATIC");
-		luaR_rawsetfield(L,
-		                 lua_pushinteger,
-		                 static_cast<int>(Sound::Type::Stream),
-		                 "STREAM");
+		luaR_rawsetinteger(L, "STATIC", static_cast<int>(Sound::Type::Static));
+		luaR_rawsetinteger(L, "STREAM", static_cast<int>(Sound::Type::Stream));
 
-		luaR_rawsetcclosurefield(L, &set_gain, "set_gain");
-		luaR_rawsetcclosurefield(L, &set_pitch, "set_pitch");
-		luaR_rawsetcclosurefield(L, &clear, "clear");
-		luaR_rawsetcclosurefield(L, &create_sound, "create_sound");
-		luaR_rawsetcclosurefield(L, &delete_sound, "delete_sound");
-		luaR_rawsetcclosurefield(L, &pause, "pause");
-		luaR_rawsetcclosurefield(L, &play, "play");
-		luaR_rawsetcclosurefield(L, &stop, "stop");
+		luaR_rawsetcfunction(L, "set_gain", &set_gain);
+		luaR_rawsetcfunction(L, "set_pitch", &set_pitch);
+		luaR_rawsetcfunction(L, "clear", &clear);
+		luaR_rawsetcfunction(L, "create_sound", &create_sound);
+		luaR_rawsetcfunction(L, "delete_sound", &delete_sound);
+		luaR_rawsetcfunction(L, "pause", &pause);
+		luaR_rawsetcfunction(L, "play", &play);
+		luaR_rawsetcfunction(L, "stop", &stop);
 
 		reg<Recorder>(L);
 
@@ -285,12 +279,12 @@ NS_RAINBOW_LUA_MODULE_BEGIN(Audio)
 		lua_createtable(L, 0, 4);
 
 		// Bank control
-		luaR_rawsetcclosurefield(L, &loadBank, "loadBank");
-		luaR_rawsetcclosurefield(L, &unloadBank, "unloadBank");
-		luaR_rawsetcclosurefield(L, &unloadAll, "unloadAll");
+		luaR_rawsetcfunction(L, "loadBank", &loadBank);
+		luaR_rawsetcfunction(L, "unloadBank", &unloadBank);
+		luaR_rawsetcfunction(L, "unloadAll", &unloadAll);
 
 		// Playback control
-		luaR_rawsetcclosurefield(L, &createInstance, "createInstance");
+		luaR_rawsetcfunction(L, "createInstance", &createInstance);
 
 		lua_setglobal(L, "FMOD");
 

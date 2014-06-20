@@ -132,10 +132,10 @@ namespace Rainbow
 		Lua::init(state_);
 
 		// Set "rainbow.breakpoint".
-		luaR_rawsetcclosurefield(state_, breakpoint, "breakpoint");
+		luaR_rawsetcfunction(state_, "breakpoint", breakpoint);
 
 		// Set "rainbow.time_since_epoch".
-		luaR_rawsetcclosurefield(state_, time_since_epoch, "time_since_epoch");
+		luaR_rawsetcfunction(state_, "time_since_epoch", time_since_epoch);
 
 		// Initialize "rainbow.scenegraph".
 		scenegraph_ = Lua::SceneGraph::create(state_, root);

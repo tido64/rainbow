@@ -10,9 +10,8 @@ NS_B2_LUA_BEGIN
 	int CircleShape(lua_State *L)
 	{
 		lua_createtable(L, 0, 4);
-
-		luaR_rawsetfield(L, lua_pushinteger, b2Shape::e_circle, "m_type");
-		luaR_rawsetfield(L, lua_pushnumber, 0.0f, "m_radius");
+		luaR_rawsetinteger(L, "m_type", b2Shape::e_circle);
+		luaR_rawsetnumber(L, "m_radius", 0.0f);
 		luaR_rawsetvec2(L, "m_p");
 		return 1;
 	}

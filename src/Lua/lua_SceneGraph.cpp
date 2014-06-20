@@ -102,11 +102,11 @@ NS_RAINBOW_LUA_BEGIN
 	{
 		R_ASSERT(register_node(root), "Failed to register root node");
 
-		lua_pushlstring(L, class_name, sizeof(class_name) / sizeof(char) - 1);
+		lua_pushlstring(L, class_name, strllen(class_name));
 		void *data = lua_newuserdata(L, sizeof(SceneGraph));
 		luaL_newmetatable(L, class_name);  // metatable = {}
 		luaL_setfuncs(L, functions, 0);
-		luaR_rawsetcclosurefield(L, &tostring<SceneGraph>, "__tostring");
+		luaR_rawsetcfunction(L, "__tostring", &tostring<SceneGraph>);
 		lua_pushliteral(L, "__index");
 		lua_pushvalue(L, -2);
 		lua_rawset(L, -3);  // metatable.__index = metatable
@@ -124,7 +124,7 @@ NS_RAINBOW_LUA_BEGIN
 		lua_getglobal(L, "rainbow");
 		if (!lua_istable(L, -1))
 			return;
-		lua_pushlstring(L, class_name, sizeof(class_name) / sizeof(char) - 1);
+		lua_pushlstring(L, class_name, strllen(class_name));
 		lua_pushnil(L);
 		lua_rawset(L, -3);
 		lua_pop(L, 1);

@@ -8,8 +8,6 @@
 #define NS_B2_LUA_BEGIN namespace b2 { namespace Lua
 #define NS_B2_LUA_END }
 
-#define strllen(k) (sizeof(k) / sizeof(k[0]) - 1)
-
 #define luaR_getboolean(L, k)  gettable<bool>(L, k, strllen(k))
 #define luaR_getfield(L, k)    getfield(L, k, strllen(k))
 #define luaR_getinteger(L, k)  gettable<lua_Integer>(L, k, strllen(k))
@@ -74,8 +72,8 @@ namespace
 	{
 		lua_pushlstring(L, field, length);
 		lua_createtable(L, 0, 2);
-		luaR_rawsetfield(L, lua_pushnumber, 0.0f, "x");
-		luaR_rawsetfield(L, lua_pushnumber, 0.0f, "y");
+		luaR_rawsetnumber(L, "x", 0.0f);
+		luaR_rawsetnumber(L, "y", 0.0f);
 		lua_rawset(L, -3);
 		return 1;
 	}

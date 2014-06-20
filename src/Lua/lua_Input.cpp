@@ -4,11 +4,10 @@
 
 #include "Lua/lua_Input.h"
 
-#include <lua.hpp>
-
 #include "Input/Input.h"
 #include "Input/Key.h"
 #include "Input/Touch.h"
+#include "Lua/LuaHelper.h"
 
 NS_RAINBOW_LUA_MODULE_BEGIN(Input)
 {
@@ -89,11 +88,11 @@ NS_RAINBOW_LUA_MODULE_BEGIN(Input)
 				{
 					lua_pushinteger(L, touches[i].hash);
 					lua_createtable(L, 0, 5);
-					luaR_rawsetfield(L, lua_pushinteger, touches[i].x, "x");
-					luaR_rawsetfield(L, lua_pushinteger, touches[i].y, "y");
-					luaR_rawsetfield(L, lua_pushinteger, touches[i].x0, "x0");
-					luaR_rawsetfield(L, lua_pushinteger, touches[i].y0, "y0");
-					luaR_rawsetfield(L, lua_pushinteger, touches[i].timestamp, "timestamp");
+					luaR_rawsetinteger(L, "x", touches[i].x);
+					luaR_rawsetinteger(L, "y", touches[i].y);
+					luaR_rawsetinteger(L, "x0", touches[i].x0);
+					luaR_rawsetinteger(L, "y0", touches[i].y0);
+					luaR_rawsetinteger(L, "timestamp", touches[i].timestamp);
 					lua_rawset(L, -3);
 				}
 			}
@@ -128,10 +127,10 @@ NS_RAINBOW_LUA_MODULE_BEGIN(Input)
 	void accelerated(lua_State *L, const Acceleration &a)
 	{
 		lua_rawgeti(L, LUA_REGISTRYINDEX, acceleration);
-		luaR_rawsetfield(L, lua_pushnumber, a.x(), "x");
-		luaR_rawsetfield(L, lua_pushnumber, a.y(), "y");
-		luaR_rawsetfield(L, lua_pushnumber, a.z(), "z");
-		luaR_rawsetfield(L, lua_pushnumber, a.timestamp(), "timestamp");
+		luaR_rawsetnumber(L, "x", a.x());
+		luaR_rawsetnumber(L, "y", a.y());
+		luaR_rawsetnumber(L, "z", a.z());
+		luaR_rawsetnumber(L, "timestamp", a.timestamp());
 		lua_pop(L, 1);
 	}
 

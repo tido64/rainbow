@@ -24,19 +24,19 @@ NS_B2_LUA_BEGIN
 	int BodyDef(lua_State *L)
 	{
 		lua_createtable(L, 0, 16);
-		luaR_rawsetfield(L, lua_pushinteger, b2_staticBody, "type");
+		luaR_rawsetinteger(L, "type", b2_staticBody);
 		luaR_rawsetvec2(L, "position");
-		luaR_rawsetfield(L, lua_pushnumber, 0.0f, "angle");
+		luaR_rawsetnumber(L, "angle", 0.0f);
 		luaR_rawsetvec2(L, "linearVelocity");
-		luaR_rawsetfield(L, lua_pushnumber, 0.0f, "angularVelocity");
-		luaR_rawsetfield(L, lua_pushnumber, 0.0f, "linearDamping");
-		luaR_rawsetfield(L, lua_pushnumber, 0.0f, "angularDamping");
-		luaR_rawsetfield(L, lua_pushboolean, true, "allowSleep");
-		luaR_rawsetfield(L, lua_pushboolean, true, "awake");
-		luaR_rawsetfield(L, lua_pushboolean, false, "fixedRotation");
-		luaR_rawsetfield(L, lua_pushboolean, false, "bullet");
-		luaR_rawsetfield(L, lua_pushboolean, true, "active");
-		luaR_rawsetfield(L, lua_pushnumber, 1.0f, "gravityScale");
+		luaR_rawsetnumber(L, "angularVelocity", 0.0f);
+		luaR_rawsetnumber(L, "linearDamping", 0.0f);
+		luaR_rawsetnumber(L, "angularDamping", 0.0f);
+		luaR_rawsetboolean(L, "allowSleep", true);
+		luaR_rawsetboolean(L, "awake", true);
+		luaR_rawsetboolean(L, "fixedRotation", false);
+		luaR_rawsetboolean(L, "bullet", false);
+		luaR_rawsetboolean(L, "active", true);
+		luaR_rawsetnumber(L, "gravityScale", 1.0f);
 		return 1;
 	}
 

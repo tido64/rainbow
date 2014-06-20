@@ -47,7 +47,7 @@ NS_RAINBOW_LUA_MODULE_BEGIN(Random)
 {
 	void init(lua_State *L)
 	{
-		luaR_rawsetcclosurefield(L, &random, "random");
-		luaR_rawsetcclosurefield(L, &seed, "seed");
+		luaR_rawsetcfunction(L, "random", &random);
+		luaR_rawsetcfunction(L, "seed", &seed);
 	}
 } NS_RAINBOW_LUA_MODULE_END(Random)

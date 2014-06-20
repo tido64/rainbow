@@ -4,8 +4,7 @@
 
 #include "Lua/lua_Platform.h"
 
-#include <lua.hpp>
-
+#include "Lua/LuaHelper.h"
 #include "Platform/SystemInfo.h"
 
 NS_RAINBOW_LUA_MODULE_BEGIN(Platform)
@@ -15,9 +14,7 @@ NS_RAINBOW_LUA_MODULE_BEGIN(Platform)
 		lua_pushliteral(L, "platform");
 		lua_createtable(L, 0, 4);
 
-		luaR_rawsetfield(
-		    L, lua_pushboolean, SystemInfo::has_accelerometer(),
-		    "accelerometer");
+		luaR_rawsetboolean(L, "accelerometer", SystemInfo::has_accelerometer());
 
 		// Retrieve locale
 		lua_pushliteral(L, "locale");
@@ -41,8 +38,7 @@ NS_RAINBOW_LUA_MODULE_BEGIN(Platform)
 		// rainbow.platform.screen
 		lua_pushliteral(L, "screen");
 		lua_createtable(L, 0, 3);
-		luaR_rawsetfield(
-		    L, lua_pushboolean, SystemInfo::has_touchscreen(), "touch");
+		luaR_rawsetboolean(L, "touch", SystemInfo::has_touchscreen());
 		lua_rawset(L, -3);
 
 		lua_rawset(L, -3);
@@ -56,8 +52,8 @@ NS_RAINBOW_LUA_MODULE_BEGIN(Platform)
 		lua_pushliteral(L, "screen");
 		lua_rawget(L, -2);
 
-		luaR_rawsetfield(L, lua_pushnumber, screen.width, "width");
-		luaR_rawsetfield(L, lua_pushnumber, screen.height, "height");
+		luaR_rawsetnumber(L, "width", screen.width);
+		luaR_rawsetnumber(L, "height", screen.height);
 
 		lua_pop(L, 3);
 	}
