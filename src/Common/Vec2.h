@@ -59,6 +59,11 @@ namespace Rainbow
 			return this->x == v.x && this->y == v.y;
 		}
 
+		Vec2<T> operator+(const T offset)
+		{
+			return Vec2<T>(this->x + offset, this->y + offset);
+		}
+
 		Vec2<T>& operator+=(const Vec2<T> &v)
 		{
 			this->x += v.x;

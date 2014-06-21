@@ -18,14 +18,59 @@
 
 namespace
 {
+	typedef unsigned char uchar_t;
 	typedef unsigned int uint_t;
 
 	const float kGlyphMargin = 2.0f;     ///< Margin around rendered font glyph.
 	const uint_t kASCIIOffset = 32;      ///< Start loading from character 32.
 	const uint_t kDPI = 96;              ///< Horizontal/vertical resolution in dpi.
 	const uint_t kGlyphPadding = 3;      ///< Padding around font glyph texture.
+	const uint_t kGlyphPadding2 = kGlyphPadding * 2;
 	const int kNumGlyphsPerColRow = 12;  ///< Number of glyphs per column/row on texture.
 	const int kPixelFormat = 64;         ///< 26.6 fixed-point pixel coordinates.
+
+	void copy_bitmap_into(uchar_t *dst, const Vec2i &dst_sz, const Vec2i &off,
+	                      const uchar_t *src, const Vec2i &src_sz)
+	{
+		const size_t stride = (dst_sz.width - src_sz.width) * 2;
+		size_t i = 0;
+		uchar_t *ptr = dst + (off.y * dst_sz.width + off.x) * 2;
+		for (int y = 0; y < src_sz.height; ++y)
+		{
+			for (int x = 0; x < src_sz.width; ++x)
+			{
+				*ptr = std::numeric_limits<uchar_t>::max();
+				*(++ptr) = src[i];
+				++ptr;
+				++i;
+			}
+			ptr += stride;
+		}
+	}
+
+	Vec2i max_glyph_size(FT_Face face, FontGlyph *glyphs, const size_t count)
+	{
+		Vec2i max;
+		std::for_each(glyphs,
+		              glyphs + count,
+		              [&, face](const FontGlyph &glyph) {
+			if (FT_Load_Char(face, glyph.code, FT_LOAD_DEFAULT))
+			{
+				R_ASSERT(false, "Failed to load characters");
+				max.width = -1;
+				return;
+			}
+			const FT_Glyph_Metrics &metrics = face->glyph->metrics;
+			if (metrics.width > max.width)
+				max.width = metrics.width;
+			if (metrics.height > max.height)
+				max.height = metrics.height;
+		});
+		if (max.width < 0)
+			return Vec2i();
+		return Vec2i(max.width / kPixelFormat + kGlyphPadding2,
+		             max.height / kPixelFormat + kGlyphPadding2);
+	}
 
 	class FontFace
 	{
@@ -133,28 +178,12 @@ FontAtlas::FontAtlas(const Data &font, const float pt)
 		return;
 
 	FT_Set_Char_Size(face, 0, pt_ * kPixelFormat, kDPI, kDPI);
-	const int padding = kGlyphPadding * 2;
-
-	// Naive algorithm for calculating texture size.
-	int max_width = 0;
-	int max_height = 0;
-	for (const auto &glyph : charset_)
-	{
-		if (FT_Load_Char(face, glyph.code, FT_LOAD_DEFAULT))
-		{
-			R_ASSERT(false, "Failed to load characters");
-			return;
-		}
-		const FT_Glyph_Metrics &metrics = face->glyph->metrics;
-		if (metrics.width > max_width)
-			max_width = metrics.width;
-		if (metrics.height > max_height)
-			max_height = metrics.height;
-	}
-	max_width = max_width / kPixelFormat + padding;
-	max_height = max_height / kPixelFormat + padding;
-	const Vec2i size(Rainbow::next_pow2(max_width * kNumGlyphsPerColRow),
-	                 Rainbow::next_pow2(max_height * kNumGlyphsPerColRow));
+	const Vec2i &max =
+	    max_glyph_size(face, charset_, sizeof(charset_) / sizeof(charset_[0]));
+	if (max.is_zero())
+		return;
+	const Vec2i size(Rainbow::next_pow2(max.width * kNumGlyphsPerColRow),
+	                 Rainbow::next_pow2(max.height * kNumGlyphsPerColRow));
 
 	// GL_LUMINANCE8_ALPHA8 buffer
 	Vec2i offset(size.width * size.height * 2, 0);
@@ -173,39 +202,18 @@ FontAtlas::FontAtlas(const Data &font, const float pt)
 
 		// Make sure bitmap data has enough space to the right. Otherwise, start
 		// a new line.
-		const int width = bitmap.width + padding;
+		const int width = bitmap.width + kGlyphPadding2;
 		if (offset.x + width > size.width)
 		{
 			offset.x = 0;
-			offset.y += max_height;
+			offset.y += max.height;
 		}
 
 		// Copy bitmap data to texture.
 		if (bitmap.buffer)
 		{
-			const unsigned char *bit = bitmap.buffer;
-			unsigned char *buf = buffer.get()
-			                   + (offset.y * size.width + offset.x) * 2
-			                   + padding * (size.width + 1);
-			const uint_t stride = (size.width - bitmap.width) * 2;
-			for (int y = 0; y < bitmap.rows; ++y)
-			{
-				for (int x = 0; x < bitmap.width; ++x)
-				{
-				#ifdef RAINBOW_OS_IOS
-					*buf = *(buf + 1) = *bit;
-				#else
-					if (*bit)
-					{
-						*buf = 255;
-						*(buf + 1) = *bit;
-					}
-				#endif
-					buf += 2;
-					++bit;
-				}
-				buf += stride;
-			}
+			copy_bitmap_into(buffer.get(), size, offset + kGlyphPadding,
+			                 bitmap.buffer, Vec2i(bitmap.width, bitmap.rows));
 		}
 
 		// Save font glyph data.
@@ -294,5 +302,5 @@ const FontGlyph* FontAtlas::get_glyph(const uint_t c) const
 		return (i == last) ? nullptr : i;
 	}
 #endif
-	return &charset_[static_cast<unsigned char>(c) - kASCIIOffset];
+	return &charset_[static_cast<uchar_t>(c) - kASCIIOffset];
 }
