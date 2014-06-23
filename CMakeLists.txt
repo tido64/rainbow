@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8)
 
 project(Rainbow)
-set(LOCAL_MODULE_PATH ${CMAKE_SOURCE_DIR}/build/cmake)
+set(LOCAL_MODULE_PATH ${PROJECT_SOURCE_DIR}/build/cmake)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${LOCAL_MODULE_PATH})
 set(LOCAL_LIBRARY ${PROJECT_SOURCE_DIR}/lib)
 set(THIRD_PARTY ${PROJECT_SOURCE_DIR}/src/ThirdParty)
@@ -15,7 +15,7 @@ option(USE_HEIMDALL     "Enable Heimdall debugging facilities" OFF)
 option(USE_PHYSICS      "Enable physics module (Box2D)" OFF)
 
 # Auto-generate files
-execute_process(COMMAND tools/shaders-gen.py WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+execute_process(COMMAND tools/shaders-gen.py WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
 
 # Platform-specifics
 include(${LOCAL_MODULE_PATH}/Project.cmake)
@@ -24,6 +24,10 @@ include(${LOCAL_MODULE_PATH}/Windows.cmake)
 
 # Target
 file(GLOB_RECURSE RAINBOW_CPP src/*.cpp)
+foreach(src IN LISTS RAINBOW_CPP)
+	string(REGEX REPLACE "${PROJECT_SOURCE_DIR}/src/" "" src_file ${src})
+	set_source_files_properties(${src} PROPERTIES COMPILE_DEFINITIONS "SRC_FILE=\"${src_file}\"")
+endforeach()
 add_executable(rainbow ${RAINBOW_CPP} ${RAINBOW_H})
 
 # Dynamic libraries

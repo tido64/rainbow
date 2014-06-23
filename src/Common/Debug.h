@@ -20,6 +20,9 @@
 #ifndef __GNUC__
 #	define __PRETTY_FUNCTION__ __FUNCTION__
 #endif
+#ifndef SRC_FILE
+#	define SRC_FILE __FILE__
+#endif
 
 #include <cstdlib>
 
@@ -28,7 +31,7 @@
 	{ \
 		if (!(expr)) \
 		{ \
-			R_ERROR("[Rainbow] %s: %s (aborted at %s:%i: %s)\n", __PRETTY_FUNCTION__, reason, __FILE__, __LINE__, #expr); \
+			R_ERROR("[Rainbow] %s: %s (aborted at %s:%i: %s)\n", __PRETTY_FUNCTION__, reason, SRC_FILE, __LINE__, #expr); \
 			abort(); \
 		} \
 	} while (0)
