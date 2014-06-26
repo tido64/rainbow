@@ -57,6 +57,7 @@ public:
 	inline float angle() const;
 	inline const Colorb& color() const;
 	inline unsigned int height() const;
+	inline const SpriteBatch& parent() const;
 	inline const Vec2f& position() const;
 	inline const Vec2f& scale() const;
 	inline unsigned int width() const;
@@ -142,6 +143,11 @@ const Colorb& Sprite::color() const
 unsigned int Sprite::height() const
 {
 	return height_;
+}
+
+const SpriteBatch& Sprite::parent() const
+{
+	return *parent_;
 }
 
 const Vec2f& Sprite::position() const

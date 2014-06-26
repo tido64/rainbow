@@ -52,7 +52,7 @@ NS_RAINBOW_LUA_BEGIN
 		const Vec2i origin(lua_tointeger(L, 2), lua_tointeger(L, 3));
 		const int w = lua_tointeger(L, 4);
 		const int h = lua_tointeger(L, 5);
-		lua_pushinteger(L, self->texture_->define(origin, w, h));
+		lua_pushunsigned(L, self->texture_->define(origin, w, h));
 		return 1;
 	}
 

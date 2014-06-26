@@ -187,7 +187,10 @@ NS_RAINBOW_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		self->sprite_->set_texture(lua_tointeger(L, 2));
+		const unsigned int t = lua_tounsigned(L, 2);
+		LUA_ASSERT(L, t < self->sprite_->parent().texture().size(),
+		           "Non-existing texture region (%d)", t);
+		self->sprite_->set_texture(t);
 		return 0;
 	}
 

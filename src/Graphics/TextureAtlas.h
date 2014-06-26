@@ -25,18 +25,20 @@ public:
 	explicit TextureAtlas(const DataMap &img);
 	inline ~TextureAtlas();
 
+	inline size_t size() const;
+
 	/// Binds this texture.
 	inline void bind() const;
 	inline void bind(const unsigned int unit) const;
 
-	/// Defines a texture within the atlas.
-	/// \param x,y     Starting point of the texture.
-	/// \param width   Width of the texture.
-	/// \param height  Height of the texture.
-	/// \return The id of the texture.
+	/// Defines a texture region.
+	/// \param x,y     Starting point of the region.
+	/// \param width   Width of the region.
+	/// \param height  Height of the region.
+	/// \return The id of the region.
 	unsigned int define(const Vec2i &origin, const int width, const int height);
 
-	/// Trims the internal texture storage.
+	/// Trims the internal texture region storage.
 	inline void trim();
 
 	inline const Texture& operator[](const unsigned int i) const;
@@ -46,12 +48,17 @@ private:
 	unsigned int name_;         ///< Texture atlas' id.
 	int width_;                 ///< Width of texture atlas.
 	int height_;                ///< Height of texture atlas.
-	Vector<Texture> textures_;  ///< Defined textures.
+	Vector<Texture> regions_;   ///< Defined texture regions.
 };
 
 TextureAtlas::~TextureAtlas()
 {
 	TextureManager::Instance->remove(name_);
+}
+
+size_t TextureAtlas::size() const
+{
+	return regions_.size();
 }
 
 void TextureAtlas::bind() const
@@ -66,12 +73,12 @@ void TextureAtlas::bind(const unsigned int unit) const
 
 void TextureAtlas::trim()
 {
-	textures_.reserve(0);
+	regions_.reserve(0);
 }
 
 const Texture& TextureAtlas::operator[](const unsigned int i) const
 {
-	return textures_[i];
+	return regions_[i];
 }
 
 TextureAtlas::operator bool() const

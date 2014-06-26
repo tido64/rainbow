@@ -119,8 +119,8 @@ unsigned int TextureAtlas::define(const Vec2i &origin, const int w, const int h)
 	const Vec2f v1((origin.x + w) / static_cast<float>(width_),
 	               (origin.y + h) / static_cast<float>(height_));
 
-	const size_t i = textures_.size();
-	textures_.emplace_back(v0, v1);
-	textures_[i].atlas = name_;
+	const size_t i = regions_.size();
+	regions_.emplace_back(v0, v1);
+	regions_[i].atlas = name_;
 	return i;
 }

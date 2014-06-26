@@ -18,8 +18,8 @@
 /// coordinates are flipped vertically, giving us 3,2,1 and 1,0,3.
 struct Texture
 {
-	unsigned int atlas;
 	Vec2f vx[4];
+	unsigned int atlas;
 
 	inline Texture();
 	inline Texture(const Vec2f &v0, const Vec2f &v1);
