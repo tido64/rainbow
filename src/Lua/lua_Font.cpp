@@ -30,7 +30,7 @@ NS_RAINBOW_LUA_BEGIN
 		if (!font)
 			luaL_error(L, "rainbow.font: Failed to load font");
 		font_ = new FontAtlas(font, lua_tonumber(L, 2));
-		if (!*font_)
+		if (!font_->is_valid())
 			luaL_error(L, "rainbow.font: Failed to create font texture");
 	}
 } NS_RAINBOW_LUA_END

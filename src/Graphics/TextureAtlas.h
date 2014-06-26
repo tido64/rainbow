@@ -25,6 +25,7 @@ public:
 	explicit TextureAtlas(const DataMap &img);
 	inline ~TextureAtlas();
 
+	inline bool is_valid() const;
 	inline size_t size() const;
 
 	/// Binds this texture.
@@ -42,7 +43,6 @@ public:
 	inline void trim();
 
 	inline const Texture& operator[](const unsigned int i) const;
-	inline explicit operator bool() const;
 
 private:
 	unsigned int name_;         ///< Texture atlas' id.
@@ -54,6 +54,11 @@ private:
 TextureAtlas::~TextureAtlas()
 {
 	TextureManager::Instance->remove(name_);
+}
+
+bool TextureAtlas::is_valid() const
+{
+	return name_;
 }
 
 size_t TextureAtlas::size() const
@@ -79,11 +84,6 @@ void TextureAtlas::trim()
 const Texture& TextureAtlas::operator[](const unsigned int i) const
 {
 	return regions_[i];
-}
-
-TextureAtlas::operator bool() const
-{
-	return name_;
 }
 
 #endif

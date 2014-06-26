@@ -37,14 +37,14 @@ public:
 	/// Returns the line height.
 	inline int height() const;
 
+	/// Returns whether this FontAtlas is valid.
+	inline bool is_valid() const;
+
 	/// Sets this font as active texture.
 	void bind() const;
 
 	/// Returns the glyph for a character.
 	const FontGlyph* get_glyph(const unsigned int c) const;
-
-	/// Returns whether this FontAtlas is valid.
-	inline explicit operator bool() const;
 
 protected:
 	/// Load characters 32 through 126 from the ASCII table.
@@ -63,9 +63,9 @@ int FontAtlas::height() const
 	return height_;
 }
 
-FontAtlas::operator bool() const
+bool FontAtlas::is_valid() const
 {
-	return texture_ != 0;
+	return texture_;
 }
 
 #endif

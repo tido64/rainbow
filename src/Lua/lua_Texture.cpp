@@ -33,7 +33,7 @@ NS_RAINBOW_LUA_BEGIN
 		if (!data)
 			luaL_error(L, "rainbow.texture: Failed to load texture");
 		texture_ = new TextureAtlas(data);
-		if (!*texture_)
+		if (!texture_->is_valid())
 			luaL_error(L, "rainbow.texture: Failed to create texture");
 	}
 
