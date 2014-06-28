@@ -61,6 +61,7 @@
                 <li class="divider"></li>
                 <li><a href="#box2d">Box2D</a></li>
                 <li><a href="#fmod-studio">FMOD Studio</a></li>
+                <li><a href="#spine">Spine</a></li>
               </ul>
             </li>
           </ul>
@@ -95,6 +96,7 @@
   * &mdash;
   * [Box2D](#box2d)
   * [FMOD Studio](#fmod-studio)
+  * [Spine](#spine)
 
 ## rainbow.animation
 
@@ -1184,6 +1186,145 @@ Returns the position of the event instance's timeline playback cursor.
 | <var>position</var> | Desired timeline position in milliseconds. |
 
 Sets the position of the event instance's timeline playback cursor.
+
+## Spine
+
+### rainbow.skeleton(path)
+
+| Parameter | Description |
+|-----------|-------------|
+| <var>path</var> | Path to Spine JSON file. |
+
+Loads a skeleton from a JSON file exported from [Spine](http://esotericsoftware.com/).
+
+### &lt;skeleton&gt;:add_animation(track, animation, loop, delay)
+
+| Parameter | Description |
+|-----------|-------------|
+| <var>track</var> | The track to queue the animation on. |
+| <var>animation</var> | Name of the animation. |
+| <var>loop</var> | Whether to loop the animation. |
+| <var>delay</var> | The delay to wait before playing the animation. |
+
+Queues an animation to be played after a delay. If <var>delay</var> &lt;= 0, the duration of previous animation is used plus the negative delay.
+
+### &lt;skeleton&gt;:clear_track(track)
+
+| Parameter | Description |
+|-----------|-------------|
+| <var>track</var> | The track to clear all animations on. |
+
+Stops the current animation and clears all queued animations on specified track.
+
+### &lt;skeleton&gt;:clear_tracks()
+
+Stops the current animation and clears all queued animations.
+
+### &lt;skeleton&gt;:get_current_animation(track)
+
+| Parameter | Description |
+|-----------|-------------|
+| <var>track</var> | The track to retrieve the current animation from. |
+
+Returns the name of the current animation on specified track.
+
+### &lt;skeleton&gt;:get_skin()
+
+Returns the name of the current skin.
+
+### &lt;skeleton&gt;:set_animation(track, animation, loop)
+
+| Parameter | Description |
+|-----------|-------------|
+| <var>track</var> | The track to set the animation on. |
+| <var>animation</var> | Name of the animation. |
+| <var>loop</var> | Whether to loop the animation. |
+
+Sets the current animation. Any queued animations are cleared.
+
+### &lt;skeleton&gt;:set_animation_mix(from, to, duration)
+
+| Parameter | Description |
+|-----------|-------------|
+| <var>from</var> | Name of the animation to crossfade from. |
+| <var>to</var> | Name of the animation to crossfade to. |
+| <var>duration</var> | Duration in seconds to crossfade. |
+
+Sets crossfading duration for a pair of animations.
+
+### &lt;skeleton&gt;:set_attachment(slot, attachment)
+
+| Parameter | Description |
+|-----------|-------------|
+| <var>slot</var> | Name of slot. |
+| <var>attachment</var> | Name of the attachment. |
+
+Sets the attachment for the slot and attachment name. The skeleton looks first in its skin, then in the skeleton data's default skin.
+
+### &lt;skeleton&gt;:set_flip(x, y)
+
+| Parameter | Description |
+|-----------|-------------|
+| <var>x</var> | Whether to flip the skeleton horizontally. |
+| <var>y</var> | Whether to flip the skeleton vertically. |
+
+Flips the rendering of the skeleton horizontally and/or vertically.
+
+### &lt;skeleton&gt;:set_listener(listener)
+
+| Parameter | Description |
+|-----------|-------------|
+| <var>listener</var> | Table with ``on_animation_start``, ``on_animation_end``, ``on_animation_complete`` and/or ``on_animation_event`` implemented. |
+
+Sets an animation state event listener. The aforementioned functions are all optional. Their signatures are as in the following example:
+
+    local boy = rainbow.skeleton("data/spineboy.json", 0.4)
+    local animation_state_handler = {
+      on_animation_start = function(self, track, loop_count)
+        print("> An animation has started on track: " .. track)
+        print("  Number of times looped: " .. loop_count)
+      end,
+      on_animation_end = function(self, track, loop_count)
+        print("> An animation has ended on track: " .. track)
+        print("  Number of times looped: " .. loop_count)
+      end,
+      on_animation_complete = function(self, track, loop_count)
+        print("> An animation has completed on track: " .. track)
+        print("  Number of times looped: " .. loop_count)
+      end,
+      on_animation_event = function(self, track, event, loop_count)
+        print("> An animation event has occurred on track: " .. track)
+        print("  Name of the event: " ..  event)
+        print("  Number of times looped: " .. loop_count)
+      end
+    }
+    boy:set_listener(animation_state_handler)
+
+To unsubscribe, simply set the listener to ``nil``.
+
+### &lt;skeleton&gt;:set_position(x, y)
+
+| Parameter | Description |
+|-----------|-------------|
+| <var>x, y</var> | The drawing position of the skeleton in world coordinates. |
+
+Sets the drawing position of the skeleton in world coordinates.
+
+### &lt;skeleton&gt;:set_skin(skin)
+
+| Parameter | Description |
+|-----------|-------------|
+| <var>skin</var> | Name of the skin. May be ``nil``. |
+
+Sets the skin used to look up attachments not found in the ``SkeletonData`` ``defaultSkin``. Attachments from the new skin are attached if the corresponding attachment from the old skin was attached.
+
+### &lt;skeleton&gt;:set_time_scale(scale)
+
+| Parameter | Description |
+|-----------|-------------|
+| <var>scale</var> | Animation speed scale. Default: 1.0. |
+
+Sets time dilation factor.
 
     </div>
     <footer class="container">

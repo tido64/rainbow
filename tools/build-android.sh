@@ -43,6 +43,9 @@ libraries=("Lua")
 if [[ $@ = *USE_PHYSICS* ]]; then
 	libraries+=("Box2D")
 fi
+if [[ $@ = *USE_SPINE* ]]; then
+	libraries+=("spine-runtimes/spine-c")
+fi
 for lib in "${libraries[@]}"; do
 	SRC_FILES="$SRC_FILES \\"$'\n'$(find lib/$lib -name '*.c' -and ! -name 'lua.c' -and ! -name 'luac.c' -or -name '*.cpp' | xargs)
 done
@@ -66,6 +69,7 @@ LOCAL_C_INCLUDES := $PROJECT/src $PROJECT/lib \
                     $PROJECT/src/ThirdParty/FreeType $PROJECT/lib/FreeType/include $PROJECT/lib/FreeType/src \
                     $PROJECT/lib/Lua \
                     $PROJECT/src/ThirdParty/libpng $PROJECT/lib/libpng \
+                    $PROJECT/lib/spine-runtimes/spine-c/include \
                     $NDK_HOME/sources/android/native_app_glue
 LOCAL_CFLAGS := $@
 LOCAL_CPPFLAGS := -std=c++11 -Wall -Wextra -Wold-style-cast -Woverloaded-virtual -Wsign-promo -fno-rtti -fno-exceptions

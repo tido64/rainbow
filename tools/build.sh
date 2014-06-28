@@ -17,7 +17,6 @@ function compile {
 			make && [[ -f rainbow ]] || exit 1
 			mv rainbow rainbow.bc
 			em++ -v rainbow.bc -o rainbow.html
-			mv rainbow.bc rainbow
 			;;
 		"Ninja")
 			$ANALYZER ninja
@@ -52,6 +51,7 @@ case $1 in
 		echo "  -DUSE_FMOD_STUDIO=1      Enable FMOD Studio audio engine"
 		echo "  -DUSE_HEIMDALL=1         Enable Heimdall debugging facilities"
 		echo "  -DUSE_PHYSICS=1          Enable physics module (Box2D)"
+		echo "  -DUSE_SPINE=1            Enable Spine runtime"
 		echo
 		echo "CMake options are passed directly to CMake so you can set variables like"
 		echo "-DCMAKE_BUILD_TYPE=<type> among others."
@@ -70,7 +70,7 @@ case $1 in
 		$SHELL "$RAINBOW/tools/build-android.sh" $ARGS
 		;;
 	"clean")
-		rm -fr CMakeFiles CMakeScripts Debug Rainbow.* Release lib
+		rm -fr CMakeFiles CMakeScripts Debug MinSizeRel Rainbow.* Release RelWithDebInfo lib
 		rm -f .ninja_log CMakeCache.txt Makefile {build,rules}.ninja cmake_install.cmake lib*.a rainbow*
 		;;
 	"emscripten")

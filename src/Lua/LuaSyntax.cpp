@@ -94,6 +94,12 @@ NS_RAINBOW_LUA_BEGIN
 	/* void */
 
 	template<>
+	void Argument<void*>::is_optional(lua_State *L, const int n)
+	{
+		optional(L, n, is_table, "table");
+	}
+
+	template<>
 	void Argument<void*>::is_required(lua_State *L, const int n)
 	{
 		require(L, n, is_table, "table");

@@ -57,6 +57,7 @@ features:
   reloading
 - Physics ([Box2D](http://box2d.org/))
 - Scene graph
+- [Spine](http://esotericsoftware.com/) integration
 - [TestFlight](https://testflightapp.com/) integration
 
 ## Structure
@@ -181,7 +182,7 @@ run a demo, you'll need to copy some files into the folder of the demo you want
 to run:
 
 - `lua/*` (you may not need all but it's easier to just copy everything)
-- `src/Graphics/Shaders` (copy the folder, not needed for Android/iOS)
+- `src/Graphics/Shaders` (copy the folder; not needed for Android/iOS)
 
 Some demos may use resources that (unfortunately) cannot be distributed with
 Rainbow.

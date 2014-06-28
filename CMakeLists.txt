@@ -13,6 +13,7 @@ option(UNIT_TESTS  "Compile unit tests" OFF)
 option(USE_FMOD_STUDIO  "Enable FMOD Studio audio engine" ON)
 option(USE_HEIMDALL     "Enable Heimdall debugging facilities" OFF)
 option(USE_PHYSICS      "Enable physics module (Box2D)" OFF)
+option(USE_SPINE        "Enable Spine runtime" OFF)
 
 # Auto-generate files
 execute_process(COMMAND tools/shaders-gen.py WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
@@ -45,6 +46,9 @@ endif()
 include(${LOCAL_MODULE_PATH}/FreeType.cmake)
 include(${LOCAL_MODULE_PATH}/Lua.cmake)
 include(${LOCAL_MODULE_PATH}/SDL2.cmake)
+if(USE_SPINE)
+	include(${LOCAL_MODULE_PATH}/Spine.cmake)
+endif()
 include(${LOCAL_MODULE_PATH}/zlib.cmake)
 include(${LOCAL_MODULE_PATH}/libpng.cmake)
 
@@ -64,11 +68,12 @@ set_property(TARGET rainbow APPEND PROPERTY INCLUDE_DIRECTORIES
 	${LIBPNG_INCLUDE_DIR}
 	${LUA_INCLUDE_DIR}
 	${SDL2_INCLUDE_DIR}
+	${SPINE_INCLUDE_DIR}
 	${ZLIB_INCLUDE_DIR}
 	${AUDIO_INCLUDE_DIRS}
 )
 target_link_libraries(rainbow
-	freetype lua ${PHYSICS_LIBRARY} png ${SDL2_LIBRARIES}
+	freetype lua ${PHYSICS_LIBRARY} png ${SDL2_LIBRARIES} ${SPINE_LIBRARY}
 	${AUDIO_LIBRARIES} ${OPENGL_ext_LIBRARY} ${OPENGL_gl_LIBRARY}
 	${ZLIB_LIBRARY} ${PLATFORM_LIBRARIES}
 )

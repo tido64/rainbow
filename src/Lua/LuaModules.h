@@ -23,6 +23,7 @@
 
 #include "Physics/lua_Box2D.h"
 #include "Services/Services.h"
+#include "ThirdParty/Spine/spine-rainbow.h"
 
 NS_RAINBOW_LUA_BEGIN
 {
@@ -34,6 +35,10 @@ NS_RAINBOW_LUA_BEGIN
 		reg<Sprite>(L);
 		reg<SpriteBatch>(L);
 		reg<Texture>(L);
+
+	#ifdef USE_SPINE
+		reg<Spine::Lua::Skeleton>(L);
+	#endif
 	}
 
 	inline void init(lua_State *L)
