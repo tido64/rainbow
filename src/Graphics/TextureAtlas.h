@@ -25,6 +25,8 @@ public:
 	explicit TextureAtlas(const DataMap &img);
 	inline ~TextureAtlas();
 
+	inline int width() const;
+	inline int height() const;
 	inline bool is_valid() const;
 	inline size_t size() const;
 
@@ -54,6 +56,16 @@ private:
 TextureAtlas::~TextureAtlas()
 {
 	TextureManager::Instance->remove(name_);
+}
+
+int TextureAtlas::width() const
+{
+	return width_;
+}
+
+int TextureAtlas::height() const
+{
+	return height_;
 }
 
 bool TextureAtlas::is_valid() const
