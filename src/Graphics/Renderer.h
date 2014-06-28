@@ -34,9 +34,6 @@ public:
 	template<typename T>
 	static void draw(const T &);
 
-	static void draw_elements(const SpriteVertex *vertices,
-	                          const unsigned int count);
-
 	static bool has_extension(const char *const extension);
 	static int max_texture_size();
 

@@ -24,25 +24,6 @@ void Renderer::clear()
 	glClear(GL_COLOR_BUFFER_BIT);
 }
 
-void Renderer::draw_elements(const SpriteVertex *vertices,
-                             const unsigned int count)
-{
-	VertexArray::unbind();
-	glVertexAttribPointer(
-	    Shader::kAttributeColor, 4, GL_UNSIGNED_BYTE, GL_TRUE,
-	    sizeof(SpriteVertex), &vertices->color);
-	glVertexAttribPointer(
-	    Shader::kAttributeTexCoord, 2, GL_FLOAT, GL_FALSE,
-	    sizeof(SpriteVertex), &vertices->texcoord);
-	glVertexAttribPointer(
-	    Shader::kAttributeVertex, 2, GL_FLOAT, GL_TRUE,
-	    sizeof(SpriteVertex), &vertices->position);
-
-	glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_SHORT, nullptr);
-
-	R_ASSERT(glGetError() == GL_NO_ERROR, "Failed to draw elements");
-}
-
 bool Renderer::has_extension(const char *const extension)
 {
 	return strstr(reinterpret_cast<const char*>(glGetString(GL_EXTENSIONS)),

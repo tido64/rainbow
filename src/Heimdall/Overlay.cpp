@@ -19,29 +19,36 @@ namespace Heimdall
 			TextureManager::Instance->remove(texture_);
 	}
 
+	void Overlay::bind_textures() const
+	{
+		TextureManager::Instance->bind(texture_);
+	}
+
 	void Overlay::setup(const Vec2i &screen)
 	{
 		const unsigned char white[4096] = { 0xff };
 		texture_ = TextureManager::Instance->create(
 		    GL_LUMINANCE, 64, 64, GL_LUMINANCE, white);
 
-		vertices_[0].color       = Color::Overlay();
-		vertices_[0].texcoord    = Vec2f(0.5f, 0.5f);
-		vertices_[1].color       = vertices_[0].color;
-		vertices_[1].texcoord    = vertices_[0].texcoord;
-		vertices_[1].position.x  = screen.width;
-		vertices_[2].color       = vertices_[0].color;
-		vertices_[2].texcoord    = vertices_[0].texcoord;
-		vertices_[2].position    = Vec2f(screen.width, screen.height);
-		vertices_[3].color       = vertices_[0].color;
-		vertices_[3].texcoord    = vertices_[0].texcoord;
-		vertices_[3].position.y  = screen.height;
+		SpriteVertex vertices[4];
+		vertices[0].color       = Color::Overlay();
+		vertices[0].texcoord    = Vec2f(0.5f, 0.5f);
+		vertices[1].color       = vertices[0].color;
+		vertices[1].texcoord    = vertices[0].texcoord;
+		vertices[1].position.x  = screen.width;
+		vertices[2].color       = vertices[0].color;
+		vertices[2].texcoord    = vertices[0].texcoord;
+		vertices[2].position    = Vec2f(screen.width, screen.height);
+		vertices[3].color       = vertices[0].color;
+		vertices[3].texcoord    = vertices[0].texcoord;
+		vertices[3].position.y  = screen.height;
+		vertex_buffer_.upload(vertices, sizeof(vertices));
+		array_.reconfigure([this] { vertex_buffer_.bind(); });
 	}
 
 	void Overlay::draw_impl()
 	{
-		TextureManager::Instance->bind(texture_);
-		Renderer::draw_elements(vertices_, 6);
+		Renderer::draw(*this);
 	}
 
 	void Overlay::update_impl() { }
