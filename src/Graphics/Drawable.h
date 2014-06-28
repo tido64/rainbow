@@ -9,18 +9,16 @@
 class Drawable
 {
 public:
-	static const char class_name[];
-
 	virtual ~Drawable() = default;
 
 	inline Drawable* get();
 
 	inline void draw();
-	inline void update();
+	inline void update(const unsigned long dt);
 
 private:
 	virtual void draw_impl() = 0;
-	virtual void update_impl() = 0;
+	virtual void update_impl(const unsigned long dt) = 0;
 };
 
 Drawable* Drawable::get()
@@ -33,9 +31,9 @@ void Drawable::draw()
 	draw_impl();
 }
 
-void Drawable::update()
+void Drawable::update(const unsigned long dt)
 {
-	update_impl();
+	update_impl(dt);
 }
 
 #endif

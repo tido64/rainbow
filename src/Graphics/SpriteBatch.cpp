@@ -6,7 +6,6 @@
 
 #include <algorithm>
 
-#include "Graphics/Drawable.h"
 #include "Graphics/Renderer.h"
 #include "Graphics/ShaderDetails.h"
 
@@ -34,8 +33,6 @@ namespace
 		bool should_update_;
 	};
 }
-
-const char Drawable::class_name[] = "Drawable";
 
 SpriteBatch::SpriteBatch(const unsigned int hint) : count_(0), reserved_(0)
 {

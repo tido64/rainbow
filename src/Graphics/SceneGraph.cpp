@@ -86,7 +86,7 @@ namespace SceneGraph
 				animation_->update(dt);
 				break;
 			case DrawableNode:
-				drawable_->update();
+				drawable_->update(dt);
 				break;
 			case LabelNode:
 				label_->update();

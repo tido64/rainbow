@@ -37,7 +37,7 @@ namespace Heimdall
 		/* Implement Drawable. */
 
 		virtual void draw_impl() override;
-		virtual void update_impl() override;
+		virtual void update_impl(const unsigned long dt) override;
 	};
 
 	Overlay::Overlay() : texture_(0) { }

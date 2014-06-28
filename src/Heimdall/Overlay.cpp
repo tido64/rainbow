@@ -51,7 +51,7 @@ namespace Heimdall
 		Renderer::draw(*this);
 	}
 
-	void Overlay::update_impl() { }
+	void Overlay::update_impl(const unsigned long) { }
 }
 
 #endif
