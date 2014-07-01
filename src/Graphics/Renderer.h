@@ -34,6 +34,9 @@ public:
 	template<typename T>
 	static void draw(const T &);
 
+	template<typename T>
+	static void draw_arrays(const T &, const int first, const size_t count);
+
 	static bool has_extension(const char *const extension);
 	static int max_texture_size();
 
@@ -69,6 +72,14 @@ void Renderer::draw(const T &obj)
 	obj.vertex_array().bind();
 	obj.bind_textures();
 	glDrawElements(GL_TRIANGLES, obj.count(), GL_UNSIGNED_SHORT, nullptr);
+}
+
+template<typename T>
+void Renderer::draw_arrays(const T &obj, const int first, const size_t count)
+{
+	obj.vertex_array().bind();
+	obj.bind_textures();
+	glDrawArrays(GL_TRIANGLES, first, count);
 }
 
 const Vec2i& Renderer::window_size() const
