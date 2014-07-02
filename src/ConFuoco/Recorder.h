@@ -100,7 +100,7 @@ namespace ConFuoco
 }
 
 #include "Platform/Macros.h"
-#if defined(RAINBOW_OS_ANDROID)
+#if defined(RAINBOW_OS_ANDROID) && !defined(USE_FMOD_STUDIO)
 #	include "ConFuoco/impl/Recorder_SL.h"
 #elif defined(RAINBOW_OS_IOS) && !defined(USE_FMOD_STUDIO)
 #	include "ConFuoco/impl/Recorder_iOS.h"

@@ -3,7 +3,7 @@
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
 #include "ConFuoco/Recorder.h"
-#ifdef RAINBOW_OS_ANDROID
+#if defined(RAINBOW_OS_ANDROID) && !defined(USE_FMOD_STUDIO)
 
 #include <climits>
 #include <cmath>

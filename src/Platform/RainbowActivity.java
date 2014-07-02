@@ -12,27 +12,17 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 
+import org.fmod.FMODAudioDevice;
+
 public class RainbowActivity extends NativeActivity
                              implements View.OnSystemUiVisibilityChangeListener {
     static {
+        System.loadLibrary("fmod");
+        System.loadLibrary("fmodstudio");
         System.loadLibrary("gnustl_shared");
     }
 
     /* NativeActivity */
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (kShouldDimSystemUI) {
-            mDimmerHandler = new Handler();
-            mDimmerRunnable = new Runnable() {
-                public void run() {
-                    dimSystemUI();
-                }
-            };
-            contentView().setOnSystemUiVisibilityChangeListener(this);
-        }
-    }
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
@@ -53,6 +43,28 @@ public class RainbowActivity extends NativeActivity
                 | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_FULLSCREEN
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (kShouldDimSystemUI) {
+            mDimmerHandler = new Handler();
+            mDimmerRunnable = new Runnable() {
+                public void run() {
+                    dimSystemUI();
+                }
+            };
+            contentView().setOnSystemUiVisibilityChangeListener(this);
+        }
+        FMODAudioDevice.init(this);
+    }
+
+    @Override
+    protected void onDestroy()
+    {
+        FMODAudioDevice.close();
+        super.onDestroy();
     }
 
     /* View.OnSystemUiVisibilityChangeListener */
