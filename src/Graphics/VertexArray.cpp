@@ -56,6 +56,6 @@ void VertexArray::reconfigure(std::function<void()> &&array_state)
 		glDeleteVertexArrays(1, &array_);
 	array_ = array;
 #else
-	array_ = std::move(array_state);
+	array_ = std::forward<std::function<void()>>(array_state);
 #endif
 }

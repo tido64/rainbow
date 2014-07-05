@@ -43,6 +43,32 @@ Sets the number of frames per second to animate at.
 
 Sets table of animation frames.
 
+### &lt;rainbow.animation&gt;:set_listener(listener)
+
+| Parameter | Description |
+|-----------|-------------|
+| <var>listener</var> | Table with ``on_animation_start``, ``on_animation_end`` and/or ``on_animation_complete`` implemented. |
+
+Sets an animation state event listener. The aforementioned functions are all optional. Their signatures are as in the following example:
+
+``` lua
+local a = rainbow.animation(...)
+local animation_state_handler = {
+  on_animation_start = function(self)
+    print("> Animation has started")
+  end,
+  on_animation_end = function(self)
+    print("> Animation has ended")
+  end,
+  on_animation_complete = function(self)
+    print("> Animation has completed")
+  end
+}
+a:set_listener(animation_state_handler)
+```
+
+To unsubscribe, simply set the listener to ``nil``.
+
 ### &lt;rainbow.animation&gt;:set_sprite(sprite)
 
 | Parameter | Description |

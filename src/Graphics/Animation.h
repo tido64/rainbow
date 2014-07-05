@@ -5,6 +5,7 @@
 #ifndef GRAPHICS_ANIMATION_H_
 #define GRAPHICS_ANIMATION_H_
 
+#include <functional>
 #include <memory>
 
 #include "Common/NonCopyable.h"
@@ -14,7 +15,17 @@
 /// Sprite animation using sprite sheets.
 class Animation : public TimedEvent<Animation>, private NonCopyable<Animation>
 {
+	friend TimedEvent;
+
 public:
+	enum class Event
+	{
+		Start,
+		End,
+		Complete
+	};
+
+	using Callback = std::function<void(const Event)>;
 	using Frame = unsigned int;
 
 	static const Frame kAnimationEnd;
@@ -30,6 +41,8 @@ public:
 	          const Frame *const frames,
 	          const unsigned int fps,
 	          const int delay = 0);
+
+	inline void set_callback(Callback&&);
 
 	/// Sets number of ticks to delay before the animation loops. Negative
 	/// numbers disable looping.
@@ -56,7 +69,16 @@ private:
 	std::unique_ptr<const Frame[]> frames_;  ///< Array of texture ids to be used as frames, terminated with \c kAnimationEnd.
 	int delay_;  ///< Number of ticks to delay before the animation loops. Negative numbers disable looping.
 	int idled_;  ///< Number of ticks idled.
+	Callback callback_;
+
+	void on_start();
+	void on_stop();
 };
+
+void Animation::set_callback(Callback&& f)
+{
+	callback_ = std::forward<Callback>(f);
+}
 
 void Animation::set_delay(const int delay)
 {

@@ -54,13 +54,22 @@ template<typename T>
 void TimedEvent<T>::start()
 {
 	R_ASSERT(timeout_ > 0, "No time out set");
+
+	if (!stopped_)
+		return;
+
 	stopped_ = false;
+	static_cast<T*>(this)->on_start();
 }
 
 template<typename T>
 void TimedEvent<T>::stop()
 {
+	if (stopped_)
+		return;
+
 	stopped_ = true;
+	static_cast<T*>(this)->on_stop();
 }
 
 template<typename T>

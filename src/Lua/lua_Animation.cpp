@@ -11,14 +11,17 @@
 
 namespace
 {
-	unsigned int* get_frames(lua_State *L, const int n)
+	const char kErrorHandlingAnimationStateEvent[] =
+	    "An error occurred while handling an animation state event";
+
+	Animation::Frame* get_frames(lua_State *L, const int n)
 	{
 		const size_t count = lua_rawlen(L, n);
-		unsigned int *const frames = new unsigned int[count + 1];
+		Animation::Frame *const frames = new Animation::Frame[count + 1];
 		int i = 0;
-		std::for_each(frames, frames + count, [L, n, &i](unsigned int &frame) {
+		std::generate_n(frames, count, [L, n, &i] {
 			lua_rawgeti(L, n, ++i);
-			frame = lua_tointeger(L, -1);
+			return lua_tointeger(L, -1);
 		});
 		lua_pop(L, i);
 		frames[count] = Animation::kAnimationEnd;
@@ -36,13 +39,14 @@ NS_RAINBOW_LUA_BEGIN
 
 	template<>
 	const luaL_Reg Animation::Bind::functions[] = {
-		{ "is_stopped",  &Animation::is_stopped },
-		{ "set_delay",   &Animation::set_delay },
-		{ "set_fps",     &Animation::set_fps },
-		{ "set_frames",  &Animation::set_frames },
-		{ "set_sprite",  &Animation::set_sprite },
-		{ "play",        &Animation::play },
-		{ "stop",        &Animation::stop },
+		{ "is_stopped",    &Animation::is_stopped },
+		{ "set_delay",     &Animation::set_delay },
+		{ "set_fps",       &Animation::set_fps },
+		{ "set_frames",    &Animation::set_frames },
+		{ "set_listener",  &Animation::set_listener },
+		{ "set_sprite",    &Animation::set_sprite },
+		{ "play",          &Animation::play },
+		{ "stop",          &Animation::stop },
 		{ nullptr, nullptr }
 	};
 
@@ -112,6 +116,47 @@ NS_RAINBOW_LUA_BEGIN
 		return 0;
 	}
 
+	int Animation::set_listener(lua_State *L)
+	{
+		Rainbow::Lua::Argument<void*>::is_optional(L, 2);
+
+		Animation *self = Bind::self(L);
+		if (!self)
+			return 0;
+
+		if (!lua_istable(L, 2))
+		{
+			self->listener_.reset();
+			self->animation_->set_callback(nullptr);
+			return 0;
+		}
+		lua_settop(L, 2);
+		self->listener_.reset(L);
+		self->animation_->set_callback([L, self](const ::Animation::Event e) {
+			self->listener_.get();
+			switch (e)
+			{
+				case ::Animation::Event::Start:
+					lua_getfield(L, -1, "on_animation_start");
+					break;
+				case ::Animation::Event::End:
+					lua_getfield(L, -1, "on_animation_end");
+					break;
+				case ::Animation::Event::Complete:
+					lua_getfield(L, -1, "on_animation_complete");
+					break;
+			}
+			if (!lua_isfunction(L, -1))
+			{
+				lua_pop(L, 2);
+				return;
+			}
+			lua_insert(L, -2);
+			call(L, 1, 0, 0, kErrorHandlingAnimationStateEvent);
+		});
+		return 0;
+	}
+
 	int Animation::set_sprite(lua_State *L)
 	{
 		// <animation>:set_sprite(<sprite>)
@@ -142,7 +187,6 @@ NS_RAINBOW_LUA_BEGIN
 			return 0;
 
 		self->animation_->stop();
-		self->animation_->reset();
 		return 0;
 	}
 } NS_RAINBOW_LUA_END

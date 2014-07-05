@@ -29,12 +29,30 @@ void Animation::tick()
 	if (frames_[frame_ + 1] == kAnimationEnd)
 	{
 		if (delay_ < 0)
+		{
 			stop();
-		else if (idled_ < delay_)
+			return;
+		}
+		if (idled_ == 0 && callback_)
+			callback_(Event::Complete);
+		if (idled_ < delay_)
 			++idled_;
 		else
 			reset();
 	}
 	else
 		++frame_;
+}
+
+void Animation::on_start()
+{
+	reset();
+	if (callback_)
+		callback_(Event::Start);
+}
+
+void Animation::on_stop()
+{
+	if (callback_)
+		callback_(Event::End);
 }

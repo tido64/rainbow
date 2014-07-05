@@ -21,10 +21,16 @@ namespace
 			return ticks_;
 		}
 
+		void on_start() { }
+		void on_stop() { }
+
 	private:
 		int ticks_;
 	};
 }
+
+// TODO: The following newlines were added for Catch to create unique names.
+
 
 TEST_CASE("TimedEvents are started on creation", "[timedevent]")
 {
@@ -41,6 +47,9 @@ TEST_CASE("TimedEvent calls tick() on timeout", "[timedevent]")
 		REQUIRE(event.ticks() == i);
 	}
 }
+
+// TODO: The following newlines were added for Catch to create unique names.
+
 
 TEST_CASE("TimedEvent calls tick() multiple times to catch up", "[timedevent]")
 {

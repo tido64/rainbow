@@ -26,11 +26,13 @@ NS_RAINBOW_LUA_BEGIN
 		static int set_delay(lua_State *);
 		static int set_fps(lua_State *);
 		static int set_frames(lua_State *);
+		static int set_listener(lua_State *);
 		static int set_sprite(lua_State *);
 		static int play(lua_State *);
 		static int stop(lua_State *);
 
 		std::unique_ptr<::Animation> animation_;
+		ScopedRef listener_;
 	};
 
 	::Animation* Animation::get()
