@@ -69,17 +69,10 @@ namespace Rainbow
 	#endif
 		lua_getglobal(state_, "init");
 	#ifndef NDEBUG
-		const int lua_e = lua_pcall(state_, 0, 0, 1);
-		lua_remove(state_, 1);
+		return Lua::call(state_, 0, 0, 1, "Failed to initialise main script");
 	#else
-		const int lua_e = lua_pcall(state_, 0, 0, 0);
+		return Lua::call(state_, 0, 0, 0, "Failed to initialise main script");
 	#endif
-		if (lua_e != LUA_OK)
-		{
-			Lua::error(state_, lua_e);
-			return luaL_error(state_, "Failed to initialise main script");
-		}
-		return LUA_OK;
 	}
 
 	int LuaMachine::update(const unsigned long t)
@@ -90,17 +83,10 @@ namespace Rainbow
 		lua_rawgeti(state_, LUA_REGISTRYINDEX, internal_);
 		lua_pushunsigned(state_, t);
 	#ifndef NDEBUG
-		const int lua_e = lua_pcall(state_, 1, 0, 1);
-		lua_remove(state_, 1);
+		return Lua::call(state_, 1, 0, 1, "Failed to call 'update'");
 	#else
-		const int lua_e = lua_pcall(state_, 1, 0, 0);
+		return Lua::call(state_, 1, 0, 0, "Failed to call 'update'");
 	#endif
-		if (lua_e != LUA_OK)
-		{
-			Lua::error(state_, lua_e);
-			return luaL_error(state_, "Failed to call 'update'");
-		}
-		return LUA_OK;
 	}
 
 	LuaMachine::LuaMachine()

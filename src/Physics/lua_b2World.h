@@ -31,12 +31,8 @@ NS_B2_LUA_BEGIN
 
 		void FireContactEvent(const char *const event, lua_State *L, int nargs)
 		{
-			const int lua_e = lua_pcall(L, nargs + 1, 0, 0);
-			if (lua_e != LUA_OK)
-			{
-				Rainbow::Lua::error(L, lua_e);
-				luaL_error(L, "Failed to evaluate '%s'", event);
-			}
+			Rainbow::Lua::call(
+			    L, nargs + 1, 0, 0, "Failed to evaluate '%s'", event);
 		}
 
 		template<typename F, typename... Args>

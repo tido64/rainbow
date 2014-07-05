@@ -46,12 +46,12 @@ namespace
 
 NS_RAINBOW_LUA_BEGIN
 {
-	void error(lua_State *L, const int lua_e)
+	void error(lua_State *L, const int result)
 	{
-		R_ASSERT(lua_e != LUA_OK, "No error to report");
+		R_ASSERT(result != LUA_OK, "No error to report");
 
 		const char *desc = kLuaErrorGeneral;
-		switch (lua_e)
+		switch (result)
 		{
 			case LUA_ERRRUN:
 				desc = kLuaErrorRuntime;

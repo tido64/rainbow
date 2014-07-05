@@ -6,6 +6,7 @@
 #define LUA_LUAHELPER_H_
 
 #include <new>
+#include <utility>
 
 #include <lua.hpp>
 
@@ -18,6 +19,14 @@ NS_RAINBOW_LUA_BEGIN
 	/// Creates a Lua wrapped object.
 	template<class T>
 	int alloc(lua_State *L);
+
+	template<typename... Args>
+	int call(lua_State *L,
+	         const int nargs,
+	         const int nresults,
+	         const int errfunc,
+	         const char *err,
+	         Args&&... args);
 
 	template<class T>
 	int dealloc(lua_State *L);
@@ -134,6 +143,25 @@ NS_RAINBOW_LUA_BEGIN
 		lua_rawgeti(L, LUA_REGISTRYINDEX, ref);
 		luaL_unref(L, LUA_REGISTRYINDEX, ref);
 		return 1;
+	}
+
+	template<typename... Args>
+	int call(lua_State *L,
+	         const int nargs,
+	         const int nresults,
+	         const int errfunc,
+	         const char *err,
+	         Args&&... args)
+	{
+		const int result = lua_pcall(L, nargs, nresults, errfunc);
+		if (errfunc)
+			lua_remove(L, 1);
+		if (result != LUA_OK)
+		{
+			error(L, result);
+			return luaL_error(L, err, std::forward<Args>(args)...);
+		}
+		return LUA_OK;
 	}
 
 	template<class T>

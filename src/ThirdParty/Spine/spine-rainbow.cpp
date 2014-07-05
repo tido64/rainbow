@@ -129,14 +129,9 @@ namespace
 			++nargs;
 		}
 		lua_pushinteger(sk->state(), loop_count);
-		const int lua_e = lua_pcall(sk->state(), nargs, 0, 0);
-		if (lua_e != LUA_OK)
-		{
-			Rainbow::Lua::error(sk->state(), lua_e);
-			luaL_error(
-			    sk->state(),
-			    "An error occurred while handling an animation state event");
-		}
+		Rainbow::Lua::call(
+		    sk->state(), nargs, 0, 0,
+		    "An error occurred while handling an animation state event");
 	}
 
 	template<typename T>
