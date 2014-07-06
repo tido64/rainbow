@@ -2,24 +2,21 @@
 -- Distributed under the MIT License.
 -- (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
+local module_path = ((...):match("(.*[./\\])[^./\\]+") or "") .. "../"
+
+local F = require(module_path .. "Functional")
+
 local format = string.format
 local pairs = pairs
 local tonumber = tonumber
 local type = type
 
 local rainbow = rainbow
-local audio = rainbow.audio
 local scenegraph = rainbow.scenegraph
 
-local FMOD = FMOD
-
-local SoundFinalizer = {
-	__gc = function(self) audio.delete_sound(self) end
-}
-
-local function endswith(str, ending)
-	return ending == '' or str:sub(-ending:len()) == ending
-end
+--
+-- Helper functions
+--
 
 local function extend(data)
 	return setmetatable(
@@ -40,22 +37,15 @@ local function insert(t, k, v)
 	t[k] = t[k] and error(format("'%s' is defined twice", k)) or v
 end
 
-local function merge(t1, t2)
+local function copy_into(t1, t2)
 	for k,v in pairs(t2) do
 		insert(t1, k, v)
 	end
 end
 
-local function setproperties(obj, def)
+local function set_properties(obj, def)
 	if def.alignment then
 		obj:set_alignment(def.alignment)
-	end
-	if def.animations then
-		obj.animations = {}
-		for k,v in pairs(def.animations) do
-			obj.animations[k] = rainbow.animation(obj, v, v.fps, v.delay or 0)
-			obj.animations[k]:stop()
-		end
 	end
 	if def.color then
 		local r = tonumber(def.color:sub(1, 2), 16)
@@ -76,83 +66,119 @@ local function setproperties(obj, def)
 		obj:set_rotation(def.rotation)
 	end
 	if def.scale then
-		obj:set_scale(def.scale)
+		if type(def.scale) == "table" then
+			local x, y = 1, 2
+			obj:set_scale(def.scale[x], def.scale[y])
+		else
+			obj:set_scale(def.scale)
+		end
 	end
 	if def.texture then
 		obj:set_texture(def.texture)
 	end
 end
 
-local function createbatch(node, resources)
+--
+-- Drawables
+--
+
+local function create_batch(node, resources)
 	local width, height = 1, 2
 	local batch = extend(rainbow.spritebatch(#node.sprites))
 	batch:set_texture(resources[node.texture])
-	local sprites = {}
-	for i = 1, #node.sprites do
-		local def = node.sprites[i]
+	local f = function(t, def)
 		local sprite =
 		    extend(batch:create_sprite(def.size[width], def.size[height]))
-		setproperties(sprite, def)
-		insert(sprites, def.name, sprite)
+		set_properties(sprite, def)
+		if def.animations then
+			local f = function(_, v)
+				local a = rainbow.animation(sprite, v, v.fps, v.delay or 0)
+				a:stop()
+				return a
+			end
+			sprite.animations = F.maph(f, def.animations)
+		end
+		insert(t, def.name, sprite)
+		return t
 	end
-	return batch, sprites
+	return batch, F.foldl(f, {}, node.sprites)
 end
 
-local function createfont(def)
-	local path, size = 1, 2
-	return rainbow.font(def[path], def[size])
-end
-
-local function createlabel(def, resources)
-	local label = extend(def.text and rainbow.label(def.text)
-	                               or rainbow.label())
+local function create_label(def, resources)
+	local label = extend(rainbow.label(def.text or nil))
 	label:set_font(resources[def.font])
-	setproperties(label, def)
+	set_properties(label, def)
 	return label
 end
 
-local createsound =
-    FMOD and function(snd)
-                 return FMOD.createSound(snd)
-             end
-          or function(snd)
-                 return setmetatable(audio.create_sound(snd), SoundFinalizer)
-             end
+--
+-- Resources
+--
 
-local function createtexture(def)
-	local path = 1
-	local x, y, width, height = 1, 2, 3, 4
-	local texture = rainbow.texture(def[path])
-	for i = 2, #def do
-		texture:create(def[i][x], def[i][y], def[i][width], def[i][height])
+local ResourceFactory
+do
+	local audio = rainbow.audio
+	local FMOD = FMOD
+
+	local function create_font(def)
+		local path, size = 1, 2
+		return rainbow.font(def[path], def[size])
 	end
-	return texture
-end
 
-local function createresources(resources)
-	local t = {}
-	for name,resource in pairs(resources) do
-		local path = type(resource) ~= "table" and resource or resource[1]
-		if endswith(path, ".png") or endswith(path, ".pvr") then
-			insert(t, name, createtexture(resource))
-		elseif endswith(path, ".otf") or endswith(path, ".ttf") then
-			insert(t, name, createfont(resource))
-		elseif endswith(path, ".ogg") or endswith(path, ".mp3") then
-			insert(t, name, createsound(resource))
-		else
-			print("Unknown resource: " .. path)
+	local create_sound =
+	    FMOD and function(snd)
+	                 return FMOD.createSound(snd)
+	             end
+	          or function(snd)
+	                 return setmetatable(audio.create_sound(snd), {
+	                     __gc = function(self) audio.delete_sound(self) end
+	                 })
+	             end
+
+	local function create_texture(def)
+		local path = 1
+		local x, y, width, height = 1, 2, 3, 4
+		local texture = rainbow.texture(def[path])
+		for i = 2, #def do
+			local t = def[i]
+			texture:create(t[x], t[y], t[width], t[height])
 		end
+		return texture
 	end
-	return t
+
+	ResourceFactory = {
+		mp3 = create_sound,
+		ogg = create_sound,
+		otf = create_font,
+		png = create_texture,
+		pvr = create_texture,
+		ttf = create_font,
+	}
 end
 
-local function createnodes(parent, resources, nodes)
-	local t = {}
-	for i = 1, #nodes do
-		local node = nodes[i]
+local function create_resource(name, resource)
+	local path = type(resource) ~= "table" and resource or resource[1]
+	local produce = ResourceFactory[path:sub(-3)]
+	if not produce then
+		print("Unknown resource: " .. path)
+		return
+	end
+	return produce(resource)
+end
+
+--
+-- Public functions
+--
+
+local function create_resources(resources)
+	return F.maph(create_resource, resources)
+end
+
+local function create_nodes(parent, resources, nodes)
+	local f = function(t, node)
 		if node.sprites then
-			local batch, sprites = createbatch(node, resources)
-			merge(t, sprites)
+			local batch, sprites = create_batch(node, resources)
+			copy_into(t, sprites)
 			batch.node = scenegraph:add_batch(parent, batch)
 			for _,sprite in pairs(sprites) do
 				for _,animation in pairs(sprite.animations or {}) do
@@ -161,22 +187,23 @@ local function createnodes(parent, resources, nodes)
 			end
 			insert(t, node.name, batch)
 		elseif node.font then
-			local label = createlabel(node, resources)
+			local label = create_label(node, resources)
 			label.node = scenegraph:add_label(parent, label)
 			insert(t, node.name, label)
 		elseif node.nodes then
 			local group = scenegraph:add_node(parent)
-			merge(t, createnodes(group, resources, node.nodes))
+			copy_into(t, create_nodes(group, resources, node.nodes))
 			insert(t, node.name, group)
 		else
 			print("Unknown element: " .. node.name)
 		end
+		return t
 	end
-	return t
+	return F.foldl(f, {}, nodes)
 end
 
 return {
-	createresources = createresources,
-	createnodes = createnodes,
+	create_resources = create_resources,
+	create_nodes = create_nodes,
 	version = 1.1
 }

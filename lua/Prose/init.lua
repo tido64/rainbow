@@ -10,8 +10,8 @@ local setmetatable = setmetatable
 
 local scenegraph = rainbow.scenegraph
 
-local function emptytable(t)
-	for k,v in pairs(t) do
+local function clear_table(t)
+	for k,_ in pairs(t or {}) do
 		t[k] = nil
 	end
 end
@@ -22,43 +22,24 @@ local Prose = {
 			-- We're shutting down, all resources are released.
 			return
 		end
-		if self.resources then
-			emptytable(self.resources)
-			self.resources = nil
-		end
-		if self.objects then
-			emptytable(self.objects)
-			self.objects = nil
-		end
+		clear_table(self.resources)
+		clear_table(self.objects)
 		if self.node then
 			scenegraph:remove(self.node)
-			self.node = nil
 		end
-	end,
-	__index = nil,
-	from_table = nil
+	end
 }
 
-Prose.__index = setmetatable(Prose, {
-	__call = function()
-		return setmetatable({
-			node = scenegraph:add_node(),
-			objects = false,
-			resources = false
-		}, Prose)
-	end
-})
-
-function Prose.from_table(t)
+local function from_table(t)
 	if type(t) ~= "table" or t.version < Parser.version then
 		return nil
 	end
 	collectgarbage("stop")
-	local prose = Prose()
-	prose.resources = Parser.createresources(t.resources)
-	prose.objects = Parser.createnodes(prose.node, prose.resources, t.nodes)
+	local res = Parser.create_resources(t.resources)
+	local node = scenegraph:add_node()
+	local objs = Parser.create_nodes(node, res, t.nodes)
 	collectgarbage("restart")
-	return prose
+	return setmetatable({ node = node, objects = objs, resources = res }, Prose)
 end
 
-return Prose
+return { from_table = from_table }
