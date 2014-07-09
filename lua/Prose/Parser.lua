@@ -4,6 +4,7 @@
 
 local module_path = ((...):match("(.*[./\\])[^./\\]+") or "") .. "../"
 
+local AnimationController = require(module_path .. "AnimationController")
 local F = require(module_path .. "Functional")
 
 local format = string.format
@@ -96,7 +97,7 @@ local function create_batch(node, resources)
 				a:stop()
 				return a
 			end
-			sprite.animations = F.maph(f, def.animations)
+			sprite.animations = AnimationController(F.maph(f, def.animations))
 		end
 		insert(t, def.name, sprite)
 		return t
@@ -181,9 +182,8 @@ local function create_nodes(parent, resources, nodes)
 			copy_into(t, sprites)
 			batch.node = scenegraph:add_batch(parent, batch)
 			for _,sprite in pairs(sprites) do
-				for name, animation in pairs(sprite.animations or {}) do
-					local node = scenegraph:add_animation(batch.node, animation)
-					scenegraph:set_tag(node, name)
+				if sprite.animations then
+					sprite.animations.parent = batch.node
 				end
 			end
 			scenegraph:set_tag(batch.node, node.name)

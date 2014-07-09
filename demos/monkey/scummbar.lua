@@ -31,9 +31,9 @@ function SceneSCUMMBar:init()
 	rainbow.input.subscribe(self)
 	threepwood:init(self.scene.node, global_scale * 30, global_scale * 30)
 	local objects = self.scene.objects
-	objects.chandelier.animations.drink:play()
-	objects.bythewindow.animations.drink:play()
-	objects.intheback.animations.drink:play()
+	objects.chandelier.animations:set_animation(0, "drink", true)
+	objects.bythewindow.animations:set_animation(0, "drink", true)
+	objects.intheback.animations:set_animation(0, "drink", true)
 end
 
 function SceneSCUMMBar:update(dt)
