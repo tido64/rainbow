@@ -54,16 +54,6 @@ namespace Rainbow
 			return !this->x && !this->y;
 		}
 
-		bool operator==(const Vec2<T> &v) const
-		{
-			return this->x == v.x && this->y == v.y;
-		}
-
-		Vec2<T> operator+(const T offset)
-		{
-			return Vec2<T>(this->x + offset, this->y + offset);
-		}
-
 		Vec2<T>& operator+=(const Vec2<T> &v)
 		{
 			this->x += v.x;
@@ -83,6 +73,16 @@ namespace Rainbow
 			this->x *= f;
 			this->y *= f;
 			return *this;
+		}
+
+		friend bool operator==(const Vec2<T> &a, const Vec2<T> &b)
+		{
+			return a.x == b.x && a.y == b.y;
+		}
+
+		friend Vec2<T> operator+(const Vec2<T> &a, const T offset)
+		{
+			return Vec2<T>(a.x + offset, a.y + offset);
 		}
 	};
 

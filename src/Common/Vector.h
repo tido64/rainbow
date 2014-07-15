@@ -15,7 +15,7 @@
 /// This class is mainly for the lack of full STL implementation on some
 /// platforms, such as Android. (And because we don't like iterators.)
 template<typename T>
-class Vector : private NonCopyable<Vector<T>>
+class Vector final : private NonCopyable<Vector<T>>
 {
 public:
 	Vector(const size_t capacity = 4);
@@ -83,11 +83,11 @@ public:
 	///                  tightened.
 	void reserve(size_t capacity);
 
-	/// Returns whether the two vectors are the same.
-	bool operator==(const Vector<T> &) const;
-
 	/// Returns the element stored at index.
 	T& operator[](const size_t i) const;
+
+	/// Returns whether the two vectors are the same.
+	friend bool operator==(const Vector<T> &a, const Vector<T> &b);
 
 private:
 	Arena<T> arena_;   ///< Memory arena.
@@ -246,12 +246,6 @@ void Vector<T>::reserve(size_t capacity)
 }
 
 template<typename T>
-bool Vector<T>::operator==(const Vector<T> &v) const
-{
-	return arena_ == v.arena_;
-}
-
-template<typename T>
 T& Vector<T>::operator[](const size_t i) const
 {
 	R_ASSERT(i < count_, "Index out of range");
@@ -263,6 +257,12 @@ template<typename T>
 size_t Vector<T>::recommended_size() const
 {
 	return reserved_ + (reserved_ + 1) / 2;
+}
+
+template<typename T>
+bool operator==(const Vector<T> &a, const Vector<T> &b)
+{
+	return a.arena_ == b.arena_;
 }
 
 #endif

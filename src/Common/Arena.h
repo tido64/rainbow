@@ -95,12 +95,6 @@ T& Arena<T>::operator[](const size_t i) const
 }
 
 template<typename T>
-T& Arena<T>::operator*() const
-{
-	return *arena_;
-}
-
-template<typename T>
 T* Arena<T>::operator->() const
 {
 	return arena_;
@@ -110,6 +104,12 @@ template<typename T>
 T* Arena<T>::operator+(const size_t offset) const
 {
 	return arena_ + offset;
+}
+
+template<typename T>
+T& Arena<T>::operator*() const
+{
+	return *arena_;
 }
 
 #endif

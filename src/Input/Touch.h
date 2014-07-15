@@ -13,42 +13,28 @@ struct Touch
 	int x0, y0;               ///< Previous position of touch.
 	unsigned long timestamp;  ///< The time this event occurred in milliseconds.
 
-	inline Touch();
-	inline Touch(const unsigned int hash,
-	             const int x,
-	             const int y,
-	             const unsigned long t);
-	inline Touch(const unsigned int hash,
-	             const int x,
-	             const int y,
-	             const int x0,
-	             const int y0,
-	             const unsigned long t);
+	Touch() : hash(0), x(0), y(0), x0(0), y0(0), timestamp(0) { }
+
+	Touch(const unsigned int hash,
+	      const int x,
+	      const int y,
+	      const unsigned long t)
+	    : hash(hash), x(x), y(y), x0(x), y0(y), timestamp(t) { }
+
+	Touch(const unsigned int hash,
+	      const int x,
+	      const int y,
+	      const int x0,
+	      const int y0,
+	      const unsigned long t)
+	    : hash(hash), x(x), y(y), x0(x0), y0(y0), timestamp(t) { }
 
 	/// Two touch events are equal if their hash values are; i.e. they share a
 	/// common origin.
-	inline bool operator==(const Touch &t) const;
+	friend bool operator==(const Touch &a, const Touch &b)
+	{
+		return a.hash == b.hash;
+	}
 };
-
-Touch::Touch() : hash(0), x(0), y(0), x0(0), y0(0), timestamp(0) { }
-
-Touch::Touch(const unsigned int hash,
-             const int x,
-             const int y,
-             const unsigned long t)
-    : hash(hash), x(x), y(y), x0(x), y0(y), timestamp(t) { }
-
-Touch::Touch(const unsigned int hash,
-             const int x,
-             const int y,
-             const int x0,
-             const int y0,
-             const unsigned long t)
-    : hash(hash), x(x), y(y), x0(x0), y0(y0), timestamp(t) { }
-
-bool Touch::operator==(const Touch &t) const
-{
-	return this->hash == t.hash;
-}
 
 #endif

@@ -86,8 +86,15 @@ private:
 		unsigned int id;  ///< Texture id.
 		unsigned int sz;  ///< Texture area.
 
-		inline bool operator==(const TextureId &tex);
-		inline bool operator>(const TextureId &tex);
+		friend bool operator==(const TextureId &a, const TextureId &b)
+		{
+			return a.id == b.id;
+		}
+
+		friend bool operator>(const TextureId &a, const TextureId &b)
+		{
+			return a.sz > b.sz;
+		}
 	};
 
 	unsigned int active_[kNumTextureUnits];
@@ -117,16 +124,6 @@ private:
 void TextureManager::purge()
 {
 	purge(recycled_);
-}
-
-bool TextureManager::TextureId::operator==(const TextureId &tex)
-{
-	return tex.id == id;
-}
-
-bool TextureManager::TextureId::operator>(const TextureId &tex)
-{
-	return sz > tex.sz;
 }
 
 #endif
