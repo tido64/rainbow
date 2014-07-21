@@ -214,7 +214,11 @@ NS_RAINBOW_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		self->sprite_->move(Vec2f(lua_tonumber(L, 2), lua_tonumber(L, 3)));
+		const Vec2f delta(lua_tonumber(L, 2), lua_tonumber(L, 3));
+		if (delta.is_zero())
+			return 0;
+
+		self->sprite_->move(delta);
 		return 0;
 	}
 

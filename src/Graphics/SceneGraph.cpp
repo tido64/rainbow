@@ -30,14 +30,14 @@ namespace SceneGraph
 
 	void Node::draw() const
 	{
-		if (!enabled)
+		if (!this->enabled)
 			return;
 
 		ShaderManager::Context context;
 		if (program_ >= 0)
 			ShaderManager::Instance->use(program_);
 
-		switch (type)
+		switch (this->type)
 		{
 			case SceneGraph::Node::DrawableNode:
 				drawable_->draw();
@@ -57,10 +57,7 @@ namespace SceneGraph
 
 	void Node::move(const Vec2f &delta) const
 	{
-		if (delta.is_zero())
-			return;
-
-		switch (type)
+		switch (this->type)
 		{
 			case LabelNode:
 				label_->move(delta);
@@ -77,10 +74,10 @@ namespace SceneGraph
 
 	void Node::update(const unsigned long dt) const
 	{
-		if (!enabled)
+		if (!this->enabled)
 			return;
 
-		switch (type)
+		switch (this->type)
 		{
 			case AnimationNode:
 				animation_->update(dt);

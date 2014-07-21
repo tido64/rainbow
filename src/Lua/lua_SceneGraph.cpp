@@ -266,7 +266,11 @@ NS_RAINBOW_LUA_BEGIN
 		Argument<lua_Number>::is_required(L, 3);
 		Argument<lua_Number>::is_required(L, 4);
 
-		luaR_tonode(L, 2)->move(Vec2f(lua_tonumber(L, 3), lua_tonumber(L, 4)));
+		const Vec2f delta(lua_tonumber(L, 3), lua_tonumber(L, 4));
+		if (delta.is_zero())
+			return 0;
+
+		luaR_tonode(L, 2)->move(delta);
 		return 0;
 	}
 } NS_RAINBOW_LUA_END

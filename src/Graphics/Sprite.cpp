@@ -146,9 +146,6 @@ void Sprite::mirror()
 
 void Sprite::move(const Vec2f &delta)
 {
-	if (delta.is_zero())
-		return;
-
 	position_ += delta;
 	stale_ |= kStalePosition;
 }
