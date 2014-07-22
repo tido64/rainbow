@@ -22,8 +22,8 @@
 #include "Lua/lua_Texture.h"
 
 #include "Physics/lua_Box2D.h"
-#include "Services/Services.h"
 #include "ThirdParty/Spine/spine-rainbow.h"
+#include "ThirdParty/TestFlight/TestFlight.h"
 
 NS_RAINBOW_LUA_BEGIN
 {
@@ -50,11 +50,11 @@ NS_RAINBOW_LUA_BEGIN
 		Random::init(L);    // Initialise "rainbow.random" function
 		Input::init(L);     // Initialise "rainbow.input" namespace
 		Audio::init(L);     // Initialise "rainbow.audio" namespace
-		Services::init(L);  // Initialise third-party services
 
 	#ifdef USE_PHYSICS
 		b2::Lua::Init(L);   // Initialise "b2" namespace
 	#endif
+		TF::Lua::init(L);   // Initialise "TestFlight" namespace
 	}
 } NS_RAINBOW_LUA_END
 

@@ -2,7 +2,7 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
-#include "Services/TestFlight.h"
+#include "ThirdParty/TestFlight/TestFlight.h"
 
 #include "Common/Debug.h"
 #include "Lua/LuaHelper.h"
@@ -56,19 +56,16 @@ namespace
 	}
 }
 
-namespace Rainbow
+namespace TF
 {
-	namespace Services
+	namespace Lua
 	{
-		namespace TestFlight
+		void init(lua_State *L)
 		{
-			void init(lua_State *L)
-			{
-				lua_createtable(L, 0, 2);
-				luaR_rawsetcfunction(L, "log", &log);
-				luaR_rawsetcfunction(L, "pass_checkpoint", &pass_checkpoint);
-				lua_setglobal(L, "testflight");
-			}
+			lua_createtable(L, 0, 2);
+			luaR_rawsetcfunction(L, "log", &log);
+			luaR_rawsetcfunction(L, "pass_checkpoint", &pass_checkpoint);
+			lua_setglobal(L, "testflight");
 		}
 	}
 }

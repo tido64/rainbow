@@ -2,19 +2,16 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
-#ifndef SERVICES_TESTFLIGHT_H_
-#define SERVICES_TESTFLIGHT_H_
+#ifndef THIRDPARTY_TESTFLIGHT_TESTFLIGHT_H_
+#define THIRDPARTY_TESTFLIGHT_TESTFLIGHT_H_
 
 struct lua_State;
 
-namespace Rainbow
+namespace TF
 {
-	namespace Services
+	namespace Lua
 	{
-		namespace TestFlight
-		{
-			void init(lua_State *);
-		}
+		void init(lua_State *);
 	}
 }
 
