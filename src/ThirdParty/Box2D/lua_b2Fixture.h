@@ -2,8 +2,8 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
-#ifndef PHYSICS_LUA_B2FIXTURE_H_
-#define PHYSICS_LUA_B2FIXTURE_H_
+#ifndef THIRDPARTY_BOX2D_LUA_B2FIXTURE_H_
+#define THIRDPARTY_BOX2D_LUA_B2FIXTURE_H_
 
 NS_B2_LUA_BEGIN
 {

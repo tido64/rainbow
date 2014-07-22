@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		190497DF168293DB0037F5EC /* lua_IO.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 190497DE168293DB0037F5EC /* lua_IO.cpp */; };
 		190497E41682963F0037F5EC /* lua_Platform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 190497E31682963F0037F5EC /* lua_Platform.cpp */; };
-		190D6FED16964AA100C9ED26 /* lua_Box2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 190D6FEB16964AA100C9ED26 /* lua_Box2D.cpp */; };
 		190D6FF116964B2500C9ED26 /* RainbowDraw.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 190D6FEF16964B2500C9ED26 /* RainbowDraw.cpp */; };
 		193929B316E1932E0018340B /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 193929B216E1932E0018340B /* CoreMotion.framework */; };
 		193929B616E23D410018340B /* RainbowViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 193929B516E23D410018340B /* RainbowViewController.mm */; };
@@ -122,6 +121,7 @@
 		1939A23E152C432A00494609 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1939A23D152C432900494609 /* AudioToolbox.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		1939A240152C435000494609 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1939A23F152C435000494609 /* AVFoundation.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		1942A50A18985D450050CF5C /* Buffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1942A50818985D450050CF5C /* Buffer.cpp */; };
+		19455D33197F1C98003E4A79 /* lua_Box2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19455D31197F1C98003E4A79 /* lua_Box2D.cpp */; };
 		1946B7AE1836E54600F74A3B /* File.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1946B7AA1836E54600F74A3B /* File.cpp */; };
 		1946B7AF1836E54600F74A3B /* Path.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1946B7AC1836E54600F74A3B /* Path.cpp */; };
 		1948C023152C397D00E9B854 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1948C022152C397D00E9B854 /* UIKit.framework */; };
@@ -176,14 +176,6 @@
 		190497DE168293DB0037F5EC /* lua_IO.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = lua_IO.cpp; sourceTree = "<group>"; };
 		190497E31682963F0037F5EC /* lua_Platform.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = lua_Platform.cpp; sourceTree = "<group>"; };
 		190A0ADA15E0294C0088D8B7 /* Debug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Debug.h; sourceTree = "<group>"; };
-		190D6FE416964AA100C9ED26 /* lua_b2Body.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lua_b2Body.h; sourceTree = "<group>"; };
-		190D6FE516964AA100C9ED26 /* lua_b2Contact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lua_b2Contact.h; sourceTree = "<group>"; };
-		190D6FE616964AA100C9ED26 /* lua_b2Draw.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lua_b2Draw.h; sourceTree = "<group>"; };
-		190D6FE716964AA100C9ED26 /* lua_b2Fixture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lua_b2Fixture.h; sourceTree = "<group>"; };
-		190D6FE916964AA100C9ED26 /* lua_b2Shape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lua_b2Shape.h; sourceTree = "<group>"; };
-		190D6FEA16964AA100C9ED26 /* lua_b2World.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lua_b2World.h; sourceTree = "<group>"; };
-		190D6FEB16964AA100C9ED26 /* lua_Box2D.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = lua_Box2D.cpp; sourceTree = "<group>"; };
-		190D6FEC16964AA100C9ED26 /* lua_Box2D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lua_Box2D.h; sourceTree = "<group>"; };
 		190D6FEF16964B2500C9ED26 /* RainbowDraw.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = RainbowDraw.cpp; sourceTree = "<group>"; };
 		190D6FF016964B2500C9ED26 /* RainbowDraw.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RainbowDraw.h; sourceTree = "<group>"; };
 		191484E61891BD87004014D7 /* ShaderDetails.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShaderDetails.h; sourceTree = "<group>"; };
@@ -431,6 +423,15 @@
 		1939A23F152C435000494609 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		1942A50818985D450050CF5C /* Buffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Buffer.cpp; sourceTree = "<group>"; };
 		1942A50918985D450050CF5C /* Buffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Buffer.h; sourceTree = "<group>"; };
+		19455D29197F1C98003E4A79 /* b2LuaHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = b2LuaHelper.h; sourceTree = "<group>"; };
+		19455D2A197F1C98003E4A79 /* lua_b2Body.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lua_b2Body.h; sourceTree = "<group>"; };
+		19455D2B197F1C98003E4A79 /* lua_b2Contact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lua_b2Contact.h; sourceTree = "<group>"; };
+		19455D2C197F1C98003E4A79 /* lua_b2Draw.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lua_b2Draw.h; sourceTree = "<group>"; };
+		19455D2D197F1C98003E4A79 /* lua_b2Fixture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lua_b2Fixture.h; sourceTree = "<group>"; };
+		19455D2F197F1C98003E4A79 /* lua_b2Shape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lua_b2Shape.h; sourceTree = "<group>"; };
+		19455D30197F1C98003E4A79 /* lua_b2World.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lua_b2World.h; sourceTree = "<group>"; };
+		19455D31197F1C98003E4A79 /* lua_Box2D.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = lua_Box2D.cpp; sourceTree = "<group>"; };
+		19455D32197F1C98003E4A79 /* lua_Box2D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lua_Box2D.h; sourceTree = "<group>"; };
 		1946B7AA1836E54600F74A3B /* File.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = File.cpp; sourceTree = "<group>"; };
 		1946B7AB1836E54600F74A3B /* File.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = File.h; sourceTree = "<group>"; };
 		1946B7AC1836E54600F74A3B /* Path.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = Path.cpp; sourceTree = "<group>"; };
@@ -552,22 +553,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		190D6FE316964AA100C9ED26 /* Physics */ = {
-			isa = PBXGroup;
-			children = (
-				190D6FE416964AA100C9ED26 /* lua_b2Body.h */,
-				190D6FE516964AA100C9ED26 /* lua_b2Contact.h */,
-				190D6FE616964AA100C9ED26 /* lua_b2Draw.h */,
-				190D6FE716964AA100C9ED26 /* lua_b2Fixture.h */,
-				190D6FE916964AA100C9ED26 /* lua_b2Shape.h */,
-				190D6FEA16964AA100C9ED26 /* lua_b2World.h */,
-				190D6FEB16964AA100C9ED26 /* lua_Box2D.cpp */,
-				190D6FEC16964AA100C9ED26 /* lua_Box2D.h */,
-			);
-			name = Physics;
-			path = ../../../src/Physics;
-			sourceTree = "<group>";
-		};
 		19399E10152C401300494609 /* Box2D */ = {
 			isa = PBXGroup;
 			children = (
@@ -1003,6 +988,22 @@
 			path = ../../../src/Lua;
 			sourceTree = "<group>";
 		};
+		19455D28197F1C98003E4A79 /* Box2D */ = {
+			isa = PBXGroup;
+			children = (
+				19455D29197F1C98003E4A79 /* b2LuaHelper.h */,
+				19455D2A197F1C98003E4A79 /* lua_b2Body.h */,
+				19455D2B197F1C98003E4A79 /* lua_b2Contact.h */,
+				19455D2C197F1C98003E4A79 /* lua_b2Draw.h */,
+				19455D2D197F1C98003E4A79 /* lua_b2Fixture.h */,
+				19455D2F197F1C98003E4A79 /* lua_b2Shape.h */,
+				19455D30197F1C98003E4A79 /* lua_b2World.h */,
+				19455D31197F1C98003E4A79 /* lua_Box2D.cpp */,
+				19455D32197F1C98003E4A79 /* lua_Box2D.h */,
+			);
+			path = Box2D;
+			sourceTree = "<group>";
+		};
 		1946B7A91836E54600F74A3B /* FileSystem */ = {
 			isa = PBXGroup;
 			children = (
@@ -1100,7 +1101,6 @@
 				196CB724161E4ADD0068C809 /* Heimdall */,
 				1939A1DB152C425D00494609 /* Input */,
 				1939A1E6152C425D00494609 /* Lua */,
-				190D6FE316964AA100C9ED26 /* Physics */,
 				1986919F16DED44D00BC4830 /* Platform */,
 				1963EA32197F1BA400107228 /* ThirdParty */,
 				1939A1A0152C425D00494609 /* Config.cpp */,
@@ -1114,6 +1114,7 @@
 		1963EA32197F1BA400107228 /* ThirdParty */ = {
 			isa = PBXGroup;
 			children = (
+				19455D28197F1C98003E4A79 /* Box2D */,
 				1963EA48197F1BA400107228 /* TestFlight */,
 			);
 			name = ThirdParty;
@@ -1306,6 +1307,7 @@
 				1939A04C152C401300494609 /* b2CollideCircle.cpp in Sources */,
 				1939A04D152C401300494609 /* b2CollideEdge.cpp in Sources */,
 				1939A04E152C401300494609 /* b2CollidePolygon.cpp in Sources */,
+				19455D33197F1C98003E4A79 /* lua_Box2D.cpp in Sources */,
 				1939A04F152C401300494609 /* b2Collision.cpp in Sources */,
 				1939A050152C401300494609 /* b2Distance.cpp in Sources */,
 				1939A051152C401300494609 /* b2DynamicTree.cpp in Sources */,
@@ -1421,7 +1423,6 @@
 				190497DF168293DB0037F5EC /* lua_IO.cpp in Sources */,
 				190497E41682963F0037F5EC /* lua_Platform.cpp in Sources */,
 				19E91FC21682B1460054D61F /* LuaHelper.cpp in Sources */,
-				190D6FED16964AA100C9ED26 /* lua_Box2D.cpp in Sources */,
 				190D6FF116964B2500C9ED26 /* RainbowDraw.cpp in Sources */,
 				193929B616E23D410018340B /* RainbowViewController.mm in Sources */,
 				19FDF4961942FCFB00B5F21B /* LuaSyntax.cpp in Sources */,

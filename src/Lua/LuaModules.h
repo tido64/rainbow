@@ -21,7 +21,7 @@
 #include "Lua/lua_SpriteBatch.h"
 #include "Lua/lua_Texture.h"
 
-#include "Physics/lua_Box2D.h"
+#include "ThirdParty/Box2D/lua_Box2D.h"
 #include "ThirdParty/Spine/spine-rainbow.h"
 #include "ThirdParty/TestFlight/TestFlight.h"
 

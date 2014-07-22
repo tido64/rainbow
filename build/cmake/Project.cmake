@@ -37,9 +37,6 @@ if(MSVC OR XCODE)
 	file(GLOB RAINBOW_SRC src/Lua/*)
 	source_group("Source Files\\Lua" FILES ${RAINBOW_SRC})
 
-	file(GLOB RAINBOW_SRC src/Physics/*)
-	source_group("Source Files\\Physics" FILES ${RAINBOW_SRC})
-
 	file(GLOB RAINBOW_SRC src/Platform/*)
 	source_group("Source Files\\Platform" FILES ${RAINBOW_SRC})
 	file(GLOB RAINBOW_SRC src/Platform/impl/*)
@@ -47,6 +44,9 @@ if(MSVC OR XCODE)
 
 	file(GLOB RAINBOW_SRC src/Resources/*)
 	source_group("Source Files\\Resources" FILES ${RAINBOW_SRC})
+
+	file(GLOB RAINBOW_SRC src/ThirdParty/Box2D/*)
+	source_group("Source Files\\ThirdParty\\Box2D" FILES ${RAINBOW_SRC})
 
 	file(GLOB RAINBOW_SRC src/ThirdParty/TestFlight/*)
 	source_group("Source Files\\ThirdParty\\TestFlight" FILES ${RAINBOW_SRC})

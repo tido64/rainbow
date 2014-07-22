@@ -2,8 +2,8 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
-#ifndef LUA_PHYSICS_H_
-#define LUA_PHYSICS_H_
+#ifndef THIRDPARTY_BOX2D_LUA_BOX2D_H_
+#define THIRDPARTY_BOX2D_LUA_BOX2D_H_
 
 #ifdef USE_PHYSICS
 
@@ -24,4 +24,4 @@ namespace b2
 }
 
 #endif  // USE_PHYSICS
-#endif  // LUA_PHYSICS_H_
+#endif  // THIRDPARTY_BOX2D_LUA_BOX2D_H_

@@ -7,7 +7,7 @@
 #include <Box2D/Box2D.h>
 
 #include "Lua/LuaBind.h"
-#include "Physics/b2LuaHelper.h"
+#include "ThirdParty/Box2D/b2LuaHelper.h"
 
 using Rainbow::Lua::Bind;
 
@@ -17,12 +17,12 @@ namespace b2
 	int g_body_list = -1;     ///< List of Lua::Body objects for retrieval.
 }
 
-#include "Physics/lua_b2Draw.h"
-#include "Physics/lua_b2Shape.h"
-#include "Physics/lua_b2Fixture.h"
-#include "Physics/lua_b2Body.h"
-#include "Physics/lua_b2Contact.h"
-#include "Physics/lua_b2World.h"
+#include "ThirdParty/Box2D/lua_b2Draw.h"
+#include "ThirdParty/Box2D/lua_b2Shape.h"
+#include "ThirdParty/Box2D/lua_b2Fixture.h"
+#include "ThirdParty/Box2D/lua_b2Body.h"
+#include "ThirdParty/Box2D/lua_b2Contact.h"
+#include "ThirdParty/Box2D/lua_b2World.h"
 
 NS_B2_LUA_BEGIN
 {
