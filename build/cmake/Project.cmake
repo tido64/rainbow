@@ -21,8 +21,8 @@ if(MSVC OR XCODE)
 	source_group("Source Files\\Graphics" FILES ${RAINBOW_SRC})
 	file(GLOB RAINBOW_SRC src/Graphics/Decoders/*)
 	source_group("Source Files\\Graphics\\Decoders" FILES ${RAINBOW_SRC})
-	file(GLOB RAINBOW_SRC src/Graphics/impl/*)
-	source_group("Source Files\\Graphics\\impl" FILES ${RAINBOW_SRC})
+	file(GLOB RAINBOW_SRC src/Graphics/Shaders/*)
+	source_group("Source Files\\Graphics\\Shaders" FILES ${RAINBOW_SRC})
 
 	file(GLOB RAINBOW_SRC src/Heimdall/*)
 	source_group("Source Files\\Heimdall" FILES ${RAINBOW_SRC})
@@ -47,6 +47,9 @@ if(MSVC OR XCODE)
 
 	file(GLOB RAINBOW_SRC src/ThirdParty/Box2D/*)
 	source_group("Source Files\\ThirdParty\\Box2D" FILES ${RAINBOW_SRC})
+
+	file(GLOB RAINBOW_SRC src/ThirdParty/Spine/*)
+	source_group("Source Files\\ThirdParty\\Spine" FILES ${RAINBOW_SRC})
 
 	file(GLOB RAINBOW_SRC src/ThirdParty/TestFlight/*)
 	source_group("Source Files\\ThirdParty\\TestFlight" FILES ${RAINBOW_SRC})
