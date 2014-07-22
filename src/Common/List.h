@@ -8,8 +8,7 @@
 #include <functional>
 #include <utility>
 
-#include "Common/NonCopyable.h"
-#include "Common/SharedPtr.h"
+#include "Common/Memory.h"
 
 /// A functional list.
 ///
@@ -36,7 +35,7 @@ class List : private NonCopyable<List<T>>
 public:
 	List() = default;
 
-	List(List &&list) : head_(std::move(list.head_)) { }
+	List(List &&list) : head_(std::forward<SharedPtr<Item>>(list.head_)) { }
 
 	bool empty() const
 	{
@@ -74,7 +73,7 @@ public:
 
 	List& operator=(List &&list)
 	{
-		head_ = std::move(list.head_);
+		head_ = std::forward<SharedPtr<Item>>(list.head_);
 		return *this;
 	}
 

@@ -6,7 +6,7 @@
 #define GRAPHICS_TEXTUREATLAS_H_
 
 #include "Common/DataMap.h"
-#include "Common/SharedPtr.h"
+#include "Common/Memory.h"
 #include "Graphics/Texture.h"
 #include "Graphics/TextureManager.h"
 

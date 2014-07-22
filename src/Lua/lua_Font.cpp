@@ -29,7 +29,7 @@ NS_RAINBOW_LUA_BEGIN
 		const Data &font = Data::load_asset(lua_tostring(L, 1));
 		if (!font)
 			luaL_error(L, "rainbow.font: Failed to load font");
-		font_ = new FontAtlas(font, lua_tonumber(L, 2));
+		font_.reset(new FontAtlas(font, lua_tonumber(L, 2)));
 		if (!font_->is_valid())
 			luaL_error(L, "rainbow.font: Failed to create font texture");
 	}

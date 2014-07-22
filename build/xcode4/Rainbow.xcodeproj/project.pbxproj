@@ -187,7 +187,7 @@
 		190D6FEF16964B2500C9ED26 /* RainbowDraw.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = RainbowDraw.cpp; sourceTree = "<group>"; };
 		190D6FF016964B2500C9ED26 /* RainbowDraw.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RainbowDraw.h; sourceTree = "<group>"; };
 		191484E61891BD87004014D7 /* ShaderDetails.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShaderDetails.h; sourceTree = "<group>"; };
-		192A0B9A1681EF75009218EB /* SharedPtr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SharedPtr.h; sourceTree = "<group>"; };
+		192A0B9A1681EF75009218EB /* Memory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Memory.h; sourceTree = "<group>"; };
 		192A0B9B1681EF84009218EB /* SpriteVertex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpriteVertex.h; sourceTree = "<group>"; };
 		193929B216E1932E0018340B /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
 		193929B416E23D410018340B /* RainbowViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RainbowViewController.h; path = ../../../src/Platform/RainbowViewController.h; sourceTree = "<group>"; };
@@ -837,10 +837,10 @@
 				1949374E1756796D00CF3FC6 /* DataMap.h */,
 				190A0ADA15E0294C0088D8B7 /* Debug.h */,
 				195D565617D90DD100C78117 /* Functional.h */,
+				192A0B9A1681EF75009218EB /* Memory.h */,
 				19F9890C15FBBB3B005A5F69 /* NonCopyable.h */,
 				1939A196152C425D00494609 /* Random.cpp */,
 				1939A197152C425D00494609 /* Random.h */,
-				192A0B9A1681EF75009218EB /* SharedPtr.h */,
 				1970946217BAF222006810E9 /* TimedEvent.h */,
 				1939A19C152C425D00494609 /* TreeNode.h */,
 				1939A19D152C425D00494609 /* Vec2.h */,

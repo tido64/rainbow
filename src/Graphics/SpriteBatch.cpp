@@ -56,12 +56,12 @@ void SpriteBatch::set_normal(TextureAtlas *texture)
 		set_buffer(normals_.get());
 		array_.reconfigure(std::bind(&SpriteBatch::bind_arrays, this));
 	}
-	normal_ = texture;
+	normal_.reset(texture);
 }
 
 void SpriteBatch::set_texture(TextureAtlas *texture)
 {
-	texture_ = texture;
+	texture_.reset(texture);
 }
 
 void SpriteBatch::bind_textures() const

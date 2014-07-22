@@ -34,7 +34,7 @@ void Label::set_color(const Colorb &c)
 
 void Label::set_font(FontAtlas *f)
 {
-	font_ = f;
+	font_.reset(f);
 	stale_ |= kStaleBuffer;
 }
 

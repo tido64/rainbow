@@ -2,7 +2,7 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
-#include "Common/SharedPtr.h"
+#include "Common/Memory.h"
 
 namespace
 {
@@ -32,23 +32,23 @@ TEST_CASE("SharedPtr manages reference counted objects", "[sharedptr]")
 	{
 		SharedPtr<SharedPtrTestStruct> foo_ptr1(foo);
 		REQUIRE(foo_ptr1.get() == foo);
-		REQUIRE(foo_ptr1.ref_count() == 1u);
+		REQUIRE(foo_ptr1.use_count() == 1u);
 		{
 			SharedPtr<SharedPtrTestStruct> foo_ptr2(foo);
 			REQUIRE(foo_ptr2.get() == foo);
-			REQUIRE(foo_ptr1.ref_count() == 2u);
-			REQUIRE(foo_ptr2.ref_count() == 2u);
+			REQUIRE(foo_ptr1.use_count() == 2u);
+			REQUIRE(foo_ptr2.use_count() == 2u);
 			{
 				SharedPtr<SharedPtrTestStruct> foo_ptr3(foo_ptr1);
 				REQUIRE(foo_ptr3.get() == foo);
-				REQUIRE(foo_ptr1.ref_count() == 3u);
-				REQUIRE(foo_ptr2.ref_count() == 3u);
-				REQUIRE(foo_ptr3.ref_count() == 3u);
+				REQUIRE(foo_ptr1.use_count() == 3u);
+				REQUIRE(foo_ptr2.use_count() == 3u);
+				REQUIRE(foo_ptr3.use_count() == 3u);
 			}
-			REQUIRE(foo_ptr1.ref_count() == 2u);
-			REQUIRE(foo_ptr2.ref_count() == 2u);
+			REQUIRE(foo_ptr1.use_count() == 2u);
+			REQUIRE(foo_ptr2.use_count() == 2u);
 		}
-		REQUIRE(foo_ptr1.ref_count() == 1u);
+		REQUIRE(foo_ptr1.use_count() == 1u);
 		REQUIRE_FALSE(foo_deleted);
 	}
 	REQUIRE(foo_deleted);
@@ -59,7 +59,7 @@ TEST_CASE("SharedPtr deletes managed object when reset", "[sharedptr]")
 	bool foo_deleted = false;
 	SharedPtr<SharedPtrTestStruct> foo_ptr(
 	    new SharedPtrTestStruct(foo_deleted));
-	foo_ptr = nullptr;
+	foo_ptr.reset();
 	REQUIRE(foo_ptr.get() == nullptr);
 	REQUIRE(foo_deleted);
 };
@@ -75,13 +75,13 @@ TEST_CASE("SharedPtr increments the counter on managed objects", "[sharedptr]")
 		SharedPtr<SharedPtrTestStruct> bar_ptr(bar);
 		REQUIRE(foo_ptr.get() == foo);
 		REQUIRE(bar_ptr.get() == bar);
-		REQUIRE(foo_ptr.ref_count() == 1u);
-		REQUIRE(bar_ptr.ref_count() == 1u);
-		bar_ptr = foo;
+		REQUIRE(foo_ptr.use_count() == 1u);
+		REQUIRE(bar_ptr.use_count() == 1u);
+		bar_ptr.reset(foo);
 		REQUIRE(bar_ptr.get() == foo);
 		REQUIRE(foo_ptr.get() == foo);
-		REQUIRE(bar_ptr.ref_count() == 2u);
-		REQUIRE(foo_ptr.ref_count() == 2u);
+		REQUIRE(bar_ptr.use_count() == 2u);
+		REQUIRE(foo_ptr.use_count() == 2u);
 		REQUIRE(bar_deleted);
 	}
 	REQUIRE(foo_deleted);
@@ -98,13 +98,13 @@ TEST_CASE("SharedPtr can be assigned another SharedPtr", "[sharedptr]")
 		SharedPtr<SharedPtrTestStruct> bar_ptr(bar);
 		REQUIRE(foo_ptr.get() == foo);
 		REQUIRE(bar_ptr.get() == bar);
-		REQUIRE(foo_ptr.ref_count() == 1u);
-		REQUIRE(bar_ptr.ref_count() == 1u);
+		REQUIRE(foo_ptr.use_count() == 1u);
+		REQUIRE(bar_ptr.use_count() == 1u);
 		bar_ptr = foo_ptr;
 		REQUIRE(bar_ptr.get() == foo);
 		REQUIRE(foo_ptr.get() == foo);
-		REQUIRE(bar_ptr.ref_count() == 2u);
-		REQUIRE(foo_ptr.ref_count() == 2u);
+		REQUIRE(bar_ptr.use_count() == 2u);
+		REQUIRE(foo_ptr.use_count() == 2u);
 		REQUIRE(bar_deleted);
 	}
 	REQUIRE(foo_deleted);
@@ -117,15 +117,15 @@ TEST_CASE("SharedPtr can assign itself", "[sharedptr]")
 	{
 		SharedPtr<SharedPtrTestStruct> foo_ptr(foo);
 		REQUIRE(foo_ptr.get() == foo);
-		REQUIRE(foo_ptr.ref_count() == 1u);
-		foo_ptr = foo;
+		REQUIRE(foo_ptr.use_count() == 1u);
+		foo_ptr.reset(foo);
 		REQUIRE_FALSE(foo_deleted);
 		REQUIRE(foo_ptr.get() == foo);
-		REQUIRE(foo_ptr.ref_count() == 1u);
+		REQUIRE(foo_ptr.use_count() == 1u);
 		foo_ptr = foo_ptr;
 		REQUIRE_FALSE(foo_deleted);
 		REQUIRE(foo_ptr.get() == foo);
-		REQUIRE(foo_ptr.ref_count() == 1u);
+		REQUIRE(foo_ptr.use_count() == 1u);
 	}
 	REQUIRE(foo_deleted);
 };
@@ -137,19 +137,19 @@ TEST_CASE("SharedPtr can move other SharedPtrs", "[sharedptr]")
 	{
 		SharedPtr<SharedPtrTestStruct> foo_ptr(foo);
 		REQUIRE(foo_ptr.get() == foo);
-		REQUIRE(foo_ptr.ref_count() == 1u);
+		REQUIRE(foo_ptr.use_count() == 1u);
 
 		SharedPtr<SharedPtrTestStruct> bar_ptr(std::move(foo_ptr));
 		REQUIRE_FALSE(foo_deleted);
 		REQUIRE(foo_ptr.get() == nullptr);
 		REQUIRE(bar_ptr.get() == foo);
-		REQUIRE(bar_ptr.ref_count() == 1u);
+		REQUIRE(bar_ptr.use_count() == 1u);
 
 		foo_ptr = std::move(bar_ptr);
 		REQUIRE_FALSE(foo_deleted);
 		REQUIRE(bar_ptr.get() == nullptr);
 		REQUIRE(foo_ptr.get() == foo);
-		REQUIRE(foo_ptr.ref_count() == 1u);
+		REQUIRE(foo_ptr.use_count() == 1u);
 	}
 	REQUIRE(foo_deleted);
 };
