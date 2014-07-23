@@ -12,7 +12,7 @@
 /// A barebone implementation of a tree node.
 ///
 /// This class does not hold any data and is meant to be sub-classed.
-template<class T>
+template<typename T>
 class TreeNode : private NonCopyable<TreeNode<T>>
 {
 public:
@@ -21,7 +21,7 @@ public:
 
 	/// Recursively calls function \p func on this node and its children.
 	template<typename F>
-	void for_each(F func);
+	void for_each(F &&func);
 
 	/// Removes node from the tree and deletes it.
 	void remove();
@@ -37,7 +37,7 @@ protected:
 	~TreeNode();
 };
 
-template<class T>
+template<typename T>
 void TreeNode<T>::add_child(T *node)
 {
 	if (node->parent_)
@@ -46,9 +46,9 @@ void TreeNode<T>::add_child(T *node)
 	children_.push_back(node);
 }
 
-template<class T>
+template<typename T>
 template<typename F>
-void TreeNode<T>::for_each(F func)
+void TreeNode<T>::for_each(F &&func)
 {
 	static_assert(std::is_convertible<F, std::function<void(T*)>>::value,
 	              "function type void(T*) required");
@@ -58,13 +58,13 @@ void TreeNode<T>::for_each(F func)
 		child->for_each(func);
 }
 
-template<class T>
+template<typename T>
 void TreeNode<T>::remove()
 {
 	parent_->remove_child(static_cast<T*>(this));
 }
 
-template<class T>
+template<typename T>
 void TreeNode<T>::remove_child(T *node)
 {
 	if (!node)
@@ -73,10 +73,14 @@ void TreeNode<T>::remove_child(T *node)
 	delete node;
 }
 
-template<class T>
-TreeNode<T>::TreeNode() : parent_(nullptr) { }
+template<typename T>
+TreeNode<T>::TreeNode() : parent_(nullptr)
+{
+	static_assert(std::is_base_of<TreeNode, T>::value,
+	              "T must be a subclass of RefCounted");
+}
 
-template<class T>
+template<typename T>
 TreeNode<T>::~TreeNode()
 {
 	for (auto child : children_)

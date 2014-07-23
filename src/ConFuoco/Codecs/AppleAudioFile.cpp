@@ -19,7 +19,7 @@ namespace ConFuoco
 		const unsigned int kAudioChannelsMono = 1;
 		const unsigned int kBitsPerChannel = 16;
 
-		template<class C, class T>
+		template<typename C, typename T>
 		C bridge_cast(T &var)
 		{
 		#ifdef RAINBOW_OS_IOS

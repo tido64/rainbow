@@ -27,7 +27,7 @@ NS_RAINBOW_LUA_BEGIN
 		static void destroy(lua_State *, SceneGraph *);
 
 	private:
-		template<class T, CastingMethod C>
+		template<typename T, CastingMethod C>
 		static int add_child(lua_State *L);
 
 		static int add_animation(lua_State *);

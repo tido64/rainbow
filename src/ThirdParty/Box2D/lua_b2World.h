@@ -36,7 +36,7 @@ NS_B2_LUA_BEGIN
 		}
 
 		template<typename F, typename... Args>
-		void ForEachDynamicBody(b2World &world, F f, Args&&... args)
+		void ForEachDynamicBody(b2World &world, F &&f, Args&&... args)
 		{
 			for (b2Body *b = world.GetBodyList(); b; b = b->GetNext())
 			{

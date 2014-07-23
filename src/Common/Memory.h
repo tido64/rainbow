@@ -5,6 +5,8 @@
 #ifndef COMMON_MEMORY_H_
 #define COMMON_MEMORY_H_
 
+#include <type_traits>
+
 #include "Common/Debug.h"
 #include "Common/NonCopyable.h"
 
@@ -74,11 +76,15 @@ public:
 	explicit operator bool() const;
 
 private:
-	RefCounted *ptr_;  ///< Actual pointer managed by this shared pointer.
+	T *ptr_;  ///< Actual pointer managed by this shared pointer.
 };
 
 template<typename T>
-SharedPtr<T>::SharedPtr() : ptr_(nullptr) { }
+SharedPtr<T>::SharedPtr() : ptr_(nullptr)
+{
+	static_assert(std::is_base_of<RefCounted, T>::value,
+	              "Managed object must be a subclass of RefCounted");
+}
 
 template<typename T>
 SharedPtr<T>::SharedPtr(const SharedPtr<T> &shared_ptr) : ptr_(shared_ptr.ptr_)
@@ -111,7 +117,7 @@ SharedPtr<T>::~SharedPtr()
 template<typename T>
 T* SharedPtr<T>::get() const
 {
-	return static_cast<T*>(ptr_);
+	return ptr_;
 }
 
 template<typename T>
@@ -121,7 +127,7 @@ void SharedPtr<T>::reset()
 	         "This object should've been deleted by now");
 
 	if (ptr_ && !--ptr_->refs_)
-		delete static_cast<T*>(ptr_);
+		delete ptr_;
 	ptr_ = nullptr;
 }
 
@@ -147,20 +153,20 @@ template<typename T>
 T* SharedPtr<T>::operator->() const
 {
 	R_ASSERT(ptr_, "No reference to pointer");
-	return static_cast<T*>(ptr_);
+	return ptr_;
 }
 
 template<typename T>
 T& SharedPtr<T>::operator*() const
 {
 	R_ASSERT(ptr_, "No reference to pointer");
-	return *static_cast<T*>(ptr_);
+	return *ptr_;
 }
 
 template<typename T>
 SharedPtr<T>& SharedPtr<T>::operator=(const SharedPtr<T> &shared_ptr)
 {
-	reset(static_cast<T*>(shared_ptr.ptr_));
+	reset(shared_ptr.ptr_);
 	return *this;
 }
 

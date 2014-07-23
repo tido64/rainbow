@@ -16,8 +16,15 @@ class Data;
 
 NS_RAINBOW_LUA_BEGIN
 {
+	template<typename T>
+	class Bind;
+
+	template<typename T>
+	using EnableIfBaseOfBind =
+	    std::enable_if<std::is_base_of<Bind<T>, T>::value>;
+
 	/// Creates a Lua wrapped object.
-	template<class T>
+	template<typename T, typename Enable>
 	int alloc(lua_State *L);
 
 	template<typename... Args>
@@ -28,7 +35,7 @@ NS_RAINBOW_LUA_BEGIN
 	         const char *err,
 	         Args&&... args);
 
-	template<class T>
+	template<typename T, typename Enable>
 	int dealloc(lua_State *L);
 
 	/// Outputs information about the error, and dumps the stack if applicable.
@@ -87,7 +94,7 @@ NS_RAINBOW_LUA_BEGIN
 	///
 	/// \see http://www.lua.org/manual/5.2/
 	/// \see http://lua-users.org/wiki/LunaWrapper
-	template<class T>
+	template<typename T, typename Enable>
 	void reg(lua_State *L);
 
 	/// Reloads a previously loaded Lua chunk.
@@ -124,15 +131,15 @@ NS_RAINBOW_LUA_BEGIN
 
 	/// Returns the string representing a Lua wrapped object. The format of the
 	/// string is "<type name>: <address>".
-	template<class T>
+	template<typename T, typename Enable>
 	int tostring(lua_State *L);
 
 	/// Returns the pointer returned from luaL_checkudata() or lua_touserdata(),
 	/// depending on whether NDEBUG is defined.
-	template<class T>
+	template<typename T, typename Enable>
 	T* touserdata(lua_State *L, const int n);
 
-	template<class T>
+	template<typename T, typename = typename EnableIfBaseOfBind<T>::type>
 	int alloc(lua_State *L)
 	{
 		void *data = lua_newuserdata(L, sizeof(T));
@@ -164,13 +171,6 @@ NS_RAINBOW_LUA_BEGIN
 		return LUA_OK;
 	}
 
-	template<class T>
-	int dealloc(lua_State *L)
-	{
-		touserdata<T>(L, 1)->~T();
-		return 0;
-	}
-
 	lua_Integer optinteger(lua_State *L, const int n, lua_Integer def)
 	{
 	#ifndef NDEBUG
@@ -200,7 +200,49 @@ NS_RAINBOW_LUA_BEGIN
 		lua_rawset(L, -3);
 	}
 
-	template<class T>
+	lua_Integer tointeger(lua_State *L, const int n)
+	{
+	#ifndef NDEBUG
+		return luaL_checkinteger(L, n);
+	#else
+		return lua_tointeger(L, n);
+	#endif
+	}
+
+	lua_Number tonumber(lua_State *L, const int n)
+	{
+	#ifndef NDEBUG
+		return luaL_checknumber(L, n);
+	#else
+		return lua_tonumber(L, n);
+	#endif
+	}
+
+	template<typename T, typename = typename EnableIfBaseOfBind<T>::type>
+	T* touserdata(lua_State *L, const int n)
+	{
+	#ifndef NDEBUG
+		return static_cast<T*>(luaL_checkudata(L, n, T::class_name));
+	#else
+		return static_cast<T*>(lua_touserdata(L, n));
+	#endif
+	}
+
+	template<typename T, typename = typename EnableIfBaseOfBind<T>::type>
+	int dealloc(lua_State *L)
+	{
+		touserdata<T>(L, 1)->~T();
+		return 0;
+	}
+
+	template<typename T, typename = typename EnableIfBaseOfBind<T>::type>
+	int tostring(lua_State *L)
+	{
+		lua_pushfstring(L, "%s: %p", T::class_name, touserdata<T>(L, 1));
+		return 1;
+	}
+
+	template<typename T, typename = typename EnableIfBaseOfBind<T>::type>
 	void reg(lua_State *L)
 	{
 		if (T::is_constructible)
@@ -220,41 +262,6 @@ NS_RAINBOW_LUA_BEGIN
 		lua_createtable(L, 0, 0);
 		lua_rawset(L, -3);  // metatable.__metatable = {}
 		lua_pop(L, 1);
-	}
-
-	lua_Integer tointeger(lua_State *L, const int n)
-	{
-	#ifndef NDEBUG
-		return luaL_checkinteger(L, n);
-	#else
-		return lua_tointeger(L, n);
-	#endif
-	}
-
-	lua_Number tonumber(lua_State *L, const int n)
-	{
-	#ifndef NDEBUG
-		return luaL_checknumber(L, n);
-	#else
-		return lua_tonumber(L, n);
-	#endif
-	}
-
-	template<class T>
-	int tostring(lua_State *L)
-	{
-		lua_pushfstring(L, "%s: %p", T::class_name, touserdata<T>(L, 1));
-		return 1;
-	}
-
-	template<class T>
-	T* touserdata(lua_State *L, const int n)
-	{
-	#ifndef NDEBUG
-		return static_cast<T*>(luaL_checkudata(L, n, T::class_name));
-	#else
-		return static_cast<T*>(lua_touserdata(L, n));
-	#endif
 	}
 } NS_RAINBOW_LUA_END
 

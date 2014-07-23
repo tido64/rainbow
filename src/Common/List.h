@@ -87,7 +87,7 @@ private:
 };
 
 template<typename T, typename F>
-void for_each(const List<T> &list, F f)
+void for_each(const List<T> &list, F &&f)
 {
 	static_assert(std::is_convertible<F, std::function<void(T)>>::value,
 	              "for_each() requires a function type void(T)");

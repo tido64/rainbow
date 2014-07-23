@@ -10,21 +10,33 @@
 namespace Rainbow
 {
 	/// Structure for storing a three-dimensional vector.
+	template<typename T, typename Enable = void>
+	struct Vec3;
+
 	template<typename T>
-	struct Vec3
+	struct Vec3<T, typename std::enable_if<std::is_arithmetic<T>::value>::type>
 	{
 		T x, y, z;
 
 		Vec3() : x(0), y(0), z(0) { }
 		Vec3(const T x, const T y, const T z) : x(x), y(y), z(z) { }
 
-		/// Returns whether the vector is zero.
-		bool is_zero() const
+		template<typename U = T>
+		typename std::enable_if<std::is_integral<U>::value, bool>::type
+		is_zero() const
 		{
-			return !this->x && !this->y && !this->z;
+			return this->x == 0 && this->y == 0 && this->z == 0;
 		}
 
-		Vec3<T>& operator+=(const Vec3<T> &v)
+		template<typename U = T>
+		typename std::enable_if<std::is_floating_point<U>::value, bool>::type
+		is_zero() const
+		{
+			return is_equal<T>(0.0, this->x) && is_equal<T>(0.0, this->y) &&
+			    is_equal<T>(0.0, this->z);
+		}
+
+		Vec3& operator+=(const Vec3 &v)
 		{
 			this->x += v.x;
 			this->y += v.y;
@@ -32,7 +44,7 @@ namespace Rainbow
 			return *this;
 		}
 
-		Vec3<T>& operator-=(const Vec3<T> &v)
+		Vec3& operator-=(const Vec3 &v)
 		{
 			this->x -= v.x;
 			this->y -= v.y;
@@ -40,7 +52,7 @@ namespace Rainbow
 			return *this;
 		}
 
-		Vec3<T>& operator*=(const T &f)
+		Vec3& operator*=(const T &f)
 		{
 			this->x *= f;
 			this->y *= f;
@@ -48,18 +60,6 @@ namespace Rainbow
 			return *this;
 		}
 	};
-
-	template<>
-	inline bool Vec3<double>::is_zero() const
-	{
-		return isequal(0.0, this->x) && isequal(0.0, this->y) && isequal(0.0, this->z);
-	}
-
-	template<>
-	inline bool Vec3<float>::is_zero() const
-	{
-		return isequal(0.0f, this->x) && isequal(0.0f, this->y) && isequal(0.0f, this->z);
-	}
 }
 
 typedef Rainbow::Vec3<double> Vec3d;

@@ -43,10 +43,10 @@ namespace
 	}
 #endif
 
-	template<class T, Rainbow::Lua::SceneGraph::CastingMethod C>
+	template<typename T, Rainbow::Lua::SceneGraph::CastingMethod C>
 	struct luaR_cast;
 
-	template<class T>
+	template<typename T>
 	struct luaR_cast<T, Rainbow::Lua::SceneGraph::kCastingSafe>
 	{
 		static T* from(lua_State *L, const int n)
@@ -55,7 +55,7 @@ namespace
 		}
 	};
 
-	template<class T>
+	template<typename T>
 	struct luaR_cast<T, Rainbow::Lua::SceneGraph::kCastingUnsafe>
 	{
 		static T* from(lua_State *L, const int n)
@@ -133,7 +133,7 @@ NS_RAINBOW_LUA_BEGIN
 
 	SceneGraph::SceneGraph(Node *root) : node(root) { }
 
-	template<class T, SceneGraph::CastingMethod C>
+	template<typename T, SceneGraph::CastingMethod C>
 	int SceneGraph::add_child(lua_State *L)
 	{
 		SceneGraph *self = Bind::self(L);

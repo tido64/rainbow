@@ -55,14 +55,14 @@ namespace
 	}
 
 	template<typename F>
-	void optional(lua_State *L, const int n, F is_type, const char *const type)
+	void optional(lua_State *L, const int n, F &&is_type, const char *const type)
 	{
 		if (!lua_isnoneornil(L, n) && !is_type(L, n))
 			type_error(L, n, type);
 	}
 
 	template<typename F>
-	void require(lua_State *L, const int n, F is_type, const char *const type)
+	void require(lua_State *L, const int n, F &&is_type, const char *const type)
 	{
 		if (!is_type(L, n))
 			type_error(L, n, type);

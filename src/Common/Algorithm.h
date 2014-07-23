@@ -11,6 +11,7 @@
 
 #include <cmath>
 #include <limits>
+#include <type_traits>
 
 #include "Common/Constants.h"
 #include "Common/Functional.h"
@@ -68,11 +69,11 @@ namespace Rainbow
 
 	/// Compares two floating point numbers and approximate their equality.
 	/// \return \c true when approximately equal.
-	template<typename T>
-	bool isequal(const T a, const T b) pure;
+	template<typename T, typename Enable>
+	bool is_equal(const T a, const T b) pure;
 
 	/// Determines whether an integer is a power of 2.
-	inline bool ispow2(const unsigned int i) pure;
+	inline bool is_pow2(const unsigned int i) pure;
 
 	/// Low-pass filter.
 	inline float low_pass(const float value, const float low_pass) pure;
@@ -101,20 +102,24 @@ namespace Rainbow
 		return x * (1.5f - (xhalf * x * x));
 	}
 
-	template<typename T>
-	bool isequal(const T a, const T b)
+	template<typename T,
+	         typename = typename std::enable_if<
+	             std::is_floating_point<T>::value>::type>
+	bool is_equal(const T a, const T b)
 	{
-		return fabs(a - b) <= fmax(fabs(a), fabs(b)) * std::numeric_limits<T>::epsilon();
+		return fabs(a - b) <=
+		    fmax(fabs(a), fabs(b)) * std::numeric_limits<T>::epsilon();
 	}
 
-	bool ispow2(const unsigned int i)
+	bool is_pow2(const unsigned int i)
 	{
 		return i && !(i & (i - 1));
 	}
 
 	float low_pass(const float value, const float low_pass)
 	{
-		return kLowPassAlpha * powf(10.0f, value * kLowPassAlpha) + (1.0f - kLowPassAlpha) * low_pass;
+		return kLowPassAlpha * powf(10.0f, value * kLowPassAlpha) +
+		    (1.0f - kLowPassAlpha) * low_pass;
 	}
 
 	unsigned int next_pow2(unsigned int i)

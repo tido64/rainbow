@@ -10,8 +10,11 @@
 namespace Rainbow
 {
 	/// Structure for storing a two-dimensional vector.
+	template<typename T, typename Enable = void>
+	struct Vec2;
+
 	template<typename T>
-	struct Vec2
+	struct Vec2<T, typename std::enable_if<std::is_arithmetic<T>::value>::type>
 	{
 		union
 		{
@@ -29,13 +32,13 @@ namespace Rainbow
 		Vec2(const T x, const T y) : x(x), y(y) { }
 
 		/// Returns the angle (in radians) between two points.
-		float angle(const Vec2<T> &v) const
+		float angle(const Vec2 &v) const
 		{
 			return atan2f(v.y - this->y, v.x - this->x);
 		}
 
 		/// Returns the distance between two points.
-		float distance(const Vec2<T> &v) const
+		float distance(const Vec2 &v) const
 		{
 			T dx = v.x - this->x;
 			T dy = v.y - this->y;
@@ -43,54 +46,56 @@ namespace Rainbow
 		}
 
 		/// Returns the dot product of two vectors
-		T dot(const Vec2<T> &v) const
+		T dot(const Vec2 &v) const
 		{
 			return this->x * v.x + this->y * v.y;
 		}
 
-		/// Returns whether the vector is zero.
-		bool is_zero() const
+		template<typename U = T>
+		typename std::enable_if<std::is_integral<U>::value, bool>::type
+		is_zero() const
 		{
-			return !this->x && !this->y;
+			return this->x == 0 && this->y == 0;
 		}
 
-		Vec2<T>& operator+=(const Vec2<T> &v)
+		template<typename U = T>
+		typename std::enable_if<std::is_floating_point<U>::value, bool>::type
+		is_zero() const
+		{
+			return is_equal<T>(0.0, this->x) && is_equal<T>(0.0, this->y);
+		}
+
+		Vec2& operator+=(const Vec2 &v)
 		{
 			this->x += v.x;
 			this->y += v.y;
 			return *this;
 		}
 
-		Vec2<T>& operator-=(const Vec2<T> &v)
+		Vec2& operator-=(const Vec2 &v)
 		{
 			this->x -= v.x;
 			this->y -= v.y;
 			return *this;
 		}
 
-		Vec2<T>& operator*=(const T &f)
+		Vec2& operator*=(const T &f)
 		{
 			this->x *= f;
 			this->y *= f;
 			return *this;
 		}
 
-		friend bool operator==(const Vec2<T> &a, const Vec2<T> &b)
+		friend bool operator==(const Vec2 &a, const Vec2 &b)
 		{
 			return a.x == b.x && a.y == b.y;
 		}
 
-		friend Vec2<T> operator+(const Vec2<T> &a, const T offset)
+		friend Vec2 operator+(const Vec2 &a, const T offset)
 		{
-			return Vec2<T>(a.x + offset, a.y + offset);
+			return Vec2(a.x + offset, a.y + offset);
 		}
 	};
-
-	template<>
-	inline bool Vec2<float>::is_zero() const
-	{
-		return isequal(0.0f, this->x) && isequal(0.0f, this->y);
-	}
 }
 
 typedef Rainbow::Vec2<float> Vec2f;

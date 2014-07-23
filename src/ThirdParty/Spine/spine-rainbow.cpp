@@ -29,7 +29,7 @@ namespace
 	    "Skeletons spanning multiple textures are not yet supported";
 
 	template<typename F>
-	F for_each(const spSkeleton *skeleton, F f)
+	F for_each(const spSkeleton *skeleton, F &&f)
 	{
 		return std::move(
 		    std::for_each(skeleton->drawOrder,

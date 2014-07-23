@@ -6,16 +6,16 @@
 
 TEST_CASE("floats are approximately equal", "[algorithm]")
 {
-	REQUIRE(Rainbow::isequal(0.0f, 0.0f));
-	REQUIRE_FALSE(Rainbow::isequal(0.0f, 0.00001f));
-	REQUIRE_FALSE(Rainbow::isequal(0.0f, -0.00001f));
-	REQUIRE(Rainbow::isequal(3.14285714f, 22.0f / 7.0f));
+	REQUIRE(Rainbow::is_equal(0.0f, 0.0f));
+	REQUIRE_FALSE(Rainbow::is_equal(0.0f, 0.00001f));
+	REQUIRE_FALSE(Rainbow::is_equal(0.0f, -0.00001f));
+	REQUIRE(Rainbow::is_equal(3.14285714f, 22.0f / 7.0f));
 }
 
 TEST_CASE("Converts radians to degrees", "[algorithm]")
 {
-	REQUIRE(Rainbow::isequal(static_cast<float>(kPi),
-	                         Rainbow::radians(Rainbow::degrees(kPi))));
+	REQUIRE(Rainbow::is_equal(static_cast<float>(kPi),
+	                          Rainbow::radians(Rainbow::degrees(kPi))));
 }
 
 TEST_CASE("Determines whether an integer is a power of two", "[algorithm]")
@@ -25,11 +25,11 @@ TEST_CASE("Determines whether an integer is a power of two", "[algorithm]")
 	{
 		if (i == p)
 		{
-			REQUIRE(Rainbow::ispow2(i));
+			REQUIRE(Rainbow::is_pow2(i));
 			p *= 2;
 			continue;
 		}
-		REQUIRE_FALSE(Rainbow::ispow2(i));
+		REQUIRE_FALSE(Rainbow::is_pow2(i));
 	}
 }
 
@@ -46,8 +46,8 @@ TEST_CASE("Returns the next power of two", "[algorithm]")
 
 TEST_CASE("Converts degrees to radians", "[algorithm]")
 {
-	REQUIRE(Rainbow::isequal(static_cast<float>(kPi),
-	                         Rainbow::degrees(Rainbow::radians(kPi))));
+	REQUIRE(Rainbow::is_equal(static_cast<float>(kPi),
+	                          Rainbow::degrees(Rainbow::radians(kPi))));
 }
 
 TEST_CASE("Converts UTF-8 characters to UTF-32", "[algorithm]")

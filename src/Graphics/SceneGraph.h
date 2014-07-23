@@ -53,7 +53,7 @@ namespace SceneGraph
 		inline Node* add_child(Node *n);
 
 		/// Adds a child node.
-		template<class T>
+		template<typename T>
 		Node* add_child(T *p);
 
 		/// Attach a program to this node. The program will be used to draw this
@@ -88,7 +88,7 @@ namespace SceneGraph
 		return n;
 	}
 
-	template<class T>
+	template<typename T>
 	Node* Node::add_child(T *p)
 	{
 		return add_child(new Node(p));

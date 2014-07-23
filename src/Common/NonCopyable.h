@@ -6,7 +6,7 @@
 #define COMMON_NONCOPYABLE_H_
 
 /// Prevents objects of a class from being copy-constructed or assigned.
-template<class T>
+template<typename T>
 class NonCopyable
 {
 protected:
