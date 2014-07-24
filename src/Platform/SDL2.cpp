@@ -17,10 +17,6 @@
 #	include <GL/glew.c>
 #endif
 
-#ifdef RAINBOW_TEST
-#	include "../tests/test.h"
-#endif
-
 #include "Common/Chrono.h"
 #include "Common/Data.h"
 #include "Config.h"
@@ -28,6 +24,9 @@
 #include "FileSystem/Path.h"
 #include "Input/Key.h"
 #include "Input/Touch.h"
+#ifdef RAINBOW_TEST
+#	include "Tests/Tests.h"
+#endif
 
 // Mac OS X: Use native fullscreen mode instead.
 #define USE_BORDERLESS_WINDOWED_MODE \
@@ -142,7 +141,7 @@ int main(int argc, char *argv[])
 		{
 		#ifdef RAINBOW_TEST
 			Path::set_current(Path());
-			return Catch::Session().run(argc, argv);
+			return Rainbow::run_tests(argc, argv);
 		#else
 			return 0;
 		#endif
