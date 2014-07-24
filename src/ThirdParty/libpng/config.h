@@ -5,7 +5,7 @@
 #define HAVE_DLFCN_H 1
 
 /* Define to 1 if you have the `feenableexcept' function. */
-#define HAVE_FEENABLEEXCEPT 1
+/* #undef HAVE_FEENABLEEXCEPT */
 
 /* Define to 1 if you have the <inttypes.h> header file. */
 #define HAVE_INTTYPES_H 1
@@ -16,9 +16,6 @@
 /* Define to 1 if you have the `z' library (-lz). */
 #define HAVE_LIBZ 1
 
-/* Define to 1 if you have the <malloc.h> header file. */
-#define HAVE_MALLOC_H 1
-
 /* Define to 1 if you have the <memory.h> header file. */
 #define HAVE_MEMORY_H 1
 
@@ -26,7 +23,7 @@
 #define HAVE_MEMSET 1
 
 /* Define to 1 if you have the `pow' function. */
-/* #undef HAVE_POW */
+#define HAVE_POW 1
 
 /* Define to 1 if you have the <stdint.h> header file. */
 #define HAVE_STDINT_H 1
@@ -63,7 +60,7 @@
 #define PACKAGE_NAME "libpng"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "libpng 1.6.2"
+#define PACKAGE_STRING "libpng 1.6.12"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "libpng"
@@ -72,13 +69,16 @@
 #define PACKAGE_URL ""
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "1.6.2"
+#define PACKAGE_VERSION "1.6.12"
 
-/* Align row buffers */
-#define PNG_ALIGNED_MEMORY_SUPPORTED 1
+/* Turn on ARM Neon optimizations at run-time */
+/* #undef PNG_ARM_NEON_API_SUPPORTED */
 
-/* ARM NEON filter initialization function */
-/* #undef PNG_FILTER_OPTIMIZATIONS png_init_filter_functions_neon */
+/* Check for ARM Neon support at run-time */
+/* #undef PNG_ARM_NEON_CHECK_SUPPORTED */
+
+/* Enable ARM Neon optimizations */
+/* #undef PNG_ARM_NEON_OPT */
 
 /* Define to 1 if you have the ANSI C header files. */
 #define STDC_HEADERS 1
@@ -87,7 +87,7 @@
 /* #undef TM_IN_SYS_TIME */
 
 /* Version number of package */
-#define VERSION "1.6.2"
+#define VERSION "1.6.12"
 
 /* Define to empty if `const' does not conform to ANSI C. */
 /* #undef const */
