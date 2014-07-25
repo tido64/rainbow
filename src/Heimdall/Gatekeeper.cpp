@@ -78,15 +78,16 @@ namespace Heimdall
 		overlay_.setup(screen);
 
 		const unsigned int pt = screen.height / 64;
-		FontAtlas *console_font = new FontAtlas(DataRef(Inconsolata_otf), pt);
-		FontAtlas *ui_font = new FontAtlas(DataRef(NewsCycle_Regular_ttf),
-		                                   (pt << 1) + (pt >> 1));
+		auto console_font = make_shared<FontAtlas>(
+		    DataRef(Inconsolata_otf), pt);
+		auto ui_font = make_shared<FontAtlas>(
+		    DataRef(NewsCycle_Regular_ttf), (pt << 1) + (pt >> 1));
 		const float y = screen.height - console_font->height();
 		Vec2f position(screen.width / 128,
 		               y - console_font->height() - ui_font->height());
-		info_->set_button(position, ui_font);
+		info_->set_button(position, std::move(ui_font));
 		position.y = y;
-		info_->set_console(position, console_font);
+		info_->set_console(position, std::move(console_font));
 
 		Director::init(main, screen);
 		input().subscribe(this, Input::Events::Touch);

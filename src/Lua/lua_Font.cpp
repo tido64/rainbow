@@ -33,4 +33,9 @@ NS_RAINBOW_LUA_BEGIN
 		if (!font_->is_valid())
 			luaL_error(L, "rainbow.font: Failed to create font texture");
 	}
+
+	SharedPtr<FontAtlas> Font::get() const
+	{
+		return font_;
+	}
 } NS_RAINBOW_LUA_END

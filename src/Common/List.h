@@ -28,8 +28,8 @@ class List : private NonCopyable<List<T>>
 		const T value;
 		const SharedPtr<Item> next;
 
-		Item(const T &value, const SharedPtr<Item> &next)
-		    : value(value), next(next) { }
+		Item(const T &value, SharedPtr<Item> next)
+		    : value(value), next(std::move(next)) { }
 	};
 
 public:
@@ -80,7 +80,7 @@ public:
 private:
 	SharedPtr<Item> head_;
 
-	explicit List(const SharedPtr<Item> &items) : head_(items) { }
+	explicit List(SharedPtr<Item> items) : head_(std::move(items)) { }
 
 	List(const T &value, const List &tail)
 	    : head_(new Item(value, tail.head_)) { }

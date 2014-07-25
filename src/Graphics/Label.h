@@ -46,7 +46,7 @@ public:
 	void set_color(const Colorb &);
 
 	/// Sets text font.
-	void set_font(FontAtlas *);
+	void set_font(SharedPtr<FontAtlas>);
 
 	/// Sets position of text.
 	void set_position(const Vec2f &);

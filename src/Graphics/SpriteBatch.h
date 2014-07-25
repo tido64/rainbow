@@ -44,10 +44,10 @@ public:
 	inline const VertexArray& vertex_array() const;
 
 	/// Assigns a normal map.
-	void set_normal(TextureAtlas *texture);
+	void set_normal(SharedPtr<TextureAtlas> texture);
 
 	/// Assigns a texture atlas.
-	void set_texture(TextureAtlas *texture);
+	void set_texture(SharedPtr<TextureAtlas> texture);
 
 	/// Adds a textured sprite to the batch given texture coordinates.
 	/// \param x,y     Position of the texture assigned to the sprite.

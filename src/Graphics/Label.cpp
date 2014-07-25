@@ -32,9 +32,9 @@ void Label::set_color(const Colorb &c)
 	stale_ |= kStaleColor;
 }
 
-void Label::set_font(FontAtlas *f)
+void Label::set_font(SharedPtr<FontAtlas> f)
 {
-	font_.reset(f);
+	font_ = std::move(f);
 	stale_ |= kStaleBuffer;
 }
 

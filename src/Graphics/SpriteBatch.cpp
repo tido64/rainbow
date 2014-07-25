@@ -47,7 +47,7 @@ SpriteBatch::~SpriteBatch()
 	normals_.release(count_ * 4);
 }
 
-void SpriteBatch::set_normal(TextureAtlas *texture)
+void SpriteBatch::set_normal(SharedPtr<TextureAtlas> texture)
 {
 	if (!normals_)
 	{
@@ -56,12 +56,12 @@ void SpriteBatch::set_normal(TextureAtlas *texture)
 		set_buffer(normals_.get());
 		array_.reconfigure(std::bind(&SpriteBatch::bind_arrays, this));
 	}
-	normal_.reset(texture);
+	normal_ = std::move(texture);
 }
 
-void SpriteBatch::set_texture(TextureAtlas *texture)
+void SpriteBatch::set_texture(SharedPtr<TextureAtlas> texture)
 {
-	texture_.reset(texture);
+	texture_ = std::move(texture);
 }
 
 void SpriteBatch::bind_textures() const

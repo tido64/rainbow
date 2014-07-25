@@ -22,8 +22,8 @@ namespace Heimdall
 		inline Label* button();
 		inline SceneGraph::Node* node();
 
-		void set_button(const Vec2f &position, FontAtlas *font);
-		void set_console(const Vec2f &position, FontAtlas *font);
+		void set_button(const Vec2f &position, SharedPtr<FontAtlas> font);
+		void set_console(const Vec2f &position, SharedPtr<FontAtlas> font);
 
 		void update(const unsigned long dt);
 

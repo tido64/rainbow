@@ -29,16 +29,17 @@ namespace Heimdall
 		node_->add_child(&label_);
 	}
 
-	void DebugInfo::set_button(const Vec2f &position, FontAtlas *font)
+	void DebugInfo::set_button(const Vec2f &position, SharedPtr<FontAtlas> font)
 	{
-		button_.set_font(font);
+		button_.set_font(std::move(font));
 		button_.set_position(position);
 		position_ = position;
 	}
 
-	void DebugInfo::set_console(const Vec2f &position, FontAtlas *font)
+	void DebugInfo::set_console(const Vec2f &position,
+	                            SharedPtr<FontAtlas> font)
 	{
-		label_.set_font(font);
+		label_.set_font(std::move(font));
 		label_.set_position(position);
 	}
 

@@ -17,7 +17,7 @@ NS_RAINBOW_LUA_BEGIN
 	public:
 		Texture(lua_State *);
 
-		inline TextureAtlas* get();
+		SharedPtr<TextureAtlas> get() const;
 
 	private:
 		static int create(lua_State *);
@@ -25,11 +25,6 @@ NS_RAINBOW_LUA_BEGIN
 
 		SharedPtr<TextureAtlas> texture_;
 	};
-
-	TextureAtlas* Texture::get()
-	{
-		return texture_.get();
-	}
 } NS_RAINBOW_LUA_END
 
 #endif

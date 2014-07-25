@@ -6,6 +6,7 @@
 #define COMMON_MEMORY_H_
 
 #include <type_traits>
+#include <utility>
 
 #include "Common/Debug.h"
 #include "Common/NonCopyable.h"
@@ -183,6 +184,12 @@ template<typename T>
 SharedPtr<T>::operator bool() const
 {
 	return ptr_;
+}
+
+template<typename T, typename... Args>
+SharedPtr<T> make_shared(Args&&... args)
+{
+	return SharedPtr<T>(new T(std::forward<Args>(args)...));
 }
 
 #endif

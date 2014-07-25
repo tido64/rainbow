@@ -37,6 +37,11 @@ NS_RAINBOW_LUA_BEGIN
 			luaL_error(L, "rainbow.texture: Failed to create texture");
 	}
 
+	SharedPtr<TextureAtlas> Texture::get() const
+	{
+		return texture_;
+	}
+
 	int Texture::create(lua_State *L)
 	{
 		// <texture>:create(x, y, width, height)
