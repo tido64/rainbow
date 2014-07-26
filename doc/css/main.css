@@ -1,4 +1,20 @@
-h1 {  /* RAINBOW! */
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,700|Inconsolata:400,700);
+
+.optional {
+  font-size: 0.7em;
+  margin: 0 0 0.33em 0;
+  padding: 0 0.33em;
+  color: #fff;
+  border: 1px solid #46b8da;
+  border-radius: 0.33em;
+  background: #5bc0de;
+}
+
+.optional:before {
+  content: 'optional';
+}
+
+.rainbow {
   color: #ffffff;
   text-shadow:  2px  1px 0 #dd0000,  4px  2px 0 #dd0000,
                 6px  3px 0 #fe6230,  8px  4px 0 #fe6230,
@@ -9,38 +25,58 @@ h1 {  /* RAINBOW! */
                26px 13px 0 #30009b, 28px 14px 0 #30009b;
 }
 
-h2 {
-  margin-top: 63px;
+/* Overrides */
+
+html, body {
+  font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 14px;
 }
 
-h3 {
-  margin-top: 37px;
+a, h1, h2, h3, h4, td, var {
+  font-family: inherit !important;
 }
 
-thead {
-  display: none;
+code {
+  letter-spacing: normal !important;
 }
 
-#content > ul:first-child {
-  margin-top: 70px;
-  list-style: none;
-  -webkit-column-count: 4;  /* Safari and Chrome */
-     -moz-column-count: 4;  /* Firefox */
-          column-count: 4;
+h1, h2, h3, h4 {
+  font-weight: lighter !important;
 }
 
-#top {
-  position: fixed;
-  right: 16px;
-  bottom: 16px;
+sub, sup {
+  font-size: 75%;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
 }
 
-.optional:before {
-  font-size: 0.7em;
-  font-weight: bold;
-  content: '[optional] ';
+sup {
+  top: -0.5em;
 }
 
-.table {
-  width: auto;
+sub {
+  bottom: -0.25em;
+}
+
+th {
+  font-size: 0.8em;
+}
+
+.content h3 {
+  font-size: 1.3em;
+}
+
+.header {
+  padding: 10px 30px;
+}
+
+.header h1 {
+  font-size: 1.0em;
+  padding-right: 1.0em;
+}
+
+.hljs {
+  font-family: 'Inconsolata', monospace !important;
+  font-size: 1.0em !important;
 }
