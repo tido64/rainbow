@@ -20,7 +20,7 @@ Data Data::load_document(const char *const document)
 }
 
 Data::Data(const File &file)
-    : ownership_(kDataOwner), allocated_(0), sz_(0), data_(nullptr)
+    : ownership_(Ownership::Owner), allocated_(0), sz_(0), data_(nullptr)
 {
 	if (!file)
 		return;
@@ -39,7 +39,7 @@ Data::Data(const File &file)
 
 Data::~Data()
 {
-	if (ownership_ != kDataOwner)
+	if (ownership_ != Ownership::Owner)
 		return;
 
 	operator delete(data_);
@@ -59,7 +59,8 @@ bool Data::save(const char *const path) const
 
 void Data::allocate(const size_t size)
 {
-	R_ASSERT(ownership_ == kDataOwner, "Cannot reallocate a read-only buffer");
+	R_ASSERT(ownership_ == Ownership::Owner,
+	         "Cannot reallocate a read-only buffer");
 
 	if (size >= allocated_)
 	{

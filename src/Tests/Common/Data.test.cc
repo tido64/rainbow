@@ -11,7 +11,7 @@
 TEST_CASE("Data manages data and performs disk operations", "[data]")
 {
 	const char secret[] = "It's a double-rainbow!\n";
-	Data blob(secret, strlen(secret), Data::kDataReference);
+	Data blob(secret, strlen(secret), Data::Ownership::Reference);
 
 	SECTION("Data manages arbitrary data blobs")
 	{

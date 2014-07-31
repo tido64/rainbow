@@ -5,10 +5,16 @@
 #ifndef COMMON_DATA_H_
 #define COMMON_DATA_H_
 
+#include <type_traits>
+
 #include "Common/NonCopyable.h"
 #include "Platform/Macros.h"
 
 class File;
+
+template<typename T>
+using EnableIfCharType = std::enable_if<
+    std::is_same<typename std::make_unsigned<T>::type, unsigned char>::value>;
 
 /// Wrapper for byte buffers.
 ///
@@ -23,11 +29,25 @@ class File;
 class Data : private NonCopyable<Data>
 {
 public:
-	enum Ownership
+	enum class Ownership
 	{
-		kDataOwner,
-		kDataReference
+		Owner,
+		Reference
 	};
+
+#ifdef _MSC_VER  // TODO: MSVC 2013 fails to deduce template argument.
+	template<typename T, size_t N>
+#else
+	template<typename T, size_t N, typename Enable>
+#endif
+	static Data from_bytes(const T (&bytes)[N]);
+
+#ifdef _MSC_VER  // TODO: MSVC 2013 fails to deduce template argument.
+	template<typename T, size_t N>
+#else
+	template<typename T, size_t N, typename Enable>
+#endif
+	static Data from_literal(const T (&literal)[N]);
 
 	static Data load_asset(const char *const asset);
 	static Data load_document(const char *const document);
@@ -77,7 +97,28 @@ private:
 	void allocate(const size_t size);
 };
 
-Data::Data() : ownership_(kDataOwner), allocated_(0), sz_(0), data_(nullptr) { }
+#ifdef _MSC_VER
+template<typename T, size_t N>
+#else
+template<typename T, size_t N, typename = typename EnableIfCharType<T>::type>
+#endif
+Data Data::from_bytes(const T (&bytes)[N])
+{
+	return Data(bytes, N, Ownership::Reference);
+}
+
+#ifdef _MSC_VER
+template<typename T, size_t N>
+#else
+template<typename T, size_t N, typename = typename EnableIfCharType<T>::type>
+#endif
+Data Data::from_literal(const T (&literal)[N])
+{
+	return Data(literal, N - 1, Ownership::Reference);
+}
+
+Data::Data()
+    : ownership_(Ownership::Owner), allocated_(0), sz_(0), data_(nullptr) { }
 
 Data::Data(Data &&d)
     : ownership_(d.ownership_), allocated_(d.allocated_), sz_(d.sz_),

@@ -153,13 +153,8 @@ namespace Rainbow
 		R_ASSERT(lua_gettop(state_) == 0, "Stack not empty");
 
 		// Load our internal script.
-		const size_t length = sizeof(Rainbow_lua) / sizeof(char) - 1;
-		if (Lua::load(state_,
-		              Data(Rainbow_lua, length, Data::kDataReference),
-		              rainbow) == 0)
-		{
+		if (Lua::load(state_, Data::from_literal(Rainbow_lua), rainbow) == 0)
 			return luaL_error(state_, "Failed to load internal Lua script");
-		}
 		lua_getglobal(state_, "__update");
 		R_ASSERT(lua_isfunction(state_, -1),
 		         "Failed to get internal Lua script");

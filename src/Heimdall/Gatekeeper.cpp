@@ -13,8 +13,6 @@
 #include "Resources/Inconsolata.otf.h"
 #include "Resources/NewsCycle-Regular.ttf.h"
 
-#define DataRef(ref) Data(ref, sizeof(ref), Data::kDataReference)
-
 namespace
 {
 	const char* basename(const char *const path) pure;
@@ -79,9 +77,9 @@ namespace Heimdall
 
 		const unsigned int pt = screen.height / 64;
 		auto console_font = make_shared<FontAtlas>(
-		    DataRef(Inconsolata_otf), pt);
+		    Data::from_bytes(Inconsolata_otf), pt);
 		auto ui_font = make_shared<FontAtlas>(
-		    DataRef(NewsCycle_Regular_ttf), (pt << 1) + (pt >> 1));
+		    Data::from_bytes(NewsCycle_Regular_ttf), (pt << 1) + (pt >> 1));
 		const float y = screen.height - console_font->height();
 		Vec2f position(screen.width / 128,
 		               y - console_font->height() - ui_font->height());
