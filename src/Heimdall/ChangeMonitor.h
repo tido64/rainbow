@@ -24,7 +24,7 @@ struct lua_State;
 class ChangeMonitor : private NonCopyable<ChangeMonitor>
 {
 public:
-	typedef std::function<void(const char *)> Callback;
+	using Callback = std::function<void(const char *)>;
 
 	explicit ChangeMonitor(const char *const directory);
 	~ChangeMonitor();

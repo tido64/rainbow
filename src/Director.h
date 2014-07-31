@@ -100,7 +100,7 @@ namespace Rainbow
 #ifdef USE_HEIMDALL
 #	include "Heimdall/Gatekeeper.h"
 #else
-typedef Rainbow::Director Director;
+using Director = Rainbow::Director;
 #endif
 
 #endif

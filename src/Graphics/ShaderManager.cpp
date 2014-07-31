@@ -14,7 +14,7 @@
 #	define GLAPIENTRY
 #endif
 
-typedef std::unique_ptr<char[]> unique_str;
+using unique_str = std::unique_ptr<char[]>;
 
 namespace
 {

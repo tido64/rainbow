@@ -118,7 +118,7 @@ namespace ConFuoco
 		void update_impl() { }
 	};
 
-	typedef RecorderStub Recorder;
+	using Recorder = RecorderStub;
 }
 
 #endif

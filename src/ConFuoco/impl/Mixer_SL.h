@@ -77,7 +77,7 @@ namespace ConFuoco
 		return this->engine;
 	}
 
-	typedef MixerSL Mixer;
+	using Mixer = MixerSL;
 }
 
 #endif

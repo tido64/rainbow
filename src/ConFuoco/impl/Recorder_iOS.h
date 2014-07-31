@@ -25,7 +25,7 @@ namespace ConFuoco
 		void update_impl();
 	};
 
-	typedef RecorderiOS Recorder;
+	using Recorder = RecorderiOS;
 }
 
 #endif  // CONFUOCO_RECORDER_IOS_H_

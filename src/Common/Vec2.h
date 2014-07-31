@@ -98,7 +98,7 @@ namespace Rainbow
 	};
 }
 
-typedef Rainbow::Vec2<float> Vec2f;
-typedef Rainbow::Vec2<int> Vec2i;
+using Vec2f = Rainbow::Vec2<float>;
+using Vec2i = Rainbow::Vec2<int>;
 
 #endif

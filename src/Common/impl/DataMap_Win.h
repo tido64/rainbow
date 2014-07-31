@@ -65,6 +65,6 @@ namespace Rainbow
 	}
 }
 
-typedef Rainbow::DataMapBase<Rainbow::DataMapWin> DataMap;
+using DataMap = Rainbow::DataMapBase<Rainbow::DataMapWin>;
 
 #endif

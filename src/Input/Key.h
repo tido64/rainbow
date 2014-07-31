@@ -10,10 +10,7 @@
 #ifdef RAINBOW_BUTTONS
 
 #if defined(RAINBOW_SDL)
-
-struct SDL_Keysym;
-typedef SDL_Keysym RawKeysym;
-
+using RawKeysym = struct SDL_Keysym;
 #else
 #	error "This platform is not supposed to use SDL."
 #endif

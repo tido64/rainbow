@@ -9,7 +9,7 @@
 
 namespace Rainbow
 {
-	typedef std::function<void()> Task;
+	using Task = std::function<void()>;
 
 	class ThreadPool;
 

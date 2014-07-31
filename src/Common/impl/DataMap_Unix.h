@@ -64,6 +64,6 @@ namespace Rainbow
 	}
 }
 
-typedef Rainbow::DataMapBase<Rainbow::DataMapUnix> DataMap;
+using DataMap = Rainbow::DataMapBase<Rainbow::DataMapUnix>;
 
 #endif

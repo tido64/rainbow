@@ -22,8 +22,8 @@
 
 namespace
 {
-	typedef unsigned char uchar_t;
-	typedef unsigned int uint_t;
+	using uchar_t = unsigned char;
+	using uint_t = unsigned int;
 
 	const float kGlyphMargin = 2.0f;     ///< Margin around rendered font glyph.
 	const uint_t kASCIIOffset = 32;      ///< Start loading from character 32.

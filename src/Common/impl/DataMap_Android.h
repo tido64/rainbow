@@ -49,6 +49,6 @@ namespace Rainbow
 	}
 }
 
-typedef Rainbow::DataMapBase<Rainbow::DataMapAndroid> DataMap;
+using DataMap = Rainbow::DataMapBase<Rainbow::DataMapAndroid>;
 
 #endif

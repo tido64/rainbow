@@ -14,7 +14,7 @@
 
 namespace Rainbow
 {
-	typedef std::function<void()> Task;
+	using Task = std::function<void()>;
 
 	/// Thread pool. Dispatched tasks are run as soon as a thread is available
 	/// and may or may not be completed upon return. The only way to make sure

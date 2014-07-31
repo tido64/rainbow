@@ -62,7 +62,7 @@ namespace Rainbow
 	};
 }
 
-typedef Rainbow::Vec3<double> Vec3d;
-typedef Rainbow::Vec3<float> Vec3f;
+using Vec3d = Rainbow::Vec3<double>;
+using Vec3f = Rainbow::Vec3<float>;
 
 #endif

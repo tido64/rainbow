@@ -7,7 +7,7 @@
 
 #include "ConFuoco/Mixer.h"
 
-typedef struct ALCcontext_struct ALCcontext;
+using ALCcontext = struct ALCcontext_struct;
 
 #ifdef RAINBOW_OS_IOS
 
@@ -60,7 +60,7 @@ namespace ConFuoco
 		void release_impl(Sound *s);
 	};
 
-	typedef MixerAL Mixer;
+	using Mixer = MixerAL;
 }
 
 #endif

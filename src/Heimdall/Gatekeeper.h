@@ -66,7 +66,7 @@ namespace Heimdall
 	}
 }
 
-typedef Heimdall::Gatekeeper Director;
+using Director = Heimdall::Gatekeeper;
 
 #endif  // USE_HEIMDALL
 #endif  // HEIMDALL_GATEKEEPER_H_

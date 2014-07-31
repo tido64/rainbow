@@ -47,7 +47,7 @@ namespace ConFuoco
 		system_->update();
 	}
 
-	typedef MixerFMOD Mixer;
+	using Mixer = MixerFMOD;
 }
 
 #endif

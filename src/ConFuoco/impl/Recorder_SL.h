@@ -41,7 +41,7 @@ namespace ConFuoco
 		void update_impl();
 	};
 
-	typedef RecorderSL Recorder;
+	using Recorder = RecorderSL;
 }
 
 #endif  // CONFUOCO_RECORDER_SL_H_
