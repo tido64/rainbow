@@ -17,18 +17,12 @@ NS_RAINBOW_LUA_BEGIN
 		friend Bind;
 
 	public:
-		enum CastingMethod
-		{
-			kCastingUnsafe,
-			kCastingSafe
-		};
-
 		static SceneGraph* create(lua_State *, ::SceneGraph::Node *);
 		static void destroy(lua_State *, SceneGraph *);
 
 	private:
-		template<typename T, CastingMethod C>
-		static int add_child(lua_State *L);
+		template<typename T, typename F>
+		static int add_child(lua_State *L, F&& touserdata);
 
 		static int add_animation(lua_State *);
 		static int add_batch(lua_State *);

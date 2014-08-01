@@ -43,32 +43,15 @@ namespace
 	}
 #endif
 
-	template<typename T, Rainbow::Lua::SceneGraph::CastingMethod C>
-	struct luaR_cast;
-
 	template<typename T>
-	struct luaR_cast<T, Rainbow::Lua::SceneGraph::kCastingSafe>
+	T* unchecked_cast(lua_State *L, const int n)
 	{
-		static T* from(lua_State *L, const int n)
-		{
-			return static_cast<T*>(luaL_checkudata(L, n, T::class_name));
-		}
-	};
+		return static_cast<T*>(lua_touserdata(L, n));
+	}
 
-	template<typename T>
-	struct luaR_cast<T, Rainbow::Lua::SceneGraph::kCastingUnsafe>
+	Node* tonode(lua_State *L, const int n)
 	{
-		static T* from(lua_State *L, const int n)
-		{
-			return static_cast<T*>(lua_touserdata(L, n));
-		}
-	};
-
-	Node* luaR_tonode(lua_State *L, const int n)
-	{
-		Node *node =
-		    luaR_cast<Node, Rainbow::Lua::SceneGraph::kCastingUnsafe>::
-		        from(L, n);
+		Node *node = unchecked_cast<Node>(L, n);
 		R_ASSERT(is_valid_node(L, n, node), "Invalid or non-existing node");
 		return node;
 	}
@@ -133,8 +116,8 @@ NS_RAINBOW_LUA_BEGIN
 
 	SceneGraph::SceneGraph(Node *root) : node(root) { }
 
-	template<typename T, SceneGraph::CastingMethod C>
-	int SceneGraph::add_child(lua_State *L)
+	template<typename T, typename F>
+	int SceneGraph::add_child(lua_State *L, F&& touserdata)
 	{
 		SceneGraph *self = Bind::self(L);
 		if (!self)
@@ -152,11 +135,11 @@ NS_RAINBOW_LUA_BEGIN
 		{
 			Argument<Node>::is_required(L, 2);
 			Argument<T>::is_required(L, 3);
-			node = luaR_tonode(L, 2);
+			node = tonode(L, 2);
 			obj = 3;
 		}
 		replacetable(L, obj);
-		Node *child = node->add_child(luaR_cast<T, C>::from(L, obj)->get());
+		Node *child = node->add_child(touserdata(L, obj)->get());
 		R_ASSERT(register_node(child), "Failed to register node");
 		lua_pushlightuserdata(L, child);
 		return 1;
@@ -165,25 +148,25 @@ NS_RAINBOW_LUA_BEGIN
 	int SceneGraph::add_animation(lua_State *L)
 	{
 		// rainbow.scenegraph:add_animation([node], <animation>)
-		return add_child<Animation, kCastingSafe>(L);
+		return add_child<Animation>(L, touserdata<Animation>);
 	}
 
 	int SceneGraph::add_batch(lua_State *L)
 	{
 		// rainbow.scenegraph:add_batch([node], <batch>)
-		return add_child<SpriteBatch, kCastingSafe>(L);
+		return add_child<SpriteBatch>(L, touserdata<SpriteBatch>);
 	}
 
 	int SceneGraph::add_drawable(lua_State *L)
 	{
 		// rainbow.scenegraph:add_drawable([node], <drawable>)
-		return add_child<Drawable, kCastingUnsafe>(L);
+		return add_child<Drawable>(L, unchecked_cast<Drawable>);
 	}
 
 	int SceneGraph::add_label(lua_State *L)
 	{
 		// rainbow.scenegraph:add_label([node], <label>)
-		return add_child<Label, kCastingSafe>(L);
+		return add_child<Label>(L, touserdata<Label>);
 	}
 
 	int SceneGraph::add_node(lua_State *L)
@@ -195,7 +178,7 @@ NS_RAINBOW_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		Node *node = lua_isuserdata(L, 2) ? luaR_tonode(L, 2) : self->node;
+		Node *node = lua_isuserdata(L, 2) ? tonode(L, 2) : self->node;
 		R_ASSERT(node, "This shouldn't ever happen.");
 		Node *child = new Node();
 		R_ASSERT(register_node(child), "Failed to register node");
@@ -214,9 +197,9 @@ NS_RAINBOW_LUA_BEGIN
 			return 0;
 
 		int program = lua_isuserdata(L, 3)
-		    ? luaR_cast<Shader, kCastingUnsafe>::from(L, 3)->id()
+		    ? unchecked_cast<Shader>(L, 3)->id()
 		    : 0;
-		luaR_tonode(L, 2)->attach_program(program);
+		tonode(L, 2)->attach_program(program);
 		return 0;
 	}
 
@@ -225,7 +208,7 @@ NS_RAINBOW_LUA_BEGIN
 		// rainbow.scenegraph:disable(node)
 		Argument<Node>::is_required(L, 2);
 
-		luaR_tonode(L, 2)->enabled = false;
+		tonode(L, 2)->enabled = false;
 		return 0;
 	}
 
@@ -234,7 +217,7 @@ NS_RAINBOW_LUA_BEGIN
 		// rainbow.scenegraph:enable(node)
 		Argument<Node>::is_required(L, 2);
 
-		luaR_tonode(L, 2)->enabled = true;
+		tonode(L, 2)->enabled = true;
 		return 0;
 	}
 
@@ -243,7 +226,7 @@ NS_RAINBOW_LUA_BEGIN
 		// rainbow.scenegraph:remove(node)
 		Argument<Node>::is_required(L, 2);
 
-		Node *node = luaR_tonode(L, 2);
+		Node *node = tonode(L, 2);
 		R_ASSERT(unregister_node(node), "Failed to unregister node");
 		node->remove();
 		return 0;
@@ -255,7 +238,7 @@ NS_RAINBOW_LUA_BEGIN
 		Argument<Node>::is_required(L, 2);
 		Argument<Node>::is_required(L, 3);
 
-		luaR_tonode(L, 2)->add_child(luaR_tonode(L, 3));
+		tonode(L, 2)->add_child(tonode(L, 3));
 		return 0;
 	}
 
@@ -270,7 +253,7 @@ NS_RAINBOW_LUA_BEGIN
 		if (delta.is_zero())
 			return 0;
 
-		luaR_tonode(L, 2)->move(delta);
+		tonode(L, 2)->move(delta);
 		return 0;
 	}
 } NS_RAINBOW_LUA_END
