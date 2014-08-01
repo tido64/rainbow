@@ -181,18 +181,22 @@ local function create_nodes(parent, resources, nodes)
 			copy_into(t, sprites)
 			batch.node = scenegraph:add_batch(parent, batch)
 			for _,sprite in pairs(sprites) do
-				for _,animation in pairs(sprite.animations or {}) do
-					scenegraph:add_animation(batch.node, animation)
+				for name, animation in pairs(sprite.animations or {}) do
+					local node = scenegraph:add_animation(batch.node, animation)
+					scenegraph:set_tag(node, name)
 				end
 			end
+			scenegraph:set_tag(batch.node, node.name)
 			insert(t, node.name, batch)
 		elseif node.font then
 			local label = create_label(node, resources)
 			label.node = scenegraph:add_label(parent, label)
+			scenegraph:set_tag(label.node, node.name)
 			insert(t, node.name, label)
 		elseif node.nodes then
 			local group = scenegraph:add_node(parent)
 			copy_into(t, create_nodes(group, resources, node.nodes))
+			scenegraph:set_tag(group, node.name)
 			insert(t, node.name, group)
 		else
 			print("Unknown element: " .. node.name)

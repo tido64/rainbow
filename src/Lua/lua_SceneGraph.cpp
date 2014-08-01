@@ -77,6 +77,7 @@ NS_RAINBOW_LUA_BEGIN
 		{ "enable",          &SceneGraph::enable },
 		{ "remove",          &SceneGraph::remove },
 		{ "set_parent",      &SceneGraph::set_parent },
+		{ "set_tag",         &SceneGraph::set_tag },
 		{ "move",            &SceneGraph::move },
 		{ nullptr, nullptr }
 	};
@@ -239,6 +240,18 @@ NS_RAINBOW_LUA_BEGIN
 		Argument<Node>::is_required(L, 3);
 
 		tonode(L, 2)->add_child(tonode(L, 3));
+		return 0;
+	}
+
+	int SceneGraph::set_tag(lua_State *L)
+	{
+		// rainbow.scenegraph:set_tag(node, tag)
+		Argument<Node>::is_required(L, 2);
+		Argument<char*>::is_required(L, 3);
+
+	#ifndef NDEBUG
+		tonode(L, 2)->set_tag(lua_tostring(L, 3));
+	#endif
 		return 0;
 	}
 

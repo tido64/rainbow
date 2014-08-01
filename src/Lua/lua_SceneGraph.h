@@ -34,6 +34,7 @@ NS_RAINBOW_LUA_BEGIN
 		static int enable(lua_State *);
 		static int remove(lua_State *);
 		static int set_parent(lua_State *);
+		static int set_tag(lua_State *);
 		static int move(lua_State *);
 
 		::SceneGraph::Node *node;
