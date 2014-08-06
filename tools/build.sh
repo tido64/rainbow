@@ -4,9 +4,8 @@
 # (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
 GENERATOR=${GENERATOR:-Unix Makefiles}
-IS_INSIDE=$(git rev-parse --show-toplevel 2> /dev/null)
 RAINBOW=$(cd -P "$(dirname $0)/.." && pwd)
-if [[ "$IS_INSIDE" == "$RAINBOW" ]]; then
+if [[ "$(git rev-parse --show-toplevel 2> /dev/null)" == "$RAINBOW" ]]; then
 	echo "$0: Cannot run while still inside the repository"
 	exit 0
 fi
