@@ -5,9 +5,8 @@
 #ifndef COMMON_RANDOM_H_
 #define COMMON_RANDOM_H_
 
-#include <type_traits>
-
 #include "Common/Chrono.h"
+#include "Common/Constraints.h"
 #include "Common/Debug.h"
 
 #define DSFMT_MEXP 19937
@@ -28,9 +27,6 @@
 /// C++ wrapper for dSFMT random number generator.
 namespace Random
 {
-	template<typename T>
-	using EnableIfArithmetic = std::enable_if<std::is_arithmetic<T>::value>;
-
 	/// Returns the next generated random number in [0, 1).
 	inline double next();
 
@@ -51,13 +47,13 @@ namespace Random
 		return dsfmt_gv_genrand_close_open();
 	}
 
-	template<typename T, typename = typename EnableIfArithmetic<T>::type>
+	template<typename T, typename = Arithmetic<T>>
 	T next(const T n)
 	{
 		return static_cast<T>(next() * n);
 	}
 
-	template<typename T, typename = typename EnableIfArithmetic<T>::type>
+	template<typename T, typename = Arithmetic<T>>
 	T next(const T n1, const T n2)
 	{
 		R_ASSERT(n1 < n2, "Parameters must be in ascending order");

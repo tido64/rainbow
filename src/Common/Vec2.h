@@ -14,7 +14,7 @@ namespace Rainbow
 	struct Vec2;
 
 	template<typename T>
-	struct Vec2<T, typename std::enable_if<std::is_arithmetic<T>::value>::type>
+	struct Vec2<T, Arithmetic<T>>
 	{
 		union
 		{
@@ -52,15 +52,13 @@ namespace Rainbow
 		}
 
 		template<typename U = T>
-		typename std::enable_if<std::is_integral<U>::value, bool>::type
-		is_zero() const
+		EnableIfIntegral<U, bool> is_zero() const
 		{
 			return this->x == 0 && this->y == 0;
 		}
 
 		template<typename U = T>
-		typename std::enable_if<std::is_floating_point<U>::value, bool>::type
-		is_zero() const
+		EnableIfFloatingPoint<U, bool> is_zero() const
 		{
 			return is_equal<T>(0.0, this->x) && is_equal<T>(0.0, this->y);
 		}

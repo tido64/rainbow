@@ -5,16 +5,11 @@
 #ifndef COMMON_DATA_H_
 #define COMMON_DATA_H_
 
-#include <type_traits>
-
+#include "Common/Constraints.h"
 #include "Common/NonCopyable.h"
 #include "Platform/Macros.h"
 
 class File;
-
-template<typename T>
-using EnableIfCharType = std::enable_if<
-    std::is_same<typename std::make_unsigned<T>::type, unsigned char>::value>;
 
 /// Wrapper for byte buffers.
 ///
@@ -100,7 +95,7 @@ private:
 #ifdef _MSC_VER
 template<typename T, size_t N>
 #else
-template<typename T, size_t N, typename = typename EnableIfCharType<T>::type>
+template<typename T, size_t N, typename = CharType<T>>
 #endif
 Data Data::from_bytes(const T (&bytes)[N])
 {
@@ -110,7 +105,7 @@ Data Data::from_bytes(const T (&bytes)[N])
 #ifdef _MSC_VER
 template<typename T, size_t N>
 #else
-template<typename T, size_t N, typename = typename EnableIfCharType<T>::type>
+template<typename T, size_t N, typename = CharType<T>>
 #endif
 Data Data::from_literal(const T (&literal)[N])
 {

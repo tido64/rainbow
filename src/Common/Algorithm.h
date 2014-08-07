@@ -11,9 +11,9 @@
 
 #include <cmath>
 #include <limits>
-#include <type_traits>
 
 #include "Common/Constants.h"
+#include "Common/Constraints.h"
 #include "Common/Functional.h"
 
 namespace Rainbow
@@ -102,9 +102,7 @@ namespace Rainbow
 		return x * (1.5f - (xhalf * x * x));
 	}
 
-	template<typename T,
-	         typename = typename std::enable_if<
-	             std::is_floating_point<T>::value>::type>
+	template<typename T, typename = FloatingPoint<T>>
 	bool is_equal(const T a, const T b)
 	{
 		return fabs(a - b) <=

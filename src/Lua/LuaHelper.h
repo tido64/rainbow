@@ -10,6 +10,7 @@
 
 #include <lua.hpp>
 
+#include "Common/Constraints.h"
 #include "Lua/LuaMacros.h"
 
 class Data;
@@ -20,8 +21,8 @@ NS_RAINBOW_LUA_BEGIN
 	class Bind;
 
 	template<typename T>
-	using EnableIfBaseOfBind =
-	    std::enable_if<std::is_base_of<Bind<T>, T>::value>;
+	using LuaBindable =
+	    typename std::enable_if<std::is_base_of<Bind<T>, T>::value>::type;
 
 	/// Creates a Lua wrapped object.
 	template<typename T, typename Enable>
@@ -139,7 +140,7 @@ NS_RAINBOW_LUA_BEGIN
 	template<typename T, typename Enable>
 	T* touserdata(lua_State *L, const int n);
 
-	template<typename T, typename = typename EnableIfBaseOfBind<T>::type>
+	template<typename T, typename = LuaBindable<T>>
 	int alloc(lua_State *L)
 	{
 		void *data = lua_newuserdata(L, sizeof(T));
@@ -218,7 +219,7 @@ NS_RAINBOW_LUA_BEGIN
 	#endif
 	}
 
-	template<typename T, typename = typename EnableIfBaseOfBind<T>::type>
+	template<typename T, typename = LuaBindable<T>>
 	T* touserdata(lua_State *L, const int n)
 	{
 	#ifndef NDEBUG
@@ -228,21 +229,21 @@ NS_RAINBOW_LUA_BEGIN
 	#endif
 	}
 
-	template<typename T, typename = typename EnableIfBaseOfBind<T>::type>
+	template<typename T, typename = LuaBindable<T>>
 	int dealloc(lua_State *L)
 	{
 		touserdata<T>(L, 1)->~T();
 		return 0;
 	}
 
-	template<typename T, typename = typename EnableIfBaseOfBind<T>::type>
+	template<typename T, typename = LuaBindable<T>>
 	int tostring(lua_State *L)
 	{
 		lua_pushfstring(L, "%s: %p", T::class_name, touserdata<T>(L, 1));
 		return 1;
 	}
 
-	template<typename T, typename = typename EnableIfBaseOfBind<T>::type>
+	template<typename T, typename = LuaBindable<T>>
 	void reg(lua_State *L)
 	{
 		if (T::is_constructible)
