@@ -16,10 +16,6 @@
 #include "Graphics/OpenGL.h"
 #include "Graphics/TextureManager.h"
 
-#ifdef _MSC_VER
-#	undef max  // TODO: Interferes with std::numeric_limits::max().
-#endif
-
 namespace
 {
 	using uchar_t = unsigned char;

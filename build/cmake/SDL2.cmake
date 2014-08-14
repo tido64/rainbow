@@ -64,7 +64,7 @@ else()
 
 	add_subdirectory(${SDL2_SOURCE_DIR})
 	add_definitions(-DUSING_GENERATED_CONFIG_H)
+	add_dependencies(rainbow SDL2-static SDL2main)
 endif()
-add_dependencies(rainbow SDL2-static SDL2main)
 
 endif(NOT EMSCRIPTEN)
