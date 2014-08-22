@@ -475,6 +475,10 @@ Returns sprite orientation in radians.
 
 Returns sprite colour in separate channels (RGBA).
 
+### &lt;rainbow.sprite&gt;:get_pivot()
+
+Returns sprite pivot point.
+
 ### &lt;rainbow.sprite&gt;:get_position()
 
 Returns sprite position.
@@ -482,6 +486,10 @@ Returns sprite position.
 ### &lt;rainbow.sprite&gt;:get_scale()
 
 Returns sprite scale factors.
+
+### &lt;rainbow.sprite&gt;:get_size()
+
+Returns sprite size, unscaled.
 
 ### &lt;rainbow.sprite&gt;:set_color(r, g, b, a = 255)
 

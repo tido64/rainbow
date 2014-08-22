@@ -58,6 +58,7 @@ public:
 	inline const Colorb& color() const;
 	inline unsigned int height() const;
 	inline const SpriteBatch& parent() const;
+	inline const Vec2f& pivot() const;
 	inline const Vec2f& position() const;
 	inline const Vec2f& scale() const;
 	inline unsigned int width() const;
@@ -148,6 +149,11 @@ unsigned int Sprite::height() const
 const SpriteBatch& Sprite::parent() const
 {
 	return *parent_;
+}
+
+const Vec2f& Sprite::pivot() const
+{
+	return pivot_;
 }
 
 const Vec2f& Sprite::position() const
