@@ -50,7 +50,7 @@ function Kim:touch_began(touches)
 		-- Move to point in 0.5 seconds. Squared ease-in effect.
 		for h,t in pairs(touches) do
 			local x, y = self.sprite:get_position()
-			self.moving = Transition.move(self.node, t.x - x, t.y - y, 500, Transition.Functions.easein_square)
+			self.moving = Transition.move(self.node, t.x - x, t.y - y, 500, Transition.Functions.easeinout_cubic)
 			self.alpha = Transition.fadeto(self.sprite, 0xff, 500)
 			self.alternate = true
 			break

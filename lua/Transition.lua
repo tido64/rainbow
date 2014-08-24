@@ -7,7 +7,7 @@
 local module_path = (...):match("(.*[./\\])[^./\\]+") or ""
 local Functions = require(module_path .. "TransitionFunctions")
 
-local kDefaultTransitionFunction = Functions.linear
+local kDefaultEasingFunction = Functions.linear
 
 local __count = 0
 local __transitions = {}
@@ -74,7 +74,7 @@ function Transition.new(target, func, start, desired, duration, transition)
 	local elapsed = 0
 	local iter = __variadic[type(desired) == "table" and #desired or 1]
 	local min = math.min
-	transition = transition or kDefaultTransitionFunction
+	transition = transition or kDefaultEasingFunction
 	local self = {
 		cancel = cancel,
 		tick = function(dt)
