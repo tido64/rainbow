@@ -52,7 +52,7 @@ namespace
 
 	int time_since_epoch(lua_State *L)
 	{
-		lua_pushunsigned(L, Chrono::time_since_epoch().count());
+		lua_pushinteger(L, Chrono::time_since_epoch().count());
 		return 1;
 	}
 }
@@ -81,7 +81,7 @@ namespace Rainbow
 		lua_rawgeti(state_, LUA_REGISTRYINDEX, traceback_);
 	#endif
 		lua_rawgeti(state_, LUA_REGISTRYINDEX, internal_);
-		lua_pushunsigned(state_, t);
+		lua_pushinteger(state_, t);
 	#ifndef NDEBUG
 		return Lua::call(state_, 1, 0, 1, "Failed to call 'update'");
 	#else

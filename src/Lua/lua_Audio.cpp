@@ -338,8 +338,9 @@ namespace  // FMOD Low Level API
 		if (!self)
 			return 0;
 
-		self->get()->setLoopPoints(lua_tounsigned(L, 2), FMOD_TIMEUNIT_MS,
-		                           lua_tounsigned(L, 3), FMOD_TIMEUNIT_MS);
+		self->get()->setLoopPoints(
+		    static_cast<unsigned int>(lua_tointeger(L, 2)), FMOD_TIMEUNIT_MS,
+		    static_cast<unsigned int>(lua_tointeger(L, 3)), FMOD_TIMEUNIT_MS);
 		return 0;
 	}
 
@@ -352,8 +353,8 @@ namespace  // FMOD Low Level API
 		unsigned int start, end;
 		self->get()->getLoopPoints(&start, FMOD_TIMEUNIT_MS,
 		                             &end, FMOD_TIMEUNIT_MS);
-		lua_pushunsigned(L, start);
-		lua_pushunsigned(L, end);
+		lua_pushinteger(L, start);
+		lua_pushinteger(L, end);
 		return 2;
 	}
 }

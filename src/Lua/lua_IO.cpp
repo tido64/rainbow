@@ -31,7 +31,7 @@ namespace
 		Rainbow::Lua::Argument<lua_Number>::is_required(L, 3);
 
 		Data blob(lua_tostring(L, 2),
-		          lua_tounsigned(L, 3),
+		          lua_tointeger(L, 3),
 		          Data::Ownership::Reference);
 		lua_pushboolean(L, blob.save(lua_tostring(L, 1)));
 		return 1;

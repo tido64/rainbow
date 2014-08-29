@@ -9,6 +9,8 @@
 #include "Graphics/SpriteBatch.h"
 #include "Lua/LuaSyntax.h"
 
+using uint_t = unsigned int;
+
 NS_RAINBOW_LUA_BEGIN
 {
 	template<>
@@ -38,7 +40,7 @@ NS_RAINBOW_LUA_BEGIN
 
 	Sprite::Sprite(lua_State *L)
 	    : sprite_(static_cast<SpriteBatch*>(lua_touserdata(L, 1))->
-	                  sprite(lua_tointeger(L, 2))) { }
+	                  sprite(static_cast<uint_t>(lua_tointeger(L, 2)))) { }
 
 	int Sprite::get_angle(lua_State *L)
 	{
@@ -100,10 +102,10 @@ NS_RAINBOW_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		unsigned int color = lua_tointeger(L, 2) << 24;
-		color += lua_tointeger(L, 3) << 16;
-		color += lua_tointeger(L, 4) << 8;
-		color += optinteger(L, 5, 0xff);
+		const uint_t color = (static_cast<uint_t>(lua_tointeger(L, 2)) << 24)
+		                   + (static_cast<uint_t>(lua_tointeger(L, 3)) << 16)
+		                   + (static_cast<uint_t>(lua_tointeger(L, 4)) << 8)
+		                   + static_cast<uint_t>(optinteger(L, 5, 0xff));
 		self->sprite_->set_color(color);
 		return 0;
 	}
@@ -117,7 +119,7 @@ NS_RAINBOW_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		self->sprite_->set_normal(lua_tointeger(L, 2));
+		self->sprite_->set_normal(static_cast<uint_t>(lua_tointeger(L, 2)));
 		return 0;
 	}
 
@@ -187,7 +189,7 @@ NS_RAINBOW_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		const unsigned int t = lua_tounsigned(L, 2);
+		const uint_t t = static_cast<uint_t>(lua_tointeger(L, 2));
 		LUA_ASSERT(L, t < self->sprite_->parent().texture().size(),
 		           "Non-existing texture region (%d)", t);
 		self->sprite_->set_texture(t);
