@@ -126,7 +126,7 @@ namespace Spine
 		public:
 			Skeleton(lua_State *);
 
-			inline int listener() const;
+			inline const Rainbow::Lua::ScopedRef& listener() const;
 			inline lua_State* state() const;
 
 		private:
@@ -146,13 +146,13 @@ namespace Spine
 
 			std::unique_ptr<::Skeleton> skeleton_;
 			lua_State *state_;
-			int listener_;
+			Rainbow::Lua::ScopedRef listener_;
 
 			virtual void draw_impl() override;
 			virtual void update_impl(const unsigned long dt) override;
 		};
 
-		int Skeleton::listener() const
+		const Rainbow::Lua::ScopedRef& Skeleton::listener() const
 		{
 			return listener_;
 		}

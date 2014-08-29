@@ -11,6 +11,7 @@
 #include <lua.hpp>
 
 #include "Common/Constraints.h"
+#include "Common/NonCopyable.h"
 #include "Lua/LuaMacros.h"
 
 class Data;
@@ -23,6 +24,24 @@ NS_RAINBOW_LUA_BEGIN
 	template<typename T>
 	using LuaBindable =
 	    typename std::enable_if<std::is_base_of<Bind<T>, T>::value>::type;
+
+	/// The equivalent of std::shared_ptr for Lua objects.
+	class ScopedRef : private NonCopyable<ScopedRef>
+	{
+	public:
+		inline ScopedRef();
+		ScopedRef(lua_State *);
+		~ScopedRef();
+
+		inline void get() const;
+		void reset(lua_State *L = nullptr);
+
+		inline explicit operator bool() const;
+
+	private:
+		lua_State *state_;
+		int ref_;
+	};
 
 	/// Creates a Lua wrapped object.
 	template<typename T, typename Enable>
@@ -140,16 +159,27 @@ NS_RAINBOW_LUA_BEGIN
 	template<typename T, typename Enable>
 	T* touserdata(lua_State *L, const int n);
 
+	ScopedRef::ScopedRef() : state_(nullptr), ref_(LUA_REFNIL) { }
+
+	void ScopedRef::get() const
+	{
+		lua_rawgeti(state_, LUA_REGISTRYINDEX, ref_);
+	}
+
+	ScopedRef::operator bool() const
+	{
+		return ref_ != LUA_REFNIL;
+	}
+
 	template<typename T, typename = LuaBindable<T>>
 	int alloc(lua_State *L)
 	{
 		void *data = lua_newuserdata(L, sizeof(T));
 		luaL_setmetatable(L, T::class_name);
 		// Stash the userdata so we can return it later.
-		const int ref = luaL_ref(L, LUA_REGISTRYINDEX);
+		ScopedRef ref(L);
 		new (data) T(L);
-		lua_rawgeti(L, LUA_REGISTRYINDEX, ref);
-		luaL_unref(L, LUA_REGISTRYINDEX, ref);
+		ref.get();
 		return 1;
 	}
 

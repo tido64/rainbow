@@ -47,9 +47,11 @@ NS_B2_LUA_BEGIN
 			}
 		}
 
-		void PreContactEvent(const char *const event, lua_State *L, int listener)
+		void PreContactEvent(const char *const event,
+		                     lua_State *L,
+		                     const Rainbow::Lua::ScopedRef &listener)
 		{
-			lua_rawgeti(L, LUA_REGISTRYINDEX, listener);
+			listener.get();
 			lua_getfield(L, -1, event);
 			lua_insert(L, -2);
 		}
@@ -90,9 +92,9 @@ NS_B2_LUA_BEGIN
 
 		static int dump(lua_State *);
 
-		int contact_listener_;
+		Rainbow::Lua::ScopedRef contact_listener_;
 		lua_Number elapsed_;
-		lua_State *L_;
+		lua_State *state_;
 		RainbowDraw debug_draw_;
 		b2World world_;
 
@@ -106,8 +108,8 @@ NS_B2_LUA_BEGIN
 	const lua_Number kFramesPerMs = 60.0 / 1000.0;
 
 	World::World(lua_State *L)
-	    : contact_listener_(LUA_REFNIL), elapsed_(0.0), L_(L),
-	      debug_draw_(g_ptm_ratio), world_(b2Vec2(0.0f, kStandardGravity))
+	    : elapsed_(0.0), state_(L), debug_draw_(g_ptm_ratio),
+	      world_(b2Vec2(0.0f, kStandardGravity))
 	{
 		// b2.World(gx = 0.0, gy = -9.80665)
 		Rainbow::Lua::Argument<lua_Number>::is_optional(L, 1);
@@ -129,8 +131,6 @@ NS_B2_LUA_BEGIN
 	World::~World()
 	{
 		g_debug_data->erase(&world_);
-		if (contact_listener_ != LUA_REFNIL)
-			luaL_unref(L_, LUA_REGISTRYINDEX, contact_listener_);
 	}
 
 	int World::set_contact_listener(lua_State *L)
@@ -142,11 +142,9 @@ NS_B2_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		if (self->contact_listener_ == LUA_REFNIL)
+		if (!self->contact_listener_)
 			self->world_.SetContactListener(self);
-		else
-			luaL_unref(L, LUA_REGISTRYINDEX, self->contact_listener_);
-		self->contact_listener_ = luaL_ref(L, LUA_REGISTRYINDEX);
+		self->contact_listener_.reset(L);
 		return 0;
 	}
 
@@ -281,46 +279,46 @@ NS_B2_LUA_BEGIN
 
 	void World::BeginContact(b2Contact *contact)
 	{
-		if (contact_listener_ == LUA_REFNIL)
+		if (!contact_listener_)
 			return;
 
 		const char event[] = "BeginContact";
-		PreContactEvent(event, L_, contact_listener_);
-		CreateContactList(L_, contact);
-		FireContactEvent(event, L_, 1);
+		PreContactEvent(event, state_, contact_listener_);
+		CreateContactList(state_, contact);
+		FireContactEvent(event, state_, 1);
 	}
 
 	void World::EndContact(b2Contact *contact)
 	{
-		if (contact_listener_ == LUA_REFNIL)
+		if (!contact_listener_)
 			return;
 
 		const char event[] = "EndContact";
-		PreContactEvent(event, L_, contact_listener_);
-		CreateContactList(L_, contact);
-		FireContactEvent(event, L_, 1);
+		PreContactEvent(event, state_, contact_listener_);
+		CreateContactList(state_, contact);
+		FireContactEvent(event, state_, 1);
 	}
 
 	void World::PreSolve(b2Contact *contact, const b2Manifold *)
 	{
-		if (contact_listener_ == LUA_REFNIL)
+		if (!contact_listener_)
 			return;
 
 		const char event[] = "PreSolve";
-		PreContactEvent(event, L_, contact_listener_);
-		CreateContactList(L_, contact);
-		FireContactEvent(event, L_, 1);
+		PreContactEvent(event, state_, contact_listener_);
+		CreateContactList(state_, contact);
+		FireContactEvent(event, state_, 1);
 	}
 
 	void World::PostSolve(b2Contact *contact, const b2ContactImpulse *)
 	{
-		if (contact_listener_ == LUA_REFNIL)
+		if (!contact_listener_)
 			return;
 
 		const char event[] = "PostSolve";
-		PreContactEvent(event, L_, contact_listener_);
-		CreateContactList(L_, contact);
-		FireContactEvent(event, L_, 1);
+		PreContactEvent(event, state_, contact_listener_);
+		CreateContactList(state_, contact);
+		FireContactEvent(event, state_, 1);
 	}
 
 	void World::interpolate()

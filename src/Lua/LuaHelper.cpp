@@ -46,6 +46,26 @@ namespace
 
 NS_RAINBOW_LUA_BEGIN
 {
+	ScopedRef::ScopedRef(lua_State *L)
+	    : state_(L), ref_(luaL_ref(L, LUA_REGISTRYINDEX)) { }
+
+	ScopedRef::~ScopedRef()
+	{
+		if (ref_ == LUA_REFNIL ||
+		    lua_rawlen(state_, LUA_REGISTRYINDEX) < static_cast<size_t>(ref_))
+			return;
+
+		luaL_unref(state_, LUA_REGISTRYINDEX, ref_);
+	}
+
+	void ScopedRef::reset(lua_State *L)
+	{
+		if (ref_ != LUA_REFNIL)
+			luaL_unref(state_, LUA_REGISTRYINDEX, ref_);
+		state_ = L;
+		ref_ = (!L) ? LUA_REFNIL : luaL_ref(L, LUA_REGISTRYINDEX);
+	}
+
 	void error(lua_State *L, const int result)
 	{
 		R_ASSERT(result != LUA_OK, "No error to report");

@@ -92,10 +92,10 @@ namespace
 	{
 		using Spine::Lua::Skeleton;
 		Skeleton *sk = static_cast<Skeleton*>(state->rendererObject);
-		if (sk->listener() == LUA_REFNIL)
+		if (!sk->listener())
 			return;
 
-		lua_rawgeti(sk->state(), LUA_REGISTRYINDEX, sk->listener());
+		sk->listener().get();
 		switch (type)
 		{
 			case SP_ANIMATION_START:
@@ -495,7 +495,7 @@ namespace Spine
 {
 	namespace Lua
 	{
-		Skeleton::Skeleton(lua_State *L) : state_(L), listener_(LUA_REFNIL)
+		Skeleton::Skeleton(lua_State *L) : state_(L)
 		{
 			Rainbow::Lua::Argument<char*>::is_required(L, 1);
 			Rainbow::Lua::Argument<lua_Number>::is_optional(L, 2);
@@ -641,17 +641,15 @@ namespace Spine
 			if (!self)
 				return 0;
 
-			if (self->listener_ != LUA_REFNIL)
-				luaL_unref(L, LUA_REGISTRYINDEX, self->listener_);
 			if (!lua_istable(L, 2))
 			{
-				self->listener_ = LUA_REFNIL;
+				self->listener_.reset();
 				self->skeleton_->set_listener(nullptr, nullptr);
 			}
 			else
 			{
 				lua_settop(L, 2);
-				self->listener_ = luaL_ref(L, LUA_REGISTRYINDEX);
+				self->listener_.reset(L);
 				self->skeleton_->set_listener(on_animation_state_event, self);
 			}
 			return 0;
