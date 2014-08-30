@@ -100,7 +100,7 @@ corresponding section.
 
 ### Building with FMOD Studio
 
-The default audio backend for desktop builds is currently FMOD Studio. If you
+The default audio backend for all platforms is currently FMOD Studio. If you
 don't want to use FMOD Studio, run `build.sh` with `-DUSE_FMOD_STUDIO=0` or
 undefine USE_FMOD_STUDIO in the project file.
 
@@ -171,6 +171,15 @@ and `rainbow\build\windows\lib\`. Finally, download SDL development libraries
 and move its content to `rainbow\lib\SDL\`.
 
 Alternatively, see "Linux" for cross-compilation.
+
+#### Known Issues
+
+The C++ compiler in Visual Studio (Express) 2013 Update 3 no longer supports
+list initialisation inside member initialiser list ([see
+C2797](http://msdn.microsoft.com/en-us/library/dn793970.aspx)). You will have
+to manually patch `ShaderManager::ShaderManager()` or downgrade. Visual C++
+Compiler 2013 Update 2 and [Nov 2013 CTP](http://aka.ms/Icp591) are not
+affected.
 
 ## Learning
 
