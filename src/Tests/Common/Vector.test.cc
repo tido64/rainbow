@@ -77,11 +77,10 @@ TEST_CASE("Vector operations", "[vector]")
 			REQUIRE(intvec[i] == i);
 
 		intvec.erase(0);
+		REQUIRE(intvec.size() == kTestSize - 1);
 		REQUIRE(intvec.find(0) == -1);
 
 		for (size_t i = 0; i < intvec.size(); ++i)
-
-
 			REQUIRE(intvec[i] == i + 1);
 	}
 

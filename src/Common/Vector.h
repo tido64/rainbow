@@ -87,7 +87,8 @@ public:
 	T& operator[](const size_t i) const;
 
 	/// Returns whether the two vectors are the same.
-	friend bool operator==(const Vector<T> &a, const Vector<T> &b);
+	template<typename U>
+	friend bool operator==(const Vector<U> &a, const Vector<U> &b);
 
 private:
 	Arena<T> arena_;   ///< Memory arena.
@@ -181,7 +182,7 @@ void Vector<T>::erase(const size_t i)
 
 	arena_[i].~T();
 	T *ptr = arena_ + i;
-	memcpy(ptr, ptr + 1, (--count_ - i) * sizeof(T));
+	memmove(ptr, ptr + 1, (--count_ - i) * sizeof(T));
 }
 
 template<typename T>
@@ -212,7 +213,7 @@ void Vector<T>::qerase(const size_t i)
 
 	arena_[i].~T();
 	if (--count_ != i)
-		memcpy(arena_ + i, arena_ + count_, sizeof(T));
+		memmove(arena_ + i, arena_ + count_, sizeof(T));
 }
 
 template<typename T>

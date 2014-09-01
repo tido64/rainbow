@@ -5,6 +5,7 @@
 #include "Graphics/Label.h"
 
 #include <algorithm>
+#include <cstring>
 
 namespace
 {
