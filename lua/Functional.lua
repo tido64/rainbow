@@ -10,6 +10,7 @@
 -- Distributed under the MIT License.
 -- (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
+local min = math.min
 local pairs = pairs
 
 -- Auxiliary function for sum.
@@ -127,6 +128,22 @@ local function maph(f, table)
 	return mapped
 end
 
+local function zip(a, b)
+	local zipped = {}
+	for i = 1, min(#a, #b) do
+		zipped[i] = { a[i], b[i] }
+	end
+	return zipped
+end
+
+local function zip_with(f, a, b)
+	local zipped = {}
+	for i = 1, min(#a, #b) do
+		zipped[i] = f(a[i], b[i])
+	end
+	return zipped
+end
+
 -- Computes the difference of a finite list of numbers; the first value being
 -- the minuend.
 local function difference(list)
@@ -162,5 +179,7 @@ return {
 	maph = maph,
 	product = product,
 	quotient = quotient,
-	sum = sum
+	sum = sum,
+	zip = zip,
+	zip_with = zip_with
 }
