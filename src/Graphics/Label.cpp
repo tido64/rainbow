@@ -155,12 +155,10 @@ void Label::update_internal()
     }
     else if (stale_ & kStaleColor)
     {
-        std::for_each(vertices_.get(),
-                      vertices_.get() + count_,
-                      [&color = color_](SpriteVertex& v)
-                      {
-                          v.color = color;
-                      });
+        std::for_each(  //
+            vertices_.get(),
+            vertices_.get() + count_,
+            [& color = color_](SpriteVertex & v) { v.color = color; });
     }
 }
 

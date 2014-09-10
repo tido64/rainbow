@@ -117,6 +117,8 @@ set(SOURCE_FILES
     src/Lua/LuaMacros.h
     src/Lua/LuaSyntax.cpp
     src/Lua/LuaSyntax.h
+    src/Math/Catmull-Rom.cpp
+    src/Math/Catmull-Rom.h
     src/Math/Geometry.h
     src/Math/Transform.h
     src/Math/Vec2.h
@@ -269,6 +271,7 @@ if(UNIT_TESTS)
        src/Tests/Input/Input.test.cc
        src/Tests/Input/Pointer.test.cc
        src/Tests/Input/VirtualKey.test.cc
+       src/Tests/Math/Catmull-Rom.test.cc
        src/Tests/Math/Vec2.test.cc
        src/Tests/Math/Vec3.test.cc
        src/Tests/Memory/Pool.test.cc
