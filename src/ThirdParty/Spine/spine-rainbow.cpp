@@ -33,7 +33,7 @@ namespace
 	{
 		return std::move(
 		    std::for_each(skeleton->drawOrder,
-		                  skeleton->drawOrder + skeleton->slotCount,
+		                  skeleton->drawOrder + skeleton->slotsCount,
 		                  std::forward<F>(f)));
 	}
 
@@ -364,8 +364,7 @@ void Skeleton::update(const unsigned long dt)
 				R_ASSERT(texture_ == get_texture(region),
 				         kErrorMultipleTexturesUnsupported);
 				spRegionAttachment_computeWorldVertices(
-				    region, slot->skeleton->x, slot->skeleton->y, slot->bone,
-				    coordinates);
+				    region, slot->bone, coordinates);
 
 				const char r = skeleton_->r * slot->r * 0xff;
 				const char g = skeleton_->g * slot->g * 0xff;
@@ -430,8 +429,7 @@ void Skeleton::update(const unsigned long dt)
 					return;
 				}
 				spMeshAttachment_computeWorldVertices(
-				    mesh, slot->skeleton->x, slot->skeleton->y, slot,
-				    coordinates);
+				    mesh, slot, coordinates);
 				i += update_mesh(
 				    &vertices_[i], skeleton_, slot, mesh, coordinates);
 				break;
@@ -448,8 +446,7 @@ void Skeleton::update(const unsigned long dt)
 					return;
 				}
 				spSkinnedMeshAttachment_computeWorldVertices(
-				    mesh, slot->skeleton->x, slot->skeleton->y, slot,
-				    coordinates);
+				    mesh, slot, coordinates);
 				i += update_mesh(
 				    &vertices_[i], skeleton_, slot, mesh, coordinates);
 				break;
