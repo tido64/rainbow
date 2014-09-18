@@ -77,6 +77,7 @@ Available features and build configurations:
 | `USE_HEIMDALL`    | Compiles in Rainbow's debug overlay and other debugging facilities. |
 | `USE_PHYSICS`     | Compiles in Box2D and its Lua wrappers. |
 | `USE_SPINE`       | Enables support for loading Spine rigs. |
+| `USE_VECTOR`      | Compiles in NanoVG for vector drawing capabilities. |
 
 Example: Build Rainbow with physics and Spine support for game development.
 

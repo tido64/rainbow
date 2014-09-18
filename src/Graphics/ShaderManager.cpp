@@ -182,6 +182,10 @@ void ShaderManager::use(const unsigned int program)
 		const Shader::Details &current = get_program();
 #endif  // !USE_VERTEX_ARRAY_OBJECT
 		current_ = program;
+
+		if (current_ == kInvalidProgram)
+			return;
+
 		const Shader::Details &details = get_program();
 		glUseProgram(details.program);
 

@@ -121,6 +121,27 @@ Vec2i Renderer::convert_to_view(const Vec2i &p) const
 	return Vec2i((p.x - origin_.x) * scale_.x, (p.y - origin_.y) * scale_.y);
 }
 
+void Renderer::reset() const
+{
+	glDisable(GL_CULL_FACE);
+	glDisable(GL_DEPTH_TEST);
+	glDisable(GL_SCISSOR_TEST);
+
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable(GL_BLEND);
+
+	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+
+	glActiveTexture(GL_TEXTURE0);
+}
+
+void Renderer::unbind_all()
+{
+	VertexArray::unbind();
+	shader_manager_.use(ShaderManager::kInvalidProgram);
+	texture_manager_.bind();
+}
+
 Renderer::Renderer()
     : index_buffer_(0), scale_(1.0f, 1.0f), ortho_(kProjectionMatrix()),
       shader_manager_(this) {}

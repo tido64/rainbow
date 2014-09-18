@@ -55,6 +55,7 @@ case $1 in
     echo "  -DUSE_HEIMDALL=1         Enable Heimdall debugging facilities"
     echo "  -DUSE_PHYSICS=1          Enable physics module (Box2D)"
     echo "  -DUSE_SPINE=1            Enable Spine runtime"
+    echo "  -DUSE_VECTOR=1           Enable vector drawing library (NanoVG)"
     echo
     echo "CMake options are passed directly to CMake so you can set variables like"
     echo "-DCMAKE_BUILD_TYPE=<type> among others."

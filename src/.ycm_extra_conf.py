@@ -51,6 +51,7 @@ def ProjectFlags():
     '-I', os.path.join(project_path, 'lib', 'Lua'),
     '-I', os.path.join(project_path, 'lib', 'SDL', 'include'),
     '-I', os.path.join(project_path, 'lib', 'libpng'),
+    '-I', os.path.join(project_path, 'lib', 'nanovg', 'src'),
     '-I', os.path.join(project_path, 'lib', 'spine-runtimes', 'spine-c', 'include'),
     '-DUSE_FMOD_STUDIO=1',
     '-DUSE_PHYSICS=1',

@@ -15,6 +15,7 @@ option(USE_HEIMDALL     "Enable Heimdall debugging facilities" OFF)
 option(USE_LUA_SCRIPT   "Enable Lua scripting" ON)
 option(USE_PHYSICS      "Enable physics module (Box2D)" OFF)
 option(USE_SPINE        "Enable Spine runtime" OFF)
+option(USE_VECTOR       "Enable vector drawing library (NanoVG)" OFF)
 
 # Auto-generate files
 execute_process(COMMAND tools/shaders-gen.py WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
@@ -237,6 +238,7 @@ else()
 endif()
 
 if(USE_HEIMDALL)
+	set(USE_VECTOR 1)
 	add_definitions(-DUSE_HEIMDALL)
 	list(APPEND SOURCE_FILES
 		src/Heimdall/Button.h
@@ -298,6 +300,12 @@ if(USE_SPINE)
 		src/ThirdParty/Spine/spine-rainbow.h)
 endif()
 
+if(USE_VECTOR)
+	list(APPEND SOURCE_FILES
+		src/ThirdParty/NanoVG/NanoVG.cpp
+		src/ThirdParty/NanoVG/NanoVG.h)
+endif()
+
 foreach(src IN LISTS SOURCE_FILES)
 	string(REGEX REPLACE "^src/" "" src_file ${src})
 	set_source_files_properties(${src} PROPERTIES COMPILE_DEFINITIONS "SRC_FILE=\"${src_file}\"")
@@ -334,6 +342,9 @@ if(USE_SPINE)
 endif()
 include(${LOCAL_MODULE_PATH}/zlib.cmake)
 include(${LOCAL_MODULE_PATH}/libpng.cmake)
+if(USE_VECTOR)
+	include(${LOCAL_MODULE_PATH}/nanovg.cmake)
+endif()
 
 set(SOURCE_FILES ${SOURCE_FILES} CACHE STRING "For external scripts")
 
@@ -345,6 +356,7 @@ set_property(TARGET rainbow APPEND PROPERTY INCLUDE_DIRECTORIES
 	${FREETYPE_INCLUDE_DIR}
 	${LIBPNG_INCLUDE_DIR}
 	${LUA_INCLUDE_DIR}
+	${NANOVG_INCLUDE_DIR}
 	${SDL2_INCLUDE_DIR}
 	${SPINE_INCLUDE_DIR}
 	${ZLIB_INCLUDE_DIR}
@@ -352,7 +364,8 @@ set_property(TARGET rainbow APPEND PROPERTY INCLUDE_DIRECTORIES
 	${CATCH_INCLUDE_DIR}
 )
 target_link_libraries(rainbow
-	freetype lua ${PHYSICS_LIBRARY} png ${SDL2_LIBRARIES} ${SPINE_LIBRARY}
+	${PHYSICS_LIBRARY} ${SPINE_LIBRARY} ${VECTOR_LIBRARY}
+	freetype lua png ${SDL2_LIBRARIES}
 	${AUDIO_LIBRARIES} ${OPENGL_ext_LIBRARY} ${OPENGL_gl_LIBRARY}
 	${ZLIB_LIBRARY} ${PLATFORM_LIBRARIES}
 )
