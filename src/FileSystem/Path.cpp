@@ -229,8 +229,8 @@ int Path::create()
 CFURLRef Path::CreateCFURL() const
 {
 	CFStringRef str = CFStringCreateWithBytesNoCopy(
-	    kCFAllocatorDefault, (const UInt8*)path_, strlen(path_),
-	    kCFStringEncodingUTF8, false, kCFAllocatorNull);
+	    kCFAllocatorDefault, reinterpret_cast<const UInt8*>(path_),
+	    strlen(path_), kCFStringEncodingUTF8, false, kCFAllocatorNull);
 	CFURLRef url = CFURLCreateWithFileSystemPath(
 	    kCFAllocatorDefault, str, kCFURLPOSIXPathStyle, false);
 	CFRelease(str);

@@ -39,8 +39,10 @@ namespace Rainbow
 			locales.reserve(count);
 			for (long i = 0; i < count; ++i)
 			{
-				CFStringRef lang = (CFStringRef)CFArrayGetValueAtIndex(localesArray, i);
-				CFStringGetCString(lang, tmp, sizeof(tmp), kCFStringEncodingUTF8);
+				CFStringRef lang = static_cast<CFStringRef>(
+				    CFArrayGetValueAtIndex(localesArray, i));
+				CFStringGetCString(
+				    lang, tmp, sizeof(tmp), kCFStringEncodingUTF8);
 				locales.emplace_back(new char[sizeof(tmp)]);
 				strcpy(locales[i].get(), tmp);
 			}

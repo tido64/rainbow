@@ -7,10 +7,17 @@
 #include <algorithm>
 #include <memory>
 
+#ifdef __GNUC__
+#	pragma GCC diagnostic push
+#	pragma GCC diagnostic ignored "-Wold-style-cast"
+#endif
 #include <ft2build.h>
 #include FT_CFF_DRIVER_H
 #include FT_GLYPH_H
 #include FT_MODULE_H
+#ifdef __GNUC__
+#	pragma GCC diagnostic pop
+#endif
 
 #include "Common/Data.h"
 #include "Graphics/OpenGL.h"
