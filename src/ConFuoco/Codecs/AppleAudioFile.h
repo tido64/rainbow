@@ -30,11 +30,11 @@ namespace ConFuoco
 
 		/* Implement AudioFile */
 
-		virtual int channels_impl() const override;
-		virtual int rate_impl() const override;
-		virtual size_t read_impl(char **dst) override;
-		virtual size_t read_impl(char *dst, const size_t size) override;
-		virtual void rewind_impl() override;
+		int channels_impl() const override;
+		int rate_impl() const override;
+		size_t read_impl(char **dst) override;
+		size_t read_impl(char *dst, const size_t size) override;
+		void rewind_impl() override;
 	};
 }
 

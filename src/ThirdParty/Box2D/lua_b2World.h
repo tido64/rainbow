@@ -67,12 +67,12 @@ NS_B2_LUA_BEGIN
 
 		/* Implement b2ContactListener. */
 
-		virtual void BeginContact(b2Contact *contact) override;
-		virtual void EndContact(b2Contact *contact) override;
-		virtual void PreSolve(b2Contact *contact,
-		                      const b2Manifold *oldManifold) override;
-		virtual void PostSolve(b2Contact *contact,
-		                       const b2ContactImpulse *impulse) override;
+		void BeginContact(b2Contact *contact) override;
+		void EndContact(b2Contact *contact) override;
+		void PreSolve(b2Contact *contact,
+		              const b2Manifold *oldManifold) override;
+		void PostSolve(b2Contact *contact,
+		               const b2ContactImpulse *impulse) override;
 
 	private:
 		static int set_contact_listener(lua_State *);

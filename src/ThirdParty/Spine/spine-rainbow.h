@@ -148,8 +148,8 @@ namespace Spine
 			lua_State *state_;
 			Rainbow::Lua::ScopedRef listener_;
 
-			virtual void draw_impl() override;
-			virtual void update_impl(const unsigned long dt) override;
+			void draw_impl() override;
+			void update_impl(const unsigned long dt) override;
 		};
 
 		const Rainbow::Lua::ScopedRef& Skeleton::listener() const

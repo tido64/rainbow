@@ -20,7 +20,7 @@ namespace
 
 		const Rainbow::Shaders::Diffuse* get() const;
 
-		virtual int id() const override;
+		int id() const override;
 
 	private:
 		static int set_cutoff(lua_State *);

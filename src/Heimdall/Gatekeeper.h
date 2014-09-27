@@ -47,11 +47,11 @@ namespace Heimdall
 
 		/* Implement Touchable */
 
-		virtual void touch_began_impl(const Touch *const touches,
-		                              const size_t count) override;
-		virtual void touch_canceled_impl() override;
-		virtual void touch_ended_impl(const Touch *const touches,
-		                              const size_t count) override;
+		void touch_began_impl(const Touch *const touches,
+		                      const size_t count) override;
+		void touch_canceled_impl() override;
+		void touch_ended_impl(const Touch *const touches,
+		                      const size_t count) override;
 	};
 
 	void Gatekeeper::draw()
