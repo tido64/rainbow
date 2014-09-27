@@ -5,8 +5,6 @@
 #include "Lua/lua_Renderer.h"
 
 #include "Graphics/Renderer.h"
-#include "Graphics/ShaderManager.h"
-#include "Graphics/TextureManager.h"
 #include "Lua/LuaHelper.h"
 #include "Lua/LuaSyntax.h"
 
@@ -34,7 +32,7 @@ namespace
 		const int filter = lua_tointeger(L, 1);
 		LUA_ASSERT(L, filter == GL_NEAREST || filter == GL_LINEAR,
 		           "gl.NEAREST or gl.LINEAR expected");
-		TextureManager::Instance->set_filter(filter);
+		TextureManager::Get()->set_filter(filter);
 		return 0;
 	}
 
@@ -46,7 +44,7 @@ namespace
 		Rainbow::Lua::Argument<lua_Number>::is_required(L, 3);
 		Rainbow::Lua::Argument<lua_Number>::is_required(L, 4);
 
-		ShaderManager::Instance->set_projection(
+		ShaderManager::Get()->set_projection(
 		    lua_tonumber(L, 1), lua_tonumber(L, 2),
 		    lua_tonumber(L, 3), lua_tonumber(L, 4));
 		return 0;

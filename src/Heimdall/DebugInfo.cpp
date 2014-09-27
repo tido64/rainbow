@@ -49,7 +49,7 @@ namespace Heimdall
 			return;
 
 		double used, peak;
-		TextureManager::Instance->memory_usage(used, peak, peak);
+		TextureManager::Get()->memory_usage(used, peak, peak);
 		sprintf(text_, kStringInfoFormat, dt, used, peak);
 		label_.set_text(text_);
 	}

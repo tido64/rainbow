@@ -7,7 +7,6 @@
 #include <lua.hpp>
 
 #include "Common/Data.h"
-#include "Graphics/TextureManager.h"
 #include "Lua/lua_Platform.h"
 
 namespace Rainbow
@@ -82,7 +81,7 @@ namespace Rainbow
 		R_ASSERT(!terminated_, "App should have terminated by now");
 
 		lua_gc(lua_, LUA_GCCOLLECT, 0);
-		TextureManager::Instance->purge();
+		TextureManager::Get()->purge();
 	}
 
 	void Director::terminate(const char *error)

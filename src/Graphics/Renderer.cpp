@@ -5,7 +5,6 @@
 #include "Graphics/Renderer.h"
 
 #include "Graphics/Label.h"
-#include "Graphics/ShaderManager.h"
 #include "Graphics/SpriteBatch.h"
 
 #define S0(i)  (i) * 4
@@ -16,8 +15,6 @@
 #define S64(i)     S16((i)),  S16((i) +  16),  S16((i) +  32),  S16((i) +  48)
 #define S256(i)    S64((i)),  S64((i) +  64),  S64((i) + 128),  S64((i) + 192)
 #define S1024(i)  S256((i)), S256((i) + 256), S256((i) + 512), S256((i) + 768)
-
-Renderer *Renderer::Instance = nullptr;
 
 void Renderer::clear()
 {
@@ -42,11 +39,11 @@ int Renderer::max_texture_size()
 
 void Renderer::set_resolution(const Vec2i &resolution)
 {
-	R_ASSERT(ShaderManager::Instance,
+	R_ASSERT(is_global(),
 	         "Cannot set resolution with an uninitialised renderer");
 
 	view_ = resolution;
-	ShaderManager::Instance->set(resolution);
+	shader_manager_.set(resolution);
 	if (window_.is_zero())
 		window_ = view_;
 	set_window_size(window_);
@@ -56,7 +53,7 @@ void Renderer::set_resolution(const Vec2i &resolution)
 
 void Renderer::set_window_size(const Vec2i &size)
 {
-	R_ASSERT(ShaderManager::Instance,
+	R_ASSERT(is_global(),
 	         "Cannot set window size with an uninitialised renderer");
 
 	if (zoom_mode_ == ZoomMode::Stretch || size == view_)
@@ -120,7 +117,6 @@ Renderer::Renderer()
 
 Renderer::~Renderer()
 {
-	Instance = nullptr;
 	if (index_buffer_)
 	{
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
@@ -145,8 +141,7 @@ bool Renderer::init()
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	shader_manager_.init();
-	if (!ShaderManager::Instance)
+	if (!shader_manager_.init())
 		return false;
 
 	const unsigned short kDefaultIndices[] = { S256(0) };
@@ -159,6 +154,6 @@ bool Renderer::init()
 	    GL_ELEMENT_ARRAY_BUFFER, sizeof(kDefaultIndices), kDefaultIndices,
 	    GL_STATIC_DRAW);
 
-	Instance = this;
+	make_global();
 	return glGetError() == GL_NO_ERROR;
 }

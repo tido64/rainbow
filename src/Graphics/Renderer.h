@@ -13,7 +13,7 @@ struct SpriteVertex;
 
 namespace Rainbow { class Director; }
 
-class Renderer
+class Renderer : public Global<Renderer>
 {
 	friend Rainbow::Director;
 
@@ -26,8 +26,6 @@ public:
 	};
 
 	static const size_t kNumSprites = 256;  ///< Hard-coded limit on number of sprites.
-
-	static Renderer *Instance;
 
 	static void clear();
 

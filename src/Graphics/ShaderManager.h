@@ -7,12 +7,13 @@
 
 #include <array>
 
+#include "Common/Global.h"
 #include "Common/Vec2.h"
 #include "Common/Vector.h"
 #include "Graphics/OpenGL.h"
 #include "Graphics/ShaderDetails.h"
 
-class ShaderManager : private NonCopyable<ShaderManager>
+class ShaderManager : public Global<ShaderManager>
 {
 	friend class Renderer;
 
@@ -27,8 +28,6 @@ public:
 	private:
 		int program_;
 	};
-
-	static ShaderManager *Instance;
 
 	/// Compiles program.
 	/// \param shaders     Shader parameters.
@@ -71,15 +70,15 @@ private:
 	ShaderManager();
 	~ShaderManager();
 
-	void init();
+	bool init();
 };
 
 ShaderManager::Context::Context()
-    : program_(ShaderManager::Instance->active_) { }
+    : program_(ShaderManager::Get()->active_) { }
 
 ShaderManager::Context::~Context()
 {
-	ShaderManager::Instance->use(program_);
+	ShaderManager::Get()->use(program_);
 }
 
 Shader::Details& ShaderManager::get_program() const

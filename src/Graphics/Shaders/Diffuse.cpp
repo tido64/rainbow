@@ -42,7 +42,7 @@ namespace Rainbow
 					{ Shader::kAttributeNone, nullptr }
 				};
 				program_ =
-				    ShaderManager::Instance->compile(shaders, attributes);
+				    ShaderManager::Get()->compile(shaders, attributes);
 			}
 			else
 			{
@@ -51,15 +51,15 @@ namespace Rainbow
 					sDiffuseLight2Df,
 					{ Shader::kTypeInvalid, 0, nullptr }
 				};
-				program_ = ShaderManager::Instance->compile(shaders, nullptr);
+				program_ = ShaderManager::Get()->compile(shaders, nullptr);
 			}
 			if (program_ < 0)
 				return;
 
 			ShaderManager::Context context;
-			ShaderManager::Instance->use(program_);
+			ShaderManager::Get()->use(program_);
 			Shader::Details &details =
-			    ShaderManager::Instance->get_program(program_);
+			    ShaderManager::Get()->get_program(program_);
 			cutoff_ = glGetUniformLocation(details.program, "cutoff");
 			radius_ = glGetUniformLocation(details.program, "radius");
 			position_ = glGetUniformLocation(details.program, "light");
@@ -77,14 +77,14 @@ namespace Rainbow
 		void Diffuse::set_cutoff(const float cutoff) const
 		{
 			ShaderManager::Context context;
-			ShaderManager::Instance->use(program_);
+			ShaderManager::Get()->use(program_);
 			glUniform1f(cutoff_, cutoff);
 		}
 
 		void Diffuse::set_radius(const float radius) const
 		{
 			ShaderManager::Context context;
-			ShaderManager::Instance->use(program_);
+			ShaderManager::Get()->use(program_);
 			glUniform1f(radius_, radius);
 		}
 
@@ -92,7 +92,7 @@ namespace Rainbow
 		Diffuse::set_position(const float x, const float y, const float z) const
 		{
 			ShaderManager::Context context;
-			ShaderManager::Instance->use(program_);
+			ShaderManager::Get()->use(program_);
 			glUniform3f(position_, x, y, z);
 		}
 	}

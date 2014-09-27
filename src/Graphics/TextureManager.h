@@ -5,6 +5,7 @@
 #ifndef GRAPHICS_TEXTUREMANAGER_H_
 #define GRAPHICS_TEXTUREMANAGER_H_
 
+#include "Common/Global.h"
 #include "Common/Vector.h"
 
 #define RECORD_VMEM_USAGE !defined(NDEBUG) || defined(USE_HEIMDALL)
@@ -20,13 +21,11 @@
 /// course, it is also possible to purge this storage by issuing \c purge(). To
 /// avoid problems, this should only occur when you're done loading textures
 /// for a while.
-class TextureManager : private NonCopyable<TextureManager>
+class TextureManager : public Global<TextureManager>
 {
 	friend class Renderer;
 
 public:
-	static TextureManager *Instance;
-
 	/// Makes texture active on current rendering target.
 	/// \param id  Texture id to bind. If omitted, bind the default texture.
 	void bind(const unsigned int id = 0);

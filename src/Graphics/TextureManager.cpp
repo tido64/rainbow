@@ -8,8 +8,6 @@
 
 #include "Graphics/OpenGL.h"
 
-TextureManager *TextureManager::Instance = nullptr;
-
 void TextureManager::bind(const unsigned int id)
 {
 	if (id == active_[0])
@@ -110,14 +108,12 @@ TextureManager::TextureManager()
     , mem_used_(0.0)
 #endif
 {
-	R_ASSERT(Instance == nullptr, "There can be only one TextureManager");
 	std::fill_n(active_, kNumTextureUnits, 0);
-	Instance = this;
+	make_global();
 }
 
 TextureManager::~TextureManager()
 {
-	Instance = nullptr;
 	purge(recycled_);
 	purge(textures_);
 }

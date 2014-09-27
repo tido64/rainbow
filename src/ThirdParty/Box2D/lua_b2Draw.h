@@ -6,7 +6,6 @@
 #define THIRDPARTY_BOX2D_LUA_B2DRAW_H_
 
 #include "Graphics/Renderer.h"
-#include "Graphics/ShaderManager.h"
 #include "Graphics/Shaders.h"
 
 namespace b2
@@ -28,16 +27,16 @@ namespace b2
 				{ Shader::kAttributeColor, "color" },
 				{ Shader::kAttributeNone, nullptr }
 			};
-			program_ = ShaderManager::Instance->compile(shaders, attributes);
+			program_ = ShaderManager::Get()->compile(shaders, attributes);
 			Shader::Details &details =
-			    ShaderManager::Instance->get_program(program_);
+			    ShaderManager::Get()->get_program(program_);
 			details.texture0 = false;
 		}
 
 		void draw()
 		{
 			ShaderManager::Context context;
-			ShaderManager::Instance->use(program_);
+			ShaderManager::Get()->use(program_);
 			std::for_each(worlds_, worlds_ + kNumWorlds, [](b2World *world) {
 				if (world)
 					world->DrawDebugData();

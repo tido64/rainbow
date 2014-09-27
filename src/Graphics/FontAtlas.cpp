@@ -281,19 +281,19 @@ FontAtlas::FontAtlas(const Data &font, const float pt)
 	 */
 
 	texture_ =
-	    TextureManager::Instance->create(
+	    TextureManager::Get()->create(
 	        GL_LUMINANCE_ALPHA, size.width, size.height, GL_LUMINANCE_ALPHA,
 	        buffer.get());
 }
 
 FontAtlas::~FontAtlas()
 {
-	TextureManager::Instance->remove(texture_);
+	TextureManager::Get()->remove(texture_);
 }
 
 void FontAtlas::bind() const
 {
-	TextureManager::Instance->bind(texture_);
+	TextureManager::Get()->bind(texture_);
 }
 
 const FontGlyph* FontAtlas::get_glyph(const uint_t c) const

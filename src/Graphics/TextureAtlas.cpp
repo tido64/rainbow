@@ -5,6 +5,7 @@
 #include "Graphics/TextureAtlas.h"
 
 #include "Graphics/Image.h"
+#include "Graphics/TextureManager.h"
 
 namespace
 {
@@ -43,7 +44,7 @@ TextureAtlas::TextureAtlas(const DataMap &img) : name_(0), width_(0), height_(0)
 	{
 	#ifdef GL_OES_compressed_ETC1_RGB8_texture
 		case Rainbow::Image::Format::ETC1:
-			name_ = TextureManager::Instance->create_compressed(
+			name_ = TextureManager::Get()->create_compressed(
 			    GL_ETC1_RGB8_OES, image.width, image.height, image.size,
 			    image.data);
 			break;
@@ -67,7 +68,7 @@ TextureAtlas::TextureAtlas(const DataMap &img) : name_(0), width_(0), height_(0)
 				    ? GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG
 				    : GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG;
 			}
-			name_ = TextureManager::Instance->create_compressed(
+			name_ = TextureManager::Get()->create_compressed(
 			    internal, image.width, image.height, image.size, image.data);
 			break;
 		}
@@ -100,12 +101,27 @@ TextureAtlas::TextureAtlas(const DataMap &img) : name_(0), width_(0), height_(0)
 					internal = (image.depth == 16) ? GL_RGBA4 : GL_RGBA8;
 					break;
 			}
-			name_ = TextureManager::Instance->create(
+			name_ = TextureManager::Get()->create(
 			    internal, width_, height_, format, image.data);
 			break;
 		}
 	}
 	Rainbow::Image::release(image);
+}
+
+TextureAtlas::~TextureAtlas()
+{
+	TextureManager::Get()->remove(name_);
+}
+
+void TextureAtlas::bind() const
+{
+	TextureManager::Get()->bind(name_);
+}
+
+void TextureAtlas::bind(const unsigned int unit) const
+{
+	TextureManager::Get()->bind(name_, unit);
 }
 
 unsigned int TextureAtlas::define(const Vec2i &origin, const int w, const int h)

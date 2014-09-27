@@ -7,8 +7,8 @@
 
 #include "Common/DataMap.h"
 #include "Common/Memory.h"
+#include "Common/Vector.h"
 #include "Graphics/Texture.h"
-#include "Graphics/TextureManager.h"
 
 /// Texture atlas loaded from an image file.
 ///
@@ -23,7 +23,7 @@ class TextureAtlas : public RefCounted
 {
 public:
 	explicit TextureAtlas(const DataMap &img);
-	inline ~TextureAtlas();
+	~TextureAtlas();
 
 	inline int width() const;
 	inline int height() const;
@@ -31,8 +31,8 @@ public:
 	inline size_t size() const;
 
 	/// Binds this texture.
-	inline void bind() const;
-	inline void bind(const unsigned int unit) const;
+	void bind() const;
+	void bind(const unsigned int unit) const;
 
 	/// Defines a texture region.
 	/// \param x,y     Starting point of the region.
@@ -53,11 +53,6 @@ private:
 	Vector<Texture> regions_;   ///< Defined texture regions.
 };
 
-TextureAtlas::~TextureAtlas()
-{
-	TextureManager::Instance->remove(name_);
-}
-
 int TextureAtlas::width() const
 {
 	return width_;
@@ -76,16 +71,6 @@ bool TextureAtlas::is_valid() const
 size_t TextureAtlas::size() const
 {
 	return regions_.size();
-}
-
-void TextureAtlas::bind() const
-{
-	TextureManager::Instance->bind(name_);
-}
-
-void TextureAtlas::bind(const unsigned int unit) const
-{
-	TextureManager::Instance->bind(name_, unit);
 }
 
 void TextureAtlas::trim()

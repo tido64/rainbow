@@ -35,7 +35,7 @@ namespace SceneGraph
 
 		ShaderManager::Context context;
 		if (program_ >= 0)
-			ShaderManager::Instance->use(program_);
+			ShaderManager::Get()->use(program_);
 
 		switch (this->type)
 		{

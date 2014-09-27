@@ -8,7 +8,6 @@
 
 #include "Graphics/OpenGL.h"
 #include "Graphics/Renderer.h"
-#include "Graphics/TextureManager.h"
 #include "Heimdall/Style.h"
 
 namespace Heimdall
@@ -16,18 +15,18 @@ namespace Heimdall
 	Overlay::~Overlay()
 	{
 		if (texture_)
-			TextureManager::Instance->remove(texture_);
+			TextureManager::Get()->remove(texture_);
 	}
 
 	void Overlay::bind_textures() const
 	{
-		TextureManager::Instance->bind(texture_);
+		TextureManager::Get()->bind(texture_);
 	}
 
 	void Overlay::setup(const Vec2i &screen)
 	{
 		const unsigned char white[4096] = { 0xff };
-		texture_ = TextureManager::Instance->create(
+		texture_ = TextureManager::Get()->create(
 		    GL_LUMINANCE, 64, 64, GL_LUMINANCE, white);
 
 		SpriteVertex vertices[4];

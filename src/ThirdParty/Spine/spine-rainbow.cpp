@@ -326,7 +326,7 @@ void Skeleton::set_skin(const char *skin)
 
 void Skeleton::draw()
 {
-	Renderer::Instance->draw_arrays(
+	Renderer::Get()->draw_arrays(
 	    *this, 0, num_vertices_ + num_vertices_ / 2);
 }
 

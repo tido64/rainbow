@@ -111,8 +111,6 @@ namespace
 	}
 }
 
-ShaderManager *ShaderManager::Instance = nullptr;
-
 int ShaderManager::compile(Shader::ShaderParams *shaders,
                            const Shader::AttributeParams *attributes)
 {
@@ -192,16 +190,13 @@ ShaderManager::ShaderManager()
                             0.0f,  1.0f,  0.0f, 0.0f,
                             0.0f,  0.0f, -1.0f, 0.0f,
                            -1.0f, -1.0f,  0.0f, 1.0f }}
-{
-	R_ASSERT(Instance == nullptr, "There can be only one ShaderManager");
-}
+{ }
 
 ShaderManager::~ShaderManager()
 {
 	if (active_ < 0)
 		return;
 
-	Instance = nullptr;
 	glUseProgram(0);
 	for (const auto &details : programs_)
 		glDeleteProgram(details.program);
@@ -209,10 +204,8 @@ ShaderManager::~ShaderManager()
 		glDeleteShader(shader);
 }
 
-void ShaderManager::init()
+bool ShaderManager::init()
 {
-	R_ASSERT(Instance == nullptr, "ShaderManager is already initialised");
-
 	Shader::ShaderParams shaders[] = {
 		{ Shader::kTypeVertex, 0, Rainbow::Shaders::kFixed2Dv },
 		{ Shader::kTypeFragment, 0, Rainbow::Shaders::kFixed2Df },
@@ -222,7 +215,8 @@ void ShaderManager::init()
 	if (pid < 0)
 	{
 		R_ASSERT(pid >= 0, "Failed to compile default shader");
-		return;
+		return false;
 	}
-	Instance = this;
+	make_global();
+	return true;
 }
