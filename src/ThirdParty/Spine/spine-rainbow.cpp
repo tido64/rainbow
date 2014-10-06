@@ -20,13 +20,25 @@
 
 namespace
 {
-	const int kMaxVertices = 512;  // See kErrorMaxVerticesReached below.
-
-	const char kErrorMaxVerticesReached[] =
-	    "A mesh has reached the maximum number of vertices currently allowed. "
-	    "This is a hardcoded limit and can be increased.";
 	const char kErrorMultipleTexturesUnsupported[] =  // TODO: Implement.
 	    "Skeletons spanning multiple textures are not yet supported";
+
+	int g_buffer_size = 0;
+	std::unique_ptr<float[]> g_buffer;
+
+	void compute_world_vertices(spMeshAttachment *self,
+	                            spSlot *slot,
+	                            float *vertices)
+	{
+		spMeshAttachment_computeWorldVertices(self, slot, vertices);
+	}
+
+	void compute_world_vertices(spSkinnedMeshAttachment *self,
+	                            spSlot *slot,
+	                            float *vertices)
+	{
+		spSkinnedMeshAttachment_computeWorldVertices(self, slot, vertices);
+	}
 
 	template<typename F>
 	F for_each(const spSkeleton *skeleton, F &&f)
@@ -49,7 +61,7 @@ namespace
 	{
 		size_t num_vertices = 0;
 		TextureAtlas *texture = nullptr;
-		for_each(skeleton, [&](const spSlot *slot) {
+		for_each(skeleton, [&num_vertices, &texture](const spSlot *slot) {
 			if (!slot->attachment)
 				return;
 			switch (slot->attachment->type)
@@ -137,17 +149,23 @@ namespace
 	template<typename T>
 	int update_mesh(SpriteVertex *vertices,
 	                const spSkeleton *skeleton,
-	                const spSlot *slot,
-	                const T *mesh,
-	                const float *coordinates)
+	                T *mesh,
+	                spSlot *slot)
 	{
+		if (mesh->trianglesCount > g_buffer_size)
+		{
+			g_buffer_size = mesh->trianglesCount * 2;
+			g_buffer.reset(new float[g_buffer_size]);
+		}
+		float *coordinates = g_buffer.get();
+		compute_world_vertices(mesh, slot, coordinates);
+
 		const char r = skeleton->r * slot->r * 0xff;
 		const char g = skeleton->g * slot->g * 0xff;
 		const char b = skeleton->b * slot->b * 0xff;
 		const char a = skeleton->a * slot->a * 0xff;
 
-		int i = 0;
-		for (; i < mesh->trianglesCount; ++i)
+		for (int i = 0; i < mesh->trianglesCount; ++i)
 		{
 			vertices[i].color.r = r;
 			vertices[i].color.g = g;
@@ -160,7 +178,7 @@ namespace
 			vertices[i].position.x = coordinates[index];
 			vertices[i].position.y = coordinates[index + 1];
 		}
-		return i;
+		return mesh->trianglesCount;
 	}
 }
 
@@ -352,19 +370,19 @@ void Skeleton::update(const unsigned long dt)
 	}
 
 	size_t i = 0;
-	float coordinates[kMaxVertices * 2];
-	for_each(skeleton_, [this, &i, &coordinates](spSlot *slot) {
+	for_each(skeleton_, [this, &i](spSlot *slot) {
 		if (!slot->attachment)
 			return;
 		switch (slot->attachment->type)
 		{
 			case SP_ATTACHMENT_REGION: {
+				float vertices[8];
 				spRegionAttachment *region =
 				    reinterpret_cast<spRegionAttachment*>(slot->attachment);
 				R_ASSERT(texture_ == get_texture(region),
 				         kErrorMultipleTexturesUnsupported);
 				spRegionAttachment_computeWorldVertices(
-				    region, slot->bone, coordinates);
+				    region, slot->bone, vertices);
 
 				const char r = skeleton_->r * slot->r * 0xff;
 				const char g = skeleton_->g * slot->g * 0xff;
@@ -377,8 +395,8 @@ void Skeleton::update(const unsigned long dt)
 				vertices_[i].color.a = a;
 				vertices_[i].texcoord.x = region->uvs[SP_VERTEX_X1];
 				vertices_[i].texcoord.y = region->uvs[SP_VERTEX_Y1];
-				vertices_[i].position.x = coordinates[SP_VERTEX_X1];
-				vertices_[i].position.y = coordinates[SP_VERTEX_Y1];
+				vertices_[i].position.x = vertices[SP_VERTEX_X1];
+				vertices_[i].position.y = vertices[SP_VERTEX_Y1];
 
 				vertices_[++i].color.r = r;
 				vertices_[i].color.g = g;
@@ -386,8 +404,8 @@ void Skeleton::update(const unsigned long dt)
 				vertices_[i].color.a = a;
 				vertices_[i].texcoord.x = region->uvs[SP_VERTEX_X2];
 				vertices_[i].texcoord.y = region->uvs[SP_VERTEX_Y2];
-				vertices_[i].position.x = coordinates[SP_VERTEX_X2];
-				vertices_[i].position.y = coordinates[SP_VERTEX_Y2];
+				vertices_[i].position.x = vertices[SP_VERTEX_X2];
+				vertices_[i].position.y = vertices[SP_VERTEX_Y2];
 
 				vertices_[++i].color.r = r;
 				vertices_[i].color.g = g;
@@ -395,8 +413,8 @@ void Skeleton::update(const unsigned long dt)
 				vertices_[i].color.a = a;
 				vertices_[i].texcoord.x = region->uvs[SP_VERTEX_X3];
 				vertices_[i].texcoord.y = region->uvs[SP_VERTEX_Y3];
-				vertices_[i].position.x = coordinates[SP_VERTEX_X3];
-				vertices_[i].position.y = coordinates[SP_VERTEX_Y3];
+				vertices_[i].position.x = vertices[SP_VERTEX_X3];
+				vertices_[i].position.y = vertices[SP_VERTEX_Y3];
 
 				++i;
 				vertices_[i] = vertices_[i - 1];
@@ -407,8 +425,8 @@ void Skeleton::update(const unsigned long dt)
 				vertices_[i].color.a = a;
 				vertices_[i].texcoord.x = region->uvs[SP_VERTEX_X4];
 				vertices_[i].texcoord.y = region->uvs[SP_VERTEX_Y4];
-				vertices_[i].position.x = coordinates[SP_VERTEX_X4];
-				vertices_[i].position.y = coordinates[SP_VERTEX_Y4];
+				vertices_[i].position.x = vertices[SP_VERTEX_X4];
+				vertices_[i].position.y = vertices[SP_VERTEX_Y4];
 
 				++i;
 				vertices_[i] = vertices_[i - 5];
@@ -423,15 +441,7 @@ void Skeleton::update(const unsigned long dt)
 				    reinterpret_cast<spMeshAttachment*>(slot->attachment);
 				R_ASSERT(texture_ == get_texture(mesh),
 				         kErrorMultipleTexturesUnsupported);
-				if (mesh->trianglesCount > kMaxVertices)
-				{
-					R_ERROR("[Rainbow/Spine] %s\n", kErrorMaxVerticesReached);
-					return;
-				}
-				spMeshAttachment_computeWorldVertices(
-				    mesh, slot, coordinates);
-				i += update_mesh(
-				    &vertices_[i], skeleton_, slot, mesh, coordinates);
+				i += update_mesh(&vertices_[i], skeleton_, mesh, slot);
 				break;
 			}
 			case SP_ATTACHMENT_SKINNED_MESH: {
@@ -440,15 +450,7 @@ void Skeleton::update(const unsigned long dt)
 				        slot->attachment);
 				R_ASSERT(texture_ == get_texture(mesh),
 				         kErrorMultipleTexturesUnsupported);
-				if (mesh->trianglesCount > kMaxVertices)
-				{
-					R_ERROR("[Rainbow/Spine] %s\n", kErrorMaxVerticesReached);
-					return;
-				}
-				spSkinnedMeshAttachment_computeWorldVertices(
-				    mesh, slot, coordinates);
-				i += update_mesh(
-				    &vertices_[i], skeleton_, slot, mesh, coordinates);
+				i += update_mesh(&vertices_[i], skeleton_, mesh, slot);
 				break;
 			}
 		}
