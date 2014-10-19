@@ -3,7 +3,6 @@
 # Distributed under the MIT License.
 # (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
-GENERATOR=${GENERATOR:-Unix Makefiles}
 RAINBOW=$(cd -P "$(dirname $0)/.." && pwd)
 if [[ "$(git rev-parse --show-toplevel 2> /dev/null)" == "$RAINBOW" ]]; then
 	echo "$0: Cannot run while still inside the repository"
@@ -70,7 +69,7 @@ case $1 in
 		;;
 	"clean")
 		rm -fr CMakeFiles CMakeScripts Debug MinSizeRel Rainbow.* Release RelWithDebInfo lib
-		rm -f .ninja_log CMakeCache.txt Makefile {build,rules}.ninja cmake_install.cmake lib*.a rainbow*
+		rm -f .ninja_* CMakeCache.txt Makefile {build,rules}.ninja cmake_install.cmake lib*.a rainbow*
 		;;
 	"emscripten")
 		EMSCRIPTEN=$(em-config EMSCRIPTEN_ROOT)
@@ -88,16 +87,19 @@ case $1 in
 		$SHELL $0 --help
 		;;
 	"linux")
+		GENERATOR=${GENERATOR:-Unix Makefiles}
 		CC=${CC:-clang} CXX=${CXX:-clang++} cmake $ARGS -G "$GENERATOR" "$RAINBOW" &&
 		compile "$GENERATOR"
 		;;
 	"mac")
-		cmake $ARGS -G Xcode "$RAINBOW" &&
-		compile Xcode
+		GENERATOR=${GENERATOR:-Xcode}
+		cmake $ARGS -G "$GENERATOR" "$RAINBOW" &&
+		compile "$GENERATOR"
 		;;
 	"windows")
+		GENERATOR=${GENERATOR:-Unix Makefiles}
 		cmake -DCMAKE_TOOLCHAIN_FILE="$RAINBOW/build/cmake/MinGW.cmake" $ARGS -G "$GENERATOR" "$RAINBOW" &&
-		compile $GENERATOR
+		compile "$GENERATOR"
 		;;
 	*)  # Attempt to detect platform
 		case $(uname) in
