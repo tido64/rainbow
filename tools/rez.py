@@ -9,26 +9,26 @@ import sys
 bytes_per_line = 0
 
 def main(resource):
-	output = os.path.split(resource)[1]
-	rez = 'const unsigned char ' + output.replace('.', '_') + "[] = {"
+    output = os.path.split(resource)[1]
+    rez = 'const unsigned char ' + output.replace('.', '_') + "[] = {"
 
-	f = open(resource, 'rb')
-	if bytes_per_line > 0:
-		rez += "\n"
-		bytes = f.read(bytes_per_line)
-		while bytes:
-			rez += "\t" + ''.join(['0x%02x, ' % b for b in bytes]).strip() + "\n"
-			bytes = f.read(bytes_per_line)
-		rez = rez[:-2] + "\n};\n"
-	else:
-		bytes = f.read()
-		rez += ' ' + ''.join(['%u,' % b for b in bytes])[:-1] + " };\n"
-	f.close()
+    f = open(resource, 'rb')
+    if bytes_per_line > 0:
+        rez += "\n"
+        bytes = f.read(bytes_per_line)
+        while bytes:
+            rez += "\t" + ''.join(['0x%02x, ' % b for b in bytes]).strip() + "\n"
+            bytes = f.read(bytes_per_line)
+        rez = rez[:-2] + "\n};\n"
+    else:
+        bytes = f.read()
+        rez += ' ' + ''.join(['%u,' % b for b in bytes])[:-1] + " };\n"
+    f.close()
 
-	f = open(output + '.h', 'w')
-	f.write(rez)
-	f.close()
-	return 0
+    f = open(output + '.h', 'w')
+    f.write(rez)
+    f.close()
+    return 0
 
 if __name__ == "__main__":
-	sys.exit(main(sys.argv[1]))
+    sys.exit(main(sys.argv[1]))

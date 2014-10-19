@@ -19,13 +19,13 @@ cd $BUILD_DIR
 
 # Clean the folder
 rm -fr AndroidManifest.xml ant.properties bin build.xml gen jni libs \
-  local.properties obj proguard-project.txt project.properties res src
+    local.properties obj proguard-project.txt project.properties res src
 
 # Create project files
 mkdir jni
 android --silent create project --name "Rainbow" --target "android-19" \
-  --path jni --package "com.bifrostentertainment.rainbow" --activity "Rainbow" \
-  || exit 1
+    --path jni --package "com.bifrostentertainment.rainbow" --activity "Rainbow" \
+    || exit 1
 rm -r jni/src/*
 mv jni/* .
 
@@ -131,7 +131,7 @@ echo -n "Generating res/values/themes.xml..."
 cat > res/values/themes.xml << THEMES_XML
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<style name="Rainbow.Theme.Default" parent="@android:style/Theme.NoTitleBar.Fullscreen"></style>
+  <style name="Rainbow.Theme.Default" parent="@android:style/Theme.NoTitleBar.Fullscreen"></style>
 </resources>
 THEMES_XML
 echo " done"
@@ -141,7 +141,7 @@ mkdir -p res/values-v11
 cat > res/values-v11/themes.xml << THEMES_XML
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<style name="Rainbow.Theme.Default" parent="@android:style/Theme.Holo.NoActionBar.Fullscreen"></style>
+  <style name="Rainbow.Theme.Default" parent="@android:style/Theme.Holo.NoActionBar.Fullscreen"></style>
 </resources>
 THEMES_XML
 echo " done"
@@ -153,27 +153,27 @@ cat > AndroidManifest.xml << ANDROIDMANIFEST_XML
           package="com.bifrostentertainment.rainbow"
           android:versionCode="1"
           android:versionName="1.0">
-	<uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
-	<!-- uses-permission android:name="android.permission.RECORD_AUDIO" / -->
-	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-	<uses-sdk android:minSdkVersion="15" android:targetSdkVersion="19" />
-	<uses-feature android:name="android.hardware.screen.portrait"
-	              android:glEsVersion="0x00020000" />
-	<application android:icon="@drawable/ic_launcher"
-	             android:label="@string/app_name"
-	             android:theme="@style/Rainbow.Theme.Default">
-		<activity android:configChanges="orientation|screenSize"
-		          android:label="@string/app_name"
-		          android:launchMode="singleTop"
-		          android:name=".RainbowActivity"
-		          android:screenOrientation="sensorLandscape">
-			<intent-filter>
-				<action android:name="android.intent.action.MAIN" />
-				<category android:name="android.intent.category.LAUNCHER" />
-			</intent-filter>
-			<meta-data android:name="android.app.lib_name" android:value="rainbow" />
-		</activity>
-	</application>
+  <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+  <!-- uses-permission android:name="android.permission.RECORD_AUDIO" / -->
+  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+  <uses-sdk android:minSdkVersion="15" android:targetSdkVersion="19" />
+  <uses-feature android:name="android.hardware.screen.portrait"
+                android:glEsVersion="0x00020000" />
+  <application android:icon="@drawable/ic_launcher"
+               android:label="@string/app_name"
+               android:theme="@style/Rainbow.Theme.Default">
+    <activity android:configChanges="orientation|screenSize"
+              android:label="@string/app_name"
+              android:launchMode="singleTop"
+              android:name=".RainbowActivity"
+              android:screenOrientation="sensorLandscape">
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN" />
+        <category android:name="android.intent.category.LAUNCHER" />
+      </intent-filter>
+      <meta-data android:name="android.app.lib_name" android:value="rainbow" />
+    </activity>
+  </application>
 </manifest>
 ANDROIDMANIFEST_XML
 echo " done"
