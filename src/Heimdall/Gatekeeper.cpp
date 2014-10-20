@@ -68,7 +68,7 @@ namespace Heimdall
 			changed_files_ = changed_files_.push_front(file);
 		});
 
-		touch_canceled();
+		on_touch_canceled();
 	}
 
 	void Gatekeeper::init(const Data &main, const Vec2i &screen)
@@ -88,7 +88,7 @@ namespace Heimdall
 		info_->set_console(position, std::move(console_font));
 
 		Director::init(main, screen);
-		input().subscribe(this, Input::Events::Touch);
+		input().subscribe(this);
 	}
 
 	void Gatekeeper::update(const unsigned long dt)
@@ -124,11 +124,11 @@ namespace Heimdall
 		scenegraph_.update(dt);
 	}
 
-	void Gatekeeper::touch_began_impl(const Touch *const touches,
-	                                  const size_t count)
+	bool Gatekeeper::on_touch_began_impl(const Touch *const touches,
+	                                     const size_t count)
 	{
 		if (overlay_node_->enabled)
-			return;
+			return true;
 
 		size_t i = 0;
 		switch (touch_count_)
@@ -148,23 +148,25 @@ namespace Heimdall
 			default:
 				break;
 		}
+		return false;
 	}
 
-	void Gatekeeper::touch_canceled_impl()
+	bool Gatekeeper::on_touch_canceled_impl()
 	{
 		touch_count_ = 0;
 		touches_[0].hash = -1;
 		touches_[1].hash = -1;
+		return false;
 	}
 
-	void Gatekeeper::touch_ended_impl(const Touch *const touches,
-	                                  const size_t count)
+	bool Gatekeeper::on_touch_ended_impl(const Touch *const touches,
+	                                     const size_t count)
 	{
 		if (overlay_node_->enabled && !touch_count_)
 		{
 			if (!info_->on_touch(touches, count))
 				toggle_overlay();
-			return;
+			return true;
 		}
 
 		for (size_t i = 0; i < count; ++i)
@@ -181,6 +183,7 @@ namespace Heimdall
 				--touch_count_;
 			}
 		}
+		return false;
 	}
 }
 

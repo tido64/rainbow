@@ -56,7 +56,7 @@ NS_RAINBOW_LUA_MODULE_BEGIN(Input)
 
 	#ifdef RAINBOW_BUTTONS
 
-		void key_event(lua_State *L, const Event event, const Key &key)
+		void on_key_event(lua_State *L, const Event event, const Key &key)
 		{
 			push_event(L, event);
 
@@ -72,10 +72,10 @@ NS_RAINBOW_LUA_MODULE_BEGIN(Input)
 
 	#endif  // RAINBOW_BUTTONS
 
-		void touch_event(lua_State *L,
-						 const Event event,
-						 const Touch *const touches,
-						 const size_t count)
+		void on_touch_event(lua_State *L,
+		                    const Event event,
+		                    const Touch *const touches,
+		                    const size_t count)
 		{
 			push_event(L, event);
 
@@ -148,35 +148,35 @@ NS_RAINBOW_LUA_MODULE_BEGIN(Input)
 
 #ifdef RAINBOW_BUTTONS
 
-	void key_down(lua_State *L, const Key &key)
+	void on_key_down(lua_State *L, const Key &key)
 	{
-		key_event(L, kEventKeyDown, key);
+		on_key_event(L, kEventKeyDown, key);
 	}
 
-	void key_up(lua_State *L, const Key &key)
+	void on_key_up(lua_State *L, const Key &key)
 	{
-		key_event(L, kEventKeyUp, key);
+		on_key_event(L, kEventKeyUp, key);
 	}
 
 #endif  // RAINBOW_BUTTONS
 
-	void touch_began(lua_State *L, const Touch *const touches, const size_t count)
+	void on_touch_began(lua_State *L, const Touch *const touches, const size_t count)
 	{
-		touch_event(L, kEventTouchBegan, touches, count);
+		on_touch_event(L, kEventTouchBegan, touches, count);
 	}
 
-	void touch_canceled(lua_State *L)
+	void on_touch_canceled(lua_State *L)
 	{
-		touch_event(L, kEventTouchCanceled, nullptr, 0);
+		on_touch_event(L, kEventTouchCanceled, nullptr, 0);
 	}
 
-	void touch_ended(lua_State *L, const Touch *const touches, const size_t count)
+	void on_touch_ended(lua_State *L, const Touch *const touches, const size_t count)
 	{
-		touch_event(L, kEventTouchEnded, touches, count);
+		on_touch_event(L, kEventTouchEnded, touches, count);
 	}
 
-	void touch_moved(lua_State *L, const Touch *const touches, const size_t count)
+	void on_touch_moved(lua_State *L, const Touch *const touches, const size_t count)
 	{
-		touch_event(L, kEventTouchMoved, touches, count);
+		on_touch_event(L, kEventTouchMoved, touches, count);
 	}
 } NS_RAINBOW_LUA_MODULE_END(Input)

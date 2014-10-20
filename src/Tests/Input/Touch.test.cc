@@ -5,13 +5,13 @@
 #include <lua.hpp>
 
 #include "Input/Input.h"
+#include "Input/InputListener.h"
 #include "Input/Touch.h"
-#include "Input/Touchable.h"
 #include "Lua/lua_Input.h"
 
 namespace
 {
-	class TouchTestFixture : public Touchable
+	class TouchTestFixture : public InputListener
 	{
 	public:
 		struct Events
@@ -43,36 +43,40 @@ namespace
 	private:
 		unsigned int flags_;
 
-		virtual void touch_began_impl(const Touch *const touches,
-		                              const size_t count) override
+		bool on_touch_began_impl(const Touch *const touches,
+		                         const size_t count) override
 		{
 			if (is_invalid(touches, count))
-				return;
+				return false;
 
 			flags_ |= Events::TouchBegan;
+			return true;
 		}
 
-		virtual void touch_canceled_impl() override
+		bool on_touch_canceled_impl() override
 		{
 			flags_ |= Events::TouchCanceled;
+			return true;
 		}
 
-		virtual void touch_ended_impl(const Touch *const touches,
-		                              const size_t count) override
+		bool on_touch_ended_impl(const Touch *const touches,
+		                         const size_t count) override
 		{
 			if (is_invalid(touches, count))
-				return;
+				return false;
 
 			flags_ |= Events::TouchEnded;
+			return true;
 		}
 
-		virtual void touch_moved_impl(const Touch *const touches,
-		                              const size_t count) override
+		bool on_touch_moved_impl(const Touch *const touches,
+		                         const size_t count) override
 		{
 			if (is_invalid(touches, count))
-				return;
+				return false;
 
 			flags_ |= Events::TouchMoved;
+			return true;
 		}
 	};
 }
@@ -89,19 +93,19 @@ TEST_CASE("Touch events", "[input]")
 	lua_setglobal(L, "rainbow");
 
 	TouchTestFixture delegate;
-	input.subscribe(&delegate, Input::Events::All);
+	input.subscribe(&delegate);
 
 	SECTION("touch_began event")
 	{
 		Touch t1(1, 2, 3, 0);
-		input.touch_began(&t1, 1);
+		input.on_touch_began(&t1, 1);
 		REQUIRE(delegate.is_triggered(TouchEvents::TouchBegan));
 		REQUIRE_FALSE(delegate.is_triggered(0xff ^ TouchEvents::TouchBegan));
 	}
 
 	SECTION("touch_canceled event")
 	{
-		input.touch_canceled();
+		input.on_touch_canceled();
 		REQUIRE(delegate.is_triggered(TouchEvents::TouchCanceled));
 		REQUIRE_FALSE(delegate.is_triggered(0xff ^ TouchEvents::TouchCanceled));
 	}
@@ -109,7 +113,7 @@ TEST_CASE("Touch events", "[input]")
 	SECTION("touch_ended event")
 	{
 		Touch t1(1, 2, 3, 0);
-		input.touch_ended(&t1, 1);
+		input.on_touch_ended(&t1, 1);
 		REQUIRE(delegate.is_triggered(TouchEvents::TouchEnded));
 		REQUIRE_FALSE(delegate.is_triggered(0xff ^ TouchEvents::TouchEnded));
 	}
@@ -117,7 +121,7 @@ TEST_CASE("Touch events", "[input]")
 	SECTION("touch_moved event")
 	{
 		Touch t1(1, 2, 3, 0);
-		input.touch_moved(&t1, 1);
+		input.on_touch_moved(&t1, 1);
 		REQUIRE(delegate.is_triggered(TouchEvents::TouchMoved));
 		REQUIRE_FALSE(delegate.is_triggered(0xff ^ TouchEvents::TouchMoved));
 	}

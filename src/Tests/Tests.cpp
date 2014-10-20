@@ -13,6 +13,7 @@
 #include "Tests/Common/Chrono.test.cc"
 #include "Tests/Common/Color.test.cc"
 #include "Tests/Common/Data.test.cc"
+#include "Tests/Common/Link.test.cc"
 #include "Tests/Common/SharedPtr.test.cc"
 #include "Tests/Common/TimedEvent.test.cc"
 #include "Tests/Common/TreeNode.test.cc"
@@ -21,6 +22,7 @@
 #include "Tests/Common/Vector.test.cc"
 #include "Tests/ConFuoco/ConFuoco.test.cc"
 #include "Tests/FileSystem/Path.test.cc"
+#include "Tests/Input/Input.test.cc"
 #include "Tests/Input/Touch.test.cc"
 
 namespace Rainbow

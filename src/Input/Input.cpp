@@ -4,16 +4,20 @@
 
 #include "Input/Input.h"
 
+#include <utility>
+
 #include "Input/Key.h"
-#include "Input/Touchable.h"
 #include "Lua/lua_Input.h"
 
-void Input::subscribe(Touchable *const t, const unsigned int events)
+void Input::subscribe(InputListener *const i)
 {
-	//if (events & Events::Key)
+	last_listener_->append(i);
+	last_listener_ = i;
+}
 
-	if (events & Events::Touch)
-		touch_subscribers_.push_back(t);
+void Input::unsubscribe(InputListener *const i)
+{
+	i->pop();
 }
 
 void Input::accelerated(const double x, const double y, const double z, const double t)
@@ -28,43 +32,66 @@ void Input::clear()
 }
 
 #ifdef RAINBOW_BUTTONS
-
-void Input::key_down(const Key &k)
+void Input::on_key_down(const Key &k)
 {
-	Rainbow::Lua::Input::key_down(lua_state_, k);
+	if (for_each(next(), [&k](InputListener *i) { return i->on_key_down(k); }))
+		return;
+
+	Rainbow::Lua::Input::on_key_down(lua_state_, k);
 }
 
-void Input::key_up(const Key &k)
+void Input::on_key_up(const Key &k)
 {
-	Rainbow::Lua::Input::key_up(lua_state_, k);
-}
+	if (for_each(next(), [&k](InputListener *i) { return i->on_key_up(k); }))
+		return;
 
+	Rainbow::Lua::Input::on_key_up(lua_state_, k);
+}
 #endif
 
-void Input::touch_began(Touch *const touches, const size_t count)
+void Input::on_touch_began(Touch *const touches, const size_t count)
 {
-	for (auto subscriber : touch_subscribers_)
-		subscriber->touch_began(touches, count);
-	Rainbow::Lua::Input::touch_began(lua_state_, touches, count);
+	auto began = [touches, count](InputListener *i) {
+		return i->on_touch_began(touches, count);
+	};
+	if (for_each(next(), std::move(began)))
+		return;
+
+	Rainbow::Lua::Input::on_touch_began(lua_state_, touches, count);
 }
 
-void Input::touch_canceled()
+void Input::on_touch_canceled()
 {
-	for (auto subscriber : touch_subscribers_)
-		subscriber->touch_canceled();
-	Rainbow::Lua::Input::touch_canceled(lua_state_);
+	auto canceled = [](InputListener *i) { return i->on_touch_canceled(); };
+	if (for_each(next(), std::move(canceled)))
+		return;
+
+	Rainbow::Lua::Input::on_touch_canceled(lua_state_);
 }
 
-void Input::touch_ended(Touch *const touches, const size_t count)
+void Input::on_touch_ended(Touch *const touches, const size_t count)
 {
-	for (auto subscriber : touch_subscribers_)
-		subscriber->touch_ended(touches, count);
-	Rainbow::Lua::Input::touch_ended(lua_state_, touches, count);
+	auto ended = [touches, count](InputListener *i) {
+		return i->on_touch_ended(touches, count);
+	};
+	if (for_each(next(), std::move(ended)))
+		return;
+
+	Rainbow::Lua::Input::on_touch_ended(lua_state_, touches, count);
 }
 
-void Input::touch_moved(Touch *const touches, const size_t count)
+void Input::on_touch_moved(Touch *const touches, const size_t count)
 {
-	for (auto subscriber : touch_subscribers_)
-		subscriber->touch_moved(touches, count);
-	Rainbow::Lua::Input::touch_moved(lua_state_, touches, count);
+	auto moved = [touches, count](InputListener *i) {
+		return i->on_touch_moved(touches, count);
+	};
+	if (for_each(next(), std::move(moved)))
+		return;
+
+	Rainbow::Lua::Input::on_touch_moved(lua_state_, touches, count);
+}
+
+void Input::on_end_link_removed(Link *node)
+{
+	last_listener_ = static_cast<InputListener*>(node)->prev();
 }

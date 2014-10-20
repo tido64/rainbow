@@ -347,11 +347,11 @@ bool RainbowController::run()
 					window_.toggle_fullscreen();
 				}
 				else
-					director_.input().key_down(Key::from_raw(&keysym));
+					director_.input().on_key_down(Key::from_raw(&keysym));
 				break;
 			}
 			case SDL_KEYUP:
-				director_.input().key_up(Key::from_raw(&event.key.keysym));
+				director_.input().on_key_up(Key::from_raw(&event.key.keysym));
 				break;
 			case SDL_MOUSEMOTION:
 				on_mouse_motion(
@@ -398,7 +398,7 @@ void RainbowController::on_mouse_down(const Vec2i &point,
 	mouse_.x0 = mouse_.x;
 	mouse_.y0 = mouse_.y;
 	mouse_.timestamp = timestamp;
-	director_.input().touch_began(&mouse_, 1);
+	director_.input().on_touch_began(&mouse_, 1);
 }
 
 void RainbowController::on_mouse_motion(const Vec2i &point,
@@ -409,7 +409,7 @@ void RainbowController::on_mouse_motion(const Vec2i &point,
 	mouse_.x = point.x;
 	mouse_.y = point.y;
 	mouse_.timestamp = timestamp;
-	director_.input().touch_moved(&mouse_, 1);
+	director_.input().on_touch_moved(&mouse_, 1);
 }
 
 void RainbowController::on_mouse_up(const Vec2i &point,
@@ -420,7 +420,7 @@ void RainbowController::on_mouse_up(const Vec2i &point,
 	mouse_.x0 = mouse_.x;
 	mouse_.y0 = mouse_.y;
 	mouse_.timestamp = timestamp;
-	director_.input().touch_ended(&mouse_, 1);
+	director_.input().on_touch_ended(&mouse_, 1);
 }
 
 void RainbowController::on_window_resized()

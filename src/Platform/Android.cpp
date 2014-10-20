@@ -313,7 +313,7 @@ int32_t android_handle_motion(struct android_app *app, AInputEvent *event)
 			        & AMOTION_EVENT_ACTION_POINTER_INDEX_MASK)
 			    >> AMOTION_EVENT_ACTION_POINTER_INDEX_SHIFT;
 			Touch t = get_touch_event(director->renderer(), event, index);
-			director->input().touch_began(&t, 1);
+			director->input().on_touch_began(&t, 1);
 			break;
 		}
 		case AMOTION_EVENT_ACTION_UP:
@@ -323,7 +323,7 @@ int32_t android_handle_motion(struct android_app *app, AInputEvent *event)
 			        & AMOTION_EVENT_ACTION_POINTER_INDEX_MASK)
 			    >> AMOTION_EVENT_ACTION_POINTER_INDEX_SHIFT;
 			Touch t = get_touch_event(director->renderer(), event, index);
-			director->input().touch_ended(&t, 1);
+			director->input().on_touch_ended(&t, 1);
 			break;
 		}
 		case AMOTION_EVENT_ACTION_MOVE: {
@@ -340,13 +340,12 @@ int32_t android_handle_motion(struct android_app *app, AInputEvent *event)
 				touches[i] =
 				    get_touch_event(director->renderer(), event, i, history);
 			}
-			director->input().touch_moved(touches.get(), count);
+			director->input().on_touch_moved(touches.get(), count);
 			break;
 		}
 		case AMOTION_EVENT_ACTION_CANCEL:
 		case AMOTION_EVENT_ACTION_OUTSIDE:
-			//director->input().touch_canceled(touches, count);
-			director->input().touch_canceled();
+			director->input().on_touch_canceled();
 			break;
 		default:
 			break;

@@ -152,25 +152,25 @@ namespace
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
-	self.director->input().touch_began([self convertTouches:touches],
-	                                   touches.count);
+	self.director->input().on_touch_began([self convertTouches:touches],
+	                                      touches.count);
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
 {
-	self.director->input().touch_moved([self convertTouches:touches],
-	                                   touches.count);
+	self.director->input().on_touch_moved([self convertTouches:touches],
+	                                      touches.count);
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
-	self.director->input().touch_ended([self convertTouches:touches],
-	                                   touches.count);
+	self.director->input().on_touch_ended([self convertTouches:touches],
+	                                      touches.count);
 }
 
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
 {
-	self.director->input().touch_canceled();
+	self.director->input().on_touch_canceled();
 }
 
 #pragma mark - UIViewController overrides

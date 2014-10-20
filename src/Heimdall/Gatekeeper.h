@@ -14,13 +14,13 @@
 #include "Heimdall/ChangeMonitor.h"
 #include "Heimdall/DebugInfo.h"
 #include "Heimdall/Overlay.h"
+#include "Input/InputListener.h"
 #include "Input/Touch.h"
-#include "Input/Touchable.h"
 
 namespace Heimdall
 {
 	/// Overlay for debugging options.
-	class Gatekeeper final : public Rainbow::Director, public Touchable
+	class Gatekeeper final : public Rainbow::Director, public InputListener
 	{
 	public:
 		Gatekeeper();
@@ -45,13 +45,13 @@ namespace Heimdall
 
 		inline void toggle_overlay();
 
-		/* Implement Touchable */
+		/* Implement InputListener */
 
-		void touch_began_impl(const Touch *const touches,
-		                      const size_t count) override;
-		void touch_canceled_impl() override;
-		void touch_ended_impl(const Touch *const touches,
-		                      const size_t count) override;
+		bool on_touch_began_impl(const Touch *const touches,
+		                         const size_t count) override;
+		bool on_touch_canceled_impl() override;
+		bool on_touch_ended_impl(const Touch *const touches,
+		                         const size_t count) override;
 	};
 
 	void Gatekeeper::draw()
