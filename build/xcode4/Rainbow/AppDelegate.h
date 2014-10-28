@@ -4,12 +4,6 @@
 
 #import <UIKit/UIKit.h>
 
-@class RainbowViewController;
-
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
-
-@property (strong, nonatomic) UIWindow *window;
-
-@property (strong, nonatomic) RainbowViewController *viewController;
-
+@property(strong, nonatomic) UIWindow *window;
 @end

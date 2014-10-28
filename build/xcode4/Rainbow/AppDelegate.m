@@ -19,10 +19,9 @@
 #ifdef USE_TESTFLIGHT_SDK
 	[TestFlight takeOff:kRainbowAppToken];
 #endif
-	self.viewController = [[RainbowViewController alloc] init];
 	self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
-	self.window.rootViewController = self.viewController;
-	self.window.backgroundColor = [UIColor whiteColor];
+	self.window.backgroundColor = [UIColor blackColor];
+	self.window.rootViewController = [[RainbowViewController alloc] init];
 	[self.window makeKeyAndVisible];
 	return YES;
 }
