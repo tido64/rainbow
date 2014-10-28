@@ -14,8 +14,10 @@
 #include "Heimdall/ChangeMonitor.h"
 #include "Heimdall/DebugInfo.h"
 #include "Heimdall/Overlay.h"
+#include "Heimdall/OverlayActivator.h"
 #include "Input/InputListener.h"
-#include "Input/Touch.h"
+
+struct Touch;
 
 namespace Heimdall
 {
@@ -32,37 +34,26 @@ namespace Heimdall
 		void update(const unsigned long dt);
 
 	private:
-		unsigned int touch_count_;
-		unsigned long touch_held_;
 		List<const char*> changed_files_;
+		Overlay overlay_;
+		OverlayActivator overlay_activator_;
 		std::unique_ptr<DebugInfo> info_;
-		SceneGraph::Node *overlay_node_;
 		SceneGraph::Node scenegraph_;
 		std::mutex changed_files_mutex_;
-		Touch touches_[2];
 		ChangeMonitor monitor_;
-		Overlay overlay_;
-
-		inline void toggle_overlay();
 
 		/* Implement InputListener */
 
-		bool on_touch_began_impl(const Touch *const touches,
-		                         const size_t count) override;
+		bool on_touch_began_impl(const Touch *const, const size_t) override;
 		bool on_touch_canceled_impl() override;
-		bool on_touch_ended_impl(const Touch *const touches,
-		                         const size_t count) override;
+		bool on_touch_ended_impl(const Touch *const, const size_t) override;
+		bool on_touch_moved_impl(const Touch *const, const size_t) override;
 	};
 
 	void Gatekeeper::draw()
 	{
 		Director::draw();
 		scenegraph_.draw();
-	}
-
-	void Gatekeeper::toggle_overlay()
-	{
-		overlay_node_->enabled = !overlay_node_->enabled;
 	}
 }
 

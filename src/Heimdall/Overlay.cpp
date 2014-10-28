@@ -12,6 +12,8 @@
 
 namespace Heimdall
 {
+	Overlay::Overlay() : node_(nullptr), texture_(0) { }
+
 	Overlay::~Overlay()
 	{
 		if (texture_)
@@ -23,7 +25,7 @@ namespace Heimdall
 		TextureManager::Get()->bind(texture_);
 	}
 
-	void Overlay::setup(const Vec2i &screen)
+	void Overlay::init(SceneGraph::Node &parent, const Vec2i &screen)
 	{
 		const unsigned char white[4096] = { 0xff };
 		texture_ = TextureManager::Get()->create(
@@ -43,6 +45,9 @@ namespace Heimdall
 		vertices[3].position.y  = screen.height;
 		vertex_buffer_.upload(vertices, sizeof(vertices));
 		array_.reconfigure([this] { vertex_buffer_.bind(); });
+
+		node_ = parent.add_child(this);
+		node_->enabled = false;
 	}
 
 	void Overlay::draw_impl()

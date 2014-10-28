@@ -20,10 +20,10 @@ namespace Heimdall
 		DebugInfo();
 
 		inline Label* button();
-		inline SceneGraph::Node* node();
+		inline SceneGraph::Node* node() const;
 
-		void set_button(const Vec2f &position, SharedPtr<FontAtlas> font);
-		void set_console(const Vec2f &position, SharedPtr<FontAtlas> font);
+		void init_button(const Vec2f &position, SharedPtr<FontAtlas> font);
+		void init_console(const Vec2f &position, SharedPtr<FontAtlas> font);
 
 		void update(const unsigned long dt);
 
@@ -42,7 +42,7 @@ namespace Heimdall
 		return &button_;
 	}
 
-	SceneGraph::Node* DebugInfo::node()
+	SceneGraph::Node* DebugInfo::node() const
 	{
 		return node_;
 	}

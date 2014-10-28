@@ -163,6 +163,7 @@
 		19D9318A1834AFCE00F0137E /* ChangeMonitor_Stub.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19D931871834AFCE00F0137E /* ChangeMonitor_Stub.cpp */; };
 		19DCB2731741A1D000660000 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 19DCB2721741A1D000660000 /* libz.dylib */; };
 		19DCB2751741A23400660000 /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19DCB2741741A23400660000 /* libTestFlight.a */; settings = {ATTRIBUTES = (Weak, ); }; };
+		19E7748A1A02C8D3005DE249 /* OverlayActivator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19E774871A02C8D3005DE249 /* OverlayActivator.cpp */; };
 		19E85AA91858DCBD00D8B170 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 19E85AA81858DCBD00D8B170 /* Images.xcassets */; };
 		19E91FC21682B1460054D61F /* LuaHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19E91FC01682B1460054D61F /* LuaHelper.cpp */; };
 		19EBC54D16599D7000D3B5D7 /* Mixer_AL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19EBC54816599D7000D3B5D7 /* Mixer_AL.cpp */; };
@@ -496,7 +497,6 @@
 		19AF589B167FFA0800F54B27 /* DebugInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DebugInfo.h; sourceTree = "<group>"; };
 		19AF589C167FFA0800F54B27 /* Overlay.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Overlay.cpp; sourceTree = "<group>"; };
 		19AF589D167FFA0800F54B27 /* Overlay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Overlay.h; sourceTree = "<group>"; };
-		19AF589E167FFA0800F54B27 /* Resources.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Resources.h; sourceTree = "<group>"; };
 		19CEDD6A172422DC008B73B5 /* AudioFile.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = AudioFile.cpp; sourceTree = "<group>"; };
 		19CEDD6B172422DC008B73B5 /* AudioFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioFile.h; sourceTree = "<group>"; };
 		19CEDD6D172422DC008B73B5 /* AppleAudioFile.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = AppleAudioFile.cpp; sourceTree = "<group>"; };
@@ -512,6 +512,9 @@
 		19DCB2721741A1D000660000 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		19DCB2741741A23400660000 /* libTestFlight.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libTestFlight.a; path = ../../lib/TestFlight/libTestFlight.a; sourceTree = "<group>"; };
 		19DCB2831746AB7C00660000 /* LuaBind.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LuaBind.h; sourceTree = "<group>"; };
+		19E774871A02C8D3005DE249 /* OverlayActivator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OverlayActivator.cpp; sourceTree = "<group>"; };
+		19E774881A02C8D3005DE249 /* OverlayActivator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OverlayActivator.h; sourceTree = "<group>"; };
+		19E774891A02C8D3005DE249 /* Style.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Style.h; sourceTree = "<group>"; };
 		19E85AA81858DCBD00D8B170 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		19E91FC01682B1460054D61F /* LuaHelper.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = LuaHelper.cpp; sourceTree = "<group>"; };
 		19E91FC11682B1460054D61F /* LuaHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LuaHelper.h; sourceTree = "<group>"; };
@@ -1152,7 +1155,9 @@
 				196CB726161E4ADD0068C809 /* Gatekeeper.h */,
 				19AF589C167FFA0800F54B27 /* Overlay.cpp */,
 				19AF589D167FFA0800F54B27 /* Overlay.h */,
-				19AF589E167FFA0800F54B27 /* Resources.h */,
+				19E774871A02C8D3005DE249 /* OverlayActivator.cpp */,
+				19E774881A02C8D3005DE249 /* OverlayActivator.h */,
+				19E774891A02C8D3005DE249 /* Style.h */,
 			);
 			name = Heimdall;
 			path = ../../../src/Heimdall;
@@ -1382,6 +1387,7 @@
 				1939A161152C401300494609 /* liolib.c in Sources */,
 				1939A162152C401300494609 /* llex.c in Sources */,
 				1939A163152C401300494609 /* lmathlib.c in Sources */,
+				19E7748A1A02C8D3005DE249 /* OverlayActivator.cpp in Sources */,
 				1939A164152C401300494609 /* lmem.c in Sources */,
 				1939A165152C401300494609 /* loadlib.c in Sources */,
 				1939A166152C401300494609 /* lobject.c in Sources */,

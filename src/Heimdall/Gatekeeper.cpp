@@ -48,32 +48,14 @@ namespace
 namespace Heimdall
 {
 	Gatekeeper::Gatekeeper()
-	    : touch_count_(0), touch_held_(0), overlay_node_(nullptr),
-	      monitor_(Path::current())
-	{
-		if (terminated())
-			return;
-
-		info_.reset(new DebugInfo());
-		scenegraph_.add_child(info_->node());
-
-		overlay_node_ = scenegraph_.add_child(&overlay_);
-		overlay_node_->enabled = false;
-		overlay_node_->add_child(info_->button());
-
-		monitor_.set_callback([this](const char *path) {
-			char *file = new char[strlen(path) + 1];
-			strcpy(file, path);
-			std::lock_guard<std::mutex> lock(changed_files_mutex_);
-			changed_files_ = changed_files_.push_front(file);
-		});
-
-		on_touch_canceled();
-	}
+	    : overlay_activator_(&overlay_), monitor_(Path::current()) { }
 
 	void Gatekeeper::init(const Data &main, const Vec2i &screen)
 	{
-		overlay_.setup(screen);
+		info_.reset(new DebugInfo());
+		scenegraph_.add_child(info_->node());
+
+		overlay_.init(scenegraph_, screen);
 
 		const unsigned int pt = screen.height / 64;
 		auto console_font = make_shared<FontAtlas>(
@@ -83,17 +65,29 @@ namespace Heimdall
 		const float y = screen.height - console_font->height();
 		Vec2f position(screen.width / 128,
 		               y - console_font->height() - ui_font->height());
-		info_->set_button(position, std::move(ui_font));
+		info_->init_button(position, std::move(ui_font));
 		position.y = y;
-		info_->set_console(position, std::move(console_font));
+		info_->init_console(position, std::move(console_font));
+		overlay_.add_child(info_->button());
 
 		Director::init(main, screen);
+		if (terminated())
+			return;
+
 		input().subscribe(this);
+		input().subscribe(&overlay_activator_);
+
+		monitor_.set_callback([this](const char *path) {
+			char *file = new char[strlen(path) + 1];
+			strcpy(file, path);
+			std::lock_guard<std::mutex> lock(changed_files_mutex_);
+			changed_files_ = changed_files_.push_front(file);
+		});
 	}
 
 	void Gatekeeper::update(const unsigned long dt)
 	{
-		// Reload changed files.
+		if (!changed_files_.empty())
 		{
 			decltype(changed_files_) files;
 			{
@@ -114,76 +108,37 @@ namespace Heimdall
 
 		Director::update(dt);
 
-		if (!overlay_node_->enabled && touch_count_ == 2)
-		{
-			touch_held_ += dt;
-			if (touch_held_ > 2000)
-				toggle_overlay();
-		}
+		if (!overlay_.is_visible())
+			overlay_activator_.update(dt);
 		info_->update(dt);
 		scenegraph_.update(dt);
 	}
 
-	bool Gatekeeper::on_touch_began_impl(const Touch *const touches,
-	                                     const size_t count)
+	bool Gatekeeper::on_touch_began_impl(const Touch *const, const size_t)
 	{
-		if (overlay_node_->enabled)
-			return true;
-
-		size_t i = 0;
-		switch (touch_count_)
-		{
-			case 0:
-				touches_[0] = touches[0];
-				++touch_count_;
-				++i;
-			case 1:
-				if (i < count)
-				{
-					touches_[1] = touches[i];
-					++touch_count_;
-					touch_held_ = 0;
-				}
-				break;
-			default:
-				break;
-		}
-		return false;
+		return overlay_.is_visible();
 	}
 
 	bool Gatekeeper::on_touch_canceled_impl()
 	{
-		touch_count_ = 0;
-		touches_[0].hash = -1;
-		touches_[1].hash = -1;
-		return false;
+		return overlay_.is_visible();
 	}
 
 	bool Gatekeeper::on_touch_ended_impl(const Touch *const touches,
 	                                     const size_t count)
 	{
-		if (overlay_node_->enabled && !touch_count_)
+		if (overlay_.is_visible() && !overlay_activator_.is_activated())
 		{
 			if (!info_->on_touch(touches, count))
-				toggle_overlay();
+				overlay_.hide();
 			return true;
 		}
-
-		for (size_t i = 0; i < count; ++i)
-		{
-			if (touches[i] == touches_[0])
-			{
-				touches_[0] = touches_[1];
-				touches_[1].hash = -1;
-				--touch_count_;
-			}
-			else if (touches[i] == touches_[1])
-			{
-				touches_[1].hash = -1;
-				--touch_count_;
-			}
-		}
 		return false;
+	}
+
+	bool Gatekeeper::on_touch_moved_impl(const Touch *const, const size_t)
+	{
+		return overlay_.is_visible();
 	}
 }
 
