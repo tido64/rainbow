@@ -435,14 +435,9 @@ namespace  // FMOD Studio API
 		// FMOD.createInstance(event)
 		Rainbow::Lua::Argument<char*>::is_required(L, 1);
 
-		const char *const event = lua_tostring(L, 1);
-		FMOD::Studio::ID id{ 0, 0, 0, { 0 } };
-		if ((*Mixer::Instance)->lookupID(event, &id) != FMOD_OK)
-			return 0;
-
 		FMOD::Studio::EventDescription *description = nullptr;
-		if ((*Mixer::Instance)->getEvent(
-		        &id, FMOD_STUDIO_LOAD_BEGIN_NOW, &description) != FMOD_OK)
+		if ((*Mixer::Instance)->getEvent(lua_tostring(L, 1), &description) !=
+		    FMOD_OK)
 		{
 			return 0;
 		}

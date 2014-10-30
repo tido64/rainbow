@@ -12,7 +12,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 
-import org.fmod.FMODAudioDevice;
+import org.fmod.FMOD;
 
 public class RainbowActivity extends NativeActivity
                              implements View.OnSystemUiVisibilityChangeListener {
@@ -57,13 +57,13 @@ public class RainbowActivity extends NativeActivity
             };
             contentView().setOnSystemUiVisibilityChangeListener(this);
         }
-        FMODAudioDevice.init(this);
+        FMOD.init(this);
     }
 
     @Override
     protected void onDestroy()
     {
-        FMODAudioDevice.close();
+        FMOD.close();
         super.onDestroy();
     }
 
