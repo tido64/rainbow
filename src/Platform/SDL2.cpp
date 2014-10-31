@@ -37,6 +37,14 @@ namespace
 	static_assert(SDL_VERSION_ATLEAST(2,0,3),
 	              "Rainbow requires SDL version 2.0.3 or higher");
 
+	const uint32_t kMouseButtons[] = {
+		SDL_BUTTON_LEFT,
+		SDL_BUTTON_MIDDLE,
+		SDL_BUTTON_RIGHT,
+		SDL_BUTTON_X1,
+		SDL_BUTTON_X2
+	};
+
 	const double kMsPerFrame = 1000.0 / 60.0;
 
 	bool is_fullscreen(const SDL_Keysym &keysym)
@@ -97,7 +105,7 @@ namespace
 	private:
 		SDLContext context_;       ///< SDL context.
 		bool vsync_;               ///< Whether vertical sync is enabled.
-		unsigned int fullscreen_;  ///< Whether the window is in full screen mode.
+		uint32_t fullscreen_;      ///< Whether the window is in full screen mode.
 	#if USE_BORDERLESS_WINDOWED_MODE
 		SDL_Point position_;       ///< Window's position while windowed.
 	#endif
@@ -113,14 +121,19 @@ namespace
 
 		bool run();
 
-		void on_mouse_down(const Vec2i &point, const unsigned long timestamp);
-		void on_mouse_motion(const Vec2i &point, const unsigned long timestamp);
-		void on_mouse_up(const Vec2i &point, const unsigned long timestamp);
+		void on_mouse_down(const uint32_t button,
+		                   const Vec2i &point,
+		                   const unsigned long timestamp);
+		void on_mouse_motion(const uint32_t buttons,
+		                     const Vec2i &point,
+		                     const unsigned long timestamp);
+		void on_mouse_up(const uint32_t button,
+		                 const Vec2i &point,
+		                 const unsigned long timestamp);
 		void on_window_resized();
 
 	private:
 		SDLWindow &window_;
-		Touch mouse_;
 		Chrono chrono_;
 		Director director_;
 		const bool suspend_on_focus_lost_;
@@ -220,11 +233,11 @@ SDLContext::operator bool() const
 }
 
 SDLWindow::SDLWindow(const Vec2i &size)
-    : context_({ SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED }, size)
+    : context_({SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED}, size)
     , vsync_(false)
     , fullscreen_(0)
 #if USE_BORDERLESS_WINDOWED_MODE
-    , position_({ SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED })
+    , position_({SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED})
 #endif
     , size_(size)
 {
@@ -354,22 +367,22 @@ bool RainbowController::run()
 				director_.input().on_key_up(Key::from_raw(&event.key.keysym));
 				break;
 			case SDL_MOUSEMOTION:
-				on_mouse_motion(
-				    director_.renderer().convert_to_flipped_view(
-				        Vec2i(event.motion.x, event.motion.y)),
-				    chrono_.current());
+				on_mouse_motion(event.motion.state,
+				                director_.renderer().convert_to_flipped_view(
+				                    Vec2i(event.motion.x, event.motion.y)),
+				                event.motion.timestamp);
 				break;
 			case SDL_MOUSEBUTTONDOWN:
-				on_mouse_down(
-				    director_.renderer().convert_to_flipped_view(
-				        Vec2i(event.button.x, event.button.y)),
-				    chrono_.current());
+				on_mouse_down(event.button.button,
+				              director_.renderer().convert_to_flipped_view(
+				                  Vec2i(event.button.x, event.button.y)),
+				              event.button.timestamp);
 				break;
 			case SDL_MOUSEBUTTONUP:
-				on_mouse_up(
-				    director_.renderer().convert_to_flipped_view(
-				        Vec2i(event.button.x, event.button.y)),
-				    chrono_.current());
+				on_mouse_up(event.button.button,
+				            director_.renderer().convert_to_flipped_view(
+				                Vec2i(event.button.x, event.button.y)),
+				            event.button.timestamp);
 				break;
 			default:
 				break;
@@ -390,37 +403,45 @@ bool RainbowController::run()
 	return true;
 }
 
-void RainbowController::on_mouse_down(const Vec2i &point,
+void RainbowController::on_mouse_down(const uint32_t button,
+                                      const Vec2i &point,
                                       const unsigned long timestamp)
 {
-	mouse_.x = point.x;
-	mouse_.y = point.y;
-	mouse_.x0 = mouse_.x;
-	mouse_.y0 = mouse_.y;
-	mouse_.timestamp = timestamp;
-	director_.input().on_touch_began(&mouse_, 1);
+	Touch t(button, point.x, point.y, timestamp);
+	director_.input().on_touch_began(&t, 1);
 }
 
-void RainbowController::on_mouse_motion(const Vec2i &point,
+void RainbowController::on_mouse_motion(const uint32_t buttons,
+                                        const Vec2i &point,
                                         const unsigned long timestamp)
 {
-	mouse_.x0 = mouse_.x;
-	mouse_.y0 = mouse_.y;
-	mouse_.x = point.x;
-	mouse_.y = point.y;
-	mouse_.timestamp = timestamp;
-	director_.input().on_touch_moved(&mouse_, 1);
+	if (buttons > 0)
+	{
+		Touch t[SDL_BUTTON_X2];
+		size_t i = 0;
+		for (auto button : kMouseButtons)
+		{
+			if (buttons & SDL_BUTTON(button))
+			{
+				t[i] = Touch(button, point.x, point.y, timestamp);
+				++i;
+			}
+		}
+		director_.input().on_touch_moved(t, i);
+	}
+	else
+	{
+		Touch t(0, point.x, point.y, timestamp);
+		director_.input().on_touch_moved(&t, 1);
+	}
 }
 
-void RainbowController::on_mouse_up(const Vec2i &point,
+void RainbowController::on_mouse_up(const uint32_t button,
+                                    const Vec2i &point,
                                     const unsigned long timestamp)
 {
-	mouse_.x = point.x;
-	mouse_.y = point.y;
-	mouse_.x0 = mouse_.x;
-	mouse_.y0 = mouse_.y;
-	mouse_.timestamp = timestamp;
-	director_.input().on_touch_ended(&mouse_, 1);
+	Touch t(button, point.x, point.y, timestamp);
+	director_.input().on_touch_ended(&t, 1);
 }
 
 void RainbowController::on_window_resized()
