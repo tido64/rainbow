@@ -19,15 +19,15 @@ public:
 	/// Adds a node as child.
 	void add_child(T *);
 
-	/// Recursively calls function \p func on this node and its children.
-	template<typename F>
-	void for_each(F &&func);
-
 	/// Removes node from the tree and deletes it.
 	void remove();
 
 	/// Removes a child node.
 	void remove_child(T *);
+
+	/// Recursively calls function \p func on \p node and its children.
+	template<typename U, typename F>
+	friend void for_each(U *node, F&& func);
 
 protected:
 	T *parent_;            ///< This node's parent.
@@ -44,18 +44,6 @@ void TreeNode<T>::add_child(T *node)
 		node->parent_->children_.remove(node);
 	node->parent_ = static_cast<T*>(this);
 	children_.push_back(node);
-}
-
-template<typename T>
-template<typename F>
-void TreeNode<T>::for_each(F &&func)
-{
-	static_assert(std::is_convertible<F, std::function<void(T*)>>::value,
-	              "function type void(T*) required");
-
-	func(static_cast<T*>(this));
-	for (auto child : children_)
-		child->for_each(func);
 }
 
 template<typename T>
@@ -77,7 +65,7 @@ template<typename T>
 TreeNode<T>::TreeNode() : parent_(nullptr)
 {
 	static_assert(std::is_base_of<TreeNode, T>::value,
-	              "T must be a subclass of RefCounted");
+	              "T must be a subclass of TreeNode");
 }
 
 template<typename T>
@@ -85,6 +73,19 @@ TreeNode<T>::~TreeNode()
 {
 	for (auto child : children_)
 		delete child;
+}
+
+template<typename T, typename F>
+void for_each(T *node, F&& func)
+{
+	static_assert(std::is_base_of<TreeNode<T>, T>::value,
+	              "T must be a subclass of TreeNode");
+	static_assert(std::is_convertible<F, std::function<void(T*)>>::value,
+	              "function type void(T*) required");
+
+	func(node);
+	for (auto child : node->children_)
+		for_each(child, func);
 }
 
 #endif
