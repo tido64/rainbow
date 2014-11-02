@@ -15,11 +15,11 @@
 class Label : private NonCopyable<Label>
 {
 public:
-	enum Alignment
+	enum class TextAlignment
 	{
-		kLeftTextAlignment,
-		kRightTextAlignment,
-		kCenterTextAlignment
+		Left,
+		Right,
+		Center
 	};
 
 	static const unsigned int kStaleBuffer      = 1u << 0;
@@ -50,7 +50,7 @@ public:
 	inline unsigned int width() const;
 
 	/// Sets text alignment.
-	void set_alignment(const Alignment);
+	void set_alignment(const TextAlignment);
 
 	/// Sets text color.
 	void set_color(const Colorb &);
@@ -86,7 +86,7 @@ private:
 	Vec2f position_;                ///< Position of the text (bottom left).
 	Colorb color_;                  ///< Color of the text.
 	float scale_;                   ///< Label scale factor.
-	Alignment alignment_;           ///< Text alignment.
+	TextAlignment alignment_;       ///< Text alignment.
 	unsigned int count_;            ///< Number of characters * 4 (i.e. vertices).
 	unsigned int stale_;            ///< Flags indicating need for update.
 	unsigned int width_;            ///< Label width.

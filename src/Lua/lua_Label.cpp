@@ -63,13 +63,13 @@ NS_RAINBOW_LUA_BEGIN
 		switch (*lua_tostring(L, 2))
 		{
 			case 'c':
-				self->label_.set_alignment(::Label::kCenterTextAlignment);
+				self->label_.set_alignment(::Label::TextAlignment::Center);
 				break;
 			case 'r':
-				self->label_.set_alignment(::Label::kRightTextAlignment);
+				self->label_.set_alignment(::Label::TextAlignment::Right);
 				break;
 			default:
-				self->label_.set_alignment(::Label::kLeftTextAlignment);
+				self->label_.set_alignment(::Label::TextAlignment::Left);
 				break;
 		}
 		return 0;

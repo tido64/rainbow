@@ -8,13 +8,13 @@
 #include <cstring>
 
 Label::Label()
-    : size_(0), scale_(1.0f), alignment_(kLeftTextAlignment), count_(0),
+    : size_(0), scale_(1.0f), alignment_(TextAlignment::Left), count_(0),
       stale_(0), width_(0)
 {
 	array_.reconfigure([=] { buffer_.bind(); });
 }
 
-void Label::set_alignment(const Label::Alignment a)
+void Label::set_alignment(const TextAlignment a)
 {
 	alignment_ = a;
 	set_needs_update(kStaleBuffer);
@@ -152,9 +152,9 @@ void Label::update()
 
 void Label::align(float offset, const size_t start, const size_t end)
 {
-	if (alignment_ != kLeftTextAlignment)
+	if (alignment_ != TextAlignment::Left)
 	{
-		if (alignment_ == kCenterTextAlignment)
+		if (alignment_ == TextAlignment::Center)
 			offset *= 0.5f;
 		std::for_each(vertices_.get() + start * 4,
 		              vertices_.get() + end * 4,
