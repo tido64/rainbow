@@ -7,13 +7,6 @@
 #include <algorithm>
 #include <cstring>
 
-namespace
-{
-	const unsigned int kStaleBuffer      = 1u << 0;
-	const unsigned int kStaleBufferSize  = 1u << 1;
-	const unsigned int kStaleColor       = 1u << 2;
-}
-
 Label::Label()
     : size_(0), scale_(1.0f), alignment_(kLeftTextAlignment), count_(0),
       stale_(0), width_(0)
@@ -24,26 +17,26 @@ Label::Label()
 void Label::set_alignment(const Label::Alignment a)
 {
 	alignment_ = a;
-	stale_ |= kStaleBuffer;
+	set_needs_update(kStaleBuffer);
 }
 
 void Label::set_color(const Colorb &c)
 {
 	color_ = c;
-	stale_ |= kStaleColor;
+	set_needs_update(kStaleColor);
 }
 
 void Label::set_font(SharedPtr<FontAtlas> f)
 {
 	font_ = std::move(f);
-	stale_ |= kStaleBuffer;
+	set_needs_update(kStaleBuffer);
 }
 
 void Label::set_position(const Vec2f &position)
 {
 	position_.x = static_cast<int>(position.x + 0.5);
 	position_.y = static_cast<int>(position.y + 0.5);
-	stale_ |= kStaleBuffer;
+	set_needs_update(kStaleBuffer);
 }
 
 void Label::set_scale(const float f)
@@ -58,7 +51,7 @@ void Label::set_scale(const float f)
 	else
 		scale_ = f;
 
-	stale_ |= kStaleBuffer;
+	set_needs_update(kStaleBuffer);
 }
 
 void Label::set_text(const char *text)
@@ -68,11 +61,11 @@ void Label::set_text(const char *text)
 	{
 		text_.reset(new char[len + 1]);
 		size_ = len;
-		stale_ |= kStaleBufferSize;
+		set_needs_update(kStaleBufferSize);
 	}
 	memcpy(text_.get(), text, len);
 	text_[len] = '\0';
-	stale_ |= kStaleBuffer;
+	set_needs_update(kStaleBuffer);
 }
 
 void Label::bind_textures() const
@@ -83,7 +76,7 @@ void Label::bind_textures() const
 void Label::move(const Vec2f &delta)
 {
 	position_ += delta;
-	stale_ |= kStaleBuffer;
+	set_needs_update(kStaleBuffer);
 }
 
 void Label::update()
@@ -96,7 +89,7 @@ void Label::update()
 			if (stale_ & kStaleBufferSize)
 			{
 				vertices_.reset(new SpriteVertex[size_ * 4]);
-				stale_ |= kStaleColor;
+				set_needs_update(kStaleColor);
 			}
 			size_t count = 0;
 			size_t start = 0;

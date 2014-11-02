@@ -22,6 +22,10 @@ public:
 		kCenterTextAlignment
 	};
 
+	static const unsigned int kStaleBuffer      = 1u << 0;
+	static const unsigned int kStaleBufferSize  = 1u << 1;
+	static const unsigned int kStaleColor       = 1u << 2;
+
 	Label();
 
 	/// Returns label text color.
@@ -32,6 +36,12 @@ public:
 
 	/// Returns the assigned font.
 	inline const FontAtlas& font() const;
+
+	/// Returns label position.
+	inline const Vec2f& position() const;
+
+	/// Returns the string.
+	inline const char* text() const;
 
 	/// Returns the vertex array object.
 	inline const VertexArray& vertex_array() const;
@@ -54,6 +64,9 @@ public:
 	/// Sets label scale. Value is clamped between 0.01 and 1.0.
 	void set_scale(const float f);
 
+	/// Sets label as needing update.
+	inline void set_needs_update(const unsigned int what);
+
 	/// Sets text to display.
 	void set_text(const char *);
 
@@ -70,7 +83,7 @@ private:
 	std::unique_ptr<SpriteVertex[]> vertices_;  ///< Client vertex buffer.
 	std::unique_ptr<char[]> text_;  ///< Content of this label.
 	size_t size_;                   ///< Size of the char array.
-	Vec2f position_;                ///< Position of the text (top left).
+	Vec2f position_;                ///< Position of the text (bottom left).
 	Colorb color_;                  ///< Color of the text.
 	float scale_;                   ///< Label scale factor.
 	Alignment alignment_;           ///< Text alignment.
@@ -103,6 +116,16 @@ const FontAtlas& Label::font() const
 	return *font_.get();
 }
 
+const Vec2f& Label::position() const
+{
+	return position_;
+}
+
+const char* Label::text() const
+{
+	return text_.get();
+}
+
 const VertexArray& Label::vertex_array() const
 {
 	return array_;
@@ -111,6 +134,11 @@ const VertexArray& Label::vertex_array() const
 unsigned int Label::width() const
 {
 	return width_;
+}
+
+void Label::set_needs_update(const unsigned int what)
+{
+	stale_ |= what;
 }
 
 #endif
