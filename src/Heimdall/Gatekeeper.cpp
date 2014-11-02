@@ -9,6 +9,7 @@
 #include "Common/Data.h"
 #include "FileSystem/File.h"
 #include "FileSystem/Path.h"
+#include "Input/Touch.h"
 #include "Lua/LuaHelper.h"
 #include "Resources/Inconsolata.otf.h"
 #include "Resources/NewsCycle-Regular.ttf.h"
@@ -68,7 +69,7 @@ namespace Heimdall
 		info_->init_button(position, std::move(ui_font));
 		position.y = y;
 		info_->init_console(position, std::move(console_font));
-		overlay_.add_child(info_->button());
+		overlay_.add_child(info_->button().drawable());
 
 		Director::init(main, screen);
 		if (terminated())
@@ -114,13 +115,19 @@ namespace Heimdall
 		scenegraph_.update(dt);
 	}
 
-	bool Gatekeeper::on_touch_began_impl(const Touch *const, const size_t)
+	bool Gatekeeper::on_touch_began_impl(const Touch *const touches,
+	                                     const size_t count)
 	{
+		std::for_each(touches, touches + count, [this](const Touch &t) {
+			if (info_->button().hit_test(Vec2i(t.x, t.y)))
+				pressed_[t.hash] = &info_->button();
+		});
 		return overlay_.is_visible();
 	}
 
 	bool Gatekeeper::on_touch_canceled_impl()
 	{
+		pressed_.clear();
 		return overlay_.is_visible();
 	}
 
@@ -129,10 +136,24 @@ namespace Heimdall
 	{
 		if (overlay_.is_visible() && !overlay_activator_.is_activated())
 		{
-			if (!info_->on_touch(touches, count))
+			if (!pressed_.empty())
+			{
+				std::for_each(touches, touches + count, [this](const Touch &t) {
+					auto button = pressed_.find(t.hash);
+					if (button != pressed_.end())
+					{
+						if (button->second->hit_test(Vec2i(t.x, t.y)))
+							button->second->press();
+						pressed_.erase(button);
+					}
+				});
+			}
+			else
 				overlay_.hide();
 			return true;
 		}
+		else if (!pressed_.empty())
+			pressed_.clear();
 		return false;
 	}
 

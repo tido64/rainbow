@@ -8,6 +8,7 @@
 #ifdef USE_HEIMDALL
 
 #include <mutex>
+#include <unordered_map>
 
 #include "Common/List.h"
 #include "Director.h"
@@ -39,6 +40,7 @@ namespace Heimdall
 		OverlayActivator overlay_activator_;
 		std::unique_ptr<DebugInfo> info_;
 		SceneGraph::Node scenegraph_;
+		std::unordered_map<unsigned int, Button*> pressed_;
 		std::mutex changed_files_mutex_;
 		ChangeMonitor monitor_;
 

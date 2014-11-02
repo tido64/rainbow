@@ -5,9 +5,7 @@
 #ifndef HEIMDALL_DEBUGINFO_H_
 #define HEIMDALL_DEBUGINFO_H_
 
-#include "Graphics/Label.h"
-
-struct Touch;
+#include "Heimdall/Button.h"
 
 namespace SceneGraph { class Node; }
 
@@ -19,7 +17,7 @@ namespace Heimdall
 	public:
 		DebugInfo();
 
-		inline Label* button();
+		inline Button& button();
 		inline SceneGraph::Node* node() const;
 
 		void init_button(const Vec2f &position, SharedPtr<FontAtlas> font);
@@ -27,19 +25,15 @@ namespace Heimdall
 
 		void update(const unsigned long dt);
 
-		bool on_touch(const Touch *const touches, const size_t count);
-
 	private:
 		SceneGraph::Node *node_;
-		Vec2f position_;
-		Label button_;
 		Label label_;
-		char text_[128];
+		Button button_;
 	};
 
-	Label* DebugInfo::button()
+	Button& DebugInfo::button()
 	{
-		return &button_;
+		return button_;
 	}
 
 	SceneGraph::Node* DebugInfo::node() const

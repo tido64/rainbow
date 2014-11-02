@@ -6,40 +6,63 @@
 
 #include "Heimdall/DebugInfo.h"
 
+#include <algorithm>
+
 #include "Graphics/SceneGraph.h"
 #include "Graphics/TextureManager.h"
 #include "Heimdall/Style.h"
-#include "Input/Touch.h"
+
+#if defined(_MSC_VER) && _MSC_VER <= 1800
+#	define snprintf(...) sprintf_s(__VA_ARGS__)
+#endif
 
 namespace Heimdall
 {
 	namespace
 	{
+		const size_t kBufferSize = 128;
 		const char kStringHideDebug[] = "Hide debug information";
-		const char kStringInfoFormat[] = "PERF: %lu ms/frame\nVMEM: %.2f MBs (peaked at %.2f MBs)";
+		const char kStringInfoFormat[] =
+		    "PERF: %lu ms/frame\nVMEM: %.2f MBs (peaked at %.2f MBs)";
 		const char kStringShowDebug[] = "Show debug information";
 	}
 
 	DebugInfo::DebugInfo() : node_(new SceneGraph::Node())
 	{
 		node_->enabled = false;
-		button_.set_color(Color::InactiveFont());
-		button_.set_text(kStringShowDebug);
-		label_.set_color(Color::DebugInfoFont());
-		node_->add_child(&label_);
 	}
 
 	void DebugInfo::init_button(const Vec2f &p, SharedPtr<FontAtlas> font)
 	{
+		button_.set_color(Color::InactiveFont());
 		button_.set_font(std::move(font));
 		button_.set_position(p);
-		position_ = p;
+		button_.set_text(kStringShowDebug);
+		button_.set_action([this] {
+			node_->enabled = !node_->enabled;
+			if (node_->enabled)
+			{
+				button_.set_color(Color::NormalFont());
+				button_.set_text(kStringHideDebug);
+			}
+			else
+			{
+				button_.set_color(Color::InactiveFont());
+				button_.set_text(kStringShowDebug);
+			}
+		});
 	}
 
 	void DebugInfo::init_console(const Vec2f &p, SharedPtr<FontAtlas> font)
 	{
+		label_.set_color(Color::DebugInfoFont());
 		label_.set_font(std::move(font));
 		label_.set_position(p);
+		char tmp[kBufferSize];
+		std::fill_n(tmp, kBufferSize - 1, ' ');
+		tmp[kBufferSize - 1] = '\0';
+		label_.set_text(tmp);
+		node_->add_child(&label_);
 	}
 
 	void DebugInfo::update(const unsigned long dt)
@@ -49,34 +72,13 @@ namespace Heimdall
 
 		double used, peak;
 		TextureManager::Get()->memory_usage(used, peak, peak);
-		sprintf(text_, kStringInfoFormat, dt, used, peak);
-		label_.set_text(text_);
-	}
-
-	bool DebugInfo::on_touch(const Touch *const touches, const size_t count)
-	{
-		const int x1 = position_.x + button_.width();
-		const int y1 = position_.y + button_.font().height();
-		for (size_t i = 0; i < count; ++i)
-		{
-			if (touches[0].x >= position_.x && touches[0].x <= x1
-			    && touches[0].y >= position_.y && touches[0].y <= y1)
-			{
-				node_->enabled = !node_->enabled;
-				if (node_->enabled)
-				{
-					button_.set_color(Color::NormalFont());
-					button_.set_text(kStringHideDebug);
-				}
-				else
-				{
-					button_.set_color(Color::InactiveFont());
-					button_.set_text(kStringShowDebug);
-				}
-				return true;
-			}
-		}
-		return false;
+		snprintf(const_cast<char*>(label_.text()),
+		         kBufferSize,
+		         kStringInfoFormat,
+		         dt,
+		         used,
+		         peak);
+		label_.set_needs_update(Label::kStaleBuffer);
 	}
 }
 
