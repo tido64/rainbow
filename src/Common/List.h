@@ -28,30 +28,30 @@ class List : private NonCopyable<List<T>>
 		const T value;
 		const SharedPtr<Item> next;
 
-		Item(const T &value, SharedPtr<Item> next)
-		    : value(value), next(std::move(next)) { }
+		Item(T&& value, SharedPtr<Item> next)
+		    : value(std::forward<T>(value)), next(std::move(next)) { }
 	};
 
 public:
 	List() = default;
 
-	List(List &&list) : head_(std::forward<SharedPtr<Item>>(list.head_)) { }
+	List(List&& list) : head_(std::forward<SharedPtr<Item>>(list.head_)) { }
 
 	bool empty() const
 	{
 		return !head_;
 	}
 
-	T front() const
+	const T& front() const
 	{
 		return head_->value;
 	}
 
-	List insert(const size_t i, const T &value) const
+	List insert(const size_t i, T&& value) const
 	{
 		if (i == 0)
-			return push_front(value);
-		return List(front(), pop_front().insert(i - 1, value));
+			return push_front(std::forward<T>(value));
+		return List(front(), pop_front().insert(i - 1, std::forward<T>(value)));
 	}
 
 	List pop_front() const
@@ -59,19 +59,19 @@ public:
 		return List(head_->next);
 	}
 
-	List push_back(const T &value) const
+	List push_back(T&& value) const
 	{
 		if (empty())
-			return push_front(value);
-		return List(front(), pop_front().push_back(value));
+			return push_front(std::forward<T>(value));
+		return List(front(), pop_front().push_back(std::forward<T>(value)));
 	}
 
-	List push_front(const T &value) const
+	List push_front(T&& value) const
 	{
-		return List(value, *this);
+		return List(std::forward<T>(value), *this);
 	}
 
-	List& operator=(List &&list)
+	List& operator=(List&& list)
 	{
 		head_ = std::forward<SharedPtr<Item>>(list.head_);
 		return *this;
@@ -82,12 +82,12 @@ private:
 
 	explicit List(SharedPtr<Item> items) : head_(std::move(items)) { }
 
-	List(const T &value, const List &tail)
-	    : head_(new Item(value, tail.head_)) { }
+	List(T&& value, const List &tail)
+	    : head_(new Item(std::forward<T>(value), tail.head_)) { }
 };
 
 template<typename T, typename F>
-void for_each(const List<T> &list, F &&f)
+void for_each(const List<T> &list, F&& f)
 {
 	static_assert(std::is_convertible<F, std::function<void(T)>>::value,
 	              "for_each() requires a function type void(T)");
