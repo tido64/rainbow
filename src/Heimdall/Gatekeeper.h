@@ -35,7 +35,7 @@ namespace Heimdall
 		void update(const unsigned long dt);
 
 	private:
-		List<const char*> changed_files_;
+		List<std::unique_ptr<char[]>> changed_files_;
 		Overlay overlay_;
 		OverlayActivator overlay_activator_;
 		std::unique_ptr<DebugInfo> info_;

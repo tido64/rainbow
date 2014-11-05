@@ -79,10 +79,10 @@ namespace Heimdall
 		input().subscribe(&overlay_activator_);
 
 		monitor_.set_callback([this](const char *path) {
-			char *file = new char[strlen(path) + 1];
-			strcpy(file, path);
+			std::unique_ptr<char[]> file(new char[strlen(path) + 1]);
+			strcpy(file.get(), path);
 			std::lock_guard<std::mutex> lock(changed_files_mutex_);
-			changed_files_ = changed_files_.push_front(file);
+			changed_files_ = changed_files_.push_front(std::move(file));
 		});
 	}
 
@@ -96,9 +96,8 @@ namespace Heimdall
 				files = std::move(changed_files_);
 			}
 			lua_State *L = state();
-			for_each(files, [L](const char *file) {
-				std::unique_ptr<const char[]> path(file);
-				Library library(path.get());
+			for_each(files, [L](const std::unique_ptr<char[]> &file) {
+				Library library(file.get());
 				if (!library)
 					return;
 
