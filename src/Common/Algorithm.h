@@ -9,6 +9,7 @@
 #ifndef COMMON_ALGORITHM_H_
 #define COMMON_ALGORITHM_H_
 
+#include <algorithm>
 #include <cmath>
 #include <limits>
 
@@ -61,6 +62,9 @@ namespace Rainbow
 		}
 	};
 
+	template<typename T>
+	T clamp(const T x, const T min_val, const T max_val) pure;
+
 	/// Converts radians to degrees.
 	inline float degrees(const float r) pure;
 
@@ -87,6 +91,12 @@ namespace Rainbow
 
 	/// Converts a UTF-8 character to UTF-32.
 	inline utf_t utf8_decode(const unsigned char *str) pure;
+
+	template<typename T>
+	T clamp(const T x, const T min_val, const T max_val)
+	{
+		return std::min(std::max(x, min_val), max_val);
+	}
 
 	float degrees(const float r)
 	{

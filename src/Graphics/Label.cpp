@@ -4,8 +4,9 @@
 
 #include "Graphics/Label.h"
 
-#include <algorithm>
 #include <cstring>
+
+#include "Common/Algorithm.h"
 
 Label::Label()
     : size_(0), scale_(1.0f), alignment_(TextAlignment::Left), count_(0),
@@ -44,13 +45,7 @@ void Label::set_scale(const float f)
 	if (Rainbow::is_equal(scale_, f))
 		return;
 
-	if (f >= 1.0f)
-		scale_ = 1.0f;
-	else if (f <= 0.01f)
-		scale_ = 0.01f;
-	else
-		scale_ = f;
-
+	scale_ = Rainbow::clamp(f, 0.01f, 1.0f);
 	set_needs_update(kStaleBuffer);
 }
 
