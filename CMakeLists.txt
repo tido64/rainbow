@@ -18,18 +18,230 @@ option(USE_SPINE        "Enable Spine runtime" OFF)
 # Auto-generate files
 execute_process(COMMAND tools/shaders-gen.py WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
 
-# Platform-specifics
+# Platform-specific flags
 include(${LOCAL_MODULE_PATH}/Project.cmake)
 include(${LOCAL_MODULE_PATH}/Unix.cmake)
 include(${LOCAL_MODULE_PATH}/Windows.cmake)
 
-# Target
-file(GLOB_RECURSE RAINBOW_CPP src/*.cpp)
-foreach(src IN LISTS RAINBOW_CPP)
-	string(REGEX REPLACE "${PROJECT_SOURCE_DIR}/src/" "" src_file ${src})
+set(SOURCE_FILES
+	src/Common/Algorithm.h
+	src/Common/Arena.h
+	src/Common/Chrono.cpp
+	src/Common/Chrono.h
+	src/Common/Color.h
+	src/Common/Constants.h
+	src/Common/Constraints.h
+	src/Common/Data.cpp
+	src/Common/Data.h
+	src/Common/DataMap.h
+	src/Common/Debug.h
+	src/Common/Functional.h
+	src/Common/Global.h
+	src/Common/Link.cpp
+	src/Common/Link.h
+	src/Common/List.h
+	src/Common/Memory.h
+	src/Common/NonCopyable.h
+	src/Common/Random.cpp
+	src/Common/Random.h
+	src/Common/TimedEvent.h
+	src/Common/TreeNode.h
+	src/Common/Vec2.h
+	src/Common/Vec3.h
+	src/Common/Vector.h
+	src/Config.cpp
+	src/Config.h
+	src/ConFuoco/Mixer.h
+	src/Director.cpp
+	src/Director.h
+	src/FileSystem/File.cpp
+	src/FileSystem/File.h
+	src/FileSystem/Path.cpp
+	src/FileSystem/Path.h
+	src/Graphics/Animation.cpp
+	src/Graphics/Animation.h
+	src/Graphics/Buffer.cpp
+	src/Graphics/Buffer.h
+	src/Graphics/Decoders/PNG.h
+	src/Graphics/Decoders/PVRTC.h
+	src/Graphics/Decoders/UIKit.h
+	src/Graphics/Drawable.h
+	src/Graphics/FontAtlas.cpp
+	src/Graphics/FontAtlas.h
+	src/Graphics/FontGlyph.h
+	src/Graphics/Image.h
+	src/Graphics/Label.cpp
+	src/Graphics/Label.h
+	src/Graphics/OpenGL.h
+	src/Graphics/Renderer.cpp
+	src/Graphics/Renderer.h
+	src/Graphics/SceneGraph.cpp
+	src/Graphics/SceneGraph.h
+	src/Graphics/ShaderDetails.h
+	src/Graphics/ShaderManager.cpp
+	src/Graphics/ShaderManager.h
+	src/Graphics/Shaders/Diffuse.cpp
+	src/Graphics/Shaders/Diffuse.h
+	src/Graphics/Shaders/Shaders.h
+	src/Graphics/Shaders.cpp
+	src/Graphics/Shaders.h
+	src/Graphics/Sprite.cpp
+	src/Graphics/Sprite.h
+	src/Graphics/SpriteBatch.cpp
+	src/Graphics/SpriteBatch.h
+	src/Graphics/SpriteVertex.h
+	src/Graphics/Texture.h
+	src/Graphics/TextureAtlas.cpp
+	src/Graphics/TextureAtlas.h
+	src/Graphics/TextureManager.cpp
+	src/Graphics/TextureManager.h
+	src/Graphics/VertexArray.cpp
+	src/Graphics/VertexArray.h
+	src/Input/Acceleration.h
+	src/Input/impl/Key_SDL.cpp
+	src/Input/Input.cpp
+	src/Input/Input.h
+	src/Input/InputListener.h
+	src/Input/Key.h
+	src/Input/Touch.h
+	src/Lua/lua_Animation.cpp
+	src/Lua/lua_Animation.h
+	src/Lua/lua_Audio.cpp
+	src/Lua/lua_Audio.h
+	src/Lua/lua_Font.cpp
+	src/Lua/lua_Font.h
+	src/Lua/lua_Input.cpp
+	src/Lua/lua_Input.h
+	src/Lua/lua_IO.cpp
+	src/Lua/lua_IO.h
+	src/Lua/lua_Label.cpp
+	src/Lua/lua_Label.h
+	src/Lua/lua_Platform.cpp
+	src/Lua/lua_Platform.h
+	src/Lua/lua_Rainbow.h
+	src/Lua/lua_Random.cpp
+	src/Lua/lua_Random.h
+	src/Lua/lua_Recorder.cpp
+	src/Lua/lua_Recorder.h
+	src/Lua/lua_Renderer.cpp
+	src/Lua/lua_Renderer.h
+	src/Lua/lua_SceneGraph.cpp
+	src/Lua/lua_SceneGraph.h
+	src/Lua/lua_Shaders.cpp
+	src/Lua/lua_Shaders.h
+	src/Lua/lua_Sprite.cpp
+	src/Lua/lua_Sprite.h
+	src/Lua/lua_SpriteBatch.cpp
+	src/Lua/lua_SpriteBatch.h
+	src/Lua/lua_Texture.cpp
+	src/Lua/lua_Texture.h
+	src/Lua/LuaBind.h
+	src/Lua/LuaDebugging.h
+	src/Lua/LuaHelper.cpp
+	src/Lua/LuaHelper.h
+	src/Lua/LuaMachine.cpp
+	src/Lua/LuaMachine.h
+	src/Lua/LuaMacros.h
+	src/Lua/LuaModules.h
+	src/Lua/LuaSyntax.cpp
+	src/Lua/LuaSyntax.h
+	src/Platform/Macros.h
+	src/Platform/SDL2.cpp
+	src/Platform/SystemInfo.h
+	src/ThirdParty/TestFlight/TestFlight.cpp
+	src/ThirdParty/TestFlight/TestFlight.h)
+
+if(WIN32)
+	list(APPEND SOURCE_FILES
+		src/Common/impl/DataMap_Win.cpp
+		src/Common/impl/DataMap_Win.h
+		src/Platform/impl/SystemInfo_Win.cpp)
+else()
+	list(APPEND SOURCE_FILES
+		src/Common/impl/DataMap_Unix.cpp
+		src/Common/impl/DataMap_Unix.h)
+	if(APPLE)
+		list(APPEND SOURCE_FILES src/Platform/impl/SystemInfo_Apple.cpp)
+	else()
+		list(APPEND SOURCE_FILES src/Platform/impl/SystemInfo_Unix.cpp)
+	endif()
+endif()
+
+if(UNIT_TESTS)
+	add_definitions(-DRAINBOW_TEST)
+	list(APPEND SOURCE_FILES src/Tests/Tests.cpp src/Tests/Tests.h)
+endif()
+
+if(USE_FMOD_STUDIO)
+	list(APPEND SOURCE_FILES
+		src/ConFuoco/impl/Mixer_FMOD.cpp
+		src/ConFuoco/impl/Mixer_FMOD.h)
+else()
+	list(APPEND SOURCE_FILES
+		src/ConFuoco/AudioFile.cpp
+		src/ConFuoco/AudioFile.h
+		src/ConFuoco/Codecs/OggVorbisAudioFile.cpp
+		src/ConFuoco/Codecs/OggVorbisAudioFile.h
+		src/ConFuoco/impl/Mixer_AL.cpp
+		src/ConFuoco/impl/Mixer_AL.h
+		src/ConFuoco/Recorder.h
+		src/ConFuoco/Sound.h)
+	if(APPLE)
+		list(APPEND SOURCE_FILES
+			src/ConFuoco/Codecs/AppleAudioFile.cpp
+			src/ConFuoco/Codecs/AppleAudioFile.h)
+	endif()
+endif()
+
+if(USE_HEIMDALL)
+	add_definitions(-DUSE_HEIMDALL)
+	list(APPEND SOURCE_FILES
+		src/Heimdall/Button.h
+		src/Heimdall/ChangeMonitor.h
+		src/Heimdall/DebugInfo.cpp
+		src/Heimdall/DebugInfo.h
+		src/Heimdall/Gatekeeper.cpp
+		src/Heimdall/Gatekeeper.h
+		src/Heimdall/Overlay.cpp
+		src/Heimdall/Overlay.h
+		src/Heimdall/OverlayActivator.cpp
+		src/Heimdall/OverlayActivator.h
+		src/Heimdall/Style.h
+		src/Resources/Inconsolata.otf.h
+		src/Resources/NewsCycle-Regular.ttf.h)
+	if(APPLE)
+		list(APPEND SOURCE_FILES src/Heimdall/impl/ChangeMonitor_Mac.cpp)
+	elseif(WIN32)
+		list(APPEND SOURCE_FILES src/Heimdall/impl/ChangeMonitor_Win.cpp)
+	else()
+		list(APPEND SOURCE_FILES src/Heimdall/impl/ChangeMonitor_Stub.cpp)
+	endif()
+endif()
+
+if(USE_PHYSICS)
+	list(APPEND SOURCE_FILES
+		src/ThirdParty/Box2D/b2LuaHelper.h
+		src/ThirdParty/Box2D/lua_b2Body.h
+		src/ThirdParty/Box2D/lua_b2Contact.h
+		src/ThirdParty/Box2D/lua_b2Draw.h
+		src/ThirdParty/Box2D/lua_b2Fixture.h
+		src/ThirdParty/Box2D/lua_b2Shape.h
+		src/ThirdParty/Box2D/lua_b2World.h
+		src/ThirdParty/Box2D/lua_Box2D.cpp
+		src/ThirdParty/Box2D/lua_Box2D.h)
+endif()
+
+if(USE_SPINE)
+	list(APPEND SOURCE_FILES
+		src/ThirdParty/Spine/spine-rainbow.cpp
+		src/ThirdParty/Spine/spine-rainbow.h)
+endif()
+
+foreach(src IN LISTS SOURCE_FILES)
+	string(REGEX REPLACE "src/" "" src_file ${src})
 	set_source_files_properties(${src} PROPERTIES COMPILE_DEFINITIONS "SRC_FILE=\"${src_file}\"")
 endforeach()
-add_executable(rainbow ${RAINBOW_CPP} ${RAINBOW_H})
+add_executable(rainbow ${SOURCE_FILES})
 
 # Dynamic libraries
 include(${LOCAL_MODULE_PATH}/Audio.cmake)
@@ -51,14 +263,6 @@ if(USE_SPINE)
 endif()
 include(${LOCAL_MODULE_PATH}/zlib.cmake)
 include(${LOCAL_MODULE_PATH}/libpng.cmake)
-
-# Features
-if(UNIT_TESTS)
-	add_definitions(-DRAINBOW_TEST)
-endif()
-if(USE_HEIMDALL)
-	add_definitions(-DUSE_HEIMDALL)
-endif()
 
 # Rainbow
 set_property(TARGET rainbow APPEND PROPERTY INCLUDE_DIRECTORIES
