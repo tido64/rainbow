@@ -18,6 +18,11 @@ template<typename T>
 class TreeNode : private NonCopyable<TreeNode<T>>
 {
 public:
+#ifdef USE_HEIMDALL
+	bool has_changes() const;
+	void reset_state();
+#endif
+
 	/// Adds a node as child.
 	void add_child(T *);
 
@@ -37,6 +42,12 @@ protected:
 
 	TreeNode();
 	~TreeNode();
+
+#ifdef USE_HEIMDALL
+	bool has_changes_;
+
+	void on_change();
+#endif
 };
 
 template<typename T>
@@ -46,6 +57,9 @@ void TreeNode<T>::add_child(T *node)
 		rainbow::remove(node->parent_->children_, node);
 	node->parent_ = static_cast<T*>(this);
 	children_.push_back(node);
+#ifdef USE_HEIMDALL
+	on_change();
+#endif
 }
 
 template<typename T>
@@ -62,10 +76,16 @@ void TreeNode<T>::remove_child(T *node)
 
 	rainbow::remove(children_, node);
 	delete node;
+#ifdef USE_HEIMDALL
+	on_change();
+#endif
 }
 
 template<typename T>
 TreeNode<T>::TreeNode() : parent_(nullptr)
+#ifdef USE_HEIMDALL
+                        , has_changes_(false)
+#endif
 {
 	static_assert(std::is_base_of<TreeNode, T>::value,
 	              "T must be a subclass of TreeNode");
@@ -77,6 +97,29 @@ TreeNode<T>::~TreeNode()
 	for (auto child : children_)
 		delete child;
 }
+
+#ifdef USE_HEIMDALL
+template<typename T>
+bool TreeNode<T>::has_changes() const
+{
+	return has_changes_;
+}
+
+template<typename T>
+void TreeNode<T>::reset_state()
+{
+	has_changes_ = false;
+}
+
+template<typename T>
+void TreeNode<T>::on_change()
+{
+	if (!parent_)
+		has_changes_ = true;
+	else
+		parent_->on_change();
+}
+#endif
 
 template<typename T, typename F, typename... Args>
 void for_each(T *node, F&& f, Args&&... args)

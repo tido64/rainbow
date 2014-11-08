@@ -7,6 +7,7 @@
 
 #include <cstdio>
 #include <cstdlib>
+#include <functional>
 #include <utility>
 
 #include "Common/Chrono.h"
@@ -60,6 +61,15 @@
 			               #expr)
 #endif  // NDEBUG
 
+#define HAS_EXTERNAL_LOGGER defined(USE_HEIMDALL) && !defined(RAINBOW_OS_IOS)
+
+#if HAS_EXTERNAL_LOGGER
+namespace heimdall
+{
+	extern std::function<void(const char*)> write_external_log;
+}
+#endif  // HAS_EXTERNAL_LOGGER
+
 namespace rainbow
 {
 	const size_t kLogLineLength = 1024;
@@ -77,9 +87,24 @@ namespace rainbow
 		    level, "Rainbow", format, std::forward<Args>(args)...);
 #else
 		const long long int timestamp = Chrono::system_now().count();
+#if HAS_EXTERNAL_LOGGER
+		char buf[kLogLineLength * 2];
+		const int offset =
+		    snprintf(buf, kLogLineLength, format, std::forward<Args>(args)...) +
+		    1;
+		snprintf(buf + offset,
+		         kLogLineLength * 2 - offset,
+		         "[%lli|%s] %s\n",
+		         timestamp,
+		         level,
+		         buf);
+		fprintf(stream, buf + offset);
+		heimdall::write_external_log(buf + offset);
+#else
 		char buf[kLogLineLength];
 		snprintf(buf, kLogLineLength, format, std::forward<Args>(args)...);
 		fprintf(stream, "[%lli|%s] %s\n", timestamp, level, buf);
+#endif  // !USE_HEIMDALL
 #endif  // RAINBOW_OS_ANDROID
 #ifdef __GNUC__
 #	pragma GCC diagnostic pop

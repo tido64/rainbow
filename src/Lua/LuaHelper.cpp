@@ -13,7 +13,7 @@
 #include "Lua/LuaDebugging.h"
 #include "Lua/LuaSyntax.h"
 
-using Rainbow::Lua::WeakRef;
+using rainbow::lua::WeakRef;
 
 namespace
 {

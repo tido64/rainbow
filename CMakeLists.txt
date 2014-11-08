@@ -212,8 +212,11 @@ if(USE_HEIMDALL)
 		src/Heimdall/OverlayActivator.cpp
 		src/Heimdall/OverlayActivator.h
 		src/Heimdall/Style.h
+		src/Heimdall/WebSocket.cpp
+		src/Heimdall/WebSocket.h
 		src/Resources/Inconsolata.otf.h
-		src/Resources/NewsCycle-Regular.ttf.h)
+		src/Resources/NewsCycle-Regular.ttf.h
+		src/Resources/Rainbow.html.h)
 	if(APPLE)
 		list(APPEND SOURCE_FILES src/Heimdall/impl/ChangeMonitor_Mac.cpp)
 	elseif(WIN32)
@@ -283,6 +286,9 @@ if(USE_SPINE)
 endif()
 include(${LOCAL_MODULE_PATH}/zlib.cmake)
 include(${LOCAL_MODULE_PATH}/libpng.cmake)
+if(USE_HEIMDALL)
+	include(${LOCAL_MODULE_PATH}/libwebsockets.cmake)
+endif()
 
 set(SOURCE_FILES ${SOURCE_FILES} CACHE STRING "For external scripts")
 
@@ -292,6 +298,7 @@ set_property(TARGET rainbow APPEND PROPERTY INCLUDE_DIRECTORIES
 	${LOCAL_LIBRARY}
 	${FREETYPE_INCLUDE_DIR}
 	${LIBPNG_INCLUDE_DIR}
+	${LIBWEBSOCKETS_INCLUDE_DIR}
 	${LUA_INCLUDE_DIR}
 	${SDL2_INCLUDE_DIR}
 	${SPINE_INCLUDE_DIR}
@@ -301,5 +308,5 @@ set_property(TARGET rainbow APPEND PROPERTY INCLUDE_DIRECTORIES
 target_link_libraries(rainbow
 	freetype lua ${PHYSICS_LIBRARY} png ${SDL2_LIBRARIES} ${SPINE_LIBRARY}
 	${AUDIO_LIBRARIES} ${OPENGL_ext_LIBRARY} ${OPENGL_gl_LIBRARY}
-	${ZLIB_LIBRARY} ${PLATFORM_LIBRARIES}
+	${LIBWEBSOCKETS_LIBRARY} ${ZLIB_LIBRARY} ${PLATFORM_LIBRARIES}
 )

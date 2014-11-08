@@ -28,6 +28,8 @@ namespace heimdall
 	public:
 		Gatekeeper();
 
+		using Director::scenegraph;
+
 		/* Director overrides */
 
 		inline void draw();

@@ -6,6 +6,8 @@
 
 #include "Heimdall/Gatekeeper.h"
 
+#include <cstring>
+
 #include "Common/Data.h"
 #include "FileSystem/File.h"
 #include "FileSystem/Path.h"

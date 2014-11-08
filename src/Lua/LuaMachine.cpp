@@ -170,7 +170,7 @@ namespace rainbow
 		R_ASSERT(lua_gettop(state_) == 0, "Stack not empty");
 #endif
 
-		// Create table for Lua::WeakRef
+		// Create table for lua::WeakRef
 		lua_createtable(state_, 1, 1);
 		lua_createtable(state_, 0, 1);
 		lua_pushliteral(state_, "__mode");
@@ -179,7 +179,7 @@ namespace rainbow
 		lua_setmetatable(state_, -2);
 		lua_pushinteger(state_, 0);
 		lua_rawseti(state_, -2, 0);
-		Lua::WeakRef::RegistryIndex = luaL_ref(state_, LUA_REGISTRYINDEX);
+		lua::WeakRef::RegistryIndex = luaL_ref(state_, LUA_REGISTRYINDEX);
 		R_ASSERT(lua_gettop(state_) == 0, "Stack not empty");
 
 		// Map 'lua_createtable' to 'table.create'

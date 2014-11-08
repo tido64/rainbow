@@ -22,6 +22,7 @@
 #include "Config.h"
 #include "Director.h"
 #include "FileSystem/Path.h"
+#include "Heimdall/WebSocket.h"
 #include "Input/Key.h"
 #include "Input/Touch.h"
 #ifdef RAINBOW_TEST
@@ -99,7 +100,11 @@ namespace
 	class RainbowController
 	{
 	public:
-		RainbowController(SDLContext &context, const rainbow::Config &config);
+		RainbowController(SDLContext &context,
+#ifdef USE_HEIMDALL
+		                  heimdall::WebSocket &socket,
+#endif
+		                  const rainbow::Config &config);
 
 		const char* error() const;
 
@@ -120,6 +125,9 @@ namespace
 		SDLContext &context_;
 		Chrono chrono_;
 		Director director_;
+#ifdef USE_HEIMDALL
+		heimdall::WebSocket &socket_;
+#endif
 		const bool suspend_on_focus_lost_;
 	};
 }
@@ -150,7 +158,12 @@ int main(int argc, char *argv[])
 	if (!context)
 		return 1;
 
+#ifdef USE_HEIMDALL
+	heimdall::WebSocket web_socket;
+	RainbowController controller(context, web_socket, config);
+#else
 	RainbowController controller(context, config);
+#endif
 	while (controller.run()) {}
 	if (controller.error())
 	{
@@ -284,8 +297,16 @@ SDLContext::operator bool() const
 }
 
 RainbowController::RainbowController(
-    SDLContext &context, const rainbow::Config &config)
-    : context_(context), suspend_on_focus_lost_(config.suspend())
+    SDLContext &context,
+#ifdef USE_HEIMDALL
+    heimdall::WebSocket &socket,
+#endif
+    const rainbow::Config &config)
+    : context_(context),
+#ifdef USE_HEIMDALL
+      socket_(socket),
+#endif
+      suspend_on_focus_lost_(config.suspend())
 {
 	if (director_.terminated())
 		return;
@@ -385,6 +406,9 @@ bool RainbowController::run()
 	{
 		// Update game logic
 		director_.update(chrono_.delta());
+#ifdef USE_HEIMDALL
+		socket_.update(director_);
+#endif
 
 		// Draw
 		director_.draw();
