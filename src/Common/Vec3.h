@@ -18,7 +18,7 @@ namespace Rainbow
 	{
 		T x, y, z;
 
-		Vec3() : x(0), y(0), z(0) { }
+		Vec3() : Vec3(0, 0, 0) { }
 		Vec3(const T x, const T y, const T z) : x(x), y(y), z(z) { }
 
 		template<typename U = T>

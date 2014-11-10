@@ -2,8 +2,8 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
-#ifndef GRAPHICS_SCENEGRAPH_NODE_H_
-#define GRAPHICS_SCENEGRAPH_NODE_H_
+#ifndef GRAPHICS_SCENEGRAPH_H_
+#define GRAPHICS_SCENEGRAPH_H_
 
 #include "Common/TreeNode.h"
 #include "Common/Vec2.h"
@@ -25,29 +25,20 @@ namespace SceneGraph
 	public:
 		bool enabled;  ///< Whether this node should be updated and/or drawn.
 
-		const enum
-		{
-			GroupNode,
-			AnimationNode,
-			DrawableNode,
-			LabelNode,
-			SpriteBatchNode
-		} type;  ///< Defines what type of graphical element this node represents.
-
 		/// Creates a group node.
-		Node();
+		inline Node();
 
 		/// Creates an animation node.
-		explicit Node(Animation *);
+		inline explicit Node(Animation *);
 
 		/// Creates a label node.
-		explicit Node(Label *);
+		inline explicit Node(Label *);
 
 		/// Creates a sprite batch node.
-		explicit Node(SpriteBatch *);
+		inline explicit Node(SpriteBatch *);
 
 		/// Creates a generic drawable node.
-		Node(Drawable *);
+		inline Node(Drawable *);
 
 		/// Adds a child node.
 		inline Node* add_child(Node *n);
@@ -71,7 +62,17 @@ namespace SceneGraph
 		void update(const unsigned long dt) const;
 
 	private:
-		int program_;  ///< The active program for this node and its descendants.
+		enum class Type
+		{
+			Group,
+			Animation,
+			Drawable,
+			Label,
+			SpriteBatch
+		};
+
+		const Type type_;  ///< Defines what type of graphical element this node represents.
+		int program_;      ///< The active program for this node and its descendants.
 		union
 		{
 			void *data_;
@@ -80,7 +81,19 @@ namespace SceneGraph
 			Label *label_;
 			SpriteBatch *sprite_batch_;
 		};  ///< Graphical element represented by this node.
+
+		inline Node(Type type, void *data);
 	};
+
+	Node::Node() : Node(Type::Group, nullptr) { }
+
+	Node::Node(Animation *animation) : Node(Type::Animation, animation) { }
+
+	Node::Node(Label *label) : Node(Type::Label, label) { }
+
+	Node::Node(SpriteBatch *batch) : Node(Type::SpriteBatch, batch) { }
+
+	Node::Node(Drawable *drawable) : Node(Type::Drawable, drawable) { }
 
 	Node* Node::add_child(Node *n)
 	{
@@ -98,6 +111,9 @@ namespace SceneGraph
 	{
 		program_ = program;
 	}
+
+	Node::Node(Type type, void *data)
+	    : enabled(true), type_(type), program_(-1), data_(data) { }
 }
 
 #endif

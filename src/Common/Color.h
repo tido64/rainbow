@@ -20,7 +20,7 @@ namespace Rainbow
 	{
 		unsigned char r, g, b, a;
 
-		constexpr Color() : r(0xff), g(0xff), b(0xff), a(0xff) { }
+		constexpr Color() : Color(0xff, 0xff, 0xff, 0xff) { }
 
 		constexpr Color(const unsigned char r,
 		                const unsigned char g,
@@ -47,7 +47,7 @@ namespace Rainbow
 	{
 		float r, g, b, a;
 
-		constexpr Color() : r(1.0f), g(1.0f), b(1.0f), a(1.0f) { }
+		constexpr Color() : Color(1.0f, 1.0f, 1.0f, 1.0f) { }
 
 		constexpr Color(const unsigned int c)
 		    : r((0xff & (c >> 24)) * 1.0f / 255.0f),

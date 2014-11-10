@@ -12,22 +12,6 @@
 
 namespace SceneGraph
 {
-	Node::Node()
-	    : enabled(true), type(GroupNode), program_(-1), data_(nullptr) { }
-
-	Node::Node(Animation *a)
-	    : enabled(true), type(AnimationNode), program_(-1), animation_(a) { }
-
-	Node::Node(Label *l)
-	    : enabled(true), type(LabelNode), program_(-1), label_(l) { }
-
-	Node::Node(SpriteBatch *b)
-	    : enabled(true), type(SpriteBatchNode), program_(-1), sprite_batch_(b)
-	{ }
-
-	Node::Node(Drawable *d)
-	    : enabled(true), type(DrawableNode), program_(-1), drawable_(d) { }
-
 	void Node::draw() const
 	{
 		if (!this->enabled)
@@ -37,15 +21,15 @@ namespace SceneGraph
 		if (program_ >= 0)
 			ShaderManager::Get()->use(program_);
 
-		switch (this->type)
+		switch (type_)
 		{
-			case SceneGraph::Node::DrawableNode:
+			case Type::Drawable:
 				drawable_->draw();
 				break;
-			case SceneGraph::Node::LabelNode:
+			case Type::Label:
 				Renderer::draw(*label_);
 				break;
-			case SceneGraph::Node::SpriteBatchNode:
+			case Type::SpriteBatch:
 				Renderer::draw(*sprite_batch_);
 				break;
 			default:
@@ -57,12 +41,12 @@ namespace SceneGraph
 
 	void Node::move(const Vec2f &delta) const
 	{
-		switch (this->type)
+		switch (type_)
 		{
-			case LabelNode:
+			case Type::Label:
 				label_->move(delta);
 				break;
-			case SpriteBatchNode:
+			case Type::SpriteBatch:
 				sprite_batch_->move(delta);
 				break;
 			default:
@@ -77,18 +61,18 @@ namespace SceneGraph
 		if (!this->enabled)
 			return;
 
-		switch (this->type)
+		switch (type_)
 		{
-			case AnimationNode:
+			case Type::Animation:
 				animation_->update(dt);
 				break;
-			case DrawableNode:
+			case Type::Drawable:
 				drawable_->update(dt);
 				break;
-			case LabelNode:
+			case Type::Label:
 				label_->update();
 				break;
-			case SpriteBatchNode:
+			case Type::SpriteBatch:
 				sprite_batch_->update();
 				break;
 			default:
