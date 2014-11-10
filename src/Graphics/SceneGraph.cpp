@@ -41,19 +41,19 @@ namespace SceneGraph
 
 	void Node::move(const Vec2f &delta) const
 	{
-		switch (type_)
-		{
-			case Type::Label:
-				label_->move(delta);
-				break;
-			case Type::SpriteBatch:
-				sprite_batch_->move(delta);
-				break;
-			default:
-				break;
-		}
-		for (auto child : children_)
-			child->move(delta);
+		for_each(this, [](const Node *node, const Vec2f &delta) {
+			switch (node->type_)
+			{
+				case Type::Label:
+					node->label_->move(delta);
+					break;
+				case Type::SpriteBatch:
+					node->sprite_batch_->move(delta);
+					break;
+				default:
+					break;
+			}
+		}, delta);
 	}
 
 	void Node::update(const unsigned long dt) const

@@ -25,9 +25,9 @@ public:
 	/// Removes a child node.
 	void remove_child(T *);
 
-	/// Recursively calls function \p func on \p node and its children.
-	template<typename U, typename F>
-	friend void for_each(U *node, F&& func);
+	/// Recursively calls function \p f on \p node and its children.
+	template<typename U, typename F, typename... Args>
+	friend void for_each(U *node, F&& f, Args&&... args);
 
 protected:
 	T *parent_;            ///< This node's parent.
@@ -75,17 +75,18 @@ TreeNode<T>::~TreeNode()
 		delete child;
 }
 
-template<typename T, typename F>
-void for_each(T *node, F&& func)
+template<typename T, typename F, typename... Args>
+void for_each(T *node, F&& f, Args&&... args)
 {
-	static_assert(std::is_base_of<TreeNode<T>, T>::value,
+	using U = typename std::decay<T>::type;
+	static_assert(std::is_base_of<TreeNode<U>, U>::value,
 	              "T must be a subclass of TreeNode");
-	static_assert(std::is_convertible<F, std::function<void(T*)>>::value,
-	              "function type void(T*) required");
+	static_assert(std::is_convertible<F, std::function<void(T*, Args&&...)>>::value,
+	              "function type void(T*, Args&&...) required");
 
-	func(node);
+	f(node, std::forward<Args>(args)...);
 	for (auto child : node->children_)
-		for_each(child, func);
+		for_each(child, f, std::forward<Args>(args)...);
 }
 
 #endif
