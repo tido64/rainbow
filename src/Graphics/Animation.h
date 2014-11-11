@@ -10,10 +10,14 @@
 
 #include "Common/NonCopyable.h"
 #include "Common/TimedEvent.h"
+#include "Graphics/SceneGraphNodeData.h"
 #include "Graphics/Sprite.h"
 
 /// Sprite animation using sprite sheets.
 class Animation : public TimedEvent<Animation>, private NonCopyable<Animation>
+#ifndef NDEBUG
+                , public SceneGraph::NodeData
+#endif
 {
 	friend TimedEvent;
 

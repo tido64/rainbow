@@ -22,6 +22,8 @@ namespace SceneGraph
 	/// the same set of data.
 	class Node : public TreeNode<Node>
 	{
+		friend class NodeData;
+
 	public:
 		bool enabled;  ///< Whether this node should be updated and/or drawn.
 
@@ -29,18 +31,20 @@ namespace SceneGraph
 		inline Node();
 
 		/// Creates an animation node.
-		inline explicit Node(Animation *);
+		explicit Node(Animation *);
 
 		/// Creates a label node.
-		inline explicit Node(Label *);
+		explicit Node(Label *);
 
 		/// Creates a sprite batch node.
-		inline explicit Node(SpriteBatch *);
+		explicit Node(SpriteBatch *);
 
 		/// Creates a generic drawable node.
-		inline Node(Drawable *);
+		Node(Drawable *);
 
 	#ifndef NDEBUG
+		~Node();
+
 		const char* tag() const { return tag_; }
 		void set_tag(const char *tag) { tag_ = tag; }
 	#endif
@@ -86,22 +90,28 @@ namespace SceneGraph
 			Label *label_;
 			SpriteBatch *sprite_batch_;
 		};  ///< Graphical element represented by this node.
-	#ifndef NDEBUG
-		const char *tag_;
-	#endif
 
 		inline Node(Type type, void *data);
+
+	#ifndef NDEBUG
+		const char *tag_;
+
+		void reset_data();
+		void verify() const;
+	#endif
 	};
 
 	Node::Node() : Node(Type::Group, nullptr) { }
 
-	Node::Node(Animation *animation) : Node(Type::Animation, animation) { }
+#ifdef NDEBUG
+	inline Node::Node(Animation *a) : Node(Type::Animation, a) { }
 
-	Node::Node(Label *label) : Node(Type::Label, label) { }
+	inline Node::Node(Label *l) : Node(Type::Label, l) { }
 
-	Node::Node(SpriteBatch *batch) : Node(Type::SpriteBatch, batch) { }
+	inline Node::Node(SpriteBatch *b) : Node(Type::SpriteBatch, b) { }
 
-	Node::Node(Drawable *drawable) : Node(Type::Drawable, drawable) { }
+	inline Node::Node(Drawable *d) : Node(Type::Drawable, d) { }
+#endif
 
 	Node* Node::add_child(Node *n)
 	{

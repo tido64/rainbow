@@ -5,8 +5,13 @@
 #ifndef GRAPHICS_DRAWABLE_H_
 #define GRAPHICS_DRAWABLE_H_
 
+#include "Graphics/SceneGraphNodeData.h"
+
 /// A drawable interface.
 class Drawable
+#ifndef NDEBUG
+    : public SceneGraph::NodeData
+#endif
 {
 public:
 	virtual ~Drawable() = default;

@@ -10,10 +10,15 @@
 #include "Graphics/Renderer.h"
 #include "Graphics/SpriteBatch.h"
 
+#ifdef NDEBUG
+#	define verify() static_cast<void>(0)
+#endif
+
 namespace SceneGraph
 {
 	void Node::draw() const
 	{
+		verify();
 		if (!this->enabled)
 			return;
 
@@ -41,6 +46,7 @@ namespace SceneGraph
 
 	void Node::move(const Vec2f &delta) const
 	{
+		verify();
 		for_each(this, [](const Node *node, const Vec2f &delta) {
 			switch (node->type_)
 			{
@@ -58,6 +64,7 @@ namespace SceneGraph
 
 	void Node::update(const unsigned long dt) const
 	{
+		verify();
 		if (!this->enabled)
 			return;
 
@@ -81,4 +88,64 @@ namespace SceneGraph
 		for (auto child : children_)
 			child->update(dt);
 	}
+
+#ifndef NDEBUG
+	Node::Node(Animation *animation) : Node(Type::Animation, animation)
+	{
+		animation_->node_ = this;
+	}
+
+	Node::Node(Label *label) : Node(Type::Label, label)
+	{
+		label_->node_ = this;
+	}
+
+	Node::Node(SpriteBatch *batch) : Node(Type::SpriteBatch, batch)
+	{
+		sprite_batch_->node_ = this;
+	}
+
+	Node::Node(Drawable *drawable) : Node(Type::Drawable, drawable)
+	{
+		drawable_->node_ = this;
+	}
+
+	Node::~Node()
+	{
+		if (!data_)
+			return;
+
+		switch (type_)
+		{
+			case Type::Animation:
+				animation_->node_ = nullptr;
+				break;
+			case Type::Label:
+				label_->node_ = nullptr;
+				break;
+			case Type::SpriteBatch:
+				sprite_batch_->node_ = nullptr;
+				break;
+			default:
+				break;
+		}
+	}
+
+	void Node::reset_data()
+	{
+		data_ = nullptr;
+	}
+
+	void Node::verify() const
+	{
+		if (type_ != Type::Group && !data_)
+			R_ABORT("Data for node ('%s') has already been deleted", tag_);
+	}
+
+	NodeData::~NodeData()
+	{
+		if (node_)
+			node_->reset_data();
+	}
+#endif
 }

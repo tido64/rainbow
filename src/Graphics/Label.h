@@ -9,10 +9,14 @@
 
 #include "Graphics/Buffer.h"
 #include "Graphics/FontAtlas.h"
+#include "Graphics/SceneGraphNodeData.h"
 #include "Graphics/VertexArray.h"
 
 /// Label for displaying text.
 class Label : private NonCopyable<Label>
+#ifndef NDEBUG
+            , public SceneGraph::NodeData
+#endif
 {
 public:
 	enum class TextAlignment

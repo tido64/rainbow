@@ -7,6 +7,7 @@
 
 #include "Common/Arena.h"
 #include "Graphics/Buffer.h"
+#include "Graphics/SceneGraphNodeData.h"
 #include "Graphics/Sprite.h"
 #include "Graphics/TextureAtlas.h"
 #include "Graphics/VertexArray.h"
@@ -17,6 +18,9 @@
 /// are drawn with a single glDraw call. The sprites must use the same texture
 /// atlas.
 class SpriteBatch : private NonCopyable<SpriteBatch>
+#ifndef NDEBUG
+                  , public SceneGraph::NodeData
+#endif
 {
 public:
 	/// Creates a batch of sprites.
