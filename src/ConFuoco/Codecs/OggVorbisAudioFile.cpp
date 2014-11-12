@@ -7,30 +7,30 @@
 
 #include <cstring>
 
-#include "Common/Debug.h"
+#include "Common/Logging.h"
 #include "FileSystem/File.h"
 
 namespace ConFuoco
 {
 	void ov_error(const int err)
 	{
-		R_ERROR("[Rainbow::ConFuoco/Vorbis] ");
+		const char *error = "Undocumented error";
 		switch (err)
 		{
 			case OV_EREAD:
-				R_ERROR("A read from media returned an error\n");
+				error = "A read from media returned an error";
 				break;
 			case OV_EFAULT:
-				R_ERROR("Internal logic fault; indicates a bug or heap/stack corruption\n");
+				error = "Internal logic fault; indicates a bug or heap/stack corruption";
 				break;
 			case OV_ENOTVORBIS:
-				R_ERROR("Bitstream does not contain any Vorbis data\n");
+				error = "Bitstream does not contain any Vorbis data";
 				break;
 			case OV_EBADHEADER:
-				R_ERROR("Invalid Vorbis bitstream header\n");
+				error = "Invalid Vorbis bitstream header";
 				break;
 			case OV_EVERSION:
-				R_ERROR("Vorbis version mismatch\n");
+				error = "Vorbis version mismatch";
 				break;
 			case OV_EIMPL:
 			case OV_EINVAL:
@@ -39,9 +39,9 @@ namespace ConFuoco
 			case OV_EBADLINK:
 			case OV_ENOSEEK:
 			default:
-				R_ERROR("Undocumented error\n");
 				break;
 		}
+		LOGE("ConFuoco/Vorbis: %s", error);
 	}
 
 #ifndef RAINBOW_OS_MACOS
@@ -49,7 +49,7 @@ namespace ConFuoco
 	{
 		File f = File::open_asset(file);
 		if (!f)
-			R_ERROR("[Rainbow::ConFuoco/Vorbis] Failed to open '%s'\n", file);
+			LOGE("ConFuoco/Vorbis: Failed to open '%s'", file);
 		return new OggVorbisAudioFile(std::move(f));
 	}
 #endif
@@ -67,7 +67,7 @@ namespace ConFuoco
 		if (!this->vi)
 		{
 			this->vi = nullptr;
-			R_ERROR("[Rainbow::ConFuoco/Vorbis] Failed to retrieve Ogg bitstream info\n");
+			LOGE("ConFuoco/Vorbis: Failed to retrieve Ogg bitstream info");
 		}
 	}
 

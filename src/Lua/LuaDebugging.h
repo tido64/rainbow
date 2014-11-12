@@ -9,7 +9,7 @@
 
 #include <lua.hpp>
 
-#include "Common/Debug.h"
+#include "Common/Logging.h"
 #include "Lua/LuaMacros.h"
 
 NS_RAINBOW_LUA_BEGIN
@@ -54,15 +54,15 @@ NS_RAINBOW_LUA_BEGIN
 	{
 		int level = 0;
 		lua_Debug ar;
-		R_ERROR("* stack traceback\n");
+		puts("* stack traceback");
 		while (lua_getstack(L, level, &ar))
 		{
 			lua_getinfo(L, "nSl", &ar);
-			R_ERROR("    frame #%i: %s at %s:%d\n",
-					level,
-					ar.name ? ar.name : "[internal function]",
-					ar.source,
-					ar.currentline);
+			printf("    frame #%i: %s at %s:%d\n",
+			       level,
+			       ar.name ? ar.name : "[internal function]",
+			       ar.source,
+			       ar.currentline);
 			++level;
 		}
 	}
@@ -138,7 +138,7 @@ NS_RAINBOW_LUA_BEGIN
 					{
 						if (g_level > g_finish)
 							return;
-						R_ERROR("Max stack size reached!\n");
+						LOGE("Max stack size reached!");
 						g_finish = g_level - 1;
 						break;
 					}

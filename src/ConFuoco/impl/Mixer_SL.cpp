@@ -67,29 +67,29 @@ namespace ConFuoco
 	{
 		if (slCreateEngine(&this->engine_obj, 0, nullptr, 0, nullptr, nullptr) != SL_RESULT_SUCCESS)
 		{
-			R_ERROR(CF_TAG "Failed to create SL engine\n");
+			LOGE("ConFuoco/SL: Failed to create SL engine");
 			return;
 		}
 		if (slRealize(this->engine_obj, SL_BOOLEAN_FALSE) != SL_RESULT_SUCCESS)
 		{
-			R_ERROR(CF_TAG "Failed to realize SL engine\n");
+			LOGE("ConFuoco/SL: Failed to realize SL engine");
 			return;
 		}
 		if (slGetInterface(this->engine_obj, SL_IID_ENGINE, &this->engine) != SL_RESULT_SUCCESS)
 		{
-			R_ERROR(CF_TAG "Failed to get interface for SL engine\n");
+			LOGE("ConFuoco/SL: Failed to get interface for SL engine");
 			return;
 		}
 		const SLInterfaceID iids[] = { SL_IID_ENVIRONMENTALREVERB };
 		const SLboolean req[] = { SL_BOOLEAN_FALSE };
 		if (slCreateOutputMix(this->engine, &this->output_mix, 1, iids, req) != SL_RESULT_SUCCESS)
 		{
-			R_ERROR(CF_TAG "Failed to create SL output mix\n");
+			LOGE("ConFuoco/SL: Failed to create SL output mix");
 			return;
 		}
 		if (slRealize(this->output_mix, SL_BOOLEAN_FALSE) != SL_RESULT_SUCCESS)
 		{
-			R_ERROR(CF_TAG "Failed to realize SL output mix\n");
+			LOGE("ConFuoco/SL: Failed to realize SL output mix");
 			slDestroy(this->output_mix);
 			this->output_mix = nullptr;
 			return;
@@ -285,19 +285,19 @@ namespace ConFuoco
 
 		if (slCreateAudioPlayer(engine, &this->player, &source, &sink, 1, iids, req) != SL_RESULT_SUCCESS)
 		{
-			R_ERROR(CF_TAG "Failed to create audio player (%p)\n", stream);
+			LOGE("ConFuoco/SL: Failed to create audio player (%p)", stream);
 			this->release();
 			return false;
 		}
 		if (slRealize(this->player, SL_BOOLEAN_FALSE) != SL_RESULT_SUCCESS)
 		{
-			R_ERROR(CF_TAG "Failed to realize audio player (%p)\n", stream);
+			LOGE("ConFuoco/SL: Failed to realize audio player (%p)", stream);
 			this->release();
 			return false;
 		}
 		if (slGetInterface(this->player, SL_IID_PLAY, &this->play_itf) != SL_RESULT_SUCCESS)
 		{
-			R_ERROR(CF_TAG "Failed to get playback interface (%p)\n", stream);
+			LOGE("ConFuoco/SL: Failed to get playback interface (%p)", stream);
 			this->release();
 			return false;
 		}
@@ -307,14 +307,14 @@ namespace ConFuoco
 			if (slSetCallbackEventsMask(this->play_itf, SL_PLAYEVENT_HEADATEND) != SL_RESULT_SUCCESS
 			    || slRegisterCallback(this->play_itf, PlayEventCallback, &this->loops) != SL_RESULT_SUCCESS)
 			{
-				R_ERROR(CF_TAG "Failed to set up looping (%p)\n", stream);
+				LOGE("ConFuoco/SL: Failed to set up looping (%p)", stream);
 				this->release();
 				return false;
 			}
 		}
 		if (slGetInterface(this->player, SL_IID_VOLUME, &this->volume_itf) != SL_RESULT_SUCCESS)
 		{
-			R_ERROR(CF_TAG "Failed to get volume interface (%p)\n", stream);
+			LOGE("ConFuoco/SL: Failed to get volume interface (%p)", stream);
 			this->release();
 			return false;
 		}

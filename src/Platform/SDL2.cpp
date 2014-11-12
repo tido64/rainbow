@@ -170,7 +170,7 @@ int main(int argc, char *argv[])
 	while (controller.run());
 	if (controller.error())
 	{
-		R_ERROR("[Rainbow] %s\n", controller.error());
+		LOGF("%s", controller.error());
 		return 1;
 	}
 	return 0;
@@ -181,7 +181,7 @@ SDLContext::SDLContext(const SDL_Point &position, const Vec2i &size)
 {
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
 	{
-		R_ERROR("[SDL] Unable to initialise video: %s\n", SDL_GetError());
+		LOGF("SDL: Unable to initialise video: %s", SDL_GetError());
 		return;
 	}
 
@@ -199,13 +199,13 @@ SDLContext::SDLContext(const SDL_Point &position, const Vec2i &size)
 	    SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
 	if (!window_)
 	{
-		R_ERROR("[SDL] Failed to create window: %s\n", SDL_GetError());
+		LOGF("SDL: Failed to create window: %s", SDL_GetError());
 		return;
 	}
 
 	context_ = SDL_GL_CreateContext(window_);
 	if (!context_)
-		R_ERROR("[SDL] Failed to create GL context: %s\n", SDL_GetError());
+		LOGF("SDL: Failed to create GL context: %s", SDL_GetError());
 }
 
 SDLContext::~SDLContext()
@@ -246,7 +246,7 @@ SDLWindow::SDLWindow(const Vec2i &size)
 
 	SDL_GL_SetSwapInterval(1);
 	vsync_ = SDL_GL_GetSwapInterval() == 1;
-	R_DEBUG("[SDL] Sync with vertical retrace: %s\n", vsync_ ? "Yes" : "No");
+	LOGI("SDL: Sync with vertical retrace: %s", vsync_ ? "Yes" : "No");
 }
 
 SDL_Window* SDLWindow::handle() const

@@ -169,7 +169,7 @@ NS_RAINBOW_LUA_MODULE_BEGIN(Audio)
 
 #else  // USE_FMOD_STUDIO
 
-#include "Common/Debug.h"
+#include "Common/Logging.h"
 #include "FileSystem/Path.h"
 #include "Lua/LuaBind.h"
 
@@ -254,9 +254,7 @@ namespace  // FMOD Low Level API
 		const Path path(lua_tostring(L, 1));
 		if (!path.is_file())
 		{
-			R_ERROR("[Rainbow] No such file: %s\n",
-			        static_cast<const char*>(path));
-			R_ASSERT(path.is_file(), "Failed to find sound file");
+			R_ABORT("No such file: %s", static_cast<const char*>(path));
 			return 0;
 		}
 	#endif
@@ -397,9 +395,7 @@ namespace  // FMOD Studio API
 		const Path path(lua_tostring(L, 1));
 		if (!path.is_file())
 		{
-			R_ERROR("[Rainbow] No such file: %s\n",
-			        static_cast<const char*>(path));
-			R_ASSERT(path.is_file(), "Failed to find sound bank");
+			R_ABORT("No such file: %s", static_cast<const char*>(path));
 			return 0;
 		}
 		Bank *bank = nullptr;

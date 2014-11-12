@@ -6,7 +6,7 @@
 
 #include <cstring>
 
-#include "Common/Debug.h"
+#include "Common/Logging.h"
 #include "FileSystem/File.h"
 
 Data Data::load_asset(const char *const asset)

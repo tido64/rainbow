@@ -8,7 +8,7 @@
 #include <io.h>
 #include <windows.h>
 
-#include "Common/Debug.h"
+#include "Common/Logging.h"
 #include "FileSystem/Path.h"
 
 namespace Rainbow
@@ -21,15 +21,17 @@ namespace Rainbow
 		    FILE_ATTRIBUTE_READONLY | FILE_FLAG_SEQUENTIAL_SCAN, nullptr);
 		if (fh == INVALID_HANDLE_VALUE)
 		{
-			R_ERROR("[Rainbow] Failed to open '%s' (%x)\n",
-			        static_cast<const char*>(path), GetLastError());
+			LOGE(kErrorFileOpen,
+			     static_cast<const char*>(path),
+			     GetLastError());
 			return;
 		}
 		LARGE_INTEGER size;
 		if (!GetFileSizeEx(fh, &size))
 		{
-			R_ERROR("[Rainbow] Failed to read '%s' (%x)\n",
-			        static_cast<const char*>(path), GetLastError());
+			LOGE(kErrorFileRead,
+			     static_cast<const char*>(path),
+			     GetLastError());
 		}
 		else
 		{
@@ -37,8 +39,9 @@ namespace Rainbow
 			    CreateFileMapping(fh, nullptr, PAGE_READONLY, 0, 0, nullptr);
 			if (!handle_)
 			{
-				R_ERROR("[Rainbow] Failed to create file mapping for '%s' (%x)\n",
-				        static_cast<const char*>(path), GetLastError());
+				LOGE("Failed to create file mapping for '%s' (%x)",
+				     static_cast<const char*>(path),
+				     GetLastError());
 			}
 			else
 			{
@@ -46,8 +49,9 @@ namespace Rainbow
 				addr_ = MapViewOfFile(handle_, FILE_MAP_READ, 0, 0, 0);
 				if (!addr_)
 				{
-					R_ERROR(kErrorMapFailed,
-					        static_cast<const char*>(path), GetLastError());
+					LOGE(kErrorMemoryMap,
+					     static_cast<const char*>(path),
+					     GetLastError());
 				}
 			}
 		}

@@ -75,27 +75,27 @@ namespace ConFuoco
 		SLEngineItf engine = ConFuoco::Mixer::Instance->interface();
 		if (slCreateAudioRecorder(engine, &this->object, &source, &sink, 1, iids, req) != SL_RESULT_SUCCESS)
 		{
-			R_ERROR(CF_TAG "Failed to create audio recorder\n");
+			LOGE("ConFuoco/SL: Failed to create audio recorder");
 			return;
 		}
 		if (slRealize(this->object, SL_BOOLEAN_FALSE) != SL_RESULT_SUCCESS)
 		{
-			R_ERROR(CF_TAG "Failed to realize audio recorder\n");
+			LOGE("ConFuoco/SL: Failed to realize audio recorder");
 			return;
 		}
 		if (slGetInterface(this->object, SL_IID_RECORD, &this->interface) != SL_RESULT_SUCCESS)
 		{
-			R_ERROR(CF_TAG "Failed to get audio recorder interface\n");
+			LOGE("ConFuoco/SL: Failed to get audio recorder interface");
 			return;
 		}
 		if (slGetInterface(this->object, SL_IID_ANDROIDSIMPLEBUFFERQUEUE, &this->buffer_queue) != SL_RESULT_SUCCESS)
 		{
-			R_ERROR(CF_TAG "Failed to get buffer queue interface\n");
+			LOGE("ConFuoco/SL: Failed to get buffer queue interface");
 			return;
 		}
 		if (slRegisterCallback(this->buffer_queue, AndroidSimpleBufferQueueCallback, this) != SL_RESULT_SUCCESS)
 		{
-			R_ERROR(CF_TAG "Failed to set audio recorder callback\n");
+			LOGE("ConFuoco/SL: Failed to set audio recorder callback");
 			return;
 		}
 

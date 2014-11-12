@@ -76,10 +76,10 @@ namespace
 		    verify(id, GL_COMPILE_STATUS, glGetShaderiv, glGetShaderInfoLog);
 		if (error.get())
 		{
-			R_ERROR("[Rainbow] GLSL: Failed to compile %s shader: %s\n",
-			        (shader.type == Shader::kTypeVertex) ? "vertex"
-			                                             : "fragment",
-			        error.get());
+			LOGE("GLSL: Failed to compile %s shader: %s",
+			     (shader.type == Shader::kTypeVertex) ? "vertex"
+			                                          : "fragment",
+			     error.get());
 			glDeleteShader(id);
 			return -1;
 		}
@@ -101,8 +101,7 @@ namespace
 		    program, GL_LINK_STATUS, glGetProgramiv, glGetProgramInfoLog);
 		if (error.get())
 		{
-			R_ERROR("[Rainbow] GLSL: Failed to link program: %s\n",
-			        error.get());
+			LOGE("GLSL: Failed to link program: %s", error.get());
 			glDeleteProgram(program);
 			return -1;
 		}

@@ -7,7 +7,7 @@
 
 #include <stdint.h>
 
-#include "Common/Debug.h"
+#include "Common/Logging.h"
 #include "Common/Functional.h"
 
 #define USE_PVRTC

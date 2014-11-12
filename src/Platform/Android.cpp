@@ -152,7 +152,7 @@ void android_handle_display(AInstance *a)
 	a->director.reset(new Director());
 	if (a->director->terminated())
 	{
-		R_ERROR("[Rainbow] %s", a->director->error());
+		LOGF("%s", a->director->error());
 		a->done = true;
 		return;
 	}
@@ -199,7 +199,7 @@ void android_init_display(AInstance *a)
 		surface = eglCreateWindowSurface(dpy, config, a->app->window, nullptr);
 		if (surface == EGL_NO_SURFACE)
 		{
-			R_ERROR("[Rainbow] Failed to create EGL window surface");
+			LOGF("Failed to create EGL window surface");
 			return;
 		}
 	}
@@ -211,14 +211,14 @@ void android_init_display(AInstance *a)
 		ctx = eglCreateContext(dpy, config, EGL_NO_CONTEXT, gles_attrib);
 		if (ctx == EGL_NO_CONTEXT)
 		{
-			R_ERROR("[Rainbow] Failed to create EGL rendering context");
+			LOGF("Failed to create EGL rendering context");
 			return;
 		}
 	}
 
 	a->done = eglMakeCurrent(dpy, surface, surface, ctx) == EGL_FALSE;
 	if (a->done)
-		R_ERROR("[Rainbow] Failed to bind context to the current rendering thread");
+		LOGF("Failed to bind context to the current rendering thread");
 	else
 		android_handle_display(a);
 }

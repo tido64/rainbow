@@ -101,7 +101,7 @@ namespace Heimdall
 				if (!library)
 					return;
 
-				R_DEBUG("[Rainbow] Reloading '%s'...\n", library.name());
+				LOGI("Reloading '%s'...", library.name());
 				Rainbow::Lua::reload(L, library.open(), library.name());
 			});
 		}

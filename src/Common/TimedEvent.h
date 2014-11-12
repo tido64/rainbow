@@ -5,7 +5,7 @@
 #ifndef COMMON_TIMEDEVENT_H_
 #define COMMON_TIMEDEVENT_H_
 
-#include "Common/Debug.h"
+#include "Common/Logging.h"
 
 /// A ticker with a configurable time interval.
 template<typename T>

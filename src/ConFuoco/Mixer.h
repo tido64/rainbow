@@ -174,9 +174,9 @@ namespace ConFuoco
 
 		static_cast<T*>(this)->play_impl(c);
 
-		R_DEBUG("[Rainbow::ConFuoco] Playing %p (channel %u)\n",
-		        static_cast<void*>(c->sound),
-		        c->ch);
+		LOGD("ConFuoco: Playing %p (channel %u)",
+		     static_cast<void*>(c->sound),
+		     c->ch);
 	}
 
 	template<typename T>
@@ -196,12 +196,13 @@ namespace ConFuoco
 		    static_cast<T*>(this)->create_sound_impl(file, type, loops);
 	#ifndef NDEBUG
 		if (!sound)
-			R_DEBUG("[Rainbow::ConFuoco] Failed to open '%s'\n", file);
+			LOGD("ConFuoco: Failed to open '%s'", file);
 		else
 		{
-			R_DEBUG("[Rainbow::ConFuoco] Opened '%s' at %p (%s)\n",
-			        file, static_cast<void*>(sound),
-			        (type == Sound::Type::Stream) ? "stream" : "static");
+			LOGD("ConFuoco: Opened '%s' at %p (%s)",
+			     file,
+			     static_cast<void*>(sound),
+			     (type == Sound::Type::Stream) ? "stream" : "static");
 		}
 	#endif
 		return sound;
@@ -225,7 +226,7 @@ namespace ConFuoco
 		static_cast<T*>(this)->release_impl(s);
 		this->sounds.qremove(s);
 
-		R_DEBUG("[Rainbow::ConFuoco] Released %p\n", static_cast<void*>(s));
+		LOGD("ConFuoco: Released %p", static_cast<void*>(s));
 	}
 
 	template<typename T>
@@ -248,7 +249,7 @@ namespace ConFuoco
 				return &channel;
 			}
 		}
-		R_DEBUG("[Rainbow::ConFuoco] All channels are busy\n");
+		LOGD("ConFuoco: All channels are busy");
 		return nullptr;
 	}
 }

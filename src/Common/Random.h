@@ -7,7 +7,7 @@
 
 #include "Common/Chrono.h"
 #include "Common/Constraints.h"
-#include "Common/Debug.h"
+#include "Common/Logging.h"
 
 #define DSFMT_MEXP 19937
 #if defined(__SSE2__) || (defined(_M_IX86_FP) && _M_IX86_FP >= 2) || defined(_M_X64)

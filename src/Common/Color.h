@@ -5,7 +5,7 @@
 #ifndef COMMON_COLOR_H_
 #define COMMON_COLOR_H_
 
-#include "Common/Debug.h"
+#include "Common/Logging.h"
 #include "Platform/Macros.h"  // TODO: Remove when MSVC implements 'constexpr'
 
 namespace Rainbow

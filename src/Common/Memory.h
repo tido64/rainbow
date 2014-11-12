@@ -8,7 +8,7 @@
 #include <type_traits>
 #include <utility>
 
-#include "Common/Debug.h"
+#include "Common/Logging.h"
 #include "Common/NonCopyable.h"
 
 /// Makes a class reference countable.

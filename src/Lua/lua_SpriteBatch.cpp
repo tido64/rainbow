@@ -30,9 +30,9 @@ NS_RAINBOW_LUA_BEGIN
 
 	int SpriteBatch::add(lua_State *L)
 	{
-		R_DEBUG("[Rainbow] <spritebatch>:add() is deprecated, use "
-		        "<spritebatch>:create_sprite() and <sprite>:set_texture() "
-		        "instead.\n");
+		LOGW("<spritebatch>:add() is deprecated, use "
+		     "<spritebatch>:create_sprite() and <sprite>:set_texture() "
+		     "instead.");
 
 		// <spritebatch>:add(x, y, width, height)
 		Argument<lua_Number>::is_required(L, 2);

@@ -177,7 +177,7 @@
 /* Begin PBXFileReference section */
 		190497DE168293DB0037F5EC /* lua_IO.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = lua_IO.cpp; sourceTree = "<group>"; };
 		190497E31682963F0037F5EC /* lua_Platform.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = lua_Platform.cpp; sourceTree = "<group>"; };
-		190A0ADA15E0294C0088D8B7 /* Debug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Debug.h; sourceTree = "<group>"; };
+		190A0ADA15E0294C0088D8B7 /* Logging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Logging.h; sourceTree = "<group>"; };
 		190D6FEF16964B2500C9ED26 /* RainbowDraw.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = RainbowDraw.cpp; sourceTree = "<group>"; };
 		190D6FF016964B2500C9ED26 /* RainbowDraw.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RainbowDraw.h; sourceTree = "<group>"; };
 		1910099319FDA3A70036D5F4 /* Arena.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Arena.h; sourceTree = "<group>"; };
@@ -830,11 +830,11 @@
 				19865981175E98F700723171 /* Data.cpp */,
 				1939A186152C425D00494609 /* Data.h */,
 				1949374E1756796D00CF3FC6 /* DataMap.h */,
-				190A0ADA15E0294C0088D8B7 /* Debug.h */,
 				195D565617D90DD100C78117 /* Functional.h */,
 				1910099519FDA3A70036D5F4 /* Global.h */,
 				1910099619FDA3A70036D5F4 /* Link.cpp */,
 				1910099719FDA3A70036D5F4 /* Link.h */,
+				190A0ADA15E0294C0088D8B7 /* Logging.h */,
 				192A0B9A1681EF75009218EB /* Memory.h */,
 				19F9890C15FBBB3B005A5F69 /* NonCopyable.h */,
 				1939A196152C425D00494609 /* Random.cpp */,

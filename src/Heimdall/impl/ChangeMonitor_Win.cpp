@@ -7,7 +7,7 @@
 #include "Heimdall/ChangeMonitor.h"
 #ifdef RAINBOW_OS_WINDOWS
 
-#include "Common/Debug.h"
+#include "Common/Logging.h"
 
 ChangeMonitor::ChangeMonitor(const char *const directory)
     : monitoring_(false), callback_([](const char *) { })
@@ -23,7 +23,7 @@ ChangeMonitor::ChangeMonitor(const char *const directory)
 	if (hDirectory_ == INVALID_HANDLE_VALUE)
 		return;
 
-	R_DEBUG("[Rainbow] Monitoring %s\n", directory);
+	LOGI("Monitoring '%s'", directory);
 	monitoring_ = true;
 	worker_ = std::async(std::launch::async, [this]() {
 		char lpPath[MAX_PATH * 4];

@@ -5,7 +5,7 @@
 #ifndef COMMON_GLOBAL_H_
 #define COMMON_GLOBAL_H_
 
-#include "Common/Debug.h"
+#include "Common/Logging.h"
 #include "Common/NonCopyable.h"
 
 template<typename T>

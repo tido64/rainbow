@@ -7,7 +7,7 @@
 #include <memory>
 
 #include "Common/Data.h"
-#include "Common/Debug.h"
+#include "Common/Logging.h"
 #include "FileSystem/File.h"
 #include "FileSystem/Path.h"
 #include "Lua/LuaHelper.h"
@@ -33,7 +33,7 @@ namespace Rainbow
 		const Path path(kConfigModule);
 		if (!path.is_file())
 		{
-			R_DEBUG("[Rainbow] No config file was found\n");
+			LOGI("No config file was found");
 			return;
 		}
 

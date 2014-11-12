@@ -21,8 +21,6 @@
 #	include "ConFuoco/impl/Mixer_iOS.h"
 #endif
 
-#define CF_TAG "[Rainbow::ConFuoco/AL] "
-
 namespace
 {
 	int alGetSourceState(const unsigned int sid)
@@ -81,14 +79,14 @@ namespace ConFuoco
 		ALCdevice *device = alcOpenDevice(0);
 		if (!device)
 		{
-			R_ERROR(CF_TAG "alcOpenDevice error code 0x%x\n", alGetError());
+			LOGE("ConFuoco/AL: alcOpenDevice error code 0x%x", alGetError());
 			return;
 		}
 
 		ALCcontext *context = alcCreateContext(device, 0);
 		if (!context)
 		{
-			R_ERROR(CF_TAG "alcCreateContext error code 0x%x\n", alGetError());
+			LOGE("ConFuoco/AL: alcCreateContext error code 0x%x", alGetError());
 			return;
 		}
 		alcMakeContextCurrent(context);
@@ -100,7 +98,7 @@ namespace ConFuoco
 		alGenSources(kNumChannels, sids);
 		if (alGetError() != AL_NO_ERROR)
 		{
-			R_ERROR(CF_TAG "Failed to generate sources\n");
+			LOGE("ConFuoco/AL: Failed to generate sources");
 			alcDestroyContext(context);
 			return;
 		}
@@ -340,7 +338,7 @@ Wave::Wave(const char *const file)
 {
 	alGenBuffers(1, &this->bid);
 	if (alGetError() != AL_NO_ERROR)
-		R_ERROR(CF_TAG "Failed to generate buffer\n");
+		LOGE("ConFuoco/AL: Failed to generate buffer");
 
 	std::unique_ptr<ConFuoco::AudioFile> audio_file(
 			ConFuoco::AudioFile::Open(file, ConFuoco::AudioFile::kAudioFileStatic));
@@ -368,7 +366,7 @@ Stream::Stream(const char *const file, const int loops)
 {
 	alGenBuffers(kNumALBuffers, this->bids);
 	if (alGetError() != AL_NO_ERROR)
-		R_ERROR(CF_TAG "Failed to generate buffers\n");
+		LOGE("ConFuoco/AL: Failed to generate buffers");
 
 	this->audio_file.reset(
 			ConFuoco::AudioFile::Open(file, ConFuoco::AudioFile::kAudioFileStream));

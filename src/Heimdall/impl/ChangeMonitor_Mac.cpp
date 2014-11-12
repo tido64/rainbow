@@ -10,7 +10,7 @@
 #include <memory>
 #include <CoreFoundation/CoreFoundation.h>
 
-#include "Common/Debug.h"
+#include "Common/Logging.h"
 #include "Common/NonCopyable.h"
 
 namespace
@@ -67,7 +67,7 @@ ChangeMonitor::ChangeMonitor(const char *const directory)
 	                                 kCFRunLoopDefaultMode);
 	FSEventStreamStart(stream_);
 
-	R_DEBUG("[Rainbow] Monitoring %s\n", directory);
+	LOGI("Monitoring '%s'", directory);
 }
 
 ChangeMonitor::~ChangeMonitor()

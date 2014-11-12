@@ -88,7 +88,7 @@ NS_RAINBOW_LUA_BEGIN
 			default:
 				break;
 		}
-		R_ERROR("* Lua %s error: %s\n", desc, lua_tostring(L, -1));
+		LOGE("Lua %s error: %s", desc, lua_tostring(L, -1));
 		lua_pop(L, 1);
 		dump_stack(L);
 	}

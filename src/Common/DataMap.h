@@ -13,8 +13,9 @@ class Path;
 namespace Rainbow
 {
 	// TODO: Move error strings to a separate header.
-	static const char kErrorMapFailed[] =
-	    "[Rainbow] Failed to memory map '%s' (%x)\n";
+	static const char kErrorFileOpen[] = "Failed to open '%s' (%x)";
+	static const char kErrorFileRead[] = "Failed to read '%s' (%x)";
+	static const char kErrorMemoryMap[] = "Failed to memory map '%s' (%x)";
 
 	template<typename T>
 	class DataMapBase : private T, private NonCopyable<DataMapBase<T>>

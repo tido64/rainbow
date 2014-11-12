@@ -9,7 +9,7 @@
 #include <fcntl.h>
 #include <sys/mman.h>
 
-#include "Common/Debug.h"
+#include "Common/Logging.h"
 #include "FileSystem/File.h"
 #include "FileSystem/Path.h"
 
@@ -21,16 +21,12 @@ namespace Rainbow
 		const File &f = File::open(path);
 		if (!f)
 		{
-			R_ERROR("[Rainbow] Failed to open '%s'\n",
-			        static_cast<const char*>(path));
+			LOGE(kErrorFileOpen, static_cast<const char*>(path), errno);
 			return;
 		}
 		len_ = f.size();
 		if (!len_)
-		{
-			R_ERROR("[Rainbow] Failed to read '%s'\n",
-			        static_cast<const char*>(path));
-		}
+			LOGE(kErrorFileRead, static_cast<const char*>(path), errno);
 		else
 		{
 			const int fd = fileno(f);
@@ -41,7 +37,7 @@ namespace Rainbow
 			addr_ = mmap(nullptr, len_, PROT_READ, MAP_PRIVATE, fd, 0);
 			if (addr_ == MAP_FAILED)
 			{
-				R_ERROR(kErrorMapFailed, static_cast<const char*>(path), errno);
+				LOGE(kErrorMemoryMap, static_cast<const char*>(path), errno);
 				addr_ = nullptr;
 			}
 		}

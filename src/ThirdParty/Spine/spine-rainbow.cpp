@@ -237,7 +237,7 @@ Skeleton* Skeleton::from_json(const char *path, const float scale)
 	spSkeletonJson_dispose(json);
 	if (!data)
 	{
-		R_ERROR("[Spine] %s\n", json->error);
+		LOGE("Spine: %s", json->error);
 		return nullptr;
 	}
 	return new Skeleton(data, atlas);
@@ -455,7 +455,7 @@ void Skeleton::update(const unsigned long dt)
 			}
 		}
 		if (slot->data->additiveBlending)  // TODO: Implement.
-			R_ERROR("[Rainbow] Additive blending not yet implemented\n");
+			LOGE("Additive blending not yet implemented");
 	});
 
 	vertex_buffer_.upload(vertices_.get(), i * sizeof(SpriteVertex));

@@ -28,7 +28,7 @@
 #	define kPathSeparatorLiteral "/"
 #endif
 
-#include "Common/Debug.h"
+#include "Common/Logging.h"
 
 #ifdef RAINBOW_OS_ANDROID
 extern ANativeActivity *gNativeActivity;
@@ -36,9 +36,9 @@ extern ANativeActivity *gNativeActivity;
 
 namespace
 {
-	const char kErrorAccessDirectory[] = "Error accessing '%s' (%x)\n";
-	const char kErrorCreateDirectory[] = "Failed to create directory '%s' (%x)\n";
-	const char kErrorInvalidDirectory[] = "'%s' is not a valid directory\n";
+	const char kErrorAccessDirectory[] = "Error accessing '%s' (%x)";
+	const char kErrorCreateDirectory[] = "Failed to create directory '%s' (%x)";
+	const char kErrorInvalidDirectory[] = "'%s' is not a valid directory";
 	const char kUserDataPath[] = "user";
 
 	Path g_current_path;
@@ -75,18 +75,18 @@ namespace
 				{
 					if (errno != ENOENT)
 					{
-						R_ERROR(kErrorAccessDirectory, dir, errno);
+						LOGE(kErrorAccessDirectory, dir, errno);
 						return -1;
 					}
 					if (mkdir(dir, mode) != 0 || stat(dir, &sb) != 0)
 					{
-						R_ERROR(kErrorCreateDirectory, dir, errno);
+						LOGE(kErrorCreateDirectory, dir, errno);
 						return -1;
 					}
 				}
 				if (!S_ISDIR(sb.st_mode))
 				{
-					R_ERROR(kErrorInvalidDirectory, dir);
+					LOGE(kErrorInvalidDirectory, dir);
 					return -1;
 				}
 				dir[i] = kPathSeparator;

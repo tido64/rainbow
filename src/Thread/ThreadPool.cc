@@ -21,8 +21,8 @@ namespace Rainbow
 	    : next_task_(0), shutting_down_(false), num_threads_(num_threads),
 	      threads_(new std::thread[num_threads_])
 	{
-		R_DEBUG("[Rainbow] Number of hardware threads: %u\n",
-		        std::thread::hardware_concurrency());
+		LOGI("Number of hardware threads: %u",
+		     std::thread::hardware_concurrency());
 
 		unsigned int i = 1;
 		std::generate_n(threads_.get(), num_threads_, [this, &i]() {

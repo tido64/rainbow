@@ -4,7 +4,7 @@
 
 #include "ThirdParty/TestFlight/TestFlight.h"
 
-#include "Common/Debug.h"
+#include "Common/Logging.h"
 #include "Lua/LuaHelper.h"
 #include "Lua/LuaSyntax.h"
 
@@ -27,7 +27,7 @@ namespace
 		TFLog(@"%s", message);
 	#endif  // RAINBOW_OS_IOS
 	#else
-		R_DEBUG("%s\n", message);
+		LOGD("%s", message);
 	#endif  // USE_TESTFLIGHT_SDK
 		return 0;
 		static_cast<void>(message);
@@ -49,7 +49,7 @@ namespace
 		[::TestFlight passCheckpoint:checkpointName];
 	#endif  // RAINBOW_OS_IOS
 	#else
-		R_DEBUG("Passed checkpoint: \"%s\"\n", checkpoint);
+		LOGD("Passed checkpoint: \"%s\"", checkpoint);
 	#endif  // USE_TESTFLIGHT_SDK
 		return 0;
 		static_cast<void>(checkpoint);

@@ -7,7 +7,6 @@
 
 #include <android/asset_manager.h>
 
-#include "Common/Debug.h"
 #include "FileSystem/Path.h"
 
 namespace Rainbow

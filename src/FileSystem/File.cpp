@@ -11,7 +11,7 @@
 #	include <android/native_activity.h>
 #endif
 
-#include "Common/Debug.h"
+#include "Common/Logging.h"
 #include "FileSystem/Path.h"
 
 #if defined(RAINBOW_OS_ANDROID)
@@ -100,7 +100,7 @@ File::File(const char *const path) : is_asset_(true), stream_(nullptr)
 	stream_ = fopen(path, "rb");
 #endif
 	if (!stream_)
-		R_ERROR("[Rainbow] File: Failed to open '%s'\n", path);
+		LOGE("File: Failed to open '%s'", path);
 }
 
 File::File(const char *const path, const char *const mode)

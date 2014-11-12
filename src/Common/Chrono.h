@@ -17,15 +17,12 @@ class Chrono : private NonCopyable<Chrono>
 public:
 	using clock = std::chrono::steady_clock;
 	using duration = std::chrono::milliseconds;
-	using time_point = clock::time_point;
 
 	static void sleep(const duration::rep milliseconds);
+	static duration system_now();
 	static std::chrono::seconds time_since_epoch();
 
 	Chrono();
-
-	/// Returns timestamp of current frame.
-	inline duration::rep current() const;
 
 	/// Returns the time difference between current and previous frame.
 	inline duration::rep delta() const;
@@ -35,15 +32,9 @@ public:
 
 protected:
 	duration delta_;
-	time_point current_;
-	time_point previous_;
+	clock::duration current_;
+	clock::duration previous_;
 };
-
-Chrono::duration::rep Chrono::current() const
-{
-	const auto t = current_.time_since_epoch();
-	return std::chrono::duration_cast<duration>(t).count();
-}
 
 Chrono::duration::rep Chrono::delta() const
 {

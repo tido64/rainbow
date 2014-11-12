@@ -34,12 +34,12 @@ set(SOURCE_FILES
 	src/Common/Data.cpp
 	src/Common/Data.h
 	src/Common/DataMap.h
-	src/Common/Debug.h
 	src/Common/Functional.h
 	src/Common/Global.h
 	src/Common/Link.cpp
 	src/Common/Link.h
 	src/Common/List.h
+	src/Common/Logging.h
 	src/Common/Memory.h
 	src/Common/NonCopyable.h
 	src/Common/Random.cpp

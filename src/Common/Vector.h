@@ -8,7 +8,7 @@
 #include <utility>
 
 #include "Common/Arena.h"
-#include "Common/Debug.h"
+#include "Common/Logging.h"
 
 /// Simple vector class, mimicking std::vector.
 ///

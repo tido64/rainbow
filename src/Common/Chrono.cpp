@@ -8,11 +8,16 @@
 
 namespace
 {
-	Chrono::time_point now()
+	Chrono::clock::duration now()
 	{
-		const auto now = Chrono::clock::now();
-		return std::chrono::time_point_cast<Chrono::duration>(now);
+		return Chrono::clock::now().time_since_epoch();
 	}
+}
+
+Chrono::duration Chrono::system_now()
+{
+	return std::chrono::duration_cast<Chrono::duration>(
+	    std::chrono::system_clock::now().time_since_epoch());
 }
 
 void Chrono::sleep(const duration::rep ms)
@@ -22,10 +27,7 @@ void Chrono::sleep(const duration::rep ms)
 
 std::chrono::seconds Chrono::time_since_epoch()
 {
-	const auto now =
-	    std::chrono::time_point_cast<std::chrono::seconds>(
-	        Chrono::clock::now());
-	return now.time_since_epoch();
+	return std::chrono::duration_cast<std::chrono::seconds>(now());
 }
 
 Chrono::Chrono() : current_(now()), previous_(current_) { }

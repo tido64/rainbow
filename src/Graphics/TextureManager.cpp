@@ -149,8 +149,7 @@ void TextureManager::print_usage() const
 #ifndef NDEBUG
 	double used, unused, peak;
 	memory_usage(used, unused, peak);
-	R_DEBUG("[Rainbow] Video: %.2f MBs of textures (%.2f MBs unused)\n",
-	        used, unused);
+	LOGD("Video: %.2f MBs of textures (%.2f MBs unused)", used, unused);
 #endif
 }
 

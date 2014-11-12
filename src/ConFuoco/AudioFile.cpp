@@ -8,7 +8,7 @@
 
 #include <cstring>
 
-#include "Common/Debug.h"
+#include "Common/Logging.h"
 
 namespace ConFuoco
 {
@@ -39,7 +39,7 @@ namespace ConFuoco
 
 	size_t AudioFile::read_impl(char **dst)
 	{
-		R_DEBUG("[Rainbow::ConFuoco] Loading fallback\n");
+		LOGD("ConFuoco: Loading fallback");
 
 		*dst = new char[kFallbackBufferSize];
 		memset(*dst, 0, kFallbackBufferSize);

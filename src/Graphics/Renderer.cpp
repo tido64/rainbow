@@ -130,8 +130,7 @@ bool Renderer::init()
 	GLenum err = glewInit();
 	if (err != GLEW_OK)
 	{
-		R_ERROR("[Rainbow] Failed to initialise GLEW: %s\n",
-		        glewGetErrorString(err));
+		LOGF("Failed to initialise GLEW: %s", glewGetErrorString(err));
 		return false;
 	}
 #endif

@@ -5,7 +5,7 @@
 #include "ConFuoco/Codecs/AppleAudioFile.h"
 #if USE_APPLEAUDIOFILE
 
-#include "Common/Debug.h"
+#include "Common/Logging.h"
 #include "ConFuoco/Codecs/OggVorbisAudioFile.h"
 #include "FileSystem/File.h"
 #include "FileSystem/Path.h"
@@ -56,7 +56,7 @@ namespace ConFuoco
 		NSURL *url = path;
 	#endif
 		if (ExtAudioFileOpenURL(bridge_cast<CFURLRef>(url), &this->ref) != noErr)
-			R_ERROR("[Rainbow::ConFuoco/AudioToolbox] Failed to open '%s'\n", file);
+			LOGE("ConFuoco/AudioToolbox: Failed to open '%s'", file);
 	#ifdef RAINBOW_OS_MACOS
 		CFRelease(url);
 	#endif
@@ -68,7 +68,7 @@ namespace ConFuoco
 		if (ExtAudioFileGetProperty(
 				this->ref, kExtAudioFileProperty_FileDataFormat, &size,
 				&this->format) != noErr)
-			R_ERROR("[Rainbow::ConFuoco/AudioToolbox] Failed to retrieve audio format\n");
+			LOGE("ConFuoco/AudioToolbox: Failed to retrieve audio format");
 
 		FillOutASBDForLPCM(
 				this->format,
@@ -81,7 +81,7 @@ namespace ConFuoco
 		if (ExtAudioFileSetProperty(
 				this->ref, kExtAudioFileProperty_ClientDataFormat,
 				sizeof(this->format), &this->format) != noErr)
-			R_ERROR("[Rainbow::ConFuoco/AudioToolbox] Failed to set client data format\n");
+			LOGE("ConFuoco/AudioToolbox: Failed to set client data format");
 	}
 
 	AppleAudioFile::~AppleAudioFile()
@@ -117,7 +117,7 @@ namespace ConFuoco
 				this->ref, kExtAudioFileProperty_FileLengthFrames, &size,
 				&frames) != noErr)
 		{
-			R_ERROR("[Rainbow::ConFuoco/AudioToolbox] Failed to retrieve audio length\n");
+			LOGE("ConFuoco/AudioToolbox: Failed to retrieve audio length");
 			return 0;
 		}
 		size = frames * this->format.mBytesPerFrame;
@@ -137,7 +137,7 @@ namespace ConFuoco
 		buffer.mBuffers[0].mDataByteSize = size;
 		buffer.mBuffers[0].mData = dst;
 		if (ExtAudioFileRead(this->ref, &frames, &buffer) != noErr)
-			R_ERROR("[Rainbow::ConFuoco/AudioToolbox] Failed to read <%p>\n",this->ref);
+			LOGE("ConFuoco/AudioToolbox: Failed to read <%p>", this->ref);
 		return frames * this->format.mBytesPerFrame;
 	}
 
