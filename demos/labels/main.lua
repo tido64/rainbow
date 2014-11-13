@@ -24,6 +24,7 @@ local screen = rainbow.platform.screen
 local y_offset = { 0.55, 0.63, 0.71 }
 
 function change(dt, label)
+	local rand = rainbow.random
 	local text = {
 		"Open Sans\nAaBbCcDdEeFfGgHhIi\nJjKkLlMmNnOoPpQqRr\nSsTtUuVvWwXxYyZz",
 		"Grumpy wizards make\ntoxic brew for the\nevil Queen and Jack.",
@@ -38,6 +39,9 @@ function change(dt, label)
 		label:set_text(stanza)
 		i = (i + 1) % num_texts
 		Coroutine.wait(5000)
+		-- Test that colour is set for future strings
+		label:set_color(rand(256), rand(256), rand(256), 255)
+		Coroutine.wait(0)
 	end
 end
 
@@ -48,6 +52,7 @@ function init()
 	label:set_font(rainbow.font("OpenSans-Light.ttf", 60))
 	g_label_node = rainbow.scenegraph:add_label(label)
 	Coroutine.start(change, label)
+	rainbow.seed(0)
 end
 
 function update(dt) end

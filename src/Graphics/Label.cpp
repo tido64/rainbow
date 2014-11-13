@@ -82,10 +82,7 @@ void Label::update()
 		if (stale_ & kStaleBuffer)
 		{
 			if (stale_ & kStaleBufferSize)
-			{
 				vertices_.reset(new SpriteVertex[size_ * 4]);
-				set_needs_update(kStaleColor);
-			}
 			size_t count = 0;
 			size_t start = 0;
 			SpriteVertex *vx = vertices_.get();
@@ -117,6 +114,7 @@ void Label::update()
 
 				for (size_t i = 0; i < 4; ++i)
 				{
+					vx->color = color_;
 					vx->texcoord = glyph->quad[i].texcoord;
 					vx->position = glyph->quad[i].position;
 					vx->position *= scale_;
@@ -131,7 +129,7 @@ void Label::update()
 			align(position_.x - pen.x, start, count);
 			width_ = pen.x - position_.x;
 		}
-		if (stale_ & kStaleColor)
+		else if (stale_ & kStaleColor)
 		{
 			const Colorb &color = color_;
 			std::for_each(vertices_.get(),
