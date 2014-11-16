@@ -77,6 +77,10 @@ namespace SceneGraph
 		/// Updates this node and all its enabled children.
 		void update(const unsigned long dt) const;
 
+#ifdef USE_HEIMDALL
+		std::string& to_string(std::string &) const;
+#endif
+
 	private:
 		enum class Type
 		{

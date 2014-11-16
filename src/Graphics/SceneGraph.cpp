@@ -87,4 +87,40 @@ namespace SceneGraph
 		for (auto child : children_)
 			child->update(dt);
 	}
+
+#ifdef USE_HEIMDALL
+	std::string& Node::to_string(std::string &str) const
+	{
+		str += "{\"id\":";
+		str += std::to_string(reinterpret_cast<uintptr_t>(this));
+		str += ",\"name\":\"";
+		str += tag();
+		str += "\",\"type\":";
+		str += std::to_string(static_cast<int>(type_));
+		str += ",\"enabled\":";
+		str += this->enabled ? "true" : "false";
+		str += ",\"parent\":";
+		if (!parent_)
+			str += "null";
+		else
+		{
+			str += '"';
+			str += parent_->tag();
+			str += '"';
+		}
+		if (children_.size())
+		{
+			str += ",\"children\":[";
+			children_[0]->to_string(str);
+			for (size_t i = 1; i < children_.size(); ++i)
+			{
+				str += ",";
+				children_[i]->to_string(str);
+			}
+			str += ']';
+		}
+		str += '}';
+		return str;
+	}
+#endif  // USE_HEIMDALL
 }
