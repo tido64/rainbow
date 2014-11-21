@@ -119,7 +119,7 @@ namespace spine
 
 			::Skeleton* get() const { return skeleton_.get(); }
 
-			const rainbow::lua::ScopedRef& listener() const
+			const rainbow::lua::WeakRef& listener() const
 			{
 				return listener_;
 			}
@@ -143,7 +143,7 @@ namespace spine
 
 			std::unique_ptr<::Skeleton> skeleton_;
 			lua_State *state_;
-			rainbow::lua::ScopedRef listener_;
+			rainbow::lua::WeakRef listener_;
 
 			// Implement Drawable.
 

@@ -13,6 +13,8 @@
 #include "Lua/LuaDebugging.h"
 #include "Lua/LuaSyntax.h"
 
+using Rainbow::Lua::WeakRef;
+
 namespace
 {
 	const char kLuaErrorErrorHandling[]  = "error handling";
@@ -42,28 +44,58 @@ namespace
 			return luaL_error(L, "Failed to load '%s'", module);
 		return result;
 	}
+
+	int weak_ref(lua_State *L)
+	{
+		if (!L || WeakRef::RegistryIndex < 0)
+			return LUA_NOREF;
+
+		lua_rawgeti(L, LUA_REGISTRYINDEX, WeakRef::RegistryIndex);
+		lua_insert(L, -2);
+		const int ref = luaL_ref(L, -2);
+		lua_pop(L, 1);
+		return ref;
+	}
+
+	void weak_unref(lua_State *L, const int ref)
+	{
+		if (ref < 0 || WeakRef::RegistryIndex < 0)
+			return;
+
+		lua_rawgeti(L, LUA_REGISTRYINDEX, WeakRef::RegistryIndex);
+		luaL_unref(L, -1, ref);
+		lua_pop(L, 1);
+	}
 }
 
 NS_RAINBOW_LUA_BEGIN
 {
-	ScopedRef::ScopedRef(lua_State *L)
-	    : state_(L), ref_(luaL_ref(L, LUA_REGISTRYINDEX)) {}
+	int WeakRef::RegistryIndex = LUA_NOREF;
 
-	ScopedRef::~ScopedRef()
+	WeakRef::WeakRef(lua_State *L) : state_(L), ref_(weak_ref(L)) {}
+
+	WeakRef::~WeakRef()
 	{
-		if (ref_ == LUA_REFNIL ||
-		    lua_rawlen(state_, LUA_REGISTRYINDEX) < static_cast<size_t>(ref_))
-			return;
-
-		luaL_unref(state_, LUA_REGISTRYINDEX, ref_);
+		weak_unref(state_, ref_);
 	}
 
-	void ScopedRef::reset(lua_State *L)
+	void WeakRef::get() const
 	{
-		if (ref_ != LUA_REFNIL)
-			luaL_unref(state_, LUA_REGISTRYINDEX, ref_);
+		if (!state_ || ref_ < 0 || RegistryIndex < 0)
+		{
+			lua_pushnil(state_);
+			return;
+		}
+		lua_rawgeti(state_, LUA_REGISTRYINDEX, RegistryIndex);
+		lua_rawgeti(state_, -1, ref_);
+		lua_remove(state_, -2);
+	}
+
+	void WeakRef::reset(lua_State *L)
+	{
+		weak_unref(state_, ref_);
 		state_ = L;
-		ref_ = (!L) ? LUA_REFNIL : luaL_ref(L, LUA_REGISTRYINDEX);
+		ref_ = weak_ref(state_);
 	}
 
 	void error(lua_State *L, const int result)

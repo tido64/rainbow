@@ -25,15 +25,17 @@ NS_RAINBOW_LUA_BEGIN
 	using LuaBindable =
 	    typename std::enable_if<std::is_base_of<Bind<T>, T>::value>::type;
 
-	/// The equivalent of std::shared_ptr for Lua objects.
-	class ScopedRef : private NonCopyable<ScopedRef>
+	/// The equivalent of std::weak_ptr for Lua objects.
+	class WeakRef : private NonCopyable<WeakRef>
 	{
 	public:
-		inline ScopedRef();
-		ScopedRef(lua_State *);
-		~ScopedRef();
+		static int RegistryIndex;
 
-		inline void get() const;
+		inline WeakRef();
+		WeakRef(lua_State *);
+		~WeakRef();
+
+		void get() const;
 		void reset(lua_State *L = nullptr);
 
 		inline explicit operator bool() const;
@@ -159,16 +161,11 @@ NS_RAINBOW_LUA_BEGIN
 	template<typename T, typename Enable>
 	T* touserdata(lua_State *L, const int n);
 
-	ScopedRef::ScopedRef() : state_(nullptr), ref_(LUA_REFNIL) {}
+	WeakRef::WeakRef() : state_(nullptr), ref_(LUA_NOREF) {}
 
-	void ScopedRef::get() const
+	WeakRef::operator bool() const
 	{
-		lua_rawgeti(state_, LUA_REGISTRYINDEX, ref_);
-	}
-
-	ScopedRef::operator bool() const
-	{
-		return ref_ != LUA_REFNIL;
+		return ref_ >= 0;
 	}
 
 	template<typename T, typename = LuaBindable<T>>
@@ -177,9 +174,10 @@ NS_RAINBOW_LUA_BEGIN
 		void *data = lua_newuserdata(L, sizeof(T));
 		luaL_setmetatable(L, T::class_name);
 		// Stash the userdata so we can return it later.
-		ScopedRef ref(L);
+		const int ref = luaL_ref(L, LUA_REGISTRYINDEX);
 		new (data) T(L);
-		ref.get();
+		lua_rawgeti(L, LUA_REGISTRYINDEX, ref);
+		luaL_unref(L, LUA_REGISTRYINDEX, ref);
 		return 1;
 	}
 

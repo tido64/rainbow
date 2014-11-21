@@ -32,7 +32,7 @@ NS_RAINBOW_LUA_BEGIN
 		static int stop(lua_State *);
 
 		std::unique_ptr<::Animation> animation_;
-		ScopedRef listener_;
+		WeakRef listener_;
 	};
 } NS_RAINBOW_LUA_END
 

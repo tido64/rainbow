@@ -120,6 +120,12 @@ NS_RAINBOW_LUA_BEGIN
 		self->listener_.reset(L);
 		self->animation_->set_callback([L, self](const ::Animation::Event e) {
 			self->listener_.get();
+			if (lua_isnil(L, -1))
+			{
+				lua_pop(L, 1);
+				self->animation_->set_callback(nullptr);
+				return;
+			}
 			switch (e)
 			{
 				case ::Animation::Event::Start:
