@@ -136,6 +136,13 @@ NS_RAINBOW_LUA_BEGIN
         self->animation_->set_callback(
             [L, self](::Animation*, ::Animation::Event e) {
                 self->listener_.get();
+                if (lua_isnil(L, -1))
+                {
+                    lua_pop(L, 1);
+                    self->animation_->set_callback(nullptr);
+                    return;
+                }
+
                 switch (e)
                 {
                     case ::Animation::Event::Start:
@@ -156,6 +163,7 @@ NS_RAINBOW_LUA_BEGIN
                     lua_pop(L, 2);
                     return;
                 }
+
                 lua_insert(L, -2);
                 call(L, 1, 0, 0, kErrorHandlingAnimationStateEvent);
             });

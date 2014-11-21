@@ -26,19 +26,21 @@ NS_RAINBOW_LUA_BEGIN
         typename std::enable_if<std::is_base_of<Bind<T>, T>::value>::type;
 
     /// <summary>
-    ///   The equivalent of <see cref="std::shared_ptr"/> for Lua objects.
+    ///   The equivalent of <see cref="std::weak_ptr"/> for Lua objects.
     /// </summary>
-    class ScopedRef : private NonCopyable<ScopedRef>
+    class WeakRef : private NonCopyable<WeakRef>
     {
     public:
-        ScopedRef() : state_(nullptr), ref_(LUA_REFNIL) {}
-        ScopedRef(lua_State*);
-        ~ScopedRef();
+        static int RegistryIndex;
 
-        void get() const { lua_rawgeti(state_, LUA_REGISTRYINDEX, ref_); }
+        WeakRef() : state_(nullptr), ref_(LUA_NOREF) {}
+        WeakRef(lua_State*);
+        ~WeakRef();
+
+        void get() const;
         void reset(lua_State* L = nullptr);
 
-        explicit operator bool() const { return ref_ != LUA_REFNIL; }
+        explicit operator bool() const { return ref_ >= 0; }
 
     private:
         lua_State* state_;
@@ -84,9 +86,10 @@ NS_RAINBOW_LUA_BEGIN
         void* data = lua_newuserdata(L, sizeof(T));
         luaL_setmetatable(L, T::class_name);
         // Stash the userdata so we can return it later.
-        ScopedRef ref(L);
+        const int ref = luaL_ref(L, LUA_REGISTRYINDEX);
         new (data) T(L);
-        ref.get();
+        lua_rawgeti(L, LUA_REGISTRYINDEX, ref);
+        luaL_unref(L, LUA_REGISTRYINDEX, ref);
         return 1;
     }
 

@@ -102,11 +102,16 @@ namespace
                                   int loop_count)
     {
         using spine::lua::Skeleton;
-        Skeleton* sk = static_cast<Skeleton*>(state->rendererObject);
-        if (!sk->listener())
-            return;
 
+        Skeleton* sk = static_cast<Skeleton*>(state->rendererObject);
         sk->listener().get();
+        if (lua_isnil(sk->state(), -1))
+        {
+            lua_pop(sk->state(), 1);
+            sk->get()->set_listener(nullptr, nullptr);
+            return;
+        }
+
         switch (type)
         {
             case SP_ANIMATION_START:
