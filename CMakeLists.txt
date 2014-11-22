@@ -118,7 +118,6 @@ set(SOURCE_FILES
 	src/Lua/lua_Label.h
 	src/Lua/lua_Platform.cpp
 	src/Lua/lua_Platform.h
-	src/Lua/lua_Rainbow.h
 	src/Lua/lua_Random.cpp
 	src/Lua/lua_Random.h
 	src/Lua/lua_Recorder.cpp
@@ -148,6 +147,7 @@ set(SOURCE_FILES
 	src/Platform/Macros.h
 	src/Platform/SDL2.cpp
 	src/Platform/SystemInfo.h
+	src/Resources/Rainbow.lua.h
 	src/ThirdParty/TestFlight/TestFlight.cpp
 	src/ThirdParty/TestFlight/TestFlight.h)
 

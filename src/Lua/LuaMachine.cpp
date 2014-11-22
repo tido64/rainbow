@@ -7,7 +7,7 @@
 #include "Common/Chrono.h"
 #include "Common/Data.h"
 #include "Lua/LuaModules.h"
-#include "Lua/lua_Rainbow.h"
+#include "Resources/Rainbow.lua.h"
 
 namespace
 {
