@@ -25,6 +25,14 @@ namespace
 		{ Shader::kAttributeNone, nullptr }
 	};
 
+	constexpr std::array<float, 16> kProjectionMatrix()
+	{
+		return {{1.0f,  0.0f,  0.0f, 0.0f,
+		         0.0f,  1.0f,  0.0f, 0.0f,
+		         0.0f,  0.0f, -1.0f, 0.0f,
+		        -1.0f, -1.0f,  0.0f, 1.0f}};
+	}
+
 	void set_projection_matrix(const Shader::Details &details,
 	                           const std::array<float, 16> &ortho)
 	{
@@ -184,12 +192,7 @@ void ShaderManager::use(const int program)
 	}
 }
 
-ShaderManager::ShaderManager()
-    : active_(-1), ortho_{{ 1.0f,  0.0f,  0.0f, 0.0f,
-                            0.0f,  1.0f,  0.0f, 0.0f,
-                            0.0f,  0.0f, -1.0f, 0.0f,
-                           -1.0f, -1.0f,  0.0f, 1.0f }}
-{ }
+ShaderManager::ShaderManager() : active_(-1), ortho_(kProjectionMatrix()) { }
 
 ShaderManager::~ShaderManager()
 {

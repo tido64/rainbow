@@ -163,7 +163,7 @@ content to `rainbow/lib/SDL/`. Xcode's Command Line Tools must be installed.
 - [OpenAL Soft](http://kcat.strangesoft.net/openal.html) (only with
   `-DUSE_FMOD_STUDIO=0`)
 - [SDL](http://libsdl.org/)
-- [Visual Studio Express for Windows Desktop](http://microsoft.com/express/)
+- [Visual Studio Community](http://www.visualstudio.com/en-us/products/visual-studio-community-vs)
   (2013 or later)
 
 Download OpenAL Soft and place the files under `rainbow\build\windows\include\`
@@ -171,15 +171,6 @@ and `rainbow\build\windows\lib\`. Finally, download SDL development libraries
 and move its content to `rainbow\lib\SDL\`.
 
 Alternatively, see "Linux" for cross-compilation.
-
-#### Known Issues
-
-The C++ compiler in Visual Studio (Express) 2013 Update 3 no longer supports
-list initialisation inside member initialiser list ([see
-C2797](http://msdn.microsoft.com/en-us/library/dn793970.aspx)). You will have
-to manually patch `ShaderManager::ShaderManager()` or downgrade. Visual C++
-Compiler 2013 Update 2 and [Nov 2013 CTP](http://aka.ms/Icp591) are not
-affected.
 
 ## Learning
 
