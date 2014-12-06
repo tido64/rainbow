@@ -29,10 +29,22 @@ namespace
 
 TEST_CASE("Vector operations", "[vector]")
 {
+	class BloatedInteger
+	{
+	public:
+		BloatedInteger(const size_t i) : integer_(i) { }
+
+		operator size_t() const { return integer_; };
+
+	private:
+		char random_padding_[13];
+		size_t integer_;
+	};
+
 	const size_t kTestSize = 16;
-	Vector<unsigned> intvec;
+	Vector<BloatedInteger> intvec;
 	for (size_t i = 0; i < kTestSize; ++i)
-		intvec.push_back(i);
+		intvec.emplace_back(i);
 
 	SECTION("Access")
 	{
@@ -196,7 +208,7 @@ TEST_CASE("Vector operations", "[vector]")
 		REQUIRE(intvec.capacity() == cap);
 		REQUIRE(intvec.size() == kTestSize);
 		for (size_t i = kTestSize; i < cap; ++i)
-			intvec.push_back(i);
+			intvec.emplace_back(i);
 		REQUIRE(intvec.capacity() == cap);
 		REQUIRE(intvec.size() == cap);
 	}

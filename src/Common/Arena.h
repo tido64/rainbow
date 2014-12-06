@@ -5,7 +5,8 @@
 #ifndef COMMON_ARENA_H_
 #define COMMON_ARENA_H_
 
-#include <cstring>
+#include <iterator>
+#include <memory>
 #include <new>
 
 #include "Common/NonCopyable.h"
@@ -68,7 +69,7 @@ void Arena<T>::release(size_t count) const
 {
 	if (!arena_)
 		return;
-	while (count)
+	while (count > 0)
 		arena_[--count].~T();
 }
 
@@ -76,8 +77,11 @@ template<typename T>
 void Arena<T>::resize(const size_t old_count, const size_t new_count)
 {
 	T *new_arena = static_cast<T*>(operator new(new_count * sizeof(T)));
-	if (old_count)
-		memcpy(new_arena, arena_, old_count * sizeof(T));
+	if (old_count > 0)
+	{
+		std::uninitialized_copy_n(
+		    std::make_move_iterator(arena_), old_count, new_arena);
+	}
 	operator delete(arena_);
 	arena_ = new_arena;
 }
