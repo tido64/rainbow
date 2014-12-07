@@ -12,7 +12,7 @@
 namespace Rainbow
 {
 	DataMapAndroid::DataMapAndroid(const Path &path)
-	    : off_(0), asset_(File::open(path)) { }
+	    : off_(0), asset_(File::open(path)) {}
 
 	const unsigned char* DataMapAndroid::bytes() const
 	{

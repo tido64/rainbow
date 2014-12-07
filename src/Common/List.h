@@ -29,13 +29,13 @@ class List : private NonCopyable<List<T>>
 		const SharedPtr<Item> next;
 
 		Item(T&& value, SharedPtr<Item> next)
-		    : value(std::forward<T>(value)), next(std::move(next)) { }
+		    : value(std::forward<T>(value)), next(std::move(next)) {}
 	};
 
 public:
 	List() = default;
 
-	List(List&& list) : head_(std::forward<SharedPtr<Item>>(list.head_)) { }
+	List(List&& list) : head_(std::forward<SharedPtr<Item>>(list.head_)) {}
 
 	bool empty() const
 	{
@@ -80,10 +80,10 @@ public:
 private:
 	SharedPtr<Item> head_;
 
-	explicit List(SharedPtr<Item> items) : head_(std::move(items)) { }
+	explicit List(SharedPtr<Item> items) : head_(std::move(items)) {}
 
 	List(T&& value, const List &tail)
-	    : head_(new Item(std::forward<T>(value), tail.head_)) { }
+	    : head_(new Item(std::forward<T>(value), tail.head_)) {}
 };
 
 template<typename T, typename F>

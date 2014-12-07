@@ -159,7 +159,7 @@ NS_RAINBOW_LUA_BEGIN
 	template<typename T, typename Enable>
 	T* touserdata(lua_State *L, const int n);
 
-	ScopedRef::ScopedRef() : state_(nullptr), ref_(LUA_REFNIL) { }
+	ScopedRef::ScopedRef() : state_(nullptr), ref_(LUA_REFNIL) {}
 
 	void ScopedRef::get() const
 	{
@@ -204,20 +204,20 @@ NS_RAINBOW_LUA_BEGIN
 
 	lua_Integer optinteger(lua_State *L, const int n, lua_Integer def)
 	{
-	#ifndef NDEBUG
+#ifndef NDEBUG
 		return luaL_optinteger(L, n, def);
-	#else
+#else
 		return luaL_opt(L, lua_tointeger, n, def);
-	#endif
+#endif
 	}
 
 	lua_Number optnumber(lua_State *L, const int n, lua_Number def)
 	{
-	#ifndef NDEBUG
+#ifndef NDEBUG
 		return luaL_optnumber(L, n, def);
-	#else
+#else
 		return luaL_opt(L, lua_tonumber, n, def);
-	#endif
+#endif
 	}
 
 	template<typename T>
@@ -233,30 +233,30 @@ NS_RAINBOW_LUA_BEGIN
 
 	lua_Integer tointeger(lua_State *L, const int n)
 	{
-	#ifndef NDEBUG
+#ifndef NDEBUG
 		return luaL_checkinteger(L, n);
-	#else
+#else
 		return lua_tointeger(L, n);
-	#endif
+#endif
 	}
 
 	lua_Number tonumber(lua_State *L, const int n)
 	{
-	#ifndef NDEBUG
+#ifndef NDEBUG
 		return luaL_checknumber(L, n);
-	#else
+#else
 		return lua_tonumber(L, n);
-	#endif
+#endif
 	}
 
 	template<typename T, typename = LuaBindable<T>>
 	T* touserdata(lua_State *L, const int n)
 	{
-	#ifndef NDEBUG
+#ifndef NDEBUG
 		return static_cast<T*>(luaL_checkudata(L, n, T::class_name));
-	#else
+#else
 		return static_cast<T*>(lua_touserdata(L, n));
-	#endif
+#endif
 	}
 
 	template<typename T, typename = LuaBindable<T>>

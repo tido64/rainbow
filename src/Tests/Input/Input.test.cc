@@ -13,7 +13,7 @@ namespace
 	{
 	public:
 		TestInputListener(const bool consume)
-		    : consume_(consume), touched_(false) { }
+		    : consume_(consume), touched_(false) {}
 
 		void reset() { touched_ = false; }
 

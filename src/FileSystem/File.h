@@ -62,7 +62,7 @@ private:
 	File(const char *const path, const char *const mode);
 };
 
-File::File() : is_asset_(false), stream_(nullptr) { }
+File::File() : is_asset_(false), stream_(nullptr) {}
 
 File::operator bool() const
 {

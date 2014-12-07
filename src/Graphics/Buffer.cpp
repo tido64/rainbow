@@ -19,7 +19,7 @@ namespace
 	}
 }
 
-Buffer::Buffer() : id_(glGenBuffer()) { }
+Buffer::Buffer() : id_(glGenBuffer()) {}
 
 Buffer::~Buffer()
 {

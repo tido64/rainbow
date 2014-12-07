@@ -12,7 +12,7 @@ namespace Rainbow
 {
 	namespace SystemInfo
 	{
-	#ifdef RAINBOW_OS_UNIX
+#ifdef RAINBOW_OS_UNIX
 		bool has_accelerometer()
 		{
 			return false;
@@ -51,7 +51,7 @@ namespace Rainbow
 			}
 			locales.emplace_back(locale);
 		}
-	#endif
+#endif
 
 		size_t memory()
 		{

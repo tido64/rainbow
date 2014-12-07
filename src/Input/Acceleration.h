@@ -33,7 +33,7 @@ private:
 	double timestamp_;  ///< The relative time at which the acceleration event occurred.
 };
 
-Acceleration::Acceleration() : timestamp_(0.0) { }
+Acceleration::Acceleration() : timestamp_(0.0) {}
 
 double Acceleration::timestamp() const
 {

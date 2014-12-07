@@ -17,7 +17,7 @@ using EnableIfIntegral =
 
 #if defined(_MSC_VER) && _MSC_VER <= 1800  // TODO: Fixed in VS2014
 template<typename T>
-struct EnableIfArithmetic : std::enable_if<std::is_arithmetic<T>::value> { };
+struct EnableIfArithmetic : std::enable_if<std::is_arithmetic<T>::value> {};
 
 template<typename T>
 using Arithmetic = typename EnableIfArithmetic<T>::type;

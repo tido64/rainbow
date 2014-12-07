@@ -10,9 +10,9 @@ namespace Rainbow
 {
 	namespace Shaders
 	{
-	#ifdef GL_ES_VERSION_2_0
-	#	include "Graphics/Shaders/Shaders.h"
-	#else
+#ifdef GL_ES_VERSION_2_0
+#	include "Graphics/Shaders/Shaders.h"
+#else
 		const char kDiffuseLight2Df[]      = "Shaders/DiffuseLight2D.fsh";
 		const char kDiffuseLightNormalf[]  = "Shaders/DiffuseLightNormal.fsh";
 		const char kFixed2Df[]             = "Shaders/Fixed2D.fsh";
@@ -20,6 +20,6 @@ namespace Rainbow
 		const char kNormalMappedv[]        = "Shaders/NormalMapped.vsh";
 		const char kSimple2Dv[]            = "Shaders/Simple2D.vsh";
 		const char kSimplef[]              = "Shaders/Simple.fsh";
-	#endif
+#endif
 	}
 }

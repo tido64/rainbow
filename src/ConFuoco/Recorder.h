@@ -93,7 +93,7 @@ namespace ConFuoco
 	}
 
 	template<typename T>
-	RecorderBase<T>::RecorderBase() : average(-160.0f), low(-160.0f), peak(-160.0f) { }
+	RecorderBase<T>::RecorderBase() : average(-160.0f), low(-160.0f), peak(-160.0f) {}
 
 	template<typename T>
 	RecorderBase<T>::~RecorderBase() = default;
@@ -112,10 +112,10 @@ namespace ConFuoco
 	{
 		friend RecorderBase<RecorderStub>;
 
-		void pause_impl() { }
+		void pause_impl() {}
 		bool record_impl(const unsigned long) { return false; }
-		void stop_impl() { }
-		void update_impl() { }
+		void stop_impl() {}
+		void update_impl() {}
 	};
 
 	using Recorder = RecorderStub;

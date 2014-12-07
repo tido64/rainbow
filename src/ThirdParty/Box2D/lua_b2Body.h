@@ -18,7 +18,7 @@ NS_B2_LUA_BEGIN
 
 		BodyData(const b2BodyDef &d)
 		    : curr_p(d.position), prev_p(d.position), curr_r(d.angle),
-		      prev_r(d.angle) { }
+		      prev_r(d.angle) {}
 	};
 
 	int BodyDef(lua_State *L)
@@ -125,7 +125,7 @@ NS_B2_LUA_BEGIN
 	};
 
 	Body::Body(lua_State *L)
-	    : body_(static_cast<b2Body*>(lua_touserdata(L, -1))) { }
+	    : body_(static_cast<b2Body*>(lua_touserdata(L, -1))) {}
 
 	b2Body* Body::get()
 	{

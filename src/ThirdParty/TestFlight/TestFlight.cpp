@@ -22,13 +22,13 @@ namespace
 		Rainbow::Lua::Argument<char*>::is_required(L, 1);
 
 		const char *message = lua_tostring(L, 1);
-	#ifdef USE_TESTFLIGHT_SDK
-	#ifdef RAINBOW_OS_IOS
+#ifdef USE_TESTFLIGHT_SDK
+#ifdef RAINBOW_OS_IOS
 		TFLog(@"%s", message);
-	#endif  // RAINBOW_OS_IOS
-	#else
+#endif  // RAINBOW_OS_IOS
+#else
 		LOGD("%s", message);
-	#endif  // USE_TESTFLIGHT_SDK
+#endif  // USE_TESTFLIGHT_SDK
 		return 0;
 		static_cast<void>(message);
 	}
@@ -39,18 +39,18 @@ namespace
 		Rainbow::Lua::Argument<char*>::is_required(L, 1);
 
 		const char *checkpoint = lua_tostring(L, 1);
-	#ifdef USE_TESTFLIGHT_SDK
-	#ifdef RAINBOW_OS_IOS
+#ifdef USE_TESTFLIGHT_SDK
+#ifdef RAINBOW_OS_IOS
 		NSString *checkpointName = [[NSString alloc]
 		    initWithBytesNoCopy:(void*)checkpoint
 		                 length:strlen(checkpoint)
 		               encoding:NSUTF8StringEncoding
 		           freeWhenDone:NO];
 		[::TestFlight passCheckpoint:checkpointName];
-	#endif  // RAINBOW_OS_IOS
-	#else
+#endif  // RAINBOW_OS_IOS
+#else
 		LOGD("Passed checkpoint: \"%s\"", checkpoint);
-	#endif  // USE_TESTFLIGHT_SDK
+#endif  // USE_TESTFLIGHT_SDK
 		return 0;
 		static_cast<void>(checkpoint);
 	}

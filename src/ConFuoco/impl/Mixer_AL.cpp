@@ -72,9 +72,9 @@ namespace ConFuoco
 {
 	MixerAL::MixerAL() : context_(nullptr)
 	{
-	#ifdef RAINBOW_OS_IOS
+#ifdef RAINBOW_OS_IOS
 		this->session_ = [[AudioSession alloc] init];
-	#endif
+#endif
 
 		ALCdevice *device = alcOpenDevice(0);
 		if (!device)
@@ -162,7 +162,7 @@ namespace ConFuoco
 
 	void MixerAL::update_impl()
 	{
-	#ifndef RAINBOW_OS_IOS
+#ifndef RAINBOW_OS_IOS
 		for (auto sound : this->sounds)
 		{
 			if (sound->type != Sound::Type::Stream)
@@ -198,44 +198,44 @@ namespace ConFuoco
 			if (processed > 0 && alGetSourceState(stream->channel->ch) == AL_STOPPED)
 				alSourcePlay(stream->channel->ch);
 		}
-	#endif
+#endif
 	}
 
 	/* Channel interface */
 
 	bool MixerAL::is_paused_impl(const Channel *c)
 	{
-	#ifdef RAINBOW_OS_IOS
+#ifdef RAINBOW_OS_IOS
 		if (c->sound->type != Sound::Type::Static)
 			return static_cast<Stream*>(c->sound)->is_paused();
-	#endif
+#endif
 		return alGetSourceState(c->ch) == AL_PAUSED;
 	}
 
 	bool MixerAL::is_playing_impl(const Channel *c)
 	{
-	#ifdef RAINBOW_OS_IOS
+#ifdef RAINBOW_OS_IOS
 		if (c->sound->type != Sound::Type::Static)
 			return static_cast<Stream*>(c->sound)->is_playing();
-	#endif
+#endif
 		return alGetSourceState(c->ch) == AL_PLAYING;
 	}
 
 	void MixerAL::set_gain_impl(const Channel *c, const float gain)
 	{
-	#ifdef RAINBOW_OS_IOS
+#ifdef RAINBOW_OS_IOS
 		if (c->sound->type != Sound::Type::Static)
 		{
 			static_cast<Stream*>(c->sound)->set_volume(gain);
 			return;
 		}
-	#endif
+#endif
 		alSourcef(c->ch, AL_GAIN, gain);
 	}
 
 	void MixerAL::pause_impl(const Channel *c)
 	{
-	#ifdef RAINBOW_OS_IOS
+#ifdef RAINBOW_OS_IOS
 		if (c->sound->type != Sound::Type::Static)
 		{
 			Stream *sound = static_cast<Stream*>(c->sound);
@@ -245,7 +245,7 @@ namespace ConFuoco
 				sound->pause();
 			return;
 		}
-	#endif
+#endif
 
 		const int state = alGetSourceState(c->ch);
 		if (state == AL_STOPPED)
@@ -266,14 +266,14 @@ namespace ConFuoco
 				this->stop(stream->channel);
 			stream->channel = c;
 			this->set_gain(c, 1.0f);
-		#ifdef RAINBOW_OS_IOS
+#ifdef RAINBOW_OS_IOS
 			stream->play();
-		#else
+#else
 			alSourcei(c->ch, AL_BUFFER, 0);
 			alSourceQueueBuffers(c->ch, kNumALBuffers, stream->bids);
 			alSourcePlay(c->ch);
 			stream->playing = true;
-		#endif
+#endif
 		}
 		else
 		{
@@ -285,15 +285,15 @@ namespace ConFuoco
 
 	void MixerAL::stop_impl(const Channel *c)
 	{
-	#ifdef RAINBOW_OS_IOS
+#ifdef RAINBOW_OS_IOS
 		if (c->sound->type != Sound::Type::Static)
 		{
 			static_cast<Stream*>(c->sound)->stop();
 			return;
 		}
-	#endif
+#endif
 		alSourceStop(c->ch);
-	#ifndef RAINBOW_OS_IOS
+#ifndef RAINBOW_OS_IOS
 		if (c->sound->type != Sound::Type::Static)
 		{
 			alSourcei(c->ch, AL_BUFFER, 0);
@@ -301,7 +301,7 @@ namespace ConFuoco
 			s->playing = false;
 			s->preload();
 		}
-	#endif
+#endif
 	}
 
 	/* Sound interface */

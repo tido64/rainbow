@@ -30,7 +30,7 @@ std::chrono::seconds Chrono::time_since_epoch()
 	return std::chrono::duration_cast<std::chrono::seconds>(now());
 }
 
-Chrono::Chrono() : current_(now()), previous_(current_) { }
+Chrono::Chrono() : current_(now()), previous_(current_) {}
 
 void Chrono::update()
 {

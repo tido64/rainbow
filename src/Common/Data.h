@@ -56,7 +56,9 @@ public:
 	explicit Data(const File &);
 
 	/// Constructs a wrapper around a buffer.
-	inline Data(const void *buffer, const size_t size, const Ownership ownership);
+	inline Data(const void *buffer,
+	            const size_t size,
+	            const Ownership ownership);
 
 	~Data();
 
@@ -113,7 +115,7 @@ Data Data::from_literal(const T (&literal)[N])
 }
 
 Data::Data()
-    : ownership_(Ownership::Owner), allocated_(0), sz_(0), data_(nullptr) { }
+    : ownership_(Ownership::Owner), allocated_(0), sz_(0), data_(nullptr) {}
 
 Data::Data(Data &&d)
     : ownership_(d.ownership_), allocated_(d.allocated_), sz_(d.sz_),
@@ -126,7 +128,7 @@ Data::Data(Data &&d)
 
 Data::Data(const void *buffer, const size_t size, const Ownership ownership)
     : ownership_(ownership), allocated_(size), sz_(size),
-      data_(const_cast<void*>(buffer)) { }
+      data_(const_cast<void*>(buffer)) {}
 
 void* Data::bytes() const
 {

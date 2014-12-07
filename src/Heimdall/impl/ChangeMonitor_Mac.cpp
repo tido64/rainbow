@@ -39,7 +39,7 @@ namespace
 }
 
 ChangeMonitor::ChangeMonitor(const char *const directory)
-    : stream_(nullptr), callback_([](const char *) { })
+    : stream_(nullptr), callback_([](const char *) {})
 {
 	memset(&context_, 0, sizeof(context_));
 	context_.info = this;

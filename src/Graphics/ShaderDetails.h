@@ -23,9 +23,9 @@ namespace Shader
 		kTypeInvalid = 0,
 		kTypeFragment = GL_FRAGMENT_SHADER,
 		kTypeVertex = GL_VERTEX_SHADER
-	#ifdef GL_GEOMETRY_SHADER
+#ifdef GL_GEOMETRY_SHADER
 		, kTypeGeometry = GL_GEOMETRY_SHADER
-	#endif
+#endif
 	};
 
 	struct AttributeParams
@@ -41,7 +41,7 @@ namespace Shader
 		const unsigned int program;
 
 		Details(const unsigned int program)
-		    : texture0(true), texture1(false), program(program) { }
+		    : texture0(true), texture1(false), program(program) {}
 	};
 
 	struct ShaderParams

@@ -81,8 +81,9 @@ void for_each(T *node, F&& f, Args&&... args)
 	using U = typename std::decay<T>::type;
 	static_assert(std::is_base_of<TreeNode<U>, U>::value,
 	              "T must be a subclass of TreeNode");
-	static_assert(std::is_convertible<F, std::function<void(T*, Args&&...)>>::value,
-	              "function type void(T*, Args&&...) required");
+	static_assert(
+	    std::is_convertible<F, std::function<void(T*, Args&&...)>>::value,
+	    "function type void(T*, Args&&...) required");
 
 	f(node, std::forward<Args>(args)...);
 	for (auto child : node->children_)

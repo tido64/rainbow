@@ -65,11 +65,11 @@ namespace
 			end = dir[i] == '\0';
 			if (dir[i] == kPathSeparator || end)
 			{
-			#ifdef RAINBOW_OS_WINDOWS
+#ifdef RAINBOW_OS_WINDOWS
 				// Windows' stat() doesn't handle trailing backslash.
 				if (dir[i - 1] == ':' || dir[i - 1] == kPathSeparator)
 					continue;
-			#endif
+#endif
 				dir[i] = '\0';
 				if (stat(dir, &sb) != 0)
 				{
@@ -136,7 +136,7 @@ Path::Path(const char *const file, const RelativeTo rel)
 	switch (rel)
 	{
 		case RelativeTo::CurrentPath:
-			#if defined(RAINBOW_OS_ANDROID)
+#if defined(RAINBOW_OS_ANDROID)
 			{
 				// Android doesn't ignore multiple '/' in paths.
 				int i = -1;
@@ -149,7 +149,7 @@ Path::Path(const char *const file, const RelativeTo rel)
 				}
 				path_[++j] = '\0';
 			}
-			#elif defined(RAINBOW_OS_IOS)
+#elif defined(RAINBOW_OS_IOS)
 			{
 				NSString *string = [[NSString alloc]
 				    initWithBytesNoCopy:(void*)file
@@ -164,15 +164,15 @@ Path::Path(const char *const file, const RelativeTo rel)
 
 				*this = [string UTF8String];
 			}
-			#else
+#else
 			{
 				*this = ::g_current_path;
 				*this += file;
 			}
-			#endif
+#endif
 			break;
 		case RelativeTo::UserDataPath:
-			#ifdef RAINBOW_OS_IOS
+#ifdef RAINBOW_OS_IOS
 			{
 				NSError *err = nil;
 				NSString *libraryDir = [[[NSFileManager defaultManager]
@@ -190,7 +190,7 @@ Path::Path(const char *const file, const RelativeTo rel)
 				           freeWhenDone:NO];
 				*this = [[libraryDir stringByAppendingPathComponent:string] UTF8String];
 			}
-			#else
+#else
 			{
 				if (!g_user_data_path)
 					break;
@@ -205,7 +205,7 @@ Path::Path(const char *const file, const RelativeTo rel)
 				*this = g_user_data_path;
 				*this += file;
 			}
-			#endif  // RAINBOW_OS_IOS
+#endif  // RAINBOW_OS_IOS
 			break;
 		case RelativeTo::Root:
 			*this = file;

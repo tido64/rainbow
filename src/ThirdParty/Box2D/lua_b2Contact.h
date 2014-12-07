@@ -47,7 +47,7 @@ NS_B2_LUA_BEGIN
 		b2Contact *contact_;
 	};
 
-	Contact::Contact(lua_State *) : contact_(nullptr) { }
+	Contact::Contact(lua_State *) : contact_(nullptr) {}
 
 	void Contact::set(b2Contact *contact)
 	{

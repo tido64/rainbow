@@ -54,7 +54,7 @@ NS_RAINBOW_LUA_MODULE_BEGIN(Input)
 			lua_rawseti(L, -2, 1);
 		}
 
-	#ifdef RAINBOW_BUTTONS
+#ifdef RAINBOW_BUTTONS
 
 		void on_key_event(lua_State *L, const Event event, const Key &key)
 		{
@@ -70,7 +70,7 @@ NS_RAINBOW_LUA_MODULE_BEGIN(Input)
 			lua_pop(L, 2);
 		}
 
-	#endif  // RAINBOW_BUTTONS
+#endif  // RAINBOW_BUTTONS
 
 		void on_touch_event(lua_State *L,
 		                    const Event event,

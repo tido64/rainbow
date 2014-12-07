@@ -40,10 +40,10 @@ namespace SceneGraph
 		/// Creates a generic drawable node.
 		inline Node(Drawable *);
 
-	#ifndef NDEBUG
+#ifndef NDEBUG
 		const char* tag() const { return tag_; }
 		void set_tag(const char *tag) { tag_ = tag; }
-	#endif
+#endif
 
 		/// Adds a child node.
 		inline Node* add_child(Node *n);
@@ -86,22 +86,22 @@ namespace SceneGraph
 			Label *label_;
 			SpriteBatch *sprite_batch_;
 		};  ///< Graphical element represented by this node.
-	#ifndef NDEBUG
+#ifndef NDEBUG
 		const char *tag_;
-	#endif
+#endif
 
 		inline Node(Type type, void *data);
 	};
 
-	Node::Node() : Node(Type::Group, nullptr) { }
+	Node::Node() : Node(Type::Group, nullptr) {}
 
-	Node::Node(Animation *animation) : Node(Type::Animation, animation) { }
+	Node::Node(Animation *animation) : Node(Type::Animation, animation) {}
 
-	Node::Node(Label *label) : Node(Type::Label, label) { }
+	Node::Node(Label *label) : Node(Type::Label, label) {}
 
-	Node::Node(SpriteBatch *batch) : Node(Type::SpriteBatch, batch) { }
+	Node::Node(SpriteBatch *batch) : Node(Type::SpriteBatch, batch) {}
 
-	Node::Node(Drawable *drawable) : Node(Type::Drawable, drawable) { }
+	Node::Node(Drawable *drawable) : Node(Type::Drawable, drawable) {}
 
 	Node* Node::add_child(Node *n)
 	{
@@ -122,10 +122,10 @@ namespace SceneGraph
 
 	Node::Node(Type type, void *data)
 	    : enabled(true), type_(type), program_(-1), data_(data)
-	#ifndef NDEBUG
+#ifndef NDEBUG
 	    , tag_(nullptr)
-	#endif
-	{ }
+#endif
+	{}
 }
 
 #endif

@@ -116,7 +116,7 @@ namespace ConFuoco
 	}
 
 	void MixerSL::set_gain_impl(const float) { /* TODO */ }
-	void MixerSL::set_pitch_impl(const float) { }
+	void MixerSL::set_pitch_impl(const float) {}
 
 	void MixerSL::clear_impl()
 	{
@@ -153,7 +153,7 @@ namespace ConFuoco
 		}
 	}
 
-	void MixerSL::update_impl() { }
+	void MixerSL::update_impl() {}
 
 	/* Channel interface */
 
@@ -202,7 +202,7 @@ namespace ConFuoco
 	                                  const Sound::Type,
 	                                  const int loops)
 	{
-	#if 0
+#if 0
 		/**
 		 * Disabled because creating an audio player with SLDataLocator_URI
 		 * doesn't seem to work. Android implements OpenSL 1.0.1 *partially*
@@ -213,7 +213,7 @@ namespace ConFuoco
 		SLDataLocator_URI uri = { SL_DATALOCATOR_URI, reinterpret_cast<SLchar*>(asset_uri) };
 		SLDataFormat_MIME format = { SL_DATAFORMAT_MIME, nullptr, SL_CONTAINERTYPE_UNSPECIFIED };
 		SLDataSource source = { &uri, &format };
-	#endif
+#endif
 
 		off_t offset, length;
 		int fd = 0;
@@ -243,7 +243,7 @@ namespace ConFuoco
 
 	MixerSL::SLAudioPlayer::SLAudioPlayer()
 	    : suspended(false), loops(0), channel(nullptr), player(nullptr),
-	      play_itf(nullptr), volume_itf(nullptr) { }
+	      play_itf(nullptr), volume_itf(nullptr) {}
 
 	MixerSL::SLAudioPlayer::~SLAudioPlayer()
 	{
@@ -346,7 +346,7 @@ Stream::Stream(const int fd,
                const off_t length,
                const int loops)
     : ConFuoco::Sound(ConFuoco::Sound::Type::Stream), loops(loops), fd(fd),
-      offset(offset), length(length) { }
+      offset(offset), length(length) {}
 
 Stream::~Stream()
 {

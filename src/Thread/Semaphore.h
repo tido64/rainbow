@@ -20,7 +20,7 @@ namespace Rainbow
 	class Semaphore
 	{
 	public:
-		Semaphore() : count_(0) { }
+		Semaphore() : count_(0) {}
 
 		void consume_one()
 		{

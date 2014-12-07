@@ -18,8 +18,8 @@ namespace Rainbow
 	{
 		T x, y, z;
 
-		Vec3() : Vec3(0, 0, 0) { }
-		Vec3(const T x, const T y, const T z) : x(x), y(y), z(z) { }
+		Vec3() : Vec3(0, 0, 0) {}
+		Vec3(const T x, const T y, const T z) : x(x), y(y), z(z) {}
 
 		template<typename U = T>
 		EnableIfIntegral<U, bool> is_zero() const

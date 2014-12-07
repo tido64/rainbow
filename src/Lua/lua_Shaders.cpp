@@ -64,7 +64,7 @@ const luaL_Reg Diffuse::Bind::functions[] = {
 	{ nullptr, nullptr }
 };
 
-Diffuse::Diffuse(lua_State *L) : lighting_(lua_toboolean(L, 1)) { }
+Diffuse::Diffuse(lua_State *L) : lighting_(lua_toboolean(L, 1)) {}
 
 const Rainbow::Shaders::Diffuse* Diffuse::get() const
 {

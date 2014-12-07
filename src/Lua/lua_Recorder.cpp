@@ -26,7 +26,7 @@ NS_RAINBOW_LUA_BEGIN
 		{ nullptr, nullptr }
 	};
 
-	Recorder::Recorder(lua_State *) { }
+	Recorder::Recorder(lua_State *) {}
 
 	int Recorder::get_average_power(lua_State *L)
 	{

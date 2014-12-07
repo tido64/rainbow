@@ -45,7 +45,7 @@ struct AInstance
 	    : active(false), done(false), initialised(false), app(nullptr),
 	      sensorManager(nullptr), accelerometerSensor(nullptr),
 	      sensorEventQueue(nullptr), display(EGL_NO_DISPLAY),
-	      surface(EGL_NO_SURFACE), context(EGL_NO_CONTEXT) { }
+	      surface(EGL_NO_SURFACE), context(EGL_NO_CONTEXT) {}
 };
 
 void android_destroy_display(AInstance *ainstance);

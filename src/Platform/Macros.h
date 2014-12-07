@@ -37,19 +37,8 @@
 #	define RAINBOW_SDL
 #endif
 
-#define RAINBOW_BUILD "Rainbow / Bifrost Entertainment Property / Built " __DATE__
-
-// Define keyword 'override' for pre-C++11 compilers.
-#ifdef __GNUC__
-#	ifndef __GNUC_PATCHLEVEL__
-#		define __GNUC_VERSION__ (__GNUC__ * 10000 + __GNUC_MINOR__ * 100)
-#	else
-#		define __GNUC_VERSION__ (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__)
-#	endif
-#	if __GNUC_VERSION__ < 40700
-#		define override
-#	endif
-#endif
+#define RAINBOW_BUILD \
+    "Rainbow / Bifrost Entertainment Property / Built " __DATE__
 
 // Workaround for warning C4425:
 //     'constexpr' was ignored (class literal types are not yet supported)

@@ -43,10 +43,10 @@ NS_RAINBOW_LUA_BEGIN
 
 #ifdef NDEBUG
 	template<typename T>
-	void Argument<T>::is_optional(lua_State *, const int) { }
+	void Argument<T>::is_optional(lua_State *, const int) {}
 
 	template<typename T>
-	void Argument<T>::is_required(lua_State *, const int) { }
+	void Argument<T>::is_required(lua_State *, const int) {}
 #endif  // NDEBUG
 } NS_RAINBOW_LUA_END
 

@@ -45,7 +45,7 @@ namespace Rainbow
 			12, 0,12,12,12,12,12, 0,12, 0,12,12, 12,24,12,12,12,12,12,24,12,24,12,12,
 			12,12,12,12,12,12,12,24,12,12,12,12, 12,24,12,12,12,12,12,12,12,24,12,12,
 			12,12,12,12,12,12,12,36,12,36,12,12, 12,36,12,12,12,12,12,36,12,36,12,12,
-			12,36,12,12,12,12,12,12,12,12,12,12,
+			12,36,12,12,12,12,12,12,12,12,12,12
 		};
 	}
 
@@ -54,7 +54,7 @@ namespace Rainbow
 		unsigned int code;
 		unsigned int bytes;
 
-		utf_t() : code(0), bytes(0) { }
+		utf_t() : code(0), bytes(0) {}
 
 		operator unsigned int() const
 		{
@@ -116,7 +116,7 @@ namespace Rainbow
 	bool is_equal(const T a, const T b)
 	{
 		return fabs(a - b) <=
-		    fmax(fabs(a), fabs(b)) * std::numeric_limits<T>::epsilon();
+		       fmax(fabs(a), fabs(b)) * std::numeric_limits<T>::epsilon();
 	}
 
 	bool is_pow2(const unsigned int i)
@@ -127,7 +127,7 @@ namespace Rainbow
 	float low_pass(const float value, const float low_pass)
 	{
 		return kLowPassAlpha * powf(10.0f, value * kLowPassAlpha) +
-		    (1.0f - kLowPassAlpha) * low_pass;
+		       (1.0f - kLowPassAlpha) * low_pass;
 	}
 
 	unsigned int next_pow2(unsigned int i)

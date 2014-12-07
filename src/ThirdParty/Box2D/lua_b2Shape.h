@@ -33,7 +33,7 @@ NS_B2_LUA_BEGIN
 		b2PolygonShape shape_;
 	};
 
-	PolygonShape::PolygonShape(lua_State *) { }
+	PolygonShape::PolygonShape(lua_State *) {}
 
 	b2PolygonShape& PolygonShape::get()
 	{

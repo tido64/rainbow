@@ -29,7 +29,7 @@ private:
 	virtual void on_end_link_removed(Link *node);
 };
 
-Link::Link() : next_(nullptr), prev_(nullptr) { }
+Link::Link() : next_(nullptr), prev_(nullptr) {}
 
 Link* Link::next() const
 {

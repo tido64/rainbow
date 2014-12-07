@@ -36,7 +36,7 @@ namespace
 }
 
 Sprite::Ref::Ref(const SpriteBatch *batch, const size_t i)
-    : batch_(batch), i_(i) { }
+    : batch_(batch), i_(i) {}
 
 Sprite& Sprite::Ref::operator*() const
 {
@@ -50,7 +50,7 @@ Sprite* Sprite::Ref::operator->() const
 
 Sprite::Sprite(const unsigned int w, const unsigned int h, const SpriteBatch *p)
     : angle_(0.0f), width_(w), height_(h), stale_(-1), vertex_array_(nullptr),
-      parent_(p), pivot_(0.5f, 0.5f), scale_(1.0f, 1.0f) { }
+      parent_(p), pivot_(0.5f, 0.5f), scale_(1.0f, 1.0f) {}
 
 Sprite::Sprite(Sprite &&s)
     : angle_(s.angle_), width_(s.width_), height_(s.height_), stale_(s.stale_),

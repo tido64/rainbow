@@ -30,10 +30,10 @@ namespace Rainbow
 		else
 		{
 			const int fd = fileno(f);
-		#if defined(RAINBOW_OS_IOS) || defined(RAINBOW_OS_MACOS)
+#if defined(RAINBOW_OS_IOS) || defined(RAINBOW_OS_MACOS)
 			fcntl(fd, F_NOCACHE, 1);
 			fcntl(fd, F_RDAHEAD, 1);
-		#endif
+#endif
 			addr_ = mmap(nullptr, len_, PROT_READ, MAP_PRIVATE, fd, 0);
 			if (addr_ == MAP_FAILED)
 			{

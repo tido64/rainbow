@@ -103,7 +103,7 @@ namespace ConFuoco
 		this->rewind_impl();
 	}
 
-	AudioFile::AudioFile(File &&file) : file(std::forward<File>(file)) { }
+	AudioFile::AudioFile(File &&file) : file(std::forward<File>(file)) {}
 }
 
 #endif  // !USE_FMOD_STUDIO

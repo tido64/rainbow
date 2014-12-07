@@ -74,7 +74,7 @@ private:
 };
 
 ShaderManager::Context::Context()
-    : program_(ShaderManager::Get()->active_) { }
+    : program_(ShaderManager::Get()->active_) {}
 
 ShaderManager::Context::~Context()
 {

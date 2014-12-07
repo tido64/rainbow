@@ -64,9 +64,9 @@ namespace
 
 	int compile_shader(const Shader::ShaderParams &shader)
 	{
-	#ifdef GL_ES_VERSION_2_0
+#ifdef GL_ES_VERSION_2_0
 		const char *source = shader.source;
-	#else
+#else
 		const Data &glsl = Data::load_asset(shader.source);
 		if (!glsl)
 		{
@@ -74,7 +74,7 @@ namespace
 			return -1;
 		}
 		const char *source = glsl;
-	#endif
+#endif
 
 		const GLuint id = glCreateShader(shader.type);
 		glShaderSource(id, 1, &source, nullptr);
@@ -192,7 +192,7 @@ void ShaderManager::use(const int program)
 	}
 }
 
-ShaderManager::ShaderManager() : active_(-1), ortho_(kProjectionMatrix()) { }
+ShaderManager::ShaderManager() : active_(-1), ortho_(kProjectionMatrix()) {}
 
 ShaderManager::~ShaderManager()
 {

@@ -10,7 +10,7 @@
 #include "Common/Logging.h"
 
 ChangeMonitor::ChangeMonitor(const char *const directory)
-    : monitoring_(false), callback_([](const char *) { })
+    : monitoring_(false), callback_([](const char *) {})
 {
 	hDirectory_ = CreateFileA(
 	    directory,

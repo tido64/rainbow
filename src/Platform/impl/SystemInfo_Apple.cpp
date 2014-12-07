@@ -15,20 +15,20 @@ namespace Rainbow
 	{
 		bool has_accelerometer()
 		{
-		#ifdef RAINBOW_OS_IOS
+#ifdef RAINBOW_OS_IOS
 			return true;
-		#else
+#else
 			return false;
-		#endif
+#endif
 		}
 
 		bool has_touchscreen()
 		{
-		#ifdef RAINBOW_OS_IOS
+#ifdef RAINBOW_OS_IOS
 			return true;
-		#else
+#else
 			return false;
-		#endif
+#endif
 		}
 
 		void locales(Vector<std::unique_ptr<char[]>> &locales)

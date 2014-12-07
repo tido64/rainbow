@@ -247,7 +247,7 @@ FontAtlas::FontAtlas(const Data &font, const float pt)
 		vx[3].texcoord.x = vx[0].texcoord.x;
 		vx[3].texcoord.y = vx[2].texcoord.y;
 
-	#ifdef FONTATLAS_KERNING
+#ifdef FONTATLAS_KERNING
 		if (FT_HAS_KERNING(face))
 		{
 			int i = -1;
@@ -258,7 +258,7 @@ FontAtlas::FontAtlas(const Data &font, const float pt)
 				glyph.kern[++i] = static_cast<short>(kerning.x / kPixelFormat);
 			}
 		}
-	#endif
+#endif
 
 		// Advance to the next "slot" in our texture.
 		offset.x += width;

@@ -61,7 +61,7 @@ private:
 	void on_end_link_removed(Link *node) override;
 };
 
-Input::Input(lua_State *L) : lua_state_(L), last_listener_(this) { }
+Input::Input(lua_State *L) : lua_state_(L), last_listener_(this) {}
 
 void Input::reset()
 {

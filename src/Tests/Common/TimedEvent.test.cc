@@ -9,7 +9,7 @@ namespace
 	class TimedEventTest : public TimedEvent<TimedEventTest>
 	{
 	public:
-		TimedEventTest() : TimedEvent(1), ticks_(0) { }
+		TimedEventTest() : TimedEvent(1), ticks_(0) {}
 
 		void tick()
 		{
@@ -21,8 +21,8 @@ namespace
 			return ticks_;
 		}
 
-		void on_start() { }
-		void on_stop() { }
+		void on_start() {}
+		void on_stop() {}
 
 	private:
 		int ticks_;

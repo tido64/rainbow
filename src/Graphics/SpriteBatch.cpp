@@ -152,7 +152,7 @@ void SpriteBatch::set_buffer(T *buffer)
 }
 
 template<typename T>
-SetBuffer<T>::SetBuffer(T *buffer) : buffer_(buffer) { }
+SetBuffer<T>::SetBuffer(T *buffer) : buffer_(buffer) {}
 
 template<>
 void SetBuffer<SpriteVertex>::operator()(Sprite &sprite)
@@ -168,7 +168,7 @@ void SetBuffer<Vec2f>::operator()(Sprite &sprite)
 	buffer_ += 4;
 }
 
-Update::Update() : should_update_(false) { }
+Update::Update() : should_update_(false) {}
 
 void Update::operator()(Sprite &sprite)
 {

@@ -58,10 +58,10 @@ namespace Rainbow
 			height_ = Lua::tointeger(L.get(), -1);
 		}
 
-	#ifdef RAINBOW_SDL
+#ifdef RAINBOW_SDL
 		lua_getglobal(L.get(), "suspend_on_focus_lost");
 		if (lua_isboolean(L.get(), -1))
 			suspend_ = lua_toboolean(L.get(), -1);
-	#endif
+#endif
 	}
 }

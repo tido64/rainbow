@@ -22,7 +22,7 @@ namespace
 			static const unsigned int TouchMoved     = 1u << 3;
 		};
 
-		TouchTestFixture() : flags_(0) { }
+		TouchTestFixture() : flags_(0) {}
 
 		bool is_invalid(const Touch *const touches, const unsigned int count)
 		{

@@ -49,22 +49,22 @@ namespace
 
 	bool is_fullscreen(const SDL_Keysym &keysym)
 	{
-	#ifdef RAINBOW_OS_MACOS
+#ifdef RAINBOW_OS_MACOS
 		return false;
 		static_cast<void>(keysym);
-	#else
+#else
 		return keysym.sym == SDLK_RETURN && (keysym.mod & KMOD_LALT);
-	#endif
+#endif
 	}
 
 	bool is_quit(const SDL_Keysym &keysym)
 	{
-	#ifdef RAINBOW_OS_MACOS
+#ifdef RAINBOW_OS_MACOS
 		return false;
 		static_cast<void>(keysym);
-	#else
+#else
 		return keysym.sym == SDLK_q && (keysym.mod & KMOD_LCTRL);
-	#endif
+#endif
 	}
 
 	Vec2i window_size(const Rainbow::Config &config)
@@ -106,9 +106,9 @@ namespace
 		SDLContext context_;       ///< SDL context.
 		bool vsync_;               ///< Whether vertical sync is enabled.
 		uint32_t fullscreen_;      ///< Whether the window is in full screen mode.
-	#if USE_BORDERLESS_WINDOWED_MODE
+#if USE_BORDERLESS_WINDOWED_MODE
 		SDL_Point position_;       ///< Window's position while windowed.
-	#endif
+#endif
 		Vec2i size_;               ///< Window's size while windowed.
 	};
 
@@ -152,12 +152,12 @@ int main(int argc, char *argv[])
 		const Path main("main.lua");
 		if (!main.is_file())
 		{
-		#ifdef RAINBOW_TEST
+#ifdef RAINBOW_TEST
 			Path::set_current(Path());
 			return Rainbow::run_tests(argc, argv);
-		#else
+#else
 			return 0;
-		#endif
+#endif
 		}
 	}
 
@@ -167,7 +167,7 @@ int main(int argc, char *argv[])
 		return 1;
 
 	RainbowController controller(window, config.suspend());
-	while (controller.run());
+	while (controller.run()) {}
 	if (controller.error())
 	{
 		LOGF("%s", controller.error());

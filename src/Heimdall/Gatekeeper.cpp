@@ -49,7 +49,7 @@ namespace
 namespace Heimdall
 {
 	Gatekeeper::Gatekeeper()
-	    : overlay_activator_(&overlay_), monitor_(Path::current()) { }
+	    : overlay_activator_(&overlay_), monitor_(Path::current()) {}
 
 	void Gatekeeper::init(const Data &main, const Vec2i &screen)
 	{

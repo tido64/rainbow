@@ -42,14 +42,14 @@ TextureAtlas::TextureAtlas(const DataMap &img) : name_(0), width_(0), height_(0)
 
 	switch (image.format)
 	{
-	#ifdef GL_OES_compressed_ETC1_RGB8_texture
+#ifdef GL_OES_compressed_ETC1_RGB8_texture
 		case Rainbow::Image::Format::ETC1:
 			name_ = TextureManager::Get()->create_compressed(
 			    GL_ETC1_RGB8_OES, image.width, image.height, image.size,
 			    image.data);
 			break;
-	#endif  // ETC1
-	#ifdef GL_IMG_texture_compression_pvrtc
+#endif  // ETC1
+#ifdef GL_IMG_texture_compression_pvrtc
 		case Rainbow::Image::Format::PVRTC: {
 			R_ASSERT(image.depth == 2 || image.depth == 4,
 			         "Invalid colour depth");
@@ -72,7 +72,7 @@ TextureAtlas::TextureAtlas(const DataMap &img) : name_(0), width_(0), height_(0)
 			    internal, image.width, image.height, image.size, image.data);
 			break;
 		}
-	#endif  // PVRTC
+#endif  // PVRTC
 		default: {
 			GLint format = 0;
 			GLint internal = 0;

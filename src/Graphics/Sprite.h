@@ -124,7 +124,7 @@ private:
 	Vec2f scale_;                 ///< Scaling factor.
 };
 
-Sprite::Ref::Ref() : batch_(nullptr), i_(0) { }
+Sprite::Ref::Ref() : batch_(nullptr), i_(0) {}
 
 Sprite::Ref::operator bool() const
 {

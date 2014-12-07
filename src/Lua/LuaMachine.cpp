@@ -13,11 +13,11 @@ namespace
 {
 	int breakpoint(lua_State *L)
 	{
-	#ifndef NDEBUG
+#ifndef NDEBUG
 		Rainbow::Lua::sethook(L);
-	#else
+#else
 		static_cast<void>(L);
-	#endif
+#endif
 		return 0;
 	}
 
@@ -64,34 +64,34 @@ namespace Rainbow
 		if (Lua::load(state_, main, "main") == 0)
 			return luaL_error(state_, "Failed to load main script");
 
-	#ifndef NDEBUG
+#ifndef NDEBUG
 		lua_rawgeti(state_, LUA_REGISTRYINDEX, traceback_);
-	#endif
+#endif
 		lua_getglobal(state_, "init");
-	#ifndef NDEBUG
+#ifndef NDEBUG
 		return Lua::call(state_, 0, 0, 1, "Failed to initialise main script");
-	#else
+#else
 		return Lua::call(state_, 0, 0, 0, "Failed to initialise main script");
-	#endif
+#endif
 	}
 
 	int LuaMachine::update(const unsigned long t)
 	{
-	#ifndef NDEBUG
+#ifndef NDEBUG
 		lua_rawgeti(state_, LUA_REGISTRYINDEX, traceback_);
-	#endif
+#endif
 		lua_rawgeti(state_, LUA_REGISTRYINDEX, internal_);
 		lua_pushinteger(state_, t);
-	#ifndef NDEBUG
+#ifndef NDEBUG
 		return Lua::call(state_, 1, 0, 1, "Failed to call 'update'");
-	#else
+#else
 		return Lua::call(state_, 1, 0, 0, "Failed to call 'update'");
-	#endif
+#endif
 	}
 
 	LuaMachine::LuaMachine()
 	    : state_(luaL_newstate()), internal_(0), traceback_(0),
-	      scenegraph_(nullptr) { }
+	      scenegraph_(nullptr) {}
 
 	LuaMachine::~LuaMachine()
 	{
@@ -161,14 +161,14 @@ namespace Rainbow
 		internal_ = luaL_ref(state_, LUA_REGISTRYINDEX);
 		R_ASSERT(lua_gettop(state_) == 0, "Stack not empty");
 
-	#ifndef NDEBUG
+#ifndef NDEBUG
 		lua_getglobal(state_, "debug");
 		lua_pushliteral(state_, "traceback");
 		lua_rawget(state_, -2);
 		traceback_ = luaL_ref(state_, LUA_REGISTRYINDEX);
 		lua_pop(state_, 1);
 		R_ASSERT(lua_gettop(state_) == 0, "Stack not empty");
-	#endif
+#endif
 
 		// Map 'lua_createtable' to 'table.create'
 		lua_getglobal(state_, "table");

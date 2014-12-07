@@ -44,7 +44,7 @@ private:
 };
 
 template<typename T>
-Arena<T>::Arena() : arena_(nullptr) { }
+Arena<T>::Arena() : arena_(nullptr) {}
 
 template<typename T>
 Arena<T>::Arena(Arena &&a) : arena_(a.arena_)

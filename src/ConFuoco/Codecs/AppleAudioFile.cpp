@@ -22,17 +22,17 @@ namespace ConFuoco
 		template<typename C, typename T>
 		C bridge_cast(T &var)
 		{
-		#ifdef RAINBOW_OS_IOS
+#ifdef RAINBOW_OS_IOS
 			return (__bridge C)var;
-		#else
+#else
 			return (C)var;
-		#endif
+#endif
 		}
 	}
 
 	AudioFile* AudioFile::Open(const char *const file, const Mode mode)
 	{
-	#ifndef RAINBOW_OS_IOS
+#ifndef RAINBOW_OS_IOS
 		char id[8] = { 0 };
 		File f = File::open_asset(file);
 		if (f)
@@ -43,23 +43,23 @@ namespace ConFuoco
 		if (strncmp(Codecs::kCodecOggVorbis, id, strllen(Codecs::kCodecOggVorbis)) == 0)
 			return new OggVorbisAudioFile(std::move(f));
 		else
-	#endif
+#endif
 			return new AppleAudioFile(file, mode);
 	}
 
 	AppleAudioFile::AppleAudioFile(const char *const file, const int mode) : ref(nullptr)
 	{
 		const Path path(file);
-	#ifdef RAINBOW_OS_MACOS
+#ifdef RAINBOW_OS_MACOS
 		CFURLRef url = path.CreateCFURL();
-	#else
+#else
 		NSURL *url = path;
-	#endif
+#endif
 		if (ExtAudioFileOpenURL(bridge_cast<CFURLRef>(url), &this->ref) != noErr)
 			LOGE("ConFuoco/AudioToolbox: Failed to open '%s'", file);
-	#ifdef RAINBOW_OS_MACOS
+#ifdef RAINBOW_OS_MACOS
 		CFRelease(url);
-	#endif
+#endif
 		if (!this->ref)
 			return;
 

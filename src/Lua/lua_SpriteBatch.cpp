@@ -26,7 +26,7 @@ NS_RAINBOW_LUA_BEGIN
 		{ nullptr, nullptr }
 	};
 
-	SpriteBatch::SpriteBatch(lua_State *L) : batch_(optinteger(L, 1, 4)) { }
+	SpriteBatch::SpriteBatch(lua_State *L) : batch_(optinteger(L, 1, 4)) {}
 
 	int SpriteBatch::add(lua_State *L)
 	{

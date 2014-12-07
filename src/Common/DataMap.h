@@ -40,7 +40,7 @@ namespace Rainbow
 	};
 
 	template<typename T>
-	DataMapBase<T>::DataMapBase(const Path &path) : T(path) { }
+	DataMapBase<T>::DataMapBase(const Path &path) : T(path) {}
 
 	template<typename T>
 	const unsigned char* DataMapBase<T>::bytes() const

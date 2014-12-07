@@ -27,7 +27,7 @@ struct Texture
 	inline operator unsigned int() const;
 };
 
-Texture::Texture() : atlas(0) { }
+Texture::Texture() : atlas(0) {}
 
 Texture::Texture(const Vec2f &v0, const Vec2f &v1) : atlas(0)
 {

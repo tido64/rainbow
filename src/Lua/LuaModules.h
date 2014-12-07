@@ -36,9 +36,9 @@ NS_RAINBOW_LUA_BEGIN
 		reg<SpriteBatch>(L);
 		reg<Texture>(L);
 
-	#ifdef USE_SPINE
+#ifdef USE_SPINE
 		reg<Spine::Lua::Skeleton>(L);
-	#endif
+#endif
 	}
 
 	inline void init(lua_State *L)
@@ -51,9 +51,9 @@ NS_RAINBOW_LUA_BEGIN
 		Input::init(L);     // Initialise "rainbow.input" namespace
 		Audio::init(L);     // Initialise "rainbow.audio" namespace
 
-	#ifdef USE_PHYSICS
+#ifdef USE_PHYSICS
 		b2::Lua::Init(L);   // Initialise "b2" namespace
-	#endif
+#endif
 		TF::Lua::init(L);   // Initialise "TestFlight" namespace
 	}
 } NS_RAINBOW_LUA_END

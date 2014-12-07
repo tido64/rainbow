@@ -167,7 +167,7 @@ public:
 	inline Key();
 };
 
-Key::Key() : key(Keys::None), modifier(Mods::None) { }
+Key::Key() : key(Keys::None), modifier(Mods::None) {}
 
 #endif  // RAINBOW_BUTTONS
 #endif  // KEY_H_

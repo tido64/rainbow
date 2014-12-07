@@ -43,7 +43,7 @@ namespace Rainbow
 
 		Image()
 		    : format(Format::UNKNOWN), width(0), height(0), depth(0),
-		      channels(0), size(0), data(nullptr) { }
+		      channels(0), size(0), data(nullptr) {}
 	};
 }
 
@@ -61,21 +61,21 @@ namespace Rainbow
 {
 	Image Image::decode(const DataMap &data)
 	{
-	#ifdef USE_PVRTC
+#ifdef USE_PVRTC
 		if (PVRTC::check(data))
 			return PVRTC::decode(data);
-	#endif  // USE_PVRTC
+#endif  // USE_PVRTC
 
-	#ifdef USE_PNG
+#ifdef USE_PNG
 		if (PNG::check(data))
 			return PNG::decode(data);
-	#endif  // USE_PNG
+#endif  // USE_PNG
 
-	#ifdef USE_UIKIT
+#ifdef USE_UIKIT
 		return UIKit::decode(data);
-	#else
+#else
 		return Image();
-	#endif
+#endif
 	}
 
 	void Image::release(const Image &image)

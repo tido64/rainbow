@@ -10,6 +10,8 @@
 
 namespace Rainbow
 {
+	static_assert(sizeof(unsigned int) >= 4, "int is less than 32-bits");
+
 	/// Structure for storing a colour (RGBA).
 	template<typename T>
 	struct Color;
@@ -20,19 +22,16 @@ namespace Rainbow
 	{
 		unsigned char r, g, b, a;
 
-		constexpr Color() : Color(0xff, 0xff, 0xff, 0xff) { }
+		constexpr Color() : Color(0xff, 0xff, 0xff, 0xff) {}
 
 		constexpr Color(const unsigned char r,
 		                const unsigned char g,
 		                const unsigned char b,
 		                const unsigned char a = 0xff)
-		    : r(r), g(g), b(b), a(a) { }
+		    : r(r), g(g), b(b), a(a) {}
 
 		Color<unsigned char>& operator=(const unsigned int c)
 		{
-			static_assert(sizeof(unsigned int) >= 4,
-			              "int is less than 32-bits");
-
 			this->r = 0xff & (c >> 24);
 			this->g = 0xff & (c >> 16);
 			this->b = 0xff & (c >> 8);
@@ -47,25 +46,22 @@ namespace Rainbow
 	{
 		float r, g, b, a;
 
-		constexpr Color() : Color(1.0f, 1.0f, 1.0f, 1.0f) { }
+		constexpr Color() : Color(1.0f, 1.0f, 1.0f, 1.0f) {}
 
 		constexpr Color(const unsigned int c)
 		    : r((0xff & (c >> 24)) * 1.0f / 255.0f),
 		      g((0xff & (c >> 16)) * 1.0f / 255.0f),
 		      b((0xff & (c >> 8)) * 1.0f / 255.0f),
-		      a((0xff & (c)) * 1.0f / 255.0f) { }
+		      a((0xff & (c)) * 1.0f / 255.0f) {}
 
 		constexpr Color(const float r,
 		                const float g,
 		                const float b,
 		                const float a = 1.0f)
-		    : r(r), g(g), b(b), a(a) { }
+		    : r(r), g(g), b(b), a(a) {}
 
 		Color<float>& operator=(const unsigned int c)
 		{
-			static_assert(sizeof(unsigned int) >= 4,
-			              "int is less than 32-bits");
-
 			const float white = 1.0f / 255.0f;
 			this->r = (0xff & (c >> 24)) * white;
 			this->g = (0xff & (c >> 16)) * white;

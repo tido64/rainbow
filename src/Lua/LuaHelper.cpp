@@ -30,10 +30,10 @@ namespace
 		strcpy(path, module);
 		strcat(path, suffix);
 		const Path asset(path);
-	#ifndef RAINBOW_OS_ANDROID
+#ifndef RAINBOW_OS_ANDROID
 		if (!asset.is_file())
 			return 0;
-	#endif  // RAINBOW_OS_ANDROID
+#endif  // RAINBOW_OS_ANDROID
 		const File &file = File::open(asset);
 		if (!file)
 			return 0;
@@ -47,7 +47,7 @@ namespace
 NS_RAINBOW_LUA_BEGIN
 {
 	ScopedRef::ScopedRef(lua_State *L)
-	    : state_(L), ref_(luaL_ref(L, LUA_REGISTRYINDEX)) { }
+	    : state_(L), ref_(luaL_ref(L, LUA_REGISTRYINDEX)) {}
 
 	ScopedRef::~ScopedRef()
 	{

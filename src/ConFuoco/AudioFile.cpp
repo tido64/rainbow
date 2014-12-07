@@ -52,7 +52,7 @@ namespace ConFuoco
 		return size;
 	}
 
-	void AudioFile::rewind_impl() { }
+	void AudioFile::rewind_impl() {}
 }
 
 #endif

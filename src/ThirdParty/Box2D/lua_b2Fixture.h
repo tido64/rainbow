@@ -71,7 +71,7 @@ NS_B2_LUA_BEGIN
 		b2Fixture *fixture_;
 	};
 
-	Fixture::Fixture(lua_State *) : fixture_(nullptr) { }
+	Fixture::Fixture(lua_State *) : fixture_(nullptr) {}
 
 	void Fixture::set(b2Fixture *fixture)
 	{

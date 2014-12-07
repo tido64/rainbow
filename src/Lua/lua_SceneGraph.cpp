@@ -115,7 +115,7 @@ NS_RAINBOW_LUA_BEGIN
 		scenegraph->~SceneGraph();
 	}
 
-	SceneGraph::SceneGraph(Node *root) : node(root) { }
+	SceneGraph::SceneGraph(Node *root) : node(root) {}
 
 	template<typename T, typename F>
 	int SceneGraph::add_child(lua_State *L, F&& touserdata)
@@ -249,9 +249,9 @@ NS_RAINBOW_LUA_BEGIN
 		Argument<Node>::is_required(L, 2);
 		Argument<char*>::is_required(L, 3);
 
-	#ifndef NDEBUG
+#ifndef NDEBUG
 		tonode(L, 2)->set_tag(lua_tostring(L, 3));
-	#endif
+#endif
 		return 0;
 	}
 

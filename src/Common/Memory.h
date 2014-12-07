@@ -19,7 +19,7 @@ class RefCounted : private NonCopyable<RefCounted>
 	template<typename T> friend class SharedPtr;
 
 protected:
-	RefCounted() : refs_(0) { }
+	RefCounted() : refs_(0) {}
 	~RefCounted() = default;
 
 private:

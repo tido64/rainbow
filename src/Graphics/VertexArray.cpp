@@ -22,7 +22,7 @@ VertexArray::VertexArray()
 #ifdef USE_VERTEX_ARRAY_OBJECT
     : array_(0)
 #endif
-{ }
+{}
 
 VertexArray::~VertexArray()
 {

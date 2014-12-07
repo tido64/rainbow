@@ -12,7 +12,7 @@
 
 namespace Heimdall
 {
-	Overlay::Overlay() : node_(nullptr), texture_(0) { }
+	Overlay::Overlay() : node_(nullptr), texture_(0) {}
 
 	Overlay::~Overlay()
 	{
@@ -55,7 +55,7 @@ namespace Heimdall
 		Renderer::draw(*this);
 	}
 
-	void Overlay::update_impl(const unsigned long) { }
+	void Overlay::update_impl(const unsigned long) {}
 }
 
 #endif

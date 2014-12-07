@@ -26,7 +26,7 @@ namespace ConFuoco
 			unsigned int ch;  ///< Channel number.
 			Sound *sound;     ///< The sound object bound to this channel.
 
-			Channel() : ch(-1), sound(nullptr) { }
+			Channel() : ch(-1), sound(nullptr) {}
 		};
 
 		/// Sets master gain.
@@ -194,7 +194,7 @@ namespace ConFuoco
 	{
 		Sound *sound =
 		    static_cast<T*>(this)->create_sound_impl(file, type, loops);
-	#ifndef NDEBUG
+#ifndef NDEBUG
 		if (!sound)
 			LOGD("ConFuoco: Failed to open '%s'", file);
 		else
@@ -204,7 +204,7 @@ namespace ConFuoco
 			     static_cast<void*>(sound),
 			     (type == Sound::Type::Stream) ? "stream" : "static");
 		}
-	#endif
+#endif
 		return sound;
 	}
 

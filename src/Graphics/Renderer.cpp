@@ -113,7 +113,7 @@ Vec2i Renderer::convert_to_view(const Vec2i &p) const
 }
 
 Renderer::Renderer()
-    : index_buffer_(0), zoom_mode_(ZoomMode::LetterBox), scale_(1.0f, 1.0f) { }
+    : index_buffer_(0), zoom_mode_(ZoomMode::LetterBox), scale_(1.0f, 1.0f) {}
 
 Renderer::~Renderer()
 {

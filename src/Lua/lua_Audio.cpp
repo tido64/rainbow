@@ -247,17 +247,17 @@ namespace  // FMOD Low Level API
 		if (getLowLevelSystem(&system) != FMOD_OK)
 			return 0;
 
-	#ifdef RAINBOW_OS_ANDROID
+#ifdef RAINBOW_OS_ANDROID
 		const char *path =
 		    lua_pushfstring(L, "file:///android_asset/%s", lua_tostring(L, 1));
-	#else
+#else
 		const Path path(lua_tostring(L, 1));
 		if (!path.is_file())
 		{
 			R_ABORT("No such file: %s", static_cast<const char*>(path));
 			return 0;
 		}
-	#endif
+#endif
 
 		FMOD::Sound *sound;
 		const FMOD_RESULT result =
@@ -509,7 +509,7 @@ const luaL_Reg FMODChannel::Bind::functions[] = {
 };
 
 FMODChannel::FMODChannel(lua_State *L)
-    : channel_(static_cast<FMOD::Channel*>(lua_touserdata(L, 1))) { }
+    : channel_(static_cast<FMOD::Channel*>(lua_touserdata(L, 1))) {}
 
 FMOD::Channel* FMODChannel::get() const
 {
@@ -769,7 +769,7 @@ const luaL_Reg FMODSound::Bind::functions[] = {
 };
 
 FMODSound::FMODSound(lua_State *L)
-    : sound_(static_cast<FMOD::Sound*>(lua_touserdata(L, 1))) { }
+    : sound_(static_cast<FMOD::Sound*>(lua_touserdata(L, 1))) {}
 
 FMODSound::~FMODSound()
 {
@@ -825,7 +825,7 @@ const luaL_Reg FMODStudioEventInstance::Bind::functions[] = {
 
 FMODStudioEventInstance::FMODStudioEventInstance(lua_State *L)
     : instance_(static_cast<FMOD::Studio::EventInstance*>(lua_touserdata(L, 1)))
-{ }
+{}
 
 FMODStudioEventInstance::~FMODStudioEventInstance()
 {

@@ -27,15 +27,15 @@ namespace ConFuoco
 		MixerAL();
 		~MixerAL();
 
-	#ifdef RAINBOW_OS_IOS
+#ifdef RAINBOW_OS_IOS
 		AudioSession* session() const { return this->session_; }
-	#endif
+#endif
 
 	private:
 		ALCcontext *context_;
-	#ifdef RAINBOW_OS_IOS
+#ifdef RAINBOW_OS_IOS
 		AudioSession *session_;
-	#endif
+#endif
 
 		void set_gain_impl(const float gain);
 		void set_pitch_impl(const float pitch);

@@ -13,15 +13,15 @@ namespace
 		const bool was_moved;
 
 		VectorConstructionTest()
-		    : was_constructed(true), was_copied(false), was_moved(false) { }
+		    : was_constructed(true), was_copied(false), was_moved(false) {}
 
 		VectorConstructionTest(const VectorConstructionTest& v)
 		    : was_constructed(v.was_constructed), was_copied(true),
-		      was_moved(false) { }
+		      was_moved(false) {}
 
 		VectorConstructionTest(VectorConstructionTest&& v)
 		    : was_constructed(v.was_constructed), was_copied(false),
-		      was_moved(true) { }
+		      was_moved(true) {}
 	};
 }
 
@@ -32,7 +32,7 @@ TEST_CASE("Vector operations", "[vector]")
 	class BloatedInteger
 	{
 	public:
-		BloatedInteger(const size_t i) : integer_(i) { }
+		BloatedInteger(const size_t i) : integer_(i) {}
 
 		operator size_t() const { return integer_; };
 

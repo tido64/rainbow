@@ -9,7 +9,7 @@ namespace
 	class SharedPtrTestStruct : public RefCounted
 	{
 	public:
-		SharedPtrTestStruct(bool &flag) : flag(flag) { }
+		SharedPtrTestStruct(bool &flag) : flag(flag) {}
 		~SharedPtrTestStruct() { flag = true; }
 
 	private:
