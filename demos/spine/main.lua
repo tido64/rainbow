@@ -3,7 +3,6 @@
 -- (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
 local boy
-local goblin
 
 function create_boy()
 	local boy = rainbow.skeleton("data/spineboy.json", 0.4)
@@ -17,13 +16,6 @@ function create_boy()
 	return boy
 end
 
-function create_goblin()
-	local goblin = rainbow.skeleton("data/goblins-ffd.json", 1.0)
-	goblin:set_animation(0, "walk", true)
-	goblin:set_skin("goblin")
-	return goblin
-end
-
 function noop() end
 
 function on_click()
@@ -32,12 +24,6 @@ function on_click()
 	boy:add_animation(0, "run", true, 0.0)
 	boy:add_animation(0, "walk", true, 0.0)
 	boy:add_animation(0, "idle", true, 1.0)
-
-	if goblin:get_skin() == "goblin" then
-		goblin:set_skin("goblingirl")
-	else
-		goblin:set_skin("goblin")
-	end
 end
 
 function init()
@@ -46,11 +32,6 @@ function init()
 
 	boy = create_boy()
 	boy:set_position(screen.width * 0.33, screen.height * 0.1)
-
-	goblin = create_goblin()
-	goblin:set_position(screen.width * 0.66, screen.height * 0.1)
-
-	rainbow.scenegraph:add_drawable(goblin)
 	rainbow.scenegraph:add_drawable(boy)
 
 	local animation_state_handler = {
