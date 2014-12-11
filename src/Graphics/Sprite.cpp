@@ -12,7 +12,7 @@ namespace
 	const unsigned int kStalePosition     = 1u << 1;
 	const unsigned int kStaleFrontBuffer  = 1u << 2;
 
-	inline Vec2f transform_rst(const Vec2f &p,
+	inline Vec2f transform_srt(const Vec2f &p,
 	                           const Vec2f &s_sin_r,
 	                           const Vec2f &s_cos_r,
 	                           const Vec2f &center) pure;
@@ -20,13 +20,13 @@ namespace
 	                          const Vec2f &scale,
 	                          const Vec2f &center) pure;
 
-	Vec2f transform_rst(const Vec2f &p,
+	Vec2f transform_srt(const Vec2f &p,
 	                    const Vec2f &s_sin_r,
 	                    const Vec2f &s_cos_r,
 	                    const Vec2f &center)
 	{
-		return Vec2f(s_cos_r.x * p.x - s_sin_r.x * p.y + center.x,
-		             s_sin_r.y * p.x + s_cos_r.y * p.y + center.y);
+		return Vec2f(s_cos_r.x * p.x - s_sin_r.y * p.y + center.x,
+		             s_sin_r.x * p.x + s_cos_r.y * p.y + center.y);
 	}
 
 	Vec2f transform_st(const Vec2f &p, const Vec2f &scale, const Vec2f &center)
@@ -190,13 +190,13 @@ bool Sprite::update()
 			const Vec2f s_cos_r(scale_.x * cos_r, scale_.y * cos_r);
 
 			vertex_array_[0].position =
-			    transform_rst(origin[0], s_sin_r, s_cos_r, center_);
+			    transform_srt(origin[0], s_sin_r, s_cos_r, center_);
 			vertex_array_[1].position =
-			    transform_rst(origin[1], s_sin_r, s_cos_r, center_);
+			    transform_srt(origin[1], s_sin_r, s_cos_r, center_);
 			vertex_array_[2].position =
-			    transform_rst(origin[2], s_sin_r, s_cos_r, center_);
+			    transform_srt(origin[2], s_sin_r, s_cos_r, center_);
 			vertex_array_[3].position =
-			    transform_rst(origin[3], s_sin_r, s_cos_r, center_);
+			    transform_srt(origin[3], s_sin_r, s_cos_r, center_);
 		}
 		else
 		{
