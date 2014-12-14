@@ -1,9 +1,7 @@
 // This FreeType custom build will only support OpenType and TrueType
 
 #define FT2_BUILD_LIBRARY 1
-#if defined(__ANDROID__)  // Fixes "Error: width suffixes are invalid in ARM mode"
-#	define FT_CONFIG_OPTION_NO_ASSEMBLER
-#elif defined(__IPHONE_OS_VERSION_MIN_REQUIRED)
+#if defined(__IPHONE_OS_VERSION_MIN_REQUIRED)
 #	define FT_CONFIG_OPTION_SYSTEM_ZLIB
 #endif
 #define FT_CONFIG_MODULES_H  <ftmodule.h>

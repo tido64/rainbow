@@ -16,6 +16,8 @@ namespace Rainbow
 	template<typename T>
 	struct Vec2<T, Arithmetic<T>>
 	{
+		using value_type = T;
+
 		union
 		{
 			T x;
@@ -98,5 +100,6 @@ namespace Rainbow
 
 using Vec2f = Rainbow::Vec2<float>;
 using Vec2i = Rainbow::Vec2<int>;
+using Vec2u = Rainbow::Vec2<unsigned>;
 
 #endif
