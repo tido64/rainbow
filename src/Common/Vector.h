@@ -5,6 +5,7 @@
 #ifndef COMMON_VECTOR_H_
 #define COMMON_VECTOR_H_
 
+#include <cstring>
 #include <utility>
 
 #include "Common/Arena.h"

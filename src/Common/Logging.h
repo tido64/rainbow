@@ -76,7 +76,7 @@ namespace Rainbow
 		__android_log_print(
 		    level, "Rainbow", format, std::forward<Args>(args)...);
 #else
-		const auto timestamp = Chrono::system_now().count();
+		const long long int timestamp = Chrono::system_now().count();
 		char buf[kLogLineLength];
 		snprintf(buf, kLogLineLength, format, std::forward<Args>(args)...);
 		fprintf(stream, "[%lli|%s] %s\n", timestamp, level, buf);
