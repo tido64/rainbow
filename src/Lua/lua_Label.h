@@ -25,6 +25,7 @@ NS_RAINBOW_LUA_BEGIN
 		static int set_color(lua_State *);
 		static int set_font(lua_State *);
 		static int set_position(lua_State *);
+		static int set_rotation(lua_State *);
 		static int set_scale(lua_State *);
 		static int set_text(lua_State *);
 		static int move(lua_State *);

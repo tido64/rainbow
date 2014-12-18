@@ -8,11 +8,18 @@
 
 #include "Common/Algorithm.h"
 
-Label::Label()
-    : size_(0), scale_(1.0f), alignment_(TextAlignment::Left), count_(0),
-      stale_(0), width_(0)
+using Rainbow::is_equal;
+
+namespace
 {
-	array_.reconfigure([=] { buffer_.bind(); });
+	const float kAlignmentFactor[]{0.0f, 1.0f, 0.5f};
+}
+
+Label::Label()
+    : size_(0), scale_(1.0f), alignment_(TextAlignment::Left), angle_(0.0f),
+      count_(0), stale_(0), width_(0)
+{
+	array_.reconfigure([this] { buffer_.bind(); });
 }
 
 void Label::set_alignment(const TextAlignment a)
@@ -40,9 +47,18 @@ void Label::set_position(const Vec2f &position)
 	set_needs_update(kStaleBuffer);
 }
 
+void Label::set_rotation(const float r)
+{
+	if (is_equal(r, angle_))
+		return;
+
+	angle_ = r;
+	set_needs_update(kStaleBuffer);
+}
+
 void Label::set_scale(const float f)
 {
-	if (Rainbow::is_equal(scale_, f))
+	if (is_equal(f, scale_))
 		return;
 
 	scale_ = Rainbow::clamp(f, 0.01f, 1.0f);
@@ -83,25 +99,31 @@ void Label::update()
 		{
 			if (stale_ & kStaleBufferSize)
 				vertices_.reset(new SpriteVertex[size_ * 4]);
-			size_t count = 0;
+			width_ = 0;
 			size_t start = 0;
+			size_t count = 0;
+			const Vec2f R = !is_equal(angle_, 0.0f)
+			                    ? Vec2f(cosf(-angle_), sinf(-angle_))
+			                    : Vec2f(1.0f, 0.0f);
+			const bool needs_alignment =
+			    alignment_ != TextAlignment::Left || !is_equal(angle_, 0.0f);
+			Vec2f pen = needs_alignment ? Vec2f(0.0f, 0.0f) : position_;
+			const float origin_x = pen.x;
 			SpriteVertex *vx = vertices_.get();
-			Vec2f pen = position_;
-			for (const unsigned char *text =
-			         reinterpret_cast<unsigned char*>(text_.get());
-			     *text;)
+			const auto *text = reinterpret_cast<unsigned char*>(text_.get());
+			while (*text)
 			{
 				if (*text == '\n')
 				{
-					align(position_.x - pen.x, start, count);
-					pen.x = position_.x;
+					save(start, count, pen.x - origin_x, R, needs_alignment);
+					pen.x = origin_x;
 					start = count;
 					pen.y -= font_->height() * scale_;
 					++text;
 					continue;
 				}
 
-				const Rainbow::utf_t &c = Rainbow::utf8_decode(text);
+				const auto &c = Rainbow::utf8_decode(text);
 				if (c.bytes == 0)
 					break;
 				text += c.bytes;
@@ -126,8 +148,7 @@ void Label::update()
 				++count;
 			}
 			count_ = count * 4;
-			align(position_.x - pen.x, start, count);
-			width_ = pen.x - position_.x;
+			save(start, count, pen.x - origin_x, R, needs_alignment);
 		}
 		else if (stale_ & kStaleColor)
 		{
@@ -143,16 +164,25 @@ void Label::update()
 	}
 }
 
-void Label::align(float offset, const size_t start, const size_t end)
+void Label::save(const size_t start,
+                 const size_t end,
+                 const float width,
+                 const Vec2f &R,
+                 const bool needs_alignment)
 {
-	if (alignment_ != TextAlignment::Left)
+	if (needs_alignment)
 	{
-		if (alignment_ == TextAlignment::Center)
-			offset *= 0.5f;
+		const float offset =
+		    width * kAlignmentFactor[static_cast<int>(alignment_)];
+		const auto &translate = position_;
 		std::for_each(vertices_.get() + start * 4,
 		              vertices_.get() + end * 4,
-		              [offset](SpriteVertex &v) {
-			v.position.x += offset;
+		              [offset, &R, &translate](SpriteVertex &v) {
+			auto &p = v.position;
+			p = Vec2f(R.x * (p.x - offset) - R.y * p.y + translate.x,
+			          R.y * (p.x - offset) + R.x * p.y + translate.y);
 		});
 	}
+	if (width > width_)
+		width_ = width;
 }

@@ -61,6 +61,9 @@ public:
 	/// Sets position of text.
 	void set_position(const Vec2f &);
 
+	/// Sets angle of rotation (in radian). Pivot depends on text alignment.
+	void set_rotation(const float r);
+
 	/// Sets label scale. Value is clamped between 0.01 and 1.0.
 	void set_scale(const float f);
 
@@ -87,6 +90,7 @@ private:
 	Colorb color_;                  ///< Color of the text.
 	float scale_;                   ///< Label scale factor.
 	TextAlignment alignment_;       ///< Text alignment.
+	float angle_;                   ///< Angle of rotation.
 	unsigned int count_;            ///< Number of characters * 4 (i.e. vertices).
 	unsigned int stale_;            ///< Flags indicating need for update.
 	unsigned int width_;            ///< Label width.
@@ -94,11 +98,17 @@ private:
 	VertexArray array_;             ///< Vertex array object.
 	SharedPtr<FontAtlas> font_;     ///< The font used in this label.
 
-	/// Aligns individual characters.
-	/// \param length  Negative length of characters from \p start to \p end.
-	/// \param start   First character to align.
-	/// \param end     End character.
-	void align(float length, const size_t start, const size_t end);
+	/// Saves line width and aligns the line if needed.
+	/// \param start            First character of line.
+	/// \param end              End character.
+	/// \param width            Width of line.
+	/// \param R                Rotation vector.
+	/// \param needs_alignment  Whether alignment is needed.
+	void save(const size_t start,
+	          const size_t end,
+	          const float width,
+	          const Vec2f &R,
+	          const bool needs_alignment);
 };
 
 const Colorb& Label::color() const

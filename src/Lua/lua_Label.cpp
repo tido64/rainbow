@@ -22,6 +22,7 @@ NS_RAINBOW_LUA_BEGIN
 		{ "set_color",      &Label::set_color },
 		{ "set_font",       &Label::set_font },
 		{ "set_position",   &Label::set_position },
+		{ "set_rotation",   &Label::set_rotation },
 		{ "set_scale",      &Label::set_scale },
 		{ "set_text",       &Label::set_text },
 		{ "move",           &Label::move },
@@ -120,6 +121,19 @@ NS_RAINBOW_LUA_BEGIN
 
 		self->label_.set_position(
 		    Vec2f(lua_tonumber(L, 2), lua_tonumber(L, 3)));
+		return 0;
+	}
+
+	int Label::set_rotation(lua_State *L)
+	{
+		// <label>:set_rotation(r)
+		Argument<lua_Number>::is_required(L, 2);
+
+		Label *self = Bind::self(L);
+		if (!self)
+			return 0;
+
+		self->label_.set_rotation(lua_tonumber(L, 2));
 		return 0;
 	}
 

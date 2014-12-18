@@ -282,6 +282,14 @@ Sets font type.
 
 Sets label position.
 
+### &lt;rainbow.label&gt;:set_rotation(r)
+
+| Parameter | Description |
+|-----------|-------------|
+| <var>r</var> | Angle in radians. Default: 0.0. |
+
+Sets label rotation.
+
 ### &lt;rainbow.label&gt;:set_scale(scale)
 
 | Parameter | Description |
