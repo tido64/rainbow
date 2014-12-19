@@ -82,7 +82,6 @@ set(SOURCE_FILES
 	src/Graphics/ShaderManager.h
 	src/Graphics/Shaders/Diffuse.cpp
 	src/Graphics/Shaders/Diffuse.h
-	src/Graphics/Shaders/Shaders.h
 	src/Graphics/Shaders.cpp
 	src/Graphics/Shaders.h
 	src/Graphics/Sprite.cpp
