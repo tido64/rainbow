@@ -608,7 +608,7 @@ namespace Spine
 		int Skeleton::set_attachment(lua_State *L)
 		{
 			Rainbow::Lua::Argument<char*>::is_required(L, 2);
-			Rainbow::Lua::Argument<char*>::is_required(L, 3);
+			Rainbow::Lua::Argument<char*>::is_optional(L, 3);
 
 			Skeleton *self = Bind::self(L);
 			if (!self)
