@@ -1,0 +1,15 @@
+version: 1.0.{build}
+skip_tags: true
+configuration: RelWithDebInfo
+before_build:
+  - git submodule update --init
+  - cd lib
+  - appveyor DownloadFile http://www.libsdl.org/release/SDL2-devel-2.0.3-VC.zip
+  - 7z x SDL2-devel-2.0.3-VC.zip
+  - ren SDL2-2.0.3 SDL
+  - mkdir "%APPVEYOR_BUILD_FOLDER%-build"
+  - cd "%APPVEYOR_BUILD_FOLDER%-build"
+  - cmake -DUSE_HEIMDALL=1 -G "Visual Studio 12" %APPVEYOR_BUILD_FOLDER%
+build_script:
+  - msbuild "%APPVEYOR_BUILD_FOLDER%-build\Rainbow.sln" /maxcpucount /verbosity:minimal /logger:"%ProgramFiles%\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
+test: off

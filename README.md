@@ -1,4 +1,4 @@
-# Rainbow
+# Rainbow [![Build status](https://ci.appveyor.com/api/projects/status/oajtxwu9d9lrayk0?svg=true)](https://ci.appveyor.com/project/Tommy/rainbow)
 
 Rainbow is a scriptable, cross-platform, 2D game engine written in C++.
 
