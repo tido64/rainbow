@@ -8,6 +8,9 @@
 
 #include "Common/Data.h"
 #include "Lua/lua_Platform.h"
+#ifdef USE_PHYSICS
+#include "ThirdParty/Box2D/DebugDraw.h"
+#endif  // USE_PHYSICS
 
 namespace Rainbow
 {
@@ -35,6 +38,9 @@ namespace Rainbow
 	{
 		Renderer::clear();
 		scenegraph_.draw();
+#ifdef USE_PHYSICS
+		b2::DebugDraw::Draw();
+#endif  // USE_PHYSICS
 	}
 
 	void Director::init(const Data &main, const Vec2i &screen)

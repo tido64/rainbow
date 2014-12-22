@@ -2,21 +2,17 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
-#include "Lua/LuaHelper.h"
-#include "Lua/LuaSyntax.h"
+#include "ThirdParty/Box2D/Lua/Helper.h"
 
-#define NS_B2_LUA_BEGIN namespace b2 { namespace Lua
-#define NS_B2_LUA_END }
+#include <Box2D/Common/b2Math.h>
 
-#define luaR_getboolean(L, k)  gettable<bool>(L, k, strllen(k))
-#define luaR_getfield(L, k)    getfield(L, k, strllen(k))
-#define luaR_getinteger(L, k)  gettable<lua_Integer>(L, k, strllen(k))
-#define luaR_getnumber(L, k)   gettable<lua_Number>(L, k, strllen(k))
-#define luaR_rawsetnil(L, k)   rawsetnil(L, k, strllen(k))
-#define luaR_rawsetvec2(L, k)  rawsetvec2(L, k, strllen(k))
-
-namespace
+namespace b2
 {
+	b2Vec2 Vec2(lua_State *L, const int m, const int n)
+	{
+		return b2Vec2(lua_tonumber(L, m), lua_tonumber(L, n));
+	}
+
 	void getfield(lua_State *L, const char *const field, const size_t length)
 	{
 		lua_pushlstring(L, field, length);
@@ -24,9 +20,6 @@ namespace
 		LUA_ASSERT(
 		    L, !lua_isnil(L, -1), "Missing field '%s' in definition", field);
 	}
-
-	template<typename T>
-	T gettable(lua_State *L, const char *const field, const size_t length);
 
 	template<>
 	bool gettable<bool>(lua_State *L,
@@ -59,6 +52,17 @@ namespace
 		const lua_Number n = Rainbow::Lua::tonumber(L, -1);
 		lua_pop(L, 1);
 		return n;
+	}
+
+	template<>
+	b2Vec2 gettable<b2Vec2>(lua_State *L,
+	                        const char *const field,
+	                        const size_t length)
+	{
+		getfield(L, field, length);
+		const b2Vec2 v(luaR_getnumber(L, "x"), luaR_getnumber(L, "y"));
+		lua_pop(L, 1);
+		return v;
 	}
 
 	void rawsetnil(lua_State *L, const char *const field, const size_t length)

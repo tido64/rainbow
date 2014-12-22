@@ -18,8 +18,14 @@ namespace ConFuoco
 
 namespace SceneGraph { class Node; }
 
-class b2Fixture;
-namespace b2 { namespace Lua { class Body; } }
+namespace b2
+{
+	namespace Lua
+	{
+		class Body;
+		class Fixture;
+	}
+}
 
 namespace FMOD
 {
@@ -233,13 +239,13 @@ NS_RAINBOW_LUA_BEGIN
 	template<>
 	void Argument<b2::Lua::Body>::is_required(lua_State *L, const int n)
 	{
-		require(L, n, is_userdata, "b2Body");
+		luaL_checkudata(L, n, "b2Body");
 	}
 
 	template<>
-	void Argument<b2Fixture>::is_required(lua_State *L, const int n)
+	void Argument<b2::Lua::Fixture>::is_required(lua_State *L, const int n)
 	{
-		require(L, n, lua_isuserdata, "b2Fixture");
+		luaL_checkudata(L, n, "b2Fixture");
 	}
 
 	/* ConFuoco */

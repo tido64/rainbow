@@ -36,6 +36,21 @@ NS_RAINBOW_LUA_BEGIN
 			return 1;
 		}
 
+#ifdef USE_PHYSICS
+		template<typename F>
+		static int set1b(lua_State *L, F&& set)
+		{
+			Argument<bool>::is_required(L, 2);
+
+			T *self = Bind::self(L);
+			if (!self)
+				return 0;
+
+			set(self->get(), lua_toboolean(L, 2));
+			return 0;
+		}
+#endif  // USE_PHYSICS
+
 		template<typename F>
 		static int get1f(lua_State *L, F&& get)
 		{
@@ -87,6 +102,33 @@ NS_RAINBOW_LUA_BEGIN
 			return 0;
 		}
 
+#ifdef USE_PHYSICS
+		template<typename F>
+		static int set2f(lua_State *L, F&& set)
+		{
+			Argument<lua_Number>::is_required(L, 2);
+			Argument<lua_Number>::is_required(L, 3);
+
+			T *self = Bind::self(L);
+			if (!self)
+				return 0;
+
+			set(self->get(), lua_tonumber(L, 2), lua_tonumber(L, 3));
+			return 0;
+		}
+
+		template<typename F>
+		static int get1i(lua_State *L, F&& get)
+		{
+			T *self = Bind::self(L);
+			if (!self)
+				return 0;
+
+			lua_pushinteger(L, get(self->get()));
+			return 1;
+		}
+#endif  // USE_PHYSICS
+
 		template<typename F>
 		static int set1i(lua_State *L, F&& set)
 		{
@@ -112,6 +154,23 @@ NS_RAINBOW_LUA_BEGIN
 			set(self->get(), touserdata<U>(L, 2)->get());
 			return 0;
 		}
+
+#ifdef USE_PHYSICS
+		template<typename U, typename F>
+		static int get1ud(lua_State *L, F&& get)
+		{
+			T *self = Bind::self(L);
+			if (!self)
+				return 0;
+
+			void *p = get(self->get());
+			if (!p)
+				return 0;
+
+			lua_pushlightuserdata(L, p);
+			return Rainbow::Lua::alloc<U>(L);
+		}
+#endif  // USE_PHYSICS
 
 		~Bind() = default;
 	};

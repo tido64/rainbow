@@ -225,15 +225,30 @@ endif()
 
 if(USE_PHYSICS)
 	list(APPEND SOURCE_FILES
-		src/ThirdParty/Box2D/b2LuaHelper.h
-		src/ThirdParty/Box2D/lua_b2Body.h
-		src/ThirdParty/Box2D/lua_b2Contact.h
-		src/ThirdParty/Box2D/lua_b2Draw.h
-		src/ThirdParty/Box2D/lua_b2Fixture.h
-		src/ThirdParty/Box2D/lua_b2Shape.h
-		src/ThirdParty/Box2D/lua_b2World.h
-		src/ThirdParty/Box2D/lua_Box2D.cpp
-		src/ThirdParty/Box2D/lua_Box2D.h)
+		src/ThirdParty/Box2D/DebugDraw.cpp
+		src/ThirdParty/Box2D/DebugDraw.h
+		src/ThirdParty/Box2D/Lua/Box2D.cpp
+		src/ThirdParty/Box2D/Lua/Box2D.h
+		src/ThirdParty/Box2D/Lua/Dynamics/Body.cpp
+		src/ThirdParty/Box2D/Lua/Dynamics/Body.h
+		src/ThirdParty/Box2D/Lua/Dynamics/Contacts/Contact.cpp
+		src/ThirdParty/Box2D/Lua/Dynamics/Contacts/Contact.h
+		src/ThirdParty/Box2D/Lua/Dynamics/Fixture.cpp
+		src/ThirdParty/Box2D/Lua/Dynamics/Fixture.h
+		src/ThirdParty/Box2D/Lua/Dynamics/World.cpp
+		src/ThirdParty/Box2D/Lua/Dynamics/World.h
+		src/ThirdParty/Box2D/Lua/Collision/Shapes/CircleShape.cpp
+		src/ThirdParty/Box2D/Lua/Collision/Shapes/CircleShape.h
+		src/ThirdParty/Box2D/Lua/Collision/Shapes/EdgeShape.cpp
+		src/ThirdParty/Box2D/Lua/Collision/Shapes/EdgeShape.h
+		src/ThirdParty/Box2D/Lua/Collision/Shapes/PolygonShape.cpp
+		src/ThirdParty/Box2D/Lua/Collision/Shapes/PolygonShape.h
+		src/ThirdParty/Box2D/Lua/Collision/Shapes/Shape.cpp
+		src/ThirdParty/Box2D/Lua/Collision/Shapes/Shape.h
+		src/ThirdParty/Box2D/Lua/Helper.cpp
+		src/ThirdParty/Box2D/Lua/Helper.h
+		src/ThirdParty/Box2D/StableWorld.cpp
+		src/ThirdParty/Box2D/StableWorld.h)
 endif()
 
 if(USE_SPINE)
