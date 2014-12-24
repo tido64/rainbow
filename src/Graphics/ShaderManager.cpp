@@ -11,7 +11,7 @@
 
 // For platforms not using GLEW.
 #ifndef GLAPIENTRY
-#	define GLAPIENTRY
+#define GLAPIENTRY
 #endif
 
 using unique_str = std::unique_ptr<char[]>;
@@ -19,11 +19,10 @@ using unique_str = std::unique_ptr<char[]>;
 namespace
 {
 	const Shader::AttributeParams kAttributeDefaultParams[] = {
-		{ Shader::kAttributeVertex, "vertex" },
-		{ Shader::kAttributeColor, "color" },
-		{ Shader::kAttributeTexCoord, "texcoord" },
-		{ Shader::kAttributeNone, nullptr }
-	};
+	    {Shader::kAttributeVertex, "vertex"},
+	    {Shader::kAttributeColor, "color"},
+	    {Shader::kAttributeTexCoord, "texcoord"},
+	    {Shader::kAttributeNone, nullptr}};
 
 	constexpr std::array<float, 16> kProjectionMatrix()
 	{
@@ -36,15 +35,17 @@ namespace
 	void set_projection_matrix(const Shader::Details &details,
 	                           const std::array<float, 16> &ortho)
 	{
-		const int location = glGetUniformLocation(details.program, "mvp_matrix");
+		const int location =
+		    glGetUniformLocation(details.program, "mvp_matrix");
 		R_ASSERT(location >= 0, "Shader is missing a projection matrix");
 		glUniformMatrix4fv(location, 1, GL_FALSE, ortho.data());
 	}
 
-	unique_str verify(const GLuint id,
-	                  const GLenum pname,
-	                  void (GLAPIENTRY *glGetiv)(GLuint, GLenum, GLint*),
-	                  void (GLAPIENTRY *glGetInfoLog)(GLuint, GLsizei, GLsizei*, GLchar*))
+	unique_str verify(
+	    const GLuint id,
+	    const GLenum pname,
+	    void(GLAPIENTRY *glGetiv)(GLuint, GLenum, GLint *),
+	    void(GLAPIENTRY *glGetInfoLog)(GLuint, GLsizei, GLsizei *, GLchar *))
 	{
 		GLint status = GL_FALSE;
 		glGetiv(id, pname, &status);
@@ -85,8 +86,7 @@ namespace
 		if (error.get())
 		{
 			LOGE("GLSL: Failed to compile %s shader: %s",
-			     (shader.type == Shader::kTypeVertex) ? "vertex"
-			                                          : "fragment",
+			     (shader.type == Shader::kTypeVertex) ? "vertex" : "fragment",
 			     error.get());
 			glDeleteShader(id);
 			return -1;
@@ -99,7 +99,8 @@ namespace
 	                 const Shader::AttributeParams *attributes)
 	{
 		const GLuint program = glCreateProgram();
-		for (auto shader = shaders; shader->type != Shader::kTypeInvalid; ++shader)
+		for (auto shader = shaders; shader->type != Shader::kTypeInvalid;
+		     ++shader)
 			glAttachShader(program, shader->id);
 		for (auto attrib = attributes; attrib->name; ++attrib)
 			glBindAttribLocation(program, attrib->index, attrib->name);
@@ -161,11 +162,13 @@ void ShaderManager::set(const Vec2i &resolution)
 	set_projection_matrix(programs_[active_], ortho_);
 }
 
-void ShaderManager::set_projection(const float left, const float right,
-                                   const float bottom, const float top)
+void ShaderManager::set_projection(const float left,
+                                   const float right,
+                                   const float bottom,
+                                   const float top)
 {
-	ortho_[ 0] = 2.0f / (right - left);
-	ortho_[ 5] = 2.0f / (top - bottom);
+	ortho_[0] = 2.0f / (right - left);
+	ortho_[5] = 2.0f / (top - bottom);
 	ortho_[12] = -(right + left) / (right - left);
 	ortho_[13] = -(top + bottom) / (top - bottom);
 	set_projection_matrix(programs_[active_], ortho_);
@@ -173,22 +176,22 @@ void ShaderManager::set_projection(const float left, const float right,
 
 void ShaderManager::use(const int program)
 {
-	if (program == active_)
-		return;
-
-	const Shader::Details &current = programs_[active_];
-	active_ = program;
-	const Shader::Details &details = programs_[active_];
-	glUseProgram(details.program);
-
-	set_projection_matrix(details, ortho_);
-
-	if (details.texture0 != current.texture0)
+	if (program != active_)
 	{
-		if (!details.texture0)
-			glDisableVertexAttribArray(Shader::kAttributeTexCoord);
-		else
-			glEnableVertexAttribArray(Shader::kAttributeTexCoord);
+		const Shader::Details &current = programs_[active_];
+		active_ = program;
+		const Shader::Details &details = programs_[active_];
+		glUseProgram(details.program);
+
+		set_projection_matrix(details, ortho_);
+
+		if (details.texture0 != current.texture0)
+		{
+			if (!details.texture0)
+				glDisableVertexAttribArray(Shader::kAttributeTexCoord);
+			else
+				glEnableVertexAttribArray(Shader::kAttributeTexCoord);
+		}
 	}
 }
 
@@ -209,10 +212,9 @@ ShaderManager::~ShaderManager()
 bool ShaderManager::init()
 {
 	Shader::ShaderParams shaders[] = {
-		{ Shader::kTypeVertex, 0, Rainbow::Shaders::kFixed2Dv },
-		{ Shader::kTypeFragment, 0, Rainbow::Shaders::kFixed2Df },
-		{ Shader::kTypeInvalid, 0, nullptr }
-	};
+	    {Shader::kTypeVertex, 0, Rainbow::Shaders::kFixed2Dv},
+	    {Shader::kTypeFragment, 0, Rainbow::Shaders::kFixed2Df},
+	    {Shader::kTypeInvalid, 0, nullptr}};
 	const int pid = compile(shaders, nullptr);
 	if (pid < 0)
 	{

@@ -22,8 +22,8 @@ public:
 	class Context
 	{
 	public:
-		inline Context();
-		inline ~Context();
+		Context() : program_(ShaderManager::Get()->active_) {}
+		~Context() { ShaderManager::Get()->use(program_); }
 
 	private:
 		int program_;
@@ -46,17 +46,17 @@ public:
 	void set(const Vec2i &);
 
 	/// Sets orthographic projection.
-	void set_projection(const float left, const float right,
-	                    const float bottom, const float top);
+	void set_projection(const float left,
+	                    const float right,
+	                    const float bottom,
+	                    const float top);
 
 	/// Activates program.
 	void use(const int program);
 
 private:
-	int active_;  ///< Currently active program.
-
-	Vector<unsigned int> shaders_;
-	Vector<Shader::Details> programs_;
+	int active_;                        ///< Currently active program.
+	Vector<Shader::Details> programs_;  ///< Linked shader programs.
 
 	/// The orthographic projection matrix is defined as:
 	///   | 2 / (r - l)        0             0       -(r + l) / (r - l) |
@@ -67,19 +67,13 @@ private:
 	/// near = -1.0 and far = 1.0. The matrix is stored in column-major order.
 	std::array<float, 16> ortho_;
 
+	Vector<unsigned int> shaders_;  ///< Compiled shaders.
+
 	ShaderManager();
 	~ShaderManager();
 
 	bool init();
 };
-
-ShaderManager::Context::Context()
-    : program_(ShaderManager::Get()->active_) {}
-
-ShaderManager::Context::~Context()
-{
-	ShaderManager::Get()->use(program_);
-}
 
 Shader::Details& ShaderManager::get_program() const
 {
