@@ -64,5 +64,5 @@ if(MSVC OR XCODE)
 	file(GLOB SOURCE_FILES src/ThirdParty/TestFlight/*)
 	source_group("Source Files\\ThirdParty\\TestFlight" FILES ${SOURCE_FILES})
 
-	set(SOURCE_FILES)
+	unset(SOURCE_FILES)
 endif()

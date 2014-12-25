@@ -149,7 +149,14 @@ set(SOURCE_FILES
 	src/ThirdParty/TestFlight/TestFlight.cpp
 	src/ThirdParty/TestFlight/TestFlight.h)
 
-if(WIN32)
+if(ANDROID)
+	list(APPEND SOURCE_FILES
+		src/Common/impl/DataMap_Android.cpp
+		src/Common/impl/DataMap_Android.h
+		src/Platform/Android.cpp
+		src/Platform/impl/SystemInfo_Android.cpp
+		src/Platform/impl/SystemInfo_Unix.cpp)
+elseif(WIN32)
 	list(APPEND SOURCE_FILES
 		src/Common/impl/DataMap_Win.cpp
 		src/Common/impl/DataMap_Win.h
@@ -243,7 +250,7 @@ add_executable(rainbow ${SOURCE_FILES})
 
 # Dynamic libraries
 include(${LOCAL_MODULE_PATH}/Audio.cmake)
-if(EMSCRIPTEN)
+if(ANDROID OR EMSCRIPTEN)
 	set(OPENGL_gl_LIBRARY)
 else()
 	find_package(OpenGL REQUIRED)
@@ -261,6 +268,8 @@ if(USE_SPINE)
 endif()
 include(${LOCAL_MODULE_PATH}/zlib.cmake)
 include(${LOCAL_MODULE_PATH}/libpng.cmake)
+
+set(SOURCE_FILES ${SOURCE_FILES} CACHE STRING "For external scripts")
 
 # Rainbow
 set_property(TARGET rainbow APPEND PROPERTY INCLUDE_DIRECTORIES

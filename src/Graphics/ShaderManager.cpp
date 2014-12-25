@@ -41,11 +41,11 @@ namespace
 		glUniformMatrix4fv(location, 1, GL_FALSE, ortho.data());
 	}
 
-	unique_str verify(
-	    const GLuint id,
-	    const GLenum pname,
-	    void(GLAPIENTRY *glGetiv)(GLuint, GLenum, GLint *),
-	    void(GLAPIENTRY *glGetInfoLog)(GLuint, GLsizei, GLsizei *, GLchar *))
+	template<typename F, typename G>
+	unique_str verify(const GLuint id,
+	                  const GLenum pname,
+	                  F&& glGetiv,
+	                  G&& glGetInfoLog)
 	{
 		GLint status = GL_FALSE;
 		glGetiv(id, pname, &status);

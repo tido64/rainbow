@@ -8,3 +8,5 @@ add_dependencies(rainbow spine)
 
 set(SPINE_LIBRARY spine)
 message(STATUS "Compile with skeletal animation: Spine")
+
+list(APPEND SOURCE_FILES ${SPINE_SRC})

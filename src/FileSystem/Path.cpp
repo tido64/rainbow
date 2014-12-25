@@ -39,7 +39,9 @@ namespace
 	const char kErrorAccessDirectory[] = "Error accessing '%s' (%x)";
 	const char kErrorCreateDirectory[] = "Failed to create directory '%s' (%x)";
 	const char kErrorInvalidDirectory[] = "'%s' is not a valid directory";
+#ifndef RAINBOW_OS_ANDROID
 	const char kUserDataPath[] = "user";
+#endif
 
 	Path g_current_path;
 	Path g_user_data_path;

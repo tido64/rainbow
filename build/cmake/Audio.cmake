@@ -1,4 +1,6 @@
-if(EMSCRIPTEN)
+if(ANDROID)
+	# Just pass through.
+elseif(EMSCRIPTEN)
 	find_package(OpenAL REQUIRED)
 	set(AUDIO_LIBRARIES ${OPENAL_LIBRARY})
 elseif(USE_FMOD_STUDIO)

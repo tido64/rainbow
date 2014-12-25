@@ -1,4 +1,4 @@
-if(NOT EMSCRIPTEN)
+if(NOT ANDROID AND NOT EMSCRIPTEN)
 
 set(SDL2_SOURCE_DIR ${LOCAL_LIBRARY}/SDL)
 if(MSVC)
@@ -67,4 +67,4 @@ else()
 	add_dependencies(rainbow SDL2-static SDL2main)
 endif()
 
-endif(NOT EMSCRIPTEN)
+endif(NOT ANDROID AND NOT EMSCRIPTEN)
