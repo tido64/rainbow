@@ -20,8 +20,10 @@
 
 namespace
 {
+#ifndef NDEBUG
 	const char kErrorMultipleTexturesUnsupported[] =  // TODO: Implement.
 	    "Skeletons spanning multiple textures are not yet supported";
+#endif
 
 	int g_buffer_size = 0;
 	std::unique_ptr<float[]> g_buffer;
