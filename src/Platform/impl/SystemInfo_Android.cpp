@@ -19,7 +19,7 @@ namespace Rainbow
 			return true;
 		}
 
-		void locales(Vector<std::unique_ptr<char[]>> &locales)
+		void locales(std::vector<std::unique_ptr<char[]>> &locales)
 		{
 			locales.emplace_back(new char[3]);
 			strcpy(locales[0].get(), "en");

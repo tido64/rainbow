@@ -19,7 +19,7 @@ namespace
 			deleted_ = true;
 		}
 
-		const Vector<TreeNodeTest*>& children() const
+		const std::vector<TreeNodeTest*>& children() const
 		{
 			return children_;
 		}

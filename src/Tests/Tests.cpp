@@ -19,7 +19,6 @@
 #include "Tests/Common/TreeNode.test.cc"
 #include "Tests/Common/Vec2.test.cc"
 #include "Tests/Common/Vec3.test.cc"
-#include "Tests/Common/Vector.test.cc"
 #include "Tests/ConFuoco/ConFuoco.test.cc"
 #include "Tests/FileSystem/Path.test.cc"
 #include "Tests/Input/Input.test.cc"

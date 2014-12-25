@@ -12,6 +12,7 @@
 #include <algorithm>
 #include <cmath>
 #include <limits>
+#include <utility>
 
 #include "Common/Constants.h"
 #include "Common/Constraints.h"
@@ -86,8 +87,17 @@ namespace Rainbow
 	/// \note 0 is incorrectly considered a power of 2.
 	inline unsigned int next_pow2(unsigned int i) pure;
 
+	/// Removes the element at \p pos by swapping it with the last element in
+	/// \p container and popping it.
+	template<typename T>
+	void quick_erase(T &container, typename T::iterator pos);
+
 	/// Converts degrees to radians.
 	inline float radians(const float d) pure;
+
+	/// Removes the first element equal to \p v.
+	template<typename T>
+	typename T::iterator remove(T &container, const typename T::value_type &v);
 
 	/// Converts a UTF-8 character to UTF-32.
 	inline utf_t utf8_decode(const unsigned char *str) pure;
@@ -141,9 +151,23 @@ namespace Rainbow
 		return ++i;
 	}
 
+	template<typename T>
+	void quick_erase(T &container, typename T::iterator pos)
+	{
+		std::swap(*pos, container.back());
+		container.pop_back();
+	}
+
 	float radians(const float d)
 	{
 		return d * static_cast<float>(kDegree);
+	}
+
+	template<typename T>
+	typename T::iterator remove(T &container, const typename T::value_type &val)
+	{
+		auto i = std::find(std::begin(container), std::end(container), val);
+		return (i == std::end(container)) ? i : container.erase(i);
 	}
 
 	utf_t utf8_decode(const unsigned char *str)

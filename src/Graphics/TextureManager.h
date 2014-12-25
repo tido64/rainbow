@@ -5,8 +5,9 @@
 #ifndef GRAPHICS_TEXTUREMANAGER_H_
 #define GRAPHICS_TEXTUREMANAGER_H_
 
+#include <vector>
+
 #include "Common/Global.h"
-#include "Common/Vector.h"
 
 #define RECORD_VMEM_USAGE !defined(NDEBUG) || defined(USE_HEIMDALL)
 
@@ -97,8 +98,8 @@ private:
 	};
 
 	unsigned int active_[kNumTextureUnits];
-	Vector<TextureId> textures_;  ///< Stores texture ids currently in use.
-	Vector<TextureId> recycled_;  ///< Stores reusable texture ids.
+	std::vector<TextureId> textures_;  ///< Stores texture ids currently in use.
+	std::vector<TextureId> recycled_;  ///< Stores reusable texture ids.
 	int mag_filter_;
 	int min_filter_;
 
@@ -117,7 +118,7 @@ private:
 	void print_usage() const;
 
 	/// Clears and deletes textures.
-	void purge(Vector<TextureId> &textures);
+	void purge(std::vector<TextureId> &textures);
 };
 
 void TextureManager::purge()

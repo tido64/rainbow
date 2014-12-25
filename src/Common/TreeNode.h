@@ -6,8 +6,10 @@
 #define COMMON_TREENODE_H_
 
 #include <functional>
+#include <vector>
 
-#include "Common/Vector.h"
+#include "Common/Algorithm.h"
+#include "Common/NonCopyable.h"
 
 /// A barebone implementation of a tree node.
 ///
@@ -30,8 +32,8 @@ public:
 	friend void for_each(U *node, F&& f, Args&&... args);
 
 protected:
-	T *parent_;            ///< This node's parent.
-	Vector<T*> children_;  ///< This node's children.
+	T *parent_;                 ///< This node's parent.
+	std::vector<T*> children_;  ///< This node's children.
 
 	TreeNode();
 	~TreeNode();
@@ -41,7 +43,7 @@ template<typename T>
 void TreeNode<T>::add_child(T *node)
 {
 	if (node->parent_)
-		node->parent_->children_.remove(node);
+		Rainbow::remove(node->parent_->children_, node);
 	node->parent_ = static_cast<T*>(this);
 	children_.push_back(node);
 }
@@ -57,7 +59,8 @@ void TreeNode<T>::remove_child(T *node)
 {
 	if (!node)
 		return;
-	children_.remove(node);
+
+	Rainbow::remove(children_, node);
 	delete node;
 }
 

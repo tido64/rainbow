@@ -32,7 +32,7 @@ namespace Rainbow
 			return false;
 		}
 
-		void locales(Vector<std::unique_ptr<char[]>> &locales)
+		void locales(std::vector<std::unique_ptr<char[]>> &locales)
 		{
 			char *locale_id;
 			if (!HasGetUserDefaultLocaleName())  // Windows 98, XP

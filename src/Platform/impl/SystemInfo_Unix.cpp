@@ -5,6 +5,7 @@
 #include "Platform/SystemInfo.h"
 #if defined(RAINBOW_OS_ANDROID) || defined(RAINBOW_OS_LINUX) || defined(RAINBOW_JS)
 
+#include <cstring>
 #include <locale.h>
 #include <unistd.h>
 
@@ -23,7 +24,7 @@ namespace Rainbow
 			return false;
 		}
 
-		void locales(Vector<std::unique_ptr<char[]>> &locales)
+		void locales(std::vector<std::unique_ptr<char[]>> &locales)
 		{
 			char *lc = setlocale(LC_ALL, nullptr);
 			if (!lc)

@@ -4,9 +4,10 @@
 
 #include "Graphics/TextureManager.h"
 
-#include <algorithm>
-
+#include "Common/Algorithm.h"
 #include "Graphics/OpenGL.h"
+
+using Rainbow::quick_erase;
 
 void TextureManager::bind(const unsigned int id)
 {
@@ -75,20 +76,21 @@ TextureManager::memory_usage(double &used, double &unused, double &peak) const
 
 void TextureManager::remove(const unsigned int id)
 {
-	const int i = textures_.find(TextureId{id, 0});
-	if (i < 0)
+	const auto i =
+	    std::find(std::begin(textures_), std::end(textures_), TextureId{id, 0});
+	if (i == std::end(textures_))
 		return;
 
-	bind(textures_[i].id);
+	bind(i->id);
 	glTexImage2D(
 	    GL_TEXTURE_2D, 0, GL_LUMINANCE, 64, 64, 0, GL_LUMINANCE,
 	    GL_UNSIGNED_BYTE, nullptr);
 	bind();
-	recycled_.push_back(textures_[i]);
+	recycled_.push_back(*i);
 #if RECORD_VMEM_USAGE
-	mem_used_ -= textures_[i].sz;
+	mem_used_ -= i->sz;
 #endif
-	textures_.qerase(i);
+	quick_erase(textures_, i);
 }
 
 void TextureManager::set_filter(const int filter)
@@ -126,8 +128,9 @@ TextureManager::create_texture(const unsigned int size)
 		glGenTextures(1, &texture.id);
 	else
 	{
-		texture.id = recycled_[0].id;
-		recycled_.qerase(0);
+		const auto i = std::begin(recycled_);
+		texture.id = i->id;
+		quick_erase(recycled_, i);
 	}
 #if RECORD_VMEM_USAGE
 	mem_used_ += texture.sz;
@@ -153,7 +156,7 @@ void TextureManager::print_usage() const
 #endif
 }
 
-void TextureManager::purge(Vector<TextureId> &t)
+void TextureManager::purge(std::vector<TextureId> &t)
 {
 	if (!t.size())
 		return;
@@ -167,7 +170,7 @@ void TextureManager::purge(Vector<TextureId> &t)
 	static_assert(sizeof(unsigned int) < sizeof(TextureId),
 	              "sizeof(int) needs to be smaller than sizeof(TextureId)");
 
-	unsigned int *textures = reinterpret_cast<unsigned int*>(t.begin());
+	unsigned int *textures = reinterpret_cast<unsigned int*>(t.data());
 	for (size_t i = 0; i < t.size(); ++i)
 		textures[i] = t[i].id;
 

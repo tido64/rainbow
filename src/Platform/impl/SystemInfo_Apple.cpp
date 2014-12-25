@@ -31,7 +31,7 @@ namespace Rainbow
 #endif
 		}
 
-		void locales(Vector<std::unique_ptr<char[]>> &locales)
+		void locales(std::vector<std::unique_ptr<char[]>> &locales)
 		{
 			char tmp[16];
 			CFArrayRef localesArray = CFLocaleCopyPreferredLanguages();

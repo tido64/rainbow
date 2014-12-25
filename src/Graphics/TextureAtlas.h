@@ -5,9 +5,10 @@
 #ifndef GRAPHICS_TEXTUREATLAS_H_
 #define GRAPHICS_TEXTUREATLAS_H_
 
+#include <vector>
+
 #include "Common/DataMap.h"
 #include "Common/Memory.h"
-#include "Common/Vector.h"
 #include "Graphics/Texture.h"
 
 /// Texture atlas loaded from an image file.
@@ -47,10 +48,10 @@ public:
 	inline const Texture& operator[](const unsigned int i) const;
 
 private:
-	unsigned int name_;         ///< Texture atlas' id.
-	int width_;                 ///< Width of texture atlas.
-	int height_;                ///< Height of texture atlas.
-	Vector<Texture> regions_;   ///< Defined texture regions.
+	unsigned int name_;             ///< Texture atlas' id.
+	int width_;                     ///< Width of texture atlas.
+	int height_;                    ///< Height of texture atlas.
+	std::vector<Texture> regions_;  ///< Defined texture regions.
 };
 
 int TextureAtlas::width() const
@@ -75,7 +76,7 @@ size_t TextureAtlas::size() const
 
 void TextureAtlas::trim()
 {
-	regions_.reserve(0);
+	regions_.shrink_to_fit();
 }
 
 const Texture& TextureAtlas::operator[](const unsigned int i) const

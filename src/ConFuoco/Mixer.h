@@ -6,7 +6,10 @@
 #define CONFUOCO_MIXER_H_
 
 #ifndef USE_FMOD_STUDIO
-#include "Common/Vector.h"
+
+#include <vector>
+
+#include "Common/Algorithm.h"
 #include "ConFuoco/Sound.h"
 
 namespace ConFuoco
@@ -80,7 +83,7 @@ namespace ConFuoco
 		static const size_t kNumChannels = 32;
 
 		float master_gain;               ///< Master gain/volume.
-		Vector<Sound*> sounds;           ///< Stores all loaded sounds.
+		std::vector<Sound*> sounds;      ///< Stores all loaded sounds.
 		Channel channels[kNumChannels];  ///< Channels on which sounds are played.
 
 		MixerBase();
@@ -224,7 +227,8 @@ namespace ConFuoco
 	void MixerBase<T>::release(Sound *s)
 	{
 		static_cast<T*>(this)->release_impl(s);
-		this->sounds.qremove(s);
+		auto i = std::find(std::begin(this->sounds), std::end(this->sounds), s);
+		Rainbow::quick_erase(i);
 
 		LOGD("ConFuoco: Released %p", static_cast<void*>(s));
 	}

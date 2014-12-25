@@ -48,7 +48,6 @@ set(SOURCE_FILES
 	src/Common/TreeNode.h
 	src/Common/Vec2.h
 	src/Common/Vec3.h
-	src/Common/Vector.h
 	src/Config.cpp
 	src/Config.h
 	src/ConFuoco/Mixer.h

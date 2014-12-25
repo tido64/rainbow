@@ -4,6 +4,8 @@
 
 #include "Graphics/Renderer.h"
 
+#include <cstring>
+
 #include "Graphics/Label.h"
 #include "Graphics/SpriteBatch.h"
 

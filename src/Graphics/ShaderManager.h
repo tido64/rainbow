@@ -6,10 +6,10 @@
 #define GRAPHICS_SHADERMANAGER_H_
 
 #include <array>
+#include <vector>
 
 #include "Common/Global.h"
 #include "Common/Vec2.h"
-#include "Common/Vector.h"
 #include "Graphics/OpenGL.h"
 #include "Graphics/ShaderDetails.h"
 
@@ -37,10 +37,10 @@ public:
 	            const Shader::AttributeParams *attributes);
 
 	/// Returns current program details.
-	inline Shader::Details& get_program() const;
+	inline const Shader::Details& get_program() const;
 
 	/// Returns program details.
-	inline Shader::Details& get_program(const int pid) const;
+	inline Shader::Details& get_program(const int pid);
 
 	/// Sets viewport.
 	void set(const Vec2i &);
@@ -55,8 +55,8 @@ public:
 	void use(const int program);
 
 private:
-	int active_;                        ///< Currently active program.
-	Vector<Shader::Details> programs_;  ///< Linked shader programs.
+	int active_;                             ///< Currently active program.
+	std::vector<Shader::Details> programs_;  ///< Linked shader programs.
 
 	/// The orthographic projection matrix is defined as:
 	///   | 2 / (r - l)        0             0       -(r + l) / (r - l) |
@@ -67,7 +67,7 @@ private:
 	/// near = -1.0 and far = 1.0. The matrix is stored in column-major order.
 	std::array<float, 16> ortho_;
 
-	Vector<unsigned int> shaders_;  ///< Compiled shaders.
+	std::vector<unsigned int> shaders_;  ///< Compiled shaders.
 
 	ShaderManager();
 	~ShaderManager();
@@ -75,13 +75,13 @@ private:
 	bool init();
 };
 
-Shader::Details& ShaderManager::get_program() const
+const Shader::Details& ShaderManager::get_program() const
 {
 	R_ASSERT(active_ >= 0, "ShaderManager is uninitialised");
-	return get_program(active_);
+	return programs_[active_];
 }
 
-Shader::Details& ShaderManager::get_program(const int pid) const
+Shader::Details& ShaderManager::get_program(const int pid)
 {
 	R_ASSERT(pid >= 0, "Invalid shader program id");
 	return programs_[pid];
