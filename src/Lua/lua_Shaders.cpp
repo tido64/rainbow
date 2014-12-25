@@ -6,7 +6,6 @@
 
 #include "Graphics/Shaders/Diffuse.h"
 #include "Lua/LuaBind.h"
-#include "Lua/LuaSyntax.h"
 
 namespace
 {

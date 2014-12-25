@@ -19,7 +19,7 @@ NS_RAINBOW_LUA_BEGIN
 	public:
 		Animation(lua_State *);
 
-		inline ::Animation* get();
+		::Animation* get() { return animation_.get(); }
 
 	private:
 		static int is_stopped(lua_State *);
@@ -34,11 +34,6 @@ NS_RAINBOW_LUA_BEGIN
 		std::unique_ptr<::Animation> animation_;
 		ScopedRef listener_;
 	};
-
-	::Animation* Animation::get()
-	{
-		return animation_.get();
-	}
 } NS_RAINBOW_LUA_END
 
 #endif

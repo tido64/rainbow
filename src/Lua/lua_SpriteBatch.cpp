@@ -5,7 +5,6 @@
 #include "Lua/lua_SpriteBatch.h"
 
 #include "FileSystem/Path.h"
-#include "Lua/LuaSyntax.h"
 #include "Lua/lua_Sprite.h"
 #include "Lua/lua_Texture.h"
 
@@ -77,26 +76,20 @@ NS_RAINBOW_LUA_BEGIN
 	int SpriteBatch::set_normal(lua_State *L)
 	{
 		// <spritebatch>:set_normal(<texture>)
-		Argument<Texture>::is_required(L, 2);
-
-		SpriteBatch *self = Bind::self(L);
-		if (!self)
-			return 0;
-
-		self->batch_.set_normal(touserdata<Texture>(L, 2)->get());
-		return 0;
+		return set1ud<Texture>(
+		    L,
+		    [](::SpriteBatch *batch, SharedPtr<TextureAtlas> atlas) {
+		      batch->set_normal(atlas);
+		    });
 	}
 
 	int SpriteBatch::set_texture(lua_State *L)
 	{
 		// <spritebatch>:set_texture(<texture>)
-		Argument<Texture>::is_required(L, 2);
-
-		SpriteBatch *self = Bind::self(L);
-		if (!self)
-			return 0;
-
-		self->batch_.set_texture(touserdata<Texture>(L, 2)->get());
-		return 0;
+		return set1ud<Texture>(
+		    L,
+		    [](::SpriteBatch *batch, SharedPtr<TextureAtlas> atlas) {
+		      batch->set_texture(atlas);
+		    });
 	}
 } NS_RAINBOW_LUA_END

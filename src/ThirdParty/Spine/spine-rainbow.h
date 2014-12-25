@@ -126,8 +126,14 @@ namespace Spine
 		public:
 			Skeleton(lua_State *);
 
-			inline const Rainbow::Lua::ScopedRef& listener() const;
-			inline lua_State* state() const;
+			::Skeleton* get() const { return skeleton_.get(); }
+
+			const Rainbow::Lua::ScopedRef& listener() const
+			{
+				return listener_;
+			}
+
+			lua_State* state() const { return state_; }
 
 		private:
 			static int add_animation(lua_State *);
@@ -151,16 +157,6 @@ namespace Spine
 			void draw_impl() override;
 			void update_impl(const unsigned long dt) override;
 		};
-
-		const Rainbow::Lua::ScopedRef& Skeleton::listener() const
-		{
-			return listener_;
-		}
-
-		lua_State* Skeleton::state() const
-		{
-			return state_;
-		}
 	}
 }
 

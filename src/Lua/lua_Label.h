@@ -17,7 +17,7 @@ NS_RAINBOW_LUA_BEGIN
 	public:
 		Label(lua_State *);
 
-		inline ::Label* get();
+		::Label* get() { return &label_; }
 
 	private:
 		static int get_color(lua_State *);
@@ -32,11 +32,6 @@ NS_RAINBOW_LUA_BEGIN
 
 		::Label label_;
 	};
-
-	::Label* Label::get()
-	{
-		return &label_;
-	}
 }
 NS_RAINBOW_LUA_END
 

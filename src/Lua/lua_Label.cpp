@@ -4,7 +4,6 @@
 
 #include "Lua/lua_Label.h"
 
-#include "Lua/LuaSyntax.h"
 #include "Lua/lua_Font.h"
 
 NS_RAINBOW_LUA_BEGIN
@@ -99,55 +98,35 @@ NS_RAINBOW_LUA_BEGIN
 	int Label::set_font(lua_State *L)
 	{
 		// <label>:set_font(<font>)
-		Argument<Font>::is_required(L, 2);
-
-		Label *self = Bind::self(L);
-		if (!self)
-			return 0;
-
-		self->label_.set_font(touserdata<Font>(L, 2)->get());
-		return 0;
+		return set1ud<Font>(
+		    L,
+		    [](::Label *label, SharedPtr<FontAtlas> font) {
+		      label->set_font(font);
+		    });
 	}
 
 	int Label::set_position(lua_State *L)
 	{
 		// <label>:set_position(x, y)
-		Argument<lua_Number>::is_required(L, 2);
-		Argument<lua_Number>::is_required(L, 3);
-
-		Label *self = Bind::self(L);
-		if (!self)
-			return 0;
-
-		self->label_.set_position(
-		    Vec2f(lua_tonumber(L, 2), lua_tonumber(L, 3)));
-		return 0;
+		return set1fv(L, [](::Label *label, const Vec2f &position) {
+			label->set_position(position);
+		});
 	}
 
 	int Label::set_rotation(lua_State *L)
 	{
 		// <label>:set_rotation(r)
-		Argument<lua_Number>::is_required(L, 2);
-
-		Label *self = Bind::self(L);
-		if (!self)
-			return 0;
-
-		self->label_.set_rotation(lua_tonumber(L, 2));
-		return 0;
+		return set1f(L, [](::Label *label, const float r) {
+			label->set_rotation(r);
+		});
 	}
 
 	int Label::set_scale(lua_State *L)
 	{
 		// <label>:set_scale(f)
-		Argument<lua_Number>::is_required(L, 2);
-
-		Label *self = Bind::self(L);
-		if (!self)
-			return 0;
-
-		self->label_.set_scale(lua_tonumber(L, 2));
-		return 0;
+		return set1f(L, [](::Label *label, const float f) {
+			label->set_scale(f);
+		});
 	}
 
 	int Label::set_text(lua_State *L)
@@ -166,14 +145,8 @@ NS_RAINBOW_LUA_BEGIN
 	int Label::move(lua_State *L)
 	{
 		// <label>:move(x, y)
-		Argument<lua_Number>::is_required(L, 2);
-		Argument<lua_Number>::is_required(L, 3);
-
-		Label *self = Bind::self(L);
-		if (!self)
-			return 0;
-
-		self->label_.move(Vec2f(lua_tonumber(L, 2), lua_tonumber(L, 3)));
-		return 0;
+		return set1fv(L, [](::Label *label, const Vec2f &delta) {
+			label->move(delta);
+		});
 	}
 } NS_RAINBOW_LUA_END

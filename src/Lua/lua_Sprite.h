@@ -17,7 +17,7 @@ NS_RAINBOW_LUA_BEGIN
 	public:
 		Sprite(lua_State *);
 
-		inline const ::Sprite::Ref& get() const;
+		const ::Sprite::Ref& get() const { return sprite_; }
 
 	private:
 		static int get_angle(lua_State *);
@@ -40,11 +40,6 @@ NS_RAINBOW_LUA_BEGIN
 
 		const ::Sprite::Ref sprite_;
 	};
-
-	const ::Sprite::Ref& Sprite::get() const
-	{
-		return sprite_;
-	}
 } NS_RAINBOW_LUA_END
 
 #endif

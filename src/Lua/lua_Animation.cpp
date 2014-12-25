@@ -6,7 +6,6 @@
 
 #include <algorithm>
 
-#include "Lua/LuaSyntax.h"
 #include "Lua/lua_Sprite.h"
 
 namespace
@@ -69,38 +68,25 @@ NS_RAINBOW_LUA_BEGIN
 
 	int Animation::is_stopped(lua_State *L)
 	{
-		Animation *self = Bind::self(L);
-		if (!self)
-			return 0;
-
-		lua_pushboolean(L, self->animation_->is_stopped());
-		return 1;
+		return get1b(L, [](const ::Animation *animation) {
+			return animation->is_stopped();
+		});
 	}
 
 	int Animation::set_delay(lua_State *L)
 	{
 		// <animation>:set_delay(delay_in_ms)
-		Argument<lua_Number>::is_required(L, 2);
-
-		Animation *self = Bind::self(L);
-		if (!self)
-			return 0;
-
-		self->animation_->set_delay(lua_tointeger(L, 2));
-		return 0;
+		return set1i(L, [](::Animation *animation, const int delay) {
+			animation->set_delay(delay);
+		});
 	}
 
 	int Animation::set_fps(lua_State *L)
 	{
 		// <animation>:set_fps(fps)
-		Argument<lua_Number>::is_required(L, 2);
-
-		Animation *self = Bind::self(L);
-		if (!self)
-			return 0;
-
-		self->animation_->set_timeout(1000.0f / lua_tointeger(L, 2));
-		return 0;
+		return set1i(L, [](::Animation *animation, const int fps) {
+			animation->set_timeout(1000.f / fps);
+		});
 	}
 
 	int Animation::set_frames(lua_State *L)
@@ -160,14 +146,11 @@ NS_RAINBOW_LUA_BEGIN
 	int Animation::set_sprite(lua_State *L)
 	{
 		// <animation>:set_sprite(<sprite>)
-		Argument<Sprite>::is_required(L, 2);
-
-		Animation *self = Bind::self(L);
-		if (!self)
-			return 0;
-
-		self->animation_->set_sprite(touserdata<Sprite>(L, 2)->get());
-		return 0;
+		return set1ud<Sprite>(
+		    L,
+		    [](::Animation *animation, const ::Sprite::Ref &sprite) {
+		      animation->set_sprite(sprite);
+		    });
 	}
 
 	int Animation::play(lua_State *L)

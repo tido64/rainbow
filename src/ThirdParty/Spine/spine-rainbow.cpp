@@ -16,7 +16,6 @@
 #include "Graphics/Renderer.h"
 #include "Graphics/SpriteVertex.h"
 #include "Graphics/TextureAtlas.h"
-#include "Lua/LuaSyntax.h"
 
 namespace
 {
@@ -527,14 +526,9 @@ namespace Spine
 
 		int Skeleton::clear_track(lua_State *L)
 		{
-			Rainbow::Lua::Argument<lua_Number>::is_required(L, 2);
-
-			Skeleton *self = Bind::self(L);
-			if (!self)
-				return 0;
-
-			self->skeleton_->clear_track(lua_tointeger(L, 2));
-			return 0;
+			return set1i(L, [](::Skeleton *skeleton, const int track) {
+				skeleton->clear_track(track);
+			});
 		}
 
 		int Skeleton::clear_tracks(lua_State *L)
@@ -658,16 +652,9 @@ namespace Spine
 
 		int Skeleton::set_position(lua_State *L)
 		{
-			Rainbow::Lua::Argument<lua_Number>::is_required(L, 2);
-			Rainbow::Lua::Argument<lua_Number>::is_required(L, 3);
-
-			Skeleton *self = Bind::self(L);
-			if (!self)
-				return 0;
-
-			self->skeleton_->set_position(
-			    Vec2f(lua_tonumber(L, 2), lua_tonumber(L, 3)));
-			return 0;
+			return set1fv(L, [](::Skeleton *skeleton, const Vec2f &position) {
+				skeleton->set_position(position);
+			});
 		}
 
 		int Skeleton::set_skin(lua_State *L)
@@ -684,14 +671,9 @@ namespace Spine
 
 		int Skeleton::set_time_scale(lua_State *L)
 		{
-			Rainbow::Lua::Argument<lua_Number>::is_required(L, 2);
-
-			Skeleton *self = Bind::self(L);
-			if (!self)
-				return 0;
-
-			self->skeleton_->set_time_scale(lua_tonumber(L, 2));
-			return 0;
+			return set1f(L, [](::Skeleton *skeleton, const float scale) {
+				skeleton->set_time_scale(scale);
+			});
 		}
 
 		void Skeleton::draw_impl()

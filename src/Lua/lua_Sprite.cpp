@@ -7,7 +7,6 @@
 #include <lua.hpp>
 
 #include "Graphics/SpriteBatch.h"
-#include "Lua/LuaSyntax.h"
 
 using uint_t = unsigned int;
 
@@ -46,12 +45,9 @@ NS_RAINBOW_LUA_BEGIN
 
 	int Sprite::get_angle(lua_State *L)
 	{
-		Sprite *self = Bind::self(L);
-		if (!self)
-			return 0;
-
-		lua_pushnumber(L, self->sprite_->angle());
-		return 1;
+		return get1f(L, [](const ::Sprite::Ref &sprite) {
+			return sprite->angle();
+		});
 	}
 
 	int Sprite::get_color(lua_State *L)
@@ -70,38 +66,23 @@ NS_RAINBOW_LUA_BEGIN
 
 	int Sprite::get_pivot(lua_State *L)
 	{
-		Sprite *self = Bind::self(L);
-		if (!self)
-			return 0;
-
-		const Vec2f &v = self->sprite_->pivot();
-		lua_pushnumber(L, v.x);
-		lua_pushnumber(L, v.y);
-		return 2;
+		return get1fv(L, [](const ::Sprite::Ref &sprite) {
+			return sprite->pivot();
+		});
 	}
 
 	int Sprite::get_position(lua_State *L)
 	{
-		Sprite *self = Bind::self(L);
-		if (!self)
-			return 0;
-
-		const Vec2f &v = self->sprite_->position();
-		lua_pushnumber(L, v.x);
-		lua_pushnumber(L, v.y);
-		return 2;
+		return get1fv(L, [](const ::Sprite::Ref &sprite) {
+			return sprite->position();
+		});
 	}
 
 	int Sprite::get_scale(lua_State *L)
 	{
-		Sprite *self = Bind::self(L);
-		if (!self)
-			return 0;
-
-		const Vec2f &f = self->sprite_->scale();
-		lua_pushnumber(L, f.x);
-		lua_pushnumber(L, f.y);
-		return 2;
+		return get1fv(L, [](const ::Sprite::Ref &sprite) {
+			return sprite->scale();
+		});
 	}
 
 	int Sprite::get_size(lua_State *L)
@@ -138,56 +119,33 @@ NS_RAINBOW_LUA_BEGIN
 	int Sprite::set_normal(lua_State *L)
 	{
 		// <sprite>:set_normal(<texture>)
-		Argument<lua_Number>::is_required(L, 2);
-
-		Sprite *self = Bind::self(L);
-		if (!self)
-			return 0;
-
-		self->sprite_->set_normal(static_cast<uint_t>(lua_tointeger(L, 2)));
-		return 0;
+		return set1i(L, [](const ::Sprite::Ref &sprite, const int normal) {
+			sprite->set_normal(static_cast<uint_t>(normal));
+		});
 	}
 
 	int Sprite::set_pivot(lua_State *L)
 	{
 		// <sprite>:set_pivot(x, y)
-		Argument<lua_Number>::is_required(L, 2);
-		Argument<lua_Number>::is_required(L, 3);
-
-		Sprite *self = Bind::self(L);
-		if (!self)
-			return 0;
-
-		self->sprite_->set_pivot(Vec2f(lua_tonumber(L, 2), lua_tonumber(L, 3)));
-		return 0;
+		return set1fv(L, [](const ::Sprite::Ref &sprite, const Vec2f &p) {
+			sprite->set_pivot(p);
+		});
 	}
 
 	int Sprite::set_position(lua_State *L)
 	{
 		// <sprite>:set_position(x, y)
-		Argument<lua_Number>::is_required(L, 2);
-		Argument<lua_Number>::is_required(L, 3);
-
-		Sprite *self = Bind::self(L);
-		if (!self)
-			return 0;
-
-		self->sprite_->set_position(
-		    Vec2f(lua_tonumber(L, 2), lua_tonumber(L, 3)));
-		return 0;
+		return set1fv(L, [](const ::Sprite::Ref &sprite, const Vec2f &p) {
+			sprite->set_position(p);
+		});
 	}
 
 	int Sprite::set_rotation(lua_State *L)
 	{
 		// <sprite>:set_rotation(r)
-		Argument<lua_Number>::is_required(L, 2);
-
-		Sprite *self = Bind::self(L);
-		if (!self)
-			return 0;
-
-		self->sprite_->set_rotation(lua_tonumber(L, 2));
-		return 0;
+		return set1f(L, [](const ::Sprite::Ref &sprite, const float r) {
+			sprite->set_rotation(r);
+		});
 	}
 
 	int Sprite::set_scale(lua_State *L)
@@ -208,17 +166,9 @@ NS_RAINBOW_LUA_BEGIN
 	int Sprite::set_texture(lua_State *L)
 	{
 		// <sprite>:set_texture(<texture>)
-		Argument<lua_Number>::is_required(L, 2);
-
-		Sprite *self = Bind::self(L);
-		if (!self)
-			return 0;
-
-		const uint_t t = static_cast<uint_t>(lua_tointeger(L, 2));
-		LUA_ASSERT(L, t < self->sprite_->parent().texture().size(),
-		           "Non-existing texture region (%d)", t);
-		self->sprite_->set_texture(t);
-		return 0;
+		return set1i(L, [](const ::Sprite::Ref &sprite, const int texture) {
+			sprite->set_texture(static_cast<uint_t>(texture));
+		});
 	}
 
 	int Sprite::mirror(lua_State *L)
@@ -234,31 +184,19 @@ NS_RAINBOW_LUA_BEGIN
 	int Sprite::move(lua_State *L)
 	{
 		// <sprite>:move(x, y)
-		Argument<lua_Number>::is_required(L, 2);
-		Argument<lua_Number>::is_required(L, 3);
+		return set1fv(L, [](const ::Sprite::Ref &sprite, const Vec2f &delta) {
+			if (delta.is_zero())
+				return;
 
-		Sprite *self = Bind::self(L);
-		if (!self)
-			return 0;
-
-		const Vec2f delta(lua_tonumber(L, 2), lua_tonumber(L, 3));
-		if (delta.is_zero())
-			return 0;
-
-		self->sprite_->move(delta);
-		return 0;
+			sprite->move(delta);
+		});
 	}
 
 	int Sprite::rotate(lua_State *L)
 	{
 		// <sprite>:rotate(r)
-		Argument<lua_Number>::is_required(L, 2);
-
-		Sprite *self = Bind::self(L);
-		if (!self)
-			return 0;
-
-		self->sprite_->rotate(lua_tonumber(L, 2));
-		return 0;
+		return set1f(L, [](const ::Sprite::Ref &sprite, const float r) {
+			sprite->rotate(r);
+		});
 	}
 } NS_RAINBOW_LUA_END

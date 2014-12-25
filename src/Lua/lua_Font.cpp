@@ -7,7 +7,6 @@
 #include <lua.hpp>
 
 #include "Common/Data.h"
-#include "Lua/LuaSyntax.h"
 
 NS_RAINBOW_LUA_BEGIN
 {
