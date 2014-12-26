@@ -14,7 +14,7 @@ Animation::Animation(const Sprite::Ref &sprite,
                      const Frame *const frames,
                      const unsigned int fps,
                      const int delay)
-    : TimedEvent(1000.0f / fps), frame_(0), sprite_(sprite), frames_(frames),
+    : TimedEvent(1000 / fps), frame_(0), sprite_(sprite), frames_(frames),
       delay_(delay), idled_(0) {}
 
 void Animation::set_frames(const Frame *const frames)

@@ -55,7 +55,7 @@ namespace SceneGraph
 		/// Attach a program to this node. The program will be used to draw this
 		/// node and any of its descendants unless they also have an attached
 		/// shader.
-		inline void attach_program(const int program);
+		inline void attach_program(const unsigned int program);
 
 		/// Draws this node and all its enabled children.
 		void draw() const;
@@ -76,8 +76,8 @@ namespace SceneGraph
 			SpriteBatch
 		};
 
-		const Type type_;  ///< Defines what type of graphical element this node represents.
-		int program_;      ///< The active program for this node and its descendants.
+		const Type type_;       ///< Defines what type of graphical element this node represents.
+		unsigned int program_;  ///< The active program for this node and its descendants.
 		union
 		{
 			void *data_;
@@ -115,13 +115,13 @@ namespace SceneGraph
 		return add_child(new Node(p));
 	}
 
-	void Node::attach_program(const int program)
+	void Node::attach_program(const unsigned int program)
 	{
 		program_ = program;
 	}
 
 	Node::Node(Type type, void *data)
-	    : enabled(true), type_(type), program_(-1), data_(data)
+	    : enabled(true), type_(type), program_(0), data_(data)
 #ifndef NDEBUG
 	    , tag_(nullptr)
 #endif

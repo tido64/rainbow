@@ -20,16 +20,16 @@ namespace Rainbow
 			void set_radius(const float radius) const;
 			void set_position(const float x, const float y, const float z = 100.0f) const;
 
-			inline int id() const;
+			inline unsigned int id() const;
 
 		private:
 			int cutoff_;    ///< Maximum distance of the light's influence.
 			int radius_;    ///< Light source's radius.
 			int position_;  ///< Position of the light source.
-			int program_;
+			unsigned int program_;
 		};
 
-		int Diffuse::id() const
+		unsigned int Diffuse::id() const
 		{
 			return program_;
 		}

@@ -18,29 +18,35 @@ class ShaderManager : public Global<ShaderManager>
 	friend class Renderer;
 
 public:
+	enum
+	{
+		kInvalidProgram = 0,
+		kDefaultProgram
+	};
+
 	/// Saves the current shader context and restores it when exiting scope.
 	class Context
 	{
 	public:
-		Context() : program_(ShaderManager::Get()->active_) {}
+		Context() : program_(ShaderManager::Get()->current_) {}
 		~Context() { ShaderManager::Get()->use(program_); }
 
 	private:
-		int program_;
+		unsigned int program_;
 	};
 
 	/// Compiles program.
 	/// \param shaders     Shader parameters.
 	/// \param attributes  Shader attributes.
-	/// \return Unique program identifier; -1 if unsuccessful.
-	int compile(Shader::ShaderParams *shaders,
-	            const Shader::AttributeParams *attributes);
+	/// \return Unique program identifier; kInvalidProgram if unsuccessful.
+	unsigned int compile(Shader::ShaderParams *shaders,
+	                     const Shader::AttributeParams *attributes);
 
 	/// Returns current program details.
 	inline const Shader::Details& get_program() const;
 
 	/// Returns program details.
-	inline Shader::Details& get_program(const int pid);
+	inline Shader::Details& get_program(const unsigned int pid);
 
 	/// Sets viewport.
 	void set(const Vec2i &);
@@ -52,10 +58,10 @@ public:
 	                    const float top);
 
 	/// Activates program.
-	void use(const int program);
+	void use(const unsigned int program);
 
 private:
-	int active_;                             ///< Currently active program.
+	unsigned int current_;                   ///< Currently used program.
 	std::vector<Shader::Details> programs_;  ///< Linked shader programs.
 
 	/// The orthographic projection matrix is defined as:
@@ -77,14 +83,14 @@ private:
 
 const Shader::Details& ShaderManager::get_program() const
 {
-	R_ASSERT(active_ >= 0, "ShaderManager is uninitialised");
-	return programs_[active_];
+	R_ASSERT(current_ > 0, "ShaderManager is uninitialised");
+	return programs_[current_ - 1];
 }
 
-Shader::Details& ShaderManager::get_program(const int pid)
+Shader::Details& ShaderManager::get_program(const unsigned int pid)
 {
-	R_ASSERT(pid >= 0, "Invalid shader program id");
-	return programs_[pid];
+	R_ASSERT(pid > 0, "Invalid shader program id");
+	return programs_[pid - 1];
 }
 
 #endif

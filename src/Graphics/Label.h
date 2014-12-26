@@ -104,8 +104,8 @@ private:
 	/// \param width            Width of line.
 	/// \param R                Rotation vector.
 	/// \param needs_alignment  Whether alignment is needed.
-	void save(const size_t start,
-	          const size_t end,
+	void save(const unsigned int start,
+	          const unsigned int end,
 	          const float width,
 	          const Vec2f &R,
 	          const bool needs_alignment);

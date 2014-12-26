@@ -100,8 +100,8 @@ void Label::update()
 			if (stale_ & kStaleBufferSize)
 				vertices_.reset(new SpriteVertex[size_ * 4]);
 			width_ = 0;
-			size_t start = 0;
-			size_t count = 0;
+			unsigned int start = 0;
+			unsigned int count = 0;
 			const Vec2f R = !is_equal(angle_, 0.0f)
 			                    ? Vec2f(cosf(-angle_), sinf(-angle_))
 			                    : Vec2f(1.0f, 0.0f);
@@ -164,8 +164,8 @@ void Label::update()
 	}
 }
 
-void Label::save(const size_t start,
-                 const size_t end,
+void Label::save(const unsigned int start,
+                 const unsigned int end,
                  const float width,
                  const Vec2f &R,
                  const bool needs_alignment)

@@ -25,7 +25,8 @@ namespace Rainbow
 	namespace Shaders
 	{
 		Diffuse::Diffuse(const bool normal)
-		    : cutoff_(0), radius_(0), position_(0), program_(-1)
+		    : cutoff_(0), radius_(0), position_(0),
+		      program_(ShaderManager::kInvalidProgram)
 		{
 			if (normal)
 			{
@@ -41,8 +42,7 @@ namespace Rainbow
 					{ Shader::kAttributeNormal, "normal" },
 					{ Shader::kAttributeNone, nullptr }
 				};
-				program_ =
-				    ShaderManager::Get()->compile(shaders, attributes);
+				program_ = ShaderManager::Get()->compile(shaders, attributes);
 			}
 			else
 			{
@@ -53,7 +53,7 @@ namespace Rainbow
 				};
 				program_ = ShaderManager::Get()->compile(shaders, nullptr);
 			}
-			if (program_ < 0)
+			if (program_ == ShaderManager::kInvalidProgram)
 				return;
 
 			ShaderManager::Context context;

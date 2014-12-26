@@ -63,7 +63,7 @@ namespace
 		return unique_str();
 	}
 
-	int compile_shader(const Shader::ShaderParams &shader)
+	unsigned int compile_shader(const Shader::ShaderParams &shader)
 	{
 #ifdef GL_ES_VERSION_2_0
 		const char *source = shader.source;
@@ -71,8 +71,8 @@ namespace
 		const Data &glsl = Data::load_asset(shader.source);
 		if (!glsl)
 		{
-			R_ASSERT(glsl, "Failed to load shader");
-			return -1;
+			R_ABORT("Failed to load shader");
+			return ShaderManager::kInvalidProgram;
 		}
 		const char *source = glsl;
 #endif
@@ -85,18 +85,18 @@ namespace
 		    verify(id, GL_COMPILE_STATUS, glGetShaderiv, glGetShaderInfoLog);
 		if (error.get())
 		{
-			LOGE("GLSL: Failed to compile %s shader: %s",
-			     (shader.type == Shader::kTypeVertex) ? "vertex" : "fragment",
-			     error.get());
+			R_ABORT("GLSL: Failed to compile %s shader: %s",
+			        shader.type == Shader::kTypeVertex ? "vertex" : "fragment",
+			        error.get());
 			glDeleteShader(id);
-			return -1;
+			return ShaderManager::kInvalidProgram;
 		}
 
 		return id;
 	}
 
-	int link_program(const Shader::ShaderParams *shaders,
-	                 const Shader::AttributeParams *attributes)
+	unsigned int link_program(const Shader::ShaderParams *shaders,
+	                          const Shader::AttributeParams *attributes)
 	{
 		const GLuint program = glCreateProgram();
 		for (auto shader = shaders; shader->type != Shader::kTypeInvalid;
@@ -110,17 +110,17 @@ namespace
 		    program, GL_LINK_STATUS, glGetProgramiv, glGetProgramInfoLog);
 		if (error.get())
 		{
-			LOGE("GLSL: Failed to link program: %s", error.get());
+			R_ABORT("GLSL: Failed to link program: %s", error.get());
 			glDeleteProgram(program);
-			return -1;
+			return ShaderManager::kInvalidProgram;
 		}
 
 		return program;
 	}
 }
 
-int ShaderManager::compile(Shader::ShaderParams *shaders,
-                           const Shader::AttributeParams *attributes)
+unsigned int ShaderManager::compile(Shader::ShaderParams *shaders,
+                                    const Shader::AttributeParams *attributes)
 {
 	for (auto shader = shaders; shader->type != Shader::kTypeInvalid; ++shader)
 	{
@@ -131,35 +131,35 @@ int ShaderManager::compile(Shader::ShaderParams *shaders,
 		}
 		if (shader->id > 0)
 			continue;
-		const int id = compile_shader(*shader);
-		if (id < 0)
+		const unsigned int id = compile_shader(*shader);
+		if (id == kInvalidProgram)
 			return id;
 		shaders_.push_back(id);
 		shader->id = id;
 	}
 	if (!attributes)
 		attributes = kAttributeDefaultParams;
-	const int program = link_program(shaders, attributes);
-	if (program < 0)
+	const unsigned int program = link_program(shaders, attributes);
+	if (program == kInvalidProgram)
 		return program;
 	programs_.emplace_back(program);
-	return programs_.size() - 1;
+	return static_cast<unsigned int>(programs_.size());
 }
 
 void ShaderManager::set(const Vec2i &resolution)
 {
 	ortho_[0] = 2.0f / resolution.width;
 	ortho_[5] = 2.0f / resolution.height;
-	if (active_ < 0)
+	if (current_ == kInvalidProgram)
 	{
-		active_ = 0;
-		const Shader::Details &details = programs_[active_];
+		current_ = kDefaultProgram;
+		const Shader::Details &details = get_program();
 		glUseProgram(details.program);
 		set_projection_matrix(details, ortho_);
-		glUniform1i(glGetUniformLocation(programs_[0].program, "texture"), 0);
+		glUniform1i(glGetUniformLocation(details.program, "texture"), 0);
 		return;
 	}
-	set_projection_matrix(programs_[active_], ortho_);
+	set_projection_matrix(get_program(), ortho_);
 }
 
 void ShaderManager::set_projection(const float left,
@@ -171,16 +171,16 @@ void ShaderManager::set_projection(const float left,
 	ortho_[5] = 2.0f / (top - bottom);
 	ortho_[12] = -(right + left) / (right - left);
 	ortho_[13] = -(top + bottom) / (top - bottom);
-	set_projection_matrix(programs_[active_], ortho_);
+	set_projection_matrix(get_program(), ortho_);
 }
 
-void ShaderManager::use(const int program)
+void ShaderManager::use(const unsigned int program)
 {
-	if (program != active_)
+	if (program != current_)
 	{
-		const Shader::Details &current = programs_[active_];
-		active_ = program;
-		const Shader::Details &details = programs_[active_];
+		const Shader::Details &current = get_program();
+		current_ = program;
+		const Shader::Details &details = get_program();
 		glUseProgram(details.program);
 
 		set_projection_matrix(details, ortho_);
@@ -195,14 +195,11 @@ void ShaderManager::use(const int program)
 	}
 }
 
-ShaderManager::ShaderManager() : active_(-1), ortho_(kProjectionMatrix()) {}
+ShaderManager::ShaderManager()
+    : current_(kInvalidProgram), ortho_(kProjectionMatrix()) {}
 
 ShaderManager::~ShaderManager()
 {
-	if (active_ < 0)
-		return;
-
-	glUseProgram(0);
 	for (const auto &details : programs_)
 		glDeleteProgram(details.program);
 	for (const auto shader : shaders_)
@@ -215,10 +212,10 @@ bool ShaderManager::init()
 	    {Shader::kTypeVertex, 0, Rainbow::Shaders::kFixed2Dv},
 	    {Shader::kTypeFragment, 0, Rainbow::Shaders::kFixed2Df},
 	    {Shader::kTypeInvalid, 0, nullptr}};
-	const int pid = compile(shaders, nullptr);
-	if (pid < 0)
+	const unsigned int pid = compile(shaders, nullptr);
+	if (pid == kInvalidProgram)
 	{
-		R_ASSERT(pid >= 0, "Failed to compile default shader");
+		R_ABORT("Failed to compile default shader");
 		return false;
 	}
 	make_global();

@@ -63,7 +63,8 @@ namespace Random
 	void seed(const uint32_t seed)
 	{
 		dsfmt_gv_init_gen_rand(
-		    (seed == 0) ? Chrono::clock::now().time_since_epoch().count()
+		    (seed == 0) ? static_cast<uint32_t>(
+		                      Chrono::clock::now().time_since_epoch().count())
 		                : seed);
 	}
 }

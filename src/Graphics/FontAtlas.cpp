@@ -152,7 +152,7 @@ FontAtlas::FontAtlas(const Data &font, const float pt)
 		charset_[i].code = i + kASCIIOffset;
 
 #if FONTATLAS_EXTENDED > 0
-	const unsigned long characters[] = {
+	const unsigned int characters[] = {
 	    0x00c5,  // LATIN CAPITAL LETTER A WITH RING ABOVE
 	    0x00c6,  // LATIN CAPITAL LETTER AE
 	    0x00d8,  // LATIN CAPITAL LETTER O WITH STROKE

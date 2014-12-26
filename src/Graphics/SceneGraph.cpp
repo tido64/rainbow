@@ -10,6 +10,9 @@
 #include "Graphics/Renderer.h"
 #include "Graphics/SpriteBatch.h"
 
+static_assert(ShaderManager::kInvalidProgram == 0,
+              "Inlined Node(Type, void*) assumes kInvalidProgram == 0");
+
 namespace SceneGraph
 {
 	void Node::draw() const
@@ -18,7 +21,7 @@ namespace SceneGraph
 			return;
 
 		ShaderManager::Context context;
-		if (program_ >= 0)
+		if (program_ != ShaderManager::kInvalidProgram)
 			ShaderManager::Get()->use(program_);
 
 		switch (type_)
