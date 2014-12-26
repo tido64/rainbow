@@ -7,16 +7,9 @@
 #include "Graphics/Image.h"
 #include "Graphics/TextureManager.h"
 
-namespace
-{
-#if 0  // Currently unused.
-	/// Return \c true if the integer is greater than 64 and divisible by 4.
-	bool is_valid(const unsigned int i)
-	{
-		return (i < 64) ? false : (i & 0x03) == 0;
-	}
+#ifndef NDEBUG
+#include "Graphics/Renderer.h"
 #endif
-}
 
 TextureAtlas::TextureAtlas(const DataMap &img) : name_(0), width_(0), height_(0)
 {
@@ -28,13 +21,11 @@ TextureAtlas::TextureAtlas(const DataMap &img) : name_(0), width_(0), height_(0)
 
 #ifndef NDEBUG
 	// Ensure texture dimension is supported by the hardware
-	int max_texture_size;
-	glGetIntegerv(GL_MAX_TEXTURE_SIZE, &max_texture_size);
-	R_ASSERT(image.width <= static_cast<unsigned int>(max_texture_size)
-	         && image.height <= static_cast<unsigned int>(max_texture_size),
-	         "Texture dimension exceeds max texture size supported by hardware");
-	//R_ASSERT(is_valid(image.width) && is_valid(image.height),
-	//         "Texture dimension must be greater than 64 and divisible by 4");
+	const unsigned int max_texture_size =
+	    static_cast<unsigned int>(Renderer::max_texture_size());
+	R_ASSERT(
+	    image.width <= max_texture_size && image.height <= max_texture_size,
+	    "Texture dimension exceeds max texture size supported by hardware");
 #endif
 
 	width_ = image.width;
