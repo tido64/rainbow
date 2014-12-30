@@ -18,13 +18,6 @@ class Renderer : public Global<Renderer>
 	friend Rainbow::Director;
 
 public:
-	enum class ZoomMode
-	{
-		LetterBox,  // Keeps aspect ratio, creating black borders if necessary.
-		Stretch,    // Stretches to fill the screen, disregarding aspect ratio.
-		Zoom        // Zooms in to fill the screen, cropping excess pixels.
-	};
-
 	static const size_t kNumSprites = 256;  ///< Hard-coded limit on number of sprites.
 
 	static void clear();
@@ -41,8 +34,7 @@ public:
 	inline const Vec2i& window_size() const;
 
 	void set_resolution(const Vec2i &resolution);
-	void set_window_size(const Vec2i &size);
-	void set_zoom_mode(const ZoomMode zoom);
+	void set_window_size(const Vec2i &size, const float factor = 1.0f);
 
 	void bind_element_array() const;
 	Vec2i convert_to_flipped_view(const Vec2i &) const;
@@ -50,7 +42,6 @@ public:
 
 private:
 	unsigned int index_buffer_;
-	ZoomMode zoom_mode_;
 	Vec2f scale_;
 	Vec2i origin_;
 	Vec2i view_;

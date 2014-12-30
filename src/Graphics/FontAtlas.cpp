@@ -42,12 +42,12 @@ namespace
 	                      const uchar_t *src,
 	                      const Vec2u &src_sz)
 	{
-		const size_t stride = (dst_sz.width - src_sz.width) * 2;
+		const size_t stride = (dst_sz.x - src_sz.x) * 2;
 		size_t i = 0;
-		uchar_t *ptr = dst + (off.y * dst_sz.width + off.x) * 2;
-		for (uint_t y = 0; y < src_sz.height; ++y)
+		uchar_t *ptr = dst + (off.y * dst_sz.x + off.x) * 2;
+		for (uint_t y = 0; y < src_sz.y; ++y)
 		{
-			for (uint_t x = 0; x < src_sz.width; ++x)
+			for (uint_t x = 0; x < src_sz.x; ++x)
 			{
 				*ptr = std::numeric_limits<uchar_t>::max();
 				*(++ptr) = src[i];
@@ -69,19 +69,19 @@ namespace
 			if (FT_Load_Char(face, glyph.code, FT_LOAD_DEFAULT))
 			{
 				R_ABORT("Failed to load characters");
-				max.width = 0;
+				max.x = 0;
 				return;
 			}
 			const FT_Glyph_Metrics &metrics = face->glyph->metrics;
-			if (metrics.width > static_cast<FT_Pos>(max.width))
-				max.width = static_cast<Vec2u::value_type>(metrics.width);
-			if (metrics.height > static_cast<FT_Pos>(max.height))
-				max.height = static_cast<Vec2u::value_type>(metrics.height);
+			if (metrics.width > static_cast<FT_Pos>(max.x))
+				max.x = static_cast<Vec2u::value_type>(metrics.width);
+			if (metrics.height > static_cast<FT_Pos>(max.y))
+				max.y = static_cast<Vec2u::value_type>(metrics.height);
 		});
-		if (max.width == 0)
+		if (max.x == 0)
 			return Vec2u();
-		return Vec2u(max.width / kPixelFormat + kGlyphPadding2,
-		             max.height / kPixelFormat + kGlyphPadding2);
+		return Vec2u(max.x / kPixelFormat + kGlyphPadding2,
+		             max.y / kPixelFormat + kGlyphPadding2);
 	}
 
 	class FontFace
@@ -177,17 +177,17 @@ FontAtlas::FontAtlas(const Data &font, const float pt)
 	    max_glyph_size(face, charset_, sizeof(charset_) / sizeof(charset_[0]));
 	if (max.is_zero())
 		return;
-	const Vec2u size(Rainbow::next_pow2(max.width * kNumGlyphsPerColRow),
-	                 Rainbow::next_pow2(max.height * kNumGlyphsPerColRow));
+	const Vec2u size(Rainbow::next_pow2(max.x * kNumGlyphsPerColRow),
+	                 Rainbow::next_pow2(max.y * kNumGlyphsPerColRow));
 
 	// GL_LUMINANCE8_ALPHA8 buffer
-	Vec2u offset(size.width * size.height * 2, 0);
+	Vec2u offset(size.x * size.y * 2, 0);
 	std::unique_ptr<GLubyte[]> buffer(new GLubyte[offset.x]);
 	std::fill_n(buffer.get(), offset.x, 0);
 
 	// Copy all glyph bitmaps to our texture.
 	offset.x = 0;
-	const Vec2f pixel(1.0f / size.width, 1.0f / size.height);
+	const Vec2f pixel(1.0f / size.x, 1.0f / size.y);
 	for (auto &glyph : charset_)
 	{
 		FT_Load_Char(face, glyph.code, FT_LOAD_RENDER);
@@ -198,10 +198,10 @@ FontAtlas::FontAtlas(const Data &font, const float pt)
 		// Make sure bitmap data has enough space to the right. Otherwise, start
 		// a new line.
 		const uint_t width = bitmap.width + kGlyphPadding2;
-		if (offset.x + width > size.width)
+		if (offset.x + width > size.x)
 		{
 			offset.x = 0;
-			offset.y += max.height;
+			offset.y += max.y;
 		}
 
 		// Copy bitmap data to texture.
@@ -233,18 +233,14 @@ FontAtlas::FontAtlas(const Data &font, const float pt)
 		vx[3].position.x = vx[0].position.x;
 		vx[3].position.y = vx[2].position.y;
 
-		vx[0].texcoord.x =
-		    (kGlyphPadding - kGlyphMargin + offset.x) * pixel.width;
+		vx[0].texcoord.x = (kGlyphPadding - kGlyphMargin + offset.x) * pixel.x;
 		vx[0].texcoord.y =
-		    (kGlyphPadding + bitmap.rows + kGlyphMargin + offset.y) *
-		    pixel.height;
+		    (kGlyphPadding + bitmap.rows + kGlyphMargin + offset.y) * pixel.y;
 		vx[1].texcoord.x =
-		    (kGlyphPadding + bitmap.width + kGlyphMargin + offset.x) *
-		    pixel.width;
+		    (kGlyphPadding + bitmap.width + kGlyphMargin + offset.x) * pixel.x;
 		vx[1].texcoord.y = vx[0].texcoord.y;
 		vx[2].texcoord.x = vx[1].texcoord.x;
-		vx[2].texcoord.y =
-		    (kGlyphPadding - kGlyphMargin + offset.y) * pixel.height;
+		vx[2].texcoord.y = (kGlyphPadding - kGlyphMargin + offset.y) * pixel.y;
 		vx[3].texcoord.x = vx[0].texcoord.x;
 		vx[3].texcoord.y = vx[2].texcoord.y;
 
@@ -267,11 +263,8 @@ FontAtlas::FontAtlas(const Data &font, const float pt)
 	}
 	height_ = face->size->metrics.height / kPixelFormat;
 
-	texture_ = TextureManager::Get()->create(GL_LUMINANCE_ALPHA,
-	                                         size.width,
-	                                         size.height,
-	                                         GL_LUMINANCE_ALPHA,
-	                                         buffer.get());
+	texture_ = TextureManager::Get()->create(
+	    GL_LUMINANCE_ALPHA, size.x, size.y, GL_LUMINANCE_ALPHA, buffer.get());
 }
 
 FontAtlas::~FontAtlas()

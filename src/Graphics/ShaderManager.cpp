@@ -148,8 +148,8 @@ unsigned int ShaderManager::compile(Shader::ShaderParams *shaders,
 
 void ShaderManager::set(const Vec2i &resolution)
 {
-	ortho_[0] = 2.0f / resolution.width;
-	ortho_[5] = 2.0f / resolution.height;
+	ortho_[0] = 2.0f / resolution.x;
+	ortho_[5] = 2.0f / resolution.y;
 	if (current_ == kInvalidProgram)
 	{
 		current_ = kDefaultProgram;

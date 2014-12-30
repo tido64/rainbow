@@ -36,13 +36,13 @@ namespace Heimdall
 		vertices[0].texcoord    = Vec2f(0.5f, 0.5f);
 		vertices[1].color       = vertices[0].color;
 		vertices[1].texcoord    = vertices[0].texcoord;
-		vertices[1].position.x  = screen.width;
+		vertices[1].position.x  = screen.x;
 		vertices[2].color       = vertices[0].color;
 		vertices[2].texcoord    = vertices[0].texcoord;
-		vertices[2].position    = Vec2f(screen.width, screen.height);
+		vertices[2].position    = Vec2f(screen.x, screen.y);
 		vertices[3].color       = vertices[0].color;
 		vertices[3].texcoord    = vertices[0].texcoord;
-		vertices[3].position.y  = screen.height;
+		vertices[3].position.y  = screen.y;
 		vertex_buffer_.upload(vertices, sizeof(vertices));
 		array_.reconfigure([this] { vertex_buffer_.bind(); });
 

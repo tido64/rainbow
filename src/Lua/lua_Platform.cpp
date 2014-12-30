@@ -52,8 +52,8 @@ NS_RAINBOW_LUA_MODULE_BEGIN(Platform)
 		lua_pushliteral(L, "screen");
 		lua_rawget(L, -2);
 
-		luaR_rawsetnumber(L, "width", screen.width);
-		luaR_rawsetnumber(L, "height", screen.height);
+		luaR_rawsetnumber(L, "width", screen.x);
+		luaR_rawsetnumber(L, "height", screen.y);
 
 		lua_pop(L, 3);
 	}

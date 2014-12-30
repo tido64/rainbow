@@ -26,7 +26,8 @@ namespace
 namespace Rainbow
 {
 	Config::Config()
-	    : accelerometer_(true), suspend_(true), width_(0), height_(0)
+	    : accelerometer_(true), high_dpi_(false), suspend_(true), width_(0),
+	      height_(0)
 	{
 		const char kConfigModule[] = "config";
 
@@ -48,6 +49,12 @@ namespace Rainbow
 		lua_getglobal(L.get(), "accelerometer");
 		if (lua_isboolean(L.get(), -1))
 			accelerometer_ = lua_toboolean(L.get(), -1);
+
+#ifdef RAINBOW_SDL
+		lua_getglobal(L.get(), "allow_high_dpi");
+		if (lua_isboolean(L.get(), -1))
+			high_dpi_ = lua_toboolean(L.get(), -1);
+#endif
 
 		lua_getglobal(L.get(), "resolution");
 		if (lua_istable(L.get(), -1))

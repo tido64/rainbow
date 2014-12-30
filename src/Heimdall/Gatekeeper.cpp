@@ -58,13 +58,13 @@ namespace Heimdall
 
 		overlay_.init(scenegraph_, screen);
 
-		const unsigned int pt = screen.height / 64;
+		const unsigned int pt = screen.y / 64;
 		auto console_font = make_shared<FontAtlas>(
 		    Data::from_bytes(Inconsolata_otf), pt);
 		auto ui_font = make_shared<FontAtlas>(
 		    Data::from_bytes(NewsCycle_Regular_ttf), (pt << 1) + (pt >> 1));
-		const float y = screen.height - console_font->height();
-		Vec2f position(screen.width / 128,
+		const float y = screen.y - console_font->height();
+		Vec2f position(screen.x / 128,
 		               y - console_font->height() - ui_font->height());
 		info_->init_button(position, std::move(ui_font));
 		position.y = y;

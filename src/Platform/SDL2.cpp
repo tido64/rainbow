@@ -38,12 +38,11 @@ namespace
 	              "Rainbow requires SDL version 2.0.3 or higher");
 
 	const uint32_t kMouseButtons[] = {
-		SDL_BUTTON_LEFT,
-		SDL_BUTTON_MIDDLE,
-		SDL_BUTTON_RIGHT,
-		SDL_BUTTON_X1,
-		SDL_BUTTON_X2
-	};
+	    SDL_BUTTON_LEFT,
+	    SDL_BUTTON_MIDDLE,
+	    SDL_BUTTON_RIGHT,
+	    SDL_BUTTON_X1,
+	    SDL_BUTTON_X2};
 
 	const double kMsPerFrame = 1000.0 / 60.0;
 
@@ -77,25 +76,11 @@ namespace
 	class SDLContext
 	{
 	public:
-		SDLContext(const SDL_Point &position, const Vec2i &size);
+		SDLContext(const Rainbow::Config &config);
 		~SDLContext();
 
-		SDL_Window* window() const;
-
-		explicit operator bool() const;
-
-	private:
-		SDL_Window *window_;     ///< Window handle.
-		SDL_GLContext context_;  ///< OpenGL context handle.
-	};
-
-	class SDLWindow
-	{
-	public:
-		explicit SDLWindow(const Vec2i &window_size);
-
-		SDL_Window* handle() const;
-		const Vec2i& size() const;
+		Vec2i drawable_size() const;
+		Vec2i window_size() const;
 
 		void swap() const;
 		void toggle_fullscreen();
@@ -103,19 +88,18 @@ namespace
 		explicit operator bool() const;
 
 	private:
-		SDLContext context_;       ///< SDL context.
-		bool vsync_;               ///< Whether vertical sync is enabled.
-		uint32_t fullscreen_;      ///< Whether the window is in full screen mode.
-#if USE_BORDERLESS_WINDOWED_MODE
-		SDL_Point position_;       ///< Window's position while windowed.
-#endif
-		Vec2i size_;               ///< Window's size while windowed.
+		SDL_Window *window_;     ///< Window handle.
+		bool vsync_;             ///< Whether vertical sync is enabled.
+		uint32_t fullscreen_;    ///< Whether the window is in full screen mode.
+		SDL_Point position_;     ///< Window's position while windowed.
+		Vec2i size_;             ///< Window's size while windowed.
+		SDL_GLContext context_;  ///< OpenGL context handle.
 	};
 
 	class RainbowController
 	{
 	public:
-		RainbowController(SDLWindow &window, const bool suspend_on_focus_lost);
+		RainbowController(SDLContext &context, const Rainbow::Config &config);
 
 		const char* error() const;
 
@@ -133,7 +117,7 @@ namespace
 		void on_window_resized();
 
 	private:
-		SDLWindow &window_;
+		SDLContext &context_;
 		Chrono chrono_;
 		Director director_;
 		const bool suspend_on_focus_lost_;
@@ -162,11 +146,11 @@ int main(int argc, char *argv[])
 	}
 
 	const Rainbow::Config config;
-	SDLWindow window(window_size(config));
-	if (!window)
+	SDLContext context(config);
+	if (!context)
 		return 1;
 
-	RainbowController controller(window, config.suspend());
+	RainbowController controller(context, config);
 	while (controller.run()) {}
 	if (controller.error())
 	{
@@ -176,8 +160,10 @@ int main(int argc, char *argv[])
 	return 0;
 }
 
-SDLContext::SDLContext(const SDL_Point &position, const Vec2i &size)
-    : window_(nullptr), context_(nullptr)
+SDLContext::SDLContext(const Rainbow::Config &config)
+    : window_(nullptr), vsync_(false), fullscreen_(0),
+      position_({SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED}),
+      size_(::window_size(config)), context_(nullptr)
 {
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
 	{
@@ -194,18 +180,28 @@ SDLContext::SDLContext(const SDL_Point &position, const Vec2i &size)
 	SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
 	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 0);
 
+	const uint32_t allow_high_dpi = config.high_dpi() ? SDL_WINDOW_ALLOW_HIGHDPI
+	                                                  : 0;
 	window_ = SDL_CreateWindow(
-	    RAINBOW_BUILD, position.x, position.y, size.width, size.height,
-	    SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+	    RAINBOW_BUILD, position_.x, position_.y, size_.x, size_.y,
+	    SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE |
+	    allow_high_dpi);
 	if (!window_)
 	{
-		LOGF("SDL: Failed to create window: %s", SDL_GetError());
+		R_ABORT("SDL: Failed to create window: %s", SDL_GetError());
 		return;
 	}
 
 	context_ = SDL_GL_CreateContext(window_);
 	if (!context_)
-		LOGF("SDL: Failed to create GL context: %s", SDL_GetError());
+	{
+		R_ABORT("SDL: Failed to create GL context: %s", SDL_GetError());
+		return;
+	}
+
+	SDL_GL_SetSwapInterval(1);
+	vsync_ = SDL_GL_GetSwapInterval() == 1;
+	LOGI("SDL: Sync with vertical retrace: %s", vsync_ ? "Yes" : "No");
 }
 
 SDLContext::~SDLContext()
@@ -222,9 +218,48 @@ SDLContext::~SDLContext()
 	SDL_Quit();
 }
 
-SDL_Window* SDLContext::window() const
+Vec2i SDLContext::drawable_size() const
 {
-	return window_;
+	Vec2i size;
+	SDL_GL_GetDrawableSize(window_, &size.x, &size.y);
+	return size;
+}
+
+Vec2i SDLContext::window_size() const
+{
+	Vec2i size;
+	SDL_GetWindowSize(window_, &size.x, &size.y);
+	return size;
+}
+
+void SDLContext::swap() const
+{
+	if (!vsync_)
+		Chrono::sleep(0);
+	SDL_GL_SwapWindow(window_);
+}
+
+void SDLContext::toggle_fullscreen()
+{
+	fullscreen_ ^= SDL_WINDOW_FULLSCREEN_DESKTOP;
+
+#if !USE_BORDERLESS_WINDOWED_MODE
+	SDL_SetWindowFullscreen(window_, fullscreen_);
+#else
+	SDL_bool bordered = SDL_TRUE;
+	SDL_Rect window_rect{position_.x, position_.y, size_.x, size_.y};
+	if (fullscreen_)
+	{
+		SDL_GetWindowPosition(window_, &position_.x, &position_.y);
+		bordered = SDL_FALSE;
+		SDL_GetDisplayBounds(SDL_GetWindowDisplayIndex(window_), &window_rect);
+		window_rect.x = SDL_WINDOWPOS_CENTERED;
+		window_rect.y = SDL_WINDOWPOS_CENTERED;
+	}
+	SDL_SetWindowBordered(window_, bordered);
+	SDL_SetWindowSize(window_, window_rect.w, window_rect.h);
+	SDL_SetWindowPosition(window_, window_rect.x, window_rect.y);
+#endif  // !USE_BORDERLESS_WINDOWED_MODE
 }
 
 SDLContext::operator bool() const
@@ -232,76 +267,15 @@ SDLContext::operator bool() const
 	return context_;
 }
 
-SDLWindow::SDLWindow(const Vec2i &size)
-    : context_({SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED}, size)
-    , vsync_(false)
-    , fullscreen_(0)
-#if USE_BORDERLESS_WINDOWED_MODE
-    , position_({SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED})
-#endif
-    , size_(size)
-{
-	if (!context_)
-		return;
-
-	SDL_GL_SetSwapInterval(1);
-	vsync_ = SDL_GL_GetSwapInterval() == 1;
-	LOGI("SDL: Sync with vertical retrace: %s", vsync_ ? "Yes" : "No");
-}
-
-SDL_Window* SDLWindow::handle() const
-{
-	return context_.window();
-}
-
-const Vec2i& SDLWindow::size() const
-{
-	return size_;
-}
-
-void SDLWindow::swap() const
-{
-	if (!vsync_)
-		Chrono::sleep(0);
-	SDL_GL_SwapWindow(handle());
-}
-
-void SDLWindow::toggle_fullscreen()
-{
-	fullscreen_ ^= SDL_WINDOW_FULLSCREEN_DESKTOP;
-
-#if !USE_BORDERLESS_WINDOWED_MODE
-	SDL_SetWindowFullscreen(handle(), fullscreen_);
-#else
-	SDL_bool bordered = SDL_TRUE;
-	SDL_Rect window_rect{position_.x, position_.y, size_.width, size_.height};
-	if (fullscreen_)
-	{
-		SDL_GetWindowPosition(handle(), &position_.x, &position_.y);
-		bordered = SDL_FALSE;
-		SDL_GetDisplayBounds(SDL_GetWindowDisplayIndex(handle()), &window_rect);
-		window_rect.x = SDL_WINDOWPOS_CENTERED;
-		window_rect.y = SDL_WINDOWPOS_CENTERED;
-	}
-	SDL_SetWindowBordered(handle(), bordered);
-	SDL_SetWindowSize(handle(), window_rect.w, window_rect.h);
-	SDL_SetWindowPosition(handle(), window_rect.x, window_rect.y);
-#endif  // !USE_BORDERLESS_WINDOWED_MODE
-}
-
-SDLWindow::operator bool() const
-{
-	return static_cast<bool>(context_);
-}
-
 RainbowController::RainbowController(
-    SDLWindow &window, const bool suspend_on_focus_lost)
-    : window_(window), suspend_on_focus_lost_(suspend_on_focus_lost)
+    SDLContext &context, const Rainbow::Config &config)
+    : context_(context), suspend_on_focus_lost_(config.suspend())
 {
 	if (director_.terminated())
 		return;
 
-	director_.init(Data::load_asset("main.lua"), window_.size());
+	director_.init(Data::load_asset("main.lua"), context_.drawable_size());
+	on_window_resized();
 }
 
 const char* RainbowController::error() const
@@ -357,7 +331,7 @@ bool RainbowController::run()
 					// glitches. Focus is restored when we receive an
 					// SDL_WINDOWEVENT_SIZE_CHANGED.
 					director_.on_focus_lost();
-					window_.toggle_fullscreen();
+					context_.toggle_fullscreen();
 				}
 				else
 					director_.input().on_key_down(Key::from_raw(&keysym));
@@ -398,7 +372,7 @@ bool RainbowController::run()
 
 		// Draw
 		director_.draw();
-		window_.swap();
+		context_.swap();
 	}
 	return true;
 }
@@ -446,11 +420,12 @@ void RainbowController::on_mouse_up(const uint32_t button,
 
 void RainbowController::on_window_resized()
 {
-	Vec2i size;
-	SDL_GetWindowSize(window_.handle(), &size.width, &size.height);
+	const Vec2i &size = context_.window_size();
 	if (size == director_.renderer().window_size())
 		return;
-	director_.renderer().set_window_size(size);
+
+	const Vec2i &viewport = context_.drawable_size();
+	director_.renderer().set_window_size(size, viewport.x / size.x);
 }
 
 #endif  // RAINBOW_SDL

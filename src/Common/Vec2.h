@@ -18,17 +18,8 @@ namespace Rainbow
 	{
 		using value_type = T;
 
-		union
-		{
-			T x;
-			T width;
-		};
-
-		union
-		{
-			T y;
-			T height;
-		};
+		T x;
+		T y;
 
 		Vec2() : Vec2(0, 0) {}
 		Vec2(const T x, const T y) : x(x), y(y) {}

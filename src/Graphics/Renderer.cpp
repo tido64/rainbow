@@ -46,57 +46,39 @@ void Renderer::set_resolution(const Vec2i &resolution)
 
 	view_ = resolution;
 	shader_manager_.set(resolution);
-	if (window_.is_zero())
-		window_ = view_;
-	set_window_size(window_);
+	set_window_size(window_.is_zero() ? view_ : window_);
 
 	R_ASSERT(glGetError() == GL_NO_ERROR, "Failed to set resolution");
 }
 
-void Renderer::set_window_size(const Vec2i &size)
+void Renderer::set_window_size(const Vec2i &size, const float factor)
 {
 	R_ASSERT(is_global(),
 	         "Cannot set window size with an uninitialised renderer");
 
-	if (zoom_mode_ == ZoomMode::Stretch || size == view_)
+	window_ = view_;
+	if (size == view_)
 	{
 		origin_.x = 0;
 		origin_.y = 0;
-		window_ = size;
 	}
 	else
 	{
-		const Vec2f ratio(size.width / static_cast<float>(view_.width),
-		                  size.height / static_cast<float>(view_.height));
-		if ((zoom_mode_ == ZoomMode::Zoom && ratio.x < ratio.y)
-		    || (zoom_mode_ == ZoomMode::LetterBox && ratio.x > ratio.y))
-		{
-			window_.width = view_.width * ratio.y;
-			window_.height = size.height;
-			origin_.x = (size.width - window_.width) / 2;
-			origin_.y = 0;
-		}
-		else
-		{
-			window_.width = size.width;
-			window_.height = view_.height * ratio.x;
-			origin_.x = 0;
-			origin_.y = (size.height - window_.height) / 2;
-		}
+		const float scale = std::min(size.x / static_cast<float>(window_.x),
+		                             size.y / static_cast<float>(window_.y));
+		window_.x *= scale;
+		window_.y *= scale;
+		origin_.x = (size.x - window_.x) / 2;
+		origin_.y = (size.y - window_.y) / 2;
 	}
-	glViewport(origin_.x, origin_.y, window_.width, window_.height);
-	scale_.x = static_cast<float>(view_.width) / window_.width;
-	scale_.y = static_cast<float>(view_.height) / window_.height;
-	window_.height = size.height;
-}
-
-void Renderer::set_zoom_mode(const ZoomMode zoom)
-{
-	if (zoom == zoom_mode_)
-		return;
-
-	zoom_mode_ = zoom;
-	set_window_size(window_);
+	scale_.x = static_cast<float>(view_.x) / window_.x;
+	scale_.y = static_cast<float>(view_.y) / window_.y;
+	glViewport(origin_.x * factor,
+	           origin_.y * factor,
+	           window_.x * factor,
+	           window_.y * factor);
+	// Set height in order to properly transform mouse coordinates.
+	window_.y = size.y;
 }
 
 void Renderer::bind_element_array() const
@@ -106,7 +88,7 @@ void Renderer::bind_element_array() const
 
 Vec2i Renderer::convert_to_flipped_view(const Vec2i &p) const
 {
-	return convert_to_view(Vec2i(p.x, window_.height - p.y));
+	return convert_to_view(Vec2i(p.x, window_.y - p.y));
 }
 
 Vec2i Renderer::convert_to_view(const Vec2i &p) const
@@ -114,8 +96,7 @@ Vec2i Renderer::convert_to_view(const Vec2i &p) const
 	return Vec2i((p.x - origin_.x) * scale_.x, (p.y - origin_.y) * scale_.y);
 }
 
-Renderer::Renderer()
-    : index_buffer_(0), zoom_mode_(ZoomMode::LetterBox), scale_(1.0f, 1.0f) {}
+Renderer::Renderer() : index_buffer_(0), scale_(1.0f, 1.0f) {}
 
 Renderer::~Renderer()
 {
