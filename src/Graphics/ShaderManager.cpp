@@ -178,13 +178,16 @@ void ShaderManager::use(const unsigned int program)
 {
 	if (program != current_)
 	{
+#ifndef USE_VERTEX_ARRAY_OBJECT
 		const Shader::Details &current = get_program();
+#endif  // !USE_VERTEX_ARRAY_OBJECT
 		current_ = program;
 		const Shader::Details &details = get_program();
 		glUseProgram(details.program);
 
 		set_projection_matrix(details, ortho_);
 
+#ifndef USE_VERTEX_ARRAY_OBJECT
 		if (details.texture0 != current.texture0)
 		{
 			if (!details.texture0)
@@ -192,6 +195,7 @@ void ShaderManager::use(const unsigned int program)
 			else
 				glEnableVertexAttribArray(Shader::kAttributeTexCoord);
 		}
+#endif  // !USE_VERTEX_ARRAY_OBJECT
 	}
 }
 
