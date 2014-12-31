@@ -9,7 +9,7 @@ before_build:
   - ren SDL2-2.0.3 SDL
   - mkdir "%APPVEYOR_BUILD_FOLDER%-build"
   - cd "%APPVEYOR_BUILD_FOLDER%-build"
-  - cmake -DUSE_HEIMDALL=1 -G "Visual Studio 12" %APPVEYOR_BUILD_FOLDER%
+  - cmake -DUSE_HEIMDALL=1 -DUSE_PHYSICS=1 -DUSE_SPINE=1 -G "Visual Studio 12" %APPVEYOR_BUILD_FOLDER%
 build_script:
   - msbuild "%APPVEYOR_BUILD_FOLDER%-build\Rainbow.sln" /maxcpucount /verbosity:minimal /logger:"%ProgramFiles%\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 test: off
