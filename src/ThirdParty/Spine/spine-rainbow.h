@@ -12,7 +12,6 @@
 #include <spine/AnimationState.h>
 #include <spine/AnimationStateData.h>
 
-#include "Common/Vec2.h"
 #include "Graphics/Buffer.h"
 #include "Graphics/Drawable.h"
 #include "Graphics/VertexArray.h"
@@ -31,8 +30,10 @@ public:
 	Skeleton(spSkeletonData *data, spAtlas *atlas);
 	~Skeleton();
 
+	spSkeleton* skeleton() { return skeleton_; }
+
 	/// Returns the vertex array object.
-	inline const VertexArray& vertex_array() const;
+	const VertexArray& vertex_array() const { return array_; }
 
 	/// Flips the rendering of the skeleton horizontally and/or vertically.
 	void set_flip(const bool x, const bool y);
@@ -43,7 +44,7 @@ public:
 	void set_position(const Vec2f &position);
 
 	/// Sets time dilation factor.
-	inline void set_time_scale(const float scale);
+	void set_time_scale(const float scale) { time_scale_ = scale; }
 
 	/// Queues an animation to be played after a delay. If \p delay is <= 0, the
 	/// duration of previous animation is used plus the negative delay.
@@ -104,16 +105,6 @@ private:
 	spSkeletonData *data_;
 };
 
-const VertexArray& Skeleton::vertex_array() const
-{
-	return array_;
-}
-
-void Skeleton::set_time_scale(const float scale)
-{
-	time_scale_ = scale;
-}
-
 namespace Spine
 {
 	namespace Lua
@@ -154,6 +145,9 @@ namespace Spine
 			lua_State *state_;
 			Rainbow::Lua::ScopedRef listener_;
 
+			// Implement Drawable.
+
+			void move_impl(const Vec2f &delta) override;
 			void draw_impl() override;
 			void update_impl(const unsigned long dt) override;
 		};

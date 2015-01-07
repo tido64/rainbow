@@ -5,35 +5,26 @@
 #ifndef GRAPHICS_DRAWABLE_H_
 #define GRAPHICS_DRAWABLE_H_
 
+#include "Common/Vec2.h"
+
 /// A drawable interface.
 class Drawable
 {
 public:
 	virtual ~Drawable() = default;
 
-	inline Drawable* get();
+	Drawable* get() { return this; }
 
-	inline void draw();
-	inline void update(const unsigned long dt);
+	void move(const Vec2f &delta) { move_impl(delta); }
+
+	void draw() { draw_impl(); }
+	void update(const unsigned long dt) { update_impl(dt); }
 
 private:
+	virtual void move_impl(const Vec2f &) {}
+
 	virtual void draw_impl() = 0;
 	virtual void update_impl(const unsigned long dt) = 0;
 };
-
-Drawable* Drawable::get()
-{
-	return this;
-}
-
-void Drawable::draw()
-{
-	draw_impl();
-}
-
-void Drawable::update(const unsigned long dt)
-{
-	update_impl(dt);
-}
 
 #endif

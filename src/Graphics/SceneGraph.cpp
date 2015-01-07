@@ -47,6 +47,9 @@ namespace SceneGraph
 		for_each(this, [](const Node *node, const Vec2f &delta) {
 			switch (node->type_)
 			{
+				case Type::Drawable:
+					node->drawable_->move(delta);
+					break;
 				case Type::Label:
 					node->label_->move(delta);
 					break;

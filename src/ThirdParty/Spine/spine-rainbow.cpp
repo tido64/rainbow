@@ -676,6 +676,12 @@ namespace Spine
 			});
 		}
 
+		void Skeleton::move_impl(const Vec2f &delta)
+		{
+			skeleton_->skeleton()->x += delta.x;
+			skeleton_->skeleton()->y += delta.y;
+		}
+
 		void Skeleton::draw_impl()
 		{
 			skeleton_->draw();
