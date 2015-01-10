@@ -13,9 +13,9 @@
 
 /// Manages texture resources.
 ///
-/// Generates and reuses texture ids whenever possible. This should eliminate
-/// problems caused by drivers that return deleted ids before they are actually
-/// deleted. This causes black textures.
+/// Generates and reuses texture names whenever possible. This should eliminate
+/// problems caused by drivers that return deleted names before they are
+/// actually deleted. This causes black textures.
 ///
 /// Deleted textures are shelved until they are needed again. In order to
 /// minimize memory use, they are resized to a minimal texture dimension. Of
@@ -27,14 +27,30 @@ class TextureManager : public Global<TextureManager>
 	friend class Renderer;
 
 public:
+#if RECORD_VMEM_USAGE
+	struct MemoryUsage
+	{
+		double used;
+		double peak;
+	};
+
+	/// Returns total video memory used by textures.
+	MemoryUsage memory_usage() const;
+#endif
+
+	void set_filter(const int filter);
+
 	/// Makes texture active on current rendering target.
-	/// \param id  Texture id to bind. If omitted, bind the default texture.
-	void bind(const unsigned int id = 0);
+	/// \param name  Name of texture. If omitted, binds the default texture.
+	void bind(const unsigned int name = 0);
 
 	/// Makes texture active on specified unit.
-	/// \param id    Texture id to bind.
+	/// \param name  Name of texture.
 	/// \param unit  Texture unit to bind on.
-	void bind(const unsigned int id, const unsigned int unit);
+	void bind(const unsigned int name, const unsigned int unit);
+
+	/// Generates an empty texture.
+	unsigned int create();
 
 	/// Creates a texture.
 	/// \param internal_format  Preferred renderer's internal format.
@@ -42,7 +58,7 @@ public:
 	/// \param height           Height of the texture.
 	/// \param format           Format of the bitmap data.
 	/// \param data             Bitmap data.
-	/// \return Texture id.
+	/// \return Texture name.
 	unsigned int create(const unsigned int internal_format,
 	                    const unsigned int width,
 	                    const unsigned int height,
@@ -55,51 +71,59 @@ public:
 	/// \param height  Height of the texture.
 	/// \param size    Data size.
 	/// \param data    Compressed bitmap data.
-	/// \return Texture id.
+	/// \return Texture name.
 	unsigned int create_compressed(const unsigned int format,
 	                               const unsigned int width,
 	                               const unsigned int height,
 	                               const size_t size,
 	                               const void *data);
 
-#if RECORD_VMEM_USAGE
-	/// Returns total video memory used (and unused) by textures.
-	void memory_usage(double &used, double &unused, double &peak) const;
-#endif
-
 	/// Purges unused texture memory.
-	inline void purge();
+	void purge();
 
-	/// Deletes texture. In reality, the texture is put in a recycle bin and may
-	/// be reused unless purged.
-	/// \param id  Texture to delete.
-	void remove(const unsigned int id);
+	/// Deletes texture.
+	/// \param name  Name of texture to delete.
+	void remove(const unsigned int name);
 
-	void set_filter(const int filter);
+	/// Uploads bitmap data to specified texture.
+	/// \param name             Name of target texture.
+	/// \param internal_format  Preferred renderer's internal format.
+	/// \param width            Width of the texture.
+	/// \param height           Height of the texture.
+	/// \param format           Format of the bitmap data.
+	/// \param data             Bitmap data.
+	void upload(const unsigned int name,
+	            const unsigned int internal_format,
+	            const unsigned int width,
+	            const unsigned int height,
+	            const unsigned int format,
+	            const void *data);
 
 private:
-	static const size_t kNumTextureUnits = 2;
-
-	/// Structure storing a texture's id and area.
-	struct TextureId
+#if RECORD_VMEM_USAGE
+	struct TextureName
 	{
-		unsigned int id;  ///< Texture id.
-		unsigned int sz;  ///< Texture area.
+		unsigned int name;
+		unsigned int size;
 
-		friend bool operator==(const TextureId &a, const TextureId &b)
-		{
-			return a.id == b.id;
-		}
+		TextureName(const unsigned int name_) : name(name_), size(0) {}
 
-		friend bool operator>(const TextureId &a, const TextureId &b)
+		operator unsigned int() const { return name; }
+
+		friend bool operator==(const TextureName &t, const unsigned int name)
 		{
-			return a.sz > b.sz;
+			return t.name == name;
 		}
 	};
+#else
+	using TextureName = unsigned int;
+#endif
+
+	static const size_t kNumTextureUnits = 2;
 
 	unsigned int active_[kNumTextureUnits];
-	std::vector<TextureId> textures_;  ///< Stores texture ids currently in use.
-	std::vector<TextureId> recycled_;  ///< Stores reusable texture ids.
+	std::vector<TextureName> textures_;   ///< Stores texture names currently in use.
+	std::vector<unsigned int> recycled_;  ///< Stores reusable texture names.
 	int mag_filter_;
 	int min_filter_;
 
@@ -109,21 +133,15 @@ private:
 #endif
 
 	TextureManager();
-	~TextureManager();
+	~TextureManager() = default;
 
-	/// Returns a recycled texture id or creates a new one, ready for upload.
-	TextureId create_texture(const unsigned int size);
-
+#if RECORD_VMEM_USAGE
 	/// Prints total video memory used by textures.
 	void print_usage() const;
 
-	/// Clears and deletes textures.
-	void purge(std::vector<TextureId> &textures);
+	/// Records usage of texture memory.
+	void record_usage(TextureName &name, const unsigned int size);
+#endif
 };
-
-void TextureManager::purge()
-{
-	purge(recycled_);
-}
 
 #endif

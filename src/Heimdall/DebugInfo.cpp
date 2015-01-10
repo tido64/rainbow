@@ -70,14 +70,13 @@ namespace Heimdall
 		if (!node_->enabled)
 			return;
 
-		double used, peak;
-		TextureManager::Get()->memory_usage(used, peak, peak);
+		const auto &usage = TextureManager::Get()->memory_usage();
 		snprintf(const_cast<char*>(label_.text()),
 		         kBufferSize,
 		         kStringInfoFormat,
 		         dt,
-		         used,
-		         peak);
+		         usage.used,
+		         usage.peak);
 		label_.set_needs_update(Label::kStaleBuffer);
 	}
 }
