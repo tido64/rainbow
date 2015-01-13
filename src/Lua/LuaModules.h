@@ -32,6 +32,7 @@ NS_RAINBOW_LUA_BEGIN
 		reg<Animation>(L);
 		reg<Font>(L);
 		reg<Label>(L);
+		reg<ScopedNode>(L);
 		reg<Sprite>(L);
 		reg<SpriteBatch>(L);
 		reg<Texture>(L);

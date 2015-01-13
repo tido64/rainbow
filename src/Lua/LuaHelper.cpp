@@ -179,10 +179,10 @@ NS_RAINBOW_LUA_BEGIN
 		lua_replace(L, n);
 	}
 
-	int sethook(lua_State *L, const int mask)
+	void sethook(lua_State *L, const int mask)
 	{
 		if (g_level >= 0)
-			return 0;
+			return;
 
 		int depth = -1;
 		lua_Debug ar;
@@ -196,7 +196,7 @@ NS_RAINBOW_LUA_BEGIN
 			g_callstack[depth - g_level].source = ar.source;
 		}
 
-		return lua_sethook(L, lua_Hook, mask, 0);
+		lua_sethook(L, lua_Hook, mask, 0);
 	}
 
 	void* topointer(lua_State *L, const char *name)

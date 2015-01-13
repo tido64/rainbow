@@ -23,14 +23,13 @@
 -- (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
 local module_path = (...):match("(.*[./\\])[^./\\]+") or ""
-local setmetatable = setmetatable
+local F = require(module_path .. "Functional")
+
+local scenegraph = rainbow.scenegraph
+local scoped_node = rainbow.scoped_node
 local table_unpack = table.unpack or unpack
 
-local F = require(module_path .. "Functional")
-local scenegraph = rainbow.scenegraph
-
 local Parallax = {
-	__gc = nil,
 	__index = nil,
 	hide = nil,
 	move = nil,
@@ -41,26 +40,14 @@ local Parallax = {
 
 Parallax.__index = setmetatable(Parallax, {
 	__call = function(Parallax, layers)
-		local self = setmetatable({
-			layers = nil,
-			node = scenegraph:add_node()
-		}, Parallax)
+		local node = scenegraph:add_node()
 		local f = function(layer)
 			local batch, vx, vy = table_unpack(layer)
-			return { scenegraph:add_batch(self.node, batch), vx, vy }
+			return {scenegraph:add_batch(node, batch), vx, vy}
 		end
-		self.layers = F.map(f, layers)
-		return self
+		return {[0] = scoped_node(node), layers = F.map(f, layers), node = node}
 	end
 })
-
-function Parallax:__gc()
-	scenegraph:remove(self.node)
-	for i = 1, #self.layers do
-		self.layers[i] = nil
-	end
-	self.layers = nil
-end
 
 function Parallax:hide()
 	scenegraph:disable(self.node)

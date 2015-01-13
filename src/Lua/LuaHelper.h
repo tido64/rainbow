@@ -127,8 +127,8 @@ NS_RAINBOW_LUA_BEGIN
 	void replacetable(lua_State *L, const int n);
 
 	/// Sets debugging hook.
-	int sethook(lua_State *L,
-	            const int mask = LUA_MASKCALL | LUA_MASKRET | LUA_MASKLINE);
+	void sethook(lua_State *L,
+	             const int mask = LUA_MASKCALL | LUA_MASKRET | LUA_MASKLINE);
 
 	/// Returns the value returned from luaL_checkinteger() or lua_tointeger(),
 	/// depending on whether NDEBUG is defined.

@@ -37,10 +37,23 @@ NS_RAINBOW_LUA_BEGIN
 		static int set_tag(lua_State *);
 		static int move(lua_State *);
 
-		::SceneGraph::Node *node;
+		::SceneGraph::Node *node_;
 
 		SceneGraph(::SceneGraph::Node *);
 		~SceneGraph() = default;
+	};
+
+	class ScopedNode : public Bind<ScopedNode>
+	{
+		friend Bind;
+
+	public:
+		ScopedNode(lua_State *L);
+		~ScopedNode();
+
+	private:
+		::SceneGraph::Node *node_;
+		lua_State *state_;
 	};
 } NS_RAINBOW_LUA_END
 
