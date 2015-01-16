@@ -1,3 +1,5 @@
+if(NOT ANDROID)
+
 set(ZLIB_INCLUDE_DIR ${LOCAL_LIBRARY}/zlib)
 
 set(ZLIB_SRCZ  adler32.c crc32.c deflate.c infback.c inffast.c inflate.c
@@ -18,3 +20,5 @@ set(ZLIB_LIBRARY z)
 add_library(${ZLIB_LIBRARY} STATIC ${ZLIB_SRC})
 set_property(TARGET ${ZLIB_LIBRARY} APPEND PROPERTY INCLUDE_DIRECTORIES ${ZLIB_INCLUDE_DIR})
 add_dependencies(rainbow ${ZLIB_LIBRARY})
+
+endif()
