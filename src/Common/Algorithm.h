@@ -63,6 +63,9 @@ namespace Rainbow
 		}
 	};
 
+	template<typename T, size_t N>
+	size_t array_size(const T (&)[N]) pure;
+
 	template<typename T>
 	T clamp(const T x, const T min_val, const T max_val) pure;
 
@@ -101,6 +104,12 @@ namespace Rainbow
 
 	/// Converts a UTF-8 character to UTF-32.
 	inline utf_t utf8_decode(const unsigned char *str) pure;
+
+	template<typename T, size_t N>
+	size_t array_size(const T (&)[N])
+	{
+		return N;
+	}
 
 	template<typename T>
 	T clamp(const T x, const T min_val, const T max_val)

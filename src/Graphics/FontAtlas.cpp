@@ -23,11 +23,13 @@
 #include "Graphics/OpenGL.h"
 #include "Graphics/TextureManager.h"
 
+using Rainbow::array_size;
+
+using uchar_t = unsigned char;
+using uint_t = unsigned int;
+
 namespace
 {
-	using uchar_t = unsigned char;
-	using uint_t = unsigned int;
-
 	const float kGlyphMargin = 2.0f;     ///< Margin around rendered font glyph.
 	const uint_t kASCIIOffset = 32;      ///< Start loading from character 32.
 	const uint_t kDPI = 96;              ///< Horizontal/vertical resolution in dpi.
@@ -159,8 +161,8 @@ FontAtlas::FontAtlas(const Data &font, const float pt)
 	    0x00e5,  // LATIN SMALL LETTER A WITH RING ABOVE
 	    0x00e6,  // LATIN SMALL LETTER AE
 	    0x00f8,  // LATIN SMALL LETTER O WITH STROKE
-	    0};
-	for (uint_t i = 0; characters[i]; ++i)
+	};
+	for (size_t i = 0; i < array_size(characters); ++i)
 		charset_[kNumCharacters + i].code = characters[i];
 #endif
 
@@ -173,8 +175,7 @@ FontAtlas::FontAtlas(const Data &font, const float pt)
 		return;
 
 	FT_Set_Char_Size(face, 0, pt_ * kPixelFormat, kDPI, kDPI);
-	const Vec2u &max =
-	    max_glyph_size(face, charset_, sizeof(charset_) / sizeof(charset_[0]));
+	const Vec2u &max = max_glyph_size(face, charset_, array_size(charset_));
 	if (max.is_zero())
 		return;
 	const Vec2u size(Rainbow::next_pow2(max.x * kNumGlyphsPerColRow),

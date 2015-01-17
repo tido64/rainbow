@@ -10,7 +10,7 @@
 #include "FileSystem/File.h"
 #include "FileSystem/Path.h"
 
-#define strllen(literal) sizeof(literal) / sizeof(char) - sizeof(char)
+#define strllen(literal) (Rainbow::array_size(literal) - 1)
 
 namespace ConFuoco
 {
@@ -150,5 +150,4 @@ namespace ConFuoco
 	}
 }
 
-#undef strllen
 #endif

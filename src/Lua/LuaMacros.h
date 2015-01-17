@@ -5,6 +5,8 @@
 #ifndef LUA_LUAMACROS_H_
 #define LUA_LUAMACROS_H_
 
+#include "Common/Algorithm.h"
+
 #define NS_RAINBOW_LUA_BEGIN namespace Rainbow { namespace Lua
 #define NS_RAINBOW_LUA_END }
 
@@ -12,7 +14,7 @@
 	namespace Rainbow { namespace Lua { namespace module
 #define NS_RAINBOW_LUA_MODULE_END(module) }}
 
-#define strllen(k) (sizeof(k) / sizeof(k[0]) - 1)
+#define strllen(literal) (Rainbow::array_size(literal) - 1)
 
 #define luaR_rawsetboolean(L, k, v) \
 	Rainbow::Lua::rawset<bool>(L, k, strllen(k), (v))
