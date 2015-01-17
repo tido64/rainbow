@@ -12,17 +12,6 @@
 #include "FileSystem/Path.h"
 #include "Lua/LuaHelper.h"
 
-namespace
-{
-	struct LuaStateDeleter
-	{
-		void operator()(lua_State *L) const
-		{
-			lua_close(L);
-		}
-	};
-}
-
 namespace Rainbow
 {
 	Config::Config()
@@ -42,7 +31,8 @@ namespace Rainbow
 		if (!config)
 			return;
 
-		std::unique_ptr<lua_State, LuaStateDeleter> L(luaL_newstate());
+		std::unique_ptr<lua_State, decltype(&lua_close)> L(luaL_newstate(),
+		                                                   lua_close);
 		if (Lua::load(L.get(), config, kConfigModule) == 0)
 			return;
 
