@@ -16,6 +16,8 @@ namespace Rainbow
 	///   Specifies whether the accelerometer is used.
 	/// - <tt>allow_high_dpi = false|true</tt>
 	///   Specifies whether to create windows in high DPI mode.
+	/// - <tt>msaa = 0|2|4|8</tt>
+	///   Sets number of samples for multisample anti-aliasing.
 	/// - <tt>resolution = { width, height }</tt>
 	///   Specifies the preferred screen resolution or window size. It also
 	///   determines whether we are in landscape or portrait mode.
@@ -27,7 +29,8 @@ namespace Rainbow
 	///
 	/// - <tt>accelerometer = true</tt>
 	/// - <tt>allow_high_dpi = false</tt>
-	/// - <tt>resolution = { 0, 0 }</tt> (which also implies landscape mode)
+	/// - <tt>msaa = 0</tt>
+	/// - <tt>resolution = {0, 0}</tt> (which also implies landscape mode)
 	/// - <tt>suspend_on_focus_lost = true</tt>
 	class Config
 	{
@@ -46,6 +49,9 @@ namespace Rainbow
 		/// Returns whether the screen is in portrait mode.
 		bool is_portrait() const { return width_ < height_; }
 
+		/// Returns number of samples for multisample anti-aliasing.
+		unsigned int msaa() const { return msaa_; }
+
 		/// Returns whether we need to use the accelerometer.
 		bool needs_accelerometer() const { return accelerometer_; }
 
@@ -58,6 +64,7 @@ namespace Rainbow
 		bool suspend_;
 		int width_;
 		int height_;
+		unsigned int msaa_;
 	};
 }
 

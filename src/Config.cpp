@@ -16,7 +16,7 @@ namespace Rainbow
 {
 	Config::Config()
 	    : accelerometer_(true), high_dpi_(false), suspend_(true), width_(0),
-	      height_(0)
+	      height_(0), msaa_(0)
 	{
 		const char kConfigModule[] = "config";
 
@@ -44,6 +44,16 @@ namespace Rainbow
 		lua_getglobal(L.get(), "allow_high_dpi");
 		if (lua_isboolean(L.get(), -1))
 			high_dpi_ = lua_toboolean(L.get(), -1);
+
+		lua_getglobal(L.get(), "msaa");
+		if (lua_isnumber(L.get(), -1))
+		{
+			msaa_ = Lua::tointeger(L.get(), -1) &
+			        (std::numeric_limits<decltype(msaa_)>::max() - 1);
+			const auto msaa2 = next_pow2(msaa_);
+			if (msaa2 != msaa_)
+				msaa_ = msaa2 >> 1;
+		}
 #endif
 
 		lua_getglobal(L.get(), "resolution");

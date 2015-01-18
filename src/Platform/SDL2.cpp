@@ -179,6 +179,11 @@ SDLContext::SDLContext(const Rainbow::Config &config)
 	SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
 	SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
 	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 0);
+	if (config.msaa() > 0)
+	{
+		SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
+		SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, config.msaa());
+	}
 
 	const uint32_t allow_high_dpi = config.high_dpi() ? SDL_WINDOW_ALLOW_HIGHDPI
 	                                                  : 0;
@@ -201,7 +206,18 @@ SDLContext::SDLContext(const Rainbow::Config &config)
 
 	SDL_GL_SetSwapInterval(1);
 	vsync_ = SDL_GL_GetSwapInterval() == 1;
-	LOGI("SDL: Sync with vertical retrace: %s", vsync_ ? "Yes" : "No");
+
+#ifndef NDEBUG
+	const Vec2i &resolution = drawable_size();
+	LOGI("SDL: Resolution: %ix%i", resolution.x, resolution.y);
+	int msaa = 0;
+	SDL_GL_GetAttribute(SDL_GL_MULTISAMPLESAMPLES, &msaa);
+	if (msaa > 0)
+		LOGI("SDL: Anti-aliasing: %ix MSAA", msaa);
+	else
+		LOGI("SDL: Anti-aliasing: Off");
+	LOGI("SDL: Vertical sync: %s", vsync_ ? "Yes" : "No");
+#endif
 }
 
 SDLContext::~SDLContext()
