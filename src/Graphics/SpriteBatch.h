@@ -26,22 +26,27 @@ public:
 	~SpriteBatch();
 
 	/// Returns the vertex count.
-	inline unsigned int count() const;
+	unsigned int count() const { return count_ * 6; }
 
 	/// Returns current normal map.
-	inline const TextureAtlas& normal() const;
-
-	/// Returns a reference to the sprite at index \p i.
-	inline Sprite::Ref sprite(const unsigned int i) const;
+	const TextureAtlas& normal() const
+	{
+		R_ASSERT(normal_.get(), "Normal texture is not set");
+		return *normal_.get();
+	}
 
 	/// Returns the sprites array.
-	inline Sprite* sprites() const;
+	Sprite* sprites() const { return sprites_.get(); }
 
 	/// Returns current texture.
-	inline const TextureAtlas& texture() const;
+	const TextureAtlas& texture() const
+	{
+		R_ASSERT(texture_.get(), "Texture is not set");
+		return *texture_.get();
+	}
 
 	/// Returns the vertex array object.
-	inline const VertexArray& vertex_array() const;
+	const VertexArray& vertex_array() const { return array_; }
 
 	/// Assigns a normal map.
 	void set_normal(SharedPtr<TextureAtlas> texture);
@@ -53,8 +58,8 @@ public:
 	/// \param x,y     Position of the texture assigned to the sprite.
 	/// \param width   Width of the texture and, consequently, the sprite.
 	/// \param height  Height of the texture and, consequently, the sprite.
-	/// \return The index of the newly created sprite, positioned at (0,0).
-	unsigned int add(const int x, const int y, const int width, const int height);
+	/// \return Reference to the newly created sprite, positioned at (x,y).
+	Sprite::Ref add(const int x, const int y, const int width, const int height);
 
 	/// Binds all used textures.
 	void bind_textures() const;
@@ -62,9 +67,9 @@ public:
 	/// Creates a sprite.
 	/// \param width   Width of the sprite.
 	/// \param height  Height of the sprite.
-	/// \return The index of the newly created sprite, positioned at (0,0).
-	unsigned int create_sprite(const unsigned int width,
-	                           const unsigned int height);
+	/// \return Reference to the newly created sprite, positioned at (0,0).
+	Sprite::Ref create_sprite(const unsigned int width,
+	                          const unsigned int height);
 
 	/// Moves all sprites by (x,y).
 	void move(const Vec2f &);
@@ -94,37 +99,5 @@ private:
 	template<typename T>
 	void set_buffer(T *buffer);
 };
-
-unsigned int SpriteBatch::count() const
-{
-	return count_ * 6;
-}
-
-const TextureAtlas& SpriteBatch::normal() const
-{
-	R_ASSERT(normal_.get(), "Normal texture is not set");
-	return *normal_.get();
-}
-
-Sprite::Ref SpriteBatch::sprite(const unsigned int i) const
-{
-	return Sprite::Ref(this, i);
-}
-
-Sprite* SpriteBatch::sprites() const
-{
-	return sprites_.get();
-}
-
-const TextureAtlas& SpriteBatch::texture() const
-{
-	R_ASSERT(texture_.get(), "Texture is not set");
-	return *texture_.get();
-}
-
-const VertexArray& SpriteBatch::vertex_array() const
-{
-	return array_;
-}
 
 #endif

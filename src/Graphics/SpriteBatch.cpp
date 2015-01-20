@@ -71,16 +71,15 @@ void SpriteBatch::bind_textures() const
 	texture_->bind();
 }
 
-unsigned int
-SpriteBatch::add(const int x, const int y, const int w, const int h)
+Sprite::Ref SpriteBatch::add(const int x, const int y, const int w, const int h)
 {
-	const unsigned int idx = create_sprite(w, h);
-	sprites_[idx].set_texture(texture_->define(Vec2i(x, y), w, h));
-	return idx;
+	auto sprite = create_sprite(w, h);
+	sprite->set_texture(texture_->define(Vec2i(x, y), w, h));
+	return sprite;
 }
 
-unsigned int SpriteBatch::create_sprite(const unsigned int width,
-                                        const unsigned int height)
+Sprite::Ref SpriteBatch::create_sprite(const unsigned int width,
+                                       const unsigned int height)
 {
 	R_ASSERT(count_ <= Renderer::kNumSprites, "Hard-coded limit reached");
 
@@ -99,7 +98,7 @@ unsigned int SpriteBatch::create_sprite(const unsigned int width,
 		std::uninitialized_fill_n(normals_ + offset, 4, Vec2f());
 		sprite.set_normal_buffer(normals_ + offset);
 	}
-	return count_++;
+	return Sprite::Ref(this, count_++);
 }
 
 void SpriteBatch::move(const Vec2f &delta)

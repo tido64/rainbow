@@ -49,8 +49,8 @@ NS_RAINBOW_LUA_BEGIN
 		const int h = lua_tointeger(L, 5);
 
 		lua_settop(L, 0);
-		lua_pushlightuserdata(L, self->get());
-		lua_pushinteger(L, self->batch_.add(x, y, w, h));
+		auto sprite = self->batch_.add(x, y, w, h);
+		lua_pushlightuserdata(L, &sprite);
 		return alloc<Sprite>(L);
 	}
 
@@ -68,8 +68,8 @@ NS_RAINBOW_LUA_BEGIN
 		const int h = lua_tointeger(L, 3);
 
 		lua_settop(L, 0);
-		lua_pushlightuserdata(L, self->get());
-		lua_pushinteger(L, self->batch_.create_sprite(w, h));
+		auto sprite = self->batch_.create_sprite(w, h);
+		lua_pushlightuserdata(L, &sprite);
 		return alloc<Sprite>(L);
 	}
 

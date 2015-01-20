@@ -40,8 +40,7 @@ NS_RAINBOW_LUA_BEGIN
 	};
 
 	Sprite::Sprite(lua_State *L)
-	    : sprite_(static_cast<SpriteBatch*>(lua_touserdata(L, 1))->
-	                  sprite(static_cast<uint_t>(lua_tointeger(L, 2)))) {}
+	    : sprite_(*static_cast<::Sprite::Ref*>(lua_touserdata(L, 1))) {}
 
 	int Sprite::get_angle(lua_State *L)
 	{
