@@ -13,7 +13,7 @@
 
 class Data;
 
-namespace Rainbow
+namespace rainbow
 {
 	/// Simple game loop for Lua-scripted games. Must be created after having
 	/// set up an OpenGL context.
@@ -48,7 +48,7 @@ namespace Rainbow
 
 #ifdef USE_HEIMDALL
 	protected:
-		/// Used by Heimdall::Gatekeeper to retrieve Lua state.
+		/// Used by heimdall::Gatekeeper to retrieve Lua state.
 		struct lua_State* state() const { return lua_; }
 #endif
 
@@ -100,7 +100,7 @@ namespace Rainbow
 #ifdef USE_HEIMDALL
 #	include "Heimdall/Gatekeeper.h"
 #else
-using Director = Rainbow::Director;
+using Director = rainbow::Director;
 #endif
 
 #endif

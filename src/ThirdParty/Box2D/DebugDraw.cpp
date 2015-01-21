@@ -44,9 +44,9 @@ namespace b2
 
 		if (g_debug_draw_program == 0)
 		{
-			Shader::ShaderParams shaders[] = {
-			    {Shader::kTypeVertex, 0, Rainbow::Shaders::kSimple2Dv},
-			    {Shader::kTypeFragment, 0, Rainbow::Shaders::kSimplef},
+			Shader::Params shaders[] = {
+			    {Shader::kTypeVertex, 0, rainbow::shaders::kSimple2Dv},
+			    {Shader::kTypeFragment, 0, rainbow::shaders::kSimplef},
 			    {Shader::kTypeInvalid, 0, nullptr}};
 			const Shader::AttributeParams attributes[] = {
 			    {Shader::kAttributeVertex, "vertex"},

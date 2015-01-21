@@ -10,7 +10,7 @@
 #include "Graphics/Renderer.h"
 #include "Heimdall/Style.h"
 
-namespace Heimdall
+namespace heimdall
 {
 	Overlay::Overlay() : node_(nullptr), texture_(0) {}
 
@@ -32,7 +32,7 @@ namespace Heimdall
 		    GL_LUMINANCE, 64, 64, GL_LUMINANCE, white);
 
 		SpriteVertex vertices[4];
-		vertices[0].color       = Color::Overlay();
+		vertices[0].color       = color::Overlay();
 		vertices[0].texcoord    = Vec2f(0.5f, 0.5f);
 		vertices[1].color       = vertices[0].color;
 		vertices[1].texcoord    = vertices[0].texcoord;

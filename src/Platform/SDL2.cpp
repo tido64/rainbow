@@ -66,7 +66,7 @@ namespace
 #endif
 	}
 
-	Vec2i window_size(const Rainbow::Config &config)
+	Vec2i window_size(const rainbow::Config &config)
 	{
 		return (!config.width() || !config.height())
 		    ? Vec2i(1280, 720)
@@ -76,7 +76,7 @@ namespace
 	class SDLContext
 	{
 	public:
-		SDLContext(const Rainbow::Config &config);
+		SDLContext(const rainbow::Config &config);
 		~SDLContext();
 
 		Vec2i drawable_size() const;
@@ -99,7 +99,7 @@ namespace
 	class RainbowController
 	{
 	public:
-		RainbowController(SDLContext &context, const Rainbow::Config &config);
+		RainbowController(SDLContext &context, const rainbow::Config &config);
 
 		const char* error() const;
 
@@ -138,14 +138,14 @@ int main(int argc, char *argv[])
 		{
 #ifdef RAINBOW_TEST
 			Path::set_current(Path());
-			return Rainbow::run_tests(argc, argv);
+			return rainbow::run_tests(argc, argv);
 #else
 			return 0;
 #endif
 		}
 	}
 
-	const Rainbow::Config config;
+	const rainbow::Config config;
 	SDLContext context(config);
 	if (!context)
 		return 1;
@@ -160,7 +160,7 @@ int main(int argc, char *argv[])
 	return 0;
 }
 
-SDLContext::SDLContext(const Rainbow::Config &config)
+SDLContext::SDLContext(const rainbow::Config &config)
     : window_(nullptr), vsync_(false), fullscreen_(0),
       position_({SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED}),
       size_(::window_size(config)), context_(nullptr)
@@ -284,7 +284,7 @@ SDLContext::operator bool() const
 }
 
 RainbowController::RainbowController(
-    SDLContext &context, const Rainbow::Config &config)
+    SDLContext &context, const rainbow::Config &config)
     : context_(context), suspend_on_focus_lost_(config.suspend())
 {
 	if (director_.terminated())

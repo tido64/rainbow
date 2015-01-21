@@ -23,12 +23,12 @@ void Input::unsubscribe(InputListener *const i)
 void Input::accelerated(const double x, const double y, const double z, const double t)
 {
 	acceleration_.update(x, y, z, t);
-	Rainbow::Lua::Input::accelerated(lua_state_, acceleration_);
+	rainbow::lua::input::accelerated(lua_state_, acceleration_);
 }
 
 void Input::clear()
 {
-	Rainbow::Lua::Input::clear(lua_state_);
+	rainbow::lua::input::clear(lua_state_);
 }
 
 #ifdef RAINBOW_BUTTONS
@@ -37,7 +37,7 @@ void Input::on_key_down(const Key &k)
 	if (for_each(next(), [&k](InputListener *i) { return i->on_key_down(k); }))
 		return;
 
-	Rainbow::Lua::Input::on_key_down(lua_state_, k);
+	rainbow::lua::input::on_key_down(lua_state_, k);
 }
 
 void Input::on_key_up(const Key &k)
@@ -45,7 +45,7 @@ void Input::on_key_up(const Key &k)
 	if (for_each(next(), [&k](InputListener *i) { return i->on_key_up(k); }))
 		return;
 
-	Rainbow::Lua::Input::on_key_up(lua_state_, k);
+	rainbow::lua::input::on_key_up(lua_state_, k);
 }
 #endif
 
@@ -57,7 +57,7 @@ void Input::on_touch_began(Touch *const touches, const size_t count)
 	if (for_each(next(), std::move(began)))
 		return;
 
-	Rainbow::Lua::Input::on_touch_began(lua_state_, touches, count);
+	rainbow::lua::input::on_touch_began(lua_state_, touches, count);
 }
 
 void Input::on_touch_canceled()
@@ -66,7 +66,7 @@ void Input::on_touch_canceled()
 	if (for_each(next(), std::move(canceled)))
 		return;
 
-	Rainbow::Lua::Input::on_touch_canceled(lua_state_);
+	rainbow::lua::input::on_touch_canceled(lua_state_);
 }
 
 void Input::on_touch_ended(Touch *const touches, const size_t count)
@@ -77,7 +77,7 @@ void Input::on_touch_ended(Touch *const touches, const size_t count)
 	if (for_each(next(), std::move(ended)))
 		return;
 
-	Rainbow::Lua::Input::on_touch_ended(lua_state_, touches, count);
+	rainbow::lua::input::on_touch_ended(lua_state_, touches, count);
 }
 
 void Input::on_touch_moved(Touch *const touches, const size_t count)
@@ -88,7 +88,7 @@ void Input::on_touch_moved(Touch *const touches, const size_t count)
 	if (for_each(next(), std::move(moved)))
 		return;
 
-	Rainbow::Lua::Input::on_touch_moved(lua_state_, touches, count);
+	rainbow::lua::input::on_touch_moved(lua_state_, touches, count);
 }
 
 void Input::on_end_link_removed(Link *node)

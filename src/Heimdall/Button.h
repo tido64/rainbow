@@ -7,7 +7,7 @@
 
 #include "Graphics/Label.h"
 
-namespace Heimdall
+namespace heimdall
 {
 	class Button
 	{

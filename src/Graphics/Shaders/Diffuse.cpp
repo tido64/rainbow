@@ -9,20 +9,20 @@
 
 namespace
 {
-	Shader::ShaderParams sDiffuseLight2Df {
-		Shader::kTypeFragment, 0, Rainbow::Shaders::kDiffuseLight2Df
+	Shader::Params sDiffuseLight2Df {
+	    Shader::kTypeFragment, 0, rainbow::shaders::kDiffuseLight2Df
 	};
-	Shader::ShaderParams sDiffuseLightNormalf {
-		Shader::kTypeFragment, 0, Rainbow::Shaders::kDiffuseLightNormalf
+	Shader::Params sDiffuseLightNormalf {
+	    Shader::kTypeFragment, 0, rainbow::shaders::kDiffuseLightNormalf
 	};
-	Shader::ShaderParams sNormalMappedf {
-		Shader::kTypeVertex, 0, Rainbow::Shaders::kNormalMappedv
+	Shader::Params sNormalMappedf {
+	    Shader::kTypeVertex, 0, rainbow::shaders::kNormalMappedv
 	};
 }
 
-namespace Rainbow
+namespace rainbow
 {
-	namespace Shaders
+	namespace shaders
 	{
 		Diffuse::Diffuse(const bool normal)
 		    : cutoff_(0), radius_(0), position_(0),
@@ -30,27 +30,24 @@ namespace Rainbow
 		{
 			if (normal)
 			{
-				Shader::ShaderParams shaders[] = {
-					sNormalMappedf,
-					sDiffuseLightNormalf,
-					{ Shader::kTypeInvalid, 0, nullptr }
-				};
+				Shader::Params shaders[] = {
+				    sNormalMappedf,
+				    sDiffuseLightNormalf,
+				    {Shader::kTypeInvalid, 0, nullptr}};
 				const Shader::AttributeParams attributes[] = {
-					{ Shader::kAttributeVertex, "vertex" },
-					{ Shader::kAttributeColor, "color" },
-					{ Shader::kAttributeTexCoord, "texcoord" },
-					{ Shader::kAttributeNormal, "normal" },
-					{ Shader::kAttributeNone, nullptr }
-				};
+				    {Shader::kAttributeVertex, "vertex"},
+				    {Shader::kAttributeColor, "color"},
+				    {Shader::kAttributeTexCoord, "texcoord"},
+				    {Shader::kAttributeNormal, "normal"},
+				    {Shader::kAttributeNone, nullptr}};
 				program_ = ShaderManager::Get()->compile(shaders, attributes);
 			}
 			else
 			{
-				Shader::ShaderParams shaders[] = {
-					{ Shader::kTypeVertex, 0, nullptr },  // kFixed2Dv
-					sDiffuseLight2Df,
-					{ Shader::kTypeInvalid, 0, nullptr }
-				};
+				Shader::Params shaders[] = {
+				    {Shader::kTypeVertex, 0, nullptr},  // kFixed2Dv
+				    sDiffuseLight2Df,
+				    {Shader::kTypeInvalid, 0, nullptr}};
 				program_ = ShaderManager::Get()->compile(shaders, nullptr);
 			}
 			if (program_ == ShaderManager::kInvalidProgram)

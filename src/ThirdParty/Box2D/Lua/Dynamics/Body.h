@@ -15,7 +15,7 @@ NS_B2_LUA_BEGIN
 	int BodyDef(lua_State *L);
 	b2BodyDef GetBodyDef(lua_State *L);
 
-	class Body : public Rainbow::Lua::Bind<Body>
+	class Body : public rainbow::lua::Bind<Body>
 	{
 		friend Bind;
 

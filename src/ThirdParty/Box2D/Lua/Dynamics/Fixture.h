@@ -20,7 +20,7 @@ NS_B2_LUA_BEGIN
 	int FixtureDef(lua_State *L);
 	b2FixtureDef GetFixtureDef(lua_State *L);
 
-	class Fixture : public Rainbow::Lua::Bind<Fixture>
+	class Fixture : public rainbow::lua::Bind<Fixture>
 	{
 		friend Bind;
 

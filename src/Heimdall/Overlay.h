@@ -11,7 +11,7 @@
 #include "Graphics/SpriteVertex.h"
 #include "Graphics/VertexArray.h"
 
-namespace Heimdall
+namespace heimdall
 {
 	class Overlay final : public Drawable
 	{

@@ -9,9 +9,9 @@
 
 struct lua_State;
 
-NS_RAINBOW_LUA_MODULE_BEGIN(IO)
+NS_RAINBOW_LUA_MODULE_BEGIN(io)
 {
 	void init(lua_State *);
-} NS_RAINBOW_LUA_MODULE_END(IO)
+} NS_RAINBOW_LUA_MODULE_END(io)
 
 #endif

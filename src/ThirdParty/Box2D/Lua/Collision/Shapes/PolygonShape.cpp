@@ -42,8 +42,8 @@ NS_B2_LUA_BEGIN
 
 	int PolygonShape::Set(lua_State *L)
 	{
-		Rainbow::Lua::Argument<void*>::is_required(L, 2);
-		Rainbow::Lua::Argument<lua_Number>::is_required(L, 3);
+		rainbow::lua::Argument<void*>::is_required(L, 2);
+		rainbow::lua::Argument<lua_Number>::is_required(L, 3);
 
 		PolygonShape *self = Bind::self(L);
 		if (!self)
@@ -63,8 +63,8 @@ NS_B2_LUA_BEGIN
 
 	int PolygonShape::SetAsBox(lua_State *L)
 	{
-		Rainbow::Lua::Argument<lua_Number>::is_required(L, 2);
-		Rainbow::Lua::Argument<lua_Number>::is_required(L, 3);
+		rainbow::lua::Argument<lua_Number>::is_required(L, 2);
+		rainbow::lua::Argument<lua_Number>::is_required(L, 3);
 
 		PolygonShape *self = Bind::self(L);
 		if (!self)
@@ -77,9 +77,9 @@ NS_B2_LUA_BEGIN
 			self->get()->SetAsBox(lua_tonumber(L, 2), lua_tonumber(L, 3));
 		else
 		{
-			Rainbow::Lua::Argument<lua_Number>::is_required(L, 4);
-			Rainbow::Lua::Argument<lua_Number>::is_required(L, 5);
-			Rainbow::Lua::Argument<lua_Number>::is_required(L, 6);
+			rainbow::lua::Argument<lua_Number>::is_required(L, 4);
+			rainbow::lua::Argument<lua_Number>::is_required(L, 5);
+			rainbow::lua::Argument<lua_Number>::is_required(L, 6);
 
 			self->get()->SetAsBox(lua_tonumber(L, 2),
 			                      lua_tonumber(L, 3),
@@ -99,7 +99,7 @@ NS_B2_LUA_BEGIN
 
 NS_RAINBOW_LUA_BEGIN
 {
-	using b2::Lua::PolygonShape;
+	using b2::lua::PolygonShape;
 
 	template<>
 	const char PolygonShape::Bind::class_name[] = "PolygonShape";

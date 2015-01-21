@@ -46,7 +46,7 @@ namespace
 	};
 }
 
-namespace Heimdall
+namespace heimdall
 {
 	Gatekeeper::Gatekeeper()
 	    : overlay_activator_(&overlay_), monitor_(Path::current()) {}
@@ -102,7 +102,7 @@ namespace Heimdall
 					return;
 
 				LOGI("Reloading '%s'...", library.name());
-				Rainbow::Lua::reload(L, library.open(), library.name());
+				rainbow::lua::reload(L, library.open(), library.name());
 			});
 		}
 

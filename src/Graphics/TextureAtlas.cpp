@@ -15,7 +15,7 @@ TextureAtlas::TextureAtlas(const DataMap &img) : name_(0), width_(0), height_(0)
 {
 	R_ASSERT(img, "Failed to load texture");
 
-	const Rainbow::Image &image = Rainbow::Image::decode(img);
+	const rainbow::Image &image = rainbow::Image::decode(img);
 	if (!image.data)
 		return;
 
@@ -34,14 +34,14 @@ TextureAtlas::TextureAtlas(const DataMap &img) : name_(0), width_(0), height_(0)
 	switch (image.format)
 	{
 #ifdef GL_OES_compressed_ETC1_RGB8_texture
-		case Rainbow::Image::Format::ETC1:
+		case rainbow::Image::Format::ETC1:
 			name_ = TextureManager::Get()->create_compressed(
 			    GL_ETC1_RGB8_OES, image.width, image.height, image.size,
 			    image.data);
 			break;
 #endif  // ETC1
 #ifdef GL_IMG_texture_compression_pvrtc
-		case Rainbow::Image::Format::PVRTC: {
+		case rainbow::Image::Format::PVRTC: {
 			R_ASSERT(image.depth == 2 || image.depth == 4,
 			         "Invalid colour depth");
 			R_ASSERT(image.channels == 3 || image.channels == 4,
@@ -97,7 +97,7 @@ TextureAtlas::TextureAtlas(const DataMap &img) : name_(0), width_(0), height_(0)
 			break;
 		}
 	}
-	Rainbow::Image::release(image);
+	rainbow::Image::release(image);
 }
 
 TextureAtlas::~TextureAtlas()

@@ -11,7 +11,7 @@
 
 #ifndef NDEBUG
 #	define LUA_ASSERT(L, expr, ...) \
-		Rainbow::Lua::verify(L, (expr), __VA_ARGS__)
+		rainbow::lua::verify(L, (expr), __VA_ARGS__)
 #else
 #	define LUA_ASSERT(L, expr, ...) static_cast<void>(0)
 #endif

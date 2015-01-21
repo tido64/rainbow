@@ -9,15 +9,15 @@
 
 namespace
 {
-	class Diffuse : public Rainbow::Lua::Shader,
-	                public Rainbow::Lua::Bind<Diffuse>
+	class Diffuse : public rainbow::lua::Shader,
+	                public rainbow::lua::Bind<Diffuse>
 	{
 		friend Bind;
 
 	public:
 		explicit Diffuse(lua_State *);
 
-		const Rainbow::Shaders::Diffuse* get() const;
+		const rainbow::shaders::Diffuse* get() const;
 
 		int id() const override;
 
@@ -26,16 +26,16 @@ namespace
 		static int set_radius(lua_State *);
 		static int set_position(lua_State *);
 
-		Rainbow::Shaders::Diffuse lighting_;
+		rainbow::shaders::Diffuse lighting_;
 	};
 
 	int diffuse(lua_State *L)
 	{
-		return Rainbow::Lua::alloc<Diffuse>(L);
+		return rainbow::lua::alloc<Diffuse>(L);
 	}
 }
 
-NS_RAINBOW_LUA_MODULE_BEGIN(Shaders)
+NS_RAINBOW_LUA_MODULE_BEGIN(shaders)
 {
 	void init(lua_State *L)
 	{
@@ -47,7 +47,7 @@ NS_RAINBOW_LUA_MODULE_BEGIN(Shaders)
 
 		reg<Diffuse>(L);
 	}
-} NS_RAINBOW_LUA_MODULE_END(Shaders)
+} NS_RAINBOW_LUA_MODULE_END(shaders)
 
 template<>
 const char Diffuse::Bind::class_name[] = "shaders.diffuse";
@@ -65,7 +65,7 @@ const luaL_Reg Diffuse::Bind::functions[] = {
 
 Diffuse::Diffuse(lua_State *L) : lighting_(lua_toboolean(L, 1)) {}
 
-const Rainbow::Shaders::Diffuse* Diffuse::get() const
+const rainbow::shaders::Diffuse* Diffuse::get() const
 {
 	return &lighting_;
 }
@@ -78,7 +78,7 @@ int Diffuse::id() const
 int Diffuse::set_cutoff(lua_State *L)
 {
 	// <diffuse>:set_cutoff(cutoff)
-	Rainbow::Lua::Argument<lua_Number>::is_required(L, 2);
+	rainbow::lua::Argument<lua_Number>::is_required(L, 2);
 
 	Diffuse *self = Bind::self(L);
 	if (!self)
@@ -91,7 +91,7 @@ int Diffuse::set_cutoff(lua_State *L)
 int Diffuse::set_radius(lua_State *L)
 {
 	// <diffuse>:set_radius(radius)
-	Rainbow::Lua::Argument<lua_Number>::is_required(L, 2);
+	rainbow::lua::Argument<lua_Number>::is_required(L, 2);
 
 	Diffuse *self = Bind::self(L);
 	if (!self)
@@ -104,16 +104,16 @@ int Diffuse::set_radius(lua_State *L)
 int Diffuse::set_position(lua_State *L)
 {
 	// <diffuse>:set_position(x, y, z = 100.0)
-	Rainbow::Lua::Argument<lua_Number>::is_required(L, 2);
-	Rainbow::Lua::Argument<lua_Number>::is_required(L, 3);
-	Rainbow::Lua::Argument<lua_Number>::is_optional(L, 4);
+	rainbow::lua::Argument<lua_Number>::is_required(L, 2);
+	rainbow::lua::Argument<lua_Number>::is_required(L, 3);
+	rainbow::lua::Argument<lua_Number>::is_optional(L, 4);
 
 	Diffuse *self = Bind::self(L);
 	if (!self)
 		return 0;
 
 	self->lighting_.set_position(lua_tonumber(L, 2),
-	                            lua_tonumber(L, 3),
-	                            Rainbow::Lua::optnumber(L, 4, 100.0));
+	                             lua_tonumber(L, 3),
+	                             rainbow::lua::optnumber(L, 4, 100.0));
 	return 0;
 }

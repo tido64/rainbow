@@ -11,7 +11,7 @@ class b2Contact;
 
 NS_B2_LUA_BEGIN
 {
-	class Contact : public Rainbow::Lua::Bind<Contact>
+	class Contact : public rainbow::lua::Bind<Contact>
 	{
 		friend Bind;
 

@@ -9,9 +9,9 @@
 #include <locale.h>
 #include <unistd.h>
 
-namespace Rainbow
+namespace rainbow
 {
-	namespace SystemInfo
+	namespace system_info
 	{
 #ifdef RAINBOW_OS_UNIX
 		bool has_accelerometer()

@@ -12,13 +12,13 @@
 
 #define USE_UIKIT
 
-namespace UIKit
+namespace uikit
 {
-	Rainbow::Image decode(const DataMap &data) pure;
+	rainbow::Image decode(const DataMap &data) pure;
 
-	Rainbow::Image decode(const DataMap &data)
+	rainbow::Image decode(const DataMap &data)
 	{
-		Rainbow::Image image;
+		rainbow::Image image;
 
 		UIImage *uiimage = [UIImage imageWithData:
 		    [NSData dataWithBytesNoCopy:const_cast<void*>(static_cast<const void*>(data))

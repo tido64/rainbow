@@ -19,7 +19,7 @@ using RawKeysym = struct SDL_Keysym;
 class Key
 {
 public:
-	/// Converts raw keysym to a Rainbow::Key.
+	/// Converts raw keysym to a rainbow::Key.
 	static Key from_raw(const RawKeysym *keysym);
 
 	enum class Keys : unsigned

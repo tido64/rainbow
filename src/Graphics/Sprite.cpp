@@ -4,7 +4,7 @@
 
 #include "Graphics/SpriteBatch.h"
 
-using Rainbow::is_equal;
+using rainbow::is_equal;
 
 namespace
 {

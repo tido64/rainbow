@@ -5,7 +5,7 @@
 #ifndef COMMON_IMPL_DATAMAP_UNIX_H_
 #define COMMON_IMPL_DATAMAP_UNIX_H_
 
-namespace Rainbow
+namespace rainbow
 {
 	class DataMapUnix
 	{
@@ -64,6 +64,6 @@ namespace Rainbow
 	}
 }
 
-using DataMap = Rainbow::DataMapBase<Rainbow::DataMapUnix>;
+using DataMap = rainbow::DataMapBase<rainbow::DataMapUnix>;
 
 #endif

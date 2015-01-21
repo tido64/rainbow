@@ -43,7 +43,7 @@ template<typename T>
 void TreeNode<T>::add_child(T *node)
 {
 	if (node->parent_)
-		Rainbow::remove(node->parent_->children_, node);
+		rainbow::remove(node->parent_->children_, node);
 	node->parent_ = static_cast<T*>(this);
 	children_.push_back(node);
 }
@@ -60,7 +60,7 @@ void TreeNode<T>::remove_child(T *node)
 	if (!node)
 		return;
 
-	Rainbow::remove(children_, node);
+	rainbow::remove(children_, node);
 	delete node;
 }
 

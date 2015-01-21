@@ -21,8 +21,8 @@ TEST_CASE("Assigning colour to Color<float>", "[color]")
 {
 	Colorf cf;
 	cf = 0x12345678;
-	REQUIRE(Rainbow::is_equal(cf.r, 0x12 / 255.0f));
-	REQUIRE(Rainbow::is_equal(cf.g, 0x34 / 255.0f));
-	REQUIRE(Rainbow::is_equal(cf.b, 0x56 / 255.0f));
-	REQUIRE(Rainbow::is_equal(cf.a, 0x78 / 255.0f));
+	REQUIRE(rainbow::is_equal(cf.r, 0x12 / 255.0f));
+	REQUIRE(rainbow::is_equal(cf.g, 0x34 / 255.0f));
+	REQUIRE(rainbow::is_equal(cf.b, 0x56 / 255.0f));
+	REQUIRE(rainbow::is_equal(cf.a, 0x78 / 255.0f));
 }

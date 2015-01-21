@@ -38,24 +38,24 @@ NS_RAINBOW_LUA_BEGIN
 		reg<Texture>(L);
 
 #ifdef USE_SPINE
-		reg<Spine::Lua::Skeleton>(L);
+		reg<spine::lua::Skeleton>(L);
 #endif
 	}
 
 	inline void init(lua_State *L)
 	{
-		Platform::init(L);  // Initialise "rainbow.platform" namespace
-		Renderer::init(L);  // Initialise "rainbow.renderer" namespace
-		Shaders::init(L);   // Initialise "rainbow.shaders" namespace
-		IO::init(L);        // Initialise "rainbow.io" namespace
-		Random::init(L);    // Initialise "rainbow.random" function
-		Input::init(L);     // Initialise "rainbow.input" namespace
-		Audio::init(L);     // Initialise "rainbow.audio" namespace
+		platform::init(L);  // Initialise "rainbow.platform" namespace
+		renderer::init(L);  // Initialise "rainbow.renderer" namespace
+		shaders::init(L);   // Initialise "rainbow.shaders" namespace
+		io::init(L);        // Initialise "rainbow.io" namespace
+		random::init(L);    // Initialise "rainbow.random" function
+		input::init(L);     // Initialise "rainbow.input" namespace
+		audio::init(L);     // Initialise "rainbow.audio" namespace
 
 #ifdef USE_PHYSICS
-		b2::Lua::Init(L);   // Initialise "b2" namespace
+		b2::lua::init(L);   // Initialise "b2" namespace
 #endif
-		TF::Lua::init(L);   // Initialise "TestFlight" namespace
+		tf::lua::init(L);   // Initialise "TestFlight" namespace
 	}
 } NS_RAINBOW_LUA_END
 

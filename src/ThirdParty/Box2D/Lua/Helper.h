@@ -9,7 +9,7 @@
 
 #include "Lua/LuaBind.h"
 
-#define NS_B2_LUA_BEGIN namespace b2 { namespace Lua
+#define NS_B2_LUA_BEGIN namespace b2 { namespace lua
 #define NS_B2_LUA_END }
 
 #define luaR_getboolean(L, k)  gettable<bool>(L, k, strllen(k))

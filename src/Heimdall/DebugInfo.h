@@ -9,7 +9,7 @@
 
 namespace SceneGraph { class Node; }
 
-namespace Heimdall
+namespace heimdall
 {
 	/// Displays frames per second and VRAM used.
 	class DebugInfo : private NonCopyable<DebugInfo>

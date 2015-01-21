@@ -44,7 +44,7 @@ namespace Shader
 		    : texture0(true), texture1(false), program(program) {}
 	};
 
-	struct ShaderParams
+	struct Params
 	{
 		Type type;
 		unsigned int id;

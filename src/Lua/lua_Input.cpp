@@ -9,7 +9,7 @@
 #include "Input/Touch.h"
 #include "Lua/LuaHelper.h"
 
-NS_RAINBOW_LUA_MODULE_BEGIN(Input)
+NS_RAINBOW_LUA_MODULE_BEGIN(input)
 {
 	namespace
 	{
@@ -179,4 +179,4 @@ NS_RAINBOW_LUA_MODULE_BEGIN(Input)
 	{
 		on_touch_event(L, kEventTouchMoved, touches, count);
 	}
-} NS_RAINBOW_LUA_MODULE_END(Input)
+} NS_RAINBOW_LUA_MODULE_END(input)

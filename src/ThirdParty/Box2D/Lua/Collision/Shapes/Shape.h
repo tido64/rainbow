@@ -20,7 +20,7 @@ NS_B2_LUA_BEGIN
 	b2Shape* GetShape(lua_State *L);
 
 	template<typename T>
-	class ShapeBase : public Rainbow::Lua::Bind<T>
+	class ShapeBase : public rainbow::lua::Bind<T>
 	{
 	protected:
 		static int TestPoint(lua_State *);
@@ -35,11 +35,11 @@ NS_B2_LUA_BEGIN
 	template<typename T>
 	int ShapeBase<T>::TestPoint(lua_State *L)
 	{
-		Rainbow::Lua::Argument<lua_Number>::is_required(L, 2);
-		Rainbow::Lua::Argument<lua_Number>::is_required(L, 3);
-		Rainbow::Lua::Argument<lua_Number>::is_required(L, 4);
-		Rainbow::Lua::Argument<lua_Number>::is_required(L, 5);
-		Rainbow::Lua::Argument<lua_Number>::is_required(L, 6);
+		rainbow::lua::Argument<lua_Number>::is_required(L, 2);
+		rainbow::lua::Argument<lua_Number>::is_required(L, 3);
+		rainbow::lua::Argument<lua_Number>::is_required(L, 4);
+		rainbow::lua::Argument<lua_Number>::is_required(L, 5);
+		rainbow::lua::Argument<lua_Number>::is_required(L, 6);
 
 		T *self = T::self(L);
 		if (!self)

@@ -18,7 +18,7 @@
 #include "Common/Constraints.h"
 #include "Common/Functional.h"
 
-namespace Rainbow
+namespace rainbow
 {
 	namespace
 	{

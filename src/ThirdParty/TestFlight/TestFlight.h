@@ -7,9 +7,9 @@
 
 struct lua_State;
 
-namespace TF
+namespace tf
 {
-	namespace Lua
+	namespace lua
 	{
 		void init(lua_State *);
 	}

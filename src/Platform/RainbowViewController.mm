@@ -61,7 +61,7 @@ namespace
 	if (self = [super init])
 	{
 		self.preferredFramesPerSecond = 60;
-		Rainbow::Config config;
+		rainbow::Config config;
 		_supportedInterfaceOrientations =
 		    (config.is_portrait()) ? UIInterfaceOrientationMaskPortrait
 		                           : UIInterfaceOrientationMaskLandscape;

@@ -37,7 +37,7 @@ namespace
 		const File &file = File::open(asset);
 		if (!file)
 			return 0;
-		const int result = Rainbow::Lua::load(L, Data(file), module, false);
+		const int result = rainbow::lua::load(L, Data(file), module, false);
 		if (result == 0)
 			return luaL_error(L, "Failed to load '%s'", module);
 		return result;

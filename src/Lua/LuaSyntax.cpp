@@ -20,7 +20,7 @@ namespace SceneGraph { class Node; }
 
 namespace b2
 {
-	namespace Lua
+	namespace lua
 	{
 		class Body;
 		class Fixture;
@@ -141,7 +141,7 @@ NS_RAINBOW_LUA_BEGIN
 		require(L, n, lua_isnumber, "number");
 	}
 
-	/* Rainbow::Lua::Animation */
+	/* rainbow::lua::Animation */
 
 	class Animation;
 
@@ -151,7 +151,7 @@ NS_RAINBOW_LUA_BEGIN
 		require(L, n, is_userdata, "animation");
 	}
 
-	/* Rainbow::Lua::Font */
+	/* rainbow::lua::Font */
 
 	class Font;
 
@@ -161,7 +161,7 @@ NS_RAINBOW_LUA_BEGIN
 		require(L, n, is_userdata, "font");
 	}
 
-	/* Rainbow::Lua::Label */
+	/* rainbow::lua::Label */
 
 	class Label;
 
@@ -171,7 +171,7 @@ NS_RAINBOW_LUA_BEGIN
 		require(L, n, is_userdata, "label");
 	}
 
-	/* Rainbow::Lua::Shader */
+	/* rainbow::lua::Shader */
 
 	class Shader;
 
@@ -184,7 +184,7 @@ NS_RAINBOW_LUA_BEGIN
 		}
 	}
 
-	/* Rainbow::Lua::Sprite */
+	/* rainbow::lua::Sprite */
 
 	class Sprite;
 
@@ -200,7 +200,7 @@ NS_RAINBOW_LUA_BEGIN
 		require(L, n, is_userdata, "sprite");
 	}
 
-	/* Rainbow::Lua::SpriteBatch */
+	/* rainbow::lua::SpriteBatch */
 
 	class SpriteBatch;
 
@@ -210,7 +210,7 @@ NS_RAINBOW_LUA_BEGIN
 		require(L, n, is_userdata, "sprite batch");
 	}
 
-	/* Rainbow::Lua::Texture */
+	/* rainbow::lua::Texture */
 
 	class Texture;
 
@@ -237,13 +237,13 @@ NS_RAINBOW_LUA_BEGIN
 	/* Box2D */
 
 	template<>
-	void Argument<b2::Lua::Body>::is_required(lua_State *L, const int n)
+	void Argument<b2::lua::Body>::is_required(lua_State *L, const int n)
 	{
 		luaL_checkudata(L, n, "b2Body");
 	}
 
 	template<>
-	void Argument<b2::Lua::Fixture>::is_required(lua_State *L, const int n)
+	void Argument<b2::lua::Fixture>::is_required(lua_State *L, const int n)
 	{
 		luaL_checkudata(L, n, "b2Fixture");
 	}

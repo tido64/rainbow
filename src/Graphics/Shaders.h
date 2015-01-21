@@ -5,9 +5,9 @@
 #ifndef GRAPHICS_SHADERS_H_
 #define GRAPHICS_SHADERS_H_
 
-namespace Rainbow
+namespace rainbow
 {
-	namespace Shaders
+	namespace shaders
 	{
 		extern const char kDiffuseLight2Df[];
 		extern const char kDiffuseLightNormalf[];

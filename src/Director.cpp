@@ -12,7 +12,7 @@
 #include "ThirdParty/Box2D/DebugDraw.h"
 #endif  // USE_PHYSICS
 
-namespace Rainbow
+namespace rainbow
 {
 	Director::Director()
 	    : active_(true), terminated_(false), error_(nullptr), input_(lua_)
@@ -48,7 +48,7 @@ namespace Rainbow
 		R_ASSERT(main, "Failed to load 'main.lua'");
 
 		renderer_.set_resolution(screen);
-		Lua::Platform::update(lua_, screen);
+		lua::platform::update(lua_, screen);
 		if (lua_.start(main) != LUA_OK || lua_.update(0) != LUA_OK)
 		{
 			terminate("Failed to start 'main.lua'");

@@ -2,7 +2,7 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
-namespace Rainbow
+namespace rainbow
 {
 	int run_tests(int argc, char *argv[]);
 }

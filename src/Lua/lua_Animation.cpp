@@ -104,7 +104,7 @@ NS_RAINBOW_LUA_BEGIN
 
 	int Animation::set_listener(lua_State *L)
 	{
-		Rainbow::Lua::Argument<void*>::is_optional(L, 2);
+		rainbow::lua::Argument<void*>::is_optional(L, 2);
 
 		Animation *self = Bind::self(L);
 		if (!self)

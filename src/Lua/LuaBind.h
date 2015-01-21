@@ -168,7 +168,7 @@ NS_RAINBOW_LUA_BEGIN
 				return 0;
 
 			lua_pushlightuserdata(L, p);
-			return Rainbow::Lua::alloc<U>(L);
+			return rainbow::lua::alloc<U>(L);
 		}
 #endif  // USE_PHYSICS
 

@@ -18,9 +18,9 @@ namespace
 	}
 }
 
-namespace Rainbow
+namespace rainbow
 {
-	namespace SystemInfo
+	namespace system_info
 	{
 		bool has_accelerometer()
 		{

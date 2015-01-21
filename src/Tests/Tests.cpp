@@ -24,7 +24,7 @@
 #include "Tests/Input/Input.test.cc"
 #include "Tests/Input/Touch.test.cc"
 
-namespace Rainbow
+namespace rainbow
 {
 	int run_tests(int argc, char *argv[])
 	{

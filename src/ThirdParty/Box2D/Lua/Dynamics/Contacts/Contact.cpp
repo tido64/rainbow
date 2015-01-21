@@ -147,7 +147,7 @@ NS_B2_LUA_BEGIN
 
 NS_RAINBOW_LUA_BEGIN
 {
-	using b2::Lua::Contact;
+	using b2::lua::Contact;
 
 	template<>
 	const char Contact::Bind::class_name[] = "b2Contact";

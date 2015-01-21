@@ -89,7 +89,7 @@ TEST_CASE("Touch events", "[input]")
 	Input input(L);
 
 	lua_createtable(L, 0, 1);
-	Rainbow::Lua::Input::init(L);
+	rainbow::lua::input::init(L);
 	lua_setglobal(L, "rainbow");
 
 	TouchTestFixture delegate;

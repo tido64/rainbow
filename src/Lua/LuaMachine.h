@@ -11,10 +11,10 @@ class Data;
 struct lua_State;
 namespace SceneGraph { class Node; }
 
-namespace Rainbow
+namespace rainbow
 {
 	class Director;
-	namespace Lua { class SceneGraph; }
+	namespace lua { class SceneGraph; }
 
 	/// Embeds Lua scripting engine.
 	class LuaMachine : private NonCopyable<LuaMachine>
@@ -34,7 +34,7 @@ namespace Rainbow
 		lua_State *state_;
 		int internal_;
 		int traceback_;
-		Lua::SceneGraph *scenegraph_;
+		lua::SceneGraph *scenegraph_;
 
 		LuaMachine();
 		~LuaMachine();

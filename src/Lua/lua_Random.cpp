@@ -8,46 +8,46 @@
 #include "Lua/LuaHelper.h"
 #include "Lua/LuaSyntax.h"
 
-namespace
+NS_RAINBOW_LUA_MODULE_BEGIN(random)
 {
-	int random(lua_State *L)
+	namespace
 	{
-		lua_Number r;
-		switch (lua_gettop(L))
+		int random(lua_State *L)
 		{
-			case 0:  // rainbow.random()
-				r = Random::next();
-				break;
-			case 1:  // rainbow.random(max)
-				Rainbow::Lua::Argument<lua_Number>::is_required(L, 1);
-				r = Random::next<lua_Number>(lua_tonumber(L, 1));
-				break;
-			default:  // rainbow.random(min, max)
-				Rainbow::Lua::Argument<lua_Number>::is_required(L, 1);
-				Rainbow::Lua::Argument<lua_Number>::is_required(L, 2);
-				r = Random::next<lua_Number>(lua_tonumber(L, 1),
-				                             lua_tonumber(L, 2));
-				break;
+			lua_Number r;
+			switch (lua_gettop(L))
+			{
+				case 0:  // rainbow.random()
+					r = Random::next();
+					break;
+				case 1:  // rainbow.random(max)
+					rainbow::lua::Argument<lua_Number>::is_required(L, 1);
+					r = Random::next<lua_Number>(lua_tonumber(L, 1));
+					break;
+				default:  // rainbow.random(min, max)
+					rainbow::lua::Argument<lua_Number>::is_required(L, 1);
+					rainbow::lua::Argument<lua_Number>::is_required(L, 2);
+					r = Random::next<lua_Number>(lua_tonumber(L, 1),
+					                             lua_tonumber(L, 2));
+					break;
+			}
+			lua_pushnumber(L, r);
+			return 1;
 		}
-		lua_pushnumber(L, r);
-		return 1;
+
+		int seed(lua_State *L)
+		{
+			// rainbow.seed(seed = 0)
+			rainbow::lua::Argument<lua_Number>::is_optional(L, 1);
+
+			Random::seed(rainbow::lua::optinteger(L, 1, 0));
+			return 0;
+		}
 	}
 
-	int seed(lua_State *L)
-	{
-		// rainbow.seed(seed = 0)
-		Rainbow::Lua::Argument<lua_Number>::is_optional(L, 1);
-
-		Random::seed(Rainbow::Lua::optinteger(L, 1, 0));
-		return 0;
-	}
-}
-
-NS_RAINBOW_LUA_MODULE_BEGIN(Random)
-{
 	void init(lua_State *L)
 	{
 		luaR_rawsetcfunction(L, "random", &random);
 		luaR_rawsetcfunction(L, "seed", &seed);
 	}
-} NS_RAINBOW_LUA_MODULE_END(Random)
+} NS_RAINBOW_LUA_MODULE_END(random)

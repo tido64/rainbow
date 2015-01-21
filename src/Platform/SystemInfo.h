@@ -10,9 +10,9 @@
 
 #include "Platform/Macros.h"
 
-namespace Rainbow
+namespace rainbow
 {
-	namespace SystemInfo
+	namespace system_info
 	{
 		/// Returns whether the platform has an accelerometer.
 		bool has_accelerometer();

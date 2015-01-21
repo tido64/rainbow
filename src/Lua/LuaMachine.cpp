@@ -14,7 +14,7 @@ namespace
 	int breakpoint(lua_State *L)
 	{
 #ifndef NDEBUG
-		Rainbow::Lua::sethook(L);
+		rainbow::lua::sethook(L);
 #else
 		static_cast<void>(L);
 #endif
@@ -23,7 +23,7 @@ namespace
 
 	int createtable(lua_State *L)
 	{
-		using Rainbow::Lua::optinteger;
+		using rainbow::lua::optinteger;
 		lua_createtable(L, optinteger(L, 1, 0), optinteger(L, 2, 0));
 		return 1;
 	}
@@ -56,11 +56,11 @@ namespace
 	}
 }
 
-namespace Rainbow
+namespace rainbow
 {
 	int LuaMachine::start(const Data &main)
 	{
-		if (Lua::load(state_, main, "main") == 0)
+		if (lua::load(state_, main, "main") == 0)
 			return luaL_error(state_, "Failed to load main script");
 
 #ifndef NDEBUG
@@ -68,9 +68,9 @@ namespace Rainbow
 #endif
 		lua_getglobal(state_, "init");
 #ifndef NDEBUG
-		return Lua::call(state_, 0, 0, 1, "Failed to initialise main script");
+		return lua::call(state_, 0, 0, 1, "Failed to initialise main script");
 #else
-		return Lua::call(state_, 0, 0, 0, "Failed to initialise main script");
+		return lua::call(state_, 0, 0, 0, "Failed to initialise main script");
 #endif
 	}
 
@@ -82,9 +82,9 @@ namespace Rainbow
 		lua_rawgeti(state_, LUA_REGISTRYINDEX, internal_);
 		lua_pushinteger(state_, t);
 #ifndef NDEBUG
-		return Lua::call(state_, 1, 0, 1, "Failed to call 'update'");
+		return lua::call(state_, 1, 0, 1, "Failed to call 'update'");
 #else
-		return Lua::call(state_, 1, 0, 0, "Failed to call 'update'");
+		return lua::call(state_, 1, 0, 0, "Failed to call 'update'");
 #endif
 	}
 
@@ -103,7 +103,7 @@ namespace Rainbow
 		if (!state_)
 			return;
 
-		Lua::SceneGraph::destroy(state_, scenegraph_);
+		lua::SceneGraph::destroy(state_, scenegraph_);
 		lua_close(state_);
 		state_ = nullptr;
 	}
@@ -114,7 +114,7 @@ namespace Rainbow
 
 		// Initialize "rainbow" namespace.
 		lua_createtable(state_, 0, 16);
-		Lua::init(state_);
+		lua::init(state_);
 
 		// Set "rainbow.breakpoint".
 		luaR_rawsetcfunction(state_, "breakpoint", breakpoint);
@@ -123,10 +123,10 @@ namespace Rainbow
 		luaR_rawsetcfunction(state_, "time_since_epoch", time_since_epoch);
 
 		// Initialize "rainbow.scenegraph".
-		scenegraph_ = Lua::SceneGraph::create(state_, root);
+		scenegraph_ = lua::SceneGraph::create(state_, root);
 
 		// Bind C++ objects.
-		Lua::bind(state_);
+		lua::bind(state_);
 
 		const char rainbow[] = "rainbow";
 		lua_setglobal(state_, rainbow);
@@ -146,13 +146,13 @@ namespace Rainbow
 			lua_rawgeti(state_, -1, i);
 			lua_rawseti(state_, -2, i + 1);
 		}
-		lua_pushcfunction(state_, Lua::load);
+		lua_pushcfunction(state_, lua::load);
 		lua_rawseti(state_, -2, 1);
 		lua_pop(state_, 2);
 		R_ASSERT(lua_gettop(state_) == 0, "Stack not empty");
 
 		// Load our internal script.
-		if (Lua::load(state_, Data::from_literal(Rainbow_lua), rainbow) == 0)
+		if (lua::load(state_, Data::from_literal(Rainbow_lua), rainbow) == 0)
 			return luaL_error(state_, "Failed to load internal Lua script");
 		lua_getglobal(state_, "__update");
 		R_ASSERT(lua_isfunction(state_, -1),

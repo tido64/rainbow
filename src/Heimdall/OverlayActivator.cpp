@@ -16,7 +16,7 @@ namespace
 	const int kTimeTillActivation = 2000;
 }
 
-namespace Heimdall
+namespace heimdall
 {
 	void OverlayActivator::reset()
 	{

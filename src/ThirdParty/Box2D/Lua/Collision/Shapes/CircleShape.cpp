@@ -54,7 +54,7 @@ NS_B2_LUA_BEGIN
 
 NS_RAINBOW_LUA_BEGIN
 {
-	using b2::Lua::CircleShape;
+	using b2::lua::CircleShape;
 
 	template<>
 	const char CircleShape::Bind::class_name[] = "CircleShape";

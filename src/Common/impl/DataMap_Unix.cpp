@@ -13,7 +13,7 @@
 #include "FileSystem/File.h"
 #include "FileSystem/Path.h"
 
-namespace Rainbow
+namespace rainbow
 {
 	DataMapUnix::DataMapUnix(const Path &path)
 	    : len_(0), off_(0), addr_(nullptr)

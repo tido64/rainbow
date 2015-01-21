@@ -21,9 +21,9 @@ NS_RAINBOW_LUA_BEGIN
 	};
 } NS_RAINBOW_LUA_END
 
-NS_RAINBOW_LUA_MODULE_BEGIN(Shaders)
+NS_RAINBOW_LUA_MODULE_BEGIN(shaders)
 {
 	void init(lua_State *);
-} NS_RAINBOW_LUA_MODULE_END(Shaders)
+} NS_RAINBOW_LUA_MODULE_END(shaders)
 
 #endif

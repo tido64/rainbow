@@ -8,7 +8,7 @@
 
 #include "Common/Algorithm.h"
 
-using Rainbow::is_equal;
+using rainbow::is_equal;
 
 namespace
 {
@@ -61,7 +61,7 @@ void Label::set_scale(const float f)
 	if (is_equal(f, scale_))
 		return;
 
-	scale_ = Rainbow::clamp(f, 0.01f, 1.0f);
+	scale_ = rainbow::clamp(f, 0.01f, 1.0f);
 	set_needs_update(kStaleBuffer);
 }
 
@@ -123,7 +123,7 @@ void Label::update()
 					continue;
 				}
 
-				const auto &c = Rainbow::utf8_decode(text);
+				const auto &c = rainbow::utf8_decode(text);
 				if (c.bytes == 0)
 					break;
 				text += c.bytes;

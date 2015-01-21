@@ -13,9 +13,9 @@ namespace
 	int set_clear_color(lua_State *L)
 	{
 		// rainbow.renderer.set_clear_color(0xrr, 0xgg, 0xbb)
-		Rainbow::Lua::Argument<lua_Number>::is_required(L, 1);
-		Rainbow::Lua::Argument<lua_Number>::is_required(L, 2);
-		Rainbow::Lua::Argument<lua_Number>::is_required(L, 3);
+		rainbow::lua::Argument<lua_Number>::is_required(L, 1);
+		rainbow::lua::Argument<lua_Number>::is_required(L, 2);
+		rainbow::lua::Argument<lua_Number>::is_required(L, 3);
 
 		const float r = lua_tonumber(L, 1) / 255.0f;
 		const float g = lua_tonumber(L, 2) / 255.0f;
@@ -27,7 +27,7 @@ namespace
 	int set_filter(lua_State *L)
 	{
 		// rainbow.renderer.set_filter(filter)
-		Rainbow::Lua::Argument<lua_Number>::is_required(L, 1);
+		rainbow::lua::Argument<lua_Number>::is_required(L, 1);
 
 		const int filter = lua_tointeger(L, 1);
 		LUA_ASSERT(L, filter == GL_NEAREST || filter == GL_LINEAR,
@@ -39,10 +39,10 @@ namespace
 	int set_projection(lua_State *L)
 	{
 		// rainbow.renderer.set_projection(left, right, bottom, top)
-		Rainbow::Lua::Argument<lua_Number>::is_required(L, 1);
-		Rainbow::Lua::Argument<lua_Number>::is_required(L, 2);
-		Rainbow::Lua::Argument<lua_Number>::is_required(L, 3);
-		Rainbow::Lua::Argument<lua_Number>::is_required(L, 4);
+		rainbow::lua::Argument<lua_Number>::is_required(L, 1);
+		rainbow::lua::Argument<lua_Number>::is_required(L, 2);
+		rainbow::lua::Argument<lua_Number>::is_required(L, 3);
+		rainbow::lua::Argument<lua_Number>::is_required(L, 4);
 
 		ShaderManager::Get()->set_projection(
 		    lua_tonumber(L, 1), lua_tonumber(L, 2),
@@ -51,7 +51,7 @@ namespace
 	}
 }
 
-NS_RAINBOW_LUA_MODULE_BEGIN(Renderer)
+NS_RAINBOW_LUA_MODULE_BEGIN(renderer)
 {
 	void init(lua_State *L)
 	{
@@ -78,4 +78,4 @@ NS_RAINBOW_LUA_MODULE_BEGIN(Renderer)
 		luaR_rawsetinteger(L, "LINEAR", GL_LINEAR);
 		lua_setglobal(L, "gl");
 	}
-} NS_RAINBOW_LUA_MODULE_END(Renderer)
+} NS_RAINBOW_LUA_MODULE_END(renderer)

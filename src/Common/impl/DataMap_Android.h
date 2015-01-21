@@ -7,7 +7,7 @@
 
 #include "FileSystem/File.h"
 
-namespace Rainbow
+namespace rainbow
 {
 	class DataMapAndroid
 	{
@@ -49,6 +49,6 @@ namespace Rainbow
 	}
 }
 
-using DataMap = Rainbow::DataMapBase<Rainbow::DataMapAndroid>;
+using DataMap = rainbow::DataMapBase<rainbow::DataMapAndroid>;
 
 #endif

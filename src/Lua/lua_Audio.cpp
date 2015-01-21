@@ -31,7 +31,7 @@ namespace
 	Mixer::Channel* tochannel(lua_State *L)
 	{
 		return static_cast<Mixer::Channel*>(
-		    Rainbow::Lua::topointer(L, kChannelType));
+		    rainbow::lua::topointer(L, kChannelType));
 	}
 
 	int set_gain(lua_State *L)
@@ -40,8 +40,8 @@ namespace
 
 		if (lua_gettop(L) >= 2)
 		{
-			Rainbow::Lua::Argument<ConFuoco::Channel>::is_required(L, 1);
-			Rainbow::Lua::Argument<lua_Number>::is_required(L, 2);
+			rainbow::lua::Argument<ConFuoco::Channel>::is_required(L, 1);
+			rainbow::lua::Argument<lua_Number>::is_required(L, 2);
 
 			const float gain = lua_tonumber(L, 2);
 			lua_pop(L, 1);
@@ -54,7 +54,7 @@ namespace
 		}
 		else
 		{
-			Rainbow::Lua::Argument<lua_Number>::is_required(L, 1);
+			rainbow::lua::Argument<lua_Number>::is_required(L, 1);
 
 			Mixer::Instance->set_gain(lua_tonumber(L, 1));
 		}
@@ -64,7 +64,7 @@ namespace
 	int set_pitch(lua_State *L)
 	{
 		// rainbow.audio.set_pitch(pitch)
-		Rainbow::Lua::Argument<lua_Number>::is_required(L, 1);
+		rainbow::lua::Argument<lua_Number>::is_required(L, 1);
 
 		Mixer::Instance->set_pitch(lua_tonumber(L, 1));
 		return 0;
@@ -79,15 +79,15 @@ namespace
 	int create_sound(lua_State *L)
 	{
 		// rainbow.audio.create_sound(file, type = STATIC, loops = -1)
-		Rainbow::Lua::Argument<char*>::is_required(L, 1);
-		Rainbow::Lua::Argument<lua_Number>::is_optional(L, 2);
-		Rainbow::Lua::Argument<lua_Number>::is_optional(L, 3);
+		rainbow::lua::Argument<char*>::is_required(L, 1);
+		rainbow::lua::Argument<lua_Number>::is_optional(L, 2);
+		rainbow::lua::Argument<lua_Number>::is_optional(L, 3);
 
 		const char *file = lua_tostring(L, 1);
-		const int type = Rainbow::Lua::optinteger(
+		const int type = rainbow::lua::optinteger(
 		    L, 2, static_cast<int>(Sound::Type::Static));
-		const int loops = Rainbow::Lua::optinteger(L, 3, -1);
-		Rainbow::Lua::pushpointer(
+		const int loops = rainbow::lua::optinteger(L, 3, -1);
+		rainbow::lua::pushpointer(
 		    L,
 		    Mixer::Instance->create_sound(
 		        file, static_cast<Sound::Type>(type), loops),
@@ -98,16 +98,16 @@ namespace
 	int delete_sound(lua_State *L)
 	{
 		// rainbow.audio.delete_sound(<sound>)
-		Rainbow::Lua::Argument<Sound>::is_required(L, 1);
+		rainbow::lua::Argument<Sound>::is_required(L, 1);
 
-		delete static_cast<Sound*>(Rainbow::Lua::topointer(L, kSoundType));
+		delete static_cast<Sound*>(rainbow::lua::topointer(L, kSoundType));
 		return 0;
 	}
 
 	int pause(lua_State *L)
 	{
 		// rainbow.audio.pause(<channel>)
-		Rainbow::Lua::Argument<ConFuoco::Channel>::is_required(L, 1);
+		rainbow::lua::Argument<ConFuoco::Channel>::is_required(L, 1);
 
 		Mixer::Channel *ch = tochannel(L);
 		if (!ch)
@@ -120,18 +120,18 @@ namespace
 	int play(lua_State *L)
 	{
 		// rainbow.audio.play(<sound>)
-		Rainbow::Lua::Argument<Sound>::is_required(L, 1);
+		rainbow::lua::Argument<Sound>::is_required(L, 1);
 
 		Sound *snd =
-		    static_cast<Sound*>(Rainbow::Lua::topointer(L, kSoundType));
-		Rainbow::Lua::pushpointer(L, Mixer::Instance->play(snd), kChannelType);
+		    static_cast<Sound*>(rainbow::lua::topointer(L, kSoundType));
+		rainbow::lua::pushpointer(L, Mixer::Instance->play(snd), kChannelType);
 		return 1;
 	}
 
 	int stop(lua_State *L)
 	{
 		// rainbow.audio.stop(<sound>)
-		Rainbow::Lua::Argument<Sound>::is_required(L, 1);
+		rainbow::lua::Argument<Sound>::is_required(L, 1);
 
 		Mixer::Channel *ch = tochannel(L);
 		if (!ch)
@@ -142,7 +142,7 @@ namespace
 	}
 }
 
-NS_RAINBOW_LUA_MODULE_BEGIN(Audio)
+NS_RAINBOW_LUA_MODULE_BEGIN(audio)
 {
 	void init(lua_State *L)
 	{
@@ -165,7 +165,7 @@ NS_RAINBOW_LUA_MODULE_BEGIN(Audio)
 
 		lua_rawset(L, -3);
 	}
-} NS_RAINBOW_LUA_MODULE_END(Audio)
+} NS_RAINBOW_LUA_MODULE_END(audio)
 
 #else  // USE_FMOD_STUDIO
 
@@ -175,7 +175,7 @@ NS_RAINBOW_LUA_MODULE_BEGIN(Audio)
 
 namespace  // FMOD Low Level API
 {
-	using Rainbow::Lua::Bind;
+	using rainbow::lua::Bind;
 
 	FMOD_RESULT getLowLevelSystem(FMOD::System **system)
 	{
@@ -241,7 +241,7 @@ namespace  // FMOD Low Level API
 
 	int createSound(lua_State *L, const bool stream)
 	{
-		Rainbow::Lua::Argument<char*>::is_required(L, 1);
+		rainbow::lua::Argument<char*>::is_required(L, 1);
 
 		FMOD::System *system;
 		if (getLowLevelSystem(&system) != FMOD_OK)
@@ -268,7 +268,7 @@ namespace  // FMOD Low Level API
 
 		lua_settop(L, 0);
 		lua_pushlightuserdata(L, sound);
-		return Rainbow::Lua::alloc<FMODSound>(L);
+		return rainbow::lua::alloc<FMODSound>(L);
 	}
 
 	int createSound(lua_State *L)
@@ -283,7 +283,7 @@ namespace  // FMOD Low Level API
 
 	int playSound(lua_State *L)
 	{
-		Rainbow::Lua::Argument<FMOD::Sound>::is_required(L, 1);
+		rainbow::lua::Argument<FMOD::Sound>::is_required(L, 1);
 
 		FMOD::System *system;
 		if (getLowLevelSystem(&system) != FMOD_OK)
@@ -291,20 +291,20 @@ namespace  // FMOD Low Level API
 
 		FMOD::Channel *channel;
 		const FMOD_RESULT result = system->playSound(
-		    Rainbow::Lua::touserdata<FMODSound>(L, 1)->get(), nullptr, false,
+		    rainbow::lua::touserdata<FMODSound>(L, 1)->get(), nullptr, false,
 		    &channel);
 		if (result != FMOD_OK)
 			return 0;
 
 		lua_settop(L, 0);
 		lua_pushlightuserdata(L, channel);
-		return Rainbow::Lua::alloc<FMODChannel>(L);
+		return rainbow::lua::alloc<FMODChannel>(L);
 	}
 
 	template<typename T>
 	int setLoopCount(lua_State *L, T *self)
 	{
-		Rainbow::Lua::Argument<lua_Number>::is_required(L, 2);
+		rainbow::lua::Argument<lua_Number>::is_required(L, 2);
 
 		if (!self)
 			return 0;
@@ -330,8 +330,8 @@ namespace  // FMOD Low Level API
 	template<typename T>
 	int setLoopPoints(lua_State *L, T *self)
 	{
-		Rainbow::Lua::Argument<lua_Number>::is_required(L, 2);
-		Rainbow::Lua::Argument<lua_Number>::is_required(L, 3);
+		rainbow::lua::Argument<lua_Number>::is_required(L, 2);
+		rainbow::lua::Argument<lua_Number>::is_required(L, 3);
 
 		if (!self)
 			return 0;
@@ -360,7 +360,7 @@ namespace  // FMOD Low Level API
 namespace  // FMOD Studio API
 {
 	using FMOD::Studio::Bank;
-	using Rainbow::Lua::Bind;
+	using rainbow::lua::Bind;
 
 	const char kBankType[] = "FMOD::Studio::Bank";
 
@@ -390,7 +390,7 @@ namespace  // FMOD Studio API
 	int loadBank(lua_State *L)
 	{
 		// FMOD.loadBank("path/to/bank")
-		Rainbow::Lua::Argument<char*>::is_required(L, 1);
+		rainbow::lua::Argument<char*>::is_required(L, 1);
 
 		const Path path(lua_tostring(L, 1));
 		if (!path.is_file())
@@ -404,16 +404,16 @@ namespace  // FMOD Studio API
 		{
 			return 0;
 		}
-		Rainbow::Lua::pushpointer(L, bank, kBankType);
+		rainbow::lua::pushpointer(L, bank, kBankType);
 		return 1;
 	}
 
 	int unloadBank(lua_State *L)
 	{
 		// FMOD.unloadBank(<bank>)
-		Rainbow::Lua::Argument<Bank>::is_required(L, 1);
+		rainbow::lua::Argument<Bank>::is_required(L, 1);
 
-		Bank *bank = static_cast<Bank*>(Rainbow::Lua::topointer(L, kBankType));
+		Bank *bank = static_cast<Bank*>(rainbow::lua::topointer(L, kBankType));
 		if (!bank)
 			return 0;
 		bank->unload();
@@ -429,7 +429,7 @@ namespace  // FMOD Studio API
 	int createInstance(lua_State *L)
 	{
 		// FMOD.createInstance(event)
-		Rainbow::Lua::Argument<char*>::is_required(L, 1);
+		rainbow::lua::Argument<char*>::is_required(L, 1);
 
 		FMOD::Studio::EventDescription *description = nullptr;
 		if ((*Mixer::Instance)->getEvent(lua_tostring(L, 1), &description) !=
@@ -444,11 +444,11 @@ namespace  // FMOD Studio API
 
 		lua_settop(L, 0);
 		lua_pushlightuserdata(L, instance);
-		return Rainbow::Lua::alloc<FMODStudioEventInstance>(L);
+		return rainbow::lua::alloc<FMODStudioEventInstance>(L);
 	}
 }
 
-NS_RAINBOW_LUA_MODULE_BEGIN(Audio)
+NS_RAINBOW_LUA_MODULE_BEGIN(audio)
 {
 	void init(lua_State *L)
 	{
@@ -473,7 +473,7 @@ NS_RAINBOW_LUA_MODULE_BEGIN(Audio)
 		reg<FMODSound>(L);
 		reg<FMODStudioEventInstance>(L);
 	}
-} NS_RAINBOW_LUA_MODULE_END(Audio)
+} NS_RAINBOW_LUA_MODULE_END(audio)
 
 template<>
 const char FMODChannel::Bind::class_name[] = "FMOD::Channel";
@@ -528,7 +528,7 @@ int FMODChannel::stop(lua_State *L)
 
 int FMODChannel::setPaused(lua_State *L)
 {
-	Rainbow::Lua::Argument<bool>::is_required(L, 2);
+	rainbow::lua::Argument<bool>::is_required(L, 2);
 
 	FMODChannel *self = Bind::self(L);
 	if (!self)
@@ -552,7 +552,7 @@ int FMODChannel::getPaused(lua_State *L)
 
 int FMODChannel::setVolume(lua_State *L)
 {
-	Rainbow::Lua::Argument<lua_Number>::is_required(L, 2);
+	rainbow::lua::Argument<lua_Number>::is_required(L, 2);
 
 	FMODChannel *self = Bind::self(L);
 	if (!self)
@@ -576,7 +576,7 @@ int FMODChannel::getVolume(lua_State *L)
 
 int FMODChannel::setVolumeRamp(lua_State *L)
 {
-	Rainbow::Lua::Argument<bool>::is_required(L, 2);
+	rainbow::lua::Argument<bool>::is_required(L, 2);
 
 	FMODChannel *self = Bind::self(L);
 	if (!self)
@@ -612,7 +612,7 @@ int FMODChannel::getAudibility(lua_State *L)
 
 int FMODChannel::setPitch(lua_State *L)
 {
-	Rainbow::Lua::Argument<lua_Number>::is_required(L, 2);
+	rainbow::lua::Argument<lua_Number>::is_required(L, 2);
 
 	FMODChannel *self = Bind::self(L);
 	if (!self)
@@ -636,7 +636,7 @@ int FMODChannel::getPitch(lua_State *L)
 
 int FMODChannel::setMute(lua_State *L)
 {
-	Rainbow::Lua::Argument<bool>::is_required(L, 2);
+	rainbow::lua::Argument<bool>::is_required(L, 2);
 
 	FMODChannel *self = Bind::self(L);
 	if (!self)
@@ -660,8 +660,8 @@ int FMODChannel::getMute(lua_State *L)
 
 int FMODChannel::setReverbProperties(lua_State *L)
 {
-	Rainbow::Lua::Argument<lua_Number>::is_required(L, 2);
-	Rainbow::Lua::Argument<lua_Number>::is_required(L, 3);
+	rainbow::lua::Argument<lua_Number>::is_required(L, 2);
+	rainbow::lua::Argument<lua_Number>::is_required(L, 3);
 
 	FMODChannel *self = Bind::self(L);
 	if (!self)
@@ -673,7 +673,7 @@ int FMODChannel::setReverbProperties(lua_State *L)
 
 int FMODChannel::getReverbProperties(lua_State *L)
 {
-	Rainbow::Lua::Argument<lua_Number>::is_required(L, 2);
+	rainbow::lua::Argument<lua_Number>::is_required(L, 2);
 
 	FMODChannel *self = Bind::self(L);
 	if (!self)
@@ -687,7 +687,7 @@ int FMODChannel::getReverbProperties(lua_State *L)
 
 int FMODChannel::setLowPassGain(lua_State *L)
 {
-	Rainbow::Lua::Argument<lua_Number>::is_required(L, 2);
+	rainbow::lua::Argument<lua_Number>::is_required(L, 2);
 
 	FMODChannel *self = Bind::self(L);
 	if (!self)
@@ -723,7 +723,7 @@ int FMODChannel::isPlaying(lua_State *L)
 
 int FMODChannel::setPan(lua_State *L)
 {
-	Rainbow::Lua::Argument<lua_Number>::is_required(L, 2);
+	rainbow::lua::Argument<lua_Number>::is_required(L, 2);
 
 	FMODChannel *self = Bind::self(L);
 	if (!self)
@@ -847,7 +847,7 @@ int FMODStudioEventInstance::getVolume(lua_State *L)
 int FMODStudioEventInstance::setVolume(lua_State *L)
 {
 	// <eventInstance>:setVolume(volume)
-	Rainbow::Lua::Argument<lua_Number>::is_required(L, 2);
+	rainbow::lua::Argument<lua_Number>::is_required(L, 2);
 
 	FMODStudioEventInstance *self = Bind::self(L);
 	if (!self)
@@ -872,7 +872,7 @@ int FMODStudioEventInstance::getPitch(lua_State *L)
 int FMODStudioEventInstance::setPitch(lua_State *L)
 {
 	// <eventInstance>:setPitch(volume)
-	Rainbow::Lua::Argument<lua_Number>::is_required(L, 2);
+	rainbow::lua::Argument<lua_Number>::is_required(L, 2);
 
 	FMODStudioEventInstance *self = Bind::self(L);
 	if (!self)
@@ -897,7 +897,7 @@ int FMODStudioEventInstance::getPaused(lua_State *L)
 int FMODStudioEventInstance::setPaused(lua_State *L)
 {
 	// <eventInstance>:setPaused(paused)
-	Rainbow::Lua::Argument<bool>::is_required(L, 2);
+	rainbow::lua::Argument<bool>::is_required(L, 2);
 
 	FMODStudioEventInstance *self = Bind::self(L);
 	if (!self)
@@ -920,7 +920,7 @@ int FMODStudioEventInstance::start(lua_State *L)
 int FMODStudioEventInstance::stop(lua_State *L)
 {
 	// <eventInstance>:stop(fadeout = false)
-	Rainbow::Lua::Argument<bool>::is_optional(L, 2);
+	rainbow::lua::Argument<bool>::is_optional(L, 2);
 
 	FMODStudioEventInstance *self = Bind::self(L);
 	if (!self)
@@ -946,7 +946,7 @@ int FMODStudioEventInstance::getTimelinePosition(lua_State *L)
 int FMODStudioEventInstance::setTimelinePosition(lua_State *L)
 {
 	// <eventInstance>:setTimelinePosition(position)
-	Rainbow::Lua::Argument<lua_Number>::is_required(L, 2);
+	rainbow::lua::Argument<lua_Number>::is_required(L, 2);
 
 	FMODStudioEventInstance *self = Bind::self(L);
 	if (!self)

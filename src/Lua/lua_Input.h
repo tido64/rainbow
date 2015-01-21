@@ -14,7 +14,7 @@ class  Key;
 struct lua_State;
 struct Touch;
 
-NS_RAINBOW_LUA_MODULE_BEGIN(Input)
+NS_RAINBOW_LUA_MODULE_BEGIN(input)
 {
 	void init(lua_State *L);
 
@@ -31,6 +31,6 @@ NS_RAINBOW_LUA_MODULE_BEGIN(Input)
 	void on_touch_canceled(lua_State *L);
 	void on_touch_ended(lua_State *L, const Touch *const touches, const size_t count);
 	void on_touch_moved(lua_State *L, const Touch *const touches, const size_t count);
-} NS_RAINBOW_LUA_MODULE_END(Input)
+} NS_RAINBOW_LUA_MODULE_END(input)
 
 #endif

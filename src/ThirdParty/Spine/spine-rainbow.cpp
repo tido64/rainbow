@@ -103,7 +103,7 @@ namespace
 	                              spEvent *event,
 	                              int loop_count)
 	{
-		using Spine::Lua::Skeleton;
+		using spine::lua::Skeleton;
 		Skeleton *sk = static_cast<Skeleton*>(state->rendererObject);
 		if (!sk->listener())
 			return;
@@ -142,7 +142,7 @@ namespace
 			++nargs;
 		}
 		lua_pushinteger(sk->state(), loop_count);
-		Rainbow::Lua::call(
+		rainbow::lua::call(
 		    sk->state(), nargs, 0, 0,
 		    "An error occurred while handling an animation state event");
 	}
@@ -464,7 +464,7 @@ void Skeleton::update(const unsigned long dt)
 
 NS_RAINBOW_LUA_BEGIN
 {
-	using Spine::Lua::Skeleton;
+	using spine::lua::Skeleton;
 
 	template<>
 	const char Skeleton::Bind::class_name[] = "skeleton";
@@ -491,26 +491,26 @@ NS_RAINBOW_LUA_BEGIN
 	};
 } NS_RAINBOW_LUA_END
 
-namespace Spine
+namespace spine
 {
-	namespace Lua
+	namespace lua
 	{
 		Skeleton::Skeleton(lua_State *L) : state_(L)
 		{
-			Rainbow::Lua::Argument<char*>::is_required(L, 1);
-			Rainbow::Lua::Argument<lua_Number>::is_optional(L, 2);
+			rainbow::lua::Argument<char*>::is_required(L, 1);
+			rainbow::lua::Argument<lua_Number>::is_optional(L, 2);
 
 			skeleton_.reset(
 			    ::Skeleton::from_json(lua_tostring(L, 1),
-			                          Rainbow::Lua::optnumber(L, 2, 1.0f)));
+			                          rainbow::lua::optnumber(L, 2, 1.0f)));
 		}
 
 		int Skeleton::add_animation(lua_State *L)
 		{
-			Rainbow::Lua::Argument<lua_Number>::is_required(L, 2);
-			Rainbow::Lua::Argument<char*>::is_required(L, 3);
-			Rainbow::Lua::Argument<bool>::is_required(L, 4);
-			Rainbow::Lua::Argument<lua_Number>::is_required(L, 5);
+			rainbow::lua::Argument<lua_Number>::is_required(L, 2);
+			rainbow::lua::Argument<char*>::is_required(L, 3);
+			rainbow::lua::Argument<bool>::is_required(L, 4);
+			rainbow::lua::Argument<lua_Number>::is_required(L, 5);
 
 			Skeleton *self = Bind::self(L);
 			if (!self)
@@ -543,7 +543,7 @@ namespace Spine
 
 		int Skeleton::get_current_animation(lua_State *L)
 		{
-			Rainbow::Lua::Argument<lua_Number>::is_required(L, 2);
+			rainbow::lua::Argument<lua_Number>::is_required(L, 2);
 
 			Skeleton *self = Bind::self(L);
 			if (!self)
@@ -569,9 +569,9 @@ namespace Spine
 
 		int Skeleton::set_animation(lua_State *L)
 		{
-			Rainbow::Lua::Argument<lua_Number>::is_required(L, 2);
-			Rainbow::Lua::Argument<char*>::is_required(L, 3);
-			Rainbow::Lua::Argument<bool>::is_required(L, 4);
+			rainbow::lua::Argument<lua_Number>::is_required(L, 2);
+			rainbow::lua::Argument<char*>::is_required(L, 3);
+			rainbow::lua::Argument<bool>::is_required(L, 4);
 
 			Skeleton *self = Bind::self(L);
 			if (!self)
@@ -586,9 +586,9 @@ namespace Spine
 
 		int Skeleton::set_animation_mix(lua_State *L)
 		{
-			Rainbow::Lua::Argument<char*>::is_required(L, 2);
-			Rainbow::Lua::Argument<char*>::is_required(L, 3);
-			Rainbow::Lua::Argument<lua_Number>::is_required(L, 4);
+			rainbow::lua::Argument<char*>::is_required(L, 2);
+			rainbow::lua::Argument<char*>::is_required(L, 3);
+			rainbow::lua::Argument<lua_Number>::is_required(L, 4);
 
 			Skeleton *self = Bind::self(L);
 			if (!self)
@@ -603,8 +603,8 @@ namespace Spine
 
 		int Skeleton::set_attachment(lua_State *L)
 		{
-			Rainbow::Lua::Argument<char*>::is_required(L, 2);
-			Rainbow::Lua::Argument<char*>::is_optional(L, 3);
+			rainbow::lua::Argument<char*>::is_required(L, 2);
+			rainbow::lua::Argument<char*>::is_optional(L, 3);
 
 			Skeleton *self = Bind::self(L);
 			if (!self)
@@ -617,8 +617,8 @@ namespace Spine
 
 		int Skeleton::set_flip(lua_State *L)
 		{
-			Rainbow::Lua::Argument<bool>::is_required(L, 2);
-			Rainbow::Lua::Argument<bool>::is_required(L, 3);
+			rainbow::lua::Argument<bool>::is_required(L, 2);
+			rainbow::lua::Argument<bool>::is_required(L, 3);
 
 			Skeleton *self = Bind::self(L);
 			if (!self)
@@ -630,7 +630,7 @@ namespace Spine
 
 		int Skeleton::set_listener(lua_State *L)
 		{
-			Rainbow::Lua::Argument<void*>::is_optional(L, 2);
+			rainbow::lua::Argument<void*>::is_optional(L, 2);
 
 			Skeleton *self = Bind::self(L);
 			if (!self)
@@ -659,7 +659,7 @@ namespace Spine
 
 		int Skeleton::set_skin(lua_State *L)
 		{
-			Rainbow::Lua::Argument<char*>::is_optional(L, 2);
+			rainbow::lua::Argument<char*>::is_optional(L, 2);
 
 			Skeleton *self = Bind::self(L);
 			if (!self)

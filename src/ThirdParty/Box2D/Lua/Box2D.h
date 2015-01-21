@@ -13,9 +13,9 @@ struct lua_State;
 /// in place of their prefixes.
 namespace b2
 {
-	namespace Lua
+	namespace lua
 	{
-		void Init(lua_State *);
+		void init(lua_State *);
 	}
 }
 

@@ -6,16 +6,16 @@
 
 TEST_CASE("floats are approximately equal", "[algorithm]")
 {
-	REQUIRE(Rainbow::is_equal(0.0f, 0.0f));
-	REQUIRE_FALSE(Rainbow::is_equal(0.0f, 0.00001f));
-	REQUIRE_FALSE(Rainbow::is_equal(0.0f, -0.00001f));
-	REQUIRE(Rainbow::is_equal(3.14285714f, 22.0f / 7.0f));
+	REQUIRE(rainbow::is_equal(0.0f, 0.0f));
+	REQUIRE_FALSE(rainbow::is_equal(0.0f, 0.00001f));
+	REQUIRE_FALSE(rainbow::is_equal(0.0f, -0.00001f));
+	REQUIRE(rainbow::is_equal(3.14285714f, 22.0f / 7.0f));
 }
 
 TEST_CASE("Converts radians to degrees", "[algorithm]")
 {
-	REQUIRE(Rainbow::is_equal(static_cast<float>(kPi),
-	                          Rainbow::radians(Rainbow::degrees(kPi))));
+	REQUIRE(rainbow::is_equal(static_cast<float>(kPi),
+	                          rainbow::radians(rainbow::degrees(kPi))));
 }
 
 TEST_CASE("Determines whether an integer is a power of two", "[algorithm]")
@@ -25,11 +25,11 @@ TEST_CASE("Determines whether an integer is a power of two", "[algorithm]")
 	{
 		if (i == p)
 		{
-			REQUIRE(Rainbow::is_pow2(i));
+			REQUIRE(rainbow::is_pow2(i));
 			p *= 2;
 			continue;
 		}
-		REQUIRE_FALSE(Rainbow::is_pow2(i));
+		REQUIRE_FALSE(rainbow::is_pow2(i));
 	}
 }
 
@@ -38,7 +38,7 @@ TEST_CASE("Returns the next power of two", "[algorithm]")
 	unsigned int p = 1;
 	for (unsigned int i = 1; i < 100; ++i)
 	{
-		REQUIRE(Rainbow::next_pow2(i) == p);
+		REQUIRE(rainbow::next_pow2(i) == p);
 		if (i == p)
 			p *= 2;
 	}
@@ -46,8 +46,8 @@ TEST_CASE("Returns the next power of two", "[algorithm]")
 
 TEST_CASE("Converts degrees to radians", "[algorithm]")
 {
-	REQUIRE(Rainbow::is_equal(static_cast<float>(kPi),
-	                          Rainbow::degrees(Rainbow::radians(kPi))));
+	REQUIRE(rainbow::is_equal(static_cast<float>(kPi),
+	                          rainbow::degrees(rainbow::radians(kPi))));
 }
 
 TEST_CASE("Converts UTF-8 characters to UTF-32", "[algorithm]")
@@ -86,7 +86,7 @@ TEST_CASE("Converts UTF-8 characters to UTF-32", "[algorithm]")
 	const unsigned char *l = utf8;
 	for (size_t i = 0; utf32[i]; ++i)
 	{
-		const Rainbow::utf_t &c = Rainbow::utf8_decode(l);
+		const rainbow::utf_t &c = rainbow::utf8_decode(l);
 		if (c.bytes == 0)
 		{
 			REQUIRE(utf32[i] == kInvalidCharacter);

@@ -17,10 +17,10 @@
 namespace
 {
 	const char *const kShapeTypes[] = {
-	    b2::Lua::CircleShape::class_name,
-	    b2::Lua::EdgeShape::class_name,
-	    b2::Lua::PolygonShape::class_name,
-	    //b2::Lua::ChainShape::class_name
+	    b2::lua::CircleShape::class_name,
+	    b2::lua::EdgeShape::class_name,
+	    b2::lua::PolygonShape::class_name,
+	    //b2::lua::ChainShape::class_name
 	};
 }
 
@@ -37,10 +37,10 @@ NS_B2_LUA_BEGIN
 		luaR_rawsetinteger(L, "e_typeCount", b2Shape::e_typeCount);
 		lua_rawset(L, -3);
 
-		//Rainbow::Lua::reg<ChainShape>(L);
-		Rainbow::Lua::reg<CircleShape>(L);
-		Rainbow::Lua::reg<EdgeShape>(L);
-		Rainbow::Lua::reg<PolygonShape>(L);
+		//rainbow::lua::reg<ChainShape>(L);
+		rainbow::lua::reg<CircleShape>(L);
+		rainbow::lua::reg<EdgeShape>(L);
+		rainbow::lua::reg<PolygonShape>(L);
 		return 0;
 	}
 
@@ -59,13 +59,13 @@ NS_B2_LUA_BEGIN
 		switch (shape->GetType())
 		{
 			case b2Shape::e_circle:
-				return Rainbow::Lua::alloc<CircleShape>(L);
+				return rainbow::lua::alloc<CircleShape>(L);
 			case b2Shape::e_edge:
-				return Rainbow::Lua::alloc<EdgeShape>(L);
+				return rainbow::lua::alloc<EdgeShape>(L);
 			case b2Shape::e_polygon:
-				return Rainbow::Lua::alloc<PolygonShape>(L);
+				return rainbow::lua::alloc<PolygonShape>(L);
 			case b2Shape::e_chain:
-				//return Rainbow::Lua::alloc<ChainShape>(L);
+				//return rainbow::lua::alloc<ChainShape>(L);
 			default:
 				break;
 		}

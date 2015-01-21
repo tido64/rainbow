@@ -9,7 +9,7 @@
 
 #include "FileSystem/Path.h"
 
-namespace Rainbow
+namespace rainbow
 {
 	DataMapAndroid::DataMapAndroid(const Path &path)
 	    : off_(0), asset_(File::open(path)) {}

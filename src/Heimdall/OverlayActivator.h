@@ -9,7 +9,7 @@
 
 #include "Input/InputListener.h"
 
-namespace Heimdall
+namespace heimdall
 {
 	class Overlay;
 

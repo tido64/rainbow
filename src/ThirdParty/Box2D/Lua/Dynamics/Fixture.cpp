@@ -78,7 +78,7 @@ NS_B2_LUA_BEGIN
 		luaR_rawsetcfunction(L, "Filter", &Filter);
 		luaR_rawsetcfunction(L, "FixtureDef", &FixtureDef);
 
-		Rainbow::Lua::reg<Fixture>(L);
+		rainbow::lua::reg<Fixture>(L);
 	}
 
 	Fixture::Fixture(lua_State *L)
@@ -116,7 +116,7 @@ NS_B2_LUA_BEGIN
 
 	int Fixture::SetFilterData(lua_State *L)
 	{
-		Rainbow::Lua::Argument<void*>::is_required(L, 2);
+		rainbow::lua::Argument<void*>::is_required(L, 2);
 
 		Fixture *self = Bind::self(L);
 		if (!self)
@@ -162,8 +162,8 @@ NS_B2_LUA_BEGIN
 
 	int Fixture::TestPoint(lua_State *L)
 	{
-		Rainbow::Lua::Argument<lua_Number>::is_required(L, 2);
-		Rainbow::Lua::Argument<lua_Number>::is_required(L, 3);
+		rainbow::lua::Argument<lua_Number>::is_required(L, 2);
+		rainbow::lua::Argument<lua_Number>::is_required(L, 3);
 
 		return get1b(
 		    L,
@@ -238,7 +238,7 @@ NS_B2_LUA_BEGIN
 
 	int Fixture::Dump(lua_State *L)
 	{
-		Rainbow::Lua::Argument<lua_Number>::is_required(L, 2);
+		rainbow::lua::Argument<lua_Number>::is_required(L, 2);
 
 		Fixture *self = Bind::self(L);
 		if (!self)
@@ -251,7 +251,7 @@ NS_B2_LUA_BEGIN
 
 NS_RAINBOW_LUA_BEGIN
 {
-	using b2::Lua::Fixture;
+	using b2::lua::Fixture;
 
 	template<>
 	const char Fixture::Bind::class_name[] = "b2Fixture";

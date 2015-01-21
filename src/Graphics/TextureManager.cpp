@@ -7,7 +7,7 @@
 #include "Common/Algorithm.h"
 #include "Graphics/OpenGL.h"
 
-using Rainbow::quick_erase;
+using rainbow::quick_erase;
 
 #if RECORD_VMEM_USAGE
 TextureManager::MemoryUsage TextureManager::memory_usage() const

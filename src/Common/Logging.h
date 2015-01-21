@@ -30,7 +30,7 @@
 #	endif
 #endif  // RAINBOW_OS_ANDROID
 
-#define LOGE(...) Rainbow::error(__VA_ARGS__)
+#define LOGE(...) rainbow::error(__VA_ARGS__)
 #ifdef NDEBUG
 #	define LOGD(...)      static_cast<void>(0)
 #	define LOGF(...)      static_cast<void>(0)
@@ -39,20 +39,20 @@
 #	define R_ABORT(...)   static_cast<void>(0)
 #	define R_ASSERT(...)  static_cast<void>(0)
 #else
-#	define LOGD(...) Rainbow::debug(__VA_ARGS__)
-#	define LOGF(...) Rainbow::fatal(__VA_ARGS__)
-#	define LOGI(...) Rainbow::info(__VA_ARGS__)
-#	define LOGW(...) Rainbow::warn(__VA_ARGS__)
+#	define LOGD(...) rainbow::debug(__VA_ARGS__)
+#	define LOGF(...) rainbow::fatal(__VA_ARGS__)
+#	define LOGI(...) rainbow::info(__VA_ARGS__)
+#	define LOGW(...) rainbow::warn(__VA_ARGS__)
 #	ifndef __PRETTY_FUNCTION__
 #		define __PRETTY_FUNCTION__ __FUNCTION__
 #	endif
 #	ifndef SRC_FILE
 #		define SRC_FILE __FILE__
 #	endif
-#	define R_ABORT(...) Rainbow::abort(__VA_ARGS__)
+#	define R_ABORT(...) rainbow::abort(__VA_ARGS__)
 #	define R_ASSERT(expr, reason) \
 		if (!(expr)) \
-			Rainbow::abort("%s: %s (aborted at %s:%i: %s)", \
+			rainbow::abort("%s: %s (aborted at %s:%i: %s)", \
 			               __PRETTY_FUNCTION__, \
 			               reason, \
 			               SRC_FILE, \
@@ -60,7 +60,7 @@
 			               #expr)
 #endif  // NDEBUG
 
-namespace Rainbow
+namespace rainbow
 {
 	const size_t kLogLineLength = 1024;
 

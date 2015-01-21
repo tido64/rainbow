@@ -39,7 +39,7 @@ public:
 	/// \param shaders     Shader parameters.
 	/// \param attributes  Shader attributes.
 	/// \return Unique program identifier; kInvalidProgram if unsuccessful.
-	unsigned int compile(Shader::ShaderParams *shaders,
+	unsigned int compile(Shader::Params *shaders,
 	                     const Shader::AttributeParams *attributes);
 
 	/// Returns current program details.

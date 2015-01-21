@@ -89,7 +89,7 @@ namespace ConFuoco
 	void RecorderBase<T>::update()
 	{
 		static_cast<T*>(this)->update_impl();
-		this->low = Rainbow::low_pass(this->peak, this->low);
+		this->low = rainbow::low_pass(this->peak, this->low);
 	}
 
 	template<typename T>

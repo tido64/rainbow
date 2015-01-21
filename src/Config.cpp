@@ -12,7 +12,7 @@
 #include "FileSystem/Path.h"
 #include "Lua/LuaHelper.h"
 
-namespace Rainbow
+namespace rainbow
 {
 	Config::Config()
 	    : accelerometer_(true), high_dpi_(false), suspend_(true), width_(0),
@@ -33,7 +33,7 @@ namespace Rainbow
 
 		std::unique_ptr<lua_State, decltype(&lua_close)> L(luaL_newstate(),
 		                                                   lua_close);
-		if (Lua::load(L.get(), config, kConfigModule) == 0)
+		if (lua::load(L.get(), config, kConfigModule) == 0)
 			return;
 
 		lua_getglobal(L.get(), "accelerometer");
@@ -48,7 +48,7 @@ namespace Rainbow
 		lua_getglobal(L.get(), "msaa");
 		if (lua_isnumber(L.get(), -1))
 		{
-			msaa_ = Lua::tointeger(L.get(), -1) &
+			msaa_ = lua::tointeger(L.get(), -1) &
 			        (std::numeric_limits<decltype(msaa_)>::max() - 1);
 			const auto msaa2 = next_pow2(msaa_);
 			if (msaa2 != msaa_)
@@ -60,9 +60,9 @@ namespace Rainbow
 		if (lua_istable(L.get(), -1))
 		{
 			lua_rawgeti(L.get(), -1, 1);
-			width_ = Lua::tointeger(L.get(), -1);
+			width_ = lua::tointeger(L.get(), -1);
 			lua_rawgeti(L.get(), -2, 2);
-			height_ = Lua::tointeger(L.get(), -1);
+			height_ = lua::tointeger(L.get(), -1);
 		}
 
 #ifdef RAINBOW_SDL

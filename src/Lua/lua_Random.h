@@ -9,9 +9,9 @@
 
 struct lua_State;
 
-NS_RAINBOW_LUA_MODULE_BEGIN(Random)
+NS_RAINBOW_LUA_MODULE_BEGIN(random)
 {
 	void init(lua_State *);
-} NS_RAINBOW_LUA_MODULE_END(Random)
+} NS_RAINBOW_LUA_MODULE_END(random)
 
 #endif

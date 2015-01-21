@@ -7,7 +7,7 @@
 
 #include "Common/Algorithm.h"
 
-namespace Rainbow
+namespace rainbow
 {
 	/// Structure for storing a three-dimensional vector.
 	template<typename T, typename Enable = void>
@@ -60,7 +60,7 @@ namespace Rainbow
 	};
 }
 
-using Vec3d = Rainbow::Vec3<double>;
-using Vec3f = Rainbow::Vec3<float>;
+using Vec3d = rainbow::Vec3<double>;
+using Vec3f = rainbow::Vec3<float>;
 
 #endif

@@ -8,7 +8,7 @@
 #include "Common/Logging.h"
 #include "Platform/Macros.h"  // TODO: Remove when MSVC implements 'constexpr'
 
-namespace Rainbow
+namespace rainbow
 {
 	static_assert(sizeof(unsigned int) >= 4, "int is less than 32-bits");
 
@@ -72,7 +72,7 @@ namespace Rainbow
 	};
 }
 
-using Colorb = Rainbow::Color<unsigned char>;
-using Colorf = Rainbow::Color<float>;
+using Colorb = rainbow::Color<unsigned char>;
+using Colorf = rainbow::Color<float>;
 
 #endif

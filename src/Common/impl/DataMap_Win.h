@@ -5,7 +5,7 @@
 #ifndef COMMON_IMPL_DATAMAP_WIN_H_
 #define COMMON_IMPL_DATAMAP_WIN_H_
 
-namespace Rainbow
+namespace rainbow
 {
 	class DataMapWin
 	{
@@ -65,6 +65,6 @@ namespace Rainbow
 	}
 }
 
-using DataMap = Rainbow::DataMapBase<Rainbow::DataMapWin>;
+using DataMap = rainbow::DataMapBase<rainbow::DataMapWin>;
 
 #endif

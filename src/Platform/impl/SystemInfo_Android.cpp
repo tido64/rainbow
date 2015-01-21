@@ -5,9 +5,9 @@
 #include "Platform/SystemInfo.h"
 #ifdef RAINBOW_OS_ANDROID
 
-namespace Rainbow
+namespace rainbow
 {
-	namespace SystemInfo
+	namespace system_info
 	{
 		bool has_accelerometer()
 		{

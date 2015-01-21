@@ -7,7 +7,7 @@
 
 #include "Common/DataMap.h"
 
-namespace Rainbow
+namespace rainbow
 {
 	struct Image
 	{
@@ -57,22 +57,22 @@ namespace Rainbow
 #	include "Graphics/Decoders/PVRTC.h"
 #endif  // GL_IMG_texture_compression_pvrtc
 
-namespace Rainbow
+namespace rainbow
 {
 	Image Image::decode(const DataMap &data)
 	{
 #ifdef USE_PVRTC
-		if (PVRTC::check(data))
-			return PVRTC::decode(data);
+		if (pvrtc::check(data))
+			return pvrtc::decode(data);
 #endif  // USE_PVRTC
 
 #ifdef USE_PNG
-		if (PNG::check(data))
-			return PNG::decode(data);
+		if (png::check(data))
+			return png::decode(data);
 #endif  // USE_PNG
 
 #ifdef USE_UIKIT
-		return UIKit::decode(data);
+		return uikit::decode(data);
 #else
 		return Image();
 #endif

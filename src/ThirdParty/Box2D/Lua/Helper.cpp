@@ -38,7 +38,7 @@ namespace b2
 	                                  const size_t length)
 	{
 		getfield(L, field, length);
-		const lua_Integer i = Rainbow::Lua::tointeger(L, -1);
+		const lua_Integer i = rainbow::lua::tointeger(L, -1);
 		lua_pop(L, 1);
 		return i;
 	}
@@ -49,7 +49,7 @@ namespace b2
 	                                const size_t length)
 	{
 		getfield(L, field, length);
-		const lua_Number n = Rainbow::Lua::tonumber(L, -1);
+		const lua_Number n = rainbow::lua::tonumber(L, -1);
 		lua_pop(L, 1);
 		return n;
 	}

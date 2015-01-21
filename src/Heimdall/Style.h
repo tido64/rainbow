@@ -7,9 +7,9 @@
 
 #include "Common/Color.h"
 
-namespace Heimdall
+namespace heimdall
 {
-	namespace Color
+	namespace color
 	{
 		constexpr Colorb DebugInfoFont()
 		{

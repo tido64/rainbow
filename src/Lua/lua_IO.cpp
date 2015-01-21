@@ -13,7 +13,7 @@ namespace
 	int load(lua_State *L)
 	{
 		// rainbow.io.load(filename)
-		Rainbow::Lua::Argument<char*>::is_required(L, 1);
+		rainbow::lua::Argument<char*>::is_required(L, 1);
 
 		Data blob = Data::load_document(lua_tostring(L, 1));
 		if (!blob)
@@ -26,9 +26,9 @@ namespace
 	int save(lua_State *L)
 	{
 		// rainbow.io.save(filename, data, size)
-		Rainbow::Lua::Argument<char*>::is_required(L, 1);
-		Rainbow::Lua::Argument<char*>::is_required(L, 2);
-		Rainbow::Lua::Argument<lua_Number>::is_required(L, 3);
+		rainbow::lua::Argument<char*>::is_required(L, 1);
+		rainbow::lua::Argument<char*>::is_required(L, 2);
+		rainbow::lua::Argument<lua_Number>::is_required(L, 3);
 
 		Data blob(lua_tostring(L, 2),
 		          lua_tointeger(L, 3),
@@ -38,7 +38,7 @@ namespace
 	}
 }
 
-NS_RAINBOW_LUA_MODULE_BEGIN(IO)
+NS_RAINBOW_LUA_MODULE_BEGIN(io)
 {
 	void init(lua_State *L)
 	{
@@ -48,4 +48,4 @@ NS_RAINBOW_LUA_MODULE_BEGIN(IO)
 		luaR_rawsetcfunction(L, "save", &::save);
 		lua_rawset(L, -3);
 	}
-} NS_RAINBOW_LUA_MODULE_END(IO)
+} NS_RAINBOW_LUA_MODULE_END(io)

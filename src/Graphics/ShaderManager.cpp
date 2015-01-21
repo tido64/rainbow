@@ -63,7 +63,7 @@ namespace
 		return unique_str();
 	}
 
-	unsigned int compile_shader(const Shader::ShaderParams &shader)
+	unsigned int compile_shader(const Shader::Params &shader)
 	{
 #ifdef GL_ES_VERSION_2_0
 		const char *source = shader.source;
@@ -95,7 +95,7 @@ namespace
 		return id;
 	}
 
-	unsigned int link_program(const Shader::ShaderParams *shaders,
+	unsigned int link_program(const Shader::Params *shaders,
 	                          const Shader::AttributeParams *attributes)
 	{
 		const GLuint program = glCreateProgram();
@@ -119,7 +119,7 @@ namespace
 	}
 }
 
-unsigned int ShaderManager::compile(Shader::ShaderParams *shaders,
+unsigned int ShaderManager::compile(Shader::Params *shaders,
                                     const Shader::AttributeParams *attributes)
 {
 	for (auto shader = shaders; shader->type != Shader::kTypeInvalid; ++shader)
@@ -212,9 +212,9 @@ ShaderManager::~ShaderManager()
 
 bool ShaderManager::init()
 {
-	Shader::ShaderParams shaders[] = {
-	    {Shader::kTypeVertex, 0, Rainbow::Shaders::kFixed2Dv},
-	    {Shader::kTypeFragment, 0, Rainbow::Shaders::kFixed2Df},
+	Shader::Params shaders[] = {
+	    {Shader::kTypeVertex, 0, rainbow::shaders::kFixed2Dv},
+	    {Shader::kTypeFragment, 0, rainbow::shaders::kFixed2Df},
 	    {Shader::kTypeInvalid, 0, nullptr}};
 	const unsigned int pid = compile(shaders, nullptr);
 	if (pid == kInvalidProgram)

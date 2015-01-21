@@ -6,9 +6,9 @@
 
 #include "Graphics/OpenGL.h"
 
-namespace Rainbow
+namespace rainbow
 {
-	namespace Shaders
+	namespace shaders
 	{
 #ifdef GL_ES_VERSION_2_0
 #	include "Graphics/Shaders/Shaders.h"

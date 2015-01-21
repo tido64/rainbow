@@ -7,7 +7,7 @@
 
 #include "Common/Algorithm.h"
 
-namespace Rainbow
+namespace rainbow
 {
 	/// Structure for storing a two-dimensional vector.
 	template<typename T, typename Enable = void>
@@ -89,8 +89,8 @@ namespace Rainbow
 	};
 }
 
-using Vec2f = Rainbow::Vec2<float>;
-using Vec2i = Rainbow::Vec2<int>;
-using Vec2u = Rainbow::Vec2<unsigned>;
+using Vec2f = rainbow::Vec2<float>;
+using Vec2i = rainbow::Vec2<int>;
+using Vec2u = rainbow::Vec2<unsigned>;
 
 #endif

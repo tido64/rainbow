@@ -10,7 +10,7 @@
 #include "FileSystem/File.h"
 #include "FileSystem/Path.h"
 
-#define strllen(literal) (Rainbow::array_size(literal) - 1)
+#define strllen(literal) (rainbow::array_size(literal) - 1)
 
 namespace ConFuoco
 {

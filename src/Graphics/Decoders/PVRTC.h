@@ -12,10 +12,10 @@
 
 #define USE_PVRTC
 
-namespace PVRTC
+namespace pvrtc
 {
 	bool check(const DataMap &data) pure;
-	Rainbow::Image decode(const DataMap &data) pure;
+	rainbow::Image decode(const DataMap &data) pure;
 
 	namespace
 	{
@@ -45,10 +45,10 @@ namespace PVRTC
 		return *(uint32_t*)data.bytes() == kPVRHeaderVersion3;
 	}
 
-	Rainbow::Image decode(const DataMap &data)
+	rainbow::Image decode(const DataMap &data)
 	{
-		Rainbow::Image image;
-		image.format = Rainbow::Image::Format::PVRTC;
+		rainbow::Image image;
+		image.format = rainbow::Image::Format::PVRTC;
 
 #ifdef RAINBOW_OS_IOS
 		PVRTexHeader *header = (PVRTexHeader*)data.bytes();

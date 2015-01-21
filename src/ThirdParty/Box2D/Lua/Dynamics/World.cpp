@@ -32,10 +32,10 @@ namespace b2
 		lua_insert(L, -2);
 
 		lua_rawgeti(L, LUA_REGISTRYINDEX, g_contact);
-		auto *self = Rainbow::Lua::touserdata<Lua::Contact>(L, -1);
+		auto *self = rainbow::lua::touserdata<lua::Contact>(L, -1);
 		self->reset(contact);
 
-		Rainbow::Lua::call(L, 2, 0, 0, "Failed to evaluate '%s'", event);
+		rainbow::lua::call(L, 2, 0, 0, "Failed to evaluate '%s'", event);
 	}
 }
 
@@ -43,8 +43,8 @@ NS_B2_LUA_BEGIN
 {
 	World::World(lua_State *L) : contact_listener_(LUA_NOREF), state_(L)
 	{
-		Rainbow::Lua::Argument<lua_Number>::is_optional(L, 1);
-		Rainbow::Lua::Argument<lua_Number>::is_optional(L, 2);
+		rainbow::lua::Argument<lua_Number>::is_optional(L, 1);
+		rainbow::lua::Argument<lua_Number>::is_optional(L, 2);
 
 		switch (lua_gettop(L))
 		{
@@ -128,7 +128,7 @@ NS_B2_LUA_BEGIN
 
 	int World::SetContactListener(lua_State *L)
 	{
-		Rainbow::Lua::Argument<void*>::is_optional(L, 2);
+		rainbow::lua::Argument<void*>::is_optional(L, 2);
 
 		World *self = Bind::self(L);
 		if (!self)
@@ -143,7 +143,7 @@ NS_B2_LUA_BEGIN
 		}
 		if (g_contact == LUA_NOREF)
 		{
-			Rainbow::Lua::alloc<Contact>(L);
+			rainbow::lua::alloc<Contact>(L);
 			g_contact = luaL_ref(L, LUA_REGISTRYINDEX);
 		}
 		lua_settop(L, 2);
@@ -161,7 +161,7 @@ NS_B2_LUA_BEGIN
 
 	int World::CreateBody(lua_State *L)
 	{
-		Rainbow::Lua::Argument<void*>::is_required(L, 2);
+		rainbow::lua::Argument<void*>::is_required(L, 2);
 
 		World *self = Bind::self(L);
 		if (!self)
@@ -169,18 +169,18 @@ NS_B2_LUA_BEGIN
 
 		const b2BodyDef &bd = GetBodyDef(L);
 		lua_pushlightuserdata(L, self->get()->CreateBody(&bd));
-		return Rainbow::Lua::alloc<Body>(L);
+		return rainbow::lua::alloc<Body>(L);
 	}
 
 	int World::DestroyBody(lua_State *L)
 	{
-		Rainbow::Lua::Argument<Body>::is_required(L, 2);
+		rainbow::lua::Argument<Body>::is_required(L, 2);
 
 		World *self = Bind::self(L);
 		if (!self)
 			return 0;
 
-		self->get()->DestroyBody(Rainbow::Lua::touserdata<Body>(L, 2)->get());
+		self->get()->DestroyBody(rainbow::lua::touserdata<Body>(L, 2)->get());
 		return 0;
 	}
 
@@ -196,9 +196,9 @@ NS_B2_LUA_BEGIN
 
 	int World::Step(lua_State *L)
 	{
-		Rainbow::Lua::Argument<lua_Number>::is_required(L, 2);
-		Rainbow::Lua::Argument<lua_Number>::is_optional(L, 3);
-		Rainbow::Lua::Argument<lua_Number>::is_optional(L, 4);
+		rainbow::lua::Argument<lua_Number>::is_required(L, 2);
+		rainbow::lua::Argument<lua_Number>::is_optional(L, 3);
+		rainbow::lua::Argument<lua_Number>::is_optional(L, 4);
 
 		World *self = Bind::self(L);
 		if (!self)
@@ -206,8 +206,8 @@ NS_B2_LUA_BEGIN
 
 		self->get()->Step(
 		    lua_tonumber(L, 2),
-		    static_cast<int32>(Rainbow::Lua::optinteger(L, 3, 8)),
-		    static_cast<int32>(Rainbow::Lua::optinteger(L, 4, 3)));
+		    static_cast<int32>(rainbow::lua::optinteger(L, 3, 8)),
+		    static_cast<int32>(rainbow::lua::optinteger(L, 4, 3)));
 		return 0;
 	}
 
@@ -394,7 +394,7 @@ NS_B2_LUA_BEGIN
 
 NS_RAINBOW_LUA_BEGIN
 {
-	using b2::Lua::World;
+	using b2::lua::World;
 
 	template<>
 	const char World::Bind::class_name[] = "World";

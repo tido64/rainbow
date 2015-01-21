@@ -33,10 +33,10 @@ NS_B2_LUA_BEGIN
 
 	int EdgeShape::Set(lua_State *L)
 	{
-		Rainbow::Lua::Argument<lua_Number>::is_required(L, 2);
-		Rainbow::Lua::Argument<lua_Number>::is_required(L, 3);
-		Rainbow::Lua::Argument<lua_Number>::is_required(L, 4);
-		Rainbow::Lua::Argument<lua_Number>::is_required(L, 5);
+		rainbow::lua::Argument<lua_Number>::is_required(L, 2);
+		rainbow::lua::Argument<lua_Number>::is_required(L, 3);
+		rainbow::lua::Argument<lua_Number>::is_required(L, 4);
+		rainbow::lua::Argument<lua_Number>::is_required(L, 5);
 
 		EdgeShape *self = Bind::self(L);
 		if (!self)
@@ -60,7 +60,7 @@ NS_B2_LUA_BEGIN
 
 NS_RAINBOW_LUA_BEGIN
 {
-	using b2::Lua::EdgeShape;
+	using b2::lua::EdgeShape;
 
 	template<>
 	const char EdgeShape::Bind::class_name[] = "EdgeShape";

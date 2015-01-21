@@ -23,7 +23,7 @@
 #include "Graphics/OpenGL.h"
 #include "Graphics/TextureManager.h"
 
-using Rainbow::array_size;
+using rainbow::array_size;
 
 using uchar_t = unsigned char;
 using uint_t = unsigned int;
@@ -178,8 +178,8 @@ FontAtlas::FontAtlas(const Data &font, const float pt)
 	const Vec2u &max = max_glyph_size(face, charset_, array_size(charset_));
 	if (max.is_zero())
 		return;
-	const Vec2u size(Rainbow::next_pow2(max.x * kNumGlyphsPerColRow),
-	                 Rainbow::next_pow2(max.y * kNumGlyphsPerColRow));
+	const Vec2u size(rainbow::next_pow2(max.x * kNumGlyphsPerColRow),
+	                 rainbow::next_pow2(max.y * kNumGlyphsPerColRow));
 
 	// GL_LUMINANCE8_ALPHA8 buffer
 	Vec2u offset(size.x * size.y * 2, 0);

@@ -20,10 +20,10 @@
 
 struct Touch;
 
-namespace Heimdall
+namespace heimdall
 {
 	/// Overlay for debugging options.
-	class Gatekeeper final : public Rainbow::Director, public InputListener
+	class Gatekeeper final : public rainbow::Director, public InputListener
 	{
 	public:
 		Gatekeeper();
@@ -59,7 +59,7 @@ namespace Heimdall
 	}
 }
 
-using Director = Heimdall::Gatekeeper;
+using Director = heimdall::Gatekeeper;
 
 #endif  // USE_HEIMDALL
 #endif  // HEIMDALL_GATEKEEPER_H_

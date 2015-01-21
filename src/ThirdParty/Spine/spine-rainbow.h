@@ -105,21 +105,21 @@ private:
 	spSkeletonData *data_;
 };
 
-namespace Spine
+namespace spine
 {
-	namespace Lua
+	namespace lua
 	{
 		class Skeleton final : public Drawable,
-		                       public Rainbow::Lua::Bind<Skeleton>
+		                       public rainbow::lua::Bind<Skeleton>
 		{
-			friend Rainbow::Lua::Bind<Skeleton>;
+			friend rainbow::lua::Bind<Skeleton>;
 
 		public:
 			Skeleton(lua_State *);
 
 			::Skeleton* get() const { return skeleton_.get(); }
 
-			const Rainbow::Lua::ScopedRef& listener() const
+			const rainbow::lua::ScopedRef& listener() const
 			{
 				return listener_;
 			}
@@ -143,7 +143,7 @@ namespace Spine
 
 			std::unique_ptr<::Skeleton> skeleton_;
 			lua_State *state_;
-			Rainbow::Lua::ScopedRef listener_;
+			rainbow::lua::ScopedRef listener_;
 
 			// Implement Drawable.
 

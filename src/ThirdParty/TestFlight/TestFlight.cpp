@@ -19,7 +19,7 @@ namespace
 	int log(lua_State *L)
 	{
 		// TestFlight.log(message)
-		Rainbow::Lua::Argument<char*>::is_required(L, 1);
+		rainbow::lua::Argument<char*>::is_required(L, 1);
 
 		const char *message = lua_tostring(L, 1);
 #ifdef USE_TESTFLIGHT_SDK
@@ -36,7 +36,7 @@ namespace
 	int pass_checkpoint(lua_State *L)
 	{
 		// TestFlight.pass_checkpoint(checkpoint)
-		Rainbow::Lua::Argument<char*>::is_required(L, 1);
+		rainbow::lua::Argument<char*>::is_required(L, 1);
 
 		const char *checkpoint = lua_tostring(L, 1);
 #ifdef USE_TESTFLIGHT_SDK
@@ -56,9 +56,9 @@ namespace
 	}
 }
 
-namespace TF
+namespace tf
 {
-	namespace Lua
+	namespace lua
 	{
 		void init(lua_State *L)
 		{

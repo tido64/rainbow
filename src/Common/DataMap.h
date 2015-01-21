@@ -10,7 +10,7 @@
 
 class Path;
 
-namespace Rainbow
+namespace rainbow
 {
 	// TODO: Move error strings to a separate header.
 	static const char kErrorFileOpen[] = "Failed to open '%s' (%x)";

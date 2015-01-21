@@ -15,9 +15,9 @@ namespace b2
 {
 	class StableWorld;
 
-	namespace Lua
+	namespace lua
 	{
-		class World : public b2ContactListener, public Rainbow::Lua::Bind<World>
+		class World : public b2ContactListener, public rainbow::lua::Bind<World>
 		{
 			friend Bind;
 

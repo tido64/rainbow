@@ -18,16 +18,16 @@
 
 namespace b2
 {
-	namespace Lua
+	namespace lua
 	{
-		void Init(lua_State *L)
+		void init(lua_State *L)
 		{
 			lua_createtable(L, 0, 16);
 			ShapesInit(L);
 			Body::Init(L);
 			Fixture::Init(L);
-			Rainbow::Lua::reg<World>(L);
-			Rainbow::Lua::reg<Contact>(L);
+			rainbow::lua::reg<World>(L);
+			rainbow::lua::reg<Contact>(L);
 			lua_setglobal(L, "b2");
 
 			new DebugDraw();  // Manages its own lifetime.

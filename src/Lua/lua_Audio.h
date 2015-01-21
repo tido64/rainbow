@@ -9,9 +9,9 @@
 
 struct lua_State;
 
-NS_RAINBOW_LUA_MODULE_BEGIN(Audio)
+NS_RAINBOW_LUA_MODULE_BEGIN(audio)
 {
 	void init(lua_State *);
-} NS_RAINBOW_LUA_MODULE_END(Audio)
+} NS_RAINBOW_LUA_MODULE_END(audio)
 
 #endif

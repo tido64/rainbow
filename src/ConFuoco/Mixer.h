@@ -228,7 +228,7 @@ namespace ConFuoco
 	{
 		static_cast<T*>(this)->release_impl(s);
 		auto i = std::find(std::begin(this->sounds), std::end(this->sounds), s);
-		Rainbow::quick_erase(i);
+		rainbow::quick_erase(i);
 
 		LOGD("ConFuoco: Released %p", static_cast<void*>(s));
 	}

@@ -13,20 +13,20 @@
 
 #define USE_PNG
 
-namespace PNG
+namespace png
 {
 	bool check(const DataMap &data) pure;
-	Rainbow::Image decode(const DataMap &data) pure;
+	rainbow::Image decode(const DataMap &data) pure;
 
 	bool check(const DataMap &data)
 	{
 		return png_sig_cmp(data, 0, 8) == 0;
 	}
 
-	Rainbow::Image decode(const DataMap &data)
+	rainbow::Image decode(const DataMap &data)
 	{
-		Rainbow::Image image;
-		image.format = Rainbow::Image::Format::PNG;
+		rainbow::Image image;
+		image.format = rainbow::Image::Format::PNG;
 
 		png_image pi;
 		memset(&pi, 0, sizeof(pi));

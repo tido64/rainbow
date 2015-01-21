@@ -16,7 +16,7 @@
 #	define snprintf(...) sprintf_s(__VA_ARGS__)
 #endif
 
-namespace Heimdall
+namespace heimdall
 {
 	namespace
 	{
@@ -34,7 +34,7 @@ namespace Heimdall
 
 	void DebugInfo::init_button(const Vec2f &p, SharedPtr<FontAtlas> font)
 	{
-		button_.set_color(Color::InactiveFont());
+		button_.set_color(color::InactiveFont());
 		button_.set_font(std::move(font));
 		button_.set_position(p);
 		button_.set_text(kStringShowDebug);
@@ -42,12 +42,12 @@ namespace Heimdall
 			node_->enabled = !node_->enabled;
 			if (node_->enabled)
 			{
-				button_.set_color(Color::NormalFont());
+				button_.set_color(color::NormalFont());
 				button_.set_text(kStringHideDebug);
 			}
 			else
 			{
-				button_.set_color(Color::InactiveFont());
+				button_.set_color(color::InactiveFont());
 				button_.set_text(kStringShowDebug);
 			}
 		});
@@ -55,7 +55,7 @@ namespace Heimdall
 
 	void DebugInfo::init_console(const Vec2f &p, SharedPtr<FontAtlas> font)
 	{
-		label_.set_color(Color::DebugInfoFont());
+		label_.set_color(color::DebugInfoFont());
 		label_.set_font(std::move(font));
 		label_.set_position(p);
 		char tmp[kBufferSize];

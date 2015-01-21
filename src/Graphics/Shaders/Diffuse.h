@@ -7,9 +7,9 @@
 
 #include "Common/Vec3.h"
 
-namespace Rainbow
+namespace rainbow
 {
-	namespace Shaders
+	namespace shaders
 	{
 		class Diffuse
 		{

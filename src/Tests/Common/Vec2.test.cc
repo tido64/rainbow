@@ -13,14 +13,14 @@ TEST_CASE("Angle between two Vec2s", "[vec2]")
 {
 	Vec2i v0;
 	Vec2i v1(1, 1);
-	REQUIRE(Rainbow::is_equal(v0.angle(v1), 0.7853982f));
+	REQUIRE(rainbow::is_equal(v0.angle(v1), 0.7853982f));
 }
 
 TEST_CASE("Distance between two Vec2s", "[vec2]")
 {
 	Vec2i v0;
 	Vec2i v1(3, 4);
-	REQUIRE(Rainbow::is_equal(v0.distance(v1), 5.0f));
+	REQUIRE(rainbow::is_equal(v0.distance(v1), 5.0f));
 }
 
 TEST_CASE("Dot product of two Vec2s", "[vec2]")
