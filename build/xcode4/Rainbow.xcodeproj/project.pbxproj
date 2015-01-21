@@ -177,6 +177,8 @@
 		19EBC54D16599D7000D3B5D7 /* Mixer_AL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19EBC54816599D7000D3B5D7 /* Mixer_AL.cpp */; };
 		19EBC55116599D9F00D3B5D7 /* ShaderManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19EBC54F16599D9F00D3B5D7 /* ShaderManager.cpp */; };
 		19ED191C1682247D00AAA323 /* lua_Renderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19ED191A1682247D00AAA323 /* lua_Renderer.cpp */; };
+		19EF136A1A7036C500D7AAA9 /* CircleShape.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19EF13681A7036C500D7AAA9 /* CircleShape.cpp */; };
+		19EF136D1A7036DD00D7AAA9 /* DebugDraw.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19EF136B1A7036DD00D7AAA9 /* DebugDraw.cpp */; };
 		19F98DA1171970C000A85873 /* Recorder_iOS.mm in Sources */ = {isa = PBXBuildFile; fileRef = 19F98DA0171970C000A85873 /* Recorder_iOS.mm */; };
 		19F98DA8171B5E1500A85873 /* Prose in Resources */ = {isa = PBXBuildFile; fileRef = 19F98DA6171B5E1500A85873 /* Prose */; };
 		19FDF4961942FCFB00B5F21B /* LuaSyntax.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19FDF4941942FCFB00B5F21B /* LuaSyntax.cpp */; };
@@ -541,6 +543,10 @@
 		19ED191A1682247D00AAA323 /* lua_Renderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = lua_Renderer.cpp; sourceTree = "<group>"; };
 		19ED191B1682247D00AAA323 /* lua_Renderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lua_Renderer.h; sourceTree = "<group>"; };
 		19EEC4BC18592896005D93E3 /* Recorder_iOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Recorder_iOS.h; sourceTree = "<group>"; };
+		19EF13681A7036C500D7AAA9 /* CircleShape.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CircleShape.cpp; sourceTree = "<group>"; };
+		19EF13691A7036C500D7AAA9 /* CircleShape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CircleShape.h; sourceTree = "<group>"; };
+		19EF136B1A7036DD00D7AAA9 /* DebugDraw.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DebugDraw.cpp; sourceTree = "<group>"; };
+		19EF136C1A7036DD00D7AAA9 /* DebugDraw.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DebugDraw.h; sourceTree = "<group>"; };
 		19F9890715F924E8005A5F69 /* lua_IO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lua_IO.h; sourceTree = "<group>"; };
 		19F9890C15FBBB3B005A5F69 /* NonCopyable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NonCopyable.h; sourceTree = "<group>"; };
 		19F98DA0171970C000A85873 /* Recorder_iOS.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Recorder_iOS.mm; sourceTree = "<group>"; };
@@ -1017,6 +1023,8 @@
 			isa = PBXGroup;
 			children = (
 				1960AFB51A4E278E0015A3AD /* Lua */,
+				19EF136B1A7036DD00D7AAA9 /* DebugDraw.cpp */,
+				19EF136C1A7036DD00D7AAA9 /* DebugDraw.h */,
 				1960AFCC1A4E278E0015A3AD /* StableWorld.cpp */,
 				1960AFCD1A4E278E0015A3AD /* StableWorld.h */,
 			);
@@ -1154,6 +1162,8 @@
 		1960AFB91A4E278E0015A3AD /* Shapes */ = {
 			isa = PBXGroup;
 			children = (
+				19EF13681A7036C500D7AAA9 /* CircleShape.cpp */,
+				19EF13691A7036C500D7AAA9 /* CircleShape.h */,
 				1960AFBA1A4E278E0015A3AD /* EdgeShape.cpp */,
 				1960AFBB1A4E278E0015A3AD /* EdgeShape.h */,
 				1960AFBC1A4E278E0015A3AD /* PolygonShape.cpp */,
@@ -1427,6 +1437,7 @@
 				1939A06D152C401300494609 /* b2FrictionJoint.cpp in Sources */,
 				1939A06E152C401300494609 /* b2GearJoint.cpp in Sources */,
 				1939A06F152C401300494609 /* b2Joint.cpp in Sources */,
+				19EF136D1A7036DD00D7AAA9 /* DebugDraw.cpp in Sources */,
 				1939A070152C401300494609 /* b2MouseJoint.cpp in Sources */,
 				1939A071152C401300494609 /* b2PrismaticJoint.cpp in Sources */,
 				1939A072152C401300494609 /* b2PulleyJoint.cpp in Sources */,
@@ -1514,6 +1525,7 @@
 				19ED191C1682247D00AAA323 /* lua_Renderer.cpp in Sources */,
 				1963EA4F197F1BA400107228 /* TestFlight.cpp in Sources */,
 				190497DF168293DB0037F5EC /* lua_IO.cpp in Sources */,
+				19EF136A1A7036C500D7AAA9 /* CircleShape.cpp in Sources */,
 				190497E41682963F0037F5EC /* lua_Platform.cpp in Sources */,
 				19E91FC21682B1460054D61F /* LuaHelper.cpp in Sources */,
 				193929B616E23D410018340B /* RainbowViewController.mm in Sources */,
