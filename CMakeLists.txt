@@ -44,6 +44,7 @@ set(SOURCE_FILES
 	src/Common/NonCopyable.h
 	src/Common/Random.cpp
 	src/Common/Random.h
+	src/Common/ScopeStack.h
 	src/Common/TimedEvent.h
 	src/Common/TreeNode.h
 	src/Common/Vec2.h

@@ -1,4 +1,4 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -11,11 +11,14 @@
 #include "Common/Logging.h"
 #include "Common/NonCopyable.h"
 
+namespace rainbow { class LinearAllocator; }
+
 /// Makes a class reference countable.
 ///
 /// Subclasses of RefCounted can be wrapped with SharedPtr.
 class RefCounted : private NonCopyable<RefCounted>
 {
+	friend rainbow::LinearAllocator;
 	template<typename T> friend class SharedPtr;
 
 protected:
