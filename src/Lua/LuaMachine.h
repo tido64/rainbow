@@ -1,4 +1,4 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -9,17 +9,17 @@
 
 class Data;
 struct lua_State;
+class LuaScript;
 namespace SceneGraph { class Node; }
 
 namespace rainbow
 {
-	class Director;
 	namespace lua { class SceneGraph; }
 
 	/// Embeds Lua scripting engine.
 	class LuaMachine : private NonCopyable<LuaMachine>
 	{
-		friend class Director;
+		friend LuaScript;
 
 	public:
 		/// Loads and initialises game script.

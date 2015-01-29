@@ -1,4 +1,4 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -97,6 +97,7 @@ namespace
 		return num_vertices;
 	}
 
+#if !defined(USE_LUA_SCRIPT) || USE_LUA_SCRIPT
 	void on_animation_state_event(spAnimationState *state,
 	                              int track,
 	                              spEventType type,
@@ -146,6 +147,7 @@ namespace
 		    sk->state(), nargs, 0, 0,
 		    "An error occurred while handling an animation state event");
 	}
+#endif  // USE_LUA_SCRIPT
 
 	template<typename T>
 	int update_mesh(SpriteVertex *vertices,
@@ -457,6 +459,7 @@ void Skeleton::update(const unsigned long dt)
 	vertex_buffer_.upload(vertices_.get(), i * sizeof(SpriteVertex));
 }
 
+#if !defined(USE_LUA_SCRIPT) || USE_LUA_SCRIPT
 NS_RAINBOW_LUA_BEGIN
 {
 	using spine::lua::Skeleton;
@@ -688,5 +691,6 @@ namespace spine
 		}
 	}
 }
+#endif  // USE_LUA_SCRIPT
 
-#endif
+#endif  // USE_SPINE

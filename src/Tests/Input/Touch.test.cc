@@ -1,13 +1,10 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
-
-#include <lua.hpp>
 
 #include "Input/Input.h"
 #include "Input/InputListener.h"
 #include "Input/Touch.h"
-#include "Lua/lua_Input.h"
 
 namespace
 {
@@ -85,13 +82,7 @@ TEST_CASE("Touch events", "[input]")
 {
 	using TouchEvents = TouchTestFixture::Events;
 
-	lua_State *L = luaL_newstate();
-	Input input(L);
-
-	lua_createtable(L, 0, 1);
-	rainbow::lua::input::init(L);
-	lua_setglobal(L, "rainbow");
-
+	Input input;
 	TouchTestFixture delegate;
 	input.subscribe(&delegate);
 
@@ -125,6 +116,4 @@ TEST_CASE("Touch events", "[input]")
 		REQUIRE(delegate.is_triggered(TouchEvents::TouchMoved));
 		REQUIRE_FALSE(delegate.is_triggered(0xff ^ TouchEvents::TouchMoved));
 	}
-
-	lua_close(L);
 }

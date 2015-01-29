@@ -1,4 +1,4 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -7,7 +7,6 @@
 #include <utility>
 
 #include "Input/Key.h"
-#include "Lua/lua_Input.h"
 
 void Input::subscribe(InputListener *const i)
 {
@@ -23,12 +22,6 @@ void Input::unsubscribe(InputListener *const i)
 void Input::accelerated(const double x, const double y, const double z, const double t)
 {
 	acceleration_.update(x, y, z, t);
-	rainbow::lua::input::accelerated(lua_state_, acceleration_);
-}
-
-void Input::clear()
-{
-	rainbow::lua::input::clear(lua_state_);
 }
 
 #ifdef RAINBOW_BUTTONS
@@ -36,16 +29,12 @@ void Input::on_key_down(const Key &k)
 {
 	if (for_each(next(), [&k](InputListener *i) { return i->on_key_down(k); }))
 		return;
-
-	rainbow::lua::input::on_key_down(lua_state_, k);
 }
 
 void Input::on_key_up(const Key &k)
 {
 	if (for_each(next(), [&k](InputListener *i) { return i->on_key_up(k); }))
 		return;
-
-	rainbow::lua::input::on_key_up(lua_state_, k);
 }
 #endif
 
@@ -56,8 +45,6 @@ void Input::on_touch_began(Touch *const touches, const size_t count)
 	};
 	if (for_each(next(), std::move(began)))
 		return;
-
-	rainbow::lua::input::on_touch_began(lua_state_, touches, count);
 }
 
 void Input::on_touch_canceled()
@@ -65,8 +52,6 @@ void Input::on_touch_canceled()
 	auto canceled = [](InputListener *i) { return i->on_touch_canceled(); };
 	if (for_each(next(), std::move(canceled)))
 		return;
-
-	rainbow::lua::input::on_touch_canceled(lua_state_);
 }
 
 void Input::on_touch_ended(Touch *const touches, const size_t count)
@@ -76,8 +61,6 @@ void Input::on_touch_ended(Touch *const touches, const size_t count)
 	};
 	if (for_each(next(), std::move(ended)))
 		return;
-
-	rainbow::lua::input::on_touch_ended(lua_state_, touches, count);
 }
 
 void Input::on_touch_moved(Touch *const touches, const size_t count)
@@ -87,8 +70,6 @@ void Input::on_touch_moved(Touch *const touches, const size_t count)
 	};
 	if (for_each(next(), std::move(moved)))
 		return;
-
-	rainbow::lua::input::on_touch_moved(lua_state_, touches, count);
 }
 
 void Input::on_end_link_removed(Link *node)

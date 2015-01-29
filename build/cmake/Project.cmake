@@ -42,6 +42,9 @@ if(MSVC OR XCODE)
 	file(GLOB SOURCE_FILES src/Resources/*)
 	source_group("Source Files\\Resources" FILES ${SOURCE_FILES})
 
+	file(GLOB SOURCE_FILES src/Script/*)
+	source_group("Source Files\\Script" FILES ${SOURCE_FILES})
+
 	file(GLOB SOURCE_FILES src/Tests/*)
 	source_group("Source Files\\Tests" FILES ${SOURCE_FILES})
 	file(GLOB SOURCE_FILES src/Tests/Common/*)

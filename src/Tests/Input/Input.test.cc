@@ -1,8 +1,6 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
-
-#include <lua.hpp>
 
 #include "Input/Input.h"
 #include "Input/InputListener.h"
@@ -39,11 +37,10 @@ namespace
 
 TEST_CASE("Input listeners can prevent further propagation", "[input]")
 {
-	Input input(nullptr);
+	Input input;
 	TestInputListener listeners[] {
-		TestInputListener{true},
-		TestInputListener{false}
-	};
+	    TestInputListener{true},
+	    TestInputListener{false}};
 	input.subscribe(listeners);
 	input.subscribe(listeners + 1);
 	input.on_touch_began(nullptr, 0);
@@ -57,12 +54,11 @@ TEST_CASE("Input listeners can prevent further propagation", "[input]")
 
 TEST_CASE("Input listeners can unsubscribe", "[input]")
 {
-	Input input(nullptr);
+	Input input;
 	TestInputListener listeners[] {
-		TestInputListener{false},
-		TestInputListener{true},
-		TestInputListener{true}
-	};
+	    TestInputListener{false},
+	    TestInputListener{true},
+	    TestInputListener{true}};
 	for (auto &i : listeners)
 		input.subscribe(&i);
 	input.on_touch_began(nullptr, 0);
@@ -80,14 +76,13 @@ TEST_CASE("Input listeners can unsubscribe", "[input]")
 
 TEST_CASE("Input listeners are unsubscribed when deleted", "[input]")
 {
-	Input input(nullptr);
+	Input input;
 	TestInputListener l{true};
 	{
 		TestInputListener listeners[] {
-			TestInputListener{false},
-			TestInputListener{false},
-			TestInputListener{false}
-		};
+		    TestInputListener{false},
+		    TestInputListener{false},
+		    TestInputListener{false}};
 		for (auto &i : listeners)
 			input.subscribe(&i);
 		input.subscribe(&l);
@@ -104,7 +99,7 @@ TEST_CASE("Input listeners are unsubscribed when deleted", "[input]")
 
 TEST_CASE("Input manager is notified of popped end links", "[input]")
 {
-	Input input(nullptr);
+	Input input;
 	TestInputListener a{true};
 	{
 		TestInputListener b{false};

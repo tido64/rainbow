@@ -1,4 +1,4 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -15,7 +15,10 @@
 #include "Graphics/Buffer.h"
 #include "Graphics/Drawable.h"
 #include "Graphics/VertexArray.h"
+
+#if !defined(USE_LUA_SCRIPT) || USE_LUA_SCRIPT
 #include "Lua/LuaBind.h"
+#endif  // USE_LUA_SCRIPT
 
 struct SpriteVertex;
 class TextureAtlas;
@@ -105,6 +108,7 @@ private:
 	spSkeletonData *data_;
 };
 
+#if !defined(USE_LUA_SCRIPT) || USE_LUA_SCRIPT
 namespace spine
 {
 	namespace lua
@@ -153,6 +157,7 @@ namespace spine
 		};
 	}
 }
+#endif  // USE_LUA_SCRIPT
 
 #endif  // USE_SPINE
 #endif  // THIRDPARTY_SPINE_SPINE_RAINBOW_H_

@@ -1,4 +1,4 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -10,9 +10,12 @@
 #include "FileSystem/File.h"
 #include "FileSystem/Path.h"
 #include "Input/Touch.h"
-#include "Lua/LuaHelper.h"
 #include "Resources/Inconsolata.otf.h"
 #include "Resources/NewsCycle-Regular.ttf.h"
+
+#if !defined(USE_LUA_SCRIPT) || USE_LUA_SCRIPT
+#include "Lua/LuaHelper.h"
+#include "Lua/LuaScript.h"
 
 namespace
 {
@@ -34,24 +37,80 @@ namespace
 	public:
 		explicit Library(const char *const path);
 
-		inline const char* name() const;
+		const char* name() const { return name_.get(); }
 
 		inline Data open() const;
 
-		inline explicit operator bool() const;
+		explicit operator bool() const { return path_; }
 
 	private:
 		std::unique_ptr<char[]> name_;
 		const char *path_;
 	};
 }
+#endif  // USE_LUA_SCRIPT
 
 namespace heimdall
 {
 	Gatekeeper::Gatekeeper()
-	    : overlay_activator_(&overlay_), monitor_(Path::current()) {}
+	    : overlay_activator_(&overlay_)
+#if !defined(USE_LUA_SCRIPT) || USE_LUA_SCRIPT
+	    , monitor_(Path::current())
+#endif  // USE_LUA_SCRIPT
+	{}
 
-	void Gatekeeper::init(const Data &main, const Vec2i &screen)
+	void Gatekeeper::init(const Vec2i &screen)
+	{
+		pre_init(screen);
+		Director::init(screen);
+		if (terminated())
+			return;
+		post_init();
+	}
+
+	void Gatekeeper::update(const unsigned long dt)
+	{
+#if !defined(USE_LUA_SCRIPT) || USE_LUA_SCRIPT
+		if (!changed_files_.empty())
+		{
+			decltype(changed_files_) files;
+			{
+				std::lock_guard<std::mutex> lock(changed_files_mutex_);
+				files = std::move(changed_files_);
+			}
+			lua_State *L = static_cast<LuaScript*>(script())->state();
+			for_each(files, [L](const std::unique_ptr<char[]> &file) {
+				Library library(file.get());
+				if (!library)
+					return;
+
+				LOGI("Reloading '%s'...", library.name());
+				rainbow::lua::reload(L, library.open(), library.name());
+			});
+		}
+#endif  // USE_LUA_SCRIPT
+
+		Director::update(dt);
+
+		if (!overlay_.is_visible())
+			overlay_activator_.update(dt);
+		info_->update(dt);
+		scenegraph_.update(dt);
+	}
+
+	void Gatekeeper::post_init()
+	{
+#if !defined(USE_LUA_SCRIPT) || USE_LUA_SCRIPT
+		monitor_.set_callback([this](const char *path) {
+			std::unique_ptr<char[]> file(new char[strlen(path) + 1]);
+			strcpy(file.get(), path);
+			std::lock_guard<std::mutex> lock(changed_files_mutex_);
+			changed_files_ = changed_files_.push_front(std::move(file));
+		});
+#endif  // USE_LUA_SCRIPT
+	}
+
+	void Gatekeeper::pre_init(const Vec2i &screen)
 	{
 		info_.reset(new DebugInfo());
 		scenegraph_.add_child(info_->node());
@@ -71,47 +130,8 @@ namespace heimdall
 		info_->init_console(position, std::move(console_font));
 		overlay_.add_child(info_->button().drawable());
 
-		Director::init(main, screen);
-		if (terminated())
-			return;
-
 		input().subscribe(this);
 		input().subscribe(&overlay_activator_);
-
-		monitor_.set_callback([this](const char *path) {
-			std::unique_ptr<char[]> file(new char[strlen(path) + 1]);
-			strcpy(file.get(), path);
-			std::lock_guard<std::mutex> lock(changed_files_mutex_);
-			changed_files_ = changed_files_.push_front(std::move(file));
-		});
-	}
-
-	void Gatekeeper::update(const unsigned long dt)
-	{
-		if (!changed_files_.empty())
-		{
-			decltype(changed_files_) files;
-			{
-				std::lock_guard<std::mutex> lock(changed_files_mutex_);
-				files = std::move(changed_files_);
-			}
-			lua_State *L = state();
-			for_each(files, [L](const std::unique_ptr<char[]> &file) {
-				Library library(file.get());
-				if (!library)
-					return;
-
-				LOGI("Reloading '%s'...", library.name());
-				rainbow::lua::reload(L, library.open(), library.name());
-			});
-		}
-
-		Director::update(dt);
-
-		if (!overlay_.is_visible())
-			overlay_activator_.update(dt);
-		info_->update(dt);
-		scenegraph_.update(dt);
 	}
 
 	bool Gatekeeper::on_touch_began_impl(const Touch *const touches,
@@ -162,6 +182,7 @@ namespace heimdall
 	}
 }
 
+#if !defined(USE_LUA_SCRIPT) || USE_LUA_SCRIPT
 Library::Library(const char *const path) : path_(path)
 {
 	const char *filename = basename(path_);
@@ -177,11 +198,6 @@ Library::Library(const char *const path) : path_(path)
 	name_[length] = '\0';
 }
 
-const char* Library::name() const
-{
-	return name_.get();
-}
-
 Data Library::open() const
 {
 #if defined(RAINBOW_OS_MACOS)
@@ -190,12 +206,8 @@ Data Library::open() const
 	return Data::load_asset(path_);
 #else
 	return Data();
-#endif
+#endif  // RAINBOW_OS_MACOS
 }
+#endif  // USE_LUA_SCRIPT
 
-Library::operator bool() const
-{
-	return path_;
-}
-
-#endif
+#endif  // USE_HEIMDALL

@@ -12,6 +12,7 @@ option(UNIT_TESTS  "Compile unit tests" OFF)
 # Features
 option(USE_FMOD_STUDIO  "Enable FMOD Studio audio engine" ON)
 option(USE_HEIMDALL     "Enable Heimdall debugging facilities" OFF)
+option(USE_LUA_SCRIPT   "Enable Lua scripting" ON)
 option(USE_PHYSICS      "Enable physics module (Box2D)" OFF)
 option(USE_SPINE        "Enable Spine runtime" OFF)
 
@@ -103,52 +104,75 @@ set(SOURCE_FILES
 	src/Input/InputListener.h
 	src/Input/Key.h
 	src/Input/Touch.h
-	src/Lua/lua_Animation.cpp
-	src/Lua/lua_Animation.h
-	src/Lua/lua_Audio.cpp
-	src/Lua/lua_Audio.h
-	src/Lua/lua_Font.cpp
-	src/Lua/lua_Font.h
-	src/Lua/lua_Input.cpp
-	src/Lua/lua_Input.h
-	src/Lua/lua_IO.cpp
-	src/Lua/lua_IO.h
-	src/Lua/lua_Label.cpp
-	src/Lua/lua_Label.h
-	src/Lua/lua_Platform.cpp
-	src/Lua/lua_Platform.h
-	src/Lua/lua_Random.cpp
-	src/Lua/lua_Random.h
-	src/Lua/lua_Recorder.cpp
-	src/Lua/lua_Recorder.h
-	src/Lua/lua_Renderer.cpp
-	src/Lua/lua_Renderer.h
-	src/Lua/lua_SceneGraph.cpp
-	src/Lua/lua_SceneGraph.h
-	src/Lua/lua_Shaders.cpp
-	src/Lua/lua_Shaders.h
-	src/Lua/lua_Sprite.cpp
-	src/Lua/lua_Sprite.h
-	src/Lua/lua_SpriteBatch.cpp
-	src/Lua/lua_SpriteBatch.h
-	src/Lua/lua_Texture.cpp
-	src/Lua/lua_Texture.h
-	src/Lua/LuaBind.h
 	src/Lua/LuaDebugging.h
 	src/Lua/LuaHelper.cpp
 	src/Lua/LuaHelper.h
-	src/Lua/LuaMachine.cpp
-	src/Lua/LuaMachine.h
 	src/Lua/LuaMacros.h
-	src/Lua/LuaModules.h
 	src/Lua/LuaSyntax.cpp
 	src/Lua/LuaSyntax.h
 	src/Platform/Macros.h
 	src/Platform/SDL2.cpp
 	src/Platform/SystemInfo.h
-	src/Resources/Rainbow.lua.h
-	src/ThirdParty/TestFlight/TestFlight.cpp
-	src/ThirdParty/TestFlight/TestFlight.h)
+	src/Script/GameBase.cpp
+	src/Script/GameBase.h
+	src/Script/Prose.Node.h
+	src/Script/Prose.Resource.h
+	src/Script/Prose.cpp
+	src/Script/Prose.h
+	src/Script/Timer.cpp
+	src/Script/Timer.h
+	src/Script/TimingFunctions.h
+	src/Script/Transition.h
+	src/Script/TransitionFunctions.h)
+
+if(USE_LUA_SCRIPT)
+	add_definitions(-DUSE_LUA_SCRIPT=1)
+	list(APPEND SOURCE_FILES
+		src/Lua/lua_Animation.cpp
+		src/Lua/lua_Animation.h
+		src/Lua/lua_Audio.cpp
+		src/Lua/lua_Audio.h
+		src/Lua/lua_Font.cpp
+		src/Lua/lua_Font.h
+		src/Lua/lua_Input.cpp
+		src/Lua/lua_Input.h
+		src/Lua/lua_IO.cpp
+		src/Lua/lua_IO.h
+		src/Lua/lua_Label.cpp
+		src/Lua/lua_Label.h
+		src/Lua/lua_Platform.cpp
+		src/Lua/lua_Platform.h
+		src/Lua/lua_Random.cpp
+		src/Lua/lua_Random.h
+		src/Lua/lua_Recorder.cpp
+		src/Lua/lua_Recorder.h
+		src/Lua/lua_Renderer.cpp
+		src/Lua/lua_Renderer.h
+		src/Lua/lua_SceneGraph.cpp
+		src/Lua/lua_SceneGraph.h
+		src/Lua/lua_Shaders.cpp
+		src/Lua/lua_Shaders.h
+		src/Lua/lua_Sprite.cpp
+		src/Lua/lua_Sprite.h
+		src/Lua/lua_SpriteBatch.cpp
+		src/Lua/lua_SpriteBatch.h
+		src/Lua/lua_Texture.cpp
+		src/Lua/lua_Texture.h
+		src/Lua/LuaBind.h
+		src/Lua/LuaMachine.cpp
+		src/Lua/LuaMachine.h
+		src/Lua/LuaModules.h
+		src/Lua/LuaScript.cpp
+		src/Lua/LuaScript.h
+		src/Resources/Rainbow.lua.h
+		src/ThirdParty/TestFlight/TestFlight.cpp
+		src/ThirdParty/TestFlight/TestFlight.h)
+else()
+	add_definitions(-DUSE_LUA_SCRIPT=0)
+	list(APPEND SOURCE_FILES
+		src/Script/NoGame.cpp
+		src/Script/NoGame.h)
+endif()
 
 if(ANDROID)
 	list(APPEND SOURCE_FILES
@@ -228,28 +252,31 @@ if(USE_PHYSICS)
 	list(APPEND SOURCE_FILES
 		src/ThirdParty/Box2D/DebugDraw.cpp
 		src/ThirdParty/Box2D/DebugDraw.h
-		src/ThirdParty/Box2D/Lua/Box2D.cpp
-		src/ThirdParty/Box2D/Lua/Box2D.h
-		src/ThirdParty/Box2D/Lua/Dynamics/Body.cpp
-		src/ThirdParty/Box2D/Lua/Dynamics/Body.h
-		src/ThirdParty/Box2D/Lua/Dynamics/Contacts/Contact.cpp
-		src/ThirdParty/Box2D/Lua/Dynamics/Contacts/Contact.h
-		src/ThirdParty/Box2D/Lua/Dynamics/Fixture.cpp
-		src/ThirdParty/Box2D/Lua/Dynamics/Fixture.h
-		src/ThirdParty/Box2D/Lua/Dynamics/World.cpp
-		src/ThirdParty/Box2D/Lua/Dynamics/World.h
-		src/ThirdParty/Box2D/Lua/Collision/Shapes/CircleShape.cpp
-		src/ThirdParty/Box2D/Lua/Collision/Shapes/CircleShape.h
-		src/ThirdParty/Box2D/Lua/Collision/Shapes/EdgeShape.cpp
-		src/ThirdParty/Box2D/Lua/Collision/Shapes/EdgeShape.h
-		src/ThirdParty/Box2D/Lua/Collision/Shapes/PolygonShape.cpp
-		src/ThirdParty/Box2D/Lua/Collision/Shapes/PolygonShape.h
-		src/ThirdParty/Box2D/Lua/Collision/Shapes/Shape.cpp
-		src/ThirdParty/Box2D/Lua/Collision/Shapes/Shape.h
-		src/ThirdParty/Box2D/Lua/Helper.cpp
-		src/ThirdParty/Box2D/Lua/Helper.h
 		src/ThirdParty/Box2D/StableWorld.cpp
 		src/ThirdParty/Box2D/StableWorld.h)
+	if(USE_LUA_SCRIPT)
+		list(APPEND SOURCE_FILES
+			src/ThirdParty/Box2D/Lua/Box2D.cpp
+			src/ThirdParty/Box2D/Lua/Box2D.h
+			src/ThirdParty/Box2D/Lua/Dynamics/Body.cpp
+			src/ThirdParty/Box2D/Lua/Dynamics/Body.h
+			src/ThirdParty/Box2D/Lua/Dynamics/Contacts/Contact.cpp
+			src/ThirdParty/Box2D/Lua/Dynamics/Contacts/Contact.h
+			src/ThirdParty/Box2D/Lua/Dynamics/Fixture.cpp
+			src/ThirdParty/Box2D/Lua/Dynamics/Fixture.h
+			src/ThirdParty/Box2D/Lua/Dynamics/World.cpp
+			src/ThirdParty/Box2D/Lua/Dynamics/World.h
+			src/ThirdParty/Box2D/Lua/Collision/Shapes/CircleShape.cpp
+			src/ThirdParty/Box2D/Lua/Collision/Shapes/CircleShape.h
+			src/ThirdParty/Box2D/Lua/Collision/Shapes/EdgeShape.cpp
+			src/ThirdParty/Box2D/Lua/Collision/Shapes/EdgeShape.h
+			src/ThirdParty/Box2D/Lua/Collision/Shapes/PolygonShape.cpp
+			src/ThirdParty/Box2D/Lua/Collision/Shapes/PolygonShape.h
+			src/ThirdParty/Box2D/Lua/Collision/Shapes/Shape.cpp
+			src/ThirdParty/Box2D/Lua/Collision/Shapes/Shape.h
+			src/ThirdParty/Box2D/Lua/Helper.cpp
+			src/ThirdParty/Box2D/Lua/Helper.h)
+	endif()
 endif()
 
 if(USE_SPINE)

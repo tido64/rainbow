@@ -20,6 +20,7 @@ HTML_DYNAMIC_SECTIONS  = YES
 GENERATE_LATEX         = NO
 INCLUDE_PATH           = lib lib/FMOD/inc lib/FreeType/include lib/Lua lib/SDL/include lib/libpng
 PREDEFINED             = NDEBUG \
+                         USE_LUA_SCRIPT=0 \
                          USE_PHYSICS \
                          USE_SPINE
 CLASS_DIAGRAMS         = NO

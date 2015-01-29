@@ -159,6 +159,8 @@
 		1988802917F84AFD009F4587 /* Functional.lua in Resources */ = {isa = PBXBuildFile; fileRef = 1988802517F84AFD009F4587 /* Functional.lua */; };
 		1988802A17F84AFD009F4587 /* Strict.lua in Resources */ = {isa = PBXBuildFile; fileRef = 1988802617F84AFD009F4587 /* Strict.lua */; };
 		1988802B17F84AFD009F4587 /* TransitionFunctions.lua in Resources */ = {isa = PBXBuildFile; fileRef = 1988802717F84AFD009F4587 /* TransitionFunctions.lua */; };
+		198F42781A9151CB00BE7A73 /* Timer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 198F42701A9151CB00BE7A73 /* Timer.cpp */; };
+		198F427B1A9151F500BE7A73 /* LuaScript.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 198F42791A9151F500BE7A73 /* LuaScript.cpp */; };
 		19905B87152C50FA00BDD15C /* Math.lua in Resources */ = {isa = PBXBuildFile; fileRef = 19905B7D152C50FA00BDD15C /* Math.lua */; };
 		19905B88152C50FA00BDD15C /* Parallax.lua in Resources */ = {isa = PBXBuildFile; fileRef = 19905B7E152C50FA00BDD15C /* Parallax.lua */; };
 		19905B8A152C50FA00BDD15C /* Stack.lua in Resources */ = {isa = PBXBuildFile; fileRef = 19905B80152C50FA00BDD15C /* Stack.lua */; };
@@ -507,6 +509,14 @@
 		1988802617F84AFD009F4587 /* Strict.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Strict.lua; path = ../../../lua/Strict.lua; sourceTree = "<group>"; };
 		1988802717F84AFD009F4587 /* TransitionFunctions.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = TransitionFunctions.lua; path = ../../../lua/TransitionFunctions.lua; sourceTree = "<group>"; };
 		198BE0A7174A5F420036055E /* Macros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Macros.h; path = ../../../src/Platform/Macros.h; sourceTree = "<group>"; };
+		198F42681A9151CB00BE7A73 /* GameBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameBase.h; sourceTree = "<group>"; };
+		198F42701A9151CB00BE7A73 /* Timer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Timer.cpp; sourceTree = "<group>"; };
+		198F42711A9151CB00BE7A73 /* Timer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Timer.h; sourceTree = "<group>"; };
+		198F42721A9151CB00BE7A73 /* TimingFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimingFunctions.h; sourceTree = "<group>"; };
+		198F42731A9151CB00BE7A73 /* Transition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Transition.h; sourceTree = "<group>"; };
+		198F42741A9151CB00BE7A73 /* TransitionFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransitionFunctions.h; sourceTree = "<group>"; };
+		198F42791A9151F500BE7A73 /* LuaScript.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = LuaScript.cpp; sourceTree = "<group>"; };
+		198F427A1A9151F500BE7A73 /* LuaScript.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LuaScript.h; sourceTree = "<group>"; };
 		19905B7D152C50FA00BDD15C /* Math.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Math.lua; path = ../../../lua/Math.lua; sourceTree = "<group>"; };
 		19905B7E152C50FA00BDD15C /* Parallax.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Parallax.lua; path = ../../../lua/Parallax.lua; sourceTree = "<group>"; };
 		19905B80152C50FA00BDD15C /* Stack.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Stack.lua; path = ../../../lua/Stack.lua; sourceTree = "<group>"; };
@@ -982,6 +992,8 @@
 				193929BB16E243E90018340B /* LuaMachine.h */,
 				19FDF4931942FCFB00B5F21B /* LuaMacros.h */,
 				193929BC16E243E90018340B /* LuaModules.h */,
+				198F42791A9151F500BE7A73 /* LuaScript.cpp */,
+				198F427A1A9151F500BE7A73 /* LuaScript.h */,
 				19FDF4941942FCFB00B5F21B /* LuaSyntax.cpp */,
 				19FDF4951942FCFB00B5F21B /* LuaSyntax.h */,
 				1939A1E7152C425D00494609 /* lua_Animation.cpp */,
@@ -1129,6 +1141,7 @@
 				1939A1DB152C425D00494609 /* Input */,
 				1939A1E6152C425D00494609 /* Lua */,
 				1986919F16DED44D00BC4830 /* Platform */,
+				198F42661A9151CB00BE7A73 /* Script */,
 				1963EA32197F1BA400107228 /* ThirdParty */,
 				1939A1A0152C425D00494609 /* Config.cpp */,
 				1939A1A1152C425D00494609 /* Config.h */,
@@ -1245,6 +1258,20 @@
 				19F98DA5171B5DDF00A85873 /* SystemInfo.h */,
 			);
 			name = Platform;
+			sourceTree = "<group>";
+		};
+		198F42661A9151CB00BE7A73 /* Script */ = {
+			isa = PBXGroup;
+			children = (
+				198F42681A9151CB00BE7A73 /* GameBase.h */,
+				198F42701A9151CB00BE7A73 /* Timer.cpp */,
+				198F42711A9151CB00BE7A73 /* Timer.h */,
+				198F42721A9151CB00BE7A73 /* TimingFunctions.h */,
+				198F42731A9151CB00BE7A73 /* Transition.h */,
+				198F42741A9151CB00BE7A73 /* TransitionFunctions.h */,
+			);
+			name = Script;
+			path = ../../../src/Script;
 			sourceTree = "<group>";
 		};
 		19905B73152C50C100BDD15C /* Resources */ = {
@@ -1405,6 +1432,7 @@
 				1939A050152C401300494609 /* b2Distance.cpp in Sources */,
 				1939A051152C401300494609 /* b2DynamicTree.cpp in Sources */,
 				1939A052152C401300494609 /* b2TimeOfImpact.cpp in Sources */,
+				198F42781A9151CB00BE7A73 /* Timer.cpp in Sources */,
 				1939A053152C401300494609 /* b2ChainShape.cpp in Sources */,
 				1939A054152C401300494609 /* b2CircleShape.cpp in Sources */,
 				1946B7AF1836E54600F74A3B /* Path.cpp in Sources */,
@@ -1468,6 +1496,7 @@
 				1939A161152C401300494609 /* liolib.c in Sources */,
 				1939A162152C401300494609 /* llex.c in Sources */,
 				1939A163152C401300494609 /* lmathlib.c in Sources */,
+				198F427B1A9151F500BE7A73 /* LuaScript.cpp in Sources */,
 				19E7748A1A02C8D3005DE249 /* OverlayActivator.cpp in Sources */,
 				1960AFD41A4E278E0015A3AD /* Fixture.cpp in Sources */,
 				1960AFD21A4E278E0015A3AD /* Body.cpp in Sources */,
@@ -1587,6 +1616,7 @@
 					"-Wextra",
 					"-Woverloaded-virtual",
 					"-Wsign-promo",
+					"-Wno-shorten-64-to-32",
 				);
 			};
 			name = "Ad Hoc";
@@ -1604,6 +1634,7 @@
 					"DEBUG=1",
 					"USE_FMOD_STUDIO=1",
 					"USE_HEIMDALL=1",
+					"USE_LUA_SCRIPT=1",
 					"USE_PHYSICS=1",
 					"USE_TESTFLIGHT_SDK=1",
 				);
@@ -1656,6 +1687,7 @@
 					"-Wextra",
 					"-Woverloaded-virtual",
 					"-Wsign-promo",
+					"-Wno-shorten-64-to-32",
 				);
 			};
 			name = Debug;
@@ -1685,6 +1717,7 @@
 					"-Wextra",
 					"-Woverloaded-virtual",
 					"-Wsign-promo",
+					"-Wno-shorten-64-to-32",
 				);
 			};
 			name = Release;
@@ -1702,6 +1735,7 @@
 					"DEBUG=1",
 					"USE_FMOD_STUDIO=1",
 					"USE_HEIMDALL=1",
+					"USE_LUA_SCRIPT=1",
 					"USE_PHYSICS=1",
 				);
 				HEADER_SEARCH_PATHS = (
@@ -1737,6 +1771,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"NDEBUG=1",
 					"USE_FMOD_STUDIO=1",
+					"USE_LUA_SCRIPT=1",
 					"USE_PHYSICS=1",
 				);
 				HEADER_SEARCH_PATHS = (

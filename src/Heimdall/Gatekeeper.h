@@ -1,4 +1,4 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -30,19 +30,31 @@ namespace heimdall
 
 		/* Director overrides */
 
-		inline void draw();
-		void init(const Data &main, const Vec2i &screen);
+		void draw()
+		{
+			Director::draw();
+			scenegraph_.draw();
+		}
+
+		void init(const Vec2i &screen);
 		void update(const unsigned long dt);
 
 	private:
+#if !defined(USE_LUA_SCRIPT) || USE_LUA_SCRIPT
 		List<std::unique_ptr<char[]>> changed_files_;
+#endif  // USE_LUA_SCRIPT
 		Overlay overlay_;
 		OverlayActivator overlay_activator_;
 		std::unique_ptr<DebugInfo> info_;
 		SceneGraph::Node scenegraph_;
 		std::unordered_map<unsigned int, Button*> pressed_;
+#if !defined(USE_LUA_SCRIPT) || USE_LUA_SCRIPT
 		std::mutex changed_files_mutex_;
 		ChangeMonitor monitor_;
+#endif  // USE_LUA_SCRIPT
+
+		void post_init();
+		void pre_init(const Vec2i &screen);
 
 		/* Implement InputListener */
 
@@ -51,12 +63,6 @@ namespace heimdall
 		bool on_touch_ended_impl(const Touch *const, const size_t) override;
 		bool on_touch_moved_impl(const Touch *const, const size_t) override;
 	};
-
-	void Gatekeeper::draw()
-	{
-		Director::draw();
-		scenegraph_.draw();
-	}
 }
 
 using Director = heimdall::Gatekeeper;

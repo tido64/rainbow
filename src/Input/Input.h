@@ -1,4 +1,4 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -11,7 +11,6 @@
 #include "Platform/Macros.h"
 
 class  Key;
-struct lua_State;
 struct Touch;
 
 /// Handles accelerometer/gyroscope and touch events independent of platform.
@@ -22,10 +21,14 @@ struct Touch;
 class Input : private InputListener, NonCopyable<Input>
 {
 public:
-	inline explicit Input(lua_State *);
+	Input() : last_listener_(this) {}
 
 	/// Clears all input listeners.
-	inline void reset();
+	void reset()
+	{
+		pop();
+		last_listener_ = this;
+	}
 
 	/// Subscribes an object to input events.
 	/// \param i  The object to subscribe.
@@ -40,13 +43,10 @@ public:
 	/// \param i      The relative time at which the acceleration event occurred.
 	void accelerated(const double x, const double y, const double z, const double t);
 
-	/// Clears all events.
-	void clear();
-
 #ifdef RAINBOW_BUTTONS
 	void on_key_down(const Key &k);
 	void on_key_up(const Key &k);
-#endif
+#endif  // RAINBOW_BUTTONS
 
 	void on_touch_began(Touch *const touches, const size_t count);
 	void on_touch_canceled();
@@ -54,19 +54,10 @@ public:
 	void on_touch_moved(Touch *const touches, const size_t count);
 
 private:
-	lua_State *lua_state_;
 	Acceleration acceleration_;  ///< Accelerometer data
 	InputListener *last_listener_;
 
 	void on_end_link_removed(Link *node) override;
 };
-
-Input::Input(lua_State *L) : lua_state_(L), last_listener_(this) {}
-
-void Input::reset()
-{
-	pop();
-	last_listener_ = this;
-}
 
 #endif

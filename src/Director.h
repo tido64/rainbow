@@ -1,4 +1,4 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -9,9 +9,10 @@
 #include "Graphics/Renderer.h"
 #include "Graphics/SceneGraph.h"
 #include "Input/Input.h"
-#include "Lua/LuaMachine.h"
+#include "Script/Timer.h"
 
 class Data;
+class GameBase;
 
 namespace rainbow
 {
@@ -28,14 +29,16 @@ namespace rainbow
 		Input& input() { return input_; }
 		Renderer& renderer() { return renderer_; }
 		SceneGraph::Node& scenegraph() { return scenegraph_; }
+		GameBase* script() { return script_; }
 		bool terminated() const { return terminated_; }
 
 		void draw();
 
 		/// Loads and initialises main script.
-		void init(const Data &main, const Vec2i &screen);
+		void init(const Vec2i &screen);
 
 		inline void terminate();
+		inline void terminate(const char *error);
 
 		/// Updates world.
 		/// \param dt  Milliseconds since last frame.
@@ -47,29 +50,28 @@ namespace rainbow
 		/// Called when a low memory warning has been issued.
 		void on_memory_warning();
 
-#ifdef USE_HEIMDALL
-	protected:
-		/// Used by heimdall::Gatekeeper to retrieve Lua state.
-		struct lua_State* state() const { return lua_; }
-#endif
-
 	private:
 		bool active_;
 		bool terminated_;
 		const char *error_;
-		LuaMachine lua_;
+		TimerManager timer_manager_;
+		GameBase *script_;
 		SceneGraph::Node scenegraph_;
 		Input input_;
 		Renderer renderer_;
 		ConFuoco::Mixer mixer_;
-
-		void terminate(const char *error);
 	};
 
 	void Director::terminate()
 	{
 		active_ = false;
 		terminated_ = true;
+	}
+
+	void Director::terminate(const char *error)
+	{
+		terminate();
+		error_ = error;
 	}
 }
 

@@ -1,4 +1,4 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -66,6 +66,23 @@ namespace
 #endif
 	}
 
+	bool should_run_tests(int &argc, char **&argv)
+	{
+#if !defined(USE_LUA_SCRIPT) || USE_LUA_SCRIPT
+		static_cast<void>(argc);
+		static_cast<void>(argv);
+		return !Path("main.lua").is_file();
+#else
+		const bool run = argc < 2 ? false : strcmp(argv[1], "--test") == 0;
+		if (run)
+		{
+			--argc;
+			++argv;
+		}
+		return run;
+#endif  // USE_LUA_SCRIPT
+	}
+
 	Vec2i window_size(const rainbow::Config &config)
 	{
 		return (!config.width() || !config.height())
@@ -131,18 +148,14 @@ int main(int argc, char *argv[])
 	else
 		Path::set_current(argv[1]);
 
-	// Look for 'main.lua'.
+	if (should_run_tests(argc, argv))
 	{
-		const Path main("main.lua");
-		if (!main.is_file())
-		{
 #ifdef RAINBOW_TEST
-			Path::set_current(Path());
-			return rainbow::run_tests(argc, argv);
+		Path::set_current(Path());
+		return rainbow::run_tests(argc, argv);
 #else
-			return 0;
-#endif
-		}
+		return 0;
+#endif  // RAINBOW_TEST
 	}
 
 	const rainbow::Config config;
@@ -290,7 +303,7 @@ RainbowController::RainbowController(
 	if (director_.terminated())
 		return;
 
-	director_.init(Data::load_asset("main.lua"), context_.drawable_size());
+	director_.init(context_.drawable_size());
 	on_window_resized();
 }
 
