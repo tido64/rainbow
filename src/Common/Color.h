@@ -24,6 +24,12 @@ namespace rainbow
 
 		constexpr Color() : Color(0xff, 0xff, 0xff, 0xff) {}
 
+		constexpr Color(const unsigned int rgba)
+		    : r(0xff & (rgba >> 24)),
+		      g(0xff & (rgba >> 16)),
+		      b(0xff & (rgba >> 8)),
+		      a(0xff & rgba) {}
+
 		constexpr Color(const unsigned char r,
 		                const unsigned char g,
 		                const unsigned char b,

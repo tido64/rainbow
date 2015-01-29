@@ -107,10 +107,10 @@ NS_RAINBOW_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		const uint_t color = (static_cast<uint_t>(lua_tointeger(L, 2)) << 24)
-		                   + (static_cast<uint_t>(lua_tointeger(L, 3)) << 16)
-		                   + (static_cast<uint_t>(lua_tointeger(L, 4)) << 8)
-		                   + static_cast<uint_t>(optinteger(L, 5, 0xff));
+		const Colorb color(static_cast<uint_t>(lua_tointeger(L, 2)) & 0xff,
+		                   static_cast<uint_t>(lua_tointeger(L, 3)) & 0xff,
+		                   static_cast<uint_t>(lua_tointeger(L, 4)) & 0xff,
+		                   static_cast<uint_t>(optinteger(L, 5, 0xff)) & 0xff);
 		self->sprite_->set_color(color);
 		return 0;
 	}

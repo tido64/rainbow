@@ -35,12 +35,12 @@ public:
 		friend SpriteBatch;
 
 	public:
-		inline Ref();
+		Ref() : batch_(nullptr), i_(0) {}
 
 		Sprite& operator*() const;
 		Sprite* operator->() const;
 
-		inline explicit operator bool() const;
+		explicit operator bool() const { return batch_; }
 
 	private:
 		const SpriteBatch *batch_;
@@ -54,24 +54,24 @@ public:
 	       const SpriteBatch *parent);
 	Sprite(Sprite &&);
 
-	inline float angle() const;
-	inline const Colorb& color() const;
-	inline unsigned int height() const;
-	inline const SpriteBatch& parent() const;
-	inline const Vec2f& pivot() const;
-	inline const Vec2f& position() const;
-	inline const Vec2f& scale() const;
-	inline unsigned int width() const;
+	float angle() const { return angle_; }
+	Colorb color() const { return vertex_array_[0].color; }
+	unsigned int height() const { return height_; }
+	const SpriteBatch& parent() const { return *parent_; }
+	const Vec2f& pivot() const { return pivot_; }
+	const Vec2f& position() const { return position_; }
+	const Vec2f& scale() const { return scale_; }
+	unsigned int width() const { return width_; }
 
 	/// Sets sprite colour.
-	void set_color(const unsigned int c);
+	void set_color(const Colorb c);
 
 	/// Sets normal map.
 	/// \param id  Id of normal map to use.
 	void set_normal(const unsigned int id);
 
 	/// Sets buffer used to store UV coordinates.
-	inline void set_normal_buffer(Vec2f *);
+	void set_normal_buffer(Vec2f *map) { normal_map_ = map; }
 
 	/// Sets the pivot point for rotation and translation.
 	/// \param x,y  Normalised pivot point.
@@ -94,7 +94,7 @@ public:
 	void set_texture(const unsigned int id);
 
 	/// Sets vertex array buffer.
-	inline void set_vertex_array(SpriteVertex *);
+	void set_vertex_array(SpriteVertex *array) { vertex_array_ = array; }
 
 	/// Mirrors sprite.
 	void mirror();
@@ -123,62 +123,5 @@ private:
 	Vec2f position_;              ///< Uncommitted position.
 	Vec2f scale_;                 ///< Scaling factor.
 };
-
-Sprite::Ref::Ref() : batch_(nullptr), i_(0) {}
-
-Sprite::Ref::operator bool() const
-{
-	return batch_;
-}
-
-float Sprite::angle() const
-{
-	return angle_;
-}
-
-const Colorb& Sprite::color() const
-{
-	return vertex_array_[0].color;
-}
-
-unsigned int Sprite::height() const
-{
-	return height_;
-}
-
-const SpriteBatch& Sprite::parent() const
-{
-	return *parent_;
-}
-
-const Vec2f& Sprite::pivot() const
-{
-	return pivot_;
-}
-
-const Vec2f& Sprite::position() const
-{
-	return position_;
-}
-
-const Vec2f& Sprite::scale() const
-{
-	return scale_;
-}
-
-unsigned int Sprite::width() const
-{
-	return width_;
-}
-
-void Sprite::set_normal_buffer(Vec2f *buffer)
-{
-	normal_map_ = buffer;
-}
-
-void Sprite::set_vertex_array(SpriteVertex *buffer)
-{
-	vertex_array_ = buffer;
-}
 
 #endif

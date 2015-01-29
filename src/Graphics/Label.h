@@ -29,31 +29,31 @@ public:
 	Label();
 
 	/// Returns label text color.
-	inline const Colorb& color() const;
+	Colorb color() const { return color_; }
 
 	/// Returns the vertex count.
-	inline size_t count() const;
+	size_t count() const { return count_ + (count_ >> 1); }
 
 	/// Returns the assigned font.
-	inline const FontAtlas& font() const;
+	const FontAtlas& font() const { return *font_.get(); }
 
 	/// Returns label position.
-	inline const Vec2f& position() const;
+	const Vec2f& position() const { return position_; }
 
 	/// Returns the string.
-	inline const char* text() const;
+	const char* text() const { return text_.get(); }
 
 	/// Returns the vertex array object.
-	inline const VertexArray& vertex_array() const;
+	const VertexArray& vertex_array() const { return array_; }
 
 	/// Returns label width.
-	inline unsigned int width() const;
+	unsigned int width() const { return width_; }
 
 	/// Sets text alignment.
 	void set_alignment(const TextAlignment);
 
 	/// Sets text color.
-	void set_color(const Colorb &);
+	void set_color(const Colorb c);
 
 	/// Sets text font.
 	void set_font(SharedPtr<FontAtlas>);
@@ -68,7 +68,7 @@ public:
 	void set_scale(const float f);
 
 	/// Sets label as needing update.
-	inline void set_needs_update(const unsigned int what);
+	void set_needs_update(const unsigned int what) { stale_ |= what; }
 
 	/// Sets text to display.
 	void set_text(const char *);
@@ -110,45 +110,5 @@ private:
 	          const Vec2f &R,
 	          const bool needs_alignment);
 };
-
-const Colorb& Label::color() const
-{
-	return color_;
-}
-
-size_t Label::count() const
-{
-	return count_ + (count_ >> 1);
-}
-
-const FontAtlas& Label::font() const
-{
-	return *font_.get();
-}
-
-const Vec2f& Label::position() const
-{
-	return position_;
-}
-
-const char* Label::text() const
-{
-	return text_.get();
-}
-
-const VertexArray& Label::vertex_array() const
-{
-	return array_;
-}
-
-unsigned int Label::width() const
-{
-	return width_;
-}
-
-void Label::set_needs_update(const unsigned int what)
-{
-	stale_ |= what;
-}
 
 #endif

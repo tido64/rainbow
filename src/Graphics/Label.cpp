@@ -28,7 +28,7 @@ void Label::set_alignment(const TextAlignment a)
 	set_needs_update(kStaleBuffer);
 }
 
-void Label::set_color(const Colorb &c)
+void Label::set_color(const Colorb c)
 {
 	color_ = c;
 	set_needs_update(kStaleColor);

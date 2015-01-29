@@ -61,7 +61,7 @@ Sprite::Sprite(Sprite &&s)
 	s.parent_ = nullptr;
 }
 
-void Sprite::set_color(const unsigned int c)
+void Sprite::set_color(const Colorb c)
 {
 	R_ASSERT(vertex_array_, "Missing vertex array buffer");
 
