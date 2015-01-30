@@ -23,7 +23,7 @@ namespace rainbow
 			terminate("Failed to initialise renderer");
 		else if (lua_.init(&scenegraph_) != LUA_OK)
 			terminate("Failed to initialise Lua");
-#ifndef NDEBUG
+#if USE_NODE_TAGS
 		scenegraph_.set_tag("root");
 #endif
 	}

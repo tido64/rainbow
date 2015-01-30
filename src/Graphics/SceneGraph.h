@@ -5,6 +5,11 @@
 #ifndef GRAPHICS_SCENEGRAPH_H_
 #define GRAPHICS_SCENEGRAPH_H_
 
+#define USE_NODE_TAGS !defined(NDEBUG) || defined(USE_HEIMDALL)
+#if USE_NODE_TAGS
+#include <string>
+#endif
+
 #include "Common/TreeNode.h"
 #include "Common/Vec2.h"
 
@@ -26,22 +31,22 @@ namespace SceneGraph
 		bool enabled;  ///< Whether this node should be updated and/or drawn.
 
 		/// Creates a group node.
-		inline Node();
+		Node() : Node(Type::Group, nullptr) {}
 
 		/// Creates an animation node.
-		inline explicit Node(Animation *);
+		explicit Node(Animation *a) : Node(Type::Animation, a) {}
 
 		/// Creates a label node.
-		inline explicit Node(Label *);
+		explicit Node(Label *label) : Node(Type::Label, label) {}
 
 		/// Creates a sprite batch node.
-		inline explicit Node(SpriteBatch *);
+		explicit Node(SpriteBatch *batch) : Node(Type::SpriteBatch, batch) {}
 
 		/// Creates a generic drawable node.
-		inline Node(Drawable *);
+		Node(Drawable *drawable) : Node(Type::Drawable, drawable) {}
 
-#ifndef NDEBUG
-		const char* tag() const { return tag_; }
+#if USE_NODE_TAGS
+		const std::string& tag() const { return tag_; }
 		void set_tag(const char *tag) { tag_ = tag; }
 #endif
 
@@ -50,12 +55,12 @@ namespace SceneGraph
 
 		/// Adds a child node.
 		template<typename T>
-		Node* add_child(T *p);
+		Node* add_child(T component);
 
 		/// Attach a program to this node. The program will be used to draw this
 		/// node and any of its descendants unless they also have an attached
 		/// shader.
-		inline void attach_program(const unsigned int program);
+		void attach_program(const unsigned int program) { program_ = program; }
 
 		/// Draws this node and all its enabled children.
 		void draw() const;
@@ -86,22 +91,13 @@ namespace SceneGraph
 			Label *label_;
 			SpriteBatch *sprite_batch_;
 		};  ///< Graphical element represented by this node.
-#ifndef NDEBUG
-		const char *tag_;
+#if USE_NODE_TAGS
+		std::string tag_;
 #endif
 
-		inline Node(Type type, void *data);
+		Node(Type type, void *data)
+		    : enabled(true), type_(type), program_(0), data_(data) {}
 	};
-
-	Node::Node() : Node(Type::Group, nullptr) {}
-
-	Node::Node(Animation *animation) : Node(Type::Animation, animation) {}
-
-	Node::Node(Label *label) : Node(Type::Label, label) {}
-
-	Node::Node(SpriteBatch *batch) : Node(Type::SpriteBatch, batch) {}
-
-	Node::Node(Drawable *drawable) : Node(Type::Drawable, drawable) {}
 
 	Node* Node::add_child(Node *n)
 	{
@@ -110,22 +106,10 @@ namespace SceneGraph
 	}
 
 	template<typename T>
-	Node* Node::add_child(T *p)
+	Node* Node::add_child(T component)
 	{
-		return add_child(new Node(p));
+		return add_child(new Node(component));
 	}
-
-	void Node::attach_program(const unsigned int program)
-	{
-		program_ = program;
-	}
-
-	Node::Node(Type type, void *data)
-	    : enabled(true), type_(type), program_(0), data_(data)
-#ifndef NDEBUG
-	    , tag_(nullptr)
-#endif
-	{}
 }
 
 #endif

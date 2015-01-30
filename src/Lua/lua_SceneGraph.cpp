@@ -247,7 +247,7 @@ NS_RAINBOW_LUA_BEGIN
 		Argument<Node>::is_required(L, 2);
 		Argument<char*>::is_required(L, 3);
 
-#ifndef NDEBUG
+#if USE_NODE_TAGS
 		tonode(L, 2)->set_tag(lua_tostring(L, 3));
 #endif
 		return 0;
