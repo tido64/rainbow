@@ -5,6 +5,8 @@
 #ifndef GRAPHICS_SCENEGRAPH_H_
 #define GRAPHICS_SCENEGRAPH_H_
 
+#include <memory>
+
 #define USE_NODE_TAGS !defined(NDEBUG) || defined(USE_HEIMDALL)
 #if USE_NODE_TAGS
 #include <string>
@@ -56,6 +58,10 @@ namespace SceneGraph
 		/// Adds a child node.
 		template<typename T>
 		Node* add_child(T component);
+
+		/// Adds a child node.
+		template<typename T>
+		Node* add_child(const std::shared_ptr<T> &component);
 
 		/// Attach a program to this node. The program will be used to draw this
 		/// node and any of its descendants unless they also have an attached
@@ -109,6 +115,12 @@ namespace SceneGraph
 	Node* Node::add_child(T component)
 	{
 		return add_child(new Node(component));
+	}
+
+	template<typename T>
+	Node* Node::add_child(const std::shared_ptr<T> &component)
+	{
+		return add_child(new Node(component.get()));
 	}
 }
 
