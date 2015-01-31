@@ -23,11 +23,12 @@ namespace rainbow
 		Director();
 		~Director();
 
-		inline bool active() const;
-		inline const char* error() const;
-		inline Input& input();
-		inline Renderer& renderer();
-		inline bool terminated() const;
+		bool active() const { return active_; }
+		const char* error() const { return error_; }
+		Input& input() { return input_; }
+		Renderer& renderer() { return renderer_; }
+		SceneGraph::Node& scenegraph() { return scenegraph_; }
+		bool terminated() const { return terminated_; }
 
 		void draw();
 
@@ -64,31 +65,6 @@ namespace rainbow
 
 		void terminate(const char *error);
 	};
-
-	bool Director::active() const
-	{
-		return active_;
-	}
-
-	const char* Director::error() const
-	{
-		return error_;
-	}
-
-	Input& Director::input()
-	{
-		return input_;
-	}
-
-	Renderer& Director::renderer()
-	{
-		return renderer_;
-	}
-
-	bool Director::terminated() const
-	{
-		return terminated_;
-	}
 
 	void Director::terminate()
 	{
