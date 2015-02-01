@@ -1,0 +1,11 @@
+site_name: Rainbow
+repo_url: https://bitbucket.org/tido/rainbow
+copyright: Copyright &copy; 2010-15 Bifrost Entertainment AS and Tommy Nguyen.
+pages:
+  - [index.md, Home]
+  - [quick_start.md, Getting Started, Quick Start Guide]
+  - [lua/basics.md, Getting Started, Lua Basics]
+  - [lua/api.md, API Reference, Lua API]
+  - [license.md, About, License]
+theme: Yeti
+docs_dir: doc

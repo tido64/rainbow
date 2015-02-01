@@ -1,14 +1,12 @@
-# Rainbow: Quick Start
+# Quick Start Guide
 
 Before you start, please make sure you've read `README.md`. The following
 tutorials will assume that you've already built Rainbow.
 
-## Demo Time
-
 Pick a demo under `demos`. For the purpose of this tutorial, we'll try to get
 `transitions` running.
 
-### Android
+## Android
 
 1. Create a folder to contain Android files.
 2. Copy `transitions` into this folder.
@@ -25,7 +23,7 @@ Connect your device and install it:
 
 Start the app on your device.
 
-### iOS
+## iOS
 
 1. Open `build/xcode4/Rainbow.xcodeproj` in Xcode.
 2. Expand `Resources` to see all the convenience libraries.
@@ -38,7 +36,7 @@ Start the app on your device.
 
 You should now be able to run this demo in the simulator or on your device.
 
-#### TestFlight
+### TestFlight
 
 In the top left corner of Xcode, next to the Run and Stop buttons, click on
 'Rainbow' and choose 'Edit Scheme...'. Select 'Archive' and set 'Build
@@ -47,7 +45,7 @@ TestFlight.
 
 If you don't want to use TestFlight, simply remove the library from the project.
 
-### Linux / Mac OS X / Windows
+## Linux / Mac OS X / Windows
 
 1. Copy this folder somewhere. In the following steps, we'll be copying more
    stuff into this folder.
@@ -61,13 +59,13 @@ If you don't want to use TestFlight, simply remove the library from the project.
 
 Now your demo folder should contain at least the following files:
 
-- `Kim.lua`
-- `Math.lua`
-- `Shaders`
-- `Transition.lua`
-- `TransitionEffects.lua`
-- `canvas.png`
-- `main.lua`
+	Kim.lua
+	Math.lua
+	Shaders/
+	Transition.lua
+	TransitionEffects.lua
+	canvas.png
+	main.lua
 
 Start the demo:
 

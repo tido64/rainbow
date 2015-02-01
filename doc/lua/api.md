@@ -1,8 +1,8 @@
-# API Reference
+# Lua API Reference
 
 ## rainbow.animation
 
-Sprite animations use separate textures within a [texture atlas](#api-reference-rainbow-texture) as animation frames. Since animations are bound to a [sprite](#api-reference-rainbow-sprite), which in turn is bound to a [sprite batch](#api-reference-rainbow-spritebatch), they are also bound to the [texture atlas](#api-reference-rainbow-texture) the batch is using.
+Sprite animations use separate textures within a [texture atlas](#rainbowtexture) as animation frames. Since animations are bound to a [sprite](#rainbowsprite), which in turn is bound to a [sprite batch](#rainbowspritebatch), they are also bound to the [texture atlas](#rainbowtexture) the batch is using.
 
 ### rainbow.animation(sprite, frames, fps, delay = 0)
 
@@ -156,7 +156,7 @@ Stops channel.
 
 ## rainbow.font
 
-Font objects are used by [labels](#api-reference-rainbow-label) to display text. Like textures, it is recommended to reuse them whenever possible. A font object is created with a fixed point size and cannot be resized. If a different size is desired, a new font object must be created.
+Font objects are used by [labels](#rainbowlabel) to display text. Like textures, it is recommended to reuse them whenever possible. A font object is created with a fixed point size and cannot be resized. If a different size is desired, a new font object must be created.
 
 Rainbow currently supports OpenType and TrueType fonts.
 
@@ -270,7 +270,7 @@ Sets text colour.
 
 | Parameter | Description |
 |-----------|-------------|
-| <var>r</var> | [Font face](#api-reference-rainbow-font) to use. |
+| <var>r</var> | [Font face](#rainbowfont) to use. |
 
 Sets font type.
 
@@ -401,9 +401,9 @@ Sets texture filtering method. Only affects new textures.
 | Parameter | Description |
 |-----------|-------------|
 | <var>left</var> | Leftmost point in pixels. Default: 0. |
-| <var>right</var> | Rightmost point in pixels. Default: [``rainbow.platform.screen.width``](#api-reference-rainbow-platform-rainbow-platform-screen). |
+| <var>right</var> | Rightmost point in pixels. Default: [``rainbow.platform.screen.width``](#rainbowplatformscreen). |
 | <var>bottom</var> | Bottommost point in pixels. Default: 0. |
-| <var>top</var> | Topmost point in pixels. Default: [``rainbow.platform.screen.height``](#api-reference-rainbow-platform-rainbow-platform-screen). |
+| <var>top</var> | Topmost point in pixels. Default: [``rainbow.platform.screen.height``](#rainbowplatformscreen). |
 
 Sets orthographic projection.
 
@@ -416,18 +416,18 @@ Drawables must be attached to the scene graph in order to be updated and drawn. 
 | Parameter | Description |
 |-----------|-------------|
 | <var>parent</var> | <span class="optional"></span> Parent node to attach to. Default: root. |
-| <var>animation</var> | The [animation](#api-reference-rainbow-animation) to attach to the graph. |
+| <var>animation</var> | The [animation](#rainbowanimation) to attach to the graph. |
 
-Creates a node containing a [sprite animation](#api-reference-rainbow-animation).
+Creates a node containing a [sprite animation](#rainbowanimation).
 
 ### &lt;rainbow.scenegraph&gt;:add_batch(+parent, spritebatch)
 
 | Parameter | Description |
 |-----------|-------------|
 | <var>parent</var> | <span class="optional"></span> Parent node to attach to. Default: root. |
-| <var>spritebatch</var> | The [sprite batch](#api-reference-rainbow-spritebatch) to attach to the graph. |
+| <var>spritebatch</var> | The [sprite batch](#rainbowspritebatch) to attach to the graph. |
 
-Creates a node containing a [sprite batch](#api-reference-rainbow-spritebatch).
+Creates a node containing a [sprite batch](#rainbowspritebatch).
 
 ### &lt;rainbow.scenegraph&gt;:add_drawable(+parent, drawable)
 
@@ -451,9 +451,9 @@ Creates a group node.
 | Parameter | Description |
 |-----------|-------------|
 | <var>parent</var> | <span class="optional"></span> Parent node to attach to. Default: root. |
-| <var>label</var> | The [label](#api-reference-rainbow-label) to attach to the graph. |
+| <var>label</var> | The [label](#rainbowlabel) to attach to the graph. |
 
-Creates a node containing a [label](#api-reference-rainbow-label).
+Creates a node containing a [label](#rainbowlabel).
 
 ### &lt;rainbow.scenegraph&gt;:disable(node)
 
@@ -499,7 +499,7 @@ Moves node to a new parent node.
 
 ## rainbow.sprite
 
-A sprite is a textured quad in a coordinate system with the origin at the lower left corner of the screen. Sprites are created by a [sprite batch](#api-reference-rainbow-spritebatch) and uses the [texture atlas](#api-reference-rainbow-texture) assigned to the batch.
+A sprite is a textured quad in a coordinate system with the origin at the lower left corner of the screen. Sprites are created by a [sprite batch](#rainbowspritebatch) and uses the [texture atlas](#rainbowtexture) assigned to the batch.
 
 ### &lt;rainbow.sprite&gt;:get_angle()
 
@@ -599,7 +599,7 @@ Rotates sprite by given angle.
 
 ## rainbow.spritebatch
 
-Sprite batches are meant to enforce grouping of [sprites](#api-reference-rainbow-sprite) in order to avoid drawing each [sprite](#api-reference-rainbow-sprite) separately.
+Sprite batches are meant to enforce grouping of [sprites](#rainbowsprite) in order to avoid drawing each [sprite](#rainbowsprite) separately.
 
 The sprites in a batch are drawn using [painter's algorithm](http://en.wikipedia.org/wiki/Painter's_algorithm) and should therefore be created in the order they want to be drawn.
 
@@ -607,25 +607,25 @@ The sprites in a batch are drawn using [painter's algorithm](http://en.wikipedia
 
 | Parameter | Description |
 |-----------|-------------|
-| <var>hint</var> | <span class="optional"></span> Number of [sprites](#api-reference-rainbow-sprite) to make space for. Default: 4. |
+| <var>hint</var> | <span class="optional"></span> Number of [sprites](#rainbowsprite) to make space for. Default: 4. |
 
-Creates a batch of [sprites](#api-reference-rainbow-sprite).
+Creates a batch of [sprites](#rainbowsprite).
 
 ### &lt;rainbow.spritebatch&gt;:create_sprite(width, height)
 
 | Parameter | Description |
 |-----------|-------------|
-| <var>width, height</var> | Dimension of the [sprite](#api-reference-rainbow-sprite) to create. |
+| <var>width, height</var> | Dimension of the [sprite](#rainbowsprite) to create. |
 
-Creates an untextured [sprite](#api-reference-rainbow-sprite) with given dimension and places it at origin.
+Creates an untextured [sprite](#rainbowsprite) with given dimension and places it at origin.
 
 ### &lt;rainbow.spritebatch&gt;:set_texture(texture)
 
 | Parameter | Description |
 |-----------|-------------|
-| <var>texture</var> | [Texture atlas](#api-reference-rainbow-texture) used by all [sprites](#api-reference-rainbow-sprite) in the batch. |
+| <var>texture</var> | [Texture atlas](#rainbowtexture) used by all [sprites](#rainbowsprite) in the batch. |
 
-Sets [texture atlas](#api-reference-rainbow-texture).
+Sets [texture atlas](#rainbowtexture).
 
 ## rainbow.texture
 
@@ -633,7 +633,7 @@ Texture objects are images decoded and sent to the graphics card as texture. Tex
 
 Rainbow currently supports PNG and PVRTC.
 
-_Note:_ Textures should be square and its sides a power of two (greater than or equal to 64). This is due to how the graphics pipeline works. Even if textures do not meet this recommendation, the graphics drivers will enlarge a texture in order to do so anyway, wasting memory. The maximum size of a texture can be queried in [``rainbow.renderer``](#api-reference-rainbow-renderer-rainbow-renderer-max-texture-size).
+_Note:_ Textures should be square and its sides a power of two (greater than or equal to 64). This is due to how the graphics pipeline works. Even if textures do not meet this recommendation, the graphics drivers will enlarge a texture in order to do so anyway, wasting memory. The maximum size of a texture can be queried in [``rainbow.renderer``](#rainbowrenderermax_texture_size).
 
 ### rainbow.texture(path)
 
@@ -641,7 +641,7 @@ _Note:_ Textures should be square and its sides a power of two (greater than or 
 |-----------|-------------|
 | <var>path</var> | Path to texture to load. |
 
-Creates a texture object, usable in [sprite batches](#api-reference-rainbow-spritebatch).
+Creates a texture object, usable in [sprite batches](#rainbowspritebatch).
 
 ### &lt;rainbow.texture&gt;:create(x, y, width, height)
 
@@ -650,7 +650,7 @@ Creates a texture object, usable in [sprite batches](#api-reference-rainbow-spri
 | <var>x, y</var> | Upper left point of texture. |
 | <var>width, height</var> | Dimension of texture. |
 
-Creates/defines a texture in the atlas. The unique identifier returned can be used in [sprites](#api-reference-rainbow-sprite).
+Creates/defines a texture in the atlas. The unique identifier returned can be used in [sprites](#rainbowsprite).
 
 ## rainbow.time
 
@@ -1487,9 +1487,3 @@ Sets the skin used to look up attachments not found in the ``SkeletonData`` ``de
 | <var>scale</var> | Animation speed scale. Default: 1.0. |
 
 Sets time dilation factor.
-
-## About
-
-&copy; 2010-14 Bifrost Entertainment AS and Tommy Nguyen. Distributed under the [MIT License](http://opensource.org/licenses/MIT).
-
-Rainbow is freely available on [<span class="fa fa-bitbucket"></span> Bitbucket](https://bitbucket.org/tido/rainbow) and [<span class="fa fa-github"></span> GitHub](https://github.com/tn0502/rainbow).

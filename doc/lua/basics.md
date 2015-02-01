@@ -1,4 +1,4 @@
-# Rainbow: A Brief Introduction
+# Lua Basics
 
 ## File Structure
 
@@ -28,7 +28,15 @@ and sets the window size (Linux/Mac OS X/Windows).
 	accelerometer = false|true
 	-- Specifies whether the accelerometer is used.
 
-	resolution = { width, height }
+	allow_high_dpi = false|true
+	-- Specifies whether to create windows in high DPI mode. On smartphones and
+	-- tablets, this option is always set to true.
+
+	msaa = 0|2|4|8
+	-- Sets number of samples for multisample anti-aliasing. This feature is not
+	-- available on smartphones/tablets.
+
+	resolution = {width, height}
 	-- Specifies the preferred screen resolution or window size. It also
 	-- determines whether we are in landscape or portrait mode. On
 	-- smartphones/tablets, width and height have no meaning as the whole screen
@@ -42,7 +50,9 @@ If no configuration file is present, or the file is somehow unavailable, Rainbow
 falls back to the following:
 
 	accelerometer = true
-	resolution = { 0, 0 }  -- implies landscape mode
+	allow_high_dpi = false
+	msaa = 0
+	resolution = {0, 0}  -- implies landscape mode
 	suspend_on_focus_lost = true
 
 ### `Shaders` (required on Linux/Mac OS X/Windows)
@@ -51,7 +61,7 @@ This is just a copy of the folder `src/Graphics/Shaders`. On Android and iOS,
 the shaders are embedded in the binary. This is just so that you don't have to
 constantly recompile Rainbow while working with shaders.
 
-## Graphics
+## Sprite Batches
 
 One of Rainbow's philosophies is to always batch sprites. So in order to create
 a sprite, one must first create a batch.
@@ -136,9 +146,9 @@ specially structured Lua table. Creating an empty scene with Prose looks
 something like:
 
 	return {
-	  version = "1.0",  -- declare Prose
-	  resources = { },  -- declare fonts, sounds or textures here
-	  nodes = { }       -- declare animations, labels or sprites here
+	  version = 1.1,   -- declare Prose version
+	  resources = {},  -- declare fonts, sounds or textures here
+	  nodes = {}       -- declare animations, labels or sprites here
 	}
 
 We can recreate the earlier scene with this table (annotated with the equivalent
@@ -149,23 +159,23 @@ code):
 	return {
 	  version = "1.0",
 	  resources = {
-	    "atlas" = {                      -- local atlas =
-	      "canvas.png",                  --     rainbow.texture("canvas.png")
-	      { 448, 108, 100, 100 }         -- local texture0 =
-	    }                                       atlas:create_texture(...)
+	    "atlas" = {                    -- local atlas =
+	      "canvas.png",                --     rainbow.texture("canvas.png")
+	      {448, 108, 100, 100}         -- local texture0 =
+	    }                              --     atlas:create_texture(...)
 	  },
 	  nodes = {
-	    { name = "batch",                -- local batch = rainbow.spritebatch(2)
-	      texture = "atlas",             -- batch:set_texture(atlas)
-	      { name = "sprite1"             -- local sprite1 =
-	        size = { 100, 100 },         --     batch:create_sprite(100, 100)
-	        position = { cx - 50, cy },  -- sprite1:set_position(...)
-	        texture = 0                  -- sprite1:set_texture(texture0)
+	    { name = "batch",              -- local batch = rainbow.spritebatch(2)
+	      texture = "atlas",           -- batch:set_texture(atlas)
+	      { name = "sprite1"           -- local sprite1 =
+	        size = {100, 100},         --     batch:create_sprite(100, 100)
+	        position = {cx - 50, cy},  -- sprite1:set_position(...)
+	        texture = 0                -- sprite1:set_texture(texture0)
 	      },
-	      { name = "sprite2"             -- local sprite2 =
-	        size = { 100, 100 },         --     batch:create_sprite(100, 100)
-	        position = { cx + 50, cy },  -- sprite2:set_position(...)
-	        texture = 0                  -- sprite2:set_texture(texture0)
+	      { name = "sprite2"           -- local sprite2 =
+	        size = {100, 100},         --     batch:create_sprite(100, 100)
+	        position = {cx + 50, cy},  -- sprite2:set_position(...)
+	        texture = 0                -- sprite2:set_texture(texture0)
 	      }
 	    }
 	  }

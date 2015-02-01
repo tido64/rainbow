@@ -1,8 +1,9 @@
-# Rainbow [![Build status](https://ci.appveyor.com/api/projects/status/oajtxwu9d9lrayk0?svg=true)](https://ci.appveyor.com/project/Tommy/rainbow)
+# Rainbow [![ReadTheDocs](https://readthedocs.org/projects/rainbow/badge/)](http://rainbow.rtfd.org/) [![Windows build status](https://ci.appveyor.com/api/projects/status/oajtxwu9d9lrayk0?svg=true)](https://ci.appveyor.com/project/Tommy/rainbow)
 
-Rainbow is a scriptable, cross-platform, 2D game engine written in C++.
+Rainbow is a fast, scriptable, cross-platform, 2D game engine written in modern
+C++.
 
-Copyright &copy; 2010-14 Bifrost Entertainment AS and Tommy Nguyen.
+Copyright &copy; 2010-15 Bifrost Entertainment AS and Tommy Nguyen.
 
 Distributed under the MIT License (see accompanying file `LICENSE` or copy at
 http://opensource.org/licenses/MIT). Licenses for third-party software can be
@@ -10,7 +11,9 @@ found in file `THIRDPARTY`.
 
 ## Features
 
-### Platforms
+### Cross-platform
+
+Rainbow runs on most popular operating systems, including:
 
 - Android
 - iOS
@@ -20,27 +23,25 @@ found in file `THIRDPARTY`.
 
 ### Audio
 
-Rainbow integrates [FMOD Studio](http://www.fmod.org/). Its API is available at
-the scripting layer.
-
-A custom solution based on OpenAL and
-[OpenSL ES](http://www.khronos.org/opensles/) (Android-only) is also available,
-with support for the following formats:
-
-- Android: Any format supported by Android's
-  [OpenSL ES](http://www.khronos.org/opensles/) implementation
-- Linux/Mac OS X/Windows: [Ogg Vorbis](http://www.vorbis.com/)
-- iOS/Mac OS X (additionally): Any format listed in the
-  [Multimedia Programming Guide](https://developer.apple.com/library/ios/documentation/AudioVideo/Conceptual/MultimediaPG/UsingAudio/UsingAudio.html#//apple_ref/doc/uid/TP40009767-CH2-SW33)
+Rainbow integrates [FMOD Studio](http://www.fmod.org/), giving you access to
+the same professional tools that AAA studios use. There is also an open source
+alternative built on OpenAL and
+[OpenSL ES](http://www.khronos.org/opensles/) (Android). Audio format support
+depends on the platform. Typically, MP3 and Ogg Vorbis on Android, and
+[AAC, ALAC, and MP3](https://developer.apple.com/library/ios/documentation/AudioVideo/Conceptual/MultimediaPG/UsingAudio/UsingAudio.html#//apple_ref/doc/uid/TP40009767-CH2-SW33)
+on iOS and OS X.
 
 ### Graphics
 
-Uses mostly [OpenGL ES 2.0](http://www.khronos.org/opengles/2_X/) compatible
-features:
+Rainbow is mostly built on [OpenGL ES 2.0](http://www.khronos.org/opengles/2_X/)
+and features:
 
-- Shaders
-- Sprites-based rendering with implicit batching
-- Text rendering (supports TrueType and OpenType through
+- Scene graph
+- Sprites-based rendering with explicit batching
+- Animation with traditional sprite sheets, or…
+- Skeletal animation imported directly from
+  [Spine](http://esotericsoftware.com/)
+- Text rendering (supports TrueType and OpenType via
   [FreeType](http://www.freetype.org/))
 - Texture atlas ([PNG](http://www.libpng.org/pub/png/) and PVRTC)
 
@@ -51,25 +52,22 @@ features:
 - Microphone (Android and iOS)
 - Touch (Android and iOS)
 
-### Others
+### And more…
 
 - [Lua](http://www.lua.org/) scripting language with debugging console and hot
   reloading
-- Physics ([Box2D](http://box2d.org/))
-- Scene graph
-- [Spine](http://esotericsoftware.com/) integration
-- [TestFlight](https://testflightapp.com/) integration
+- 2d rigid body physics provided by [Box2D](http://box2d.org/)
+- Deploy and test with [TestFlight](https://testflightapp.com/) on iOS
 
 ## Structure
 
-- `build` - Contains compilation-related files.
-- `demos` - Demos.
-- `doc` - Documentation.
-- `lib` - Libraries necessary to compile Rainbow.
-- `lua` - Convenience libraries for implementing apps or games.
-- `src` - Rainbow source files.
-- `tests` - Rainbow unit tests.
-- `tools` - Tools such as the build script.
+	build/  # Build related files
+	demos/  # Lua demos
+	doc/    # Documentation
+	lib/    # Third party libraries Rainbow depend on
+	lua/    # Lua convenience libraries
+	src/    # Rainbow source code
+	tools/  # Tools such as the build script
 
 ## Building
 
