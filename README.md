@@ -102,7 +102,7 @@ corresponding section.
 
 The default audio backend for all platforms is currently FMOD Studio. If you
 don't want to use FMOD Studio, run `build.sh` with `-DUSE_FMOD_STUDIO=0` or
-undefine USE_FMOD_STUDIO in the project file.
+undefine `USE_FMOD_STUDIO` in the project file.
 
 ### Android
 
@@ -137,7 +137,8 @@ Use the provided Xcode project under `rainbow/build/xcode4/`.
   [MinGW-w64](http://mingw-w64.sourceforge.net/) (optional)
 
 You can install most of these using your favourite package manager. For SDL,
-download the source code and extract its content to `rainbow/lib/SDL/`.
+download the source code and extract its content to `rainbow/lib/SDL/`. If you
+have installed Mercurial, let the build script download it for you.
 
 Clang is the default compiler but you can use [GCC](http://gcc.gnu.org/), or any
 other compiler for that matter, by prefixing `CC=gcc CXX=g++`.
@@ -154,8 +155,8 @@ no longer work.
 - [Xcode](https://itunes.apple.com/no/app/xcode/id497799835?mt=12)
 
 CMake and Ogg Vorbis can be installed through [Homebrew](http://brew.sh/) or
-[MacPorts](http://www.macports.org/). Download SDL source code and extract its
-content to `rainbow/lib/SDL/`. Xcode's Command Line Tools must be installed.
+[MacPorts](http://www.macports.org/). Xcode's Command Line Tools must be
+installed. SDL will be downloaded automatically by the build script.
 
 ### Windows
 
