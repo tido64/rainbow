@@ -1,22 +1,28 @@
-# Doxyfile 1.8.1.2
+# Doxyfile 1.8.9.1
 PROJECT_NAME           = "Rainbow"
-PROJECT_NUMBER         = 1.0
+PROJECT_BRIEF          = "Rainbow is a fast, scriptable, cross-platform, 2D game engine written in modern C++."
 PROJECT_LOGO           =
-OUTPUT_DIRECTORY       = Rainbow-doc
+OUTPUT_DIRECTORY       = dox
 CREATE_SUBDIRS         = YES
-JAVADOC_AUTOBRIEF      = YES
 QT_AUTOBRIEF           = YES
-TAB_SIZE               = 4
+BUILTIN_STL_SUPPORT    = YES
 EXTRACT_ALL            = YES
 EXTRACT_PRIVATE        = YES
-CASE_SENSE_NAMES       = NO
+EXTRACT_STATIC         = YES
+SORT_MEMBERS_CTORS_1ST = YES
 SHOW_NAMESPACES        = NO
+QUIET                  = NO
 INPUT                  = src
 RECURSIVE              = YES
-EXCLUDE_PATTERNS       = */Resources/*
-SOURCE_BROWSER         = YES
+EXCLUDE_PATTERNS       = */Resources/* */Tests/*
+IMAGE_PATH             =
+HTML_DYNAMIC_SECTIONS  = YES
 GENERATE_LATEX         = NO
-PREDEFINED             = NDEBUG USE_PHYSICS
+INCLUDE_PATH           = lib lib/FMOD/inc lib/FreeType/include lib/Lua lib/SDL/include lib/libpng
+PREDEFINED             = NDEBUG \
+                         USE_PHYSICS \
+                         USE_SPINE
 CLASS_DIAGRAMS         = NO
 HIDE_UNDOC_RELATIONS   = NO
 HAVE_DOT               = YES
+DOT_IMAGE_FORMAT       = svg
