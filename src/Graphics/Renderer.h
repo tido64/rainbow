@@ -1,4 +1,4 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -31,7 +31,8 @@ public:
 	static bool has_extension(const char *const extension);
 	static int max_texture_size();
 
-	inline const Vec2i& window_size() const;
+	const Vec2i& resolution() const { return view_; }
+	const Vec2i& window_size() const { return window_; }
 
 	void set_resolution(const Vec2i &resolution);
 	void set_window_size(const Vec2i &size, const float factor = 1.0f);
@@ -69,11 +70,6 @@ void Renderer::draw_arrays(const T &obj, const int first, const size_t count)
 	obj.vertex_array().bind();
 	obj.bind_textures();
 	glDrawArrays(GL_TRIANGLES, first, count);
-}
-
-const Vec2i& Renderer::window_size() const
-{
-	return window_;
 }
 
 #endif

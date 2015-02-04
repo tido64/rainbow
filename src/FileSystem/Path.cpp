@@ -1,4 +1,4 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -137,9 +137,8 @@ Path::Path(const char *const file, const RelativeTo rel)
 	path_[0] = '\0';
 	switch (rel)
 	{
-		case RelativeTo::CurrentPath:
+		case RelativeTo::CurrentPath: {
 #if defined(RAINBOW_OS_ANDROID)
-			{
 				// Android doesn't ignore multiple '/' in paths.
 				int i = -1;
 				int j = -1;
@@ -150,9 +149,7 @@ Path::Path(const char *const file, const RelativeTo rel)
 					path_[++j] = file[i];
 				}
 				path_[++j] = '\0';
-			}
 #elif defined(RAINBOW_OS_IOS)
-			{
 				NSString *string = [[NSString alloc]
 				    initWithBytesNoCopy:(void*)file
 				                 length:strlen(file)
@@ -165,17 +162,14 @@ Path::Path(const char *const file, const RelativeTo rel)
 					break;
 
 				*this = [string UTF8String];
-			}
 #else
-			{
 				*this = ::g_current_path;
 				*this += file;
-			}
 #endif
 			break;
-		case RelativeTo::UserDataPath:
+		}
+		case RelativeTo::UserDataPath: {
 #ifdef RAINBOW_OS_IOS
-			{
 				NSError *err = nil;
 				NSString *libraryDir = [[[NSFileManager defaultManager]
 				    URLForDirectory:NSLibraryDirectory
@@ -191,9 +185,7 @@ Path::Path(const char *const file, const RelativeTo rel)
 				               encoding:NSUTF8StringEncoding
 				           freeWhenDone:NO];
 				*this = [[libraryDir stringByAppendingPathComponent:string] UTF8String];
-			}
 #else
-			{
 				if (!g_user_data_path)
 					break;
 				struct stat sb;
@@ -206,9 +198,9 @@ Path::Path(const char *const file, const RelativeTo rel)
 					break;
 				*this = g_user_data_path;
 				*this += file;
-			}
 #endif  // RAINBOW_OS_IOS
 			break;
+		}
 		case RelativeTo::Root:
 			*this = file;
 			break;
