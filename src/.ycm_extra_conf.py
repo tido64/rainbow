@@ -1,20 +1,32 @@
 import os
+import re
 import sys
 
-def PlatformIncludes():
-  if sys.platform.startswith('linux'):
-    # TODO
+# Copied from Chromium. See https://codereview.chromium.org/842053003
+def SystemIncludeDirectoryFlags():
+  """Determines compile flags to include the system include directories.
+
+  Use as a workaround for https://github.com/Valloric/YouCompleteMe/issues/303
+
+  Returns:
+    (List of Strings) Compile flags to append.
+  """
+  try:
+    with open(os.devnull, 'rb') as DEVNULL:
+      output = subprocess.check_output(['clang', '-v', '-E', '-x', 'c++', '-'],
+                                       stdin=DEVNULL, stderr=subprocess.STDOUT)
+  except (FileNotFoundError, subprocess.CalledProcessError):
     return []
-  elif sys.platform == 'darwin':
-    # Requires Xcode 5.1+ and YouCompleteMe compiled with '--clang-completer --system-libclang'
-    return [
-      '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/c++/v1',
-      '/usr/local/include',
-      '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/clang/5.1/include',
-      '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include',
-      '/usr/include',
-    ]
-  return []
+  includes_regex = r'#include <\.\.\.> search starts here:\s*' \
+                   r'(.*?)End of search list\.'
+  includes = re.search(includes_regex, output.decode(), re.DOTALL).group(1)
+  flags = []
+  for path in includes.splitlines():
+    path = path.strip()
+    if os.path.isdir(path):
+      flags.append('-isystem')
+      flags.append(path)
+  return flags
 
 def ProjectFlags():
   project_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..')
@@ -41,10 +53,7 @@ def ProjectFlags():
     '-fno-rtti',
     '-fno-exceptions',
   ]
-  # Workaround for https://github.com/Valloric/YouCompleteMe/issues/303
-  for path in PlatformIncludes():
-    flags.append('-isystem')
-    flags.append(path)
+  flags.extend(SystemIncludeDirectoryFlags())
   return flags
 
 cxx_flags = ProjectFlags()
