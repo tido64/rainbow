@@ -1,4 +1,4 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -16,7 +16,7 @@
 namespace rainbow
 {
 	DataMapUnix::DataMapUnix(const Path &path)
-	    : len_(0), off_(0), addr_(nullptr)
+	    : len_(0), off_(0), addr_(nullptr), mmapped_(true)
 	{
 		const File &f = File::open(path);
 		if (!f)
@@ -45,7 +45,7 @@ namespace rainbow
 
 	DataMapUnix::~DataMapUnix()
 	{
-		if (addr_)
+		if (mmapped_ && addr_)
 			munmap(addr_, len_);
 	}
 }

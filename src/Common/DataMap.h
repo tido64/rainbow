@@ -1,4 +1,4 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -21,6 +21,11 @@ namespace rainbow
 	class DataMapBase : private T, private NonCopyable<DataMapBase<T>>
 	{
 	public:
+#ifdef RAINBOW_JS
+		template<size_t N>
+		DataMapBase(const unsigned char (&)[N]);
+#endif
+
 		explicit DataMapBase(const Path &path);
 
 		/// Returns offset raw byte array.
@@ -38,6 +43,12 @@ namespace rainbow
 		operator const char*() const;
 		operator const unsigned char*() const;
 	};
+
+#ifdef RAINBOW_JS
+	template<typename T>
+	template<size_t N>
+	DataMapBase<T>::DataMapBase(const unsigned char (&bytes)[N]) : T(bytes) {}
+#endif
 
 	template<typename T>
 	DataMapBase<T>::DataMapBase(const Path &path) : T(path) {}

@@ -1,6 +1,6 @@
 /// Includes correct OpenGL ES headers for corresponding platforms.
 ///
-/// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+/// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 /// Distributed under the MIT License.
 /// (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -9,7 +9,7 @@
 
 #include "Platform/Macros.h"
 
-#if defined(RAINBOW_OS_ANDROID)
+#if defined(RAINBOW_OS_ANDROID) || defined(RAINBOW_JS)
 #	include <GLES2/gl2.h>
 #	include <GLES2/gl2ext.h>
 #elif defined(RAINBOW_OS_IOS)

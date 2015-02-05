@@ -2,7 +2,7 @@
 ///
 /// \see http://sourceforge.net/p/predef/wiki/Home/
 ///
-/// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+/// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 /// Distributed under the MIT License.
 /// (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -25,7 +25,7 @@
 #	define RAINBOW_OS_UNIX
 #elif defined(_WIN32)
 #	define RAINBOW_OS_WINDOWS
-#elif defined(EMSCRIPTEN)
+#elif defined(__EMSCRIPTEN__)
 #	define RAINBOW_JS
 #	define RAINBOW_OS_UNIX
 #endif

@@ -19,6 +19,7 @@ elseif(MINGW OR UNIX)
 		if(EMSCRIPTEN)
 			set(RAINBOW_COMMON_CFLAGS "${RAINBOW_COMMON_CFLAGS} -Wno-warn-absolute-paths")
 			set(RAINBOW_CSTD "-std=c99")
+			set(USE_FMOD_STUDIO OFF)
 		elseif(NOT APPLE)
 			# Common C-/C++ compiler flags
 			set(RAINBOW_COMMON_CFLAGS "${RAINBOW_COMMON_CFLAGS} -fstack-protector -fpie -march=native")

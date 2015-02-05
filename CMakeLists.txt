@@ -293,8 +293,8 @@ add_executable(rainbow ${SOURCE_FILES})
 
 # Dynamic libraries
 include(${LOCAL_MODULE_PATH}/Audio.cmake)
-if(ANDROID OR EMSCRIPTEN)
-	set(OPENGL_gl_LIBRARY)
+if(ANDROID)
+	set(OPENGL_gl_LIBRARY "")
 else()
 	find_package(OpenGL REQUIRED)
 endif()

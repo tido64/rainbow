@@ -1,4 +1,4 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -10,6 +10,9 @@ namespace rainbow
 	class DataMapUnix
 	{
 	protected:
+		template<size_t N>
+		DataMapUnix(const unsigned char (&)[N]);
+
 		explicit DataMapUnix(const Path &path);
 		~DataMapUnix();
 
@@ -26,7 +29,14 @@ namespace rainbow
 		size_t len_;
 		size_t off_;
 		void *addr_;
+		const bool mmapped_;
 	};
+
+	template<size_t N>
+	DataMapUnix::DataMapUnix(const unsigned char (&bytes)[N])
+	    : len_(N), off_(0),
+	      addr_(const_cast<void*>(static_cast<const void*>(bytes))),
+	      mmapped_(false) {}
 
 	const unsigned char* DataMapUnix::bytes() const
 	{

@@ -1,5 +1,5 @@
 #!/bin/bash
-# Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+# Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 # Distributed under the MIT License.
 # (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -12,9 +12,7 @@ fi
 function compile {
   case "$1" in
     "Emscripten")
-      make && [[ -f rainbow ]] || exit 1
-      mv rainbow rainbow.bc
-      em++ -v rainbow.bc -o rainbow.html
+      make
       ;;
     "Ninja")
       $ANALYZER ninja
@@ -84,9 +82,7 @@ case $1 in
       echo "$0: Could not find Emscripten"
       exit 1
     fi
-    cmake -DCMAKE_TOOLCHAIN_FILE="$EMSCRIPTEN/cmake/Platform/Emscripten.cmake" \
-          -DCMAKE_MODULE_PATH="$EMSCRIPTEN/cmake" \
-          -DEMSCRIPTEN=1 \
+    cmake -DCMAKE_TOOLCHAIN_FILE="$EMSCRIPTEN/cmake/Modules/Platform/Emscripten.cmake" \
           $ARGS "$RAINBOW" &&
     compile Emscripten
     ;;
@@ -105,7 +101,8 @@ case $1 in
     ;;
   "windows")
     GENERATOR=${GENERATOR:-Unix Makefiles}
-    cmake -DCMAKE_TOOLCHAIN_FILE="$RAINBOW/build/cmake/MinGW.cmake" $ARGS -G "$GENERATOR" "$RAINBOW" &&
+    cmake -DCMAKE_TOOLCHAIN_FILE="$RAINBOW/build/cmake/MinGW.cmake" \
+          $ARGS -G "$GENERATOR" "$RAINBOW" &&
     compile "$GENERATOR"
     ;;
   *)  # Attempt to detect platform

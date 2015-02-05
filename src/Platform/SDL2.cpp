@@ -8,7 +8,10 @@
 #include <SDL_config.h>  // Ensure we include the correct SDL_config.h.
 #include <SDL.h>
 
-#ifdef RAINBOW_OS_WINDOWS
+#if defined(RAINBOW_JS)
+#	pragma clang diagnostic ignored "-Wunused-function"
+#	include <emscripten.h>
+#elif defined(RAINBOW_OS_WINDOWS)
 #	if defined(_MSC_VER) && defined(NDEBUG)
 		// TODO: http://public.kitware.com/Bug/view.php?id=12566
 #		pragma comment(linker, "/SUBSYSTEM:WINDOWS")
@@ -141,38 +144,6 @@ namespace
 	};
 }
 
-int main(int argc, char *argv[])
-{
-	if (argc < 2)
-		Path::set_current();
-	else
-		Path::set_current(argv[1]);
-
-	if (should_run_tests(argc, argv))
-	{
-#ifdef RAINBOW_TEST
-		Path::set_current(Path());
-		return rainbow::run_tests(argc, argv);
-#else
-		return 0;
-#endif  // RAINBOW_TEST
-	}
-
-	const rainbow::Config config;
-	SDLContext context(config);
-	if (!context)
-		return 1;
-
-	RainbowController controller(context, config);
-	while (controller.run()) {}
-	if (controller.error())
-	{
-		LOGF("%s", controller.error());
-		return 1;
-	}
-	return 0;
-}
-
 SDLContext::SDLContext(const rainbow::Config &config)
     : window_(nullptr), vsync_(false), fullscreen_(0),
       position_({SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED}),
@@ -217,8 +188,12 @@ SDLContext::SDLContext(const rainbow::Config &config)
 		return;
 	}
 
+#ifdef RAINBOW_JS
+	vsync_ = true;
+#else
 	SDL_GL_SetSwapInterval(1);
 	vsync_ = SDL_GL_GetSwapInterval() == 1;
+#endif
 
 #ifndef NDEBUG
 	const Vec2i &resolution = drawable_size();
@@ -457,4 +432,55 @@ void RainbowController::on_window_resized()
 	director_.renderer().set_window_size(size, viewport.x / size.x);
 }
 
+#ifdef RAINBOW_JS
+
+SDLContext *g_context = nullptr;
+RainbowController *g_controller = nullptr;
+
+void emscripten_main() { g_controller->run(); }
+
+int main()
+{
+	const rainbow::Config config;
+	g_context = new SDLContext(config);
+	g_controller = new RainbowController(*g_context, config);
+	emscripten_set_main_loop(&emscripten_main, 0, 1);
+	return 0;
+}
+
+#else
+
+int main(int argc, char *argv[])
+{
+	if (argc < 2)
+		Path::set_current();
+	else
+		Path::set_current(argv[1]);
+
+	if (should_run_tests(argc, argv))
+	{
+#ifdef RAINBOW_TEST
+		Path::set_current(Path());
+		return rainbow::run_tests(argc, argv);
+#else
+		return 0;
+#endif  // RAINBOW_TEST
+	}
+
+	const rainbow::Config config;
+	SDLContext context(config);
+	if (!context)
+		return 1;
+
+	RainbowController controller(context, config);
+	while (controller.run()) {}
+	if (controller.error())
+	{
+		LOGF("%s", controller.error());
+		return 1;
+	}
+	return 0;
+}
+
+#endif  // RAINBOW_JS
 #endif  // RAINBOW_SDL
