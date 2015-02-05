@@ -5,6 +5,7 @@
 #include "ConFuoco/Codecs/AppleAudioFile.h"
 #if USE_APPLEAUDIOFILE
 
+#include "Common/Algorithm.h"
 #include "Common/Logging.h"
 #include "ConFuoco/Codecs/OggVorbisAudioFile.h"
 #include "FileSystem/File.h"
@@ -25,7 +26,7 @@ namespace ConFuoco
 #ifdef RAINBOW_OS_IOS
 			return (__bridge C)var;
 #else
-			return (C)var;
+			return static_cast<C>(var);
 #endif
 		}
 	}

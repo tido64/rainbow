@@ -12,6 +12,7 @@
 
 #ifdef RAINBOW_OS_MACOS
 #	pragma GCC diagnostic push
+#	pragma GCC diagnostic ignored "-Wold-style-cast"
 #	pragma GCC diagnostic ignored "-Wunused-variable"
 #endif
 #include <vorbis/vorbisfile.h>

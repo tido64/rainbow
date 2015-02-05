@@ -10,6 +10,8 @@
 #include <vector>
 
 #include "Common/Algorithm.h"
+#include "Common/Logging.h"
+#include "Common/NonCopyable.h"
 #include "ConFuoco/Sound.h"
 
 namespace ConFuoco
@@ -228,7 +230,7 @@ namespace ConFuoco
 	{
 		static_cast<T*>(this)->release_impl(s);
 		auto i = std::find(std::begin(this->sounds), std::end(this->sounds), s);
-		rainbow::quick_erase(i);
+		rainbow::quick_erase(this->sounds, i);
 
 		LOGD("ConFuoco: Released %p", static_cast<void*>(s));
 	}
