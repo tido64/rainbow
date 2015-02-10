@@ -345,8 +345,7 @@ void Skeleton::set_skin(const char *skin)
 
 void Skeleton::draw()
 {
-	Renderer::Get()->draw_arrays(
-	    *this, 0, num_vertices_ + num_vertices_ / 2);
+	Renderer::Get()->draw_arrays(*this, 0, num_vertices_);
 }
 
 void Skeleton::update(const unsigned long dt)
@@ -359,15 +358,11 @@ void Skeleton::update(const unsigned long dt)
 
 	// This solution is not ideal. We iterate over the bones twice: First to
 	// determine number of vertices, second to update the vertex buffer.
-	const size_t vertex_count = get_vertex_count(skeleton_, &texture_);
-	if (vertex_count != num_vertices_)
+	num_vertices_ = get_vertex_count(skeleton_, &texture_);
+	if (num_vertices_ > max_vertices_)
 	{
-		num_vertices_ = vertex_count;
-		if (vertex_count > max_vertices_)
-		{
-			max_vertices_ = vertex_count;
-			vertices_.reset(new SpriteVertex[max_vertices_]);
-		}
+		max_vertices_ = num_vertices_;
+		vertices_.reset(new SpriteVertex[max_vertices_]);
 	}
 
 	size_t i = 0;
