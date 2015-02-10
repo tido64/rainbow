@@ -2,7 +2,7 @@
 
 ## rainbow.animation
 
-Sprite animations use separate textures within a [texture atlas](#rainbowtexture) as animation frames. Since animations are bound to a [sprite](#rainbowsprite), which in turn is bound to a [sprite batch](#rainbowspritebatch), they are also bound to the [texture atlas](#rainbowtexture) the batch is using.
+> Sprite animations use separate textures within a [texture atlas](#rainbowtexture) as animation frames. Since animations are bound to a [sprite](#rainbowsprite), which in turn is bound to a [sprite batch](#rainbowspritebatch), they are also bound to the [texture atlas](#rainbowtexture) the batch is using.
 
 ### rainbow.animation(sprite, frames, fps, delay = 0)
 
@@ -87,9 +87,9 @@ Stops the animation.
 
 ## rainbow.audio
 
-Audio consists mainly of the sound object and the audio channel. The sound object is basically an audio buffer. It can be wholly loaded, or it can stream from disk. A sound object is played on an audio channel. An audio channel can only play one sound object at a time but the sound object can be used by any number of channels. As raw audio data can take a large amount of memory, it is recommended to only create static sound objects for short audio files (such as sound effects).
+> Audio consists mainly of the sound object and the audio channel. The sound object is basically an audio buffer. It can be wholly loaded, or it can stream from disk. A sound object is played on an audio channel. An audio channel can only play one sound object at a time but the sound object can be used by any number of channels. As raw audio data can take a large amount of memory, it is recommended to only create static sound objects for short audio files (such as sound effects).
 
-Officially, Rainbow supports only [Ogg Vorbis](http://en.wikipedia.org/wiki/Vorbis) audio format. However, on iOS, the [list of supported audio formats](http://developer.apple.com/library/ios/#documentation/AudioVideo/Conceptual/MultimediaPG/UsingAudio/UsingAudio.html#//apple_ref/doc/uid/TP40009767-CH2-SW9) includes AAC (MPEG-4 Advanced Audio Coding), ALAC (Apple Lossless), HE-AAC (MPEG-4 High Efficiency AAC), iLBC (internet Low Bit Rate Codec), IMA4 (IMA/ADPCM), Linear PCM (uncompressed, linear pulse code modulation), MP3, µ-law and a-law. Of these, AAC, ALAC, HE-AAC and MP3 are hardware-assisted. Mac OS X also supports these in addition to [Ogg Vorbis](http://en.wikipedia.org/wiki/Vorbis). On Android, the list of supported audio formats vary with each device but MP3 and Ogg Vorbis are both safe bets.
+> Officially, Rainbow supports only [Ogg Vorbis](http://en.wikipedia.org/wiki/Vorbis) audio format. However, on iOS, the [list of supported audio formats](http://developer.apple.com/library/ios/#documentation/AudioVideo/Conceptual/MultimediaPG/UsingAudio/UsingAudio.html#//apple_ref/doc/uid/TP40009767-CH2-SW9) includes AAC (MPEG-4 Advanced Audio Coding), ALAC (Apple Lossless), HE-AAC (MPEG-4 High Efficiency AAC), iLBC (internet Low Bit Rate Codec), IMA4 (IMA/ADPCM), Linear PCM (uncompressed, linear pulse code modulation), MP3, µ-law and a-law. Of these, AAC, ALAC, HE-AAC and MP3 are hardware-assisted. Mac OS X also supports these in addition to [Ogg Vorbis](http://en.wikipedia.org/wiki/Vorbis). On Android, the list of supported audio formats vary with each device but MP3 and Ogg Vorbis are both safe bets.
 
 ### rainbow.audio.clear()
 
@@ -156,9 +156,9 @@ Stops channel.
 
 ## rainbow.font
 
-Font objects are used by [labels](#rainbowlabel) to display text. Like textures, it is recommended to reuse them whenever possible. A font object is created with a fixed point size and cannot be resized. If a different size is desired, a new font object must be created.
+> Font objects are used by [labels](#rainbowlabel) to display text. Like textures, it is recommended to reuse them whenever possible. A font object is created with a fixed point size and cannot be resized. If a different size is desired, a new font object must be created.
 
-Rainbow currently supports OpenType and TrueType fonts.
+> Rainbow currently supports OpenType and TrueType fonts.
 
 ### rainbow.font(path, size)
 
@@ -171,7 +171,7 @@ Creates a font with a fixed point size.
 
 ## rainbow.input
 
-Input events are only sent to objects that subscribe to them. Such objects are called event listeners. A listener can be implemented as follows.
+> Input events are only sent to objects that subscribe to them. Such objects are called event listeners. A listener can be implemented as follows.
 
 ``` lua
 local InputListener = {}
@@ -195,9 +195,9 @@ function mylistener:touch_began(touches)
 end
 ```
 
-As seen in the example, the easiest way is to define an ``InputListener`` and inherit from it, then define the functions that are needed. The important point here is that all event handlers must be implemented even if they'll do nothing.
+> As seen in the example, the easiest way is to define an ``InputListener`` and inherit from it, then define the functions that are needed. The important point here is that all event handlers must be implemented even if they'll do nothing.
 
-For touch events, a table of events are sent with each notification. It is iterated as above. The ``hash`` value uniquely identifies a touch (or mouse button) for the duration of it touching the screen (or mouse button being held). Touch (or mouse click) location is stored in ``touch``:
+> For touch events, a table of events are sent with each notification. It is iterated as above. The ``hash`` value uniquely identifies a touch (or mouse button) for the duration of it touching the screen (or mouse button being held). Touch (or mouse click) location is stored in ``touch``:
 
 ``` lua
 touch.x          -- For the x-coordinate.
@@ -205,7 +205,7 @@ touch.y          -- For the y-coordinate.
 touch.timestamp  -- For the relative time at which the event occurred.
 ```
 
-_Desktop-only:_ Keyboard event listeners receive the key value (the actual key that was pressed/released) of the event and, if available, its modifiers (i.e. ctrl, alt or shift).
+> _Desktop-only:_ Keyboard event listeners receive the key value (the actual key that was pressed/released) of the event and, if available, its modifiers (i.e. ctrl, alt or shift).
 
 ### rainbow.input.subscribe(listener)
 
@@ -235,7 +235,7 @@ Removes all input listeners.
 
 ## rainbow.label
 
-A label is used to display text.
+> A label is used to display text.
 
 ### rainbow.label(text = "")
 
@@ -308,7 +308,7 @@ Sets the text to be displayed on the label.
 
 ## rainbow.platform
 
-Query the system for capabilities or sensor readings.
+> Query the system for capabilities or sensor readings.
 
 ### rainbow.platform.accelerometer
 
@@ -333,9 +333,9 @@ Total amount of RAM in MB.
 
 ## rainbow.random
 
-Rainbow's pseudo-random number generator is the [Double precision SIMD-oriented Fast Mersenne Twister](http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/SFMT/) developed by Mutsuo Saito and Makoto Matsumoto at Hiroshima University and University of Tokyo. The implementation in use supports a period of 2<sup>19937</sup> - 1.
+> Rainbow's pseudo-random number generator is the [Double precision SIMD-oriented Fast Mersenne Twister](http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/SFMT/) developed by Mutsuo Saito and Makoto Matsumoto at Hiroshima University and University of Tokyo. The implementation in use supports a period of 2<sup>19937</sup> - 1.
 
-``rainbow.seed()`` must be called before using this module.
+> ``rainbow.seed()`` must be called before using this module.
 
 ### rainbow.random()
 
@@ -368,7 +368,7 @@ Sets the random number generator seed. Must be called before any other calls.
 
 ## rainbow.renderer
 
-Access low-level graphics methods and properties.
+> Access low-level graphics methods and properties.
 
 ### rainbow.renderer.max_texture_size
 
@@ -409,7 +409,7 @@ Sets orthographic projection.
 
 ## rainbow.scenegraph
 
-Drawables must be attached to the scene graph in order to be updated and drawn. The scene graph is traversed in a depth-first manner. In a single node, this means that its children are updated and drawn in the order they were created.
+> Drawables must be attached to the scene graph in order to be updated and drawn. The scene graph is traversed in a depth-first manner. In a single node, this means that its children are updated and drawn in the order they were created.
 
 ### &lt;rainbow.scenegraph&gt;:add_animation(+parent, animation)
 
@@ -499,7 +499,7 @@ Moves node to a new parent node.
 
 ## rainbow.sprite
 
-A sprite is a textured quad in a coordinate system with the origin at the lower left corner of the screen. Sprites are created by a [sprite batch](#rainbowspritebatch) and uses the [texture atlas](#rainbowtexture) assigned to the batch.
+> A sprite is a textured quad in a coordinate system with the origin at the lower left corner of the screen. Sprites are created by a [sprite batch](#rainbowspritebatch) and uses the [texture atlas](#rainbowtexture) assigned to the batch.
 
 ### &lt;rainbow.sprite&gt;:get_angle()
 
@@ -599,9 +599,9 @@ Rotates sprite by given angle.
 
 ## rainbow.spritebatch
 
-Sprite batches are meant to enforce grouping of [sprites](#rainbowsprite) in order to avoid drawing each [sprite](#rainbowsprite) separately.
+> Sprite batches are meant to enforce grouping of [sprites](#rainbowsprite) in order to avoid drawing each [sprite](#rainbowsprite) separately.
 
-The sprites in a batch are drawn using [painter's algorithm](http://en.wikipedia.org/wiki/Painter's_algorithm) and should therefore be created in the order they want to be drawn.
+> The sprites in a batch are drawn using [painter's algorithm](http://en.wikipedia.org/wiki/Painter's_algorithm) and should therefore be created in the order they want to be drawn.
 
 ### rainbow.spritebatch(hint = 4)
 
@@ -629,11 +629,11 @@ Sets [texture atlas](#rainbowtexture).
 
 ## rainbow.texture
 
-Texture objects are images decoded and sent to the graphics card as texture. Textures are normally stored as raw bitmaps unless they were stored in a compressed format supported by the platform (e.g. ETC1 or PVRTC). This means that a 1024x1024 texture will normally occupy 4MB. In order to save memory, they are assumed to be [atlases](http://en.wikipedia.org/wiki/Texture_atlas) and should be reused whenever possible.
+> Texture objects are images decoded and sent to the graphics card as texture. Textures are normally stored as raw bitmaps unless they were stored in a compressed format supported by the platform (e.g. ETC1 or PVRTC). This means that a 1024x1024 texture will normally occupy 4MB. In order to save memory, they are assumed to be [atlases](http://en.wikipedia.org/wiki/Texture_atlas) and should be reused whenever possible.
 
-Rainbow currently supports PNG and PVRTC.
+> Rainbow currently supports PNG and PVRTC.
 
-_Note:_ Textures should be square and its sides a power of two (greater than or equal to 64). This is due to how the graphics pipeline works. Even if textures do not meet this recommendation, the graphics drivers will enlarge a texture in order to do so anyway, wasting memory. The maximum size of a texture can be queried in [``rainbow.renderer``](#rainbowrenderermax_texture_size).
+> _Note:_ Textures should be square and its sides a power of two (greater than or equal to 64). This is due to how the graphics pipeline works. Even if textures do not meet this recommendation, the graphics drivers will enlarge a texture in order to do so anyway, wasting memory. The maximum size of a texture can be queried in [``rainbow.renderer``](#rainbowrenderermax_texture_size).
 
 ### rainbow.texture(path)
 
@@ -664,7 +664,7 @@ Returns number of seconds elapsed since epoch on a steady clock.
 local Coroutine = require(module_path .. "Coroutine")
 ```
 
-Wrapper around Lua [Coroutines](http://lua-users.org/wiki/CoroutinesTutorial)
+> Wrapper around Lua [Coroutines](http://lua-users.org/wiki/CoroutinesTutorial)
 
 ### Coroutine.start(function)
 
@@ -688,7 +688,7 @@ Blocks a coroutine for a certain amount of time.
 local Functional = require(module_path .. "Functional")
 ```
 
-Functions from functional programming languages such as Haskell and Scheme.
+> Functions from functional programming languages such as Haskell and Scheme.
 
 ### Functional.compose(f, g)
 
@@ -754,7 +754,7 @@ Computes the sum of a finite list of numbers.
 local Math = require(module_path .. "Math")
 ```
 
-Useful mathematical functions.
+> Useful mathematical functions.
 
 ### Math.G
 
@@ -843,7 +843,7 @@ Converts degrees to radians.
 local Parallax = require(module_path .. "Parallax")
 ```
 
-Simple parallax controller.
+> Simple parallax controller.
 
 ``` lua
 local layers = {
@@ -856,11 +856,11 @@ local pax = Parallax(layers)
 pax:move(0.7 * dt)
 ```
 
-Limitations:
-
-  * Does not handle loops.
-  * There's a 1:1 mapping between batches and layers even though, logically,
-    batches can be on the same layer.
+> Limitations:
+>
+>  * Does not handle loops.
+>  * There's a 1:1 mapping between batches and layers even though, logically,
+>    batches can be on the same layer.
 
 ### &lt;Parallax&gt;:hide()
 
@@ -894,7 +894,7 @@ Unhides the parallax.
 local Stack = require(module_path .. "Stack")
 ```
 
-Stack is a last in, first out (LIFO) data type and linear data structure. A stack can store any element but only the top element is available at any time.
+> Stack is a last in, first out (LIFO) data type and linear data structure. A stack can store any element but only the top element is available at any time.
 
 ``` lua
 local mystack = Stack()
@@ -936,7 +936,7 @@ Returns the element on top of the stack.
 local Timer = require(module_path .. "Timer")
 ```
 
-Timers execute a function once after a set time, or any number of times at given intervals.
+> Timers execute a function once after a set time, or any number of times at given intervals.
 
 ### Timer(callback, delay, times = _infinite_)
 
@@ -1051,9 +1051,9 @@ Scales a drawable to given desired factor(s).
 
 ## Box2D
 
-First of all, you'll find the official [Box2D user manual here](http://box2d.org/documentation/).
+> First of all, you'll find the official [Box2D user manual here](http://box2d.org/documentation/).
 
-There isn't much to say about Rainbow's Box2D wrappers. You can easily use the official doc and replace all occurrences of ``b2*`` with ``b2.*`` in Lua. For instance, to create a dynamic body and centre it on the screen:
+> There isn't much to say about Rainbow's Box2D wrappers. You can easily use the official doc and replace all occurrences of ``b2*`` with ``b2.*`` in Lua. For instance, to create a dynamic body and centre it on the screen:
 
 ``` lua
 local world = b2.World()
@@ -1069,7 +1069,7 @@ local screen = rainbow.platform.screen
 body:SetTransform(screen.width * 0.5, screen.height * 0.5, 0)  -- (1)
 ```
 
-You'll notice that we haven't wrapped ``b2Vec2``. So for methods that take those, you just pass ``x`` and ``y`` individually (1). Likewise, for return values, use the comma operator to unpack the values into separate variables (2).
+> You'll notice that we haven't wrapped ``b2Vec2``. So for methods that take those, you just pass ``x`` and ``y`` individually (1). Likewise, for return values, use the comma operator to unpack the values into separate variables (2).
 
 ## FMOD
 
