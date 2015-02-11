@@ -64,7 +64,7 @@ case $1 in
     echo "Environment variables:"
     echo "  CC                       C compiler command"
     echo "  CXX                      C++ compiler command"
-    echo "  GENERATOR                CMake: Specify a makefile generator"
+    echo "  GENERATOR                CMake: Specify a build system generator"
     echo "  NDK_DEBUG                Android: Compile debuggable binary"
     echo "  NDK_TOOLCHAIN_VERSION    Android: Compiler used by ndk-build"
     ;;

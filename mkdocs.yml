@@ -3,9 +3,11 @@ repo_url: https://bitbucket.org/tido/rainbow
 copyright: Copyright &copy; 2010-15 Bifrost Entertainment AS and Tommy Nguyen.
 pages:
   - [index.md, Home]
-  - [quick_start.md, Getting Started, Quick Start Guide]
-  - [lua/basics.md, Getting Started, Lua Basics]
-  - [lua/api.md, API Reference, Lua API]
+  - [getting_started/quick_start.md, Getting Started, Quick Start Guide]
+  - [getting_started/lua_basics.md, Getting Started, Lua Basics]
+  - [programming/development/building_rainbow_for_pc.md, Development Setup, Building Rainbow for PC]
+  - [programming/lua/api.md, API Reference, Lua API]
   - [license.md, About, License]
-theme: Yeti
+theme: readthedocs
 docs_dir: doc
+markdown_extensions: [codehilite, smarty]

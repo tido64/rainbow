@@ -7,7 +7,7 @@
 ### rainbow.animation(sprite, frames, fps, delay = 0)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>sprite</var> | The sprite object to animate. |
 | <var>frames</var> | Array of frames that make up the animation. |
 | <var>fps</var> | Number of frames per second to animate at. |
@@ -22,7 +22,7 @@ Returns whether the animation has stopped.
 ### &lt;rainbow.animation&gt;:set_delay(delay)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>delay</var> | Number of milliseconds to delay before looping. |
 
 Sets the number of milliseconds to delay before looping.
@@ -30,7 +30,7 @@ Sets the number of milliseconds to delay before looping.
 ### &lt;rainbow.animation&gt;:set_fps(fps)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>fps</var> | Number of frames per second to animate at. |
 
 Sets the number of frames per second to animate at.
@@ -38,7 +38,7 @@ Sets the number of frames per second to animate at.
 ### &lt;rainbow.animation&gt;:set_frames(frames)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>frames</var> | Table of texture indices that make up the animation. |
 
 Sets table of animation frames.
@@ -46,12 +46,12 @@ Sets table of animation frames.
 ### &lt;rainbow.animation&gt;:set_listener(listener)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>listener</var> | Table with ``on_animation_start``, ``on_animation_end`` and/or ``on_animation_complete`` implemented. |
 
 Sets an animation state event listener. The aforementioned functions are all optional. Their signatures are as in the following example:
 
-``` lua
+```lua
 local a = rainbow.animation(...)
 local animation_state_handler = {
   on_animation_start = function(self)
@@ -72,7 +72,7 @@ To unsubscribe, simply set the listener to ``nil``.
 ### &lt;rainbow.animation&gt;:set_sprite(sprite)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>sprite</var> | The sprite to animate. |
 
 Sets the sprite to animate.
@@ -98,7 +98,7 @@ Stops and deletes all sound objects.
 ### rainbow.audio.create_sound(path, mode = 0, loops = -1)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>path</var> | Path to audio source, relative to the location of the main script. |
 | <var>mode</var> | <span class="optional"></span> Load into buffer (0), or stream from disk (1). Default: 0. |
 | <var>loops</var> | <span class="optional"></span> Number of times to loop. Only applicable if streaming. Default: -1. |
@@ -108,7 +108,7 @@ Creates a sound object. This object is just a reference to the audio source and 
 ### rainbow.audio.delete_sound(sound)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>sound</var> | The sound object to delete. |
 
 Deletes sound object. This will stop all channels from using the object and release all related resources.
@@ -116,7 +116,7 @@ Deletes sound object. This will stop all channels from using the object and rele
 ### rainbow.audio.pause(channel)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>channel</var> | The channel to pause playback. |
 
 Sets channel on pause.
@@ -124,7 +124,7 @@ Sets channel on pause.
 ### rainbow.audio.play(sound)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>sound</var> | The sound object to play. |
 
 Starts playback of the sound object and returns the channel on which it is played. Channels may vary with each playback.
@@ -132,7 +132,7 @@ Starts playback of the sound object and returns the channel on which it is playe
 ### rainbow.audio.set_gain(+channel, volume)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>channel</var> | <span class="optional"></span> The channel to change gain/volume. Default: master channel. |
 | <var>volume</var> | Desired gain/volume. Valid values: 0.0-1.0. |
 
@@ -141,7 +141,7 @@ Sets channel gain/volume.
 ### rainbow.audio.set_pitch(pitch)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>pitch</var> | Desired pitch shift, where 1.0 equals identify. Each reduction by 50 percent equals a pitch shift of -12 semitones (one octave reduction). Each doubling equals a pitch shift of 12 semitones (one octave increase). Zero is not a legal value. |
 
 Sets global pitch shift.
@@ -149,7 +149,7 @@ Sets global pitch shift.
 ### rainbow.audio.stop(channel)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>channel</var> | The channel to stop playback. |
 
 Stops channel.
@@ -163,7 +163,7 @@ Stops channel.
 ### rainbow.font(path, size)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>path</var> | Path to font, relative to the location of the main script. |
 | <var>size</var> | Point size. |
 
@@ -173,7 +173,7 @@ Creates a font with a fixed point size.
 
 > Input events are only sent to objects that subscribe to them. Such objects are called event listeners. A listener can be implemented as follows.
 
-``` lua
+```lua
 local InputListener = {}
 InputListener.__index = InputListener
 
@@ -199,7 +199,7 @@ end
 
 > For touch events, a table of events are sent with each notification. It is iterated as above. The ``hash`` value uniquely identifies a touch (or mouse button) for the duration of it touching the screen (or mouse button being held). Touch (or mouse click) location is stored in ``touch``:
 
-``` lua
+```lua
 touch.x          -- For the x-coordinate.
 touch.y          -- For the y-coordinate.
 touch.timestamp  -- For the relative time at which the event occurred.
@@ -210,7 +210,7 @@ touch.timestamp  -- For the relative time at which the event occurred.
 ### rainbow.input.subscribe(listener)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>listener</var> | Input listener object. |
 
 Adds an input listener.
@@ -218,7 +218,7 @@ Adds an input listener.
 ### rainbow.input.unsubscribe(listener)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>listener</var> | Input listener object. |
 
 Removes an input listener.
@@ -240,7 +240,7 @@ Removes all input listeners.
 ### rainbow.label(text = "")
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>text</var> | <span class="optional"></span> The text to be displayed on the label. Default: "". |
 
 ### &lt;rainbow.label&gt;:get_color()
@@ -250,7 +250,7 @@ Returns the font colour in separate channels (RGBA).
 ### &lt;rainbow.label&gt;:set_alignment(align)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>align</var> | Text alignment. Valid values: 'l', 'c', 'r'. Default: 'l'. |
 
 Sets text alignment.
@@ -258,7 +258,7 @@ Sets text alignment.
 ### &lt;rainbow.label&gt;:set_color(r, g, b, a = 255)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>r</var> | Amount of red. Valid values: 0-255. |
 | <var>g</var> | Amount of green. Valid values: 0-255. |
 | <var>b</var> | Amount of blue. Valid values: 0-255. |
@@ -269,7 +269,7 @@ Sets text colour.
 ### &lt;rainbow.label&gt;:set_font(font)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>r</var> | [Font face](#rainbowfont) to use. |
 
 Sets font type.
@@ -277,7 +277,7 @@ Sets font type.
 ### &lt;rainbow.label&gt;:set_position(x, y)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>x, y</var> | Position. |
 
 Sets label position.
@@ -285,7 +285,7 @@ Sets label position.
 ### &lt;rainbow.label&gt;:set_rotation(r)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>r</var> | Angle in radians. Default: 0.0. |
 
 Sets label rotation.
@@ -293,7 +293,7 @@ Sets label rotation.
 ### &lt;rainbow.label&gt;:set_scale(scale)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>scale</var> | Factor to scale label by. Valid values: 0.01-1.0. |
 
 Sets label scale. Values are clamped between 0.01-1.0.
@@ -301,7 +301,7 @@ Sets label scale. Values are clamped between 0.01-1.0.
 ### &lt;rainbow.label&gt;:set_text(text)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>text</var> | Text to be displayed on the label. |
 
 Sets the text to be displayed on the label.
@@ -313,7 +313,7 @@ Sets the text to be displayed on the label.
 ### rainbow.platform.accelerometer
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>timestamp</var> | The relative time at which the acceleration event occurred. |
 | <var>x</var> | The acceleration value for the x axis of the device. With the device held in portrait orientation and the screen facing you, the x axis runs from left (negative values) to right (positive values) across the face of the device. |
 | <var>y</var> | The acceleration value for the y axis of the device. With the device held in portrait orientation and the screen facing you, the y axis runs from bottom (negative values) to top (positive values) across the face of the device. |
@@ -322,7 +322,7 @@ Sets the text to be displayed on the label.
 ### rainbow.platform.screen
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>width</var> | Screen width in pixels. |
 | <var>height</var> | Screen height in pixels. |
 | <var>touch</var> | Whether the screen has touch capabilities. |
@@ -344,7 +344,7 @@ Returns a random number in interval [0, 1).
 ### rainbow.random(max)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>max</var> | Maximum value. |
 
 Returns a random number in interval [0, <var>max</var>).
@@ -352,7 +352,7 @@ Returns a random number in interval [0, <var>max</var>).
 ### rainbow.random(min, max)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>min</var> | Minimum value. |
 | <var>max</var> | Maximum value. |
 
@@ -361,7 +361,7 @@ Returns a random number in interval [<var>min</var>, <var>max</var>).
 ### rainbow.seed(seed = 0)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>seed</var> | <span class="optional"></span> Random number generator seed. Default: 0 (current system time). |
 
 Sets the random number generator seed. Must be called before any other calls.
@@ -381,7 +381,7 @@ Whether the platform supports PVRTC textures.
 ### rainbow.renderer.set_clear_color(r, g, b)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>r</var> | Amount of red. Valid values: 0-255. |
 | <var>g</var> | Amount of green. Valid values: 0-255. |
 | <var>b</var> | Amount of blue. Valid values: 0-255. |
@@ -391,7 +391,7 @@ Sets clear colour. Clearing occurs at the start of each drawn frame.
 ### rainbow.renderer.set_filter(filter)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>filter</var> | Texture filtering method. Valid values: ``gl.NEAREST``, ``gl.LINEAR``. |
 
 Sets texture filtering method. Only affects new textures.
@@ -399,7 +399,7 @@ Sets texture filtering method. Only affects new textures.
 ### rainbow.renderer.set_projection(left, right, bottom, top)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>left</var> | Leftmost point in pixels. Default: 0. |
 | <var>right</var> | Rightmost point in pixels. Default: [``rainbow.platform.screen.width``](#rainbowplatformscreen). |
 | <var>bottom</var> | Bottommost point in pixels. Default: 0. |
@@ -414,7 +414,7 @@ Sets orthographic projection.
 ### &lt;rainbow.scenegraph&gt;:add_animation(+parent, animation)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>parent</var> | <span class="optional"></span> Parent node to attach to. Default: root. |
 | <var>animation</var> | The [animation](#rainbowanimation) to attach to the graph. |
 
@@ -423,7 +423,7 @@ Creates a node containing a [sprite animation](#rainbowanimation).
 ### &lt;rainbow.scenegraph&gt;:add_batch(+parent, spritebatch)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>parent</var> | <span class="optional"></span> Parent node to attach to. Default: root. |
 | <var>spritebatch</var> | The [sprite batch](#rainbowspritebatch) to attach to the graph. |
 
@@ -432,7 +432,7 @@ Creates a node containing a [sprite batch](#rainbowspritebatch).
 ### &lt;rainbow.scenegraph&gt;:add_drawable(+parent, drawable)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>parent</var> | <span class="optional"></span> Parent node to attach to. Default: root. |
 | <var>drawable</var> | The drawable object to attach to the graph. |
 
@@ -441,7 +441,7 @@ Creates a node containing a drawable.
 ### &lt;rainbow.scenegraph&gt;:add_node(+parent)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>parent</var> | <span class="optional"></span> Parent node to attach to. Default: root. |
 
 Creates a group node.
@@ -449,7 +449,7 @@ Creates a group node.
 ### &lt;rainbow.scenegraph&gt;:add_label(+parent, label)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>parent</var> | <span class="optional"></span> Parent node to attach to. Default: root. |
 | <var>label</var> | The [label](#rainbowlabel) to attach to the graph. |
 
@@ -458,7 +458,7 @@ Creates a node containing a [label](#rainbowlabel).
 ### &lt;rainbow.scenegraph&gt;:disable(node)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>node</var> | The node to disable. |
 
 Disables a node. Disabling a node will cut short the graph traversal, effectively disabling all children nodes but still maintain their states.
@@ -466,7 +466,7 @@ Disables a node. Disabling a node will cut short the graph traversal, effectivel
 ### &lt;rainbow.scenegraph&gt;:enable(node)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>node</var> | The node to enable. |
 
 Enables a node. Enabling a node will open up the path in the graph, effectively enabling all children nodes but still maintain their states.
@@ -474,7 +474,7 @@ Enables a node. Enabling a node will open up the path in the graph, effectively 
 ### &lt;rainbow.scenegraph&gt;:move(node, x, y)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>node</var> | The node to move. |
 | <var>x, y</var> | Amount to move the node by. |
 
@@ -483,7 +483,7 @@ Moves a node and all of its children by (x,y).
 ### &lt;rainbow.scenegraph&gt;:remove(node)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>node</var> | The node to remove. |
 
 Removes a node and all of its children from the graph.
@@ -491,7 +491,7 @@ Removes a node and all of its children from the graph.
 ### &lt;rainbow.scenegraph&gt;:set_parent(parent, node)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>parent</var> | The new parent. |
 | <var>node</var> | The node to move. |
 
@@ -528,7 +528,7 @@ Returns sprite size, unscaled.
 ### &lt;rainbow.sprite&gt;:set_color(r, g, b, a = 255)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>r</var> | Amount of red. Valid values: 0-255. |
 | <var>g</var> | Amount of green. Valid values: 0-255. |
 | <var>b</var> | Amount of blue. Valid values: 0-255. |
@@ -539,7 +539,7 @@ Sets sprite colour.
 ### &lt;rainbow.sprite&gt;:set_pivot(x, y)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>x, y</var> | Pivot point. Default: 0.5, 0.5. |
 
 Sets sprite's pivot point.
@@ -547,7 +547,7 @@ Sets sprite's pivot point.
 ### &lt;rainbow.sprite&gt;:set_position(x, y)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>x, y</var> | Position. Default: 0, 0. |
 
 Sets sprite position.
@@ -555,7 +555,7 @@ Sets sprite position.
 ### &lt;rainbow.sprite&gt;:set_rotation(r)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>r</var> | Angle in radians. Default: 0.0. |
 
 Sets sprite rotation.
@@ -563,7 +563,7 @@ Sets sprite rotation.
 ### &lt;rainbow.sprite&gt;:set_scale(x, y = x)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>x</var> | Scale factor on x-axis. Default: 1.0. |
 | <var>y</var> | <span class="optional"></span> Scale factor on y-axis. Set to the same value as ``x`` if omitted. |
 
@@ -572,7 +572,7 @@ Sets sprite scale.
 ### &lt;rainbow.sprite&gt;:set_texture(texture)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>texture</var> | Texture id. |
 
 Assigns texture to sprite.
@@ -584,7 +584,7 @@ Horizontally mirrors sprite's current texture.
 ### &lt;rainbow.sprite&gt;:move(x, y)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>x, y</var> | Amount to move sprite by. |
 
 Moves sprite by (x,y).
@@ -592,7 +592,7 @@ Moves sprite by (x,y).
 ### &lt;rainbow.sprite&gt;:rotate(r)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>r</var> | Amount to rotate sprite by. |
 
 Rotates sprite by given angle.
@@ -606,7 +606,7 @@ Rotates sprite by given angle.
 ### rainbow.spritebatch(hint = 4)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>hint</var> | <span class="optional"></span> Number of [sprites](#rainbowsprite) to make space for. Default: 4. |
 
 Creates a batch of [sprites](#rainbowsprite).
@@ -614,7 +614,7 @@ Creates a batch of [sprites](#rainbowsprite).
 ### &lt;rainbow.spritebatch&gt;:create_sprite(width, height)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>width, height</var> | Dimension of the [sprite](#rainbowsprite) to create. |
 
 Creates an untextured [sprite](#rainbowsprite) with given dimension and places it at origin.
@@ -622,7 +622,7 @@ Creates an untextured [sprite](#rainbowsprite) with given dimension and places i
 ### &lt;rainbow.spritebatch&gt;:set_texture(texture)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>texture</var> | [Texture atlas](#rainbowtexture) used by all [sprites](#rainbowsprite) in the batch. |
 
 Sets [texture atlas](#rainbowtexture).
@@ -638,7 +638,7 @@ Sets [texture atlas](#rainbowtexture).
 ### rainbow.texture(path)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>path</var> | Path to texture to load. |
 
 Creates a texture object, usable in [sprite batches](#rainbowspritebatch).
@@ -646,7 +646,7 @@ Creates a texture object, usable in [sprite batches](#rainbowspritebatch).
 ### &lt;rainbow.texture&gt;:create(x, y, width, height)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>x, y</var> | Upper left point of texture. |
 | <var>width, height</var> | Dimension of texture. |
 
@@ -660,7 +660,7 @@ Returns number of seconds elapsed since epoch on a steady clock.
 
 ## Coroutine
 
-``` lua
+```lua
 local Coroutine = require(module_path .. "Coroutine")
 ```
 
@@ -669,7 +669,7 @@ local Coroutine = require(module_path .. "Coroutine")
 ### Coroutine.start(function)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>function</var> | Function to execute in a coroutine. |
 
 Creates and starts a coroutine.
@@ -677,14 +677,14 @@ Creates and starts a coroutine.
 ### Coroutine.wait(milliseconds)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>milliseconds</var> | Number of milliseconds to wait before continuing. |
 
 Blocks a coroutine for a certain amount of time.
 
 ## Functional
 
-``` lua
+```lua
 local Functional = require(module_path .. "Functional")
 ```
 
@@ -694,7 +694,7 @@ local Functional = require(module_path .. "Functional")
 
 Returns <var>f ∘ g</var>, i.e. the composition of two functions so that the result of function <var>g</var> becomes the input to function <var>f</var>. Example:
 
-``` lua
+```lua
 local printf = Functional.compose(io.write, string.format)
 printf("a = %i, b = %i, c = %i\n", 1, 2, 3)
 > a = 1, b = 2, c = 3
@@ -750,7 +750,7 @@ Computes the sum of a finite list of numbers.
 
 ## Math
 
-``` lua
+```lua
 local Math = require(module_path .. "Math")
 ```
 
@@ -767,7 +767,7 @@ Standard gravitational acceleration, defined in m/s<sup>2</sup>.
 ### Math.angle(a.x, a.y, b.x, b.y)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>a.x, a.y</var> | The first point. |
 | <var>b.x, b.y</var> | The second point. |
 
@@ -776,7 +776,7 @@ Calculates the angle between two points.
 ### Math.clamp(x, min, max)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>x</var> | The value to clamp. |
 | <var>min</var> | Lowest acceptable value. |
 | <var>max</var> | Highest acceptable value. |
@@ -786,7 +786,7 @@ Returns the input value clamped between a range [<var>min</var>, <var>max</var>]
 ### Math.degrees(radians)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>radians</var> | The value to convert to degrees. |
 
 Converts radians to degrees.
@@ -794,7 +794,7 @@ Converts radians to degrees.
 ### Math.distance(a.x, a.y, b.x, b.y)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>a.x, a.y</var> | The first point. |
 | <var>b.x, b.y</var> | The second point. |
 
@@ -803,7 +803,7 @@ Calculates the distance between two points.
 ### Math.gravitation(m1, m2, r)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>m1</var> | The first mass. |
 | <var>m2</var> | The second mass. |
 | <var>r</var> | Distance between the centers of the masses. |
@@ -813,7 +813,7 @@ Newton's law of universal gravitation: F = G * (m<sub>1</sub> * m<sub>2</sub>) /
 ### Math.hitbox(x, y, width, height, scale = 1.0)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>x, y</var> | Centre of the box. |
 | <var>width, height</var> | Dimension of the box. |
 | <var>scale</var> | <span class="optional"></span> Scaling factor for on-screen box size. Default: 1.0. |
@@ -823,7 +823,7 @@ Creates a hitbox.
 ### Math.is_inside(box, point)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>box</var> | Table with the upper-left and lower-right points of the box. |
 | <var>point</var> | The point to check. |
 
@@ -832,20 +832,20 @@ Checks whether a point is inside a box.
 ### Math.radians(degrees)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>degrees</var> | The value to convert to radians. |
 
 Converts degrees to radians.
 
 ## Parallax
 
-``` lua
+```lua
 local Parallax = require(module_path .. "Parallax")
 ```
 
 > Simple parallax controller.
 
-``` lua
+```lua
 local layers = {
   -- A layer is defined by a batch and its velocity on the x- and y-axis
   { batch1, 0.5, 0 }  -- background
@@ -873,7 +873,7 @@ Move layers relatively by <var>v</var> pixels.
 ### &lt;Parallax&gt;:set_layer_velocity(layer, vx, vy = 0)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>layer</var> | The layer number to change velocity. |
 | <var>vx</var> | Relative velocity on the x-axis. |
 | <var>vy</var> | <span class="optional"></span> Relative velocity on the y-axis. Default: 0. |
@@ -890,13 +890,13 @@ Unhides the parallax.
 
 ## Stack
 
-``` lua
+```lua
 local Stack = require(module_path .. "Stack")
 ```
 
 > Stack is a last in, first out (LIFO) data type and linear data structure. A stack can store any element but only the top element is available at any time.
 
-``` lua
+```lua
 local mystack = Stack()
 mystack:push(1)  -- Stack is now { 1 }
 mystack:push(2)  -- Stack is now { 1, 2 }
@@ -932,7 +932,7 @@ Returns the element on top of the stack.
 
 ## Timer
 
-``` lua
+```lua
 local Timer = require(module_path .. "Timer")
 ```
 
@@ -941,7 +941,7 @@ local Timer = require(module_path .. "Timer")
 ### Timer(callback, delay, times = _infinite_)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>callback</var> | The function to call on time-out. |
 | <var>delay</var> | Time in milliseconds to delay call. |
 | <var>times</var> | <span class="optional"></span> Number of times to call. Infinite if omitted. |
@@ -959,14 +959,14 @@ Cancels timer.
 ### &lt;Timer&gt;:reset(+delay)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>delay</var> | <span class="optional"></span> Set new delay.</span>
 
 Resets a timer. Restores it to its initial state.
 
 ## Transition
 
-``` lua
+```lua
 local Transition = require(module_path .. "Transition")
 ```
 
@@ -977,7 +977,7 @@ Cancels all transitions.
 ### Transition.fadein(source, duration)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>source</var> | The audio channel to fade in. |
 | <var>duration</var> | Duration of the transition in milliseconds. |
 
@@ -986,7 +986,7 @@ Fades in an audio channel.
 ### Transition.fadeout(source, duration)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>source</var> | The audio channel to fade out. |
 | <var>duration</var> | Duration of the transition in milliseconds. |
 
@@ -995,7 +995,7 @@ Fades out an audio channel.
 ### Transition.fadeto(sprite, alpha, duration, transition)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>sprite</var> | The sprite to fade. |
 | <var>alpha</var> | Desired alpha value. |
 | <var>duration</var> | Duration of the transition in milliseconds. |
@@ -1006,7 +1006,7 @@ Fades a sprite to a given alpha value.
 ### Transition.move(drawable, x, y, duration, transition)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>drawable</var> | A scene graph node or a drawable that implements ``:move()``. |
 | <var>x, y</var> | Number of units to move drawable(s) by, relative to its/their current position(s). |
 | <var>duration</var> | Duration of the transition in milliseconds. |
@@ -1017,7 +1017,7 @@ Moves a node (and its children) or a drawable.
 ### Transition.new(target, func, start, desired, duration, transition)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>target</var> | The object to perform transition effects on. |
 | <var>func</var> | Function to call on every step of the transition. The function should at least take two parameters: one for ``target``, and one or more for values at each step. |
 | <var>start</var> | One or more start values. |
@@ -1030,7 +1030,7 @@ Performs a transition from start value(s) to desired value(s) over specified dur
 ### Transition.rotate(drawable, r, duration, transition)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>drawable</var> | A drawable that implements ``:get_angle()`` and ``:rotate()``. |
 | <var>r</var> | Desired angle in radians. |
 | <var>duration</var> | Duration of the transition in milliseconds. |
@@ -1041,7 +1041,7 @@ Rotates a drawable to given angle.
 ### Transition.scaleto(drawable, factor, duration, transition)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>drawable</var> | A drawable that implements ``:get_scale()`` and ``:set_scale()``. |
 | <var>factor</var> | Desired scale factor(s). If one value is give, the drawable will be scaled uniformly on both axes. |
 | <var>duration</var> | Duration of the transition in milliseconds. |
@@ -1055,7 +1055,7 @@ Scales a drawable to given desired factor(s).
 
 > There isn't much to say about Rainbow's Box2D wrappers. You can easily use the official doc and replace all occurrences of ``b2*`` with ``b2.*`` in Lua. For instance, to create a dynamic body and centre it on the screen:
 
-``` lua
+```lua
 local world = b2.World()
 local bodyDef = b2.BodyDef()
 bodyDef.type = b2.dynamicBody
@@ -1076,7 +1076,7 @@ body:SetTransform(screen.width * 0.5, screen.height * 0.5, 0)  -- (1)
 ### FMOD.createSound(name) [Low Level API]
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>name</var> | Name of the file or URL to open. |
 
 Loads a sound into memory.
@@ -1084,7 +1084,7 @@ Loads a sound into memory.
 ### FMOD.createStream(name) [Low Level API]
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>name</var> | Name of the file or URL to open. |
 
 Opens a sound for streaming.
@@ -1092,7 +1092,7 @@ Opens a sound for streaming.
 ### FMOD.playSound(&lt;sound&gt;) [Low Level API]
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>name</var> | The sound to play. |
 
 Plays a sound object. Returns the channel that plays the sound.
@@ -1100,7 +1100,7 @@ Plays a sound object. Returns the channel that plays the sound.
 ### FMOD.loadBank(path) [Studio API]
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>path</var> | Name of the file on disk. |
 
 Loads a Studio event bank from a file.
@@ -1108,7 +1108,7 @@ Loads a Studio event bank from a file.
 ### FMOD.unloadBank(&lt;bank&gt;) [Studio API]
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>bank</var> | Sound bank to unload. |
 
 Unloads the bank and all of its data.
@@ -1120,7 +1120,7 @@ Unloads all currently loaded banks.
 ### FMOD.createInstance(event) [Studio API]
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>event</var> | Address of the event to create an instance of. Path must be in the following format: "event:/UI/Cancel". |
 
 Creates a playable instance of the event.
@@ -1134,7 +1134,7 @@ Stops the channel from playing. Makes it available for re-use by the priority sy
 ### &lt;Channel&gt;:setPaused(paused)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>paused</var> | The desired pause state. ``true`` = pause, ``false`` = unpause. |
 
 Sets the paused state.
@@ -1146,7 +1146,7 @@ Retrieves the paused state.
 ### &lt;Channel&gt;:setVolume(volume)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>volume</var> | The volume as a linear gain. ``0`` = silent, ``1`` = full volume. |
 
 Sets the volume level linearly.
@@ -1158,7 +1158,7 @@ Retrieves the volume level.
 ### &lt;Channel&gt;:setVolumeRamp(ramp)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>ramp</var> | Whether to enable volume ramping. |
 
 Sets whether the channel automatically ramps when setting volumes.
@@ -1174,7 +1174,7 @@ Retrieves the combined volume after 3D spatialization and geometry occlusion cal
 ### &lt;Channel&gt;:setPitch(pitch)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>pitch</var> | Pitch value, ``0.5`` = half pitch, ``2.0`` = double pitch, etc default = ``1.0``. |
 
 Sets the pitch value.
@@ -1186,7 +1186,7 @@ Retrieves the pitch value.
 ### &lt;Channel&gt;:setMute(mute)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>mute</var> | Mute state, ``true`` = mute (silent), ``false`` = normal volume. |
 
 Sets the mute state effectively silencing it or returning it to its normal volume.
@@ -1198,7 +1198,7 @@ Retrieves the mute state
 ### &lt;Channel&gt;:setReverbProperties(instance, wet)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>instance</var> | Index of the particular reverb instance to target, from 0 to 3 inclusive. |
 | <var>wet</var> | Send level for the signal to the reverb, from ``0`` (none) to ``1.0`` (full), default = ``1.0``. |
 
@@ -1207,7 +1207,7 @@ Sets the wet level (or send level) of a particular reverb instance.
 ### &lt;Channel&gt;:getReverbProperties(instance)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>instance</var> | Index of the particular reverb instance to target, from 0 to 3 inclusive. |
 
 Retrieves the wet level (or send level) for a particular reverb instance.
@@ -1215,7 +1215,7 @@ Retrieves the wet level (or send level) for a particular reverb instance.
 ### &lt;Channel&gt;:setLowPassGain(gain)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>gain</var> | Linear gain level, from ``0`` (silent, full filtering) to ``1.0`` (full volume, no filtering), default = ``1.0``. |
 
 Sets the gain of the dry signal when lowpass filtering is applied
@@ -1231,7 +1231,7 @@ Retrieves the playing state.
 ### &lt;Channel&gt;:setPan(pan)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>pan</var> | Pan level, from ``-1.0`` (left) to ``1.0`` (right), default = ``0`` (center). |
 
 Sets the pan level.
@@ -1239,7 +1239,7 @@ Sets the pan level.
 ### &lt;Channel&gt;:setLoopCount(count)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>count</var> | Number of times to loop before stopping. ``0`` = oneshot, ``1`` = loop once then stop, ``-1`` = loop forever, default = ``-1``. |
 
 Sets a channel to loop a specified number of times before stopping.
@@ -1251,7 +1251,7 @@ Retrieves the current loop count for the specified channel.
 ### &lt;Channel&gt;:setLoopPoints(start, end)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>start</var> | The loop start point in milliseconds. This point in time is played, so it is inclusive. |
 | <var>end</var> | The loop end point in milliseconds. This point in time is played, so it is inclusive. |
 
@@ -1266,7 +1266,7 @@ Retrieves the loop points for the channel.
 ### &lt;Sound&gt;:setLoopCount(count)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>count</var> | Number of times to loop before stopping. ``0`` = oneshot. ``1`` = loop once then stop. ``-1`` = loop forever. Default = ``-1`` |
 
 Sets a sound, by default, to loop a specified number of times before stopping.
@@ -1278,7 +1278,7 @@ Retrieves the current loop count value for the specified sound.
 ### &lt;Sound&gt;:setLoopPoints(start, end)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>start</var> | The loop start point in milliseconds. This point in time is played, so it is inclusive. |
 | <var>end</var> | The loop end point in milliseconds. This point in time is played, so it is inclusive. |
 
@@ -1297,7 +1297,7 @@ Returns the volume level set by the API on the event instance.
 ### &lt;EventInstance&gt;:setVolume(volume)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>volume</var> | The volume as a linear gain. ``0`` = silent, ``1`` = full volume. |
 
 Sets the volume level on the event instance.
@@ -1309,7 +1309,7 @@ Returns the pitch multiplier set by the API on the event instance.
 ### &lt;EventInstance&gt;:setPitch(pitch)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>pitch</var> | The pitch multiplier. ``1`` = normal pitch. |
 
 Sets the pitch multiplier for the event instance.
@@ -1321,7 +1321,7 @@ Returns the pause state of the event instance.
 ### &lt;EventInstance&gt;:setPaused(paused)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>paused</var> | The desired pause state. ``true`` = pause, ``false`` = unpause. |
 
 Sets the pause state of the event instance.
@@ -1341,7 +1341,7 @@ Returns the position of the event instance's timeline playback cursor.
 ### &lt;EventInstance&gt;:setTimelinePosition(position)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>position</var> | Desired timeline position in milliseconds. |
 
 Sets the position of the event instance's timeline playback cursor.
@@ -1351,7 +1351,7 @@ Sets the position of the event instance's timeline playback cursor.
 ### rainbow.skeleton(path, scale = 1.0)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>path</var> | Path to Spine JSON file. |
 | <var>scale</var> | <span class="optional"></span> Scales the skeleton as it is loaded. Default: 1.0. |
 
@@ -1360,7 +1360,7 @@ Loads a skeleton from a JSON file exported from [Spine](http://esotericsoftware.
 ### &lt;skeleton&gt;:add_animation(track, animation, loop, delay)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>track</var> | The track to queue the animation on. |
 | <var>animation</var> | Name of the animation. |
 | <var>loop</var> | Whether to loop the animation. |
@@ -1371,7 +1371,7 @@ Queues an animation to be played after a delay. If <var>delay</var> &lt;= 0, the
 ### &lt;skeleton&gt;:clear_track(track)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>track</var> | The track to clear all animations on. |
 
 Stops the current animation and clears all queued animations on specified track.
@@ -1383,7 +1383,7 @@ Stops the current animation and clears all queued animations.
 ### &lt;skeleton&gt;:get_current_animation(track)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>track</var> | The track to retrieve the current animation from. |
 
 Returns the name of the current animation on specified track.
@@ -1395,7 +1395,7 @@ Returns the name of the current skin.
 ### &lt;skeleton&gt;:set_animation(track, animation, loop)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>track</var> | The track to set the animation on. |
 | <var>animation</var> | Name of the animation. |
 | <var>loop</var> | Whether to loop the animation. |
@@ -1405,7 +1405,7 @@ Sets the current animation. Any queued animations are cleared.
 ### &lt;skeleton&gt;:set_animation_mix(from, to, duration)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>from</var> | Name of the animation to crossfade from. |
 | <var>to</var> | Name of the animation to crossfade to. |
 | <var>duration</var> | Duration in seconds to crossfade. |
@@ -1415,7 +1415,7 @@ Sets crossfading duration for a pair of animations.
 ### &lt;skeleton&gt;:set_attachment(slot, attachment)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>slot</var> | Name of slot. |
 | <var>attachment</var> | Name of the attachment. |
 
@@ -1424,7 +1424,7 @@ Sets the attachment for the slot and attachment name. The skeleton looks first i
 ### &lt;skeleton&gt;:set_flip(x, y)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>x</var> | Whether to flip the skeleton horizontally. |
 | <var>y</var> | Whether to flip the skeleton vertically. |
 
@@ -1433,12 +1433,12 @@ Flips the rendering of the skeleton horizontally and/or vertically.
 ### &lt;skeleton&gt;:set_listener(listener)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>listener</var> | Table with ``on_animation_start``, ``on_animation_end``, ``on_animation_complete`` and/or ``on_animation_event`` implemented. |
 
 Sets an animation state event listener. The aforementioned functions are all optional. Their signatures are as in the following example:
 
-``` lua
+```lua
 local boy = rainbow.skeleton("data/spineboy.json", 0.4)
 local animation_state_handler = {
   on_animation_start = function(self, track, loop_count)
@@ -1467,7 +1467,7 @@ To unsubscribe, simply set the listener to ``nil``.
 ### &lt;skeleton&gt;:set_position(x, y)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>x, y</var> | The drawing position of the skeleton in world coordinates. |
 
 Sets the drawing position of the skeleton in world coordinates.
@@ -1475,7 +1475,7 @@ Sets the drawing position of the skeleton in world coordinates.
 ### &lt;skeleton&gt;:set_skin(skin)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>skin</var> | Name of the skin. May be ``nil``. |
 
 Sets the skin used to look up attachments not found in the ``SkeletonData`` ``defaultSkin``. Attachments from the new skin are attached if the corresponding attachment from the old skin was attached.
@@ -1483,7 +1483,7 @@ Sets the skin used to look up attachments not found in the ``SkeletonData`` ``de
 ### &lt;skeleton&gt;:set_time_scale(scale)
 
 | Parameter | Description |
-|-----------|-------------|
+|:----------|:------------|
 | <var>scale</var> | Animation speed scale. Default: 1.0. |
 
 Sets time dilation factor.
