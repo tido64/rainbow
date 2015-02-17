@@ -45,7 +45,9 @@ Parallax.__index = setmetatable(Parallax, {
 			local batch, vx, vy = table_unpack(layer)
 			return {scenegraph:add_batch(node, batch), vx, vy}
 		end
-		return {[0] = scoped_node(node), layers = F.map(f, layers), node = node}
+		return setmetatable(
+		    {[0] = scoped_node(node), layers = F.map(f, layers), node = node},
+		    Parallax)
 	end
 })
 
