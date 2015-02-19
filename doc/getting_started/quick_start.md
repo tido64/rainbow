@@ -36,15 +36,6 @@ Start the app on your device.
 
 You should now be able to run this demo in the simulator or on your device.
 
-### TestFlight
-
-In the top left corner of Xcode, next to the Run and Stop buttons, click on
-'Rainbow' and choose 'Edit Scheme...'. Select 'Archive' and set 'Build
-Configuration' to 'Ad Hoc'. Now you can create an archive and upload it to
-TestFlight.
-
-If you don't want to use TestFlight, simply remove the library from the project.
-
 ## Linux / Mac OS X / Windows
 
 1. Copy this folder somewhere. In the following steps, we'll be copying more

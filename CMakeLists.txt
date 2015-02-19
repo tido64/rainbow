@@ -164,9 +164,7 @@ if(USE_LUA_SCRIPT)
 		src/Lua/LuaModules.h
 		src/Lua/LuaScript.cpp
 		src/Lua/LuaScript.h
-		src/Resources/Rainbow.lua.h
-		src/ThirdParty/TestFlight/TestFlight.cpp
-		src/ThirdParty/TestFlight/TestFlight.h)
+		src/Resources/Rainbow.lua.h)
 else()
 	add_definitions(-DUSE_LUA_SCRIPT=0)
 	list(APPEND SOURCE_FILES

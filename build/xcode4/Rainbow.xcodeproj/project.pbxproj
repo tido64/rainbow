@@ -142,7 +142,6 @@
 		1960AFD71A4E278E0015A3AD /* StableWorld.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1960AFCC1A4E278E0015A3AD /* StableWorld.cpp */; };
 		1962F1E7184930D900E1CAF4 /* Diffuse.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1962F1E5184930D900E1CAF4 /* Diffuse.cpp */; };
 		1962F1EA184930FA00E1CAF4 /* lua_Shaders.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1962F1E8184930FA00E1CAF4 /* lua_Shaders.cpp */; };
-		1963EA4F197F1BA400107228 /* TestFlight.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1963EA49197F1BA400107228 /* TestFlight.cpp */; };
 		19655DEB187C65AF0053C398 /* freetype.c in Sources */ = {isa = PBXBuildFile; fileRef = 19655DE9187C65AF0053C398 /* freetype.c */; };
 		196911CD1713564A002BC2E4 /* VertexArray.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 196911CB1713564A002BC2E4 /* VertexArray.cpp */; };
 		196C0A72189082860042190D /* Shaders.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 196C0A70189082860042190D /* Shaders.cpp */; };
@@ -199,7 +198,6 @@
 		19D045AA18071D6D00968F00 /* Chrono.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19D045A918071D6D00968F00 /* Chrono.cpp */; };
 		19D9318A1834AFCE00F0137E /* ChangeMonitor_Stub.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19D931871834AFCE00F0137E /* ChangeMonitor_Stub.cpp */; };
 		19DCB2731741A1D000660000 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 19DCB2721741A1D000660000 /* libz.dylib */; };
-		19DCB2751741A23400660000 /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19DCB2741741A23400660000 /* libTestFlight.a */; settings = {ATTRIBUTES = (Weak, ); }; };
 		19E7748A1A02C8D3005DE249 /* OverlayActivator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19E774871A02C8D3005DE249 /* OverlayActivator.cpp */; };
 		19E85AA91858DCBD00D8B170 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 19E85AA81858DCBD00D8B170 /* Images.xcassets */; };
 		19E91FC21682B1460054D61F /* LuaHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19E91FC01682B1460054D61F /* LuaHelper.cpp */; };
@@ -509,8 +507,6 @@
 		1962F1E6184930D900E1CAF4 /* Diffuse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Diffuse.h; sourceTree = "<group>"; };
 		1962F1E8184930FA00E1CAF4 /* lua_Shaders.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = lua_Shaders.cpp; sourceTree = "<group>"; };
 		1962F1E9184930FA00E1CAF4 /* lua_Shaders.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lua_Shaders.h; sourceTree = "<group>"; };
-		1963EA49197F1BA400107228 /* TestFlight.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = TestFlight.cpp; sourceTree = "<group>"; };
-		1963EA4A197F1BA400107228 /* TestFlight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestFlight.h; sourceTree = "<group>"; };
 		19655DE9187C65AF0053C398 /* freetype.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = freetype.c; path = ../../src/ThirdParty/FreeType/freetype.c; sourceTree = "<group>"; };
 		19655DEA187C65AF0053C398 /* ftmodule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ftmodule.h; path = ../../src/ThirdParty/FreeType/ftmodule.h; sourceTree = "<group>"; };
 		196911CB1713564A002BC2E4 /* VertexArray.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = VertexArray.cpp; sourceTree = "<group>"; };
@@ -594,7 +590,6 @@
 		19D931841834AFC200F0137E /* ChangeMonitor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChangeMonitor.h; sourceTree = "<group>"; };
 		19D931871834AFCE00F0137E /* ChangeMonitor_Stub.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = ChangeMonitor_Stub.cpp; sourceTree = "<group>"; };
 		19DCB2721741A1D000660000 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
-		19DCB2741741A23400660000 /* libTestFlight.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libTestFlight.a; path = ../../lib/TestFlight/libTestFlight.a; sourceTree = "<group>"; };
 		19DCB2831746AB7C00660000 /* LuaBind.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LuaBind.h; sourceTree = "<group>"; };
 		19E774871A02C8D3005DE249 /* OverlayActivator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OverlayActivator.cpp; sourceTree = "<group>"; };
 		19E774881A02C8D3005DE249 /* OverlayActivator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OverlayActivator.h; sourceTree = "<group>"; };
@@ -641,7 +636,6 @@
 				1987ADAB194F34BF003D2B3E /* libfmod_iphonesimulator.a in Frameworks */,
 				1987ADAC194F34BF003D2B3E /* libfmodstudio_iphoneos.a in Frameworks */,
 				1987ADAD194F34BF003D2B3E /* libfmodstudio_iphonesimulator.a in Frameworks */,
-				19DCB2751741A23400660000 /* libTestFlight.a in Frameworks */,
 				19DCB2731741A1D000660000 /* libz.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1145,7 +1139,6 @@
 				1987ADA7194F34BF003D2B3E /* libfmod_iphonesimulator.a */,
 				1987ADA8194F34BF003D2B3E /* libfmodstudio_iphoneos.a */,
 				1987ADA9194F34BF003D2B3E /* libfmodstudio_iphonesimulator.a */,
-				19DCB2741741A23400660000 /* libTestFlight.a */,
 				19DCB2721741A1D000660000 /* libz.dylib */,
 			);
 			name = Frameworks;
@@ -1272,19 +1265,9 @@
 			children = (
 				19455D28197F1C98003E4A79 /* Box2D */,
 				198F42B21A91531000BE7A73 /* Spine */,
-				1963EA48197F1BA400107228 /* TestFlight */,
 			);
 			name = ThirdParty;
 			path = ../../../src/ThirdParty;
-			sourceTree = "<group>";
-		};
-		1963EA48197F1BA400107228 /* TestFlight */ = {
-			isa = PBXGroup;
-			children = (
-				1963EA49197F1BA400107228 /* TestFlight.cpp */,
-				1963EA4A197F1BA400107228 /* TestFlight.h */,
-			);
-			path = TestFlight;
 			sourceTree = "<group>";
 		};
 		196CB724161E4ADD0068C809 /* Heimdall */ = {
@@ -1676,7 +1659,6 @@
 				19AF589F167FFA0800F54B27 /* DebugInfo.cpp in Sources */,
 				19AF58A0167FFA0800F54B27 /* Overlay.cpp in Sources */,
 				19ED191C1682247D00AAA323 /* lua_Renderer.cpp in Sources */,
-				1963EA4F197F1BA400107228 /* TestFlight.cpp in Sources */,
 				190497DF168293DB0037F5EC /* lua_IO.cpp in Sources */,
 				19EF136A1A7036C500D7AAA9 /* CircleShape.cpp in Sources */,
 				190497E41682963F0037F5EC /* lua_Platform.cpp in Sources */,
@@ -1760,7 +1742,6 @@
 					"USE_LUA_SCRIPT=1",
 					"USE_PHYSICS=1",
 					"USE_SPINE=1",
-					"USE_TESTFLIGHT_SDK=1",
 				);
 				HEADER_SEARCH_PATHS = (
 					../../src,
@@ -1776,7 +1757,6 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					../../lib/FMOD/lib/ios,
-					../../lib/TestFlight,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
@@ -1868,7 +1848,6 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					../../lib/FMOD/lib/ios,
-					../../lib/TestFlight,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
@@ -1905,7 +1884,6 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					../../lib/FMOD/lib/ios,
-					../../lib/TestFlight,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";

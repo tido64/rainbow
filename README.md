@@ -57,7 +57,6 @@ and features:
 - [Lua](http://www.lua.org/) scripting language with debugging console and hot
   reloading
 - 2d rigid body physics provided by [Box2D](http://box2d.org/)
-- Deploy and test with [TestFlight](https://testflightapp.com/) on iOS
 
 ## Structure
 

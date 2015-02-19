@@ -23,7 +23,6 @@
 
 #include "ThirdParty/Box2D/Lua/Box2D.h"
 #include "ThirdParty/Spine/spine-rainbow.h"
-#include "ThirdParty/TestFlight/TestFlight.h"
 
 NS_RAINBOW_LUA_BEGIN
 {
@@ -55,7 +54,6 @@ NS_RAINBOW_LUA_BEGIN
 #ifdef USE_PHYSICS
 		b2::lua::init(L);   // Initialise "b2" namespace
 #endif
-		tf::lua::init(L);   // Initialise "TestFlight" namespace
 	}
 } NS_RAINBOW_LUA_END
 

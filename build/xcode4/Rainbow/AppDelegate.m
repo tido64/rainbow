@@ -5,20 +5,12 @@
 #import "AppDelegate.h"
 #import "RainbowViewController.h"
 
-#ifdef USE_TESTFLIGHT_SDK
-#	import <TestFlight/TestFlight.h>
-#	define kRainbowAppToken @"3f3029e5-fa3f-46af-b5fb-bd36d2779e57"
-#endif
-
 #pragma clang diagnostic ignored "-Wunused-parameter"
 
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-#ifdef USE_TESTFLIGHT_SDK
-	[TestFlight takeOff:kRainbowAppToken];
-#endif
 	self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
 	self.window.backgroundColor = [UIColor blackColor];
 	self.window.rootViewController = [[RainbowViewController alloc] init];

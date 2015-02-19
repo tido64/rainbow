@@ -72,8 +72,5 @@ if(MSVC OR XCODE)
 	file(GLOB SOURCE_FILES src/ThirdParty/Spine/*)
 	source_group("Source Files\\ThirdParty\\Spine" FILES ${SOURCE_FILES})
 
-	file(GLOB SOURCE_FILES src/ThirdParty/TestFlight/*)
-	source_group("Source Files\\ThirdParty\\TestFlight" FILES ${SOURCE_FILES})
-
 	unset(SOURCE_FILES)
 endif()
