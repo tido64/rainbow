@@ -1,5 +1,6 @@
 import os
 import re
+import subprocess
 import sys
 
 # Copied from Chromium. See https://codereview.chromium.org/842053003
@@ -41,15 +42,18 @@ def ProjectFlags():
     '-Woverloaded-virtual',
     '-Wsign-promo',
     '-I', os.path.join(project_path, 'src'),
+    '-I', os.path.join(project_path, 'src', 'ThirdParty', 'FreeType'),
+    '-I', os.path.join(project_path, 'src', 'ThirdParty', 'libpng'),
     '-I', os.path.join(project_path, 'lib'),
     '-I', os.path.join(project_path, 'lib', 'FMOD', 'inc'),
-    '-I', os.path.join(project_path, 'src', 'ThirdParty', 'FreeType'),
     '-I', os.path.join(project_path, 'lib', 'FreeType', 'include'),
     '-I', os.path.join(project_path, 'lib', 'Lua'),
     '-I', os.path.join(project_path, 'lib', 'SDL', 'include'),
-    '-I', os.path.join(project_path, 'src', 'ThirdParty', 'libpng'),
     '-I', os.path.join(project_path, 'lib', 'libpng'),
+    '-I', os.path.join(project_path, 'lib', 'spine-runtimes', 'spine-c', 'include'),
     '-DUSE_FMOD_STUDIO=1',
+    '-DUSE_PHYSICS=1',
+    '-DUSE_SPINE=1',
     '-fno-rtti',
     '-fno-exceptions',
   ]
