@@ -34,6 +34,9 @@ if(MSVC OR XCODE)
 	file(GLOB SOURCE_FILES src/Lua/*)
 	source_group("Source Files\\Lua" FILES ${SOURCE_FILES})
 
+	file(GLOB SOURCE_FILES src/Memory/*)
+	source_group("Source Files\\Memory" FILES ${SOURCE_FILES})
+
 	file(GLOB SOURCE_FILES src/Platform/*)
 	source_group("Source Files\\Platform" FILES ${SOURCE_FILES})
 	file(GLOB SOURCE_FILES src/Platform/impl/*)

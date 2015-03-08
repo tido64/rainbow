@@ -5,11 +5,11 @@
 #ifndef GRAPHICS_SPRITEBATCH_H_
 #define GRAPHICS_SPRITEBATCH_H_
 
-#include "Common/Arena.h"
 #include "Graphics/Buffer.h"
 #include "Graphics/Sprite.h"
 #include "Graphics/TextureAtlas.h"
 #include "Graphics/VertexArray.h"
+#include "Memory/Arena.h"
 
 /// A drawable batch of sprites.
 ///

@@ -215,13 +215,11 @@
 		190497DE168293DB0037F5EC /* lua_IO.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = lua_IO.cpp; sourceTree = "<group>"; };
 		190497E31682963F0037F5EC /* lua_Platform.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = lua_Platform.cpp; sourceTree = "<group>"; };
 		190A0ADA15E0294C0088D8B7 /* Logging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Logging.h; sourceTree = "<group>"; };
-		1910099319FDA3A70036D5F4 /* Arena.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Arena.h; sourceTree = "<group>"; };
 		1910099419FDA3A70036D5F4 /* Constraints.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constraints.h; sourceTree = "<group>"; };
 		1910099519FDA3A70036D5F4 /* Global.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Global.h; sourceTree = "<group>"; };
 		1910099619FDA3A70036D5F4 /* Link.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Link.cpp; sourceTree = "<group>"; };
 		1910099719FDA3A70036D5F4 /* Link.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Link.h; sourceTree = "<group>"; };
 		191484E61891BD87004014D7 /* ShaderDetails.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShaderDetails.h; sourceTree = "<group>"; };
-		192A0B9A1681EF75009218EB /* Memory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Memory.h; sourceTree = "<group>"; };
 		192A0B9B1681EF84009218EB /* SpriteVertex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpriteVertex.h; sourceTree = "<group>"; };
 		193929B216E1932E0018340B /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
 		193929B416E23D410018340B /* RainbowViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RainbowViewController.h; path = ../../../src/Platform/RainbowViewController.h; sourceTree = "<group>"; };
@@ -608,6 +606,9 @@
 		19EF13691A7036C500D7AAA9 /* CircleShape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CircleShape.h; sourceTree = "<group>"; };
 		19EF136B1A7036DD00D7AAA9 /* DebugDraw.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DebugDraw.cpp; sourceTree = "<group>"; };
 		19EF136C1A7036DD00D7AAA9 /* DebugDraw.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DebugDraw.h; sourceTree = "<group>"; };
+		19F2038B1AAC551D005CD913 /* Arena.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Arena.h; path = ../../../src/Memory/Arena.h; sourceTree = "<group>"; };
+		19F2038C1AAC551D005CD913 /* ScopeStack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ScopeStack.h; path = ../../../src/Memory/ScopeStack.h; sourceTree = "<group>"; };
+		19F2038D1AAC551D005CD913 /* SharedPtr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SharedPtr.h; path = ../../../src/Memory/SharedPtr.h; sourceTree = "<group>"; };
 		19F9890715F924E8005A5F69 /* lua_IO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lua_IO.h; sourceTree = "<group>"; };
 		19F9890C15FBBB3B005A5F69 /* NonCopyable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NonCopyable.h; sourceTree = "<group>"; };
 		19F98DA0171970C000A85873 /* Recorder_iOS.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Recorder_iOS.mm; sourceTree = "<group>"; };
@@ -900,7 +901,6 @@
 			children = (
 				1939A187152C425D00494609 /* impl */,
 				193929C816E3527F0018340B /* Algorithm.h */,
-				1910099319FDA3A70036D5F4 /* Arena.h */,
 				19D045A918071D6D00968F00 /* Chrono.cpp */,
 				1939A181152C425D00494609 /* Chrono.h */,
 				1939A184152C425D00494609 /* Color.h */,
@@ -914,7 +914,6 @@
 				1910099619FDA3A70036D5F4 /* Link.cpp */,
 				1910099719FDA3A70036D5F4 /* Link.h */,
 				190A0ADA15E0294C0088D8B7 /* Logging.h */,
-				192A0B9A1681EF75009218EB /* Memory.h */,
 				19F9890C15FBBB3B005A5F69 /* NonCopyable.h */,
 				1939A196152C425D00494609 /* Random.cpp */,
 				1939A197152C425D00494609 /* Random.h */,
@@ -1190,6 +1189,7 @@
 				196CB724161E4ADD0068C809 /* Heimdall */,
 				1939A1DB152C425D00494609 /* Input */,
 				1939A1E6152C425D00494609 /* Lua */,
+				19F2038A1AAC5500005CD913 /* Memory */,
 				1986919F16DED44D00BC4830 /* Platform */,
 				198F42661A9151CB00BE7A73 /* Script */,
 				1963EA32197F1BA400107228 /* ThirdParty */,
@@ -1402,6 +1402,16 @@
 				19D931871834AFCE00F0137E /* ChangeMonitor_Stub.cpp */,
 			);
 			path = impl;
+			sourceTree = "<group>";
+		};
+		19F2038A1AAC5500005CD913 /* Memory */ = {
+			isa = PBXGroup;
+			children = (
+				19F2038B1AAC551D005CD913 /* Arena.h */,
+				19F2038C1AAC551D005CD913 /* ScopeStack.h */,
+				19F2038D1AAC551D005CD913 /* SharedPtr.h */,
+			);
+			name = Memory;
 			sourceTree = "<group>";
 		};
 		19F98DA4171B5DC000A85873 /* impl */ = {

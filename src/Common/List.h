@@ -8,7 +8,7 @@
 #include <functional>
 #include <utility>
 
-#include "Common/Memory.h"
+#include "Memory/SharedPtr.h"
 
 /// A functional list.
 ///

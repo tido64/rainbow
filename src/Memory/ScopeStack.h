@@ -2,13 +2,13 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
-#ifndef COMMON_SCOPESTACK_H_
-#define COMMON_SCOPESTACK_H_
+#ifndef MEMORY_SCOPESTACK_H_
+#define MEMORY_SCOPESTACK_H_
 
 #include <functional>
 #include <memory>
 
-#include "Common/Memory.h"
+#include "Memory/SharedPtr.h"
 
 namespace rainbow
 {

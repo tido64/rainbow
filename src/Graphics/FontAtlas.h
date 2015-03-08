@@ -7,8 +7,8 @@
 #define FONTATLAS_EXTENDED 6
 //#define FONTATLAS_KERNING
 
-#include "Common/Memory.h"
 #include "Graphics/FontGlyph.h"
+#include "Memory/SharedPtr.h"
 
 class Data;
 

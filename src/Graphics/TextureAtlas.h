@@ -8,8 +8,8 @@
 #include <vector>
 
 #include "Common/DataMap.h"
-#include "Common/Memory.h"
 #include "Graphics/Texture.h"
+#include "Memory/SharedPtr.h"
 
 /// Texture atlas loaded from an image file.
 ///

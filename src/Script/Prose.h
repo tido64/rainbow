@@ -8,7 +8,7 @@
 #include <string>
 #include <unordered_map>
 
-#include "Common/ScopeStack.h"
+#include "Memory/ScopeStack.h"
 
 class Animation;
 class FontAtlas;

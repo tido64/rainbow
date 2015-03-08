@@ -2,8 +2,8 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
-#ifndef COMMON_ARENA_H_
-#define COMMON_ARENA_H_
+#ifndef MEMORY_ARENA_H_
+#define MEMORY_ARENA_H_
 
 #include <iterator>
 #include <memory>

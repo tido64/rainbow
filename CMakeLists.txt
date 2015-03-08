@@ -26,7 +26,6 @@ include(${LOCAL_MODULE_PATH}/Windows.cmake)
 
 set(SOURCE_FILES
 	src/Common/Algorithm.h
-	src/Common/Arena.h
 	src/Common/Chrono.cpp
 	src/Common/Chrono.h
 	src/Common/Color.h
@@ -41,11 +40,9 @@ set(SOURCE_FILES
 	src/Common/Link.h
 	src/Common/List.h
 	src/Common/Logging.h
-	src/Common/Memory.h
 	src/Common/NonCopyable.h
 	src/Common/Random.cpp
 	src/Common/Random.h
-	src/Common/ScopeStack.h
 	src/Common/TimedEvent.h
 	src/Common/TreeNode.h
 	src/Common/Vec2.h
@@ -110,6 +107,9 @@ set(SOURCE_FILES
 	src/Lua/LuaMacros.h
 	src/Lua/LuaSyntax.cpp
 	src/Lua/LuaSyntax.h
+	src/Memory/Arena.h
+	src/Memory/ScopeStack.h
+	src/Memory/SharedPtr.h
 	src/Platform/Macros.h
 	src/Platform/SDL2.cpp
 	src/Platform/SystemInfo.h
