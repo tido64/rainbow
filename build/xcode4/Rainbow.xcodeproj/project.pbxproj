@@ -654,7 +654,7 @@
 				19399E73152C401300494609 /* Rope */,
 			);
 			name = Box2D;
-			path = ../../../lib/Box2D;
+			path = ../../../lib/box2d/Box2D/Box2D;
 			sourceTree = "<group>";
 		};
 		19399E14152C401300494609 /* Collision */ = {
@@ -1756,6 +1756,7 @@
 				HEADER_SEARCH_PATHS = (
 					../../src,
 					../../lib,
+					../../lib/box2d/Box2D,
 					../../src/ThirdParty/FreeType,
 					../../lib/FMOD/inc,
 					../../lib/FreeType/include,
@@ -1847,6 +1848,7 @@
 				HEADER_SEARCH_PATHS = (
 					../../src,
 					../../lib,
+					../../lib/box2d/Box2D,
 					../../src/ThirdParty/FreeType,
 					../../lib/FMOD/inc,
 					../../lib/FreeType/include,
@@ -1883,6 +1885,7 @@
 				HEADER_SEARCH_PATHS = (
 					../../src,
 					../../lib,
+					../../lib/box2d/Box2D,
 					../../src/ThirdParty/FreeType,
 					../../lib/FMOD/inc,
 					../../lib/FreeType/include,

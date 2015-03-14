@@ -4,6 +4,9 @@
 [submodule "lib/FreeType"]
 	path = lib/FreeType
 	url = git://git.sv.nongnu.org/freetype/freetype2.git
+[submodule "lib/box2d"]
+	path = lib/box2d
+	url = https://github.com/erincatto/box2d.git
 [submodule "lib/libpng"]
 	path = lib/libpng
 	url = git://git.code.sf.net/p/libpng/code
