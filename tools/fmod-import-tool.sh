@@ -64,12 +64,12 @@ fi
 # Linux
 if [ -f "$SRC"/lowlevel/lib/x86_64/libfmod.so.*.* ]; then
   mkdir -p lib/linux/x86_64
-  cp -v "$SRC"/lowlevel/lib/x86_64/libfmod.so.*.* lib/linux/x86_64/libfmod.so
-  cp -v "$SRC"/studio/lib/x86_64/libfmodstudio.so.*.* lib/linux/x86_64/libfmodstudio.so
+  cp -av "$SRC"/lowlevel/lib/x86_64/libfmod.so* lib/linux/x86_64/
+  cp -av "$SRC"/studio/lib/x86_64/libfmodstudio.so* lib/linux/x86_64/
   if [ -d "$SRC/lowlevel/lib/x86" ]; then
     mkdir -p lib/linux/x86
-    cp -v "$SRC"/lowlevel/lib/x86/libfmod.so.*.* lib/linux/x86/libfmod.so
-    cp -v "$SRC"/studio/lib/x86/libfmodstudio.so.*.* lib/linux/x86/libfmodstudio.so
+    cp -av "$SRC"/lowlevel/lib/x86/libfmod.so* lib/linux/x86/
+    cp -av "$SRC"/studio/lib/x86/libfmodstudio.so* lib/linux/x86/
   fi
 fi
 
