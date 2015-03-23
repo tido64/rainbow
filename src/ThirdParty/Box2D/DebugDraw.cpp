@@ -31,9 +31,8 @@ namespace b2
 
 	void DebugDraw::Draw()
 	{
-		R_ASSERT(g_debug_draw.get(), "b2::DebugDraw uninitialised");
-
-		g_debug_draw->DrawAllWorlds();
+		if (g_debug_draw)
+			g_debug_draw->DrawAllWorlds();
 	}
 
 	DebugDraw::DebugDraw() : buffer_size_(kCircleSegments), ptm_(0)
