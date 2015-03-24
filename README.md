@@ -1,4 +1,4 @@
-# Rainbow [![ReadTheDocs](https://readthedocs.org/projects/rainbow/badge/)](http://rainbow.rtfd.org/) [![Windows build status](https://ci.appveyor.com/api/projects/status/oajtxwu9d9lrayk0?svg=true)](https://ci.appveyor.com/project/Tommy/rainbow)
+# Rainbow [![ReadTheDocs](https://readthedocs.org/projects/rainbow/badge/)](http://rainbow.rtfd.org/) [![Windows build status](https://ci.appveyor.com/api/projects/status/oajtxwu9d9lrayk0?svg=true)](https://ci.appveyor.com/project/Tommy/rainbow) [![Build Status](https://travis-ci.org/tn0502/rainbow.svg?branch=master)](https://travis-ci.org/tn0502/rainbow)
 
 Rainbow is a fast, scriptable, cross-platform, 2D game engine written in modern
 C++.

@@ -1,0 +1,31 @@
+language: cpp
+compiler:
+  - clang
+before_install:
+  - sudo add-apt-repository --yes ppa:ubuntu-toolchain-r/test
+  - sudo add-apt-repository --yes ppa:kalakris/cmake
+  - wget -O - http://llvm.org/apt/llvm-snapshot.gpg.key | sudo apt-key add -
+  - sudo apt-add-repository 'deb http://llvm.org/apt/precise/ llvm-toolchain-precise-3.6 main'
+  - sudo apt-get update -qq
+install:
+  - sudo apt-get install -qqy clang-3.6 cmake ninja-build
+  - sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-3.6 1
+  - sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-3.6 1
+  - update-alternatives --display clang
+  - update-alternatives --display clang++
+  - sudo rm /usr/local/clang-3.4/bin/clang
+  - sudo rm /usr/local/clang-3.4/bin/clang++
+script:
+  - mkdir $TRAVIS_BUILD_DIR-build
+  - cd $TRAVIS_BUILD_DIR-build
+  - GENERATOR=Ninja $TRAVIS_BUILD_DIR/tools/build.sh -DCMAKE_BUILD_TYPE=RelWithDebInfo -DUNIT_TESTS=1 -DUSE_PHYSICS=1 -DUSE_SPINE=1
+  - ./rainbow
+branches:
+  only:
+    - master
+notifications:
+  email:
+    recipients:
+      - tn0502@gmail.com
+os:
+  - linux
