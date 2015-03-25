@@ -11,6 +11,7 @@ class Buffer
 {
 public:
 	Buffer();
+	Buffer(Buffer&&);
 	~Buffer();
 
 	/// Used by Label and SpriteBatch for interleaved vertex buffer.
@@ -23,7 +24,7 @@ public:
 	void upload(const void *const data, const size_t size) const;
 
 private:
-	const unsigned int id_;
+	unsigned int id_;
 };
 
 #endif

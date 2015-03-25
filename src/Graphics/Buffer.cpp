@@ -21,8 +21,16 @@ namespace
 
 Buffer::Buffer() : id_(glGenBuffer()) {}
 
+Buffer::Buffer(Buffer&& buffer) : id_(buffer.id_)
+{
+	buffer.id_ = 0;
+}
+
 Buffer::~Buffer()
 {
+	if (id_ == 0)
+		return;
+
 	glDeleteBuffers(1, &id_);
 }
 

@@ -5,6 +5,7 @@
 #include "Graphics/SpriteBatch.h"
 
 #include <algorithm>
+#include <utility>
 
 #include "Graphics/Renderer.h"
 #include "Graphics/ShaderDetails.h"
@@ -39,6 +40,18 @@ SpriteBatch::SpriteBatch(const unsigned int hint) : count_(0), reserved_(0)
 	resize(hint);
 	array_.reconfigure(std::bind(&SpriteBatch::bind_arrays, this));
 }
+
+SpriteBatch::SpriteBatch(SpriteBatch&& batch)
+    : sprites_(std::forward<Arena<Sprite>>(batch.sprites_)),
+      vertices_(std::forward<Arena<SpriteVertex>>(batch.vertices_)),
+      normals_(std::forward<Arena<Vec2f>>(batch.normals_)),
+      count_(batch.count_),
+      vertex_buffer_(std::forward<Buffer>(batch.vertex_buffer_)),
+      normal_buffer_(std::forward<Buffer>(batch.normal_buffer_)),
+      array_(std::forward<VertexArray>(batch.array_)),
+      normal_(std::forward<SharedPtr<TextureAtlas>>(batch.normal_)),
+      texture_(std::forward<SharedPtr<TextureAtlas>>(batch.texture_)),
+      reserved_(batch.reserved_) {}
 
 SpriteBatch::~SpriteBatch()
 {

@@ -18,6 +18,7 @@ public:
 	static void unbind();
 
 	VertexArray();
+	VertexArray(VertexArray&&);
 	~VertexArray();
 
 	/// Binds this vertex array object.

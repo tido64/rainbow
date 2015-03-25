@@ -23,6 +23,7 @@ public:
 	/// \param hint  If you know in advance how many sprites you'll need, set
 	///              \p hint for more efficient storage.
 	SpriteBatch(const unsigned int hint = 4);
+	SpriteBatch(SpriteBatch&&);
 	~SpriteBatch();
 
 	/// Returns the vertex count.

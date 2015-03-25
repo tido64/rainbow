@@ -24,6 +24,13 @@ VertexArray::VertexArray()
 #endif
 {}
 
+VertexArray::VertexArray(VertexArray&& va) : array_(va.array_)
+{
+#ifdef USE_VERTEX_ARRAY_OBJECT
+	va.array_ = 0;
+#endif
+}
+
 VertexArray::~VertexArray()
 {
 #ifdef USE_VERTEX_ARRAY_OBJECT
