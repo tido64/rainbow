@@ -173,8 +173,7 @@ SDLContext::SDLContext(const rainbow::Config &config)
 	                                                  : 0;
 	window_ = SDL_CreateWindow(
 	    RAINBOW_BUILD, position_.x, position_.y, size_.x, size_.y,
-	    SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE |
-	    allow_high_dpi);
+	    SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | allow_high_dpi);
 	if (!window_)
 	{
 		R_ABORT("SDL: Failed to create window: %s", SDL_GetError());
