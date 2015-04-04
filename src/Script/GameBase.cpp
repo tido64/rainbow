@@ -22,8 +22,7 @@ namespace rainbow
 		const Data &data = Data::load_asset(path);
 		R_ASSERT(data, "rainbow::font: Failed to load font");
 		auto font = make_shared<FontAtlas>(data, pt);
-		R_ASSERT(font->is_valid(),
-		         "rainbow::font: Failed to create font");
+		R_ASSERT(font->is_valid(), "rainbow::font: Failed to create font");
 		return font;
 	}
 

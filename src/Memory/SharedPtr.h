@@ -81,7 +81,7 @@ public:
 	void reset()
 	{
 		R_ASSERT(!ptr_ || ptr_->refs_ > 0,
-			"This object should've been deleted by now");
+		         "This object should've been deleted by now");
 
 		if (ptr_ && !--ptr_->refs_)
 			delete ptr_;

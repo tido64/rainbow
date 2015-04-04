@@ -7,7 +7,6 @@
 
 void NoGame::init(const Vec2i &screen)
 {
-	opacity_ = 0;
 	batch_ = rainbow::spritebatch(1);
 	auto texture = rainbow::texture("Rainbow.png");
 	batch_->set_texture(texture);

@@ -13,10 +13,9 @@ public:
 	NoGame(rainbow::Director &director) : GameBase(director) {}
 
 	void init(const Vec2i &screen) override;
-	void update(const unsigned long) override;
+	void update(const unsigned long dt) override;
 
 private:
-	unsigned int opacity_;
 	rainbow::sprite_t logo_;
 	rainbow::spritebatch_t batch_;
 };
