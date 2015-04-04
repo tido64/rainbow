@@ -3,6 +3,7 @@
 ## Getting Started
 
 - [Quick Start Guide](getting_started/quick_start.md)
+- [C++ Basics](getting_started/cpp_basics.md)
 - [Lua Basics](getting_started/lua_basics.md)
 
 ## Programming Guide

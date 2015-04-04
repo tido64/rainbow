@@ -1,35 +1,14 @@
-# Lua Basics
+# C++ Basics
 
 ## File Structure
 
 	config
-	main.lua
 	Shaders/
-
-Depending on your platform of choice, Rainbow may expect some files to be
-present in order to successfully launch.
-
-### `main.lua` (required)
-
-This file must implement the following two entry-point functions:
-
-```lua
-function init()
-  -- Called once on startup.
-end
-
-function update(dt)
-  -- Called every frame. |dt| is the time since last frame in milliseconds.
-end
-```
-
-There is no draw function. Later, we'll use the scene graph to get things onto
-the screen.
 
 ### `config` (optional)
 
-The configuration file is just another Lua script. It enables/disables features
-and sets the window size (Linux/Mac OS X/Windows).
+The configuration file is just a Lua script. It enables/disables features and
+sets the window size (Linux/Mac OS X/Windows).
 
 ```lua
 accelerometer = false|true
@@ -71,14 +50,53 @@ This is just a copy of the folder `src/Graphics/Shaders`. On Android and iOS,
 the shaders are embedded in the binary. This is just so that you don't have to
 constantly recompile Rainbow while working with shaders.
 
+## Entry Point
+
+Any class that derives from `GameBase` is a potential entry point. The class may
+also override any or none of the methods `init()` and `update()`. Although, not
+overriding any of them will display nothing.
+
+```c++
+class MyGame final : public GameBase
+{
+public:
+    MyGame(rainbow::Director &director) : GameBase(director) {}
+
+    void init(const Vec2i &screen) override;
+    void update(const unsigned long dt) override;
+
+private:
+    rainbow::spritebatch_t batch_;
+};
+```
+
+The engine will call `init()` once on startup, after a graphics context has been
+created. From then on, `update()` will be called every frame. `dt` is the time
+passed since last frame, in milliseconds.
+
+Finally, let Rainbow know which class to use by implementing
+`GameBase::create()`:
+
+```c++
+GameBase* GameBase::create(rainbow::Director &director)
+{
+    return new MyGame(director);
+}
+```
+
+See `Script/NoGame.cpp` and `Script/NoGame.h` for a full example. We will add
+sprites to the screen in the following sections.
+
 ## Sprite Batches
 
 One of Rainbow's philosophies is to always batch sprites. So in order to create
-a sprite, one must first create a batch.
+a sprite, one must first create a batch. We will implement `init()`:
 
-```lua
-local hint = 2  -- Intended number of sprites in batch
-local batch = rainbow.spritebatch(hint)
+```c++
+void init(const Vec2i &screen)
+{
+    const unsigned int hint = 2;  // Intended number of sprites in batch
+    batch_ = rainbow::spritebatch(hint);
 ```
 
 The `hint` tells Rainbow that we intend to create a batch of two sprites. Note
@@ -86,9 +104,9 @@ that this does not prevent us from adding more sprites. In fact, this parameter
 can be omitted entirely. However, specifying a hint will prevent Rainbow from
 using more memory than necessary. Next, we'll create two sprites:
 
-```lua
-local sprite1 = batch:create_sprite(100, 100)
-local sprite2 = batch:create_sprite(100, 100)
+```c++
+    auto sprite1 = batch_->create_sprite(100, 100);
+    auto sprite2 = batch_->create_sprite(100, 100);
 ```
 
 The order in which sprites are created are important as it determines the draw
@@ -99,15 +117,15 @@ it's better to split the batch.
 Now we have a sprite batch containing two untextured sprites. Let's add a
 texture:
 
-```lua
--- Load the texture atlas.
-local atlas = rainbow.texture("canvas.png")
-batch:set_texture(atlas)
+```c++
+    // Load the texture atlas.
+    auto atlas = rainbow::texture("canvas.png");
+    batch_->set_texture(atlas);
 
--- Create a texture from the atlas, and assign to our sprites.
-local texture = atlas:create(448, 108, 100, 100)
-sprite1:set_texture(texture)
-sprite2:set_texture(texture)
+    // Create a texture from the atlas, and assign to our sprites.
+    auto texture = atlas:create(Vec2i(448, 108), 100, 100);
+    sprite1->set_texture(texture);
+    sprite2->set_texture(texture);
 ```
 
 First, we load the actual texture. Textures are always loaded into atlases which
@@ -118,7 +136,7 @@ changing the texture of every sprite in a batch by changing only the texture
 atlas. Rainbow does not prevent you from loading the same asset.
 
 Please refer to the API reference for full details. For displaying text, look up
-`rainbow.font` and `rainbow.label`.
+`FontAtlas` and `Label`. We will implement the rest of `init()` next.
 
 ## Scene Graph
 
@@ -137,21 +155,24 @@ You can therefore determine the draw order by adding your batches appropriately.
 
 Now we'll add the batches we've created earlier:
 
-```lua
-	-- Add batch to root node. If we wanted this batch under a different node,
-	-- we'd pass the parent node as first parameter.
-	local node = rainbow.scenegraph:add_batch(batch)
+```c++
+    // Add batch to root node.
+    auto node = scenegraph().add_batch(batch);
 
-	-- Position our sprites at the center of the screen.
-	local screen = rainbow.platform.screen
-	local cx = screen.width * 0.5
-	local cy = screen.height * 0.5
-	sprite1:set_position(cx - 50, cy)
-	sprite2:set_position(cx + 50, cy)
+    // Position our sprites at the center of the screen.
+    const float cx = screen.x * 0.5f;
+    const float cy = screen.y * 0.5f;
+    sprite1->set_position(Vec2f(cx - 50, cy));
+    sprite2->set_position(Vec2f(cx + 50, cy));
+}
 ```
 
-If you've put all the code we've written so far in `init()` and run it, you
-should see two identical sprites next to each other at the center of the screen.
+If you compile and run this code, you should see two identical sprites next to
+each other at the center of the screen.
+
+Note that the root node is only accessible from the entry point. If you need it
+elsewhere, you must pass along its pointer. Or you can create and pass a child
+node, and avoid spamming the root node.
 
 As always, refer to the API reference for full details.
 
@@ -165,7 +186,7 @@ something like:
 
 ```lua
 return {
-  version = 1.1,   -- declare Prose version
+  version = 100,   -- declare Prose version
   resources = {},  -- declare fonts, sounds or textures here
   nodes = {}       -- declare animations, labels or sprites here
 }
@@ -180,41 +201,42 @@ local cx, cy = screen.width * 0.5, screen.height * 0.5
 return {
   version = "1.0",
   resources = {
-    "atlas" = {                    -- local atlas =
-      "canvas.png",                --     rainbow.texture("canvas.png")
-      {448, 108, 100, 100}         -- local texture0 =
-    }                              --     atlas:create_texture(...)
+    "atlas" = {                    -- auto atlas =
+      "canvas.png",                --     rainbow::texture("canvas.png");
+      {448, 108, 100, 100}         -- auto texture0 =
+    }                              --     atlas->create_texture(...);
   },
   nodes = {
-    { name = "batch",              -- local batch = rainbow.spritebatch(2)
-      texture = "atlas",           -- batch:set_texture(atlas)
-      { name = "sprite1"           -- local sprite1 =
-        size = {100, 100},         --     batch:create_sprite(100, 100)
-        position = {cx - 50, cy},  -- sprite1:set_position(...)
-        texture = 0                -- sprite1:set_texture(texture0)
+    { name = "batch",              -- auto batch = rainbow::spritebatch(2);
+      texture = "atlas",           -- batch->set_texture(atlas);
+      { name = "sprite1"           -- auto sprite1 =
+        size = {100, 100},         --     batch->create_sprite(100, 100);
+        position = {cx - 50, cy},  -- sprite1->set_position(...);
+        texture = 0                -- sprite1->set_texture(texture0);
       },
-      { name = "sprite2"           -- local sprite2 =
-        size = {100, 100},         --     batch:create_sprite(100, 100)
-        position = {cx + 50, cy},  -- sprite2:set_position(...)
-        texture = 0                -- sprite2:set_texture(texture0)
+      { name = "sprite2"           -- auto sprite2 =
+        size = {100, 100},         --     batch->create_sprite(100, 100);
+        position = {cx + 50, cy},  -- sprite2->set_position(...);
+        texture = 0                -- sprite2->set_texture(texture0);
       }
     }
   }
 }
 ```
 
-If you save the table in `tutorial.prose.lua`, we can replace our `init()`:
+If you save the table in `tutorial.prose.lua`, we can implement our `init()`:
 
-```lua
-function init()
-  local Prose = require("Prose")
-  -- Prose lets you create entire scenes from a table
+```c++
+void MyGame::init(const Vec2i &screen)
+{
+    scene_ = rainbow::prose::from_table("tutorial.prose.lua");
 
-  scene = Prose.from_table(require("tutorial.prose"))
-  -- You can also access nodes and resources through this object. For
-  -- instance, to access the batch:
-  local batch = scene.objects.batch
-end
+    // You can also access assets and resources through this object. We retrieve
+    // them by name:
+
+    // auto batch = scene_->get_spritebatch("batch");
+    // auto sprite1 = scene_->get_sprite("sprite1");
+}
 ```
 
 For a more complete example, see file `scummbar.lua` and its accompanying file

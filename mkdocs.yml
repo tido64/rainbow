@@ -4,6 +4,7 @@ copyright: Copyright &copy; 2010-15 Bifrost Entertainment AS and Tommy Nguyen.
 pages:
   - [index.md, Home]
   - [getting_started/quick_start.md, Getting Started, Quick Start Guide]
+  - [getting_started/cpp_basics.md, Getting Started, C++ Basics]
   - [getting_started/lua_basics.md, Getting Started, Lua Basics]
   - [programming/development/building_rainbow_for_pc.md, Development Setup, Building Rainbow for PC]
   - [programming/lua/api.md, API Reference, Lua API]
