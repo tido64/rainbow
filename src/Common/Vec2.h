@@ -33,15 +33,14 @@ namespace rainbow
 		/// Returns the distance between two points.
 		float distance(const Vec2 &v) const
 		{
-			T dx = v.x - this->x;
-			T dy = v.y - this->y;
-			return sqrt(dx * dx + dy * dy);
+			return sqrt(distance_sq(v));
 		}
 
-		/// Returns the dot product of two vectors
-		T dot(const Vec2 &v) const
+		/// Returns the distance between two points, squared.
+		float distance_sq(const Vec2 &v) const
 		{
-			return this->x * v.x + this->y * v.y;
+			const Vec2 w = *this - v;
+			return w * w;
 		}
 
 		template<typename U = T>
@@ -77,14 +76,51 @@ namespace rainbow
 			return *this;
 		}
 
-		friend bool operator==(const Vec2 &a, const Vec2 &b)
+		Vec2& operator/=(const T &f)
 		{
-			return a.x == b.x && a.y == b.y;
+			this->x /= f;
+			this->y /= f;
+			return *this;
 		}
 
 		friend Vec2 operator+(const Vec2 &a, const T offset)
 		{
 			return Vec2(a.x + offset, a.y + offset);
+		}
+
+		friend Vec2 operator+(const Vec2 &a, const Vec2 &b)
+		{
+			return Vec2(a.x + b.x, a.y + b.y);
+		}
+
+		friend Vec2 operator-(const Vec2 &a, const T offset)
+		{
+			return Vec2(a.x - offset, a.y - offset);
+		}
+
+		friend Vec2 operator-(const Vec2 &a, const Vec2 &b)
+		{
+			return Vec2(a.x - b.x, a.y - b.y);
+		}
+
+		friend Vec2 operator*(const Vec2 &a, const T f)
+		{
+			return Vec2(a.x * f, a.y * f);
+		}
+
+		friend T operator*(const Vec2 &a, const Vec2 &b)
+		{
+			return a.x * b.x + a.y * b.y;
+		}
+
+		friend Vec2 operator/(const Vec2 &a, const T f)
+		{
+			return Vec2(a.x / f, a.y / f);
+		}
+
+		friend bool operator==(const Vec2 &a, const Vec2 &b)
+		{
+			return a.x == b.x && a.y == b.y;
 		}
 	};
 }
