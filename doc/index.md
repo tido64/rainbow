@@ -14,4 +14,10 @@
 
 ### Rainbow API Reference
 
+#### C++
+
+- [Timers](programming/cpp/timers.md)
+
+#### Lua
+
 - [Lua API](programming/lua/api.md)
