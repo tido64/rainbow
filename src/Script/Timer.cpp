@@ -33,9 +33,9 @@ Timer* TimerManager::set_timer(Timer::Closure func,
 
 void TimerManager::update(const unsigned long dt)
 {
-	std::for_each(std::begin(timers_), std::end(timers_), [dt](Timer &t) {
-		t.update(dt);
-	});
+	const size_t count = timers_.size();
+	for (size_t i = 0; i < count; ++i)
+		timers_[i].update(dt);
 }
 
 int Timer::clear(const int free)
