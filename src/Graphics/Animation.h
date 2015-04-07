@@ -32,21 +32,24 @@ public:
 
 	/// Constructs a sprite animation.
 	/// \param sprite  The sprite to animate.
-	/// \param frames  Null-terminated array of texture ids to be used as
-	///                frames.
+	/// \param frames  Array of texture ids to be used as frames, terminated
+	///                with \c kAnimationEnd.
 	/// \param fps     Frames per second.
-	/// \param delay   Number of ticks to delay before the animation loops.
+	/// \param delay   Number of frames to delay before the animation loops.
 	///                Negative numbers disable looping.
 	Animation(const Sprite::Ref &sprite,
 	          const Frame *const frames,
 	          const unsigned int fps,
 	          const int delay = 0);
 
-	inline void set_callback(Callback&&);
+	void set_callback(Callback f) { callback_ = std::move(f); }
 
-	/// Sets number of ticks to delay before the animation loops. Negative
+	/// Sets number of frames to delay before the animation loops. Negative
 	/// numbers disable looping.
-	inline void set_delay(const int delay);
+	void set_delay(const int delay) { delay_ = delay; }
+
+	/// Sets playback rate in frames per second.
+	void set_fps(const unsigned int fps) { set_timeout(1000 / fps); }
 
 	/// Sets animation frames.
 	/// \note This method takes ownership of the array.
@@ -55,10 +58,14 @@ public:
 	void set_frames(const Frame *const frames);
 
 	/// Sets the sprite to animate.
-	inline void set_sprite(const Sprite::Ref &sprite);
+	void set_sprite(const Sprite::Ref &sprite) { sprite_ = sprite; }
 
 	/// Resets sprite animation.
-	inline void reset();
+	void reset()
+	{
+		frame_ = 0;
+		idled_ = 0;
+	}
 
 	/// Increments animation frame and resets/stops if the end is reached.
 	void tick();
@@ -67,33 +74,12 @@ private:
 	Frame frame_;  ///< Current frame.
 	Sprite::Ref sprite_;  ///< The sprite to animate.
 	std::unique_ptr<const Frame[]> frames_;  ///< Array of texture ids to be used as frames, terminated with \c kAnimationEnd.
-	int delay_;  ///< Number of ticks to delay before the animation loops. Negative numbers disable looping.
-	int idled_;  ///< Number of ticks idled.
+	int delay_;  ///< Number of frames to delay before the animation loops. Negative numbers disable looping.
+	int idled_;  ///< Number of frames idled.
 	Callback callback_;
 
 	void on_start();
 	void on_stop();
 };
-
-void Animation::set_callback(Callback&& f)
-{
-	callback_ = std::forward<Callback>(f);
-}
-
-void Animation::set_delay(const int delay)
-{
-	delay_ = delay;
-}
-
-void Animation::set_sprite(const Sprite::Ref &sprite)
-{
-	sprite_ = sprite;
-}
-
-void Animation::reset()
-{
-	frame_ = 0;
-	idled_ = 0;
-}
 
 #endif
