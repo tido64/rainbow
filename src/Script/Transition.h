@@ -20,9 +20,8 @@ namespace rainbow
 	{
 		return TimerManager::Get()->set_timer(
 		    Move<SceneGraph::Node*>(node, delta, duration, std::move(timing)),
-		    rainbow::timing::kInterval,
-		    std::ceil(static_cast<float>(duration) /
-		              rainbow::timing::kInterval));
+		    timing::kInterval,
+		    repeat_count_from_duration(duration));
 	}
 
 	template<typename T>
@@ -34,9 +33,8 @@ namespace rainbow
 		opacity -= component->color().a;
 		return TimerManager::Get()->set_timer(
 		    Fade<T>(component, opacity, duration, std::move(timing)),
-		    rainbow::timing::kInterval,
-		    std::ceil(static_cast<float>(duration) /
-		              rainbow::timing::kInterval));
+		    timing::kInterval,
+		    repeat_count_from_duration(duration));
 	}
 
 	template<typename T>
@@ -60,9 +58,8 @@ namespace rainbow
 		destination -= component->position();
 		return TimerManager::Get()->set_timer(
 		    Move<T>(component, destination, duration, std::move(timing)),
-		    rainbow::timing::kInterval,
-		    std::ceil(static_cast<float>(duration) /
-		              rainbow::timing::kInterval));
+		    timing::kInterval,
+		    repeat_count_from_duration(duration));
 	}
 
 	template<typename T>
@@ -74,9 +71,8 @@ namespace rainbow
 		angle -= component->angle();
 		return TimerManager::Get()->set_timer(
 		    Rotate<T>(component, angle, duration, std::move(timing)),
-		    rainbow::timing::kInterval,
-		    std::ceil(static_cast<float>(duration) /
-		              rainbow::timing::kInterval));
+		    timing::kInterval,
+		    repeat_count_from_duration(duration));
 	}
 
 	template<typename T>
@@ -88,9 +84,8 @@ namespace rainbow
 		factor -= component->scale();
 		return TimerManager::Get()->set_timer(
 		    Scale<T>(component, factor, duration, std::move(timing)),
-		    rainbow::timing::kInterval,
-		    std::ceil(static_cast<float>(duration) /
-		              rainbow::timing::kInterval));
+		    timing::kInterval,
+		    repeat_count_from_duration(duration));
 	}
 
 	template<typename T>
