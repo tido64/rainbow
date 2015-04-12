@@ -12,12 +12,13 @@
 
 - [Building Rainbow for PC](programming/development/building_rainbow_for_pc.md)
 
-### Rainbow API Reference
+### C++
 
-#### C++
-
+- [Input](programming/cpp/input.md)
+- [Sprite Sheet Animations](programming/cpp/sprite_sheet_animations.md)
 - [Timers](programming/cpp/timers.md)
+- [Transitions](programming/cpp/transitions.md)
 
-#### Lua
+### Lua
 
 - [Lua API](programming/lua/api.md)
