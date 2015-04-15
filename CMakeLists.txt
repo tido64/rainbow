@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.0)
 
 project(Rainbow)
 set(LOCAL_MODULE_PATH ${PROJECT_SOURCE_DIR}/build/cmake)
@@ -20,7 +20,6 @@ option(USE_SPINE        "Enable Spine runtime" OFF)
 execute_process(COMMAND tools/shaders-gen.py WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
 
 # Platform-specific flags
-include(${LOCAL_MODULE_PATH}/Project.cmake)
 include(${LOCAL_MODULE_PATH}/Unix.cmake)
 include(${LOCAL_MODULE_PATH}/Windows.cmake)
 
@@ -284,10 +283,20 @@ if(USE_SPINE)
 endif()
 
 foreach(src IN LISTS SOURCE_FILES)
-	string(REGEX REPLACE "src/" "" src_file ${src})
+	string(REGEX REPLACE "^src/" "" src_file ${src})
 	set_source_files_properties(${src} PROPERTIES COMPILE_DEFINITIONS "SRC_FILE=\"${src_file}\"")
 endforeach()
 add_executable(rainbow ${SOURCE_FILES})
+
+# IDE project source file groups
+if(MSVC OR XCODE)
+	foreach(filename IN LISTS SOURCE_FILES)
+		get_filename_component(directory ${filename} DIRECTORY)
+		string(REGEX REPLACE "^src" "Source Files" directory ${directory})
+		string(REPLACE "/" "\\" directory ${directory})
+		source_group(${directory} FILES ${filename})
+	endforeach()
+endif()
 
 # Dynamic libraries
 include(${LOCAL_MODULE_PATH}/Audio.cmake)
