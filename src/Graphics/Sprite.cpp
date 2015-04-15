@@ -4,21 +4,13 @@
 
 #include "Graphics/SpriteBatch.h"
 
-using rainbow::is_equal;
-
 namespace
 {
 	const unsigned int kStaleBuffer       = 1u << 0;
 	const unsigned int kStalePosition     = 1u << 1;
 	const unsigned int kStaleFrontBuffer  = 1u << 2;
-
-	inline Vec2f transform_srt(const Vec2f &p,
-	                           const Vec2f &s_sin_r,
-	                           const Vec2f &s_cos_r,
-	                           const Vec2f &center) pure;
-	inline Vec2f transform_st(const Vec2f &p,
-	                          const Vec2f &scale,
-	                          const Vec2f &center) pure;
+	const unsigned int kStaleMask         = 0xffffu;
+	const unsigned int kIsMirrored        = 1u << 16;
 
 	Vec2f transform_srt(const Vec2f &p,
 	                    const Vec2f &s_sin_r,
@@ -35,9 +27,6 @@ namespace
 	}
 }
 
-Sprite::Ref::Ref(const SpriteBatch *batch, const size_t i)
-    : batch_(batch), i_(i) {}
-
 Sprite& Sprite::Ref::operator*() const
 {
 	return batch_->sprites()[i_];
@@ -49,16 +38,23 @@ Sprite* Sprite::Ref::operator->() const
 }
 
 Sprite::Sprite(const unsigned int w, const unsigned int h, const SpriteBatch *p)
-    : angle_(0.0f), width_(w), height_(h), stale_(-1), vertex_array_(nullptr),
-      parent_(p), pivot_(0.5f, 0.5f), scale_(1.0f, 1.0f) {}
+    : width_(w), height_(h), state_(0), angle_(0.0f), pivot_(0.5f, 0.5f),
+      scale_(1.0f, 1.0f), parent_(p), vertex_array_(nullptr),
+      normal_map_(nullptr) {}
 
-Sprite::Sprite(Sprite &&s)
-    : angle_(s.angle_), width_(s.width_), height_(s.height_), stale_(s.stale_),
-      vertex_array_(s.vertex_array_), parent_(s.parent_), center_(s.center_),
-      pivot_(s.pivot_), position_(s.position_), scale_(s.scale_)
+Sprite::Sprite(Sprite&& s)
+    : width_(s.width_), height_(s.height_), state_(s.state_), angle_(s.angle_),
+      pivot_(s.pivot_), center_(s.center_), position_(s.position_),
+      scale_(s.scale_), parent_(s.parent_), vertex_array_(s.vertex_array_),
+      normal_map_(s.normal_map_)
 {
 	s.vertex_array_ = nullptr;
 	s.parent_ = nullptr;
+}
+
+bool Sprite::is_mirrored() const
+{
+	return (state_ & kIsMirrored) == kIsMirrored;
 }
 
 void Sprite::set_color(const Colorb c)
@@ -69,7 +65,7 @@ void Sprite::set_color(const Colorb c)
 	vertex_array_[1].color = c;
 	vertex_array_[2].color = c;
 	vertex_array_[3].color = c;
-	stale_ |= kStaleFrontBuffer;
+	state_ |= kStaleFrontBuffer;
 }
 
 void Sprite::set_normal(const unsigned int id)
@@ -77,11 +73,21 @@ void Sprite::set_normal(const unsigned int id)
 	R_ASSERT(normal_map_, "Missing normal map buffer");
 
 	const Texture &normal = parent_->normal()[id];
-	normal_map_[0] = normal.vx[0];
-	normal_map_[1] = normal.vx[1];
-	normal_map_[2] = normal.vx[2];
-	normal_map_[3] = normal.vx[3];
-	stale_ |= kStaleFrontBuffer;
+	if (state_ & kIsMirrored)
+	{
+		normal_map_[0] = normal.vx[1];
+		normal_map_[1] = normal.vx[0];
+		normal_map_[2] = normal.vx[3];
+		normal_map_[3] = normal.vx[2];
+	}
+	else
+	{
+		normal_map_[0] = normal.vx[0];
+		normal_map_[1] = normal.vx[1];
+		normal_map_[2] = normal.vx[2];
+		normal_map_[3] = normal.vx[3];
+	}
+	state_ |= kStaleFrontBuffer;
 }
 
 void Sprite::set_pivot(const Vec2f &pivot)
@@ -105,18 +111,13 @@ void Sprite::set_pivot(const Vec2f &pivot)
 void Sprite::set_position(const Vec2f &position)
 {
 	position_ = position;
-	stale_ |= kStalePosition;
+	state_ |= kStalePosition;
 }
 
 void Sprite::set_rotation(const float r)
 {
 	angle_ = r;
-	stale_ |= kStaleBuffer;
-}
-
-void Sprite::set_scale(const float f)
-{
-	set_scale(Vec2f(f, f));
+	state_ |= kStaleBuffer;
 }
 
 void Sprite::set_scale(const Vec2f &f)
@@ -125,50 +126,74 @@ void Sprite::set_scale(const Vec2f &f)
 	         "Can't scale with a factor of zero or less");
 
 	scale_ = f;
-	stale_ |= kStaleBuffer;
+	state_ |= kStaleBuffer;
 }
 
 void Sprite::set_texture(const unsigned int id)
 {
+	R_ASSERT(vertex_array_, "Missing vertex array buffer");
+
 	const Texture &tx = parent_->texture()[id];
-	vertex_array_[0].texcoord = tx.vx[0];
-	vertex_array_[1].texcoord = tx.vx[1];
-	vertex_array_[2].texcoord = tx.vx[2];
-	vertex_array_[3].texcoord = tx.vx[3];
-	stale_ |= kStaleFrontBuffer;
+	if (state_ & kIsMirrored)
+	{
+		vertex_array_[0].texcoord = tx.vx[1];
+		vertex_array_[1].texcoord = tx.vx[0];
+		vertex_array_[2].texcoord = tx.vx[3];
+		vertex_array_[3].texcoord = tx.vx[2];
+	}
+	else
+	{
+		vertex_array_[0].texcoord = tx.vx[0];
+		vertex_array_[1].texcoord = tx.vx[1];
+		vertex_array_[2].texcoord = tx.vx[2];
+		vertex_array_[3].texcoord = tx.vx[3];
+	}
+	state_ |= kStaleFrontBuffer;
+}
+
+void Sprite::set_vertex_array(SpriteVertex *array)
+{
+	vertex_array_ = array;
+	state_ |= kStaleMask;
 }
 
 void Sprite::mirror()
 {
+	R_ASSERT(vertex_array_, "Missing vertex array buffer");
+
 	std::swap(vertex_array_[0].texcoord, vertex_array_[1].texcoord);
 	std::swap(vertex_array_[2].texcoord, vertex_array_[3].texcoord);
+	if (normal_map_)
+	{
+		std::swap(normal_map_[0], normal_map_[1]);
+		std::swap(normal_map_[2], normal_map_[3]);
+	}
+	state_ |= kStaleFrontBuffer;
+	state_ ^= kIsMirrored;
 }
 
 void Sprite::move(const Vec2f &delta)
 {
 	position_ += delta;
-	stale_ |= kStalePosition;
+	state_ |= kStalePosition;
 }
 
 void Sprite::rotate(const float r)
 {
-	if (is_equal(r, 0.0f))
-		return;
-
 	angle_ += r;
-	stale_ |= kStaleBuffer;
+	state_ |= kStaleBuffer;
 }
 
 bool Sprite::update()
 {
-	if (!stale_)
+	if ((state_ & kStaleMask) == 0)
 		return false;
 
 	R_ASSERT(vertex_array_, "Missing vertex array buffer");
 
-	if (stale_ & kStaleBuffer)
+	if (state_ & kStaleBuffer)
 	{
-		if (stale_ & kStalePosition)
+		if (state_ & kStalePosition)
 			center_ = position_;
 
 		Vec2f origin[4];
@@ -181,7 +206,7 @@ bool Sprite::update()
 		origin[3].x = origin[0].x;
 		origin[3].y = origin[2].y;
 
-		if (!is_equal(angle_, 0.0f))
+		if (!rainbow::is_equal(angle_, 0.0f))
 		{
 			const float cos_r = cosf(-angle_);
 			const float sin_r = sinf(-angle_);
@@ -210,7 +235,7 @@ bool Sprite::update()
 			    transform_st(origin[3], scale_, center_);
 		}
 	}
-	else if (stale_ & kStalePosition)
+	else if (state_ & kStalePosition)
 	{
 		position_ -= center_;
 		vertex_array_[0].position += position_;
@@ -220,6 +245,6 @@ bool Sprite::update()
 		center_ += position_;
 		position_ = center_;
 	}
-	stale_ = 0;
+	state_ &= ~kStaleMask;
 	return true;
 }

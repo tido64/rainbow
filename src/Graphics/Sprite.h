@@ -46,17 +46,19 @@ public:
 		const SpriteBatch *batch_;
 		size_t i_;
 
-		Ref(const SpriteBatch *batch, const size_t i);
+		Ref(const SpriteBatch *batch, const size_t i)
+		    : batch_(batch), i_(i) {}
 	};
 
 	Sprite(const unsigned int width,
 	       const unsigned int height,
 	       const SpriteBatch *parent);
-	Sprite(Sprite &&);
+	Sprite(Sprite&&);
 
 	float angle() const { return angle_; }
 	Colorb color() const { return vertex_array_[0].color; }
 	unsigned int height() const { return height_; }
+	bool is_mirrored() const;
 	const SpriteBatch& parent() const { return *parent_; }
 	const Vec2f& pivot() const { return pivot_; }
 	const Vec2f& position() const { return position_; }
@@ -83,10 +85,10 @@ public:
 	/// Sets angle of rotation (in radian).
 	void set_rotation(const float r);
 
-	/// Uniform scaling of sprite (does not affect width and height properties).
-	void set_scale(const float f);
+	/// Uniform scaling of sprite (does not affect actual width and height).
+	void set_scale(const float f) { set_scale(Vec2f(f, f)); }
 
-	/// Non-uniform scaling of sprite (does not affect width and height properties).
+	/// Non-uniform scaling of sprite (does not affect actual width and height).
 	void set_scale(const Vec2f &);
 
 	/// Sets the texture.
@@ -94,7 +96,7 @@ public:
 	void set_texture(const unsigned int id);
 
 	/// Sets vertex array buffer.
-	void set_vertex_array(SpriteVertex *array) { vertex_array_ = array; }
+	void set_vertex_array(SpriteVertex *array);
 
 	/// Mirrors sprite.
 	void mirror();
@@ -102,26 +104,25 @@ public:
 	/// Moves sprite by (x,y).
 	void move(const Vec2f &);
 
-	/// Rotates sprite by r.
+	/// Rotates sprite by \p r.
 	void rotate(const float r);
 
-	/// Updates the vertices of this sprite.
+	/// Updates the vertex buffer. Returns \c true if the buffer has changed;
+	/// \c false otherwise.
 	bool update();
 
 private:
-	float angle_;                 ///< Angle of rotation.
 	const unsigned int width_;    ///< Width of sprite (not scaled).
 	const unsigned int height_;   ///< Height of sprite (not scaled).
-	unsigned int stale_;          ///< Sprite is stale if its properties have changed.
-
-	SpriteVertex *vertex_array_;  ///< Interleaved vertex array.
-	const SpriteBatch *parent_;   ///< Pointer to sprite batch.
-	Vec2f *normal_map_;           ///< Normal map UV coordinates.
-
-	Vec2f center_;                ///< Committed position.
+	unsigned int state_;          ///< State of internals, e.g. buffer.
+	float angle_;                 ///< Angle of rotation.
 	Vec2f pivot_;                 ///< Pivot point (normalised).
+	Vec2f center_;                ///< Committed position.
 	Vec2f position_;              ///< Uncommitted position.
 	Vec2f scale_;                 ///< Scaling factor.
+	const SpriteBatch *parent_;   ///< Pointer to sprite batch.
+	SpriteVertex *vertex_array_;  ///< Interleaved vertex array.
+	Vec2f *normal_map_;           ///< Normal map UV coordinates.
 };
 
 #endif
