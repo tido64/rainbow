@@ -452,8 +452,8 @@ void Skeleton::update(const unsigned long dt)
 				break;
 			}
 		}
-		if (slot->data->additiveBlending)  // TODO: Implement.
-			LOGE("Additive blending not yet implemented");
+		if (slot->data->blendMode != SP_BLEND_MODE_NORMAL)  // TODO: Implement.
+			LOGE("Non-normal blend mode not yet implemented");
 	});
 
 	vertex_buffer_.upload(vertices_.get(), i * sizeof(SpriteVertex));
