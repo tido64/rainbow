@@ -2,6 +2,8 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
+#include <catch.hpp>
+
 #include "Input/Input.h"
 #include "Input/InputListener.h"
 #include "Input/Touch.h"

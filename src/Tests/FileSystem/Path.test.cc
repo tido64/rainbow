@@ -1,8 +1,10 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
 #include <sys/stat.h>
+
+#include <catch.hpp>
 
 #include "Common/Random.h"
 #include "FileSystem/Path.h"
@@ -53,8 +55,6 @@ TEST_CASE("Current path", "[path]")
 	const Path path;
 	REQUIRE(strcmp(path, cwd) == 0);
 }
-
-// TODO: The following newlines were added for Catch to create unique names.
 
 TEST_CASE("Relative to current path", "[path]")
 {

@@ -1,6 +1,8 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
+
+#include <catch.hpp>
 
 #include "Common/TimedEvent.h"
 
@@ -29,9 +31,6 @@ namespace
 	};
 }
 
-// TODO: The following newlines were added for Catch to create unique names.
-
-
 TEST_CASE("TimedEvents are started on creation", "[timedevent]")
 {
 	TimedEventTest event;
@@ -48,9 +47,6 @@ TEST_CASE("TimedEvent calls tick() on timeout", "[timedevent]")
 	}
 }
 
-// TODO: The following newlines were added for Catch to create unique names.
-
-
 TEST_CASE("TimedEvent calls tick() multiple times to catch up", "[timedevent]")
 {
 	const int dt = 8;
@@ -58,8 +54,6 @@ TEST_CASE("TimedEvent calls tick() multiple times to catch up", "[timedevent]")
 	event.update(dt);
 	REQUIRE(event.ticks() == dt);
 }
-
-// TODO: The following newlines were added for Catch to create unique names.
 
 TEST_CASE("TimedEvents can be stopped and restarted", "[timedevent]")
 {

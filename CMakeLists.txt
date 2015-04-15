@@ -195,8 +195,25 @@ else()
 endif()
 
 if(UNIT_TESTS)
+	set(CATCH_INCLUDE_DIR ${LOCAL_LIBRARY}/Catch/include)
 	add_definitions(-DRAINBOW_TEST)
-	list(APPEND SOURCE_FILES src/Tests/Tests.cpp src/Tests/Tests.h)
+	list(APPEND SOURCE_FILES
+		src/Tests/Common/Algorithm.test.cc
+		src/Tests/Common/Chrono.test.cc
+		src/Tests/Common/Color.test.cc
+		src/Tests/Common/Data.test.cc
+		src/Tests/Common/Link.test.cc
+		src/Tests/Common/TimedEvent.test.cc
+		src/Tests/Common/TreeNode.test.cc
+		src/Tests/Common/Vec2.test.cc
+		src/Tests/Common/Vec3.test.cc
+		src/Tests/ConFuoco/ConFuoco.test.cc
+		src/Tests/FileSystem/Path.test.cc
+		src/Tests/Input/Input.test.cc
+		src/Tests/Input/Touch.test.cc
+		src/Tests/Memory/SharedPtr.test.cc
+		src/Tests/Tests.cpp
+		src/Tests/Tests.h)
 endif()
 
 if(USE_FMOD_STUDIO)
@@ -333,6 +350,7 @@ set_property(TARGET rainbow APPEND PROPERTY INCLUDE_DIRECTORIES
 	${SPINE_INCLUDE_DIR}
 	${ZLIB_INCLUDE_DIR}
 	${AUDIO_INCLUDE_DIRS}
+	${CATCH_INCLUDE_DIR}
 )
 target_link_libraries(rainbow
 	freetype lua ${PHYSICS_LIBRARY} png ${SDL2_LIBRARIES} ${SPINE_LIBRARY}

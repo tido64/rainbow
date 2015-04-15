@@ -1,14 +1,10 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
+#include <catch.hpp>
+
 #include "Common/Vec3.h"
-
-// TODO: The following newlines were added for Catch to create unique names.
-
-
-
-
 
 TEST_CASE("Vec3s can be checked for zero length", "[vec3]")
 {
@@ -50,8 +46,6 @@ TEST_CASE("Vec3s can be subtracted from one another", "[vec3]")
 	REQUIRE(rainbow::is_equal(v0.y, -3.0f));
 	REQUIRE(rainbow::is_equal(v0.z, -3.0f));
 }
-
-// TODO: The following newlines were added for Catch to create unique names.
 
 TEST_CASE("Vec3s can be multiplied with each other", "[vec3]")
 {

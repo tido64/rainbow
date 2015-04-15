@@ -2,6 +2,8 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
+#include <catch.hpp>
+
 #include "Input/Input.h"
 #include "Input/InputListener.h"
 
@@ -29,12 +31,6 @@ namespace
 	};
 }
 
-// TODO: The following newlines were added for Catch to create unique names.
-
-
-
-
-
 TEST_CASE("Input listeners can prevent further propagation", "[input]")
 {
 	Input input;
@@ -47,10 +43,6 @@ TEST_CASE("Input listeners can prevent further propagation", "[input]")
 	REQUIRE(listeners[0]);
 	REQUIRE_FALSE(listeners[1]);
 }
-
-// TODO: The following newlines were added for Catch to create unique names.
-
-
 
 TEST_CASE("Input listeners can unsubscribe", "[input]")
 {

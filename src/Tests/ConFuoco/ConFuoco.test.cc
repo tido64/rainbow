@@ -1,6 +1,8 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
+
+#include <catch.hpp>
 
 #include "ConFuoco/Mixer.h"
 
@@ -42,9 +44,6 @@ TEST_CASE("Mixer instance lifetime is defined", "[confuoco]")
 	delete mixer;
 	REQUIRE(ConFuoco::Mixer::Instance == nullptr);
 }
-
-// TODO: The following newlines were added for Catch to create unique names.
-
 
 TEST_CASE("ConFuoco loads and plays audio", "[confuoco]")
 {
