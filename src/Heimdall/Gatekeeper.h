@@ -58,10 +58,13 @@ namespace heimdall
 
 		/* Implement InputListener */
 
-		bool on_touch_began_impl(const Touch *const, const size_t) override;
+		bool on_touch_began_impl(const unsigned int,
+		                         const Touch *const) override;
 		bool on_touch_canceled_impl() override;
-		bool on_touch_ended_impl(const Touch *const, const size_t) override;
-		bool on_touch_moved_impl(const Touch *const, const size_t) override;
+		bool on_touch_ended_impl(const unsigned int,
+		                         const Touch *const) override;
+		bool on_touch_moved_impl(const unsigned int,
+		                         const Touch *const) override;
 	};
 }
 

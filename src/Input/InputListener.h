@@ -44,11 +44,11 @@ public:
 #endif
 
 	/// User puts finger down on the device; mouse down.
-	/// \param touches  The id and position of each touch.
 	/// \param count    Number of touches.
-	bool on_touch_began(const Touch *const touches, const size_t count)
+	/// \param touches  The id and position of each touch.
+	bool on_touch_began(const unsigned int count, const Touch *const touches)
 	{
-		return on_touch_began_impl(touches, count);
+		return on_touch_began_impl(count, touches);
 	}
 
 	/// Canceled touch event. May occur when the user moves finger off-screen
@@ -59,19 +59,19 @@ public:
 	}
 
 	/// User lifts finger; mouse up.
-	/// \param touches  The id and position of each touch.
 	/// \param count    Number of touches.
-	bool on_touch_ended(const Touch *const touches, const size_t count)
+	/// \param touches  The id and position of each touch.
+	bool on_touch_ended(const unsigned int count, const Touch *const touches)
 	{
-		return on_touch_ended_impl(touches, count);
+		return on_touch_ended_impl(count, touches);
 	}
 
 	/// User moves finger around while it still is on the device; mouse moved.
-	/// \param touches  The id and position of each touch.
 	/// \param count    Number of touches.
-	bool on_touch_moved(const Touch *const touches, const size_t count)
+	/// \param touches  The id and position of each touch.
+	bool on_touch_moved(const unsigned int count, const Touch *const touches)
 	{
-		return on_touch_moved_impl(touches, count);
+		return on_touch_moved_impl(count, touches);
 	}
 
 private:
@@ -87,7 +87,7 @@ private:
 	}
 #endif
 
-	virtual bool on_touch_began_impl(const Touch *const, const size_t)
+	virtual bool on_touch_began_impl(const unsigned int, const Touch *const)
 	{
 		return false;
 	}
@@ -97,12 +97,12 @@ private:
 		return false;
 	}
 
-	virtual bool on_touch_ended_impl(const Touch *const, const size_t)
+	virtual bool on_touch_ended_impl(const unsigned int, const Touch *const)
 	{
 		return false;
 	}
 
-	virtual bool on_touch_moved_impl(const Touch *const, const size_t)
+	virtual bool on_touch_moved_impl(const unsigned int, const Touch *const)
 	{
 		return false;
 	}

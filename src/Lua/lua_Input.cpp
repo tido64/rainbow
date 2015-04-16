@@ -74,8 +74,8 @@ NS_RAINBOW_LUA_MODULE_BEGIN(input)
 
 		void on_touch_event(lua_State *L,
 		                    const Event event,
-		                    const Touch *const touches,
-		                    const size_t count)
+		                    const unsigned int count,
+		                    const Touch *const touches)
 		{
 			push_event(L, event);
 
@@ -84,7 +84,7 @@ NS_RAINBOW_LUA_MODULE_BEGIN(input)
 			else
 			{
 				lua_createtable(L, 0, count);
-				for (size_t i = 0; i < count; ++i)
+				for (unsigned int i = 0; i < count; ++i)
 				{
 					lua_pushinteger(L, touches[i].hash);
 					lua_createtable(L, 0, 5);
@@ -160,23 +160,30 @@ NS_RAINBOW_LUA_MODULE_BEGIN(input)
 
 #endif  // RAINBOW_BUTTONS
 
-	void on_touch_began(lua_State *L, const Touch *const touches, const size_t count)
+	void on_touch_began(lua_State * L,
+	                    const unsigned int count,
+	                    const Touch *const touches)
 	{
-		on_touch_event(L, kEventTouchBegan, touches, count);
+		on_touch_event(L, kEventTouchBegan, count, touches);
 	}
 
-	void on_touch_canceled(lua_State *L)
+	void on_touch_canceled(lua_State * L)
 	{
-		on_touch_event(L, kEventTouchCanceled, nullptr, 0);
+		on_touch_event(L, kEventTouchCanceled, 0, nullptr);
 	}
 
-	void on_touch_ended(lua_State *L, const Touch *const touches, const size_t count)
+	void on_touch_ended(lua_State * L,
+	                    const unsigned int count,
+	                    const Touch *const touches)
 	{
-		on_touch_event(L, kEventTouchEnded, touches, count);
+		on_touch_event(L, kEventTouchEnded, count, touches);
 	}
 
-	void on_touch_moved(lua_State *L, const Touch *const touches, const size_t count)
+	void on_touch_moved(lua_State * L,
+	                    const unsigned int count,
+	                    const Touch *const touches)
 	{
-		on_touch_event(L, kEventTouchMoved, touches, count);
+		on_touch_event(L, kEventTouchMoved, count, touches);
 	}
-} NS_RAINBOW_LUA_MODULE_END(input)
+}
+NS_RAINBOW_LUA_MODULE_END(input)

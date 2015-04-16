@@ -29,10 +29,10 @@ private:
 	bool on_key_down_impl(const Key &) override;
 	bool on_key_up_impl(const Key &) override;
 #endif  // RAINBOW_BUTTONS
-	bool on_touch_began_impl(const Touch *const, const size_t) override;
+	bool on_touch_began_impl(const unsigned int, const Touch *const) override;
 	bool on_touch_canceled_impl() override;
-	bool on_touch_ended_impl(const Touch *const, const size_t) override;
-	bool on_touch_moved_impl(const Touch *const, const size_t) override;
+	bool on_touch_ended_impl(const unsigned int, const Touch *const) override;
+	bool on_touch_moved_impl(const unsigned int, const Touch *const) override;
 };
 
 #endif

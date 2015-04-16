@@ -152,20 +152,20 @@ namespace
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
-	self.director->input().on_touch_began([self convertTouches:touches],
-	                                      touches.count);
+	self.director->input().on_touch_began(touches.count,
+	                                      [self convertTouches:touches]);
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
 {
-	self.director->input().on_touch_moved([self convertTouches:touches],
-	                                      touches.count);
+	self.director->input().on_touch_moved(touches.count,
+	                                      [self convertTouches:touches]);
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
-	self.director->input().on_touch_ended([self convertTouches:touches],
-	                                      touches.count);
+	self.director->input().on_touch_ended(touches.count,
+	                                      [self convertTouches:touches]);
 }
 
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event

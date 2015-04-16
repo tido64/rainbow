@@ -48,10 +48,10 @@ public:
 	void on_key_up(const Key &k);
 #endif  // RAINBOW_BUTTONS
 
-	void on_touch_began(Touch *const touches, const size_t count);
+	void on_touch_began(const unsigned int count, Touch *const touches);
 	void on_touch_canceled();
-	void on_touch_ended(Touch *const touches, const size_t count);
-	void on_touch_moved(Touch *const touches, const size_t count);
+	void on_touch_ended(const unsigned int count, Touch *const touches);
+	void on_touch_moved(const unsigned int count, Touch *const touches);
 
 private:
 	Acceleration acceleration_;  ///< Accelerometer data

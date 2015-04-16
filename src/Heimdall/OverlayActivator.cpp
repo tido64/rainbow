@@ -37,8 +37,8 @@ namespace heimdall
 		}
 	}
 
-	bool OverlayActivator::on_touch_began_impl(const Touch *const touches,
-	                                           const size_t count)
+	bool OverlayActivator::on_touch_began_impl(const unsigned int count,
+	                                           const Touch *const touches)
 	{
 		R_ASSERT(!overlay_->is_visible(), "Overlay is leaking touch events");
 
@@ -70,11 +70,11 @@ namespace heimdall
 		return prevent_propagation;
 	}
 
-	bool OverlayActivator::on_touch_ended_impl(const Touch *const touches,
-	                                           const size_t count)
+	bool OverlayActivator::on_touch_ended_impl(const unsigned int count,
+	                                           const Touch *const touches)
 	{
 		const bool prevent_propagation = is_activated();
-		for (size_t i = 0; i < count; ++i)
+		for (unsigned int i = 0; i < count; ++i)
 		{
 			if (touches[i].hash == touches_[0])
 			{

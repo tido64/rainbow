@@ -59,10 +59,10 @@ bool LuaScript::on_key_up_impl(const Key &k)
 }
 #endif  // RAINBOW_BUTTONS
 
-bool LuaScript::on_touch_began_impl(const Touch *const touches,
-                                    const size_t count)
+bool LuaScript::on_touch_began_impl(const unsigned int count,
+                                    const Touch *const touches)
 {
-	rainbow::lua::input::on_touch_began(lua_, touches, count);
+	rainbow::lua::input::on_touch_began(lua_, count, touches);
 	return true;
 }
 
@@ -72,17 +72,17 @@ bool LuaScript::on_touch_canceled_impl()
 	return true;
 }
 
-bool LuaScript::on_touch_ended_impl(const Touch *const touches,
-                                    const size_t count)
+bool LuaScript::on_touch_ended_impl(const unsigned int count,
+                                    const Touch *const touches)
 {
-	rainbow::lua::input::on_touch_ended(lua_, touches, count);
+	rainbow::lua::input::on_touch_ended(lua_, count, touches);
 	return true;
 }
 
-bool LuaScript::on_touch_moved_impl(const Touch *const touches,
-                                    const size_t count)
+bool LuaScript::on_touch_moved_impl(const unsigned int count,
+                                    const Touch *const touches)
 {
-	rainbow::lua::input::on_touch_moved(lua_, touches, count);
+	rainbow::lua::input::on_touch_moved(lua_, count, touches);
 	return true;
 }
 

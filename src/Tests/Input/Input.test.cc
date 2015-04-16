@@ -23,7 +23,8 @@ namespace
 		const bool consume_;
 		bool touched_;
 
-		bool on_touch_began_impl(const Touch *const, const size_t) override
+		bool on_touch_began_impl(const unsigned int,
+		                         const Touch *const) override
 		{
 			touched_ = true;
 			return consume_;
@@ -39,7 +40,7 @@ TEST_CASE("Input listeners can prevent further propagation", "[input]")
 	    TestInputListener{false}};
 	input.subscribe(listeners);
 	input.subscribe(listeners + 1);
-	input.on_touch_began(nullptr, 0);
+	input.on_touch_began(0, nullptr);
 	REQUIRE(listeners[0]);
 	REQUIRE_FALSE(listeners[1]);
 }
@@ -53,14 +54,14 @@ TEST_CASE("Input listeners can unsubscribe", "[input]")
 	    TestInputListener{true}};
 	for (auto &i : listeners)
 		input.subscribe(&i);
-	input.on_touch_began(nullptr, 0);
+	input.on_touch_began(0, nullptr);
 	REQUIRE(listeners[0]);
 	REQUIRE(listeners[1]);
 	REQUIRE_FALSE(listeners[2]);
 	for (auto &i : listeners)
 		i.reset();
 	input.unsubscribe(listeners + 1);
-	input.on_touch_began(nullptr, 0);
+	input.on_touch_began(0, nullptr);
 	REQUIRE(listeners[0]);
 	REQUIRE_FALSE(listeners[1]);
 	REQUIRE(listeners[2]);
@@ -78,14 +79,14 @@ TEST_CASE("Input listeners are unsubscribed when deleted", "[input]")
 		for (auto &i : listeners)
 			input.subscribe(&i);
 		input.subscribe(&l);
-		input.on_touch_began(nullptr, 0);
+		input.on_touch_began(0, nullptr);
 		for (auto &i : listeners)
 		{
 			REQUIRE(i);
 			i.reset();
 		}
 	}
-	input.on_touch_began(nullptr, 0);
+	input.on_touch_began(0, nullptr);
 	REQUIRE(l);
 }
 
@@ -99,19 +100,19 @@ TEST_CASE("Input manager is notified of popped end links", "[input]")
 		{
 			TestInputListener c{true};
 			input.subscribe(&c);
-			input.on_touch_began(nullptr, 0);
+			input.on_touch_began(0, nullptr);
 			REQUIRE(b);
 			REQUIRE(c);
 			b.reset();
 		}
 		input.subscribe(&a);
-		input.on_touch_began(nullptr, 0);
+		input.on_touch_began(0, nullptr);
 		REQUIRE(b);
 		REQUIRE(a);
 	}
 	input.unsubscribe(&a);
 	a.reset();
 	input.subscribe(&a);
-	input.on_touch_began(nullptr, 0);
+	input.on_touch_began(0, nullptr);
 	REQUIRE(a);
 }

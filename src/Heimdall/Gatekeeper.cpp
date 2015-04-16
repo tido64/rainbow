@@ -134,8 +134,8 @@ namespace heimdall
 		input().subscribe(&overlay_activator_);
 	}
 
-	bool Gatekeeper::on_touch_began_impl(const Touch *const touches,
-	                                     const size_t count)
+	bool Gatekeeper::on_touch_began_impl(const unsigned int count,
+	                                     const Touch *const touches)
 	{
 		std::for_each(touches, touches + count, [this](const Touch &t) {
 			if (info_->button().hit_test(Vec2i(t.x, t.y)))
@@ -150,8 +150,8 @@ namespace heimdall
 		return overlay_.is_visible();
 	}
 
-	bool Gatekeeper::on_touch_ended_impl(const Touch *const touches,
-	                                     const size_t count)
+	bool Gatekeeper::on_touch_ended_impl(const unsigned int count,
+	                                     const Touch *const touches)
 	{
 		if (overlay_.is_visible() && !overlay_activator_.is_activated())
 		{
@@ -176,7 +176,7 @@ namespace heimdall
 		return false;
 	}
 
-	bool Gatekeeper::on_touch_moved_impl(const Touch *const, const size_t)
+	bool Gatekeeper::on_touch_moved_impl(const unsigned int, const Touch *const)
 	{
 		return overlay_.is_visible();
 	}

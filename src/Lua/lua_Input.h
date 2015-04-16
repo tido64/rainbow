@@ -27,10 +27,17 @@ NS_RAINBOW_LUA_MODULE_BEGIN(input)
 	void on_key_up(lua_State *L, const Key &key);
 #endif
 
-	void on_touch_began(lua_State *L, const Touch *const touches, const size_t count);
-	void on_touch_canceled(lua_State *L);
-	void on_touch_ended(lua_State *L, const Touch *const touches, const size_t count);
-	void on_touch_moved(lua_State *L, const Touch *const touches, const size_t count);
-} NS_RAINBOW_LUA_MODULE_END(input)
+	void on_touch_began(lua_State * L,
+	                    const unsigned int count,
+	                    const Touch *const touches);
+	void on_touch_canceled(lua_State * L);
+	void on_touch_ended(lua_State * L,
+	                    const unsigned int count,
+	                    const Touch *const touches);
+	void on_touch_moved(lua_State * L,
+	                    const unsigned int count,
+	                    const Touch *const touches);
+}
+NS_RAINBOW_LUA_MODULE_END(input)
 
 #endif

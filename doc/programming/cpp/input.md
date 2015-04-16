@@ -67,13 +67,13 @@ if (key.modifier == (Key::Mods::Shift | Key::Mods::Ctrl))
 Implement any of the following methods to receive mouse/touch events.
 
 ```c++
-bool  InputListener::on_touch_began_impl     (const Touch *const array,
-                                              const size_t count) override;
+bool  InputListener::on_touch_began_impl     (const unsigned int count,
+                                              const Touch *const array) override;
 bool  InputListener::on_touch_canceled_impl  () override;
-bool  InputListener::on_touch_ended_impl     (const Touch *const array,
-                                              const size_t count) override;
-bool  InputListener::on_touch_moved_impl     (const Touch *const array,
-                                              const size_t count) override;
+bool  InputListener::on_touch_ended_impl     (const unsigned int count,
+                                              const Touch *const array) override;
+bool  InputListener::on_touch_moved_impl     (const unsigned int count,
+                                              const Touch *const array) override;
 ```
 
 A `Touch` instance stores the location of the event, `x` and `y`, and the
@@ -105,10 +105,10 @@ private:
         return true;
     }
 
-    bool on_touch_began_impl(const Touch *const array,
-                             const size_t count) override
+    bool on_touch_began_impl(const unsigned int count,
+                             const Touch *const array) override
     {
-        for (size_t i = 0; i < count; ++i)
+        for (unsigned int i = 0; i < count; ++i)
         {
             LOGI("Pressed mouse button %u at %i,%i",
                  array[i].hash, array[i].x, array[i].y);

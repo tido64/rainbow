@@ -23,7 +23,7 @@ namespace
 
 		TouchTestFixture() : flags_(0) {}
 
-		bool is_invalid(const Touch *const touches, const unsigned int count)
+		bool is_invalid(const unsigned int count, const Touch *const touches)
 		{
 			return count != 1
 			    || touches[0].hash != 1
@@ -42,10 +42,10 @@ namespace
 	private:
 		unsigned int flags_;
 
-		bool on_touch_began_impl(const Touch *const touches,
-		                         const size_t count) override
+		bool on_touch_began_impl(const unsigned int count,
+		                         const Touch *const touches) override
 		{
-			if (is_invalid(touches, count))
+			if (is_invalid(count, touches))
 				return false;
 
 			flags_ |= Events::TouchBegan;
@@ -58,20 +58,20 @@ namespace
 			return true;
 		}
 
-		bool on_touch_ended_impl(const Touch *const touches,
-		                         const size_t count) override
+		bool on_touch_ended_impl(const unsigned int count,
+		                         const Touch *const touches) override
 		{
-			if (is_invalid(touches, count))
+			if (is_invalid(count, touches))
 				return false;
 
 			flags_ |= Events::TouchEnded;
 			return true;
 		}
 
-		bool on_touch_moved_impl(const Touch *const touches,
-		                         const size_t count) override
+		bool on_touch_moved_impl(const unsigned int count,
+		                         const Touch *const touches) override
 		{
-			if (is_invalid(touches, count))
+			if (is_invalid(count, touches))
 				return false;
 
 			flags_ |= Events::TouchMoved;
@@ -91,7 +91,7 @@ TEST_CASE("Touch events", "[input]")
 	SECTION("touch_began event")
 	{
 		Touch t1(1, 2, 3, 0);
-		input.on_touch_began(&t1, 1);
+		input.on_touch_began(1, &t1);
 		REQUIRE(delegate.is_triggered(TouchEvents::TouchBegan));
 		REQUIRE_FALSE(delegate.is_triggered(0xff ^ TouchEvents::TouchBegan));
 	}
@@ -106,7 +106,7 @@ TEST_CASE("Touch events", "[input]")
 	SECTION("touch_ended event")
 	{
 		Touch t1(1, 2, 3, 0);
-		input.on_touch_ended(&t1, 1);
+		input.on_touch_ended(1, &t1);
 		REQUIRE(delegate.is_triggered(TouchEvents::TouchEnded));
 		REQUIRE_FALSE(delegate.is_triggered(0xff ^ TouchEvents::TouchEnded));
 	}
@@ -114,7 +114,7 @@ TEST_CASE("Touch events", "[input]")
 	SECTION("touch_moved event")
 	{
 		Touch t1(1, 2, 3, 0);
-		input.on_touch_moved(&t1, 1);
+		input.on_touch_moved(1, &t1);
 		REQUIRE(delegate.is_triggered(TouchEvents::TouchMoved));
 		REQUIRE_FALSE(delegate.is_triggered(0xff ^ TouchEvents::TouchMoved));
 	}

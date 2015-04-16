@@ -385,7 +385,7 @@ void RainbowController::on_mouse_down(const uint32_t button,
                                       const unsigned long timestamp)
 {
 	Touch t(button, point.x, point.y, timestamp);
-	director_.input().on_touch_began(&t, 1);
+	director_.input().on_touch_began(1, &t);
 }
 
 void RainbowController::on_mouse_motion(const uint32_t buttons,
@@ -404,12 +404,12 @@ void RainbowController::on_mouse_motion(const uint32_t buttons,
 				++i;
 			}
 		}
-		director_.input().on_touch_moved(t, i);
+		director_.input().on_touch_moved(i, t);
 	}
 	else
 	{
 		Touch t(0, point.x, point.y, timestamp);
-		director_.input().on_touch_moved(&t, 1);
+		director_.input().on_touch_moved(1, &t);
 	}
 }
 
@@ -418,7 +418,7 @@ void RainbowController::on_mouse_up(const uint32_t button,
                                     const unsigned long timestamp)
 {
 	Touch t(button, point.x, point.y, timestamp);
-	director_.input().on_touch_ended(&t, 1);
+	director_.input().on_touch_ended(1, &t);
 }
 
 void RainbowController::on_window_resized()

@@ -38,10 +38,10 @@ void Input::on_key_up(const Key &k)
 }
 #endif
 
-void Input::on_touch_began(Touch *const touches, const size_t count)
+void Input::on_touch_began(const unsigned int count, Touch *const touches)
 {
-	auto began = [touches, count](InputListener *i) {
-		return i->on_touch_began(touches, count);
+	auto began = [count, touches](InputListener *i) {
+		return i->on_touch_began(count, touches);
 	};
 	if (for_each(next(), std::move(began)))
 		return;
@@ -54,19 +54,19 @@ void Input::on_touch_canceled()
 		return;
 }
 
-void Input::on_touch_ended(Touch *const touches, const size_t count)
+void Input::on_touch_ended(const unsigned int count, Touch *const touches)
 {
-	auto ended = [touches, count](InputListener *i) {
-		return i->on_touch_ended(touches, count);
+	auto ended = [count, touches](InputListener *i) {
+		return i->on_touch_ended(count, touches);
 	};
 	if (for_each(next(), std::move(ended)))
 		return;
 }
 
-void Input::on_touch_moved(Touch *const touches, const size_t count)
+void Input::on_touch_moved(const unsigned int count, Touch *const touches)
 {
-	auto moved = [touches, count](InputListener *i) {
-		return i->on_touch_moved(touches, count);
+	auto moved = [count, touches](InputListener *i) {
+		return i->on_touch_moved(count, touches);
 	};
 	if (for_each(next(), std::move(moved)))
 		return;
