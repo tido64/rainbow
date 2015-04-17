@@ -321,25 +321,27 @@ bool RainbowController::run()
 						break;
 				}
 				break;
-			case SDL_KEYDOWN: {
-				const SDL_Keysym &keysym = event.key.keysym;
-				if (is_quit(keysym))
+			case SDL_KEYDOWN:
+				if (event.key.repeat == 0)
 				{
-					director_.terminate();
-					return false;
+					const SDL_Keysym &keysym = event.key.keysym;
+					if (is_quit(keysym))
+					{
+						director_.terminate();
+						return false;
+					}
+					if (is_fullscreen(keysym))
+					{
+						// Unfocus Director while we resize the window to avoid
+						// glitches. Focus is restored when we receive an
+						// SDL_WINDOWEVENT_SIZE_CHANGED.
+						director_.on_focus_lost();
+						context_.toggle_fullscreen();
+					}
+					else
+						director_.input().on_key_down(Key::from_raw(&keysym));
 				}
-				if (is_fullscreen(keysym))
-				{
-					// Unfocus Director while we resize the window to avoid
-					// glitches. Focus is restored when we receive an
-					// SDL_WINDOWEVENT_SIZE_CHANGED.
-					director_.on_focus_lost();
-					context_.toggle_fullscreen();
-				}
-				else
-					director_.input().on_key_down(Key::from_raw(&keysym));
 				break;
-			}
 			case SDL_KEYUP:
 				director_.input().on_key_up(Key::from_raw(&event.key.keysym));
 				break;
