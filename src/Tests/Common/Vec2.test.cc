@@ -94,7 +94,7 @@ TEST_CASE("Vec2s can be scaled up", "[vec2]")
 	Vec2i v0(5, 2);
 	const Vec2i v1(3, 4);
 
-	const Vec2i v2 = v0 * 2;
+	const Vec2i v2 = 2 * v0;
 	REQUIRE(&v0 != &v2);
 	REQUIRE(v2.x == 10);
 	REQUIRE(v2.y == 4);

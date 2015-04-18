@@ -18,6 +18,24 @@ namespace rainbow
 	{
 		using value_type = T;
 
+		/// Vector representing down; shorthand for Vec2(0, -1).
+		static const Vec2 Down;
+
+		/// Vector representing left; shorthand for Vec2(-1, 0).
+		static const Vec2 Left;
+
+		/// One vector; shorthand for Vec2(1, 1).
+		static const Vec2 One;
+
+		/// Vector representing right; shorthand for Vec2(1, 0).
+		static const Vec2 Right;
+
+		/// Vector representing up; shorthand for Vec2(0, 1).
+		static const Vec2 Up;
+
+		/// Zero vector; shorthand for Vec2(0, 0).
+		static const Vec2 Zero;
+
 		T x;
 		T y;
 
@@ -52,21 +70,44 @@ namespace rainbow
 		template<typename U = T>
 		EnableIfFloatingPoint<U, bool> is_zero() const
 		{
-			return is_equal<T>(0.0, this->x) && is_equal<T>(0.0, this->y);
+			return is_equal<T>(0, this->x) && is_equal<T>(0, this->y);
 		}
 
-		Vec2& operator+=(const Vec2 &v)
+		Vec2 operator-() const { return Vec2( -this->x, -this->y ); }
+
+		T operator*(const Vec2 &v) const
 		{
-			this->x += v.x;
-			this->y += v.y;
-			return *this;
+			return this->x * v.x + this->y * v.y;
 		}
 
-		Vec2& operator-=(const Vec2 &v)
+		Vec2 operator*(const T f) const
 		{
-			this->x -= v.x;
-			this->y -= v.y;
-			return *this;
+			return Vec2(this->x * f, this->y * f);
+		}
+
+		Vec2 operator/(const T f) const
+		{
+			return Vec2(this->x / f, this->y / f);
+		}
+
+		Vec2 operator+(const Vec2 &v) const
+		{
+			return Vec2(this->x + v.x, this->y + v.y);
+		}
+
+		Vec2 operator+(const T offset) const
+		{
+			return Vec2(this->x + offset, this->y + offset);
+		}
+
+		Vec2 operator-(const Vec2 &v) const
+		{
+			return Vec2(this->x - v.x, this->y - v.y);
+		}
+
+		Vec2 operator-(const T offset) const
+		{
+			return Vec2(this->x - offset, this->y - offset);
 		}
 
 		Vec2& operator*=(const T &f)
@@ -83,39 +124,23 @@ namespace rainbow
 			return *this;
 		}
 
-		friend Vec2 operator+(const Vec2 &a, const T offset)
+		Vec2& operator+=(const Vec2 &v)
 		{
-			return Vec2(a.x + offset, a.y + offset);
+			this->x += v.x;
+			this->y += v.y;
+			return *this;
 		}
 
-		friend Vec2 operator+(const Vec2 &a, const Vec2 &b)
+		Vec2& operator-=(const Vec2 &v)
 		{
-			return Vec2(a.x + b.x, a.y + b.y);
+			this->x -= v.x;
+			this->y -= v.y;
+			return *this;
 		}
 
-		friend Vec2 operator-(const Vec2 &a, const T offset)
+		friend Vec2 operator*(const T f, const Vec2 &a)
 		{
-			return Vec2(a.x - offset, a.y - offset);
-		}
-
-		friend Vec2 operator-(const Vec2 &a, const Vec2 &b)
-		{
-			return Vec2(a.x - b.x, a.y - b.y);
-		}
-
-		friend Vec2 operator*(const Vec2 &a, const T f)
-		{
-			return Vec2(a.x * f, a.y * f);
-		}
-
-		friend T operator*(const Vec2 &a, const Vec2 &b)
-		{
-			return a.x * b.x + a.y * b.y;
-		}
-
-		friend Vec2 operator/(const Vec2 &a, const T f)
-		{
-			return Vec2(a.x / f, a.y / f);
+			return Vec2(f * a.x, f * a.y);
 		}
 
 		friend bool operator==(const Vec2 &a, const Vec2 &b)
@@ -123,6 +148,24 @@ namespace rainbow
 			return a.x == b.x && a.y == b.y;
 		}
 	};
+
+	template<typename T>
+	const Vec2<T, Arithmetic<T>> Vec2<T, Arithmetic<T>>::Down(0, -1);
+
+	template<typename T>
+	const Vec2<T, Arithmetic<T>> Vec2<T, Arithmetic<T>>::Left(-1, 0);
+
+	template<typename T>
+	const Vec2<T, Arithmetic<T>> Vec2<T, Arithmetic<T>>::One(1, 1);
+
+	template<typename T>
+	const Vec2<T, Arithmetic<T>> Vec2<T, Arithmetic<T>>::Right(1, 0);
+
+	template<typename T>
+	const Vec2<T, Arithmetic<T>> Vec2<T, Arithmetic<T>>::Up(0, 1);
+
+	template<typename T>
+	const Vec2<T, Arithmetic<T>> Vec2<T, Arithmetic<T>>::Zero;
 }
 
 using Vec2f = rainbow::Vec2<float>;
