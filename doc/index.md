@@ -15,6 +15,7 @@
 ### C++
 
 - [Input](programming/cpp/input.md)
+- [Math](programming/cpp/math.md)
 - [Sprite Sheet Animations](programming/cpp/sprite_sheet_animations.md)
 - [Timers](programming/cpp/timers.md)
 - [Transitions](programming/cpp/transitions.md)
