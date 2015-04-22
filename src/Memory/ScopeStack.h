@@ -22,7 +22,7 @@ namespace rainbow
 	public:
 		static size_t aligned_size(const size_t size)
 		{
-#ifdef _MSC_VER
+#if defined(RAINBOW_OS_ANDROID) || defined(_MSC_VER)
 			const size_t kMaxAlignment = 16;
 #else
 			const size_t kMaxAlignment = alignof(std::max_align_t);

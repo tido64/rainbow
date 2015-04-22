@@ -20,9 +20,9 @@ public:
 	      const int interval,
 	      const int repeat_count,
 	      const int id = 0)
-	    : active_(true), elapsed_(0), interval_(interval),
-	      countdown_(repeat_count), repeat_count_(repeat_count),
-	      tick_(std::move(func)), free_(-1), id_(id) {}
+	    : active_(true), interval_(interval), elapsed_(0),
+	      countdown_(repeat_count), tick_(std::move(func)),
+	      repeat_count_(repeat_count), free_(-1), id_(id) {}
 
 	bool is_active() const { return active_ && interval_ > 0; }
 	int elapsed() const { return elapsed_; }
@@ -34,11 +34,11 @@ public:
 
 private:
 	bool active_;
-	int elapsed_;
 	int interval_;
+	int elapsed_;
 	int countdown_;
-	int repeat_count_;
 	Closure tick_;
+	int repeat_count_;
 	int free_;
 	const int id_;
 
