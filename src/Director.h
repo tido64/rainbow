@@ -28,7 +28,7 @@ namespace rainbow
 		const char* error() const { return error_; }
 		Input& input() { return input_; }
 		Renderer& renderer() { return renderer_; }
-		SceneGraph::Node& scenegraph() { return scenegraph_; }
+		SceneNode& scenegraph() { return scenegraph_; }
 		GameBase* script() { return script_; }
 		bool terminated() const { return terminated_; }
 
@@ -56,7 +56,7 @@ namespace rainbow
 		const char *error_;
 		TimerManager timer_manager_;
 		GameBase *script_;
-		SceneGraph::Node scenegraph_;
+		SceneNode scenegraph_;
 		Input input_;
 		Renderer renderer_;
 		ConFuoco::Mixer mixer_;

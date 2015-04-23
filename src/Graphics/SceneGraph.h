@@ -20,32 +20,33 @@ class Drawable;
 class Label;
 class SpriteBatch;
 
-namespace SceneGraph
+namespace rainbow
 {
 	/// A single node in a scene graph.
 	///
 	/// May represent an animation, label, sprite batch, or a group node. There
 	/// are no limits to how many children a node can have. Nodes may point to
 	/// the same set of data.
-	class Node : public TreeNode<Node>
+	class SceneNode : public TreeNode<SceneNode>
 	{
 	public:
 		bool enabled;  ///< Whether this node should be updated and/or drawn.
 
 		/// Creates a group node.
-		Node() : Node(Type::Group, nullptr) {}
+		SceneNode() : SceneNode(Type::Group, nullptr) {}
 
 		/// Creates an animation node.
-		explicit Node(Animation *a) : Node(Type::Animation, a) {}
+		explicit SceneNode(Animation *a) : SceneNode(Type::Animation, a) {}
 
 		/// Creates a label node.
-		explicit Node(Label *label) : Node(Type::Label, label) {}
+		explicit SceneNode(Label *label) : SceneNode(Type::Label, label) {}
 
 		/// Creates a sprite batch node.
-		explicit Node(SpriteBatch *batch) : Node(Type::SpriteBatch, batch) {}
+		explicit SceneNode(SpriteBatch *batch)
+		    : SceneNode(Type::SpriteBatch, batch) {}
 
 		/// Creates a generic drawable node.
-		Node(Drawable *drawable) : Node(Type::Drawable, drawable) {}
+		SceneNode(Drawable *drawable) : SceneNode(Type::Drawable, drawable) {}
 
 #if USE_NODE_TAGS
 		const std::string& tag() const { return tag_; }
@@ -53,15 +54,25 @@ namespace SceneGraph
 #endif
 
 		/// Adds a child node.
-		inline Node* add_child(Node *n);
+		SceneNode* add_child(SceneNode *n)
+		{
+			TreeNode<SceneNode>::add_child(n);
+			return n;
+		}
 
 		/// Adds a child node.
 		template<typename T>
-		Node* add_child(T component);
+		SceneNode* add_child(T component)
+		{
+			return add_child(new SceneNode(component));
+		}
 
 		/// Adds a child node.
 		template<typename T>
-		Node* add_child(const std::shared_ptr<T> &component);
+		SceneNode* add_child(const std::shared_ptr<T> &component)
+		{
+			return add_child(new SceneNode(component.get()));
+		}
 
 		/// Attach a program to this node. The program will be used to draw this
 		/// node and any of its descendants unless they also have an attached
@@ -101,27 +112,9 @@ namespace SceneGraph
 		std::string tag_;
 #endif
 
-		Node(Type type, void *data)
+		SceneNode(Type type, void *data)
 		    : enabled(true), type_(type), program_(0), data_(data) {}
 	};
-
-	Node* Node::add_child(Node *n)
-	{
-		TreeNode<Node>::add_child(n);
-		return n;
-	}
-
-	template<typename T>
-	Node* Node::add_child(T component)
-	{
-		return add_child(new Node(component));
-	}
-
-	template<typename T>
-	Node* Node::add_child(const std::shared_ptr<T> &component)
-	{
-		return add_child(new Node(component.get()));
-	}
 }
 
 #endif

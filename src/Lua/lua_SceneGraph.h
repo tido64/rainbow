@@ -8,7 +8,7 @@
 #include "Common/NonCopyable.h"
 #include "Lua/LuaBind.h"
 
-namespace SceneGraph { class Node; }
+namespace rainbow { class SceneNode; }
 
 NS_RAINBOW_LUA_BEGIN
 {
@@ -17,7 +17,7 @@ NS_RAINBOW_LUA_BEGIN
 		friend Bind;
 
 	public:
-		static SceneGraph* create(lua_State *, ::SceneGraph::Node *);
+		static SceneGraph* create(lua_State *, SceneNode *);
 		static void destroy(lua_State *, SceneGraph *);
 
 	private:
@@ -37,9 +37,9 @@ NS_RAINBOW_LUA_BEGIN
 		static int set_tag(lua_State *);
 		static int move(lua_State *);
 
-		::SceneGraph::Node *node_;
+		SceneNode *node_;
 
-		SceneGraph(::SceneGraph::Node *);
+		SceneGraph(SceneNode *);
 		~SceneGraph() = default;
 	};
 
@@ -52,7 +52,7 @@ NS_RAINBOW_LUA_BEGIN
 		~ScopedNode();
 
 	private:
-		::SceneGraph::Node *node_;
+		SceneNode *node_;
 		lua_State *state_;
 	};
 } NS_RAINBOW_LUA_END

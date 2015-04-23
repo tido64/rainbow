@@ -9,17 +9,17 @@
 #include "Script/TimingFunctions.h"
 #include "Script/TransitionFunctions.h"
 
-namespace SceneGraph { class Node; }
-
 namespace rainbow
 {
-	inline Timer* move(SceneGraph::Node *node,
+	class SceneNode;
+
+	inline Timer* move(rainbow::SceneNode *node,
 	                   const Vec2f delta,
 	                   const int duration,
 	                   TimingFunction timing)
 	{
 		return TimerManager::Get()->set_timer(
-		    Move<SceneGraph::Node*>(node, delta, duration, std::move(timing)),
+		    Move<rainbow::SceneNode*>(node, delta, duration, std::move(timing)),
 		    timing::kInterval,
 		    repeat_count_from_duration(duration));
 	}

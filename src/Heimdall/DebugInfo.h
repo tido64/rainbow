@@ -7,7 +7,7 @@
 
 #include "Heimdall/Button.h"
 
-namespace SceneGraph { class Node; }
+namespace rainbow { class SceneNode; }
 
 namespace heimdall
 {
@@ -17,8 +17,8 @@ namespace heimdall
 	public:
 		DebugInfo();
 
-		inline Button& button();
-		inline SceneGraph::Node* node() const;
+		Button& button() { return button_; }
+		rainbow::SceneNode* node() const { return node_; }
 
 		void init_button(const Vec2f &position, SharedPtr<FontAtlas> font);
 		void init_console(const Vec2f &position, SharedPtr<FontAtlas> font);
@@ -26,20 +26,10 @@ namespace heimdall
 		void update(const unsigned long dt);
 
 	private:
-		SceneGraph::Node *node_;
+		rainbow::SceneNode *node_;
 		Label label_;
 		Button button_;
 	};
-
-	Button& DebugInfo::button()
-	{
-		return button_;
-	}
-
-	SceneGraph::Node* DebugInfo::node() const
-	{
-		return node_;
-	}
 }
 
 #endif

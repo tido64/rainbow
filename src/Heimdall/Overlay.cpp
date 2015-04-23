@@ -25,7 +25,7 @@ namespace heimdall
 		TextureManager::Get()->bind(texture_);
 	}
 
-	void Overlay::init(SceneGraph::Node &parent, const Vec2i &screen)
+	void Overlay::init(rainbow::SceneNode &parent, const Vec2i &screen)
 	{
 		const unsigned char white[4096] = { 0xff };
 		texture_ = TextureManager::Get()->create(

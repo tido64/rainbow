@@ -19,24 +19,24 @@ namespace heimdall
 		Overlay();
 		~Overlay() override;
 
-		inline unsigned int count() const;
-		inline bool is_visible() const;
-		inline SceneGraph::Node* node() const;
-		inline const VertexArray& vertex_array() const;
+		unsigned int count() const { return 6; }
+		bool is_visible() const { return node_->enabled; }
+		rainbow::SceneNode* node() const { return node_; }
+		const VertexArray& vertex_array() const { return array_; }
 
-		void init(SceneGraph::Node &parent, const Vec2i &screen);
+		void init(rainbow::SceneNode &parent, const Vec2i &screen);
 
-		inline void hide();
-		inline void show();
+		void hide() { node_->enabled = false; }
+		void show() { node_->enabled = true; }
 
 		template<typename T>
-		void add_child(T *) const;
+		void add_child(T *component) const { node_->add_child(component); }
 
 		/// Binds all used textures.
 		void bind_textures() const;
 
 	private:
-		SceneGraph::Node *node_;
+		rainbow::SceneNode *node_;
 		VertexArray array_;
 		unsigned int texture_;
 		Buffer vertex_buffer_;
@@ -46,42 +46,6 @@ namespace heimdall
 		void draw_impl() override;
 		void update_impl(const unsigned long dt) override;
 	};
-
-	unsigned int Overlay::count() const
-	{
-		return 6;
-	}
-
-	bool Overlay::is_visible() const
-	{
-		return node_->enabled;
-	}
-
-	SceneGraph::Node* Overlay::node() const
-	{
-		return node_;
-	}
-
-	const VertexArray& Overlay::vertex_array() const
-	{
-		return array_;
-	}
-
-	void Overlay::hide()
-	{
-		node_->enabled = false;
-	}
-
-	void Overlay::show()
-	{
-		node_->enabled = true;
-	}
-
-	template<typename T>
-	void Overlay::add_child(T *item) const
-	{
-		node_->add_child(item);
-	}
 }
 
 #endif

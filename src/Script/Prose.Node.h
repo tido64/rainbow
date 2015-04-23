@@ -34,7 +34,7 @@ void set_color_and_transform(lua_State *L, T asset)
 Prose::Asset create_animation(lua_State *L,
                               const Sprite::Ref &sprite,
                               rainbow::ScopeStack &stack,
-                              SceneGraph::Node *parent)
+                              rainbow::SceneNode *parent)
 {
 	const auto table = lua_gettop(L);
 	const size_t num_frames = lua_rawlen(L, table);
@@ -74,7 +74,7 @@ Prose::Asset create_animation(lua_State *L,
 Prose::Asset create_label(lua_State *L,
                           Prose &scene,
                           rainbow::ScopeStack &stack,
-                          SceneGraph::Node *parent)
+                          rainbow::SceneNode *parent)
 {
 	auto label = stack.allocate<Label>();
 	set_color_and_transform(L, label);
@@ -106,7 +106,7 @@ Prose::Asset create_label(lua_State *L,
 Prose::Asset create_sprite(lua_State *L,
                            SpriteBatch *batch,
                            rainbow::ScopeStack &stack,
-                           SceneGraph::Node *parent)
+                           rainbow::SceneNode *parent)
 {
 	Sprite::Ref sprite;
 	if (!has_key(L, "size"))
@@ -149,7 +149,7 @@ Prose::Asset create_sprite(lua_State *L,
 Prose::Asset create_spritebatch(lua_State *L,
                                 Prose &scene,
                                 rainbow::ScopeStack &stack,
-                                SceneGraph::Node *parent)
+                                rainbow::SceneNode *parent)
 {
 	auto batch = stack.allocate<SpriteBatch>();
 	auto field = get_field(L, "texture");
@@ -173,7 +173,7 @@ Prose::Asset create_node(lua_State *L,
                          Prose &scene,
                          Prose::AssetMap &assets,
                          rainbow::ScopeStack &stack,
-                         SceneGraph::Node *parent)
+                         rainbow::SceneNode *parent)
 {
 	Prose::Asset asset = no_asset();
 	switch (node_type(L))
@@ -184,7 +184,7 @@ Prose::Asset create_node(lua_State *L,
 		case Prose::AssetType::Node:
 			asset = {Prose::AssetType::Node,
 			         nullptr,
-			         parent->add_child(new SceneGraph::Node())};
+			         parent->add_child(new rainbow::SceneNode())};
 			break;
 		case Prose::AssetType::SpriteBatch: {
 			asset = create_spritebatch(L, scene, stack, parent);

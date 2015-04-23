@@ -108,7 +108,7 @@ namespace rainbow
 		state_ = nullptr;
 	}
 
-	int LuaMachine::init(SceneGraph::Node *root)
+	int LuaMachine::init(SceneNode *root)
 	{
 		luaR_openlibs(state_);
 

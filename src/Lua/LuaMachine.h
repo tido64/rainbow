@@ -8,13 +8,14 @@
 #include "Common/NonCopyable.h"
 
 class Data;
-struct lua_State;
 class LuaScript;
-namespace SceneGraph { class Node; }
+struct lua_State;
 
 namespace rainbow
 {
 	namespace lua { class SceneGraph; }
+
+	class SceneNode;
 
 	/// Embeds Lua scripting engine.
 	class LuaMachine : private NonCopyable<LuaMachine>
@@ -28,7 +29,7 @@ namespace rainbow
 		/// Calls game update function.
 		int update(const unsigned long t);
 
-		inline operator lua_State*() const;
+		operator lua_State*() const { return state_; }
 
 	private:
 		lua_State *state_;
@@ -40,13 +41,8 @@ namespace rainbow
 		~LuaMachine();
 
 		void close();
-		int init(SceneGraph::Node *root);
+		int init(SceneNode *root);
 	};
-
-	LuaMachine::operator lua_State*() const
-	{
-		return state_;
-	}
 }
 
 #endif

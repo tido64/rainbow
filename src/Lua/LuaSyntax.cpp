@@ -16,7 +16,7 @@ namespace ConFuoco
 	class Sound;
 }
 
-namespace SceneGraph { class Node; }
+namespace rainbow { class SceneNode; }
 
 namespace b2
 {
@@ -220,16 +220,16 @@ NS_RAINBOW_LUA_BEGIN
 		require(L, n, is_userdata, "texture");
 	}
 
-	/* ::SceneGraph::Node */
+	/* rainbow::SceneNode */
 
 	template<>
-	void Argument<::SceneGraph::Node>::is_optional(lua_State *L, const int n)
+	void Argument<SceneNode>::is_optional(lua_State *L, const int n)
 	{
 		optional(L, n, lua_isuserdata, "nil or node");
 	}
 
 	template<>
-	void Argument<::SceneGraph::Node>::is_required(lua_State *L, const int n)
+	void Argument<SceneNode>::is_required(lua_State *L, const int n)
 	{
 		require(L, n, lua_isuserdata, "node");
 	}

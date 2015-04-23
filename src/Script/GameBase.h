@@ -44,7 +44,7 @@ public:
 	virtual ~GameBase() = default;
 
 	Input& input() { return director_.input(); }
-	SceneGraph::Node& scenegraph() { return director_.scenegraph(); }
+	rainbow::SceneNode& scenegraph() { return director_.scenegraph(); }
 
 	void terminate() { director_.terminate(); }
 	void terminate(const char *error) { director_.terminate(error); }

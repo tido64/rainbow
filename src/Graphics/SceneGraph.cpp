@@ -11,11 +11,11 @@
 #include "Graphics/SpriteBatch.h"
 
 static_assert(ShaderManager::kInvalidProgram == 0,
-              "Inlined Node(Type, void*) assumes kInvalidProgram == 0");
+              "Inlined SceneNode(Type, void*) assumes kInvalidProgram == 0");
 
-namespace SceneGraph
+namespace rainbow
 {
-	void Node::draw() const
+	void SceneNode::draw() const
 	{
 		if (!this->enabled)
 			return;
@@ -42,9 +42,9 @@ namespace SceneGraph
 			child->draw();
 	}
 
-	void Node::move(const Vec2f &delta) const
+	void SceneNode::move(const Vec2f &delta) const
 	{
-		for_each(this, [](const Node *node, const Vec2f &delta) {
+		for_each(this, [](const SceneNode *node, const Vec2f &delta) {
 			switch (node->type_)
 			{
 				case Type::Drawable:
@@ -62,7 +62,7 @@ namespace SceneGraph
 		}, delta);
 	}
 
-	void Node::update(const unsigned long dt) const
+	void SceneNode::update(const unsigned long dt) const
 	{
 		if (!this->enabled)
 			return;

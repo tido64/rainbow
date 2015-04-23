@@ -32,7 +32,7 @@ enum class Prose::AssetType : unsigned int
 };
 
 Prose::Prose(const size_t size)
-    : allocator_(size), stack_(allocator_), node_(new SceneGraph::Node()) {}
+    : allocator_(size), stack_(allocator_), node_(new rainbow::SceneNode()) {}
 
 Prose::~Prose()
 {
@@ -79,9 +79,9 @@ Label* Prose::get_asset<Label>(const std::string &name)
 }
 
 template<>
-SceneGraph::Node* Prose::get_asset<SceneGraph::Node>(const std::string &name)
+rainbow::SceneNode* Prose::get_asset<rainbow::SceneNode>(const std::string &name)
 {
-	auto node = get_asset<SceneGraph::Node, AssetType::Node>(name);
+	auto node = get_asset<rainbow::SceneNode, AssetType::Node>(name);
 	if (!node)
 		R_ABORT("Prose: No such node: %s", name.c_str());
 	return node;
@@ -129,7 +129,7 @@ Label* Prose::get_label(const std::string &name)
 	return get_asset<Label>(name);
 }
 
-SceneGraph::Node* Prose::get_node(const std::string &name)
+rainbow::SceneNode* Prose::get_node(const std::string &name)
 {
 	auto asset = assets_.find(name);
 	if (asset == assets_.end())
@@ -299,7 +299,7 @@ namespace
 			case Prose::AssetType::Label:
 				return rainbow::ScopeStack::size_of<Label>();
 			case Prose::AssetType::Node:
-				return rainbow::ScopeStack::size_of<SceneGraph::Node>();
+				return rainbow::ScopeStack::size_of<rainbow::SceneNode>();
 			case Prose::AssetType::SpriteBatch:
 				return rainbow::ScopeStack::size_of<SpriteBatch>();
 			case Prose::AssetType::Sound:

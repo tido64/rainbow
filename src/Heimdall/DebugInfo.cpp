@@ -27,7 +27,7 @@ namespace heimdall
 		const char kStringShowDebug[] = "Show debug information";
 	}
 
-	DebugInfo::DebugInfo() : node_(new SceneGraph::Node())
+	DebugInfo::DebugInfo() : node_(new rainbow::SceneNode())
 	{
 		node_->enabled = false;
 	}

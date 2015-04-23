@@ -46,7 +46,7 @@ namespace heimdall
 		Overlay overlay_;
 		OverlayActivator overlay_activator_;
 		std::unique_ptr<DebugInfo> info_;
-		SceneGraph::Node scenegraph_;
+		rainbow::SceneNode scenegraph_;
 		std::unordered_map<unsigned int, Button*> pressed_;
 #if !defined(USE_LUA_SCRIPT) || USE_LUA_SCRIPT
 		std::mutex changed_files_mutex_;
