@@ -2,13 +2,28 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
+#ifndef THIRDPARTY_BOX2D_DEBUGDRAW_H_
+#define THIRDPARTY_BOX2D_DEBUGDRAW_H_
+
 #include <memory>
 
 #include <Box2D/Common/b2Draw.h>
 
 namespace b2
 {
-	class StableWorld;
+	class DebuggableWorld
+	{
+	public:
+		DebuggableWorld() : ptm_(32.0f) {}
+
+		float GetPTM() const { return ptm_; }
+		void SetPTM(const float ptm) { ptm_ = ptm; }
+
+		virtual void DrawDebugData() = 0;
+
+	protected:
+		float ptm_;
+	};
 
 	class DebugDraw : public b2Draw
 	{
@@ -17,8 +32,8 @@ namespace b2
 
 		DebugDraw();
 
-		void Add(StableWorld *);
-		void Remove(StableWorld *);
+		void Add(DebuggableWorld *);
+		void Remove(DebuggableWorld *);
 
 		void DrawAllWorlds();
 
@@ -54,7 +69,7 @@ namespace b2
 		std::unique_ptr<Vertex[]> vertices_;
 		int32 buffer_size_;
 		float32 ptm_;
-		StableWorld *worlds_[kMaxNumWorlds];
+		DebuggableWorld *worlds_[kMaxNumWorlds];
 
 		void UpdateBuffer(const b2Vec2 *vertices,
 		                  const int32 vertex_count,
@@ -64,3 +79,5 @@ namespace b2
 		                        const b2Color &color);
 	};
 }
+
+#endif

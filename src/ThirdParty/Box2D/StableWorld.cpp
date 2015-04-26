@@ -39,9 +39,14 @@ namespace b2
 	      prev_r(bd->angle) {}
 
 	StableWorld::StableWorld(const float gx, const float gy)
-	    : b2World(b2Vec2(gx, gy)), elapsed_(0.0), ptm_(32.0)
+	    : b2World(b2Vec2(gx, gy)), elapsed_(0.0)
 	{
 		SetAutoClearForces(false);  // TODO: Needed?
+	}
+
+	StableWorld::~StableWorld()
+	{
+		SetDebugDraw(nullptr);
 	}
 
 	void StableWorld::SetDebugDraw(b2Draw *debugDraw)
@@ -87,6 +92,11 @@ namespace b2
 			ClearForces();  // TODO: Needed?
 			Interpolate();
 		}
+	}
+
+	void StableWorld::DrawDebugData()
+	{
+		b2World::DrawDebugData();
 	}
 
 	void StableWorld::Interpolate()

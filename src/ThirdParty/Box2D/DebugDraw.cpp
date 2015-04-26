@@ -7,7 +7,6 @@
 #include "Graphics/Shaders.h"
 #include "Graphics/ShaderManager.h"
 #include "Graphics/VertexArray.h"
-#include "ThirdParty/Box2D/StableWorld.h"
 
 namespace
 {
@@ -75,7 +74,7 @@ namespace b2
 		g_debug_draw.reset(this);
 	}
 
-	void DebugDraw::Add(StableWorld *world)
+	void DebugDraw::Add(DebuggableWorld *world)
 	{
 		auto i = std::find(std::begin(worlds_), std::end(worlds_), nullptr);
 		if (i == std::end(worlds_))
@@ -83,7 +82,7 @@ namespace b2
 		*i = world;
 	}
 
-	void DebugDraw::Remove(StableWorld *world)
+	void DebugDraw::Remove(DebuggableWorld *world)
 	{
 		std::fill(std::remove(std::begin(worlds_), std::end(worlds_), world),
 		          std::end(worlds_),
@@ -94,7 +93,7 @@ namespace b2
 	{
 		if (std::none_of(std::begin(worlds_),
 		                 std::end(worlds_),
-		                 [](const StableWorld *world) { return world; }))
+		                 [](const DebuggableWorld *world) { return world; }))
 			return;
 
 		ShaderManager::Context context;

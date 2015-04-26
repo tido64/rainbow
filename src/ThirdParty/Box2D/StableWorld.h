@@ -15,13 +15,10 @@
 #endif
 
 #include "Graphics/Sprite.h"
-
-class b2Draw;
+#include "ThirdParty/Box2D/DebugDraw.h"
 
 namespace b2
 {
-	class DebugDraw;
-
 	struct BodyState
 	{
 		Sprite::Ref sprite;
@@ -33,15 +30,13 @@ namespace b2
 		BodyState(const b2BodyDef *d);
 	};
 
-	class StableWorld : public b2World
+	class StableWorld final : public b2World, public DebuggableWorld
 	{
 	public:
 		StableWorld(const float gx = 0.0f, const float gy = kStandardGravity);
+		~StableWorld();
 
-		float GetPTM() const { return ptm_; }
-		void SetPTM(const float ptm) { ptm_ = ptm; }
-
-		// b2World overrides
+		// b2World overrides.
 
 		void SetDebugDraw(b2Draw *debugDraw) /* override */;
 		b2Body* CreateBody(const b2BodyDef *def) /* override */;
@@ -50,9 +45,12 @@ namespace b2
 		          int32 velocityIterations,
 		          int32 positionIterations) /* override */;
 
+		// Implement DebuggableWorld.
+
+		void DrawDebugData() override;
+
 	private:
 		float elapsed_;
-		float ptm_;
 		DebugDraw *debug_draw_;
 
 		void Interpolate();
