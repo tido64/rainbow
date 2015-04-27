@@ -10,7 +10,8 @@ namespace
 	const unsigned int kStalePosition     = 1u << 1;
 	const unsigned int kStaleFrontBuffer  = 1u << 2;
 	const unsigned int kStaleMask         = 0xffffu;
-	const unsigned int kIsMirrored        = 1u << 16;
+	const unsigned int kIsHidden          = 1u << 16;
+	const unsigned int kIsMirrored        = 1u << 17;
 
 	Vec2f transform_srt(const Vec2f &p,
 	                    const Vec2f &s_sin_r,
@@ -50,6 +51,11 @@ Sprite::Sprite(Sprite&& s)
 {
 	s.vertex_array_ = nullptr;
 	s.parent_ = nullptr;
+}
+
+bool Sprite::is_hidden() const
+{
+	return (state_ & kIsHidden) == kIsHidden;
 }
 
 bool Sprite::is_mirrored() const
@@ -157,6 +163,18 @@ void Sprite::set_vertex_array(SpriteVertex *array)
 	state_ |= kStaleMask;
 }
 
+void Sprite::hide()
+{
+	if (is_hidden())
+		return;
+
+	vertex_array_[0].position = Vec2f::Zero;
+	vertex_array_[1].position = Vec2f::Zero;
+	vertex_array_[2].position = Vec2f::Zero;
+	vertex_array_[3].position = Vec2f::Zero;
+	state_ |= kIsHidden | kStaleFrontBuffer;
+}
+
 void Sprite::mirror()
 {
 	R_ASSERT(vertex_array_, "Missing vertex array buffer");
@@ -184,10 +202,25 @@ void Sprite::rotate(const float r)
 	state_ |= kStaleBuffer;
 }
 
+void Sprite::show()
+{
+	if (!is_hidden())
+		return;
+
+	state_ &= ~kIsHidden;
+	state_ |= kStaleMask;
+}
+
 bool Sprite::update()
 {
 	if ((state_ & kStaleMask) == 0)
 		return false;
+
+	if (is_hidden())
+	{
+		state_ &= ~kStaleMask;
+		return true;
+	}
 
 	R_ASSERT(vertex_array_, "Missing vertex array buffer");
 

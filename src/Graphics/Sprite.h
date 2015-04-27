@@ -58,6 +58,7 @@ public:
 	float angle() const { return angle_; }
 	Colorb color() const { return vertex_array_[0].color; }
 	unsigned int height() const { return height_; }
+	bool is_hidden() const;
 	bool is_mirrored() const;
 	const SpriteBatch& parent() const { return *parent_; }
 	const Vec2f& pivot() const { return pivot_; }
@@ -98,6 +99,9 @@ public:
 	/// Sets vertex array buffer.
 	void set_vertex_array(SpriteVertex *array);
 
+	/// Hides sprite if it is currently shown.
+	void hide();
+
 	/// Mirrors sprite.
 	void mirror();
 
@@ -106,6 +110,9 @@ public:
 
 	/// Rotates sprite by \p r.
 	void rotate(const float r);
+
+	/// Shows sprite if it is currently hidden.
+	void show();
 
 	/// Updates the vertex buffer. Returns \c true if the buffer has changed;
 	/// \c false otherwise.
