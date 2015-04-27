@@ -85,7 +85,7 @@ NS_RAINBOW_LUA_BEGIN
 	{
 		// <animation>:set_fps(fps)
 		return set1i(L, [](::Animation *animation, const int fps) {
-			animation->set_timeout(1000.f / fps);
+			animation->set_fps(fps);
 		});
 	}
 

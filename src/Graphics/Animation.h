@@ -1,4 +1,4 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -9,14 +9,11 @@
 #include <memory>
 
 #include "Common/NonCopyable.h"
-#include "Common/TimedEvent.h"
 #include "Graphics/Sprite.h"
 
 /// Sprite animation using sprite sheets.
-class Animation : public TimedEvent<Animation>, private NonCopyable<Animation>
+class Animation : private NonCopyable<Animation>
 {
-	friend TimedEvent;
-
 public:
 	enum class Event
 	{
@@ -42,6 +39,8 @@ public:
 	          const unsigned int fps,
 	          const int delay = 0);
 
+	bool is_stopped() const { return stopped_; }
+
 	void set_callback(Callback f) { callback_ = std::move(f); }
 
 	/// Sets number of frames to delay before the animation loops. Negative
@@ -49,7 +48,7 @@ public:
 	void set_delay(const int delay) { delay_ = delay; }
 
 	/// Sets playback rate in frames per second.
-	void set_fps(const unsigned int fps) { set_timeout(1000 / fps); }
+	void set_fps(const unsigned int fps);
 
 	/// Sets animation frames.
 	/// \note This method takes ownership of the array.
@@ -58,28 +57,39 @@ public:
 	void set_frames(const Frame *const frames);
 
 	/// Sets the sprite to animate.
-	void set_sprite(const Sprite::Ref &sprite) { sprite_ = sprite; }
+	void set_sprite(const Sprite::Ref &sprite);
 
-	/// Resets sprite animation.
-	void reset()
-	{
-		frame_ = 0;
-		idled_ = 0;
-	}
+	/// Jumps to \p frame.
+	void jump_to(const unsigned int frame);
+
+	/// Rewinds animation.
+	void rewind() { jump_to(0); }
+
+	/// Starts animation if it was previously stopped. Always plays from the
+	/// beginning.
+	void start();
+
+	/// Stops animation.
+	void stop();
+
+	/// Accumulates time and calls \c tick() when time is up.
+	void update(const unsigned long dt);
+
+private:
+	bool stopped_;
+	unsigned int accumulated_;  ///< Accumulated monotonic time.
+	unsigned int interval_;     ///< Time till a tick.
+	Frame frame_;               ///< Current frame.
+	std::unique_ptr<const Frame[]> frames_;  ///< Array of texture ids to be used as frames, terminated with \c kAnimationEnd.
+	Sprite::Ref sprite_;  ///< The sprite to animate.
+	int delay_;           ///< Number of frames to delay before the animation loops. Negative numbers disable looping.
+	int idled_;           ///< Number of frames idled.
+	Callback callback_;
+
+	void set_current_frame();
 
 	/// Increments animation frame and resets/stops if the end is reached.
 	void tick();
-
-private:
-	Frame frame_;  ///< Current frame.
-	Sprite::Ref sprite_;  ///< The sprite to animate.
-	std::unique_ptr<const Frame[]> frames_;  ///< Array of texture ids to be used as frames, terminated with \c kAnimationEnd.
-	int delay_;  ///< Number of frames to delay before the animation loops. Negative numbers disable looping.
-	int idled_;  ///< Number of frames idled.
-	Callback callback_;
-
-	void on_start();
-	void on_stop();
 };
 
 #endif

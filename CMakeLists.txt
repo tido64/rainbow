@@ -42,7 +42,6 @@ set(SOURCE_FILES
 	src/Common/NonCopyable.h
 	src/Common/Random.cpp
 	src/Common/Random.h
-	src/Common/TimedEvent.h
 	src/Common/TreeNode.h
 	src/Common/Vec2.h
 	src/Common/Vec3.h
@@ -203,7 +202,6 @@ if(UNIT_TESTS)
 		src/Tests/Common/Color.test.cc
 		src/Tests/Common/Data.test.cc
 		src/Tests/Common/Link.test.cc
-		src/Tests/Common/TimedEvent.test.cc
 		src/Tests/Common/TreeNode.test.cc
 		src/Tests/Common/Vec2.test.cc
 		src/Tests/Common/Vec3.test.cc

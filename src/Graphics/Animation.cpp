@@ -1,4 +1,4 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -14,13 +14,83 @@ Animation::Animation(const Sprite::Ref &sprite,
                      const Frame *const frames,
                      const unsigned int fps,
                      const int delay)
-    : TimedEvent(1000 / fps), frame_(0), sprite_(sprite), frames_(frames),
-      delay_(delay), idled_(0) {}
+    : stopped_(true), accumulated_(0), interval_(1000 / fps), frame_(0),
+      frames_(frames), sprite_(sprite), delay_(delay), idled_(0) {}
+
+void Animation::set_fps(const unsigned int fps)
+{
+	accumulated_ = 0;
+	interval_ = 1000 / fps;
+}
 
 void Animation::set_frames(const Frame *const frames)
 {
 	frames_.reset(frames);
-	reset();
+	rewind();
+}
+
+void Animation::set_sprite(const Sprite::Ref &sprite)
+{
+	sprite_ = sprite;
+	if (!is_stopped())
+	{
+		if (frame_ > 0)
+			sprite_->set_texture(frames_[frame_ - 1]);
+		else
+			set_current_frame();
+	}
+}
+
+void Animation::jump_to(const unsigned int frame)
+{
+	accumulated_ = 0;
+	frame_ = frame;
+	idled_ = 0;
+	set_current_frame();
+}
+
+void Animation::start()
+{
+	if (!is_stopped())
+		return;
+
+	stopped_ = false;
+	rewind();
+	if (callback_)
+		callback_(Event::Start);
+}
+
+void Animation::stop()
+{
+	if (is_stopped())
+		return;
+
+	stopped_ = true;
+	if (callback_)
+		callback_(Event::End);
+}
+
+void Animation::update(const unsigned long dt)
+{
+	if (is_stopped())
+		return;
+
+	accumulated_ += std::min<unsigned int>(dt, interval_ * 5);
+	while (accumulated_ >= interval_)
+	{
+		tick();
+		accumulated_ -= interval_;
+	}
+}
+
+void Animation::set_current_frame()
+{
+	if (!frames_ || !sprite_)
+		return;
+
+	sprite_->set_texture(frames_[frame_]);
+	if (frames_[frame_ + 1] != kAnimationEnd)
+		++frame_;
 }
 
 void Animation::tick()
@@ -38,21 +108,11 @@ void Animation::tick()
 		if (idled_ < delay_)
 			++idled_;
 		else
-			reset();
+		{
+			frame_ = 0;
+			idled_ = 0;
+		}
 	}
 	else
 		++frame_;
-}
-
-void Animation::on_start()
-{
-	reset();
-	if (callback_)
-		callback_(Event::Start);
-}
-
-void Animation::on_stop()
-{
-	if (callback_)
-		callback_(Event::End);
 }

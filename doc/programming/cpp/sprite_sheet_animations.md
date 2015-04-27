@@ -42,6 +42,20 @@ An animation will always start from the beginning. There is no pause function
 because animations live in the scene graph, and can therefore be paused by
 disabling its node.
 
+### Navigating the Animation
+
+```c++
+void  Animation::jump_to  (const unsigned int frame);
+```
+
+Jumps to the specified frame.
+
+```c++
+void  Animation::rewind  ();
+```
+
+Rewinds the animation. Equivalent to `jump_to(0)`.
+
 ### Modifying the Animation Sequence
 
 ```c++
@@ -75,8 +89,7 @@ Sets the sprite to animate.
 
 There are three events that are fired during an animation's lifetime.
 
-* `Animation::Event::Start` fires when a stopped animation is started. Note that
-  because animations are in a started state on creation, no event is fired.
+* `Animation::Event::Start` fires when a stopped animation is started.
 
 * `Animation::Event::End` fires when an animation is stopped.
 
@@ -159,16 +172,20 @@ public:
         auto texture = load_texture();
         batch_ = rainbow::spritebatch(1);
         batch_->set_texture(texture);
+
         auto sprite = batch_->create_sprite(104, 149);
         sprite->set_position(Vec2f(screen.x * 0.5f, screen.y * 0.5f));
+
         animation_ =
             rainbow::animation(sprite, create_animation_frames(), 6, 0);
         animation_->set_callback(&animation_event_handler);
 
         // Add the sprite batch to the root node, and the animation to the
-        // batch's node.
+        // batch's node so we can disable them both easily.
         auto node = scenegraph().add_child(batch_);
         node->add_child(animation_);
+
+        animation_->start();
     }
 
 private:
@@ -201,15 +218,17 @@ public:
         TextureManager::Get()->set_filter(GL_NEAREST);
         auto texture = load_texture();
         batch_.set_texture(texture);
+
         auto sprite = batch_.create_sprite(104, 149);
         sprite->set_position(Vec2f(screen.x * 0.5f, screen.y * 0.5f));
+
         animation_.set_sprite(sprite);
         animation_.set_callback(&animation_event_handler);
 
-        // Add the sprite batch to the root node, and the animation to the
-        // batch's node.
         auto node = scenegraph().add_child(&batch_);
         node->add_child(&animation_);
+
+        animation_.start();
     }
 
 private:
