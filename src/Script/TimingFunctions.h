@@ -18,7 +18,7 @@ namespace rainbow
 			return t * t * (2.70158f * t - 1.70158f);
 		}
 
-		float bounce(float t)
+		inline float bounce(float t)
 		{
 			if (t < (1.0f / 2.75f))
 				return 7.5625f * t * t;
@@ -77,7 +77,7 @@ namespace rainbow
 			return linear(a, b, back(t));
 		}
 
-		float ease_in_bounce(const float a, const float b, float t)
+		inline float ease_in_bounce(const float a, const float b, float t)
 		{
 			return linear(a, b, flip(bounce, t));
 		}
@@ -122,7 +122,7 @@ namespace rainbow
 			return linear(a, b, flip(back, t));
 		}
 
-		float ease_out_bounce(const float a, const float b, float t)
+		inline float ease_out_bounce(const float a, const float b, float t)
 		{
 			return linear(a, b, bounce(t));
 		}
@@ -212,6 +212,7 @@ namespace rainbow
 			return ease_in_out(quintic, a, b, t);
 		}
 
+		inline
 		float ease_in_out_sine(const float a, const float b, const float t)
 		{
 			return a - (b - a) / 2.0f * (cos(kPi * t) - 1.0f);
