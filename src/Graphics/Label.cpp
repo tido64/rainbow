@@ -7,6 +7,7 @@
 #include <cstring>
 
 #include "Common/Algorithm.h"
+#include "Common/UTF8.h"
 
 using rainbow::is_equal;
 

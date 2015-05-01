@@ -5,6 +5,7 @@
 #include <catch.hpp>
 
 #include "Common/Algorithm.h"
+#include "Common/UTF8.h"
 
 TEST_CASE("floats are approximately equal", "[algorithm]")
 {
@@ -52,38 +53,40 @@ TEST_CASE("Converts degrees to radians", "[algorithm]")
 	                          rainbow::degrees(rainbow::radians(kPi))));
 }
 
-TEST_CASE("Converts UTF-8 characters to UTF-32", "[algorithm]")
+TEST_CASE("Expands UTF-8 characters to UTF-32", "[algorithm]")
 {
 	const unsigned int kInvalidCharacter = 0xb00bbabe;
-	const unsigned char utf8[] = {
-		0x41,        // LATIN CAPITAL LETTER A
-		0x7f,        // <control>
-		0x80,        // <invalid>
-		0xff,        // <invalid>
-		0xc3, 0x85,  // LATIN CAPITAL LETTER A WITH RING ABOVE
-		0xc3, 0x86,  // LATIN CAPITAL LETTER AE
-		0xc3, 0x98,  // LATIN CAPITAL LETTER O WITH STROKE
-		0xc3, 0xa5,  // LATIN SMALL LETTER A WITH RING ABOVE
-		0xc3, 0xa6,  // LATIN SMALL LETTER AE
-		0xc3, 0xb8,  // LATIN SMALL LETTER O WITH STROKE
-		0xe2, 0x82, 0xac,  // EURO SIGN
-		0xf0, 0xa4, 0xad, 0xa2  // RANDOM CHINESE CHARACTER
-	};
-	const unsigned int utf32[] = {
-		utf8[0],
-		utf8[1],
-		kInvalidCharacter,
-		kInvalidCharacter,
-		0x00c5,
-		0x00c6,
-		0x00d8,
-		0x00e5,
-		0x00e6,
-		0x00f8,
-		0x20ac,
-		0x24b62,
-		0
-	};
+
+	const unsigned char utf8[]{
+	    0x80,                     // <invalid>
+	    0xff,                     // <invalid>
+	    0xc3, 0x85,               // LATIN CAPITAL LETTER A WITH RING ABOVE
+	    0xc3, 0x86,               // LATIN CAPITAL LETTER AE
+	    0xc3, 0x98,               // LATIN CAPITAL LETTER O WITH STROKE
+	    0xc3, 0xa5,               // LATIN SMALL LETTER A WITH RING ABOVE
+	    0xc3, 0xa6,               // LATIN SMALL LETTER AE
+	    0xc3, 0xb8,               // LATIN SMALL LETTER O WITH STROKE
+	    0xe2, 0x82, 0xac,         // EURO SIGN
+	    0xf0, 0xa4, 0xad, 0xa2};  // RANDOM CHINESE CHARACTER
+
+	const unsigned int utf32[]{
+	    kInvalidCharacter,
+	    kInvalidCharacter,
+	    0x00c5,
+	    0x00c6,
+	    0x00d8,
+	    0x00e5,
+	    0x00e6,
+	    0x00f8,
+	    0x20ac,
+	    0x24b62,
+	    0};
+
+	for (unsigned char i = 0; i < 0x80; ++i)
+	{
+		const rainbow::utf_t &c = rainbow::utf8_decode(&i);
+		REQUIRE(c.code == i);
+	}
 
 	const unsigned char *l = utf8;
 	for (size_t i = 0; utf32[i]; ++i)

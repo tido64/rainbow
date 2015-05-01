@@ -43,6 +43,8 @@ set(SOURCE_FILES
 	src/Common/Random.cpp
 	src/Common/Random.h
 	src/Common/TreeNode.h
+	src/Common/UTF8.cpp
+	src/Common/UTF8.h
 	src/Common/Vec2.h
 	src/Common/Vec3.h
 	src/Config.cpp
