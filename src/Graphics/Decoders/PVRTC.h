@@ -42,7 +42,8 @@ namespace pvrtc
 
 	bool check(const DataMap &data)
 	{
-		return *(uint32_t*)data.bytes() == kPVRHeaderVersion3;
+		return *reinterpret_cast<const uint32_t*>(data.bytes()) ==
+		       kPVRHeaderVersion3;
 	}
 
 	rainbow::Image decode(const DataMap &data)
