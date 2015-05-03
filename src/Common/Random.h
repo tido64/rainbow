@@ -1,13 +1,12 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
 #ifndef COMMON_RANDOM_H_
 #define COMMON_RANDOM_H_
 
-#include "Common/Chrono.h"
-#include "Common/Constraints.h"
-#include "Common/Logging.h"
+#include <cstdint>
+#include <random>
 
 #define DSFMT_MEXP 19937
 #if defined(__SSE2__) || (defined(_M_IX86_FP) && _M_IX86_FP >= 2) || defined(_M_X64)
@@ -24,49 +23,37 @@
 #	pragma GCC diagnostic pop
 #endif
 
-/// C++ wrapper for dSFMT random number generator.
-namespace Random
+#include "Common/Constraints.h"
+#include "Common/Logging.h"
+
+namespace rainbow
 {
-	/// Returns the next generated random number in [0, 1).
-	inline double next();
-
-	/// Returns the next generated random number in [0, n).
-	template<typename T, typename Enable>
-	T next(const T n);
-
-	/// Returns the next generated random number in [n1, n2).
-	template<typename T, typename Enable>
-	T next(const T n1, const T n2);
-
-	/// Sets the random number generator seed. Must be called before any other
-	/// calls.
-	inline void seed(const uint32_t seed);
-
-	double next()
+	/// C++ wrapper for dSFMT pseudorandom number generator.
+	template<typename T, typename = EnableIfFloatingPoint<T>>
+	struct dSFMT
 	{
-		return dsfmt_gv_genrand_close_open();
-	}
+		void seed(const uint32_t seed = 0)
+		{
+			dsfmt_gv_init_gen_rand(seed == 0 ? std::random_device{}() : seed);
+		}
 
-	template<typename T, typename = Arithmetic<T>>
-	T next(const T n)
-	{
-		return static_cast<T>(next() * n);
-	}
+		T operator()() { return dsfmt_gv_genrand_close_open(); }
 
-	template<typename T, typename = Arithmetic<T>>
-	T next(const T n1, const T n2)
-	{
-		R_ASSERT(n1 < n2, "Parameters must be in ascending order");
-		return static_cast<T>(next() * (n2 - n1) + n1);
-	}
+		template<typename N>
+		N operator()(const N n)
+		{
+			return static_cast<N>(dsfmt_gv_genrand_close_open() * n);
+		}
 
-	void seed(const uint32_t seed)
-	{
-		dsfmt_gv_init_gen_rand(
-		    (seed == 0) ? static_cast<uint32_t>(
-		                      Chrono::clock::now().time_since_epoch().count())
-		                : seed);
-	}
+		template<typename N>
+		N operator()(const N m, const N n)
+		{
+			R_ASSERT(m < n, "Parameters must be in ascending order");
+			return static_cast<N>(dsfmt_gv_genrand_close_open() * (n - m) + m);
+		}
+	};
+
+	extern dSFMT<float> random;
 }
 
 #endif

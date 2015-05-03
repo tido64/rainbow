@@ -6,6 +6,7 @@
 
 #include <lua.hpp>
 
+#include "Common/Random.h"
 #include "Script/GameBase.h"
 
 #ifdef USE_PHYSICS
@@ -43,6 +44,7 @@ namespace rainbow
 
 	void Director::init(const Vec2i &screen)
 	{
+		random.seed();
 		renderer_.set_resolution(screen);
 		script_ = GameBase::create(*this);
 		script_->init(screen);

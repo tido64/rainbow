@@ -24,9 +24,8 @@
 
 TEST_CASE("Create directories", "[path]")
 {
-	Random::seed(0);
 	char random[32];
-	sprintf(random, kTestRandomPath, Random::next(0x10000000u, 0xffffffffu));
+	sprintf(random, kTestRandomPath, rainbow::random(0x10000000u, 0xffffffffu));
 
 	Path path(random, Path::RelativeTo::Root);
 	const size_t end = strlen(path) - 1;

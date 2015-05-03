@@ -18,17 +18,16 @@ NS_RAINBOW_LUA_MODULE_BEGIN(random)
 			switch (lua_gettop(L))
 			{
 				case 0:  // rainbow.random()
-					r = Random::next();
+					r = rainbow::random();
 					break;
 				case 1:  // rainbow.random(max)
 					rainbow::lua::Argument<lua_Number>::is_required(L, 1);
-					r = Random::next<lua_Number>(lua_tonumber(L, 1));
+					r = rainbow::random(lua_tonumber(L, 1));
 					break;
 				default:  // rainbow.random(min, max)
 					rainbow::lua::Argument<lua_Number>::is_required(L, 1);
 					rainbow::lua::Argument<lua_Number>::is_required(L, 2);
-					r = Random::next<lua_Number>(lua_tonumber(L, 1),
-					                             lua_tonumber(L, 2));
+					r = rainbow::random(lua_tonumber(L, 1), lua_tonumber(L, 2));
 					break;
 			}
 			lua_pushnumber(L, r);
@@ -40,7 +39,7 @@ NS_RAINBOW_LUA_MODULE_BEGIN(random)
 			// rainbow.seed(seed = 0)
 			rainbow::lua::Argument<lua_Number>::is_optional(L, 1);
 
-			Random::seed(rainbow::lua::optinteger(L, 1, 0));
+			rainbow::random.seed(rainbow::lua::optinteger(L, 1, 0));
 			return 0;
 		}
 	}

@@ -333,9 +333,7 @@ Total amount of RAM in MB.
 
 ## rainbow.random
 
-> Rainbow's pseudo-random number generator is the [Double precision SIMD-oriented Fast Mersenne Twister](http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/SFMT/) developed by Mutsuo Saito and Makoto Matsumoto at Hiroshima University and University of Tokyo. The implementation in use supports a period of 2<sup>19937</sup> - 1.
-
-> ``rainbow.seed()`` must be called before using this module.
+> Rainbow integrates the [Double precision SIMD-oriented Fast Mersenne Twister](http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/SFMT/) pseudorandom number generators developed by Mutsuo Saito and Makoto Matsumoto at Hiroshima University and University of Tokyo. The default generator has a period of 2<sup>19937</sup> - 1.
 
 ### rainbow.random()
 
@@ -364,7 +362,7 @@ Returns a random number in interval [<var>min</var>, <var>max</var>).
 |:----------|:------------|
 | <var>seed</var> | <span class="optional"></span> Random number generator seed. Default: 0 (current system time). |
 
-Sets the random number generator seed. Must be called before any other calls.
+Sets the random number generator seed.
 
 ## rainbow.renderer
 
