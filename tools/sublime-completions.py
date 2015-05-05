@@ -34,7 +34,7 @@ def generate(g, source):
     return g.template().format(out[:len(out) - 1])
 
 if __name__ == '__main__':
-    f = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'doc', 'api.md'), 'r')
+    f = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'doc', 'programming', 'lua', 'api.md'), 'r')
     if f:
         s = generate(SublimeCompletions(), f)
         f.close()
