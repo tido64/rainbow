@@ -32,29 +32,35 @@ Start the app on your device.
    and "Create groups for any added folders" selected. Click "Add".
 5. You should now see `transitions` under `Resources`. Right-click it and choose
    "Add Files to Rainbow...".
-6. This time, navigate to `demos/canvas` and add `canvas.png`.
+6. This time, navigate to `demos` and add `canvas.png`.
 
 You should now be able to run this demo in the simulator or on your device.
 
 ## Linux / Mac OS X / Windows
 
 1. Copy this folder somewhere. In the following steps, we'll be copying more
-   stuff into this folder.
+   stuff into this folder. This will be your game folder.
 2. The `transitions` demo uses some convenience libraries, so navigate to the
-   `lua` folder and copy all the Lua files. (The demo doesn't actually use all
-   of them but we'll just copy all for simplicity's sake.)
+   `lua` folder and copy all the Lua files to your game folder. (The demo
+   doesn't actually use all of them but we'll just copy all for simplicity's
+   sake.)
 3. We'll also need to copy some basic shaders before we can start Rainbow.
-   Navigate to `src/Graphics/`. Copy the `Shaders` folder (wholesale).
+   Navigate to `src/Graphics/`. Copy the `Shaders` folder (wholesale) to your
+   game folder.
 4. `transitions` also needs a texture. This texture is located in
-   `demos/canvas/`. Copy `canvas.png`.
+   `demos/`. Copy `canvas.png` to your game folder.
 
 Now your demo folder should contain at least the following files:
 
 	Kim.lua
 	Math.lua
 	Shaders/
+	    Fixed2D.fsh
+	    Fixed2D.vsh
+	    Simple.fsh
+	    Simple2D.vsh
 	Transition.lua
-	TransitionEffects.lua
+	TransitionFunctions.lua
 	canvas.png
 	main.lua
 
