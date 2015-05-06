@@ -1,4 +1,4 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -9,7 +9,7 @@
 #include <algorithm>
 
 #include "Heimdall/Overlay.h"
-#include "Input/Touch.h"
+#include "Input/Pointer.h"
 
 namespace
 {
@@ -22,8 +22,8 @@ namespace heimdall
 	{
 		resistance_ = 2;
 		time_till_activation_ = kTimeTillActivation;
-		touches_[0] = -1;
-		touches_[1] = -1;
+		pointers_[0] = -1;
+		pointers_[1] = -1;
 	}
 
 	void OverlayActivator::update(const unsigned long dt)
@@ -37,23 +37,23 @@ namespace heimdall
 		}
 	}
 
-	bool OverlayActivator::on_touch_began_impl(const unsigned int count,
-	                                           const Touch *const touches)
+	bool OverlayActivator::on_pointer_began_impl(const unsigned int count,
+	                                             const Pointer *pointers)
 	{
-		R_ASSERT(!overlay_->is_visible(), "Overlay is leaking touch events");
+		R_ASSERT(!overlay_->is_visible(), "Overlay is leaking pointer events");
 
 		int i = 0;
 		switch (resistance_)
 		{
 			case 2:
-				touches_[0] = touches[0].hash;
+				pointers_[0] = pointers[0].hash;
 				--resistance_;
 				if (count < 2)
 					break;
 				i = 1;
 				// fall through
 			case 1:
-				touches_[1] = touches[i].hash;
+				pointers_[1] = pointers[i].hash;
 				--resistance_;
 				time_till_activation_ = kTimeTillActivation;
 				break;
@@ -63,28 +63,28 @@ namespace heimdall
 		return false;
 	}
 
-	bool OverlayActivator::on_touch_canceled_impl()
+	bool OverlayActivator::on_pointer_canceled_impl()
 	{
 		const bool prevent_propagation = is_activated();
 		reset();
 		return prevent_propagation;
 	}
 
-	bool OverlayActivator::on_touch_ended_impl(const unsigned int count,
-	                                           const Touch *const touches)
+	bool OverlayActivator::on_pointer_ended_impl(const unsigned int count,
+	                                             const Pointer *pointers)
 	{
 		const bool prevent_propagation = is_activated();
 		for (unsigned int i = 0; i < count; ++i)
 		{
-			if (touches[i].hash == touches_[0])
+			if (pointers[i].hash == pointers_[0])
 			{
-				touches_[0] = touches_[1];
-				touches_[1] = -1;
+				pointers_[0] = pointers_[1];
+				pointers_[1] = -1;
 				++resistance_;
 			}
-			else if (touches[i].hash == touches_[1])
+			else if (pointers[i].hash == pointers_[1])
 			{
-				touches_[1] = -1;
+				pointers_[1] = -1;
 				++resistance_;
 			}
 		}

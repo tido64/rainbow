@@ -18,7 +18,7 @@
 #include "Heimdall/OverlayActivator.h"
 #include "Input/InputListener.h"
 
-struct Touch;
+struct Pointer;
 
 namespace heimdall
 {
@@ -58,13 +58,13 @@ namespace heimdall
 
 		/* Implement InputListener */
 
-		bool on_touch_began_impl(const unsigned int,
-		                         const Touch *const) override;
-		bool on_touch_canceled_impl() override;
-		bool on_touch_ended_impl(const unsigned int,
-		                         const Touch *const) override;
-		bool on_touch_moved_impl(const unsigned int,
-		                         const Touch *const) override;
+		bool on_pointer_began_impl(const unsigned int,
+		                           const Pointer *) override;
+		bool on_pointer_canceled_impl() override;
+		bool on_pointer_ended_impl(const unsigned int,
+		                           const Pointer *) override;
+		bool on_pointer_moved_impl(const unsigned int,
+		                           const Pointer *) override;
 	};
 }
 

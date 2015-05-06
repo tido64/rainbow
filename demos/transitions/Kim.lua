@@ -35,7 +35,7 @@ function Kim.new(sprite)
 	return self
 end
 
-function Kim:touch_began(touches)
+function Kim:pointer_began(pointers)
 	-- Cancel the previous transitions.
 	self.alpha:cancel()
 	self.moving:cancel()
@@ -48,9 +48,9 @@ function Kim:touch_began(touches)
 		self.alternate = false
 	else
 		-- Move to point in 0.5 seconds. Squared ease-in effect.
-		for h,t in pairs(touches) do
+		for h,p in pairs(pointers) do
 			local x, y = self.sprite:get_position()
-			self.moving = Transition.move(self.node, t.x - x, t.y - y, 500, Transition.Functions.easeinout_cubic)
+			self.moving = Transition.move(self.node, p.x - x, p.y - y, 500, Transition.Functions.easeinout_cubic)
 			self.alpha = Transition.fadeto(self.sprite, 0xff, 500)
 			self.alternate = true
 			break
@@ -62,6 +62,6 @@ end
 
 function Kim:key_down() end
 function Kim:key_up() end
-function Kim:touch_canceled() end
-function Kim:touch_ended() end
-function Kim:touch_moved() end
+function Kim:pointer_canceled() end
+function Kim:pointer_ended() end
+function Kim:pointer_moved() end

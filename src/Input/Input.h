@@ -10,12 +10,13 @@
 #include "Input/InputListener.h"
 #include "Platform/Macros.h"
 
-class  Key;
-struct Touch;
+class Key;
+struct Pointer;
 
-/// Handles accelerometer/gyroscope and touch events independent of platform.
+/// Handles accelerometer/gyroscope and pointer events independent of platform.
 ///
-/// Subscribable input events. There are no accelerometer events.
+/// Accelerometer data changes do not follow the observer pattern because they
+/// happen every frame. Polling is preferred in this case.
 ///
 /// \see http://developer.apple.com/library/ios/#documentation/UIKit/Reference/UIAcceleration_Class/Reference/UIAcceleration.html
 class Input : private InputListener, NonCopyable<Input>
@@ -40,18 +41,21 @@ public:
 
 	/// Acceleration event.
 	/// \param x,y,z  Acceleration data.
-	/// \param i      The relative time at which the acceleration event occurred.
-	void accelerated(const double x, const double y, const double z, const double t);
+	/// \param t      The relative time at which the acceleration occurred.
+	void accelerated(const double x,
+	                 const double y,
+	                 const double z,
+	                 const double t);
 
 #ifdef RAINBOW_BUTTONS
 	void on_key_down(const Key &k);
 	void on_key_up(const Key &k);
 #endif  // RAINBOW_BUTTONS
 
-	void on_touch_began(const unsigned int count, Touch *const touches);
-	void on_touch_canceled();
-	void on_touch_ended(const unsigned int count, Touch *const touches);
-	void on_touch_moved(const unsigned int count, Touch *const touches);
+	void on_pointer_began(const unsigned int count, Pointer *pointers);
+	void on_pointer_canceled();
+	void on_pointer_ended(const unsigned int count, Pointer *pointers);
+	void on_pointer_moved(const unsigned int count, Pointer *pointers);
 
 private:
 	Acceleration acceleration_;  ///< Accelerometer data

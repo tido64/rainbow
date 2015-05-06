@@ -26,7 +26,7 @@
 #include "Director.h"
 #include "FileSystem/Path.h"
 #include "Input/Key.h"
-#include "Input/Touch.h"
+#include "Input/Pointer.h"
 #ifdef RAINBOW_TEST
 #	include "Tests/Tests.h"
 #endif
@@ -386,8 +386,8 @@ void RainbowController::on_mouse_down(const uint32_t button,
                                       const Vec2i &point,
                                       const unsigned long timestamp)
 {
-	Touch t(button, point.x, point.y, timestamp);
-	director_.input().on_touch_began(1, &t);
+	Pointer p(button, point.x, point.y, timestamp);
+	director_.input().on_pointer_began(1, &p);
 }
 
 void RainbowController::on_mouse_motion(const uint32_t buttons,
@@ -396,22 +396,22 @@ void RainbowController::on_mouse_motion(const uint32_t buttons,
 {
 	if (buttons > 0)
 	{
-		Touch t[SDL_BUTTON_X2];
+		Pointer p[SDL_BUTTON_X2];
 		size_t i = 0;
 		for (auto button : kMouseButtons)
 		{
 			if (buttons & SDL_BUTTON(button))
 			{
-				t[i] = Touch(button, point.x, point.y, timestamp);
+				p[i] = Pointer(button, point.x, point.y, timestamp);
 				++i;
 			}
 		}
-		director_.input().on_touch_moved(i, t);
+		director_.input().on_pointer_moved(i, p);
 	}
 	else
 	{
-		Touch t(0, point.x, point.y, timestamp);
-		director_.input().on_touch_moved(1, &t);
+		Pointer p(0, point.x, point.y, timestamp);
+		director_.input().on_pointer_moved(1, &p);
 	}
 }
 
@@ -419,8 +419,8 @@ void RainbowController::on_mouse_up(const uint32_t button,
                                     const Vec2i &point,
                                     const unsigned long timestamp)
 {
-	Touch t(button, point.x, point.y, timestamp);
-	director_.input().on_touch_ended(1, &t);
+	Pointer p(button, point.x, point.y, timestamp);
+	director_.input().on_pointer_ended(1, &p);
 }
 
 void RainbowController::on_window_resized()

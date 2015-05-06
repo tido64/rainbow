@@ -54,7 +54,7 @@ function SceneIntro:tick()
 	rainbow.scenegraph:enable(self.scene.objects.logo_batch.node)
 end
 
-function SceneIntro:touch_began()
+function SceneIntro:pointer_began()
 	rainbow.input.unsubscribe(self);
 	self.scene = nil;
 end
@@ -67,6 +67,6 @@ end
 
 function SceneIntro:key_down() end
 function SceneIntro:key_up() end
-function SceneIntro:touch_canceled() end
-function SceneIntro:touch_ended() end
-function SceneIntro:touch_moved() end
+function SceneIntro:pointer_canceled() end
+function SceneIntro:pointer_ended() end
+function SceneIntro:pointer_moved() end

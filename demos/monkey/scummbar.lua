@@ -61,10 +61,10 @@ function SceneSCUMMBar:update(dt)
 	end
 end
 
-function SceneSCUMMBar:touch_began(touches)
+function SceneSCUMMBar:pointer_began(pointers)
 	local walk = nil
-	for h,t in pairs(touches) do
-		walk = t
+	for h,p in pairs(pointers) do
+		walk = p
 		break
 	end
 
@@ -81,6 +81,6 @@ end
 function SceneSCUMMBar:destruct() end
 function SceneSCUMMBar:key_down() end
 function SceneSCUMMBar:key_up() end
-function SceneSCUMMBar:touch_canceled() end
-function SceneSCUMMBar:touch_ended() end
-function SceneSCUMMBar:touch_moved() end
+function SceneSCUMMBar:pointer_canceled() end
+function SceneSCUMMBar:pointer_ended() end
+function SceneSCUMMBar:pointer_moved() end

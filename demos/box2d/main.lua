@@ -12,9 +12,9 @@ local g_world
 local create_body_at
 local create_circle_at
 
-local function create_box_at(touches)
-	for _,t in pairs(touches) do
-		g_body_def.position = {x = t.x / g_ptm, y = t.y / g_ptm}
+local function create_box_at(pointers)
+	for _,p in pairs(pointers) do
+		g_body_def.position = {x = p.x / g_ptm, y = p.y / g_ptm}
 		local box = g_world:CreateBody(g_body_def)
 		box:CreateFixture(g_box_shape, 50)
 		box:ResetMassData()
@@ -22,9 +22,9 @@ local function create_box_at(touches)
 	create_body_at = create_circle_at
 end
 
-create_circle_at = function(touches)
-	for _,t in pairs(touches) do
-		g_body_def.position = {x = t.x / g_ptm, y = t.y / g_ptm}
+create_circle_at = function(pointers)
+	for _,p in pairs(pointers) do
+		g_body_def.position = {x = p.x / g_ptm, y = p.y / g_ptm}
 		local box = g_world:CreateBody(g_body_def)
 		box:CreateFixture(g_circle_shape, 50)
 		box:ResetMassData()
@@ -39,15 +39,15 @@ end
 local input_handler = {
 	key_down = function() end,
 	key_up = function() end,
-	touch_began = function(_, touches)
+	pointer_began = function(_, pointers)
 		g_mouse_down = true
-		create_body_at(touches)
+		create_body_at(pointers)
 	end,
-	touch_ended = on_mouse_up,
-	touch_canceled = on_mouse_up,
-	touch_moved = function(_, touches)
+	pointer_ended = on_mouse_up,
+	pointer_canceled = on_mouse_up,
+	pointer_moved = function(_, pointers)
 		if g_mouse_down then
-			create_body_at(touches)
+			create_body_at(pointers)
 		end
 	end,
 }

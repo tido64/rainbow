@@ -96,28 +96,28 @@ function Input.key_up(keys)
 	end, keys[1], keys[2])
 end
 
-function Input.touch_began(touches)
-	for_each_listener(function(l, touches)
-		l:touch_began(touches)
-	end, touches)
+function Input.pointer_began(pointers)
+	for_each_listener(function(l, pointers)
+		l:pointer_began(pointers)
+	end, pointers)
 end
 
-function Input.touch_canceled()
+function Input.pointer_canceled()
 	for_each_listener(function(l)
-		l:touch_canceled()
+		l:pointer_canceled()
 	end)
 end
 
-function Input.touch_ended(touches)
-	for_each_listener(function(l, touches)
-		l:touch_ended(touches)
-	end, touches)
+function Input.pointer_ended(pointers)
+	for_each_listener(function(l, pointers)
+		l:pointer_ended(pointers)
+	end, pointers)
 end
 
-function Input.touch_moved(touches)
-	for_each_listener(function(l, touches)
-		l:touch_moved(touches)
-	end, touches)
+function Input.pointer_moved(pointers)
+	for_each_listener(function(l, pointers)
+		l:pointer_moved(pointers)
+	end, pointers)
 end
 
 __modules[1] = function()

@@ -13,7 +13,8 @@ subscription. Delegates may return `true` if an event shouldn't travel further
 down the chain. By default, `false` is returned so that events reach all
 subscribers.
 
-Note that we currently don't differentiate mouse and touch events.
+Note that we do not differentiate mouse and touch events. Both are considered
+pointer events.
 
 ## Input Management
 
@@ -67,16 +68,16 @@ if (key.modifier == (Key::Mods::Shift | Key::Mods::Ctrl))
 Implement any of the following methods to receive mouse/touch events.
 
 ```c++
-bool  InputListener::on_touch_began_impl     (const unsigned int count,
-                                              const Touch *const array) override;
-bool  InputListener::on_touch_canceled_impl  () override;
-bool  InputListener::on_touch_ended_impl     (const unsigned int count,
-                                              const Touch *const array) override;
-bool  InputListener::on_touch_moved_impl     (const unsigned int count,
-                                              const Touch *const array) override;
+bool  InputListener::on_pointer_began_impl     (const unsigned int count,
+                                                const Pointer *array) override;
+bool  InputListener::on_pointer_canceled_impl  () override;
+bool  InputListener::on_pointer_ended_impl     (const unsigned int count,
+                                                const Pointer *array) override;
+bool  InputListener::on_pointer_moved_impl     (const unsigned int count,
+                                                const Pointer *array) override;
 ```
 
-A `Touch` instance stores the location of the event, `x` and `y`, and the
+A `Pointer` instance stores the location of the event, `x` and `y`, and the
 timestamp, `timestamp`, at which the event occurred. Its `hash` value uniquely
 identifies a touch, or mouse button, for the duration of it touching the screen,
 or mouse button being held.
@@ -93,7 +94,7 @@ Ctrl+Q/⌘Q.
 
 ```c++
 #include "Input/Key.h"
-#include "Input/Touch.h"
+#include "Input/Pointer.h"
 #include "Script/GameBase.h"
 
 class InputHandler final : public InputListener
@@ -105,8 +106,8 @@ private:
         return true;
     }
 
-    bool on_touch_began_impl(const unsigned int count,
-                             const Touch *const array) override
+    bool on_pointer_began_impl(const unsigned int count,
+                               const Pointer *array) override
     {
         for (unsigned int i = 0; i < count; ++i)
         {

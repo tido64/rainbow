@@ -10,7 +10,7 @@
 #include "Common/Data.h"
 #include "Config.h"
 #include "Director.h"
-#include "Input/Touch.h"
+#include "Input/Pointer.h"
 
 #pragma clang diagnostic ignored "-Wunused-parameter"
 
@@ -40,7 +40,7 @@ namespace
 @end
 
 @implementation RainbowViewController {
-	Touch _touches[kMaxTouches];
+	Pointer _pointers[kMaxTouches];
 }
 
 + (void)load {
@@ -92,16 +92,16 @@ namespace
 	reinterpret_cast<GLKView*>(self.view).context = context;
 }
 
-- (Touch *)touches
+- (Pointer *)pointers
 {
-	return _touches;
+	return _pointers;
 }
 
 /// Returns an array of UITouches converted to the coordinate space of our
 /// viewport.
 /// \param touches  Set of touches to convert.
-/// \return Array of touches. Must not be deleted.
-- (Touch *)convertTouches:(NSSet *)touches
+/// \return Array of Pointers. Must not be deleted.
+- (Pointer *)convertTouches:(NSSet *)touches
 {
 	R_ASSERT(touches.count <= kMaxTouches, "Unsupported number of touches");
 
@@ -110,21 +110,17 @@ namespace
 	id<UICoordinateSpace> space = screen.coordinateSpace;
 	const CGFloat height = CGRectGetHeight(space.bounds);
 	const CGFloat scale = screen.nativeScale;
-	Touch *t = self.touches;
+	Pointer *ptr = self.pointers;
 	for (UITouch *touch in touches)
 	{
-		CGPoint p = [view convertPoint:[touch locationInView:view]
-		             toCoordinateSpace:space];
-		t->hash = touch.hash;
-		t->x = p.x * scale;
-		t->y = (height - p.y) * scale;
-		p = [view convertPoint:[touch previousLocationInView:view]
-		     toCoordinateSpace:space];
-		t->x0 = p.x * scale;
-		t->y0 = (height - p.y) * scale;
-		++t;
+		const CGPoint p = [view convertPoint:[touch locationInView:view]
+		                   toCoordinateSpace:space];
+		ptr->hash = touch.hash;
+		ptr->x = p.x * scale;
+		ptr->y = (height - p.y) * scale;
+		++ptr;
 	}
-	return self.touches;
+	return self.pointers;
 }
 
 #pragma mark - GLKViewControllerDelegate protocol
@@ -152,25 +148,25 @@ namespace
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
-	self.director->input().on_touch_began(touches.count,
-	                                      [self convertTouches:touches]);
+	self.director->input().on_pointer_began(touches.count,
+	                                        [self convertTouches:touches]);
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
 {
-	self.director->input().on_touch_moved(touches.count,
-	                                      [self convertTouches:touches]);
+	self.director->input().on_pointer_moved(touches.count,
+	                                        [self convertTouches:touches]);
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
-	self.director->input().on_touch_ended(touches.count,
-	                                      [self convertTouches:touches]);
+	self.director->input().on_pointer_ended(touches.count,
+	                                        [self convertTouches:touches]);
 }
 
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
 {
-	self.director->input().on_touch_canceled();
+	self.director->input().on_pointer_canceled();
 }
 
 #pragma mark - UIViewController overrides
@@ -239,77 +235,65 @@ namespace
 
 #pragma mark - Deprecated in iOS 8.0
 
-- (Touch *)touchesFromSet:(NSSet *)touches
+- (Pointer *)touchesFromSet:(NSSet *)touches
 {
 	R_ASSERT(touches.count <= kMaxTouches, "Unsupported number of touches");
 
 	UIScreen *screen = self.view.window.screen;
 	const CGSize size = GetScreenSize(screen);
 	const CGFloat scale = screen.scale;
-	Touch *t = self.touches;
+	Pointer *ptr = self.pointers;
 	switch ([UIApplication sharedApplication].statusBarOrientation)
 	{
 		case UIInterfaceOrientationPortrait:
 			for (UITouch *touch in touches)
 			{
-				CGPoint p = [touch locationInView:nil];
-				t->hash = touch.hash;
-				t->x = p.x * scale;
-				t->y = size.height - p.y * scale;
-				p = [touch previousLocationInView:nil];
-				t->x0 = p.x * scale;
-				t->y0 = size.height - p.y * scale;
-				t->timestamp = touch.timestamp * 1000.0;
-				++t;
+				const CGPoint p = [touch locationInView:nil];
+				ptr->hash = touch.hash;
+				ptr->x = p.x * scale;
+				ptr->y = size.height - p.y * scale;
+				ptr->timestamp = touch.timestamp * 1000.0;
+				++ptr;
 			}
 			break;
 		case UIInterfaceOrientationPortraitUpsideDown:
 			for (UITouch *touch in touches)
 			{
-				CGPoint p = [touch locationInView:nil];
-				t->hash = touch.hash;
-				t->x = size.width - p.x * scale;
-				t->y = p.y * scale;
-				p = [touch previousLocationInView:nil];
-				t->x0 = size.width - p.x * scale;
-				t->y0 = p.y * scale;
-				t->timestamp = touch.timestamp * 1000.0;
-				++t;
+				const CGPoint p = [touch locationInView:nil];
+				ptr->hash = touch.hash;
+				ptr->x = size.width - p.x * scale;
+				ptr->y = p.y * scale;
+				ptr->timestamp = touch.timestamp * 1000.0;
+				++ptr;
 			}
 			break;
 		case UIInterfaceOrientationLandscapeLeft:
 			for (UITouch *touch in touches)
 			{
-				CGPoint p = [touch locationInView:nil];
-				t->hash = touch.hash;
-				t->x = size.height - p.y * scale;
-				t->y = size.width - p.x * scale;
-				p = [touch previousLocationInView:nil];
-				t->x0 = size.height - p.y * scale;
-				t->y0 = size.width - p.x * scale;
-				t->timestamp = touch.timestamp * 1000.0;
-				++t;
+				const CGPoint p = [touch locationInView:nil];
+				ptr->hash = touch.hash;
+				ptr->x = size.height - p.y * scale;
+				ptr->y = size.width - p.x * scale;
+				ptr->timestamp = touch.timestamp * 1000.0;
+				++ptr;
 			}
 			break;
 		case UIInterfaceOrientationLandscapeRight:
 			for (UITouch *touch in touches)
 			{
-				CGPoint p = [touch locationInView:nil];
-				t->hash = touch.hash;
-				t->x = p.y * scale;
-				t->y = p.x * scale;
-				p = [touch previousLocationInView:nil];
-				t->x0 = p.y * scale;
-				t->y0 = p.x * scale;
-				t->timestamp = touch.timestamp * 1000.0;
-				++t;
+				const CGPoint p = [touch locationInView:nil];
+				ptr->hash = touch.hash;
+				ptr->x = p.y * scale;
+				ptr->y = p.x * scale;
+				ptr->timestamp = touch.timestamp * 1000.0;
+				++ptr;
 			}
 			break;
 		default:
 			R_ASSERT(false, "Reached unreachable code");
 			break;
 	}
-	return self.touches;
+	return self.pointers;
 }
 
 @end

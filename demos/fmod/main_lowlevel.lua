@@ -33,10 +33,10 @@ function init()
 	local input_delegate = {
 		key_down = key_down,
 		key_up = noop,
-		touch_began = noop,
-		touch_canceled = noop,
-		touch_ended = noop,
-		touch_moved = noop,
+		pointer_began = noop,
+		pointer_canceled = noop,
+		pointer_ended = noop,
+		pointer_moved = noop,
 	}
 	rainbow.input.subscribe(input_delegate)
 

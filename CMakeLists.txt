@@ -100,7 +100,7 @@ set(SOURCE_FILES
 	src/Input/Input.h
 	src/Input/InputListener.h
 	src/Input/Key.h
-	src/Input/Touch.h
+	src/Input/Pointer.h
 	src/Lua/LuaDebugging.h
 	src/Lua/LuaHelper.cpp
 	src/Lua/LuaHelper.h
@@ -210,7 +210,7 @@ if(UNIT_TESTS)
 		src/Tests/ConFuoco/ConFuoco.test.cc
 		src/Tests/FileSystem/Path.test.cc
 		src/Tests/Input/Input.test.cc
-		src/Tests/Input/Touch.test.cc
+		src/Tests/Input/Pointer.test.cc
 		src/Tests/Memory/SharedPtr.test.cc
 		src/Tests/Tests.cpp
 		src/Tests/Tests.h)

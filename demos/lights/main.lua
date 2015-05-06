@@ -34,10 +34,10 @@ function init()
 	g_scene.delegate = {
 		key_down = function() end,
 		key_up = function() end,
-		touch_began = function() end,
-		touch_canceled = function() end,
-		touch_ended = function() end,
-		touch_moved = function() end,
+		pointer_began = function() end,
+		pointer_canceled = function() end,
+		pointer_ended = function() end,
+		pointer_moved = function() end,
 	}
 	rainbow.input.subscribe(g_scene.delegate)
 end
@@ -46,9 +46,9 @@ function tick()
 end
 
 function update()
-	g_scene.delegate.touch_moved = function(self, touches)
-		for h,t in pairs(touches) do
-			g_scene.lighting:set_position(t.x, t.y, 100)
+	g_scene.delegate.pointer_moved = function(self, pointers)
+		for h,p in pairs(pointers) do
+			g_scene.lighting:set_position(p.x, p.y, 100)
 			break
 		end
 	end

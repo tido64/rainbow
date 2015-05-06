@@ -9,7 +9,7 @@
 #include "Common/Data.h"
 #include "FileSystem/File.h"
 #include "FileSystem/Path.h"
-#include "Input/Touch.h"
+#include "Input/Pointer.h"
 #include "Resources/Inconsolata.otf.h"
 #include "Resources/NewsCycle-Regular.ttf.h"
 
@@ -134,34 +134,36 @@ namespace heimdall
 		input().subscribe(&overlay_activator_);
 	}
 
-	bool Gatekeeper::on_touch_began_impl(const unsigned int count,
-	                                     const Touch *const touches)
+	bool Gatekeeper::on_pointer_began_impl(const unsigned int count,
+	                                       const Pointer *pointers)
 	{
-		std::for_each(touches, touches + count, [this](const Touch &t) {
-			if (info_->button().hit_test(Vec2i(t.x, t.y)))
-				pressed_[t.hash] = &info_->button();
+		std::for_each(pointers, pointers + count, [this](const Pointer &p) {
+			if (info_->button().hit_test(Vec2i(p.x, p.y)))
+				pressed_[p.hash] = &info_->button();
 		});
 		return overlay_.is_visible();
 	}
 
-	bool Gatekeeper::on_touch_canceled_impl()
+	bool Gatekeeper::on_pointer_canceled_impl()
 	{
 		pressed_.clear();
 		return overlay_.is_visible();
 	}
 
-	bool Gatekeeper::on_touch_ended_impl(const unsigned int count,
-	                                     const Touch *const touches)
+	bool Gatekeeper::on_pointer_ended_impl(const unsigned int count,
+	                                       const Pointer *pointers)
 	{
 		if (overlay_.is_visible() && !overlay_activator_.is_activated())
 		{
 			if (!pressed_.empty())
 			{
-				std::for_each(touches, touches + count, [this](const Touch &t) {
-					auto button = pressed_.find(t.hash);
+				std::for_each(pointers,
+				              pointers + count,
+				              [this](const Pointer &p) {
+					auto button = pressed_.find(p.hash);
 					if (button != pressed_.end())
 					{
-						if (button->second->hit_test(Vec2i(t.x, t.y)))
+						if (button->second->hit_test(Vec2i(p.x, p.y)))
 							button->second->press();
 						pressed_.erase(button);
 					}
@@ -176,7 +178,7 @@ namespace heimdall
 		return false;
 	}
 
-	bool Gatekeeper::on_touch_moved_impl(const unsigned int, const Touch *const)
+	bool Gatekeeper::on_pointer_moved_impl(const unsigned int, const Pointer *)
 	{
 		return overlay_.is_visible();
 	}

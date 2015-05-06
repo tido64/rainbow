@@ -1,4 +1,4 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -6,7 +6,7 @@
 
 #include "Input/Input.h"
 #include "Input/Key.h"
-#include "Input/Touch.h"
+#include "Input/Pointer.h"
 #include "Lua/LuaHelper.h"
 
 NS_RAINBOW_LUA_MODULE_BEGIN(input)
@@ -17,10 +17,10 @@ NS_RAINBOW_LUA_MODULE_BEGIN(input)
 		{
 			kEventKeyDown,
 			kEventKeyUp,
-			kEventTouchBegan,
-			kEventTouchCanceled,
-			kEventTouchEnded,
-			kEventTouchMoved
+			kEventPointerBegan,
+			kEventPointerCanceled,
+			kEventPointerEnded,
+			kEventPointerMoved
 		};
 
 		int acceleration = -1;
@@ -30,10 +30,10 @@ NS_RAINBOW_LUA_MODULE_BEGIN(input)
 		const char *const kInputEvents[] = {
 			"key_down",
 			"key_up",
-			"touch_began",
-			"touch_canceled",
-			"touch_ended",
-			"touch_moved"
+			"pointer_began",
+			"pointer_canceled",
+			"pointer_ended",
+			"pointer_moved"
 		};
 
 		void push_event(lua_State *L, const Event event)
@@ -72,10 +72,10 @@ NS_RAINBOW_LUA_MODULE_BEGIN(input)
 
 #endif  // RAINBOW_BUTTONS
 
-		void on_touch_event(lua_State *L,
-		                    const Event event,
-		                    const unsigned int count,
-		                    const Touch *const touches)
+		void on_pointer_event(lua_State *L,
+		                      const Event event,
+		                      const unsigned int count,
+		                      const Pointer *pointers)
 		{
 			push_event(L, event);
 
@@ -86,13 +86,11 @@ NS_RAINBOW_LUA_MODULE_BEGIN(input)
 				lua_createtable(L, 0, count);
 				for (unsigned int i = 0; i < count; ++i)
 				{
-					lua_pushinteger(L, touches[i].hash);
-					lua_createtable(L, 0, 5);
-					luaR_rawsetinteger(L, "x", touches[i].x);
-					luaR_rawsetinteger(L, "y", touches[i].y);
-					luaR_rawsetinteger(L, "x0", touches[i].x0);
-					luaR_rawsetinteger(L, "y0", touches[i].y0);
-					luaR_rawsetinteger(L, "timestamp", touches[i].timestamp);
+					lua_pushinteger(L, pointers[i].hash);
+					lua_createtable(L, 0, 3);
+					luaR_rawsetinteger(L, "x", pointers[i].x);
+					luaR_rawsetinteger(L, "y", pointers[i].y);
+					luaR_rawsetinteger(L, "timestamp", pointers[i].timestamp);
 					lua_rawset(L, -3);
 				}
 			}
@@ -160,30 +158,30 @@ NS_RAINBOW_LUA_MODULE_BEGIN(input)
 
 #endif  // RAINBOW_BUTTONS
 
-	void on_touch_began(lua_State * L,
-	                    const unsigned int count,
-	                    const Touch *const touches)
+	void on_pointer_began(lua_State * L,
+	                      const unsigned int count,
+	                      const Pointer *pointers)
 	{
-		on_touch_event(L, kEventTouchBegan, count, touches);
+		on_pointer_event(L, kEventPointerBegan, count, pointers);
 	}
 
-	void on_touch_canceled(lua_State * L)
+	void on_pointer_canceled(lua_State * L)
 	{
-		on_touch_event(L, kEventTouchCanceled, 0, nullptr);
+		on_pointer_event(L, kEventPointerCanceled, 0, nullptr);
 	}
 
-	void on_touch_ended(lua_State * L,
-	                    const unsigned int count,
-	                    const Touch *const touches)
+	void on_pointer_ended(lua_State * L,
+	                      const unsigned int count,
+	                      const Pointer *pointers)
 	{
-		on_touch_event(L, kEventTouchEnded, count, touches);
+		on_pointer_event(L, kEventPointerEnded, count, pointers);
 	}
 
-	void on_touch_moved(lua_State * L,
-	                    const unsigned int count,
-	                    const Touch *const touches)
+	void on_pointer_moved(lua_State * L,
+	                      const unsigned int count,
+	                      const Pointer *pointers)
 	{
-		on_touch_event(L, kEventTouchMoved, count, touches);
+		on_pointer_event(L, kEventPointerMoved, count, pointers);
 	}
 }
 NS_RAINBOW_LUA_MODULE_END(input)

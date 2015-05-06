@@ -1,4 +1,4 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -9,7 +9,7 @@
 #include "Platform/Macros.h"
 
 class Key;
-struct Touch;
+struct Pointer;
 
 /// Interface for input listeners.
 class InputListener : private Link
@@ -44,34 +44,34 @@ public:
 #endif
 
 	/// User puts finger down on the device; mouse down.
-	/// \param count    Number of touches.
-	/// \param touches  The id and position of each touch.
-	bool on_touch_began(const unsigned int count, const Touch *const touches)
+	/// \param count     Number of pointers.
+	/// \param pointers  The id and position of each pointer.
+	bool on_pointer_began(const unsigned int count, const Pointer *pointers)
 	{
-		return on_touch_began_impl(count, touches);
+		return on_pointer_began_impl(count, pointers);
 	}
 
-	/// Canceled touch event. May occur when the user moves finger off-screen
+	/// Canceled pointer event. May occur when the user moves finger off-screen
 	/// or the application got interrupted by external events.
-	bool on_touch_canceled()
+	bool on_pointer_canceled()
 	{
-		return on_touch_canceled_impl();
+		return on_pointer_canceled_impl();
 	}
 
 	/// User lifts finger; mouse up.
-	/// \param count    Number of touches.
-	/// \param touches  The id and position of each touch.
-	bool on_touch_ended(const unsigned int count, const Touch *const touches)
+	/// \param count     Number of pointers.
+	/// \param pointers  The id and position of each pointer.
+	bool on_pointer_ended(const unsigned int count, const Pointer *pointers)
 	{
-		return on_touch_ended_impl(count, touches);
+		return on_pointer_ended_impl(count, pointers);
 	}
 
 	/// User moves finger around while it still is on the device; mouse moved.
-	/// \param count    Number of touches.
-	/// \param touches  The id and position of each touch.
-	bool on_touch_moved(const unsigned int count, const Touch *const touches)
+	/// \param count     Number of pointers.
+	/// \param pointers  The id and position of each pointer.
+	bool on_pointer_moved(const unsigned int count, const Pointer *pointers)
 	{
-		return on_touch_moved_impl(count, touches);
+		return on_pointer_moved_impl(count, pointers);
 	}
 
 private:
@@ -87,22 +87,22 @@ private:
 	}
 #endif
 
-	virtual bool on_touch_began_impl(const unsigned int, const Touch *const)
+	virtual bool on_pointer_began_impl(const unsigned int, const Pointer *)
 	{
 		return false;
 	}
 
-	virtual bool on_touch_canceled_impl()
+	virtual bool on_pointer_canceled_impl()
 	{
 		return false;
 	}
 
-	virtual bool on_touch_ended_impl(const unsigned int, const Touch *const)
+	virtual bool on_pointer_ended_impl(const unsigned int, const Pointer *)
 	{
 		return false;
 	}
 
-	virtual bool on_touch_moved_impl(const unsigned int, const Touch *const)
+	virtual bool on_pointer_moved_impl(const unsigned int, const Pointer *)
 	{
 		return false;
 	}

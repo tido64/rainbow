@@ -19,7 +19,10 @@ void Input::unsubscribe(InputListener *const i)
 	i->pop();
 }
 
-void Input::accelerated(const double x, const double y, const double z, const double t)
+void Input::accelerated(const double x,
+                        const double y,
+                        const double z,
+                        const double t)
 {
 	acceleration_.update(x, y, z, t);
 }
@@ -38,35 +41,35 @@ void Input::on_key_up(const Key &k)
 }
 #endif
 
-void Input::on_touch_began(const unsigned int count, Touch *const touches)
+void Input::on_pointer_began(const unsigned int count, Pointer *pointers)
 {
-	auto began = [count, touches](InputListener *i) {
-		return i->on_touch_began(count, touches);
+	auto began = [count, pointers](InputListener *i) {
+		return i->on_pointer_began(count, pointers);
 	};
 	if (for_each(next(), std::move(began)))
 		return;
 }
 
-void Input::on_touch_canceled()
+void Input::on_pointer_canceled()
 {
-	auto canceled = [](InputListener *i) { return i->on_touch_canceled(); };
+	auto canceled = [](InputListener *i) { return i->on_pointer_canceled(); };
 	if (for_each(next(), std::move(canceled)))
 		return;
 }
 
-void Input::on_touch_ended(const unsigned int count, Touch *const touches)
+void Input::on_pointer_ended(const unsigned int count, Pointer *pointers)
 {
-	auto ended = [count, touches](InputListener *i) {
-		return i->on_touch_ended(count, touches);
+	auto ended = [count, pointers](InputListener *i) {
+		return i->on_pointer_ended(count, pointers);
 	};
 	if (for_each(next(), std::move(ended)))
 		return;
 }
 
-void Input::on_touch_moved(const unsigned int count, Touch *const touches)
+void Input::on_pointer_moved(const unsigned int count, Pointer *pointers)
 {
-	auto moved = [count, touches](InputListener *i) {
-		return i->on_touch_moved(count, touches);
+	auto moved = [count, pointers](InputListener *i) {
+		return i->on_pointer_moved(count, pointers);
 	};
 	if (for_each(next(), std::move(moved)))
 		return;

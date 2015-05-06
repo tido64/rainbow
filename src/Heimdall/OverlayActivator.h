@@ -26,16 +26,16 @@ namespace heimdall
 	private:
 		int resistance_;
 		int time_till_activation_;
-		unsigned int touches_[2];
+		unsigned int pointers_[2];
 		Overlay *overlay_;
 
 		/* Implement InputListener */
 
-		bool on_touch_began_impl(const unsigned int,
-		                         const Touch *const) override;
-		bool on_touch_canceled_impl() override;
-		bool on_touch_ended_impl(const unsigned int,
-		                         const Touch *const) override;
+		bool on_pointer_began_impl(const unsigned int,
+		                           const Pointer *) override;
+		bool on_pointer_canceled_impl() override;
+		bool on_pointer_ended_impl(const unsigned int,
+		                           const Pointer *) override;
 	};
 
 	OverlayActivator::OverlayActivator(Overlay *overlay) : overlay_(overlay)

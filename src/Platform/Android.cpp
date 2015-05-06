@@ -21,7 +21,7 @@
 #include "FileSystem/Path.h"
 #include "Graphics/Renderer.h"
 #include "Input/Input.h"
-#include "Input/Touch.h"
+#include "Input/Pointer.h"
 
 ANativeActivity *gNativeActivity;
 
@@ -54,13 +54,9 @@ void android_init_display(AInstance *ainstance);
 void android_handle_event(struct android_app *app, int32_t cmd);
 int32_t android_handle_input(struct android_app *app, AInputEvent *event);
 int32_t android_handle_motion(struct android_app *app, AInputEvent *event);
-Touch get_touch_event(Renderer &renderer,
-                      AInputEvent *event,
-                      const int32_t index);
-Touch get_touch_event(Renderer &renderer,
-                      AInputEvent *event,
-                      const int32_t index,
-                      const size_t history);
+Pointer get_pointer_event(Renderer &renderer,
+                          AInputEvent *event,
+                          const int32_t index);
 
 
 void android_main(struct android_app *state)
@@ -78,9 +74,14 @@ void android_main(struct android_app *state)
 
 	// Prepare to monitor accelerometer
 	ainstance.sensorManager = ASensorManager_getInstance();
-	ainstance.accelerometerSensor = ASensorManager_getDefaultSensor(ainstance.sensorManager, ASENSOR_TYPE_ACCELEROMETER);
+	ainstance.accelerometerSensor = ASensorManager_getDefaultSensor(
+	    ainstance.sensorManager, ASENSOR_TYPE_ACCELEROMETER);
 	if (ainstance.accelerometerSensor)
-		ainstance.sensorEventQueue = ASensorManager_createEventQueue(ainstance.sensorManager, state->looper, LOOPER_ID_USER, nullptr, nullptr);
+	{
+		ainstance.sensorEventQueue = ASensorManager_createEventQueue(
+		    ainstance.sensorManager, state->looper, LOOPER_ID_USER, nullptr,
+		    nullptr);
+	}
 
 	Chrono chrono;
 	while (!ainstance.done)
@@ -89,7 +90,9 @@ void android_main(struct android_app *state)
 		int events;
 		struct android_poll_source* source;
 
-		while ((ident = ALooper_pollAll(!ainstance.active ? -1 : 0, nullptr, &events, reinterpret_cast<void**>(&source))) >= 0)
+		while ((ident = ALooper_pollAll(
+		            !ainstance.active ? -1 : 0, nullptr, &events,
+		            reinterpret_cast<void**>(&source))) >= 0)
 		{
 			if (source)
 				source->process(state, source);
@@ -98,15 +101,17 @@ void android_main(struct android_app *state)
 				break;
 
 			// If a sensor has data, process it now.
-			if (ainstance.active && ident == LOOPER_ID_USER && ainstance.accelerometerSensor)
+			if (ainstance.active && ident == LOOPER_ID_USER &&
+			    ainstance.accelerometerSensor)
 			{
 				ASensorEvent event;
-				while (ASensorEventQueue_getEvents(ainstance.sensorEventQueue, &event, 1) > 0)
+				while (ASensorEventQueue_getEvents(ainstance.sensorEventQueue,
+				                                   &event, 1) > 0)
+				{
 					ainstance.director->input().accelerated(
-						event.acceleration.x,
-						event.acceleration.y,
-						event.acceleration.z,
-						event.timestamp);
+					    event.acceleration.x, event.acceleration.y,
+					    event.acceleration.z, event.timestamp);
+				}
 			}
 		}
 
@@ -126,7 +131,8 @@ void android_destroy_display(AInstance *a)
 	a->director.reset();
 	if (a->display != EGL_NO_DISPLAY)
 	{
-		eglMakeCurrent(a->display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
+		eglMakeCurrent(
+		    a->display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
 		if (a->context != EGL_NO_CONTEXT)
 		{
 			eglDestroyContext(a->display, a->context);
@@ -207,7 +213,7 @@ void android_init_display(AInstance *a)
 	EGLContext &ctx = a->context;
 	if (ctx == EGL_NO_CONTEXT)
 	{
-		const EGLint gles_attrib[] = { EGL_CONTEXT_CLIENT_VERSION, 2, EGL_NONE };
+		const EGLint gles_attrib[]{EGL_CONTEXT_CLIENT_VERSION, 2, EGL_NONE};
 		ctx = eglCreateContext(dpy, config, EGL_NO_CONTEXT, gles_attrib);
 		if (ctx == EGL_NO_CONTEXT)
 		{
@@ -232,7 +238,8 @@ void android_handle_event(struct android_app *app, int32_t cmd)
 			android_init_display(a);
 			break;
 		case APP_CMD_TERM_WINDOW:
-			eglMakeCurrent(a->display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
+			eglMakeCurrent(
+			    a->display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
 			eglDestroySurface(a->display, a->surface);
 			a->surface = EGL_NO_SURFACE;
 			break;
@@ -243,9 +250,12 @@ void android_handle_event(struct android_app *app, int32_t cmd)
 			// When our app gains focus, we start monitoring the accelerometer.
 			if (a->accelerometerSensor)
 			{
-				ASensorEventQueue_enableSensor(a->sensorEventQueue, a->accelerometerSensor);
+				ASensorEventQueue_enableSensor(
+				    a->sensorEventQueue, a->accelerometerSensor);
 				// We'd like to get 60 events per second (in us).
-				ASensorEventQueue_setEventRate(a->sensorEventQueue, a->accelerometerSensor, (1000L / 60) * 1000);
+				ASensorEventQueue_setEventRate(
+				    a->sensorEventQueue, a->accelerometerSensor,
+				    (1000L / 60) * 1000);
 			}
 			ConFuoco::Mixer::Instance->suspend(false);
 			a->active = true;
@@ -274,9 +284,13 @@ void android_handle_event(struct android_app *app, int32_t cmd)
 		case APP_CMD_SAVE_STATE:
 			break;
 		case APP_CMD_PAUSE:
-			eglMakeCurrent(a->display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
+			eglMakeCurrent(
+			    a->display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
 			if (a->accelerometerSensor)
-				ASensorEventQueue_disableSensor(a->sensorEventQueue, a->accelerometerSensor);
+			{
+				ASensorEventQueue_disableSensor(
+				    a->sensorEventQueue, a->accelerometerSensor);
+			}
 			ConFuoco::Mixer::Instance->suspend(true);
 			break;
 		case APP_CMD_DESTROY:
@@ -312,8 +326,8 @@ int32_t android_handle_motion(struct android_app *app, AInputEvent *event)
 			    (AMotionEvent_getAction(event)
 			        & AMOTION_EVENT_ACTION_POINTER_INDEX_MASK)
 			    >> AMOTION_EVENT_ACTION_POINTER_INDEX_SHIFT;
-			Touch t = get_touch_event(director->renderer(), event, index);
-			director->input().on_touch_began(1, &t);
+			Pointer p = get_pointer_event(director->renderer(), event, index);
+			director->input().on_pointer_began(1, &p);
 			break;
 		}
 		case AMOTION_EVENT_ACTION_UP:
@@ -322,30 +336,21 @@ int32_t android_handle_motion(struct android_app *app, AInputEvent *event)
 			    (AMotionEvent_getAction(event)
 			        & AMOTION_EVENT_ACTION_POINTER_INDEX_MASK)
 			    >> AMOTION_EVENT_ACTION_POINTER_INDEX_SHIFT;
-			Touch t = get_touch_event(director->renderer(), event, index);
-			director->input().on_touch_ended(1, &t);
+			Pointer p = get_pointer_event(director->renderer(), event, index);
+			director->input().on_pointer_ended(1, &p);
 			break;
 		}
 		case AMOTION_EVENT_ACTION_MOVE: {
-			size_t history = AMotionEvent_getHistorySize(event);
-			if (!history)
-				break;
-			--history;
-
 			const size_t count = AMotionEvent_getPointerCount(event);
-			std::unique_ptr<Touch[]> touches(new Touch[count]);
-
+			std::unique_ptr<Pointer[]> pointers(new Pointer[count]);
 			for (size_t i = 0; i < count; ++i)
-			{
-				touches[i] =
-				    get_touch_event(director->renderer(), event, i, history);
-			}
-			director->input().on_touch_moved(count, touches.get());
+				pointers[i] = get_pointer_event(director->renderer(), event, i);
+			director->input().on_pointer_moved(count, pointers.get());
 			break;
 		}
 		case AMOTION_EVENT_ACTION_CANCEL:
 		case AMOTION_EVENT_ACTION_OUTSIDE:
-			director->input().on_touch_canceled();
+			director->input().on_pointer_canceled();
 			break;
 		default:
 			break;
@@ -353,31 +358,17 @@ int32_t android_handle_motion(struct android_app *app, AInputEvent *event)
 	return 1;
 }
 
-Touch get_touch_event(Renderer &renderer,
-                      AInputEvent *event,
-                      const int32_t index)
+Pointer get_pointer_event(Renderer &renderer,
+                          AInputEvent *event,
+                          const int32_t index)
 {
 	const Vec2i &point = renderer.convert_to_flipped_view(
 	    Vec2i(AMotionEvent_getX(event, index),
 	          AMotionEvent_getY(event, index)));
-	return Touch(AMotionEvent_getPointerId(event, index),
-	             point.x,
-	             point.y,
-	             AMotionEvent_getEventTime(event));
-}
-
-Touch get_touch_event(Renderer &renderer,
-                      AInputEvent *event,
-                      const int32_t index,
-                      const size_t history)
-{
-	Touch t = get_touch_event(renderer, event, index);
-	const Vec2i &point = renderer.convert_to_flipped_view(
-	    Vec2i(AMotionEvent_getHistoricalX(event, index, history),
-	          AMotionEvent_getHistoricalY(event, index, history)));
-	t.x0 = point.x;
-	t.y0 = point.y;
-	return t;
+	return Pointer(AMotionEvent_getPointerId(event, index),
+	               point.x,
+	               point.y,
+	               AMotionEvent_getEventTime(event));
 }
 
 #endif

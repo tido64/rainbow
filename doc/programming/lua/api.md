@@ -179,17 +179,17 @@ InputListener.__index = InputListener
 
 function InputListener:key_down(key, modifiers) end
 function InputListener:key_up(key, modifiers) end
-function InputListener:touch_ended(touches) end
-function InputListener:touch_canceled() end
-function InputListener:touch_moved(touches) end
+function InputListener:pointer_ended(pointers) end
+function InputListener:pointer_canceled() end
+function InputListener:pointer_moved(pointers) end
 
 -- Create our listener and let it subscribe to input events.
 local mylistener = setmetatable({}, InputListener)
 rainbow.input.subscribe(mylistener)
 
--- We're only interested in touch began events.
-function mylistener:touch_began(touches)
-  for hash,touch in pairs(touches) do
+-- We're only interested in pointer began events.
+function mylistener:pointer_began(pointers)
+  for hash,pointer in pairs(pointers) do
     -- Handle event here
   end
 end
@@ -197,12 +197,12 @@ end
 
 > As seen in the example, the easiest way is to define an ``InputListener`` and inherit from it, then define the functions that are needed. The important point here is that all event handlers must be implemented even if they'll do nothing.
 
-> For touch events, a table of events are sent with each notification. It is iterated as above. The ``hash`` value uniquely identifies a touch (or mouse button) for the duration of it touching the screen (or mouse button being held). Touch (or mouse click) location is stored in ``touch``:
+> For pointer events, a table of events are sent with each notification. It is iterated as above. The ``hash`` value uniquely identifies a touch or mouse button for the duration of it touching the screen or mouse button being held. Touch or mouse click location is stored in ``pointer``:
 
 ```lua
-touch.x          -- For the x-coordinate.
-touch.y          -- For the y-coordinate.
-touch.timestamp  -- For the relative time at which the event occurred.
+pointer.x          -- For the x-coordinate.
+pointer.y          -- For the y-coordinate.
+pointer.timestamp  -- For the relative time at which the event occurred.
 ```
 
 > _Desktop-only:_ Keyboard event listeners receive the key value (the actual key that was pressed/released) of the event and, if available, its modifiers (i.e. ctrl, alt or shift).
