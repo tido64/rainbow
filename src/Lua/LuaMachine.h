@@ -41,7 +41,7 @@ namespace rainbow
 		~LuaMachine();
 
 		void close();
-		int init(SceneNode *root);
+		int init(LuaScript *instance, SceneNode *root);
 	};
 }
 

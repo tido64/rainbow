@@ -17,14 +17,15 @@ LuaScript::~LuaScript()
 
 void LuaScript::init(const Vec2i &screen)
 {
-	if (lua_.init(&scenegraph()) != LUA_OK)
+	if (lua_.init(this, &scenegraph()) != LUA_OK)
 	{
 		terminate("Failed to initialise Lua");
 		return;
 	}
+	rainbow::lua::platform::update(lua_, screen);
+
 	const Data &main = Data::load_asset("main.lua");
 	R_ASSERT(main, "Failed to load 'main.lua'");
-	rainbow::lua::platform::update(lua_, screen);
 	if (lua_.start(main) != LUA_OK || lua_.update(0) != LUA_OK)
 	{
 		terminate("Failed to start 'main.lua'");

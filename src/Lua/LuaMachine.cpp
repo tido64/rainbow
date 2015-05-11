@@ -7,10 +7,13 @@
 #include "Common/Chrono.h"
 #include "Common/Data.h"
 #include "Lua/LuaModules.h"
+#include "Lua/LuaScript.h"
 #include "Resources/Rainbow.lua.h"
 
 namespace
 {
+	const char kLuaRainbowInstance[] = "__rainbow_instance";
+
 	int breakpoint(lua_State *L)
 	{
 #ifndef NDEBUG
@@ -26,6 +29,26 @@ namespace
 		using rainbow::lua::optinteger;
 		lua_createtable(L, optinteger(L, 1, 0), optinteger(L, 2, 0));
 		return 1;
+	}
+
+	int exit(lua_State *L)
+	{
+		rainbow::lua::Argument<char*>::is_optional(L, 1);
+
+		lua_getglobal(L, kLuaRainbowInstance);
+		if (lua_islightuserdata(L, -1))
+		{
+			LuaScript *instance =
+			    static_cast<LuaScript*>(lua_touserdata(L, -1));
+			if (lua_gettop(L) > 1)
+				instance->terminate(lua_tostring(L, 1));
+			else
+				instance->terminate();
+			lua_pushnil(L);
+			lua_setglobal(L, kLuaRainbowInstance);
+		}
+		lua_pop(L, 1);
+		return 0;
 	}
 
 	// Copied from 'linit.c'.
@@ -103,12 +126,14 @@ namespace rainbow
 		if (!state_)
 			return;
 
+		lua_pushnil(state_);
+		lua_setglobal(state_, kLuaRainbowInstance);
 		lua::SceneGraph::destroy(state_, scenegraph_);
 		lua_close(state_);
 		state_ = nullptr;
 	}
 
-	int LuaMachine::init(SceneNode *root)
+	int LuaMachine::init(LuaScript *instance, SceneNode *root)
 	{
 		luaR_openlibs(state_);
 
@@ -118,6 +143,11 @@ namespace rainbow
 
 		// Set "rainbow.breakpoint".
 		luaR_rawsetcfunction(state_, "breakpoint", breakpoint);
+
+		// Set "rainbow.exit".
+		lua_pushlightuserdata(state_, instance);
+		lua_setglobal(state_, kLuaRainbowInstance);
+		luaR_rawsetcfunction(state_, "exit", &exit);
 
 		// Set "rainbow.time_since_epoch".
 		luaR_rawsetcfunction(state_, "time_since_epoch", time_since_epoch);

@@ -9,6 +9,11 @@
 
 #include "Lua/LuaMacros.h"
 
+// A 'verify' macro is defined in 'AssertMacros.h' in the OS X SDK.
+#ifdef verify
+#	undef verify
+#endif
+
 #ifndef NDEBUG
 #	define LUA_ASSERT(L, expr, ...) \
 		rainbow::lua::verify(L, (expr), __VA_ARGS__)

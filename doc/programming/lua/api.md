@@ -154,6 +154,16 @@ Sets global pitch shift.
 
 Stops channel.
 
+## rainbow.exit
+
+### rainbow.exit(+error)
+
+| Parameter | Description |
+|:----------|:------------|
+| <var>error</var> | <span class="optional"></span> The cause of termination. |
+
+Terminates Rainbow with an optional error message. Don't pass a message if it is a clean exit.
+
 ## rainbow.font
 
 > Font objects are used by [labels](#rainbowlabel) to display text. Like textures, it is recommended to reuse them whenever possible. A font object is created with a fixed point size and cannot be resized. If a different size is desired, a new font object must be created.
