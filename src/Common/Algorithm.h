@@ -59,6 +59,10 @@ namespace rainbow
 	template<typename T>
 	typename T::iterator remove(T &container, const typename T::value_type &v);
 
+	/// Returns -1, 0, or 1 for \p x < 0, \p x == 0, or \p x > 0 respectively.
+	template<typename T>
+	T signum(const T x);
+
 	template<typename T, size_t N>
 	size_t array_size(const T (&)[N])
 	{
@@ -131,6 +135,12 @@ namespace rainbow
 	{
 		auto i = std::find(std::begin(container), std::end(container), val);
 		return (i == std::end(container)) ? i : container.erase(i);
+	}
+
+	template<typename T>
+	T signum(const T x)
+	{
+		return (x > T(0)) - (x < T(0));
 	}
 }
 

@@ -53,6 +53,13 @@ TEST_CASE("Converts degrees to radians", "[algorithm]")
 	                          rainbow::degrees(rainbow::radians(kPi))));
 }
 
+TEST_CASE("Signum function extracts the sign of a real number", "[algorithm]")
+{
+	REQUIRE(rainbow::signum(-1) < 0);
+	REQUIRE(rainbow::signum(0) == 0);
+	REQUIRE(rainbow::signum(1) > 0);
+}
+
 TEST_CASE("Expands UTF-8 characters to UTF-32", "[algorithm]")
 {
 	const unsigned int kInvalidCharacter = 0xb00bbabe;
