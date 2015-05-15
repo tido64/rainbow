@@ -45,6 +45,12 @@ disabling its node.
 ### Navigating the Animation
 
 ```c++
+unsigned int  current_frame  () const;
+```
+
+Returns the currently displayed frame; `Animation::kAnimationEnd` if none.
+
+```c++
 void  Animation::jump_to  (const unsigned int frame);
 ```
 

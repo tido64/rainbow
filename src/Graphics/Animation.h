@@ -39,8 +39,13 @@ public:
 	          const unsigned int fps,
 	          const int delay = 0);
 
+	/// Returns the currently displayed frame; \c kAnimationEnd if none.
+	unsigned int current_frame() const { return frame_ - 1; }
+
+	/// Returns whether animation is stopped.
 	bool is_stopped() const { return stopped_; }
 
+	/// Sets callback for start, end, and complete (loop) events.
 	void set_callback(Callback f) { callback_ = std::move(f); }
 
 	/// Sets number of frames to delay before the animation loops. Negative
@@ -79,12 +84,12 @@ private:
 	bool stopped_;
 	unsigned int accumulated_;  ///< Accumulated monotonic time.
 	unsigned int interval_;     ///< Time till a tick.
-	Frame frame_;               ///< Current frame.
+	unsigned int frame_;        ///< Current frame.
 	std::unique_ptr<const Frame[]> frames_;  ///< Array of texture ids to be used as frames, terminated with \c kAnimationEnd.
 	Sprite::Ref sprite_;  ///< The sprite to animate.
 	int delay_;           ///< Number of frames to delay before the animation loops. Negative numbers disable looping.
 	int idled_;           ///< Number of frames idled.
-	Callback callback_;
+	Callback callback_;   ///< Event callback.
 
 	void set_current_frame();
 
