@@ -22,13 +22,16 @@ NS_RAINBOW_LUA_BEGIN
 		::Animation* get() { return animation_.get(); }
 
 	private:
+		static int current_frame(lua_State *);
 		static int is_stopped(lua_State *);
 		static int set_delay(lua_State *);
 		static int set_fps(lua_State *);
 		static int set_frames(lua_State *);
 		static int set_listener(lua_State *);
 		static int set_sprite(lua_State *);
-		static int play(lua_State *);
+		static int jump_to(lua_State *);
+		static int rewind(lua_State *);
+		static int start(lua_State *);
 		static int stop(lua_State *);
 
 		std::unique_ptr<::Animation> animation_;

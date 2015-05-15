@@ -15,6 +15,10 @@
 
 Creates a sprite animation.
 
+### &lt;rainbow.animation&gt;:current_frame()
+
+Returns the currently displayed frame; -1 if none.
+
 ### &lt;rainbow.animation&gt;:is_stopped()
 
 Returns whether the animation has stopped.
@@ -77,7 +81,19 @@ To unsubscribe, simply set the listener to ``nil``.
 
 Sets the sprite to animate.
 
-### &lt;rainbow.animation&gt;:play()
+### &lt;rainbow.animation&gt;:jump_to(frame);
+
+| Parameter | Description |
+|:----------|:------------|
+| <var>frame</var> | The frame to jump to. |
+
+Jumps to ``frame``.
+
+### &lt;rainbow.animation&gt;:rewind()
+
+Rewinds animation.
+
+### &lt;rainbow.animation&gt;:start()
 
 Starts the animation.
 

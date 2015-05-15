@@ -102,7 +102,6 @@ NS_RAINBOW_LUA_BEGIN
 			return 0;
 		}
 
-#ifdef USE_PHYSICS
 		template<typename F>
 		static int set2f(lua_State *L, F&& set)
 		{
@@ -127,7 +126,6 @@ NS_RAINBOW_LUA_BEGIN
 			lua_pushinteger(L, get(self->get()));
 			return 1;
 		}
-#endif  // USE_PHYSICS
 
 		template<typename F>
 		static int set1i(lua_State *L, F&& set)

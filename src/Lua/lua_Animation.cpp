@@ -38,15 +38,18 @@ NS_RAINBOW_LUA_BEGIN
 
 	template<>
 	const luaL_Reg Animation::Bind::functions[] = {
-		{ "is_stopped",    &Animation::is_stopped },
-		{ "set_delay",     &Animation::set_delay },
-		{ "set_fps",       &Animation::set_fps },
-		{ "set_frames",    &Animation::set_frames },
-		{ "set_listener",  &Animation::set_listener },
-		{ "set_sprite",    &Animation::set_sprite },
-		{ "play",          &Animation::play },
-		{ "stop",          &Animation::stop },
-		{ nullptr, nullptr }
+		{ "current_frame",  &Animation::current_frame },
+		{ "is_stopped",     &Animation::is_stopped },
+		{ "set_delay",      &Animation::set_delay },
+		{ "set_fps",        &Animation::set_fps },
+		{ "set_frames",     &Animation::set_frames },
+		{ "set_listener",   &Animation::set_listener },
+		{ "set_sprite",     &Animation::set_sprite },
+		{ "jump_to",        &Animation::jump_to },
+		{ "rewind",         &Animation::rewind },
+		{ "start",          &Animation::start },
+		{ "stop",           &Animation::stop },
+		{ nullptr,          nullptr }
 	};
 
 	Animation::Animation(lua_State *L)
@@ -64,6 +67,13 @@ NS_RAINBOW_LUA_BEGIN
 		animation_.reset(new ::Animation(
 		    sprite, get_frames(L, 2), lua_tointeger(L, 3),
 		    optinteger(L, 4, 0)));
+	}
+
+	int Animation::current_frame(lua_State *L)
+	{
+		return get1i(L, [](::Animation *animation) {
+			return animation->current_frame();
+		});
 	}
 
 	int Animation::is_stopped(lua_State *L)
@@ -153,7 +163,24 @@ NS_RAINBOW_LUA_BEGIN
 		    });
 	}
 
-	int Animation::play(lua_State *L)
+	int Animation::jump_to(lua_State *L)
+	{
+		return set1i(L, [](::Animation *animation, const int frame) {
+			animation->jump_to(static_cast<unsigned int>(frame));
+		});
+	}
+
+	int Animation::rewind(lua_State *L)
+	{
+		Animation *self = Bind::self(L);
+		if (!self)
+			return 0;
+
+		self->animation_->rewind();
+		return 0;
+	}
+
+	int Animation::start(lua_State *L)
 	{
 		Animation *self = Bind::self(L);
 		if (!self)
