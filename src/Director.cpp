@@ -16,7 +16,7 @@
 namespace rainbow
 {
 	Director::Director()
-	    : active_(true), terminated_(false), error_(nullptr), script_(nullptr)
+	    : active_(true), terminated_(false), error_(nullptr)
 	{
 		if (!ConFuoco::Mixer::Instance)
 			terminate("Failed to initialise audio engine");
@@ -30,7 +30,7 @@ namespace rainbow
 	Director::~Director()
 	{
 		// Clean up before we tear down the graphics context.
-		delete script_;
+		script_.reset();
 	}
 
 	void Director::draw()
@@ -46,7 +46,7 @@ namespace rainbow
 	{
 		random.seed();
 		renderer_.set_resolution(screen);
-		script_ = GameBase::create(*this);
+		script_.reset(GameBase::create(*this));
 		script_->init(screen);
 		if (terminated())
 			return;

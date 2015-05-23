@@ -29,7 +29,7 @@ namespace rainbow
 		Input& input() { return input_; }
 		Renderer& renderer() { return renderer_; }
 		SceneNode& scenegraph() { return scenegraph_; }
-		GameBase* script() { return script_; }
+		GameBase* script() { return script_.get(); }
 		bool terminated() const { return terminated_; }
 
 		void draw();
@@ -55,7 +55,7 @@ namespace rainbow
 		bool terminated_;
 		const char *error_;
 		TimerManager timer_manager_;
-		GameBase *script_;
+		std::unique_ptr<GameBase> script_;
 		SceneNode scenegraph_;
 		Input input_;
 		Renderer renderer_;
