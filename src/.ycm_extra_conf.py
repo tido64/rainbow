@@ -45,6 +45,7 @@ def ProjectFlags():
     '-I', os.path.join(project_path, 'src', 'ThirdParty', 'FreeType'),
     '-I', os.path.join(project_path, 'src', 'ThirdParty', 'libpng'),
     '-I', os.path.join(project_path, 'lib'),
+    '-I', os.path.join(project_path, 'lib', 'box2d', 'Box2D'),
     '-I', os.path.join(project_path, 'lib', 'FMOD', 'inc'),
     '-I', os.path.join(project_path, 'lib', 'FreeType', 'include'),
     '-I', os.path.join(project_path, 'lib', 'Lua'),
