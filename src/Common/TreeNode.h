@@ -31,7 +31,7 @@ public:
 	void remove_child(T *);
 
 	/// Recursively calls function \p f on \p node and its children.
-	template<typename U, typename F, typename... Args>
+	template<typename U, typename F, typename Enable, typename... Args>
 	friend void for_each(U *node, F&& f, Args&&... args);
 
 protected:
@@ -81,12 +81,13 @@ TreeNode<T>::~TreeNode()
 		delete child;
 }
 
-template<typename T, typename F, typename... Args>
+template<typename T,
+         typename F,
+         typename = EnableIfBaseOf<TreeNode<typename std::decay<T>::type>,
+                                   typename std::decay<T>::type>,
+         typename... Args>
 void for_each(T *node, F&& f, Args&&... args)
 {
-	using U = typename std::decay<T>::type;
-	static_assert(std::is_base_of<TreeNode<U>, U>::value,
-	              "T must be a subclass of TreeNode");
 	static_assert(
 	    std::is_convertible<F, std::function<void(T*, Args&&...)>>::value,
 	    "function type void(T*, Args&&...) required");

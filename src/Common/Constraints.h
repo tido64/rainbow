@@ -7,6 +7,10 @@
 
 #include <type_traits>
 
+template<typename T, typename U>
+using EnableIfBaseOf =
+    typename std::enable_if<std::is_base_of<T, U>::value>::type;
+
 template<typename T, typename U = T>
 using EnableIfFloatingPoint =
     typename std::enable_if<std::is_floating_point<T>::value, U>::type;

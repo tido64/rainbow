@@ -5,6 +5,8 @@
 #ifndef COMMON_LINK_H_
 #define COMMON_LINK_H_
 
+#include "Common/Constraints.h"
+
 class Link
 {
 public:
@@ -16,7 +18,7 @@ public:
 	void append(Link *node);
 	void pop();
 
-	template<typename U, typename F>
+	template<typename U, typename F, typename Enable>
 	friend bool for_each(U *node, F&& f);
 
 protected:
@@ -46,7 +48,7 @@ Link::~Link()
 	pop();
 }
 
-template<typename T, typename F>
+template<typename T, typename F, typename = EnableIfBaseOf<Link, T>>
 bool for_each(T *node, F&& f)
 {
 	while (node)
