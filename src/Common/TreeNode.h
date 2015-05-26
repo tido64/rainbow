@@ -22,13 +22,29 @@ public:
 	T* parent() { return parent_; }
 
 	/// Adds a node as child.
-	void add_child(T *);
+	void add_child(T *node)
+	{
+		if (node->parent_)
+			rainbow::remove(node->parent_->children_, node);
+		node->parent_ = static_cast<T*>(this);
+		children_.push_back(node);
+	}
 
 	/// Removes node from the tree and deletes it.
-	void remove();
+	void remove()
+	{
+		parent_->remove_child(static_cast<T*>(this));
+	}
 
 	/// Removes a child node.
-	void remove_child(T *);
+	void remove_child(T *node)
+	{
+		if (!node)
+			return;
+
+		rainbow::remove(children_, node);
+		delete node;
+	}
 
 	/// Recursively calls function \p f on \p node and its children.
 	template<typename U, typename F, typename Enable, typename... Args>
@@ -38,48 +54,32 @@ protected:
 	T *parent_;                 ///< This node's parent.
 	std::vector<T*> children_;  ///< This node's children.
 
-	TreeNode();
-	~TreeNode();
+	TreeNode() : parent_(nullptr)
+	{
+		static_assert(std::is_base_of<TreeNode, T>::value,
+		              "T must be a subclass of TreeNode");
+	}
+
+	TreeNode(TreeNode&& node)
+	    : parent_(node.parent_), children_(std::move(node.children_))
+	{
+		node.parent_ = nullptr;
+	}
+
+	~TreeNode()
+	{
+		for (auto child : children_)
+			delete child;
+	}
+
+	TreeNode& operator=(TreeNode&& node)
+	{
+		parent_ = node.parent_;
+		children_ = std::move(node.children_);
+		node.parent_ = nullptr;
+		return *this;
+	}
 };
-
-template<typename T>
-void TreeNode<T>::add_child(T *node)
-{
-	if (node->parent_)
-		rainbow::remove(node->parent_->children_, node);
-	node->parent_ = static_cast<T*>(this);
-	children_.push_back(node);
-}
-
-template<typename T>
-void TreeNode<T>::remove()
-{
-	parent_->remove_child(static_cast<T*>(this));
-}
-
-template<typename T>
-void TreeNode<T>::remove_child(T *node)
-{
-	if (!node)
-		return;
-
-	rainbow::remove(children_, node);
-	delete node;
-}
-
-template<typename T>
-TreeNode<T>::TreeNode() : parent_(nullptr)
-{
-	static_assert(std::is_base_of<TreeNode, T>::value,
-	              "T must be a subclass of TreeNode");
-}
-
-template<typename T>
-TreeNode<T>::~TreeNode()
-{
-	for (auto child : children_)
-		delete child;
-}
 
 template<typename T,
          typename F,

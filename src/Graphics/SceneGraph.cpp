@@ -15,6 +15,18 @@ static_assert(ShaderManager::kInvalidProgram == 0,
 
 namespace rainbow
 {
+	SceneNode::SceneNode(SceneNode&& node)
+	    : TreeNode(std::move(node)), enabled(node.enabled),
+	      type_(node.type_), program_(node.program_), data_(node.data_)
+#if USE_NODE_TAGS
+	    , tag_(std::move(node.tag_))
+#endif
+	{
+		node.enabled = false;
+		node.program_ = ShaderManager::kInvalidProgram;
+		node.data_ = nullptr;
+	}
+
 	void SceneNode::draw() const
 	{
 		if (!this->enabled)
@@ -86,5 +98,26 @@ namespace rainbow
 		}
 		for (auto child : children_)
 			child->update(dt);
+	}
+
+	SceneNode& SceneNode::operator=(SceneNode&& node)
+	{
+		if (&node == this)
+			return *this;
+
+		TreeNode::operator=(std::move(node));
+
+		enabled = node.enabled;
+		type_ = node.type_;
+		program_ = node.program_;
+		data_ = node.data_;
+#if USE_NODE_TAGS
+		tag_= std::move(node.tag_);
+#endif
+
+		node.enabled = false;
+		node.program_ = ShaderManager::kInvalidProgram;
+		node.data_ = nullptr;
+		return *this;
 	}
 }

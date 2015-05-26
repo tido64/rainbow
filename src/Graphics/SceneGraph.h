@@ -35,6 +35,8 @@ namespace rainbow
 		/// Creates a group node.
 		SceneNode() : SceneNode(Type::Group, nullptr) {}
 
+		SceneNode(SceneNode&&);
+
 		/// Creates an animation node.
 		explicit SceneNode(Animation *a) : SceneNode(Type::Animation, a) {}
 
@@ -88,6 +90,8 @@ namespace rainbow
 		/// Updates this node and all its enabled children.
 		void update(const unsigned long dt) const;
 
+		SceneNode& operator=(SceneNode&& node);
+
 	private:
 		enum class Type
 		{
@@ -98,7 +102,7 @@ namespace rainbow
 			SpriteBatch
 		};
 
-		const Type type_;       ///< Defines what type of graphical element this node represents.
+		Type type_;             ///< Defines what type of graphical element this node represents.
 		unsigned int program_;  ///< The active program for this node and its descendants.
 		union
 		{
