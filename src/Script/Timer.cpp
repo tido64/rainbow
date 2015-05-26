@@ -4,8 +4,6 @@
 
 #include "Script/Timer.h"
 
-#include <utility>
-
 void TimerManager::clear_timer(Timer *t)
 {
 	free_ = t->clear(free_);
@@ -74,7 +72,7 @@ Timer& Timer::operator=(Timer&& t)
 	interval_ = t.interval_;
 	countdown_ = t.repeat_count_;
 	repeat_count_ = t.repeat_count_;
-	tick_ = std::forward<Closure>(t.tick_);
+	tick_ = std::move(t.tick_);
 	free_ = -1;
 	return *this;
 }

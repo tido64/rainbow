@@ -6,7 +6,6 @@
 #define COMMON_LIST_H_
 
 #include <functional>
-#include <utility>
 
 #include "Memory/SharedPtr.h"
 
@@ -35,7 +34,7 @@ class List : private NonCopyable<List<T>>
 public:
 	List() = default;
 
-	List(List&& list) : head_(std::forward<SharedPtr<Item>>(list.head_)) {}
+	List(List&& list) : head_(std::move(list.head_)) {}
 
 	bool empty() const
 	{
@@ -73,7 +72,7 @@ public:
 
 	List& operator=(List&& list)
 	{
-		head_ = std::forward<SharedPtr<Item>>(list.head_);
+		head_ = std::move(list.head_);
 		return *this;
 	}
 

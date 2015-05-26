@@ -6,8 +6,6 @@
 #define CONFUOCO_AUDIOFILE_H_
 #ifndef USE_FMOD_STUDIO
 
-#include <utility>
-
 #include "FileSystem/File.h"
 
 namespace ConFuoco
@@ -103,7 +101,7 @@ namespace ConFuoco
 		this->rewind_impl();
 	}
 
-	AudioFile::AudioFile(File &&file) : file(std::forward<File>(file)) {}
+	AudioFile::AudioFile(File &&file) : file(std::move(file)) {}
 }
 
 #endif  // !USE_FMOD_STUDIO

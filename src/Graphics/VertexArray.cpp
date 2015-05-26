@@ -4,8 +4,6 @@
 
 #include "Graphics/VertexArray.h"
 
-#include <utility>
-
 #include "Graphics/OpenGL.h"
 #include "Graphics/Renderer.h"
 
@@ -63,6 +61,6 @@ void VertexArray::reconfigure(std::function<void()> &&array_state)
 		glDeleteVertexArrays(1, &array_);
 	array_ = array;
 #else
-	array_ = std::forward<std::function<void()>>(array_state);
+	array_ = std::move(array_state);
 #endif
 }

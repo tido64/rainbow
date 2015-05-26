@@ -5,7 +5,6 @@
 #include "Graphics/SpriteBatch.h"
 
 #include <algorithm>
-#include <utility>
 
 #include "Graphics/Renderer.h"
 #include "Graphics/ShaderDetails.h"
@@ -42,16 +41,13 @@ SpriteBatch::SpriteBatch(const unsigned int hint) : count_(0), reserved_(0)
 }
 
 SpriteBatch::SpriteBatch(SpriteBatch&& batch)
-    : sprites_(std::forward<Arena<Sprite>>(batch.sprites_)),
-      vertices_(std::forward<Arena<SpriteVertex>>(batch.vertices_)),
-      normals_(std::forward<Arena<Vec2f>>(batch.normals_)),
-      count_(batch.count_),
-      vertex_buffer_(std::forward<Buffer>(batch.vertex_buffer_)),
-      normal_buffer_(std::forward<Buffer>(batch.normal_buffer_)),
-      array_(std::forward<VertexArray>(batch.array_)),
-      normal_(std::forward<SharedPtr<TextureAtlas>>(batch.normal_)),
-      texture_(std::forward<SharedPtr<TextureAtlas>>(batch.texture_)),
-      reserved_(batch.reserved_) {}
+    : sprites_(std::move(batch.sprites_)),
+      vertices_(std::move(batch.vertices_)),
+      normals_(std::move(batch.normals_)), count_(batch.count_),
+      vertex_buffer_(std::move(batch.vertex_buffer_)),
+      normal_buffer_(std::move(batch.normal_buffer_)),
+      array_(std::move(batch.array_)), normal_(std::move(batch.normal_)),
+      texture_(std::move(batch.texture_)), reserved_(batch.reserved_) {}
 
 SpriteBatch::~SpriteBatch()
 {
