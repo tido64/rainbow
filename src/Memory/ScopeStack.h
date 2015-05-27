@@ -10,6 +10,14 @@
 
 #include "Memory/SharedPtr.h"
 
+#if defined(RAINBOW_OS_ANDROID)
+// Workaround for max_align_t not being defined in namespace std.
+namespace std { using ::max_align_t; }
+#elif defined(_MSC_VER) && _MSC_VER <= 1800
+// Workaround for missing alignof operator.
+#define alignof __alignof
+#endif
+
 namespace rainbow
 {
 	/// Linear allocator for use with scope stack allocation.
@@ -22,11 +30,7 @@ namespace rainbow
 	public:
 		static size_t aligned_size(const size_t size)
 		{
-#if defined(RAINBOW_OS_ANDROID) || defined(_MSC_VER)
-			const size_t kMaxAlignment = 16;
-#else
 			const size_t kMaxAlignment = alignof(std::max_align_t);
-#endif
 			return (size + (kMaxAlignment - 1)) & ~(kMaxAlignment - 1);
 		}
 
