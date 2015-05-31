@@ -58,6 +58,11 @@ namespace rainbow
 		{
 			return sysconf(_SC_PAGE_SIZE) / 1024 * sysconf(_SC_PHYS_PAGES) / 1024;
 		}
+
+		size_t resident_set_size()
+		{
+			return 0;
+		}
 	}
 }
 

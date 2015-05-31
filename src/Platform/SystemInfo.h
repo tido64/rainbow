@@ -23,8 +23,11 @@ namespace rainbow
 		/// Returns a list of user-preferred locales.
 		void locales(std::vector<std::unique_ptr<char[]>> &locales);
 
-		/// Returns total number of physical memory installed in megabytes.
+		/// Returns total amount of physical memory installed in megabytes.
 		size_t memory();
+
+		/// Returns amount of physical memory used in bytes.
+		size_t resident_set_size();
 	}
 }
 

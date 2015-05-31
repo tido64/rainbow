@@ -5,6 +5,7 @@
 #include "Platform/SystemInfo.h"
 #if defined(RAINBOW_OS_IOS) || defined(RAINBOW_OS_MACOS)
 
+#include <mach/mach.h>
 #include <sys/types.h>
 #include <sys/sysctl.h>
 #include <CoreFoundation/CoreFoundation.h>
@@ -51,7 +52,7 @@ namespace rainbow
 
 		size_t memory()
 		{
-			int mib[2] = { CTL_HW, HW_MEMSIZE };
+			int mib[2] = {CTL_HW, HW_MEMSIZE};
 			int64_t memsize;
 			size_t length = sizeof(memsize);
 			sysctl(mib, 2, &memsize, &length, nullptr, 0);
@@ -60,10 +61,22 @@ namespace rainbow
 			{
 				const size_t memory = std::numeric_limits<size_t>::max();
 				return (memsize < static_cast<int64_t>(memory))
-				    ? static_cast<size_t>(memsize)
-				    : memory;
+				           ? static_cast<size_t>(memsize)
+				           : memory;
 			}
 			return static_cast<size_t>(memsize);
+		}
+
+		size_t resident_set_size()
+		{
+			struct mach_task_basic_info info;
+			mach_msg_type_number_t info_count = MACH_TASK_BASIC_INFO_COUNT;
+			return task_info(mach_task_self(),
+			                 MACH_TASK_BASIC_INFO,
+			                 reinterpret_cast<task_info_t>(&info),
+			                 &info_count) != KERN_SUCCESS
+			           ? 0
+			           : static_cast<size_t>(info.resident_size);
 		}
 	}
 }

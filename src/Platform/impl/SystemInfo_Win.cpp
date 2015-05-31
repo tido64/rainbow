@@ -6,6 +6,7 @@
 #ifdef RAINBOW_OS_WINDOWS
 
 #include <windows.h>
+#include <psapi.h>
 
 namespace
 {
@@ -64,6 +65,13 @@ namespace rainbow
 			status.dwLength = sizeof(status);
 			GlobalMemoryStatusEx(&status);
 			return status.ullTotalPhys / (1024 * 1024);
+		}
+
+		size_t resident_set_size()
+		{
+			PROCESS_MEMORY_COUNTERS info;
+			GetProcessMemoryInfo(GetCurrentProcess(), &info, sizeof(info));
+			return static_cast<size_t>(info.WorkingSetSize);
 		}
 	}
 }
