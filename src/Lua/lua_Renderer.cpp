@@ -44,7 +44,7 @@ namespace
 		rainbow::lua::Argument<lua_Number>::is_required(L, 3);
 		rainbow::lua::Argument<lua_Number>::is_required(L, 4);
 
-		ShaderManager::Get()->set_projection(
+		Renderer::Get()->set_projection(
 		    lua_tonumber(L, 1), lua_tonumber(L, 2),
 		    lua_tonumber(L, 3), lua_tonumber(L, 4));
 		return 0;

@@ -7,6 +7,7 @@
 #include <memory>
 
 #include "Common/Data.h"
+#include "Graphics/Renderer.h"
 #include "Graphics/Shaders.h"
 
 // For platforms not using GLEW.
@@ -23,14 +24,6 @@ namespace
 	    {Shader::kAttributeColor, "color"},
 	    {Shader::kAttributeTexCoord, "texcoord"},
 	    {Shader::kAttributeNone, nullptr}};
-
-	constexpr std::array<float, 16> kProjectionMatrix()
-	{
-		return {{1.0f,  0.0f,  0.0f, 0.0f,
-		         0.0f,  1.0f,  0.0f, 0.0f,
-		         0.0f,  0.0f, -1.0f, 0.0f,
-		        -1.0f, -1.0f,  0.0f, 1.0f}};
-	}
 
 	void set_projection_matrix(const Shader::Details &details,
 	                           const std::array<float, 16> &ortho)
@@ -146,32 +139,23 @@ unsigned int ShaderManager::compile(Shader::Params *shaders,
 	return static_cast<unsigned int>(programs_.size());
 }
 
-void ShaderManager::set(const Vec2i &resolution)
+void ShaderManager::update_projection()
 {
-	ortho_[0] = 2.0f / resolution.x;
-	ortho_[5] = 2.0f / resolution.y;
+	set_projection_matrix(get_program(), renderer_->projection());
+}
+
+void ShaderManager::update_viewport()
+{
 	if (current_ == kInvalidProgram)
 	{
 		current_ = kDefaultProgram;
 		const Shader::Details &details = get_program();
 		glUseProgram(details.program);
-		set_projection_matrix(details, ortho_);
+		update_projection();
 		glUniform1i(glGetUniformLocation(details.program, "texture"), 0);
 		return;
 	}
-	set_projection_matrix(get_program(), ortho_);
-}
-
-void ShaderManager::set_projection(const float left,
-                                   const float right,
-                                   const float bottom,
-                                   const float top)
-{
-	ortho_[0] = 2.0f / (right - left);
-	ortho_[5] = 2.0f / (top - bottom);
-	ortho_[12] = -(right + left) / (right - left);
-	ortho_[13] = -(top + bottom) / (top - bottom);
-	set_projection_matrix(get_program(), ortho_);
+	update_projection();
 }
 
 void ShaderManager::use(const unsigned int program)
@@ -185,7 +169,7 @@ void ShaderManager::use(const unsigned int program)
 		const Shader::Details &details = get_program();
 		glUseProgram(details.program);
 
-		set_projection_matrix(details, ortho_);
+		update_projection();
 
 #ifndef USE_VERTEX_ARRAY_OBJECT
 		if (details.texture0 != current.texture0)
@@ -199,8 +183,8 @@ void ShaderManager::use(const unsigned int program)
 	}
 }
 
-ShaderManager::ShaderManager()
-    : current_(kInvalidProgram), ortho_(kProjectionMatrix()) {}
+ShaderManager::ShaderManager(Renderer *renderer)
+    : current_(kInvalidProgram), renderer_(renderer) {}
 
 ShaderManager::~ShaderManager()
 {

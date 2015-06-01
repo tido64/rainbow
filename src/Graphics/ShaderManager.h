@@ -5,7 +5,6 @@
 #ifndef GRAPHICS_SHADERMANAGER_H_
 #define GRAPHICS_SHADERMANAGER_H_
 
-#include <array>
 #include <vector>
 
 #include "Common/Global.h"
@@ -13,9 +12,11 @@
 #include "Graphics/OpenGL.h"
 #include "Graphics/ShaderDetails.h"
 
+class Renderer;
+
 class ShaderManager : public Global<ShaderManager>
 {
-	friend class Renderer;
+	friend Renderer;
 
 public:
 	enum
@@ -48,34 +49,22 @@ public:
 	/// Returns program details.
 	inline Shader::Details& get_program(const unsigned int pid);
 
-	/// Sets viewport.
-	void set(const Vec2i &);
+	/// Updates orthographic projection.
+	void update_projection();
 
-	/// Sets orthographic projection.
-	void set_projection(const float left,
-	                    const float right,
-	                    const float bottom,
-	                    const float top);
+	/// Updates viewport.
+	void update_viewport();
 
 	/// Activates program.
 	void use(const unsigned int program);
 
 private:
 	unsigned int current_;                   ///< Currently used program.
+	Renderer *renderer_;
 	std::vector<Shader::Details> programs_;  ///< Linked shader programs.
+	std::vector<unsigned int> shaders_;      ///< Compiled shaders.
 
-	/// The orthographic projection matrix is defined as:
-	///   | 2 / (r - l)        0             0       -(r + l) / (r - l) |
-	///   |      0        2 / (t - b)        0       -(t + b) / (t - b) |
-	///   |      0             0       -2 / (f - n)  -(f + n) / (f - n) |
-	///   |      0             0             0                0         |
-	/// Where b = bottom, f = far, l = left, n = near, r = right, t = top, and
-	/// near = -1.0 and far = 1.0. The matrix is stored in column-major order.
-	std::array<float, 16> ortho_;
-
-	std::vector<unsigned int> shaders_;  ///< Compiled shaders.
-
-	ShaderManager();
+	ShaderManager(Renderer *);
 	~ShaderManager();
 
 	bool init();

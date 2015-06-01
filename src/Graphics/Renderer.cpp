@@ -18,6 +18,17 @@
 #define S256(i)    S64((i)),  S64((i) +  64),  S64((i) + 128),  S64((i) + 192)
 #define S1024(i)  S256((i)), S256((i) + 256), S256((i) + 512), S256((i) + 768)
 
+namespace
+{
+	constexpr std::array<float, 16> kProjectionMatrix()
+	{
+		return {{1.0f,  0.0f,  0.0f, 0.0f,
+		         0.0f,  1.0f,  0.0f, 0.0f,
+		         0.0f,  0.0f, -1.0f, 0.0f,
+		        -1.0f, -1.0f,  0.0f, 1.0f}};
+	}
+}
+
 void Renderer::clear()
 {
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -39,13 +50,27 @@ int Renderer::max_texture_size()
 	return max_texture_size;
 }
 
+void Renderer::set_projection(const float left,
+                              const float right,
+                              const float bottom,
+                              const float top)
+{
+	ortho_[0] = 2.0f / (right - left);
+	ortho_[5] = 2.0f / (top - bottom);
+	ortho_[12] = -(right + left) / (right - left);
+	ortho_[13] = -(top + bottom) / (top - bottom);
+	shader_manager_.update_projection();
+}
+
 void Renderer::set_resolution(const Vec2i &resolution)
 {
 	R_ASSERT(is_global(),
 	         "Cannot set resolution with an uninitialised renderer");
 
 	view_ = resolution;
-	shader_manager_.set(resolution);
+	ortho_[0] = 2.0f / resolution.x;
+	ortho_[5] = 2.0f / resolution.y;
+	shader_manager_.update_viewport();
 	set_window_size(window_.is_zero() ? view_ : window_);
 
 	R_ASSERT(glGetError() == GL_NO_ERROR, "Failed to set resolution");
@@ -96,7 +121,9 @@ Vec2i Renderer::convert_to_view(const Vec2i &p) const
 	return Vec2i((p.x - origin_.x) * scale_.x, (p.y - origin_.y) * scale_.y);
 }
 
-Renderer::Renderer() : index_buffer_(0), scale_(1.0f, 1.0f) {}
+Renderer::Renderer()
+    : index_buffer_(0), scale_(1.0f, 1.0f), ortho_(kProjectionMatrix()),
+      shader_manager_(this) {}
 
 Renderer::~Renderer()
 {
