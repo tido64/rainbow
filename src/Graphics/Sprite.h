@@ -58,6 +58,7 @@ public:
 	float angle() const { return angle_; }
 	Colorb color() const { return vertex_array_[0].color; }
 	unsigned int height() const { return height_; }
+	bool is_flipped() const;
 	bool is_hidden() const;
 	bool is_mirrored() const;
 	const SpriteBatch& parent() const { return *parent_; }
@@ -99,6 +100,9 @@ public:
 	/// Sets vertex array buffer.
 	void set_vertex_array(SpriteVertex *array);
 
+	/// Flips sprite vertically.
+	void flip();
+
 	/// Hides sprite if it is currently shown.
 	void hide();
 
@@ -130,6 +134,9 @@ private:
 	const SpriteBatch *parent_;   ///< Pointer to sprite batch.
 	SpriteVertex *vertex_array_;  ///< Interleaved vertex array.
 	Vec2f *normal_map_;           ///< Normal map UV coordinates.
+
+	void flip_textures(const unsigned int axis);
+	void set_normal(const unsigned int f, const Vec2f *uv);
 };
 
 #endif

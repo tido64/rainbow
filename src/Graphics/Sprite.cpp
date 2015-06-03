@@ -11,7 +11,24 @@ namespace
 	const unsigned int kStaleFrontBuffer  = 1u << 2;
 	const unsigned int kStaleMask         = 0xffffu;
 	const unsigned int kIsHidden          = 1u << 16;
-	const unsigned int kIsMirrored        = 1u << 17;
+	const unsigned int kIsFlipped         = 1u << 17;
+	const unsigned int kIsMirrored        = 1u << 18;
+
+	const unsigned int kFlipTable[]{
+	    0, 1, 2, 3,   // Normal
+	    3, 2, 1, 0,   // Flipped
+	    1, 0, 3, 2,   // Mirrored
+	    2, 3, 0, 1};  // Flipped + mirrored
+	const unsigned int kFlipVertically = 4;
+	const unsigned int kFlipHorizontally = 8;
+
+	static_assert((kIsFlipped >> 0xf) == kFlipVertically, "");
+	static_assert((kIsMirrored >> 0xf) == kFlipHorizontally, "");
+
+	unsigned int flip_index(const unsigned int state)
+	{
+		return ((state & kIsFlipped) >> 0xf) + ((state & kIsMirrored) >> 0xf);
+	}
 
 	Vec2f transform_srt(const Vec2f &p,
 	                    const Vec2f &s_sin_r,
@@ -53,6 +70,11 @@ Sprite::Sprite(Sprite&& s)
 	s.parent_ = nullptr;
 }
 
+bool Sprite::is_flipped() const
+{
+	return (state_ & kIsFlipped) == kIsFlipped;
+}
+
 bool Sprite::is_hidden() const
 {
 	return (state_ & kIsHidden) == kIsHidden;
@@ -78,21 +100,7 @@ void Sprite::set_normal(const unsigned int id)
 {
 	R_ASSERT(normal_map_, "Missing normal map buffer");
 
-	const Texture &normal = parent_->normal()[id];
-	if (state_ & kIsMirrored)
-	{
-		normal_map_[0] = normal.vx[1];
-		normal_map_[1] = normal.vx[0];
-		normal_map_[2] = normal.vx[3];
-		normal_map_[3] = normal.vx[2];
-	}
-	else
-	{
-		normal_map_[0] = normal.vx[0];
-		normal_map_[1] = normal.vx[1];
-		normal_map_[2] = normal.vx[2];
-		normal_map_[3] = normal.vx[3];
-	}
+	set_normal(flip_index(state_), parent_->normal()[id].vx);
 	state_ |= kStaleFrontBuffer;
 }
 
@@ -139,21 +147,13 @@ void Sprite::set_texture(const unsigned int id)
 {
 	R_ASSERT(vertex_array_, "Missing vertex array buffer");
 
+	const unsigned int f = flip_index(state_);
 	const Texture &tx = parent_->texture()[id];
-	if (state_ & kIsMirrored)
-	{
-		vertex_array_[0].texcoord = tx.vx[1];
-		vertex_array_[1].texcoord = tx.vx[0];
-		vertex_array_[2].texcoord = tx.vx[3];
-		vertex_array_[3].texcoord = tx.vx[2];
-	}
-	else
-	{
-		vertex_array_[0].texcoord = tx.vx[0];
-		vertex_array_[1].texcoord = tx.vx[1];
-		vertex_array_[2].texcoord = tx.vx[2];
-		vertex_array_[3].texcoord = tx.vx[3];
-	}
+	vertex_array_[kFlipTable[f + 0]].texcoord = tx.vx[0];
+	vertex_array_[kFlipTable[f + 1]].texcoord = tx.vx[1];
+	vertex_array_[kFlipTable[f + 2]].texcoord = tx.vx[2];
+	vertex_array_[kFlipTable[f + 3]].texcoord = tx.vx[3];
+
 	state_ |= kStaleFrontBuffer;
 }
 
@@ -161,6 +161,12 @@ void Sprite::set_vertex_array(SpriteVertex *array)
 {
 	vertex_array_ = array;
 	state_ |= kStaleMask;
+}
+
+void Sprite::flip()
+{
+	state_ ^= kIsFlipped;
+	flip_textures(kFlipVertically);
 }
 
 void Sprite::hide()
@@ -177,17 +183,8 @@ void Sprite::hide()
 
 void Sprite::mirror()
 {
-	R_ASSERT(vertex_array_, "Missing vertex array buffer");
-
-	std::swap(vertex_array_[0].texcoord, vertex_array_[1].texcoord);
-	std::swap(vertex_array_[2].texcoord, vertex_array_[3].texcoord);
-	if (normal_map_)
-	{
-		std::swap(normal_map_[0], normal_map_[1]);
-		std::swap(normal_map_[2], normal_map_[3]);
-	}
-	state_ |= kStaleFrontBuffer;
 	state_ ^= kIsMirrored;
+	flip_textures(kFlipHorizontally);
 }
 
 void Sprite::move(const Vec2f &delta)
@@ -280,4 +277,35 @@ bool Sprite::update()
 	}
 	state_ &= ~kStaleMask;
 	return true;
+}
+
+void Sprite::flip_textures(const unsigned int f)
+{
+	R_ASSERT(vertex_array_, "Missing vertex array buffer");
+
+	const Vec2f coords[]{vertex_array_[kFlipTable[f + 0]].texcoord,
+	                     vertex_array_[kFlipTable[f + 1]].texcoord,
+	                     vertex_array_[kFlipTable[f + 2]].texcoord,
+	                     vertex_array_[kFlipTable[f + 3]].texcoord};
+	vertex_array_[0].texcoord = coords[0];
+	vertex_array_[1].texcoord = coords[1];
+	vertex_array_[2].texcoord = coords[2];
+	vertex_array_[3].texcoord = coords[3];
+
+	if (normal_map_)
+	{
+		const Vec2f coords[]{
+		    normal_map_[0], normal_map_[1], normal_map_[2], normal_map_[3]};
+		set_normal(f, coords);
+	}
+
+	state_ |= kStaleFrontBuffer;
+}
+
+void Sprite::set_normal(const unsigned int f, const Vec2f *uv)
+{
+	normal_map_[kFlipTable[f + 0]] = uv[0];
+	normal_map_[kFlipTable[f + 1]] = uv[1];
+	normal_map_[kFlipTable[f + 2]] = uv[2];
+	normal_map_[kFlipTable[f + 3]] = uv[3];
 }
