@@ -1,4 +1,4 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -11,6 +11,12 @@
 
 #include "Common/Chrono.h"
 #include "Platform/Macros.h"
+
+#ifdef _MSC_VER
+#	define ATTRIBUTE(...)
+#else
+#	define ATTRIBUTE(...) __attribute__(__VA_ARGS__)
+#endif
 
 #ifdef RAINBOW_OS_ANDROID
 #	include <android/log.h>
@@ -39,10 +45,24 @@
 #	define R_ABORT(...)   static_cast<void>(0)
 #	define R_ASSERT(...)  static_cast<void>(0)
 #else
-#	define LOGD(...) rainbow::debug(__VA_ARGS__)
-#	define LOGF(...) rainbow::fatal(__VA_ARGS__)
-#	define LOGI(...) rainbow::info(__VA_ARGS__)
-#	define LOGW(...) rainbow::warn(__VA_ARGS__)
+#	ifdef _MSC_VER
+#		define LOGD(...) rainbow::debug(__VA_ARGS__)
+#		define LOGF(...) rainbow::fatal(__VA_ARGS__)
+#		define LOGI(...) rainbow::info(__VA_ARGS__)
+#		define LOGW(...) rainbow::warn(__VA_ARGS__)
+#	else
+#		define LOG_S(print, ...)                                               \
+			do                                                                 \
+			{                                                                  \
+				if (false)                                                     \
+					rainbow::format_check(__VA_ARGS__);                        \
+				print(__VA_ARGS__);                                            \
+			} while (false)
+#		define LOGD(...) LOG_S(rainbow::debug, __VA_ARGS__)
+#		define LOGF(...) LOG_S(rainbow::fatal, __VA_ARGS__)
+#		define LOGI(...) LOG_S(rainbow::info, __VA_ARGS__)
+#		define LOGW(...) LOG_S(rainbow::warn, __VA_ARGS__)
+#	endif  // _MSC_VER
 #	ifndef __PRETTY_FUNCTION__
 #		define __PRETTY_FUNCTION__ __FUNCTION__
 #	endif
@@ -50,19 +70,21 @@
 #		define SRC_FILE __FILE__
 #	endif
 #	define R_ABORT(...) rainbow::abort(__VA_ARGS__)
-#	define R_ASSERT(expr, reason) \
-		if (!(expr)) \
-			rainbow::abort("%s: %s (aborted at %s:%i: %s)", \
-			               __PRETTY_FUNCTION__, \
-			               reason, \
-			               SRC_FILE, \
-			               __LINE__, \
+#	define R_ASSERT(expr, reason)                                              \
+		if (!(expr))                                                           \
+			rainbow::abort("%s: %s (aborted at %s:%i: %s)",                    \
+			               __PRETTY_FUNCTION__,                                \
+			               reason,                                             \
+			               SRC_FILE,                                           \
+			               __LINE__,                                           \
 			               #expr)
 #endif  // NDEBUG
 
 namespace rainbow
 {
 	const size_t kLogLineLength = 1024;
+
+	void format_check(const char *fmt, ...) ATTRIBUTE((format(printf, 1, 2)));
 
 	template<typename T, size_t N, typename... Args>
 	void print(FILE *stream, T level, const char (&format)[N], Args&&... args)
@@ -126,6 +148,7 @@ namespace rainbow
 #endif  // !NDEBUG
 }
 
+#undef ATTRIBUTE
 #undef RAINBOW_LOG_DEBUG
 #undef RAINBOW_LOG_ERROR
 #undef RAINBOW_LOG_FATAL
