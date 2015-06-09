@@ -6,9 +6,8 @@
 #define INPUT_INPUTLISTENER_H_
 
 #include "Common/Link.h"
-#include "Platform/Macros.h"
 
-class Key;
+struct Key;
 struct Pointer;
 
 /// Interface for input listeners.
@@ -17,8 +16,6 @@ class InputListener : private Link
 	friend class Input;
 
 public:
-	virtual ~InputListener() = default;
-
 	/// Returns the next input listener; \c nullptr if none.
 	InputListener* next() const
 	{
@@ -31,7 +28,6 @@ public:
 		return static_cast<InputListener*>(Link::prev());
 	}
 
-#ifdef RAINBOW_BUTTONS
 	bool on_key_down(const Key &k)
 	{
 		return on_key_down_impl(k);
@@ -41,7 +37,6 @@ public:
 	{
 		return on_key_up_impl(k);
 	}
-#endif
 
 	/// User puts finger down on the device; mouse down.
 	/// \param count     Number of pointers.
@@ -74,18 +69,12 @@ public:
 		return on_pointer_moved_impl(count, pointers);
 	}
 
-private:
-#ifdef RAINBOW_BUTTONS
-	virtual bool on_key_down_impl(const Key &)
-	{
-		return false;
-	}
+protected:
+	~InputListener() = default;
 
-	virtual bool on_key_up_impl(const Key &)
-	{
-		return false;
-	}
-#endif
+private:
+	virtual bool on_key_down_impl(const Key &) { return false; }
+	virtual bool on_key_up_impl(const Key &) { return false; }
 
 	virtual bool on_pointer_began_impl(const unsigned int, const Pointer *)
 	{

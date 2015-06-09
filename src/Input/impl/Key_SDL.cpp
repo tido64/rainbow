@@ -1,10 +1,9 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
 #include "Input/Key.h"
 
-#ifdef RAINBOW_BUTTONS
 #ifdef RAINBOW_SDL
 
 #include <SDL_config.h>
@@ -391,4 +390,3 @@ Key Key::from_raw(const SDL_Keysym *keysym)
 }
 
 #endif  // RAINBOW_SDL
-#endif  // RAINBOW_BUTTONS

@@ -8,10 +8,6 @@
 #include "Common/NonCopyable.h"
 #include "Input/Acceleration.h"
 #include "Input/InputListener.h"
-#include "Platform/Macros.h"
-
-class Key;
-struct Pointer;
 
 /// Handles accelerometer/gyroscope and pointer events independent of platform.
 ///
@@ -47,10 +43,8 @@ public:
 	                 const double z,
 	                 const double t);
 
-#ifdef RAINBOW_BUTTONS
 	void on_key_down(const Key &k);
 	void on_key_up(const Key &k);
-#endif  // RAINBOW_BUTTONS
 
 	void on_pointer_began(const unsigned int count, Pointer *pointers);
 	void on_pointer_canceled();

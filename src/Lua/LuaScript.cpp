@@ -46,7 +46,6 @@ void LuaScript::on_memory_warning()
 	lua_gc(lua_, LUA_GCCOLLECT, 0);
 }
 
-#ifdef RAINBOW_BUTTONS
 bool LuaScript::on_key_down_impl(const Key &k)
 {
 	rainbow::lua::input::on_key_down(lua_, k);
@@ -58,7 +57,6 @@ bool LuaScript::on_key_up_impl(const Key &k)
 	rainbow::lua::input::on_key_up(lua_, k);
 	return true;
 }
-#endif  // RAINBOW_BUTTONS
 
 bool LuaScript::on_pointer_began_impl(const unsigned int count,
                                       const Pointer *pointers)

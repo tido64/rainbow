@@ -1,4 +1,4 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -7,18 +7,15 @@
 
 #include "Platform/Macros.h"
 
-#ifdef RAINBOW_BUTTONS
-
 #if defined(RAINBOW_SDL)
 using RawKeysym = struct SDL_Keysym;
 #else
-#	error "This platform is not supposed to use SDL."
+using RawKeysym = void;
 #endif
 
 /// Keyboard input.
-class Key
+struct Key
 {
-public:
 	/// Converts raw keysym to a rainbow::Key.
 	static Key from_raw(const RawKeysym *keysym);
 
@@ -164,10 +161,7 @@ public:
 	Keys key;
 	unsigned int modifier;
 
-	inline Key();
+	Key() : key(Keys::None), modifier(Mods::None) {}
 };
 
-Key::Key() : key(Keys::None), modifier(Mods::None) {}
-
-#endif  // RAINBOW_BUTTONS
-#endif  // KEY_H_
+#endif

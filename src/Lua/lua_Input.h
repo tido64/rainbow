@@ -1,4 +1,4 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -10,7 +10,7 @@
 #include "Lua/LuaMacros.h"
 
 class Acceleration;
-class Key;
+struct Key;
 struct Pointer;
 struct lua_State;
 
@@ -22,10 +22,8 @@ NS_RAINBOW_LUA_MODULE_BEGIN(input)
 
 	void clear(lua_State *L);
 
-#ifdef RAINBOW_BUTTONS
 	void on_key_down(lua_State *L, const Key &key);
 	void on_key_up(lua_State *L, const Key &key);
-#endif
 
 	void on_pointer_began(lua_State * L,
 	                      const unsigned int count,

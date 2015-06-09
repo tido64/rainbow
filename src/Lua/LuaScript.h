@@ -25,10 +25,9 @@ public:
 private:
 	rainbow::LuaMachine lua_;
 
-#ifdef RAINBOW_BUTTONS
 	bool on_key_down_impl(const Key &) override;
 	bool on_key_up_impl(const Key &) override;
-#endif  // RAINBOW_BUTTONS
+
 	bool on_pointer_began_impl(const unsigned int, const Pointer *) override;
 	bool on_pointer_canceled_impl() override;
 	bool on_pointer_ended_impl(const unsigned int, const Pointer *) override;

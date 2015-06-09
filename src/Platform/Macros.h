@@ -33,7 +33,6 @@
 // Platforms that make use of physical buttons (keyboards, gamepads, etc.)
 // and of SDL.
 #if defined(RAINBOW_OS_UNIX) || defined(RAINBOW_OS_WINDOWS)
-#	define RAINBOW_BUTTONS
 #	define RAINBOW_SDL
 #endif
 

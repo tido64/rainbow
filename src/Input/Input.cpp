@@ -6,8 +6,6 @@
 
 #include <utility>
 
-#include "Input/Key.h"
-
 void Input::subscribe(InputListener *const i)
 {
 	last_listener_->append(i);
@@ -27,7 +25,6 @@ void Input::accelerated(const double x,
 	acceleration_.update(x, y, z, t);
 }
 
-#ifdef RAINBOW_BUTTONS
 void Input::on_key_down(const Key &k)
 {
 	if (for_each(next(), [&k](InputListener *i) { return i->on_key_down(k); }))
@@ -39,7 +36,6 @@ void Input::on_key_up(const Key &k)
 	if (for_each(next(), [&k](InputListener *i) { return i->on_key_up(k); }))
 		return;
 }
-#endif
 
 void Input::on_pointer_began(const unsigned int count, Pointer *pointers)
 {

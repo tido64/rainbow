@@ -54,8 +54,6 @@ NS_RAINBOW_LUA_MODULE_BEGIN(input)
 			lua_rawseti(L, -2, 1);
 		}
 
-#ifdef RAINBOW_BUTTONS
-
 		void on_key_event(lua_State *L, const Event event, const Key &key)
 		{
 			push_event(L, event);
@@ -69,8 +67,6 @@ NS_RAINBOW_LUA_MODULE_BEGIN(input)
 			lua_rawseti(L, -2, 2);
 			lua_pop(L, 2);
 		}
-
-#endif  // RAINBOW_BUTTONS
 
 		void on_pointer_event(lua_State *L,
 		                      const Event event,
@@ -144,8 +140,6 @@ NS_RAINBOW_LUA_MODULE_BEGIN(input)
 		event_count = 0;
 	}
 
-#ifdef RAINBOW_BUTTONS
-
 	void on_key_down(lua_State *L, const Key &key)
 	{
 		on_key_event(L, kEventKeyDown, key);
@@ -155,8 +149,6 @@ NS_RAINBOW_LUA_MODULE_BEGIN(input)
 	{
 		on_key_event(L, kEventKeyUp, key);
 	}
-
-#endif  // RAINBOW_BUTTONS
 
 	void on_pointer_began(lua_State * L,
 	                      const unsigned int count,

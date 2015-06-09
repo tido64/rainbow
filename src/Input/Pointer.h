@@ -19,13 +19,6 @@ struct Pointer
 	        const int y,
 	        const unsigned long t)
 	    : hash(hash), x(x), y(y), timestamp(t) {}
-
-	/// Two pointer events are equal if their hash values are; i.e. they share a
-	/// common origin.
-	friend bool operator==(const Pointer &a, const Pointer &b)
-	{
-		return a.hash == b.hash;
-	}
 };
 
 #endif
