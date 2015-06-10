@@ -4,8 +4,6 @@
 
 #include "Input/Input.h"
 
-#include <utility>
-
 void Input::subscribe(InputListener *const i)
 {
 	last_listener_->append(i);
@@ -25,50 +23,75 @@ void Input::accelerated(const double x,
 	acceleration_.update(x, y, z, t);
 }
 
+void Input::on_controller_axis_motion(const ControllerAxisMotion &axis_motion)
+{
+	for_each(next(), [&axis_motion](InputListener *i) {
+		return i->on_controller_axis_motion(axis_motion);
+	});
+}
+
+void Input::on_controller_button_down(const ControllerButton &button)
+{
+	for_each(next(), [&button](InputListener *i) {
+		return i->on_controller_button_down(button);
+	});
+}
+
+void Input::on_controller_button_up(const ControllerButton &button)
+{
+	for_each(next(), [&button](InputListener *i) {
+		return i->on_controller_button_up(button);
+	});
+}
+
+void Input::on_controller_connected(const unsigned int id)
+{
+	for_each(next(), [id](InputListener *i) {
+		return i->on_controller_connected(id);
+	});
+}
+
+void Input::on_controller_disconnected(const unsigned int id)
+{
+	for_each(next(), [id](InputListener *i) {
+		return i->on_controller_disconnected(id);
+	});
+}
+
 void Input::on_key_down(const Key &k)
 {
-	if (for_each(next(), [&k](InputListener *i) { return i->on_key_down(k); }))
-		return;
+	for_each(next(), [&k](InputListener *i) { return i->on_key_down(k); });
 }
 
 void Input::on_key_up(const Key &k)
 {
-	if (for_each(next(), [&k](InputListener *i) { return i->on_key_up(k); }))
-		return;
+	for_each(next(), [&k](InputListener *i) { return i->on_key_up(k); });
 }
 
 void Input::on_pointer_began(const unsigned int count, Pointer *pointers)
 {
-	auto began = [count, pointers](InputListener *i) {
+	for_each(next(), [count, pointers](InputListener *i) {
 		return i->on_pointer_began(count, pointers);
-	};
-	if (for_each(next(), std::move(began)))
-		return;
+	});
 }
 
 void Input::on_pointer_canceled()
 {
-	auto canceled = [](InputListener *i) { return i->on_pointer_canceled(); };
-	if (for_each(next(), std::move(canceled)))
-		return;
+	for_each(next(), [](InputListener *i) { return i->on_pointer_canceled(); });
 }
 
 void Input::on_pointer_ended(const unsigned int count, Pointer *pointers)
 {
-	auto ended = [count, pointers](InputListener *i) {
+	for_each(next(), [count, pointers](InputListener *i) {
 		return i->on_pointer_ended(count, pointers);
-	};
-	if (for_each(next(), std::move(ended)))
-		return;
+	});
 }
 
 void Input::on_pointer_moved(const unsigned int count, Pointer *pointers)
 {
-	auto moved = [count, pointers](InputListener *i) {
+	for_each(next(), [count, pointers](InputListener *i) {
 		return i->on_pointer_moved(count, pointers);
-	};
-	if (for_each(next(), std::move(moved)))
-		return;
+	});
 }
 
 void Input::on_end_link_removed(Link *node)

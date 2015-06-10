@@ -43,6 +43,12 @@ public:
 	                 const double z,
 	                 const double t);
 
+	void on_controller_axis_motion(const ControllerAxisMotion &);
+	void on_controller_button_down(const ControllerButton &);
+	void on_controller_button_up(const ControllerButton &);
+	void on_controller_connected(const unsigned int id);
+	void on_controller_disconnected(const unsigned int id);
+
 	void on_key_down(const Key &k);
 	void on_key_up(const Key &k);
 

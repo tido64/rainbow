@@ -5,6 +5,8 @@
 #include "Platform/Macros.h"
 #ifdef RAINBOW_SDL
 
+#include <tuple>
+
 #include <SDL_config.h>  // Ensure we include the correct SDL_config.h.
 #include <SDL.h>
 
@@ -25,6 +27,7 @@
 #include "Config.h"
 #include "Director.h"
 #include "FileSystem/Path.h"
+#include "Input/Controller.h"
 #include "Input/Key.h"
 #include "Input/Pointer.h"
 #ifdef RAINBOW_TEST
@@ -39,6 +42,8 @@ namespace
 {
 	static_assert(SDL_VERSION_ATLEAST(2,0,3),
 	              "Rainbow requires SDL version 2.0.3 or higher");
+
+	using GameController = std::tuple<int, SDL_GameController*>;
 
 	const uint32_t kMouseButtons[] = {
 	    SDL_BUTTON_LEFT,
@@ -125,6 +130,8 @@ namespace
 
 		bool run();
 
+		void on_controller_connected(const int device_index);
+		void on_controller_disconnected(const int instance_id);
 		void on_mouse_down(const uint32_t button,
 		                   const Vec2i &point,
 		                   const unsigned long timestamp);
@@ -141,6 +148,7 @@ namespace
 		Chrono chrono_;
 		Director director_;
 		const bool suspend_on_focus_lost_;
+		std::vector<GameController> game_controllers_;
 	};
 }
 
@@ -149,7 +157,7 @@ SDLContext::SDLContext(const rainbow::Config &config)
       position_({SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED}),
       size_(::window_size(config)), context_(nullptr)
 {
-	if (SDL_Init(SDL_INIT_VIDEO) < 0)
+	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER) < 0)
 	{
 		LOGF("SDL: Unable to initialise video: %s", SDL_GetError());
 		return;
@@ -277,6 +285,9 @@ RainbowController::RainbowController(
 	if (director_.terminated())
 		return;
 
+	for (int i = 0; i < SDL_NumJoysticks(); ++i)
+		on_controller_connected(i);
+
 	director_.init(context_.drawable_size());
 	on_window_resized();
 }
@@ -363,6 +374,31 @@ bool RainbowController::run()
 				                Vec2i(event.button.x, event.button.y)),
 				            event.button.timestamp);
 				break;
+			case SDL_CONTROLLERAXISMOTION:
+				director_.input().on_controller_axis_motion(
+				    ControllerAxisMotion(
+				        event.caxis.which,
+				        static_cast<Controller::Axis>(event.caxis.axis),
+				        event.caxis.value, event.caxis.timestamp));
+				break;
+			case SDL_CONTROLLERBUTTONDOWN:
+				director_.input().on_controller_button_down(ControllerButton(
+				    event.cbutton.which,
+				    static_cast<Controller::Button>(event.cbutton.button),
+				    event.cbutton.timestamp));
+				break;
+			case SDL_CONTROLLERBUTTONUP:
+				director_.input().on_controller_button_up(ControllerButton(
+				    event.cbutton.which,
+				    static_cast<Controller::Button>(event.cbutton.button),
+				    event.cbutton.timestamp));
+				break;
+			case SDL_CONTROLLERDEVICEADDED:
+				on_controller_connected(event.cdevice.which);
+				break;
+			case SDL_CONTROLLERDEVICEREMOVED:
+				on_controller_disconnected(event.cdevice.which);
+				break;
 			default:
 				break;
 		}
@@ -380,6 +416,44 @@ bool RainbowController::run()
 		context_.swap();
 	}
 	return true;
+}
+
+void RainbowController::on_controller_connected(const int device_index)
+{
+	if (!SDL_IsGameController(device_index))
+		return;
+
+	auto controller = SDL_GameControllerOpen(device_index);
+	auto id = SDL_JoystickInstanceID(SDL_GameControllerGetJoystick(controller));
+
+#if defined(RAINBOW_OS_MACOS) && !SDL_VERSION_ATLEAST(2,0,4)
+	if (std::any_of(game_controllers_.cbegin(),
+	                game_controllers_.cend(),
+	                [id](const GameController &controller) {
+	                    return std::get<0>(controller) == id;
+	                }))
+		return;
+#endif  // See https://bugzilla.libsdl.org/show_bug.cgi?id=2869
+
+	game_controllers_.emplace_back(id, controller);
+	director_.input().on_controller_connected(id);
+}
+
+void RainbowController::on_controller_disconnected(const int instance_id)
+{
+	for (auto i = game_controllers_.begin(); i < game_controllers_.end(); ++i)
+	{
+		if (std::get<0>(*i) == instance_id)
+		{
+			auto controller = std::get<1>(*i);
+			if (SDL_GameControllerGetAttached(controller))
+				SDL_GameControllerClose(controller);
+
+			rainbow::quick_erase(game_controllers_, i);
+			director_.input().on_controller_disconnected(instance_id);
+			break;
+		}
+	}
 }
 
 void RainbowController::on_mouse_down(const uint32_t button,

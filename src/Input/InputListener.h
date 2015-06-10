@@ -7,6 +7,8 @@
 
 #include "Common/Link.h"
 
+struct ControllerAxisMotion;
+struct ControllerButton;
 struct Key;
 struct Pointer;
 
@@ -26,6 +28,31 @@ public:
 	InputListener* prev() const
 	{
 		return static_cast<InputListener*>(Link::prev());
+	}
+
+	bool on_controller_axis_motion(const ControllerAxisMotion &motion)
+	{
+		return on_controller_axis_motion_impl(motion);
+	}
+
+	bool on_controller_button_down(const ControllerButton &button)
+	{
+		return on_controller_button_down_impl(button);
+	}
+
+	bool on_controller_button_up(const ControllerButton &button)
+	{
+		return on_controller_button_up_impl(button);
+	}
+
+	bool on_controller_connected(const unsigned int id)
+	{
+		return on_controller_connected_impl(id);
+	}
+
+	bool on_controller_disconnected(const unsigned int id)
+	{
+		return on_controller_disconnected_impl(id);
 	}
 
 	bool on_key_down(const Key &k)
@@ -73,6 +100,31 @@ protected:
 	~InputListener() = default;
 
 private:
+	virtual bool on_controller_axis_motion_impl(const ControllerAxisMotion &)
+	{
+		return false;
+	}
+
+	virtual bool on_controller_button_down_impl(const ControllerButton &)
+	{
+		return false;
+	}
+
+	virtual bool on_controller_button_up_impl(const ControllerButton &)
+	{
+		return false;
+	}
+
+	virtual bool on_controller_connected_impl(const unsigned int)
+	{
+		return false;
+	}
+
+	virtual bool on_controller_disconnected_impl(const unsigned int)
+	{
+		return false;
+	}
+
 	virtual bool on_key_down_impl(const Key &) { return false; }
 	virtual bool on_key_up_impl(const Key &) { return false; }
 
