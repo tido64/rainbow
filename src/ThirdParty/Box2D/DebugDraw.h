@@ -1,11 +1,11 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
 #ifndef THIRDPARTY_BOX2D_DEBUGDRAW_H_
 #define THIRDPARTY_BOX2D_DEBUGDRAW_H_
 
-#include <memory>
+#include <vector>
 
 #include <Box2D/Common/b2Draw.h>
 
@@ -37,7 +37,7 @@ namespace b2
 
 		void DrawAllWorlds();
 
-		// Implement b2Draw
+		// Implement b2Draw.
 
 		void DrawPolygon(const b2Vec2 *vertices,
 		                 int32 vertex_count,
@@ -64,19 +64,14 @@ namespace b2
 		{
 			b2Color color;
 			b2Vec2 vertex;
+
+			Vertex(const b2Color &c, const b2Vec2 &v) : color(c), vertex(v) {}
 		};
 
-		std::unique_ptr<Vertex[]> vertices_;
-		int32 buffer_size_;
 		float32 ptm_;
+		std::vector<Vertex> lines_;
+		std::vector<Vertex> triangles_;
 		DebuggableWorld *worlds_[kMaxNumWorlds];
-
-		void UpdateBuffer(const b2Vec2 *vertices,
-		                  const int32 vertex_count,
-		                  const b2Color &color);
-		void UpdateCircleBuffer(const b2Vec2 &center,
-		                        const float32 radius,
-		                        const b2Color &color);
 	};
 }
 

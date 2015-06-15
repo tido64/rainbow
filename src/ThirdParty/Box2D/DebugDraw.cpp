@@ -1,8 +1,10 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
 #include "ThirdParty/Box2D/DebugDraw.h"
+
+#include <memory>
 
 #include "Graphics/Shaders.h"
 #include "Graphics/ShaderManager.h"
@@ -34,10 +36,9 @@ namespace b2
 			g_debug_draw->DrawAllWorlds();
 	}
 
-	DebugDraw::DebugDraw() : buffer_size_(kCircleSegments), ptm_(0)
+	DebugDraw::DebugDraw() : ptm_(0)
 	{
 		SetFlags(b2Draw::e_shapeBit);
-		vertices_.reset(new Vertex[buffer_size_]);
 		std::fill(std::begin(worlds_), std::end(worlds_), nullptr);
 
 		if (g_debug_draw_program == 0)
@@ -108,14 +109,28 @@ namespace b2
 			ptm_ = world->GetPTM();
 			world->DrawDebugData();
 		}
+
+		upload(triangles_.size() * sizeof(triangles_[0]), triangles_.data());
+		glDrawArrays(GL_TRIANGLES, 0, triangles_.size());
+		triangles_.clear();
+
+		upload(lines_.size() * sizeof(lines_[0]), lines_.data());
+		glDrawArrays(GL_LINES, 0, lines_.size());
+		lines_.clear();
 	}
 
 	void DebugDraw::DrawPolygon(const b2Vec2 *vertices,
 	                            int32 vertex_count,
 	                            const b2Color &color)
 	{
-		UpdateBuffer(vertices, vertex_count, color);
-		glDrawArrays(GL_LINE_LOOP, 0, vertex_count);
+		b2Vec2 p0 = ptm_ * vertices[vertex_count - 1];
+		for (int32 i = 0; i < vertex_count; ++i)
+		{
+			const b2Vec2 p1 = ptm_ * vertices[i];
+			lines_.emplace_back(color, p0);
+			lines_.emplace_back(color, p1);
+			p0 = p1;
+		}
 	}
 
 	void DebugDraw::DrawSolidPolygon(const b2Vec2 *vertices,
@@ -123,9 +138,12 @@ namespace b2
 	                                 const b2Color &color)
 	{
 		const b2Color c(color.r, color.g, color.b, 0.5f);
-		UpdateBuffer(vertices, vertex_count, c);
-		glDrawArrays(GL_TRIANGLE_FAN, 0, vertex_count);
-
+		for (int32 i = 1; i < vertex_count - 1; ++i)
+		{
+			triangles_.emplace_back(c, ptm_ * vertices[0]);
+			triangles_.emplace_back(c, ptm_ * vertices[i]);
+			triangles_.emplace_back(c, ptm_ * vertices[i + 1]);
+		}
 		DrawPolygon(vertices, vertex_count, color);
 	}
 
@@ -133,8 +151,21 @@ namespace b2
 	                           float32 radius,
 	                           const b2Color &color)
 	{
-		UpdateCircleBuffer(center, radius, color);
-		glDrawArrays(GL_TRIANGLE_FAN, 0, kCircleSegments);
+		const float32 sin_inc = sinf(kCircleIncrement);
+		const float32 cos_inc = cosf(kCircleIncrement);
+		b2Vec2 r1(1.0f, 0.0f);
+		b2Vec2 v1 = center + radius * r1;
+		for (int32 i = 0; i < kCircleSegments; ++i)
+		{
+			// Perform rotation to avoid additional trigonometry.
+			const b2Vec2 r2(cos_inc * r1.x - sin_inc * r1.y,
+			                sin_inc * r1.x + cos_inc * r1.y);
+			const b2Vec2 v2 = center + radius * r2;
+			lines_.emplace_back(color, ptm_ * v1);
+			lines_.emplace_back(color, ptm_ * v2);
+			r1 = r2;
+			v1 = v2;
+		}
 	}
 
 	void DebugDraw::DrawSolidCircle(const b2Vec2 &center,
@@ -142,10 +173,26 @@ namespace b2
 	                                const b2Vec2 &axis,
 	                                const b2Color &color)
 	{
-		DrawCircle(center, radius, b2Color(color.r, color.g, color.b, 0.5f));
+		const float32 sin_inc = sinf(kCircleIncrement);
+		const float32 cos_inc = cosf(kCircleIncrement);
+		b2Vec2 v0 = center;
+		b2Vec2 r1(cos_inc, sin_inc);
+		b2Vec2 v1 = center + radius * r1;
+		const b2Color c(color.r, color.g, color.b, 0.5f);
+		for (int32 i = 0; i < kCircleSegments; ++i)
+		{
+			// Perform rotation to avoid additional trigonometry.
+			const b2Vec2 r2(cos_inc * r1.x - sin_inc * r1.y,
+			                sin_inc * r1.x + cos_inc * r1.y);
+			const b2Vec2 v2 = center + radius * r2;
+			triangles_.emplace_back(c, ptm_ * v0);
+			triangles_.emplace_back(c, ptm_ * v1);
+			triangles_.emplace_back(c, ptm_ * v2);
+			r1 = r2;
+			v1 = v2;
+		}
 
-		UpdateCircleBuffer(center, radius, color);
-		glDrawArrays(GL_LINE_LOOP, 0, kCircleSegments);
+		DrawCircle(center, radius, color);
 
 		// Draw the axis line
 		DrawSegment(center, center + radius * axis, color);
@@ -155,12 +202,8 @@ namespace b2
 	                            const b2Vec2 &p2,
 	                            const b2Color &color)
 	{
-		vertices_[0].color = color;
-		vertices_[0].vertex = ptm_ * p1;
-		vertices_[1].color = color;
-		vertices_[1].vertex = ptm_ * p2;
-		upload(2 * sizeof(vertices_[0]), vertices_.get());
-		glDrawArrays(GL_LINES, 0, 2);
+		lines_.emplace_back(color, ptm_ * p1);
+		lines_.emplace_back(color, ptm_ * p2);
 	}
 
 	void DebugDraw::DrawTransform(const b2Transform &xf)
@@ -173,42 +216,5 @@ namespace b2
 
 		p2 = p1 + kAxisScale * xf.q.GetYAxis();
 		DrawSegment(p1, p2, b2Color(0.0f, 1.0f, 0.0f));
-	}
-
-	void DebugDraw::UpdateBuffer(const b2Vec2 *vertices,
-	                             const int32 vertex_count,
-	                             const b2Color &color)
-	{
-		if (vertex_count > buffer_size_)
-		{
-			vertices_.reset(new Vertex[vertex_count]);
-			buffer_size_ = vertex_count;
-		}
-		for (int32 i = 0; i < vertex_count; ++i)
-		{
-			vertices_[i].color = color;
-			vertices_[i].vertex = ptm_ * vertices[i];
-		}
-		upload(vertex_count * sizeof(vertices_[0]), vertices_.get());
-	}
-
-	void DebugDraw::UpdateCircleBuffer(const b2Vec2 &center,
-	                                   const float32 radius,
-	                                   const b2Color &color)
-	{
-		if (kCircleSegments > buffer_size_)
-		{
-			vertices_.reset(new Vertex[kCircleSegments]);
-			buffer_size_ = kCircleSegments;
-		}
-		float32 theta = 0.0f;
-		for (int32 i = 0; i < kCircleSegments; ++i)
-		{
-			vertices_[i].color = color;
-			vertices_[i].vertex =
-			    ptm_ * (center + radius * b2Vec2(cosf(theta), sinf(theta)));
-			theta += kCircleIncrement;
-		}
-		upload(kCircleSegments * sizeof(vertices_[0]), vertices_.get());
 	}
 }
