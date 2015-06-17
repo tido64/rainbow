@@ -1,4 +1,4 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -58,6 +58,9 @@ public:
 	/// Sets text font.
 	void set_font(SharedPtr<FontAtlas>);
 
+	/// Sets label as needing update.
+	void set_needs_update(const unsigned int what) { stale_ |= what; }
+
 	/// Sets position of text.
 	void set_position(const Vec2f &);
 
@@ -67,14 +70,11 @@ public:
 	/// Sets label scale. Value is clamped between 0.01 and 1.0.
 	void set_scale(const float f);
 
-	/// Sets label as needing update.
-	void set_needs_update(const unsigned int what) { stale_ |= what; }
-
 	/// Sets text to display.
 	void set_text(const char *);
 
 	/// Binds all used textures.
-	void bind_textures() const;
+	void bind_textures() const { font_->bind(); }
 
 	/// Moves label by (x,y).
 	void move(const Vec2f &);
@@ -82,21 +82,32 @@ public:
 	/// Populates the vertex array.
 	void update();
 
+protected:
+	unsigned int state() const { return stale_; }
+	SpriteVertex* vertex_buffer() const { return vertices_.get(); }
+
+	void clear_state() { stale_ = 0; }
+	void update_internal();
+	void upload() const;
+
 private:
-	std::unique_ptr<SpriteVertex[]> vertices_;  ///< Client vertex buffer.
-	std::unique_ptr<char[]> text_;  ///< Content of this label.
-	size_t size_;                   ///< Size of the char array.
-	Vec2f position_;                ///< Position of the text (bottom left).
-	Colorb color_;                  ///< Color of the text.
-	float scale_;                   ///< Label scale factor.
-	TextAlignment alignment_;       ///< Text alignment.
-	float angle_;                   ///< Angle of rotation.
-	unsigned int count_;            ///< Number of characters * 4 (i.e. vertices).
-	unsigned int stale_;            ///< Flags indicating need for update.
-	unsigned int width_;            ///< Label width.
-	Buffer buffer_;                 ///< Vertex buffer.
-	VertexArray array_;             ///< Vertex array object.
-	SharedPtr<FontAtlas> font_;     ///< The font used in this label.
+	using String = std::unique_ptr<char[]>;
+	using VertexBuffer = std::unique_ptr<SpriteVertex[]>;
+
+	VertexBuffer vertices_;      ///< Client vertex buffer.
+	String text_;                ///< Content of this label.
+	size_t size_;                ///< Size of the char array.
+	Vec2f position_;             ///< Position of the text (bottom left).
+	Colorb color_;               ///< Color of the text.
+	float scale_;                ///< Label scale factor.
+	TextAlignment alignment_;    ///< Text alignment.
+	float angle_;                ///< Angle of rotation.
+	unsigned int count_;         ///< Number of characters * 4 (i.e. vertices).
+	unsigned int stale_;         ///< Flags indicating need for update.
+	unsigned int width_;         ///< Label width.
+	Buffer buffer_;              ///< Vertex buffer.
+	VertexArray array_;          ///< Vertex array object.
+	SharedPtr<FontAtlas> font_;  ///< The font used in this label.
 
 	/// Saves line width and aligns the line if needed.
 	/// \param start            First character of line.

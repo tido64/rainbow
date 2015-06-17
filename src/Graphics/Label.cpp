@@ -1,4 +1,4 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -43,8 +43,8 @@ void Label::set_font(SharedPtr<FontAtlas> f)
 
 void Label::set_position(const Vec2f &position)
 {
-	position_.x = static_cast<int>(position.x + 0.5);
-	position_.y = static_cast<int>(position.y + 0.5);
+	position_.x = std::round(position.x);
+	position_.y = std::round(position.y);
 	set_needs_update(kStaleBuffer);
 }
 
@@ -75,14 +75,9 @@ void Label::set_text(const char *text)
 		size_ = len;
 		set_needs_update(kStaleBufferSize);
 	}
-	memcpy(text_.get(), text, len);
+	std::copy_n(text, len, text_.get());
 	text_[len] = '\0';
 	set_needs_update(kStaleBuffer);
-}
-
-void Label::bind_textures() const
-{
-	font_->bind();
 }
 
 void Label::move(const Vec2f &delta)
@@ -93,76 +88,86 @@ void Label::move(const Vec2f &delta)
 
 void Label::update()
 {
-	// Note: This algorithm currently does not support font kerning.
 	if (stale_)
 	{
-		if (stale_ & kStaleBuffer)
-		{
-			if (stale_ & kStaleBufferSize)
-				vertices_.reset(new SpriteVertex[size_ * 4]);
-			width_ = 0;
-			unsigned int start = 0;
-			unsigned int count = 0;
-			const Vec2f R = !is_equal(angle_, 0.0f)
-			                    ? Vec2f(cosf(-angle_), sinf(-angle_))
-			                    : Vec2f(1.0f, 0.0f);
-			const bool needs_alignment =
-			    alignment_ != TextAlignment::Left || !is_equal(angle_, 0.0f);
-			Vec2f pen = needs_alignment ? Vec2f(0.0f, 0.0f) : position_;
-			const float origin_x = pen.x;
-			SpriteVertex *vx = vertices_.get();
-			const auto *text = reinterpret_cast<unsigned char*>(text_.get());
-			while (*text)
-			{
-				if (*text == '\n')
-				{
-					save(start, count, pen.x - origin_x, R, needs_alignment);
-					pen.x = origin_x;
-					start = count;
-					pen.y -= font_->height() * scale_;
-					++text;
-					continue;
-				}
-
-				const auto &c = rainbow::utf8_decode(text);
-				if (c.bytes == 0)
-					break;
-				text += c.bytes;
-
-				const FontGlyph *glyph = font_->get_glyph(c);
-				if (!glyph)
-					continue;
-
-				pen.x += glyph->left * scale_;
-
-				for (size_t i = 0; i < 4; ++i)
-				{
-					vx->color = color_;
-					vx->texcoord = glyph->quad[i].texcoord;
-					vx->position = glyph->quad[i].position;
-					vx->position *= scale_;
-					vx->position += pen;
-					++vx;
-				}
-
-				pen.x += (glyph->advance - glyph->left) * scale_;
-				++count;
-			}
-			count_ = count * 4;
-			save(start, count, pen.x - origin_x, R, needs_alignment);
-		}
-		else if (stale_ & kStaleColor)
-		{
-			const Colorb &color = color_;
-			std::for_each(vertices_.get(),
-			              vertices_.get() + count_,
-			              [color](SpriteVertex &v) {
-				v.color = color;
-			});
-		}
-		buffer_.upload(vertices_.get(), count_ * sizeof(SpriteVertex));
-		stale_ = 0;
+		update_internal();
+		upload();
+		clear_state();
 	}
+}
+
+void Label::update_internal()
+{
+	// Note: This algorithm currently does not support font kerning.
+	if (stale_ & kStaleBuffer)
+	{
+		if (stale_ & kStaleBufferSize)
+			vertices_.reset(new SpriteVertex[size_ * 4]);
+		width_ = 0;
+		unsigned int start = 0;
+		unsigned int count = 0;
+		const bool is_rotated = !is_equal(angle_, 0.0f);
+		const Vec2f R = is_rotated ? Vec2f(cos(-angle_), sin(-angle_))
+		                           : Vec2f(1.0f, 0.0f);
+		const bool needs_alignment =
+		    alignment_ != TextAlignment::Left || is_rotated;
+		Vec2f pen = needs_alignment ? Vec2f(0.0f, 0.0f) : position_;
+		const float origin_x = pen.x;
+		SpriteVertex *vx = vertices_.get();
+		const auto *text = reinterpret_cast<unsigned char*>(text_.get());
+		while (*text)
+		{
+			if (*text == '\n')
+			{
+				save(start, count, pen.x - origin_x, R, needs_alignment);
+				pen.x = origin_x;
+				start = count;
+				pen.y -= font_->height() * scale_;
+				++text;
+				continue;
+			}
+
+			const auto &c = rainbow::utf8_decode(text);
+			if (c.bytes == 0)
+				break;
+			text += c.bytes;
+
+			const FontGlyph *glyph = font_->get_glyph(c);
+			if (!glyph)
+				continue;
+
+			pen.x += glyph->left * scale_;
+
+			for (size_t i = 0; i < 4; ++i)
+			{
+				vx->color = color_;
+				vx->texcoord = glyph->quad[i].texcoord;
+				vx->position = glyph->quad[i].position;
+				vx->position *= scale_;
+				vx->position += pen;
+				++vx;
+			}
+
+			pen.x += (glyph->advance - glyph->left) * scale_;
+			++count;
+		}
+		count_ = count * 4;
+		save(start, count, pen.x - origin_x, R, needs_alignment);
+	}
+	else if (stale_ & kStaleColor)
+	{
+		const Colorb &color = color_;
+		std::for_each(vertices_.get(),
+		              vertices_.get() + count_,
+		              [color](SpriteVertex &v) {
+			v.color = color;
+		});
+	}
+}
+
+void Label::upload() const
+{
+	buffer_.upload(vertices_.get(), count_ * sizeof(vertices_[0]));
 }
 
 void Label::save(const unsigned int start,
