@@ -78,8 +78,10 @@ void Animation::update(const unsigned long dt)
 	accumulated_ += std::min<unsigned int>(dt, interval_ * 5);
 	while (accumulated_ >= interval_)
 	{
-		tick();
+		// Consume first as |accumulated_| may be reset during a tick, leading
+		// to an underflow.
 		accumulated_ -= interval_;
+		tick();
 	}
 }
 
