@@ -37,7 +37,6 @@ set(SOURCE_FILES
 	src/Common/Global.h
 	src/Common/Link.cpp
 	src/Common/Link.h
-	src/Common/List.h
 	src/Common/Logging.h
 	src/Common/NonCopyable.h
 	src/Common/Random.cpp

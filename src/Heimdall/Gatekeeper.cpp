@@ -71,22 +71,20 @@ namespace heimdall
 	void Gatekeeper::update(const unsigned long dt)
 	{
 #if !defined(USE_LUA_SCRIPT) || USE_LUA_SCRIPT
-		if (!changed_files_.empty())
+		lua_State *L = static_cast<LuaScript*>(script())->state();
+		while (!changed_files_.empty())
 		{
-			decltype(changed_files_) files;
+			const Library library(changed_files_.front().get());
 			{
 				std::lock_guard<std::mutex> lock(changed_files_mutex_);
-				files = std::move(changed_files_);
+				changed_files_.pop();
 			}
-			lua_State *L = static_cast<LuaScript*>(script())->state();
-			for_each(files, [L](const std::unique_ptr<char[]> &file) {
-				Library library(file.get());
-				if (!library)
-					return;
 
-				LOGI("Reloading '%s'...", library.name());
-				rainbow::lua::reload(L, library.open(), library.name());
-			});
+			if (!library)
+				continue;
+
+			LOGI("Reloading '%s'...", library.name());
+			rainbow::lua::reload(L, library.open(), library.name());
 		}
 #endif  // USE_LUA_SCRIPT
 
@@ -102,10 +100,10 @@ namespace heimdall
 	{
 #if !defined(USE_LUA_SCRIPT) || USE_LUA_SCRIPT
 		monitor_.set_callback([this](const char *path) {
-			std::unique_ptr<char[]> file(new char[strlen(path) + 1]);
-			strcpy(file.get(), path);
+			auto file = new char[strlen(path) + 1];
+			strcpy(file, path);
 			std::lock_guard<std::mutex> lock(changed_files_mutex_);
-			changed_files_ = changed_files_.push_front(std::move(file));
+			changed_files_.emplace(file);
 		});
 #endif  // USE_LUA_SCRIPT
 	}

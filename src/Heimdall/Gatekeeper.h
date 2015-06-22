@@ -8,9 +8,9 @@
 #ifdef USE_HEIMDALL
 
 #include <mutex>
+#include <queue>
 #include <unordered_map>
 
-#include "Common/List.h"
 #include "Director.h"
 #include "Heimdall/ChangeMonitor.h"
 #include "Heimdall/DebugInfo.h"
@@ -41,7 +41,7 @@ namespace heimdall
 
 	private:
 #if !defined(USE_LUA_SCRIPT) || USE_LUA_SCRIPT
-		List<std::unique_ptr<char[]>> changed_files_;
+		std::queue<std::unique_ptr<char[]>> changed_files_;
 #endif  // USE_LUA_SCRIPT
 		Overlay overlay_;
 		OverlayActivator overlay_activator_;
