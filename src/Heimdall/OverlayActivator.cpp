@@ -8,6 +8,7 @@
 
 #include <algorithm>
 
+#include "Common/Logging.h"
 #include "Heimdall/Overlay.h"
 #include "Input/Pointer.h"
 
