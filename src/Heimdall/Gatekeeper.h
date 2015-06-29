@@ -13,7 +13,7 @@
 
 #include "Director.h"
 #include "Heimdall/ChangeMonitor.h"
-#include "Heimdall/DebugInfo.h"
+#include "Heimdall/PerformanceOverlay.h"
 #include "Heimdall/Overlay.h"
 #include "Heimdall/OverlayActivator.h"
 #include "Input/InputListener.h"
@@ -45,7 +45,7 @@ namespace heimdall
 #endif  // USE_LUA_SCRIPT
 		Overlay overlay_;
 		OverlayActivator overlay_activator_;
-		std::unique_ptr<DebugInfo> info_;
+		std::unique_ptr<PerformanceOverlay> perf_;
 		rainbow::SceneNode scenegraph_;
 		std::unordered_map<unsigned int, Button*> pressed_;
 #if !defined(USE_LUA_SCRIPT) || USE_LUA_SCRIPT

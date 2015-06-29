@@ -70,6 +70,8 @@ set(SOURCE_FILES
 	src/Graphics/Image.h
 	src/Graphics/Label.cpp
 	src/Graphics/Label.h
+	src/Graphics/LyricalLabel.cpp
+	src/Graphics/LyricalLabel.h
 	src/Graphics/OpenGL.h
 	src/Graphics/Renderer.cpp
 	src/Graphics/Renderer.h
@@ -243,14 +245,14 @@ if(USE_HEIMDALL)
 	list(APPEND SOURCE_FILES
 		src/Heimdall/Button.h
 		src/Heimdall/ChangeMonitor.h
-		src/Heimdall/DebugInfo.cpp
-		src/Heimdall/DebugInfo.h
 		src/Heimdall/Gatekeeper.cpp
 		src/Heimdall/Gatekeeper.h
 		src/Heimdall/Overlay.cpp
 		src/Heimdall/Overlay.h
 		src/Heimdall/OverlayActivator.cpp
 		src/Heimdall/OverlayActivator.h
+		src/Heimdall/PerformanceOverlay.cpp
+		src/Heimdall/PerformanceOverlay.h
 		src/Heimdall/Style.h
 		src/Resources/Inconsolata.otf.h
 		src/Resources/NewsCycle-Regular.ttf.h)

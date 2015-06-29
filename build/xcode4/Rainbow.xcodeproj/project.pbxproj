@@ -149,6 +149,10 @@
 		196CB728161E4ADD0068C809 /* Gatekeeper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 196CB725161E4ADD0068C809 /* Gatekeeper.cpp */; };
 		196CB72F161E4D940068C809 /* b2MotorJoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 196CB72D161E4D940068C809 /* b2MotorJoint.cpp */; };
 		197396DD15A505F60064BF7D /* TextureManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 197396DB15A505F60064BF7D /* TextureManager.cpp */; };
+		198644BC1B531C4A004378CF /* NanoVG.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 198644BA1B531C4A004378CF /* NanoVG.cpp */; };
+		198644C01B531CBD004378CF /* PerformanceOverlay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 198644BE1B531CBD004378CF /* PerformanceOverlay.cpp */; };
+		198644C31B531CDD004378CF /* LyricalLabel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 198644C11B531CDD004378CF /* LyricalLabel.cpp */; };
+		198644C81B531D19004378CF /* nanovg.c in Sources */ = {isa = PBXBuildFile; fileRef = 198644C61B531D19004378CF /* nanovg.c */; };
 		19865982175E98F700723171 /* Data.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19865981175E98F700723171 /* Data.cpp */; };
 		1987ADA5194F2E0C003D2B3E /* Mixer_FMOD.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1987ADA3194F2E0C003D2B3E /* Mixer_FMOD.cpp */; };
 		1987ADAA194F34BF003D2B3E /* libfmod_iphoneos.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1987ADA6194F34BF003D2B3E /* libfmod_iphoneos.a */; settings = {ATTRIBUTES = (Weak, ); }; };
@@ -192,7 +196,6 @@
 		19905B88152C50FA00BDD15C /* Parallax.lua in Resources */ = {isa = PBXBuildFile; fileRef = 19905B7E152C50FA00BDD15C /* Parallax.lua */; };
 		19905B8A152C50FA00BDD15C /* Stack.lua in Resources */ = {isa = PBXBuildFile; fileRef = 19905B80152C50FA00BDD15C /* Stack.lua */; };
 		19905B8B152C50FA00BDD15C /* Transition.lua in Resources */ = {isa = PBXBuildFile; fileRef = 19905B81152C50FA00BDD15C /* Transition.lua */; };
-		19AF589F167FFA0800F54B27 /* DebugInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19AF589A167FFA0800F54B27 /* DebugInfo.cpp */; };
 		19AF58A0167FFA0800F54B27 /* Overlay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19AF589C167FFA0800F54B27 /* Overlay.cpp */; };
 		19CEDD71172422DC008B73B5 /* AudioFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19CEDD6A172422DC008B73B5 /* AudioFile.cpp */; };
 		19CEDD72172422DC008B73B5 /* AppleAudioFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19CEDD6D172422DC008B73B5 /* AppleAudioFile.cpp */; };
@@ -519,6 +522,16 @@
 		196CB72E161E4D940068C809 /* b2MotorJoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = b2MotorJoint.h; sourceTree = "<group>"; };
 		197396DB15A505F60064BF7D /* TextureManager.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = TextureManager.cpp; sourceTree = "<group>"; };
 		197396DC15A505F60064BF7D /* TextureManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextureManager.h; sourceTree = "<group>"; };
+		198644BA1B531C4A004378CF /* NanoVG.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NanoVG.cpp; sourceTree = "<group>"; };
+		198644BB1B531C4A004378CF /* NanoVG.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NanoVG.h; sourceTree = "<group>"; };
+		198644BD1B531CBD004378CF /* Button.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Button.h; sourceTree = "<group>"; };
+		198644BE1B531CBD004378CF /* PerformanceOverlay.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PerformanceOverlay.cpp; sourceTree = "<group>"; };
+		198644BF1B531CBD004378CF /* PerformanceOverlay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PerformanceOverlay.h; sourceTree = "<group>"; };
+		198644C11B531CDD004378CF /* LyricalLabel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LyricalLabel.cpp; sourceTree = "<group>"; };
+		198644C21B531CDD004378CF /* LyricalLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LyricalLabel.h; sourceTree = "<group>"; };
+		198644C51B531D19004378CF /* nanovg_gl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = nanovg_gl.h; path = ../../../lib/nanovg/src/nanovg_gl.h; sourceTree = "<group>"; };
+		198644C61B531D19004378CF /* nanovg.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = nanovg.c; path = ../../../lib/nanovg/src/nanovg.c; sourceTree = "<group>"; };
+		198644C71B531D19004378CF /* nanovg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = nanovg.h; path = ../../../lib/nanovg/src/nanovg.h; sourceTree = "<group>"; };
 		19865981175E98F700723171 /* Data.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = Data.cpp; sourceTree = "<group>"; };
 		1987ADA3194F2E0C003D2B3E /* Mixer_FMOD.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Mixer_FMOD.cpp; sourceTree = "<group>"; };
 		1987ADA4194F2E0C003D2B3E /* Mixer_FMOD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Mixer_FMOD.h; sourceTree = "<group>"; };
@@ -572,8 +585,6 @@
 		19905B7E152C50FA00BDD15C /* Parallax.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Parallax.lua; path = ../../../lua/Parallax.lua; sourceTree = "<group>"; };
 		19905B80152C50FA00BDD15C /* Stack.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Stack.lua; path = ../../../lua/Stack.lua; sourceTree = "<group>"; };
 		19905B81152C50FA00BDD15C /* Transition.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Transition.lua; path = ../../../lua/Transition.lua; sourceTree = "<group>"; };
-		19AF589A167FFA0800F54B27 /* DebugInfo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DebugInfo.cpp; sourceTree = "<group>"; };
-		19AF589B167FFA0800F54B27 /* DebugInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DebugInfo.h; sourceTree = "<group>"; };
 		19AF589C167FFA0800F54B27 /* Overlay.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Overlay.cpp; sourceTree = "<group>"; };
 		19AF589D167FFA0800F54B27 /* Overlay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Overlay.h; sourceTree = "<group>"; };
 		19B2D7E21AFB4A0E00660D38 /* Pointer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Pointer.h; sourceTree = "<group>"; };
@@ -983,6 +994,8 @@
 				19D3204A17BD6BD4007BDC67 /* Image.h */,
 				1939A1C3152C425D00494609 /* Label.cpp */,
 				1939A1C4152C425D00494609 /* Label.h */,
+				198644C11B531CDD004378CF /* LyricalLabel.cpp */,
+				198644C21B531CDD004378CF /* LyricalLabel.h */,
 				1939A1C5152C425D00494609 /* OpenGL.h */,
 				1939A1C8152C425D00494609 /* Renderer.cpp */,
 				1939A1C9152C425D00494609 /* Renderer.h */,
@@ -1177,6 +1190,7 @@
 				19399E76152C401300494609 /* dSFMT */,
 				19399EAF152C401300494609 /* FreeType */,
 				1939A00B152C401300494609 /* Lua */,
+				198644C41B531CF5004378CF /* NanoVG */,
 				198F427C1A9152E000BE7A73 /* Spine */,
 			);
 			name = Libraries;
@@ -1267,6 +1281,7 @@
 			isa = PBXGroup;
 			children = (
 				19455D28197F1C98003E4A79 /* Box2D */,
+				198644B81B531C4A004378CF /* NanoVG */,
 				198F42B21A91531000BE7A73 /* Spine */,
 			);
 			name = ThirdParty;
@@ -1277,19 +1292,39 @@
 			isa = PBXGroup;
 			children = (
 				19D931851834AFCE00F0137E /* impl */,
+				198644BD1B531CBD004378CF /* Button.h */,
 				19D931841834AFC200F0137E /* ChangeMonitor.h */,
-				19AF589A167FFA0800F54B27 /* DebugInfo.cpp */,
-				19AF589B167FFA0800F54B27 /* DebugInfo.h */,
 				196CB725161E4ADD0068C809 /* Gatekeeper.cpp */,
 				196CB726161E4ADD0068C809 /* Gatekeeper.h */,
 				19AF589C167FFA0800F54B27 /* Overlay.cpp */,
 				19AF589D167FFA0800F54B27 /* Overlay.h */,
 				19E774871A02C8D3005DE249 /* OverlayActivator.cpp */,
 				19E774881A02C8D3005DE249 /* OverlayActivator.h */,
+				198644BE1B531CBD004378CF /* PerformanceOverlay.cpp */,
+				198644BF1B531CBD004378CF /* PerformanceOverlay.h */,
 				19E774891A02C8D3005DE249 /* Style.h */,
 			);
 			name = Heimdall;
 			path = ../../../src/Heimdall;
+			sourceTree = "<group>";
+		};
+		198644B81B531C4A004378CF /* NanoVG */ = {
+			isa = PBXGroup;
+			children = (
+				198644BA1B531C4A004378CF /* NanoVG.cpp */,
+				198644BB1B531C4A004378CF /* NanoVG.h */,
+			);
+			path = NanoVG;
+			sourceTree = "<group>";
+		};
+		198644C41B531CF5004378CF /* NanoVG */ = {
+			isa = PBXGroup;
+			children = (
+				198644C51B531D19004378CF /* nanovg_gl.h */,
+				198644C61B531D19004378CF /* nanovg.c */,
+				198644C71B531D19004378CF /* nanovg.h */,
+			);
+			name = NanoVG;
 			sourceTree = "<group>";
 		};
 		1986919F16DED44D00BC4830 /* Platform */ = {
@@ -1521,6 +1556,7 @@
 			files = (
 				1948C02F152C397D00E9B854 /* main.m in Sources */,
 				1948C033152C397D00E9B854 /* AppDelegate.m in Sources */,
+				198644C81B531D19004378CF /* nanovg.c in Sources */,
 				1960AFD51A4E278E0015A3AD /* World.cpp in Sources */,
 				198F42A81A9152E000BE7A73 /* MeshAttachment.c in Sources */,
 				1939A04B152C401300494609 /* b2BroadPhase.cpp in Sources */,
@@ -1564,9 +1600,11 @@
 				1939A067152C401300494609 /* b2ContactSolver.cpp in Sources */,
 				198F42A91A9152E000BE7A73 /* RegionAttachment.c in Sources */,
 				1939A068152C401300494609 /* b2EdgeAndCircleContact.cpp in Sources */,
+				198644C01B531CBD004378CF /* PerformanceOverlay.cpp in Sources */,
 				1939A069152C401300494609 /* b2EdgeAndPolygonContact.cpp in Sources */,
 				1939A06A152C401300494609 /* b2PolygonAndCircleContact.cpp in Sources */,
 				1939A06B152C401300494609 /* b2PolygonContact.cpp in Sources */,
+				198644BC1B531C4A004378CF /* NanoVG.cpp in Sources */,
 				1939A06C152C401300494609 /* b2DistanceJoint.cpp in Sources */,
 				1939A06D152C401300494609 /* b2FrictionJoint.cpp in Sources */,
 				1939A06E152C401300494609 /* b2GearJoint.cpp in Sources */,
@@ -1581,6 +1619,7 @@
 				196C0A72189082860042190D /* Shaders.cpp in Sources */,
 				1939A074152C401300494609 /* b2RopeJoint.cpp in Sources */,
 				198F42AD1A9152E000BE7A73 /* SkeletonJson.c in Sources */,
+				198644C31B531CDD004378CF /* LyricalLabel.cpp in Sources */,
 				198F42A21A9152E000BE7A73 /* Event.c in Sources */,
 				1939A075152C401300494609 /* b2WeldJoint.cpp in Sources */,
 				1939A076152C401300494609 /* b2WheelJoint.cpp in Sources */,
@@ -1670,7 +1709,6 @@
 				196CB72F161E4D940068C809 /* b2MotorJoint.cpp in Sources */,
 				19EBC54D16599D7000D3B5D7 /* Mixer_AL.cpp in Sources */,
 				19EBC55116599D9F00D3B5D7 /* ShaderManager.cpp in Sources */,
-				19AF589F167FFA0800F54B27 /* DebugInfo.cpp in Sources */,
 				19AF58A0167FFA0800F54B27 /* Overlay.cpp in Sources */,
 				19ED191C1682247D00AAA323 /* lua_Renderer.cpp in Sources */,
 				190497DF168293DB0037F5EC /* lua_IO.cpp in Sources */,
@@ -1766,6 +1804,7 @@
 					../../lib/FreeType/include,
 					../../lib/FreeType/src,
 					../../lib/Lua,
+					../../lib/nanovg/src,
 					"../../lib/spine-runtimes/spine-c/include",
 				);
 				INFOPLIST_FILE = "Rainbow/Rainbow-Info.plist";
@@ -1858,6 +1897,7 @@
 					../../lib/FreeType/include,
 					../../lib/FreeType/src,
 					../../lib/Lua,
+					../../lib/nanovg/src,
 					"../../lib/spine-runtimes/spine-c/include",
 				);
 				INFOPLIST_FILE = "Rainbow/Rainbow-Info.plist";
@@ -1895,6 +1935,7 @@
 					../../lib/FreeType/include,
 					../../lib/FreeType/src,
 					../../lib/Lua,
+					../../lib/nanovg/src,
 					"../../lib/spine-runtimes/spine-c/include",
 				);
 				INFOPLIST_FILE = "Rainbow/Rainbow-Info.plist";

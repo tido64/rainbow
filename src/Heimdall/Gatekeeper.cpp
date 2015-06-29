@@ -92,12 +92,25 @@ namespace heimdall
 
 		if (!overlay_.is_visible())
 			overlay_activator_.update(dt);
-		info_->update(dt);
+		perf_->update(dt);
 		scenegraph_.update(dt);
 	}
 
 	void Gatekeeper::post_init()
 	{
+		const Vec2i &res = renderer().resolution();
+		const unsigned int pt = res.y / 64;
+		auto console_font = make_shared<FontAtlas>(
+		    Data::from_bytes(Inconsolata_otf), pt);
+		auto ui_font = make_shared<FontAtlas>(
+		    Data::from_bytes(NewsCycle_Regular_ttf), (pt << 1) + (pt >> 1));
+		const float y = res.y - console_font->height();
+		const Vec2f position(res.x / 128,
+		                     y - console_font->height() - ui_font->height());
+		perf_->init_button(position, std::move(ui_font));
+		perf_->init_graph(std::move(console_font));
+		overlay_.add_child(perf_->button().drawable());
+
 #if !defined(USE_LUA_SCRIPT) || USE_LUA_SCRIPT
 		monitor_.set_callback([this](const char *path) {
 			auto file = new char[strlen(path) + 1];
@@ -110,23 +123,10 @@ namespace heimdall
 
 	void Gatekeeper::pre_init(const Vec2i &screen)
 	{
-		info_.reset(new DebugInfo());
-		scenegraph_.add_child(info_->node());
+		perf_.reset(new PerformanceOverlay());
+		scenegraph_.add_child(perf_->node());
 
 		overlay_.init(scenegraph_, screen);
-
-		const unsigned int pt = screen.y / 64;
-		auto console_font = make_shared<FontAtlas>(
-		    Data::from_bytes(Inconsolata_otf), pt);
-		auto ui_font = make_shared<FontAtlas>(
-		    Data::from_bytes(NewsCycle_Regular_ttf), (pt << 1) + (pt >> 1));
-		const float y = screen.y - console_font->height();
-		Vec2f position(screen.x / 128,
-		               y - console_font->height() - ui_font->height());
-		info_->init_button(position, std::move(ui_font));
-		position.y = y;
-		info_->init_console(position, std::move(console_font));
-		overlay_.add_child(info_->button().drawable());
 
 		input().subscribe(this);
 		input().subscribe(&overlay_activator_);
@@ -136,8 +136,8 @@ namespace heimdall
 	                                       const Pointer *pointers)
 	{
 		std::for_each(pointers, pointers + count, [this](const Pointer &p) {
-			if (info_->button().hit_test(Vec2i(p.x, p.y)))
-				pressed_[p.hash] = &info_->button();
+			if (perf_->button().hit_test(Vec2i(p.x, p.y)))
+				pressed_[p.hash] = &perf_->button();
 		});
 		return overlay_.is_visible();
 	}
