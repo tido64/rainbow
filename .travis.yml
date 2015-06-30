@@ -3,18 +3,19 @@ compiler:
   - clang
 before_install:
   - sudo add-apt-repository --yes ppa:ubuntu-toolchain-r/test
-  - sudo add-apt-repository --yes ppa:kalakris/cmake
-  - wget -O - http://llvm.org/apt/llvm-snapshot.gpg.key | sudo apt-key add -
+  - curl http://llvm.org/apt/llvm-snapshot.gpg.key | sudo apt-key add -
   - sudo apt-add-repository 'deb http://llvm.org/apt/precise/ llvm-toolchain-precise-3.6 main'
   - sudo apt-get update -qq
 install:
-  - sudo apt-get install -qqy clang-3.6 cmake ninja-build
+  - sudo apt-get install -qqy clang-3.6 ninja-build
   - sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-3.6 1
   - sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-3.6 1
   - update-alternatives --display clang
   - update-alternatives --display clang++
   - sudo rm /usr/local/clang-3.4/bin/clang
   - sudo rm /usr/local/clang-3.4/bin/clang++
+  - curl -O http://www.cmake.org/files/v3.2/cmake-3.2.3-Linux-x86_64.sh
+  - sudo sh cmake-3.2.3-Linux-x86_64.sh --prefix=/usr --skip-license
 script:
   - mkdir $TRAVIS_BUILD_DIR-build
   - cd $TRAVIS_BUILD_DIR-build
