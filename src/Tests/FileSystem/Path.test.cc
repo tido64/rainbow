@@ -2,6 +2,7 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
+#include <cstring>
 #include <sys/stat.h>
 
 #include <catch.hpp>
@@ -10,9 +11,13 @@
 #include "FileSystem/Path.h"
 
 #ifdef RAINBOW_OS_WINDOWS
+#	include <direct.h>
+#	define getcwd(buf, size) _getcwd(buf, size)
 #	define kPathSeparator           "\\"
 #	define kPathSeparatorCharacter  '\\'
+#	define rmdir(path) _rmdir(path)
 #else
+#	include <unistd.h>
 #	define kPathSeparator           "/"
 #	define kPathSeparatorCharacter  '/'
 #endif
