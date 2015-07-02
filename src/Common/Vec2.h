@@ -1,4 +1,4 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -43,7 +43,8 @@ namespace rainbow
 		Vec2(const T x, const T y) : x(x), y(y) {}
 
 		/// Returns the angle (in radians) between two points.
-		float angle(const Vec2 &v) const
+		template<typename U>
+		float angle(const Vec2<U> &v) const
 		{
 			return atan2f(v.y - this->y, v.x - this->x);
 		}
@@ -124,14 +125,16 @@ namespace rainbow
 			return *this;
 		}
 
-		Vec2& operator+=(const Vec2 &v)
+		template<typename U>
+		Vec2& operator+=(const Vec2<U> &v)
 		{
 			this->x += v.x;
 			this->y += v.y;
 			return *this;
 		}
 
-		Vec2& operator-=(const Vec2 &v)
+		template<typename U>
+		Vec2& operator-=(const Vec2<U> &v)
 		{
 			this->x -= v.x;
 			this->y -= v.y;
