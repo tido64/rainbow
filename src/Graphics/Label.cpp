@@ -11,6 +11,10 @@
 
 using rainbow::is_equal;
 
+#ifdef RAINBOW_OS_ANDROID
+namespace std { using ::round; }
+#endif
+
 namespace
 {
 	const float kAlignmentFactor[]{0.0f, 1.0f, 0.5f};

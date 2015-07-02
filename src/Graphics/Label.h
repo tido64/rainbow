@@ -25,6 +25,7 @@ public:
 	static const unsigned int kStaleBuffer      = 1u << 0;
 	static const unsigned int kStaleBufferSize  = 1u << 1;
 	static const unsigned int kStaleColor       = 1u << 2;
+	static const unsigned int kStaleMask        = 0xffffu;
 
 	Label();
 
@@ -80,7 +81,7 @@ public:
 	void move(const Vec2f &);
 
 	/// Populates the vertex array.
-	void update();
+	virtual void update();
 
 protected:
 	unsigned int state() const { return stale_; }
