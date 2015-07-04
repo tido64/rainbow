@@ -49,15 +49,15 @@ public:
 	/// Copies pointer and increments its reference counter.
 	SharedPtr(const SharedPtr<T> &ptr) : ptr_(ptr.ptr_)
 	{
-		if (!ptr_)
+		if (!ptr.ptr_)
 			return;
 
-		++ptr_->refs_;
+		++ptr.ptr_->refs_;
 	}
 
 	/// Takes over pointer. Does not increase its reference count and will leave
 	/// the other pointer empty.
-	SharedPtr(SharedPtr<T> &&ptr) : ptr_(ptr.ptr_)
+	SharedPtr(SharedPtr<T>&& ptr) : ptr_(ptr.ptr_)
 	{
 		ptr.ptr_ = nullptr;
 	}
@@ -65,8 +65,10 @@ public:
 	/// Sets pointer and increment its reference counter.
 	explicit SharedPtr(T *ptr) : ptr_(ptr)
 	{
-		R_ASSERT(ptr_, "No reference to pointer");
-		++ptr_->refs_;
+		if (!ptr)
+			return;
+
+		++ptr->refs_;
 	}
 
 	~SharedPtr() { reset(); }
@@ -95,9 +97,9 @@ public:
 			return;
 		reset();
 		ptr_ = ptr;
-		if (!ptr_)
+		if (!ptr)
 			return;
-		++ptr_->refs_;
+		++ptr->refs_;
 	}
 
 	/// Dereferences pointer to the managed object.

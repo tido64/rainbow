@@ -27,19 +27,20 @@ ChangeMonitor::ChangeMonitor(const char *const directory)
 	monitoring_ = true;
 	worker_ = std::async(std::launch::async, [this]() {
 		char lpPath[MAX_PATH * 4];
-		DWORD buffer[16384];
+		const DWORD nBufferLength = 8192;
+		auto buffer = std::make_unique<DWORD[]>(nBufferLength);
 		do
 		{
 			std::this_thread::sleep_for(std::chrono::seconds(1));
 			DWORD dwBytesReturned = 0;
 			ReadDirectoryChangesW(
-			    hDirectory_, buffer, sizeof(buffer), TRUE,
+			    hDirectory_, buffer.get(), nBufferLength, TRUE,
 			    FILE_NOTIFY_CHANGE_LAST_WRITE | FILE_NOTIFY_CHANGE_CREATION,
 			    &dwBytesReturned, nullptr, nullptr);
 			if (dwBytesReturned == 0)
 				continue;
 
-			const char *lpBuffer = reinterpret_cast<char*>(buffer);
+			const char *lpBuffer = reinterpret_cast<char*>(buffer.get());
 			const FILE_NOTIFY_INFORMATION *lpInfo = nullptr;
 			do
 			{

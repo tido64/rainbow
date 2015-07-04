@@ -39,7 +39,7 @@ void TextureManager::bind(const unsigned int name, const unsigned int unit)
 {
 	R_ASSERT(unit < kNumTextureUnits, "Invalid texture unit");
 
-	if (name == active_[unit])
+	if (unit >= kNumTextureUnits || name == active_[unit])
 		return;
 
 	glActiveTexture(GL_TEXTURE0 + unit);

@@ -46,7 +46,7 @@ TEST_CASE("Create directories", "[path]")
 			c = '\0';
 			REQUIRE(stat(path, &sb) == 0);
 			REQUIRE((sb.st_mode & S_IFDIR) == S_IFDIR);
-			rmdir(path);
+			REQUIRE(rmdir(path) == 0);
 		}
 	}
 }

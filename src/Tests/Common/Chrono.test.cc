@@ -9,7 +9,7 @@
 TEST_CASE("Time difference between updates", "[chrono]")
 {
 	const Chrono::duration::rep threshold = 20;
-	const Chrono::duration::rep times[] = { 16, 1000, 0 };
+	const Chrono::duration::rep times[]{16, 1000, 0};
 
 	Chrono chrono;
 	for (int i = 0; times[i] > 0; ++i)

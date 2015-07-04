@@ -28,7 +28,7 @@ TEST_CASE("Link construction", "[link]")
 
 TEST_CASE("Link operations", "[link]")
 {
-	Number numbers[] = { Number{1}, Number{2}, Number{3}, Number{4} };
+	Number numbers[]{Number{1}, Number{2}, Number{3}, Number{4}};
 	Number n{0};
 
 	SECTION("append() inserts item after current")
