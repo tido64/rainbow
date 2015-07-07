@@ -28,10 +28,9 @@ namespace
 	void set_projection_matrix(const Shader::Details &details,
 	                           const std::array<float, 16> &ortho)
 	{
-		const int location =
-		    glGetUniformLocation(details.program, "mvp_matrix");
-		R_ASSERT(location >= 0, "Shader is missing a projection matrix");
-		glUniformMatrix4fv(location, 1, GL_FALSE, ortho.data());
+		R_ASSERT(details.mvp_matrix >= 0,
+		         "Shader is missing a projection matrix");
+		glUniformMatrix4fv(details.mvp_matrix, 1, GL_FALSE, ortho.data());
 	}
 
 	template<typename F, typename G>
@@ -132,10 +131,13 @@ unsigned int ShaderManager::compile(Shader::Params *shaders,
 	}
 	if (!attributes)
 		attributes = kAttributeDefaultParams;
+
 	const unsigned int program = link_program(shaders, attributes);
 	if (program == kInvalidProgram)
 		return program;
-	programs_.emplace_back(program);
+
+	programs_.emplace_back(program,
+	                       glGetUniformLocation(program, "mvp_matrix"));
 	return static_cast<unsigned int>(programs_.size());
 }
 

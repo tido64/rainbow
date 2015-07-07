@@ -39,9 +39,11 @@ namespace Shader
 		bool texture0;
 		bool texture1;
 		const unsigned int program;
+		const int mvp_matrix;
 
-		Details(const unsigned int program)
-		    : texture0(true), texture1(false), program(program) {}
+		Details(const unsigned int program, const int mvp_matrix)
+		    : texture0(true), texture1(false), program(program),
+		      mvp_matrix(mvp_matrix) {}
 	};
 
 	struct Params
