@@ -1,11 +1,11 @@
 #!/bin/bash
-# Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+# Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 # Distributed under the MIT License.
 # (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
 NDK_HOME=${NDK_HOME:-"/usr/local/opt/android-ndk"}
 MIN_SDK_VERSION=${MIN_SDK_VERSION:-15}
-TARGET_SDK_VERSION=${TARGET_SDK_VERSION:-19}
+TARGET_SDK_VERSION=${TARGET_SDK_VERSION:-22}
 
 BUILD_DIR=$(pwd)
 COPYRIGHT="# Copyright $(date +%Y) Bifrost Entertainment AS and Tommy Nguyen."
@@ -100,8 +100,8 @@ LOCAL_C_INCLUDES        := \$(LOCAL_PATH)/src \$(LOCAL_PATH)/lib \\
 LOCAL_CFLAGS            := $@
 LOCAL_CPPFLAGS          := -std=c++11 -Wall -Wextra -Woverloaded-virtual -Wsign-promo -fno-rtti -fno-exceptions
 LOCAL_STATIC_LIBRARIES  := android_native_app_glue
-LOCAL_SHARED_LIBRARIES  := fmod fmodstudio
-LOCAL_LDLIBS            := -landroid -lEGL -lGLESv2 -lOpenSLES -llog -lz
+LOCAL_SHARED_LIBRARIES  := fmodstudio fmod
+LOCAL_LDLIBS            := -landroid -lEGL -lGLESv2 -llog -lz
 
 include \$(BUILD_SHARED_LIBRARY)
 
@@ -149,7 +149,8 @@ cat > AndroidManifest.xml << ANDROIDMANIFEST_XML
           android:versionName="1.0">
   <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
   <!-- uses-permission android:name="android.permission.RECORD_AUDIO" / -->
-  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+                   android:maxSdkVersion="18" />
   <uses-sdk android:minSdkVersion="$MIN_SDK_VERSION" android:targetSdkVersion="$TARGET_SDK_VERSION" />
   <uses-feature android:name="android.hardware.screen.portrait"
                 android:glEsVersion="0x00020000" />
