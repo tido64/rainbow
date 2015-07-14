@@ -1,5 +1,6 @@
 version: 1.0.{build}
 skip_tags: true
+clone_depth: 1
 configuration: RelWithDebInfo
 before_build:
   - git submodule update --init
@@ -9,7 +10,18 @@ before_build:
   - ren SDL2-2.0.3 SDL
   - mkdir "%APPVEYOR_BUILD_FOLDER%-build"
   - cd "%APPVEYOR_BUILD_FOLDER%-build"
-  - cmake -DUSE_HEIMDALL=1 -DUSE_PHYSICS=1 -DUSE_SPINE=1 -G "Visual Studio 12" %APPVEYOR_BUILD_FOLDER%
+  - cmake -DUSE_HEIMDALL=1 -DUSE_PHYSICS=1 -DUSE_SPINE=1 -G "Visual Studio 12" "%APPVEYOR_BUILD_FOLDER%"
 build_script:
   - msbuild "%APPVEYOR_BUILD_FOLDER%-build\Rainbow.sln" /maxcpucount /verbosity:minimal /logger:"%ProgramFiles%\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
+after_build:
+  - mkdir "rainbow-v%APPVEYOR_BUILD_VERSION%"
+  - copy "%APPVEYOR_BUILD_FOLDER%-build\%CONFIGURATION%\rainbow.exe" "rainbow-v%APPVEYOR_BUILD_VERSION%"
+  - copy "%APPVEYOR_BUILD_FOLDER%\LICENSE" "rainbow-v%APPVEYOR_BUILD_VERSION%\LICENSE.TXT"
+  - copy "%APPVEYOR_BUILD_FOLDER%\lib\FMOD\LICENSE.TXT" "rainbow-v%APPVEYOR_BUILD_VERSION%\LICENSE-FMOD.TXT"
+  - copy "%APPVEYOR_BUILD_FOLDER%\lib\FMOD\lib\windows\fmod.dll" "rainbow-v%APPVEYOR_BUILD_VERSION%"
+  - copy "%APPVEYOR_BUILD_FOLDER%\lib\FMOD\lib\windows\fmodstudio.dll" "rainbow-v%APPVEYOR_BUILD_VERSION%"
+  - appveyor DownloadFile http://www.libsdl.org/release/SDL2-2.0.3-win32-x86.zip
+  - 7z x -o"rainbow-v%APPVEYOR_BUILD_VERSION%" SDL2-2.0.3-win32-x86.zip
+  - 7z a "rainbow-v%APPVEYOR_BUILD_VERSION%.zip" "rainbow-v%APPVEYOR_BUILD_VERSION%"
+  - appveyor PushArtifact "rainbow-v%APPVEYOR_BUILD_VERSION%.zip"
 test: off
