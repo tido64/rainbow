@@ -172,12 +172,10 @@ Alternatively, see "Linux" for cross-compilation.
 
 ## Learning
 
-See documentation under `doc`, and the demos under `demos`. Note: In order to
-run a demo, you'll need to copy some files into the folder of the demo you want
-to run:
-
-- `lua/*` (you may not need all but it's easier to just copy everything)
-- `src/Graphics/Shaders` (copy the folder; not needed for Android/iOS)
+Check out the [documentation here](http://rainbow.rtfd.org/) or under `doc`, and
+the demos under `demos`. Note: In order to run a demo, you'll need to copy some
+files from `lua` into the folder of the demo you want to run. It's easier to
+copy all even if you won't need everything.
 
 Some demos may use resources that (unfortunately) cannot be distributed with
 Rainbow.

@@ -1,4 +1,4 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -7,6 +7,7 @@
 #include <memory>
 
 #include "Common/Data.h"
+#include "FileSystem/Path.h"
 #include "Graphics/Renderer.h"
 #include "Graphics/Shaders.h"
 
@@ -15,10 +16,10 @@
 #define GLAPIENTRY
 #endif
 
-using unique_str = std::unique_ptr<char[]>;
-
 namespace
 {
+	using String = std::unique_ptr<char[]>;
+
 	const Shader::AttributeParams kAttributeDefaultParams[] = {
 	    {Shader::kAttributeVertex, "vertex"},
 	    {Shader::kAttributeColor, "color"},
@@ -34,10 +35,10 @@ namespace
 	}
 
 	template<typename F, typename G>
-	unique_str verify(const GLuint id,
-	                  const GLenum pname,
-	                  F&& glGetiv,
-	                  G&& glGetInfoLog)
+	String verify(const GLuint id,
+	              const GLenum pname,
+	              F&& glGetiv,
+	              G&& glGetInfoLog)
 	{
 		GLint status = GL_FALSE;
 		glGetiv(id, pname, &status);
@@ -46,34 +47,47 @@ namespace
 			GLint info_len = 0;
 			glGetiv(id, GL_INFO_LOG_LENGTH, &info_len);
 			if (info_len == 0)
-				return unique_str();
+				return {};
 			char *log = new char[info_len];
 			glGetInfoLog(id, info_len, nullptr, log);
-			log[info_len] = '\0';
-			return unique_str(log);
+			return String(log);
 		}
-		return unique_str();
+		return {};
 	}
 
 	unsigned int compile_shader(const Shader::Params &shader)
 	{
-#ifdef GL_ES_VERSION_2_0
-		const char *source = shader.source;
-#else
-		const Data &glsl = Data::load_asset(shader.source);
-		if (!glsl)
-		{
-			R_ABORT("Failed to load shader");
-			return ShaderManager::kInvalidProgram;
-		}
-		const char *source = glsl;
-#endif
-
 		const GLuint id = glCreateShader(shader.type);
-		glShaderSource(id, 1, &source, nullptr);
+		if (Path(shader.source).is_file())
+		{
+			const Data &glsl = Data::load_asset(shader.source);
+			if (!glsl)
+			{
+				LOGE("Failed to load shader: %s", shader.source);
+				if (!shader.fallback)
+				{
+					R_ABORT("No fallback was found");
+					return ShaderManager::kInvalidProgram;
+				}
+				// Local variable required for Android compiler (NDK r10e).
+				const char *source = shader.fallback;
+				glShaderSource(id, 1, &source, nullptr);
+			}
+			else
+			{
+				const char *source = glsl;
+				glShaderSource(id, 1, &source, nullptr);
+			}
+		}
+		else
+		{
+			// Local variable required for Android compiler (NDK r10e).
+			const char *source = shader.fallback;
+			glShaderSource(id, 1, &source, nullptr);
+		}
 		glCompileShader(id);
 
-		const unique_str &error =
+		const String &error =
 		    verify(id, GL_COMPILE_STATUS, glGetShaderiv, glGetShaderInfoLog);
 		if (error.get())
 		{
@@ -98,7 +112,7 @@ namespace
 			glBindAttribLocation(program, attrib->index, attrib->name);
 		glLinkProgram(program);
 
-		const unique_str &error = verify(
+		const String &error = verify(
 		    program, GL_LINK_STATUS, glGetProgramiv, glGetProgramInfoLog);
 		if (error.get())
 		{
@@ -199,9 +213,11 @@ ShaderManager::~ShaderManager()
 bool ShaderManager::init()
 {
 	Shader::Params shaders[] = {
-	    {Shader::kTypeVertex, 0, rainbow::shaders::kFixed2Dv},
-	    {Shader::kTypeFragment, 0, rainbow::shaders::kFixed2Df},
-	    {Shader::kTypeInvalid, 0, nullptr}};
+	    {Shader::kTypeVertex, 0, rainbow::shaders::kFixed2Dv,
+	     rainbow::shaders::integrated::kFixed2Dv},
+	    {Shader::kTypeFragment, 0, rainbow::shaders::kFixed2Df,
+	     rainbow::shaders::integrated::kFixed2Df},
+	    {Shader::kTypeInvalid, 0, nullptr, nullptr}};
 	const unsigned int pid = compile(shaders, nullptr);
 	if (pid == kInvalidProgram)
 	{

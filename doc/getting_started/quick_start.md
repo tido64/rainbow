@@ -44,21 +44,13 @@ You should now be able to run this demo in the simulator or on your device.
    `lua` folder and copy all the Lua files to your game folder. (The demo
    doesn't actually use all of them but we'll just copy all for simplicity's
    sake.)
-3. We'll also need to copy some basic shaders before we can start Rainbow.
-   Navigate to `src/Graphics/`. Copy the `Shaders` folder (wholesale) to your
-   game folder.
-4. `transitions` also needs a texture. This texture is located in
+3. `transitions` also needs a texture. This texture is located in
    `demos/`. Copy `canvas.png` to your game folder.
 
 Now your demo folder should contain at least the following files:
 
 	Kim.lua
 	Math.lua
-	Shaders/
-	    Fixed2D.fsh
-	    Fixed2D.vsh
-	    Simple.fsh
-	    Simple2D.vsh
 	Transition.lua
 	TransitionFunctions.lua
 	canvas.png

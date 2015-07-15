@@ -1,4 +1,4 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -9,15 +9,15 @@
 
 namespace
 {
-	Shader::Params sDiffuseLight2Df {
-	    Shader::kTypeFragment, 0, rainbow::shaders::kDiffuseLight2Df
-	};
-	Shader::Params sDiffuseLightNormalf {
-	    Shader::kTypeFragment, 0, rainbow::shaders::kDiffuseLightNormalf
-	};
-	Shader::Params sNormalMappedf {
-	    Shader::kTypeVertex, 0, rainbow::shaders::kNormalMappedv
-	};
+	Shader::Params sDiffuseLight2Df{
+	    Shader::kTypeFragment, 0, rainbow::shaders::kDiffuseLight2Df,
+	    rainbow::shaders::integrated::kDiffuseLight2Df};
+	Shader::Params sDiffuseLightNormalf{
+	    Shader::kTypeFragment, 0, rainbow::shaders::kDiffuseLightNormalf,
+	    rainbow::shaders::integrated::kDiffuseLightNormalf};
+	Shader::Params sNormalMappedf{
+	    Shader::kTypeVertex, 0, rainbow::shaders::kNormalMappedv,
+	    rainbow::shaders::integrated::kNormalMappedv};
 }
 
 namespace rainbow
@@ -33,7 +33,7 @@ namespace rainbow
 				Shader::Params shaders[] = {
 				    sNormalMappedf,
 				    sDiffuseLightNormalf,
-				    {Shader::kTypeInvalid, 0, nullptr}};
+				    {Shader::kTypeInvalid, 0, nullptr, nullptr}};
 				const Shader::AttributeParams attributes[] = {
 				    {Shader::kAttributeVertex, "vertex"},
 				    {Shader::kAttributeColor, "color"},
@@ -45,9 +45,9 @@ namespace rainbow
 			else
 			{
 				Shader::Params shaders[] = {
-				    {Shader::kTypeVertex, 0, nullptr},  // kFixed2Dv
+				    {Shader::kTypeVertex, 0, nullptr, nullptr},  // kFixed2Dv
 				    sDiffuseLight2Df,
-				    {Shader::kTypeInvalid, 0, nullptr}};
+				    {Shader::kTypeInvalid, 0, nullptr, nullptr}};
 				program_ = ShaderManager::Get()->compile(shaders, nullptr);
 			}
 			if (program_ == ShaderManager::kInvalidProgram)

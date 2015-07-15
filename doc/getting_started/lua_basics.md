@@ -4,7 +4,6 @@
 
 	config
 	main.lua
-	Shaders/
 
 Depending on your platform of choice, Rainbow may expect some files to be
 present in order to successfully launch.
@@ -64,12 +63,6 @@ msaa = 0
 resolution = {0, 0}  -- implies landscape mode
 suspend_on_focus_lost = true
 ```
-
-### `Shaders` (required on Linux/Mac OS X/Windows)
-
-This is just a copy of the folder `src/Graphics/Shaders`. On Android and iOS,
-the shaders are embedded in the binary. This is just so that you don't have to
-constantly recompile Rainbow while working with shaders.
 
 ## Sprite Batches
 

@@ -1,4 +1,4 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -10,9 +10,11 @@ namespace rainbow
 {
 	namespace shaders
 	{
-#ifdef GL_ES_VERSION_2_0
-#	include "Graphics/Shaders/Shaders.h"
-#else
+		namespace integrated
+		{
+			#include "Graphics/Shaders/Shaders.h"
+		}
+
 		const char kDiffuseLight2Df[]      = "Shaders/DiffuseLight2D.fsh";
 		const char kDiffuseLightNormalf[]  = "Shaders/DiffuseLightNormal.fsh";
 		const char kFixed2Df[]             = "Shaders/Fixed2D.fsh";
@@ -20,6 +22,5 @@ namespace rainbow
 		const char kNormalMappedv[]        = "Shaders/NormalMapped.vsh";
 		const char kSimple2Dv[]            = "Shaders/Simple2D.vsh";
 		const char kSimplef[]              = "Shaders/Simple.fsh";
-#endif
 	}
 }
