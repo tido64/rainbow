@@ -192,7 +192,7 @@ GameBase* GameBase::create(rainbow::Director &director)
 
 Output (refresh if you missed the animation):
 
-![Fade-In Animation](programming/cpp/transitions_output.gif)
+![Fade-In Animation](transitions_output.gif)
 
 ## Caveats and Known Issues
 

@@ -207,7 +207,7 @@ GameBase* GameBase::create(rainbow::Director &director)
 
 Output:
 
-![Walking Animation](programming/cpp/sprite_sheet_animations_output.gif)
+![Walking Animation](sprite_sheet_animations_output.gif)
 
 And an alternative implementation using "manual" object lifetime management:
 

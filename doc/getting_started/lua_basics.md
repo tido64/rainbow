@@ -158,7 +158,7 @@ something like:
 
 ```lua
 return {
-  version = 1.1,   -- declare Prose version
+  version = 100,   -- declare Prose version
   resources = {},  -- declare fonts, sounds or textures here
   nodes = {}       -- declare animations, labels or sprites here
 }
@@ -171,7 +171,7 @@ code):
 local screen = rainbow.platform.screen
 local cx, cy = screen.width * 0.5, screen.height * 0.5
 return {
-  version = "1.0",
+  version = 100,
   resources = {
     "atlas" = {                    -- local atlas =
       "canvas.png",                --     rainbow.texture("canvas.png")
