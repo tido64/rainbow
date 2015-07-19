@@ -10,12 +10,13 @@ set(THIRD_PARTY ${PROJECT_SOURCE_DIR}/src/ThirdParty)
 option(UNIT_TESTS  "Compile unit tests" OFF)
 
 # Features
-option(USE_FMOD_STUDIO  "Enable FMOD Studio audio engine" ON)
-option(USE_HEIMDALL     "Enable Heimdall debugging facilities" OFF)
-option(USE_LUA_SCRIPT   "Enable Lua scripting" ON)
-option(USE_PHYSICS      "Enable physics module (Box2D)" OFF)
-option(USE_SPINE        "Enable Spine runtime" OFF)
-option(USE_VECTOR       "Enable vector drawing library (NanoVG)" OFF)
+option(USE_FMOD_STUDIO   "Enable FMOD Studio audio engine" ON)
+option(USE_HEIMDALL      "Enable Heimdall debugging facilities" OFF)
+option(USE_LUA_SCRIPT    "Enable Lua scripting" ON)
+option(USE_NIM_FRONTEND  "Enable Nim frontend" OFF)
+option(USE_PHYSICS       "Enable physics module (Box2D)" OFF)
+option(USE_SPINE         "Enable Spine runtime" OFF)
+option(USE_VECTOR        "Enable vector drawing library (NanoVG)" OFF)
 
 # Auto-generate files
 execute_process(COMMAND tools/shaders-gen.py WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
@@ -167,8 +168,15 @@ if(USE_LUA_SCRIPT)
 		src/Lua/LuaScript.cpp
 		src/Lua/LuaScript.h
 		src/Resources/Rainbow.lua.h)
+elseif(USE_NIM_FRONTEND)
+	add_definitions(-DUSE_LUA_SCRIPT=0)
+	add_definitions(-DUSE_NIM_FRONTEND=1)
+	list(APPEND SOURCE_FILES
+		src/Nim/Nim.cpp
+		src/Nim/Nim.h)
 else()
 	add_definitions(-DUSE_LUA_SCRIPT=0)
+	add_definitions(-DUSE_NIM_FRONTEND=0)
 	list(APPEND SOURCE_FILES
 		src/Script/NoGame.cpp
 		src/Script/NoGame.h)
@@ -389,10 +397,14 @@ set_property(TARGET rainbow APPEND PROPERTY INCLUDE_DIRECTORIES
 	${ZLIB_INCLUDE_DIR}
 	${AUDIO_INCLUDE_DIRS}
 	${TEST_INCLUDE_DIR}
+	/usr/local/Cellar/nim/0.12.0/nim/lib
+	${PROJECT_SOURCE_DIR}/demos/nim
 )
+add_library(main.nim STATIC IMPORTED)
+SET_TARGET_PROPERTIES(main.nim PROPERTIES IMPORTED_LOCATION libmain.nim.a)
 target_link_libraries(rainbow
 	${TEST_LIBRARY} ${PHYSICS_LIBRARY} ${SPINE_LIBRARY} ${VECTOR_LIBRARY}
-	freetype lua png ${SDL2_LIBRARIES}
+	freetype lua main.nim png ${SDL2_LIBRARIES}
 	${AUDIO_LIBRARIES} ${OPENGL_ext_LIBRARY} ${OPENGL_gl_LIBRARY}
 	${ZLIB_LIBRARY} ${PLATFORM_LIBRARIES}
 )

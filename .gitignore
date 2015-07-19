@@ -2,6 +2,7 @@
 *.swp
 .DS_Store
 Rainbow.sublime-workspace
+nimcache/
 project.xcworkspace/
 src/.ycm_extra_conf.pyc
 xcuserdata/
