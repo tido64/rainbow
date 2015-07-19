@@ -9,7 +9,7 @@
 	url = https://github.com/erincatto/box2d.git
 [submodule "lib/libpng"]
 	path = lib/libpng
-	url = git://git.code.sf.net/p/libpng/code
+	url = https://github.com/glennrp/libpng.git
 [submodule "lib/nanovg"]
 	path = lib/nanovg
 	url = https://github.com/memononen/nanovg.git
