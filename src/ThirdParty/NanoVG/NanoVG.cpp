@@ -16,8 +16,12 @@
 #endif
 #ifdef __GNUC__
 #	pragma GCC diagnostic push
-#	pragma GCC diagnostic ignored "-Wgnu-anonymous-struct"
-#	pragma GCC diagnostic ignored "-Wnested-anon-types"
+#	ifdef __clang__
+#		pragma clang diagnostic ignored "-Wgnu-anonymous-struct"
+#		pragma clang diagnostic ignored "-Wnested-anon-types"
+#	else
+#		pragma GCC diagnostic ignored "-pedantic"
+#	endif
 #	pragma GCC diagnostic ignored "-Wold-style-cast"
 #endif
 #include <nanovg_gl.h>

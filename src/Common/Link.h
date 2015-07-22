@@ -1,4 +1,4 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -10,19 +10,28 @@
 class Link
 {
 public:
-	inline Link();
+	Link() : next_(nullptr), prev_(nullptr) {}
 
-	inline Link* next() const;
-	inline Link* prev() const;
+	Link* next() const { return next_; }
+	Link* prev() const { return prev_; }
 
 	void append(Link *node);
 	void pop();
 
-	template<typename U, typename F, typename Enable>
-	friend bool for_each(U *node, F&& f);
+	template<typename T, typename F, typename = EnableIfBaseOf<Link, T>>
+	friend bool for_each(T *node, F&& f)
+	{
+		while (node)
+		{
+			if (f(node))
+				return true;
+			node = node->next();
+		}
+		return false;
+	}
 
 protected:
-	inline ~Link();
+	~Link() { pop(); }
 
 private:
 	Link *next_;
@@ -30,34 +39,5 @@ private:
 
 	virtual void on_end_link_removed(Link *node);
 };
-
-Link::Link() : next_(nullptr), prev_(nullptr) {}
-
-Link* Link::next() const
-{
-	return next_;
-}
-
-Link* Link::prev() const
-{
-	return prev_;
-}
-
-Link::~Link()
-{
-	pop();
-}
-
-template<typename T, typename F, typename = EnableIfBaseOf<Link, T>>
-bool for_each(T *node, F&& f)
-{
-	while (node)
-	{
-		if (f(node))
-			return true;
-		node = node->next();
-	}
-	return false;
-}
 
 #endif

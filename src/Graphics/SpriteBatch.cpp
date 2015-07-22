@@ -1,4 +1,4 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -15,7 +15,7 @@ namespace
 	class SetBuffer
 	{
 	public:
-		explicit SetBuffer(T *buffer);
+		explicit SetBuffer(T *buffer) : buffer_(buffer) {}
 		void operator()(Sprite &sprite);
 
 	private:
@@ -25,13 +25,32 @@ namespace
 	class Update
 	{
 	public:
-		Update();
-		void operator()(Sprite &sprite);
-		explicit operator bool() const;
+		Update() : should_update_(false) {}
+
+		void operator()(Sprite &sprite)
+		{
+			should_update_ |= sprite.update();
+		}
+
+		explicit operator bool() const { return should_update_; }
 
 	private:
 		bool should_update_;
 	};
+
+	template<>
+	void SetBuffer<SpriteVertex>::operator()(Sprite &sprite)
+	{
+		sprite.set_vertex_array(buffer_);
+		buffer_ += 4;
+	}
+
+	template<>
+	void SetBuffer<Vec2f>::operator()(Sprite &sprite)
+	{
+		sprite.set_normal_buffer(buffer_);
+		buffer_ += 4;
+	}
 }
 
 SpriteBatch::SpriteBatch(const unsigned int hint) : count_(0), reserved_(0)
@@ -157,33 +176,4 @@ template<typename T>
 void SpriteBatch::set_buffer(T *buffer)
 {
 	std::for_each(sprites_.get(), sprites_ + count_, SetBuffer<T>(buffer));
-}
-
-template<typename T>
-SetBuffer<T>::SetBuffer(T *buffer) : buffer_(buffer) {}
-
-template<>
-void SetBuffer<SpriteVertex>::operator()(Sprite &sprite)
-{
-	sprite.set_vertex_array(buffer_);
-	buffer_ += 4;
-}
-
-template<>
-void SetBuffer<Vec2f>::operator()(Sprite &sprite)
-{
-	sprite.set_normal_buffer(buffer_);
-	buffer_ += 4;
-}
-
-Update::Update() : should_update_(false) {}
-
-void Update::operator()(Sprite &sprite)
-{
-	should_update_ |= sprite.update();
-}
-
-Update::operator bool() const
-{
-	return should_update_;
 }

@@ -36,7 +36,7 @@ elseif(MINGW OR UNIX)
 	if(NOT APPLE)
 		# Debug- and release-specific flags
 		set(CMAKE_CXX_FLAGS_DEBUG   "-g -O0 -ftrapv")
-		set(CMAKE_CXX_FLAGS_RELEASE "-O2 -D_FORTIFY_SOURCE=2 -finline-functions")
+		set(CMAKE_CXX_FLAGS_RELEASE "-Os -D_FORTIFY_SOURCE=2")
 
 		# Set LDFLAGS
 		if(NOT MINGW)

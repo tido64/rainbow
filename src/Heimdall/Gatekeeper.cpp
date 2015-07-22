@@ -6,6 +6,8 @@
 
 #include "Heimdall/Gatekeeper.h"
 
+#include <cstring>
+
 #include "Common/Data.h"
 #include "FileSystem/File.h"
 #include "FileSystem/Path.h"
@@ -19,8 +21,6 @@
 
 namespace
 {
-	const char* basename(const char *const path) pure;
-
 	const char* basename(const char *const path)
 	{
 		const char *basename = path;

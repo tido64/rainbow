@@ -1,11 +1,18 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
 #ifndef THIRDPARTY_BOX2D_LUA_HELPER_H_
 #define THIRDPARTY_BOX2D_LUA_HELPER_H_
 
+#ifdef __GNUC__
+#	pragma GCC diagnostic push
+#	pragma GCC diagnostic ignored "-Wstrict-aliasing"
+#endif
 #include <Box2D/Common/b2Math.h>
+#ifdef __GNUC__
+#	pragma GCC diagnostic pop
+#endif
 
 #include "Lua/LuaBind.h"
 

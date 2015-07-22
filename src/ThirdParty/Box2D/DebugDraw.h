@@ -7,7 +7,14 @@
 
 #include <vector>
 
+#ifdef __GNUC__
+#	pragma GCC diagnostic push
+#	pragma GCC diagnostic ignored "-Wstrict-aliasing"
+#endif
 #include <Box2D/Common/b2Draw.h>
+#ifdef __GNUC__
+#	pragma GCC diagnostic pop
+#endif
 
 namespace b2
 {

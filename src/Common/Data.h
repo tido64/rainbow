@@ -1,4 +1,4 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -30,57 +30,76 @@ public:
 		Reference
 	};
 
-#ifdef _MSC_VER  // TODO: MSVC 2013 fails to deduce template argument.
-	template<typename T, size_t N>
-#else
-	template<typename T, size_t N, typename Enable>
-#endif
-	static Data from_bytes(const T (&bytes)[N]);
+	template<typename T, size_t N, typename = CharType<T>>
+	static Data from_bytes(const T (&bytes)[N])
+	{
+		return Data(bytes, N, Ownership::Reference);
+	}
 
-#ifdef _MSC_VER  // TODO: MSVC 2013 fails to deduce template argument.
-	template<typename T, size_t N>
-#else
-	template<typename T, size_t N, typename Enable>
-#endif
-	static Data from_literal(const T (&literal)[N]);
+	template<typename T, size_t N, typename = CharType<T>>
+	static Data from_literal(const T (&literal)[N])
+	{
+		return Data(literal, N - 1, Ownership::Reference);
+	}
 
 	static Data load_asset(const char *const asset);
 	static Data load_document(const char *const document);
 
 	/// Constructs an empty data object. No memory will be allocated.
-	inline Data();
+	Data()
+	    : ownership_(Ownership::Owner), allocated_(0), sz_(0), data_(nullptr) {}
 
-	inline Data(Data &&);
+	Data(Data&& d)
+	    : ownership_(d.ownership_), allocated_(d.allocated_), sz_(d.sz_),
+	      data_(d.data_)
+	{
+		d.allocated_ = 0;
+		d.sz_ = 0;
+		d.data_ = nullptr;
+	}
 
 	/// Constructs a data object with the contents of the file.
 	explicit Data(const File &);
 
 	/// Constructs a wrapper around a buffer.
-	inline Data(const void *buffer,
-	            const size_t size,
-	            const Ownership ownership);
+	Data(const void *buffer, const size_t size, const Ownership ownership)
+	    : ownership_(ownership), allocated_(size), sz_(size),
+	      data_(const_cast<void*>(buffer)) {}
 
 	~Data();
 
 	/// Returns raw byte array.
 	/// \return Pointer to array. Returns \c nullptr if buffer is empty.
-	inline void* bytes() const;
+	void* bytes() const { return data_; }
 
 	/// Saves data to file.
 	/// \return \c true on success, \c false otherwise.
 	bool save(const char *const path) const;
 
 	/// Returns the size of this buffer.
-	inline size_t size() const;
+	size_t size() const { return sz_; }
 
-	inline explicit operator bool() const;
-	inline operator void*() const;
-	inline operator char*() const;
-	inline operator unsigned char*() const;
+	explicit operator bool() const { return data_; }
+	operator void*() const { return data_; }
+	operator char*() const { return static_cast<char*>(data_); }
+
+	operator unsigned char*() const
+	{
+		return static_cast<unsigned char*>(data_);
+	}
 
 #ifdef RAINBOW_OS_IOS
-	inline operator NSData*() const;
-	inline operator NSMutableData*() const;
+	operator NSData*() const
+	{
+		return [NSData dataWithBytesNoCopy:data_ length:sz_ freeWhenDone:NO];
+	}
+
+	operator NSMutableData*() const
+	{
+		return [NSMutableData dataWithBytesNoCopy:data_
+		                                   length:sz_
+		                             freeWhenDone:NO];
+	}
 #endif
 
 private:
@@ -94,83 +113,4 @@ private:
 	void allocate(const size_t size);
 };
 
-#ifdef _MSC_VER
-template<typename T, size_t N>
-#else
-template<typename T, size_t N, typename = CharType<T>>
-#endif
-Data Data::from_bytes(const T (&bytes)[N])
-{
-	return Data(bytes, N, Ownership::Reference);
-}
-
-#ifdef _MSC_VER
-template<typename T, size_t N>
-#else
-template<typename T, size_t N, typename = CharType<T>>
-#endif
-Data Data::from_literal(const T (&literal)[N])
-{
-	return Data(literal, N - 1, Ownership::Reference);
-}
-
-Data::Data()
-    : ownership_(Ownership::Owner), allocated_(0), sz_(0), data_(nullptr) {}
-
-Data::Data(Data &&d)
-    : ownership_(d.ownership_), allocated_(d.allocated_), sz_(d.sz_),
-      data_(d.data_)
-{
-	d.allocated_ = 0;
-	d.sz_ = 0;
-	d.data_ = nullptr;
-}
-
-Data::Data(const void *buffer, const size_t size, const Ownership ownership)
-    : ownership_(ownership), allocated_(size), sz_(size),
-      data_(const_cast<void*>(buffer)) {}
-
-void* Data::bytes() const
-{
-	return data_;
-}
-
-size_t Data::size() const
-{
-	return sz_;
-}
-
-Data::operator bool() const
-{
-	return data_;
-}
-
-Data::operator void*() const
-{
-	return data_;
-}
-
-Data::operator char*() const
-{
-	return static_cast<char*>(data_);
-}
-
-Data::operator unsigned char*() const
-{
-	return static_cast<unsigned char*>(data_);
-}
-
-#ifdef RAINBOW_OS_IOS
-
-Data::operator NSData*() const
-{
-	return [NSData dataWithBytesNoCopy:data_ length:sz_ freeWhenDone:NO];
-}
-
-Data::operator NSMutableData*() const
-{
-	return [NSMutableData dataWithBytesNoCopy:data_ length:sz_ freeWhenDone:NO];
-}
-
-#endif  // RAINBOW_OS_IOS
 #endif  // DATA_H_

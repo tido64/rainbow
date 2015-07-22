@@ -16,7 +16,7 @@ namespace rainbow
 	{
 		unsigned char r, g, b, a;
 
-		constexpr Colorb() : Colorb(0xff, 0xff, 0xff, 0xff) {}
+		constexpr Colorb() : r(0xff), g(0xff), b(0xff), a(0xff) {}
 
 		constexpr Colorb(const unsigned int rgba)
 		    : r(0xff & (rgba >> 24)),
@@ -45,7 +45,7 @@ namespace rainbow
 	{
 		float r, g, b, a;
 
-		constexpr Colorf() : Colorf(1.0f, 1.0f, 1.0f, 1.0f) {}
+		constexpr Colorf() : r(1.0f), g(1.0f), b(1.0f), a(1.0f) {}
 
 		constexpr Colorf(const unsigned int c)
 		    : r((0xff & (c >> 24)) * 1.0f / 255.0f),
