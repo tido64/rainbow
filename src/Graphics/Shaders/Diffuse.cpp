@@ -4,7 +4,7 @@
 
 #include "Graphics/Shaders/Diffuse.h"
 
-#include "Graphics/ShaderManager.h"
+#include "Graphics/Renderer.h"
 #include "Graphics/Shaders.h"
 
 namespace
@@ -90,7 +90,8 @@ namespace rainbow
 		{
 			ShaderManager::Context context;
 			ShaderManager::Get()->use(program_);
-			glUniform3f(position_, x, y, z);
+			auto&& p = Renderer::Get()->convert_to_screen(Vec2i(x, y));
+			glUniform3f(position_, p.x, p.y, z);
 		}
 	}
 }

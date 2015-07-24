@@ -116,6 +116,11 @@ Vec2i Renderer::convert_to_flipped_view(const Vec2i &p) const
 	return convert_to_view(Vec2i(p.x, window_.y - p.y));
 }
 
+Vec2i Renderer::convert_to_screen(const Vec2i &p) const
+{
+	return Vec2i(p.x / scale_.x + origin_.x, p.y / scale_.y + origin_.y);
+}
+
 Vec2i Renderer::convert_to_view(const Vec2i &p) const
 {
 	return Vec2i((p.x - origin_.x) * scale_.x, (p.y - origin_.y) * scale_.y);

@@ -47,6 +47,7 @@ public:
 
 	void bind_element_array() const;
 	Vec2i convert_to_flipped_view(const Vec2i &) const;
+	Vec2i convert_to_screen(const Vec2i &) const;
 	Vec2i convert_to_view(const Vec2i &) const;
 	void reset() const;
 	void unbind_all();
