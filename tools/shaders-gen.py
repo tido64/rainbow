@@ -10,7 +10,7 @@ import sys
 
 shaders_dir = os.path.join(sys.path[0], "..", "src", "Graphics", "Shaders")
 
-RE_COMMENT = re.compile(r'\s*?//')
+RE_COMMENT = re.compile(r'^\s*?//')
 RE_INDENT = re.compile(r'^(\s+)')
 RE_WHITESPACE = re.compile(r'^\s+$')
 

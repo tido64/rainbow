@@ -14,6 +14,9 @@ precision mediump float;
 #	define lowp
 #endif
 
+uniform float cutoff;
+uniform float radius;
+uniform vec3 light;
 uniform sampler2D texture;
 
 varying lowp vec4 v_color;
@@ -50,6 +53,9 @@ precision mediump float;
 #	define lowp
 #endif
 
+uniform float cutoff;
+uniform float radius;
+uniform vec3 light;
 uniform sampler2D normal;
 uniform sampler2D texture;
 
