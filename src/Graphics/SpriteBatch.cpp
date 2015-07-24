@@ -92,6 +92,13 @@ void SpriteBatch::set_texture(SharedPtr<TextureAtlas> texture)
 	texture_ = std::move(texture);
 }
 
+Sprite::Ref SpriteBatch::add(const int x, const int y, const int w, const int h)
+{
+	auto sprite = create_sprite(w, h);
+	sprite->set_texture(texture_->define(Vec2i(x, y), w, h));
+	return sprite;
+}
+
 void SpriteBatch::bind_textures() const
 {
 	if (normal_)
@@ -99,11 +106,11 @@ void SpriteBatch::bind_textures() const
 	texture_->bind();
 }
 
-Sprite::Ref SpriteBatch::add(const int x, const int y, const int w, const int h)
+void SpriteBatch::bring_to_front(const Sprite::Ref &s)
 {
-	auto sprite = create_sprite(w, h);
-	sprite->set_texture(texture_->define(Vec2i(x, y), w, h));
-	return sprite;
+	R_ASSERT(s.batch_ == this, "Sprite does not belong to this batch");
+
+	rotate(s.i_, s.i_ + 1, count_);
 }
 
 Sprite::Ref SpriteBatch::create_sprite(const unsigned int width,
@@ -129,6 +136,22 @@ Sprite::Ref SpriteBatch::create_sprite(const unsigned int width,
 	return Sprite::Ref(this, count_++);
 }
 
+void SpriteBatch::erase(const Sprite::Ref &s)
+{
+	bring_to_front(s);
+	sprites_[--count_].~Sprite();
+}
+
+Sprite::Ref SpriteBatch::find_sprite_by_id(const int id) const
+{
+	for (unsigned int i = 0; i < count_; ++i)
+	{
+		if (sprites_[i].id() == id)
+			return {this, i};
+	}
+	return {};
+}
+
 void SpriteBatch::move(const Vec2f &delta)
 {
 	if (delta.is_zero())
@@ -139,6 +162,20 @@ void SpriteBatch::move(const Vec2f &delta)
 	});
 }
 
+void SpriteBatch::swap(const Sprite::Ref &a, const Sprite::Ref &b)
+{
+	if (a == b)
+		return;
+
+	std::swap(*a, *b);
+
+	const size_t ia = a.i_ * 4;
+	const size_t ib = b.i_ * 4;
+
+	std::swap_ranges(vertices_ + ia, vertices_ + ia + 4, vertices_ + ib);
+	if (normals_)
+		std::swap_ranges(normals_ + ia, normals_ + ia + 4, normals_ + ib);
+}
 
 void SpriteBatch::update()
 {
@@ -170,6 +207,19 @@ void SpriteBatch::resize(const unsigned int size)
 		set_buffer(normals_.get());
 	}
 	reserved_ = size;
+}
+
+void SpriteBatch::rotate(size_t first, size_t n_first, size_t last)
+{
+	std::rotate(sprites_ + first, sprites_ + n_first, sprites_ + last);
+
+	first *= 4;
+	n_first *= 4;
+	last *= 4;
+
+	std::rotate(vertices_ + first, vertices_ + n_first, vertices_ + last);
+	if (normals_)
+		std::rotate(normals_ + first, normals_ + n_first, normals_ + last);
 }
 
 template<typename T>

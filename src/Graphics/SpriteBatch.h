@@ -65,6 +65,10 @@ public:
 	/// Binds all used textures.
 	void bind_textures() const;
 
+	/// Brings sprite to front.
+	/// \note Invalidates all references.
+	void bring_to_front(const Sprite::Ref &);
+
 	/// Creates a sprite.
 	/// \param width   Width of the sprite.
 	/// \param height  Height of the sprite.
@@ -72,8 +76,18 @@ public:
 	Sprite::Ref create_sprite(const unsigned int width,
 	                          const unsigned int height);
 
+	/// Erases a sprite from the batch.
+	/// \note Invalidates all references.
+	void erase(const Sprite::Ref &);
+
+	/// Returns the first sprite with the given id.
+	Sprite::Ref find_sprite_by_id(const int id) const;
+
 	/// Moves all sprites by (x,y).
 	void move(const Vec2f &);
+
+	/// Swaps two sprites' positions in the batch.
+	void swap(const Sprite::Ref &, const Sprite::Ref &);
 
 	/// Updates the batch of sprites.
 	void update();
@@ -95,6 +109,9 @@ private:
 
 	/// Resizes all client buffers to \p size.
 	void resize(const unsigned int size);
+
+	/// Performs a left rotation on a range of sprites.
+	void rotate(size_t first, size_t n_first, size_t last);
 
 	/// Sets all sprites to use \p buffer.
 	template<typename T>

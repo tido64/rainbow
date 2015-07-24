@@ -30,6 +30,8 @@ class SpriteBatch;
 class Sprite : private NonCopyable<Sprite>
 {
 public:
+	enum { kNoId };
+
 	class Ref
 	{
 		friend SpriteBatch;
@@ -39,6 +41,11 @@ public:
 
 		Sprite& operator*() const;
 		Sprite* operator->() const;
+
+		bool operator==(const Ref &other) const
+		{
+			return batch_ == other.batch_ && i_ == other.i_;
+		}
 
 		explicit operator bool() const { return batch_; }
 
@@ -58,6 +65,7 @@ public:
 	float angle() const { return angle_; }
 	Colorb color() const { return vertex_array_[0].color; }
 	unsigned int height() const { return height_; }
+	int id() const { return id_; }
 	bool is_flipped() const;
 	bool is_hidden() const;
 	bool is_mirrored() const;
@@ -69,6 +77,9 @@ public:
 
 	/// Sets sprite colour.
 	void set_color(const Colorb c);
+
+	/// Sets the identifier for the sprite.
+	void set_id(const int id) { id_ = id; }
 
 	/// Sets normal map.
 	/// \param id  Id of normal map to use.
@@ -122,9 +133,11 @@ public:
 	/// \c false otherwise.
 	bool update();
 
+	Sprite& operator=(Sprite&&);
+
 private:
-	const unsigned int width_;    ///< Width of sprite (not scaled).
-	const unsigned int height_;   ///< Height of sprite (not scaled).
+	unsigned int width_;          ///< Width of sprite (not scaled).
+	unsigned int height_;         ///< Height of sprite (not scaled).
 	unsigned int state_;          ///< State of internals, e.g. buffer.
 	float angle_;                 ///< Angle of rotation.
 	Vec2f pivot_;                 ///< Pivot point (normalised).
@@ -134,6 +147,7 @@ private:
 	const SpriteBatch *parent_;   ///< Pointer to sprite batch.
 	SpriteVertex *vertex_array_;  ///< Interleaved vertex array.
 	Vec2f *normal_map_;           ///< Normal map UV coordinates.
+	int id_;                      ///< Sprite identifier.
 
 	void flip_textures(const unsigned int axis);
 	void set_normal(const unsigned int f, const Vec2f *uv);

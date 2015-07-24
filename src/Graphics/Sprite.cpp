@@ -58,16 +58,18 @@ Sprite* Sprite::Ref::operator->() const
 Sprite::Sprite(const unsigned int w, const unsigned int h, const SpriteBatch *p)
     : width_(w), height_(h), state_(0), angle_(0.0f), pivot_(0.5f, 0.5f),
       scale_(1.0f, 1.0f), parent_(p), vertex_array_(nullptr),
-      normal_map_(nullptr) {}
+      normal_map_(nullptr), id_(kNoId) {}
 
 Sprite::Sprite(Sprite&& s)
-    : width_(s.width_), height_(s.height_), state_(s.state_), angle_(s.angle_),
-      pivot_(s.pivot_), center_(s.center_), position_(s.position_),
-      scale_(s.scale_), parent_(s.parent_), vertex_array_(s.vertex_array_),
-      normal_map_(s.normal_map_)
+    : width_(s.width_), height_(s.height_),
+      state_(s.state_ | kStaleFrontBuffer), angle_(s.angle_), pivot_(s.pivot_),
+      center_(s.center_), position_(s.position_), scale_(s.scale_),
+      parent_(s.parent_), vertex_array_(s.vertex_array_),
+      normal_map_(s.normal_map_), id_(s.id_)
 {
-	s.vertex_array_ = nullptr;
 	s.parent_ = nullptr;
+	s.vertex_array_ = nullptr;
+	s.id_ = kNoId;
 }
 
 bool Sprite::is_flipped() const
@@ -277,6 +279,26 @@ bool Sprite::update()
 	}
 	state_ &= ~kStaleMask;
 	return true;
+}
+
+Sprite& Sprite::operator=(Sprite&& s)
+{
+	width_ = s.width_;
+	height_ = s.height_;
+	state_ = s.state_ | kStaleFrontBuffer;
+	angle_ = s.angle_;
+	pivot_ = s.pivot_;
+	center_ = s.center_;
+	position_ = s.position_;
+	scale_ = s.scale_;
+	parent_ = s.parent_;
+	vertex_array_ = s.vertex_array_;
+	normal_map_ = s.normal_map_;
+	id_ = s.id_;
+	s.parent_ = nullptr;
+	s.vertex_array_ = nullptr;
+	s.id_ = kNoId;
+	return *this;
 }
 
 void Sprite::flip_textures(const unsigned int f)
