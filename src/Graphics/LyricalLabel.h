@@ -9,9 +9,18 @@
 
 #include "Graphics/Label.h"
 
+class Timer;
+
 class LyricalLabel : private Label
 {
 public:
+	enum class Animation
+	{
+		Shake,
+		Typing,
+		Count
+	};
+
 	struct Attribute
 	{
 		enum class Type
@@ -37,8 +46,12 @@ public:
 		          const unsigned int len);
 	};
 
+	LyricalLabel();
+	~LyricalLabel() { clear_animations(); }
+
 	Label* as_label() { return static_cast<Label*>(this); }
 
+	void clear_animations();
 	void clear_attributes();
 	void clear_attributes(const Attribute::Type type);
 
@@ -49,6 +62,11 @@ public:
 	void set_offset(const Vec2i &offset,
 	                const unsigned int start,
 	                const unsigned int length);
+
+	void set_text(const char *);
+
+	void start_animation(const Animation animation, const int interval);
+	void stop_animation(const Animation animation);
 
 	void update() override;
 
@@ -66,13 +84,14 @@ public:
 	using Label::set_position;
 	using Label::set_rotation;
 	using Label::set_scale;
-	using Label::set_text;
 	using Label::bind_textures;
 	using Label::move;
 
 private:
 	std::vector<Attribute> attributes_;
-	unsigned int applied_ = 0;
+	unsigned int applied_;
+	bool did_shake_;
+	Timer *animators_[static_cast<int>(Animation::Count)];
 
 	Vec2u get_interval(const Attribute &attr);
 	void undo_from(std::vector<Attribute>::const_iterator first);

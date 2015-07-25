@@ -33,7 +33,7 @@ public:
 	Colorb color() const { return color_; }
 
 	/// Returns the vertex count.
-	size_t count() const { return count_ + (count_ >> 1); }
+	size_t count() const { return std::min(count_ + (count_ >> 1), cutoff_); }
 
 	/// Returns the assigned font.
 	const FontAtlas& font() const { return *font_.get(); }
@@ -87,6 +87,9 @@ public:
 	virtual void update();
 
 protected:
+	int cutoff() const { return cutoff_ / 6; }
+	void set_cutoff(const int cutoff) { cutoff_ = cutoff * 6; }
+
 	unsigned int state() const { return stale_; }
 	SpriteVertex* vertex_buffer() const { return vertices_.get(); }
 
@@ -100,7 +103,6 @@ private:
 
 	VertexBuffer vertices_;      ///< Client vertex buffer.
 	String text_;                ///< Content of this label.
-	size_t size_;                ///< Size of the char array.
 	Vec2f position_;             ///< Position of the text (bottom left).
 	Colorb color_;               ///< Color of the text.
 	float scale_;                ///< Label scale factor.
@@ -109,6 +111,8 @@ private:
 	unsigned int count_;         ///< Number of characters * 4 (i.e. vertices).
 	unsigned int stale_;         ///< Flags indicating need for update.
 	unsigned int width_;         ///< Label width.
+	unsigned int cutoff_;        ///< Number of characters to render.
+	size_t size_;                ///< Size of the char array.
 	Buffer buffer_;              ///< Vertex buffer.
 	VertexArray array_;          ///< Vertex array object.
 	SharedPtr<FontAtlas> font_;  ///< The font used in this label.

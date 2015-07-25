@@ -21,8 +21,9 @@ namespace
 }
 
 Label::Label()
-    : size_(0), scale_(1.0f), alignment_(TextAlignment::Left), angle_(0.0f),
-      count_(0), stale_(0), width_(0)
+    : scale_(1.0f), alignment_(TextAlignment::Left), angle_(0.0f),
+      count_(0), stale_(0), width_(0),
+      cutoff_(std::numeric_limits<decltype(cutoff_)>::max()), size_(0)
 {
 	array_.reconfigure([this] { buffer_.bind(); });
 }

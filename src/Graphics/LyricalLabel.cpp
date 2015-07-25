@@ -4,6 +4,9 @@
 
 #include "Graphics/LyricalLabel.h"
 
+#include <limits>
+
+#include "Common/Random.h"
 #include "Script/Timer.h"
 
 namespace
@@ -11,6 +14,18 @@ namespace
 	using uint_t = unsigned int;
 
 	const uint_t kStaleAttribute = 1u << 16;
+}
+
+LyricalLabel::LyricalLabel() : applied_(0), did_shake_(false)
+{
+	std::uninitialized_fill_n(
+	    animators_, rainbow::array_size(animators_), nullptr);
+}
+
+void LyricalLabel::clear_animations()
+{
+	stop_animation(Animation::Shake);
+	stop_animation(Animation::Typing);
 }
 
 void LyricalLabel::clear_attributes()
@@ -37,12 +52,78 @@ void LyricalLabel::set_color(const Colorb c,
 	set_needs_update(kStaleAttribute);
 }
 
+void LyricalLabel::set_text(const char *text)
+{
+	clear_animations();
+	Label::set_text(text);
+}
+
 void LyricalLabel::set_offset(const Vec2i &offset,
                               const uint_t start,
                               const uint_t length)
 {
 	attributes_.emplace_back(offset, start, length);
 	set_needs_update(kStaleAttribute);
+}
+
+void LyricalLabel::start_animation(const Animation animation,
+                                   const int interval)
+{
+	auto i = static_cast<int>(animation);
+	if (animators_[i])
+		return;
+
+	switch (animation)
+	{
+		case Animation::Shake:
+			animators_[i] = TimerManager::Get()->set_timer(
+			    [this] {
+			    	// Prevent multiple calls before an update.
+			    	if (did_shake_)
+			    		return;
+
+			    	clear_attributes(Attribute::Type::Offset);
+			    	for (size_t i = 0; i < length(); ++i)
+			    	{
+			    		Vec2i offset(rainbow::random(4), rainbow::random(4));
+			    		set_offset(offset, i, 1);
+			    	}
+			    	did_shake_ = true;
+			    },
+			    interval,
+			    -1);
+			did_shake_ = false;
+			break;
+		case Animation::Typing:
+			set_cutoff(0);
+			animators_[i] = TimerManager::Get()->set_timer(
+			    [this] { set_cutoff(cutoff() + 1); }, interval, length() - 1);
+			break;
+		default:
+			break;
+	}
+}
+
+void LyricalLabel::stop_animation(const Animation animation)
+{
+	const int i = static_cast<int>(animation);
+	if (!animators_[i])
+		return;
+
+	switch (animation)
+	{
+		case Animation::Shake:
+			clear_attributes(Attribute::Type::Offset);
+			break;
+		case Animation::Typing:
+			set_cutoff(std::numeric_limits<decltype(cutoff())>::max());
+			break;
+		default:
+			R_ASSERT(false, "This shouldn't ever happen.");
+			return;
+	}
+	TimerManager::Get()->clear_timer(animators_[i]);
+	animators_[i] = nullptr;
 }
 
 void LyricalLabel::update()
@@ -83,6 +164,7 @@ void LyricalLabel::update()
 
 		upload();
 		clear_state();
+		did_shake_ = false;
 	}
 }
 
