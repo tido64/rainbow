@@ -38,6 +38,9 @@ public:
 	/// Returns the assigned font.
 	const FontAtlas& font() const { return *font_.get(); }
 
+	/// Returns the number of characters.
+	size_t length() const { return count_ / 4; }
+
 	/// Returns label position.
 	const Vec2f& position() const { return position_; }
 

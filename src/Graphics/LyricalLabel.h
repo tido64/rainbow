@@ -39,7 +39,7 @@ public:
 
 	Label* as_label() { return static_cast<Label*>(this); }
 
-	void clear_attributes() { attributes_.clear(); }
+	void clear_attributes();
 	void clear_attributes(const Attribute::Type type);
 
 	void set_color(const Colorb c,
@@ -72,6 +72,10 @@ public:
 
 private:
 	std::vector<Attribute> attributes_;
+	unsigned int applied_ = 0;
+
+	Vec2u get_interval(const Attribute &attr);
+	void undo_from(std::vector<Attribute>::const_iterator first);
 };
 
 #endif
