@@ -36,7 +36,7 @@ public:
 	void bind(const unsigned int unit) const;
 
 	/// Defines a texture region.
-	/// \param x,y     Starting point of the region.
+	/// \param origin  Starting point of the region.
 	/// \param width   Width of the region.
 	/// \param height  Height of the region.
 	/// \return The id of the region.

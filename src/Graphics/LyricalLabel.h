@@ -51,21 +51,41 @@ public:
 
 	Label* as_label() { return static_cast<Label*>(this); }
 
+	/// Clears all animations.
 	void clear_animations();
+
+	/// Clears all attributes.
 	void clear_attributes();
+
+	/// Clears all attributes of given type.
 	void clear_attributes(const Attribute::Type type);
 
-	void set_color(const Colorb c,
+	/// Sets color on characters in given range.
+	/// \param color   The color to set.
+	/// \param start   Offset to the first character in range.
+	/// \param length  Number of characters in range.
+	void set_color(const Colorb color,
 	               const unsigned int start,
 	               const unsigned int length);
 
+	/// Offsets characters' positions in given range.
+	/// \param offset  The vector to offset by.
+	/// \param start   Offset to the first character in range.
+	/// \param length  Number of characters in range.
 	void set_offset(const Vec2i &offset,
 	                const unsigned int start,
 	                const unsigned int length);
 
+	/// Sets text to display.
 	void set_text(const char *);
 
+	/// Starts an animation.
+	/// \param animation  The animation to start.
+	/// \param interval   Interval between each frame.
 	void start_animation(const Animation animation, const int interval);
+
+	/// Stops an animation.
+	/// \param animation  The animation to stop.
 	void stop_animation(const Animation animation);
 
 	void update() override;

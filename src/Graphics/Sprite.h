@@ -82,15 +82,15 @@ public:
 	void set_id(const int id) { id_ = id; }
 
 	/// Sets normal map.
-	/// \param id  Id of normal map to use.
+	/// \param id  Identifier of the normal map to set.
 	void set_normal(const unsigned int id);
 
 	/// Sets buffer used to store UV coordinates.
 	void set_normal_buffer(Vec2f *map) { normal_map_ = map; }
 
 	/// Sets the pivot point for rotation and translation.
-	/// \param x,y  Normalised pivot point.
-	void set_pivot(const Vec2f &);
+	/// \param p  Normalised pivot point.
+	void set_pivot(const Vec2f &p);
 
 	/// Sets sprite position (absolute).
 	void set_position(const Vec2f &);
@@ -105,7 +105,7 @@ public:
 	void set_scale(const Vec2f &);
 
 	/// Sets the texture.
-	/// \param id  Id of texture to use.
+	/// \param id  Identifier of the texture to set.
 	void set_texture(const unsigned int id);
 
 	/// Sets vertex array buffer.
@@ -129,8 +129,8 @@ public:
 	/// Shows sprite if it is currently hidden.
 	void show();
 
-	/// Updates the vertex buffer. Returns \c true if the buffer has changed;
-	/// \c false otherwise.
+	/// Updates the vertex buffer.
+	/// \return \c true if the buffer has changed; \c false otherwise.
 	bool update();
 
 	Sprite& operator=(Sprite&&);
