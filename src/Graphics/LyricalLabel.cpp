@@ -36,12 +36,23 @@ void LyricalLabel::clear_attributes()
 
 void LyricalLabel::clear_attributes(const Attribute::Type type)
 {
-	auto begin = std::remove_if(
-	    attributes_.begin(),
-	    attributes_.end(),
-	    [type](const Attribute &attr) { return attr.type == type; });
-	undo_from(begin);
-	attributes_.erase(begin, attributes_.cend());
+	switch (type)
+	{
+		case Attribute::Type::Shake:
+			stop_animation(Animation::Shake);
+			break;
+		default: {
+			auto begin = std::remove_if(
+			    attributes_.begin(),
+			    attributes_.end(),
+			    [type](const Attribute &attr) { return attr.type == type; });
+			if (begin == attributes_.end())
+				break;
+			undo_from(begin);
+			attributes_.erase(begin, attributes_.cend());
+			break;
+		}
+	}
 }
 
 void LyricalLabel::set_color(const Colorb c,
@@ -66,6 +77,15 @@ void LyricalLabel::set_offset(const Vec2i &offset,
 	set_needs_update(kStaleAttribute);
 }
 
+void LyricalLabel::set_shaking(const uint_t magnitude,
+                               const uint_t start,
+                               const uint_t length)
+{
+	attributes_.emplace_back(magnitude, start, length);
+	if (!animators_[static_cast<int>(Animation::Shake)])
+		start_animation(Animation::Shake, 15);
+}
+
 void LyricalLabel::start_animation(const Animation animation,
                                    const int interval)
 {
@@ -83,15 +103,26 @@ void LyricalLabel::start_animation(const Animation animation,
 			    		return;
 
 			    	clear_attributes(Attribute::Type::Offset);
-			    	for (size_t i = 0; i < length(); ++i)
+			    	const uint_t len = static_cast<uint_t>(length());
+			    	for (auto&& attr : attributes_)
 			    	{
-			    		Vec2i offset(rainbow::random(4), rainbow::random(4));
-			    		set_offset(offset, i, 1);
+			    		if (attr.type == Attribute::Type::Shake)
+			    		{
+			    			const Vec2u interval(
+			    			    std::min(attr.start, len),
+			    			    std::min(attr.start + attr.length, len));
+			    			for (uint_t i = interval.x; i < interval.y; ++i)
+			    			{
+			    				set_offset(
+			    				    Vec2i(rainbow::random(attr.magnitude),
+			    				          rainbow::random(attr.magnitude)),
+			    				    i, 1);
+			    			}
+			    		}
 			    	}
 			    	did_shake_ = true;
 			    },
-			    interval,
-			    -1);
+			    interval, -1);
 			did_shake_ = false;
 			break;
 		case Animation::Typing:
@@ -114,6 +145,10 @@ void LyricalLabel::stop_animation(const Animation animation)
 	{
 		case Animation::Shake:
 			clear_attributes(Attribute::Type::Offset);
+			rainbow::remove_if(attributes_,
+			                   [](const Attribute &attr) {
+			                       return attr.type == Attribute::Type::Shake;
+			                   });
 			break;
 		case Animation::Typing:
 			set_cutoff(std::numeric_limits<decltype(cutoff())>::max());
@@ -159,6 +194,8 @@ void LyricalLabel::update()
 						buffer[i].position.y += attr.offset[1];
 					}
 					break;
+				default:
+					break;
 			}
 		}
 
@@ -202,6 +239,8 @@ void LyricalLabel::undo_from(std::vector<Attribute>::const_iterator first)
 					buffer[i].position.y -= attr->offset[1];
 				}
 				break;
+			default:
+				break;
 		}
 	}
 	set_needs_update(kStaleAttribute);
@@ -218,6 +257,11 @@ LyricalLabel::Attribute::Attribute(const Colorb c,
 	color[2] = c.b;
 	color[3] = c.a;
 }
+
+LyricalLabel::Attribute::Attribute(const uint_t magnitude,
+                                   const uint_t start,
+                                   const uint_t len)
+    : type(Type::Shake), start(start), length(len), magnitude(magnitude) {}
 
 LyricalLabel::Attribute::Attribute(const Vec2i &offset_,
                                    const uint_t start,

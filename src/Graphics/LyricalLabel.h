@@ -26,7 +26,8 @@ public:
 		enum class Type
 		{
 			Color,
-			Offset
+			Offset,
+			Shake
 		} type;
 		unsigned int start;
 		unsigned int length;
@@ -34,10 +35,15 @@ public:
 		union
 		{
 			unsigned char color[4];
+			unsigned int magnitude;
 			int offset[2];
 		};
 
 		Attribute(const Colorb color,
+		          const unsigned int start,
+		          const unsigned int len);
+
+		Attribute(const unsigned int magnitude,
 		          const unsigned int start,
 		          const unsigned int len);
 
@@ -75,6 +81,14 @@ public:
 	void set_offset(const Vec2i &offset,
 	                const unsigned int start,
 	                const unsigned int length);
+
+	/// Shake characters in given range.
+	/// \param magnitude  The magnitude of the shaking.
+	/// \param start      Offset to the first character in range.
+	/// \param length     Number of characters in range.
+	void set_shaking(const unsigned int magnitude,
+	                 const unsigned int start,
+	                 const unsigned int length);
 
 	/// Sets text to display.
 	void set_text(const char *);
