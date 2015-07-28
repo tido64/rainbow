@@ -112,6 +112,17 @@ namespace rainbow
 		return (i == std::end(container)) ? i : container.erase(i);
 	}
 
+	/// Removes all elements that satisfy \p predicate and returns a
+	/// past-the-end iterator for the new end of the range.
+	template<typename T, typename F>
+	typename T::iterator remove_if(T &container, F&& predicate)
+	{
+		return container.erase(std::remove_if(std::begin(container),
+		                                      std::end(container),
+		                                      std::forward<F>(predicate)),
+		                       std::end(container));
+	}
+
 	/// Returns -1, 0, or 1 for \p x < 0, \p x == 0, or \p x > 0 respectively.
 	template<typename T>
 	T signum(const T x)
