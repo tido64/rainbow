@@ -22,6 +22,15 @@ LyricalLabel::LyricalLabel() : applied_(0), did_shake_(false)
 	    animators_, rainbow::array_size(animators_), nullptr);
 }
 
+LyricalLabel::~LyricalLabel()
+{
+	for (auto&& animator : animators_)
+	{
+		if (animator)
+			TimerManager::Get()->clear_timer(animator);
+	}
+}
+
 void LyricalLabel::clear_animations()
 {
 	stop_animation(Animation::Shake);

@@ -53,7 +53,7 @@ public:
 	};
 
 	LyricalLabel();
-	~LyricalLabel() { clear_animations(); }
+	~LyricalLabel() override;
 
 	Label* as_label() { return static_cast<Label*>(this); }
 

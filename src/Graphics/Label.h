@@ -28,6 +28,7 @@ public:
 	static const unsigned int kStaleMask        = 0xffffu;
 
 	Label();
+	virtual ~Label() = default;
 
 	/// Returns label text color.
 	Colorb color() const { return color_; }
