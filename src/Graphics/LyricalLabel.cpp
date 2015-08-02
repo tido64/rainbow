@@ -112,20 +112,18 @@ void LyricalLabel::start_animation(const Animation animation,
 			    		return;
 
 			    	clear_attributes(Attribute::Type::Offset);
-			    	const uint_t len = static_cast<uint_t>(length());
-			    	for (auto&& attr : attributes_)
+			    	const uint_t size = attributes_.size();
+			    	for (uint_t i = 0; i < size; ++i)
 			    	{
+			    		auto&& attr = attributes_[i];
 			    		if (attr.type == Attribute::Type::Shake)
 			    		{
-			    			const Vec2u interval(
-			    			    std::min(attr.start, len),
-			    			    std::min(attr.start + attr.length, len));
-			    			for (uint_t i = interval.x; i < interval.y; ++i)
+			    			for (uint_t j = 0; j < attr.length; ++j)
 			    			{
 			    				set_offset(
 			    				    Vec2i(rainbow::random(attr.magnitude),
 			    				          rainbow::random(attr.magnitude)),
-			    				    i, 1);
+			    				    attr.start + j, 1);
 			    			}
 			    		}
 			    	}
