@@ -128,28 +128,32 @@ NS_RAINBOW_LUA_BEGIN
 		}
 		lua_settop(L, 2);
 		self->listener_.reset(L);
-		self->animation_->set_callback([L, self](const ::Animation::Event e) {
-			self->listener_.get();
-			switch (e)
-			{
-				case ::Animation::Event::Start:
-					lua_getfield(L, -1, "on_animation_start");
-					break;
-				case ::Animation::Event::End:
-					lua_getfield(L, -1, "on_animation_end");
-					break;
-				case ::Animation::Event::Complete:
-					lua_getfield(L, -1, "on_animation_complete");
-					break;
-			}
-			if (!lua_isfunction(L, -1))
-			{
-				lua_pop(L, 2);
-				return;
-			}
-			lua_insert(L, -2);
-			call(L, 1, 0, 0, kErrorHandlingAnimationStateEvent);
-		});
+		self->animation_->set_callback(
+		    [L, self](::Animation *, const ::Animation::Event e) {
+		    	self->listener_.get();
+		    	switch (e)
+		    	{
+		    		case ::Animation::Event::Start:
+		    			lua_getfield(L, -1, "on_animation_start");
+		    			break;
+		    		case ::Animation::Event::End:
+		    			lua_getfield(L, -1, "on_animation_end");
+		    			break;
+		    		case ::Animation::Event::Complete:
+		    			lua_getfield(L, -1, "on_animation_complete");
+		    			break;
+		    		case ::Animation::Event::Frame:
+		    			lua_getfield(L, -1, "on_animation_frame");
+		    			break;
+		    	}
+		    	if (!lua_isfunction(L, -1))
+		    	{
+		    		lua_pop(L, 2);
+		    		return;
+		    	}
+		    	lua_insert(L, -2);
+		    	call(L, 1, 0, 0, kErrorHandlingAnimationStateEvent);
+		    });
 		return 0;
 	}
 

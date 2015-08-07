@@ -57,7 +57,7 @@ void Animation::start()
 	stopped_ = false;
 	rewind();
 	if (callback_)
-		callback_(Event::Start);
+		callback_(this, Event::Start);
 }
 
 void Animation::stop()
@@ -67,7 +67,7 @@ void Animation::stop()
 
 	stopped_ = true;
 	if (callback_)
-		callback_(Event::End);
+		callback_(this, Event::End);
 }
 
 void Animation::update(const unsigned long dt)
@@ -106,7 +106,7 @@ void Animation::tick()
 			return;
 		}
 		if (idled_ == 0 && callback_)
-			callback_(Event::Complete);
+			callback_(this, Event::Complete);
 		if (idled_ < delay_)
 			++idled_;
 		else
@@ -116,5 +116,9 @@ void Animation::tick()
 		}
 	}
 	else
+	{
 		++frame_;
+		if (callback_)
+			callback_(this, Event::Frame);
+	}
 }

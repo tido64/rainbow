@@ -19,10 +19,11 @@ public:
 	{
 		Start,
 		End,
-		Complete
+		Complete,
+		Frame
 	};
 
-	using Callback = std::function<void(const Event)>;
+	using Callback = std::function<void(Animation *, const Event)>;
 	using Frame = unsigned int;
 
 	static const Frame kAnimationEnd;

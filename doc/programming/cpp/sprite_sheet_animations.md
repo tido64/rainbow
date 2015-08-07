@@ -102,6 +102,9 @@ There are three events that are fired during an animation's lifetime.
 * `Animation::Event::Complete` fires immediately after an animation completes a
   single cycle, before the delay preceding the next.
 
+* `Animation::Event::Frame` fires for each frame that does not trigger `End` or
+  `Complete` events.
+
 You can subscribe to these events using:
 
 ```c++
@@ -109,7 +112,8 @@ void   Animation::set_callback  (Animation::Callback f);
 ```
 
 Where `Animation::Callback` is a callable whose signature is
-`void(const Animation::Event)`.
+`void(Animation *animation, const Animation::Event event)`, and `animation` is
+the animation object that triggered `event`.
 
 ## Example
 
@@ -149,7 +153,7 @@ rainbow::texture_t load_texture()
     return texture;
 }
 
-void animation_event_handler(const Animation::Event e)
+void animation_event_handler(Animation *, const Animation::Event e)
 {
     switch (e)
     {
@@ -162,7 +166,8 @@ void animation_event_handler(const Animation::Event e)
         case Animation::Event::Complete:
             // Handle animation cycle complete here.
             break;
-        default:
+        case Animation::Event::Frame:
+            // Handle animation frame update here.
             break;
     }
 }
