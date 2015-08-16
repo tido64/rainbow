@@ -55,7 +55,6 @@ else()
 			set(PLATFORM_LIBRARIES dl ${PLATFORM_LIBRARIES})
 		endif()
 
-		set(SDL_ATOMIC OFF CACHE BOOL "Enable the atomic operations subsystem")
 		set(SDL_AUDIO OFF CACHE BOOL "Enable the audio subsystem")
 		set(SDL_RENDER OFF CACHE BOOL "Enable the render subsystem")
 		set(SDL_THREADS OFF CACHE BOOL "Enable the threading subsystem")

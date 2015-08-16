@@ -123,7 +123,6 @@ Use the provided Xcode project under `rainbow/build/xcode4/`.
 
 ### Linux (and cross-compiling for Windows)
 
-- [Clang](http://clang.llvm.org/)
 - [CMake](http://www.cmake.org/)
 - [Mesa](http://www.mesa3d.org/)
 - [Ogg Vorbis](http://www.vorbis.com/) (only with `-DUSE_FMOD_STUDIO=0`)
@@ -136,9 +135,6 @@ Use the provided Xcode project under `rainbow/build/xcode4/`.
 You can install most of these using your favourite package manager. For SDL,
 download the source code and extract its content to `rainbow/lib/SDL/`. If you
 have installed Mercurial, let the build script download it for you.
-
-Clang is the default compiler but you can use [GCC](http://gcc.gnu.org/), or any
-other compiler for that matter, by prefixing `CC=gcc CXX=g++`.
 
 Windows builds can be built using MinGW or MinGW-w64 by issuing `windows` as
 platform. However, this method hasn't been maintained in quite some time and may

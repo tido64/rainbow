@@ -92,7 +92,7 @@ case $1 in
     ;;
   "linux")
     GENERATOR=${GENERATOR:-Unix Makefiles}
-    CC=${CC:-clang} CXX=${CXX:-clang++} cmake $ARGS -G "$GENERATOR" "$RAINBOW" &&
+    cmake $ARGS -G "$GENERATOR" "$RAINBOW" &&
     compile "$GENERATOR"
     ;;
   "mac")

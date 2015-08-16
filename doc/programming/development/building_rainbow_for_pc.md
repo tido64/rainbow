@@ -26,8 +26,8 @@ Next, we'll need to install the dependencies:
 
 |               |                                                                                     |
 |---------------|-------------------------------------------------------------------------------------|
-| Arch Linux    | `pacman -S --needed clang cmake libvorbis mercurial mesa openal`                    |
-| Debian/Ubuntu | `apt-get install clang cmake libopenal-dev libvorbis-dev mercurial mesa-common-dev` |
+| Arch Linux    | `pacman -S --needed cmake gcc libvorbis mercurial mesa openal`                    |
+| Debian/Ubuntu | `apt-get install build-essential cmake libopenal-dev libvorbis-dev mercurial mesa-common-dev` |
 
 > **Note**: The correct version of SDL will be automatically downloaded by the build script.
 
@@ -91,7 +91,7 @@ You can pass any number of CMake options. For platform specific options, see the
 
 ### Linux / Mac OS X
 
-By default, Clang will be used to compile both C and C++ code. Unix Makefiles is the default generator on Linux, and Xcode on Mac OS X. You can change these by prefixing environment variables. For instance, to use [GCC](https://gcc.gnu.org/) and [Ninja](https://martine.github.io/ninja/) in place of Clang and Makefiles:
+By default, [GCC](https://gcc.gnu.org/) and Clang will be used to compile both C and C++ code on Linux and OS X respectively. Unix Makefiles is the default generator on Linux, and Xcode on OS X. You can change these by prefixing environment variables. For instance, to use GCC and [Ninja](https://martine.github.io/ninja/) in place of Clang and Makefiles:
 
 ```bash
 CC=gcc CXX=g++ GENERATOR=Ninja /path/to/rainbow/tools/build.sh [option ...]
