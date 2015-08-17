@@ -52,7 +52,7 @@ TEST_CASE("SharedPtr manages reference counted objects", "[sharedptr]")
 		REQUIRE_FALSE(foo_deleted);
 	}
 	REQUIRE(foo_deleted);
-};
+}
 
 TEST_CASE("SharedPtr deletes managed object when reset", "[sharedptr]")
 {
@@ -62,7 +62,7 @@ TEST_CASE("SharedPtr deletes managed object when reset", "[sharedptr]")
 	foo_ptr.reset();
 	REQUIRE(foo_ptr.get() == nullptr);
 	REQUIRE(foo_deleted);
-};
+}
 
 TEST_CASE("SharedPtr increments the counter on managed objects", "[sharedptr]")
 {
@@ -85,7 +85,7 @@ TEST_CASE("SharedPtr increments the counter on managed objects", "[sharedptr]")
 		REQUIRE(bar_deleted);
 	}
 	REQUIRE(foo_deleted);
-};
+}
 
 TEST_CASE("SharedPtr can be assigned another SharedPtr", "[sharedptr]")
 {
@@ -108,7 +108,7 @@ TEST_CASE("SharedPtr can be assigned another SharedPtr", "[sharedptr]")
 		REQUIRE(bar_deleted);
 	}
 	REQUIRE(foo_deleted);
-};
+}
 
 TEST_CASE("SharedPtr can assign itself", "[sharedptr]")
 {
@@ -128,7 +128,7 @@ TEST_CASE("SharedPtr can assign itself", "[sharedptr]")
 		REQUIRE(foo_ptr.use_count() == 1u);
 	}
 	REQUIRE(foo_deleted);
-};
+}
 
 TEST_CASE("SharedPtr can move other SharedPtrs", "[sharedptr]")
 {
@@ -152,4 +152,4 @@ TEST_CASE("SharedPtr can move other SharedPtrs", "[sharedptr]")
 		REQUIRE(foo_ptr.use_count() == 1u);
 	}
 	REQUIRE(foo_deleted);
-};
+}
