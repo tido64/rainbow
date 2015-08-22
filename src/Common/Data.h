@@ -11,16 +11,20 @@
 
 class File;
 
-/// Wrapper for byte buffers.
-///
-/// Data objects are used to read from disk into memory or to save files to
-/// disk.
-///
-/// Data is "toll-free bridged" with its platform-specific counterparts. On
-/// iOS, it is safe to perform a static cast of this type to an NSData or
-/// NSMutableData (which in turn can be cast to a CFData or CFMutableData).
-/// On any other platforms, it can be casted to a void pointer or an unsigned
-/// char pointer.
+/// <summary>Wrapper for byte buffers.</summary>
+/// <remarks>
+///   <para>
+///     Data objects are used to read from disk into memory or to save files to
+///     disk.
+///   </para>
+///   <para>
+///     Data is "toll-free bridged" with its platform-specific counterparts. On
+///     iOS, it is safe to perform a static cast of this type to an
+///     <c>NSData</c> or <c>NSMutableData</c> (which in turn can be cast to a
+///     <c>CFData</c> or <c>CFMutableData</c>). On other platforms, it can be
+///     casted to a <c>void*</c> or an <c>unsigned char*</c>.
+///   </para>
+/// </remarks>
 class Data : private NonCopyable<Data>
 {
 public:
@@ -45,7 +49,9 @@ public:
 	static Data load_asset(const char *const asset);
 	static Data load_document(const char *const document);
 
-	/// Constructs an empty data object. No memory will be allocated.
+	/// <summary>
+	///   Constructs an empty data object. No memory will be allocated.
+	/// </summary>
 	Data()
 	    : ownership_(Ownership::Owner), allocated_(0), sz_(0), data_(nullptr) {}
 
@@ -58,25 +64,29 @@ public:
 		d.data_ = nullptr;
 	}
 
-	/// Constructs a data object with the contents of the file.
+	/// <summary>
+	///   Constructs a data object with the contents of the file.
+	/// </summary>
 	explicit Data(const File &);
 
-	/// Constructs a wrapper around a buffer.
+	/// <summary>Constructs a wrapper around a buffer.</summary>
 	Data(const void *buffer, const size_t size, const Ownership ownership)
 	    : ownership_(ownership), allocated_(size), sz_(size),
 	      data_(const_cast<void*>(buffer)) {}
 
 	~Data();
 
-	/// Returns raw byte array.
-	/// \return Pointer to array. Returns \c nullptr if buffer is empty.
+	/// <summary>Returns raw byte array.</summary>
+	/// <returns>
+	///   Pointer to array. Returns <c>nullptr</c> if buffer is empty.
+	/// </returns>
 	void* bytes() const { return data_; }
 
-	/// Saves data to file.
-	/// \return \c true on success, \c false otherwise.
+	/// <summary>Saves data to file.</summary>
+	/// <returns><c>true</c> on success, <c>false</c> otherwise.</returns>
 	bool save(const char *const path) const;
 
-	/// Returns the size of this buffer.
+	/// <summary>Returns the size of this buffer.</summary>
 	size_t size() const { return sz_; }
 
 	explicit operator bool() const { return data_; }
@@ -108,8 +118,10 @@ private:
 	size_t sz_;            ///< Size of used buffer, not necessarily equal to allocated.
 	void *data_;           ///< Actual buffer, implemented as a C-array.
 
-	/// Resizes allocated memory segment. If the requested allocation size is
-	/// smaller than current allocated size, nothing will happen.
+	/// <summary>
+	///   Resizes allocated memory segment. If the requested allocation size is
+	///   smaller than current allocated size, nothing will happen.
+	/// </summary>
 	void allocate(const size_t size);
 };
 

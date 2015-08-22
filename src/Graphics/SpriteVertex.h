@@ -1,4 +1,4 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -8,8 +8,10 @@
 #include "Common/Color.h"
 #include "Common/Vec2.h"
 
-/// A typical sprite vertex contains x- and y-coordinates for position and
-/// texture.
+/// <summary>
+///   A typical sprite vertex contains x- and y-coordinates for position and
+///   texture.
+/// </summary>
 struct SpriteVertex
 {
 	Colorb color;    ///< Texture colour, usually white.

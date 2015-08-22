@@ -25,7 +25,9 @@ NS_RAINBOW_LUA_BEGIN
 	using LuaBindable =
 	    typename std::enable_if<std::is_base_of<Bind<T>, T>::value>::type;
 
-	/// The equivalent of std::shared_ptr for Lua objects.
+	/// <summary>
+	///   The equivalent of <see cref="std::shared_ptr"/> for Lua objects.
+	/// </summary>
 	class ScopedRef : private NonCopyable<ScopedRef>
 	{
 	public:
@@ -43,11 +45,17 @@ NS_RAINBOW_LUA_BEGIN
 		int ref_;
 	};
 
-	/// Outputs information about the error, and dumps the stack if applicable.
+	/// <summary>
+	///   Outputs information about the error, and dumps the stack if
+	///   applicable.
+	/// </summary>
 	void error(lua_State *L, const int lua_error);
 
-	/// Returns the pointer returned from luaL_checkudata() or lua_touserdata(),
-	/// depending on whether NDEBUG is defined.
+	/// <summary>
+	///   Returns the pointer returned from <see cref="luaL_checkudata"/> or
+	///   <see cref="lua_touserdata"/>, depending on whether <c>NDEBUG</c> is
+	///   defined.
+	/// </summary>
 	template<typename T, typename = LuaBindable<T>>
 	T* touserdata(lua_State *L, const int n)
 	{
@@ -58,8 +66,10 @@ NS_RAINBOW_LUA_BEGIN
 #endif
 	}
 
-	/// Returns the string representing a Lua wrapped object. The format of the
-	/// string is "<type name>: <address>".
+	/// <summary>
+	///   Returns the string representing a Lua wrapped object. The format of
+	///   the string is "<type name>: <address>".
+	/// <//summary>
 	template<typename T, typename = LuaBindable<T>>
 	int tostring(lua_State *L)
 	{
@@ -67,7 +77,7 @@ NS_RAINBOW_LUA_BEGIN
 		return 1;
 	}
 
-	/// Creates a Lua wrapped object.
+	/// <summary>Creates a Lua wrapped object.</summary>
 	template<typename T, typename = LuaBindable<T>>
 	int alloc(lua_State *L)
 	{
@@ -106,22 +116,29 @@ NS_RAINBOW_LUA_BEGIN
 		return 0;
 	}
 
-	/// Custom Lua package loader.
+	/// <summary>Custom Lua package loader.</summary>
 	int load(lua_State *L);
 
-	/// Loads buffer as a Lua chunk.
-	/// \param chunk  Buffer to load.
-	/// \param name   Name of the chunk. Used for debug information.
-	/// \param exec   For internal use only! Whether to execute the loaded
-	///               chunk. Only used by Lua package loaders.
-	/// \return Number of successfully loaded chunks.
+	/// <summary>Loads buffer as a Lua chunk.</summary>
+	/// <param name="L">Lua state.</param>
+	/// <param name="chunk">Buffer to load.</param>
+	/// <param name="name">
+	///   Name of the chunk. Used for debug information.
+	/// </param>
+	/// <param name="exec">
+	///   For internal use only! Whether to execute the loaded chunk. Only used
+	///   by Lua package loaders.
+	/// </param>
+	/// <returns>Number of successfully loaded chunks.</returns>
 	int load(lua_State *L,
 	         const Data &chunk,
 	         const char *name,
 	         const bool exec = true);
 
-	/// Returns the value returned from luaL_optinteger() but without the extra
-	/// type check if NDEBUG is defined.
+	/// <summary>
+	///   Returns the value returned from <see cref="luaL_optinteger"/> but
+	///   without the extra type check if <c>NDEBUG</c> is defined.
+	/// </summary>
 	inline lua_Integer optinteger(lua_State *L, const int n, lua_Integer def)
 	{
 #ifndef NDEBUG
@@ -131,8 +148,10 @@ NS_RAINBOW_LUA_BEGIN
 #endif
 	}
 
-	/// Returns the value returned from luaL_optnumber() but without the extra
-	/// type check if NDEBUG is defined.
+	/// <summary>
+	///   Returns the value returned from <see cref="luaL_optnumber"/> but
+	///   without the extra type check if <c>NDEBUG</c> is defined.
+	/// </summary>
 	inline lua_Number optnumber(lua_State *L, const int n, lua_Number def)
 	{
 #ifndef NDEBUG
@@ -145,21 +164,25 @@ NS_RAINBOW_LUA_BEGIN
 	template<typename T>
 	void push(lua_State *L, const T value);
 
-	/// Pushes a collectable pointer on the stack.
-	///
-	/// Wraps pointer in a table so that one can attach an arbitrary metatable
-	/// and have the garbage collector clean it up. Also sets the \c __type
-	/// field for type checking.
-	///
-	/// \param ptr   The pointer to push on the stack.
-	/// \param name  Name of the pointer type.
+	/// <summary>Pushes a collectable pointer on the stack.</summary>
+	/// <remarks>
+	///   Wraps pointer in a table so that one can attach an arbitrary metatable
+	///   and have the garbage collector clean it up. Also sets the
+	///   <c>__type</c> field for type checking.
+	/// </remarks>
+	/// <param name="L">Lua state.</param>
+	/// <param name="ptr">The pointer to push on the stack.</param>
+	/// <param name="name">Name of the pointer type.</param>
 	void pushpointer(lua_State *L, void *ptr, const char *name);
 
-	/// Does the equivalent of <tt>t[field] = value</tt>, where \c t is the
-	/// table at the top of the stack, without metamethods.
-	/// \param field   Name of the index.
-	/// \param length  Length of \p field.
-	/// \param value   The value to assign.
+	/// <summary>
+	///   Does the equivalent of <c>t[field] = value</c>, where <c>t</c> is the
+	///   table at the top of the stack, without metamethods.
+	/// </summary>
+	/// <param name="L">Lua state.</param>
+	/// <param name="field">Name of the index.</param>
+	/// <param name="length">Length of <paramref name="field"/>.</param>
+	/// <param name="value">The value to assign.</param>
 	template<typename T>
 	void rawset(lua_State *L,
 	            const char *const field,
@@ -171,13 +194,18 @@ NS_RAINBOW_LUA_BEGIN
 		lua_rawset(L, -3);
 	}
 
-	/// Simple C++-wrapper, loosely based on LunaWrapper.
-	///
-	/// Wraps a C++ object and makes its methods available in the namespace on
-	/// top of the stack.
-	///
-	/// \see http://www.lua.org/manual/5.2/
-	/// \see http://lua-users.org/wiki/LunaWrapper
+	/// <summary>Simple C++-wrapper, loosely based on LunaWrapper.</summary>
+	/// <remarks>
+	///   <para>
+	///     Wraps a C++ object and makes its methods available in the namespace
+	///     on top of the stack.
+	///   </para>
+	///   References
+	///   <list type="bullet">
+	///     <item>http://www.lua.org/manual/5.2/</item>
+	///     <item>http://lua-users.org/wiki/LunaWrapper</item>
+	///   </list>
+	/// </remarks>
 	template<typename T, typename = LuaBindable<T>>
 	void reg(lua_State *L)
 	{
@@ -200,21 +228,30 @@ NS_RAINBOW_LUA_BEGIN
 		lua_pop(L, 1);
 	}
 
-	/// Reloads a previously loaded Lua chunk.
-	/// \param chunk  Buffer to load.
-	/// \param name   Name of the chunk. Used for debug information.
-	/// \return Number of successfully reloaded chunks.
+	/// <summary>Reloads a previously loaded Lua chunk.</summary>
+	/// <param name="L">Lua state.</param>
+	/// <param name="chunk">Buffer to load.</param>
+	/// <param name="name">
+	///   Name of the chunk. Used for debug information.
+	/// </param>
+	/// <returns>Number of successfully reloaded chunks.</returns>
 	int reload(lua_State *L, const Data &chunk, const char *name);
 
-	/// Replaces the table at index \p n with its userdata if one exists.
+	/// <summary>
+	///   Replaces the table at index <paramref name="n"/> with its userdata if
+	///   one exists.
+	/// </summary>
 	void replacetable(lua_State *L, const int n);
 
-	/// Sets debugging hook.
+	/// <summary>Sets debugging hook.</summary>
 	void sethook(lua_State *L,
 	             const int mask = LUA_MASKCALL | LUA_MASKRET | LUA_MASKLINE);
 
-	/// Returns the value returned from luaL_checkinteger() or lua_tointeger(),
-	/// depending on whether NDEBUG is defined.
+	/// <summary>
+	///   Returns the value returned from <see cref="luaL_checkinteger"/> or
+	///   <see cref="lua_tointeger"/>, depending on whether <c>NDEBUG</c> is
+	///   defined.
+	/// </summary>
 	inline lua_Integer tointeger(lua_State *L, const int n)
 	{
 #ifndef NDEBUG
@@ -224,8 +261,11 @@ NS_RAINBOW_LUA_BEGIN
 #endif
 	}
 
-	/// Returns the value returned from luaL_checknumber() or lua_tonumber(),
-	/// depending on whether NDEBUG is defined.
+	/// <summary>
+	///   Returns the value returned from <see cref="luaL_checknumber"/> or
+	///   <see cref="lua_tonumber"/>, depending on whether <c>NDEBUG</c> is
+	///   defined.
+	/// </summary>
 	inline lua_Number tonumber(lua_State *L, const int n)
 	{
 #ifndef NDEBUG
@@ -235,15 +275,17 @@ NS_RAINBOW_LUA_BEGIN
 #endif
 	}
 
-	/// Returns the pointer on top of the stack.
-	///
-	/// Unwraps the pointer while checking for nil value and type. This method
-	/// may return a nullptr.
-	///
-	/// \see pushpointer()
-	///
-	/// \param name  Name of the pointer type to return.
-	/// \return The pointer on the top of the stack if valid, else \c nullptr.
+	/// <summary>Returns the pointer on top of the stack.</summary>
+	/// <remarks>
+	///   Unwraps the pointer while checking for nil value and type. This method
+	///   may return a nullptr.
+	///   <seealso cref="pushpointer"/>
+	/// </remarks>
+	/// <param name="L">Lua state.</param>
+	/// <param name="name">Name of the pointer type to return.</param>
+	/// <returns>
+	///   The pointer on the top of the stack if valid, else <c>nullptr</c>.
+	/// </returns>
 	void* topointer(lua_State *L, const char *name);
 } NS_RAINBOW_LUA_END
 

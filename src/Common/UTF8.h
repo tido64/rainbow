@@ -18,7 +18,7 @@ namespace rainbow
 		operator uint32_t() const { return this->code; }
 	};
 
-	/// Expands a UTF-8 character to UTF-32.
+	/// <summary>Expands a UTF-8 character to UTF-32.</summary>
 	utf_t utf8_decode(const unsigned char *str);
 }
 

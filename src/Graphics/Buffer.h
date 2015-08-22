@@ -17,13 +17,18 @@ public:
 	Buffer(const rainbow::ISolemnlySwearThatIAmOnlyTesting &);
 	~Buffer();
 
-	/// Used by Label and SpriteBatch for interleaved vertex buffer.
+	/// <summary>
+	///  Used by Label and SpriteBatch for interleaved vertex buffer.
+	/// </summary>
 	void bind() const;
 
-	/// Used by SpriteBatch for normal buffers.
+	/// <summary>Used by SpriteBatch for normal buffers.</summary>
 	void bind(const unsigned int index) const;
 
-	/// Uploads \p data of size \p size to the GPU buffer.
+	/// <summary>
+	///   Uploads <paramref name="data"/> of size <paramref name="size"/> to the
+	///   GPU buffer.
+	/// </summary>
 	void upload(const void *const data, const size_t size) const;
 
 private:

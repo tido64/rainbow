@@ -1,4 +1,4 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -7,55 +7,74 @@
 
 namespace rainbow
 {
-	/// Load game configuration.
+	/// <summary>Load game configuration.</summary>
+	/// <remarks>
+	///   Rudimentary config-file parser. File must be named <c>config</c> and
+	///   reside next to <c>main.lua</c>. Currently supports the following keys:
 	///
-	/// Rudimentary config-file parser. File must be named \c config and reside
-	/// next to \c main.lua. Currently supports the following keys:
+	///   <list type="bullet">
+	///     <item>
+	///       <c>accelerometer = false|true</c><br/>
+	///       Specifies whether the accelerometer is used.
+	///     </item>
+	///     <item>
+	///       <c>allow_high_dpi = false|true</c><br/>
+	///       Specifies whether to create windows in high DPI mode.
+	///     </item>
+	///     <item>
+	///       <c>msaa = 0|2|4|8</c><br/>
+	///       Sets number of samples for multisample anti-aliasing.
+	///     </item>
+	///     <item>
+	///       <c>resolution = {width, height}</c><br/>
+	///       Specifies the preferred screen resolution or window size. It also
+	///       determines whether we are in landscape or portrait mode.
+	///     </item>
+	///     <item>
+	///       <c>suspend_on_focus_lost = false|true</c><br/>
+	///       Specifies whether to suspend when focus is lost.
+	///     </item>
+	///   </list>
 	///
-	/// - <tt>accelerometer = false|true</tt>
-	///   Specifies whether the accelerometer is used.
-	/// - <tt>allow_high_dpi = false|true</tt>
-	///   Specifies whether to create windows in high DPI mode.
-	/// - <tt>msaa = 0|2|4|8</tt>
-	///   Sets number of samples for multisample anti-aliasing.
-	/// - <tt>resolution = { width, height }</tt>
-	///   Specifies the preferred screen resolution or window size. It also
-	///   determines whether we are in landscape or portrait mode.
-	/// - <tt>suspend_on_focus_lost = false|true</tt>
-	///   Specifies whether to suspend when focus is lost.
+	///   If no configuration file is present, or the file is somehow
+	///   unavailable, the following are the default values:
 	///
-	/// If no configuration file is present, or the file is somehow unavailable,
-	/// the following are the default values:
-	///
-	/// - <tt>accelerometer = true</tt>
-	/// - <tt>allow_high_dpi = false</tt>
-	/// - <tt>msaa = 0</tt>
-	/// - <tt>resolution = {0, 0}</tt> (which also implies landscape mode)
-	/// - <tt>suspend_on_focus_lost = true</tt>
+	///   <list type="bullet">
+	///     <item><c>accelerometer = true</c></item>
+	///     <item><c>allow_high_dpi = false</c></item>
+	///     <item><c>msaa = 0</c></item>
+	///     <item><c>resolution = {0, 0}</c> (which also implies landscape mode)</item>
+	///     <item><c>suspend_on_focus_lost = true</c></item>
+	///   </list>
+	/// </remarks>
 	class Config
 	{
 	public:
 		Config();
 
-		/// Returns the width of the screen.
+		/// <summary>Returns the width of the screen.</summary>
 		int width() const { return width_; }
 
-		/// Returns the height of the screen.
+		/// <summary>Returns the height of the screen.</summary>
 		int height() const { return height_; }
 
-		/// Returns whether to create windows in high DPI mode.
+		/// <summary>
+		///   Returns whether to create windows in high DPI mode.
+		/// </summary>
 		bool high_dpi() const { return high_dpi_; }
 
-		/// Returns whether the screen is in portrait mode.
+		/// <summary>Returns whether the screen is in portrait mode.</summary>
 		bool is_portrait() const { return width_ < height_; }
 
-		/// Returns number of samples for multisample anti-aliasing.
+		/// <summary>
+		///   Returns number of samples for multisample anti-aliasing.
+		/// </summary>
 		unsigned int msaa() const { return msaa_; }
 
-		/// Returns whether we need to use the accelerometer.
+		/// <summary>Returns whether we need to use the accelerometer.</summary>
 		bool needs_accelerometer() const { return accelerometer_; }
 
-		/// Returns whether to suspend when focus is lost.
+		/// <summary>Returns whether to suspend when focus is lost.</summary>
 		bool suspend() const { return suspend_; }
 
 	private:

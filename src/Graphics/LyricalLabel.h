@@ -57,49 +57,49 @@ public:
 
 	Label* as_label() { return static_cast<Label*>(this); }
 
-	/// Clears all animations.
+	/// <summary>Clears all animations.</summary>
 	void clear_animations();
 
-	/// Clears all attributes.
+	/// <summary>Clears all attributes.</summary>
 	void clear_attributes();
 
-	/// Clears all attributes of given type.
+	/// <summary>Clears all attributes of given type.</summary>
 	void clear_attributes(const Attribute::Type type);
 
-	/// Sets color on characters in given range.
-	/// \param color   The color to set.
-	/// \param start   Offset to the first character in range.
-	/// \param length  Number of characters in range.
+	/// <summary>Sets color on characters in given range.</summary>
+	/// <param name="color">The color to set.</param>
+	/// <param name="start">Offset to the first character in range.</param>
+	/// <param name="length">Number of characters in range.</param>
 	void set_color(const Colorb color,
 	               const unsigned int start,
 	               const unsigned int length);
 
-	/// Offsets characters' positions in given range.
-	/// \param offset  The vector to offset by.
-	/// \param start   Offset to the first character in range.
-	/// \param length  Number of characters in range.
+	/// <summary>Offsets characters' positions in given range.</summary>
+	/// <param name="offset">The vector to offset by.</param>
+	/// <param name="start">Offset to the first character in range.</param>
+	/// <param name="length">Number of characters in range.</param>
 	void set_offset(const Vec2i &offset,
 	                const unsigned int start,
 	                const unsigned int length);
 
-	/// Shake characters in given range.
-	/// \param magnitude  The magnitude of the shaking.
-	/// \param start      Offset to the first character in range.
-	/// \param length     Number of characters in range.
+	/// <summary>Shake characters in given range.</summary>
+	/// <param name="magnitude">The magnitude of the shaking.</param>
+	/// <param name="start">Offset to the first character in range.</param>
+	/// <param name="length">Number of characters in range.</param>
 	void set_shaking(const unsigned int magnitude,
 	                 const unsigned int start,
 	                 const unsigned int length);
 
-	/// Sets text to display.
+	/// <summary>Sets text to display.</summary>
 	void set_text(const char *);
 
-	/// Starts an animation.
-	/// \param animation  The animation to start.
-	/// \param interval   Interval between each frame.
+	/// <summary>Starts an animation.</summary>
+	/// <param name="animation">The animation to start.</param>
+	/// <param name="interval">Interval between each frame.</param>
 	void start_animation(const Animation animation, const int interval);
 
-	/// Stops an animation.
-	/// \param animation  The animation to stop.
+	/// <summary>Stops an animation.</summary>
+	/// <param name="animation">The animation to stop.</param>
 	void stop_animation(const Animation animation);
 
 	void update() override;

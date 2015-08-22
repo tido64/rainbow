@@ -11,17 +11,18 @@
 #include "Common/Algorithm.h"
 #include "Common/NonCopyable.h"
 
-/// A barebone implementation of a tree node.
-///
-/// This class does not hold any data and is meant to be sub-classed.
+/// <summary>A barebone implementation of a tree node.</summary>
+/// <remarks>
+///   This class does not hold any data and is meant to be sub-classed.
+/// </remarks>
 template<typename T>
 class TreeNode : private NonCopyable<TreeNode<T>>
 {
 public:
-	/// Returns parent node.
+	/// <summary>Returns parent node.</summary>
 	T* parent() { return parent_; }
 
-	/// Adds a node as child.
+	/// <summary>Adds a node as child.</summary>
 	void add_child(T *node)
 	{
 		if (node->parent_)
@@ -30,13 +31,13 @@ public:
 		children_.push_back(node);
 	}
 
-	/// Removes node from the tree and deletes it.
+	/// <summary>Removes node from the tree and deletes it.</summary>
 	void remove()
 	{
 		parent_->remove_child(static_cast<T*>(this));
 	}
 
-	/// Removes a child node.
+	/// <summary>Removes a child node.</summary>
 	void remove_child(T *node)
 	{
 		if (!node)
@@ -46,7 +47,10 @@ public:
 		delete node;
 	}
 
-	/// Recursively calls function \p f on \p node and its children.
+	/// <summary>
+	///   Recursively calls function <paramref name="f"/> on
+	///   <paramref name="node"/> and its children.
+	/// </summary>
 	template<typename U, typename F, typename Enable, typename... Args>
 	friend void for_each(U *node, F&& f, Args&&... args);
 

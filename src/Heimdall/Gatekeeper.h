@@ -22,7 +22,7 @@ struct Pointer;
 
 namespace heimdall
 {
-	/// Overlay for debugging options.
+	/// <summary>Overlay for debugging options.</summary>
 	class Gatekeeper final : public rainbow::Director, public InputListener
 	{
 	public:

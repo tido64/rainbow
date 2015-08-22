@@ -12,19 +12,23 @@ struct ControllerButton;
 struct Key;
 struct Pointer;
 
-/// Interface for input listeners.
+/// <summary>Interface for input listeners.</summary>
 class InputListener : private Link
 {
 	friend class Input;
 
 public:
-	/// Returns the next input listener; \c nullptr if none.
+	/// <summary>
+	///   Returns the next input listener; <c>nullptr</c> if none.
+	/// </summary>
 	InputListener* next() const
 	{
 		return static_cast<InputListener*>(Link::next());
 	}
 
-	/// Returns the previous input listener; \c nullptr if none.
+	/// <summary>
+	///   Returns the previous input listener; <c>nullptr</c> if none.
+	/// </summary>
 	InputListener* prev() const
 	{
 		return static_cast<InputListener*>(Link::prev());
@@ -65,32 +69,36 @@ public:
 		return on_key_up_impl(k);
 	}
 
-	/// User puts finger down on the device; mouse down.
-	/// \param count     Number of pointers.
-	/// \param pointers  The id and position of each pointer.
+	/// <summary>User puts finger down on the device; mouse down.</summary>
+	/// <param name="count">Number of pointers.</param>
+	/// <param name="pointers">The id and position of each pointer.</param>
 	bool on_pointer_began(const unsigned int count, const Pointer *pointers)
 	{
 		return on_pointer_began_impl(count, pointers);
 	}
 
-	/// Canceled pointer event. May occur when the user moves finger off-screen
-	/// or the application got interrupted by external events.
+	/// <summary>
+	///   Canceled pointer event. May occur when the user moves finger
+	///   off-screen or the application got interrupted by external events.
+	/// <summary>
 	bool on_pointer_canceled()
 	{
 		return on_pointer_canceled_impl();
 	}
 
-	/// User lifts finger; mouse up.
-	/// \param count     Number of pointers.
-	/// \param pointers  The id and position of each pointer.
+	/// <summary>User lifts finger; mouse up.</summary>
+	/// <param name="count">Number of pointers.</param>
+	/// <param name="pointers">The id and position of each pointer.</param>
 	bool on_pointer_ended(const unsigned int count, const Pointer *pointers)
 	{
 		return on_pointer_ended_impl(count, pointers);
 	}
 
-	/// User moves finger around while it still is on the device; mouse moved.
-	/// \param count     Number of pointers.
-	/// \param pointers  The id and position of each pointer.
+	/// <summary>
+	///   User moves finger around while it still is on the device; mouse moved.
+	/// </summary>
+	/// <param name="count">Number of pointers.</param>
+	/// <param name="pointers">The id and position of each pointer.</param>
 	bool on_pointer_moved(const unsigned int count, const Pointer *pointers)
 	{
 		return on_pointer_moved_impl(count, pointers);

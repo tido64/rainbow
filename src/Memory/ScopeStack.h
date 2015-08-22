@@ -20,11 +20,17 @@ namespace std { using ::max_align_t; }
 
 namespace rainbow
 {
-	/// Linear allocator for use with scope stack allocation.
-	///
-	/// Largely copied from Andreas Fredriksson's presentation on the subject.
-	///
-	/// \see http://dice.se/publications/scope-stack-allocation/
+	/// <summary>Linear allocator for use with scope stack allocation.</summary>
+	/// <remarks>
+	///   <para>
+	///     Largely copied from Andreas Fredriksson's presentation on the
+	///     subject.
+	///   </para>
+	///   References
+	///   <list type="bullet">
+	///     <item>http://dice.se/publications/scope-stack-allocation/</item>
+	///   </list>
+	/// </remarks>
 	class LinearAllocator : private NonCopyable<LinearAllocator>
 	{
 	public:
@@ -70,11 +76,18 @@ namespace rainbow
 #endif
 	};
 
-	/// Scope stack allocator.
-	///
-	/// Largely copied from Andreas Fredriksson's presentation on the subject.
-	///
-	/// \see http://dice.se/publications/scope-stack-allocation/
+
+	/// <summary>Scope stack allocator.</summary>
+	/// <remarks>
+	///   <para>
+	///     Largely copied from Andreas Fredriksson's presentation on the
+	///     subject.
+	///   </para>
+	///   References
+	///   <list type="bullet">
+	///     <item>http://dice.se/publications/scope-stack-allocation/</item>
+	///   </list>
+	/// </remarks>
 	class ScopeStack : private NonCopyable<ScopeStack>
 	{
 	public:

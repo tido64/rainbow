@@ -31,13 +31,13 @@ namespace rainbow
 		return std::min(std::max(x, min_val), max_val);
 	}
 
-	/// Converts radians to degrees.
+	/// <summary>Converts radians to degrees.</summary>
 	inline float degrees(const float r)
 	{
 		return r * static_cast<float>(kRadian);
 	}
 
-	/// Fast inverse square root by 0x5f3759df.
+	/// <summary>Fast inverse square root by 0x5f3759df.</summary>
 	inline float fast_invsqrt(float x)
 	{
 		float xhalf = x * 0.5f;
@@ -54,8 +54,10 @@ namespace rainbow
 		return x * (1.5f - (xhalf * x * x));
 	}
 
-	/// Compares two floating point numbers and approximate their equality.
-	/// \return \c true when approximately equal.
+	/// <summary>
+	///   Compares two floating point numbers and approximate their equality.
+	/// </summary>
+	/// <returns><c>true</c> when approximately equal.</returns>
 	template<typename T, typename = FloatingPoint<T>>
 	bool is_equal(const T a, const T b)
 	{
@@ -63,21 +65,21 @@ namespace rainbow
 		       fmax(fabs(a), fabs(b)) * std::numeric_limits<T>::epsilon();
 	}
 
-	/// Determines whether an integer is a power of 2.
+	/// <summary>Determines whether an integer is a power of 2.</summary>
 	inline bool is_pow2(const unsigned int i)
 	{
 		return i && !(i & (i - 1));
 	}
 
-	/// Low-pass filter.
+	/// <summary>Low-pass filter.</summary>
 	inline float low_pass(const float value, const float low_pass)
 	{
 		return kLowPassAlpha * powf(10.0f, value * kLowPassAlpha) +
 		       (1.0f - kLowPassAlpha) * low_pass;
 	}
 
-	/// Calculates the next power of 2.
-	/// \note 0 is incorrectly considered a power of 2.
+	/// <summary>Calculates the next power of 2.</summary>
+	/// <remarks>Note that 0 is incorrectly considered a power of 2.</remarks>
 	inline unsigned int next_pow2(unsigned int i)
 	{
 		--i;
@@ -89,8 +91,10 @@ namespace rainbow
 		return ++i;
 	}
 
-	/// Removes the element at \p pos by swapping it with the last element in
-	/// \p container and popping it.
+	/// <summary>
+	///   Removes the element at <paramref name="pos"/> by swapping it with the
+	///   last element in <paramref name="container"/> and popping it.
+	/// </summary>
 	template<typename T>
 	void quick_erase(T &container, typename T::iterator pos)
 	{
@@ -98,13 +102,15 @@ namespace rainbow
 		container.pop_back();
 	}
 
-	/// Converts degrees to radians.
+	/// <summary>Converts degrees to radians.</summary>
 	inline float radians(const float d)
 	{
 		return d * static_cast<float>(kDegree);
 	}
 
-	/// Removes the first element equal to \p v.
+	/// <summary>
+	///   Removes the first element equal to <paramref name="val"/>.
+	/// </summary>
 	template<typename T>
 	typename T::iterator remove(T &container, const typename T::value_type &val)
 	{
@@ -112,8 +118,10 @@ namespace rainbow
 		return (i == std::end(container)) ? i : container.erase(i);
 	}
 
-	/// Removes all elements that satisfy \p predicate and returns a
-	/// past-the-end iterator for the new end of the range.
+	/// <summary>
+	///   Removes all elements that satisfy <paramref name="predicate"/> and
+	///   returns a past-the-end iterator for the new end of the range.
+	/// </summary>
 	template<typename T, typename F>
 	typename T::iterator remove_if(T &container, F&& predicate)
 	{
@@ -123,7 +131,10 @@ namespace rainbow
 		                       std::end(container));
 	}
 
-	/// Returns -1, 0, or 1 for \p x < 0, \p x == 0, or \p x > 0 respectively.
+	/// <summary>
+	///   Returns -1, 0, or 1 for <paramref name="x"/> < 0,
+	///   <paramref name="x"/> == 0, or <paramref name="x"/> > 0 respectively.
+	/// </summary>
 	template<typename T>
 	T signum(const T x)
 	{

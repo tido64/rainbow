@@ -1,4 +1,4 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -19,35 +19,43 @@ public:
 	static File open_document(const char *const path);
 	static File open_write(const char *const path);
 
-	inline File();
+	File() : is_asset_(false), stream_(nullptr) {}
 	File(File &&);
 	~File();
 
-	/// Returns the file size.
+	/// <summary>Returns the file size.</summary>
 	size_t size() const;
 
-	/// Reads \p size bytes from file into buffer \p dst.
-	/// \param[out] dst   Destination buffer.
-	/// \param      size  Number of bytes to read.
-	/// \return Number of bytes read.
+	/// <summary>
+	///   Reads <paramref name="size"/> bytes from file into buffer
+	///   <paramref name="dst"/>.
+	/// </summary>
+	/// <param name="dst">[out] Destination buffer.</param>
+	/// <param name="size">Number of bytes to read.</param>
+	/// <returns>Number of bytes read.</returns>
 	size_t read(void *dst, const size_t size) const;
 
-	/// Sets the file position indicator for the file stream to the value
-	/// pointed to by \p offset. See \c fseek().
-	/// \param offset  Number of bytes to shift the position relative to origin.
-	/// \param origin  Position to which offset is added.
-	/// \return 0 upon success, nonzero value otherwise.
+	/// <summary>
+	///   Sets the file position indicator for the file stream to the value
+	///   pointed to by <paramref name="offset"/>.
+	///   <seealso cref="fseek"/>
+	/// </summary>
+	/// <param name="offset">
+	///   Number of bytes to shift the position relative to origin.
+	/// </param>
+	/// <param name="origin">Position to which offset is added.</param>
+	/// <returns>0 upon success, nonzero value otherwise.</returns>
 	int seek(const long offset, const int origin) const;
 
-	/// Writes buffer at \p buffer to file.
-	/// \param buffer  Source buffer.
-	/// \param size    Number of bytes to write.
-	/// \return Number of bytes written.
+	/// <summary>Writes buffer at <paramref name="buffer"/> to file.</summary>
+	/// <param name="buffer">Source buffer.</param>
+	/// <param name="size">Number of bytes to write.</param>
+	/// <returns>Number of bytes written.</returns>
 	size_t write(const void *buffer, const size_t size) const;
 
-	inline explicit operator bool() const;
-	inline operator AAsset*() const;
-	inline operator FILE*() const;
+	explicit operator bool() const { return stream_; }
+	operator AAsset*() const { return asset_; }
+	operator FILE*() const { return stream_; }
 
 private:
 	bool is_asset_;  ///< Whether this file is an asset.
@@ -61,22 +69,5 @@ private:
 	explicit File(const char *const path);
 	File(const char *const path, const char *const mode);
 };
-
-File::File() : is_asset_(false), stream_(nullptr) {}
-
-File::operator bool() const
-{
-	return stream_;
-}
-
-File::operator AAsset*() const
-{
-	return asset_;
-}
-
-File::operator FILE*() const
-{
-	return stream_;
-}
 
 #endif

@@ -1,4 +1,4 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -7,7 +7,9 @@
 
 #include "Graphics/SpriteVertex.h"
 
-/// Font glyph structure for storing advance and a textured sprite.
+/// <summary>
+///   Font glyph structure for storing advance and a textured sprite.
+/// </summary>
 struct FontGlyph
 {
 	unsigned int code;     ///< UTF-32 code.

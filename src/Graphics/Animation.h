@@ -11,7 +11,7 @@
 #include "Common/NonCopyable.h"
 #include "Graphics/Sprite.h"
 
-/// Sprite animation using sprite sheets.
+/// <summary>Sprite animation using sprite sheets.</summary>
 class Animation : private NonCopyable<Animation>
 {
 public:
@@ -28,57 +28,71 @@ public:
 
 	static const Frame kAnimationEnd;
 
-	/// Constructs a sprite animation.
-	/// \param sprite  The sprite to animate.
-	/// \param frames  Array of texture ids to be used as frames, terminated
-	///                with \c kAnimationEnd.
-	/// \param fps     Frames per second.
-	/// \param delay   Number of frames to delay before the animation loops.
-	///                Negative numbers disable looping.
+	/// <summary>Constructs a sprite animation.</summary>
+	/// <param name="sprite">The sprite to animate.</param>
+	/// <param name="frames">
+	///   Array of texture ids to be used as frames, terminated with
+	///   <c>kAnimationEnd</c>.
+	/// </param>
+	/// <param name="fps">Frames per second.</param>
+	/// <param name="delay">
+	///   Number of frames to delay before the animation loops. Negative numbers
+	///   disable looping.
+	/// </param>
 	Animation(const Sprite::Ref &sprite,
 	          const Frame *const frames,
 	          const unsigned int fps,
 	          const int delay = 0);
 
-	/// Returns the currently displayed frame; \c kAnimationEnd if none.
+	/// <summary>
+	///   Returns the currently displayed frame; <c>kAnimationEnd</c> if none.
+	/// </summary>
 	unsigned int current_frame() const { return frame_ - 1; }
 
-	/// Returns whether animation is stopped.
+	/// <summary>Returns whether animation is stopped.</summary>
 	bool is_stopped() const { return stopped_; }
 
-	/// Sets callback for start, end, and complete (loop) events.
+	/// <summary>
+	///   Sets callback for start, end, and complete (loop) events.
+	/// </summary>
 	void set_callback(Callback f) { callback_ = std::move(f); }
 
-	/// Sets number of frames to delay before the animation loops. Negative
-	/// numbers disable looping.
+	/// <summary>
+	///   Sets number of frames to delay before the animation loops. Negative
+	///   numbers disable looping.
+	/// </summary>
 	void set_delay(const int delay) { delay_ = delay; }
 
-	/// Sets playback rate in frames per second.
+	/// <summary>Sets playback rate in frames per second.</summary>
 	void set_fps(const unsigned int fps);
 
-	/// Sets animation frames.
-	/// \note This method takes ownership of the array.
-	/// \param frames  Array of texture ids to be used as frames, terminated
-	///                with \c kAnimationEnd.
+	/// <summary>Sets animation frames.</summary>
+	/// <remarks>This method takes ownership of the array.</remarks>
+	/// <param name="frames">
+	///   Array of texture ids to be used as frames, terminated with
+	///   <c>kAnimationEnd</c>.
+	/// </param>
 	void set_frames(const Frame *const frames);
 
-	/// Sets the sprite to animate.
+	/// <summary>Sets the sprite to animate.</summary>
 	void set_sprite(const Sprite::Ref &sprite);
 
-	/// Jumps to \p frame.
+	/// <summary>Jumps to <paramref name="frame"/>.</summary>
 	void jump_to(const unsigned int frame);
 
-	/// Rewinds animation.
+	/// <summary>Rewinds animation.</summary>
 	void rewind() { jump_to(0); }
 
-	/// Starts animation if it was previously stopped. Always plays from the
-	/// beginning.
+	/// <summary>Starts animation if it was previously stopped.</summary>
+	/// <remarks>Always plays from the beginning.</remarks>
 	void start();
 
-	/// Stops animation.
+	/// <summary>Stops animation.</summary>
 	void stop();
 
-	/// Accumulates time and calls \c tick() when time is up.
+	/// <summary>
+	///   Must be called every frame for as long as it's meant to be active.
+	/// </summary>
 	void update(const unsigned long dt);
 
 private:
@@ -86,7 +100,7 @@ private:
 	unsigned int accumulated_;  ///< Accumulated monotonic time.
 	unsigned int interval_;     ///< Time till a tick.
 	unsigned int frame_;        ///< Current frame.
-	std::unique_ptr<const Frame[]> frames_;  ///< Array of texture ids to be used as frames, terminated with \c kAnimationEnd.
+	std::unique_ptr<const Frame[]> frames_;  ///< Array of texture ids to be used as frames, terminated with <c>kAnimationEnd</c>.
 	Sprite::Ref sprite_;  ///< The sprite to animate.
 	int delay_;           ///< Number of frames to delay before the animation loops. Negative numbers disable looping.
 	int idled_;           ///< Number of frames idled.
@@ -94,7 +108,9 @@ private:
 
 	void set_current_frame();
 
-	/// Increments animation frame and resets/stops if the end is reached.
+	/// <summary>
+	///   Increments animation frame and resets/stops if the end is reached.
+	/// </summary>
 	void tick();
 };
 

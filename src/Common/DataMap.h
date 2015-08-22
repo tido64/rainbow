@@ -28,14 +28,16 @@ namespace rainbow
 
 		explicit DataMapBase(const Path &path);
 
-		/// Returns offset raw byte array.
-		/// \return Pointer to array. Returns \c nullptr if buffer is empty.
+		/// <summary>Returns offset raw byte array.</summary>
+		/// <returns>
+		///   Pointer to array. Returns <c>nullptr</c> if buffer is empty.
+		/// </returns>
 		const unsigned char* bytes() const;
 
-		/// Offsets data map's start address.
+		/// <summary>Offsets data map's start address.</summary>
 		void offset(const size_t offset);
 
-		/// Returns offset buffer size.
+		/// <summary>Returns offset buffer size.</summary>
 		size_t size() const;
 
 		explicit operator bool() const;

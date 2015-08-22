@@ -9,35 +9,47 @@
 #include "Input/Acceleration.h"
 #include "Input/InputListener.h"
 
-/// Handles accelerometer/gyroscope and pointer events independent of platform.
-///
-/// Accelerometer data changes do not follow the observer pattern because they
-/// happen every frame. Polling is preferred in this case.
-///
-/// \see http://developer.apple.com/library/ios/#documentation/UIKit/Reference/UIAcceleration_Class/Reference/UIAcceleration.html
+/// <summary>
+///   Handles accelerometer/gyroscope and pointer events independent of
+///   platform.
+/// <summary>
+/// <remarks>
+///   <para>
+///     Accelerometer data changes do not follow the observer pattern because
+///     they happen every frame. Polling is preferred in this case.
+///   </para>
+///   References
+///   <list type="bullet">
+///     <item>http://developer.apple.com/library/ios/#documentation/UIKit/Reference/UIAcceleration_Class/Reference/UIAcceleration.html</item>
+///   </list>
+/// <remarks>
 class Input : private InputListener, NonCopyable<Input>
 {
 public:
 	Input() : last_listener_(this) {}
 
-	/// Clears all input listeners.
+	/// <summary>Clears all input listeners.</summary>
 	void reset()
 	{
 		pop();
 		last_listener_ = this;
 	}
 
-	/// Subscribes an object to input events.
-	/// \param i  The object to subscribe.
+	/// <summary>Subscribes an object to input events.</summary>
+	/// <param name="i">The object to subscribe.</param>
 	void subscribe(InputListener *const i);
 
-	/// Unsubscribes an object from input events.
-	/// \params t  The object to unsubscribe.
+	/// <summary>Unsubscribes an object from input events.</summary>
+	/// <param name="i">The object to unsubscribe.</param>
 	void unsubscribe(InputListener *const i);
 
-	/// Acceleration event.
-	/// \param x,y,z  Acceleration data.
-	/// \param t      The relative time at which the acceleration occurred.
+	/// <summary>Acceleration event.</summary>
+	/// <param name="x">Acceleration data (x-value).</param>
+	/// <param name="y">Acceleration data (y-value).</param>
+	/// <param name="z">Acceleration data (z-value).</param>
+	/// <param name="t">
+	///   The relative time at which the acceleration occurred.
+	/// </param>
 	void accelerated(const double x,
 	                 const double y,
 	                 const double z,

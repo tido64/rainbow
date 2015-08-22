@@ -1,4 +1,4 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -9,25 +9,29 @@
 
 #include "Graphics/OpenGL.h"
 
-/// Manages a vertex array object for any drawable type. On Android, vertex
-/// array objects are emulated.
+/// <summary>
+///   Manages a vertex array object for any drawable type. On Android, vertex
+///   array objects are emulated.
+/// </summary>
 class VertexArray
 {
 public:
-	/// Unbinds any bound vertex array object.
+	/// <summary>Unbinds any bound vertex array object.</summary>
 	static void unbind();
 
 	VertexArray();
 	VertexArray(VertexArray&&);
 	~VertexArray();
 
-	/// Binds this vertex array object.
+	/// <summary>Binds this vertex array object.</summary>
 	void bind() const;
 
-	/// Reconfigures this vertex array object with a new set of states.
+	/// <summary>
+	///   Reconfigures this vertex array object with a new set of states.
+	/// </summary>
 	void reconfigure(std::function<void()> &&array_state);
 
-	/// Returns whether this vertex array object is valid.
+	/// <summary>Returns whether this vertex array object is valid.</summary>
 	inline explicit operator bool() const;
 
 private:

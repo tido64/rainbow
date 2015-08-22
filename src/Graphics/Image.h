@@ -1,4 +1,4 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -21,15 +21,25 @@ namespace rainbow
 			PNG
 		};
 
-		/// Creates an Image struct from image data.
-		///
-		/// Supports
-		/// - iOS: PVRTC and whatever UIImage devours.
-		/// - Other: PNG.
-		///
-		/// Limitations
-		/// - PNG: Non-transparent grayscale is assumed to be PNG8, i.e. it's not supported.
-		/// - PVRTC: PVR3 only, square, power of 2, no mipmaps, pre-multiplied alpha.
+		/// <summary>Creates an Image struct from image data.</summary>
+		/// <remarks>
+		///   Supports
+		///   <list type="bullet">
+		///     <item>iOS: PVRTC and whatever UIImage devours.</item>
+		///     <item>Other: PNG.</item>
+		///   </list>
+		///   Limitations
+		///   <list type="bullet">
+		///     <item>
+		///       PNG: Non-transparent grayscale is assumed to be PNG8, i.e.
+		///       it's not supported.
+		///     </item>
+		///     <item>
+		///       PVRTC: PVR3 only, square, power of 2, no mipmaps,
+		///       pre-multiplied alpha.
+		///     </item>
+		///   </list>
+		/// </remarks>
 		static Image decode(const DataMap &);
 		static void release(const Image &);
 

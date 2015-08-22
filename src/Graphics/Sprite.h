@@ -10,23 +10,30 @@
 
 class SpriteBatch;
 
-/// A textured quad.
-///
-/// 3 ┌─────┐ 2
-///   │     │
-///   │     │
-/// 0 └─────┘ 1
-///
-/// The vertex order of the quad is 0,1,2 for the first triangle, and 2,3,0 for
-/// the second.
-///
-/// The sprite itself does not have a texture. It holds the texture coordinates
-/// but it is the sprite batch that holds the actual texture. That way, changing
-/// textures on a whole batch (i.e. skinning) can be easily achieved.
-///
-/// \see http://developer.apple.com/library/ios/#documentation/3DDrawing/Conceptual/OpenGLES_ProgrammingGuide/TechniquesforWorkingwithVertexData/TechniquesforWorkingwithVertexData.html
-/// \see http://iphonedevelopment.blogspot.com/2009/06/opengl-es-from-ground-up-part-8.html
-/// \see http://mathforum.org/mathimages/index.php/Transformation_Matrix
+/// <summary>A textured quad.</summary>
+/// <remarks>
+///   <code>
+///     3 ┌─────┐ 2
+///       │     │
+///       │     │
+///     0 └─────┘ 1
+///   </code>
+///   <para>
+///     The vertex order of the quad is 0,1,2 for the first triangle, and 2,3,0
+///     for the second.
+///   </para>
+///   <para>
+///     The sprite itself does not have a texture. It holds the texture
+///     coordinates but it is the sprite batch that holds the actual texture.
+///     That way, changing textures on a whole batch (i.e. skinning) can be
+///     easily achieved.
+///   </para>
+///   <list type="bullet">
+///     <item>http://developer.apple.com/library/ios/#documentation/3DDrawing/Conceptual/OpenGLES_ProgrammingGuide/TechniquesforWorkingwithVertexData/TechniquesforWorkingwithVertexData.html</item>
+///     <item>http://iphonedevelopment.blogspot.com/2009/06/opengl-es-from-ground-up-part-8.html</item>
+///     <item>http://mathforum.org/mathimages/index.php/Transformation_Matrix</item>
+///   </list>
+/// </remarks>
 class Sprite : private NonCopyable<Sprite>
 {
 public:
@@ -79,62 +86,71 @@ public:
 	const SpriteVertex* vertex_array() const { return vertex_array_; }
 #endif
 
-	/// Sets sprite colour.
+	/// <summary>Sets sprite colour.</summary>
 	void set_color(const Colorb c);
 
-	/// Sets the identifier for the sprite.
+	/// <summary>Sets the identifier for the sprite</summary>
 	void set_id(const int id) { id_ = id; }
 
-	/// Sets normal map.
-	/// \param id  Identifier of the normal map to set.
+	/// <summary>Sets normal map.</summary>
+	/// <param name="id">Identifier of the normal map to set.</param>
 	void set_normal(const unsigned int id);
 
-	/// Sets buffer used to store UV coordinates.
+	/// <summary>Sets buffer used to store UV coordinates.</summary>
 	void set_normal_buffer(Vec2f *map) { normal_map_ = map; }
 
-	/// Sets the pivot point for rotation and translation.
-	/// \param p  Normalised pivot point.
+	/// <summary>Sets the pivot point for rotation and translation.</summary>
+	/// <param name="p">Normalised pivot point.</param>
 	void set_pivot(const Vec2f &p);
 
-	/// Sets sprite position (absolute).
+	/// <summary>Sets sprite position (absolute).</summary>
 	void set_position(const Vec2f &);
 
-	/// Sets angle of rotation (in radian).
+	/// <summary>Sets angle of rotation (in radian).</summary>
 	void set_rotation(const float r);
 
-	/// Uniform scaling of sprite (does not affect actual width and height).
+	/// <summary>
+	///   Uniform scaling of sprite (does not affect actual width and height).
+	/// </summary>
+	/// <param name="f">Scaling factor for both axes.</param>
 	void set_scale(const float f) { set_scale(Vec2f(f, f)); }
 
-	/// Non-uniform scaling of sprite (does not affect actual width and height).
-	void set_scale(const Vec2f &);
+	/// <summary>
+	///   Non-uniform scaling of sprite (does not affect actual width and
+	///   height).
+	/// </summary>
+	/// <param name="f">Scaling factors for x- and y-axis.</param>
+	void set_scale(const Vec2f &f);
 
-	/// Sets the texture.
-	/// \param id  Identifier of the texture to set.
+	/// <summary>Sets texture.</summary>
+	/// <param name="id">Identifier of the texture to set.</param>
 	void set_texture(const unsigned int id);
 
-	/// Sets vertex array buffer.
+	/// <summary>Sets vertex array buffer.</summary>
 	void set_vertex_array(SpriteVertex *array);
 
-	/// Flips sprite vertically.
+	/// <summary>Flips sprite vertically.</summary>
 	void flip();
 
-	/// Hides sprite if it is currently shown.
+	/// <summary>Hides sprite if it is currently shown.</summary>
 	void hide();
 
-	/// Mirrors sprite.
+	/// <summary>Mirrors sprite.</summary>
 	void mirror();
 
-	/// Moves sprite by (x,y).
+	/// <summary>Moves sprite by (x,y).</summary>
 	void move(const Vec2f &);
 
-	/// Rotates sprite by \p r.
+	/// <summary>Rotates sprite by <paramref name="r"/>.</summary>
 	void rotate(const float r);
 
-	/// Shows sprite if it is currently hidden.
+	/// <summary>Shows sprite if it is currently hidden.</summary>
 	void show();
 
-	/// Updates the vertex buffer.
-	/// \return \c true if the buffer has changed; \c false otherwise.
+	/// <summary>Updates the vertex buffer.</summary>
+	/// <returns>
+	///   <c>true</c> if the buffer has changed; <c>false</c> otherwise.
+	/// </returns>
 	bool update();
 
 	Sprite& operator=(Sprite&&);

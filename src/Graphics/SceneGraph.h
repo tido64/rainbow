@@ -1,4 +1,4 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -22,32 +22,33 @@ class SpriteBatch;
 
 namespace rainbow
 {
-	/// A single node in a scene graph.
-	///
-	/// May represent an animation, label, sprite batch, or a group node. There
-	/// are no limits to how many children a node can have. Nodes may point to
-	/// the same set of data.
+	/// <summary>A single node in a scene graph.</summary>
+	/// <remarks>
+	///   May represent an animation, label, sprite batch, or a group node.
+	///   Thereare no limits to how many children a node can have. Nodes may
+	///   point to the same set of data.
+	/// </remarks>
 	class SceneNode : public TreeNode<SceneNode>
 	{
 	public:
 		bool enabled;  ///< Whether this node should be updated and/or drawn.
 
-		/// Creates a group node.
+		/// <summary>Creates a group node.</summary>
 		SceneNode() : SceneNode(Type::Group, nullptr) {}
 
 		SceneNode(SceneNode&&);
 
-		/// Creates an animation node.
+		/// <summary>Creates an animation node.</summary>
 		explicit SceneNode(Animation *a) : SceneNode(Type::Animation, a) {}
 
-		/// Creates a label node.
+		/// <summary>Creates a label node.</summary>
 		explicit SceneNode(Label *label) : SceneNode(Type::Label, label) {}
 
-		/// Creates a sprite batch node.
+		/// <summary>Creates a sprite batch node.</summary>
 		explicit SceneNode(SpriteBatch *batch)
 		    : SceneNode(Type::SpriteBatch, batch) {}
 
-		/// Creates a generic drawable node.
+		/// <summary>Creates a generic drawable node.</summary>
 		SceneNode(Drawable *drawable) : SceneNode(Type::Drawable, drawable) {}
 
 #if USE_NODE_TAGS
@@ -55,39 +56,41 @@ namespace rainbow
 		void set_tag(const char *tag) { tag_ = tag; }
 #endif
 
-		/// Adds a child node.
+		/// <summary>Adds a child node.</summary>
 		SceneNode* add_child(SceneNode *n)
 		{
 			TreeNode<SceneNode>::add_child(n);
 			return n;
 		}
 
-		/// Adds a child node.
+		/// <summary>Adds a child node.</summary>
 		template<typename T>
 		SceneNode* add_child(T component)
 		{
 			return add_child(new SceneNode(component));
 		}
 
-		/// Adds a child node.
+		/// <summary>Adds a child node.</summary>
 		template<typename T>
 		SceneNode* add_child(const std::shared_ptr<T> &component)
 		{
 			return add_child(new SceneNode(component.get()));
 		}
 
-		/// Attach a program to this node. The program will be used to draw this
-		/// node and any of its descendants unless they also have an attached
-		/// shader.
+		/// <summary>
+		///   Attach a program to this node. The program will be used to draw
+		///   this node and any of its descendants unless they also have an
+		///   attached shader.
+		/// </summary>
 		void attach_program(const unsigned int program) { program_ = program; }
 
-		/// Draws this node and all its enabled children.
+		/// <summary>Draws this node and all its enabled children.</summary>
 		void draw() const;
 
-		/// Recursively moves all sprites by (x,y).
+		/// <summary>Recursively moves all sprites by (x,y).</summary>
 		void move(const Vec2f &) const;
 
-		/// Updates this node and all its enabled children.
+		/// <summary>Updates this node and all its enabled children.</summary>
 		void update(const unsigned long dt) const;
 
 		SceneNode& operator=(SceneNode&& node);

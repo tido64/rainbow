@@ -16,7 +16,7 @@ namespace rainbow { class SceneNode; }
 
 namespace heimdall
 {
-	/// Displays frames per second and VRAM used.
+	/// <summary>Displays frames per second and VRAM used.</summary>
 	class PerformanceOverlay : private NonCopyable<PerformanceOverlay>
 	{
 	public:

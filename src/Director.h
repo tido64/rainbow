@@ -16,8 +16,10 @@ class GameBase;
 
 namespace rainbow
 {
-	/// Simple game loop for Lua-scripted games. Must be created after having
-	/// set up an OpenGL context.
+	/// <summary>
+	///   Simple game loop for Lua-scripted games. Must be created after having
+	///   set up an OpenGL context.
+	/// </summary>
 	class Director : private NonCopyable<Director>
 	{
 	public:
@@ -34,20 +36,29 @@ namespace rainbow
 
 		void draw();
 
-		/// Loads and initialises main script.
+		/// <summary>Loads and initialises main script.</summary>
 		void init(const Vec2i &screen);
 
-		inline void terminate();
-		inline void terminate(const char *error);
+		void terminate()
+		{
+			active_ = false;
+			terminated_ = true;
+		}
 
-		/// Updates world.
-		/// \param dt  Milliseconds since last frame.
+		void terminate(const char *error)
+		{
+			terminate();
+			error_ = error;
+		}
+
+		/// <summary>Updates world.</summary>
+		/// <param name="dt">Milliseconds since last frame.</param>
 		void update(const unsigned long dt);
 
 		void on_focus_gained();
 		void on_focus_lost();
 
-		/// Called when a low memory warning has been issued.
+		/// <summary>Called when a low memory warning has been issued.</summary>
 		void on_memory_warning();
 
 	private:
@@ -61,18 +72,6 @@ namespace rainbow
 		Renderer renderer_;
 		ConFuoco::Mixer mixer_;
 	};
-
-	void Director::terminate()
-	{
-		active_ = false;
-		terminated_ = true;
-	}
-
-	void Director::terminate(const char *error)
-	{
-		terminate();
-		error_ = error;
-	}
 }
 
 #ifdef USE_HEIMDALL

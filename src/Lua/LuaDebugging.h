@@ -35,19 +35,21 @@ NS_RAINBOW_LUA_BEGIN
 		Line g_callstack[kLuaMaxStack] = { { 0, 0, nullptr } };
 	}
 
-	/// Dumps stack traceback to stdout.
+	/// <summary>Dumps stack traceback to stdout.</summary>
 	void backtrace(lua_State *L);
 
-	/// Dumps locals to stdout.
+	/// <summary>Dumps locals to stdout.</summary>
 	void dump_locals(lua_State *L, lua_Debug *ar);
 
-	/// Dumps stack to stdout.
+	/// <summary>Dumps stack to stdout.</summary>
 	void dump_stack(lua_State *L);
 
-	/// Passed to \c lua_sethook(). Not to be called directly.
+	/// <summary>
+	///   Passed to <see cref="lua_sethook"/>. Not to be called directly.
+	/// </summary>
 	void lua_Hook(lua_State *L, lua_Debug *ar);
 
-	/// Prints the value at index \p n.
+	/// <summary>Prints the value at index <paramref name="n"/>.</summary>
 	void print_value(lua_State *L, const int n);
 
 	void backtrace(lua_State *L)

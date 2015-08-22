@@ -32,7 +32,7 @@ namespace heimdall
 		template<typename T>
 		void add_child(T *component) const { node_->add_child(component); }
 
-		/// Binds all used textures.
+		/// <summary>Binds all used textures.</summary>
 		void bind_textures() const;
 
 	private:

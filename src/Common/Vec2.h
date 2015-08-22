@@ -9,7 +9,7 @@
 
 namespace rainbow
 {
-	/// Structure for storing a two-dimensional vector.
+	/// <summary>Structure for storing a two-dimensional vector.</summary>
 	template<typename T, typename Enable = void>
 	struct Vec2;
 
@@ -18,22 +18,34 @@ namespace rainbow
 	{
 		using value_type = T;
 
-		/// Vector representing down; shorthand for Vec2(0, -1).
+		/// <summary>
+		///   Vector representing down; shorthand for <c>Vec2(0, -1)</c>.
+		/// </summary>
 		static const Vec2 Down;
 
-		/// Vector representing left; shorthand for Vec2(-1, 0).
+		/// <summary>
+		///   Vector representing left; shorthand for <c>Vec2(-1, 0)</c>.
+		/// </summary>
 		static const Vec2 Left;
 
-		/// One vector; shorthand for Vec2(1, 1).
+		/// <summary>
+		///   One vector; shorthand for <c>Vec2(1, 1)</c>.
+		/// </summary>
 		static const Vec2 One;
 
-		/// Vector representing right; shorthand for Vec2(1, 0).
+		/// <summary>
+		///   Vector representing right; shorthand for <c>Vec2(1, 0)</c>.
+		/// </summary>
 		static const Vec2 Right;
 
-		/// Vector representing up; shorthand for Vec2(0, 1).
+		/// <summary>
+		///   Vector representing up; shorthand for <c>Vec2(0, 1)</c>.
+		/// </summary>
 		static const Vec2 Up;
 
-		/// Zero vector; shorthand for Vec2(0, 0).
+		/// <summary>
+		///   Zero vector; shorthand for <c>Vec2(0, 0)</c>.
+		/// </summary>
 		static const Vec2 Zero;
 
 		T x;
@@ -42,20 +54,22 @@ namespace rainbow
 		Vec2() : Vec2(0, 0) {}
 		Vec2(const T x, const T y) : x(x), y(y) {}
 
-		/// Returns the angle (in radians) between two points.
+		/// <summary>
+		///   Returns the angle (in radians) between two points.
+		/// </summary>
 		template<typename U>
 		float angle(const Vec2<U> &v) const
 		{
 			return atan2f(v.y - this->y, v.x - this->x);
 		}
 
-		/// Returns the distance between two points.
+		/// <summary>Returns the distance between two points.</summary>
 		float distance(const Vec2 &v) const
 		{
 			return sqrt(distance_sq(v));
 		}
 
-		/// Returns the distance between two points, squared.
+		/// <summary>Returns the distance between two points, squared.</summary>
 		float distance_sq(const Vec2 &v) const
 		{
 			const Vec2 w = *this - v;

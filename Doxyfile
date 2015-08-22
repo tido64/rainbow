@@ -18,7 +18,7 @@ EXCLUDE_PATTERNS       = */Resources/* */Tests/*
 IMAGE_PATH             =
 HTML_DYNAMIC_SECTIONS  = YES
 GENERATE_LATEX         = NO
-INCLUDE_PATH           = lib lib/FMOD/inc lib/FreeType/include lib/Lua lib/SDL/include lib/libpng
+INCLUDE_PATH           = src lib lib/FMOD/inc lib/FreeType/include lib/Lua lib/SDL/include lib/libpng
 PREDEFINED             = NDEBUG \
                          USE_LUA_SCRIPT=0 \
                          USE_PHYSICS \

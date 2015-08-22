@@ -1,4 +1,4 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -7,15 +7,17 @@
 
 #include "Common/Vec2.h"
 
-/// Stores texture id and UV coordinates.
-///
-/// 3 ┌─────┐ 2
-///   │     │
-///   │     │
-/// 0 └─────┘ 1
-///
-/// Textures are read into memory upside-down. Therefore, the order of the UV
-/// coordinates are flipped vertically, giving us 3,2,1 and 1,0,3.
+/// <summary>Stores texture id and UV coordinates.</summary>
+/// <remarks>
+///   <code>
+///     3 ┌─────┐ 2
+///       │     │
+///       │     │
+///     0 └─────┘ 1
+///   </code>
+///   Textures are read into memory upside-down. Therefore, the order of the UV
+///   coordinates are flipped vertically, giving us 3,2,1 and 1,0,3.
+/// </remarks>
 struct Texture
 {
 	Vec2f vx[4];

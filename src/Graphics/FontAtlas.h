@@ -1,4 +1,4 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -12,42 +12,47 @@
 
 class Data;
 
-/// Uses FreeType to load OpenType and TrueType fonts.
-///
-/// Creates textures from font glyphs for symbols 32 through 126. Copies bitmap
-/// data into a larger buffer which is then used as texture.
-///
-/// Features:
-/// - Anti-aliasing
-/// - Kerning
-///
-/// TODO: Optimise texture size by sorting glyphs.
-///
-/// \see http://iphone-3d-programming.labs.oreilly.com/ch07.html
-/// \see http://www.alfredrossi.com/?p=73
-/// \see http://musingsofninjarat.wordpress.com/opengl-freetype-texture-fonts/
-/// \see http://ftgl.sourceforge.net/docs/html/ftgl-tutorial.html
-/// \see Beginning OpenGL Game Programming 2nd Edition (2009)
+/// <summary>Uses FreeType to load OpenType and TrueType fonts.</summary>
+/// <remarks>
+///   <para>
+///     Creates textures from font glyphs for symbols 32 through 126. Copies
+///     bitmap data into a larger buffer which is then used as texture.
+///   </para>
+///   Features:
+///   <list type="bullet">
+///     <item>Anti-aliasing</item>
+///     <item>Kerning</item>
+///   </list>
+///   <para>TODO: Optimise texture size by sorting glyphs.</para>
+///   References
+///   <list type="bullet">
+///     <item>http://iphone-3d-programming.labs.oreilly.com/ch07.html</item>
+///     <item>http://www.alfredrossi.com/?p=73</item>
+///     <item>http://musingsofninjarat.wordpress.com/opengl-freetype-texture-fonts/</item>
+///     <item>http://ftgl.sourceforge.net/docs/html/ftgl-tutorial.html</item>
+///     <item>Beginning OpenGL Game Programming 2nd Edition (2009)</item>
+///   </list>
+/// </remarks>
 class FontAtlas : public RefCounted
 {
 public:
 	FontAtlas(const Data &font, const float pt);
 	~FontAtlas();
 
-	/// Returns the line height.
+	/// <summary>Returns the line height.</summary>
 	inline int height() const;
 
-	/// Returns whether this FontAtlas is valid.
+	/// <summary>Returns whether this FontAtlas is valid.</summary>
 	inline bool is_valid() const;
 
-	/// Sets this font as active texture.
+	/// <summary>Sets this font as active texture.</summary>
 	void bind() const;
 
-	/// Returns the glyph for a character.
+	/// <summary>Returns the glyph for character <paramref name="c"/>.</summary>
 	const FontGlyph* get_glyph(const unsigned int c) const;
 
 protected:
-	/// Load characters 32 through 126 from the ASCII table.
+	/// <summary>Load characters 32 through 126 from the ASCII table.</summary>
 	static const unsigned int kNumCharacters = 95;
 
 private:

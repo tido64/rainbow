@@ -17,16 +17,16 @@ namespace rainbow
 
 	class SceneNode;
 
-	/// Embeds Lua scripting engine.
+	/// <summary>Embeds Lua scripting engine.</summary>
 	class LuaMachine : private NonCopyable<LuaMachine>
 	{
 		friend LuaScript;
 
 	public:
-		/// Loads and initialises game script.
+		/// <summary>Loads and initialises game script.</summary>
 		int start(const Data &main);
 
-		/// Calls game update function.
+		/// <summary>Calls game update function.</summary>
 		int update(const unsigned long t);
 
 		operator lua_State*() const { return state_; }

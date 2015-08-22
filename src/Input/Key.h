@@ -13,10 +13,10 @@ using RawKeysym = struct SDL_Keysym;
 using RawKeysym = void;
 #endif
 
-/// Keyboard input.
+/// <summary>Structure representing a keystroke.</summary>
 struct Key
 {
-	/// Converts raw keysym to a rainbow::Key.
+	/// <summary>Converts raw keysym to a rainbow::Key.</summary>
 	static Key from_raw(const RawKeysym *keysym);
 
 	enum class Keys : unsigned

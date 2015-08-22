@@ -14,16 +14,20 @@ namespace rainbow
 {
 	namespace system_info
 	{
-		/// Returns whether the platform has an accelerometer.
+		/// <summary>
+		///   Returns whether the platform has an accelerometer.
+		/// </summary>
 		bool has_accelerometer();
 
-		/// Returns whether the platform has a touchscreen.
+		/// <summary>Returns whether the platform has a touchscreen.</summary>
 		bool has_touchscreen();
 
-		/// Returns a list of user-preferred locales.
+		/// <summary>Returns a list of user-preferred locales.</summary>
 		void locales(std::vector<std::unique_ptr<char[]>> &locales);
 
-		/// Returns total number of physical memory installed in megabytes.
+		/// <summary>
+		///   Returns total number of physical memory installed in megabytes.
+		/// </summary>
 		size_t memory();
 	}
 }

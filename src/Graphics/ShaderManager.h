@@ -1,4 +1,4 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -25,7 +25,9 @@ public:
 		kDefaultProgram
 	};
 
-	/// Saves the current shader context and restores it when exiting scope.
+	/// <summary>
+	///   Saves the current shader context and restores it when exiting scope.
+	/// </summary>
 	class Context
 	{
 	public:
@@ -36,26 +38,28 @@ public:
 		unsigned int program_;
 	};
 
-	/// Compiles program.
-	/// \param shaders     Shader parameters.
-	/// \param attributes  Shader attributes.
-	/// \return Unique program identifier; kInvalidProgram if unsuccessful.
+	/// <summary>Compiles program.</summary>
+	/// <param name="shaders">Shader parameters.</param>
+	/// <param name="attributes">Shader attributes.</param>
+	/// <returns>
+	///   Unique program identifier; <c>kInvalidProgram</c> if unsuccessful.
+	/// </returns>
 	unsigned int compile(Shader::Params *shaders,
 	                     const Shader::AttributeParams *attributes);
 
-	/// Returns current program details.
+	/// <summary>Returns current program details.</summary>
 	inline const Shader::Details& get_program() const;
 
-	/// Returns program details.
+	/// <summary>Returns program details.</summary>
 	inline Shader::Details& get_program(const unsigned int pid);
 
-	/// Updates orthographic projection.
+	/// <summary>Updates orthographic projection.</summary>
 	void update_projection();
 
-	/// Updates viewport.
+	/// <summary>Updates viewport.</summary>
 	void update_viewport();
 
-	/// Activates program.
+	/// <summary>Activates program.</summary>
 	void use(const unsigned int program);
 
 private:

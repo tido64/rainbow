@@ -11,7 +11,7 @@
 #include "Graphics/FontAtlas.h"
 #include "Graphics/VertexArray.h"
 
-/// Label for displaying text.
+/// <summary>Label for displaying text.</summary>
 class Label : private NonCopyable<Label>
 {
 public:
@@ -30,61 +30,65 @@ public:
 	Label();
 	virtual ~Label() = default;
 
-	/// Returns label text color.
+	/// <summary>Returns label text color.</summary>
 	Colorb color() const { return color_; }
 
-	/// Returns the vertex count.
+	/// <summary>Returns the vertex count.</summary>
 	size_t count() const { return std::min(count_ + (count_ >> 1), cutoff_); }
 
-	/// Returns the assigned font.
+	/// <summary>Returns the assigned font.</summary>
 	const FontAtlas& font() const { return *font_.get(); }
 
-	/// Returns the number of characters.
+	/// <summary>Returns the number of characters.</summary>
 	size_t length() const { return count_ / 4; }
 
-	/// Returns label position.
+	/// <summary>Returns label position.</summary>
 	const Vec2f& position() const { return position_; }
 
-	/// Returns the string.
+	/// <summary>Returns the string.</summary>
 	const char* text() const { return text_.get(); }
 
-	/// Returns the vertex array object.
+	/// <summary>Returns the vertex array object.</summary>
 	const VertexArray& vertex_array() const { return array_; }
 
-	/// Returns label width.
+	/// <summary>Returns label width.</summary>
 	unsigned int width() const { return width_; }
 
-	/// Sets text alignment.
+	/// <summary>Sets text alignment.</summary>
 	void set_alignment(const TextAlignment);
 
-	/// Sets text color.
+	/// <summary>Sets text color.</summary>
 	void set_color(const Colorb c);
 
-	/// Sets text font.
+	/// <summary>Sets text font.</summary>
 	void set_font(SharedPtr<FontAtlas>);
 
-	/// Sets label as needing update.
+	/// <summary>Sets label as needing update.</summary>
 	void set_needs_update(const unsigned int what) { stale_ |= what; }
 
-	/// Sets position of text.
+	/// <summary>Sets position of text.</summary>
 	void set_position(const Vec2f &);
 
-	/// Sets angle of rotation (in radian). Pivot depends on text alignment.
+	/// <summary>
+	///   Sets angle of rotation (in radian). Pivot depends on text alignment.
+	/// </summary>
 	void set_rotation(const float r);
 
-	/// Sets label scale. Value is clamped between 0.01 and 1.0.
+	/// <summary>
+	///   Sets label scale. Value is clamped between 0.01 and 1.0.
+	/// </summary>
 	void set_scale(const float f);
 
-	/// Sets text to display.
+	/// <summary>Sets text to display.</summary>
 	void set_text(const char *);
 
-	/// Binds all used textures.
+	/// <summary>Binds all used textures.</summary>
 	void bind_textures() const { font_->bind(); }
 
-	/// Moves label by (x,y).
+	/// <summary>Moves label by (x,y).</summary>
 	void move(const Vec2f &);
 
-	/// Populates the vertex array.
+	/// <summary>Populates the vertex array.</summary>
 	virtual void update();
 
 protected:
@@ -118,12 +122,12 @@ private:
 	VertexArray array_;          ///< Vertex array object.
 	SharedPtr<FontAtlas> font_;  ///< The font used in this label.
 
-	/// Saves line width and aligns the line if needed.
-	/// \param start            First character of line.
-	/// \param end              End character.
-	/// \param width            Width of line.
-	/// \param R                Rotation vector.
-	/// \param needs_alignment  Whether alignment is needed.
+	/// <summary>Saves line width and aligns the line if needed.</summary>
+	/// <param name="start">First character of line.</param>
+	/// <param name="end">End character.</param>
+	/// <param name="width">Width of line.</param>
+	/// <param name="R">Rotation vector.</param>
+	/// <param name="needs_alignment">Whether alignment is needed.</param>
 	void save(const unsigned int start,
 	          const unsigned int end,
 	          const float width,

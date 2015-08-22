@@ -35,59 +35,79 @@ public:
 
 	spSkeleton* skeleton() { return skeleton_; }
 
-	/// Returns the vertex array object.
+	/// <summary>Returns the vertex array object.</summary>
 	const VertexArray& vertex_array() const { return array_; }
 
-	/// Flips the rendering of the skeleton horizontally and/or vertically.
+	/// <summary>
+	///   Flips the rendering of the skeleton horizontally and/or vertically.
+	/// </summary>
 	void set_flip(const bool x, const bool y);
 
 	void set_listener(spAnimationStateListener listener, void *self);
 
-	/// Sets the drawing position of the skeleton in world coordinates.
+	/// <summary>
+	///   Sets the drawing position of the skeleton in world coordinates.
+	/// </summary>
 	void set_position(const Vec2f &position);
 
-	/// Sets time dilation factor.
+	/// <summary>Sets time dilation factor.</summary>
 	void set_time_scale(const float scale) { time_scale_ = scale; }
 
-	/// Queues an animation to be played after a delay. If \p delay is <= 0, the
-	/// duration of previous animation is used plus the negative delay.
+	/// <summary>
+	///   Queues an animation to be played after a delay. If
+	///   <paramref name="delay"/> is <= 0, the duration of previous animation
+	///   is used plus the negative delay.
+	/// </summary>
 	void add_animation(const int track,
 	                   const char *animation,
 	                   const bool loop,
 	                   const float delay);
 
-	/// Binds all used textures.
+	/// <summary>Binds all used textures.</summary>
 	void bind_textures() const;
 
-	/// Sets the current animation to null and clears all queued animations on
-	/// specified track.
+	/// <summary>
+	///   Sets the current animation to null and clears all queued animations on
+	///   specified track.
+	/// </summary>
 	void clear_track(const int track);
 
-	/// Sets the current animation to null and clears all queued animations.
+	/// <summary>
+	///   Sets the current animation to null and clears all queued animations.
+	/// </summary>
 	void clear_tracks();
 
-	/// Returns the name of the current animation on specified track.
+	/// <summary>
+	///   Returns the name of the current animation on specified track.
+	/// </summary>
 	const char* get_current_animation(const int track);
 
-	/// Returns the name of the current skin.
+	/// <summary>Returns the name of the current skin.</summary>
 	const char* get_skin();
 
-	/// Sets the current animation. Any queued animations are cleared.
+	/// <summary>
+	///   Sets the current animation. Any queued animations are cleared.
+	/// </summary>
 	void set_animation(const int track, const char *animation, const bool loop);
 
-	/// Sets crossfading duration for a pair of animations.
+	/// <summary>Sets crossfading duration for a pair of animations.</summary>
 	void set_animation_mix(const char *from,
 	                       const char *to,
 	                       const float duration);
 
-	/// Sets the attachment for the slot and attachment name. The skeleton looks
-	/// first in its skin, then in the skeleton data's default skin.
+	/// <summary>
+	///   Sets the attachment for the slot and attachment name. The skeleton
+	///   looks first in its skin, then in the skeleton data's default skin.
+	/// </summary>
 	void set_attachment(const char *slot, const char *attachment);
 
-	/// Sets the skin used to look up attachments not found in the SkeletonData
-	/// defaultSkin. Attachments from the new skin are attached if the
-	/// corresponding attachment from the old skin was attached.
-	/// \param skin  May be \c nullptr.
+	/// <summary>
+	///   Sets the skin used to look up attachments not found in the
+	///   <see cref="spSkeletonData"/> defaultSkin. Attachments from the new
+	///   skin are attached if the corresponding attachment from the old skin
+	///   was attached.
+	/// </summary>
+	/// <param name="skin">May be <c>nullptr</c>.</param>
 	void set_skin(const char *skin);
 
 	void draw();

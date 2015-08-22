@@ -11,7 +11,9 @@ namespace rainbow
 {
 	static_assert(sizeof(unsigned int) >= 4, "int is less than 32-bits");
 
-	/// Structure for storing a colour (RGBA) using unsigned bytes.
+	/// <summary>
+	///   Structure for storing a colour (RGBA) using unsigned bytes.
+	/// </summary>
 	struct Colorb
 	{
 		unsigned char r, g, b, a;
@@ -48,7 +50,7 @@ namespace rainbow
 		}
 	};
 
-	/// Structure for storing a colour (RGBA) using floats.
+	/// <summary>Structure for storing a colour (RGBA) using floats.</summary>
 	struct Colorf
 	{
 		float r, g, b, a;

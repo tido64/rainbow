@@ -1,4 +1,4 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -9,9 +9,8 @@
 
 #include "Common/NonCopyable.h"
 
-/// Simple class for keeping time.
-///
-/// Resolution of time is in milliseconds.
+/// <summary>Simple class for keeping time.</summary>
+/// <remarks>Resolution of time is in milliseconds.</remarks>
 class Chrono : private NonCopyable<Chrono>
 {
 public:
@@ -24,10 +23,12 @@ public:
 
 	Chrono();
 
-	/// Returns the time difference between current and previous frame.
-	inline duration::rep delta() const;
+	/// <summary>
+	///   Returns the time difference between current and previous frame.
+	/// </summary>
+	duration::rep delta() const { return delta_.count(); }
 
-	/// Updates the clock.
+	/// <summary>Updates the clock.</summary>
 	void update();
 
 protected:
@@ -35,10 +36,5 @@ protected:
 	clock::duration current_;
 	clock::duration previous_;
 };
-
-Chrono::duration::rep Chrono::delta() const
-{
-	return delta_.count();
-}
 
 #endif

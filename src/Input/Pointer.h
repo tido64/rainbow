@@ -5,7 +5,7 @@
 #ifndef INPUT_POINTER_H_
 #define INPUT_POINTER_H_
 
-/// A pointer event.
+/// <summary>A pointer event.</summary>
 struct Pointer
 {
 	unsigned int hash;        ///< Unique hash value for each pointer.
