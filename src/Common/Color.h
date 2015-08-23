@@ -38,6 +38,14 @@ namespace rainbow
 			this->a = 0xff & c;
 			return *this;
 		}
+
+		bool operator==(const Colorb &color) const
+		{
+			return this->r == color.r &&
+			       this->g == color.g &&
+			       this->b == color.b &&
+			       this->a == color.a;
+		}
 	};
 
 	/// Structure for storing a colour (RGBA) using floats.
