@@ -59,6 +59,12 @@ SpriteBatch::SpriteBatch(const unsigned int hint) : count_(0), reserved_(0)
 	array_.reconfigure(std::bind(&SpriteBatch::bind_arrays, this));
 }
 
+SpriteBatch::SpriteBatch(const rainbow::ISolemnlySwearThatIAmOnlyTesting &test)
+     : count_(0), vertex_buffer_(test), normal_buffer_(test), reserved_(0)
+{
+	resize(4);
+}
+
 SpriteBatch::SpriteBatch(SpriteBatch&& batch)
     : sprites_(std::move(batch.sprites_)),
       vertices_(std::move(batch.vertices_)),
@@ -138,7 +144,8 @@ Sprite::Ref SpriteBatch::create_sprite(const unsigned int width,
 
 void SpriteBatch::erase(const Sprite::Ref &s)
 {
-	bring_to_front(s);
+	if (s.i_ + 1 < count_)
+		bring_to_front(s);
 	sprites_[--count_].~Sprite();
 }
 
@@ -225,6 +232,10 @@ void SpriteBatch::resize(const unsigned int size)
 
 void SpriteBatch::rotate(size_t first, size_t n_first, size_t last)
 {
+	R_ASSERT(first < count_, "Index out of bounds");
+	R_ASSERT(n_first < count_, "Index out of bounds");
+	R_ASSERT(last <= count_, "Index out of bounds");
+
 	std::rotate(sprites_ + first, sprites_ + n_first, sprites_ + last);
 	std::for_each(sprites_ + first,
 	              sprites_ + last,

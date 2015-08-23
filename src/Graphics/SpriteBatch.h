@@ -11,6 +11,8 @@
 #include "Graphics/VertexArray.h"
 #include "Memory/Arena.h"
 
+namespace rainbow { struct ISolemnlySwearThatIAmOnlyTesting; }
+
 /// A drawable batch of sprites.
 ///
 /// All sprites share a common vertex buffer object (at different offsets) and
@@ -23,6 +25,7 @@ public:
 	/// \param hint  If you know in advance how many sprites you'll need, set
 	///              \p hint for more efficient storage.
 	SpriteBatch(const unsigned int hint = 4);
+	SpriteBatch(const rainbow::ISolemnlySwearThatIAmOnlyTesting &);
 	SpriteBatch(SpriteBatch&&);
 	~SpriteBatch();
 
@@ -48,6 +51,10 @@ public:
 
 	/// Returns the vertex array object.
 	const VertexArray& vertex_array() const { return array_; }
+
+#ifdef RAINBOW_TEST
+	const SpriteVertex* vertices() const { return vertices_.get(); }
+#endif
 
 	/// Assigns a normal map.
 	void set_normal(SharedPtr<TextureAtlas> texture);

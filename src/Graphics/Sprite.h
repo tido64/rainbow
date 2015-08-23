@@ -1,4 +1,4 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -74,6 +74,10 @@ public:
 	const Vec2f& position() const { return position_; }
 	const Vec2f& scale() const { return scale_; }
 	unsigned int width() const { return width_; }
+
+#ifdef RAINBOW_TEST
+	const SpriteVertex* vertex_array() const { return vertex_array_; }
+#endif
 
 	/// Sets sprite colour.
 	void set_color(const Colorb c);
