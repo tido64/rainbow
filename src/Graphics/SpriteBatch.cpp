@@ -162,19 +162,33 @@ void SpriteBatch::move(const Vec2f &delta)
 	});
 }
 
-void SpriteBatch::swap(const Sprite::Ref &a, const Sprite::Ref &b)
+void SpriteBatch::swap(const Sprite::Ref &a_ref, const Sprite::Ref &b_ref)
 {
-	if (a == b)
+	if (a_ref == b_ref)
 		return;
 
-	std::swap(*a, *b);
+	// Swap the offsets first as refs are invalidated after.
+	const size_t offset_a = b_ref.i_ * 4;
+	const size_t offset_b = a_ref.i_ * 4;
 
-	const size_t ia = a.i_ * 4;
-	const size_t ib = b.i_ * 4;
+	Sprite &a = *a_ref;
+	Sprite &b = *b_ref;
+	std::swap(a, b);
 
-	std::swap_ranges(vertices_ + ia, vertices_ + ia + 4, vertices_ + ib);
+	auto buf_a = vertices_ + offset_a;
+	auto buf_b = vertices_ + offset_b;
+	a.set_vertex_array(buf_b);
+	b.set_vertex_array(buf_a);
+	std::swap_ranges(buf_a, buf_a + 4, buf_b);
+
 	if (normals_)
-		std::swap_ranges(normals_ + ia, normals_ + ia + 4, normals_ + ib);
+	{
+		auto buf_a = normals_ + offset_a;
+		auto buf_b = normals_ + offset_b;
+		a.set_normal_buffer(buf_b);
+		b.set_normal_buffer(buf_a);
+		std::swap_ranges(buf_a, buf_a + 4, buf_b);
+	}
 }
 
 void SpriteBatch::update()
@@ -212,6 +226,15 @@ void SpriteBatch::resize(const unsigned int size)
 void SpriteBatch::rotate(size_t first, size_t n_first, size_t last)
 {
 	std::rotate(sprites_ + first, sprites_ + n_first, sprites_ + last);
+	std::for_each(sprites_ + first,
+	              sprites_ + last,
+	              SetBuffer<SpriteVertex>(vertices_ + first * 4));
+	if (normals_)
+	{
+		std::for_each(sprites_ + first,
+		              sprites_ + last,
+		              SetBuffer<Vec2f>(normals_ + first * 4));
+	}
 
 	first *= 4;
 	n_first *= 4;
