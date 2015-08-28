@@ -21,12 +21,12 @@ namespace
 
 Buffer::Buffer() : id_(glGenBuffer()) {}
 
+Buffer::Buffer(const rainbow::ISolemnlySwearThatIAmOnlyTesting &) : id_(0) {}
+
 Buffer::Buffer(Buffer&& buffer) : id_(buffer.id_)
 {
 	buffer.id_ = 0;
 }
-
-Buffer::Buffer(const rainbow::ISolemnlySwearThatIAmOnlyTesting &) : id_(0) {}
 
 Buffer::~Buffer()
 {

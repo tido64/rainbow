@@ -13,7 +13,7 @@ namespace rainbow
 
 TEST_CASE("Sprites are placed at (0,0) on creation", "[sprite]")
 {
-	SpriteBatch batch((rainbow::ISolemnlySwearThatIAmOnlyTesting()));
+	SpriteBatch batch(rainbow::ISolemnlySwearThatIAmOnlyTesting{});
 	auto sprite = batch.create_sprite(2, 2);
 
 	REQUIRE(sprite->position() == Vec2f::Zero);
@@ -29,7 +29,7 @@ TEST_CASE("Sprites are placed at (0,0) on creation", "[sprite]")
 
 TEST_CASE("Sprites can be colored", "[sprite]")
 {
-	SpriteBatch batch((rainbow::ISolemnlySwearThatIAmOnlyTesting()));
+	SpriteBatch batch(rainbow::ISolemnlySwearThatIAmOnlyTesting{});
 	auto sprite = batch.create_sprite(2, 2);
 
 	const Colorb color(0xec, 0xef, 0xf1);
@@ -44,7 +44,7 @@ TEST_CASE("Sprites can be colored", "[sprite]")
 
 TEST_CASE("Sprites can be tagged", "[sprite]")
 {
-	SpriteBatch batch((rainbow::ISolemnlySwearThatIAmOnlyTesting()));
+	SpriteBatch batch(rainbow::ISolemnlySwearThatIAmOnlyTesting{});
 	auto sprite = batch.create_sprite(2, 2);
 
 	REQUIRE(sprite->id() == Sprite::kNoId);
@@ -58,7 +58,7 @@ TEST_CASE(
     "Changing a sprite's pivot point does not change its perceived position",
     "[sprite]")
 {
-	SpriteBatch batch((rainbow::ISolemnlySwearThatIAmOnlyTesting()));
+	SpriteBatch batch(rainbow::ISolemnlySwearThatIAmOnlyTesting{});
 	auto sprite = batch.create_sprite(2, 2);
 
 	REQUIRE(sprite->pivot() == Vec2f(0.5f, 0.5f));
@@ -87,7 +87,7 @@ TEST_CASE(
 
 TEST_CASE("Sprites can be translated", "[sprite]")
 {
-	SpriteBatch batch((rainbow::ISolemnlySwearThatIAmOnlyTesting()));
+	SpriteBatch batch(rainbow::ISolemnlySwearThatIAmOnlyTesting{});
 	auto sprite = batch.create_sprite(2, 2);
 
 	sprite->set_position(Vec2f::One);
@@ -108,7 +108,7 @@ TEST_CASE("Sprites can be translated", "[sprite]")
 
 TEST_CASE("Sprites can be rotated", "[sprite]")
 {
-	SpriteBatch batch((rainbow::ISolemnlySwearThatIAmOnlyTesting()));
+	SpriteBatch batch(rainbow::ISolemnlySwearThatIAmOnlyTesting{});
 	auto sprite = batch.create_sprite(4, 2);
 
 	REQUIRE(sprite->angle() == 0.0f);
@@ -149,7 +149,7 @@ TEST_CASE("Sprites can be rotated", "[sprite]")
 
 TEST_CASE("Sprites can be scaled", "[sprite]")
 {
-	SpriteBatch batch((rainbow::ISolemnlySwearThatIAmOnlyTesting()));
+	SpriteBatch batch(rainbow::ISolemnlySwearThatIAmOnlyTesting{});
 	auto sprite = batch.create_sprite(2, 2);
 
 	REQUIRE(sprite->scale() == Vec2f::One);
@@ -189,21 +189,157 @@ TEST_CASE("Sprites can be scaled", "[sprite]")
 	REQUIRE(vertex_array[3].position == Vec2f(-1, 2));
 }
 
-TEST_CASE("TODO: Sprites can be flipped vertically", "[sprite]")
+TEST_CASE("Sprites can be flipped/mirrored", "[sprite]")
 {
-	SpriteBatch batch((rainbow::ISolemnlySwearThatIAmOnlyTesting()));
+	SpriteBatch batch(rainbow::ISolemnlySwearThatIAmOnlyTesting{});
 	auto sprite = batch.create_sprite(2, 2);
 
+	// Force set UV coordinates.
+	{
+		auto vertex_array = const_cast<SpriteVertex*>(sprite->vertex_array());
+		for (int i = 0; i < 4; ++i)
+			vertex_array[i].texcoord = Vec2f(i, i);
+	}
+	sprite->update();
+
+	auto vertex_array = sprite->vertex_array();
+	const Vec2f p[]{vertex_array[0].position,
+	                vertex_array[1].position,
+	                vertex_array[2].position,
+	                vertex_array[3].position};
+
+	SECTION("Sprites aren't flipped/mirrored initially")
+	{
+		// Do nothing.
+	}
+
+	SECTION("Sprites can be flipped vertically")
+	{
+		sprite->flip();
+
+		REQUIRE(sprite->is_flipped());
+		REQUIRE_FALSE(sprite->is_mirrored());
+		for (int i = 0; i < 4; ++i)
+			REQUIRE(vertex_array[i].position == p[i]);
+		REQUIRE(vertex_array[0].texcoord.x == 3);
+		REQUIRE(vertex_array[1].texcoord.x == 2);
+		REQUIRE(vertex_array[2].texcoord.x == 1);
+		REQUIRE(vertex_array[3].texcoord.x == 0);
+
+		sprite->flip();
+	}
+
+	SECTION("Sprites can be mirrored")
+	{
+		sprite->mirror();
+
+		REQUIRE_FALSE(sprite->is_flipped());
+		REQUIRE(sprite->is_mirrored());
+		for (int i = 0; i < 4; ++i)
+			REQUIRE(vertex_array[i].position == p[i]);
+		REQUIRE(vertex_array[0].texcoord.x == 1);
+		REQUIRE(vertex_array[1].texcoord.x == 0);
+		REQUIRE(vertex_array[2].texcoord.x == 3);
+		REQUIRE(vertex_array[3].texcoord.x == 2);
+
+		sprite->mirror();
+	}
+
+	SECTION("Sprites can be flipped and mirrored")
+	{
+		sprite->flip();
+		sprite->mirror();
+
+		REQUIRE(sprite->is_flipped());
+		REQUIRE(sprite->is_mirrored());
+		for (int i = 0; i < 4; ++i)
+			REQUIRE(vertex_array[i].position == p[i]);
+		REQUIRE(vertex_array[0].texcoord.x == 2);
+		REQUIRE(vertex_array[1].texcoord.x == 3);
+		REQUIRE(vertex_array[2].texcoord.x == 0);
+		REQUIRE(vertex_array[3].texcoord.x == 1);
+
+		sprite->flip();
+
+		REQUIRE_FALSE(sprite->is_flipped());
+		REQUIRE(sprite->is_mirrored());
+		for (int i = 0; i < 4; ++i)
+			REQUIRE(vertex_array[i].position == p[i]);
+		REQUIRE(vertex_array[0].texcoord.x == 1);
+		REQUIRE(vertex_array[1].texcoord.x == 0);
+		REQUIRE(vertex_array[2].texcoord.x == 3);
+		REQUIRE(vertex_array[3].texcoord.x == 2);
+
+		sprite->flip();
+
+		REQUIRE(sprite->is_flipped());
+		REQUIRE(sprite->is_mirrored());
+		for (int i = 0; i < 4; ++i)
+			REQUIRE(vertex_array[i].position == p[i]);
+		REQUIRE(vertex_array[0].texcoord.x == 2);
+		REQUIRE(vertex_array[1].texcoord.x == 3);
+		REQUIRE(vertex_array[2].texcoord.x == 0);
+		REQUIRE(vertex_array[3].texcoord.x == 1);
+
+		sprite->mirror();
+
+		REQUIRE(sprite->is_flipped());
+		REQUIRE_FALSE(sprite->is_mirrored());
+		for (int i = 0; i < 4; ++i)
+			REQUIRE(vertex_array[i].position == p[i]);
+		REQUIRE(vertex_array[0].texcoord.x == 3);
+		REQUIRE(vertex_array[1].texcoord.x == 2);
+		REQUIRE(vertex_array[2].texcoord.x == 1);
+		REQUIRE(vertex_array[3].texcoord.x == 0);
+
+		sprite->flip();
+
+		REQUIRE_FALSE(sprite->is_flipped());
+		REQUIRE_FALSE(sprite->is_mirrored());
+		for (int i = 0; i < 4; ++i)
+		{
+			REQUIRE(vertex_array[i].position == p[i]);
+			REQUIRE(vertex_array[i].texcoord.x == i);
+		}
+
+		sprite->mirror();
+		sprite->flip();
+
+		REQUIRE(sprite->is_flipped());
+		REQUIRE(sprite->is_mirrored());
+		for (int i = 0; i < 4; ++i)
+			REQUIRE(vertex_array[i].position == p[i]);
+		REQUIRE(vertex_array[0].texcoord.x == 2);
+		REQUIRE(vertex_array[1].texcoord.x == 3);
+		REQUIRE(vertex_array[2].texcoord.x == 0);
+		REQUIRE(vertex_array[3].texcoord.x == 1);
+
+		sprite->mirror();
+
+		REQUIRE(sprite->is_flipped());
+		REQUIRE_FALSE(sprite->is_mirrored());
+		for (int i = 0; i < 4; ++i)
+			REQUIRE(vertex_array[i].position == p[i]);
+		REQUIRE(vertex_array[0].texcoord.x == 3);
+		REQUIRE(vertex_array[1].texcoord.x == 2);
+		REQUIRE(vertex_array[2].texcoord.x == 1);
+		REQUIRE(vertex_array[3].texcoord.x == 0);
+
+		sprite->flip();
+	}
+
 	REQUIRE_FALSE(sprite->is_flipped());
-	sprite->flip();
-	REQUIRE(sprite->is_flipped());
-	sprite->flip();
-	REQUIRE_FALSE(sprite->is_flipped());
+	REQUIRE_FALSE(sprite->is_mirrored());
+	for (int i = 0; i < 4; ++i)
+	{
+		REQUIRE(vertex_array[i].position == p[i]);
+		REQUIRE(vertex_array[i].texcoord.x == i);
+	}
 }
 
 TEST_CASE("Sprites can be hidden", "[sprite]")
 {
-	SpriteBatch batch((rainbow::ISolemnlySwearThatIAmOnlyTesting()));
+	SpriteBatch batch(rainbow::ISolemnlySwearThatIAmOnlyTesting{});
 	auto sprite = batch.create_sprite(2, 2);
 
 	SECTION("Multiple calls to hide/show are effectively noops")
@@ -262,16 +398,4 @@ TEST_CASE("Sprites can be hidden", "[sprite]")
 		REQUIRE(vertex_array[2].position == Vec2f(2, 2));
 		REQUIRE(vertex_array[3].position == Vec2f(0, 2));
 	}
-}
-
-TEST_CASE("TODO: Sprites can be mirrored", "[sprite]")
-{
-	SpriteBatch batch((rainbow::ISolemnlySwearThatIAmOnlyTesting()));
-	auto sprite = batch.create_sprite(2, 2);
-
-	REQUIRE_FALSE(sprite->is_mirrored());
-	sprite->mirror();
-	REQUIRE(sprite->is_mirrored());
-	sprite->mirror();
-	REQUIRE_FALSE(sprite->is_mirrored());
 }

@@ -13,8 +13,8 @@ class Buffer
 {
 public:
 	Buffer();
+	explicit Buffer(const rainbow::ISolemnlySwearThatIAmOnlyTesting &);
 	Buffer(Buffer&&);
-	Buffer(const rainbow::ISolemnlySwearThatIAmOnlyTesting &);
 	~Buffer();
 
 	/// <summary>

@@ -62,7 +62,7 @@ namespace
 
 TEST_CASE("Sprites can be manipulated in batches", "[spritebatch]")
 {
-	SpriteBatch batch((rainbow::ISolemnlySwearThatIAmOnlyTesting()));
+	SpriteBatch batch(rainbow::ISolemnlySwearThatIAmOnlyTesting{});
 	Sprite::Ref refs[]{
 	    batch.create_sprite(1, 1),
 	    batch.create_sprite(2, 1),

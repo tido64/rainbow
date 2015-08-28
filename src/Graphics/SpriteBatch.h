@@ -28,7 +28,7 @@ public:
 	///   <paramref name="hint"/> for more efficient storage.
 	/// </param>
 	SpriteBatch(const unsigned int hint = 4);
-	SpriteBatch(const rainbow::ISolemnlySwearThatIAmOnlyTesting &);
+	explicit SpriteBatch(const rainbow::ISolemnlySwearThatIAmOnlyTesting &);
 	SpriteBatch(SpriteBatch&&);
 	~SpriteBatch();
 
