@@ -58,7 +58,7 @@ void LyricalLabel::clear_attributes(const Attribute::Type type)
 			if (begin == attributes_.end())
 				break;
 			undo_from(begin);
-			attributes_.erase(begin, attributes_.cend());
+			attributes_.erase(begin, attributes_.end());
 			break;
 		}
 	}

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+ * Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
  * Distributed under the MIT License.
  * (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
  */
@@ -15,35 +15,15 @@ import android.view.View;
 import org.fmod.FMOD;
 
 public class RainbowActivity extends NativeActivity
-                             implements View.OnSystemUiVisibilityChangeListener {
+                          implements View.OnSystemUiVisibilityChangeListener {
+
     static {
         System.loadLibrary("fmod");
         System.loadLibrary("fmodstudio");
         System.loadLibrary("gnustl_shared");
     }
 
-    /* NativeActivity */
-
-    @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
-        super.onWindowFocusChanged(hasFocus);
-        if (!hasFocus)
-            return;
-        if (!kSupportsImmersiveFullScreenMode) {
-            if (kSupportsLowProfileSystemUI) {
-                mDimmerHandler.removeCallbacks(mDimmerRunnable);
-                dimSystemUI();
-            }
-            return;
-        }
-        contentView().setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
-    }
+    // region NativeActivity overrides
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,17 +41,42 @@ public class RainbowActivity extends NativeActivity
     }
 
     @Override
-    protected void onDestroy()
-    {
+    protected void onDestroy() {
         FMOD.close();
         super.onDestroy();
     }
 
-    /* View.OnSystemUiVisibilityChangeListener */
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if (!hasFocus) {
+            return;
+        }
+        if (!kSupportsImmersiveFullScreenMode) {
+            if (kSupportsLowProfileSystemUI) {
+                mDimmerHandler.removeCallbacks(mDimmerRunnable);
+                dimSystemUI();
+            }
+            return;
+        }
+        contentView().setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_HIDE_NAVIGATION |
+                View.SYSTEM_UI_FLAG_FULLSCREEN |
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
+                View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION |
+                View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
+                View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+    }
+
+    // endregion
+    // region View.OnSystemUiVisibilityChangeListener implementation
 
     @Override
     public void onSystemUiVisibilityChange(int visibility) {
-        assert kShouldDimSystemUI;
+        if (BuildConfig.DEBUG && !kShouldDimSystemUI) {
+            throw new RuntimeException(
+                    "Not supposed to enter low profile mode.");
+        }
         if ((visibility & View.SYSTEM_UI_FLAG_LOW_PROFILE) != 0) {
             return;
         }
@@ -79,7 +84,8 @@ public class RainbowActivity extends NativeActivity
         mDimmerHandler.postDelayed(mDimmerRunnable, kDimmerDelay);
     }
 
-    /* Private */
+    // endregion
+    // region Private
 
     private static final boolean kSupportsImmersiveFullScreenMode =
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
@@ -97,7 +103,12 @@ public class RainbowActivity extends NativeActivity
     }
 
     private void dimSystemUI() {
-        assert kShouldDimSystemUI;
+        if (BuildConfig.DEBUG && !kShouldDimSystemUI) {
+            throw new RuntimeException(
+                    "Not supposed to enter low profile mode.");
+        }
         contentView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
     }
+
+    // endregion
 }

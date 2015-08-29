@@ -174,5 +174,5 @@ cat > AndroidManifest.xml << ANDROIDMANIFEST_XML
 ANDROIDMANIFEST_XML
 echo " done"
 
-NDK_DEBUG=${NDK_DEBUG:-1} NDK_TOOLCHAIN_VERSION=${NDK_TOOLCHAIN_VERSION:-clang} ndk-build -j &&
+NDK_DEBUG=${NDK_DEBUG:-1} ndk-build -j &&
 ant debug
