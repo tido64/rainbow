@@ -21,7 +21,7 @@
 #	define glDeleteVertexArrays  glDeleteVertexArraysAPPLE
 #	define glGenVertexArrays     glGenVertexArraysAPPLE
 #elif defined(RAINBOW_OS_WINDOWS)
-#	include <windows.h>
+#	include <Windows.h>
 #	define GLEW_NO_GLU
 #	define GLEW_STATIC
 #	include <GL/glew.h>

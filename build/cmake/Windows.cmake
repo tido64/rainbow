@@ -1,7 +1,47 @@
 if(WIN32)
 	set(CMAKE_FIND_LIBRARY_SUFFIXES ".a" ".lib" ".dll.a" ".dll")
 	list(APPEND RAINBOW_H ${PROJECT_SOURCE_DIR}/build/windows/Rainbow.rc)
-	add_definitions(-D_CRT_SECURE_NO_WARNINGS -D_SCL_SECURE_NO_WARNINGS -DNOMINMAX -DVC_EXTRALEAN)
+	add_definitions(
+	    -D_CRT_SECURE_NO_WARNINGS=1
+	    -D_SCL_SECURE_NO_WARNINGS=1
+	    -DNOATOM=1             # Atom Manager routines
+	    -DNOCLIPBOARD=1        # Clipboard routines
+	    -DNOCOLOR=1            # Screen colors
+	    -DNOCOMM=1             # COMM driver routines
+	    -DNOCTLMGR=1           # Control and Dialog routines
+	    -DNODEFERWINDOWPOS=1   # DeferWindowPos routines
+	    -DNODRAWTEXT=1         # DrawText() and DT_*
+	    -DNOGDICAPMASKS=1      # CC_*, LC_*, PC_*, CP_*, TC_*, RC_
+	    -DNOHELP=1             # Help engine interface.
+	    -DNOICONS=1            # IDI_*
+	    -DNOKANJI=1            # Kanji support stuff.
+	    -DNOKERNEL=1           # All KERNEL defines and routines
+	    -DNOKEYSTATES=1        # MK_*
+	    -DNOMB=1               # MB_* and MessageBox()
+	    -DNOMCX=1              # Modem Configuration Extensions
+	    -DNOMEMMGR=1           # GMEM_*, LMEM_*, GHND, LHND, associated routines
+	    -DNOMENUS=1            # MF_*
+	    -DNOMETAFILE=1         # typedef METAFILEPICT
+	    -DNOMINMAX=1           # Macros min(a,b) and max(a,b)
+	    -DNOMSG=1              # typedef MSG and associated routines
+	    -DNOOPENFILE=1         # OpenFile(), OemToAnsi, AnsiToOem, and OF_*
+	    -DNOPROFILER=1         # Profiler interface.
+	    -DNORASTEROPS=1        # Binary and Tertiary raster ops
+	    -DNOSCROLL=1           # SB_* and scrolling routines
+	    -DNOSERVICE=1          # All Service Controller routines, SERVICE_ equates, etc.
+	    -DNOSHOWWINDOW=1       # SW_*
+	    -DNOSOUND=1            # Sound driver routines
+	    -DNOSYSCOMMANDS=1      # SC_*
+	    -DNOSYSMETRICS=1       # SM_*
+	    -DNOTEXTMETRIC=1       # typedef TEXTMETRIC and associated routines
+	    -DNOUSER=1             # All USER defines and routines
+	    -DNOVIRTUALKEYCODES=1  # VK_*
+	    -DNOWH=1               # SetWindowsHook and WH_*
+	    -DNOWINMESSAGES=1      # WM_*, EM_*, LB_*, CB_*
+	    -DNOWINOFFSETS=1       # GWL_*, GCL_*, associated routines
+	    -DNOWINSTYLES=1        # WS_*, CS_*, ES_*, LBS_*, SBS_*, CBS_*
+	    -DVC_EXTRALEAN=1
+	    -DWIN32_LEAN_AND_MEAN=1)
 	if(MSVC)
 		# Warning C4065: switch statement contains 'default' but no 'case' labels
 		# Warning C4244: 'argument': conversion from 'type1' to 'type2', possible loss of data
@@ -25,10 +65,11 @@ if(WIN32)
 		set(CMAKE_EXE_LINKER_FLAGS_DEBUG "${CMAKE_EXE_LINKER_FLAGS_DEBUG} /INCREMENTAL:NO /NODEFAULTLIB:libcmt.lib")
 		set(CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO "${CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO} /INCREMENTAL:NO /NODEFAULTLIB:libcmt.lib")
 	else()
-		add_definitions(-D__MSVCRT__
-		                -D__MSVCRT_VERSION__=0x800
-		                -D_WIN32_WINNT=0x0600
-		                -DNTDDI_VERSION=0x06000000
-		                -DWINVER=0x0600)
+		add_definitions(
+		    -D__MSVCRT__
+		    -D__MSVCRT_VERSION__=0x800
+		    -D_WIN32_WINNT=0x0600
+		    -DNTDDI_VERSION=0x06000000
+		    -DWINVER=0x0600)
 	endif()
 endif()
