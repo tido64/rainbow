@@ -134,7 +134,7 @@ namespace ConFuoco
 
 	void MixerAL::set_pitch_impl(const float pitch)
 	{
-		alListenerf(AL_PITCH, (pitch < 0.01f) ? 0.01f : pitch);
+		alListenerf(AL_PITCH, (pitch < 0.01f ? 0.01f : pitch));
 	}
 
 	void MixerAL::clear_impl()
@@ -345,7 +345,8 @@ Wave::Wave(const char *const file)
 	char *data;
 	const size_t size = audio_file->read(&data);
 	alBufferData(this->bid,
-	             (audio_file->channels() == 1) ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16,
+	             (audio_file->channels() == 1 ? AL_FORMAT_MONO16
+	                                          : AL_FORMAT_STEREO16),
 	             data,
 	             size,
 	             audio_file->rate());
@@ -369,10 +370,9 @@ Stream::Stream(const char *const file, const int loops)
 		LOGE("ConFuoco/AL: Failed to generate buffers");
 
 	this->audio_file.reset(
-			ConFuoco::AudioFile::Open(file, ConFuoco::AudioFile::kAudioFileStream));
-	this->format = (this->audio_file->channels() == 1)
-	             ? AL_FORMAT_MONO16
-	             : AL_FORMAT_STEREO16;
+	    ConFuoco::AudioFile::Open(file, ConFuoco::AudioFile::kAudioFileStream));
+	this->format = (this->audio_file->channels() == 1 ? AL_FORMAT_MONO16
+	                                                  : AL_FORMAT_STEREO16);
 	this->rate = this->audio_file->rate();
 
 	this->preload();

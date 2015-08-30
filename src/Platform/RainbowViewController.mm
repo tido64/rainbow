@@ -39,11 +39,13 @@ namespace
 @property(readonly, nonatomic) CMMotionManager *motionManager;
 @end
 
-@implementation RainbowViewController {
+@implementation RainbowViewController
+{
 	Pointer _pointers[kMaxTouches];
 }
 
-+ (void)load {
++ (void)load
+{
 	static dispatch_once_t dispatchOnce;
 	dispatch_once(&dispatchOnce, ^{
 		if (![UIScreen instancesRespondToSelector:@selector(coordinateSpace)])
@@ -63,12 +65,12 @@ namespace
 		self.preferredFramesPerSecond = 60;
 		rainbow::Config config;
 		_supportedInterfaceOrientations =
-		    (config.is_portrait()) ? UIInterfaceOrientationMaskPortrait
-		                           : UIInterfaceOrientationMaskLandscape;
+		    (config.is_portrait() ? UIInterfaceOrientationMaskPortrait
+		                          : UIInterfaceOrientationMaskLandscape);
 		if (config.needs_accelerometer())
 		{
 			_motionManager = [[CMMotionManager alloc] init];
-			self.motionManager.accelerometerUpdateInterval =
+			_motionManager.accelerometerUpdateInterval =
 			    kAccelerometerUpdateInterval;
 		}
 	}

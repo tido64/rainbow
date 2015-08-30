@@ -81,7 +81,7 @@ namespace
 		static_cast<void>(argv);
 		return !Path("main.lua").is_file();
 #else
-		const bool run = argc < 2 ? false : strcmp(argv[1], "--test") == 0;
+		const bool run = (argc < 2 ? false : strcmp(argv[1], "--test") == 0);
 		if (run)
 		{
 			--argc;
@@ -93,9 +93,9 @@ namespace
 
 	Vec2i window_size(const rainbow::Config &config)
 	{
-		return (!config.width() || !config.height())
-		    ? Vec2i(1280, 720)
-		    : Vec2i(config.width(), config.height());
+		return (!config.width() || !config.height()
+		            ? Vec2i(1280, 720)
+		            : Vec2i(config.width(), config.height()));
 	}
 
 	class SDLContext
@@ -177,8 +177,8 @@ SDLContext::SDLContext(const rainbow::Config &config)
 		SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, config.msaa());
 	}
 
-	const uint32_t allow_high_dpi = config.high_dpi() ? SDL_WINDOW_ALLOW_HIGHDPI
-	                                                  : 0;
+	const uint32_t allow_high_dpi =
+	    (config.high_dpi() ? SDL_WINDOW_ALLOW_HIGHDPI : 0);
 	window_ = SDL_CreateWindow(
 	    RAINBOW_BUILD, position_.x, position_.y, size_.x, size_.y,
 	    SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | allow_high_dpi);
@@ -211,7 +211,7 @@ SDLContext::SDLContext(const rainbow::Config &config)
 		LOGI("SDL: Anti-aliasing: %ix MSAA", msaa);
 	else
 		LOGI("SDL: Anti-aliasing: Off");
-	LOGI("SDL: Vertical sync: %s", vsync_ ? "Yes" : "No");
+	LOGI("SDL: Vertical sync: %s", (vsync_ ? "Yes" : "No"));
 #endif
 }
 

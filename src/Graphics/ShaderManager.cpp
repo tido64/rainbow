@@ -91,9 +91,10 @@ namespace
 		    verify(id, GL_COMPILE_STATUS, glGetShaderiv, glGetShaderInfoLog);
 		if (error.get())
 		{
-			R_ABORT("GLSL: Failed to compile %s shader: %s",
-			        shader.type == Shader::kTypeVertex ? "vertex" : "fragment",
-			        error.get());
+			R_ABORT(
+			    "GLSL: Failed to compile %s shader: %s",
+			    (shader.type == Shader::kTypeVertex ? "vertex" : "fragment"),
+			    error.get());
 			glDeleteShader(id);
 			return ShaderManager::kInvalidProgram;
 		}

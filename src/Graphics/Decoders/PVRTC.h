@@ -63,8 +63,8 @@ namespace pvrtc
 
 		const uint64_t format = CFSwapInt64LittleToHost(header->pixel_format);
 		R_ASSERT(format < 4, "Invalid PVRTC format type");
-		image.depth = (format < 2) ? 2 : 4;
-		image.channels = ((format & 0x01) == 0) ? 3 : 4;
+		image.depth = (format < 2 ? 2 : 4);
+		image.channels = ((format & 0x01) == 0 ? 3 : 4);
 
 		const size_t offset = sizeof(*header) + CFSwapInt32LittleToHost(header->metadata_size);
 		image.size = image.width * image.height * image.depth >> 3;

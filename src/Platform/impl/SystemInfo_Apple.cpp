@@ -59,9 +59,9 @@ namespace rainbow
 			if (sizeof(size_t) < sizeof(int64_t))
 			{
 				const size_t memory = std::numeric_limits<size_t>::max();
-				return (memsize < static_cast<int64_t>(memory))
-				    ? static_cast<size_t>(memsize)
-				    : memory;
+				return (memsize < static_cast<int64_t>(memory)
+				            ? static_cast<size_t>(memsize)
+				            : memory);
 			}
 			return static_cast<size_t>(memsize);
 		}

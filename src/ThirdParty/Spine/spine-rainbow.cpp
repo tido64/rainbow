@@ -139,7 +139,7 @@ namespace
 			         "Should only occur on animation events");
 
 			lua_pushstring(sk->state(),
-			               (!event->data) ? nullptr : event->data->name);
+			               (!event->data ? nullptr : event->data->name));
 			++nargs;
 		}
 		lua_pushinteger(sk->state(), loop_count);
@@ -312,7 +312,7 @@ void Skeleton::clear_tracks()
 const char* Skeleton::get_current_animation(const int track)
 {
 	spTrackEntry *entry = spAnimationState_getCurrent(state_, track);
-	return (!entry) ? nullptr : entry->animation->name;
+	return (!entry ? nullptr : entry->animation->name);
 }
 
 const char* Skeleton::get_skin()

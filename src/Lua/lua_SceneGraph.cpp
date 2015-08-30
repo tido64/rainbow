@@ -177,7 +177,7 @@ NS_RAINBOW_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		SceneNode *node = lua_isuserdata(L, 2) ? tonode(L, 2) : self->node_;
+		SceneNode *node = (lua_isuserdata(L, 2) ? tonode(L, 2) : self->node_);
 		R_ASSERT(node, "This shouldn't ever happen.");
 		SceneNode *child = new SceneNode();
 		R_ASSERT(register_node(child), "Failed to register node");
@@ -195,9 +195,8 @@ NS_RAINBOW_LUA_BEGIN
 		if (!self)
 			return 0;
 
-		int program = lua_isuserdata(L, 3)
-		    ? unchecked_cast<Shader>(L, 3)->id()
-		    : 0;
+		int program = (lua_isuserdata(L, 3) ? unchecked_cast<Shader>(L, 3)->id()
+		                                    : 0);
 		tonode(L, 2)->attach_program(program);
 		return 0;
 	}

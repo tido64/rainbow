@@ -289,7 +289,7 @@ const FontGlyph* FontAtlas::get_glyph(const uint_t c) const
 		const auto i = std::find_if(first, last, [c] (const FontGlyph &glyph) {
 			return glyph.code == c;
 		});
-		return (i == last) ? nullptr : i;
+		return (i == last ? nullptr : i);
 	}
 #endif
 	return &charset_[static_cast<uchar_t>(c) - kASCIIOffset];

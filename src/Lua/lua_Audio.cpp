@@ -261,8 +261,8 @@ namespace  // FMOD Low Level API
 
 		FMOD::Sound *sound;
 		const FMOD_RESULT result =
-		    stream ? system->createStream(path, FMOD_DEFAULT, nullptr, &sound)
-		           : system->createSound(path, FMOD_DEFAULT, nullptr, &sound);
+		    (stream ? system->createStream(path, FMOD_DEFAULT, nullptr, &sound)
+		            : system->createSound(path, FMOD_DEFAULT, nullptr, &sound));
 		if (result != FMOD_OK)
 			return 0;
 
@@ -310,7 +310,7 @@ namespace  // FMOD Low Level API
 			return 0;
 
 		const int count = lua_tointeger(L, 2);
-		self->get()->setMode((count == 0) ? FMOD_LOOP_OFF : FMOD_LOOP_NORMAL);
+		self->get()->setMode(count == 0 ? FMOD_LOOP_OFF : FMOD_LOOP_NORMAL);
 		self->get()->setLoopCount(count);
 		return 0;
 	}

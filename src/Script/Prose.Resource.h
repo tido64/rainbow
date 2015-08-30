@@ -112,9 +112,9 @@ Prose::AssetType resource_type(lua_State *L)
 	if (field == LUA_TSTRING)
 	{
 		const char *file = lua_tostring(L, -1);
-		return !ends_with(file, ".mp3") && !ends_with(file, ".ogg")
-		           ? Prose::AssetType::None
-		           : Prose::AssetType::Sound;
+		return (!ends_with(file, ".mp3") && !ends_with(file, ".ogg")
+		            ? Prose::AssetType::None
+		            : Prose::AssetType::Sound);
 	}
 	else if (field == LUA_TTABLE)
 	{

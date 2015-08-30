@@ -115,7 +115,7 @@ namespace rainbow
 	typename T::iterator remove(T &container, const typename T::value_type &val)
 	{
 		auto i = std::find(std::begin(container), std::end(container), val);
-		return (i == std::end(container)) ? i : container.erase(i);
+		return (i == std::end(container) ? i : container.erase(i));
 	}
 
 	/// <summary>

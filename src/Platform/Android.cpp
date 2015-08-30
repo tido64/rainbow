@@ -91,7 +91,7 @@ void android_main(struct android_app *state)
 		struct android_poll_source* source;
 
 		while ((ident = ALooper_pollAll(
-		            !ainstance.active ? -1 : 0, nullptr, &events,
+		            (!ainstance.active ? -1 : 0), nullptr, &events,
 		            reinterpret_cast<void**>(&source))) >= 0)
 		{
 			if (source)

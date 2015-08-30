@@ -57,8 +57,8 @@ namespace ConFuoco
 
 	bool RecorderiOS::record_impl(const unsigned long duration)
 	{
-		return (duration) ? [this->recorder recordForDuration:duration]
-		                  : [this->recorder record];
+		return (duration ? [this->recorder recordForDuration:duration]
+		                 : [this->recorder record]);
 	}
 
 	void RecorderiOS::stop_impl()

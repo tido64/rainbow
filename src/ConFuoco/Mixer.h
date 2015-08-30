@@ -207,7 +207,7 @@ namespace ConFuoco
 			LOGD("ConFuoco: Opened '%s' at %p (%s)",
 			     file,
 			     static_cast<void*>(sound),
-			     (type == Sound::Type::Stream) ? "stream" : "static");
+			     (type == Sound::Type::Stream ? "stream" : "static"));
 		}
 #endif
 		return sound;

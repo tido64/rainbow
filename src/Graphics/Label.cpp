@@ -112,11 +112,11 @@ void Label::update_internal()
 		unsigned int start = 0;
 		unsigned int count = 0;
 		const bool is_rotated = !is_equal(angle_, 0.0f);
-		const Vec2f R = is_rotated ? Vec2f(cos(-angle_), sin(-angle_))
-		                           : Vec2f(1.0f, 0.0f);
+		const Vec2f R = (is_rotated ? Vec2f(cos(-angle_), sin(-angle_))
+		                            : Vec2f(1.0f, 0.0f));
 		const bool needs_alignment =
 		    alignment_ != TextAlignment::Left || is_rotated;
-		Vec2f pen = needs_alignment ? Vec2f(0.0f, 0.0f) : position_;
+		Vec2f pen = (needs_alignment ? Vec2f::Zero : position_);
 		const float origin_x = pen.x;
 		SpriteVertex *vx = vertices_.get();
 		const auto *text = reinterpret_cast<unsigned char*>(text_.get());

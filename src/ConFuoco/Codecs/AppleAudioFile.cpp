@@ -66,22 +66,25 @@ namespace ConFuoco
 
 		UInt32 size = sizeof(this->format);
 		memset(&this->format, 0, size);
-		if (ExtAudioFileGetProperty(
-				this->ref, kExtAudioFileProperty_FileDataFormat, &size,
-				&this->format) != noErr)
+		if (ExtAudioFileGetProperty(this->ref,
+		                            kExtAudioFileProperty_FileDataFormat,
+		                            &size,
+		                            &this->format) != noErr)
 			LOGE("ConFuoco/AudioToolbox: Failed to retrieve audio format");
 
-		FillOutASBDForLPCM(
-				this->format,
-				this->format.mSampleRate,
-				(mode == kAudioFileStream) ? this->format.mChannelsPerFrame : kAudioChannelsMono,
-				kBitsPerChannel,
-				kBitsPerChannel,
-				false,
-				false);
-		if (ExtAudioFileSetProperty(
-				this->ref, kExtAudioFileProperty_ClientDataFormat,
-				sizeof(this->format), &this->format) != noErr)
+		FillOutASBDForLPCM(this->format,
+		                   this->format.mSampleRate,
+		                   (mode == kAudioFileStream
+		                        ? this->format.mChannelsPerFrame
+		                        : kAudioChannelsMono),
+		                   kBitsPerChannel,
+		                   kBitsPerChannel,
+		                   false,
+		                   false);
+		if (ExtAudioFileSetProperty(this->ref,
+		                            kExtAudioFileProperty_ClientDataFormat,
+		                            sizeof(this->format),
+		                            &this->format) != noErr)
 			LOGE("ConFuoco/AudioToolbox: Failed to set client data format");
 	}
 

@@ -63,7 +63,7 @@ NS_RAINBOW_LUA_BEGIN
 		if (ref_ != LUA_REFNIL)
 			luaL_unref(state_, LUA_REGISTRYINDEX, ref_);
 		state_ = L;
-		ref_ = (!L) ? LUA_REFNIL : luaL_ref(L, LUA_REGISTRYINDEX);
+		ref_ = (!L ? LUA_REFNIL : luaL_ref(L, LUA_REGISTRYINDEX));
 	}
 
 	void error(lua_State *L, const int result)
@@ -98,8 +98,8 @@ NS_RAINBOW_LUA_BEGIN
 		const char *module = lua_tostring(L, -1);
 		std::unique_ptr<char[]> path(new char[strlen(module) + 10]);
 		const int result = load_module(L, path.get(), module, ".lua");
-		return (!result) ? load_module(L, path.get(), module, "/init.lua")
-		                 : result;
+		return (!result ? load_module(L, path.get(), module, "/init.lua")
+		                : result);
 	}
 
 	int load(lua_State *L, const Data &chunk, const char *name, const bool exec)

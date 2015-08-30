@@ -170,7 +170,7 @@ namespace heimdall
 		if (vmem_top != vmem_top_)
 		{
 			const int order = std::min<int>(
-			    vmem_top == 0 ? 0 : std::floor(std::log10(vmem_top)) / 3,
+			    (vmem_top == 0 ? 0 : std::floor(std::log10(vmem_top)) / 3),
 			    rainbow::array_size(k1024ToPowerOf) - 1);
 			const float dy = vmem_top / (k1024ToPowerOf[order] * 4);
 			if (dy < 1.0f)

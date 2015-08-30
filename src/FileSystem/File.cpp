@@ -66,7 +66,7 @@ size_t File::size() const
 #endif
 	const int fd = fileno(stream_);
 	struct stat file_status;
-	return (fstat(fd, &file_status) != 0) ? 0 : file_status.st_size;
+	return (fstat(fd, &file_status) != 0 ? 0 : file_status.st_size);
 }
 
 size_t File::read(void *dst, const size_t size) const

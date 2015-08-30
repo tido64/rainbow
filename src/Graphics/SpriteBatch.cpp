@@ -127,7 +127,7 @@ Sprite::Ref SpriteBatch::create_sprite(const unsigned int width,
 	if (count_ == reserved_)
 	{
 		const unsigned int half = reserved_ / 2;
-		resize(reserved_ + ((half == 0) ? 1 : half));
+		resize(reserved_ + (half == 0 ? 1 : half));
 	}
 	Sprite &sprite = sprites_[count_];
 	new (&sprite) Sprite(width, height, this);

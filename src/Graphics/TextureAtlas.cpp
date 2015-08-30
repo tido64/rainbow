@@ -49,15 +49,15 @@ TextureAtlas::TextureAtlas(const DataMap &img) : name_(0), width_(0), height_(0)
 			GLint internal = 0;
 			if (image.channels == 3)
 			{
-				internal = (image.depth == 2)
-				    ? GL_COMPRESSED_RGB_PVRTC_2BPPV1_IMG
-				    : GL_COMPRESSED_RGB_PVRTC_4BPPV1_IMG;
+				internal =
+				    (image.depth == 2 ? GL_COMPRESSED_RGB_PVRTC_2BPPV1_IMG
+				                      : GL_COMPRESSED_RGB_PVRTC_4BPPV1_IMG);
 			}
 			else
 			{
-				internal = (image.depth == 2)
-				    ? GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG
-				    : GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG;
+				internal =
+				    (image.depth == 2 ? GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG
+				                      : GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG);
 			}
 			name_ = TextureManager::Get()->create_compressed(
 			    internal, image.width, image.height, image.size, image.data);
@@ -83,13 +83,13 @@ TextureAtlas::TextureAtlas(const DataMap &img) : name_(0), width_(0), height_(0)
 					R_ASSERT(image.depth == 16 || image.depth == 24,
 					         "Invalid colour depth");
 					format = GL_RGB;
-					internal = (image.depth == 16) ? GL_RGBA4 : GL_RGBA8;
+					internal = (image.depth == 16 ? GL_RGBA4 : GL_RGBA8);
 					break;
 				case 4:
 					R_ASSERT(image.depth == 16 || image.depth == 32,
 					         "Invalid colour depth");
 					format = GL_RGBA;
-					internal = (image.depth == 16) ? GL_RGBA4 : GL_RGBA8;
+					internal = (image.depth == 16 ? GL_RGBA4 : GL_RGBA8);
 					break;
 			}
 			name_ = TextureManager::Get()->create(

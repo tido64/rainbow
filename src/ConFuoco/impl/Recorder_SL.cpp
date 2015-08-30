@@ -148,7 +148,7 @@ namespace ConFuoco
 			return true;
 
 		slEnqueue(this->buffer_queue, this->buffer, kInputSamples * sizeof(short));
-		slSetDurationLimit(this->interface, (duration) ? duration : SL_TIME_UNKNOWN);
+		slSetDurationLimit(this->interface, (duration ? duration : SL_TIME_UNKNOWN));
 		return slSetRecordState(this->interface, SL_RECORDSTATE_RECORDING) == SL_RESULT_SUCCESS;
 	}
 

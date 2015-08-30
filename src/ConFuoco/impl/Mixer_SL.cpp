@@ -180,8 +180,8 @@ namespace ConFuoco
 		if (state == SL_PLAYSTATE_STOPPED)
 			return;
 
-		player.set_state((state == SL_PLAYSTATE_PAUSED) ? SL_PLAYSTATE_PLAYING
-		                                                : SL_PLAYSTATE_PAUSED);
+		player.set_state(state == SL_PLAYSTATE_PAUSED ? SL_PLAYSTATE_PLAYING
+		                                              : SL_PLAYSTATE_PAUSED);
 	}
 
 	void MixerSL::play_impl(const Channel *c)

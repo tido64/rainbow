@@ -164,8 +164,9 @@ namespace rainbow
 		template<typename F>
 		float ease_in_out(F&& f, const float a, const float b, const float t)
 		{
-			return t < 0.5f ? linear(a, b, f(t * 2.0f) * 0.5f)
-			                : linear(a, b, 1.0f - f((1.0f - t) * 2.0f) * 0.5f);
+			return (t < 0.5f
+			            ? linear(a, b, f(t * 2.0f) * 0.5f)
+			            : linear(a, b, 1.0f - f((1.0f - t) * 2.0f) * 0.5f));
 		}
 
 		inline
@@ -177,9 +178,9 @@ namespace rainbow
 		inline
 		float ease_in_out_bounce(const float a, const float b, const float t)
 		{
-			return t < 0.5f ? ease_in_bounce(a, b, t * 2.0f) * 0.5f
-			                : ease_out_bounce(a, b, (t - 0.5) * 2.0f) * 0.5f +
-			                      (b - a) * 0.5f;
+			return (t < 0.5f ? ease_in_bounce(a, b, t * 2.0f) * 0.5f
+			                 : ease_out_bounce(a, b, (t - 0.5) * 2.0f) * 0.5f +
+			                       (b - a) * 0.5f);
 		}
 
 		inline

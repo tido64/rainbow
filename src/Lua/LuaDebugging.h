@@ -62,7 +62,7 @@ NS_RAINBOW_LUA_BEGIN
 			lua_getinfo(L, "nSl", &ar);
 			printf("    frame #%i: %s at %s:%d\n",
 			       level,
-			       ar.name ? ar.name : "[internal function]",
+			       (ar.name ? ar.name : "[internal function]"),
 			       ar.source,
 			       ar.currentline);
 			++level;
@@ -193,9 +193,9 @@ NS_RAINBOW_LUA_BEGIN
 		{
 			printf("%s(", ar->name);
 
-			const int nparams = (ar->event == 1)
-			                  ? g_callstack[g_level + 1].nparams
-			                  : g_callstack[g_level].nparams;
+			const int nparams =
+			    (ar->event == 1 ? g_callstack[g_level + 1].nparams
+			                    : g_callstack[g_level].nparams);
 			if (*ar->what == 'C')
 			{
 				for (int i = 1; i <= nparams; ++i)
@@ -298,7 +298,7 @@ NS_RAINBOW_LUA_BEGIN
 				printf(LUA_NUMBER_FMT, lua_tonumber(L, n));
 				break;
 			case LUA_TBOOLEAN:
-				printf("%s", lua_toboolean(L, n) ? "true" : "false");
+				printf("%s", (lua_toboolean(L, n) ? "true" : "false"));
 				break;
 			case LUA_TSTRING:
 				printf("\"%s\"", lua_tostring(L, n));

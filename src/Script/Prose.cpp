@@ -46,9 +46,9 @@ template<typename T, Prose::AssetType Type>
 T* Prose::get_asset(const std::string &name)
 {
 	auto asset = assets_.find(name);
-	return (asset == assets_.end() || asset->second.type != Type)
-	           ? nullptr
-	           : static_cast<T*>(asset->second.ptr);
+	return (asset == assets_.end() || asset->second.type != Type
+	            ? nullptr
+	            : static_cast<T*>(asset->second.ptr));
 }
 
 template<>
