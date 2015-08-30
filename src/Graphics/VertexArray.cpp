@@ -1,4 +1,4 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -15,12 +15,6 @@ void VertexArray::unbind()
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 #endif
 }
-
-VertexArray::VertexArray()
-#ifdef USE_VERTEX_ARRAY_OBJECT
-    : array_(0)
-#endif
-{}
 
 VertexArray::VertexArray(VertexArray&& va) : array_(va.array_)
 {

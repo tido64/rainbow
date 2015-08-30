@@ -7,19 +7,20 @@
 
 #include <functional>
 
+#include "Common/NonCopyable.h"
 #include "Graphics/OpenGL.h"
 
 /// <summary>
 ///   Manages a vertex array object for any drawable type. On Android, vertex
 ///   array objects are emulated.
 /// </summary>
-class VertexArray
+class VertexArray : NonCopyable<VertexArray>
 {
 public:
 	/// <summary>Unbinds any bound vertex array object.</summary>
 	static void unbind();
 
-	VertexArray();
+	VertexArray() = default;
 	VertexArray(VertexArray&&);
 	~VertexArray();
 
@@ -32,19 +33,17 @@ public:
 	void reconfigure(std::function<void()> &&array_state);
 
 	/// <summary>Returns whether this vertex array object is valid.</summary>
-	inline explicit operator bool() const;
+	explicit operator bool() const
+	{
+		return static_cast<const bool>(array_);
+	}
 
 private:
 #ifdef USE_VERTEX_ARRAY_OBJECT
-	unsigned int array_;
+	unsigned int array_ = 0;
 #else
 	std::function<void()> array_;
 #endif
 };
-
-VertexArray::operator bool() const
-{
-	return static_cast<const bool>(array_);
-}
 
 #endif
