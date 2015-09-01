@@ -191,15 +191,16 @@ TEST_CASE("Sprites can be scaled", "[sprite]")
 
 TEST_CASE("Sprites can be flipped/mirrored", "[sprite]")
 {
-	SpriteBatch batch(rainbow::ISolemnlySwearThatIAmOnlyTesting{});
-	auto sprite = batch.create_sprite(2, 2);
+	rainbow::ISolemnlySwearThatIAmOnlyTesting mock;
 
-	// Force set UV coordinates.
-	{
-		auto vertex_array = const_cast<SpriteVertex*>(sprite->vertex_array());
-		for (int i = 0; i < 4; ++i)
-			vertex_array[i].texcoord = Vec2f(i, i);
-	}
+	auto atlas = make_shared<TextureAtlas>(mock);
+	auto texture = atlas->define(Vec2i::Zero, 1, 1);
+
+	SpriteBatch batch(mock);
+	batch.set_texture(atlas);
+
+	auto sprite = batch.create_sprite(2, 2);
+	sprite->set_texture(texture);
 	sprite->update();
 
 	auto vertex_array = sprite->vertex_array();
@@ -207,6 +208,10 @@ TEST_CASE("Sprites can be flipped/mirrored", "[sprite]")
 	                vertex_array[1].position,
 	                vertex_array[2].position,
 	                vertex_array[3].position};
+	const Vec2f u[]{vertex_array[0].texcoord,
+	                vertex_array[1].texcoord,
+	                vertex_array[2].texcoord,
+	                vertex_array[3].texcoord};
 
 	SECTION("Sprites aren't flipped/mirrored initially")
 	{
@@ -221,10 +226,17 @@ TEST_CASE("Sprites can be flipped/mirrored", "[sprite]")
 		REQUIRE_FALSE(sprite->is_mirrored());
 		for (int i = 0; i < 4; ++i)
 			REQUIRE(vertex_array[i].position == p[i]);
-		REQUIRE(vertex_array[0].texcoord.x == 3);
-		REQUIRE(vertex_array[1].texcoord.x == 2);
-		REQUIRE(vertex_array[2].texcoord.x == 1);
-		REQUIRE(vertex_array[3].texcoord.x == 0);
+		REQUIRE(vertex_array[0].texcoord == u[3]);
+		REQUIRE(vertex_array[1].texcoord == u[2]);
+		REQUIRE(vertex_array[2].texcoord == u[1]);
+		REQUIRE(vertex_array[3].texcoord == u[0]);
+
+		sprite->set_texture(texture);
+
+		REQUIRE(vertex_array[0].texcoord == u[3]);
+		REQUIRE(vertex_array[1].texcoord == u[2]);
+		REQUIRE(vertex_array[2].texcoord == u[1]);
+		REQUIRE(vertex_array[3].texcoord == u[0]);
 
 		sprite->flip();
 	}
@@ -237,10 +249,17 @@ TEST_CASE("Sprites can be flipped/mirrored", "[sprite]")
 		REQUIRE(sprite->is_mirrored());
 		for (int i = 0; i < 4; ++i)
 			REQUIRE(vertex_array[i].position == p[i]);
-		REQUIRE(vertex_array[0].texcoord.x == 1);
-		REQUIRE(vertex_array[1].texcoord.x == 0);
-		REQUIRE(vertex_array[2].texcoord.x == 3);
-		REQUIRE(vertex_array[3].texcoord.x == 2);
+		REQUIRE(vertex_array[0].texcoord == u[1]);
+		REQUIRE(vertex_array[1].texcoord == u[0]);
+		REQUIRE(vertex_array[2].texcoord == u[3]);
+		REQUIRE(vertex_array[3].texcoord == u[2]);
+
+		sprite->set_texture(texture);
+
+		REQUIRE(vertex_array[0].texcoord == u[1]);
+		REQUIRE(vertex_array[1].texcoord == u[0]);
+		REQUIRE(vertex_array[2].texcoord == u[3]);
+		REQUIRE(vertex_array[3].texcoord == u[2]);
 
 		sprite->mirror();
 	}
@@ -254,10 +273,17 @@ TEST_CASE("Sprites can be flipped/mirrored", "[sprite]")
 		REQUIRE(sprite->is_mirrored());
 		for (int i = 0; i < 4; ++i)
 			REQUIRE(vertex_array[i].position == p[i]);
-		REQUIRE(vertex_array[0].texcoord.x == 2);
-		REQUIRE(vertex_array[1].texcoord.x == 3);
-		REQUIRE(vertex_array[2].texcoord.x == 0);
-		REQUIRE(vertex_array[3].texcoord.x == 1);
+		REQUIRE(vertex_array[0].texcoord == u[2]);
+		REQUIRE(vertex_array[1].texcoord == u[3]);
+		REQUIRE(vertex_array[2].texcoord == u[0]);
+		REQUIRE(vertex_array[3].texcoord == u[1]);
+
+		sprite->set_texture(texture);
+
+		REQUIRE(vertex_array[0].texcoord == u[2]);
+		REQUIRE(vertex_array[1].texcoord == u[3]);
+		REQUIRE(vertex_array[2].texcoord == u[0]);
+		REQUIRE(vertex_array[3].texcoord == u[1]);
 
 		sprite->flip();
 
@@ -265,10 +291,10 @@ TEST_CASE("Sprites can be flipped/mirrored", "[sprite]")
 		REQUIRE(sprite->is_mirrored());
 		for (int i = 0; i < 4; ++i)
 			REQUIRE(vertex_array[i].position == p[i]);
-		REQUIRE(vertex_array[0].texcoord.x == 1);
-		REQUIRE(vertex_array[1].texcoord.x == 0);
-		REQUIRE(vertex_array[2].texcoord.x == 3);
-		REQUIRE(vertex_array[3].texcoord.x == 2);
+		REQUIRE(vertex_array[0].texcoord == u[1]);
+		REQUIRE(vertex_array[1].texcoord == u[0]);
+		REQUIRE(vertex_array[2].texcoord == u[3]);
+		REQUIRE(vertex_array[3].texcoord == u[2]);
 
 		sprite->flip();
 
@@ -276,10 +302,10 @@ TEST_CASE("Sprites can be flipped/mirrored", "[sprite]")
 		REQUIRE(sprite->is_mirrored());
 		for (int i = 0; i < 4; ++i)
 			REQUIRE(vertex_array[i].position == p[i]);
-		REQUIRE(vertex_array[0].texcoord.x == 2);
-		REQUIRE(vertex_array[1].texcoord.x == 3);
-		REQUIRE(vertex_array[2].texcoord.x == 0);
-		REQUIRE(vertex_array[3].texcoord.x == 1);
+		REQUIRE(vertex_array[0].texcoord == u[2]);
+		REQUIRE(vertex_array[1].texcoord == u[3]);
+		REQUIRE(vertex_array[2].texcoord == u[0]);
+		REQUIRE(vertex_array[3].texcoord == u[1]);
 
 		sprite->mirror();
 
@@ -287,10 +313,10 @@ TEST_CASE("Sprites can be flipped/mirrored", "[sprite]")
 		REQUIRE_FALSE(sprite->is_mirrored());
 		for (int i = 0; i < 4; ++i)
 			REQUIRE(vertex_array[i].position == p[i]);
-		REQUIRE(vertex_array[0].texcoord.x == 3);
-		REQUIRE(vertex_array[1].texcoord.x == 2);
-		REQUIRE(vertex_array[2].texcoord.x == 1);
-		REQUIRE(vertex_array[3].texcoord.x == 0);
+		REQUIRE(vertex_array[0].texcoord == u[3]);
+		REQUIRE(vertex_array[1].texcoord == u[2]);
+		REQUIRE(vertex_array[2].texcoord == u[1]);
+		REQUIRE(vertex_array[3].texcoord == u[0]);
 
 		sprite->flip();
 
@@ -299,7 +325,7 @@ TEST_CASE("Sprites can be flipped/mirrored", "[sprite]")
 		for (int i = 0; i < 4; ++i)
 		{
 			REQUIRE(vertex_array[i].position == p[i]);
-			REQUIRE(vertex_array[i].texcoord.x == i);
+			REQUIRE(vertex_array[i].texcoord == u[i]);
 		}
 
 		sprite->mirror();
@@ -309,10 +335,10 @@ TEST_CASE("Sprites can be flipped/mirrored", "[sprite]")
 		REQUIRE(sprite->is_mirrored());
 		for (int i = 0; i < 4; ++i)
 			REQUIRE(vertex_array[i].position == p[i]);
-		REQUIRE(vertex_array[0].texcoord.x == 2);
-		REQUIRE(vertex_array[1].texcoord.x == 3);
-		REQUIRE(vertex_array[2].texcoord.x == 0);
-		REQUIRE(vertex_array[3].texcoord.x == 1);
+		REQUIRE(vertex_array[0].texcoord == u[2]);
+		REQUIRE(vertex_array[1].texcoord == u[3]);
+		REQUIRE(vertex_array[2].texcoord == u[0]);
+		REQUIRE(vertex_array[3].texcoord == u[1]);
 
 		sprite->mirror();
 
@@ -320,10 +346,10 @@ TEST_CASE("Sprites can be flipped/mirrored", "[sprite]")
 		REQUIRE_FALSE(sprite->is_mirrored());
 		for (int i = 0; i < 4; ++i)
 			REQUIRE(vertex_array[i].position == p[i]);
-		REQUIRE(vertex_array[0].texcoord.x == 3);
-		REQUIRE(vertex_array[1].texcoord.x == 2);
-		REQUIRE(vertex_array[2].texcoord.x == 1);
-		REQUIRE(vertex_array[3].texcoord.x == 0);
+		REQUIRE(vertex_array[0].texcoord == u[3]);
+		REQUIRE(vertex_array[1].texcoord == u[2]);
+		REQUIRE(vertex_array[2].texcoord == u[1]);
+		REQUIRE(vertex_array[3].texcoord == u[0]);
 
 		sprite->flip();
 	}
@@ -333,7 +359,7 @@ TEST_CASE("Sprites can be flipped/mirrored", "[sprite]")
 	for (int i = 0; i < 4; ++i)
 	{
 		REQUIRE(vertex_array[i].position == p[i]);
-		REQUIRE(vertex_array[i].texcoord.x == i);
+		REQUIRE(vertex_array[i].texcoord == u[i]);
 	}
 }
 

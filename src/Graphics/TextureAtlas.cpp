@@ -100,8 +100,15 @@ TextureAtlas::TextureAtlas(const DataMap &img) : name_(0), width_(0), height_(0)
 	rainbow::Image::release(image);
 }
 
+TextureAtlas::TextureAtlas(const rainbow::ISolemnlySwearThatIAmOnlyTesting &)
+    : name_(0), width_(64), height_(64) {}
+
 TextureAtlas::~TextureAtlas()
 {
+#ifdef RAINBOW_TEST
+	if (name_ == 0)
+		return;
+#endif
 	TextureManager::Get()->remove(name_);
 }
 

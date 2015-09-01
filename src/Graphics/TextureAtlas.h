@@ -11,6 +11,8 @@
 #include "Graphics/Texture.h"
 #include "Memory/SharedPtr.h"
 
+namespace rainbow { struct ISolemnlySwearThatIAmOnlyTesting; }
+
 /// <summary>Texture atlas loaded from an image file.</summary>
 /// <remarks>
 ///   <list type="bullet">
@@ -33,6 +35,7 @@ class TextureAtlas : public RefCounted
 {
 public:
 	explicit TextureAtlas(const DataMap &img);
+	explicit TextureAtlas(const rainbow::ISolemnlySwearThatIAmOnlyTesting &);
 	~TextureAtlas();
 
 	int width() const { return width_; }
