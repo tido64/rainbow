@@ -1,4 +1,4 @@
-# Rainbow [![ReadTheDocs](https://readthedocs.org/projects/rainbow/badge/)](http://rainbow.rtfd.org/) [![Windows build status](https://ci.appveyor.com/api/projects/status/oajtxwu9d9lrayk0?svg=true)](https://ci.appveyor.com/project/Tommy/rainbow) [![Build Status](https://travis-ci.org/tn0502/rainbow.svg?branch=master)](https://travis-ci.org/tn0502/rainbow)
+# Rainbow
 
 Rainbow is a fast, scriptable, cross-platform, 2D game engine written in modern
 C++.
@@ -9,17 +9,19 @@ Distributed under the MIT License (see accompanying file `LICENSE` or copy at
 http://opensource.org/licenses/MIT). Licenses for third-party software can be
 found in file `THIRDPARTY`.
 
+- [Documentation](https://rainbow.readthedocs.org/)
+- [Roadmap](https://trello.com/b/r2TqudY6/rainbow)
+- [Discussion](https://groups.google.com/forum/#!forum/rainbow-tech)
+
 ## Features
 
 ### Cross-platform
 
-Rainbow runs on most popular operating systems, including:
+Rainbow runs on most popular operating systems:
 
-- Android
-- iOS
-- Linux
-- Mac OS X
-- Windows
+| Android | iOS | Linux | Mac OS X | Windows |
+|:-------:|:---:|:-----:|:--------:|:-------:|
+| ✅ | ✅ | [![Linux build Status](https://travis-ci.org/tn0502/rainbow.svg?branch=master)](https://travis-ci.org/tn0502/rainbow) | ✅ | [![Windows build status](https://ci.appveyor.com/api/projects/status/oajtxwu9d9lrayk0?svg=true)](https://ci.appveyor.com/project/Tommy/rainbow) |
 
 ### Audio
 
