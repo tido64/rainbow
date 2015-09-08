@@ -44,10 +44,8 @@ public:
 	          const unsigned int fps,
 	          const int delay = 0);
 
-	/// <summary>
-	///   Returns the currently displayed frame; <c>kAnimationEnd</c> if none.
-	/// </summary>
-	unsigned int current_frame() const { return frame_ - 1; }
+	/// <summary>Returns the currently displayed frame.</summary>
+	unsigned int current_frame() const { return frame_; }
 
 	/// <summary>Returns whether animation is stopped.</summary>
 	bool is_stopped() const { return stopped_; }

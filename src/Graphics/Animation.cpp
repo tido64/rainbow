@@ -33,16 +33,12 @@ void Animation::set_sprite(const Sprite::Ref &sprite)
 {
 	sprite_ = sprite;
 	if (!is_stopped())
-	{
-		if (frame_ > 0)
-			sprite_->set_texture(frames_[frame_ - 1]);
-		else
-			set_current_frame();
-	}
+		set_current_frame();
 }
 
 void Animation::jump_to(const unsigned int frame)
 {
+	// TODO: Check for invalid frame.
 	accumulated_ = 0;
 	frame_ = frame;
 	idled_ = 0;
@@ -91,13 +87,10 @@ void Animation::set_current_frame()
 		return;
 
 	sprite_->set_texture(frames_[frame_]);
-	if (frames_[frame_ + 1] != kAnimationEnd)
-		++frame_;
 }
 
 void Animation::tick()
 {
-	sprite_->set_texture(frames_[frame_]);
 	if (frames_[frame_ + 1] == kAnimationEnd)
 	{
 		if (delay_ < 0)
@@ -108,12 +101,12 @@ void Animation::tick()
 		if (idled_ == 0 && callback_)
 			callback_(this, Event::Complete);
 		if (idled_ < delay_)
-			++idled_;
-		else
 		{
-			frame_ = 0;
-			idled_ = 0;
+			++idled_;
+			return;
 		}
+		frame_ = 0;
+		idled_ = 0;
 	}
 	else
 	{
@@ -121,4 +114,5 @@ void Animation::tick()
 		if (callback_)
 			callback_(this, Event::Frame);
 	}
+	sprite_->set_texture(frames_[frame_]);
 }

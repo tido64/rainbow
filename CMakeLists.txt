@@ -211,6 +211,7 @@ if(UNIT_TESTS)
 		src/Tests/Common/Vec3.test.cc
 		src/Tests/ConFuoco/ConFuoco.test.cc
 		src/Tests/FileSystem/Path.test.cc
+		src/Tests/Graphics/Animation.test.cc
 		src/Tests/Graphics/Sprite.test.cc
 		src/Tests/Graphics/SpriteBatch.test.cc
 		src/Tests/Input/Input.test.cc
