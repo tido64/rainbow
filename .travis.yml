@@ -18,6 +18,9 @@ script:
   - cd $TRAVIS_BUILD_DIR-build
   - GENERATOR=Ninja $TRAVIS_BUILD_DIR/tools/build.sh -DCMAKE_BUILD_TYPE=$CMAKE_BUILD_TYPE -DUNIT_TESTS=1 -DUSE_PHYSICS=1 -DUSE_SPINE=1
   - ./rainbow
+after_success:
+  - if [[ "$CMAKE_BUILD_TYPE" == "Debug" ]]; then cp -r $TRAVIS_BUILD_DIR-build/CMakeFiles/rainbow.dir/src $TRAVIS_BUILD_DIR; fi
+  - if [[ "$CMAKE_BUILD_TYPE" == "Debug" ]]; then bash <(curl -s https://codecov.io/bash) -x gcov-4.9; fi
 branches:
   only:
     - master
