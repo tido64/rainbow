@@ -12,6 +12,8 @@ TEST_CASE("Time difference between updates", "[chrono]")
 	const Chrono::duration::rep times[]{16, 1000, 0};
 
 	Chrono chrono;
+	REQUIRE(chrono.delta() == 0);
+
 	for (int i = 0; times[i] > 0; ++i)
 	{
 		Chrono::sleep(times[i]);

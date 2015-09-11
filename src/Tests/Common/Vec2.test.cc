@@ -65,6 +65,10 @@ TEST_CASE("Vec2s can be translated (addition)", "[vec2]")
 	v0 += v1;
 	REQUIRE(v0.x == 4);
 	REQUIRE(v0.y == 6);
+
+	const Vec2i v4 = v0 + 1;
+	REQUIRE(v4.x == 5);
+	REQUIRE(v4.y == 7);
 }
 
 TEST_CASE("Vec2s can be translated (subtraction)", "[vec2]")

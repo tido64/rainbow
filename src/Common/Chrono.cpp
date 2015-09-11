@@ -1,4 +1,4 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -30,7 +30,7 @@ std::chrono::seconds Chrono::time_since_epoch()
 	return std::chrono::duration_cast<std::chrono::seconds>(now());
 }
 
-Chrono::Chrono() : current_(now()), previous_(current_) {}
+Chrono::Chrono() : delta_(0), current_(now()), previous_(current_) {}
 
 void Chrono::update()
 {

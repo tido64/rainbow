@@ -124,3 +124,27 @@ TEST_CASE("Link pops itself on destruction", "[link]")
 	}
 	REQUIRE(a.next() == nullptr);
 }
+
+TEST_CASE("Traverse Links with for_each", "[link]")
+{
+	Number numbers[]{Number{0}, Number{1}, Number{2}, Number{3}, Number{4}};
+	numbers[0].append(&numbers[4]);
+	numbers[0].append(&numbers[3]);
+	numbers[0].append(&numbers[2]);
+	numbers[0].append(&numbers[1]);
+
+	int prev = -1;
+	REQUIRE_FALSE(for_each(numbers, [&prev](const Number *n) {
+		REQUIRE(n->value > prev);
+		prev = n->value;
+		return false;
+	}));
+	REQUIRE(prev == numbers[4].value);
+
+	const int max = 3;
+	REQUIRE(for_each(numbers, [max, &prev](const Number *n) {
+		prev = n->value;
+		return n->value >= max;
+	}));
+	REQUIRE(prev == max);
+}

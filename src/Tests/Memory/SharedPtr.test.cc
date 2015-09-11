@@ -22,6 +22,7 @@ namespace
 TEST_CASE("SharedPtr is empty by default", "[sharedptr]")
 {
 	SharedPtr<SharedPtrTestStruct> empty;
+	REQUIRE_FALSE(empty);
 	REQUIRE(empty.get() == nullptr);
 }
 
@@ -59,7 +60,21 @@ TEST_CASE("SharedPtr deletes managed object when reset", "[sharedptr]")
 	bool foo_deleted = false;
 	SharedPtr<SharedPtrTestStruct> foo_ptr(
 	    new SharedPtrTestStruct(foo_deleted));
+	REQUIRE(foo_ptr);
 	foo_ptr.reset();
+	REQUIRE_FALSE(foo_ptr);
+	REQUIRE(foo_ptr.get() == nullptr);
+	REQUIRE(foo_deleted);
+}
+
+TEST_CASE("SharedPtr can be reset with nullptr", "[sharedptr]")
+{
+	bool foo_deleted = false;
+	SharedPtr<SharedPtrTestStruct> foo_ptr(
+	    new SharedPtrTestStruct(foo_deleted));
+	REQUIRE(foo_ptr);
+	foo_ptr.reset(nullptr);
+	REQUIRE_FALSE(foo_ptr);
 	REQUIRE(foo_ptr.get() == nullptr);
 	REQUIRE(foo_deleted);
 }
