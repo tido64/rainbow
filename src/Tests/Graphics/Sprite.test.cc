@@ -145,6 +145,39 @@ TEST_CASE("Sprites can be rotated", "[sprite]")
 			REQUIRE(rainbow::is_equal<float>(p[3].distance(p[0]), height));
 		}
 	}
+
+	sprite->set_rotation(0.0f);
+	sprite->set_scale(1.0f);
+	sprite->update();
+
+	const float width = sprite->width();
+	const float height = sprite->height();
+
+	float angle = 0;
+	int i = 1;
+	for (int deg = 1; deg <= 4; ++deg)
+	{
+		const float r = rainbow::radians(deg * i);
+		angle += r;
+		sprite->rotate(r);
+
+		REQUIRE(sprite->angle() == Approx(angle));
+
+		sprite->update();
+		const Vec2f p[]{vertex_array[0].position,
+		                vertex_array[1].position,
+		                vertex_array[2].position,
+		                vertex_array[3].position};
+
+		REQUIRE(p[0] == -p[2]);
+		REQUIRE(p[1] == -p[3]);
+		REQUIRE(rainbow::is_equal<float>(p[0].distance(p[1]), width));
+		REQUIRE(rainbow::is_equal<float>(p[1].distance(p[2]), height));
+		REQUIRE(rainbow::is_equal<float>(p[2].distance(p[3]), width));
+		REQUIRE(rainbow::is_equal<float>(p[3].distance(p[0]), height));
+
+		i *= -1;
+	}
 }
 
 TEST_CASE("Sprites can be scaled", "[sprite]")
@@ -424,4 +457,23 @@ TEST_CASE("Sprites can be hidden", "[sprite]")
 		REQUIRE(vertex_array[2].position == Vec2f(2, 2));
 		REQUIRE(vertex_array[3].position == Vec2f(0, 2));
 	}
+}
+
+TEST_CASE("Sprites do not update unless necessary", "[sprite]")
+{
+	SpriteBatch batch(rainbow::ISolemnlySwearThatIAmOnlyTesting{});
+	auto sprite = batch.create_sprite(2, 2);
+
+	REQUIRE(sprite->update());
+	REQUIRE_FALSE(sprite->update());
+
+	sprite->move(Vec2f::Left);
+
+	REQUIRE(sprite->update());
+	REQUIRE_FALSE(sprite->update());
+}
+
+TEST_CASE("Sprite::Refs are invalid when instantiated manually", "[sprite]")
+{
+	REQUIRE_FALSE(Sprite::Ref());
 }
