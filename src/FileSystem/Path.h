@@ -7,7 +7,7 @@
 
 #include "Platform/Macros.h"
 #ifdef RAINBOW_OS_MACOS
-#include <CoreFoundation/CoreFoundation.h>
+#  include <CoreFoundation/CoreFoundation.h>
 #endif
 
 #include "Common/NonCopyable.h"
@@ -44,7 +44,7 @@ public:
 	Path& operator=(const char *const path);
 	Path& operator+=(const char *const path);
 
-	inline operator const char*() const;
+	operator const char*() const { return path_; }
 
 #ifdef RAINBOW_OS_IOS
 	operator NSURL*() const;
@@ -53,10 +53,5 @@ public:
 private:
 	char path_[256];
 };
-
-Path::operator const char*() const
-{
-	return path_;
-}
 
 #endif
