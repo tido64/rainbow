@@ -60,6 +60,72 @@ namespace
 	}
 }
 
+TEST_CASE("SpriteBatch can be move constructed", "[spritebatch]")
+{
+	rainbow::ISolemnlySwearThatIAmOnlyTesting mock;
+
+	SpriteBatch batch(mock);
+	auto atlas = make_shared<TextureAtlas>(mock);
+	batch.set_texture(atlas);
+
+	const unsigned int capacity = batch.capacity();
+	for (unsigned int i = 0; i < batch.capacity(); ++i)
+		batch.create_sprite(i + 1, i + 1)->update();
+
+	const unsigned int vertex_count = batch.count();
+	const Sprite *sprites_array = batch.sprites();
+	const TextureAtlas &texture = batch.texture();
+	const unsigned int sprite_count = batch.sprite_count();
+	const SpriteVertex* vertices = batch.vertices();
+
+	SpriteBatch moved(std::move(batch));
+
+	REQUIRE(moved.count() == vertex_count);
+	REQUIRE(moved.sprites() == sprites_array);
+	REQUIRE(&moved.texture() == &texture);
+	REQUIRE(moved.sprite_count() == sprite_count);
+	REQUIRE(moved.vertices() == vertices);
+
+	for (unsigned int i = 0; i < moved.sprite_count(); ++i)
+	{
+		const float s = (i + 1) * 0.5f;
+		const unsigned int j = i * 4;
+		REQUIRE(vertices[j    ].position == Vec2f(-s, -s));
+		REQUIRE(vertices[j + 1].position == Vec2f(s, -s));
+		REQUIRE(vertices[j + 2].position == Vec2f(s, s));
+		REQUIRE(vertices[j + 3].position == Vec2f(-s, s));
+	}
+
+	REQUIRE(batch.sprites() == nullptr);
+	REQUIRE(batch.vertices() == nullptr);
+}
+
+TEST_CASE("SpriteBatch expands to accommodate new sprites", "[spritebatch]")
+{
+	SpriteBatch batch(rainbow::ISolemnlySwearThatIAmOnlyTesting{});
+	unsigned int capacity = batch.capacity();
+	for (unsigned int i = 0; i < capacity; ++i)
+		batch.create_sprite(i + 1, i + 1)->update();
+
+	REQUIRE(batch.sprite_count() == capacity);
+
+	batch.create_sprite(capacity + 1, capacity + 1)->update();
+
+	REQUIRE(batch.sprite_count() < batch.capacity());
+	REQUIRE(batch.capacity() > capacity);
+
+	auto&& vertices = batch.vertices();
+	for (unsigned int i = 0; i < batch.sprite_count(); ++i)
+	{
+		const float s = (i + 1) * 0.5f;
+		const unsigned int j = i * 4;
+		REQUIRE(vertices[j    ].position == Vec2f(-s, -s));
+		REQUIRE(vertices[j + 1].position == Vec2f(s, -s));
+		REQUIRE(vertices[j + 2].position == Vec2f(s, s));
+		REQUIRE(vertices[j + 3].position == Vec2f(-s, s));
+	}
+}
+
 TEST_CASE("Sprites can be manipulated in batches", "[spritebatch]")
 {
 	SpriteBatch batch(rainbow::ISolemnlySwearThatIAmOnlyTesting{});
@@ -151,6 +217,8 @@ TEST_CASE("Sprites can be manipulated in batches", "[spritebatch]")
 
 		for (auto&& sprite : refs)
 			REQUIRE(&(*sprite) == &(*batch.find_sprite_by_id(sprite->id())));
+
+		REQUIRE_FALSE(batch.find_sprite_by_id(0xdeadbeef));
 	}
 
 	SECTION("Sprites can be moved in batches")

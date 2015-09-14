@@ -55,10 +55,6 @@ public:
 	/// <summary>Returns the vertex array object.</summary>
 	const VertexArray& vertex_array() const { return array_; }
 
-#ifdef RAINBOW_TEST
-	const SpriteVertex* vertices() const { return vertices_.get(); }
-#endif
-
 	/// <summary>Assigns a normal map.</summary>
 	void set_normal(SharedPtr<TextureAtlas> texture);
 
@@ -112,6 +108,12 @@ public:
 
 	/// <summary>Updates the batch of sprites.</summary>
 	void update();
+
+#ifdef RAINBOW_TEST
+	unsigned int capacity() const { return reserved_; }
+	unsigned int sprite_count() const { return count_; }
+	const SpriteVertex* vertices() const { return vertices_.get(); }
+#endif
 
 private:
 	Arena<Sprite> sprites_;            ///< Sprite batch.
