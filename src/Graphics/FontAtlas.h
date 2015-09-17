@@ -36,14 +36,14 @@ class Data;
 class FontAtlas : public RefCounted
 {
 public:
-	FontAtlas(const Data &font, const float pt);
+	FontAtlas(const Data& font, const float pt);
 	~FontAtlas();
 
 	/// <summary>Returns the line height.</summary>
-	inline int height() const;
+	int height() const { return height_; }
 
 	/// <summary>Returns whether this FontAtlas is valid.</summary>
-	inline bool is_valid() const;
+	bool is_valid() const { return texture_; }
 
 	/// <summary>Sets this font as active texture.</summary>
 	void bind() const;
@@ -62,15 +62,5 @@ private:
 	unsigned int texture_;  ///< Texture name.
 	FontGlyph charset_[kNumCharacters + FONTATLAS_EXTENDED];  ///< Character set.
 };
-
-int FontAtlas::height() const
-{
-	return height_;
-}
-
-bool FontAtlas::is_valid() const
-{
-	return texture_;
-}
 
 #endif

@@ -10,10 +10,10 @@
 namespace rainbow
 {
 	/// <summary>Structure for storing a three-dimensional vector.</summary>
-	template<typename T, typename Enable = void>
+	template <typename T, typename Enable = void>
 	struct Vec3;
 
-	template<typename T>
+	template <typename T>
 	struct Vec3<T, Arithmetic<T>>
 	{
 		T x, y, z;
@@ -21,20 +21,20 @@ namespace rainbow
 		Vec3() : Vec3(0, 0, 0) {}
 		Vec3(const T x, const T y, const T z) : x(x), y(y), z(z) {}
 
-		template<typename U = T>
+		template <typename U = T>
 		EnableIfIntegral<U, bool> is_zero() const
 		{
 			return this->x == 0 && this->y == 0 && this->z == 0;
 		}
 
-		template<typename U = T>
+		template <typename U = T>
 		EnableIfFloatingPoint<U, bool> is_zero() const
 		{
 			return is_equal<T>(0.0, this->x) && is_equal<T>(0.0, this->y) &&
-			    is_equal<T>(0.0, this->z);
+			       is_equal<T>(0.0, this->z);
 		}
 
-		Vec3& operator+=(const Vec3 &v)
+		Vec3& operator+=(const Vec3& v)
 		{
 			this->x += v.x;
 			this->y += v.y;
@@ -42,7 +42,7 @@ namespace rainbow
 			return *this;
 		}
 
-		Vec3& operator-=(const Vec3 &v)
+		Vec3& operator-=(const Vec3& v)
 		{
 			this->x -= v.x;
 			this->y -= v.y;
@@ -50,7 +50,7 @@ namespace rainbow
 			return *this;
 		}
 
-		Vec3& operator*=(const T &f)
+		Vec3& operator*=(const T& f)
 		{
 			this->x *= f;
 			this->y *= f;

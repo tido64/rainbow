@@ -43,7 +43,7 @@ namespace rainbow
 	///     <item><c>accelerometer = true</c></item>
 	///     <item><c>allow_high_dpi = false</c></item>
 	///     <item><c>msaa = 0</c></item>
-	///     <item><c>resolution = {0, 0}</c> (which also implies landscape mode)</item>
+	///     <item><c>resolution = {0, 0}</c> (implying landscape mode)</item>
 	///     <item><c>suspend_on_focus_lost = true</c></item>
 	///   </list>
 	/// </remarks>
