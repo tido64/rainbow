@@ -33,10 +33,8 @@ else()
 			set(SDL2_LIBRARIES ${SDL2_BUILD_DIR}/${SDL2_LIBRARY})
 		endif()
 
-		execute_process(COMMAND rm -f include WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
-		execute_process(COMMAND ln -s lib/SDL/include WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+		list(APPEND EXTRA_CFLAGS "-w -I ${SDL2_BUILD_DIR}/include")
 
-		list(APPEND EXTRA_CFLAGS "-w")
 		if(APPLE)
 			list(APPEND EXTRA_CFLAGS "-fobjc-exceptions")
 			find_library(CARBON_LIBRARY Carbon REQUIRED)
