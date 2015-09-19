@@ -1,4 +1,4 @@
-# Rainbow [![codecov.io](http://codecov.io/github/tn0502/rainbow/coverage.svg?branch=master)](http://codecov.io/github/tn0502/rainbow?branch=master)
+# Rainbow [![codecov.io](https://codecov.io/github/tn0502/rainbow/coverage.svg?branch=master)](https://codecov.io/github/tn0502/rainbow?branch=master)
 
 Rainbow is a fast, scriptable, cross-platform, 2D game engine written in modern
 C++.

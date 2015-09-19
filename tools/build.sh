@@ -33,14 +33,14 @@ function compile {
 }
 
 # Try to download SDL
-if [ ! -z $(which hg) ] && [ ! -f "$RAINBOW/lib/SDL/include/SDL.h" ]; then
+if [[ ! -z $(which hg) ]] && [[ ! -f "$RAINBOW/lib/SDL/include/SDL.h" ]]; then
   echo -n 'Downloading SDL…'
   hg clone -q -u release-2.0.3 http://hg.libsdl.org/SDL "$RAINBOW/lib/SDL"
   echo ' done'
 fi
 
 # Prune arguments
-if [ ! -z "$2" ]; then
+if [[ ! -z "$2" ]]; then
   ARGS=$@
   ARGS=${ARGS#* }
 fi
