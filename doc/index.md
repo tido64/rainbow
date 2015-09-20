@@ -23,3 +23,7 @@
 ### Lua
 
 - [Lua API](programming/lua/api.md)
+
+## Contributing
+
+- [Coding Standard](contributing/coding_standard.md)

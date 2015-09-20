@@ -13,6 +13,7 @@ pages:
   - [programming/cpp/timers.md, C++ Programming Guide, Timers]
   - [programming/cpp/transitions.md, C++ Programming Guide, Transitions]
   - [programming/lua/api.md, Lua Programming Guide, Lua API]
+  - [contributing/coding_standard.md, Contributing, Coding Standard]
   - [license.md, About, License]
 theme: readthedocs
 docs_dir: doc

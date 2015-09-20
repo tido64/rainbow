@@ -131,16 +131,15 @@ Use the provided Xcode project under `rainbow/build/xcode4/`.
 - [OpenAL Soft](http://kcat.strangesoft.net/openal.html) (only with
   `-DUSE_FMOD_STUDIO=0`)
 - [SDL](http://libsdl.org/)
-- [MinGW](http://www.mingw.org/) or
-  [MinGW-w64](http://mingw-w64.sourceforge.net/) (optional)
+- [MinGW-w64](http://mingw-w64.org/) (for cross-compiling only)
 
 You can install most of these using your favourite package manager. For SDL,
 download the source code and extract its content to `rainbow/lib/SDL/`. If you
 have installed Mercurial, let the build script download it for you.
 
-Windows builds can be built using MinGW or MinGW-w64 by issuing `windows` as
-platform. However, this method hasn't been maintained in quite some time and may
-no longer work.
+Windows builds can be built using MinGW-w64 by issuing `windows` as platform.
+However, this method hasn't been maintained in quite some time and may no longer
+work.
 
 ### Mac OS X
 
