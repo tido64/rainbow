@@ -10,11 +10,12 @@
 namespace rainbow
 {
 	animation_t animation(sprite_t sprite,
-	                      const Animation::Frame *const frames,
+	                      Animation::Frames frames,
 	                      const unsigned int fps,
 	                      const int loop_delay)
 	{
-		return std::make_shared<Animation>(sprite, frames, fps, loop_delay);
+		return std::make_shared<Animation>(
+		    sprite, std::move(frames), fps, loop_delay);
 	}
 
 	font_t font(const char *path, const float pt)

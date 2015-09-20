@@ -22,7 +22,7 @@ namespace rainbow
 	using texture_t = SharedPtr<TextureAtlas>;
 
 	animation_t animation(sprite_t sprite,
-	                      const Animation::Frame *const frames,
+	                      Animation::Frames frames,
 	                      const unsigned int fps,
 	                      const int loop_delay = 0);
 	font_t font(const char *path, const float pt);

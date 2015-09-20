@@ -11,11 +11,11 @@ const Animation::Frame Animation::kAnimationEnd =
     std::numeric_limits<Animation::Frame>::max();
 
 Animation::Animation(const Sprite::Ref &sprite,
-                     const Frame *const frames,
+                     Frames frames,
                      const unsigned int fps,
                      const int delay)
     : stopped_(true), accumulated_(0), interval_(1000 / fps), frame_(0),
-      frames_(frames), sprite_(sprite), delay_(delay), idled_(0) {}
+      frames_(std::move(frames)), sprite_(sprite), delay_(delay), idled_(0) {}
 
 void Animation::set_fps(const unsigned int fps)
 {
@@ -23,9 +23,9 @@ void Animation::set_fps(const unsigned int fps)
 	interval_ = 1000 / fps;
 }
 
-void Animation::set_frames(const Frame *const frames)
+void Animation::set_frames(Frames frames)
 {
-	frames_.reset(frames);
+	frames_ = std::move(frames);
 	rewind();
 }
 

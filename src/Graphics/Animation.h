@@ -25,6 +25,7 @@ public:
 
 	using Callback = std::function<void(Animation *, const Event)>;
 	using Frame = unsigned int;
+	using Frames = std::unique_ptr<Frame[]>;
 
 	static const Frame kAnimationEnd;
 
@@ -40,7 +41,7 @@ public:
 	///   disable looping.
 	/// </param>
 	Animation(const Sprite::Ref &sprite,
-	          const Frame *const frames,
+	          Frames frames,
 	          const unsigned int fps,
 	          const int delay = 0);
 
@@ -70,7 +71,7 @@ public:
 	///   Array of texture ids to be used as frames, terminated with
 	///   <c>kAnimationEnd</c>.
 	/// </param>
-	void set_frames(const Frame *const frames);
+	void set_frames(Frames frames);
 
 	/// <summary>Sets the sprite to animate.</summary>
 	void set_sprite(const Sprite::Ref &sprite);
@@ -98,11 +99,11 @@ private:
 	unsigned int accumulated_;  ///< Accumulated monotonic time.
 	unsigned int interval_;     ///< Time till a tick.
 	unsigned int frame_;        ///< Current frame.
-	std::unique_ptr<const Frame[]> frames_;  ///< Array of texture ids to be used as frames, terminated with <c>kAnimationEnd</c>.
-	Sprite::Ref sprite_;  ///< The sprite to animate.
-	int delay_;           ///< Number of frames to delay before the animation loops. Negative numbers disable looping.
-	int idled_;           ///< Number of frames idled.
-	Callback callback_;   ///< Event callback.
+	Frames frames_;             ///< Array of texture ids to be used as frames, terminated with <c>kAnimationEnd</c>.
+	Sprite::Ref sprite_;        ///< The sprite to animate.
+	int delay_;                 ///< Number of frames to delay before the animation loops. Negative numbers disable looping.
+	int idled_;                 ///< Number of frames idled.
+	Callback callback_;         ///< Event callback.
 
 	void set_current_frame();
 

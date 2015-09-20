@@ -13,18 +13,18 @@ namespace
 	const char kErrorHandlingAnimationStateEvent[] =
 	    "An error occurred while handling an animation state event";
 
-	Animation::Frame* get_frames(lua_State *L, const int n)
+	Animation::Frames get_frames(lua_State *L, const int n)
 	{
 		const size_t count = lua_rawlen(L, n);
-		Animation::Frame *const frames = new Animation::Frame[count + 1];
+		Animation::Frames frames(new Animation::Frame[count + 1]);
 		int i = 0;
-		std::generate_n(frames, count, [L, n, &i] {
+		std::generate_n(frames.get(), count, [L, n, &i] {
 			lua_rawgeti(L, n, ++i);
 			return lua_tointeger(L, -1);
 		});
 		lua_pop(L, i);
 		frames[count] = Animation::kAnimationEnd;
-		return frames;
+		return std::move(frames);
 	}
 }
 

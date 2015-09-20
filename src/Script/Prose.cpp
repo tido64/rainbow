@@ -18,7 +18,7 @@
 #include "Lua/LuaHelper.h"
 #include "Lua/LuaSyntax.h"
 
-enum class Prose::AssetType : unsigned int
+enum class Prose::AssetType
 {
 	None,
 	Animation,

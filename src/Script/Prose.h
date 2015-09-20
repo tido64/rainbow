@@ -22,7 +22,7 @@ namespace rainbow { class SceneNode; }
 class Prose
 {
 public:
-	enum class AssetType : unsigned int;
+	enum class AssetType;
 
 	struct Asset
 	{

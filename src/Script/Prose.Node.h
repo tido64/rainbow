@@ -38,7 +38,7 @@ Prose::Asset create_animation(lua_State *L,
 {
 	const auto table = lua_gettop(L);
 	const size_t num_frames = lua_rawlen(L, table);
-	Animation::Frame *frames = new Animation::Frame[num_frames + 1];
+	Animation::Frames frames(new Animation::Frame[num_frames + 1]);
 	for (size_t i = 0; i < num_frames; ++i)
 	{
 		lua_rawgeti(L, table, i + 1);
@@ -63,7 +63,8 @@ Prose::Asset create_animation(lua_State *L,
 		delay = lua_tointeger(L, -1);
 	}
 
-	auto animation = stack.allocate<Animation>(sprite, frames, fps, delay);
+	auto animation =
+	    stack.allocate<Animation>(sprite, std::move(frames), fps, delay);
 	auto node = parent->add_child(animation);
 #if USE_NODE_TAGS
 	node->set_tag(table_name(L));

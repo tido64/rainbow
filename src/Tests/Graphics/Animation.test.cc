@@ -20,12 +20,12 @@ TEST_CASE("Animation specification", "[animation]")
 	rainbow::ISolemnlySwearThatIAmOnlyTesting mock;
 
 	auto atlas = make_shared<TextureAtlas>(mock);
-	const Animation::Frame *frames = new Animation::Frame[kNumFrames + 1]{
+	Animation::Frames frames(new Animation::Frame[kNumFrames + 1]{
 	    atlas->define(Vec2i::Zero, 16, 16),
 	    atlas->define(Vec2i(16, 16), 16, 16),
 	    atlas->define(Vec2i(32, 32), 16, 16),
 	    atlas->define(Vec2i(48, 48), 16, 16),
-	    Animation::kAnimationEnd};
+	    Animation::kAnimationEnd});
 
 	SpriteBatch batch(mock);
 	batch.set_texture(atlas);
@@ -38,7 +38,7 @@ TEST_CASE("Animation specification", "[animation]")
 	                vertex_array[2].texcoord,
 	                vertex_array[3].texcoord};
 
-	Animation animation(sprite, frames, kNumFrames, 0);
+	Animation animation(sprite, std::move(frames), kNumFrames, 0);
 
 	SECTION("Animations are stopped initially")
 	{
@@ -149,8 +149,8 @@ TEST_CASE("Animation specification", "[animation]")
 		REQUIRE(vertex_array[2].texcoord == u[2]);
 		REQUIRE(vertex_array[3].texcoord == u[3]);
 
-		animation.set_frames(
-		    new Animation::Frame[3]{1, 0, Animation::kAnimationEnd});
+		animation.set_frames(Animation::Frames(
+		    new Animation::Frame[3]{1, 0, Animation::kAnimationEnd}));
 
 		REQUIRE(vertex_array[0].texcoord == Vec2f(0.25f, 0.5f));
 		REQUIRE(vertex_array[1].texcoord == Vec2f(0.5f, 0.5f));

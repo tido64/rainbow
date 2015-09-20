@@ -9,7 +9,7 @@ where we take a sprite and change its texture at set intervals.
 
 ```c++
 Animation(const Sprite::Ref &sprite,
-          const Frame *const frames,
+          std::unique_ptr<Frame[]> frames,
           const unsigned int fps,
           const int delay = 0);
 ```
@@ -78,7 +78,7 @@ void  Animation::set_fps  (const unsigned int fps);
 Sets the playback rate in frames per second.
 
 ```c++
-void  Animation::set_frames  (const Animation::Frame *const frames);
+void  Animation::set_frames  (std::unique_ptr<Frame[]> frames);
 ```
 
 Sets new frames to be played.
@@ -135,9 +135,10 @@ namespace
         920, 724, 104, 149};
 }
 
-const Animation::Frame* create_animation_frames()
+Animation::Frames create_animation_frames()
 {
-    return new Animation::Frame[7]{0, 1, 2, 3, 4, 5, Animation::kAnimationEnd};
+    return Animation::Frames(
+        new Animation::Frame[7]{0, 1, 2, 3, 4, 5, Animation::kAnimationEnd});
 }
 
 rainbow::texture_t load_texture()
