@@ -192,12 +192,14 @@ extern "C"
 		const DataMap data{Path(path)};
 		if (!data)
 			return;
-		TextureAtlas *texture = new TextureAtlas(data);
+
+		std::unique_ptr<TextureAtlas> texture(new TextureAtlas(data));
 		if (!texture->is_valid())
 			return;
-		self->rendererObject = texture;
+
 		self->width = texture->width();
 		self->height = texture->height();
+		self->rendererObject = texture.release();
 	}
 
 	void _spAtlasPage_disposeTexture(spAtlasPage *self)

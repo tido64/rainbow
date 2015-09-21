@@ -16,10 +16,10 @@
 
 namespace
 {
-	const NSTimeInterval kAccelerometerUpdateInterval = 1.0 / 60.0;
-	const NSUInteger kMaxTouches = 16;
+	constexpr NSTimeInterval kAccelerometerUpdateInterval = 1.0 / 60.0;
+	constexpr NSUInteger kMaxTouches = 16;
 
-	CGSize GetScreenSize(UIScreen *screen)
+	CGSize GetScreenSize(UIScreen* screen)
 	{
 		if (![screen respondsToSelector:@selector(nativeBounds)])
 		{
@@ -35,12 +35,12 @@ namespace
 
 @interface RainbowViewController ()
 @property(readonly, nonatomic) NSUInteger supportedInterfaceOrientations;
-@property(readonly, nonatomic) Director *director;
-@property(readonly, nonatomic) CMMotionManager *motionManager;
 @end
 
 @implementation RainbowViewController
 {
+	Director* _director;
+	CMMotionManager* _motionManager;
 	Pointer _pointers[kMaxTouches];
 }
 
@@ -62,7 +62,6 @@ namespace
 {
 	if (self = [super init])
 	{
-		self.preferredFramesPerSecond = 60;
 		rainbow::Config config;
 		_supportedInterfaceOrientations =
 		    (config.is_portrait() ? UIInterfaceOrientationMaskPortrait
@@ -79,41 +78,38 @@ namespace
 
 - (void)dealloc
 {
-	delete self.director;
+	delete _director;
 	if ([EAGLContext currentContext] == self.context)
 		[EAGLContext setCurrentContext:nil];
 }
 
-- (EAGLContext *)context
+- (EAGLContext*)context
 {
 	return reinterpret_cast<GLKView*>(self.view).context;
 }
 
-- (void)setContext:(EAGLContext *)context
+- (void)setContext:(EAGLContext*)context
 {
 	reinterpret_cast<GLKView*>(self.view).context = context;
 }
 
-- (Pointer *)pointers
-{
-	return _pointers;
-}
+- (Pointer*)pointers { return _pointers; }
 
 /// Returns an array of UITouches converted to the coordinate space of our
 /// viewport.
 /// \param touches  Set of touches to convert.
 /// \return Array of Pointers. Must not be deleted.
-- (Pointer *)convertTouches:(NSSet *)touches
+- (Pointer*)convertTouches:(NSSet*)touches
 {
 	R_ASSERT(touches.count <= kMaxTouches, "Unsupported number of touches");
 
-	UIView *view = self.view;
-	UIScreen *screen = view.window.screen;
+	UIView* view = self.view;
+	UIScreen* screen = view.window.screen;
 	id<UICoordinateSpace> space = screen.coordinateSpace;
 	const CGFloat height = CGRectGetHeight(space.bounds);
 	const CGFloat scale = screen.nativeScale;
-	Pointer *ptr = self.pointers;
-	for (UITouch *touch in touches)
+	Pointer* ptr = self.pointers;
+	for (UITouch* touch in touches)
 	{
 		const CGPoint p = [view convertPoint:[touch locationInView:view]
 		                   toCoordinateSpace:space];
@@ -129,46 +125,51 @@ namespace
 
 - (void)update
 {
-	if (self.motionManager.accelerometerActive)
+	if (_motionManager.accelerometerActive)
 	{
-		const CMAccelerometerData *data = self.motionManager.accelerometerData;
-		self.director->input().accelerated(
-		    data.acceleration.x, data.acceleration.y, data.acceleration.z,
-		    data.timestamp);
+		const CMAccelerometerData* data = _motionManager.accelerometerData;
+		_director->input().accelerated(data.acceleration.x,
+		                               data.acceleration.y,
+		                               data.acceleration.z,
+		                               data.timestamp);
 	}
-	self.director->update(self.timeSinceLastDraw * 1000);
+	_director->update(self.timeSinceLastDraw * 1000);
 }
 
 #pragma mark - GLKViewDelegate protocol
 
-- (void)glkView:(GLKView *)view drawInRect:(CGRect)rect
+- (void)glkView:(GLKView*)view drawInRect:(CGRect)rect
 {
-	self.director->draw();
+	_director->draw();
 }
+
+#pragma mark - GLKViewController overrides
+
+- (NSInteger)preferredFramesPerSecond { return 60; }
 
 #pragma mark - UIResponder overrides
 
-- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+- (void)touchesBegan:(NSSet*)touches withEvent:(UIEvent*)event
 {
-	self.director->input().on_pointer_began(touches.count,
-	                                        [self convertTouches:touches]);
+	_director->input().on_pointer_began(touches.count,
+	                                    [self convertTouches:touches]);
 }
 
-- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
+- (void)touchesMoved:(NSSet*)touches withEvent:(UIEvent*)event
 {
-	self.director->input().on_pointer_moved(touches.count,
-	                                        [self convertTouches:touches]);
+	_director->input().on_pointer_moved(touches.count,
+	                                    [self convertTouches:touches]);
 }
 
-- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
+- (void)touchesEnded:(NSSet*)touches withEvent:(UIEvent*)event
 {
-	self.director->input().on_pointer_ended(touches.count,
-	                                        [self convertTouches:touches]);
+	_director->input().on_pointer_ended(touches.count,
+	                                    [self convertTouches:touches]);
 }
 
-- (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
+- (void)touchesCancelled:(NSSet*)touches withEvent:(UIEvent*)event
 {
-	self.director->input().on_pointer_canceled();
+	_director->input().on_pointer_canceled();
 }
 
 #pragma mark - UIViewController overrides
@@ -186,7 +187,7 @@ namespace
 	}
 	[EAGLContext setCurrentContext:self.context];
 
-	[self.motionManager startAccelerometerUpdates];
+	[_motionManager startAccelerometerUpdates];
 
 	CGSize size = GetScreenSize([UIScreen mainScreen]);
 	if (self.supportedInterfaceOrientations ==
@@ -198,57 +199,45 @@ namespace
 		std::swap(size.width, size.height);
 	}
 	_director = new Director();
-	self.director->init(Vec2i(size.width, size.height));
+	_director->init(Vec2i(size.width, size.height));
 }
 
-- (BOOL)shouldAutorotate
-{
-	return YES;
-}
+- (BOOL)shouldAutorotate { return YES; }
 
 - (void)didReceiveMemoryWarning
 {
 	[super didReceiveMemoryWarning];
-
-	// TODO: Investigate whether propagating the warning to Director still has
-	// any bad side effects.
-
-	// Don't propagate the warning to Director. It will force Lua to collect
-	// garbage and mess up iPad 1's OpenGL driver.
-	//self.director->on_memory_warning();
+	_director->on_memory_warning();
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
 	[super viewDidAppear:animated];
-	[self.motionManager startAccelerometerUpdates];
+	[_motionManager startAccelerometerUpdates];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
 {
-	[self.motionManager stopAccelerometerUpdates];
+	[_motionManager stopAccelerometerUpdates];
 	[super viewDidDisappear:animated];
 }
 
-- (BOOL)prefersStatusBarHidden
-{
-	return YES;
-}
+- (BOOL)prefersStatusBarHidden { return YES; }
 
 #pragma mark - Deprecated in iOS 8.0
 
-- (Pointer *)touchesFromSet:(NSSet *)touches
+- (Pointer*)touchesFromSet:(NSSet*)touches
 {
 	R_ASSERT(touches.count <= kMaxTouches, "Unsupported number of touches");
 
-	UIScreen *screen = self.view.window.screen;
+	UIScreen* screen = self.view.window.screen;
 	const CGSize size = GetScreenSize(screen);
 	const CGFloat scale = screen.scale;
-	Pointer *ptr = self.pointers;
+	Pointer* ptr = self.pointers;
 	switch ([UIApplication sharedApplication].statusBarOrientation)
 	{
 		case UIInterfaceOrientationPortrait:
-			for (UITouch *touch in touches)
+			for (UITouch* touch in touches)
 			{
 				const CGPoint p = [touch locationInView:nil];
 				ptr->hash = touch.hash;
@@ -259,7 +248,7 @@ namespace
 			}
 			break;
 		case UIInterfaceOrientationPortraitUpsideDown:
-			for (UITouch *touch in touches)
+			for (UITouch* touch in touches)
 			{
 				const CGPoint p = [touch locationInView:nil];
 				ptr->hash = touch.hash;
@@ -270,7 +259,7 @@ namespace
 			}
 			break;
 		case UIInterfaceOrientationLandscapeLeft:
-			for (UITouch *touch in touches)
+			for (UITouch* touch in touches)
 			{
 				const CGPoint p = [touch locationInView:nil];
 				ptr->hash = touch.hash;
@@ -281,7 +270,7 @@ namespace
 			}
 			break;
 		case UIInterfaceOrientationLandscapeRight:
-			for (UITouch *touch in touches)
+			for (UITouch* touch in touches)
 			{
 				const CGPoint p = [touch locationInView:nil];
 				ptr->hash = touch.hash;
