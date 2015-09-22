@@ -1,4 +1,4 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -20,14 +20,14 @@ namespace heimdall
 		~Overlay() override;
 
 		unsigned int count() const { return 6; }
-		bool is_visible() const { return node_->enabled; }
+		bool is_visible() const { return node_->is_enabled(); }
 		rainbow::SceneNode* node() const { return node_; }
 		const VertexArray& vertex_array() const { return array_; }
 
 		void init(rainbow::SceneNode &parent, const Vec2i &screen);
 
-		void hide() { node_->enabled = false; }
-		void show() { node_->enabled = true; }
+		void hide() { node_->set_enabled(false); }
+		void show() { node_->set_enabled(true); }
 
 		template<typename T>
 		void add_child(T *component) const { node_->add_child(component); }

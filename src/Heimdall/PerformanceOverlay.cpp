@@ -77,9 +77,10 @@ namespace
 namespace heimdall
 {
 	PerformanceOverlay::PerformanceOverlay()
-	    : node_(new rainbow::SceneNode()), vmem_top_(0.0f), perf_graph_(nvg_)
+	    : node_(rainbow::SceneNode::create().release()), vmem_top_(0.0f),
+	      perf_graph_(nvg_)
 	{
-		node_->enabled = false;
+		node_->set_enabled(false);
 	}
 
 	void PerformanceOverlay::init_button(const Vec2f &p,
@@ -90,16 +91,17 @@ namespace heimdall
 		button_.set_position(p);
 		button_.set_text(kStringShowPerfData);
 		button_.set_action([this] {
-			node_->enabled = !node_->enabled;
-			if (node_->enabled)
+			if (node_->is_enabled())
 			{
-				button_.set_color(color::NormalFont());
-				button_.set_text(kStringHidePerfData);
+				node_->set_enabled(false);
+				button_.set_color(color::InactiveFont());
+				button_.set_text(kStringShowPerfData);
 			}
 			else
 			{
-				button_.set_color(color::InactiveFont());
-				button_.set_text(kStringShowPerfData);
+				node_->set_enabled(true);
+				button_.set_color(color::NormalFont());
+				button_.set_text(kStringHidePerfData);
 			}
 		});
 	}
@@ -131,7 +133,7 @@ namespace heimdall
 
 	void PerformanceOverlay::update(const unsigned long dt)
 	{
-		if (!node_->enabled)
+		if (!node_->is_enabled())
 			return;
 
 		if (frame_data_.size() == kFrameDataLength)

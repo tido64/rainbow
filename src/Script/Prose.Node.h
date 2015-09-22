@@ -183,9 +183,7 @@ Prose::Asset create_node(lua_State *L,
 			asset = create_label(L, scene, stack, parent);
 			break;
 		case Prose::AssetType::Node:
-			asset = {Prose::AssetType::Node,
-			         nullptr,
-			         parent->add_child(new rainbow::SceneNode())};
+			asset = {Prose::AssetType::Node, nullptr, parent->add_child()};
 			break;
 		case Prose::AssetType::SpriteBatch: {
 			asset = create_spritebatch(L, scene, stack, parent);

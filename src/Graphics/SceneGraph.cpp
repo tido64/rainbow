@@ -1,4 +1,4 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -13,111 +13,157 @@
 static_assert(ShaderManager::kInvalidProgram == 0,
               "Inlined SceneNode(Type, void*) assumes kInvalidProgram == 0");
 
-namespace rainbow
+using rainbow::SceneNode;
+
+namespace
 {
-	SceneNode::SceneNode(SceneNode&& node)
-	    : TreeNode(std::move(node)), enabled(node.enabled),
-	      type_(node.type_), program_(node.program_), data_(node.data_)
-#if USE_NODE_TAGS
-	    , tag_(std::move(node.tag_))
-#endif
+	class AnimationNode final : public SceneNode
 	{
-		node.enabled = false;
-		node.program_ = ShaderManager::kInvalidProgram;
-		node.data_ = nullptr;
-	}
+	public:
+		AnimationNode(Animation* animation) : animation_(animation) {}
 
-	void SceneNode::draw() const
-	{
-		if (!this->enabled)
-			return;
+	private:
+		Animation* animation_;
 
-		ShaderManager::Context context;
-		if (program_ != ShaderManager::kInvalidProgram)
-			ShaderManager::Get()->use(program_);
+		void draw_impl() const override {}
+		void move_impl(const Vec2f&) const override {}
 
-		switch (type_)
+		void update_impl(const unsigned long dt) const override
 		{
-			case Type::Drawable:
-				drawable_->draw();
-				break;
-			case Type::Label:
-				Renderer::draw(*label_);
-				break;
-			case Type::SpriteBatch:
-				Renderer::draw(*sprite_batch_);
-				break;
-			default:
-				break;
+			animation_->update(dt);
 		}
-		for (auto child : children_)
-			child->draw();
-	}
+	};
 
-	void SceneNode::move(const Vec2f &delta) const
+	class DrawableNode final : public SceneNode
 	{
-		for_each(this, [](const SceneNode *node, const Vec2f &delta) {
-			switch (node->type_)
-			{
-				case Type::Drawable:
-					node->drawable_->move(delta);
-					break;
-				case Type::Label:
-					node->label_->move(delta);
-					break;
-				case Type::SpriteBatch:
-					node->sprite_batch_->move(delta);
-					break;
-				default:
-					break;
-			}
-		}, delta);
-	}
+	public:
+		DrawableNode(Drawable* drawable) : drawable_(drawable) {}
 
-	void SceneNode::update(const unsigned long dt) const
-	{
-		if (!this->enabled)
-			return;
+	private:
+		Drawable* drawable_;
 
-		switch (type_)
+		void draw_impl() const override { drawable_->draw(); }
+
+		void move_impl(const Vec2f& delta) const override
 		{
-			case Type::Animation:
-				animation_->update(dt);
-				break;
-			case Type::Drawable:
-				drawable_->update(dt);
-				break;
-			case Type::Label:
-				label_->update();
-				break;
-			case Type::SpriteBatch:
-				sprite_batch_->update();
-				break;
-			default:
-				break;
+			drawable_->move(delta);
 		}
-		for (auto child : children_)
-			child->update(dt);
-	}
 
-	SceneNode& SceneNode::operator=(SceneNode&& node)
+		void update_impl(const unsigned long dt) const override
+		{
+			drawable_->update(dt);
+		}
+	};
+
+	class LabelNode final : public SceneNode
 	{
-		if (&node == this)
-			return *this;
+	public:
+		LabelNode(Label* label) : label_(label) {}
 
-		TreeNode::operator=(std::move(node));
+	private:
+		Label* label_;
 
-		enabled = node.enabled;
-		type_ = node.type_;
-		program_ = node.program_;
-		data_ = node.data_;
-#if USE_NODE_TAGS
-		tag_= std::move(node.tag_);
-#endif
+		void draw_impl() const override { Renderer::draw(*label_); }
 
-		node.enabled = false;
-		node.program_ = ShaderManager::kInvalidProgram;
-		node.data_ = nullptr;
-		return *this;
-	}
+		void move_impl(const Vec2f& delta) const override
+		{
+			label_->move(delta);
+		}
+
+		void update_impl(const unsigned long) const override
+		{
+			label_->update();
+		}
+	};
+
+	class SpriteBatchNode final : public SceneNode
+	{
+	public:
+		SpriteBatchNode(SpriteBatch* batch) : sprite_batch_(batch) {}
+
+	private:
+		SpriteBatch* sprite_batch_;
+
+		void draw_impl() const override { Renderer::draw(*sprite_batch_); }
+
+		void move_impl(const Vec2f& delta) const override
+		{
+			sprite_batch_->move(delta);
+		}
+
+		void update_impl(const unsigned long) const override
+		{
+			sprite_batch_->update();
+		}
+	};
 }
+
+void SceneNode::draw() const
+{
+	if (!is_enabled())
+		return;
+
+	ShaderManager::Context context;
+	if (program_ != ShaderManager::kInvalidProgram)
+		ShaderManager::Get()->use(program_);
+
+	draw_impl();
+
+	for (auto&& child : children_)
+		child->draw();
+}
+
+void SceneNode::move(const Vec2f& delta) const
+{
+	for_each(this, [](const SceneNode* node, const Vec2f& delta) {
+		node->move_impl(delta);
+	}, delta);
+}
+
+void SceneNode::update(const unsigned long dt) const
+{
+	if (!is_enabled())
+		return;
+
+	update_impl(dt);
+
+	for (auto&& child : children_)
+		child->update(dt);
+}
+
+// Workaround for https://gcc.gnu.org/bugzilla/show_bug.cgi?id=56480
+#if defined(__GNUC__) && !defined(__clang__)
+namespace rainbow {
+#endif
+
+std::unique_ptr<SceneNode> SceneNode::create()
+{
+	return std::unique_ptr<SceneNode>(new GroupNode());
+}
+
+std::unique_ptr<SceneNode> SceneNode::create(Drawable* drawable)
+{
+	return std::unique_ptr<SceneNode>(new DrawableNode(drawable));
+}
+
+template <>
+std::unique_ptr<SceneNode> SceneNode::create(Animation* a)
+{
+	return std::unique_ptr<SceneNode>(new AnimationNode(a));
+}
+
+template <>
+std::unique_ptr<SceneNode> SceneNode::create(Label* l)
+{
+	return std::unique_ptr<SceneNode>(new LabelNode(l));
+}
+
+template <>
+std::unique_ptr<SceneNode> SceneNode::create(SpriteBatch* s)
+{
+	return std::unique_ptr<SceneNode>(new SpriteBatchNode(s));
+}
+
+#if defined(__GNUC__) && !defined(__clang__)
+}
+#endif

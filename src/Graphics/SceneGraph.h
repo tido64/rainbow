@@ -15,10 +15,7 @@
 #include "Common/TreeNode.h"
 #include "Common/Vec2.h"
 
-class Animation;
 class Drawable;
-class Label;
-class SpriteBatch;
 
 namespace rainbow
 {
@@ -31,96 +28,90 @@ namespace rainbow
 	class SceneNode : public TreeNode<SceneNode>
 	{
 	public:
-		bool enabled;  ///< Whether this node should be updated and/or drawn.
-
 		/// <summary>Creates a group node.</summary>
-		SceneNode() : SceneNode(Type::Group, nullptr) {}
+		static std::unique_ptr<SceneNode> create();
 
-		SceneNode(SceneNode&&);
+		/// <summary>Creates a node with specified drawable.</summary>
+		static std::unique_ptr<SceneNode> create(Drawable* drawable);
 
-		/// <summary>Creates an animation node.</summary>
-		explicit SceneNode(Animation *a) : SceneNode(Type::Animation, a) {}
+		/// <summary>Creates a node with specified component.</summary>
+		template <typename T,
+		          typename std::enable_if<
+		              !std::is_base_of<Drawable, T>::value>::type* = nullptr>
+		static std::unique_ptr<SceneNode> create(T* component);
 
-		/// <summary>Creates a label node.</summary>
-		explicit SceneNode(Label *label) : SceneNode(Type::Label, label) {}
+		virtual ~SceneNode() = default;
 
-		/// <summary>Creates a sprite batch node.</summary>
-		explicit SceneNode(SpriteBatch *batch)
-		    : SceneNode(Type::SpriteBatch, batch) {}
-
-		/// <summary>Creates a generic drawable node.</summary>
-		SceneNode(Drawable *drawable) : SceneNode(Type::Drawable, drawable) {}
-
-#if USE_NODE_TAGS
-		const std::string& tag() const { return tag_; }
-		void set_tag(const char *tag) { tag_ = tag; }
-#endif
-
-		/// <summary>Adds a child node.</summary>
-		SceneNode* add_child(SceneNode *n)
-		{
-			TreeNode<SceneNode>::add_child(n);
-			return n;
-		}
-
-		/// <summary>Adds a child node.</summary>
-		template<typename T>
-		SceneNode* add_child(T component)
-		{
-			return add_child(new SceneNode(component));
-		}
-
-		/// <summary>Adds a child node.</summary>
-		template<typename T>
-		SceneNode* add_child(const std::shared_ptr<T> &component)
-		{
-			return add_child(new SceneNode(component.get()));
-		}
+		/// <summary>Returns whether this node is enabled.</summary>
+		bool is_enabled() const { return enabled_; }
+		void set_enabled(const bool enabled) { enabled_ = enabled; }
 
 		/// <summary>
-		///   Attach a program to this node. The program will be used to draw
+		///   Attaches a program to this node. The program will be used to draw
 		///   this node and any of its descendants unless they also have an
 		///   attached shader.
 		/// </summary>
 		void attach_program(const unsigned int program) { program_ = program; }
 
+#if USE_NODE_TAGS
+		const std::string& tag() const { return tag_; }
+		void set_tag(std::string tag) { tag_ = std::move(tag); }
+#endif
+
+		/// <summary>Adds a child group node.</summary>
+		SceneNode* add_child() { return add_child(create().release()); }
+
+		/// <summary>Adds a child node.</summary>
+		SceneNode* add_child(SceneNode* n)
+		{
+			TreeNode::add_child(n);
+			return n;
+		}
+
+		/// <summary>Adds a child node.</summary>
+		template <typename T>
+		SceneNode* add_child(const std::shared_ptr<T>& component)
+		{
+			return add_child(create(component.get()).release());
+		}
+
+		/// <summary>Adds a child node.</summary>
+		template <typename T>
+		SceneNode* add_child(T* component)
+		{
+			return add_child(create(component).release());
+		}
+
 		/// <summary>Draws this node and all its enabled children.</summary>
 		void draw() const;
 
 		/// <summary>Recursively moves all sprites by (x,y).</summary>
-		void move(const Vec2f &) const;
+		void move(const Vec2f& delta) const;
 
 		/// <summary>Updates this node and all its enabled children.</summary>
 		void update(const unsigned long dt) const;
 
-		SceneNode& operator=(SceneNode&& node);
+	protected:
+		SceneNode() : enabled_(true), program_(0) {}
 
 	private:
-		enum class Type
-		{
-			Group,
-			Animation,
-			Drawable,
-			Label,
-			SpriteBatch
-		};
-
-		Type type_;             ///< Defines what type of graphical element this node represents.
-		unsigned int program_;  ///< The active program for this node and its descendants.
-		union
-		{
-			void *data_;
-			Animation *animation_;
-			Drawable *drawable_;
-			Label *label_;
-			SpriteBatch *sprite_batch_;
-		};  ///< Graphical element represented by this node.
+		bool enabled_;
+		unsigned int program_;
 #if USE_NODE_TAGS
 		std::string tag_;
 #endif
 
-		SceneNode(Type type, void *data)
-		    : enabled(true), type_(type), program_(0), data_(data) {}
+		virtual void draw_impl() const = 0;
+		virtual void move_impl(const Vec2f&) const = 0;
+		virtual void update_impl(const unsigned long dt) const = 0;
+	};
+
+	class GroupNode final : public SceneNode
+	{
+	private:
+		void draw_impl() const override {}
+		void move_impl(const Vec2f&) const override {}
+		void update_impl(const unsigned long) const override {}
 	};
 }
 

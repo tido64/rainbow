@@ -67,7 +67,7 @@ namespace rainbow
 		const char *error_;
 		TimerManager timer_manager_;
 		std::unique_ptr<GameBase> script_;
-		SceneNode scenegraph_;
+		GroupNode scenegraph_;
 		Input input_;
 		Renderer renderer_;
 		ConFuoco::Mixer mixer_;

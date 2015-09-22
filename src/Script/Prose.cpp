@@ -32,7 +32,8 @@ enum class Prose::AssetType
 };
 
 Prose::Prose(const size_t size)
-    : allocator_(size), stack_(allocator_), node_(new rainbow::SceneNode()) {}
+    : allocator_(size), stack_(allocator_),
+      node_(rainbow::SceneNode::create().release()) {}
 
 Prose::~Prose()
 {

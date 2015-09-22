@@ -1,4 +1,4 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -179,7 +179,7 @@ NS_RAINBOW_LUA_BEGIN
 
 		SceneNode *node = (lua_isuserdata(L, 2) ? tonode(L, 2) : self->node_);
 		R_ASSERT(node, "This shouldn't ever happen.");
-		SceneNode *child = new SceneNode();
+		SceneNode *child = new GroupNode();
 		R_ASSERT(register_node(child), "Failed to register node");
 		lua_pushlightuserdata(L, node->add_child(child));
 		return 1;
@@ -206,7 +206,7 @@ NS_RAINBOW_LUA_BEGIN
 		// rainbow.scenegraph:disable(node)
 		Argument<SceneNode>::is_required(L, 2);
 
-		tonode(L, 2)->enabled = false;
+		tonode(L, 2)->set_enabled(false);
 		return 0;
 	}
 
@@ -215,7 +215,7 @@ NS_RAINBOW_LUA_BEGIN
 		// rainbow.scenegraph:enable(node)
 		Argument<SceneNode>::is_required(L, 2);
 
-		tonode(L, 2)->enabled = true;
+		tonode(L, 2)->set_enabled(true);
 		return 0;
 	}
 
