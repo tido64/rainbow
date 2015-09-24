@@ -7,6 +7,7 @@
 
 #include "Common/NonCopyable.h"
 #include "Graphics/SpriteVertex.h"
+#include "Memory/NotNull.h"
 
 class SpriteBatch;
 
@@ -60,13 +61,13 @@ public:
 		const SpriteBatch *batch_;
 		size_t i_;
 
-		Ref(const SpriteBatch *batch, const size_t i)
+		Ref(NotNull<const SpriteBatch*> batch, const size_t i)
 		    : batch_(batch), i_(i) {}
 	};
 
 	Sprite(const unsigned int width,
 	       const unsigned int height,
-	       const SpriteBatch *parent);
+	       NotNull<const SpriteBatch*> parent);
 	Sprite(Sprite&&);
 
 	float angle() const { return angle_; }
@@ -97,14 +98,14 @@ public:
 	void set_normal(const unsigned int id);
 
 	/// <summary>Sets buffer used to store UV coordinates.</summary>
-	void set_normal_buffer(Vec2f *map) { normal_map_ = map; }
+	void set_normal_buffer(NotNull<Vec2f*> map) { normal_map_ = map; }
 
 	/// <summary>Sets the pivot point for rotation and translation.</summary>
 	/// <param name="p">Normalised pivot point.</param>
-	void set_pivot(const Vec2f &p);
+	void set_pivot(const Vec2f& p);
 
 	/// <summary>Sets sprite position (absolute).</summary>
-	void set_position(const Vec2f &);
+	void set_position(const Vec2f&);
 
 	/// <summary>Sets angle of rotation (in radian).</summary>
 	void set_rotation(const float r);
@@ -120,14 +121,14 @@ public:
 	///   height).
 	/// </summary>
 	/// <param name="f">Scaling factors for x- and y-axis.</param>
-	void set_scale(const Vec2f &f);
+	void set_scale(const Vec2f& f);
 
 	/// <summary>Sets texture.</summary>
 	/// <param name="id">Identifier of the texture to set.</param>
 	void set_texture(const unsigned int id);
 
 	/// <summary>Sets vertex array buffer.</summary>
-	void set_vertex_array(SpriteVertex *array);
+	void set_vertex_array(NotNull<SpriteVertex*> array);
 
 	/// <summary>Flips sprite vertically.</summary>
 	void flip();
@@ -139,7 +140,7 @@ public:
 	void mirror();
 
 	/// <summary>Moves sprite by (x,y).</summary>
-	void move(const Vec2f &);
+	void move(const Vec2f&);
 
 	/// <summary>Rotates sprite by <paramref name="r"/>.</summary>
 	void rotate(const float r);
@@ -164,13 +165,13 @@ private:
 	Vec2f center_;                ///< Committed position.
 	Vec2f position_;              ///< Uncommitted position.
 	Vec2f scale_;                 ///< Scaling factor.
-	const SpriteBatch *parent_;   ///< Pointer to sprite batch.
-	SpriteVertex *vertex_array_;  ///< Interleaved vertex array.
-	Vec2f *normal_map_;           ///< Normal map UV coordinates.
+	const SpriteBatch* parent_;   ///< Pointer to sprite batch.
+	SpriteVertex* vertex_array_;  ///< Interleaved vertex array.
+	Vec2f* normal_map_;           ///< Normal map UV coordinates.
 	int id_;                      ///< Sprite identifier.
 
 	void flip_textures(const unsigned int axis);
-	void set_normal(const unsigned int f, const Vec2f *uv);
+	void set_normal(const unsigned int f, const Vec2f* uv);
 };
 
 #endif

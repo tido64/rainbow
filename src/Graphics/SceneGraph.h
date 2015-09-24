@@ -9,7 +9,7 @@
 
 #define USE_NODE_TAGS !defined(NDEBUG) || defined(USE_HEIMDALL)
 #if USE_NODE_TAGS
-#include <string>
+#	include <string>
 #endif
 
 #include "Common/TreeNode.h"
@@ -32,13 +32,13 @@ namespace rainbow
 		static std::unique_ptr<SceneNode> create();
 
 		/// <summary>Creates a node with specified drawable.</summary>
-		static std::unique_ptr<SceneNode> create(Drawable* drawable);
+		static std::unique_ptr<SceneNode> create(Drawable& drawable);
 
 		/// <summary>Creates a node with specified component.</summary>
 		template <typename T,
 		          typename std::enable_if<
 		              !std::is_base_of<Drawable, T>::value>::type* = nullptr>
-		static std::unique_ptr<SceneNode> create(T* component);
+		static std::unique_ptr<SceneNode> create(T& component);
 
 		virtual ~SceneNode() = default;
 
@@ -59,10 +59,10 @@ namespace rainbow
 #endif
 
 		/// <summary>Adds a child group node.</summary>
-		SceneNode* add_child() { return add_child(create().release()); }
+		SceneNode* add_child() { return add_child(create()); }
 
 		/// <summary>Adds a child node.</summary>
-		SceneNode* add_child(SceneNode* n)
+		SceneNode* add_child(NotNull<Owner<SceneNode*>> n)
 		{
 			TreeNode::add_child(n);
 			return n;
@@ -70,16 +70,22 @@ namespace rainbow
 
 		/// <summary>Adds a child node.</summary>
 		template <typename T>
-		SceneNode* add_child(const std::shared_ptr<T>& component)
+		SceneNode* add_child(T& component)
 		{
-			return add_child(create(component.get()).release());
+			return add_child(create(component));
 		}
 
 		/// <summary>Adds a child node.</summary>
 		template <typename T>
-		SceneNode* add_child(T* component)
+		SceneNode* add_child(std::shared_ptr<T>& component)
 		{
-			return add_child(create(component).release());
+			return add_child(create(*component));
+		}
+
+		/// <summary>Adds a child node.</summary>
+		SceneNode* add_child(std::unique_ptr<SceneNode> node)
+		{
+			return add_child(node.release());
 		}
 
 		/// <summary>Draws this node and all its enabled children.</summary>

@@ -65,7 +65,7 @@ Prose::Asset create_animation(lua_State *L,
 
 	auto animation =
 	    stack.allocate<Animation>(sprite, std::move(frames), fps, delay);
-	auto node = parent->add_child(animation);
+	auto node = parent->add_child(*animation);
 #if USE_NODE_TAGS
 	node->set_tag(table_name(L));
 #endif  // USE_NODE_TAGS
@@ -101,7 +101,7 @@ Prose::Asset create_label(lua_State *L,
 		auto field = get_field(L, "text");
 		label->set_text(lua_tostring(L, -1));
 	}
-	return {Prose::AssetType::Label, label, parent->add_child(label)};
+	return {Prose::AssetType::Label, label, parent->add_child(*label)};
 }
 
 Prose::Asset create_sprite(lua_State *L,
@@ -156,7 +156,7 @@ Prose::Asset create_spritebatch(lua_State *L,
 	auto field = get_field(L, "texture");
 	batch->set_texture(SharedPtr<TextureAtlas>(
 	    scene.get_asset<TextureAtlas>(lua_tostring(L, -1))));
-	return {Prose::AssetType::SpriteBatch, batch, parent->add_child(batch)};
+	return {Prose::AssetType::SpriteBatch, batch, parent->add_child(*batch)};
 }
 
 Prose::AssetType node_type(lua_State *L)

@@ -11,7 +11,7 @@ namespace
 	class TreeNodeTest : public TreeNode<TreeNodeTest>
 	{
 	public:
-		TreeNodeTest(bool &deleted) : deleted_(deleted) { deleted_ = false; }
+		TreeNodeTest(bool& deleted) : deleted_(deleted) { deleted_ = false; }
 		TreeNodeTest(TreeNodeTest&&) = default;
 		~TreeNodeTest() { deleted_ = true; }
 
@@ -24,7 +24,7 @@ namespace
 		}
 
 	private:
-		bool &deleted_;
+		bool& deleted_;
 	};
 }
 
@@ -42,7 +42,7 @@ TEST_CASE("TreeNodes can be moved", "[tree]")
 	TreeNodeTest root(root_deleted);
 
 	bool node_deleted = false;
-	TreeNodeTest *node = new TreeNodeTest(node_deleted);
+	TreeNodeTest* node = new TreeNodeTest(node_deleted);
 	root.add_child(node);
 
 	REQUIRE_FALSE(root.children().empty());
@@ -74,7 +74,7 @@ TEST_CASE("Adding/removing nodes", "[tree]")
 	TreeNodeTest root(root_deleted);
 
 	bool node_deleted = false;
-	TreeNodeTest *node = new TreeNodeTest(node_deleted);
+	TreeNodeTest* node = new TreeNodeTest(node_deleted);
 	root.add_child(node);
 
 	REQUIRE_FALSE(node_deleted);
@@ -248,10 +248,10 @@ TEST_CASE("Traverse nodes with for_each", "[tree]")
 	nodes[2]->add_child(nodes[3]);
 	nodes[2]->add_child(nodes[4]);
 
-	for_each(&root, [&nodes](const TreeNodeTest *node) {
+	for_each(root, [&nodes](const TreeNodeTest& node) {
 		for (size_t i = 0; i < rainbow::array_size(nodes); ++i)
 		{
-			if (nodes[i] == node)
+			if (nodes[i] == &node)
 			{
 				nodes[i] = nullptr;
 				break;
@@ -259,7 +259,7 @@ TEST_CASE("Traverse nodes with for_each", "[tree]")
 		}
 	});
 
-	REQUIRE(std::all_of(nodes, std::end(nodes), [](const TreeNodeTest *node) {
+	REQUIRE(std::all_of(nodes, std::end(nodes), [](const TreeNodeTest* node) {
 		return node == nullptr;
 	}));
 }

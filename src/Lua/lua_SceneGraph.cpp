@@ -38,7 +38,7 @@ namespace
 
 	bool unregister_node(SceneNode *node)
 	{
-		for_each(node, [](SceneNode *node) { g_nodes.erase(node); });
+		for_each(*node, [](SceneNode &node) { g_nodes.erase(&node); });
 		return true;
 	}
 #endif
@@ -138,7 +138,7 @@ NS_RAINBOW_LUA_BEGIN
 			obj = 3;
 		}
 		replacetable(L, obj);
-		SceneNode *child = node->add_child(touserdata(L, obj)->get());
+		SceneNode *child = node->add_child(*touserdata(L, obj)->get());
 		R_ASSERT(register_node(child), "Failed to register node");
 		lua_pushlightuserdata(L, child);
 		return 1;
@@ -179,9 +179,9 @@ NS_RAINBOW_LUA_BEGIN
 
 		SceneNode *node = (lua_isuserdata(L, 2) ? tonode(L, 2) : self->node_);
 		R_ASSERT(node, "This shouldn't ever happen.");
-		SceneNode *child = new GroupNode();
-		R_ASSERT(register_node(child), "Failed to register node");
-		lua_pushlightuserdata(L, node->add_child(child));
+		auto child = SceneNode::create();
+		R_ASSERT(register_node(child.get()), "Failed to register node");
+		lua_pushlightuserdata(L, node->add_child(std::move(child)));
 		return 1;
 	}
 

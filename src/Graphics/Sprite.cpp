@@ -30,32 +30,28 @@ namespace
 		return ((state & kIsFlipped) >> 0xf) + ((state & kIsMirrored) >> 0xf);
 	}
 
-	Vec2f transform_srt(const Vec2f &p,
-	                    const Vec2f &s_sin_r,
-	                    const Vec2f &s_cos_r,
-	                    const Vec2f &center)
+	Vec2f transform_srt(const Vec2f& p,
+	                    const Vec2f& s_sin_r,
+	                    const Vec2f& s_cos_r,
+	                    const Vec2f& center)
 	{
 		return Vec2f(s_cos_r.x * p.x - s_sin_r.y * p.y + center.x,
 		             s_sin_r.x * p.x + s_cos_r.y * p.y + center.y);
 	}
 
-	Vec2f transform_st(const Vec2f &p, const Vec2f &scale, const Vec2f &center)
+	Vec2f transform_st(const Vec2f& p, const Vec2f& scale, const Vec2f& center)
 	{
 		return Vec2f(scale.x * p.x + center.x, scale.y * p.y + center.y);
 	}
 }
 
-Sprite& Sprite::Ref::operator*() const
-{
-	return batch_->sprites()[i_];
-}
+Sprite& Sprite::Ref::operator*() const { return batch_->sprites()[i_]; }
 
-Sprite* Sprite::Ref::operator->() const
-{
-	return &batch_->sprites()[i_];
-}
+Sprite* Sprite::Ref::operator->() const { return &batch_->sprites()[i_]; }
 
-Sprite::Sprite(const unsigned int w, const unsigned int h, const SpriteBatch *p)
+Sprite::Sprite(const unsigned int w,
+               const unsigned int h,
+               NotNull<const SpriteBatch*> p)
     : width_(w), height_(h), state_(0), angle_(0.0f), pivot_(0.5f, 0.5f),
       scale_(1.0f, 1.0f), parent_(p), vertex_array_(nullptr),
       normal_map_(nullptr), id_(kNoId) {}
@@ -72,15 +68,9 @@ Sprite::Sprite(Sprite&& s)
 	s.id_ = kNoId;
 }
 
-bool Sprite::is_flipped() const
-{
-	return (state_ & kIsFlipped) == kIsFlipped;
-}
+bool Sprite::is_flipped() const { return (state_ & kIsFlipped) == kIsFlipped; }
 
-bool Sprite::is_hidden() const
-{
-	return (state_ & kIsHidden) == kIsHidden;
-}
+bool Sprite::is_hidden() const { return (state_ & kIsHidden) == kIsHidden; }
 
 bool Sprite::is_mirrored() const
 {
@@ -106,7 +96,7 @@ void Sprite::set_normal(const unsigned int id)
 	state_ |= kStaleFrontBuffer;
 }
 
-void Sprite::set_pivot(const Vec2f &pivot)
+void Sprite::set_pivot(const Vec2f& pivot)
 {
 	R_ASSERT(pivot.x >= 0.0f && pivot.x <= 1.0f &&
 	         pivot.y >= 0.0f && pivot.y <= 1.0f,
@@ -124,7 +114,7 @@ void Sprite::set_pivot(const Vec2f &pivot)
 	pivot_ = pivot;
 }
 
-void Sprite::set_position(const Vec2f &position)
+void Sprite::set_position(const Vec2f& position)
 {
 	position_ = position;
 	state_ |= kStalePosition;
@@ -136,7 +126,7 @@ void Sprite::set_rotation(const float r)
 	state_ |= kStaleBuffer;
 }
 
-void Sprite::set_scale(const Vec2f &f)
+void Sprite::set_scale(const Vec2f& f)
 {
 	R_ASSERT(f.x > 0.0f && f.y > 0.0f,
 	         "Can't scale with a factor of zero or less");
@@ -150,7 +140,7 @@ void Sprite::set_texture(const unsigned int id)
 	R_ASSERT(vertex_array_, "Missing vertex array buffer");
 
 	const unsigned int f = flip_index(state_);
-	const Texture &tx = parent_->texture()[id];
+	const Texture& tx = parent_->texture()[id];
 	vertex_array_[kFlipTable[f + 0]].texcoord = tx.vx[0];
 	vertex_array_[kFlipTable[f + 1]].texcoord = tx.vx[1];
 	vertex_array_[kFlipTable[f + 2]].texcoord = tx.vx[2];
@@ -159,7 +149,7 @@ void Sprite::set_texture(const unsigned int id)
 	state_ |= kStaleFrontBuffer;
 }
 
-void Sprite::set_vertex_array(SpriteVertex *array)
+void Sprite::set_vertex_array(NotNull<SpriteVertex*> array)
 {
 	vertex_array_ = array;
 	state_ |= kStaleMask;
@@ -189,7 +179,7 @@ void Sprite::mirror()
 	flip_textures(kFlipHorizontally);
 }
 
-void Sprite::move(const Vec2f &delta)
+void Sprite::move(const Vec2f& delta)
 {
 	position_ += delta;
 	state_ |= kStalePosition;
@@ -324,7 +314,7 @@ void Sprite::flip_textures(const unsigned int f)
 	state_ |= kStaleFrontBuffer;
 }
 
-void Sprite::set_normal(const unsigned int f, const Vec2f *uv)
+void Sprite::set_normal(const unsigned int f, const Vec2f* uv)
 {
 	normal_map_[kFlipTable[f + 0]] = uv[0];
 	normal_map_[kFlipTable[f + 1]] = uv[1];

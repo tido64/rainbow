@@ -10,20 +10,24 @@
 
 #include "Common/Algorithm.h"
 #include "Common/NonCopyable.h"
+#include "Memory/NotNull.h"
 
 /// <summary>A barebone implementation of a tree node.</summary>
 /// <remarks>
 ///   This class does not hold any data and is meant to be sub-classed.
 /// </remarks>
-template<typename T>
+template <typename T>
 class TreeNode : private NonCopyable<TreeNode<T>>
 {
 public:
+	template <typename U>
+	using Owner = U;
+
 	/// <summary>Returns parent node.</summary>
 	T* parent() { return parent_; }
 
 	/// <summary>Adds a node as child.</summary>
-	void add_child(T *node)
+	void add_child(NotNull<Owner<T*>> node)
 	{
 		if (node->parent_)
 			rainbow::remove(node->parent_->children_, node);
@@ -32,13 +36,10 @@ public:
 	}
 
 	/// <summary>Removes node from the tree and deletes it.</summary>
-	void remove()
-	{
-		parent_->remove_child(static_cast<T*>(this));
-	}
+	void remove() { parent_->remove_child(static_cast<T*>(this)); }
 
 	/// <summary>Removes a child node.</summary>
-	void remove_child(T *node)
+	void remove_child(T* node)
 	{
 		if (!node)
 			return;
@@ -51,12 +52,12 @@ public:
 	///   Recursively calls function <paramref name="f"/> on
 	///   <paramref name="node"/> and its children.
 	/// </summary>
-	template<typename U, typename F, typename Enable, typename... Args>
-	friend void for_each(U *node, F&& f, Args&&... args);
+	template <typename U, typename F, typename Enable, typename... Args>
+	friend void for_each(U& node, F&& f, Args&&... args);
 
 protected:
-	T *parent_;                 ///< This node's parent.
-	std::vector<T*> children_;  ///< This node's children.
+	T* parent_;                        ///< Parent node.
+	std::vector<Owner<T*>> children_;  ///< Children node.
 
 	TreeNode() : parent_(nullptr)
 	{
@@ -72,7 +73,7 @@ protected:
 
 	~TreeNode()
 	{
-		for (auto child : children_)
+		for (auto&& child : children_)
 			delete child;
 	}
 
@@ -85,20 +86,15 @@ protected:
 	}
 };
 
-template<typename T,
-         typename F,
-         typename = EnableIfBaseOf<TreeNode<typename std::decay<T>::type>,
-                                   typename std::decay<T>::type>,
-         typename... Args>
-void for_each(T *node, F&& f, Args&&... args)
+template <typename T,
+          typename F,
+          typename = EnableIfBaseOf<TreeNode<PlainType<T>>, PlainType<T>>,
+          typename... Args>
+void for_each(T& node, F&& f, Args&&... args)
 {
-	static_assert(
-	    std::is_convertible<F, std::function<void(T*, Args&&...)>>::value,
-	    "function type void(T*, Args&&...) required");
-
 	f(node, std::forward<Args>(args)...);
-	for (auto child : node->children_)
-		for_each(child, f, std::forward<Args>(args)...);
+	for (auto&& child : node.children_)
+		for_each(*child, f, std::forward<Args>(args)...);
 }
 
 #endif

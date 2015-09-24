@@ -25,7 +25,7 @@ namespace heimdall
 		TextureManager::Get()->bind(texture_);
 	}
 
-	void Overlay::init(rainbow::SceneNode &parent, const Vec2i &screen)
+	void Overlay::init(rainbow::SceneNode& parent, const Vec2i& screen)
 	{
 		const unsigned char white[4096] = { 0xff };
 		texture_ = TextureManager::Get()->create(
@@ -46,14 +46,11 @@ namespace heimdall
 		vertex_buffer_.upload(vertices, sizeof(vertices));
 		array_.reconfigure([this] { vertex_buffer_.bind(); });
 
-		node_ = parent.add_child(this);
+		node_ = parent.add_child(*this);
 		node_->set_enabled(false);
 	}
 
-	void Overlay::draw_impl()
-	{
-		Renderer::draw(*this);
-	}
+	void Overlay::draw_impl() { Renderer::draw(*this); }
 
 	void Overlay::update_impl(const unsigned long) {}
 }

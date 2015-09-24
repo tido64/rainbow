@@ -20,80 +20,80 @@ namespace
 	class AnimationNode final : public SceneNode
 	{
 	public:
-		AnimationNode(Animation* animation) : animation_(animation) {}
+		AnimationNode(Animation& animation) : animation_(animation) {}
 
 	private:
-		Animation* animation_;
+		Animation& animation_;
 
 		void draw_impl() const override {}
 		void move_impl(const Vec2f&) const override {}
 
 		void update_impl(const unsigned long dt) const override
 		{
-			animation_->update(dt);
+			animation_.update(dt);
 		}
 	};
 
 	class DrawableNode final : public SceneNode
 	{
 	public:
-		DrawableNode(Drawable* drawable) : drawable_(drawable) {}
+		DrawableNode(Drawable& drawable) : drawable_(drawable) {}
 
 	private:
-		Drawable* drawable_;
+		Drawable& drawable_;
 
-		void draw_impl() const override { drawable_->draw(); }
+		void draw_impl() const override { drawable_.draw(); }
 
 		void move_impl(const Vec2f& delta) const override
 		{
-			drawable_->move(delta);
+			drawable_.move(delta);
 		}
 
 		void update_impl(const unsigned long dt) const override
 		{
-			drawable_->update(dt);
+			drawable_.update(dt);
 		}
 	};
 
 	class LabelNode final : public SceneNode
 	{
 	public:
-		LabelNode(Label* label) : label_(label) {}
+		LabelNode(Label& label) : label_(label) {}
 
 	private:
-		Label* label_;
+		Label& label_;
 
-		void draw_impl() const override { Renderer::draw(*label_); }
+		void draw_impl() const override { Renderer::draw(label_); }
 
 		void move_impl(const Vec2f& delta) const override
 		{
-			label_->move(delta);
+			label_.move(delta);
 		}
 
 		void update_impl(const unsigned long) const override
 		{
-			label_->update();
+			label_.update();
 		}
 	};
 
 	class SpriteBatchNode final : public SceneNode
 	{
 	public:
-		SpriteBatchNode(SpriteBatch* batch) : sprite_batch_(batch) {}
+		SpriteBatchNode(SpriteBatch& batch) : sprite_batch_(batch) {}
 
 	private:
-		SpriteBatch* sprite_batch_;
+		SpriteBatch& sprite_batch_;
 
-		void draw_impl() const override { Renderer::draw(*sprite_batch_); }
+		void draw_impl() const override { Renderer::draw(sprite_batch_); }
 
 		void move_impl(const Vec2f& delta) const override
 		{
-			sprite_batch_->move(delta);
+			sprite_batch_.move(delta);
 		}
 
 		void update_impl(const unsigned long) const override
 		{
-			sprite_batch_->update();
+			sprite_batch_.update();
 		}
 	};
 }
@@ -115,8 +115,8 @@ void SceneNode::draw() const
 
 void SceneNode::move(const Vec2f& delta) const
 {
-	for_each(this, [](const SceneNode* node, const Vec2f& delta) {
-		node->move_impl(delta);
+	for_each(*this, [](const SceneNode& node, const Vec2f& delta) {
+		node.move_impl(delta);
 	}, delta);
 }
 
@@ -141,25 +141,25 @@ std::unique_ptr<SceneNode> SceneNode::create()
 	return std::unique_ptr<SceneNode>(new GroupNode());
 }
 
-std::unique_ptr<SceneNode> SceneNode::create(Drawable* drawable)
+std::unique_ptr<SceneNode> SceneNode::create(Drawable& drawable)
 {
 	return std::unique_ptr<SceneNode>(new DrawableNode(drawable));
 }
 
 template <>
-std::unique_ptr<SceneNode> SceneNode::create(Animation* a)
+std::unique_ptr<SceneNode> SceneNode::create(Animation& a)
 {
 	return std::unique_ptr<SceneNode>(new AnimationNode(a));
 }
 
 template <>
-std::unique_ptr<SceneNode> SceneNode::create(Label* l)
+std::unique_ptr<SceneNode> SceneNode::create(Label& l)
 {
 	return std::unique_ptr<SceneNode>(new LabelNode(l));
 }
 
 template <>
-std::unique_ptr<SceneNode> SceneNode::create(SpriteBatch* s)
+std::unique_ptr<SceneNode> SceneNode::create(SpriteBatch& s)
 {
 	return std::unique_ptr<SceneNode>(new SpriteBatchNode(s));
 }

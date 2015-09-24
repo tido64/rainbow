@@ -128,7 +128,7 @@ namespace heimdall
 			labels_.set_offset(i * offset, i * 7 + 7, 7);
 
 		node_->add_child(labels_.as_label())
-		     ->add_child(&perf_graph_);
+		     ->add_child(perf_graph_);
 	}
 
 	void PerformanceOverlay::update(const unsigned long dt)

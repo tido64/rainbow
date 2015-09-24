@@ -24,19 +24,19 @@ namespace heimdall
 		rainbow::SceneNode* node() const { return node_; }
 		const VertexArray& vertex_array() const { return array_; }
 
-		void init(rainbow::SceneNode &parent, const Vec2i &screen);
+		void init(rainbow::SceneNode& parent, const Vec2i& screen);
 
 		void hide() { node_->set_enabled(false); }
 		void show() { node_->set_enabled(true); }
 
-		template<typename T>
-		void add_child(T *component) const { node_->add_child(component); }
+		template <typename T>
+		void add_child(T& component) const { node_->add_child(component); }
 
 		/// <summary>Binds all used textures.</summary>
 		void bind_textures() const;
 
 	private:
-		rainbow::SceneNode *node_;
+		rainbow::SceneNode* node_;
 		VertexArray array_;
 		unsigned int texture_;
 		Buffer vertex_buffer_;

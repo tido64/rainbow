@@ -29,7 +29,7 @@
 namespace rainbow
 {
 	/// <summary>C++ wrapper for dSFMT pseudorandom number generator.</summary>
-	template<typename T, typename = EnableIfFloatingPoint<T>>
+	template<typename T, typename = FloatingPoint<T>>
 	struct dSFMT
 	{
 		void seed(const uint32_t seed = 0)

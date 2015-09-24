@@ -12,50 +12,38 @@ namespace heimdall
 	class Button
 	{
 	public:
-		Label* drawable()
-		{
-			return &label_;
-		}
+		Label& drawable() { return label_; }
 
-		template<typename F>
+		template <typename F>
 		void set_action(F&& action)
 		{
-			action_ = std::forward<F>(action);
+			action_ = std::move(action);
 		}
 
-		void set_color(const Colorb &color)
-		{
-			label_.set_color(color);
-		}
+		void set_color(const Colorb color) { label_.set_color(color); }
 
 		void set_font(SharedPtr<FontAtlas> font)
 		{
 			label_.set_font(std::move(font));
 		}
 
-		void set_position(const Vec2f &position)
+		void set_position(const Vec2f& position)
 		{
 			label_.set_position(position);
 		}
 
-		void set_text(const char *text)
-		{
-			label_.set_text(text);
-		}
+		void set_text(const char* text) { label_.set_text(text); }
 
-		bool hit_test(const Vec2i &point) const
+		bool hit_test(const Vec2i& point) const
 		{
-			const Vec2f &position = label_.position();
+			const Vec2f& position = label_.position();
 			const int max_x = position.x + label_.width();
 			const int max_y = position.y + label_.font().height();
 			return point.x >= position.x && point.x <= max_x &&
 			       point.y >= position.y && point.y <= max_y;
 		}
 
-		void press() const
-		{
-			action_();
-		}
+		void press() const { action_(); }
 
 	private:
 		Label label_;

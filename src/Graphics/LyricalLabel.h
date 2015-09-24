@@ -55,7 +55,7 @@ public:
 	LyricalLabel();
 	~LyricalLabel() override;
 
-	Label* as_label() { return static_cast<Label*>(this); }
+	Label& as_label() { return *static_cast<Label*>(this); }
 
 	/// <summary>Clears all animations.</summary>
 	void clear_animations();
