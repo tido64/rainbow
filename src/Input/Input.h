@@ -8,6 +8,7 @@
 #include "Common/NonCopyable.h"
 #include "Input/Acceleration.h"
 #include "Input/InputListener.h"
+#include "Memory/NotNull.h"
 
 /// <summary>
 ///   Handles accelerometer/gyroscope and pointer events independent of
@@ -37,11 +38,11 @@ public:
 
 	/// <summary>Subscribes an object to input events.</summary>
 	/// <param name="i">The object to subscribe.</param>
-	void subscribe(InputListener *const i);
+	void subscribe(NotNull<InputListener*> i);
 
 	/// <summary>Unsubscribes an object from input events.</summary>
 	/// <param name="i">The object to unsubscribe.</param>
-	void unsubscribe(InputListener *const i);
+	void unsubscribe(NotNull<InputListener*> i);
 
 	/// <summary>Acceleration event.</summary>
 	/// <param name="x">Acceleration data (x-value).</param>

@@ -68,7 +68,6 @@ TEST_CASE("SpriteBatch can be move constructed", "[spritebatch]")
 	auto atlas = make_shared<TextureAtlas>(mock);
 	batch.set_texture(atlas);
 
-	const unsigned int capacity = batch.capacity();
 	for (unsigned int i = 0; i < batch.capacity(); ++i)
 		batch.create_sprite(i + 1, i + 1)->update();
 

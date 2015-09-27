@@ -4,13 +4,13 @@
 
 #include "Input/Input.h"
 
-void Input::subscribe(InputListener *const i)
+void Input::subscribe(NotNull<InputListener*> i)
 {
 	last_listener_->append(i);
 	last_listener_ = i;
 }
 
-void Input::unsubscribe(InputListener *const i)
+void Input::unsubscribe(NotNull<InputListener*> i)
 {
 	i->pop();
 }

@@ -78,6 +78,16 @@ namespace
 	};
 }
 
+TEST_CASE("Pointer is all zero by default", "[input]")
+{
+	const Pointer p;
+
+	REQUIRE(p.hash == 0);
+	REQUIRE(p.x == 0);
+	REQUIRE(p.y == 0);
+	REQUIRE(p.timestamp == 0);
+}
+
 TEST_CASE("Pointer events", "[input]")
 {
 	using PointerEvents = PointerTestFixture::Events;
