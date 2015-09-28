@@ -2,7 +2,7 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
-#include <catch.hpp>
+#include <gtest/gtest.h>
 
 #include "Common/Global.h"
 
@@ -14,10 +14,10 @@ namespace
 		Fail
 	};
 
-	class GlobalTest : public Global<GlobalTest>
+	class GlobalObject : public Global<GlobalObject>
 	{
 	public:
-		GlobalTest(const InitStatus status)
+		GlobalObject(const InitStatus status)
 		{
 			if (status == InitStatus::Success)
 				make_global();
@@ -27,13 +27,15 @@ namespace
 	};
 }
 
-TEST_CASE("A Global is not global unless explicitly made so", "[global]")
+TEST(GlobalTest, GlobalOnlyWhenExplicitlyMadeSo)
 {
-	GlobalTest success(InitStatus::Success);
-	REQUIRE(success.is_global());
-	REQUIRE(GlobalTest::Get() == &success);
+	GlobalObject success(InitStatus::Success);
 
-	GlobalTest fail(InitStatus::Fail);
-	REQUIRE_FALSE(fail.is_global());
-	REQUIRE(GlobalTest::Get() == &success);
+	ASSERT_TRUE(success.is_global());
+	ASSERT_EQ(&success, GlobalObject::Get());
+
+	GlobalObject fail(InitStatus::Fail);
+
+	ASSERT_FALSE(fail.is_global());
+	ASSERT_EQ(&success, GlobalObject::Get());
 }

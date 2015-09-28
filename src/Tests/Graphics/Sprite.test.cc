@@ -2,7 +2,7 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
-#include <catch.hpp>
+#include <gtest/gtest.h>
 
 #include "Graphics/SpriteBatch.h"
 
@@ -11,81 +11,126 @@ namespace rainbow
 	struct ISolemnlySwearThatIAmOnlyTesting {};
 }
 
-TEST_CASE("Sprites are placed at (0,0) on creation", "[sprite]")
+namespace
+{
+	rainbow::ISolemnlySwearThatIAmOnlyTesting mock;
+
+	class SpriteFlipMirrorTest : public ::testing::Test
+	{
+	public:
+		SpriteFlipMirrorTest()
+		    : atlas(make_shared<TextureAtlas>(mock)),
+		      texture(atlas->define(Vec2i::Zero, 1, 1)),
+		      batch(mock),
+		      sprite(batch.create_sprite(2, 2)),
+		      vertex_array(sprite->vertex_array()) {}
+
+	protected:
+		SharedPtr<TextureAtlas> atlas;
+		unsigned int texture;
+		SpriteBatch batch;
+		Sprite::Ref sprite = batch.create_sprite(2, 2);
+		const SpriteVertex* vertex_array;
+		Vec2f p[4];
+		Vec2f u[4];
+
+		void SetUp() override
+		{
+			batch.set_texture(atlas);
+			sprite->set_texture(texture);
+			sprite->update();
+			for (size_t i = 0; i < 4; ++i)
+			{
+				p[i] = vertex_array[i].position;
+				u[i] = vertex_array[i].texcoord;
+			}
+		}
+	};
+
+	class SpriteHiddenTest : public ::testing::Test
+	{
+	public:
+		SpriteHiddenTest() : batch(mock), sprite(batch.create_sprite(2, 2)) {}
+
+	protected:
+		SpriteBatch batch;
+		Sprite::Ref sprite;
+	};
+}
+
+TEST(SpriteTest, PlacedAtOriginOnCreation)
 {
 	SpriteBatch batch(rainbow::ISolemnlySwearThatIAmOnlyTesting{});
 	auto sprite = batch.create_sprite(2, 2);
 
-	REQUIRE(sprite->position() == Vec2f::Zero);
+	ASSERT_EQ(Vec2f::Zero, sprite->position());
 
 	sprite->update();
 
 	auto vertex_array = sprite->vertex_array();
-	REQUIRE(vertex_array[0].position == Vec2f(-1, -1));
-	REQUIRE(vertex_array[1].position == Vec2f(1, -1));
-	REQUIRE(vertex_array[2].position == Vec2f(1, 1));
-	REQUIRE(vertex_array[3].position == Vec2f(-1, 1));
+	ASSERT_EQ(Vec2f(-1, -1), vertex_array[0].position);
+	ASSERT_EQ(Vec2f(1, -1), vertex_array[1].position);
+	ASSERT_EQ(Vec2f(1, 1), vertex_array[2].position);
+	ASSERT_EQ(Vec2f(-1, 1), vertex_array[3].position);
 }
 
-TEST_CASE("Sprites can be colored", "[sprite]")
+TEST(SpriteTest, CanBeColored)
 {
 	SpriteBatch batch(rainbow::ISolemnlySwearThatIAmOnlyTesting{});
 	auto sprite = batch.create_sprite(2, 2);
 
 	const Colorb color(0xec, 0xef, 0xf1);
-	REQUIRE_FALSE(sprite->color() == color);
+	ASSERT_NE(color, sprite->color());
 	sprite->set_color(color);
-	REQUIRE(sprite->color() == color);
+	ASSERT_EQ(color, sprite->color());
 
 	auto vertex_array = sprite->vertex_array();
 	for (size_t i = 0; i < 4; ++i)
-		REQUIRE(vertex_array[i].color == color);
+		ASSERT_EQ(color, vertex_array[i].color);
 }
 
-TEST_CASE("Sprites can be tagged", "[sprite]")
+TEST(SpriteTest, CanBeTagged)
 {
 	SpriteBatch batch(rainbow::ISolemnlySwearThatIAmOnlyTesting{});
 	auto sprite = batch.create_sprite(2, 2);
 
-	REQUIRE(sprite->id() == Sprite::kNoId);
+	ASSERT_EQ(Sprite::kNoId, sprite->id());
 
 	const int tag = 0xdeadbeef;
 	sprite->set_id(tag);
-	REQUIRE(sprite->id() == tag);
+	ASSERT_EQ(tag, sprite->id());
 }
 
-TEST_CASE(
-    "Changing a sprite's pivot point does not change its perceived position",
-    "[sprite]")
+TEST(SpriteTest, ChangesPivotWithoutShifting)
 {
 	SpriteBatch batch(rainbow::ISolemnlySwearThatIAmOnlyTesting{});
 	auto sprite = batch.create_sprite(2, 2);
 
-	REQUIRE(sprite->pivot() == Vec2f(0.5f, 0.5f));
+	ASSERT_EQ(Vec2f(0.5f, 0.5f), sprite->pivot());
 
 	sprite->update();
 	sprite->set_pivot(Vec2f::Zero);
 
-	REQUIRE(sprite->pivot() == Vec2f::Zero);
-	REQUIRE(sprite->position() == -Vec2f::One);
+	ASSERT_EQ(Vec2f::Zero, sprite->pivot());
+	ASSERT_EQ(-Vec2f::One, sprite->position());
 
 	auto vertex_array = sprite->vertex_array();
-	REQUIRE(vertex_array[0].position == Vec2f(-1, -1));
-	REQUIRE(vertex_array[1].position == Vec2f(1, -1));
-	REQUIRE(vertex_array[2].position == Vec2f(1, 1));
-	REQUIRE(vertex_array[3].position == Vec2f(-1, 1));
+	ASSERT_EQ(Vec2f(-1, -1), vertex_array[0].position);
+	ASSERT_EQ(Vec2f(1, -1), vertex_array[1].position);
+	ASSERT_EQ(Vec2f(1, 1), vertex_array[2].position);
+	ASSERT_EQ(Vec2f(-1, 1), vertex_array[3].position);
 
 	sprite->set_position(Vec2f::Zero);
 	sprite->update();
 
-	REQUIRE(sprite->position() == Vec2f::Zero);
-	REQUIRE(vertex_array[0].position == Vec2f(0, 0));
-	REQUIRE(vertex_array[1].position == Vec2f(2, 0));
-	REQUIRE(vertex_array[2].position == Vec2f(2, 2));
-	REQUIRE(vertex_array[3].position == Vec2f(0, 2));
+	ASSERT_EQ(Vec2f::Zero, sprite->position());
+	ASSERT_EQ(Vec2f(0, 0), vertex_array[0].position);
+	ASSERT_EQ(Vec2f(2, 0), vertex_array[1].position);
+	ASSERT_EQ(Vec2f(2, 2), vertex_array[2].position);
+	ASSERT_EQ(Vec2f(0, 2), vertex_array[3].position);
 }
 
-TEST_CASE("Sprites can be translated", "[sprite]")
+TEST(SpriteTest, Translates)
 {
 	SpriteBatch batch(rainbow::ISolemnlySwearThatIAmOnlyTesting{});
 	auto sprite = batch.create_sprite(2, 2);
@@ -93,25 +138,25 @@ TEST_CASE("Sprites can be translated", "[sprite]")
 	sprite->set_position(Vec2f::One);
 	sprite->update();
 
-	REQUIRE(sprite->position() == Vec2f::One);
+	ASSERT_EQ(Vec2f::One, sprite->position());
 
 	auto vertex_array = sprite->vertex_array();
-	REQUIRE(vertex_array[0].position == Vec2f(0, 0));
-	REQUIRE(vertex_array[1].position == Vec2f(2, 0));
-	REQUIRE(vertex_array[2].position == Vec2f(2, 2));
-	REQUIRE(vertex_array[3].position == Vec2f(0, 2));
+	ASSERT_EQ(Vec2f(0, 0), vertex_array[0].position);
+	ASSERT_EQ(Vec2f(2, 0), vertex_array[1].position);
+	ASSERT_EQ(Vec2f(2, 2), vertex_array[2].position);
+	ASSERT_EQ(Vec2f(0, 2), vertex_array[3].position);
 
 	sprite->move(-Vec2f::One);
 
-	REQUIRE(sprite->position() == Vec2f::Zero);
+	ASSERT_EQ(Vec2f::Zero, sprite->position());
 }
 
-TEST_CASE("Sprites can be rotated", "[sprite]")
+TEST(SpriteTest, Rotates)
 {
 	SpriteBatch batch(rainbow::ISolemnlySwearThatIAmOnlyTesting{});
 	auto sprite = batch.create_sprite(4, 2);
 
-	REQUIRE(sprite->angle() == 0.0f);
+	ASSERT_EQ(0.0f, sprite->angle());
 
 	auto vertex_array = sprite->vertex_array();
 	for (int i = 0; i < 2; ++i)
@@ -125,7 +170,7 @@ TEST_CASE("Sprites can be rotated", "[sprite]")
 			const float rad = rainbow::radians(deg);
 			sprite->set_rotation(rad);
 
-			REQUIRE(sprite->angle() == rad);
+			ASSERT_EQ(rad, sprite->angle());
 
 			sprite->update();
 			const Vec2f p[]{vertex_array[0].position,
@@ -134,15 +179,15 @@ TEST_CASE("Sprites can be rotated", "[sprite]")
 			                vertex_array[3].position};
 
 			if (deg == 0 || deg == 360)
-				REQUIRE(rainbow::is_equal<float>(p[2].x, scale + scale));
+				ASSERT_FLOAT_EQ(scale + scale, p[2].x);
 			else
-				REQUIRE_FALSE(rainbow::is_equal<float>(p[2].x, scale + scale));
-			REQUIRE(p[0] == -p[2]);
-			REQUIRE(p[1] == -p[3]);
-			REQUIRE(rainbow::is_equal<float>(p[0].distance(p[1]), width));
-			REQUIRE(rainbow::is_equal<float>(p[1].distance(p[2]), height));
-			REQUIRE(rainbow::is_equal<float>(p[2].distance(p[3]), width));
-			REQUIRE(rainbow::is_equal<float>(p[3].distance(p[0]), height));
+				ASSERT_FALSE(rainbow::is_equal<float>(p[2].x, scale + scale));
+			ASSERT_EQ(-p[2], p[0]);
+			ASSERT_EQ(-p[3], p[1]);
+			ASSERT_FLOAT_EQ(width, p[0].distance(p[1]));
+			ASSERT_FLOAT_EQ(height, p[1].distance(p[2]));
+			ASSERT_FLOAT_EQ(width, p[2].distance(p[3]));
+			ASSERT_FLOAT_EQ(height, p[3].distance(p[0]));
 		}
 	}
 
@@ -161,7 +206,7 @@ TEST_CASE("Sprites can be rotated", "[sprite]")
 		angle += r;
 		sprite->rotate(r);
 
-		REQUIRE(sprite->angle() == Approx(angle));
+		ASSERT_FLOAT_EQ(angle, sprite->angle());
 
 		sprite->update();
 		const Vec2f p[]{vertex_array[0].position,
@@ -169,311 +214,302 @@ TEST_CASE("Sprites can be rotated", "[sprite]")
 		                vertex_array[2].position,
 		                vertex_array[3].position};
 
-		REQUIRE(p[0] == -p[2]);
-		REQUIRE(p[1] == -p[3]);
-		REQUIRE(rainbow::is_equal<float>(p[0].distance(p[1]), width));
-		REQUIRE(rainbow::is_equal<float>(p[1].distance(p[2]), height));
-		REQUIRE(rainbow::is_equal<float>(p[2].distance(p[3]), width));
-		REQUIRE(rainbow::is_equal<float>(p[3].distance(p[0]), height));
+		ASSERT_EQ(-p[2], p[0]);
+		ASSERT_EQ(-p[3], p[1]);
+		ASSERT_FLOAT_EQ(width, p[0].distance(p[1]));
+		ASSERT_FLOAT_EQ(height, p[1].distance(p[2]));
+		ASSERT_FLOAT_EQ(width, p[2].distance(p[3]));
+		ASSERT_FLOAT_EQ(height, p[3].distance(p[0]));
 
 		i *= -1;
 	}
 }
 
-TEST_CASE("Sprites can be scaled", "[sprite]")
+TEST(SpriteTest, Scales)
 {
 	SpriteBatch batch(rainbow::ISolemnlySwearThatIAmOnlyTesting{});
 	auto sprite = batch.create_sprite(2, 2);
 
-	REQUIRE(sprite->scale() == Vec2f::One);
+	ASSERT_EQ(Vec2f::One, sprite->scale());
 
 	sprite->set_scale(2);
 
-	REQUIRE(sprite->scale() == Vec2f(2.0f, 2.0f));
+	ASSERT_EQ(Vec2f(2.0f, 2.0f), sprite->scale());
 
 	sprite->update();
 
 	auto vertex_array = sprite->vertex_array();
-	REQUIRE(vertex_array[0].position == Vec2f(-2, -2));
-	REQUIRE(vertex_array[1].position == Vec2f(2, -2));
-	REQUIRE(vertex_array[2].position == Vec2f(2, 2));
-	REQUIRE(vertex_array[3].position == Vec2f(-2, 2));
+	ASSERT_EQ(Vec2f(-2, -2), vertex_array[0].position);
+	ASSERT_EQ(Vec2f(2, -2), vertex_array[1].position);
+	ASSERT_EQ(Vec2f(2, 2), vertex_array[2].position);
+	ASSERT_EQ(Vec2f(-2, 2), vertex_array[3].position);
 
 	sprite->set_scale(1);
 
-	REQUIRE(sprite->scale() == Vec2f::One);
+	ASSERT_EQ(Vec2f::One, sprite->scale());
 
 	sprite->update();
 
-	REQUIRE(vertex_array[0].position == Vec2f(-1, -1));
-	REQUIRE(vertex_array[1].position == Vec2f(1, -1));
-	REQUIRE(vertex_array[2].position == Vec2f(1, 1));
-	REQUIRE(vertex_array[3].position == Vec2f(-1, 1));
+	ASSERT_EQ(Vec2f(-1, -1), vertex_array[0].position);
+	ASSERT_EQ(Vec2f(1, -1), vertex_array[1].position);
+	ASSERT_EQ(Vec2f(1, 1), vertex_array[2].position);
+	ASSERT_EQ(Vec2f(-1, 1), vertex_array[3].position);
 
 	sprite->set_scale(Vec2f(1, 2));
 
-	REQUIRE(sprite->scale() == Vec2f(1.0f, 2.0f));
+	ASSERT_EQ(Vec2f(1.0f, 2.0f), sprite->scale());
 
 	sprite->update();
 
-	REQUIRE(vertex_array[0].position == Vec2f(-1, -2));
-	REQUIRE(vertex_array[1].position == Vec2f(1, -2));
-	REQUIRE(vertex_array[2].position == Vec2f(1, 2));
-	REQUIRE(vertex_array[3].position == Vec2f(-1, 2));
+	ASSERT_EQ(Vec2f(-1, -2), vertex_array[0].position);
+	ASSERT_EQ(Vec2f(1, -2), vertex_array[1].position);
+	ASSERT_EQ(Vec2f(1, 2), vertex_array[2].position);
+	ASSERT_EQ(Vec2f(-1, 2), vertex_array[3].position);
 }
 
-TEST_CASE("Sprites can be flipped/mirrored", "[sprite]")
+TEST_F(SpriteFlipMirrorTest, IsNotFlippedOrMirroredInitially)
 {
-	rainbow::ISolemnlySwearThatIAmOnlyTesting mock;
+	ASSERT_FALSE(sprite->is_flipped());
+	ASSERT_FALSE(sprite->is_mirrored());
+	for (int i = 0; i < 4; ++i)
+	{
+		ASSERT_EQ(p[i], vertex_array[i].position);
+		ASSERT_EQ(u[i], vertex_array[i].texcoord);
+	}
+}
 
-	auto atlas = make_shared<TextureAtlas>(mock);
-	auto texture = atlas->define(Vec2i::Zero, 1, 1);
+TEST_F(SpriteFlipMirrorTest, FlipsVertically)
+{
+	sprite->flip();
 
-	SpriteBatch batch(mock);
-	batch.set_texture(atlas);
+	ASSERT_TRUE(sprite->is_flipped());
+	ASSERT_FALSE(sprite->is_mirrored());
+	for (int i = 0; i < 4; ++i)
+		ASSERT_EQ(p[i], vertex_array[i].position);
+	ASSERT_EQ(u[3], vertex_array[0].texcoord);
+	ASSERT_EQ(u[2], vertex_array[1].texcoord);
+	ASSERT_EQ(u[1], vertex_array[2].texcoord);
+	ASSERT_EQ(u[0], vertex_array[3].texcoord);
 
-	auto sprite = batch.create_sprite(2, 2);
 	sprite->set_texture(texture);
+
+	ASSERT_EQ(u[3], vertex_array[0].texcoord);
+	ASSERT_EQ(u[2], vertex_array[1].texcoord);
+	ASSERT_EQ(u[1], vertex_array[2].texcoord);
+	ASSERT_EQ(u[0], vertex_array[3].texcoord);
+
+	sprite->flip();
+
+	ASSERT_FALSE(sprite->is_flipped());
+	ASSERT_FALSE(sprite->is_mirrored());
+	for (int i = 0; i < 4; ++i)
+	{
+		ASSERT_EQ(p[i], vertex_array[i].position);
+		ASSERT_EQ(u[i], vertex_array[i].texcoord);
+	}
+}
+
+TEST_F(SpriteFlipMirrorTest, Mirrors)
+{
+	sprite->mirror();
+
+	ASSERT_FALSE(sprite->is_flipped());
+	ASSERT_TRUE(sprite->is_mirrored());
+	for (int i = 0; i < 4; ++i)
+		ASSERT_EQ(p[i], vertex_array[i].position);
+	ASSERT_EQ(u[1], vertex_array[0].texcoord);
+	ASSERT_EQ(u[0], vertex_array[1].texcoord);
+	ASSERT_EQ(u[3], vertex_array[2].texcoord);
+	ASSERT_EQ(u[2], vertex_array[3].texcoord);
+
+	sprite->set_texture(texture);
+
+	ASSERT_EQ(u[1], vertex_array[0].texcoord);
+	ASSERT_EQ(u[0], vertex_array[1].texcoord);
+	ASSERT_EQ(u[3], vertex_array[2].texcoord);
+	ASSERT_EQ(u[2], vertex_array[3].texcoord);
+
+	sprite->mirror();
+
+	ASSERT_FALSE(sprite->is_flipped());
+	ASSERT_FALSE(sprite->is_mirrored());
+	for (int i = 0; i < 4; ++i)
+	{
+		ASSERT_EQ(p[i], vertex_array[i].position);
+		ASSERT_EQ(u[i], vertex_array[i].texcoord);
+	}
+}
+
+TEST_F(SpriteFlipMirrorTest, FlipsAndMirrors)
+{
+	sprite->flip();
+	sprite->mirror();
+
+	ASSERT_TRUE(sprite->is_flipped());
+	ASSERT_TRUE(sprite->is_mirrored());
+	for (int i = 0; i < 4; ++i)
+		ASSERT_EQ(p[i], vertex_array[i].position);
+	ASSERT_EQ(u[2], vertex_array[0].texcoord);
+	ASSERT_EQ(u[3], vertex_array[1].texcoord);
+	ASSERT_EQ(u[0], vertex_array[2].texcoord);
+	ASSERT_EQ(u[1], vertex_array[3].texcoord);
+
+	sprite->set_texture(texture);
+
+	ASSERT_EQ(u[2], vertex_array[0].texcoord);
+	ASSERT_EQ(u[3], vertex_array[1].texcoord);
+	ASSERT_EQ(u[0], vertex_array[2].texcoord);
+	ASSERT_EQ(u[1], vertex_array[3].texcoord);
+
+	sprite->flip();
+
+	ASSERT_FALSE(sprite->is_flipped());
+	ASSERT_TRUE(sprite->is_mirrored());
+	for (int i = 0; i < 4; ++i)
+		ASSERT_EQ(p[i], vertex_array[i].position);
+	ASSERT_EQ(u[1], vertex_array[0].texcoord);
+	ASSERT_EQ(u[0], vertex_array[1].texcoord);
+	ASSERT_EQ(u[3], vertex_array[2].texcoord);
+	ASSERT_EQ(u[2], vertex_array[3].texcoord);
+
+	sprite->flip();
+
+	ASSERT_TRUE(sprite->is_flipped());
+	ASSERT_TRUE(sprite->is_mirrored());
+	for (int i = 0; i < 4; ++i)
+		ASSERT_EQ(p[i], vertex_array[i].position);
+	ASSERT_EQ(u[2], vertex_array[0].texcoord);
+	ASSERT_EQ(u[3], vertex_array[1].texcoord);
+	ASSERT_EQ(u[0], vertex_array[2].texcoord);
+	ASSERT_EQ(u[1], vertex_array[3].texcoord);
+
+	sprite->mirror();
+
+	ASSERT_TRUE(sprite->is_flipped());
+	ASSERT_FALSE(sprite->is_mirrored());
+	for (int i = 0; i < 4; ++i)
+		ASSERT_EQ(p[i], vertex_array[i].position);
+	ASSERT_EQ(u[3], vertex_array[0].texcoord);
+	ASSERT_EQ(u[2], vertex_array[1].texcoord);
+	ASSERT_EQ(u[1], vertex_array[2].texcoord);
+	ASSERT_EQ(u[0], vertex_array[3].texcoord);
+
+	sprite->flip();
+
+	ASSERT_FALSE(sprite->is_flipped());
+	ASSERT_FALSE(sprite->is_mirrored());
+	for (int i = 0; i < 4; ++i)
+	{
+		ASSERT_EQ(p[i], vertex_array[i].position);
+		ASSERT_EQ(u[i], vertex_array[i].texcoord);
+	}
+
+	sprite->mirror();
+	sprite->flip();
+
+	ASSERT_TRUE(sprite->is_flipped());
+	ASSERT_TRUE(sprite->is_mirrored());
+	for (int i = 0; i < 4; ++i)
+		ASSERT_EQ(p[i], vertex_array[i].position);
+	ASSERT_EQ(u[2], vertex_array[0].texcoord);
+	ASSERT_EQ(u[3], vertex_array[1].texcoord);
+	ASSERT_EQ(u[0], vertex_array[2].texcoord);
+	ASSERT_EQ(u[1], vertex_array[3].texcoord);
+
+	sprite->mirror();
+
+	ASSERT_TRUE(sprite->is_flipped());
+	ASSERT_FALSE(sprite->is_mirrored());
+	for (int i = 0; i < 4; ++i)
+		ASSERT_EQ(p[i], vertex_array[i].position);
+	ASSERT_EQ(u[3], vertex_array[0].texcoord);
+	ASSERT_EQ(u[2], vertex_array[1].texcoord);
+	ASSERT_EQ(u[1], vertex_array[2].texcoord);
+	ASSERT_EQ(u[0], vertex_array[3].texcoord);
+
+	sprite->flip();
+
+	ASSERT_FALSE(sprite->is_flipped());
+	ASSERT_FALSE(sprite->is_mirrored());
+	for (int i = 0; i < 4; ++i)
+	{
+		ASSERT_EQ(p[i], vertex_array[i].position);
+		ASSERT_EQ(u[i], vertex_array[i].texcoord);
+	}
+}
+
+TEST_F(SpriteHiddenTest, IgnoresMultipleCalls)
+{
+	ASSERT_FALSE(sprite->is_hidden());
+
+	sprite->hide();
+	ASSERT_TRUE(sprite->is_hidden());
+	sprite->hide();
+	ASSERT_TRUE(sprite->is_hidden());
+
+	sprite->show();
+	ASSERT_FALSE(sprite->is_hidden());
+	sprite->show();
+	ASSERT_FALSE(sprite->is_hidden());
+}
+
+TEST_F(SpriteHiddenTest, RestoresHiddenSprites)
+{
+	sprite->hide();
 	sprite->update();
 
 	auto vertex_array = sprite->vertex_array();
-	const Vec2f p[]{vertex_array[0].position,
-	                vertex_array[1].position,
-	                vertex_array[2].position,
-	                vertex_array[3].position};
-	const Vec2f u[]{vertex_array[0].texcoord,
-	                vertex_array[1].texcoord,
-	                vertex_array[2].texcoord,
-	                vertex_array[3].texcoord};
+	ASSERT_EQ(Vec2f::Zero, vertex_array[0].position);
+	ASSERT_EQ(Vec2f::Zero, vertex_array[1].position);
+	ASSERT_EQ(Vec2f::Zero, vertex_array[2].position);
+	ASSERT_EQ(Vec2f::Zero, vertex_array[3].position);
 
-	SECTION("Sprites aren't flipped/mirrored initially")
-	{
-		// Do nothing.
-	}
+	sprite->show();
+	sprite->update();
 
-	SECTION("Sprites can be flipped vertically")
-	{
-		sprite->flip();
-
-		REQUIRE(sprite->is_flipped());
-		REQUIRE_FALSE(sprite->is_mirrored());
-		for (int i = 0; i < 4; ++i)
-			REQUIRE(vertex_array[i].position == p[i]);
-		REQUIRE(vertex_array[0].texcoord == u[3]);
-		REQUIRE(vertex_array[1].texcoord == u[2]);
-		REQUIRE(vertex_array[2].texcoord == u[1]);
-		REQUIRE(vertex_array[3].texcoord == u[0]);
-
-		sprite->set_texture(texture);
-
-		REQUIRE(vertex_array[0].texcoord == u[3]);
-		REQUIRE(vertex_array[1].texcoord == u[2]);
-		REQUIRE(vertex_array[2].texcoord == u[1]);
-		REQUIRE(vertex_array[3].texcoord == u[0]);
-
-		sprite->flip();
-	}
-
-	SECTION("Sprites can be mirrored")
-	{
-		sprite->mirror();
-
-		REQUIRE_FALSE(sprite->is_flipped());
-		REQUIRE(sprite->is_mirrored());
-		for (int i = 0; i < 4; ++i)
-			REQUIRE(vertex_array[i].position == p[i]);
-		REQUIRE(vertex_array[0].texcoord == u[1]);
-		REQUIRE(vertex_array[1].texcoord == u[0]);
-		REQUIRE(vertex_array[2].texcoord == u[3]);
-		REQUIRE(vertex_array[3].texcoord == u[2]);
-
-		sprite->set_texture(texture);
-
-		REQUIRE(vertex_array[0].texcoord == u[1]);
-		REQUIRE(vertex_array[1].texcoord == u[0]);
-		REQUIRE(vertex_array[2].texcoord == u[3]);
-		REQUIRE(vertex_array[3].texcoord == u[2]);
-
-		sprite->mirror();
-	}
-
-	SECTION("Sprites can be flipped and mirrored")
-	{
-		sprite->flip();
-		sprite->mirror();
-
-		REQUIRE(sprite->is_flipped());
-		REQUIRE(sprite->is_mirrored());
-		for (int i = 0; i < 4; ++i)
-			REQUIRE(vertex_array[i].position == p[i]);
-		REQUIRE(vertex_array[0].texcoord == u[2]);
-		REQUIRE(vertex_array[1].texcoord == u[3]);
-		REQUIRE(vertex_array[2].texcoord == u[0]);
-		REQUIRE(vertex_array[3].texcoord == u[1]);
-
-		sprite->set_texture(texture);
-
-		REQUIRE(vertex_array[0].texcoord == u[2]);
-		REQUIRE(vertex_array[1].texcoord == u[3]);
-		REQUIRE(vertex_array[2].texcoord == u[0]);
-		REQUIRE(vertex_array[3].texcoord == u[1]);
-
-		sprite->flip();
-
-		REQUIRE_FALSE(sprite->is_flipped());
-		REQUIRE(sprite->is_mirrored());
-		for (int i = 0; i < 4; ++i)
-			REQUIRE(vertex_array[i].position == p[i]);
-		REQUIRE(vertex_array[0].texcoord == u[1]);
-		REQUIRE(vertex_array[1].texcoord == u[0]);
-		REQUIRE(vertex_array[2].texcoord == u[3]);
-		REQUIRE(vertex_array[3].texcoord == u[2]);
-
-		sprite->flip();
-
-		REQUIRE(sprite->is_flipped());
-		REQUIRE(sprite->is_mirrored());
-		for (int i = 0; i < 4; ++i)
-			REQUIRE(vertex_array[i].position == p[i]);
-		REQUIRE(vertex_array[0].texcoord == u[2]);
-		REQUIRE(vertex_array[1].texcoord == u[3]);
-		REQUIRE(vertex_array[2].texcoord == u[0]);
-		REQUIRE(vertex_array[3].texcoord == u[1]);
-
-		sprite->mirror();
-
-		REQUIRE(sprite->is_flipped());
-		REQUIRE_FALSE(sprite->is_mirrored());
-		for (int i = 0; i < 4; ++i)
-			REQUIRE(vertex_array[i].position == p[i]);
-		REQUIRE(vertex_array[0].texcoord == u[3]);
-		REQUIRE(vertex_array[1].texcoord == u[2]);
-		REQUIRE(vertex_array[2].texcoord == u[1]);
-		REQUIRE(vertex_array[3].texcoord == u[0]);
-
-		sprite->flip();
-
-		REQUIRE_FALSE(sprite->is_flipped());
-		REQUIRE_FALSE(sprite->is_mirrored());
-		for (int i = 0; i < 4; ++i)
-		{
-			REQUIRE(vertex_array[i].position == p[i]);
-			REQUIRE(vertex_array[i].texcoord == u[i]);
-		}
-
-		sprite->mirror();
-		sprite->flip();
-
-		REQUIRE(sprite->is_flipped());
-		REQUIRE(sprite->is_mirrored());
-		for (int i = 0; i < 4; ++i)
-			REQUIRE(vertex_array[i].position == p[i]);
-		REQUIRE(vertex_array[0].texcoord == u[2]);
-		REQUIRE(vertex_array[1].texcoord == u[3]);
-		REQUIRE(vertex_array[2].texcoord == u[0]);
-		REQUIRE(vertex_array[3].texcoord == u[1]);
-
-		sprite->mirror();
-
-		REQUIRE(sprite->is_flipped());
-		REQUIRE_FALSE(sprite->is_mirrored());
-		for (int i = 0; i < 4; ++i)
-			REQUIRE(vertex_array[i].position == p[i]);
-		REQUIRE(vertex_array[0].texcoord == u[3]);
-		REQUIRE(vertex_array[1].texcoord == u[2]);
-		REQUIRE(vertex_array[2].texcoord == u[1]);
-		REQUIRE(vertex_array[3].texcoord == u[0]);
-
-		sprite->flip();
-	}
-
-	REQUIRE_FALSE(sprite->is_flipped());
-	REQUIRE_FALSE(sprite->is_mirrored());
-	for (int i = 0; i < 4; ++i)
-	{
-		REQUIRE(vertex_array[i].position == p[i]);
-		REQUIRE(vertex_array[i].texcoord == u[i]);
-	}
+	ASSERT_EQ(Vec2f(-1, -1), vertex_array[0].position);
+	ASSERT_EQ(Vec2f(1, -1), vertex_array[1].position);
+	ASSERT_EQ(Vec2f(1, 1), vertex_array[2].position);
+	ASSERT_EQ(Vec2f(-1, 1), vertex_array[3].position);
 }
 
-TEST_CASE("Sprites can be hidden", "[sprite]")
+TEST_F(SpriteHiddenTest, CanBeMoved)
+{
+	sprite->hide();
+
+	sprite->set_position(Vec2f::One);
+	sprite->update();
+
+	auto vertex_array = sprite->vertex_array();
+	ASSERT_EQ(Vec2f::Zero, vertex_array[0].position);
+	ASSERT_EQ(Vec2f::Zero, vertex_array[1].position);
+	ASSERT_EQ(Vec2f::Zero, vertex_array[2].position);
+	ASSERT_EQ(Vec2f::Zero, vertex_array[3].position);
+
+	sprite->show();
+	sprite->update();
+
+	ASSERT_EQ(Vec2f(0, 0), vertex_array[0].position);
+	ASSERT_EQ(Vec2f(2, 0), vertex_array[1].position);
+	ASSERT_EQ(Vec2f(2, 2), vertex_array[2].position);
+	ASSERT_EQ(Vec2f(0, 2), vertex_array[3].position);
+}
+
+TEST(SpriteTest, UpdatesOnlyOnChange)
 {
 	SpriteBatch batch(rainbow::ISolemnlySwearThatIAmOnlyTesting{});
 	auto sprite = batch.create_sprite(2, 2);
 
-	SECTION("Multiple calls to hide/show are effectively noops")
-	{
-		REQUIRE_FALSE(sprite->is_hidden());
-
-		sprite->hide();
-		REQUIRE(sprite->is_hidden());
-		sprite->hide();
-		REQUIRE(sprite->is_hidden());
-
-		sprite->show();
-		REQUIRE_FALSE(sprite->is_hidden());
-		sprite->show();
-		REQUIRE_FALSE(sprite->is_hidden());
-	}
-
-	SECTION("Hidden sprites are restored properly")
-	{
-		sprite->hide();
-		sprite->update();
-
-		auto vertex_array = sprite->vertex_array();
-		REQUIRE(vertex_array[0].position == Vec2f::Zero);
-		REQUIRE(vertex_array[1].position == Vec2f::Zero);
-		REQUIRE(vertex_array[2].position == Vec2f::Zero);
-		REQUIRE(vertex_array[3].position == Vec2f::Zero);
-
-		sprite->show();
-		sprite->update();
-
-		REQUIRE(vertex_array[0].position == Vec2f(-1, -1));
-		REQUIRE(vertex_array[1].position == Vec2f(1, -1));
-		REQUIRE(vertex_array[2].position == Vec2f(1, 1));
-		REQUIRE(vertex_array[3].position == Vec2f(-1, 1));
-	}
-
-	SECTION("Sprites can be moved while hidden")
-	{
-		sprite->hide();
-
-		sprite->set_position(Vec2f::One);
-		sprite->update();
-
-		auto vertex_array = sprite->vertex_array();
-		REQUIRE(vertex_array[0].position == Vec2f::Zero);
-		REQUIRE(vertex_array[1].position == Vec2f::Zero);
-		REQUIRE(vertex_array[2].position == Vec2f::Zero);
-		REQUIRE(vertex_array[3].position == Vec2f::Zero);
-
-		sprite->show();
-		sprite->update();
-
-		REQUIRE(vertex_array[0].position == Vec2f(0, 0));
-		REQUIRE(vertex_array[1].position == Vec2f(2, 0));
-		REQUIRE(vertex_array[2].position == Vec2f(2, 2));
-		REQUIRE(vertex_array[3].position == Vec2f(0, 2));
-	}
-}
-
-TEST_CASE("Sprites do not update unless necessary", "[sprite]")
-{
-	SpriteBatch batch(rainbow::ISolemnlySwearThatIAmOnlyTesting{});
-	auto sprite = batch.create_sprite(2, 2);
-
-	REQUIRE(sprite->update());
-	REQUIRE_FALSE(sprite->update());
+	ASSERT_TRUE(sprite->update());
+	ASSERT_FALSE(sprite->update());
 
 	sprite->move(Vec2f::Left);
 
-	REQUIRE(sprite->update());
-	REQUIRE_FALSE(sprite->update());
+	ASSERT_TRUE(sprite->update());
+	ASSERT_FALSE(sprite->update());
 }
 
-TEST_CASE("Sprite::Refs are invalid when instantiated manually", "[sprite]")
+TEST(SpriteTest, ManuallyConstructedRefsAreInvalid)
 {
-	REQUIRE_FALSE(Sprite::Ref());
+	ASSERT_FALSE(Sprite::Ref());
 }

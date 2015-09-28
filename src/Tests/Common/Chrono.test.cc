@@ -2,23 +2,23 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
-#include <catch.hpp>
+#include <gtest/gtest.h>
 
 #include "Common/Chrono.h"
 
-TEST_CASE("Time difference between updates", "[chrono]")
+TEST(ChronoTest, TimeDifferenceBetweenUpdates)
 {
 	const Chrono::duration::rep threshold = 20;
 	const Chrono::duration::rep times[]{16, 1000, 0};
 
 	Chrono chrono;
-	REQUIRE(chrono.delta() == 0);
+	ASSERT_EQ(0, chrono.delta());
 
 	for (int i = 0; times[i] > 0; ++i)
 	{
 		Chrono::sleep(times[i]);
 		chrono.update();
-		REQUIRE(chrono.delta() >= times[i]);
-		REQUIRE(chrono.delta() < times[i] + threshold);
+		ASSERT_LE(times[i], chrono.delta());
+		ASSERT_GE(times[i] + threshold, chrono.delta());
 	}
 }

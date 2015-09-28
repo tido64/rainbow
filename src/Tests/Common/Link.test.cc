@@ -2,7 +2,7 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
-#include <catch.hpp>
+#include <gtest/gtest.h>
 
 #include "Common/Link.h"
 
@@ -18,114 +18,131 @@ namespace
 	};
 }
 
-TEST_CASE("Link construction", "[link]")
+TEST(LinkTest, Constructs)
 {
-	Number n{0};
-	REQUIRE(n.value == 0);
-	REQUIRE(n.next() == nullptr);
-	REQUIRE(n.prev() == nullptr);
+	const Number n{0};
+
+	ASSERT_EQ(0, n.value);
+	ASSERT_EQ(nullptr, n.next());
+	ASSERT_EQ(nullptr, n.prev());
 }
 
-TEST_CASE("Link operations", "[link]")
+TEST(LinkTest, AppendsItemAfterCurrent)
 {
 	Number numbers[]{Number{1}, Number{2}, Number{3}, Number{4}};
 	Number n{0};
 
-	SECTION("append() inserts item after current")
+	std::for_each(numbers, numbers + 4, [&n](Number& m) {
+		const auto o = n.next();
+		ASSERT_EQ(nullptr, m.prev());
+
+		n.append(&m);
+
+		ASSERT_EQ(&n, m.prev());
+		ASSERT_EQ(o, m.next());
+		ASSERT_EQ(nullptr, n.prev());
+		ASSERT_EQ(&m, n.next());
+	});
+
+	ASSERT_EQ(0, n.value);
+	ASSERT_EQ(numbers + 3, n.next());
+
+	auto m = n.next();
+	for (int i = 4; i > 0; --i)
 	{
-		std::for_each(numbers, numbers + 4, [&n](Number &m) {
-			const auto o = n.next();
-			REQUIRE(m.prev() == nullptr);
-			n.append(&m);
-			REQUIRE(m.prev() == &n);
-			REQUIRE(m.next() == o);
-			REQUIRE(n.prev() == nullptr);
-			REQUIRE(n.next() == &m);
-		});
-		REQUIRE(n.value == 0);
-		REQUIRE(n.next() == numbers + 3);
-		auto m = n.next();
-		for (int i = 4; i > 0; --i)
-		{
-			REQUIRE(m->value == i);
-			m = m->next();
-		}
-	}
-
-	SECTION("append() pops the item before insertion")
-	{
-		std::for_each(numbers, numbers + 4, [&n](Number &m) { n.append(&m); });
-		REQUIRE(n.next() == numbers + 3);
-		REQUIRE(numbers[3].prev() == &n);
-		REQUIRE(numbers[3].next() == numbers + 2);
-		REQUIRE(numbers[0].next() == nullptr);
-		numbers[0].append(numbers + 3);
-		REQUIRE(numbers[0].next() == numbers + 3);
-		REQUIRE(numbers[3].prev() == numbers);
-		REQUIRE(numbers[3].next() == nullptr);
-		REQUIRE(n.next() == numbers + 2);
-		REQUIRE(numbers[2].prev() == &n);
-	}
-
-	SECTION("pop() removes itself from the list")
-	{
-		std::for_each(numbers, numbers + 4, [&n](Number &m) { n.append(&m); });
-
-		REQUIRE(n.next() == numbers + 3);
-		REQUIRE(n.prev() == nullptr);
-		REQUIRE(numbers[3].next() == numbers + 2);
-		REQUIRE(numbers[3].prev() == &n);
-		n.pop();
-		REQUIRE(n.value == 0);
-		REQUIRE(n.next() == nullptr);
-		REQUIRE(numbers[3].prev() == nullptr);
-
-		REQUIRE(numbers[3].next() == numbers + 2);
-		REQUIRE(numbers[2].prev() == numbers + 3);
-		REQUIRE(numbers[2].next() == numbers + 1);
-		REQUIRE(numbers[1].prev() == numbers + 2);
-		numbers[2].pop();
-		REQUIRE(numbers[2].prev() == nullptr);
-		REQUIRE(numbers[2].next() == nullptr);
-		REQUIRE(numbers[3].next() == numbers + 1);
-		REQUIRE(numbers[1].prev() == numbers + 3);
-
-		REQUIRE(numbers[1].next() == numbers);
-		REQUIRE(numbers[0].prev() == numbers + 1);
-		REQUIRE(numbers[0].next() == nullptr);
-		numbers[0].pop();
-		REQUIRE(numbers[1].next() == nullptr);
-		REQUIRE(numbers[1].prev() == numbers + 3);
-		REQUIRE(numbers[0].next() == nullptr);
-		REQUIRE(numbers[0].prev() == nullptr);
+		ASSERT_EQ(i, m->value);
+		m = m->next();
 	}
 }
 
-TEST_CASE("Link pops itself on destruction", "[link]")
+TEST(LinkTest, PopsItemBeforeInsertion)
+{
+	Number numbers[]{Number{1}, Number{2}, Number{3}, Number{4}};
+	Number n{0};
+
+	std::for_each(numbers, numbers + 4, [&n](Number& m) { n.append(&m); });
+
+	ASSERT_EQ(numbers + 3, n.next());
+	ASSERT_EQ(&n, numbers[3].prev());
+	ASSERT_EQ(numbers + 2, numbers[3].next());
+	ASSERT_EQ(nullptr, numbers[0].next());
+
+	numbers[0].append(numbers + 3);
+
+	ASSERT_EQ(numbers + 3, numbers[0].next());
+	ASSERT_EQ(numbers, numbers[3].prev());
+	ASSERT_EQ(nullptr, numbers[3].next());
+	ASSERT_EQ(numbers + 2, n.next());
+	ASSERT_EQ(&n, numbers[2].prev());
+}
+
+TEST(LinkTest, RemovesItselfWhenPopped)
+{
+	Number numbers[]{Number{1}, Number{2}, Number{3}, Number{4}};
+	Number n{0};
+
+	std::for_each(numbers, numbers + 4, [&n](Number& m) { n.append(&m); });
+
+	ASSERT_EQ(numbers + 3, n.next());
+	ASSERT_EQ(nullptr, n.prev());
+	ASSERT_EQ(numbers + 2, numbers[3].next());
+	ASSERT_EQ(&n, numbers[3].prev());
+
+	n.pop();
+
+	ASSERT_EQ(0, n.value);
+	ASSERT_EQ(nullptr, n.next());
+	ASSERT_EQ(nullptr, numbers[3].prev());
+
+	ASSERT_EQ(numbers + 2, numbers[3].next());
+	ASSERT_EQ(numbers + 3, numbers[2].prev());
+	ASSERT_EQ(numbers + 1, numbers[2].next());
+	ASSERT_EQ(numbers + 2, numbers[1].prev());
+
+	numbers[2].pop();
+
+	ASSERT_EQ(nullptr, numbers[2].prev());
+	ASSERT_EQ(nullptr, numbers[2].next());
+	ASSERT_EQ(numbers + 1, numbers[3].next());
+	ASSERT_EQ(numbers + 3, numbers[1].prev());
+
+	ASSERT_EQ(numbers, numbers[1].next());
+	ASSERT_EQ(numbers + 1, numbers[0].prev());
+	ASSERT_EQ(nullptr, numbers[0].next());
+
+	numbers[0].pop();
+
+	ASSERT_EQ(nullptr, numbers[1].next());
+	ASSERT_EQ(numbers + 3, numbers[1].prev());
+	ASSERT_EQ(nullptr, numbers[0].next());
+	ASSERT_EQ(nullptr, numbers[0].prev());
+}
+
+TEST(LinkTest, PopsItselfOnDestruction)
 {
 	Number a{0};
-	REQUIRE(a.next() == nullptr);
+	ASSERT_EQ(nullptr, a.next());
 	{
 		Number b{1};
 		a.append(&b);
-		REQUIRE(a.next() == &b);
-		REQUIRE(b.prev() == &a);
-		REQUIRE(b.next() == nullptr);
+		ASSERT_EQ(&b, a.next());
+		ASSERT_EQ(&a, b.prev());
+		ASSERT_EQ(nullptr, b.next());
 		{
 			Number c{1};
 			b.append(&c);
-			REQUIRE(b.next() == &c);
-			REQUIRE(c.prev() == &b);
-			REQUIRE(b.prev() == &a);
-			REQUIRE(a.next() == &b);
+			ASSERT_EQ(&c, b.next());
+			ASSERT_EQ(&b, c.prev());
+			ASSERT_EQ(&a, b.prev());
+			ASSERT_EQ(&b, a.next());
 		}
-		REQUIRE(b.next() == nullptr);
-		REQUIRE(b.prev() == &a);
+		ASSERT_EQ(nullptr, b.next());
+		ASSERT_EQ(&a, b.prev());
 	}
-	REQUIRE(a.next() == nullptr);
+	ASSERT_EQ(nullptr, a.next());
 }
 
-TEST_CASE("Traverse Links with for_each", "[link]")
+TEST(LinkTest, ForEachTraversesLinks)
 {
 	Number numbers[]{Number{0}, Number{1}, Number{2}, Number{3}, Number{4}};
 	numbers[0].append(&numbers[4]);
@@ -134,17 +151,17 @@ TEST_CASE("Traverse Links with for_each", "[link]")
 	numbers[0].append(&numbers[1]);
 
 	int prev = -1;
-	REQUIRE_FALSE(for_each(numbers, [&prev](const Number *n) {
-		REQUIRE(n->value > prev);
+	ASSERT_FALSE(for_each(numbers, [&prev](const Number* n) {
+		[&] { ASSERT_GT(n->value, prev); }();
 		prev = n->value;
 		return false;
 	}));
-	REQUIRE(prev == numbers[4].value);
+	ASSERT_EQ(numbers[4].value, prev);
 
 	const int max = 3;
-	REQUIRE(for_each(numbers, [max, &prev](const Number *n) {
+	ASSERT_TRUE(for_each(numbers, [max, &prev](const Number* n) {
 		prev = n->value;
 		return n->value >= max;
 	}));
-	REQUIRE(prev == max);
+	ASSERT_EQ(max, prev);
 }

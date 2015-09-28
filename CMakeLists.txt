@@ -198,8 +198,18 @@ else()
 endif()
 
 if(UNIT_TESTS)
-	set(CATCH_INCLUDE_DIR ${LOCAL_LIBRARY}/Catch/include)
 	add_definitions(-DRAINBOW_TEST)
+	set(TEST_INCLUDE_DIR ${LOCAL_LIBRARY}/googletest/googletest/include)
+	set(TEST_LIBRARY googletest)
+	add_library(${TEST_LIBRARY} STATIC lib/googletest/googletest/src/gtest-all.cc)
+	set_property(
+		TARGET ${TEST_LIBRARY}
+		APPEND
+		PROPERTY COMPILE_FLAGS -w)
+	set_property(
+		TARGET ${TEST_LIBRARY}
+		APPEND
+		PROPERTY INCLUDE_DIRECTORIES ${TEST_INCLUDE_DIR} ${LOCAL_LIBRARY}/googletest/googletest)
 	list(APPEND SOURCE_FILES
 		src/Tests/Common/Algorithm.test.cc
 		src/Tests/Common/Chrono.test.cc
@@ -317,7 +327,10 @@ endif()
 
 foreach(src IN LISTS SOURCE_FILES)
 	string(REGEX REPLACE "^src/" "" src_file ${src})
-	set_source_files_properties(${src} PROPERTIES COMPILE_DEFINITIONS "SRC_FILE=\"${src_file}\"")
+	set_property(
+		SOURCE ${src}
+		APPEND
+		PROPERTY COMPILE_DEFINITIONS "SRC_FILE=\"${src_file}\"")
 endforeach()
 add_executable(rainbow ${SOURCE_FILES})
 
@@ -370,10 +383,10 @@ set_property(TARGET rainbow APPEND PROPERTY INCLUDE_DIRECTORIES
 	${SPINE_INCLUDE_DIR}
 	${ZLIB_INCLUDE_DIR}
 	${AUDIO_INCLUDE_DIRS}
-	${CATCH_INCLUDE_DIR}
+	${TEST_INCLUDE_DIR}
 )
 target_link_libraries(rainbow
-	${PHYSICS_LIBRARY} ${SPINE_LIBRARY} ${VECTOR_LIBRARY}
+	${TEST_LIBRARY} ${PHYSICS_LIBRARY} ${SPINE_LIBRARY} ${VECTOR_LIBRARY}
 	freetype lua png ${SDL2_LIBRARIES}
 	${AUDIO_LIBRARIES} ${OPENGL_ext_LIBRARY} ${OPENGL_gl_LIBRARY}
 	${ZLIB_LIBRARY} ${PLATFORM_LIBRARIES}

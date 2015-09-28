@@ -26,9 +26,7 @@ branches:
   only:
     - master
 notifications:
-  email:
-    recipients:
-      - tn0502@gmail.com
+  email: false
 env:
   - CMAKE_BUILD_TYPE=Debug
   - CMAKE_BUILD_TYPE=MinSizeRel

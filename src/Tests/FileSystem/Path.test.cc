@@ -5,7 +5,7 @@
 #include <cstring>
 #include <sys/stat.h>
 
-#include <catch.hpp>
+#include <gtest/gtest.h>
 
 #include "Common/Random.h"
 #include "FileSystem/Path.h"
@@ -27,72 +27,75 @@
 
 // For tests of File, see DataTest::SaveAndLoad.
 
-TEST_CASE("Create directories", "[path]")
+TEST(PathTest, CreatesDirectories)
 {
 	char random[32];
 	sprintf(random, kTestRandomPath, rainbow::random(0x10000000u, 0xffffffffu));
 
 	Path path(random, Path::RelativeTo::Root);
 	const size_t end = strlen(path) - 1;
-	path += "1" kPathSeparator "2" kPathSeparator "3" kPathSeparator "4" kPathSeparator;
+	path += "1" kPathSeparator "2" kPathSeparator "3" kPathSeparator
+	        "4" kPathSeparator;
 
-	REQUIRE(path.create() == 0);
+	ASSERT_EQ(0, path.create());
 	struct stat sb;
 	for (size_t i = strlen(path) - 1; i > end; --i)
 	{
 		if (path[i] == kPathSeparatorCharacter)
 		{
-			char &c = const_cast<char&>(path[i]);
+			char& c = const_cast<char&>(path[i]);
 			c = '\0';
-			REQUIRE(stat(path, &sb) == 0);
-			REQUIRE((sb.st_mode & S_IFDIR) == S_IFDIR);
-			REQUIRE(rmdir(path) == 0);
+			ASSERT_EQ(0, stat(path, &sb));
+			ASSERT_EQ(static_cast<mode_t>(S_IFDIR), sb.st_mode & S_IFDIR);
+			ASSERT_EQ(0, rmdir(path));
 		}
 	}
 }
 
-TEST_CASE("Current path", "[path]")
+TEST(PathTest, CurrentPath)
 {
 	char cwd[256];
-	REQUIRE(getcwd(cwd, sizeof(cwd)) == cwd);
-	REQUIRE(strcmp(Path::current(), cwd) == 0);
+	ASSERT_EQ(cwd, getcwd(cwd, sizeof(cwd)));
+	ASSERT_EQ(0, strcmp(Path::current(), cwd));
 	const Path path;
-	REQUIRE(strcmp(path, cwd) == 0);
+	ASSERT_EQ(0, strcmp(path, cwd));
 }
 
-TEST_CASE("Relative to current path", "[path]")
+TEST(PathTest, RelativeToCurrentPath)
 {
 	char cwd[256];
-	REQUIRE(getcwd(cwd, sizeof(cwd)) == cwd);
+	ASSERT_EQ(cwd, getcwd(cwd, sizeof(cwd)));
 	strcat(cwd, kPathSeparator kTestFileName);
 
 	const Path path(kTestFileName, Path::RelativeTo::CurrentPath);
-	REQUIRE(strcmp(path, cwd) == 0);
+	ASSERT_EQ(0, strcmp(path, cwd));
 }
 
-TEST_CASE("Relative to root", "[path]")
+TEST(PathTest, RelativeToRoot)
 {
 	const Path path(kTestPath, Path::RelativeTo::Root);
-	REQUIRE(strcmp(path, kTestPath) == 0);
+	ASSERT_EQ(0, strcmp(path, kTestPath));
 }
 
-TEST_CASE("Set path", "[path]")
+TEST(PathTest, SetsPath)
 {
 	Path path;
-	REQUIRE(strcmp(path, kTestPath) != 0);
+	ASSERT_NE(0, strcmp(path, kTestPath));
 	path = kTestPath;
-	REQUIRE(strcmp(path, kTestPath) == 0);
+	ASSERT_EQ(0, strcmp(path, kTestPath));
 }
 
-TEST_CASE("Appends path components", "[path]")
+TEST(PathTest, AppendsPathComponents)
 {
 	Path path;
 	path = kTestPath;
-	REQUIRE(strcmp(path, kTestPath) == 0);
+	ASSERT_EQ(0, strcmp(path, kTestPath));
 	path += kTestFileName;
-	REQUIRE(strcmp(path, kTestPath kPathSeparator kTestFileName) == 0);
+	ASSERT_EQ(0, strcmp(path, kTestPath kPathSeparator kTestFileName));
 	path += kPathSeparator;
-	REQUIRE(strcmp(path, kTestPath kPathSeparator kTestFileName kPathSeparator kPathSeparator) == 0);
+	ASSERT_EQ(0, strcmp(path, kTestPath kPathSeparator kTestFileName
+	                              kPathSeparator kPathSeparator));
 	path += kTestFileName;
-	REQUIRE(strcmp(path, kTestPath kPathSeparator kTestFileName kPathSeparator kPathSeparator kTestFileName) == 0);
+	ASSERT_EQ(0, strcmp(path, kTestPath kPathSeparator kTestFileName
+	                              kPathSeparator kPathSeparator kTestFileName));
 }

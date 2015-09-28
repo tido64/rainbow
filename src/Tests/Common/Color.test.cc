@@ -2,7 +2,7 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
-#include <catch.hpp>
+#include <gtest/gtest.h>
 
 #include "Common/Algorithm.h"
 #include "Common/Color.h"
@@ -23,85 +23,79 @@ namespace
 	const unsigned int kTestColor = 0x12345678;
 }
 
-TEST_CASE("Color<T> is white by default", "[color]")
+TEST(ColorTest, IsWhiteByDefault)
 {
 	const Colorb cb;
-	REQUIRE(cb.r == 255);
-	REQUIRE(cb.g == 255);
-	REQUIRE(cb.b == 255);
-	REQUIRE(cb.a == 255);
+	ASSERT_EQ(255, cb.r);
+	ASSERT_EQ(255, cb.g);
+	ASSERT_EQ(255, cb.b);
+	ASSERT_EQ(255, cb.a);
 
 	const Colorf cf;
-	REQUIRE(cf.r == 1.0f);
-	REQUIRE(cf.g == 1.0f);
-	REQUIRE(cf.b == 1.0f);
-	REQUIRE(cf.a == 1.0f);
+	ASSERT_EQ(1.0f, cf.r);
+	ASSERT_EQ(1.0f, cf.g);
+	ASSERT_EQ(1.0f, cf.b);
+	ASSERT_EQ(1.0f, cf.a);
 }
 
-TEST_CASE("Can construct a Color<char> with an integer", "[color]")
+TEST(ColorTest, ConstructsColorWithTypeChar)
 {
 	const Colorb c(kTestColor);
-	REQUIRE(c.r == kRed);
-	REQUIRE(c.g == kGreen);
-	REQUIRE(c.b == kBlue);
-	REQUIRE(c.a == kAlpha);
+	ASSERT_EQ(kRed, c.r);
+	ASSERT_EQ(kGreen, c.g);
+	ASSERT_EQ(kBlue, c.b);
+	ASSERT_EQ(kAlpha, c.a);
+
+	const Colorb d(kRed, kGreen, kBlue, kAlpha);
+	ASSERT_EQ(kRed, d.r);
+	ASSERT_EQ(kGreen, d.g);
+	ASSERT_EQ(kBlue, d.b);
+	ASSERT_EQ(kAlpha, d.a);
+
+	const Colorb e(kRed, kGreen, kBlue);
+	ASSERT_EQ(kRed, e.r);
+	ASSERT_EQ(kGreen, e.g);
+	ASSERT_EQ(kBlue, e.b);
+	ASSERT_EQ(0xff, e.a);
 }
 
-TEST_CASE("Can construct a Color<char> component-wise", "[color]")
-{
-	const Colorb c(kRed, kGreen, kBlue, kAlpha);
-	REQUIRE(c.r == kRed);
-	REQUIRE(c.g == kGreen);
-	REQUIRE(c.b == kBlue);
-	REQUIRE(c.a == kAlpha);
-
-	const Colorb d(kRed, kGreen, kBlue);
-	REQUIRE(d.r == kRed);
-	REQUIRE(d.g == kGreen);
-	REQUIRE(d.b == kBlue);
-	REQUIRE(d.a == 0xff);
-}
-
-TEST_CASE("Can assign an integer to Color<char>", "[color]")
+TEST(ColorTest, AssignsIntegerColorWithTypeChar)
 {
 	Colorb c;
 	c = kTestColor;
-	REQUIRE(c.r == kRed);
-	REQUIRE(c.g == kGreen);
-	REQUIRE(c.b == kBlue);
-	REQUIRE(c.a == kAlpha);
+	ASSERT_EQ(kRed, c.r);
+	ASSERT_EQ(kGreen, c.g);
+	ASSERT_EQ(kBlue, c.b);
+	ASSERT_EQ(kAlpha, c.a);
 }
 
-TEST_CASE("Can construct a Color<float> with an integer", "[color]")
+TEST(ColorTest, ConstructsColorWithTypeFloat)
 {
 	const Colorf c(kTestColor);
-	REQUIRE(c.r == Approx(kRedF));
-	REQUIRE(c.g == Approx(kGreenF));
-	REQUIRE(c.b == Approx(kBlueF));
-	REQUIRE(c.a == Approx(kAlphaF));
+	ASSERT_FLOAT_EQ(kRedF, c.r);
+	ASSERT_FLOAT_EQ(kGreenF, c.g);
+	ASSERT_FLOAT_EQ(kBlueF, c.b);
+	ASSERT_FLOAT_EQ(kAlphaF, c.a);
+
+	const Colorf d(kRedF, kGreenF, kBlueF, kAlphaF);
+	ASSERT_FLOAT_EQ(kRedF, d.r);
+	ASSERT_FLOAT_EQ(kGreenF, d.g);
+	ASSERT_FLOAT_EQ(kBlueF, d.b);
+	ASSERT_FLOAT_EQ(kAlphaF, d.a);
+
+	const Colorf e(kRedF, kGreenF, kBlueF);
+	ASSERT_FLOAT_EQ(kRedF, e.r);
+	ASSERT_FLOAT_EQ(kGreenF, e.g);
+	ASSERT_FLOAT_EQ(kBlueF, e.b);
+	ASSERT_FLOAT_EQ(1.0f, e.a);
 }
 
-TEST_CASE("Can construct a Color<float> component-wise", "[color]")
-{
-	const Colorf c(kRedF, kGreenF, kBlueF, kAlphaF);
-	REQUIRE(c.r == Approx(kRedF));
-	REQUIRE(c.g == Approx(kGreenF));
-	REQUIRE(c.b == Approx(kBlueF));
-	REQUIRE(c.a == Approx(kAlphaF));
-
-	const Colorf d(kRedF, kGreenF, kBlueF);
-	REQUIRE(d.r == Approx(kRedF));
-	REQUIRE(d.g == Approx(kGreenF));
-	REQUIRE(d.b == Approx(kBlueF));
-	REQUIRE(d.a == Approx(1.0f));
-}
-
-TEST_CASE("Can assign an integer to Color<float>", "[color]")
+TEST(ColorTest, AssignsIntegerColorWithTypeFloat)
 {
 	Colorf c;
 	c = kTestColor;
-	REQUIRE(c.r == Approx(kRedF));
-	REQUIRE(c.g == Approx(kGreenF));
-	REQUIRE(c.b == Approx(kBlueF));
-	REQUIRE(c.a == Approx(kAlphaF));
+	ASSERT_FLOAT_EQ(kRedF, c.r);
+	ASSERT_FLOAT_EQ(kGreenF, c.g);
+	ASSERT_FLOAT_EQ(kBlueF, c.b);
+	ASSERT_FLOAT_EQ(kAlphaF, c.a);
 }

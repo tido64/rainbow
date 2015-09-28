@@ -2,22 +2,22 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
-#include <catch.hpp>
+#include <gtest/gtest.h>
 
 #include "Common/TreeNode.h"
 
 namespace
 {
-	class TreeNodeTest : public TreeNode<TreeNodeTest>
+	class TestNode : public TreeNode<TestNode>
 	{
 	public:
-		TreeNodeTest(bool& deleted) : deleted_(deleted) { deleted_ = false; }
-		TreeNodeTest(TreeNodeTest&&) = default;
-		~TreeNodeTest() { deleted_ = true; }
+		TestNode(bool& deleted) : deleted_(deleted) { deleted_ = false; }
+		TestNode(TestNode&&) = default;
+		~TestNode() { deleted_ = true; }
 
-		const std::vector<TreeNodeTest*>& children() const { return children_; }
+		const std::vector<TestNode*>& children() const { return children_; }
 
-		TreeNodeTest& operator=(TreeNodeTest&& node)
+		TestNode& operator=(TestNode&& node)
 		{
 			TreeNode::operator=(std::move(node));
 			return *this;
@@ -28,159 +28,165 @@ namespace
 	};
 }
 
-TEST_CASE("A newly constructed node is always a free node", "[tree]")
+TEST(TreeNodeTest, ConstructsFreeNode)
 {
 	bool node_deleted = false;
-	TreeNodeTest node(node_deleted);
-	REQUIRE_FALSE(node.parent());
-	REQUIRE(node.children().empty());
+	TestNode node(node_deleted);
+	ASSERT_FALSE(node.parent());
+	ASSERT_TRUE(node.children().empty());
 }
 
-TEST_CASE("TreeNodes can be moved", "[tree]")
+TEST(TreeNodeTest, MoveConstructs)
 {
 	bool root_deleted = false;
-	TreeNodeTest root(root_deleted);
+	TestNode root(root_deleted);
 
 	bool node_deleted = false;
-	TreeNodeTest* node = new TreeNodeTest(node_deleted);
+	TestNode* node = new TestNode(node_deleted);
 	root.add_child(node);
 
-	REQUIRE_FALSE(root.children().empty());
+	ASSERT_FALSE(root.children().empty());
 
-	SECTION("Can be move constructed")
-	{
-		TreeNodeTest new_root(std::move(root));
+	TestNode new_root(std::move(root));
 
-		REQUIRE_FALSE(node_deleted);
-		REQUIRE(new_root.children().at(0) == node);
-		REQUIRE(root.children().empty());
-	}
-
-	SECTION("Can be move assigned")
-	{
-		bool new_root_deleted = false;
-		TreeNodeTest new_root(new_root_deleted);
-		new_root = std::move(root);
-
-		REQUIRE_FALSE(node_deleted);
-		REQUIRE(new_root.children().at(0) == node);
-		REQUIRE(root.children().empty());
-	}
+	ASSERT_FALSE(node_deleted);
+	ASSERT_EQ(node, new_root.children().at(0));
+	ASSERT_TRUE(root.children().empty());
 }
 
-TEST_CASE("Adding/removing nodes", "[tree]")
+TEST(TreeNodeTest, MoveAssigns)
 {
 	bool root_deleted = false;
-	TreeNodeTest root(root_deleted);
+	TestNode root(root_deleted);
 
 	bool node_deleted = false;
-	TreeNodeTest* node = new TreeNodeTest(node_deleted);
+	TestNode* node = new TestNode(node_deleted);
 	root.add_child(node);
 
-	REQUIRE_FALSE(node_deleted);
-	REQUIRE_FALSE(root.parent());
+	ASSERT_FALSE(root.children().empty());
 
-	REQUIRE(root.children().size() == 1);
-	REQUIRE(root.children().at(0) == node);
-	REQUIRE(node->parent() == &root);
+	bool new_root_deleted = false;
+	TestNode new_root(new_root_deleted);
+	new_root = std::move(root);
+
+	ASSERT_FALSE(node_deleted);
+	ASSERT_EQ(node, new_root.children().at(0));
+	ASSERT_TRUE(root.children().empty());
+}
+
+TEST(TreeNodeTest, AddsAndRemovesNodes)
+{
+	bool root_deleted = false;
+	TestNode root(root_deleted);
+
+	bool node_deleted = false;
+	TestNode* node = new TestNode(node_deleted);
+	root.add_child(node);
+
+	ASSERT_FALSE(node_deleted);
+	ASSERT_FALSE(root.parent());
+
+	ASSERT_EQ(1u, root.children().size());
+	ASSERT_EQ(node, root.children().at(0));
+	ASSERT_EQ(&root, node->parent());
 
 	root.remove_child(node);
 
-	REQUIRE(node_deleted);
-	REQUIRE(root.children().empty());
+	ASSERT_TRUE(node_deleted);
+	ASSERT_TRUE(root.children().empty());
 }
 
-TEST_CASE("Removing a node also deletes it", "[tree]")
+TEST(TreeNodeTest, RemovedNodesAreDeleted)
 {
 	bool root_deleted = false;
-	TreeNodeTest root(root_deleted);
+	TestNode root(root_deleted);
 	bool node_deleted = false;
-	TreeNodeTest *node = new TreeNodeTest(node_deleted);
+	TestNode* node = new TestNode(node_deleted);
 	root.add_child(node);
-	REQUIRE_FALSE(node_deleted);
+	ASSERT_FALSE(node_deleted);
 	node->remove();
-	REQUIRE(node_deleted);
-	REQUIRE(root.children().empty());
+	ASSERT_TRUE(node_deleted);
+	ASSERT_TRUE(root.children().empty());
 }
 
-TEST_CASE("Reparenting nodes", "[tree]")
+TEST(TreeNodeTest, ReparentsNodes)
 {
 	bool root_deleted = false;
-	TreeNodeTest root(root_deleted);
+	TestNode root(root_deleted);
 
 	bool deleted[]{false, false, false};
-	TreeNodeTest* nodes[]{
-	    new TreeNodeTest(deleted[0]),
-	    new TreeNodeTest(deleted[1]),
-	    new TreeNodeTest(deleted[2])};
+	TestNode* nodes[]{
+	    new TestNode(deleted[0]),
+	    new TestNode(deleted[1]),
+	    new TestNode(deleted[2])};
 
 	root.add_child(nodes[0]);
 	root.add_child(nodes[1]);
 	nodes[1]->add_child(nodes[2]);
 
-	REQUIRE(root.children().size() == 2);
-	REQUIRE(root.children().at(0) == nodes[0]);
-	REQUIRE(root.children().at(1) == nodes[1]);
+	ASSERT_EQ(2u, root.children().size());
+	ASSERT_EQ(nodes[0], root.children().at(0));
+	ASSERT_EQ(nodes[1], root.children().at(1));
 
-	REQUIRE(nodes[0]->parent() == &root);
-	REQUIRE(nodes[0]->children().empty());
+	ASSERT_EQ(&root, nodes[0]->parent());
+	ASSERT_TRUE(nodes[0]->children().empty());
 
-	REQUIRE(nodes[1]->parent() == &root);
-	REQUIRE(nodes[1]->children().size() == 1);
-	REQUIRE(nodes[1]->children().at(0) == nodes[2]);
+	ASSERT_EQ(&root, nodes[1]->parent());
+	ASSERT_EQ(1u, nodes[1]->children().size());
+	ASSERT_EQ(nodes[2], nodes[1]->children().at(0));
 
-	REQUIRE(nodes[2]->parent() == nodes[1]);
-	REQUIRE(nodes[2]->children().empty());
+	ASSERT_EQ(nodes[1], nodes[2]->parent());
+	ASSERT_TRUE(nodes[2]->children().empty());
 
 	nodes[0]->add_child(nodes[1]);
 
-	REQUIRE(root.children().size() == 1);
-	REQUIRE(root.children().at(0) == nodes[0]);
+	ASSERT_EQ(1u, root.children().size());
+	ASSERT_EQ(nodes[0], root.children().at(0));
 
-	REQUIRE(nodes[0]->parent() == &root);
-	REQUIRE(nodes[0]->children().size() == 1);
-	REQUIRE(nodes[0]->children().at(0) == nodes[1]);
+	ASSERT_EQ(&root, nodes[0]->parent());
+	ASSERT_EQ(1u, nodes[0]->children().size());
+	ASSERT_EQ(nodes[1], nodes[0]->children().at(0));
 
-	REQUIRE(nodes[1]->parent() == nodes[0]);
-	REQUIRE(nodes[1]->children().size() == 1);
-	REQUIRE(nodes[1]->children().at(0) == nodes[2]);
+	ASSERT_EQ(nodes[0], nodes[1]->parent());
+	ASSERT_EQ(1u, nodes[1]->children().size());
+	ASSERT_EQ(nodes[2], nodes[1]->children().at(0));
 
-	REQUIRE(nodes[2]->parent() == nodes[1]);
-	REQUIRE(nodes[2]->children().empty());
+	ASSERT_EQ(nodes[1], nodes[2]->parent());
+	ASSERT_TRUE(nodes[2]->children().empty());
 
 	root.add_child(nodes[1]);
 
-	REQUIRE(root.children().size() == 2);
-	REQUIRE(root.children().at(0) == nodes[0]);
-	REQUIRE(root.children().at(1) == nodes[1]);
+	ASSERT_EQ(2u, root.children().size());
+	ASSERT_EQ(nodes[0], root.children().at(0));
+	ASSERT_EQ(nodes[1], root.children().at(1));
 
-	REQUIRE(nodes[0]->parent() == &root);
-	REQUIRE(nodes[0]->children().empty());
+	ASSERT_EQ(&root, nodes[0]->parent());
+	ASSERT_TRUE(nodes[0]->children().empty());
 
-	REQUIRE(nodes[1]->parent() == &root);
-	REQUIRE(nodes[1]->children().size() == 1);
-	REQUIRE(nodes[1]->children().at(0) == nodes[2]);
+	ASSERT_EQ(&root, nodes[1]->parent());
+	ASSERT_EQ(1u, nodes[1]->children().size());
+	ASSERT_EQ(nodes[2], nodes[1]->children().at(0));
 
-	REQUIRE(nodes[2]->parent() == nodes[1]);
-	REQUIRE(nodes[2]->children().empty());
+	ASSERT_EQ(nodes[1], nodes[2]->parent());
+	ASSERT_TRUE(nodes[2]->children().empty());
 
-	REQUIRE_FALSE(deleted[0]);
-	REQUIRE_FALSE(deleted[1]);
-	REQUIRE_FALSE(deleted[2]);
+	ASSERT_FALSE(deleted[0]);
+	ASSERT_FALSE(deleted[1]);
+	ASSERT_FALSE(deleted[2]);
 }
 
-TEST_CASE("Removing a node will also remove its children", "[tree]")
+TEST(TreeNodeTest, DeletesChildrenOnDestruction)
 {
 	bool root_deleted = false;
-	TreeNodeTest root(root_deleted);
+	TestNode root(root_deleted);
 
 	bool deleted[]{false, false, false, false, false};
-	TreeNodeTest* nodes[]{
-	    new TreeNodeTest(deleted[0]),
-	    new TreeNodeTest(deleted[1]),
-	    new TreeNodeTest(deleted[2]),
-	    new TreeNodeTest(deleted[3]),
-	    new TreeNodeTest(deleted[4])};
+	TestNode* nodes[]{
+	    new TestNode(deleted[0]),
+	    new TestNode(deleted[1]),
+	    new TestNode(deleted[2]),
+	    new TestNode(deleted[3]),
+	    new TestNode(deleted[4])};
 
 	root.add_child(nodes[0]);
 	nodes[0]->add_child(nodes[1]);
@@ -188,59 +194,59 @@ TEST_CASE("Removing a node will also remove its children", "[tree]")
 	nodes[2]->add_child(nodes[3]);
 	nodes[2]->add_child(nodes[4]);
 
-	REQUIRE(root.children().size() == 1);
-	REQUIRE(root.children().at(0) == nodes[0]);
+	ASSERT_EQ(1u, root.children().size());
+	ASSERT_EQ(nodes[0], root.children().at(0));
 
-	REQUIRE(nodes[0]->parent() == &root);
-	REQUIRE(nodes[0]->children().size() == 2);
-	REQUIRE(nodes[0]->children().at(0) == nodes[1]);
-	REQUIRE(nodes[0]->children().at(1) == nodes[2]);
+	ASSERT_EQ(&root, nodes[0]->parent());
+	ASSERT_EQ(2u, nodes[0]->children().size());
+	ASSERT_EQ(nodes[1], nodes[0]->children().at(0));
+	ASSERT_EQ(nodes[2], nodes[0]->children().at(1));
 
-	REQUIRE(nodes[1]->parent() == nodes[0]);
-	REQUIRE(nodes[1]->children().empty());
+	ASSERT_EQ(nodes[0], nodes[1]->parent());
+	ASSERT_TRUE(nodes[1]->children().empty());
 
-	REQUIRE(nodes[2]->parent() == nodes[0]);
-	REQUIRE(nodes[2]->children().size() == 2);
-	REQUIRE(nodes[2]->children().at(0) == nodes[3]);
-	REQUIRE(nodes[2]->children().at(1) == nodes[4]);
+	ASSERT_EQ(nodes[0], nodes[2]->parent());
+	ASSERT_EQ(2u, nodes[2]->children().size());
+	ASSERT_EQ(nodes[3], nodes[2]->children().at(0));
+	ASSERT_EQ(nodes[4], nodes[2]->children().at(1));
 
-	REQUIRE(nodes[3]->parent() == nodes[2]);
-	REQUIRE(nodes[3]->children().empty());
+	ASSERT_EQ(nodes[2], nodes[3]->parent());
+	ASSERT_TRUE(nodes[3]->children().empty());
 
-	REQUIRE(nodes[4]->parent() == nodes[2]);
-	REQUIRE(nodes[4]->children().empty());
+	ASSERT_EQ(nodes[2], nodes[4]->parent());
+	ASSERT_TRUE(nodes[4]->children().empty());
 
 	nodes[2]->remove();
 
-	REQUIRE_FALSE(deleted[0]);
-	REQUIRE_FALSE(deleted[1]);
-	REQUIRE(deleted[2]);
-	REQUIRE(deleted[3]);
-	REQUIRE(deleted[4]);
+	ASSERT_FALSE(deleted[0]);
+	ASSERT_FALSE(deleted[1]);
+	ASSERT_TRUE(deleted[2]);
+	ASSERT_TRUE(deleted[3]);
+	ASSERT_TRUE(deleted[4]);
 
-	REQUIRE(nodes[0]->parent() == &root);
-	REQUIRE(nodes[0]->children().size() == 1);
-	REQUIRE(nodes[1]->parent() == nodes[0]);
+	ASSERT_EQ(&root, nodes[0]->parent());
+	ASSERT_EQ(1u, nodes[0]->children().size());
+	ASSERT_EQ(nodes[0], nodes[1]->parent());
 
 	nodes[0]->remove();
 
-	REQUIRE(deleted[0]);
-	REQUIRE(deleted[1]);
-	REQUIRE(root.children().empty());
+	ASSERT_TRUE(deleted[0]);
+	ASSERT_TRUE(deleted[1]);
+	ASSERT_TRUE(root.children().empty());
 }
 
-TEST_CASE("Traverse nodes with for_each", "[tree]")
+TEST(TreeNodeTest, ForEachTraversesNodes)
 {
 	bool root_deleted = false;
-	TreeNodeTest root(root_deleted);
+	TestNode root(root_deleted);
 
 	bool deleted[]{false, false, false, false, false};
-	TreeNodeTest* nodes[]{
-	    new TreeNodeTest(deleted[0]),
-	    new TreeNodeTest(deleted[1]),
-	    new TreeNodeTest(deleted[2]),
-	    new TreeNodeTest(deleted[3]),
-	    new TreeNodeTest(deleted[4])};
+	TestNode* nodes[]{
+	    new TestNode(deleted[0]),
+	    new TestNode(deleted[1]),
+	    new TestNode(deleted[2]),
+	    new TestNode(deleted[3]),
+	    new TestNode(deleted[4])};
 
 	root.add_child(nodes[0]);
 	nodes[0]->add_child(nodes[1]);
@@ -248,7 +254,7 @@ TEST_CASE("Traverse nodes with for_each", "[tree]")
 	nodes[2]->add_child(nodes[3]);
 	nodes[2]->add_child(nodes[4]);
 
-	for_each(root, [&nodes](const TreeNodeTest& node) {
+	for_each(root, [&nodes](const TestNode& node) {
 		for (size_t i = 0; i < rainbow::array_size(nodes); ++i)
 		{
 			if (nodes[i] == &node)
@@ -259,7 +265,7 @@ TEST_CASE("Traverse nodes with for_each", "[tree]")
 		}
 	});
 
-	REQUIRE(std::all_of(nodes, std::end(nodes), [](const TreeNodeTest* node) {
+	ASSERT_TRUE(std::all_of(nodes, std::end(nodes), [](const TestNode* node) {
 		return node == nullptr;
 	}));
 }

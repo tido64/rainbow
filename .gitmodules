@@ -1,12 +1,12 @@
-[submodule "lib/Catch"]
-	path = lib/Catch
-	url = https://github.com/philsquared/Catch.git
 [submodule "lib/FreeType"]
 	path = lib/FreeType
 	url = git://git.sv.nongnu.org/freetype/freetype2.git
 [submodule "lib/box2d"]
 	path = lib/box2d
 	url = https://github.com/erincatto/box2d.git
+[submodule "lib/googletest"]
+	path = lib/googletest
+	url = https://github.com/google/googletest.git
 [submodule "lib/libpng"]
 	path = lib/libpng
 	url = https://github.com/glennrp/libpng.git

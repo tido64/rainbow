@@ -2,122 +2,122 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
-#include <catch.hpp>
+#include <gtest/gtest.h>
 
 #include "Common/Vec2.h"
 
-TEST_CASE("Angle between two Vec2s", "[vec2]")
+TEST(Vec2Test, Angle)
 {
 	const Vec2i v0;
 	const Vec2i v1(1, 1);
-	REQUIRE(rainbow::is_equal(v0.angle(v1), 0.7853982f));
+	ASSERT_FLOAT_EQ(0.7853982f, v0.angle(v1));
 }
 
-TEST_CASE("Distance between two Vec2s", "[vec2]")
+TEST(Vec2Test, Distance)
 {
 	const Vec2i v0;
 	const Vec2i v1(3, 4);
-	REQUIRE(rainbow::is_equal(v0.distance(v1), 5.0f));
+	ASSERT_FLOAT_EQ(5.0f, v0.distance(v1));
 }
 
-TEST_CASE("Dot product of two Vec2s", "[vec2]")
+TEST(Vec2Test, DotProduct)
 {
 	const Vec2i v0(3, 4);
-	REQUIRE((v0 * v0) == 25);
+	ASSERT_EQ(25, (v0 * v0));
 }
 
-TEST_CASE("Vec2s can be checked for zero length", "[vec2]")
+TEST(Vec2Test, ZeroLength)
 {
 	Vec2i v0;
-	REQUIRE(v0.is_zero());
+	ASSERT_TRUE(v0.is_zero());
 
 	v0.x = 1;
 	v0.y = 1;
-	REQUIRE_FALSE(v0.is_zero());
+	ASSERT_FALSE(v0.is_zero());
 }
 
-TEST_CASE("Vec2s can be assigned", "[vec2]")
+TEST(Vec2Test, Assigns)
 {
 	Vec2i v0;
 	const Vec2i v1(5, 2);
 	v0 = v1;
-	REQUIRE(v0.x == 5);
-	REQUIRE(v0.y == 2);
+	ASSERT_EQ(5, v0.x);
+	ASSERT_EQ(2, v0.y);
 }
 
-TEST_CASE("Vec2s can be translated (addition)", "[vec2]")
+TEST(Vec2Test, Translates)
 {
 	Vec2i v0(1, 2);
 	const Vec2i v1(3, 4);
 
 	const Vec2i v2 = v0 + v1;
-	REQUIRE(&v0 != &v2);
-	REQUIRE(&v1 != &v2);
-	REQUIRE(v2.x == 4);
-	REQUIRE(v2.y == 6);
+	ASSERT_NE(&v2, &v0);
+	ASSERT_NE(&v2, &v1);
+	ASSERT_EQ(4, v2.x);
+	ASSERT_EQ(6, v2.y);
 
 	const Vec2i v3 = v1 + v0;
-	REQUIRE(&v0 != &v3);
-	REQUIRE(&v1 != &v3);
-	REQUIRE(v3.x == 4);
-	REQUIRE(v3.y == 6);
+	ASSERT_NE(&v3, &v0);
+	ASSERT_NE(&v3, &v1);
+	ASSERT_EQ(4, v3.x);
+	ASSERT_EQ(6, v3.y);
 
 	v0 += v1;
-	REQUIRE(v0.x == 4);
-	REQUIRE(v0.y == 6);
+	ASSERT_EQ(4, v0.x);
+	ASSERT_EQ(6, v0.y);
 
 	const Vec2i v4 = v0 + 1;
-	REQUIRE(v4.x == 5);
-	REQUIRE(v4.y == 7);
+	ASSERT_EQ(5, v4.x);
+	ASSERT_EQ(7, v4.y);
 }
 
-TEST_CASE("Vec2s can be translated (subtraction)", "[vec2]")
+TEST(Vec2Test, TranslatesNegative)
 {
 	Vec2i v0(1, 2);
 	const Vec2i v1(3, 4);
 
 	const Vec2i v2 = v0 - v1;
-	REQUIRE(&v0 != &v2);
-	REQUIRE(&v1 != &v2);
-	REQUIRE(v2.x == -2);
-	REQUIRE(v2.y == -2);
+	ASSERT_NE(&v2, &v0);
+	ASSERT_NE(&v2, &v1);
+	ASSERT_EQ(-2, v2.x);
+	ASSERT_EQ(-2, v2.y);
 
 	const Vec2i v3 = v1 - v0;
-	REQUIRE(&v0 != &v3);
-	REQUIRE(&v1 != &v3);
-	REQUIRE(v3.x == 2);
-	REQUIRE(v3.y == 2);
+	ASSERT_NE(&v3, &v0);
+	ASSERT_NE(&v3, &v1);
+	ASSERT_EQ(2, v3.x);
+	ASSERT_EQ(2, v3.y);
 
 	v0 -= v1;
-	REQUIRE(v0.x == -2);
-	REQUIRE(v0.y == -2);
+	ASSERT_EQ(-2, v0.x);
+	ASSERT_EQ(-2, v0.y);
 }
 
-TEST_CASE("Vec2s can be scaled up", "[vec2]")
+TEST(Vec2Test, ScalesUp)
 {
 	Vec2i v0(5, 2);
 	const Vec2i v1(3, 4);
 
 	const Vec2i v2 = 2 * v0;
-	REQUIRE(&v0 != &v2);
-	REQUIRE(v2.x == 10);
-	REQUIRE(v2.y == 4);
+	ASSERT_NE(&v2, &v0);
+	ASSERT_EQ(10, v2.x);
+	ASSERT_EQ(4, v2.y);
 
 	v0 *= 2;
-	REQUIRE(v0.x == 10);
-	REQUIRE(v0.y == 4);
+	ASSERT_EQ(10, v0.x);
+	ASSERT_EQ(4, v0.y);
 }
 
-TEST_CASE("Vec2s can be scaled down", "[vec2]")
+TEST(Vec2Test, ScalesDown)
 {
 	Vec2i v0(4, 8);
 
 	const Vec2i v2 = v0 / 2;
-	REQUIRE(&v0 != &v2);
-	REQUIRE(v2.x == 2);
-	REQUIRE(v2.y == 4);
+	ASSERT_NE(&v2, &v0);
+	ASSERT_EQ(2, v2.x);
+	ASSERT_EQ(4, v2.y);
 
 	v0 /= 2;
-	REQUIRE(v0.x == 2);
-	REQUIRE(v0.y == 4);
+	ASSERT_EQ(2, v0.x);
+	ASSERT_EQ(4, v0.y);
 }

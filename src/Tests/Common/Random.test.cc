@@ -2,7 +2,7 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
-#include <catch.hpp>
+#include <gtest/gtest.h>
 
 #include "Common/Algorithm.h"
 #include "Common/Random.h"
@@ -17,24 +17,24 @@ namespace
 	                             0.073465290616508, 0.924735636004535};
 }
 
-TEST_CASE("Randoms in range [0, 1)", "[random]")
+TEST(RandomTest, InRange01)
 {
 	dsfmt_gv_init_gen_rand(0);
 
 	for (size_t i = 0; i < rainbow::array_size(kKnownRandoms); ++i)
-		REQUIRE(Approx(rainbow::random()) == kKnownRandoms[i]);
+		ASSERT_FLOAT_EQ(kKnownRandoms[i], rainbow::random());
 }
 
-TEST_CASE("Randoms in range [0, n)", "[random]")
+TEST(RandomTest, InRange0N)
 {
 	const double upper = 8;
 	dsfmt_gv_init_gen_rand(0);
 
 	for (size_t i = 0; i < rainbow::array_size(kKnownRandoms); ++i)
-		REQUIRE(Approx(rainbow::random(upper)) == kKnownRandoms[i] * upper);
+		ASSERT_FLOAT_EQ(kKnownRandoms[i] * upper, rainbow::random(upper));
 }
 
-TEST_CASE("Randoms in range [m, n)", "[random]")
+TEST(RandomTest, InRangeMN)
 {
 	const double lower = 8.0;
 	const double upper = 16.0;
@@ -42,14 +42,17 @@ TEST_CASE("Randoms in range [m, n)", "[random]")
 
 	for (size_t i = 0; i < rainbow::array_size(kKnownRandoms); ++i)
 	{
-		REQUIRE(Approx(rainbow::random(lower, upper)) ==
-		        kKnownRandoms[i] * lower + lower);
+		ASSERT_FLOAT_EQ(kKnownRandoms[i] * lower + lower,
+		                rainbow::random(lower, upper));
 	}
 }
 
-TEST_CASE("Seeded randoms in range [0, 1)", "[random]")
+TEST(RandomTest, SeededInRange01)
 {
 	rainbow::random.seed(1);
 	for (size_t i = 0; i < rainbow::array_size(kKnownRandoms); ++i)
-		REQUIRE(Approx(rainbow::random()) != kKnownRandoms[i]);
+	{
+		ASSERT_FALSE(
+		    rainbow::is_equal<float>(rainbow::random(), kKnownRandoms[i]));
+	}
 }

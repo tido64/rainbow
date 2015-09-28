@@ -4,7 +4,7 @@
 
 #include <cstring>
 
-#include <catch.hpp>
+#include <gtest/gtest.h>
 
 #include "Common/Algorithm.h"
 #include "Common/Data.h"
@@ -13,36 +13,47 @@
 namespace
 {
 	const char kSecretData[] = "It's a double-rainbow!\n";
+
+	class DataReadWriteTest : public ::testing::Test
+	{
+	public:
+		DataReadWriteTest()
+		    : blob_(kSecretData,
+		            rainbow::array_size(kSecretData),
+		            Data::Ownership::Reference) {}
+
+	protected:
+		const Data& blob() const { return blob_; }
+
+	private:
+		Data blob_;
+	};
 }
 
-TEST_CASE("Data can reference in-memory data", "[data]")
+TEST(DataTest, ReferencesInMemoryData)
 {
 	Data blob = Data::from_literal(kSecretData);
-	REQUIRE(blob.bytes() == kSecretData);
-	REQUIRE(blob.size() == rainbow::array_size(kSecretData) - 1);
-	REQUIRE(memcmp(blob, kSecretData, blob.size()) == 0);
+	ASSERT_EQ(kSecretData, blob.bytes());
+	ASSERT_EQ(rainbow::array_size(kSecretData) - 1, blob.size());
+	ASSERT_EQ(0, memcmp(blob, kSecretData, blob.size()));
 }
 
-TEST_CASE("Data manages data and performs disk operations", "[data]")
+TEST_F(DataReadWriteTest, ManagesArbitraryDataBlobs)
 {
-	Data blob(kSecretData, rainbow::array_size(kSecretData),
-	          Data::Ownership::Reference);
+	ASSERT_EQ(rainbow::array_size(kSecretData), blob().size());
+	ASSERT_EQ(0, strcmp(blob(), kSecretData));
+}
 
-	SECTION("Data manages arbitrary data blobs")
-	{
-		REQUIRE(blob.size() == rainbow::array_size(kSecretData));
-		REQUIRE(strcmp(blob, kSecretData) == 0);
-	}
+TEST_F(DataReadWriteTest, WritesAndReadsFromDisk)
+{
+	const char file[] = "Rainbow__Data.test";
 
-	SECTION("Data writes and reads from disk")
-	{
-		const char file[] = "Rainbow__Data.test";
+	ASSERT_TRUE(blob().save(file));
 
-		REQUIRE(blob.save(file));
-		const Data &from_disk = Data::load_document(file);
-		REQUIRE(from_disk);
-		REQUIRE(strcmp(from_disk, kSecretData) == 0);
-		Path path(file, Path::RelativeTo::UserDataPath);
-		remove(path);
-	}
+	const Data& from_disk = Data::load_document(file);
+
+	ASSERT_TRUE(from_disk);
+	ASSERT_EQ(0, strcmp(from_disk, kSecretData));
+
+	remove(Path(file, Path::RelativeTo::UserDataPath));
 }

@@ -2,7 +2,7 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
-#include <catch.hpp>
+#include <gtest/gtest.h>
 
 #include "Input/Controller.h"
 #include "Input/Input.h"
@@ -11,7 +11,7 @@
 
 namespace
 {
-	class DefaultInputListener : public InputListener {};
+	class BaseInputListener : public InputListener {};
 
 	class TestInputListener : public InputListener
 	{
@@ -127,60 +127,60 @@ namespace
 	};
 }
 
-TEST_CASE("Default input listener implementation does nothing", "[input]")
+TEST(InputTest, BaseInputListenerDoesNothing)
 {
-	DefaultInputListener default_input_listener;
+	BaseInputListener base_input_listener;
 	TestInputListener test_input_listener(false);
 	Input input;
-	input.subscribe(&default_input_listener);
+	input.subscribe(&base_input_listener);
 	input.subscribe(&test_input_listener);
 
-	REQUIRE_FALSE(test_input_listener.axis_motion());
+	ASSERT_FALSE(test_input_listener.axis_motion());
 	input.on_controller_axis_motion(ControllerAxisMotion());
-	REQUIRE(test_input_listener.axis_motion());
+	ASSERT_TRUE(test_input_listener.axis_motion());
 
-	REQUIRE_FALSE(test_input_listener.button_down());
+	ASSERT_FALSE(test_input_listener.button_down());
 	input.on_controller_button_down(ControllerButton());
-	REQUIRE(test_input_listener.button_down());
+	ASSERT_TRUE(test_input_listener.button_down());
 
-	REQUIRE_FALSE(test_input_listener.button_up());
+	ASSERT_FALSE(test_input_listener.button_up());
 	input.on_controller_button_up(ControllerButton());
-	REQUIRE(test_input_listener.button_up());
+	ASSERT_TRUE(test_input_listener.button_up());
 
-	REQUIRE_FALSE(test_input_listener.controller_connected());
+	ASSERT_FALSE(test_input_listener.controller_connected());
 	input.on_controller_connected(0);
-	REQUIRE(test_input_listener.controller_connected());
+	ASSERT_TRUE(test_input_listener.controller_connected());
 
-	REQUIRE_FALSE(test_input_listener.controller_disconnected());
+	ASSERT_FALSE(test_input_listener.controller_disconnected());
 	input.on_controller_disconnected(0);
-	REQUIRE(test_input_listener.controller_disconnected());
+	ASSERT_TRUE(test_input_listener.controller_disconnected());
 
-	REQUIRE_FALSE(test_input_listener.key_down());
+	ASSERT_FALSE(test_input_listener.key_down());
 	input.on_key_down(Key());
-	REQUIRE(test_input_listener.key_down());
+	ASSERT_TRUE(test_input_listener.key_down());
 
-	REQUIRE_FALSE(test_input_listener.key_up());
+	ASSERT_FALSE(test_input_listener.key_up());
 	input.on_key_up(Key());
-	REQUIRE(test_input_listener.key_up());
+	ASSERT_TRUE(test_input_listener.key_up());
 
-	REQUIRE_FALSE(test_input_listener.pointer_began());
+	ASSERT_FALSE(test_input_listener.pointer_began());
 	input.on_pointer_began(0, nullptr);
-	REQUIRE(test_input_listener.pointer_began());
+	ASSERT_TRUE(test_input_listener.pointer_began());
 
-	REQUIRE_FALSE(test_input_listener.pointer_canceled());
+	ASSERT_FALSE(test_input_listener.pointer_canceled());
 	input.on_pointer_canceled();
-	REQUIRE(test_input_listener.pointer_canceled());
+	ASSERT_TRUE(test_input_listener.pointer_canceled());
 
-	REQUIRE_FALSE(test_input_listener.pointer_ended());
+	ASSERT_FALSE(test_input_listener.pointer_ended());
 	input.on_pointer_ended(0, nullptr);
-	REQUIRE(test_input_listener.pointer_ended());
+	ASSERT_TRUE(test_input_listener.pointer_ended());
 
-	REQUIRE_FALSE(test_input_listener.pointer_moved());
+	ASSERT_FALSE(test_input_listener.pointer_moved());
 	input.on_pointer_moved(0, nullptr);
-	REQUIRE(test_input_listener.pointer_moved());
+	ASSERT_TRUE(test_input_listener.pointer_moved());
 }
 
-TEST_CASE("Input listeners can prevent further propagation", "[input]")
+TEST(InputTest, PreventsFurtherPropagation)
 {
 	Input input;
 	TestInputListener listeners[]{TestInputListener{true},
@@ -189,11 +189,11 @@ TEST_CASE("Input listeners can prevent further propagation", "[input]")
 	input.subscribe(listeners + 1);
 	input.on_pointer_began(0, nullptr);
 
-	REQUIRE(listeners[0]);
-	REQUIRE_FALSE(listeners[1]);
+	ASSERT_TRUE(listeners[0]);
+	ASSERT_FALSE(listeners[1]);
 }
 
-TEST_CASE("Input listeners can unsubscribe", "[input]")
+TEST(InputTest, Unsubscribes)
 {
 	Input input;
 	TestInputListener listeners[]{TestInputListener{false},
@@ -203,21 +203,21 @@ TEST_CASE("Input listeners can unsubscribe", "[input]")
 		input.subscribe(&i);
 	input.on_pointer_began(0, nullptr);
 
-	REQUIRE(listeners[0]);
-	REQUIRE(listeners[1]);
-	REQUIRE_FALSE(listeners[2]);
+	ASSERT_TRUE(listeners[0]);
+	ASSERT_TRUE(listeners[1]);
+	ASSERT_FALSE(listeners[2]);
 
 	for (auto& i : listeners)
 		i.reset();
 	input.unsubscribe(listeners + 1);
 	input.on_pointer_began(0, nullptr);
 
-	REQUIRE(listeners[0]);
-	REQUIRE_FALSE(listeners[1]);
-	REQUIRE(listeners[2]);
+	ASSERT_TRUE(listeners[0]);
+	ASSERT_FALSE(listeners[1]);
+	ASSERT_TRUE(listeners[2]);
 }
 
-TEST_CASE("Input listeners are unsubscribed when deleted", "[input]")
+TEST(InputTest, UnsubscribesWhenDeleted)
 {
 	Input input;
 	TestInputListener l{true};
@@ -231,15 +231,15 @@ TEST_CASE("Input listeners are unsubscribed when deleted", "[input]")
 		input.on_pointer_began(0, nullptr);
 		for (auto& i : listeners)
 		{
-			REQUIRE(i);
+			ASSERT_TRUE(i);
 			i.reset();
 		}
 	}
 	input.on_pointer_began(0, nullptr);
-	REQUIRE(l);
+	ASSERT_TRUE(l);
 }
 
-TEST_CASE("Input manager is notified of popped end links", "[input]")
+TEST(InputTest, IsNotifiedOfPoppedEndLinks)
 {
 	Input input;
 	TestInputListener a{true};
@@ -250,18 +250,18 @@ TEST_CASE("Input manager is notified of popped end links", "[input]")
 			TestInputListener c{true};
 			input.subscribe(&c);
 			input.on_pointer_began(0, nullptr);
-			REQUIRE(b);
-			REQUIRE(c);
+			ASSERT_TRUE(b);
+			ASSERT_TRUE(c);
 			b.reset();
 		}
 		input.subscribe(&a);
 		input.on_pointer_began(0, nullptr);
-		REQUIRE(b);
-		REQUIRE(a);
+		ASSERT_TRUE(b);
+		ASSERT_TRUE(a);
 	}
 	input.unsubscribe(&a);
 	a.reset();
 	input.subscribe(&a);
 	input.on_pointer_began(0, nullptr);
-	REQUIRE(a);
+	ASSERT_TRUE(a);
 }

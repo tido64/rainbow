@@ -2,7 +2,7 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
-#include <catch.hpp>
+#include <gtest/gtest.h>
 
 #include "Graphics/Animation.h"
 #include "Graphics/SpriteBatch.h"
@@ -12,290 +12,287 @@ namespace rainbow
 	struct ISolemnlySwearThatIAmOnlyTesting {};
 }
 
-TEST_CASE("Animation specification", "[animation]")
+namespace
 {
-	const size_t kNumFrames = 4;
-	const unsigned long kFrameTime = 1000 / kNumFrames;
+	constexpr size_t kNumFrames = 4;
+	constexpr unsigned long kFrameTime = 1000 / kNumFrames;
 
-	rainbow::ISolemnlySwearThatIAmOnlyTesting mock;
-
-	auto atlas = make_shared<TextureAtlas>(mock);
-	Animation::Frames frames(new Animation::Frame[kNumFrames + 1]{
-	    atlas->define(Vec2i::Zero, 16, 16),
-	    atlas->define(Vec2i(16, 16), 16, 16),
-	    atlas->define(Vec2i(32, 32), 16, 16),
-	    atlas->define(Vec2i(48, 48), 16, 16),
-	    Animation::kAnimationEnd});
-
-	SpriteBatch batch(mock);
-	batch.set_texture(atlas);
-
-	auto sprite = batch.create_sprite(2, 2);
-	sprite->set_texture(frames[0]);
-	auto vertex_array = sprite->vertex_array();
-	const Vec2f u[]{vertex_array[0].texcoord,
-	                vertex_array[1].texcoord,
-	                vertex_array[2].texcoord,
-	                vertex_array[3].texcoord};
-
-	Animation animation(sprite, std::move(frames), kNumFrames, 0);
-
-	SECTION("Animations are stopped initially")
+	class AnimationTest : public ::testing::Test
 	{
-		REQUIRE(animation.current_frame() == 0);
-		REQUIRE(animation.is_stopped());
-		REQUIRE(vertex_array[0].texcoord == u[0]);
-		REQUIRE(vertex_array[1].texcoord == u[1]);
-		REQUIRE(vertex_array[2].texcoord == u[2]);
-		REQUIRE(vertex_array[3].texcoord == u[3]);
-	}
+	public:
+		AnimationTest()
+		    : atlas(make_shared<TextureAtlas>(mock)),
+		      batch(mock), sprite(batch.create_sprite(2, 2)),
+		      vertex_array(sprite->vertex_array()),
+		      animation(sprite, nullptr, kNumFrames, 0) {}
 
-	SECTION("Animations always play from the beginning")
-	{
-		animation.start();
-		animation.update(kFrameTime);
+	protected:
+		rainbow::ISolemnlySwearThatIAmOnlyTesting mock;
+		SharedPtr<TextureAtlas> atlas;
+		SpriteBatch batch;
+		Sprite::Ref sprite;
+		const SpriteVertex* vertex_array;
+		Vec2f u[4];
+		Animation animation;
 
-		REQUIRE(animation.current_frame() == 1);
-		REQUIRE(vertex_array[0].texcoord == Vec2f(0.25f, 0.5f));
-		REQUIRE(vertex_array[1].texcoord == Vec2f(0.5f, 0.5f));
-		REQUIRE(vertex_array[2].texcoord == Vec2f(0.5f, 0.25f));
-		REQUIRE(vertex_array[3].texcoord == Vec2f(0.25f, 0.25f));
-
-		animation.stop();
-
-		REQUIRE(animation.is_stopped());
-		REQUIRE(animation.current_frame() == 1);
-
-		animation.start();
-
-		REQUIRE(animation.current_frame() == 0);
-		REQUIRE(vertex_array[0].texcoord == u[0]);
-		REQUIRE(vertex_array[1].texcoord == u[1]);
-		REQUIRE(vertex_array[2].texcoord == u[2]);
-		REQUIRE(vertex_array[3].texcoord == u[3]);
-	}
-
-	SECTION("Stopped animations don't progress on update")
-	{
-		animation.update(kFrameTime * 2);
-		REQUIRE(animation.current_frame() == 0);
-		REQUIRE(vertex_array[0].texcoord == u[0]);
-		REQUIRE(vertex_array[1].texcoord == u[1]);
-		REQUIRE(vertex_array[2].texcoord == u[2]);
-		REQUIRE(vertex_array[3].texcoord == u[3]);
-	}
-
-	SECTION("Animations loop by default")
-	{
-		animation.start();
-		REQUIRE_FALSE(animation.is_stopped());
-		for (unsigned int i = 0; i < kNumFrames * 2; ++i)
+		void SetUp() override
 		{
-			REQUIRE(animation.current_frame() == i % kNumFrames);
-			animation.update(kFrameTime);
+			Animation::Frames frames(new Animation::Frame[kNumFrames + 1]{
+			    atlas->define(Vec2i::Zero, 16, 16),
+			    atlas->define(Vec2i(16, 16), 16, 16),
+			    atlas->define(Vec2i(32, 32), 16, 16),
+			    atlas->define(Vec2i(48, 48), 16, 16),
+			    Animation::kAnimationEnd});
+			batch.set_texture(atlas);
+			sprite->set_texture(frames[0]);
+			animation.set_frames(std::move(frames));
+			for (size_t i = 0; i < 4; ++i)
+				u[i] = vertex_array[i].texcoord;
 		}
-		REQUIRE(animation.current_frame() == 0);
-	}
+	};
+}
 
-	SECTION("Can disable looping")
+TEST_F(AnimationTest, IsStoppedInitially)
+{
+	ASSERT_EQ(0u, animation.current_frame());
+	ASSERT_TRUE(animation.is_stopped());
+	for (size_t i = 0; i < 4; ++i)
+		ASSERT_EQ(u[i], vertex_array[i].texcoord);
+}
+
+TEST_F(AnimationTest, AlwaysPlaysFromTheBeginning)
+{
+	animation.start();
+	animation.update(kFrameTime);
+
+	ASSERT_EQ(1u, animation.current_frame());
+	ASSERT_EQ(Vec2f(0.25f, 0.5f), vertex_array[0].texcoord);
+	ASSERT_EQ(Vec2f(0.5f, 0.5f), vertex_array[1].texcoord);
+	ASSERT_EQ(Vec2f(0.5f, 0.25f), vertex_array[2].texcoord);
+	ASSERT_EQ(Vec2f(0.25f, 0.25f), vertex_array[3].texcoord);
+
+	animation.stop();
+
+	ASSERT_TRUE(animation.is_stopped());
+	ASSERT_EQ(1u, animation.current_frame());
+
+	animation.start();
+
+	ASSERT_EQ(0u, animation.current_frame());
+	for (size_t i = 0; i < 4; ++i)
+		ASSERT_EQ(u[i], vertex_array[i].texcoord);
+}
+
+TEST_F(AnimationTest, StoppedAnimationsDontProgressOnUpdate)
+{
+	animation.update(kFrameTime * 2);
+	ASSERT_EQ(0u, animation.current_frame());
+	for (size_t i = 0; i < 4; ++i)
+		ASSERT_EQ(u[i], vertex_array[i].texcoord);
+}
+
+TEST_F(AnimationTest, LoopsByDefault)
+{
+	animation.start();
+	ASSERT_FALSE(animation.is_stopped());
+	for (unsigned int i = 0; i < kNumFrames * 2; ++i)
 	{
-		animation.set_delay(-1);
-		animation.start();
-		for (unsigned int i = 0; i < kNumFrames * 2; ++i)
+		ASSERT_EQ(i % kNumFrames, animation.current_frame());
+		animation.update(kFrameTime);
+	}
+	ASSERT_EQ(0u, animation.current_frame());
+}
+
+TEST_F(AnimationTest, DisablesLooping)
+{
+	animation.set_delay(-1);
+	animation.start();
+	for (unsigned int i = 0; i < kNumFrames * 2; ++i)
+	{
+		ASSERT_EQ(std::min<unsigned int>(i, kNumFrames - 1),
+		          animation.current_frame());
+		animation.update(kFrameTime);
+	}
+}
+
+TEST_F(AnimationTest, SetsDelayBetweenLoops)
+{
+	animation.set_delay(1);
+	animation.start();
+	animation.update(kFrameTime * 3);
+	ASSERT_EQ(3u, animation.current_frame());
+	animation.update(kFrameTime);
+	ASSERT_EQ(3u, animation.current_frame());
+	animation.update(kFrameTime);
+	ASSERT_EQ(0u, animation.current_frame());
+	animation.update(kFrameTime * 3);
+	ASSERT_EQ(3u, animation.current_frame());
+	animation.update(kFrameTime);
+	ASSERT_EQ(3u, animation.current_frame());
+	animation.update(kFrameTime);
+	ASSERT_EQ(0u, animation.current_frame());
+}
+
+TEST_F(AnimationTest, ChangesPlaybackSpeed)
+{
+	animation.start();
+	ASSERT_EQ(0u, animation.current_frame());
+	animation.update(kFrameTime);
+	ASSERT_EQ(1u, animation.current_frame());
+	animation.set_fps(60);
+	animation.update(16);
+	ASSERT_EQ(2u, animation.current_frame());
+	animation.update(16);
+	ASSERT_EQ(3u, animation.current_frame());
+}
+
+TEST_F(AnimationTest, ResetsAnimationFrames)
+{
+	animation.start();
+
+	for (size_t i = 0; i < 4; ++i)
+		ASSERT_EQ(u[i], vertex_array[i].texcoord);
+
+	animation.set_frames(Animation::Frames(
+	    new Animation::Frame[3]{1, 0, Animation::kAnimationEnd}));
+
+	ASSERT_EQ(Vec2f(0.25f, 0.5f), vertex_array[0].texcoord);
+	ASSERT_EQ(Vec2f(0.5f, 0.5f), vertex_array[1].texcoord);
+	ASSERT_EQ(Vec2f(0.5f, 0.25f), vertex_array[2].texcoord);
+	ASSERT_EQ(Vec2f(0.25f, 0.25f), vertex_array[3].texcoord);
+}
+
+TEST_F(AnimationTest, ResetsTargetSprite)
+{
+	animation.start();
+	animation.update(kFrameTime);
+
+	ASSERT_EQ(1u, animation.current_frame());
+	ASSERT_EQ(Vec2f(0.25f, 0.5f), vertex_array[0].texcoord);
+	ASSERT_EQ(Vec2f(0.5f, 0.5f), vertex_array[1].texcoord);
+	ASSERT_EQ(Vec2f(0.5f, 0.25f), vertex_array[2].texcoord);
+	ASSERT_EQ(Vec2f(0.25f, 0.25f), vertex_array[3].texcoord);
+
+	sprite->set_texture(0);
+
+	for (size_t i = 0; i < 4; ++i)
+		ASSERT_EQ(u[i], vertex_array[i].texcoord);
+
+	animation.set_sprite(sprite);
+
+	ASSERT_EQ(Vec2f(0.25f, 0.5f), vertex_array[0].texcoord);
+	ASSERT_EQ(Vec2f(0.5f, 0.5f), vertex_array[1].texcoord);
+	ASSERT_EQ(Vec2f(0.5f, 0.25f), vertex_array[2].texcoord);
+	ASSERT_EQ(Vec2f(0.25f, 0.25f), vertex_array[3].texcoord);
+}
+
+TEST_F(AnimationTest, JumpsToSpecificFrames)
+{
+	animation.start();
+	animation.update(kFrameTime);
+
+	ASSERT_EQ(1u, animation.current_frame());
+	ASSERT_EQ(Vec2f(0.25f, 0.5f), vertex_array[0].texcoord);
+	ASSERT_EQ(Vec2f(0.5f, 0.5f), vertex_array[1].texcoord);
+	ASSERT_EQ(Vec2f(0.5f, 0.25f), vertex_array[2].texcoord);
+	ASSERT_EQ(Vec2f(0.25f, 0.25f), vertex_array[3].texcoord);
+
+	animation.jump_to(0);
+
+	ASSERT_EQ(0u, animation.current_frame());
+	for (size_t i = 0; i < 4; ++i)
+		ASSERT_EQ(u[i], vertex_array[i].texcoord);
+
+	animation.jump_to(1);
+
+	ASSERT_EQ(1u, animation.current_frame());
+	ASSERT_EQ(Vec2f(0.25f, 0.5f), vertex_array[0].texcoord);
+	ASSERT_EQ(Vec2f(0.5f, 0.5f), vertex_array[1].texcoord);
+	ASSERT_EQ(Vec2f(0.5f, 0.25f), vertex_array[2].texcoord);
+	ASSERT_EQ(Vec2f(0.25f, 0.25f), vertex_array[3].texcoord);
+}
+
+TEST_F(AnimationTest, Rewinds)
+{
+	animation.start();
+	animation.update(kFrameTime);
+
+	ASSERT_EQ(1u, animation.current_frame());
+	ASSERT_EQ(Vec2f(0.25f, 0.5f), vertex_array[0].texcoord);
+	ASSERT_EQ(Vec2f(0.5f, 0.5f), vertex_array[1].texcoord);
+	ASSERT_EQ(Vec2f(0.5f, 0.25f), vertex_array[2].texcoord);
+	ASSERT_EQ(Vec2f(0.25f, 0.25f), vertex_array[3].texcoord);
+
+	animation.rewind();
+
+	ASSERT_EQ(0u, animation.current_frame());
+	for (size_t i = 0; i < 4; ++i)
+		ASSERT_EQ(u[i], vertex_array[i].texcoord);
+}
+
+TEST_F(AnimationTest, EventCallbacksAreCalledOnlyOnce)
+{
+	int started = 0;
+	int stopped = 0;
+	int completed = 0;
+	int frame = 0;
+	animation.set_callback([&](Animation* a, Animation::Event e) {
+		ASSERT_EQ(a, &animation);
+		switch (e)
 		{
-			REQUIRE(animation.current_frame() ==
-			        std::min<unsigned int>(i, kNumFrames - 1));
-			animation.update(kFrameTime);
+			case Animation::Event::Start:
+				++started;
+				break;
+			case Animation::Event::End:
+				++stopped;
+				break;
+			case Animation::Event::Complete:
+				++completed;
+				break;
+			case Animation::Event::Frame:
+				++frame;
+				break;
+			default:
+				break;
 		}
-	}
+	});
 
-	SECTION("Can set delay between loops")
-	{
-		animation.set_delay(1);
-		animation.start();
-		animation.update(kFrameTime * 3);
-		REQUIRE(animation.current_frame() == 3);
-		animation.update(kFrameTime);
-		REQUIRE(animation.current_frame() == 3);
-		animation.update(kFrameTime);
-		REQUIRE(animation.current_frame() == 0);
-		animation.update(kFrameTime * 3);
-		REQUIRE(animation.current_frame() == 3);
-		animation.update(kFrameTime);
-		REQUIRE(animation.current_frame() == 3);
-		animation.update(kFrameTime);
-		REQUIRE(animation.current_frame() == 0);
-	}
+	animation.stop();
 
-	SECTION("Can change playback speed")
-	{
-		animation.start();
-		REQUIRE(animation.current_frame() == 0);
-		animation.update(kFrameTime);
-		REQUIRE(animation.current_frame() == 1);
-		animation.set_fps(60);
-		animation.update(16);
-		REQUIRE(animation.current_frame() == 2);
-		animation.update(16);
-		REQUIRE(animation.current_frame() == 3);
-	}
+	ASSERT_EQ(0, started);
+	ASSERT_EQ(0, stopped);
 
-	SECTION("Can reset animation frames")
-	{
-		animation.start();
+	animation.start();
 
-		REQUIRE(vertex_array[0].texcoord == u[0]);
-		REQUIRE(vertex_array[1].texcoord == u[1]);
-		REQUIRE(vertex_array[2].texcoord == u[2]);
-		REQUIRE(vertex_array[3].texcoord == u[3]);
+	ASSERT_EQ(1, started);
+	ASSERT_EQ(0, frame);
 
-		animation.set_frames(Animation::Frames(
-		    new Animation::Frame[3]{1, 0, Animation::kAnimationEnd}));
+	animation.start();
 
-		REQUIRE(vertex_array[0].texcoord == Vec2f(0.25f, 0.5f));
-		REQUIRE(vertex_array[1].texcoord == Vec2f(0.5f, 0.5f));
-		REQUIRE(vertex_array[2].texcoord == Vec2f(0.5f, 0.25f));
-		REQUIRE(vertex_array[3].texcoord == Vec2f(0.25f, 0.25f));
-	}
+	ASSERT_EQ(1, started);
+	ASSERT_EQ(0, frame);
 
-	SECTION("Can reset target sprite")
-	{
-		animation.start();
-		animation.update(kFrameTime);
+	animation.update(kFrameTime * 3);
 
-		REQUIRE(animation.current_frame() == 1);
-		REQUIRE(vertex_array[0].texcoord == Vec2f(0.25f, 0.5f));
-		REQUIRE(vertex_array[1].texcoord == Vec2f(0.5f, 0.5f));
-		REQUIRE(vertex_array[2].texcoord == Vec2f(0.5f, 0.25f));
-		REQUIRE(vertex_array[3].texcoord == Vec2f(0.25f, 0.25f));
+	ASSERT_EQ(1, started);
+	ASSERT_EQ(0, stopped);
+	ASSERT_EQ(0, completed);
+	ASSERT_EQ(3, frame);
 
-		sprite->set_texture(0);
+	animation.update(kFrameTime);
 
-		REQUIRE(vertex_array[0].texcoord == u[0]);
-		REQUIRE(vertex_array[1].texcoord == u[1]);
-		REQUIRE(vertex_array[2].texcoord == u[2]);
-		REQUIRE(vertex_array[3].texcoord == u[3]);
+	ASSERT_EQ(1, completed);
+	ASSERT_EQ(3, frame);
 
-		animation.set_sprite(sprite);
+	animation.update(kFrameTime);
 
-		REQUIRE(vertex_array[0].texcoord == Vec2f(0.25f, 0.5f));
-		REQUIRE(vertex_array[1].texcoord == Vec2f(0.5f, 0.5f));
-		REQUIRE(vertex_array[2].texcoord == Vec2f(0.5f, 0.25f));
-		REQUIRE(vertex_array[3].texcoord == Vec2f(0.25f, 0.25f));
-	}
+	ASSERT_EQ(1, completed);
+	ASSERT_EQ(4, frame);
 
-	SECTION("Can jump to specific frames")
-	{
-		animation.start();
-		animation.update(kFrameTime);
+	animation.stop();
 
-		REQUIRE(animation.current_frame() == 1);
-		REQUIRE(vertex_array[0].texcoord == Vec2f(0.25f, 0.5f));
-		REQUIRE(vertex_array[1].texcoord == Vec2f(0.5f, 0.5f));
-		REQUIRE(vertex_array[2].texcoord == Vec2f(0.5f, 0.25f));
-		REQUIRE(vertex_array[3].texcoord == Vec2f(0.25f, 0.25f));
-
-		animation.jump_to(0);
-
-		REQUIRE(animation.current_frame() == 0);
-		REQUIRE(vertex_array[0].texcoord == u[0]);
-		REQUIRE(vertex_array[1].texcoord == u[1]);
-		REQUIRE(vertex_array[2].texcoord == u[2]);
-		REQUIRE(vertex_array[3].texcoord == u[3]);
-
-		animation.jump_to(1);
-
-		REQUIRE(animation.current_frame() == 1);
-		REQUIRE(vertex_array[0].texcoord == Vec2f(0.25f, 0.5f));
-		REQUIRE(vertex_array[1].texcoord == Vec2f(0.5f, 0.5f));
-		REQUIRE(vertex_array[2].texcoord == Vec2f(0.5f, 0.25f));
-		REQUIRE(vertex_array[3].texcoord == Vec2f(0.25f, 0.25f));
-	}
-
-	SECTION("Can be rewound")
-	{
-		animation.start();
-		animation.update(kFrameTime);
-
-		REQUIRE(animation.current_frame() == 1);
-		REQUIRE(vertex_array[0].texcoord == Vec2f(0.25f, 0.5f));
-		REQUIRE(vertex_array[1].texcoord == Vec2f(0.5f, 0.5f));
-		REQUIRE(vertex_array[2].texcoord == Vec2f(0.5f, 0.25f));
-		REQUIRE(vertex_array[3].texcoord == Vec2f(0.25f, 0.25f));
-
-		animation.rewind();
-
-		REQUIRE(animation.current_frame() == 0);
-		REQUIRE(vertex_array[0].texcoord == u[0]);
-		REQUIRE(vertex_array[1].texcoord == u[1]);
-		REQUIRE(vertex_array[2].texcoord == u[2]);
-		REQUIRE(vertex_array[3].texcoord == u[3]);
-	}
-
-	SECTION("Event callbacks are called only once")
-	{
-		int started = 0;
-		int stopped = 0;
-		int completed = 0;
-		int frame = 0;
-		animation.set_callback([&](Animation *a, Animation::Event e) {
-			REQUIRE(&animation == a);
-			switch (e)
-			{
-				case Animation::Event::Start:
-					++started;
-					break;
-				case Animation::Event::End:
-					++stopped;
-					break;
-				case Animation::Event::Complete:
-					++completed;
-					break;
-				case Animation::Event::Frame:
-					++frame;
-					break;
-				default:
-					break;
-			}
-		});
-
-		animation.stop();
-
-		REQUIRE(started == 0);
-		REQUIRE(stopped == 0);
-
-		animation.start();
-
-		REQUIRE(started == 1);
-		REQUIRE(frame == 0);
-
-		animation.start();
-
-		REQUIRE(started == 1);
-		REQUIRE(frame == 0);
-
-		animation.update(kFrameTime * 3);
-
-		REQUIRE(started == 1);
-		REQUIRE(stopped == 0);
-		REQUIRE(completed == 0);
-		REQUIRE(frame == 3);
-
-		animation.update(kFrameTime);
-
-		REQUIRE(completed == 1);
-		REQUIRE(frame == 3);
-
-		animation.update(kFrameTime);
-
-		REQUIRE(completed == 1);
-		REQUIRE(frame == 4);
-
-		animation.stop();
-
-		REQUIRE(started == 1);
-		REQUIRE(stopped == 1);
-		REQUIRE(completed == 1);
-		REQUIRE(frame == 4);
-	}
+	ASSERT_EQ(1, started);
+	ASSERT_EQ(1, stopped);
+	ASSERT_EQ(1, completed);
+	ASSERT_EQ(4, frame);
 }

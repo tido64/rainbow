@@ -4,7 +4,7 @@
 
 #include <string>
 
-#include <catch.hpp>
+#include <gtest/gtest.h>
 
 #include "Common/Algorithm.h"
 #include "Config.h"
@@ -40,7 +40,7 @@ namespace
 	class ScopedCurrentDirectory
 	{
 	public:
-		ScopedCurrentDirectory(const char *path)
+		ScopedCurrentDirectory(const char* path)
 		{
 			working_dir_ = Path::current();
 			Path::set_current(path);
@@ -55,7 +55,7 @@ namespace
 	class ScopedConfig
 	{
 	public:
-		template<size_t N>
+		template <size_t N>
 		ScopedConfig(const char (&config)[N]) : ScopedConfig(config, N - 1) {}
 		~ScopedConfig() { remove(path_); }
 
@@ -63,87 +63,95 @@ namespace
 		Path path_;
 		ScopedCurrentDirectory working_directory_;
 
-		ScopedConfig(const char *config, size_t length)
+		ScopedConfig(const char* config, size_t length)
 		    : path_(kConfigTestPath), working_directory_(kConfigTestPath)
 		{
 			path_.create();
 			path_ += "config";
-			FILE *fd = fopen(path_, "wb");
-			REQUIRE(fd != nullptr);
+			FILE* fd = fopen(path_, "wb");
+			[fd] { ASSERT_NE(nullptr, fd); }();
 			fwrite(config, sizeof(*config), length, fd);
 			fclose(fd);
 		}
 	};
 }
 
-TEST_CASE("Default configuration", "[config]")
+TEST(ConfigTest, NoConfiguration)
 {
-	std::unique_ptr<rainbow::Config> config;
+	ScopedCurrentDirectory test(kConfigTestPath);
+	rainbow::Config config;
 
-	SECTION("No configuration")
-	{
-		ScopedCurrentDirectory test(kConfigTestPath);
-		config.reset(new rainbow::Config());
-	}
-
-	SECTION("Empty configuration")
-	{
-		ScopedConfig conf("");
-		config.reset(new rainbow::Config());
-	}
-
-	SECTION("Invalid configuration")
-	{
-		INFO("Lua syntax error \"unexpected symbol near '@'\" is expected");
-		ScopedConfig conf(kInvalidConfig);
-		config.reset(new rainbow::Config());
-	}
-
-	REQUIRE(config->width() == 0);
-	REQUIRE(config->height() == 0);
-	REQUIRE_FALSE(config->high_dpi());
-	REQUIRE_FALSE(config->is_portrait());
-	REQUIRE(config->msaa() == 0);
-	REQUIRE(config->suspend());
+	ASSERT_EQ(0, config.width());
+	ASSERT_EQ(0, config.height());
+	ASSERT_FALSE(config.high_dpi());
+	ASSERT_FALSE(config.is_portrait());
+	ASSERT_EQ(0u, config.msaa());
+	ASSERT_TRUE(config.suspend());
 }
 
-TEST_CASE("Parse normal configuration", "[config]")
+TEST(ConfigTest, EmptyConfiguration)
+{
+	ScopedConfig conf("");
+	rainbow::Config config;
+
+	ASSERT_EQ(0, config.width());
+	ASSERT_EQ(0, config.height());
+	ASSERT_FALSE(config.high_dpi());
+	ASSERT_FALSE(config.is_portrait());
+	ASSERT_EQ(0u, config.msaa());
+	ASSERT_TRUE(config.suspend());
+}
+
+TEST(ConfigTest, InvalidConfiguration)
+{
+	ScopedConfig conf(kInvalidConfig);
+	rainbow::Config config;
+
+	ASSERT_EQ(0, config.width());
+	ASSERT_EQ(0, config.height());
+	ASSERT_FALSE(config.high_dpi());
+	ASSERT_FALSE(config.is_portrait());
+	ASSERT_EQ(0u, config.msaa());
+	ASSERT_TRUE(config.suspend());
+}
+
+TEST(ConfigTest, NormalConfiguration)
 {
 	ScopedConfig config(kStandardConfig);
 	rainbow::Config c;
 
-	REQUIRE(c.width() == 1920);
-	REQUIRE(c.height() == 1080);
-	REQUIRE(c.high_dpi());
-	REQUIRE_FALSE(c.is_portrait());
-	REQUIRE(c.msaa() == 4);
-	REQUIRE_FALSE(c.needs_accelerometer());
-	REQUIRE_FALSE(c.suspend());
+	ASSERT_EQ(1920, c.width());
+	ASSERT_EQ(1080, c.height());
+	ASSERT_TRUE(c.high_dpi());
+	ASSERT_FALSE(c.is_portrait());
+	ASSERT_EQ(4u, c.msaa());
+	ASSERT_FALSE(c.needs_accelerometer());
+	ASSERT_FALSE(c.suspend());
 }
 
-TEST_CASE("Parse alternate configuration", "[config]")
+TEST(ConfigTest, AlternateConfiguration)
 {
 	ScopedConfig config(kAlternateConfig);
 	rainbow::Config c;
 
-	REQUIRE(c.width() == 750);
-	REQUIRE(c.height() == 1334);
-	REQUIRE_FALSE(c.high_dpi());
-	REQUIRE(c.is_portrait());
-	REQUIRE(c.msaa() == 4);
-	REQUIRE(c.needs_accelerometer());
-	REQUIRE(c.suspend());
+	ASSERT_EQ(750, c.width());
+	ASSERT_EQ(1334, c.height());
+	ASSERT_FALSE(c.high_dpi());
+	ASSERT_TRUE(c.is_portrait());
+	ASSERT_EQ(4u, c.msaa());
+	ASSERT_TRUE(c.needs_accelerometer());
+	ASSERT_TRUE(c.suspend());
 }
 
-TEST_CASE("Parse sparse configuration", "[config]")
+TEST(ConfigTest, SparseConfiguration)
 {
 	ScopedConfig config(kSparseConfig);
 	rainbow::Config c;
 
-	REQUIRE(c.width() == 0);
-	REQUIRE(c.height() == 0);
-	REQUIRE(c.high_dpi());
-	REQUIRE_FALSE(c.is_portrait());
-	REQUIRE(c.msaa() == 8);
-	REQUIRE_FALSE(c.suspend());
+	ASSERT_EQ(0, c.width());
+	ASSERT_EQ(0, c.height());
+	ASSERT_TRUE(c.high_dpi());
+	ASSERT_FALSE(c.is_portrait());
+	ASSERT_EQ(8u, c.msaa());
+	ASSERT_FALSE(c.suspend());
 }

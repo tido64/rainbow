@@ -2,56 +2,56 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
-#include <catch.hpp>
+#include <gtest/gtest.h>
 
 #include "Common/Vec3.h"
 
-TEST_CASE("Vec3s can be checked for zero length", "[vec3]")
+TEST(Vec3Test, ZeroLength)
 {
 	Vec3f v0;
-	REQUIRE(v0.is_zero());
+	ASSERT_TRUE(v0.is_zero());
 
 	v0.x = 1.0f;
 	v0.y = 2.0f;
 	v0.z = 3.0f;
-	REQUIRE_FALSE(v0.is_zero());
+	ASSERT_FALSE(v0.is_zero());
 }
 
-TEST_CASE("Vec3s can be assigned", "[vec3]")
+TEST(Vec3Test, Assigns)
 {
 	Vec3f v0;
 	Vec3f v1(4.0f, 5.0f, 6.0f);
 	v0 = v1;
-	REQUIRE(rainbow::is_equal(v0.x, 4.0f));
-	REQUIRE(rainbow::is_equal(v0.y, 5.0f));
-	REQUIRE(rainbow::is_equal(v0.z, 6.0f));
+	ASSERT_FLOAT_EQ(4.0f, v0.x);
+	ASSERT_FLOAT_EQ(5.0f, v0.y);
+	ASSERT_FLOAT_EQ(6.0f, v0.z);
 }
 
-TEST_CASE("Vec3s can be added to one another", "[vec3]")
+TEST(Vec3Test, Adds)
 {
 	Vec3f v0(1.0f, 2.0f, 3.0f);
 	Vec3f v1(4.0f, 5.0f, 6.0f);
 	v0 += v1;
-	REQUIRE(rainbow::is_equal(v0.x, 5.0f));
-	REQUIRE(rainbow::is_equal(v0.y, 7.0f));
-	REQUIRE(rainbow::is_equal(v0.z, 9.0f));
+	ASSERT_FLOAT_EQ(5.0f, v0.x);
+	ASSERT_FLOAT_EQ(7.0f, v0.y);
+	ASSERT_FLOAT_EQ(9.0f, v0.z);
 }
 
-TEST_CASE("Vec3s can be subtracted from one another", "[vec3]")
+TEST(Vec3Test, Subtracts)
 {
 	Vec3f v0(1, 2, 3);
 	Vec3f v1(4, 5, 6);
 	v0 -= v1;
-	REQUIRE(rainbow::is_equal(v0.x, -3.0f));
-	REQUIRE(rainbow::is_equal(v0.y, -3.0f));
-	REQUIRE(rainbow::is_equal(v0.z, -3.0f));
+	ASSERT_FLOAT_EQ(-3.0f, v0.x);
+	ASSERT_FLOAT_EQ(-3.0f, v0.y);
+	ASSERT_FLOAT_EQ(-3.0f, v0.z);
 }
 
-TEST_CASE("Vec3s can be multiplied with each other", "[vec3]")
+TEST(Vec3Test, Multiplies)
 {
 	Vec3f v0(1.0f, 2.0f, 3.0f);
 	v0 *= 2;
-	REQUIRE(rainbow::is_equal(v0.x, 2.0f));
-	REQUIRE(rainbow::is_equal(v0.y, 4.0f));
-	REQUIRE(rainbow::is_equal(v0.z, 6.0f));
+	ASSERT_FLOAT_EQ(2.0f, v0.x);
+	ASSERT_FLOAT_EQ(4.0f, v0.y);
+	ASSERT_FLOAT_EQ(6.0f, v0.z);
 }

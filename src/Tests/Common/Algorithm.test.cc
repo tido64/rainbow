@@ -2,142 +2,142 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
-#include <catch.hpp>
+#include <gtest/gtest.h>
 
 #include "Common/Algorithm.h"
 #include "Common/UTF8.h"
 
-TEST_CASE("Clamp values to a range", "[algorithm]")
+TEST(AlgorithmTest, ClampsValues)
 {
-	REQUIRE(rainbow::clamp(10, 0, 1) == 1);
-	REQUIRE(rainbow::clamp(-10, 0, 1) == 0);
-	REQUIRE(rainbow::clamp(0, 0, 1) == 0);
-	REQUIRE(rainbow::clamp(1, 0, 1) == 1);
+	ASSERT_EQ(1, rainbow::clamp(10, 0, 1));
+	ASSERT_EQ(0, rainbow::clamp(-10, 0, 1));
+	ASSERT_EQ(0, rainbow::clamp(0, 0, 1));
+	ASSERT_EQ(1, rainbow::clamp(1, 0, 1));
 }
 
-TEST_CASE("Convert radians to degrees", "[algorithm]")
+TEST(AlgorithmTest, ConvertsRadiansToDegrees)
 {
-	REQUIRE(rainbow::is_equal(static_cast<float>(kPi),
-	                          rainbow::radians(rainbow::degrees(kPi))));
+	ASSERT_TRUE(rainbow::is_equal(static_cast<float>(kPi),
+	                              rainbow::radians(rainbow::degrees(kPi))));
 }
 
-TEST_CASE("floats are approximately equal", "[algorithm]")
+TEST(AlgorithmTest, ApproximatesFloatEquality)
 {
-	REQUIRE(rainbow::is_equal(0.0f, 0.0f));
-	REQUIRE_FALSE(rainbow::is_equal(0.0f, 0.00001f));
-	REQUIRE_FALSE(rainbow::is_equal(0.0f, -0.00001f));
-	REQUIRE(rainbow::is_equal(3.14285714f, 22.0f / 7.0f));
+	ASSERT_TRUE(rainbow::is_equal(0.0f, 0.0f));
+	ASSERT_FALSE(rainbow::is_equal(0.0f, 0.00001f));
+	ASSERT_FALSE(rainbow::is_equal(0.0f, -0.00001f));
+	ASSERT_TRUE(rainbow::is_equal(3.14285714f, 22.0f / 7.0f));
 }
 
-TEST_CASE("Determine whether an integer is a power of two", "[algorithm]")
+TEST(AlgorithmTest, IsPowerOfTwo)
 {
 	unsigned int p = 1;
 	for (unsigned int i = 0; i < 100; ++i)
 	{
 		if (i == p)
 		{
-			REQUIRE(rainbow::is_pow2(i));
+			ASSERT_TRUE(rainbow::is_pow2(i));
 			p *= 2;
 			continue;
 		}
-		REQUIRE_FALSE(rainbow::is_pow2(i));
+		ASSERT_FALSE(rainbow::is_pow2(i));
 	}
 }
 
-TEST_CASE("Return the next power of two", "[algorithm]")
+TEST(AlgorithmTest, ReturnsNextPowerOfTwo)
 {
 	unsigned int p = 1;
 	for (unsigned int i = 1; i < 100; ++i)
 	{
-		REQUIRE(rainbow::next_pow2(i) == p);
+		ASSERT_EQ(p, rainbow::next_pow2(i));
 		if (i == p)
 			p *= 2;
 	}
 }
 
-TEST_CASE("Quick erase an element in a container", "[algorithm]")
+TEST(AlgorithmTest, QuickErasesElementsInContainer)
 {
 	std::vector<int> v{1, 2, 3, 4, 5};
 	rainbow::quick_erase(v, v.begin());
 
-	REQUIRE(v.size() == 4);
-	REQUIRE(v[0] == 5);
-	REQUIRE(v[1] == 2);
-	REQUIRE(v[2] == 3);
-	REQUIRE(v[3] == 4);
+	ASSERT_EQ(4u, v.size());
+	ASSERT_EQ(5, v[0]);
+	ASSERT_EQ(2, v[1]);
+	ASSERT_EQ(3, v[2]);
+	ASSERT_EQ(4, v[3]);
 
 	rainbow::quick_erase(v, v.begin() + 1);
 
-	REQUIRE(v.size() == 3);
-	REQUIRE(v[0] == 5);
-	REQUIRE(v[1] == 4);
-	REQUIRE(v[2] == 3);
+	ASSERT_EQ(3u, v.size());
+	ASSERT_EQ(5, v[0]);
+	ASSERT_EQ(4, v[1]);
+	ASSERT_EQ(3, v[2]);
 
 	rainbow::quick_erase(v, v.end() - 1);
 
-	REQUIRE(v.size() == 2);
-	REQUIRE(v[0] == 5);
-	REQUIRE(v[1] == 4);
+	ASSERT_EQ(2u, v.size());
+	ASSERT_EQ(5, v[0]);
+	ASSERT_EQ(4, v[1]);
 }
 
-TEST_CASE("Convert degrees to radians", "[algorithm]")
+TEST(AlgorithmTest, ConvertsDegreesToRadians)
 {
-	REQUIRE(rainbow::is_equal(static_cast<float>(kPi),
-	                          rainbow::degrees(rainbow::radians(kPi))));
+	ASSERT_TRUE(rainbow::is_equal(static_cast<float>(kPi),
+	                              rainbow::degrees(rainbow::radians(kPi))));
 }
 
-TEST_CASE("Remove a value from a container", "[algorithm]")
+TEST(AlgorithmTest, RemovesValuesFromContainer)
 {
 	std::vector<int> v{1, 2, 3, 4, 3};
 	rainbow::remove(v, 3);
 
-	REQUIRE(v.size() == 4);
-	REQUIRE(v[0] == 1);
-	REQUIRE(v[1] == 2);
-	REQUIRE(v[2] == 4);
-	REQUIRE(v[3] == 3);
+	ASSERT_EQ(4u, v.size());
+	ASSERT_EQ(1, v[0]);
+	ASSERT_EQ(2, v[1]);
+	ASSERT_EQ(4, v[2]);
+	ASSERT_EQ(3, v[3]);
 
 	rainbow::remove(v, 3);
 
-	REQUIRE(v.size() == 3);
-	REQUIRE(v[0] == 1);
-	REQUIRE(v[1] == 2);
-	REQUIRE(v[2] == 4);
+	ASSERT_EQ(3u, v.size());
+	ASSERT_EQ(1, v[0]);
+	ASSERT_EQ(2, v[1]);
+	ASSERT_EQ(4, v[2]);
 
 	rainbow::remove(v, 9000);
 
-	REQUIRE(v.size() == 3);
-	REQUIRE(v[0] == 1);
-	REQUIRE(v[1] == 2);
-	REQUIRE(v[2] == 4);
+	ASSERT_EQ(3u, v.size());
+	ASSERT_EQ(1, v[0]);
+	ASSERT_EQ(2, v[1]);
+	ASSERT_EQ(4, v[2]);
 }
 
-TEST_CASE("Remove values satisfying a predicate from a container", "[algorithm]")
+TEST(AlgorithmTest, RemovesValuesSatisfyingPredicatesFromContainer)
 {
 	std::vector<int> v{1, 2, 3, 4, 5, 6};
 	rainbow::remove_if(v, [](int i) { return i % 2 == 0; });
 
-	REQUIRE(v.size() == 3);
-	REQUIRE(v[0] == 1);
-	REQUIRE(v[1] == 3);
-	REQUIRE(v[2] == 5);
+	ASSERT_EQ(3u, v.size());
+	ASSERT_EQ(1, v[0]);
+	ASSERT_EQ(3, v[1]);
+	ASSERT_EQ(5, v[2]);
 
 	rainbow::remove_if(v, [](int i) { return i > 5; });
 
-	REQUIRE(v.size() == 3);
-	REQUIRE(v[0] == 1);
-	REQUIRE(v[1] == 3);
-	REQUIRE(v[2] == 5);
+	ASSERT_EQ(3u, v.size());
+	ASSERT_EQ(1, v[0]);
+	ASSERT_EQ(3, v[1]);
+	ASSERT_EQ(5, v[2]);
 }
 
-TEST_CASE("Signum function extracts the sign of a real number", "[algorithm]")
+TEST(AlgorithmTest, ExtractsSignOfRealNumbers)
 {
-	REQUIRE(rainbow::signum(-10) < 0);
-	REQUIRE(rainbow::signum(0) == 0);
-	REQUIRE(rainbow::signum(10) > 0);
+	ASSERT_GT(0, rainbow::signum(-10));
+	ASSERT_EQ(0, rainbow::signum(0));
+	ASSERT_LT(0, rainbow::signum(10));
 }
 
-TEST_CASE("Expand UTF-8 characters to UTF-32", "[algorithm]")
+TEST(AlgorithmTest, ExpandsUTF8StringToUTF32)
 {
 	const unsigned int kInvalidCharacter = 0xb00bbabe;
 
@@ -168,23 +168,23 @@ TEST_CASE("Expand UTF-8 characters to UTF-32", "[algorithm]")
 
 	for (unsigned char i = 0; i < 0x80; ++i)
 	{
-		const rainbow::utf_t &c = rainbow::utf8_decode(&i);
-		REQUIRE(c.code == i);
-		REQUIRE(static_cast<uint32_t>(c) == c.code);
+		const rainbow::utf_t& c = rainbow::utf8_decode(&i);
+		ASSERT_EQ(i, c.code);
+		ASSERT_EQ(c.code, static_cast<uint32_t>(c));
 	}
 
-	const unsigned char *l = utf8;
+	const unsigned char* l = utf8;
 	for (size_t i = 0; utf32[i]; ++i)
 	{
-		const rainbow::utf_t &c = rainbow::utf8_decode(l);
+		const rainbow::utf_t& c = rainbow::utf8_decode(l);
 		if (c.bytes == 0)
 		{
-			REQUIRE(utf32[i] == kInvalidCharacter);
+			ASSERT_EQ(kInvalidCharacter, utf32[i]);
 			++l;
 			continue;
 		}
-		REQUIRE(utf32[i] == static_cast<uint32_t>(c));
-		REQUIRE(utf32[i] == c.code);
+		ASSERT_EQ(static_cast<uint32_t>(c), utf32[i]);
+		ASSERT_EQ(c.code, utf32[i]);
 		l += c.bytes;
 	}
 }

@@ -2,7 +2,7 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
-#include <catch.hpp>
+#include <gtest/gtest.h>
 
 #include "Input/Controller.h"
 #include "Input/Input.h"
@@ -10,7 +10,7 @@
 
 namespace
 {
-	class ControllerTestFixture : public InputListener
+	class ControllerTest : public InputListener, public ::testing::Test
 	{
 	public:
 		struct Events
@@ -22,7 +22,7 @@ namespace
 			static const unsigned int Disconnected  = 1u << 4;
 		};
 
-		ControllerTestFixture() : flags_(0) {}
+		ControllerTest() : flags_(0) {}
 
 		ControllerAxisMotion axis_motion() const
 		{
@@ -38,18 +38,25 @@ namespace
 
 		bool is_triggered(const unsigned int flags) { return flags_ & flags; }
 
+	protected:
+		Input input;
+
+		void SetUp() override { input.subscribe(this); }
+
 	private:
 		unsigned int flags_;
 
 		bool on_controller_axis_motion_impl(
 		    const ControllerAxisMotion& motion) override
 		{
-			const auto& expected = axis_motion();
-
-			REQUIRE(motion.id == expected.id);
-			REQUIRE(motion.axis == expected.axis);
-			REQUIRE(motion.value == expected.value);
-			REQUIRE(motion.timestamp == expected.timestamp);
+			[this, &motion]
+			{
+				const auto& expected = axis_motion();
+				ASSERT_EQ(expected.id, motion.id);
+				ASSERT_EQ(expected.axis, motion.axis);
+				ASSERT_EQ(expected.value, motion.value);
+				ASSERT_EQ(expected.timestamp, motion.timestamp);
+			}();
 
 			flags_ |= Events::AxisMotion;
 			return true;
@@ -58,24 +65,27 @@ namespace
 		bool
 		on_controller_button_down_impl(const ControllerButton& btn) override
 		{
-			const auto& expected = button();
-
-			REQUIRE(btn.id == expected.id);
-			REQUIRE(btn.button == expected.button);
-			REQUIRE(btn.timestamp == expected.timestamp);
+			[this, &btn]
+			{
+				const auto& expected = button();
+				ASSERT_EQ(expected.id, btn.id);
+				ASSERT_EQ(expected.button, btn.button);
+				ASSERT_EQ(expected.timestamp, btn.timestamp);
+			}();
 
 			flags_ |= Events::ButtonDown;
 			return true;
 		}
 
-		bool
-		on_controller_button_up_impl(const ControllerButton& btn) override
+		bool on_controller_button_up_impl(const ControllerButton& btn) override
 		{
-			const auto& expected = button();
-
-			REQUIRE(btn.id == expected.id);
-			REQUIRE(btn.button == expected.button);
-			REQUIRE(btn.timestamp == expected.timestamp);
+			[this, &btn]
+			{
+				const auto& expected = button();
+				ASSERT_EQ(expected.id, btn.id);
+				ASSERT_EQ(expected.button, btn.button);
+				ASSERT_EQ(expected.timestamp, btn.timestamp);
+			}();
 
 			flags_ |= Events::ButtonUp;
 			return true;
@@ -83,7 +93,7 @@ namespace
 
 		bool on_controller_connected_impl(const unsigned int i) override
 		{
-			REQUIRE(i == id());
+			[this, i] { ASSERT_EQ(id(), i); }();
 
 			flags_ |= Events::Connected;
 			return true;
@@ -91,7 +101,7 @@ namespace
 
 		bool on_controller_disconnected_impl(const unsigned int i) override
 		{
-			REQUIRE(i == id());
+			[this, i] { ASSERT_EQ(id(), i); }();
 
 			flags_ |= Events::Disconnected;
 			return true;
@@ -99,67 +109,53 @@ namespace
 	};
 }
 
-TEST_CASE("Controller input objects are invalid by default", "[input]")
+TEST_F(ControllerTest, IsInvalidByDefault)
 {
 	const ControllerAxisMotion axis;
 
-	REQUIRE(axis.id == 0);
-	REQUIRE(axis.axis == Controller::Axis::Invalid);
-	REQUIRE(axis.value == 0);
-	REQUIRE(axis.timestamp == 0);
+	ASSERT_EQ(0u, axis.id);
+	ASSERT_EQ(Controller::Axis::Invalid, axis.axis);
+	ASSERT_EQ(0, axis.value);
+	ASSERT_EQ(0ull, axis.timestamp);
 
 	const ControllerButton button;
 
-	REQUIRE(button.id == 0);
-	REQUIRE(button.button == Controller::Button::Invalid);
-	REQUIRE(button.timestamp == 0);
+	ASSERT_EQ(0u, button.id);
+	ASSERT_EQ(Controller::Button::Invalid, button.button);
+	ASSERT_EQ(0ull, button.timestamp);
 }
 
-TEST_CASE("Controller events are propagated", "[input]")
+TEST_F(ControllerTest, on_controller_axis_motion)
 {
-	using ControllerEvents = ControllerTestFixture::Events;
+	input.on_controller_axis_motion(axis_motion());
+	ASSERT_TRUE(is_triggered(Events::AxisMotion));
+	ASSERT_FALSE(is_triggered(0xff ^ Events::AxisMotion));
+}
 
-	Input input;
-	ControllerTestFixture delegate;
-	input.subscribe(&delegate);
+TEST_F(ControllerTest, on_controller_button_down)
+{
+	input.on_controller_button_down(button());
+	ASSERT_TRUE(is_triggered(Events::ButtonDown));
+	ASSERT_FALSE(is_triggered(0xff ^ Events::ButtonDown));
+}
 
-	SECTION("on_controller_axis_motion event")
-	{
-		input.on_controller_axis_motion(delegate.axis_motion());
-		REQUIRE(delegate.is_triggered(ControllerEvents::AxisMotion));
-		REQUIRE_FALSE(
-		    delegate.is_triggered(0xff ^ ControllerEvents::AxisMotion));
-	}
+TEST_F(ControllerTest, on_controller_button_up)
+{
+	input.on_controller_button_up(button());
+	ASSERT_TRUE(is_triggered(Events::ButtonUp));
+	ASSERT_FALSE(is_triggered(0xff ^ Events::ButtonUp));
+}
 
-	SECTION("on_controller_button_down event")
-	{
-		input.on_controller_button_down(delegate.button());
-		REQUIRE(delegate.is_triggered(ControllerEvents::ButtonDown));
-		REQUIRE_FALSE(
-		    delegate.is_triggered(0xff ^ ControllerEvents::ButtonDown));
-	}
+TEST_F(ControllerTest, on_controller_connected)
+{
+	input.on_controller_connected(id());
+	ASSERT_TRUE(is_triggered(Events::Connected));
+	ASSERT_FALSE(is_triggered(0xff ^ Events::Connected));
+}
 
-	SECTION("on_controller_button_up event")
-	{
-		input.on_controller_button_up(delegate.button());
-		REQUIRE(delegate.is_triggered(ControllerEvents::ButtonUp));
-		REQUIRE_FALSE(
-		    delegate.is_triggered(0xff ^ ControllerEvents::ButtonUp));
-	}
-
-	SECTION("on_controller_connected event")
-	{
-		input.on_controller_connected(delegate.id());
-		REQUIRE(delegate.is_triggered(ControllerEvents::Connected));
-		REQUIRE_FALSE(
-		    delegate.is_triggered(0xff ^ ControllerEvents::Connected));
-	}
-
-	SECTION("on_controller_disconnected event")
-	{
-		input.on_controller_disconnected(delegate.id());
-		REQUIRE(delegate.is_triggered(ControllerEvents::Disconnected));
-		REQUIRE_FALSE(
-		    delegate.is_triggered(0xff ^ ControllerEvents::Disconnected));
-	}
+TEST_F(ControllerTest, on_controller_disconnected)
+{
+	input.on_controller_disconnected(id());
+	ASSERT_TRUE(is_triggered(Events::Disconnected));
+	ASSERT_FALSE(is_triggered(0xff ^ Events::Disconnected));
 }

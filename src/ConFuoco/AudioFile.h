@@ -6,6 +6,8 @@
 #define CONFUOCO_AUDIOFILE_H_
 #ifndef USE_FMOD_STUDIO
 
+#include <utility>
+
 #include "FileSystem/File.h"
 
 namespace ConFuoco
@@ -32,76 +34,52 @@ namespace ConFuoco
 		/// \param[out] buffer    Created buffer.
 		/// \param[in]  channels  Number of channels to output.
 		/// \return Size of buffer.
-		static size_t CreateBuffer(char **buffer, const unsigned int channels);
+		static size_t CreateBuffer(char** buffer, const unsigned int channels);
 
 		/// Opens \p file for playback.
 		/// \param file  Path to audio file.
 		/// \param mode  Audio playback mode.
 		/// \return Audio file handler.
-		static AudioFile* Open(const char *const file, const Mode mode);
+		static AudioFile* Open(const char* const file, const Mode mode);
 
 		virtual ~AudioFile() = default;
 
 		/// Returns number of channels.
-		inline int channels() const;
+		int channels() const { return this->channels_impl(); }
 
 		/// Returns sample rate.
-		inline int rate() const;
+		int rate() const { return this->rate_impl(); }
 
 		/// Reads whole file into buffer.
 		/// \param[out] dst  Destination buffer.
 		/// \return Size of returned buffer.
-		inline size_t read(char **dst);
+		size_t read(char** dst) { return this->read_impl(dst); }
 
 		/// Reads \p size bytes into \p dst.
 		/// \param dst   Destination buffer.
 		/// \param size  Number of bytes to read. Must be equal to or less than
 		///              the size allocated for buffer.
 		/// \return Number of bytes read.
-		inline size_t read(char *dst, const size_t size);
+		size_t read(char* dst, const size_t size)
+		{
+			return this->read_impl(dst, size);
+		}
 
 		/// Rewinds audio file to start.
-		inline void rewind();
+		void rewind() { this->rewind_impl(); }
 
 	protected:
 		const File file;
 
 		virtual int channels_impl() const;
 		virtual int rate_impl() const;
-		virtual size_t read_impl(char **dst);
-		virtual size_t read_impl(char *dst, const size_t size);
+		virtual size_t read_impl(char** dst);
+		virtual size_t read_impl(char* dst, const size_t size);
 		virtual void rewind_impl();
 
 		AudioFile() = default;
-		inline AudioFile(File &&file);
+		AudioFile(File&& file) : file(std::move(file)) {}
 	};
-
-	int AudioFile::channels() const
-	{
-		return this->channels_impl();
-	}
-
-	int AudioFile::rate() const
-	{
-		return this->rate_impl();
-	}
-
-	size_t AudioFile::read(char **dst)
-	{
-		return this->read_impl(dst);
-	}
-
-	size_t AudioFile::read(char *dst, const size_t size)
-	{
-		return this->read_impl(dst, size);
-	}
-
-	void AudioFile::rewind()
-	{
-		this->rewind_impl();
-	}
-
-	AudioFile::AudioFile(File &&file) : file(std::move(file)) {}
 }
 
 #endif  // !USE_FMOD_STUDIO

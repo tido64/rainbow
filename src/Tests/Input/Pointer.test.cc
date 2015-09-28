@@ -2,7 +2,7 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
-#include <catch.hpp>
+#include <gtest/gtest.h>
 
 #include "Input/Input.h"
 #include "Input/InputListener.h"
@@ -10,7 +10,7 @@
 
 namespace
 {
-	class PointerTestFixture : public InputListener
+	class PointerTest : public InputListener, public ::testing::Test
 	{
 	public:
 		struct Events
@@ -21,9 +21,9 @@ namespace
 			static const unsigned int Moved     = 1u << 3;
 		};
 
-		PointerTestFixture() : flags_(0) {}
+		PointerTest() : flags_(0) {}
 
-		bool is_invalid(const unsigned int count, const Pointer *pointers)
+		bool is_invalid(const unsigned int count, const Pointer* pointers)
 		{
 			return count != 1
 			    || pointers[0].hash != 1
@@ -37,11 +37,16 @@ namespace
 			return flags_ & flags;
 		}
 
+	protected:
+		Input input;
+
+		void SetUp() override { input.subscribe(this); }
+
 	private:
 		unsigned int flags_;
 
 		bool on_pointer_began_impl(const unsigned int count,
-		                           const Pointer *pointers) override
+		                           const Pointer* pointers) override
 		{
 			if (is_invalid(count, pointers))
 				return false;
@@ -57,7 +62,7 @@ namespace
 		}
 
 		bool on_pointer_ended_impl(const unsigned int count,
-		                           const Pointer *pointers) override
+		                           const Pointer* pointers) override
 		{
 			if (is_invalid(count, pointers))
 				return false;
@@ -67,7 +72,7 @@ namespace
 		}
 
 		bool on_pointer_moved_impl(const unsigned int count,
-		                           const Pointer *pointers) override
+		                           const Pointer* pointers) override
 		{
 			if (is_invalid(count, pointers))
 				return false;
@@ -78,52 +83,43 @@ namespace
 	};
 }
 
-TEST_CASE("Pointer is all zero by default", "[input]")
+TEST_F(PointerTest, IsZeroByDefault)
 {
 	const Pointer p;
 
-	REQUIRE(p.hash == 0);
-	REQUIRE(p.x == 0);
-	REQUIRE(p.y == 0);
-	REQUIRE(p.timestamp == 0);
+	ASSERT_EQ(0u, p.hash);
+	ASSERT_EQ(0, p.x);
+	ASSERT_EQ(0, p.y);
+	ASSERT_EQ(0ull, p.timestamp);
 }
 
-TEST_CASE("Pointer events", "[input]")
+TEST_F(PointerTest, pointer_began)
 {
-	using PointerEvents = PointerTestFixture::Events;
+	Pointer p1(1, 2, 3, 0);
+	input.on_pointer_began(1, &p1);
+	ASSERT_TRUE(is_triggered(Events::Began));
+	ASSERT_FALSE(is_triggered(0xff ^ Events::Began));
+}
 
-	Input input;
-	PointerTestFixture delegate;
-	input.subscribe(&delegate);
+TEST_F(PointerTest, pointer_canceled)
+{
+	input.on_pointer_canceled();
+	ASSERT_TRUE(is_triggered(Events::Canceled));
+	ASSERT_FALSE(is_triggered(0xff ^ Events::Canceled));
+}
 
-	SECTION("pointer_began event")
-	{
-		Pointer p1(1, 2, 3, 0);
-		input.on_pointer_began(1, &p1);
-		REQUIRE(delegate.is_triggered(PointerEvents::Began));
-		REQUIRE_FALSE(delegate.is_triggered(0xff ^ PointerEvents::Began));
-	}
+TEST_F(PointerTest, pointer_ended)
+{
+	Pointer p1(1, 2, 3, 0);
+	input.on_pointer_ended(1, &p1);
+	ASSERT_TRUE(is_triggered(Events::Ended));
+	ASSERT_FALSE(is_triggered(0xff ^ Events::Ended));
+}
 
-	SECTION("pointer_canceled event")
-	{
-		input.on_pointer_canceled();
-		REQUIRE(delegate.is_triggered(PointerEvents::Canceled));
-		REQUIRE_FALSE(delegate.is_triggered(0xff ^ PointerEvents::Canceled));
-	}
-
-	SECTION("pointer_ended event")
-	{
-		Pointer p1(1, 2, 3, 0);
-		input.on_pointer_ended(1, &p1);
-		REQUIRE(delegate.is_triggered(PointerEvents::Ended));
-		REQUIRE_FALSE(delegate.is_triggered(0xff ^ PointerEvents::Ended));
-	}
-
-	SECTION("pointer_moved event")
-	{
-		Pointer p1(1, 2, 3, 0);
-		input.on_pointer_moved(1, &p1);
-		REQUIRE(delegate.is_triggered(PointerEvents::Moved));
-		REQUIRE_FALSE(delegate.is_triggered(0xff ^ PointerEvents::Moved));
-	}
+TEST_F(PointerTest, pointer_moved)
+{
+	Pointer p1(1, 2, 3, 0);
+	input.on_pointer_moved(1, &p1);
+	ASSERT_TRUE(is_triggered(Events::Moved));
+	ASSERT_FALSE(is_triggered(0xff ^ Events::Moved));
 }
