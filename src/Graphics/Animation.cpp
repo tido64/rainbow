@@ -99,7 +99,11 @@ void Animation::tick()
 			return;
 		}
 		if (idled_ == 0 && callback_)
+		{
 			callback_(this, Event::Complete);
+			if (is_stopped())
+				return;
+		}
 		if (idled_ < delay_)
 		{
 			++idled_;
