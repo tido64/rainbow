@@ -6,6 +6,7 @@
 
 #include <memory>
 
+#include "Graphics/Geometry.h"
 #include "Graphics/Shaders.h"
 #include "Graphics/ShaderManager.h"
 #include "Graphics/VertexArray.h"
@@ -14,7 +15,6 @@ namespace
 {
 	const float32 kAxisScale = 0.4f;
 	const int32 kCircleSegments = 16;
-	const float32 kCircleIncrement = 2.0f * b2_pi / kCircleSegments;
 
 	unsigned int g_debug_draw_buffer = 0;
 	unsigned int g_debug_draw_program = 0;
@@ -153,21 +153,14 @@ namespace b2
 	                           float32 radius,
 	                           const b2Color &color)
 	{
-		const float32 sin_inc = sinf(kCircleIncrement);
-		const float32 cos_inc = cosf(kCircleIncrement);
-		b2Vec2 r1(1.0f, 0.0f);
-		b2Vec2 v1 = center + radius * r1;
-		for (int32 i = 0; i < kCircleSegments; ++i)
-		{
-			// Perform rotation to avoid additional trigonometry.
-			const b2Vec2 r2(cos_inc * r1.x - sin_inc * r1.y,
-			                sin_inc * r1.x + cos_inc * r1.y);
-			const b2Vec2 v2 = center + radius * r2;
-			lines_.emplace_back(color, ptm_ * v1);
-			lines_.emplace_back(color, ptm_ * v2);
-			r1 = r2;
-			v1 = v2;
-		}
+		rainbow::for_each_point_on_circle_edge(
+		    Vec2f(center.x, center.y),
+		    radius,
+		    kCircleSegments,
+		    [this, &color](const Vec2f& p0, const Vec2f& p1) {
+		    	lines_.emplace_back(color, ptm_ * b2Vec2(p0.x, p0.y));
+		    	lines_.emplace_back(color, ptm_ * b2Vec2(p1.x, p1.y));
+		    });
 	}
 
 	void DebugDraw::DrawSolidCircle(const b2Vec2 &center,
@@ -175,24 +168,16 @@ namespace b2
 	                                const b2Vec2 &axis,
 	                                const b2Color &color)
 	{
-		const float32 sin_inc = sinf(kCircleIncrement);
-		const float32 cos_inc = cosf(kCircleIncrement);
-		b2Vec2 v0 = center;
-		b2Vec2 r1(cos_inc, sin_inc);
-		b2Vec2 v1 = center + radius * r1;
 		const b2Color c(color.r, color.g, color.b, 0.5f);
-		for (int32 i = 0; i < kCircleSegments; ++i)
-		{
-			// Perform rotation to avoid additional trigonometry.
-			const b2Vec2 r2(cos_inc * r1.x - sin_inc * r1.y,
-			                sin_inc * r1.x + cos_inc * r1.y);
-			const b2Vec2 v2 = center + radius * r2;
-			triangles_.emplace_back(c, ptm_ * v0);
-			triangles_.emplace_back(c, ptm_ * v1);
-			triangles_.emplace_back(c, ptm_ * v2);
-			r1 = r2;
-			v1 = v2;
-		}
+		rainbow::for_each_point_on_circle_edge(
+		    Vec2f(center.x, center.y),
+		    radius,
+		    kCircleSegments,
+		    [this, &center, &c](const Vec2f& p0, const Vec2f& p1) {
+		    	triangles_.emplace_back(c, ptm_ * center);
+		    	triangles_.emplace_back(c, ptm_ * b2Vec2(p0.x, p0.y));
+		    	triangles_.emplace_back(c, ptm_ * b2Vec2(p1.x, p1.y));
+		    });
 
 		DrawCircle(center, radius, color);
 
