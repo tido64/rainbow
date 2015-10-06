@@ -38,18 +38,18 @@ NS_RAINBOW_LUA_BEGIN
 
 	template<>
 	const luaL_Reg Animation::Bind::functions[] = {
-		{ "current_frame",  &Animation::current_frame },
-		{ "is_stopped",     &Animation::is_stopped },
-		{ "set_delay",      &Animation::set_delay },
-		{ "set_fps",        &Animation::set_fps },
-		{ "set_frames",     &Animation::set_frames },
-		{ "set_listener",   &Animation::set_listener },
-		{ "set_sprite",     &Animation::set_sprite },
-		{ "jump_to",        &Animation::jump_to },
-		{ "rewind",         &Animation::rewind },
-		{ "start",          &Animation::start },
-		{ "stop",           &Animation::stop },
-		{ nullptr,          nullptr }
+		{ "current_frame",   &Animation::current_frame },
+		{ "is_stopped",      &Animation::is_stopped },
+		{ "set_delay",       &Animation::set_delay },
+		{ "set_frame_rate",  &Animation::set_frame_rate },
+		{ "set_frames",      &Animation::set_frames },
+		{ "set_listener",    &Animation::set_listener },
+		{ "set_sprite",      &Animation::set_sprite },
+		{ "jump_to",         &Animation::jump_to },
+		{ "rewind",          &Animation::rewind },
+		{ "start",           &Animation::start },
+		{ "stop",            &Animation::stop },
+		{ nullptr,           nullptr }
 	};
 
 	Animation::Animation(lua_State *L)
@@ -91,11 +91,11 @@ NS_RAINBOW_LUA_BEGIN
 		});
 	}
 
-	int Animation::set_fps(lua_State *L)
+	int Animation::set_frame_rate(lua_State *L)
 	{
-		// <animation>:set_fps(fps)
+		// <animation>:set_frame_rate(fps)
 		return set1i(L, [](::Animation *animation, const int fps) {
-			animation->set_fps(fps);
+			animation->set_frame_rate(fps);
 		});
 	}
 

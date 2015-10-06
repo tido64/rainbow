@@ -51,6 +51,12 @@ unsigned int  current_frame  () const;
 Returns the currently displayed frame; `Animation::kAnimationEnd` if none.
 
 ```c++
+unsigned int  frame_rate  () const;
+```
+
+Returns the frame rate in frames per second.
+
+```c++
 void  Animation::jump_to  (const unsigned int frame);
 ```
 
@@ -72,10 +78,10 @@ Sets number of frames to delay before the animation loops. Negative numbers
 disable looping.
 
 ```c++
-void  Animation::set_fps  (const unsigned int fps);
+void  Animation::set_frame_rate  (const unsigned int fps);
 ```
 
-Sets the playback rate in frames per second.
+Sets the frame rate in frames per second.
 
 ```c++
 void  Animation::set_frames  (std::unique_ptr<Frame[]> frames);

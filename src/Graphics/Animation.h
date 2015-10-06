@@ -48,6 +48,9 @@ public:
 	/// <summary>Returns the currently displayed frame.</summary>
 	unsigned int current_frame() const { return frame_; }
 
+	/// <summary>Returns the frame rate in frames per second.</summary>
+	unsigned int frame_rate() const { return 1000 / interval_; }
+
 	/// <summary>Returns whether animation is stopped.</summary>
 	bool is_stopped() const { return stopped_; }
 
@@ -62,8 +65,8 @@ public:
 	/// </summary>
 	void set_delay(const int delay) { delay_ = delay; }
 
-	/// <summary>Sets playback rate in frames per second.</summary>
-	void set_fps(const unsigned int fps);
+	/// <summary>Sets the frame rate in frames per second.</summary>
+	void set_frame_rate(const unsigned int fps);
 
 	/// <summary>Sets animation frames.</summary>
 	/// <remarks>This method takes ownership of the array.</remarks>

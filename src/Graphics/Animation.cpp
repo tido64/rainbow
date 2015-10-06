@@ -17,7 +17,7 @@ Animation::Animation(const Sprite::Ref &sprite,
     : stopped_(true), accumulated_(0), interval_(1000 / fps), frame_(0),
       frames_(std::move(frames)), sprite_(sprite), delay_(delay), idled_(0) {}
 
-void Animation::set_fps(const unsigned int fps)
+void Animation::set_frame_rate(const unsigned int fps)
 {
 	accumulated_ = 0;
 	interval_ = 1000 / fps;

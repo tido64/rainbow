@@ -25,7 +25,7 @@ NS_RAINBOW_LUA_BEGIN
 		static int current_frame(lua_State *);
 		static int is_stopped(lua_State *);
 		static int set_delay(lua_State *);
-		static int set_fps(lua_State *);
+		static int set_frame_rate(lua_State *);
 		static int set_frames(lua_State *);
 		static int set_listener(lua_State *);
 		static int set_sprite(lua_State *);

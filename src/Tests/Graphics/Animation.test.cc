@@ -140,7 +140,8 @@ TEST_F(AnimationTest, ChangesPlaybackSpeed)
 	ASSERT_EQ(0u, animation_.current_frame());
 	animation_.update(kFrameTime);
 	ASSERT_EQ(1u, animation_.current_frame());
-	animation_.set_fps(60);
+	animation_.set_frame_rate(60);
+	ASSERT_GE(animation_.frame_rate(), 60u);
 	animation_.update(16);
 	ASSERT_EQ(2u, animation_.current_frame());
 	animation_.update(16);

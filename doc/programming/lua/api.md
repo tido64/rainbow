@@ -31,13 +31,13 @@ Returns whether the animation has stopped.
 
 Sets the number of milliseconds to delay before looping.
 
-### &lt;rainbow.animation&gt;:set_fps(fps)
+### &lt;rainbow.animation&gt;:set_frame_rate(fps)
 
 | Parameter | Description |
 |:----------|:------------|
-| <var>fps</var> | Number of frames per second to animate at. |
+| <var>fps</var> | Frame rate in frames per second. |
 
-Sets the number of frames per second to animate at.
+Sets the frame rate in frames per second.
 
 ### &lt;rainbow.animation&gt;:set_frames(frames)
 
