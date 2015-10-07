@@ -19,8 +19,9 @@ Animation::Animation(const Sprite::Ref &sprite,
 
 void Animation::set_frame_rate(const unsigned int fps)
 {
-	accumulated_ = 0;
+	const float progress = static_cast<float>(accumulated_) / interval_;
 	interval_ = 1000 / fps;
+	accumulated_ = interval_ * progress;
 }
 
 void Animation::set_frames(Frames frames)

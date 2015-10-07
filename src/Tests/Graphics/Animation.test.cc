@@ -134,17 +134,49 @@ TEST_F(AnimationTest, SetsDelayBetweenLoops)
 	ASSERT_EQ(0u, animation_.current_frame());
 }
 
-TEST_F(AnimationTest, ChangesPlaybackSpeed)
+TEST_F(AnimationTest, ChangesFrameRate)
 {
 	animation_.start();
+
 	ASSERT_EQ(0u, animation_.current_frame());
+
 	animation_.update(kFrameTime);
+
 	ASSERT_EQ(1u, animation_.current_frame());
+
 	animation_.set_frame_rate(60);
+
 	ASSERT_GE(animation_.frame_rate(), 60u);
+
 	animation_.update(16);
+
 	ASSERT_EQ(2u, animation_.current_frame());
+
 	animation_.update(16);
+
+	ASSERT_EQ(3u, animation_.current_frame());
+
+	animation_.stop();
+	animation_.set_frame_rate(1);
+	animation_.start();
+	animation_.update(1000);
+
+	ASSERT_EQ(1u, animation_.current_frame());
+
+	animation_.update(500);
+
+	ASSERT_EQ(1u, animation_.current_frame());
+
+	animation_.set_frame_rate(2);
+
+	ASSERT_EQ(1u, animation_.current_frame());
+
+	animation_.update(250);
+
+	ASSERT_EQ(2u, animation_.current_frame());
+
+	animation_.update(500);
+
 	ASSERT_EQ(3u, animation_.current_frame());
 }
 
