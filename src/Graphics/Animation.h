@@ -25,7 +25,7 @@ public:
 
 	using Callback = std::function<void(Animation *, const Event)>;
 	using Frame = unsigned int;
-	using Frames = std::unique_ptr<Frame[]>;
+	using Frames = std::unique_ptr<const Frame[]>;
 
 	static const Frame kAnimationEnd;
 
@@ -50,6 +50,9 @@ public:
 
 	/// <summary>Returns the frame rate in frames per second.</summary>
 	unsigned int frame_rate() const { return 1000 / interval_; }
+
+	/// <summary>Returns the target sprite.</summary>
+	Sprite::Ref sprite() const { return sprite_; }
 
 	/// <summary>Returns whether animation is stopped.</summary>
 	bool is_stopped() const { return stopped_; }
@@ -81,6 +84,11 @@ public:
 
 	/// <summary>Jumps to <paramref name="frame"/>.</summary>
 	void jump_to(const unsigned int frame);
+
+	/// <summary>
+	///   Releases ownership of animation frames and returns it.
+	/// </summary>
+	const Frame* release() { return frames_.release(); }
 
 	/// <summary>Rewinds animation.</summary>
 	void rewind() { jump_to(0); }

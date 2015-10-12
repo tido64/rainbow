@@ -182,18 +182,21 @@ TEST_F(AnimationTest, ChangesFrameRate)
 
 TEST_F(AnimationTest, ResetsAnimationFrames)
 {
+	const Animation::Frame kAnimationFrames[3]{1, 0, Animation::kAnimationEnd};
+
 	animation_.start();
 
 	for (size_t i = 0; i < 4; ++i)
 		ASSERT_EQ(uv_[i], vertex_array_[i].texcoord);
 
-	animation_.set_frames(Animation::Frames(
-	    new Animation::Frame[3]{1, 0, Animation::kAnimationEnd}));
+	animation_.set_frames(Animation::Frames(kAnimationFrames));
 
 	ASSERT_EQ(Vec2f(0.25f, 0.5f), vertex_array_[0].texcoord);
 	ASSERT_EQ(Vec2f(0.5f, 0.5f), vertex_array_[1].texcoord);
 	ASSERT_EQ(Vec2f(0.5f, 0.25f), vertex_array_[2].texcoord);
 	ASSERT_EQ(Vec2f(0.25f, 0.25f), vertex_array_[3].texcoord);
+
+	animation_.release();
 }
 
 TEST_F(AnimationTest, ResetsTargetSprite)

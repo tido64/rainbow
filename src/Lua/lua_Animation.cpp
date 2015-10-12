@@ -16,7 +16,8 @@ namespace
 	Animation::Frames get_frames(lua_State *L, const int n)
 	{
 		const size_t count = lua_rawlen(L, n);
-		Animation::Frames frames(new Animation::Frame[count + 1]);
+		std::unique_ptr<Animation::Frame[]> frames(
+		    new Animation::Frame[count + 1]);
 		int i = 0;
 		std::generate_n(frames.get(), count, [L, n, &i] {
 			lua_rawgeti(L, n, ++i);
@@ -24,7 +25,9 @@ namespace
 		});
 		lua_pop(L, i);
 		frames[count] = Animation::kAnimationEnd;
-		return std::move(frames);
+		return Animation::Frames(
+		    // The cast is necessary for Visual Studio 2013.
+		    static_cast<const Animation::Frame*>(frames.release()));
 	}
 }
 

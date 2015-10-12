@@ -9,7 +9,7 @@ where we take a sprite and change its texture at set intervals.
 
 ```c++
 Animation(const Sprite::Ref &sprite,
-          std::unique_ptr<Frame[]> frames,
+          std::unique_ptr<const Frame[]> frames,
           const unsigned int fps,
           const int delay = 0);
 ```
@@ -84,12 +84,24 @@ void  Animation::set_frame_rate  (const unsigned int fps);
 Sets the frame rate in frames per second.
 
 ```c++
-void  Animation::set_frames  (std::unique_ptr<Frame[]> frames);
+void  Animation::set_frames  (std::unique_ptr<const Frame[]> frames);
 ```
 
 Sets new frames to be played.
 
+```c++
+const Frame*  release  ();
+```
+
+Releases ownership of animation frames and returns it.
+
 ### Changing Sprite To Animate
+
+```c++
+Sprite::Ref  sprite  () const;
+```
+
+Returns the target sprite.
 
 ```c++
 void  Animation::set_sprite  (const Sprite::Ref &sprite);
@@ -139,12 +151,9 @@ namespace
         712, 724, 104, 149,
         816, 724, 104, 149,
         920, 724, 104, 149};
-}
 
-Animation::Frames create_animation_frames()
-{
-    return Animation::Frames(
-        new Animation::Frame[7]{0, 1, 2, 3, 4, 5, Animation::kAnimationEnd});
+    const Animation::Frame kAnimationFrames[7]{
+        0, 1, 2, 3, 4, 5, Animation::kAnimationEnd};
 }
 
 rainbow::texture_t load_texture()
@@ -152,15 +161,14 @@ rainbow::texture_t load_texture()
     auto texture = rainbow::texture("monkey.png");
     for (unsigned int i = 0; i < kNumTextureRegions; i += 4)
     {
-        texture->define(
-            Vec2i(kTextureRegions[i], kTextureRegions[i + 1]),
-            kTextureRegions[i + 2],
-            kTextureRegions[i + 3]);
+        texture->define(Vec2i(kTextureRegions[i], kTextureRegions[i + 1]),
+                        kTextureRegions[i + 2],
+                        kTextureRegions[i + 3]);
     }
     return texture;
 }
 
-void animation_event_handler(Animation *, const Animation::Event e)
+void animation_event_handler(Animation*, const Animation::Event e)
 {
     switch (e)
     {
@@ -182,9 +190,10 @@ void animation_event_handler(Animation *, const Animation::Event e)
 class AnimationExample final : public GameBase
 {
 public:
-    AnimationExample(rainbow::Director &director) : GameBase(director) {}
+    AnimationExample(rainbow::Director& director) : GameBase(director) {}
+    ~AnimationExample() { animation_->release(); }
 
-    void init(const Vec2i &screen) override
+    void init(const Vec2i& screen) override
     {
         TextureManager::Get()->set_filter(GL_NEAREST);
         auto texture = load_texture();
@@ -194,8 +203,8 @@ public:
         auto sprite = batch_->create_sprite(104, 149);
         sprite->set_position(Vec2f(screen.x * 0.5f, screen.y * 0.5f));
 
-        animation_ =
-            rainbow::animation(sprite, create_animation_frames(), 6, 0);
+        animation_ = rainbow::animation(
+            sprite, Animation::Frames(kAnimationFrames), 6, 0);
         animation_->set_callback(&animation_event_handler);
 
         // Add the sprite batch to the root node, and the animation to the
@@ -211,7 +220,7 @@ private:
     rainbow::animation_t animation_;
 };
 
-GameBase* GameBase::create(rainbow::Director &director)
+GameBase* GameBase::create(rainbow::Director& director)
 {
     return new AnimationExample(director);
 }
@@ -227,11 +236,14 @@ And an alternative implementation using "manual" object lifetime management:
 class AnimationExample final : public GameBase
 {
 public:
-    AnimationExample(rainbow::Director &director)
+    AnimationExample(rainbow::Director& director)
         : GameBase(director), batch_(1),
-          animation_(Sprite::Ref(), create_animation_frames(), 6, 0) {}
+          animation_(Sprite::Ref(), Animation::Frames(kAnimationFrames), 6, 0)
+    {}
 
-    void init(const Vec2i &screen) override
+    ~AnimationExample() { animation_.release(); }
+
+    void init(const Vec2i& screen) override
     {
         TextureManager::Get()->set_filter(GL_NEAREST);
         auto texture = load_texture();
@@ -243,8 +255,8 @@ public:
         animation_.set_sprite(sprite);
         animation_.set_callback(&animation_event_handler);
 
-        auto node = scenegraph().add_child(&batch_);
-        node->add_child(&animation_);
+        auto node = scenegraph().add_child(batch_);
+        node->add_child(animation_);
 
         animation_.start();
     }

@@ -38,7 +38,8 @@ Prose::Asset create_animation(lua_State *L,
 {
 	const auto table = lua_gettop(L);
 	const size_t num_frames = lua_rawlen(L, table);
-	Animation::Frames frames(new Animation::Frame[num_frames + 1]);
+	std::unique_ptr<Animation::Frame[]> frames(
+	    new Animation::Frame[num_frames + 1]);
 	for (size_t i = 0; i < num_frames; ++i)
 	{
 		lua_rawgeti(L, table, i + 1);
@@ -63,8 +64,13 @@ Prose::Asset create_animation(lua_State *L,
 		delay = lua_tointeger(L, -1);
 	}
 
-	auto animation =
-	    stack.allocate<Animation>(sprite, std::move(frames), fps, delay);
+	auto animation = stack.allocate<Animation>(
+	    sprite,
+	    Animation::Frames(
+	        // The cast is necessary for Visual Studio 2013.
+	        static_cast<const Animation::Frame*>(frames.release())),
+	    fps,
+	    delay);
 	auto node = parent->add_child(*animation);
 #if USE_NODE_TAGS
 	node->set_tag(table_name(L));
