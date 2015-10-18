@@ -120,10 +120,10 @@ void LyricalLabel::start_animation(const Animation animation,
 			    		{
 			    			for (uint_t j = 0; j < attr.length; ++j)
 			    			{
-			    				set_offset(
-			    				    Vec2i(rainbow::random(attr.magnitude),
-			    				          rainbow::random(attr.magnitude)),
-			    				    attr.start + j, 1);
+			    				const Vec2i magnitude(
+			    				    rainbow::random(attr.magnitude),
+			    				    rainbow::random(attr.magnitude));
+			    				set_offset(magnitude, attr.start + j, 1);
 			    			}
 			    		}
 			    	}
