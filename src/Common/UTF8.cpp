@@ -29,9 +29,6 @@
 
 namespace
 {
-	const uint8_t kUTF8Accept = 0;
-	const uint8_t kUTF8Reject = 0xf;
-
 	const uint32_t utf8_classtab[0x10]{
 	    0x88888888UL, 0x88888888UL, 0x99999999UL, 0x99999999UL,
 	    0xaaaaaaaaUL, 0xaaaaaaaaUL, 0xaaaaaaaaUL, 0xaaaaaaaaUL,
@@ -43,8 +40,11 @@ namespace
 	    0xfffffff4UL, 0xfffffff7UL, 0xfffffff6UL, 0xffffffffUL,
 	    0x33f11f0fUL, 0xf3311f0fUL, 0xf33f110fUL, 0xfffffff2UL,
 	    0xfffffff5UL, 0xffffffffUL, 0xffffffffUL, 0xffffffffUL};
+}
 
-	uint8_t utf8_decode_step(uint8_t state, uint8_t octet, uint32_t *cpp)
+namespace rainbow
+{
+	uint8_t utf8_decode_step(uint8_t state, uint8_t octet, uint32_t* cpp)
 	{
 		const uint8_t reject = state >> 3;
 		const uint8_t nonascii = octet >> 7;
@@ -57,25 +57,5 @@ namespace
 
 		return (reject ? kUTF8Reject
 		               : (0xf & (utf8_statetab[klass] >> (4 * (state & 7)))));
-	}
-}
-
-namespace rainbow
-{
-	utf_t utf8_decode(const unsigned char *str)
-	{
-		uint8_t state = kUTF8Accept;
-		utf_t c;
-
-		for (; *str; ++str)
-		{
-			state = utf8_decode_step(state, *str, &c.code);
-			++c.bytes;
-			if (state == kUTF8Accept)
-				return c;
-			if (state == kUTF8Reject)
-				break;
-		}
-		return {};
 	}
 }

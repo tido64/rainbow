@@ -5,6 +5,7 @@
 #include <gtest/gtest.h>
 
 #include "Common/Algorithm.h"
+#include "Common/Logging.h"
 #include "Common/UTF8.h"
 
 TEST(AlgorithmTest, ClampsValues)
@@ -137,54 +138,40 @@ TEST(AlgorithmTest, ExtractsSignOfRealNumbers)
 	ASSERT_LT(0, rainbow::signum(10));
 }
 
-TEST(AlgorithmTest, ExpandsUTF8StringToUTF32)
+TEST(AlgorithmTest, IteratesUTF8String)
 {
-	const unsigned int kInvalidCharacter = 0xb00bbabe;
+	const unsigned char kInvalidUTF8[] = {
+	    'B', 'l',  'o', 'w',  'z', 'y', ' ', 'n', 'i', 'g', 'h',
+	    't', '-',  'f', 'r',  'u', 'm', 'p', 's', ' ', 'v', 'e',
+	    'x', '\'', 'd', 0xff, 'J', 'a', 'c', 'k', ' ', 'Q', '.'};
 
-	const unsigned char utf8[]{
-	    0x80,                     // <invalid>
-	    0xff,                     // <invalid>
-	    0xc3, 0x85,               // LATIN CAPITAL LETTER A WITH RING ABOVE
-	    0xc3, 0x86,               // LATIN CAPITAL LETTER AE
-	    0xc3, 0x98,               // LATIN CAPITAL LETTER O WITH STROKE
-	    0xc3, 0xa5,               // LATIN SMALL LETTER A WITH RING ABOVE
-	    0xc3, 0xa6,               // LATIN SMALL LETTER AE
-	    0xc3, 0xb8,               // LATIN SMALL LETTER O WITH STROKE
-	    0xe2, 0x82, 0xac,         // EURO SIGN
-	    0xf0, 0x9f, 0x92, 0xa9};  // PILE OF POO
+	const unsigned char kUTF8[]{
+	    0xc3, 0x85,              // LATIN CAPITAL LETTER A WITH RING ABOVE
+	    0xc3, 0x86,              // LATIN CAPITAL LETTER AE
+	    0xc3, 0x98,              // LATIN CAPITAL LETTER O WITH STROKE
+	    0xc3, 0xa5,              // LATIN SMALL LETTER A WITH RING ABOVE
+	    0xc3, 0xa6,              // LATIN SMALL LETTER AE
+	    0xc3, 0xb8,              // LATIN SMALL LETTER O WITH STROKE
+	    0xe2, 0x82, 0xac,        // EURO SIGN
+	    0xf0, 0x9f, 0x92, 0xa9,  // PILE OF POO
+	    0x00};
 
-	const unsigned int utf32[]{
-	    kInvalidCharacter,
-	    kInvalidCharacter,
-	    0x00c5,
-	    0x00c6,
-	    0x00d8,
-	    0x00e5,
-	    0x00e6,
-	    0x00f8,
-	    0x20ac,
-	    0x1f4a9,
-	    0};
+	const uint32_t kUTF32[]{
+	    0x00c5, 0x00c6, 0x00d8, 0x00e5, 0x00e6, 0x00f8, 0x20ac, 0x1f4a9};
 
-	for (unsigned char i = 0; i < 0x80; ++i)
-	{
-		const rainbow::utf_t& c = rainbow::utf8_decode(&i);
-		ASSERT_EQ(i, c.code);
-		ASSERT_EQ(c.code, static_cast<uint32_t>(c));
-	}
+	size_t i = 0;
+	rainbow::for_each_utf8(reinterpret_cast<const char*>(kUTF8),
+	                       [&i, kUTF32](uint32_t ch) {
+	                           ASSERT_EQ(kUTF32[i], ch);
+	                           ++i;
+	                       });
+	ASSERT_EQ(rainbow::array_size(kUTF32), i);
 
-	const unsigned char* l = utf8;
-	for (size_t i = 0; utf32[i]; ++i)
-	{
-		const rainbow::utf_t& c = rainbow::utf8_decode(l);
-		if (c.bytes == 0)
-		{
-			ASSERT_EQ(kInvalidCharacter, utf32[i]);
-			++l;
-			continue;
-		}
-		ASSERT_EQ(static_cast<uint32_t>(c), utf32[i]);
-		ASSERT_EQ(c.code, utf32[i]);
-		l += c.bytes;
-	}
+	i = 0;
+	rainbow::for_each_utf8(reinterpret_cast<const char*>(kInvalidUTF8),
+	                       [&i, kInvalidUTF8](uint32_t ch) {
+	                           ASSERT_EQ(kInvalidUTF8[i], ch);
+	                           ++i;
+	                       });
+	ASSERT_EQ(25u, i);
 }

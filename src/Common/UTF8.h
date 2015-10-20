@@ -9,17 +9,29 @@
 
 namespace rainbow
 {
-	struct utf_t
+	const uint8_t kUTF8Accept = 0;
+	const uint8_t kUTF8Reject = 0xf;
+
+	uint8_t utf8_decode_step(uint8_t state, uint8_t octet, uint32_t* cpp);
+
+	/// <summary>
+	///   Applies the given function <paramref name="f"/> to each valid UTF-8
+	///   code point in <paramref name="str"/>.
+	/// </summary>
+	template <typename F>
+	void for_each_utf8(const char* str, F&& f)
 	{
-		uint32_t code = 0;
-		uint32_t bytes = 0;
-
-		operator bool() const { return this->bytes > 0; }
-		operator uint32_t() const { return this->code; }
-	};
-
-	/// <summary>Expands a UTF-8 character to UTF-32.</summary>
-	utf_t utf8_decode(const unsigned char *str);
+		uint32_t code_point;
+		uint8_t state = kUTF8Accept;
+		for (; *str; ++str)
+		{
+			state = utf8_decode_step(state, *str, &code_point);
+			if (state == kUTF8Accept)
+				f(code_point);
+			else if (state == kUTF8Reject)
+				break;
+		}
+	}
 }
 
 #endif

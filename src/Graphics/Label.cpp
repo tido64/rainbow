@@ -119,27 +119,23 @@ void Label::update_internal()
 		Vec2f pen = (needs_alignment ? Vec2f::Zero : position_);
 		const float origin_x = pen.x;
 		SpriteVertex *vx = vertices_.get();
-		const auto *text = reinterpret_cast<unsigned char*>(text_.get());
-		while (*text)
-		{
-			if (*text == '\n')
+
+		rainbow::for_each_utf8(
+		    text_.get(),
+		    [this, &start, &count, &pen, origin_x, R, needs_alignment, &vx](
+		        uint32_t ch) {
+			if (ch == '\n')
 			{
 				save(start, count, pen.x - origin_x, R, needs_alignment);
 				pen.x = origin_x;
 				start = count;
 				pen.y -= font_->height() * scale_;
-				++text;
-				continue;
+				return;
 			}
 
-			const auto &c = rainbow::utf8_decode(text);
-			if (c.bytes == 0)
-				break;
-			text += c.bytes;
-
-			const FontGlyph *glyph = font_->get_glyph(c);
+			const FontGlyph *glyph = font_->get_glyph(ch);
 			if (!glyph)
-				continue;
+				return;
 
 			pen.x += glyph->left * scale_;
 
@@ -155,7 +151,8 @@ void Label::update_internal()
 
 			pen.x += (glyph->advance - glyph->left) * scale_;
 			++count;
-		}
+		});
+
 		count_ = count * 4;
 		save(start, count, pen.x - origin_x, R, needs_alignment);
 	}
