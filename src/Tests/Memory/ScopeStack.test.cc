@@ -66,21 +66,58 @@ TEST(LinearAllocatorTest, AllocatesEnoughSpace)
 	ASSERT_EQ(begin + aligned_double, end);
 }
 
+TEST(ScopeStackTest, ResetsStack)
+{
+	const uint32_t kFirst = 0xabad1dea;
+	const uint32_t kSecond = 0xdeadbeef;
+
+	LinearAllocator allocator(1024);
+	const char* allocator_begin = static_cast<const char*>(allocator.end());
+
+	ScopeStack stack(allocator);
+	const auto i = stack.allocate<uint32_t>(kFirst);
+
+	ASSERT_EQ(*i, kFirst);
+	ASSERT_GT(allocator.end(), allocator_begin);
+
+	const auto j = stack.allocate<uint32_t>(kSecond);
+
+	ASSERT_EQ(*i, kFirst);
+	ASSERT_EQ(*j, kSecond);
+
+	stack.reset();
+
+	ASSERT_EQ(allocator_begin, allocator.end());
+
+	const auto k = stack.allocate<uint32_t>(kFirst);
+
+	ASSERT_EQ(*k, kFirst);
+	ASSERT_GT(allocator.end(), allocator_begin);
+
+	const auto l = stack.allocate<uint32_t>(kSecond);
+
+	ASSERT_EQ(*k, kFirst);
+	ASSERT_EQ(*l, kSecond);
+}
+
 TEST(ScopeStackTest, RewindsAllocator)
 {
+	const uint32_t kFirst = 0xabad1dea;
+	const uint32_t kSecond = 0xdeadbeef;
+
 	LinearAllocator allocator(1024);
 	const char* allocator_begin = static_cast<const char*>(allocator.end());
 	{
 		ScopeStack stack(allocator);
-		const auto i = stack.allocate<uint32_t>(0xabad1dea);
+		const auto i = stack.allocate<uint32_t>(kFirst);
 
-		ASSERT_EQ(*i, 0xabad1dea);
+		ASSERT_EQ(*i, kFirst);
 		ASSERT_GT(allocator.end(), allocator_begin);
 
-		const auto j = stack.allocate<uint32_t>(0xdeadbeef);
+		const auto j = stack.allocate<uint32_t>(kSecond);
 
-		ASSERT_EQ(*i, 0xabad1dea);
-		ASSERT_EQ(*j, 0xdeadbeef);
+		ASSERT_EQ(*i, kFirst);
+		ASSERT_EQ(*j, kSecond);
 	}
 	ASSERT_EQ(allocator_begin, allocator.end());
 }

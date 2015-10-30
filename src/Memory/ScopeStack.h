@@ -103,7 +103,16 @@ namespace rainbow
 		    : allocator_(allocator), blocks_(nullptr),
 		      rewind_point_(static_cast<BlockHeader*>(allocator.end())) {}
 
-		~ScopeStack()
+		~ScopeStack() { reset(); }
+
+		template<typename T, typename... Args>
+		T* allocate(Args&&... args)
+		{
+			return new (address_of(new_block<T>()))
+			    T(std::forward<Args>(args)...);
+		}
+
+		void reset()
 		{
 			while (blocks_)
 			{
@@ -111,13 +120,6 @@ namespace rainbow
 				blocks_ = blocks_->next;
 			}
 			allocator_.rewind(rewind_point_);
-		}
-
-		template<typename T, typename... Args>
-		T* allocate(Args&&... args)
-		{
-			return new (address_of(new_block<T>()))
-			    T(std::forward<Args>(args)...);
 		}
 
 		void retain(RefCounted *ref) const { allocator_.retain(ref); }
