@@ -225,6 +225,7 @@ if(UNIT_TESTS)
 		src/Tests/Config.test.cc
 		src/Tests/FileSystem/Path.test.cc
 		src/Tests/Graphics/Animation.test.cc
+		src/Tests/Graphics/SceneGraph.test.cc
 		src/Tests/Graphics/Sprite.test.cc
 		src/Tests/Graphics/SpriteBatch.test.cc
 		src/Tests/Input/Controller.test.cc

@@ -14,6 +14,8 @@
 
 class Renderer;
 
+namespace rainbow { struct ISolemnlySwearThatIAmOnlyTesting; }
+
 class ShaderManager : public Global<ShaderManager>
 {
 	friend Renderer;
@@ -38,14 +40,22 @@ public:
 		unsigned int program_;
 	};
 
+	ShaderManager(const rainbow::ISolemnlySwearThatIAmOnlyTesting&)
+	    : ShaderManager(nullptr)
+	{
+		make_global();
+	}
+
+	~ShaderManager();
+
 	/// <summary>Compiles program.</summary>
 	/// <param name="shaders">Shader parameters.</param>
 	/// <param name="attributes">Shader attributes.</param>
 	/// <returns>
 	///   Unique program identifier; <c>kInvalidProgram</c> if unsuccessful.
 	/// </returns>
-	unsigned int compile(Shader::Params *shaders,
-	                     const Shader::AttributeParams *attributes);
+	unsigned int compile(Shader::Params* shaders,
+	                     const Shader::AttributeParams* attributes);
 
 	/// <summary>Returns current program details.</summary>
 	inline const Shader::Details& get_program() const;
@@ -64,12 +74,11 @@ public:
 
 private:
 	unsigned int current_;                   ///< Currently used program.
-	Renderer *renderer_;
+	Renderer* renderer_;
 	std::vector<Shader::Details> programs_;  ///< Linked shader programs.
 	std::vector<unsigned int> shaders_;      ///< Compiled shaders.
 
-	ShaderManager(Renderer *);
-	~ShaderManager();
+	ShaderManager(Renderer*);
 
 	bool init();
 };

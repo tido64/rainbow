@@ -26,8 +26,8 @@ namespace
 	    {Shader::kAttributeTexCoord, "texcoord"},
 	    {Shader::kAttributeNone, nullptr}};
 
-	void set_projection_matrix(const Shader::Details &details,
-	                           const std::array<float, 16> &ortho)
+	void set_projection_matrix(const Shader::Details& details,
+	                           const std::array<float, 16>& ortho)
 	{
 		R_ASSERT(details.mvp_matrix >= 0,
 		         "Shader is missing a projection matrix");
@@ -48,19 +48,19 @@ namespace
 			glGetiv(id, GL_INFO_LOG_LENGTH, &info_len);
 			if (info_len == 0)
 				return {};
-			char *log = new char[info_len];
+			char* log = new char[info_len];
 			glGetInfoLog(id, info_len, nullptr, log);
 			return String(log);
 		}
 		return {};
 	}
 
-	unsigned int compile_shader(const Shader::Params &shader)
+	unsigned int compile_shader(const Shader::Params& shader)
 	{
 		const GLuint id = glCreateShader(shader.type);
 		if (Path(shader.source).is_file())
 		{
-			const Data &glsl = Data::load_asset(shader.source);
+			const Data& glsl = Data::load_asset(shader.source);
 			if (!glsl)
 			{
 				LOGE("Failed to load shader: %s", shader.source);
@@ -70,24 +70,24 @@ namespace
 					return ShaderManager::kInvalidProgram;
 				}
 				// Local variable required for Android compiler (NDK r10e).
-				const char *source = shader.fallback;
+				const char* source = shader.fallback;
 				glShaderSource(id, 1, &source, nullptr);
 			}
 			else
 			{
-				const char *source = glsl;
+				const char* source = glsl;
 				glShaderSource(id, 1, &source, nullptr);
 			}
 		}
 		else
 		{
 			// Local variable required for Android compiler (NDK r10e).
-			const char *source = shader.fallback;
+			const char* source = shader.fallback;
 			glShaderSource(id, 1, &source, nullptr);
 		}
 		glCompileShader(id);
 
-		const String &error =
+		const String& error =
 		    verify(id, GL_COMPILE_STATUS, glGetShaderiv, glGetShaderInfoLog);
 		if (error.get())
 		{
@@ -102,8 +102,8 @@ namespace
 		return id;
 	}
 
-	unsigned int link_program(const Shader::Params *shaders,
-	                          const Shader::AttributeParams *attributes)
+	unsigned int link_program(const Shader::Params* shaders,
+	                          const Shader::AttributeParams* attributes)
 	{
 		const GLuint program = glCreateProgram();
 		for (auto shader = shaders; shader->type != Shader::kTypeInvalid;
@@ -113,7 +113,7 @@ namespace
 			glBindAttribLocation(program, attrib->index, attrib->name);
 		glLinkProgram(program);
 
-		const String &error = verify(
+		const String& error = verify(
 		    program, GL_LINK_STATUS, glGetProgramiv, glGetProgramInfoLog);
 		if (error.get())
 		{
@@ -126,8 +126,16 @@ namespace
 	}
 }
 
-unsigned int ShaderManager::compile(Shader::Params *shaders,
-                                    const Shader::AttributeParams *attributes)
+ShaderManager::~ShaderManager()
+{
+	for (const auto& details : programs_)
+		glDeleteProgram(details.program);
+	for (const auto shader : shaders_)
+		glDeleteShader(shader);
+}
+
+unsigned int ShaderManager::compile(Shader::Params* shaders,
+                                    const Shader::AttributeParams* attributes)
 {
 	for (auto shader = shaders; shader->type != Shader::kTypeInvalid; ++shader)
 	{
@@ -166,7 +174,7 @@ void ShaderManager::update_viewport()
 	if (current_ == kInvalidProgram)
 	{
 		current_ = kDefaultProgram;
-		const Shader::Details &details = get_program();
+		const Shader::Details& details = get_program();
 		glUseProgram(details.program);
 		update_projection();
 		glUniform1i(glGetUniformLocation(details.program, "texture"), 0);
@@ -180,14 +188,14 @@ void ShaderManager::use(const unsigned int program)
 	if (program != current_)
 	{
 #ifndef USE_VERTEX_ARRAY_OBJECT
-		const Shader::Details &current = get_program();
+		const Shader::Details& current = get_program();
 #endif  // !USE_VERTEX_ARRAY_OBJECT
 		current_ = program;
 
 		if (current_ == kInvalidProgram)
 			return;
 
-		const Shader::Details &details = get_program();
+		const Shader::Details& details = get_program();
 		glUseProgram(details.program);
 
 		update_projection();
@@ -204,16 +212,8 @@ void ShaderManager::use(const unsigned int program)
 	}
 }
 
-ShaderManager::ShaderManager(Renderer *renderer)
+ShaderManager::ShaderManager(Renderer* renderer)
     : current_(kInvalidProgram), renderer_(renderer) {}
-
-ShaderManager::~ShaderManager()
-{
-	for (const auto &details : programs_)
-		glDeleteProgram(details.program);
-	for (const auto shader : shaders_)
-		glDeleteShader(shader);
-}
 
 bool ShaderManager::init()
 {
