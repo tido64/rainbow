@@ -7,8 +7,6 @@ src/.ycm_extra_conf.pyc
 xcuserdata/
 
 # Libraries
-build/windows/include/AL/
-build/windows/lib/libOpenAL32.dll.a
 lib/**/*.cmake
 lib/**/*.txt
 lib/**/.git*
@@ -20,6 +18,8 @@ lib/**/README
 lib/**/docs/
 lib/**/html/
 lib/**/makefile
+lib/FMOD/
 lib/SDL/
 lib/dSFMT/check.sh
 lib/dSFMT/test.c
+lib/openal-soft/

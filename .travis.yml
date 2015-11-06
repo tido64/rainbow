@@ -7,6 +7,8 @@ addons:
       - ubuntu-toolchain-r-test
     packages:
       - g++-4.9
+      - libopenal-dev
+      - libvorbis-dev
       - ninja-build
 install:
   - mkdir local
@@ -16,7 +18,7 @@ install:
 script:
   - mkdir $TRAVIS_BUILD_DIR-build
   - cd $TRAVIS_BUILD_DIR-build
-  - GENERATOR=Ninja $TRAVIS_BUILD_DIR/tools/build.sh -DCMAKE_BUILD_TYPE=$CMAKE_BUILD_TYPE -DUNIT_TESTS=1 -DUSE_PHYSICS=1 -DUSE_SPINE=1
+  - GENERATOR=Ninja $TRAVIS_BUILD_DIR/tools/build.sh -DCMAKE_BUILD_TYPE=$CMAKE_BUILD_TYPE -DUNIT_TESTS=1 -DUSE_FMOD_STUDIO=0 -DUSE_PHYSICS=1 -DUSE_SPINE=1
   - ./rainbow
 after_success:
   - cd $TRAVIS_BUILD_DIR

@@ -103,6 +103,75 @@ The default audio backend for all platforms is currently FMOD Studio. If you
 don't want to use FMOD Studio, run `build.sh` with `-DUSE_FMOD_STUDIO=0` or
 undefine `USE_FMOD_STUDIO` in the project file.
 
+FMOD's licence prevents redistribution of its files so you'll have to download
+them yourself [here](http://www.fmod.org/download/). Extract or install it and
+move the files into the repository under `lib/FMOD/`. It should look similar to
+the listing below if you've done it correctly:
+
+```bash
+# Headers
+lib/FMOD/inc/fmod.h
+lib/FMOD/inc/fmod.hpp
+lib/FMOD/inc/fmod_codec.h
+lib/FMOD/inc/fmod_common.h
+lib/FMOD/inc/fmod_dsp.h
+lib/FMOD/inc/fmod_dsp_effects.h
+lib/FMOD/inc/fmod_errors.h
+lib/FMOD/inc/fmod_output.h
+lib/FMOD/inc/fmod_studio.h
+lib/FMOD/inc/fmod_studio.hpp
+lib/FMOD/inc/fmod_studio_common.h
+
+# Android
+lib/FMOD/lib/android/armeabi/libfmod.so
+lib/FMOD/lib/android/armeabi/libfmodstudio.so
+lib/FMOD/lib/android/armeabi-v7a/libfmod.so
+lib/FMOD/lib/android/armeabi-v7a/libfmodstudio.so
+lib/FMOD/lib/android/fmod.jar
+lib/FMOD/lib/android/x86/libfmod.so
+lib/FMOD/lib/android/x86/libfmodstudio.so
+
+# iOS
+lib/FMOD/lib/ios/libfmod_iphoneos.a
+lib/FMOD/lib/ios/libfmod_iphonesimulator.a
+lib/FMOD/lib/ios/libfmodstudio_iphoneos.a
+lib/FMOD/lib/ios/libfmodstudio_iphonesimulator.a
+
+# Linux
+lib/FMOD/lib/linux/x86/libfmod.so
+lib/FMOD/lib/linux/x86/libfmod.so.5
+lib/FMOD/lib/linux/x86/libfmod.so.5.14
+lib/FMOD/lib/linux/x86/libfmodstudio.so
+lib/FMOD/lib/linux/x86/libfmodstudio.so.5
+lib/FMOD/lib/linux/x86/libfmodstudio.so.5.14
+lib/FMOD/lib/linux/x86_64/libfmod.so
+lib/FMOD/lib/linux/x86_64/libfmod.so.5
+lib/FMOD/lib/linux/x86_64/libfmod.so.5.14
+lib/FMOD/lib/linux/x86_64/libfmodstudio.so
+lib/FMOD/lib/linux/x86_64/libfmodstudio.so.5
+lib/FMOD/lib/linux/x86_64/libfmodstudio.so.5.14
+
+# Mac OS X
+lib/FMOD/lib/mac/libfmod.dylib
+lib/FMOD/lib/mac/libfmodstudio.dylib
+
+# Windows
+lib/FMOD/lib/windows/fmod.dll
+lib/FMOD/lib/windows/fmod64.dll
+lib/FMOD/lib/windows/fmod64_vc.lib
+lib/FMOD/lib/windows/fmod_vc.lib
+lib/FMOD/lib/windows/fmodstudio.dll
+lib/FMOD/lib/windows/fmodstudio64.dll
+lib/FMOD/lib/windows/fmodstudio64_vc.lib
+lib/FMOD/lib/windows/fmodstudio_vc.lib
+```
+
+Note that you don't need to download libraries for all platforms. They're only
+listed for sake of completeness. If you're on Mac OS or Linux, you can use
+`tools/fmod-import-tool.sh` to copy the files into place.
+
+Rainbow currently supports FMOD Studio 1.05 API.
+
 ### Android
 
 - [Android NDK](http://developer.android.com/tools/sdk/ndk/)

@@ -1,4 +1,4 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -6,10 +6,12 @@
 #define CONFUOCO_CODECS_APPLEAUDIOFILE_H_
 
 #include "Platform/Macros.h"
-#define USE_APPLEAUDIOFILE \
-    (defined(RAINBOW_OS_IOS) || defined(RAINBOW_OS_MACOS)) \
-    && !defined(USE_FMOD_STUDIO)
-#if USE_APPLEAUDIOFILE
+#if (defined(RAINBOW_OS_IOS) || defined(RAINBOW_OS_MACOS)) &&                  \
+    !defined(USE_FMOD_STUDIO)
+#	define USE_APPLEAUDIOFILE
+#endif
+
+#ifdef USE_APPLEAUDIOFILE
 
 #include <AudioToolbox/ExtendedAudioFile.h>
 

@@ -8,18 +8,20 @@ before_build:
   - appveyor DownloadFile http://www.libsdl.org/release/SDL2-devel-2.0.3-VC.zip
   - 7z x SDL2-devel-2.0.3-VC.zip
   - ren SDL2-2.0.3 SDL
+  - appveyor DownloadFile http://kcat.strangesoft.net/openal-binaries/openal-soft-1.17.0-bin.zip
+  - 7z x openal-soft-1.17.0-bin.zip
+  - ren openal-soft-1.17.0-bin openal-soft
   - mkdir "%APPVEYOR_BUILD_FOLDER%-build"
   - cd "%APPVEYOR_BUILD_FOLDER%-build"
-  - cmake -DUSE_HEIMDALL=1 -DUSE_PHYSICS=1 -DUSE_SPINE=1 -G "Visual Studio 12" "%APPVEYOR_BUILD_FOLDER%"
+  - cmake -DUSE_FMOD_STUDIO=0 -DUSE_HEIMDALL=1 -DUSE_PHYSICS=1 -DUSE_SPINE=1 -G "Visual Studio 12" "%APPVEYOR_BUILD_FOLDER%"
 build_script:
   - msbuild "%APPVEYOR_BUILD_FOLDER%-build\Rainbow.sln" /maxcpucount /verbosity:minimal /logger:"%ProgramFiles%\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 after_build:
   - mkdir "rainbow-v%APPVEYOR_BUILD_VERSION%"
   - copy "%APPVEYOR_BUILD_FOLDER%-build\%CONFIGURATION%\rainbow.exe" "rainbow-v%APPVEYOR_BUILD_VERSION%"
-  - copy "%APPVEYOR_BUILD_FOLDER%\LICENSE" "rainbow-v%APPVEYOR_BUILD_VERSION%\LICENSE.TXT"
-  - copy "%APPVEYOR_BUILD_FOLDER%\lib\FMOD\LICENSE.TXT" "rainbow-v%APPVEYOR_BUILD_VERSION%\LICENSE-FMOD.TXT"
-  - copy "%APPVEYOR_BUILD_FOLDER%\lib\FMOD\lib\windows\fmod.dll" "rainbow-v%APPVEYOR_BUILD_VERSION%"
-  - copy "%APPVEYOR_BUILD_FOLDER%\lib\FMOD\lib\windows\fmodstudio.dll" "rainbow-v%APPVEYOR_BUILD_VERSION%"
+  - copy "%APPVEYOR_BUILD_FOLDER%\LICENSE" "rainbow-v%APPVEYOR_BUILD_VERSION%\LICENSE.txt"
+  - copy "%APPVEYOR_BUILD_FOLDER%\lib\openal-soft\COPYING" "rainbow-v%APPVEYOR_BUILD_VERSION%\COPYING-OPENAL.txt"
+  - copy "%APPVEYOR_BUILD_FOLDER%\lib\openal-soft\bin\Win32\soft_oal.dll" "rainbow-v%APPVEYOR_BUILD_VERSION%\OpenAL32.dll"
   - appveyor DownloadFile http://www.libsdl.org/release/SDL2-2.0.3-win32-x86.zip
   - 7z x -o"rainbow-v%APPVEYOR_BUILD_VERSION%" SDL2-2.0.3-win32-x86.zip
   - 7z a "rainbow-v%APPVEYOR_BUILD_VERSION%.zip" "rainbow-v%APPVEYOR_BUILD_VERSION%"
