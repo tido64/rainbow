@@ -8,6 +8,28 @@
 #include "Common/Logging.h"
 #include "Common/UTF8.h"
 
+namespace
+{
+	constexpr unsigned char kInvalidUTF8[] = {
+	    'B', 'l',  'o', 'w',  'z', 'y', ' ', 'n', 'i', 'g', 'h',
+	    't', '-',  'f', 'r',  'u', 'm', 'p', 's', ' ', 'v', 'e',
+	    'x', '\'', 'd', 0xff, 'J', 'a', 'c', 'k', ' ', 'Q', '.'};
+
+	constexpr unsigned char kUTF8[]{
+	    0xc3, 0x85,              // LATIN CAPITAL LETTER A WITH RING ABOVE
+	    0xc3, 0x86,              // LATIN CAPITAL LETTER AE
+	    0xc3, 0x98,              // LATIN CAPITAL LETTER O WITH STROKE
+	    0xc3, 0xa5,              // LATIN SMALL LETTER A WITH RING ABOVE
+	    0xc3, 0xa6,              // LATIN SMALL LETTER AE
+	    0xc3, 0xb8,              // LATIN SMALL LETTER O WITH STROKE
+	    0xe2, 0x82, 0xac,        // EURO SIGN
+	    0xf0, 0x9f, 0x92, 0xa9,  // PILE OF POO
+	    0x00};
+
+	constexpr uint32_t kUTF32[]{
+	    0x00c5, 0x00c6, 0x00d8, 0x00e5, 0x00e6, 0x00f8, 0x20ac, 0x1f4a9};
+}
+
 TEST(AlgorithmTest, ClampsValues)
 {
 	ASSERT_EQ(1, rainbow::clamp(10, 0, 1));
@@ -140,28 +162,9 @@ TEST(AlgorithmTest, ExtractsSignOfRealNumbers)
 
 TEST(AlgorithmTest, IteratesUTF8String)
 {
-	const unsigned char kInvalidUTF8[] = {
-	    'B', 'l',  'o', 'w',  'z', 'y', ' ', 'n', 'i', 'g', 'h',
-	    't', '-',  'f', 'r',  'u', 'm', 'p', 's', ' ', 'v', 'e',
-	    'x', '\'', 'd', 0xff, 'J', 'a', 'c', 'k', ' ', 'Q', '.'};
-
-	const unsigned char kUTF8[]{
-	    0xc3, 0x85,              // LATIN CAPITAL LETTER A WITH RING ABOVE
-	    0xc3, 0x86,              // LATIN CAPITAL LETTER AE
-	    0xc3, 0x98,              // LATIN CAPITAL LETTER O WITH STROKE
-	    0xc3, 0xa5,              // LATIN SMALL LETTER A WITH RING ABOVE
-	    0xc3, 0xa6,              // LATIN SMALL LETTER AE
-	    0xc3, 0xb8,              // LATIN SMALL LETTER O WITH STROKE
-	    0xe2, 0x82, 0xac,        // EURO SIGN
-	    0xf0, 0x9f, 0x92, 0xa9,  // PILE OF POO
-	    0x00};
-
-	const uint32_t kUTF32[]{
-	    0x00c5, 0x00c6, 0x00d8, 0x00e5, 0x00e6, 0x00f8, 0x20ac, 0x1f4a9};
-
 	size_t i = 0;
 	rainbow::for_each_utf8(reinterpret_cast<const char*>(kUTF8),
-	                       [&i, kUTF32](uint32_t ch) {
+	                       [&i](uint32_t ch) {
 	                           ASSERT_EQ(kUTF32[i], ch);
 	                           ++i;
 	                       });
@@ -169,7 +172,7 @@ TEST(AlgorithmTest, IteratesUTF8String)
 
 	i = 0;
 	rainbow::for_each_utf8(reinterpret_cast<const char*>(kInvalidUTF8),
-	                       [&i, kInvalidUTF8](uint32_t ch) {
+	                       [&i](uint32_t ch) {
 	                           ASSERT_EQ(kInvalidUTF8[i], ch);
 	                           ++i;
 	                       });

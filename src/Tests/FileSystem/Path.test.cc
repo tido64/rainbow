@@ -11,11 +11,13 @@
 #include "FileSystem/Path.h"
 
 #ifdef RAINBOW_OS_WINDOWS
+#	include <cstdint>
 #	include <direct.h>
 #	define getcwd(buf, size) _getcwd(buf, size)
 #	define kPathSeparator           "\\"
 #	define kPathSeparatorCharacter  '\\'
 #	define rmdir(path) _rmdir(path)
+using mode_t = uint16_t;
 #else
 #	include <unistd.h>
 #	define kPathSeparator           "/"
