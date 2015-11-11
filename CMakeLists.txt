@@ -344,6 +344,9 @@ if(MSVC OR XCODE)
 		string(REPLACE "/" "\\" directory ${directory})
 		source_group(${directory} FILES ${filename})
 	endforeach()
+	if(UNIT_TESTS)
+		set_target_properties(rainbow PROPERTIES XCODE_ATTRIBUTE_GCC_INSTRUMENT_PROGRAM_FLOW_ARCS "YES")
+	endif()
 endif()
 
 # Dynamic libraries

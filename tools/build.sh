@@ -25,7 +25,8 @@ function compile {
       if [[ "$ARGS" =~ CMAKE_BUILD_TYPE=([A-za-z]+) ]]; then
         configuration=${BASH_REMATCH[1]}
       fi
-      xcrun xcodebuild -project Rainbow.xcodeproj -configuration $configuration -arch $(uname -m) build
+      #xcrun xcodebuild -project Rainbow.xcodeproj -configuration $configuration -arch $(uname -m) build
+      open Rainbow.xcodeproj
       ;;
     *)
       ;;
