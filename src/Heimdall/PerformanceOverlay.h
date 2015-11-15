@@ -17,7 +17,8 @@ namespace rainbow { class SceneNode; }
 namespace heimdall
 {
 	/// <summary>Displays frames per second and VRAM used.</summary>
-	class PerformanceOverlay : private NonCopyable<PerformanceOverlay>
+	class PerformanceOverlay final : public nvg::Canvas,
+	                                 private NonCopyable<PerformanceOverlay>
 	{
 	public:
 		PerformanceOverlay();
@@ -25,19 +26,23 @@ namespace heimdall
 		Button& button() { return button_; }
 		rainbow::SceneNode* node() const { return node_; }
 
-		void init_button(const Vec2f &position, SharedPtr<FontAtlas> font);
+		void init_button(const Vec2f& position, SharedPtr<FontAtlas> font);
 		void init_graph(SharedPtr<FontAtlas> font);
 
-		void update(const unsigned long dt);
-
 	private:
-		rainbow::SceneNode *node_;
+		rainbow::SceneNode* node_;
 		std::deque<std::tuple<float, float>> frame_data_;
-		nvg::Context nvg_;
 		LyricalLabel labels_;
 		float vmem_top_;
 		Button button_;
-		nvg::Drawable perf_graph_;
+
+		// Implement Drawable.
+
+		void update_impl(const unsigned long dt) override;
+
+		// Implement nvg::Canvas.
+
+		void paint_impl() override;
 	};
 }
 

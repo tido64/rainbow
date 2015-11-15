@@ -5,10 +5,6 @@
 #ifndef THIRDPARTY_NANOVG_NANOVG_H_
 #define THIRDPARTY_NANOVG_NANOVG_H_
 
-#include <functional>
-#include <utility>
-#include <vector>
-
 #ifdef __GNUC__
 #	pragma GCC diagnostic push
 #	ifdef __clang__
@@ -27,35 +23,21 @@
 
 namespace nvg
 {
-	class Context
+	class Canvas : public Drawable
 	{
 	public:
-		Context();
-		~Context();
+		Canvas();
+		~Canvas() override;
 
-		void draw();
-
-		template<typename F>
-		void enqueue(F&& cmd)
-		{
-			commands_.emplace_back(std::forward<F>(cmd));
-		}
+	protected:
+		NVGcontext* context() const { return context_; }
 
 	private:
-		std::vector<std::function<void(NVGcontext*)>> commands_;
-		NVGcontext *context_;
-	};
+		NVGcontext* context_;
 
-	class Drawable final : public ::Drawable
-	{
-	public:
-		Drawable(Context &nvg) : nvg_(&nvg) {}
+		void draw_impl() final;
 
-	private:
-		Context *nvg_;
-
-		void draw_impl() override { nvg_->draw(); }
-		void update_impl(const unsigned long) override {}
+		virtual void paint_impl() = 0;
 	};
 }
 

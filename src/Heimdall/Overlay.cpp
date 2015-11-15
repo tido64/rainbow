@@ -27,7 +27,7 @@ namespace heimdall
 
 	void Overlay::init(rainbow::SceneNode& parent, const Vec2i& screen)
 	{
-		const unsigned char white[4096] = { 0xff };
+		const unsigned char white[4096]{0xff};
 		texture_ = TextureManager::Get()->create(
 		    GL_LUMINANCE, 64, 64, GL_LUMINANCE, white);
 

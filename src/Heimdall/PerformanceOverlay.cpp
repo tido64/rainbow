@@ -28,12 +28,9 @@ namespace
 	const char kStringHidePerfData[] = "Hide performance data";
 	const char kStringShowPerfData[] = "Show performance data";
 
-	float spacing(const Vec2i& res)
-	{
-		return res.y / 20;
-	}
+	float spacing(const Vec2i& res) { return res.y / 20; }
 
-	Colorb colorb(const NVGcolor &c)
+	Colorb colorb(const NVGcolor& c)
 	{
 		return Colorb(c.r * 255, c.g * 255, c.b * 255, c.a * 255);
 	}
@@ -43,24 +40,21 @@ namespace
 		return nvgRGBf(0.12941176f, 0.58823529f, 0.95294118f);  // #2196f3
 	}
 
-	NVGcolor graph_line_color()
-	{
-		return nvgRGBAf(1.0f, 1.0f, 1.0f, 0.8f);
-	}
+	NVGcolor graph_line_color() { return nvgRGBAf(1.0f, 1.0f, 1.0f, 0.8f); }
 
 	NVGcolor vmem_line_color()
 	{
 		return nvgRGBf(0.29803921f, 0.68627451f, 0.31372549f);  // #4caf50
 	}
 
-	template<size_t I, typename T>
-	void plot(NVGcontext *vg,
+	template <size_t I, typename T>
+	void plot(NVGcontext* vg,
 	          float x1,
 	          const float y0,
 	          const float dx,
 	          const float dy,
 	          const NVGcolor color,
-	          const T &data)
+	          const T& data)
 	{
 		nvgBeginPath(vg);
 		nvgMoveTo(vg, x1, y0 - std::get<I>(data.front()) * dy);
@@ -77,13 +71,12 @@ namespace
 namespace heimdall
 {
 	PerformanceOverlay::PerformanceOverlay()
-	    : node_(rainbow::SceneNode::create().release()), vmem_top_(0.0f),
-	      perf_graph_(nvg_)
+	    : node_(rainbow::SceneNode::create().release()), vmem_top_(0.0f)
 	{
 		node_->set_enabled(false);
 	}
 
-	void PerformanceOverlay::init_button(const Vec2f &p,
+	void PerformanceOverlay::init_button(const Vec2f& p,
 	                                     SharedPtr<FontAtlas> font)
 	{
 		button_.set_color(color::InactiveFont());
@@ -119,7 +112,7 @@ namespace heimdall
 		labels_.set_position(Vec2f(x0, y1));
 		labels_.set_text(kStringAxisLabels);
 
-		const Colorb &color = colorb(vmem_line_color());
+		const Colorb& color = colorb(vmem_line_color());
 		for (int i = 0; i <= 4; ++i)
 			labels_.set_color(color, i * 7 + 4, 3);
 
@@ -128,47 +121,21 @@ namespace heimdall
 			labels_.set_offset(i * offset, i * 7 + 7, 7);
 
 		node_->add_child(labels_.as_label())
-		     ->add_child(perf_graph_);
+		     ->add_child(*this);
 	}
 
-	void PerformanceOverlay::update(const unsigned long dt)
+	void PerformanceOverlay::update_impl(const unsigned long dt)
 	{
 		if (!node_->is_enabled())
 			return;
 
 		if (frame_data_.size() == kFrameDataLength)
 			frame_data_.pop_back();
-		const auto &usage = TextureManager::Get()->memory_usage();
+
+		const auto& usage = TextureManager::Get()->memory_usage();
 		frame_data_.emplace_front(dt, usage.used);
 
-		const auto &data = frame_data_;
 		const float vmem_top = rainbow::next_pow2(std::ceil(usage.peak));
-		nvg_.enqueue([&data, vmem_top](NVGcontext *vg) {
-			const Vec2i& res = Renderer::Get()->resolution();
-			const float x = spacing(res);
-			const float width = res.x - x * 4;
-			const float height = x * 4;
-			const float y = res.y - x - height;
-
-			nvgBeginPath(vg);
-			nvgRect(vg, x, y, width, height);
-			for (int i = 1; i < 4; ++i)
-			{
-				const float y1 = y + x * i;
-				nvgMoveTo(vg, x, y1);
-				nvgLineTo(vg, x + width, y1);
-			}
-			nvgStrokeColor(vg, graph_line_color());
-			nvgStrokeWidth(vg, 2.0f);
-			nvgStroke(vg);
-
-			const float x1 = x + width - 1;
-			const float by = y + height;
-			const float dx = width / static_cast<float>(kFrameDataLength);
-			plot<0>(vg, x1, by, dx, x / 16, frame_line_color(), data);
-			plot<1>(vg, x1, by, dx, height / vmem_top, vmem_line_color(), data);
-		});
-
 		if (vmem_top != vmem_top_)
 		{
 			const int order = std::min<int>(
@@ -201,6 +168,34 @@ namespace heimdall
 			labels_.set_needs_update(Label::kStaleBuffer);
 			vmem_top_ = vmem_top;
 		}
+	}
+
+	void PerformanceOverlay::paint_impl()
+	{
+		const Vec2i& res = Renderer::Get()->resolution();
+		const float x = spacing(res);
+		const float width = res.x - x * 4;
+		const float height = x * 4;
+		const float y = res.y - x - height;
+
+		nvgBeginPath(context());
+		nvgRect(context(), x, y, width, height);
+		for (int i = 1; i < 4; ++i)
+		{
+			const float y1 = y + x * i;
+			nvgMoveTo(context(), x, y1);
+			nvgLineTo(context(), x + width, y1);
+		}
+		nvgStrokeColor(context(), graph_line_color());
+		nvgStrokeWidth(context(), 2.0f);
+		nvgStroke(context());
+
+		const float x1 = x + width - 1;
+		const float by = y + height;
+		const float dx = width / static_cast<float>(kFrameDataLength);
+		plot<0>(context(), x1, by, dx, x / 16, frame_line_color(), frame_data_);
+		plot<1>(context(), x1, by, dx, height / vmem_top_, vmem_line_color(),
+		        frame_data_);
 	}
 }
 

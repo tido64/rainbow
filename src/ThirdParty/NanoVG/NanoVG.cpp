@@ -32,24 +32,22 @@
 #include "Graphics/Renderer.h"
 #include "Graphics/VertexArray.h"
 
-using nvg::Context;
+using nvg::Canvas;
 
-Context::Context() : context_(nvgCreateContext(NVG_ANTIALIAS)) {}
+Canvas::Canvas() : context_(nvgCreateContext(NVG_ANTIALIAS)) {}
 
-Context::~Context() { nvgDeleteContext(context_); }
+Canvas::~Canvas() { nvgDeleteContext(context_); }
 
-void Context::draw()
+void Canvas::draw_impl()
 {
 	ShaderManager::Context context;
 	auto renderer = Renderer::Get();
 	renderer->unbind_all();
 
-	const Vec2i &res = renderer->resolution();
+	const Vec2i& res = renderer->resolution();
 	nvgBeginFrame(context_, res.x, res.y, 1.0f);
-	for (auto&& cmd : commands_)
-		cmd(context_);
+	paint_impl();
 	nvgEndFrame(context_);
-	commands_.clear();
 
 	renderer->reset();
 }

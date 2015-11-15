@@ -92,7 +92,6 @@ namespace heimdall
 
 		if (!overlay_.is_visible())
 			overlay_activator_.update(dt);
-		perf_->update(dt);
 		scenegraph_.update(dt);
 	}
 

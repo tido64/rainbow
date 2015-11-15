@@ -41,7 +41,7 @@ namespace heimdall
 		unsigned int texture_;
 		Buffer vertex_buffer_;
 
-		/* Implement Drawable. */
+		// Implement Drawable.
 
 		void draw_impl() override;
 		void update_impl(const unsigned long dt) override;
