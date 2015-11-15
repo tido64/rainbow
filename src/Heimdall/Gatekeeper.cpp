@@ -15,16 +15,16 @@
 #include "Resources/Inconsolata.otf.h"
 #include "Resources/NewsCycle-Regular.ttf.h"
 
-#if !defined(USE_LUA_SCRIPT) || USE_LUA_SCRIPT
+#if USE_LUA_SCRIPT
 #include "Lua/LuaHelper.h"
 #include "Lua/LuaScript.h"
 
 namespace
 {
-	const char* basename(const char *const path)
+	const char* basename(const char* const path)
 	{
-		const char *basename = path;
-		for (const char *c = path; *c; ++c)
+		const char* basename = path;
+		for (const char* c = path; *c; ++c)
 		{
 			if (*c == '/' || *c == ':' || *c == '\\')
 				basename = ++c;
@@ -35,7 +35,7 @@ namespace
 	class Library
 	{
 	public:
-		explicit Library(const char *const path);
+		explicit Library(const char* const path);
 
 		const char* name() const { return name_.get(); }
 
@@ -45,7 +45,7 @@ namespace
 
 	private:
 		std::unique_ptr<char[]> name_;
-		const char *path_;
+		const char* path_;
 	};
 }
 #endif  // USE_LUA_SCRIPT
@@ -54,12 +54,12 @@ namespace heimdall
 {
 	Gatekeeper::Gatekeeper()
 	    : overlay_activator_(&overlay_)
-#if !defined(USE_LUA_SCRIPT) || USE_LUA_SCRIPT
+#if USE_LUA_SCRIPT
 	    , monitor_(Path::current())
 #endif  // USE_LUA_SCRIPT
 	{}
 
-	void Gatekeeper::init(const Vec2i &screen)
+	void Gatekeeper::init(const Vec2i& screen)
 	{
 		pre_init(screen);
 		Director::init(screen);
@@ -70,8 +70,8 @@ namespace heimdall
 
 	void Gatekeeper::update(const unsigned long dt)
 	{
-#if !defined(USE_LUA_SCRIPT) || USE_LUA_SCRIPT
-		lua_State *L = static_cast<LuaScript*>(script())->state();
+#if USE_LUA_SCRIPT
+		lua_State* L = static_cast<LuaScript*>(script())->state();
 		while (!changed_files_.empty())
 		{
 			const Library library(changed_files_.front().get());
@@ -97,10 +97,10 @@ namespace heimdall
 
 	void Gatekeeper::post_init()
 	{
-		const Vec2i &res = renderer().resolution();
+		const Vec2i& res = renderer().resolution();
 		const unsigned int pt = res.y / 64;
-		auto console_font = make_shared<FontAtlas>(
-		    Data::from_bytes(Inconsolata_otf), pt);
+		auto console_font =
+		    make_shared<FontAtlas>(Data::from_bytes(Inconsolata_otf), pt);
 		auto ui_font = make_shared<FontAtlas>(
 		    Data::from_bytes(NewsCycle_Regular_ttf), (pt << 1) + (pt >> 1));
 		const float y = res.y - console_font->height();
@@ -110,8 +110,8 @@ namespace heimdall
 		perf_->init_graph(std::move(console_font));
 		overlay_.add_child(perf_->button().drawable());
 
-#if !defined(USE_LUA_SCRIPT) || USE_LUA_SCRIPT
-		monitor_.set_callback([this](const char *path) {
+#if USE_LUA_SCRIPT
+		monitor_.set_callback([this](const char* path) {
 			auto file = new char[strlen(path) + 1];
 			strcpy(file, path);
 			std::lock_guard<std::mutex> lock(changed_files_mutex_);
@@ -120,7 +120,7 @@ namespace heimdall
 #endif  // USE_LUA_SCRIPT
 	}
 
-	void Gatekeeper::pre_init(const Vec2i &screen)
+	void Gatekeeper::pre_init(const Vec2i& screen)
 	{
 		perf_.reset(new PerformanceOverlay());
 		scenegraph_.add_child(perf_->node());
@@ -132,9 +132,9 @@ namespace heimdall
 	}
 
 	bool Gatekeeper::on_pointer_began_impl(const unsigned int count,
-	                                       const Pointer *pointers)
+	                                       const Pointer* pointers)
 	{
-		std::for_each(pointers, pointers + count, [this](const Pointer &p) {
+		std::for_each(pointers, pointers + count, [this](const Pointer& p) {
 			if (perf_->button().hit_test(Vec2i(p.x, p.y)))
 				pressed_[p.hash] = &perf_->button();
 		});
@@ -148,23 +148,24 @@ namespace heimdall
 	}
 
 	bool Gatekeeper::on_pointer_ended_impl(const unsigned int count,
-	                                       const Pointer *pointers)
+	                                       const Pointer* pointers)
 	{
 		if (overlay_.is_visible() && !overlay_activator_.is_activated())
 		{
 			if (!pressed_.empty())
 			{
-				std::for_each(pointers,
-				              pointers + count,
-				              [this](const Pointer &p) {
-					auto button = pressed_.find(p.hash);
-					if (button != pressed_.end())
-					{
-						if (button->second->hit_test(Vec2i(p.x, p.y)))
-							button->second->press();
-						pressed_.erase(button);
-					}
-				});
+				std::for_each(
+				    pointers,
+				    pointers + count,
+				    [this](const Pointer& p) {
+				        auto button = pressed_.find(p.hash);
+				        if (button != pressed_.end())
+				        {
+				            if (button->second->hit_test(Vec2i(p.x, p.y)))
+				                button->second->press();
+				            pressed_.erase(button);
+				        }
+				    });
 			}
 			else
 				overlay_.hide();
@@ -175,16 +176,16 @@ namespace heimdall
 		return false;
 	}
 
-	bool Gatekeeper::on_pointer_moved_impl(const unsigned int, const Pointer *)
+	bool Gatekeeper::on_pointer_moved_impl(const unsigned int, const Pointer*)
 	{
 		return overlay_.is_visible();
 	}
 }
 
-#if !defined(USE_LUA_SCRIPT) || USE_LUA_SCRIPT
-Library::Library(const char *const path) : path_(path)
+#if USE_LUA_SCRIPT
+Library::Library(const char* const path) : path_(path)
 {
-	const char *filename = basename(path_);
+	const char* filename = basename(path_);
 	size_t length = strlen(filename);
 	if (length < 5 || memcmp(filename + length - 4, ".lua", 4) != 0)
 	{

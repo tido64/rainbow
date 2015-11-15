@@ -40,12 +40,12 @@
 
 namespace
 {
-	static_assert(SDL_VERSION_ATLEAST(2,0,3),
+	static_assert(SDL_VERSION_ATLEAST(2, 0, 3),
 	              "Rainbow requires SDL version 2.0.3 or higher");
 
 	using GameController = std::tuple<int, SDL_GameController*>;
 
-	const uint32_t kMouseButtons[] = {
+	const uint32_t kMouseButtons[]{
 	    SDL_BUTTON_LEFT,
 	    SDL_BUTTON_MIDDLE,
 	    SDL_BUTTON_RIGHT,
@@ -54,7 +54,7 @@ namespace
 
 	const double kMsPerFrame = 1000.0 / 60.0;
 
-	bool is_fullscreen(const SDL_Keysym &keysym)
+	bool is_fullscreen(const SDL_Keysym& keysym)
 	{
 #ifdef RAINBOW_OS_MACOS
 		return false;
@@ -64,7 +64,7 @@ namespace
 #endif
 	}
 
-	bool is_quit(const SDL_Keysym &keysym)
+	bool is_quit(const SDL_Keysym& keysym)
 	{
 #ifdef RAINBOW_OS_MACOS
 		return false;
@@ -74,9 +74,9 @@ namespace
 #endif
 	}
 
-	bool should_run_tests(int &argc, char **&argv)
+	bool should_run_tests(int& argc, char**& argv)
 	{
-#if !defined(USE_LUA_SCRIPT) || USE_LUA_SCRIPT
+#if USE_LUA_SCRIPT
 		static_cast<void>(argc);
 		static_cast<void>(argv);
 		return !Path("main.lua").is_file();
@@ -91,7 +91,7 @@ namespace
 #endif  // USE_LUA_SCRIPT
 	}
 
-	Vec2i window_size(const rainbow::Config &config)
+	Vec2i window_size(const rainbow::Config& config)
 	{
 		return (!config.width() || !config.height()
 		            ? Vec2i(1280, 720)
@@ -101,7 +101,7 @@ namespace
 	class SDLContext
 	{
 	public:
-		SDLContext(const rainbow::Config &config);
+		SDLContext(const rainbow::Config& config);
 		~SDLContext();
 
 		Vec2i drawable_size() const;
@@ -113,7 +113,7 @@ namespace
 		explicit operator bool() const;
 
 	private:
-		SDL_Window *window_;     ///< Window handle.
+		SDL_Window* window_;     ///< Window handle.
 		bool vsync_;             ///< Whether vertical sync is enabled.
 		uint32_t fullscreen_;    ///< Whether the window is in full screen mode.
 		SDL_Point position_;     ///< Window's position while windowed.
@@ -124,7 +124,7 @@ namespace
 	class RainbowController
 	{
 	public:
-		RainbowController(SDLContext &context, const rainbow::Config &config);
+		RainbowController(SDLContext& context, const rainbow::Config& config);
 
 		const char* error() const;
 
@@ -133,18 +133,18 @@ namespace
 		void on_controller_connected(const int device_index);
 		void on_controller_disconnected(const int instance_id);
 		void on_mouse_down(const uint32_t button,
-		                   const Vec2i &point,
+		                   const Vec2i& point,
 		                   const unsigned long timestamp);
 		void on_mouse_motion(const uint32_t buttons,
-		                     const Vec2i &point,
+		                     const Vec2i& point,
 		                     const unsigned long timestamp);
 		void on_mouse_up(const uint32_t button,
-		                 const Vec2i &point,
+		                 const Vec2i& point,
 		                 const unsigned long timestamp);
 		void on_window_resized();
 
 	private:
-		SDLContext &context_;
+		SDLContext& context_;
 		Chrono chrono_;
 		Director director_;
 		const bool suspend_on_focus_lost_;
@@ -152,7 +152,7 @@ namespace
 	};
 }
 
-SDLContext::SDLContext(const rainbow::Config &config)
+SDLContext::SDLContext(const rainbow::Config& config)
     : window_(nullptr), vsync_(false), fullscreen_(0),
       position_({SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED}),
       size_(::window_size(config)), context_(nullptr)
@@ -203,7 +203,7 @@ SDLContext::SDLContext(const rainbow::Config &config)
 #endif
 
 #ifndef NDEBUG
-	const Vec2i &resolution = drawable_size();
+	const Vec2i& resolution = drawable_size();
 	LOGI("SDL: Resolution: %ix%i", resolution.x, resolution.y);
 	int msaa = 0;
 	SDL_GL_GetAttribute(SDL_GL_MULTISAMPLESAMPLES, &msaa);
@@ -273,13 +273,10 @@ void SDLContext::toggle_fullscreen()
 #endif  // !USE_BORDERLESS_WINDOWED_MODE
 }
 
-SDLContext::operator bool() const
-{
-	return context_;
-}
+SDLContext::operator bool() const { return context_; }
 
-RainbowController::RainbowController(
-    SDLContext &context, const rainbow::Config &config)
+RainbowController::RainbowController(SDLContext& context,
+                                     const rainbow::Config& config)
     : context_(context), suspend_on_focus_lost_(config.suspend())
 {
 	if (director_.terminated())
@@ -292,10 +289,7 @@ RainbowController::RainbowController(
 	on_window_resized();
 }
 
-const char* RainbowController::error() const
-{
-	return director_.error();
-}
+const char* RainbowController::error() const { return director_.error(); }
 
 bool RainbowController::run()
 {
@@ -335,7 +329,7 @@ bool RainbowController::run()
 			case SDL_KEYDOWN:
 				if (event.key.repeat == 0)
 				{
-					const SDL_Keysym &keysym = event.key.keysym;
+					const SDL_Keysym& keysym = event.key.keysym;
 					if (is_quit(keysym))
 					{
 						director_.terminate();
@@ -426,13 +420,16 @@ void RainbowController::on_controller_connected(const int device_index)
 	auto controller = SDL_GameControllerOpen(device_index);
 	auto id = SDL_JoystickInstanceID(SDL_GameControllerGetJoystick(controller));
 
-#if defined(RAINBOW_OS_MACOS) && !SDL_VERSION_ATLEAST(2,0,4)
-	if (std::any_of(game_controllers_.cbegin(),
-	                game_controllers_.cend(),
-	                [id](const GameController &controller) {
-	                    return std::get<0>(controller) == id;
-	                }))
+#if defined(RAINBOW_OS_MACOS) && !SDL_VERSION_ATLEAST(2, 0, 4)
+	if (std::any_of(
+	        game_controllers_.cbegin(),
+	        game_controllers_.cend(),
+	        [id](const GameController& controller) {
+	            return std::get<0>(controller) == id;
+	        }))
+	{
 		return;
+	}
 #endif  // See https://bugzilla.libsdl.org/show_bug.cgi?id=2869
 
 	game_controllers_.emplace_back(id, controller);
@@ -457,7 +454,7 @@ void RainbowController::on_controller_disconnected(const int instance_id)
 }
 
 void RainbowController::on_mouse_down(const uint32_t button,
-                                      const Vec2i &point,
+                                      const Vec2i& point,
                                       const unsigned long timestamp)
 {
 	Pointer p(button, point.x, point.y, timestamp);
@@ -465,7 +462,7 @@ void RainbowController::on_mouse_down(const uint32_t button,
 }
 
 void RainbowController::on_mouse_motion(const uint32_t buttons,
-                                        const Vec2i &point,
+                                        const Vec2i& point,
                                         const unsigned long timestamp)
 {
 	if (buttons > 0)
@@ -490,7 +487,7 @@ void RainbowController::on_mouse_motion(const uint32_t buttons,
 }
 
 void RainbowController::on_mouse_up(const uint32_t button,
-                                    const Vec2i &point,
+                                    const Vec2i& point,
                                     const unsigned long timestamp)
 {
 	Pointer p(button, point.x, point.y, timestamp);
@@ -499,18 +496,18 @@ void RainbowController::on_mouse_up(const uint32_t button,
 
 void RainbowController::on_window_resized()
 {
-	const Vec2i &size = context_.window_size();
+	const Vec2i& size = context_.window_size();
 	if (size == director_.renderer().window_size())
 		return;
 
-	const Vec2i &viewport = context_.drawable_size();
+	const Vec2i& viewport = context_.drawable_size();
 	director_.renderer().set_window_size(size, viewport.x / size.x);
 }
 
 #ifdef RAINBOW_JS
 
-SDLContext *g_context = nullptr;
-RainbowController *g_controller = nullptr;
+SDLContext* g_context = nullptr;
+RainbowController* g_controller = nullptr;
 
 void emscripten_main() { g_controller->run(); }
 
@@ -525,7 +522,7 @@ int main()
 
 #else
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
 	if (argc < 2)
 		Path::set_current();

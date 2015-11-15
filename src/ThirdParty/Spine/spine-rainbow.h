@@ -16,8 +16,8 @@
 #include "Graphics/Drawable.h"
 #include "Graphics/VertexArray.h"
 
-#if !defined(USE_LUA_SCRIPT) || USE_LUA_SCRIPT
-#include "Lua/LuaBind.h"
+#if USE_LUA_SCRIPT
+#	include "Lua/LuaBind.h"
 #endif  // USE_LUA_SCRIPT
 
 struct SpriteVertex;
@@ -28,9 +28,9 @@ struct spAtlas;
 class Skeleton
 {
 public:
-	static Skeleton* from_json(const char *path, const float scale = 1.0f);
+	static Skeleton* from_json(const char* path, const float scale = 1.0f);
 
-	Skeleton(spSkeletonData *data, spAtlas *atlas);
+	Skeleton(spSkeletonData* data, spAtlas* atlas);
 	~Skeleton();
 
 	spSkeleton* skeleton() { return skeleton_; }
@@ -43,12 +43,12 @@ public:
 	/// </summary>
 	void set_flip(const bool x, const bool y);
 
-	void set_listener(spAnimationStateListener listener, void *self);
+	void set_listener(spAnimationStateListener listener, void* self);
 
 	/// <summary>
 	///   Sets the drawing position of the skeleton in world coordinates.
 	/// </summary>
-	void set_position(const Vec2f &position);
+	void set_position(const Vec2f& position);
 
 	/// <summary>Sets time dilation factor.</summary>
 	void set_time_scale(const float scale) { time_scale_ = scale; }
@@ -59,7 +59,7 @@ public:
 	///   is used plus the negative delay.
 	/// </summary>
 	void add_animation(const int track,
-	                   const char *animation,
+	                   const char* animation,
 	                   const bool loop,
 	                   const float delay);
 
@@ -88,18 +88,18 @@ public:
 	/// <summary>
 	///   Sets the current animation. Any queued animations are cleared.
 	/// </summary>
-	void set_animation(const int track, const char *animation, const bool loop);
+	void set_animation(const int track, const char* animation, const bool loop);
 
 	/// <summary>Sets crossfading duration for a pair of animations.</summary>
-	void set_animation_mix(const char *from,
-	                       const char *to,
+	void set_animation_mix(const char* from,
+	                       const char* to,
 	                       const float duration);
 
 	/// <summary>
 	///   Sets the attachment for the slot and attachment name. The skeleton
 	///   looks first in its skin, then in the skeleton data's default skin.
 	/// </summary>
-	void set_attachment(const char *slot, const char *attachment);
+	void set_attachment(const char* slot, const char* attachment);
 
 	/// <summary>
 	///   Sets the skin used to look up attachments not found in the
@@ -108,27 +108,27 @@ public:
 	///   was attached.
 	/// </summary>
 	/// <param name="skin">May be <c>nullptr</c>.</param>
-	void set_skin(const char *skin);
+	void set_skin(const char* skin);
 
 	void draw();
 	void update(const unsigned long dt);
 
 private:
-	spSkeleton *skeleton_;
-	spAnimationState *state_;
+	spSkeleton* skeleton_;
+	spAnimationState* state_;
 	float time_scale_;
 	std::unique_ptr<SpriteVertex[]> vertices_;
 	size_t num_vertices_;
 	Buffer vertex_buffer_;
 	VertexArray array_;
-	TextureAtlas *texture_;
+	TextureAtlas* texture_;
 	size_t max_vertices_;
-	spAnimationStateData *animation_data_;
-	spAtlas *atlas_;
-	spSkeletonData *data_;
+	spAnimationStateData* animation_data_;
+	spAtlas* atlas_;
+	spSkeletonData* data_;
 };
 
-#if !defined(USE_LUA_SCRIPT) || USE_LUA_SCRIPT
+#if USE_LUA_SCRIPT
 namespace spine
 {
 	namespace lua
@@ -139,7 +139,7 @@ namespace spine
 			friend rainbow::lua::Bind<Skeleton>;
 
 		public:
-			Skeleton(lua_State *);
+			Skeleton(lua_State*);
 
 			::Skeleton* get() const { return skeleton_.get(); }
 
@@ -151,27 +151,27 @@ namespace spine
 			lua_State* state() const { return state_; }
 
 		private:
-			static int add_animation(lua_State *);
-			static int clear_track(lua_State *);
-			static int clear_tracks(lua_State *);
-			static int get_current_animation(lua_State *);
-			static int get_skin(lua_State *);
-			static int set_animation(lua_State *);
-			static int set_animation_mix(lua_State *);
-			static int set_attachment(lua_State *);
-			static int set_flip(lua_State *);
-			static int set_listener(lua_State *);
-			static int set_position(lua_State *);
-			static int set_skin(lua_State *);
-			static int set_time_scale(lua_State *);
+			static int add_animation(lua_State*);
+			static int clear_track(lua_State*);
+			static int clear_tracks(lua_State*);
+			static int get_current_animation(lua_State*);
+			static int get_skin(lua_State*);
+			static int set_animation(lua_State*);
+			static int set_animation_mix(lua_State*);
+			static int set_attachment(lua_State*);
+			static int set_flip(lua_State*);
+			static int set_listener(lua_State*);
+			static int set_position(lua_State*);
+			static int set_skin(lua_State*);
+			static int set_time_scale(lua_State*);
 
 			std::unique_ptr<::Skeleton> skeleton_;
-			lua_State *state_;
+			lua_State* state_;
 			rainbow::lua::ScopedRef listener_;
 
 			// Implement Drawable.
 
-			void move_impl(const Vec2f &delta) override;
+			void move_impl(const Vec2f& delta) override;
 			void draw_impl() override;
 			void update_impl(const unsigned long dt) override;
 		};

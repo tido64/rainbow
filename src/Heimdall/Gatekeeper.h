@@ -36,11 +36,11 @@ namespace heimdall
 			scenegraph_.draw();
 		}
 
-		void init(const Vec2i &screen);
+		void init(const Vec2i& screen);
 		void update(const unsigned long dt);
 
 	private:
-#if !defined(USE_LUA_SCRIPT) || USE_LUA_SCRIPT
+#if USE_LUA_SCRIPT
 		std::queue<std::unique_ptr<char[]>> changed_files_;
 #endif  // USE_LUA_SCRIPT
 		Overlay overlay_;
@@ -48,23 +48,20 @@ namespace heimdall
 		std::unique_ptr<PerformanceOverlay> perf_;
 		rainbow::GroupNode scenegraph_;
 		std::unordered_map<unsigned int, Button*> pressed_;
-#if !defined(USE_LUA_SCRIPT) || USE_LUA_SCRIPT
+#if USE_LUA_SCRIPT
 		std::mutex changed_files_mutex_;
 		ChangeMonitor monitor_;
 #endif  // USE_LUA_SCRIPT
 
 		void post_init();
-		void pre_init(const Vec2i &screen);
+		void pre_init(const Vec2i& screen);
 
 		/* Implement InputListener */
 
-		bool on_pointer_began_impl(const unsigned int,
-		                           const Pointer *) override;
+		bool on_pointer_began_impl(const unsigned int, const Pointer*) override;
 		bool on_pointer_canceled_impl() override;
-		bool on_pointer_ended_impl(const unsigned int,
-		                           const Pointer *) override;
-		bool on_pointer_moved_impl(const unsigned int,
-		                           const Pointer *) override;
+		bool on_pointer_ended_impl(const unsigned int, const Pointer*) override;
+		bool on_pointer_moved_impl(const unsigned int, const Pointer*) override;
 	};
 }
 
