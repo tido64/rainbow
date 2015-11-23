@@ -110,6 +110,8 @@ set(SOURCE_FILES
 	src/Lua/LuaSyntax.cpp
 	src/Lua/LuaSyntax.h
 	src/Memory/Arena.h
+	src/Memory/NotNull.h
+	src/Memory/Pool.h
 	src/Memory/ScopeStack.h
 	src/Memory/SharedPtr.h
 	src/Platform/Macros.h
@@ -231,6 +233,7 @@ if(UNIT_TESTS)
 		src/Tests/Input/Controller.test.cc
 		src/Tests/Input/Input.test.cc
 		src/Tests/Input/Pointer.test.cc
+		src/Tests/Memory/Pool.test.cc
 		src/Tests/Memory/ScopeStack.test.cc
 		src/Tests/Memory/SharedPtr.test.cc
 		src/Tests/Tests.cpp
