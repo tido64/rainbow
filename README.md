@@ -94,8 +94,12 @@ permission:
 
 	$ chmod +x /path/to/rainbow/tools/build.sh
 
-Windows-users have to use `build.bat` instead. For iOS builds, see the
-corresponding section.
+For Windows developers on Visual Studio 2015 or newer, run the PowerShell script
+`tools\make.ps1` (right-click on it and select _Run with PowerShell_). It will
+take you through the steps. Otherwise, you'll have to use the batch script
+`tools\build.bat`.
+
+For iOS builds, see the corresponding section.
 
 ### Building with FMOD Studio
 
@@ -230,9 +234,10 @@ installed. SDL will be downloaded automatically by the build script.
 - [Visual Studio Community](http://www.visualstudio.com/en-us/products/visual-studio-community-vs)
   (2013 or later)
 
-Download OpenAL Soft and place the files under `rainbow\build\windows\include\`
-and `rainbow\build\windows\lib\`. Finally, download SDL development libraries
-and move its content to `rainbow\lib\SDL\`.
+Download OpenAL Soft and move the extracted folder into `rainbow\lib\`. Then
+rename the folder `openal-soft`. Finally, download SDL development libraries and
+move its content to `rainbow\lib\SDL\`. If you're on Visual Studio 2015 or
+newer, the PowerShell script will take care of this for you.
 
 Alternatively, see "Linux" for cross-compilation.
 

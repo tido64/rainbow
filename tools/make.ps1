@@ -11,6 +11,7 @@ $Generator = "Visual Studio 14"
 $SourcePath = Join-Path (Split-Path (Get-Variable MyInvocation).Value.MyCommand.Path) .. -Resolve
 $LibraryPath = Join-Path $SourcePath lib
 $PackagesPath = "Packages"
+$UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2486.0 Safari/537.36 Edge/13.10586"
 
 $FMODDescription = "Enable FMOD Studio audio engine"
 $HeimdallDescription = "Enable Heimdall debugging facilities"
@@ -27,12 +28,12 @@ function Get-Package
 
 	$Packages = New-Item -Path $PackagesPath -ItemType Directory -Force
 
-	Write-Host "Downloading $Uri..."
+	Write-Output "Downloading $Uri..."
 	$OutFile = [IO.Path]::Combine($Packages.FullName, $OutFile)
 	Invoke-WebRequest -Uri $Uri -UserAgent $UserAgent -OutFile $OutFile
 
 	if (Test-Path $OutFile) {
-		Write-Host "Extracting $OutFile..."
+		Write-Output "Extracting $OutFile..."
 		$Packages = $Shell.NameSpace($Packages.FullName)
 		foreach ($Item in $Shell.NameSpace($OutFile).Items()) {
 			$Packages.CopyHere($Item)
@@ -77,22 +78,18 @@ elseif ($Generate) {
 }
 elseif ($Help) {
 	$Script = $MyInvocation.InvocationName
-	Write-Host "Syntax: $Script [-Clean|-Generate [option ...]]"
-	Write-Host
-	Write-Host "Options:"
-	Write-Host "  -DUNIT_TESTS=1           $UnitTestsDescription"
-	Write-Host "  -DUSE_FMOD_STUDIO=1      $FMODDescription"
-	Write-Host "  -DUSE_HEIMDALL=1         $HeimdallDescription"
-	Write-Host "  -DUSE_PHYSICS=1          $PhysicsDescription"
-	Write-Host "  -DUSE_SPINE=1            $SpineDescription"
-	Write-Host "  -DUSE_VECTOR=1           $VectorDescription"
-	Write-Host
-	Write-Host "CMake options are passed directly to CMake so you can set variables like"
-	Write-Host "-DCMAKE_BUILD_TYPE=<type> among others."
-}
-elseif ($Test) {
-	Write-Host $PWD
-	Write-Host $args
+	Write-Output "Syntax: $Script [-Clean|-Generate [option ...]]"
+	Write-Output ""
+	Write-Output "Options:"
+	Write-Output "  -DUNIT_TESTS=1           $UnitTestsDescription"
+	Write-Output "  -DUSE_FMOD_STUDIO=1      $FMODDescription"
+	Write-Output "  -DUSE_HEIMDALL=1         $HeimdallDescription"
+	Write-Output "  -DUSE_PHYSICS=1          $PhysicsDescription"
+	Write-Output "  -DUSE_SPINE=1            $SpineDescription"
+	Write-Output "  -DUSE_VECTOR=1           $VectorDescription"
+	Write-Output ""
+	Write-Output "CMake options are passed directly to CMake so you can set variables like"
+	Write-Output "-DCMAKE_BUILD_TYPE=<type> among others."
 }
 else {
 	Add-Type -AssemblyName System.Windows.Forms

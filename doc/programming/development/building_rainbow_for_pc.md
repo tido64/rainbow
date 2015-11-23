@@ -52,17 +52,9 @@ for more details.
 3. Download [SDL development libraries](https://www.libsdl.org/download-2.0.php) for Visual C++ and extract its content to `lib\SDL` in the repository.
 4. **Optional**: Download [OpenAL Soft](http://kcat.strangesoft.net/openal.html) and extract it. Copy includes to `build\windows\include` in the repository, and libraries to `build\windows\lib`.
 
+> **Note**: If you're on Visual Studio 2015 or newer, the PowerShell script will automatically download OpenAL Soft and SDL for you.
+
 ## Compiling Rainbow
-
-Rainbow must be built outside of the source tree. So you'll need to first make a directory for building Rainbow, then run the build script:
-
-```bash
-mkdir rainbow-build
-cd rainbow-build
-/path/to/rainbow/tools/build.sh -DCMAKE_BUILD_TYPE=<configuration> [option ...]
-```
-
-The build script will generate project files and start building Rainbow.
 
 ### Configuration
 
@@ -96,6 +88,16 @@ You can pass any number of CMake options. For platform specific options, see the
 
 ### Linux / Mac OS X
 
+Rainbow must be built outside of the source tree. So you'll need to first make a directory for building Rainbow, then run the build script:
+
+```bash
+mkdir rainbow-build
+cd rainbow-build
+/path/to/rainbow/tools/build.sh -DCMAKE_BUILD_TYPE=<configuration> [option ...]
+```
+
+The build script will generate project files and start building Rainbow.
+
 By default, [GCC](https://gcc.gnu.org/) and Clang will be used to compile both C and C++ code on Linux and OS X respectively. Unix Makefiles is the default generator on Linux, and Xcode on OS X. You can change these by prefixing environment variables. For instance, to use GCC and [Ninja](https://martine.github.io/ninja/) in place of Clang and Makefiles:
 
 ```bash
@@ -110,7 +112,9 @@ chmod +x /path/to/rainbow/tools/build.sh
 
 ### Windows
 
-On Windows, we're currently limited by the batch script and do not read environment variables. The compiler and generator is always Visual Studio 2012.
+The PowerShell script `tools\make.ps1` will walk you through customising your Rainbow project. Find it using File Explorer, right-click the script and select _Run with PowerShell_. It will also automatically download OpenAL Soft and SDL for you.
+
+If you're still on Visual Studio 2013, use the batch script to generate project files.
 
 ```bat
 \path\to\rainbow\tools\build.bat -DCMAKE_BUILD_TYPE=<configuration> [option ...]
