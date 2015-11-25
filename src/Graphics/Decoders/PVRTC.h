@@ -1,4 +1,4 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -14,8 +14,8 @@
 
 namespace pvrtc
 {
-	bool check(const DataMap &data) pure;
-	rainbow::Image decode(const DataMap &data) pure;
+	bool check(const DataMap& data) pure;
+	rainbow::Image decode(const DataMap& data) pure;
 
 	namespace
 	{
@@ -40,19 +40,19 @@ namespace pvrtc
 		};
 	}
 
-	bool check(const DataMap &data)
+	bool check(const DataMap& data)
 	{
-		return *reinterpret_cast<const uint32_t*>(data.bytes()) ==
+		return *reinterpret_cast<const uint32_t*>(data.data()) ==
 		       kPVRHeaderVersion3;
 	}
 
-	rainbow::Image decode(const DataMap &data)
+	rainbow::Image decode(const DataMap& data)
 	{
 		rainbow::Image image;
 		image.format = rainbow::Image::Format::PVRTC;
 
 #ifdef RAINBOW_OS_IOS
-		PVRTexHeader *header = (PVRTexHeader*)data.bytes();
+		PVRTexHeader* header = (PVRTexHeader*)data.data();
 		R_ASSERT(CFSwapInt32LittleToHost(header->mipmap_count) == 1,
 		         "Mipmaps are not supported");
 
@@ -66,11 +66,12 @@ namespace pvrtc
 		image.depth = (format < 2 ? 2 : 4);
 		image.channels = ((format & 0x01) == 0 ? 3 : 4);
 
-		const size_t offset = sizeof(*header) + CFSwapInt32LittleToHost(header->metadata_size);
+		const size_t offset =
+		    sizeof(*header) + CFSwapInt32LittleToHost(header->metadata_size);
 		image.size = image.width * image.height * image.depth >> 3;
 		R_ASSERT(offset + image.size == data.size(),
 		         "Unsupported PVR file format");
-		image.data = const_cast<unsigned char*>(data.bytes() + offset);
+		image.data = data.data() + offset;
 #else
 		static_cast<void>(data);
 #endif

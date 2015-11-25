@@ -10,70 +10,34 @@ namespace rainbow
 	class DataMapUnix
 	{
 	protected:
-		template<size_t N>
-		DataMapUnix(const unsigned char (&)[N]);
+		template <size_t N>
+		DataMapUnix(const unsigned char (&bytes)[N])
+		    : len_(N), off_(0),
+		      addr_(const_cast<void*>(static_cast<const void*>(bytes))),
+		      mmapped_(false) {}
 
-		explicit DataMapUnix(const Path &path);
+		explicit DataMapUnix(const Path& path);
+		DataMapUnix(DataMapUnix&& data);
 		~DataMapUnix();
 
-		inline const unsigned char* bytes() const;
-		inline void offset(const size_t offset);
-		inline size_t size() const;
+		const unsigned char* data() const
+		{
+			return static_cast<unsigned char*>(addr_) + off_;
+		}
 
-		inline explicit operator bool() const;
-		inline operator const void*() const;
-		inline operator const char*() const;
-		inline operator const unsigned char*() const;
+		void offset(size_t offset) { off_ = offset; }
+		size_t size() const { return len_ - off_; }
+
+		explicit operator bool() const { return addr_; }
 
 	private:
 		size_t len_;
 		size_t off_;
-		void *addr_;
+		void* addr_;
 		const bool mmapped_;
 	};
-
-	template<size_t N>
-	DataMapUnix::DataMapUnix(const unsigned char (&bytes)[N])
-	    : len_(N), off_(0),
-	      addr_(const_cast<void*>(static_cast<const void*>(bytes))),
-	      mmapped_(false) {}
-
-	const unsigned char* DataMapUnix::bytes() const
-	{
-		return static_cast<unsigned char*>(addr_) + off_;
-	}
-
-	void DataMapUnix::offset(const size_t offset)
-	{
-		off_ = offset;
-	}
-
-	size_t DataMapUnix::size() const
-	{
-		return len_ - off_;
-	}
-
-	DataMapUnix::operator bool() const
-	{
-		return addr_;
-	}
-
-	DataMapUnix::operator const void*() const
-	{
-		return bytes();
-	}
-
-	DataMapUnix::operator const char*() const
-	{
-		return static_cast<char*>(addr_) + off_;
-	}
-
-	DataMapUnix::operator const unsigned char*() const
-	{
-		return bytes();
-	}
 }
 
-using DataMap = rainbow::DataMapBase<rainbow::DataMapUnix>;
+using DataMap = rainbow::TDataMap<rainbow::DataMapUnix>;
 
 #endif

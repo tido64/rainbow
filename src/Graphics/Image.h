@@ -40,8 +40,8 @@ namespace rainbow
 		///     </item>
 		///   </list>
 		/// </remarks>
-		static Image decode(const DataMap &);
-		static void release(const Image &);
+		static Image decode(const DataMap&);
+		static void release(const Image&);
 
 		Format format;
 		unsigned int width;
@@ -49,7 +49,7 @@ namespace rainbow
 		unsigned int depth;
 		unsigned int channels;
 		size_t size;
-		void *data;
+		const unsigned char* data;
 
 		Image()
 		    : format(Format::UNKNOWN), width(0), height(0), depth(0),
@@ -69,7 +69,7 @@ namespace rainbow
 
 namespace rainbow
 {
-	Image Image::decode(const DataMap &data)
+	Image Image::decode(const DataMap& data)
 	{
 #ifdef USE_PVRTC
 		if (pvrtc::check(data))
@@ -88,7 +88,7 @@ namespace rainbow
 #endif
 	}
 
-	void Image::release(const Image &image)
+	void Image::release(const Image& image)
 	{
 		switch (image.format)
 		{
@@ -96,7 +96,7 @@ namespace rainbow
 				break;
 			case Format::PNG:
 			default:
-				delete[] static_cast<unsigned char*>(image.data);
+				delete[] image.data;
 				break;
 		}
 	}

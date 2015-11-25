@@ -1,4 +1,4 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -12,43 +12,20 @@ namespace rainbow
 	class DataMapAndroid
 	{
 	protected:
-		explicit DataMapAndroid(const Path &path);
+		explicit DataMapAndroid(const Path& path);
 
-		const unsigned char* bytes() const;
-		inline void offset(const size_t offset);
+		const unsigned char* data() const;
+		void offset(size_t offset) { off_ = offset; }
 		size_t size() const;
 
-		inline explicit operator bool() const;
-		inline operator const void*() const;
-		operator const char*() const;
-		inline operator const unsigned char*() const;
+		explicit operator bool() const { return static_cast<AAsset*>(asset_); }
 
 	private:
 		size_t off_;
 		const File asset_;
 	};
-
-	void DataMapAndroid::offset(const size_t offset)
-	{
-		off_ = offset;
-	}
-
-	DataMapAndroid::operator bool() const
-	{
-		return static_cast<AAsset*>(asset_);
-	}
-
-	DataMapAndroid::operator const void*() const
-	{
-		return bytes();
-	}
-
-	DataMapAndroid::operator const unsigned char*() const
-	{
-		return bytes();
-	}
 }
 
-using DataMap = rainbow::DataMapBase<rainbow::DataMapAndroid>;
+using DataMap = rainbow::TDataMap<rainbow::DataMapAndroid>;
 
 #endif

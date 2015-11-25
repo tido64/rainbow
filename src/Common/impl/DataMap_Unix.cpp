@@ -3,7 +3,6 @@
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
 #include "Common/DataMap.h"
-#if defined(RAINBOW_OS_IOS) || defined(RAINBOW_OS_UNIX)
 
 #include <errno.h>
 #include <fcntl.h>
@@ -13,41 +12,48 @@
 #include "FileSystem/File.h"
 #include "FileSystem/Path.h"
 
-namespace rainbow
+using rainbow::DataMapUnix;
+
+DataMapUnix::DataMapUnix(const Path& path)
+    : len_(0), off_(0), addr_(nullptr), mmapped_(true)
 {
-	DataMapUnix::DataMapUnix(const Path &path)
-	    : len_(0), off_(0), addr_(nullptr), mmapped_(true)
+	const File& f = File::open(path);
+	if (!f)
 	{
-		const File &f = File::open(path);
-		if (!f)
-		{
-			LOGE(kErrorFileOpen, static_cast<const char*>(path), errno);
-			return;
-		}
-		len_ = f.size();
-		if (!len_)
-			LOGE(kErrorFileRead, static_cast<const char*>(path), errno);
-		else
-		{
-			const int fd = fileno(f);
-#if defined(RAINBOW_OS_IOS) || defined(RAINBOW_OS_MACOS)
-			fcntl(fd, F_NOCACHE, 1);
-			fcntl(fd, F_RDAHEAD, 1);
-#endif
-			addr_ = mmap(nullptr, len_, PROT_READ, MAP_PRIVATE, fd, 0);
-			if (addr_ == MAP_FAILED)
-			{
-				LOGE(kErrorMemoryMap, static_cast<const char*>(path), errno);
-				addr_ = nullptr;
-			}
-		}
+		LOGE(kErrorFileOpen, static_cast<const char*>(path), errno);
+		return;
 	}
 
-	DataMapUnix::~DataMapUnix()
+	len_ = f.size();
+	if (!len_)
+		LOGE(kErrorFileRead, static_cast<const char*>(path), errno);
+	else
 	{
-		if (mmapped_ && addr_)
-			munmap(addr_, len_);
+		const int fd = fileno(f);
+#if defined(RAINBOW_OS_IOS) || defined(RAINBOW_OS_MACOS)
+		fcntl(fd, F_NOCACHE, 1);
+		fcntl(fd, F_RDAHEAD, 1);
+#endif
+		addr_ = mmap(nullptr, len_, PROT_READ, MAP_PRIVATE, fd, 0);
+		if (addr_ == MAP_FAILED)
+		{
+			addr_ = nullptr;
+			LOGE(kErrorMemoryMap, static_cast<const char*>(path), errno);
+		}
 	}
 }
 
-#endif
+DataMapUnix::DataMapUnix(DataMapUnix&& data)
+    : len_(data.len_), off_(data.off_), addr_(data.addr_),
+      mmapped_(data.mmapped_)
+{
+	data.len_ = 0;
+	data.off_ = 0;
+	data.addr_ = nullptr;
+}
+
+DataMapUnix::~DataMapUnix()
+{
+	if (mmapped_ && addr_)
+		munmap(addr_, len_);
+}

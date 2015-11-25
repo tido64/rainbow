@@ -5,6 +5,8 @@
 #ifndef COMMON_DATAMAP_H_
 #define COMMON_DATAMAP_H_
 
+#include <utility>
+
 #include "Common/NonCopyable.h"
 #include "Platform/Macros.h"
 
@@ -17,85 +19,32 @@ namespace rainbow
 	static const char kErrorFileRead[] = "Failed to read '%s' (%x)";
 	static const char kErrorMemoryMap[] = "Failed to memory map '%s' (%x)";
 
-	template<typename T>
-	class DataMapBase : private T, private NonCopyable<DataMapBase<T>>
+	template <typename T>
+	class TDataMap : private T, private NonCopyable<TDataMap<T>>
 	{
 	public:
 #ifdef RAINBOW_JS
-		template<size_t N>
-		DataMapBase(const unsigned char (&)[N]);
+		template <size_t N>
+		TDataMap(const unsigned char (&bytes)[N]) : T(bytes) {}
 #endif
 
-		explicit DataMapBase(const Path &path);
+		explicit TDataMap(const Path& path) : T(path) {}
+		TDataMap(TDataMap&& data) : T(std::move(data)) {}
 
 		/// <summary>Returns offset raw byte array.</summary>
 		/// <returns>
 		///   Pointer to array. Returns <c>nullptr</c> if buffer is empty.
 		/// </returns>
-		const unsigned char* bytes() const;
+		const unsigned char* data() const { return T::data(); }
 
 		/// <summary>Offsets data map's start address.</summary>
-		void offset(const size_t offset);
+		void offset(size_t offset) { return T::offset(offset); }
 
 		/// <summary>Returns offset buffer size.</summary>
-		size_t size() const;
+		size_t size() const { return T::size(); }
 
-		explicit operator bool() const;
-		operator const void*() const;
-		operator const char*() const;
-		operator const unsigned char*() const;
+		explicit operator bool() const { return T::operator bool(); }
 	};
-
-#ifdef RAINBOW_JS
-	template<typename T>
-	template<size_t N>
-	DataMapBase<T>::DataMapBase(const unsigned char (&bytes)[N]) : T(bytes) {}
-#endif
-
-	template<typename T>
-	DataMapBase<T>::DataMapBase(const Path &path) : T(path) {}
-
-	template<typename T>
-	const unsigned char* DataMapBase<T>::bytes() const
-	{
-		return T::bytes();
-	}
-
-	template<typename T>
-	void DataMapBase<T>::offset(const size_t offset)
-	{
-		return T::offset(offset);
-	}
-
-	template<typename T>
-	size_t DataMapBase<T>::size() const
-	{
-		return T::size();
-	}
-
-	template<typename T>
-	DataMapBase<T>::operator bool() const
-	{
-		return T::operator bool();
-	}
-
-	template<typename T>
-	DataMapBase<T>::operator const void*() const
-	{
-		return T::operator const void*();
-	}
-
-	template<typename T>
-	DataMapBase<T>::operator const char*() const
-	{
-		return T::operator const char*();
-	}
-
-	template<typename T>
-	DataMapBase<T>::operator const unsigned char*() const
-	{
-		return T::operator const unsigned char*();
-	}
 }
 
 #if defined(RAINBOW_OS_ANDROID)

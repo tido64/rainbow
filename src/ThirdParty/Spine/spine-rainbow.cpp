@@ -213,7 +213,7 @@ extern "C"
 		const DataMap data{Path(path)};
 		*length = static_cast<int>(data.size());
 		char* blob = new char[data.size()];
-		memcpy(blob, data, data.size());
+		memcpy(blob, data.data(), data.size());
 		return blob;
 	}
 }  // extern "C"

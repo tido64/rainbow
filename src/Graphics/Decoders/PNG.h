@@ -1,4 +1,4 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -6,6 +6,7 @@
 #define GRAPHICS_DECODERS_PNG_H_
 
 #include <cstring>
+
 #include <png.h>
 
 #include "Common/Logging.h"
@@ -15,15 +16,15 @@
 
 namespace png
 {
-	bool check(const DataMap &data) pure;
-	rainbow::Image decode(const DataMap &data) pure;
+	bool check(const DataMap& data) pure;
+	rainbow::Image decode(const DataMap& data) pure;
 
-	bool check(const DataMap &data)
+	bool check(const DataMap& data)
 	{
-		return png_sig_cmp(data, 0, 8) == 0;
+		return png_sig_cmp(data.data(), 0, 8) == 0;
 	}
 
-	rainbow::Image decode(const DataMap &data)
+	rainbow::Image decode(const DataMap& data)
 	{
 		rainbow::Image image;
 		image.format = rainbow::Image::Format::PNG;
@@ -32,7 +33,7 @@ namespace png
 		memset(&pi, 0, sizeof(pi));
 		pi.version = PNG_IMAGE_VERSION;
 
-		if (!png_image_begin_read_from_memory(&pi, data, data.size()))
+		if (!png_image_begin_read_from_memory(&pi, data.data(), data.size()))
 			return image;
 
 		image.width = pi.width;
@@ -43,9 +44,10 @@ namespace png
 			pi.format = PNG_FORMAT_RGBA;
 		image.depth = PNG_IMAGE_SAMPLE_SIZE(pi.format) * 8;
 		image.channels = PNG_IMAGE_SAMPLE_CHANNELS(pi.format);
-		image.data = new unsigned char[PNG_IMAGE_SIZE(pi)];
+		auto buffer = new unsigned char[PNG_IMAGE_SIZE(pi)];
 		png_image_finish_read(
-		    &pi, nullptr, image.data, PNG_IMAGE_ROW_STRIDE(pi), nullptr);
+		    &pi, nullptr, buffer, PNG_IMAGE_ROW_STRIDE(pi), nullptr);
+		image.data = buffer;
 		return image;
 	}
 }

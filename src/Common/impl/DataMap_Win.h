@@ -1,4 +1,4 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -10,61 +10,28 @@ namespace rainbow
 	class DataMapWin
 	{
 	protected:
-		explicit DataMapWin(const Path &path);
+		explicit DataMapWin(const Path& path);
+		DataMapWin(DataMapWin&&);
 		~DataMapWin();
 
-		inline const unsigned char* bytes() const;
-		inline void offset(const size_t offset);
-		inline size_t size() const;
+		const unsigned char* data() const
+		{
+			return static_cast<unsigned char*>(addr_) + off_;
+		}
 
-		inline explicit operator bool() const;
-		inline operator const void*() const;
-		inline operator const char*() const;
-		inline operator const unsigned char*() const;
+		void offset(size_t offset) { off_ = offset; }
+		size_t size() const { return len_ - off_; }
+
+		explicit operator bool() const { return addr_; }
 
 	private:
 		size_t len_;
 		size_t off_;
-		void *addr_;
-		void *handle_;
+		void* addr_;
+		void* handle_;
 	};
-
-	const unsigned char* DataMapWin::bytes() const
-	{
-		return static_cast<unsigned char*>(addr_) + off_;
-	}
-
-	void DataMapWin::offset(const size_t offset)
-	{
-		off_ = offset;
-	}
-
-	size_t DataMapWin::size() const
-	{
-		return len_ - off_;
-	}
-
-	DataMapWin::operator bool() const
-	{
-		return addr_;
-	}
-
-	DataMapWin::operator const void*() const
-	{
-		return bytes();
-	}
-
-	DataMapWin::operator const char*() const
-	{
-		return static_cast<char*>(addr_) + off_;
-	}
-
-	DataMapWin::operator const unsigned char*() const
-	{
-		return bytes();
-	}
 }
 
-using DataMap = rainbow::DataMapBase<rainbow::DataMapWin>;
+using DataMap = rainbow::TDataMap<rainbow::DataMapWin>;
 
 #endif

@@ -1,4 +1,4 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -16,14 +16,16 @@ namespace uikit
 {
 	rainbow::Image decode(const DataMap &data) pure;
 
-	rainbow::Image decode(const DataMap &data)
+	rainbow::Image decode(const DataMap &map)
 	{
 		rainbow::Image image;
 
-		UIImage *uiimage = [UIImage imageWithData:
-		    [NSData dataWithBytesNoCopy:const_cast<void*>(static_cast<const void*>(data))
-		                         length:data.size()
-		                   freeWhenDone:NO]];
+		NSData* data = [NSData
+		    dataWithBytesNoCopy:const_cast<void*>(
+		                            static_cast<const void*>(map.data()))
+		                 length:map.size()
+		           freeWhenDone:NO];
+		UIImage *uiimage = [UIImage imageWithData:data];
 		if (!uiimage)
 		{
 			R_ASSERT(uiimage, "Unknown texture format");
@@ -44,11 +46,10 @@ namespace uikit
 		CGRect bounds = CGRectMake(0, 0, image.width, image.height);
 
 		CGColorSpaceRef color_space = CGColorSpaceCreateDeviceRGB();
-		image.data = new unsigned char[image.height * image.width * 4];
+		auto buffer = new unsigned char[image.height * image.width * 4];
 
 		CGContextRef context = CGBitmapContextCreate(
-		    image.data, image.width, image.height, 8, image.width * 4,
-		    color_space,
+		    buffer, image.width, image.height, 8, image.width * 4, color_space,
 		    kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big);
 		CGColorSpaceRelease(color_space);
 
@@ -57,6 +58,7 @@ namespace uikit
 		CGContextDrawImage(context, bounds, uiimage.CGImage);
 		CGContextRelease(context);
 
+		image.data = buffer;
 		return image;
 	}
 }
