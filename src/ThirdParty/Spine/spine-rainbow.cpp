@@ -190,11 +190,7 @@ extern "C"
 {
 	void _spAtlasPage_createTexture(spAtlasPage* self, const char* path)
 	{
-		const DataMap data{Path(path)};
-		if (!data)
-			return;
-
-		std::unique_ptr<TextureAtlas> texture(new TextureAtlas(data));
+		std::unique_ptr<TextureAtlas> texture(new TextureAtlas(path));
 		if (!texture->is_valid())
 			return;
 

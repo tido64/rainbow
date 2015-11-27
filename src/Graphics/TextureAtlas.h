@@ -11,6 +11,8 @@
 #include "Graphics/Texture.h"
 #include "Memory/SharedPtr.h"
 
+class TextureManager;
+
 namespace rainbow { struct ISolemnlySwearThatIAmOnlyTesting; }
 
 /// <summary>Texture atlas loaded from an image file.</summary>
@@ -34,39 +36,44 @@ namespace rainbow { struct ISolemnlySwearThatIAmOnlyTesting; }
 class TextureAtlas : public RefCounted
 {
 public:
-	explicit TextureAtlas(const DataMap &img);
-	explicit TextureAtlas(const rainbow::ISolemnlySwearThatIAmOnlyTesting &);
-	~TextureAtlas();
+	explicit TextureAtlas(const char* path);
+
+	explicit TextureAtlas(const rainbow::ISolemnlySwearThatIAmOnlyTesting&)
+	    : width_(64), height_(64) {}
 
 	int width() const { return width_; }
 	int height() const { return height_; }
-	bool is_valid() const { return name_; }
+	bool is_valid() const { return texture_; }
 	size_t size() const { return regions_.size(); }
 
 	/// <summary>Binds this texture.</summary>
-	void bind() const;
-	void bind(const unsigned int unit) const;
+	void bind() const { texture_.bind(); }
+	void bind(unsigned int unit) const { texture_.bind(unit); }
 
 	/// <summary>Defines a texture region.</summary>
 	/// <param name="origin">Starting point of the region.</param>
 	/// <param name="width">Width of the region.</param>
 	/// <param name="height">Height of the region.</param>
 	/// <returns>The id of the region.</returns>
-	unsigned int define(const Vec2i &origin, const int width, const int height);
+	unsigned int define(const Vec2i& origin, int width, int height);
 
 	/// <summary>Trims the internal texture region storage.</summary>
 	void trim() { regions_.shrink_to_fit(); }
 
-	const Texture& operator[](const unsigned int i) const
+	const rainbow::TextureRegion& operator[](unsigned int i) const
 	{
 		return regions_[i];
 	}
 
 private:
-	unsigned int name_;             ///< Texture atlas' id.
-	int width_;                     ///< Width of texture atlas.
-	int height_;                    ///< Height of texture atlas.
-	std::vector<Texture> regions_;  ///< Defined texture regions.
+	rainbow::Texture texture_;                     ///< Texture atlas' id.
+	int width_;                                    ///< Width of texture atlas.
+	int height_;                                   ///< Height of texture atlas.
+	std::vector<rainbow::TextureRegion> regions_;  ///< Defined texture regions.
+
+	void load(TextureManager* texture_manager,
+	          const rainbow::Texture& texture,
+	          const DataMap& data);
 };
 
 #endif

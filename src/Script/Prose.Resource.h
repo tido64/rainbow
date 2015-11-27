@@ -52,14 +52,7 @@ Prose::Asset create_texture(lua_State *L, rainbow::ScopeStack &stack)
 		lua_pop(L, 1);
 		return no_asset();
 	}
-	const DataMap data(path);
-	if (!data)
-	{
-		LOGE(kProseFailedOpening, static_cast<const char*>(path));
-		lua_pop(L, 1);
-		return no_asset();
-	}
-	auto texture = stack.allocate<TextureAtlas>(data);
+	auto texture = stack.allocate<TextureAtlas>(path);
 	if (!texture->is_valid())
 	{
 		LOGE(kProseFailedLoading, "texture", static_cast<const char*>(path));

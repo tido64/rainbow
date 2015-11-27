@@ -24,6 +24,7 @@
 #include "Graphics/TextureManager.h"
 
 using rainbow::array_size;
+using rainbow::Texture;
 
 using uchar_t = unsigned char;
 using uint_t = unsigned int;
@@ -146,8 +147,39 @@ namespace
 	};
 }
 
-FontAtlas::FontAtlas(const Data &font, const float pt)
-    : pt_(pt), height_(0), texture_(0)
+FontAtlas::FontAtlas(const char* path, const float pt)
+    : FontAtlas(path, Data::load_asset(path), pt) {}
+
+FontAtlas::FontAtlas(const char* name, const Data& font, const float pt)
+    : pt_(pt), height_(0)
+{
+	texture_ = TextureManager::Get()->create(
+	    name,
+	    [this, &font](TextureManager* texture_manager, const Texture& texture)
+	    {
+	        load(texture_manager, texture, font);
+	    });
+}
+
+const FontGlyph* FontAtlas::get_glyph(const uint_t c) const
+{
+#if FONTATLAS_EXTENDED > 0
+	if (c >= 0x80u)
+	{
+		const auto first = charset_ + kNumCharacters;
+		const auto last = first + FONTATLAS_EXTENDED;
+		const auto i = std::find_if(first, last, [c] (const FontGlyph &glyph) {
+			return glyph.code == c;
+		});
+		return (i == last ? nullptr : i);
+	}
+#endif
+	return &charset_[static_cast<uchar_t>(c) - kASCIIOffset];
+}
+
+void FontAtlas::load(TextureManager* texture_manager,
+                     const rainbow::Texture& texture,
+                     const Data& font)
 {
 	R_ASSERT(font, "Failed to load font");
 
@@ -155,7 +187,7 @@ FontAtlas::FontAtlas(const Data &font, const float pt)
 		charset_[i].code = i + kASCIIOffset;
 
 #if FONTATLAS_EXTENDED > 0
-	const unsigned int characters[] = {
+	const unsigned int characters[]{
 	    0x00c5,  // LATIN CAPITAL LETTER A WITH RING ABOVE
 	    0x00c6,  // LATIN CAPITAL LETTER AE
 	    0x00d8,  // LATIN CAPITAL LETTER O WITH STROKE
@@ -176,7 +208,7 @@ FontAtlas::FontAtlas(const Data &font, const float pt)
 		return;
 
 	FT_Set_Char_Size(face, 0, pt_ * kPixelFormat, kDPI, kDPI);
-	const Vec2u &max = max_glyph_size(face, charset_, array_size(charset_));
+	const Vec2u& max = max_glyph_size(face, charset_, array_size(charset_));
 	if (max.is_zero())
 		return;
 	const Vec2u size(rainbow::next_pow2(max.x * kNumGlyphsPerColRow),
@@ -190,12 +222,12 @@ FontAtlas::FontAtlas(const Data &font, const float pt)
 	// Copy all glyph bitmaps to our texture.
 	offset.x = 0;
 	const Vec2f pixel(1.0f / size.x, 1.0f / size.y);
-	for (auto &glyph : charset_)
+	for (auto& glyph : charset_)
 	{
 		FT_Load_Char(face, glyph.code, FT_LOAD_RENDER);
 
-		const FT_GlyphSlot &slot = face->glyph;
-		const FT_Bitmap &bitmap = slot->bitmap;
+		const FT_GlyphSlot& slot = face->glyph;
+		const FT_Bitmap& bitmap = slot->bitmap;
 
 		// Make sure bitmap data has enough space to the right. Otherwise, start
 		// a new line.
@@ -211,18 +243,15 @@ FontAtlas::FontAtlas(const Data &font, const float pt)
 		{
 			R_ASSERT(bitmap.num_grays == 256, "");
 			R_ASSERT(bitmap.pixel_mode == FT_PIXEL_MODE_GRAY, "");
-			copy_bitmap_into(buffer.get(),
-			                 size,
-			                 offset + kGlyphPadding,
-			                 bitmap.buffer,
-			                 Vec2u(bitmap.width, bitmap.rows));
+			copy_bitmap_into(buffer.get(), size, offset + kGlyphPadding,
+			                 bitmap.buffer, Vec2u(bitmap.width, bitmap.rows));
 		}
 
 		// Save font glyph data.
 		glyph.advance = slot->advance.x / kPixelFormat;
 		glyph.left = slot->bitmap_left;
 
-		SpriteVertex *vx = glyph.quad;
+		SpriteVertex* vx = glyph.quad;
 
 		vx[0].position.x = -kGlyphMargin;
 		vx[0].position.y = static_cast<float>(slot->bitmap_top -
@@ -251,7 +280,7 @@ FontAtlas::FontAtlas(const Data &font, const float pt)
 		{
 			int i = -1;
 			FT_Vector kerning;
-			for (auto &left : charset_)
+			for (auto& left : charset_)
 			{
 				FT_Get_Kerning(
 				    face, left.code, glyph.code, FT_KERNING_DEFAULT, &kerning);
@@ -263,34 +292,9 @@ FontAtlas::FontAtlas(const Data &font, const float pt)
 		// Advance to the next "slot" in our texture.
 		offset.x += width;
 	}
+
 	height_ = face->size->metrics.height / kPixelFormat;
 
-	texture_ = TextureManager::Get()->create(
-	    GL_LUMINANCE_ALPHA, size.x, size.y, GL_LUMINANCE_ALPHA, buffer.get());
-}
-
-FontAtlas::~FontAtlas()
-{
-	TextureManager::Get()->remove(texture_);
-}
-
-void FontAtlas::bind() const
-{
-	TextureManager::Get()->bind(texture_);
-}
-
-const FontGlyph* FontAtlas::get_glyph(const uint_t c) const
-{
-#if FONTATLAS_EXTENDED > 0
-	if (c >= 0x80u)
-	{
-		const auto first = charset_ + kNumCharacters;
-		const auto last = first + FONTATLAS_EXTENDED;
-		const auto i = std::find_if(first, last, [c] (const FontGlyph &glyph) {
-			return glyph.code == c;
-		});
-		return (i == last ? nullptr : i);
-	}
-#endif
-	return &charset_[static_cast<uchar_t>(c) - kASCIIOffset];
+	texture_manager->upload(texture, GL_LUMINANCE_ALPHA, size.x, size.y,
+	                        GL_LUMINANCE_ALPHA, buffer.get());
 }

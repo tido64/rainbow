@@ -1,4 +1,4 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -8,30 +8,91 @@
 #include <vector>
 
 #include "Common/Global.h"
+#include "Graphics/Texture.h"
 
-#define RECORD_VMEM_USAGE !defined(NDEBUG) || defined(USE_HEIMDALL)
+#define RAINBOW_RECORD_VMEM_USAGE !defined(NDEBUG) || defined(USE_HEIMDALL)
 
 /// <summary>Manages texture resources.</summary>
-/// <remarks>
-///   <para>
-///     Generates and reuses texture names whenever possible. This should
-///     eliminate problems caused by drivers that return deleted names before
-///     they are actually deleted. This causes black textures.
-///   </para>
-///   <para>
-///     Deleted textures are shelved until they are needed again. In order to
-///     minimize memory use, they are resized to a minimal texture dimension. Of
-///     course, it is also possible to purge this storage by issuing
-///     <see cref="TextureManager::purge"/>. To avoid problems, this should only
-///     occur when you're done loading textures for a while.
-///   </para>
-/// </remarks>
 class TextureManager : public Global<TextureManager>
 {
-	friend class Renderer;
-
 public:
-#if RECORD_VMEM_USAGE
+	/// <summary>Sets texture filtering function.</summary>
+	/// <remarks>
+	///   Existing textures are not affected by this setting. Valid values are
+	///   <see cref="GL_NEAREST"/> and <see cref="GL_LINEAR"/>.
+	/// </remarks>
+	void set_filter(int filter);
+
+	/// <summary>Makes texture active on current rendering target.</summary>
+	/// <param name="name">
+	///   Name of texture. If omitted, binds the default texture.
+	/// </param>
+	void bind(unsigned int name = 0);
+
+	/// <summary>Makes texture active on specified unit.</summary>
+	/// <param name="name">Name of texture.</param>
+	/// <param name="unit">Texture unit to bind to.</param>
+	void bind(unsigned int name, unsigned int unit);
+
+	/// <summary>
+	///   Loads texture for unique identifier, using the specified loader.
+	/// </summary>
+	/// <remarks>
+	///   If a texture with the same identifier already exists, it will
+	///   immediately be returned, saving a call to the loader.
+	/// </remarks>
+	/// <param name="id">A unique identifier.</param>
+	/// <param name="loader">
+	///   Function for loading and <see cref="upload"/> data.
+	/// </param>
+	/// <returns>Texture name.</returns>
+	template <typename F>
+	rainbow::Texture create(const char* id, F&& loader)
+	{
+		auto t = std::find(textures_.begin(), textures_.end(), id);
+		if (t == textures_.end())
+		{
+			rainbow::Texture texture = create_texture(id);
+			loader(this, texture);
+			return std::move(texture);
+		}
+		return *t;
+	}
+
+	/// <summary>Deletes unused textures.</summary>
+	void trim();
+
+	/// <summary>Uploads image data to specified texture.</summary>
+	/// <param name="name">Target texture.</param>
+	/// <param name="internal_format">Internal format of the texture.</param>
+	/// <param name="width">Width of the texture.</param>
+	/// <param name="height">Height of the texture.</param>
+	/// <param name="format">Format of the image data.</param>
+	/// <param name="data">Image data.</param>
+	void upload(const rainbow::Texture& texture,
+	            unsigned int internal_format,
+	            unsigned int width,
+	            unsigned int height,
+	            unsigned int format,
+	            const void* data);
+
+	/// <summary>
+	///   Uploads compressed image data to specified texture.
+	/// </summary>
+	/// <param name="name">Target texture.</param>
+	/// <param name="format">Compression format.</param>
+	/// <param name="width">Width of the texture.</param>
+	/// <param name="height">Height of the texture.</param>
+	/// <param name="size">Data size.</param>
+	/// <param name="data">Image data.</param>
+	void upload_compressed(const rainbow::Texture& texture,
+	                       unsigned int format,
+	                       unsigned int width,
+	                       unsigned int height,
+	                       unsigned int size,
+	                       const void* data);
+
+#if RAINBOW_RECORD_VMEM_USAGE
 	struct MemoryUsage
 	{
 		double used;
@@ -42,112 +103,34 @@ public:
 	MemoryUsage memory_usage() const;
 #endif
 
-	void set_filter(const int filter);
-
-	/// <summary>Makes texture active on current rendering target.</summary>
-	/// <param name="name">
-	///   Name of texture. If omitted, binds the default texture.
-	/// </param>
-	void bind(const unsigned int name = 0);
-
-	/// <summary>Makes texture active on specified unit.</summary>
-	/// <param name="name">Name of texture.</param>
-	/// <param name="unit">Texture unit to bind on.</param>
-	void bind(const unsigned int name, const unsigned int unit);
-
-	/// <summary>Generates an empty texture.</summary>
-	unsigned int create();
-
-	/// <summary>Creates a texture.</summary>
-	/// <param name="internal_format">Internal format of the texture.</param>
-	/// <param name="width">Width of the texture.</param>
-	/// <param name="height">Height of the texture.</param>
-	/// <param name="format">Format of the bitmap data.</param>
-	/// <param name="data">Bitmap data.</param>
-	/// <returns>Texture name.</returns>
-	unsigned int create(const unsigned int internal_format,
-	                    const unsigned int width,
-	                    const unsigned int height,
-	                    const unsigned int format,
-	                    const void *data);
-
-	/// <summary>Creates texture from a compressed format.</summary>
-	/// <param name="format">Compression format.</param>
-	/// <param name="width">Width of the texture.</param>
-	/// <param name="height">Height of the texture.</param>
-	/// <param name="size">Data size.</param>
-	/// <param name="data">Compressed bitmap data.</param>
-	/// <returns>Texture name.</returns>
-	unsigned int create_compressed(const unsigned int format,
-	                               const unsigned int width,
-	                               const unsigned int height,
-	                               const size_t size,
-	                               const void *data);
-
-	/// <summary>Purges unused texture memory.</summary>
-	void purge();
-
-	/// <summary>Deletes texture.</summary>
-	/// <param name="name">Name of texture to delete.</param>
-	void remove(const unsigned int name);
-
-	/// <summary>Uploads bitmap data to specified texture.</summary>
-	/// <param name="name">Name of target texture.</param>
-	/// <param name="internal_format">Internal format of the texture.</param>
-	/// <param name="width">Width of the texture.</param>
-	/// <param name="height">Height of the texture.</param>
-	/// <param name="format">Format of the bitmap data.</param>
-	/// <param name="data">Bitmap data.</param>
-	void upload(const unsigned int name,
-	            const unsigned int internal_format,
-	            const unsigned int width,
-	            const unsigned int height,
-	            const unsigned int format,
-	            const void *data);
-
 private:
-#if RECORD_VMEM_USAGE
-	struct TextureName
-	{
-		unsigned int name;
-		unsigned int size;
-
-		TextureName(const unsigned int name_) : name(name_), size(0) {}
-
-		operator unsigned int() const { return name; }
-
-		friend bool operator==(const TextureName &t, const unsigned int name)
-		{
-			return t.name == name;
-		}
-	};
-#else
-	using TextureName = unsigned int;
-#endif
-
 	static const size_t kNumTextureUnits = 2;
 
 	unsigned int active_[kNumTextureUnits];
-	std::vector<TextureName> textures_;   ///< Stores texture names currently in use.
-	std::vector<unsigned int> recycled_;  ///< Stores reusable texture names.
+	std::vector<rainbow::TextureHandle> textures_;
 	int mag_filter_;
 	int min_filter_;
 
-#if RECORD_VMEM_USAGE
+#if RAINBOW_RECORD_VMEM_USAGE
 	double mem_peak_;
 	double mem_used_;
 #endif
 
 	TextureManager();
-	~TextureManager() = default;
+	~TextureManager();
 
-#if RECORD_VMEM_USAGE
-	/// <summary>Prints total video memory used by textures.</summary>
-	void print_usage() const;
+	rainbow::Texture create_texture(const char* id);
 
-	/// <summary>Records usage of texture memory.</summary>
-	void record_usage(TextureName &name, const unsigned int size);
+	void release(const rainbow::Texture& t);
+	void retain(const rainbow::Texture& t);
+
+#if RAINBOW_RECORD_VMEM_USAGE
+	/// <summary>Updates and prints total texture memory used.</summary>
+	void update_usage();
 #endif
+
+	friend class Renderer;
+	friend rainbow::Texture;
 };
 
 #endif

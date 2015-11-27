@@ -10,26 +10,21 @@
 #include "Graphics/Renderer.h"
 #include "Heimdall/Style.h"
 
+using rainbow::Texture;
+
 namespace heimdall
 {
-	Overlay::Overlay() : node_(nullptr), texture_(0) {}
-
-	Overlay::~Overlay()
-	{
-		if (texture_)
-			TextureManager::Get()->remove(texture_);
-	}
-
-	void Overlay::bind_textures() const
-	{
-		TextureManager::Get()->bind(texture_);
-	}
-
 	void Overlay::init(rainbow::SceneNode& parent, const Vec2i& screen)
 	{
 		const unsigned char white[4096]{0xff};
+		const unsigned char* white_ptr = white;
 		texture_ = TextureManager::Get()->create(
-		    GL_LUMINANCE, 64, 64, GL_LUMINANCE, white);
+		    "rainbow/heimdall/overlay",
+		    [white_ptr](TextureManager* texture_manager, const Texture& texture)
+		    {
+		        texture_manager->upload(
+		            texture, GL_LUMINANCE, 64, 64, GL_LUMINANCE, white_ptr);
+		    });
 
 		SpriteVertex vertices[4];
 		vertices[0].color       = color::Overlay();
@@ -51,8 +46,6 @@ namespace heimdall
 	}
 
 	void Overlay::draw_impl() { Renderer::draw(*this); }
-
-	void Overlay::update_impl(const unsigned long) {}
 }
 
 #endif

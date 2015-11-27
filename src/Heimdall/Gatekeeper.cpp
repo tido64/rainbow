@@ -99,10 +99,14 @@ namespace heimdall
 	{
 		const Vec2i& res = renderer().resolution();
 		const unsigned int pt = res.y / 64;
-		auto console_font =
-		    make_shared<FontAtlas>(Data::from_bytes(Inconsolata_otf), pt);
+		auto console_font = make_shared<FontAtlas>(
+		    "rainbow/assets/Inconsolata.otf",
+		    Data::from_bytes(Inconsolata_otf),
+		    pt);
 		auto ui_font = make_shared<FontAtlas>(
-		    Data::from_bytes(NewsCycle_Regular_ttf), (pt << 1) + (pt >> 1));
+		    "rainbow/assets/NewsCycleRegular.ttf",
+		    Data::from_bytes(NewsCycle_Regular_ttf),
+		    (pt << 1) + (pt >> 1));
 		const float y = res.y - console_font->height();
 		const Vec2f position(res.x / 128,
 		                     y - console_font->height() - ui_font->height());

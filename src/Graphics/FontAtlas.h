@@ -8,9 +8,13 @@
 //#define FONTATLAS_KERNING
 
 #include "Graphics/FontGlyph.h"
+#include "Graphics/Texture.h"
 #include "Memory/SharedPtr.h"
 
 class Data;
+class TextureManager;
+
+namespace rainbow { class Texture; }
 
 /// <summary>Uses FreeType to load OpenType and TrueType fonts.</summary>
 /// <remarks>
@@ -36,8 +40,8 @@ class Data;
 class FontAtlas : public RefCounted
 {
 public:
-	FontAtlas(const Data& font, const float pt);
-	~FontAtlas();
+	FontAtlas(const char* path, const float pt);
+	FontAtlas(const char* name, const Data& font, const float pt);
 
 	/// <summary>Returns the line height.</summary>
 	int height() const { return height_; }
@@ -46,7 +50,7 @@ public:
 	bool is_valid() const { return texture_; }
 
 	/// <summary>Sets this font as active texture.</summary>
-	void bind() const;
+	void bind() const { texture_.bind(); }
 
 	/// <summary>Returns the glyph for character <paramref name="c"/>.</summary>
 	const FontGlyph* get_glyph(const unsigned int c) const;
@@ -56,11 +60,15 @@ protected:
 	static const unsigned int kNumCharacters = 95;
 
 private:
-	const float pt_;        ///< Font point size.
-	Colorb color_;          ///< Font colour.
-	int height_;            ///< Font line height.
-	unsigned int texture_;  ///< Texture name.
+	const float pt_;            ///< Font point size.
+	Colorb color_;              ///< Font colour.
+	int height_;                ///< Font line height.
+	rainbow::Texture texture_;  ///< Texture name.
 	FontGlyph charset_[kNumCharacters + FONTATLAS_EXTENDED];  ///< Character set.
+
+	void load(TextureManager* texture_manager,
+	          const rainbow::Texture& texture,
+	          const Data& font);
 };
 
 #endif

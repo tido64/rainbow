@@ -140,7 +140,7 @@ void Sprite::set_texture(const unsigned int id)
 	R_ASSERT(vertex_array_, "Missing vertex array buffer");
 
 	const unsigned int f = flip_index(state_);
-	const Texture& tx = parent_->texture()[id];
+	const auto& tx = parent_->texture()[id];
 	vertex_array_[kFlipTable[f + 0]].texcoord = tx.vx[0];
 	vertex_array_[kFlipTable[f + 1]].texcoord = tx.vx[1];
 	vertex_array_[kFlipTable[f + 2]].texcoord = tx.vx[2];

@@ -1,32 +1,84 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
 #include "Graphics/TextureManager.h"
 
-#include "Common/Algorithm.h"
-#include "Graphics/OpenGL.h"
+#include "Graphics/Renderer.h"
 
-using rainbow::quick_erase;
+using rainbow::Texture;
+using rainbow::TextureHandle;
 
-#if RECORD_VMEM_USAGE
-TextureManager::MemoryUsage TextureManager::memory_usage() const
+namespace
 {
-	const double M = 1e-6;
-	return MemoryUsage{mem_used_ * M, mem_peak_ * M};
-}
+#ifndef NDEBUG
+	void assert_texture_size(unsigned int width, unsigned int height)
+	{
+		const unsigned int max_texture_size = Renderer::max_texture_size();
+		R_ASSERT(width <= max_texture_size && height <= max_texture_size,
+		         "Texture dimension exceeds max texture size supported by "
+		         "hardware");
+	}
+#else
+#	define assert_texture_size(...) static_cast<void>(0)
 #endif
 
-void TextureManager::set_filter(const int filter)
+	template <typename Container, typename T, typename F>
+	void perform_if(Container& container, const T& value, F&& action)
+	{
+		for (auto&& element : container)
+		{
+			if (element == value)
+			{
+				action(element);
+				break;
+			}
+		}
+	}
+}
+
+Texture::Texture(const Texture& texture) : name_(texture.name_)
+{
+	TextureManager::Get()->retain(*this);
+}
+
+Texture::~Texture()
+{
+	if (name_ == 0)
+		return;
+
+	TextureManager::Get()->release(*this);
+}
+
+void Texture::bind() const
+{
+	TextureManager::Get()->bind(name_);
+}
+
+void Texture::bind(unsigned int unit) const
+{
+	TextureManager::Get()->bind(name_, unit);
+}
+
+Texture& Texture::operator=(Texture&& texture)
+{
+	if (name_ > 0)
+		TextureManager::Get()->release(*this);
+	name_ = texture.name_;
+	texture.name_ = 0;
+	return *this;
+}
+
+void TextureManager::set_filter(int filter)
 {
 	R_ASSERT(filter == GL_NEAREST || filter == GL_LINEAR,
-	         "Invalid texture filter");
+	         "Invalid texture filter function.");
 
 	mag_filter_ = filter;
 	min_filter_ = filter;
 }
 
-void TextureManager::bind(const unsigned int name)
+void TextureManager::bind(unsigned int name)
 {
 	if (name == active_[0])
 		return;
@@ -35,7 +87,7 @@ void TextureManager::bind(const unsigned int name)
 	active_[0] = name;
 }
 
-void TextureManager::bind(const unsigned int name, const unsigned int unit)
+void TextureManager::bind(unsigned int name, unsigned int unit)
 {
 	R_ASSERT(unit < kNumTextureUnits, "Invalid texture unit");
 
@@ -48,113 +100,34 @@ void TextureManager::bind(const unsigned int name, const unsigned int unit)
 	active_[unit] = name;
 }
 
-unsigned int TextureManager::create()
+void TextureManager::trim()
 {
-	unsigned int name;
-	if (recycled_.size() == 0)
-		glGenTextures(1, &name);
-	else
+	auto first = std::remove_if(
+	    textures_.begin(),
+	    textures_.end(),
+	    [](const TextureHandle& texture) { return texture.use_count == 0; });
+	auto end = textures_.end();
+	if (first == end)
+		return;
+
+	for (auto i = first; i != end; ++i)
 	{
-		const auto i = std::begin(recycled_);
-		name = *i;
-		quick_erase(recycled_, i);
+		glDeleteTextures(1, &i->name);
+#if RAINBOW_RECORD_VMEM_USAGE
+		mem_used_ -= i->size;
+#endif
 	}
-	textures_.emplace_back(name);
 
-	bind(name);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, min_filter_);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, mag_filter_);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	textures_.erase(first, end);
 
-	return name;
-}
-
-unsigned int TextureManager::create(const unsigned int internal_format,
-                                    const unsigned int width,
-                                    const unsigned int height,
-                                    const unsigned int format,
-                                    const void *data)
-{
-	const auto name = create();
-	upload(name, internal_format, width, height, format, data);
-	return name;
-}
-
-unsigned int TextureManager::create_compressed(const unsigned int format,
-                                               const unsigned int width,
-                                               const unsigned int height,
-                                               const size_t size,
-                                               const void *data)
-{
-	const auto name = create();
-	glCompressedTexImage2D(
-	    GL_TEXTURE_2D, 0, format, width, height, 0, size, data);
-
-	R_ASSERT(glGetError() == GL_NO_ERROR,
-	         "Failed to upload compressed texture");
-
-#if RECORD_VMEM_USAGE
-	record_usage(textures_.back(), size);
-#endif
-	return name;
-}
-
-void TextureManager::purge()
-{
-	if (recycled_.size() == 0)
-		return;
-
-	glDeleteTextures(recycled_.size(), recycled_.data());
-	recycled_.clear();
-
-#if RECORD_VMEM_USAGE
-	print_usage();
-#endif
-}
-
-void TextureManager::remove(const unsigned int name)
-{
-	const auto i = std::find(std::begin(textures_), std::end(textures_), name);
-	if (i == std::end(textures_))
-		return;
-
-	bind(*i);
-	glTexImage2D(
-	    GL_TEXTURE_2D, 0, GL_LUMINANCE, 1, 1, 0, GL_LUMINANCE, GL_UNSIGNED_BYTE,
-	    nullptr);
-	bind();
-
-	recycled_.push_back(*i);
-#if RECORD_VMEM_USAGE
-	mem_used_ -= i->size;
-#endif
-	quick_erase(textures_, i);
-}
-
-void TextureManager::upload(const unsigned int name,
-                            const unsigned int internal_format,
-                            const unsigned int width,
-                            const unsigned int height,
-                            const unsigned int format,
-                            const void *data)
-{
-	bind(name);
-	glTexImage2D(
-	    GL_TEXTURE_2D, 0, internal_format, width, height, 0, format,
-	    GL_UNSIGNED_BYTE, data);
-
-	R_ASSERT(glGetError() == GL_NO_ERROR, "Failed to upload texture");
-
-#if RECORD_VMEM_USAGE
-	record_usage(*std::find(std::begin(textures_), std::end(textures_), name),
-	             width * height * 4);
+#if RAINBOW_RECORD_VMEM_USAGE
+	update_usage();
 #endif
 }
 
 TextureManager::TextureManager()
     : mag_filter_(GL_LINEAR), min_filter_(GL_LINEAR)
-#if RECORD_VMEM_USAGE
+#if RAINBOW_RECORD_VMEM_USAGE
     , mem_peak_(0.0), mem_used_(0.0)
 #endif
 {
@@ -162,18 +135,103 @@ TextureManager::TextureManager()
 	make_global();
 }
 
-#if RECORD_VMEM_USAGE
-void TextureManager::print_usage() const
+TextureManager::~TextureManager()
 {
-	LOGD("Video: %.2f MBs of textures", memory_usage().used);
+	for (const TextureHandle& texture : textures_)
+		glDeleteTextures(1, &texture.name);
 }
 
-void TextureManager::record_usage(TextureName &name, const unsigned int size)
+Texture TextureManager::create_texture(const char* id)
 {
-	name.size = size;
-	mem_used_ += name.size;
+	GLuint name;
+	glGenTextures(1, &name);
+	textures_.emplace_back(id, name);
+
+	bind(name);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, min_filter_);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, mag_filter_);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+	return textures_.back();
+}
+
+void TextureManager::upload(const Texture& texture,
+                            unsigned int internal_format,
+                            unsigned int width,
+                            unsigned int height,
+                            unsigned int format,
+                            const void* data)
+{
+	assert_texture_size(width, height);
+
+	bind(texture);
+	glTexImage2D(GL_TEXTURE_2D, 0, internal_format, width, height, 0, format,
+	             GL_UNSIGNED_BYTE, data);
+
+	R_ASSERT(glGetError() == GL_NO_ERROR, "Failed to upload texture");
+
+#if RAINBOW_RECORD_VMEM_USAGE
+	perform_if(textures_,
+	           texture,
+	           [this, width, height](TextureHandle& texture) {
+	               texture.size = width * height * 4;
+	               mem_used_ += texture.size;
+	           });
+	update_usage();
+#endif
+}
+
+void TextureManager::upload_compressed(const Texture& texture,
+                                       unsigned int format,
+                                       unsigned int width,
+                                       unsigned int height,
+                                       unsigned int size,
+                                       const void* data)
+{
+	assert_texture_size(width, height);
+
+	bind(texture);
+	glCompressedTexImage2D(
+	    GL_TEXTURE_2D, 0, format, width, height, 0, size, data);
+
+	R_ASSERT(glGetError() == GL_NO_ERROR, "Failed to upload texture");
+
+#if RAINBOW_RECORD_VMEM_USAGE
+	perform_if(textures_, texture, [this, &size](TextureHandle& texture) {
+		texture.size = size;
+		mem_used_ += texture.size;
+	});
+	update_usage();
+#endif
+}
+
+void TextureManager::release(const Texture& t)
+{
+	perform_if(textures_, t, [](TextureHandle& texture) {
+		--texture.use_count;
+	});
+}
+
+void TextureManager::retain(const Texture& t)
+{
+	perform_if(textures_, t, [](TextureHandle& texture) {
+		++texture.use_count;
+	});
+}
+
+#if RAINBOW_RECORD_VMEM_USAGE
+TextureManager::MemoryUsage TextureManager::memory_usage() const
+{
+	const double M = 1e-6;
+	return {mem_used_ * M, mem_peak_ * M};
+}
+
+void TextureManager::update_usage()
+{
 	if (mem_used_ > mem_peak_)
 		mem_peak_ = mem_used_;
-	print_usage();
+
+	LOGD("Video: %.2f MBs of textures", memory_usage().used);
 }
 #endif

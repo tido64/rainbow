@@ -62,6 +62,7 @@ namespace rainbow
 		timer_manager_.update(dt);
 		script_->update(dt);
 		scenegraph_.update(dt);
+		TextureManager::Get()->trim();
 	}
 
 	void Director::on_focus_gained()
@@ -83,6 +84,5 @@ namespace rainbow
 		R_ASSERT(!terminated_, "App should have terminated by now");
 
 		script_->on_memory_warning();
-		TextureManager::Get()->purge();
 	}
 }

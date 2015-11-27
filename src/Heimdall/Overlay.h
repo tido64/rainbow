@@ -9,6 +9,7 @@
 #include "Graphics/Drawable.h"
 #include "Graphics/SceneGraph.h"
 #include "Graphics/SpriteVertex.h"
+#include "Graphics/Texture.h"
 #include "Graphics/VertexArray.h"
 
 namespace heimdall
@@ -16,35 +17,37 @@ namespace heimdall
 	class Overlay final : public Drawable
 	{
 	public:
-		Overlay();
-		~Overlay() override;
+		Overlay() : node_(nullptr) {}
+
+		void init(rainbow::SceneNode& parent, const Vec2i& screen);
 
 		unsigned int count() const { return 6; }
 		bool is_visible() const { return node_->is_enabled(); }
 		rainbow::SceneNode* node() const { return node_; }
 		const VertexArray& vertex_array() const { return array_; }
 
-		void init(rainbow::SceneNode& parent, const Vec2i& screen);
-
 		void hide() { node_->set_enabled(false); }
 		void show() { node_->set_enabled(true); }
 
 		template <typename T>
-		void add_child(T& component) const { node_->add_child(component); }
+		void add_child(T& component) const
+		{
+			node_->add_child(component);
+		}
 
 		/// <summary>Binds all used textures.</summary>
-		void bind_textures() const;
+		void bind_textures() const { texture_.bind(); }
 
 	private:
 		rainbow::SceneNode* node_;
 		VertexArray array_;
-		unsigned int texture_;
+		rainbow::Texture texture_;
 		Buffer vertex_buffer_;
 
 		// Implement Drawable.
 
 		void draw_impl() override;
-		void update_impl(const unsigned long dt) override;
+		void update_impl(const unsigned long) override {}
 	};
 }
 

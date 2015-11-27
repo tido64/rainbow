@@ -5,43 +5,91 @@
 #ifndef GRAPHICS_TEXTURE_H_
 #define GRAPHICS_TEXTURE_H_
 
+#include <string>
+
 #include "Common/Vec2.h"
 
-/// <summary>Stores texture id and UV coordinates.</summary>
-/// <remarks>
-///   <code>
-///     3 ┌─────┐ 2
-///       │     │
-///       │     │
-///     0 └─────┘ 1
-///   </code>
-///   Textures are read into memory upside-down. Therefore, the order of the UV
-///   coordinates are flipped vertically, giving us 3,2,1 and 1,0,3.
-/// </remarks>
-struct Texture
+namespace rainbow
 {
-	Vec2f vx[4];
-	unsigned int atlas;
+	struct TextureHandle
+	{
+		std::string id;
+		unsigned int name;
+		unsigned int use_count;
+		unsigned int size;
 
-	inline Texture();
-	inline Texture(const Vec2f &v0, const Vec2f &v1);
+		TextureHandle(const char* id_, unsigned int name_)
+		    : id(id_), name(name_), use_count(0), size(0) {}
 
-	inline operator unsigned int() const;
-};
+		friend bool operator==(const TextureHandle& t, const char* id)
+		{
+			return t.id == id;
+		}
 
-Texture::Texture() : atlas(0) {}
+		friend bool operator==(const TextureHandle& t, unsigned int name)
+		{
+			return t.name == name;
+		}
+	};
 
-Texture::Texture(const Vec2f &v0, const Vec2f &v1) : atlas(0)
-{
-	this->vx[0].x = v0.x; this->vx[0].y = v1.y;
-	this->vx[1].x = v1.x; this->vx[1].y = v1.y;
-	this->vx[2].x = v1.x; this->vx[2].y = v0.y;
-	this->vx[3].x = v0.x; this->vx[3].y = v0.y;
-}
+	class Texture
+	{
+	public:
+		Texture() : name_(0) {}
 
-Texture::operator unsigned int() const
-{
-	return this->atlas;
+		Texture(TextureHandle& texture) : name_(texture.name)
+		{
+			++texture.use_count;
+		}
+
+		Texture(const Texture& texture);
+		Texture(Texture&& texture) : name_(texture.name_) { texture.name_ = 0; }
+		~Texture();
+
+		void bind() const;
+		void bind(unsigned int unit) const;
+
+		explicit operator bool() const { return name_ != 0; }
+		operator unsigned int() const { return name_; }
+
+		Texture& operator=(Texture&& texture);
+
+	private:
+		unsigned int name_;
+	};
+
+	/// <summary>Stores texture id and UV coordinates.</summary>
+	/// <remarks>
+	///   <code>
+	///     3 ┌─────┐ 2
+	///       │     │
+	///       │     │
+	///     0 └─────┘ 1
+	///   </code>
+	///   Textures are read into memory upside-down. Therefore, the order of the
+	///   UV coordinates are flipped vertically, giving us 3,2,1 and 1,0,3.
+	/// </remarks>
+	struct TextureRegion
+	{
+		Vec2f vx[4];
+		unsigned int atlas;
+
+		TextureRegion() : atlas(0) {}
+
+		TextureRegion(const Vec2f& v0, const Vec2f& v1) : atlas(0)
+		{
+			vx[0].x = v0.x;
+			vx[0].y = v1.y;
+			vx[1].x = v1.x;
+			vx[1].y = v1.y;
+			vx[2].x = v1.x;
+			vx[2].y = v0.y;
+			vx[3].x = v0.x;
+			vx[3].y = v0.y;
+		}
+
+		operator unsigned int() const { return atlas; }
+	};
 }
 
 #endif

@@ -20,9 +20,7 @@ namespace rainbow
 
 	font_t font(const char *path, const float pt)
 	{
-		const Data &data = Data::load_asset(path);
-		R_ASSERT(data, "rainbow::font: Failed to load font");
-		auto font = make_shared<FontAtlas>(data, pt);
+		auto font = make_shared<FontAtlas>(path, pt);
 		R_ASSERT(font->is_valid(), "rainbow::font: Failed to create font");
 		return font;
 	}
@@ -42,9 +40,7 @@ namespace rainbow
 
 	texture_t texture(const char *path)
 	{
-		DataMap data{Path(path)};
-		R_ASSERT(data, "rainbow::texture: Failed to load texture");
-		auto texture = make_shared<TextureAtlas>(data);
+		auto texture = make_shared<TextureAtlas>(path);
 		R_ASSERT(texture->is_valid(),
 		         "rainbow::texture: Failed to create texture");
 		return texture;
