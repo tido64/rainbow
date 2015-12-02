@@ -10,10 +10,10 @@
 namespace rainbow
 {
 	/// <summary>Structure for storing a two-dimensional vector.</summary>
-	template<typename T, typename Enable = void>
+	template <typename T, typename Enable = void>
 	struct Vec2;
 
-	template<typename T>
+	template <typename T>
 	struct Vec2<T, Arithmetic<T>>
 	{
 		using value_type = T;
@@ -48,140 +48,157 @@ namespace rainbow
 		/// </summary>
 		static const Vec2 Zero;
 
-		T x;
-		T y;
+		value_type x;
+		value_type y;
 
 		Vec2() : Vec2(0, 0) {}
-		Vec2(const T x, const T y) : x(x), y(y) {}
+		Vec2(value_type x, value_type y) : x(x), y(y) {}
 
 		/// <summary>
 		///   Returns the angle (in radians) between two points.
 		/// </summary>
-		template<typename U>
-		float angle(const Vec2<U> &v) const
+		template <typename U>
+		float angle(const Vec2<U>& v) const
 		{
-			return atan2f(v.y - this->y, v.x - this->x);
+			return atan2f(v.y - y, v.x - x);
 		}
 
 		/// <summary>Returns the distance between two points.</summary>
-		float distance(const Vec2 &v) const
+		float distance(const Vec2& v) const
 		{
 			return sqrt(distance_sq(v));
 		}
 
 		/// <summary>Returns the distance between two points, squared.</summary>
-		float distance_sq(const Vec2 &v) const
+		float distance_sq(const Vec2& v) const
 		{
 			const Vec2 w = *this - v;
 			return w * w;
 		}
 
-		template<typename U = T>
+		template <typename U = T>
 		EnableIfIntegral<U, bool> is_zero() const
 		{
-			return this->x == 0 && this->y == 0;
+			return x == 0 && y == 0;
 		}
 
-		template<typename U = T>
+		template <typename U = T>
 		EnableIfFloatingPoint<U, bool> is_zero() const
 		{
-			return is_equal<T>(0, this->x) && is_equal<T>(0, this->y);
+			return is_equal<T>(0, x) && is_equal<T>(0, y);
 		}
 
-		Vec2 operator-() const { return Vec2( -this->x, -this->y ); }
-
-		T operator*(const Vec2 &v) const
+		template <typename U = T>
+		EnableIfIntegral<U, Vec2<float, Arithmetic<float>>> normalize() const
 		{
-			return this->x * v.x + this->y * v.y;
+			const float h = sqrt(x * x + y * y);
+			return {x / h, y / h};
 		}
 
-		Vec2 operator*(const T f) const
+		template <typename U = T>
+		EnableIfFloatingPoint<U, Vec2> normalize() const
 		{
-			return Vec2(this->x * f, this->y * f);
+			const value_type h = sqrt(x * x + y * y);
+			return {x / h, y / h};
 		}
 
-		Vec2 operator/(const T f) const
+		Vec2 operator-() const
 		{
-			return Vec2(this->x / f, this->y / f);
+			return {-x, -y};
 		}
 
-		Vec2 operator+(const Vec2 &v) const
+		value_type operator*(const Vec2& v) const
 		{
-			return Vec2(this->x + v.x, this->y + v.y);
+			return x * v.x + y * v.y;
 		}
 
-		Vec2 operator+(const T offset) const
+		Vec2 operator*(value_type f) const
 		{
-			return Vec2(this->x + offset, this->y + offset);
+			return {x * f, y * f};
 		}
 
-		Vec2 operator-(const Vec2 &v) const
+		Vec2 operator/(value_type f) const
 		{
-			return Vec2(this->x - v.x, this->y - v.y);
+			return {x / f, y / f};
 		}
 
-		Vec2 operator-(const T offset) const
+		Vec2 operator+(const Vec2& v) const
 		{
-			return Vec2(this->x - offset, this->y - offset);
+			return {x + v.x, y + v.y};
 		}
 
-		Vec2& operator*=(const T &f)
+		Vec2 operator+(value_type offset) const
 		{
-			this->x *= f;
-			this->y *= f;
+			return {x + offset, y + offset};
+		}
+
+		Vec2 operator-(const Vec2& v) const
+		{
+			return {x - v.x, y - v.y};
+		}
+
+		Vec2 operator-(value_type offset) const
+		{
+			return {x - offset, y - offset};
+		}
+
+		Vec2& operator*=(value_type f)
+		{
+			x *= f;
+			y *= f;
 			return *this;
 		}
 
-		Vec2& operator/=(const T &f)
+		Vec2& operator/=(value_type f)
 		{
-			this->x /= f;
-			this->y /= f;
+			x /= f;
+			y /= f;
 			return *this;
 		}
 
-		template<typename U>
-		Vec2& operator+=(const Vec2<U> &v)
+		template <typename U>
+		Vec2& operator+=(const Vec2<U>& v)
 		{
-			this->x += v.x;
-			this->y += v.y;
+			x += v.x;
+			y += v.y;
 			return *this;
 		}
 
-		template<typename U>
-		Vec2& operator-=(const Vec2<U> &v)
+		template <typename U>
+		Vec2& operator-=(const Vec2<U>& v)
 		{
-			this->x -= v.x;
-			this->y -= v.y;
+			x -= v.x;
+			y -= v.y;
 			return *this;
 		}
 
-		friend Vec2 operator*(const T f, const Vec2 &a)
+		friend Vec2 operator*(value_type f, const Vec2& a)
 		{
-			return Vec2(f * a.x, f * a.y);
+			return {f * a.x, f * a.y};
 		}
 
-		friend bool operator==(const Vec2 &a, const Vec2 &b)
+		friend bool operator==(const Vec2& a, const Vec2& b)
 		{
 			return a.x == b.x && a.y == b.y;
 		}
 	};
 
-	template<typename T>
+	template <typename T>
 	const Vec2<T, Arithmetic<T>> Vec2<T, Arithmetic<T>>::Down(0, -1);
 
-	template<typename T>
+	template <typename T>
 	const Vec2<T, Arithmetic<T>> Vec2<T, Arithmetic<T>>::Left(-1, 0);
 
-	template<typename T>
+	template <typename T>
 	const Vec2<T, Arithmetic<T>> Vec2<T, Arithmetic<T>>::One(1, 1);
 
-	template<typename T>
+	template <typename T>
 	const Vec2<T, Arithmetic<T>> Vec2<T, Arithmetic<T>>::Right(1, 0);
 
-	template<typename T>
+	template <typename T>
 	const Vec2<T, Arithmetic<T>> Vec2<T, Arithmetic<T>>::Up(0, 1);
 
-	template<typename T>
+	template <typename T>
 	const Vec2<T, Arithmetic<T>> Vec2<T, Arithmetic<T>>::Zero;
 }
 

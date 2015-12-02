@@ -36,6 +36,24 @@ TEST(Vec2Test, ZeroLength)
 	ASSERT_FALSE(v0.is_zero());
 }
 
+TEST(Vec2Test, Normalizes)
+{
+	constexpr double kErrorMargin = 1e-6;
+	constexpr double kTestSample[]{
+	       0,    1,        0,         1,
+	       1,    1, 0.707107,  0.707107,
+	       2,    1, 0.894427,  0.447214,
+	       9,   -4, 0.913812, -0.406138,
+	    1920, 1080, 0.871576,  0.490261};
+
+	for (size_t i = 0; i < rainbow::array_size(kTestSample); i += 4)
+	{
+		const auto& v = Vec2f(kTestSample[i], kTestSample[i + 1]).normalize();
+		ASSERT_NEAR(kTestSample[i + 2], v.x, kErrorMargin);
+		ASSERT_NEAR(kTestSample[i + 3], v.y, kErrorMargin);
+	}
+}
+
 TEST(Vec2Test, Assigns)
 {
 	Vec2i v0;

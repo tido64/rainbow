@@ -44,6 +44,13 @@ TEST(AlgorithmTest, ConvertsRadiansToDegrees)
 	                              rainbow::radians(rainbow::degrees(kPi))));
 }
 
+TEST(AlgorithmTest, ApproximatesInverseSquareRoot)
+{
+	const double kErrorMargin = 0.017478;
+	for (double f = 0.01; f < 10000; f += 0.01)
+		ASSERT_NEAR(1 / sqrt(f), rainbow::fast_invsqrt(f), kErrorMargin);
+}
+
 TEST(AlgorithmTest, ApproximatesFloatEquality)
 {
 	ASSERT_TRUE(rainbow::is_equal(0.0f, 0.0f));
