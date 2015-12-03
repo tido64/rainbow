@@ -23,9 +23,9 @@ pointer and pass it around. The pointer is guaranteed to be valid throughout the
 lifetime of your main class.
 
 ```c++
-void MyGame::init(const Vec2i &)
+void MyGame::init(const Vec2i&)
 {
-    Input *input_manager = &input();
+    Input* input_manager = &input();
     […]
 }
 ```
@@ -33,8 +33,8 @@ void MyGame::init(const Vec2i &)
 ### Subscribing
 
 ```c++
-void  Input::subscribe    (InputListener *const i);
-void  Input::unsubscribe  (InputListener *const i);
+void  Input::subscribe    (InputListener* const i);
+void  Input::unsubscribe  (InputListener* const i);
 ```
 
 Subscribes/unsubscribes listener `i` to input events. A listener will always be
@@ -48,8 +48,8 @@ when it is released. Listeners may implement any of the following methods to
 receive key events.
 
 ```c++
-bool  InputListener::on_key_down_impl  (const Key &key) override;
-bool  InputListener::on_key_up_impl    (const Key &key) override;
+bool  InputListener::on_key_down_impl  (const Key& key) override;
+bool  InputListener::on_key_up_impl    (const Key& key) override;
 ```
 
 The key value of the event is passed as argument and, if available, its
@@ -68,13 +68,10 @@ if (key.modifier == (Key::Mods::Shift | Key::Mods::Ctrl))
 Implement any of the following methods to receive mouse/touch events.
 
 ```c++
-bool  InputListener::on_pointer_began_impl     (const unsigned int count,
-                                                const Pointer *array) override;
+bool  InputListener::on_pointer_began_impl     (const ArrayView<Pointer>& pointers) override;
 bool  InputListener::on_pointer_canceled_impl  () override;
-bool  InputListener::on_pointer_ended_impl     (const unsigned int count,
-                                                const Pointer *array) override;
-bool  InputListener::on_pointer_moved_impl     (const unsigned int count,
-                                                const Pointer *array) override;
+bool  InputListener::on_pointer_ended_impl     (const ArrayView<Pointer>& pointers) override;
+bool  InputListener::on_pointer_moved_impl     (const ArrayView<Pointer>& pointers) override;
 ```
 
 A `Pointer` instance stores the location of the event, `x` and `y`, and the
@@ -100,20 +97,16 @@ Ctrl+Q/⌘Q.
 class InputHandler final : public InputListener
 {
 private:
-    bool on_key_down_impl(const Key &k) override
+    bool on_key_down_impl(const Key& k) override
     {
         LOGI("Pressed a key: %c", static_cast<char>(k.key));
         return true;
     }
 
-    bool on_pointer_began_impl(const unsigned int count,
-                               const Pointer *array) override
+    bool on_pointer_began_impl(const ArrayView<Pointer>& pointers) override
     {
-        for (unsigned int i = 0; i < count; ++i)
-        {
-            LOGI("Pressed mouse button %u at %i,%i",
-                 array[i].hash, array[i].x, array[i].y);
-        }
+        for (auto&& p : pointers)
+            LOGI("Pressed mouse button %u at %i,%i", p.hash, p.x, p.y);
         return true;
     }
 };
@@ -121,7 +114,7 @@ private:
 class InputExample final : public GameBase
 {
 public:
-    InputExample(rainbow::Director &director) : GameBase(director) {}
+    InputExample(rainbow::Director& director) : GameBase(director) {}
 
     ~InputExample()
     {
@@ -130,7 +123,7 @@ public:
         input().unsubscribe(&input_handler_);
     }
 
-    void init(const Vec2i &)
+    void init(const Vec2i&)
     {
         input().subscribe(&input_handler_);
     }
@@ -139,7 +132,7 @@ private:
     InputHandler input_handler_;
 };
 
-GameBase *GameBase::create(rainbow::Director &director)
+GameBase* GameBase::create(rainbow::Director& director)
 {
     return new InputExample(director);
 }

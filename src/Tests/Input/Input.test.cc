@@ -101,7 +101,7 @@ namespace
 			return consume_;
 		}
 
-		bool on_pointer_began_impl(const unsigned int, const Pointer*) override
+		bool on_pointer_began_impl(const ArrayView<Pointer>&) override
 		{
 			pointer_began_ = true;
 			return consume_;
@@ -113,13 +113,13 @@ namespace
 			return consume_;
 		}
 
-		bool on_pointer_ended_impl(const unsigned int, const Pointer*) override
+		bool on_pointer_ended_impl(const ArrayView<Pointer>&) override
 		{
 			pointer_ended_ = true;
 			return consume_;
 		}
 
-		bool on_pointer_moved_impl(const unsigned int, const Pointer*) override
+		bool on_pointer_moved_impl(const ArrayView<Pointer>&) override
 		{
 			pointer_moved_ = true;
 			return consume_;
@@ -164,7 +164,7 @@ TEST(InputTest, BaseInputListenerDoesNothing)
 	ASSERT_TRUE(test_input_listener.key_up());
 
 	ASSERT_FALSE(test_input_listener.pointer_began());
-	input.on_pointer_began(0, nullptr);
+	input.on_pointer_began(nullptr);
 	ASSERT_TRUE(test_input_listener.pointer_began());
 
 	ASSERT_FALSE(test_input_listener.pointer_canceled());
@@ -172,11 +172,11 @@ TEST(InputTest, BaseInputListenerDoesNothing)
 	ASSERT_TRUE(test_input_listener.pointer_canceled());
 
 	ASSERT_FALSE(test_input_listener.pointer_ended());
-	input.on_pointer_ended(0, nullptr);
+	input.on_pointer_ended(nullptr);
 	ASSERT_TRUE(test_input_listener.pointer_ended());
 
 	ASSERT_FALSE(test_input_listener.pointer_moved());
-	input.on_pointer_moved(0, nullptr);
+	input.on_pointer_moved(nullptr);
 	ASSERT_TRUE(test_input_listener.pointer_moved());
 }
 
@@ -187,7 +187,7 @@ TEST(InputTest, PreventsFurtherPropagation)
 	                              TestInputListener{false}};
 	input.subscribe(listeners);
 	input.subscribe(listeners + 1);
-	input.on_pointer_began(0, nullptr);
+	input.on_pointer_began(nullptr);
 
 	ASSERT_TRUE(listeners[0]);
 	ASSERT_FALSE(listeners[1]);
@@ -201,7 +201,7 @@ TEST(InputTest, Unsubscribes)
 	                              TestInputListener{true}};
 	for (auto& i : listeners)
 		input.subscribe(&i);
-	input.on_pointer_began(0, nullptr);
+	input.on_pointer_began(nullptr);
 
 	ASSERT_TRUE(listeners[0]);
 	ASSERT_TRUE(listeners[1]);
@@ -210,7 +210,7 @@ TEST(InputTest, Unsubscribes)
 	for (auto& i : listeners)
 		i.reset();
 	input.unsubscribe(listeners + 1);
-	input.on_pointer_began(0, nullptr);
+	input.on_pointer_began(nullptr);
 
 	ASSERT_TRUE(listeners[0]);
 	ASSERT_FALSE(listeners[1]);
@@ -228,14 +228,14 @@ TEST(InputTest, UnsubscribesWhenDeleted)
 		for (auto& i : listeners)
 			input.subscribe(&i);
 		input.subscribe(&l);
-		input.on_pointer_began(0, nullptr);
+		input.on_pointer_began(nullptr);
 		for (auto& i : listeners)
 		{
 			ASSERT_TRUE(i);
 			i.reset();
 		}
 	}
-	input.on_pointer_began(0, nullptr);
+	input.on_pointer_began(nullptr);
 	ASSERT_TRUE(l);
 }
 
@@ -249,19 +249,19 @@ TEST(InputTest, IsNotifiedOfPoppedEndLinks)
 		{
 			TestInputListener c{true};
 			input.subscribe(&c);
-			input.on_pointer_began(0, nullptr);
+			input.on_pointer_began(nullptr);
 			ASSERT_TRUE(b);
 			ASSERT_TRUE(c);
 			b.reset();
 		}
 		input.subscribe(&a);
-		input.on_pointer_began(0, nullptr);
+		input.on_pointer_began(nullptr);
 		ASSERT_TRUE(b);
 		ASSERT_TRUE(a);
 	}
 	input.unsubscribe(&a);
 	a.reset();
 	input.subscribe(&a);
-	input.on_pointer_began(0, nullptr);
+	input.on_pointer_began(nullptr);
 	ASSERT_TRUE(a);
 }

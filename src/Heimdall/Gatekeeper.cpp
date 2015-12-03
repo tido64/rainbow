@@ -2,8 +2,6 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
-#ifdef USE_HEIMDALL
-
 #include "Heimdall/Gatekeeper.h"
 
 #include <cstring>
@@ -38,8 +36,7 @@ namespace
 		explicit Library(const char* const path);
 
 		const char* name() const { return name_.get(); }
-
-		inline Data open() const;
+		Data open() const;
 
 		explicit operator bool() const { return path_; }
 
@@ -50,140 +47,137 @@ namespace
 }
 #endif  // USE_LUA_SCRIPT
 
-namespace heimdall
+using heimdall::Gatekeeper;
+
+Gatekeeper::Gatekeeper()
+    : overlay_activator_(&overlay_)
+#if USE_LUA_SCRIPT
+    , monitor_(Path::current())
+#endif  // USE_LUA_SCRIPT
+{}
+
+void Gatekeeper::init(const Vec2i& screen)
 {
-	Gatekeeper::Gatekeeper()
-	    : overlay_activator_(&overlay_)
-#if USE_LUA_SCRIPT
-	    , monitor_(Path::current())
-#endif  // USE_LUA_SCRIPT
-	{}
+	pre_init(screen);
+	Director::init(screen);
+	if (terminated())
+		return;
+	post_init();
+}
 
-	void Gatekeeper::init(const Vec2i& screen)
-	{
-		pre_init(screen);
-		Director::init(screen);
-		if (terminated())
-			return;
-		post_init();
-	}
-
-	void Gatekeeper::update(const unsigned long dt)
-	{
+void Gatekeeper::update(unsigned long dt)
+{
 #if USE_LUA_SCRIPT
-		lua_State* L = static_cast<LuaScript*>(script())->state();
-		while (!changed_files_.empty())
+	lua_State* L = static_cast<LuaScript*>(script())->state();
+	while (!changed_files_.empty())
+	{
+		const Library library(changed_files_.front().get());
 		{
-			const Library library(changed_files_.front().get());
-			{
-				std::lock_guard<std::mutex> lock(changed_files_mutex_);
-				changed_files_.pop();
-			}
-
-			if (!library)
-				continue;
-
-			LOGI("Reloading '%s'...", library.name());
-			rainbow::lua::reload(L, library.open(), library.name());
-		}
-#endif  // USE_LUA_SCRIPT
-
-		Director::update(dt);
-
-		if (!overlay_.is_visible())
-			overlay_activator_.update(dt);
-		scenegraph_.update(dt);
-	}
-
-	void Gatekeeper::post_init()
-	{
-		const Vec2i& res = renderer().resolution();
-		const unsigned int pt = res.y / 64;
-		auto console_font = make_shared<FontAtlas>(
-		    "rainbow/assets/Inconsolata.otf",
-		    Data::from_bytes(Inconsolata_otf),
-		    pt);
-		auto ui_font = make_shared<FontAtlas>(
-		    "rainbow/assets/NewsCycleRegular.ttf",
-		    Data::from_bytes(NewsCycle_Regular_ttf),
-		    (pt << 1) + (pt >> 1));
-		const float y = res.y - console_font->height();
-		const Vec2f position(res.x / 128,
-		                     y - console_font->height() - ui_font->height());
-		perf_->init_button(position, std::move(ui_font));
-		perf_->init_graph(std::move(console_font));
-		overlay_.add_child(perf_->button().drawable());
-
-#if USE_LUA_SCRIPT
-		monitor_.set_callback([this](const char* path) {
-			auto file = new char[strlen(path) + 1];
-			strcpy(file, path);
 			std::lock_guard<std::mutex> lock(changed_files_mutex_);
-			changed_files_.emplace(file);
-		});
-#endif  // USE_LUA_SCRIPT
-	}
-
-	void Gatekeeper::pre_init(const Vec2i& screen)
-	{
-		perf_.reset(new PerformanceOverlay());
-		scenegraph_.add_child(perf_->node());
-
-		overlay_.init(scenegraph_, screen);
-
-		input().subscribe(this);
-		input().subscribe(&overlay_activator_);
-	}
-
-	bool Gatekeeper::on_pointer_began_impl(const unsigned int count,
-	                                       const Pointer* pointers)
-	{
-		std::for_each(pointers, pointers + count, [this](const Pointer& p) {
-			if (perf_->button().hit_test(Vec2i(p.x, p.y)))
-				pressed_[p.hash] = &perf_->button();
-		});
-		return overlay_.is_visible();
-	}
-
-	bool Gatekeeper::on_pointer_canceled_impl()
-	{
-		pressed_.clear();
-		return overlay_.is_visible();
-	}
-
-	bool Gatekeeper::on_pointer_ended_impl(const unsigned int count,
-	                                       const Pointer* pointers)
-	{
-		if (overlay_.is_visible() && !overlay_activator_.is_activated())
-		{
-			if (!pressed_.empty())
-			{
-				std::for_each(
-				    pointers,
-				    pointers + count,
-				    [this](const Pointer& p) {
-				        auto button = pressed_.find(p.hash);
-				        if (button != pressed_.end())
-				        {
-				            if (button->second->hit_test(Vec2i(p.x, p.y)))
-				                button->second->press();
-				            pressed_.erase(button);
-				        }
-				    });
-			}
-			else
-				overlay_.hide();
-			return true;
+			changed_files_.pop();
 		}
-		else if (!pressed_.empty())
-			pressed_.clear();
-		return false;
-	}
 
-	bool Gatekeeper::on_pointer_moved_impl(const unsigned int, const Pointer*)
-	{
-		return overlay_.is_visible();
+		if (!library)
+			continue;
+
+		LOGI("Reloading '%s'...", library.name());
+		rainbow::lua::reload(L, library.open(), library.name());
 	}
+#endif  // USE_LUA_SCRIPT
+
+	Director::update(dt);
+
+	if (!overlay_.is_visible())
+		overlay_activator_.update(dt);
+	scenegraph_.update(dt);
+}
+
+void Gatekeeper::post_init()
+{
+	const Vec2i& res = renderer().resolution();
+	const unsigned int pt = res.y / 64;
+	auto console_font = make_shared<FontAtlas>(
+	    "rainbow/assets/Inconsolata.otf",
+	    Data::from_bytes(Inconsolata_otf),
+	    pt);
+	auto ui_font = make_shared<FontAtlas>(
+	    "rainbow/assets/NewsCycleRegular.ttf",
+	    Data::from_bytes(NewsCycle_Regular_ttf),
+	    (pt << 1) + (pt >> 1));
+	const float y = res.y - console_font->height();
+	const Vec2f position(res.x / 128,
+	                     y - console_font->height() - ui_font->height());
+	perf_->init_button(position, std::move(ui_font));
+	perf_->init_graph(std::move(console_font));
+	overlay_.add_child(perf_->button().drawable());
+
+#if USE_LUA_SCRIPT
+	monitor_.set_callback([this](const char* path) {
+		auto file = new char[strlen(path) + 1];
+		strcpy(file, path);
+		std::lock_guard<std::mutex> lock(changed_files_mutex_);
+		changed_files_.emplace(file);
+	});
+#endif  // USE_LUA_SCRIPT
+}
+
+void Gatekeeper::pre_init(const Vec2i& screen)
+{
+	perf_.reset(new PerformanceOverlay());
+	scenegraph_.add_child(perf_->node());
+
+	overlay_.init(scenegraph_, screen);
+
+	input().subscribe(this);
+	input().subscribe(&overlay_activator_);
+}
+
+bool Gatekeeper::on_pointer_began_impl(const ArrayView<Pointer>& pointers)
+{
+	for (auto&& p : pointers)
+	{
+		if (perf_->button().hit_test(Vec2i(p.x, p.y)))
+			pressed_[p.hash] = &perf_->button();
+	}
+	return overlay_.is_visible();
+}
+
+bool Gatekeeper::on_pointer_canceled_impl()
+{
+	pressed_.clear();
+	return overlay_.is_visible();
+}
+
+bool Gatekeeper::on_pointer_ended_impl(const ArrayView<Pointer>& pointers)
+{
+	if (overlay_.is_visible() && !overlay_activator_.is_activated())
+	{
+		if (!pressed_.empty())
+		{
+			for (auto&& p : pointers)
+			{
+				auto button = pressed_.find(p.hash);
+				if (button != pressed_.end())
+				{
+					if (button->second->hit_test(Vec2i(p.x, p.y)))
+						button->second->press();
+					pressed_.erase(button);
+				}
+			}
+		}
+		else
+			overlay_.hide();
+		return true;
+	}
+	else if (!pressed_.empty())
+		pressed_.clear();
+
+	return false;
+}
+
+bool Gatekeeper::on_pointer_moved_impl(const ArrayView<Pointer>&)
+{
+	return overlay_.is_visible();
 }
 
 #if USE_LUA_SCRIPT
@@ -196,6 +190,7 @@ Library::Library(const char* const path) : path_(path)
 		path_ = nullptr;
 		return;
 	}
+
 	length -= 4;
 	name_.reset(new char[length + 1]);
 	strncpy(name_.get(), filename, length);
@@ -213,5 +208,3 @@ Data Library::open() const
 #endif  // RAINBOW_OS_MACOS
 }
 #endif  // USE_LUA_SCRIPT
-
-#endif  // USE_HEIMDALL

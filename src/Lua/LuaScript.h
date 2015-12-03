@@ -12,12 +12,12 @@
 class LuaScript final : public GameBase, public InputListener
 {
 public:
-	LuaScript(rainbow::Director &director) : GameBase(director) {}
+	LuaScript(rainbow::Director& director) : GameBase(director) {}
 	~LuaScript() override;
 
 	lua_State* state() const { return lua_; }
 
-	void init(const Vec2i &screen) override;
+	void init(const Vec2i& screen) override;
 	void update(const unsigned long) override;
 
 	void on_memory_warning() override;
@@ -25,13 +25,13 @@ public:
 private:
 	rainbow::LuaMachine lua_;
 
-	bool on_key_down_impl(const Key &) override;
-	bool on_key_up_impl(const Key &) override;
+	bool on_key_down_impl(const Key&) override;
+	bool on_key_up_impl(const Key&) override;
 
-	bool on_pointer_began_impl(const unsigned int, const Pointer *) override;
+	bool on_pointer_began_impl(const ArrayView<Pointer>&) override;
 	bool on_pointer_canceled_impl() override;
-	bool on_pointer_ended_impl(const unsigned int, const Pointer *) override;
-	bool on_pointer_moved_impl(const unsigned int, const Pointer *) override;
+	bool on_pointer_ended_impl(const ArrayView<Pointer>&) override;
+	bool on_pointer_moved_impl(const ArrayView<Pointer>&) override;
 };
 
 #endif

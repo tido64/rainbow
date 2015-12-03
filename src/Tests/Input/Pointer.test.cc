@@ -23,9 +23,9 @@ namespace
 
 		PointerTest() : flags_(0) {}
 
-		bool is_invalid(const unsigned int count, const Pointer* pointers)
+		bool is_invalid(const ArrayView<Pointer>& pointers)
 		{
-			return count != 1
+			return pointers.size() != 1
 			    || pointers[0].hash != 1
 			    || pointers[0].x != 2
 			    || pointers[0].y != 3
@@ -45,10 +45,9 @@ namespace
 	private:
 		unsigned int flags_;
 
-		bool on_pointer_began_impl(const unsigned int count,
-		                           const Pointer* pointers) override
+		bool on_pointer_began_impl(const ArrayView<Pointer>& pointers) override
 		{
-			if (is_invalid(count, pointers))
+			if (is_invalid(pointers))
 				return false;
 
 			flags_ |= Events::Began;
@@ -61,20 +60,18 @@ namespace
 			return true;
 		}
 
-		bool on_pointer_ended_impl(const unsigned int count,
-		                           const Pointer* pointers) override
+		bool on_pointer_ended_impl(const ArrayView<Pointer>& pointers) override
 		{
-			if (is_invalid(count, pointers))
+			if (is_invalid(pointers))
 				return false;
 
 			flags_ |= Events::Ended;
 			return true;
 		}
 
-		bool on_pointer_moved_impl(const unsigned int count,
-		                           const Pointer* pointers) override
+		bool on_pointer_moved_impl(const ArrayView<Pointer>& pointers) override
 		{
-			if (is_invalid(count, pointers))
+			if (is_invalid(pointers))
 				return false;
 
 			flags_ |= Events::Moved;
@@ -96,7 +93,7 @@ TEST_F(PointerTest, IsZeroByDefault)
 TEST_F(PointerTest, pointer_began)
 {
 	Pointer p1(1, 2, 3, 0);
-	input.on_pointer_began(1, &p1);
+	input.on_pointer_began({1, &p1});
 	ASSERT_TRUE(is_triggered(Events::Began));
 	ASSERT_FALSE(is_triggered(0xff ^ Events::Began));
 }
@@ -111,7 +108,7 @@ TEST_F(PointerTest, pointer_canceled)
 TEST_F(PointerTest, pointer_ended)
 {
 	Pointer p1(1, 2, 3, 0);
-	input.on_pointer_ended(1, &p1);
+	input.on_pointer_ended({1, &p1});
 	ASSERT_TRUE(is_triggered(Events::Ended));
 	ASSERT_FALSE(is_triggered(0xff ^ Events::Ended));
 }
@@ -119,7 +116,7 @@ TEST_F(PointerTest, pointer_ended)
 TEST_F(PointerTest, pointer_moved)
 {
 	Pointer p1(1, 2, 3, 0);
-	input.on_pointer_moved(1, &p1);
+	input.on_pointer_moved({1, &p1});
 	ASSERT_TRUE(is_triggered(Events::Moved));
 	ASSERT_FALSE(is_triggered(0xff ^ Events::Moved));
 }

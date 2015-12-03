@@ -5,7 +5,7 @@
 #ifndef HEIMDALL_OVERLAYACTIVATOR_H_
 #define HEIMDALL_OVERLAYACTIVATOR_H_
 
-#ifdef USE_HEIMDALL
+#include <cstdint>
 
 #include "Input/InputListener.h"
 
@@ -16,38 +16,28 @@ namespace heimdall
 	class OverlayActivator final : public InputListener
 	{
 	public:
-		inline OverlayActivator(Overlay *);
+		OverlayActivator(Overlay* overlay) : overlay_(overlay) { reset(); }
 
-		inline bool is_activated() const;
+		bool is_activated() const
+		{
+			return time_till_activation_ == 0 && resistance_ < 2;
+		}
 
 		void reset();
-		void update(const unsigned long dt);
+		void update(unsigned long dt);
 
 	private:
 		int resistance_;
 		int time_till_activation_;
-		unsigned int pointers_[2];
-		Overlay *overlay_;
+		uint32_t pointers_[2];
+		Overlay* overlay_;
 
 		/* Implement InputListener */
 
-		bool on_pointer_began_impl(const unsigned int,
-		                           const Pointer *) override;
+		bool on_pointer_began_impl(const ArrayView<Pointer>&) override;
 		bool on_pointer_canceled_impl() override;
-		bool on_pointer_ended_impl(const unsigned int,
-		                           const Pointer *) override;
+		bool on_pointer_ended_impl(const ArrayView<Pointer>&) override;
 	};
-
-	OverlayActivator::OverlayActivator(Overlay *overlay) : overlay_(overlay)
-	{
-		reset();
-	}
-
-	bool OverlayActivator::is_activated() const
-	{
-		return time_till_activation_ == 0 && resistance_ < 2;
-	}
 }
 
-#endif  // USE_HEIMDALL
 #endif  // HEIMDALL_OVERLAYACTIVATOR_H_

@@ -8,7 +8,6 @@
 #include "Common/NonCopyable.h"
 #include "Input/Acceleration.h"
 #include "Input/InputListener.h"
-#include "Memory/NotNull.h"
 
 /// <summary>
 ///   Handles accelerometer/gyroscope and pointer events independent of
@@ -51,30 +50,27 @@ public:
 	/// <param name="t">
 	///   The relative time at which the acceleration occurred.
 	/// </param>
-	void accelerated(const double x,
-	                 const double y,
-	                 const double z,
-	                 const double t);
+	void accelerated(double x, double y, double z, double t);
 
-	void on_controller_axis_motion(const ControllerAxisMotion &);
-	void on_controller_button_down(const ControllerButton &);
-	void on_controller_button_up(const ControllerButton &);
-	void on_controller_connected(const unsigned int id);
-	void on_controller_disconnected(const unsigned int id);
+	void on_controller_axis_motion(const ControllerAxisMotion&);
+	void on_controller_button_down(const ControllerButton&);
+	void on_controller_button_up(const ControllerButton&);
+	void on_controller_connected(unsigned int id);
+	void on_controller_disconnected(unsigned int id);
 
-	void on_key_down(const Key &k);
-	void on_key_up(const Key &k);
+	void on_key_down(const Key& k);
+	void on_key_up(const Key& k);
 
-	void on_pointer_began(const unsigned int count, Pointer *pointers);
+	void on_pointer_began(const ArrayView<Pointer>& pointers);
 	void on_pointer_canceled();
-	void on_pointer_ended(const unsigned int count, Pointer *pointers);
-	void on_pointer_moved(const unsigned int count, Pointer *pointers);
+	void on_pointer_ended(const ArrayView<Pointer>& pointers);
+	void on_pointer_moved(const ArrayView<Pointer>& pointers);
 
 private:
 	Acceleration acceleration_;  ///< Accelerometer data
-	InputListener *last_listener_;
+	InputListener* last_listener_;
 
-	void on_end_link_removed(Link *node) override;
+	void on_end_link_removed(Link* node) override;
 };
 
 #endif

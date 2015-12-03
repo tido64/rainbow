@@ -5,8 +5,6 @@
 #ifndef HEIMDALL_GATEKEEPER_H_
 #define HEIMDALL_GATEKEEPER_H_
 
-#ifdef USE_HEIMDALL
-
 #include <mutex>
 #include <queue>
 #include <unordered_map>
@@ -37,7 +35,7 @@ namespace heimdall
 		}
 
 		void init(const Vec2i& screen);
-		void update(const unsigned long dt);
+		void update(unsigned long dt);
 
 	private:
 #if USE_LUA_SCRIPT
@@ -58,14 +56,13 @@ namespace heimdall
 
 		/* Implement InputListener */
 
-		bool on_pointer_began_impl(const unsigned int, const Pointer*) override;
+		bool on_pointer_began_impl(const ArrayView<Pointer>&) override;
 		bool on_pointer_canceled_impl() override;
-		bool on_pointer_ended_impl(const unsigned int, const Pointer*) override;
-		bool on_pointer_moved_impl(const unsigned int, const Pointer*) override;
+		bool on_pointer_ended_impl(const ArrayView<Pointer>&) override;
+		bool on_pointer_moved_impl(const ArrayView<Pointer>&) override;
 	};
 }
 
 using Director = heimdall::Gatekeeper;
 
-#endif  // USE_HEIMDALL
 #endif  // HEIMDALL_GATEKEEPER_H_

@@ -27,16 +27,15 @@ NS_RAINBOW_LUA_MODULE_BEGIN(input)
 		int events = -1;
 		size_t event_count = -1;
 
-		const char *const kInputEvents[] = {
-			"key_down",
-			"key_up",
-			"pointer_began",
-			"pointer_canceled",
-			"pointer_ended",
-			"pointer_moved"
-		};
+		const char* const kInputEvents[]{
+		    "key_down",
+		    "key_up",
+		    "pointer_began",
+		    "pointer_canceled",
+		    "pointer_ended",
+		    "pointer_moved"};
 
-		void push_event(lua_State *L, const Event event)
+		void push_event(lua_State* L, const Event event)
 		{
 			lua_rawgeti(L, LUA_REGISTRYINDEX, events);
 			lua_pushinteger(L, ++event_count);
@@ -54,7 +53,7 @@ NS_RAINBOW_LUA_MODULE_BEGIN(input)
 			lua_rawseti(L, -2, 1);
 		}
 
-		void on_key_event(lua_State *L, const Event event, const Key &key)
+		void on_key_event(lua_State* L, const Event event, const Key& key)
 		{
 			push_event(L, event);
 
@@ -68,25 +67,24 @@ NS_RAINBOW_LUA_MODULE_BEGIN(input)
 			lua_pop(L, 2);
 		}
 
-		void on_pointer_event(lua_State *L,
+		void on_pointer_event(lua_State* L,
 		                      const Event event,
-		                      const unsigned int count,
-		                      const Pointer *pointers)
+		                      const ArrayView<Pointer>& pointers)
 		{
 			push_event(L, event);
 
-			if (!count)
+			if (pointers.size() == 0)
 				lua_pushnil(L);
 			else
 			{
-				lua_createtable(L, 0, count);
-				for (unsigned int i = 0; i < count; ++i)
+				lua_createtable(L, 0, pointers.size());
+				for (auto&& p : pointers)
 				{
-					lua_pushinteger(L, pointers[i].hash);
+					lua_pushinteger(L, p.hash);
 					lua_createtable(L, 0, 3);
-					luaR_rawsetinteger(L, "x", pointers[i].x);
-					luaR_rawsetinteger(L, "y", pointers[i].y);
-					luaR_rawsetinteger(L, "timestamp", pointers[i].timestamp);
+					luaR_rawsetinteger(L, "x", p.x);
+					luaR_rawsetinteger(L, "y", p.y);
+					luaR_rawsetinteger(L, "timestamp", p.timestamp);
 					lua_rawset(L, -3);
 				}
 			}
@@ -96,7 +94,7 @@ NS_RAINBOW_LUA_MODULE_BEGIN(input)
 		}
 	}
 
-	void init(lua_State *L)
+	void init(lua_State* L)
 	{
 		lua_pushliteral(L, "input");
 		lua_createtable(L, 0, 11);
@@ -118,7 +116,7 @@ NS_RAINBOW_LUA_MODULE_BEGIN(input)
 		clear(L);
 	}
 
-	void accelerated(lua_State *L, const Acceleration &a)
+	void accelerated(lua_State* L, const Acceleration& a)
 	{
 		lua_rawgeti(L, LUA_REGISTRYINDEX, acceleration);
 		luaR_rawsetnumber(L, "x", a.x());
@@ -128,7 +126,7 @@ NS_RAINBOW_LUA_MODULE_BEGIN(input)
 		lua_pop(L, 1);
 	}
 
-	void clear(lua_State *L)
+	void clear(lua_State* L)
 	{
 		if (event_count == 0)
 			return;
@@ -140,40 +138,34 @@ NS_RAINBOW_LUA_MODULE_BEGIN(input)
 		event_count = 0;
 	}
 
-	void on_key_down(lua_State *L, const Key &key)
+	void on_key_down(lua_State* L, const Key& key)
 	{
 		on_key_event(L, kEventKeyDown, key);
 	}
 
-	void on_key_up(lua_State *L, const Key &key)
+	void on_key_up(lua_State* L, const Key& key)
 	{
 		on_key_event(L, kEventKeyUp, key);
 	}
 
-	void on_pointer_began(lua_State * L,
-	                      const unsigned int count,
-	                      const Pointer *pointers)
+	void on_pointer_began(lua_State* L, const ArrayView<Pointer>& pointers)
 	{
-		on_pointer_event(L, kEventPointerBegan, count, pointers);
+		on_pointer_event(L, kEventPointerBegan, pointers);
 	}
 
-	void on_pointer_canceled(lua_State * L)
+	void on_pointer_canceled(lua_State* L)
 	{
-		on_pointer_event(L, kEventPointerCanceled, 0, nullptr);
+		on_pointer_event(L, kEventPointerCanceled, nullptr);
 	}
 
-	void on_pointer_ended(lua_State * L,
-	                      const unsigned int count,
-	                      const Pointer *pointers)
+	void on_pointer_ended(lua_State* L, const ArrayView<Pointer>& pointers)
 	{
-		on_pointer_event(L, kEventPointerEnded, count, pointers);
+		on_pointer_event(L, kEventPointerEnded, pointers);
 	}
 
-	void on_pointer_moved(lua_State * L,
-	                      const unsigned int count,
-	                      const Pointer *pointers)
+	void on_pointer_moved(lua_State* L, const ArrayView<Pointer>& pointers)
 	{
-		on_pointer_event(L, kEventPointerMoved, count, pointers);
+		on_pointer_event(L, kEventPointerMoved, pointers);
 	}
 }
 NS_RAINBOW_LUA_MODULE_END(input)
