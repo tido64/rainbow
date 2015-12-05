@@ -26,14 +26,6 @@ namespace
 	    {Shader::kAttributeTexCoord, "texcoord"},
 	    {Shader::kAttributeNone, nullptr}};
 
-	void set_projection_matrix(const Shader::Details& details,
-	                           const std::array<float, 16>& ortho)
-	{
-		R_ASSERT(details.mvp_matrix >= 0,
-		         "Shader is missing a projection matrix");
-		glUniformMatrix4fv(details.mvp_matrix, 1, GL_FALSE, ortho.data());
-	}
-
 	template<typename F, typename G>
 	String verify(const GLuint id,
 	              const GLenum pname,
@@ -166,7 +158,28 @@ unsigned int ShaderManager::compile(Shader::Params* shaders,
 
 void ShaderManager::update_projection()
 {
-	set_projection_matrix(get_program(), renderer_->projection());
+	R_ASSERT(get_program().mvp_matrix >= 0,
+	         "Shader is missing a projection matrix");
+
+	// The orthographic projection matrix is defined as:
+	//
+	//   | 2 / (r - l)       0             0       -(r + l) / (r - l) |
+	//   |      0       2 / (t - b)        0       -(t + b) / (t - b) |
+	//   |      0            0       -2 / (f - n)  -(f + n) / (f - n) |
+	//   |      0            0             0                1         |
+	//
+	// Where <c>b</c> = bottom, <c>f</c> = far, <c>l</c> = left, <c>n</c> =
+	// near, <c>r</c> = right, <c>t</c> = top, and near = -1.0 and far = 1.0.
+	// The matrix is stored in column-major order.
+	const auto& rect = renderer_->projection();
+	const float projection[]{
+	    2.0f / (rect.right - rect.left), 0.0f, 0.0f, 0.0f,
+	    0.0f, 2.0f / (rect.top - rect.bottom), 0.0f, 0.0f,
+	    0.0f, 0.0f, -1.0f, 0.0f,
+	    -(rect.right + rect.left) / (rect.right - rect.left),
+	    -(rect.top + rect.bottom) / (rect.top - rect.bottom),
+	    0.0f, 1.0f};
+	glUniformMatrix4fv(get_program().mvp_matrix, 1, GL_FALSE, projection);
 }
 
 void ShaderManager::update_viewport()

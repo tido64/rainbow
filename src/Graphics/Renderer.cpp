@@ -1,4 +1,4 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -18,23 +18,12 @@
 #define S256(i)    S64((i)),  S64((i) +  64),  S64((i) + 128),  S64((i) + 192)
 #define S1024(i)  S256((i)), S256((i) + 256), S256((i) + 512), S256((i) + 768)
 
-namespace
-{
-	constexpr std::array<float, 16> kProjectionMatrix()
-	{
-		return {{1.0f,  0.0f,  0.0f, 0.0f,
-		         0.0f,  1.0f,  0.0f, 0.0f,
-		         0.0f,  0.0f, -1.0f, 0.0f,
-		        -1.0f, -1.0f,  0.0f, 1.0f}};
-	}
-}
-
 void Renderer::clear()
 {
 	glClear(GL_COLOR_BUFFER_BIT);
 }
 
-bool Renderer::has_extension(const char *const extension)
+bool Renderer::has_extension(const char* const extension)
 {
 	return strstr(reinterpret_cast<const char*>(glGetString(GL_EXTENSIONS)),
 	              extension);
@@ -50,33 +39,27 @@ int Renderer::max_texture_size()
 	return max_texture_size;
 }
 
-void Renderer::set_projection(const float left,
-                              const float right,
-                              const float bottom,
-                              const float top)
+void Renderer::set_projection(const rainbow::Rect& projection)
 {
-	ortho_[0] = 2.0f / (right - left);
-	ortho_[5] = 2.0f / (top - bottom);
-	ortho_[12] = -(right + left) / (right - left);
-	ortho_[13] = -(top + bottom) / (top - bottom);
+	rect_ = projection;
 	shader_manager_.update_projection();
 }
 
-void Renderer::set_resolution(const Vec2i &resolution)
+void Renderer::set_resolution(const Vec2i& resolution)
 {
 	R_ASSERT(is_global(),
 	         "Cannot set resolution with an uninitialised renderer");
 
 	view_ = resolution;
-	ortho_[0] = 2.0f / resolution.x;
-	ortho_[5] = 2.0f / resolution.y;
+	rect_.right = rect_.left + resolution.x;
+	rect_.top = rect_.bottom + resolution.y;
 	shader_manager_.update_viewport();
 	set_window_size(window_.is_zero() ? view_ : window_);
 
 	R_ASSERT(glGetError() == GL_NO_ERROR, "Failed to set resolution");
 }
 
-void Renderer::set_window_size(const Vec2i &size, const float factor)
+void Renderer::set_window_size(const Vec2i& size, float factor)
 {
 	R_ASSERT(is_global(),
 	         "Cannot set window size with an uninitialised renderer");
@@ -98,9 +81,7 @@ void Renderer::set_window_size(const Vec2i &size, const float factor)
 	}
 	scale_.x = static_cast<float>(view_.x) / window_.x;
 	scale_.y = static_cast<float>(view_.y) / window_.y;
-	glViewport(origin_.x * factor,
-	           origin_.y * factor,
-	           window_.x * factor,
+	glViewport(origin_.x * factor, origin_.y * factor, window_.x * factor,
 	           window_.y * factor);
 	// Set height in order to properly transform mouse coordinates.
 	window_.y = size.y;
@@ -111,19 +92,20 @@ void Renderer::bind_element_array() const
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffer_);
 }
 
-Vec2i Renderer::convert_to_flipped_view(const Vec2i &p) const
+Vec2i Renderer::convert_to_flipped_view(const Vec2i& p) const
 {
 	return convert_to_view(Vec2i(p.x, window_.y - p.y));
 }
 
-Vec2i Renderer::convert_to_screen(const Vec2i &p) const
+Vec2i Renderer::convert_to_screen(const Vec2i& p) const
 {
 	return Vec2i(p.x / scale_.x + origin_.x, p.y / scale_.y + origin_.y);
 }
 
-Vec2i Renderer::convert_to_view(const Vec2i &p) const
+Vec2i Renderer::convert_to_view(const Vec2i& p) const
 {
-	return Vec2i((p.x - origin_.x) * scale_.x, (p.y - origin_.y) * scale_.y);
+	return Vec2i(rect_.left + (p.x - origin_.x) * scale_.x,
+	             rect_.bottom + (p.y - origin_.y) * scale_.y);
 }
 
 void Renderer::reset() const
@@ -148,8 +130,7 @@ void Renderer::unbind_all()
 }
 
 Renderer::Renderer()
-    : index_buffer_(0), scale_(1.0f, 1.0f), ortho_(kProjectionMatrix()),
-      shader_manager_(this) {}
+    : index_buffer_(0), scale_(1.0f, 1.0f), shader_manager_(this) {}
 
 Renderer::~Renderer()
 {
@@ -185,9 +166,8 @@ bool Renderer::init()
 	              "Number of indices do not match set number of sprites");
 	glGenBuffers(1, &index_buffer_);
 	bind_element_array();
-	glBufferData(
-	    GL_ELEMENT_ARRAY_BUFFER, sizeof(kDefaultIndices), kDefaultIndices,
-	    GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(kDefaultIndices),
+	             kDefaultIndices, GL_STATIC_DRAW);
 
 	make_global();
 	return glGetError() == GL_NO_ERROR;

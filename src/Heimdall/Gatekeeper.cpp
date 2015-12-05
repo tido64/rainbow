@@ -48,6 +48,7 @@ namespace
 #endif  // USE_LUA_SCRIPT
 
 using heimdall::Gatekeeper;
+using rainbow::is_equal;
 
 Gatekeeper::Gatekeeper()
     : overlay_activator_(&overlay_)
@@ -89,6 +90,7 @@ void Gatekeeper::update(unsigned long dt)
 
 	if (!overlay_.is_visible())
 		overlay_activator_.update(dt);
+	update_components();
 	scenegraph_.update(dt);
 }
 
@@ -130,6 +132,18 @@ void Gatekeeper::pre_init(const Vec2i& screen)
 
 	input().subscribe(this);
 	input().subscribe(&overlay_activator_);
+}
+
+void Gatekeeper::update_components()
+{
+	const auto& projection = Renderer::Get()->projection();
+	if (projection != projection_)
+	{
+		projection_ = projection;
+		if (overlay_.is_visible())
+			overlay_.update(projection);
+		perf_->set_origin(projection.bottom_left());
+	}
 }
 
 bool Gatekeeper::on_pointer_began_impl(const ArrayView<Pointer>& pointers)

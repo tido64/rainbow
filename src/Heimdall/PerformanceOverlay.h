@@ -29,8 +29,11 @@ namespace heimdall
 		void init_button(const Vec2f& position, SharedPtr<FontAtlas> font);
 		void init_graph(SharedPtr<FontAtlas> font);
 
+		void set_origin(const Vec2f& origin);
+
 	private:
 		rainbow::SceneNode* node_;
+		Vec2f position_;
 		std::deque<std::tuple<float, float>> frame_data_;
 		LyricalLabel labels_;
 		float vmem_top_;

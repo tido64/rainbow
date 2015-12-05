@@ -12,6 +12,8 @@
 #include "Graphics/Texture.h"
 #include "Graphics/VertexArray.h"
 
+namespace rainbow { struct Rect; }
+
 namespace heimdall
 {
 	class Overlay final : public Drawable
@@ -37,6 +39,8 @@ namespace heimdall
 
 		/// <summary>Binds all used textures.</summary>
 		void bind_textures() const { texture_.bind(); }
+
+		void update(const rainbow::Rect& projection);
 
 	private:
 		rainbow::SceneNode* node_;

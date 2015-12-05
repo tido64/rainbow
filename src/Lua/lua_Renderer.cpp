@@ -38,15 +38,15 @@ namespace
 
 	int set_projection(lua_State *L)
 	{
-		// rainbow.renderer.set_projection(left, right, bottom, top)
+		// rainbow.renderer.set_projection(left, top, right, bottom)
 		rainbow::lua::Argument<lua_Number>::is_required(L, 1);
 		rainbow::lua::Argument<lua_Number>::is_required(L, 2);
 		rainbow::lua::Argument<lua_Number>::is_required(L, 3);
 		rainbow::lua::Argument<lua_Number>::is_required(L, 4);
 
-		Renderer::Get()->set_projection(
+		Renderer::Get()->set_projection({
 		    lua_tonumber(L, 1), lua_tonumber(L, 2),
-		    lua_tonumber(L, 3), lua_tonumber(L, 4));
+		    lua_tonumber(L, 3), lua_tonumber(L, 4)});
 		return 0;
 	}
 }

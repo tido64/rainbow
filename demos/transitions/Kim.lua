@@ -13,6 +13,7 @@ Kim.__index = Kim
 function Kim.new(sprite)
 	local self = {}
 	setmetatable(self, Kim)
+	self.origin = {0, 0}
 	self.sprite = sprite
 
 	-- Used to alternate between move and rotate.
@@ -33,6 +34,35 @@ function Kim.new(sprite)
 	rainbow.input.subscribe(self)
 
 	return self
+end
+
+function Kim:key_down(key, modifiers)
+	local distance = 64
+	local moved = false
+	if key == 97 then  -- Left
+		self.origin[1] = self.origin[1] - distance
+		moved = true
+	elseif key == 100 then  -- Right
+		self.origin[1] = self.origin[1] + distance
+		moved = true
+	elseif key == 115 then  -- Down
+		self.origin[2] = self.origin[2] - distance
+		moved = true
+	elseif key == 119 then  -- Up
+		self.origin[2] = self.origin[2] + distance
+		moved = true
+	end
+	if moved then
+		local screen = rainbow.platform.screen
+		rainbow.renderer.set_projection(
+		    self.origin[1],
+		    self.origin[2] + screen.height,
+		    self.origin[1] + screen.width,
+		    self.origin[2])
+	end
+end
+
+function Kim:key_up()
 end
 
 function Kim:pointer_began(pointers)
@@ -60,8 +90,6 @@ end
 
 -- We don't care about these events.
 
-function Kim:key_down() end
-function Kim:key_up() end
 function Kim:pointer_canceled() end
 function Kim:pointer_ended() end
 function Kim:pointer_moved() end

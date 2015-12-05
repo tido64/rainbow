@@ -57,10 +57,10 @@ namespace
 	bool is_fullscreen(const SDL_Keysym& keysym)
 	{
 #ifdef RAINBOW_OS_MACOS
-		return false;
-		static_cast<void>(keysym);
+		const auto mod = KMOD_LCTRL | KMOD_LGUI;
+		return keysym.sym == SDLK_f && (keysym.mod & mod) == mod;
 #else
-		return keysym.sym == SDLK_RETURN && (keysym.mod & KMOD_LALT);
+		return keysym.sym == SDLK_RETURN && (keysym.mod & KMOD_LALT) == KMOD_LALT;
 #endif
 	}
 

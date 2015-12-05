@@ -16,6 +16,8 @@
 #	define snprintf(...) sprintf_s(__VA_ARGS__)
 #endif
 
+using heimdall::PerformanceOverlay;
+
 namespace
 {
 	const int k1024ToPowerOf[]{1, 1024, 1048576, 1073741824};
@@ -68,135 +70,143 @@ namespace
 	}
 }
 
-namespace heimdall
+PerformanceOverlay::PerformanceOverlay()
+    : node_(rainbow::SceneNode::create().release()), vmem_top_(0.0f)
 {
-	PerformanceOverlay::PerformanceOverlay()
-	    : node_(rainbow::SceneNode::create().release()), vmem_top_(0.0f)
-	{
-		node_->set_enabled(false);
-	}
+	node_->set_enabled(false);
+}
 
-	void PerformanceOverlay::init_button(const Vec2f& p,
-	                                     SharedPtr<FontAtlas> font)
-	{
-		button_.set_color(color::InactiveFont());
-		button_.set_font(std::move(font));
-		button_.set_position(p);
-		button_.set_text(kStringShowPerfData);
-		button_.set_action([this] {
-			if (node_->is_enabled())
-			{
-				node_->set_enabled(false);
-				button_.set_color(color::InactiveFont());
-				button_.set_text(kStringShowPerfData);
-			}
-			else
-			{
-				node_->set_enabled(true);
-				button_.set_color(color::NormalFont());
-				button_.set_text(kStringHidePerfData);
-			}
-		});
-	}
-
-	void PerformanceOverlay::init_graph(SharedPtr<FontAtlas> font)
-	{
-		const Vec2i& res = Renderer::Get()->resolution();
-		const float x = spacing(res);
-		const float x0 = res.x - x * 3 + x / 5;
-		const float y0 = x + font->height() * (2.0f / 3.0f);
-		const float y1 = y0 + x * 4;
-
-		labels_.set_color(colorb(frame_line_color()));
-		labels_.set_font(font);
-		labels_.set_position(Vec2f(x0, y1));
-		labels_.set_text(kStringAxisLabels);
-
-		const Colorb& color = colorb(vmem_line_color());
-		for (int i = 0; i <= 4; ++i)
-			labels_.set_color(color, i * 7 + 4, 3);
-
-		const Vec2i offset(0, font->height() - x);
-		for (int i = 1; i < 4; ++i)
-			labels_.set_offset(i * offset, i * 7 + 7, 7);
-
-		node_->add_child(labels_.as_label())
-		     ->add_child(*this);
-	}
-
-	void PerformanceOverlay::update_impl(const unsigned long dt)
-	{
-		if (!node_->is_enabled())
-			return;
-
-		if (frame_data_.size() == kFrameDataLength)
-			frame_data_.pop_back();
-
-		const auto& usage = TextureManager::Get()->memory_usage();
-		frame_data_.emplace_front(dt, usage.used);
-
-		const float vmem_top = rainbow::next_pow2(std::ceil(usage.peak));
-		if (vmem_top != vmem_top_)
+void PerformanceOverlay::init_button(const Vec2f& p,
+                                     SharedPtr<FontAtlas> font)
+{
+	button_.set_color(color::InactiveFont());
+	button_.set_font(std::move(font));
+	button_.set_position(p);
+	button_.set_text(kStringShowPerfData);
+	button_.set_action([this] {
+		if (node_->is_enabled())
 		{
-			const int order = std::min<int>(
-			    (vmem_top == 0 ? 0 : std::floor(std::log10(vmem_top)) / 3),
-			    rainbow::array_size(k1024ToPowerOf) - 1);
-			const float dy = vmem_top / (k1024ToPowerOf[order] * 4);
-			if (dy < 1.0f)
-			{
-				snprintf(const_cast<char*>(labels_.text()),
-				         sizeof(kStringAxisLabelsF),
-				         kStringAxisLabelsF,
-				         kStringAxisLabelsM[order],
-				         dy * 4,
-				         dy * 3,
-				         dy * 2,
-				         dy);
-			}
-			else
-			{
-				const int dY = static_cast<int>(dy);
-				snprintf(const_cast<char*>(labels_.text()),
-				         sizeof(kStringAxisLabels),
-				         kStringAxisLabels,
-				         kStringAxisLabelsM[order],
-				         dY * 4,
-				         dY * 3,
-				         dY * 2,
-				         dY);
-			}
-			labels_.set_needs_update(Label::kStaleBuffer);
-			vmem_top_ = vmem_top;
+			node_->set_enabled(false);
+			button_.set_color(color::InactiveFont());
+			button_.set_text(kStringShowPerfData);
 		}
-	}
-
-	void PerformanceOverlay::paint_impl()
-	{
-		const Vec2i& res = Renderer::Get()->resolution();
-		const float x = spacing(res);
-		const float width = res.x - x * 4;
-		const float height = x * 4;
-		const float y = res.y - x - height;
-
-		nvgBeginPath(context());
-		nvgRect(context(), x, y, width, height);
-		for (int i = 1; i < 4; ++i)
+		else
 		{
-			const float y1 = y + x * i;
-			nvgMoveTo(context(), x, y1);
-			nvgLineTo(context(), x + width, y1);
+			node_->set_enabled(true);
+			button_.set_color(color::NormalFont());
+			button_.set_text(kStringHidePerfData);
 		}
-		nvgStrokeColor(context(), graph_line_color());
-		nvgStrokeWidth(context(), 2.0f);
-		nvgStroke(context());
+	});
+}
 
-		const float x1 = x + width - 1;
-		const float by = y + height;
-		const float dx = width / static_cast<float>(kFrameDataLength);
-		plot<0>(context(), x1, by, dx, x / 16, frame_line_color(), frame_data_);
-		plot<1>(context(), x1, by, dx, height / vmem_top_, vmem_line_color(),
-		        frame_data_);
+void PerformanceOverlay::init_graph(SharedPtr<FontAtlas> font)
+{
+	const Vec2i& res = Renderer::Get()->resolution();
+	const float x = spacing(res);
+	const float x0 = res.x - x * 3 + x / 5;
+	const float y0 = x + font->height() * (2.0f / 3.0f);
+	const float y1 = y0 + x * 4;
+
+	labels_.set_color(colorb(frame_line_color()));
+	labels_.set_font(font);
+	labels_.set_position(Vec2f(x0, y1));
+	labels_.set_text(kStringAxisLabels);
+
+	const Colorb& color = colorb(vmem_line_color());
+	for (int i = 0; i <= 4; ++i)
+		labels_.set_color(color, i * 7 + 4, 3);
+
+	const Vec2i offset(0, font->height() - x);
+	for (int i = 1; i < 4; ++i)
+		labels_.set_offset(i * offset, i * 7 + 7, 7);
+
+	node_->add_child(labels_.as_label());
+	node_->add_child(*this);
+}
+
+void PerformanceOverlay::set_origin(const Vec2f& origin)
+{
+	if (origin == position_)
+		return;
+
+	const auto& delta = origin - position_;
+	position_ = origin;
+	labels_.move(delta);
+	button_.drawable().move(delta);
+}
+
+void PerformanceOverlay::update_impl(const unsigned long dt)
+{
+	if (!node_->is_enabled())
+		return;
+
+	if (frame_data_.size() == kFrameDataLength)
+		frame_data_.pop_back();
+
+	const auto& usage = TextureManager::Get()->memory_usage();
+	frame_data_.emplace_front(dt, usage.used);
+
+	const float vmem_top = rainbow::next_pow2(std::ceil(usage.peak));
+	if (vmem_top != vmem_top_)
+	{
+		const int order = std::min<int>(
+		    (vmem_top == 0 ? 0 : std::floor(std::log10(vmem_top)) / 3),
+		    rainbow::array_size(k1024ToPowerOf) - 1);
+		const float dy = vmem_top / (k1024ToPowerOf[order] * 4);
+		if (dy < 1.0f)
+		{
+			snprintf(const_cast<char*>(labels_.text()),
+			         sizeof(kStringAxisLabelsF),
+			         kStringAxisLabelsF,
+			         kStringAxisLabelsM[order],
+			         dy * 4,
+			         dy * 3,
+			         dy * 2,
+			         dy);
+		}
+		else
+		{
+			const int dY = static_cast<int>(dy);
+			snprintf(const_cast<char*>(labels_.text()),
+			         sizeof(kStringAxisLabels),
+			         kStringAxisLabels,
+			         kStringAxisLabelsM[order],
+			         dY * 4,
+			         dY * 3,
+			         dY * 2,
+			         dY);
+		}
+		labels_.set_needs_update(Label::kStaleBuffer);
+		vmem_top_ = vmem_top;
 	}
+}
+
+void PerformanceOverlay::paint_impl()
+{
+	const Vec2i& res = Renderer::Get()->resolution();
+	const float x = spacing(res);
+	const float width = res.x - x * 4;
+	const float height = x * 4;
+	const float y = res.y - x - height;
+
+	nvgBeginPath(context());
+	nvgRect(context(), x, y, width, height);
+	for (int i = 1; i < 4; ++i)
+	{
+		const float y1 = y + x * i;
+		nvgMoveTo(context(), x, y1);
+		nvgLineTo(context(), x + width, y1);
+	}
+	nvgStrokeColor(context(), graph_line_color());
+	nvgStrokeWidth(context(), 2.0f);
+	nvgStroke(context());
+
+	const float x1 = x + width - 1;
+	const float by = y + height;
+	const float dx = width / static_cast<float>(kFrameDataLength);
+	plot<0>(context(), x1, by, dx, x / 16, frame_line_color(), frame_data_);
+	plot<1>(context(), x1, by, dx, height / vmem_top_, vmem_line_color(),
+	        frame_data_);
 }
 
 #endif

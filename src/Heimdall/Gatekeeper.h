@@ -46,6 +46,7 @@ namespace heimdall
 		std::unique_ptr<PerformanceOverlay> perf_;
 		rainbow::GroupNode scenegraph_;
 		std::unordered_map<unsigned int, Button*> pressed_;
+		rainbow::Rect projection_;
 #if USE_LUA_SCRIPT
 		std::mutex changed_files_mutex_;
 		ChangeMonitor monitor_;
@@ -53,6 +54,7 @@ namespace heimdall
 
 		void post_init();
 		void pre_init(const Vec2i& screen);
+		void update_components();
 
 		/* Implement InputListener */
 

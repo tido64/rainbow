@@ -6,7 +6,7 @@
 
 #include <memory>
 
-#include "Graphics/Geometry.h"
+#include "Common/Geometry.h"
 #include "Graphics/Shaders.h"
 #include "Graphics/ShaderManager.h"
 #include "Graphics/VertexArray.h"
