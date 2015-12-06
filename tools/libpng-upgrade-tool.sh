@@ -1,4 +1,8 @@
 #!/bin/sh
+# Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
+# Distributed under the MIT License.
+# (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
+
 dst=$(cd -P "$(dirname $0)/../src/ThirdParty/libpng" && pwd)
 [ -d "$dst" ] || exit $(stat "$dst")
 [ -f png.c ] || exit $(stat png.c)
