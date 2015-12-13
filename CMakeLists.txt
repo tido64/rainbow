@@ -43,6 +43,7 @@ set(SOURCE_FILES
 	src/Common/Random.cpp
 	src/Common/Random.h
 	src/Common/TreeNode.h
+	src/Common/TypeInfo.h
 	src/Common/UTF8.cpp
 	src/Common/UTF8.h
 	src/Common/Vec2.h
@@ -221,6 +222,7 @@ if(UNIT_TESTS)
 		src/Tests/Common/Link.test.cc
 		src/Tests/Common/Random.test.cc
 		src/Tests/Common/TreeNode.test.cc
+		src/Tests/Common/TypeInfo.test.cc
 		src/Tests/Common/Vec2.test.cc
 		src/Tests/Common/Vec3.test.cc
 		src/Tests/ConFuoco/ConFuoco.test.cc
