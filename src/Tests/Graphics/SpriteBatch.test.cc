@@ -180,6 +180,19 @@ TEST_F(SpriteBatchOperationsTest, BringsSpritesToFront)
 	verify_batch_integrity(batch, count);
 }
 
+TEST_F(SpriteBatchOperationsTest, ClearsSprites)
+{
+	const auto capacity = batch.capacity();
+
+	ASSERT_EQ(count, batch.sprite_count());
+
+	batch.clear();
+
+	ASSERT_EQ(0u, batch.count());
+	ASSERT_EQ(0u, batch.sprite_count());
+	ASSERT_EQ(capacity, batch.capacity());
+}
+
 TEST_F(SpriteBatchOperationsTest, ErasesSprites)
 {
 	set_sprite_ids(refs);

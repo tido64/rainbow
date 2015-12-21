@@ -28,7 +28,7 @@ public:
 	///   <paramref name="hint"/> for more efficient storage.
 	/// </param>
 	SpriteBatch(const unsigned int hint = 4);
-	explicit SpriteBatch(const rainbow::ISolemnlySwearThatIAmOnlyTesting &);
+	explicit SpriteBatch(const rainbow::ISolemnlySwearThatIAmOnlyTesting&);
 	SpriteBatch(SpriteBatch&&);
 	~SpriteBatch();
 
@@ -82,7 +82,10 @@ public:
 
 	/// <summary>Brings sprite to front.</summary>
 	/// <remarks>Invalidates all references.</remarks>
-	void bring_to_front(const Sprite::Ref &);
+	void bring_to_front(const Sprite::Ref&);
+
+	/// <summary>Clears all sprites.</summary>
+	void clear() { count_ = 0; }
 
 	/// <summary>Creates a sprite.</summary>
 	/// <param name="width">Width of the sprite.</param>
@@ -95,16 +98,16 @@ public:
 
 	/// <summary>Erases a sprite from the batch.</summary>
 	/// <remarks>Invalidates all references.</remarks>
-	void erase(const Sprite::Ref &);
+	void erase(const Sprite::Ref&);
 
 	/// <summary>Returns the first sprite with the given id.</summary>
 	Sprite::Ref find_sprite_by_id(const int id) const;
 
 	/// <summary>Moves all sprites by (x,y).</summary>
-	void move(const Vec2f &);
+	void move(const Vec2f&);
 
 	/// <summary>Swaps two sprites' positions in the batch.</summary>
-	void swap(const Sprite::Ref &, const Sprite::Ref &);
+	void swap(const Sprite::Ref&, const Sprite::Ref&);
 
 	/// <summary>Updates the batch of sprites.</summary>
 	void update();
@@ -130,15 +133,17 @@ private:
 	/// <summary>Sets the array state for this batch.</summary>
 	void bind_arrays() const;
 
-	/// <summary>Resizes all client buffers to <paramref name="size"/>.</summary>
+	/// <summary>
+	///   Resizes all client buffers to <paramref name="size"/>.
+	/// </summary>
 	void resize(const unsigned int size);
 
 	/// <summary>Performs a left rotation on a range of sprites.</summary>
 	void rotate(size_t first, size_t n_first, size_t last);
 
 	/// <summary>Sets all sprites to use <paramref name="buffer"/>.</summary>
-	template<typename T>
-	void set_buffer(T *buffer);
+	template <typename T>
+	void set_buffer(T* buffer);
 };
 
 #endif
