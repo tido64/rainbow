@@ -32,7 +32,7 @@ def SystemIncludeDirectoryFlags():
 def ProjectFlags():
   project_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..')
   flags = [
-    '-std=c++11',
+    '-std=c++14',
     '-Werror',
     '-pedantic',
     '-Wall',

@@ -105,7 +105,9 @@ NS_RAINBOW_LUA_BEGIN
 	int load(lua_State *L, const Data &chunk, const char *name, const bool exec)
 	{
 		int e = luaL_loadbuffer(L, chunk, chunk.size(), name);
-		if (e || (exec && (e = lua_pcall(L, 0, LUA_MULTRET, 0))))
+		if (e == LUA_OK && exec)
+			e = lua_pcall(L, 0, LUA_MULTRET, 0);
+		if (e != LUA_OK)
 		{
 			error(L, e);
 			return 0;

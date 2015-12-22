@@ -17,8 +17,6 @@
 #	define getcwd(buf, size) _getcwd(buf, size)
 #	define kPathSeparator '\\'
 #	define kPathSeparatorLiteral "\\"
-#	define mkdir(dirname, mode) _mkdir(dirname)
-#	define mode_t int
 #else
 #	ifdef RAINBOW_OS_ANDROID
 #		include <android/native_activity.h>
@@ -46,6 +44,15 @@ namespace
 	Path g_current_path;
 	Path g_user_data_path;
 
+#ifdef RAINBOW_OS_WINDOWS
+	using mode_t = int;
+
+	int mkdir(const char* dirname, mode_t)
+	{
+		return _mkdir(dirname);
+	}
+#endif
+
 	/// Creates a directory, including any intermediate directories.
 	/// \see mkdir()
 	/// \see stat()
@@ -54,9 +61,10 @@ namespace
 	/// \return 0 upon success. Otherwise, -1 is returned and errno is set to
 	///         indicate the error.
 #ifdef RAINBOW_OS_IOS
-	int create_directories(const char *const path, const mode_t mode) __attribute__((unused));
+	int create_directories(const char* path, mode_t mode)
+	    __attribute__((unused));
 #endif
-	int create_directories(const char *const path, const mode_t mode)
+	int create_directories(const char* path, mode_t mode)
 	{
 		bool end = false;
 		struct stat sb;
@@ -106,7 +114,7 @@ const char* Path::current()
 void Path::set_current()
 {
 #ifdef RAINBOW_OS_ANDROID
-	const char *data_path = gNativeActivity->externalDataPath;
+	const char* data_path = gNativeActivity->externalDataPath;
 	if (!data_path)
 	{
 		data_path = gNativeActivity->internalDataPath;
@@ -120,7 +128,7 @@ void Path::set_current()
 #endif
 }
 
-void Path::set_current(const char *const path)
+void Path::set_current(const char* path)
 {
 	g_current_path = path;
 	set_current();
@@ -132,7 +140,7 @@ Path::Path()
 		path_[0] = '\0';
 }
 
-Path::Path(const char *const file, const RelativeTo rel)
+Path::Path(const char* file, RelativeTo rel)
 {
 	path_[0] = '\0';
 	switch (rel)
@@ -150,7 +158,7 @@ Path::Path(const char *const file, const RelativeTo rel)
 				}
 				path_[++j] = '\0';
 #elif defined(RAINBOW_OS_IOS)
-				NSString *string = [[NSString alloc]
+				NSString* string = [[NSString alloc]
 				    initWithBytesNoCopy:(void*)file
 				                 length:strlen(file)
 				               encoding:NSUTF8StringEncoding
@@ -170,8 +178,8 @@ Path::Path(const char *const file, const RelativeTo rel)
 		}
 		case RelativeTo::UserDataPath: {
 #ifdef RAINBOW_OS_IOS
-				NSError *err = nil;
-				NSString *libraryDir = [[[NSFileManager defaultManager]
+				NSError* err = nil;
+				NSString* libraryDir = [[[NSFileManager defaultManager]
 				    URLForDirectory:NSLibraryDirectory
 				           inDomain:NSUserDomainMask
 				  appropriateForURL:nil
@@ -179,7 +187,7 @@ Path::Path(const char *const file, const RelativeTo rel)
 				              error:&err] path];
 				if (!libraryDir)
 					return;
-				NSString *string = [[NSString alloc]
+				NSString* string = [[NSString alloc]
 				    initWithBytesNoCopy:(void*)file
 				                 length:strlen(file)
 				               encoding:NSUTF8StringEncoding
@@ -210,16 +218,13 @@ Path::Path(const char *const file, const RelativeTo rel)
 }
 
 #ifdef RAINBOW_TEST
-
 int Path::create()
 {
 	return create_directories(path_, 0775);
 }
-
 #endif
 
 #ifdef RAINBOW_OS_MACOS
-
 CFURLRef Path::CreateCFURL() const
 {
 	CFStringRef str = CFStringCreateWithBytesNoCopy(
@@ -230,7 +235,6 @@ CFURLRef Path::CreateCFURL() const
 	CFRelease(str);
 	return url;
 }
-
 #endif
 
 bool Path::is_file() const
@@ -241,13 +245,13 @@ bool Path::is_file() const
 	return S_ISREG(sb.st_mode);
 }
 
-Path& Path::operator=(const char *const path)
+Path& Path::operator=(const char* path)
 {
 	strncpy(path_, path, sizeof(path_) - sizeof(path_[0]));
 	return *this;
 }
 
-Path& Path::operator+=(const char *const path)
+Path& Path::operator+=(const char* path)
 {
 	const size_t last = strlen(path_) - 1;
 	if (path_[last] != kPathSeparator)
@@ -257,15 +261,13 @@ Path& Path::operator+=(const char *const path)
 }
 
 #ifdef RAINBOW_OS_IOS
-
 Path::operator NSURL*() const
 {
-	NSString *path = [[NSString alloc]
+	NSString* path = [[NSString alloc]
 	    initWithBytesNoCopy:(void*)path_
 	                 length:strlen(path_)
 	               encoding:NSUTF8StringEncoding
 	           freeWhenDone:NO];
 	return [NSURL fileURLWithPath:path isDirectory:NO];
 }
-
 #endif

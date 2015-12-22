@@ -22,7 +22,7 @@ namespace
 #ifndef NDEBUG
 	std::unordered_set<SceneNode*> g_nodes;
 
-	bool is_valid_node(lua_State *L, const int n, SceneNode *node)
+	bool is_valid_node(lua_State* L, int n, SceneNode* node)
 	{
 		if (!node)
 			return luaL_argerror(L, n, "invalid node");
@@ -31,27 +31,27 @@ namespace
 		return true;
 	}
 
-	bool register_node(SceneNode *node)
+	bool register_node(SceneNode* node)
 	{
 		return g_nodes.insert(node).second;
 	}
 
-	bool unregister_node(SceneNode *node)
+	bool unregister_node(SceneNode* node)
 	{
 		for_each(*node, [](SceneNode &node) { g_nodes.erase(&node); });
 		return true;
 	}
 #endif
 
-	template<typename T>
-	T* unchecked_cast(lua_State *L, const int n)
+	template <typename T>
+	T* unchecked_cast(lua_State* L, int n)
 	{
 		return static_cast<T*>(lua_touserdata(L, n));
 	}
 
-	SceneNode* tonode(lua_State *L, const int n)
+	SceneNode* tonode(lua_State* L, int n)
 	{
-		SceneNode *node = unchecked_cast<SceneNode>(L, n);
+		SceneNode* node = unchecked_cast<SceneNode>(L, n);
 		R_ASSERT(is_valid_node(L, n, node), "Invalid or non-existing node");
 		return node;
 	}
@@ -59,13 +59,13 @@ namespace
 
 NS_RAINBOW_LUA_BEGIN
 {
-	template<>
+	template <>
 	const char SceneGraph::Bind::class_name[] = "scenegraph";
 
-	template<>
+	template <>
 	const bool SceneGraph::Bind::is_constructible = false;
 
-	template<>
+	template <>
 	const luaL_Reg SceneGraph::Bind::functions[] = {
 	    {"add_animation",   &SceneGraph::add_animation},
 	    {"add_batch",       &SceneGraph::add_batch},
@@ -82,12 +82,12 @@ NS_RAINBOW_LUA_BEGIN
 	    {nullptr,           nullptr}
 	};
 
-	SceneGraph* SceneGraph::create(lua_State *L, SceneNode *root)
+	SceneGraph* SceneGraph::create(lua_State* L, SceneNode* root)
 	{
 		R_ASSERT(register_node(root), "Failed to register root node");
 
 		lua_pushlstring(L, class_name, strllen(class_name));
-		void *data = lua_newuserdata(L, sizeof(SceneGraph));
+		void* data = lua_newuserdata(L, sizeof(SceneGraph));
 		luaL_newmetatable(L, class_name);  // metatable = {}
 		luaL_setfuncs(L, functions, 0);
 		luaR_rawsetcfunction(L, "__tostring", &tostring<SceneGraph>);
@@ -103,7 +103,10 @@ NS_RAINBOW_LUA_BEGIN
 		return static_cast<SceneGraph*>(new (data) SceneGraph(root));
 	}
 
-	void SceneGraph::destroy(lua_State *L, SceneGraph *scenegraph)
+#ifdef _MSC_VER
+#	pragma warning(suppress: 4100)
+#endif
+	void SceneGraph::destroy(lua_State* L, SceneGraph* scenegraph)
 	{
 		lua_getglobal(L, "rainbow");
 		lua_pushlstring(L, class_name, strllen(class_name));
@@ -113,16 +116,16 @@ NS_RAINBOW_LUA_BEGIN
 		scenegraph->~SceneGraph();
 	}
 
-	SceneGraph::SceneGraph(SceneNode *root) : node_(root) {}
+	SceneGraph::SceneGraph(SceneNode* root) : node_(root) {}
 
-	template<typename T, typename F>
-	int SceneGraph::add_child(lua_State *L, F&& touserdata)
+	template <typename T, typename F>
+	int SceneGraph::add_child(lua_State* L, F&& touserdata)
 	{
-		SceneGraph *self = Bind::self(L);
+		SceneGraph* self = Bind::self(L);
 		if (!self)
 			return 0;
 
-		SceneNode *node;
+		SceneNode* node;
 		int obj;
 		if (lua_isnoneornil(L, 3))
 		{
@@ -138,46 +141,46 @@ NS_RAINBOW_LUA_BEGIN
 			obj = 3;
 		}
 		replacetable(L, obj);
-		SceneNode *child = node->add_child(*touserdata(L, obj)->get());
+		SceneNode* child = node->add_child(*touserdata(L, obj)->get());
 		R_ASSERT(register_node(child), "Failed to register node");
 		lua_pushlightuserdata(L, child);
 		return 1;
 	}
 
-	int SceneGraph::add_animation(lua_State *L)
+	int SceneGraph::add_animation(lua_State* L)
 	{
 		// rainbow.scenegraph:add_animation([node], <animation>)
 		return add_child<Animation>(L, touserdata<Animation>);
 	}
 
-	int SceneGraph::add_batch(lua_State *L)
+	int SceneGraph::add_batch(lua_State* L)
 	{
 		// rainbow.scenegraph:add_batch([node], <batch>)
 		return add_child<SpriteBatch>(L, touserdata<SpriteBatch>);
 	}
 
-	int SceneGraph::add_drawable(lua_State *L)
+	int SceneGraph::add_drawable(lua_State* L)
 	{
 		// rainbow.scenegraph:add_drawable([node], <drawable>)
 		return add_child<Drawable>(L, unchecked_cast<Drawable>);
 	}
 
-	int SceneGraph::add_label(lua_State *L)
+	int SceneGraph::add_label(lua_State* L)
 	{
 		// rainbow.scenegraph:add_label([node], <label>)
 		return add_child<Label>(L, touserdata<Label>);
 	}
 
-	int SceneGraph::add_node(lua_State *L)
+	int SceneGraph::add_node(lua_State* L)
 	{
 		// rainbow.scenegraph:add_node([parent])
 		Argument<SceneNode>::is_optional(L, 2);
 
-		SceneGraph *self = Bind::self(L);
+		SceneGraph* self = Bind::self(L);
 		if (!self)
 			return 0;
 
-		SceneNode *node = (lua_isuserdata(L, 2) ? tonode(L, 2) : self->node_);
+		SceneNode* node = (lua_isuserdata(L, 2) ? tonode(L, 2) : self->node_);
 		R_ASSERT(node, "This shouldn't ever happen.");
 		auto child = SceneNode::create();
 		R_ASSERT(register_node(child.get()), "Failed to register node");
@@ -185,13 +188,13 @@ NS_RAINBOW_LUA_BEGIN
 		return 1;
 	}
 
-	int SceneGraph::attach_program(lua_State *L)
+	int SceneGraph::attach_program(lua_State* L)
 	{
 		// rainbow.scenegraph:attach_program(node, program)
 		Argument<SceneNode>::is_required(L, 2);
 		Argument<Shader>::is_required(L, 3);
 
-		SceneGraph *self = Bind::self(L);
+		SceneGraph* self = Bind::self(L);
 		if (!self)
 			return 0;
 
@@ -201,7 +204,7 @@ NS_RAINBOW_LUA_BEGIN
 		return 0;
 	}
 
-	int SceneGraph::disable(lua_State *L)
+	int SceneGraph::disable(lua_State* L)
 	{
 		// rainbow.scenegraph:disable(node)
 		Argument<SceneNode>::is_required(L, 2);
@@ -210,7 +213,7 @@ NS_RAINBOW_LUA_BEGIN
 		return 0;
 	}
 
-	int SceneGraph::enable(lua_State *L)
+	int SceneGraph::enable(lua_State* L)
 	{
 		// rainbow.scenegraph:enable(node)
 		Argument<SceneNode>::is_required(L, 2);
@@ -219,18 +222,18 @@ NS_RAINBOW_LUA_BEGIN
 		return 0;
 	}
 
-	int SceneGraph::remove(lua_State *L)
+	int SceneGraph::remove(lua_State* L)
 	{
 		// rainbow.scenegraph:remove(node)
 		Argument<SceneNode>::is_required(L, 2);
 
-		SceneNode *node = tonode(L, 2);
+		SceneNode* node = tonode(L, 2);
 		R_ASSERT(unregister_node(node), "Failed to unregister node");
 		node->remove();
 		return 0;
 	}
 
-	int SceneGraph::set_parent(lua_State *L)
+	int SceneGraph::set_parent(lua_State* L)
 	{
 		// rainbow.scenegraph:set_parent(parent, child)
 		Argument<SceneNode>::is_required(L, 2);
@@ -240,7 +243,7 @@ NS_RAINBOW_LUA_BEGIN
 		return 0;
 	}
 
-	int SceneGraph::set_tag(lua_State *L)
+	int SceneGraph::set_tag(lua_State* L)
 	{
 		// rainbow.scenegraph:set_tag(node, tag)
 		Argument<SceneNode>::is_required(L, 2);
@@ -252,7 +255,7 @@ NS_RAINBOW_LUA_BEGIN
 		return 0;
 	}
 
-	int SceneGraph::move(lua_State *L)
+	int SceneGraph::move(lua_State* L)
 	{
 		// rainbow.scenegraph:move(node, x, y)
 		Argument<SceneNode>::is_required(L, 2);
@@ -267,16 +270,16 @@ NS_RAINBOW_LUA_BEGIN
 		return 0;
 	}
 
-	template<>
+	template <>
 	const char ScopedNode::Bind::class_name[] = "scoped_node";
 
-	template<>
+	template <>
 	const bool ScopedNode::Bind::is_constructible = true;
 
-	template<>
+	template <>
 	const luaL_Reg ScopedNode::Bind::functions[] = {{nullptr, nullptr}};
 
-	ScopedNode::ScopedNode(lua_State *L) : node_(nullptr), state_(L)
+	ScopedNode::ScopedNode(lua_State* L) : node_(nullptr), state_(L)
 	{
 		Argument<SceneNode>::is_required(L, 1);
 		node_ = tonode(L, 1);

@@ -10,8 +10,6 @@
 #  include <CoreFoundation/CoreFoundation.h>
 #endif
 
-#include "Common/NonCopyable.h"
-
 class Path
 {
 public:
@@ -24,11 +22,10 @@ public:
 
 	static const char* current();
 	static void set_current();
-	static void set_current(const char *const path);
+	static void set_current(const char* path);
 
 	Path();
-	explicit Path(const char *const file,
-	              const RelativeTo rel = RelativeTo::CurrentPath);
+	explicit Path(const char* file, RelativeTo rel = RelativeTo::CurrentPath);
 
 #ifdef RAINBOW_TEST
 	int create();
@@ -41,8 +38,8 @@ public:
 	/// <summary>Returns whether there is a file at this path.</summary>
 	bool is_file() const;
 
-	Path& operator=(const char *const path);
-	Path& operator+=(const char *const path);
+	Path& operator=(const char* path);
+	Path& operator+=(const char* path);
 
 	operator const char*() const { return path_; }
 

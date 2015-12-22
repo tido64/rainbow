@@ -25,7 +25,7 @@ NS_RAINBOW_LUA_MODULE_BEGIN(input)
 
 		int acceleration = -1;
 		int events = -1;
-		size_t event_count = -1;
+		size_t event_count = std::numeric_limits<size_t>::max();
 
 		const char* const kInputEvents[]{
 		    "key_down",

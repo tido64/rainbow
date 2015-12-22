@@ -45,6 +45,7 @@ if(WIN32)
 	if(MSVC)
 		# Warning C4065: switch statement contains 'default' but no 'case' labels
 		# Warning C4244: 'argument': conversion from 'type1' to 'type2', possible loss of data
+		# Warning C4456: declaration of 'x' hides previous local declaration
 		# Warning C4800: 'type': forcing value to bool 'true' or 'false' (performance warning)
 		# /GR-: Disables run-time type information (RTTI).
 		# /INCREMENTAL:NO: Disables incremental linking.
@@ -56,7 +57,7 @@ if(WIN32)
 		set(CMAKE_C_FLAGS_MINSIZEREL "${CMAKE_C_FLAGS_MINSIZEREL} /MT")
 		set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} /MT")
 		set(CMAKE_C_FLAGS_RELWITHDEBINFO "${CMAKE_C_FLAGS_RELWITHDEBINFO} /MTd")
-		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4065 /wd4244 /wd4800 /GR- /Oi")
+		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4 /wd4065 /wd4244 /wd4456 /wd4800 /GR- /Oi")
 		set(CMAKE_CXX_FLAGS_MINSIZEREL "${CMAKE_CXX_FLAGS_MINSIZEREL} /MT")
 		set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
 		string(REGEX REPLACE "/D NDEBUG" "" MSVC_CXX_FLAGS_RELWITHDEBINFO ${CMAKE_CXX_FLAGS_RELWITHDEBINFO})

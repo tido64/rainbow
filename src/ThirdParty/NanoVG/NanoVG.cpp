@@ -23,10 +23,15 @@
 #		pragma GCC diagnostic ignored "-pedantic"
 #	endif
 #	pragma GCC diagnostic ignored "-Wold-style-cast"
+#elif _MSC_VER
+#	pragma warning(push)
+#	pragma warning(disable: 4201)
 #endif
 #include <nanovg_gl.h>
 #ifdef __GNUC__
 #	pragma GCC diagnostic pop
+#elif _MSC_VER
+#	pragma warning(pop)
 #endif
 
 #include "Graphics/Renderer.h"
