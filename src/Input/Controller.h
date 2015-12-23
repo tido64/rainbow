@@ -53,10 +53,10 @@ struct ControllerAxisMotion
 	ControllerAxisMotion()
 	    : id(0), axis(Controller::Axis::Invalid), value(0), timestamp(0) {}
 
-	ControllerAxisMotion(const uint32_t id,
-	                     const Controller::Axis axis,
-	                     const int32_t value,
-	                     const uint64_t timestamp)
+	ControllerAxisMotion(uint32_t id,
+	                     Controller::Axis axis,
+	                     int32_t value,
+	                     uint64_t timestamp)
 	    : id(id), axis(axis), value(value), timestamp(timestamp) {}
 };
 
@@ -69,9 +69,7 @@ struct ControllerButton
 	ControllerButton()
 	    : id(0), button(Controller::Button::Invalid), timestamp(0) {}
 
-	ControllerButton(const uint32_t id,
-	                 const Controller::Button button,
-	                 const uint64_t timestamp)
+	ControllerButton(uint32_t id, Controller::Button button, uint64_t timestamp)
 	    : id(id), button(button), timestamp(timestamp) {}
 };
 

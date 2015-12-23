@@ -20,17 +20,14 @@ namespace
 {
 	using String = std::unique_ptr<char[]>;
 
-	const Shader::AttributeParams kAttributeDefaultParams[] = {
+	const Shader::AttributeParams kAttributeDefaultParams[]{
 	    {Shader::kAttributeVertex, "vertex"},
 	    {Shader::kAttributeColor, "color"},
 	    {Shader::kAttributeTexCoord, "texcoord"},
 	    {Shader::kAttributeNone, nullptr}};
 
-	template<typename F, typename G>
-	String verify(const GLuint id,
-	              const GLenum pname,
-	              F&& glGetiv,
-	              G&& glGetInfoLog)
+	template <typename F, typename G>
+	String verify(GLuint id, GLenum pname, F&& glGetiv, G&& glGetInfoLog)
 	{
 		GLint status = GL_FALSE;
 		glGetiv(id, pname, &status);
@@ -196,7 +193,7 @@ void ShaderManager::update_viewport()
 	update_projection();
 }
 
-void ShaderManager::use(const unsigned int program)
+void ShaderManager::use(unsigned int program)
 {
 	if (program != current_)
 	{
@@ -230,7 +227,7 @@ ShaderManager::ShaderManager(Renderer* renderer)
 
 bool ShaderManager::init()
 {
-	Shader::Params shaders[] = {
+	Shader::Params shaders[]{
 	    {Shader::kTypeVertex, 0, rainbow::shaders::kFixed2Dv,
 	     rainbow::shaders::integrated::kFixed2Dv},
 	    {Shader::kTypeFragment, 0, rainbow::shaders::kFixed2Df,

@@ -28,7 +28,7 @@ namespace
 		void draw_impl() const override { ++draw_count_; }
 		void move_impl(const Vec2f&) const override { ++move_count_; }
 
-		void update_impl(const unsigned long) const override
+		void update_impl(unsigned long) const override
 		{
 			++update_count_;
 		}

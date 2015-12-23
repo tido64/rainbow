@@ -23,10 +23,10 @@ namespace heimdall
 
 		void init(rainbow::SceneNode& parent, const Vec2i& screen);
 
-		unsigned int count() const { return 6; }
-		bool is_visible() const { return node_->is_enabled(); }
-		rainbow::SceneNode* node() const { return node_; }
-		const VertexArray& vertex_array() const { return array_; }
+		auto count() const { return 6; }
+		auto is_visible() const { return node_->is_enabled(); }
+		auto node() const { return node_; }
+		auto vertex_array() const -> const VertexArray& { return array_; }
 
 		void hide() { node_->set_enabled(false); }
 		void show() { node_->set_enabled(true); }
@@ -51,7 +51,7 @@ namespace heimdall
 		// Implement Drawable.
 
 		void draw_impl() override;
-		void update_impl(const unsigned long) override {}
+		void update_impl(unsigned long) override {}
 	};
 }
 

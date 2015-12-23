@@ -1,4 +1,4 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -7,33 +7,25 @@
 
 #include "Common/Vec3.h"
 
-namespace rainbow
+namespace rainbow { namespace shaders
 {
-	namespace shaders
+	class Diffuse
 	{
-		class Diffuse
-		{
-		public:
-			Diffuse(const bool normal = false);
+	public:
+		Diffuse(bool normal = false);
 
-			void set_cutoff(const float cutoff) const;
-			void set_radius(const float radius) const;
-			void set_position(const float x, const float y, const float z = 100.0f) const;
+		unsigned int id() const { return program_; }
 
-			inline unsigned int id() const;
+		void set_cutoff(float cutoff) const;
+		void set_radius(float radius) const;
+		void set_position(float x, float y, float z = 100.0f) const;
 
-		private:
-			int cutoff_;    ///< Maximum distance of the light's influence.
-			int radius_;    ///< Light source's radius.
-			int position_;  ///< Position of the light source.
-			unsigned int program_;
-		};
-
-		unsigned int Diffuse::id() const
-		{
-			return program_;
-		}
-	}
-}
+	private:
+		int cutoff_;    ///< Maximum distance of the light's influence.
+		int radius_;    ///< Light source's radius.
+		int position_;  ///< Position of the light source.
+		unsigned int program_;
+	};
+}}  // namespace rainbow::shaders
 
 #endif

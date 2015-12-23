@@ -17,7 +17,7 @@ public:
 	using clock = std::chrono::steady_clock;
 	using duration = std::chrono::milliseconds;
 
-	static void sleep(const duration::rep milliseconds);
+	static void sleep(duration::rep milliseconds);
 	static duration system_now();
 	static std::chrono::seconds time_since_epoch();
 

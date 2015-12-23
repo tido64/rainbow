@@ -14,13 +14,13 @@ struct AAsset;
 class File : private NonCopyable<File>
 {
 public:
-	static File open(const char *const path);
-	static File open_asset(const char *const path);
-	static File open_document(const char *const path);
-	static File open_write(const char *const path);
+	static File open(const char* path);
+	static File open_asset(const char* path);
+	static File open_document(const char* path);
+	static File open_write(const char* path);
 
 	File() : is_asset_(false), stream_(nullptr) {}
-	File(File &&);
+	File(File&&);
 	~File();
 
 	/// <summary>Returns the file size.</summary>
@@ -33,7 +33,7 @@ public:
 	/// <param name="dst">[out] Destination buffer.</param>
 	/// <param name="size">Number of bytes to read.</param>
 	/// <returns>Number of bytes read.</returns>
-	size_t read(void *dst, const size_t size) const;
+	size_t read(void* dst, size_t size) const;
 
 	/// <summary>
 	///   Sets the file position indicator for the file stream to the value
@@ -45,13 +45,13 @@ public:
 	/// </param>
 	/// <param name="origin">Position to which offset is added.</param>
 	/// <returns>0 upon success, nonzero value otherwise.</returns>
-	int seek(const long offset, const int origin) const;
+	int seek(long offset, int origin) const;
 
 	/// <summary>Writes buffer at <paramref name="buffer"/> to file.</summary>
 	/// <param name="buffer">Source buffer.</param>
 	/// <param name="size">Number of bytes to write.</param>
 	/// <returns>Number of bytes written.</returns>
-	size_t write(const void *buffer, const size_t size) const;
+	size_t write(const void* buffer, size_t size) const;
 
 	explicit operator bool() const { return stream_; }
 	operator AAsset*() const { return asset_; }
@@ -62,12 +62,12 @@ private:
 
 	union
 	{
-		AAsset *asset_;
-		FILE *stream_;
+		AAsset* asset_;
+		FILE* stream_;
 	};
 
-	explicit File(const char *const path);
-	File(const char *const path, const char *const mode);
+	explicit File(const char* path);
+	File(const char* path, const char* mode);
 };
 
 #endif

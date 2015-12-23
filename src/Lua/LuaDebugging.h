@@ -1,4 +1,4 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -18,41 +18,40 @@ NS_RAINBOW_LUA_BEGIN
 	{
 		const int kLuaMaxStack = 256;
 
-		const char *const kLuaHookNames[] = {
-			"call", "return", "line", "count", "tail call"
-		};
+		const char* const kLuaHookNames[]{
+		    "call", "return", "line", "count", "tail call"};
 
 		struct Line
 		{
 			int currentline;
 			int nparams;
-			const char *source;
+			const char* source;
 		};
 
 		char g_command = 0;
 		int g_finish = std::numeric_limits<int>::max();
 		int g_level = -1;
-		Line g_callstack[kLuaMaxStack] = { { 0, 0, nullptr } };
+		Line g_callstack[kLuaMaxStack] = {{0, 0, nullptr}};
 	}
 
 	/// <summary>Dumps stack traceback to stdout.</summary>
-	void backtrace(lua_State *L);
+	void backtrace(lua_State* L);
 
 	/// <summary>Dumps locals to stdout.</summary>
-	void dump_locals(lua_State *L, lua_Debug *ar);
+	void dump_locals(lua_State* L, lua_Debug* ar);
 
 	/// <summary>Dumps stack to stdout.</summary>
-	void dump_stack(lua_State *L);
+	void dump_stack(lua_State* L);
 
 	/// <summary>
 	///   Passed to <see cref="lua_sethook"/>. Not to be called directly.
 	/// </summary>
-	void lua_Hook(lua_State *L, lua_Debug *ar);
+	void lua_Hook(lua_State* L, lua_Debug* ar);
 
 	/// <summary>Prints the value at index <paramref name="n"/>.</summary>
-	void print_value(lua_State *L, const int n);
+	void print_value(lua_State* L, int n);
 
-	void backtrace(lua_State *L)
+	void backtrace(lua_State* L)
 	{
 		int level = 0;
 		lua_Debug ar;
@@ -69,10 +68,10 @@ NS_RAINBOW_LUA_BEGIN
 		}
 	}
 
-	void dump_locals(lua_State *L, lua_Debug *ar)
+	void dump_locals(lua_State* L, lua_Debug* ar)
 	{
 		int i = 0;
-		const char *local = lua_getlocal(L, ar, ++i);
+		const char* local = lua_getlocal(L, ar, ++i);
 		while (local)
 		{
 			if (*local == '(')
@@ -90,7 +89,7 @@ NS_RAINBOW_LUA_BEGIN
 		}
 	}
 
-	void dump_stack(lua_State *L)
+	void dump_stack(lua_State* L)
 	{
 		const int top = lua_gettop(L);
 		if (top == 0)
@@ -105,7 +104,7 @@ NS_RAINBOW_LUA_BEGIN
 		}
 	}
 
-	void lua_Hook(lua_State *L, lua_Debug *ar)
+	void lua_Hook(lua_State* L, lua_Debug* ar)
 	{
 		if (lua_getinfo(L, "nSlufL", ar) == 0)
 			return;
@@ -160,7 +159,7 @@ NS_RAINBOW_LUA_BEGIN
 						else
 						{
 							int i = 0;
-							const char *local = lua_getlocal(L, ar, ++i);
+							const char* local = lua_getlocal(L, ar, ++i);
 							while (local && *local != '(')
 								local = lua_getlocal(L, ar, ++i);
 							g_callstack[g_level].nparams = i - 1;
@@ -169,8 +168,8 @@ NS_RAINBOW_LUA_BEGIN
 						g_callstack[g_level].source = ar->source;
 
 						// Jump over require() and any C-calls
-						jump = (ar->name && strcmp("require", ar->name) == 0)
-						       || *ar->what == 'C';
+						jump = (ar->name && strcmp("require", ar->name) == 0) ||
+						       *ar->what == 'C';
 					}
 					break;
 				case 1:  // return
@@ -211,7 +210,7 @@ NS_RAINBOW_LUA_BEGIN
 			{
 				for (int i = 1; i <= nparams; ++i)
 				{
-					const char *local = lua_getlocal(L, ar, i);
+					const char* local = lua_getlocal(L, ar, i);
 					if (lua_type(L, -1) == LUA_TFUNCTION)
 					{
 						lua_pop(L, 1);
@@ -231,11 +230,17 @@ NS_RAINBOW_LUA_BEGIN
 		if (jump)
 		{
 			g_finish = g_level - 1;
-			printf("at %s:%i\n", g_callstack[g_finish].source, g_callstack[g_finish].currentline);
+			printf("at %s:%i\n",
+			       g_callstack[g_finish].source,
+			       g_callstack[g_finish].currentline);
 			return;
 		}
 		else
-			printf("at %s:%i\n", g_callstack[g_level].source, g_callstack[g_level].currentline);
+		{
+			printf("at %s:%i\n",
+			       g_callstack[g_level].source,
+			       g_callstack[g_level].currentline);
+		}
 
 		char input[16];
 		while (true)
@@ -287,7 +292,7 @@ NS_RAINBOW_LUA_BEGIN
 		}
 	}
 
-	void print_value(lua_State *L, const int n)
+	void print_value(lua_State* L, int n)
 	{
 		switch (lua_type(L, n))
 		{

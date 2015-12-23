@@ -1,4 +1,4 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -13,7 +13,7 @@ NS_RAINBOW_LUA_BEGIN
 	class Font : public Bind<Font>
 	{
 	public:
-		Font(lua_State *);
+		Font(lua_State*);
 
 		SharedPtr<FontAtlas> get() const;
 

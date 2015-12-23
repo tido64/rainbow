@@ -5,7 +5,7 @@
 #include "Script/NoGame.h"
 #include "Script/Transition.h"
 
-void NoGame::init(const Vec2i &screen)
+void NoGame::init(const Vec2i& screen)
 {
 	batch_ = rainbow::spritebatch(1);
 	auto texture = rainbow::texture("Rainbow.png");
@@ -18,7 +18,7 @@ void NoGame::init(const Vec2i &screen)
 	scenegraph().add_child(batch_);
 }
 
-void NoGame::update(const unsigned long)
+void NoGame::update(unsigned long)
 {
 	static bool run_once = false;
 	if (!run_once)
@@ -28,7 +28,7 @@ void NoGame::update(const unsigned long)
 	}
 }
 
-GameBase* GameBase::create(rainbow::Director &director)
+GameBase* GameBase::create(rainbow::Director& director)
 {
 	return new NoGame(director);
 }

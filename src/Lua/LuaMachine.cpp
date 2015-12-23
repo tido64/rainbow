@@ -1,4 +1,4 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -14,7 +14,7 @@ namespace
 {
 	const char kLuaRainbowInstance[] = "__rainbow_instance";
 
-	int breakpoint(lua_State *L)
+	int breakpoint(lua_State* L)
 	{
 #ifndef NDEBUG
 		rainbow::lua::sethook(L);
@@ -24,22 +24,21 @@ namespace
 		return 0;
 	}
 
-	int createtable(lua_State *L)
+	int createtable(lua_State* L)
 	{
 		using rainbow::lua::optinteger;
 		lua_createtable(L, optinteger(L, 1, 0), optinteger(L, 2, 0));
 		return 1;
 	}
 
-	int exit(lua_State *L)
+	int exit(lua_State* L)
 	{
 		rainbow::lua::Argument<char*>::is_optional(L, 1);
 
 		lua_getglobal(L, kLuaRainbowInstance);
 		if (lua_islightuserdata(L, -1))
 		{
-			LuaScript *instance =
-			    static_cast<LuaScript*>(lua_touserdata(L, -1));
+			auto instance = static_cast<LuaScript*>(lua_touserdata(L, -1));
 			if (lua_gettop(L) > 1)
 				instance->terminate(lua_tostring(L, 1));
 			else
@@ -52,9 +51,9 @@ namespace
 	}
 
 	// Copied from 'linit.c'.
-	void luaR_openlibs(lua_State *L)
+	void luaR_openlibs(lua_State* L)
 	{
-		const luaL_Reg loadedlibs[] = {
+		const luaL_Reg loadedlibs[]{
 		    {"_G", luaopen_base},
 		    {LUA_LOADLIBNAME, luaopen_package},
 		    {LUA_COLIBNAME, luaopen_coroutine},
@@ -62,17 +61,17 @@ namespace
 		    {LUA_STRLIBNAME, luaopen_string},
 		    {LUA_BITLIBNAME, luaopen_bit32},
 		    {LUA_MATHLIBNAME, luaopen_math},
-		    {LUA_DBLIBNAME, luaopen_debug}
-		};
+		    {LUA_DBLIBNAME, luaopen_debug}};
+
 		// Call open functions from 'loadedlibs' and set results to global table
-		for (const auto &lib : loadedlibs)
+		for (const auto& lib : loadedlibs)
 		{
 			luaL_requiref(L, lib.name, lib.func, 1);
 			lua_pop(L, 1);
 		}
 	}
 
-	int time_since_epoch(lua_State *L)
+	int time_since_epoch(lua_State* L)
 	{
 		lua_pushinteger(L, Chrono::time_since_epoch().count());
 		return 1;
@@ -81,7 +80,7 @@ namespace
 
 namespace rainbow
 {
-	int LuaMachine::start(const Data &main)
+	int LuaMachine::start(const Data& main)
 	{
 		if (lua::load(state_, main, "main") == 0)
 			return luaL_error(state_, "Failed to load main script");
@@ -97,7 +96,7 @@ namespace rainbow
 #endif
 	}
 
-	int LuaMachine::update(const unsigned long t)
+	int LuaMachine::update(unsigned long t)
 	{
 #ifndef NDEBUG
 		lua_rawgeti(state_, LUA_REGISTRYINDEX, traceback_);
@@ -133,7 +132,7 @@ namespace rainbow
 		state_ = nullptr;
 	}
 
-	int LuaMachine::init(LuaScript *instance, SceneNode *root)
+	int LuaMachine::init(LuaScript* instance, SceneNode* root)
 	{
 		luaR_openlibs(state_);
 

@@ -1,4 +1,4 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -15,13 +15,13 @@ NS_RAINBOW_LUA_BEGIN
 		friend Bind;
 
 	public:
-		Texture(lua_State *);
+		Texture(lua_State*);
 
 		SharedPtr<TextureAtlas> get() const;
 
 	private:
-		static int create(lua_State *);
-		static int trim(lua_State *);
+		static int create(lua_State*);
+		static int trim(lua_State*);
 
 		SharedPtr<TextureAtlas> texture_;
 	};

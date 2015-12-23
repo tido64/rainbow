@@ -28,20 +28,20 @@ namespace b2
 		float curr_r;
 		float prev_r;
 
-		BodyState(const b2BodyDef *d);
+		BodyState(const b2BodyDef* d);
 	};
 
 	class StableWorld final : public b2World, public DebuggableWorld
 	{
 	public:
-		StableWorld(const float gx = 0.0f, const float gy = kStandardGravity);
+		StableWorld(float gx = 0.0f, float gy = kStandardGravity);
 		~StableWorld();
 
 		// b2World overrides.
 
-		void SetDebugDraw(b2Draw *debugDraw) /* override */;
-		b2Body* CreateBody(const b2BodyDef *def) /* override */;
-		void DestroyBody(b2Body *body) /* override */;
+		void SetDebugDraw(b2Draw* debugDraw) /* override */;
+		b2Body* CreateBody(const b2BodyDef* def) /* override */;
+		void DestroyBody(b2Body* body) /* override */;
 		void Step(float32 timeStep,
 		          int32 velocityIterations,
 		          int32 positionIterations) /* override */;
@@ -52,7 +52,7 @@ namespace b2
 
 	private:
 		float elapsed_;
-		DebugDraw *debug_draw_;
+		DebugDraw* debug_draw_;
 
 		void Interpolate();
 		void RestoreState();

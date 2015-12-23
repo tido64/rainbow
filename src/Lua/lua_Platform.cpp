@@ -1,4 +1,4 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -9,7 +9,7 @@
 
 NS_RAINBOW_LUA_MODULE_BEGIN(platform)
 {
-	void init(lua_State *L)
+	void init(lua_State* L)
 	{
 		lua_pushliteral(L, "platform");
 		lua_createtable(L, 0, 4);
@@ -45,7 +45,7 @@ NS_RAINBOW_LUA_MODULE_BEGIN(platform)
 		lua_rawset(L, -3);
 	}
 
-	void update(lua_State *L, const Vec2i &screen)
+	void update(lua_State* L, const Vec2i& screen)
 	{
 		lua_getglobal(L, "rainbow");
 		lua_pushliteral(L, "platform");

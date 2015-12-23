@@ -10,13 +10,12 @@
 #include "Script/GameBase.h"
 
 #ifdef USE_PHYSICS
-#include "ThirdParty/Box2D/DebugDraw.h"
+#	include "ThirdParty/Box2D/DebugDraw.h"
 #endif  // USE_PHYSICS
 
 namespace rainbow
 {
-	Director::Director()
-	    : active_(true), terminated_(false), error_(nullptr)
+	Director::Director() : active_(true), terminated_(false), error_(nullptr)
 	{
 		if (!ConFuoco::Mixer::Instance)
 			terminate("Failed to initialise audio engine");
@@ -42,7 +41,7 @@ namespace rainbow
 #endif  // USE_PHYSICS
 	}
 
-	void Director::init(const Vec2i &screen)
+	void Director::init(const Vec2i& screen)
 	{
 		random.seed();
 		renderer_.set_resolution(screen);
@@ -54,7 +53,7 @@ namespace rainbow
 		scenegraph_.update(0);
 	}
 
-	void Director::update(const unsigned long dt)
+	void Director::update(unsigned long dt)
 	{
 		R_ASSERT(!terminated_, "App should have terminated by now");
 

@@ -10,14 +10,14 @@
 const Animation::Frame Animation::kAnimationEnd =
     std::numeric_limits<Animation::Frame>::max();
 
-Animation::Animation(const Sprite::Ref &sprite,
+Animation::Animation(const Sprite::Ref& sprite,
                      Frames frames,
-                     const unsigned int fps,
-                     const int delay)
+                     unsigned int fps,
+                     int delay)
     : stopped_(true), accumulated_(0), interval_(1000 / fps), frame_(0),
       frames_(std::move(frames)), sprite_(sprite), delay_(delay), idled_(0) {}
 
-void Animation::set_frame_rate(const unsigned int fps)
+void Animation::set_frame_rate(unsigned int fps)
 {
 	const float progress = static_cast<float>(accumulated_) / interval_;
 	interval_ = 1000 / fps;
@@ -30,14 +30,14 @@ void Animation::set_frames(Frames frames)
 	rewind();
 }
 
-void Animation::set_sprite(const Sprite::Ref &sprite)
+void Animation::set_sprite(const Sprite::Ref& sprite)
 {
 	sprite_ = sprite;
 	if (!is_stopped())
 		set_current_frame();
 }
 
-void Animation::jump_to(const unsigned int frame)
+void Animation::jump_to(unsigned int frame)
 {
 	// TODO: Check for invalid frame.
 	accumulated_ = 0;
@@ -67,7 +67,7 @@ void Animation::stop()
 		callback_(this, Event::End);
 }
 
-void Animation::update(const unsigned long dt)
+void Animation::update(unsigned long dt)
 {
 	if (is_stopped())
 		return;

@@ -31,7 +31,7 @@ namespace Shader
 	struct AttributeParams
 	{
 		unsigned int index;
-		const char *name;
+		const char* name;
 	};
 
 	struct Details
@@ -41,7 +41,7 @@ namespace Shader
 		const unsigned int program;
 		const int mvp_matrix;
 
-		Details(const unsigned int program, const int mvp_matrix)
+		Details(unsigned int program, int mvp_matrix)
 		    : texture0(true), texture1(false), program(program),
 		      mvp_matrix(mvp_matrix) {}
 	};
@@ -50,8 +50,8 @@ namespace Shader
 	{
 		Type type;
 		unsigned int id;
-		const char *source;
-		const char *fallback;
+		const char* source;
+		const char* fallback;
 	};
 }
 

@@ -11,15 +11,16 @@
 
 namespace
 {
-	template<typename T>
+	template <typename T>
 	class SetBuffer
 	{
 	public:
-		explicit SetBuffer(T *buffer) : buffer_(buffer) {}
-		void operator()(Sprite &sprite);
+		explicit SetBuffer(T* buffer) : buffer_(buffer) {}
+
+		void operator()(Sprite& sprite);
 
 	private:
-		T *buffer_;
+		T* buffer_;
 	};
 
 	class Update
@@ -27,10 +28,7 @@ namespace
 	public:
 		Update() : should_update_(false) {}
 
-		void operator()(Sprite &sprite)
-		{
-			should_update_ |= sprite.update();
-		}
+		void operator()(Sprite& sprite) { should_update_ |= sprite.update(); }
 
 		explicit operator bool() const { return should_update_; }
 
@@ -38,29 +36,29 @@ namespace
 		bool should_update_;
 	};
 
-	template<>
-	void SetBuffer<SpriteVertex>::operator()(Sprite &sprite)
+	template <>
+	void SetBuffer<SpriteVertex>::operator()(Sprite& sprite)
 	{
 		sprite.set_vertex_array(buffer_);
 		buffer_ += 4;
 	}
 
-	template<>
-	void SetBuffer<Vec2f>::operator()(Sprite &sprite)
+	template <>
+	void SetBuffer<Vec2f>::operator()(Sprite& sprite)
 	{
 		sprite.set_normal_buffer(buffer_);
 		buffer_ += 4;
 	}
 }
 
-SpriteBatch::SpriteBatch(const unsigned int hint) : count_(0), reserved_(0)
+SpriteBatch::SpriteBatch(unsigned int hint) : count_(0), reserved_(0)
 {
 	resize(hint);
 	array_.reconfigure(std::bind(&SpriteBatch::bind_arrays, this));
 }
 
-SpriteBatch::SpriteBatch(const rainbow::ISolemnlySwearThatIAmOnlyTesting &test)
-     : count_(0), vertex_buffer_(test), normal_buffer_(test), reserved_(0)
+SpriteBatch::SpriteBatch(const rainbow::ISolemnlySwearThatIAmOnlyTesting& test)
+    : count_(0), vertex_buffer_(test), normal_buffer_(test), reserved_(0)
 {
 	resize(4);
 }
@@ -98,7 +96,7 @@ void SpriteBatch::set_texture(SharedPtr<TextureAtlas> texture)
 	texture_ = std::move(texture);
 }
 
-Sprite::Ref SpriteBatch::add(const int x, const int y, const int w, const int h)
+Sprite::Ref SpriteBatch::add(int x, int y, int w, int h)
 {
 	auto sprite = create_sprite(w, h);
 	sprite->set_texture(texture_->define(Vec2i(x, y), w, h));
@@ -112,15 +110,14 @@ void SpriteBatch::bind_textures() const
 	texture_->bind();
 }
 
-void SpriteBatch::bring_to_front(const Sprite::Ref &s)
+void SpriteBatch::bring_to_front(const Sprite::Ref& s)
 {
 	R_ASSERT(s.batch_ == this, "Sprite does not belong to this batch");
 
 	rotate(s.i_, s.i_ + 1, count_);
 }
 
-Sprite::Ref SpriteBatch::create_sprite(const unsigned int width,
-                                       const unsigned int height)
+Sprite::Ref SpriteBatch::create_sprite(unsigned int width, unsigned int height)
 {
 	R_ASSERT(count_ <= Renderer::kNumSprites, "Hard-coded limit reached");
 
@@ -129,7 +126,7 @@ Sprite::Ref SpriteBatch::create_sprite(const unsigned int width,
 		const unsigned int half = reserved_ / 2;
 		resize(reserved_ + (half == 0 ? 1 : half));
 	}
-	Sprite &sprite = sprites_[count_];
+	Sprite& sprite = sprites_[count_];
 	new (&sprite) Sprite(width, height, this);
 	const unsigned int offset = count_ * 4;
 	std::uninitialized_fill_n(vertices_ + offset, 4, SpriteVertex());
@@ -142,14 +139,14 @@ Sprite::Ref SpriteBatch::create_sprite(const unsigned int width,
 	return Sprite::Ref(this, count_++);
 }
 
-void SpriteBatch::erase(const Sprite::Ref &s)
+void SpriteBatch::erase(const Sprite::Ref& s)
 {
 	if (s.i_ + 1 < count_)
 		bring_to_front(s);
 	sprites_[--count_].~Sprite();
 }
 
-Sprite::Ref SpriteBatch::find_sprite_by_id(const int id) const
+Sprite::Ref SpriteBatch::find_sprite_by_id(int id) const
 {
 	for (unsigned int i = 0; i < count_; ++i)
 	{
@@ -159,17 +156,17 @@ Sprite::Ref SpriteBatch::find_sprite_by_id(const int id) const
 	return {};
 }
 
-void SpriteBatch::move(const Vec2f &delta)
+void SpriteBatch::move(const Vec2f& delta)
 {
 	if (delta.is_zero())
 		return;
 
-	std::for_each(sprites_.get(), sprites_ + count_, [&delta](Sprite &sprite) {
+	std::for_each(sprites_.get(), sprites_ + count_, [&delta](Sprite& sprite) {
 		sprite.move(delta);
 	});
 }
 
-void SpriteBatch::swap(const Sprite::Ref &a_ref, const Sprite::Ref &b_ref)
+void SpriteBatch::swap(const Sprite::Ref& a_ref, const Sprite::Ref& b_ref)
 {
 	if (a_ref == b_ref)
 		return;
@@ -178,8 +175,8 @@ void SpriteBatch::swap(const Sprite::Ref &a_ref, const Sprite::Ref &b_ref)
 	const size_t offset_a = b_ref.i_ * 4;
 	const size_t offset_b = a_ref.i_ * 4;
 
-	Sprite &a = *a_ref;
-	Sprite &b = *b_ref;
+	Sprite& a = *a_ref;
+	Sprite& b = *b_ref;
 	std::swap(a, b);
 
 	auto buf_a = vertices_ + offset_a;
@@ -217,7 +214,7 @@ void SpriteBatch::bind_arrays() const
 		normal_buffer_.bind(Shader::kAttributeNormal);
 }
 
-void SpriteBatch::resize(const unsigned int size)
+void SpriteBatch::resize(unsigned int size)
 {
 	sprites_.resize(count_, size);
 	vertices_.resize(count_ * 4, size * 4);
@@ -256,8 +253,8 @@ void SpriteBatch::rotate(size_t first, size_t n_first, size_t last)
 		std::rotate(normals_ + first, normals_ + n_first, normals_ + last);
 }
 
-template<typename T>
-void SpriteBatch::set_buffer(T *buffer)
+template <typename T>
+void SpriteBatch::set_buffer(T* buffer)
 {
 	std::for_each(sprites_.get(), sprites_ + count_, SetBuffer<T>(buffer));
 }

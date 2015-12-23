@@ -33,7 +33,7 @@ void LuaScript::init(const Vec2i& screen)
 	input().subscribe(this);
 }
 
-void LuaScript::update(const unsigned long dt)
+void LuaScript::update(unsigned long dt)
 {
 	if (lua_.update(dt))
 		terminate();

@@ -21,20 +21,20 @@ namespace
 }
 
 Label::Label()
-    : scale_(1.0f), alignment_(TextAlignment::Left), angle_(0.0f),
-      count_(0), stale_(0), width_(0),
+    : scale_(1.0f), alignment_(TextAlignment::Left), angle_(0.0f), count_(0),
+      stale_(0), width_(0),
       cutoff_(std::numeric_limits<decltype(cutoff_)>::max()), size_(0)
 {
 	array_.reconfigure([this] { buffer_.bind(); });
 }
 
-void Label::set_alignment(const TextAlignment a)
+void Label::set_alignment(TextAlignment a)
 {
 	alignment_ = a;
 	set_needs_update(kStaleBuffer);
 }
 
-void Label::set_color(const Colorb c)
+void Label::set_color(Colorb c)
 {
 	color_ = c;
 	set_needs_update(kStaleColor);
@@ -46,14 +46,14 @@ void Label::set_font(SharedPtr<FontAtlas> f)
 	set_needs_update(kStaleBuffer);
 }
 
-void Label::set_position(const Vec2f &position)
+void Label::set_position(const Vec2f& position)
 {
 	position_.x = std::round(position.x);
 	position_.y = std::round(position.y);
 	set_needs_update(kStaleBuffer);
 }
 
-void Label::set_rotation(const float r)
+void Label::set_rotation(float r)
 {
 	if (is_equal(r, angle_))
 		return;
@@ -62,7 +62,7 @@ void Label::set_rotation(const float r)
 	set_needs_update(kStaleBuffer);
 }
 
-void Label::set_scale(const float f)
+void Label::set_scale(float f)
 {
 	if (is_equal(f, scale_))
 		return;
@@ -71,7 +71,7 @@ void Label::set_scale(const float f)
 	set_needs_update(kStaleBuffer);
 }
 
-void Label::set_text(const char *text)
+void Label::set_text(const char* text)
 {
 	const size_t len = strlen(text);
 	if (len > size_)
@@ -85,7 +85,7 @@ void Label::set_text(const char *text)
 	set_needs_update(kStaleBuffer);
 }
 
-void Label::move(const Vec2f &delta)
+void Label::move(const Vec2f& delta)
 {
 	position_ += delta;
 	set_needs_update(kStaleBuffer);
@@ -118,7 +118,7 @@ void Label::update_internal()
 		    alignment_ != TextAlignment::Left || is_rotated;
 		Vec2f pen = (needs_alignment ? Vec2f::Zero : position_);
 		const float origin_x = pen.x;
-		SpriteVertex *vx = vertices_.get();
+		SpriteVertex* vx = vertices_.get();
 
 		rainbow::for_each_utf8(
 		    text_.get(),
@@ -133,7 +133,7 @@ void Label::update_internal()
 				return;
 			}
 
-			const FontGlyph *glyph = font_->get_glyph(ch);
+			const FontGlyph* glyph = font_->get_glyph(ch);
 			if (!glyph)
 				return;
 
@@ -158,10 +158,10 @@ void Label::update_internal()
 	}
 	else if (stale_ & kStaleColor)
 	{
-		const Colorb &color = color_;
+		const Colorb& color = color_;
 		std::for_each(vertices_.get(),
 		              vertices_.get() + count_,
-		              [color](SpriteVertex &v) {
+		              [color](SpriteVertex& v) {
 			v.color = color;
 		});
 	}
@@ -172,21 +172,21 @@ void Label::upload() const
 	buffer_.upload(vertices_.get(), count_ * sizeof(vertices_[0]));
 }
 
-void Label::save(const unsigned int start,
-                 const unsigned int end,
-                 const float width,
-                 const Vec2f &R,
-                 const bool needs_alignment)
+void Label::save(unsigned int start,
+                 unsigned int end,
+                 float width,
+                 const Vec2f& R,
+                 bool needs_alignment)
 {
 	if (needs_alignment)
 	{
 		const float offset =
 		    width * kAlignmentFactor[static_cast<int>(alignment_)];
-		const auto &translate = position_;
+		const auto& translate = position_;
 		std::for_each(vertices_.get() + start * 4,
 		              vertices_.get() + end * 4,
-		              [offset, &R, &translate](SpriteVertex &v) {
-			auto &p = v.position;
+		              [offset, &R, &translate](SpriteVertex& v) {
+			auto& p = v.position;
 			p = Vec2f(R.x * (p.x - offset) - R.y * p.y + translate.x,
 			          R.y * (p.x - offset) + R.x * p.y + translate.y);
 		});

@@ -39,17 +39,9 @@ public:
 			int offset[2];
 		};
 
-		Attribute(const Colorb color,
-		          const unsigned int start,
-		          const unsigned int len);
-
-		Attribute(const unsigned int magnitude,
-		          const unsigned int start,
-		          const unsigned int len);
-
-		Attribute(const Vec2i &offset,
-		          const unsigned int start,
-		          const unsigned int len);
+		Attribute(Colorb color, unsigned int start, unsigned int len);
+		Attribute(unsigned int magnitude, unsigned int start, unsigned int len);
+		Attribute(const Vec2i& offset, unsigned int start, unsigned int len);
 	};
 
 	LyricalLabel();
@@ -64,43 +56,41 @@ public:
 	void clear_attributes();
 
 	/// <summary>Clears all attributes of given type.</summary>
-	void clear_attributes(const Attribute::Type type);
+	void clear_attributes(Attribute::Type type);
 
 	/// <summary>Sets color on characters in given range.</summary>
 	/// <param name="color">The color to set.</param>
 	/// <param name="start">Offset to the first character in range.</param>
 	/// <param name="length">Number of characters in range.</param>
-	void set_color(const Colorb color,
-	               const unsigned int start,
-	               const unsigned int length);
+	void set_color(Colorb color, unsigned int start, unsigned int length);
 
 	/// <summary>Offsets characters' positions in given range.</summary>
 	/// <param name="offset">The vector to offset by.</param>
 	/// <param name="start">Offset to the first character in range.</param>
 	/// <param name="length">Number of characters in range.</param>
-	void set_offset(const Vec2i &offset,
-	                const unsigned int start,
-	                const unsigned int length);
+	void set_offset(const Vec2i& offset,
+	                unsigned int start,
+	                unsigned int length);
 
 	/// <summary>Shake characters in given range.</summary>
 	/// <param name="magnitude">The magnitude of the shaking.</param>
 	/// <param name="start">Offset to the first character in range.</param>
 	/// <param name="length">Number of characters in range.</param>
-	void set_shaking(const unsigned int magnitude,
-	                 const unsigned int start,
-	                 const unsigned int length);
+	void set_shaking(unsigned int magnitude,
+	                 unsigned int start,
+	                 unsigned int length);
 
 	/// <summary>Sets text to display.</summary>
-	void set_text(const char *);
+	void set_text(const char*);
 
 	/// <summary>Starts an animation.</summary>
 	/// <param name="animation">The animation to start.</param>
 	/// <param name="interval">Interval between each frame.</param>
-	void start_animation(const Animation animation, const int interval);
+	void start_animation(Animation animation, int interval);
 
 	/// <summary>Stops an animation.</summary>
 	/// <param name="animation">The animation to stop.</param>
-	void stop_animation(const Animation animation);
+	void stop_animation(Animation animation);
 
 	void update() override;
 
@@ -125,9 +115,9 @@ private:
 	std::vector<Attribute> attributes_;
 	unsigned int applied_;
 	bool did_shake_;
-	Timer *animators_[static_cast<int>(Animation::Count)];
+	Timer* animators_[static_cast<int>(Animation::Count)];
 
-	Vec2u get_interval(const Attribute &attr);
+	Vec2u get_interval(const Attribute& attr);
 	void undo_from(std::vector<Attribute>::const_iterator first);
 };
 

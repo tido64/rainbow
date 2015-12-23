@@ -28,7 +28,7 @@ namespace
 		void draw_impl() const override {}
 		void move_impl(const Vec2f&) const override {}
 
-		void update_impl(const unsigned long dt) const override
+		void update_impl(unsigned long dt) const override
 		{
 			animation_.update(dt);
 		}
@@ -49,7 +49,7 @@ namespace
 			drawable_.move(delta);
 		}
 
-		void update_impl(const unsigned long dt) const override
+		void update_impl(unsigned long dt) const override
 		{
 			drawable_.update(dt);
 		}
@@ -70,7 +70,7 @@ namespace
 			label_.move(delta);
 		}
 
-		void update_impl(const unsigned long) const override
+		void update_impl(unsigned long) const override
 		{
 			label_.update();
 		}
@@ -91,7 +91,7 @@ namespace
 			sprite_batch_.move(delta);
 		}
 
-		void update_impl(const unsigned long) const override
+		void update_impl(unsigned long) const override
 		{
 			sprite_batch_.update();
 		}
@@ -120,7 +120,7 @@ void SceneNode::move(const Vec2f& delta) const
 	}, delta);
 }
 
-void SceneNode::update(const unsigned long dt) const
+void SceneNode::update(unsigned long dt) const
 {
 	if (!is_enabled())
 		return;

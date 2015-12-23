@@ -33,8 +33,8 @@ void MyGame::init(const Vec2i&)
 ### Subscribing
 
 ```c++
-void  Input::subscribe    (InputListener* const i);
-void  Input::unsubscribe  (InputListener* const i);
+void  Input::subscribe    (InputListener* i);
+void  Input::unsubscribe  (InputListener* i);
 ```
 
 Subscribes/unsubscribes listener `i` to input events. A listener will always be

@@ -84,10 +84,10 @@ namespace rainbow
 {
 	const size_t kLogLineLength = 1024;
 
-	void format_check(const char *fmt, ...) ATTRIBUTE((format(printf, 1, 2)));
+	void format_check(const char* fmt, ...) ATTRIBUTE((format(printf, 1, 2)));
 
-	template<typename T, size_t N, typename... Args>
-	void print(FILE *stream, T level, const char (&format)[N], Args&&... args)
+	template <typename T, size_t N, typename... Args>
+	void print(FILE* stream, T level, const char (&format)[N], Args&&... args)
 	{
 #ifdef __GNUC__
 #	pragma GCC diagnostic push
@@ -108,38 +108,38 @@ namespace rainbow
 #endif
 	}
 
-	template<size_t N, typename... Args>
+	template <size_t N, typename... Args>
 	void error(const char (&format)[N], Args&&... args)
 	{
 		print(stderr, RAINBOW_LOG_ERROR, format, std::forward<Args>(args)...);
 	}
 
 #ifndef NDEBUG
-	template<size_t N, typename... Args>
+	template <size_t N, typename... Args>
 	void debug(const char (&format)[N], Args&&... args)
 	{
 		print(stdout, RAINBOW_LOG_DEBUG, format, std::forward<Args>(args)...);
 	}
 
-	template<size_t N, typename... Args>
+	template <size_t N, typename... Args>
 	void fatal(const char (&format)[N], Args&&... args)
 	{
 		print(stderr, RAINBOW_LOG_FATAL, format, std::forward<Args>(args)...);
 	}
 
-	template<size_t N, typename... Args>
+	template <size_t N, typename... Args>
 	void info(const char (&format)[N], Args&&... args)
 	{
 		print(stdout, RAINBOW_LOG_INFO, format, std::forward<Args>(args)...);
 	}
 
-	template<size_t N, typename... Args>
+	template <size_t N, typename... Args>
 	void warn(const char (&format)[N], Args&&... args)
 	{
 		print(stderr, RAINBOW_LOG_WARN, format, std::forward<Args>(args)...);
 	}
 
-	template<size_t N, typename... Args>
+	template <size_t N, typename... Args>
 	void abort(const char (&format)[N], Args&&... args)
 	{
 		fatal(format, std::forward<Args>(args)...);

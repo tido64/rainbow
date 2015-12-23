@@ -2,6 +2,7 @@ Language: Cpp
 BasedOnStyle: LLVM
 AccessModifierOffset: -4
 AlwaysBreakTemplateDeclarations: true
+BinPackArguments: false
 BinPackParameters: false
 BreakBeforeBraces: Allman
 IndentCaseLabels: true

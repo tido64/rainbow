@@ -15,16 +15,16 @@ public:
 
 	Drawable* get() { return this; }
 
-	void move(const Vec2f &delta) { move_impl(delta); }
+	void move(const Vec2f& delta) { move_impl(delta); }
 
 	void draw() { draw_impl(); }
-	void update(const unsigned long dt) { update_impl(dt); }
+	void update(unsigned long dt) { update_impl(dt); }
 
 private:
-	virtual void move_impl(const Vec2f &) {}
+	virtual void move_impl(const Vec2f&) {}
 
 	virtual void draw_impl() = 0;
-	virtual void update_impl(const unsigned long dt) = 0;
+	virtual void update_impl(unsigned long dt) = 0;
 };
 
 #endif

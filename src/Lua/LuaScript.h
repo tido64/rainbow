@@ -18,7 +18,7 @@ public:
 	lua_State* state() const { return lua_; }
 
 	void init(const Vec2i& screen) override;
-	void update(const unsigned long) override;
+	void update(unsigned long) override;
 
 	void on_memory_warning() override;
 

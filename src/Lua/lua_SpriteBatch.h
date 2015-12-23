@@ -1,4 +1,4 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -15,15 +15,15 @@ NS_RAINBOW_LUA_BEGIN
 		friend Bind;
 
 	public:
-		SpriteBatch(lua_State *L);
+		SpriteBatch(lua_State* L);
 
 		::SpriteBatch* get() { return &batch_; }
 
 	private:
-		static int add(lua_State *);
-		static int create_sprite(lua_State *);
-		static int set_normal(lua_State *);
-		static int set_texture(lua_State *);
+		static int add(lua_State*);
+		static int create_sprite(lua_State*);
+		static int set_normal(lua_State*);
+		static int set_texture(lua_State*);
 
 		::SpriteBatch batch_;
 	};

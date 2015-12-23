@@ -1,4 +1,4 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -25,7 +25,7 @@ namespace
 	static_assert((kIsFlipped >> 0xf) == kFlipVertically, "");
 	static_assert((kIsMirrored >> 0xf) == kFlipHorizontally, "");
 
-	unsigned int flip_index(const unsigned int state)
+	unsigned int flip_index(unsigned int state)
 	{
 		return ((state & kIsFlipped) >> 0xf) + ((state & kIsMirrored) >> 0xf);
 	}
@@ -49,8 +49,8 @@ Sprite& Sprite::Ref::operator*() const { return batch_->sprites()[i_]; }
 
 Sprite* Sprite::Ref::operator->() const { return &batch_->sprites()[i_]; }
 
-Sprite::Sprite(const unsigned int w,
-               const unsigned int h,
+Sprite::Sprite(unsigned int w,
+               unsigned int h,
                NotNull<const SpriteBatch*> p)
     : width_(w), height_(h), state_(0), angle_(0.0f), pivot_(0.5f, 0.5f),
       scale_(1.0f, 1.0f), parent_(p), vertex_array_(nullptr),
@@ -68,16 +68,22 @@ Sprite::Sprite(Sprite&& s)
 	s.id_ = kNoId;
 }
 
-bool Sprite::is_flipped() const { return (state_ & kIsFlipped) == kIsFlipped; }
+auto Sprite::is_flipped() const -> bool
+{
+	return (state_ & kIsFlipped) == kIsFlipped;
+}
 
-bool Sprite::is_hidden() const { return (state_ & kIsHidden) == kIsHidden; }
+auto Sprite::is_hidden() const -> bool
+{
+	return (state_ & kIsHidden) == kIsHidden;
+}
 
-bool Sprite::is_mirrored() const
+auto Sprite::is_mirrored() const -> bool
 {
 	return (state_ & kIsMirrored) == kIsMirrored;
 }
 
-void Sprite::set_color(const Colorb c)
+void Sprite::set_color(Colorb c)
 {
 	R_ASSERT(vertex_array_, "Missing vertex array buffer");
 
@@ -88,7 +94,7 @@ void Sprite::set_color(const Colorb c)
 	state_ |= kStaleFrontBuffer;
 }
 
-void Sprite::set_normal(const unsigned int id)
+void Sprite::set_normal(unsigned int id)
 {
 	R_ASSERT(normal_map_, "Missing normal map buffer");
 
@@ -120,7 +126,7 @@ void Sprite::set_position(const Vec2f& position)
 	state_ |= kStalePosition;
 }
 
-void Sprite::set_rotation(const float r)
+void Sprite::set_rotation(float r)
 {
 	angle_ = r;
 	state_ |= kStaleBuffer;
@@ -135,7 +141,7 @@ void Sprite::set_scale(const Vec2f& f)
 	state_ |= kStaleBuffer;
 }
 
-void Sprite::set_texture(const unsigned int id)
+void Sprite::set_texture(unsigned int id)
 {
 	R_ASSERT(vertex_array_, "Missing vertex array buffer");
 
@@ -185,7 +191,7 @@ void Sprite::move(const Vec2f& delta)
 	state_ |= kStalePosition;
 }
 
-void Sprite::rotate(const float r)
+void Sprite::rotate(float r)
 {
 	angle_ += r;
 	state_ |= kStaleBuffer;
@@ -200,7 +206,7 @@ void Sprite::show()
 	state_ |= kStaleMask;
 }
 
-bool Sprite::update()
+auto Sprite::update() -> bool
 {
 	if ((state_ & kStaleMask) == 0)
 		return false;
@@ -291,7 +297,7 @@ Sprite& Sprite::operator=(Sprite&& s)
 	return *this;
 }
 
-void Sprite::flip_textures(const unsigned int f)
+void Sprite::flip_textures(unsigned int f)
 {
 	R_ASSERT(vertex_array_, "Missing vertex array buffer");
 
@@ -314,7 +320,7 @@ void Sprite::flip_textures(const unsigned int f)
 	state_ |= kStaleFrontBuffer;
 }
 
-void Sprite::set_normal(const unsigned int f, const Vec2f* uv)
+void Sprite::set_normal(unsigned int f, const Vec2f* uv)
 {
 	normal_map_[kFlipTable[f + 0]] = uv[0];
 	normal_map_[kFlipTable[f + 1]] = uv[1];

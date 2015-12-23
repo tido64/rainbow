@@ -12,7 +12,7 @@
 
 using rainbow::DataMapWin;
 
-DataMapWin::DataMapWin(const Path &path)
+DataMapWin::DataMapWin(const Path& path)
     : len_(0), off_(0), addr_(nullptr), handle_(nullptr)
 {
 	HANDLE fh = CreateFile(

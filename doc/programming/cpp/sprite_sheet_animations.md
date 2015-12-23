@@ -10,8 +10,8 @@ where we take a sprite and change its texture at set intervals.
 ```c++
 Animation(const Sprite::Ref &sprite,
           std::unique_ptr<const Frame[]> frames,
-          const unsigned int fps,
-          const int delay = 0);
+          unsigned int fps,
+          int delay = 0);
 ```
 
 `frames` is an array of texture ids that are played back in succession and is
@@ -57,7 +57,7 @@ unsigned int  frame_rate  () const;
 Returns the frame rate in frames per second.
 
 ```c++
-void  Animation::jump_to  (const unsigned int frame);
+void  Animation::jump_to  (unsigned int frame);
 ```
 
 Jumps to the specified frame.
@@ -71,14 +71,14 @@ Rewinds the animation. Equivalent to `jump_to(0)`.
 ### Modifying the Animation Sequence
 
 ```c++
-void  Animation::set_delay  (const int delay);
+void  Animation::set_delay  (int delay);
 ```
 
 Sets number of frames to delay before the animation loops. Negative numbers
 disable looping.
 
 ```c++
-void  Animation::set_frame_rate  (const unsigned int fps);
+void  Animation::set_frame_rate  (unsigned int fps);
 ```
 
 Sets the frame rate in frames per second.
@@ -130,8 +130,8 @@ void   Animation::set_callback  (Animation::Callback f);
 ```
 
 Where `Animation::Callback` is a callable whose signature is
-`void(Animation *animation, const Animation::Event event)`, and `animation` is
-the animation object that triggered `event`.
+`void(Animation *animation, Animation::Event event)`, and `animation` is the
+animation object that triggered `event`.
 
 ## Example
 
@@ -168,7 +168,7 @@ rainbow::texture_t load_texture()
     return texture;
 }
 
-void animation_event_handler(Animation*, const Animation::Event e)
+void animation_event_handler(Animation*, Animation::Event e)
 {
     switch (e)
     {

@@ -16,7 +16,7 @@ namespace
 	class TestInputListener : public InputListener
 	{
 	public:
-		TestInputListener(const bool consume)
+		TestInputListener(bool consume)
 		    : consume_(consume), axis_motion_(false), button_down_(false),
 		      button_up_(false), controller_connected_(false),
 		      controller_disconnected_(false), key_down_(false), key_up_(false),
@@ -77,13 +77,13 @@ namespace
 			return consume_;
 		}
 
-		bool on_controller_connected_impl(const unsigned int) override
+		bool on_controller_connected_impl(unsigned int) override
 		{
 			controller_connected_ = true;
 			return consume_;
 		}
 
-		bool on_controller_disconnected_impl(const unsigned int) override
+		bool on_controller_disconnected_impl(unsigned int) override
 		{
 			controller_disconnected_ = true;
 			return consume_;

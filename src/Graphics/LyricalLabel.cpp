@@ -43,7 +43,7 @@ void LyricalLabel::clear_attributes()
 	attributes_.clear();
 }
 
-void LyricalLabel::clear_attributes(const Attribute::Type type)
+void LyricalLabel::clear_attributes(Attribute::Type type)
 {
 	switch (type)
 	{
@@ -54,7 +54,7 @@ void LyricalLabel::clear_attributes(const Attribute::Type type)
 			auto begin = std::remove_if(
 			    attributes_.begin(),
 			    attributes_.end(),
-			    [type](const Attribute &attr) { return attr.type == type; });
+			    [type](const Attribute& attr) { return attr.type == type; });
 			if (begin == attributes_.end())
 				break;
 			undo_from(begin);
@@ -64,39 +64,32 @@ void LyricalLabel::clear_attributes(const Attribute::Type type)
 	}
 }
 
-void LyricalLabel::set_color(const Colorb c,
-                             const uint_t start,
-                             const uint_t length)
+void LyricalLabel::set_color(Colorb c, uint_t start, uint_t length)
 {
 	attributes_.emplace_back(c, start, length);
 	set_needs_update(kStaleAttribute);
 }
 
-void LyricalLabel::set_text(const char *text)
+void LyricalLabel::set_text(const char* text)
 {
 	clear_animations();
 	Label::set_text(text);
 }
 
-void LyricalLabel::set_offset(const Vec2i &offset,
-                              const uint_t start,
-                              const uint_t length)
+void LyricalLabel::set_offset(const Vec2i& offset, uint_t start, uint_t length)
 {
 	attributes_.emplace_back(offset, start, length);
 	set_needs_update(kStaleAttribute);
 }
 
-void LyricalLabel::set_shaking(const uint_t magnitude,
-                               const uint_t start,
-                               const uint_t length)
+void LyricalLabel::set_shaking(uint_t magnitude, uint_t start, uint_t length)
 {
 	attributes_.emplace_back(magnitude, start, length);
 	if (!animators_[static_cast<int>(Animation::Shake)])
 		start_animation(Animation::Shake, 15);
 }
 
-void LyricalLabel::start_animation(const Animation animation,
-                                   const int interval)
+void LyricalLabel::start_animation(Animation animation, int interval)
 {
 	auto i = static_cast<int>(animation);
 	if (animators_[i])
@@ -142,7 +135,7 @@ void LyricalLabel::start_animation(const Animation animation,
 	}
 }
 
-void LyricalLabel::stop_animation(const Animation animation)
+void LyricalLabel::stop_animation(Animation animation)
 {
 	const int i = static_cast<int>(animation);
 	if (!animators_[i])
@@ -153,7 +146,7 @@ void LyricalLabel::stop_animation(const Animation animation)
 		case Animation::Shake:
 			clear_attributes(Attribute::Type::Offset);
 			rainbow::remove_if(attributes_,
-			                   [](const Attribute &attr) {
+			                   [](const Attribute& attr) {
 			                       return attr.type == Attribute::Type::Shake;
 			                   });
 			break;
@@ -181,7 +174,7 @@ void LyricalLabel::update()
 		auto buffer = vertex_buffer();
 		for (; applied_ < attributes_.size(); ++applied_)
 		{
-			const auto &attr = attributes_[applied_];
+			const auto& attr = attributes_[applied_];
 			const Vec2u interval = get_interval(attr);
 			switch (attr.type)
 			{
@@ -212,7 +205,7 @@ void LyricalLabel::update()
 	}
 }
 
-Vec2u LyricalLabel::get_interval(const Attribute &attr)
+Vec2u LyricalLabel::get_interval(const Attribute& attr)
 {
 	const uint_t final = static_cast<uint_t>(length()) * 4;
 	return {std::min(attr.start * 4, final),
@@ -254,9 +247,7 @@ void LyricalLabel::undo_from(std::vector<Attribute>::const_iterator first)
 	applied_ -= std::distance(first, attributes_.cend());
 }
 
-LyricalLabel::Attribute::Attribute(const Colorb c,
-                                   const uint_t start,
-                                   const uint_t len)
+LyricalLabel::Attribute::Attribute(Colorb c, uint_t start, uint_t len)
     : type(Type::Color), start(start), length(len)
 {
 	color[0] = c.r;
@@ -265,14 +256,12 @@ LyricalLabel::Attribute::Attribute(const Colorb c,
 	color[3] = c.a;
 }
 
-LyricalLabel::Attribute::Attribute(const uint_t magnitude,
-                                   const uint_t start,
-                                   const uint_t len)
+LyricalLabel::Attribute::Attribute(uint_t magnitude, uint_t start, uint_t len)
     : type(Type::Shake), start(start), length(len), magnitude(magnitude) {}
 
-LyricalLabel::Attribute::Attribute(const Vec2i &offset_,
-                                   const uint_t start,
-                                   const uint_t len)
+LyricalLabel::Attribute::Attribute(const Vec2i& offset_,
+                                   uint_t start,
+                                   uint_t len)
     : type(Type::Offset), start(start), length(len)
 {
 	offset[0] = offset_.x;

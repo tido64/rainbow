@@ -17,7 +17,7 @@ using RawKeysym = void;
 struct Key
 {
 	/// <summary>Converts raw keysym to a rainbow::Key.</summary>
-	static Key from_raw(const RawKeysym *keysym);
+	static Key from_raw(const RawKeysym* keysym);
 
 	enum class Keys : unsigned
 	{

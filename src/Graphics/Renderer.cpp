@@ -23,7 +23,7 @@ void Renderer::clear()
 	glClear(GL_COLOR_BUFFER_BIT);
 }
 
-bool Renderer::has_extension(const char* const extension)
+bool Renderer::has_extension(const char* extension)
 {
 	return strstr(reinterpret_cast<const char*>(glGetString(GL_EXTENSIONS)),
 	              extension);
@@ -160,7 +160,7 @@ bool Renderer::init()
 	if (!shader_manager_.init())
 		return false;
 
-	const unsigned short kDefaultIndices[] = { S256(0) };
+	const unsigned short kDefaultIndices[]{S256(0)};
 	static_assert(sizeof(kDefaultIndices) ==
 	                  kNumSprites * 6 * sizeof(kDefaultIndices[0]),
 	              "Number of indices do not match set number of sprites");

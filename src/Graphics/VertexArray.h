@@ -30,13 +30,10 @@ public:
 	/// <summary>
 	///   Reconfigures this vertex array object with a new set of states.
 	/// </summary>
-	void reconfigure(std::function<void()> &&array_state);
+	void reconfigure(std::function<void()>&& array_state);
 
 	/// <summary>Returns whether this vertex array object is valid.</summary>
-	explicit operator bool() const
-	{
-		return static_cast<const bool>(array_);
-	}
+	explicit operator bool() const { return static_cast<const bool>(array_); }
 
 private:
 #ifdef USE_VERTEX_ARRAY_OBJECT

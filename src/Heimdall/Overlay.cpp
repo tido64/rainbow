@@ -2,8 +2,6 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
-#ifdef USE_HEIMDALL
-
 #include "Heimdall/Overlay.h"
 
 #include "Graphics/OpenGL.h"
@@ -58,5 +56,3 @@ void Overlay::update(const rainbow::Rect& projection)
 }
 
 void Overlay::draw_impl() { Renderer::draw(*this); }
-
-#endif

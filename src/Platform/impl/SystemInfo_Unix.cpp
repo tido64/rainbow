@@ -1,4 +1,4 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -24,18 +24,18 @@ namespace rainbow
 			return false;
 		}
 
-		void locales(std::vector<std::unique_ptr<char[]>> &locales)
+		void locales(std::vector<std::unique_ptr<char[]>>& locales)
 		{
-			char *lc = setlocale(LC_ALL, nullptr);
+			char* lc = setlocale(LC_ALL, nullptr);
 			if (!lc)
 				lc = setlocale(LC_MESSAGES, nullptr);
 			else
 			{
-				char *lc_msg = strstr(lc, "LC_MESSAGES");
+				char* lc_msg = strstr(lc, "LC_MESSAGES");
 				if (lc_msg)
 					lc = lc_msg + 12;
 			}
-			char *locale = new char[6];
+			char* locale = new char[6];
 			if (!lc || strcmp("C", lc) == 0)
 				strcpy(locale, "en");
 			else

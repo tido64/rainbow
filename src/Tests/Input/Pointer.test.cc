@@ -32,7 +32,7 @@ namespace
 			    || pointers[0].timestamp != 0;
 		}
 
-		bool is_triggered(const unsigned int flags)
+		bool is_triggered(unsigned int flags)
 		{
 			return flags_ & flags;
 		}

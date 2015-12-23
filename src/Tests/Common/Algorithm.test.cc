@@ -10,7 +10,7 @@
 
 namespace
 {
-	constexpr unsigned char kInvalidUTF8[] = {
+	constexpr unsigned char kInvalidUTF8[]{
 	    'B', 'l',  'o', 'w',  'z', 'y', ' ', 'n', 'i', 'g', 'h',
 	    't', '-',  'f', 'r',  'u', 'm', 'p', 's', ' ', 'v', 'e',
 	    'x', '\'', 'd', 0xff, 'J', 'a', 'c', 'k', ' ', 'Q', '.'};

@@ -11,7 +11,7 @@
 
 #include "Common/NonCopyable.h"
 
-template<typename T>
+template <typename T>
 class Arena : private NonCopyable<Arena<T>>
 {
 public:
@@ -37,9 +37,9 @@ public:
 	/// </summary>
 	/// <param name="old_count">Number of elements to keep.</param>
 	/// <param name="new_count">Number of elements to allocate for.</param>
-	void resize(const size_t old_count, const size_t new_count)
+	void resize(size_t old_count, size_t new_count)
 	{
-		T *new_arena = static_cast<T*>(operator new(new_count * sizeof(T)));
+		T* new_arena = static_cast<T*>(operator new(new_count * sizeof(T)));
 		if (old_count > 0)
 		{
 			std::uninitialized_copy_n(
@@ -52,13 +52,13 @@ public:
 	/// <summary>Returns whether this arena is valid.</summary>
 	explicit operator bool() const { return arena_; }
 
-	T& operator[](const size_t i) const { return arena_[i]; }
+	T& operator[](size_t i) const { return arena_[i]; }
 	T* operator->() const { return arena_; }
-	T* operator+(const size_t offset) const { return arena_ + offset; }
+	T* operator+(size_t offset) const { return arena_ + offset; }
 	T& operator*() const { return *arena_; }
 
 private:
-	T *arena_;
+	T* arena_;
 };
 
 #endif

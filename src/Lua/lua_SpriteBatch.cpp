@@ -1,4 +1,4 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -10,24 +10,23 @@
 
 NS_RAINBOW_LUA_BEGIN
 {
-	template<>
+	template <>
 	const char SpriteBatch::Bind::class_name[] = "spritebatch";
 
-	template<>
+	template <>
 	const bool SpriteBatch::Bind::is_constructible = true;
 
-	template<>
+	template <>
 	const luaL_Reg SpriteBatch::Bind::functions[] = {
-		{ "add",            &SpriteBatch::add },
-		{ "create_sprite",  &SpriteBatch::create_sprite },
-		{ "set_normal",     &SpriteBatch::set_normal },
-		{ "set_texture",    &SpriteBatch::set_texture },
-		{ nullptr, nullptr }
-	};
+	    {"add",            &SpriteBatch::add},
+	    {"create_sprite",  &SpriteBatch::create_sprite},
+	    {"set_normal",     &SpriteBatch::set_normal},
+	    {"set_texture",    &SpriteBatch::set_texture},
+	    {nullptr,          nullptr}};
 
-	SpriteBatch::SpriteBatch(lua_State *L) : batch_(optinteger(L, 1, 4)) {}
+	SpriteBatch::SpriteBatch(lua_State* L) : batch_(optinteger(L, 1, 4)) {}
 
-	int SpriteBatch::add(lua_State *L)
+	int SpriteBatch::add(lua_State* L)
 	{
 		LOGW("<spritebatch>:add() is deprecated, use "
 		     "<spritebatch>:create_sprite() and <sprite>:set_texture() "
@@ -39,7 +38,7 @@ NS_RAINBOW_LUA_BEGIN
 		Argument<lua_Number>::is_required(L, 4);
 		Argument<lua_Number>::is_required(L, 5);
 
-		SpriteBatch *self = Bind::self(L);
+		SpriteBatch* self = Bind::self(L);
 		if (!self)
 			return 0;
 
@@ -54,13 +53,13 @@ NS_RAINBOW_LUA_BEGIN
 		return alloc<Sprite>(L);
 	}
 
-	int SpriteBatch::create_sprite(lua_State *L)
+	int SpriteBatch::create_sprite(lua_State* L)
 	{
 		// <spritebatch>:create_sprite(width, height)
 		Argument<lua_Number>::is_required(L, 2);
 		Argument<lua_Number>::is_required(L, 3);
 
-		SpriteBatch *self = Bind::self(L);
+		SpriteBatch* self = Bind::self(L);
 		if (!self)
 			return 0;
 
@@ -73,22 +72,22 @@ NS_RAINBOW_LUA_BEGIN
 		return alloc<Sprite>(L);
 	}
 
-	int SpriteBatch::set_normal(lua_State *L)
+	int SpriteBatch::set_normal(lua_State* L)
 	{
 		// <spritebatch>:set_normal(<texture>)
 		return set1ud<Texture>(
 		    L,
-		    [](::SpriteBatch *batch, SharedPtr<TextureAtlas> atlas) {
+		    [](::SpriteBatch* batch, SharedPtr<TextureAtlas> atlas) {
 		      batch->set_normal(atlas);
 		    });
 	}
 
-	int SpriteBatch::set_texture(lua_State *L)
+	int SpriteBatch::set_texture(lua_State* L)
 	{
 		// <spritebatch>:set_texture(<texture>)
 		return set1ud<Texture>(
 		    L,
-		    [](::SpriteBatch *batch, SharedPtr<TextureAtlas> atlas) {
+		    [](::SpriteBatch* batch, SharedPtr<TextureAtlas> atlas) {
 		      batch->set_texture(atlas);
 		    });
 	}

@@ -1,25 +1,23 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
-#ifdef USE_HEIMDALL
-
 #include "Heimdall/ChangeMonitor.h"
-#ifdef RAINBOW_OS_WINDOWS
 
 #include "Common/Logging.h"
 
-ChangeMonitor::ChangeMonitor(const char *const directory)
-    : monitoring_(false), callback_([](const char *) {})
+ChangeMonitor::ChangeMonitor(const char* directory)
+    : monitoring_(false), callback_([](const char*) {})
 {
-	hDirectory_ = CreateFileA(
-	    directory,
-	    FILE_LIST_DIRECTORY, FILE_SHARE_READ | FILE_SHARE_WRITE |
-	        FILE_SHARE_DELETE,
-	    nullptr,
-	    OPEN_EXISTING, FILE_FLAG_OVERLAPPED | FILE_FLAG_SEQUENTIAL_SCAN |
-	        FILE_FLAG_BACKUP_SEMANTICS,
-	    nullptr);
+	hDirectory_ =
+	    CreateFileA(directory,
+	                FILE_LIST_DIRECTORY,
+	                FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE,
+	                nullptr,
+	                OPEN_EXISTING,
+	                FILE_FLAG_OVERLAPPED | FILE_FLAG_SEQUENTIAL_SCAN |
+	                    FILE_FLAG_BACKUP_SEMANTICS,
+	                nullptr);
 	if (hDirectory_ == INVALID_HANDLE_VALUE)
 		return;
 
@@ -40,8 +38,8 @@ ChangeMonitor::ChangeMonitor(const char *const directory)
 			if (dwBytesReturned == 0)
 				continue;
 
-			const char *lpBuffer = reinterpret_cast<char*>(buffer.get());
-			const FILE_NOTIFY_INFORMATION *lpInfo = nullptr;
+			const char* lpBuffer = reinterpret_cast<char*>(buffer.get());
+			const FILE_NOTIFY_INFORMATION* lpInfo = nullptr;
 			do
 			{
 				if (!monitoring_)
@@ -81,6 +79,3 @@ ChangeMonitor::~ChangeMonitor()
 	CancelIoEx(hDirectory_, nullptr);
 	CloseHandle(hDirectory_);
 }
-
-#endif  // RAINBOW_OS_WINDOWS
-#endif  // USE_HEIMDALL

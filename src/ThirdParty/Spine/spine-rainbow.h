@@ -5,8 +5,6 @@
 #ifndef THIRDPARTY_SPINE_SPINE_RAINBOW_H_
 #define THIRDPARTY_SPINE_SPINE_RAINBOW_H_
 
-#ifdef USE_SPINE
-
 #include <memory>
 
 #include <spine/AnimationState.h>
@@ -28,7 +26,7 @@ struct spAtlas;
 class Skeleton
 {
 public:
-	static Skeleton* from_json(const char* path, const float scale = 1.0f);
+	static Skeleton* from_json(const char* path, float scale = 1.0f);
 
 	Skeleton(spSkeletonData* data, spAtlas* atlas);
 	~Skeleton();
@@ -41,7 +39,7 @@ public:
 	/// <summary>
 	///   Flips the rendering of the skeleton horizontally and/or vertically.
 	/// </summary>
-	void set_flip(const bool x, const bool y);
+	void set_flip(bool x, bool y);
 
 	void set_listener(spAnimationStateListener listener, void* self);
 
@@ -51,17 +49,17 @@ public:
 	void set_position(const Vec2f& position);
 
 	/// <summary>Sets time dilation factor.</summary>
-	void set_time_scale(const float scale) { time_scale_ = scale; }
+	void set_time_scale(float scale) { time_scale_ = scale; }
 
 	/// <summary>
 	///   Queues an animation to be played after a delay. If
 	///   <paramref name="delay"/> is <= 0, the duration of previous animation
 	///   is used plus the negative delay.
 	/// </summary>
-	void add_animation(const int track,
+	void add_animation(int track,
 	                   const char* animation,
-	                   const bool loop,
-	                   const float delay);
+	                   bool loop,
+	                   float delay);
 
 	/// <summary>Binds all used textures.</summary>
 	void bind_textures() const;
@@ -70,7 +68,7 @@ public:
 	///   Sets the current animation to null and clears all queued animations on
 	///   specified track.
 	/// </summary>
-	void clear_track(const int track);
+	void clear_track(int track);
 
 	/// <summary>
 	///   Sets the current animation to null and clears all queued animations.
@@ -80,7 +78,7 @@ public:
 	/// <summary>
 	///   Returns the name of the current animation on specified track.
 	/// </summary>
-	const char* get_current_animation(const int track);
+	const char* get_current_animation(int track);
 
 	/// <summary>Returns the name of the current skin.</summary>
 	const char* get_skin();
@@ -88,12 +86,10 @@ public:
 	/// <summary>
 	///   Sets the current animation. Any queued animations are cleared.
 	/// </summary>
-	void set_animation(const int track, const char* animation, const bool loop);
+	void set_animation(int track, const char* animation, bool loop);
 
 	/// <summary>Sets crossfading duration for a pair of animations.</summary>
-	void set_animation_mix(const char* from,
-	                       const char* to,
-	                       const float duration);
+	void set_animation_mix(const char* from, const char* to, float duration);
 
 	/// <summary>
 	///   Sets the attachment for the slot and attachment name. The skeleton
@@ -111,7 +107,7 @@ public:
 	void set_skin(const char* skin);
 
 	void draw();
-	void update(const unsigned long dt);
+	void update(unsigned long dt);
 
 private:
 	spSkeleton* skeleton_;
@@ -173,11 +169,10 @@ namespace spine
 
 			void move_impl(const Vec2f& delta) override;
 			void draw_impl() override;
-			void update_impl(const unsigned long dt) override;
+			void update_impl(unsigned long dt) override;
 		};
 	}
 }
 #endif  // USE_LUA_SCRIPT
 
-#endif  // USE_SPINE
 #endif  // THIRDPARTY_SPINE_SPINE_RAINBOW_H_

@@ -19,8 +19,8 @@ namespace rainbow
 	/// <param name="f">The function to apply.</param>
 	template <typename F>
 	void for_each_point_on_circle_edge(const Vec2f& center,
-	                                   const float radius,
-	                                   const int num_segments,
+	                                   float radius,
+	                                   int num_segments,
 	                                   F&& f)
 	{
 		const double increment = 2.0 * kPi / num_segments;

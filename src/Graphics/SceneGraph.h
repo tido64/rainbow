@@ -44,14 +44,14 @@ namespace rainbow
 
 		/// <summary>Returns whether this node is enabled.</summary>
 		bool is_enabled() const { return enabled_; }
-		void set_enabled(const bool enabled) { enabled_ = enabled; }
+		void set_enabled(bool enabled) { enabled_ = enabled; }
 
 		/// <summary>
 		///   Attaches a program to this node. The program will be used to draw
 		///   this node and any of its descendants unless they also have an
 		///   attached shader.
 		/// </summary>
-		void attach_program(const unsigned int program) { program_ = program; }
+		void attach_program(unsigned int program) { program_ = program; }
 
 #if USE_NODE_TAGS
 		const std::string& tag() const { return tag_; }
@@ -95,7 +95,7 @@ namespace rainbow
 		void move(const Vec2f& delta) const;
 
 		/// <summary>Updates this node and all its enabled children.</summary>
-		void update(const unsigned long dt) const;
+		void update(unsigned long dt) const;
 
 	protected:
 		SceneNode() : enabled_(true), program_(0) {}
@@ -109,7 +109,7 @@ namespace rainbow
 
 		virtual void draw_impl() const = 0;
 		virtual void move_impl(const Vec2f&) const = 0;
-		virtual void update_impl(const unsigned long dt) const = 0;
+		virtual void update_impl(unsigned long dt) const = 0;
 	};
 
 	class GroupNode final : public SceneNode
@@ -117,7 +117,7 @@ namespace rainbow
 	private:
 		void draw_impl() const override {}
 		void move_impl(const Vec2f&) const override {}
-		void update_impl(const unsigned long) const override {}
+		void update_impl(unsigned long) const override {}
 	};
 }
 

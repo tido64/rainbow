@@ -1,4 +1,4 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -20,7 +20,7 @@ namespace heimdall
 			action_ = std::move(action);
 		}
 
-		void set_color(const Colorb color) { label_.set_color(color); }
+		void set_color(Colorb color) { label_.set_color(color); }
 
 		void set_font(SharedPtr<FontAtlas> font)
 		{

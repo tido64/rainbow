@@ -33,7 +33,7 @@ public:
 	/// <param name="t">
 	///   The relative time at which the acceleration event occurred.
 	/// </param>
-	void update(const double x, const double y, const double z, const double t)
+	void update(double x, double y, double z, double t)
 	{
 		// Calculate the low-pass value and subtract it from the measured value.
 		pass_.x =

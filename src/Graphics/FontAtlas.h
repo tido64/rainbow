@@ -40,11 +40,11 @@ namespace rainbow { class Texture; }
 class FontAtlas : public RefCounted
 {
 public:
-	FontAtlas(const char* path, const float pt);
-	FontAtlas(const char* name, const Data& font, const float pt);
+	FontAtlas(const char* path, float pt);
+	FontAtlas(const char* name, const Data& font, float pt);
 
 	/// <summary>Returns the line height.</summary>
-	int height() const { return height_; }
+	auto height() const { return height_; }
 
 	/// <summary>Returns whether this FontAtlas is valid.</summary>
 	bool is_valid() const { return texture_; }
@@ -53,7 +53,7 @@ public:
 	void bind() const { texture_.bind(); }
 
 	/// <summary>Returns the glyph for character <paramref name="c"/>.</summary>
-	const FontGlyph* get_glyph(const unsigned int c) const;
+	const FontGlyph* get_glyph(unsigned int c) const;
 
 protected:
 	/// <summary>Load characters 32 through 126 from the ASCII table.</summary>

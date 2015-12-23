@@ -2,8 +2,8 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
-template<typename T>
-void set_color_and_transform(lua_State *L, T asset)
+template <typename T>
+void set_color_and_transform(lua_State* L, T asset)
 {
 	if (has_key(L, "color"))
 	{
@@ -31,10 +31,10 @@ void set_color_and_transform(lua_State *L, T asset)
 	}
 }
 
-Prose::Asset create_animation(lua_State *L,
-                              const Sprite::Ref &sprite,
-                              rainbow::ScopeStack &stack,
-                              rainbow::SceneNode *parent)
+Prose::Asset create_animation(lua_State* L,
+                              const Sprite::Ref& sprite,
+                              rainbow::ScopeStack& stack,
+                              rainbow::SceneNode* parent)
 {
 	const auto table = lua_gettop(L);
 	const size_t num_frames = lua_rawlen(L, table);
@@ -78,10 +78,10 @@ Prose::Asset create_animation(lua_State *L,
 	return {Prose::AssetType::Animation, animation, node};
 }
 
-Prose::Asset create_label(lua_State *L,
-                          Prose &scene,
-                          rainbow::ScopeStack &stack,
-                          rainbow::SceneNode *parent)
+Prose::Asset create_label(lua_State* L,
+                          Prose& scene,
+                          rainbow::ScopeStack& stack,
+                          rainbow::SceneNode* parent)
 {
 	auto label = stack.allocate<Label>();
 	set_color_and_transform(L, label);
@@ -89,7 +89,7 @@ Prose::Asset create_label(lua_State *L,
 	{
 		auto field = get_field(L, "alignment");
 		Label::TextAlignment alignment = Label::TextAlignment::Left;
-		const char *set = lua_tostring(L, -1);
+		const char* set = lua_tostring(L, -1);
 		if (*set == 'c')
 			alignment = Label::TextAlignment::Center;
 		else if (*set == 'r')
@@ -110,10 +110,10 @@ Prose::Asset create_label(lua_State *L,
 	return {Prose::AssetType::Label, label, parent->add_child(*label)};
 }
 
-Prose::Asset create_sprite(lua_State *L,
-                           SpriteBatch *batch,
-                           rainbow::ScopeStack &stack,
-                           rainbow::SceneNode *parent)
+Prose::Asset create_sprite(lua_State* L,
+                           SpriteBatch* batch,
+                           rainbow::ScopeStack& stack,
+                           rainbow::SceneNode* parent)
 {
 	Sprite::Ref sprite;
 	if (!has_key(L, "size"))
@@ -153,10 +153,10 @@ Prose::Asset create_sprite(lua_State *L,
 	return {Prose::AssetType::Sprite, nullptr, nullptr};
 }
 
-Prose::Asset create_spritebatch(lua_State *L,
-                                Prose &scene,
-                                rainbow::ScopeStack &stack,
-                                rainbow::SceneNode *parent)
+Prose::Asset create_spritebatch(lua_State* L,
+                                Prose& scene,
+                                rainbow::ScopeStack& stack,
+                                rainbow::SceneNode* parent)
 {
 	auto batch = stack.allocate<SpriteBatch>();
 	auto field = get_field(L, "texture");
@@ -165,7 +165,7 @@ Prose::Asset create_spritebatch(lua_State *L,
 	return {Prose::AssetType::SpriteBatch, batch, parent->add_child(*batch)};
 }
 
-Prose::AssetType node_type(lua_State *L)
+Prose::AssetType node_type(lua_State* L)
 {
 	if (has_key(L, "sprites"))
 		return Prose::AssetType::SpriteBatch;
@@ -176,11 +176,11 @@ Prose::AssetType node_type(lua_State *L)
 	return Prose::AssetType::None;
 }
 
-Prose::Asset create_node(lua_State *L,
-                         Prose &scene,
-                         Prose::AssetMap &assets,
-                         rainbow::ScopeStack &stack,
-                         rainbow::SceneNode *parent)
+Prose::Asset create_node(lua_State* L,
+                         Prose& scene,
+                         Prose::AssetMap& assets,
+                         rainbow::ScopeStack& stack,
+                         rainbow::SceneNode* parent)
 {
 	Prose::Asset asset = no_asset();
 	switch (node_type(L))
@@ -209,20 +209,15 @@ Prose::Asset create_node(lua_State *L,
 	}
 	if (asset.type != Prose::AssetType::None)
 	{
-		const char *name = table_name(L);
+		const char* name = table_name(L);
 #if USE_NODE_TAGS
 		asset.node->set_tag(name);
 #endif  // USE_NODE_TAGS
 		assets[name] = asset;
 		if (asset.type == Prose::AssetType::Node || has_key(L, "nodes"))
 		{
-			parse_table(L,
-			            "nodes",
-			            &create_node,
-			            scene,
-			            assets,
-			            stack,
-			            asset.node);
+			parse_table(
+			    L, "nodes", &create_node, scene, assets, stack, asset.node);
 		}
 	}
 	return asset;

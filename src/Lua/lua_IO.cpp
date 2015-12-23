@@ -1,4 +1,4 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -10,7 +10,7 @@
 
 namespace
 {
-	int load(lua_State *L)
+	int load(lua_State* L)
 	{
 		// rainbow.io.load(filename)
 		rainbow::lua::Argument<char*>::is_required(L, 1);
@@ -23,7 +23,7 @@ namespace
 		return 1;
 	}
 
-	int save(lua_State *L)
+	int save(lua_State* L)
 	{
 		// rainbow.io.save(filename, data, size)
 		rainbow::lua::Argument<char*>::is_required(L, 1);
@@ -40,7 +40,7 @@ namespace
 
 NS_RAINBOW_LUA_MODULE_BEGIN(io)
 {
-	void init(lua_State *L)
+	void init(lua_State* L)
 	{
 		lua_pushliteral(L, "io");
 		lua_createtable(L, 0, 2);

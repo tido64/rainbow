@@ -18,10 +18,10 @@ class Data;
 
 NS_RAINBOW_LUA_BEGIN
 {
-	template<typename T>
+	template <typename T>
 	class Bind;
 
-	template<typename T>
+	template <typename T>
 	using LuaBindable =
 	    typename std::enable_if<std::is_base_of<Bind<T>, T>::value>::type;
 
@@ -32,16 +32,16 @@ NS_RAINBOW_LUA_BEGIN
 	{
 	public:
 		ScopedRef() : state_(nullptr), ref_(LUA_REFNIL) {}
-		ScopedRef(lua_State *);
+		ScopedRef(lua_State*);
 		~ScopedRef();
 
 		void get() const { lua_rawgeti(state_, LUA_REGISTRYINDEX, ref_); }
-		void reset(lua_State *L = nullptr);
+		void reset(lua_State* L = nullptr);
 
 		explicit operator bool() const { return ref_ != LUA_REFNIL; }
 
 	private:
-		lua_State *state_;
+		lua_State* state_;
 		int ref_;
 	};
 
@@ -49,15 +49,15 @@ NS_RAINBOW_LUA_BEGIN
 	///   Outputs information about the error, and dumps the stack if
 	///   applicable.
 	/// </summary>
-	void error(lua_State *L, const int lua_error);
+	void error(lua_State* L, int lua_error);
 
 	/// <summary>
 	///   Returns the pointer returned from <see cref="luaL_checkudata"/> or
 	///   <see cref="lua_touserdata"/>, depending on whether <c>NDEBUG</c> is
 	///   defined.
 	/// </summary>
-	template<typename T, typename = LuaBindable<T>>
-	T* touserdata(lua_State *L, const int n)
+	template <typename T, typename = LuaBindable<T>>
+	T* touserdata(lua_State* L, int n)
 	{
 #ifndef NDEBUG
 		return static_cast<T*>(luaL_checkudata(L, n, T::class_name));
@@ -70,18 +70,18 @@ NS_RAINBOW_LUA_BEGIN
 	///   Returns the string representing a Lua wrapped object. The format of
 	///   the string is "<type name>: <address>".
 	/// <//summary>
-	template<typename T, typename = LuaBindable<T>>
-	int tostring(lua_State *L)
+	template <typename T, typename = LuaBindable<T>>
+	int tostring(lua_State* L)
 	{
 		lua_pushfstring(L, "%s: %p", T::class_name, touserdata<T>(L, 1));
 		return 1;
 	}
 
 	/// <summary>Creates a Lua wrapped object.</summary>
-	template<typename T, typename = LuaBindable<T>>
-	int alloc(lua_State *L)
+	template <typename T, typename = LuaBindable<T>>
+	int alloc(lua_State* L)
 	{
-		void *data = lua_newuserdata(L, sizeof(T));
+		void* data = lua_newuserdata(L, sizeof(T));
 		luaL_setmetatable(L, T::class_name);
 		// Stash the userdata so we can return it later.
 		ScopedRef ref(L);
@@ -90,12 +90,12 @@ NS_RAINBOW_LUA_BEGIN
 		return 1;
 	}
 
-	template<typename... Args>
-	int call(lua_State *L,
-	         const int nargs,
-	         const int nresults,
-	         const int errfunc,
-	         const char *err,
+	template <typename... Args>
+	int call(lua_State* L,
+	         int nargs,
+	         int nresults,
+	         int errfunc,
+	         const char* err,
 	         Args&&... args)
 	{
 		const int result = lua_pcall(L, nargs, nresults, errfunc);
@@ -109,15 +109,15 @@ NS_RAINBOW_LUA_BEGIN
 		return LUA_OK;
 	}
 
-	template<typename T, typename = LuaBindable<T>>
-	int dealloc(lua_State *L)
+	template <typename T, typename = LuaBindable<T>>
+	int dealloc(lua_State* L)
 	{
 		touserdata<T>(L, 1)->~T();
 		return 0;
 	}
 
 	/// <summary>Custom Lua package loader.</summary>
-	int load(lua_State *L);
+	int load(lua_State* L);
 
 	/// <summary>Loads buffer as a Lua chunk.</summary>
 	/// <param name="L">Lua state.</param>
@@ -130,16 +130,16 @@ NS_RAINBOW_LUA_BEGIN
 	///   by Lua package loaders.
 	/// </param>
 	/// <returns>Number of successfully loaded chunks.</returns>
-	int load(lua_State *L,
-	         const Data &chunk,
-	         const char *name,
-	         const bool exec = true);
+	int load(lua_State* L,
+	         const Data& chunk,
+	         const char* name,
+	         bool exec = true);
 
 	/// <summary>
 	///   Returns the value returned from <see cref="luaL_optinteger"/> but
 	///   without the extra type check if <c>NDEBUG</c> is defined.
 	/// </summary>
-	inline lua_Integer optinteger(lua_State *L, const int n, lua_Integer def)
+	inline lua_Integer optinteger(lua_State* L, int n, lua_Integer def)
 	{
 #ifndef NDEBUG
 		return luaL_optinteger(L, n, def);
@@ -152,7 +152,7 @@ NS_RAINBOW_LUA_BEGIN
 	///   Returns the value returned from <see cref="luaL_optnumber"/> but
 	///   without the extra type check if <c>NDEBUG</c> is defined.
 	/// </summary>
-	inline lua_Number optnumber(lua_State *L, const int n, lua_Number def)
+	inline lua_Number optnumber(lua_State* L, int n, lua_Number def)
 	{
 #ifndef NDEBUG
 		return luaL_optnumber(L, n, def);
@@ -161,8 +161,8 @@ NS_RAINBOW_LUA_BEGIN
 #endif
 	}
 
-	template<typename T>
-	void push(lua_State *L, const T value);
+	template <typename T>
+	void push(lua_State* L, T value);
 
 	/// <summary>Pushes a collectable pointer on the stack.</summary>
 	/// <remarks>
@@ -173,7 +173,7 @@ NS_RAINBOW_LUA_BEGIN
 	/// <param name="L">Lua state.</param>
 	/// <param name="ptr">The pointer to push on the stack.</param>
 	/// <param name="name">Name of the pointer type.</param>
-	void pushpointer(lua_State *L, void *ptr, const char *name);
+	void pushpointer(lua_State* L, void* ptr, const char* name);
 
 	/// <summary>
 	///   Does the equivalent of <c>t[field] = value</c>, where <c>t</c> is the
@@ -183,11 +183,8 @@ NS_RAINBOW_LUA_BEGIN
 	/// <param name="field">Name of the index.</param>
 	/// <param name="length">Length of <paramref name="field"/>.</param>
 	/// <param name="value">The value to assign.</param>
-	template<typename T>
-	void rawset(lua_State *L,
-	            const char *const field,
-	            const size_t length,
-	            const T value)
+	template <typename T>
+	void rawset(lua_State* L, const char* field, size_t length, T value)
 	{
 		lua_pushlstring(L, field, length);
 		push<T>(L, value);
@@ -206,8 +203,8 @@ NS_RAINBOW_LUA_BEGIN
 	///     <item>http://lua-users.org/wiki/LunaWrapper</item>
 	///   </list>
 	/// </remarks>
-	template<typename T, typename = LuaBindable<T>>
-	void reg(lua_State *L)
+	template <typename T, typename = LuaBindable<T>>
+	void reg(lua_State* L)
 	{
 		if (T::is_constructible)
 		{
@@ -235,24 +232,24 @@ NS_RAINBOW_LUA_BEGIN
 	///   Name of the chunk. Used for debug information.
 	/// </param>
 	/// <returns>Number of successfully reloaded chunks.</returns>
-	int reload(lua_State *L, const Data &chunk, const char *name);
+	int reload(lua_State* L, const Data& chunk, const char* name);
 
 	/// <summary>
 	///   Replaces the table at index <paramref name="n"/> with its userdata if
 	///   one exists.
 	/// </summary>
-	void replacetable(lua_State *L, const int n);
+	void replacetable(lua_State* L, int n);
 
 	/// <summary>Sets debugging hook.</summary>
-	void sethook(lua_State *L,
-	             const int mask = LUA_MASKCALL | LUA_MASKRET | LUA_MASKLINE);
+	void sethook(lua_State* L,
+	             int mask = LUA_MASKCALL | LUA_MASKRET | LUA_MASKLINE);
 
 	/// <summary>
 	///   Returns the value returned from <see cref="luaL_checkinteger"/> or
 	///   <see cref="lua_tointeger"/>, depending on whether <c>NDEBUG</c> is
 	///   defined.
 	/// </summary>
-	inline lua_Integer tointeger(lua_State *L, const int n)
+	inline lua_Integer tointeger(lua_State* L, int n)
 	{
 #ifndef NDEBUG
 		return luaL_checkinteger(L, n);
@@ -266,7 +263,7 @@ NS_RAINBOW_LUA_BEGIN
 	///   <see cref="lua_tonumber"/>, depending on whether <c>NDEBUG</c> is
 	///   defined.
 	/// </summary>
-	inline lua_Number tonumber(lua_State *L, const int n)
+	inline lua_Number tonumber(lua_State* L, int n)
 	{
 #ifndef NDEBUG
 		return luaL_checknumber(L, n);
@@ -286,7 +283,7 @@ NS_RAINBOW_LUA_BEGIN
 	/// <returns>
 	///   The pointer on the top of the stack if valid, else <c>nullptr</c>.
 	/// </returns>
-	void* topointer(lua_State *L, const char *name);
+	void* topointer(lua_State* L, const char* name);
 } NS_RAINBOW_LUA_END
 
 #endif

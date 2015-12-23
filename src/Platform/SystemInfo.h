@@ -1,4 +1,4 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -23,7 +23,7 @@ namespace rainbow
 		bool has_touchscreen();
 
 		/// <summary>Returns a list of user-preferred locales.</summary>
-		void locales(std::vector<std::unique_ptr<char[]>> &locales);
+		void locales(std::vector<std::unique_ptr<char[]>>& locales);
 
 		/// <summary>
 		///   Returns total number of physical memory installed in megabytes.

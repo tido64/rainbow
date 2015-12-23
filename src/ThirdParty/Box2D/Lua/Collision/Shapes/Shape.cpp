@@ -1,4 +1,4 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -16,7 +16,7 @@
 
 namespace
 {
-	const char *const kShapeTypes[] = {
+	const char* const kShapeTypes[]{
 	    b2::lua::CircleShape::class_name,
 	    b2::lua::EdgeShape::class_name,
 	    b2::lua::PolygonShape::class_name,
@@ -26,7 +26,7 @@ namespace
 
 NS_B2_LUA_BEGIN
 {
-	int ShapesInit(lua_State *L)
+	int ShapesInit(lua_State* L)
 	{
 		lua_pushliteral(L, "Shape");
 		lua_createtable(L, 5, 0);
@@ -44,7 +44,7 @@ NS_B2_LUA_BEGIN
 		return 0;
 	}
 
-	int MassData(lua_State *L, const b2MassData &mass)
+	int MassData(lua_State* L, const b2MassData& mass)
 	{
 		lua_pushnumber(L, mass.mass);
 		lua_pushnumber(L, mass.center.x);
@@ -53,7 +53,7 @@ NS_B2_LUA_BEGIN
 		return 4;
 	}
 
-	int Shape(lua_State *L, b2Shape *shape)
+	int Shape(lua_State* L, b2Shape* shape)
 	{
 		lua_pushlightuserdata(L, shape);
 		switch (shape->GetType())
@@ -72,11 +72,11 @@ NS_B2_LUA_BEGIN
 		return 0;
 	}
 
-	b2Shape* GetShape(lua_State *L)
+	b2Shape* GetShape(lua_State* L)
 	{
 		for (int i = 0; i < b2Shape::e_typeCount; ++i)
 		{
-			void *ud = luaL_testudata(L, -1, kShapeTypes[i]);
+			void* ud = luaL_testudata(L, -1, kShapeTypes[i]);
 			if (ud)
 			{
 				switch (i)

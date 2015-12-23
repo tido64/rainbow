@@ -19,7 +19,7 @@
 
 namespace
 {
-	const char* basename(const char* const path)
+	const char* basename(const char* path)
 	{
 		const char* basename = path;
 		for (const char* c = path; *c; ++c)
@@ -33,7 +33,7 @@ namespace
 	class Library
 	{
 	public:
-		explicit Library(const char* const path);
+		explicit Library(const char* path);
 
 		const char* name() const { return name_.get(); }
 		Data open() const;
@@ -195,7 +195,7 @@ bool Gatekeeper::on_pointer_moved_impl(const ArrayView<Pointer>&)
 }
 
 #if USE_LUA_SCRIPT
-Library::Library(const char* const path) : path_(path)
+Library::Library(const char* path) : path_(path)
 {
 	const char* filename = basename(path_);
 	size_t length = strlen(filename);

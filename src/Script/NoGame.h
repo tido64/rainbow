@@ -10,10 +10,10 @@
 class NoGame final : public GameBase
 {
 public:
-	NoGame(rainbow::Director &director) : GameBase(director) {}
+	NoGame(rainbow::Director& director) : GameBase(director) {}
 
-	void init(const Vec2i &screen) override;
-	void update(const unsigned long dt) override;
+	void init(const Vec2i& screen) override;
+	void update(unsigned long dt) override;
 
 private:
 	rainbow::sprite_t logo_;

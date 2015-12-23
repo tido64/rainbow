@@ -42,7 +42,7 @@ void VertexArray::bind() const
 #endif
 }
 
-void VertexArray::reconfigure(std::function<void()> &&array_state)
+void VertexArray::reconfigure(std::function<void()>&& array_state)
 {
 #ifdef USE_VERTEX_ARRAY_OBJECT
 	GLuint array;

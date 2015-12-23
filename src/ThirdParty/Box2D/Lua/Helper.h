@@ -29,16 +29,16 @@
 
 namespace b2
 {
-	b2Vec2 Vec2(lua_State *L, const int m, const int n);
+	b2Vec2 Vec2(lua_State* L, int m, int n);
 
-	void getfield(lua_State *L, const char *const field, const size_t length);
+	void getfield(lua_State* L, const char* field, size_t length);
 
-	template<typename T>
-	T gettable(lua_State *L, const char *const field, const size_t length);
+	template <typename T>
+	T gettable(lua_State* L, const char* field, size_t length);
 
-	void rawsetnil(lua_State *L, const char *const field, const size_t length);
+	void rawsetnil(lua_State* L, const char* field, size_t length);
 
-	int rawsetvec2(lua_State *L, const char *const field, const size_t length);
+	int rawsetvec2(lua_State* L, const char* field, size_t length);
 }
 
 #endif

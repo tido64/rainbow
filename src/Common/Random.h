@@ -29,24 +29,24 @@
 namespace rainbow
 {
 	/// <summary>C++ wrapper for dSFMT pseudorandom number generator.</summary>
-	template<typename T, typename = FloatingPoint<T>>
+	template <typename T, typename = FloatingPoint<T>>
 	struct dSFMT
 	{
-		void seed(const uint32_t seed = 0)
+		void seed(uint32_t seed = 0)
 		{
 			dsfmt_gv_init_gen_rand(seed == 0 ? std::random_device{}() : seed);
 		}
 
 		T operator()() { return dsfmt_gv_genrand_close_open(); }
 
-		template<typename N>
-		N operator()(const N n)
+		template <typename N>
+		N operator()(N n)
 		{
 			return static_cast<N>(dsfmt_gv_genrand_close_open() * n);
 		}
 
-		template<typename N>
-		N operator()(const N m, const N n)
+		template <typename N>
+		N operator()(N m, N n)
 		{
 			R_ASSERT(m < n, "Parameters must be in ascending order");
 			return static_cast<N>(dsfmt_gv_genrand_close_open() * (n - m) + m);

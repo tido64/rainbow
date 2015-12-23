@@ -11,14 +11,15 @@
 #	define pure
 #endif
 
-#include <algorithm>
 #include <iterator>
 #include <utility>
 
+#include "Common/Algorithm.h"
+
 namespace rainbow
 {
-	template<typename F, typename T>
-	T filter(F&& pred, const T &list)
+	template <typename F, typename T>
+	T filter(F&& pred, const T& list)
 	{
 		T result;
 		std::copy_if(
@@ -26,34 +27,31 @@ namespace rainbow
 		return std::move(result);
 	}
 
-	template<typename F, typename T>
-	T& filter_by_mut(F&& pred, T &list)
+	template <typename F, typename T>
+	T& filter_by_mut(F&& pred, T& list)
 	{
 		using U = typename T::value_type;
-		list.erase(std::remove_if(std::begin(list),
-		                          std::end(list),
-		                          [&pred](const U &i) { return !pred(i); }),
-		           std::end(list));
+		remove_if(list, [&pred](const U& i) { return !pred(i); });
 		return list;
 	}
 
-	template<typename F, typename T, typename U, typename V>
-	T foldl(F&& op, const T &z, const U &list, V i, V end)
+	template <typename F, typename T, typename U, typename V>
+	T foldl(F&& op, const T& z, const U& list, V i, V end)
 	{
-		if (i == end)
-			return z;
-		return foldl(std::forward<F>(op), op(z, *i), list, i + 1, end);
+		return i == end
+		           ? z
+		           : foldl(std::forward<F>(op), op(z, *i), list, i + 1, end);
 	}
 
-	template<typename F, typename T, typename U>
-	T foldl(F&& op, const T &z, const U &list)
+	template <typename F, typename T, typename U>
+	T foldl(F&& op, const T& z, const U& list)
 	{
 		return foldl(
 		    std::forward<F>(op), z, list, std::begin(list), std::end(list));
 	}
 
-	template<typename F, typename T>
-	auto foldl1(F&& op, const T &list)
+	template <typename F, typename T>
+	auto foldl1(F&& op, const T& list)
 	    -> decltype(op(*std::begin(list), *std::begin(list)))
 	{
 		auto i = std::begin(list);
@@ -61,23 +59,23 @@ namespace rainbow
 	}
 
 #if __cplusplus >= 201402L
-	template<typename F, typename T, typename U, typename V>
-	T foldr(F&& op, const T &z, const U &list, V i, V rend)
+	template <typename F, typename T, typename U, typename V>
+	T foldr(F&& op, const T& z, const U& list, V i, V rend)
 	{
-		if (i == rend)
-			return z;
-		return foldr(std::forward<F>(op), op(*i, z), list, i + 1, rend);
+		return i == rend
+		           ? z
+		           : foldr(std::forward<F>(op), op(*i, z), list, i + 1, rend);
 	}
 
-	template<typename F, typename T, typename U>
-	T foldr(F&& op, const T &z, const U &list)
+	template <typename F, typename T, typename U>
+	T foldr(F&& op, const T& z, const U& list)
 	{
 		return foldr(
 		    std::forward<F>(op), z, list, std::rbegin(list), std::rend(list));
 	}
 
-	template<typename F, typename T>
-	auto foldr1(F&& op, const T &list)
+	template <typename F, typename T>
+	auto foldr1(F&& op, const T& list)
 	    -> decltype(op(*std::rbegin(list), *std::rbegin(list)))
 	{
 		auto i = std::rbegin(list);
@@ -85,8 +83,8 @@ namespace rainbow
 	}
 #endif  // __cplusplus >= 201402L
 
-	template<typename F, typename T>
-	T map(F&& op, const T &list)
+	template <typename F, typename T>
+	T map(F&& op, const T& list)
 	{
 		T result;
 		std::transform(
@@ -94,15 +92,15 @@ namespace rainbow
 		return std::move(result);
 	}
 
-	template<typename F, typename T>
-	T& map_by_mut(F&& op, T &list)
+	template <typename F, typename T>
+	T& map_by_mut(F&& op, T& list)
 	{
 		std::transform(std::begin(list), std::end(list), std::begin(list), op);
 		return list;
 	}
 
-	template<typename T>
-	auto accumulate(const T &list)
+	template <typename T>
+	auto accumulate(const T& list)
 	    -> decltype(*std::begin(list) + *std::begin(list))
 	{
 		using U = typename T::value_type;

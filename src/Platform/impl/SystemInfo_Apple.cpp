@@ -1,4 +1,4 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -31,7 +31,7 @@ namespace rainbow
 #endif
 		}
 
-		void locales(std::vector<std::unique_ptr<char[]>> &locales)
+		void locales(std::vector<std::unique_ptr<char[]>>& locales)
 		{
 			char tmp[16];
 			CFArrayRef localesArray = CFLocaleCopyPreferredLanguages();
@@ -51,7 +51,7 @@ namespace rainbow
 
 		size_t memory()
 		{
-			int mib[2] = { CTL_HW, HW_MEMSIZE };
+			int mib[2]{CTL_HW, HW_MEMSIZE};
 			int64_t memsize;
 			size_t length = sizeof(memsize);
 			sysctl(mib, 2, &memsize, &length, nullptr, 0);

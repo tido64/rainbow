@@ -24,24 +24,24 @@ namespace rainbow
 
 	public:
 		/// <summary>Loads and initialises game script.</summary>
-		int start(const Data &main);
+		int start(const Data& main);
 
 		/// <summary>Calls game update function.</summary>
-		int update(const unsigned long t);
+		int update(unsigned long t);
 
 		operator lua_State*() const { return state_; }
 
 	private:
-		lua_State *state_;
+		lua_State* state_;
 		int internal_;
 		int traceback_;
-		lua::SceneGraph *scenegraph_;
+		lua::SceneGraph* scenegraph_;
 
 		LuaMachine();
 		~LuaMachine();
 
 		void close();
-		int init(LuaScript *instance, SceneNode *root);
+		int init(LuaScript* instance, SceneNode* root);
 	};
 }
 

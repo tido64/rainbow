@@ -3,7 +3,6 @@
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
 #include "Platform/Macros.h"
-#ifdef RAINBOW_OS_ANDROID
 
 #include <memory>
 #include <unistd.h>
@@ -23,7 +22,7 @@
 #include "Input/Input.h"
 #include "Input/Pointer.h"
 
-ANativeActivity *gNativeActivity;
+ANativeActivity* gNativeActivity;
 
 struct AInstance
 {
@@ -31,10 +30,10 @@ struct AInstance
 	bool done;    ///< Whether the user has requested to quit.
 	bool initialised;
 
-	struct android_app *app;
-	ASensorManager *sensorManager;
-	const ASensor *accelerometerSensor;
-	ASensorEventQueue *sensorEventQueue;
+	struct android_app* app;
+	ASensorManager* sensorManager;
+	const ASensor* accelerometerSensor;
+	ASensorEventQueue* sensorEventQueue;
 
 	EGLDisplay display;
 	EGLSurface surface;
@@ -48,18 +47,17 @@ struct AInstance
 	      surface(EGL_NO_SURFACE), context(EGL_NO_CONTEXT) {}
 };
 
-void android_destroy_display(AInstance *ainstance);
-void android_handle_display(AInstance *ainstance);
-void android_init_display(AInstance *ainstance);
-void android_handle_event(struct android_app *app, int32_t cmd);
-int32_t android_handle_input(struct android_app *app, AInputEvent *event);
-int32_t android_handle_motion(struct android_app *app, AInputEvent *event);
-Pointer get_pointer_event(Renderer &renderer,
-                          AInputEvent *event,
-                          const int32_t index);
+void android_destroy_display(AInstance* ainstance);
+void android_handle_display(AInstance* ainstance);
+void android_init_display(AInstance* ainstance);
+void android_handle_event(struct android_app* app, int32_t cmd);
+int32_t android_handle_input(struct android_app* app, AInputEvent* event);
+int32_t android_handle_motion(struct android_app* app, AInputEvent* event);
+Pointer get_pointer_event(Renderer& renderer,
+                          AInputEvent* event,
+                          int32_t index);
 
-
-void android_main(struct android_app *state)
+void android_main(struct android_app* state)
 {
 	app_dummy();
 	//sleep(5);  // Sleep a little so GDB can attach itself
@@ -105,12 +103,14 @@ void android_main(struct android_app *state)
 			    ainstance.accelerometerSensor)
 			{
 				ASensorEvent event;
-				while (ASensorEventQueue_getEvents(ainstance.sensorEventQueue,
-				                                   &event, 1) > 0)
+				while (ASensorEventQueue_getEvents(
+				           ainstance.sensorEventQueue, &event, 1) > 0)
 				{
 					ainstance.director->input().accelerated(
-					    event.acceleration.x, event.acceleration.y,
-					    event.acceleration.z, event.timestamp);
+					    event.acceleration.x,
+					    event.acceleration.y,
+					    event.acceleration.z,
+					    event.timestamp);
 				}
 			}
 		}
@@ -126,7 +126,7 @@ void android_main(struct android_app *state)
 	android_destroy_display(&ainstance);
 }
 
-void android_destroy_display(AInstance *a)
+void android_destroy_display(AInstance* a)
 {
 	a->director.reset();
 	if (a->display != EGL_NO_DISPLAY)
@@ -150,7 +150,7 @@ void android_destroy_display(AInstance *a)
 	a->active = false;
 }
 
-void android_handle_display(AInstance *a)
+void android_handle_display(AInstance* a)
 {
 	if (a->initialised)
 		return;
@@ -173,29 +173,28 @@ void android_handle_display(AInstance *a)
 	a->initialised = !a->director->terminated();
 }
 
-void android_init_display(AInstance *a)
+void android_init_display(AInstance* a)
 {
-	EGLDisplay &dpy = a->display;
+	EGLDisplay& dpy = a->display;
 	if (dpy == EGL_NO_DISPLAY)
 	{
 		dpy = eglGetDisplay(EGL_DEFAULT_DISPLAY);
 		eglInitialize(dpy, 0, 0);
 	}
 
-	const EGLint attrib_list[] = {
-		EGL_ALPHA_SIZE, 8,
-		EGL_BLUE_SIZE, 8,
-		EGL_GREEN_SIZE, 8,
-		EGL_RED_SIZE, 8,
-		EGL_SURFACE_TYPE, EGL_WINDOW_BIT,
-		EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT,
-		EGL_NONE
-	};
+	const EGLint attrib_list[]{
+	    EGL_ALPHA_SIZE, 8,
+	    EGL_BLUE_SIZE, 8,
+	    EGL_GREEN_SIZE, 8,
+	    EGL_RED_SIZE, 8,
+	    EGL_SURFACE_TYPE, EGL_WINDOW_BIT,
+	    EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT,
+	    EGL_NONE};
 	EGLConfig config;
 	EGLint nconfigs;
 	eglChooseConfig(dpy, attrib_list, &config, 1, &nconfigs);
 
-	EGLSurface &surface = a->surface;
+	EGLSurface& surface = a->surface;
 	if (surface == EGL_NO_SURFACE)
 	{
 		EGLint format;
@@ -210,7 +209,7 @@ void android_init_display(AInstance *a)
 		}
 	}
 
-	EGLContext &ctx = a->context;
+	EGLContext& ctx = a->context;
 	if (ctx == EGL_NO_CONTEXT)
 	{
 		const EGLint gles_attrib[]{EGL_CONTEXT_CLIENT_VERSION, 2, EGL_NONE};
@@ -229,7 +228,7 @@ void android_init_display(AInstance *a)
 		android_handle_display(a);
 }
 
-void android_handle_event(struct android_app *app, int32_t cmd)
+void android_handle_event(struct android_app* app, int32_t cmd)
 {
 	AInstance* a = static_cast<AInstance*>(app->userData);
 	switch (cmd)
@@ -302,7 +301,7 @@ void android_handle_event(struct android_app *app, int32_t cmd)
 	}
 }
 
-int32_t android_handle_input(struct android_app *app, AInputEvent *event)
+int32_t android_handle_input(struct android_app* app, AInputEvent* event)
 {
 	switch (AInputEvent_getType(event))
 	{
@@ -315,27 +314,25 @@ int32_t android_handle_input(struct android_app *app, AInputEvent *event)
 	}
 }
 
-int32_t android_handle_motion(struct android_app *app, AInputEvent *event)
+int32_t android_handle_motion(struct android_app* app, AInputEvent* event)
 {
-	Director *director = static_cast<AInstance*>(app->userData)->director.get();
+	Director* director = static_cast<AInstance*>(app->userData)->director.get();
 	switch (AMotionEvent_getAction(event) & AMOTION_EVENT_ACTION_MASK)
 	{
 		case AMOTION_EVENT_ACTION_DOWN:
 		case AMOTION_EVENT_ACTION_POINTER_DOWN: {
-			const int32_t index =
-			    (AMotionEvent_getAction(event)
-			        & AMOTION_EVENT_ACTION_POINTER_INDEX_MASK)
-			    >> AMOTION_EVENT_ACTION_POINTER_INDEX_SHIFT;
+			const int32_t index = (AMotionEvent_getAction(event) &
+			                       AMOTION_EVENT_ACTION_POINTER_INDEX_MASK) >>
+			                      AMOTION_EVENT_ACTION_POINTER_INDEX_SHIFT;
 			Pointer p = get_pointer_event(director->renderer(), event, index);
 			director->input().on_pointer_began(1, &p);
 			break;
 		}
 		case AMOTION_EVENT_ACTION_UP:
 		case AMOTION_EVENT_ACTION_POINTER_UP: {
-			const int32_t index =
-			    (AMotionEvent_getAction(event)
-			        & AMOTION_EVENT_ACTION_POINTER_INDEX_MASK)
-			    >> AMOTION_EVENT_ACTION_POINTER_INDEX_SHIFT;
+			const int32_t index = (AMotionEvent_getAction(event) &
+			                       AMOTION_EVENT_ACTION_POINTER_INDEX_MASK) >>
+			                      AMOTION_EVENT_ACTION_POINTER_INDEX_SHIFT;
 			Pointer p = get_pointer_event(director->renderer(), event, index);
 			director->input().on_pointer_ended(1, &p);
 			break;
@@ -358,17 +355,12 @@ int32_t android_handle_motion(struct android_app *app, AInputEvent *event)
 	return 1;
 }
 
-Pointer get_pointer_event(Renderer &renderer,
-                          AInputEvent *event,
-                          const int32_t index)
+Pointer get_pointer_event(Renderer& renderer, AInputEvent* event, int32_t index)
 {
-	const Vec2i &point = renderer.convert_to_flipped_view(
-	    Vec2i(AMotionEvent_getX(event, index),
-	          AMotionEvent_getY(event, index)));
+	const Vec2i& point = renderer.convert_to_flipped_view(Vec2i(
+	    AMotionEvent_getX(event, index), AMotionEvent_getY(event, index)));
 	return Pointer(AMotionEvent_getPointerId(event, index),
 	               point.x,
 	               point.y,
 	               AMotionEvent_getEventTime(event));
 }
-
-#endif

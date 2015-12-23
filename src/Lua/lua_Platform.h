@@ -1,4 +1,4 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -12,10 +12,10 @@ struct lua_State;
 
 NS_RAINBOW_LUA_MODULE_BEGIN(platform)
 {
-	void init(lua_State *L);
+	void init(lua_State* L);
 
 	/// Updates rainbow.platform.screen.
-	void update(lua_State *L, const Vec2i &screen);
+	void update(lua_State* L, const Vec2i& screen);
 } NS_RAINBOW_LUA_MODULE_END(platform)
 
 #endif

@@ -17,10 +17,7 @@ struct Pointer
 
 	Pointer() : hash(0), x(0), y(0), timestamp(0) {}
 
-	Pointer(const uint32_t hash,
-	        const int32_t x,
-	        const int32_t y,
-	        const uint64_t t)
+	Pointer(uint32_t hash, int32_t x, int32_t y, uint64_t t)
 	    : hash(hash), x(x), y(y), timestamp(t) {}
 };
 

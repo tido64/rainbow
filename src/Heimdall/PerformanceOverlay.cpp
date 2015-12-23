@@ -2,8 +2,6 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
-#ifdef USE_HEIMDALL
-
 #include "Heimdall/PerformanceOverlay.h"
 
 #include <algorithm>
@@ -52,10 +50,10 @@ namespace
 	template <size_t I, typename T>
 	void plot(NVGcontext* vg,
 	          float x1,
-	          const float y0,
-	          const float dx,
-	          const float dy,
-	          const NVGcolor color,
+	          float y0,
+	          float dx,
+	          float dy,
+	          NVGcolor color,
 	          const T& data)
 	{
 		nvgBeginPath(vg);
@@ -135,7 +133,7 @@ void PerformanceOverlay::set_origin(const Vec2f& origin)
 	button_.drawable().move(delta);
 }
 
-void PerformanceOverlay::update_impl(const unsigned long dt)
+void PerformanceOverlay::update_impl(unsigned long dt)
 {
 	if (!node_->is_enabled())
 		return;
@@ -208,5 +206,3 @@ void PerformanceOverlay::paint_impl()
 	plot<1>(context(), x1, by, dx, height / vmem_top_, vmem_line_color(),
 	        frame_data_);
 }
-
-#endif

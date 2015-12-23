@@ -18,6 +18,8 @@
 #include "Lua/LuaHelper.h"
 #include "Lua/LuaSyntax.h"
 
+using rainbow::SceneNode;
+
 enum class Prose::AssetType
 {
 	None,
@@ -31,9 +33,10 @@ enum class Prose::AssetType
 	TextureAtlas
 };
 
-Prose::Prose(const size_t size)
-    : allocator_(size), stack_(allocator_),
-      node_(rainbow::SceneNode::create().release()) {}
+Prose::Prose(size_t size)
+    : allocator_(size), stack_(allocator_), node_(SceneNode::create().release())
+{
+}
 
 Prose::~Prose()
 {
@@ -43,8 +46,8 @@ Prose::~Prose()
 		node_->remove();
 }
 
-template<typename T, Prose::AssetType Type>
-T* Prose::get_asset(const std::string &name)
+template <typename T, Prose::AssetType Type>
+T* Prose::get_asset(const std::string& name)
 {
 	auto asset = assets_.find(name);
 	return (asset == assets_.end() || asset->second.type != Type
@@ -52,8 +55,8 @@ T* Prose::get_asset(const std::string &name)
 	            : static_cast<T*>(asset->second.ptr));
 }
 
-template<>
-Animation* Prose::get_asset<Animation>(const std::string &name)
+template <>
+Animation* Prose::get_asset<Animation>(const std::string& name)
 {
 	auto animation = get_asset<Animation, AssetType::Animation>(name);
 	if (!animation)
@@ -61,8 +64,8 @@ Animation* Prose::get_asset<Animation>(const std::string &name)
 	return animation;
 }
 
-template<>
-FontAtlas* Prose::get_asset<FontAtlas>(const std::string &name)
+template <>
+FontAtlas* Prose::get_asset<FontAtlas>(const std::string& name)
 {
 	auto font = get_asset<FontAtlas, AssetType::FontAtlas>(name);
 	if (!font)
@@ -70,8 +73,8 @@ FontAtlas* Prose::get_asset<FontAtlas>(const std::string &name)
 	return font;
 }
 
-template<>
-Label* Prose::get_asset<Label>(const std::string &name)
+template <>
+Label* Prose::get_asset<Label>(const std::string& name)
 {
 	auto label = get_asset<Label, AssetType::Label>(name);
 	if (!label)
@@ -79,17 +82,17 @@ Label* Prose::get_asset<Label>(const std::string &name)
 	return label;
 }
 
-template<>
-rainbow::SceneNode* Prose::get_asset<rainbow::SceneNode>(const std::string &name)
+template <>
+SceneNode* Prose::get_asset<SceneNode>(const std::string& name)
 {
-	auto node = get_asset<rainbow::SceneNode, AssetType::Node>(name);
+	auto node = get_asset<SceneNode, AssetType::Node>(name);
 	if (!node)
 		R_ABORT("Prose: No such node: %s", name.c_str());
 	return node;
 }
 
-template<>
-Sprite* Prose::get_asset<Sprite>(const std::string &name)
+template <>
+Sprite* Prose::get_asset<Sprite>(const std::string& name)
 {
 	auto sprite = get_asset<Sprite, AssetType::Sprite>(name);
 	if (!sprite)
@@ -97,8 +100,8 @@ Sprite* Prose::get_asset<Sprite>(const std::string &name)
 	return sprite;
 }
 
-template<>
-SpriteBatch* Prose::get_asset<SpriteBatch>(const std::string &name)
+template <>
+SpriteBatch* Prose::get_asset<SpriteBatch>(const std::string& name)
 {
 	auto batch = get_asset<SpriteBatch, AssetType::SpriteBatch>(name);
 	if (!batch)
@@ -106,8 +109,8 @@ SpriteBatch* Prose::get_asset<SpriteBatch>(const std::string &name)
 	return batch;
 }
 
-template<>
-TextureAtlas* Prose::get_asset<TextureAtlas>(const std::string &name)
+template <>
+TextureAtlas* Prose::get_asset<TextureAtlas>(const std::string& name)
 {
 	auto texture = get_asset<TextureAtlas, AssetType::TextureAtlas>(name);
 	if (!texture)
@@ -115,22 +118,22 @@ TextureAtlas* Prose::get_asset<TextureAtlas>(const std::string &name)
 	return texture;
 }
 
-Animation* Prose::get_animation(const std::string &name)
+Animation* Prose::get_animation(const std::string& name)
 {
 	return get_asset<Animation>(name);
 }
 
-FontAtlas* Prose::get_font(const std::string &name)
+FontAtlas* Prose::get_font(const std::string& name)
 {
 	return get_asset<FontAtlas>(name);
 }
 
-Label* Prose::get_label(const std::string &name)
+Label* Prose::get_label(const std::string& name)
 {
 	return get_asset<Label>(name);
 }
 
-rainbow::SceneNode* Prose::get_node(const std::string &name)
+SceneNode* Prose::get_node(const std::string& name)
 {
 	auto asset = assets_.find(name);
 	if (asset == assets_.end())
@@ -141,17 +144,17 @@ rainbow::SceneNode* Prose::get_node(const std::string &name)
 	return asset->second.node;
 }
 
-Sprite* Prose::get_sprite(const std::string &name)
+Sprite* Prose::get_sprite(const std::string& name)
 {
 	return get_asset<Sprite>(name);
 }
 
-SpriteBatch* Prose::get_spritebatch(const std::string &name)
+SpriteBatch* Prose::get_spritebatch(const std::string& name)
 {
 	return get_asset<SpriteBatch>(name);
 }
 
-TextureAtlas* Prose::get_texture(const std::string &name)
+TextureAtlas* Prose::get_texture(const std::string& name)
 {
 	return get_asset<TextureAtlas>(name);
 }
@@ -173,18 +176,15 @@ namespace
 	class ScopedField
 	{
 	public:
-		ScopedField(lua_State *L, const int n) : state_(L)
-		{
-			lua_rawgeti(L, -1, n);
-		}
+		ScopedField(lua_State* L, int n) : state_(L) { lua_rawgeti(L, -1, n); }
 
-		ScopedField(lua_State *L, const char *s) : state_(L)
+		ScopedField(lua_State* L, const char* s) : state_(L)
 		{
 			lua_pushstring(L, s);
 			lua_rawget(L, -2);
 		}
 
-		ScopedField(lua_State *L, const char *s, const size_t len) : state_(L)
+		ScopedField(lua_State* L, const char* s, size_t len) : state_(L)
 		{
 			lua_pushlstring(L, s, len);
 			lua_rawget(L, -2);
@@ -193,17 +193,17 @@ namespace
 		~ScopedField() { lua_pop(state_, 1); }
 
 	private:
-		lua_State *state_;
+		lua_State* state_;
 	};
 
-	template<size_t N>
-	ScopedField get_field(lua_State *L, const char (&name)[N])
+	template <size_t N>
+	ScopedField get_field(lua_State* L, const char (&name)[N])
 	{
 		return ScopedField(L, name, N - 1);
 	}
 
-	template<size_t N>
-	bool has_key(lua_State *L, const char (&name)[N])
+	template <size_t N>
+	bool has_key(lua_State* L, const char (&name)[N])
 	{
 		if (!lua_istable(L, -1))
 			return false;
@@ -217,7 +217,7 @@ namespace
 		return {Prose::AssetType::None, nullptr, nullptr};
 	}
 
-	const char* table_name(lua_State *L)
+	const char* table_name(lua_State* L)
 	{
 		if (has_key(L, "name"))
 		{
@@ -227,7 +227,7 @@ namespace
 		switch (lua_type(L, -2))
 		{
 			case LUA_TNUMBER: {
-				const char *name =
+				const char* name =
 				    lua_pushfstring(L, "#%d", lua_tointeger(L, -2));
 				lua_pop(L, 1);
 				return name;
@@ -240,8 +240,8 @@ namespace
 		return "";
 	}
 
-	template<typename F, typename... Args>
-	void parse_table(lua_State *L, const char *name, F&& parse, Args&&... args)
+	template <typename F, typename... Args>
+	void parse_table(lua_State* L, const char* name, F&& parse, Args&&... args)
 	{
 		ScopedField table(L, name);
 		R_ASSERT(lua_istable(L, -1), "Table expected");
@@ -256,18 +256,18 @@ namespace
 		}
 	}
 
-	#include "Script/Prose.Node.h"
-	#include "Script/Prose.Resource.h"
+#include "Script/Prose.Node.h"
+#include "Script/Prose.Resource.h"
 
 #if USE_NODE_TAGS
-	std::unique_ptr<char[]> basename_without_extension(const char *path)
+	std::unique_ptr<char[]> basename_without_extension(const char* path)
 	{
 		if (!path)
 			return {};
 
-		const char *i = path;
-		const char *start = path;
-		const char *end = path;
+		const char* i = path;
+		const char* start = path;
+		const char* end = path;
 		while (*i)
 		{
 			if (*i == '.')
@@ -282,14 +282,14 @@ namespace
 			return {};
 
 		const ptrdiff_t length = end - start;
-		char *name = new char[length + 1];
+		char* name = new char[length + 1];
 		strncpy(name, start, length);
 		name[length] = '\0';
 		return std::unique_ptr<char[]>(name);
 	}
 #endif
 
-	size_t size_of(const Prose::AssetType type)
+	size_t size_of(Prose::AssetType type)
 	{
 		switch (type)
 		{
@@ -300,7 +300,7 @@ namespace
 			case Prose::AssetType::Label:
 				return rainbow::ScopeStack::size_of<Label>();
 			case Prose::AssetType::Node:
-				return rainbow::ScopeStack::size_of<rainbow::SceneNode>();
+				return rainbow::ScopeStack::size_of<SceneNode>();
 			case Prose::AssetType::SpriteBatch:
 				return rainbow::ScopeStack::size_of<SpriteBatch>();
 			case Prose::AssetType::Sound:
@@ -312,7 +312,7 @@ namespace
 		}
 	}
 
-	Prose::Asset compute_size(lua_State *L, size_t &total_size)
+	Prose::Asset compute_size(lua_State* L, size_t& total_size)
 	{
 		auto type = node_type(L);
 		if (type == Prose::AssetType::None)
@@ -335,7 +335,7 @@ namespace
 	}
 }
 
-Prose* Prose::from_lua(const char *path)
+Prose* Prose::from_lua(const char* path)
 {
 	const Data script(File::open(path));
 	if (!script)
@@ -376,12 +376,9 @@ Prose* Prose::from_lua(const char *path)
 	parse_table(L.get(), "resources", &compute_size, total_size);
 	parse_table(L.get(), "nodes", &compute_size, total_size);
 
-	Prose *scene = new Prose(total_size);
-	parse_table(L.get(),
-	            "resources",
-	            &create_resource,
-	            scene->stack_,
-	            scene->assets_);
+	Prose* scene = new Prose(total_size);
+	parse_table(
+	    L.get(), "resources", &create_resource, scene->stack_, scene->assets_);
 	parse_table(L.get(),
 	            "nodes",
 	            &create_node,
@@ -390,7 +387,7 @@ Prose* Prose::from_lua(const char *path)
 	            scene->stack_,
 	            scene->node_);
 #if USE_NODE_TAGS
-	if (const auto &name = basename_without_extension(path))
+	if (const auto& name = basename_without_extension(path))
 		scene->node()->set_tag(name.get());
 #endif  // USE_NODE_TAGS
 	return scene;

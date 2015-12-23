@@ -20,7 +20,7 @@ Chrono::duration Chrono::system_now()
 	    std::chrono::system_clock::now().time_since_epoch());
 }
 
-void Chrono::sleep(const duration::rep ms)
+void Chrono::sleep(duration::rep ms)
 {
 	std::this_thread::sleep_for(duration(ms));
 }

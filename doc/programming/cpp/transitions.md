@@ -54,15 +54,15 @@ void   Translatable::move      (Vec2f);
 ### Fade Transition
 
 ```c++
-template<typename T>
+template <typename T>
 rainbow::Timer*  rainbow::fade  (T component,
                                  int opacity,
-                                 const int duration,
+                                 int duration,
                                  TimingFunction timing)
-template<typename T>
+template <typename T>
 rainbow::Timer*  rainbow::fade  (T component,
-                                 const float opacity,
-                                 const int duration,
+                                 float opacity,
+                                 int duration,
                                  TimingFunction timing)
 ```
 
@@ -76,10 +76,10 @@ Components must be [colourable](#colourable).
 ### Move Transition
 
 ```c++
-template<typename T>
+template <typename T>
 rainbow::Timer*  rainbow::move  (T component,
                                  Vec2f destination,
-                                 const int duration,
+                                 int duration,
                                  TimingFunction timing)
 ```
 
@@ -91,10 +91,10 @@ specialised implementation for scene nodes that takes a relative vector instead.
 ### Rotate Transition
 
 ```c++
-template<typename T>
+template <typename T>
 rainbow::Timer*  rainbow::rotate  (T component,
                                    float angle,
-                                   const int duration,
+                                   int duration,
                                    TimingFunction timing)
 ```
 
@@ -105,15 +105,15 @@ Components must be [rotatable](#rotatable).
 ### Scale Transition
 
 ```c++
-template<typename T>
+template <typename T>
 rainbow::Timer*  rainbow::scale  (T component,
-                                  const float factor,
-                                  const int duration,
+                                  float factor,
+                                  int duration,
                                   TimingFunction timing)
-template<typename T>
+template <typename T>
 rainbow::Timer*  rainbow::scale  (T component,
                                   Vec2f factor,
-                                  const int duration,
+                                  int duration,
                                   TimingFunction timing)
 ```
 

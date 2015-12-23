@@ -1,4 +1,4 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -10,7 +10,7 @@
 
 NS_B2_LUA_BEGIN
 {
-	PolygonShape::PolygonShape(lua_State *L)
+	PolygonShape::PolygonShape(lua_State* L)
 	    : polygon_(nullptr), is_owner_(false)
 	{
 		if (lua_isuserdata(L, -1))
@@ -28,24 +28,24 @@ NS_B2_LUA_BEGIN
 			delete polygon_;
 	}
 
-	int PolygonShape::GetType(lua_State *L)
+	int PolygonShape::GetType(lua_State* L)
 	{
 		lua_pushinteger(L, b2Shape::e_polygon);
 		return 1;
 	}
 
-	int PolygonShape::GetChildCount(lua_State *L)
+	int PolygonShape::GetChildCount(lua_State* L)
 	{
 		lua_pushinteger(L, 1);
 		return 1;
 	}
 
-	int PolygonShape::Set(lua_State *L)
+	int PolygonShape::Set(lua_State* L)
 	{
 		rainbow::lua::Argument<void*>::is_required(L, 2);
 		rainbow::lua::Argument<lua_Number>::is_required(L, 3);
 
-		PolygonShape *self = Bind::self(L);
+		PolygonShape* self = Bind::self(L);
 		if (!self)
 			return 0;
 
@@ -61,12 +61,12 @@ NS_B2_LUA_BEGIN
 		return 0;
 	}
 
-	int PolygonShape::SetAsBox(lua_State *L)
+	int PolygonShape::SetAsBox(lua_State* L)
 	{
 		rainbow::lua::Argument<lua_Number>::is_required(L, 2);
 		rainbow::lua::Argument<lua_Number>::is_required(L, 3);
 
-		PolygonShape *self = Bind::self(L);
+		PolygonShape* self = Bind::self(L);
 		if (!self)
 			return 0;
 
@@ -89,9 +89,9 @@ NS_B2_LUA_BEGIN
 		return 0;
 	}
 
-	int PolygonShape::Validate(lua_State *L)
+	int PolygonShape::Validate(lua_State* L)
 	{
-		return get1b(L, [](const b2PolygonShape *polygon) {
+		return get1b(L, [](const b2PolygonShape* polygon) {
 			return polygon->Validate();
 		});
 	}
@@ -101,14 +101,14 @@ NS_RAINBOW_LUA_BEGIN
 {
 	using b2::lua::PolygonShape;
 
-	template<>
+	template <>
 	const char PolygonShape::Bind::class_name[] = "PolygonShape";
 
-	template<>
+	template <>
 	const bool PolygonShape::Bind::is_constructible = true;
 
-	template<>
-	const luaL_Reg PolygonShape::Bind::functions[] = {
+	template <>
+	const luaL_Reg PolygonShape::Bind::functions[]{
 	    {"GetType",         &PolygonShape::GetType},
 	    {"GetChildCount",   &PolygonShape::GetChildCount},
 	    {"Set",             &PolygonShape::Set},
@@ -118,6 +118,6 @@ NS_RAINBOW_LUA_BEGIN
 	    {"ComputeAABB",     &PolygonShape::ComputeAABB},
 	    {"ComputeMass",     &PolygonShape::ComputeMass},
 	    {"Validate",        &PolygonShape::Validate},
-	    {nullptr,          nullptr}
+	    {nullptr,           nullptr}
 	};
 } NS_RAINBOW_LUA_END

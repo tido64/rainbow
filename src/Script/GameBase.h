@@ -23,23 +23,23 @@ namespace rainbow
 
 	animation_t animation(sprite_t sprite,
 	                      Animation::Frames frames,
-	                      const unsigned int fps,
-	                      const int loop_delay = 0);
-	font_t font(const char *path, const float pt);
-	label_t label(const char *string = nullptr);
-	spritebatch_t spritebatch(const unsigned int hint = 4);
-	texture_t texture(const char *path);
+	                      unsigned int fps,
+	                      int loop_delay = 0);
+	font_t font(const char* path, float pt);
+	label_t label(const char* string = nullptr);
+	spritebatch_t spritebatch(unsigned int hint = 4);
+	texture_t texture(const char* path);
 
 	namespace prose
 	{
-		prose_t from_lua(const char *path);
+		prose_t from_lua(const char* path);
 	}
 }
 
 class GameBase
 {
 public:
-	static GameBase* create(rainbow::Director &director);
+	static GameBase* create(rainbow::Director& director);
 
 	virtual ~GameBase() = default;
 
@@ -47,18 +47,18 @@ public:
 	rainbow::SceneNode& scenegraph() { return director_.scenegraph(); }
 
 	void terminate() { director_.terminate(); }
-	void terminate(const char *error) { director_.terminate(error); }
+	void terminate(const char* error) { director_.terminate(error); }
 
-	virtual void init(const Vec2i &) {}
-	virtual void update(const unsigned long) {}
+	virtual void init(const Vec2i&) {}
+	virtual void update(unsigned long) {}
 
 	virtual void on_memory_warning() {}
 
 protected:
-	GameBase(rainbow::Director &director) : director_(director) {}
+	GameBase(rainbow::Director& director) : director_(director) {}
 
 private:
-	rainbow::Director &director_;
+	rainbow::Director& director_;
 };
 
 #endif

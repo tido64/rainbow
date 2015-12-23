@@ -34,9 +34,12 @@ namespace
 			return ControllerButton(id(), Controller::Button::A, 1);
 		}
 
-		uint32_t id() const { return 1; }
+		auto id() const -> uint32_t { return 1; }
 
-		bool is_triggered(const unsigned int flags) { return flags_ & flags; }
+		auto is_triggered(unsigned int flags) const -> bool
+		{
+			return flags_ & flags;
+		}
 
 	protected:
 		Input input;
@@ -91,7 +94,7 @@ namespace
 			return true;
 		}
 
-		bool on_controller_connected_impl(const unsigned int i) override
+		bool on_controller_connected_impl(unsigned int i) override
 		{
 			[this, i] { ASSERT_EQ(id(), i); }();
 
@@ -99,7 +102,7 @@ namespace
 			return true;
 		}
 
-		bool on_controller_disconnected_impl(const unsigned int i) override
+		bool on_controller_disconnected_impl(unsigned int i) override
 		{
 			[this, i] { ASSERT_EQ(id(), i); }();
 

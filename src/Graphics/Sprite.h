@@ -50,7 +50,7 @@ public:
 		Sprite& operator*() const;
 		Sprite* operator->() const;
 
-		bool operator==(const Ref &other) const
+		bool operator==(const Ref& other) const
 		{
 			return batch_ == other.batch_ && i_ == other.i_;
 		}
@@ -58,44 +58,40 @@ public:
 		explicit operator bool() const { return batch_; }
 
 	private:
-		const SpriteBatch *batch_;
+		const SpriteBatch* batch_;
 		size_t i_;
 
-		Ref(NotNull<const SpriteBatch*> batch, const size_t i)
+		Ref(NotNull<const SpriteBatch*> batch, size_t i)
 		    : batch_(batch), i_(i) {}
 	};
 
-	Sprite(const unsigned int width,
-	       const unsigned int height,
+	Sprite(unsigned int width,
+	       unsigned int height,
 	       NotNull<const SpriteBatch*> parent);
 	Sprite(Sprite&&);
 
-	float angle() const { return angle_; }
-	Colorb color() const { return vertex_array_[0].color; }
-	unsigned int height() const { return height_; }
-	int id() const { return id_; }
-	bool is_flipped() const;
-	bool is_hidden() const;
-	bool is_mirrored() const;
-	const SpriteBatch& parent() const { return *parent_; }
-	const Vec2f& pivot() const { return pivot_; }
-	const Vec2f& position() const { return position_; }
-	const Vec2f& scale() const { return scale_; }
-	unsigned int width() const { return width_; }
-
-#ifdef RAINBOW_TEST
-	const SpriteVertex* vertex_array() const { return vertex_array_; }
-#endif
+	auto angle() const { return angle_; }
+	auto color() const { return vertex_array_[0].color; }
+	auto height() const { return height_; }
+	auto id() const { return id_; }
+	auto is_flipped() const -> bool;
+	auto is_hidden() const -> bool;
+	auto is_mirrored() const -> bool;
+	auto parent() const -> const SpriteBatch& { return *parent_; }
+	auto pivot() const { return pivot_; }
+	auto position() const { return position_; }
+	auto scale() const { return scale_; }
+	auto width() const { return width_; }
 
 	/// <summary>Sets sprite colour.</summary>
-	void set_color(const Colorb c);
+	void set_color(Colorb c);
 
 	/// <summary>Sets the identifier for the sprite</summary>
-	void set_id(const int id) { id_ = id; }
+	void set_id(int id) { id_ = id; }
 
 	/// <summary>Sets normal map.</summary>
 	/// <param name="id">Identifier of the normal map to set.</param>
-	void set_normal(const unsigned int id);
+	void set_normal(unsigned int id);
 
 	/// <summary>Sets buffer used to store UV coordinates.</summary>
 	void set_normal_buffer(NotNull<Vec2f*> map) { normal_map_ = map; }
@@ -108,13 +104,13 @@ public:
 	void set_position(const Vec2f&);
 
 	/// <summary>Sets angle of rotation (in radian).</summary>
-	void set_rotation(const float r);
+	void set_rotation(float r);
 
 	/// <summary>
 	///   Uniform scaling of sprite (does not affect actual width and height).
 	/// </summary>
 	/// <param name="f">Scaling factor for both axes.</param>
-	void set_scale(const float f) { set_scale(Vec2f(f, f)); }
+	void set_scale(float f) { set_scale(Vec2f(f, f)); }
 
 	/// <summary>
 	///   Non-uniform scaling of sprite (does not affect actual width and
@@ -125,7 +121,7 @@ public:
 
 	/// <summary>Sets texture.</summary>
 	/// <param name="id">Identifier of the texture to set.</param>
-	void set_texture(const unsigned int id);
+	void set_texture(unsigned int id);
 
 	/// <summary>Sets vertex array buffer.</summary>
 	void set_vertex_array(NotNull<SpriteVertex*> array);
@@ -143,7 +139,7 @@ public:
 	void move(const Vec2f&);
 
 	/// <summary>Rotates sprite by <paramref name="r"/>.</summary>
-	void rotate(const float r);
+	void rotate(float r);
 
 	/// <summary>Shows sprite if it is currently hidden.</summary>
 	void show();
@@ -152,9 +148,13 @@ public:
 	/// <returns>
 	///   <c>true</c> if the buffer has changed; <c>false</c> otherwise.
 	/// </returns>
-	bool update();
+	auto update() -> bool;
 
 	Sprite& operator=(Sprite&&);
+
+#ifdef RAINBOW_TEST
+	auto vertex_array() const -> const SpriteVertex* { return vertex_array_; }
+#endif
 
 private:
 	unsigned int width_;          ///< Width of sprite (not scaled).
@@ -170,8 +170,8 @@ private:
 	Vec2f* normal_map_;           ///< Normal map UV coordinates.
 	int id_;                      ///< Sprite identifier.
 
-	void flip_textures(const unsigned int axis);
-	void set_normal(const unsigned int f, const Vec2f* uv);
+	void flip_textures(unsigned int axis);
+	void set_normal(unsigned int f, const Vec2f* uv);
 };
 
 #endif

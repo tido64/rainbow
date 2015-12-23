@@ -19,33 +19,33 @@ namespace rainbow
 		const int kInterval = 4;
 	}
 
-	inline int repeat_count_from_duration(const int duration)
+	inline int repeat_count_from_duration(int duration)
 	{
 		return std::ceil(static_cast<float>(duration) / timing::kInterval);
 	}
 
-	template<typename T, typename U>
+	template <typename T, typename U>
 	class Transition
 	{
 	protected:
 		int elapsed_;
-		const int duration_;
+		int duration_;
 		const U delta_;
 		TimingFunction timing_;
 		U previous_;
 		T component_;
 
 		Transition(T component,
-		           const U &delta,
-		           const int duration,
+		           const U& delta,
+		           int duration,
 		           TimingFunction timing)
 		    : elapsed_(0), duration_(duration), delta_(delta),
 		      timing_(std::move(timing)), component_(component) {}
 
 		Transition(T component,
-		           const int outset,
-		           const U &delta,
-		           const int duration,
+		           int outset,
+		           const U& delta,
+		           int duration,
 		           TimingFunction timing)
 		    : elapsed_(0), duration_(duration), delta_(delta),
 		      timing_(std::move(timing)), previous_(outset),
@@ -58,14 +58,11 @@ namespace rainbow
 		}
 	};
 
-	template<typename T>
+	template <typename T>
 	class Fade : private Transition<T, int>
 	{
 	public:
-		Fade(T component,
-		     const int opacity,
-		     const int duration,
-		     TimingFunction timing)
+		Fade(T component, int opacity, int duration, TimingFunction timing)
 		    : Transition<T, int>(
 		          component, 0, opacity, duration, std::move(timing)) {}
 
@@ -79,13 +76,13 @@ namespace rainbow
 		}
 	};
 
-	template<typename T>
+	template <typename T>
 	class Move : private Transition<T, Vec2f>
 	{
 	public:
 		Move(T component,
-		     const Vec2f delta,
-		     const int duration,
+		     const Vec2f& delta,
+		     int duration,
 		     TimingFunction timing)
 		    : Transition<T, Vec2f>(
 		          component, delta, duration, std::move(timing)) {}
@@ -101,16 +98,14 @@ namespace rainbow
 		}
 	};
 
-	template<typename T>
+	template <typename T>
 	class Rotate : private Transition<T, float>
 	{
 	public:
-		Rotate(T component,
-		       const float r,
-		       const int duration,
-		       TimingFunction timing)
+		Rotate(T component, float r, int duration, TimingFunction timing)
 		    : Transition<T, float>(component, 0, r, duration, std::move(timing))
-		{}
+		{
+		}
 
 		void operator()()
 		{
@@ -120,14 +115,11 @@ namespace rainbow
 		}
 	};
 
-	template<typename T>
+	template <typename T>
 	class Scale : private Transition<T, Vec2f>
 	{
 	public:
-		Scale(T component,
-		      const Vec2f f,
-		      const int duration,
-		      TimingFunction timing)
+		Scale(T component, const Vec2f& f, int duration, TimingFunction timing)
 		    : Transition<T, Vec2f>(component, f, duration, std::move(timing)) {}
 
 		void operator()()

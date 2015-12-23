@@ -11,21 +11,21 @@ namespace rainbow
 {
 	animation_t animation(sprite_t sprite,
 	                      Animation::Frames frames,
-	                      const unsigned int fps,
-	                      const int loop_delay)
+	                      unsigned int fps,
+	                      int loop_delay)
 	{
 		return std::make_shared<Animation>(
 		    sprite, std::move(frames), fps, loop_delay);
 	}
 
-	font_t font(const char *path, const float pt)
+	font_t font(const char* path, float pt)
 	{
 		auto font = make_shared<FontAtlas>(path, pt);
 		R_ASSERT(font->is_valid(), "rainbow::font: Failed to create font");
 		return font;
 	}
 
-	label_t label(const char *string)
+	label_t label(const char* string)
 	{
 		auto label = std::make_shared<Label>();
 		if (string)
@@ -33,12 +33,12 @@ namespace rainbow
 		return label;
 	}
 
-	spritebatch_t spritebatch(const unsigned int hint)
+	spritebatch_t spritebatch(unsigned int hint)
 	{
 		return std::make_shared<SpriteBatch>(hint);
 	}
 
-	texture_t texture(const char *path)
+	texture_t texture(const char* path)
 	{
 		auto texture = make_shared<TextureAtlas>(path);
 		R_ASSERT(texture->is_valid(),
@@ -48,7 +48,7 @@ namespace rainbow
 
 	namespace prose
 	{
-		prose_t from_lua(const char *path)
+		prose_t from_lua(const char* path)
 		{
 			return prose_t(Prose::from_lua(path));
 		}

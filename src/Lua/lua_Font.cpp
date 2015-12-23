@@ -17,7 +17,7 @@ NS_RAINBOW_LUA_BEGIN
 	const bool Font::Bind::is_constructible = true;
 
 	template <>
-	const luaL_Reg Font::Bind::functions[] = {{nullptr, nullptr}};
+	const luaL_Reg Font::Bind::functions[]{{nullptr, nullptr}};
 
 	Font::Font(lua_State* L)
 	{

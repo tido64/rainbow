@@ -14,9 +14,9 @@
 
 namespace uikit
 {
-	rainbow::Image decode(const DataMap &data) pure;
+	rainbow::Image decode(const DataMap& data) pure;
 
-	rainbow::Image decode(const DataMap &map)
+	rainbow::Image decode(const DataMap& map)
 	{
 		rainbow::Image image;
 
@@ -25,7 +25,7 @@ namespace uikit
 		                            static_cast<const void*>(map.data()))
 		                 length:map.size()
 		           freeWhenDone:NO];
-		UIImage *uiimage = [UIImage imageWithData:data];
+		UIImage* uiimage = [UIImage imageWithData:data];
 		if (!uiimage)
 		{
 			R_ASSERT(uiimage, "Unknown texture format");
@@ -35,7 +35,8 @@ namespace uikit
 		image.width = CGImageGetWidth(uiimage.CGImage);
 		image.height = CGImageGetHeight(uiimage.CGImage);
 		image.depth = CGImageGetBitsPerPixel(uiimage.CGImage);
-		image.channels = image.depth / CGImageGetBitsPerComponent(uiimage.CGImage);
+		image.channels =
+		    image.depth / CGImageGetBitsPerComponent(uiimage.CGImage);
 		if (image.depth == 24 || (image.depth == 8 && image.channels == 1))
 		{
 			// - Increase depth from 24 to 32 because iOS breaks on GL_RGB; or

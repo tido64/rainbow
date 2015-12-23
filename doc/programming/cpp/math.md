@@ -7,7 +7,7 @@ stated.
 ## Power of 2
 
 ```c++
-bool  is_pow2  (const unsigned int i);
+bool  is_pow2  (unsigned int i);
 ```
 
 Returns whether integer `i` is a power of 2.
@@ -23,8 +23,8 @@ Returns the smallest power of 2 greater than or equal to `i`.
 ## Trigonometry
 
 ```c++
-float  degrees  (const float r);
-float  radian   (const float d);
+float  degrees  (float r);
+float  radian   (float d);
 ```
 
 Converts values between degrees and radians.
@@ -43,42 +43,42 @@ using Vec2u = rainbow::Vec2<unsigned>;
 ### Constants
 
 ```c++
-template<typename T>
+template <typename T>
 const Vec2<T>  Vec2<T>::Down;
 ```
 
 Vector representing down; shorthand for `Vec2<T>(0, -1)`.
 
 ```c++
-template<typename T>
+template <typename T>
 const Vec2<T>  Vec2<T>::Left;
 ```
 
 Vector representing left; shorthand for `Vec2<T>(-1, 0)`.
 
 ```c++
-template<typename T>
+template <typename T>
 const Vec2<T>  Vec2<T>::One;
 ```
 
 One vector; shorthand for `Vec2<T>(1, 1)`.
 
 ```c++
-template<typename T>
+template <typename T>
 const Vec2<T>  Vec2<T>::Right;
 ```
 
 Vector representing right; shorthand for `Vec2<T>(1, 0)`.
 
 ```c++
-template<typename T>
+template <typename T>
 const Vec2<T>  Vec2<T>::Up;
 ```
 
 Vector representing up; shorthand for `Vec2<T>(0, 1)`.
 
 ```c++
-template<typename T>
+template <typename T>
 const Vec2<T>  Vec2<T>::Zero;
 ```
 
@@ -189,8 +189,8 @@ Equivalent to `v.x == w.x && v.y == w.y`.
 ## Miscellaneous
 
 ```c++
-template<typename T>
-T  clamp  (const T x, const T min_val, const T max_val);
+template <typename T>
+T  clamp  (T x, T min_val, T max_val);
 ```
 
 Returns the restricted value of `x` clamped in the range [`min_val`, `max_val`].
@@ -202,8 +202,8 @@ float  fast_invsqrt  (float x);
 Returns an approximation of 1/√x using the infamous constant 0x5f3759df.
 
 ```c++
-template<typename T, typename = FloatingPoint<T>>
-bool  is_equal  (const T a, const T b);
+template <typename T, typename = FloatingPoint<T>>
+bool  is_equal  (T a, T b);
 ```
 
 Returns whether two floating point numbers are (almost) equal. Based on the

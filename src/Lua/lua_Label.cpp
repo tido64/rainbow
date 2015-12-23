@@ -1,4 +1,4 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -8,27 +8,26 @@
 
 NS_RAINBOW_LUA_BEGIN
 {
-	template<>
+	template <>
 	const char Label::Bind::class_name[] = "label";
 
-	template<>
+	template <>
 	const bool Label::Bind::is_constructible = true;
 
-	template<>
-	const luaL_Reg Label::Bind::functions[] = {
-		{ "get_color",      &Label::get_color },
-		{ "set_alignment",  &Label::set_alignment },
-		{ "set_color",      &Label::set_color },
-		{ "set_font",       &Label::set_font },
-		{ "set_position",   &Label::set_position },
-		{ "set_rotation",   &Label::set_rotation },
-		{ "set_scale",      &Label::set_scale },
-		{ "set_text",       &Label::set_text },
-		{ "move",           &Label::move },
-		{ nullptr, nullptr }
-	};
+	template <>
+	const luaL_Reg Label::Bind::functions[]{
+	    {"get_color",      &Label::get_color},
+	    {"set_alignment",  &Label::set_alignment},
+	    {"set_color",      &Label::set_color},
+	    {"set_font",       &Label::set_font},
+	    {"set_position",   &Label::set_position},
+	    {"set_rotation",   &Label::set_rotation},
+	    {"set_scale",      &Label::set_scale},
+	    {"set_text",       &Label::set_text},
+	    {"move",           &Label::move},
+	    {nullptr,          nullptr}};
 
-	Label::Label(lua_State *L)
+	Label::Label(lua_State* L)
 	{
 		// rainbow.label(["string"])
 		Argument<char*>::is_optional(L, 1);
@@ -37,9 +36,9 @@ NS_RAINBOW_LUA_BEGIN
 			label_.set_text(lua_tostring(L, 1));
 	}
 
-	int Label::get_color(lua_State *L)
+	int Label::get_color(lua_State* L)
 	{
-		Label *self = Bind::self(L);
+		Label* self = Bind::self(L);
 		if (!self)
 			return 0;
 
@@ -51,12 +50,12 @@ NS_RAINBOW_LUA_BEGIN
 		return 4;
 	}
 
-	int Label::set_alignment(lua_State *L)
+	int Label::set_alignment(lua_State* L)
 	{
 		// <label>:set_alignment('l' | 'c' | 'r')
 		Argument<char*>::is_required(L, 2);
 
-		Label *self = Bind::self(L);
+		Label* self = Bind::self(L);
 		if (!self)
 			return 0;
 
@@ -75,7 +74,7 @@ NS_RAINBOW_LUA_BEGIN
 		return 0;
 	}
 
-	int Label::set_color(lua_State *L)
+	int Label::set_color(lua_State* L)
 	{
 		// <label>:set_color(r, g, b, a = 255)
 		Argument<lua_Number>::is_required(L, 2);
@@ -83,7 +82,7 @@ NS_RAINBOW_LUA_BEGIN
 		Argument<lua_Number>::is_required(L, 4);
 		Argument<lua_Number>::is_optional(L, 5);
 
-		Label *self = Bind::self(L);
+		Label* self = Bind::self(L);
 		if (!self)
 			return 0;
 
@@ -95,46 +94,46 @@ NS_RAINBOW_LUA_BEGIN
 		return 0;
 	}
 
-	int Label::set_font(lua_State *L)
+	int Label::set_font(lua_State* L)
 	{
 		// <label>:set_font(<font>)
 		return set1ud<Font>(
 		    L,
-		    [](::Label *label, SharedPtr<FontAtlas> font) {
+		    [](::Label* label, SharedPtr<FontAtlas> font) {
 		      label->set_font(font);
 		    });
 	}
 
-	int Label::set_position(lua_State *L)
+	int Label::set_position(lua_State* L)
 	{
 		// <label>:set_position(x, y)
-		return set1fv(L, [](::Label *label, const Vec2f &position) {
+		return set1fv(L, [](::Label* label, const Vec2f& position) {
 			label->set_position(position);
 		});
 	}
 
-	int Label::set_rotation(lua_State *L)
+	int Label::set_rotation(lua_State* L)
 	{
 		// <label>:set_rotation(r)
-		return set1f(L, [](::Label *label, const float r) {
+		return set1f(L, [](::Label* label, float r) {
 			label->set_rotation(r);
 		});
 	}
 
-	int Label::set_scale(lua_State *L)
+	int Label::set_scale(lua_State* L)
 	{
 		// <label>:set_scale(f)
-		return set1f(L, [](::Label *label, const float f) {
+		return set1f(L, [](::Label* label, float f) {
 			label->set_scale(f);
 		});
 	}
 
-	int Label::set_text(lua_State *L)
+	int Label::set_text(lua_State* L)
 	{
 		// <label>:set_text("string")
 		Argument<char*>::is_required(L, 2);
 
-		Label *self = Bind::self(L);
+		Label* self = Bind::self(L);
 		if (!self)
 			return 0;
 
@@ -142,10 +141,10 @@ NS_RAINBOW_LUA_BEGIN
 		return 0;
 	}
 
-	int Label::move(lua_State *L)
+	int Label::move(lua_State* L)
 	{
 		// <label>:move(x, y)
-		return set1fv(L, [](::Label *label, const Vec2f &delta) {
+		return set1fv(L, [](::Label* label, const Vec2f& delta) {
 			label->move(delta);
 		});
 	}

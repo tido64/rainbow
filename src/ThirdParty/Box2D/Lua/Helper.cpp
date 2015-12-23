@@ -6,12 +6,12 @@
 
 namespace b2
 {
-	b2Vec2 Vec2(lua_State *L, const int m, const int n)
+	b2Vec2 Vec2(lua_State* L, int m, int n)
 	{
 		return b2Vec2(lua_tonumber(L, m), lua_tonumber(L, n));
 	}
 
-	void getfield(lua_State *L, const char *const field, const size_t length)
+	void getfield(lua_State* L, const char* field, size_t length)
 	{
 		lua_pushlstring(L, field, length);
 		lua_gettable(L, -2);
@@ -19,10 +19,8 @@ namespace b2
 		    L, !lua_isnil(L, -1), "Missing field '%s' in definition", field);
 	}
 
-	template<>
-	bool gettable<bool>(lua_State *L,
-	                    const char *const field,
-	                    const size_t length)
+	template <>
+	bool gettable<bool>(lua_State* L, const char* field, size_t length)
 	{
 		getfield(L, field, length);
 		const bool b = lua_toboolean(L, -1);
@@ -30,10 +28,10 @@ namespace b2
 		return b;
 	}
 
-	template<>
-	lua_Integer gettable<lua_Integer>(lua_State *L,
-	                                  const char *const field,
-	                                  const size_t length)
+	template <>
+	lua_Integer gettable<lua_Integer>(lua_State* L,
+	                                  const char* field,
+	                                  size_t length)
 	{
 		getfield(L, field, length);
 		const lua_Integer i = rainbow::lua::tointeger(L, -1);
@@ -41,10 +39,10 @@ namespace b2
 		return i;
 	}
 
-	template<>
-	lua_Number gettable<lua_Number>(lua_State *L,
-	                                const char *const field,
-	                                const size_t length)
+	template <>
+	lua_Number gettable<lua_Number>(lua_State* L,
+	                                const char* field,
+	                                size_t length)
 	{
 		getfield(L, field, length);
 		const lua_Number n = rainbow::lua::tonumber(L, -1);
@@ -52,10 +50,8 @@ namespace b2
 		return n;
 	}
 
-	template<>
-	b2Vec2 gettable<b2Vec2>(lua_State *L,
-	                        const char *const field,
-	                        const size_t length)
+	template <>
+	b2Vec2 gettable<b2Vec2>(lua_State* L, const char* field, size_t length)
 	{
 		getfield(L, field, length);
 		const b2Vec2 v(luaR_getnumber(L, "x"), luaR_getnumber(L, "y"));
@@ -63,14 +59,14 @@ namespace b2
 		return v;
 	}
 
-	void rawsetnil(lua_State *L, const char *const field, const size_t length)
+	void rawsetnil(lua_State* L, const char* field, size_t length)
 	{
 		lua_pushlstring(L, field, length);
 		lua_pushnil(L);
 		lua_rawset(L, -3);
 	}
 
-	int rawsetvec2(lua_State *L, const char *const field, const size_t length)
+	int rawsetvec2(lua_State* L, const char* field, size_t length)
 	{
 		lua_pushlstring(L, field, length);
 		lua_createtable(L, 0, 2);

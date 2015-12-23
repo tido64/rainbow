@@ -50,12 +50,12 @@ public:
 		return on_controller_button_up_impl(button);
 	}
 
-	bool on_controller_connected(const unsigned int id)
+	bool on_controller_connected(unsigned int id)
 	{
 		return on_controller_connected_impl(id);
 	}
 
-	bool on_controller_disconnected(const unsigned int id)
+	bool on_controller_disconnected(unsigned int id)
 	{
 		return on_controller_disconnected_impl(id);
 	}
@@ -115,12 +115,12 @@ private:
 		return false;
 	}
 
-	virtual bool on_controller_connected_impl(const unsigned int)
+	virtual bool on_controller_connected_impl(unsigned int)
 	{
 		return false;
 	}
 
-	virtual bool on_controller_disconnected_impl(const unsigned int)
+	virtual bool on_controller_disconnected_impl(unsigned int)
 	{
 		return false;
 	}

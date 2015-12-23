@@ -1,4 +1,4 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -12,13 +12,13 @@
 
 NS_B2_LUA_BEGIN
 {
-	int Filter(lua_State *L)
+	int Filter(lua_State* L)
 	{
 		const b2Filter filter;
 		return Filter(L, filter);
 	}
 
-	int Filter(lua_State *L, const b2Filter &filter)
+	int Filter(lua_State* L, const b2Filter& filter)
 	{
 		lua_createtable(L, 0, 3);
 		luaR_rawsetinteger(L, "categoryBits", filter.categoryBits);
@@ -27,7 +27,7 @@ NS_B2_LUA_BEGIN
 		return 1;
 	}
 
-	b2Filter GetFilter(lua_State *L)
+	b2Filter GetFilter(lua_State* L)
 	{
 		b2Filter filter;
 		filter.categoryBits = luaR_getinteger(L, "categoryBits");
@@ -36,7 +36,7 @@ NS_B2_LUA_BEGIN
 		return filter;
 	}
 
-	int FixtureDef(lua_State *L)
+	int FixtureDef(lua_State* L)
 	{
 		lua_createtable(L, 0, 6);
 
@@ -53,7 +53,7 @@ NS_B2_LUA_BEGIN
 		return 1;
 	}
 
-	b2FixtureDef GetFixtureDef(lua_State *L)
+	b2FixtureDef GetFixtureDef(lua_State* L)
 	{
 		b2FixtureDef fd;
 
@@ -73,7 +73,7 @@ NS_B2_LUA_BEGIN
 		return fd;
 	}
 
-	void Fixture::Init(lua_State *L)
+	void Fixture::Init(lua_State* L)
 	{
 		luaR_rawsetcfunction(L, "Filter", &Filter);
 		luaR_rawsetcfunction(L, "FixtureDef", &FixtureDef);
@@ -81,44 +81,44 @@ NS_B2_LUA_BEGIN
 		rainbow::lua::reg<Fixture>(L);
 	}
 
-	Fixture::Fixture(lua_State *L)
+	Fixture::Fixture(lua_State* L)
 	    : fixture_(static_cast<b2Fixture*>(lua_touserdata(L, -1))) {}
 
-	int Fixture::GetType(lua_State *L)
+	int Fixture::GetType(lua_State* L)
 	{
-		return get1i(L, [](const b2Fixture *fixture) {
+		return get1i(L, [](const b2Fixture* fixture) {
 			return fixture->GetType();
 		});
 	}
 
-	int Fixture::GetShape(lua_State *L)
+	int Fixture::GetShape(lua_State* L)
 	{
-		Fixture *self = Bind::self(L);
+		Fixture* self = Bind::self(L);
 		if (!self)
 			return 0;
 
 		return Shape(L, self->get()->GetShape());
 	}
 
-	int Fixture::SetSensor(lua_State *L)
+	int Fixture::SetSensor(lua_State* L)
 	{
-		return set1b(L, [](b2Fixture *fixture, const bool sensor) {
+		return set1b(L, [](b2Fixture* fixture, bool sensor) {
 			fixture->SetSensor(sensor);
 		});
 	}
 
-	int Fixture::IsSensor(lua_State *L)
+	int Fixture::IsSensor(lua_State* L)
 	{
-		return get1b(L, [](const b2Fixture *fixture) {
+		return get1b(L, [](const b2Fixture* fixture) {
 			return fixture->IsSensor();
 		});
 	}
 
-	int Fixture::SetFilterData(lua_State *L)
+	int Fixture::SetFilterData(lua_State* L)
 	{
 		rainbow::lua::Argument<void*>::is_required(L, 2);
 
-		Fixture *self = Bind::self(L);
+		Fixture* self = Bind::self(L);
 		if (!self)
 			return 0;
 
@@ -126,19 +126,19 @@ NS_B2_LUA_BEGIN
 		return 0;
 	}
 
-	int Fixture::GetFilterData(lua_State *L)
+	int Fixture::GetFilterData(lua_State* L)
 	{
-		Fixture *self = Bind::self(L);
+		Fixture* self = Bind::self(L);
 		if (!self)
 			return 0;
 
-		const b2Filter &filter = self->get()->GetFilterData();
+		const b2Filter& filter = self->get()->GetFilterData();
 		return Filter(L, filter);
 	}
 
-	int Fixture::Refilter(lua_State *L)
+	int Fixture::Refilter(lua_State* L)
 	{
-		Fixture *self = Bind::self(L);
+		Fixture* self = Bind::self(L);
 		if (!self)
 			return 0;
 
@@ -146,41 +146,38 @@ NS_B2_LUA_BEGIN
 		return 0;
 	}
 
-	int Fixture::GetBody(lua_State *L)
+	int Fixture::GetBody(lua_State* L)
 	{
-		return get1ud<Body>(L, [](b2Fixture *fixture) {
+		return get1ud<Body>(L, [](b2Fixture* fixture) {
 			return fixture->GetBody();
 		});
 	}
 
-	int Fixture::GetNext(lua_State *L)
+	int Fixture::GetNext(lua_State* L)
 	{
-		return get1ud<Fixture>(L, [](b2Fixture *fixture) {
+		return get1ud<Fixture>(L, [](b2Fixture* fixture) {
 			return fixture->GetNext();
 		});
 	}
 
-	int Fixture::TestPoint(lua_State *L)
+	int Fixture::TestPoint(lua_State* L)
 	{
 		rainbow::lua::Argument<lua_Number>::is_required(L, 2);
 		rainbow::lua::Argument<lua_Number>::is_required(L, 3);
 
 		return get1b(
 		    L,
-		    [](const b2Fixture *fixture, b2Vec2 p) {
-		      return fixture->TestPoint(p);
+		    [](const b2Fixture* fixture, const b2Vec2& p) {
+		        return fixture->TestPoint(p);
 		    },
 		    Vec2(L, 2, 3));
 	}
 
-	int Fixture::RayCast(lua_State *)
-	{
-		return -1;
-	}
+	int Fixture::RayCast(lua_State*) { return -1; }
 
-	int Fixture::GetMassData(lua_State *L)
+	int Fixture::GetMassData(lua_State* L)
 	{
-		Fixture *self = Bind::self(L);
+		Fixture* self = Bind::self(L);
 		if (!self)
 			return 0;
 
@@ -189,58 +186,55 @@ NS_B2_LUA_BEGIN
 		return MassData(L, mass);
 	}
 
-	int Fixture::SetDensity(lua_State *L)
+	int Fixture::SetDensity(lua_State* L)
 	{
-		return set1f(L, [](b2Fixture *fixture, const float density) {
+		return set1f(L, [](b2Fixture* fixture, float density) {
 			fixture->SetDensity(density);
 		});
 	}
 
-	int Fixture::GetDensity(lua_State *L)
+	int Fixture::GetDensity(lua_State* L)
 	{
-		return get1f(L, [](const b2Fixture *fixture) {
+		return get1f(L, [](const b2Fixture* fixture) {
 			return fixture->GetDensity();
 		});
 	}
 
-	int Fixture::GetFriction(lua_State *L)
+	int Fixture::GetFriction(lua_State* L)
 	{
-		return get1f(L, [](const b2Fixture *fixture) {
+		return get1f(L, [](const b2Fixture* fixture) {
 			return fixture->GetFriction();
 		});
 	}
 
-	int Fixture::SetFriction(lua_State *L)
+	int Fixture::SetFriction(lua_State* L)
 	{
-		return set1f(L, [](b2Fixture *fixture, const float friction) {
+		return set1f(L, [](b2Fixture* fixture, float friction) {
 			fixture->SetFriction(friction);
 		});
 	}
 
-	int Fixture::GetRestitution(lua_State *L)
+	int Fixture::GetRestitution(lua_State* L)
 	{
-		return get1f(L, [](const b2Fixture *fixture) {
+		return get1f(L, [](const b2Fixture* fixture) {
 			return fixture->GetRestitution();
 		});
 	}
 
-	int Fixture::SetRestitution(lua_State *L)
+	int Fixture::SetRestitution(lua_State* L)
 	{
-		return set1f(L, [](b2Fixture *fixture, const float restitution) {
+		return set1f(L, [](b2Fixture* fixture, float restitution) {
 			fixture->SetRestitution(restitution);
 		});
 	}
 
-	int Fixture::GetAABB(lua_State *)
-	{
-		return -1;
-	}
+	int Fixture::GetAABB(lua_State*) { return -1; }
 
-	int Fixture::Dump(lua_State *L)
+	int Fixture::Dump(lua_State* L)
 	{
 		rainbow::lua::Argument<lua_Number>::is_required(L, 2);
 
-		Fixture *self = Bind::self(L);
+		Fixture* self = Bind::self(L);
 		if (!self)
 			return 0;
 
@@ -253,14 +247,14 @@ NS_RAINBOW_LUA_BEGIN
 {
 	using b2::lua::Fixture;
 
-	template<>
+	template <>
 	const char Fixture::Bind::class_name[] = "b2Fixture";
 
-	template<>
+	template <>
 	const bool Fixture::Bind::is_constructible = false;
 
-	template<>
-	const luaL_Reg Fixture::Bind::functions[] = {
+	template <>
+	const luaL_Reg Fixture::Bind::functions[]{
 	    {"GetType",         &Fixture::GetType},
 	    {"GetShape",        &Fixture::GetShape},
 	    {"SetSensor",       &Fixture::SetSensor},

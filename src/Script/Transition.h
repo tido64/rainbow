@@ -13,9 +13,9 @@ namespace rainbow
 {
 	class SceneNode;
 
-	inline Timer* move(rainbow::SceneNode *node,
-	                   const Vec2f delta,
-	                   const int duration,
+	inline Timer* move(rainbow::SceneNode* node,
+	                   const Vec2f& delta,
+	                   int duration,
 	                   TimingFunction timing)
 	{
 		return TimerManager::Get()->set_timer(
@@ -24,11 +24,8 @@ namespace rainbow
 		    repeat_count_from_duration(duration));
 	}
 
-	template<typename T>
-	Timer* fade(T component,
-	            int opacity,
-	            const int duration,
-	            TimingFunction timing)
+	template <typename T>
+	Timer* fade(T component, int opacity, int duration, TimingFunction timing)
 	{
 		opacity -= component->color().a;
 		return TimerManager::Get()->set_timer(
@@ -37,11 +34,8 @@ namespace rainbow
 		    repeat_count_from_duration(duration));
 	}
 
-	template<typename T>
-	Timer* fade(T component,
-	            const float opacity,
-	            const int duration,
-	            TimingFunction timing)
+	template <typename T>
+	Timer* fade(T component, float opacity, int duration, TimingFunction timing)
 	{
 		return fade(component,
 		            static_cast<int>(opacity * 255.0f + 0.5f),
@@ -49,10 +43,10 @@ namespace rainbow
 		            std::move(timing));
 	}
 
-	template<typename T>
+	template <typename T>
 	Timer* move(T component,
 	            Vec2f destination,
-	            const int duration,
+	            int duration,
 	            TimingFunction timing)
 	{
 		destination -= component->position();
@@ -62,11 +56,8 @@ namespace rainbow
 		    repeat_count_from_duration(duration));
 	}
 
-	template<typename T>
-	Timer* rotate(T component,
-	              float angle,
-	              const int duration,
-	              TimingFunction timing)
+	template <typename T>
+	Timer* rotate(T component, float angle, int duration, TimingFunction timing)
 	{
 		angle -= component->angle();
 		return TimerManager::Get()->set_timer(
@@ -75,11 +66,8 @@ namespace rainbow
 		    repeat_count_from_duration(duration));
 	}
 
-	template<typename T>
-	Timer* scale(T component,
-	             Vec2f factor,
-	             const int duration,
-	             TimingFunction timing)
+	template <typename T>
+	Timer* scale(T component, Vec2f factor, int duration, TimingFunction timing)
 	{
 		factor -= component->scale();
 		return TimerManager::Get()->set_timer(
@@ -88,11 +76,8 @@ namespace rainbow
 		    repeat_count_from_duration(duration));
 	}
 
-	template<typename T>
-	Timer* scale(T component,
-	             const float factor,
-	             const int duration,
-	             TimingFunction timing)
+	template <typename T>
+	Timer* scale(T component, float factor, int duration, TimingFunction timing)
 	{
 		return scale(
 		    component, Vec2f(factor, factor), duration, std::move(timing));

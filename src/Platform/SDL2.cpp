@@ -3,7 +3,6 @@
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
 #include "Platform/Macros.h"
-#ifdef RAINBOW_SDL
 
 #include <tuple>
 
@@ -130,17 +129,17 @@ namespace
 
 		bool run();
 
-		void on_controller_connected(const int device_index);
-		void on_controller_disconnected(const int instance_id);
-		void on_mouse_down(const uint32_t button,
+		void on_controller_connected(int device_index);
+		void on_controller_disconnected(int instance_id);
+		void on_mouse_down(uint32_t button,
 		                   const Vec2i& point,
-		                   const unsigned long timestamp);
-		void on_mouse_motion(const uint32_t buttons,
+		                   unsigned long timestamp);
+		void on_mouse_motion(uint32_t buttons,
 		                     const Vec2i& point,
-		                     const unsigned long timestamp);
-		void on_mouse_up(const uint32_t button,
+		                     unsigned long timestamp);
+		void on_mouse_up(uint32_t button,
 		                 const Vec2i& point,
-		                 const unsigned long timestamp);
+		                 unsigned long timestamp);
 		void on_window_resized();
 
 	private:
@@ -412,7 +411,7 @@ bool RainbowController::run()
 	return true;
 }
 
-void RainbowController::on_controller_connected(const int device_index)
+void RainbowController::on_controller_connected(int device_index)
 {
 	if (!SDL_IsGameController(device_index))
 		return;
@@ -436,7 +435,7 @@ void RainbowController::on_controller_connected(const int device_index)
 	director_.input().on_controller_connected(id);
 }
 
-void RainbowController::on_controller_disconnected(const int instance_id)
+void RainbowController::on_controller_disconnected(int instance_id)
 {
 	for (auto i = game_controllers_.begin(); i < game_controllers_.end(); ++i)
 	{
@@ -453,17 +452,17 @@ void RainbowController::on_controller_disconnected(const int instance_id)
 	}
 }
 
-void RainbowController::on_mouse_down(const uint32_t button,
+void RainbowController::on_mouse_down(uint32_t button,
                                       const Vec2i& point,
-                                      const unsigned long timestamp)
+                                      unsigned long timestamp)
 {
 	Pointer p(button, point.x, point.y, timestamp);
 	director_.input().on_pointer_began({1, &p});
 }
 
-void RainbowController::on_mouse_motion(const uint32_t buttons,
+void RainbowController::on_mouse_motion(uint32_t buttons,
                                         const Vec2i& point,
-                                        const unsigned long timestamp)
+                                        unsigned long timestamp)
 {
 	if (buttons > 0)
 	{
@@ -486,9 +485,9 @@ void RainbowController::on_mouse_motion(const uint32_t buttons,
 	}
 }
 
-void RainbowController::on_mouse_up(const uint32_t button,
+void RainbowController::on_mouse_up(uint32_t button,
                                     const Vec2i& point,
-                                    const unsigned long timestamp)
+                                    unsigned long timestamp)
 {
 	Pointer p(button, point.x, point.y, timestamp);
 	director_.input().on_pointer_ended({1, &p});
@@ -555,4 +554,3 @@ int main(int argc, char* argv[])
 }
 
 #endif  // RAINBOW_JS
-#endif  // RAINBOW_SDL

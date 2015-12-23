@@ -27,7 +27,7 @@ public:
 	///   If you know in advance how many sprites you'll need, set
 	///   <paramref name="hint"/> for more efficient storage.
 	/// </param>
-	SpriteBatch(const unsigned int hint = 4);
+	SpriteBatch(unsigned int hint = 4);
 	explicit SpriteBatch(const rainbow::ISolemnlySwearThatIAmOnlyTesting&);
 	SpriteBatch(SpriteBatch&&);
 	~SpriteBatch();
@@ -75,7 +75,7 @@ public:
 	/// <returns>
 	///   Reference to the newly created sprite, positioned at (x,y).
 	/// </returns>
-	Sprite::Ref add(const int x, const int y, const int width, const int height);
+	Sprite::Ref add(int x, int y, int width, int height);
 
 	/// <summary>Binds all used textures.</summary>
 	void bind_textures() const;
@@ -93,15 +93,14 @@ public:
 	/// <returns>
 	///   Reference to the newly created sprite, positioned at (0,0).
 	/// </returns>
-	Sprite::Ref create_sprite(const unsigned int width,
-	                          const unsigned int height);
+	Sprite::Ref create_sprite(unsigned int width, unsigned int height);
 
 	/// <summary>Erases a sprite from the batch.</summary>
 	/// <remarks>Invalidates all references.</remarks>
 	void erase(const Sprite::Ref&);
 
 	/// <summary>Returns the first sprite with the given id.</summary>
-	Sprite::Ref find_sprite_by_id(const int id) const;
+	Sprite::Ref find_sprite_by_id(int id) const;
 
 	/// <summary>Moves all sprites by (x,y).</summary>
 	void move(const Vec2f&);
@@ -136,7 +135,7 @@ private:
 	/// <summary>
 	///   Resizes all client buffers to <paramref name="size"/>.
 	/// </summary>
-	void resize(const unsigned int size);
+	void resize(unsigned int size);
 
 	/// <summary>Performs a left rotation on a range of sprites.</summary>
 	void rotate(size_t first, size_t n_first, size_t last);

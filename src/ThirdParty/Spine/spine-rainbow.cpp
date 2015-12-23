@@ -2,8 +2,6 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
-#ifdef USE_SPINE
-
 #include "ThirdParty/Spine/spine-rainbow.h"
 
 #include <algorithm>
@@ -214,7 +212,7 @@ extern "C"
 	}
 }  // extern "C"
 
-Skeleton* Skeleton::from_json(const char* path, const float scale)
+Skeleton* Skeleton::from_json(const char* path, float scale)
 {
 	/// Copy the path and replace ".json" with ".atlas"
 	const size_t length = strlen(path);
@@ -268,7 +266,7 @@ Skeleton::~Skeleton()
 	spAtlas_dispose(atlas_);
 }
 
-void Skeleton::set_flip(const bool x, const bool y)
+void Skeleton::set_flip(bool x, bool y)
 {
 	skeleton_->flipX = x;
 	skeleton_->flipY = y;
@@ -286,24 +284,24 @@ void Skeleton::set_position(const Vec2f& p)
 	skeleton_->y = p.y;
 }
 
-void Skeleton::add_animation(const int track,
+void Skeleton::add_animation(int track,
                              const char* animation,
-                             const bool loop,
-                             const float delay)
+                             bool loop,
+                             float delay)
 {
 	spAnimationState_addAnimationByName(state_, track, animation, loop, delay);
 }
 
 void Skeleton::bind_textures() const { texture_->bind(); }
 
-void Skeleton::clear_track(const int track)
+void Skeleton::clear_track(int track)
 {
 	spAnimationState_clearTrack(state_, track);
 }
 
 void Skeleton::clear_tracks() { spAnimationState_clearTracks(state_); }
 
-const char* Skeleton::get_current_animation(const int track)
+const char* Skeleton::get_current_animation(int track)
 {
 	spTrackEntry* entry = spAnimationState_getCurrent(state_, track);
 	return (!entry ? nullptr : entry->animation->name);
@@ -311,16 +309,14 @@ const char* Skeleton::get_current_animation(const int track)
 
 const char* Skeleton::get_skin() { return skeleton_->skin->name; }
 
-void Skeleton::set_animation(const int track,
-                             const char* animation,
-                             const bool loop)
+void Skeleton::set_animation(int track, const char* animation, bool loop)
 {
 	spAnimationState_setAnimationByName(state_, track, animation, loop);
 }
 
 void Skeleton::set_animation_mix(const char* from,
                                  const char* to,
-                                 const float duration)
+                                 float duration)
 {
 	spAnimationStateData_setMixByName(animation_data_, from, to, duration);
 }
@@ -338,7 +334,7 @@ void Skeleton::set_skin(const char* skin)
 
 void Skeleton::draw() { Renderer::Get()->draw_arrays(*this, 0, num_vertices_); }
 
-void Skeleton::update(const unsigned long dt)
+void Skeleton::update(unsigned long dt)
 {
 	const float delta = dt / 1000.0f;
 	spSkeleton_update(skeleton_, delta);
@@ -460,7 +456,7 @@ NS_RAINBOW_LUA_BEGIN
 	const bool Skeleton::Bind::is_constructible = true;
 
 	template <>
-	const luaL_Reg Skeleton::Bind::functions[] = {
+	const luaL_Reg Skeleton::Bind::functions[]{
 	    {"add_animation",          &Skeleton::add_animation},
 	    {"clear_track",            &Skeleton::clear_track},
 	    {"clear_tracks",           &Skeleton::clear_tracks},
@@ -512,7 +508,7 @@ namespace spine
 
 		int Skeleton::clear_track(lua_State* L)
 		{
-			return set1i(L, [](::Skeleton* skeleton, const int track) {
+			return set1i(L, [](::Skeleton* skeleton, int track) {
 				skeleton->clear_track(track);
 			});
 		}
@@ -658,7 +654,7 @@ namespace spine
 
 		int Skeleton::set_time_scale(lua_State* L)
 		{
-			return set1f(L, [](::Skeleton* skeleton, const float scale) {
+			return set1f(L, [](::Skeleton* skeleton, float scale) {
 				skeleton->set_time_scale(scale);
 			});
 		}
@@ -671,12 +667,10 @@ namespace spine
 
 		void Skeleton::draw_impl() { skeleton_->draw(); }
 
-		void Skeleton::update_impl(const unsigned long dt)
+		void Skeleton::update_impl(unsigned long dt)
 		{
 			skeleton_->update(dt);
 		}
 	}
 }
 #endif  // USE_LUA_SCRIPT
-
-#endif  // USE_SPINE

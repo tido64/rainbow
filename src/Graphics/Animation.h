@@ -23,7 +23,7 @@ public:
 		Frame
 	};
 
-	using Callback = std::function<void(Animation *, const Event)>;
+	using Callback = std::function<void(Animation*, Event)>;
 	using Frame = unsigned int;
 	using Frames = std::unique_ptr<const Frame[]>;
 
@@ -40,10 +40,10 @@ public:
 	///   Number of frames to delay before the animation loops. Negative numbers
 	///   disable looping.
 	/// </param>
-	Animation(const Sprite::Ref &sprite,
+	Animation(const Sprite::Ref& sprite,
 	          Frames frames,
-	          const unsigned int fps,
-	          const int delay = 0);
+	          unsigned int fps,
+	          int delay = 0);
 
 	/// <summary>Returns the currently displayed frame.</summary>
 	unsigned int current_frame() const { return frame_; }
@@ -66,10 +66,10 @@ public:
 	///   Sets number of frames to delay before the animation loops. Negative
 	///   numbers disable looping.
 	/// </summary>
-	void set_delay(const int delay) { delay_ = delay; }
+	void set_delay(int delay) { delay_ = delay; }
 
 	/// <summary>Sets the frame rate in frames per second.</summary>
-	void set_frame_rate(const unsigned int fps);
+	void set_frame_rate(unsigned int fps);
 
 	/// <summary>Sets animation frames.</summary>
 	/// <remarks>This method takes ownership of the array.</remarks>
@@ -80,10 +80,10 @@ public:
 	void set_frames(Frames frames);
 
 	/// <summary>Sets the sprite to animate.</summary>
-	void set_sprite(const Sprite::Ref &sprite);
+	void set_sprite(const Sprite::Ref& sprite);
 
 	/// <summary>Jumps to <paramref name="frame"/>.</summary>
-	void jump_to(const unsigned int frame);
+	void jump_to(unsigned int frame);
 
 	/// <summary>
 	///   Releases ownership of animation frames and returns it.
@@ -103,7 +103,7 @@ public:
 	/// <summary>
 	///   Must be called every frame for as long as it's meant to be active.
 	/// </summary>
-	void update(const unsigned long dt);
+	void update(unsigned long dt);
 
 private:
 	bool stopped_;

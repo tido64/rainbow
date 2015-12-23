@@ -1,4 +1,4 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -15,17 +15,17 @@
 
 namespace
 {
-	const char kLuaErrorErrorHandling[]  = "error handling";
-	const char kLuaErrorGeneral[]        = "general";
-	const char kLuaErrorMemory[]         = "memory allocation";
-	const char kLuaErrorRuntime[]        = "runtime";
-	const char kLuaErrorSyntax[]         = "syntax";
-	const char kLuaErrorType[]           = "Object is not of type '%s'";
+	const char kLuaErrorErrorHandling[] = "error handling";
+	const char kLuaErrorGeneral[] = "general";
+	const char kLuaErrorMemory[] = "memory allocation";
+	const char kLuaErrorRuntime[] = "runtime";
+	const char kLuaErrorSyntax[] = "syntax";
+	const char kLuaErrorType[] = "Object is not of type '%s'";
 
-	int load_module(lua_State *L,
-	                char *const path,
-	                const char *const module,
-	                const char *const suffix)
+	int load_module(lua_State* L,
+	                char* path,
+	                const char* module,
+	                const char* suffix)
 	{
 		strcpy(path, module);
 		strcat(path, suffix);
@@ -34,7 +34,7 @@ namespace
 		if (!asset.is_file())
 			return 0;
 #endif  // RAINBOW_OS_ANDROID
-		const File &file = File::open(asset);
+		const File& file = File::open(asset);
 		if (!file)
 			return 0;
 		const int result = rainbow::lua::load(L, Data(file), module, false);
@@ -46,7 +46,7 @@ namespace
 
 NS_RAINBOW_LUA_BEGIN
 {
-	ScopedRef::ScopedRef(lua_State *L)
+	ScopedRef::ScopedRef(lua_State* L)
 	    : state_(L), ref_(luaL_ref(L, LUA_REGISTRYINDEX)) {}
 
 	ScopedRef::~ScopedRef()
@@ -58,7 +58,7 @@ NS_RAINBOW_LUA_BEGIN
 		luaL_unref(state_, LUA_REGISTRYINDEX, ref_);
 	}
 
-	void ScopedRef::reset(lua_State *L)
+	void ScopedRef::reset(lua_State* L)
 	{
 		if (ref_ != LUA_REFNIL)
 			luaL_unref(state_, LUA_REGISTRYINDEX, ref_);
@@ -66,11 +66,11 @@ NS_RAINBOW_LUA_BEGIN
 		ref_ = (!L ? LUA_REFNIL : luaL_ref(L, LUA_REGISTRYINDEX));
 	}
 
-	void error(lua_State *L, const int result)
+	void error(lua_State* L, int result)
 	{
 		R_ASSERT(result != LUA_OK, "No error to report");
 
-		const char *desc = kLuaErrorGeneral;
+		const char* desc = kLuaErrorGeneral;
 		switch (result)
 		{
 			case LUA_ERRRUN:
@@ -93,16 +93,16 @@ NS_RAINBOW_LUA_BEGIN
 		dump_stack(L);
 	}
 
-	int load(lua_State *L)
+	int load(lua_State* L)
 	{
-		const char *module = lua_tostring(L, -1);
+		const char* module = lua_tostring(L, -1);
 		std::unique_ptr<char[]> path(new char[strlen(module) + 10]);
 		const int result = load_module(L, path.get(), module, ".lua");
 		return (!result ? load_module(L, path.get(), module, "/init.lua")
 		                : result);
 	}
 
-	int load(lua_State *L, const Data &chunk, const char *name, const bool exec)
+	int load(lua_State* L, const Data& chunk, const char* name, bool exec)
 	{
 		int e = luaL_loadbuffer(L, chunk, chunk.size(), name);
 		if (e == LUA_OK && exec)
@@ -115,37 +115,37 @@ NS_RAINBOW_LUA_BEGIN
 		return 1;
 	}
 
-	template<>
-	void push<bool>(lua_State *L, const bool b)
+	template <>
+	void push<bool>(lua_State* L, bool b)
 	{
 		lua_pushboolean(L, b);
 	}
 
-	template<>
-	void push<const char*>(lua_State *L, const char *const str)
+	template <>
+	void push<const char*>(lua_State* L, const char* str)
 	{
 		lua_pushstring(L, str);
 	}
 
-	template<>
-	void push<lua_CFunction>(lua_State *L, const lua_CFunction c)
+	template <>
+	void push<lua_CFunction>(lua_State* L, lua_CFunction c)
 	{
 		lua_pushcfunction(L, c);
 	}
 
-	template<>
-	void push<lua_Integer>(lua_State *L, const lua_Integer i)
+	template <>
+	void push<lua_Integer>(lua_State* L, lua_Integer i)
 	{
 		lua_pushinteger(L, i);
 	}
 
-	template<>
-	void push<lua_Number>(lua_State *L, const lua_Number n)
+	template <>
+	void push<lua_Number>(lua_State* L, lua_Number n)
 	{
 		lua_pushnumber(L, n);
 	}
 
-	void pushpointer(lua_State *L, void *ptr, const char *name)
+	void pushpointer(lua_State* L, void* ptr, const char* name)
 	{
 		lua_createtable(L, 1, 1);
 		lua_pushlightuserdata(L, ptr);
@@ -153,7 +153,7 @@ NS_RAINBOW_LUA_BEGIN
 		luaR_rawsetstring(L, "__type", name);
 	}
 
-	int reload(lua_State *L, const Data &chunk, const char *name)
+	int reload(lua_State* L, const Data& chunk, const char* name)
 	{
 		lua_getglobal(L, "package");
 		lua_pushliteral(L, "loaded");
@@ -166,7 +166,7 @@ NS_RAINBOW_LUA_BEGIN
 		return load(L, chunk, name, true);
 	}
 
-	void replacetable(lua_State *L, const int n)
+	void replacetable(lua_State* L, int n)
 	{
 		if (!lua_istable(L, n))
 			return;
@@ -181,14 +181,14 @@ NS_RAINBOW_LUA_BEGIN
 		lua_replace(L, n);
 	}
 
-	void sethook(lua_State *L, const int mask)
+	void sethook(lua_State* L, int mask)
 	{
 		if (g_level >= 0)
 			return;
 
 		int depth = -1;
 		lua_Debug ar;
-		while (lua_getstack(L, ++depth, &ar));
+		while (lua_getstack(L, ++depth, &ar)) {}
 		--depth;
 		while (lua_getstack(L, ++g_level, &ar))
 		{
@@ -201,13 +201,13 @@ NS_RAINBOW_LUA_BEGIN
 		lua_sethook(L, lua_Hook, mask, 0);
 	}
 
-	void* topointer(lua_State *L, const char *name)
+	void* topointer(lua_State* L, const char* name)
 	{
 		LUA_ASSERT(L, !lua_isnil(L, -1), "Unexpected nil value");
 		LUA_ASSERT(L, lua_istable(L, -1), kLuaErrorType, name);
 		lua_pushliteral(L, "__type");
 		lua_rawget(L, -2);
-		const char *type = lua_tostring(L, -1);
+		const char* type = lua_tostring(L, -1);
 		if (!type)
 		{
 			LUA_ASSERT(L, type, kLuaErrorType, name);
@@ -216,7 +216,7 @@ NS_RAINBOW_LUA_BEGIN
 		}
 		LUA_ASSERT(L, strcmp(type, name) == 0, kLuaErrorType, name);
 		lua_rawgeti(L, -2, 0);
-		void *ptr = lua_touserdata(L, -1);
+		void* ptr = lua_touserdata(L, -1);
 		lua_pop(L, 2);
 		return ptr;
 		static_cast<void>(name);

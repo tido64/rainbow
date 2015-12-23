@@ -41,7 +41,7 @@ namespace heimdall
 
 		// Implement Drawable.
 
-		void update_impl(const unsigned long dt) override;
+		void update_impl(unsigned long dt) override;
 
 		// Implement nvg::Canvas.
 

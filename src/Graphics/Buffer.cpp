@@ -21,12 +21,9 @@ namespace
 
 Buffer::Buffer() : id_(glGenBuffer()) {}
 
-Buffer::Buffer(const rainbow::ISolemnlySwearThatIAmOnlyTesting &) : id_(0) {}
+Buffer::Buffer(const rainbow::ISolemnlySwearThatIAmOnlyTesting&) : id_(0) {}
 
-Buffer::Buffer(Buffer&& buffer) : id_(buffer.id_)
-{
-	buffer.id_ = 0;
-}
+Buffer::Buffer(Buffer&& buffer) : id_(buffer.id_) { buffer.id_ = 0; }
 
 Buffer::~Buffer()
 {
@@ -41,29 +38,38 @@ void Buffer::bind() const
 	glBindBuffer(GL_ARRAY_BUFFER, id_);
 	glEnableVertexAttribArray(Shader::kAttributeColor);
 	glVertexAttribPointer(
-	    Shader::kAttributeColor, 4, GL_UNSIGNED_BYTE, GL_TRUE,
+	    Shader::kAttributeColor,
+	    4,
+	    GL_UNSIGNED_BYTE,
+	    GL_TRUE,
 	    sizeof(SpriteVertex),
 	    reinterpret_cast<void*>(offsetof(SpriteVertex, color)));
 	glEnableVertexAttribArray(Shader::kAttributeTexCoord);
 	glVertexAttribPointer(
-	    Shader::kAttributeTexCoord, 2, GL_FLOAT, GL_FALSE,
+	    Shader::kAttributeTexCoord,
+	    2,
+	    GL_FLOAT,
+	    GL_FALSE,
 	    sizeof(SpriteVertex),
 	    reinterpret_cast<void*>(offsetof(SpriteVertex, texcoord)));
 	glEnableVertexAttribArray(Shader::kAttributeVertex);
 	glVertexAttribPointer(
-	    Shader::kAttributeVertex, 2, GL_FLOAT, GL_TRUE,
+	    Shader::kAttributeVertex,
+	    2,
+	    GL_FLOAT,
+	    GL_TRUE,
 	    sizeof(SpriteVertex),
 	    reinterpret_cast<void*>(offsetof(SpriteVertex, position)));
 }
 
-void Buffer::bind(const unsigned int index) const
+void Buffer::bind(unsigned int index) const
 {
 	glBindBuffer(GL_ARRAY_BUFFER, id_);
 	glEnableVertexAttribArray(index);
 	glVertexAttribPointer(index, 2, GL_FLOAT, GL_FALSE, sizeof(Vec2f), nullptr);
 }
 
-void Buffer::upload(const void *const data, const size_t size) const
+void Buffer::upload(const void* data, size_t size) const
 {
 	glBindBuffer(GL_ARRAY_BUFFER, id_);
 	glBufferData(GL_ARRAY_BUFFER, size, data, GL_STREAM_DRAW);

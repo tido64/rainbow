@@ -1,11 +1,9 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
 #ifndef HEIMDALL_CHANGEMONITOR_H_
 #define HEIMDALL_CHANGEMONITOR_H_
-
-#ifdef USE_HEIMDALL
 
 #include <functional>
 
@@ -24,14 +22,14 @@ struct lua_State;
 class ChangeMonitor : private NonCopyable<ChangeMonitor>
 {
 public:
-	using Callback = std::function<void(const char *)>;
+	using Callback = std::function<void(const char*)>;
 
-	explicit ChangeMonitor(const char *const directory);
+	explicit ChangeMonitor(const char* directory);
 	~ChangeMonitor();
 
-	inline void set_callback(Callback &&callback);
+	void set_callback(Callback&& callback) { callback_ = std::move(callback); }
 
-	inline void on_modified(const char *path);
+	void on_modified(const char* path) { callback_(path); }
 
 private:
 #if defined(RAINBOW_OS_MACOS)
@@ -45,15 +43,4 @@ private:
 	Callback callback_;
 };
 
-void ChangeMonitor::set_callback(Callback &&callback)
-{
-	callback_ = callback;
-}
-
-void ChangeMonitor::on_modified(const char *path)
-{
-	callback_(path);
-}
-
-#endif  // USE_HEIMDALL
-#endif  // HEIMDALL_CHANGEMONITOR_H_
+#endif

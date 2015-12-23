@@ -55,45 +55,45 @@ public:
 	unsigned int width() const { return width_; }
 
 	/// <summary>Sets text alignment.</summary>
-	void set_alignment(const TextAlignment);
+	void set_alignment(TextAlignment);
 
 	/// <summary>Sets text color.</summary>
-	void set_color(const Colorb c);
+	void set_color(Colorb c);
 
 	/// <summary>Sets text font.</summary>
 	void set_font(SharedPtr<FontAtlas>);
 
 	/// <summary>Sets label as needing update.</summary>
-	void set_needs_update(const unsigned int what) { stale_ |= what; }
+	void set_needs_update(unsigned int what) { stale_ |= what; }
 
 	/// <summary>Sets position of text.</summary>
-	void set_position(const Vec2f &);
+	void set_position(const Vec2f&);
 
 	/// <summary>
 	///   Sets angle of rotation (in radian). Pivot depends on text alignment.
 	/// </summary>
-	void set_rotation(const float r);
+	void set_rotation(float r);
 
 	/// <summary>
 	///   Sets label scale. Value is clamped between 0.01 and 1.0.
 	/// </summary>
-	void set_scale(const float f);
+	void set_scale(float f);
 
 	/// <summary>Sets text to display.</summary>
-	void set_text(const char *);
+	void set_text(const char*);
 
 	/// <summary>Binds all used textures.</summary>
 	void bind_textures() const { font_->bind(); }
 
 	/// <summary>Moves label by (x,y).</summary>
-	void move(const Vec2f &);
+	void move(const Vec2f&);
 
 	/// <summary>Populates the vertex array.</summary>
 	virtual void update();
 
 protected:
 	int cutoff() const { return cutoff_ / 6; }
-	void set_cutoff(const int cutoff) { cutoff_ = cutoff * 6; }
+	void set_cutoff(int cutoff) { cutoff_ = cutoff * 6; }
 
 	unsigned int state() const { return stale_; }
 	SpriteVertex* vertex_buffer() const { return vertices_.get(); }
@@ -128,11 +128,11 @@ private:
 	/// <param name="width">Width of line.</param>
 	/// <param name="R">Rotation vector.</param>
 	/// <param name="needs_alignment">Whether alignment is needed.</param>
-	void save(const unsigned int start,
-	          const unsigned int end,
-	          const float width,
-	          const Vec2f &R,
-	          const bool needs_alignment);
+	void save(unsigned int start,
+	          unsigned int end,
+	          float width,
+	          const Vec2f& R,
+	          bool needs_alignment);
 };
 
 #endif

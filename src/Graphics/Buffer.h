@@ -13,7 +13,7 @@ class Buffer
 {
 public:
 	Buffer();
-	explicit Buffer(const rainbow::ISolemnlySwearThatIAmOnlyTesting &);
+	explicit Buffer(const rainbow::ISolemnlySwearThatIAmOnlyTesting&);
 	Buffer(Buffer&&);
 	~Buffer();
 
@@ -23,13 +23,13 @@ public:
 	void bind() const;
 
 	/// <summary>Used by SpriteBatch for normal buffers.</summary>
-	void bind(const unsigned int index) const;
+	void bind(unsigned int index) const;
 
 	/// <summary>
 	///   Uploads <paramref name="data"/> of size <paramref name="size"/> to the
 	///   GPU buffer.
 	/// </summary>
-	void upload(const void *const data, const size_t size) const;
+	void upload(const void* data, size_t size) const;
 
 private:
 	unsigned int id_;

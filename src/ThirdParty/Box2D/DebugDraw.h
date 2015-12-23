@@ -24,7 +24,7 @@ namespace b2
 		DebuggableWorld() : ptm_(32.0f) {}
 
 		float GetPTM() const { return ptm_; }
-		void SetPTM(const float ptm) { ptm_ = ptm; }
+		void SetPTM(float ptm) { ptm_ = ptm; }
 
 		virtual void DrawDebugData() = 0;
 
@@ -39,30 +39,30 @@ namespace b2
 
 		DebugDraw();
 
-		void Add(DebuggableWorld *);
-		void Remove(DebuggableWorld *);
+		void Add(DebuggableWorld*);
+		void Remove(DebuggableWorld*);
 
 		void DrawAllWorlds();
 
 		// Implement b2Draw.
 
-		void DrawPolygon(const b2Vec2 *vertices,
+		void DrawPolygon(const b2Vec2* vertices,
 		                 int32 vertex_count,
-		                 const b2Color &color) override;
-		void DrawSolidPolygon(const b2Vec2 *vertices,
+		                 const b2Color& color) override;
+		void DrawSolidPolygon(const b2Vec2* vertices,
 		                      int32 vertex_count,
-		                      const b2Color &color) override;
-		void DrawCircle(const b2Vec2 &center,
+		                      const b2Color& color) override;
+		void DrawCircle(const b2Vec2& center,
 		                float32 radius,
-		                const b2Color &color) override;
-		void DrawSolidCircle(const b2Vec2 &center,
+		                const b2Color& color) override;
+		void DrawSolidCircle(const b2Vec2& center,
 		                     float32 radius,
-		                     const b2Vec2 &axis,
-		                     const b2Color &color) override;
-		void DrawSegment(const b2Vec2 &p1,
-		                 const b2Vec2 &p2,
-		                 const b2Color &color) override;
-		void DrawTransform(const b2Transform &xf) override;
+		                     const b2Vec2& axis,
+		                     const b2Color& color) override;
+		void DrawSegment(const b2Vec2& p1,
+		                 const b2Vec2& p2,
+		                 const b2Color& color) override;
+		void DrawTransform(const b2Transform& xf) override;
 
 	private:
 		static const size_t kMaxNumWorlds = 6;
@@ -72,13 +72,13 @@ namespace b2
 			b2Color color;
 			b2Vec2 vertex;
 
-			Vertex(const b2Color &c, const b2Vec2 &v) : color(c), vertex(v) {}
+			Vertex(const b2Color& c, const b2Vec2& v) : color(c), vertex(v) {}
 		};
 
 		float32 ptm_;
 		std::vector<Vertex> lines_;
 		std::vector<Vertex> triangles_;
-		DebuggableWorld *worlds_[kMaxNumWorlds];
+		DebuggableWorld* worlds_[kMaxNumWorlds];
 	};
 }
 

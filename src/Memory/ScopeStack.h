@@ -34,15 +34,15 @@ namespace rainbow
 	class LinearAllocator : private NonCopyable<LinearAllocator>
 	{
 	public:
-		static size_t aligned_size(const size_t size)
+		static size_t aligned_size(size_t size)
 		{
 			const size_t kMaxAlignment = alignof(std::max_align_t);
 			return (size + (kMaxAlignment - 1)) & ~(kMaxAlignment - 1);
 		}
 
-		LinearAllocator(const size_t size) : end_(new char[size])
+		LinearAllocator(size_t size) : end_(new char[size])
 #ifndef NDEBUG
-		                                   , size_(size)
+		                             , size_(size)
 #endif
 		{
 			block_.reset(end_);
@@ -50,7 +50,7 @@ namespace rainbow
 
 		void* end() { return end_; }
 
-		void* allocate(const size_t size)
+		void* allocate(size_t size)
 		{
 			auto block = end_;
 			end_ += aligned_size(size);
@@ -58,7 +58,7 @@ namespace rainbow
 			return block;
 		}
 
-		void retain(RefCounted *ref) const
+		void retain(RefCounted* ref) const
 		{
 			R_ASSERT(std::less_equal<void*>()(block_.get(), ref) &&
 			             std::less<void*>()(ref, end_),
@@ -66,16 +66,15 @@ namespace rainbow
 			++ref->refs_;
 		}
 
-		void rewind(void *ptr) { end_ = static_cast<char*>(ptr); }
+		void rewind(void* ptr) { end_ = static_cast<char*>(ptr); }
 
 	private:
 		std::unique_ptr<char[]> block_;
-		char *end_;
+		char* end_;
 #ifndef NDEBUG
 		const size_t size_;
 #endif
 	};
-
 
 	/// <summary>Scope stack allocator.</summary>
 	/// <remarks>
@@ -91,21 +90,20 @@ namespace rainbow
 	class ScopeStack : private NonCopyable<ScopeStack>
 	{
 	public:
-		template<typename T>
+		template <typename T>
 		static size_t size_of()
 		{
 			return LinearAllocator::aligned_size(
-			           LinearAllocator::aligned_size(sizeof(BlockHeader)) +
-			           sizeof(T));
+			    LinearAllocator::aligned_size(sizeof(BlockHeader)) + sizeof(T));
 		}
 
-		ScopeStack(LinearAllocator &allocator)
+		ScopeStack(LinearAllocator& allocator)
 		    : allocator_(allocator), blocks_(nullptr),
 		      rewind_point_(static_cast<BlockHeader*>(allocator.end())) {}
 
 		~ScopeStack() { reset(); }
 
-		template<typename T, typename... Args>
+		template <typename T, typename... Args>
 		T* allocate(Args&&... args)
 		{
 			return new (address_of(new_block<T>()))
@@ -122,11 +120,11 @@ namespace rainbow
 			allocator_.rewind(rewind_point_);
 		}
 
-		void retain(RefCounted *ref) const { allocator_.retain(ref); }
+		void retain(RefCounted* ref) const { allocator_.retain(ref); }
 
 	private:
-		template<typename T>
-		static void destruct(void *ptr)
+		template <typename T>
+		static void destruct(void* ptr)
 		{
 			static_cast<T*>(ptr)->~T();
 		}
@@ -134,20 +132,20 @@ namespace rainbow
 		struct BlockHeader
 		{
 			void (*destructor)(void*);
-			BlockHeader *next;
+			BlockHeader* next;
 		};
 
-		LinearAllocator &allocator_;
-		BlockHeader *blocks_;
-		void *const rewind_point_;
+		LinearAllocator& allocator_;
+		BlockHeader* blocks_;
+		void* const rewind_point_;
 
-		void* address_of(BlockHeader *b)
+		void* address_of(BlockHeader* b)
 		{
 			return reinterpret_cast<char*>(b) +
 			       LinearAllocator::aligned_size(sizeof(*b));
 		}
 
-		template<typename T>
+		template <typename T>
 		BlockHeader* new_block()
 		{
 			BlockHeader* block = static_cast<BlockHeader*>(allocator_.allocate(

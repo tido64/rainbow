@@ -1,4 +1,4 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -8,29 +8,28 @@
 
 NS_RAINBOW_LUA_BEGIN
 {
-	template<>
+	template <>
 	const char Recorder::Bind::class_name[] = "recorder";
 
-	template<>
+	template <>
 	const bool Recorder::Bind::is_constructible = true;
 
-	template<>
-	const luaL_Reg Recorder::Bind::functions[] = {
-		{ "get_average_power",  &Recorder::get_average_power },
-		{ "get_low_pass",       &Recorder::get_low_pass },
-		{ "get_peak_power",     &Recorder::get_peak_power },
-		{ "pause",              &Recorder::pause },
-		{ "record",             &Recorder::record },
-		{ "stop",               &Recorder::stop },
-		{ "update",             &Recorder::update },
-		{ nullptr, nullptr }
-	};
+	template <>
+	const luaL_Reg Recorder::Bind::functions[]{
+	    {"get_average_power",  &Recorder::get_average_power},
+	    {"get_low_pass",       &Recorder::get_low_pass},
+	    {"get_peak_power",     &Recorder::get_peak_power},
+	    {"pause",              &Recorder::pause},
+	    {"record",             &Recorder::record},
+	    {"stop",               &Recorder::stop},
+	    {"update",             &Recorder::update},
+	    {nullptr,              nullptr}};
 
-	Recorder::Recorder(lua_State *) {}
+	Recorder::Recorder(lua_State*) {}
 
-	int Recorder::get_average_power(lua_State *L)
+	int Recorder::get_average_power(lua_State* L)
 	{
-		Recorder *self = Bind::self(L);
+		Recorder* self = Bind::self(L);
 		if (!self)
 			return 0;
 
@@ -38,9 +37,9 @@ NS_RAINBOW_LUA_BEGIN
 		return 1;
 	}
 
-	int Recorder::get_low_pass(lua_State *L)
+	int Recorder::get_low_pass(lua_State* L)
 	{
-		Recorder *self = Bind::self(L);
+		Recorder* self = Bind::self(L);
 		if (!self)
 			return 0;
 
@@ -48,9 +47,9 @@ NS_RAINBOW_LUA_BEGIN
 		return 1;
 	}
 
-	int Recorder::get_peak_power(lua_State *L)
+	int Recorder::get_peak_power(lua_State* L)
 	{
-		Recorder *self = Bind::self(L);
+		Recorder* self = Bind::self(L);
 		if (!self)
 			return 0;
 
@@ -58,9 +57,9 @@ NS_RAINBOW_LUA_BEGIN
 		return 1;
 	}
 
-	int Recorder::pause(lua_State *L)
+	int Recorder::pause(lua_State* L)
 	{
-		Recorder *self = Bind::self(L);
+		Recorder* self = Bind::self(L);
 		if (!self)
 			return 0;
 
@@ -68,9 +67,9 @@ NS_RAINBOW_LUA_BEGIN
 		return 0;
 	}
 
-	int Recorder::record(lua_State *L)
+	int Recorder::record(lua_State* L)
 	{
-		Recorder *self = Bind::self(L);
+		Recorder* self = Bind::self(L);
 		if (!self)
 			return 0;
 
@@ -78,9 +77,9 @@ NS_RAINBOW_LUA_BEGIN
 		return 0;
 	}
 
-	int Recorder::stop(lua_State *L)
+	int Recorder::stop(lua_State* L)
 	{
-		Recorder *self = Bind::self(L);
+		Recorder* self = Bind::self(L);
 		if (!self)
 			return 0;
 
@@ -88,9 +87,9 @@ NS_RAINBOW_LUA_BEGIN
 		return 0;
 	}
 
-	int Recorder::update(lua_State *L)
+	int Recorder::update(lua_State* L)
 	{
-		Recorder *self = Bind::self(L);
+		Recorder* self = Bind::self(L);
 		if (!self)
 			return 0;
 

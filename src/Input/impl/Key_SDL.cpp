@@ -9,7 +9,7 @@
 #include <SDL_config.h>
 #include <SDL_keyboard.h>
 
-Key Key::from_raw(const SDL_Keysym *keysym)
+Key Key::from_raw(const SDL_Keysym* keysym)
 {
 	Key k;
 	switch (keysym->sym)

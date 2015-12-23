@@ -1,4 +1,4 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -15,7 +15,7 @@ namespace
 	const int kMaxSteps = 10;
 
 	template <typename F, typename... Args>
-	void ForEachDynamicBody(b2Body *body, F&& f, Args&&... args)
+	void ForEachDynamicBody(b2Body* body, F&& f, Args&&... args)
 	{
 		for (auto b = body; b; b = b->GetNext())
 		{
@@ -26,7 +26,7 @@ namespace
 		}
 	}
 
-	b2::BodyState* GetBodyState(b2Body *body)
+	b2::BodyState* GetBodyState(b2Body* body)
 	{
 		return static_cast<b2::BodyState*>(body->GetUserData());
 	}
@@ -34,22 +34,19 @@ namespace
 
 namespace b2
 {
-	BodyState::BodyState(const b2BodyDef *bd)
+	BodyState::BodyState(const b2BodyDef* bd)
 	    : curr_p(bd->position), prev_p(bd->position), curr_r(bd->angle),
 	      prev_r(bd->angle) {}
 
-	StableWorld::StableWorld(const float gx, const float gy)
+	StableWorld::StableWorld(float gx, float gy)
 	    : b2World(b2Vec2(gx, gy)), elapsed_(0.0)
 	{
 		SetAutoClearForces(false);  // TODO: Needed?
 	}
 
-	StableWorld::~StableWorld()
-	{
-		SetDebugDraw(nullptr);
-	}
+	StableWorld::~StableWorld() { SetDebugDraw(nullptr); }
 
-	void StableWorld::SetDebugDraw(b2Draw *debugDraw)
+	void StableWorld::SetDebugDraw(b2Draw* debugDraw)
 	{
 		if (debug_draw_)
 			debug_draw_->Remove(this);
@@ -59,14 +56,14 @@ namespace b2
 			debug_draw_->Add(this);
 	}
 
-	b2Body* StableWorld::CreateBody(const b2BodyDef *bd)
+	b2Body* StableWorld::CreateBody(const b2BodyDef* bd)
 	{
 		auto body = b2World::CreateBody(bd);
 		body->SetUserData(new BodyState(bd));
 		return body;
 	}
 
-	void StableWorld::DestroyBody(b2Body *body)
+	void StableWorld::DestroyBody(b2Body* body)
 	{
 		delete GetBodyState(body);
 		b2World::DestroyBody(body);
@@ -94,27 +91,25 @@ namespace b2
 		}
 	}
 
-	void StableWorld::DrawDebugData()
-	{
-		b2World::DrawDebugData();
-	}
+	void StableWorld::DrawDebugData() { b2World::DrawDebugData(); }
 
 	void StableWorld::Interpolate()
 	{
 		const float ratio = elapsed_ * kStepsPerMs;
 		ForEachDynamicBody(
 		    GetBodyList(),
-		    [this] (b2Body *body, const float ratio, const float rest) {
-		    	if (!body->IsAwake())
-		    		return;
+		    [this](b2Body* body, float ratio, float rest)
+		    {
+		        if (!body->IsAwake())
+		            return;
 
-		    	auto d = GetBodyState(body);
-		    	if (!d->sprite)
-		    		return;
+		        auto d = GetBodyState(body);
+		        if (!d->sprite)
+		            return;
 
-		    	const b2Vec2 v = ptm_ * (ratio * d->curr_p + rest * d->prev_p);
-		    	d->sprite->set_position(Vec2f(v.x, v.y));
-		    	d->sprite->set_rotation(ratio * d->curr_r + rest * d->prev_r);
+		        const b2Vec2 v = ptm_ * (ratio * d->curr_p + rest * d->prev_p);
+		        d->sprite->set_position(Vec2f(v.x, v.y));
+		        d->sprite->set_rotation(ratio * d->curr_r + rest * d->prev_r);
 		    },
 		    ratio,
 		    1.0f - ratio);
@@ -122,28 +117,32 @@ namespace b2
 
 	void StableWorld::RestoreState()
 	{
-		ForEachDynamicBody(GetBodyList(),
-		                   [this] (b2Body *body) {
-			auto d = GetBodyState(body);
-			if (!d->sprite)
-				return;
+		ForEachDynamicBody(
+		    GetBodyList(),
+		    [this](b2Body* body)
+		    {
+		        auto d = GetBodyState(body);
+		        if (!d->sprite)
+		            return;
 
-			const Vec2f position(d->curr_p.x * ptm_, d->curr_p.y * ptm_);
-			d->sprite->set_position(position);
-			d->sprite->set_rotation(d->curr_r);
-		});
+		        const Vec2f position(d->curr_p.x * ptm_, d->curr_p.y * ptm_);
+		        d->sprite->set_position(position);
+		        d->sprite->set_rotation(d->curr_r);
+		    });
 	}
 
 	void StableWorld::SaveState()
 	{
-		ForEachDynamicBody(GetBodyList(),
-		                   [this] (b2Body *body) {
-			auto d = GetBodyState(body);
-			const auto &t = body->GetTransform();
-			d->prev_p = d->curr_p;
-			d->curr_p = t.p;
-			d->prev_r = d->curr_r;
-			d->curr_r = t.q.GetAngle();
-		});
+		ForEachDynamicBody(
+		    GetBodyList(),
+		    [this](b2Body* body)
+		    {
+		        auto d = GetBodyState(body);
+		        const auto& t = body->GetTransform();
+		        d->prev_p = d->curr_p;
+		        d->curr_p = t.p;
+		        d->prev_r = d->curr_r;
+		        d->curr_r = t.q.GetAngle();
+		    });
 	}
 }

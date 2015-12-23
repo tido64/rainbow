@@ -16,18 +16,15 @@ class Timer : private NonCopyable<Timer>
 public:
 	using Closure = std::function<void()>;
 
-	Timer(Closure func,
-	      const int interval,
-	      const int repeat_count,
-	      const int id = 0)
+	Timer(Closure func, int interval, int repeat_count, int id = 0)
 	    : active_(true), interval_(interval), elapsed_(0),
 	      countdown_(repeat_count), tick_(std::move(func)),
 	      repeat_count_(repeat_count), free_(-1), id_(id) {}
 
-	bool is_active() const { return active_ && interval_ > 0; }
-	int elapsed() const { return elapsed_; }
-	int interval() const { return interval_; }
-	int repeat_count() const { return repeat_count_; }
+	auto elapsed() const { return elapsed_; }
+	auto interval() const { return interval_; }
+	auto is_active() const { return active_ && interval_ > 0; }
+	auto repeat_count() const { return repeat_count_; }
 
 	void pause() { active_ = false; }
 	void resume() { active_ = true; }
@@ -42,8 +39,8 @@ private:
 	int free_;
 	const int id_;
 
-	int clear(const int free);
-	void update(const unsigned long dt);
+	int clear(int free);
+	void update(unsigned long dt);
 
 	Timer& operator=(Timer&& t);
 
@@ -55,13 +52,10 @@ class TimerManager : public Global<TimerManager>
 public:
 	TimerManager() : free_(-1) { make_global(); }
 
-	void clear_timer(Timer *t);
+	void clear_timer(Timer* t);
+	Timer* set_timer(Timer::Closure func, int interval, int repeat_count);
 
-	Timer* set_timer(Timer::Closure func,
-	                 const int interval,
-	                 const int repeat_count);
-
-	void update(const unsigned long dt);
+	void update(unsigned long dt);
 
 private:
 	std::deque<Timer> timers_;

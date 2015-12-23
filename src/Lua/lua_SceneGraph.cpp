@@ -38,7 +38,7 @@ namespace
 
 	bool unregister_node(SceneNode* node)
 	{
-		for_each(*node, [](SceneNode &node) { g_nodes.erase(&node); });
+		for_each(*node, [](SceneNode& node) { g_nodes.erase(&node); });
 		return true;
 	}
 #endif

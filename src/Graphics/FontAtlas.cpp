@@ -39,15 +39,15 @@ namespace
 	const int kNumGlyphsPerColRow = 12;  ///< Number of glyphs per column/row on texture.
 	const int kPixelFormat = 64;         ///< 26.6 fixed-point pixel coordinates.
 
-	void copy_bitmap_into(uchar_t *dst,
-	                      const Vec2u &dst_sz,
-	                      const Vec2u &off,
-	                      const uchar_t *src,
-	                      const Vec2u &src_sz)
+	void copy_bitmap_into(uchar_t* dst,
+	                      const Vec2u& dst_sz,
+	                      const Vec2u& off,
+	                      const uchar_t* src,
+	                      const Vec2u& src_sz)
 	{
 		const size_t stride = (dst_sz.x - src_sz.x) * 2;
 		size_t i = 0;
-		uchar_t *ptr = dst + (off.y * dst_sz.x + off.x) * 2;
+		uchar_t* ptr = dst + (off.y * dst_sz.x + off.x) * 2;
 		for (uint_t y = 0; y < src_sz.y; ++y)
 		{
 			for (uint_t x = 0; x < src_sz.x; ++x)
@@ -61,21 +61,21 @@ namespace
 		}
 	}
 
-	Vec2u max_glyph_size(const FT_Face &face,
-	                     const FontGlyph *glyphs,
-	                     const size_t count)
+	Vec2u max_glyph_size(const FT_Face& face,
+	                     const FontGlyph* glyphs,
+	                     size_t count)
 	{
 		Vec2u max;
 		std::for_each(glyphs,
 		              glyphs + count,
-		              [&face, &max](const FontGlyph &glyph) {
+		              [&face, &max](const FontGlyph& glyph) {
 			if (FT_Load_Char(face, glyph.code, FT_LOAD_DEFAULT))
 			{
 				R_ABORT("Failed to load characters");
 				max.x = 0;
 				return;
 			}
-			const FT_Glyph_Metrics &metrics = face->glyph->metrics;
+			const FT_Glyph_Metrics& metrics = face->glyph->metrics;
 			if (metrics.width > static_cast<FT_Pos>(max.x))
 				max.x = static_cast<Vec2u::value_type>(metrics.width);
 			if (metrics.height > static_cast<FT_Pos>(max.y))
@@ -90,7 +90,7 @@ namespace
 	class FontFace
 	{
 	public:
-		FontFace(FT_Library library, const Data &font) : face_(nullptr)
+		FontFace(FT_Library library, const Data& font) : face_(nullptr)
 		{
 			FT_Error error =
 			    FT_New_Memory_Face(library,
@@ -147,10 +147,10 @@ namespace
 	};
 }
 
-FontAtlas::FontAtlas(const char* path, const float pt)
+FontAtlas::FontAtlas(const char* path, float pt)
     : FontAtlas(path, Data::load_asset(path), pt) {}
 
-FontAtlas::FontAtlas(const char* name, const Data& font, const float pt)
+FontAtlas::FontAtlas(const char* name, const Data& font, float pt)
     : pt_(pt), height_(0)
 {
 	texture_ = TextureManager::Get()->create(
@@ -161,14 +161,14 @@ FontAtlas::FontAtlas(const char* name, const Data& font, const float pt)
 	    });
 }
 
-const FontGlyph* FontAtlas::get_glyph(const uint_t c) const
+const FontGlyph* FontAtlas::get_glyph(uint_t c) const
 {
 #if FONTATLAS_EXTENDED > 0
 	if (c >= 0x80u)
 	{
 		const auto first = charset_ + kNumCharacters;
 		const auto last = first + FONTATLAS_EXTENDED;
-		const auto i = std::find_if(first, last, [c] (const FontGlyph &glyph) {
+		const auto i = std::find_if(first, last, [c](const FontGlyph& glyph) {
 			return glyph.code == c;
 		});
 		return (i == last ? nullptr : i);

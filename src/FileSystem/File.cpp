@@ -1,4 +1,4 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -15,32 +15,29 @@
 #include "FileSystem/Path.h"
 
 #if defined(RAINBOW_OS_ANDROID)
-extern ANativeActivity *gNativeActivity;
+extern ANativeActivity* gNativeActivity;
 #elif defined(RAINBOW_OS_WINDOWS)
 #	define fileno _fileno
 #endif
 
-File File::open(const char *const path)
-{
-	return File(path);
-}
+File File::open(const char* path) { return File(path); }
 
-File File::open_asset(const char *const path)
+File File::open_asset(const char* path)
 {
 	return File(Path(path, Path::RelativeTo::CurrentPath));
 }
 
-File File::open_document(const char *const path)
+File File::open_document(const char* path)
 {
 	return File(Path(path, Path::RelativeTo::UserDataPath), "r+b");
 }
 
-File File::open_write(const char *const path)
+File File::open_write(const char* path)
 {
 	return File(Path(path, Path::RelativeTo::UserDataPath), "wb");
 }
 
-File::File(File &&f) : is_asset_(f.is_asset_), stream_(f.stream_)
+File::File(File&& f) : is_asset_(f.is_asset_), stream_(f.stream_)
 {
 	f.stream_ = nullptr;
 }
@@ -69,7 +66,7 @@ size_t File::size() const
 	return (fstat(fd, &file_status) != 0 ? 0 : file_status.st_size);
 }
 
-size_t File::read(void *dst, const size_t size) const
+size_t File::read(void* dst, size_t size) const
 {
 #ifdef RAINBOW_OS_ANDROID
 	if (is_asset_)
@@ -78,17 +75,17 @@ size_t File::read(void *dst, const size_t size) const
 	return fread(dst, sizeof(char), size, stream_);
 }
 
-int File::seek(const long offset, const int origin) const
+int File::seek(long offset, int origin) const
 {
 	return fseek(stream_, offset, origin);
 }
 
-size_t File::write(const void *buffer, const size_t size) const
+size_t File::write(const void* buffer, size_t size) const
 {
 	return fwrite(buffer, sizeof(char), size, stream_);
 }
 
-File::File(const char *const path) : is_asset_(true), stream_(nullptr)
+File::File(const char* path) : is_asset_(true), stream_(nullptr)
 {
 	if (!path || path[0] == '\0')
 		return;
@@ -103,7 +100,7 @@ File::File(const char *const path) : is_asset_(true), stream_(nullptr)
 		LOGE("File: Failed to open '%s'", path);
 }
 
-File::File(const char *const path, const char *const mode)
+File::File(const char* path, const char* mode)
     : is_asset_(false), stream_(nullptr)
 {
 	stream_ = fopen(path, mode);

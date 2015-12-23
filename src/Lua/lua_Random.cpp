@@ -1,4 +1,4 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -12,7 +12,7 @@ NS_RAINBOW_LUA_MODULE_BEGIN(random)
 {
 	namespace
 	{
-		int random(lua_State *L)
+		int random(lua_State* L)
 		{
 			lua_Number r;
 			switch (lua_gettop(L))
@@ -34,7 +34,7 @@ NS_RAINBOW_LUA_MODULE_BEGIN(random)
 			return 1;
 		}
 
-		int seed(lua_State *L)
+		int seed(lua_State* L)
 		{
 			// rainbow.seed(seed = 0)
 			rainbow::lua::Argument<lua_Number>::is_optional(L, 1);
@@ -44,7 +44,7 @@ NS_RAINBOW_LUA_MODULE_BEGIN(random)
 		}
 	}
 
-	void init(lua_State *L)
+	void init(lua_State* L)
 	{
 		luaR_rawsetcfunction(L, "random", &random);
 		luaR_rawsetcfunction(L, "seed", &seed);

@@ -29,7 +29,7 @@
 #include "Common/Logging.h"
 
 #ifdef RAINBOW_OS_ANDROID
-extern ANativeActivity *gNativeActivity;
+extern ANativeActivity* gNativeActivity;
 #endif
 
 namespace

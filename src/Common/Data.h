@@ -34,20 +34,20 @@ public:
 		Reference
 	};
 
-	template<typename T, size_t N, typename = CharType<T>>
+	template <typename T, size_t N, typename = CharType<T>>
 	static Data from_bytes(const T (&bytes)[N])
 	{
 		return Data(bytes, N, Ownership::Reference);
 	}
 
-	template<typename T, size_t N, typename = CharType<T>>
+	template <typename T, size_t N, typename = CharType<T>>
 	static Data from_literal(const T (&literal)[N])
 	{
 		return Data(literal, N - 1, Ownership::Reference);
 	}
 
-	static Data load_asset(const char *const asset);
-	static Data load_document(const char *const document);
+	static Data load_asset(const char* asset);
+	static Data load_document(const char* document);
 
 	/// <summary>
 	///   Constructs an empty data object. No memory will be allocated.
@@ -67,10 +67,10 @@ public:
 	/// <summary>
 	///   Constructs a data object with the contents of the file.
 	/// </summary>
-	explicit Data(const File &);
+	explicit Data(const File&);
 
 	/// <summary>Constructs a wrapper around a buffer.</summary>
-	Data(const void *buffer, const size_t size, const Ownership ownership)
+	Data(const void* buffer, size_t size, Ownership ownership)
 	    : ownership_(ownership), allocated_(size), sz_(size),
 	      data_(const_cast<void*>(buffer)) {}
 
@@ -84,7 +84,7 @@ public:
 
 	/// <summary>Saves data to file.</summary>
 	/// <returns><c>true</c> on success, <c>false</c> otherwise.</returns>
-	bool save(const char *const path) const;
+	bool save(const char* path) const;
 
 	/// <summary>Returns the size of this buffer.</summary>
 	size_t size() const { return sz_; }
@@ -116,13 +116,13 @@ private:
 	Ownership ownership_;  ///< Decides whether to free the buffer on destruction.
 	size_t allocated_;     ///< Allocated memory size.
 	size_t sz_;            ///< Size of used buffer, not necessarily equal to allocated.
-	void *data_;           ///< Actual buffer, implemented as a C-array.
+	void* data_;           ///< Actual buffer, implemented as a C-array.
 
 	/// <summary>
 	///   Resizes allocated memory segment. If the requested allocation size is
 	///   smaller than current allocated size, nothing will happen.
 	/// </summary>
-	void allocate(const size_t size);
+	void allocate(size_t size);
 };
 
 #endif  // DATA_H_

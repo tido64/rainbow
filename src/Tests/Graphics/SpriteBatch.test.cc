@@ -14,7 +14,7 @@ namespace rainbow
 namespace
 {
 	template <size_t N>
-	void set_sprite_ids(const Sprite::Ref(&refs)[N])
+	void set_sprite_ids(const Sprite::Ref (&refs)[N])
 	{
 		for (size_t i = 0; i < N; ++i)
 			refs[i]->set_id(i + 1);
@@ -23,7 +23,7 @@ namespace
 			ASSERT_EQ(i + 1, static_cast<size_t>(refs[i]->id()));
 	}
 
-	void update(SpriteBatch& batch, const size_t count)
+	void update(SpriteBatch& batch, size_t count)
 	{
 		auto sprites = batch.sprites();
 		std::for_each(sprites, sprites + count, [](Sprite& sprite) {
@@ -33,7 +33,7 @@ namespace
 
 	void verify_sprite_vertices(const Sprite& sprite,
 	                            const SpriteVertex* vertices,
-	                            const Vec2f offset)
+	                            const Vec2f& offset)
 	{
 		const float half_width = sprite.width() * 0.5f;
 		const float half_height = sprite.height() * 0.5f;
@@ -47,7 +47,7 @@ namespace
 		          vertices[3].position);
 	}
 
-	void verify_batch_integrity(const SpriteBatch& batch, const size_t count)
+	void verify_batch_integrity(const SpriteBatch& batch, size_t count)
 	{
 		const auto sprites = batch.sprites();
 		const SpriteVertex* vertices = batch.vertices();

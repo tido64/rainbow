@@ -27,15 +27,14 @@ NS_RAINBOW_LUA_MODULE_BEGIN(input)
 		int events = -1;
 		size_t event_count = std::numeric_limits<size_t>::max();
 
-		const char* const kInputEvents[]{
-		    "key_down",
-		    "key_up",
-		    "pointer_began",
-		    "pointer_canceled",
-		    "pointer_ended",
-		    "pointer_moved"};
+		const char* const kInputEvents[]{"key_down",
+		                                 "key_up",
+		                                 "pointer_began",
+		                                 "pointer_canceled",
+		                                 "pointer_ended",
+		                                 "pointer_moved"};
 
-		void push_event(lua_State* L, const Event event)
+		void push_event(lua_State* L, Event event)
 		{
 			lua_rawgeti(L, LUA_REGISTRYINDEX, events);
 			lua_pushinteger(L, ++event_count);
@@ -53,7 +52,7 @@ NS_RAINBOW_LUA_MODULE_BEGIN(input)
 			lua_rawseti(L, -2, 1);
 		}
 
-		void on_key_event(lua_State* L, const Event event, const Key& key)
+		void on_key_event(lua_State* L, Event event, const Key& key)
 		{
 			push_event(L, event);
 
@@ -68,7 +67,7 @@ NS_RAINBOW_LUA_MODULE_BEGIN(input)
 		}
 
 		void on_pointer_event(lua_State* L,
-		                      const Event event,
+		                      Event event,
 		                      const ArrayView<Pointer>& pointers)
 		{
 			push_event(L, event);

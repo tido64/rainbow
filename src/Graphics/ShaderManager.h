@@ -58,10 +58,18 @@ public:
 	                     const Shader::AttributeParams* attributes);
 
 	/// <summary>Returns current program details.</summary>
-	inline const Shader::Details& get_program() const;
+	const Shader::Details& get_program() const
+	{
+		R_ASSERT(current_ > 0, "ShaderManager is uninitialised");
+		return programs_[current_ - 1];
+	}
 
 	/// <summary>Returns program details.</summary>
-	inline Shader::Details& get_program(const unsigned int pid);
+	Shader::Details& get_program(unsigned int pid)
+	{
+		R_ASSERT(pid > 0, "Invalid shader program id");
+		return programs_[pid - 1];
+	}
 
 	/// <summary>Updates orthographic projection.</summary>
 	void update_projection();
@@ -70,7 +78,7 @@ public:
 	void update_viewport();
 
 	/// <summary>Activates program.</summary>
-	void use(const unsigned int program);
+	void use(unsigned int program);
 
 private:
 	unsigned int current_;                   ///< Currently used program.
@@ -82,17 +90,5 @@ private:
 
 	bool init();
 };
-
-const Shader::Details& ShaderManager::get_program() const
-{
-	R_ASSERT(current_ > 0, "ShaderManager is uninitialised");
-	return programs_[current_ - 1];
-}
-
-Shader::Details& ShaderManager::get_program(const unsigned int pid)
-{
-	R_ASSERT(pid > 0, "Invalid shader program id");
-	return programs_[pid - 1];
-}
 
 #endif

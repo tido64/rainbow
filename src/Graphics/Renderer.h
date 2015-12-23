@@ -31,14 +31,14 @@ public:
 	}
 
 	template <typename T>
-	static void draw_arrays(const T& obj, const int first, const size_t count)
+	static void draw_arrays(const T& obj, int first, size_t count)
 	{
 		obj.vertex_array().bind();
 		obj.bind_textures();
 		glDrawArrays(GL_TRIANGLES, first, count);
 	}
 
-	static bool has_extension(const char* const extension);
+	static bool has_extension(const char* extension);
 	static int max_texture_size();
 
 	const rainbow::Rect& projection() const { return rect_; }

@@ -37,7 +37,7 @@ namespace rainbow
 		void draw();
 
 		/// <summary>Loads and initialises main script.</summary>
-		void init(const Vec2i &screen);
+		void init(const Vec2i& screen);
 
 		void terminate()
 		{
@@ -45,7 +45,7 @@ namespace rainbow
 			terminated_ = true;
 		}
 
-		void terminate(const char *error)
+		void terminate(const char* error)
 		{
 			terminate();
 			error_ = error;
@@ -53,7 +53,7 @@ namespace rainbow
 
 		/// <summary>Updates world.</summary>
 		/// <param name="dt">Milliseconds since last frame.</param>
-		void update(const unsigned long dt);
+		void update(unsigned long dt);
 
 		void on_focus_gained();
 		void on_focus_lost();
@@ -64,7 +64,7 @@ namespace rainbow
 	private:
 		bool active_;
 		bool terminated_;
-		const char *error_;
+		const char* error_;
 		TimerManager timer_manager_;
 		std::unique_ptr<GameBase> script_;
 		GroupNode scenegraph_;

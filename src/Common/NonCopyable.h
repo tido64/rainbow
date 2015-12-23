@@ -6,7 +6,7 @@
 #define COMMON_NONCOPYABLE_H_
 
 /// Prevents objects of a class from being copy-constructed or assigned.
-template<typename T>
+template <typename T>
 class NonCopyable
 {
 protected:
@@ -14,8 +14,8 @@ protected:
 	~NonCopyable() = default;
 
 private:
-	NonCopyable(const NonCopyable &) = delete;
-	NonCopyable& operator=(const NonCopyable &) = delete;
+	NonCopyable(const NonCopyable&) = delete;
+	NonCopyable& operator=(const NonCopyable&) = delete;
 };
 
 #endif

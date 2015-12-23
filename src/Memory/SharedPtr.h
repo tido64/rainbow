@@ -21,7 +21,7 @@ namespace rainbow { class LinearAllocator; }
 class RefCounted : private NonCopyable<RefCounted>
 {
 	friend rainbow::LinearAllocator;
-	template<typename T> friend class SharedPtr;
+	template <typename T> friend class SharedPtr;
 
 protected:
 	RefCounted() : refs_(0) {}
@@ -38,7 +38,7 @@ private:
 ///   Only objects that are a subclass of <see cref="RefCounted"/> can be
 ///   managed by this pointer type.
 /// </remarks>
-template<typename T>
+template <typename T>
 class SharedPtr
 {
 public:
@@ -52,7 +52,7 @@ public:
 	}
 
 	/// <summary>Copies pointer and increments its reference counter.</summary>
-	SharedPtr(const SharedPtr<T> &ptr) : ptr_(ptr.ptr_)
+	SharedPtr(const SharedPtr<T>& ptr) : ptr_(ptr.ptr_)
 	{
 		if (!ptr.ptr_)
 			return;
@@ -64,13 +64,10 @@ public:
 	///   Takes over pointer. Does not increase its reference count and will
 	///   leave the other pointer empty.
 	/// </summary>
-	SharedPtr(SharedPtr<T>&& ptr) : ptr_(ptr.ptr_)
-	{
-		ptr.ptr_ = nullptr;
-	}
+	SharedPtr(SharedPtr<T>&& ptr) : ptr_(ptr.ptr_) { ptr.ptr_ = nullptr; }
 
 	/// <summary>Sets pointer and increment its reference counter.</summary>
-	explicit SharedPtr(T *ptr) : ptr_(ptr)
+	explicit SharedPtr(T* ptr) : ptr_(ptr)
 	{
 		if (!ptr)
 			return;
@@ -100,7 +97,7 @@ public:
 	}
 
 	/// <summary>Replaces the managed object.</summary>
-	void reset(T *ptr)
+	void reset(T* ptr)
 	{
 		if (ptr == ptr_)
 			return;
@@ -126,7 +123,7 @@ public:
 	}
 
 	/// <summary>Releases the current pointer and retains the new one.</summary>
-	SharedPtr<T>& operator=(const SharedPtr<T> &ptr)
+	SharedPtr<T>& operator=(const SharedPtr<T>& ptr)
 	{
 		reset(ptr.ptr_);
 		return *this;
@@ -135,7 +132,7 @@ public:
 	/// <summary>
 	///   Releases the current pointer and takes over the new one.
 	/// </summary>
-	SharedPtr<T>& operator=(SharedPtr<T> &&ptr)
+	SharedPtr<T>& operator=(SharedPtr<T>&& ptr)
 	{
 		reset();
 		ptr_ = ptr.ptr_;
@@ -149,10 +146,10 @@ public:
 	explicit operator bool() const { return ptr_; }
 
 private:
-	T *ptr_;  ///< Actual pointer managed by this shared pointer.
+	T* ptr_;  ///< Actual pointer managed by this shared pointer.
 };
 
-template<typename T, typename... Args>
+template <typename T, typename... Args>
 SharedPtr<T> make_shared(Args&&... args)
 {
 	return SharedPtr<T>(new T(std::forward<Args>(args)...));
