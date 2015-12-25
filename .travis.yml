@@ -6,15 +6,16 @@ addons:
     sources:
       - ubuntu-toolchain-r-test
     packages:
-      - g++-4.9
+      - g++-5
       - libopenal-dev
       - libvorbis-dev
       - ninja-build
+      - pulseaudio
 install:
   - mkdir local
   - curl -LO http://cmake.org/files/v3.3/cmake-3.3.2-Linux-x86_64.sh
   - sh cmake-3.3.2-Linux-x86_64.sh --prefix=local --skip-license
-  - export CC=gcc-4.9 CXX=g++-4.9 PATH=$(pwd)/local/bin:$PATH
+  - export CC=gcc-5 CXX=g++-5 PATH=$(pwd)/local/bin:$PATH
 script:
   - mkdir $TRAVIS_BUILD_DIR-build
   - cd $TRAVIS_BUILD_DIR-build
@@ -23,7 +24,7 @@ script:
 after_success:
   - cd $TRAVIS_BUILD_DIR
   - if [[ "$CMAKE_BUILD_TYPE" == "Debug" ]]; then cp -r $TRAVIS_BUILD_DIR-build/CMakeFiles/rainbow.dir/src .; fi
-  - if [[ "$CMAKE_BUILD_TYPE" == "Debug" ]]; then bash <(curl -s https://codecov.io/bash) -x gcov-4.9; fi
+  - if [[ "$CMAKE_BUILD_TYPE" == "Debug" ]]; then bash <(curl -s https://codecov.io/bash) -x gcov-5; fi
 branches:
   only:
     - master
@@ -35,4 +36,5 @@ env:
   - CMAKE_BUILD_TYPE=RelWithDebInfo
 os:
   - linux
-sudo: false
+sudo: required
+dist: trusty
