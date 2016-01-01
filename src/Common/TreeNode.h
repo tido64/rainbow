@@ -31,17 +31,23 @@ public:
 	{
 		if (node->parent_)
 			rainbow::remove(node->parent_->children_, node);
-		node->parent_ = static_cast<T*>(this);
+		node->parent_ = self();
 		children_.push_back(node);
 	}
 
 	/// <summary>Removes node from the tree and deletes it.</summary>
-	void remove() { parent_->remove_child(static_cast<T*>(this)); }
+	void remove()
+	{
+		if (parent_ == nullptr)
+			delete self();
+		else
+			parent_->remove_child(self());
+	}
 
 	/// <summary>Removes a child node.</summary>
 	void remove_child(T* node)
 	{
-		if (!node)
+		if (node == nullptr)
 			return;
 
 		rainbow::remove(children_, node);
@@ -76,6 +82,8 @@ protected:
 		for (auto&& child : children_)
 			delete child;
 	}
+
+	auto self() { return static_cast<T*>(this); }
 
 	TreeNode& operator=(TreeNode&& node)
 	{

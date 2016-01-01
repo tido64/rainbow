@@ -109,6 +109,15 @@ TEST(TreeNodeTest, RemovedNodesAreDeleted)
 	ASSERT_TRUE(root.children().empty());
 }
 
+TEST(TreeNodeTest, RemovesOrphanNodes)
+{
+	bool node_deleted = false;
+	TestNode* node = new TestNode(node_deleted);
+	ASSERT_FALSE(node_deleted);
+	node->remove();
+	ASSERT_TRUE(node_deleted);
+}
+
 TEST(TreeNodeTest, ReparentsNodes)
 {
 	bool root_deleted = false;
