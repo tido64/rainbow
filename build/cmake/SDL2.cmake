@@ -36,14 +36,15 @@ else()
 		list(APPEND EXTRA_CFLAGS "-w -I ${SDL2_BUILD_DIR}/include")
 
 		if(APPLE)
-			list(APPEND EXTRA_CFLAGS "-fobjc-exceptions")
 			find_library(CARBON_LIBRARY Carbon REQUIRED)
 			find_library(COCOA_LIBRARY Cocoa REQUIRED)
+			find_library(COREVIDEO_LIBRARY CoreVideo REQUIRED)
 			find_library(FORCEFEEDBACK_LIBRARY ForceFeedback REQUIRED)
 			find_library(IOKIT_LIBRARY IOKit REQUIRED)
 			set(PLATFORM_LIBRARIES
-			    ${CARBON_LIBRARY} ${COCOA_LIBRARY} ${FORCEFEEDBACK_LIBRARY}
-			    ${IOKIT_LIBRARY} ${PLATFORM_LIBRARIES})
+			    ${CARBON_LIBRARY} ${COCOA_LIBRARY} ${COREVIDEO_LIBRARY}
+			    ${FORCEFEEDBACK_LIBRARY} ${IOKIT_LIBRARY} iconv
+			    ${PLATFORM_LIBRARIES})
 		elseif(MINGW)
 			set(PLATFORM_LIBRARIES
 			    mingw32 ${SDL2_BUILD_DIR}/libSDL2main.a gdi32 imm32 ole32

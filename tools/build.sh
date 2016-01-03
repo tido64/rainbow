@@ -1,5 +1,5 @@
 #!/bin/bash
-# Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
+# Copyright (c) 2010-16 Bifrost Entertainment AS and Tommy Nguyen
 # Distributed under the MIT License.
 # (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -36,7 +36,7 @@ function compile {
 # Try to download SDL
 if [[ ! -z $(which hg) ]] && [[ ! -f "$RAINBOW/lib/SDL/include/SDL.h" ]]; then
   echo -n 'Downloading SDL…'
-  hg clone -q -u release-2.0.3 http://hg.libsdl.org/SDL "$RAINBOW/lib/SDL"
+  hg clone -u release-2.0.4 http://hg.libsdl.org/SDL "$RAINBOW/lib/SDL"
   echo ' done'
 fi
 

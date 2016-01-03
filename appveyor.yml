@@ -6,7 +6,7 @@ configuration: RelWithDebInfo
 before_build:
   - git submodule update --init
   - cd lib
-  - appveyor DownloadFile http://www.libsdl.org/tmp/release/SDL2-devel-2.0.4-VC.zip
+  - appveyor DownloadFile http://www.libsdl.org/release/SDL2-devel-2.0.4-VC.zip
   - 7z x SDL2-devel-2.0.4-VC.zip
   - ren SDL2-2.0.4 SDL
   - appveyor DownloadFile http://kcat.strangesoft.net/openal-binaries/openal-soft-1.17.0-bin.zip
@@ -23,7 +23,7 @@ after_build:
   - copy "%APPVEYOR_BUILD_FOLDER%\LICENSE" "rainbow-v%APPVEYOR_BUILD_VERSION%\LICENSE.txt"
   - copy "%APPVEYOR_BUILD_FOLDER%\lib\openal-soft\COPYING" "rainbow-v%APPVEYOR_BUILD_VERSION%\COPYING-OPENAL.txt"
   - copy "%APPVEYOR_BUILD_FOLDER%\lib\openal-soft\bin\Win32\soft_oal.dll" "rainbow-v%APPVEYOR_BUILD_VERSION%\OpenAL32.dll"
-  - appveyor DownloadFile http://www.libsdl.org/tmp/release/SDL2-2.0.4-win32-x86.zip
+  - appveyor DownloadFile http://www.libsdl.org/release/SDL2-2.0.4-win32-x86.zip
   - 7z x -o"rainbow-v%APPVEYOR_BUILD_VERSION%" SDL2-2.0.4-win32-x86.zip
   - 7z a "rainbow-v%APPVEYOR_BUILD_VERSION%.zip" "rainbow-v%APPVEYOR_BUILD_VERSION%"
   - appveyor PushArtifact "rainbow-v%APPVEYOR_BUILD_VERSION%.zip"

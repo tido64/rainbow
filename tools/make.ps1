@@ -1,4 +1,4 @@
-# Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
+# Copyright (c) 2010-16 Bifrost Entertainment AS and Tommy Nguyen
 # Distributed under the MIT License.
 # (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -46,7 +46,7 @@ function Get-AllPackages
 {
 	if (!(Test-Path (Join-Path $SourcePath "lib/SDL/include/SDL.h")) -or !(Test-Path (Join-Path $SourcePath "lib/SDL/lib/x86/SDL2.lib"))) {
 		$SDL2 = "SDL2-devel-2.0.4-VC.zip"
-		Get-Package "http://www.libsdl.org/tmp/release/$SDL2" $SDL2
+		Get-Package "http://www.libsdl.org/release/$SDL2" $SDL2
 		$SDL2 = Join-Path $PackagesPath SDL2-2.0.4 -Resolve
 		if (Test-Path $SDL2) {
 			Move-Item $SDL2 ([IO.Path]::Combine($LibraryPath, "SDL"))
