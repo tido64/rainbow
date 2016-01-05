@@ -31,28 +31,31 @@ public:
 	virtual ~Label() = default;
 
 	/// <summary>Returns label text color.</summary>
-	Colorb color() const { return color_; }
-
-	/// <summary>Returns the vertex count.</summary>
-	size_t count() const { return std::min(count_ + (count_ >> 1), cutoff_); }
+	auto color() const { return color_; }
 
 	/// <summary>Returns the assigned font.</summary>
-	const FontAtlas& font() const { return *font_.get(); }
+	auto font() const -> const FontAtlas& { return *font_.get(); }
 
 	/// <summary>Returns the number of characters.</summary>
-	size_t length() const { return count_ / 4; }
+	auto length() const { return count_ / 4; }
 
 	/// <summary>Returns label position.</summary>
-	const Vec2f& position() const { return position_; }
+	auto position() const -> const Vec2f& { return position_; }
 
 	/// <summary>Returns the string.</summary>
-	const char* text() const { return text_.get(); }
+	auto text() const { return text_.get(); }
 
 	/// <summary>Returns the vertex array object.</summary>
-	const VertexArray& vertex_array() const { return array_; }
+	auto vertex_array() const -> const VertexArray& { return array_; }
+
+	/// <summary>Returns the vertex count.</summary>
+	auto vertex_count() const
+	{
+		return std::min(count_ + (count_ >> 1), cutoff_);
+	}
 
 	/// <summary>Returns label width.</summary>
-	unsigned int width() const { return width_; }
+	auto width() const { return width_; }
 
 	/// <summary>Sets text alignment.</summary>
 	void set_alignment(TextAlignment);

@@ -23,10 +23,10 @@ namespace heimdall
 
 		void init(rainbow::SceneNode& parent, const Vec2i& screen);
 
-		auto count() const { return 6; }
 		auto is_visible() const { return node_->is_enabled(); }
 		auto node() const { return node_; }
 		auto vertex_array() const -> const VertexArray& { return array_; }
+		auto vertex_count() const { return 6; }
 
 		void hide() { node_->set_enabled(false); }
 		void show() { node_->set_enabled(true); }

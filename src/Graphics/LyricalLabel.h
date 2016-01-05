@@ -95,11 +95,11 @@ public:
 	void update() override;
 
 	using Label::color;
-	using Label::count;
 	using Label::font;
 	using Label::position;
 	using Label::text;
 	using Label::vertex_array;
+	using Label::vertex_count;
 	using Label::width;
 	using Label::set_alignment;
 	using Label::set_color;

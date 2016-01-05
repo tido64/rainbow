@@ -32,28 +32,28 @@ public:
 	SpriteBatch(SpriteBatch&&);
 	~SpriteBatch();
 
-	/// <summary>Returns the vertex count.</summary>
-	unsigned int count() const { return count_ * 6; }
-
 	/// <summary>Returns current normal map.</summary>
-	const TextureAtlas& normal() const
+	auto normal() const -> const TextureAtlas&
 	{
 		R_ASSERT(normal_.get(), "Normal texture is not set");
 		return *normal_.get();
 	}
 
 	/// <summary>Returns the sprites array.</summary>
-	Sprite* sprites() const { return sprites_.get(); }
+	auto sprites() const { return sprites_.get(); }
 
 	/// <summary>Returns current texture.</summary>
-	const TextureAtlas& texture() const
+	auto texture() const -> const TextureAtlas&
 	{
 		R_ASSERT(texture_.get(), "Texture is not set");
 		return *texture_.get();
 	}
 
 	/// <summary>Returns the vertex array object.</summary>
-	const VertexArray& vertex_array() const { return array_; }
+	auto vertex_array() const -> const VertexArray& { return array_; }
+
+	/// <summary>Returns the vertex count.</summary>
+	auto vertex_count() const { return count_ * 6; }
 
 	/// <summary>Assigns a normal map.</summary>
 	void set_normal(SharedPtr<TextureAtlas> texture);
@@ -112,9 +112,9 @@ public:
 	void update();
 
 #ifdef RAINBOW_TEST
-	unsigned int capacity() const { return reserved_; }
-	unsigned int sprite_count() const { return count_; }
-	const SpriteVertex* vertices() const { return vertices_.get(); }
+	auto capacity() const { return reserved_; }
+	auto size() const { return count_; }
+	auto vertices() const { return vertices_.get(); }
 #endif
 
 private:

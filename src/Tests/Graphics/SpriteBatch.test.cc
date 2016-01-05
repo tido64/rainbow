@@ -88,21 +88,21 @@ TEST(SpriteBatchTest, MoveConstructs)
 	for (unsigned int i = 0; i < batch.capacity(); ++i)
 		batch.create_sprite(i + 1, i + 1)->update();
 
-	const unsigned int vertex_count = batch.count();
+	const unsigned int vertex_count = batch.vertex_count();
 	const Sprite* sprites_array = batch.sprites();
 	const TextureAtlas& texture = batch.texture();
-	const unsigned int sprite_count = batch.sprite_count();
+	const unsigned int sprite_count = batch.size();
 	const SpriteVertex* vertices = batch.vertices();
 
 	SpriteBatch moved(std::move(batch));
 
-	ASSERT_EQ(vertex_count, moved.count());
+	ASSERT_EQ(vertex_count, moved.vertex_count());
 	ASSERT_EQ(sprites_array, moved.sprites());
 	ASSERT_EQ(&texture, &moved.texture());
-	ASSERT_EQ(sprite_count, moved.sprite_count());
+	ASSERT_EQ(sprite_count, moved.size());
 	ASSERT_EQ(vertices, moved.vertices());
 
-	for (unsigned int i = 0; i < moved.sprite_count(); ++i)
+	for (unsigned int i = 0; i < moved.size(); ++i)
 	{
 		const float s = (i + 1) * 0.5f;
 		const unsigned int j = i * 4;
@@ -123,15 +123,15 @@ TEST(SpriteBatchTest, ExpandsToAccommodateNewSprites)
 	for (unsigned int i = 0; i < capacity; ++i)
 		batch.create_sprite(i + 1, i + 1)->update();
 
-	ASSERT_EQ(capacity, batch.sprite_count());
+	ASSERT_EQ(capacity, batch.size());
 
 	batch.create_sprite(capacity + 1, capacity + 1)->update();
 
-	ASSERT_LT(batch.sprite_count(), batch.capacity());
+	ASSERT_LT(batch.size(), batch.capacity());
 	ASSERT_GT(batch.capacity(), capacity);
 
 	auto&& vertices = batch.vertices();
-	for (unsigned int i = 0; i < batch.sprite_count(); ++i)
+	for (unsigned int i = 0; i < batch.size(); ++i)
 	{
 		const float s = (i + 1) * 0.5f;
 		const unsigned int j = i * 4;
@@ -144,7 +144,7 @@ TEST(SpriteBatchTest, ExpandsToAccommodateNewSprites)
 
 TEST_F(SpriteBatchOperationsTest, SpritesShareASingleBuffer)
 {
-	ASSERT_EQ(count * 6, batch.count());
+	ASSERT_EQ(count * 6, batch.vertex_count());
 
 	const auto sprites = batch.sprites();
 	for (size_t i = 0; i < count; ++i)
@@ -184,12 +184,12 @@ TEST_F(SpriteBatchOperationsTest, ClearsSprites)
 {
 	const auto capacity = batch.capacity();
 
-	ASSERT_EQ(count, batch.sprite_count());
+	ASSERT_EQ(count, batch.size());
 
 	batch.clear();
 
-	ASSERT_EQ(0u, batch.count());
-	ASSERT_EQ(0u, batch.sprite_count());
+	ASSERT_EQ(0u, batch.vertex_count());
+	ASSERT_EQ(0u, batch.size());
 	ASSERT_EQ(capacity, batch.capacity());
 }
 
@@ -201,7 +201,7 @@ TEST_F(SpriteBatchOperationsTest, ErasesSprites)
 	batch.erase(batch.find_sprite_by_id(2));
 
 	size_t length = count - 1;
-	ASSERT_EQ(length * 6, batch.count());
+	ASSERT_EQ(length * 6, batch.vertex_count());
 	auto sprites = batch.sprites();
 	ASSERT_EQ(1, sprites[0].id());
 	ASSERT_EQ(3, sprites[1].id());
@@ -211,7 +211,7 @@ TEST_F(SpriteBatchOperationsTest, ErasesSprites)
 
 	batch.erase(batch.find_sprite_by_id(1));
 
-	ASSERT_EQ(--length * 6, batch.count());
+	ASSERT_EQ(--length * 6, batch.vertex_count());
 	ASSERT_EQ(3, sprites[0].id());
 	ASSERT_EQ(4, sprites[1].id());
 
@@ -219,13 +219,13 @@ TEST_F(SpriteBatchOperationsTest, ErasesSprites)
 
 	batch.erase(batch.find_sprite_by_id(4));
 
-	ASSERT_EQ(6u, batch.count());
+	ASSERT_EQ(6u, batch.vertex_count());
 	ASSERT_EQ(3, sprites[0].id());
 	ASSERT_EQ(vertices, sprites[0].vertex_array());
 	verify_sprite_vertices(sprites[0], vertices, Vec2f::Zero);
 
 	batch.erase(batch.find_sprite_by_id(3));
-	ASSERT_EQ(0u, batch.count());
+	ASSERT_EQ(0u, batch.vertex_count());
 }
 
 TEST_F(SpriteBatchOperationsTest, FindsSpritesById)
