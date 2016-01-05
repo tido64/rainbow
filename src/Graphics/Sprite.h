@@ -42,10 +42,11 @@ public:
 
 	class Ref
 	{
-		friend SpriteBatch;
-
 	public:
 		Ref() : batch_(nullptr), i_(0) {}
+
+		Ref(NotNull<const SpriteBatch*> batch, size_t i)
+		    : batch_(batch), i_(i) {}
 
 		Sprite& operator*() const;
 		Sprite* operator->() const;
@@ -61,8 +62,7 @@ public:
 		const SpriteBatch* batch_;
 		size_t i_;
 
-		Ref(NotNull<const SpriteBatch*> batch, size_t i)
-		    : batch_(batch), i_(i) {}
+		friend SpriteBatch;
 	};
 
 	Sprite(unsigned int width,

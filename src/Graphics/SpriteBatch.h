@@ -32,6 +32,12 @@ public:
 	SpriteBatch(SpriteBatch&&);
 	~SpriteBatch();
 
+	/// <summary>Returns a pointer to the beginning.</summary>
+	auto begin() const -> Sprite* { return sprites(); }
+
+	/// <summary>Returns a pointer to the end.</summary>
+	auto end() const -> Sprite* { return sprites() + count_; }
+
 	/// <summary>Returns current normal map.</summary>
 	auto normal() const -> const TextureAtlas&
 	{
@@ -39,8 +45,11 @@ public:
 		return *normal_.get();
 	}
 
+	/// <summary>Returns sprite count.</summary>
+	auto size() const { return count_; }
+
 	/// <summary>Returns the sprites array.</summary>
-	auto sprites() const { return sprites_.get(); }
+	auto sprites() const -> Sprite* { return sprites_.get(); }
 
 	/// <summary>Returns current texture.</summary>
 	auto texture() const -> const TextureAtlas&
@@ -113,7 +122,6 @@ public:
 
 #ifdef RAINBOW_TEST
 	auto capacity() const { return reserved_; }
-	auto size() const { return count_; }
 	auto vertices() const { return vertices_.get(); }
 #endif
 

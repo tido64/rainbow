@@ -161,9 +161,8 @@ void SpriteBatch::move(const Vec2f& delta)
 	if (delta.is_zero())
 		return;
 
-	std::for_each(sprites_.get(), sprites_ + count_, [&delta](Sprite& sprite) {
+	for (auto&& sprite : *this)
 		sprite.move(delta);
-	});
 }
 
 void SpriteBatch::swap(const Sprite::Ref& a_ref, const Sprite::Ref& b_ref)
