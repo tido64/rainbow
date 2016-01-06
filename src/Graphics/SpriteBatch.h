@@ -38,6 +38,9 @@ public:
 	/// <summary>Returns a pointer to the end.</summary>
 	auto end() const -> Sprite* { return sprites() + count_; }
 
+	/// <summary>Returns whether the batch is visible.</summary>
+	auto is_visible() const { return visible_; }
+
 	/// <summary>Returns current normal map.</summary>
 	auto normal() const -> const TextureAtlas&
 	{
@@ -62,13 +65,16 @@ public:
 	auto vertex_array() const -> const VertexArray& { return array_; }
 
 	/// <summary>Returns the vertex count.</summary>
-	auto vertex_count() const { return count_ * 6; }
+	auto vertex_count() const { return !visible_ ? 0 : count_ * 6; }
 
 	/// <summary>Assigns a normal map.</summary>
 	void set_normal(SharedPtr<TextureAtlas> texture);
 
 	/// <summary>Assigns a texture atlas.</summary>
 	void set_texture(SharedPtr<TextureAtlas> texture);
+
+	/// <summary>Sets batch visibility.</summary>
+	void set_visible(bool visible) { visible_ = visible; }
 
 	/// <summary>
 	///   Adds a textured sprite to the batch given texture coordinates.
@@ -136,6 +142,7 @@ private:
 	SharedPtr<TextureAtlas> normal_;   ///< Normal map used by all sprites in the batch.
 	SharedPtr<TextureAtlas> texture_;  ///< Texture atlas used by all sprites in the batch.
 	unsigned int reserved_;            ///< Number of sprites reserved for.
+	bool visible_;                     ///< Whether the batch is visible.
 
 	/// <summary>Sets the array state for this batch.</summary>
 	void bind_arrays() const;

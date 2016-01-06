@@ -114,6 +114,47 @@ TEST(SpriteBatchTest, MoveConstructs)
 
 	ASSERT_EQ(nullptr, batch.sprites());
 	ASSERT_EQ(nullptr, batch.vertices());
+	ASSERT_EQ(0u, batch.vertex_count());
+}
+
+TEST(SpriteBatchTest, IsVisible)
+{
+	SpriteBatch batch(rainbow::ISolemnlySwearThatIAmOnlyTesting{});
+	batch.create_sprite(1, 1);
+
+	ASSERT_TRUE(batch.is_visible());
+	ASSERT_EQ(6u, batch.vertex_count());
+
+	batch.set_visible(true);
+
+	ASSERT_TRUE(batch.is_visible());
+	ASSERT_EQ(6u, batch.vertex_count());
+
+	batch.set_visible(false);
+
+	ASSERT_FALSE(batch.is_visible());
+	ASSERT_EQ(0u, batch.vertex_count());
+
+	batch.set_visible(false);
+
+	ASSERT_FALSE(batch.is_visible());
+	ASSERT_EQ(0u, batch.vertex_count());
+
+	batch.set_visible(true);
+
+	ASSERT_TRUE(batch.is_visible());
+	ASSERT_EQ(6u, batch.vertex_count());
+
+	SpriteBatch batch2(std::move(batch));
+
+	ASSERT_TRUE(batch2.is_visible());
+	ASSERT_EQ(6u, batch2.vertex_count());
+
+	batch2.set_visible(false);
+	SpriteBatch batch3(std::move(batch2));
+
+	ASSERT_FALSE(batch3.is_visible());
+	ASSERT_EQ(0u, batch3.vertex_count());
 }
 
 TEST(SpriteBatchTest, ExpandsToAccommodateNewSprites)

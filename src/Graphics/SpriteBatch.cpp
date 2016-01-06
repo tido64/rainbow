@@ -51,14 +51,16 @@ namespace
 	}
 }
 
-SpriteBatch::SpriteBatch(unsigned int hint) : count_(0), reserved_(0)
+SpriteBatch::SpriteBatch(unsigned int hint)
+    : count_(0), reserved_(0), visible_(true)
 {
 	resize(hint);
 	array_.reconfigure(std::bind(&SpriteBatch::bind_arrays, this));
 }
 
 SpriteBatch::SpriteBatch(const rainbow::ISolemnlySwearThatIAmOnlyTesting& test)
-    : count_(0), vertex_buffer_(test), normal_buffer_(test), reserved_(0)
+    : count_(0), vertex_buffer_(test), normal_buffer_(test), reserved_(0),
+      visible_(true)
 {
 	resize(4);
 }
@@ -70,7 +72,11 @@ SpriteBatch::SpriteBatch(SpriteBatch&& batch)
       vertex_buffer_(std::move(batch.vertex_buffer_)),
       normal_buffer_(std::move(batch.normal_buffer_)),
       array_(std::move(batch.array_)), normal_(std::move(batch.normal_)),
-      texture_(std::move(batch.texture_)), reserved_(batch.reserved_) {}
+      texture_(std::move(batch.texture_)), reserved_(batch.reserved_),
+      visible_(batch.visible_)
+{
+	batch.clear();
+}
 
 SpriteBatch::~SpriteBatch()
 {
