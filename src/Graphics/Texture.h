@@ -11,40 +11,54 @@
 
 namespace rainbow
 {
-	struct TextureHandle
+	struct ISolemnlySwearThatIAmOnlyTesting;
+
+	namespace detail
 	{
-		std::string id;
-		unsigned int name;
-		unsigned int use_count;
-		unsigned int size;
-
-		TextureHandle(const char* id_, unsigned int name_)
-		    : id(id_), name(name_), use_count(0), size(0) {}
-
-		friend bool operator==(const TextureHandle& t, const char* id)
+		struct Texture
 		{
-			return t.id == id;
-		}
+			std::string id;
+			unsigned int name;
+			unsigned int width;
+			unsigned int height;
+			unsigned int size;
+			unsigned int use_count;
 
-		friend bool operator==(const TextureHandle& t, unsigned int name)
-		{
-			return t.name == name;
-		}
-	};
+			Texture(const char* id_, unsigned int name_)
+			    : id(id_), name(name_), width(0), height(0), size(0),
+			      use_count(0) {}
+
+			friend bool operator==(const Texture& t, const char* id)
+			{
+				return t.id == id;
+			}
+
+			friend bool operator==(const Texture& t, unsigned int name)
+			{
+				return t.name == name;
+			}
+		};
+	}
 
 	class Texture
 	{
 	public:
 		Texture() : name_(0) {}
 
-		Texture(TextureHandle& texture) : name_(texture.name)
+		Texture(detail::Texture& texture)
+		    : name_(texture.name), size_(texture.width, texture.height)
 		{
 			++texture.use_count;
 		}
 
+		explicit Texture(const ISolemnlySwearThatIAmOnlyTesting&)
+		    : name_(0), size_(64, 64) {}
+
 		Texture(const Texture& texture);
-		Texture(Texture&& texture) : name_(texture.name_) { texture.name_ = 0; }
 		~Texture();
+
+		auto width() const { return size_.x; }
+		auto height() const { return size_.y; }
 
 		void bind() const;
 		void bind(unsigned int unit) const;
@@ -52,10 +66,12 @@ namespace rainbow
 		explicit operator bool() const { return name_ != 0; }
 		operator unsigned int() const { return name_; }
 
+		Texture& operator=(const Texture& texture) = delete;
 		Texture& operator=(Texture&& texture);
 
 	private:
 		unsigned int name_;
+		Vec2u size_;
 	};
 
 	/// <summary>Stores texture id and UV coordinates.</summary>

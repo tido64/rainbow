@@ -47,14 +47,13 @@ public:
 	/// </param>
 	/// <returns>Texture name.</returns>
 	template <typename F>
-	rainbow::Texture create(const char* id, F&& loader)
+	auto create(const char* id, F&& loader) -> rainbow::Texture
 	{
 		auto t = std::find(textures_.begin(), textures_.end(), id);
 		if (t == textures_.end())
 		{
-			rainbow::Texture texture = create_texture(id);
-			loader(this, texture);
-			return std::move(texture);
+			loader(*this, create_texture(id));
+			return textures_.back();
 		}
 		return *t;
 	}
@@ -100,14 +99,14 @@ public:
 	};
 
 	/// <summary>Returns total video memory used by textures.</summary>
-	MemoryUsage memory_usage() const;
+	auto memory_usage() const -> MemoryUsage;
 #endif
 
 private:
 	static const size_t kNumTextureUnits = 2;
 
 	unsigned int active_[kNumTextureUnits];
-	std::vector<rainbow::TextureHandle> textures_;
+	std::vector<rainbow::detail::Texture> textures_;
 	int mag_filter_;
 	int min_filter_;
 
@@ -119,7 +118,7 @@ private:
 	TextureManager();
 	~TextureManager();
 
-	rainbow::Texture create_texture(const char* id);
+	auto create_texture(const char* id) -> rainbow::Texture;
 
 	void release(const rainbow::Texture& t);
 	void retain(const rainbow::Texture& t);

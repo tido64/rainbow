@@ -53,7 +53,7 @@ public:
 	void bind() const { texture_.bind(); }
 
 	/// <summary>Returns the glyph for character <paramref name="c"/>.</summary>
-	const FontGlyph* get_glyph(unsigned int c) const;
+	auto get_glyph(unsigned int c) const -> const FontGlyph*;
 
 protected:
 	/// <summary>Load characters 32 through 126 from the ASCII table.</summary>
@@ -66,7 +66,7 @@ private:
 	rainbow::Texture texture_;  ///< Texture name.
 	FontGlyph charset_[kNumCharacters + FONTATLAS_EXTENDED];  ///< Character set.
 
-	void load(TextureManager* texture_manager,
+	void load(TextureManager& texture_manager,
 	          const rainbow::Texture& texture,
 	          const Data& font);
 };

@@ -155,13 +155,13 @@ FontAtlas::FontAtlas(const char* name, const Data& font, float pt)
 {
 	texture_ = TextureManager::Get()->create(
 	    name,
-	    [this, &font](TextureManager* texture_manager, const Texture& texture)
+	    [this, &font](TextureManager& texture_manager, const Texture& texture)
 	    {
 	        load(texture_manager, texture, font);
 	    });
 }
 
-const FontGlyph* FontAtlas::get_glyph(uint_t c) const
+auto FontAtlas::get_glyph(uint_t c) const -> const FontGlyph*
 {
 #if FONTATLAS_EXTENDED > 0
 	if (c >= 0x80u)
@@ -177,7 +177,7 @@ const FontGlyph* FontAtlas::get_glyph(uint_t c) const
 	return &charset_[static_cast<uchar_t>(c) - kASCIIOffset];
 }
 
-void FontAtlas::load(TextureManager* texture_manager,
+void FontAtlas::load(TextureManager& texture_manager,
                      const rainbow::Texture& texture,
                      const Data& font)
 {
@@ -295,6 +295,6 @@ void FontAtlas::load(TextureManager* texture_manager,
 
 	height_ = face->size->metrics.height / kPixelFormat;
 
-	texture_manager->upload(texture, GL_LUMINANCE_ALPHA, size.x, size.y,
-	                        GL_LUMINANCE_ALPHA, buffer.get());
+	texture_manager.upload(texture, GL_LUMINANCE_ALPHA, size.x, size.y,
+	                       GL_LUMINANCE_ALPHA, buffer.get());
 }

@@ -7,7 +7,6 @@
 #include "Graphics/Renderer.h"
 
 using rainbow::Texture;
-using rainbow::TextureHandle;
 
 namespace
 {
@@ -37,7 +36,8 @@ namespace
 	}
 }
 
-Texture::Texture(const Texture& texture) : name_(texture.name_)
+Texture::Texture(const Texture& texture)
+    : name_(texture.name_), size_(texture.size_)
 {
 	TextureManager::Get()->retain(*this);
 }
@@ -65,7 +65,9 @@ Texture& Texture::operator=(Texture&& texture)
 	if (name_ > 0)
 		TextureManager::Get()->release(*this);
 	name_ = texture.name_;
+	size_ = texture.size_;
 	texture.name_ = 0;
+	texture.size_ = Vec2u::Zero;
 	return *this;
 }
 
@@ -105,7 +107,9 @@ void TextureManager::trim()
 	auto first = std::remove_if(
 	    textures_.begin(),
 	    textures_.end(),
-	    [](const TextureHandle& texture) { return texture.use_count == 0; });
+	    [](const rainbow::detail::Texture& texture) {
+	        return texture.use_count == 0;
+	    });
 	auto end = textures_.end();
 	if (first == end)
 		return;
@@ -137,11 +141,11 @@ TextureManager::TextureManager()
 
 TextureManager::~TextureManager()
 {
-	for (const TextureHandle& texture : textures_)
+	for (const rainbow::detail::Texture& texture : textures_)
 		glDeleteTextures(1, &texture.name);
 }
 
-Texture TextureManager::create_texture(const char* id)
+auto TextureManager::create_texture(const char* id) -> Texture
 {
 	GLuint name;
 	glGenTextures(1, &name);
@@ -171,15 +175,17 @@ void TextureManager::upload(const Texture& texture,
 
 	R_ASSERT(glGetError() == GL_NO_ERROR, "Failed to upload texture");
 
-#if RAINBOW_RECORD_VMEM_USAGE
 	perform_if(textures_,
 	           texture,
-	           [this, width, height](TextureHandle& texture) {
+	           [this, width, height](rainbow::detail::Texture& texture) {
+	               texture.width = width;
+	               texture.height = height;
 	               texture.size = width * height * 4;
+#if RAINBOW_RECORD_VMEM_USAGE
 	               mem_used_ += texture.size;
-	           });
-	update_usage();
+	               update_usage();
 #endif
+	           });
 }
 
 void TextureManager::upload_compressed(const Texture& texture,
@@ -197,31 +203,35 @@ void TextureManager::upload_compressed(const Texture& texture,
 
 	R_ASSERT(glGetError() == GL_NO_ERROR, "Failed to upload texture");
 
+	perform_if(textures_,
+	           texture,
+	           [this, width, height, size](rainbow::detail::Texture& texture) {
+	               texture.width = width;
+	               texture.height = height;
+	               texture.size = size;
 #if RAINBOW_RECORD_VMEM_USAGE
-	perform_if(textures_, texture, [this, &size](TextureHandle& texture) {
-		texture.size = size;
-		mem_used_ += texture.size;
-	});
-	update_usage();
+	               mem_used_ += texture.size;
+	               update_usage();
 #endif
+	           });
 }
 
 void TextureManager::release(const Texture& t)
 {
-	perform_if(textures_, t, [](TextureHandle& texture) {
+	perform_if(textures_, t, [](rainbow::detail::Texture& texture) {
 		--texture.use_count;
 	});
 }
 
 void TextureManager::retain(const Texture& t)
 {
-	perform_if(textures_, t, [](TextureHandle& texture) {
+	perform_if(textures_, t, [](rainbow::detail::Texture& texture) {
 		++texture.use_count;
 	});
 }
 
 #if RAINBOW_RECORD_VMEM_USAGE
-TextureManager::MemoryUsage TextureManager::memory_usage() const
+auto TextureManager::memory_usage() const -> TextureManager::MemoryUsage
 {
 	const double M = 1e-6;
 	return {mem_used_ * M, mem_peak_ * M};

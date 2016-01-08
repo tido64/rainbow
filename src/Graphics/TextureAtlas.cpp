@@ -10,34 +10,34 @@
 
 using rainbow::Texture;
 
-TextureAtlas::TextureAtlas(const char* path) : width_(0), height_(0)
+TextureAtlas::TextureAtlas(const char* path)
 {
 	texture_ = TextureManager::Get()->create(
 	    path,
-	    [this, path](TextureManager* texture_manager, const Texture& texture)
+	    [this, path](TextureManager& texture_manager, const Texture& texture)
 	    {
 	        load(texture_manager, texture, DataMap{Path(path)});
 	    });
 }
 
-unsigned int TextureAtlas::define(const Vec2i& origin, int w, int h)
+auto TextureAtlas::define(const Vec2i& origin, int w, int h) -> unsigned int
 {
-	R_ASSERT(origin.x >= 0 && (origin.x + w) <= width_ &&
-	         origin.y >= 0 && (origin.y + h) <= height_,
+	const float width = static_cast<float>(texture_.width());
+	const float height = static_cast<float>(texture_.height());
+
+	R_ASSERT(origin.x >= 0 && (origin.x + w) <= width &&
+	         origin.y >= 0 && (origin.y + h) <= height,
 	         "Invalid dimensions");
 
-	const Vec2f v0(origin.x / static_cast<float>(width_),
-	               origin.y / static_cast<float>(height_));
-	const Vec2f v1((origin.x + w) / static_cast<float>(width_),
-	               (origin.y + h) / static_cast<float>(height_));
-
+	const Vec2f v0(origin.x / width, origin.y / height);
+	const Vec2f v1((origin.x + w) / width, (origin.y + h) / height);
 	const size_t i = regions_.size();
 	regions_.emplace_back(v0, v1);
 	regions_[i].atlas = texture_;
 	return i;
 }
 
-void TextureAtlas::load(TextureManager* texture_manager,
+void TextureAtlas::load(TextureManager& texture_manager,
                         const rainbow::Texture& texture,
                         const DataMap& data)
 {
@@ -47,14 +47,11 @@ void TextureAtlas::load(TextureManager* texture_manager,
 	if (!image.data)
 		return;
 
-	width_ = image.width;
-	height_ = image.height;
-
 	switch (image.format)
 	{
 #ifdef GL_OES_compressed_ETC1_RGB8_texture
 		case rainbow::Image::Format::ETC1:
-			texture_manager->upload_compressed(
+			texture_manager.upload_compressed(
 			    texture, GL_ETC1_RGB8_OES, image.width, image.height,
 			    image.size, image.data);
 			break;
@@ -78,7 +75,7 @@ void TextureAtlas::load(TextureManager* texture_manager,
 				    ? GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG
 				    : GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG);
 			}
-			texture_manager->upload_compressed(
+			texture_manager.upload_compressed(
 			    texture, internal, image.width, image.height, image.size,
 			    image.data);
 			break;
@@ -112,8 +109,9 @@ void TextureAtlas::load(TextureManager* texture_manager,
 					internal = (image.depth == 16 ? GL_RGBA4 : GL_RGBA8);
 					break;
 			}
-			texture_manager->upload(
-			    texture, internal, width_, height_, format, image.data);
+			texture_manager.upload(
+			    texture, internal, image.width, image.height, format,
+			    image.data);
 			break;
 		}
 	}

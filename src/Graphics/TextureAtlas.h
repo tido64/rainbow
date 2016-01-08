@@ -13,8 +13,6 @@
 
 class TextureManager;
 
-namespace rainbow { struct ISolemnlySwearThatIAmOnlyTesting; }
-
 /// <summary>Texture atlas loaded from an image file.</summary>
 /// <remarks>
 ///   <list type="bullet">
@@ -37,14 +35,13 @@ class TextureAtlas : public RefCounted
 {
 public:
 	explicit TextureAtlas(const char* path);
+	explicit TextureAtlas(const rainbow::ISolemnlySwearThatIAmOnlyTesting& test)
+	    : texture_(test) {}
 
-	explicit TextureAtlas(const rainbow::ISolemnlySwearThatIAmOnlyTesting&)
-	    : width_(64), height_(64) {}
-
-	int width() const { return width_; }
-	int height() const { return height_; }
-	bool is_valid() const { return texture_; }
-	size_t size() const { return regions_.size(); }
+	auto height() const { return texture_.height(); }
+	auto is_valid() const { return texture_; }
+	auto size() const { return regions_.size(); }
+	auto width() const { return texture_.width(); }
 
 	/// <summary>Binds this texture.</summary>
 	void bind() const { texture_.bind(); }
@@ -55,23 +52,21 @@ public:
 	/// <param name="width">Width of the region.</param>
 	/// <param name="height">Height of the region.</param>
 	/// <returns>The id of the region.</returns>
-	unsigned int define(const Vec2i& origin, int width, int height);
+	auto define(const Vec2i& origin, int width, int height) -> unsigned int;
 
 	/// <summary>Trims the internal texture region storage.</summary>
 	void trim() { regions_.shrink_to_fit(); }
 
-	const rainbow::TextureRegion& operator[](unsigned int i) const
+	auto operator[](unsigned int i) const -> const rainbow::TextureRegion&
 	{
 		return regions_[i];
 	}
 
 private:
 	rainbow::Texture texture_;                     ///< Texture atlas' id.
-	int width_;                                    ///< Width of texture atlas.
-	int height_;                                   ///< Height of texture atlas.
 	std::vector<rainbow::TextureRegion> regions_;  ///< Defined texture regions.
 
-	void load(TextureManager* texture_manager,
+	void load(TextureManager& texture_manager,
 	          const rainbow::Texture& texture,
 	          const DataMap& data);
 };
