@@ -45,4 +45,16 @@
 #	define constexpr inline
 #endif
 
+#if defined(__GNUC__)
+#	if defined(__clang__)
+#		define ASSUME(expr) __builtin_assume(expr)
+#	else
+#		define ASSUME(expr) static_cast<void>(0)
+#	endif
+#	define UNREACHABLE() __builtin_unreachable()
+#elif defined(_MSC_VER)
+#	define ASSUME(expr) __assume(expr)
+#	define UNREACHABLE() __assume(0)
+#endif
+
 #endif  // PLATFORM_MACROS_H_

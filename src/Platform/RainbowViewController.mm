@@ -281,7 +281,8 @@ namespace
 			}
 			break;
 		default:
-			R_ASSERT(false, "Reached unreachable code");
+			R_ASSERT(false, "Reached unreachable code.");
+			UNREACHABLE();
 			break;
 	}
 	return self.pointers;

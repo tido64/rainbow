@@ -100,6 +100,9 @@ namespace rainbow
 #else
 		const long long int timestamp = Chrono::system_now().count();
 		char buf[kLogLineLength];
+#ifdef _MSC_VER
+#	pragma warning(suppress: 6031)
+#endif
 		snprintf(buf, kLogLineLength, format, std::forward<Args>(args)...);
 		fprintf(stream, "[%lli|%s] %s\n", timestamp, level, buf);
 #endif  // RAINBOW_OS_ANDROID

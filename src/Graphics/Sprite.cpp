@@ -85,7 +85,8 @@ auto Sprite::is_mirrored() const -> bool
 
 void Sprite::set_color(Colorb c)
 {
-	R_ASSERT(vertex_array_, "Missing vertex array buffer");
+	R_ASSERT(vertex_array_ != nullptr, "Missing vertex array buffer");
+	ASSUME(vertex_array_ != nullptr);
 
 	vertex_array_[0].color = c;
 	vertex_array_[1].color = c;
@@ -96,7 +97,8 @@ void Sprite::set_color(Colorb c)
 
 void Sprite::set_normal(unsigned int id)
 {
-	R_ASSERT(normal_map_, "Missing normal map buffer");
+	R_ASSERT(normal_map_ != nullptr, "Missing normal map buffer");
+	ASSUME(normal_map_ != nullptr);
 
 	set_normal(flip_index(state_), parent_->normal()[id].vx);
 	state_ |= kStaleFrontBuffer;
@@ -143,7 +145,8 @@ void Sprite::set_scale(const Vec2f& f)
 
 void Sprite::set_texture(unsigned int id)
 {
-	R_ASSERT(vertex_array_, "Missing vertex array buffer");
+	R_ASSERT(vertex_array_ != nullptr, "Missing vertex array buffer");
+	ASSUME(vertex_array_ != nullptr);
 
 	const unsigned int f = flip_index(state_);
 	const auto& tx = parent_->texture()[id];
@@ -217,7 +220,8 @@ auto Sprite::update() -> bool
 		return true;
 	}
 
-	R_ASSERT(vertex_array_, "Missing vertex array buffer");
+	R_ASSERT(vertex_array_ != nullptr, "Missing vertex array buffer");
+	ASSUME(vertex_array_ != nullptr);
 
 	if (state_ & kStaleBuffer)
 	{
@@ -299,7 +303,8 @@ Sprite& Sprite::operator=(Sprite&& s)
 
 void Sprite::flip_textures(unsigned int f)
 {
-	R_ASSERT(vertex_array_, "Missing vertex array buffer");
+	R_ASSERT(vertex_array_ != nullptr, "Missing vertex array buffer");
+	ASSUME(vertex_array_ != nullptr);
 
 	const Vec2f coords[]{vertex_array_[kFlipTable[f + 0]].texcoord,
 	                     vertex_array_[kFlipTable[f + 1]].texcoord,

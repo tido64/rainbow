@@ -65,8 +65,10 @@ namespace rainbow
 		void release(NotNull<value_type*> element)
 		{
 			element->dispose();
+
 			Entry* e = get_entry(element);
 			R_ASSERT(&e->element == element.get(), "This shouldn't happen.");
+
 			e->next_free = free_;
 			free_ = e;
 		}

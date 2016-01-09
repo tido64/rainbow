@@ -181,7 +181,9 @@ NS_RAINBOW_LUA_BEGIN
 			return 0;
 
 		SceneNode* node = (lua_isuserdata(L, 2) ? tonode(L, 2) : self->node_);
-		R_ASSERT(node, "This shouldn't ever happen.");
+		R_ASSERT(node != nullptr, "This shouldn't ever happen.");
+		ASSUME(node != nullptr);
+
 		auto child = SceneNode::create();
 		R_ASSERT(register_node(child.get()), "Failed to register node");
 		lua_pushlightuserdata(L, node->add_child(std::move(child)));

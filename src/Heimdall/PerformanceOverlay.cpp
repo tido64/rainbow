@@ -153,6 +153,9 @@ void PerformanceOverlay::update_impl(unsigned long dt)
 		const float dy = vmem_top / (k1024ToPowerOf[order] * 4);
 		if (dy < 1.0f)
 		{
+#ifdef _MSC_VER
+#	pragma warning(suppress: 6031)
+#endif
 			snprintf(const_cast<char*>(labels_.text()),
 			         sizeof(kStringAxisLabelsF),
 			         kStringAxisLabelsF,
@@ -165,6 +168,9 @@ void PerformanceOverlay::update_impl(unsigned long dt)
 		else
 		{
 			const int dY = static_cast<int>(dy);
+#ifdef _MSC_VER
+#	pragma warning(suppress: 6031)
+#endif
 			snprintf(const_cast<char*>(labels_.text()),
 			         sizeof(kStringAxisLabels),
 			         kStringAxisLabels,

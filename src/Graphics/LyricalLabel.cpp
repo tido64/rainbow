@@ -155,6 +155,7 @@ void LyricalLabel::stop_animation(Animation animation)
 			break;
 		default:
 			R_ASSERT(false, "This shouldn't ever happen.");
+			UNREACHABLE();
 			return;
 	}
 	TimerManager::Get()->clear_timer(animators_[i]);
