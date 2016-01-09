@@ -160,6 +160,50 @@ TEST(AlgorithmTest, RemovesValuesSatisfyingPredicatesFromContainer)
 	ASSERT_EQ(5, v[2]);
 }
 
+TEST(AlgorithmTest, RotatesLeft)
+{
+	std::vector<int> nums{1, 2, 3, 4, 5};
+	rainbow::rotate_left(nums);
+
+	ASSERT_EQ(5u, nums.size());
+	ASSERT_EQ(2, nums[0]);
+	ASSERT_EQ(3, nums[1]);
+	ASSERT_EQ(4, nums[2]);
+	ASSERT_EQ(5, nums[3]);
+	ASSERT_EQ(1, nums[4]);
+
+	rainbow::rotate_left(nums);
+
+	ASSERT_EQ(5u, nums.size());
+	ASSERT_EQ(3, nums[0]);
+	ASSERT_EQ(4, nums[1]);
+	ASSERT_EQ(5, nums[2]);
+	ASSERT_EQ(1, nums[3]);
+	ASSERT_EQ(2, nums[4]);
+}
+
+TEST(AlgorithmTest, RotatesRight)
+{
+	std::vector<int> nums{1, 2, 3, 4, 5};
+	rainbow::rotate_right(nums);
+
+	ASSERT_EQ(5u, nums.size());
+	ASSERT_EQ(5, nums[0]);
+	ASSERT_EQ(1, nums[1]);
+	ASSERT_EQ(2, nums[2]);
+	ASSERT_EQ(3, nums[3]);
+	ASSERT_EQ(4, nums[4]);
+
+	rainbow::rotate_right(nums);
+
+	ASSERT_EQ(5u, nums.size());
+	ASSERT_EQ(4, nums[0]);
+	ASSERT_EQ(5, nums[1]);
+	ASSERT_EQ(1, nums[2]);
+	ASSERT_EQ(2, nums[3]);
+	ASSERT_EQ(3, nums[4]);
+}
+
 TEST(AlgorithmTest, ExtractsSignOfRealNumbers)
 {
 	ASSERT_GT(0, rainbow::signum(-10));

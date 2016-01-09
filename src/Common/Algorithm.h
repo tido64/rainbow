@@ -131,6 +131,22 @@ namespace rainbow
 		                       std::end(container));
 	}
 
+	/// <summary>Performs a left rotation on the container.</summary>
+	template <typename T>
+	void rotate_left(T& container)
+	{
+		auto begin = container.begin();
+		std::rotate(begin, begin + 1, container.end());
+	}
+
+	/// <summary>Performs a right rotation on the container.</summary>
+	template <typename T>
+	void rotate_right(T& container)
+	{
+		auto rbegin = container.rbegin();
+		std::rotate(rbegin, rbegin + 1, container.rend());
+	}
+
 	/// <summary>
 	///   Returns -1, 0, or 1 for <paramref name="x"/> < 0,
 	///   <paramref name="x"/> == 0, or <paramref name="x"/> > 0 respectively.
