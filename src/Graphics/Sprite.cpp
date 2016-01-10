@@ -325,7 +325,7 @@ void Sprite::flip_textures(unsigned int f)
 	state_ |= kStaleFrontBuffer;
 }
 
-void Sprite::set_normal(unsigned int f, const Vec2f* uv)
+void Sprite::set_normal(unsigned int f, NotNull<const Vec2f*> uv)
 {
 	normal_map_[kFlipTable[f + 0]] = uv[0];
 	normal_map_[kFlipTable[f + 1]] = uv[1];

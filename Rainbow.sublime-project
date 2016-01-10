@@ -16,12 +16,12 @@
 	"build_systems":
 	[
 		{
-			"name": "C++11",
+			"name": "C++14 Single File",
 			"cmd":
 			[
 				"clang++",
 				"-c",
-				"-std=c++11",
+				"-std=c++14",
 				"-Werror",
 				"-pedantic",
 				"-Wall",
@@ -31,13 +31,21 @@
 				"-Woverloaded-virtual",
 				"-Wsign-promo",
 				"-I$project_path/src",
-				"-I$project_path/lib",
+				"-I$project_path/src",
 				"-I$project_path/src/ThirdParty/FreeType",
+				"-I$project_path/src/ThirdParty/libpng",
+				"-I$project_path/lib",
+				"-I$project_path/lib/box2d/Box2D",
+				"-I$project_path/lib/FMOD/inc",
 				"-I$project_path/lib/FreeType/include",
 				"-I$project_path/lib/Lua",
 				"-I$project_path/lib/SDL/include",
-				"-I$project_path/src/ThirdParty/libpng",
 				"-I$project_path/lib/libpng",
+				"-I$project_path/lib/nanovg/src",
+				"-I$project_path/lib/spine-runtimes/spine-c/include",
+				"-I$project_path/lib/googletest/googletest/include",
+				"-DUSE_PHYSICS=1",
+				"-DUSE_SPINE=1",
 				"-fno-rtti",
 				"-fno-exceptions",
 				"-o",

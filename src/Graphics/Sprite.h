@@ -171,7 +171,7 @@ private:
 	int id_;                      ///< Sprite identifier.
 
 	void flip_textures(unsigned int axis);
-	void set_normal(unsigned int f, const Vec2f* uv);
+	void set_normal(unsigned int f, NotNull<const Vec2f*> uv);
 };
 
 #endif
