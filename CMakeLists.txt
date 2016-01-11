@@ -116,6 +116,12 @@ set(SOURCE_FILES
     src/Memory/SharedPtr.h
     src/Platform/Macros.h
     src/Platform/SystemInfo.h
+    src/Script/Actor.h
+    src/Script/Components/AnimationComponent.h
+    src/Script/Components/RenderComponent.h
+    src/Script/Components/SceneComponent.h
+    src/Script/Components/ScriptComponent.h
+    src/Script/Components/StateComponent.h
     src/Script/GameBase.cpp
     src/Script/GameBase.h
     src/Script/Prose.Node.h
@@ -126,7 +132,8 @@ set(SOURCE_FILES
     src/Script/Timer.h
     src/Script/TimingFunctions.h
     src/Script/Transition.h
-    src/Script/TransitionFunctions.h)
+    src/Script/TransitionFunctions.h
+    src/Script/World.h)
 
 if(USE_LUA_SCRIPT)
   add_definitions(-DUSE_LUA_SCRIPT=1)
