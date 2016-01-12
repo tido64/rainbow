@@ -169,17 +169,17 @@ node, and avoid spamming the root node.
 
 As always, refer to the API reference for full details.
 
-## Prose
+## Kvad
 
 Sometimes, dealing with the scene graph can be confusing or frustrating if you
-can't fully visualise the tree. However, with Prose, you can define entire
-scenes using a much simpler, and arguably more visual, syntax. Prose is just a
-specially structured Lua table. Creating an empty scene with Prose looks
+can't fully visualise the tree. However, with Kvad, you can define entire
+scenes using a much simpler, and arguably more visual, syntax. Kvad is just a
+specially structured Lua table. Creating an empty scene with Kvad looks
 something like:
 
 ```lua
 return {
-  version = 100,   -- declare Prose version
+  version = 100,   -- declare Kvad version
   resources = {},  -- declare fonts, sounds or textures here
   nodes = {}       -- declare animations, labels or sprites here
 }
@@ -217,12 +217,12 @@ return {
 }
 ```
 
-If you save the table in `tutorial.prose.lua`, we can implement our `init()`:
+If you save the table in `tutorial.kvad.lua`, we can implement our `init()`:
 
 ```c++
 void MyGame::init(const Vec2i &screen)
 {
-    scene_ = rainbow::prose::from_table("tutorial.prose.lua");
+    scene_ = rainbow::kvad::from_table("tutorial.kvad.lua");
 
     // You can also access assets and resources through this object. We retrieve
     // them by name:
@@ -233,4 +233,4 @@ void MyGame::init(const Vec2i &screen)
 ```
 
 For a more complete example, see file `scummbar.lua` and its accompanying file
-`scummbar.prose.lua` of the `monkey` demo.
+`scummbar.kvad.lua` of the `monkey` demo.

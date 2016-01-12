@@ -120,10 +120,10 @@ set(SOURCE_FILES
 	src/Platform/SystemInfo.h
 	src/Script/GameBase.cpp
 	src/Script/GameBase.h
-	src/Script/Prose.Node.h
-	src/Script/Prose.Resource.h
-	src/Script/Prose.cpp
-	src/Script/Prose.h
+	src/Script/Kvad.cpp
+	src/Script/Kvad.h
+	src/Script/KvadNode.h
+	src/Script/KvadResource.h
 	src/Script/Timer.cpp
 	src/Script/Timer.h
 	src/Script/TimingFunctions.h

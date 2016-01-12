@@ -2,7 +2,7 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
-#include "Script/Prose.h"
+#include "Script/Kvad.h"
 
 #include <cctype>
 #include <cstring>
@@ -18,9 +18,10 @@
 #include "Lua/LuaHelper.h"
 #include "Lua/LuaSyntax.h"
 
+using rainbow::Kvad;
 using rainbow::SceneNode;
 
-enum class Prose::AssetType
+enum class Kvad::AssetType
 {
 	None,
 	Animation,
@@ -33,21 +34,15 @@ enum class Prose::AssetType
 	TextureAtlas
 };
 
-Prose::Prose(size_t size)
+Kvad::Kvad(size_t size)
     : allocator_(size), stack_(allocator_), node_(SceneNode::create().release())
 {
 }
 
-Prose::~Prose()
-{
-	if (!node_->parent())
-		delete node_;
-	else
-		node_->remove();
-}
+Kvad::~Kvad() { node_->remove(); }
 
-template <typename T, Prose::AssetType Type>
-T* Prose::get_asset(const std::string& name)
+template <typename T, Kvad::AssetType Type>
+auto Kvad::get_asset(const std::string& name) -> T*
 {
 	auto asset = assets_.find(name);
 	return (asset == assets_.end() || asset->second.type != Type
@@ -56,121 +51,119 @@ T* Prose::get_asset(const std::string& name)
 }
 
 template <>
-Animation* Prose::get_asset<Animation>(const std::string& name)
+auto Kvad::get_asset<Animation>(const std::string& name) -> Animation*
 {
 	auto animation = get_asset<Animation, AssetType::Animation>(name);
 	if (!animation)
-		R_ABORT("Prose: No such animation: %s", name.c_str());
+		R_ABORT("Kvad: No such animation: %s", name.c_str());
 	return animation;
 }
 
 template <>
-FontAtlas* Prose::get_asset<FontAtlas>(const std::string& name)
+auto Kvad::get_asset<FontAtlas>(const std::string& name) -> FontAtlas*
 {
 	auto font = get_asset<FontAtlas, AssetType::FontAtlas>(name);
 	if (!font)
-		R_ABORT("Prose: No such font: %s", name.c_str());
+		R_ABORT("Kvad: No such font: %s", name.c_str());
 	return font;
 }
 
 template <>
-Label* Prose::get_asset<Label>(const std::string& name)
+auto Kvad::get_asset<Label>(const std::string& name) -> Label*
 {
 	auto label = get_asset<Label, AssetType::Label>(name);
 	if (!label)
-		R_ABORT("Prose: No such label: %s", name.c_str());
+		R_ABORT("Kvad: No such label: %s", name.c_str());
 	return label;
 }
 
 template <>
-SceneNode* Prose::get_asset<SceneNode>(const std::string& name)
+auto Kvad::get_asset<SceneNode>(const std::string& name) -> SceneNode*
 {
 	auto node = get_asset<SceneNode, AssetType::Node>(name);
 	if (!node)
-		R_ABORT("Prose: No such node: %s", name.c_str());
+		R_ABORT("Kvad: No such node: %s", name.c_str());
 	return node;
 }
 
 template <>
-Sprite* Prose::get_asset<Sprite>(const std::string& name)
+auto Kvad::get_asset<Sprite>(const std::string& name) -> Sprite*
 {
 	auto sprite = get_asset<Sprite, AssetType::Sprite>(name);
 	if (!sprite)
-		R_ABORT("Prose: No such sprite: %s", name.c_str());
+		R_ABORT("Kvad: No such sprite: %s", name.c_str());
 	return sprite;
 }
 
 template <>
-SpriteBatch* Prose::get_asset<SpriteBatch>(const std::string& name)
+auto Kvad::get_asset<SpriteBatch>(const std::string& name) -> SpriteBatch*
 {
 	auto batch = get_asset<SpriteBatch, AssetType::SpriteBatch>(name);
 	if (!batch)
-		R_ABORT("Prose: No such sprite batch: %s", name.c_str());
+		R_ABORT("Kvad: No such sprite batch: %s", name.c_str());
 	return batch;
 }
 
 template <>
-TextureAtlas* Prose::get_asset<TextureAtlas>(const std::string& name)
+auto Kvad::get_asset<TextureAtlas>(const std::string& name) -> TextureAtlas*
 {
 	auto texture = get_asset<TextureAtlas, AssetType::TextureAtlas>(name);
 	if (!texture)
-		R_ABORT("Prose: No such texture: %s", name.c_str());
+		R_ABORT("Kvad: No such texture: %s", name.c_str());
 	return texture;
 }
 
-Animation* Prose::get_animation(const std::string& name)
+auto Kvad::get_animation(const std::string& name) -> Animation*
 {
 	return get_asset<Animation>(name);
 }
 
-FontAtlas* Prose::get_font(const std::string& name)
+auto Kvad::get_font(const std::string& name) -> FontAtlas*
 {
 	return get_asset<FontAtlas>(name);
 }
 
-Label* Prose::get_label(const std::string& name)
+auto Kvad::get_label(const std::string& name) -> Label*
 {
 	return get_asset<Label>(name);
 }
 
-SceneNode* Prose::get_node(const std::string& name)
+auto Kvad::get_node(const std::string& name) -> SceneNode*
 {
 	auto asset = assets_.find(name);
 	if (asset == assets_.end())
 	{
-		R_ABORT("Prose: No such node: %s", name.c_str());
+		R_ABORT("Kvad: No such node: %s", name.c_str());
 		return nullptr;
 	}
 	return asset->second.node;
 }
 
-Sprite* Prose::get_sprite(const std::string& name)
+auto Kvad::get_sprite(const std::string& name) -> Sprite*
 {
 	return get_asset<Sprite>(name);
 }
 
-SpriteBatch* Prose::get_spritebatch(const std::string& name)
+auto Kvad::get_spritebatch(const std::string& name) -> SpriteBatch*
 {
 	return get_asset<SpriteBatch>(name);
 }
 
-TextureAtlas* Prose::get_texture(const std::string& name)
+auto Kvad::get_texture(const std::string& name) -> TextureAtlas*
 {
 	return get_asset<TextureAtlas>(name);
 }
 
 namespace
 {
-	const int kProseVersion = 100;
+	const int kKvadVersion = 100;
 
-	const char kProseFailedLoading[] = "Prose: Failed to load %s: %s";
-	const char kProseFailedOpening[] = "Prose: Failed to open file: %s";
-	const char kProseNoSuchFile[] = "Prose: No such file: %s";
+	const char kKvadFailedLoading[] = "Kvad: Failed to load %s: %s";
+	const char kKvadFailedOpening[] = "Kvad: Failed to open file: %s";
+	const char kKvadNoSuchFile[] = "Kvad: No such file: %s";
 #ifndef NDEBUG
-	const char kProseMissingProperty[] =
-	    "Prose: Missing property '%s' on %s: %s";
-	const char kProseUnknownProperty[] =
-	    "Prose: Unknown property '%s' on %s: %s";
+	const char kKvadMissingProperty[] = "Kvad: Missing property '%s' on %s: %s";
+	const char kKvadUnknownProperty[] = "Kvad: Unknown property '%s' on %s: %s";
 #endif
 
 	class ScopedField
@@ -212,10 +205,7 @@ namespace
 		return !lua_isnil(L, -1);
 	}
 
-	Prose::Asset no_asset()
-	{
-		return {Prose::AssetType::None, nullptr, nullptr};
-	}
+	Kvad::Asset no_asset() { return {Kvad::AssetType::None, nullptr, nullptr}; }
 
 	const char* table_name(lua_State* L)
 	{
@@ -224,6 +214,7 @@ namespace
 			auto field = get_field(L, "name");
 			return lua_tostring(L, -1);
 		}
+
 		switch (lua_type(L, -2))
 		{
 			case LUA_TNUMBER: {
@@ -250,14 +241,14 @@ namespace
 		while (lua_next(L, -2) != 0)
 		{
 			auto asset = parse(L, std::forward<Args>(args)...);
-			if (asset.type == Prose::AssetType::None)
-				LOGE("Prose: Failed to parse '%s'", table_name(L));
+			if (asset.type == Kvad::AssetType::None)
+				LOGE("Kvad: Failed to parse '%s'", table_name(L));
 			lua_pop(L, 1);
 		}
 	}
 
-#include "Script/Prose.Node.h"
-#include "Script/Prose.Resource.h"
+#include "Script/KvadNode.h"
+#include "Script/KvadResource.h"
 
 #if USE_NODE_TAGS
 	std::unique_ptr<char[]> basename_without_extension(const char* path)
@@ -282,60 +273,61 @@ namespace
 			return {};
 
 		const ptrdiff_t length = end - start;
-		char* name = new char[length + 1];
-		strncpy(name, start, length);
+		auto name = std::make_unique<char[]>(length + 1);
+		strncpy(name.get(), start, length);
 		name[length] = '\0';
-		return std::unique_ptr<char[]>(name);
+		return std::move(name);
 	}
 #endif
 
-	size_t size_of(Prose::AssetType type)
+	size_t size_of(Kvad::AssetType type)
 	{
 		switch (type)
 		{
-			case Prose::AssetType::Animation:
+			case Kvad::AssetType::Animation:
 				return rainbow::ScopeStack::size_of<Animation>();
-			case Prose::AssetType::FontAtlas:
+			case Kvad::AssetType::FontAtlas:
 				return rainbow::ScopeStack::size_of<FontAtlas>();
-			case Prose::AssetType::Label:
+			case Kvad::AssetType::Label:
 				return rainbow::ScopeStack::size_of<Label>();
-			case Prose::AssetType::Node:
+			case Kvad::AssetType::Node:
 				return rainbow::ScopeStack::size_of<SceneNode>();
-			case Prose::AssetType::SpriteBatch:
+			case Kvad::AssetType::SpriteBatch:
 				return rainbow::ScopeStack::size_of<SpriteBatch>();
-			case Prose::AssetType::Sound:
+			case Kvad::AssetType::Sound:
 				return rainbow::ScopeStack::size_of<void*>();
-			case Prose::AssetType::TextureAtlas:
+			case Kvad::AssetType::TextureAtlas:
 				return rainbow::ScopeStack::size_of<TextureAtlas>();
 			default:
 				return 0;
 		}
 	}
 
-	Prose::Asset compute_size(lua_State* L, size_t& total_size)
+	Kvad::Asset compute_size(lua_State* L, size_t& total_size)
 	{
 		auto type = node_type(L);
-		if (type == Prose::AssetType::None)
+		if (type == Kvad::AssetType::None)
 			type = resource_type(L);
-		else if (type == Prose::AssetType::SpriteBatch)
+		else if (type == Kvad::AssetType::SpriteBatch)
 			parse_table(L, "sprites", &compute_size, total_size);
-		if (type == Prose::AssetType::None)
+
+		if (type == Kvad::AssetType::None)
 		{
 			if (has_key(L, "texture"))
 			{
-				type = Prose::AssetType::Sprite;
+				type = Kvad::AssetType::Sprite;
 				if (has_key(L, "animations"))
 					parse_table(L, "animations", &compute_size, total_size);
 			}
 			else if (has_key(L, "fps"))
-				type = Prose::AssetType::Animation;
+				type = Kvad::AssetType::Animation;
 		}
 		total_size += size_of(type);
 		return {type, nullptr, nullptr};
 	}
 }
 
-Prose* Prose::from_lua(const char* path)
+Kvad* Kvad::from_lua(const char* path)
 {
 	const Data script(File::open(path));
 	if (!script)
@@ -356,17 +348,17 @@ Prose* Prose::from_lua(const char* path)
 	lua_rawset(L.get(), -3);
 	lua_setglobal(L.get(), "rainbow");
 
-	if (rainbow::lua::load(L.get(), script, "Prose") == 0)
+	if (rainbow::lua::load(L.get(), script, "Kvad") == 0)
 		return nullptr;
 
 	if (!has_key(L.get(), "version"))
-		R_ABORT("Prose: Version required and missing");
+		R_ABORT("Kvad: Version required and missing");
 	else
 	{
 		auto field = get_field(L.get(), "version");
-		if (lua_tointeger(L.get(), -1) < kProseVersion)
+		if (lua_tointeger(L.get(), -1) < kKvadVersion)
 		{
-			R_ABORT("Prose: Version %i required", kProseVersion);
+			R_ABORT("Kvad: Version %i required", kKvadVersion);
 			return nullptr;
 		}
 	}
@@ -376,7 +368,7 @@ Prose* Prose::from_lua(const char* path)
 	parse_table(L.get(), "resources", &compute_size, total_size);
 	parse_table(L.get(), "nodes", &compute_size, total_size);
 
-	Prose* scene = new Prose(total_size);
+	Kvad* scene = new Kvad(total_size);
 	parse_table(
 	    L.get(), "resources", &create_resource, scene->stack_, scene->assets_);
 	parse_table(L.get(),
@@ -386,9 +378,11 @@ Prose* Prose::from_lua(const char* path)
 	            scene->assets_,
 	            scene->stack_,
 	            scene->node_);
+
 #if USE_NODE_TAGS
 	if (const auto& name = basename_without_extension(path))
 		scene->node()->set_tag(name.get());
 #endif  // USE_NODE_TAGS
+
 	return scene;
 }

@@ -46,11 +46,11 @@ namespace rainbow
 		return texture;
 	}
 
-	namespace prose
+	namespace kvad
 	{
-		prose_t from_lua(const char* path)
+		kvad_t from_lua(const char* path)
 		{
-			return prose_t(Prose::from_lua(path));
+			return kvad_t(Kvad::from_lua(path));
 		}
 	}
 }

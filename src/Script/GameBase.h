@@ -9,14 +9,14 @@
 #include "Graphics/Animation.h"
 #include "Graphics/Label.h"
 #include "Graphics/SpriteBatch.h"
-#include "Script/Prose.h"
+#include "Script/Kvad.h"
 
 namespace rainbow
 {
 	using animation_t = std::shared_ptr<Animation>;
 	using font_t = SharedPtr<FontAtlas>;
 	using label_t = std::shared_ptr<Label>;
-	using prose_t = std::shared_ptr<Prose>;
+	using kvad_t = std::shared_ptr<Kvad>;
 	using sprite_t = Sprite::Ref;
 	using spritebatch_t = std::shared_ptr<SpriteBatch>;
 	using texture_t = SharedPtr<TextureAtlas>;
@@ -30,9 +30,9 @@ namespace rainbow
 	spritebatch_t spritebatch(unsigned int hint = 4);
 	texture_t texture(const char* path);
 
-	namespace prose
+	namespace kvad
 	{
-		prose_t from_lua(const char* path);
+		kvad_t from_lua(const char* path);
 	}
 }
 

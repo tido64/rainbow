@@ -31,15 +31,14 @@ void set_color_and_transform(lua_State* L, T asset)
 	}
 }
 
-Prose::Asset create_animation(lua_State* L,
-                              const Sprite::Ref& sprite,
-                              rainbow::ScopeStack& stack,
-                              rainbow::SceneNode* parent)
+Kvad::Asset create_animation(lua_State* L,
+                             const Sprite::Ref& sprite,
+                             rainbow::ScopeStack& stack,
+                             rainbow::SceneNode* parent)
 {
 	const auto table = lua_gettop(L);
 	const size_t num_frames = lua_rawlen(L, table);
-	std::unique_ptr<Animation::Frame[]> frames(
-	    new Animation::Frame[num_frames + 1]);
+	auto frames = std::make_unique<Animation::Frame[]>(num_frames + 1);
 	for (size_t i = 0; i < num_frames; ++i)
 	{
 		lua_rawgeti(L, table, i + 1);
@@ -50,7 +49,7 @@ Prose::Asset create_animation(lua_State* L,
 
 	unsigned int fps = 0;
 	if (!has_key(L, "fps"))
-		R_ABORT(kProseMissingProperty, "fps", "animation", table_name(L));
+		R_ABORT(kKvadMissingProperty, "fps", "animation", table_name(L));
 	else
 	{
 		auto field = get_field(L, "fps");
@@ -75,13 +74,13 @@ Prose::Asset create_animation(lua_State* L,
 #if USE_NODE_TAGS
 	node->set_tag(table_name(L));
 #endif  // USE_NODE_TAGS
-	return {Prose::AssetType::Animation, animation, node};
+	return {Kvad::AssetType::Animation, animation, node};
 }
 
-Prose::Asset create_label(lua_State* L,
-                          Prose& scene,
-                          rainbow::ScopeStack& stack,
-                          rainbow::SceneNode* parent)
+Kvad::Asset create_label(lua_State* L,
+                         Kvad& scene,
+                         rainbow::ScopeStack& stack,
+                         rainbow::SceneNode* parent)
 {
 	auto label = stack.allocate<Label>();
 	set_color_and_transform(L, label);
@@ -107,17 +106,17 @@ Prose::Asset create_label(lua_State* L,
 		auto field = get_field(L, "text");
 		label->set_text(lua_tostring(L, -1));
 	}
-	return {Prose::AssetType::Label, label, parent->add_child(*label)};
+	return {Kvad::AssetType::Label, label, parent->add_child(*label)};
 }
 
-Prose::Asset create_sprite(lua_State* L,
-                           SpriteBatch* batch,
-                           rainbow::ScopeStack& stack,
-                           rainbow::SceneNode* parent)
+Kvad::Asset create_sprite(lua_State* L,
+                          SpriteBatch* batch,
+                          rainbow::ScopeStack& stack,
+                          rainbow::SceneNode* parent)
 {
 	Sprite::Ref sprite;
 	if (!has_key(L, "size"))
-		R_ABORT(kProseMissingProperty, "size", "sprite", table_name(L));
+		R_ABORT(kKvadMissingProperty, "size", "sprite", table_name(L));
 	else
 	{
 		auto field = get_field(L, "size");
@@ -128,7 +127,7 @@ Prose::Asset create_sprite(lua_State* L,
 		lua_pop(L, 2);
 	}
 	if (!has_key(L, "texture"))
-		R_ABORT(kProseMissingProperty, "texture", "sprite", table_name(L));
+		R_ABORT(kKvadMissingProperty, "texture", "sprite", table_name(L));
 	else
 	{
 		auto field = get_field(L, "texture");
@@ -150,48 +149,48 @@ Prose::Asset create_sprite(lua_State* L,
 	}
 	if (has_key(L, "animations"))
 		parse_table(L, "animations", &create_animation, sprite, stack, parent);
-	return {Prose::AssetType::Sprite, nullptr, nullptr};
+	return {Kvad::AssetType::Sprite, nullptr, nullptr};
 }
 
-Prose::Asset create_spritebatch(lua_State* L,
-                                Prose& scene,
-                                rainbow::ScopeStack& stack,
-                                rainbow::SceneNode* parent)
+Kvad::Asset create_spritebatch(lua_State* L,
+                               Kvad& scene,
+                               rainbow::ScopeStack& stack,
+                               rainbow::SceneNode* parent)
 {
 	auto batch = stack.allocate<SpriteBatch>();
 	auto field = get_field(L, "texture");
 	batch->set_texture(SharedPtr<TextureAtlas>(
 	    scene.get_asset<TextureAtlas>(lua_tostring(L, -1))));
-	return {Prose::AssetType::SpriteBatch, batch, parent->add_child(*batch)};
+	return {Kvad::AssetType::SpriteBatch, batch, parent->add_child(*batch)};
 }
 
-Prose::AssetType node_type(lua_State* L)
+Kvad::AssetType node_type(lua_State* L)
 {
 	if (has_key(L, "sprites"))
-		return Prose::AssetType::SpriteBatch;
+		return Kvad::AssetType::SpriteBatch;
 	if (has_key(L, "font"))
-		return Prose::AssetType::Label;
+		return Kvad::AssetType::Label;
 	if (has_key(L, "nodes"))
-		return Prose::AssetType::Node;
-	return Prose::AssetType::None;
+		return Kvad::AssetType::Node;
+	return Kvad::AssetType::None;
 }
 
-Prose::Asset create_node(lua_State* L,
-                         Prose& scene,
-                         Prose::AssetMap& assets,
-                         rainbow::ScopeStack& stack,
-                         rainbow::SceneNode* parent)
+Kvad::Asset create_node(lua_State* L,
+                        Kvad& scene,
+                        Kvad::AssetMap& assets,
+                        rainbow::ScopeStack& stack,
+                        rainbow::SceneNode* parent)
 {
-	Prose::Asset asset = no_asset();
+	Kvad::Asset asset = no_asset();
 	switch (node_type(L))
 	{
-		case Prose::AssetType::Label:
+		case Kvad::AssetType::Label:
 			asset = create_label(L, scene, stack, parent);
 			break;
-		case Prose::AssetType::Node:
-			asset = {Prose::AssetType::Node, nullptr, parent->add_child()};
+		case Kvad::AssetType::Node:
+			asset = {Kvad::AssetType::Node, nullptr, parent->add_child()};
 			break;
-		case Prose::AssetType::SpriteBatch: {
+		case Kvad::AssetType::SpriteBatch: {
 			asset = create_spritebatch(L, scene, stack, parent);
 			if (has_key(L, "sprites"))
 			{
@@ -207,14 +206,14 @@ Prose::Asset create_node(lua_State* L,
 		default:
 			break;
 	}
-	if (asset.type != Prose::AssetType::None)
+	if (asset.type != Kvad::AssetType::None)
 	{
 		const char* name = table_name(L);
 #if USE_NODE_TAGS
 		asset.node->set_tag(name);
 #endif  // USE_NODE_TAGS
 		assets[name] = asset;
-		if (asset.type == Prose::AssetType::Node || has_key(L, "nodes"))
+		if (asset.type == Kvad::AssetType::Node || has_key(L, "nodes"))
 		{
 			parse_table(
 			    L, "nodes", &create_node, scene, assets, stack, asset.node);

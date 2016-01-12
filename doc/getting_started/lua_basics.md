@@ -148,17 +148,17 @@ should see two identical sprites next to each other at the center of the screen.
 
 As always, refer to the API reference for full details.
 
-## Prose
+## Kvad
 
 Sometimes, dealing with the scene graph can be confusing or frustrating if you
-can't fully visualise the tree. However, with Prose, you can define entire
-scenes using a much simpler, and arguably more visual, syntax. Prose is just a
-specially structured Lua table. Creating an empty scene with Prose looks
+can't fully visualise the tree. However, with Kvad, you can define entire
+scenes using a much simpler, and arguably more visual, syntax. Kvad is just a
+specially structured Lua table. Creating an empty scene with Kvad looks
 something like:
 
 ```lua
 return {
-  version = 100,   -- declare Prose version
+  version = 100,   -- declare Kvad version
   resources = {},  -- declare fonts, sounds or textures here
   nodes = {}       -- declare animations, labels or sprites here
 }
@@ -196,14 +196,14 @@ return {
 }
 ```
 
-If you save the table in `tutorial.prose.lua`, we can replace our `init()`:
+If you save the table in `tutorial.kvad.lua`, we can replace our `init()`:
 
 ```lua
 function init()
-  local Prose = require("Prose")
-  -- Prose lets you create entire scenes from a table
+  local Kvad = require("Kvad")
+  -- Kvad lets you create entire scenes from a table
 
-  scene = Prose.from_table(require("tutorial.prose"))
+  scene = Kvad.from_table(require("tutorial.kvad"))
   -- You can also access nodes and resources through this object. For
   -- instance, to access the batch:
   local batch = scene.objects.batch
@@ -211,4 +211,4 @@ end
 ```
 
 For a more complete example, see file `scummbar.lua` and its accompanying file
-`scummbar.prose.lua` of the `monkey` demo.
+`scummbar.kvad.lua` of the `monkey` demo.

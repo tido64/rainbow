@@ -4,9 +4,9 @@
 -- Distributed under the MIT License.
 -- (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
-local Prose = require("Prose")  -- Prose module lets you create scenes from a table
+local Kvad = require("Kvad")  -- Kvad module lets you create scenes from a table
 local Timer = require("Timer")
-local scenedef = require("intro.prose")
+local scenedef = require("intro.kvad")
 
 SceneIntro = {}
 SceneIntro.__index = SceneIntro
@@ -20,7 +20,7 @@ function SceneIntro:new()
 		self.scene = etc.
 	--]]
 	local self = setmetatable({
-		scene = Prose.from_table(scenedef),
+		scene = Kvad.from_table(scenedef),
 		timer = 0
 	}, SceneIntro)
 	rainbow.scenegraph:disable(self.scene.objects.logo_batch.node)

@@ -4,8 +4,8 @@
 -- Distributed under the MIT License.
 -- (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
-local Prose = require("Prose")  -- Prose module lets you create scenes from a table
-local scenedef = require("scummbar.prose")
+local Kvad = require("Kvad")  -- Kvad module lets you create scenes from a table
+local scenedef = require("scummbar.kvad")
 local screen = rainbow.platform.screen
 
 SceneSCUMMBar = {}
@@ -13,7 +13,7 @@ SceneSCUMMBar.__index = SceneSCUMMBar
 
 function SceneSCUMMBar:new()
 	local self = setmetatable({
-		scene = Prose.from_table(scenedef),
+		scene = Kvad.from_table(scenedef),
 		edge_margin = 24 * global_scale,
 		screen = screen.width,
 		split = screen.width
