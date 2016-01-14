@@ -116,7 +116,11 @@ set(SOURCE_FILES
 	src/Memory/ScopeStack.h
 	src/Memory/SharedPtr.h
 	src/Platform/Macros.h
-	src/Platform/SDL2.cpp
+	src/Platform/SDL/Context.cpp
+	src/Platform/SDL/Context.h
+	src/Platform/SDL/RainbowController.cpp
+	src/Platform/SDL/RainbowController.h
+	src/Platform/SDL/main.cpp
 	src/Platform/SystemInfo.h
 	src/Script/GameBase.cpp
 	src/Script/GameBase.h
