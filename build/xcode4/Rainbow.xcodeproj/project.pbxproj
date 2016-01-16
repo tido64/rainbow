@@ -12,7 +12,6 @@
 		1910099819FDA3A70036D5F4 /* Link.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1910099619FDA3A70036D5F4 /* Link.cpp */; };
 		1923F97F1AF6400A0012C078 /* UTF8.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1923F97D1AF6400A0012C078 /* UTF8.cpp */; };
 		193929B316E1932E0018340B /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 193929B216E1932E0018340B /* CoreMotion.framework */; };
-		193929B616E23D410018340B /* RainbowViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 193929B516E23D410018340B /* RainbowViewController.mm */; };
 		193929B816E23D5F0018340B /* SystemInfo_Apple.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 193929B716E23D5F0018340B /* SystemInfo_Apple.cpp */; };
 		193929BD16E243E90018340B /* LuaMachine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 193929BA16E243E90018340B /* LuaMachine.cpp */; };
 		193929C716E352540018340B /* Timer.lua in Resources */ = {isa = PBXBuildFile; fileRef = 193929C616E352540018340B /* Timer.lua */; };
@@ -163,6 +162,7 @@
 		1988802917F84AFD009F4587 /* Functional.lua in Resources */ = {isa = PBXBuildFile; fileRef = 1988802517F84AFD009F4587 /* Functional.lua */; };
 		1988802A17F84AFD009F4587 /* Strict.lua in Resources */ = {isa = PBXBuildFile; fileRef = 1988802617F84AFD009F4587 /* Strict.lua */; };
 		1988802B17F84AFD009F4587 /* TransitionFunctions.lua in Resources */ = {isa = PBXBuildFile; fileRef = 1988802717F84AFD009F4587 /* TransitionFunctions.lua */; };
+		1989645C1C4AE0080011BA15 /* RainbowViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1989645B1C4AE0080011BA15 /* RainbowViewController.mm */; };
 		198F42781A9151CB00BE7A73 /* Timer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 198F42701A9151CB00BE7A73 /* Timer.cpp */; };
 		198F427B1A9151F500BE7A73 /* LuaScript.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 198F42791A9151F500BE7A73 /* LuaScript.cpp */; };
 		198F42981A9152E000BE7A73 /* Animation.c in Sources */ = {isa = PBXBuildFile; fileRef = 198F427D1A9152E000BE7A73 /* Animation.c */; };
@@ -228,8 +228,6 @@
 		1923F97E1AF6400A0012C078 /* UTF8.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UTF8.h; sourceTree = "<group>"; };
 		192A0B9B1681EF84009218EB /* SpriteVertex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpriteVertex.h; sourceTree = "<group>"; };
 		193929B216E1932E0018340B /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
-		193929B416E23D410018340B /* RainbowViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RainbowViewController.h; path = ../../../src/Platform/RainbowViewController.h; sourceTree = "<group>"; };
-		193929B516E23D410018340B /* RainbowViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = RainbowViewController.mm; path = ../../../src/Platform/RainbowViewController.mm; sourceTree = "<group>"; };
 		193929B716E23D5F0018340B /* SystemInfo_Apple.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SystemInfo_Apple.cpp; path = ../../../src/Platform/impl/SystemInfo_Apple.cpp; sourceTree = "<group>"; };
 		193929BA16E243E90018340B /* LuaMachine.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = LuaMachine.cpp; sourceTree = "<group>"; };
 		193929BB16E243E90018340B /* LuaMachine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LuaMachine.h; sourceTree = "<group>"; };
@@ -543,6 +541,8 @@
 		1988802517F84AFD009F4587 /* Functional.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Functional.lua; path = ../../../lua/Functional.lua; sourceTree = "<group>"; };
 		1988802617F84AFD009F4587 /* Strict.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Strict.lua; path = ../../../lua/Strict.lua; sourceTree = "<group>"; };
 		1988802717F84AFD009F4587 /* TransitionFunctions.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = TransitionFunctions.lua; path = ../../../lua/TransitionFunctions.lua; sourceTree = "<group>"; };
+		1989645A1C4AE0080011BA15 /* RainbowViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RainbowViewController.h; sourceTree = "<group>"; };
+		1989645B1C4AE0080011BA15 /* RainbowViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = RainbowViewController.mm; sourceTree = "<group>"; };
 		198BE0A7174A5F420036055E /* Macros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Macros.h; path = ../../../src/Platform/Macros.h; sourceTree = "<group>"; };
 		198F42681A9151CB00BE7A73 /* GameBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameBase.h; sourceTree = "<group>"; };
 		198F42701A9151CB00BE7A73 /* Timer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Timer.cpp; sourceTree = "<group>"; };
@@ -1330,13 +1330,22 @@
 		1986919F16DED44D00BC4830 /* Platform */ = {
 			isa = PBXGroup;
 			children = (
+				198964591C4AE0080011BA15 /* iOS */,
 				19F98DA4171B5DC000A85873 /* impl */,
 				198BE0A7174A5F420036055E /* Macros.h */,
-				193929B416E23D410018340B /* RainbowViewController.h */,
-				193929B516E23D410018340B /* RainbowViewController.mm */,
 				19F98DA5171B5DDF00A85873 /* SystemInfo.h */,
 			);
 			name = Platform;
+			sourceTree = "<group>";
+		};
+		198964591C4AE0080011BA15 /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				1989645A1C4AE0080011BA15 /* RainbowViewController.h */,
+				1989645B1C4AE0080011BA15 /* RainbowViewController.mm */,
+			);
+			name = iOS;
+			path = ../../../src/Platform/iOS;
 			sourceTree = "<group>";
 		};
 		198F42661A9151CB00BE7A73 /* Script */ = {
@@ -1487,7 +1496,7 @@
 		1948C015152C397D00E9B854 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0430;
+				LastUpgradeCheck = 0720;
 				TargetAttributes = {
 					1948C01D152C397D00E9B854 = {
 						DevelopmentTeam = WQJVTURJ6W;
@@ -1641,6 +1650,7 @@
 				1939A15B152C401300494609 /* ldo.c in Sources */,
 				1939A15C152C401300494609 /* ldump.c in Sources */,
 				1939A15D152C401300494609 /* lfunc.c in Sources */,
+				1989645C1C4AE0080011BA15 /* RainbowViewController.mm in Sources */,
 				198F429E1A9152E000BE7A73 /* AttachmentLoader.c in Sources */,
 				1939A15E152C401300494609 /* lgc.c in Sources */,
 				198F42AF1A9152E000BE7A73 /* SkinnedMeshAttachment.c in Sources */,
@@ -1715,7 +1725,6 @@
 				19EF136A1A7036C500D7AAA9 /* CircleShape.cpp in Sources */,
 				190497E41682963F0037F5EC /* lua_Platform.cpp in Sources */,
 				19E91FC21682B1460054D61F /* LuaHelper.cpp in Sources */,
-				193929B616E23D410018340B /* RainbowViewController.mm in Sources */,
 				198F42A11A9152E000BE7A73 /* BoundingBoxAttachment.c in Sources */,
 				1960AFD11A4E278E0015A3AD /* Shape.cpp in Sources */,
 				19FDF4961942FCFB00B5F21B /* LuaSyntax.cpp in Sources */,
@@ -1763,7 +1772,11 @@
 				GCC_ENABLE_CPP_EXCEPTIONS = NO;
 				GCC_ENABLE_CPP_RTTI = NO;
 				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
-				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				OTHER_CFLAGS = (
+					"-w",
+					"-DNS_BLOCK_ASSERTIONS=1",
+				);
+				OTHER_CPLUSPLUSFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1814,6 +1827,7 @@
 					"$(inherited)",
 					../../lib/FMOD/lib/ios,
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.bifrostentertainment.rainbow;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 			};
@@ -1828,12 +1842,15 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_ENABLE_CPP_EXCEPTIONS = NO;
 				GCC_ENABLE_CPP_RTTI = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_CFLAGS = "-w";
+				OTHER_CPLUSPLUSFLAGS = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1859,7 +1876,11 @@
 				GCC_ENABLE_CPP_EXCEPTIONS = NO;
 				GCC_ENABLE_CPP_RTTI = NO;
 				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
-				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				OTHER_CFLAGS = (
+					"-w",
+					"-DNS_BLOCK_ASSERTIONS=1",
+				);
+				OTHER_CPLUSPLUSFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
@@ -1909,6 +1930,7 @@
 					"$(inherited)",
 					../../lib/FMOD/lib/ios,
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.bifrostentertainment.rainbow;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 			};
@@ -1929,6 +1951,8 @@
 					"USE_LUA_SCRIPT=1",
 					"USE_PHYSICS=1",
 					"USE_SPINE=1",
+					"__STB_INCLUDE_STB_TRUETYPE_H__=0",
+					"FONS_USE_FREETYPE=1",
 				);
 				HEADER_SEARCH_PATHS = (
 					../../src,
@@ -1947,6 +1971,7 @@
 					"$(inherited)",
 					../../lib/FMOD/lib/ios,
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.bifrostentertainment.rainbow;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 			};

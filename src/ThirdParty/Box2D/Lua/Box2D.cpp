@@ -30,7 +30,9 @@ namespace b2
 			rainbow::lua::reg<Contact>(L);
 			lua_setglobal(L, "b2");
 
+#ifndef __clang_analyzer__
 			new DebugDraw();  // Manages its own lifetime.
+#endif
 		}
 	}
 }
