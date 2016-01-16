@@ -115,11 +115,6 @@ set(SOURCE_FILES
     src/Memory/ScopeStack.h
     src/Memory/SharedPtr.h
     src/Platform/Macros.h
-    src/Platform/SDL/Context.cpp
-    src/Platform/SDL/Context.h
-    src/Platform/SDL/RainbowController.cpp
-    src/Platform/SDL/RainbowController.h
-    src/Platform/SDL/main.cpp
     src/Platform/SystemInfo.h
     src/Script/GameBase.cpp
     src/Script/GameBase.h
@@ -175,33 +170,39 @@ if(USE_LUA_SCRIPT)
        src/Resources/Rainbow.lua.h)
 else()
   add_definitions(-DUSE_LUA_SCRIPT=0)
-  list(APPEND SOURCE_FILES
-       src/Script/NoGame.cpp
-       src/Script/NoGame.h)
+  list(APPEND SOURCE_FILES src/Script/NoGame.cpp src/Script/NoGame.h)
 endif()
 
 if(ANDROID)
   list(APPEND SOURCE_FILES
        src/Common/impl/DataMap_Android.cpp
        src/Common/impl/DataMap_Android.h
-       src/Platform/Android.cpp
+       src/Platform/Android/main.cpp
        src/Platform/impl/SystemInfo_Android.cpp
        src/Platform/impl/SystemInfo_Unix.cpp)
-elseif(WIN32)
-  list(APPEND SOURCE_FILES
-       src/Common/impl/DataMap_Win.cpp
-       src/Common/impl/DataMap_Win.h
-       src/Platform/impl/SystemInfo_Win.cpp)
 else()
   list(APPEND SOURCE_FILES
-       src/Common/impl/DataMap_Unix.cpp
-       src/Common/impl/DataMap_Unix.h)
-  if(APPLE)
+       src/Platform/SDL/Context.cpp
+       src/Platform/SDL/Context.h
+       src/Platform/SDL/RainbowController.cpp
+       src/Platform/SDL/RainbowController.h
+       src/Platform/SDL/main.cpp)
+  if(WIN32)
     list(APPEND SOURCE_FILES
-         src/Graphics/Decoders/UIKit.h
-         src/Platform/impl/SystemInfo_Apple.cpp)
+         src/Common/impl/DataMap_Win.cpp
+         src/Common/impl/DataMap_Win.h
+         src/Platform/impl/SystemInfo_Win.cpp)
   else()
-    list(APPEND SOURCE_FILES src/Platform/impl/SystemInfo_Unix.cpp)
+    list(APPEND SOURCE_FILES
+         src/Common/impl/DataMap_Unix.cpp
+         src/Common/impl/DataMap_Unix.h)
+    if(APPLE)
+      list(APPEND SOURCE_FILES
+           src/Graphics/Decoders/UIKit.h
+           src/Platform/impl/SystemInfo_Apple.cpp)
+    else()
+      list(APPEND SOURCE_FILES src/Platform/impl/SystemInfo_Unix.cpp)
+    endif()
   endif()
 endif()
 

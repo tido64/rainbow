@@ -38,7 +38,7 @@ mv jni/* .
 
 # Replace placeholder RainbowActivity with real implementation
 rm src/$PACKAGE/RainbowActivity.java
-ln -s $PROJECT/src/Platform/RainbowActivity.java src/$PACKAGE/
+ln -s $PROJECT/src/Platform/Android/RainbowActivity.java src/$PACKAGE/
 
 # Link third-party libraries
 ln -s $PROJECT/lib/FMOD/lib/android/fmod.jar libs/
@@ -99,7 +99,7 @@ LOCAL_C_INCLUDES        := \$(LOCAL_PATH)/src \$(LOCAL_PATH)/lib \\
                            \$(LOCAL_PATH)/lib/spine-runtimes/spine-c/include \\
                            $NDK_HOME/sources/android/native_app_glue
 LOCAL_CFLAGS            := $@
-LOCAL_CPPFLAGS          := -std=c++11 -Wall -Wextra -Woverloaded-virtual -Wsign-promo -fno-rtti -fno-exceptions
+LOCAL_CPPFLAGS          := -std=c++1y -Wall -Wextra -Woverloaded-virtual -Wsign-promo -fno-rtti -fno-exceptions
 LOCAL_STATIC_LIBRARIES  := android_native_app_glue
 LOCAL_SHARED_LIBRARIES  := fmodstudio fmod
 LOCAL_LDLIBS            := -landroid -lEGL -lGLESv2 -llog -lz
@@ -174,5 +174,5 @@ cat > AndroidManifest.xml << ANDROIDMANIFEST_XML
 ANDROIDMANIFEST_XML
 echo " done"
 
-NDK_DEBUG=${NDK_DEBUG:-1} ndk-build -j &&
+NDK_DEBUG=${NDK_DEBUG:-1} NDK_TOOLCHAIN_VERSION=4.9 ndk-build -j &&
 ant debug

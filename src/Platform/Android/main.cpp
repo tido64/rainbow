@@ -155,7 +155,7 @@ void android_handle_display(AInstance* a)
 	if (a->initialised)
 		return;
 
-	a->director.reset(new Director());
+	a->director = std::make_unique<Director>();
 	if (a->director->terminated())
 	{
 		LOGF("%s", a->director->error());
@@ -325,7 +325,7 @@ int32_t android_handle_motion(struct android_app* app, AInputEvent* event)
 			                       AMOTION_EVENT_ACTION_POINTER_INDEX_MASK) >>
 			                      AMOTION_EVENT_ACTION_POINTER_INDEX_SHIFT;
 			Pointer p = get_pointer_event(director->renderer(), event, index);
-			director->input().on_pointer_began(1, &p);
+			director->input().on_pointer_began(ArrayView<Pointer>(1, &p));
 			break;
 		}
 		case AMOTION_EVENT_ACTION_UP:
@@ -334,15 +334,16 @@ int32_t android_handle_motion(struct android_app* app, AInputEvent* event)
 			                       AMOTION_EVENT_ACTION_POINTER_INDEX_MASK) >>
 			                      AMOTION_EVENT_ACTION_POINTER_INDEX_SHIFT;
 			Pointer p = get_pointer_event(director->renderer(), event, index);
-			director->input().on_pointer_ended(1, &p);
+			director->input().on_pointer_ended(ArrayView<Pointer>(1, &p));
 			break;
 		}
 		case AMOTION_EVENT_ACTION_MOVE: {
 			const size_t count = AMotionEvent_getPointerCount(event);
-			std::unique_ptr<Pointer[]> pointers(new Pointer[count]);
+			auto pointers = std::make_unique<Pointer[]>(count);
 			for (size_t i = 0; i < count; ++i)
 				pointers[i] = get_pointer_event(director->renderer(), event, i);
-			director->input().on_pointer_moved(count, pointers.get());
+			director->input().on_pointer_moved(
+			    ArrayView<Pointer>(count, pointers));
 			break;
 		}
 		case AMOTION_EVENT_ACTION_CANCEL:

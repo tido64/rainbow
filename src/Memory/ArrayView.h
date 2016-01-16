@@ -12,6 +12,8 @@ public:
 	ArrayView() : ArrayView(0, nullptr) {}
 	ArrayView(std::nullptr_t) : size_(0), array_(nullptr) {}
 	ArrayView(size_t size, NotNull<T*> array) : size_(size), array_(array) {}
+	ArrayView(size_t size, const std::unique_ptr<T[]>& array)
+	    : ArrayView(size, array.get()) {}
 
 	const T* data() const { return array_; }
 	bool empty() const { return size_ == 0; }
