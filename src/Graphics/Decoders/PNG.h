@@ -6,19 +6,14 @@
 #define GRAPHICS_DECODERS_PNG_H_
 
 #include <cstring>
+#include <memory>
 
 #include <png.h>
-
-#include "Common/Logging.h"
-#include "Common/Functional.h"
 
 #define USE_PNG
 
 namespace png
 {
-	bool check(const DataMap& data) pure;
-	rainbow::Image decode(const DataMap& data) pure;
-
 	bool check(const DataMap& data)
 	{
 		return png_sig_cmp(data.data(), 0, 8) == 0;
@@ -44,11 +39,13 @@ namespace png
 			pi.format = PNG_FORMAT_RGBA;
 		image.depth = PNG_IMAGE_SAMPLE_SIZE(pi.format) * 8;
 		image.channels = PNG_IMAGE_SAMPLE_CHANNELS(pi.format);
-		auto buffer = new unsigned char[PNG_IMAGE_SIZE(pi)];
+
+		auto buffer = std::make_unique<unsigned char[]>(PNG_IMAGE_SIZE(pi));
 		png_image_finish_read(
-		    &pi, nullptr, buffer, PNG_IMAGE_ROW_STRIDE(pi), nullptr);
-		image.data = buffer;
-		return image;
+		    &pi, nullptr, buffer.get(), PNG_IMAGE_ROW_STRIDE(pi), nullptr);
+		image.data = buffer.release();
+
+		return std::move(image);
 	}
 }
 

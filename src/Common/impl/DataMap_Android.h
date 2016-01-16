@@ -14,7 +14,7 @@ namespace rainbow
 	protected:
 		explicit DataMapAndroid(const Path& path);
 
-		const unsigned char* data() const;
+		const byte_t* data() const;
 		void offset(size_t offset) { off_ = offset; }
 		size_t size() const;
 

@@ -115,6 +115,4 @@ void TextureAtlas::load(TextureManager& texture_manager,
 			break;
 		}
 	}
-
-	rainbow::Image::release(image);
 }

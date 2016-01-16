@@ -63,7 +63,6 @@ set(SOURCE_FILES
     src/Graphics/Buffer.h
     src/Graphics/Decoders/PNG.h
     src/Graphics/Decoders/PVRTC.h
-    src/Graphics/Decoders/UIKit.h
     src/Graphics/Drawable.h
     src/Graphics/FontAtlas.cpp
     src/Graphics/FontAtlas.h
@@ -198,7 +197,9 @@ else()
        src/Common/impl/DataMap_Unix.cpp
        src/Common/impl/DataMap_Unix.h)
   if(APPLE)
-    list(APPEND SOURCE_FILES src/Platform/impl/SystemInfo_Apple.cpp)
+    list(APPEND SOURCE_FILES
+         src/Graphics/Decoders/UIKit.h
+         src/Platform/impl/SystemInfo_Apple.cpp)
   else()
     list(APPEND SOURCE_FILES src/Platform/impl/SystemInfo_Unix.cpp)
   endif()

@@ -11,7 +11,7 @@ namespace rainbow
 	{
 	protected:
 		template <size_t N>
-		DataMapUnix(const unsigned char (&bytes)[N])
+		DataMapUnix(const byte_t (&bytes)[N])
 		    : len_(N), off_(0),
 		      addr_(const_cast<void*>(static_cast<const void*>(bytes))),
 		      mmapped_(false) {}
@@ -20,9 +20,9 @@ namespace rainbow
 		DataMapUnix(DataMapUnix&& data);
 		~DataMapUnix();
 
-		const unsigned char* data() const
+		const byte_t* data() const
 		{
-			return static_cast<unsigned char*>(addr_) + off_;
+			return static_cast<byte_t*>(addr_) + off_;
 		}
 
 		void offset(size_t offset) { off_ = offset; }

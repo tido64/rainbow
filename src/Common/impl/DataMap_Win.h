@@ -14,9 +14,9 @@ namespace rainbow
 		DataMapWin(DataMapWin&&);
 		~DataMapWin();
 
-		const unsigned char* data() const
+		const byte_t* data() const
 		{
-			return static_cast<unsigned char*>(addr_) + off_;
+			return static_cast<byte_t*>(addr_) + off_;
 		}
 
 		void offset(size_t offset) { off_ = offset; }

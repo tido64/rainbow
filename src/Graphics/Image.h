@@ -9,11 +9,11 @@
 
 namespace rainbow
 {
-	struct Image
+	struct Image : private NonCopyable<Image>
 	{
 		enum class Format
 		{
-			UNKNOWN,
+			Unknown,
 			ATITC,  // Adreno
 			ETC1,   // OpenGL ES standard
 			PVRTC,  // iOS, OMAP43xx, PowerVR
@@ -26,7 +26,7 @@ namespace rainbow
 		///   Supports
 		///   <list type="bullet">
 		///     <item>iOS: PVRTC and whatever UIImage devours.</item>
-		///     <item>Other: PNG.</item>
+		///     <item>Others: PNG.</item>
 		///   </list>
 		///   Limitations
 		///   <list type="bullet">
@@ -35,25 +35,53 @@ namespace rainbow
 		///       it's not supported.
 		///     </item>
 		///     <item>
-		///       PVRTC: PVR3 only, square, power of 2, no mipmaps,
+		///       PVRTC: PVR3 only; square, power of 2; no mipmaps;
 		///       pre-multiplied alpha.
 		///     </item>
 		///   </list>
 		/// </remarks>
 		static Image decode(const DataMap&);
-		static void release(const Image&);
 
-		Format format;
-		unsigned int width;
-		unsigned int height;
-		unsigned int depth;
-		unsigned int channels;
-		size_t size;
-		const unsigned char* data;
+		Format format = Format::Unknown;
+		unsigned int width = 0;
+		unsigned int height = 0;
+		unsigned int depth = 0;
+		unsigned int channels = 0;
+		size_t size = 0;
+		const byte_t* data = nullptr;
 
-		Image()
-		    : format(Format::UNKNOWN), width(0), height(0), depth(0),
-		      channels(0), size(0), data(nullptr) {}
+		Image() = default;
+
+		Image(Image&& image)
+		    : format(image.format), width(image.width), height(image.height),
+		      depth(image.depth), channels(image.channels), size(image.size),
+		      data(image.data)
+		{
+			image.format = Format::Unknown;
+			image.width = 0;
+			image.height = 0;
+			image.depth = 0;
+			image.channels = 0;
+			image.size = 0;
+			image.data = nullptr;
+		}
+
+		~Image()
+		{
+			switch (format)
+			{
+				case Format::ATITC:
+				case Format::ETC1:
+				case Format::PVRTC:
+				case Format::S3TC:
+					break;
+
+				case Format::PNG:
+				default:
+					delete[] data;
+					break;
+			}
+		}
 	};
 }
 
@@ -84,21 +112,8 @@ namespace rainbow
 #ifdef USE_UIKIT
 		return uikit::decode(data);
 #else
-		return Image();
+		return {};
 #endif
-	}
-
-	void Image::release(const Image& image)
-	{
-		switch (image.format)
-		{
-			case Format::PVRTC:
-				break;
-			case Format::PNG:
-			default:
-				delete[] image.data;
-				break;
-		}
 	}
 }
 

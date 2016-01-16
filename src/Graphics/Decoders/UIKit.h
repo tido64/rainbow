@@ -8,14 +8,11 @@
 #include <UIKit/UIKit.h>
 
 #include "Common/Logging.h"
-#include "Common/Functional.h"
 
 #define USE_UIKIT
 
 namespace uikit
 {
-	rainbow::Image decode(const DataMap& data) pure;
-
 	rainbow::Image decode(const DataMap& map)
 	{
 		rainbow::Image image;
@@ -60,7 +57,7 @@ namespace uikit
 		CGContextRelease(context);
 
 		image.data = buffer;
-		return image;
+		return std::move(image);
 	}
 }
 

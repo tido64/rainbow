@@ -14,10 +14,12 @@ class Path;
 
 namespace rainbow
 {
+	using byte_t = unsigned char;
+
 	// TODO: Move error strings to a separate header.
-	static const char kErrorFileOpen[] = "Failed to open '%s' (%x)";
-	static const char kErrorFileRead[] = "Failed to read '%s' (%x)";
-	static const char kErrorMemoryMap[] = "Failed to memory map '%s' (%x)";
+	static constexpr char kErrorFileOpen[] = "Failed to open '%s' (%x)";
+	static constexpr char kErrorFileRead[] = "Failed to read '%s' (%x)";
+	static constexpr char kErrorMemoryMap[] = "Failed to memory map '%s' (%x)";
 
 	template <typename T>
 	class TDataMap : private T, private NonCopyable<TDataMap<T>>
@@ -25,7 +27,7 @@ namespace rainbow
 	public:
 #ifdef RAINBOW_JS
 		template <size_t N>
-		TDataMap(const unsigned char (&bytes)[N]) : T(bytes) {}
+		TDataMap(const byte_t (&bytes)[N]) : T(bytes) {}
 #endif
 
 		explicit TDataMap(const Path& path) : T(path) {}
@@ -35,7 +37,7 @@ namespace rainbow
 		/// <returns>
 		///   Pointer to array. Returns <c>nullptr</c> if buffer is empty.
 		/// </returns>
-		const unsigned char* data() const { return T::data(); }
+		const byte_t* data() const { return T::data(); }
 
 		/// <summary>Offsets data map's start address.</summary>
 		void offset(size_t offset) { return T::offset(offset); }

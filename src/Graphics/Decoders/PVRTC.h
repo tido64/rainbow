@@ -5,18 +5,14 @@
 #ifndef GRAPHICS_DECODERS_PVRTC_H_
 #define GRAPHICS_DECODERS_PVRTC_H_
 
-#include <stdint.h>
+#include <cstdint>
 
 #include "Common/Logging.h"
-#include "Common/Functional.h"
 
 #define USE_PVRTC
 
 namespace pvrtc
 {
-	bool check(const DataMap& data) pure;
-	rainbow::Image decode(const DataMap& data) pure;
-
 	namespace
 	{
 		const unsigned int kPVRHeaderVersion3 = 0x03525650;  // = "PVR3"
@@ -52,7 +48,8 @@ namespace pvrtc
 		image.format = rainbow::Image::Format::PVRTC;
 
 #ifdef RAINBOW_OS_IOS
-		PVRTexHeader* header = (PVRTexHeader*)data.data();
+		const PVRTexHeader* header =
+		    reinterpret_cast<const PVRTexHeader*>(data.data());
 		R_ASSERT(CFSwapInt32LittleToHost(header->mipmap_count) == 1,
 		         "Mipmaps are not supported");
 

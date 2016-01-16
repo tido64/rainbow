@@ -9,13 +9,14 @@
 #include "FileSystem/Path.h"
 
 using rainbow::DataMapAndroid;
+using rainbow::byte_t;
 
 DataMapAndroid::DataMapAndroid(const Path& path)
     : off_(0), asset_(File::open(path)) {}
 
-const unsigned char* DataMapAndroid::data() const
+const byte_t* DataMapAndroid::data() const
 {
-	return static_cast<const unsigned char*>(AAsset_getBuffer(asset_)) + off_;
+	return static_cast<const byte_t*>(AAsset_getBuffer(asset_)) + off_;
 }
 
 size_t DataMapAndroid::size() const { return AAsset_getLength(asset_); }
