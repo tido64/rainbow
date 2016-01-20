@@ -8,6 +8,7 @@
 
 #include "Common/Algorithm.h"
 #include "Common/UTF8.h"
+#include "Graphics/Transform.h"
 
 using rainbow::is_equal;
 
@@ -182,14 +183,18 @@ void Label::save(unsigned int start,
 	{
 		const float offset =
 		    width * kAlignmentFactor[static_cast<int>(alignment_)];
+		const Vec2f sin_r(R.y, R.y);
+		const Vec2f cos_r(R.x, R.x);
 		const auto& translate = position_;
 		std::for_each(vertices_.get() + start * 4,
 		              vertices_.get() + end * 4,
-		              [offset, &R, &translate](SpriteVertex& v) {
-			auto& p = v.position;
-			p = Vec2f(R.x * (p.x - offset) - R.y * p.y + translate.x,
-			          R.y * (p.x - offset) + R.x * p.y + translate.y);
-		});
+		              [offset, &sin_r, &cos_r, &translate](SpriteVertex& v)
+		              {
+		                  auto p = v.position;
+		                  p.x -= offset;
+		                  v.position = rainbow::graphics::transform_srt(
+		                      p, sin_r, cos_r, translate);
+		              });
 	}
 	if (width > width_)
 		width_ = width;

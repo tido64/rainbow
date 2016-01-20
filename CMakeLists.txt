@@ -94,6 +94,7 @@ set(SOURCE_FILES
     src/Graphics/TextureAtlas.h
     src/Graphics/TextureManager.cpp
     src/Graphics/TextureManager.h
+    src/Graphics/Transform.h
     src/Graphics/VertexArray.cpp
     src/Graphics/VertexArray.h
     src/Input/Acceleration.h

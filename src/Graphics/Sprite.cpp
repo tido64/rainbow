@@ -4,6 +4,8 @@
 
 #include "Graphics/SpriteBatch.h"
 
+#include "Graphics/Transform.h"
+
 namespace
 {
 	const unsigned int kStaleBuffer       = 1u << 0;
@@ -28,20 +30,6 @@ namespace
 	unsigned int flip_index(unsigned int state)
 	{
 		return ((state & kIsFlipped) >> 0xf) + ((state & kIsMirrored) >> 0xf);
-	}
-
-	Vec2f transform_srt(const Vec2f& p,
-	                    const Vec2f& s_sin_r,
-	                    const Vec2f& s_cos_r,
-	                    const Vec2f& center)
-	{
-		return Vec2f(s_cos_r.x * p.x - s_sin_r.y * p.y + center.x,
-		             s_sin_r.x * p.x + s_cos_r.y * p.y + center.y);
-	}
-
-	Vec2f transform_st(const Vec2f& p, const Vec2f& scale, const Vec2f& center)
-	{
-		return Vec2f(scale.x * p.x + center.x, scale.y * p.y + center.y);
 	}
 }
 
@@ -228,44 +216,8 @@ auto Sprite::update() -> bool
 		if (state_ & kStalePosition)
 			center_ = position_;
 
-		Vec2f origin[4];
-		origin[0].x = width_ * -pivot_.x;
-		origin[0].y = height_ * -(1 - pivot_.y);
-		origin[1].x = origin[0].x + width_;
-		origin[1].y = origin[0].y;
-		origin[2].x = origin[1].x;
-		origin[2].y = origin[1].y + height_;
-		origin[3].x = origin[0].x;
-		origin[3].y = origin[2].y;
-
-		if (!rainbow::is_equal(angle_, 0.0f))
-		{
-			const float cos_r = cosf(-angle_);
-			const float sin_r = sinf(-angle_);
-
-			const Vec2f s_sin_r(scale_.x * sin_r, scale_.y * sin_r);
-			const Vec2f s_cos_r(scale_.x * cos_r, scale_.y * cos_r);
-
-			vertex_array_[0].position =
-			    transform_srt(origin[0], s_sin_r, s_cos_r, center_);
-			vertex_array_[1].position =
-			    transform_srt(origin[1], s_sin_r, s_cos_r, center_);
-			vertex_array_[2].position =
-			    transform_srt(origin[2], s_sin_r, s_cos_r, center_);
-			vertex_array_[3].position =
-			    transform_srt(origin[3], s_sin_r, s_cos_r, center_);
-		}
-		else
-		{
-			vertex_array_[0].position =
-			    transform_st(origin[0], scale_, center_);
-			vertex_array_[1].position =
-			    transform_st(origin[1], scale_, center_);
-			vertex_array_[2].position =
-			    transform_st(origin[2], scale_, center_);
-			vertex_array_[3].position =
-			    transform_st(origin[3], scale_, center_);
-		}
+		rainbow::graphics::transform(
+		    *this, ArrayView<SpriteVertex>(4, vertex_array_));
 	}
 	else if (state_ & kStalePosition)
 	{
