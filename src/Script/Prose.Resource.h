@@ -80,7 +80,7 @@ Prose::Asset create_texture(lua_State* L, rainbow::ScopeStack& stack)
         lua_rawgeti(L, -4, 4);
         const int height = lua_tointeger(L, -1);
         lua_pop(L, 5);
-        texture->define(Vec2i(x, y), width, height);
+        texture->add_region(x, y, width, height);
     }
     return {Prose::AssetType::TextureAtlas, texture, nullptr};
 }

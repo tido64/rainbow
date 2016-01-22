@@ -10,6 +10,11 @@
 
 using rainbow::Texture;
 
+namespace
+{
+    constexpr const char kInvalidColorDepth[] = "Invalid colour depth";
+}
+
 TextureAtlas::TextureAtlas(const char* path)
 {
     texture_ = TextureManager::Get()->create(
@@ -20,21 +25,31 @@ TextureAtlas::TextureAtlas(const char* path)
         });
 }
 
-auto TextureAtlas::define(const Vec2i& origin, int w, int h) -> unsigned int
+auto TextureAtlas::add_region(int x, int y, int w, int h) -> unsigned int
 {
     const float width = static_cast<float>(texture_.width());
     const float height = static_cast<float>(texture_.height());
 
-    R_ASSERT(origin.x >= 0 && (origin.x + w) <= width &&
-             origin.y >= 0 && (origin.y + h) <= height,
+    R_ASSERT(x >= 0 && (x + w) <= width && y >= 0 && (y + h) <= height,
              "Invalid dimensions");
 
-    const Vec2f v0(origin.x / width, origin.y / height);
-    const Vec2f v1((origin.x + w) / width, (origin.y + h) / height);
+    const Vec2f v0(x / width, y / height);
+    const Vec2f v1((x + w) / width, (y + h) / height);
     const size_t i = regions_.size();
     regions_.emplace_back(v0, v1);
     regions_[i].atlas = texture_;
     return i;
+}
+
+void TextureAtlas::set_regions(const ArrayView<const int>& rects)
+{
+    R_ASSERT(rects.size() % 4 == 0,
+             "Rectangle data size must be a multiple of 4");
+
+    regions_.clear();
+    regions_.reserve(rects.size() / 4);
+    for (size_t i = 0; i < rects.size(); i += 4)
+        add_region(rects[i], rects[i + 1], rects[i + 2], rects[i + 3]);
 }
 
 void TextureAtlas::load(TextureManager& texture_manager,
@@ -58,8 +73,7 @@ void TextureAtlas::load(TextureManager& texture_manager,
 #endif  // ETC1
 #ifdef GL_IMG_texture_compression_pvrtc
         case rainbow::Image::Format::PVRTC: {
-            R_ASSERT(image.depth == 2 || image.depth == 4,
-                     "Invalid colour depth");
+            R_ASSERT(image.depth == 2 || image.depth == 4, kInvalidColorDepth);
             R_ASSERT(image.channels == 3 || image.channels == 4,
                      "Invalid number of colour channels");
             GLint internal = 0;
@@ -87,24 +101,24 @@ void TextureAtlas::load(TextureManager& texture_manager,
             switch (image.channels)
             {
                 case 1:
-                    R_ASSERT(image.depth == 8, "Invalid colour depth");
+                    R_ASSERT(image.depth == 8, kInvalidColorDepth);
                     format = GL_LUMINANCE;
                     internal = GL_LUMINANCE;
                     break;
                 case 2:
-                    R_ASSERT(image.depth == 16, "Invalid colour depth");
+                    R_ASSERT(image.depth == 16, kInvalidColorDepth);
                     format = GL_LUMINANCE_ALPHA;
                     internal = GL_LUMINANCE_ALPHA;
                     break;
                 case 3:
                     R_ASSERT(image.depth == 16 || image.depth == 24,
-                             "Invalid colour depth");
+                             kInvalidColorDepth);
                     format = GL_RGB;
                     internal = (image.depth == 16 ? GL_RGBA4 : GL_RGBA8);
                     break;
                 case 4:
                     R_ASSERT(image.depth == 16 || image.depth == 32,
-                             "Invalid colour depth");
+                             kInvalidColorDepth);
                     format = GL_RGBA;
                     internal = (image.depth == 16 ? GL_RGBA4 : GL_RGBA8);
                     break;

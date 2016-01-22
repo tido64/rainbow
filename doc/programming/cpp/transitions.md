@@ -174,7 +174,7 @@ public:
 		logo->set_color(Colorb(0xffffff00));
 		logo->set_position(Vec2f(screen.x * 0.5f, screen.y * 0.5f));
 		logo->set_scale(0.5);
-		logo->set_texture(texture->define(Vec2i(1, 1), 392, 710));
+		logo->set_texture(texture->add_region(1, 1, 392, 710));
 		scenegraph().add_child(batch_);
 
 		rainbow::fade(logo, 1.0f, 1500, rainbow::timing::linear);

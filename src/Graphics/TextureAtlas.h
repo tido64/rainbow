@@ -9,6 +9,7 @@
 
 #include "Common/DataMap.h"
 #include "Graphics/Texture.h"
+#include "Memory/ArrayView.h"
 #include "Memory/SharedPtr.h"
 
 class TextureManager;
@@ -45,14 +46,33 @@ public:
 
     /// <summary>Binds this texture.</summary>
     void bind() const { texture_.bind(); }
+
+    /// <summary>Binds this texture to specified texture unit.</summary>
     void bind(unsigned int unit) const { texture_.bind(unit); }
 
-    /// <summary>Defines a texture region.</summary>
-    /// <param name="origin">Starting point of the region.</param>
+    /// <summary>Adds a texture region.</summary>
+    /// <param name="x">Starting point of the region (x-coordinate).</param>
+    /// <param name="y">Starting point of the region (y-coordinate).</param>
     /// <param name="width">Width of the region.</param>
     /// <param name="height">Height of the region.</param>
     /// <returns>The id of the region.</returns>
-    auto define(const Vec2i& origin, int width, int height) -> unsigned int;
+    auto add_region(int x, int y, int width, int height) -> unsigned int;
+
+    /// <summary>
+    ///   Replaces the current set of texture regions with the set in the
+    ///   specified array.
+    /// </summary>
+    void set_regions(const ArrayView<const int>& rectangles);
+
+    /// <summary>
+    ///   Replaces the current set of texture regions with the set in the
+    ///   specified array.
+    /// </summary>
+    template <size_t N>
+    void set_regions(const int (&rectangles)[N])
+    {
+        set_regions(ArrayView<const int>(N, rectangles));
+    }
 
     /// <summary>Trims the internal texture region storage.</summary>
     void trim() { regions_.shrink_to_fit(); }

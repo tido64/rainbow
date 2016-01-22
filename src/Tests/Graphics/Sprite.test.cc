@@ -20,7 +20,7 @@ namespace
     public:
         SpriteFlipMirrorTest()
             : atlas(make_shared<TextureAtlas>(mock)),
-              texture(atlas->define(Vec2i::Zero, 1, 1)),
+              texture(atlas->add_region(0, 0, 1, 1)),
               batch(mock),
               sprite(batch.create_sprite(2, 2)),
               vertex_array(sprite->vertex_array()) {}

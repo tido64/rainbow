@@ -105,7 +105,7 @@ void SpriteBatch::set_texture(SharedPtr<TextureAtlas> texture)
 Sprite::Ref SpriteBatch::add(int x, int y, int w, int h)
 {
     auto sprite = create_sprite(w, h);
-    sprite->set_texture(texture_->define(Vec2i(x, y), w, h));
+    sprite->set_texture(texture_->add_region(x, y, w, h));
     return sprite;
 }
 

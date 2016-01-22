@@ -39,10 +39,10 @@ namespace
         void SetUp() override
         {
             Animation::Frames frames(new Animation::Frame[kNumFrames + 1]{
-                atlas_->define(Vec2i::Zero, 16, 16),
-                atlas_->define(Vec2i(16, 16), 16, 16),
-                atlas_->define(Vec2i(32, 32), 16, 16),
-                atlas_->define(Vec2i(48, 48), 16, 16),
+                atlas_->add_region(0, 0, 16, 16),
+                atlas_->add_region(16, 16, 16, 16),
+                atlas_->add_region(32, 32, 16, 16),
+                atlas_->add_region(48, 48, 16, 16),
                 Animation::kAnimationEnd});
             batch_.set_texture(atlas_);
             sprite_->set_texture(frames[0]);

@@ -142,9 +142,7 @@ In this example, we set up a walking animation using the simplified API.
 
 namespace
 {
-    const unsigned int kNumTextureRegions = 24;
-
-    const unsigned int kTextureRegions[kNumTextureRegions]{
+    const int kTextureRegions[]{
         400, 724, 104, 149,
         504, 724, 104, 149,
         608, 724, 104, 149,
@@ -152,19 +150,14 @@ namespace
         816, 724, 104, 149,
         920, 724, 104, 149};
 
-    const Animation::Frame kAnimationFrames[7]{
+    const Animation::Frame kAnimationFrames[]{
         0, 1, 2, 3, 4, 5, Animation::kAnimationEnd};
 }
 
 rainbow::texture_t load_texture()
 {
     auto texture = rainbow::texture("monkey.png");
-    for (unsigned int i = 0; i < kNumTextureRegions; i += 4)
-    {
-        texture->define(Vec2i(kTextureRegions[i], kTextureRegions[i + 1]),
-                        kTextureRegions[i + 2],
-                        kTextureRegions[i + 3]);
-    }
+    texture->set_regions(kTextureRegions);
     return texture;
 }
 
