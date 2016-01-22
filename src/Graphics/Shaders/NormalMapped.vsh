@@ -1,17 +1,17 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-16 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
 //#version 100
 
 #ifdef GL_ES
-#	ifdef GL_FRAGMENT_PRECISION_HIGH
+#   ifdef GL_FRAGMENT_PRECISION_HIGH
 precision highp float;
-#	else
+#   else
 precision mediump float;
-#	endif
+#   endif
 #else
-#	define lowp
+#   define lowp
 #endif
 
 attribute vec4 color;
@@ -27,8 +27,8 @@ varying vec2 v_texcoord;
 
 void main()
 {
-	v_color = color;
-	v_normal = normal;
-	v_texcoord = texcoord;
-	gl_Position = mvp_matrix * vec4(vertex, 0.0, 1.0);
+    v_color = color;
+    v_normal = normal;
+    v_texcoord = texcoord;
+    gl_Position = mvp_matrix * vec4(vertex, 0.0, 1.0);
 }

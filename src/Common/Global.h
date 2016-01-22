@@ -1,4 +1,4 @@
-// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-16 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -12,26 +12,26 @@ template <typename T>
 class Global : private NonCopyable<Global<T>>
 {
 public:
-	static T* Get()
-	{
-		R_ASSERT(s_instance, "Instance not yet created or already destroyed");
-		return s_instance;
-	}
+    static T* Get()
+    {
+        R_ASSERT(s_instance, "Instance not yet created or already destroyed");
+        return s_instance;
+    }
 
 protected:
-	Global() = default;
-	~Global() { s_instance = nullptr; }
+    Global() = default;
+    ~Global() { s_instance = nullptr; }
 
-	bool is_global() const { return s_instance == static_cast<const T*>(this); }
+    bool is_global() const { return s_instance == static_cast<const T*>(this); }
 
-	void make_global()
-	{
-		R_ASSERT(!s_instance, "An instance already exists");
-		s_instance = static_cast<T*>(this);
-	}
+    void make_global()
+    {
+        R_ASSERT(!s_instance, "An instance already exists");
+        s_instance = static_cast<T*>(this);
+    }
 
 private:
-	static T* s_instance;
+    static T* s_instance;
 };
 
 template <typename T>

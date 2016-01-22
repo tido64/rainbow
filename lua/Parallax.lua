@@ -18,7 +18,7 @@
 --   - There's a 1:1 mapping between batches and layers even though, logically,
 --     batches can be on the same layer.
 --
--- Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+-- Copyright (c) 2010-16 Bifrost Entertainment AS and Tommy Nguyen
 -- Distributed under the MIT License.
 -- (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -30,50 +30,50 @@ local scoped_node = rainbow.scoped_node
 local table_unpack = table.unpack or unpack
 
 local Parallax = {
-	__index = nil,
-	hide = nil,
-	move = nil,
-	set_layer_velocity = nil,
-	set_parent = nil,
-	show = nil
+    __index = nil,
+    hide = nil,
+    move = nil,
+    set_layer_velocity = nil,
+    set_parent = nil,
+    show = nil
 }
 
 Parallax.__index = setmetatable(Parallax, {
-	__call = function(Parallax, layers)
-		local node = scenegraph:add_node()
-		local f = function(layer)
-			local batch, vx, vy = table_unpack(layer)
-			return {scenegraph:add_batch(node, batch), vx, vy}
-		end
-		return setmetatable(
-		    {[0] = scoped_node(node), layers = F.map(f, layers), node = node},
-		    Parallax)
-	end
+    __call = function(Parallax, layers)
+        local node = scenegraph:add_node()
+        local f = function(layer)
+            local batch, vx, vy = table_unpack(layer)
+            return {scenegraph:add_batch(node, batch), vx, vy}
+        end
+        return setmetatable(
+            {[0] = scoped_node(node), layers = F.map(f, layers), node = node},
+            Parallax)
+    end
 })
 
 function Parallax:hide()
-	scenegraph:disable(self.node)
+    scenegraph:disable(self.node)
 end
 
 function Parallax:move(v)
-	for i = 1, #self.layers do
-		local layer, vx, vy = table_unpack(self.layers[i])
-		scenegraph:move(layer, v * vx, v * vy)
-	end
+    for i = 1, #self.layers do
+        local layer, vx, vy = table_unpack(self.layers[i])
+        scenegraph:move(layer, v * vx, v * vy)
+    end
 end
 
 function Parallax:set_layer_velocity(layer, vx, vy)
-	layer = self.layers[layer]
-	layer[2] = vx
-	layer[3] = vy or 0
+    layer = self.layers[layer]
+    layer[2] = vx
+    layer[3] = vy or 0
 end
 
 function Parallax:set_parent(parent)
-	scenegraph:set_parent(parent, self.node)
+    scenegraph:set_parent(parent, self.node)
 end
 
 function Parallax:show()
-	scenegraph:enable(self.node)
+    scenegraph:enable(self.node)
 end
 
 return Parallax

@@ -1,4 +1,4 @@
-// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-16 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -11,26 +11,26 @@ class b2PolygonShape;
 
 NS_B2_LUA_BEGIN
 {
-	class PolygonShape : public ShapeBase<PolygonShape>
-	{
-	public:
-		explicit PolygonShape(lua_State*);
-		~PolygonShape();
+    class PolygonShape : public ShapeBase<PolygonShape>
+    {
+    public:
+        explicit PolygonShape(lua_State*);
+        ~PolygonShape();
 
-		b2PolygonShape* get() const { return polygon_; }
+        b2PolygonShape* get() const { return polygon_; }
 
-	private:
-		static int GetType(lua_State*);
-		static int GetChildCount(lua_State*);
-		static int Set(lua_State*);
-		static int SetAsBox(lua_State*);
-		static int Validate(lua_State*);
+    private:
+        static int GetType(lua_State*);
+        static int GetChildCount(lua_State*);
+        static int Set(lua_State*);
+        static int SetAsBox(lua_State*);
+        static int Validate(lua_State*);
 
-		b2PolygonShape* polygon_;
-		bool is_owner_;
+        b2PolygonShape* polygon_;
+        bool is_owner_;
 
-		friend Bind;
-	};
+        friend Bind;
+    };
 } NS_B2_LUA_END
 
 #endif

@@ -1,4 +1,4 @@
-// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-16 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -13,10 +13,10 @@ struct lua_State;
 /// in place of their prefixes.
 namespace b2
 {
-	namespace lua
-	{
-		void init(lua_State*);
-	}
+    namespace lua
+    {
+        void init(lua_State*);
+    }
 }
 
 #endif

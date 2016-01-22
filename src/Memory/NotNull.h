@@ -25,39 +25,39 @@ template <typename T>
 class NotNull
 {
 public:
-	NotNull(T t) : ptr_(t) { R_ASSERT(t != nullptr, "t cannot be nullptr"); }
+    NotNull(T t) : ptr_(t) { R_ASSERT(t != nullptr, "t cannot be nullptr"); }
 
-	NotNull(const NotNull& other) = default;
+    NotNull(const NotNull& other) = default;
 
-	template <typename U,
-	          typename = std::enable_if<std::is_convertible<U, T>::value>>
-	NotNull(const NotNull<U>& other) : ptr_(other.get()) {}
+    template <typename U,
+              typename = std::enable_if<std::is_convertible<U, T>::value>>
+    NotNull(const NotNull<U>& other) : ptr_(other.get()) {}
 
-	T get() const { return ptr_; }
+    T get() const { return ptr_; }
 
-	operator T() const { return get(); }
-	T operator->() const { return get(); }
+    operator T() const { return get(); }
+    T operator->() const { return get(); }
 
 private:
-	T ptr_;
+    T ptr_;
 
-	NotNull(std::nullptr_t) = delete;
-	NotNull(int) = delete;
+    NotNull(std::nullptr_t) = delete;
+    NotNull(int) = delete;
 
-	NotNull operator++(int) = delete;
-	NotNull operator--(int) = delete;
+    NotNull operator++(int) = delete;
+    NotNull operator--(int) = delete;
 
-	NotNull& operator++() = delete;
-	NotNull& operator--() = delete;
+    NotNull& operator++() = delete;
+    NotNull& operator--() = delete;
 
-	NotNull& operator+(size_t) = delete;
-	NotNull& operator-(size_t) = delete;
+    NotNull& operator+(size_t) = delete;
+    NotNull& operator-(size_t) = delete;
 
-	NotNull& operator=(std::nullptr_t) = delete;
-	NotNull& operator=(int) = delete;
+    NotNull& operator=(std::nullptr_t) = delete;
+    NotNull& operator=(int) = delete;
 
-	NotNull& operator+=(size_t) = delete;
-	NotNull& operator-=(size_t) = delete;
+    NotNull& operator+=(size_t) = delete;
+    NotNull& operator-=(size_t) = delete;
 };
 
 #endif

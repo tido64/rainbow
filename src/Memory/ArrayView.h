@@ -9,28 +9,28 @@ template <typename T>
 class ArrayView
 {
 public:
-	ArrayView() : ArrayView(0, nullptr) {}
-	ArrayView(std::nullptr_t) : size_(0), array_(nullptr) {}
-	ArrayView(size_t size, NotNull<T*> array) : size_(size), array_(array) {}
-	ArrayView(size_t size, const std::unique_ptr<T[]>& array)
-	    : ArrayView(size, array.get()) {}
+    ArrayView() : ArrayView(nullptr) {}
+    ArrayView(std::nullptr_t) : size_(0), array_(nullptr) {}
+    ArrayView(size_t size, NotNull<T*> array) : size_(size), array_(array) {}
+    ArrayView(size_t size, const std::unique_ptr<T[]>& array)
+        : ArrayView(size, array.get()) {}
 
-	const T* data() const { return array_; }
-	bool empty() const { return size_ == 0; }
-	size_t size() const { return size_; }
+    auto data() const -> const T* { return array_; }
+    bool empty() const { return size_ == 0; }
+    auto size() const { return size_; }
 
-	T* begin() const { return array_; }
-	T* end() const { return array_ + size_; }
+    auto begin() const { return array_; }
+    auto end() const { return array_ + size_; }
 
-	const T* cbegin() const { return begin(); }
-	const T* cend() const { return end(); }
+    auto cbegin() const -> const T* { return begin(); }
+    auto cend() const -> const T*{ return end(); }
 
-	T& operator[](size_t i) { return array_[i]; }
-	const T& operator[](size_t i) const { return array_[i]; }
+    auto& operator[](size_t i) { return array_[i]; }
+    auto& operator[](size_t i) const { return array_[i]; }
 
 private:
-	size_t size_;
-	T* array_;
+    size_t size_;
+    T* array_;
 };
 
 #endif

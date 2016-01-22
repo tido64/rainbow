@@ -1,6 +1,8 @@
 Language: Cpp
 BasedOnStyle: LLVM
 AccessModifierOffset: -4
+AllowShortFunctionsOnASingleLine: Inline
+AlwaysBreakBeforeMultilineStrings: true
 AlwaysBreakTemplateDeclarations: true
 BinPackArguments: false
 BinPackParameters: false
@@ -8,9 +10,8 @@ BreakBeforeBraces: Allman
 IndentCaseLabels: true
 IndentWidth: 4
 NamespaceIndentation: All
-PenaltyReturnTypeOnItsOwnLine: 80
+PenaltyBreakBeforeFirstCallParameter: 0
+PenaltyReturnTypeOnItsOwnLine: 160
 PointerAlignment: Left
-SpaceBeforeParens: ControlStatements
 SpacesBeforeTrailingComments: 2
 TabWidth: 4
-UseTab: ForIndentation

@@ -1,4 +1,4 @@
-// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-16 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -34,41 +34,41 @@ class TextureManager;
 class TextureAtlas : public RefCounted
 {
 public:
-	explicit TextureAtlas(const char* path);
-	explicit TextureAtlas(const rainbow::ISolemnlySwearThatIAmOnlyTesting& test)
-	    : texture_(test) {}
+    explicit TextureAtlas(const char* path);
+    explicit TextureAtlas(const rainbow::ISolemnlySwearThatIAmOnlyTesting& test)
+        : texture_(test) {}
 
-	auto height() const { return texture_.height(); }
-	auto is_valid() const { return texture_; }
-	auto size() const { return regions_.size(); }
-	auto width() const { return texture_.width(); }
+    auto height() const { return texture_.height(); }
+    auto is_valid() const { return texture_; }
+    auto size() const { return regions_.size(); }
+    auto width() const { return texture_.width(); }
 
-	/// <summary>Binds this texture.</summary>
-	void bind() const { texture_.bind(); }
-	void bind(unsigned int unit) const { texture_.bind(unit); }
+    /// <summary>Binds this texture.</summary>
+    void bind() const { texture_.bind(); }
+    void bind(unsigned int unit) const { texture_.bind(unit); }
 
-	/// <summary>Defines a texture region.</summary>
-	/// <param name="origin">Starting point of the region.</param>
-	/// <param name="width">Width of the region.</param>
-	/// <param name="height">Height of the region.</param>
-	/// <returns>The id of the region.</returns>
-	auto define(const Vec2i& origin, int width, int height) -> unsigned int;
+    /// <summary>Defines a texture region.</summary>
+    /// <param name="origin">Starting point of the region.</param>
+    /// <param name="width">Width of the region.</param>
+    /// <param name="height">Height of the region.</param>
+    /// <returns>The id of the region.</returns>
+    auto define(const Vec2i& origin, int width, int height) -> unsigned int;
 
-	/// <summary>Trims the internal texture region storage.</summary>
-	void trim() { regions_.shrink_to_fit(); }
+    /// <summary>Trims the internal texture region storage.</summary>
+    void trim() { regions_.shrink_to_fit(); }
 
-	auto operator[](unsigned int i) const -> const rainbow::TextureRegion&
-	{
-		return regions_[i];
-	}
+    auto operator[](unsigned int i) const -> const rainbow::TextureRegion&
+    {
+        return regions_[i];
+    }
 
 private:
-	rainbow::Texture texture_;                     ///< Texture atlas' id.
-	std::vector<rainbow::TextureRegion> regions_;  ///< Defined texture regions.
+    rainbow::Texture texture_;                     ///< Texture atlas' id.
+    std::vector<rainbow::TextureRegion> regions_;  ///< Defined texture regions.
 
-	void load(TextureManager& texture_manager,
-	          const rainbow::Texture& texture,
-	          const DataMap& data);
+    void load(TextureManager& texture_manager,
+              const rainbow::Texture& texture,
+              const DataMap& data);
 };
 
 #endif

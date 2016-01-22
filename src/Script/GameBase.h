@@ -1,4 +1,4 @@
-// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-16 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -13,52 +13,52 @@
 
 namespace rainbow
 {
-	using animation_t = std::shared_ptr<Animation>;
-	using font_t = SharedPtr<FontAtlas>;
-	using label_t = std::shared_ptr<Label>;
-	using prose_t = std::shared_ptr<Prose>;
-	using sprite_t = Sprite::Ref;
-	using spritebatch_t = std::shared_ptr<SpriteBatch>;
-	using texture_t = SharedPtr<TextureAtlas>;
+    using animation_t = std::shared_ptr<Animation>;
+    using font_t = SharedPtr<FontAtlas>;
+    using label_t = std::shared_ptr<Label>;
+    using prose_t = std::shared_ptr<Prose>;
+    using sprite_t = Sprite::Ref;
+    using spritebatch_t = std::shared_ptr<SpriteBatch>;
+    using texture_t = SharedPtr<TextureAtlas>;
 
-	animation_t animation(sprite_t sprite,
-	                      Animation::Frames frames,
-	                      unsigned int fps,
-	                      int loop_delay = 0);
-	font_t font(const char* path, float pt);
-	label_t label(const char* string = nullptr);
-	spritebatch_t spritebatch(unsigned int hint = 4);
-	texture_t texture(const char* path);
+    animation_t animation(sprite_t sprite,
+                          Animation::Frames frames,
+                          unsigned int fps,
+                          int loop_delay = 0);
+    font_t font(const char* path, float pt);
+    label_t label(const char* string = nullptr);
+    spritebatch_t spritebatch(unsigned int hint = 4);
+    texture_t texture(const char* path);
 
-	namespace prose
-	{
-		prose_t from_lua(const char* path);
-	}
+    namespace prose
+    {
+        prose_t from_lua(const char* path);
+    }
 }
 
 class GameBase
 {
 public:
-	static GameBase* create(rainbow::Director& director);
+    static GameBase* create(rainbow::Director& director);
 
-	virtual ~GameBase() = default;
+    virtual ~GameBase() = default;
 
-	Input& input() { return director_.input(); }
-	rainbow::SceneNode& scenegraph() { return director_.scenegraph(); }
+    Input& input() { return director_.input(); }
+    rainbow::SceneNode& scenegraph() { return director_.scenegraph(); }
 
-	void terminate() { director_.terminate(); }
-	void terminate(const char* error) { director_.terminate(error); }
+    void terminate() { director_.terminate(); }
+    void terminate(const char* error) { director_.terminate(error); }
 
-	virtual void init(const Vec2i&) {}
-	virtual void update(unsigned long) {}
+    virtual void init(const Vec2i&) {}
+    virtual void update(unsigned long) {}
 
-	virtual void on_memory_warning() {}
+    virtual void on_memory_warning() {}
 
 protected:
-	GameBase(rainbow::Director& director) : director_(director) {}
+    GameBase(rainbow::Director& director) : director_(director) {}
 
 private:
-	rainbow::Director& director_;
+    rainbow::Director& director_;
 };
 
 #endif

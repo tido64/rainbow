@@ -1,4 +1,4 @@
-// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-16 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -9,23 +9,23 @@
 
 namespace heimdall
 {
-	namespace color
-	{
-		constexpr Colorb InactiveFont()
-		{
-			return Colorb(0xff, 0xff, 0xff, 0xb0);
-		}
+    namespace color
+    {
+        constexpr Colorb InactiveFont()
+        {
+            return Colorb(0xff, 0xff, 0xff, 0xb0);
+        }
 
-		constexpr Colorb NormalFont()
-		{
-			return Colorb(0xff, 0xff, 0xff);
-		}
+        constexpr Colorb NormalFont()
+        {
+            return Colorb(0xff, 0xff, 0xff);
+        }
 
-		constexpr Colorb Overlay()
-		{
-			return Colorb(0x00, 0x00, 0x00, 0x80);
-		}
-	}
+        constexpr Colorb Overlay()
+        {
+            return Colorb(0x00, 0x00, 0x00, 0x80);
+        }
+    }
 }
 
 #endif

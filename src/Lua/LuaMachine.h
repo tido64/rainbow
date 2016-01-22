@@ -1,4 +1,4 @@
-// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-16 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -13,36 +13,36 @@ struct lua_State;
 
 namespace rainbow
 {
-	namespace lua { class SceneGraph; }
+    namespace lua { class SceneGraph; }
 
-	class SceneNode;
+    class SceneNode;
 
-	/// <summary>Embeds Lua scripting engine.</summary>
-	class LuaMachine : private NonCopyable<LuaMachine>
-	{
-		friend LuaScript;
+    /// <summary>Embeds Lua scripting engine.</summary>
+    class LuaMachine : private NonCopyable<LuaMachine>
+    {
+        friend LuaScript;
 
-	public:
-		/// <summary>Loads and initialises game script.</summary>
-		int start(const Data& main);
+    public:
+        /// <summary>Loads and initialises game script.</summary>
+        int start(const Data& main);
 
-		/// <summary>Calls game update function.</summary>
-		int update(unsigned long t);
+        /// <summary>Calls game update function.</summary>
+        int update(unsigned long t);
 
-		operator lua_State*() const { return state_; }
+        operator lua_State*() const { return state_; }
 
-	private:
-		lua_State* state_;
-		int internal_;
-		int traceback_;
-		lua::SceneGraph* scenegraph_;
+    private:
+        lua_State* state_;
+        int internal_;
+        int traceback_;
+        lua::SceneGraph* scenegraph_;
 
-		LuaMachine();
-		~LuaMachine();
+        LuaMachine();
+        ~LuaMachine();
 
-		void close();
-		int init(LuaScript* instance, SceneNode* root);
-	};
+        void close();
+        int init(LuaScript* instance, SceneNode* root);
+    };
 }
 
 #endif

@@ -1,4 +1,4 @@
-// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-16 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -26,51 +26,51 @@
 class Input : private InputListener, NonCopyable<Input>
 {
 public:
-	Input() : last_listener_(this) {}
+    Input() : last_listener_(this) {}
 
-	/// <summary>Clears all input listeners.</summary>
-	void reset()
-	{
-		pop();
-		last_listener_ = this;
-	}
+    /// <summary>Clears all input listeners.</summary>
+    void reset()
+    {
+        pop();
+        last_listener_ = this;
+    }
 
-	/// <summary>Subscribes an object to input events.</summary>
-	/// <param name="i">The object to subscribe.</param>
-	void subscribe(NotNull<InputListener*> i);
+    /// <summary>Subscribes an object to input events.</summary>
+    /// <param name="i">The object to subscribe.</param>
+    void subscribe(NotNull<InputListener*> i);
 
-	/// <summary>Unsubscribes an object from input events.</summary>
-	/// <param name="i">The object to unsubscribe.</param>
-	void unsubscribe(NotNull<InputListener*> i);
+    /// <summary>Unsubscribes an object from input events.</summary>
+    /// <param name="i">The object to unsubscribe.</param>
+    void unsubscribe(NotNull<InputListener*> i);
 
-	/// <summary>Acceleration event.</summary>
-	/// <param name="x">Acceleration data (x-value).</param>
-	/// <param name="y">Acceleration data (y-value).</param>
-	/// <param name="z">Acceleration data (z-value).</param>
-	/// <param name="t">
-	///   The relative time at which the acceleration occurred.
-	/// </param>
-	void accelerated(double x, double y, double z, double t);
+    /// <summary>Acceleration event.</summary>
+    /// <param name="x">Acceleration data (x-value).</param>
+    /// <param name="y">Acceleration data (y-value).</param>
+    /// <param name="z">Acceleration data (z-value).</param>
+    /// <param name="t">
+    ///   The relative time at which the acceleration occurred.
+    /// </param>
+    void accelerated(double x, double y, double z, double t);
 
-	void on_controller_axis_motion(const ControllerAxisMotion&);
-	void on_controller_button_down(const ControllerButton&);
-	void on_controller_button_up(const ControllerButton&);
-	void on_controller_connected(unsigned int id);
-	void on_controller_disconnected(unsigned int id);
+    void on_controller_axis_motion(const ControllerAxisMotion&);
+    void on_controller_button_down(const ControllerButton&);
+    void on_controller_button_up(const ControllerButton&);
+    void on_controller_connected(unsigned int id);
+    void on_controller_disconnected(unsigned int id);
 
-	void on_key_down(const Key& k);
-	void on_key_up(const Key& k);
+    void on_key_down(const Key& k);
+    void on_key_up(const Key& k);
 
-	void on_pointer_began(const ArrayView<Pointer>& pointers);
-	void on_pointer_canceled();
-	void on_pointer_ended(const ArrayView<Pointer>& pointers);
-	void on_pointer_moved(const ArrayView<Pointer>& pointers);
+    void on_pointer_began(const ArrayView<Pointer>& pointers);
+    void on_pointer_canceled();
+    void on_pointer_ended(const ArrayView<Pointer>& pointers);
+    void on_pointer_moved(const ArrayView<Pointer>& pointers);
 
 private:
-	Acceleration acceleration_;  ///< Accelerometer data
-	InputListener* last_listener_;
+    Acceleration acceleration_;  ///< Accelerometer data
+    InputListener* last_listener_;
 
-	void on_end_link_removed(Link* node) override;
+    void on_end_link_removed(Link* node) override;
 };
 
 #endif

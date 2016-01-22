@@ -1,4 +1,4 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-16 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -11,73 +11,73 @@
 
 namespace ConFuoco
 {
-	class MixerSL : public MixerBase<MixerSL>
-	{
-		friend MixerBase<MixerSL>;
+    class MixerSL : public MixerBase<MixerSL>
+    {
+        friend MixerBase<MixerSL>;
 
-	public:
-		MixerSL();
-		~MixerSL();
+    public:
+        MixerSL();
+        ~MixerSL();
 
-		inline SLEngineItf interface();
+        inline SLEngineItf interface();
 
-	private:
-		struct SLAudioPlayer
-		{
-			bool suspended;
-			int loops;
+    private:
+        struct SLAudioPlayer
+        {
+            bool suspended;
+            int loops;
 
-			const Channel *channel;
-			SLObjectItf player;
-			SLPlayItf play_itf;
-			SLVolumeItf volume_itf;
+            const Channel *channel;
+            SLObjectItf player;
+            SLPlayItf play_itf;
+            SLVolumeItf volume_itf;
 
-			SLAudioPlayer();
-			~SLAudioPlayer();
+            SLAudioPlayer();
+            ~SLAudioPlayer();
 
-			SLuint32 state() const;
-			void set_state(const SLuint32 state);
+            SLuint32 state() const;
+            void set_state(const SLuint32 state);
 
-			bool load(SLEngineItf engine, SLObjectItf output_mix);
-			void release();
+            bool load(SLEngineItf engine, SLObjectItf output_mix);
+            void release();
 
-			explicit operator bool() const;
-		};
+            explicit operator bool() const;
+        };
 
-		SLObjectItf engine_obj;  ///< OpenSL engine object.
-		SLEngineItf engine;      ///< OpenSL engine interface.
-		SLObjectItf output_mix;  ///< Output mix object.
-		SLAudioPlayer players[kNumChannels];
+        SLObjectItf engine_obj;  ///< OpenSL engine object.
+        SLEngineItf engine;      ///< OpenSL engine interface.
+        SLObjectItf output_mix;  ///< Output mix object.
+        SLAudioPlayer players[kNumChannels];
 
-		void set_gain_impl(const float gain);
-		void set_pitch_impl(const float pitch);
-		void clear_impl();
-		void suspend_impl(const bool suspend);
-		void update_impl();
+        void set_gain_impl(const float gain);
+        void set_pitch_impl(const float pitch);
+        void clear_impl();
+        void suspend_impl(const bool suspend);
+        void update_impl();
 
-		/* Channel interface */
+        /* Channel interface */
 
-		bool is_paused_impl(const Channel *c);
-		bool is_playing_impl(const Channel *c);
-		void set_gain_impl(const Channel *c, const float gain);
-		void pause_impl(const Channel *c);
-		void play_impl(const Channel *c);
-		void stop_impl(const Channel *c);
+        bool is_paused_impl(const Channel *c);
+        bool is_playing_impl(const Channel *c);
+        void set_gain_impl(const Channel *c, const float gain);
+        void pause_impl(const Channel *c);
+        void play_impl(const Channel *c);
+        void stop_impl(const Channel *c);
 
-		/* Sound interface */
+        /* Sound interface */
 
-		Sound* create_sound_impl(const char *const file,
-		                         const Sound::Type type,
-		                         const int loops);
-		void release_impl(Sound *s);
-	};
+        Sound* create_sound_impl(const char *const file,
+                                 const Sound::Type type,
+                                 const int loops);
+        void release_impl(Sound *s);
+    };
 
-	inline SLEngineItf MixerSL::interface()
-	{
-		return this->engine;
-	}
+    inline SLEngineItf MixerSL::interface()
+    {
+        return this->engine;
+    }
 
-	using Mixer = MixerSL;
+    using Mixer = MixerSL;
 }
 
 #endif

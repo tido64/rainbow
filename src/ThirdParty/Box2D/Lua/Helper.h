@@ -1,4 +1,4 @@
-// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-16 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -6,12 +6,12 @@
 #define THIRDPARTY_BOX2D_LUA_HELPER_H_
 
 #ifdef __GNUC__
-#	pragma GCC diagnostic push
-#	pragma GCC diagnostic ignored "-Wstrict-aliasing"
+#   pragma GCC diagnostic push
+#   pragma GCC diagnostic ignored "-Wstrict-aliasing"
 #endif
 #include <Box2D/Common/b2Math.h>
 #ifdef __GNUC__
-#	pragma GCC diagnostic pop
+#   pragma GCC diagnostic pop
 #endif
 
 #include "Lua/LuaBind.h"
@@ -29,16 +29,16 @@
 
 namespace b2
 {
-	b2Vec2 Vec2(lua_State* L, int m, int n);
+    b2Vec2 Vec2(lua_State* L, int m, int n);
 
-	void getfield(lua_State* L, const char* field, size_t length);
+    void getfield(lua_State* L, const char* field, size_t length);
 
-	template <typename T>
-	T gettable(lua_State* L, const char* field, size_t length);
+    template <typename T>
+    T gettable(lua_State* L, const char* field, size_t length);
 
-	void rawsetnil(lua_State* L, const char* field, size_t length);
+    void rawsetnil(lua_State* L, const char* field, size_t length);
 
-	int rawsetvec2(lua_State* L, const char* field, size_t length);
+    int rawsetvec2(lua_State* L, const char* field, size_t length);
 }
 
 #endif

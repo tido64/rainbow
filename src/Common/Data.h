@@ -1,4 +1,4 @@
-// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-16 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -28,101 +28,101 @@ class File;
 class Data : private NonCopyable<Data>
 {
 public:
-	enum class Ownership
-	{
-		Owner,
-		Reference
-	};
+    enum class Ownership
+    {
+        Owner,
+        Reference
+    };
 
-	template <typename T, size_t N, typename = CharType<T>>
-	static Data from_bytes(const T (&bytes)[N])
-	{
-		return Data(bytes, N, Ownership::Reference);
-	}
+    template <typename T, size_t N, typename = CharType<T>>
+    static Data from_bytes(const T (&bytes)[N])
+    {
+        return Data(bytes, N, Ownership::Reference);
+    }
 
-	template <typename T, size_t N, typename = CharType<T>>
-	static Data from_literal(const T (&literal)[N])
-	{
-		return Data(literal, N - 1, Ownership::Reference);
-	}
+    template <typename T, size_t N, typename = CharType<T>>
+    static Data from_literal(const T (&literal)[N])
+    {
+        return Data(literal, N - 1, Ownership::Reference);
+    }
 
-	static Data load_asset(const char* asset);
-	static Data load_document(const char* document);
+    static Data load_asset(const char* asset);
+    static Data load_document(const char* document);
 
-	/// <summary>
-	///   Constructs an empty data object. No memory will be allocated.
-	/// </summary>
-	Data()
-	    : ownership_(Ownership::Owner), allocated_(0), sz_(0), data_(nullptr) {}
+    /// <summary>
+    ///   Constructs an empty data object. No memory will be allocated.
+    /// </summary>
+    Data()
+        : ownership_(Ownership::Owner), allocated_(0), sz_(0), data_(nullptr) {}
 
-	Data(Data&& d)
-	    : ownership_(d.ownership_), allocated_(d.allocated_), sz_(d.sz_),
-	      data_(d.data_)
-	{
-		d.allocated_ = 0;
-		d.sz_ = 0;
-		d.data_ = nullptr;
-	}
+    Data(Data&& d)
+        : ownership_(d.ownership_), allocated_(d.allocated_), sz_(d.sz_),
+          data_(d.data_)
+    {
+        d.allocated_ = 0;
+        d.sz_ = 0;
+        d.data_ = nullptr;
+    }
 
-	/// <summary>
-	///   Constructs a data object with the contents of the file.
-	/// </summary>
-	explicit Data(const File&);
+    /// <summary>
+    ///   Constructs a data object with the contents of the file.
+    /// </summary>
+    explicit Data(const File&);
 
-	/// <summary>Constructs a wrapper around a buffer.</summary>
-	Data(const void* buffer, size_t size, Ownership ownership)
-	    : ownership_(ownership), allocated_(size), sz_(size),
-	      data_(const_cast<void*>(buffer)) {}
+    /// <summary>Constructs a wrapper around a buffer.</summary>
+    Data(const void* buffer, size_t size, Ownership ownership)
+        : ownership_(ownership), allocated_(size), sz_(size),
+          data_(const_cast<void*>(buffer)) {}
 
-	~Data();
+    ~Data();
 
-	/// <summary>Returns raw byte array.</summary>
-	/// <returns>
-	///   Pointer to array. Returns <c>nullptr</c> if buffer is empty.
-	/// </returns>
-	void* bytes() const { return data_; }
+    /// <summary>Returns raw byte array.</summary>
+    /// <returns>
+    ///   Pointer to array. Returns <c>nullptr</c> if buffer is empty.
+    /// </returns>
+    void* bytes() const { return data_; }
 
-	/// <summary>Saves data to file.</summary>
-	/// <returns><c>true</c> on success, <c>false</c> otherwise.</returns>
-	bool save(const char* path) const;
+    /// <summary>Saves data to file.</summary>
+    /// <returns><c>true</c> on success, <c>false</c> otherwise.</returns>
+    bool save(const char* path) const;
 
-	/// <summary>Returns the size of this buffer.</summary>
-	size_t size() const { return sz_; }
+    /// <summary>Returns the size of this buffer.</summary>
+    size_t size() const { return sz_; }
 
-	explicit operator bool() const { return data_; }
-	operator void*() const { return data_; }
-	operator char*() const { return static_cast<char*>(data_); }
+    explicit operator bool() const { return data_; }
+    operator void*() const { return data_; }
+    operator char*() const { return static_cast<char*>(data_); }
 
-	operator unsigned char*() const
-	{
-		return static_cast<unsigned char*>(data_);
-	}
+    operator unsigned char*() const
+    {
+        return static_cast<unsigned char*>(data_);
+    }
 
 #ifdef RAINBOW_OS_IOS
-	operator NSData*() const
-	{
-		return [NSData dataWithBytesNoCopy:data_ length:sz_ freeWhenDone:NO];
-	}
+    operator NSData*() const
+    {
+        return [NSData dataWithBytesNoCopy:data_ length:sz_ freeWhenDone:NO];
+    }
 
-	operator NSMutableData*() const
-	{
-		return [NSMutableData dataWithBytesNoCopy:data_
-		                                   length:sz_
-		                             freeWhenDone:NO];
-	}
+    operator NSMutableData*() const
+    {
+        return [NSMutableData dataWithBytesNoCopy:data_
+                                           length:sz_
+                                     freeWhenDone:NO];
+    }
 #endif
 
 private:
-	Ownership ownership_;  ///< Decides whether to free the buffer on destruction.
-	size_t allocated_;     ///< Allocated memory size.
-	size_t sz_;            ///< Size of used buffer, not necessarily equal to allocated.
-	void* data_;           ///< Actual buffer, implemented as a C-array.
+    Ownership ownership_;  ///< Decides whether to free the buffer on destruction.
+    size_t allocated_;     ///< Allocated memory size.
+    size_t sz_;            ///< Size of used buffer, not necessarily equal to allocated.
+    void* data_;           ///< Actual buffer, implemented as a C-array.
 
-	/// <summary>
-	///   Resizes allocated memory segment. If the requested allocation size is
-	///   smaller than current allocated size, nothing will happen.
-	/// </summary>
-	void allocate(size_t size);
+    /// <summary>
+    ///   Resizes allocated memory segment. If the requested allocation size is
+    ///   smaller than current allocated size, nothing will happen.
+    /// </summary>
+    void allocate(size_t size);
 };
 
 #endif  // DATA_H_

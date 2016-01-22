@@ -1,4 +1,4 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-16 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -9,23 +9,23 @@
 
 namespace ConFuoco
 {
-	class RecorderiOS : public RecorderBase<RecorderiOS>
-	{
-		friend RecorderBase<RecorderiOS>;
+    class RecorderiOS : public RecorderBase<RecorderiOS>
+    {
+        friend RecorderBase<RecorderiOS>;
 
-	public:
-		RecorderiOS();
+    public:
+        RecorderiOS();
 
-	private:
-		AVAudioRecorder *recorder;
+    private:
+        AVAudioRecorder *recorder;
 
-		void pause_impl();
-		bool record_impl(const unsigned long duration);
-		void stop_impl();
-		void update_impl();
-	};
+        void pause_impl();
+        bool record_impl(const unsigned long duration);
+        void stop_impl();
+        void update_impl();
+    };
 
-	using Recorder = RecorderiOS;
+    using Recorder = RecorderiOS;
 }
 
 #endif  // CONFUOCO_RECORDER_IOS_H_

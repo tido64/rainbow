@@ -29,33 +29,33 @@
 
 namespace
 {
-	const uint32_t utf8_classtab[0x10]{
-	    0x88888888UL, 0x88888888UL, 0x99999999UL, 0x99999999UL,
-	    0xaaaaaaaaUL, 0xaaaaaaaaUL, 0xaaaaaaaaUL, 0xaaaaaaaaUL,
-	    0x222222ffUL, 0x22222222UL, 0x22222222UL, 0x22222222UL,
-	    0x3333333bUL, 0x33433333UL, 0xfff5666cUL, 0xffffffffUL};
+    const uint32_t utf8_classtab[0x10]{
+        0x88888888UL, 0x88888888UL, 0x99999999UL, 0x99999999UL,
+        0xaaaaaaaaUL, 0xaaaaaaaaUL, 0xaaaaaaaaUL, 0xaaaaaaaaUL,
+        0x222222ffUL, 0x22222222UL, 0x22222222UL, 0x22222222UL,
+        0x3333333bUL, 0x33433333UL, 0xfff5666cUL, 0xffffffffUL};
 
-	const uint32_t utf8_statetab[0x10]{
-	    0xfffffff0UL, 0xffffffffUL, 0xfffffff1UL, 0xfffffff3UL,
-	    0xfffffff4UL, 0xfffffff7UL, 0xfffffff6UL, 0xffffffffUL,
-	    0x33f11f0fUL, 0xf3311f0fUL, 0xf33f110fUL, 0xfffffff2UL,
-	    0xfffffff5UL, 0xffffffffUL, 0xffffffffUL, 0xffffffffUL};
+    const uint32_t utf8_statetab[0x10]{
+        0xfffffff0UL, 0xffffffffUL, 0xfffffff1UL, 0xfffffff3UL,
+        0xfffffff4UL, 0xfffffff7UL, 0xfffffff6UL, 0xffffffffUL,
+        0x33f11f0fUL, 0xf3311f0fUL, 0xf33f110fUL, 0xfffffff2UL,
+        0xfffffff5UL, 0xffffffffUL, 0xffffffffUL, 0xffffffffUL};
 }
 
 namespace rainbow
 {
-	uint8_t utf8_decode_step(uint8_t state, uint8_t octet, uint32_t* cpp)
-	{
-		const uint8_t reject = state >> 3;
-		const uint8_t nonascii = octet >> 7;
-		const uint8_t klass =
-		    (!nonascii ? 0 : (0xf & (utf8_classtab[(octet >> 3) & 0xf] >>
-		                             (4 * (octet & 7)))));
+    uint8_t utf8_decode_step(uint8_t state, uint8_t octet, uint32_t* cpp)
+    {
+        const uint8_t reject = state >> 3;
+        const uint8_t nonascii = octet >> 7;
+        const uint8_t klass =
+            (!nonascii ? 0 : (0xf & (utf8_classtab[(octet >> 3) & 0xf] >>
+                                     (4 * (octet & 7)))));
 
-		*cpp = (state == kUTF8Accept ? (octet & (0xffU >> klass))
-		                             : ((octet & 0x3fU) | (*cpp << 6)));
+        *cpp = (state == kUTF8Accept ? (octet & (0xffU >> klass))
+                                     : ((octet & 0x3fU) | (*cpp << 6)));
 
-		return (reject ? kUTF8Reject
-		               : (0xf & (utf8_statetab[klass] >> (4 * (state & 7)))));
-	}
+        return (reject ? kUTF8Reject
+                       : (0xf & (utf8_statetab[klass] >> (4 * (state & 7)))));
+    }
 }

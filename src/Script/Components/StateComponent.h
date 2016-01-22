@@ -10,133 +10,133 @@
 
 namespace rainbow
 {
-	class StateComponent;
+    class StateComponent;
 
-	class IState
-	{
-	public:
-		auto next() const { return next_; }
+    class IState
+    {
+    public:
+        auto next() const { return next_; }
 
-		virtual void update(StateComponent&, Actor&, unsigned long dt) = 0;
+        virtual void update(StateComponent&, Actor&, unsigned long dt) = 0;
 
-		virtual void on_enter(StateComponent&, Actor&) {}
-		virtual void on_exit(StateComponent&, Actor&) {}
+        virtual void on_enter(StateComponent&, Actor&) {}
+        virtual void on_exit(StateComponent&, Actor&) {}
 
-		virtual auto to_string() const -> const char* = 0;
+        virtual auto to_string() const -> const char* = 0;
 
-	protected:
-		IState() : next_(nullptr) {}
-		~IState() = default;
+    protected:
+        IState() : next_(nullptr) {}
+        ~IState() = default;
 
-	private:
-		IState* next_;
+    private:
+        IState* next_;
 
-		friend StateComponent;
-	};
+        friend StateComponent;
+    };
 
-	class StateComponent : public IScriptComponent
-	{
-	public:
-		auto state() const { return top_; }
+    class StateComponent : public IScriptComponent
+    {
+    public:
+        auto state() const { return top_; }
 
-		bool contains(const IState& state) const
-		{
-			return &state == top_ || state_before(state) != nullptr;
-		}
+        bool contains(const IState& state) const
+        {
+            return &state == top_ || state_before(state) != nullptr;
+        }
 
-		void dump() const
-		{
-			LOGD("<StateComponent:%p>\n"
-			     "  Top\n"
-			     "   ↑",
-			     this);
+        void dump() const
+        {
+            LOGD("<StateComponent:%p>\n"
+                 "  Top\n"
+                 "   ↑",
+                 this);
 
-			auto state = top_;
-			while (state)
-			{
-				LOGD("   | %s (%p)", state->to_string(), state);
-				state = state->next();
-			}
+            auto state = top_;
+            while (state)
+            {
+                LOGD("   | %s (%p)", state->to_string(), state);
+                state = state->next();
+            }
 
-			LOGD("   ⊥");
-		}
+            LOGD("   ⊥");
+        }
 
-		void pop_state()
-		{
-			if (!top_)
-				return;
+        void pop_state()
+        {
+            if (!top_)
+                return;
 
-			auto& state = *top_;
-			top_ = state.next();
-			exit_state(state);
-		}
+            auto& state = *top_;
+            top_ = state.next();
+            exit_state(state);
+        }
 
-		void push_state(IState& state)
-		{
-			state.next_ = top_;
-			top_ = &state;
-			state.on_enter(*this, actor());
-		}
+        void push_state(IState& state)
+        {
+            state.next_ = top_;
+            top_ = &state;
+            state.on_enter(*this, actor());
+        }
 
-		void remove_state(IState& state)
-		{
-			if (&state == top_)
-			{
-				pop_state();
-				return;
-			}
+        void remove_state(IState& state)
+        {
+            if (&state == top_)
+            {
+                pop_state();
+                return;
+            }
 
-			auto prev = state_before(state);
-			if (!prev)
-				return;
+            auto prev = state_before(state);
+            if (!prev)
+                return;
 
-			prev->next_ = state.next();
-			exit_state(state);
-		}
+            prev->next_ = state.next();
+            exit_state(state);
+        }
 
-		void set_state(IState& state)
-		{
-			if (top_)
-				top_->on_exit(*this, actor());
-			top_ = &state;
-			state.on_enter(*this, actor());
-		}
+        void set_state(IState& state)
+        {
+            if (top_)
+                top_->on_exit(*this, actor());
+            top_ = &state;
+            state.on_enter(*this, actor());
+        }
 
-		// IScriptComponent details.
+        // IScriptComponent details.
 
-		void initialize(Actor& actor) override { actor_ = &actor; }
+        void initialize(Actor& actor) override { actor_ = &actor; }
 
-		void update(unsigned long dt) override
-		{
-			state()->update(*this, actor(), dt);
-		}
+        void update(unsigned long dt) override
+        {
+            state()->update(*this, actor(), dt);
+        }
 
-	protected:
-		auto actor() -> Actor& { return *actor_; }
+    protected:
+        auto actor() -> Actor& { return *actor_; }
 
-	private:
-		IState* top_ = nullptr;
-		Actor* actor_ = nullptr;
+    private:
+        IState* top_ = nullptr;
+        Actor* actor_ = nullptr;
 
-		void exit_state(IState& state)
-		{
-			state.next_ = nullptr;
-			state.on_exit(*this, actor());
-		}
+        void exit_state(IState& state)
+        {
+            state.next_ = nullptr;
+            state.on_exit(*this, actor());
+        }
 
-		IState* state_before(const IState& state) const
-		{
-			auto i = top_;
-			while (i)
-			{
-				if (i->next() == &state)
-					return i;
+        IState* state_before(const IState& state) const
+        {
+            auto i = top_;
+            while (i)
+            {
+                if (i->next() == &state)
+                    return i;
 
-				i = i->next();
-			}
-			return nullptr;
-		}
-	};
+                i = i->next();
+            }
+            return nullptr;
+        }
+    };
 }
 
 #endif

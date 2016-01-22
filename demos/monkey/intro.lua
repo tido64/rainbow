@@ -1,6 +1,6 @@
 -- Monkey Demo: Intro
 --
--- Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+-- Copyright (c) 2010-16 Bifrost Entertainment AS and Tommy Nguyen
 -- Distributed under the MIT License.
 -- (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -12,57 +12,57 @@ SceneIntro = {}
 SceneIntro.__index = SceneIntro
 
 function SceneIntro:new()
-	--[[
-	This is just a short-hand version of writing:
+    --[[
+    This is just a short-hand version of writing:
 
-		local self = {}
-		setmetatable(self, SceneIntro)
-		self.scene = etc.
-	--]]
-	local self = setmetatable({
-		scene = Prose.from_table(scenedef),
-		timer = 0
-	}, SceneIntro)
-	rainbow.scenegraph:disable(self.scene.objects.logo_batch.node)
-	return self
+        local self = {}
+        setmetatable(self, SceneIntro)
+        self.scene = etc.
+    --]]
+    local self = setmetatable({
+        scene = Prose.from_table(scenedef),
+        timer = 0
+    }, SceneIntro)
+    rainbow.scenegraph:disable(self.scene.objects.logo_batch.node)
+    return self
 end
 
 --[[
 This here lets you create a SceneIntro object without calling .new:
 
-	local scene = SceneIntro()
+    local scene = SceneIntro()
 --]]
 setmetatable(SceneIntro, { __call = SceneIntro.new })
 
 function SceneIntro:destruct()
-	--[[
-		We've already marked self.scene for collection. There's nothing else to
-		do here.
-	--]]
+    --[[
+        We've already marked self.scene for collection. There's nothing else to
+        do here.
+    --]]
 end
 
 function SceneIntro:init()
-	playSound(self.scene.resources.bgm)
-	local callback = function()
-		self:tick()
-	end
-	self.timer = Timer(callback, 22000, 1)
+    playSound(self.scene.resources.bgm)
+    local callback = function()
+        self:tick()
+    end
+    self.timer = Timer(callback, 22000, 1)
 end
 
 function SceneIntro:tick()
-	rainbow.input.subscribe(self)
-	rainbow.scenegraph:enable(self.scene.objects.logo_batch.node)
+    rainbow.input.subscribe(self)
+    rainbow.scenegraph:enable(self.scene.objects.logo_batch.node)
 end
 
 function SceneIntro:pointer_began()
-	rainbow.input.unsubscribe(self);
-	self.scene = nil;
+    rainbow.input.unsubscribe(self);
+    self.scene = nil;
 end
 
 function SceneIntro:update(dt)
-	if not self.scene then
-		return "scummbar";
-	end
+    if not self.scene then
+        return "scummbar";
+    end
 end
 
 function SceneIntro:key_down() end

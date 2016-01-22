@@ -1,4 +1,4 @@
-// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-16 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -11,20 +11,20 @@
 class Drawable
 {
 public:
-	virtual ~Drawable() = default;
+    virtual ~Drawable() = default;
 
-	Drawable* get() { return this; }
+    Drawable* get() { return this; }
 
-	void move(const Vec2f& delta) { move_impl(delta); }
+    void move(const Vec2f& delta) { move_impl(delta); }
 
-	void draw() { draw_impl(); }
-	void update(unsigned long dt) { update_impl(dt); }
+    void draw() { draw_impl(); }
+    void update(unsigned long dt) { update_impl(dt); }
 
 private:
-	virtual void move_impl(const Vec2f&) {}
+    virtual void move_impl(const Vec2f&) {}
 
-	virtual void draw_impl() = 0;
-	virtual void update_impl(unsigned long dt) = 0;
+    virtual void draw_impl() = 0;
+    virtual void update_impl(unsigned long dt) = 0;
 };
 
 #endif

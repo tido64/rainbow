@@ -1,4 +1,4 @@
-// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-16 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -11,25 +11,25 @@ class b2EdgeShape;
 
 NS_B2_LUA_BEGIN
 {
-	class EdgeShape : public ShapeBase<EdgeShape>
-	{
-	public:
-		explicit EdgeShape(lua_State*);
-		~EdgeShape();
+    class EdgeShape : public ShapeBase<EdgeShape>
+    {
+    public:
+        explicit EdgeShape(lua_State*);
+        ~EdgeShape();
 
-		b2EdgeShape* get() const { return edge_; }
+        b2EdgeShape* get() const { return edge_; }
 
-	private:
-		static int GetType(lua_State*);
-		static int Set(lua_State*);
-		static int GetChildCount(lua_State*);
-		static int TestPoint(lua_State*) /* override */;
+    private:
+        static int GetType(lua_State*);
+        static int Set(lua_State*);
+        static int GetChildCount(lua_State*);
+        static int TestPoint(lua_State*) /* override */;
 
-		b2EdgeShape* edge_;
-		bool is_owner_;
+        b2EdgeShape* edge_;
+        bool is_owner_;
 
-		friend Bind;
-	};
+        friend Bind;
+    };
 } NS_B2_LUA_END
 
 #endif

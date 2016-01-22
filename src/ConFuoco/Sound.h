@@ -1,4 +1,4 @@
-// Copyright (c) 2010-14 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-16 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -7,22 +7,22 @@
 
 namespace ConFuoco
 {
-	class Sound
-	{
-	public:
-		enum class Type
-		{
-			Static,
-			Stream
-		};
+    class Sound
+    {
+    public:
+        enum class Type
+        {
+            Static,
+            Stream
+        };
 
-		const Type type;
+        const Type type;
 
-		virtual ~Sound() = default;
+        virtual ~Sound() = default;
 
-	protected:
-		explicit Sound(const Type t) : type(t) {}
-	};
+    protected:
+        explicit Sound(const Type t) : type(t) {}
+    };
 }
 
 #endif

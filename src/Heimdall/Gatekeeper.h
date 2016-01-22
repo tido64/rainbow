@@ -1,4 +1,4 @@
-// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-16 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -20,49 +20,49 @@ struct Pointer;
 
 namespace heimdall
 {
-	/// <summary>Overlay for debugging options.</summary>
-	class Gatekeeper final : public rainbow::Director, public InputListener
-	{
-	public:
-		Gatekeeper();
+    /// <summary>Overlay for debugging options.</summary>
+    class Gatekeeper final : public rainbow::Director, public InputListener
+    {
+    public:
+        Gatekeeper();
 
-		/* Director overrides */
+        /* Director overrides */
 
-		void draw()
-		{
-			Director::draw();
-			scenegraph_.draw();
-		}
+        void draw()
+        {
+            Director::draw();
+            scenegraph_.draw();
+        }
 
-		void init(const Vec2i& screen);
-		void update(unsigned long dt);
+        void init(const Vec2i& screen);
+        void update(unsigned long dt);
 
-	private:
+    private:
 #if USE_LUA_SCRIPT
-		std::queue<std::unique_ptr<char[]>> changed_files_;
+        std::queue<std::unique_ptr<char[]>> changed_files_;
 #endif  // USE_LUA_SCRIPT
-		Overlay overlay_;
-		OverlayActivator overlay_activator_;
-		std::unique_ptr<PerformanceOverlay> perf_;
-		rainbow::GroupNode scenegraph_;
-		std::unordered_map<unsigned int, Button*> pressed_;
-		rainbow::Rect projection_;
+        Overlay overlay_;
+        OverlayActivator overlay_activator_;
+        std::unique_ptr<PerformanceOverlay> perf_;
+        rainbow::GroupNode scenegraph_;
+        std::unordered_map<unsigned int, Button*> pressed_;
+        rainbow::Rect projection_;
 #if USE_LUA_SCRIPT
-		std::mutex changed_files_mutex_;
-		ChangeMonitor monitor_;
+        std::mutex changed_files_mutex_;
+        ChangeMonitor monitor_;
 #endif  // USE_LUA_SCRIPT
 
-		void post_init();
-		void pre_init(const Vec2i& screen);
-		void update_components();
+        void post_init();
+        void pre_init(const Vec2i& screen);
+        void update_components();
 
-		/* Implement InputListener */
+        /* Implement InputListener */
 
-		bool on_pointer_began_impl(const ArrayView<Pointer>&) override;
-		bool on_pointer_canceled_impl() override;
-		bool on_pointer_ended_impl(const ArrayView<Pointer>&) override;
-		bool on_pointer_moved_impl(const ArrayView<Pointer>&) override;
-	};
+        bool on_pointer_began_impl(const ArrayView<Pointer>&) override;
+        bool on_pointer_canceled_impl() override;
+        bool on_pointer_ended_impl(const ArrayView<Pointer>&) override;
+        bool on_pointer_moved_impl(const ArrayView<Pointer>&) override;
+    };
 }
 
 using Director = heimdall::Gatekeeper;

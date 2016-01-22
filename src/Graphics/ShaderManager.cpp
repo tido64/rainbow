@@ -1,4 +1,4 @@
-// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-16 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -18,208 +18,208 @@
 
 namespace
 {
-	using String = std::unique_ptr<char[]>;
+    using String = std::unique_ptr<char[]>;
 
-	const Shader::AttributeParams kAttributeDefaultParams[]{
-	    {Shader::kAttributeVertex, "vertex"},
-	    {Shader::kAttributeColor, "color"},
-	    {Shader::kAttributeTexCoord, "texcoord"},
-	    {Shader::kAttributeNone, nullptr}};
+    const Shader::AttributeParams kAttributeDefaultParams[]{
+        {Shader::kAttributeVertex, "vertex"},
+        {Shader::kAttributeColor, "color"},
+        {Shader::kAttributeTexCoord, "texcoord"},
+        {Shader::kAttributeNone, nullptr}};
 
-	template <typename F, typename G>
-	String verify(GLuint id, GLenum pname, F&& glGetiv, G&& glGetInfoLog)
-	{
-		GLint status = GL_FALSE;
-		glGetiv(id, pname, &status);
-		if (status == GL_FALSE)
-		{
-			GLint info_len = 0;
-			glGetiv(id, GL_INFO_LOG_LENGTH, &info_len);
-			if (info_len == 0)
-				return {};
-			char* log = new char[info_len];
-			glGetInfoLog(id, info_len, nullptr, log);
-			return String(log);
-		}
-		return {};
-	}
+    template <typename F, typename G>
+    String verify(GLuint id, GLenum pname, F&& glGetiv, G&& glGetInfoLog)
+    {
+        GLint status = GL_FALSE;
+        glGetiv(id, pname, &status);
+        if (status == GL_FALSE)
+        {
+            GLint info_len = 0;
+            glGetiv(id, GL_INFO_LOG_LENGTH, &info_len);
+            if (info_len == 0)
+                return {};
+            char* log = new char[info_len];
+            glGetInfoLog(id, info_len, nullptr, log);
+            return String(log);
+        }
+        return {};
+    }
 
-	unsigned int compile_shader(const Shader::Params& shader)
-	{
-		const GLuint id = glCreateShader(shader.type);
-		if (Path(shader.source).is_file())
-		{
-			const Data& glsl = Data::load_asset(shader.source);
-			if (!glsl)
-			{
-				LOGE("Failed to load shader: %s", shader.source);
-				if (!shader.fallback)
-				{
-					R_ABORT("No fallback was found");
-					return ShaderManager::kInvalidProgram;
-				}
-				// Local variable required for Android compiler (NDK r10e).
-				const char* source = shader.fallback;
-				glShaderSource(id, 1, &source, nullptr);
-			}
-			else
-			{
-				const char* source = glsl;
-				glShaderSource(id, 1, &source, nullptr);
-			}
-		}
-		else
-		{
-			// Local variable required for Android compiler (NDK r10e).
-			const char* source = shader.fallback;
-			glShaderSource(id, 1, &source, nullptr);
-		}
-		glCompileShader(id);
+    unsigned int compile_shader(const Shader::Params& shader)
+    {
+        const GLuint id = glCreateShader(shader.type);
+        if (Path(shader.source).is_file())
+        {
+            const Data& glsl = Data::load_asset(shader.source);
+            if (!glsl)
+            {
+                LOGE("Failed to load shader: %s", shader.source);
+                if (!shader.fallback)
+                {
+                    R_ABORT("No fallback was found");
+                    return ShaderManager::kInvalidProgram;
+                }
+                // Local variable required for Android compiler (NDK r10e).
+                const char* source = shader.fallback;
+                glShaderSource(id, 1, &source, nullptr);
+            }
+            else
+            {
+                const char* source = glsl;
+                glShaderSource(id, 1, &source, nullptr);
+            }
+        }
+        else
+        {
+            // Local variable required for Android compiler (NDK r10e).
+            const char* source = shader.fallback;
+            glShaderSource(id, 1, &source, nullptr);
+        }
+        glCompileShader(id);
 
-		const String& error =
-		    verify(id, GL_COMPILE_STATUS, glGetShaderiv, glGetShaderInfoLog);
-		if (error.get())
-		{
-			R_ABORT(
-			    "GLSL: Failed to compile %s shader: %s",
-			    (shader.type == Shader::kTypeVertex ? "vertex" : "fragment"),
-			    error.get());
-			glDeleteShader(id);
-			return ShaderManager::kInvalidProgram;
-		}
+        const String& error =
+            verify(id, GL_COMPILE_STATUS, glGetShaderiv, glGetShaderInfoLog);
+        if (error.get())
+        {
+            R_ABORT(
+                "GLSL: Failed to compile %s shader: %s",
+                (shader.type == Shader::kTypeVertex ? "vertex" : "fragment"),
+                error.get());
+            glDeleteShader(id);
+            return ShaderManager::kInvalidProgram;
+        }
 
-		return id;
-	}
+        return id;
+    }
 
-	unsigned int link_program(const Shader::Params* shaders,
-	                          const Shader::AttributeParams* attributes)
-	{
-		const GLuint program = glCreateProgram();
-		for (auto shader = shaders; shader->type != Shader::kTypeInvalid;
-		     ++shader)
-			glAttachShader(program, shader->id);
-		for (auto attrib = attributes; attrib->name; ++attrib)
-			glBindAttribLocation(program, attrib->index, attrib->name);
-		glLinkProgram(program);
+    unsigned int link_program(const Shader::Params* shaders,
+                              const Shader::AttributeParams* attributes)
+    {
+        const GLuint program = glCreateProgram();
+        for (auto shader = shaders; shader->type != Shader::kTypeInvalid;
+             ++shader)
+            glAttachShader(program, shader->id);
+        for (auto attrib = attributes; attrib->name; ++attrib)
+            glBindAttribLocation(program, attrib->index, attrib->name);
+        glLinkProgram(program);
 
-		const String& error = verify(
-		    program, GL_LINK_STATUS, glGetProgramiv, glGetProgramInfoLog);
-		if (error.get())
-		{
-			R_ABORT("GLSL: Failed to link program: %s", error.get());
-			glDeleteProgram(program);
-			return ShaderManager::kInvalidProgram;
-		}
+        const String& error = verify(
+            program, GL_LINK_STATUS, glGetProgramiv, glGetProgramInfoLog);
+        if (error.get())
+        {
+            R_ABORT("GLSL: Failed to link program: %s", error.get());
+            glDeleteProgram(program);
+            return ShaderManager::kInvalidProgram;
+        }
 
-		return program;
-	}
+        return program;
+    }
 }
 
 ShaderManager::~ShaderManager()
 {
-	for (const auto& details : programs_)
-		glDeleteProgram(details.program);
-	for (const auto shader : shaders_)
-		glDeleteShader(shader);
+    for (const auto& details : programs_)
+        glDeleteProgram(details.program);
+    for (const auto shader : shaders_)
+        glDeleteShader(shader);
 }
 
 unsigned int ShaderManager::compile(Shader::Params* shaders,
                                     const Shader::AttributeParams* attributes)
 {
-	for (auto shader = shaders; shader->type != Shader::kTypeInvalid; ++shader)
-	{
-		if (!shader->source)
-		{
-			shader->id = shaders_[shader->id];
-			continue;
-		}
-		if (shader->id > 0)
-			continue;
-		const unsigned int id = compile_shader(*shader);
-		if (id == kInvalidProgram)
-			return id;
-		shaders_.push_back(id);
-		shader->id = id;
-	}
-	if (!attributes)
-		attributes = kAttributeDefaultParams;
+    for (auto shader = shaders; shader->type != Shader::kTypeInvalid; ++shader)
+    {
+        if (!shader->source)
+        {
+            shader->id = shaders_[shader->id];
+            continue;
+        }
+        if (shader->id > 0)
+            continue;
+        const unsigned int id = compile_shader(*shader);
+        if (id == kInvalidProgram)
+            return id;
+        shaders_.push_back(id);
+        shader->id = id;
+    }
+    if (!attributes)
+        attributes = kAttributeDefaultParams;
 
-	const unsigned int program = link_program(shaders, attributes);
-	if (program == kInvalidProgram)
-		return program;
+    const unsigned int program = link_program(shaders, attributes);
+    if (program == kInvalidProgram)
+        return program;
 
-	programs_.emplace_back(program,
-	                       glGetUniformLocation(program, "mvp_matrix"));
-	return static_cast<unsigned int>(programs_.size());
+    programs_.emplace_back(program,
+                           glGetUniformLocation(program, "mvp_matrix"));
+    return static_cast<unsigned int>(programs_.size());
 }
 
 void ShaderManager::update_projection()
 {
-	R_ASSERT(get_program().mvp_matrix >= 0,
-	         "Shader is missing a projection matrix");
+    R_ASSERT(get_program().mvp_matrix >= 0,
+             "Shader is missing a projection matrix");
 
-	// The orthographic projection matrix is defined as:
-	//
-	//   | 2 / (r - l)       0             0       -(r + l) / (r - l) |
-	//   |      0       2 / (t - b)        0       -(t + b) / (t - b) |
-	//   |      0            0       -2 / (f - n)  -(f + n) / (f - n) |
-	//   |      0            0             0                1         |
-	//
-	// Where <c>b</c> = bottom, <c>f</c> = far, <c>l</c> = left, <c>n</c> =
-	// near, <c>r</c> = right, <c>t</c> = top, and near = -1.0 and far = 1.0.
-	// The matrix is stored in column-major order.
-	const auto& rect = renderer_->projection();
-	const float projection[]{
-	    2.0f / (rect.right - rect.left), 0.0f, 0.0f, 0.0f,
-	    0.0f, 2.0f / (rect.top - rect.bottom), 0.0f, 0.0f,
-	    0.0f, 0.0f, -1.0f, 0.0f,
-	    -(rect.right + rect.left) / (rect.right - rect.left),
-	    -(rect.top + rect.bottom) / (rect.top - rect.bottom),
-	    0.0f, 1.0f};
-	glUniformMatrix4fv(get_program().mvp_matrix, 1, GL_FALSE, projection);
+    // The orthographic projection matrix is defined as:
+    //
+    //   | 2 / (r - l)       0             0       -(r + l) / (r - l) |
+    //   |      0       2 / (t - b)        0       -(t + b) / (t - b) |
+    //   |      0            0       -2 / (f - n)  -(f + n) / (f - n) |
+    //   |      0            0             0                1         |
+    //
+    // Where <c>b</c> = bottom, <c>f</c> = far, <c>l</c> = left, <c>n</c> =
+    // near, <c>r</c> = right, <c>t</c> = top, and near = -1.0 and far = 1.0.
+    // The matrix is stored in column-major order.
+    const auto& rect = renderer_->projection();
+    const float projection[]{
+        2.0f / (rect.right - rect.left), 0.0f, 0.0f, 0.0f,
+        0.0f, 2.0f / (rect.top - rect.bottom), 0.0f, 0.0f,
+        0.0f, 0.0f, -1.0f, 0.0f,
+        -(rect.right + rect.left) / (rect.right - rect.left),
+        -(rect.top + rect.bottom) / (rect.top - rect.bottom),
+        0.0f, 1.0f};
+    glUniformMatrix4fv(get_program().mvp_matrix, 1, GL_FALSE, projection);
 }
 
 void ShaderManager::update_viewport()
 {
-	if (current_ == kInvalidProgram)
-	{
-		current_ = kDefaultProgram;
-		const Shader::Details& details = get_program();
-		glUseProgram(details.program);
-		update_projection();
-		glUniform1i(glGetUniformLocation(details.program, "texture"), 0);
-		return;
-	}
-	update_projection();
+    if (current_ == kInvalidProgram)
+    {
+        current_ = kDefaultProgram;
+        const Shader::Details& details = get_program();
+        glUseProgram(details.program);
+        update_projection();
+        glUniform1i(glGetUniformLocation(details.program, "texture"), 0);
+        return;
+    }
+    update_projection();
 }
 
 void ShaderManager::use(unsigned int program)
 {
-	if (program != current_)
-	{
+    if (program != current_)
+    {
 #ifndef USE_VERTEX_ARRAY_OBJECT
-		const Shader::Details& current = get_program();
+        const Shader::Details& current = get_program();
 #endif  // !USE_VERTEX_ARRAY_OBJECT
-		current_ = program;
+        current_ = program;
 
-		if (current_ == kInvalidProgram)
-			return;
+        if (current_ == kInvalidProgram)
+            return;
 
-		const Shader::Details& details = get_program();
-		glUseProgram(details.program);
+        const Shader::Details& details = get_program();
+        glUseProgram(details.program);
 
-		update_projection();
+        update_projection();
 
 #ifndef USE_VERTEX_ARRAY_OBJECT
-		if (details.texture0 != current.texture0)
-		{
-			if (!details.texture0)
-				glDisableVertexAttribArray(Shader::kAttributeTexCoord);
-			else
-				glEnableVertexAttribArray(Shader::kAttributeTexCoord);
-		}
+        if (details.texture0 != current.texture0)
+        {
+            if (!details.texture0)
+                glDisableVertexAttribArray(Shader::kAttributeTexCoord);
+            else
+                glEnableVertexAttribArray(Shader::kAttributeTexCoord);
+        }
 #endif  // !USE_VERTEX_ARRAY_OBJECT
-	}
+    }
 }
 
 ShaderManager::ShaderManager(Renderer* renderer)
@@ -227,18 +227,18 @@ ShaderManager::ShaderManager(Renderer* renderer)
 
 bool ShaderManager::init()
 {
-	Shader::Params shaders[]{
-	    {Shader::kTypeVertex, 0, rainbow::shaders::kFixed2Dv,
-	     rainbow::shaders::integrated::kFixed2Dv},
-	    {Shader::kTypeFragment, 0, rainbow::shaders::kFixed2Df,
-	     rainbow::shaders::integrated::kFixed2Df},
-	    {Shader::kTypeInvalid, 0, nullptr, nullptr}};
-	const unsigned int pid = compile(shaders, nullptr);
-	if (pid == kInvalidProgram)
-	{
-		R_ABORT("Failed to compile default shader");
-		return false;
-	}
-	make_global();
-	return true;
+    Shader::Params shaders[]{
+        {Shader::kTypeVertex, 0, rainbow::shaders::kFixed2Dv,
+         rainbow::shaders::integrated::kFixed2Dv},
+        {Shader::kTypeFragment, 0, rainbow::shaders::kFixed2Df,
+         rainbow::shaders::integrated::kFixed2Df},
+        {Shader::kTypeInvalid, 0, nullptr, nullptr}};
+    const unsigned int pid = compile(shaders, nullptr);
+    if (pid == kInvalidProgram)
+    {
+        R_ABORT("Failed to compile default shader");
+        return false;
+    }
+    make_global();
+    return true;
 }

@@ -1,4 +1,4 @@
-// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-16 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -11,101 +11,101 @@
 
 namespace rainbow
 {
-	struct ISolemnlySwearThatIAmOnlyTesting;
+    struct ISolemnlySwearThatIAmOnlyTesting;
 
-	namespace detail
-	{
-		struct Texture
-		{
-			std::string id;
-			unsigned int name;
-			unsigned int width;
-			unsigned int height;
-			unsigned int size;
-			unsigned int use_count;
+    namespace detail
+    {
+        struct Texture
+        {
+            std::string id;
+            unsigned int name;
+            unsigned int width;
+            unsigned int height;
+            unsigned int size;
+            unsigned int use_count;
 
-			Texture(const char* id_, unsigned int name_)
-			    : id(id_), name(name_), width(0), height(0), size(0),
-			      use_count(0) {}
+            Texture(const char* id_, unsigned int name_)
+                : id(id_), name(name_), width(0), height(0), size(0),
+                  use_count(0) {}
 
-			friend bool operator==(const Texture& t, const char* id)
-			{
-				return t.id == id;
-			}
+            friend bool operator==(const Texture& t, const char* id)
+            {
+                return t.id == id;
+            }
 
-			friend bool operator==(const Texture& t, unsigned int name)
-			{
-				return t.name == name;
-			}
-		};
-	}
+            friend bool operator==(const Texture& t, unsigned int name)
+            {
+                return t.name == name;
+            }
+        };
+    }
 
-	class Texture
-	{
-	public:
-		Texture() : name_(0) {}
+    class Texture
+    {
+    public:
+        Texture() : name_(0) {}
 
-		Texture(detail::Texture& texture)
-		    : name_(texture.name), size_(texture.width, texture.height)
-		{
-			++texture.use_count;
-		}
+        Texture(detail::Texture& texture)
+            : name_(texture.name), size_(texture.width, texture.height)
+        {
+            ++texture.use_count;
+        }
 
-		explicit Texture(const ISolemnlySwearThatIAmOnlyTesting&)
-		    : name_(0), size_(64, 64) {}
+        explicit Texture(const ISolemnlySwearThatIAmOnlyTesting&)
+            : name_(0), size_(64, 64) {}
 
-		Texture(const Texture& texture);
-		~Texture();
+        Texture(const Texture& texture);
+        ~Texture();
 
-		auto width() const { return size_.x; }
-		auto height() const { return size_.y; }
+        auto width() const { return size_.x; }
+        auto height() const { return size_.y; }
 
-		void bind() const;
-		void bind(unsigned int unit) const;
+        void bind() const;
+        void bind(unsigned int unit) const;
 
-		explicit operator bool() const { return name_ != 0; }
-		operator unsigned int() const { return name_; }
+        explicit operator bool() const { return name_ != 0; }
+        operator unsigned int() const { return name_; }
 
-		Texture& operator=(const Texture& texture) = delete;
-		Texture& operator=(Texture&& texture);
+        Texture& operator=(const Texture& texture) = delete;
+        Texture& operator=(Texture&& texture);
 
-	private:
-		unsigned int name_;
-		Vec2u size_;
-	};
+    private:
+        unsigned int name_;
+        Vec2u size_;
+    };
 
-	/// <summary>Stores texture id and UV coordinates.</summary>
-	/// <remarks>
-	///   <code>
-	///     3 ┌─────┐ 2
-	///       │     │
-	///       │     │
-	///     0 └─────┘ 1
-	///   </code>
-	///   Textures are read into memory upside-down. Therefore, the order of the
-	///   UV coordinates are flipped vertically, giving us 3,2,1 and 1,0,3.
-	/// </remarks>
-	struct TextureRegion
-	{
-		Vec2f vx[4];
-		unsigned int atlas;
+    /// <summary>Stores texture id and UV coordinates.</summary>
+    /// <remarks>
+    ///   <code>
+    ///     3 ┌─────┐ 2
+    ///       │     │
+    ///       │     │
+    ///     0 └─────┘ 1
+    ///   </code>
+    ///   Textures are read into memory upside-down. Therefore, the order of the
+    ///   UV coordinates are flipped vertically, giving us 3,2,1 and 1,0,3.
+    /// </remarks>
+    struct TextureRegion
+    {
+        Vec2f vx[4];
+        unsigned int atlas;
 
-		TextureRegion() : atlas(0) {}
+        TextureRegion() : atlas(0) {}
 
-		TextureRegion(const Vec2f& v0, const Vec2f& v1) : atlas(0)
-		{
-			vx[0].x = v0.x;
-			vx[0].y = v1.y;
-			vx[1].x = v1.x;
-			vx[1].y = v1.y;
-			vx[2].x = v1.x;
-			vx[2].y = v0.y;
-			vx[3].x = v0.x;
-			vx[3].y = v0.y;
-		}
+        TextureRegion(const Vec2f& v0, const Vec2f& v1) : atlas(0)
+        {
+            vx[0].x = v0.x;
+            vx[0].y = v1.y;
+            vx[1].x = v1.x;
+            vx[1].y = v1.y;
+            vx[2].x = v1.x;
+            vx[2].y = v0.y;
+            vx[3].x = v0.x;
+            vx[3].y = v0.y;
+        }
 
-		operator unsigned int() const { return atlas; }
-	};
+        operator unsigned int() const { return atlas; }
+    };
 }
 
 #endif

@@ -1,4 +1,4 @@
-// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-16 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -10,14 +10,14 @@
 class NoGame final : public GameBase
 {
 public:
-	NoGame(rainbow::Director& director) : GameBase(director) {}
+    NoGame(rainbow::Director& director) : GameBase(director) {}
 
-	void init(const Vec2i& screen) override;
-	void update(unsigned long dt) override;
+    void init(const Vec2i& screen) override;
+    void update(unsigned long dt) override;
 
 private:
-	rainbow::sprite_t logo_;
-	rainbow::spritebatch_t batch_;
+    rainbow::sprite_t logo_;
+    rainbow::spritebatch_t batch_;
 };
 
 #endif

@@ -1,4 +1,4 @@
-// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-16 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -20,113 +20,113 @@
 
 void Renderer::clear()
 {
-	glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT);
 }
 
 bool Renderer::has_extension(const char* extension)
 {
-	return strstr(reinterpret_cast<const char*>(glGetString(GL_EXTENSIONS)),
-	              extension);
+    return strstr(reinterpret_cast<const char*>(glGetString(GL_EXTENSIONS)),
+                  extension);
 }
 
 int Renderer::max_texture_size()
 {
-	static const int max_texture_size = [] {
-		int max_texture_size;
-		glGetIntegerv(GL_MAX_TEXTURE_SIZE, &max_texture_size);
-		return max_texture_size;
-	}();
-	return max_texture_size;
+    static const int max_texture_size = [] {
+        int max_texture_size;
+        glGetIntegerv(GL_MAX_TEXTURE_SIZE, &max_texture_size);
+        return max_texture_size;
+    }();
+    return max_texture_size;
 }
 
 void Renderer::set_projection(const rainbow::Rect& projection)
 {
-	rect_ = projection;
-	shader_manager_.update_projection();
+    rect_ = projection;
+    shader_manager_.update_projection();
 }
 
 void Renderer::set_resolution(const Vec2i& resolution)
 {
-	R_ASSERT(is_global(),
-	         "Cannot set resolution with an uninitialised renderer");
+    R_ASSERT(is_global(),
+             "Cannot set resolution with an uninitialised renderer");
 
-	view_ = resolution;
-	rect_.right = rect_.left + resolution.x;
-	rect_.top = rect_.bottom + resolution.y;
-	shader_manager_.update_viewport();
-	set_window_size(window_.is_zero() ? view_ : window_);
+    view_ = resolution;
+    rect_.right = rect_.left + resolution.x;
+    rect_.top = rect_.bottom + resolution.y;
+    shader_manager_.update_viewport();
+    set_window_size(window_.is_zero() ? view_ : window_);
 
-	R_ASSERT(glGetError() == GL_NO_ERROR, "Failed to set resolution");
+    R_ASSERT(glGetError() == GL_NO_ERROR, "Failed to set resolution");
 }
 
 void Renderer::set_window_size(const Vec2i& size, float factor)
 {
-	R_ASSERT(is_global(),
-	         "Cannot set window size with an uninitialised renderer");
+    R_ASSERT(is_global(),
+             "Cannot set window size with an uninitialised renderer");
 
-	window_ = view_;
-	if (size == view_)
-	{
-		origin_.x = 0;
-		origin_.y = 0;
-	}
-	else
-	{
-		const float scale = std::min(size.x / static_cast<float>(window_.x),
-		                             size.y / static_cast<float>(window_.y));
-		window_.x *= scale;
-		window_.y *= scale;
-		origin_.x = (size.x - window_.x) / 2;
-		origin_.y = (size.y - window_.y) / 2;
-	}
-	scale_.x = static_cast<float>(view_.x) / window_.x;
-	scale_.y = static_cast<float>(view_.y) / window_.y;
-	glViewport(origin_.x * factor, origin_.y * factor, window_.x * factor,
-	           window_.y * factor);
-	// Set height in order to properly transform mouse coordinates.
-	window_.y = size.y;
+    window_ = view_;
+    if (size == view_)
+    {
+        origin_.x = 0;
+        origin_.y = 0;
+    }
+    else
+    {
+        const float scale = std::min(size.x / static_cast<float>(window_.x),
+                                     size.y / static_cast<float>(window_.y));
+        window_.x *= scale;
+        window_.y *= scale;
+        origin_.x = (size.x - window_.x) / 2;
+        origin_.y = (size.y - window_.y) / 2;
+    }
+    scale_.x = static_cast<float>(view_.x) / window_.x;
+    scale_.y = static_cast<float>(view_.y) / window_.y;
+    glViewport(origin_.x * factor, origin_.y * factor, window_.x * factor,
+               window_.y * factor);
+    // Set height in order to properly transform mouse coordinates.
+    window_.y = size.y;
 }
 
 void Renderer::bind_element_array() const
 {
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffer_);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffer_);
 }
 
 Vec2i Renderer::convert_to_flipped_view(const Vec2i& p) const
 {
-	return convert_to_view(Vec2i(p.x, window_.y - p.y));
+    return convert_to_view(Vec2i(p.x, window_.y - p.y));
 }
 
 Vec2i Renderer::convert_to_screen(const Vec2i& p) const
 {
-	return Vec2i(p.x / scale_.x + origin_.x, p.y / scale_.y + origin_.y);
+    return Vec2i(p.x / scale_.x + origin_.x, p.y / scale_.y + origin_.y);
 }
 
 Vec2i Renderer::convert_to_view(const Vec2i& p) const
 {
-	return Vec2i(rect_.left + (p.x - origin_.x) * scale_.x,
-	             rect_.bottom + (p.y - origin_.y) * scale_.y);
+    return Vec2i(rect_.left + (p.x - origin_.x) * scale_.x,
+                 rect_.bottom + (p.y - origin_.y) * scale_.y);
 }
 
 void Renderer::reset() const
 {
-	glDisable(GL_CULL_FACE);
-	glDisable(GL_DEPTH_TEST);
-	glDisable(GL_SCISSOR_TEST);
+    glDisable(GL_CULL_FACE);
+    glDisable(GL_DEPTH_TEST);
+    glDisable(GL_SCISSOR_TEST);
 
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_BLEND);
 
-	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+    glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 
-	glActiveTexture(GL_TEXTURE0);
+    glActiveTexture(GL_TEXTURE0);
 }
 
 void Renderer::unbind_all()
 {
-	VertexArray::unbind();
-	shader_manager_.use(ShaderManager::kInvalidProgram);
-	texture_manager_.bind();
+    VertexArray::unbind();
+    shader_manager_.use(ShaderManager::kInvalidProgram);
+    texture_manager_.bind();
 }
 
 Renderer::Renderer()
@@ -134,41 +134,41 @@ Renderer::Renderer()
 
 Renderer::~Renderer()
 {
-	if (index_buffer_)
-	{
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-		glDeleteBuffers(1, &index_buffer_);
-	}
+    if (index_buffer_)
+    {
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+        glDeleteBuffers(1, &index_buffer_);
+    }
 }
 
 bool Renderer::init()
 {
 #ifdef __glew_h__
-	GLenum err = glewInit();
-	if (err != GLEW_OK)
-	{
-		LOGF("Failed to initialise GLEW: %s", glewGetErrorString(err));
-		return false;
-	}
+    GLenum err = glewInit();
+    if (err != GLEW_OK)
+    {
+        LOGF("Failed to initialise GLEW: %s", glewGetErrorString(err));
+        return false;
+    }
 #endif
 
-	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	if (!shader_manager_.init())
-		return false;
+    if (!shader_manager_.init())
+        return false;
 
-	const unsigned short kDefaultIndices[]{S256(0)};
-	static_assert(sizeof(kDefaultIndices) ==
-	                  kNumSprites * 6 * sizeof(kDefaultIndices[0]),
-	              "Number of indices do not match set number of sprites");
-	glGenBuffers(1, &index_buffer_);
-	bind_element_array();
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(kDefaultIndices),
-	             kDefaultIndices, GL_STATIC_DRAW);
+    const unsigned short kDefaultIndices[]{S256(0)};
+    static_assert(sizeof(kDefaultIndices) ==
+                      kNumSprites * 6 * sizeof(kDefaultIndices[0]),
+                  "Number of indices do not match set number of sprites");
+    glGenBuffers(1, &index_buffer_);
+    bind_element_array();
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(kDefaultIndices),
+                 kDefaultIndices, GL_STATIC_DRAW);
 
-	make_global();
-	return glGetError() == GL_NO_ERROR;
+    make_global();
+    return glGetError() == GL_NO_ERROR;
 }

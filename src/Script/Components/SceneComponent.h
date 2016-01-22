@@ -10,27 +10,27 @@
 
 namespace rainbow
 {
-	class SceneComponent : private NonCopyable<SceneComponent>
-	{
-	public:
-		SceneComponent() : node_(rainbow::SceneNode::create().release()) {}
-		virtual ~SceneComponent() { node_->remove(); }
+    class SceneComponent : private NonCopyable<SceneComponent>
+    {
+    public:
+        SceneComponent() : node_(rainbow::SceneNode::create().release()) {}
+        virtual ~SceneComponent() { node_->remove(); }
 
-		bool is_enabled() const { return node_->is_enabled(); }
-		rainbow::SceneNode* node() const { return node_; }
+        bool is_enabled() const { return node_->is_enabled(); }
+        rainbow::SceneNode* node() const { return node_; }
 
-		Vec2f position() const { return position_; }
-		void set_position(const Vec2f& p) { move(p - position_); }
+        Vec2f position() const { return position_; }
+        void set_position(const Vec2f& p) { move(p - position_); }
 
-		void disable() { node_->set_enabled(false); }
-		void enable() { node_->set_enabled(true); }
+        void disable() { node_->set_enabled(false); }
+        void enable() { node_->set_enabled(true); }
 
-		virtual void move(const Vec2f& delta) { position_ += delta; }
+        virtual void move(const Vec2f& delta) { position_ += delta; }
 
-	private:
-		rainbow::SceneNode* node_;  // Scene graph node.
-		Vec2f position_;            // Logical position.
-	};
+    private:
+        rainbow::SceneNode* node_;  // Scene graph node.
+        Vec2f position_;            // Logical position.
+    };
 }
 
 #endif

@@ -1,4 +1,4 @@
-// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-16 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -10,17 +10,17 @@
 
 #define DSFMT_MEXP 19937
 #if defined(__SSE2__) || (defined(_M_IX86_FP) && _M_IX86_FP >= 2) || defined(_M_X64)
-#	define HAVE_SSE2
+#   define HAVE_SSE2
 #elif defined(__ALTIVEC__)
-#	define HAVE_ALTIVEC
+#   define HAVE_ALTIVEC
 #endif
 #ifdef __GNUC__
-#	pragma GCC diagnostic push
-#	pragma GCC diagnostic ignored "-Wlong-long"
+#   pragma GCC diagnostic push
+#   pragma GCC diagnostic ignored "-Wlong-long"
 #endif
 #include <dSFMT/dSFMT.h>
 #ifdef __GNUC__
-#	pragma GCC diagnostic pop
+#   pragma GCC diagnostic pop
 #endif
 
 #include "Common/Constraints.h"
@@ -28,32 +28,32 @@
 
 namespace rainbow
 {
-	/// <summary>C++ wrapper for dSFMT pseudorandom number generator.</summary>
-	template <typename T, typename = FloatingPoint<T>>
-	struct dSFMT
-	{
-		void seed(uint32_t seed = 0)
-		{
-			dsfmt_gv_init_gen_rand(seed == 0 ? std::random_device{}() : seed);
-		}
+    /// <summary>C++ wrapper for dSFMT pseudorandom number generator.</summary>
+    template <typename T, typename = FloatingPoint<T>>
+    struct dSFMT
+    {
+        void seed(uint32_t seed = 0)
+        {
+            dsfmt_gv_init_gen_rand(seed == 0 ? std::random_device{}() : seed);
+        }
 
-		T operator()() { return dsfmt_gv_genrand_close_open(); }
+        T operator()() { return dsfmt_gv_genrand_close_open(); }
 
-		template <typename N>
-		N operator()(N n)
-		{
-			return static_cast<N>(dsfmt_gv_genrand_close_open() * n);
-		}
+        template <typename N>
+        N operator()(N n)
+        {
+            return static_cast<N>(dsfmt_gv_genrand_close_open() * n);
+        }
 
-		template <typename N>
-		N operator()(N m, N n)
-		{
-			R_ASSERT(m < n, "Parameters must be in ascending order");
-			return static_cast<N>(dsfmt_gv_genrand_close_open() * (n - m) + m);
-		}
-	};
+        template <typename N>
+        N operator()(N m, N n)
+        {
+            R_ASSERT(m < n, "Parameters must be in ascending order");
+            return static_cast<N>(dsfmt_gv_genrand_close_open() * (n - m) + m);
+        }
+    };
 
-	extern dSFMT<float> random;
+    extern dSFMT<float> random;
 }
 
 #endif

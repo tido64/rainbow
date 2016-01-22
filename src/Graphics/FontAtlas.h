@@ -1,4 +1,4 @@
-// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-16 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -40,35 +40,35 @@ namespace rainbow { class Texture; }
 class FontAtlas : public RefCounted
 {
 public:
-	FontAtlas(const char* path, float pt);
-	FontAtlas(const char* name, const Data& font, float pt);
+    FontAtlas(const char* path, float pt);
+    FontAtlas(const char* name, const Data& font, float pt);
 
-	/// <summary>Returns the line height.</summary>
-	auto height() const { return height_; }
+    /// <summary>Returns the line height.</summary>
+    auto height() const { return height_; }
 
-	/// <summary>Returns whether this FontAtlas is valid.</summary>
-	bool is_valid() const { return texture_; }
+    /// <summary>Returns whether this FontAtlas is valid.</summary>
+    bool is_valid() const { return texture_; }
 
-	/// <summary>Sets this font as active texture.</summary>
-	void bind() const { texture_.bind(); }
+    /// <summary>Sets this font as active texture.</summary>
+    void bind() const { texture_.bind(); }
 
-	/// <summary>Returns the glyph for character <paramref name="c"/>.</summary>
-	auto get_glyph(unsigned int c) const -> const FontGlyph*;
+    /// <summary>Returns the glyph for character <paramref name="c"/>.</summary>
+    auto get_glyph(unsigned int c) const -> const FontGlyph*;
 
 protected:
-	/// <summary>Load characters 32 through 126 from the ASCII table.</summary>
-	static const unsigned int kNumCharacters = 95;
+    /// <summary>Load characters 32 through 126 from the ASCII table.</summary>
+    static const unsigned int kNumCharacters = 95;
 
 private:
-	const float pt_;            ///< Font point size.
-	Colorb color_;              ///< Font colour.
-	int height_;                ///< Font line height.
-	rainbow::Texture texture_;  ///< Texture name.
-	FontGlyph charset_[kNumCharacters + FONTATLAS_EXTENDED];  ///< Character set.
+    const float pt_;            ///< Font point size.
+    Colorb color_;              ///< Font colour.
+    int height_;                ///< Font line height.
+    rainbow::Texture texture_;  ///< Texture name.
+    FontGlyph charset_[kNumCharacters + FONTATLAS_EXTENDED];  ///< Character set.
 
-	void load(TextureManager& texture_manager,
-	          const rainbow::Texture& texture,
-	          const Data& font);
+    void load(TextureManager& texture_manager,
+              const rainbow::Texture& texture,
+              const Data& font);
 };
 
 #endif

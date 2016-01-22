@@ -1,4 +1,4 @@
-// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-16 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -26,35 +26,35 @@
 
 NS_RAINBOW_LUA_BEGIN
 {
-	inline void bind(lua_State* L)
-	{
-		reg<Animation>(L);
-		reg<Font>(L);
-		reg<Label>(L);
-		reg<ScopedNode>(L);
-		reg<Sprite>(L);
-		reg<SpriteBatch>(L);
-		reg<Texture>(L);
+    inline void bind(lua_State* L)
+    {
+        reg<Animation>(L);
+        reg<Font>(L);
+        reg<Label>(L);
+        reg<ScopedNode>(L);
+        reg<Sprite>(L);
+        reg<SpriteBatch>(L);
+        reg<Texture>(L);
 
 #ifdef USE_SPINE
-		reg<spine::lua::Skeleton>(L);
+        reg<spine::lua::Skeleton>(L);
 #endif
-	}
+    }
 
-	inline void init(lua_State* L)
-	{
-		platform::init(L);  // Initialise "rainbow.platform" namespace
-		renderer::init(L);  // Initialise "rainbow.renderer" namespace
-		shaders::init(L);   // Initialise "rainbow.shaders" namespace
-		io::init(L);        // Initialise "rainbow.io" namespace
-		random::init(L);    // Initialise "rainbow.random" function
-		input::init(L);     // Initialise "rainbow.input" namespace
-		audio::init(L);     // Initialise "rainbow.audio" namespace
+    inline void init(lua_State* L)
+    {
+        platform::init(L);  // Initialise "rainbow.platform" namespace
+        renderer::init(L);  // Initialise "rainbow.renderer" namespace
+        shaders::init(L);   // Initialise "rainbow.shaders" namespace
+        io::init(L);        // Initialise "rainbow.io" namespace
+        random::init(L);    // Initialise "rainbow.random" function
+        input::init(L);     // Initialise "rainbow.input" namespace
+        audio::init(L);     // Initialise "rainbow.audio" namespace
 
 #ifdef USE_PHYSICS
-		b2::lua::init(L);  // Initialise "b2" namespace
+        b2::lua::init(L);  // Initialise "b2" namespace
 #endif
-	}
+    }
 } NS_RAINBOW_LUA_END
 
 #endif

@@ -15,22 +15,22 @@ namespace rainbow { class Config; }
 class SDLContext
 {
 public:
-	SDLContext(const rainbow::Config& config);
-	~SDLContext();
+    SDLContext(const rainbow::Config& config);
+    ~SDLContext();
 
-	Vec2i drawable_size() const;
-	Vec2i window_size() const;
+    Vec2i drawable_size() const;
+    Vec2i window_size() const;
 
-	void swap() const;
-	void toggle_fullscreen();
+    void swap() const;
+    void toggle_fullscreen();
 
-	explicit operator bool() const { return context_; }
+    explicit operator bool() const { return context_; }
 
 private:
-	SDL_Window* window_;     ///< Window handle.
-	bool vsync_;             ///< Whether vertical sync is enabled.
-	uint32_t fullscreen_;    ///< Whether the window is in full screen mode.
-	SDL_GLContext context_;  ///< OpenGL context handle.
+    SDL_Window* window_;     ///< Window handle.
+    bool vsync_;             ///< Whether vertical sync is enabled.
+    uint32_t fullscreen_;    ///< Whether the window is in full screen mode.
+    SDL_GLContext context_;  ///< OpenGL context handle.
 };
 
 #endif

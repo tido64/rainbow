@@ -1,4 +1,4 @@
-// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-16 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -18,21 +18,21 @@
 
 namespace b2
 {
-	namespace lua
-	{
-		void init(lua_State* L)
-		{
-			lua_createtable(L, 0, 16);
-			ShapesInit(L);
-			Body::Init(L);
-			Fixture::Init(L);
-			rainbow::lua::reg<World>(L);
-			rainbow::lua::reg<Contact>(L);
-			lua_setglobal(L, "b2");
+    namespace lua
+    {
+        void init(lua_State* L)
+        {
+            lua_createtable(L, 0, 16);
+            ShapesInit(L);
+            Body::Init(L);
+            Fixture::Init(L);
+            rainbow::lua::reg<World>(L);
+            rainbow::lua::reg<Contact>(L);
+            lua_setglobal(L, "b2");
 
 #ifndef __clang_analyzer__
-			new DebugDraw();  // Manages its own lifetime.
+            new DebugDraw();  // Manages its own lifetime.
 #endif
-		}
-	}
+        }
+    }
 }

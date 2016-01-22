@@ -1,4 +1,4 @@
-// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-16 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -16,43 +16,43 @@ namespace rainbow { struct Rect; }
 
 namespace heimdall
 {
-	class Overlay final : public Drawable
-	{
-	public:
-		Overlay() : node_(nullptr) {}
+    class Overlay final : public Drawable
+    {
+    public:
+        Overlay() : node_(nullptr) {}
 
-		void init(rainbow::SceneNode& parent, const Vec2i& screen);
+        void init(rainbow::SceneNode& parent, const Vec2i& screen);
 
-		auto is_visible() const { return node_->is_enabled(); }
-		auto node() const { return node_; }
-		auto vertex_array() const -> const VertexArray& { return array_; }
-		auto vertex_count() const { return 6; }
+        auto is_visible() const { return node_->is_enabled(); }
+        auto node() const { return node_; }
+        auto vertex_array() const -> const VertexArray& { return array_; }
+        auto vertex_count() const { return 6; }
 
-		void hide() { node_->set_enabled(false); }
-		void show() { node_->set_enabled(true); }
+        void hide() { node_->set_enabled(false); }
+        void show() { node_->set_enabled(true); }
 
-		template <typename T>
-		void add_child(T& component) const
-		{
-			node_->add_child(component);
-		}
+        template <typename T>
+        void add_child(T& component) const
+        {
+            node_->add_child(component);
+        }
 
-		/// <summary>Binds all used textures.</summary>
-		void bind_textures() const { texture_.bind(); }
+        /// <summary>Binds all used textures.</summary>
+        void bind_textures() const { texture_.bind(); }
 
-		void update(const rainbow::Rect& projection);
+        void update(const rainbow::Rect& projection);
 
-	private:
-		rainbow::SceneNode* node_;
-		VertexArray array_;
-		rainbow::Texture texture_;
-		Buffer vertex_buffer_;
+    private:
+        rainbow::SceneNode* node_;
+        VertexArray array_;
+        rainbow::Texture texture_;
+        Buffer vertex_buffer_;
 
-		// Implement Drawable.
+        // Implement Drawable.
 
-		void draw_impl() override;
-		void update_impl(unsigned long) override {}
-	};
+        void draw_impl() override;
+        void update_impl(unsigned long) override {}
+    };
 }
 
 #endif

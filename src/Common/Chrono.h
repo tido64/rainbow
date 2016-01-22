@@ -1,4 +1,4 @@
-// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-16 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -14,27 +14,27 @@
 class Chrono : private NonCopyable<Chrono>
 {
 public:
-	using clock = std::chrono::steady_clock;
-	using duration = std::chrono::milliseconds;
+    using clock = std::chrono::steady_clock;
+    using duration = std::chrono::milliseconds;
 
-	static void sleep(duration::rep milliseconds);
-	static duration system_now();
-	static std::chrono::seconds time_since_epoch();
+    static void sleep(duration::rep milliseconds);
+    static duration system_now();
+    static std::chrono::seconds time_since_epoch();
 
-	Chrono();
+    Chrono();
 
-	/// <summary>
-	///   Returns the time difference between current and previous frame.
-	/// </summary>
-	duration::rep delta() const { return delta_.count(); }
+    /// <summary>
+    ///   Returns the time difference between current and previous frame.
+    /// </summary>
+    duration::rep delta() const { return delta_.count(); }
 
-	/// <summary>Updates the clock.</summary>
-	void update();
+    /// <summary>Updates the clock.</summary>
+    void update();
 
 protected:
-	duration delta_;
-	clock::duration current_;
-	clock::duration previous_;
+    duration delta_;
+    clock::duration current_;
+    clock::duration previous_;
 };
 
 #endif

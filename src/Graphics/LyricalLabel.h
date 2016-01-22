@@ -1,4 +1,4 @@
-// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-16 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -14,111 +14,111 @@ class Timer;
 class LyricalLabel : private Label
 {
 public:
-	enum class Animation
-	{
-		Shake,
-		Typing,
-		Count
-	};
+    enum class Animation
+    {
+        Shake,
+        Typing,
+        Count
+    };
 
-	struct Attribute
-	{
-		enum class Type
-		{
-			Color,
-			Offset,
-			Shake
-		} type;
-		unsigned int start;
-		unsigned int length;
+    struct Attribute
+    {
+        enum class Type
+        {
+            Color,
+            Offset,
+            Shake
+        } type;
+        unsigned int start;
+        unsigned int length;
 
-		union
-		{
-			unsigned char color[4];
-			unsigned int magnitude;
-			int offset[2];
-		};
+        union
+        {
+            unsigned char color[4];
+            unsigned int magnitude;
+            int offset[2];
+        };
 
-		Attribute(Colorb color, unsigned int start, unsigned int len);
-		Attribute(unsigned int magnitude, unsigned int start, unsigned int len);
-		Attribute(const Vec2i& offset, unsigned int start, unsigned int len);
-	};
+        Attribute(Colorb color, unsigned int start, unsigned int len);
+        Attribute(unsigned int magnitude, unsigned int start, unsigned int len);
+        Attribute(const Vec2i& offset, unsigned int start, unsigned int len);
+    };
 
-	LyricalLabel();
-	~LyricalLabel() override;
+    LyricalLabel();
+    ~LyricalLabel() override;
 
-	Label& as_label() { return *static_cast<Label*>(this); }
+    Label& as_label() { return *static_cast<Label*>(this); }
 
-	/// <summary>Clears all animations.</summary>
-	void clear_animations();
+    /// <summary>Clears all animations.</summary>
+    void clear_animations();
 
-	/// <summary>Clears all attributes.</summary>
-	void clear_attributes();
+    /// <summary>Clears all attributes.</summary>
+    void clear_attributes();
 
-	/// <summary>Clears all attributes of given type.</summary>
-	void clear_attributes(Attribute::Type type);
+    /// <summary>Clears all attributes of given type.</summary>
+    void clear_attributes(Attribute::Type type);
 
-	/// <summary>Sets color on characters in given range.</summary>
-	/// <param name="color">The color to set.</param>
-	/// <param name="start">Offset to the first character in range.</param>
-	/// <param name="length">Number of characters in range.</param>
-	void set_color(Colorb color, unsigned int start, unsigned int length);
+    /// <summary>Sets color on characters in given range.</summary>
+    /// <param name="color">The color to set.</param>
+    /// <param name="start">Offset to the first character in range.</param>
+    /// <param name="length">Number of characters in range.</param>
+    void set_color(Colorb color, unsigned int start, unsigned int length);
 
-	/// <summary>Offsets characters' positions in given range.</summary>
-	/// <param name="offset">The vector to offset by.</param>
-	/// <param name="start">Offset to the first character in range.</param>
-	/// <param name="length">Number of characters in range.</param>
-	void set_offset(const Vec2i& offset,
-	                unsigned int start,
-	                unsigned int length);
+    /// <summary>Offsets characters' positions in given range.</summary>
+    /// <param name="offset">The vector to offset by.</param>
+    /// <param name="start">Offset to the first character in range.</param>
+    /// <param name="length">Number of characters in range.</param>
+    void set_offset(const Vec2i& offset,
+                    unsigned int start,
+                    unsigned int length);
 
-	/// <summary>Shake characters in given range.</summary>
-	/// <param name="magnitude">The magnitude of the shaking.</param>
-	/// <param name="start">Offset to the first character in range.</param>
-	/// <param name="length">Number of characters in range.</param>
-	void set_shaking(unsigned int magnitude,
-	                 unsigned int start,
-	                 unsigned int length);
+    /// <summary>Shake characters in given range.</summary>
+    /// <param name="magnitude">The magnitude of the shaking.</param>
+    /// <param name="start">Offset to the first character in range.</param>
+    /// <param name="length">Number of characters in range.</param>
+    void set_shaking(unsigned int magnitude,
+                     unsigned int start,
+                     unsigned int length);
 
-	/// <summary>Sets text to display.</summary>
-	void set_text(const char*);
+    /// <summary>Sets text to display.</summary>
+    void set_text(const char*);
 
-	/// <summary>Starts an animation.</summary>
-	/// <param name="animation">The animation to start.</param>
-	/// <param name="interval">Interval between each frame.</param>
-	void start_animation(Animation animation, int interval);
+    /// <summary>Starts an animation.</summary>
+    /// <param name="animation">The animation to start.</param>
+    /// <param name="interval">Interval between each frame.</param>
+    void start_animation(Animation animation, int interval);
 
-	/// <summary>Stops an animation.</summary>
-	/// <param name="animation">The animation to stop.</param>
-	void stop_animation(Animation animation);
+    /// <summary>Stops an animation.</summary>
+    /// <param name="animation">The animation to stop.</param>
+    void stop_animation(Animation animation);
 
-	void update() override;
+    void update() override;
 
-	using Label::color;
-	using Label::font;
-	using Label::position;
-	using Label::text;
-	using Label::vertex_array;
-	using Label::vertex_count;
-	using Label::width;
-	using Label::set_alignment;
-	using Label::set_color;
-	using Label::set_font;
-	using Label::set_needs_update;
-	using Label::set_position;
-	using Label::set_rotation;
-	using Label::set_scale;
-	using Label::bind_textures;
-	using Label::move;
+    using Label::color;
+    using Label::font;
+    using Label::position;
+    using Label::text;
+    using Label::vertex_array;
+    using Label::vertex_count;
+    using Label::width;
+    using Label::set_alignment;
+    using Label::set_color;
+    using Label::set_font;
+    using Label::set_needs_update;
+    using Label::set_position;
+    using Label::set_rotation;
+    using Label::set_scale;
+    using Label::bind_textures;
+    using Label::move;
 
 private:
-	std::vector<Attribute> attributes_;
-	unsigned int applied_;
-	bool did_shake_;
-	Timer* animators_[static_cast<int>(Animation::Count)];
+    std::vector<Attribute> attributes_;
+    unsigned int applied_;
+    bool did_shake_;
+    Timer* animators_[static_cast<int>(Animation::Count)];
 
-	Vec2u get_interval(const Attribute& attr);
-	void undo_from(std::vector<Attribute>::const_iterator first);
+    Vec2u get_interval(const Attribute& attr);
+    void undo_from(std::vector<Attribute>::const_iterator first);
 };
 
 #endif

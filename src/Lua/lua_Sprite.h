@@ -1,4 +1,4 @@
-// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-16 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -10,36 +10,36 @@
 
 NS_RAINBOW_LUA_BEGIN
 {
-	class Sprite : public Bind<Sprite>
-	{
-		friend Bind;
+    class Sprite : public Bind<Sprite>
+    {
+        friend Bind;
 
-	public:
-		Sprite(lua_State*);
+    public:
+        Sprite(lua_State*);
 
-		const ::Sprite::Ref& get() const { return sprite_; }
+        const ::Sprite::Ref& get() const { return sprite_; }
 
-	private:
-		static int get_angle(lua_State*);
-		static int get_color(lua_State*);
-		static int get_pivot(lua_State*);
-		static int get_position(lua_State*);
-		static int get_scale(lua_State*);
-		static int get_size(lua_State*);
-		static int set_color(lua_State*);
-		static int set_normal(lua_State*);
-		static int set_pivot(lua_State*);
-		static int set_position(lua_State*);
-		static int set_rotation(lua_State*);
-		static int set_scale(lua_State*);
-		static int set_texture(lua_State*);
+    private:
+        static int get_angle(lua_State*);
+        static int get_color(lua_State*);
+        static int get_pivot(lua_State*);
+        static int get_position(lua_State*);
+        static int get_scale(lua_State*);
+        static int get_size(lua_State*);
+        static int set_color(lua_State*);
+        static int set_normal(lua_State*);
+        static int set_pivot(lua_State*);
+        static int set_position(lua_State*);
+        static int set_rotation(lua_State*);
+        static int set_scale(lua_State*);
+        static int set_texture(lua_State*);
 
-		static int mirror(lua_State*);
-		static int move(lua_State*);
-		static int rotate(lua_State*);
+        static int mirror(lua_State*);
+        static int move(lua_State*);
+        static int rotate(lua_State*);
 
-		const ::Sprite::Ref sprite_;
-	};
+        const ::Sprite::Ref sprite_;
+    };
 } NS_RAINBOW_LUA_END
 
 #endif

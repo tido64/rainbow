@@ -1,4 +1,4 @@
-// Copyright (c) 2010-15 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-16 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
@@ -19,35 +19,35 @@
 class Acceleration
 {
 public:
-	Acceleration() : timestamp_(0.0) {}
+    Acceleration() : timestamp_(0.0) {}
 
-	double timestamp() const { return timestamp_; }
-	double x() const { return pass_.x; }
-	double y() const { return pass_.y; }
-	double z() const { return pass_.z; }
+    double timestamp() const { return timestamp_; }
+    double x() const { return pass_.x; }
+    double y() const { return pass_.y; }
+    double z() const { return pass_.z; }
 
-	/// <summary>Updates acceleration data.</summary>
-	/// <param name="x">Raw acceleration data (x-value).</param>
-	/// <param name="y">Raw acceleration data (y-value).</param>
-	/// <param name="z">Raw acceleration data (z-value).</param>
-	/// <param name="t">
-	///   The relative time at which the acceleration event occurred.
-	/// </param>
-	void update(double x, double y, double z, double t)
-	{
-		// Calculate the low-pass value and subtract it from the measured value.
-		pass_.x =
-		    x - ((x * kFilteringFactor) + (pass_.x * (1.0 - kFilteringFactor)));
-		pass_.y =
-		    y - ((y * kFilteringFactor) + (pass_.y * (1.0 - kFilteringFactor)));
-		pass_.z =
-		    z - ((z * kFilteringFactor) + (pass_.z * (1.0 - kFilteringFactor)));
-		timestamp_ = t;
-	}
+    /// <summary>Updates acceleration data.</summary>
+    /// <param name="x">Raw acceleration data (x-value).</param>
+    /// <param name="y">Raw acceleration data (y-value).</param>
+    /// <param name="z">Raw acceleration data (z-value).</param>
+    /// <param name="t">
+    ///   The relative time at which the acceleration event occurred.
+    /// </param>
+    void update(double x, double y, double z, double t)
+    {
+        // Calculate the low-pass value and subtract it from the measured value.
+        pass_.x =
+            x - ((x * kFilteringFactor) + (pass_.x * (1.0 - kFilteringFactor)));
+        pass_.y =
+            y - ((y * kFilteringFactor) + (pass_.y * (1.0 - kFilteringFactor)));
+        pass_.z =
+            z - ((z * kFilteringFactor) + (pass_.z * (1.0 - kFilteringFactor)));
+        timestamp_ = t;
+    }
 
 private:
-	Vec3d pass_;        ///< Filtered acceleration data.
-	double timestamp_;  ///< The relative time at which the acceleration event occurred.
+    Vec3d pass_;        ///< Filtered acceleration data.
+    double timestamp_;  ///< The relative time at which the acceleration event occurred.
 };
 
 #endif
