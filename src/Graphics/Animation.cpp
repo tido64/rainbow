@@ -4,12 +4,6 @@
 
 #include "Graphics/Animation.h"
 
-#include <limits>
-
-// TODO: Move back to .h when MSVC finally implements constexpr.
-const Animation::Frame Animation::kAnimationEnd =
-    std::numeric_limits<Animation::Frame>::max();
-
 Animation::Animation(const Sprite::Ref& sprite,
                      Frames frames,
                      unsigned int fps,

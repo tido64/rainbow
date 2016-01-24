@@ -5,8 +5,6 @@
 #ifndef COMMON_COLOR_H_
 #define COMMON_COLOR_H_
 
-#include "Platform/Macros.h"  // TODO: Remove when MSVC implements 'constexpr'
-
 namespace rainbow
 {
     static_assert(sizeof(unsigned int) >= 4, "int is less than 32-bits");

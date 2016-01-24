@@ -10,10 +10,6 @@
 #include "Graphics/SceneGraph.h"
 #include "Heimdall/Style.h"
 
-#if defined(_MSC_VER) && _MSC_VER <= 1800
-#   define snprintf(...) sprintf_s(__VA_ARGS__)
-#endif
-
 using heimdall::PerformanceOverlay;
 
 namespace

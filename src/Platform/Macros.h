@@ -39,12 +39,6 @@
 #define RAINBOW_BUILD \
     "Rainbow / Bifrost Entertainment Property / Built " __DATE__
 
-// Workaround for warning C4425:
-//     'constexpr' was ignored (class literal types are not yet supported)
-#if defined(_MSC_VER) && _MSC_VER <= 1800
-#   define constexpr inline
-#endif
-
 #if defined(__GNUC__)
 #   if defined(__clang__)
 #       define ASSUME(expr) __builtin_assume(expr)

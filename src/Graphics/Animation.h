@@ -6,6 +6,7 @@
 #define GRAPHICS_ANIMATION_H_
 
 #include <functional>
+#include <limits>
 #include <memory>
 
 #include "Common/NonCopyable.h"
@@ -27,7 +28,7 @@ public:
     using Frame = unsigned int;
     using Frames = std::unique_ptr<const Frame[]>;
 
-    static const Frame kAnimationEnd;
+    static constexpr Frame kAnimationEnd = std::numeric_limits<Frame>::max();
 
     /// <summary>Constructs a sprite animation.</summary>
     /// <param name="sprite">The sprite to animate.</param>
@@ -46,16 +47,16 @@ public:
               int delay = 0);
 
     /// <summary>Returns the currently displayed frame.</summary>
-    unsigned int current_frame() const { return frame_; }
+    auto current_frame() const { return frame_; }
 
     /// <summary>Returns the frame rate in frames per second.</summary>
-    unsigned int frame_rate() const { return 1000 / interval_; }
-
-    /// <summary>Returns the target sprite.</summary>
-    Sprite::Ref sprite() const { return sprite_; }
+    auto frame_rate() const -> unsigned int { return 1000 / interval_; }
 
     /// <summary>Returns whether animation is stopped.</summary>
     bool is_stopped() const { return stopped_; }
+
+    /// <summary>Returns the target sprite.</summary>
+    auto sprite() const { return sprite_; }
 
     /// <summary>
     ///   Sets callback for start, end, and complete (loop) events.

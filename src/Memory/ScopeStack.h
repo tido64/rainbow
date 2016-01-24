@@ -13,9 +13,6 @@
 #if defined(RAINBOW_OS_ANDROID)
 // Workaround for max_align_t not being defined in namespace std.
 namespace std { using ::max_align_t; }
-#elif defined(_MSC_VER) && _MSC_VER <= 1800
-// Workaround for missing alignof operator.
-#define alignof __alignof
 #endif
 
 namespace rainbow

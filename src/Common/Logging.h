@@ -31,9 +31,6 @@
 #   define RAINBOW_LOG_FATAL  "FATAL"
 #   define RAINBOW_LOG_INFO   "INFO"
 #   define RAINBOW_LOG_WARN   "WARN"
-#   if defined(_MSC_VER) && _MSC_VER <= 1800
-#       define snprintf(...) sprintf_s(__VA_ARGS__)
-#   endif
 #endif  // RAINBOW_OS_ANDROID
 
 #define LOGE(...) rainbow::error(__VA_ARGS__)

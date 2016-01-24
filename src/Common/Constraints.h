@@ -19,16 +19,8 @@ template <typename T, typename U = T>
 using EnableIfIntegral =
     typename std::enable_if<std::is_integral<T>::value, U>::type;
 
-#if defined(_MSC_VER) && _MSC_VER <= 1800
-template <typename T>
-struct EnableIfArithmetic : std::enable_if<std::is_arithmetic<T>::value> {};
-
-template <typename T>
-using Arithmetic = typename EnableIfArithmetic<T>::type;
-#else
 template <typename T>
 using Arithmetic = typename std::enable_if<std::is_arithmetic<T>::value>::type;
-#endif  // _MSC_VER <= 1800
 
 template <typename T>
 using CharType =
