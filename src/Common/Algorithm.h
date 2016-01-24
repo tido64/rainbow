@@ -11,6 +11,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <iterator>
 #include <limits>
 #include <utility>
 
@@ -135,16 +136,16 @@ namespace rainbow
     template <typename T>
     void rotate_left(T& container)
     {
-        auto begin = container.begin();
-        std::rotate(begin, begin + 1, container.end());
+        auto begin = std::begin(container);
+        std::rotate(begin, begin + 1, std::end(container));
     }
 
     /// <summary>Performs a right rotation on the container.</summary>
     template <typename T>
     void rotate_right(T& container)
     {
-        auto rbegin = container.rbegin();
-        std::rotate(rbegin, rbegin + 1, container.rend());
+        auto rbegin = std::rbegin(container);
+        std::rotate(rbegin, rbegin + 1, std::rend(container));
     }
 
     /// <summary>
