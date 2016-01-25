@@ -111,6 +111,7 @@ set(SOURCE_FILES
     src/Lua/LuaSyntax.cpp
     src/Lua/LuaSyntax.h
     src/Memory/Arena.h
+    src/Memory/ArrayView.h
     src/Memory/NotNull.h
     src/Memory/Pool.h
     src/Memory/ScopeStack.h

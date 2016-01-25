@@ -216,7 +216,7 @@ void RainbowController::on_mouse_down(uint32_t button,
                                       unsigned long timestamp)
 {
     Pointer p(button, point.x, point.y, timestamp);
-    director_.input().on_pointer_began({1, &p});
+    director_.input().on_pointer_began(p);
 }
 
 void RainbowController::on_mouse_motion(uint32_t buttons,
@@ -235,12 +235,12 @@ void RainbowController::on_mouse_motion(uint32_t buttons,
                 ++i;
             }
         }
-        director_.input().on_pointer_moved({i, p});
+        director_.input().on_pointer_moved({p, i});
     }
     else
     {
         Pointer p(0, point.x, point.y, timestamp);
-        director_.input().on_pointer_moved({1, &p});
+        director_.input().on_pointer_moved(p);
     }
 }
 
@@ -249,7 +249,7 @@ void RainbowController::on_mouse_up(uint32_t button,
                                     unsigned long timestamp)
 {
     Pointer p(button, point.x, point.y, timestamp);
-    director_.input().on_pointer_ended({1, &p});
+    director_.input().on_pointer_ended(p);
 }
 
 void RainbowController::on_window_resized()

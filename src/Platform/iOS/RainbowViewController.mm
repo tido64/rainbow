@@ -152,19 +152,19 @@ namespace
 - (void)touchesBegan:(NSSet*)touches withEvent:(UIEvent*)event
 {
     _director->input().on_pointer_began(
-        ArrayView<Pointer>(touches.count, [self convertTouches:touches]));
+        ArrayView<Pointer>([self convertTouches:touches], touches.count));
 }
 
 - (void)touchesMoved:(NSSet*)touches withEvent:(UIEvent*)event
 {
     _director->input().on_pointer_moved(
-        ArrayView<Pointer>(touches.count, [self convertTouches:touches]));
+        ArrayView<Pointer>([self convertTouches:touches], touches.count));
 }
 
 - (void)touchesEnded:(NSSet*)touches withEvent:(UIEvent*)event
 {
     _director->input().on_pointer_ended(
-        ArrayView<Pointer>(touches.count, [self convertTouches:touches]));
+        ArrayView<Pointer>([self convertTouches:touches], touches.count));
 }
 
 - (void)touchesCancelled:(NSSet*)touches withEvent:(UIEvent*)event

@@ -93,7 +93,7 @@ TEST_F(PointerTest, IsZeroByDefault)
 TEST_F(PointerTest, pointer_began)
 {
     Pointer p1(1, 2, 3, 0);
-    input.on_pointer_began({1, &p1});
+    input.on_pointer_began(p1);
     ASSERT_TRUE(is_triggered(Events::Began));
     ASSERT_FALSE(is_triggered(0xff ^ Events::Began));
 }
@@ -108,7 +108,7 @@ TEST_F(PointerTest, pointer_canceled)
 TEST_F(PointerTest, pointer_ended)
 {
     Pointer p1(1, 2, 3, 0);
-    input.on_pointer_ended({1, &p1});
+    input.on_pointer_ended(p1);
     ASSERT_TRUE(is_triggered(Events::Ended));
     ASSERT_FALSE(is_triggered(0xff ^ Events::Ended));
 }
@@ -116,7 +116,7 @@ TEST_F(PointerTest, pointer_ended)
 TEST_F(PointerTest, pointer_moved)
 {
     Pointer p1(1, 2, 3, 0);
-    input.on_pointer_moved({1, &p1});
+    input.on_pointer_moved(p1);
     ASSERT_TRUE(is_triggered(Events::Moved));
     ASSERT_FALSE(is_triggered(0xff ^ Events::Moved));
 }
