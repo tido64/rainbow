@@ -16,13 +16,12 @@ using rainbow::is_equal;
 void Overlay::init(rainbow::SceneNode& parent, const Vec2i&)
 {
     const unsigned char white[4096]{0xff};
-    const unsigned char* white_ptr = white;
     texture_ = TextureManager::Get()->create(
         "rainbow/heimdall/overlay",
-        [white_ptr](TextureManager& texture_manager, const Texture& texture)
+        [data = white](TextureManager& texture_manager, const Texture& texture)
         {
             texture_manager.upload(
-                texture, GL_LUMINANCE, 64, 64, GL_LUMINANCE, white_ptr);
+                texture, GL_LUMINANCE, 64, 64, GL_LUMINANCE, data);
         });
 
     update(Rect{});

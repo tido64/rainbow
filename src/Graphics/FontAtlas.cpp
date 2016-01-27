@@ -71,8 +71,9 @@ namespace
                       [&face, &max](const FontGlyph& glyph) {
             if (FT_Load_Char(face, glyph.code, FT_LOAD_DEFAULT))
             {
-                R_ABORT("Failed to load characters");
                 max.x = 0;
+                R_ABORT("Failed to load characters");
+                UNREACHABLE();
                 return;
             }
             const FT_Glyph_Metrics& metrics = face->glyph->metrics;

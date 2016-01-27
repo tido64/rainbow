@@ -124,47 +124,48 @@ void Label::update_internal()
         rainbow::for_each_utf8(
             text_.get(),
             [this, &start, &count, &pen, origin_x, R, needs_alignment, &vx](
-                uint32_t ch) {
-            if (ch == '\n')
+                uint32_t ch)
             {
-                save(start, count, pen.x - origin_x, R, needs_alignment);
-                pen.x = origin_x;
-                start = count;
-                pen.y -= font_->height() * scale_;
-                return;
-            }
+                if (ch == '\n')
+                {
+                    save(start, count, pen.x - origin_x, R, needs_alignment);
+                    pen.x = origin_x;
+                    start = count;
+                    pen.y -= font_->height() * scale_;
+                    return;
+                }
 
-            const FontGlyph* glyph = font_->get_glyph(ch);
-            if (!glyph)
-                return;
+                const FontGlyph* glyph = font_->get_glyph(ch);
+                if (!glyph)
+                    return;
 
-            pen.x += glyph->left * scale_;
+                pen.x += glyph->left * scale_;
 
-            for (size_t i = 0; i < 4; ++i)
-            {
-                vx->color = color_;
-                vx->texcoord = glyph->quad[i].texcoord;
-                vx->position = glyph->quad[i].position;
-                vx->position *= scale_;
-                vx->position += pen;
-                ++vx;
-            }
+                for (size_t i = 0; i < 4; ++i)
+                {
+                    vx->color = color_;
+                    vx->texcoord = glyph->quad[i].texcoord;
+                    vx->position = glyph->quad[i].position;
+                    vx->position *= scale_;
+                    vx->position += pen;
+                    ++vx;
+                }
 
-            pen.x += (glyph->advance - glyph->left) * scale_;
-            ++count;
-        });
+                pen.x += (glyph->advance - glyph->left) * scale_;
+                ++count;
+            });
 
         count_ = count * 4;
         save(start, count, pen.x - origin_x, R, needs_alignment);
     }
     else if (stale_ & kStaleColor)
     {
-        const Colorb& color = color_;
         std::for_each(vertices_.get(),
                       vertices_.get() + count_,
-                      [color](SpriteVertex& v) {
-            v.color = color;
-        });
+                      [&color = color_](SpriteVertex& v)
+                      {
+                          v.color = color;
+                      });
     }
 }
 
@@ -181,20 +182,21 @@ void Label::save(unsigned int start,
 {
     if (needs_alignment)
     {
-        const float offset =
-            width * kAlignmentFactor[static_cast<int>(alignment_)];
-        const Vec2f sin_r(R.y, R.y);
-        const Vec2f cos_r(R.x, R.x);
-        const auto& translate = position_;
-        std::for_each(vertices_.get() + start * 4,
-                      vertices_.get() + end * 4,
-                      [offset, &sin_r, &cos_r, &translate](SpriteVertex& v)
-                      {
-                          auto p = v.position;
-                          p.x -= offset;
-                          v.position = rainbow::graphics::transform_srt(
-                              p, sin_r, cos_r, translate);
-                      });
+        std::for_each(
+            vertices_.get() + start * 4,
+            vertices_.get() + end * 4,
+            [
+              offset = width * kAlignmentFactor[static_cast<int>(alignment_)],
+              sin_r = Vec2f(R.y, R.y),
+              cos_r = Vec2f(R.x, R.x),
+              &translate = position_
+            ](SpriteVertex& v)
+            {
+                auto p = v.position;
+                p.x -= offset;
+                v.position = rainbow::graphics::transform_srt(
+                    p, sin_r, cos_r, translate);
+            });
     }
     if (width > width_)
         width_ = width;
