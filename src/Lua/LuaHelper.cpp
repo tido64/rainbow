@@ -34,10 +34,11 @@ namespace
         if (!asset.is_file())
             return 0;
 #endif  // RAINBOW_OS_ANDROID
-        const File& file = File::open(asset);
+        File file = File::open(asset);
         if (!file)
             return 0;
-        const int result = rainbow::lua::load(L, Data(file), module, false);
+        const int result =
+            rainbow::lua::load(L, Data(std::move(file)), module, false);
         if (result == 0)
             return luaL_error(L, "Failed to load '%s'", module);
         return result;

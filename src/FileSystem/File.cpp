@@ -55,7 +55,7 @@ File::~File()
         fclose(stream_);
 }
 
-size_t File::size() const
+auto File::size() const -> size_t
 {
 #ifdef RAINBOW_OS_ANDROID
     if (is_asset_)
@@ -66,7 +66,7 @@ size_t File::size() const
     return (fstat(fd, &file_status) != 0 ? 0 : file_status.st_size);
 }
 
-size_t File::read(void* dst, size_t size) const
+auto File::read(void* dst, size_t size) -> size_t
 {
 #ifdef RAINBOW_OS_ANDROID
     if (is_asset_)
@@ -75,12 +75,12 @@ size_t File::read(void* dst, size_t size) const
     return fread(dst, sizeof(char), size, stream_);
 }
 
-int File::seek(long offset, int origin) const
+auto File::seek(long offset, int origin) -> int
 {
     return fseek(stream_, offset, origin);
 }
 
-size_t File::write(const void* buffer, size_t size) const
+auto File::write(const void* buffer, size_t size) -> size_t
 {
     return fwrite(buffer, sizeof(char), size, stream_);
 }

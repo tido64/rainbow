@@ -67,7 +67,7 @@ public:
     /// <summary>
     ///   Constructs a data object with the contents of the file.
     /// </summary>
-    explicit Data(const File&);
+    explicit Data(File&&);
 
     /// <summary>Constructs a wrapper around a buffer.</summary>
     Data(const void* buffer, size_t size, Ownership ownership)

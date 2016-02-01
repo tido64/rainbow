@@ -19,7 +19,7 @@ Data Data::load_document(const char* document)
     return Data(File::open_document(document));
 }
 
-Data::Data(const File& file)
+Data::Data(File&& file)
     : ownership_(Ownership::Owner), allocated_(0), sz_(0), data_(nullptr)
 {
     if (!file)
@@ -50,7 +50,7 @@ bool Data::save(const char* path) const
     R_ASSERT(data_, "No data to save");
     R_ASSERT(sz_ > 0, "Data is set but size is 0");
 
-    const File& file = File::open_write(path);
+    File file = File::open_write(path);
     if (!file)
         return false;
 

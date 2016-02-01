@@ -24,7 +24,7 @@ public:
     ~File();
 
     /// <summary>Returns the file size.</summary>
-    size_t size() const;
+    auto size() const -> size_t;
 
     /// <summary>
     ///   Reads <paramref name="size"/> bytes from file into buffer
@@ -33,7 +33,7 @@ public:
     /// <param name="dst">[out] Destination buffer.</param>
     /// <param name="size">Number of bytes to read.</param>
     /// <returns>Number of bytes read.</returns>
-    size_t read(void* dst, size_t size) const;
+    auto read(void* dst, size_t size) -> size_t;
 
     /// <summary>
     ///   Sets the file position indicator for the file stream to the value
@@ -45,13 +45,13 @@ public:
     /// </param>
     /// <param name="origin">Position to which offset is added.</param>
     /// <returns>0 upon success, nonzero value otherwise.</returns>
-    int seek(long offset, int origin) const;
+    auto seek(long offset, int origin) -> int;
 
     /// <summary>Writes buffer at <paramref name="buffer"/> to file.</summary>
     /// <param name="buffer">Source buffer.</param>
     /// <param name="size">Number of bytes to write.</param>
     /// <returns>Number of bytes written.</returns>
-    size_t write(const void* buffer, size_t size) const;
+    auto write(const void* buffer, size_t size) -> size_t;
 
     explicit operator bool() const { return stream_; }
     operator AAsset*() const { return asset_; }
