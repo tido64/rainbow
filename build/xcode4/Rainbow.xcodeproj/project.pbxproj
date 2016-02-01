@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 47;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -112,7 +112,6 @@
 		1939A230152C425D00494609 /* lua_Input.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1939A1ED152C425D00494609 /* lua_Input.cpp */; };
 		1939A231152C425D00494609 /* lua_Label.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1939A1EF152C425D00494609 /* lua_Label.cpp */; };
 		1939A233152C425D00494609 /* lua_Random.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1939A1F4152C425D00494609 /* lua_Random.cpp */; };
-		1939A234152C425D00494609 /* lua_Recorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1939A1F6152C425D00494609 /* lua_Recorder.cpp */; };
 		1939A235152C425D00494609 /* lua_SceneGraph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1939A1F8152C425D00494609 /* lua_SceneGraph.cpp */; };
 		1939A236152C425D00494609 /* lua_Sprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1939A1FA152C425D00494609 /* lua_Sprite.cpp */; };
 		1939A237152C425D00494609 /* lua_SpriteBatch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1939A1FC152C425D00494609 /* lua_SpriteBatch.cpp */; };
@@ -153,11 +152,6 @@
 		198644C31B531CDD004378CF /* LyricalLabel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 198644C11B531CDD004378CF /* LyricalLabel.cpp */; };
 		198644C81B531D19004378CF /* nanovg.c in Sources */ = {isa = PBXBuildFile; fileRef = 198644C61B531D19004378CF /* nanovg.c */; };
 		19865982175E98F700723171 /* Data.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19865981175E98F700723171 /* Data.cpp */; };
-		1987ADA5194F2E0C003D2B3E /* Mixer_FMOD.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1987ADA3194F2E0C003D2B3E /* Mixer_FMOD.cpp */; };
-		1987ADAA194F34BF003D2B3E /* libfmod_iphoneos.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1987ADA6194F34BF003D2B3E /* libfmod_iphoneos.a */; settings = {ATTRIBUTES = (Weak, ); }; };
-		1987ADAB194F34BF003D2B3E /* libfmod_iphonesimulator.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1987ADA7194F34BF003D2B3E /* libfmod_iphonesimulator.a */; settings = {ATTRIBUTES = (Weak, ); }; };
-		1987ADAC194F34BF003D2B3E /* libfmodstudio_iphoneos.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1987ADA8194F34BF003D2B3E /* libfmodstudio_iphoneos.a */; settings = {ATTRIBUTES = (Weak, ); }; };
-		1987ADAD194F34BF003D2B3E /* libfmodstudio_iphonesimulator.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1987ADA9194F34BF003D2B3E /* libfmodstudio_iphonesimulator.a */; settings = {ATTRIBUTES = (Weak, ); }; };
 		1988802817F84AFD009F4587 /* Coroutine.lua in Resources */ = {isa = PBXBuildFile; fileRef = 1988802417F84AFD009F4587 /* Coroutine.lua */; };
 		1988802917F84AFD009F4587 /* Functional.lua in Resources */ = {isa = PBXBuildFile; fileRef = 1988802517F84AFD009F4587 /* Functional.lua */; };
 		1988802A17F84AFD009F4587 /* Strict.lua in Resources */ = {isa = PBXBuildFile; fileRef = 1988802617F84AFD009F4587 /* Strict.lua */; };
@@ -197,20 +191,20 @@
 		19905B8A152C50FA00BDD15C /* Stack.lua in Resources */ = {isa = PBXBuildFile; fileRef = 19905B80152C50FA00BDD15C /* Stack.lua */; };
 		19905B8B152C50FA00BDD15C /* Transition.lua in Resources */ = {isa = PBXBuildFile; fileRef = 19905B81152C50FA00BDD15C /* Transition.lua */; };
 		19AF58A0167FFA0800F54B27 /* Overlay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19AF589C167FFA0800F54B27 /* Overlay.cpp */; };
-		19CEDD71172422DC008B73B5 /* AudioFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19CEDD6A172422DC008B73B5 /* AudioFile.cpp */; };
-		19CEDD72172422DC008B73B5 /* AppleAudioFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19CEDD6D172422DC008B73B5 /* AppleAudioFile.cpp */; };
 		19D045AA18071D6D00968F00 /* Chrono.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19D045A918071D6D00968F00 /* Chrono.cpp */; };
 		19D9318A1834AFCE00F0137E /* ChangeMonitor_Stub.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19D931871834AFCE00F0137E /* ChangeMonitor_Stub.cpp */; };
 		19DCB2731741A1D000660000 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 19DCB2721741A1D000660000 /* libz.dylib */; };
+		19DFE5351C6002890079CB58 /* Mixer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19DFE5221C6002890079CB58 /* Mixer.cpp */; };
+		19DFE5361C6002890079CB58 /* AudioFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19DFE5251C6002890079CB58 /* AudioFile.cpp */; };
+		19DFE5371C6002890079CB58 /* AppleAudioFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19DFE5281C6002890079CB58 /* AppleAudioFile.cpp */; };
+		19DFE53D1C6142F40079CB58 /* RainbowAudioSession.mm in Sources */ = {isa = PBXBuildFile; fileRef = 19DFE53C1C6142F40079CB58 /* RainbowAudioSession.mm */; };
 		19E7748A1A02C8D3005DE249 /* OverlayActivator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19E774871A02C8D3005DE249 /* OverlayActivator.cpp */; };
 		19E85AA91858DCBD00D8B170 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 19E85AA81858DCBD00D8B170 /* Images.xcassets */; };
 		19E91FC21682B1460054D61F /* LuaHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19E91FC01682B1460054D61F /* LuaHelper.cpp */; };
-		19EBC54D16599D7000D3B5D7 /* Mixer_AL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19EBC54816599D7000D3B5D7 /* Mixer_AL.cpp */; };
 		19EBC55116599D9F00D3B5D7 /* ShaderManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19EBC54F16599D9F00D3B5D7 /* ShaderManager.cpp */; };
 		19ED191C1682247D00AAA323 /* lua_Renderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19ED191A1682247D00AAA323 /* lua_Renderer.cpp */; };
 		19EF136A1A7036C500D7AAA9 /* CircleShape.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19EF13681A7036C500D7AAA9 /* CircleShape.cpp */; };
 		19EF136D1A7036DD00D7AAA9 /* DebugDraw.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19EF136B1A7036DD00D7AAA9 /* DebugDraw.cpp */; };
-		19F98DA1171970C000A85873 /* Recorder_iOS.mm in Sources */ = {isa = PBXBuildFile; fileRef = 19F98DA0171970C000A85873 /* Recorder_iOS.mm */; };
 		19F98DA8171B5E1500A85873 /* Prose in Resources */ = {isa = PBXBuildFile; fileRef = 19F98DA6171B5E1500A85873 /* Prose */; };
 		19FDF4961942FCFB00B5F21B /* LuaSyntax.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19FDF4941942FCFB00B5F21B /* LuaSyntax.cpp */; };
 /* End PBXBuildFile section */
@@ -407,9 +401,6 @@
 		1939A19E152C425D00494609 /* Vec3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Vec3.h; sourceTree = "<group>"; };
 		1939A1A0152C425D00494609 /* Config.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; name = Config.cpp; path = ../../../src/Config.cpp; sourceTree = "<group>"; };
 		1939A1A1152C425D00494609 /* Config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Config.h; path = ../../../src/Config.h; sourceTree = "<group>"; };
-		1939A1B1152C425D00494609 /* Mixer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Mixer.h; sourceTree = "<group>"; };
-		1939A1B4152C425D00494609 /* Recorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Recorder.h; sourceTree = "<group>"; };
-		1939A1B5152C425D00494609 /* Sound.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Sound.h; sourceTree = "<group>"; };
 		1939A1BA152C425D00494609 /* Director.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; name = Director.cpp; path = ../../../src/Director.cpp; sourceTree = "<group>"; };
 		1939A1BB152C425D00494609 /* Director.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Director.h; path = ../../../src/Director.h; sourceTree = "<group>"; };
 		1939A1BD152C425D00494609 /* Animation.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = Animation.cpp; sourceTree = "<group>"; };
@@ -450,8 +441,6 @@
 		1939A1F3152C425D00494609 /* lua_Platform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lua_Platform.h; sourceTree = "<group>"; };
 		1939A1F4152C425D00494609 /* lua_Random.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = lua_Random.cpp; sourceTree = "<group>"; };
 		1939A1F5152C425D00494609 /* lua_Random.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lua_Random.h; sourceTree = "<group>"; };
-		1939A1F6152C425D00494609 /* lua_Recorder.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = lua_Recorder.cpp; sourceTree = "<group>"; };
-		1939A1F7152C425D00494609 /* lua_Recorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lua_Recorder.h; sourceTree = "<group>"; };
 		1939A1F8152C425D00494609 /* lua_SceneGraph.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = lua_SceneGraph.cpp; sourceTree = "<group>"; };
 		1939A1F9152C425D00494609 /* lua_SceneGraph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lua_SceneGraph.h; sourceTree = "<group>"; };
 		1939A1FA152C425D00494609 /* lua_Sprite.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = lua_Sprite.cpp; sourceTree = "<group>"; };
@@ -531,8 +520,6 @@
 		198644C61B531D19004378CF /* nanovg.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = nanovg.c; path = ../../../lib/nanovg/src/nanovg.c; sourceTree = "<group>"; };
 		198644C71B531D19004378CF /* nanovg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = nanovg.h; path = ../../../lib/nanovg/src/nanovg.h; sourceTree = "<group>"; };
 		19865981175E98F700723171 /* Data.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = Data.cpp; sourceTree = "<group>"; };
-		1987ADA3194F2E0C003D2B3E /* Mixer_FMOD.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Mixer_FMOD.cpp; sourceTree = "<group>"; };
-		1987ADA4194F2E0C003D2B3E /* Mixer_FMOD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Mixer_FMOD.h; sourceTree = "<group>"; };
 		1987ADA6194F34BF003D2B3E /* libfmod_iphoneos.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libfmod_iphoneos.a; path = ../../lib/FMOD/lib/ios/libfmod_iphoneos.a; sourceTree = "<group>"; };
 		1987ADA7194F34BF003D2B3E /* libfmod_iphonesimulator.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libfmod_iphonesimulator.a; path = ../../lib/FMOD/lib/ios/libfmod_iphonesimulator.a; sourceTree = "<group>"; };
 		1987ADA8194F34BF003D2B3E /* libfmodstudio_iphoneos.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libfmodstudio_iphoneos.a; path = ../../lib/FMOD/lib/ios/libfmodstudio_iphoneos.a; sourceTree = "<group>"; };
@@ -588,33 +575,36 @@
 		19AF589C167FFA0800F54B27 /* Overlay.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Overlay.cpp; sourceTree = "<group>"; };
 		19AF589D167FFA0800F54B27 /* Overlay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Overlay.h; sourceTree = "<group>"; };
 		19B2D7E21AFB4A0E00660D38 /* Pointer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Pointer.h; sourceTree = "<group>"; };
-		19CEDD6A172422DC008B73B5 /* AudioFile.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = AudioFile.cpp; sourceTree = "<group>"; };
-		19CEDD6B172422DC008B73B5 /* AudioFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioFile.h; sourceTree = "<group>"; };
-		19CEDD6D172422DC008B73B5 /* AppleAudioFile.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = AppleAudioFile.cpp; sourceTree = "<group>"; };
-		19CEDD6E172422DC008B73B5 /* AppleAudioFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppleAudioFile.h; sourceTree = "<group>"; };
 		19D045A918071D6D00968F00 /* Chrono.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Chrono.cpp; sourceTree = "<group>"; };
 		19D3204717BD6BD4007BDC67 /* UIKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIKit.h; sourceTree = "<group>"; };
 		19D3204817BD6BD4007BDC67 /* PVRTC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PVRTC.h; sourceTree = "<group>"; };
 		19D3204917BD6BD4007BDC67 /* PNG.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNG.h; sourceTree = "<group>"; };
 		19D3204A17BD6BD4007BDC67 /* Image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Image.h; sourceTree = "<group>"; };
-		19D3C03A1857E6DD00D1603D /* Mixer_AL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Mixer_AL.h; sourceTree = "<group>"; };
 		19D931841834AFC200F0137E /* ChangeMonitor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChangeMonitor.h; sourceTree = "<group>"; };
 		19D931871834AFCE00F0137E /* ChangeMonitor_Stub.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = ChangeMonitor_Stub.cpp; sourceTree = "<group>"; };
 		19DCB2721741A1D000660000 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		19DCB2831746AB7C00660000 /* LuaBind.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LuaBind.h; sourceTree = "<group>"; };
+		19DFE5211C6002890079CB58 /* Channel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Channel.h; sourceTree = "<group>"; };
+		19DFE5221C6002890079CB58 /* Mixer.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = Mixer.cpp; sourceTree = "<group>"; };
+		19DFE5231C6002890079CB58 /* Mixer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Mixer.h; sourceTree = "<group>"; };
+		19DFE5241C6002890079CB58 /* Sound.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Sound.h; sourceTree = "<group>"; };
+		19DFE5251C6002890079CB58 /* AudioFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AudioFile.cpp; sourceTree = "<group>"; };
+		19DFE5261C6002890079CB58 /* AudioFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioFile.h; sourceTree = "<group>"; };
+		19DFE5281C6002890079CB58 /* AppleAudioFile.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = AppleAudioFile.cpp; sourceTree = "<group>"; };
+		19DFE5291C6002890079CB58 /* AppleAudioFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppleAudioFile.h; sourceTree = "<group>"; };
+		19DFE5301C6002890079CB58 /* Mixer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Mixer.h; sourceTree = "<group>"; };
+		19DFE53B1C6142B00079CB58 /* RainbowAudioSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RainbowAudioSession.h; sourceTree = "<group>"; };
+		19DFE53C1C6142F40079CB58 /* RainbowAudioSession.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = RainbowAudioSession.mm; sourceTree = "<group>"; };
 		19E774871A02C8D3005DE249 /* OverlayActivator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OverlayActivator.cpp; sourceTree = "<group>"; };
 		19E774881A02C8D3005DE249 /* OverlayActivator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OverlayActivator.h; sourceTree = "<group>"; };
 		19E774891A02C8D3005DE249 /* Style.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Style.h; sourceTree = "<group>"; };
 		19E85AA81858DCBD00D8B170 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		19E91FC01682B1460054D61F /* LuaHelper.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = LuaHelper.cpp; sourceTree = "<group>"; };
 		19E91FC11682B1460054D61F /* LuaHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LuaHelper.h; sourceTree = "<group>"; };
-		19EBC54816599D7000D3B5D7 /* Mixer_AL.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = Mixer_AL.cpp; sourceTree = "<group>"; };
-		19EBC54916599D7000D3B5D7 /* Mixer_iOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Mixer_iOS.h; sourceTree = "<group>"; };
 		19EBC54F16599D9F00D3B5D7 /* ShaderManager.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = ShaderManager.cpp; sourceTree = "<group>"; };
 		19EBC55016599D9F00D3B5D7 /* ShaderManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShaderManager.h; sourceTree = "<group>"; };
 		19ED191A1682247D00AAA323 /* lua_Renderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = lua_Renderer.cpp; sourceTree = "<group>"; };
 		19ED191B1682247D00AAA323 /* lua_Renderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lua_Renderer.h; sourceTree = "<group>"; };
-		19EEC4BC18592896005D93E3 /* Recorder_iOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Recorder_iOS.h; sourceTree = "<group>"; };
 		19EF13681A7036C500D7AAA9 /* CircleShape.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CircleShape.cpp; sourceTree = "<group>"; };
 		19EF13691A7036C500D7AAA9 /* CircleShape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CircleShape.h; sourceTree = "<group>"; };
 		19EF136B1A7036DD00D7AAA9 /* DebugDraw.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DebugDraw.cpp; sourceTree = "<group>"; };
@@ -624,7 +614,6 @@
 		19F2038D1AAC551D005CD913 /* SharedPtr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SharedPtr.h; path = ../../../src/Memory/SharedPtr.h; sourceTree = "<group>"; };
 		19F9890715F924E8005A5F69 /* lua_IO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lua_IO.h; sourceTree = "<group>"; };
 		19F9890C15FBBB3B005A5F69 /* NonCopyable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NonCopyable.h; sourceTree = "<group>"; };
-		19F98DA0171970C000A85873 /* Recorder_iOS.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Recorder_iOS.mm; sourceTree = "<group>"; };
 		19F98DA5171B5DDF00A85873 /* SystemInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SystemInfo.h; path = ../../../src/Platform/SystemInfo.h; sourceTree = "<group>"; };
 		19F98DA6171B5E1500A85873 /* Prose */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Prose; path = ../../../lua/Prose; sourceTree = "<group>"; };
 		19FDF4931942FCFB00B5F21B /* LuaMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LuaMacros.h; sourceTree = "<group>"; };
@@ -646,10 +635,6 @@
 				1939A23C152C42ED00494609 /* OpenAL.framework in Frameworks */,
 				1939A179152C41C000494609 /* OpenGLES.framework in Frameworks */,
 				1948C023152C397D00E9B854 /* UIKit.framework in Frameworks */,
-				1987ADAA194F34BF003D2B3E /* libfmod_iphoneos.a in Frameworks */,
-				1987ADAB194F34BF003D2B3E /* libfmod_iphonesimulator.a in Frameworks */,
-				1987ADAC194F34BF003D2B3E /* libfmodstudio_iphoneos.a in Frameworks */,
-				1987ADAD194F34BF003D2B3E /* libfmodstudio_iphonesimulator.a in Frameworks */,
 				19DCB2731741A1D000660000 /* libz.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -949,35 +934,6 @@
 			path = impl;
 			sourceTree = "<group>";
 		};
-		1939A1A2152C425D00494609 /* ConFuoco */ = {
-			isa = PBXGroup;
-			children = (
-				1939A1A4152C425D00494609 /* impl */,
-				19CEDD6C172422DC008B73B5 /* Codecs */,
-				19CEDD6A172422DC008B73B5 /* AudioFile.cpp */,
-				19CEDD6B172422DC008B73B5 /* AudioFile.h */,
-				1939A1B1152C425D00494609 /* Mixer.h */,
-				1939A1B4152C425D00494609 /* Recorder.h */,
-				1939A1B5152C425D00494609 /* Sound.h */,
-			);
-			name = ConFuoco;
-			path = ../../../src/ConFuoco;
-			sourceTree = "<group>";
-		};
-		1939A1A4152C425D00494609 /* impl */ = {
-			isa = PBXGroup;
-			children = (
-				19EBC54816599D7000D3B5D7 /* Mixer_AL.cpp */,
-				19D3C03A1857E6DD00D1603D /* Mixer_AL.h */,
-				1987ADA3194F2E0C003D2B3E /* Mixer_FMOD.cpp */,
-				1987ADA4194F2E0C003D2B3E /* Mixer_FMOD.h */,
-				19EBC54916599D7000D3B5D7 /* Mixer_iOS.h */,
-				19EEC4BC18592896005D93E3 /* Recorder_iOS.h */,
-				19F98DA0171970C000A85873 /* Recorder_iOS.mm */,
-			);
-			path = impl;
-			sourceTree = "<group>";
-		};
 		1939A1BC152C425D00494609 /* Graphics */ = {
 			isa = PBXGroup;
 			children = (
@@ -1077,8 +1033,6 @@
 				1939A1F3152C425D00494609 /* lua_Platform.h */,
 				1939A1F4152C425D00494609 /* lua_Random.cpp */,
 				1939A1F5152C425D00494609 /* lua_Random.h */,
-				1939A1F6152C425D00494609 /* lua_Recorder.cpp */,
-				1939A1F7152C425D00494609 /* lua_Recorder.h */,
 				19ED191A1682247D00AAA323 /* lua_Renderer.cpp */,
 				19ED191B1682247D00AAA323 /* lua_Renderer.h */,
 				1939A1F8152C425D00494609 /* lua_SceneGraph.cpp */,
@@ -1199,8 +1153,8 @@
 		1948C03A152C3A3600E9B854 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				19DFE51F1C6002890079CB58 /* Audio */,
 				1939A180152C425D00494609 /* Common */,
-				1939A1A2152C425D00494609 /* ConFuoco */,
 				1946B7A91836E54600F74A3B /* FileSystem */,
 				1939A1BC152C425D00494609 /* Graphics */,
 				196CB724161E4ADD0068C809 /* Heimdall */,
@@ -1424,15 +1378,6 @@
 			path = Rainbow;
 			sourceTree = "<group>";
 		};
-		19CEDD6C172422DC008B73B5 /* Codecs */ = {
-			isa = PBXGroup;
-			children = (
-				19CEDD6D172422DC008B73B5 /* AppleAudioFile.cpp */,
-				19CEDD6E172422DC008B73B5 /* AppleAudioFile.h */,
-			);
-			path = Codecs;
-			sourceTree = "<group>";
-		};
 		19D3204617BD6BD4007BDC67 /* Decoders */ = {
 			isa = PBXGroup;
 			children = (
@@ -1449,6 +1394,41 @@
 				19D931871834AFCE00F0137E /* ChangeMonitor_Stub.cpp */,
 			);
 			path = impl;
+			sourceTree = "<group>";
+		};
+		19DFE51F1C6002890079CB58 /* Audio */ = {
+			isa = PBXGroup;
+			children = (
+				19DFE5201C6002890079CB58 /* AL */,
+				19DFE5271C6002890079CB58 /* Codecs */,
+				19DFE5251C6002890079CB58 /* AudioFile.cpp */,
+				19DFE5261C6002890079CB58 /* AudioFile.h */,
+				19DFE5301C6002890079CB58 /* Mixer.h */,
+			);
+			name = Audio;
+			path = ../../../src/Audio;
+			sourceTree = "<group>";
+		};
+		19DFE5201C6002890079CB58 /* AL */ = {
+			isa = PBXGroup;
+			children = (
+				19DFE5211C6002890079CB58 /* Channel.h */,
+				19DFE5221C6002890079CB58 /* Mixer.cpp */,
+				19DFE5231C6002890079CB58 /* Mixer.h */,
+				19DFE53B1C6142B00079CB58 /* RainbowAudioSession.h */,
+				19DFE53C1C6142F40079CB58 /* RainbowAudioSession.mm */,
+				19DFE5241C6002890079CB58 /* Sound.h */,
+			);
+			path = AL;
+			sourceTree = "<group>";
+		};
+		19DFE5271C6002890079CB58 /* Codecs */ = {
+			isa = PBXGroup;
+			children = (
+				19DFE5281C6002890079CB58 /* AppleAudioFile.cpp */,
+				19DFE5291C6002890079CB58 /* AppleAudioFile.h */,
+			);
+			path = Codecs;
 			sourceTree = "<group>";
 		};
 		19F2038A1AAC5500005CD913 /* Memory */ = {
@@ -1497,14 +1477,9 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 0720;
-				TargetAttributes = {
-					1948C01D152C397D00E9B854 = {
-						DevelopmentTeam = WQJVTURJ6W;
-					};
-				};
 			};
 			buildConfigurationList = 1948C018152C397D00E9B854 /* Build configuration list for PBXProject "Rainbow" */;
-			compatibilityVersion = "Xcode 3.2";
+			compatibilityVersion = "Xcode 6.3";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -1554,7 +1529,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "../../tools/shaders-gen.py";
+			shellScript = "cd ../../ && tools/shaders-gen.py";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1578,6 +1553,7 @@
 				1939A050152C401300494609 /* b2Distance.cpp in Sources */,
 				1939A051152C401300494609 /* b2DynamicTree.cpp in Sources */,
 				1939A052152C401300494609 /* b2TimeOfImpact.cpp in Sources */,
+				19DFE5371C6002890079CB58 /* AppleAudioFile.cpp in Sources */,
 				198F42781A9151CB00BE7A73 /* Timer.cpp in Sources */,
 				1939A053152C401300494609 /* b2ChainShape.cpp in Sources */,
 				1939A054152C401300494609 /* b2CircleShape.cpp in Sources */,
@@ -1593,6 +1569,7 @@
 				1939A05A152C401300494609 /* b2Settings.cpp in Sources */,
 				1939A05B152C401300494609 /* b2StackAllocator.cpp in Sources */,
 				19D9318A1834AFCE00F0137E /* ChangeMonitor_Stub.cpp in Sources */,
+				19DFE5351C6002890079CB58 /* Mixer.cpp in Sources */,
 				1939A05C152C401300494609 /* b2Timer.cpp in Sources */,
 				1939A05D152C401300494609 /* b2Body.cpp in Sources */,
 				1939A05E152C401300494609 /* b2ContactManager.cpp in Sources */,
@@ -1604,6 +1581,7 @@
 				1939A063152C401300494609 /* b2ChainAndCircleContact.cpp in Sources */,
 				1939A064152C401300494609 /* b2ChainAndPolygonContact.cpp in Sources */,
 				1939A065152C401300494609 /* b2CircleContact.cpp in Sources */,
+				19DFE53D1C6142F40079CB58 /* RainbowAudioSession.mm in Sources */,
 				198F42991A9152E000BE7A73 /* AnimationState.c in Sources */,
 				1939A066152C401300494609 /* b2Contact.cpp in Sources */,
 				1939A067152C401300494609 /* b2ContactSolver.cpp in Sources */,
@@ -1679,7 +1657,6 @@
 				198F42B01A9152E000BE7A73 /* Slot.c in Sources */,
 				1939A16E152C401300494609 /* ltablib.c in Sources */,
 				1939A16F152C401300494609 /* ltm.c in Sources */,
-				1987ADA5194F2E0C003D2B3E /* Mixer_FMOD.cpp in Sources */,
 				1939A172152C401300494609 /* lundump.c in Sources */,
 				1939A173152C401300494609 /* lvm.c in Sources */,
 				1939A174152C401300494609 /* lzio.c in Sources */,
@@ -1708,7 +1685,6 @@
 				1939A231152C425D00494609 /* lua_Label.cpp in Sources */,
 				1960AFD71A4E278E0015A3AD /* StableWorld.cpp in Sources */,
 				1939A233152C425D00494609 /* lua_Random.cpp in Sources */,
-				1939A234152C425D00494609 /* lua_Recorder.cpp in Sources */,
 				1939A235152C425D00494609 /* lua_SceneGraph.cpp in Sources */,
 				1939A236152C425D00494609 /* lua_Sprite.cpp in Sources */,
 				1939A237152C425D00494609 /* lua_SpriteBatch.cpp in Sources */,
@@ -1717,7 +1693,6 @@
 				197396DD15A505F60064BF7D /* TextureManager.cpp in Sources */,
 				196CB728161E4ADD0068C809 /* Gatekeeper.cpp in Sources */,
 				196CB72F161E4D940068C809 /* b2MotorJoint.cpp in Sources */,
-				19EBC54D16599D7000D3B5D7 /* Mixer_AL.cpp in Sources */,
 				19EBC55116599D9F00D3B5D7 /* ShaderManager.cpp in Sources */,
 				19AF58A0167FFA0800F54B27 /* Overlay.cpp in Sources */,
 				19ED191C1682247D00AAA323 /* lua_Renderer.cpp in Sources */,
@@ -1728,6 +1703,7 @@
 				198F42A11A9152E000BE7A73 /* BoundingBoxAttachment.c in Sources */,
 				1960AFD11A4E278E0015A3AD /* Shape.cpp in Sources */,
 				19FDF4961942FCFB00B5F21B /* LuaSyntax.cpp in Sources */,
+				19DFE5361C6002890079CB58 /* AudioFile.cpp in Sources */,
 				19D045AA18071D6D00968F00 /* Chrono.cpp in Sources */,
 				193929B816E23D5F0018340B /* SystemInfo_Apple.cpp in Sources */,
 				198F42A51A9152E000BE7A73 /* IkConstraint.c in Sources */,
@@ -1735,11 +1711,8 @@
 				198F42A01A9152E000BE7A73 /* BoneData.c in Sources */,
 				196911CD1713564A002BC2E4 /* VertexArray.cpp in Sources */,
 				1946B7AE1836E54600F74A3B /* File.cpp in Sources */,
-				19F98DA1171970C000A85873 /* Recorder_iOS.mm in Sources */,
 				198F42AE1A9152E000BE7A73 /* Skin.c in Sources */,
-				19CEDD71172422DC008B73B5 /* AudioFile.cpp in Sources */,
 				19655DEB187C65AF0053C398 /* freetype.c in Sources */,
-				19CEDD72172422DC008B73B5 /* AppleAudioFile.cpp in Sources */,
 				1949374D1756795900CF3FC6 /* DataMap_Unix.cpp in Sources */,
 				198F429C1A9152E000BE7A73 /* AtlasAttachmentLoader.c in Sources */,
 				19865982175E98F700723171 /* Data.cpp in Sources */,
@@ -1802,7 +1775,7 @@
 				GCC_PREFIX_HEADER = "Rainbow/Rainbow-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
-					"USE_FMOD_STUDIO=1",
+					"RAINBOW_AUDIO_AL=1",
 					"USE_HEIMDALL=1",
 					"USE_LUA_SCRIPT=1",
 					"USE_PHYSICS=1",
@@ -1815,7 +1788,6 @@
 					../../lib,
 					../../lib/box2d/Box2D,
 					../../src/ThirdParty/FreeType,
-					../../lib/FMOD/inc,
 					../../lib/FreeType/include,
 					../../lib/FreeType/src,
 					../../lib/Lua,
@@ -1823,10 +1795,6 @@
 					"../../lib/spine-runtimes/spine-c/include",
 				);
 				INFOPLIST_FILE = "Rainbow/Rainbow-Info.plist";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					../../lib/FMOD/lib/ios,
-				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.bifrostentertainment.rainbow;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
@@ -1905,7 +1873,7 @@
 				GCC_PREFIX_HEADER = "Rainbow/Rainbow-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
-					"USE_FMOD_STUDIO=1",
+					"RAINBOW_AUDIO_AL=1",
 					"USE_HEIMDALL=1",
 					"USE_LUA_SCRIPT=1",
 					"USE_PHYSICS=1",
@@ -1918,7 +1886,6 @@
 					../../lib,
 					../../lib/box2d/Box2D,
 					../../src/ThirdParty/FreeType,
-					../../lib/FMOD/inc,
 					../../lib/FreeType/include,
 					../../lib/FreeType/src,
 					../../lib/Lua,
@@ -1926,10 +1893,6 @@
 					"../../lib/spine-runtimes/spine-c/include",
 				);
 				INFOPLIST_FILE = "Rainbow/Rainbow-Info.plist";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					../../lib/FMOD/lib/ios,
-				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.bifrostentertainment.rainbow;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
@@ -1947,7 +1910,7 @@
 				GCC_PREFIX_HEADER = "Rainbow/Rainbow-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"NDEBUG=1",
-					"USE_FMOD_STUDIO=1",
+					"RAINBOW_AUDIO_AL=1",
 					"USE_LUA_SCRIPT=1",
 					"USE_PHYSICS=1",
 					"USE_SPINE=1",
@@ -1959,7 +1922,6 @@
 					../../lib,
 					../../lib/box2d/Box2D,
 					../../src/ThirdParty/FreeType,
-					../../lib/FMOD/inc,
 					../../lib/FreeType/include,
 					../../lib/FreeType/src,
 					../../lib/Lua,
@@ -1967,10 +1929,6 @@
 					"../../lib/spine-runtimes/spine-c/include",
 				);
 				INFOPLIST_FILE = "Rainbow/Rainbow-Info.plist";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					../../lib/FMOD/lib/ios,
-				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.bifrostentertainment.rainbow;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";

@@ -11,7 +11,46 @@
 
 struct AAsset;
 
-class File : private NonCopyable<File>
+class IFile : private NonCopyable<IFile>
+{
+public:
+    virtual ~IFile() = default;
+
+    /// <summary>Returns the file size.</summary>
+    virtual auto size() const -> size_t = 0;
+
+    /// <summary>
+    ///   Reads <paramref name="size"/> bytes from file into buffer
+    ///   <paramref name="dst"/>.
+    /// </summary>
+    /// <param name="dst">[out] Destination buffer.</param>
+    /// <param name="size">Number of bytes to read.</param>
+    /// <returns>Number of bytes read.</returns>
+    virtual auto read(void* dst, size_t size) -> size_t = 0;
+
+    /// <summary>
+    ///   Sets the file position indicator for the file stream to the value
+    ///   pointed to by <paramref name="offset"/>.
+    ///   <seealso cref="fseek"/>
+    /// </summary>
+    /// <param name="offset">
+    ///   Number of bytes to shift the position relative to origin.
+    /// </param>
+    /// <param name="origin">Position to which offset is added.</param>
+    /// <returns>0 upon success, nonzero value otherwise.</returns>
+    virtual auto seek(long offset, int origin) -> int = 0;
+
+    /// <summary>Writes buffer at <paramref name="buffer"/> to file.</summary>
+    /// <param name="buffer">Source buffer.</param>
+    /// <param name="size">Number of bytes to write.</param>
+    /// <returns>Number of bytes written.</returns>
+    virtual auto write(const void* buffer, size_t size) -> size_t = 0;
+
+    /// <summary>Returns whether the file was successfully opened.</summary>
+    virtual /*explicit*/ operator bool() const = 0;
+};
+
+class File final : private NonCopyable<File>
 {
 public:
     static File open(const char* path);

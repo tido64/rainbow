@@ -17,6 +17,7 @@
 
 #include "Common/Constants.h"
 #include "Common/Constraints.h"
+#include "Platform/Macros.h"  // For std::rbegin/rend on Android.
 
 namespace rainbow
 {

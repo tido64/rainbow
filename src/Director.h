@@ -5,7 +5,7 @@
 #ifndef DIRECTOR_H_
 #define DIRECTOR_H_
 
-#include "ConFuoco/Mixer.h"
+#include "Audio/Mixer.h"
 #include "Graphics/Renderer.h"
 #include "Graphics/SceneGraph.h"
 #include "Input/Input.h"
@@ -27,11 +27,12 @@ namespace rainbow
         ~Director();
 
         bool active() const { return active_; }
-        const char* error() const { return error_; }
-        Input& input() { return input_; }
-        Renderer& renderer() { return renderer_; }
-        SceneNode& scenegraph() { return scenegraph_; }
-        GameBase* script() { return script_.get(); }
+        auto error() const { return error_; }
+        auto input() -> Input& { return input_; }
+        auto mixer() -> audio::Mixer& { return mixer_; }
+        auto renderer() -> Renderer& { return renderer_; }
+        auto scenegraph() -> GroupNode& { return scenegraph_; }
+        auto script() { return script_.get(); }
         bool terminated() const { return terminated_; }
 
         void draw();
@@ -70,7 +71,7 @@ namespace rainbow
         GroupNode scenegraph_;
         Input input_;
         Renderer renderer_;
-        ConFuoco::Mixer mixer_;
+        audio::Mixer mixer_;
     };
 }
 

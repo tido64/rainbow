@@ -53,9 +53,9 @@ function Get-AllPackages
 		}
 	}
 	if (!(Test-Path (Join-Path $SourcePath "lib/openal-soft/include/AL/al.h")) -or !(Test-Path (Join-Path $SourcePath "lib/openal-soft/libs/Win32/OpenAL32.lib"))) {
-		$AL = "openal-soft-1.17.0-bin.zip"
+		$AL = "openal-soft-1.17.2-bin.zip"
 		Get-Package "http://kcat.strangesoft.net/openal-binaries/$AL" $AL
-		$AL = Join-Path $PackagesPath openal-soft-1.17.0-bin -Resolve
+		$AL = Join-Path $PackagesPath openal-soft-1.17.2-bin -Resolve
 		if (Test-Path $AL) {
 			Move-Item $AL ([IO.Path]::Combine($LibraryPath, "openal-soft"))
 		}
@@ -119,7 +119,6 @@ else {
 	}
 	$FMODCheckBox = New-Object System.Windows.Forms.CheckBox -Property @{
 		AutoSize = $true
-		Checked = $true
 		Text = $FMODDescription
 	}
 	$HeimdallCheckBox = New-Object System.Windows.Forms.CheckBox -Property @{
@@ -200,8 +199,8 @@ else {
 	if ($UnitTestsCheckBox.Checked) {
 		$Options += "-DUNIT_TESTS=1"
 	}
-	if (!$FMODCheckBox.Checked) {
-		$Options += "-DUSE_FMOD_STUDIO=0"
+	if ($FMODCheckBox.Checked) {
+		$Options += "-DUSE_FMOD_STUDIO=1"
 	}
 	if ($HeimdallCheckBox.Checked) {
 		$Options += "-DUSE_HEIMDALL=1"

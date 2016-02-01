@@ -10,7 +10,7 @@ set(THIRD_PARTY ${PROJECT_SOURCE_DIR}/src/ThirdParty)
 option(UNIT_TESTS  "Compile unit tests" OFF)
 
 # Features
-option(USE_FMOD_STUDIO  "Enable FMOD Studio audio engine" ON)
+option(USE_FMOD_STUDIO  "Enable FMOD Studio audio engine" OFF)
 option(USE_HEIMDALL     "Enable Heimdall debugging facilities" OFF)
 option(USE_LUA_SCRIPT   "Enable Lua scripting" ON)
 option(USE_PHYSICS      "Enable physics module (Box2D)" OFF)
@@ -25,6 +25,7 @@ include(${LOCAL_MODULE_PATH}/Unix.cmake)
 include(${LOCAL_MODULE_PATH}/Windows.cmake)
 
 set(SOURCE_FILES
+    src/Audio/Mixer.h
     src/Common/Algorithm.h
     src/Common/Chrono.cpp
     src/Common/Chrono.h
@@ -50,7 +51,6 @@ set(SOURCE_FILES
     src/Common/Vec3.h
     src/Config.cpp
     src/Config.h
-    src/ConFuoco/Mixer.h
     src/Director.cpp
     src/Director.h
     src/FileSystem/File.cpp
@@ -156,8 +156,6 @@ if(USE_LUA_SCRIPT)
        src/Lua/lua_Platform.h
        src/Lua/lua_Random.cpp
        src/Lua/lua_Random.h
-       src/Lua/lua_Recorder.cpp
-       src/Lua/lua_Recorder.h
        src/Lua/lua_Renderer.cpp
        src/Lua/lua_Renderer.h
        src/Lua/lua_SceneGraph.cpp
@@ -229,6 +227,7 @@ if(UNIT_TESTS)
       APPEND
       PROPERTY INCLUDE_DIRECTORIES ${TEST_INCLUDE_DIR} ${LOCAL_LIBRARY}/googletest/googletest)
   list(APPEND SOURCE_FILES
+       src/Tests/Audio/Mixer.test.cc
        src/Tests/Common/Algorithm.test.cc
        src/Tests/Common/Chrono.test.cc
        src/Tests/Common/Color.test.cc
@@ -240,7 +239,6 @@ if(UNIT_TESTS)
        src/Tests/Common/TypeInfo.test.cc
        src/Tests/Common/Vec2.test.cc
        src/Tests/Common/Vec3.test.cc
-       src/Tests/ConFuoco/ConFuoco.test.cc
        src/Tests/Config.test.cc
        src/Tests/FileSystem/Path.test.cc
        src/Tests/Graphics/Animation.test.cc
@@ -258,23 +256,25 @@ if(UNIT_TESTS)
 endif()
 
 if(USE_FMOD_STUDIO)
+  add_definitions(-DRAINBOW_AUDIO_FMOD=1)
   list(APPEND SOURCE_FILES
-       src/ConFuoco/impl/Mixer_FMOD.cpp
-       src/ConFuoco/impl/Mixer_FMOD.h)
+       src/Audio/FMOD/Mixer.cpp
+       src/Audio/FMOD/Mixer.h)
 else()
+  add_definitions(-DRAINBOW_AUDIO_AL=1)
   list(APPEND SOURCE_FILES
-       src/ConFuoco/AudioFile.cpp
-       src/ConFuoco/AudioFile.h
-       src/ConFuoco/Codecs/OggVorbisAudioFile.cpp
-       src/ConFuoco/Codecs/OggVorbisAudioFile.h
-       src/ConFuoco/impl/Mixer_AL.cpp
-       src/ConFuoco/impl/Mixer_AL.h
-       src/ConFuoco/Recorder.h
-       src/ConFuoco/Sound.h)
+       src/Audio/AL/Channel.h
+       src/Audio/AL/Mixer.cpp
+       src/Audio/AL/Mixer.h
+       src/Audio/AL/Sound.h
+       src/Audio/AudioFile.cpp
+       src/Audio/AudioFile.h
+       src/Audio/Codecs/OggVorbisAudioFile.cpp
+       src/Audio/Codecs/OggVorbisAudioFile.h)
   if(APPLE)
     list(APPEND SOURCE_FILES
-         src/ConFuoco/Codecs/AppleAudioFile.cpp
-         src/ConFuoco/Codecs/AppleAudioFile.h)
+         src/Audio/Codecs/AppleAudioFile.cpp
+         src/Audio/Codecs/AppleAudioFile.h)
   endif()
 endif()
 

@@ -51,4 +51,16 @@
 #   define UNREACHABLE() __assume(0)
 #endif
 
+// TODO: Workaround for missing std::rbegin/rend in Android NDK.
+#ifdef RAINBOW_OS_ANDROID
+namespace std
+{
+    template <typename T>
+    auto rbegin(T& container) { return container.rbegin(); }
+
+    template <typename T>
+    auto rend(T& container) { return container.rend(); }
+}
+#endif  // RAINBOW_OS_ANDROID
+
 #endif  // PLATFORM_MACROS_H_

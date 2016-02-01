@@ -54,7 +54,7 @@ def ProjectFlags():
     '-I', os.path.join(project_path, 'lib', 'nanovg', 'src'),
     '-I', os.path.join(project_path, 'lib', 'spine-runtimes', 'spine-c', 'include'),
     '-I', os.path.join(project_path, 'lib', 'googletest', 'googletest', 'include'),
-    '-DUSE_FMOD_STUDIO=1',
+    '-DRAINBOW_AUDIO_AL=1',
     '-DUSE_PHYSICS=1',
     '-DUSE_SPINE=1',
     '-fno-rtti',

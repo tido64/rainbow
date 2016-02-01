@@ -107,27 +107,37 @@ Stops the animation.
 
 > Officially, Rainbow supports only [Ogg Vorbis](http://en.wikipedia.org/wiki/Vorbis) audio format. However, on iOS, the [list of supported audio formats](http://developer.apple.com/library/ios/#documentation/AudioVideo/Conceptual/MultimediaPG/UsingAudio/UsingAudio.html#//apple_ref/doc/uid/TP40009767-CH2-SW9) includes AAC (MPEG-4 Advanced Audio Coding), ALAC (Apple Lossless), HE-AAC (MPEG-4 High Efficiency AAC), iLBC (internet Low Bit Rate Codec), IMA4 (IMA/ADPCM), Linear PCM (uncompressed, linear pulse code modulation), MP3, µ-law and a-law. Of these, AAC, ALAC, HE-AAC and MP3 are hardware-assisted. Mac OS X also supports these in addition to [Ogg Vorbis](http://en.wikipedia.org/wiki/Vorbis). On Android, the list of supported audio formats vary with each device but MP3 and Ogg Vorbis are both safe bets.
 
-### rainbow.audio.clear()
-
-Stops and deletes all sound objects.
-
-### rainbow.audio.create_sound(path, mode = 0, loops = -1)
+### rainbow.audio.is_paused(channel)
 
 | Parameter | Description |
 |:----------|:------------|
-| <var>path</var> | Path to audio source, relative to the location of the main script. |
-| <var>mode</var> | <span class="optional"></span> Load into buffer (0), or stream from disk (1). Default: 0. |
-| <var>loops</var> | <span class="optional"></span> Number of times to loop. Only applicable if streaming. Default: -1. |
+| <var>channel</var> | The channel to get pause state of. |
 
-Creates a sound object. This object is just a reference to the audio source and cannot be manipulated in any way.
+Returns whether the channel has been paused.
 
-### rainbow.audio.delete_sound(sound)
+### rainbow.audio.is_playing(channel)
 
 | Parameter | Description |
 |:----------|:------------|
-| <var>sound</var> | The sound object to delete. |
+| <var>channel</var> | The channel to get playing state of. |
 
-Deletes sound object. This will stop all channels from using the object and release all related resources.
+Returns whether the channel is playing.
+
+### rainbow.audio.load_sound(path)
+
+| Parameter | Description |
+|:----------|:------------|
+| <var>path</var> | Path to audio file, relative to the location of the main script. |
+
+Creates a static sound object. This object is just a reference to the audio file and cannot be manipulated in any way. Subsequent calls with the same path will return the same sound object as long as it hasn't been released.
+
+### rainbow.audio.load_stream(path)
+
+| Parameter | Description |
+|:----------|:------------|
+| <var>path</var> | Path to audio file, relative to the location of the main script. |
+
+Creates a sound object for streaming. This object is just a reference to the audio file and cannot be manipulated in any way. Subsequent calls with the same path will return the same sound object as long as it hasn't been released.
 
 ### rainbow.audio.pause(channel)
 
@@ -137,30 +147,55 @@ Deletes sound object. This will stop all channels from using the object and rele
 
 Sets channel on pause.
 
-### rainbow.audio.play(sound)
+### rainbow.audio.play(channel)
+
+| Parameter | Description |
+|:----------|:------------|
+| <var>channel</var> | The channel to resume playback. |
+
+Resumes playback of channel.
+
+### rainbow.audio.play(sound, x, y)
 
 | Parameter | Description |
 |:----------|:------------|
 | <var>sound</var> | The sound object to play. |
+| <var>x, y</var> | Position of the source in the world. Default: (0, 0). |
 
-Starts playback of the sound object and returns the channel on which it is played. Channels may vary with each playback.
+Starts playback of the sound object, and returns the channel on which it is played. Channels may vary with each playback.
 
-### rainbow.audio.set_gain(+channel, volume)
-
-| Parameter | Description |
-|:----------|:------------|
-| <var>channel</var> | <span class="optional"></span> The channel to change gain/volume. Default: master channel. |
-| <var>volume</var> | Desired gain/volume. Valid values: 0.0-1.0. |
-
-Sets channel gain/volume.
-
-### rainbow.audio.set_pitch(pitch)
+### rainbow.audio.release(sound)
 
 | Parameter | Description |
 |:----------|:------------|
-| <var>pitch</var> | Desired pitch shift, where 1.0 equals identify. Each reduction by 50 percent equals a pitch shift of -12 semitones (one octave reduction). Each doubling equals a pitch shift of 12 semitones (one octave increase). Zero is not a legal value. |
+| <var>sound</var> | The sound object to release. |
 
-Sets global pitch shift.
+Releases sound object. This will stop all channels currently using the object, and release all related resources.
+
+### rainbow.audio.set_loop_count(channel, loop_count)
+
+| Parameter | Description |
+|:----------|:------------|
+| <var>channel</var> | The channel to change volume on. |
+| <var>loop_count</var> | Number of times to loop. |
+
+Sets the number of times to loop before the channel stops playback.
+
+### rainbow.audio.set_volume(channel, volume)
+
+| Parameter | Description |
+|:----------|:------------|
+| <var>channel</var> | The channel to change volume on. |
+| <var>volume</var> | Desired volume. Valid values: 0.0-1.0. |
+
+### rainbow.audio.set_world_position(channel, x, y)
+
+| Parameter | Description |
+|:----------|:------------|
+| <var>channel</var> | The channel to change volume on. |
+| <var>x, y</var> | Position of the source in the world. |
+
+Sets channel world position.
 
 ### rainbow.audio.stop(channel)
 
@@ -168,7 +203,7 @@ Sets global pitch shift.
 |:----------|:------------|
 | <var>channel</var> | The channel to stop playback. |
 
-Stops channel.
+Stops channel, and returns it to the pool.
 
 ## rainbow.exit
 

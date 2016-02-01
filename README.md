@@ -3,7 +3,7 @@
 Rainbow is a fast, scriptable, cross-platform, 2D game engine written in modern
 C++.
 
-Copyright &copy; 2010-15 Bifrost Entertainment AS and Tommy Nguyen.
+Copyright &copy; 2010-16 Bifrost Entertainment AS and Tommy Nguyen.
 
 Distributed under the MIT License (see accompanying file `LICENSE` or copy at
 http://opensource.org/licenses/MIT). Licenses for third-party software can be
@@ -27,9 +27,8 @@ Rainbow runs on most popular operating systems:
 
 Rainbow integrates [FMOD Studio](http://www.fmod.org/), giving you access to
 the same professional tools that AAA studios use. There is also an open source
-alternative built on OpenAL and
-[OpenSL ES](http://www.khronos.org/opensles/) (Android). Audio format support
-depends on the platform. Typically, MP3 and Ogg Vorbis on Android, and
+alternative built on OpenAL. Audio format support depends on the platform.
+Typically, MP3 and Ogg Vorbis on Android, and
 [AAC, ALAC, and MP3](https://developer.apple.com/library/ios/documentation/AudioVideo/Conceptual/MultimediaPG/UsingAudio/UsingAudio.html#//apple_ref/doc/uid/TP40009767-CH2-SW33)
 on iOS and OS X.
 
@@ -103,9 +102,9 @@ For iOS builds, see the corresponding section.
 
 ### Building with FMOD Studio
 
-The default audio backend for all platforms is currently FMOD Studio. If you
-don't want to use FMOD Studio, run `build.sh` with `-DUSE_FMOD_STUDIO=0` or
-undefine `USE_FMOD_STUDIO` in the project file.
+The default audio backend for all platforms is currently OpenAL. If you want to
+use FMOD Studio, run `build.sh` with `-DUSE_FMOD_STUDIO=1` or replace
+`RAINBOW_AUDIO_AL=1` with `RAINBOW_AUDIO_FMOD=1` in the project file.
 
 FMOD's licence prevents redistribution of its files so you'll have to download
 them yourself [here](http://www.fmod.org/download/). Extract or install it and

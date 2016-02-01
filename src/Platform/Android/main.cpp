@@ -256,7 +256,7 @@ void android_handle_event(struct android_app* app, int32_t cmd)
                     a->sensorEventQueue, a->accelerometerSensor,
                     (1000L / 60) * 1000);
             }
-            ConFuoco::Mixer::Instance->suspend(false);
+            a->director->mixer().suspend(false);
             a->active = true;
             break;
         case APP_CMD_LOST_FOCUS:
@@ -290,7 +290,7 @@ void android_handle_event(struct android_app* app, int32_t cmd)
                 ASensorEventQueue_disableSensor(
                     a->sensorEventQueue, a->accelerometerSensor);
             }
-            ConFuoco::Mixer::Instance->suspend(true);
+            a->director->mixer().suspend(true);
             break;
         case APP_CMD_DESTROY:
             a->active = false;

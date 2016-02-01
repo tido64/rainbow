@@ -13,12 +13,12 @@ before_build:
   - appveyor DownloadFile http://www.libsdl.org/release/SDL2-devel-2.0.4-VC.zip
   - 7z x SDL2-devel-2.0.4-VC.zip
   - ren SDL2-2.0.4 SDL
-  - appveyor DownloadFile http://kcat.strangesoft.net/openal-binaries/openal-soft-1.17.0-bin.zip
-  - 7z x openal-soft-1.17.0-bin.zip
-  - ren openal-soft-1.17.0-bin openal-soft
+  - appveyor DownloadFile http://kcat.strangesoft.net/openal-binaries/openal-soft-1.17.2-bin.zip
+  - 7z x openal-soft-1.17.2-bin.zip
+  - ren openal-soft-1.17.2-bin openal-soft
   - mkdir "%APPVEYOR_BUILD_FOLDER%-build"
   - cd "%APPVEYOR_BUILD_FOLDER%-build"
-  - cmake -DUSE_FMOD_STUDIO=0 -DUSE_HEIMDALL=1 -DUSE_PHYSICS=1 -DUSE_SPINE=1 -G "Visual Studio 14" "%APPVEYOR_BUILD_FOLDER%"
+  - cmake -DUSE_HEIMDALL=1 -DUSE_PHYSICS=1 -DUSE_SPINE=1 -G "Visual Studio 14" "%APPVEYOR_BUILD_FOLDER%"
 build_script:
   - msbuild "%APPVEYOR_BUILD_FOLDER%-build\Rainbow.sln" /maxcpucount /verbosity:minimal /logger:"%ProgramFiles%\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 after_build:

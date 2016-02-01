@@ -10,13 +10,16 @@
 
 class Drawable;
 
-namespace ConFuoco
+namespace rainbow
 {
-    class Channel;
-    class Sound;
-}
+    class SceneNode;
 
-namespace rainbow { class SceneNode; }
+    namespace audio
+    {
+        struct Channel;
+        struct Sound;
+    }
+}
 
 namespace b2
 {
@@ -24,16 +27,6 @@ namespace b2
     {
         class Body;
         class Fixture;
-    }
-}
-
-namespace FMOD
-{
-    class Sound;
-
-    namespace Studio
-    {
-        class Bank;
     }
 }
 
@@ -126,6 +119,34 @@ NS_RAINBOW_LUA_BEGIN
     void Argument<Drawable>::is_required(lua_State* L, int n)
     {
         require(L, n, is_userdata, "drawable");
+    }
+
+    /* rainbow::SceneNode */
+
+    template <>
+    void Argument<SceneNode>::is_optional(lua_State* L, int n)
+    {
+        optional(L, n, lua_isuserdata, "nil or node");
+    }
+
+    template <>
+    void Argument<SceneNode>::is_required(lua_State* L, int n)
+    {
+        require(L, n, lua_isuserdata, "node");
+    }
+
+    /* rainbow::audio */
+
+    template <>
+    void Argument<rainbow::audio::Channel>::is_required(lua_State* L, int n)
+    {
+        require(L, n, is_table, "channel");
+    }
+
+    template <>
+    void Argument<rainbow::audio::Sound>::is_required(lua_State* L, int n)
+    {
+        require(L, n, is_table, "sound");
     }
 
     /* lua_Number */
@@ -222,20 +243,6 @@ NS_RAINBOW_LUA_BEGIN
         require(L, n, is_userdata, "texture");
     }
 
-    /* rainbow::SceneNode */
-
-    template <>
-    void Argument<SceneNode>::is_optional(lua_State* L, int n)
-    {
-        optional(L, n, lua_isuserdata, "nil or node");
-    }
-
-    template <>
-    void Argument<SceneNode>::is_required(lua_State* L, int n)
-    {
-        require(L, n, lua_isuserdata, "node");
-    }
-
     /* Box2D */
 
     template <>
@@ -248,34 +255,6 @@ NS_RAINBOW_LUA_BEGIN
     void Argument<b2::lua::Fixture>::is_required(lua_State* L, int n)
     {
         luaL_checkudata(L, n, "b2Fixture");
-    }
-
-    /* ConFuoco */
-
-    template <>
-    void Argument<ConFuoco::Channel>::is_required(lua_State* L, int n)
-    {
-        require(L, n, is_table, "channel");
-    }
-
-    template <>
-    void Argument<ConFuoco::Sound>::is_required(lua_State* L, int n)
-    {
-        require(L, n, is_table, "sound");
-    }
-
-    /* FMOD Studio */
-
-    template <>
-    void Argument<FMOD::Sound>::is_required(lua_State* L, int n)
-    {
-        require(L, n, is_userdata, "FMOD::Sound");
-    }
-
-    template <>
-    void Argument<FMOD::Studio::Bank>::is_required(lua_State* L, int n)
-    {
-        require(L, n, is_table, "FMOD::Studio::Bank");
     }
 } NS_RAINBOW_LUA_END
 

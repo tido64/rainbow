@@ -67,7 +67,7 @@ include \$(CLEAR_VARS)
 
 LOCAL_MODULE             := fmod
 LOCAL_SRC_FILES          := lib/FMOD/lib/android/\$(TARGET_ARCH_ABI)/libfmod.so
-LOCAL_EXPORT_CFLAGS      := -DUSE_FMOD_STUDIO=1
+LOCAL_EXPORT_CFLAGS      := -DRAINBOW_AUDIO_FMOD=1
 LOCAL_EXPORT_C_INCLUDES  := \$(LOCAL_PATH)/lib/FMOD/inc
 
 include \$(PREBUILT_SHARED_LIBRARY)
@@ -79,7 +79,7 @@ include \$(CLEAR_VARS)
 
 LOCAL_MODULE             := fmodstudio
 LOCAL_SRC_FILES          := lib/FMOD/lib/android/\$(TARGET_ARCH_ABI)/libfmodstudio.so
-LOCAL_EXPORT_CFLAGS      := -DUSE_FMOD_STUDIO=1
+LOCAL_EXPORT_CFLAGS      := -DRAINBOW_AUDIO_FMOD=1
 LOCAL_EXPORT_C_INCLUDES  := \$(LOCAL_PATH)/lib/FMOD/inc
 
 include \$(PREBUILT_SHARED_LIBRARY)
@@ -99,7 +99,7 @@ LOCAL_C_INCLUDES        := \$(LOCAL_PATH)/src \$(LOCAL_PATH)/lib \\
                            \$(LOCAL_PATH)/lib/spine-runtimes/spine-c/include \\
                            $NDK_HOME/sources/android/native_app_glue
 LOCAL_CFLAGS            := $@
-LOCAL_CPPFLAGS          := -std=c++1y -Wall -Wextra -Woverloaded-virtual -Wsign-promo -fno-rtti -fno-exceptions
+LOCAL_CPPFLAGS          := -std=gnu++1y -Wall -Wextra -Woverloaded-virtual -Wsign-promo -fno-rtti -fno-exceptions
 LOCAL_STATIC_LIBRARIES  := android_native_app_glue
 LOCAL_SHARED_LIBRARIES  := fmodstudio fmod
 LOCAL_LDLIBS            := -landroid -lEGL -lGLESv2 -llog -lz

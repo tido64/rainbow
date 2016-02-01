@@ -15,15 +15,15 @@ If you're using a graphical UI for Git, make sure to checkout the submodules as 
 Next, we'll need to install the dependencies:
 
 * [CMake](http://www.cmake.org/)
-* [FMOD](http://www.fmod.org/)
+* [FMOD](http://www.fmod.org/) (only if you want to use FMOD Studio)
 * [Mercurial](http://mercurial.selenic.com/) (Linux and Mac OS X only)
-* [Ogg Vorbis](http://www.vorbis.com/) (only if you don't want to use FMOD Studio)
-* [OpenAL Soft](http://kcat.strangesoft.net/openal.html) (only if you don't want to use FMOD Studio)
+* [Ogg Vorbis](http://www.vorbis.com/) (only if you want to use OpenAL)
+* [OpenAL Soft](http://kcat.strangesoft.net/openal.html) (only if you want to use OpenAL)
 * [SDL](https://www.libsdl.org/download-2.0.php) (Windows only)
 
-Download the FMOD Studio 1.05 API package for your platform. Extract or install
-it, and copy the files into place. Please see the instructions in `README.md`
-for more details.
+If you've decided to use FMOD Studio, download the FMOD Studio 1.05 API package
+for your platform. Extract or install it, and copy the files into place. Please
+see the instructions in `README.md` for more details.
 
 ### Linux
 

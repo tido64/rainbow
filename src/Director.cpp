@@ -13,11 +13,16 @@
 #   include "ThirdParty/Box2D/DebugDraw.h"
 #endif  // USE_PHYSICS
 
+namespace
+{
+    constexpr int kMaxAudioChannels = 24;
+}
+
 namespace rainbow
 {
     Director::Director() : active_(true), terminated_(false), error_(nullptr)
     {
-        if (!ConFuoco::Mixer::Instance)
+        if (!mixer_.initialize(kMaxAudioChannels))
             terminate("Failed to initialise audio engine");
         else if (!renderer_.init())
             terminate("Failed to initialise renderer");
@@ -47,6 +52,7 @@ namespace rainbow
         renderer_.set_resolution(screen);
         script_.reset(GameBase::create(*this));
         script_->init(screen);
+
         if (terminated())
             return;
 
@@ -57,7 +63,7 @@ namespace rainbow
     {
         R_ASSERT(!terminated_, "App should have terminated by now");
 
-        mixer_.update();
+        mixer_.process();
         timer_manager_.update(dt);
         script_->update(dt);
         scenegraph_.update(dt);
