@@ -173,8 +173,6 @@ Note that you don't need to download libraries for all platforms. They're only
 listed for sake of completeness. If you're on Mac OS or Linux, you can use
 `tools/fmod-import-tool.sh` to copy the files into place.
 
-Rainbow currently supports FMOD Studio 1.05 API.
-
 ### Android
 
 - [Android NDK](http://developer.android.com/tools/sdk/ndk/)
@@ -199,9 +197,9 @@ Use the provided Xcode project under `rainbow/build/xcode4/`.
 
 - [CMake](http://www.cmake.org/)
 - [Mesa](http://www.mesa3d.org/)
-- [Ogg Vorbis](http://www.vorbis.com/) (only with `-DUSE_FMOD_STUDIO=0`)
-- [OpenAL Soft](http://kcat.strangesoft.net/openal.html) (only with
-  `-DUSE_FMOD_STUDIO=0`)
+- [Ogg Vorbis](http://www.vorbis.com/) (optional with `-DUSE_FMOD_STUDIO=1`)
+- [OpenAL Soft](http://kcat.strangesoft.net/openal.html) (optional with
+  `-DUSE_FMOD_STUDIO=1`)
 - [SDL](http://libsdl.org/)
 - [MinGW-w64](http://mingw-w64.org/) (for cross-compiling only)
 
@@ -216,7 +214,7 @@ work.
 ### Mac OS X
 
 - [CMake](http://www.cmake.org/)
-- [Ogg Vorbis](http://www.vorbis.com/) (only with `-DUSE_FMOD_STUDIO=0`)
+- [Ogg Vorbis](http://www.vorbis.com/) (optional with `-DUSE_FMOD_STUDIO=1`)
 - [SDL](http://libsdl.org/)
 - [Xcode](https://itunes.apple.com/no/app/xcode/id497799835?mt=12)
 
@@ -227,8 +225,8 @@ installed. SDL will be downloaded automatically by the build script.
 ### Windows
 
 - [CMake](http://www.cmake.org/)
-- [OpenAL Soft](http://kcat.strangesoft.net/openal.html) (only with
-  `-DUSE_FMOD_STUDIO=0`)
+- [OpenAL Soft](http://kcat.strangesoft.net/openal.html) (optional with
+  `-DUSE_FMOD_STUDIO=1`)
 - [SDL](http://libsdl.org/)
 - [Visual Studio Community](http://www.visualstudio.com/en-us/products/visual-studio-community-vs)
   (2013 or later)

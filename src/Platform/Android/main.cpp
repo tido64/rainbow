@@ -47,20 +47,38 @@ struct AInstance
           surface(EGL_NO_SURFACE), context(EGL_NO_CONTEXT) {}
 };
 
-void android_destroy_display(AInstance* ainstance);
-void android_handle_display(AInstance* ainstance);
-void android_init_display(AInstance* ainstance);
-void android_handle_event(struct android_app* app, int32_t cmd);
-int32_t android_handle_input(struct android_app* app, AInputEvent* event);
-int32_t android_handle_motion(struct android_app* app, AInputEvent* event);
-Pointer get_pointer_event(Renderer& renderer,
-                          AInputEvent* event,
-                          int32_t index);
+void android_destroy_display(AInstance*);
+void android_handle_display(AInstance*);
+void android_init_display(AInstance*);
+void android_handle_event(struct android_app*, int32_t cmd);
+int32_t android_handle_input(struct android_app*, AInputEvent*);
+int32_t android_handle_motion(struct android_app*, AInputEvent*);
+Pointer get_pointer_event(Renderer&, AInputEvent*, int32_t index);
+
+namespace
+{
+    pthread_key_t s_thread_key;
+
+    void detach_current_thread(void* vm)
+    {
+        if (vm == nullptr)
+            return;
+
+        static_cast<JavaVM*>(vm)->DetachCurrentThread();
+        pthread_setspecific(s_thread_key, nullptr);
+    }
+}
 
 void android_main(struct android_app* state)
 {
     app_dummy();
     //sleep(5);  // Sleep a little so GDB can attach itself
+
+    pthread_key_create(&s_thread_key, detach_current_thread);
+
+    JNIEnv* env;
+    state->activity->vm->AttachCurrentThread(&env, nullptr);
+    pthread_setspecific(s_thread_key, state->activity->vm);
 
     AInstance ainstance;
     state->userData = &ainstance;
@@ -123,6 +141,7 @@ void android_main(struct android_app* state)
         ainstance.director->draw();
         eglSwapBuffers(ainstance.display, ainstance.surface);
     }
+
     android_destroy_display(&ainstance);
 }
 

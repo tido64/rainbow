@@ -40,6 +40,11 @@ namespace
     template <typename F>
     FMOD::Sound* create_sound(F&& create, const char* path)
     {
+#ifdef RAINBOW_OS_ANDROID
+        std::string uri("file:///android_asset/");
+        uri += path;
+        const char* asset = uri.c_str();
+#else
         const Path asset(path);
         if (!asset.is_file())
         {
@@ -47,6 +52,7 @@ namespace
             UNREACHABLE();
             return nullptr;
         }
+#endif
 
         FMOD::Sound* sound;
         auto result = create(asset, FMOD_DEFAULT, nullptr, &sound);

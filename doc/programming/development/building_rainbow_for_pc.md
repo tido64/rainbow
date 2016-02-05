@@ -21,9 +21,9 @@ Next, we'll need to install the dependencies:
 * [OpenAL Soft](http://kcat.strangesoft.net/openal.html) (only if you want to use OpenAL)
 * [SDL](https://www.libsdl.org/download-2.0.php) (Windows only)
 
-If you've decided to use FMOD Studio, download the FMOD Studio 1.05 API package
-for your platform. Extract or install it, and copy the files into place. Please
-see the instructions in `README.md` for more details.
+If you've decided to use FMOD Studio, download the FMOD Studio API package for
+your platform. Extract or install it, and copy the files into place. Please see
+the instructions in `README.md` for more details.
 
 ### Linux
 
