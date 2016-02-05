@@ -383,7 +383,7 @@
 ** ===================================================================
 */
 
-/* #define LUA_NUMBER_DOUBLE */
+#define LUA_NUMBER_FLOAT
 #define LUA_NUMBER	float
 
 /*
@@ -408,7 +408,7 @@
 /*
 @@ l_mathop allows the addition of an 'l' or 'f' to all math operations
 */
-#define l_mathop(x)		(x)
+#define l_mathop(x)		(x##f)
 
 
 /*
