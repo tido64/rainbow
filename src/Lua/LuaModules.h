@@ -22,7 +22,9 @@
 #include "Lua/lua_Texture.h"
 
 #include "ThirdParty/Box2D/Lua/Box2D.h"
-#include "ThirdParty/Spine/spine-rainbow.h"
+#ifdef USE_SPINE
+#   include "ThirdParty/Spine/spine-rainbow.h"
+#endif
 
 NS_RAINBOW_LUA_BEGIN
 {
