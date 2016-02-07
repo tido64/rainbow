@@ -4,6 +4,8 @@
 # (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
 RAINBOW=$(cd -P "$(dirname $0)/.." && pwd)
+SDL_VERSION=2.0.4
+
 if [[ "$(git rev-parse --show-toplevel 2> /dev/null)" == "$RAINBOW" ]]; then
   echo "$0: Cannot run while still inside the repository"
   exit 0
@@ -34,10 +36,12 @@ function compile {
 }
 
 # Try to download SDL
-if [[ ! -z $(which hg) ]] && [[ ! -f "$RAINBOW/lib/SDL/include/SDL.h" ]]; then
-  echo -n 'Downloading SDL…'
-  hg clone -u release-2.0.4 http://hg.libsdl.org/SDL "$RAINBOW/lib/SDL"
-  echo ' done'
+if [[ ! -f "$RAINBOW/lib/SDL/include/SDL.h" ]]; then
+  echo 'Downloading SDL…'
+  curl -O http://libsdl.org/release/SDL2-$SDL_VERSION.tar.gz
+  tar xzf SDL2-$SDL_VERSION.tar.gz
+  mv SDL2-$SDL_VERSION "$RAINBOW/lib/SDL"
+  rm SDL2-$SDL_VERSION.tar.gz
 fi
 
 # Prune arguments
