@@ -25,8 +25,8 @@ public:
 private:
     rainbow::LuaMachine lua_;
 
-    bool on_key_down_impl(const Key&) override;
-    bool on_key_up_impl(const Key&) override;
+    bool on_key_down_impl(const rainbow::KeyStroke&) override;
+    bool on_key_up_impl(const rainbow::KeyStroke&) override;
 
     bool on_pointer_began_impl(const ArrayView<Pointer>&) override;
     bool on_pointer_canceled_impl() override;

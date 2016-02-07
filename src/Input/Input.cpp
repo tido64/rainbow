@@ -4,6 +4,38 @@
 
 #include "Input/Input.h"
 
+using rainbow::KeyMods;
+using rainbow::KeyStroke;
+using rainbow::VirtualKey;
+
+namespace
+{
+    template <typename T, typename F>
+    void flip_keys(const KeyStroke& stroke, T&& keys, F&& flip)
+    {
+        flip(keys, static_cast<unsigned>(stroke.key));
+        if (stroke.mods != KeyMods::None)
+        {
+            if ((stroke.mods & KeyMods::LeftShift) == KeyMods::LeftShift)
+                flip(keys, static_cast<unsigned>(VirtualKey::LeftShift));
+            if ((stroke.mods & KeyMods::RightShift) == KeyMods::RightShift)
+                flip(keys, static_cast<unsigned>(VirtualKey::RightShift));
+            if ((stroke.mods & KeyMods::LeftCtrl) == KeyMods::LeftCtrl)
+                flip(keys, static_cast<unsigned>(VirtualKey::LeftCtrl));
+            if ((stroke.mods & KeyMods::RightCtrl) == KeyMods::RightCtrl)
+                flip(keys, static_cast<unsigned>(VirtualKey::RightCtrl));
+            if ((stroke.mods & KeyMods::LeftAlt) == KeyMods::LeftAlt)
+                flip(keys, static_cast<unsigned>(VirtualKey::LeftAlt));
+            if ((stroke.mods & KeyMods::RightAlt) == KeyMods::RightAlt)
+                flip(keys, static_cast<unsigned>(VirtualKey::RightAlt));
+            if ((stroke.mods & KeyMods::LeftSuper) == KeyMods::LeftSuper)
+                flip(keys, static_cast<unsigned>(VirtualKey::LeftSuper));
+            if ((stroke.mods & KeyMods::RightSuper) == KeyMods::RightSuper)
+                flip(keys, static_cast<unsigned>(VirtualKey::RightSuper));
+        }
+    }
+}
+
 void Input::subscribe(NotNull<InputListener*> i)
 {
     last_listener_->append(i);
@@ -55,13 +87,21 @@ void Input::on_controller_disconnected(unsigned int id)
     });
 }
 
-void Input::on_key_down(const Key& k)
+void Input::on_key_down(const KeyStroke& k)
 {
+    flip_keys(k, keys_, [](decltype(keys_)& keys, unsigned pos) {
+        keys.set(pos);
+    });
+
     for_each(next(), [&k](InputListener* i) { return i->on_key_down(k); });
 }
 
-void Input::on_key_up(const Key& k)
+void Input::on_key_up(const KeyStroke& k)
 {
+    flip_keys(k, keys_, [](decltype(keys_)& keys, unsigned pos) {
+        keys.reset(pos);
+    });
+
     for_each(next(), [&k](InputListener* i) { return i->on_key_up(k); });
 }
 

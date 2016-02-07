@@ -8,9 +8,10 @@
 
 #include "Config.h"
 #include "Input/Controller.h"
-#include "Input/Key.h"
 #include "Input/Pointer.h"
 #include "Platform/SDL/Context.h"
+
+using rainbow::KeyStroke;
 
 namespace
 {
@@ -112,11 +113,15 @@ bool RainbowController::run()
                         context_.toggle_fullscreen();
                     }
                     else
-                        director_.input().on_key_down(Key::from_raw(&keysym));
+                    {
+                        director_.input().on_key_down(
+                            KeyStroke::from_event(keysym));
+                    }
                 }
                 break;
             case SDL_KEYUP:
-                director_.input().on_key_up(Key::from_raw(&event.key.keysym));
+                director_.input().on_key_up(
+                    KeyStroke::from_event(event.key.keysym));
                 break;
             case SDL_MOUSEMOTION:
                 on_mouse_motion(event.motion.state,

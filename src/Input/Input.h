@@ -5,9 +5,12 @@
 #ifndef INPUT_INPUT_H_
 #define INPUT_INPUT_H_
 
-#include "Common/NonCopyable.h"
+#include <bitset>
+
+#include "Common/Global.h"
 #include "Input/Acceleration.h"
 #include "Input/InputListener.h"
+#include "Input/VirtualKey.h"
 
 /// <summary>
 ///   Handles accelerometer/gyroscope and pointer events independent of
@@ -23,10 +26,16 @@
 ///     <item>http://developer.apple.com/library/ios/#documentation/UIKit/Reference/UIAcceleration_Class/Reference/UIAcceleration.html</item>
 ///   </list>
 /// <remarks>
-class Input : private InputListener, NonCopyable<Input>
+class Input : public Global<Input>, private InputListener
 {
 public:
-    Input() : last_listener_(this) {}
+    Input() : last_listener_(this) { make_global(); }
+
+    /// <summary>Returns whether specified key is currently pressed.</summary>
+    bool is_down(rainbow::VirtualKey key) const
+    {
+        return keys_[static_cast<unsigned int>(key)];
+    }
 
     /// <summary>Clears all input listeners.</summary>
     void reset()
@@ -58,17 +67,24 @@ public:
     void on_controller_connected(unsigned int id);
     void on_controller_disconnected(unsigned int id);
 
-    void on_key_down(const Key& k);
-    void on_key_up(const Key& k);
+    void on_key_down(const rainbow::KeyStroke&);
+    void on_key_up(const rainbow::KeyStroke&);
 
     void on_pointer_began(const ArrayView<Pointer>& pointers);
     void on_pointer_canceled();
     void on_pointer_ended(const ArrayView<Pointer>& pointers);
     void on_pointer_moved(const ArrayView<Pointer>& pointers);
 
+#ifdef RAINBOW_TEST
+    auto keys_down() const { return keys_.count(); }
+#endif  // RAINBOW_TEST
+
 private:
+    std::bitset<static_cast<unsigned>(rainbow::VirtualKey::NumKeys)> keys_;
     Acceleration acceleration_;  ///< Accelerometer data
     InputListener* last_listener_;
+
+    // Link overrides.
 
     void on_end_link_removed(Link* node) override;
 };

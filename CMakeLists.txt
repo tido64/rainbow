@@ -98,12 +98,12 @@ set(SOURCE_FILES
     src/Graphics/VertexArray.cpp
     src/Graphics/VertexArray.h
     src/Input/Acceleration.h
-    src/Input/impl/Key_SDL.cpp
+    src/Input/impl/VirtualKey_SDL.cpp
     src/Input/Input.cpp
     src/Input/Input.h
     src/Input/InputListener.h
-    src/Input/Key.h
     src/Input/Pointer.h
+    src/Input/VirtualKey.h
     src/Lua/LuaDebugging.h
     src/Lua/LuaHelper.cpp
     src/Lua/LuaHelper.h

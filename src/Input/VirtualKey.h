@@ -2,24 +2,13 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
-#ifndef INPUT_KEY_H_
-#define INPUT_KEY_H_
+#ifndef INPUT_VIRTUALKEY_H_
+#define INPUT_VIRTUALKEY_H_
 
-#include "Platform/Macros.h"
-
-#if defined(RAINBOW_SDL)
-using RawKeysym = struct SDL_Keysym;
-#else
-using RawKeysym = void;
-#endif
-
-/// <summary>Structure representing a keystroke.</summary>
-struct Key
+namespace rainbow
 {
-    /// <summary>Converts raw keysym to a rainbow::Key.</summary>
-    static Key from_raw(const RawKeysym* keysym);
-
-    enum class Keys : unsigned
+    /// <summary>Virtual key codes.</summary>
+    enum class VirtualKey : unsigned
     {
         None = '\0',
         Backspace = '\b',
@@ -138,30 +127,41 @@ struct Key
         RightAlt,
         LeftSuper,   ///< Left Command/Windows key
         RightSuper,  ///< Right Command/Windows key
-        Mode         ///< Alt Gr
+        Mode,        ///< Alt Gr
+        NumKeys
     };
 
-    struct Mods
+    /// <summary>
+    ///   Converts a platform key event to a <see cref="VirtualKey"/>.
+    /// </summary>
+    template <typename T>
+    VirtualKey to_virtualkey(const T& event);
+
+    struct KeyMods
     {
-        static const unsigned int None        = 0;
-        static const unsigned int LeftShift   = 1 << 0;  // 00000001
-        static const unsigned int RightShift  = 1 << 1;  // 00000010
-        static const unsigned int Shift       = 3 << 0;  // 00000011
-        static const unsigned int LeftCtrl    = 1 << 2;  // 00000100
-        static const unsigned int RightCtrl   = 1 << 3;  // 00001000
-        static const unsigned int Ctrl        = 3 << 2;  // 00001100
-        static const unsigned int LeftAlt     = 1 << 4;  // 00010000
-        static const unsigned int RightAlt    = 1 << 5;  // 00100000
-        static const unsigned int Alt         = 3 << 4;  // 00110000
-        static const unsigned int LeftSuper   = 1 << 6;  // 01000000
-        static const unsigned int RightSuper  = 1 << 7;  // 10000000
-        static const unsigned int Super       = 3 << 6;  // 11000000
+        static constexpr unsigned int None        = 0;
+        static constexpr unsigned int LeftShift   = 1 << 0;
+        static constexpr unsigned int RightShift  = 1 << 1;
+        static constexpr unsigned int Shift       = LeftShift | RightShift;
+        static constexpr unsigned int LeftCtrl    = 1 << 2;
+        static constexpr unsigned int RightCtrl   = 1 << 3;
+        static constexpr unsigned int Ctrl        = LeftCtrl | RightCtrl;
+        static constexpr unsigned int LeftAlt     = 1 << 4;
+        static constexpr unsigned int RightAlt    = 1 << 5;
+        static constexpr unsigned int Alt         = LeftAlt | RightAlt;
+        static constexpr unsigned int LeftSuper   = 1 << 6;
+        static constexpr unsigned int RightSuper  = 1 << 7;
+        static constexpr unsigned int Super       = LeftSuper | RightSuper;
     };
 
-    Keys key;
-    unsigned int modifier;
+    struct KeyStroke
+    {
+        template <typename T>
+        static KeyStroke from_event(const T& event);
 
-    Key() : key(Keys::None), modifier(Mods::None) {}
-};
+        VirtualKey key;
+        unsigned int mods;
+    };
+}
 
 #endif

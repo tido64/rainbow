@@ -268,6 +268,14 @@ pointer.timestamp  -- For the relative time at which the event occurred.
 
 > _Desktop-only:_ Keyboard event listeners receive the key value (the actual key that was pressed/released) of the event and, if available, its modifiers (i.e. ctrl, alt or shift).
 
+### rainbow.input.is_key_down(key_code)
+
+| Parameter | Description |
+|:----------|:------------|
+| <var>key_code</var> | The desired key code. |
+
+Returns whether the key is currently being pressed.
+
 ### rainbow.input.subscribe(listener)
 
 | Parameter | Description |

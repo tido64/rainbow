@@ -11,9 +11,13 @@
 #include "Memory/ArrayView.h"
 
 class Acceleration;
-struct Key;
 struct Pointer;
 struct lua_State;
+
+namespace rainbow
+{
+    struct KeyStroke;
+}
 
 NS_RAINBOW_LUA_MODULE_BEGIN(input)
 {
@@ -23,8 +27,8 @@ NS_RAINBOW_LUA_MODULE_BEGIN(input)
 
     void clear(lua_State* L);
 
-    void on_key_down(lua_State* L, const Key& key);
-    void on_key_up(lua_State* L, const Key& key);
+    void on_key_down(lua_State* L, const rainbow::KeyStroke& key);
+    void on_key_up(lua_State* L, const rainbow::KeyStroke& key);
 
     void on_pointer_began(lua_State* L, const ArrayView<Pointer>& pointers);
     void on_pointer_canceled(lua_State* L);

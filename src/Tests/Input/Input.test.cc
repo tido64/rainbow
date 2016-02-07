@@ -7,7 +7,10 @@
 #include "Input/Controller.h"
 #include "Input/Input.h"
 #include "Input/InputListener.h"
-#include "Input/Key.h"
+
+using rainbow::KeyMods;
+using rainbow::KeyStroke;
+using rainbow::VirtualKey;
 
 namespace
 {
@@ -89,13 +92,13 @@ namespace
             return consume_;
         }
 
-        bool on_key_down_impl(const Key&) override
+        bool on_key_down_impl(const KeyStroke&) override
         {
             key_down_ = true;
             return consume_;
         }
 
-        bool on_key_up_impl(const Key&) override
+        bool on_key_up_impl(const KeyStroke&) override
         {
             key_up_ = true;
             return consume_;
@@ -156,11 +159,11 @@ TEST(InputTest, BaseInputListenerDoesNothing)
     ASSERT_TRUE(test_input_listener.controller_disconnected());
 
     ASSERT_FALSE(test_input_listener.key_down());
-    input.on_key_down(Key());
+    input.on_key_down(KeyStroke{});
     ASSERT_TRUE(test_input_listener.key_down());
 
     ASSERT_FALSE(test_input_listener.key_up());
-    input.on_key_up(Key());
+    input.on_key_up(KeyStroke{});
     ASSERT_TRUE(test_input_listener.key_up());
 
     ASSERT_FALSE(test_input_listener.pointer_began());
@@ -178,6 +181,61 @@ TEST(InputTest, BaseInputListenerDoesNothing)
     ASSERT_FALSE(test_input_listener.pointer_moved());
     input.on_pointer_moved(nullptr);
     ASSERT_TRUE(test_input_listener.pointer_moved());
+}
+
+TEST(InputTest, KeysArePollable)
+{
+    Input input;
+
+    ASSERT_EQ(0u, input.keys_down());
+
+    input.on_key_down({VirtualKey::W, KeyMods::None});
+
+    ASSERT_EQ(1u, input.keys_down());
+    ASSERT_TRUE(input.is_down(VirtualKey::W));
+
+    input.on_key_up({VirtualKey::W, KeyMods::None});
+
+    ASSERT_EQ(0u, input.keys_down());
+    ASSERT_FALSE(input.is_down(VirtualKey::W));
+
+    input.on_key_down({VirtualKey::W, KeyMods::LeftShift | KeyMods::LeftCtrl});
+
+    ASSERT_EQ(3u, input.keys_down());
+    ASSERT_TRUE(input.is_down(VirtualKey::W));
+    ASSERT_TRUE(input.is_down(VirtualKey::LeftShift));
+    ASSERT_TRUE(input.is_down(VirtualKey::LeftCtrl));
+
+    input.on_key_up({VirtualKey::LeftCtrl, KeyMods::None});
+
+    ASSERT_EQ(2u, input.keys_down());
+    ASSERT_TRUE(input.is_down(VirtualKey::W));
+    ASSERT_TRUE(input.is_down(VirtualKey::LeftShift));
+    ASSERT_FALSE(input.is_down(VirtualKey::LeftCtrl));
+
+    input.on_key_up({VirtualKey::W, KeyMods::None});
+
+    ASSERT_EQ(1u, input.keys_down());
+    ASSERT_FALSE(input.is_down(VirtualKey::W));
+    ASSERT_TRUE(input.is_down(VirtualKey::LeftShift));
+    ASSERT_FALSE(input.is_down(VirtualKey::LeftCtrl));
+
+    input.on_key_up({VirtualKey::S, KeyMods::LeftShift});
+
+    ASSERT_EQ(0u, input.keys_down());
+    ASSERT_FALSE(input.is_down(VirtualKey::S));
+    ASSERT_FALSE(input.is_down(VirtualKey::W));
+    ASSERT_FALSE(input.is_down(VirtualKey::LeftShift));
+    ASSERT_FALSE(input.is_down(VirtualKey::LeftCtrl));
+
+    input.on_key_down({VirtualKey::W, KeyMods::None});
+    input.on_key_down({VirtualKey::S, KeyMods::None});
+
+    ASSERT_EQ(2u, input.keys_down());
+    ASSERT_TRUE(input.is_down(VirtualKey::S));
+    ASSERT_TRUE(input.is_down(VirtualKey::W));
+    ASSERT_FALSE(input.is_down(VirtualKey::LeftShift));
+    ASSERT_FALSE(input.is_down(VirtualKey::LeftCtrl));
 }
 
 TEST(InputTest, PreventsFurtherPropagation)

@@ -10,6 +10,8 @@
 #include "Lua/lua_Input.h"
 #include "Lua/lua_Platform.h"
 
+using rainbow::KeyStroke;
+
 LuaScript::~LuaScript() { lua_.close(); }
 
 void LuaScript::init(const Vec2i& screen)
@@ -42,13 +44,13 @@ void LuaScript::update(unsigned long dt)
 
 void LuaScript::on_memory_warning() { lua_gc(lua_, LUA_GCCOLLECT, 0); }
 
-bool LuaScript::on_key_down_impl(const Key& k)
+bool LuaScript::on_key_down_impl(const KeyStroke& k)
 {
     rainbow::lua::input::on_key_down(lua_, k);
     return true;
 }
 
-bool LuaScript::on_key_up_impl(const Key& k)
+bool LuaScript::on_key_up_impl(const KeyStroke& k)
 {
     rainbow::lua::input::on_key_up(lua_, k);
     return true;

@@ -10,14 +10,16 @@
 
 struct ControllerAxisMotion;
 struct ControllerButton;
-struct Key;
 struct Pointer;
+
+namespace rainbow
+{
+    struct KeyStroke;
+}
 
 /// <summary>Interface for input listeners.</summary>
 class InputListener : private Link
 {
-    friend class Input;
-
 public:
     /// <summary>
     ///   Returns the next input listener; <c>nullptr</c> if none.
@@ -60,9 +62,12 @@ public:
         return on_controller_disconnected_impl(id);
     }
 
-    bool on_key_down(const Key& k) { return on_key_down_impl(k); }
+    bool on_key_down(const rainbow::KeyStroke& k)
+    {
+        return on_key_down_impl(k);
+    }
 
-    bool on_key_up(const Key& k) { return on_key_up_impl(k); }
+    bool on_key_up(const rainbow::KeyStroke& k) { return on_key_up_impl(k); }
 
     /// <summary>User puts finger down on the device; mouse down.</summary>
     /// <param name="count">Number of pointers.</param>
@@ -125,8 +130,8 @@ private:
         return false;
     }
 
-    virtual bool on_key_down_impl(const Key&) { return false; }
-    virtual bool on_key_up_impl(const Key&) { return false; }
+    virtual bool on_key_down_impl(const rainbow::KeyStroke&) { return false; }
+    virtual bool on_key_up_impl(const rainbow::KeyStroke&) { return false; }
 
     virtual bool on_pointer_began_impl(const ArrayView<Pointer>&)
     {
@@ -144,6 +149,8 @@ private:
     {
         return false;
     }
+
+    friend class Input;
 };
 
 #endif
