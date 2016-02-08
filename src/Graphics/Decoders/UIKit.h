@@ -57,7 +57,7 @@ namespace uikit
         CGContextRelease(context);
 
         image.data = buffer;
-        return std::move(image);
+        return image;
     }
 }
 

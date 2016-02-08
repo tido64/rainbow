@@ -18,7 +18,7 @@ namespace rainbow
         T result;
         std::copy_if(
             std::begin(list), std::end(list), std::back_inserter(result), pred);
-        return std::move(result);
+        return result;
     }
 
     template <typename F, typename T>
@@ -83,7 +83,7 @@ namespace rainbow
         T result;
         std::transform(
             std::begin(list), std::end(list), std::back_inserter(result), op);
-        return std::move(result);
+        return result;
     }
 
     template <typename F, typename T>

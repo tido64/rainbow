@@ -42,10 +42,9 @@ namespace
     template <typename F>
     F for_each(const spSkeleton* skeleton, F&& f)
     {
-        return std::move(std::for_each(
-            skeleton->drawOrder,
-            skeleton->drawOrder + skeleton->slotsCount,
-            std::forward<F>(f)));
+        return std::for_each(skeleton->drawOrder,
+                             skeleton->drawOrder + skeleton->slotsCount,
+                             std::forward<F>(f));
     }
 
     template <typename T>

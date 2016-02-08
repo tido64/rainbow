@@ -98,7 +98,9 @@ namespace
         const GLuint program = glCreateProgram();
         for (auto shader = shaders; shader->type != Shader::kTypeInvalid;
              ++shader)
+        {
             glAttachShader(program, shader->id);
+        }
         for (auto attrib = attributes; attrib->name; ++attrib)
             glBindAttribLocation(program, attrib->index, attrib->name);
         glLinkProgram(program);

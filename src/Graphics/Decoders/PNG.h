@@ -51,7 +51,7 @@ namespace png
             &pi, nullptr, buffer.get(), PNG_IMAGE_ROW_STRIDE(pi), nullptr);
         image.data = buffer.release();
 
-        return std::move(image);
+        return image;
     }
 }
 
