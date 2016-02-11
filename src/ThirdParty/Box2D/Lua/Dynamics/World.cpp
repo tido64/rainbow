@@ -56,14 +56,14 @@ NS_B2_LUA_BEGIN
         switch (lua_gettop(L))
         {
             case 0:
-                world_.reset(new StableWorld());
+                world_ = std::make_unique<StableWorld>();
                 break;
             case 1:
-                world_.reset(new StableWorld(lua_tonumber(L, 1)));
+                world_ = std::make_unique<StableWorld>(lua_tonumber(L, 1));
                 break;
             case 2:
-                world_.reset(
-                    new StableWorld(lua_tonumber(L, 1), lua_tonumber(L, 2)));
+                world_ = std::make_unique<StableWorld>(
+                    lua_tonumber(L, 1), lua_tonumber(L, 2));
                 break;
             default:
                 luaL_argerror(L, 3, "0-2 parameters expected");

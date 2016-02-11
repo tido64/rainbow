@@ -27,7 +27,7 @@ NS_RAINBOW_LUA_BEGIN
         // rainbow.texture("/path/to/texture")
         Argument<char*>::is_required(L, 1);
 
-        texture_.reset(new TextureAtlas(lua_tostring(L, 1)));
+        texture_ = make_shared<TextureAtlas>(lua_tostring(L, 1));
         if (!texture_->is_valid())
             luaL_error(L, "rainbow.texture: Failed to create texture");
     }

@@ -77,7 +77,7 @@ void Label::set_text(const char* text)
     const size_t len = strlen(text);
     if (len > size_)
     {
-        text_.reset(new char[len + 1]);
+        text_ = std::make_unique<char[]>(len + 1);
         size_ = len;
         set_needs_update(kStaleBufferSize);
     }
@@ -108,7 +108,7 @@ void Label::update_internal()
     if (stale_ & kStaleBuffer)
     {
         if (stale_ & kStaleBufferSize)
-            vertices_.reset(new SpriteVertex[size_ * 4]);
+            vertices_ = std::make_unique<SpriteVertex[]>(size_ * 4);
         width_ = 0;
         unsigned int start = 0;
         unsigned int count = 0;

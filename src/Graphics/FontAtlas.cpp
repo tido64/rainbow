@@ -217,7 +217,7 @@ void FontAtlas::load(TextureManager& texture_manager,
 
     // GL_LUMINANCE8_ALPHA8 buffer
     Vec2u offset(size.x * size.y * 2, 0);
-    std::unique_ptr<GLubyte[]> buffer(new GLubyte[offset.x]);
+    auto buffer = std::make_unique<GLubyte[]>(offset.x);
     std::fill_n(buffer.get(), offset.x, 0);
 
     // Copy all glyph bitmaps to our texture.

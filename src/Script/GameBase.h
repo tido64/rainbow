@@ -39,7 +39,7 @@ namespace rainbow
 class GameBase
 {
 public:
-    static GameBase* create(rainbow::Director& director);
+    static std::unique_ptr<GameBase> create(rainbow::Director& director);
 
     virtual ~GameBase() = default;
 

@@ -282,10 +282,10 @@ namespace
             return {};
 
         const ptrdiff_t length = end - start;
-        char* name = new char[length + 1];
-        strncpy(name, start, length);
+        auto name = std::make_unique<char[]>(length + 1);
+        strncpy(name.get(), start, length);
         name[length] = '\0';
-        return std::unique_ptr<char[]>(name);
+        return name;
     }
 #endif
 

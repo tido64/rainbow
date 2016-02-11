@@ -37,12 +37,12 @@ namespace rainbow
             return (size + (kMaxAlignment - 1)) & ~(kMaxAlignment - 1);
         }
 
-        LinearAllocator(size_t size) : end_(new char[size])
+        LinearAllocator(size_t size)
+            : block_(std::make_unique<char[]>(size)), end_(block_.get())
 #ifndef NDEBUG
-                                     , size_(size)
+            , size_(size)
 #endif
         {
-            block_.reset(end_);
         }
 
         void* end() { return end_; }

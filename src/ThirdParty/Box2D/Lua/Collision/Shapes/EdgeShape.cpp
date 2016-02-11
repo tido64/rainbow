@@ -8,21 +8,21 @@
 
 NS_B2_LUA_BEGIN
 {
-    EdgeShape::EdgeShape(lua_State* L) : edge_(nullptr), is_owner_(false)
+    EdgeShape::EdgeShape(lua_State* L) : is_owner_(false)
     {
         if (lua_isuserdata(L, -1))
-            edge_ = static_cast<b2EdgeShape*>(lua_touserdata(L, -1));
+            edge_.reset(static_cast<b2EdgeShape*>(lua_touserdata(L, -1)));
         else
         {
-            edge_ = new b2EdgeShape();
+            edge_ = std::make_unique<b2EdgeShape>();
             is_owner_ = true;
         }
     }
 
     EdgeShape::~EdgeShape()
     {
-        if (is_owner_)
-            delete edge_;
+        if (!is_owner_)
+            edge_.release();
     }
 
     int EdgeShape::GetType(lua_State* L)

@@ -115,17 +115,17 @@ void Gatekeeper::post_init()
 
 #if USE_LUA_SCRIPT
     monitor_.set_callback([this](const char* path) {
-        auto file = new char[strlen(path) + 1];
-        strcpy(file, path);
+        auto file = std::make_unique<char[]>(strlen(path) + 1);
+        strcpy(file.get(), path);
         std::lock_guard<std::mutex> lock(changed_files_mutex_);
-        changed_files_.emplace(file);
+        changed_files_.emplace(std::move(file));
     });
 #endif  // USE_LUA_SCRIPT
 }
 
 void Gatekeeper::pre_init(const Vec2i& screen)
 {
-    perf_.reset(new PerformanceOverlay());
+    perf_ = std::make_unique<PerformanceOverlay>();
     scenegraph_.add_child(perf_->node());
 
     overlay_.init(scenegraph_, screen);
@@ -206,7 +206,7 @@ Library::Library(const char* path) : path_(path)
     }
 
     length -= 4;
-    name_.reset(new char[length + 1]);
+    name_ = std::make_unique<char[]>(length + 1);
     strncpy(name_.get(), filename, length);
     name_[length] = '\0';
 }

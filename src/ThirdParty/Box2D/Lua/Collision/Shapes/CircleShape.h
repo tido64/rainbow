@@ -5,6 +5,8 @@
 #ifndef THIRDPARTY_BOX2D_LUA_COLLISION_SHAPES_CIRCLESHAPE_H_
 #define THIRDPARTY_BOX2D_LUA_COLLISION_SHAPES_CIRCLESHAPE_H_
 
+#include <memory>
+
 #include "ThirdParty/Box2D/Lua/Collision/Shapes/Shape.h"
 
 class b2CircleShape;
@@ -17,7 +19,7 @@ NS_B2_LUA_BEGIN
         explicit CircleShape(lua_State*);
         ~CircleShape();
 
-        b2CircleShape* get() const { return circle_; }
+        b2CircleShape* get() const { return circle_.get(); }
 
     private:
         static int GetType(lua_State*);
@@ -25,7 +27,7 @@ NS_B2_LUA_BEGIN
         static int SetRadius(lua_State*);
         static int GetChildCount(lua_State*);
 
-        b2CircleShape* circle_;
+        std::unique_ptr<b2CircleShape> circle_;
         bool is_owner_;
 
         friend Bind;

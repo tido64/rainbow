@@ -10,22 +10,21 @@
 
 NS_B2_LUA_BEGIN
 {
-    PolygonShape::PolygonShape(lua_State* L)
-        : polygon_(nullptr), is_owner_(false)
+    PolygonShape::PolygonShape(lua_State* L) : is_owner_(false)
     {
         if (lua_isuserdata(L, -1))
-            polygon_ = static_cast<b2PolygonShape*>(lua_touserdata(L, -1));
+            polygon_.reset(static_cast<b2PolygonShape*>(lua_touserdata(L, -1)));
         else
         {
-            polygon_ = new b2PolygonShape();
+            polygon_ = std::make_unique<b2PolygonShape>();
             is_owner_ = true;
         }
     }
 
     PolygonShape::~PolygonShape()
     {
-        if (is_owner_)
-            delete polygon_;
+        if (!is_owner_)
+            polygon_.release();
     }
 
     int PolygonShape::GetType(lua_State* L)
@@ -50,7 +49,7 @@ NS_B2_LUA_BEGIN
             return 0;
 
         const int count = static_cast<int>(lua_tointeger(L, 3));
-        std::unique_ptr<b2Vec2[]> points(new b2Vec2[count]);
+        auto points = std::make_unique<b2Vec2[]>(count);
         for (int i = 0; i < count; ++i)
         {
             lua_rawgeti(L, 2, i + 1);

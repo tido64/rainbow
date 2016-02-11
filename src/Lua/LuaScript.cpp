@@ -80,7 +80,7 @@ bool LuaScript::on_pointer_moved_impl(const ArrayView<Pointer>& pointers)
     return true;
 }
 
-GameBase* GameBase::create(rainbow::Director& director)
+std::unique_ptr<GameBase> GameBase::create(rainbow::Director& director)
 {
-    return new LuaScript(director);
+    return std::make_unique<LuaScript>(director);
 }

@@ -38,8 +38,7 @@ Prose::Asset create_animation(lua_State* L,
 {
     const auto table = lua_gettop(L);
     const size_t num_frames = lua_rawlen(L, table);
-    std::unique_ptr<Animation::Frame[]> frames(
-        new Animation::Frame[num_frames + 1]);
+    auto frames = std::make_unique<Animation::Frame[]>(num_frames + 1);
     for (size_t i = 0; i < num_frames; ++i)
     {
         lua_rawgeti(L, table, i + 1);

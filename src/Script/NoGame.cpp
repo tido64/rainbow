@@ -28,7 +28,7 @@ void NoGame::update(unsigned long)
     }
 }
 
-GameBase* GameBase::create(rainbow::Director& director)
+std::unique_ptr<GameBase> GameBase::create(rainbow::Director& director)
 {
-    return new NoGame(director);
+    return std::make_unique<NoGame>(director);
 }

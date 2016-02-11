@@ -161,8 +161,9 @@ namespace
         if (mesh->trianglesCount > g_buffer_size)
         {
             g_buffer_size = mesh->trianglesCount * 2;
-            g_buffer.reset(new float[g_buffer_size]);
+            g_buffer = std::make_unique<float[]>(g_buffer_size);
         }
+
         float* coordinates = g_buffer.get();
         compute_world_vertices(mesh, slot, coordinates);
 
@@ -192,7 +193,7 @@ extern "C"
 {
     void _spAtlasPage_createTexture(spAtlasPage* self, const char* path)
     {
-        std::unique_ptr<TextureAtlas> texture(new TextureAtlas(path));
+        auto texture = std::make_unique<TextureAtlas>(path);
         if (!texture->is_valid())
             return;
 
@@ -218,9 +219,9 @@ extern "C"
 
 Skeleton* Skeleton::from_json(const char* path, float scale)
 {
-    /// Copy the path and replace ".json" with ".atlas"
+    // Copy the path and replace ".json" with ".atlas"
     const size_t length = strlen(path);
-    std::unique_ptr<char[]> atlas_path(new char[length + 7]);
+    auto atlas_path = std::make_unique<char[]>(length + 7);
     strcpy(atlas_path.get(), path);
 
     char* ext;
@@ -352,7 +353,7 @@ void Skeleton::update(unsigned long dt)
     if (num_vertices_ > max_vertices_)
     {
         max_vertices_ = num_vertices_;
-        vertices_.reset(new SpriteVertex[max_vertices_]);
+        vertices_ = std::make_unique<SpriteVertex[]>(max_vertices_);
     }
 
     size_t i = 0;

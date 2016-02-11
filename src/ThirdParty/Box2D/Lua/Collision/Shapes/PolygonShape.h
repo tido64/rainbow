@@ -5,6 +5,8 @@
 #ifndef THIRDPARTY_BOX2D_LUA_COLLISION_SHAPES_POLYGONSHAPE_H_
 #define THIRDPARTY_BOX2D_LUA_COLLISION_SHAPES_POLYGONSHAPE_H_
 
+#include <memory>
+
 #include "ThirdParty/Box2D/Lua/Collision/Shapes/Shape.h"
 
 class b2PolygonShape;
@@ -17,7 +19,7 @@ NS_B2_LUA_BEGIN
         explicit PolygonShape(lua_State*);
         ~PolygonShape();
 
-        b2PolygonShape* get() const { return polygon_; }
+        b2PolygonShape* get() const { return polygon_.get(); }
 
     private:
         static int GetType(lua_State*);
@@ -26,7 +28,7 @@ NS_B2_LUA_BEGIN
         static int SetAsBox(lua_State*);
         static int Validate(lua_State*);
 
-        b2PolygonShape* polygon_;
+        std::unique_ptr<b2PolygonShape> polygon_;
         bool is_owner_;
 
         friend Bind;

@@ -16,8 +16,7 @@ namespace
     Animation::Frames get_frames(lua_State* L, int n)
     {
         const size_t count = lua_rawlen(L, n);
-        std::unique_ptr<Animation::Frame[]> frames(
-            new Animation::Frame[count + 1]);
+        auto frames = std::make_unique<Animation::Frame[]>(count + 1);
         int i = 0;
         std::generate_n(frames.get(),
                         count,
@@ -69,9 +68,9 @@ NS_RAINBOW_LUA_BEGIN
         replacetable(L, 1);
         if (lua_isuserdata(L, 1))
             sprite = touserdata<Sprite>(L, 1)->get();
-        animation_.reset(new ::Animation(
+        animation_ = std::make_unique<::Animation>(
             sprite, get_frames(L, 2), lua_tointeger(L, 3),
-            optinteger(L, 4, 0)));
+            optinteger(L, 4, 0));
     }
 
     int Animation::current_frame(lua_State* L)

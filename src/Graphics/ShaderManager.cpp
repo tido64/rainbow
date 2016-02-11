@@ -37,10 +37,12 @@ namespace
             glGetiv(id, GL_INFO_LOG_LENGTH, &info_len);
             if (info_len == 0)
                 return {};
-            char* log = new char[info_len];
-            glGetInfoLog(id, info_len, nullptr, log);
-            return String(log);
+
+            auto log = std::make_unique<char[]>(info_len);
+            glGetInfoLog(id, info_len, nullptr, log.get());
+            return log;
         }
+
         return {};
     }
 

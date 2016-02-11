@@ -8,21 +8,21 @@
 
 NS_B2_LUA_BEGIN
 {
-    CircleShape::CircleShape(lua_State* L) : circle_(nullptr), is_owner_(false)
+    CircleShape::CircleShape(lua_State* L) : is_owner_(false)
     {
         if (lua_isuserdata(L, -1))
-            circle_ = static_cast<b2CircleShape*>(lua_touserdata(L, -1));
+            circle_.reset(static_cast<b2CircleShape*>(lua_touserdata(L, -1)));
         else
         {
-            circle_ = new b2CircleShape();
+            circle_ = std::make_unique<b2CircleShape>();
             is_owner_ = true;
         }
     }
 
     CircleShape::~CircleShape()
     {
-        if (is_owner_)
-            delete circle_;
+        if (!is_owner_)
+            circle_.release();
     }
 
     int CircleShape::GetType(lua_State* L)

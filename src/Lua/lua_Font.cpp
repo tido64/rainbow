@@ -25,7 +25,7 @@ NS_RAINBOW_LUA_BEGIN
         Argument<char*>::is_required(L, 1);
         Argument<lua_Number>::is_required(L, 2);
 
-        font_.reset(new FontAtlas(lua_tostring(L, 1), lua_tonumber(L, 2)));
+        font_ = make_shared<FontAtlas>(lua_tostring(L, 1), lua_tonumber(L, 2));
         if (!font_->is_valid())
             luaL_error(L, "rainbow.font: Failed to create font texture");
     }

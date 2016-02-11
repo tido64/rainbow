@@ -44,10 +44,15 @@ namespace uikit
         CGRect bounds = CGRectMake(0, 0, image.width, image.height);
 
         CGColorSpaceRef color_space = CGColorSpaceCreateDeviceRGB();
-        auto buffer = new unsigned char[image.height * image.width * 4];
-
+        auto buffer =
+            std::make_unique<unsigned char[]>(image.height * image.width * 4);
         CGContextRef context = CGBitmapContextCreate(
-            buffer, image.width, image.height, 8, image.width * 4, color_space,
+            buffer.get(),
+            image.width,
+            image.height,
+            8,
+            image.width * 4,
+            color_space,
             kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big);
         CGColorSpaceRelease(color_space);
 
@@ -56,7 +61,7 @@ namespace uikit
         CGContextDrawImage(context, bounds, uiimage.CGImage);
         CGContextRelease(context);
 
-        image.data = buffer;
+        image.data = buffer.release();
         return image;
     }
 }

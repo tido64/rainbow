@@ -127,7 +127,7 @@ NS_RAINBOW_LUA_BEGIN
     int load(lua_State* L)
     {
         const char* module = lua_tostring(L, -1);
-        std::unique_ptr<char[]> path(new char[strlen(module) + 10]);
+        auto path = std::make_unique<char[]>(strlen(module) + 10);
         const int result = load_module(L, path.get(), module, ".lua");
         return (!result ? load_module(L, path.get(), module, "/init.lua")
                         : result);
