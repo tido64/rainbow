@@ -43,6 +43,7 @@ set(SOURCE_FILES
     src/Common/NonCopyable.h
     src/Common/Random.cpp
     src/Common/Random.h
+    src/Common/String.h
     src/Common/TreeNode.h
     src/Common/TypeInfo.h
     src/Common/UTF8.cpp

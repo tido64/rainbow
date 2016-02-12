@@ -4,9 +4,8 @@
 
 #include "Heimdall/Gatekeeper.h"
 
-#include <cstring>
-
 #include "Common/Data.h"
+#include "Common/String.h"
 #include "FileSystem/File.h"
 #include "FileSystem/Path.h"
 #include "Input/Pointer.h"
@@ -19,17 +18,6 @@
 
 namespace
 {
-    const char* basename(const char* path)
-    {
-        const char* basename = path;
-        for (const char* c = path; *c; ++c)
-        {
-            if (*c == '/' || *c == ':' || *c == '\\')
-                basename = ++c;
-        }
-        return basename;
-    }
-
     class Library
     {
     public:
@@ -49,6 +37,7 @@ namespace
 
 using heimdall::Gatekeeper;
 using rainbow::is_equal;
+using rainbow::string_view;
 
 Gatekeeper::Gatekeeper()
     : overlay_activator_(&overlay_)
@@ -115,8 +104,7 @@ void Gatekeeper::post_init()
 
 #if USE_LUA_SCRIPT
     monitor_.set_callback([this](const char* path) {
-        auto file = std::make_unique<char[]>(strlen(path) + 1);
-        strcpy(file.get(), path);
+        auto file = rainbow::make_string_copy(path);
         std::lock_guard<std::mutex> lock(changed_files_mutex_);
         changed_files_.emplace(std::move(file));
     });
@@ -197,18 +185,14 @@ bool Gatekeeper::on_pointer_moved_impl(const ArrayView<Pointer>&)
 #if USE_LUA_SCRIPT
 Library::Library(const char* path) : path_(path)
 {
-    const char* filename = basename(path_);
-    size_t length = strlen(filename);
-    if (length < 5 || memcmp(filename + length - 4, ".lua", 4) != 0)
+    string_view filename = Path::basename(path_);
+    if (filename.length() < 5 || !rainbow::ends_with(filename, ".lua"))
     {
         path_ = nullptr;
         return;
     }
 
-    length -= 4;
-    name_ = std::make_unique<char[]>(length + 1);
-    strncpy(name_.get(), filename, length);
-    name_[length] = '\0';
+    name_ = rainbow::make_string_copy(filename);
 }
 
 Data Library::open() const
@@ -218,7 +202,7 @@ Data Library::open() const
 #elif defined(RAINBOW_OS_WINDOWS)
     return Data::load_asset(path_);
 #else
-    return Data();
+    return {};
 #endif  // RAINBOW_OS_MACOS
 }
 #endif  // USE_LUA_SCRIPT

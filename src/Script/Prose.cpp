@@ -5,9 +5,9 @@
 #include "Script/Prose.h"
 
 #include <cctype>
-#include <cstring>
 
 #include "Common/Data.h"
+#include "Common/String.h"
 #include "FileSystem/File.h"
 #include "FileSystem/Path.h"
 #include "Graphics/Animation.h"
@@ -19,6 +19,7 @@
 #include "Lua/LuaSyntax.h"
 
 using rainbow::SceneNode;
+using rainbow::string_view;
 
 enum class Prose::AssetType
 {
@@ -282,10 +283,7 @@ namespace
             return {};
 
         const ptrdiff_t length = end - start;
-        auto name = std::make_unique<char[]>(length + 1);
-        strncpy(name.get(), start, length);
-        name[length] = '\0';
-        return name;
+        return rainbow::make_string_copy(string_view(start, length));
     }
 #endif
 

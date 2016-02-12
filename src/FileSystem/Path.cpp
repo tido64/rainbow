@@ -106,6 +106,25 @@ namespace
     }
 }
 
+const char* Path::basename(const char* path)
+{
+    auto basename = path;
+    for (auto c = path; *c; ++c)
+    {
+        switch (*c)
+        {
+            case '/':
+            case ':':
+            case '\\':
+                basename = ++c;
+                break;
+            default:
+                break;
+        }
+    }
+    return basename;
+}
+
 const char* Path::current()
 {
     return g_current_path;

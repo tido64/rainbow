@@ -20,16 +20,13 @@ public:
         Root
     };
 
+    static const char* basename(const char* path);
     static const char* current();
     static void set_current();
     static void set_current(const char* path);
 
     Path();
     explicit Path(const char* file, RelativeTo rel = RelativeTo::CurrentPath);
-
-#ifdef RAINBOW_TEST
-    int create();
-#endif
 
 #ifdef RAINBOW_OS_MACOS
     CFURLRef CreateCFURL() const;
@@ -45,6 +42,10 @@ public:
 
 #ifdef RAINBOW_OS_IOS
     operator NSURL*() const;
+#endif
+
+#ifdef RAINBOW_TEST
+    int create();
 #endif
 
 private:
