@@ -199,6 +199,8 @@ else()
     list(APPEND SOURCE_FILES
          src/Common/impl/DataMap_Win.cpp
          src/Common/impl/DataMap_Win.h
+         src/Graphics/D3D12/Renderer.cpp
+         src/Graphics/D3D12/Renderer.h
          src/Platform/impl/SystemInfo_Win.cpp)
   else()
     list(APPEND SOURCE_FILES
