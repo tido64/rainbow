@@ -12,6 +12,10 @@
 #include "Resources/Inconsolata.otf.h"
 #include "Resources/NewsCycle-Regular.ttf.h"
 
+using heimdall::Gatekeeper;
+using rainbow::is_equal;
+using rainbow::string_view;
+
 #if USE_LUA_SCRIPT
 #include "Lua/LuaHelper.h"
 #include "Lua/LuaScript.h"
@@ -23,21 +27,17 @@ namespace
     public:
         explicit Library(const char* path);
 
-        const char* name() const { return name_.get(); }
-        Data open() const;
+        auto name() const -> const string_view& { return name_; }
+        auto open() const -> Data;
 
-        explicit operator bool() const { return path_; }
+        explicit operator bool() const { return path_ != nullptr; }
 
     private:
-        std::unique_ptr<char[]> name_;
+        string_view name_;
         const char* path_;
     };
 }
 #endif  // USE_LUA_SCRIPT
-
-using heimdall::Gatekeeper;
-using rainbow::is_equal;
-using rainbow::string_view;
 
 Gatekeeper::Gatekeeper()
     : overlay_activator_(&overlay_)
@@ -52,6 +52,7 @@ void Gatekeeper::init(const Vec2i& screen)
     Director::init(screen);
     if (terminated())
         return;
+
     post_init();
 }
 
@@ -61,16 +62,18 @@ void Gatekeeper::update(unsigned long dt)
     lua_State* L = static_cast<LuaScript*>(script())->state();
     while (!changed_files_.empty())
     {
-        const Library library(changed_files_.front().get());
+        std::unique_ptr<char[]> file;
         {
             std::lock_guard<std::mutex> lock(changed_files_mutex_);
+            file = std::move(changed_files_.front());
             changed_files_.pop();
         }
 
+        const Library library(file.get());
         if (!library)
             continue;
 
-        LOGI("Reloading '%s'...", library.name());
+        LOGI("Reloading '%s'...", library.name().data());
         rainbow::lua::reload(L, library.open(), library.name());
     }
 #endif  // USE_LUA_SCRIPT
@@ -192,7 +195,7 @@ Library::Library(const char* path) : path_(path)
         return;
     }
 
-    name_ = rainbow::make_string_copy(filename);
+    name_ = string_view{filename.data(), filename.length() - 4};
 }
 
 Data Library::open() const

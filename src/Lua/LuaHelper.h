@@ -12,6 +12,7 @@
 
 #include "Common/Constraints.h"
 #include "Common/NonCopyable.h"
+#include "Common/String.h"
 #include "Lua/LuaMacros.h"
 
 class Data;
@@ -235,7 +236,9 @@ NS_RAINBOW_LUA_BEGIN
     ///   Name of the chunk. Used for debug information.
     /// </param>
     /// <returns>Number of successfully reloaded chunks.</returns>
-    int reload(lua_State* L, const Data& chunk, const char* name);
+    int reload(lua_State* L,
+               const Data& chunk,
+               const rainbow::string_view& name);
 
     /// <summary>
     ///   Replaces the table at index <paramref name="n"/> with its userdata if

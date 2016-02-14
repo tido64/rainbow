@@ -18,6 +18,7 @@ namespace rainbow
     class string_view
     {
     public:
+        string_view() : data_(nullptr), length_(0) {}
         string_view(const char* str) : data_(str), length_(strlen(str)) {}
         string_view(const char* str, size_t length)
             : data_(str), length_(length) {}
