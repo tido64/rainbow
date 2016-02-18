@@ -1,16 +1,21 @@
 # Generated files
 *.aps
+*.pyc
 *.swp
 .DS_Store
 .browse.VC.*
 .vs/
 CMakeSettings.json
 Rainbow.sublime-workspace
+StyleCop.Cache
+bin/
+obj/
+project.lock.json
 project.xcworkspace/
-src/.ycm_extra_conf.pyc
 xcuserdata/
 
 # Libraries
+*.dll
 lib/**/*.cmake
 lib/**/*.txt
 lib/**/.git*

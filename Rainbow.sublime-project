@@ -1,7 +1,7 @@
 {
 	"folders":
 	[
-		{ "path": "." }
+		{"path": "."}
 	],
 	"settings":
 	{
@@ -54,5 +54,6 @@
 			"selector": "source.c++",
 			"working_dir": "/tmp"
 		}
-	]
+	],
+	"solution_file": "src/DotNet/Rainbow/project.json"
 }

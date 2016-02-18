@@ -7,13 +7,14 @@ param (
 	[switch]$Generate,
 	[switch]$Help)
 
-$Generator = "Visual Studio 14"
+$Generator = "Visual Studio 14 Win64"
 $SourcePath = Join-Path (Split-Path (Get-Variable MyInvocation).Value.MyCommand.Path) .. -Resolve
 
 $FMODDescription = "Enable FMOD Studio audio engine"
 $HeimdallDescription = "Enable Heimdall debugging facilities"
 $LuaDescription = "Enable Lua scripting"
 $PhysicsDescription = "Enable physics module (Box2D)"
+$ScriptingDescription = "Scripting with: Lua"
 $SpineDescription = "Enable Spine runtime"
 $UnitTestsDescription = "Enable unit tests"
 
@@ -68,10 +69,12 @@ else {
 			[System.Windows.Forms.MessageBoxIcon]::Information)
 	}
 
-	$UnitTestsCheckBox = New-Object System.Windows.Forms.CheckBox -Property @{
+	$ScriptingComboBox = New-Object System.Windows.Forms.ComboBox -Property @{
 		AutoSize = $true
-		Text = $UnitTestsDescription
+		Text = $ScriptingDescription
 	}
+	$ScriptingComboBox.Items.AddRange(@("Lua", "C++", "C#"))
+
 	$FMODCheckBox = New-Object System.Windows.Forms.CheckBox -Property @{
 		AutoSize = $true
 		Text = $FMODDescription
@@ -80,11 +83,6 @@ else {
 		AutoSize = $true
 		Text = $HeimdallDescription
 	}
-	$LuaCheckBox = New-Object System.Windows.Forms.CheckBox -Property @{
-		AutoSize = $true
-		Checked = $true
-		Text = $LuaDescription
-	}
 	$PhysicsCheckBox = New-Object System.Windows.Forms.CheckBox -Property @{
 		AutoSize = $true
 		Text = $PhysicsDescription
@@ -92,6 +90,10 @@ else {
 	$SpineCheckBox = New-Object System.Windows.Forms.CheckBox -Property @{
 		AutoSize = $true
 		Text = $SpineDescription
+	}
+	$UnitTestsCheckBox = New-Object System.Windows.Forms.CheckBox -Property @{
+		AutoSize = $true
+		Text = $UnitTestsDescription
 	}
 
 	$AcceptButton = New-Object System.Windows.Forms.Button -Property @{
@@ -117,12 +119,12 @@ else {
 		WrapContents = $false
 	}
 	$Layout.Controls.AddRange((
-		$UnitTestsCheckBox,
+		$ScriptingComboBox,
 		$FMODCheckBox,
 		$HeimdallCheckBox,
-		$LuaCheckBox,
 		$PhysicsCheckBox,
 		$SpineCheckBox,
+		$UnitTestsCheckBox,
 		$ButtonLayout));
 
 	$Form = New-Object System.Windows.Forms.Form -Property @{
@@ -146,23 +148,31 @@ else {
 	}
 
 	$Options = @()
-	if ($UnitTestsCheckBox.Checked) {
-		$Options += "-DUNIT_TESTS=1"
+
+	if ("C++".CompareTo($ScriptingComboBox.SelectedItem) -eq 0) {
+		$Options += "-DSCRIPTING=C++"
 	}
+	elseif ("C#".CompareTo($ScriptingComboBox.SelectedItem) -eq 0) {
+		$Options += "-DSCRIPTING=CSharp"
+	}
+	else {
+		$Options += "-DSCRIPTING=Lua"
+	}
+
 	if ($FMODCheckBox.Checked) {
 		$Options += "-DUSE_FMOD_STUDIO=1"
 	}
 	if ($HeimdallCheckBox.Checked) {
 		$Options += "-DUSE_HEIMDALL=1"
 	}
-	if (!$LuaCheckBox.Checked) {
-		$Options += "-DUSE_LUA_SCRIPT=0"
-	}
 	if ($PhysicsCheckBox.Checked) {
 		$Options += "-DUSE_PHYSICS=1"
 	}
 	if ($SpineCheckBox.Checked) {
 		$Options += "-DUSE_SPINE=1"
+	}
+	if ($UnitTestsCheckBox.Checked) {
+		$Options += "-DUNIT_TESTS=1"
 	}
 
 	Push-Location $OutputFolder

@@ -18,15 +18,31 @@ pointer events.
 
 ## Input Management
 
-The input manager is only accessible from the entry point but you can store a
-pointer and pass it around. The pointer is guaranteed to be valid throughout the
-lifetime of your main class.
-
 ```c++
 void MyGame::init_impl(const Vec2i&)
 {
+    // The input manager is only accessible from the entry point but you can
+    // store a pointer and pass it around. The pointer is guaranteed to be valid
+    // throughout the lifetime of your main class.
     Input* input_manager = &input();
     […]
+}
+```
+
+```csharp
+namespace MyGame
+{
+    using Rainbow.Input;  // For InputManager, VirtualKey
+
+    public sealed class Program
+    {
+        public static void Update(ulong dt)
+        {
+            // |InputManager| is a static class:
+            bool w_down = InputManager.IsDown(VirtualKey.W);
+            […]
+        }
+    }
 }
 ```
 
@@ -41,14 +57,37 @@ void  Input::subscribe    (InputListener& listener);
 void  Input::unsubscribe  (InputListener& listener);
 ```
 
+```csharp
+namespace Rainbow.Input
+{
+    public static partial class InputManager
+    {
+        public static event EventHandler<ControllerAxisMotion> ControllerAxisMotion;
+        public static event EventHandler<ControllerButtonEvent> ControllerButtonDown;
+        public static event EventHandler<ControllerButtonEvent> ControllerButtonUp;
+        public static event EventHandler<uint> ControllerConnected;
+        public static event EventHandler<uint> ControllerDisconnected;
+        public static event EventHandler<KeyStroke> KeyDown;
+        public static event EventHandler<KeyStroke> KeyUp;
+        public static event EventHandler<IReadOnlyList<Pointer>> PointerBegan;
+        public static event EventHandler<IReadOnlyList<Pointer>> PointerCanceled;
+        public static event EventHandler<IReadOnlyList<Pointer>> PointerEnded;
+        public static event EventHandler<IReadOnlyList<Pointer>> PointerMoved;
+    }
+}
+```
+
 ```lua
 function rainbow.input.subscribe    (listener)  --> void
 function rainbow.input.unsubscribe  (listener)  --> void
 ```
 
-Subscribes/unsubscribes `listener` to input events. A listener will always be
-added to the end of the chain, regardless if it was previously subscribed. A
-deleted listener will automatically unsubscribe itself.
+**C++/Lua**: Subscribes/unsubscribes `listener` to input events. A listener will
+always be added to the end of the chain, regardless if it was previously
+subscribed. A deleted listener will automatically unsubscribe itself.
+
+**C#**: Subscribe/unsubscribe to/from the specific events you're interested in.
+See [Events (C# Programming Guide)].
 
 ### Handling Key Events
 
@@ -164,3 +203,5 @@ Output:
 [1428763101291|INFO] Pressed a key: 5
 [1428763101461|INFO] Pressed a key: q
 ```
+
+[Events (C# Programming Guide)]: https://msdn.microsoft.com/en-us/library/awbftdfh.aspx

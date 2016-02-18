@@ -1,0 +1,2 @@
+[*.{cpp,h}]
+max_line_length = 1000

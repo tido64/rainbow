@@ -2,6 +2,9 @@ if(MINGW OR UNIX)
   set(CFLAG_NO_WARNINGS -w)
   if(UNIT_TESTS)
     set(RAINBOW_COMMON_CFLAGS "-frtti -fexceptions --coverage")
+  elseif(APPLE)
+    # TODO: Remove when Clang implements FileSystem TS.
+    set(RAINBOW_COMMON_CFLAGS "-fno-rtti -fexceptions")
   else()
     set(RAINBOW_COMMON_CFLAGS "-fno-rtti -fno-exceptions")
   endif()
@@ -32,8 +35,11 @@ if(MINGW OR UNIX)
   set(CMAKE_CXX_FLAGS "-pipe ${RAINBOW_CXXSTD} ${RAINBOW_CXX_WARNINGS} ${RAINBOW_COMMON_CFLAGS}")
 
   if(APPLE)
+    # TODO: Temporary workaround till Apple LLVM includes FileSystem TS.
+    find_library(BOOST_FILESYSTEM boost_filesystem REQUIRED)
+    find_library(BOOST_SYSTEM boost_system REQUIRED)
     find_library(CORESERVICES_LIBRARY CoreServices REQUIRED)
-    set(PLATFORM_LIBRARIES ${CORESERVICES_LIBRARY})
+    set(PLATFORM_LIBRARIES ${CORESERVICES_LIBRARY} ${BOOST_FILESYSTEM} ${BOOST_SYSTEM})
   else()
     # Debug- and release-specific flags
     set(CMAKE_CXX_FLAGS_DEBUG   "-g -O0 -ftrapv")

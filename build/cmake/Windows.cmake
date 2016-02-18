@@ -5,7 +5,8 @@ if(WIN32)
        .editorconfig
        build/cmake/Windows.cmake
        build/windows/Rainbow.natvis
-       build/windows/Rainbow.rc)
+       build/windows/Rainbow.rc
+       src/DotNet/Rainbow/.editorconfig)
   add_definitions(
       -D_CRT_SECURE_NO_WARNINGS=1
       -D_SCL_SECURE_NO_WARNINGS=1
