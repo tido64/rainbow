@@ -1,0 +1,18 @@
+{
+  "$schema": "https://raw.githubusercontent.com/DotNetAnalyzers/StyleCopAnalyzers/master/StyleCop.Analyzers/StyleCop.Analyzers/Settings/stylecop.schema.json",
+  "settings": {
+    "documentationRules": {
+      "companyName": "Bifrost Entertainment AS and Tommy Nguyen",
+      "copyrightText": "Copyright (c) 2010-present {companyName}\nDistributed under the MIT License.\n(See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)",
+      "xmlHeader": false
+    },
+    "indentation": {
+      "indentationSize": 4,
+      "tabSize": 4,
+      "useTabs": false
+    },
+    "orderingRules": {
+      "blankLinesBetweenUsingGroups": "require"
+    }
+  }
+}

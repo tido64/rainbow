@@ -1,4 +1,5 @@
 coverage:
   ignore:
   - lib/.*
+  - src/DotNet/Rainbow/.*
   - src/Tests/.*
