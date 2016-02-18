@@ -9,15 +9,36 @@ set(THIRD_PARTY ${PROJECT_SOURCE_DIR}/src/ThirdParty)
 include(FindPkgConfig)
 include(${LOCAL_MODULE_PATH}/Utilities.cmake)
 
-#option(PROFILING   "Compile with profiling" OFF)
-option(UNIT_TESTS  "Compile unit tests" OFF)
+# Scripting languages
+set(SCRIPTING "Lua" CACHE STRING "Scripting language of choice")
+set_property(CACHE SCRIPTING PROPERTY STRINGS "C++" "CSharp" "Lua")
 
 # Features
 option(USE_FMOD_STUDIO  "Enable FMOD Studio audio engine" OFF)
 option(USE_HEIMDALL     "Enable Heimdall debugging facilities" OFF)
-option(USE_LUA_SCRIPT   "Enable Lua scripting" ON)
 option(USE_PHYSICS      "Enable physics module (Box2D)" OFF)
 option(USE_SPINE        "Enable Spine runtime" OFF)
+
+#option(PROFILING   "Compile with profiling" OFF)
+option(UNIT_TESTS  "Compile unit tests" OFF)
+
+# Validate selected scripting language
+string(TOLOWER ${SCRIPTING} SCRIPTINGL)
+get_property(SUPPORTED_LANGUAGES CACHE SCRIPTING PROPERTY STRINGS)
+foreach(LANG ${SUPPORTED_LANGUAGES})
+  string(TOLOWER ${LANG} LANGL)
+  if(LANGL STREQUAL SCRIPTINGL)
+    string(REPLACE "Sharp" "#" LANG ${LANG})
+    message(STATUS "Scripting language: ${LANG}")
+    break()
+  endif()
+  unset(LANGL)
+endforeach()
+if(NOT DEFINED LANGL)
+  string(REPLACE ";" ", " SUPPORTED_LANGUAGES "${SUPPORTED_LANGUAGES}")
+  message(FATAL_ERROR "unsupported scripting language: ${SCRIPTING}; must be one of ${SUPPORTED_LANGUAGES}")
+endif()
+unset(LANGL)
 
 # Auto-generate files
 execute_process(COMMAND tools/shaders-gen.py WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
@@ -154,7 +175,27 @@ set(SOURCE_FILES
     src/ThirdParty/NanoSVG/NanoSVG.h
     src/Threading/Synchronized.h)
 
-if(USE_LUA_SCRIPT)
+if(SCRIPTINGL STREQUAL "csharp")
+  add_definitions(-DUSE_LUA_SCRIPT=0)
+  list(APPEND SOURCE_FILES
+       include/Rainbow.hpp
+       src/DotNet/Core.cpp
+       src/DotNet/CoreCLR.cpp
+       src/DotNet/CoreCLR.h
+       src/DotNet/CoreScript.cpp
+       src/DotNet/CoreScript.h
+       src/DotNet/Error.h
+       src/DotNet/SharedLibrary.cpp
+       src/DotNet/SharedLibrary.h
+       src/DotNet/TerminateOnReturn.h)
+elseif(SCRIPTINGL STREQUAL "c++")
+  add_definitions(-DUSE_LUA_SCRIPT=0)
+  list(APPEND SOURCE_FILES
+       src/Resources/Rainbow.svg.h
+       src/Script/NoGame.cpp
+       src/Script/NoGame.h)
+else()
+  set(SCRIPTINGL "lua")
   add_definitions(-DUSE_LUA_SCRIPT=1)
   list(APPEND SOURCE_FILES
        src/Lua/lua_Animation.cpp
@@ -192,12 +233,6 @@ if(USE_LUA_SCRIPT)
        src/Lua/LuaScript.h
        src/Lua/Object.h
        src/Resources/Rainbow.lua.h)
-else()
-  add_definitions(-DUSE_LUA_SCRIPT=0)
-  list(APPEND SOURCE_FILES
-       src/Resources/Rainbow.svg.h
-       src/Script/NoGame.cpp
-       src/Script/NoGame.h)
 endif()
 
 if(ANDROID)
@@ -335,7 +370,7 @@ if(USE_PHYSICS)
        src/ThirdParty/Box2D/DebugDraw.h
        src/ThirdParty/Box2D/StableWorld.cpp
        src/ThirdParty/Box2D/StableWorld.h)
-  if(USE_LUA_SCRIPT)
+  if(SCRIPTINGL STREQUAL "lua")
     list(APPEND SOURCE_FILES
          src/ThirdParty/Box2D/Lua/Box2D.cpp
          src/ThirdParty/Box2D/Lua/Box2D.h
@@ -386,6 +421,7 @@ if(MSVC OR XCODE)
   foreach(filename IN LISTS SOURCE_FILES)
     get_filename_component(directory ${filename} DIRECTORY)
     if(NOT directory STREQUAL "")
+      string(REGEX REPLACE "^include" "Header Files" directory ${directory})
       string(REGEX REPLACE "^src" "Source Files" directory ${directory})
       string(REPLACE "/" "\\" directory ${directory})
       source_group(${directory} FILES ${filename})
@@ -431,6 +467,7 @@ target_include_directories(
         ${LUA_INCLUDE_DIR}
         ${SDL2_INCLUDE_DIRS}
         ${AUDIO_INCLUDE_DIRS}
+        /usr/local/include
 )
 target_link_libraries(
     rainbow

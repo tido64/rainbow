@@ -17,11 +17,17 @@ well.
 
 Next, we'll need to install the dependencies:
 
+* [.NET Core](https://www.microsoft.com/net/core) (**optional:** only if you want to use C#)
 * [CMake](https://cmake.org/)
 * [FMOD](https://www.fmod.org/) (**optional:** only if you want to use FMOD Studio)
 * [Ogg Vorbis](https://www.xiph.org/vorbis/) (**optional:** only if you want to use OpenAL)
 * [OpenAL Soft](http://kcat.strangesoft.net/openal.html) (**optional:** only if you want to use OpenAL)
 * [SDL](https://libsdl.org/)
+
+If you wish to try out the experimental C# front end, you'll need to install
+[.NET Core](https://www.microsoft.com/net/core). Rainbow requires .NET Core 2.0
+or later, and currently only works properly on Windows until
+[this proposal](https://github.com/dotnet/coreclr/issues/9038) is implemented.
 
 If you've decided to use FMOD Studio, download the FMOD Studio API package for
 your platform. You will need to extract or install it, and copy the files into
@@ -136,7 +142,7 @@ Available features and build configurations:
 
 | Feature flag      | Description                                                                   |
 |:------------------|:------------------------------------------------------------------------------|
-| `SCRIPTING`       | Scripting language: `C++` or `Lua`. This is set to Lua if omitted.            |
+| `SCRIPTING`       | Scripting language: `C++`, `CSharp`, or `Lua`. This is set to Lua if omitted. |
 | `UNIT_TESTS`      | Compiles unit tests. Only useful for engine developers.                       |
 | `USE_FMOD_STUDIO` | Replaces Rainbow's custom audio engine with FMOD Studio.                      |
 | `USE_HEIMDALL`    | Compiles in Rainbow's debug overlay and other debugging facilities.           |
@@ -188,3 +194,14 @@ chmod +x /path/to/rainbow/tools/build.sh
 The PowerShell script `tools\make.ps1` will walk you through customising your
 Rainbow project. Find it using File Explorer, right-click the file, and select
 _Run with PowerShell_. You can dismiss any prompts about execution policy.
+
+## Compiling Rainbow managed assembly (for C# front end only)
+
+```shell
+cd /path/to/rainbow/dotnet/Rainbow
+dotnet restore
+dotnet publish
+```
+
+Finally, copy all the `.dll`s under `bin/Debug/netcoreapp1.1/publish/` to the
+same folder as your Rainbow executable.

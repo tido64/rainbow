@@ -3,6 +3,7 @@ title: Rainbow Documentation
 
 language_tabs:
   - cpp: C++
+  - csharp: C#
   - lua: Lua
 
 toc_footers:

@@ -29,6 +29,12 @@ Sound*  rainbow::audio::load_stream  (const char* path);
 void    rainbow::audio::release      (Sound*);
 ```
 
+```csharp
+Sound  Rainbow.Audio.Mixer.LoadSound   (string path);
+Sound  Rainbow.Audio.Mixer.LoadStream  (string path);
+void   Rainbow.Audio.Mixer.Release     (Sound sound);
+```
+
 ```lua
 function rainbow.audio.load_sound   (path)   --> sound
 function rainbow.audio.load_stream  (path)   --> sound
@@ -53,6 +59,15 @@ Channel*  rainbow::audio::play        (Sound*, Vec2f world_position = Vec2f::Zer
 void      rainbow::audio::stop        (Channel*);
 ```
 
+```csharp
+bool     Rainbow.Audio.Mixer.IsPaused   (Channel);
+bool     Rainbow.Audio.Mixer.IsPlaying  (Channel);
+void     Rainbow.Audio.Mixer.Pause      (Channel);
+Channel  Rainbow.Audio.Mixer.Play       (Channel);
+Channel  Rainbow.Audio.Mixer.Play       (Sound, Vector2 worldPosition = Vector2.Zero);
+void     Rainbow.Audio.Mixer.Stop       (Channel);
+```
+
 ```lua
 function rainbow.audio.is_paused   (channel)              --> bool
 function rainbow.audio.is_playing  (channel)              --> bool
@@ -74,6 +89,12 @@ to be reused by subsequent calls to `play(Sound*, ...)`.
 void  rainbow::audio::set_loop_count      (Channel*, int count);
 void  rainbow::audio::set_volume          (Channel*, float volume);
 void  rainbow::audio::set_world_position  (Channel*, Vec2f position);
+```
+
+```csharp
+void  Rainbow.Audio.Mixer.SetLoopCount      (Channel, int count);
+void  Rainbow.Audio.Mixer.SetVolume         (Channel, float volume);
+void  Rainbow.Audio.Mixer.SetWorldPosition  (Channel, Vector2 position);
 ```
 
 ```lua
