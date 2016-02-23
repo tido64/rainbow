@@ -6,6 +6,8 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${LOCAL_MODULE_PATH})
 set(LOCAL_LIBRARY ${PROJECT_SOURCE_DIR}/lib)
 set(THIRD_PARTY ${PROJECT_SOURCE_DIR}/src/ThirdParty)
 
+include(${LOCAL_MODULE_PATH}/Utilities.cmake)
+
 #option(PROFILING   "Compile with profiling" OFF)
 option(UNIT_TESTS  "Compile unit tests" OFF)
 

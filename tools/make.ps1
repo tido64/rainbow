@@ -9,9 +9,6 @@ param (
 
 $Generator = "Visual Studio 14"
 $SourcePath = Join-Path (Split-Path (Get-Variable MyInvocation).Value.MyCommand.Path) .. -Resolve
-$LibraryPath = Join-Path $SourcePath lib
-$PackagesPath = "Packages"
-$UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2486.0 Safari/537.36 Edge/13.10586"
 
 $FMODDescription = "Enable FMOD Studio audio engine"
 $HeimdallDescription = "Enable Heimdall debugging facilities"
@@ -23,50 +20,10 @@ $VectorDescription = "Enable vector drawing library (NanoVG)"
 
 $Shell = New-Object -ComObject Shell.Application
 
-function Get-Package
-{
-	param ($Uri, $OutFile)
-
-	$Packages = New-Item -Path $PackagesPath -ItemType Directory -Force
-
-	Write-Output "Downloading $Uri..."
-	$OutFile = [IO.Path]::Combine($Packages.FullName, $OutFile)
-	Invoke-WebRequest -Uri $Uri -UserAgent $UserAgent -OutFile $OutFile
-
-	if (Test-Path $OutFile) {
-		Write-Output "Extracting $OutFile..."
-		$Packages = $Shell.NameSpace($Packages.FullName)
-		foreach ($Item in $Shell.NameSpace($OutFile).Items()) {
-			$Packages.CopyHere($Item)
-		}
-	}
-}
-
-function Get-AllPackages
-{
-	if (!(Test-Path (Join-Path $SourcePath "lib/SDL/include/SDL.h")) -or !(Test-Path (Join-Path $SourcePath "lib/SDL/lib/x86/SDL2.lib"))) {
-		$SDL2 = "SDL2-devel-2.0.4-VC.zip"
-		Get-Package "http://www.libsdl.org/release/$SDL2" $SDL2
-		$SDL2 = Join-Path $PackagesPath SDL2-2.0.4 -Resolve
-		if (Test-Path $SDL2) {
-			Move-Item $SDL2 ([IO.Path]::Combine($LibraryPath, "SDL"))
-		}
-	}
-	if (!(Test-Path (Join-Path $SourcePath "lib/openal-soft/include/AL/al.h")) -or !(Test-Path (Join-Path $SourcePath "lib/openal-soft/libs/Win32/OpenAL32.lib"))) {
-		$AL = "openal-soft-1.17.2-bin.zip"
-		Get-Package "http://kcat.strangesoft.net/openal-binaries/$AL" $AL
-		$AL = Join-Path $PackagesPath openal-soft-1.17.2-bin -Resolve
-		if (Test-Path $AL) {
-			Move-Item $AL ([IO.Path]::Combine($LibraryPath, "openal-soft"))
-		}
-	}
-}
-
 function Make
 {
 	param ($options)
 
-	Get-AllPackages
 	cmake $options -G $Generator $SourcePath
 	.\Rainbow.sln
 }

@@ -93,10 +93,8 @@ permission:
 
 	$ chmod +x /path/to/rainbow/tools/build.sh
 
-For Windows developers on Visual Studio 2015 or newer, run the PowerShell script
-`tools\make.ps1` (right-click on it and select _Run with PowerShell_). It will
-take you through the steps. Otherwise, you'll have to use the batch script
-`tools\build.bat`.
+For Windows developers, run the PowerShell script `tools\make.ps1` (right-click
+on it and select _Run with PowerShell_). It will take you through the steps.
 
 For iOS builds, see the corresponding section.
 
@@ -229,12 +227,12 @@ installed. SDL will be downloaded automatically by the build script.
   `-DUSE_FMOD_STUDIO=1`)
 - [SDL](http://libsdl.org/)
 - [Visual Studio Community](http://www.visualstudio.com/en-us/products/visual-studio-community-vs)
-  (2013 or later)
+  (2015 with Update 1 or later)
 
-Download OpenAL Soft and move the extracted folder into `rainbow\lib\`. Then
-rename the folder `openal-soft`. Finally, download SDL development libraries and
-move its content to `rainbow\lib\SDL\`. If you're on Visual Studio 2015 or
-newer, the PowerShell script will take care of this for you.
+The process of downloading and setting up OpenAL Soft and SDL is fully automated
+by the build scripts. Simply run the PowerShell script, `tools\make.ps1`, and
+follow the wizard. If you get a prompt about execution policy, you can simply
+dismiss it as the script doesn't require any special rights.
 
 Alternatively, see "Linux" for cross-compilation.
 

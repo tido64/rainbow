@@ -49,10 +49,8 @@ the instructions in `README.md` for more details.
 
 1. Download and install [Visual Studio Community](http://www.visualstudio.com/en-us/products/visual-studio-community-vs).
 2. Download and install [CMake](http://www.cmake.org/download/).
-3. Download [SDL development libraries](https://www.libsdl.org/download-2.0.php) for Visual C++ and extract its content to `lib\SDL` in the repository.
-4. **Optional**: Download [OpenAL Soft](http://kcat.strangesoft.net/openal.html) and extract it. Copy includes to `build\windows\include` in the repository, and libraries to `build\windows\lib`.
 
-> **Note**: If you're on Visual Studio 2015 or newer, the PowerShell script will automatically download OpenAL Soft and SDL for you.
+> **Note**: The build scripts will automatically download and set up OpenAL Soft and SDL for you.
 
 ## Compiling Rainbow
 
@@ -112,10 +110,4 @@ chmod +x /path/to/rainbow/tools/build.sh
 
 ### Windows
 
-The PowerShell script `tools\make.ps1` will walk you through customising your Rainbow project. Find it using File Explorer, right-click the script and select _Run with PowerShell_. It will also automatically download OpenAL Soft and SDL for you.
-
-If you're still on Visual Studio 2013, use the batch script to generate project files.
-
-```bat
-\path\to\rainbow\tools\build.bat -DCMAKE_BUILD_TYPE=<configuration> [option ...]
-```
+The PowerShell script `tools\make.ps1` will walk you through customising your Rainbow project. Find it using File Explorer, right-click the file, and select _Run with PowerShell_. You can dismiss any prompts about execution policy.

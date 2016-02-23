@@ -1,3 +1,8 @@
+set(SDL2_TARGET_VERSION 2.0.4)
+set(SDL2_DEV_HASH 933557cc8b76edddb2a92979b9992ba71b2bb6b2)
+set(SDL2_BIN32_HASH ae79e23874c14b911a2a1bf91f234fe17a8ffb1f)
+set(SDL2_BIN64_HASH ca564ee5f2dbc3ae9446ba301689ed8cb3fdd0ff)
+
 if(ANDROID)
   # Pass through.
 elseif(EMSCRIPTEN)
@@ -6,12 +11,27 @@ elseif(EMSCRIPTEN)
 else()
   set(SDL2_SOURCE_DIR ${LOCAL_LIBRARY}/SDL)
   if(MSVC)
-    set(SDL2_INCLUDE_DIR ${SDL2_SOURCE_DIR}/include)
     if(CMAKE_CL_64)
+      set(SDL2_ARCH x64)
       set(SDL2_LIBRARY_DIR ${SDL2_SOURCE_DIR}/lib/x64)
+      set(SDL2_BIN_HASH ${SDL2_BIN64_HASH})
     else()
+      set(SDL2_ARCH x86)
       set(SDL2_LIBRARY_DIR ${SDL2_SOURCE_DIR}/lib/x86)
+      set(SDL2_BIN_HASH ${SDL2_BIN32_HASH})
     endif()
+    download_library(
+        sdl2-dev
+        https://libsdl.org/release/SDL2-devel-${SDL2_TARGET_VERSION}-VC.zip
+        ${SDL2_DEV_HASH}
+        ${SDL2_SOURCE_DIR})
+    download_library(
+        sdl2-bin
+        https://libsdl.org/release/SDL2-${SDL2_TARGET_VERSION}-win32-${SDL2_ARCH}.zip
+        ${SDL2_BIN_HASH}
+        ${CMAKE_BINARY_DIR})
+    add_dependencies(rainbow sdl2-dev sdl2-bin)
+    set(SDL2_INCLUDE_DIR ${SDL2_SOURCE_DIR}/include)
     set(SDL2_LIBRARIES ${SDL2_LIBRARY_DIR}/SDL2.lib ${SDL2_LIBRARY_DIR}/SDL2main.lib)
   else()
     set(SDL2_BUILD_DIR ${CMAKE_BINARY_DIR}/lib/SDL)
