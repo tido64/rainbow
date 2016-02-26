@@ -40,16 +40,9 @@ namespace rainbow
                    int duration,
                    TimingFunction timing)
             : elapsed_(0), duration_(duration), delta_(delta),
-              timing_(std::move(timing)), component_(component) {}
-
-        Transition(T component,
-                   int outset,
-                   const U& delta,
-                   int duration,
-                   TimingFunction timing)
-            : elapsed_(0), duration_(duration), delta_(delta),
-              timing_(std::move(timing)), previous_(outset),
-              component_(component) {}
+              timing_(std::move(timing)), previous_(U{}), component_(component)
+        {
+        }
 
         float tick()
         {
@@ -64,15 +57,15 @@ namespace rainbow
     public:
         Fade(T component, int opacity, int duration, TimingFunction timing)
             : Transition<T, int>(
-                  component, 0, opacity, duration, std::move(timing)) {}
+                  component, opacity, duration, std::move(timing)) {}
 
         void operator()()
         {
             Colorb color = this->component_->color();
-            color.a += this->timing_(0.0f, this->delta_, this->tick()) -
-                       this->previous_;
+            const int d = this->timing_(0.0f, this->delta_, this->tick());
+            color.a += d - this->previous_;
             this->component_->set_color(color);
-            this->previous_ = color.a;
+            this->previous_ = d;
         }
     };
 
