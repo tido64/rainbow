@@ -30,7 +30,7 @@ DataMapWin::DataMapWin(const Path& path)
     else
     {
         handle_ = CreateFileMapping(fh, nullptr, PAGE_READONLY, 0, 0, nullptr);
-        if (!handle_)
+        if (handle_ == nullptr)
         {
             LOGE("Failed to create file mapping for '%s' (%x)",
                  static_cast<const char*>(path),
@@ -40,7 +40,7 @@ DataMapWin::DataMapWin(const Path& path)
         {
             len_ = size.QuadPart;
             addr_ = MapViewOfFile(handle_, FILE_MAP_READ, 0, 0, 0);
-            if (!addr_)
+            if (addr_ == nullptr)
             {
                 CloseHandle(handle_);
                 handle_ = nullptr;
@@ -65,9 +65,9 @@ DataMapWin::DataMapWin(DataMapWin&& data)
 
 DataMapWin::~DataMapWin()
 {
-    if (addr_)
-    {
-        UnmapViewOfFile(addr_);
-        CloseHandle(handle_);
-    }
+    if (handle_ == nullptr)
+        return;
+
+    UnmapViewOfFile(addr_);
+    CloseHandle(handle_);
 }

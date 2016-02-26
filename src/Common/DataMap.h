@@ -25,7 +25,7 @@ namespace rainbow
     class TDataMap : private T, private NonCopyable<TDataMap<T>>
     {
     public:
-#ifdef RAINBOW_JS
+#ifndef RAINBOW_OS_ANDROID
         template <size_t N>
         TDataMap(const byte_t (&bytes)[N]) : T(bytes) {}
 #endif

@@ -14,7 +14,7 @@ namespace rainbow
         DataMapUnix(const byte_t (&bytes)[N])
             : len_(N), off_(0),
               addr_(const_cast<void*>(static_cast<const void*>(bytes))),
-              mmapped_(false) {}
+              is_embedded_(true) {}
 
         explicit DataMapUnix(const Path& path);
         DataMapUnix(DataMapUnix&& data);
@@ -34,7 +34,7 @@ namespace rainbow
         size_t len_;
         size_t off_;
         void* addr_;
-        const bool mmapped_;
+        const bool is_embedded_;
     };
 }
 

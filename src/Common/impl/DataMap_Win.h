@@ -10,6 +10,12 @@ namespace rainbow
     class DataMapWin
     {
     protected:
+        template <size_t N>
+        DataMapWin(const byte_t (&bytes)[N])
+            : len_(N), off_(0),
+              addr_(const_cast<void*>(static_cast<const void*>(bytes))),
+              handle_(nullptr) {}
+
         explicit DataMapWin(const Path& path);
         DataMapWin(DataMapWin&&);
         ~DataMapWin();

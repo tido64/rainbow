@@ -15,7 +15,7 @@
 using rainbow::DataMapUnix;
 
 DataMapUnix::DataMapUnix(const Path& path)
-    : len_(0), off_(0), addr_(nullptr), mmapped_(true)
+    : len_(0), off_(0), addr_(nullptr), is_embedded_(false)
 {
     const File& f = File::open(path);
     if (!f)
@@ -45,7 +45,7 @@ DataMapUnix::DataMapUnix(const Path& path)
 
 DataMapUnix::DataMapUnix(DataMapUnix&& data)
     : len_(data.len_), off_(data.off_), addr_(data.addr_),
-      mmapped_(data.mmapped_)
+      is_embedded_(data.is_embedded_)
 {
     data.len_ = 0;
     data.off_ = 0;
@@ -54,6 +54,8 @@ DataMapUnix::DataMapUnix(DataMapUnix&& data)
 
 DataMapUnix::~DataMapUnix()
 {
-    if (mmapped_ && addr_)
-        munmap(addr_, len_);
+    if (addr_ == nullptr || is_embedded_)
+        return;
+
+    munmap(addr_, len_);
 }
