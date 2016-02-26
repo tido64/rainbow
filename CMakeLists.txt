@@ -183,7 +183,10 @@ if(USE_LUA_SCRIPT)
        src/Resources/Rainbow.lua.h)
 else()
   add_definitions(-DUSE_LUA_SCRIPT=0)
-  list(APPEND SOURCE_FILES src/Script/NoGame.cpp src/Script/NoGame.h)
+  list(APPEND SOURCE_FILES
+       src/Resources/Rainbow.svg.h
+       src/Script/NoGame.cpp
+       src/Script/NoGame.h)
 endif()
 
 if(ANDROID)
