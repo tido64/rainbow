@@ -28,7 +28,8 @@ namespace rainbow
     font_t font(const char* path, float pt);
     label_t label(const char* string = nullptr);
     spritebatch_t spritebatch(unsigned int hint = 4);
-    texture_t texture(const char* path);
+    texture_t texture(const char* path, float scale = 1.0f);
+    texture_t texture(const char* id, const DataMap& data, float scale = 1.0f);
 
     namespace prose
     {

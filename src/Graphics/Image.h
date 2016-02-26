@@ -18,7 +18,8 @@ namespace rainbow
             ETC1,   // OpenGL ES standard
             PVRTC,  // iOS, OMAP43xx, PowerVR
             S3TC,   // Desktops, Tegra
-            PNG
+            PNG,
+            SVG,
         };
 
         /// <summary>Creates an Image struct from image data.</summary>
@@ -40,7 +41,7 @@ namespace rainbow
         ///     </item>
         ///   </list>
         /// </remarks>
-        static Image decode(const DataMap&);
+        static Image decode(const DataMap&, float scale);
 
         Format format = Format::Unknown;
         unsigned int width = 0;
@@ -77,6 +78,7 @@ namespace rainbow
                     break;
 
                 case Format::PNG:
+                case Format::SVG:
                 default:
                     delete[] data;
                     break;
@@ -90,6 +92,7 @@ namespace rainbow
 #   include "Graphics/Decoders/UIKit.h"
 #else
 #   include "Graphics/Decoders/PNG.h"
+#   include "Graphics/Decoders/SVG.h"
 #endif
 #ifdef GL_IMG_texture_compression_pvrtc
 #   include "Graphics/Decoders/PVRTC.h"
@@ -97,7 +100,7 @@ namespace rainbow
 
 namespace rainbow
 {
-    Image Image::decode(const DataMap& data)
+    Image Image::decode(const DataMap& data, float scale)
     {
 #ifdef USE_PVRTC
         if (pvrtc::check(data))
@@ -108,6 +111,11 @@ namespace rainbow
         if (png::check(data))
             return png::decode(data);
 #endif  // USE_PNG
+
+#ifdef USE_SVG
+        if (svg::check(data))
+            return svg::decode(data, scale);
+#endif  // USE_SVG
 
 #ifdef USE_UIKIT
         return uikit::decode(data);

@@ -4,9 +4,6 @@
 
 #include "Script/GameBase.h"
 
-#include "Common/Data.h"
-#include "FileSystem/Path.h"
-
 namespace rainbow
 {
     animation_t animation(sprite_t sprite,
@@ -28,7 +25,7 @@ namespace rainbow
     label_t label(const char* string)
     {
         auto label = std::make_shared<Label>();
-        if (string)
+        if (string != nullptr)
             label->set_text(string);
         return label;
     }
@@ -38,9 +35,17 @@ namespace rainbow
         return std::make_shared<SpriteBatch>(hint);
     }
 
-    texture_t texture(const char* path)
+    texture_t texture(const char* path, float scale)
     {
-        auto texture = make_shared<TextureAtlas>(path);
+        auto texture = make_shared<TextureAtlas>(path, scale);
+        R_ASSERT(texture->is_valid(),
+                 "rainbow::texture: Failed to create texture");
+        return texture;
+    }
+
+    texture_t texture(const char* id, const DataMap& data, float scale)
+    {
+        auto texture = make_shared<TextureAtlas>(id, data, scale);
         R_ASSERT(texture->is_valid(),
                  "rainbow::texture: Failed to create texture");
         return texture;

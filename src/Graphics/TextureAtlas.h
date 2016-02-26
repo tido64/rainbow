@@ -35,9 +35,8 @@ class TextureManager;
 class TextureAtlas : public RefCounted
 {
 public:
-    explicit TextureAtlas(const char* path);
-    explicit TextureAtlas(const rainbow::ISolemnlySwearThatIAmOnlyTesting& test)
-        : texture_(test) {}
+    explicit TextureAtlas(const char* path, float scale = 1.0f);
+    TextureAtlas(const char* id, const DataMap& data, float scale = 1.0f);
 
     auto height() const { return texture_.height(); }
     auto is_valid() const { return texture_; }
@@ -82,13 +81,17 @@ public:
         return regions_[i];
     }
 
+    explicit TextureAtlas(const rainbow::ISolemnlySwearThatIAmOnlyTesting& test)
+        : texture_(test) {}
+
 private:
     rainbow::Texture texture_;                     ///< Texture atlas' id.
     std::vector<rainbow::TextureRegion> regions_;  ///< Defined texture regions.
 
     void load(TextureManager& texture_manager,
               const rainbow::Texture& texture,
-              const DataMap& data);
+              const DataMap& data,
+              float scale);
 };
 
 #endif

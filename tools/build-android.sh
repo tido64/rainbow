@@ -95,6 +95,7 @@ LOCAL_C_INCLUDES        := \$(LOCAL_PATH)/src \$(LOCAL_PATH)/lib \\
                            \$(LOCAL_PATH)/src/ThirdParty/FreeType \$(LOCAL_PATH)/lib/FreeType/include \$(LOCAL_PATH)/lib/FreeType/src \\
                            \$(LOCAL_PATH)/lib/Lua \\
                            \$(LOCAL_PATH)/src/ThirdParty/libpng \$(LOCAL_PATH)/lib/libpng \\
+                           \$(LOCAL_PATH)/lib/nanosvg/src \\
                            \$(LOCAL_PATH)/lib/nanovg/src \\
                            \$(LOCAL_PATH)/lib/spine-runtimes/spine-c/include \\
                            $NDK_HOME/sources/android/native_app_glue

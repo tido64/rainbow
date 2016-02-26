@@ -66,6 +66,7 @@ set(SOURCE_FILES
     src/Graphics/Buffer.h
     src/Graphics/Decoders/PNG.h
     src/Graphics/Decoders/PVRTC.h
+    src/Graphics/Decoders/SVG.h
     src/Graphics/Drawable.h
     src/Graphics/FontAtlas.cpp
     src/Graphics/FontAtlas.h
@@ -138,7 +139,9 @@ set(SOURCE_FILES
     src/Script/TimingFunctions.h
     src/Script/Transition.h
     src/Script/TransitionFunctions.h
-    src/Script/World.h)
+    src/Script/World.h
+    src/ThirdParty/NanoSVG.cpp
+    src/ThirdParty/NanoSVG.h)
 
 if(USE_LUA_SCRIPT)
   add_definitions(-DUSE_LUA_SCRIPT=1)
@@ -408,6 +411,7 @@ set_property(
         ${FREETYPE_INCLUDE_DIR}
         ${LIBPNG_INCLUDE_DIR}
         ${LUA_INCLUDE_DIR}
+        ${LOCAL_LIBRARY}/nanosvg/src
         ${NANOVG_INCLUDE_DIR}
         ${SDL2_INCLUDE_DIR}
         ${SPINE_INCLUDE_DIR}

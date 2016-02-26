@@ -15,13 +15,25 @@ namespace
     constexpr const char kInvalidColorDepth[] = "Invalid colour depth";
 }
 
-TextureAtlas::TextureAtlas(const char* path)
+TextureAtlas::TextureAtlas(const char* path, float scale)
 {
     texture_ = TextureManager::Get()->create(
         path,
-        [this, path](TextureManager& texture_manager, const Texture& texture)
+        [this, path, scale](
+            TextureManager& texture_manager, const Texture& texture)
         {
-            load(texture_manager, texture, DataMap{Path(path)});
+            load(texture_manager, texture, DataMap{Path(path)}, scale);
+        });
+}
+
+TextureAtlas::TextureAtlas(const char* id, const DataMap& data, float scale)
+{
+    texture_ = TextureManager::Get()->create(
+        id,
+        [this, &data, scale](
+            TextureManager& texture_manager, const Texture& texture)
+        {
+            load(texture_manager, texture, data, scale);
         });
 }
 
@@ -54,11 +66,12 @@ void TextureAtlas::set_regions(const ArrayView<const int>& rects)
 
 void TextureAtlas::load(TextureManager& texture_manager,
                         const rainbow::Texture& texture,
-                        const DataMap& data)
+                        const DataMap& data,
+                        float scale)
 {
     R_ASSERT(data, "Failed to load texture");
 
-    const rainbow::Image& image = rainbow::Image::decode(data);
+    const rainbow::Image& image = rainbow::Image::decode(data, scale);
     if (!image.data)
         return;
 

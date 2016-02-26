@@ -22,7 +22,7 @@
 namespace rainbow
 {
     template <typename T, size_t N>
-    size_t array_size(const T (&)[N])
+    constexpr size_t array_size(const T (&)[N])
     {
         return N;
     }
