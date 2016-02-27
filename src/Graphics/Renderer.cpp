@@ -59,32 +59,32 @@ void Renderer::set_resolution(const Vec2i& resolution)
     R_ASSERT(glGetError() == GL_NO_ERROR, "Failed to set resolution");
 }
 
-void Renderer::set_window_size(const Vec2i& size, float factor)
+void Renderer::set_window_size(const Vec2i& new_size, float factor)
 {
     R_ASSERT(is_global(),
              "Cannot set window size with an uninitialised renderer");
 
-    window_ = view_;
-    if (size == view_)
+    scale_ = static_cast<float>(view_.x) / new_size.x;
+    if (factor * new_size == view_)
     {
+        zoom_ = 1.0f;
         origin_.x = 0;
         origin_.y = 0;
     }
     else
     {
-        const float scale = std::min(size.x / static_cast<float>(window_.x),
-                                     size.y / static_cast<float>(window_.y));
-        window_.x *= scale;
-        window_.y *= scale;
-        origin_.x = (size.x - window_.x) / 2;
-        origin_.y = (size.y - window_.y) / 2;
+        const Vec2i actual_size = factor * new_size;
+        zoom_ = std::min(static_cast<float>(actual_size.x) / view_.x,
+                         static_cast<float>(actual_size.y) / view_.y);
+        origin_.x = (actual_size.x - view_.x * zoom_) * 0.5f;
+        origin_.y = (actual_size.y - view_.y * zoom_) * 0.5f;
     }
-    scale_.x = static_cast<float>(view_.x) / window_.x;
-    scale_.y = static_cast<float>(view_.y) / window_.y;
-    glViewport(origin_.x * factor, origin_.y * factor, window_.x * factor,
-               window_.y * factor);
-    // Set height in order to properly transform mouse coordinates.
-    window_.y = size.y;
+    window_ = new_size;
+
+    glViewport(origin_.x,
+               origin_.y,
+               new_size.x * factor - origin_.x * 2,
+               new_size.y * factor - origin_.y * 2);
 }
 
 void Renderer::bind_element_array() const
@@ -99,13 +99,14 @@ Vec2i Renderer::convert_to_flipped_view(const Vec2i& p) const
 
 Vec2i Renderer::convert_to_screen(const Vec2i& p) const
 {
-    return Vec2i(p.x / scale_.x + origin_.x, p.y / scale_.y + origin_.y);
+    return Vec2i(origin_.x + (p.x - rect_.left) * zoom_,
+                 origin_.y + (p.y - rect_.bottom) * zoom_);
 }
 
 Vec2i Renderer::convert_to_view(const Vec2i& p) const
 {
-    return Vec2i(rect_.left + (p.x - origin_.x) * scale_.x,
-                 rect_.bottom + (p.y - origin_.y) * scale_.y);
+    return Vec2i(rect_.left + p.x * scale_ - origin_.x / zoom_,
+                 rect_.bottom + p.y * scale_ - origin_.y / zoom_);
 }
 
 void Renderer::reset() const
@@ -130,7 +131,7 @@ void Renderer::unbind_all()
 }
 
 Renderer::Renderer()
-    : index_buffer_(0), scale_(1.0f, 1.0f), shader_manager_(this) {}
+    : index_buffer_(0), scale_(1.0f), zoom_(1.0f), shader_manager_(this) {}
 
 Renderer::~Renderer()
 {

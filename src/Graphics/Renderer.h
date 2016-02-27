@@ -60,7 +60,8 @@ public:
 
 private:
     unsigned int index_buffer_;
-    Vec2f scale_;
+    float scale_;
+    float zoom_;
     Vec2i origin_;
     Vec2i view_;
     Vec2i window_;
