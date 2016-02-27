@@ -118,22 +118,17 @@ end
 local ResourceFactory
 do
     local audio = rainbow.audio
-    local FMOD = FMOD
 
     local function create_font(def)
         local path, size = 1, 2
         return rainbow.font(def[path], def[size])
     end
 
-    local create_sound =
-        FMOD and function(snd)
-                     return FMOD.createSound(snd)
-                 end
-              or function(snd)
-                     return setmetatable(audio.create_sound(snd), {
-                         __gc = function(self) audio.delete_sound(self) end
-                     })
-                 end
+    local function create_sound(snd)
+        return setmetatable(audio.load_sound(snd), {
+            __gc = function(self) audio.release(self) end
+        })
+    end
 
     local function create_texture(def)
         local path = 1
