@@ -17,7 +17,7 @@ void Overlay::init(rainbow::SceneNode& parent, const Vec2i&)
 {
     const unsigned char white[4096]{0xff};
     texture_ = TextureManager::Get()->create(
-        "rainbow/heimdall/overlay",
+        "rainbow://heimdall/white",
         [data = white](TextureManager& texture_manager, const Texture& texture)
         {
             texture_manager.upload(

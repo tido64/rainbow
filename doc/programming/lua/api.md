@@ -700,7 +700,9 @@ Sets [texture atlas](#rainbowtexture).
 
 > Rainbow currently supports PNG and PVRTC.
 
-> _Note:_ Textures should be square and its sides a power of two (greater than or equal to 64). This is due to how the graphics pipeline works. Even if textures do not meet this recommendation, the graphics drivers will enlarge a texture in order to do so anyway, wasting memory. The maximum size of a texture can be queried in [``rainbow.renderer``](#rainbowrenderermax_texture_size).
+!!! note
+
+    Textures should be square and its sides a power of two (greater than or equal to 64). This is due to how the graphics pipeline works. Even if textures do not meet this recommendation, the graphics drivers will enlarge a texture in order to do so anyway, wasting memory. The maximum size of a texture can be queried in [``rainbow.renderer``](#rainbowrenderermax_texture_size).
 
 ### rainbow.texture(path)
 

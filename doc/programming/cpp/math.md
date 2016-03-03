@@ -18,7 +18,9 @@ unsigned int  next_pow2  (unsigned int i);
 
 Returns the smallest power of 2 greater than or equal to `i`.
 
-> **Note:** 0 is incorrectly considered a power of 2.
+!!! note
+
+    0 is incorrectly considered a power of 2.
 
 ## Trigonometry
 
@@ -207,6 +209,6 @@ bool  is_equal  (T a, T b);
 ```
 
 Returns whether two floating point numbers are (almost) equal. Based on the
-`AlmostEqualRelative()` implementation from a [Random ASCII blog post](1).
+`AlmostEqualRelative()` implementation from a [Random ASCII blog post][1].
 
 [1]: https://randomascii.wordpress.com/2012/02/25/comparing-floating-point-numbers-2012-edition/ "Comparing Floating Point Numbers, 2012 Edition"

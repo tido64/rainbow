@@ -34,7 +34,9 @@ the instructions in `README.md` for more details.
 | Arch Linux    | `pacman -S --needed cmake gcc libvorbis mercurial mesa openal`                    |
 | Debian/Ubuntu | `apt-get install build-essential cmake libopenal-dev libvorbis-dev mercurial mesa-common-dev` |
 
-> **Note**: The correct version of SDL will be automatically downloaded by the build script.
+!!! note
+
+    The correct version of SDL will be automatically downloaded by the build script.
 
 ### Mac OS X
 
@@ -43,14 +45,18 @@ the instructions in `README.md` for more details.
 3. Install [Homebrew](http://brew.sh/) (or [MacPorts](http://www.macports.org/)).
 4. Install the rest of the dependencies: `brew install cmake libogg libvorbis mercurial`
 
-> **Note**: The correct version of SDL will be automatically downloaded by the build script.
+!!! note
+
+    The correct version of SDL will be automatically downloaded by the build script.
 
 ### Windows
 
 1. Download and install [Visual Studio Community](http://www.visualstudio.com/en-us/products/visual-studio-community-vs).
 2. Download and install [CMake](http://www.cmake.org/download/).
 
-> **Note**: The build scripts will automatically download and set up OpenAL Soft and SDL for you.
+!!! note
+
+    The build scripts will automatically download and set up OpenAL Soft and SDL for you.
 
 ## Compiling Rainbow
 

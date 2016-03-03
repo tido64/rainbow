@@ -1,6 +1,6 @@
 site_name: Rainbow
 repo_url: https://bitbucket.org/tido/rainbow
-copyright: Copyright &copy; 2010-15 Bifrost Entertainment AS and Tommy Nguyen.
+copyright: Copyright &copy; 2010-16 Bifrost Entertainment AS and Tommy Nguyen.
 pages:
   - [index.md, Home]
   - [getting_started/quick_start.md, Getting Started, Quick Start Guide]
@@ -17,4 +17,4 @@ pages:
   - [license.md, About, License]
 theme: readthedocs
 docs_dir: doc
-markdown_extensions: [codehilite, smarty]
+markdown_extensions: [admonition, codehilite, smarty]
