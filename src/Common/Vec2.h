@@ -88,6 +88,11 @@ namespace rainbow
             return is_equal<T>(0, x) && is_equal<T>(0, y);
         }
 
+        Vec2 normal() const
+        {
+            return {-y, x};
+        }
+
         template <typename U = T>
         EnableIfIntegral<U, Vec2<float, Arithmetic<float>>> normalize() const
         {

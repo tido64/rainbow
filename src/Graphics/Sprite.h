@@ -81,6 +81,7 @@ public:
     auto pivot() const { return pivot_; }
     auto position() const { return position_; }
     auto scale() const { return scale_; }
+    auto vertex_array() const -> const SpriteVertex* { return vertex_array_; }
     auto width() const { return width_; }
 
     /// <summary>Sets sprite colour.</summary>
@@ -151,10 +152,6 @@ public:
     auto update() -> bool;
 
     Sprite& operator=(Sprite&&);
-
-#ifdef RAINBOW_TEST
-    auto vertex_array() const -> const SpriteVertex* { return vertex_array_; }
-#endif
 
 private:
     unsigned int width_;          ///< Width of sprite (not scaled).

@@ -28,6 +28,8 @@ include(${LOCAL_MODULE_PATH}/Windows.cmake)
 
 set(SOURCE_FILES
     src/Audio/Mixer.h
+    src/Collision/SAT.cpp
+    src/Collision/SAT.h
     src/Common/Algorithm.h
     src/Common/Chrono.cpp
     src/Common/Chrono.h
