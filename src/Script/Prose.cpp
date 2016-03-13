@@ -347,7 +347,7 @@ Prose* Prose::from_lua(const char* path)
     lua_createtable(L.get(), 0, 1);
     lua_pushliteral(L.get(), "screen");
     lua_createtable(L.get(), 0, 2);
-    const Vec2i& screen = Renderer::Get()->resolution();
+    const Vec2i& screen = rainbow::graphics::resolution();
     luaR_rawsetnumber(L.get(), "width", screen.x);
     luaR_rawsetnumber(L.get(), "height", screen.y);
     lua_rawset(L.get(), -3);

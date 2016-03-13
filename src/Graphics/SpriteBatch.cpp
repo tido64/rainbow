@@ -125,7 +125,8 @@ void SpriteBatch::bring_to_front(const Sprite::Ref& s)
 
 Sprite::Ref SpriteBatch::create_sprite(unsigned int width, unsigned int height)
 {
-    R_ASSERT(count_ <= Renderer::kNumSprites, "Hard-coded limit reached");
+    R_ASSERT(count_ <= rainbow::graphics::kMaxSprites,
+             "Hard-coded limit reached");
 
     if (count_ == reserved_)
     {

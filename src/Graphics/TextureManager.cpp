@@ -13,7 +13,8 @@ namespace
 #ifndef NDEBUG
     void assert_texture_size(unsigned int width, unsigned int height)
     {
-        const unsigned int max_texture_size = Renderer::max_texture_size();
+        const unsigned int max_texture_size =
+            rainbow::graphics::max_texture_size();
         R_ASSERT(width <= max_texture_size && height <= max_texture_size,
                  "Texture dimension exceeds max texture size supported by "
                  "hardware");

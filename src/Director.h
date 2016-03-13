@@ -30,7 +30,6 @@ namespace rainbow
         auto error() const { return error_; }
         auto input() -> Input& { return input_; }
         auto mixer() -> audio::Mixer& { return mixer_; }
-        auto renderer() -> Renderer& { return renderer_; }
         auto scenegraph() -> GroupNode& { return scenegraph_; }
         auto script() { return script_.get(); }
         bool terminated() const { return terminated_; }
@@ -70,7 +69,7 @@ namespace rainbow
         std::unique_ptr<GameBase> script_;
         GroupNode scenegraph_;
         Input input_;
-        Renderer renderer_;
+        graphics::State renderer_;
         audio::Mixer mixer_;
     };
 }

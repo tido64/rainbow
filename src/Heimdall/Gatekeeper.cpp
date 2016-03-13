@@ -88,7 +88,7 @@ void Gatekeeper::update(unsigned long dt)
 
 void Gatekeeper::post_init()
 {
-    const Vec2i& res = renderer().resolution();
+    const Vec2i& res = rainbow::graphics::resolution();
     const unsigned int pt = res.y / 64;
     auto console_font = make_shared<FontAtlas>(  //
         "rainbow://assets/Inconsolata.otf",
@@ -127,7 +127,7 @@ void Gatekeeper::pre_init(const Vec2i& screen)
 
 void Gatekeeper::update_components()
 {
-    const auto& projection = Renderer::Get()->projection();
+    const auto& projection = rainbow::graphics::projection();
     if (projection != projection_)
     {
         projection_ = projection;

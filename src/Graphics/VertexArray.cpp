@@ -48,7 +48,7 @@ void VertexArray::reconfigure(std::function<void()>&& array_state)
     GLuint array;
     glGenVertexArrays(1, &array);
     glBindVertexArray(array);
-    Renderer::Get()->bind_element_array();
+    rainbow::graphics::bind_element_array();
     array_state();
     glBindVertexArray(0);
     if (array_)

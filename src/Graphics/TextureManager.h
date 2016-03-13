@@ -12,6 +12,11 @@
 
 #define RAINBOW_RECORD_VMEM_USAGE !defined(NDEBUG) || defined(USE_HEIMDALL)
 
+namespace rainbow { namespace graphics
+{
+    struct State;
+}}
+
 /// <summary>Manages texture resources.</summary>
 class TextureManager : public Global<TextureManager>
 {
@@ -128,8 +133,8 @@ private:
     void update_usage();
 #endif
 
-    friend class Renderer;
     friend rainbow::Texture;
+    friend rainbow::graphics::State;
 };
 
 #endif

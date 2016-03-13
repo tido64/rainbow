@@ -125,19 +125,19 @@ bool RainbowController::run()
                 break;
             case SDL_MOUSEMOTION:
                 on_mouse_motion(event.motion.state,
-                                director_.renderer().convert_to_flipped_view(
+                                rainbow::graphics::convert_to_flipped_view(
                                     Vec2i(event.motion.x, event.motion.y)),
                                 event.motion.timestamp);
                 break;
             case SDL_MOUSEBUTTONDOWN:
                 on_mouse_down(event.button.button,
-                              director_.renderer().convert_to_flipped_view(
+                              rainbow::graphics::convert_to_flipped_view(
                                   Vec2i(event.button.x, event.button.y)),
                               event.button.timestamp);
                 break;
             case SDL_MOUSEBUTTONUP:
                 on_mouse_up(event.button.button,
-                            director_.renderer().convert_to_flipped_view(
+                            rainbow::graphics::convert_to_flipped_view(
                                 Vec2i(event.button.x, event.button.y)),
                             event.button.timestamp);
                 break;
@@ -260,9 +260,9 @@ void RainbowController::on_mouse_up(uint32_t button,
 void RainbowController::on_window_resized()
 {
     const Vec2i& size = context_.window_size();
-    if (size == director_.renderer().window_size())
+    if (size == rainbow::graphics::window_size())
         return;
 
     const Vec2i& viewport = context_.drawable_size();
-    director_.renderer().set_window_size(size, viewport.x / size.x);
+    rainbow::graphics::set_window_size(size, viewport.x / size.x);
 }

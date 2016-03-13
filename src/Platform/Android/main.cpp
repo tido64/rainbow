@@ -53,7 +53,7 @@ void android_init_display(AInstance*);
 void android_handle_event(struct android_app*, int32_t cmd);
 int32_t android_handle_input(struct android_app*, AInputEvent*);
 int32_t android_handle_motion(struct android_app*, AInputEvent*);
-Pointer get_pointer_event(Renderer&, AInputEvent*, int32_t index);
+Pointer get_pointer_event(AInputEvent*, int32_t index);
 
 namespace
 {
@@ -343,7 +343,7 @@ int32_t android_handle_motion(struct android_app* app, AInputEvent* event)
             const int32_t index = (AMotionEvent_getAction(event) &
                                    AMOTION_EVENT_ACTION_POINTER_INDEX_MASK) >>
                                   AMOTION_EVENT_ACTION_POINTER_INDEX_SHIFT;
-            Pointer p = get_pointer_event(director->renderer(), event, index);
+            Pointer p = get_pointer_event(event, index);
             director->input().on_pointer_began(ArrayView<Pointer>(p));
             break;
         }
@@ -352,7 +352,7 @@ int32_t android_handle_motion(struct android_app* app, AInputEvent* event)
             const int32_t index = (AMotionEvent_getAction(event) &
                                    AMOTION_EVENT_ACTION_POINTER_INDEX_MASK) >>
                                   AMOTION_EVENT_ACTION_POINTER_INDEX_SHIFT;
-            Pointer p = get_pointer_event(director->renderer(), event, index);
+            Pointer p = get_pointer_event(event, index);
             director->input().on_pointer_ended(ArrayView<Pointer>(p));
             break;
         }
@@ -360,7 +360,7 @@ int32_t android_handle_motion(struct android_app* app, AInputEvent* event)
             const size_t count = AMotionEvent_getPointerCount(event);
             auto pointers = std::make_unique<Pointer[]>(count);
             for (size_t i = 0; i < count; ++i)
-                pointers[i] = get_pointer_event(director->renderer(), event, i);
+                pointers[i] = get_pointer_event(event, i);
             director->input().on_pointer_moved(
                 ArrayView<Pointer>(pointers, count));
             break;
@@ -375,9 +375,9 @@ int32_t android_handle_motion(struct android_app* app, AInputEvent* event)
     return 1;
 }
 
-Pointer get_pointer_event(Renderer& renderer, AInputEvent* event, int32_t index)
+Pointer get_pointer_event(AInputEvent* event, int32_t index)
 {
-    const Vec2i& point = renderer.convert_to_flipped_view(Vec2i(
+    const Vec2i& point = rainbow::graphics::convert_to_flipped_view(Vec2i(
         AMotionEvent_getX(event, index), AMotionEvent_getY(event, index)));
     return Pointer(AMotionEvent_getPointerId(event, index),
                    point.x,

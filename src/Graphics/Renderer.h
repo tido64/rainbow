@@ -5,25 +5,51 @@
 #ifndef GRAPHICS_RENDERER_H_
 #define GRAPHICS_RENDERER_H_
 
-#include <array>
-
 #include "Common/Geometry.h"
 #include "Graphics/ShaderManager.h"
 #include "Graphics/TextureManager.h"
 
-struct SpriteVertex;
-
-namespace rainbow { class Director; }
-
-class Renderer : public Global<Renderer>
+namespace rainbow { namespace graphics
 {
-public:
-    static const size_t kNumSprites = 256;  ///< Hard-coded limit on number of sprites.
+    ///<summary>Hard-coded limit on number of sprites.</summary>
+    static constexpr size_t kMaxSprites = 4096;
 
-    static void clear();
+    struct State
+    {
+        unsigned int index_buffer = 0;
+        float scale = 1.0f;
+        float zoom = 1.0f;
+        Vec2i origin;
+        Vec2i view;
+        Vec2i window;
+        Rect rect;
+        TextureManager texture_manager;
+        ShaderManager shader_manager;
+
+        ~State();
+
+        bool initialize();
+    };
+
+    auto max_texture_size() -> int;
+    auto projection() -> const Rect&;
+    auto resolution() -> const Vec2i&;
+    auto window_size() -> const Vec2i&;
+
+    void set_projection(const Rect&);
+    void set_resolution(const Vec2i& resolution);
+    void set_window_size(const Vec2i& size, float factor = 1.0f);
+
+    void bind_element_array();
+
+    void clear();
+
+    auto convert_to_flipped_view(const Vec2i&) -> Vec2i;
+    auto convert_to_screen(const Vec2i&) -> Vec2i;
+    auto convert_to_view(const Vec2i&) -> Vec2i;
 
     template <typename T>
-    static void draw(const T& obj)
+    void draw(const T& obj)
     {
         obj.vertex_array().bind();
         obj.bind_textures();
@@ -32,49 +58,17 @@ public:
     }
 
     template <typename T>
-    static void draw_arrays(const T& obj, int first, size_t count)
+    void draw_arrays(const T& obj, int first, size_t count)
     {
         obj.vertex_array().bind();
         obj.bind_textures();
         glDrawArrays(GL_TRIANGLES, first, count);
     }
 
-    static bool has_extension(const char* extension);
-    static int max_texture_size();
+    bool has_extension(const char* extension);
 
-    const rainbow::Rect& projection() const { return rect_; }
-    void set_projection(const rainbow::Rect&);
-
-    const Vec2i& resolution() const { return view_; }
-    void set_resolution(const Vec2i& resolution);
-
-    const Vec2i& window_size() const { return window_; }
-    void set_window_size(const Vec2i& size, float factor = 1.0f);
-
-    void bind_element_array() const;
-    Vec2i convert_to_flipped_view(const Vec2i&) const;
-    Vec2i convert_to_screen(const Vec2i&) const;
-    Vec2i convert_to_view(const Vec2i&) const;
-    void reset() const;
+    void reset();
     void unbind_all();
-
-private:
-    unsigned int index_buffer_;
-    float scale_;
-    float zoom_;
-    Vec2i origin_;
-    Vec2i view_;
-    Vec2i window_;
-    rainbow::Rect rect_;
-    TextureManager texture_manager_;
-    ShaderManager shader_manager_;
-
-    Renderer();
-    ~Renderer();
-
-    bool init();
-
-    friend rainbow::Director;
-};
+}}  // namespace rainbow::graphics
 
 #endif

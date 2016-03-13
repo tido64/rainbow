@@ -63,7 +63,7 @@ namespace
     private:
         Label& label_;
 
-        void draw_impl() const override { Renderer::draw(label_); }
+        void draw_impl() const override { rainbow::graphics::draw(label_); }
 
         void move_impl(const Vec2f& delta) const override
         {
@@ -84,7 +84,10 @@ namespace
     private:
         SpriteBatch& sprite_batch_;
 
-        void draw_impl() const override { Renderer::draw(sprite_batch_); }
+        void draw_impl() const override
+        {
+            rainbow::graphics::draw(sprite_batch_);
+        }
 
         void move_impl(const Vec2f& delta) const override
         {

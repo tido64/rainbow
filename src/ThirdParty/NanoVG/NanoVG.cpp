@@ -46,13 +46,12 @@ Canvas::~Canvas() { nvgDeleteContext(context_); }
 void Canvas::draw_impl()
 {
     ShaderManager::Context context;
-    auto renderer = Renderer::Get();
-    renderer->unbind_all();
+    rainbow::graphics::unbind_all();
 
-    const Vec2i& res = renderer->resolution();
+    const Vec2i& res = rainbow::graphics::resolution();
     nvgBeginFrame(context_, res.x, res.y, 1.0f);
     paint_impl();
     nvgEndFrame(context_);
 
-    renderer->reset();
+    rainbow::graphics::reset();
 }

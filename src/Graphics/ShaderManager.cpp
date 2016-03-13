@@ -174,7 +174,7 @@ void ShaderManager::update_projection()
     // Where <c>b</c> = bottom, <c>f</c> = far, <c>l</c> = left, <c>n</c> =
     // near, <c>r</c> = right, <c>t</c> = top, and near = -1.0 and far = 1.0.
     // The matrix is stored in column-major order.
-    const auto& rect = renderer_->projection();
+    const auto& rect = rainbow::graphics::projection();
     const float projection[]{
         2.0f / (rect.right - rect.left), 0.0f, 0.0f, 0.0f,
         0.0f, 2.0f / (rect.top - rect.bottom), 0.0f, 0.0f,
@@ -227,9 +227,6 @@ void ShaderManager::use(unsigned int program)
 #endif  // !USE_VERTEX_ARRAY_OBJECT
     }
 }
-
-ShaderManager::ShaderManager(Renderer* renderer)
-    : current_(kInvalidProgram), renderer_(renderer) {}
 
 bool ShaderManager::init()
 {

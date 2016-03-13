@@ -95,7 +95,7 @@ void PerformanceOverlay::init_button(const Vec2f& p,
 
 void PerformanceOverlay::init_graph(SharedPtr<FontAtlas> font)
 {
-    const Vec2i& res = Renderer::Get()->resolution();
+    const Vec2i& res = rainbow::graphics::resolution();
     const float x = spacing(res);
     const float x0 = res.x - x * 3 + x / 5;
     const float y0 = x + font->height() * (2.0f / 3.0f);
@@ -183,7 +183,7 @@ void PerformanceOverlay::update_impl(unsigned long dt)
 
 void PerformanceOverlay::paint_impl()
 {
-    const Vec2i& res = Renderer::Get()->resolution();
+    const Vec2i& res = rainbow::graphics::resolution();
     const float x = spacing(res);
     const float width = res.x - x * 4;
     const float height = x * 4;

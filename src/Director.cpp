@@ -24,7 +24,7 @@ namespace rainbow
     {
         if (!mixer_.initialize(kMaxAudioChannels))
             terminate("Failed to initialise audio engine");
-        else if (!renderer_.init())
+        else if (!renderer_.initialize())
             terminate("Failed to initialise renderer");
 #if USE_NODE_TAGS
         scenegraph_.set_tag("root");
@@ -39,7 +39,7 @@ namespace rainbow
 
     void Director::draw()
     {
-        Renderer::clear();
+        graphics::clear();
         scenegraph_.draw();
 #ifdef USE_PHYSICS
         b2::DebugDraw::Draw();
@@ -49,7 +49,7 @@ namespace rainbow
     void Director::init(const Vec2i& screen)
     {
         random.seed();
-        renderer_.set_resolution(screen);
+        graphics::set_resolution(screen);
         script_ = GameBase::create(*this);
         script_->init(screen);
 

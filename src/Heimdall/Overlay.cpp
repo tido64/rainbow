@@ -54,4 +54,4 @@ void Overlay::update(const rainbow::Rect& projection)
     vertex_buffer_.upload(vertices, sizeof(vertices));
 }
 
-void Overlay::draw_impl() { Renderer::draw(*this); }
+void Overlay::draw_impl() { rainbow::graphics::draw(*this); }

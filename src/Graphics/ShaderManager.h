@@ -12,18 +12,22 @@
 #include "Graphics/OpenGL.h"
 #include "Graphics/ShaderDetails.h"
 
-class Renderer;
+namespace rainbow
+{
+    namespace graphics
+    {
+        struct State;
+    }
 
-namespace rainbow { struct ISolemnlySwearThatIAmOnlyTesting; }
+    struct ISolemnlySwearThatIAmOnlyTesting;
+}
 
 class ShaderManager : public Global<ShaderManager>
 {
-    friend Renderer;
-
 public:
     enum
     {
-        kInvalidProgram = 0,
+        kInvalidProgram,
         kDefaultProgram
     };
 
@@ -41,7 +45,7 @@ public:
     };
 
     ShaderManager(const rainbow::ISolemnlySwearThatIAmOnlyTesting&)
-        : ShaderManager(nullptr)
+        : ShaderManager()
     {
         make_global();
     }
@@ -82,13 +86,14 @@ public:
 
 private:
     unsigned int current_;                   ///< Currently used program.
-    Renderer* renderer_;
     std::vector<Shader::Details> programs_;  ///< Linked shader programs.
     std::vector<unsigned int> shaders_;      ///< Compiled shaders.
 
-    ShaderManager(Renderer*);
+    ShaderManager() : current_(kInvalidProgram) {}
 
     bool init();
+
+    friend rainbow::graphics::State;
 };
 
 #endif

@@ -45,10 +45,10 @@ namespace
         rainbow::lua::Argument<lua_Number>::is_required(L, 3);
         rainbow::lua::Argument<lua_Number>::is_required(L, 4);
 
-        Renderer::Get()->set_projection({lua_tonumber(L, 1),
-                                         lua_tonumber(L, 2),
-                                         lua_tonumber(L, 3),
-                                         lua_tonumber(L, 4)});
+        rainbow::graphics::set_projection({lua_tonumber(L, 1),
+                                           lua_tonumber(L, 2),
+                                           lua_tonumber(L, 3),
+                                           lua_tonumber(L, 4)});
         return 0;
     }
 }
@@ -61,13 +61,12 @@ NS_RAINBOW_LUA_MODULE_BEGIN(renderer)
         lua_pushliteral(L, "renderer");
         lua_createtable(L, 0, 5);
 
-        luaR_rawsetinteger(
-            L, "max_texture_size", ::Renderer::max_texture_size());
+        luaR_rawsetinteger(L, "max_texture_size", graphics::max_texture_size());
 
         luaR_rawsetboolean(
             L,
             "supports_pvrtc",
-            ::Renderer::has_extension("GL_IMG_texture_compression_pvrtc"));
+            graphics::has_extension("GL_IMG_texture_compression_pvrtc"));
 
         luaR_rawsetcfunction(L, "set_clear_color", &set_clear_color);
         luaR_rawsetcfunction(L, "set_filter", &set_filter);

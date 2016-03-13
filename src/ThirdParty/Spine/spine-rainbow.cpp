@@ -337,7 +337,10 @@ void Skeleton::set_skin(const char* skin)
     spSkeleton_setToSetupPose(skeleton_);
 }
 
-void Skeleton::draw() { Renderer::Get()->draw_arrays(*this, 0, num_vertices_); }
+void Skeleton::draw()
+{
+    rainbow::graphics::draw_arrays(*this, 0, num_vertices_);
+}
 
 void Skeleton::update(unsigned long dt)
 {

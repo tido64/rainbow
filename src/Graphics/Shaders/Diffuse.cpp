@@ -85,7 +85,7 @@ namespace rainbow { namespace shaders
     {
         ShaderManager::Context context;
         ShaderManager::Get()->use(program_);
-        auto&& p = Renderer::Get()->convert_to_screen(Vec2i(x, y));
+        auto&& p = graphics::convert_to_screen(Vec2i(x, y));
         glUniform3f(position_, p.x, p.y, z);
     }
 }}  // namespace rainbow::shaders
