@@ -8,7 +8,7 @@
 #include <cstdlib>
 
 #include "Lua/LuaMacros.h"
-#include "Memory/ArrayView.h"
+#include "Memory/Array.h"
 
 class Acceleration;
 struct Pointer;

@@ -2,7 +2,7 @@
 #define GRAPHICS_TRANSFORM_H_
 
 #include "Common/Vec2.h"
-#include "Memory/ArrayView.h"
+#include "Memory/Array.h"
 
 namespace rainbow { namespace graphics
 {
@@ -28,7 +28,7 @@ namespace rainbow { namespace graphics
     void transform(const Vec2<Float>(&quad)[4],
                    const Vec2<Float>& position,
                    const Vec2<Float>& scale,
-                   ArrayView<Vertex> data)
+                   ArraySpan<Vertex> data)
     {
         data[0].position = transform_st(quad[0], scale, position);
         data[1].position = transform_st(quad[1], scale, position);
@@ -41,7 +41,7 @@ namespace rainbow { namespace graphics
                    const Vec2<Float>& position,
                    const Vec2<Float>& s_sin_r,
                    const Vec2<Float>& s_cos_r,
-                   ArrayView<Vertex> data)
+                   ArraySpan<Vertex> data)
     {
         data[0].position = transform_srt(quad[0], s_sin_r, s_cos_r, position);
         data[1].position = transform_srt(quad[1], s_sin_r, s_cos_r, position);
@@ -54,7 +54,7 @@ namespace rainbow { namespace graphics
                    const Vec2<Float>& position,
                    Float angle,
                    const Vec2<Float>& scale,
-                   ArrayView<Vertex> data)
+                   ArraySpan<Vertex> data)
     {
         if (!rainbow::is_equal(angle, 0.0f))
         {
@@ -73,7 +73,7 @@ namespace rainbow { namespace graphics
     }
 
     template <typename T, typename Vertex>
-    void transform(const T& sprite, ArrayView<Vertex> data)
+    void transform(const T& sprite, ArraySpan<Vertex> data)
     {
         Vec2f quad[4];
         quad[0].x = sprite.width() * -sprite.pivot().x;

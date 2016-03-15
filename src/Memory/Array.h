@@ -1,32 +1,31 @@
-#ifndef MEMORY_ARRAYVIEW_H_
-#define MEMORY_ARRAYVIEW_H_
+#ifndef MEMORY_ARRAY_H_
+#define MEMORY_ARRAY_H_
 
 #include <cstddef>
 
 #include "Memory/NotNull.h"
 
 template <typename T>
-class ArrayView
+class ArraySpan
 {
 public:
-    constexpr ArrayView() : ArrayView(nullptr) {}
+    constexpr ArraySpan() : ArraySpan(nullptr) {}
 
-    constexpr ArrayView(std::nullptr_t) : size_(0), data_(nullptr) {}
+    constexpr ArraySpan(std::nullptr_t) : size_(0), data_(nullptr) {}
 
-    constexpr ArrayView(std::nullptr_t, size_t)
-        : size_(0), data_(nullptr) {}
+    constexpr ArraySpan(std::nullptr_t, size_t) : size_(0), data_(nullptr) {}
 
-    constexpr ArrayView(T& data) : ArrayView(&data, 1) {}
+    constexpr ArraySpan(T& data) : ArraySpan(&data, 1) {}
 
     template <size_t N>
-    constexpr ArrayView(const T (&data)[N])
-        : ArrayView(data, N) {}
+    constexpr ArraySpan(const T (&data)[N])
+        : ArraySpan(data, N) {}
 
-    constexpr ArrayView(NotNull<T*> data, size_t size)
+    constexpr ArraySpan(NotNull<T*> data, size_t size)
         : size_(size), data_(data) {}
 
-    constexpr ArrayView(const std::unique_ptr<T[]>& data, size_t size)
-        : ArrayView(data.get(), size) {}
+    constexpr ArraySpan(const std::unique_ptr<T[]>& data, size_t size)
+        : ArraySpan(data.get(), size) {}
 
     auto data() const -> const T* { return data_; }
     bool empty() const { return size_ == 0; }
@@ -45,5 +44,8 @@ private:
     size_t size_;
     T* data_;
 };
+
+template <typename T>
+using ArrayView = ArraySpan<const T>;
 
 #endif

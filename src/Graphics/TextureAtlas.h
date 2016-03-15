@@ -9,7 +9,7 @@
 
 #include "Common/DataMap.h"
 #include "Graphics/Texture.h"
-#include "Memory/ArrayView.h"
+#include "Memory/Array.h"
 #include "Memory/SharedPtr.h"
 
 class TextureManager;
@@ -61,7 +61,7 @@ public:
     ///   Replaces the current set of texture regions with the set in the
     ///   specified array.
     /// </summary>
-    void set_regions(const ArrayView<const int>& rectangles);
+    void set_regions(const ArrayView<int>& rectangles);
 
     /// <summary>
     ///   Replaces the current set of texture regions with the set in the
@@ -70,7 +70,7 @@ public:
     template <size_t N>
     void set_regions(const int (&rectangles)[N])
     {
-        set_regions(ArrayView<const int>(N, rectangles));
+        set_regions(ArrayView<int>(N, rectangles));
     }
 
     /// <summary>Trims the internal texture region storage.</summary>

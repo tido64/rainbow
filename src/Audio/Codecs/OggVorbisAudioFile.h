@@ -17,14 +17,14 @@
 #endif
 
 #include "Audio/AudioFile.h"
-#include "Memory/ArrayView.h"
+#include "Memory/Array.h"
 
 namespace rainbow { namespace audio
 {
     class OggVorbisAudioFile final : public IAudioFile
     {
     public:
-        static bool signature_matches(const ArrayView<const char>& signature);
+        static bool signature_matches(const ArrayView<char>& signature);
 
         OggVorbisAudioFile(File&&);
         ~OggVorbisAudioFile() override;

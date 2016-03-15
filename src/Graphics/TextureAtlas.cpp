@@ -53,7 +53,7 @@ auto TextureAtlas::add_region(int x, int y, int w, int h) -> unsigned int
     return i;
 }
 
-void TextureAtlas::set_regions(const ArrayView<const int>& rects)
+void TextureAtlas::set_regions(const ArrayView<int>& rects)
 {
     R_ASSERT(rects.size() % 4 == 0,
              "Rectangle data size must be a multiple of 4");

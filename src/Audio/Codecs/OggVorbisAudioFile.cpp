@@ -51,7 +51,7 @@ namespace
     }
 }
 
-bool OggVorbisAudioFile::signature_matches(const ArrayView<const char>& id)
+bool OggVorbisAudioFile::signature_matches(const ArrayView<char>& id)
 {
     const size_t size = array_size(kIdOggVorbis);
     return id.size() >= size && strncmp(id.begin(), kIdOggVorbis, size) == 0;

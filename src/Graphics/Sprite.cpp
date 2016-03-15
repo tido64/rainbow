@@ -217,7 +217,7 @@ auto Sprite::update() -> bool
             center_ = position_;
 
         rainbow::graphics::transform(
-            *this, ArrayView<SpriteVertex>(vertex_array_, 4));
+            *this, ArraySpan<SpriteVertex>(vertex_array_, 4));
     }
     else if (state_ & kStalePosition)
     {

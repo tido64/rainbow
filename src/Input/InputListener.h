@@ -6,7 +6,7 @@
 #define INPUT_INPUTLISTENER_H_
 
 #include "Common/Link.h"
-#include "Memory/ArrayView.h"
+#include "Memory/Array.h"
 
 struct ControllerAxisMotion;
 struct ControllerButton;
