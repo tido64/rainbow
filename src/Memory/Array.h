@@ -24,9 +24,6 @@ public:
     constexpr ArraySpan(NotNull<T*> data, size_t size)
         : size_(size), data_(data) {}
 
-    constexpr ArraySpan(const std::unique_ptr<T[]>& data, size_t size)
-        : ArraySpan(data.get(), size) {}
-
     auto data() const -> const T* { return data_; }
     bool empty() const { return size_ == 0; }
     auto size() const { return size_; }

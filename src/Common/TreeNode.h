@@ -58,7 +58,7 @@ public:
     ///   Recursively calls function <paramref name="f"/> on
     ///   <paramref name="node"/> and its children.
     /// </summary>
-    template <typename U, typename F, typename Enable, typename... Args>
+    template <typename U, typename F, typename... Args>
     friend void for_each(U& node, F&& f, Args&&... args);
 
 protected:
@@ -96,7 +96,6 @@ protected:
 
 template <typename T,
           typename F,
-          typename = EnableIfBaseOf<TreeNode<PlainType<T>>, PlainType<T>>,
           typename... Args>
 void for_each(T& node, F&& f, Args&&... args)
 {

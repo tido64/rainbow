@@ -22,7 +22,7 @@
 #include "Input/Input.h"
 #include "Input/Pointer.h"
 
-ANativeActivity* gNativeActivity;
+ANativeActivity* g_native_activity;
 
 struct AInstance
 {
@@ -85,7 +85,7 @@ void android_main(struct android_app* state)
     state->onAppCmd = android_handle_event;
     state->onInputEvent = android_handle_input;
     ainstance.app = state;
-    gNativeActivity = state->activity;
+    g_native_activity = state->activity;
     Path::set_current();
 
     // Prepare to monitor accelerometer
@@ -362,7 +362,7 @@ int32_t android_handle_motion(struct android_app* app, AInputEvent* event)
             for (size_t i = 0; i < count; ++i)
                 pointers[i] = get_pointer_event(event, i);
             director->input().on_pointer_moved(
-                ArrayView<Pointer>(pointers, count));
+                ArrayView<Pointer>(pointers.get(), count));
             break;
         }
         case AMOTION_EVENT_ACTION_CANCEL:

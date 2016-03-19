@@ -29,7 +29,7 @@
 #include "Common/Logging.h"
 
 #ifdef RAINBOW_OS_ANDROID
-extern ANativeActivity* gNativeActivity;
+extern ANativeActivity* g_native_activity;
 #endif
 
 namespace
@@ -133,10 +133,10 @@ const char* Path::current()
 void Path::set_current()
 {
 #ifdef RAINBOW_OS_ANDROID
-    const char* data_path = gNativeActivity->externalDataPath;
+    const char* data_path = g_native_activity->externalDataPath;
     if (!data_path)
     {
-        data_path = gNativeActivity->internalDataPath;
+        data_path = g_native_activity->internalDataPath;
         if (!data_path)
             return;
     }

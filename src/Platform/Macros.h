@@ -51,8 +51,10 @@
 #   define UNREACHABLE() __assume(0)
 #endif
 
-// TODO: Workaround for missing std::rbegin/rend in Android NDK.
+// TODO: Workaround for missing C++14 features in Android NDK.
 #ifdef RAINBOW_OS_ANDROID
+#include <cmath>  // std::round
+
 namespace std
 {
     template <typename T>
@@ -60,6 +62,8 @@ namespace std
 
     template <typename T>
     auto rend(T& container) { return container.rend(); }
+
+    using ::round;
 }
 #endif  // RAINBOW_OS_ANDROID
 

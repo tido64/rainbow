@@ -10,11 +10,6 @@
 
 #include "Memory/SharedPtr.h"
 
-#if defined(RAINBOW_OS_ANDROID)
-// Workaround for max_align_t not being defined in namespace std.
-namespace std { using ::max_align_t; }
-#endif
-
 namespace rainbow
 {
     /// <summary>Linear allocator for use with scope stack allocation.</summary>

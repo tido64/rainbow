@@ -15,7 +15,7 @@
 #include "FileSystem/Path.h"
 
 #if defined(RAINBOW_OS_ANDROID)
-extern ANativeActivity* gNativeActivity;
+extern ANativeActivity* g_native_activity;
 #elif defined(RAINBOW_OS_WINDOWS)
 #   define fileno _fileno
 #endif
@@ -92,7 +92,7 @@ File::File(const char* path) : is_asset_(true), stream_(nullptr)
 
 #ifdef RAINBOW_OS_ANDROID
     asset_ = AAssetManager_open(
-        gNativeActivity->assetManager, path, AASSET_MODE_UNKNOWN);
+        g_native_activity->assetManager, path, AASSET_MODE_UNKNOWN);
 #else
     stream_ = fopen(path, "rb");
 #endif

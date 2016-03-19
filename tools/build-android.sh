@@ -100,7 +100,7 @@ LOCAL_C_INCLUDES        := \$(LOCAL_PATH)/src \$(LOCAL_PATH)/lib \\
                            \$(LOCAL_PATH)/lib/spine-runtimes/spine-c/include \\
                            $NDK_HOME/sources/android/native_app_glue
 LOCAL_CFLAGS            := $@
-LOCAL_CPPFLAGS          := -std=gnu++1y -Wall -Wextra -Woverloaded-virtual -Wsign-promo -fno-rtti -fno-exceptions
+LOCAL_CPPFLAGS          := -std=c++14 -Wall -Wextra -Woverloaded-virtual -Wsign-promo -fno-rtti -fno-exceptions
 LOCAL_STATIC_LIBRARIES  := android_native_app_glue
 LOCAL_SHARED_LIBRARIES  := fmodstudio fmod
 LOCAL_LDLIBS            := -landroid -lEGL -lGLESv2 -llog -lz
@@ -175,5 +175,5 @@ cat > AndroidManifest.xml << ANDROIDMANIFEST_XML
 ANDROIDMANIFEST_XML
 echo " done"
 
-NDK_DEBUG=${NDK_DEBUG:-1} NDK_TOOLCHAIN_VERSION=4.9 ndk-build -j &&
+NDK_DEBUG=${NDK_DEBUG:-1} NDK_TOOLCHAIN_VERSION=clang ndk-build -j &&
 ant debug

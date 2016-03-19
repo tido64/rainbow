@@ -6,6 +6,7 @@
 
 package com.bifrostentertainment.rainbow;
 
+import android.annotation.TargetApi;
 import android.app.NativeActivity;
 import android.os.Build;
 import android.os.Bundle;
@@ -46,6 +47,7 @@ public class RainbowActivity extends NativeActivity
         super.onDestroy();
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
@@ -74,8 +76,7 @@ public class RainbowActivity extends NativeActivity
     @Override
     public void onSystemUiVisibilityChange(int visibility) {
         if (BuildConfig.DEBUG && !kShouldDimSystemUI) {
-            throw new RuntimeException(
-                    "Not supposed to enter low profile mode.");
+            throw new RuntimeException("Not supposed to enter low profile mode.");
         }
         if ((visibility & View.SYSTEM_UI_FLAG_LOW_PROFILE) != 0) {
             return;
@@ -104,8 +105,7 @@ public class RainbowActivity extends NativeActivity
 
     private void dimSystemUI() {
         if (BuildConfig.DEBUG && !kShouldDimSystemUI) {
-            throw new RuntimeException(
-                    "Not supposed to enter low profile mode.");
+            throw new RuntimeException("Not supposed to enter low profile mode.");
         }
         contentView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
     }
