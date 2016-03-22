@@ -80,7 +80,7 @@ public:
 #endif  // RAINBOW_TEST
 
 private:
-    std::bitset<static_cast<unsigned>(rainbow::VirtualKey::NumKeys)> keys_;
+    std::bitset<static_cast<unsigned>(rainbow::VirtualKey::KeyCount)> keys_;
     Acceleration acceleration_;  ///< Accelerometer data
     InputListener* last_listener_;
 

@@ -45,7 +45,7 @@ NS_RAINBOW_LUA_MODULE_BEGIN(input)
             const unsigned key = static_cast<unsigned>(lua_tointeger(L, 1));
             lua_pushboolean(
                 L,
-                key < static_cast<unsigned>(VirtualKey::NumKeys) &&
+                key < static_cast<unsigned>(VirtualKey::KeyCount) &&
                     Input::Get()->is_down(static_cast<VirtualKey>(key)));
             return 1;
         }
