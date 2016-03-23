@@ -135,6 +135,17 @@ namespace rainbow
     };
 
     /// <summary>
+    ///   Returns key code for the corresponding <see cref="VirtualKey"/>
+    ///   according to the current keyboard layout.
+    /// </summary>
+    int to_keycode(VirtualKey);
+
+    /// <summary>
+    ///   Returns scan code for the corresponding <see cref="VirtualKey"/>.
+    /// </summary>
+    int to_scancode(VirtualKey);
+
+    /// <summary>
     ///   Converts a platform key event to a <see cref="VirtualKey"/>.
     /// </summary>
     template <typename T>
