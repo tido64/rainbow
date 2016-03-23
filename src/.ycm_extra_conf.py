@@ -61,7 +61,7 @@ def ProjectFlags():
     '-fno-rtti',
     '-fno-exceptions',
   ]
-  flags.extend(SystemIncludeDirectoryFlags())
+  #flags.extend(SystemIncludeDirectoryFlags())
   return flags
 
 cxx_flags = ProjectFlags()
