@@ -70,6 +70,8 @@ set(SOURCE_FILES
     src/Graphics/Decoders/PVRTC.h
     src/Graphics/Decoders/SVG.h
     src/Graphics/Drawable.h
+    src/Graphics/ElementBuffer.cpp
+    src/Graphics/ElementBuffer.h
     src/Graphics/FontAtlas.cpp
     src/Graphics/FontAtlas.h
     src/Graphics/FontGlyph.h

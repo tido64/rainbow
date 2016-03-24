@@ -6,6 +6,7 @@
 #define GRAPHICS_RENDERER_H_
 
 #include "Common/Geometry.h"
+#include "Graphics/ElementBuffer.h"
 #include "Graphics/ShaderManager.h"
 #include "Graphics/TextureManager.h"
 
@@ -16,13 +17,13 @@ namespace rainbow { namespace graphics
 
     struct State
     {
-        unsigned int index_buffer = 0;
         float scale = 1.0f;
         float zoom = 1.0f;
         Vec2i origin;
         Vec2i view;
         Vec2i window;
         Rect rect;
+        ElementBuffer element_buffer;
         TextureManager texture_manager;
         ShaderManager shader_manager;
 

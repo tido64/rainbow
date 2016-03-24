@@ -31,14 +31,8 @@ namespace
 
 State::~State()
 {
-    if (index_buffer == 0)
-        return;
-
     if (this == g_state)
         g_state = nullptr;
-
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-    glDeleteBuffers(1, &index_buffer);
 }
 
 bool State::initialize()
@@ -67,12 +61,10 @@ bool State::initialize()
         sizeof(kDefaultIndices) == kMaxSprites * 6 * sizeof(kDefaultIndices[0]),
         "Number of indices do not match set number of sprites");
 
-    glGenBuffers(1, &index_buffer);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffer);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-                 sizeof(kDefaultIndices),
-                 kDefaultIndices,
-                 GL_STATIC_DRAW);
+    unsigned int buffer;
+    glGenBuffers(1, &buffer);
+    element_buffer = buffer;
+    element_buffer.upload(kDefaultIndices, sizeof(kDefaultIndices));
 
     const bool success = glGetError() == GL_NO_ERROR;
     if (success)
@@ -163,7 +155,7 @@ void graphics::set_window_size(const Vec2i& new_size, float factor)
 
 void graphics::bind_element_array()
 {
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, g_state->index_buffer);
+    g_state->element_buffer.bind();
 }
 
 void graphics::clear()
