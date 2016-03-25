@@ -147,8 +147,6 @@
 		196CB728161E4ADD0068C809 /* Gatekeeper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 196CB725161E4ADD0068C809 /* Gatekeeper.cpp */; };
 		196CB72F161E4D940068C809 /* b2MotorJoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 196CB72D161E4D940068C809 /* b2MotorJoint.cpp */; };
 		197396DD15A505F60064BF7D /* TextureManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 197396DB15A505F60064BF7D /* TextureManager.cpp */; };
-		198644BC1B531C4A004378CF /* NanoVG.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 198644BA1B531C4A004378CF /* NanoVG.cpp */; };
-		198644C01B531CBD004378CF /* PerformanceOverlay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 198644BE1B531CBD004378CF /* PerformanceOverlay.cpp */; };
 		198644C31B531CDD004378CF /* LyricalLabel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 198644C11B531CDD004378CF /* LyricalLabel.cpp */; };
 		198644C81B531D19004378CF /* nanovg.c in Sources */ = {isa = PBXBuildFile; fileRef = 198644C61B531D19004378CF /* nanovg.c */; };
 		19865982175E98F700723171 /* Data.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19865981175E98F700723171 /* Data.cpp */; };
@@ -193,6 +191,8 @@
 		19AF58A0167FFA0800F54B27 /* Overlay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19AF589C167FFA0800F54B27 /* Overlay.cpp */; };
 		19D045AA18071D6D00968F00 /* Chrono.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19D045A918071D6D00968F00 /* Chrono.cpp */; };
 		19D9318A1834AFCE00F0137E /* ChangeMonitor_Stub.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19D931871834AFCE00F0137E /* ChangeMonitor_Stub.cpp */; };
+		19DB48B61CA6A4BD00999675 /* ImGuiHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19DB48B41CA6A4BD00999675 /* ImGuiHelper.cpp */; };
+		19DB48B91CA6AAFE00999675 /* ElementBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19DB48B71CA6AAFE00999675 /* ElementBuffer.cpp */; };
 		19DCB2731741A1D000660000 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 19DCB2721741A1D000660000 /* libz.dylib */; };
 		19DFE5351C6002890079CB58 /* Mixer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19DFE5221C6002890079CB58 /* Mixer.cpp */; };
 		19DFE5361C6002890079CB58 /* AudioFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19DFE5251C6002890079CB58 /* AudioFile.cpp */; };
@@ -509,11 +509,7 @@
 		196CB72E161E4D940068C809 /* b2MotorJoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = b2MotorJoint.h; sourceTree = "<group>"; };
 		197396DB15A505F60064BF7D /* TextureManager.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = TextureManager.cpp; sourceTree = "<group>"; };
 		197396DC15A505F60064BF7D /* TextureManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextureManager.h; sourceTree = "<group>"; };
-		198644BA1B531C4A004378CF /* NanoVG.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NanoVG.cpp; sourceTree = "<group>"; };
-		198644BB1B531C4A004378CF /* NanoVG.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NanoVG.h; sourceTree = "<group>"; };
 		198644BD1B531CBD004378CF /* Button.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Button.h; sourceTree = "<group>"; };
-		198644BE1B531CBD004378CF /* PerformanceOverlay.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PerformanceOverlay.cpp; sourceTree = "<group>"; };
-		198644BF1B531CBD004378CF /* PerformanceOverlay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PerformanceOverlay.h; sourceTree = "<group>"; };
 		198644C11B531CDD004378CF /* LyricalLabel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LyricalLabel.cpp; sourceTree = "<group>"; };
 		198644C21B531CDD004378CF /* LyricalLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LyricalLabel.h; sourceTree = "<group>"; };
 		198644C51B531D19004378CF /* nanovg_gl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = nanovg_gl.h; path = ../../../lib/nanovg/src/nanovg_gl.h; sourceTree = "<group>"; };
@@ -584,6 +580,11 @@
 		19D3204A17BD6BD4007BDC67 /* Image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Image.h; sourceTree = "<group>"; };
 		19D931841834AFC200F0137E /* ChangeMonitor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChangeMonitor.h; sourceTree = "<group>"; };
 		19D931871834AFCE00F0137E /* ChangeMonitor_Stub.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = ChangeMonitor_Stub.cpp; sourceTree = "<group>"; };
+		19DB48B31CA6A4BD00999675 /* imconfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = imconfig.h; sourceTree = "<group>"; };
+		19DB48B41CA6A4BD00999675 /* ImGuiHelper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ImGuiHelper.cpp; sourceTree = "<group>"; };
+		19DB48B51CA6A4BD00999675 /* ImGuiHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImGuiHelper.h; sourceTree = "<group>"; };
+		19DB48B71CA6AAFE00999675 /* ElementBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ElementBuffer.cpp; sourceTree = "<group>"; };
+		19DB48B81CA6AAFE00999675 /* ElementBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ElementBuffer.h; sourceTree = "<group>"; };
 		19DCB2721741A1D000660000 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		19DCB2831746AB7C00660000 /* LuaBind.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LuaBind.h; sourceTree = "<group>"; };
 		19DF40441C98B3EF001482BC /* Geometry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Geometry.h; sourceTree = "<group>"; };
@@ -954,6 +955,8 @@
 				1942A50818985D450050CF5C /* Buffer.cpp */,
 				1942A50918985D450050CF5C /* Buffer.h */,
 				1939A1BF152C425D00494609 /* Drawable.h */,
+				19DB48B71CA6AAFE00999675 /* ElementBuffer.cpp */,
+				19DB48B81CA6AAFE00999675 /* ElementBuffer.h */,
 				1939A1C0152C425D00494609 /* FontAtlas.cpp */,
 				1939A1C1152C425D00494609 /* FontAtlas.h */,
 				1939A1C2152C425D00494609 /* FontGlyph.h */,
@@ -1246,7 +1249,7 @@
 			isa = PBXGroup;
 			children = (
 				19455D28197F1C98003E4A79 /* Box2D */,
-				198644B81B531C4A004378CF /* NanoVG */,
+				19DB48B21CA6A4BD00999675 /* ImGui */,
 				198F42B21A91531000BE7A73 /* Spine */,
 			);
 			name = ThirdParty;
@@ -1265,21 +1268,10 @@
 				19AF589D167FFA0800F54B27 /* Overlay.h */,
 				19E774871A02C8D3005DE249 /* OverlayActivator.cpp */,
 				19E774881A02C8D3005DE249 /* OverlayActivator.h */,
-				198644BE1B531CBD004378CF /* PerformanceOverlay.cpp */,
-				198644BF1B531CBD004378CF /* PerformanceOverlay.h */,
 				19E774891A02C8D3005DE249 /* Style.h */,
 			);
 			name = Heimdall;
 			path = ../../../src/Heimdall;
-			sourceTree = "<group>";
-		};
-		198644B81B531C4A004378CF /* NanoVG */ = {
-			isa = PBXGroup;
-			children = (
-				198644BA1B531C4A004378CF /* NanoVG.cpp */,
-				198644BB1B531C4A004378CF /* NanoVG.h */,
-			);
-			path = NanoVG;
 			sourceTree = "<group>";
 		};
 		198644C41B531CF5004378CF /* NanoVG */ = {
@@ -1405,6 +1397,16 @@
 				19D931871834AFCE00F0137E /* ChangeMonitor_Stub.cpp */,
 			);
 			path = impl;
+			sourceTree = "<group>";
+		};
+		19DB48B21CA6A4BD00999675 /* ImGui */ = {
+			isa = PBXGroup;
+			children = (
+				19DB48B31CA6A4BD00999675 /* imconfig.h */,
+				19DB48B41CA6A4BD00999675 /* ImGuiHelper.cpp */,
+				19DB48B51CA6A4BD00999675 /* ImGuiHelper.h */,
+			);
+			path = ImGui;
 			sourceTree = "<group>";
 		};
 		19DFE51F1C6002890079CB58 /* Audio */ = {
@@ -1568,6 +1570,7 @@
 				1939A051152C401300494609 /* b2DynamicTree.cpp in Sources */,
 				1939A052152C401300494609 /* b2TimeOfImpact.cpp in Sources */,
 				19DFE5371C6002890079CB58 /* AppleAudioFile.cpp in Sources */,
+				19DB48B91CA6AAFE00999675 /* ElementBuffer.cpp in Sources */,
 				198F42781A9151CB00BE7A73 /* Timer.cpp in Sources */,
 				1939A053152C401300494609 /* b2ChainShape.cpp in Sources */,
 				1939A054152C401300494609 /* b2CircleShape.cpp in Sources */,
@@ -1595,17 +1598,16 @@
 				1939A063152C401300494609 /* b2ChainAndCircleContact.cpp in Sources */,
 				1939A064152C401300494609 /* b2ChainAndPolygonContact.cpp in Sources */,
 				1939A065152C401300494609 /* b2CircleContact.cpp in Sources */,
+				19DB48B61CA6A4BD00999675 /* ImGuiHelper.cpp in Sources */,
 				19DFE53D1C6142F40079CB58 /* RainbowAudioSession.mm in Sources */,
 				198F42991A9152E000BE7A73 /* AnimationState.c in Sources */,
 				1939A066152C401300494609 /* b2Contact.cpp in Sources */,
 				1939A067152C401300494609 /* b2ContactSolver.cpp in Sources */,
 				198F42A91A9152E000BE7A73 /* RegionAttachment.c in Sources */,
 				1939A068152C401300494609 /* b2EdgeAndCircleContact.cpp in Sources */,
-				198644C01B531CBD004378CF /* PerformanceOverlay.cpp in Sources */,
 				1939A069152C401300494609 /* b2EdgeAndPolygonContact.cpp in Sources */,
 				1939A06A152C401300494609 /* b2PolygonAndCircleContact.cpp in Sources */,
 				1939A06B152C401300494609 /* b2PolygonContact.cpp in Sources */,
-				198644BC1B531C4A004378CF /* NanoVG.cpp in Sources */,
 				1939A06C152C401300494609 /* b2DistanceJoint.cpp in Sources */,
 				1939A06D152C401300494609 /* b2FrictionJoint.cpp in Sources */,
 				1939A06E152C401300494609 /* b2GearJoint.cpp in Sources */,
@@ -1794,7 +1796,6 @@
 					"USE_LUA_SCRIPT=1",
 					"USE_PHYSICS=1",
 					"USE_SPINE=1",
-					"__STB_INCLUDE_STB_TRUETYPE_H__=0",
 					"FONS_USE_FREETYPE=1",
 				);
 				HEADER_SEARCH_PATHS = (
@@ -1892,7 +1893,6 @@
 					"USE_LUA_SCRIPT=1",
 					"USE_PHYSICS=1",
 					"USE_SPINE=1",
-					"__STB_INCLUDE_STB_TRUETYPE_H__=0",
 					"FONS_USE_FREETYPE=1",
 				);
 				HEADER_SEARCH_PATHS = (
@@ -1928,7 +1928,6 @@
 					"USE_LUA_SCRIPT=1",
 					"USE_PHYSICS=1",
 					"USE_SPINE=1",
-					"__STB_INCLUDE_STB_TRUETYPE_H__=0",
 					"FONS_USE_FREETYPE=1",
 				);
 				HEADER_SEARCH_PATHS = (

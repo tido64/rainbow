@@ -9,8 +9,10 @@
 #include "Common/Logging.h"
 #include "Heimdall/Overlay.h"
 #include "Input/Pointer.h"
+#include "Input/VirtualKey.h"
 
 using heimdall::OverlayActivator;
+using rainbow::VirtualKey;
 
 namespace
 {
@@ -24,6 +26,7 @@ void OverlayActivator::reset()
     time_till_activation_ = kTimeTillActivation;
     pointers_[0] = kNoPointer;
     pointers_[1] = kNoPointer;
+    shortcut_primed_ = 0;
 }
 
 void OverlayActivator::update(unsigned long dt)
@@ -33,13 +36,47 @@ void OverlayActivator::update(unsigned long dt)
         time_till_activation_ =
             std::max(time_till_activation_ - static_cast<int>(dt), 0);
         if (time_till_activation_ == 0)
-            overlay_->show();
+        {
+            reset();
+            overlay_->enable();
+        }
     }
+}
+
+bool OverlayActivator::on_key_down_impl(const rainbow::KeyStroke& key)
+{
+    if (!overlay_->is_enabled())
+    {
+        if (shortcut_primed_ > 0 && key.key == VirtualKey::F11)
+        {
+            shortcut_primed_ = 0;
+            overlay_->enable();
+            return true;
+        }
+        if (key.key == VirtualKey::LeftCtrl || key.key == VirtualKey::RightCtrl)
+        {
+            ++shortcut_primed_;
+        }
+    }
+
+    return false;
+}
+
+bool OverlayActivator::on_key_up_impl(const rainbow::KeyStroke& key)
+{
+    if (!overlay_->is_enabled() &&
+        (key.key == VirtualKey::LeftCtrl || key.key == VirtualKey::RightCtrl))
+    {
+        shortcut_primed_ = std::max(shortcut_primed_ - 1, 0);
+    }
+
+    return false;
 }
 
 bool OverlayActivator::on_pointer_began_impl(const ArrayView<Pointer>& pointers)
 {
-    R_ASSERT(!overlay_->is_visible(), "Overlay is leaking pointer events");
+    if (overlay_->is_enabled())
+        return false;
 
     int i = 0;
     switch (resistance_)

@@ -7,21 +7,18 @@
 
 #include <mutex>
 #include <queue>
-#include <unordered_map>
 
 #include "Director.h"
 #include "Heimdall/ChangeMonitor.h"
-#include "Heimdall/PerformanceOverlay.h"
 #include "Heimdall/Overlay.h"
 #include "Heimdall/OverlayActivator.h"
-#include "Input/InputListener.h"
 
 struct Pointer;
 
 namespace heimdall
 {
     /// <summary>Overlay for debugging options.</summary>
-    class Gatekeeper final : public rainbow::Director, public InputListener
+    class Gatekeeper final : public rainbow::Director
     {
     public:
         Gatekeeper();
@@ -43,25 +40,11 @@ namespace heimdall
 #endif  // USE_LUA_SCRIPT
         Overlay overlay_;
         OverlayActivator overlay_activator_;
-        std::unique_ptr<PerformanceOverlay> perf_;
         rainbow::GroupNode scenegraph_;
-        std::unordered_map<unsigned int, Button*> pressed_;
-        rainbow::Rect projection_;
 #if USE_LUA_SCRIPT
         std::mutex changed_files_mutex_;
         ChangeMonitor monitor_;
 #endif  // USE_LUA_SCRIPT
-
-        void post_init();
-        void pre_init(const Vec2i& screen);
-        void update_components();
-
-        /* Implement InputListener */
-
-        bool on_pointer_began_impl(const ArrayView<Pointer>&) override;
-        bool on_pointer_canceled_impl() override;
-        bool on_pointer_ended_impl(const ArrayView<Pointer>&) override;
-        bool on_pointer_moved_impl(const ArrayView<Pointer>&) override;
     };
 }
 

@@ -21,6 +21,9 @@ namespace rainbow { namespace graphics
 class TextureManager : public Global<TextureManager>
 {
 public:
+    auto mag_filter() const { return mag_filter_; }
+    auto min_filter() const { return min_filter_; }
+
     /// <summary>Sets texture filtering function.</summary>
     /// <remarks>
     ///   Existing textures are not affected by this setting. Valid values are

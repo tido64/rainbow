@@ -117,11 +117,11 @@ precision mediump float;
 #   define lowp
 #endif
 
+uniform mat4 mvp_matrix;
+
 attribute vec4 color;
 attribute vec2 texcoord;
 attribute vec2 vertex;
-
-uniform mat4 mvp_matrix;
 
 varying lowp vec4 v_color;
 varying vec2 v_texcoord;
@@ -146,12 +146,12 @@ precision mediump float;
 #   define lowp
 #endif
 
+uniform mat4 mvp_matrix;
+
 attribute vec4 color;
 attribute vec2 normal;
 attribute vec2 texcoord;
 attribute vec2 vertex;
-
-uniform mat4 mvp_matrix;
 
 varying lowp vec4 v_color;
 varying vec2 v_normal;
@@ -198,10 +198,10 @@ precision mediump float;
 #   define lowp
 #endif
 
+uniform mat4 mvp_matrix;
+
 attribute vec4 color;
 attribute vec2 vertex;
-
-uniform mat4 mvp_matrix;
 
 varying lowp vec4 v_color;
 

@@ -6,7 +6,6 @@ if(WIN32)
       -D_SCL_SECURE_NO_WARNINGS=1
       -DNO_STATE_FLAGS=1
       -DNOATOM=1             # Atom Manager routines
-      -DNOCLIPBOARD=1        # Clipboard routines
       -DNOCOLOR=1            # Screen colors
       -DNOCOMM=1             # COMM driver routines
       -DNOCTLMGR=1           # Control and Dialog routines

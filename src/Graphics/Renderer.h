@@ -12,26 +12,17 @@
 
 namespace rainbow { namespace graphics
 {
+    namespace detail
+    {
+#ifndef NDEBUG
+        extern unsigned int g_draw_count_accumulator;
+#endif
+    }
+
     ///<summary>Hard-coded limit on number of sprites.</summary>
     static constexpr size_t kMaxSprites = 4096;
 
-    struct State
-    {
-        float scale = 1.0f;
-        float zoom = 1.0f;
-        Vec2i origin;
-        Vec2i view;
-        Vec2i window;
-        Rect rect;
-        ElementBuffer element_buffer;
-        TextureManager texture_manager;
-        ShaderManager shader_manager;
-
-        ~State();
-
-        bool initialize();
-    };
-
+    auto draw_count() -> unsigned int;
     auto max_texture_size() -> int;
     auto projection() -> const Rect&;
     auto resolution() -> const Vec2i&;
@@ -56,6 +47,10 @@ namespace rainbow { namespace graphics
         obj.bind_textures();
         glDrawElements(
             GL_TRIANGLES, obj.vertex_count(), GL_UNSIGNED_SHORT, nullptr);
+
+#ifndef NDEBUG
+        ++detail::g_draw_count_accumulator;
+#endif
     }
 
     template <typename T>
@@ -64,12 +59,61 @@ namespace rainbow { namespace graphics
         obj.vertex_array().bind();
         obj.bind_textures();
         glDrawArrays(GL_TRIANGLES, first, count);
+
+#ifndef NDEBUG
+        ++detail::g_draw_count_accumulator;
+#endif
     }
 
     bool has_extension(const char* extension);
 
     void reset();
+
+    void scissor(int x, int y, int width, int height);
+
     void unbind_all();
+
+    class ScopedProjection
+    {
+    public:
+        ScopedProjection(const Rect& new_projection) : projection_(projection())
+        {
+            set_projection(new_projection);
+        }
+
+        ~ScopedProjection() { set_projection(projection_); }
+
+    private:
+        const Rect projection_;
+    };
+
+    template <int GL_STATE>
+    struct ScopedState
+    {
+        ScopedState() { glEnable(GL_STATE); }
+        ~ScopedState() { glDisable(GL_STATE); }
+    };
+
+    using ScopedCullFace = ScopedState<GL_CULL_FACE>;
+    using ScopedDepthTest = ScopedState<GL_DEPTH_TEST>;
+    using ScopedScissorTest = ScopedState<GL_SCISSOR_TEST>;
+
+    struct State
+    {
+        float scale = 1.0f;
+        float zoom = 1.0f;
+        Vec2i origin;
+        Vec2i view;
+        Vec2i window;
+        Rect rect;
+        ElementBuffer element_buffer;
+        TextureManager texture_manager;
+        ShaderManager shader_manager;
+
+        ~State();
+
+        bool initialize();
+    };
 }}  // namespace rainbow::graphics
 
 #endif

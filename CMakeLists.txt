@@ -292,7 +292,6 @@ else()
 endif()
 
 if(USE_HEIMDALL)
-  set(USE_VECTOR 1)
   add_definitions(-DUSE_HEIMDALL)
   list(APPEND SOURCE_FILES
        src/Heimdall/Button.h
@@ -303,11 +302,12 @@ if(USE_HEIMDALL)
        src/Heimdall/Overlay.h
        src/Heimdall/OverlayActivator.cpp
        src/Heimdall/OverlayActivator.h
-       src/Heimdall/PerformanceOverlay.cpp
-       src/Heimdall/PerformanceOverlay.h
        src/Heimdall/Style.h
        src/Resources/Inconsolata.otf.h
-       src/Resources/NewsCycle-Regular.ttf.h)
+       src/Resources/NewsCycle-Regular.ttf.h
+       src/ThirdParty/ImGui/imconfig.h
+       src/ThirdParty/ImGui/ImGuiHelper.cpp
+       src/ThirdParty/ImGui/ImGuiHelper.h)
   if(APPLE)
     list(APPEND SOURCE_FILES src/Heimdall/impl/ChangeMonitor_Mac.cpp)
   elseif(WIN32)

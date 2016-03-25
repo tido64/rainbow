@@ -26,51 +26,20 @@ namespace graphics = rainbow::graphics;
 
 namespace
 {
+    unsigned int g_draw_count = 0;
     State* g_state = nullptr;
 }
 
-State::~State()
+namespace rainbow { namespace graphics { namespace detail
 {
-    if (this == g_state)
-        g_state = nullptr;
-}
+#ifndef NDEBUG
+    unsigned int g_draw_count_accumulator = 0;
+#endif  // NDEBUG
+}}}
 
-bool State::initialize()
+auto graphics::draw_count() -> unsigned int
 {
-    R_ASSERT(g_state == nullptr, "Renderer is already initialised");
-
-#ifdef __glew_h__
-    GLenum err = glewInit();
-    if (err != GLEW_OK)
-    {
-        LOGF("Failed to initialise GLEW: %s", glewGetErrorString(err));
-        return false;
-    }
-#endif
-
-    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-    if (!shader_manager.init())
-        return false;
-
-    const unsigned short kDefaultIndices[]{S4096(0)};
-    static_assert(
-        sizeof(kDefaultIndices) == kMaxSprites * 6 * sizeof(kDefaultIndices[0]),
-        "Number of indices do not match set number of sprites");
-
-    unsigned int buffer;
-    glGenBuffers(1, &buffer);
-    element_buffer = buffer;
-    element_buffer.upload(kDefaultIndices, sizeof(kDefaultIndices));
-
-    const bool success = glGetError() == GL_NO_ERROR;
-    if (success)
-        g_state = this;
-
-    return success;
+    return g_draw_count;
 }
 
 auto graphics::max_texture_size() -> int
@@ -161,6 +130,11 @@ void graphics::bind_element_array()
 void graphics::clear()
 {
     glClear(GL_COLOR_BUFFER_BIT);
+
+#ifndef NDEBUG
+    g_draw_count = detail::g_draw_count_accumulator;
+    detail::g_draw_count_accumulator = 0;
+#endif
 }
 
 auto graphics::convert_to_flipped_view(const Vec2i& p) -> Vec2i
@@ -204,9 +178,58 @@ void graphics::reset()
     glActiveTexture(GL_TEXTURE0);
 }
 
+void graphics::scissor(int x, int y, int width, int height)
+{
+    glScissor(g_state->origin.x + x, g_state->origin.y + y, width, height);
+}
+
 void graphics::unbind_all()
 {
     VertexArray::unbind();
     g_state->shader_manager.use(ShaderManager::kInvalidProgram);
     g_state->texture_manager.bind();
+}
+
+State::~State()
+{
+    if (this == g_state)
+        g_state = nullptr;
+}
+
+bool State::initialize()
+{
+    R_ASSERT(g_state == nullptr, "Renderer is already initialised");
+
+#ifdef __glew_h__
+    GLenum err = glewInit();
+    if (err != GLEW_OK)
+    {
+        LOGF("Failed to initialise GLEW: %s", glewGetErrorString(err));
+        return false;
+    }
+#endif
+
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    if (!shader_manager.init())
+        return false;
+
+    const unsigned short kDefaultIndices[]{S4096(0)};
+    static_assert(
+        sizeof(kDefaultIndices) == kMaxSprites * 6 * sizeof(kDefaultIndices[0]),
+        "Number of indices do not match set number of sprites");
+
+    unsigned int buffer;
+    glGenBuffers(1, &buffer);
+    element_buffer = buffer;
+    element_buffer.upload(kDefaultIndices, sizeof(kDefaultIndices));
+
+    const bool success = glGetError() == GL_NO_ERROR;
+    if (success)
+        g_state = this;
+
+    return success;
 }

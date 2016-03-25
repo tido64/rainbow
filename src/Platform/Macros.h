@@ -57,6 +57,18 @@
 
 namespace std
 {
+    template <typename T, size_t N>
+    auto cbegin(T (&container)[N]) { return container; }
+
+    template <typename T, size_t N>
+    auto cend(T (&container)[N]) { return &container[N]; }
+
+    template <typename T>
+    auto cbegin(T& container) { return container.cbegin(); }
+
+    template <typename T>
+    auto cend(T& container) { return container.cend(); }
+
     template <typename T>
     auto rbegin(T& container) { return container.rbegin(); }
 
