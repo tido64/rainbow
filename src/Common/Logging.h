@@ -67,14 +67,14 @@
 #       define SRC_FILE __FILE__
 #   endif
 #   define R_ABORT(...) rainbow::abort(__VA_ARGS__)
-#   define R_ASSERT(expr, reason)                                              \
-        if (!(expr))                                                           \
-            rainbow::abort("%s: %s (aborted at %s:%i: %s)",                    \
-                           __PRETTY_FUNCTION__,                                \
-                           reason,                                             \
-                           SRC_FILE,                                           \
-                           __LINE__,                                           \
-                           #expr)
+#define R_ASSERT(expr, reason)                                                 \
+    (!(expr) ? rainbow::abort("%s: %s (aborted at %s:%i: %s)",                 \
+                              __PRETTY_FUNCTION__,                             \
+                              reason,                                          \
+                              SRC_FILE,                                        \
+                              __LINE__,                                        \
+                              #expr)                                           \
+             : static_cast<void>(0))
 #endif  // NDEBUG
 
 namespace rainbow
