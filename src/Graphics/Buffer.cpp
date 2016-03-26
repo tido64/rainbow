@@ -9,6 +9,8 @@
 #include "Graphics/ShaderDetails.h"
 #include "Graphics/SpriteVertex.h"
 
+using rainbow::graphics::Buffer;
+
 namespace
 {
     unsigned int glGenBuffer()

@@ -10,37 +10,45 @@
 #include "Common/NonCopyable.h"
 #include "Graphics/OpenGL.h"
 
-/// <summary>
-///   Manages a vertex array object for any drawable type. On Android, vertex
-///   array objects are emulated.
-/// </summary>
-class VertexArray : NonCopyable<VertexArray>
+namespace rainbow { namespace graphics
 {
-public:
-    /// <summary>Unbinds any bound vertex array object.</summary>
-    static void unbind();
-
-    VertexArray() = default;
-    VertexArray(VertexArray&&);
-    ~VertexArray();
-
-    /// <summary>Binds this vertex array object.</summary>
-    void bind() const;
-
     /// <summary>
-    ///   Reconfigures this vertex array object with a new set of states.
+    ///   Manages a vertex array object for any drawable type. On Android, vertex
+    ///   array objects are emulated.
     /// </summary>
-    void reconfigure(std::function<void()>&& array_state);
+    class VertexArray : NonCopyable<VertexArray>
+    {
+    public:
+        /// <summary>Unbinds any bound vertex array object.</summary>
+        static void unbind();
 
-    /// <summary>Returns whether this vertex array object is valid.</summary>
-    explicit operator bool() const { return static_cast<const bool>(array_); }
+        VertexArray() = default;
+        VertexArray(VertexArray&&);
+        ~VertexArray();
 
-private:
-#ifdef USE_VERTEX_ARRAY_OBJECT
-    unsigned int array_ = 0;
-#else
-    std::function<void()> array_;
-#endif
-};
+        /// <summary>Binds this vertex array object.</summary>
+        void bind() const;
+
+        /// <summary>
+        ///   Reconfigures this vertex array object with a new set of states.
+        /// </summary>
+        void reconfigure(std::function<void()>&& array_state);
+
+        /// <summary>
+        ///   Returns whether this vertex array object is valid.
+        /// </summary>
+        explicit operator bool() const
+        {
+            return static_cast<const bool>(array_);
+        }
+
+    private:
+    #ifdef USE_VERTEX_ARRAY_OBJECT
+        unsigned int array_ = 0;
+    #else
+        std::function<void()> array_;
+    #endif
+    };
+}}  // namespace rainbow::graphics
 
 #endif

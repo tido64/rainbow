@@ -9,30 +9,33 @@
 
 namespace rainbow { struct ISolemnlySwearThatIAmOnlyTesting; }
 
-class Buffer
+namespace rainbow { namespace graphics
 {
-public:
-    Buffer();
-    explicit Buffer(const rainbow::ISolemnlySwearThatIAmOnlyTesting&);
-    Buffer(Buffer&&);
-    ~Buffer();
+    class Buffer
+    {
+    public:
+        Buffer();
+        explicit Buffer(const rainbow::ISolemnlySwearThatIAmOnlyTesting&);
+        Buffer(Buffer&&);
+        ~Buffer();
 
-    /// <summary>
-    ///  Used by Label and SpriteBatch for interleaved vertex buffer.
-    /// </summary>
-    void bind() const;
+        /// <summary>
+        ///  Used by Label and SpriteBatch for interleaved vertex buffer.
+        /// </summary>
+        void bind() const;
 
-    /// <summary>Used by SpriteBatch for normal buffers.</summary>
-    void bind(unsigned int index) const;
+        /// <summary>Used by SpriteBatch for normal buffers.</summary>
+        void bind(unsigned int index) const;
 
-    /// <summary>
-    ///   Uploads <paramref name="data"/> of size <paramref name="size"/> to the
-    ///   GPU buffer.
-    /// </summary>
-    void upload(const void* data, size_t size) const;
+        /// <summary>
+        ///   Uploads <paramref name="data"/> of size <paramref name="size"/> to
+        ///   the GPU buffer.
+        /// </summary>
+        void upload(const void* data, size_t size) const;
 
-private:
-    unsigned int id_;
-};
+    private:
+        unsigned int id_;
+    };
+}}  // namespace rainbow::graphics
 
 #endif

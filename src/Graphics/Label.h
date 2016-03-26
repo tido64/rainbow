@@ -46,7 +46,10 @@ public:
     auto text() const { return text_.get(); }
 
     /// <summary>Returns the vertex array object.</summary>
-    auto vertex_array() const -> const VertexArray& { return array_; }
+    auto vertex_array() const -> const rainbow::graphics::VertexArray&
+    {
+        return array_;
+    }
 
     /// <summary>Returns the vertex count.</summary>
     auto vertex_count() const
@@ -121,8 +124,8 @@ private:
     unsigned int width_;         ///< Label width.
     unsigned int cutoff_;        ///< Number of characters to render.
     size_t size_;                ///< Size of the char array.
-    Buffer buffer_;              ///< Vertex buffer.
-    VertexArray array_;          ///< Vertex array object.
+    rainbow::graphics::Buffer buffer_;      ///< Vertex buffer.
+    rainbow::graphics::VertexArray array_;  ///< Vertex array object.
     SharedPtr<FontAtlas> font_;  ///< The font used in this label.
 
     /// <summary>Saves line width and aligns the line if needed.</summary>

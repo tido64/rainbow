@@ -31,10 +31,13 @@ public:
     Skeleton(spSkeletonData* data, spAtlas* atlas);
     ~Skeleton();
 
-    spSkeleton* skeleton() { return skeleton_; }
+    auto skeleton() { return skeleton_; }
 
     /// <summary>Returns the vertex array object.</summary>
-    const VertexArray& vertex_array() const { return array_; }
+    auto vertex_array() const -> const rainbow::graphics::VertexArray&
+    {
+        return array_;
+    }
 
     /// <summary>
     ///   Flips the rendering of the skeleton horizontally and/or vertically.
@@ -115,8 +118,8 @@ private:
     float time_scale_;
     std::unique_ptr<SpriteVertex[]> vertices_;
     size_t num_vertices_;
-    Buffer vertex_buffer_;
-    VertexArray array_;
+    rainbow::graphics::Buffer vertex_buffer_;
+    rainbow::graphics::VertexArray array_;
     TextureAtlas* texture_;
     size_t max_vertices_;
     spAnimationStateData* animation_data_;

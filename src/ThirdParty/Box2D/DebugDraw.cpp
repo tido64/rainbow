@@ -18,7 +18,7 @@ namespace
 
     unsigned int g_debug_draw_buffer = 0;
     unsigned int g_debug_draw_program = 0;
-    VertexArray g_debug_draw_vao;
+    rainbow::graphics::VertexArray g_debug_draw_vao;
 
     void upload(GLsizei size, const void* data)
     {

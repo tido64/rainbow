@@ -7,6 +7,8 @@
 #include "Graphics/OpenGL.h"
 #include "Graphics/Renderer.h"
 
+using rainbow::graphics::VertexArray;
+
 void VertexArray::unbind()
 {
 #ifdef USE_VERTEX_ARRAY_OBJECT

@@ -62,7 +62,10 @@ public:
     }
 
     /// <summary>Returns the vertex array object.</summary>
-    auto vertex_array() const -> const VertexArray& { return array_; }
+    auto vertex_array() const -> const rainbow::graphics::VertexArray&
+    {
+        return array_;
+    }
 
     /// <summary>Returns the vertex count.</summary>
     auto vertex_count() const { return !visible_ ? 0 : count_ * 6; }
@@ -136,9 +139,9 @@ private:
     Arena<SpriteVertex> vertices_;     ///< Client vertex buffer.
     Arena<Vec2f> normals_;             ///< Client normal buffer.
     unsigned int count_;               ///< Number of sprites.
-    Buffer vertex_buffer_;             ///< Shared, interleaved vertex buffer.
-    Buffer normal_buffer_;             ///< Shared normal buffer.
-    VertexArray array_;                ///< Vertex array object.
+    rainbow::graphics::Buffer vertex_buffer_;  ///< Shared, interleaved vertex buffer.
+    rainbow::graphics::Buffer normal_buffer_;  ///< Shared normal buffer.
+    rainbow::graphics::VertexArray array_;     ///< Vertex array object.
     SharedPtr<TextureAtlas> normal_;   ///< Normal map used by all sprites in the batch.
     SharedPtr<TextureAtlas> texture_;  ///< Texture atlas used by all sprites in the batch.
     unsigned int reserved_;            ///< Number of sprites reserved for.
