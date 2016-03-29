@@ -7,6 +7,7 @@
 #include "Graphics/Renderer.h"
 
 using rainbow::Texture;
+using rainbow::graphics::TextureFilter;
 
 namespace
 {
@@ -33,6 +34,17 @@ namespace
                 action(element);
                 break;
             }
+        }
+    }
+
+    int texture_filter(TextureFilter filter)
+    {
+        switch (filter)
+        {
+            case TextureFilter::Nearest:
+                return GL_NEAREST;
+            default:
+                return GL_LINEAR;
         }
     }
 }
@@ -72,11 +84,8 @@ Texture& Texture::operator=(Texture&& texture)
     return *this;
 }
 
-void TextureManager::set_filter(int filter)
+void TextureManager::set_filter(TextureFilter filter)
 {
-    R_ASSERT(filter == GL_NEAREST || filter == GL_LINEAR,
-             "Invalid texture filter function.");
-
     mag_filter_ = filter;
     min_filter_ = filter;
 }
@@ -131,7 +140,7 @@ void TextureManager::trim()
 }
 
 TextureManager::TextureManager()
-    : mag_filter_(GL_LINEAR), min_filter_(GL_LINEAR)
+    : mag_filter_(TextureFilter::Linear), min_filter_(TextureFilter::Linear)
 #if RAINBOW_RECORD_VMEM_USAGE
     , mem_peak_(0.0), mem_used_(0.0)
 #endif
@@ -153,8 +162,10 @@ auto TextureManager::create_texture(const char* id) -> Texture
     textures_.emplace_back(id, name);
 
     bind(name);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, min_filter_);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, mag_filter_);
+    glTexParameteri(
+        GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, texture_filter(min_filter_));
+    glTexParameteri(
+        GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, texture_filter(mag_filter_));
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 

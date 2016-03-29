@@ -15,6 +15,13 @@
 namespace rainbow { namespace graphics
 {
     struct State;
+
+    enum class TextureFilter
+    {
+        Linear,
+        Nearest,
+        TextureFilterCount
+    };
 }}
 
 /// <summary>Manages texture resources.</summary>
@@ -25,11 +32,8 @@ public:
     auto min_filter() const { return min_filter_; }
 
     /// <summary>Sets texture filtering function.</summary>
-    /// <remarks>
-    ///   Existing textures are not affected by this setting. Valid values are
-    ///   <see cref="GL_NEAREST"/> and <see cref="GL_LINEAR"/>.
-    /// </remarks>
-    void set_filter(int filter);
+    /// <remarks>Existing textures are not affected by this setting.</remarks>
+    void set_filter(rainbow::graphics::TextureFilter filter);
 
     /// <summary>Makes texture active on current rendering target.</summary>
     /// <param name="name">
@@ -115,8 +119,8 @@ private:
 
     unsigned int active_[kNumTextureUnits];
     std::vector<rainbow::detail::Texture> textures_;
-    int mag_filter_;
-    int min_filter_;
+    rainbow::graphics::TextureFilter mag_filter_;
+    rainbow::graphics::TextureFilter min_filter_;
 
 #if RAINBOW_RECORD_VMEM_USAGE
     double mem_peak_;

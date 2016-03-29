@@ -25,6 +25,7 @@ using rainbow::graphics::Buffer;
 using rainbow::graphics::ElementBuffer;
 using rainbow::graphics::ScopedProjection;
 using rainbow::graphics::ScopedScissorTest;
+using rainbow::graphics::TextureFilter;
 using rainbow::graphics::VertexArray;
 using rainbow::Texture;
 
@@ -149,8 +150,8 @@ namespace rainbow { namespace imgui
         io.UserData = renderable;
 
         auto texture_manager = TextureManager::Get();
-        const int filter = texture_manager->mag_filter();
-        texture_manager->set_filter(GL_NEAREST);
+        const TextureFilter filter = texture_manager->mag_filter();
+        texture_manager->set_filter(TextureFilter::Nearest);
         renderable->texture() = texture_manager->create(
             "rainbow://dear_imgui/ProggyClean.ttf",
             [&io](TextureManager& texture_manager, const Texture& texture) {

@@ -8,14 +8,17 @@
 #include "Lua/LuaHelper.h"
 #include "Lua/LuaSyntax.h"
 
+using rainbow::graphics::TextureFilter;
+using rainbow::lua::Argument;
+
 namespace
 {
     int set_clear_color(lua_State* L)
     {
         // rainbow.renderer.set_clear_color(0xrr, 0xgg, 0xbb)
-        rainbow::lua::Argument<lua_Number>::is_required(L, 1);
-        rainbow::lua::Argument<lua_Number>::is_required(L, 2);
-        rainbow::lua::Argument<lua_Number>::is_required(L, 3);
+        Argument<lua_Number>::is_required(L, 1);
+        Argument<lua_Number>::is_required(L, 2);
+        Argument<lua_Number>::is_required(L, 3);
 
         const float r = lua_tonumber(L, 1) / 255.0f;
         const float g = lua_tonumber(L, 2) / 255.0f;
@@ -27,23 +30,23 @@ namespace
     int set_filter(lua_State* L)
     {
         // rainbow.renderer.set_filter(filter)
-        rainbow::lua::Argument<lua_Number>::is_required(L, 1);
+        Argument<lua_Number>::is_required(L, 1);
 
         const int filter = lua_tointeger(L, 1);
         LUA_ASSERT(L,
-                   filter == GL_NEAREST || filter == GL_LINEAR,
+                   filter < static_cast<int>(TextureFilter::TextureFilterCount),
                    "gl.NEAREST or gl.LINEAR expected");
-        TextureManager::Get()->set_filter(filter);
+        TextureManager::Get()->set_filter(static_cast<TextureFilter>(filter));
         return 0;
     }
 
     int set_projection(lua_State* L)
     {
         // rainbow.renderer.set_projection(left, top, right, bottom)
-        rainbow::lua::Argument<lua_Number>::is_required(L, 1);
-        rainbow::lua::Argument<lua_Number>::is_required(L, 2);
-        rainbow::lua::Argument<lua_Number>::is_required(L, 3);
-        rainbow::lua::Argument<lua_Number>::is_required(L, 4);
+        Argument<lua_Number>::is_required(L, 1);
+        Argument<lua_Number>::is_required(L, 2);
+        Argument<lua_Number>::is_required(L, 3);
+        Argument<lua_Number>::is_required(L, 4);
 
         rainbow::graphics::set_projection({lua_tonumber(L, 1),
                                            lua_tonumber(L, 2),
@@ -76,8 +79,10 @@ NS_RAINBOW_LUA_MODULE_BEGIN(renderer)
 
         // Initialise "gl" namespace
         lua_createtable(L, 0, 2);
-        luaR_rawsetinteger(L, "NEAREST", GL_NEAREST);
-        luaR_rawsetinteger(L, "LINEAR", GL_LINEAR);
+        luaR_rawsetinteger(
+            L, "NEAREST", static_cast<int>(TextureFilter::Nearest));
+        luaR_rawsetinteger(
+            L, "LINEAR", static_cast<int>(TextureFilter::Linear));
         lua_setglobal(L, "gl");
     }
 } NS_RAINBOW_LUA_MODULE_END(renderer)
