@@ -5,7 +5,7 @@
 #ifndef GRAPHICS_DECODERS_SVG_H_
 #define GRAPHICS_DECODERS_SVG_H_
 
-#include "ThirdParty/NanoSVG.h"
+#include "ThirdParty/NanoSVG/NanoSVG.h"
 
 #define USE_SVG
 
