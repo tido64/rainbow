@@ -102,7 +102,7 @@ void SpriteBatch::set_texture(SharedPtr<TextureAtlas> texture)
     texture_ = std::move(texture);
 }
 
-Sprite::Ref SpriteBatch::add(int x, int y, int w, int h)
+SpriteRef SpriteBatch::add(int x, int y, int w, int h)
 {
     auto sprite = create_sprite(w, h);
     sprite->set_texture(texture_->add_region(x, y, w, h));
@@ -116,14 +116,14 @@ void SpriteBatch::bind_textures() const
     texture_->bind();
 }
 
-void SpriteBatch::bring_to_front(const Sprite::Ref& s)
+void SpriteBatch::bring_to_front(const SpriteRef& s)
 {
     R_ASSERT(s.batch_ == this, "Sprite does not belong to this batch");
 
     rotate(s.i_, s.i_ + 1, count_);
 }
 
-Sprite::Ref SpriteBatch::create_sprite(unsigned int width, unsigned int height)
+SpriteRef SpriteBatch::create_sprite(unsigned int width, unsigned int height)
 {
     R_ASSERT(count_ <= rainbow::graphics::kMaxSprites,
              "Hard-coded limit reached");
@@ -143,17 +143,17 @@ Sprite::Ref SpriteBatch::create_sprite(unsigned int width, unsigned int height)
         std::uninitialized_fill_n(normals_ + offset, 4, Vec2f());
         sprite.set_normal_buffer(normals_ + offset);
     }
-    return Sprite::Ref(this, count_++);
+    return {this, count_++};
 }
 
-void SpriteBatch::erase(const Sprite::Ref& s)
+void SpriteBatch::erase(const SpriteRef& s)
 {
     if (s.i_ + 1 < count_)
         bring_to_front(s);
     sprites_[--count_].~Sprite();
 }
 
-Sprite::Ref SpriteBatch::find_sprite_by_id(int id) const
+SpriteRef SpriteBatch::find_sprite_by_id(int id) const
 {
     for (unsigned int i = 0; i < count_; ++i)
     {
@@ -172,7 +172,7 @@ void SpriteBatch::move(const Vec2f& delta)
         sprite.move(delta);
 }
 
-void SpriteBatch::swap(const Sprite::Ref& a_ref, const Sprite::Ref& b_ref)
+void SpriteBatch::swap(const SpriteRef& a_ref, const SpriteRef& b_ref)
 {
     if (a_ref == b_ref)
         return;

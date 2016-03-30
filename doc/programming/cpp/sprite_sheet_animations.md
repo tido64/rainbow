@@ -8,7 +8,7 @@ where we take a sprite and change its texture at set intervals.
 ### Creating Sprite Sheet Animations
 
 ```c++
-Animation(const Sprite::Ref &sprite,
+Animation(const SpriteRef &sprite,
           std::unique_ptr<const Frame[]> frames,
           unsigned int fps,
           int delay = 0);
@@ -98,13 +98,13 @@ Releases ownership of animation frames and returns it.
 ### Changing Sprite To Animate
 
 ```c++
-Sprite::Ref  sprite  () const;
+SpriteRef  sprite  () const;
 ```
 
 Returns the target sprite.
 
 ```c++
-void  Animation::set_sprite  (const Sprite::Ref &sprite);
+void  Animation::set_sprite  (const SpriteRef &sprite);
 ```
 
 Sets the sprite to animate.
@@ -231,8 +231,7 @@ class AnimationExample final : public GameBase
 public:
     AnimationExample(rainbow::Director& director)
         : GameBase(director), batch_(1),
-          animation_(Sprite::Ref(), Animation::Frames(kAnimationFrames), 6, 0)
-    {}
+          animation_(SpriteRef{}, Animation::Frames(kAnimationFrames), 6, 0) {}
 
     ~AnimationExample() { animation_.release(); }
 

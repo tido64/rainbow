@@ -41,7 +41,7 @@ public:
     ///   Number of frames to delay before the animation loops. Negative numbers
     ///   disable looping.
     /// </param>
-    Animation(const Sprite::Ref& sprite,
+    Animation(const SpriteRef& sprite,
               Frames frames,
               unsigned int fps,
               int delay = 0);
@@ -81,7 +81,7 @@ public:
     void set_frames(Frames frames);
 
     /// <summary>Sets the sprite to animate.</summary>
-    void set_sprite(const Sprite::Ref& sprite);
+    void set_sprite(const SpriteRef& sprite);
 
     /// <summary>Jumps to <paramref name="frame"/>.</summary>
     void jump_to(unsigned int frame);
@@ -112,7 +112,7 @@ private:
     unsigned int interval_;     ///< Time till a tick.
     unsigned int frame_;        ///< Current frame.
     Frames frames_;             ///< Array of texture ids to be used as frames, terminated with <c>kAnimationEnd</c>.
-    Sprite::Ref sprite_;        ///< The sprite to animate.
+    SpriteRef sprite_;          ///< The sprite to animate.
     int delay_;                 ///< Number of frames to delay before the animation loops. Negative numbers disable looping.
     int idled_;                 ///< Number of frames idled.
     Callback callback_;         ///< Event callback.

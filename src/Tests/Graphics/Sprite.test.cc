@@ -29,7 +29,7 @@ namespace
         SharedPtr<TextureAtlas> atlas;
         unsigned int texture;
         SpriteBatch batch;
-        Sprite::Ref sprite = batch.create_sprite(2, 2);
+        SpriteRef sprite = batch.create_sprite(2, 2);
         const SpriteVertex* vertex_array;
         Vec2f p[4];
         Vec2f u[4];
@@ -54,7 +54,7 @@ namespace
 
     protected:
         SpriteBatch batch;
-        Sprite::Ref sprite;
+        SpriteRef sprite;
     };
 }
 
@@ -511,5 +511,5 @@ TEST(SpriteTest, UpdatesOnlyOnChange)
 
 TEST(SpriteTest, ManuallyConstructedRefsAreInvalid)
 {
-    ASSERT_FALSE(Sprite::Ref());
+    ASSERT_FALSE(SpriteRef{});
 }

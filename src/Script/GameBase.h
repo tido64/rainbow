@@ -17,11 +17,10 @@ namespace rainbow
     using font_t = SharedPtr<FontAtlas>;
     using label_t = std::shared_ptr<Label>;
     using prose_t = std::shared_ptr<Prose>;
-    using sprite_t = Sprite::Ref;
     using spritebatch_t = std::shared_ptr<SpriteBatch>;
     using texture_t = SharedPtr<TextureAtlas>;
 
-    animation_t animation(sprite_t sprite,
+    animation_t animation(SpriteRef sprite,
                           Animation::Frames frames,
                           unsigned int fps,
                           int loop_delay = 0);

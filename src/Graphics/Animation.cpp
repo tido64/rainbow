@@ -4,7 +4,7 @@
 
 #include "Graphics/Animation.h"
 
-Animation::Animation(const Sprite::Ref& sprite,
+Animation::Animation(const SpriteRef& sprite,
                      Frames frames,
                      unsigned int fps,
                      int delay)
@@ -24,7 +24,7 @@ void Animation::set_frames(Frames frames)
     rewind();
 }
 
-void Animation::set_sprite(const Sprite::Ref& sprite)
+void Animation::set_sprite(const SpriteRef& sprite)
 {
     sprite_ = sprite;
     if (!is_stopped())

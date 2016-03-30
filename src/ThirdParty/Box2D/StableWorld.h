@@ -22,7 +22,7 @@ namespace b2
 {
     struct BodyState
     {
-        Sprite::Ref sprite;
+        SpriteRef sprite;
         b2Vec2 curr_p;
         b2Vec2 prev_p;
         float curr_r;

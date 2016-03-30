@@ -6,7 +6,7 @@
 
 namespace rainbow
 {
-    animation_t animation(sprite_t sprite,
+    animation_t animation(SpriteRef sprite,
                           Animation::Frames frames,
                           unsigned int fps,
                           int loop_delay)

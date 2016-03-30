@@ -16,7 +16,7 @@ public:
     void update(unsigned long dt) override;
 
 private:
-    rainbow::sprite_t frame_;
+    SpriteRef frame_;
     rainbow::spritebatch_t batch_;
 };
 

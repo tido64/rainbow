@@ -9,7 +9,33 @@
 #include "Graphics/SpriteVertex.h"
 #include "Memory/NotNull.h"
 
+class Sprite;
 class SpriteBatch;
+
+class SpriteRef
+{
+public:
+    SpriteRef() : batch_(nullptr), i_(0) {}
+
+    SpriteRef(NotNull<const SpriteBatch*> batch, size_t i)
+        : batch_(batch), i_(i) {}
+
+    Sprite& operator*() const;
+    Sprite* operator->() const;
+
+    bool operator==(const SpriteRef& other) const
+    {
+        return batch_ == other.batch_ && i_ == other.i_;
+    }
+
+    explicit operator bool() const { return batch_; }
+
+private:
+    const SpriteBatch* batch_;
+    size_t i_;
+
+    friend SpriteBatch;
+};
 
 /// <summary>A textured quad.</summary>
 /// <remarks>
@@ -39,31 +65,6 @@ class Sprite : private NonCopyable<Sprite>
 {
 public:
     enum { kNoId };
-
-    class Ref
-    {
-    public:
-        Ref() : batch_(nullptr), i_(0) {}
-
-        Ref(NotNull<const SpriteBatch*> batch, size_t i)
-            : batch_(batch), i_(i) {}
-
-        Sprite& operator*() const;
-        Sprite* operator->() const;
-
-        bool operator==(const Ref& other) const
-        {
-            return batch_ == other.batch_ && i_ == other.i_;
-        }
-
-        explicit operator bool() const { return batch_; }
-
-    private:
-        const SpriteBatch* batch_;
-        size_t i_;
-
-        friend SpriteBatch;
-    };
 
     Sprite(unsigned int width,
            unsigned int height,

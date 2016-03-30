@@ -14,7 +14,7 @@ namespace rainbow
 namespace
 {
     template <size_t N>
-    void set_sprite_ids(const Sprite::Ref (&refs)[N])
+    void set_sprite_ids(const SpriteRef (&refs)[N])
     {
         for (size_t i = 0; i < N; ++i)
             refs[i]->set_id(i + 1);
@@ -71,7 +71,7 @@ namespace
 
     protected:
         SpriteBatch batch;
-        Sprite::Ref refs[4];
+        SpriteRef refs[4];
         const size_t count;
         const SpriteVertex* vertices;
     };

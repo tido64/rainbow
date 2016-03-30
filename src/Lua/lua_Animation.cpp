@@ -64,7 +64,7 @@ NS_RAINBOW_LUA_BEGIN
         Argument<lua_Number>::is_required(L, 3);
         Argument<lua_Number>::is_optional(L, 4);
 
-        ::Sprite::Ref sprite;
+        SpriteRef sprite;
         replacetable(L, 1);
         if (lua_isuserdata(L, 1))
             sprite = touserdata<Sprite>(L, 1)->get();
@@ -174,7 +174,7 @@ NS_RAINBOW_LUA_BEGIN
         // <animation>:set_sprite(<sprite>)
         return set1ud<Sprite>(
             L,
-            [](::Animation* animation, const ::Sprite::Ref& sprite) {
+            [](::Animation* animation, const SpriteRef& sprite) {
               animation->set_sprite(sprite);
             });
     }

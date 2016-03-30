@@ -93,14 +93,14 @@ public:
     /// <returns>
     ///   Reference to the newly created sprite, positioned at (x,y).
     /// </returns>
-    Sprite::Ref add(int x, int y, int width, int height);
+    SpriteRef add(int x, int y, int width, int height);
 
     /// <summary>Binds all used textures.</summary>
     void bind_textures() const;
 
     /// <summary>Brings sprite to front.</summary>
     /// <remarks>Invalidates all references.</remarks>
-    void bring_to_front(const Sprite::Ref&);
+    void bring_to_front(const SpriteRef&);
 
     /// <summary>Clears all sprites.</summary>
     void clear() { count_ = 0; }
@@ -111,20 +111,20 @@ public:
     /// <returns>
     ///   Reference to the newly created sprite, positioned at (0,0).
     /// </returns>
-    Sprite::Ref create_sprite(unsigned int width, unsigned int height);
+    SpriteRef create_sprite(unsigned int width, unsigned int height);
 
     /// <summary>Erases a sprite from the batch.</summary>
     /// <remarks>Invalidates all references.</remarks>
-    void erase(const Sprite::Ref&);
+    void erase(const SpriteRef&);
 
     /// <summary>Returns the first sprite with the given id.</summary>
-    Sprite::Ref find_sprite_by_id(int id) const;
+    SpriteRef find_sprite_by_id(int id) const;
 
     /// <summary>Moves all sprites by (x,y).</summary>
     void move(const Vec2f&);
 
     /// <summary>Swaps two sprites' positions in the batch.</summary>
-    void swap(const Sprite::Ref&, const Sprite::Ref&);
+    void swap(const SpriteRef&, const SpriteRef&);
 
     /// <summary>Updates the batch of sprites.</summary>
     void update();

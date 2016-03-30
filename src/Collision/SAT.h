@@ -9,7 +9,7 @@
 
 namespace rainbow
 {
-    bool overlaps(const Sprite::Ref& a, const Sprite::Ref& b);
+    bool overlaps(const SpriteRef& a, const SpriteRef& b);
 }
 
 #endif

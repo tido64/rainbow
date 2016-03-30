@@ -32,7 +32,7 @@ void set_color_and_transform(lua_State* L, T asset)
 }
 
 Prose::Asset create_animation(lua_State* L,
-                              const Sprite::Ref& sprite,
+                              const SpriteRef& sprite,
                               rainbow::ScopeStack& stack,
                               rainbow::SceneNode* parent)
 {
@@ -114,7 +114,7 @@ Prose::Asset create_sprite(lua_State* L,
                            rainbow::ScopeStack& stack,
                            rainbow::SceneNode* parent)
 {
-    Sprite::Ref sprite;
+    SpriteRef sprite;
     if (!has_key(L, "size"))
         R_ABORT(kProseMissingProperty, "size", "sprite", table_name(L));
     else

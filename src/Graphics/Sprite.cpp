@@ -33,16 +33,22 @@ namespace
     }
 }
 
-Sprite& Sprite::Ref::operator*() const { return batch_->sprites()[i_]; }
+Sprite& SpriteRef::operator*() const
+{
+    return batch_->sprites()[i_];
+}
 
-Sprite* Sprite::Ref::operator->() const { return &batch_->sprites()[i_]; }
+Sprite* SpriteRef::operator->() const
+{
+    return &batch_->sprites()[i_];
+}
 
-Sprite::Sprite(unsigned int w,
-               unsigned int h,
-               NotNull<const SpriteBatch*> p)
+Sprite::Sprite(unsigned int w, unsigned int h, NotNull<const SpriteBatch*> p)
     : width_(w), height_(h), state_(0), angle_(0.0f), pivot_(0.5f, 0.5f),
       scale_(1.0f, 1.0f), parent_(p), vertex_array_(nullptr),
-      normal_map_(nullptr), id_(kNoId) {}
+      normal_map_(nullptr), id_(kNoId)
+{
+}
 
 Sprite::Sprite(Sprite&& s)
     : width_(s.width_), height_(s.height_),

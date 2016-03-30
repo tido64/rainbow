@@ -13,7 +13,7 @@ namespace
         Vec2f v2;
         Vec2f v3;
 
-        Quad(const Sprite::Ref& sprite) : Quad(sprite->vertex_array()) {}
+        Quad(const SpriteRef& sprite) : Quad(sprite->vertex_array()) {}
 
         Quad(const SpriteVertex* vertices)
             : v0(vertices[0].position), v1(vertices[1].position),
@@ -62,7 +62,7 @@ namespace
     }
 }
 
-bool rainbow::overlaps(const Sprite::Ref& a, const Sprite::Ref& b)
+bool rainbow::overlaps(const SpriteRef& a, const SpriteRef& b)
 {
     return ::overlaps(a, a->angle(), b, b->angle());
 }

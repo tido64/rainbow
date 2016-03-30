@@ -31,7 +31,7 @@ namespace
         rainbow::ISolemnlySwearThatIAmOnlyTesting mock;
         SharedPtr<TextureAtlas> atlas_;
         SpriteBatch batch_;
-        Sprite::Ref sprite_;
+        SpriteRef sprite_;
         const SpriteVertex* vertex_array_;
         Vec2f uv_[4];
         Animation animation_;
