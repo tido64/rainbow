@@ -28,7 +28,7 @@ public:
     ///   <paramref name="hint"/> for more efficient storage.
     /// </param>
     SpriteBatch(unsigned int hint = 4);
-    explicit SpriteBatch(const rainbow::ISolemnlySwearThatIAmOnlyTesting&);
+    SpriteBatch(SharedPtr<TextureAtlas> texture, SpriteList sprites);
     SpriteBatch(SpriteBatch&&);
     ~SpriteBatch();
 
@@ -130,6 +130,8 @@ public:
     void update();
 
 #ifdef RAINBOW_TEST
+    explicit SpriteBatch(const rainbow::ISolemnlySwearThatIAmOnlyTesting&);
+
     auto capacity() const { return reserved_; }
     auto vertices() const { return vertices_.get(); }
 #endif

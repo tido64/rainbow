@@ -5,6 +5,7 @@
 #ifndef GRAPHICS_TEXTUREATLAS_H_
 #define GRAPHICS_TEXTUREATLAS_H_
 
+#include <tuple>
 #include <vector>
 
 #include "Common/DataMap.h"
@@ -13,6 +14,8 @@
 #include "Memory/SharedPtr.h"
 
 class TextureManager;
+
+using TextureList = std::initializer_list<std::tuple<int, int, int, int>>;
 
 /// <summary>Texture atlas loaded from an image file.</summary>
 /// <remarks>
@@ -36,7 +39,12 @@ class TextureAtlas : public RefCounted
 {
 public:
     explicit TextureAtlas(const char* path, float scale = 1.0f);
+    TextureAtlas(const char* path, float scale, TextureList regions);
     TextureAtlas(const char* id, const DataMap& data, float scale = 1.0f);
+    TextureAtlas(const char* id,
+                 const DataMap& data,
+                 float scale,
+                 TextureList regions);
 
     auto height() const { return texture_.height(); }
     auto is_valid() const { return texture_; }

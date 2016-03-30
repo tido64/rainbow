@@ -58,11 +58,22 @@ SpriteBatch::SpriteBatch(unsigned int hint)
     array_.reconfigure(std::bind(&SpriteBatch::bind_arrays, this));
 }
 
-SpriteBatch::SpriteBatch(const rainbow::ISolemnlySwearThatIAmOnlyTesting& test)
-    : count_(0), vertex_buffer_(test), normal_buffer_(test), reserved_(0),
-      visible_(true)
+SpriteBatch::SpriteBatch(SharedPtr<TextureAtlas> texture, SpriteList sprites)
+    : SpriteBatch(sprites.size())
 {
-    resize(4);
+    set_texture(std::move(texture));
+    for (auto&& s : sprites)
+    {
+        auto sprite = create_sprite(s.size().x, s.size().y);
+        sprite->set_rotation(s.angle());
+        sprite->set_pivot(s.pivot());
+        sprite->set_position(s.position());
+        sprite->set_scale(s.scale());
+        sprite->set_color(s.color());
+        sprite->set_texture(s.texture());
+        if (s.ref() != nullptr)
+            *s.ref() = sprite;
+    }
 }
 
 SpriteBatch::SpriteBatch(SpriteBatch&& batch)
@@ -264,3 +275,12 @@ void SpriteBatch::set_buffer(T* buffer)
 {
     std::for_each(sprites_.get(), sprites_ + count_, SetBuffer<T>(buffer));
 }
+
+#ifdef RAINBOW_TEST
+SpriteBatch::SpriteBatch(const rainbow::ISolemnlySwearThatIAmOnlyTesting& test)
+    : count_(0), vertex_buffer_(test), normal_buffer_(test), reserved_(0),
+      visible_(true)
+{
+    resize(4);
+}
+#endif  // RAINBOW_TEST

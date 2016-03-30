@@ -15,22 +15,33 @@ void NoGame::init(const Vec2i& screen)
     const float logo_scale = 0.1f * scale;
     const unsigned int logo_width = kRainbowLogoWidth * logo_scale;
     const unsigned int logo_height = kRainbowLogoHeight * logo_scale;
+
+    auto texture = rainbow::texture(
+        kRainbowLogoURI,
+        kRainbowLogo,
+        logo_scale,
+        TextureList({
+            std::make_tuple(0, 64, 0, 0),                    // 0
+            std::make_tuple(0, 0, logo_width, logo_height),  // 1
+        }));
+
     const unsigned int logo_padding = 32 * scale;
+    const Vec2f center{screen.x * 0.5f, screen.y * 0.5f};
 
-    batch_ = rainbow::spritebatch(1);
-    auto texture = rainbow::texture(kRainbowLogoURI, kRainbowLogo, logo_scale);
-    batch_->set_texture(texture);
-
-    frame_ = batch_->create_sprite(
-        logo_width + logo_padding, logo_height + logo_padding);
-    frame_->set_color(0xffffff00);
-    frame_->set_position(Vec2f(screen.x * 0.5f, screen.y * 0.5f));
-    frame_->set_texture(texture->add_region(0, 64, 0, 0));
-
-    auto logo = batch_->create_sprite(logo_width, logo_height);
-    logo->set_color(0x000000ff);
-    logo->set_position(Vec2f(screen.x * 0.5f, screen.y * 0.5f));
-    logo->set_texture(texture->add_region(0, 0, logo_width, logo_height));
+    batch_ = rainbow::spritebatch(
+        texture,
+        SpriteList({
+            SpriteModel(&frame_)
+                .size(logo_width + logo_padding, logo_height + logo_padding)
+                .position(center)
+                .texture(0)
+                .color(0xffffff00),
+            SpriteModel()
+                .size(logo_width, logo_height)
+                .position(center)
+                .texture(1)
+                .color(0x000000ff),
+        }));
 
     scenegraph().add_child(batch_);
 }

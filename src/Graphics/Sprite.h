@@ -172,4 +172,75 @@ private:
     void set_normal(unsigned int f, NotNull<const Vec2f*> uv);
 };
 
+class SpriteModel
+{
+public:
+    SpriteModel(SpriteRef* ref = nullptr) : ref_(ref) {}
+
+    auto angle() const { return angle_; }
+    auto angle(float angle) -> SpriteModel&
+    {
+        angle_ = angle;
+        return *this;
+    }
+
+    auto color() const { return color_; }
+    auto color(Colorb color) -> SpriteModel&
+    {
+        color_ = color;
+        return *this;
+    }
+
+    auto pivot() const { return pivot_; }
+    auto pivot(const Vec2f& pivot) -> SpriteModel&
+    {
+        pivot_ = pivot;
+        return *this;
+    }
+
+    auto position() const { return position_; }
+    auto position(const Vec2f& position) -> SpriteModel&
+    {
+        position_ = position;
+        return *this;
+    }
+
+    auto ref() const { return ref_; }
+
+    auto scale() const { return scale_; }
+    auto scale(const Vec2f& scale) -> SpriteModel&
+    {
+        scale_ = scale;
+        return *this;
+    }
+
+    auto size() const { return Vec2i(width_, height_); }
+    auto size(unsigned int width, unsigned int height) -> SpriteModel&
+    {
+        width_ = width;
+        height_ = height;
+        return *this;
+    }
+
+    auto texture() const { return texture_; }
+    auto texture(unsigned int texture) -> SpriteModel&
+    {
+        texture_ = texture;
+        return *this;
+    }
+
+private:
+    unsigned int width_ = 0;
+    unsigned int height_ = 0;
+    float angle_ = 0.0f;
+    Vec2f pivot_ = {0.5f, 0.5f};
+    Vec2f position_;
+    Vec2f scale_ = Vec2f::One;
+    Colorb color_;
+    unsigned int texture_ = 0;
+    SpriteRef* ref_;
+};
+
+using SpriteList = std::initializer_list<SpriteModel>;
+
 #endif

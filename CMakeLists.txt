@@ -132,7 +132,6 @@ set(SOURCE_FILES
     src/Script/Components/SceneComponent.h
     src/Script/Components/ScriptComponent.h
     src/Script/Components/StateComponent.h
-    src/Script/GameBase.cpp
     src/Script/GameBase.h
     src/Script/Prose.Node.h
     src/Script/Prose.Resource.h

@@ -20,19 +20,49 @@ namespace rainbow
     using spritebatch_t = std::shared_ptr<SpriteBatch>;
     using texture_t = SharedPtr<TextureAtlas>;
 
-    animation_t animation(SpriteRef sprite,
-                          Animation::Frames frames,
-                          unsigned int fps,
-                          int loop_delay = 0);
-    font_t font(const char* path, float pt);
-    label_t label(const char* string = nullptr);
-    spritebatch_t spritebatch(unsigned int hint = 4);
-    texture_t texture(const char* path, float scale = 1.0f);
-    texture_t texture(const char* id, const DataMap& data, float scale = 1.0f);
+    template <typename... Args>
+    auto animation(Args&&... args)
+    {
+        return std::make_shared<Animation>(std::forward<Args>(args)...);
+    }
+
+    template <typename... Args>
+    auto font(Args&&... args)
+    {
+        auto font = ::make_shared<FontAtlas>(std::forward<Args>(args)...);
+        R_ASSERT(font->is_valid(), "rainbow::font: Failed to create font");
+        return font;
+    }
+
+    inline auto label(const char* string = nullptr)
+    {
+        auto label = std::make_shared<Label>();
+        if (string != nullptr)
+            label->set_text(string);
+        return label;
+    }
+
+    template <typename... Args>
+    auto spritebatch(Args&&... args)
+    {
+        return std::make_shared<SpriteBatch>(std::forward<Args>(args)...);
+    }
+
+    template <typename... Args>
+    auto texture(Args&&... args)
+    {
+        auto texture = ::make_shared<TextureAtlas>(std::forward<Args>(args)...);
+        R_ASSERT(texture->is_valid(),
+                 "rainbow::texture: Failed to create texture");
+        return texture;
+    }
 
     namespace prose
     {
-        prose_t from_lua(const char* path);
+        inline auto from_lua(const char* path)
+        {
+            return std::shared_ptr<Prose>(Prose::from_lua(path));
+        }
     }
 }
 

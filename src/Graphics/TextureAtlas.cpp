@@ -26,6 +26,19 @@ TextureAtlas::TextureAtlas(const char* path, float scale)
         });
 }
 
+TextureAtlas::TextureAtlas(const char* path, float scale, TextureList regions)
+    : TextureAtlas(path, scale)
+{
+    regions_.reserve(regions.size());
+    for (auto&& p : regions)
+    {
+        add_region(std::get<0>(p),
+                   std::get<1>(p),
+                   std::get<2>(p),
+                   std::get<3>(p));
+    }
+}
+
 TextureAtlas::TextureAtlas(const char* id, const DataMap& data, float scale)
 {
     texture_ = TextureManager::Get()->create(
@@ -35,6 +48,22 @@ TextureAtlas::TextureAtlas(const char* id, const DataMap& data, float scale)
         {
             load(texture_manager, texture, data, scale);
         });
+}
+
+TextureAtlas::TextureAtlas(const char* id,
+                           const DataMap& data,
+                           float scale,
+                           TextureList regions)
+    : TextureAtlas(id, data, scale)
+{
+    regions_.reserve(regions.size());
+    for (auto&& p : regions)
+    {
+        add_region(std::get<0>(p),
+                   std::get<1>(p),
+                   std::get<2>(p),
+                   std::get<3>(p));
+    }
 }
 
 auto TextureAtlas::add_region(int x, int y, int w, int h) -> unsigned int
