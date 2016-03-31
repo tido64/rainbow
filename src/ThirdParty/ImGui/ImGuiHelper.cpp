@@ -5,13 +5,20 @@
 #include "ThirdParty/ImGui/ImGuiHelper.h"
 
 #ifdef __GNUC__
-#   pragma GCC diagnostic push
+    // TODO: This is a workaround for 'diagnostic push' bug in GCC. See
+    // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=53431 for details.
+#   ifdef __clang__
+#       pragma GCC diagnostic push
+#   endif
+#   pragma GCC diagnostic ignored "-Wformat"
 #   pragma GCC diagnostic ignored "-Wold-style-cast"
+#   pragma GCC diagnostic ignored "-Wtype-limits"
+#   pragma GCC diagnostic ignored "-Wunused-function"
 #   pragma GCC diagnostic ignored "-Wunused-parameter"
 #endif
 #include <imgui/imgui.cpp>
 #include <imgui/imgui_draw.cpp>
-#ifdef __GNUC__
+#ifdef __clang__
 #   pragma GCC diagnostic pop
 #endif
 
