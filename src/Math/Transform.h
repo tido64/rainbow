@@ -1,10 +1,14 @@
-#ifndef GRAPHICS_TRANSFORM_H_
-#define GRAPHICS_TRANSFORM_H_
+// Copyright (c) 2010-16 Bifrost Entertainment AS and Tommy Nguyen
+// Distributed under the MIT License.
+// (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
-#include "Common/Vec2.h"
+#ifndef MATH_TRANSFORM_H_
+#define MATH_TRANSFORM_H_
+
+#include "Math/Vec2.h"
 #include "Memory/Array.h"
 
-namespace rainbow { namespace graphics
+namespace rainbow
 {
     template <typename Float>
     Vec2<Float> transform_srt(const Vec2<Float>& p,
@@ -88,6 +92,6 @@ namespace rainbow { namespace graphics
         transform(
             quad, sprite.position(), sprite.angle(), sprite.scale(), data);
     }
-}}  // namespace rainbow::graphics
+}
 
 #endif

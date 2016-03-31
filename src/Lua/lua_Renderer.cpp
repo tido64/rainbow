@@ -42,7 +42,7 @@ namespace
 
     int set_projection(lua_State* L)
     {
-        // rainbow.renderer.set_projection(left, top, right, bottom)
+        // rainbow.renderer.set_projection(left, bottom, right, top)
         Argument<lua_Number>::is_required(L, 1);
         Argument<lua_Number>::is_required(L, 2);
         Argument<lua_Number>::is_required(L, 3);

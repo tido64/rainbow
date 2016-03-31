@@ -8,7 +8,7 @@
 
 #include "Common/Algorithm.h"
 #include "Common/UTF8.h"
-#include "Graphics/Transform.h"
+#include "Math/Transform.h"
 
 using rainbow::is_equal;
 
@@ -186,12 +186,10 @@ void Label::save(unsigned int start,
               sin_r = Vec2f(R.y, R.y),
               cos_r = Vec2f(R.x, R.x),
               &translate = position_
-            ](SpriteVertex& v)
-            {
+            ](SpriteVertex& v) {
                 auto p = v.position;
                 p.x -= offset;
-                v.position = rainbow::graphics::transform_srt(
-                    p, sin_r, cos_r, translate);
+                v.position = rainbow::transform_srt(p, sin_r, cos_r, translate);
             });
     }
     if (width > width_)

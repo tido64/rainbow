@@ -5,10 +5,10 @@
 #ifndef GRAPHICS_RENDERER_H_
 #define GRAPHICS_RENDERER_H_
 
-#include "Common/Geometry.h"
 #include "Graphics/ElementBuffer.h"
 #include "Graphics/ShaderManager.h"
 #include "Graphics/TextureManager.h"
+#include "Math/Geometry.h"
 
 namespace rainbow { namespace graphics
 {

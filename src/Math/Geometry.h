@@ -2,10 +2,10 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
-#ifndef GRAPHICS_GEOMETRY_H_
-#define GRAPHICS_GEOMETRY_H_
+#ifndef MATH_GEOMETRY_H_
+#define MATH_GEOMETRY_H_
 
-#include "Common/Vec2.h"
+#include "Math/Vec2.h"
 
 namespace rainbow
 {
@@ -44,18 +44,18 @@ namespace rainbow
     struct Rect
     {
         float left;
-        float top;
-        float right;
         float bottom;
+        float right;
+        float top;
 
         Rect() : Rect(0.0f, 0.0f, 0.0f, 0.0f) {}
-        Rect(float left_, float top_, float right_, float bottom_)
-            : left(left_), top(top_), right(right_), bottom(bottom_) {}
+        Rect(float left_, float bottom_, float right_, float top_)
+            : left(left_), bottom(bottom_), right(right_), top(top_) {}
 
-        Vec2f bottom_left() const { return {left, bottom}; }
-        Vec2f bottom_right() const { return {right, bottom}; }
-        Vec2f top_left() const { return {left, top}; }
-        Vec2f top_right() const { return {right, top}; }
+        auto bottom_left() const { return Vec2f{left, bottom}; }
+        auto bottom_right() const { return Vec2f{right, bottom}; }
+        auto top_left() const { return Vec2f{left, top}; }
+        auto top_right() const { return Vec2f{right, top}; }
 
         friend bool operator!=(const Rect& r, const Rect& s)
         {
@@ -64,8 +64,8 @@ namespace rainbow
 
         friend bool operator==(const Rect& r, const Rect& s)
         {
-            return r.left == s.left && r.top == s.top && r.right == s.right &&
-                   r.bottom == s.bottom;
+            return r.left == s.left && r.bottom == s.bottom &&
+                   r.right == s.right && r.top == s.top;
         }
     };
 }

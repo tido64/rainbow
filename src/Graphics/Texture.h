@@ -7,7 +7,7 @@
 
 #include <string>
 
-#include "Common/Vec2.h"
+#include "Math/Vec2.h"
 
 namespace rainbow
 {

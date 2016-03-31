@@ -13,7 +13,7 @@
 #endif
 
 #include "Common/TreeNode.h"
-#include "Common/Vec2.h"
+#include "Math/Vec2.h"
 
 class Drawable;
 

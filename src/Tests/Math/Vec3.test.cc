@@ -4,7 +4,7 @@
 
 #include <gtest/gtest.h>
 
-#include "Common/Vec3.h"
+#include "Math/Vec3.h"
 
 TEST(Vec3Test, ZeroLength)
 {

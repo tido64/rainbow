@@ -2,8 +2,8 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
-#ifndef COMMON_VEC3_H_
-#define COMMON_VEC3_H_
+#ifndef MATH_VEC3_H_
+#define MATH_VEC3_H_
 
 #include "Common/Algorithm.h"
 

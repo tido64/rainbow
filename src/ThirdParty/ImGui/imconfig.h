@@ -8,7 +8,7 @@
 #define THIRDPARTY_IMGUI_IMCONFIG_H_
 
 #include "Common/Logging.h"
-#include "Common/Vec2.h"
+#include "Math/Vec2.h"
 
 //---- Define assertion handler. Defaults to calling assert().
 #define IM_ASSERT(_EXPR)  R_ASSERT((_EXPR), "dear imgui")

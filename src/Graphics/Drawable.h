@@ -5,7 +5,7 @@
 #ifndef GRAPHICS_DRAWABLE_H_
 #define GRAPHICS_DRAWABLE_H_
 
-#include "Common/Vec2.h"
+#include "Math/Vec2.h"
 
 /// <summary>A drawable interface.</summary>
 class Drawable

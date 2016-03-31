@@ -66,7 +66,7 @@ namespace
         draw_data->ScaleClipRects(io.DisplayFramebufferScale);
 
         ScopedProjection projection(
-            {0.0f, 0.0f, io.DisplaySize.x, io.DisplaySize.y});
+            {0.0f, io.DisplaySize.y, io.DisplaySize.x, 0.0f});
         ScopedScissorTest scissor_test;
 
         const int window_height =

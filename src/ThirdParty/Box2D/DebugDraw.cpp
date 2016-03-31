@@ -6,10 +6,10 @@
 
 #include <memory>
 
-#include "Common/Geometry.h"
 #include "Graphics/Shaders.h"
 #include "Graphics/ShaderManager.h"
 #include "Graphics/VertexArray.h"
+#include "Math/Geometry.h"
 
 namespace
 {

@@ -5,8 +5,8 @@
 #ifndef LUA_PLATFORM_H_
 #define LUA_PLATFORM_H_
 
-#include "Common/Vec2.h"
 #include "Lua/LuaMacros.h"
+#include "Math/Vec2.h"
 
 struct lua_State;
 

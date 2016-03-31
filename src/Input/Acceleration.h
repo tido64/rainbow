@@ -5,7 +5,7 @@
 #ifndef INPUT_ACCELERATION_H_
 #define INPUT_ACCELERATION_H_
 
-#include "Common/Vec3.h"
+#include "Math/Vec3.h"
 
 #define kFilteringFactor 0.1
 

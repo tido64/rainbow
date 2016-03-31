@@ -4,7 +4,7 @@
 
 #include "Graphics/SpriteBatch.h"
 
-#include "Graphics/Transform.h"
+#include "Math/Transform.h"
 
 namespace
 {
@@ -222,8 +222,7 @@ auto Sprite::update() -> bool
         if (state_ & kStalePosition)
             center_ = position_;
 
-        rainbow::graphics::transform(
-            *this, ArraySpan<SpriteVertex>(vertex_array_, 4));
+        rainbow::transform(*this, ArraySpan<SpriteVertex>(vertex_array_, 4));
     }
     else if (state_ & kStalePosition)
     {

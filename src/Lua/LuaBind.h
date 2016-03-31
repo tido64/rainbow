@@ -5,9 +5,9 @@
 #ifndef LUA_LUABIND_H_
 #define LUA_LUABIND_H_
 
-#include "Common/Vec2.h"
 #include "Lua/LuaHelper.h"
 #include "Lua/LuaSyntax.h"
+#include "Math/Vec2.h"
 
 NS_RAINBOW_LUA_BEGIN
 {

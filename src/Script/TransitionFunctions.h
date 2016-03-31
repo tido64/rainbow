@@ -8,7 +8,7 @@
 #include <functional>
 
 #include "Common/Color.h"
-#include "Common/Vec2.h"
+#include "Math/Vec2.h"
 
 using TimingFunction = std::function<float(float, float, float)>;
 

@@ -8,7 +8,7 @@
 #include <SDL_config.h>  // Ensure we include the correct SDL_config.h.
 #include <SDL_video.h>
 
-#include "Common/Vec2.h"
+#include "Math/Vec2.h"
 
 namespace rainbow { class Config; }
 

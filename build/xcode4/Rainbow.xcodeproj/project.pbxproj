@@ -397,8 +397,6 @@
 		1939A196152C425D00494609 /* Random.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Random.cpp; sourceTree = "<group>"; };
 		1939A197152C425D00494609 /* Random.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Random.h; sourceTree = "<group>"; };
 		1939A19C152C425D00494609 /* TreeNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TreeNode.h; sourceTree = "<group>"; };
-		1939A19D152C425D00494609 /* Vec2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Vec2.h; sourceTree = "<group>"; };
-		1939A19E152C425D00494609 /* Vec3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Vec3.h; sourceTree = "<group>"; };
 		1939A1A0152C425D00494609 /* Config.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; name = Config.cpp; path = ../../../src/Config.cpp; sourceTree = "<group>"; };
 		1939A1A1152C425D00494609 /* Config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Config.h; path = ../../../src/Config.h; sourceTree = "<group>"; };
 		1939A1BA152C425D00494609 /* Director.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; name = Director.cpp; path = ../../../src/Director.cpp; sourceTree = "<group>"; };
@@ -578,6 +576,10 @@
 		19D3204817BD6BD4007BDC67 /* PVRTC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PVRTC.h; sourceTree = "<group>"; };
 		19D3204917BD6BD4007BDC67 /* PNG.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNG.h; sourceTree = "<group>"; };
 		19D3204A17BD6BD4007BDC67 /* Image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Image.h; sourceTree = "<group>"; };
+		19D5620E1CAD011400827F72 /* Geometry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Geometry.h; sourceTree = "<group>"; };
+		19D5620F1CAD011400827F72 /* Transform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Transform.h; sourceTree = "<group>"; };
+		19D562101CAD011400827F72 /* Vec2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Vec2.h; sourceTree = "<group>"; };
+		19D562111CAD011400827F72 /* Vec3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Vec3.h; sourceTree = "<group>"; };
 		19D931841834AFC200F0137E /* ChangeMonitor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChangeMonitor.h; sourceTree = "<group>"; };
 		19D931871834AFCE00F0137E /* ChangeMonitor_Stub.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = ChangeMonitor_Stub.cpp; sourceTree = "<group>"; };
 		19DB48B31CA6A4BD00999675 /* imconfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = imconfig.h; sourceTree = "<group>"; };
@@ -587,10 +589,8 @@
 		19DB48B81CA6AAFE00999675 /* ElementBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ElementBuffer.h; sourceTree = "<group>"; };
 		19DCB2721741A1D000660000 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		19DCB2831746AB7C00660000 /* LuaBind.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LuaBind.h; sourceTree = "<group>"; };
-		19DF40441C98B3EF001482BC /* Geometry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Geometry.h; sourceTree = "<group>"; };
 		19DF40451C98B415001482BC /* TypeInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TypeInfo.h; sourceTree = "<group>"; };
 		19DF40461C98B425001482BC /* String.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = String.h; sourceTree = "<group>"; };
-		19DF40471C98B455001482BC /* Transform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Transform.h; sourceTree = "<group>"; };
 		19DF40481C98B4AF001482BC /* Pool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Pool.h; path = ../../../src/Memory/Pool.h; sourceTree = "<group>"; };
 		19DFE5211C6002890079CB58 /* Channel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Channel.h; sourceTree = "<group>"; };
 		19DFE5221C6002890079CB58 /* Mixer.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = Mixer.cpp; sourceTree = "<group>"; };
@@ -916,7 +916,6 @@
 				1939A186152C425D00494609 /* Data.h */,
 				1949374E1756796D00CF3FC6 /* DataMap.h */,
 				195D565617D90DD100C78117 /* Functional.h */,
-				19DF40441C98B3EF001482BC /* Geometry.h */,
 				1910099519FDA3A70036D5F4 /* Global.h */,
 				1910099619FDA3A70036D5F4 /* Link.cpp */,
 				1910099719FDA3A70036D5F4 /* Link.h */,
@@ -929,8 +928,6 @@
 				19DF40451C98B415001482BC /* TypeInfo.h */,
 				1923F97D1AF6400A0012C078 /* UTF8.cpp */,
 				1923F97E1AF6400A0012C078 /* UTF8.h */,
-				1939A19D152C425D00494609 /* Vec2.h */,
-				1939A19E152C425D00494609 /* Vec3.h */,
 			);
 			name = Common;
 			path = ../../../src/Common;
@@ -985,7 +982,6 @@
 				1939A1DA152C425D00494609 /* TextureAtlas.h */,
 				197396DB15A505F60064BF7D /* TextureManager.cpp */,
 				197396DC15A505F60064BF7D /* TextureManager.h */,
-				19DF40471C98B455001482BC /* Transform.h */,
 				196911CB1713564A002BC2E4 /* VertexArray.cpp */,
 				196911CC1713564A002BC2E4 /* VertexArray.h */,
 			);
@@ -1174,6 +1170,7 @@
 				196CB724161E4ADD0068C809 /* Heimdall */,
 				1939A1DB152C425D00494609 /* Input */,
 				1939A1E6152C425D00494609 /* Lua */,
+				19D5620D1CAD011400827F72 /* Math */,
 				19F2038A1AAC5500005CD913 /* Memory */,
 				1986919F16DED44D00BC4830 /* Platform */,
 				198F42661A9151CB00BE7A73 /* Script */,
@@ -1389,6 +1386,18 @@
 				19D3204717BD6BD4007BDC67 /* UIKit.h */,
 			);
 			path = Decoders;
+			sourceTree = "<group>";
+		};
+		19D5620D1CAD011400827F72 /* Math */ = {
+			isa = PBXGroup;
+			children = (
+				19D5620E1CAD011400827F72 /* Geometry.h */,
+				19D5620F1CAD011400827F72 /* Transform.h */,
+				19D562101CAD011400827F72 /* Vec2.h */,
+				19D562111CAD011400827F72 /* Vec3.h */,
+			);
+			name = Math;
+			path = ../../../src/Math;
 			sourceTree = "<group>";
 		};
 		19D931851834AFCE00F0137E /* impl */ = {

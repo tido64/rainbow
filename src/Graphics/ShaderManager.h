@@ -8,9 +8,9 @@
 #include <vector>
 
 #include "Common/Global.h"
-#include "Common/Vec2.h"
 #include "Graphics/OpenGL.h"
 #include "Graphics/ShaderDetails.h"
+#include "Math/Vec2.h"
 
 namespace rainbow
 {

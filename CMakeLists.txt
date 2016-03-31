@@ -52,8 +52,6 @@ set(SOURCE_FILES
     src/Common/TypeInfo.h
     src/Common/UTF8.cpp
     src/Common/UTF8.h
-    src/Common/Vec2.h
-    src/Common/Vec3.h
     src/Config.cpp
     src/Config.h
     src/Director.cpp
@@ -102,7 +100,6 @@ set(SOURCE_FILES
     src/Graphics/TextureAtlas.h
     src/Graphics/TextureManager.cpp
     src/Graphics/TextureManager.h
-    src/Graphics/Transform.h
     src/Graphics/VertexArray.cpp
     src/Graphics/VertexArray.h
     src/Input/Acceleration.h
@@ -118,6 +115,10 @@ set(SOURCE_FILES
     src/Lua/LuaMacros.h
     src/Lua/LuaSyntax.cpp
     src/Lua/LuaSyntax.h
+    src/Math/Geometry.h
+    src/Math/Transform.h
+    src/Math/Vec2.h
+    src/Math/Vec3.h
     src/Memory/Arena.h
     src/Memory/Array.h
     src/Memory/NotNull.h
@@ -249,8 +250,6 @@ if(UNIT_TESTS)
        src/Tests/Common/Random.test.cc
        src/Tests/Common/TreeNode.test.cc
        src/Tests/Common/TypeInfo.test.cc
-       src/Tests/Common/Vec2.test.cc
-       src/Tests/Common/Vec3.test.cc
        src/Tests/Config.test.cc
        src/Tests/FileSystem/Path.test.cc
        src/Tests/Graphics/Animation.test.cc
@@ -260,6 +259,8 @@ if(UNIT_TESTS)
        src/Tests/Input/Controller.test.cc
        src/Tests/Input/Input.test.cc
        src/Tests/Input/Pointer.test.cc
+       src/Tests/Math/Vec2.test.cc
+       src/Tests/Math/Vec3.test.cc
        src/Tests/Memory/Pool.test.cc
        src/Tests/Memory/ScopeStack.test.cc
        src/Tests/Memory/SharedPtr.test.cc

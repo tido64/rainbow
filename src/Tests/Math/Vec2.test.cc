@@ -4,7 +4,7 @@
 
 #include <gtest/gtest.h>
 
-#include "Common/Vec2.h"
+#include "Math/Vec2.h"
 
 TEST(Vec2Test, Angle)
 {

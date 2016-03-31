@@ -5,7 +5,7 @@
 #ifndef GRAPHICS_SHADERS_DIFFUSE_H_
 #define GRAPHICS_SHADERS_DIFFUSE_H_
 
-#include "Common/Vec3.h"
+#include "Math/Vec3.h"
 
 namespace rainbow { namespace shaders
 {

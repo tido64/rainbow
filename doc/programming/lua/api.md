@@ -463,14 +463,14 @@ Sets clear colour. Clearing occurs at the start of each drawn frame.
 
 Sets texture filtering method. Only affects new textures.
 
-### rainbow.renderer.set_projection(left, top, right, bottom)
+### rainbow.renderer.set_projection(left, bottom, right, top)
 
 | Parameter | Description |
 |:----------|:------------|
 | <var>left</var> | Leftmost point in pixels. Default: 0. |
-| <var>top</var> | Topmost point in pixels. Default: [``rainbow.platform.screen.height``](#rainbowplatformscreen). |
-| <var>right</var> | Rightmost point in pixels. Default: [``rainbow.platform.screen.width``](#rainbowplatformscreen). |
 | <var>bottom</var> | Bottommost point in pixels. Default: 0. |
+| <var>right</var> | Rightmost point in pixels. Default: [``rainbow.platform.screen.width``](#rainbowplatformscreen). |
+| <var>top</var> | Topmost point in pixels. Default: [``rainbow.platform.screen.height``](#rainbowplatformscreen). |
 
 Sets orthographic projection.
 
