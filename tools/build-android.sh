@@ -156,6 +156,9 @@ model {
             }
         }
     }
+    android.lintOptions {
+        disable 'GoogleAppIndexingWarning'
+    }
 }
 
 dependencies {
@@ -188,26 +191,6 @@ mkdir -p src/main/jniLibs
 ln -s $PROJECT/lib/FMOD/lib/android/fmod.jar src/main/jniLibs/
 echo " done"
 
-echo -n "Generating src/main/res/values/themes.xml…"
-mkdir -p src/main/res/values
-cat > src/main/res/values/themes.xml << THEMES_XML
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-  <style name="Rainbow.Theme.Default" parent="@android:style/Theme.NoTitleBar.Fullscreen"></style>
-</resources>
-THEMES_XML
-echo " done"
-
-echo -n "Generating src/main/res/values-v11/themes.xml…"
-mkdir -p src/main/res/values-v11
-cat > src/main/res/values-v11/themes.xml << THEMES_XML
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-  <style name="Rainbow.Theme.Default" parent="@android:style/Theme.Holo.NoActionBar.Fullscreen"></style>
-</resources>
-THEMES_XML
-echo " done"
-
 echo -n "Generating src/main/AndroidManifest.xml…"
 cat > src/main/AndroidManifest.xml << ANDROIDMANIFEST_XML
 <?xml version="1.0" encoding="utf-8"?>
@@ -237,6 +220,31 @@ cat > src/main/AndroidManifest.xml << ANDROIDMANIFEST_XML
   </application>
 </manifest>
 ANDROIDMANIFEST_XML
+echo " done"
+
+echo -n "Generating src/main/res/values/themes.xml…"
+mkdir -p src/main/res/values
+cat > src/main/res/values/themes.xml << THEMES_XML
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <style name="Rainbow.Theme.Default" parent="@android:style/Theme.NoTitleBar.Fullscreen"></style>
+</resources>
+THEMES_XML
+echo " done"
+
+echo -n "Generating src/main/res/values-v11/themes.xml…"
+mkdir -p src/main/res/values-v11
+cat > src/main/res/values-v11/themes.xml << THEMES_XML
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <style name="Rainbow.Theme.Default" parent="@android:style/Theme.Holo.NoActionBar.Fullscreen"></style>
+</resources>
+THEMES_XML
+echo " done"
+
+echo -n "Removing unused resources…"
+rm src/main/res/layout/main.xml
+rmdir src/main/res/layout
 echo " done"
 
 ./gradlew
