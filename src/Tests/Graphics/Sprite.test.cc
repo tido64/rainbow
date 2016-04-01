@@ -4,7 +4,8 @@
 
 #include <gtest/gtest.h>
 
-#include "Graphics/SpriteBatch.h"
+#include "Graphics/Sprite.h"
+#include "Graphics/TextureAtlas.h"
 
 namespace rainbow
 {
@@ -13,32 +14,50 @@ namespace rainbow
 
 namespace
 {
+    constexpr unsigned int kStaleBuffer     = 1u << 0;
+    constexpr unsigned int kStalePosition   = 1u << 1;
+    constexpr unsigned int kStaleTexture    = 1u << 2;
+    //constexpr unsigned int kStaleNormalMap  = 1u << 3;
+    constexpr unsigned int kStaleMask       = 0xffffu;
+
     rainbow::ISolemnlySwearThatIAmOnlyTesting mock;
+
+    auto create_texture()
+    {
+        auto atlas = make_shared<TextureAtlas>(mock);
+        atlas->add_region(0, 0, 1, 1);
+        return atlas;
+    }
+
+    auto is_stale(const Sprite& sprite)
+    {
+        return (sprite.state() & kStaleMask) != 0;
+    }
+
+    auto is_stale(const Sprite& sprite, unsigned int state)
+    {
+        return (sprite.state() & state) == state;
+    }
 
     class SpriteFlipMirrorTest : public ::testing::Test
     {
     public:
-        SpriteFlipMirrorTest()
-            : atlas(make_shared<TextureAtlas>(mock)),
-              texture(atlas->add_region(0, 0, 1, 1)),
-              batch(mock),
-              sprite(batch.create_sprite(2, 2)),
-              vertex_array(sprite->vertex_array()) {}
+        SpriteFlipMirrorTest() : atlas(create_texture()) {}
 
     protected:
+        Sprite sprite = {2, 2};
+        SpriteVertex vertex_array[4];
         SharedPtr<TextureAtlas> atlas;
-        unsigned int texture;
-        SpriteBatch batch;
-        SpriteRef sprite = batch.create_sprite(2, 2);
-        const SpriteVertex* vertex_array;
+        unsigned int texture = 0;
         Vec2f p[4];
         Vec2f u[4];
 
+        void update() { sprite.update(vertex_array, *atlas); }
+
         void SetUp() override
         {
-            batch.set_texture(atlas);
-            sprite->set_texture(texture);
-            sprite->update();
+            sprite.set_texture(texture);
+            update();
             for (size_t i = 0; i < 4; ++i)
             {
                 p[i] = vertex_array[i].position;
@@ -50,24 +69,33 @@ namespace
     class SpriteHiddenTest : public ::testing::Test
     {
     public:
-        SpriteHiddenTest() : batch(mock), sprite(batch.create_sprite(2, 2)) {}
+        SpriteHiddenTest() : atlas(create_texture()) {}
 
     protected:
-        SpriteBatch batch;
-        SpriteRef sprite;
+        Sprite sprite = {2, 2};
+        SpriteVertex vertex_array[4];
+        SharedPtr<TextureAtlas> atlas;
+
+        void update() { sprite.update(vertex_array, *atlas); }
+
+        void SetUp() override
+        {
+            update();
+        }
     };
 }
 
 TEST(SpriteTest, PlacedAtOriginOnCreation)
 {
-    SpriteBatch batch(rainbow::ISolemnlySwearThatIAmOnlyTesting{});
-    auto sprite = batch.create_sprite(2, 2);
+    Sprite sprite(2, 2);
 
-    ASSERT_EQ(Vec2f::Zero, sprite->position());
+    ASSERT_TRUE(is_stale(sprite, kStaleBuffer));
+    ASSERT_TRUE(sprite.position().is_zero());
 
-    sprite->update();
+    SpriteVertex vertex_array[4];
+    sprite.update(vertex_array, *create_texture());
 
-    auto vertex_array = sprite->vertex_array();
+    ASSERT_FALSE(is_stale(sprite));
     ASSERT_EQ(Vec2f(-1, -1), vertex_array[0].position);
     ASSERT_EQ(Vec2f(1, -1), vertex_array[1].position);
     ASSERT_EQ(Vec2f(1, 1), vertex_array[2].position);
@@ -76,54 +104,68 @@ TEST(SpriteTest, PlacedAtOriginOnCreation)
 
 TEST(SpriteTest, CanBeColored)
 {
-    SpriteBatch batch(rainbow::ISolemnlySwearThatIAmOnlyTesting{});
-    auto sprite = batch.create_sprite(2, 2);
-
+    Sprite sprite(2, 2);
     const Colorb color(0xec, 0xef, 0xf1);
-    ASSERT_NE(color, sprite->color());
-    sprite->set_color(color);
-    ASSERT_EQ(color, sprite->color());
 
-    auto vertex_array = sprite->vertex_array();
+    ASSERT_TRUE(is_stale(sprite, kStaleBuffer));
+    ASSERT_NE(color, sprite.color());
+
+    sprite.set_color(color);
+
+    ASSERT_TRUE(is_stale(sprite, kStaleBuffer | kStaleTexture));
+    ASSERT_EQ(color, sprite.color());
+
+    SpriteVertex vertex_array[4];
+    sprite.update(vertex_array, *create_texture());
+
+    ASSERT_FALSE(is_stale(sprite));
     for (size_t i = 0; i < 4; ++i)
         ASSERT_EQ(color, vertex_array[i].color);
 }
 
 TEST(SpriteTest, CanBeTagged)
 {
-    SpriteBatch batch(rainbow::ISolemnlySwearThatIAmOnlyTesting{});
-    auto sprite = batch.create_sprite(2, 2);
+    Sprite sprite(2, 2);
 
-    ASSERT_EQ(Sprite::kNoId, sprite->id());
+    ASSERT_EQ(Sprite::kNoId, sprite.id());
 
     const int tag = 0xdeadbeef;
-    sprite->set_id(tag);
-    ASSERT_EQ(tag, sprite->id());
+    sprite.set_id(tag);
+
+    ASSERT_EQ(tag, sprite.id());
 }
 
 TEST(SpriteTest, ChangesPivotWithoutShifting)
 {
-    SpriteBatch batch(rainbow::ISolemnlySwearThatIAmOnlyTesting{});
-    auto sprite = batch.create_sprite(2, 2);
+    Sprite sprite(2, 2);
 
-    ASSERT_EQ(Vec2f(0.5f, 0.5f), sprite->pivot());
+    ASSERT_TRUE(is_stale(sprite, kStaleBuffer));
+    ASSERT_EQ(Vec2f(0.5f, 0.5f), sprite.pivot());
 
-    sprite->update();
-    sprite->set_pivot(Vec2f::Zero);
+    SpriteVertex vertex_array[4];
+    auto texture = create_texture();
+    sprite.update(vertex_array, *texture);
 
-    ASSERT_EQ(Vec2f::Zero, sprite->pivot());
-    ASSERT_EQ(-Vec2f::One, sprite->position());
+    ASSERT_FALSE(is_stale(sprite));
 
-    auto vertex_array = sprite->vertex_array();
+    sprite.set_pivot(Vec2f::Zero);
+
+    ASSERT_FALSE(is_stale(sprite));
+    ASSERT_EQ(Vec2f::Zero, sprite.pivot());
+    ASSERT_EQ(-Vec2f::One, sprite.position());
     ASSERT_EQ(Vec2f(-1, -1), vertex_array[0].position);
     ASSERT_EQ(Vec2f(1, -1), vertex_array[1].position);
     ASSERT_EQ(Vec2f(1, 1), vertex_array[2].position);
     ASSERT_EQ(Vec2f(-1, 1), vertex_array[3].position);
 
-    sprite->set_position(Vec2f::Zero);
-    sprite->update();
+    sprite.set_position(Vec2f::Zero);
 
-    ASSERT_EQ(Vec2f::Zero, sprite->position());
+    ASSERT_TRUE(is_stale(sprite, kStalePosition));
+    ASSERT_TRUE(sprite.position().is_zero());
+
+    sprite.update(vertex_array, *texture);
+
+    ASSERT_FALSE(is_stale(sprite));
     ASSERT_EQ(Vec2f(0, 0), vertex_array[0].position);
     ASSERT_EQ(Vec2f(2, 0), vertex_array[1].position);
     ASSERT_EQ(Vec2f(2, 2), vertex_array[2].position);
@@ -132,52 +174,56 @@ TEST(SpriteTest, ChangesPivotWithoutShifting)
 
 TEST(SpriteTest, Translates)
 {
-    SpriteBatch batch(rainbow::ISolemnlySwearThatIAmOnlyTesting{});
-    auto sprite = batch.create_sprite(2, 2);
+    Sprite sprite(2, 2);
+    sprite.set_position(Vec2f::One);
 
-    sprite->set_position(Vec2f::One);
-    sprite->update();
+    ASSERT_TRUE(is_stale(sprite, kStaleBuffer));
 
-    ASSERT_EQ(Vec2f::One, sprite->position());
+    SpriteVertex vertex_array[4];
+    sprite.update(vertex_array, *create_texture());
 
-    auto vertex_array = sprite->vertex_array();
+    ASSERT_FALSE(is_stale(sprite));
+    ASSERT_EQ(Vec2f::One, sprite.position());
     ASSERT_EQ(Vec2f(0, 0), vertex_array[0].position);
     ASSERT_EQ(Vec2f(2, 0), vertex_array[1].position);
     ASSERT_EQ(Vec2f(2, 2), vertex_array[2].position);
     ASSERT_EQ(Vec2f(0, 2), vertex_array[3].position);
 
-    sprite->move(-Vec2f::One);
+    sprite.move(-Vec2f::One);
 
-    ASSERT_EQ(Vec2f::Zero, sprite->position());
+    ASSERT_TRUE(is_stale(sprite, kStalePosition));
+    ASSERT_TRUE(sprite.position().is_zero());
 }
 
 TEST(SpriteTest, Rotates)
 {
-    SpriteBatch batch(rainbow::ISolemnlySwearThatIAmOnlyTesting{});
-    auto sprite = batch.create_sprite(4, 2);
+    Sprite sprite(4, 2);
 
-    ASSERT_EQ(0.0f, sprite->angle());
+    ASSERT_EQ(0.0f, sprite.angle());
 
-    auto vertex_array = sprite->vertex_array();
+    SpriteVertex vertex_array[4];
+    auto texture = create_texture();
     for (int i = 0; i < 2; ++i)
     {
         const float scale = 1.0f + 0.5f * i;
-        const float width = sprite->width() * scale;
-        const float height = sprite->height() * scale;
-        sprite->set_scale(scale);
+        const float width = sprite.width() * scale;
+        const float height = sprite.height() * scale;
+        sprite.set_scale(scale);
         for (int deg = 0; deg <= 360; ++deg)
         {
             const float rad = rainbow::radians(deg);
-            sprite->set_rotation(rad);
+            sprite.set_rotation(rad);
 
-            ASSERT_EQ(rad, sprite->angle());
+            ASSERT_TRUE(is_stale(sprite, kStaleBuffer));
+            ASSERT_EQ(rad, sprite.angle());
 
-            sprite->update();
+            sprite.update(vertex_array, *texture);
             const Vec2f p[]{vertex_array[0].position,
                             vertex_array[1].position,
                             vertex_array[2].position,
                             vertex_array[3].position};
 
+            ASSERT_FALSE(is_stale(sprite));
             if (deg == 0 || deg == 360)
                 ASSERT_FLOAT_EQ(scale + scale, p[2].x);
             else
@@ -191,12 +237,12 @@ TEST(SpriteTest, Rotates)
         }
     }
 
-    sprite->set_rotation(0.0f);
-    sprite->set_scale(1.0f);
-    sprite->update();
+    sprite.set_rotation(0.0f);
+    sprite.set_scale(1.0f);
+    sprite.update(vertex_array, *texture);
 
-    const float width = sprite->width();
-    const float height = sprite->height();
+    const float width = sprite.width();
+    const float height = sprite.height();
 
     float angle = 0;
     int i = 1;
@@ -204,16 +250,18 @@ TEST(SpriteTest, Rotates)
     {
         const float r = rainbow::radians(deg * i);
         angle += r;
-        sprite->rotate(r);
+        sprite.rotate(r);
 
-        ASSERT_FLOAT_EQ(angle, sprite->angle());
+        ASSERT_TRUE(is_stale(sprite, kStaleBuffer));
+        ASSERT_FLOAT_EQ(angle, sprite.angle());
 
-        sprite->update();
+        sprite.update(vertex_array, *texture);
         const Vec2f p[]{vertex_array[0].position,
                         vertex_array[1].position,
                         vertex_array[2].position,
                         vertex_array[3].position};
 
+        ASSERT_FALSE(is_stale(sprite));
         ASSERT_EQ(-p[2], p[0]);
         ASSERT_EQ(-p[3], p[1]);
         ASSERT_FLOAT_EQ(width, p[0].distance(p[1]));
@@ -227,40 +275,47 @@ TEST(SpriteTest, Rotates)
 
 TEST(SpriteTest, Scales)
 {
-    SpriteBatch batch(rainbow::ISolemnlySwearThatIAmOnlyTesting{});
-    auto sprite = batch.create_sprite(2, 2);
+    Sprite sprite(2, 2);
 
-    ASSERT_EQ(Vec2f::One, sprite->scale());
+    ASSERT_TRUE(is_stale(sprite, kStaleBuffer));
+    ASSERT_EQ(Vec2f::One, sprite.scale());
 
-    sprite->set_scale(2);
+    sprite.set_scale(2);
 
-    ASSERT_EQ(Vec2f(2.0f, 2.0f), sprite->scale());
+    ASSERT_TRUE(is_stale(sprite, kStaleBuffer));
+    ASSERT_EQ(Vec2f(2.0f, 2.0f), sprite.scale());
 
-    sprite->update();
+    SpriteVertex vertex_array[4];
+    auto texture = create_texture();
+    sprite.update(vertex_array, *texture);
 
-    auto vertex_array = sprite->vertex_array();
+    ASSERT_FALSE(is_stale(sprite));
     ASSERT_EQ(Vec2f(-2, -2), vertex_array[0].position);
     ASSERT_EQ(Vec2f(2, -2), vertex_array[1].position);
     ASSERT_EQ(Vec2f(2, 2), vertex_array[2].position);
     ASSERT_EQ(Vec2f(-2, 2), vertex_array[3].position);
 
-    sprite->set_scale(1);
+    sprite.set_scale(1);
 
-    ASSERT_EQ(Vec2f::One, sprite->scale());
+    ASSERT_TRUE(is_stale(sprite, kStaleBuffer));
+    ASSERT_EQ(Vec2f::One, sprite.scale());
 
-    sprite->update();
+    sprite.update(vertex_array, *texture);
 
+    ASSERT_FALSE(is_stale(sprite));
     ASSERT_EQ(Vec2f(-1, -1), vertex_array[0].position);
     ASSERT_EQ(Vec2f(1, -1), vertex_array[1].position);
     ASSERT_EQ(Vec2f(1, 1), vertex_array[2].position);
     ASSERT_EQ(Vec2f(-1, 1), vertex_array[3].position);
 
-    sprite->set_scale(Vec2f(1, 2));
+    sprite.set_scale(Vec2f(1, 2));
 
-    ASSERT_EQ(Vec2f(1.0f, 2.0f), sprite->scale());
+    ASSERT_TRUE(is_stale(sprite, kStaleBuffer));
+    ASSERT_EQ(Vec2f(1.0f, 2.0f), sprite.scale());
 
-    sprite->update();
+    sprite.update(vertex_array, *texture);
 
+    ASSERT_FALSE(is_stale(sprite));
     ASSERT_EQ(Vec2f(-1, -2), vertex_array[0].position);
     ASSERT_EQ(Vec2f(1, -2), vertex_array[1].position);
     ASSERT_EQ(Vec2f(1, 2), vertex_array[2].position);
@@ -269,8 +324,13 @@ TEST(SpriteTest, Scales)
 
 TEST_F(SpriteFlipMirrorTest, IsNotFlippedOrMirroredInitially)
 {
-    ASSERT_FALSE(sprite->is_flipped());
-    ASSERT_FALSE(sprite->is_mirrored());
+    ASSERT_FALSE(sprite.is_flipped());
+    ASSERT_FALSE(sprite.is_mirrored());
+    ASSERT_FALSE(is_stale(sprite));
+
+    update();
+
+    ASSERT_FALSE(is_stale(sprite));
     for (int i = 0; i < 4; ++i)
     {
         ASSERT_EQ(p[i], vertex_array[i].position);
@@ -280,10 +340,15 @@ TEST_F(SpriteFlipMirrorTest, IsNotFlippedOrMirroredInitially)
 
 TEST_F(SpriteFlipMirrorTest, FlipsVertically)
 {
-    sprite->flip();
+    sprite.flip();
 
-    ASSERT_TRUE(sprite->is_flipped());
-    ASSERT_FALSE(sprite->is_mirrored());
+    ASSERT_TRUE(is_stale(sprite, kStaleTexture));
+    ASSERT_TRUE(sprite.is_flipped());
+    ASSERT_FALSE(sprite.is_mirrored());
+
+    update();
+
+    ASSERT_FALSE(is_stale(sprite, kStaleMask));
     for (int i = 0; i < 4; ++i)
         ASSERT_EQ(p[i], vertex_array[i].position);
     ASSERT_EQ(u[3], vertex_array[0].texcoord);
@@ -291,17 +356,27 @@ TEST_F(SpriteFlipMirrorTest, FlipsVertically)
     ASSERT_EQ(u[1], vertex_array[2].texcoord);
     ASSERT_EQ(u[0], vertex_array[3].texcoord);
 
-    sprite->set_texture(texture);
+    sprite.set_texture(texture);
 
+    ASSERT_TRUE(is_stale(sprite, kStaleTexture));
+
+    update();
+
+    ASSERT_FALSE(is_stale(sprite, kStaleMask));
     ASSERT_EQ(u[3], vertex_array[0].texcoord);
     ASSERT_EQ(u[2], vertex_array[1].texcoord);
     ASSERT_EQ(u[1], vertex_array[2].texcoord);
     ASSERT_EQ(u[0], vertex_array[3].texcoord);
 
-    sprite->flip();
+    sprite.flip();
 
-    ASSERT_FALSE(sprite->is_flipped());
-    ASSERT_FALSE(sprite->is_mirrored());
+    ASSERT_TRUE(is_stale(sprite, kStaleTexture));
+    ASSERT_FALSE(sprite.is_flipped());
+    ASSERT_FALSE(sprite.is_mirrored());
+
+    update();
+
+    ASSERT_FALSE(is_stale(sprite, kStaleMask));
     for (int i = 0; i < 4; ++i)
     {
         ASSERT_EQ(p[i], vertex_array[i].position);
@@ -311,10 +386,15 @@ TEST_F(SpriteFlipMirrorTest, FlipsVertically)
 
 TEST_F(SpriteFlipMirrorTest, Mirrors)
 {
-    sprite->mirror();
+    sprite.mirror();
 
-    ASSERT_FALSE(sprite->is_flipped());
-    ASSERT_TRUE(sprite->is_mirrored());
+    ASSERT_TRUE(is_stale(sprite, kStaleTexture));
+    ASSERT_FALSE(sprite.is_flipped());
+    ASSERT_TRUE(sprite.is_mirrored());
+
+    update();
+
+    ASSERT_FALSE(is_stale(sprite, kStaleMask));
     for (int i = 0; i < 4; ++i)
         ASSERT_EQ(p[i], vertex_array[i].position);
     ASSERT_EQ(u[1], vertex_array[0].texcoord);
@@ -322,17 +402,24 @@ TEST_F(SpriteFlipMirrorTest, Mirrors)
     ASSERT_EQ(u[3], vertex_array[2].texcoord);
     ASSERT_EQ(u[2], vertex_array[3].texcoord);
 
-    sprite->set_texture(texture);
+    sprite.set_texture(texture);
+    update();
 
+    ASSERT_FALSE(is_stale(sprite, kStaleMask));
     ASSERT_EQ(u[1], vertex_array[0].texcoord);
     ASSERT_EQ(u[0], vertex_array[1].texcoord);
     ASSERT_EQ(u[3], vertex_array[2].texcoord);
     ASSERT_EQ(u[2], vertex_array[3].texcoord);
 
-    sprite->mirror();
+    sprite.mirror();
 
-    ASSERT_FALSE(sprite->is_flipped());
-    ASSERT_FALSE(sprite->is_mirrored());
+    ASSERT_TRUE(is_stale(sprite, kStaleTexture));
+    ASSERT_FALSE(sprite.is_flipped());
+    ASSERT_FALSE(sprite.is_mirrored());
+
+    update();
+
+    ASSERT_FALSE(is_stale(sprite, kStaleMask));
     for (int i = 0; i < 4; ++i)
     {
         ASSERT_EQ(p[i], vertex_array[i].position);
@@ -342,11 +429,16 @@ TEST_F(SpriteFlipMirrorTest, Mirrors)
 
 TEST_F(SpriteFlipMirrorTest, FlipsAndMirrors)
 {
-    sprite->flip();
-    sprite->mirror();
+    sprite.flip();
+    sprite.mirror();
 
-    ASSERT_TRUE(sprite->is_flipped());
-    ASSERT_TRUE(sprite->is_mirrored());
+    ASSERT_TRUE(is_stale(sprite, kStaleTexture));
+    ASSERT_TRUE(sprite.is_flipped());
+    ASSERT_TRUE(sprite.is_mirrored());
+
+    update();
+
+    ASSERT_FALSE(is_stale(sprite, kStaleMask));
     for (int i = 0; i < 4; ++i)
         ASSERT_EQ(p[i], vertex_array[i].position);
     ASSERT_EQ(u[2], vertex_array[0].texcoord);
@@ -354,17 +446,24 @@ TEST_F(SpriteFlipMirrorTest, FlipsAndMirrors)
     ASSERT_EQ(u[0], vertex_array[2].texcoord);
     ASSERT_EQ(u[1], vertex_array[3].texcoord);
 
-    sprite->set_texture(texture);
+    sprite.set_texture(texture);
+    update();
 
+    ASSERT_FALSE(is_stale(sprite, kStaleMask));
     ASSERT_EQ(u[2], vertex_array[0].texcoord);
     ASSERT_EQ(u[3], vertex_array[1].texcoord);
     ASSERT_EQ(u[0], vertex_array[2].texcoord);
     ASSERT_EQ(u[1], vertex_array[3].texcoord);
 
-    sprite->flip();
+    sprite.flip();
 
-    ASSERT_FALSE(sprite->is_flipped());
-    ASSERT_TRUE(sprite->is_mirrored());
+    ASSERT_TRUE(is_stale(sprite, kStaleTexture));
+    ASSERT_FALSE(sprite.is_flipped());
+    ASSERT_TRUE(sprite.is_mirrored());
+
+    update();
+
+    ASSERT_FALSE(is_stale(sprite, kStaleMask));
     for (int i = 0; i < 4; ++i)
         ASSERT_EQ(p[i], vertex_array[i].position);
     ASSERT_EQ(u[1], vertex_array[0].texcoord);
@@ -372,10 +471,15 @@ TEST_F(SpriteFlipMirrorTest, FlipsAndMirrors)
     ASSERT_EQ(u[3], vertex_array[2].texcoord);
     ASSERT_EQ(u[2], vertex_array[3].texcoord);
 
-    sprite->flip();
+    sprite.flip();
 
-    ASSERT_TRUE(sprite->is_flipped());
-    ASSERT_TRUE(sprite->is_mirrored());
+    ASSERT_TRUE(is_stale(sprite, kStaleTexture));
+    ASSERT_TRUE(sprite.is_flipped());
+    ASSERT_TRUE(sprite.is_mirrored());
+
+    update();
+
+    ASSERT_FALSE(is_stale(sprite, kStaleMask));
     for (int i = 0; i < 4; ++i)
         ASSERT_EQ(p[i], vertex_array[i].position);
     ASSERT_EQ(u[2], vertex_array[0].texcoord);
@@ -383,10 +487,15 @@ TEST_F(SpriteFlipMirrorTest, FlipsAndMirrors)
     ASSERT_EQ(u[0], vertex_array[2].texcoord);
     ASSERT_EQ(u[1], vertex_array[3].texcoord);
 
-    sprite->mirror();
+    sprite.mirror();
 
-    ASSERT_TRUE(sprite->is_flipped());
-    ASSERT_FALSE(sprite->is_mirrored());
+    ASSERT_TRUE(is_stale(sprite, kStaleTexture));
+    ASSERT_TRUE(sprite.is_flipped());
+    ASSERT_FALSE(sprite.is_mirrored());
+
+    update();
+
+    ASSERT_FALSE(is_stale(sprite, kStaleMask));
     for (int i = 0; i < 4; ++i)
         ASSERT_EQ(p[i], vertex_array[i].position);
     ASSERT_EQ(u[3], vertex_array[0].texcoord);
@@ -394,21 +503,31 @@ TEST_F(SpriteFlipMirrorTest, FlipsAndMirrors)
     ASSERT_EQ(u[1], vertex_array[2].texcoord);
     ASSERT_EQ(u[0], vertex_array[3].texcoord);
 
-    sprite->flip();
+    sprite.flip();
 
-    ASSERT_FALSE(sprite->is_flipped());
-    ASSERT_FALSE(sprite->is_mirrored());
+    ASSERT_TRUE(is_stale(sprite, kStaleTexture));
+    ASSERT_FALSE(sprite.is_flipped());
+    ASSERT_FALSE(sprite.is_mirrored());
+
+    update();
+
+    ASSERT_FALSE(is_stale(sprite, kStaleMask));
     for (int i = 0; i < 4; ++i)
     {
         ASSERT_EQ(p[i], vertex_array[i].position);
         ASSERT_EQ(u[i], vertex_array[i].texcoord);
     }
 
-    sprite->mirror();
-    sprite->flip();
+    sprite.mirror();
+    sprite.flip();
 
-    ASSERT_TRUE(sprite->is_flipped());
-    ASSERT_TRUE(sprite->is_mirrored());
+    ASSERT_TRUE(is_stale(sprite, kStaleTexture));
+    ASSERT_TRUE(sprite.is_flipped());
+    ASSERT_TRUE(sprite.is_mirrored());
+
+    update();
+
+    ASSERT_FALSE(is_stale(sprite, kStaleMask));
     for (int i = 0; i < 4; ++i)
         ASSERT_EQ(p[i], vertex_array[i].position);
     ASSERT_EQ(u[2], vertex_array[0].texcoord);
@@ -416,10 +535,15 @@ TEST_F(SpriteFlipMirrorTest, FlipsAndMirrors)
     ASSERT_EQ(u[0], vertex_array[2].texcoord);
     ASSERT_EQ(u[1], vertex_array[3].texcoord);
 
-    sprite->mirror();
+    sprite.mirror();
 
-    ASSERT_TRUE(sprite->is_flipped());
-    ASSERT_FALSE(sprite->is_mirrored());
+    ASSERT_TRUE(is_stale(sprite, kStaleTexture));
+    ASSERT_TRUE(sprite.is_flipped());
+    ASSERT_FALSE(sprite.is_mirrored());
+
+    update();
+
+    ASSERT_FALSE(is_stale(sprite, kStaleMask));
     for (int i = 0; i < 4; ++i)
         ASSERT_EQ(p[i], vertex_array[i].position);
     ASSERT_EQ(u[3], vertex_array[0].texcoord);
@@ -427,10 +551,15 @@ TEST_F(SpriteFlipMirrorTest, FlipsAndMirrors)
     ASSERT_EQ(u[1], vertex_array[2].texcoord);
     ASSERT_EQ(u[0], vertex_array[3].texcoord);
 
-    sprite->flip();
+    sprite.flip();
 
-    ASSERT_FALSE(sprite->is_flipped());
-    ASSERT_FALSE(sprite->is_mirrored());
+    ASSERT_TRUE(is_stale(sprite, kStaleTexture));
+    ASSERT_FALSE(sprite.is_flipped());
+    ASSERT_FALSE(sprite.is_mirrored());
+
+    update();
+
+    ASSERT_FALSE(is_stale(sprite, kStaleMask));
     for (int i = 0; i < 4; ++i)
     {
         ASSERT_EQ(p[i], vertex_array[i].position);
@@ -440,33 +569,40 @@ TEST_F(SpriteFlipMirrorTest, FlipsAndMirrors)
 
 TEST_F(SpriteHiddenTest, IgnoresMultipleCalls)
 {
-    ASSERT_FALSE(sprite->is_hidden());
+    ASSERT_FALSE(sprite.is_hidden());
 
-    sprite->hide();
-    ASSERT_TRUE(sprite->is_hidden());
-    sprite->hide();
-    ASSERT_TRUE(sprite->is_hidden());
+    sprite.hide();
+    ASSERT_TRUE(sprite.is_hidden());
+    sprite.hide();
+    ASSERT_TRUE(sprite.is_hidden());
 
-    sprite->show();
-    ASSERT_FALSE(sprite->is_hidden());
-    sprite->show();
-    ASSERT_FALSE(sprite->is_hidden());
+    sprite.show();
+    ASSERT_FALSE(sprite.is_hidden());
+    sprite.show();
+    ASSERT_FALSE(sprite.is_hidden());
 }
 
 TEST_F(SpriteHiddenTest, RestoresHiddenSprites)
 {
-    sprite->hide();
-    sprite->update();
+    sprite.hide();
 
-    auto vertex_array = sprite->vertex_array();
+    ASSERT_TRUE(is_stale(sprite, kStaleMask));
+
+    update();
+
+    ASSERT_FALSE(is_stale(sprite, kStaleMask));
     ASSERT_EQ(Vec2f::Zero, vertex_array[0].position);
     ASSERT_EQ(Vec2f::Zero, vertex_array[1].position);
     ASSERT_EQ(Vec2f::Zero, vertex_array[2].position);
     ASSERT_EQ(Vec2f::Zero, vertex_array[3].position);
 
-    sprite->show();
-    sprite->update();
+    sprite.show();
 
+    ASSERT_TRUE(is_stale(sprite, kStaleMask));
+
+    update();
+
+    ASSERT_FALSE(is_stale(sprite, kStaleMask));
     ASSERT_EQ(Vec2f(-1, -1), vertex_array[0].position);
     ASSERT_EQ(Vec2f(1, -1), vertex_array[1].position);
     ASSERT_EQ(Vec2f(1, 1), vertex_array[2].position);
@@ -475,19 +611,20 @@ TEST_F(SpriteHiddenTest, RestoresHiddenSprites)
 
 TEST_F(SpriteHiddenTest, CanBeMoved)
 {
-    sprite->hide();
+    sprite.hide();
+    sprite.set_position(Vec2f::One);
+    update();
 
-    sprite->set_position(Vec2f::One);
-    sprite->update();
-
-    auto vertex_array = sprite->vertex_array();
     ASSERT_EQ(Vec2f::Zero, vertex_array[0].position);
     ASSERT_EQ(Vec2f::Zero, vertex_array[1].position);
     ASSERT_EQ(Vec2f::Zero, vertex_array[2].position);
     ASSERT_EQ(Vec2f::Zero, vertex_array[3].position);
 
-    sprite->show();
-    sprite->update();
+    sprite.show();
+
+    ASSERT_TRUE(is_stale(sprite, kStaleMask));
+
+    update();
 
     ASSERT_EQ(Vec2f(0, 0), vertex_array[0].position);
     ASSERT_EQ(Vec2f(2, 0), vertex_array[1].position);
@@ -497,16 +634,19 @@ TEST_F(SpriteHiddenTest, CanBeMoved)
 
 TEST(SpriteTest, UpdatesOnlyOnChange)
 {
-    SpriteBatch batch(rainbow::ISolemnlySwearThatIAmOnlyTesting{});
-    auto sprite = batch.create_sprite(2, 2);
+    Sprite sprite(2, 2);
+    SpriteVertex vertex_array[4];
+    auto texture = create_texture();
 
-    ASSERT_TRUE(sprite->update());
-    ASSERT_FALSE(sprite->update());
+    ASSERT_TRUE(is_stale(sprite, kStaleBuffer));
+    ASSERT_TRUE(sprite.update(vertex_array, *texture));
+    ASSERT_FALSE(sprite.update(vertex_array, *texture));
 
-    sprite->move(Vec2f::Left);
+    sprite.move(Vec2f::Left);
 
-    ASSERT_TRUE(sprite->update());
-    ASSERT_FALSE(sprite->update());
+    ASSERT_TRUE(is_stale(sprite, kStalePosition));
+    ASSERT_TRUE(sprite.update(vertex_array, *texture));
+    ASSERT_FALSE(sprite.update(vertex_array, *texture));
 }
 
 TEST(SpriteTest, ManuallyConstructedRefsAreInvalid)

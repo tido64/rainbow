@@ -55,7 +55,7 @@ public:
     auto sprites() const -> Sprite* { return sprites_.get(); }
 
     /// <summary>Returns current texture.</summary>
-    auto texture() const -> const TextureAtlas&
+    auto texture() const -> TextureAtlas&
     {
         R_ASSERT(texture_.get(), "Texture is not set");
         return *texture_.get();
@@ -159,10 +159,6 @@ private:
 
     /// <summary>Performs a left rotation on a range of sprites.</summary>
     void rotate(size_t first, size_t n_first, size_t last);
-
-    /// <summary>Sets all sprites to use <paramref name="buffer"/>.</summary>
-    template <typename T>
-    void set_buffer(T* buffer);
 };
 
 #endif

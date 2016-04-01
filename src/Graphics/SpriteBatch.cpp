@@ -9,48 +9,6 @@
 #include "Graphics/Renderer.h"
 #include "Graphics/ShaderDetails.h"
 
-namespace
-{
-    template <typename T>
-    class SetBuffer
-    {
-    public:
-        explicit SetBuffer(T* buffer) : buffer_(buffer) {}
-
-        void operator()(Sprite& sprite);
-
-    private:
-        T* buffer_;
-    };
-
-    class Update
-    {
-    public:
-        Update() : should_update_(false) {}
-
-        void operator()(Sprite& sprite) { should_update_ |= sprite.update(); }
-
-        explicit operator bool() const { return should_update_; }
-
-    private:
-        bool should_update_;
-    };
-
-    template <>
-    void SetBuffer<SpriteVertex>::operator()(Sprite& sprite)
-    {
-        sprite.set_vertex_array(buffer_);
-        buffer_ += 4;
-    }
-
-    template <>
-    void SetBuffer<Vec2f>::operator()(Sprite& sprite)
-    {
-        sprite.set_normal_buffer(buffer_);
-        buffer_ += 4;
-    }
-}
-
 SpriteBatch::SpriteBatch(unsigned int hint)
     : count_(0), reserved_(0), visible_(true)
 {
@@ -65,12 +23,12 @@ SpriteBatch::SpriteBatch(SharedPtr<TextureAtlas> texture, SpriteList sprites)
     for (auto&& s : sprites)
     {
         auto sprite = create_sprite(s.size().x, s.size().y);
+        sprite->set_position(s.position());
+        sprite->set_texture(s.texture());
+        sprite->set_color(s.color());
         sprite->set_rotation(s.angle());
         sprite->set_pivot(s.pivot());
-        sprite->set_position(s.position());
         sprite->set_scale(s.scale());
-        sprite->set_color(s.color());
-        sprite->set_texture(s.texture());
         if (s.ref() != nullptr)
             *s.ref() = sprite;
     }
@@ -101,10 +59,10 @@ void SpriteBatch::set_normal(SharedPtr<TextureAtlas> texture)
     if (!normals_)
     {
         normals_.resize(0, reserved_ * 4);
-        std::uninitialized_fill_n(normals_.get(), count_ * 4, Vec2f());
-        set_buffer(normals_.get());
+        std::uninitialized_fill_n(normals_.get(), count_ * 4, Vec2f{});
         array_.reconfigure(std::bind(&SpriteBatch::bind_arrays, this));
     }
+
     normal_ = std::move(texture);
 }
 
@@ -144,16 +102,13 @@ SpriteRef SpriteBatch::create_sprite(unsigned int width, unsigned int height)
         const unsigned int half = reserved_ / 2;
         resize(reserved_ + (half == 0 ? 1 : half));
     }
+
     Sprite& sprite = sprites_[count_];
-    new (&sprite) Sprite(width, height, this);
+    new (&sprite) Sprite(width, height);
     const unsigned int offset = count_ * 4;
-    std::uninitialized_fill_n(vertices_ + offset, 4, SpriteVertex());
-    sprite.set_vertex_array(vertices_ + offset);
+    std::uninitialized_fill_n(vertices_ + offset, 4, SpriteVertex{});
     if (normals_)
-    {
-        std::uninitialized_fill_n(normals_ + offset, 4, Vec2f());
-        sprite.set_normal_buffer(normals_ + offset);
-    }
+        std::uninitialized_fill_n(normals_ + offset, 4, Vec2f{});
     return {this, count_++};
 }
 
@@ -188,34 +143,33 @@ void SpriteBatch::swap(const SpriteRef& a_ref, const SpriteRef& b_ref)
     if (a_ref == b_ref)
         return;
 
-    // Swap the offsets first as refs are invalidated after.
-    const size_t offset_a = b_ref.i_ * 4;
-    const size_t offset_b = a_ref.i_ * 4;
-
-    Sprite& a = *a_ref;
-    Sprite& b = *b_ref;
-    std::swap(a, b);
-
-    auto buf_a = vertices_ + offset_a;
-    auto buf_b = vertices_ + offset_b;
-    a.set_vertex_array(buf_b);
-    b.set_vertex_array(buf_a);
-    std::swap_ranges(buf_a, buf_a + 4, buf_b);
-
-    if (normals_)
-    {
-        auto buf_a = normals_ + offset_a;
-        auto buf_b = normals_ + offset_b;
-        a.set_normal_buffer(buf_b);
-        b.set_normal_buffer(buf_a);
-        std::swap_ranges(buf_a, buf_a + 4, buf_b);
-    }
+    std::swap(*a_ref, *b_ref);
 }
 
 void SpriteBatch::update()
 {
-    // Update all sprites, then upload the vertex buffer if necessary.
-    if (std::for_each(sprites_.get(), sprites_ + count_, Update()))
+    bool needs_update = false;
+    if (normals_)
+    {
+        for (unsigned int i = 0; i < count_; ++i)
+        {
+            needs_update |=
+                sprites_[i].update(
+                    ArraySpan<Vec2f>(normals_ + i * 4, 4), *normal_) |
+                sprites_[i].update(
+                    ArraySpan<SpriteVertex>(vertices_ + i * 4, 4), *texture_);
+        }
+    }
+    else
+    {
+        for (unsigned int i = 0; i < count_; ++i)
+        {
+            needs_update |= sprites_[i].update(
+                ArraySpan<SpriteVertex>(vertices_ + i * 4, 4), *texture_);
+        }
+    }
+
+    if (needs_update)
     {
         const unsigned int count = count_ * 4;
         vertex_buffer_.upload(vertices_.get(), count * sizeof(SpriteVertex));
@@ -235,12 +189,8 @@ void SpriteBatch::resize(unsigned int size)
 {
     sprites_.resize(count_, size);
     vertices_.resize(count_ * 4, size * 4);
-    set_buffer(vertices_.get());
     if (normals_)
-    {
         normals_.resize(count_ * 4, size * 4);
-        set_buffer(normals_.get());
-    }
     reserved_ = size;
 }
 
@@ -251,36 +201,14 @@ void SpriteBatch::rotate(size_t first, size_t n_first, size_t last)
     R_ASSERT(last <= count_, "Index out of bounds");
 
     std::rotate(sprites_ + first, sprites_ + n_first, sprites_ + last);
-    std::for_each(sprites_ + first,
-                  sprites_ + last,
-                  SetBuffer<SpriteVertex>(vertices_ + first * 4));
-    if (normals_)
-    {
-        std::for_each(sprites_ + first,
-                      sprites_ + last,
-                      SetBuffer<Vec2f>(normals_ + first * 4));
-    }
-
-    first *= 4;
-    n_first *= 4;
-    last *= 4;
-
-    std::rotate(vertices_ + first, vertices_ + n_first, vertices_ + last);
-    if (normals_)
-        std::rotate(normals_ + first, normals_ + n_first, normals_ + last);
-}
-
-template <typename T>
-void SpriteBatch::set_buffer(T* buffer)
-{
-    std::for_each(sprites_.get(), sprites_ + count_, SetBuffer<T>(buffer));
 }
 
 #ifdef RAINBOW_TEST
 SpriteBatch::SpriteBatch(const rainbow::ISolemnlySwearThatIAmOnlyTesting& test)
-    : count_(0), vertex_buffer_(test), normal_buffer_(test), reserved_(0),
-      visible_(true)
+    : count_(0), vertex_buffer_(test), normal_buffer_(test),
+      texture_(make_shared<TextureAtlas>(test)), reserved_(0), visible_(true)
 {
     resize(4);
+    texture_->add_region(0, 0, 1, 1);
 }
 #endif  // RAINBOW_TEST

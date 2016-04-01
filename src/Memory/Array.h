@@ -18,13 +18,12 @@ public:
     constexpr ArraySpan(T& data) : ArraySpan(&data, 1) {}
 
     template <size_t N>
-    constexpr ArraySpan(const T (&data)[N])
-        : ArraySpan(data, N) {}
+    constexpr ArraySpan(T (&data)[N]) : ArraySpan(data, N) {}
 
     constexpr ArraySpan(NotNull<T*> data, size_t size)
         : size_(size), data_(data) {}
 
-    auto data() const -> const T* { return data_; }
+    auto data() const { return data_; }
     bool empty() const { return size_ == 0; }
     auto size() const { return size_; }
 

@@ -7,10 +7,11 @@
 
 #include "Common/NonCopyable.h"
 #include "Graphics/SpriteVertex.h"
-#include "Memory/NotNull.h"
+#include "Memory/Array.h"
 
 class Sprite;
 class SpriteBatch;
+class TextureAtlas;
 
 class SpriteRef
 {
@@ -66,19 +67,16 @@ class Sprite : private NonCopyable<Sprite>
 public:
     enum { kNoId };
 
-    Sprite(unsigned int width,
-           unsigned int height,
-           NotNull<const SpriteBatch*> parent);
+    Sprite(unsigned int w, unsigned int h) : width_(w), height_(h) {}
     Sprite(Sprite&&);
 
     auto angle() const { return angle_; }
-    auto color() const { return vertex_array_[0].color; }
+    auto color() const { return color_; }
     auto height() const { return height_; }
     auto id() const { return id_; }
     auto is_flipped() const -> bool;
     auto is_hidden() const -> bool;
     auto is_mirrored() const -> bool;
-    auto parent() const -> const SpriteBatch& { return *parent_; }
     auto pivot() const { return pivot_; }
     auto position() const { return position_; }
     auto scale() const { return scale_; }
@@ -94,9 +92,6 @@ public:
     /// <summary>Sets normal map.</summary>
     /// <param name="id">Identifier of the normal map to set.</param>
     void set_normal(unsigned int id);
-
-    /// <summary>Sets buffer used to store UV coordinates.</summary>
-    void set_normal_buffer(NotNull<Vec2f*> map) { normal_map_ = map; }
 
     /// <summary>Sets the pivot point for rotation and translation.</summary>
     /// <param name="p">Normalised pivot point.</param>
@@ -125,9 +120,6 @@ public:
     /// <param name="id">Identifier of the texture to set.</param>
     void set_texture(unsigned int id);
 
-    /// <summary>Sets vertex array buffer.</summary>
-    void set_vertex_array(NotNull<SpriteVertex*> array);
-
     /// <summary>Flips sprite vertically.</summary>
     void flip();
 
@@ -150,26 +142,36 @@ public:
     /// <returns>
     ///   <c>true</c> if the buffer has changed; <c>false</c> otherwise.
     /// </returns>
-    auto update() -> bool;
+    auto update(ArraySpan<SpriteVertex> vertex_array,
+                const TextureAtlas& texture) -> bool;
+
+    /// <summary>Updates the normal buffer.</summary>
+    /// <returns>
+    ///   <c>true</c> if the buffer has changed; <c>false</c> otherwise.
+    /// </returns>
+    auto update(ArraySpan<Vec2f> normal_array,
+                const TextureAtlas& normal) -> bool;
 
     Sprite& operator=(Sprite&&);
 
-private:
-    unsigned int width_;          ///< Width of sprite (not scaled).
-    unsigned int height_;         ///< Height of sprite (not scaled).
-    unsigned int state_;          ///< State of internals, e.g. buffer.
-    float angle_;                 ///< Angle of rotation.
-    Vec2f pivot_;                 ///< Pivot point (normalised).
-    Vec2f center_;                ///< Committed position.
-    Vec2f position_;              ///< Uncommitted position.
-    Vec2f scale_;                 ///< Scaling factor.
-    const SpriteBatch* parent_;   ///< Pointer to sprite batch.
-    SpriteVertex* vertex_array_;  ///< Interleaved vertex array.
-    Vec2f* normal_map_;           ///< Normal map UV coordinates.
-    int id_;                      ///< Sprite identifier.
+#ifdef RAINBOW_TEST
+    auto state() const { return state_; }
+#endif
 
-    void flip_textures(unsigned int axis);
-    void set_normal(unsigned int f, NotNull<const Vec2f*> uv);
+private:
+    unsigned int state_ = 1;                ///< State of internals, e.g. buffer.
+    Vec2f center_;                          ///< Committed position.
+    Vec2f position_;                        ///< Uncommitted position.
+    unsigned int texture_ = 0;
+    Colorb color_;
+    unsigned int width_ = 0;                ///< Width of sprite (not scaled).
+    unsigned int height_ = 0;               ///< Height of sprite (not scaled).
+    float angle_ = 0.0f;                    ///< Angle of rotation.
+    Vec2f pivot_ = {0.5f, 0.5f};            ///< Pivot point (normalised).
+    Vec2f scale_ = Vec2f::One;              ///< Scaling factor.
+    unsigned int normal_map_ = 0;
+    int id_ = kNoId;                        ///< Sprite identifier.
+    SpriteVertex* vertex_array_ = nullptr;  ///< Interleaved vertex array.
 };
 
 class SpriteModel

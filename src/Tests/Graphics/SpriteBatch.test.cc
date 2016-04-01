@@ -23,12 +23,15 @@ namespace
             ASSERT_EQ(i + 1, static_cast<size_t>(refs[i]->id()));
     }
 
-    void update(SpriteBatch& batch, size_t count)
+    void update(SpriteBatch& batch)
     {
         auto sprites = batch.sprites();
-        std::for_each(sprites, sprites + count, [](Sprite& sprite) {
-            sprite.update();
-        });
+        for (unsigned int i = 0; i < batch.size(); ++i)
+        {
+            sprites[i].update(
+                ArraySpan<SpriteVertex>(batch.vertices() + i * 4, 4),
+                batch.texture());
+        }
     }
 
     void verify_sprite_vertices(const Sprite& sprite,
@@ -47,11 +50,21 @@ namespace
                   vertices[3].position);
     }
 
-    void verify_batch_integrity(const SpriteBatch& batch, size_t count)
+    void verify_sprites_vertices(const SpriteBatch& batch)
+    {
+        const auto sprites = batch.sprites();
+        for (unsigned int i = 0; i < batch.size(); ++i)
+        {
+            const auto& sprite = sprites[i];
+            verify_sprite_vertices(sprite, sprite.vertex_array(), Vec2f::Zero);
+        }
+    }
+
+    void verify_batch_integrity(const SpriteBatch& batch)
     {
         const auto sprites = batch.sprites();
         const SpriteVertex* vertices = batch.vertices();
-        for (size_t i = 0; i < count; ++i)
+        for (unsigned int i = 0; i < batch.size(); ++i)
         {
             auto vertex_array = vertices + i * 4;
             ASSERT_EQ(vertex_array, sprites[i].vertex_array());
@@ -74,6 +87,8 @@ namespace
         SpriteRef refs[4];
         const size_t count;
         const SpriteVertex* vertices;
+
+        void SetUp() override { update(batch); }
     };
 }
 
@@ -86,7 +101,8 @@ TEST(SpriteBatchTest, MoveConstructs)
     batch.set_texture(atlas);
 
     for (unsigned int i = 0; i < batch.capacity(); ++i)
-        batch.create_sprite(i + 1, i + 1)->update();
+        batch.create_sprite(i + 1, i + 1);
+    update(batch);
 
     const unsigned int vertex_count = batch.vertex_count();
     const Sprite* sprites_array = batch.sprites();
@@ -162,11 +178,13 @@ TEST(SpriteBatchTest, ExpandsToAccommodateNewSprites)
     SpriteBatch batch(rainbow::ISolemnlySwearThatIAmOnlyTesting{});
     unsigned int capacity = batch.capacity();
     for (unsigned int i = 0; i < capacity; ++i)
-        batch.create_sprite(i + 1, i + 1)->update();
+        batch.create_sprite(i + 1, i + 1);
+    update(batch);
 
     ASSERT_EQ(capacity, batch.size());
 
-    batch.create_sprite(capacity + 1, capacity + 1)->update();
+    batch.create_sprite(capacity + 1, capacity + 1);
+    update(batch);
 
     ASSERT_LT(batch.size(), batch.capacity());
     ASSERT_GT(batch.capacity(), capacity);
@@ -197,7 +215,7 @@ TEST_F(SpriteBatchOperationsTest, SpritesShareASingleBuffer)
 
 TEST_F(SpriteBatchOperationsTest, SpritesPositionAtOriginOnCreation)
 {
-    update(batch, count);
+    update(batch);
     for (size_t i = 0; i < count; ++i)
     {
         ASSERT_EQ(Vec2f::Zero, refs[i]->position());
@@ -208,7 +226,7 @@ TEST_F(SpriteBatchOperationsTest, SpritesPositionAtOriginOnCreation)
 TEST_F(SpriteBatchOperationsTest, BringsSpritesToFront)
 {
     set_sprite_ids(refs);
-    update(batch, count);
+    update(batch);
 
     batch.bring_to_front(refs[1]);
 
@@ -218,7 +236,11 @@ TEST_F(SpriteBatchOperationsTest, BringsSpritesToFront)
     ASSERT_EQ(4, sprites[2].id());
     ASSERT_EQ(2, sprites[3].id());
 
-    verify_batch_integrity(batch, count);
+    verify_sprites_vertices(batch);
+
+    update(batch);
+
+    verify_batch_integrity(batch);
 }
 
 TEST_F(SpriteBatchOperationsTest, ClearsSprites)
@@ -237,18 +259,23 @@ TEST_F(SpriteBatchOperationsTest, ClearsSprites)
 TEST_F(SpriteBatchOperationsTest, ErasesSprites)
 {
     set_sprite_ids(refs);
-    update(batch, count);
+    update(batch);
 
     batch.erase(batch.find_sprite_by_id(2));
 
     size_t length = count - 1;
     ASSERT_EQ(length * 6, batch.vertex_count());
+
     auto sprites = batch.sprites();
     ASSERT_EQ(1, sprites[0].id());
     ASSERT_EQ(3, sprites[1].id());
     ASSERT_EQ(4, sprites[2].id());
 
-    verify_batch_integrity(batch, length);
+    verify_sprites_vertices(batch);
+
+    update(batch);
+
+    verify_batch_integrity(batch);
 
     batch.erase(batch.find_sprite_by_id(1));
 
@@ -256,9 +283,14 @@ TEST_F(SpriteBatchOperationsTest, ErasesSprites)
     ASSERT_EQ(3, sprites[0].id());
     ASSERT_EQ(4, sprites[1].id());
 
-    verify_batch_integrity(batch, length);
+    verify_sprites_vertices(batch);
+
+    update(batch);
+
+    verify_batch_integrity(batch);
 
     batch.erase(batch.find_sprite_by_id(4));
+    update(batch);
 
     ASSERT_EQ(6u, batch.vertex_count());
     ASSERT_EQ(3, sprites[0].id());
@@ -266,6 +298,7 @@ TEST_F(SpriteBatchOperationsTest, ErasesSprites)
     verify_sprite_vertices(sprites[0], vertices, Vec2f::Zero);
 
     batch.erase(batch.find_sprite_by_id(3));
+
     ASSERT_EQ(0u, batch.vertex_count());
 }
 
@@ -282,19 +315,20 @@ TEST_F(SpriteBatchOperationsTest, FindsSpritesById)
 TEST_F(SpriteBatchOperationsTest, MovesSprites)
 {
     batch.move(Vec2f::One);
-    update(batch, count);
+    update(batch);
     for (size_t i = 0; i < count; ++i)
         verify_sprite_vertices(*refs[i], vertices + i * 4, Vec2f::One);
 
     batch.move(-Vec2f::One);
-    update(batch, count);
-    verify_batch_integrity(batch, count);
+    update(batch);
+
+    verify_batch_integrity(batch);
 }
 
 TEST_F(SpriteBatchOperationsTest, SwapsSprites)
 {
     set_sprite_ids(refs);
-    update(batch, count);
+    update(batch);
 
     batch.swap(refs[0], refs[0]);
 
@@ -304,7 +338,11 @@ TEST_F(SpriteBatchOperationsTest, SwapsSprites)
     ASSERT_EQ(3, sprites[2].id());
     ASSERT_EQ(4, sprites[3].id());
 
-    verify_batch_integrity(batch, count);
+    verify_sprites_vertices(batch);
+
+    update(batch);
+
+    verify_batch_integrity(batch);
 
     batch.swap(refs[0], refs[3]);
 
@@ -313,7 +351,11 @@ TEST_F(SpriteBatchOperationsTest, SwapsSprites)
     ASSERT_EQ(3, sprites[2].id());
     ASSERT_EQ(1, sprites[3].id());
 
-    verify_batch_integrity(batch, count);
+    verify_sprites_vertices(batch);
+
+    update(batch);
+
+    verify_batch_integrity(batch);
 
     batch.swap(refs[1], refs[2]);
 
@@ -322,5 +364,9 @@ TEST_F(SpriteBatchOperationsTest, SwapsSprites)
     ASSERT_EQ(2, sprites[2].id());
     ASSERT_EQ(1, sprites[3].id());
 
-    verify_batch_integrity(batch, count);
+    verify_sprites_vertices(batch);
+
+    update(batch);
+
+    verify_batch_integrity(batch);
 }

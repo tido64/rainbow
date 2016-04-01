@@ -24,7 +24,7 @@ namespace
             : atlas_(make_shared<TextureAtlas>(mock)),
               batch_(mock),
               sprite_(batch_.create_sprite(2, 2)),
-              vertex_array_(sprite_->vertex_array()),
+              vertex_array_(batch_.vertices()),
               animation_(sprite_, nullptr, kNumFrames, 0) {}
 
     protected:
@@ -32,9 +32,14 @@ namespace
         SharedPtr<TextureAtlas> atlas_;
         SpriteBatch batch_;
         SpriteRef sprite_;
-        const SpriteVertex* vertex_array_;
+        SpriteVertex* vertex_array_;
         Vec2f uv_[4];
         Animation animation_;
+
+        void update()
+        {
+            sprite_->update(ArraySpan<SpriteVertex>(vertex_array_, 4), *atlas_);
+        }
 
         void SetUp() override
         {
@@ -46,6 +51,7 @@ namespace
                 Animation::kAnimationEnd});
             batch_.set_texture(atlas_);
             sprite_->set_texture(frames[0]);
+            update();
             animation_.set_frames(std::move(frames));
             for (size_t i = 0; i < 4; ++i)
                 uv_[i] = vertex_array_[i].texcoord;
@@ -65,6 +71,7 @@ TEST_F(AnimationTest, AlwaysPlaysFromTheBeginning)
 {
     animation_.start();
     animation_.update(kFrameTime);
+    update();
 
     ASSERT_EQ(1u, animation_.current_frame());
     ASSERT_EQ(Vec2f(0.25f, 0.5f), vertex_array_[0].texcoord);
@@ -78,6 +85,7 @@ TEST_F(AnimationTest, AlwaysPlaysFromTheBeginning)
     ASSERT_EQ(1u, animation_.current_frame());
 
     animation_.start();
+    update();
 
     ASSERT_EQ(0u, animation_.current_frame());
     for (size_t i = 0; i < 4; ++i)
@@ -87,6 +95,8 @@ TEST_F(AnimationTest, AlwaysPlaysFromTheBeginning)
 TEST_F(AnimationTest, StoppedAnimationsDontProgressOnUpdate)
 {
     animation_.update(kFrameTime * 2);
+    update();
+
     ASSERT_EQ(0u, animation_.current_frame());
     for (size_t i = 0; i < 4; ++i)
         ASSERT_EQ(uv_[i], vertex_array_[i].texcoord);
@@ -190,6 +200,7 @@ TEST_F(AnimationTest, ResetsAnimationFrames)
         ASSERT_EQ(uv_[i], vertex_array_[i].texcoord);
 
     animation_.set_frames(Animation::Frames(kAnimationFrames));
+    update();
 
     ASSERT_EQ(Vec2f(0.25f, 0.5f), vertex_array_[0].texcoord);
     ASSERT_EQ(Vec2f(0.5f, 0.5f), vertex_array_[1].texcoord);
@@ -203,6 +214,7 @@ TEST_F(AnimationTest, ResetsTargetSprite)
 {
     animation_.start();
     animation_.update(kFrameTime);
+    update();
 
     ASSERT_EQ(1u, animation_.current_frame());
     ASSERT_EQ(Vec2f(0.25f, 0.5f), vertex_array_[0].texcoord);
@@ -211,11 +223,13 @@ TEST_F(AnimationTest, ResetsTargetSprite)
     ASSERT_EQ(Vec2f(0.25f, 0.25f), vertex_array_[3].texcoord);
 
     sprite_->set_texture(0);
+    update();
 
     for (size_t i = 0; i < 4; ++i)
         ASSERT_EQ(uv_[i], vertex_array_[i].texcoord);
 
     animation_.set_sprite(sprite_);
+    update();
 
     ASSERT_EQ(Vec2f(0.25f, 0.5f), vertex_array_[0].texcoord);
     ASSERT_EQ(Vec2f(0.5f, 0.5f), vertex_array_[1].texcoord);
@@ -227,6 +241,7 @@ TEST_F(AnimationTest, JumpsToSpecificFrames)
 {
     animation_.start();
     animation_.update(kFrameTime);
+    update();
 
     ASSERT_EQ(1u, animation_.current_frame());
     ASSERT_EQ(Vec2f(0.25f, 0.5f), vertex_array_[0].texcoord);
@@ -235,12 +250,14 @@ TEST_F(AnimationTest, JumpsToSpecificFrames)
     ASSERT_EQ(Vec2f(0.25f, 0.25f), vertex_array_[3].texcoord);
 
     animation_.jump_to(0);
+    update();
 
     ASSERT_EQ(0u, animation_.current_frame());
     for (size_t i = 0; i < 4; ++i)
         ASSERT_EQ(uv_[i], vertex_array_[i].texcoord);
 
     animation_.jump_to(1);
+    update();
 
     ASSERT_EQ(1u, animation_.current_frame());
     ASSERT_EQ(Vec2f(0.25f, 0.5f), vertex_array_[0].texcoord);
@@ -253,6 +270,7 @@ TEST_F(AnimationTest, Rewinds)
 {
     animation_.start();
     animation_.update(kFrameTime);
+    update();
 
     ASSERT_EQ(1u, animation_.current_frame());
     ASSERT_EQ(Vec2f(0.25f, 0.5f), vertex_array_[0].texcoord);
@@ -261,6 +279,7 @@ TEST_F(AnimationTest, Rewinds)
     ASSERT_EQ(Vec2f(0.25f, 0.25f), vertex_array_[3].texcoord);
 
     animation_.rewind();
+    update();
 
     ASSERT_EQ(0u, animation_.current_frame());
     for (size_t i = 0; i < 4; ++i)
