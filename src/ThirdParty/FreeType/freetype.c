@@ -2,7 +2,7 @@
 
 #define FT2_BUILD_LIBRARY 1
 #if defined(__IPHONE_OS_VERSION_MIN_REQUIRED)
-#	define FT_CONFIG_OPTION_SYSTEM_ZLIB
+#   define FT_CONFIG_OPTION_SYSTEM_ZLIB
 #endif
 #define FT_CONFIG_MODULES_H  <ftmodule.h>
 
