@@ -5,7 +5,7 @@
 #ifndef COLLISION_SAT_H_
 #define COLLISION_SAT_H_
 
-#include "Graphics/Sprite.h"
+class SpriteRef;
 
 namespace rainbow
 {

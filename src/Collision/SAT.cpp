@@ -4,6 +4,8 @@
 
 #include "Collision/SAT.h"
 
+#include "Graphics/Sprite.h"
+
 namespace
 {
     struct Quad

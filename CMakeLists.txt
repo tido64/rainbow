@@ -241,6 +241,7 @@ if(UNIT_TESTS)
       PROPERTY INCLUDE_DIRECTORIES ${TEST_INCLUDE_DIR} ${LOCAL_LIBRARY}/googletest/googletest)
   list(APPEND SOURCE_FILES
        src/Tests/Audio/Mixer.test.cc
+       src/Tests/Collision/SAT.test.cc
        src/Tests/Common/Algorithm.test.cc
        src/Tests/Common/Chrono.test.cc
        src/Tests/Common/Color.test.cc
