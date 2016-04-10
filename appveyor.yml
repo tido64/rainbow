@@ -4,12 +4,16 @@ branches:
     - master
     - tido/work
 skip_tags: true
-os: Visual Studio 2015
-clone_depth: 1
+image: Visual Studio 2015
 configuration: RelWithDebInfo
+clone_depth: 1
+cache:
+  - '%APPVEYOR_BUILD_FOLDER%-build\lib\openal-soft\src\openal-soft-1.17.2-bin.zip'
+  - '%APPVEYOR_BUILD_FOLDER%-build\lib\sdl2-bin\src\SDL2-2.0.4-win32-x86.zip'
+  - '%APPVEYOR_BUILD_FOLDER%-build\lib\sdl2-dev\src\SDL2-devel-2.0.4-VC.zip'
 before_build:
   - git submodule update --init
-  - mkdir "%APPVEYOR_BUILD_FOLDER%-build"
+  - if not exist "%APPVEYOR_BUILD_FOLDER%-build" mkdir "%APPVEYOR_BUILD_FOLDER%-build"
   - cd "%APPVEYOR_BUILD_FOLDER%-build"
   - cmake -DUSE_HEIMDALL=1 -DUSE_PHYSICS=1 -DUSE_SPINE=1 -G "Visual Studio 14" "%APPVEYOR_BUILD_FOLDER%"
 build_script:
