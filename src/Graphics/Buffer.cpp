@@ -74,6 +74,7 @@ void Buffer::bind(unsigned int index) const
 void Buffer::upload(const void* data, size_t size) const
 {
     glBindBuffer(GL_ARRAY_BUFFER, id_);
+    glBufferData(GL_ARRAY_BUFFER, size, nullptr, GL_STREAM_DRAW);
     glBufferData(GL_ARRAY_BUFFER, size, data, GL_STREAM_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
