@@ -17,12 +17,22 @@ namespace rainbow
     public:
         auto next() const { return next_; }
 
-        virtual void update(StateComponent&, Actor&, unsigned long dt) = 0;
+        void update(StateComponent& component, Actor& actor, unsigned long dt)
+        {
+            update_impl(component, actor, dt);
+        }
 
-        virtual void on_enter(StateComponent&, Actor&) {}
-        virtual void on_exit(StateComponent&, Actor&) {}
+        void on_enter(StateComponent& component, Actor& actor)
+        {
+            on_enter_impl(component, actor);
+        }
 
-        virtual auto to_string() const -> const char* = 0;
+        void on_exit(StateComponent& component, Actor& actor)
+        {
+            on_exit_impl(component, actor);
+        }
+
+        auto to_string() const -> const char* { return to_string_impl(); }
 
     protected:
         IState() : next_(nullptr) {}
@@ -30,6 +40,11 @@ namespace rainbow
 
     private:
         IState* next_;
+
+        virtual void update_impl(StateComponent&, Actor&, unsigned long dt) = 0;
+        virtual void on_enter_impl(StateComponent&, Actor&) {}
+        virtual void on_exit_impl(StateComponent&, Actor&) {}
+        virtual auto to_string_impl() const -> const char* = 0;
 
         friend StateComponent;
     };
@@ -49,12 +64,14 @@ namespace rainbow
             LOGD("<StateComponent:%p>\n"
                  "  Top\n"
                  "   ↑",
-                 this);
+                 static_cast<const void*>(this));
 
             auto state = top_;
             while (state)
             {
-                LOGD("   | %s (%p)", state->to_string(), state);
+                LOGD("   | %s (%p)",
+                     state->to_string(),
+                     static_cast<const void*>(state));
                 state = state->next();
             }
 
@@ -102,15 +119,6 @@ namespace rainbow
             state.on_enter(*this, actor());
         }
 
-        // IScriptComponent details.
-
-        void initialize(Actor& actor) override { actor_ = &actor; }
-
-        void update(unsigned long dt) override
-        {
-            state()->update(*this, actor(), dt);
-        }
-
     protected:
         auto actor() -> Actor& { return *actor_; }
 
@@ -135,6 +143,15 @@ namespace rainbow
                 i = i->next();
             }
             return nullptr;
+        }
+
+        // IScriptComponent details.
+
+        void initialize_impl(Actor& actor) override { actor_ = &actor; }
+
+        void update_impl(unsigned long dt) override
+        {
+            state()->update(*this, actor(), dt);
         }
     };
 }

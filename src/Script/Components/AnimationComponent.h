@@ -24,7 +24,7 @@ namespace rainbow
     class Animator
     {
     public:
-        Animator() : active_(-1), animation_(Sprite::Ref(), nullptr, 1) {}
+        Animator() : active_(-1), animation_(SpriteRef{}, nullptr, 1) {}
 
         ~Animator()
         {
@@ -75,10 +75,7 @@ namespace rainbow
         /// <summary>Sets the animation to play.</summary>
         /// <param name="name">Name of the animation to set.</param>
         /// <returns>A reference to the newly set animation.</returns>
-        auto set(int name) -> Animation&
-        {
-            return set(name, animations_.at(name));
-        }
+        auto set(int name) { return set(name, animations_.at(name)); }
 
     private:
         struct Animation
@@ -99,7 +96,7 @@ namespace rainbow
             animation_.release();
         }
 
-        auto set(int name, const Animation& anim) -> ::Animation&
+        auto set(int name, const Animation& anim) -> ::Animation*
         {
             release();
             animation_.set_frame_rate(anim.frame_rate);
@@ -108,7 +105,7 @@ namespace rainbow
             animation_.set_callback(anim.callback);
             animation_.start();
             active_ = name;
-            return animation_;
+            return &animation_;
         }
     };
 
@@ -119,30 +116,33 @@ namespace rainbow
         /// <summary>
         ///   Returns the name of the currently active animation.
         /// </summary>
-        virtual auto active() const -> int = 0;
+        auto active() const -> int { return active_impl(); }
 
         /// <summary>Returns the <see cref="Animator"/> at index.</summary>
-        virtual auto animator(size_t i) -> Animator& = 0;
+        auto animator(size_t i) -> Animator& { return animator_impl(i); }
 
         /// <summary>Sets the animation to play.</summary>
         /// <param name="name">Name of the animation to set.</param>
         /// <returns>A reference to the newly set animation.</returns>
-        virtual auto set(int name) -> Animation& = 0;
+        auto set(int name) -> Animation& { return set_impl(name); }
 
         /// <summary>Stops all animations.</summary>
-        virtual void stop() = 0;
+        void stop() { stop_impl(); }
 
     protected:
-        virtual ~IAnimationComponent() = default;
+        ~IAnimationComponent() = default;
+
+    private:
+        virtual auto active_impl() const -> int = 0;
+        virtual auto animator_impl(size_t i) -> Animator& = 0;
+        virtual auto set_impl(int name) -> Animation& = 0;
+        virtual void stop_impl() = 0;
     };
 
     template <size_t N>
     class AnimationComponent : public IAnimationComponent
     {
     public:
-        auto active() const -> int final { return active_; }
-        auto animator(size_t i) -> Animator& final { return animators_.at(i); }
-
         void initialize(RenderComponent& render, SceneNode& parent)
         {
             R_ASSERT(render.batch().size() >= N,
@@ -156,7 +156,18 @@ namespace rainbow
             }
         }
 
-        auto set(int name) -> Animation& override
+    private:
+        int active_ = -1;
+        std::array<Animator, N> animators_;
+
+        auto active_impl() const -> int final { return active_; }
+
+        auto animator_impl(size_t i) -> Animator& final
+        {
+            return animators_.at(i);
+        }
+
+        auto set_impl(int name) -> Animation& override
         {
             auto& animator = animators_[0];
             if (name == active_)
@@ -167,16 +178,12 @@ namespace rainbow
             return animator.animation();
         }
 
-        void stop() final
+        void stop_impl() final
         {
             active_ = -1;
             for (auto&& animator : animators_)
                 animator.animation().stop();
         }
-
-    private:
-        int active_ = -1;
-        std::array<Animator, N> animators_;
     };
 }
 

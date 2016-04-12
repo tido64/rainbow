@@ -15,10 +15,10 @@ namespace rainbow
     public:
         auto batch() -> SpriteBatch& { return batch_; }
         auto batch() const -> const SpriteBatch& { return batch_; }
-        auto first() const -> Sprite::Ref { return sprite(0); }
-        auto is_mirrored() const -> bool { return first()->is_mirrored(); }
-        auto second() const -> Sprite::Ref { return sprite(1); }
-        auto third() const -> Sprite::Ref { return sprite(2); }
+        auto first() { return sprite(0); }
+        bool is_mirrored() const { return batch()[0].is_mirrored(); }
+        auto second() { return sprite(1); }
+        auto third() { return sprite(2); }
 
         /// <summary>Sets local angle of rotation (in radian).</summary>
         void set_local_rotation(float r)
@@ -29,7 +29,7 @@ namespace rainbow
 
         /// <summary>Sets uniform local scaling factor.</summary>
         /// <param name="f">Scaling factor for both axes.</param>
-        void set_local_scale(float f) { set_local_scale(Vec2f(f, f)); }
+        void set_local_scale(float f) { set_local_scale(Vec2f{f, f}); }
 
         /// <summary>Sets non-uniform local scaling factor.</summary>
         /// <param name="f">Scaling factors for x- and y-axis.</param>
@@ -52,7 +52,7 @@ namespace rainbow
         /// <returns>
         ///   Reference to the newly created sprite, positioned at (0,0).
         /// </returns>
-        auto add_sprite(unsigned int width, unsigned int height) -> Sprite::Ref
+        auto add_sprite(uint32_t width, uint32_t height)
         {
             return batch().create_sprite(width, height);
         }
@@ -67,27 +67,26 @@ namespace rainbow
                 sprite.mirror();
         }
 
-        /// <summary>Moves component by specified vector.</summary>
-        void move(const Vec2f& delta) override
-        {
-            SceneComponent::move(delta);
-            for (auto&& sprite : batch())
-                sprite.move(delta);
-        }
-
         /// <summary>Shows render component.</summary>
         void show() { batch().set_visible(true); }
 
         /// <summary>Returns the <see cref="Sprite"/> at index.</summary>
-        auto sprite(size_t i) const -> Sprite::Ref
+        auto sprite(uint32_t i) -> SpriteRef
         {
-            R_ASSERT(i < batch().size(),
-                     "Tried to access a sprite out of range.");
+            R_ASSERT(
+                i < batch().size(), "Tried to access a sprite out of range.");
+
             return {&batch(), i};
         }
 
     private:
         SpriteBatch batch_;
+
+        void move_impl(const Vec2f& delta) override
+        {
+            for (auto&& sprite : batch())
+                sprite.move(delta);
+        }
     };
 }
 

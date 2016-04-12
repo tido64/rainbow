@@ -25,11 +25,17 @@ namespace rainbow
         void disable() { node_->set_enabled(false); }
         void enable() { node_->set_enabled(true); }
 
-        virtual void move(const Vec2f& delta) { position_ += delta; }
+        void move(const Vec2f& delta)
+        {
+            position_ += delta;
+            move_impl(delta);
+        }
 
     private:
         SceneNode* node_;  // Scene graph node.
         Vec2f position_;   // Logical position.
+
+        virtual void move_impl(const Vec2f&) {}
     };
 }
 

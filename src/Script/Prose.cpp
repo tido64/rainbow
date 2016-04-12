@@ -4,8 +4,6 @@
 
 #include "Script/Prose.h"
 
-#include <cctype>
-
 #include "Common/Data.h"
 #include "Common/String.h"
 #include "FileSystem/File.h"

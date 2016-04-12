@@ -28,7 +28,7 @@ namespace rainbow
         {
             for (auto&& entity : entities_)
             {
-                if (entity.type == rainbow::type_id<T>())
+                if (entity.type == type_id<T>())
                     action(static_cast<T*>(entity.actor.get()));
             }
         }
@@ -79,8 +79,7 @@ namespace rainbow
             std::unique_ptr<Actor> actor;
 
             template <typename T>
-            Entity(T* actor_)
-                : type(rainbow::type_id<T>()), actor(actor_) {}
+            Entity(T* actor_) : type(type_id<T>()), actor(actor_) {}
 
             Entity(Entity&&) = default;
 
