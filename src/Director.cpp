@@ -4,8 +4,6 @@
 
 #include "Director.h"
 
-#include <lua.hpp>
-
 #include "Common/Random.h"
 #include "Script/GameBase.h"
 

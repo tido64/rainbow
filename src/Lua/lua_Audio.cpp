@@ -4,10 +4,7 @@
 
 #include "Lua/lua_Audio.h"
 
-#include <cstring>
-
 #include "Audio/Mixer.h"
-#include "Common/Data.h"
 #include "Lua/LuaHelper.h"
 #include "Lua/LuaSyntax.h"
 

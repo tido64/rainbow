@@ -4,9 +4,6 @@
 
 #include "Lua/LuaHelper.h"
 
-#include <cstring>
-#include <memory>
-
 #include "Common/Data.h"
 #include "FileSystem/File.h"
 #include "FileSystem/Path.h"

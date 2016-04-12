@@ -8,7 +8,6 @@
 
 #include "Graphics/Drawable.h"
 #include "Graphics/SceneGraph.h"
-#include "Lua/LuaSyntax.h"
 #include "Lua/lua_Animation.h"
 #include "Lua/lua_Label.h"
 #include "Lua/lua_Shaders.h"

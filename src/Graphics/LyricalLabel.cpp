@@ -4,8 +4,6 @@
 
 #include "Graphics/LyricalLabel.h"
 
-#include <limits>
-
 #include "Common/Random.h"
 #include "Script/Timer.h"
 

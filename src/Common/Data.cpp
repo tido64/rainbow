@@ -51,10 +51,7 @@ bool Data::save(const char* path) const
     R_ASSERT(sz_ > 0, "Data is set but size is 0");
 
     File file = File::open_write(path);
-    if (!file)
-        return false;
-
-    return file.write(data_, sz_) == sz_;
+    return file && file.write(data_, sz_) == sz_;
 }
 
 void Data::allocate(size_t size)

@@ -6,7 +6,6 @@
 
 #include <cstring>
 
-#include "Common/Algorithm.h"
 #include "Common/UTF8.h"
 #include "Math/Transform.h"
 
@@ -109,7 +108,7 @@ void Label::update_internal()
         unsigned int start = 0;
         unsigned int count = 0;
         const bool is_rotated = !is_equal(angle_, 0.0f);
-        const Vec2f R = (is_rotated ? Vec2f(cos(-angle_), sin(-angle_))
+        const Vec2f R = (is_rotated ? Vec2f(cosf(-angle_), sinf(-angle_))
                                     : Vec2f(1.0f, 0.0f));
         const bool needs_alignment =
             alignment_ != TextAlignment::Left || is_rotated;

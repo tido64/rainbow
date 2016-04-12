@@ -9,6 +9,7 @@
     // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=53431 for details.
 #   ifdef __clang__
 #       pragma GCC diagnostic push
+#       pragma GCC diagnostic ignored "-Wformat-pedantic"
 #   endif
 #   pragma GCC diagnostic ignored "-Wformat"
 #   pragma GCC diagnostic ignored "-Wold-style-cast"

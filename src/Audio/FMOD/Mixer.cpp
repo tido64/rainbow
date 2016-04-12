@@ -17,9 +17,7 @@
 #   pragma GCC diagnostic pop
 #endif
 
-#include "Audio/Mixer.h"
 #include "Common/Logging.h"
-#include "FileSystem/Path.h"
 
 using rainbow::audio::Channel;
 using rainbow::audio::FMODMixer;

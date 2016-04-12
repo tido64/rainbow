@@ -7,7 +7,6 @@
 #include "Graphics/OpenGL.h"
 #include "Graphics/ShaderDetails.h"
 #include "Graphics/SpriteVertex.h"
-#include "Math/Vec2.h"
 
 using rainbow::graphics::Buffer;
 

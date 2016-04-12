@@ -4,7 +4,6 @@
 
 #include "Graphics/FontAtlas.h"
 
-#include <algorithm>
 #include <memory>
 
 #ifdef __GNUC__
@@ -13,8 +12,6 @@
 #endif
 #include <ft2build.h>
 #include FT_CFF_DRIVER_H
-#include FT_GLYPH_H
-#include FT_MODULE_H
 #ifdef __GNUC__
 #   pragma GCC diagnostic pop
 #endif

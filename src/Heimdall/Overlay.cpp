@@ -7,7 +7,6 @@
 #include <numeric>
 
 #include "Graphics/Renderer.h"
-#include "Platform/Macros.h"
 #include "ThirdParty/ImGui/ImGuiHelper.h"
 
 using heimdall::Overlay;

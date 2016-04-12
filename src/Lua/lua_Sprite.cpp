@@ -4,10 +4,6 @@
 
 #include "Lua/lua_Sprite.h"
 
-#include <lua.hpp>
-
-#include "Graphics/SpriteBatch.h"
-
 using uint_t = unsigned int;
 
 NS_RAINBOW_LUA_BEGIN

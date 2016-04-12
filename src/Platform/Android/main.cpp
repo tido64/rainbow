@@ -5,8 +5,6 @@
 #include "Platform/Macros.h"
 
 #include <memory>
-#include <unistd.h>
-#include <sys/types.h>
 
 #include <EGL/egl.h>
 #include <android/input.h>
@@ -15,11 +13,8 @@
 
 #include "Common/Chrono.h"
 #include "Common/Data.h"
-#include "Config.h"
 #include "Director.h"
 #include "FileSystem/Path.h"
-#include "Graphics/Renderer.h"
-#include "Input/Input.h"
 #include "Input/Pointer.h"
 
 ANativeActivity* g_native_activity;

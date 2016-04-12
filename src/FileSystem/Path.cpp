@@ -259,9 +259,7 @@ CFURLRef Path::CreateCFURL() const
 bool Path::is_file() const
 {
     struct stat sb;
-    if (stat(path_, &sb) != 0)
-        return false;
-    return S_ISREG(sb.st_mode);
+    return stat(path_, &sb) == 0 && S_ISREG(sb.st_mode);
 }
 
 Path& Path::operator=(const char* path)

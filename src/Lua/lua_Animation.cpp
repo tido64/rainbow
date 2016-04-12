@@ -4,8 +4,6 @@
 
 #include "Lua/lua_Animation.h"
 
-#include <algorithm>
-
 #include "Lua/lua_Sprite.h"
 
 namespace

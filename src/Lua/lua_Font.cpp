@@ -4,10 +4,6 @@
 
 #include "Lua/lua_Font.h"
 
-#include <lua.hpp>
-
-#include "Common/Data.h"
-
 NS_RAINBOW_LUA_BEGIN
 {
     template <>

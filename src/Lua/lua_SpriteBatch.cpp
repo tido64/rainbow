@@ -4,7 +4,6 @@
 
 #include "Lua/lua_SpriteBatch.h"
 
-#include "FileSystem/Path.h"
 #include "Lua/lua_Sprite.h"
 #include "Lua/lua_Texture.h"
 

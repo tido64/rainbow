@@ -4,10 +4,7 @@
 
 #include "Graphics/SpriteBatch.h"
 
-#include <algorithm>
-
 #include "Graphics/Renderer.h"
-#include "Graphics/ShaderDetails.h"
 
 SpriteBatch::SpriteBatch(unsigned int hint)
     : count_(0), reserved_(0), visible_(true)
