@@ -33,32 +33,31 @@
 #   define RAINBOW_LOG_WARN   "WARN"
 #endif  // RAINBOW_OS_ANDROID
 
-#define LOGE(...) rainbow::error(__VA_ARGS__)
+#define LOGE(...) rainbow::debug::error(__VA_ARGS__)
+#define LOGF(...) rainbow::debug::fatal(__VA_ARGS__)
+
 #ifdef NDEBUG
 #   define LOGD(...)      static_cast<void>(0)
-#   define LOGF(...)      static_cast<void>(0)
 #   define LOGI(...)      static_cast<void>(0)
 #   define LOGW(...)      static_cast<void>(0)
 #   define R_ABORT(...)   static_cast<void>(0)
 #   define R_ASSERT(...)  static_cast<void>(0)
 #else
 #   ifdef _MSC_VER
-#       define LOGD(...) rainbow::debug(__VA_ARGS__)
-#       define LOGF(...) rainbow::fatal(__VA_ARGS__)
-#       define LOGI(...) rainbow::info(__VA_ARGS__)
-#       define LOGW(...) rainbow::warn(__VA_ARGS__)
+#       define LOGD(...) rainbow::debug::debug(__VA_ARGS__)
+#       define LOGI(...) rainbow::debug::info(__VA_ARGS__)
+#       define LOGW(...) rainbow::debug::warn(__VA_ARGS__)
 #   else
 #       define LOG_S(print, ...)                                               \
             do                                                                 \
             {                                                                  \
                 if (false)                                                     \
-                    rainbow::format_check(__VA_ARGS__);                        \
+                    rainbow::debug::format_check(__VA_ARGS__);                 \
                 print(__VA_ARGS__);                                            \
             } while (false)
-#       define LOGD(...) LOG_S(rainbow::debug, __VA_ARGS__)
-#       define LOGF(...) LOG_S(rainbow::fatal, __VA_ARGS__)
-#       define LOGI(...) LOG_S(rainbow::info, __VA_ARGS__)
-#       define LOGW(...) LOG_S(rainbow::warn, __VA_ARGS__)
+#       define LOGD(...) LOG_S(rainbow::debug::debug, __VA_ARGS__)
+#       define LOGI(...) LOG_S(rainbow::debug::info, __VA_ARGS__)
+#       define LOGW(...) LOG_S(rainbow::debug::warn, __VA_ARGS__)
 #   endif  // _MSC_VER
 #   ifndef __PRETTY_FUNCTION__
 #       define __PRETTY_FUNCTION__ __FUNCTION__
@@ -66,20 +65,20 @@
 #   ifndef SRC_FILE
 #       define SRC_FILE __FILE__
 #   endif
-#   define R_ABORT(...) rainbow::abort(__VA_ARGS__)
-#define R_ASSERT(expr, reason)                                                 \
-    (!(expr) ? rainbow::abort("%s: %s (aborted at %s:%i: %s)",                 \
-                              __PRETTY_FUNCTION__,                             \
-                              reason,                                          \
-                              SRC_FILE,                                        \
-                              __LINE__,                                        \
-                              #expr)                                           \
+#   define R_ABORT(...) (rainbow::debug::fatal(__VA_ARGS__), std::abort())
+#   define R_ASSERT(expr, reason)                                              \
+    (!(expr) ? R_ABORT("%s: %s (aborted at %s:%i: %s)",                        \
+                       __PRETTY_FUNCTION__,                                    \
+                       reason,                                                 \
+                       SRC_FILE,                                               \
+                       __LINE__,                                               \
+                       #expr)                                                  \
              : static_cast<void>(0))
 #endif  // NDEBUG
 
-namespace rainbow
+namespace rainbow { namespace debug
 {
-    const size_t kLogLineLength = 1024;
+    constexpr size_t kLogLineLength = 1024;
 
     void format_check(const char* fmt, ...) ATTRIBUTE((format(printf, 1, 2)));
 
@@ -114,17 +113,17 @@ namespace rainbow
         print(stderr, RAINBOW_LOG_ERROR, format, std::forward<Args>(args)...);
     }
 
+    template <size_t N, typename... Args>
+    void fatal(const char (&format)[N], Args&&... args)
+    {
+        print(stderr, RAINBOW_LOG_FATAL, format, std::forward<Args>(args)...);
+    }
+
 #ifndef NDEBUG
     template <size_t N, typename... Args>
     void debug(const char (&format)[N], Args&&... args)
     {
         print(stdout, RAINBOW_LOG_DEBUG, format, std::forward<Args>(args)...);
-    }
-
-    template <size_t N, typename... Args>
-    void fatal(const char (&format)[N], Args&&... args)
-    {
-        print(stderr, RAINBOW_LOG_FATAL, format, std::forward<Args>(args)...);
     }
 
     template <size_t N, typename... Args>
@@ -138,15 +137,8 @@ namespace rainbow
     {
         print(stderr, RAINBOW_LOG_WARN, format, std::forward<Args>(args)...);
     }
-
-    template <size_t N, typename... Args>
-    void abort(const char (&format)[N], Args&&... args)
-    {
-        fatal(format, std::forward<Args>(args)...);
-        std::abort();
-    }
 #endif  // !NDEBUG
-}
+}}  // namespace rainbow::debug
 
 #undef ATTRIBUTE
 #undef RAINBOW_LOG_DEBUG
