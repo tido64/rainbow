@@ -257,6 +257,7 @@ if(UNIT_TESTS)
        src/Tests/Graphics/SceneGraph.test.cc
        src/Tests/Graphics/Sprite.test.cc
        src/Tests/Graphics/SpriteBatch.test.cc
+       src/Tests/Graphics/TextureAtlas.test.cc
        src/Tests/Input/Controller.test.cc
        src/Tests/Input/Input.test.cc
        src/Tests/Input/Pointer.test.cc

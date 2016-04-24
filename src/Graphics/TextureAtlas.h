@@ -71,16 +71,6 @@ public:
     /// </summary>
     void set_regions(const ArrayView<int>& rectangles);
 
-    /// <summary>
-    ///   Replaces the current set of texture regions with the set in the
-    ///   specified array.
-    /// </summary>
-    template <size_t N>
-    void set_regions(const int (&rectangles)[N])
-    {
-        set_regions(ArrayView<int>(N, rectangles));
-    }
-
     /// <summary>Trims the internal texture region storage.</summary>
     void trim() { regions_.shrink_to_fit(); }
 
