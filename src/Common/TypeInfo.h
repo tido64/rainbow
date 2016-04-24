@@ -43,7 +43,7 @@ namespace rainbow
     template <typename T>
     type_id_t type_id()
     {
-        return type_id_t::id<typename std::decay<T>::type>();
+        return type_id_t::id<std::decay_t<T>>();
     }
 }
 

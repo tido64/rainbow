@@ -23,8 +23,7 @@ NS_RAINBOW_LUA_BEGIN
     class Bind;
 
     template <typename T>
-    using LuaBindable =
-        typename std::enable_if<std::is_base_of<Bind<T>, T>::value>::type;
+    using LuaBindable = std::enable_if_t<std::is_base_of<Bind<T>, T>::value>;
 
     /// <summary>
     ///   The equivalent of <see cref="std::weak_ptr"/> for Lua objects.

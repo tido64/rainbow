@@ -8,30 +8,26 @@
 #include <type_traits>
 
 template <typename T, typename U>
-using EnableIfBaseOf =
-    typename std::enable_if<std::is_base_of<T, U>::value>::type;
+using EnableIfBaseOf = std::enable_if_t<std::is_base_of<T, U>::value>;
 
 template <typename T, typename U = T>
 using EnableIfFloatingPoint =
-    typename std::enable_if<std::is_floating_point<T>::value, U>::type;
+    std::enable_if_t<std::is_floating_point<T>::value, U>;
 
 template <typename T, typename U = T>
-using EnableIfIntegral =
-    typename std::enable_if<std::is_integral<T>::value, U>::type;
+using EnableIfIntegral = std::enable_if_t<std::is_integral<T>::value, U>;
 
 template <typename T>
-using Arithmetic = typename std::enable_if<std::is_arithmetic<T>::value>::type;
+using Arithmetic = std::enable_if_t<std::is_arithmetic<T>::value>;
 
 template <typename T>
-using CharType =
-    typename std::enable_if<std::is_same<typename std::make_unsigned<T>::type,
-                                         unsigned char>::value>::type;
+using CharType = std::enable_if_t<
+    std::is_same<std::make_unsigned_t<T>, unsigned char>::value>;
 
 template <typename T>
 using FloatingPoint = EnableIfFloatingPoint<T>;
 
 template <typename T>
-using PlainType =
-    typename std::remove_pointer<typename std::decay<T>::type>::type;
+using PlainType = std::remove_pointer_t<std::decay_t<T>>;
 
 #endif

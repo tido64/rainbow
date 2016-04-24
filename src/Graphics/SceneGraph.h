@@ -35,9 +35,9 @@ namespace rainbow
         static std::unique_ptr<SceneNode> create(Drawable& drawable);
 
         /// <summary>Creates a node with specified component.</summary>
-        template <typename T,
-                  typename std::enable_if<
-                      !std::is_base_of<Drawable, T>::value>::type* = nullptr>
+        template <
+            typename T,
+            std::enable_if_t<!std::is_base_of<Drawable, T>::value>* = nullptr>
         static std::unique_ptr<SceneNode> create(T& component);
 
         virtual ~SceneNode() = default;
