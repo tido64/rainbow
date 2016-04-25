@@ -28,8 +28,8 @@ public:
     /// </summary>
     duration::rep delta() const { return delta_.count(); }
 
-    /// <summary>Updates the clock.</summary>
-    void update();
+    /// <summary>Moves the clock one tick forward.</summary>
+    void tick();
 
 protected:
     duration delta_;

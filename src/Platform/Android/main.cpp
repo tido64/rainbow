@@ -128,7 +128,7 @@ void android_main(struct android_app* state)
             }
         }
 
-        chrono.update();
+        chrono.tick();
         if (!(ainstance.initialised & ainstance.active))
             continue;
 

@@ -4,6 +4,7 @@
 
 #include "Platform/SDL/RainbowController.h"
 
+#include <cinttypes>
 #include <SDL.h>
 
 #include "Config.h"
@@ -62,6 +63,9 @@ RainbowController::RainbowController(SDLContext& context,
 
     director_.init(context_.drawable_size());
     on_window_resized();
+
+    chrono_.tick();
+    LOGI("Initialization time: %" PRId64 " ms", chrono_.delta());
 }
 
 bool RainbowController::run()
@@ -177,7 +181,7 @@ bool RainbowController::run()
         }
     }
 
-    chrono_.update();
+    chrono_.tick();
     if (!director_.active())
         Chrono::sleep(kInactiveSleepTime);
     else

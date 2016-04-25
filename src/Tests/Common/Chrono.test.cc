@@ -17,7 +17,7 @@ TEST(ChronoTest, TimeDifferenceBetweenUpdates)
     for (int i = 0; times[i] > 0; ++i)
     {
         Chrono::sleep(times[i]);
-        chrono.update();
+        chrono.tick();
         ASSERT_LE(times[i], chrono.delta());
         ASSERT_GE(times[i] + threshold, chrono.delta());
     }

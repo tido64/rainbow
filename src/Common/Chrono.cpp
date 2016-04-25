@@ -14,15 +14,15 @@ namespace
     }
 }
 
-Chrono::duration Chrono::system_now()
-{
-    return std::chrono::duration_cast<Chrono::duration>(
-        std::chrono::system_clock::now().time_since_epoch());
-}
-
 void Chrono::sleep(duration::rep ms)
 {
     std::this_thread::sleep_for(duration(ms));
+}
+
+Chrono::duration Chrono::system_now()
+{
+    return std::chrono::duration_cast<duration>(
+        std::chrono::system_clock::now().time_since_epoch());
 }
 
 std::chrono::seconds Chrono::time_since_epoch()
@@ -30,9 +30,11 @@ std::chrono::seconds Chrono::time_since_epoch()
     return std::chrono::duration_cast<std::chrono::seconds>(now());
 }
 
-Chrono::Chrono() : delta_(0), current_(now()), previous_(current_) {}
+Chrono::Chrono() : delta_(0), current_(now()), previous_(current_)
+{
+}
 
-void Chrono::update()
+void Chrono::tick()
 {
     previous_ = current_;
     current_ = now();
