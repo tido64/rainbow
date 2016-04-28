@@ -18,6 +18,8 @@ namespace
 
 namespace rainbow
 {
+    Random random;
+
     Director::Director() : active_(true), terminated_(false), error_(nullptr)
     {
         if (!mixer_.initialize(kMaxAudioChannels))

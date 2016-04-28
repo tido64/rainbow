@@ -4,55 +4,87 @@
 
 #include <gtest/gtest.h>
 
-#include "Common/Algorithm.h"
 #include "Common/Random.h"
 
 namespace
 {
-    // dSFMT2-19937:117-19:ffafffffffb3f-ffdfffc90fffd
-    // init_gen_rand(0) generated randoms [0, 1)
-    const double kKnownRandoms[]{0.030581026769374, 0.213140320067012,
-                                 0.299002525016001, 0.381138853044628,
-                                 0.863488397063594, 0.133443440024236,
-                                 0.073465290616508, 0.924735636004535};
+    constexpr unsigned int kSampleSize = 1u << 16;
+    constexpr uint64_t kSeed = UINT64_C(1181783497276652981);
 }
 
 TEST(RandomTest, InRange01)
 {
-    dsfmt_gv_init_gen_rand(0);
+    rainbow::random.seed();
 
-    for (size_t i = 0; i < rainbow::array_size(kKnownRandoms); ++i)
-        ASSERT_FLOAT_EQ(kKnownRandoms[i], rainbow::random());
+    for (unsigned int i = 0; i < kSampleSize; ++i)
+    {
+        const double v = rainbow::random();
+        ASSERT_GE(v, 0.0);
+        ASSERT_LT(v, 1.0);
+    }
 }
 
 TEST(RandomTest, InRange0N)
 {
-    const double upper = 8;
-    dsfmt_gv_init_gen_rand(0);
+    constexpr double upper = 6;
+    rainbow::random.seed();
 
-    for (size_t i = 0; i < rainbow::array_size(kKnownRandoms); ++i)
-        ASSERT_FLOAT_EQ(kKnownRandoms[i] * upper, rainbow::random(upper));
+    for (unsigned int i = 0; i < kSampleSize; ++i)
+    {
+        const double v = rainbow::random(upper);
+        ASSERT_GE(v, 0.0);
+        ASSERT_LT(v, upper);
+    }
 }
 
 TEST(RandomTest, InRangeMN)
 {
-    const double lower = 8.0;
-    const double upper = 16.0;
-    dsfmt_gv_init_gen_rand(0);
+    constexpr double lower = 1.0;
+    constexpr double upper = 6.0;
+    rainbow::random.seed();
 
-    for (size_t i = 0; i < rainbow::array_size(kKnownRandoms); ++i)
+    for (unsigned int i = 0; i < kSampleSize; ++i)
     {
-        ASSERT_FLOAT_EQ(kKnownRandoms[i] * lower + lower,
-                        rainbow::random(lower, upper));
+        const double v = rainbow::random(lower, upper);
+        ASSERT_GE(v, lower);
+        ASSERT_LT(v, upper);
     }
+}
+
+TEST(RandomTest, Seed)
+{
+    rainbow::Random rand1;
+    rand1.seed(kSeed);
+
+    rainbow::Random rand2;
+    rand2.seed(kSeed);
+
+    for (unsigned int i = 0; i < kSampleSize; ++i)
+        ASSERT_EQ(rand1(), rand2(0.0, 1.0));
+
+    rand2.seed(kSeed);
+
+    ASSERT_NE(rand1(), rand2(0.0, 1.0));
+
+    rand1.seed(kSeed);
+    rand2.seed(kSeed);
+
+    ASSERT_EQ(rand1(), rand2(0.0, 1.0));
+
+    rand1.seed();
+    rand2.seed();
+
+    ASSERT_NE(rand1(), rand2(0.0, 1.0));
 }
 
 TEST(RandomTest, SeededInRange01)
 {
-    rainbow::random.seed(1);
-    for (size_t i = 0; i < rainbow::array_size(kKnownRandoms); ++i)
+    rainbow::random.seed(kSeed);
+
+    for (unsigned int i = 0; i < kSampleSize; ++i)
     {
-        ASSERT_FALSE(
-            rainbow::is_equal<float>(rainbow::random(), kKnownRandoms[i]));
+        const double v = rainbow::random();
+        ASSERT_GE(v, 0.0);
+        ASSERT_LT(v, 1.0);
     }
 }

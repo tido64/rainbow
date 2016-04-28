@@ -94,7 +94,6 @@
 		1939A174152C401300494609 /* lzio.c in Sources */ = {isa = PBXBuildFile; fileRef = 1939A046152C401300494609 /* lzio.c */; };
 		1939A177152C418700494609 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1939A176152C418700494609 /* GLKit.framework */; };
 		1939A179152C41C000494609 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1939A178152C41C000494609 /* OpenGLES.framework */; };
-		1939A20F152C425D00494609 /* Random.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1939A196152C425D00494609 /* Random.cpp */; };
 		1939A211152C425D00494609 /* Config.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1939A1A0152C425D00494609 /* Config.cpp */; };
 		1939A21B152C425D00494609 /* Director.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1939A1BA152C425D00494609 /* Director.cpp */; };
 		1939A21C152C425D00494609 /* Animation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1939A1BD152C425D00494609 /* Animation.cpp */; };
@@ -394,7 +393,6 @@
 		1939A184152C425D00494609 /* Color.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Color.h; sourceTree = "<group>"; };
 		1939A185152C425D00494609 /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		1939A186152C425D00494609 /* Data.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Data.h; sourceTree = "<group>"; };
-		1939A196152C425D00494609 /* Random.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Random.cpp; sourceTree = "<group>"; };
 		1939A197152C425D00494609 /* Random.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Random.h; sourceTree = "<group>"; };
 		1939A19C152C425D00494609 /* TreeNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TreeNode.h; sourceTree = "<group>"; };
 		1939A1A0152C425D00494609 /* Config.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; name = Config.cpp; path = ../../../src/Config.cpp; sourceTree = "<group>"; };
@@ -921,7 +919,6 @@
 				1910099719FDA3A70036D5F4 /* Link.h */,
 				190A0ADA15E0294C0088D8B7 /* Logging.h */,
 				19F9890C15FBBB3B005A5F69 /* NonCopyable.h */,
-				1939A196152C425D00494609 /* Random.cpp */,
 				1939A197152C425D00494609 /* Random.h */,
 				19DF40461C98B425001482BC /* String.h */,
 				1939A19C152C425D00494609 /* TreeNode.h */,
@@ -1685,7 +1682,6 @@
 				1939A172152C401300494609 /* lundump.c in Sources */,
 				1939A173152C401300494609 /* lvm.c in Sources */,
 				1939A174152C401300494609 /* lzio.c in Sources */,
-				1939A20F152C425D00494609 /* Random.cpp in Sources */,
 				1962F1EA184930FA00E1CAF4 /* lua_Shaders.cpp in Sources */,
 				1939A211152C425D00494609 /* Config.cpp in Sources */,
 				1939A21B152C425D00494609 /* Director.cpp in Sources */,
