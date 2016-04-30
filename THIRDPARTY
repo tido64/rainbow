@@ -2,7 +2,7 @@
 
 ### Box2D
 
-> lib/Box2D/*
+> lib/box2D/
 
 Copyright (c) 2006-2014 Erin Catto http://box2d.org/
 
@@ -24,7 +24,7 @@ Copyright (c) 2006-2014 Erin Catto http://box2d.org/
 
 ### dSFMT
 
-> lib/dSFMT/*
+> lib/dSFMT/
 
 Copyright (c) 2007, 2008, 2009 Mutsuo Saito, Makoto Matsumoto and Hiroshima University.
 Copyright (c) 2011, 2002 Mutsuo Saito, Makoto Matsumoto, Hiroshima University and The University of Tokyo.
@@ -59,16 +59,72 @@ All rights reserved.
 
 ### FreeType
 
-> lib/FreeType/*
-> src/ThirdParty/FreeType/*
+> lib/FreeType/
+> src/ThirdParty/FreeType/
 
 Portions of this software are copyright (c) 2006-2014 The FreeType Project (www.freetype.org).
 All rights reserved.
 
+### Google Test
+
+> lib/googletest/
+
+Copyright 2008, Google Inc. All rights reserved.
+
+	Redistribution and use in source and binary forms, with or without
+	modification, are permitted provided that the following conditions are
+	met:
+
+	    * Redistributions of source code must retain the above copyright
+	notice, this list of conditions and the following disclaimer.
+	    * Redistributions in binary form must reproduce the above
+	copyright notice, this list of conditions and the following disclaimer
+	in the documentation and/or other materials provided with the
+	distribution.
+	    * Neither the name of Google Inc. nor the names of its
+	contributors may be used to endorse or promote products derived from
+	this software without specific prior written permission.
+
+	THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+	"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+	LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+	A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+	OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+	SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+	LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+	DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+	THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+	(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+### dear imgui
+
+> lib/imgui/
+
+Copyright (c) 2014-2015 Omar Cornut and ImGui contributors
+
+	Permission is hereby granted, free of charge, to any person obtaining a copy
+	of this software and associated documentation files (the "Software"), to deal
+	in the Software without restriction, including without limitation the rights
+	to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	copies of the Software, and to permit persons to whom the Software is
+	furnished to do so, subject to the following conditions:
+
+	The above copyright notice and this permission notice shall be included in all
+	copies or substantial portions of the Software.
+
+	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+	AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+	SOFTWARE.
+
 ### libpng
 
-> lib/libpng/*
-> src/ThirdParty/libpng/*
+> lib/libpng/
+> src/ThirdParty/libpng/
 
 Copyright (c) 1998-2014 Glenn Randers-Pehrson
 Copyright (c) 1996-1997 Andreas Dilger
@@ -76,7 +132,7 @@ Copyright (c) 1995-1996 Guy Eric Schalnat, Group 42, Inc.
 
 ### Lua
 
-> lib/Lua/*
+> lib/Lua/
 
 Copyright (c) 1994-2014 Lua.org, PUC-Rio.
 
@@ -98,9 +154,31 @@ Copyright (c) 1994-2014 Lua.org, PUC-Rio.
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 	THE SOFTWARE.
 
+### NanoSVG
+
+> lib/nanosvg/
+
+Copyright (c) 2013-14 Mikko Mononen memon@inside.org
+
+	This software is provided 'as-is', without any express or implied
+	warranty.  In no event will the authors be held liable for any damages
+	arising from the use of this software.
+
+	Permission is granted to anyone to use this software for any purpose,
+	including commercial applications, and to alter it and redistribute it
+	freely, subject to the following restrictions:
+
+	1. The origin of this software must not be misrepresented; you must not
+	claim that you wrote the original software. If you use this software
+	in a product, an acknowledgment in the product documentation would be
+	appreciated but is not required.
+	2. Altered source versions must be plainly marked as such, and must not be
+	misrepresented as being the original software.
+	3. This notice may not be removed or altered from any source distribution.
+
 ### NanoVG
 
-> lib/nanovg/*
+> lib/nanovg/
 
 Copyright (c) 2013 Mikko Mononen memon@inside.org
 
@@ -138,8 +216,8 @@ Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 
 ### Ogg Vorbis, Vorbisfile
 
-> build/windows/include/ogg/*
-> build/windows/include/vorbis/*
+> build/windows/include/ogg/
+> build/windows/include/vorbis/
 > build/windows/lib/libogg_static.lib
 > build/windows/lib/libvorbis_static.lib
 > build/windows/lib/libvorbisfile_static.lib
@@ -175,10 +253,9 @@ Copyright (c) 2002-2008 Xiph.org Foundation
 
 ### OpenAL Soft
 
-> build/windows/include/AL/*
-> build/windows/lib/libOpenAL32.dll.a
+> lib/openal-soft
 
-Copyright (c) 2007-2014  Chris Robinson <chris.kcat@gmail.com>
+Copyright (c) 2007-2016 Chris Robinson <chris.kcat@gmail.com>
 
 	This library is free software; you can redistribute it and/or
 	modify it under the terms of the GNU Library General Public
@@ -196,7 +273,7 @@ Copyright (c) 2007-2014  Chris Robinson <chris.kcat@gmail.com>
 
 ### SDL
 
-> lib/SDL/*
+> lib/SDL/
 
 	This software is provided 'as-is', without any express or implied
 	warranty.  In no event will the authors be held liable for any damages
@@ -213,6 +290,39 @@ Copyright (c) 2007-2014  Chris Robinson <chris.kcat@gmail.com>
 	2. Altered source versions must be plainly marked as such, and must not be
 	   misrepresented as being the original software.
 	3. This notice may not be removed or altered from any source distribution.
+
+### Spine Runtimes
+
+> lib/spine-runtimes
+
+	Spine Runtimes Software License
+	Version 2.2
+
+	Copyright (c) 2013, Esoteric Software
+	All rights reserved.
+
+	You are granted a perpetual, non-exclusive, non-sublicensable and
+	non-transferable license to use, install, execute and perform the Spine
+	Runtimes Software (the "Software") and derivative works solely for personal or
+	internal use. Without the written permission of Esoteric Software (typically
+	granted by licensing Spine), you may not (a) modify, translate, adapt or
+	otherwise create derivative works, improvements of the Software or develop
+	new applications using the Software or (b) remove, delete, alter or obscure
+	any trademarks or any copyright, trademark, patent or other intellectual
+	property or proprietary rights notices on or in the Software, including any
+	copy thereof. Redistributions in binary or source form must include this
+	license and terms.
+
+	THIS SOFTWARE IS PROVIDED BY ESOTERIC SOFTWARE "AS IS" AND ANY EXPRESS OR
+	IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+	MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO
+	EVENT SHALL ESOTERIC SOFTARE BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+	SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+	PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+	OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+	WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+	OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+	ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ### Taylor R. Campbell's UTF-8 Decoder
 
@@ -245,9 +355,21 @@ Copyright (c) 2014 Taylor R Campbell
 	ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 	POSSIBILITY OF SUCH DAMAGE.
 
+### xorshift1024*, splitmix64
+
+> src/Common/Random.h
+
+Written in 2014-2015 by Sebastiano Vigna (vigna@acm.org)
+
+	To the extent possible under law, the author has dedicated all copyright
+	and related and neighboring rights to this software to the public domain
+	worldwide. This software is distributed without any warranty.
+
+	See <http://creativecommons.org/publicdomain/zero/1.0/>.
+
 ### zlib
 
-> lib/zlib/*
+> lib/zlib/
 
 Copyright (C) 1995-2014 Jean-loup Gailly and Mark Adler
 
