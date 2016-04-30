@@ -5,6 +5,7 @@
 #include <gtest/gtest.h>
 
 #include "Audio/Mixer.h"
+#include "Tests/TestHelpers.h"
 
 using rainbow::audio::Channel;
 using rainbow::audio::Mixer;
@@ -14,6 +15,9 @@ namespace
 {
     constexpr int kMaxAudioChannels = 8;
     constexpr const char kAudioTestFile[] = "Silence.ogg";
+
+    DEFINE_NOT_FN(not_paused, rainbow::audio::is_paused, Channel*);
+    DEFINE_NOT_FN(not_playing, rainbow::audio::is_playing, Channel*);
 
     struct Static
     {
@@ -58,43 +62,43 @@ TYPED_TEST(AudioTest, ControlsChannelPlayback)
 {
     auto channel = rainbow::audio::play(this->sound_);
 
-    ASSERT_FALSE(rainbow::audio::is_paused(channel));
-    ASSERT_TRUE(rainbow::audio::is_playing(channel));
+    ASSERT_PRED1(not_paused, channel);
+    ASSERT_PRED1(rainbow::audio::is_playing, channel);
 
     ASSERT_EQ(channel, rainbow::audio::play(channel));
 
-    ASSERT_FALSE(rainbow::audio::is_paused(channel));
-    ASSERT_TRUE(rainbow::audio::is_playing(channel));
+    ASSERT_PRED1(not_paused, channel);
+    ASSERT_PRED1(rainbow::audio::is_playing, channel);
 
     rainbow::audio::pause(channel);
 
-    ASSERT_TRUE(rainbow::audio::is_paused(channel));
-    ASSERT_TRUE(rainbow::audio::is_playing(channel));
+    ASSERT_PRED1(rainbow::audio::is_paused, channel);
+    ASSERT_PRED1(rainbow::audio::is_playing, channel);
 
     rainbow::audio::pause(channel);
 
-    ASSERT_TRUE(rainbow::audio::is_paused(channel));
-    ASSERT_TRUE(rainbow::audio::is_playing(channel));
+    ASSERT_PRED1(rainbow::audio::is_paused, channel);
+    ASSERT_PRED1(rainbow::audio::is_playing, channel);
 
     rainbow::audio::play(channel);
 
-    ASSERT_FALSE(rainbow::audio::is_paused(channel));
-    ASSERT_TRUE(rainbow::audio::is_playing(channel));
+    ASSERT_PRED1(not_paused, channel);
+    ASSERT_PRED1(rainbow::audio::is_playing, channel);
 
     rainbow::audio::stop(channel);
 
-    ASSERT_FALSE(rainbow::audio::is_paused(channel));
-    ASSERT_FALSE(rainbow::audio::is_playing(channel));
+    ASSERT_PRED1(not_paused, channel);
+    ASSERT_PRED1(not_playing, channel);
 
     rainbow::audio::play(channel);
 
-    ASSERT_FALSE(rainbow::audio::is_paused(channel));
-    ASSERT_FALSE(rainbow::audio::is_playing(channel));
+    ASSERT_PRED1(not_paused, channel);
+    ASSERT_PRED1(not_playing, channel);
 
     rainbow::audio::pause(channel);
 
-    ASSERT_FALSE(rainbow::audio::is_paused(channel));
-    ASSERT_FALSE(rainbow::audio::is_playing(channel));
+    ASSERT_PRED1(not_paused, channel);
+    ASSERT_PRED1(not_playing, channel);
 }
 
 #ifdef RAINBOW_AUDIO_AL
@@ -102,18 +106,18 @@ TYPED_TEST(AudioTest, ReusesChannels)
 {
     auto channel = rainbow::audio::play(this->sound_);
 
-    ASSERT_FALSE(rainbow::audio::is_paused(channel));
-    ASSERT_TRUE(rainbow::audio::is_playing(channel));
+    ASSERT_PRED1(not_paused, channel);
+    ASSERT_PRED1(rainbow::audio::is_playing, channel);
 
     rainbow::audio::stop(channel);
 
-    ASSERT_FALSE(rainbow::audio::is_paused(channel));
-    ASSERT_FALSE(rainbow::audio::is_playing(channel));
+    ASSERT_PRED1(not_paused, channel);
+    ASSERT_PRED1(not_playing, channel);
 
     ASSERT_EQ(channel, rainbow::audio::play(this->sound_));
 
-    ASSERT_FALSE(rainbow::audio::is_paused(channel));
-    ASSERT_TRUE(rainbow::audio::is_playing(channel));
+    ASSERT_PRED1(not_paused, channel);
+    ASSERT_PRED1(rainbow::audio::is_playing, channel);
 
     rainbow::audio::stop(channel);
 }
@@ -129,13 +133,13 @@ TYPED_TEST(AudioTest, StopsPlaybackWhenSoundIsReleased)
 {
     auto channel = rainbow::audio::play(this->sound_);
 
-    ASSERT_FALSE(rainbow::audio::is_paused(channel));
-    ASSERT_TRUE(rainbow::audio::is_playing(channel));
+    ASSERT_PRED1(not_paused, channel);
+    ASSERT_PRED1(rainbow::audio::is_playing, channel);
 
     rainbow::audio::release(this->sound_);
 
-    ASSERT_FALSE(rainbow::audio::is_paused(channel));
-    ASSERT_FALSE(rainbow::audio::is_playing(channel));
+    ASSERT_PRED1(not_paused, channel);
+    ASSERT_PRED1(not_playing, channel);
 }
 
 TEST(AudioTest, CanPlaySingleSoundOnMultipleChannels)
@@ -160,9 +164,9 @@ TEST(AudioTest, CanPlaySingleSoundOnMultipleChannels)
     for (int i = 0; i < kMaxAudioChannels; ++i)
     {
         if (i % 2 == 0)
-            ASSERT_TRUE(rainbow::audio::is_paused(channels[i]));
+            ASSERT_PRED1(rainbow::audio::is_paused, channels[i]);
         else
-            ASSERT_TRUE(rainbow::audio::is_playing(channels[i]));
+            ASSERT_PRED1(rainbow::audio::is_playing, channels[i]);
     }
 
     for (int i = 1; i < kMaxAudioChannels; i += 2)
@@ -171,11 +175,11 @@ TEST(AudioTest, CanPlaySingleSoundOnMultipleChannels)
     for (int i = 0; i < kMaxAudioChannels; ++i)
     {
         if (i % 2 == 0)
-            ASSERT_TRUE(rainbow::audio::is_paused(channels[i]));
+            ASSERT_PRED1(rainbow::audio::is_paused, channels[i]);
         else
         {
-            ASSERT_FALSE(rainbow::audio::is_paused(channels[i]));
-            ASSERT_FALSE(rainbow::audio::is_playing(channels[i]));
+            ASSERT_PRED1(not_paused, channels[i]);
+            ASSERT_PRED1(not_playing, channels[i]);
         }
     }
 
@@ -191,11 +195,11 @@ TEST(AudioTest, CanPlaySingleSoundOnMultipleChannels)
     for (int i = 0; i < kMaxAudioChannels; ++i)
     {
         if (i % 2 == 0)
-            ASSERT_TRUE(rainbow::audio::is_playing(channels[i]));
+            ASSERT_PRED1(rainbow::audio::is_playing, channels[i]);
         else
         {
-            ASSERT_FALSE(rainbow::audio::is_paused(channels[i]));
-            ASSERT_FALSE(rainbow::audio::is_playing(channels[i]));
+            ASSERT_PRED1(not_paused, channels[i]);
+            ASSERT_PRED1(not_playing, channels[i]);
         }
     }
 
@@ -203,7 +207,7 @@ TEST(AudioTest, CanPlaySingleSoundOnMultipleChannels)
 
     for (auto&& channel : channels)
     {
-        ASSERT_FALSE(rainbow::audio::is_paused(channel));
-        ASSERT_FALSE(rainbow::audio::is_playing(channel));
+        ASSERT_PRED1(not_paused, channel);
+        ASSERT_PRED1(not_playing, channel);
     }
 }

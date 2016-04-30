@@ -265,6 +265,7 @@ if(UNIT_TESTS)
        src/Tests/Memory/Pool.test.cc
        src/Tests/Memory/ScopeStack.test.cc
        src/Tests/Memory/SharedPtr.test.cc
+       src/Tests/TestHelpers.h
        src/Tests/Tests.cpp
        src/Tests/Tests.h)
 endif()

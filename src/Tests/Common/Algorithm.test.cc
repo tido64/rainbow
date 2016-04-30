@@ -7,6 +7,7 @@
 #include "Common/Algorithm.h"
 #include "Common/Logging.h"
 #include "Common/UTF8.h"
+#include "Tests/TestHelpers.h"
 
 namespace
 {
@@ -40,8 +41,8 @@ TEST(AlgorithmTest, ClampsValues)
 
 TEST(AlgorithmTest, ConvertsRadiansToDegrees)
 {
-    ASSERT_TRUE(rainbow::is_equal(static_cast<float>(kPi),
-                                  rainbow::radians(rainbow::degrees(kPi))));
+    ASSERT_PRED2(
+        rainbow::is_equal<float>, kPi, rainbow::radians(rainbow::degrees(kPi)));
 }
 
 TEST(AlgorithmTest, ApproximatesInverseSquareRoot)
@@ -53,24 +54,28 @@ TEST(AlgorithmTest, ApproximatesInverseSquareRoot)
 
 TEST(AlgorithmTest, ApproximatesFloatEquality)
 {
-    ASSERT_TRUE(rainbow::is_equal(0.0f, 0.0f));
-    ASSERT_FALSE(rainbow::is_equal(0.0f, 0.00001f));
-    ASSERT_FALSE(rainbow::is_equal(0.0f, -0.00001f));
-    ASSERT_TRUE(rainbow::is_equal(3.14285714f, 22.0f / 7.0f));
+    DEFINE_NOT_FN(not_equal, rainbow::is_equal<float>, float);
+
+    ASSERT_PRED2(rainbow::is_equal<float>, 0.0f, 0.0f);
+    ASSERT_PRED2(not_equal, 0.0f, 0.00001f);
+    ASSERT_PRED2(not_equal, 0.0f, -0.00001f);
+    ASSERT_PRED2(rainbow::is_equal<float>, 3.14285714f, 22.0f / 7.0f);
 }
 
 TEST(AlgorithmTest, IsPowerOfTwo)
 {
+    DEFINE_NOT_FN(not_pow2, rainbow::is_pow2, unsigned int);
+
     unsigned int p = 1;
     for (unsigned int i = 0; i < 100; ++i)
     {
         if (i == p)
         {
-            ASSERT_TRUE(rainbow::is_pow2(i));
+            ASSERT_PRED1(rainbow::is_pow2, i);
             p *= 2;
             continue;
         }
-        ASSERT_FALSE(rainbow::is_pow2(i));
+        ASSERT_PRED1(not_pow2, i);
     }
 }
 
@@ -112,8 +117,8 @@ TEST(AlgorithmTest, QuickErasesElementsInContainer)
 
 TEST(AlgorithmTest, ConvertsDegreesToRadians)
 {
-    ASSERT_TRUE(rainbow::is_equal(static_cast<float>(kPi),
-                                  rainbow::degrees(rainbow::radians(kPi))));
+    ASSERT_PRED2(
+        rainbow::is_equal<float>, kPi, rainbow::degrees(rainbow::radians(kPi)));
 }
 
 TEST(AlgorithmTest, RemovesValuesFromContainer)

@@ -243,6 +243,7 @@ bool ShaderManager::init()
         UNREACHABLE();
         return false;
     }
+
     make_global();
     return true;
 }

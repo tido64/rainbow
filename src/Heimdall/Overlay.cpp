@@ -34,6 +34,12 @@ namespace
                                    typename Container::value_type{})) /
                container.size();
     }
+
+    template <typename... Args>
+    void snprintf_q(Args&&... args)
+    {
+        static_cast<void>(std::snprintf(std::forward<Args>(args)...));
+    }
 }
 
 Overlay::Overlay()
@@ -93,10 +99,10 @@ void Overlay::update_impl(unsigned long dt)
             ImGui::LabelText(
                 "", "Draw count: %u", rainbow::graphics::draw_count());
 
-            snprintf(buffer,
-                     rainbow::array_size(buffer),
-                     "Frame time: %.01f ms/frame",
-                     mean(frame_times_));
+            snprintf_q(buffer,
+                       rainbow::array_size(buffer),
+                       "Frame time: %.01f ms/frame",
+                       mean(frame_times_));
             ImGui::PlotLines("",
                              at<decltype(frame_times_)>,
                              &frame_times_,
@@ -107,10 +113,10 @@ void Overlay::update_impl(unsigned long dt)
                              100.0f,
                              graph_size);
 
-            snprintf(buffer,
-                     rainbow::array_size(buffer),
-                     "Video memory: %.2f MBs",
-                     vmem_usage_.back());
+            snprintf_q(buffer,
+                       rainbow::array_size(buffer),
+                       "Video memory: %.2f MBs",
+                       vmem_usage_.back());
             ImGui::PlotLines("",
                              at<decltype(vmem_usage_)>,
                              &vmem_usage_,
