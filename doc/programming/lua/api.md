@@ -105,7 +105,7 @@ Stops the animation.
 
 > Audio consists mainly of the sound object and the audio channel. The sound object is basically an audio buffer. It can be wholly loaded, or it can stream from disk. A sound object is played on an audio channel. An audio channel can only play one sound object at a time but the sound object can be used by any number of channels. As raw audio data can take a large amount of memory, it is recommended to only create static sound objects for short audio files (such as sound effects).
 
-> Officially, Rainbow supports only [Ogg Vorbis](http://en.wikipedia.org/wiki/Vorbis) audio format. However, on iOS, the [list of supported audio formats](http://developer.apple.com/library/ios/#documentation/AudioVideo/Conceptual/MultimediaPG/UsingAudio/UsingAudio.html#//apple_ref/doc/uid/TP40009767-CH2-SW9) includes AAC (MPEG-4 Advanced Audio Coding), ALAC (Apple Lossless), HE-AAC (MPEG-4 High Efficiency AAC), iLBC (internet Low Bit Rate Codec), IMA4 (IMA/ADPCM), Linear PCM (uncompressed, linear pulse code modulation), MP3, µ-law and a-law. Of these, AAC, ALAC, HE-AAC and MP3 are hardware-assisted. Mac OS X also supports these in addition to [Ogg Vorbis](http://en.wikipedia.org/wiki/Vorbis). On Android, the list of supported audio formats vary with each device but MP3 and Ogg Vorbis are both safe bets.
+> Officially, Rainbow supports only [Ogg Vorbis](https://en.wikipedia.org/wiki/Vorbis) audio format. However, on iOS, the [list of supported audio formats](https://developer.apple.com/library/ios/documentation/AudioVideo/Conceptual/MultimediaPG/UsingAudio/UsingAudio.html#//apple_ref/doc/uid/TP40009767-CH2-SW9) includes AAC (MPEG-4 Advanced Audio Coding), ALAC (Apple Lossless), HE-AAC (MPEG-4 High Efficiency AAC), iLBC (internet Low Bit Rate Codec), IMA4 (IMA/ADPCM), Linear PCM (uncompressed, linear pulse code modulation), MP3, µ-law and a-law. Of these, AAC, ALAC, HE-AAC and MP3 are hardware-assisted. Mac OS X also supports these in addition to [Ogg Vorbis](https://en.wikipedia.org/wiki/Vorbis). On Android, the list of supported audio formats vary with each device but MP3 and Ogg Vorbis are both safe bets.
 
 ### rainbow.audio.is_paused(channel)
 
@@ -402,7 +402,7 @@ Total amount of RAM in MB.
 
 ## rainbow.random
 
-> Rainbow integrates the [Double precision SIMD-oriented Fast Mersenne Twister](http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/SFMT/) pseudorandom number generators developed by Mutsuo Saito and Makoto Matsumoto at Hiroshima University and University of Tokyo. The default generator has a period of 2<sup>19937</sup> - 1.
+> Rainbow's default random number generator is [xorshift1024*](http://xoroshiro.di.unimi.it/) written by Sebastiano Vigna. The generator has a period of 2<sup>1024</sup> - 1.
 
 ### rainbow.random()
 
@@ -668,7 +668,7 @@ Rotates sprite by given angle.
 
 > Sprite batches are meant to enforce grouping of [sprites](#rainbowsprite) in order to avoid drawing each [sprite](#rainbowsprite) separately.
 
-> The sprites in a batch are drawn using [painter's algorithm](http://en.wikipedia.org/wiki/Painter's_algorithm) and should therefore be created in the order they want to be drawn.
+> The sprites in a batch are drawn using [painter's algorithm](https://en.wikipedia.org/wiki/Painter's_algorithm) and should therefore be created in the order they want to be drawn.
 
 ### rainbow.spritebatch(hint = 4)
 
@@ -696,7 +696,7 @@ Sets [texture atlas](#rainbowtexture).
 
 ## rainbow.texture
 
-> Texture objects are images decoded and sent to the graphics card as texture. Textures are normally stored as raw bitmaps unless they were stored in a compressed format supported by the platform (e.g. ETC1 or PVRTC). This means that a 1024x1024 texture will normally occupy 4MB. In order to save memory, they are assumed to be [atlases](http://en.wikipedia.org/wiki/Texture_atlas) and should be reused whenever possible.
+> Texture objects are images decoded and sent to the graphics card as texture. Textures are normally stored as raw bitmaps unless they were stored in a compressed format supported by the platform (e.g. ETC1 or PVRTC). This means that a 1024x1024 texture will normally occupy 4MB. In order to save memory, they are assumed to be [atlases](https://en.wikipedia.org/wiki/Texture_atlas) and should be reused whenever possible.
 
 > Rainbow currently supports PNG and PVRTC.
 

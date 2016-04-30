@@ -2,7 +2,7 @@
 
 ## Getting the source code
 
-First, make sure you've installed [Git](http://git-scm.com/downloads) as that's what we'll be using to retrieve the source code. The following command will download Rainbow and all of its submodules into a folder named `rainbow`:
+First, make sure you've installed [Git](https://git-scm.com/downloads) as that's what we'll be using to retrieve the source code. The following command will download Rainbow and all of its submodules into a folder named `rainbow`:
 
 ```bash
 git clone --recursive https://bitbucket.org/tido/rainbow.git
@@ -14,12 +14,12 @@ If you're using a graphical UI for Git, make sure to checkout the submodules as 
 
 Next, we'll need to install the dependencies:
 
-* [CMake](http://www.cmake.org/)
-* [FMOD](http://www.fmod.org/) (only if you want to use FMOD Studio)
-* [Mercurial](http://mercurial.selenic.com/) (Linux and Mac OS X only)
+* [CMake](https://cmake.org/)
+* [FMOD](https://www.fmod.org/) (only if you want to use FMOD Studio)
+* [Mercurial](https://www.mercurial-scm.org/) (Linux and Mac OS X only)
 * [Ogg Vorbis](http://www.vorbis.com/) (only if you want to use OpenAL)
 * [OpenAL Soft](http://kcat.strangesoft.net/openal.html) (only if you want to use OpenAL)
-* [SDL](https://www.libsdl.org/download-2.0.php) (Windows only)
+* [SDL](https://libsdl.org/) (Windows only)
 
 If you've decided to use FMOD Studio, download the FMOD Studio API package for
 your platform. Extract or install it, and copy the files into place. Please see
@@ -42,7 +42,7 @@ the instructions in `README.md` for more details.
 
 1. Download and install [Xcode](https://itunes.apple.com/app/xcode/id497799835?mt=12) from the App Store.
 2. Install the Command Line Tools Package by running `xcode-select --install` in Terminal.
-3. Install [Homebrew](http://brew.sh/) (or [MacPorts](http://www.macports.org/)).
+3. Install [Homebrew](http://brew.sh/) (or [MacPorts](https://www.macports.org/)).
 4. Install the rest of the dependencies: `brew install cmake libogg libvorbis mercurial`
 
 !!! note
@@ -51,8 +51,8 @@ the instructions in `README.md` for more details.
 
 ### Windows
 
-1. Download and install [Visual Studio Community](http://www.visualstudio.com/en-us/products/visual-studio-community-vs).
-2. Download and install [CMake](http://www.cmake.org/download/).
+1. Download and install [Visual Studio Community](https://www.visualstudio.com/en-us/products/visual-studio-community-vs.aspx).
+2. Download and install [CMake](https://cmake.org/download/).
 
 !!! note
 
@@ -102,7 +102,7 @@ cd rainbow-build
 
 The build script will generate project files and start building Rainbow.
 
-By default, [GCC](https://gcc.gnu.org/) and Clang will be used to compile both C and C++ code on Linux and OS X respectively. Unix Makefiles is the default generator on Linux, and Xcode on OS X. You can change these by prefixing environment variables. For instance, to use GCC and [Ninja](https://martine.github.io/ninja/) in place of Clang and Makefiles:
+By default, [GCC](https://gcc.gnu.org/) and Clang will be used to compile both C and C++ code on Linux and OS X respectively. Unix Makefiles is the default generator on Linux, and Xcode on OS X. You can change these by prefixing environment variables. For instance, to use GCC and [Ninja](https://ninja-build.org/) in place of Clang and Makefiles:
 
 ```bash
 CC=gcc CXX=g++ GENERATOR=Ninja /path/to/rainbow/tools/build.sh [option ...]

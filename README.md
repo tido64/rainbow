@@ -1,4 +1,4 @@
-# Rainbow [![codecov.io](https://codecov.io/github/tn0502/rainbow/coverage.svg?branch=master)](https://codecov.io/github/tn0502/rainbow?branch=master)
+# Rainbow [![codecov](https://codecov.io/gh/tn0502/rainbow/branch/master/graph/badge.svg)](https://codecov.io/gh/tn0502/rainbow)
 
 Rainbow is a fast, scriptable, cross-platform, 2D game engine written in modern
 C++.
@@ -6,10 +6,10 @@ C++.
 Copyright &copy; 2010-16 Bifrost Entertainment AS and Tommy Nguyen.
 
 Distributed under the MIT License (see accompanying file `LICENSE` or copy at
-http://opensource.org/licenses/MIT). Licenses for third-party software can be
+https://opensource.org/licenses/MIT). Licenses for third-party software can be
 found in file `THIRDPARTY`.
 
-- [Documentation](https://rainbow.readthedocs.org/)
+- [Documentation](https://rainbow.readthedocs.io/)
 - [Roadmap](https://trello.com/b/r2TqudY6/rainbow)
 - [Discussion](https://groups.google.com/forum/#!forum/rainbow-tech)
 
@@ -25,7 +25,7 @@ Rainbow runs on most popular operating systems:
 
 ### Audio
 
-Rainbow integrates [FMOD Studio](http://www.fmod.org/), giving you access to
+Rainbow integrates [FMOD Studio](https://www.fmod.org/), giving you access to
 the same professional tools that AAA studios use. There is also an open source
 alternative built on OpenAL. Audio format support depends on the platform.
 Typically, MP3 and Ogg Vorbis on Android, and
@@ -34,8 +34,8 @@ on iOS and OS X.
 
 ### Graphics
 
-Rainbow is mostly built on [OpenGL ES 2.0](http://www.khronos.org/opengles/2_X/)
-and features:
+Rainbow is mostly built on
+[OpenGL ES 2.0](https://www.khronos.org/opengles/2_X/) and features:
 
 - Scene graph
 - Sprites-based rendering with explicit batching
@@ -44,7 +44,7 @@ and features:
   [Spine](http://esotericsoftware.com/)
 - Text rendering (supports TrueType and OpenType via
   [FreeType](http://www.freetype.org/))
-- Texture atlas ([PNG](http://www.libpng.org/pub/png/) and PVRTC)
+- Texture atlas ([PNG](http://libpng.org/pub/png/libpng.html) and PVRTC)
 
 ### Input
 
@@ -55,7 +55,7 @@ and features:
 
 ### And more…
 
-- [Lua](http://www.lua.org/) scripting language with debugging console and hot
+- [Lua](https://www.lua.org/) scripting language with debugging console and hot
   reloading
 - 2d rigid body physics provided by [Box2D](http://box2d.org/)
 
@@ -105,7 +105,7 @@ use FMOD Studio, run `build.sh` with `-DUSE_FMOD_STUDIO=1` or replace
 `RAINBOW_AUDIO_AL=1` with `RAINBOW_AUDIO_FMOD=1` in the project file.
 
 FMOD's licence prevents redistribution of its files so you'll have to download
-them yourself [here](http://www.fmod.org/download/). Extract or install it and
+them yourself [here](https://www.fmod.org/download/). Extract or install it and
 move the files into the repository under `lib/FMOD/`. It should look similar to
 the listing below if you've done it correctly:
 
@@ -173,8 +173,8 @@ listed for sake of completeness. If you're on Mac OS or Linux, you can use
 
 ### Android
 
-- [Android NDK](http://developer.android.com/tools/sdk/ndk/)
-- [Android SDK](http://developer.android.com/sdk/)
+- [Android NDK](https://developer.android.com/tools/sdk/ndk/)
+- [Android SDK](https://developer.android.com/sdk/)
 
 Once you've installed both, open `rainbow/tools/build-android.sh` and change
 `NDK_HOME` to point at the NDK. The build script will create a debuggable and
@@ -193,12 +193,12 @@ Use the provided Xcode project under `rainbow/build/xcode4/`.
 
 ### Linux (and cross-compiling for Windows)
 
-- [CMake](http://www.cmake.org/)
+- [CMake](https://cmake.org/)
 - [Mesa](http://www.mesa3d.org/)
 - [Ogg Vorbis](http://www.vorbis.com/) (optional with `-DUSE_FMOD_STUDIO=1`)
 - [OpenAL Soft](http://kcat.strangesoft.net/openal.html) (optional with
   `-DUSE_FMOD_STUDIO=1`)
-- [SDL](http://libsdl.org/)
+- [SDL](https://libsdl.org/)
 - [MinGW-w64](http://mingw-w64.org/) (for cross-compiling only)
 
 You can install most of these using your favourite package manager. For SDL,
@@ -211,23 +211,23 @@ work.
 
 ### Mac OS X
 
-- [CMake](http://www.cmake.org/)
+- [CMake](https://cmake.org/)
 - [Ogg Vorbis](http://www.vorbis.com/) (optional with `-DUSE_FMOD_STUDIO=1`)
-- [SDL](http://libsdl.org/)
+- [SDL](https://libsdl.org/)
 - [Xcode](https://itunes.apple.com/no/app/xcode/id497799835?mt=12)
 
 CMake and Ogg Vorbis can be installed through [Homebrew](http://brew.sh/) or
-[MacPorts](http://www.macports.org/). Xcode's Command Line Tools must be
+[MacPorts](https://www.macports.org/). Xcode's Command Line Tools must be
 installed. SDL will be downloaded automatically by the build script.
 
 ### Windows
 
-- [CMake](http://www.cmake.org/)
+- [CMake](https://cmake.org/)
 - [OpenAL Soft](http://kcat.strangesoft.net/openal.html) (optional with
   `-DUSE_FMOD_STUDIO=1`)
-- [SDL](http://libsdl.org/)
-- [Visual Studio Community](http://www.visualstudio.com/en-us/products/visual-studio-community-vs)
-  (2015 with Update 1 or later)
+- [SDL](https://libsdl.org/)
+- [Visual Studio Community](https://www.visualstudio.com/en-us/products/visual-studio-community-vs.aspx)
+  (2015 with Update 2 or later)
 
 The process of downloading and setting up OpenAL Soft and SDL is fully automated
 by the build scripts. Simply run the PowerShell script, `tools\make.ps1`, and
@@ -238,10 +238,10 @@ Alternatively, see "Linux" for cross-compilation.
 
 ## Learning
 
-Check out the [documentation here](http://rainbow.rtfd.org/) or under `doc`, and
-the demos under `demos`. Note: In order to run a demo, you'll need to copy some
-files from `lua` into the folder of the demo you want to run. It's easier to
-copy all even if you won't need everything.
+Check out the [documentation here](https://rainbow.readthedocs.io/) or under
+`doc`, and the demos under `demos`. Note: In order to run a demo, you'll need to
+copy some files from `lua` into the folder of the demo you want to run. It's
+easier to copy all even if you won't need everything.
 
 Some demos may use resources that (unfortunately) cannot be distributed with
 Rainbow.
