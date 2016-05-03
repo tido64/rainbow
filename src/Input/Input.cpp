@@ -4,6 +4,8 @@
 
 #include "Input/Input.h"
 
+using rainbow::ControllerAxisMotion;
+using rainbow::ControllerButtonEvent;
 using rainbow::KeyMods;
 using rainbow::KeyStroke;
 using rainbow::VirtualKey;
@@ -59,14 +61,14 @@ void Input::on_controller_axis_motion(const ControllerAxisMotion& axis_motion)
     });
 }
 
-void Input::on_controller_button_down(const ControllerButton& button)
+void Input::on_controller_button_down(const ControllerButtonEvent& button)
 {
     for_each(next(), [&button](InputListener* i) {
         return i->on_controller_button_down(button);
     });
 }
 
-void Input::on_controller_button_up(const ControllerButton& button)
+void Input::on_controller_button_up(const ControllerButtonEvent& button)
 {
     for_each(next(), [&button](InputListener* i) {
         return i->on_controller_button_up(button);

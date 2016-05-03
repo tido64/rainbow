@@ -61,9 +61,9 @@ public:
     /// </param>
     void accelerated(double x, double y, double z, double t);
 
-    void on_controller_axis_motion(const ControllerAxisMotion&);
-    void on_controller_button_down(const ControllerButton&);
-    void on_controller_button_up(const ControllerButton&);
+    void on_controller_axis_motion(const rainbow::ControllerAxisMotion&);
+    void on_controller_button_down(const rainbow::ControllerButtonEvent&);
+    void on_controller_button_up(const rainbow::ControllerButtonEvent&);
     void on_controller_connected(unsigned int id);
     void on_controller_disconnected(unsigned int id);
 

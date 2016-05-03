@@ -8,6 +8,11 @@
 #include "Input/Input.h"
 #include "Input/InputListener.h"
 
+using rainbow::ControllerAxis;
+using rainbow::ControllerAxisMotion;
+using rainbow::ControllerButton;
+using rainbow::ControllerButtonEvent;
+
 namespace
 {
     class ControllerTest : public InputListener, public ::testing::Test
@@ -26,12 +31,12 @@ namespace
 
         ControllerAxisMotion axis_motion() const
         {
-            return ControllerAxisMotion(id(), Controller::Axis::LeftX, 255, 1);
+            return ControllerAxisMotion(id(), ControllerAxis::LeftX, 255, 1);
         }
 
-        ControllerButton button() const
+        ControllerButtonEvent button() const
         {
-            return ControllerButton(id(), Controller::Button::A, 1);
+            return ControllerButtonEvent(id(), ControllerButton::A, 1);
         }
 
         auto id() const -> uint32_t { return 1; }
@@ -65,8 +70,8 @@ namespace
             return true;
         }
 
-        bool
-        on_controller_button_down_impl(const ControllerButton& btn) override
+        bool on_controller_button_down_impl(
+            const ControllerButtonEvent& btn) override
         {
             [this, &btn]
             {
@@ -80,7 +85,8 @@ namespace
             return true;
         }
 
-        bool on_controller_button_up_impl(const ControllerButton& btn) override
+        bool on_controller_button_up_impl(
+            const ControllerButtonEvent& btn) override
         {
             [this, &btn]
             {
@@ -117,14 +123,14 @@ TEST_F(ControllerTest, IsInvalidByDefault)
     const ControllerAxisMotion axis;
 
     ASSERT_EQ(0u, axis.id);
-    ASSERT_EQ(Controller::Axis::Invalid, axis.axis);
+    ASSERT_EQ(ControllerAxis::Invalid, axis.axis);
     ASSERT_EQ(0, axis.value);
     ASSERT_EQ(0ull, axis.timestamp);
 
-    const ControllerButton button;
+    const ControllerButtonEvent button;
 
     ASSERT_EQ(0u, button.id);
-    ASSERT_EQ(Controller::Button::Invalid, button.button);
+    ASSERT_EQ(ControllerButton::Invalid, button.button);
     ASSERT_EQ(0ull, button.timestamp);
 }
 

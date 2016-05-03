@@ -8,6 +8,8 @@
 #include "Input/Input.h"
 #include "Input/InputListener.h"
 
+using rainbow::ControllerAxisMotion;
+using rainbow::ControllerButtonEvent;
 using rainbow::KeyMods;
 using rainbow::KeyStroke;
 using rainbow::VirtualKey;
@@ -61,20 +63,21 @@ namespace
         bool pointer_ended_;
         bool pointer_moved_;
 
-        bool
-        on_controller_axis_motion_impl(const ControllerAxisMotion&) override
+        bool on_controller_axis_motion_impl(
+            const ControllerAxisMotion&) override
         {
             axis_motion_ = true;
             return consume_;
         }
 
-        bool on_controller_button_down_impl(const ControllerButton&) override
+        bool on_controller_button_down_impl(
+            const ControllerButtonEvent&) override
         {
             button_down_ = true;
             return consume_;
         }
 
-        bool on_controller_button_up_impl(const ControllerButton&) override
+        bool on_controller_button_up_impl(const ControllerButtonEvent&) override
         {
             button_up_ = true;
             return consume_;
@@ -143,11 +146,11 @@ TEST(InputTest, BaseInputListenerDoesNothing)
     ASSERT_TRUE(test_input_listener.axis_motion());
 
     ASSERT_FALSE(test_input_listener.button_down());
-    input.on_controller_button_down(ControllerButton());
+    input.on_controller_button_down(ControllerButtonEvent());
     ASSERT_TRUE(test_input_listener.button_down());
 
     ASSERT_FALSE(test_input_listener.button_up());
-    input.on_controller_button_up(ControllerButton());
+    input.on_controller_button_up(ControllerButtonEvent());
     ASSERT_TRUE(test_input_listener.button_up());
 
     ASSERT_FALSE(test_input_listener.controller_connected());

@@ -11,6 +11,10 @@
 #include "Input/Pointer.h"
 #include "Platform/SDL/Context.h"
 
+using rainbow::ControllerAxis;
+using rainbow::ControllerAxisMotion;
+using rainbow::ControllerButton;
+using rainbow::ControllerButtonEvent;
 using rainbow::KeyStroke;
 
 namespace
@@ -145,20 +149,21 @@ bool RainbowController::run()
                 director_.input().on_controller_axis_motion(
                     ControllerAxisMotion(
                         event.caxis.which,
-                        static_cast<Controller::Axis>(event.caxis.axis),
+                        static_cast<ControllerAxis>(event.caxis.axis),
                         event.caxis.value,
                         event.caxis.timestamp));
                 break;
             case SDL_CONTROLLERBUTTONDOWN:
-                director_.input().on_controller_button_down(ControllerButton(
-                    event.cbutton.which,
-                    static_cast<Controller::Button>(event.cbutton.button),
-                    event.cbutton.timestamp));
+                director_.input().on_controller_button_down(
+                    ControllerButtonEvent(
+                        event.cbutton.which,
+                        static_cast<ControllerButton>(event.cbutton.button),
+                        event.cbutton.timestamp));
                 break;
             case SDL_CONTROLLERBUTTONUP:
-                director_.input().on_controller_button_up(ControllerButton(
+                director_.input().on_controller_button_up(ControllerButtonEvent(
                     event.cbutton.which,
-                    static_cast<Controller::Button>(event.cbutton.button),
+                    static_cast<ControllerButton>(event.cbutton.button),
                     event.cbutton.timestamp));
                 break;
             case SDL_CONTROLLERDEVICEADDED:

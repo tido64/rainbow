@@ -8,12 +8,12 @@
 #include "Common/Link.h"
 #include "Memory/Array.h"
 
-struct ControllerAxisMotion;
-struct ControllerButton;
 struct Pointer;
 
 namespace rainbow
 {
+    struct ControllerAxisMotion;
+    struct ControllerButtonEvent;
     struct KeyStroke;
 }
 
@@ -37,17 +37,17 @@ public:
         return static_cast<InputListener*>(Link::prev());
     }
 
-    bool on_controller_axis_motion(const ControllerAxisMotion& motion)
+    bool on_controller_axis_motion(const rainbow::ControllerAxisMotion& motion)
     {
         return on_controller_axis_motion_impl(motion);
     }
 
-    bool on_controller_button_down(const ControllerButton& button)
+    bool on_controller_button_down(const rainbow::ControllerButtonEvent& button)
     {
         return on_controller_button_down_impl(button);
     }
 
-    bool on_controller_button_up(const ControllerButton& button)
+    bool on_controller_button_up(const rainbow::ControllerButtonEvent& button)
     {
         return on_controller_button_up_impl(button);
     }
@@ -105,17 +105,20 @@ protected:
     ~InputListener() = default;
 
 private:
-    virtual bool on_controller_axis_motion_impl(const ControllerAxisMotion&)
+    virtual bool on_controller_axis_motion_impl(
+        const rainbow::ControllerAxisMotion&)
     {
         return false;
     }
 
-    virtual bool on_controller_button_down_impl(const ControllerButton&)
+    virtual bool on_controller_button_down_impl(
+        const rainbow::ControllerButtonEvent&)
     {
         return false;
     }
 
-    virtual bool on_controller_button_up_impl(const ControllerButton&)
+    virtual bool on_controller_button_up_impl(
+        const rainbow::ControllerButtonEvent&)
     {
         return false;
     }
