@@ -158,6 +158,13 @@ namespace rainbow
     {
         return (x > T(0)) - (x < T(0));
     }
+
+    template <typename Enum>
+    constexpr auto to_underlying_type(Enum value)
+        -> std::underlying_type_t<Enum>
+    {
+        return static_cast<std::underlying_type_t<Enum>>(value);
+    }
 }
 
 #endif

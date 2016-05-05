@@ -38,6 +38,21 @@ namespace
     }
 }
 
+constexpr unsigned int Input::kNumSupportedControllers;
+
+template <typename F>
+void Input::process_controller(unsigned int id, F&& process)
+{
+    for (auto i = 0u; i < rainbow::array_size(controllers_); ++i)
+    {
+        if (controllers_[i].id() == id)
+        {
+            process(i);
+            break;
+        }
+    }
+}
+
 void Input::subscribe(NotNull<InputListener*> i)
 {
     last_listener_->append(i);
@@ -54,38 +69,75 @@ void Input::accelerated(double x, double y, double z, double t)
     acceleration_.update(x, y, z, t);
 }
 
-void Input::on_controller_axis_motion(const ControllerAxisMotion& axis_motion)
+void Input::on_controller_axis_motion(const ControllerAxisMotion& motion)
 {
-    for_each(next(), [&axis_motion](InputListener* i) {
-        return i->on_controller_axis_motion(axis_motion);
+    process_controller(motion.id, [this, motion](unsigned int i) {
+        controllers_[i].on_axis_motion(motion);
+        auto event = motion;
+        event.id = i;
+        for_each(next(), [&event](InputListener* i) {
+            return i->on_controller_axis_motion(event);
+        });
     });
 }
 
 void Input::on_controller_button_down(const ControllerButtonEvent& button)
 {
-    for_each(next(), [&button](InputListener* i) {
-        return i->on_controller_button_down(button);
+    process_controller(button.id, [this, button](unsigned int i) {
+        controllers_[i].on_button_down(button);
+        auto event = button;
+        event.id = i;
+        for_each(next(), [&event](InputListener* i) {
+            return i->on_controller_button_down(event);
+        });
     });
 }
 
 void Input::on_controller_button_up(const ControllerButtonEvent& button)
 {
-    for_each(next(), [&button](InputListener* i) {
-        return i->on_controller_button_up(button);
+    process_controller(button.id, [this, button](unsigned int i) {
+        controllers_[i].on_button_up(button);
+        auto event = button;
+        event.id = i;
+        for_each(next(), [&event](InputListener* i) {
+            return i->on_controller_button_up(event);
+        });
     });
 }
 
 void Input::on_controller_connected(unsigned int id)
 {
-    for_each(next(), [id](InputListener* i) {
-        return i->on_controller_connected(id);
+    int port = -1;
+    for (auto i = 0u; i < rainbow::array_size(controllers_); ++i)
+    {
+        if (controllers_[i].id() == id)
+            return;
+
+        if (port < 0 && !controllers_[i].is_assigned())
+            port = static_cast<int>(i);
+    }
+
+    if (port < 0)
+        return;
+
+    controllers_[port].assign(id);
+    LOGI("Controller %u plugged into port %d", id, port + 1);
+
+    for_each(next(), [port](InputListener* i) {
+        return i->on_controller_connected(port);
     });
 }
 
 void Input::on_controller_disconnected(unsigned int id)
 {
-    for_each(next(), [id](InputListener* i) {
-        return i->on_controller_disconnected(id);
+    process_controller(id, [this](unsigned int i) {
+        auto& controller = controllers_[i];
+        LOGI("Controller %u unplugged from port %d", controller.id(), i + 1);
+        controller.unassign();
+
+        for_each(next(), [i](InputListener* listener) {
+            return listener->on_controller_disconnected(i);
+        });
     });
 }
 

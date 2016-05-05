@@ -9,6 +9,7 @@
 #include "Input/InputListener.h"
 
 using rainbow::ControllerAxisMotion;
+using rainbow::ControllerButton;
 using rainbow::ControllerButtonEvent;
 using rainbow::KeyMods;
 using rainbow::KeyStroke;
@@ -141,21 +142,23 @@ TEST(InputTest, BaseInputListenerDoesNothing)
     input.subscribe(&base_input_listener);
     input.subscribe(&test_input_listener);
 
+    ASSERT_FALSE(test_input_listener.controller_connected());
+    input.on_controller_connected(0);
+    ASSERT_TRUE(test_input_listener.controller_connected());
+
     ASSERT_FALSE(test_input_listener.axis_motion());
     input.on_controller_axis_motion(ControllerAxisMotion());
     ASSERT_TRUE(test_input_listener.axis_motion());
 
+    const ControllerButtonEvent button(0, ControllerButton::A, 0);
+
     ASSERT_FALSE(test_input_listener.button_down());
-    input.on_controller_button_down(ControllerButtonEvent());
+    input.on_controller_button_down(button);
     ASSERT_TRUE(test_input_listener.button_down());
 
     ASSERT_FALSE(test_input_listener.button_up());
-    input.on_controller_button_up(ControllerButtonEvent());
+    input.on_controller_button_up(button);
     ASSERT_TRUE(test_input_listener.button_up());
-
-    ASSERT_FALSE(test_input_listener.controller_connected());
-    input.on_controller_connected(0);
-    ASSERT_TRUE(test_input_listener.controller_connected());
 
     ASSERT_FALSE(test_input_listener.controller_disconnected());
     input.on_controller_disconnected(0);

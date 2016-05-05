@@ -9,6 +9,7 @@
 
 #include "Common/Global.h"
 #include "Input/Acceleration.h"
+#include "Input/Controller.h"
 #include "Input/InputListener.h"
 #include "Input/VirtualKey.h"
 
@@ -29,12 +30,31 @@
 class Input : public Global<Input>, private InputListener
 {
 public:
+    static constexpr unsigned int kNumSupportedControllers = 4;
+
     Input() : last_listener_(this) { make_global(); }
+
+    /// <summary>
+    ///   Returns the value of the specified axis on specified controller.
+    /// </summary>
+    auto axis(unsigned int controller, rainbow::ControllerAxis axis) const
+    {
+        return controllers_[controller].axis(axis);
+    }
+
+    /// <summary>
+    ///   Returns whether specified button is currently pressed on specified
+    ///   controller.
+    /// </summary>
+    bool is_down(unsigned int controller, rainbow::ControllerButton btn) const
+    {
+        return controllers_[controller].is_down(btn);
+    }
 
     /// <summary>Returns whether specified key is currently pressed.</summary>
     bool is_down(rainbow::VirtualKey key) const
     {
-        return keys_[static_cast<unsigned int>(key)];
+        return keys_[rainbow::to_underlying_type(key)];
     }
 
     /// <summary>Clears all input listeners.</summary>
@@ -76,13 +96,30 @@ public:
     void on_pointer_moved(const ArrayView<Pointer>& pointers);
 
 #ifdef RAINBOW_TEST
+    auto buttons_down(unsigned int i) const
+    {
+        return controllers_[i].buttons_down();
+    }
+
+    auto connected_controllers() const
+    {
+        return std::count_if(
+            std::cbegin(controllers_),
+            std::cend(controllers_),
+            [](auto&& controller) { return controller.is_assigned(); });
+    }
+
     auto keys_down() const { return keys_.count(); }
 #endif  // RAINBOW_TEST
 
 private:
-    std::bitset<static_cast<unsigned>(rainbow::VirtualKey::KeyCount)> keys_;
+    rainbow::ControllerState controllers_[kNumSupportedControllers];
+    std::bitset<rainbow::to_underlying_type(rainbow::VirtualKey::KeyCount)> keys_;
     Acceleration acceleration_;  ///< Accelerometer data
     InputListener* last_listener_;
+
+    template <typename F>
+    void process_controller(unsigned int id, F&& process);
 
     // Link overrides.
 
