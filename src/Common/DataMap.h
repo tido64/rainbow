@@ -10,16 +10,15 @@
 #include "Common/NonCopyable.h"
 #include "Platform/Macros.h"
 
+#define kErrorFileOpen   "Failed to open '%s' (%x)"
+#define kErrorFileRead   "Failed to read '%s' (%x)"
+#define kErrorMemoryMap  "Failed to memory map '%s' (%x)"
+
 class Path;
 
 namespace rainbow
 {
     using byte_t = unsigned char;
-
-    // TODO: Move error strings to a separate header.
-    static constexpr char kErrorFileOpen[] = "Failed to open '%s' (%x)";
-    static constexpr char kErrorFileRead[] = "Failed to read '%s' (%x)";
-    static constexpr char kErrorMemoryMap[] = "Failed to memory map '%s' (%x)";
 
     template <typename T>
     class TDataMap : private T, private NonCopyable<TDataMap<T>>

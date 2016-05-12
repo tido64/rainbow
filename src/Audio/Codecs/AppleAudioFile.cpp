@@ -95,7 +95,7 @@ auto AppleAudioFile::read(void* dst, size_t size) -> size_t
     buffer.mBuffers[0].mDataByteSize = size;
     buffer.mBuffers[0].mData = dst;
     if (ExtAudioFileRead(ref_, &frames, &buffer) != noErr)
-        LOGE("AudioToolbox: Failed to read <%p>", ref_);
+        LOGE("AudioToolbox: Failed to read <%p>", static_cast<void*>(ref_));
     return frames * format_.mBytesPerFrame;
 }
 

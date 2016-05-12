@@ -18,6 +18,12 @@
 #include "Lua/LuaHelper.h"
 #include "Lua/LuaSyntax.h"
 
+#define kProseFailedLoading    "Prose: Failed to load %s: %s"
+#define kProseFailedOpening    "Prose: Failed to open file: %s"
+#define kProseMissingProperty  "Prose: Missing property '%s' on %s: %s"
+#define kProseNoSuchFile       "Prose: No such file: %s"
+#define kProseUnknownProperty  "Prose: Unknown property '%s' on %s: %s"
+
 using rainbow::SceneNode;
 using rainbow::string_view;
 
@@ -163,16 +169,6 @@ TextureAtlas* Prose::get_texture(const std::string& name)
 namespace
 {
     const int kProseVersion = 100;
-
-    const char kProseFailedLoading[] = "Prose: Failed to load %s: %s";
-    const char kProseFailedOpening[] = "Prose: Failed to open file: %s";
-    const char kProseNoSuchFile[] = "Prose: No such file: %s";
-#ifndef NDEBUG
-    const char kProseMissingProperty[] =
-        "Prose: Missing property '%s' on %s: %s";
-    const char kProseUnknownProperty[] =
-        "Prose: Unknown property '%s' on %s: %s";
-#endif
 
     class ScopedField
     {

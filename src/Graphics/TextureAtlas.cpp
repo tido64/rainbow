@@ -8,12 +8,9 @@
 #include "Graphics/Image.h"
 #include "Graphics/TextureManager.h"
 
-using rainbow::Texture;
+#define kInvalidColorDepth "Invalid colour depth"
 
-namespace
-{
-    constexpr const char kInvalidColorDepth[] = "Invalid colour depth";
-}
+using rainbow::Texture;
 
 TextureAtlas::TextureAtlas(const char* path, float scale)
 {

@@ -5,146 +5,78 @@
 #ifndef COMMON_LOGGING_H_
 #define COMMON_LOGGING_H_
 
+#include <cinttypes>
 #include <cstdio>
 #include <cstdlib>
-#include <utility>
 
 #include "Common/Chrono.h"
 #include "Platform/Macros.h"
 
-#ifdef _MSC_VER
-#   define ATTRIBUTE(...)
-#else
-#   define ATTRIBUTE(...) __attribute__(__VA_ARGS__)
-#endif
-
 #ifdef RAINBOW_OS_ANDROID
 #   include <android/log.h>
-#   define RAINBOW_LOG_DEBUG  ANDROID_LOG_DEBUG
-#   define RAINBOW_LOG_ERROR  ANDROID_LOG_ERROR
-#   define RAINBOW_LOG_FATAL  ANDROID_LOG_FATAL
-#   define RAINBOW_LOG_INFO   ANDROID_LOG_INFO
-#   define RAINBOW_LOG_WARN   ANDROID_LOG_WARN
+#   define LOGD(...) __android_log_print(ANDROID_LOG_DEBUG, "Rainbow", __VA_ARGS__)
+#   define LOGE(...) __android_log_print(ANDROID_LOG_ERROR, "Rainbow", __VA_ARGS__)
+#   define LOGF(...) __android_log_print(ANDROID_LOG_FATAL, "Rainbow", __VA_ARGS__)
+#   define LOGI(...) __android_log_print(ANDROID_LOG_INFO, "Rainbow", __VA_ARGS__)
+#   define LOGW(...) __android_log_print(ANDROID_LOG_WARN, "Rainbow", __VA_ARGS__)
 #else
-#   define RAINBOW_LOG_DEBUG  "DEBUG"
-#   define RAINBOW_LOG_ERROR  "ERROR"
-#   define RAINBOW_LOG_FATAL  "FATAL"
-#   define RAINBOW_LOG_INFO   "INFO"
-#   define RAINBOW_LOG_WARN   "WARN"
+#   define LOG_FMT(level, fmt) "[%" PRId64 "|" level "] " fmt
+#   ifdef _MSC_VER
+#       define LOG_F(level, fmt, ...)                                          \
+            printf(LOG_FMT(level, fmt) "\n",                                   \
+                   Chrono::system_now().count(),                               \
+                   __VA_ARGS__)
+#       define LOGE(fmt, ...) LOG_F("ERROR", fmt, __VA_ARGS__)
+#       define LOGF(fmt, ...) LOG_F("FATAL", fmt, __VA_ARGS__)
+#   else
+#       define LOG_EX(...) , __VA_ARGS__
+#       define LOG_F(level, fmt, ...)                                          \
+            printf(LOG_FMT(level, fmt) "%c",                                   \
+                   Chrono::system_now().count()                                \
+                   LOG_EX(__VA_ARGS__))
+#       define LOGE(...) LOG_F("ERROR", __VA_ARGS__, '\n')
+#       define LOGF(...) LOG_F("FATAL", __VA_ARGS__, '\n')
+#   endif  // _MSC_VER
+#   ifdef NDEBUG
+#       define LOGD(...) static_cast<void>(0)
+#       define LOGI(...) static_cast<void>(0)
+#       define LOGW(...) static_cast<void>(0)
+#   else
+#       ifdef _MSC_VER
+#           define LOGD(fmt, ...) LOG_F("DEBUG", fmt, __VA_ARGS__)
+#           define LOGI(fmt, ...) LOG_F("INFO", fmt, __VA_ARGS__)
+#           define LOGW(fmt, ...) LOG_F("WARN", fmt, __VA_ARGS__)
+#       else
+#           define LOGD(...) LOG_F("DEBUG", __VA_ARGS__, '\n')
+#           define LOGI(...) LOG_F("INFO", __VA_ARGS__, '\n')
+#           define LOGW(...) LOG_F("WARN", __VA_ARGS__, '\n')
+#       endif  // _MSC_VER
+#   endif  // NDEBUG
 #endif  // RAINBOW_OS_ANDROID
 
-#define LOGE(...) rainbow::debug::error(__VA_ARGS__)
-#define LOGF(...) rainbow::debug::fatal(__VA_ARGS__)
-
 #ifdef NDEBUG
-#   define LOGD(...)      static_cast<void>(0)
-#   define LOGI(...)      static_cast<void>(0)
-#   define LOGW(...)      static_cast<void>(0)
 #   define R_ABORT(...)   static_cast<void>(0)
 #   define R_ASSERT(...)  static_cast<void>(0)
 #else
 #   ifdef _MSC_VER
-#       define LOGD(...) rainbow::debug::debug(__VA_ARGS__)
-#       define LOGI(...) rainbow::debug::info(__VA_ARGS__)
-#       define LOGW(...) rainbow::debug::warn(__VA_ARGS__)
+#       define R_ABORT(fmt, ...) (LOGF(fmt, __VA_ARGS__), std::abort())
 #   else
-#       define LOG_S(print, ...)                                               \
-            do                                                                 \
-            {                                                                  \
-                if (false)                                                     \
-                    rainbow::debug::format_check(__VA_ARGS__);                 \
-                print(__VA_ARGS__);                                            \
-            } while (false)
-#       define LOGD(...) LOG_S(rainbow::debug::debug, __VA_ARGS__)
-#       define LOGI(...) LOG_S(rainbow::debug::info, __VA_ARGS__)
-#       define LOGW(...) LOG_S(rainbow::debug::warn, __VA_ARGS__)
+#       define R_ABORT(...) (LOGF(__VA_ARGS__), std::abort())
 #   endif  // _MSC_VER
 #   ifndef __PRETTY_FUNCTION__
-#       define __PRETTY_FUNCTION__ __FUNCTION__
+#       define __PRETTY_FUNCTION__ __func__
 #   endif
 #   ifndef SRC_FILE
 #       define SRC_FILE __FILE__
 #   endif
-#   define R_ABORT(...) (rainbow::debug::fatal(__VA_ARGS__), std::abort())
 #   define R_ASSERT(expr, reason)                                              \
-    (!(expr) ? R_ABORT("%s: %s (aborted at %s:%i: %s)",                        \
-                       __PRETTY_FUNCTION__,                                    \
-                       reason,                                                 \
-                       SRC_FILE,                                               \
-                       __LINE__,                                               \
-                       #expr)                                                  \
-             : static_cast<void>(0))
+        (!(expr) ? R_ABORT("%s: %s (aborted at %s:%i: %s)",                    \
+                           __PRETTY_FUNCTION__,                                \
+                           reason,                                             \
+                           SRC_FILE,                                           \
+                           __LINE__,                                           \
+                           #expr)                                              \
+                 : static_cast<void>(0))
 #endif  // NDEBUG
 
-namespace rainbow { namespace debug
-{
-    constexpr size_t kLogLineLength = 1024;
-
-    void format_check(const char* fmt, ...) ATTRIBUTE((format(printf, 1, 2)));
-
-    template <typename T, size_t N, typename... Args>
-    void print(FILE* stream, T level, const char (&format)[N], Args&&... args)
-    {
-#ifdef __GNUC__
-#   pragma GCC diagnostic push
-#   pragma GCC diagnostic ignored "-Wformat-security"
-#endif
-#ifdef RAINBOW_OS_ANDROID
-        static_cast<void>(stream);
-        __android_log_print(
-            level, "Rainbow", format, std::forward<Args>(args)...);
-#else
-        const long long int timestamp = Chrono::system_now().count();
-        char buf[kLogLineLength];
-#ifdef _MSC_VER
-#   pragma warning(suppress: 6031)
-#endif
-        snprintf(buf, kLogLineLength, format, std::forward<Args>(args)...);
-        fprintf(stream, "[%lli|%s] %s\n", timestamp, level, buf);
-#endif  // RAINBOW_OS_ANDROID
-#ifdef __GNUC__
-#   pragma GCC diagnostic pop
-#endif
-    }
-
-    template <size_t N, typename... Args>
-    void error(const char (&format)[N], Args&&... args)
-    {
-        print(stderr, RAINBOW_LOG_ERROR, format, std::forward<Args>(args)...);
-    }
-
-    template <size_t N, typename... Args>
-    void fatal(const char (&format)[N], Args&&... args)
-    {
-        print(stderr, RAINBOW_LOG_FATAL, format, std::forward<Args>(args)...);
-    }
-
-#ifndef NDEBUG
-    template <size_t N, typename... Args>
-    void debug(const char (&format)[N], Args&&... args)
-    {
-        print(stdout, RAINBOW_LOG_DEBUG, format, std::forward<Args>(args)...);
-    }
-
-    template <size_t N, typename... Args>
-    void info(const char (&format)[N], Args&&... args)
-    {
-        print(stdout, RAINBOW_LOG_INFO, format, std::forward<Args>(args)...);
-    }
-
-    template <size_t N, typename... Args>
-    void warn(const char (&format)[N], Args&&... args)
-    {
-        print(stderr, RAINBOW_LOG_WARN, format, std::forward<Args>(args)...);
-    }
-#endif  // !NDEBUG
-}}  // namespace rainbow::debug
-
-#undef ATTRIBUTE
-#undef RAINBOW_LOG_DEBUG
-#undef RAINBOW_LOG_ERROR
-#undef RAINBOW_LOG_FATAL
-#undef RAINBOW_LOG_INFO
-#undef RAINBOW_LOG_WARN
-
-#endif  // RAINBOW_LOGGING_H_
+#endif  // COMMON_LOGGING_H_

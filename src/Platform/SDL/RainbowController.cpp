@@ -4,7 +4,6 @@
 
 #include "Platform/SDL/RainbowController.h"
 
-#include <cinttypes>
 #include <SDL.h>
 
 #include "Config.h"
