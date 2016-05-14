@@ -32,7 +32,7 @@ the instructions in `README.md` for more details.
 |               |                                                                                     |
 |---------------|-------------------------------------------------------------------------------------|
 | Arch Linux    | `pacman -S --needed cmake gcc libvorbis mercurial mesa openal`                    |
-| Debian/Ubuntu | `apt-get install build-essential cmake libopenal-dev libvorbis-dev mercurial mesa-common-dev` |
+| Debian/Ubuntu | `apt-get install build-essential cmake libgl1-mesa-dev libopenal-dev libvorbis-dev mercurial` |
 
 !!! note
 

@@ -6,7 +6,7 @@ branches:
 skip_tags: true
 image: Visual Studio 2015
 configuration: RelWithDebInfo
-clone_depth: 1
+clone_depth: 16
 cache:
   - '%APPVEYOR_BUILD_FOLDER%-build\lib\openal-soft\src\openal-soft-1.17.2-bin.zip'
   - '%APPVEYOR_BUILD_FOLDER%-build\lib\sdl2-bin\src\SDL2-2.0.4-win32-x86.zip'

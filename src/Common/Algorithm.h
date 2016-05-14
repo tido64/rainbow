@@ -114,7 +114,7 @@ namespace rainbow
     ///   Removes the first element equal to <paramref name="val"/>.
     /// </summary>
     template <typename T>
-    typename T::iterator remove(T& container, const typename T::value_type& val)
+    auto remove(T& container, const typename T::value_type& val)
     {
         auto i = std::find(std::begin(container), std::end(container), val);
         return (i == std::end(container) ? i : container.erase(i));
@@ -125,7 +125,7 @@ namespace rainbow
     ///   returns a past-the-end iterator for the new end of the range.
     /// </summary>
     template <typename T, typename F>
-    typename T::iterator remove_if(T& container, F&& predicate)
+    auto remove_if(T& container, F&& predicate)
     {
         return container.erase(std::remove_if(std::begin(container),
                                               std::end(container),
@@ -161,7 +161,6 @@ namespace rainbow
 
     template <typename Enum>
     constexpr auto to_underlying_type(Enum value)
-        -> std::underlying_type_t<Enum>
     {
         return static_cast<std::underlying_type_t<Enum>>(value);
     }
