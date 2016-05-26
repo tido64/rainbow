@@ -31,6 +31,17 @@ namespace
         0x00c5, 0x00c6, 0x00d8, 0x00e5, 0x00e6, 0x00f8, 0x20ac, 0x1f4a9};
 }
 
+TEST(AlgorithmTest, RoundsUpToNearestPowerOfTwo)
+{
+    unsigned int p = 1;
+    for (unsigned int i = 1; i < 100; ++i)
+    {
+        ASSERT_EQ(p, rainbow::ceil_pow2(i));
+        if (i == p)
+            p *= 2;
+    }
+}
+
 TEST(AlgorithmTest, ClampsValues)
 {
     ASSERT_EQ(1, rainbow::clamp(10, 0, 1));
@@ -50,6 +61,19 @@ TEST(AlgorithmTest, ApproximatesInverseSquareRoot)
     const double kErrorMargin = 0.017478;
     for (double f = 0.01; f < 10000; f += 0.01)
         ASSERT_NEAR(1 / sqrt(f), rainbow::fast_invsqrt(f), kErrorMargin);
+}
+
+TEST(AlgorithmTest, RoundsDownToNearestPowerOfTwo)
+{
+    ASSERT_EQ(0u, rainbow::floor_pow2(0));
+
+    unsigned int p = 1;
+    for (unsigned int i = 1; i < 100; ++i)
+    {
+        if (i == p * 2)
+            p = i;
+        ASSERT_EQ(p, rainbow::floor_pow2(i));
+    }
 }
 
 TEST(AlgorithmTest, ApproximatesFloatEquality)
@@ -76,17 +100,6 @@ TEST(AlgorithmTest, IsPowerOfTwo)
             continue;
         }
         ASSERT_PRED1(not_pow2, i);
-    }
-}
-
-TEST(AlgorithmTest, ReturnsNextPowerOfTwo)
-{
-    unsigned int p = 1;
-    for (unsigned int i = 1; i < 100; ++i)
-    {
-        ASSERT_EQ(p, rainbow::next_pow2(i));
-        if (i == p)
-            p *= 2;
     }
 }
 

@@ -209,8 +209,8 @@ void FontAtlas::load(TextureManager& texture_manager,
     const Vec2u& max = max_glyph_size(face, charset_, array_size(charset_));
     if (max.is_zero())
         return;
-    const Vec2u size(rainbow::next_pow2(max.x * kNumGlyphsPerColRow),
-                     rainbow::next_pow2(max.y * kNumGlyphsPerColRow));
+    const Vec2u size(rainbow::ceil_pow2(max.x * kNumGlyphsPerColRow),
+                     rainbow::ceil_pow2(max.y * kNumGlyphsPerColRow));
 
     // GL_LUMINANCE8_ALPHA8 buffer
     Vec2u offset(size.x * size.y * 2, 0);

@@ -12,6 +12,11 @@
 #include "FileSystem/Path.h"
 #include "Lua/LuaHelper.h"
 
+namespace
+{
+    constexpr unsigned int kMaxMSAA = 16;
+}
+
 namespace rainbow
 {
     Config::Config()
@@ -48,11 +53,7 @@ namespace rainbow
         lua_getglobal(L.get(), "msaa");
         if (lua_isnumber(L.get(), -1))
         {
-            msaa_ = lua::tointeger(L.get(), -1) &
-                    (std::numeric_limits<decltype(msaa_)>::max() - 1);
-            const auto msaa2 = next_pow2(msaa_);
-            if (msaa2 != msaa_)
-                msaa_ = msaa2 >> 1;
+            msaa_ = std::min(floor_pow2(lua::tointeger(L.get(), -1)), kMaxMSAA);
         }
 #endif
 

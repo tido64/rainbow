@@ -34,8 +34,8 @@ namespace svg
                 return image;
         }
 
-        image.width = rainbow::next_pow2(img->width * scale);
-        image.height = rainbow::next_pow2(img->height * scale);
+        image.width = rainbow::ceil_pow2(img->width * scale);
+        image.height = rainbow::ceil_pow2(img->height * scale);
         image.depth = 32;
         image.channels = 4;
         image.size = image.width * image.height * 4;

@@ -27,6 +27,19 @@ namespace rainbow
         return N;
     }
 
+    /// <summary>Rounds up to the nearest power of 2.</summary>
+    /// <remarks>Note that 0 is incorrectly considered a power of 2.</remarks>
+    inline unsigned int ceil_pow2(unsigned int i)
+    {
+        --i;
+        i |= i >> 1;
+        i |= i >> 2;
+        i |= i >> 4;
+        i |= i >> 8;
+        i |= i >> 16;
+        return ++i;
+    }
+
     template <typename T>
     T clamp(T x, T min_val, T max_val)
     {
@@ -56,6 +69,17 @@ namespace rainbow
         return x * (1.5f - (xhalf * x * x));
     }
 
+    /// <summary>Rounds down to the nearest power of 2.</summary>
+    inline unsigned int floor_pow2(unsigned int i)
+    {
+        i |= i >> 1;
+        i |= i >> 2;
+        i |= i >> 4;
+        i |= i >> 8;
+        i |= i >> 16;
+        return i - (i >> 1);
+    }
+
     /// <summary>
     ///   Compares two floating point numbers and approximate their equality.
     /// </summary>
@@ -78,19 +102,6 @@ namespace rainbow
     {
         return kLowPassAlpha * powf(10.0f, value * kLowPassAlpha) +
                (1.0f - kLowPassAlpha) * low_pass;
-    }
-
-    /// <summary>Calculates the next power of 2.</summary>
-    /// <remarks>Note that 0 is incorrectly considered a power of 2.</remarks>
-    inline unsigned int next_pow2(unsigned int i)
-    {
-        --i;
-        i |= i >> 1;
-        i |= i >> 2;
-        i |= i >> 4;
-        i |= i >> 8;
-        i |= i >> 16;
-        return ++i;
     }
 
     /// <summary>
