@@ -92,7 +92,10 @@ void Overlay::update_impl(unsigned long dt)
         ImGui::SameLine(0.0f, 120.0f);
         ImGui::Checkbox(pinned_ ? "Unpin" : "Pin", &pinned_);
 
-        if (ImGui::CollapsingHeader("Performance", nullptr, false, true))
+        if (ImGui::CollapsingHeader("Performance",
+                                    nullptr,
+                                    ImGuiTreeNodeFlags_NoAutoOpenOnLog |
+                                        ImGuiTreeNodeFlags_DefaultOpen))
         {
             const ImVec2 graph_size(400, 100);
 
