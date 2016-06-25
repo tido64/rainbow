@@ -338,7 +338,7 @@ void rainbow::audio::set_volume(Channel* channel, float volume)
     alSourcef(channel->id(), AL_GAIN, volume);
 }
 
-void rainbow::audio::set_world_position(Channel* channel, const Vec2f& position)
+void rainbow::audio::set_world_position(Channel* channel, Vec2f position)
 {
     const ALfloat pos[]{position.x, position.y, 0.0f};
     alSourcefv(channel->id(), AL_POSITION, pos);
@@ -358,7 +358,7 @@ auto rainbow::audio::play(Channel* channel) -> Channel*
     return channel;
 }
 
-auto rainbow::audio::play(Sound* sound, const Vec2f& position) -> Channel*
+auto rainbow::audio::play(Sound* sound, Vec2f position) -> Channel*
 {
     Channel* channel = al_mixer->get_channel();
     channel->set_sound(sound);

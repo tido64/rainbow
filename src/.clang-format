@@ -7,6 +7,13 @@ AlwaysBreakTemplateDeclarations: true
 BinPackArguments: false
 BinPackParameters: false
 BreakBeforeBraces: Allman
+IncludeCategories:
+  - Regex: '^["<](AL|AVFoundation|AudioToolbox|Box2D|CoreMotion|CoreServices|EGL|GL|GLES2|GLKit|OpenAL|OpenGL|OpenGLES|SDL|UIKit|android|boost|fmod|gtest|vorbis)[\/_]'
+    Priority: 2
+  - Regex: '^<'
+    Priority: 1
+  - Regex: '.\*'
+    Priority: 10
 IndentCaseLabels: true
 IndentWidth: 4
 NamespaceIndentation: All

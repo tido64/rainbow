@@ -21,7 +21,7 @@ Rainbow runs on most popular operating systems:
 
 | Android | iOS | Linux | Mac OS X | Windows |
 |:-------:|:---:|:-----:|:--------:|:-------:|
-| ✅ | ✅ | [![Linux build Status](https://travis-ci.org/tn0502/rainbow.svg?branch=master)](https://travis-ci.org/tn0502/rainbow) | ✅ | [![Windows build status](https://ci.appveyor.com/api/projects/status/oajtxwu9d9lrayk0?svg=true)](https://ci.appveyor.com/project/Tommy/rainbow) |
+| ✓ | ✓ | [![Linux build Status](https://travis-ci.org/tn0502/rainbow.svg?branch=master)](https://travis-ci.org/tn0502/rainbow) | ✓ | [![Windows build status](https://ci.appveyor.com/api/projects/status/oajtxwu9d9lrayk0?svg=true)](https://ci.appveyor.com/project/Tommy/rainbow) |
 
 ### Audio
 

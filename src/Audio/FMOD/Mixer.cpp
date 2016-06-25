@@ -200,7 +200,7 @@ void rainbow::audio::set_volume(Channel* channel, float volume)
     from_opaque(channel)->setVolume(volume);
 }
 
-void rainbow::audio::set_world_position(Channel* channel, const Vec2f& position)
+void rainbow::audio::set_world_position(Channel* channel, Vec2f position)
 {
     FMOD_VECTOR pos{position.x, position.y, 0.0f};
     from_opaque(channel)->set3DAttributes(&pos, nullptr);
@@ -221,7 +221,7 @@ auto rainbow::audio::play(Channel* channel) -> Channel*
     return channel;
 }
 
-auto rainbow::audio::play(Sound* sound, const Vec2f& position) -> Channel*
+auto rainbow::audio::play(Sound* sound, Vec2f position) -> Channel*
 {
     ASSUME(fmod_system != nullptr);
 

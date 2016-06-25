@@ -42,13 +42,12 @@ namespace rainbow { namespace audio
 
     void set_loop_count(Channel* channel, int count);
     void set_volume(Channel* channel, float volume);
-    void set_world_position(Channel* channel, const Vec2f& pos);
+    void set_world_position(Channel* channel, Vec2f pos);
 
     void pause(Channel* channel);
 
     auto play(Channel* channel) -> Channel*;
-    auto play(Sound* sound, const Vec2f& world_position = Vec2f::Zero)
-        -> Channel*;
+    auto play(Sound* sound, Vec2f world_position = Vec2f::Zero) -> Channel*;
 
     void stop(Channel* channel);
 }}  // rainbow::audio
