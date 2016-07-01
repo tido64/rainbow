@@ -124,6 +124,9 @@ set(SOURCE_FILES
     src/Memory/Pool.h
     src/Memory/ScopeStack.h
     src/Memory/SharedPtr.h
+    src/Memory/StableArray.h
+    src/Memory/TempBuffer.cpp
+    src/Memory/TempBuffer.h
     src/Platform/Macros.h
     src/Platform/SystemInfo.h
     src/Script/Actor.h
@@ -265,6 +268,7 @@ if(UNIT_TESTS)
        src/Tests/Memory/Pool.test.cc
        src/Tests/Memory/ScopeStack.test.cc
        src/Tests/Memory/SharedPtr.test.cc
+       src/Tests/Memory/StableArray.test.cc
        src/Tests/TestHelpers.h
        src/Tests/Tests.cpp
        src/Tests/Tests.h)
