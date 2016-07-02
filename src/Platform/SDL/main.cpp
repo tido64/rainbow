@@ -66,8 +66,9 @@ void emscripten_main() { g_controller->run(); }
 int main()
 {
     const rainbow::Config config;
-    g_context = new SDLContext(config);
-    g_controller = new RainbowController(*g_context, config);
+    g_context = std::make_unique<SDLContext>(config).release();
+    g_controller =
+        std::make_unique<RainbowController>(*g_context, config).release();
     emscripten_set_main_loop(&emscripten_main, 0, 1);
     return 0;
 }

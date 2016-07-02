@@ -39,7 +39,7 @@ namespace
 
 @implementation RainbowViewController
 {
-    Director* _director;
+    std::unique_ptr<Director> _director;
     CMMotionManager* _motionManager;
     Pointer _pointers[kMaxTouches];
 }
@@ -78,7 +78,7 @@ namespace
 
 - (void)dealloc
 {
-    delete _director;
+    _director.release();
     if ([EAGLContext currentContext] == self.context)
         [EAGLContext setCurrentContext:nil];
 }
@@ -198,7 +198,7 @@ namespace
         // device rotates.
         std::swap(size.width, size.height);
     }
-    _director = new Director();
+    _director = std::make_unique<Director>();
     _director->init(Vec2i(size.width, size.height));
 }
 

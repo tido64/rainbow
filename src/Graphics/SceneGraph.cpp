@@ -141,30 +141,30 @@ namespace rainbow {
 
 std::unique_ptr<SceneNode> SceneNode::create()
 {
-    return std::unique_ptr<SceneNode>(new GroupNode());
+    return std::unique_ptr<SceneNode>{std::make_unique<GroupNode>()};
 }
 
 std::unique_ptr<SceneNode> SceneNode::create(Drawable& drawable)
 {
-    return std::unique_ptr<SceneNode>(new DrawableNode(drawable));
+    return std::unique_ptr<SceneNode>{std::make_unique<DrawableNode>(drawable)};
 }
 
 template <>
 std::unique_ptr<SceneNode> SceneNode::create(Animation& a)
 {
-    return std::unique_ptr<SceneNode>(new AnimationNode(a));
+    return std::unique_ptr<SceneNode>{std::make_unique<AnimationNode>(a)};
 }
 
 template <>
 std::unique_ptr<SceneNode> SceneNode::create(Label& l)
 {
-    return std::unique_ptr<SceneNode>(new LabelNode(l));
+    return std::unique_ptr<SceneNode>{std::make_unique<LabelNode>(l)};
 }
 
 template <>
 std::unique_ptr<SceneNode> SceneNode::create(SpriteBatch& s)
 {
-    return std::unique_ptr<SceneNode>(new SpriteBatchNode(s));
+    return std::unique_ptr<SceneNode>{std::make_unique<SpriteBatchNode>(s)};
 }
 
 #if defined(__GNUC__) && !defined(__clang__)

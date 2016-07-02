@@ -370,7 +370,7 @@ Prose* Prose::from_lua(const char* path)
     parse_table(L.get(), "resources", &compute_size, total_size);
     parse_table(L.get(), "nodes", &compute_size, total_size);
 
-    Prose* scene = new Prose(total_size);
+    auto scene = std::make_unique<Prose>(total_size);
     parse_table(
         L.get(), "resources", &create_resource, scene->stack_, scene->assets_);
     parse_table(L.get(),
@@ -384,5 +384,5 @@ Prose* Prose::from_lua(const char* path)
     if (const auto& name = basename_without_extension(path))
         scene->node()->set_tag(name.get());
 #endif  // USE_NODE_TAGS
-    return scene;
+    return scene.release();
 }

@@ -69,14 +69,14 @@ std::unique_ptr<IAudioFile> IAudioFile::open(const char* path)
 #ifdef USE_OGGVORBIS
     if (OggVorbisAudioFile::signature_matches(ArrayView<char>(signature)))
     {
-        return std::unique_ptr<IAudioFile>(
-            new OggVorbisAudioFile(std::move(file)));
+        return std::unique_ptr<IAudioFile>{
+            std::make_unique<OggVorbisAudioFile>(std::move(file))};
     }
 #endif  // USE_OGGVORBIS
 
 #ifdef USE_AUDIOTOOLBOX
-    return std::unique_ptr<IAudioFile>(new AppleAudioFile(path));
+    return std::unique_ptr<IAudioFile>{std::make_unique<AppleAudioFile>(path)};
 #else
-    return std::unique_ptr<IAudioFile>(new DummyAudioFile());
+    return std::unique_ptr<IAudioFile>{std::make_unique<DummyAudioFile>()};
 #endif  // USE_AUDIOTOOLBOX
 }

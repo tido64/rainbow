@@ -14,7 +14,9 @@
 
 namespace
 {
+#ifdef RAINBOW_SDL
     constexpr unsigned int kMaxMSAA = 16;
+#endif
 }
 
 namespace rainbow
