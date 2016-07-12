@@ -155,12 +155,13 @@ Prose::Asset create_sprite(lua_State* L,
 Prose::Asset create_spritebatch(lua_State* L,
                                 Prose& scene,
                                 rainbow::ScopeStack& stack,
+                                uint32_t count,
                                 rainbow::SceneNode* parent)
 {
-    auto batch = stack.allocate<SpriteBatch>();
+    auto batch = stack.allocate<SpriteBatch>(count);
     auto field = get_field(L, "texture");
-    batch->set_texture(SharedPtr<TextureAtlas>(
-        scene.get_asset<TextureAtlas>(lua_tostring(L, -1))));
+    batch->set_texture(SharedPtr<TextureAtlas>{
+        scene.get_asset<TextureAtlas>(lua_tostring(L, -1))});
     return {Prose::AssetType::SpriteBatch, batch, parent->add_child(*batch)};
 }
 
@@ -190,10 +191,11 @@ Prose::Asset create_node(lua_State* L,
         case Prose::AssetType::Node:
             asset = {Prose::AssetType::Node, nullptr, parent->add_child()};
             break;
-        case Prose::AssetType::SpriteBatch: {
-            asset = create_spritebatch(L, scene, stack, parent);
+        case Prose::AssetType::SpriteBatch:
             if (has_key(L, "sprites"))
             {
+                const auto length = table_length(L, "sprites");
+                asset = create_spritebatch(L, scene, stack, length, parent);
                 parse_table(L,
                             "sprites",
                             &create_sprite,
@@ -202,7 +204,6 @@ Prose::Asset create_node(lua_State* L,
                             asset.node);
             }
             break;
-        }
         default:
             break;
     }

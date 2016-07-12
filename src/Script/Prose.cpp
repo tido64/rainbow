@@ -196,7 +196,7 @@ namespace
     template <size_t N>
     ScopedField get_field(lua_State* L, const char (&name)[N])
     {
-        return ScopedField(L, name, N - 1);
+        return {L, name, N - 1};
     }
 
     template <size_t N>
@@ -212,6 +212,21 @@ namespace
     Prose::Asset no_asset()
     {
         return {Prose::AssetType::None, nullptr, nullptr};
+    }
+
+    uint32_t table_length(lua_State *L, const char* name)
+    {
+        ScopedField table{L, name};
+        R_ASSERT(lua_istable(L, -1), "Table expected");
+
+        uint32_t length = 0;
+        lua_pushnil(L);
+        while (lua_next(L, -2) != 0)
+        {
+            ++length;
+            lua_pop(L, 1);
+        }
+        return length;
     }
 
     const char* table_name(lua_State* L)
@@ -240,7 +255,7 @@ namespace
     template <typename F, typename... Args>
     void parse_table(lua_State* L, const char* name, F&& parse, Args&&... args)
     {
-        ScopedField table(L, name);
+        ScopedField table{L, name};
         R_ASSERT(lua_istable(L, -1), "Table expected");
 
         lua_pushnil(L);

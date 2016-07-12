@@ -17,12 +17,13 @@ class SpriteRef
 {
 public:
     SpriteRef() : batch_(nullptr), i_(0) {}
+    SpriteRef(NotNull<SpriteBatch*> batch, size_t i) : batch_(batch), i_(i) {}
 
-    SpriteRef(NotNull<const SpriteBatch*> batch, size_t i)
-        : batch_(batch), i_(i) {}
+    auto operator*() -> Sprite& { return get(); }
+    auto operator*() const -> const Sprite& { return get(); }
 
-    Sprite& operator*() const;
-    Sprite* operator->() const;
+    auto operator->() -> Sprite* { return &get(); }
+    auto operator->() const -> const Sprite* { return &get(); }
 
     bool operator==(const SpriteRef& other) const
     {
@@ -30,10 +31,13 @@ public:
     }
 
     explicit operator bool() const { return batch_; }
+    explicit operator uint32_t() const { return i_; }
 
 private:
-    const SpriteBatch* batch_;
-    size_t i_;
+    SpriteBatch* batch_;
+    uint32_t i_;
+
+    auto get() const -> Sprite&;
 
     friend SpriteBatch;
 };
@@ -67,8 +71,9 @@ class Sprite : private NonCopyable<Sprite>
 public:
     enum { kNoId };
 
+    Sprite() : Sprite(0, 0) {}
     Sprite(unsigned int w, unsigned int h) : width_(w), height_(h) {}
-    Sprite(Sprite&&);
+    Sprite(Sprite&&) noexcept;
 
     auto angle() const { return angle_; }
     auto color() const { return color_; }
@@ -152,7 +157,7 @@ public:
     auto update(ArraySpan<Vec2f> normal_array,
                 const TextureAtlas& normal) -> bool;
 
-    Sprite& operator=(Sprite&&);
+    auto operator=(Sprite&&) -> Sprite&;
 
 #ifdef RAINBOW_TEST
     auto state() const { return state_; }

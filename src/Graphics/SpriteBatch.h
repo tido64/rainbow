@@ -9,7 +9,7 @@
 #include "Graphics/Sprite.h"
 #include "Graphics/TextureAtlas.h"
 #include "Graphics/VertexArray.h"
-#include "Memory/Arena.h"
+#include "Memory/StableArray.h"
 
 namespace rainbow { struct ISolemnlySwearThatIAmOnlyTesting; }
 
@@ -23,20 +23,18 @@ class SpriteBatch : private NonCopyable<SpriteBatch>
 {
 public:
     /// <summary>Creates a batch of sprites.</summary>
-    /// <param name="hint">
-    ///   If you know in advance how many sprites you'll need, set
-    ///   <paramref name="hint"/> for more efficient storage.
-    /// </param>
-    SpriteBatch(unsigned int hint = 4);
+    /// <param name="count">Number of sprites to allocate for.</param>
+    SpriteBatch(uint32_t count);
     SpriteBatch(SharedPtr<TextureAtlas> texture, SpriteList sprites);
-    SpriteBatch(SpriteBatch&&);
-    ~SpriteBatch();
+    SpriteBatch(SpriteBatch&&) noexcept;
 
     /// <summary>Returns a pointer to the beginning.</summary>
-    auto begin() const -> Sprite* { return sprites(); }
+    auto begin() { return sprites_.data(); }
+    auto begin() const { return sprites_.data(); }
 
     /// <summary>Returns a pointer to the end.</summary>
-    auto end() const -> Sprite* { return sprites() + count_; }
+    auto end() { return begin() + count_; }
+    auto end() const { return begin() + count_; }
 
     /// <summary>Returns whether the batch is visible.</summary>
     auto is_visible() const { return visible_; }
@@ -50,9 +48,6 @@ public:
 
     /// <summary>Returns sprite count.</summary>
     auto size() const { return count_; }
-
-    /// <summary>Returns the sprites array.</summary>
-    auto sprites() const -> Sprite* { return sprites_.get(); }
 
     /// <summary>Returns current texture.</summary>
     auto texture() const -> TextureAtlas&
@@ -129,36 +124,32 @@ public:
     /// <summary>Updates the batch of sprites.</summary>
     void update();
 
+    auto operator[](uint32_t i) -> Sprite& { return sprites_[i]; }
+    auto operator[](uint32_t i) const -> const Sprite& { return sprites_[i]; }
+
 #ifdef RAINBOW_TEST
     explicit SpriteBatch(const rainbow::ISolemnlySwearThatIAmOnlyTesting&);
 
-    auto capacity() const { return reserved_; }
+    auto capacity() const { return sprites_.size(); }
+    auto sprites() { return sprites_.data(); }
+    auto sprites() const { return sprites_.data(); }
     auto vertices() const { return vertices_.get(); }
 #endif
 
 private:
-    Arena<Sprite> sprites_;            ///< Sprite batch.
-    Arena<SpriteVertex> vertices_;     ///< Client vertex buffer.
-    Arena<Vec2f> normals_;             ///< Client normal buffer.
-    unsigned int count_;               ///< Number of sprites.
-    rainbow::graphics::Buffer vertex_buffer_;  ///< Shared, interleaved vertex buffer.
-    rainbow::graphics::Buffer normal_buffer_;  ///< Shared normal buffer.
-    rainbow::graphics::VertexArray array_;     ///< Vertex array object.
-    SharedPtr<TextureAtlas> normal_;   ///< Normal map used by all sprites in the batch.
-    SharedPtr<TextureAtlas> texture_;  ///< Texture atlas used by all sprites in the batch.
-    unsigned int reserved_;            ///< Number of sprites reserved for.
-    bool visible_;                     ///< Whether the batch is visible.
+    StableArray<Sprite> sprites_;
+    std::unique_ptr<SpriteVertex[]> vertices_;  ///< Client vertex buffer.
+    std::unique_ptr<Vec2f[]> normals_;          ///< Client normal buffer.
+    uint32_t count_;                            ///< Number of sprites.
+    rainbow::graphics::Buffer vertex_buffer_;   ///< Shared, interleaved vertex buffer.
+    rainbow::graphics::Buffer normal_buffer_;   ///< Shared normal buffer.
+    rainbow::graphics::VertexArray array_;      ///< Vertex array object.
+    SharedPtr<TextureAtlas> normal_;            ///< Normal map used by all sprites in the batch.
+    SharedPtr<TextureAtlas> texture_;           ///< Texture atlas used by all sprites in the batch.
+    bool visible_;                              ///< Whether the batch is visible.
 
     /// <summary>Sets the array state for this batch.</summary>
     void bind_arrays() const;
-
-    /// <summary>
-    ///   Resizes all client buffers to <paramref name="size"/>.
-    /// </summary>
-    void resize(unsigned int size);
-
-    /// <summary>Performs a left rotation on a range of sprites.</summary>
-    void rotate(size_t first, size_t n_first, size_t last);
 };
 
 #endif

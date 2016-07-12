@@ -35,17 +35,12 @@ namespace
     }
 }
 
-Sprite& SpriteRef::operator*() const
+auto SpriteRef::get() const -> Sprite&
 {
-    return batch_->sprites()[i_];
+    return (*batch_)[i_];
 }
 
-Sprite* SpriteRef::operator->() const
-{
-    return &batch_->sprites()[i_];
-}
-
-Sprite::Sprite(Sprite&& s)
+Sprite::Sprite(Sprite&& s) noexcept
     : state_(s.state_ | kStaleMask), center_(s.center_), position_(s.position_),
       texture_(s.texture_), color_(s.color_), width_(s.width_),
       height_(s.height_), angle_(s.angle_), pivot_(s.pivot_), scale_(s.scale_),
@@ -233,7 +228,7 @@ auto Sprite::update(ArraySpan<Vec2f> normal_array, const TextureAtlas& normal)
     return true;
 }
 
-Sprite& Sprite::operator=(Sprite&& s)
+auto Sprite::operator=(Sprite&& s) -> Sprite&
 {
     state_ = s.state_ | kStaleMask;
     center_ = s.center_;

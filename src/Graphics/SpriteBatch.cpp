@@ -6,11 +6,14 @@
 
 #include "Graphics/Renderer.h"
 
-SpriteBatch::SpriteBatch(unsigned int hint)
-    : count_(0), reserved_(0), visible_(true)
+SpriteBatch::SpriteBatch(uint32_t count)
+    : sprites_(count), vertices_(std::make_unique<SpriteVertex[]>(count * 4)),
+      count_(0), visible_(true)
 {
-    resize(hint);
-    array_.reconfigure(std::bind(&SpriteBatch::bind_arrays, this));
+    R_ASSERT(count <= rainbow::graphics::kMaxSprites,  //
+             "Hard-coded limit reached");
+
+    array_.reconfigure([this] { bind_arrays(); });
 }
 
 SpriteBatch::SpriteBatch(SharedPtr<TextureAtlas> texture, SpriteList sprites)
@@ -31,33 +34,24 @@ SpriteBatch::SpriteBatch(SharedPtr<TextureAtlas> texture, SpriteList sprites)
     }
 }
 
-SpriteBatch::SpriteBatch(SpriteBatch&& batch)
+SpriteBatch::SpriteBatch(SpriteBatch&& batch) noexcept
     : sprites_(std::move(batch.sprites_)),
       vertices_(std::move(batch.vertices_)),
       normals_(std::move(batch.normals_)), count_(batch.count_),
       vertex_buffer_(std::move(batch.vertex_buffer_)),
       normal_buffer_(std::move(batch.normal_buffer_)),
       array_(std::move(batch.array_)), normal_(std::move(batch.normal_)),
-      texture_(std::move(batch.texture_)), reserved_(batch.reserved_),
-      visible_(batch.visible_)
+      texture_(std::move(batch.texture_)), visible_(batch.visible_)
 {
     batch.clear();
-}
-
-SpriteBatch::~SpriteBatch()
-{
-    sprites_.release(count_);
-    vertices_.release(count_ * 4);
-    normals_.release(count_ * 4);
 }
 
 void SpriteBatch::set_normal(SharedPtr<TextureAtlas> texture)
 {
     if (!normals_)
     {
-        normals_.resize(0, reserved_ * 4);
-        std::uninitialized_fill_n(normals_.get(), count_ * 4, Vec2f{});
-        array_.reconfigure(std::bind(&SpriteBatch::bind_arrays, this));
+        normals_ = std::make_unique<Vec2f[]>(sprites_.size() * 4);
+        array_.reconfigure([this] { bind_arrays(); });
     }
 
     normal_ = std::move(texture);
@@ -86,43 +80,45 @@ void SpriteBatch::bring_to_front(const SpriteRef& s)
 {
     R_ASSERT(s.batch_ == this, "Sprite does not belong to this batch");
 
-    rotate(s.i_, s.i_ + 1, count_);
+    sprites_.move(s.i_, count_ - 1);
 }
 
 SpriteRef SpriteBatch::create_sprite(unsigned int width, unsigned int height)
 {
-    R_ASSERT(count_ <= rainbow::graphics::kMaxSprites,
-             "Hard-coded limit reached");
-
-    if (count_ == reserved_)
+    if (count_ == sprites_.size())
     {
-        const unsigned int half = reserved_ / 2;
-        resize(reserved_ + (half == 0 ? 1 : half));
+        LOGW(
+            "Tried to add a sprite (size: %ux%u) to a full SpriteBatch "
+            "(capacity: %u). Increase the capacity and try again.",
+            width,
+            height,
+            sprites_.size());
+        return {};
     }
 
-    Sprite& sprite = sprites_[count_];
-    new (&sprite) Sprite(width, height);
-    const unsigned int offset = count_ * 4;
-    std::uninitialized_fill_n(vertices_ + offset, 4, SpriteVertex{});
+    new (sprites_.data() + count_) Sprite(width, height);
+    const uint32_t offset = count_ * 4;
+    std::fill_n(vertices_.get() + offset, 4, SpriteVertex{});
     if (normals_)
-        std::uninitialized_fill_n(normals_ + offset, 4, Vec2f{});
-    return {this, count_++};
+        std::fill_n(normals_.get() + offset, 4, Vec2f::Zero);
+    return {this, sprites_.find_iterator(count_++)};
 }
 
 void SpriteBatch::erase(const SpriteRef& s)
 {
-    if (s.i_ + 1 < count_)
-        bring_to_front(s);
-    sprites_[--count_].~Sprite();
+    bring_to_front(s);
+    sprites_.data()[--count_].~Sprite();
 }
 
 SpriteRef SpriteBatch::find_sprite_by_id(int id) const
 {
-    for (unsigned int i = 0; i < count_; ++i)
+    auto sprites = sprites_.data();
+    for (uint32_t i = 0; i < count_; ++i)
     {
-        if (sprites_[i].id() == id)
-            return {this, i};
+        if (sprites[i].id() == id)
+            return {const_cast<SpriteBatch*>(this), sprites_.find_iterator(i)};
     }
+
     return {};
 }
 
@@ -135,40 +131,43 @@ void SpriteBatch::move(const Vec2f& delta)
         sprite.move(delta);
 }
 
-void SpriteBatch::swap(const SpriteRef& a_ref, const SpriteRef& b_ref)
+void SpriteBatch::swap(const SpriteRef& a, const SpriteRef& b)
 {
-    if (a_ref == b_ref)
+    if (a == b)
         return;
 
-    std::swap(*a_ref, *b_ref);
+    R_ASSERT(a.batch_ == b.batch_,
+             "Cannot swap sprites from different batches.");
+
+    sprites_.swap(a.i_, b.i_);
 }
 
 void SpriteBatch::update()
 {
     bool needs_update = false;
+    auto sprites = sprites_.data();
     if (normals_)
     {
-        for (unsigned int i = 0; i < count_; ++i)
+        for (uint32_t i = 0; i < count_; ++i)
         {
-            needs_update |=
-                sprites_[i].update(
-                    ArraySpan<Vec2f>(normals_ + i * 4, 4), *normal_) |
-                sprites_[i].update(
-                    ArraySpan<SpriteVertex>(vertices_ + i * 4, 4), *texture_);
+            ArraySpan<Vec2f> normal_buffer{normals_.get() + i * 4, 4};
+            ArraySpan<SpriteVertex> vertex_buffer{vertices_.get() + i * 4, 4};
+            needs_update |= sprites[i].update(normal_buffer, *normal_) |
+                            sprites[i].update(vertex_buffer, *texture_);
         }
     }
     else
     {
-        for (unsigned int i = 0; i < count_; ++i)
+        for (uint32_t i = 0; i < count_; ++i)
         {
-            needs_update |= sprites_[i].update(
-                ArraySpan<SpriteVertex>(vertices_ + i * 4, 4), *texture_);
+            ArraySpan<SpriteVertex> buffer{vertices_.get() + i * 4, 4};
+            needs_update |= sprites[i].update(buffer, *texture_);
         }
     }
 
     if (needs_update)
     {
-        const unsigned int count = count_ * 4;
+        const uint32_t count = count_ * 4;
         vertex_buffer_.upload(vertices_.get(), count * sizeof(SpriteVertex));
         if (normals_)
             normal_buffer_.upload(normals_.get(), count * sizeof(Vec2f));
@@ -182,30 +181,12 @@ void SpriteBatch::bind_arrays() const
         normal_buffer_.bind(Shader::kAttributeNormal);
 }
 
-void SpriteBatch::resize(unsigned int size)
-{
-    sprites_.resize(count_, size);
-    vertices_.resize(count_ * 4, size * 4);
-    if (normals_)
-        normals_.resize(count_ * 4, size * 4);
-    reserved_ = size;
-}
-
-void SpriteBatch::rotate(size_t first, size_t n_first, size_t last)
-{
-    R_ASSERT(first < count_, "Index out of bounds");
-    R_ASSERT(n_first < count_, "Index out of bounds");
-    R_ASSERT(last <= count_, "Index out of bounds");
-
-    std::rotate(sprites_ + first, sprites_ + n_first, sprites_ + last);
-}
-
 #ifdef RAINBOW_TEST
 SpriteBatch::SpriteBatch(const rainbow::ISolemnlySwearThatIAmOnlyTesting& test)
-    : count_(0), vertex_buffer_(test), normal_buffer_(test),
-      texture_(make_shared<TextureAtlas>(test)), reserved_(0), visible_(true)
+    : sprites_(4), vertices_(std::make_unique<SpriteVertex[]>(4 * 4)),
+      count_(0), vertex_buffer_(test), normal_buffer_(test),
+      texture_(make_shared<TextureAtlas>(test)), visible_(true)
 {
-    resize(4);
     texture_->add_region(0, 0, 1, 1);
 }
 #endif  // RAINBOW_TEST

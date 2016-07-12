@@ -187,6 +187,7 @@
 		19905B88152C50FA00BDD15C /* Parallax.lua in Resources */ = {isa = PBXBuildFile; fileRef = 19905B7E152C50FA00BDD15C /* Parallax.lua */; };
 		19905B8A152C50FA00BDD15C /* Stack.lua in Resources */ = {isa = PBXBuildFile; fileRef = 19905B80152C50FA00BDD15C /* Stack.lua */; };
 		19905B8B152C50FA00BDD15C /* Transition.lua in Resources */ = {isa = PBXBuildFile; fileRef = 19905B81152C50FA00BDD15C /* Transition.lua */; };
+		19937CBA1D398336009F8917 /* TempBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19937CB81D398336009F8917 /* TempBuffer.cpp */; };
 		19AF58A0167FFA0800F54B27 /* Overlay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19AF589C167FFA0800F54B27 /* Overlay.cpp */; };
 		19D045AA18071D6D00968F00 /* Chrono.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19D045A918071D6D00968F00 /* Chrono.cpp */; };
 		19D9318A1834AFCE00F0137E /* ChangeMonitor_Stub.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19D931871834AFCE00F0137E /* ChangeMonitor_Stub.cpp */; };
@@ -564,6 +565,9 @@
 		19905B7E152C50FA00BDD15C /* Parallax.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Parallax.lua; path = ../../../lua/Parallax.lua; sourceTree = "<group>"; };
 		19905B80152C50FA00BDD15C /* Stack.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Stack.lua; path = ../../../lua/Stack.lua; sourceTree = "<group>"; };
 		19905B81152C50FA00BDD15C /* Transition.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Transition.lua; path = ../../../lua/Transition.lua; sourceTree = "<group>"; };
+		19937CB71D398336009F8917 /* StableArray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StableArray.h; path = ../../../src/Memory/StableArray.h; sourceTree = "<group>"; };
+		19937CB81D398336009F8917 /* TempBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TempBuffer.cpp; path = ../../../src/Memory/TempBuffer.cpp; sourceTree = "<group>"; };
+		19937CB91D398336009F8917 /* TempBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TempBuffer.h; path = ../../../src/Memory/TempBuffer.h; sourceTree = "<group>"; };
 		19AF589C167FFA0800F54B27 /* Overlay.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Overlay.cpp; sourceTree = "<group>"; };
 		19AF589D167FFA0800F54B27 /* Overlay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Overlay.h; sourceTree = "<group>"; };
 		19B2D7E21AFB4A0E00660D38 /* Pointer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Pointer.h; sourceTree = "<group>"; };
@@ -1459,6 +1463,9 @@
 				19DF40481C98B4AF001482BC /* Pool.h */,
 				19F2038C1AAC551D005CD913 /* ScopeStack.h */,
 				19F2038D1AAC551D005CD913 /* SharedPtr.h */,
+				19937CB71D398336009F8917 /* StableArray.h */,
+				19937CB81D398336009F8917 /* TempBuffer.cpp */,
+				19937CB91D398336009F8917 /* TempBuffer.h */,
 			);
 			name = Memory;
 			sourceTree = "<group>";
@@ -1727,6 +1734,7 @@
 				19DFE5361C6002890079CB58 /* AudioFile.cpp in Sources */,
 				19D045AA18071D6D00968F00 /* Chrono.cpp in Sources */,
 				193929B816E23D5F0018340B /* SystemInfo_Apple.cpp in Sources */,
+				19937CBA1D398336009F8917 /* TempBuffer.cpp in Sources */,
 				198F42A51A9152E000BE7A73 /* IkConstraint.c in Sources */,
 				193929BD16E243E90018340B /* LuaMachine.cpp in Sources */,
 				198F42A01A9152E000BE7A73 /* BoneData.c in Sources */,

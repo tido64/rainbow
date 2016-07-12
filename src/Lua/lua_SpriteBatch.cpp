@@ -23,7 +23,10 @@ NS_RAINBOW_LUA_BEGIN
         {"set_texture",    &SpriteBatch::set_texture},
         {nullptr,          nullptr}};
 
-    SpriteBatch::SpriteBatch(lua_State* L) : batch_(optinteger(L, 1, 4)) {}
+    SpriteBatch::SpriteBatch(lua_State* L) : batch_(optinteger(L, 1, 4))
+    {
+        Argument<lua_Number>::is_required(L, 1);
+    }
 
     int SpriteBatch::add(lua_State* L)
     {

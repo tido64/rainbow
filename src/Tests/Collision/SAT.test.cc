@@ -17,11 +17,10 @@ namespace
     void update(SpriteBatch& batch)
     {
         auto sprites = batch.sprites();
-        for (unsigned int i = 0; i < batch.size(); ++i)
+        for (uint32_t i = 0; i < batch.size(); ++i)
         {
-            sprites[i].update(
-                ArraySpan<SpriteVertex>(batch.vertices() + i * 4, 4),
-                batch.texture());
+            ArraySpan<SpriteVertex> buffer{batch.vertices() + i * 4, 4};
+            sprites[i].update(buffer, batch.texture());
         }
     }
 }

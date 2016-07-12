@@ -670,11 +670,11 @@ Rotates sprite by given angle.
 
 > The sprites in a batch are drawn using [painter's algorithm](https://en.wikipedia.org/wiki/Painter's_algorithm) and should therefore be created in the order they want to be drawn.
 
-### rainbow.spritebatch(hint = 4)
+### rainbow.spritebatch(count)
 
 | Parameter | Description |
 |:----------|:------------|
-| <var>hint</var> | <span class="optional"></span> Number of [sprites](#rainbowsprite) to make space for. Default: 4. |
+| <var>count</var> | Number of [sprites](#rainbowsprite) to make space for. |
 
 Creates a batch of [sprites](#rainbowsprite).
 

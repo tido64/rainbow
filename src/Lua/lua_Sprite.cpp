@@ -113,7 +113,7 @@ NS_RAINBOW_LUA_BEGIN
     int Sprite::set_normal(lua_State* L)
     {
         // <sprite>:set_normal(<texture>)
-        return set1i(L, [](const SpriteRef& sprite, int normal) {
+        return set1i(L, [](SpriteRef& sprite, int normal) {
             sprite->set_normal(static_cast<uint_t>(normal));
         });
     }
@@ -121,7 +121,7 @@ NS_RAINBOW_LUA_BEGIN
     int Sprite::set_pivot(lua_State* L)
     {
         // <sprite>:set_pivot(x, y)
-        return set1fv(L, [](const SpriteRef& sprite, const Vec2f& p) {
+        return set1fv(L, [](SpriteRef& sprite, const Vec2f& p) {
             sprite->set_pivot(p);
         });
     }
@@ -129,7 +129,7 @@ NS_RAINBOW_LUA_BEGIN
     int Sprite::set_position(lua_State* L)
     {
         // <sprite>:set_position(x, y)
-        return set1fv(L, [](const SpriteRef& sprite, const Vec2f& p) {
+        return set1fv(L, [](SpriteRef& sprite, const Vec2f& p) {
             sprite->set_position(p);
         });
     }
@@ -137,7 +137,7 @@ NS_RAINBOW_LUA_BEGIN
     int Sprite::set_rotation(lua_State* L)
     {
         // <sprite>:set_rotation(r)
-        return set1f(L, [](const SpriteRef& sprite, float r) {
+        return set1f(L, [](SpriteRef& sprite, float r) {
             sprite->set_rotation(r);
         });
     }
@@ -160,7 +160,7 @@ NS_RAINBOW_LUA_BEGIN
     int Sprite::set_texture(lua_State* L)
     {
         // <sprite>:set_texture(<texture>)
-        return set1i(L, [](const SpriteRef& sprite, int texture) {
+        return set1i(L, [](SpriteRef& sprite, int texture) {
             sprite->set_texture(static_cast<uint_t>(texture));
         });
     }
@@ -178,7 +178,7 @@ NS_RAINBOW_LUA_BEGIN
     int Sprite::move(lua_State* L)
     {
         // <sprite>:move(x, y)
-        return set1fv(L, [](const SpriteRef& sprite, const Vec2f& delta) {
+        return set1fv(L, [](SpriteRef& sprite, const Vec2f& delta) {
             if (delta.is_zero())
                 return;
 
@@ -189,7 +189,7 @@ NS_RAINBOW_LUA_BEGIN
     int Sprite::rotate(lua_State* L)
     {
         // <sprite>:rotate(r)
-        return set1f(L, [](const SpriteRef& sprite, float r) {
+        return set1f(L, [](SpriteRef& sprite, float r) {
             sprite->rotate(r);
         });
     }
