@@ -14,6 +14,8 @@ using rainbow::KeyStroke;
 using rainbow::Rect;
 using rainbow::SceneNode;
 
+namespace graphics = rainbow::graphics;
+
 namespace
 {
     constexpr size_t kDataSampleSize = 100;
@@ -99,8 +101,7 @@ void Overlay::update_impl(unsigned long dt)
         {
             const ImVec2 graph_size(400, 100);
 
-            ImGui::LabelText(
-                "", "Draw count: %u", rainbow::graphics::draw_count());
+            ImGui::TextWrapped("Draw count: %u", graphics::draw_count());
 
             snprintf_q(buffer,
                        rainbow::array_size(buffer),
@@ -129,6 +130,26 @@ void Overlay::update_impl(unsigned long dt)
                              std::numeric_limits<float>::min(),
                              1.0f,
                              graph_size);
+
+            ImGui::TextWrapped("OpenGL %s", graphics::gl_version());
+            ImGui::TextWrapped("Vendor: %s", graphics::vendor());
+            ImGui::TextWrapped("Renderer: %s", graphics::renderer());
+            const auto meminfo = graphics::memory_info();
+            if (meminfo.current_available > 0)
+            {
+                if (meminfo.total_available > 0)
+                {
+                    ImGui::TextWrapped(  //
+                        "Video memory: %i / %i kB free",
+                        meminfo.current_available,
+                        meminfo.total_available);
+                }
+                else
+                {
+                    ImGui::TextWrapped(
+                        "Video memory: %i kB free", meminfo.current_available);
+                }
+            }
         }
 
         ImGui::End();

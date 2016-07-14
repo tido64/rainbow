@@ -22,10 +22,20 @@ namespace rainbow { namespace graphics
     ///<summary>Hard-coded limit on number of sprites.</summary>
     static constexpr size_t kMaxSprites = 4096;
 
+    struct MemoryInfo
+    {
+        int current_available;
+        int total_available;
+    };
+
     auto draw_count() -> unsigned int;
+    auto gl_version() -> const char*;
     auto max_texture_size() -> int;
+    auto memory_info() -> MemoryInfo;
     auto projection() -> const Rect&;
+    auto renderer() -> const char*;
     auto resolution() -> const Vec2i&;
+    auto vendor() -> const char*;
     auto window_size() -> const Vec2i&;
 
     void set_projection(const Rect&);

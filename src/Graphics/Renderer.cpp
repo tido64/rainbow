@@ -9,6 +9,7 @@
 #include "Graphics/Label.h"
 #include "Graphics/SpriteBatch.h"
 
+// clang-format off
 #define S0(i)  (i) * 4
 #define S1(i)  S0(i), S0(i) + 1, S0(i) + 2, S0(i) + 2, S0(i) + 3, S0(i)
 
@@ -18,6 +19,7 @@
 #define S256(i)     S64((i)),   S64((i) +   64),   S64((i) +  128),   S64((i) +  192)
 #define S1024(i)   S256((i)),  S256((i) +  256),  S256((i) +  512),  S256((i) +  768)
 #define S4096(i)  S1024((i)), S1024((i) + 1024), S1024((i) + 2048), S1024((i) + 3072)
+// clang-format on
 
 using rainbow::Rect;
 using rainbow::graphics::State;
@@ -28,6 +30,11 @@ namespace
 {
     unsigned int g_draw_count = 0;
     State* g_state = nullptr;
+
+    auto gl_get_string(GLenum name)
+    {
+        return reinterpret_cast<const char*>(glGetString(name));
+    }
 }
 
 namespace rainbow { namespace graphics { namespace detail
@@ -42,14 +49,52 @@ auto graphics::draw_count() -> unsigned int
     return g_draw_count;
 }
 
+auto graphics::gl_version() -> const char*
+{
+    return gl_get_string(GL_VERSION);
+}
+
 auto graphics::max_texture_size() -> int
 {
     static const int max_texture_size = [] {
-        int max_texture_size;
+        GLint max_texture_size;
         glGetIntegerv(GL_MAX_TEXTURE_SIZE, &max_texture_size);
         return max_texture_size;
     }();
     return max_texture_size;
+}
+
+auto graphics::memory_info() -> graphics::MemoryInfo
+{
+    static const GLenum pname = [] {
+        if (has_extension("GL_NVX_gpu_memory_info"))
+            return GL_GPU_MEMORY_INFO_CURRENT_AVAILABLE_VIDMEM_NVX;
+        if (has_extension("GL_ATI_meminfo"))
+            return GL_TEXTURE_FREE_MEMORY_ATI;
+        return 0;
+    }();
+
+    MemoryInfo meminfo;
+    switch (pname)
+    {
+        case GL_TEXTURE_FREE_MEMORY_ATI: {
+            GLint info[4];
+            glGetIntegerv(pname, info);
+            meminfo.current_available = info[0];
+            meminfo.total_available = 0;
+            break;
+        }
+        case GL_GPU_MEMORY_INFO_CURRENT_AVAILABLE_VIDMEM_NVX:
+            glGetIntegerv(pname, &meminfo.current_available);
+            glGetIntegerv(GL_GPU_MEMORY_INFO_TOTAL_AVAILABLE_MEMORY_NVX,
+                          &meminfo.total_available);
+            break;
+        default:
+            meminfo.current_available = 0;
+            meminfo.total_available = 0;
+            break;
+    }
+    return meminfo;
 }
 
 auto graphics::projection() -> const Rect&
@@ -57,9 +102,19 @@ auto graphics::projection() -> const Rect&
     return g_state->rect;
 }
 
+auto graphics::renderer() -> const char*
+{
+    return gl_get_string(GL_RENDERER);
+}
+
 auto graphics::resolution() -> const Vec2i&
 {
     return g_state->view;
+}
+
+auto graphics::vendor() -> const char*
+{
+    return gl_get_string(GL_VENDOR);
 }
 
 auto graphics::window_size() -> const Vec2i&
@@ -159,8 +214,7 @@ auto graphics::convert_to_view(const Vec2i& p) -> Vec2i
 
 bool graphics::has_extension(const char* extension)
 {
-    static auto gl_extensions =
-        reinterpret_cast<const char*>(glGetString(GL_EXTENSIONS));
+    static auto gl_extensions = gl_get_string(GL_EXTENSIONS);
     return strstr(gl_extensions, extension);
 }
 
