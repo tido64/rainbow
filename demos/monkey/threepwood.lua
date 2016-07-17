@@ -84,6 +84,7 @@ function Threepwood:move(pos)
         self.walking = self.walkingl
     end
     self.animating = rainbow.scenegraph:add_animation(self.node, self.walking)
+    self.walking:start()
 end
 
 function Threepwood:stop()
