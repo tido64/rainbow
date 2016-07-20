@@ -6,6 +6,9 @@ namespace Rainbow
 {
     using System;
 
+    using Graphics;
+    using Input;
+
     /// <summary>
     /// Main entry point for Rainbow executables.
     /// </summary>
@@ -16,12 +19,35 @@ namespace Rainbow
     {
         public static void Initialize(int width, int height)
         {
-            Console.WriteLine($"Rainbow#: Initialize (surface size: {width}x{height})");
+            Current.SetScreenSize(width, height);
+
+            var background = new Demo.Background(width);
+            var player = new Demo.Player();
+
+            RenderQueue.Add(background.SpriteBatch, @"background");
+            RenderQueue.Add(player.SpriteBatch, @"player");
+            Current.RegisterInstance(background);
+            Current.RegisterInstance(player);
+
+            InputManager.Map(InputAction.Crouch, VirtualKey.S);
+            InputManager.Map(InputAction.Left, VirtualKey.A);
+            InputManager.Map(InputAction.Right, VirtualKey.D);
+            InputManager.Map(InputAction.Jump, VirtualKey.W);
         }
 
         public static void Update(ulong dt)
         {
-            ////Console.WriteLine($"Rainbow#: Update (dt: {dt})");
+            var player = Current.Resolve<Demo.Player>();
+            player.Update(dt);
+            var currentPosition = player.Position;
+            if (currentPosition.X > Current.ScreenWidth + Demo.Player.Width)
+            {
+                player.SetPosition(-Demo.Player.Width, currentPosition.Y);
+            }
+            else if (currentPosition.X < -Demo.Player.Width)
+            {
+                player.SetPosition(Current.ScreenWidth + Demo.Player.Width, currentPosition.Y);
+            }
         }
 
         public static void OnMemoryWarning()
