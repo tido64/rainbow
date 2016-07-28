@@ -48,7 +48,7 @@ namespace xorshift
         // non-overlapping subsequences for parallel computations.
         void discard(unsigned long long)
         {
-            uint64_t t[16]{0};
+            uint64_t t[16]{};
             for (auto i : kJump)
             {
                 for(int b = 0; b < 64; ++b)

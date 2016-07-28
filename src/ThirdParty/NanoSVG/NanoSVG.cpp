@@ -7,7 +7,7 @@
 #ifdef __GNUC__
 #   pragma GCC diagnostic push
 #   ifndef __clang__
-#      pragma GCC diagnostic ignored "-pedantic"
+#      pragma GCC diagnostic ignored "-Wpedantic"
 #   endif
 #   pragma GCC diagnostic ignored "-Wold-style-cast"
 #endif

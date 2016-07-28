@@ -58,7 +58,7 @@ namespace
 
 std::unique_ptr<IAudioFile> IAudioFile::open(const char* path)
 {
-    char signature[8]{0};
+    char signature[8]{};
     File file = File::open_asset(path);
     if (file)
     {

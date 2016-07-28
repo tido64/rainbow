@@ -7,6 +7,7 @@
 
 #include <bitset>
 #include <cstdint>
+#include <memory>
 
 #include "Common/Algorithm.h"
 #include "Common/Logging.h"

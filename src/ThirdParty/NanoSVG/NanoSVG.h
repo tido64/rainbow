@@ -4,7 +4,7 @@
 
 #if defined(__GNUC__) && !defined(__clang__)
 #   pragma GCC diagnostic push
-#   pragma GCC diagnostic ignored "-pedantic"
+#   pragma GCC diagnostic ignored "-Wpedantic"
 #endif
 #include <nanosvg.h>
 #include <nanosvgrast.h>
