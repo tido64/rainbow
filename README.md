@@ -201,9 +201,7 @@ Use the provided Xcode project under `rainbow/build/xcode4/`.
 - [SDL](https://libsdl.org/)
 - [MinGW-w64](http://mingw-w64.org/) (for cross-compiling only)
 
-You can install most of these using your favourite package manager. For SDL,
-download the source code and extract its content to `rainbow/lib/SDL/`. If you
-have installed Mercurial, let the build script download it for you.
+You can install most of these using your favourite package manager.
 
 Windows builds can be built using MinGW-w64 by issuing `windows` as platform.
 However, this method hasn't been maintained in quite some time and may no longer

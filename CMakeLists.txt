@@ -426,7 +426,7 @@ set_property(
         ${LUA_INCLUDE_DIR}
         ${LOCAL_LIBRARY}/nanosvg/src
         ${NANOVG_INCLUDE_DIR}
-        ${SDL2_INCLUDE_DIR}
+        ${SDL2_INCLUDE_DIRS}
         ${SPINE_INCLUDE_DIR}
         ${ZLIB_INCLUDE_DIR}
         ${AUDIO_INCLUDE_DIRS}

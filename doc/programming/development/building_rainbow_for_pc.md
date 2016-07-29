@@ -16,7 +16,6 @@ Next, we'll need to install the dependencies:
 
 * [CMake](https://cmake.org/)
 * [FMOD](https://www.fmod.org/) (only if you want to use FMOD Studio)
-* [Mercurial](https://www.mercurial-scm.org/) (Linux and Mac OS X only)
 * [Ogg Vorbis](http://www.vorbis.com/) (only if you want to use OpenAL)
 * [OpenAL Soft](http://kcat.strangesoft.net/openal.html) (only if you want to use OpenAL)
 * [SDL](https://libsdl.org/) (Windows only)
@@ -31,19 +30,15 @@ the instructions in `README.md` for more details.
 
 |               |                                                                                     |
 |---------------|-------------------------------------------------------------------------------------|
-| Arch Linux    | `pacman -S --needed cmake gcc libvorbis mercurial mesa openal`                    |
-| Debian/Ubuntu | `apt-get install build-essential cmake libgl1-mesa-dev libopenal-dev libvorbis-dev mercurial` |
-
-!!! note
-
-    The correct version of SDL will be automatically downloaded by the build script.
+| Arch Linux    | `pacman -S --needed cmake gcc libvorbis mesa openal sdl2` |
+| Debian/Ubuntu | `apt-get install build-essential cmake libgl1-mesa-dev libopenal-dev libsdl2-dev libvorbis-dev` |
 
 ### Mac OS X
 
 1. Download and install [Xcode](https://itunes.apple.com/app/xcode/id497799835?mt=12) from the App Store.
 2. Install the Command Line Tools Package by running `xcode-select --install` in Terminal.
 3. Install [Homebrew](http://brew.sh/) (or [MacPorts](https://www.macports.org/)).
-4. Install the rest of the dependencies: `brew install cmake libogg libvorbis mercurial`
+4. Install the rest of the dependencies: `brew install cmake libogg libvorbis`
 
 !!! note
 

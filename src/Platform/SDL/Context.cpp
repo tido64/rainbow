@@ -11,8 +11,8 @@
 
 namespace
 {
-    static_assert(SDL_VERSION_ATLEAST(2, 0, 4),
-                  "Rainbow requires SDL version 2.0.4 or higher");
+    static_assert(SDL_VERSION_ATLEAST(2, 0, 0),
+                  "Rainbow requires SDL version 2.0.0 or higher");
 
     Vec2i window_size(const rainbow::Config& config)
     {
