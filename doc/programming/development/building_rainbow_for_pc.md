@@ -38,7 +38,7 @@ the instructions in `README.md` for more details.
 1. Download and install [Xcode](https://itunes.apple.com/app/xcode/id497799835?mt=12) from the App Store.
 2. Install the Command Line Tools Package by running `xcode-select --install` in Terminal.
 3. Install [Homebrew](http://brew.sh/) (or [MacPorts](https://www.macports.org/)).
-4. Install the rest of the dependencies: `brew install cmake libogg libvorbis`
+4. Install the rest of the dependencies: `brew install cmake libogg libvorbis pkg-config`
 
 !!! note
 

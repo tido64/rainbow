@@ -70,7 +70,7 @@ case $1 in
     $SHELL "$RAINBOW/tools/build-android.sh" $ARGS
     ;;
   "clean")
-    rm -fr CMakeFiles CMakeScripts Debug MinSizeRel Rainbow.* Release RelWithDebInfo lib
+    rm -fr CMakeFiles CMakeScripts Debug MinSizeRel Rainbow.* Release RelWithDebInfo
     rm -f .ninja_* CMakeCache.txt Makefile {build,rules}.ninja cmake_install.cmake lib*.a rainbow*
     ;;
   "emscripten")

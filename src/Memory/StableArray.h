@@ -6,6 +6,7 @@
 #define MEMORY_STABLEARRAY_H_
 
 #include <algorithm>
+#include <memory>
 #include <new>
 
 #include "Common/Logging.h"

@@ -1,5 +1,22 @@
 include(ExternalProject)
 
+function(add_static_library name location)
+  add_library(${name} STATIC IMPORTED)
+  set(STATIC_LIBRARY "${CMAKE_STATIC_LIBRARY_PREFIX}${name}${CMAKE_STATIC_LIBRARY_SUFFIX}")
+  set_property(
+      TARGET ${name}
+      PROPERTY IMPORTED_LOCATION_DEBUG ${location}/Debug/${STATIC_LIBRARY})
+  set_property(
+      TARGET ${name}
+      PROPERTY IMPORTED_LOCATION_MINSIZEREL ${location}/MinSizeRel/${STATIC_LIBRARY})
+  set_property(
+      TARGET ${name}
+      PROPERTY IMPORTED_LOCATION_RELEASE ${location}/Release/${STATIC_LIBRARY})
+  set_property(
+      TARGET ${name}
+      PROPERTY IMPORTED_LOCATION_RELWITHDEBINFO ${location}/RelWithDebInfo/${STATIC_LIBRARY})
+endfunction()
+
 function(copy_to_build_dir name source destination)
   ExternalProject_Add_Step(
       ${name}

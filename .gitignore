@@ -22,4 +22,6 @@ lib/FMOD/
 lib/SDL/
 lib/dSFMT/check.sh
 lib/dSFMT/test.c
+lib/ogg/
 lib/openal-soft/
+lib/vorbis/

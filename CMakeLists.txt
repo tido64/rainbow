@@ -2,10 +2,11 @@ cmake_minimum_required(VERSION 3.0)
 
 project(Rainbow)
 set(LOCAL_MODULE_PATH ${PROJECT_SOURCE_DIR}/build/cmake)
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${LOCAL_MODULE_PATH})
+list(APPEND CMAKE_MODULE_PATH ${LOCAL_MODULE_PATH})
 set(LOCAL_LIBRARY ${PROJECT_SOURCE_DIR}/lib)
 set(THIRD_PARTY ${PROJECT_SOURCE_DIR}/src/ThirdParty)
 
+include(FindPkgConfig)
 include(${LOCAL_MODULE_PATH}/Utilities.cmake)
 
 #option(PROFILING   "Compile with profiling" OFF)

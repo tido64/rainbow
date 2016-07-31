@@ -6,7 +6,7 @@
 #define PLATFORM_SDL_CONTEXT_H_
 
 #include <SDL_config.h>  // Ensure we include the correct SDL_config.h.
-#include <SDL_video.h>
+#include <SDL.h>
 
 #include "Math/Vec2.h"
 

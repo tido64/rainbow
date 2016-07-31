@@ -9,7 +9,7 @@ set(LUA_LIB_SRC  lauxlib.c lbaselib.c lbitlib.c lcorolib.c ldblib.c liolib.c
 
 # Loop through the source list and prefix the project source directory
 foreach(file ${LUA_CORE_SRC} ${LUA_LIB_SRC})
-  set(LUA_SRC ${LUA_SRC} ${LUA_INCLUDE_DIR}/${file})
+  list(APPEND LUA_SRC ${LUA_INCLUDE_DIR}/${file})
 endforeach()
 
 add_library(lua STATIC ${LUA_SRC})
