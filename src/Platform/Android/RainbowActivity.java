@@ -19,7 +19,7 @@ public class RainbowActivity extends NativeActivity
                           implements View.OnSystemUiVisibilityChangeListener {
 
     static {
-        System.loadLibrary("gnustl_shared");
+        System.loadLibrary("c++_shared");
         System.loadLibrary("fmod");
         System.loadLibrary("fmodstudio");
     }

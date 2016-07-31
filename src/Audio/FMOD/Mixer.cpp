@@ -4,6 +4,8 @@
 
 #include "Audio/FMOD/Mixer.h"
 
+#include <string>
+
 #ifdef __GNUC__
 #   pragma GCC diagnostic push
 #   pragma GCC diagnostic ignored "-Wignored-qualifiers"

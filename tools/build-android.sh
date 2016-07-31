@@ -4,6 +4,8 @@
 # (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
 APP_ID="com.bifrostentertainment.rainbow"
+BUILD_TOOLS_VERSION=24.0.1
+GRADLE_VERSION=2.10
 MIN_SDK_VERSION=${MIN_SDK_VERSION:-15}
 TARGET_SDK_VERSION=${TARGET_SDK_VERSION:-22}
 
@@ -30,8 +32,9 @@ android --silent create project \
         --path . \
     || exit 1
 
-# Set Gradle Wrapper version to 2.10
-sed -e 's/gradle-[0-9]*\.[0-9]*/gradle-2.10/' -i '' gradle/wrapper/gradle-wrapper.properties
+# Set Gradle Wrapper version
+sed -e "s/gradle-[0-9]*\.[0-9]*/gradle-$GRADLE_VERSION/" -i '' gradle/wrapper/gradle-wrapper.properties
+sed -e 's/http\\/https\\/' -i '' gradle/wrapper/gradle-wrapper.properties
 
 # Add ndk.dir to local.properties
 echo $(sed -e '$!d' -e 's/sdk.dir/ndk.dir/' local.properties)/ndk-bundle >> local.properties
@@ -44,7 +47,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath "com.android.tools.build:gradle-experimental:0.7.0-alpha4"
+        classpath "com.android.tools.build:gradle-experimental:0.7.2"
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -76,7 +79,7 @@ model {
     }
     android {
         compileSdkVersion $TARGET_SDK_VERSION
-        buildToolsVersion '23.0.3'
+        buildToolsVersion '$BUILD_TOOLS_VERSION'
 
         defaultConfig {
             applicationId '$APP_ID'
@@ -135,7 +138,7 @@ model {
                 '-fno-exceptions',
             ])
             ldLibs.addAll(['android', 'EGL', 'GLESv2', 'log', 'z'])
-            stl 'gnustl_shared'
+            stl 'c++_shared'
         }
         productFlavors {
             create('arm') {
@@ -166,7 +169,7 @@ dependencies {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.10'
+    gradleVersion = '$GRADLE_VERSION'
 }
 BUILD_GRADLE
 echo " done"

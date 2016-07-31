@@ -51,32 +51,4 @@
 #   define UNREACHABLE() __assume(0)
 #endif
 
-// TODO: Workaround for missing C++14 features in Android NDK.
-#ifdef RAINBOW_OS_ANDROID
-#include <cmath>  // std::round
-
-namespace std
-{
-    template <typename T, size_t N>
-    auto cbegin(T (&container)[N]) { return container; }
-
-    template <typename T, size_t N>
-    auto cend(T (&container)[N]) { return &container[N]; }
-
-    template <typename T>
-    auto cbegin(T& container) { return container.cbegin(); }
-
-    template <typename T>
-    auto cend(T& container) { return container.cend(); }
-
-    template <typename T>
-    auto rbegin(T& container) { return container.rbegin(); }
-
-    template <typename T>
-    auto rend(T& container) { return container.rend(); }
-
-    using ::round;
-}
-#endif  // RAINBOW_OS_ANDROID
-
 #endif  // PLATFORM_MACROS_H_
