@@ -5,6 +5,8 @@
 #ifndef GRAPHICS_SPRITEBATCH_H_
 #define GRAPHICS_SPRITEBATCH_H_
 
+#include <type_traits>
+
 #include "Graphics/Buffer.h"
 #include "Graphics/Sprite.h"
 #include "Graphics/TextureAtlas.h"
@@ -25,7 +27,15 @@ public:
     /// <summary>Creates a batch of sprites.</summary>
     /// <param name="count">Number of sprites to allocate for.</param>
     SpriteBatch(uint32_t count);
-    SpriteBatch(SharedPtr<TextureAtlas> texture, SpriteList sprites);
+
+    template <typename... Args>
+    SpriteBatch(SharedPtr<TextureAtlas> texture, Args&&... sprites)
+        : SpriteBatch(sizeof...(sprites))
+    {
+        set_texture(std::move(texture));
+        add(std::forward<Args>(sprites)...);
+    }
+
     SpriteBatch(SpriteBatch&&) noexcept;
 
     /// <summary>Returns a pointer to the beginning.</summary>
@@ -88,7 +98,10 @@ public:
     /// <returns>
     ///   Reference to the newly created sprite, positioned at (x,y).
     /// </returns>
-    SpriteRef add(int x, int y, int width, int height);
+    auto add(int x, int y, int width, int height) -> SpriteRef;
+
+    auto at(uint32_t i) -> Sprite& { return (*this)[i]; }
+    auto at(uint32_t i) const -> const Sprite& { return (*this)[i]; }
 
     /// <summary>Binds all used textures.</summary>
     void bind_textures() const;
@@ -106,14 +119,14 @@ public:
     /// <returns>
     ///   Reference to the newly created sprite, positioned at (0,0).
     /// </returns>
-    SpriteRef create_sprite(unsigned int width, unsigned int height);
+    auto create_sprite(unsigned int width, unsigned int height) -> SpriteRef;
 
     /// <summary>Erases a sprite from the batch.</summary>
     /// <remarks>Invalidates all references.</remarks>
     void erase(const SpriteRef&);
 
     /// <summary>Returns the first sprite with the given id.</summary>
-    SpriteRef find_sprite_by_id(int id) const;
+    auto find_sprite_by_id(int id) const -> SpriteRef;
 
     /// <summary>Moves all sprites by (x,y).</summary>
     void move(const Vec2f&);
@@ -147,6 +160,19 @@ private:
     SharedPtr<TextureAtlas> normal_;            ///< Normal map used by all sprites in the batch.
     SharedPtr<TextureAtlas> texture_;           ///< Texture atlas used by all sprites in the batch.
     bool visible_;                              ///< Whether the batch is visible.
+
+    void add() {}
+
+    template <typename T, typename... Args>
+    void add(T&& sprite, Args&&... sprites)
+    {
+        static_assert(std::is_same<std::decay_t<T>, Sprite>::value,
+                      "Elements must be of type Sprite");
+
+        auto s = create_sprite(0, 0);
+        *s = std::move(sprite);
+        add(std::forward<Args>(sprites)...);
+    }
 
     /// <summary>Sets the array state for this batch.</summary>
     void bind_arrays() const;

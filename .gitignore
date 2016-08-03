@@ -1,6 +1,7 @@
 # Generated files
 *.swp
 .DS_Store
+.browse.VC.*
 Rainbow.sublime-workspace
 project.xcworkspace/
 src/.ycm_extra_conf.pyc

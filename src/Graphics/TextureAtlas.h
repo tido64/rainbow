@@ -6,6 +6,7 @@
 #define GRAPHICS_TEXTUREATLAS_H_
 
 #include <tuple>
+#include <type_traits>
 #include <vector>
 
 #include "Common/DataMap.h"
@@ -14,8 +15,6 @@
 #include "Memory/SharedPtr.h"
 
 class TextureManager;
-
-using TextureList = std::initializer_list<std::tuple<int, int, int, int>>;
 
 /// <summary>Texture atlas loaded from an image file.</summary>
 /// <remarks>
@@ -39,12 +38,27 @@ class TextureAtlas : public RefCounted
 {
 public:
     explicit TextureAtlas(const char* path, float scale = 1.0f);
-    TextureAtlas(const char* path, float scale, TextureList regions);
+
+    template <typename... Args>
+    TextureAtlas(const char* path, float scale, Args&&... regions)
+        : TextureAtlas(path, scale)
+    {
+        regions_.reserve(sizeof...(regions));
+        add_regions(std::forward<Args>(regions)...);
+    }
+
     TextureAtlas(const char* id, const DataMap& data, float scale = 1.0f);
+
+    template <typename... Args>
     TextureAtlas(const char* id,
                  const DataMap& data,
                  float scale,
-                 TextureList regions);
+                 Args&&... regions)
+        : TextureAtlas(id, data, scale)
+    {
+        regions_.reserve(sizeof...(regions));
+        add_regions(std::forward<Args>(regions)...);
+    }
 
     auto height() const { return texture_.height(); }
     auto is_valid() const { return texture_; }
@@ -80,11 +94,35 @@ public:
     }
 
     explicit TextureAtlas(const rainbow::ISolemnlySwearThatIAmOnlyTesting& test)
-        : texture_(test) {}
+        : texture_(test)
+    {
+    }
 
 private:
+    template <std::size_t I, typename T>
+    static constexpr bool is_integral_v =
+        std::is_integral<typename std::tuple_element<I, T>::type>::value;
+
     rainbow::Texture texture_;                     ///< Texture atlas' id.
     std::vector<rainbow::TextureRegion> regions_;  ///< Defined texture regions.
+
+    void add_regions() {}
+
+    template <typename T, typename... Args>
+    void add_regions(const T& region, Args&&... regions)
+    {
+        static_assert(is_integral_v<0, T> &&      //
+                          is_integral_v<1, T> &&  //
+                          is_integral_v<2, T> &&  //
+                          is_integral_v<3, T>,
+                      "Tuple elements must be of integral type");
+
+        add_region(std::get<0>(region),
+                   std::get<1>(region),
+                   std::get<2>(region),
+                   std::get<3>(region));
+        add_regions(std::forward<Args>(regions)...);
+    }
 
     void load(TextureManager& texture_manager,
               const rainbow::Texture& texture,

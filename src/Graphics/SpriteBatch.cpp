@@ -16,24 +16,6 @@ SpriteBatch::SpriteBatch(uint32_t count)
     array_.reconfigure([this] { bind_arrays(); });
 }
 
-SpriteBatch::SpriteBatch(SharedPtr<TextureAtlas> texture, SpriteList sprites)
-    : SpriteBatch(sprites.size())
-{
-    set_texture(std::move(texture));
-    for (auto&& s : sprites)
-    {
-        auto sprite = create_sprite(s.size().x, s.size().y);
-        sprite->set_position(s.position());
-        sprite->set_texture(s.texture());
-        sprite->set_color(s.color());
-        sprite->set_rotation(s.angle());
-        sprite->set_pivot(s.pivot());
-        sprite->set_scale(s.scale());
-        if (s.ref() != nullptr)
-            *s.ref() = sprite;
-    }
-}
-
 SpriteBatch::SpriteBatch(SpriteBatch&& batch) noexcept
     : sprites_(std::move(batch.sprites_)),
       vertices_(std::move(batch.vertices_)),
@@ -62,7 +44,7 @@ void SpriteBatch::set_texture(SharedPtr<TextureAtlas> texture)
     texture_ = std::move(texture);
 }
 
-SpriteRef SpriteBatch::add(int x, int y, int w, int h)
+auto SpriteBatch::add(int x, int y, int w, int h) -> SpriteRef
 {
     auto sprite = create_sprite(w, h);
     sprite->set_texture(texture_->add_region(x, y, w, h));
@@ -83,7 +65,8 @@ void SpriteBatch::bring_to_front(const SpriteRef& s)
     sprites_.move(s.i_, count_ - 1);
 }
 
-SpriteRef SpriteBatch::create_sprite(unsigned int width, unsigned int height)
+auto SpriteBatch::create_sprite(unsigned int width, unsigned int height)
+    -> SpriteRef
 {
     if (count_ == sprites_.size())
     {
@@ -110,7 +93,7 @@ void SpriteBatch::erase(const SpriteRef& s)
     sprites_.data()[--count_].~Sprite();
 }
 
-SpriteRef SpriteBatch::find_sprite_by_id(int id) const
+auto SpriteBatch::find_sprite_by_id(int id) const -> SpriteRef
 {
     auto sprites = sprites_.data();
     for (uint32_t i = 0; i < count_; ++i)
