@@ -47,7 +47,7 @@ public:
     LyricalLabel();
     ~LyricalLabel() override;
 
-    Label& as_label() { return *static_cast<Label*>(this); }
+    auto as_label() -> Label& { return *static_cast<Label*>(this); }
 
     /// <summary>Clears all animations.</summary>
     void clear_animations();
@@ -117,7 +117,7 @@ private:
     bool did_shake_;
     Timer* animators_[static_cast<int>(Animation::Count)];
 
-    Vec2u get_interval(const Attribute& attr);
+    auto get_interval(const Attribute& attr) -> Vec2u;
     void undo_from(std::vector<Attribute>::const_iterator first);
 };
 

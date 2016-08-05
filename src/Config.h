@@ -53,10 +53,10 @@ namespace rainbow
         Config();
 
         /// <summary>Returns the width of the screen.</summary>
-        int width() const { return width_; }
+        auto width() const { return width_; }
 
         /// <summary>Returns the height of the screen.</summary>
-        int height() const { return height_; }
+        auto height() const { return height_; }
 
         /// <summary>
         ///   Returns whether to create windows in high DPI mode.
@@ -69,7 +69,7 @@ namespace rainbow
         /// <summary>
         ///   Returns number of samples for multisample anti-aliasing.
         /// </summary>
-        unsigned int msaa() const { return msaa_; }
+        auto msaa() const { return msaa_; }
 
         /// <summary>Returns whether we need to use the accelerometer.</summary>
         bool needs_accelerometer() const { return accelerometer_; }

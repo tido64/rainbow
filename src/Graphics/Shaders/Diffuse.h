@@ -14,7 +14,7 @@ namespace rainbow { namespace shaders
     public:
         Diffuse(bool normal = false);
 
-        unsigned int id() const { return program_; }
+        auto id() const { return program_; }
 
         void set_cutoff(float cutoff) const;
         void set_radius(float radius) const;

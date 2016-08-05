@@ -13,13 +13,13 @@ namespace rainbow
     class SceneComponent : private NonCopyable<SceneComponent>
     {
     public:
-        SceneComponent() : node_(rainbow::SceneNode::create().release()) {}
+        SceneComponent() : node_(SceneNode::create().release()) {}
         virtual ~SceneComponent() { node_->remove(); }
 
         bool is_enabled() const { return node_->is_enabled(); }
-        rainbow::SceneNode* node() const { return node_; }
+        auto node() const { return node_; }
 
-        Vec2f position() const { return position_; }
+        auto position() const { return position_; }
         void set_position(const Vec2f& p) { move(p - position_); }
 
         void disable() { node_->set_enabled(false); }
@@ -28,8 +28,8 @@ namespace rainbow
         virtual void move(const Vec2f& delta) { position_ += delta; }
 
     private:
-        rainbow::SceneNode* node_;  // Scene graph node.
-        Vec2f position_;            // Logical position.
+        SceneNode* node_;  // Scene graph node.
+        Vec2f position_;   // Logical position.
     };
 }
 

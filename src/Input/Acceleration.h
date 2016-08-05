@@ -21,10 +21,10 @@ class Acceleration
 public:
     Acceleration() : timestamp_(0.0) {}
 
-    double timestamp() const { return timestamp_; }
-    double x() const { return pass_.x; }
-    double y() const { return pass_.y; }
-    double z() const { return pass_.z; }
+    auto timestamp() const { return timestamp_; }
+    auto x() const { return pass_.x; }
+    auto y() const { return pass_.y; }
+    auto z() const { return pass_.z; }
 
     /// <summary>Updates acceleration data.</summary>
     /// <param name="x">Raw acceleration data (x-value).</param>

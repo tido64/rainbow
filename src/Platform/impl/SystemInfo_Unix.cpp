@@ -54,9 +54,10 @@ namespace rainbow
         }
 #endif
 
-        size_t memory()
+        auto memory() -> size_t
         {
-            return sysconf(_SC_PAGE_SIZE) / 1024 * sysconf(_SC_PHYS_PAGES) / 1024;
+            return sysconf(_SC_PAGE_SIZE) / 1024 *
+                   sysconf(_SC_PHYS_PAGES) / 1024;
         }
     }
 }

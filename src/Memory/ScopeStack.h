@@ -26,7 +26,7 @@ namespace rainbow
     class LinearAllocator : private NonCopyable<LinearAllocator>
     {
     public:
-        static size_t aligned_size(size_t size)
+        static auto aligned_size(size_t size) -> size_t
         {
             const size_t kMaxAlignment = alignof(std::max_align_t);
             return (size + (kMaxAlignment - 1)) & ~(kMaxAlignment - 1);
@@ -40,9 +40,9 @@ namespace rainbow
         {
         }
 
-        void* end() { return end_; }
+        auto end() -> void* { return end_; }
 
-        void* allocate(size_t size)
+        auto allocate(size_t size) -> void*
         {
             auto block = end_;
             end_ += aligned_size(size);
@@ -83,7 +83,7 @@ namespace rainbow
     {
     public:
         template <typename T>
-        static size_t size_of()
+        static auto size_of()
         {
             return LinearAllocator::aligned_size(
                 LinearAllocator::aligned_size(sizeof(BlockHeader)) + sizeof(T));
@@ -96,7 +96,7 @@ namespace rainbow
         ~ScopeStack() { reset(); }
 
         template <typename T, typename... Args>
-        T* allocate(Args&&... args)
+        auto allocate(Args&&... args)
         {
             return new (address_of(new_block<T>()))
                 T(std::forward<Args>(args)...);
@@ -131,14 +131,14 @@ namespace rainbow
         BlockHeader* blocks_;
         void* const rewind_point_;
 
-        void* address_of(BlockHeader* b)
+        auto address_of(BlockHeader* b) -> void*
         {
             return reinterpret_cast<char*>(b) +
                    LinearAllocator::aligned_size(sizeof(*b));
         }
 
         template <typename T>
-        BlockHeader* new_block()
+        auto new_block()
         {
             BlockHeader* block = static_cast<BlockHeader*>(allocator_.allocate(
                 LinearAllocator::aligned_size(sizeof(BlockHeader)) +

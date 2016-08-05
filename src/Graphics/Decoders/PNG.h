@@ -19,7 +19,7 @@ namespace png
         return png_sig_cmp(data.data(), 0, 8) == 0;
     }
 
-    rainbow::Image decode(const DataMap& data)
+    auto decode(const DataMap& data)
     {
         rainbow::Image image;
         image.format = rainbow::Image::Format::PNG;

@@ -9,8 +9,6 @@
 #include "FileSystem/File.h"
 #include "FileSystem/Path.h"
 #include "Input/Pointer.h"
-#include "Resources/Inconsolata.otf.h"
-#include "Resources/NewsCycle-Regular.ttf.h"
 
 using heimdall::Gatekeeper;
 using rainbow::is_equal;
@@ -108,10 +106,10 @@ Library::Library(const char* path) : path_(path)
     name_ = string_view{filename.data(), filename.length() - 4};
 }
 
-Data Library::open() const
+auto Library::open() const -> Data
 {
 #if defined(RAINBOW_OS_MACOS)
-    return Data(File::open(path_));
+    return Data{File::open(path_)};
 #elif defined(RAINBOW_OS_WINDOWS)
     return Data::load_asset(path_);
 #else

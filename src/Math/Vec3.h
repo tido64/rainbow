@@ -22,19 +22,19 @@ namespace rainbow
         Vec3(T x, T y, T z) : x(x), y(y), z(z) {}
 
         template <typename U = T>
-        EnableIfIntegral<U, bool> is_zero() const
+        auto is_zero() const -> EnableIfIntegral<U, bool>
         {
             return this->x == 0 && this->y == 0 && this->z == 0;
         }
 
         template <typename U = T>
-        EnableIfFloatingPoint<U, bool> is_zero() const
+        auto is_zero() const -> EnableIfFloatingPoint<U, bool>
         {
             return is_equal<T>(0.0, this->x) && is_equal<T>(0.0, this->y) &&
                    is_equal<T>(0.0, this->z);
         }
 
-        Vec3& operator+=(const Vec3& v)
+        auto operator+=(const Vec3& v) -> Vec3&
         {
             this->x += v.x;
             this->y += v.y;
@@ -42,7 +42,7 @@ namespace rainbow
             return *this;
         }
 
-        Vec3& operator-=(const Vec3& v)
+        auto operator-=(const Vec3& v) -> Vec3&
         {
             this->x -= v.x;
             this->y -= v.y;
@@ -50,7 +50,7 @@ namespace rainbow
             return *this;
         }
 
-        Vec3& operator*=(const T& f)
+        auto operator*=(const T& f) -> Vec3&
         {
             this->x *= f;
             this->y *= f;

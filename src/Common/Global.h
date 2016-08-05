@@ -12,7 +12,7 @@ template <typename T>
 class Global : private NonCopyable<Global<T>>
 {
 public:
-    static T* Get()
+    static auto Get()
     {
         R_ASSERT(s_instance, "Instance not yet created or already destroyed");
         return s_instance;

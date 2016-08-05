@@ -40,7 +40,7 @@ namespace
     }
 
     template <typename F>
-    F for_each(const spSkeleton* skeleton, F&& f)
+    auto for_each(const spSkeleton* skeleton, F&& f)
     {
         return std::for_each(skeleton->drawOrder,
                              skeleton->drawOrder + skeleton->slotsCount,
@@ -48,14 +48,15 @@ namespace
     }
 
     template <typename T>
-    TextureAtlas* get_texture(const T* attachment)
+    auto get_texture(const T* attachment)
     {
         return static_cast<TextureAtlas*>(
             static_cast<spAtlasRegion*>(attachment->rendererObject)
                 ->page->rendererObject);
     }
 
-    size_t get_vertex_count(const spSkeleton* skeleton, TextureAtlas** atlas)
+    auto get_vertex_count(const spSkeleton* skeleton, TextureAtlas** atlas)
+        -> size_t
     {
         size_t num_vertices = 0;
         TextureAtlas* texture = nullptr;
@@ -153,10 +154,10 @@ namespace
 #endif  // USE_LUA_SCRIPT
 
     template <typename T>
-    int update_mesh(SpriteVertex* vertices,
-                    const spSkeleton* skeleton,
-                    T* mesh,
-                    spSlot* slot)
+    auto update_mesh(SpriteVertex* vertices,
+                     const spSkeleton* skeleton,
+                     T* mesh,
+                     spSlot* slot) -> int
     {
         if (mesh->trianglesCount > g_buffer_size)
         {
@@ -207,7 +208,7 @@ extern "C"
         delete static_cast<TextureAtlas*>(self->rendererObject);
     }
 
-    char* _spUtil_readFile(const char* path, int* length)
+    auto _spUtil_readFile(const char* path, int* length) -> char*
     {
         const DataMap data{Path(path)};
         *length = static_cast<int>(data.size());
@@ -217,7 +218,7 @@ extern "C"
     }
 }  // extern "C"
 
-Skeleton* Skeleton::from_json(const char* path, float scale)
+auto Skeleton::from_json(const char* path, float scale) -> Skeleton*
 {
     // Copy the path and replace ".json" with ".atlas"
     const size_t length = strlen(path);
@@ -297,22 +298,31 @@ void Skeleton::add_animation(int track,
     spAnimationState_addAnimationByName(state_, track, animation, loop, delay);
 }
 
-void Skeleton::bind_textures() const { texture_->bind(); }
+void Skeleton::bind_textures() const
+{
+    texture_->bind();
+}
 
 void Skeleton::clear_track(int track)
 {
     spAnimationState_clearTrack(state_, track);
 }
 
-void Skeleton::clear_tracks() { spAnimationState_clearTracks(state_); }
+void Skeleton::clear_tracks()
+{
+    spAnimationState_clearTracks(state_);
+}
 
-const char* Skeleton::get_current_animation(int track)
+auto Skeleton::get_current_animation(int track) -> const char*
 {
     spTrackEntry* entry = spAnimationState_getCurrent(state_, track);
     return (!entry ? nullptr : entry->animation->name);
 }
 
-const char* Skeleton::get_skin() { return skeleton_->skin->name; }
+auto Skeleton::get_skin() -> const char*
+{
+    return skeleton_->skin->name;
+}
 
 void Skeleton::set_animation(int track, const char* animation, bool loop)
 {
@@ -482,203 +492,201 @@ NS_RAINBOW_LUA_BEGIN
 }
 NS_RAINBOW_LUA_END
 
-namespace spine
+namespace spine { namespace lua
 {
-    namespace lua
+    Skeleton::Skeleton(lua_State* L) : state_(L)
     {
-        Skeleton::Skeleton(lua_State* L) : state_(L)
-        {
-            rainbow::lua::Argument<char*>::is_required(L, 1);
-            rainbow::lua::Argument<lua_Number>::is_optional(L, 2);
+        rainbow::lua::Argument<char*>::is_required(L, 1);
+        rainbow::lua::Argument<lua_Number>::is_optional(L, 2);
 
-            skeleton_.reset(::Skeleton::from_json(
-                lua_tostring(L, 1), rainbow::lua::optnumber(L, 2, 1.0f)));
-        }
-
-        int Skeleton::add_animation(lua_State* L)
-        {
-            rainbow::lua::Argument<lua_Number>::is_required(L, 2);
-            rainbow::lua::Argument<char*>::is_required(L, 3);
-            rainbow::lua::Argument<bool>::is_required(L, 4);
-            rainbow::lua::Argument<lua_Number>::is_required(L, 5);
-
-            Skeleton* self = Bind::self(L);
-            if (!self)
-                return 0;
-
-            self->skeleton_->add_animation(
-                lua_tointeger(L, 2),
-                lua_tostring(L, 3),
-                lua_toboolean(L, 4),
-                lua_tonumber(L, 5));
-            return 0;
-        }
-
-        int Skeleton::clear_track(lua_State* L)
-        {
-            return set1i(L, [](::Skeleton* skeleton, int track) {
-                skeleton->clear_track(track);
-            });
-        }
-
-        int Skeleton::clear_tracks(lua_State* L)
-        {
-            Skeleton* self = Bind::self(L);
-            if (!self)
-                return 0;
-
-            self->skeleton_->clear_tracks();
-            return 0;
-        }
-
-        int Skeleton::get_current_animation(lua_State* L)
-        {
-            rainbow::lua::Argument<lua_Number>::is_required(L, 2);
-
-            Skeleton* self = Bind::self(L);
-            if (!self)
-                return 0;
-
-            const char* name =
-                self->skeleton_->get_current_animation(lua_tointeger(L, 2));
-            if (!name)
-                return 0;
-
-            lua_pushstring(L, name);
-            return 1;
-        }
-
-        int Skeleton::get_skin(lua_State* L)
-        {
-            Skeleton* self = Bind::self(L);
-            if (!self)
-                return 0;
-
-            lua_pushstring(L, self->skeleton_->get_skin());
-            return 1;
-        }
-
-        int Skeleton::set_animation(lua_State* L)
-        {
-            rainbow::lua::Argument<lua_Number>::is_required(L, 2);
-            rainbow::lua::Argument<char*>::is_required(L, 3);
-            rainbow::lua::Argument<bool>::is_required(L, 4);
-
-            Skeleton* self = Bind::self(L);
-            if (!self)
-                return 0;
-
-            self->skeleton_->set_animation(
-                lua_tointeger(L, 2),
-                lua_tostring(L, 3),
-                lua_toboolean(L, 4));
-            return 0;
-        }
-
-        int Skeleton::set_animation_mix(lua_State* L)
-        {
-            rainbow::lua::Argument<char*>::is_required(L, 2);
-            rainbow::lua::Argument<char*>::is_required(L, 3);
-            rainbow::lua::Argument<lua_Number>::is_required(L, 4);
-
-            Skeleton* self = Bind::self(L);
-            if (!self)
-                return 0;
-
-            self->skeleton_->set_animation_mix(
-                lua_tostring(L, 2),
-                lua_tostring(L, 3),
-                lua_tonumber(L, 4));
-            return 0;
-        }
-
-        int Skeleton::set_attachment(lua_State* L)
-        {
-            rainbow::lua::Argument<char*>::is_required(L, 2);
-            rainbow::lua::Argument<char*>::is_optional(L, 3);
-
-            Skeleton* self = Bind::self(L);
-            if (!self)
-                return 0;
-
-            self->skeleton_->set_attachment(lua_tostring(L, 2),
-                                            lua_tostring(L, 3));
-            return 0;
-        }
-
-        int Skeleton::set_flip(lua_State* L)
-        {
-            rainbow::lua::Argument<bool>::is_required(L, 2);
-            rainbow::lua::Argument<bool>::is_required(L, 3);
-
-            Skeleton* self = Bind::self(L);
-            if (!self)
-                return 0;
-
-            self->skeleton_->set_flip(lua_toboolean(L, 2), lua_toboolean(L, 3));
-            return 0;
-        }
-
-        int Skeleton::set_listener(lua_State* L)
-        {
-            rainbow::lua::Argument<void*>::is_optional(L, 2);
-
-            Skeleton* self = Bind::self(L);
-            if (!self)
-                return 0;
-
-            if (!lua_istable(L, 2))
-            {
-                self->listener_.reset();
-                self->skeleton_->set_listener(nullptr, nullptr);
-            }
-            else
-            {
-                lua_settop(L, 2);
-                self->listener_.reset(L);
-                self->skeleton_->set_listener(on_animation_state_event, self);
-            }
-            return 0;
-        }
-
-        int Skeleton::set_position(lua_State* L)
-        {
-            return set1fv(L, [](::Skeleton* skeleton, const Vec2f& position) {
-                skeleton->set_position(position);
-            });
-        }
-
-        int Skeleton::set_skin(lua_State* L)
-        {
-            rainbow::lua::Argument<char*>::is_optional(L, 2);
-
-            Skeleton* self = Bind::self(L);
-            if (!self)
-                return 0;
-
-            self->skeleton_->set_skin(lua_tostring(L, 2));
-            return 0;
-        }
-
-        int Skeleton::set_time_scale(lua_State* L)
-        {
-            return set1f(L, [](::Skeleton* skeleton, float scale) {
-                skeleton->set_time_scale(scale);
-            });
-        }
-
-        void Skeleton::move_impl(const Vec2f& delta)
-        {
-            skeleton_->skeleton()->x += delta.x;
-            skeleton_->skeleton()->y += delta.y;
-        }
-
-        void Skeleton::draw_impl() { skeleton_->draw(); }
-
-        void Skeleton::update_impl(unsigned long dt)
-        {
-            skeleton_->update(dt);
-        }
+        skeleton_.reset(::Skeleton::from_json(
+            lua_tostring(L, 1), rainbow::lua::optnumber(L, 2, 1.0f)));
     }
-}
+
+    auto Skeleton::add_animation(lua_State* L) -> int
+    {
+        rainbow::lua::Argument<lua_Number>::is_required(L, 2);
+        rainbow::lua::Argument<char*>::is_required(L, 3);
+        rainbow::lua::Argument<bool>::is_required(L, 4);
+        rainbow::lua::Argument<lua_Number>::is_required(L, 5);
+
+        Skeleton* self = Bind::self(L);
+        if (!self)
+            return 0;
+
+        self->skeleton_->add_animation(
+            lua_tointeger(L, 2),
+            lua_tostring(L, 3),
+            lua_toboolean(L, 4),
+            lua_tonumber(L, 5));
+        return 0;
+    }
+
+    auto Skeleton::clear_track(lua_State* L) -> int
+    {
+        return set1i(L, [](::Skeleton* skeleton, int track) {
+            skeleton->clear_track(track);
+        });
+    }
+
+    auto Skeleton::clear_tracks(lua_State* L) -> int
+    {
+        Skeleton* self = Bind::self(L);
+        if (!self)
+            return 0;
+
+        self->skeleton_->clear_tracks();
+        return 0;
+    }
+
+    auto Skeleton::get_current_animation(lua_State* L) -> int
+    {
+        rainbow::lua::Argument<lua_Number>::is_required(L, 2);
+
+        Skeleton* self = Bind::self(L);
+        if (!self)
+            return 0;
+
+        const char* name =
+            self->skeleton_->get_current_animation(lua_tointeger(L, 2));
+        if (!name)
+            return 0;
+
+        lua_pushstring(L, name);
+        return 1;
+    }
+
+    auto Skeleton::get_skin(lua_State* L) -> int
+    {
+        Skeleton* self = Bind::self(L);
+        if (!self)
+            return 0;
+
+        lua_pushstring(L, self->skeleton_->get_skin());
+        return 1;
+    }
+
+    auto Skeleton::set_animation(lua_State* L) -> int
+    {
+        rainbow::lua::Argument<lua_Number>::is_required(L, 2);
+        rainbow::lua::Argument<char*>::is_required(L, 3);
+        rainbow::lua::Argument<bool>::is_required(L, 4);
+
+        Skeleton* self = Bind::self(L);
+        if (!self)
+            return 0;
+
+        self->skeleton_->set_animation(
+            lua_tointeger(L, 2),
+            lua_tostring(L, 3),
+            lua_toboolean(L, 4));
+        return 0;
+    }
+
+    auto Skeleton::set_animation_mix(lua_State* L) -> int
+    {
+        rainbow::lua::Argument<char*>::is_required(L, 2);
+        rainbow::lua::Argument<char*>::is_required(L, 3);
+        rainbow::lua::Argument<lua_Number>::is_required(L, 4);
+
+        Skeleton* self = Bind::self(L);
+        if (!self)
+            return 0;
+
+        self->skeleton_->set_animation_mix(
+            lua_tostring(L, 2),
+            lua_tostring(L, 3),
+            lua_tonumber(L, 4));
+        return 0;
+    }
+
+    auto Skeleton::set_attachment(lua_State* L) -> int
+    {
+        rainbow::lua::Argument<char*>::is_required(L, 2);
+        rainbow::lua::Argument<char*>::is_optional(L, 3);
+
+        Skeleton* self = Bind::self(L);
+        if (!self)
+            return 0;
+
+        self->skeleton_->set_attachment(lua_tostring(L, 2),
+                                        lua_tostring(L, 3));
+        return 0;
+    }
+
+    auto Skeleton::set_flip(lua_State* L) -> int
+    {
+        rainbow::lua::Argument<bool>::is_required(L, 2);
+        rainbow::lua::Argument<bool>::is_required(L, 3);
+
+        Skeleton* self = Bind::self(L);
+        if (!self)
+            return 0;
+
+        self->skeleton_->set_flip(lua_toboolean(L, 2), lua_toboolean(L, 3));
+        return 0;
+    }
+
+    auto Skeleton::set_listener(lua_State* L) -> int
+    {
+        rainbow::lua::Argument<void*>::is_optional(L, 2);
+
+        Skeleton* self = Bind::self(L);
+        if (!self)
+            return 0;
+
+        if (!lua_istable(L, 2))
+        {
+            self->listener_.reset();
+            self->skeleton_->set_listener(nullptr, nullptr);
+        }
+        else
+        {
+            lua_settop(L, 2);
+            self->listener_.reset(L);
+            self->skeleton_->set_listener(on_animation_state_event, self);
+        }
+        return 0;
+    }
+
+    auto Skeleton::set_position(lua_State* L) -> int
+    {
+        return set1fv(L, [](::Skeleton* skeleton, const Vec2f& position) {
+            skeleton->set_position(position);
+        });
+    }
+
+    auto Skeleton::set_skin(lua_State* L) -> int
+    {
+        rainbow::lua::Argument<char*>::is_optional(L, 2);
+
+        Skeleton* self = Bind::self(L);
+        if (!self)
+            return 0;
+
+        self->skeleton_->set_skin(lua_tostring(L, 2));
+        return 0;
+    }
+
+    auto Skeleton::set_time_scale(lua_State* L) -> int
+    {
+        return set1f(L, [](::Skeleton* skeleton, float scale) {
+            skeleton->set_time_scale(scale);
+        });
+    }
+
+    void Skeleton::move_impl(const Vec2f& delta)
+    {
+        skeleton_->skeleton()->x += delta.x;
+        skeleton_->skeleton()->y += delta.y;
+    }
+
+    void Skeleton::draw_impl() { skeleton_->draw(); }
+
+    void Skeleton::update_impl(unsigned long dt)
+    {
+        skeleton_->update(dt);
+    }
+}}  // namespace spine::lua
+
 #endif  // USE_LUA_SCRIPT

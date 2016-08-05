@@ -27,7 +27,8 @@ namespace
         {Shader::kAttributeNone, nullptr}};
 
     template <typename F, typename G>
-    String verify(GLuint id, GLenum pname, F&& glGetiv, G&& glGetInfoLog)
+    auto verify(GLuint id, GLenum pname, F&& glGetiv, G&& glGetInfoLog)
+        -> String
     {
         GLint status = GL_FALSE;
         glGetiv(id, pname, &status);
@@ -46,7 +47,7 @@ namespace
         return {};
     }
 
-    unsigned int compile_shader(const Shader::Params& shader)
+    auto compile_shader(const Shader::Params& shader) -> unsigned int
     {
         const GLuint id = glCreateShader(shader.type);
         if (Path(shader.source).is_file())
@@ -94,8 +95,8 @@ namespace
         return id;
     }
 
-    unsigned int link_program(const Shader::Params* shaders,
-                              const Shader::AttributeParams* attributes)
+    auto link_program(const Shader::Params* shaders,
+                      const Shader::AttributeParams* attributes) -> unsigned int
     {
         const GLuint program = glCreateProgram();
         for (auto shader = shaders; shader->type != Shader::kTypeInvalid;
@@ -129,8 +130,9 @@ ShaderManager::~ShaderManager()
         glDeleteShader(shader);
 }
 
-unsigned int ShaderManager::compile(Shader::Params* shaders,
-                                    const Shader::AttributeParams* attributes)
+auto ShaderManager::compile(Shader::Params* shaders,
+                            const Shader::AttributeParams* attributes)
+    -> unsigned int
 {
     for (auto shader = shaders; shader->type != Shader::kTypeInvalid; ++shader)
     {

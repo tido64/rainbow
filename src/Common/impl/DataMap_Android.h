@@ -14,9 +14,9 @@ namespace rainbow
     protected:
         explicit DataMapAndroid(const Path& path);
 
-        const byte_t* data() const;
+        auto data() const -> const byte_t* ;
         void offset(size_t offset) { off_ = offset; }
-        size_t size() const;
+        auto size() const -> size_t ;
 
         explicit operator bool() const { return static_cast<AAsset*>(asset_); }
 

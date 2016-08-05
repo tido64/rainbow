@@ -42,7 +42,7 @@ namespace pvrtc
                kPVRHeaderVersion3;
     }
 
-    rainbow::Image decode(const DataMap& data)
+    auto decode(const DataMap& data)
     {
         rainbow::Image image;
         image.format = rainbow::Image::Format::PVRTC;

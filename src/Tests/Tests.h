@@ -4,5 +4,5 @@
 
 namespace rainbow
 {
-    int run_tests(int argc, char* argv[]);
+    auto run_tests(int argc, char* argv[]) -> int;
 }

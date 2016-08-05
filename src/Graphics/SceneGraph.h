@@ -29,16 +29,16 @@ namespace rainbow
     {
     public:
         /// <summary>Creates a group node.</summary>
-        static std::unique_ptr<SceneNode> create();
+        static auto create() -> std::unique_ptr<SceneNode>;
 
         /// <summary>Creates a node with specified drawable.</summary>
-        static std::unique_ptr<SceneNode> create(Drawable& drawable);
+        static auto create(Drawable& drawable) -> std::unique_ptr<SceneNode>;
 
         /// <summary>Creates a node with specified component.</summary>
         template <
             typename T,
             std::enable_if_t<!std::is_base_of<Drawable, T>::value>* = nullptr>
-        static std::unique_ptr<SceneNode> create(T& component);
+        static auto create(T& component) -> std::unique_ptr<SceneNode>;
 
         virtual ~SceneNode() = default;
 
@@ -54,15 +54,15 @@ namespace rainbow
         void attach_program(unsigned int program) { program_ = program; }
 
 #if USE_NODE_TAGS
-        const std::string& tag() const { return tag_; }
+        auto tag() const -> const std::string& { return tag_; }
         void set_tag(std::string tag) { tag_ = std::move(tag); }
 #endif
 
         /// <summary>Adds a child group node.</summary>
-        SceneNode* add_child() { return add_child(create()); }
+        auto add_child() { return add_child(create()); }
 
         /// <summary>Adds a child node.</summary>
-        SceneNode* add_child(NotNull<Owner<SceneNode*>> n)
+        auto add_child(NotNull<Owner<SceneNode*>> n) -> SceneNode*
         {
             TreeNode::add_child(n);
             return n;
@@ -70,20 +70,20 @@ namespace rainbow
 
         /// <summary>Adds a child node.</summary>
         template <typename T>
-        SceneNode* add_child(T& component)
+        auto add_child(T& component) -> SceneNode*
         {
             return add_child(create(component));
         }
 
         /// <summary>Adds a child node.</summary>
         template <typename T>
-        SceneNode* add_child(std::shared_ptr<T>& component)
+        auto add_child(std::shared_ptr<T>& component) -> SceneNode*
         {
             return add_child(create(*component));
         }
 
         /// <summary>Adds a child node.</summary>
-        SceneNode* add_child(std::unique_ptr<SceneNode> node)
+        auto add_child(std::unique_ptr<SceneNode> node) -> SceneNode*
         {
             return add_child(node.release());
         }

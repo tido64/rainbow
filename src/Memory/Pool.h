@@ -34,7 +34,7 @@ namespace rainbow
         /// <summary>
         ///   Returns number of elements currently in circulation.
         /// </summary>
-        size_type size() const { return pool_.size(); }
+        auto size() const { return pool_.size(); }
 
         /// <summary>Removes all elements from the pool.</summary>
         void clear()
@@ -47,7 +47,7 @@ namespace rainbow
         ///   Returns an element constructed with specified parameters.
         /// </summary>
         template <typename... Args>
-        value_type* construct(Args&&... args)
+        auto construct(Args&&... args) -> value_type*
         {
             if (!free_)
             {
@@ -80,7 +80,7 @@ namespace rainbow
         Container pool_;
 
         /// <summary>Pops and returns the next reusable element.</summary>
-        value_type& pop()
+        auto pop() -> value_type&
         {
             Entry* e = free_;
             free_ = e->next_free;
@@ -88,7 +88,7 @@ namespace rainbow
         }
 
         /// <summary>Returns the element's entry in the pool.<summary>
-        static Entry* get_entry(NotNull<value_type*> element)
+        static auto get_entry(NotNull<value_type*> element)
         {
             return reinterpret_cast<Entry*>(element.get());
         }

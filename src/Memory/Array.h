@@ -37,8 +37,8 @@ public:
     auto cbegin() const -> const T* { return begin(); }
     auto cend() const -> const T* { return end(); }
 
-    auto& operator[](size_t i) { return data_[i]; }
-    auto& operator[](size_t i) const { return data_[i]; }
+    auto operator[](size_t i) -> T& { return data_[i]; }
+    auto operator[](size_t i) const -> T& { return data_[i]; }
 
 private:
     size_t size_;

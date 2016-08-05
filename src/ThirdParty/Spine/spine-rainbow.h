@@ -26,7 +26,7 @@ struct spAtlas;
 class Skeleton
 {
 public:
-    static Skeleton* from_json(const char* path, float scale = 1.0f);
+    static auto from_json(const char* path, float scale = 1.0f) -> Skeleton*;
 
     Skeleton(spSkeletonData* data, spAtlas* atlas);
     ~Skeleton();
@@ -81,10 +81,10 @@ public:
     /// <summary>
     ///   Returns the name of the current animation on specified track.
     /// </summary>
-    const char* get_current_animation(int track);
+    auto get_current_animation(int track) -> const char*;
 
     /// <summary>Returns the name of the current skin.</summary>
-    const char* get_skin();
+    auto get_skin() -> const char*;
 
     /// <summary>
     ///   Sets the current animation. Any queued animations are cleared.

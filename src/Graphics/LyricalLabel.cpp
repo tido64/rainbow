@@ -204,7 +204,7 @@ void LyricalLabel::update()
     }
 }
 
-Vec2u LyricalLabel::get_interval(const Attribute& attr)
+auto LyricalLabel::get_interval(const Attribute& attr) -> Vec2u
 {
     const uint_t final = static_cast<uint_t>(length()) * 4;
     return {std::min(attr.start * 4, final),

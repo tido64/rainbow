@@ -20,13 +20,13 @@ namespace rainbow
         DataMapWin(DataMapWin&&);
         ~DataMapWin();
 
-        const byte_t* data() const
+        auto data() const -> const byte_t*
         {
             return static_cast<byte_t*>(addr_) + off_;
         }
 
         void offset(size_t offset) { off_ = offset; }
-        size_t size() const { return len_ - off_; }
+        auto size() const -> size_t { return len_ - off_; }
 
         explicit operator bool() const { return addr_; }
 

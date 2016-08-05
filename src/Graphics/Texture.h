@@ -66,8 +66,8 @@ namespace rainbow
         explicit operator bool() const { return name_ != 0; }
         operator unsigned int() const { return name_; }
 
-        Texture& operator=(const Texture& texture) = delete;
-        Texture& operator=(Texture&& texture);
+        auto operator=(const Texture& texture) -> Texture& = delete;
+        auto operator=(Texture&& texture) -> Texture&;
 
     private:
         unsigned int name_;

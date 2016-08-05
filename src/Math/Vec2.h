@@ -58,103 +58,104 @@ namespace rainbow
         ///   Returns the angle (in radians) between two points.
         /// </summary>
         template <typename U>
-        float angle(const Vec2<U>& v) const
+        auto angle(const Vec2<U>& v) const -> float
         {
             return atan2f(v.y - y, v.x - x);
         }
 
         /// <summary>Returns the distance between two points.</summary>
-        float distance(const Vec2& v) const
+        auto distance(const Vec2& v) const -> float
         {
             return sqrt(distance_sq(v));
         }
 
         /// <summary>Returns the distance between two points, squared.</summary>
-        float distance_sq(const Vec2& v) const
+        auto distance_sq(const Vec2& v) const -> float
         {
             const Vec2 w = *this - v;
             return w * w;
         }
 
         template <typename U = T>
-        EnableIfIntegral<U, bool> is_zero() const
+        auto is_zero() const -> EnableIfIntegral<U, bool>
         {
             return x == 0 && y == 0;
         }
 
         template <typename U = T>
-        EnableIfFloatingPoint<U, bool> is_zero() const
+        auto is_zero() const -> EnableIfFloatingPoint<U, bool>
         {
             return is_equal<T>(0, x) && is_equal<T>(0, y);
         }
 
-        Vec2 normal() const
+        auto normal() const
         {
-            return {-y, x};
+            return Vec2{-y, x};
         }
 
         template <typename U = T>
-        EnableIfIntegral<U, Vec2<float, Arithmetic<float>>> normalize() const
+        auto normalize() const
+            -> EnableIfIntegral<U, Vec2<float, Arithmetic<float>>>
         {
             const float h = sqrt(x * x + y * y);
             return {x / h, y / h};
         }
 
         template <typename U = T>
-        EnableIfFloatingPoint<U, Vec2> normalize() const
+        auto normalize() const -> EnableIfFloatingPoint<U, Vec2>
         {
             const value_type h = sqrt(x * x + y * y);
             return {x / h, y / h};
         }
 
-        Vec2 operator-() const
+        auto operator-() const
         {
-            return {-x, -y};
+            return Vec2{-x, -y};
         }
 
-        value_type operator*(const Vec2& v) const
+        auto operator*(const Vec2& v) const
         {
             return x * v.x + y * v.y;
         }
 
-        Vec2 operator*(value_type f) const
+        auto operator*(value_type f) const
         {
-            return {x * f, y * f};
+            return Vec2{x * f, y * f};
         }
 
-        Vec2 operator/(value_type f) const
+        auto operator/(value_type f) const
         {
-            return {x / f, y / f};
+            return Vec2{x / f, y / f};
         }
 
-        Vec2 operator+(const Vec2& v) const
+        auto operator+(const Vec2& v) const
         {
-            return {x + v.x, y + v.y};
+            return Vec2{x + v.x, y + v.y};
         }
 
-        Vec2 operator+(value_type offset) const
+        auto operator+(value_type offset) const
         {
-            return {x + offset, y + offset};
+            return Vec2{x + offset, y + offset};
         }
 
-        Vec2 operator-(const Vec2& v) const
+        auto operator-(const Vec2& v) const
         {
-            return {x - v.x, y - v.y};
+            return Vec2{x - v.x, y - v.y};
         }
 
-        Vec2 operator-(value_type offset) const
+        auto operator-(value_type offset) const
         {
-            return {x - offset, y - offset};
+            return Vec2{x - offset, y - offset};
         }
 
-        Vec2& operator*=(value_type f)
+        auto operator*=(value_type f) -> Vec2&
         {
             x *= f;
             y *= f;
             return *this;
         }
 
-        Vec2& operator/=(value_type f)
+        auto operator/=(value_type f) -> Vec2&
         {
             x /= f;
             y /= f;
@@ -162,7 +163,7 @@ namespace rainbow
         }
 
         template <typename U>
-        Vec2& operator+=(const Vec2<U>& v)
+        auto operator+=(const Vec2<U>& v) -> Vec2&
         {
             x += v.x;
             y += v.y;
@@ -170,16 +171,16 @@ namespace rainbow
         }
 
         template <typename U>
-        Vec2& operator-=(const Vec2<U>& v)
+        auto operator-=(const Vec2<U>& v) -> Vec2&
         {
             x -= v.x;
             y -= v.y;
             return *this;
         }
 
-        friend Vec2 operator*(value_type f, const Vec2& a)
+        friend auto operator*(value_type f, const Vec2& a)
         {
-            return {f * a.x, f * a.y};
+            return Vec2{f * a.x, f * a.y};
         }
 
         friend bool operator==(const Vec2& a, const Vec2& b)

@@ -16,7 +16,7 @@ namespace svg
         return strstr(reinterpret_cast<const char*>(data.data()), "<svg ");
     }
 
-    rainbow::Image decode(const DataMap& data, float scale)
+    auto decode(const DataMap& data, float scale)
     {
         using NSVGImage = std::unique_ptr<NSVGimage, decltype(&nsvgDelete)>;
         using NSVGRasterizer =

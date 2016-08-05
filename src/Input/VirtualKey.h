@@ -138,18 +138,18 @@ namespace rainbow
     ///   Returns key code for the corresponding <see cref="VirtualKey"/>
     ///   according to the current keyboard layout.
     /// </summary>
-    int to_keycode(VirtualKey);
+    auto to_keycode(VirtualKey) -> int;
 
     /// <summary>
     ///   Returns scan code for the corresponding <see cref="VirtualKey"/>.
     /// </summary>
-    int to_scancode(VirtualKey);
+    auto to_scancode(VirtualKey) -> int;
 
     /// <summary>
     ///   Converts a platform key event to a <see cref="VirtualKey"/>.
     /// </summary>
     template <typename T>
-    VirtualKey to_virtualkey(const T& event);
+    auto to_virtualkey(const T& event) -> VirtualKey;
 
     struct KeyMods
     {
@@ -171,7 +171,7 @@ namespace rainbow
     struct KeyStroke
     {
         template <typename T>
-        static KeyStroke from_event(const T& event);
+        static auto from_event(const T& event) -> KeyStroke;
 
         VirtualKey key;
         unsigned int mods;

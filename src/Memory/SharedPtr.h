@@ -5,6 +5,7 @@
 #ifndef MEMORY_SHAREDPTR_H_
 #define MEMORY_SHAREDPTR_H_
 
+#include <memory>
 #include <type_traits>
 #include <utility>
 
@@ -20,15 +21,15 @@ namespace rainbow { class LinearAllocator; }
 /// </remarks>
 class RefCounted : private NonCopyable<RefCounted>
 {
-    friend rainbow::LinearAllocator;
-    template <typename T> friend class SharedPtr;
-
 protected:
     RefCounted() : refs_(0) {}
     ~RefCounted() = default;
 
 private:
     unsigned int refs_;
+
+    friend rainbow::LinearAllocator;
+    template <typename T> friend class SharedPtr;
 };
 
 /// <summary>
@@ -78,12 +79,12 @@ public:
     ~SharedPtr() { reset(); }
 
     /// <summary>Returns a pointer to the managed object.</summary>
-    T* get() const { return ptr_; }
+    auto get() const { return ptr_; }
 
     /// <summary>
     ///   Returns the number of references to the managed object.
     /// </summary>
-    unsigned int use_count() const { return ptr_->refs_; }
+    auto use_count() const { return ptr_->refs_; }
 
     /// <summary>Releases the managed object.</summary>
     void reset()
@@ -109,21 +110,21 @@ public:
     }
 
     /// <summary>Dereferences pointer to the managed object.</summary>
-    T* operator->() const
+    auto operator->() const
     {
         R_ASSERT(ptr_, "No reference to pointer");
         return ptr_;
     }
 
     /// <summary>Dereferences pointer to the managed object.</summary>
-    T& operator*() const
+    auto operator*() const -> T&
     {
         R_ASSERT(ptr_, "No reference to pointer");
         return *ptr_;
     }
 
     /// <summary>Releases the current pointer and retains the new one.</summary>
-    SharedPtr<T>& operator=(const SharedPtr<T>& ptr)
+    auto operator=(const SharedPtr<T>& ptr) -> SharedPtr<T>&
     {
         reset(ptr.ptr_);
         return *this;
@@ -132,7 +133,7 @@ public:
     /// <summary>
     ///   Releases the current pointer and takes over the new one.
     /// </summary>
-    SharedPtr<T>& operator=(SharedPtr<T>&& ptr)
+    auto operator=(SharedPtr<T>&& ptr) -> SharedPtr<T>&
     {
         reset();
         ptr_ = ptr.ptr_;
@@ -150,9 +151,10 @@ private:
 };
 
 template <typename T, typename... Args>
-SharedPtr<T> make_shared(Args&&... args)
+auto make_shared(Args&&... args)
 {
-    return SharedPtr<T>(new T(std::forward<Args>(args)...));
+    auto obj = std::make_unique<T>(std::forward<Args>(args)...);
+    return SharedPtr<T>{obj.release()};
 }
 
 #endif

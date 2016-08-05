@@ -24,7 +24,7 @@ public:
     using Owner = U;
 
     /// <summary>Returns parent node.</summary>
-    T* parent() { return parent_; }
+    auto parent() { return parent_; }
 
     /// <summary>Adds a node as child.</summary>
     void add_child(NotNull<Owner<T*>> node)
@@ -85,7 +85,7 @@ protected:
 
     auto self() { return static_cast<T*>(this); }
 
-    TreeNode& operator=(TreeNode&& node)
+    auto operator=(TreeNode&& node) -> TreeNode&
     {
         parent_ = node.parent_;
         children_ = std::move(node.children_);

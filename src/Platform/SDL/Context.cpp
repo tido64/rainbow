@@ -14,11 +14,11 @@ namespace
     static_assert(SDL_VERSION_ATLEAST(2, 0, 0),
                   "Rainbow requires SDL version 2.0.0 or higher");
 
-    Vec2i window_size(const rainbow::Config& config)
+    auto window_size(const rainbow::Config& config)
     {
         return (!config.width() || !config.height()
-                    ? Vec2i(1280, 720)
-                    : Vec2i(config.width(), config.height()));
+                    ? Vec2i{1280, 720}
+                    : Vec2i{config.width(), config.height()});
     }
 }
 
@@ -102,14 +102,14 @@ SDLContext::~SDLContext()
     SDL_Quit();
 }
 
-Vec2i SDLContext::drawable_size() const
+auto SDLContext::drawable_size() const -> Vec2i
 {
     Vec2i size;
     SDL_GL_GetDrawableSize(window_, &size.x, &size.y);
     return size;
 }
 
-Vec2i SDLContext::window_size() const
+auto SDLContext::window_size() const -> Vec2i
 {
     Vec2i size;
     SDL_GetWindowSize(window_, &size.x, &size.y);

@@ -139,30 +139,30 @@ void SceneNode::update(unsigned long dt) const
 namespace rainbow {
 #endif
 
-std::unique_ptr<SceneNode> SceneNode::create()
+auto SceneNode::create() -> std::unique_ptr<SceneNode>
 {
     return std::unique_ptr<SceneNode>{std::make_unique<GroupNode>()};
 }
 
-std::unique_ptr<SceneNode> SceneNode::create(Drawable& drawable)
+auto SceneNode::create(Drawable& drawable) -> std::unique_ptr<SceneNode>
 {
     return std::unique_ptr<SceneNode>{std::make_unique<DrawableNode>(drawable)};
 }
 
 template <>
-std::unique_ptr<SceneNode> SceneNode::create(Animation& a)
+auto SceneNode::create(Animation& a) -> std::unique_ptr<SceneNode>
 {
     return std::unique_ptr<SceneNode>{std::make_unique<AnimationNode>(a)};
 }
 
 template <>
-std::unique_ptr<SceneNode> SceneNode::create(Label& l)
+auto SceneNode::create(Label& l) -> std::unique_ptr<SceneNode>
 {
     return std::unique_ptr<SceneNode>{std::make_unique<LabelNode>(l)};
 }
 
 template <>
-std::unique_ptr<SceneNode> SceneNode::create(SpriteBatch& s)
+auto SceneNode::create(SpriteBatch& s) -> std::unique_ptr<SceneNode>
 {
     return std::unique_ptr<SceneNode>{std::make_unique<SpriteBatchNode>(s)};
 }

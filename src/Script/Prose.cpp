@@ -54,7 +54,7 @@ Prose::~Prose()
 }
 
 template <typename T, Prose::AssetType Type>
-T* Prose::get_asset(const std::string& name)
+auto Prose::get_asset(const std::string& name) -> T*
 {
     auto asset = assets_.find(name);
     return (asset == assets_.end() || asset->second.type != Type
@@ -63,7 +63,7 @@ T* Prose::get_asset(const std::string& name)
 }
 
 template <>
-Animation* Prose::get_asset<Animation>(const std::string& name)
+auto Prose::get_asset<Animation>(const std::string& name) -> Animation*
 {
     auto animation = get_asset<Animation, AssetType::Animation>(name);
     if (!animation)
@@ -72,7 +72,7 @@ Animation* Prose::get_asset<Animation>(const std::string& name)
 }
 
 template <>
-FontAtlas* Prose::get_asset<FontAtlas>(const std::string& name)
+auto Prose::get_asset<FontAtlas>(const std::string& name) -> FontAtlas*
 {
     auto font = get_asset<FontAtlas, AssetType::FontAtlas>(name);
     if (!font)
@@ -81,7 +81,7 @@ FontAtlas* Prose::get_asset<FontAtlas>(const std::string& name)
 }
 
 template <>
-Label* Prose::get_asset<Label>(const std::string& name)
+auto Prose::get_asset<Label>(const std::string& name) -> Label*
 {
     auto label = get_asset<Label, AssetType::Label>(name);
     if (!label)
@@ -90,7 +90,7 @@ Label* Prose::get_asset<Label>(const std::string& name)
 }
 
 template <>
-SceneNode* Prose::get_asset<SceneNode>(const std::string& name)
+auto Prose::get_asset<SceneNode>(const std::string& name) -> SceneNode*
 {
     auto node = get_asset<SceneNode, AssetType::Node>(name);
     if (!node)
@@ -99,7 +99,7 @@ SceneNode* Prose::get_asset<SceneNode>(const std::string& name)
 }
 
 template <>
-Sprite* Prose::get_asset<Sprite>(const std::string& name)
+auto Prose::get_asset<Sprite>(const std::string& name) -> Sprite*
 {
     auto sprite = get_asset<Sprite, AssetType::Sprite>(name);
     if (!sprite)
@@ -108,7 +108,7 @@ Sprite* Prose::get_asset<Sprite>(const std::string& name)
 }
 
 template <>
-SpriteBatch* Prose::get_asset<SpriteBatch>(const std::string& name)
+auto Prose::get_asset<SpriteBatch>(const std::string& name) -> SpriteBatch*
 {
     auto batch = get_asset<SpriteBatch, AssetType::SpriteBatch>(name);
     if (!batch)
@@ -117,7 +117,7 @@ SpriteBatch* Prose::get_asset<SpriteBatch>(const std::string& name)
 }
 
 template <>
-TextureAtlas* Prose::get_asset<TextureAtlas>(const std::string& name)
+auto Prose::get_asset<TextureAtlas>(const std::string& name) -> TextureAtlas*
 {
     auto texture = get_asset<TextureAtlas, AssetType::TextureAtlas>(name);
     if (!texture)
@@ -125,22 +125,22 @@ TextureAtlas* Prose::get_asset<TextureAtlas>(const std::string& name)
     return texture;
 }
 
-Animation* Prose::get_animation(const std::string& name)
+auto Prose::get_animation(const std::string& name) -> Animation*
 {
     return get_asset<Animation>(name);
 }
 
-FontAtlas* Prose::get_font(const std::string& name)
+auto Prose::get_font(const std::string& name) -> FontAtlas*
 {
     return get_asset<FontAtlas>(name);
 }
 
-Label* Prose::get_label(const std::string& name)
+auto Prose::get_label(const std::string& name) -> Label*
 {
     return get_asset<Label>(name);
 }
 
-SceneNode* Prose::get_node(const std::string& name)
+auto Prose::get_node(const std::string& name) -> SceneNode*
 {
     auto asset = assets_.find(name);
     if (asset == assets_.end())
@@ -151,17 +151,17 @@ SceneNode* Prose::get_node(const std::string& name)
     return asset->second.node;
 }
 
-Sprite* Prose::get_sprite(const std::string& name)
+auto Prose::get_sprite(const std::string& name) -> Sprite*
 {
     return get_asset<Sprite>(name);
 }
 
-SpriteBatch* Prose::get_spritebatch(const std::string& name)
+auto Prose::get_spritebatch(const std::string& name) -> SpriteBatch*
 {
     return get_asset<SpriteBatch>(name);
 }
 
-TextureAtlas* Prose::get_texture(const std::string& name)
+auto Prose::get_texture(const std::string& name) -> TextureAtlas*
 {
     return get_asset<TextureAtlas>(name);
 }
@@ -194,9 +194,9 @@ namespace
     };
 
     template <size_t N>
-    ScopedField get_field(lua_State* L, const char (&name)[N])
+    auto get_field(lua_State* L, const char (&name)[N])
     {
-        return {L, name, N - 1};
+        return ScopedField{L, name, N - 1};
     }
 
     template <size_t N>
@@ -209,12 +209,12 @@ namespace
         return !lua_isnil(L, -1);
     }
 
-    Prose::Asset no_asset()
+    auto no_asset()
     {
-        return {Prose::AssetType::None, nullptr, nullptr};
+        return Prose::Asset{Prose::AssetType::None, nullptr, nullptr};
     }
 
-    uint32_t table_length(lua_State *L, const char* name)
+    auto table_length(lua_State *L, const char* name)
     {
         ScopedField table{L, name};
         R_ASSERT(lua_istable(L, -1), "Table expected");
@@ -229,7 +229,7 @@ namespace
         return length;
     }
 
-    const char* table_name(lua_State* L)
+    auto table_name(lua_State* L) -> const char*
     {
         if (has_key(L, "name"))
         {
@@ -272,7 +272,7 @@ namespace
 #include "Script/Prose.Resource.h"
 
 #if USE_NODE_TAGS
-    std::unique_ptr<char[]> basename_without_extension(const char* path)
+    auto basename_without_extension(const char* path) -> std::unique_ptr<char[]>
     {
         if (!path)
             return {};
@@ -298,7 +298,7 @@ namespace
     }
 #endif
 
-    size_t size_of(Prose::AssetType type)
+    auto size_of(Prose::AssetType type) -> size_t
     {
         switch (type)
         {
@@ -321,7 +321,7 @@ namespace
         }
     }
 
-    Prose::Asset compute_size(lua_State* L, size_t& total_size)
+    auto compute_size(lua_State* L, size_t& total_size) -> Prose::Asset
     {
         auto type = node_type(L);
         if (type == Prose::AssetType::None)
@@ -344,7 +344,7 @@ namespace
     }
 }
 
-Prose* Prose::from_lua(const char* path)
+auto Prose::from_lua(const char* path) -> Prose*
 {
     const Data script(File::open(path));
     if (!script)

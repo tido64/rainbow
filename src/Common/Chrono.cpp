@@ -19,13 +19,13 @@ void Chrono::sleep(duration::rep ms)
     std::this_thread::sleep_for(duration(ms));
 }
 
-Chrono::duration Chrono::system_now()
+auto Chrono::system_now() -> Chrono::duration
 {
     return std::chrono::duration_cast<duration>(
         std::chrono::system_clock::now().time_since_epoch());
 }
 
-std::chrono::seconds Chrono::time_since_epoch()
+auto Chrono::time_since_epoch() -> std::chrono::seconds
 {
     return std::chrono::duration_cast<std::chrono::seconds>(now());
 }

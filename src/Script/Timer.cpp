@@ -4,11 +4,14 @@
 
 #include "Script/Timer.h"
 
-void TimerManager::clear_timer(Timer* t) { free_ = t->clear(free_); }
+void TimerManager::clear_timer(Timer* t)
+{
+    free_ = t->clear(free_);
+}
 
-Timer* TimerManager::set_timer(Timer::Closure func,
-                               int interval,
-                               int repeat_count)
+auto TimerManager::set_timer(Timer::Closure func,
+                             int interval,
+                             int repeat_count) -> Timer*
 {
     Timer* t;
     if (free_ < 0)
@@ -33,7 +36,7 @@ void TimerManager::update(unsigned long dt)
         timers_[i].update(dt);
 }
 
-int Timer::clear(int free)
+auto Timer::clear(int free) -> int
 {
     interval_ = 0;
     tick_ = {};  // Always clear as resources may be retained in the closure.
@@ -62,7 +65,7 @@ void Timer::update(unsigned long dt)
     elapsed_ -= ticks * interval_;
 }
 
-Timer& Timer::operator=(Timer&& t)
+auto Timer::operator=(Timer&& t) -> Timer&
 {
     active_ = true;
     elapsed_ = 0;

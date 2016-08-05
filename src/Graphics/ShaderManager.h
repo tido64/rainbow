@@ -58,18 +58,18 @@ public:
     /// <returns>
     ///   Unique program identifier; <c>kInvalidProgram</c> if unsuccessful.
     /// </returns>
-    unsigned int compile(Shader::Params* shaders,
-                         const Shader::AttributeParams* attributes);
+    auto compile(Shader::Params* shaders,
+                 const Shader::AttributeParams* attributes) -> unsigned int;
 
     /// <summary>Returns current program details.</summary>
-    const Shader::Details& get_program() const
+    auto get_program() const -> const Shader::Details&
     {
         R_ASSERT(current_ > 0, "ShaderManager is uninitialised");
         return programs_[current_ - 1];
     }
 
     /// <summary>Returns program details.</summary>
-    Shader::Details& get_program(unsigned int pid)
+    auto get_program(unsigned int pid) -> Shader::Details&
     {
         R_ASSERT(pid > 0, "Invalid shader program id");
         return programs_[pid - 1];

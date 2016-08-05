@@ -39,10 +39,10 @@ private:
     int free_;
     const int id_;
 
-    int clear(int free);
+    auto clear(int free) -> int;
     void update(unsigned long dt);
 
-    Timer& operator=(Timer&& t);
+    auto operator=(Timer&& t) -> Timer&;
 
     friend class TimerManager;
 };
@@ -53,7 +53,8 @@ public:
     TimerManager() : free_(-1) { make_global(); }
 
     void clear_timer(Timer* t);
-    Timer* set_timer(Timer::Closure func, int interval, int repeat_count);
+    auto set_timer(Timer::Closure func, int interval, int repeat_count)
+        -> Timer*;
 
     void update(unsigned long dt);
 

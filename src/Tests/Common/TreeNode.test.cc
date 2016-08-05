@@ -15,9 +15,12 @@ namespace
         TestNode(TestNode&&) = default;
         ~TestNode() { deleted_ = true; }
 
-        const std::vector<TestNode*>& children() const { return children_; }
+        auto children() const -> const std::vector<TestNode*>&
+        {
+            return children_;
+        }
 
-        TestNode& operator=(TestNode&& node)
+        auto operator=(TestNode&& node) -> TestNode&
         {
             TreeNode::operator=(std::move(node));
             return *this;

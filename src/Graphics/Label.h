@@ -98,11 +98,11 @@ public:
     virtual void update();
 
 protected:
-    int cutoff() const { return cutoff_ / 6; }
+    auto cutoff() const -> int { return cutoff_ / 6; }
     void set_cutoff(int cutoff) { cutoff_ = cutoff * 6; }
 
-    unsigned int state() const { return stale_; }
-    SpriteVertex* vertex_buffer() const { return vertices_.get(); }
+    auto state() const { return stale_; }
+    auto vertex_buffer() const { return vertices_.get(); }
 
     void clear_state() { stale_ = 0; }
     void update_internal();

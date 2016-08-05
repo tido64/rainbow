@@ -12,14 +12,14 @@ class Link
 public:
     Link() : next_(nullptr), prev_(nullptr) {}
 
-    Link* next() const { return next_; }
-    Link* prev() const { return prev_; }
+    auto next() const { return next_; }
+    auto prev() const { return prev_; }
 
     void append(Link* node);
     void pop();
 
     template <typename T, typename F, typename = EnableIfBaseOf<Link, T>>
-    friend bool for_each(T* node, F&& f)
+    friend auto for_each(T* node, F&& f) -> bool
     {
         while (node)
         {

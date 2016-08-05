@@ -46,14 +46,15 @@ namespace rainbow
                memcmp(str.data() + str.length() - length, postfix, length) == 0;
     }
 
-    inline std::unique_ptr<char[]> make_string_copy(const char* str)
+    inline auto make_string_copy(const char* str) -> std::unique_ptr<char[]>
     {
         auto copy = std::make_unique<char[]>(strlen(str) + 1);
         strcpy(copy.get(), str);
         return copy;
     }
 
-    inline std::unique_ptr<char[]> make_string_copy(const string_view& str)
+    inline auto make_string_copy(const string_view& str)
+        -> std::unique_ptr<char[]>
     {
         const size_t length = str.length();
         auto copy = std::make_unique<char[]>(length + 1);

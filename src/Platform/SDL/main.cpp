@@ -26,7 +26,7 @@
 
 namespace
 {
-    int run_tests(int& argc, char**& argv)
+    auto run_tests(int& argc, char**& argv) -> int
     {
 #ifdef RAINBOW_TEST
         Path::set_current(Path());
@@ -63,7 +63,7 @@ RainbowController* g_controller = nullptr;
 
 void emscripten_main() { g_controller->run(); }
 
-int main()
+auto main() -> int
 {
     const rainbow::Config config;
     g_context = std::make_unique<SDLContext>(config).release();
@@ -75,7 +75,7 @@ int main()
 
 #else
 
-int main(int argc, char* argv[])
+auto main(int argc, char* argv[]) -> int
 {
     if (argc < 2)
         Path::set_current();

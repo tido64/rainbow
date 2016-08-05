@@ -52,7 +52,7 @@ namespace rainbow
         /// </summary>
         /// <returns>Actor that just spawned.</returns>
         template <typename T, typename... Args>
-        T* spawn(const Vec2f& position, SceneNode& node, Args&&... args)
+        auto spawn(const Vec2f& position, SceneNode& node, Args&&... args)
         {
             static_assert(std::is_base_of<Actor, T>::value,
                           "Entity type must be derived from Actor.");
@@ -86,7 +86,7 @@ namespace rainbow
 
             ~Entity() { actor->dispose(); }
 
-            Entity& operator=(Entity&&) = default;
+            auto operator=(Entity&&) -> Entity& = default;
         };
 
         std::vector<Entity> entities_;

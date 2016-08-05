@@ -19,7 +19,7 @@ namespace rainbow
         const int kInterval = 4;
     }
 
-    inline int repeat_count_from_duration(int duration)
+    inline auto repeat_count_from_duration(int duration) -> int
     {
         return std::ceil(static_cast<float>(duration) / timing::kInterval);
     }
@@ -44,7 +44,7 @@ namespace rainbow
         {
         }
 
-        float tick()
+        auto tick() -> float
         {
             elapsed_ += timing::kInterval;
             return std::min(static_cast<float>(elapsed_) / duration_, 1.0f);

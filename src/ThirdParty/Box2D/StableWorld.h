@@ -40,7 +40,7 @@ namespace b2
         // b2World overrides.
 
         void SetDebugDraw(b2Draw* debugDraw) /* override */;
-        b2Body* CreateBody(const b2BodyDef* def) /* override */;
+        auto CreateBody(const b2BodyDef* def) -> b2Body* /* override */;
         void DestroyBody(b2Body* body) /* override */;
         void Step(float32 timeStep,
                   int32 velocityIterations,

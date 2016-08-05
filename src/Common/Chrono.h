@@ -18,15 +18,15 @@ public:
     using duration = std::chrono::milliseconds;
 
     static void sleep(duration::rep milliseconds);
-    static duration system_now();
-    static std::chrono::seconds time_since_epoch();
+    static auto system_now() -> duration;
+    static auto time_since_epoch() -> std::chrono::seconds;
 
     Chrono();
 
     /// <summary>
     ///   Returns the time difference between current and previous frame.
     /// </summary>
-    duration::rep delta() const { return delta_.count(); }
+    auto delta() const { return delta_.count(); }
 
     /// <summary>Moves the clock one tick forward.</summary>
     void tick();

@@ -124,7 +124,7 @@ namespace rainbow
             state.on_exit(*this, actor());
         }
 
-        IState* state_before(const IState& state) const
+        auto state_before(const IState& state) const -> IState*
         {
             auto i = top_;
             while (i)

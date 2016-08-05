@@ -13,7 +13,7 @@
 namespace rainbow
 {
     template <typename F, typename T>
-    T filter(F&& pred, const T& list)
+    auto filter(F&& pred, const T& list) -> T
     {
         T result;
         std::copy_if(
@@ -22,7 +22,7 @@ namespace rainbow
     }
 
     template <typename F, typename T>
-    T& filter_by_mut(F&& pred, T& list)
+    auto filter_by_mut(F&& pred, T& list) -> T&
     {
         using U = typename T::value_type;
         remove_if(list, [&pred](const U& i) { return !pred(i); });
@@ -30,7 +30,7 @@ namespace rainbow
     }
 
     template <typename F, typename T, typename U, typename V>
-    T foldl(F&& op, const T& z, const U& list, V i, V end)
+    auto foldl(F&& op, const T& z, const U& list, V i, V end) -> T
     {
         return i == end
                    ? z
@@ -38,7 +38,7 @@ namespace rainbow
     }
 
     template <typename F, typename T, typename U>
-    T foldl(F&& op, const T& z, const U& list)
+    auto foldl(F&& op, const T& z, const U& list) -> T
     {
         return foldl(
             std::forward<F>(op), z, list, std::begin(list), std::end(list));
@@ -52,9 +52,8 @@ namespace rainbow
         return foldl(std::forward<F>(op), *i, list, i + 1, std::end(list));
     }
 
-#if __cplusplus >= 201402L
     template <typename F, typename T, typename U, typename V>
-    T foldr(F&& op, const T& z, const U& list, V i, V rend)
+    auto foldr(F&& op, const T& z, const U& list, V i, V rend) -> T
     {
         return i == rend
                    ? z
@@ -62,7 +61,7 @@ namespace rainbow
     }
 
     template <typename F, typename T, typename U>
-    T foldr(F&& op, const T& z, const U& list)
+    auto foldr(F&& op, const T& z, const U& list) -> T
     {
         return foldr(
             std::forward<F>(op), z, list, std::rbegin(list), std::rend(list));
@@ -75,10 +74,9 @@ namespace rainbow
         auto i = std::rbegin(list);
         return foldr(std::forward<F>(op), *i, list, i + 1, std::rend(list));
     }
-#endif  // __cplusplus >= 201402L
 
     template <typename F, typename T>
-    T map(F&& op, const T& list)
+    auto map(F&& op, const T& list) -> T
     {
         T result;
         std::transform(
@@ -87,7 +85,7 @@ namespace rainbow
     }
 
     template <typename F, typename T>
-    T& map_by_mut(F&& op, T& list)
+    auto map_by_mut(F&& op, T& list) -> T&
     {
         std::transform(std::begin(list), std::end(list), std::begin(list), op);
         return list;

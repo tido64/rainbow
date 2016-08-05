@@ -30,7 +30,7 @@ namespace nvg
         ~Canvas() override;
 
     protected:
-        NVGcontext* context() const { return context_; }
+        auto context() const { return context_; }
 
     private:
         NVGcontext* context_;

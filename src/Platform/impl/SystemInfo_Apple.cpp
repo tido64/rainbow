@@ -49,7 +49,7 @@ namespace rainbow
             CFRelease(localesArray);
         }
 
-        size_t memory()
+        auto memory() -> size_t
         {
             int mib[2]{CTL_HW, HW_MEMSIZE};
             int64_t memsize;

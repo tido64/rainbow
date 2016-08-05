@@ -17,7 +17,7 @@ namespace rainbow { namespace graphics
         void bind() const;
         void upload(const void* data, size_t size) const;
 
-        ElementBuffer& operator=(unsigned int buffer)
+        auto operator=(unsigned int buffer) -> ElementBuffer&
         {
             buffer_ = buffer;
             return *this;

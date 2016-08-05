@@ -14,7 +14,7 @@ namespace
 
         Number(int v) : value(v) {}
 
-        Number* next() const { return static_cast<Number*>(Link::next()); }
+        auto next() const { return static_cast<Number*>(Link::next()); }
     };
 }
 

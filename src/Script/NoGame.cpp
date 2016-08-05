@@ -50,7 +50,7 @@ void NoGame::update(unsigned long)
     }
 }
 
-std::unique_ptr<GameBase> GameBase::create(rainbow::Director& director)
+auto GameBase::create(rainbow::Director& director) -> std::unique_ptr<GameBase>
 {
     return std::make_unique<NoGame>(director);
 }

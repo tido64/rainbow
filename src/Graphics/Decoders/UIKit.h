@@ -13,7 +13,7 @@
 
 namespace uikit
 {
-    rainbow::Image decode(const DataMap& map)
+    auto decode(const DataMap& map)
     {
         rainbow::Image image;
 

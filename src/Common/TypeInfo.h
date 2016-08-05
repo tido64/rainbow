@@ -24,7 +24,7 @@ namespace rainbow
 
     private:
         template <typename T>
-        static type_id_t id()
+        static auto id()
         {
             static constexpr T* const id{};
             return &id;
@@ -35,13 +35,13 @@ namespace rainbow
         constexpr type_id_t(const void* p) : id_(p) {}
 
         template <typename T>
-        friend type_id_t type_id();
+        friend auto type_id() -> type_id_t;
     };
 
     /// <summary>Returns a unique id for the specified type.</summary>
     /// <remarks>Ids may not be the same from session to session.</remarks>
     template <typename T>
-    type_id_t type_id()
+    auto type_id() -> type_id_t
     {
         return type_id_t::id<std::decay_t<T>>();
     }

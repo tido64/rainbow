@@ -26,7 +26,7 @@ namespace
         }
     }
 
-    b2::BodyState* GetBodyState(b2Body* body)
+    auto GetBodyState(b2Body* body)
     {
         return static_cast<b2::BodyState*>(body->GetUserData());
     }
@@ -56,7 +56,7 @@ namespace b2
             debug_draw_->Add(this);
     }
 
-    b2Body* StableWorld::CreateBody(const b2BodyDef* bd)
+    auto StableWorld::CreateBody(const b2BodyDef* bd) -> b2Body*
     {
         auto body = b2World::CreateBody(bd);
         body->SetUserData(new BodyState(bd));

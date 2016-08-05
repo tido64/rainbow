@@ -2,7 +2,7 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
-Prose::Asset create_font(lua_State* L, rainbow::ScopeStack& stack)
+auto create_font(lua_State* L, rainbow::ScopeStack& stack) -> Prose::Asset
 {
     lua_rawgeti(L, -1, 1);
     const char* path = lua_tostring(L, -1);
@@ -29,13 +29,13 @@ Prose::Asset create_font(lua_State* L, rainbow::ScopeStack& stack)
     return {Prose::AssetType::FontAtlas, font, nullptr};
 }
 
-Prose::Asset create_sound(lua_State*, rainbow::ScopeStack&)
+auto create_sound(lua_State*, rainbow::ScopeStack&) -> Prose::Asset
 {
     LOGW("Prose: Sound is not yet implemented");
     return {Prose::AssetType::Sound, nullptr, nullptr};
 }
 
-Prose::Asset create_texture(lua_State* L, rainbow::ScopeStack& stack)
+auto create_texture(lua_State* L, rainbow::ScopeStack& stack) -> Prose::Asset
 {
     const int top = lua_gettop(L);
     lua_pushnil(L);
@@ -99,7 +99,7 @@ bool ends_with(const char* str, const char* suffix)
     return true;
 }
 
-Prose::AssetType resource_type(lua_State* L)
+auto resource_type(lua_State* L) -> Prose::AssetType
 {
     const auto field = lua_type(L, -1);
     if (field == LUA_TSTRING)
@@ -123,9 +123,9 @@ Prose::AssetType resource_type(lua_State* L)
     return Prose::AssetType::None;
 }
 
-Prose::Asset create_resource(lua_State* L,
-                             rainbow::ScopeStack& stack,
-                             Prose::AssetMap& assets)
+auto create_resource(lua_State* L,
+                     rainbow::ScopeStack& stack,
+                     Prose::AssetMap& assets) -> Prose::Asset
 {
     Prose::Asset asset = no_asset();
     switch (resource_type(L))

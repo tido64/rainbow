@@ -28,7 +28,7 @@ namespace rainbow
                          unsigned char a = 0xff)
             : r(r), g(g), b(b), a(a) {}
 
-        Colorb& operator=(unsigned int c)
+        auto operator=(unsigned int c) -> Colorb&
         {
             r = 0xff & (c >> 24);
             g = 0xff & (c >> 16);
@@ -61,7 +61,7 @@ namespace rainbow
         constexpr Colorf(float r, float g, float b, float a = 1.0f)
             : r(r), g(g), b(b), a(a) {}
 
-        Colorf& operator=(unsigned int c)
+        auto operator=(unsigned int c) -> Colorf&
         {
             const float white = 1.0f / 255.0f;
             r = (0xff & (c >> 24)) * white;

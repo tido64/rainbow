@@ -56,7 +56,7 @@ namespace rainbow { namespace system_info
         locales.emplace_back(locale_id);
     }
 
-    size_t memory()
+    auto memory() -> size_t
     {
         MEMORYSTATUSEX status;
         status.dwLength = sizeof(status);

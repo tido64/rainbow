@@ -13,7 +13,7 @@ namespace rainbow
 {
     class SceneNode;
 
-    inline Timer* move(rainbow::SceneNode* node,
+    inline auto move(rainbow::SceneNode* node,
                        const Vec2f& delta,
                        int duration,
                        TimingFunction timing)
@@ -25,7 +25,7 @@ namespace rainbow
     }
 
     template <typename T>
-    Timer* fade(T component, int opacity, int duration, TimingFunction timing)
+    auto fade(T component, int opacity, int duration, TimingFunction timing)
     {
         opacity -= component->color().a;
         return TimerManager::Get()->set_timer(
@@ -35,7 +35,7 @@ namespace rainbow
     }
 
     template <typename T>
-    Timer* fade(T component, float opacity, int duration, TimingFunction timing)
+    auto fade(T component, float opacity, int duration, TimingFunction timing)
     {
         return fade(component,
                     static_cast<int>(opacity * 255.0f + 0.5f),
@@ -44,7 +44,7 @@ namespace rainbow
     }
 
     template <typename T>
-    Timer* move(T component,
+    auto move(T component,
                 Vec2f destination,
                 int duration,
                 TimingFunction timing)
@@ -57,7 +57,7 @@ namespace rainbow
     }
 
     template <typename T>
-    Timer* rotate(T component, float angle, int duration, TimingFunction timing)
+    auto rotate(T component, float angle, int duration, TimingFunction timing)
     {
         angle -= component->angle();
         return TimerManager::Get()->set_timer(
@@ -67,7 +67,7 @@ namespace rainbow
     }
 
     template <typename T>
-    Timer* scale(T component, Vec2f factor, int duration, TimingFunction timing)
+    auto scale(T component, Vec2f factor, int duration, TimingFunction timing)
     {
         factor -= component->scale();
         return TimerManager::Get()->set_timer(
@@ -77,7 +77,7 @@ namespace rainbow
     }
 
     template <typename T>
-    Timer* scale(T component, float factor, int duration, TimingFunction timing)
+    auto scale(T component, float factor, int duration, TimingFunction timing)
     {
         return scale(
             component, Vec2f(factor, factor), duration, std::move(timing));

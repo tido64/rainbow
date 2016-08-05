@@ -28,7 +28,7 @@ namespace rainbow
         /// <summary>
         ///   Returns total number of physical memory installed in megabytes.
         /// </summary>
-        size_t memory();
+        auto memory() -> size_t;
     }
 }
 

@@ -17,19 +17,18 @@
 
 #include "Common/Constants.h"
 #include "Common/Constraints.h"
-#include "Platform/Macros.h"  // For std::rbegin/rend on Android.
 
 namespace rainbow
 {
     template <typename T, size_t N>
-    constexpr size_t array_size(const T (&)[N])
+    constexpr auto array_size(const T (&)[N])
     {
         return N;
     }
 
     /// <summary>Rounds up to the nearest power of 2.</summary>
     /// <remarks>Note that 0 is incorrectly considered a power of 2.</remarks>
-    inline unsigned int ceil_pow2(unsigned int i)
+    inline auto ceil_pow2(unsigned int i)
     {
         --i;
         i |= i >> 1;
@@ -41,19 +40,19 @@ namespace rainbow
     }
 
     template <typename T>
-    T clamp(T x, T min_val, T max_val)
+    auto clamp(T x, T min_val, T max_val)
     {
         return std::min(std::max(x, min_val), max_val);
     }
 
     /// <summary>Converts radians to degrees.</summary>
-    inline float degrees(float r)
+    inline auto degrees(float r)
     {
         return r * static_cast<float>(kRadian);
     }
 
     /// <summary>Fast inverse square root by 0x5f3759df.</summary>
-    inline float fast_invsqrt(float x)
+    inline auto fast_invsqrt(float x)
     {
         float xhalf = x * 0.5f;
 #ifdef __GNUC__
@@ -70,7 +69,7 @@ namespace rainbow
     }
 
     /// <summary>Rounds down to the nearest power of 2.</summary>
-    inline unsigned int floor_pow2(unsigned int i)
+    inline auto floor_pow2(unsigned int i)
     {
         i |= i >> 1;
         i |= i >> 2;
@@ -98,7 +97,7 @@ namespace rainbow
     }
 
     /// <summary>Low-pass filter.</summary>
-    inline float low_pass(float value, float low_pass)
+    inline auto low_pass(float value, float low_pass)
     {
         return kLowPassAlpha * powf(10.0f, value * kLowPassAlpha) +
                (1.0f - kLowPassAlpha) * low_pass;
@@ -116,7 +115,7 @@ namespace rainbow
     }
 
     /// <summary>Converts degrees to radians.</summary>
-    inline float radians(float d)
+    inline auto radians(float d)
     {
         return d * static_cast<float>(kDegree);
     }
@@ -165,7 +164,7 @@ namespace rainbow
     ///   <paramref name="x"/> == 0, or <paramref name="x"/> > 0 respectively.
     /// </summary>
     template <typename T>
-    T signum(T x)
+    auto signum(T x)
     {
         return (x > T(0)) - (x < T(0));
     }

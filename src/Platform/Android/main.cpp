@@ -46,9 +46,9 @@ void android_destroy_display(AInstance*);
 void android_handle_display(AInstance*);
 void android_init_display(AInstance*);
 void android_handle_event(struct android_app*, int32_t cmd);
-int32_t android_handle_input(struct android_app*, AInputEvent*);
-int32_t android_handle_motion(struct android_app*, AInputEvent*);
-Pointer get_pointer_event(AInputEvent*, int32_t index);
+auto android_handle_input(struct android_app*, AInputEvent*) -> int32_t;
+auto android_handle_motion(struct android_app*, AInputEvent*) -> int32_t;
+auto get_pointer_event(AInputEvent*, int32_t index) -> Pointer;
 
 namespace
 {
@@ -315,7 +315,8 @@ void android_handle_event(struct android_app* app, int32_t cmd)
     }
 }
 
-int32_t android_handle_input(struct android_app* app, AInputEvent* event)
+auto android_handle_input(struct android_app* app, AInputEvent* event)
+    -> int32_t
 {
     switch (AInputEvent_getType(event))
     {
@@ -328,7 +329,8 @@ int32_t android_handle_input(struct android_app* app, AInputEvent* event)
     }
 }
 
-int32_t android_handle_motion(struct android_app* app, AInputEvent* event)
+auto android_handle_motion(struct android_app* app, AInputEvent* event)
+    -> int32_t
 {
     Director* director = static_cast<AInstance*>(app->userData)->director.get();
     switch (AMotionEvent_getAction(event) & AMOTION_EVENT_ACTION_MASK)
@@ -370,7 +372,7 @@ int32_t android_handle_motion(struct android_app* app, AInputEvent* event)
     return 1;
 }
 
-Pointer get_pointer_event(AInputEvent* event, int32_t index)
+auto get_pointer_event(AInputEvent* event, int32_t index) -> Pointer
 {
     const Vec2i& point = rainbow::graphics::convert_to_flipped_view(Vec2i(
         AMotionEvent_getX(event, index), AMotionEvent_getY(event, index)));

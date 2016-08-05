@@ -11,25 +11,26 @@
 namespace rainbow
 {
     template <typename Float>
-    Vec2<Float> transform_srt(const Vec2<Float>& p,
-                              const Vec2<Float>& s_sin_r,
-                              const Vec2<Float>& s_cos_r,
-                              const Vec2<Float>& position)
+    auto transform_srt(const Vec2<Float>& p,
+                       const Vec2<Float>& s_sin_r,
+                       const Vec2<Float>& s_cos_r,
+                       const Vec2<Float>& position)
     {
-        return {s_cos_r.x * p.x - s_sin_r.y * p.y + position.x,
-                s_sin_r.x * p.x + s_cos_r.y * p.y + position.y};
+        return Vec2<Float>{s_cos_r.x * p.x - s_sin_r.y * p.y + position.x,
+                           s_sin_r.x * p.x + s_cos_r.y * p.y + position.y};
     }
 
     template <typename Float>
-    Vec2<Float> transform_st(const Vec2<Float>& p,
-                             const Vec2<Float>& scale,
-                             const Vec2<Float>& position)
+    auto transform_st(const Vec2<Float>& p,
+                      const Vec2<Float>& scale,
+                      const Vec2<Float>& position)
     {
-        return {scale.x * p.x + position.x, scale.y * p.y + position.y};
+        return Vec2<Float>{scale.x * p.x + position.x,   //
+                           scale.y * p.y + position.y};
     }
 
     template <typename Float, typename Vertex>
-    void transform(const Vec2<Float>(&quad)[4],
+    void transform(const Vec2<Float> (&quad)[4],
                    const Vec2<Float>& position,
                    const Vec2<Float>& scale,
                    ArraySpan<Vertex> data)
@@ -41,7 +42,7 @@ namespace rainbow
     }
 
     template <typename Float, typename Vertex>
-    void transform(const Vec2<Float>(&quad)[4],
+    void transform(const Vec2<Float> (&quad)[4],
                    const Vec2<Float>& position,
                    const Vec2<Float>& s_sin_r,
                    const Vec2<Float>& s_cos_r,
@@ -54,7 +55,7 @@ namespace rainbow
     }
 
     template <typename Float, typename Vertex>
-    void transform(const Vec2<Float>(&quad)[4],
+    void transform(const Vec2<Float> (&quad)[4],
                    const Vec2<Float>& position,
                    Float angle,
                    const Vec2<Float>& scale,

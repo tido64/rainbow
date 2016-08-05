@@ -23,7 +23,7 @@ namespace b2
     public:
         DebuggableWorld() : ptm_(32.0f) {}
 
-        float GetPTM() const { return ptm_; }
+        auto GetPTM() const { return ptm_; }
         void SetPTM(float ptm) { ptm_ = ptm; }
 
         virtual void DrawDebugData() = 0;

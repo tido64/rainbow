@@ -12,7 +12,8 @@ namespace rainbow
     const uint8_t kUTF8Accept = 0;
     const uint8_t kUTF8Reject = 0xf;
 
-    uint8_t utf8_decode_step(uint8_t state, uint8_t octet, uint32_t* cpp);
+    auto utf8_decode_step(uint8_t state, uint8_t octet, uint32_t* cpp)
+        -> uint8_t;
 
     /// <summary>
     ///   Applies the given function <paramref name="f"/> to each valid UTF-8

@@ -69,12 +69,13 @@ namespace rainbow
 class GameBase
 {
 public:
-    static std::unique_ptr<GameBase> create(rainbow::Director& director);
+    static auto create(rainbow::Director& director)
+        -> std::unique_ptr<GameBase>;
 
     virtual ~GameBase() = default;
 
-    Input& input() { return director_.input(); }
-    rainbow::SceneNode& scenegraph() { return director_.scenegraph(); }
+    auto input() -> Input& { return director_.input(); }
+    auto scenegraph() -> rainbow::SceneNode& { return director_.scenegraph(); }
 
     void terminate() { director_.terminate(); }
     void terminate(const char* error) { director_.terminate(error); }

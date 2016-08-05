@@ -12,11 +12,16 @@ using rainbow::DataMapAndroid;
 using rainbow::byte_t;
 
 DataMapAndroid::DataMapAndroid(const Path& path)
-    : off_(0), asset_(File::open(path)) {}
+    : off_(0), asset_(File::open(path))
+{
+}
 
-const byte_t* DataMapAndroid::data() const
+auto DataMapAndroid::data() const -> const byte_t*
 {
     return static_cast<const byte_t*>(AAsset_getBuffer(asset_)) + off_;
 }
 
-size_t DataMapAndroid::size() const { return AAsset_getLength(asset_); }
+auto DataMapAndroid::size() const -> size_t
+{
+    return AAsset_getLength(asset_);
+}

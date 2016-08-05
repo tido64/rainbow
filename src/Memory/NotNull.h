@@ -33,10 +33,10 @@ public:
               typename = std::enable_if<std::is_convertible<U, T>::value>>
     NotNull(const NotNull<U>& other) : ptr_(other.get()) {}
 
-    T get() const { return ptr_; }
+    auto get() const { return ptr_; }
 
     operator T() const { return get(); }
-    T operator->() const { return get(); }
+    auto operator->() const { return get(); }
 
 private:
     T ptr_;
@@ -44,20 +44,20 @@ private:
     NotNull(std::nullptr_t) = delete;
     NotNull(int) = delete;
 
-    NotNull operator++(int) = delete;
-    NotNull operator--(int) = delete;
+    auto operator++(int) -> NotNull = delete;
+    auto operator--(int) -> NotNull = delete;
 
-    NotNull& operator++() = delete;
-    NotNull& operator--() = delete;
+    auto operator++() -> NotNull& = delete;
+    auto operator--() -> NotNull& = delete;
 
-    NotNull& operator+(size_t) = delete;
-    NotNull& operator-(size_t) = delete;
+    auto operator+(size_t) -> NotNull& = delete;
+    auto operator-(size_t) -> NotNull& = delete;
 
-    NotNull& operator=(std::nullptr_t) = delete;
-    NotNull& operator=(int) = delete;
+    auto operator=(std::nullptr_t) -> NotNull& = delete;
+    auto operator=(int) -> NotNull& = delete;
 
-    NotNull& operator+=(size_t) = delete;
-    NotNull& operator-=(size_t) = delete;
+    auto operator+=(size_t) -> NotNull& = delete;
+    auto operator-=(size_t) -> NotNull& = delete;
 };
 
 #endif

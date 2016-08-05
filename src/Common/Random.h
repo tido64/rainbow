@@ -33,12 +33,12 @@ namespace xorshift
     class xorshift1024star
     {
     public:
-        static constexpr uint64_t max()
+        static constexpr auto max()
         {
             return std::numeric_limits<uint64_t>::max();
         }
 
-        static constexpr uint64_t min()
+        static constexpr auto min()
         {
             return std::numeric_limits<uint64_t>::min();
         }
@@ -99,7 +99,7 @@ namespace xorshift
             }
         }
 
-        uint64_t operator()()
+        auto operator()() -> uint64_t
         {
             const uint64_t s0 = s_[p_];
             uint64_t s1 = s_[p_ = (p_ + 1) & 15];
@@ -135,13 +135,13 @@ namespace rainbow
         auto operator()() { return dis(gen); }
 
         template <typename N>
-        N operator()(N n)
+        auto operator()(N n) -> N
         {
             return (*this)() * n;
         }
 
         template <typename N>
-        N operator()(N m, N n)
+        auto operator()(N m, N n) -> N
         {
             R_ASSERT(m < n, "Parameters must be in ascending order");
             return static_cast<N>((*this)() * (n - m) + m);

@@ -9,12 +9,12 @@
 #include "Common/Logging.h"
 #include "FileSystem/File.h"
 
-Data Data::load_asset(const char* asset)
+auto Data::load_asset(const char* asset) -> Data
 {
     return Data(File::open_asset(asset));
 }
 
-Data Data::load_document(const char* document)
+auto Data::load_document(const char* document) -> Data
 {
     return Data(File::open_document(document));
 }

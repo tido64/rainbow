@@ -23,7 +23,7 @@ namespace
                     Data::Ownership::Reference) {}
 
     protected:
-        const Data& blob() const { return blob_; }
+        auto blob() const -> const Data& { return blob_; }
 
     private:
         Data blob_;

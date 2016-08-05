@@ -119,7 +119,6 @@ set(SOURCE_FILES
     src/Math/Transform.h
     src/Math/Vec2.h
     src/Math/Vec3.h
-    src/Memory/Arena.h
     src/Memory/Array.h
     src/Memory/NotNull.h
     src/Memory/Pool.h
@@ -309,7 +308,6 @@ if(USE_HEIMDALL)
        src/Heimdall/Overlay.h
        src/Heimdall/OverlayActivator.cpp
        src/Heimdall/OverlayActivator.h
-       src/Heimdall/Style.h
        src/Resources/Inconsolata.otf.h
        src/Resources/NewsCycle-Regular.ttf.h
        src/ThirdParty/ImGui/imconfig.h

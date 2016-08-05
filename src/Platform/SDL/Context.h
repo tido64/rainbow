@@ -18,8 +18,8 @@ public:
     SDLContext(const rainbow::Config& config);
     ~SDLContext();
 
-    Vec2i drawable_size() const;
-    Vec2i window_size() const;
+    auto drawable_size() const -> Vec2i;
+    auto window_size() const -> Vec2i;
 
     void swap() const;
     void toggle_fullscreen();

@@ -44,7 +44,8 @@ namespace
 
 namespace rainbow
 {
-    uint8_t utf8_decode_step(uint8_t state, uint8_t octet, uint32_t* cpp)
+    auto utf8_decode_step(uint8_t state, uint8_t octet, uint32_t* cpp)
+        -> uint8_t
     {
         const uint8_t reject = state >> 3;
         const uint8_t nonascii = octet >> 7;

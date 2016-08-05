@@ -184,8 +184,8 @@ namespace rainbow { namespace imgui
             g_initial_window_width = window_size.x;
             auto& resolution = graphics::resolution();
             g_window_scale =
-                Vec2f(static_cast<float>(resolution.x) / window_size.x,
-                      static_cast<float>(resolution.y) / window_size.y);
+                Vec2f{static_cast<float>(resolution.x) / window_size.x,
+                      static_cast<float>(resolution.y) / window_size.y};
             io.DisplaySize = window_size;
         }
 

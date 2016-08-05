@@ -73,7 +73,7 @@ void Texture::bind(unsigned int unit) const
     TextureManager::Get()->bind(name_, unit);
 }
 
-Texture& Texture::operator=(Texture&& texture)
+auto Texture::operator=(Texture&& texture) -> Texture&
 {
     if (name_ > 0)
         TextureManager::Get()->release(*this);

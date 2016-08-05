@@ -36,13 +36,13 @@ namespace rainbow
         /// <returns>
         ///   Pointer to array. Returns <c>nullptr</c> if buffer is empty.
         /// </returns>
-        const byte_t* data() const { return T::data(); }
+        auto data() const -> const byte_t* { return T::data(); }
 
         /// <summary>Offsets data map's start address.</summary>
         void offset(size_t offset) { return T::offset(offset); }
 
         /// <summary>Returns offset buffer size.</summary>
-        size_t size() const { return T::size(); }
+        auto size() const -> size_t { return T::size(); }
 
         explicit operator bool() const { return T::operator bool(); }
     };

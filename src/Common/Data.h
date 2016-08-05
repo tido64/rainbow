@@ -35,19 +35,19 @@ public:
     };
 
     template <typename T, size_t N, typename = CharType<T>>
-    static Data from_bytes(const T (&bytes)[N])
+    static auto from_bytes(const T (&bytes)[N])
     {
-        return Data(bytes, N, Ownership::Reference);
+        return Data{bytes, N, Ownership::Reference};
     }
 
     template <typename T, size_t N, typename = CharType<T>>
-    static Data from_literal(const T (&literal)[N])
+    static auto from_literal(const T (&literal)[N])
     {
-        return Data(literal, N - 1, Ownership::Reference);
+        return Data{literal, N - 1, Ownership::Reference};
     }
 
-    static Data load_asset(const char* asset);
-    static Data load_document(const char* document);
+    static auto load_asset(const char* asset) -> Data;
+    static auto load_document(const char* document) -> Data;
 
     /// <summary>
     ///   Constructs an empty data object. No memory will be allocated.
@@ -80,14 +80,14 @@ public:
     /// <returns>
     ///   Pointer to array. Returns <c>nullptr</c> if buffer is empty.
     /// </returns>
-    void* bytes() const { return data_; }
+    auto bytes() const { return data_; }
 
     /// <summary>Saves data to file.</summary>
     /// <returns><c>true</c> on success, <c>false</c> otherwise.</returns>
     bool save(const char* path) const;
 
     /// <summary>Returns the size of this buffer.</summary>
-    size_t size() const { return sz_; }
+    auto size() const { return sz_; }
 
     explicit operator bool() const { return data_; }
     operator void*() const { return data_; }

@@ -21,7 +21,7 @@ namespace
 
     struct Static
     {
-        Sound* load() const
+        auto load() const
         {
             return rainbow::audio::load_sound(kAudioTestFile);
         }
@@ -29,7 +29,7 @@ namespace
 
     struct Stream
     {
-        Sound* load() const
+        auto load() const
         {
             return rainbow::audio::load_stream(kAudioTestFile);
         }

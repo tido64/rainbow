@@ -12,13 +12,13 @@
 
 namespace rainbow
 {
-    int to_keycode(VirtualKey vkey)
+    auto to_keycode(VirtualKey vkey) -> int
     {
         return SDL_GetKeyFromScancode(
             static_cast<SDL_Scancode>(to_scancode(vkey)));
     }
 
-    int to_scancode(VirtualKey vkey)
+    auto to_scancode(VirtualKey vkey) -> int
     {
         switch (vkey)
         {
@@ -268,7 +268,7 @@ namespace rainbow
     }
 
     template <>
-    VirtualKey to_virtualkey(const SDL_Keysym& keysym)
+    auto to_virtualkey(const SDL_Keysym& keysym) -> VirtualKey
     {
         switch (keysym.scancode)
         {
@@ -520,7 +520,7 @@ namespace rainbow
     }
 
     template <>
-    KeyStroke KeyStroke::from_event(const SDL_Keysym& keysym)
+    auto KeyStroke::from_event(const SDL_Keysym& keysym) -> KeyStroke
     {
         unsigned int mods{};
         if (keysym.mod & KMOD_LSHIFT)

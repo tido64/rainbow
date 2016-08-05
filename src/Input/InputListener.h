@@ -24,18 +24,12 @@ public:
     /// <summary>
     ///   Returns the next input listener; <c>nullptr</c> if none.
     /// </summary>
-    InputListener* next() const
-    {
-        return static_cast<InputListener*>(Link::next());
-    }
+    auto next() const { return static_cast<InputListener*>(Link::next()); }
 
     /// <summary>
     ///   Returns the previous input listener; <c>nullptr</c> if none.
     /// </summary>
-    InputListener* prev() const
-    {
-        return static_cast<InputListener*>(Link::prev());
-    }
+    auto prev() const { return static_cast<InputListener*>(Link::prev()); }
 
     bool on_controller_axis_motion(const rainbow::ControllerAxisMotion& motion)
     {

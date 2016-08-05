@@ -33,13 +33,13 @@ namespace rainbow
         }
 
         /// <summary>Returns the id of the currently active animation.</summary>
-        int active() const { return active_; }
+        auto active() const { return active_; }
 
         /// <summary>Returns the animation object.</summary>
-        Animation& animation() { return animation_; }
+        auto animation() -> Animation& { return animation_; }
 
         /// <summary>Returns the animation object.</summary>
-        const Animation& animation() const { return animation_; }
+        auto animation() const -> const Animation& { return animation_; }
 
         /// <summary>
         ///   Adds an animation with given name to the collection.
@@ -75,7 +75,10 @@ namespace rainbow
         /// <summary>Sets the animation to play.</summary>
         /// <param name="name">Name of the animation to set.</param>
         /// <returns>A reference to the newly set animation.</returns>
-        Animation& set(int name) { return set(name, animations_.at(name)); }
+        auto set(int name) -> Animation&
+        {
+            return set(name, animations_.at(name));
+        }
 
     private:
         struct Animation
@@ -96,7 +99,7 @@ namespace rainbow
             animation_.release();
         }
 
-        ::Animation& set(int name, const Animation& anim)
+        auto set(int name, const Animation& anim) -> ::Animation&
         {
             release();
             animation_.set_frame_rate(anim.frame_rate);
@@ -153,7 +156,7 @@ namespace rainbow
             }
         }
 
-        Animation& set(int name) override
+        auto set(int name) -> Animation& override
         {
             auto& animator = animators_[0];
             if (name == active_)
