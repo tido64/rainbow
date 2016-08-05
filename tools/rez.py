@@ -4,29 +4,34 @@
 # (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
 import os
+import re
 import sys
 
-bytes_per_line = 0
+bytes_per_line = 0  # 12
 
 def main(resource):
     output = os.path.split(resource)[1]
-    rez = 'const unsigned char ' + output.replace('.', '_') + "[] = {"
+    name = re.sub('[^\w]', '_', output)
+    guard = name.upper() + "_H\n"
+    rez = '#ifndef ' + guard \
+        + '#define ' + guard + "\n" \
+        + 'constexpr unsigned char ' + name + "[]{"
 
     f = open(resource, 'rb')
     if bytes_per_line > 0:
         rez += "\n"
         bytes = f.read(bytes_per_line)
         while bytes:
-            rez += "\t" + ''.join(['0x%02x, ' % b for b in bytes]).strip() + "\n"
+            rez += '    ' + ' '.join(['0x%02x,' % b for b in bytes]) + "\n"
             bytes = f.read(bytes_per_line)
-        rez = rez[:-2] + "\n};\n"
+        rez = rez[:-2] + '};'
     else:
         bytes = f.read()
-        rez += ' ' + ''.join(['%u,' % b for b in bytes])[:-1] + " };\n"
+        rez += ''.join(['%u,' % b for b in bytes])[:-1] + '};'
     f.close()
 
     f = open(output + '.h', 'w')
-    f.write(rez)
+    f.write(rez + "\n\n#endif  // " + guard)
     f.close()
     return 0
 
