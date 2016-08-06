@@ -20,13 +20,13 @@ NS_RAINBOW_LUA_MODULE_BEGIN(platform)
         // Retrieve locale
         lua_pushliteral(L, "locale");
         {
-            std::vector<std::unique_ptr<char[]>> locales;
-            system_info::locales(locales);
+            auto locales = system_info::locales();
             lua_createtable(L, locales.size(), 0);
-            for (size_t i = 0; i < locales.size(); ++i)
+            int i = 0;
+            for (auto&& locale : locales)
             {
-                lua_pushstring(L, locales[i].get());
-                lua_rawseti(L, -2, i + 1);
+                lua_pushstring(L, locale.c_str());
+                lua_rawseti(L, -2, ++i);
             }
         }
         lua_rawset(L, -3);

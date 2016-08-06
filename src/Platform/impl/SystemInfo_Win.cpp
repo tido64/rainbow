@@ -22,38 +22,43 @@ namespace rainbow { namespace system_info
 
     bool has_touchscreen() { return false; }
 
-    void locales(std::vector<std::unique_ptr<char[]>>& locales)
+    auto locales() -> std::vector<std::string>
     {
-        char* locale_id;
+        std::vector<std::string> locales{{}};
+
         if (!HasGetUserDefaultLocaleName())  // Windows 98, XP
         {
-            LCID locale = GetUserDefaultLCID();
-            char lpLCData[LOCALE_NAME_MAX_LENGTH];
-            int length = GetLocaleInfo(
-                locale, LOCALE_SISO639LANGNAME, lpLCData, 9);
-            lpLCData[length++] = '-';
-            length += GetLocaleInfo(
-                locale, LOCALE_SISO3166CTRYNAME, lpLCData + length, 9);
-            locale_id = new char[length + 1];
-            memcpy(locale_id, lpLCData, length + 1);
+            const LCID lcid = GetUserDefaultLCID();
+            char lc_data[LOCALE_NAME_MAX_LENGTH];
+            int length =
+                GetLocaleInfo(lcid, LOCALE_SISO639LANGNAME, lc_data, 9);
+            lc_data[length++] = '-';
+            GetLocaleInfo(lcid, LOCALE_SISO3166CTRYNAME, lc_data + length, 9);
+            locales[0] = lc_data;
         }
         else  // Windows Vista and later
         {
-            wchar_t name[LOCALE_NAME_MAX_LENGTH];
-            int size = GetUserDefaultLocaleName(name, LOCALE_NAME_MAX_LENGTH);
-            if (size <= 0)
-                return;
-
-            size = WideCharToMultiByte(
-                CP_UTF8, 0, name, -1, nullptr, 0, nullptr, nullptr);
-            if (size <= 0)
-                return;
-
-            locale_id = new char[size];
-            WideCharToMultiByte(
-                CP_UTF8, 0, name, -1, locale_id, size, nullptr, nullptr);
+            wchar_t wname[LOCALE_NAME_MAX_LENGTH];
+            const int size =
+                GetUserDefaultLocaleName(wname, LOCALE_NAME_MAX_LENGTH);
+            if (size > 0)
+            {
+                char name[LOCALE_NAME_MAX_LENGTH];
+                if (WideCharToMultiByte(CP_UTF8,
+                                        0,
+                                        wname,
+                                        -1,
+                                        name,
+                                        sizeof(name),
+                                        nullptr,
+                                        nullptr) > 0)
+                {
+                    locales[0] = name;
+                }
+            }
         }
-        locales.emplace_back(locale_id);
+
+        return locales;
     }
 
     auto memory() -> size_t

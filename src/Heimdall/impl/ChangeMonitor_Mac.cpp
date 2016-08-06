@@ -57,6 +57,9 @@ ChangeMonitor::ChangeMonitor(const char* directory)
     CFRelease(paths);
     CFRelease(path);
 
+    if (stream_ == nullptr)
+        return;
+
     FSEventStreamScheduleWithRunLoop(
         stream_, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
     FSEventStreamStart(stream_);
@@ -66,6 +69,9 @@ ChangeMonitor::ChangeMonitor(const char* directory)
 
 ChangeMonitor::~ChangeMonitor()
 {
+    if (stream_ == nullptr)
+        return;
+
     FSEventStreamStop(stream_);
     FSEventStreamInvalidate(stream_);
     FSEventStreamRelease(stream_);

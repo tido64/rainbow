@@ -222,22 +222,15 @@ auto Skeleton::from_json(const char* path, float scale) -> Skeleton*
 {
     // Copy the path and replace ".json" with ".atlas"
     const size_t length = strlen(path);
-    auto atlas_path = std::make_unique<char[]>(length + 7);
-    strcpy(atlas_path.get(), path);
-
-    char* ext;
-    if (path[length - 5] != '.')
+    const char* ext = path + length - 5;
+    if (*ext != '.')
     {
-        ext = strrchr(atlas_path.get(), '.');
+        ext = strrchr(path, '.');
         if (!ext)
-            ext = atlas_path.get() + length;
+            ext = path + length;
     }
-    else
-        ext = atlas_path.get() + length - 5;
-    memcpy(ext, ".atlas\0", 7);
-
-    spAtlas* atlas = spAtlas_createFromFile(atlas_path.get(), nullptr);
-    atlas_path.reset();
+    const std::string atlas_path = std::string{path, ext} + ".atlas";
+    spAtlas* atlas = spAtlas_createFromFile(atlas_path.c_str(), nullptr);
     spSkeletonJson* json = spSkeletonJson_create(atlas);
     json->scale = scale;
     spSkeletonData* data = spSkeletonJson_readSkeletonDataFile(json, path);

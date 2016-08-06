@@ -166,6 +166,11 @@ for your favourite editor:
 - Vim: [vim-clang-format](https://github.com/rhysd/vim-clang-format)
 - Xcode: [ClangFormat-Xcode](https://github.com/travisjeffery/ClangFormat-Xcode)
 
+## Using Linters
+
+You can tell CMake to run **clang-tidy** as part of the build process by passing
+`-DCMAKE_CXX_CLANG_TIDY=/path/to/clang-tidy` as a parameter to the build script.
+
 ## Other Guidelines
 
 - [Google C++ Style Guide](https://google-styleguide.googlecode.com/svn/trunk/cppguide.html)

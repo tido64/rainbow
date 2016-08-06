@@ -15,36 +15,35 @@ using rainbow::string_view;
 
 namespace
 {
-    const char kLuaErrorErrorHandling[] = "error handling";
-    const char kLuaErrorGeneral[] = "general";
-    const char kLuaErrorMemory[] = "memory allocation";
-    const char kLuaErrorRuntime[] = "runtime";
-    const char kLuaErrorSyntax[] = "syntax";
-    const char kLuaErrorType[] = "Object is not of type '%s'";
+    constexpr char kLuaErrorErrorHandling[] = "error handling";
+    constexpr char kLuaErrorGeneral[] = "general";
+    constexpr char kLuaErrorMemory[] = "memory allocation";
+    constexpr char kLuaErrorRuntime[] = "runtime";
+    constexpr char kLuaErrorSyntax[] = "syntax";
+    constexpr char kLuaErrorType[] = "Object is not of type '%s'";
 
-    int load_module(lua_State* L,
-                    char* path,
-                    const char* module,
-                    const char* suffix)
+    auto load_module(lua_State* L, const char* module, const char* suffix)
+        -> int
     {
-        strcpy(path, module);
-        strcat(path, suffix);
-        const Path asset(path);
+        const std::string path = std::string{module} + suffix;
+        const Path asset(path.c_str());
+
 #ifndef RAINBOW_OS_ANDROID
         if (!asset.is_file())
             return 0;
 #endif  // RAINBOW_OS_ANDROID
+
         File file = File::open(asset);
         if (!file)
             return 0;
+
         const int result =
             rainbow::lua::load(L, Data(std::move(file)), module, false);
-        if (result == 0)
-            return luaL_error(L, "Failed to load '%s'", module);
-        return result;
+        return result == 0 ? luaL_error(L, "Failed to load '%s'", module)
+                           : result;
     }
 
-    int weak_ref(lua_State* L)
+    auto weak_ref(lua_State* L) -> int
     {
         if (!L || WeakRef::RegistryIndex < 0)
             return LUA_NOREF;
@@ -122,16 +121,15 @@ NS_RAINBOW_LUA_BEGIN
         dump_stack(L);
     }
 
-    int load(lua_State* L)
+    auto load(lua_State* L) -> int
     {
         const char* module = lua_tostring(L, -1);
-        auto path = std::make_unique<char[]>(strlen(module) + 10);
-        const int result = load_module(L, path.get(), module, ".lua");
-        return (!result ? load_module(L, path.get(), module, "/init.lua")
-                        : result);
+        const int result = load_module(L, module, ".lua");
+        return !result ? load_module(L, module, "/init.lua") : result;
     }
 
-    int load(lua_State* L, const Data& chunk, const char* name, bool exec)
+    auto load(lua_State* L, const Data& chunk, const char* name, bool exec)
+        -> int
     {
         int e = luaL_loadbuffer(L, chunk, chunk.size(), name);
         if (e == LUA_OK && exec)
@@ -182,7 +180,7 @@ NS_RAINBOW_LUA_BEGIN
         luaR_rawsetstring(L, "__type", name);
     }
 
-    int reload(lua_State* L, const Data& chunk, const string_view& name)
+    auto reload(lua_State* L, const Data& chunk, const string_view& name) -> int
     {
         lua_getglobal(L, "package");
         lua_pushliteral(L, "loaded");
@@ -232,7 +230,7 @@ NS_RAINBOW_LUA_BEGIN
         lua_sethook(L, lua_Hook, mask, 0);
     }
 
-    void* topointer(lua_State* L, const char* name)
+    auto topointer(lua_State* L, const char* name) -> void*
     {
         LUA_ASSERT(L, !lua_isnil(L, -1), "Unexpected nil value");
         LUA_ASSERT(L, lua_istable(L, -1), kLuaErrorType, name);
@@ -245,11 +243,13 @@ NS_RAINBOW_LUA_BEGIN
             lua_pop(L, 1);
             return nullptr;
         }
+
         LUA_ASSERT(L, strcmp(type, name) == 0, kLuaErrorType, name);
         lua_rawgeti(L, -2, 0);
         void* ptr = lua_touserdata(L, -1);
         lua_pop(L, 2);
         return ptr;
+
         static_cast<void>(name);
         static_cast<void>(kLuaErrorType);
     }

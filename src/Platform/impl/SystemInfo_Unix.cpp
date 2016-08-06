@@ -3,63 +3,58 @@
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
 #include "Platform/SystemInfo.h"
-#if defined(RAINBOW_OS_ANDROID) || defined(RAINBOW_OS_LINUX) || defined(RAINBOW_JS)
 
 #include <cstring>
 #include <locale.h>
 #include <unistd.h>
 
-namespace rainbow
+namespace rainbow { namespace system_info
 {
-    namespace system_info
-    {
 #ifdef RAINBOW_OS_UNIX
-        bool has_accelerometer()
+    bool has_accelerometer() { return false; }
+
+    bool has_touchscreen() { return false; }
+
+    auto locales() -> std::vector<std::string>
+    {
+        const char* lc = setlocale(LC_ALL, nullptr);
+        if (!lc)
         {
-            return false;
+            lc = setlocale(LC_MESSAGES, nullptr);
+        }
+        else
+        {
+            constexpr char kLCMessages[] = "LC_MESSAGES";
+            const char* lc_msg = strstr(lc, kLCMessages);
+            if (lc_msg)
+                lc = lc_msg + sizeof(kLCMessages);
         }
 
-        bool has_touchscreen()
+        std::vector<std::string> locales;
+        if (!lc || (lc[0] == 'C' && lc[1] == '\0'))
         {
-            return false;
+            locales.emplace_back("en");
         }
-
-        void locales(std::vector<std::unique_ptr<char[]>>& locales)
+        else
         {
-            char* lc = setlocale(LC_ALL, nullptr);
-            if (!lc)
-                lc = setlocale(LC_MESSAGES, nullptr);
-            else
+            const char* first = lc;
+            for (const char* c = first; *c != '\0'; ++c)
             {
-                char* lc_msg = strstr(lc, "LC_MESSAGES");
-                if (lc_msg)
-                    lc = lc_msg + 12;
-            }
-            char* locale = new char[6];
-            if (!lc || strcmp("C", lc) == 0)
-                strcpy(locale, "en");
-            else
-            {
-                const size_t length = strlen(lc);
-                size_t i = 0;
-                for (; i < length; ++i)
+                if (*c == ';')
                 {
-                    if (lc[i] == ';')
-                        break;
-                    locale[i] = lc[i];
+                    if (c > first)
+                        locales.emplace_back(first, c);
+                    first = c + 1;
                 }
-                locale[i] = '\0';
             }
-            locales.emplace_back(locale);
         }
-#endif
-
-        auto memory() -> size_t
-        {
-            return sysconf(_SC_PAGE_SIZE) / 1024 *
-                   sysconf(_SC_PHYS_PAGES) / 1024;
-        }
+        return locales;
     }
-}
-
 #endif
+
+    auto memory() -> size_t
+    {
+        return sysconf(_SC_PAGE_SIZE) / 1024 *
+               sysconf(_SC_PHYS_PAGES) / 1024;
+    }
+}}  // namespace rainbow::system_info
