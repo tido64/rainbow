@@ -12,9 +12,9 @@ namespace rainbow
     class DataMapAndroid
     {
     protected:
-        explicit DataMapAndroid(const Path& path);
+        explicit DataMapAndroid(const filesystem::Path& path);
 
-        auto data() const -> const byte_t* ;
+        auto data() const -> const uint8_t* ;
         void offset(size_t offset) { off_ = offset; }
         auto size() const -> size_t ;
 

@@ -44,30 +44,31 @@ auto create_texture(lua_State* L, rainbow::ScopeStack& stack) -> Prose::Asset
         lua_settop(L, top);
         return no_asset();
     }
-    const Path path(lua_tostring(L, -1));
+
+    const auto path = rainbow::filesystem::relative(lua_tostring(L, -1));
     lua_pop(L, 1);
-    if (!path.is_file())
+    std::error_code error;
+    if (!rainbow::filesystem::is_regular_file(path, error))
     {
-        LOGE(kProseNoSuchFile, static_cast<const char*>(path));
+        LOGE(kProseNoSuchFile, path.c_str());
         lua_pop(L, 1);
         return no_asset();
     }
+
     auto texture = stack.allocate<TextureAtlas>(path);
     if (!texture->is_valid())
     {
-        LOGE(kProseFailedLoading, "texture", static_cast<const char*>(path));
+        LOGE(kProseFailedLoading, "texture", path.c_str());
         lua_pop(L, 1);
         return no_asset();
     }
+
     stack.retain(texture);
     while (lua_next(L, -2) != 0)
     {
         if (!lua_istable(L, -1))
         {
-            LOGW(kProseUnknownProperty,
-                 table_name(L),
-                 "texture",
-                 static_cast<const char*>(path));
+            LOGW(kProseUnknownProperty, table_name(L), "texture", path.c_str());
             lua_pop(L, 1);
             continue;
         }

@@ -9,16 +9,16 @@
 #include "FileSystem/Path.h"
 
 using rainbow::DataMapAndroid;
-using rainbow::byte_t;
+using rainbow::filesystem::Path;
 
 DataMapAndroid::DataMapAndroid(const Path& path)
     : off_(0), asset_(File::open(path))
 {
 }
 
-auto DataMapAndroid::data() const -> const byte_t*
+auto DataMapAndroid::data() const -> const uint8_t*
 {
-    return static_cast<const byte_t*>(AAsset_getBuffer(asset_)) + off_;
+    return static_cast<const uint8_t*>(AAsset_getBuffer(asset_)) + off_;
 }
 
 auto DataMapAndroid::size() const -> size_t

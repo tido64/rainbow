@@ -11,6 +11,7 @@
 		190497E41682963F0037F5EC /* lua_Platform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 190497E31682963F0037F5EC /* lua_Platform.cpp */; };
 		1910099819FDA3A70036D5F4 /* Link.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1910099619FDA3A70036D5F4 /* Link.cpp */; };
 		1923F97F1AF6400A0012C078 /* UTF8.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1923F97D1AF6400A0012C078 /* UTF8.cpp */; };
+		193458551D5A3884008482E8 /* FileSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 193458531D5A3884008482E8 /* FileSystem.cpp */; };
 		193929B316E1932E0018340B /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 193929B216E1932E0018340B /* CoreMotion.framework */; };
 		193929B816E23D5F0018340B /* SystemInfo_Apple.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 193929B716E23D5F0018340B /* SystemInfo_Apple.cpp */; };
 		193929BD16E243E90018340B /* LuaMachine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 193929BA16E243E90018340B /* LuaMachine.cpp */; };
@@ -221,6 +222,8 @@
 		1923F97D1AF6400A0012C078 /* UTF8.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UTF8.cpp; sourceTree = "<group>"; };
 		1923F97E1AF6400A0012C078 /* UTF8.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UTF8.h; sourceTree = "<group>"; };
 		192A0B9B1681EF84009218EB /* SpriteVertex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpriteVertex.h; sourceTree = "<group>"; };
+		193458531D5A3884008482E8 /* FileSystem.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = FileSystem.cpp; sourceTree = "<group>"; };
+		193458541D5A3884008482E8 /* FileSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileSystem.h; sourceTree = "<group>"; };
 		193929B216E1932E0018340B /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
 		193929B716E23D5F0018340B /* SystemInfo_Apple.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SystemInfo_Apple.cpp; path = ../../../src/Platform/impl/SystemInfo_Apple.cpp; sourceTree = "<group>"; };
 		193929BA16E243E90018340B /* LuaMachine.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = LuaMachine.cpp; sourceTree = "<group>"; };
@@ -1078,6 +1081,8 @@
 			children = (
 				1946B7AA1836E54600F74A3B /* File.cpp */,
 				1946B7AB1836E54600F74A3B /* File.h */,
+				193458531D5A3884008482E8 /* FileSystem.cpp */,
+				193458541D5A3884008482E8 /* FileSystem.h */,
 				1946B7AC1836E54600F74A3B /* Path.cpp */,
 				1946B7AD1836E54600F74A3B /* Path.h */,
 			);
@@ -1661,6 +1666,7 @@
 				198F429E1A9152E000BE7A73 /* AttachmentLoader.c in Sources */,
 				1939A15E152C401300494609 /* lgc.c in Sources */,
 				198F42AF1A9152E000BE7A73 /* SkinnedMeshAttachment.c in Sources */,
+				193458551D5A3884008482E8 /* FileSystem.cpp in Sources */,
 				1960AFCE1A4E278E0015A3AD /* Box2D.cpp in Sources */,
 				1942A50A18985D450050CF5C /* Buffer.cpp in Sources */,
 				1939A160152C401300494609 /* linit.c in Sources */,

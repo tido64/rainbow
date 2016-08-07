@@ -10,7 +10,7 @@
 #include <spine/extension.h>
 
 #include "Common/DataMap.h"
-#include "FileSystem/Path.h"
+#include "FileSystem/FileSystem.h"
 #include "Graphics/Renderer.h"
 #include "Graphics/SpriteVertex.h"
 #include "Graphics/TextureAtlas.h"
@@ -194,7 +194,8 @@ extern "C"
 {
     void _spAtlasPage_createTexture(spAtlasPage* self, const char* path)
     {
-        auto texture = std::make_unique<TextureAtlas>(path);
+        auto texture =
+            std::make_unique<TextureAtlas>(rainbow::filesystem::relative(path));
         if (!texture->is_valid())
             return;
 
@@ -210,7 +211,7 @@ extern "C"
 
     auto _spUtil_readFile(const char* path, int* length) -> char*
     {
-        const DataMap data{Path(path)};
+        const DataMap data{rainbow::filesystem::relative(path)};
         *length = static_cast<int>(data.size());
         char* blob = new char[data.size()];
         memcpy(blob, data.data(), data.size());

@@ -4,22 +4,23 @@
 
 #include "Graphics/TextureAtlas.h"
 
-#include "FileSystem/Path.h"
+#include "FileSystem/FileSystem.h"
 #include "Graphics/Image.h"
 #include "Graphics/TextureManager.h"
 
 #define kInvalidColorDepth "Invalid colour depth"
 
 using rainbow::Texture;
+using rainbow::filesystem::Path;
 
-TextureAtlas::TextureAtlas(const char* path, float scale)
+TextureAtlas::TextureAtlas(const Path& path, float scale)
 {
     texture_ = TextureManager::Get()->create(
-        path,
-        [this, path, scale](
+        path.u8string(),
+        [this, &path, scale](
             TextureManager& texture_manager, const Texture& texture)
         {
-            load(texture_manager, texture, DataMap{Path(path)}, scale);
+            load(texture_manager, texture, DataMap{path}, scale);
         });
 }
 

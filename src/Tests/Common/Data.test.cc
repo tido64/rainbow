@@ -8,7 +8,7 @@
 
 #include "Common/Algorithm.h"
 #include "Common/Data.h"
-#include "FileSystem/Path.h"
+#include "FileSystem/FileSystem.h"
 
 namespace
 {
@@ -55,5 +55,6 @@ TEST_F(DataReadWriteTest, WritesAndReadsFromDisk)
     ASSERT_TRUE(from_disk);
     ASSERT_EQ(0, strcmp(from_disk, kSecretData));
 
-    remove(Path(file, Path::RelativeTo::UserDataPath));
+    std::error_code error;
+    rainbow::filesystem::remove(rainbow::filesystem::user(file), error);
 }

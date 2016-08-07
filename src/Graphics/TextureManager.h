@@ -59,7 +59,7 @@ public:
     /// </param>
     /// <returns>Texture name.</returns>
     template <typename F>
-    auto create(const char* id, F&& loader) -> rainbow::Texture
+    auto create(const std::string& id, F&& loader) -> rainbow::Texture
     {
         auto t = std::find(textures_.begin(), textures_.end(), id);
         if (t == textures_.end())
@@ -130,7 +130,7 @@ private:
     TextureManager();
     ~TextureManager();
 
-    auto create_texture(const char* id) -> rainbow::Texture;
+    auto create_texture(std::string id) -> rainbow::Texture;
 
     void release(const rainbow::Texture& t);
     void retain(const rainbow::Texture& t);

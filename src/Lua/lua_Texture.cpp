@@ -6,7 +6,7 @@
 
 #include <lua.hpp>
 
-#include "FileSystem/Path.h"
+#include "FileSystem/FileSystem.h"
 
 NS_RAINBOW_LUA_BEGIN
 {
@@ -27,7 +27,8 @@ NS_RAINBOW_LUA_BEGIN
         // rainbow.texture("/path/to/texture")
         Argument<char*>::is_required(L, 1);
 
-        texture_ = make_shared<TextureAtlas>(lua_tostring(L, 1));
+        const auto path = rainbow::filesystem::relative(lua_tostring(L, 1));
+        texture_ = make_shared<TextureAtlas>(path);
         if (!texture_->is_valid())
             luaL_error(L, "rainbow.texture: Failed to create texture");
     }

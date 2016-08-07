@@ -6,6 +6,7 @@
 #define GRAPHICS_TEXTURE_H_
 
 #include <string>
+#include <utility>
 
 #include "Math/Vec2.h"
 
@@ -24,11 +25,11 @@ namespace rainbow
             unsigned int size;
             unsigned int use_count;
 
-            Texture(const char* id_, unsigned int name_)
-                : id(id_), name(name_), width(0), height(0), size(0),
+            Texture(std::string id_, unsigned int name_)
+                : id(std::move(id_)), name(name_), width(0), height(0), size(0),
                   use_count(0) {}
 
-            friend bool operator==(const Texture& t, const char* id)
+            friend bool operator==(const Texture& t, const std::string& id)
             {
                 return t.id == id;
             }

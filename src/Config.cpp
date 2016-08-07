@@ -9,7 +9,7 @@
 #include "Common/Data.h"
 #include "Common/Logging.h"
 #include "FileSystem/File.h"
-#include "FileSystem/Path.h"
+#include "FileSystem/FileSystem.h"
 #include "Lua/LuaHelper.h"
 
 namespace
@@ -23,10 +23,11 @@ rainbow::Config::Config()
     : accelerometer_(true), high_dpi_(false), suspend_(true), width_(0),
       height_(0), msaa_(0)
 {
-    const char kConfigModule[] = "config";
+    constexpr char kConfigModule[] = "config";
 
-    const Path path(kConfigModule);
-    if (!path.is_file())
+    const auto path = filesystem::relative(kConfigModule);
+    std::error_code error;
+    if (!filesystem::is_regular_file(path, error))
     {
         LOGI("No config file was found");
         return;

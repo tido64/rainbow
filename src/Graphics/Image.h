@@ -49,7 +49,7 @@ namespace rainbow
         unsigned int depth = 0;
         unsigned int channels = 0;
         size_t size = 0;
-        const byte_t* data = nullptr;
+        const uint8_t* data = nullptr;
 
         Image() = default;
 

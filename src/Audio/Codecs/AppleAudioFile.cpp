@@ -7,7 +7,7 @@
 #include "Audio/Codecs/AppleAudioFile.h"
 
 #include "Common/Logging.h"
-#include "FileSystem/Path.h"
+#include "FileSystem/FileSystem.h"
 
 using rainbow::audio::AppleAudioFile;
 
@@ -16,23 +16,23 @@ namespace
     constexpr unsigned int kBitsPerChannel = 16;
 
     template<typename C, typename T>
-    C bridge_cast(T &var)
+    auto bridge_cast(T &var) -> C
     {
 #ifdef RAINBOW_OS_IOS
         return (__bridge C)var;
 #else
-        return static_cast<C>(var);
+        return var;
 #endif
     }
 }
 
 AppleAudioFile::AppleAudioFile(const char* file) : ref_(nullptr)
 {
-    const Path path(file);
+    const auto path = filesystem::relative(file);
 #ifdef RAINBOW_OS_MACOS
-    CFURLRef url = path.CreateCFURL();
+    CFURLRef url = path.cfurl();
 #else
-    NSURL* url = path;
+    NSURL* url = path.nsurl();
 #endif
     if (ExtAudioFileOpenURL(bridge_cast<CFURLRef>(url), &ref_) != noErr)
         LOGE("AudioToolbox: Failed to open '%s'", file);

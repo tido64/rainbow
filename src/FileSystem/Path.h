@@ -5,51 +5,60 @@
 #ifndef FILESYSTEM_PATH_H_
 #define FILESYSTEM_PATH_H_
 
+#include <string>
+
 #include "Platform/Macros.h"
 #ifdef RAINBOW_OS_MACOS
-#  include <CoreFoundation/CoreFoundation.h>
+#   include <CoreFoundation/CoreFoundation.h>
 #endif
 
-class Path
+namespace rainbow { namespace filesystem
 {
-public:
-    enum class RelativeTo
+    class Path
     {
-        CurrentPath,
-        UserDataPath,
-        Root
-    };
+    public:
+        Path() = default;
 
-    static const char* basename(const char* path);
-    static const char* current();
-    static void set_current();
-    static void set_current(const char* path);
+        bool empty() const { return path_.empty(); }
+        auto extension() const -> const char*;
+        auto filename() const -> const char*;
 
-    Path();
-    explicit Path(const char* file, RelativeTo rel = RelativeTo::CurrentPath);
+        auto c_str() const { return path_.c_str(); }
+        auto string() const -> const std::string& { return u8string(); }
+        auto u8string() const -> const std::string& { return path_; }
 
 #ifdef RAINBOW_OS_MACOS
-    CFURLRef CreateCFURL() const;
+        auto cfurl() const -> CFURLRef;
 #endif
-
-    /// <summary>Returns whether there is a file at this path.</summary>
-    bool is_file() const;
-
-    Path& operator=(const char* path);
-    Path& operator+=(const char* path);
-
-    operator const char*() const { return path_; }
-
 #ifdef RAINBOW_OS_IOS
-    operator NSURL*() const;
+        auto nsurl() const -> NSURL*;
 #endif
 
-#ifdef RAINBOW_TEST
-    int create();
-#endif
+        template <typename T>
+        auto operator=(const T& p) -> Path&
+        {
+            path_ = p;
+            return *this;
+        }
 
-private:
-    char path_[256];
-};
+        template <typename T>
+        auto operator+=(const T& p) -> Path&
+        {
+            path_ += p;
+            return *this;
+        }
+
+        auto operator/=(const char* p) -> Path&;
+
+    private:
+        std::string path_;
+
+        explicit Path(const char* file);
+
+        friend auto absolute(const char* path) -> Path;
+        friend auto relative(const char* path) -> Path;
+        friend auto user(const char* path) -> Path;
+    };
+}}  // namespace rainbow::filesystem
 
 #endif

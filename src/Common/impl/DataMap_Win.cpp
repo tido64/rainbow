@@ -11,29 +11,37 @@
 #include "FileSystem/Path.h"
 
 using rainbow::DataMapWin;
+using rainbow::filesystem::Path;
 
 DataMapWin::DataMapWin(const Path& path)
     : len_(0), off_(0), addr_(nullptr), handle_(nullptr)
 {
-    HANDLE fh = CreateFile(
-        path, GENERIC_READ, 0, nullptr, OPEN_EXISTING,
-        FILE_ATTRIBUTE_READONLY | FILE_FLAG_SEQUENTIAL_SCAN, nullptr);
+    HANDLE fh = CreateFile(  //
+        path.c_str(),
+        GENERIC_READ,
+        0,
+        nullptr,
+        OPEN_EXISTING,
+        FILE_ATTRIBUTE_READONLY | FILE_FLAG_SEQUENTIAL_SCAN,
+        nullptr);
     if (fh == INVALID_HANDLE_VALUE)
     {
-        LOGE(kErrorFileOpen, static_cast<const char*>(path), GetLastError());
+        LOGE(kErrorFileOpen, path.c_str(), GetLastError());
         return;
     }
 
     LARGE_INTEGER size;
     if (!GetFileSizeEx(fh, &size))
-        LOGE(kErrorFileRead, static_cast<const char*>(path), GetLastError());
+    {
+        LOGE(kErrorFileRead, path.c_str(), GetLastError());
+    }
     else
     {
         handle_ = CreateFileMapping(fh, nullptr, PAGE_READONLY, 0, 0, nullptr);
         if (handle_ == nullptr)
         {
             LOGE("Failed to create file mapping for '%s' (%x)",
-                 static_cast<const char*>(path),
+                 path.c_str(),
                  GetLastError());
         }
         else
@@ -45,9 +53,7 @@ DataMapWin::DataMapWin(const Path& path)
                 CloseHandle(handle_);
                 handle_ = nullptr;
 
-                LOGE(kErrorMemoryMap,
-                     static_cast<const char*>(path),
-                     GetLastError());
+                LOGE(kErrorMemoryMap, path.c_str(), GetLastError());
             }
         }
     }

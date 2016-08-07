@@ -40,7 +40,7 @@ namespace svg
         image.channels = 4;
         image.size = image.width * image.height * 4;
 
-        auto buffer = std::make_unique<rainbow::byte_t[]>(image.size);
+        auto buffer = std::make_unique<uint8_t[]>(image.size);
         NSVGRasterizer rasterizer(nsvgCreateRasterizer(), nsvgDeleteRasterizer);
         nsvgRasterize(rasterizer.get(),
                       img.get(),

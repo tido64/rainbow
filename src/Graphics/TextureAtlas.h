@@ -37,10 +37,13 @@ class TextureManager;
 class TextureAtlas : public RefCounted
 {
 public:
-    explicit TextureAtlas(const char* path, float scale = 1.0f);
+    explicit TextureAtlas(const rainbow::filesystem::Path& path,
+                          float scale = 1.0f);
 
     template <typename... Args>
-    TextureAtlas(const char* path, float scale, Args&&... regions)
+    TextureAtlas(const rainbow::filesystem::Path& path,
+                 float scale,
+                 Args&&... regions)
         : TextureAtlas(path, scale)
     {
         regions_.reserve(sizeof...(regions));

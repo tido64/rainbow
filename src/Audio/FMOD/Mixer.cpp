@@ -20,6 +20,7 @@
 #endif
 
 #include "Common/Logging.h"
+#include "FileSystem/FileSystem.h"
 
 using rainbow::audio::Channel;
 using rainbow::audio::FMODMixer;
@@ -38,20 +39,22 @@ namespace
     }
 
     template <typename F>
-    FMOD::Sound* create_sound(F&& create, const char* path)
+    auto create_sound(F&& create, const char* path) -> FMOD::Sound*
     {
 #ifdef RAINBOW_OS_ANDROID
         std::string uri("file:///android_asset/");
         uri += path;
         const char* asset = uri.c_str();
 #else
-        const Path asset(path);
-        if (!asset.is_file())
+        const auto p = rainbow::filesystem::relative(path);
+        std::error_code error;
+        if (!rainbow::filesystem::is_regular_file(p, error))
         {
             R_ABORT("No such file: %s", path);
             UNREACHABLE();
             return nullptr;
         }
+        const char* asset = p.c_str();
 #endif
 
         FMOD::Sound* sound;
@@ -65,22 +68,22 @@ namespace
         return sound;
     }
 
-    FMOD::Channel* from_opaque(Channel* channel)
+    auto from_opaque(Channel* channel)
     {
         return static_cast<FMOD::Channel*>(static_cast<void*>(channel));
     }
 
-    FMOD::Sound* from_opaque(Sound* sound)
+    auto from_opaque(Sound* sound)
     {
         return static_cast<FMOD::Sound*>(static_cast<void*>(sound));
     }
 
-    Channel* to_opaque(FMOD::Channel* channel)
+    auto to_opaque(FMOD::Channel* channel)
     {
         return static_cast<Channel*>(static_cast<void*>(channel));
     }
 
-    Sound* to_opaque(FMOD::Sound* sound)
+    auto to_opaque(FMOD::Sound* sound)
     {
         return static_cast<Sound*>(static_cast<void*>(sound));
     }

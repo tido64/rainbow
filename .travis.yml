@@ -21,7 +21,7 @@ script:
   - mkdir $TRAVIS_BUILD_DIR-build
   - cd $TRAVIS_BUILD_DIR-build
   - GENERATOR=Ninja $TRAVIS_BUILD_DIR/tools/build.sh -DCMAKE_BUILD_TYPE=$CMAKE_BUILD_TYPE -DUNIT_TESTS=1 -DUSE_PHYSICS=1 -DUSE_SPINE=1
-  - ./rainbow
+  - ./rainbow --test
 after_success:
   - cd $TRAVIS_BUILD_DIR
   - if [[ "$CMAKE_BUILD_TYPE" == "Debug" ]]; then cp -r $TRAVIS_BUILD_DIR-build/CMakeFiles/rainbow.dir/src .; fi

@@ -155,11 +155,11 @@ TextureManager::~TextureManager()
         glDeleteTextures(1, &texture.name);
 }
 
-auto TextureManager::create_texture(const char* id) -> Texture
+auto TextureManager::create_texture(std::string id) -> Texture
 {
     GLuint name;
     glGenTextures(1, &name);
-    textures_.emplace_back(id, name);
+    textures_.emplace_back(std::move(id), name);
 
     bind(name);
     glTexParameteri(

@@ -58,6 +58,8 @@ set(SOURCE_FILES
     src/Director.h
     src/FileSystem/File.cpp
     src/FileSystem/File.h
+    src/FileSystem/FileSystem.cpp
+    src/FileSystem/FileSystem.h
     src/FileSystem/Path.cpp
     src/FileSystem/Path.h
     src/Graphics/Animation.cpp

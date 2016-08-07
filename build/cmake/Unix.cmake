@@ -43,7 +43,7 @@ elseif(MINGW OR UNIX)
     # Set LDFLAGS
     if(NOT MINGW)
       set(CMAKE_EXE_LINKER_FLAGS "-Wl,-z,now -Wl,-z,relro -pie -pthread")
-      set(PLATFORM_LIBRARIES m rt stdc++)
+      set(PLATFORM_LIBRARIES m rt stdc++fs)
     endif()
   endif()
 endif()

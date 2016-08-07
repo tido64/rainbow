@@ -7,7 +7,7 @@
 #include <memory>
 
 #include "Common/Data.h"
-#include "FileSystem/Path.h"
+#include "FileSystem/FileSystem.h"
 #include "Graphics/Renderer.h"
 #include "Graphics/Shaders.h"
 
@@ -50,7 +50,9 @@ namespace
     auto compile_shader(const Shader::Params& shader) -> unsigned int
     {
         const GLuint id = glCreateShader(shader.type);
-        if (Path(shader.source).is_file())
+        std::error_code error_code;
+        if (rainbow::filesystem::is_regular_file(
+                rainbow::filesystem::relative(shader.source), error_code))
         {
             const Data& glsl = Data::load_asset(shader.source);
             if (!glsl)

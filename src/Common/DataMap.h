@@ -5,6 +5,7 @@
 #ifndef COMMON_DATAMAP_H_
 #define COMMON_DATAMAP_H_
 
+#include <cstdint>
 #include <utility>
 
 #include "Common/NonCopyable.h"
@@ -14,11 +15,9 @@
 #define kErrorFileRead   "Failed to read '%s' (%x)"
 #define kErrorMemoryMap  "Failed to memory map '%s' (%x)"
 
-class Path;
-
 namespace rainbow
 {
-    using byte_t = unsigned char;
+    namespace filesystem { class Path; }
 
     template <typename T>
     class TDataMap : private T, private NonCopyable<TDataMap<T>>
@@ -26,17 +25,17 @@ namespace rainbow
     public:
 #ifndef RAINBOW_OS_ANDROID
         template <size_t N>
-        TDataMap(const byte_t (&bytes)[N]) : T(bytes) {}
+        TDataMap(const uint8_t (&bytes)[N]) : T(bytes) {}
 #endif
 
-        explicit TDataMap(const Path& path) : T(path) {}
+        explicit TDataMap(const filesystem::Path& path) : T(path) {}
         TDataMap(TDataMap&& data) : T(std::move(data)) {}
 
         /// <summary>Returns offset raw byte array.</summary>
         /// <returns>
         ///   Pointer to array. Returns <c>nullptr</c> if buffer is empty.
         /// </returns>
-        auto data() const -> const byte_t* { return T::data(); }
+        auto data() const -> const uint8_t* { return T::data(); }
 
         /// <summary>Offsets data map's start address.</summary>
         void offset(size_t offset) { return T::offset(offset); }

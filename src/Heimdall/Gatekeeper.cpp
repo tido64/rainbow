@@ -7,7 +7,7 @@
 #include "Common/Data.h"
 #include "Common/String.h"
 #include "FileSystem/File.h"
-#include "FileSystem/Path.h"
+#include "FileSystem/FileSystem.h"
 #include "Input/Pointer.h"
 
 using heimdall::Gatekeeper;
@@ -40,7 +40,7 @@ namespace
 Gatekeeper::Gatekeeper()
     : overlay_activator_(&overlay_)
 #if USE_LUA_SCRIPT
-    , monitor_(Path::current())
+    , monitor_(rainbow::filesystem::current_path())
 #endif  // USE_LUA_SCRIPT
 {}
 
@@ -96,7 +96,7 @@ void Gatekeeper::update(unsigned long dt)
 #if USE_LUA_SCRIPT
 Library::Library(const char* path) : path_(path)
 {
-    string_view filename = Path::basename(path_);
+    string_view filename = rainbow::filesystem::absolute(path).filename();
     if (filename.length() < 5 || !rainbow::ends_with(filename, ".lua"))
     {
         path_ = nullptr;
@@ -109,7 +109,7 @@ Library::Library(const char* path) : path_(path)
 auto Library::open() const -> Data
 {
 #if defined(RAINBOW_OS_MACOS)
-    return Data{File::open(path_)};
+    return Data{File::open(rainbow::filesystem::absolute(path_))};
 #elif defined(RAINBOW_OS_WINDOWS)
     return Data::load_asset(path_);
 #else

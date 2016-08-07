@@ -14,7 +14,7 @@
 #include "Common/Chrono.h"
 #include "Common/Data.h"
 #include "Director.h"
-#include "FileSystem/Path.h"
+#include "FileSystem/FileSystem.h"
 #include "Input/Pointer.h"
 
 ANativeActivity* g_native_activity;
@@ -81,7 +81,7 @@ void android_main(struct android_app* state)
     state->onInputEvent = android_handle_input;
     ainstance.app = state;
     g_native_activity = state->activity;
-    Path::set_current();
+    rainbow::filesystem::current_path();
 
     // Prepare to monitor accelerometer
     ainstance.sensorManager = ASensorManager_getInstance();

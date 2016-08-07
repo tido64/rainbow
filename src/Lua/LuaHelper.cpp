@@ -6,7 +6,7 @@
 
 #include "Common/Data.h"
 #include "FileSystem/File.h"
-#include "FileSystem/Path.h"
+#include "FileSystem/FileSystem.h"
 #include "Lua/LuaDebugging.h"
 #include "Lua/LuaSyntax.h"
 
@@ -25,11 +25,12 @@ namespace
     auto load_module(lua_State* L, const char* module, const char* suffix)
         -> int
     {
-        const std::string path = std::string{module} + suffix;
-        const Path asset(path.c_str());
+        const auto filename = std::string{module} + suffix;
+        const auto asset = rainbow::filesystem::relative(filename.c_str());
 
 #ifndef RAINBOW_OS_ANDROID
-        if (!asset.is_file())
+        std::error_code error;
+        if (!rainbow::filesystem::is_regular_file(asset, error))
             return 0;
 #endif  // RAINBOW_OS_ANDROID
 

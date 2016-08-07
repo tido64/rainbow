@@ -9,8 +9,8 @@
 
 namespace rainbow
 {
-    const uint8_t kUTF8Accept = 0;
-    const uint8_t kUTF8Reject = 0xf;
+    constexpr uint8_t kUTF8Accept = 0;
+    constexpr uint8_t kUTF8Reject = 0xf;
 
     auto utf8_decode_step(uint8_t state, uint8_t octet, uint32_t* cpp)
         -> uint8_t;

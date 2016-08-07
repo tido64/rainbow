@@ -9,7 +9,9 @@
 #include "Common/Algorithm.h"
 #include "Config.h"
 #include "FileSystem/File.h"
-#include "FileSystem/Path.h"
+#include "FileSystem/FileSystem.h"
+
+using rainbow::filesystem::Path;
 
 namespace
 {
@@ -42,11 +44,14 @@ namespace
     public:
         ScopedCurrentDirectory(const char* path)
         {
-            working_dir_ = Path::current();
-            Path::set_current(path);
+            working_dir_ = rainbow::filesystem::current_path();
+            rainbow::filesystem::set_current_path(path);
         }
 
-        ~ScopedCurrentDirectory() { Path::set_current(working_dir_.c_str()); }
+        ~ScopedCurrentDirectory()
+        {
+            rainbow::filesystem::set_current_path(working_dir_.c_str());
+        }
 
     private:
         std::string working_dir_;
@@ -56,19 +61,29 @@ namespace
     {
     public:
         template <size_t N>
-        ScopedConfig(const char (&config)[N]) : ScopedConfig(config, N - 1) {}
-        ~ScopedConfig() { remove(path_); }
+        ScopedConfig(const char (&config)[N]) : ScopedConfig(config, N - 1)
+        {
+        }
+
+        ~ScopedConfig()
+        {
+            std::error_code error;
+            rainbow::filesystem::remove(path_.c_str(), error);
+            rainbow::filesystem::remove(kConfigTestPath, error);
+        }
 
     private:
         Path path_;
         ScopedCurrentDirectory working_directory_;
 
         ScopedConfig(const char* config, size_t length)
-            : path_(kConfigTestPath), working_directory_(kConfigTestPath)
+            : path_(rainbow::filesystem::relative(kConfigTestPath)),
+              working_directory_(kConfigTestPath)
         {
-            path_.create();
-            path_ += "config";
-            FILE* fd = fopen(path_, "wb");
+            std::error_code error;
+            rainbow::filesystem::create_directories(path_, error);
+            path_ /= "config";
+            FILE* fd = fopen(path_.c_str(), "wb");
             [fd] { ASSERT_NE(nullptr, fd); }();
             fwrite(config, sizeof(*config), length, fd);
             fclose(fd);

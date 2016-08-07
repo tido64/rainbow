@@ -6,10 +6,13 @@
 
 #include <gtest/gtest.h>
 
+#include "Common/Random.h"
+
 namespace rainbow
 {
     auto run_tests(int argc, char* argv[]) -> int
     {
+        random.seed();
         ::testing::InitGoogleTest(&argc, argv);
         return RUN_ALL_TESTS();
     }

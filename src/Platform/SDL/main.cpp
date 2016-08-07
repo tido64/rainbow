@@ -17,7 +17,7 @@
 
 #include "Config.h"
 #include "Director.h"
-#include "FileSystem/Path.h"
+#include "FileSystem/FileSystem.h"
 #include "Platform/SDL/Context.h"
 #include "Platform/SDL/RainbowController.h"
 #ifdef RAINBOW_TEST
@@ -29,7 +29,6 @@ namespace
     auto run_tests(int& argc, char**& argv) -> int
     {
 #ifdef RAINBOW_TEST
-        Path::set_current(Path());
         return rainbow::run_tests(argc, argv);
 #else
         return 0;
@@ -40,11 +39,6 @@ namespace
 
     bool should_run_tests(int& argc, char**& argv)
     {
-#if USE_LUA_SCRIPT
-        return !Path("main.lua").is_file();
-        static_cast<void>(argc);
-        static_cast<void>(argv);
-#else
         const bool run = (argc < 2 ? false : strcmp(argv[1], "--test") == 0);
         if (run)
         {
@@ -52,7 +46,6 @@ namespace
             ++argv;
         }
         return run;
-#endif  // USE_LUA_SCRIPT
     }
 }
 
@@ -77,13 +70,18 @@ auto main() -> int
 
 auto main(int argc, char* argv[]) -> int
 {
-    if (argc < 2)
-        Path::set_current();
-    else
-        Path::set_current(argv[1]);
+    rainbow::filesystem::executable_path(argv[0]);
 
     if (should_run_tests(argc, argv))
+    {
+        rainbow::filesystem::current_path();
         return run_tests(argc, argv);
+    }
+
+    if (argc < 2)
+        rainbow::filesystem::current_path();
+    else
+        rainbow::filesystem::current_path(argv[1]);
 
     const rainbow::Config config;
     SDLContext context(config);

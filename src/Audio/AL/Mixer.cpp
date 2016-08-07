@@ -43,14 +43,14 @@ namespace
         void operator()(ALCdevice* device) const { alcCloseDevice(device); }
     };
 
-    int get_channel_state(const Channel& channel)
+    auto get_channel_state(const Channel& channel)
     {
         ALint state{};
         alGetSourcei(channel.id(), AL_SOURCE_STATE, &state);
         return state;
     }
 
-    int get_channel_type(const Channel& channel)
+    auto get_channel_type(const Channel& channel)
     {
         ALint type{};
         alGetSourcei(channel.id(), AL_SOURCE_TYPE, &type);

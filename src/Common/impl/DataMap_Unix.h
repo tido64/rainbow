@@ -11,18 +11,18 @@ namespace rainbow
     {
     protected:
         template <size_t N>
-        DataMapUnix(const byte_t (&bytes)[N])
+        DataMapUnix(const uint8_t (&bytes)[N])
             : len_(N), off_(0),
               addr_(const_cast<void*>(static_cast<const void*>(bytes))),
               is_embedded_(true) {}
 
-        explicit DataMapUnix(const Path& path);
+        explicit DataMapUnix(const filesystem::Path& path);
         DataMapUnix(DataMapUnix&& data);
         ~DataMapUnix();
 
-        auto data() const -> const byte_t*
+        auto data() const -> const uint8_t*
         {
-            return static_cast<byte_t*>(addr_) + off_;
+            return static_cast<uint8_t*>(addr_) + off_;
         }
 
         void offset(size_t offset) { off_ = offset; }

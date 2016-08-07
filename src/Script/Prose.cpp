@@ -9,7 +9,7 @@
 #include "Common/Data.h"
 #include "Common/String.h"
 #include "FileSystem/File.h"
-#include "FileSystem/Path.h"
+#include "FileSystem/FileSystem.h"
 #include "Graphics/Animation.h"
 #include "Graphics/Label.h"
 #include "Graphics/Renderer.h"
@@ -346,7 +346,7 @@ namespace
 
 auto Prose::from_lua(const char* path) -> Prose*
 {
-    const Data script(File::open(path));
+    const Data script{File::open(rainbow::filesystem::relative(path))};
     if (!script)
         return nullptr;
 

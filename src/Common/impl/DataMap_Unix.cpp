@@ -13,6 +13,7 @@
 #include "FileSystem/Path.h"
 
 using rainbow::DataMapUnix;
+using rainbow::filesystem::Path;
 
 DataMapUnix::DataMapUnix(const Path& path)
     : len_(0), off_(0), addr_(nullptr), is_embedded_(false)
@@ -20,25 +21,29 @@ DataMapUnix::DataMapUnix(const Path& path)
     const File& f = File::open(path);
     if (!f)
     {
-        LOGE(kErrorFileOpen, static_cast<const char*>(path), errno);
+        LOGE(kErrorFileOpen, path.c_str(), errno);
         return;
     }
 
     len_ = f.size();
     if (!len_)
-        LOGE(kErrorFileRead, static_cast<const char*>(path), errno);
+    {
+        LOGE(kErrorFileRead, path.c_str(), errno);
+    }
     else
     {
         const int fd = fileno(f);
-#if defined(RAINBOW_OS_IOS) || defined(RAINBOW_OS_MACOS)
+#ifdef F_NOCACHE
         fcntl(fd, F_NOCACHE, 1);
+#endif
+#ifdef F_RDAHEAD
         fcntl(fd, F_RDAHEAD, 1);
 #endif
         addr_ = mmap(nullptr, len_, PROT_READ, MAP_PRIVATE, fd, 0);
         if (addr_ == MAP_FAILED)
         {
             addr_ = nullptr;
-            LOGE(kErrorMemoryMap, static_cast<const char*>(path), errno);
+            LOGE(kErrorMemoryMap, path.c_str(), errno);
         }
     }
 }

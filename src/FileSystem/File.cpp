@@ -12,7 +12,7 @@
 #endif
 
 #include "Common/Logging.h"
-#include "FileSystem/Path.h"
+#include "FileSystem/FileSystem.h"
 
 #if defined(RAINBOW_OS_ANDROID)
 extern ANativeActivity* g_native_activity;
@@ -20,21 +20,26 @@ extern ANativeActivity* g_native_activity;
 #   define fileno _fileno
 #endif
 
-File File::open(const char* path) { return File(path); }
+using rainbow::filesystem::Path;
 
-File File::open_asset(const char* path)
+auto File::open(const Path& path) -> File
 {
-    return File(Path(path, Path::RelativeTo::CurrentPath));
+    return File{path};
 }
 
-File File::open_document(const char* path)
+auto File::open_asset(const char* path) -> File
 {
-    return File(Path(path, Path::RelativeTo::UserDataPath), "r+b");
+    return File{rainbow::filesystem::relative(path)};
 }
 
-File File::open_write(const char* path)
+auto File::open_document(const char* path) -> File
 {
-    return File(Path(path, Path::RelativeTo::UserDataPath), "wb");
+    return File{rainbow::filesystem::user(path), "r+b"};
+}
+
+auto File::open_write(const char* path) -> File
+{
+    return File{rainbow::filesystem::user(path), "wb"};
 }
 
 File::File(File&& f) : is_asset_(f.is_asset_), stream_(f.stream_)
@@ -85,23 +90,23 @@ auto File::write(const void* buffer, size_t size) -> size_t
     return fwrite(buffer, sizeof(char), size, stream_);
 }
 
-File::File(const char* path) : is_asset_(true), stream_(nullptr)
+File::File(const Path& path) : is_asset_(true), stream_(nullptr)
 {
-    if (!path || path[0] == '\0')
+    if (path.empty())
         return;
 
 #ifdef RAINBOW_OS_ANDROID
     asset_ = AAssetManager_open(
-        g_native_activity->assetManager, path, AASSET_MODE_UNKNOWN);
+        g_native_activity->assetManager, path.c_str(), AASSET_MODE_UNKNOWN);
 #else
-    stream_ = fopen(path, "rb");
+    stream_ = fopen(path.c_str(), "rb");
 #endif
     if (!stream_)
-        LOGE("File: Failed to open '%s'", path);
+        LOGE("File: Failed to open '%s'", path.c_str());
 }
 
-File::File(const char* path, const char* mode)
+File::File(const Path& path, const char* mode)
     : is_asset_(false), stream_(nullptr)
 {
-    stream_ = fopen(path, mode);
+    stream_ = fopen(path.c_str(), mode);
 }
