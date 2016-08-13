@@ -10,14 +10,11 @@
 
 NS_RAINBOW_LUA_BEGIN
 {
-    template <>
-    const char Texture::Bind::class_name[] = "texture";
+    constexpr bool Texture::is_constructible;
 
-    template <>
-    const bool Texture::Bind::is_constructible = true;
+    const char Texture::class_name[] = "texture";
 
-    template <>
-    const luaL_Reg Texture::Bind::functions[]{
+    const luaL_Reg Texture::functions[]{
         {"create",  &Texture::create},
         {"trim",    &Texture::trim},
         {nullptr,   nullptr}};

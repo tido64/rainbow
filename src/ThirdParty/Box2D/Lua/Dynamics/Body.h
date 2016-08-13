@@ -15,11 +15,13 @@ NS_B2_LUA_BEGIN
     int BodyDef(lua_State* L);
     b2BodyDef GetBodyDef(lua_State* L);
 
-    class Body : public rainbow::lua::Bind<Body>
+    class Body : private rainbow::lua::Bind<Body>
     {
-        friend Bind;
-
     public:
+        static constexpr bool is_constructible = false;
+        static const char class_name[];
+        static const luaL_Reg functions[];
+
         static void Init(lua_State*);
 
         explicit Body(lua_State*);

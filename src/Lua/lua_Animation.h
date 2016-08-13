@@ -12,11 +12,13 @@ class Animation;
 
 NS_RAINBOW_LUA_BEGIN
 {
-    class Animation : public Bind<Animation>
+    class Animation : private Bind<Animation>
     {
-        friend Bind;
-
     public:
+        static constexpr bool is_constructible = true;
+        static const char class_name[];
+        static const luaL_Reg functions[];
+
         Animation(lua_State*);
 
         ::Animation* get() { return animation_.get(); }

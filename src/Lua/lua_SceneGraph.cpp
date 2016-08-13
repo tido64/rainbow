@@ -58,14 +58,11 @@ namespace
 
 NS_RAINBOW_LUA_BEGIN
 {
-    template <>
-    const char SceneGraph::Bind::class_name[] = "scenegraph";
+    constexpr bool SceneGraph::is_constructible;
 
-    template <>
-    const bool SceneGraph::Bind::is_constructible = false;
+    const char SceneGraph::class_name[] = "scenegraph";
 
-    template <>
-    const luaL_Reg SceneGraph::Bind::functions[] = {
+    const luaL_Reg SceneGraph::functions[]{
         {"add_animation",   &SceneGraph::add_animation},
         {"add_batch",       &SceneGraph::add_batch},
         {"add_drawable",    &SceneGraph::add_drawable},
@@ -78,8 +75,7 @@ NS_RAINBOW_LUA_BEGIN
         {"set_parent",      &SceneGraph::set_parent},
         {"set_tag",         &SceneGraph::set_tag},
         {"move",            &SceneGraph::move},
-        {nullptr,           nullptr}
-    };
+        {nullptr,           nullptr}};
 
     SceneGraph* SceneGraph::create(lua_State* L, SceneNode* root)
     {
@@ -271,14 +267,11 @@ NS_RAINBOW_LUA_BEGIN
         return 0;
     }
 
-    template <>
-    const char ScopedNode::Bind::class_name[] = "scoped_node";
+    constexpr bool ScopedNode::is_constructible;
 
-    template <>
-    const bool ScopedNode::Bind::is_constructible = true;
+    const char ScopedNode::class_name[] = "scoped_node";
 
-    template <>
-    const luaL_Reg ScopedNode::Bind::functions[] = {{nullptr, nullptr}};
+    const luaL_Reg ScopedNode::functions[]{{nullptr, nullptr}};
 
     ScopedNode::ScopedNode(lua_State* L) : node_(nullptr), state_(L)
     {

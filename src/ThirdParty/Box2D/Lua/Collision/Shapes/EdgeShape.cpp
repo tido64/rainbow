@@ -8,6 +8,20 @@
 
 NS_B2_LUA_BEGIN
 {
+    constexpr bool EdgeShape::is_constructible;
+
+    const char EdgeShape::class_name[] = "EdgeShape";
+
+    const luaL_Reg EdgeShape::functions[]{
+        {"GetType",        &EdgeShape::GetType},
+        {"Set",            &EdgeShape::Set},
+        {"GetChildCount",  &EdgeShape::GetChildCount},
+        {"TestPoint",      &EdgeShape::TestPoint},
+        {"RayCast",        &EdgeShape::RayCast},
+        {"ComputeAABB",    &EdgeShape::ComputeAABB},
+        {"ComputeMass",    &EdgeShape::ComputeMass},
+        {nullptr,          nullptr}};
+
     EdgeShape::EdgeShape(lua_State* L) : is_owner_(false)
     {
         if (lua_isuserdata(L, -1))
@@ -57,26 +71,3 @@ NS_B2_LUA_BEGIN
         return 0;
     }
 } NS_B2_LUA_END
-
-NS_RAINBOW_LUA_BEGIN
-{
-    using b2::lua::EdgeShape;
-
-    template <>
-    const char EdgeShape::Bind::class_name[] = "EdgeShape";
-
-    template <>
-    const bool EdgeShape::Bind::is_constructible = true;
-
-    template <>
-    const luaL_Reg EdgeShape::Bind::functions[]{
-        {"GetType",        &EdgeShape::GetType},
-        {"Set",            &EdgeShape::Set},
-        {"GetChildCount",  &EdgeShape::GetChildCount},
-        {"TestPoint",      &EdgeShape::TestPoint},
-        {"RayCast",        &EdgeShape::RayCast},
-        {"ComputeAABB",    &EdgeShape::ComputeAABB},
-        {"ComputeMass",    &EdgeShape::ComputeMass},
-        {nullptr,          nullptr}
-    };
-} NS_RAINBOW_LUA_END

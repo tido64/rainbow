@@ -457,18 +457,13 @@ void Skeleton::update(unsigned long dt)
 }
 
 #if USE_LUA_SCRIPT
-NS_RAINBOW_LUA_BEGIN
+namespace spine { namespace lua
 {
-    using spine::lua::Skeleton;
+    constexpr bool Skeleton::is_constructible;
 
-    template <>
-    const char Skeleton::Bind::class_name[] = "skeleton";
+    const char Skeleton::class_name[] = "skeleton";
 
-    template <>
-    const bool Skeleton::Bind::is_constructible = true;
-
-    template <>
-    const luaL_Reg Skeleton::Bind::functions[]{
+    const luaL_Reg Skeleton::functions[]{
         {"add_animation",          &Skeleton::add_animation},
         {"clear_track",            &Skeleton::clear_track},
         {"clear_tracks",           &Skeleton::clear_tracks},
@@ -483,11 +478,7 @@ NS_RAINBOW_LUA_BEGIN
         {"set_skin",               &Skeleton::set_skin},
         {"set_time_scale",         &Skeleton::set_time_scale},
         {nullptr,                  nullptr}};
-}
-NS_RAINBOW_LUA_END
 
-namespace spine { namespace lua
-{
     Skeleton::Skeleton(lua_State* L) : state_(L)
     {
         rainbow::lua::Argument<char*>::is_required(L, 1);

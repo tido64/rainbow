@@ -10,11 +10,13 @@
 
 NS_RAINBOW_LUA_BEGIN
 {
-    class SpriteBatch : public Bind<SpriteBatch>
+    class SpriteBatch : private Bind<SpriteBatch>
     {
-        friend Bind;
-
     public:
+        static constexpr bool is_constructible = true;
+        static const char class_name[];
+        static const luaL_Reg functions[];
+
         SpriteBatch(lua_State* L);
 
         ::SpriteBatch* get() { return &batch_; }

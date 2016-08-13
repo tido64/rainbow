@@ -10,6 +10,31 @@
 
 NS_B2_LUA_BEGIN
 {
+    constexpr bool Contact::is_constructible;
+
+    const char Contact::class_name[] = "b2Contact";
+
+    const luaL_Reg Contact::functions[]{
+        {"GetManifold",       &Contact::GetManifold},
+        {"GetWorldManifold",  &Contact::GetWorldManifold},
+        {"IsTouching",        &Contact::IsTouching},
+        {"SetEnabled",        &Contact::SetEnabled},
+        {"IsEnabled",         &Contact::IsEnabled},
+        {"GetNext",           &Contact::GetNext},
+        {"GetFixtureA",       &Contact::GetFixtureA},
+        {"GetChildIndexA",    &Contact::GetChildIndexA},
+        {"GetFixtureB",       &Contact::GetFixtureB},
+        {"GetChildIndexB",    &Contact::GetChildIndexB},
+        {"SetFriction",       &Contact::SetFriction},
+        {"GetFriction",       &Contact::GetFriction},
+        {"ResetFriction",     &Contact::ResetFriction},
+        {"SetRestitution",    &Contact::SetRestitution},
+        {"GetRestitution",    &Contact::GetRestitution},
+        {"ResetRestitution",  &Contact::ResetRestitution},
+        {"SetTangentSpeed",   &Contact::SetTangentSpeed},
+        {"GetTangentSpeed",   &Contact::GetTangentSpeed},
+        {nullptr,             nullptr}};
+
     Contact::Contact(lua_State*) : contact_(nullptr) {}
 
     int Contact::GetManifold(lua_State*) { return -1; }
@@ -138,37 +163,3 @@ NS_B2_LUA_BEGIN
         });
     }
 } NS_B2_LUA_END
-
-NS_RAINBOW_LUA_BEGIN
-{
-    using b2::lua::Contact;
-
-    template <>
-    const char Contact::Bind::class_name[] = "b2Contact";
-
-    template <>
-    const bool Contact::Bind::is_constructible = false;
-
-    template <>
-    const luaL_Reg Contact::Bind::functions[]{
-        {"GetManifold",       &Contact::GetManifold},
-        {"GetWorldManifold",  &Contact::GetWorldManifold},
-        {"IsTouching",        &Contact::IsTouching},
-        {"SetEnabled",        &Contact::SetEnabled},
-        {"IsEnabled",         &Contact::IsEnabled},
-        {"GetNext",           &Contact::GetNext},
-        {"GetFixtureA",       &Contact::GetFixtureA},
-        {"GetChildIndexA",    &Contact::GetChildIndexA},
-        {"GetFixtureB",       &Contact::GetFixtureB},
-        {"GetChildIndexB",    &Contact::GetChildIndexB},
-        {"SetFriction",       &Contact::SetFriction},
-        {"GetFriction",       &Contact::GetFriction},
-        {"ResetFriction",     &Contact::ResetFriction},
-        {"SetRestitution",    &Contact::SetRestitution},
-        {"GetRestitution",    &Contact::GetRestitution},
-        {"ResetRestitution",  &Contact::ResetRestitution},
-        {"SetTangentSpeed",   &Contact::SetTangentSpeed},
-        {"GetTangentSpeed",   &Contact::GetTangentSpeed},
-        {nullptr,             nullptr}
-    };
-} NS_RAINBOW_LUA_END

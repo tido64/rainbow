@@ -12,11 +12,13 @@ namespace rainbow { class SceneNode; }
 
 NS_RAINBOW_LUA_BEGIN
 {
-    class SceneGraph : public Bind<SceneGraph>, private NonCopyable<SceneGraph>
+    class SceneGraph : private Bind<SceneGraph>, private NonCopyable<SceneGraph>
     {
-        friend Bind;
-
     public:
+        static constexpr bool is_constructible = false;
+        static const char class_name[];
+        static const luaL_Reg functions[];
+
         static SceneGraph* create(lua_State*, SceneNode*);
         static void destroy(lua_State*, SceneGraph*);
 
@@ -43,11 +45,13 @@ NS_RAINBOW_LUA_BEGIN
         ~SceneGraph() = default;
     };
 
-    class ScopedNode : public Bind<ScopedNode>
+    class ScopedNode : private Bind<ScopedNode>
     {
-        friend Bind;
-
     public:
+        static constexpr bool is_constructible = true;
+        static const char class_name[];
+        static const luaL_Reg functions[];
+
         ScopedNode(lua_State* L);
         ~ScopedNode();
 

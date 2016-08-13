@@ -10,6 +10,22 @@
 
 NS_B2_LUA_BEGIN
 {
+    constexpr bool PolygonShape::is_constructible;
+
+    const char PolygonShape::class_name[] = "PolygonShape";
+
+    const luaL_Reg PolygonShape::functions[]{
+        {"GetType",        &PolygonShape::GetType},
+        {"GetChildCount",  &PolygonShape::GetChildCount},
+        {"Set",            &PolygonShape::Set},
+        {"SetAsBox",       &PolygonShape::SetAsBox},
+        {"TestPoint",      &PolygonShape::TestPoint},
+        {"RayCast",        &PolygonShape::RayCast},
+        {"ComputeAABB",    &PolygonShape::ComputeAABB},
+        {"ComputeMass",    &PolygonShape::ComputeMass},
+        {"Validate",       &PolygonShape::Validate},
+        {nullptr,          nullptr}};
+
     PolygonShape::PolygonShape(lua_State* L) : is_owner_(false)
     {
         if (lua_isuserdata(L, -1))
@@ -95,28 +111,3 @@ NS_B2_LUA_BEGIN
         });
     }
 } NS_B2_LUA_END
-
-NS_RAINBOW_LUA_BEGIN
-{
-    using b2::lua::PolygonShape;
-
-    template <>
-    const char PolygonShape::Bind::class_name[] = "PolygonShape";
-
-    template <>
-    const bool PolygonShape::Bind::is_constructible = true;
-
-    template <>
-    const luaL_Reg PolygonShape::Bind::functions[]{
-        {"GetType",         &PolygonShape::GetType},
-        {"GetChildCount",   &PolygonShape::GetChildCount},
-        {"Set",             &PolygonShape::Set},
-        {"SetAsBox",        &PolygonShape::SetAsBox},
-        {"TestPoint",       &PolygonShape::TestPoint},
-        {"RayCast",         &PolygonShape::RayCast},
-        {"ComputeAABB",     &PolygonShape::ComputeAABB},
-        {"ComputeMass",     &PolygonShape::ComputeMass},
-        {"Validate",        &PolygonShape::Validate},
-        {nullptr,           nullptr}
-    };
-} NS_RAINBOW_LUA_END

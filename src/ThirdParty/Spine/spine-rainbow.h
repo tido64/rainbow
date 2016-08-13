@@ -133,11 +133,13 @@ namespace spine
     namespace lua
     {
         class Skeleton final : public Drawable,
-                               public rainbow::lua::Bind<Skeleton>
+                               private rainbow::lua::Bind<Skeleton>
         {
-            friend rainbow::lua::Bind<Skeleton>;
-
         public:
+            static constexpr bool is_constructible = true;
+            static const char class_name[];
+            static const luaL_Reg functions[];
+
             Skeleton(lua_State*);
 
             ::Skeleton* get() const { return skeleton_.get(); }

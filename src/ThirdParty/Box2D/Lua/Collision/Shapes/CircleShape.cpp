@@ -8,6 +8,21 @@
 
 NS_B2_LUA_BEGIN
 {
+    constexpr bool CircleShape::is_constructible;
+
+    const char CircleShape::class_name[] = "CircleShape";
+
+    const luaL_Reg CircleShape::functions[]{
+        {"GetType",        &CircleShape::GetType},
+        {"GetRadius",      &CircleShape::GetRadius},
+        {"SetRadius",      &CircleShape::SetRadius},
+        {"GetChildCount",  &CircleShape::GetChildCount},
+        {"TestPoint",      &CircleShape::TestPoint},
+        {"RayCast",        &CircleShape::RayCast},
+        {"ComputeAABB",    &CircleShape::ComputeAABB},
+        {"ComputeMass",    &CircleShape::ComputeMass},
+        {nullptr,          nullptr}};
+
     CircleShape::CircleShape(lua_State* L) : is_owner_(false)
     {
         if (lua_isuserdata(L, -1))
@@ -51,27 +66,3 @@ NS_B2_LUA_BEGIN
         return 1;
     }
 } NS_B2_LUA_END
-
-NS_RAINBOW_LUA_BEGIN
-{
-    using b2::lua::CircleShape;
-
-    template <>
-    const char CircleShape::Bind::class_name[] = "CircleShape";
-
-    template <>
-    const bool CircleShape::Bind::is_constructible = true;
-
-    template <>
-    const luaL_Reg CircleShape::Bind::functions[]{
-        {"GetType",        &CircleShape::GetType},
-        {"GetRadius",      &CircleShape::GetRadius},
-        {"SetRadius",      &CircleShape::SetRadius},
-        {"GetChildCount",  &CircleShape::GetChildCount},
-        {"TestPoint",      &CircleShape::TestPoint},
-        {"RayCast",        &CircleShape::RayCast},
-        {"ComputeAABB",    &CircleShape::ComputeAABB},
-        {"ComputeMass",    &CircleShape::ComputeMass},
-        {nullptr,          nullptr}
-    };
-} NS_RAINBOW_LUA_END

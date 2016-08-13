@@ -73,6 +73,33 @@ NS_B2_LUA_BEGIN
         return fd;
     }
 
+    constexpr bool Fixture::is_constructible;
+
+    const char Fixture::class_name[] = "b2Fixture";
+
+    const luaL_Reg Fixture::functions[]{
+        {"GetType",         &Fixture::GetType},
+        {"GetShape",        &Fixture::GetShape},
+        {"SetSensor",       &Fixture::SetSensor},
+        {"IsSensor",        &Fixture::IsSensor},
+        {"SetFilterData",   &Fixture::SetFilterData},
+        {"GetFilterData",   &Fixture::GetFilterData},
+        {"Refilter",        &Fixture::Refilter},
+        {"GetBody",         &Fixture::GetBody},
+        {"GetNext",         &Fixture::GetNext},
+        {"TestPoint",       &Fixture::TestPoint},
+        {"RayCast",         &Fixture::RayCast},
+        {"GetMassData",     &Fixture::GetMassData},
+        {"SetDensity",      &Fixture::SetDensity},
+        {"GetDensity",      &Fixture::GetDensity},
+        {"GetFriction",     &Fixture::GetFriction},
+        {"SetFriction",     &Fixture::SetFriction},
+        {"GetRestitution",  &Fixture::GetRestitution},
+        {"SetRestitution",  &Fixture::SetRestitution},
+        {"GetAABB",         &Fixture::GetAABB},
+        {"Dump",            &Fixture::Dump},
+        {nullptr,           nullptr}};
+
     void Fixture::Init(lua_State* L)
     {
         luaR_rawsetcfunction(L, "Filter", &Filter);
@@ -242,39 +269,3 @@ NS_B2_LUA_BEGIN
         return 0;
     }
 } NS_B2_LUA_END
-
-NS_RAINBOW_LUA_BEGIN
-{
-    using b2::lua::Fixture;
-
-    template <>
-    const char Fixture::Bind::class_name[] = "b2Fixture";
-
-    template <>
-    const bool Fixture::Bind::is_constructible = false;
-
-    template <>
-    const luaL_Reg Fixture::Bind::functions[]{
-        {"GetType",         &Fixture::GetType},
-        {"GetShape",        &Fixture::GetShape},
-        {"SetSensor",       &Fixture::SetSensor},
-        {"IsSensor",        &Fixture::IsSensor},
-        {"SetFilterData",   &Fixture::SetFilterData},
-        {"GetFilterData",   &Fixture::GetFilterData},
-        {"Refilter",        &Fixture::Refilter},
-        {"GetBody",         &Fixture::GetBody},
-        {"GetNext",         &Fixture::GetNext},
-        {"TestPoint",       &Fixture::TestPoint},
-        {"RayCast",         &Fixture::RayCast},
-        {"GetMassData",     &Fixture::GetMassData},
-        {"SetDensity",      &Fixture::SetDensity},
-        {"GetDensity",      &Fixture::GetDensity},
-        {"GetFriction",     &Fixture::GetFriction},
-        {"SetFriction",     &Fixture::SetFriction},
-        {"GetRestitution",  &Fixture::GetRestitution},
-        {"SetRestitution",  &Fixture::SetRestitution},
-        {"GetAABB",         &Fixture::GetAABB},
-        {"Dump",            &Fixture::Dump},
-        {nullptr,           nullptr}
-    };
-} NS_RAINBOW_LUA_END

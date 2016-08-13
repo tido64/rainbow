@@ -42,7 +42,7 @@ namespace rainbow { namespace shaders
         }
         else
         {
-            Shader::Params shaders[] = {
+            Shader::Params shaders[]{
                 {Shader::kTypeVertex, 0, nullptr, nullptr},  // kFixed2Dv
                 sDiffuseLight2Df,
                 {Shader::kTypeInvalid, 0, nullptr, nullptr}};

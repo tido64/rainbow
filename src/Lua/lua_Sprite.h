@@ -10,11 +10,13 @@
 
 NS_RAINBOW_LUA_BEGIN
 {
-    class Sprite : public Bind<Sprite>
+    class Sprite : private Bind<Sprite>
     {
-        friend Bind;
-
     public:
+        static constexpr bool is_constructible = false;
+        static const char class_name[];
+        static const luaL_Reg functions[];
+
         Sprite(lua_State*);
 
         auto get() -> SpriteRef& { return sprite_; }

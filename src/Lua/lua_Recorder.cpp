@@ -8,14 +8,11 @@
 
 NS_RAINBOW_LUA_BEGIN
 {
-    template <>
-    const char Recorder::Bind::class_name[] = "recorder";
+    constexpr bool Recorder::is_constructible;
 
-    template <>
-    const bool Recorder::Bind::is_constructible = true;
+    const char Recorder::class_name[] = "recorder";
 
-    template <>
-    const luaL_Reg Recorder::Bind::functions[]{
+    const luaL_Reg Recorder::functions[]{
         {"get_average_power",  &Recorder::get_average_power},
         {"get_low_pass",       &Recorder::get_low_pass},
         {"get_peak_power",     &Recorder::get_peak_power},

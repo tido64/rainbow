@@ -33,14 +33,11 @@ namespace
 
 NS_RAINBOW_LUA_BEGIN
 {
-    template <>
-    const char Animation::Bind::class_name[] = "animation";
+    constexpr bool Animation::is_constructible;
 
-    template <>
-    const bool Animation::Bind::is_constructible = true;
+    const char Animation::class_name[] = "animation";
 
-    template <>
-    const luaL_Reg Animation::Bind::functions[]{
+    const luaL_Reg Animation::functions[]{
         {"current_frame",   &Animation::current_frame},
         {"is_stopped",      &Animation::is_stopped},
         {"set_delay",       &Animation::set_delay},

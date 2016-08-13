@@ -10,9 +10,13 @@
 namespace
 {
     class Diffuse final : public rainbow::lua::Shader,
-                          public rainbow::lua::Bind<Diffuse>
+                          private rainbow::lua::Bind<Diffuse>
     {
     public:
+        static constexpr bool is_constructible = false;
+        static const char class_name[];
+        static const luaL_Reg functions[];
+
         explicit Diffuse(lua_State* L) : lighting_(lua_toboolean(L, 1)) {}
 
         const rainbow::shaders::Diffuse* get() const { return &lighting_; }
@@ -25,8 +29,6 @@ namespace
         static int set_position(lua_State*);
 
         rainbow::shaders::Diffuse lighting_;
-
-        friend Bind;
     };
 
     int diffuse(lua_State* L) { return rainbow::lua::alloc<Diffuse>(L); }
@@ -46,14 +48,11 @@ NS_RAINBOW_LUA_MODULE_BEGIN(shaders)
     }
 } NS_RAINBOW_LUA_MODULE_END(shaders)
 
-template <>
-const char Diffuse::Bind::class_name[] = "shaders.diffuse";
+constexpr bool Diffuse::is_constructible;
 
-template <>
-const bool Diffuse::Bind::is_constructible = false;
+const char Diffuse::class_name[] = "shaders.diffuse";
 
-template <>
-const luaL_Reg Diffuse::Bind::functions[]{
+const luaL_Reg Diffuse::functions[]{
     {"set_cutoff",    &Diffuse::set_cutoff},
     {"set_radius",    &Diffuse::set_radius},
     {"set_position",  &Diffuse::set_position},

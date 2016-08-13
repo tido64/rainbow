@@ -9,14 +9,11 @@
 
 NS_RAINBOW_LUA_BEGIN
 {
-    template <>
-    const char SpriteBatch::Bind::class_name[] = "spritebatch";
+    constexpr bool SpriteBatch::is_constructible;
 
-    template <>
-    const bool SpriteBatch::Bind::is_constructible = true;
+    const char SpriteBatch::class_name[] = "spritebatch";
 
-    template <>
-    const luaL_Reg SpriteBatch::Bind::functions[] = {
+    const luaL_Reg SpriteBatch::functions[]{
         {"add",            &SpriteBatch::add},
         {"create_sprite",  &SpriteBatch::create_sprite},
         {"set_normal",     &SpriteBatch::set_normal},

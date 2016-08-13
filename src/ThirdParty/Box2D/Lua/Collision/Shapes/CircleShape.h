@@ -16,6 +16,10 @@ NS_B2_LUA_BEGIN
     class CircleShape : public ShapeBase<CircleShape>
     {
     public:
+        static constexpr bool is_constructible = true;
+        static const char class_name[];
+        static const luaL_Reg functions[];
+
         explicit CircleShape(lua_State*);
         ~CircleShape();
 
@@ -29,8 +33,6 @@ NS_B2_LUA_BEGIN
 
         std::unique_ptr<b2CircleShape> circle_;
         bool is_owner_;
-
-        friend Bind;
     };
 } NS_B2_LUA_END
 

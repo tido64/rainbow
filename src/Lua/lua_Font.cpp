@@ -6,14 +6,11 @@
 
 NS_RAINBOW_LUA_BEGIN
 {
-    template <>
-    const char Font::Bind::class_name[] = "font";
+    constexpr bool Font::is_constructible;
 
-    template <>
-    const bool Font::Bind::is_constructible = true;
+    const char Font::class_name[] = "font";
 
-    template <>
-    const luaL_Reg Font::Bind::functions[]{{nullptr, nullptr}};
+    const luaL_Reg Font::functions[]{{nullptr, nullptr}};
 
     Font::Font(lua_State* L)
     {

@@ -17,11 +17,14 @@ namespace b2
 
     namespace lua
     {
-        class World : public b2ContactListener, public rainbow::lua::Bind<World>
+        class World : public b2ContactListener,
+                      private rainbow::lua::Bind<World>
         {
-            friend Bind;
-
         public:
+            static constexpr bool is_constructible = true;
+            static const char class_name[];
+            static const luaL_Reg functions[];
+
             explicit World(lua_State*);
             ~World();
 

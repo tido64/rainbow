@@ -10,9 +10,13 @@
 
 NS_RAINBOW_LUA_BEGIN
 {
-    class Font : public Bind<Font>
+    class Font : private Bind<Font>
     {
     public:
+        static constexpr bool is_constructible = true;
+        static const char class_name[];
+        static const luaL_Reg functions[];
+
         Font(lua_State*);
 
         SharedPtr<FontAtlas> get() const;

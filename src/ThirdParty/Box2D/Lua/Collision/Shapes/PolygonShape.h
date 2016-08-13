@@ -16,6 +16,10 @@ NS_B2_LUA_BEGIN
     class PolygonShape : public ShapeBase<PolygonShape>
     {
     public:
+        static constexpr bool is_constructible = true;
+        static const char class_name[];
+        static const luaL_Reg functions[];
+
         explicit PolygonShape(lua_State*);
         ~PolygonShape();
 
@@ -30,8 +34,6 @@ NS_B2_LUA_BEGIN
 
         std::unique_ptr<b2PolygonShape> polygon_;
         bool is_owner_;
-
-        friend Bind;
     };
 } NS_B2_LUA_END
 

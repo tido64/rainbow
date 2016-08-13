@@ -20,11 +20,13 @@ NS_B2_LUA_BEGIN
     int FixtureDef(lua_State* L);
     b2FixtureDef GetFixtureDef(lua_State* L);
 
-    class Fixture : public rainbow::lua::Bind<Fixture>
+    class Fixture : private rainbow::lua::Bind<Fixture>
     {
-        friend Bind;
-
     public:
+        static constexpr bool is_constructible = false;
+        static const char class_name[];
+        static const luaL_Reg functions[];
+
         static void Init(lua_State*);
 
         explicit Fixture(lua_State*);

@@ -10,11 +10,13 @@
 
 NS_RAINBOW_LUA_BEGIN
 {
-    class Texture : public Bind<Texture>
+    class Texture : private Bind<Texture>
     {
-        friend Bind;
-
     public:
+        static constexpr bool is_constructible = true;
+        static const char class_name[];
+        static const luaL_Reg functions[];
+
         Texture(lua_State*);
 
         SharedPtr<TextureAtlas> get() const;

@@ -16,6 +16,10 @@ NS_B2_LUA_BEGIN
     class EdgeShape : public ShapeBase<EdgeShape>
     {
     public:
+        static constexpr bool is_constructible = true;
+        static const char class_name[];
+        static const luaL_Reg functions[];
+
         explicit EdgeShape(lua_State*);
         ~EdgeShape();
 
@@ -29,8 +33,6 @@ NS_B2_LUA_BEGIN
 
         std::unique_ptr<b2EdgeShape> edge_;
         bool is_owner_;
-
-        friend Bind;
     };
 } NS_B2_LUA_END
 

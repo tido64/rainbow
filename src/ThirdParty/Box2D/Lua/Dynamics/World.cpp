@@ -48,6 +48,51 @@ namespace b2
 
 NS_B2_LUA_BEGIN
 {
+    constexpr bool World::is_constructible;
+
+    const char World::class_name[] = "World";
+
+    const luaL_Reg World::functions[]{
+        {"GetPTM",                  &World::GetPTM},
+        {"SetPTM",                  &World::SetPTM},
+        {"SetDestructionListener",  &World::SetDestructionListener},
+        {"SetContactFilter",        &World::SetContactFilter},
+        {"SetContactListener",      &World::SetContactListener},
+        {"SetDebugDraw",            &World::SetDebugDraw},
+        {"CreateBody",              &World::CreateBody},
+        {"DestroyBody",             &World::DestroyBody},
+        {"CreateJoint",             &World::CreateJoint},
+        {"DestroyJoint",            &World::DestroyJoint},
+        {"Step",                    &World::Step},
+        {"QueryAABB",               &World::QueryAABB},
+        {"RayCast",                 &World::RayCast},
+        {"GetBodyList",             &World::GetBodyList},
+        {"GetJointList",            &World::GetJointList},
+        {"GetContactList",          &World::GetContactList},
+        {"SetAllowSleeping",        &World::SetAllowSleeping},
+        {"GetAllowSleeping",        &World::GetAllowSleeping},
+        {"SetWarmStarting",         &World::SetWarmStarting},
+        {"GetWarmStarting",         &World::GetWarmStarting},
+        {"SetContinuousPhysics",    &World::SetContinuousPhysics},
+        {"GetContinuousPhysics",    &World::GetContinuousPhysics},
+        {"SetSubStepping",          &World::SetSubStepping},
+        {"GetSubStepping",          &World::GetSubStepping},
+        {"GetProxyCount",           &World::GetProxyCount},
+        {"GetBodyCount",            &World::GetBodyCount},
+        {"GetJointCount",           &World::GetJointCount},
+        {"GetContactCount",         &World::GetContactCount},
+        {"GetTreeHeight",           &World::GetTreeHeight},
+        {"GetTreeBalance",          &World::GetTreeBalance},
+        {"GetTreeQuality",          &World::GetTreeQuality},
+        {"SetGravity",              &World::SetGravity},
+        {"GetGravity",              &World::GetGravity},
+        {"IsLocked",                &World::IsLocked},
+        {"ShiftOrigin",             &World::ShiftOrigin},
+        {"GetContactManager",       &World::GetContactManager},
+        {"GetProfile",              &World::GetProfile},
+        {"Dump",                    &World::Dump},
+        {nullptr,                   nullptr}};
+
     World::World(lua_State* L) : contact_listener_(LUA_NOREF), state_(L)
     {
         rainbow::lua::Argument<lua_Number>::is_optional(L, 1);
@@ -368,57 +413,3 @@ NS_B2_LUA_BEGIN
         return 0;
     }
 } NS_B2_LUA_END
-
-NS_RAINBOW_LUA_BEGIN
-{
-    using b2::lua::World;
-
-    template <>
-    const char World::Bind::class_name[] = "World";
-
-    template <>
-    const bool World::Bind::is_constructible = true;
-
-    template <>
-    const luaL_Reg World::Bind::functions[]{
-        {"GetPTM",                  &World::GetPTM},
-        {"SetPTM",                  &World::SetPTM},
-        {"SetDestructionListener",  &World::SetDestructionListener},
-        {"SetContactFilter",        &World::SetContactFilter},
-        {"SetContactListener",      &World::SetContactListener},
-        {"SetDebugDraw",            &World::SetDebugDraw},
-        {"CreateBody",              &World::CreateBody},
-        {"DestroyBody",             &World::DestroyBody},
-        {"CreateJoint",             &World::CreateJoint},
-        {"DestroyJoint",            &World::DestroyJoint},
-        {"Step",                    &World::Step},
-        {"QueryAABB",               &World::QueryAABB},
-        {"RayCast",                 &World::RayCast},
-        {"GetBodyList",             &World::GetBodyList},
-        {"GetJointList",            &World::GetJointList},
-        {"GetContactList",          &World::GetContactList},
-        {"SetAllowSleeping",        &World::SetAllowSleeping},
-        {"GetAllowSleeping",        &World::GetAllowSleeping},
-        {"SetWarmStarting",         &World::SetWarmStarting},
-        {"GetWarmStarting",         &World::GetWarmStarting},
-        {"SetContinuousPhysics",    &World::SetContinuousPhysics},
-        {"GetContinuousPhysics",    &World::GetContinuousPhysics},
-        {"SetSubStepping",          &World::SetSubStepping},
-        {"GetSubStepping",          &World::GetSubStepping},
-        {"GetProxyCount",           &World::GetProxyCount},
-        {"GetBodyCount",            &World::GetBodyCount},
-        {"GetJointCount",           &World::GetJointCount},
-        {"GetContactCount",         &World::GetContactCount},
-        {"GetTreeHeight",           &World::GetTreeHeight},
-        {"GetTreeBalance",          &World::GetTreeBalance},
-        {"GetTreeQuality",          &World::GetTreeQuality},
-        {"SetGravity",              &World::SetGravity},
-        {"GetGravity",              &World::GetGravity},
-        {"IsLocked",                &World::IsLocked},
-        {"ShiftOrigin",             &World::ShiftOrigin},
-        {"GetContactManager",       &World::GetContactManager},
-        {"GetProfile",              &World::GetProfile},
-        {"Dump",                    &World::Dump},
-        {nullptr,                   nullptr}
-    };
-} NS_RAINBOW_LUA_END

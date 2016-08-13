@@ -10,11 +10,13 @@
 
 NS_RAINBOW_LUA_BEGIN
 {
-    class Recorder : public Bind<Recorder>
+    class Recorder : private Bind<Recorder>
     {
-        friend Bind;
-
     public:
+        static constexpr bool is_constructible = true;
+        static const char class_name[];
+        static const luaL_Reg functions[];
+
         Recorder(lua_State*);
 
     private:

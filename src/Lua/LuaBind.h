@@ -14,11 +14,6 @@ NS_RAINBOW_LUA_BEGIN
     template <typename T>
     class Bind
     {
-    public:
-        static const char class_name[];
-        static const bool is_constructible;
-        static const luaL_Reg functions[];
-
     protected:
         static T* self(lua_State* L) { return touserdata<T>(L, 1); }
 
@@ -163,7 +158,7 @@ NS_RAINBOW_LUA_BEGIN
                 return 0;
 
             lua_pushlightuserdata(L, p);
-            return rainbow::lua::alloc<U>(L);
+            return lua::alloc<U>(L);
         }
 #endif  // USE_PHYSICS
 

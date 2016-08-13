@@ -8,14 +8,11 @@
 
 NS_RAINBOW_LUA_BEGIN
 {
-    template <>
-    const char Label::Bind::class_name[] = "label";
+    constexpr bool Label::is_constructible;
 
-    template <>
-    const bool Label::Bind::is_constructible = true;
+    const char Label::class_name[] = "label";
 
-    template <>
-    const luaL_Reg Label::Bind::functions[]{
+    const luaL_Reg Label::functions[]{
         {"get_color",      &Label::get_color},
         {"set_alignment",  &Label::set_alignment},
         {"set_color",      &Label::set_color},

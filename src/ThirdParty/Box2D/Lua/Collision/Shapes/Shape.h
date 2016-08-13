@@ -20,7 +20,7 @@ NS_B2_LUA_BEGIN
     b2Shape* GetShape(lua_State* L);
 
     template <typename T>
-    class ShapeBase : public rainbow::lua::Bind<T>
+    class ShapeBase : protected rainbow::lua::Bind<T>
     {
     protected:
         static int TestPoint(lua_State* L)

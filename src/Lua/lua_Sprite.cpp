@@ -8,14 +8,11 @@ using uint_t = unsigned int;
 
 NS_RAINBOW_LUA_BEGIN
 {
-    template <>
-    const char Sprite::Bind::class_name[] = "sprite";
+    constexpr bool Sprite::is_constructible;
 
-    template <>
-    const bool Sprite::Bind::is_constructible = false;
+    const char Sprite::class_name[] = "sprite";
 
-    template <>
-    const luaL_Reg Sprite::Bind::functions[] = {
+    const luaL_Reg Sprite::functions[]{
         {"get_angle",     &Sprite::get_angle},
         {"get_color",     &Sprite::get_color},
         {"get_pivot",     &Sprite::get_pivot},

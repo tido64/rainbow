@@ -11,11 +11,13 @@ class b2Contact;
 
 NS_B2_LUA_BEGIN
 {
-    class Contact : public rainbow::lua::Bind<Contact>
+    class Contact : private rainbow::lua::Bind<Contact>
     {
-        friend Bind;
-
     public:
+        static constexpr bool is_constructible = false;
+        static const char class_name[];
+        static const luaL_Reg functions[];
+
         explicit Contact(lua_State*);
 
         b2Contact* get() const { return contact_; }

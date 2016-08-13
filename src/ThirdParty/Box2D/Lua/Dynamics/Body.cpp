@@ -62,6 +62,64 @@ NS_B2_LUA_BEGIN
         return bd;
     }
 
+    constexpr bool Body::is_constructible;
+
+    const char Body::class_name[] = "b2Body";
+
+    const luaL_Reg Body::functions[]{
+        {"Bind",                 &Body::Bind},
+        {"CreateFixture",        &Body::CreateFixture},
+        {"DestroyFixture",       &Body::DestroyFixture},
+        {"SetTransform",         &Body::SetTransform},
+        {"GetPosition",          &Body::GetPosition},
+        {"GetAngle",             &Body::GetAngle},
+        {"GetWorldCenter",       &Body::GetWorldCenter},
+        {"GetLocalCenter",       &Body::GetLocalCenter},
+        {"SetLinearVelocity",    &Body::SetLinearVelocity},
+        {"GetLinearVelocity",    &Body::GetLinearVelocity},
+        {"SetAngularVelocity",   &Body::SetAngularVelocity},
+        {"GetAngularVelocity",   &Body::GetAngularVelocity},
+        {"ApplyForce",           &Body::ApplyForce},
+        {"ApplyForceToCenter",   &Body::ApplyForceToCenter},
+        {"ApplyTorque",          &Body::ApplyTorque},
+        {"ApplyLinearImpulse",   &Body::ApplyLinearImpulse},
+        {"ApplyAngularImpulse",  &Body::ApplyAngularImpulse},
+        {"GetMass",              &Body::GetMass},
+        {"GetInertia",           &Body::GetInertia},
+        {"GetMassData",          &Body::GetMassData},
+        {"SetMassData",          &Body::SetMassData},
+        {"ResetMassData",        &Body::ResetMassData},
+        {"GetWorldPoint",        &Body::GetWorldPoint},
+        {"GetWorldVector",       &Body::GetWorldVector},
+        {"GetLocalPoint",        &Body::GetLocalPoint},
+        {"GetLocalVector",       &Body::GetLocalVector},
+        {"GetLinearVelocityFromWorldPoint",
+         &Body::GetLinearVelocityFromWorldPoint},
+        {"GetLinearVelocityFromLocalPoint",
+         &Body::GetLinearVelocityFromLocalPoint},
+        {"GetLinearDamping",     &Body::GetLinearDamping},
+        {"SetLinearDamping",     &Body::SetLinearDamping},
+        {"GetAngularDamping",    &Body::GetAngularDamping},
+        {"SetAngularDamping",    &Body::SetAngularDamping},
+        {"GetGravityScale",      &Body::GetGravityScale},
+        {"SetGravityScale",      &Body::SetGravityScale},
+        {"SetBullet",            &Body::SetBullet},
+        {"IsBullet",             &Body::IsBullet},
+        {"SetSleepingAllowed",   &Body::SetSleepingAllowed},
+        {"IsSleepingAllowed",    &Body::IsSleepingAllowed},
+        {"SetAwake",             &Body::SetAwake},
+        {"IsAwake",              &Body::IsAwake},
+        {"SetActive",            &Body::SetActive},
+        {"IsActive",             &Body::IsActive},
+        {"SetFixedRotation",     &Body::SetFixedRotation},
+        {"IsFixedRotation",      &Body::IsFixedRotation},
+        {"GetFixtureList",       &Body::GetFixtureList},
+        {"GetJointList",         &Body::GetJointList},
+        {"GetContactList",       &Body::GetContactList},
+        {"GetNext",              &Body::GetNext},
+        {"Dump",                 &Body::Dump},
+        {nullptr,                nullptr}};
+
     void Body::Init(lua_State* L)
     {
         luaR_rawsetinteger(L, "staticBody", b2_staticBody);
@@ -564,70 +622,3 @@ NS_B2_LUA_BEGIN
         return 0;
     }
 } NS_B2_LUA_END
-
-NS_RAINBOW_LUA_BEGIN
-{
-    using b2::lua::Body;
-
-    template <>
-    const char Body::Bind::class_name[] = "b2Body";
-
-    template <>
-    const bool Body::Bind::is_constructible = false;
-
-    template <>
-    const luaL_Reg Body::Bind::functions[]{
-        {"Bind",                 &Body::Bind},
-        {"CreateFixture",        &Body::CreateFixture},
-        {"DestroyFixture",       &Body::DestroyFixture},
-        {"SetTransform",         &Body::SetTransform},
-        {"GetPosition",          &Body::GetPosition},
-        {"GetAngle",             &Body::GetAngle},
-        {"GetWorldCenter",       &Body::GetWorldCenter},
-        {"GetLocalCenter",       &Body::GetLocalCenter},
-        {"SetLinearVelocity",    &Body::SetLinearVelocity},
-        {"GetLinearVelocity",    &Body::GetLinearVelocity},
-        {"SetAngularVelocity",   &Body::SetAngularVelocity},
-        {"GetAngularVelocity",   &Body::GetAngularVelocity},
-        {"ApplyForce",           &Body::ApplyForce},
-        {"ApplyForceToCenter",   &Body::ApplyForceToCenter},
-        {"ApplyTorque",          &Body::ApplyTorque},
-        {"ApplyLinearImpulse",   &Body::ApplyLinearImpulse},
-        {"ApplyAngularImpulse",  &Body::ApplyAngularImpulse},
-        {"GetMass",              &Body::GetMass},
-        {"GetInertia",           &Body::GetInertia},
-        {"GetMassData",          &Body::GetMassData},
-        {"SetMassData",          &Body::SetMassData},
-        {"ResetMassData",        &Body::ResetMassData},
-        {"GetWorldPoint",        &Body::GetWorldPoint},
-        {"GetWorldVector",       &Body::GetWorldVector},
-        {"GetLocalPoint",        &Body::GetLocalPoint},
-        {"GetLocalVector",       &Body::GetLocalVector},
-        {"GetLinearVelocityFromWorldPoint",
-         &Body::GetLinearVelocityFromWorldPoint},
-        {"GetLinearVelocityFromLocalPoint",
-         &Body::GetLinearVelocityFromLocalPoint},
-        {"GetLinearDamping",     &Body::GetLinearDamping},
-        {"SetLinearDamping",     &Body::SetLinearDamping},
-        {"GetAngularDamping",    &Body::GetAngularDamping},
-        {"SetAngularDamping",    &Body::SetAngularDamping},
-        {"GetGravityScale",      &Body::GetGravityScale},
-        {"SetGravityScale",      &Body::SetGravityScale},
-        {"SetBullet",            &Body::SetBullet},
-        {"IsBullet",             &Body::IsBullet},
-        {"SetSleepingAllowed",   &Body::SetSleepingAllowed},
-        {"IsSleepingAllowed",    &Body::IsSleepingAllowed},
-        {"SetAwake",             &Body::SetAwake},
-        {"IsAwake",              &Body::IsAwake},
-        {"SetActive",            &Body::SetActive},
-        {"IsActive",             &Body::IsActive},
-        {"SetFixedRotation",     &Body::SetFixedRotation},
-        {"IsFixedRotation",      &Body::IsFixedRotation},
-        {"GetFixtureList",       &Body::GetFixtureList},
-        {"GetJointList",         &Body::GetJointList},
-        {"GetContactList",       &Body::GetContactList},
-        {"GetNext",              &Body::GetNext},
-        {"Dump",                 &Body::Dump},
-        {nullptr,                nullptr}
-    };
-} NS_RAINBOW_LUA_END

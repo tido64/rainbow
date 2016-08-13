@@ -10,11 +10,13 @@
 
 NS_RAINBOW_LUA_BEGIN
 {
-    class Label : public Bind<Label>
+    class Label : private Bind<Label>
     {
-        friend Bind;
-
     public:
+        static constexpr bool is_constructible = true;
+        static const char class_name[];
+        static const luaL_Reg functions[];
+
         Label(lua_State*);
 
         ::Label* get() { return &label_; }
