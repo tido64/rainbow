@@ -249,8 +249,8 @@ namespace rainbow { namespace imgui
             }
         }
 #else
-        static_cast<void>(key);
-        static_cast<void>(down);
+        NOT_USED(key);
+        NOT_USED(down);
 #endif  // RAINBOW_SDL
         return io.WantCaptureKeyboard;
     }

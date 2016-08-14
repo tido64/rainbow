@@ -32,8 +32,8 @@ namespace
         return rainbow::run_tests(argc, argv);
 #else
         return 0;
-        static_cast<void>(argc);
-        static_cast<void>(argv);
+        NOT_USED(argc);
+        NOT_USED(argv);
 #endif  // RAINBOW_TEST
     }
 

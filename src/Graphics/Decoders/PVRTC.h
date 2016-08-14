@@ -70,7 +70,7 @@ namespace pvrtc
                  "Unsupported PVR file format");
         image.data = data.data() + offset;
 #else
-        static_cast<void>(data);
+        NOT_USED(data);
 #endif
 
         return image;

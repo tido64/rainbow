@@ -21,7 +21,6 @@ namespace stdfs = std::experimental::filesystem;
 extern ANativeActivity* g_native_activity;
 #   endif
 #   include "Common/Logging.h"
-#   define NOT_USED(v) static_cast<void>(v)
 #endif
 
 #ifdef RAINBOW_OS_WINDOWS

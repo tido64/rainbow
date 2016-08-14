@@ -251,7 +251,7 @@ NS_RAINBOW_LUA_BEGIN
         lua_pop(L, 2);
         return ptr;
 
-        static_cast<void>(name);
-        static_cast<void>(kLuaErrorType);
+        NOT_USED(name);
+        NOT_USED(kLuaErrorType);
     }
 } NS_RAINBOW_LUA_END

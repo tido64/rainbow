@@ -19,7 +19,7 @@ namespace
 #ifndef NDEBUG
         rainbow::lua::sethook(L);
 #else
-        static_cast<void>(L);
+        NOT_USED(L);
 #endif
         return 0;
     }

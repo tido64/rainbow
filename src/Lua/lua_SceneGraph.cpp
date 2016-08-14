@@ -137,7 +137,9 @@ NS_RAINBOW_LUA_BEGIN
         }
         replacetable(L, obj);
         SceneNode* child = node->add_child(*touserdata(L, obj)->get());
-        R_ASSERT(register_node(child), "Failed to register node");
+#ifndef NDEBUG
+        register_node(child);
+#endif
         lua_pushlightuserdata(L, child);
         return 1;
     }

@@ -43,7 +43,7 @@ namespace
     {
 #ifdef RAINBOW_OS_MACOS
         return false;
-        static_cast<void>(keysym);
+        NOT_USED(keysym);
 #else
         return keysym.sym == SDLK_q && (keysym.mod & KMOD_LCTRL);
 #endif

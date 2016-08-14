@@ -101,7 +101,7 @@ namespace
                      "Unscalable fonts are not supported");
             error = FT_Select_Charmap(face_, FT_ENCODING_UNICODE);
             R_ASSERT(!error, "Failed to select character map");
-            static_cast<void>(error);
+            NOT_USED(error);
         }
 
         ~FontFace()

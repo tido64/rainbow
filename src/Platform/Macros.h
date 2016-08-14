@@ -53,6 +53,8 @@
 #   define UNREACHABLE() __assume(0)
 #endif
 
+#define NOT_USED(v) static_cast<void>(v)
+
 #if (defined(__apple_build_version__) && CLANG_VERSION >= 80000) ||            \
     (!defined(__apple_build_version__) && CLANG_VERSION >= 30900) ||           \
     GCC_VERSION >= 50300 ||                                                    \
