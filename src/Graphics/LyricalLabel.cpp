@@ -9,9 +9,7 @@
 
 namespace
 {
-    using uint_t = unsigned int;
-
-    const uint_t kStaleAttribute = 1u << 16;
+    constexpr uint32_t kStaleAttribute = 1u << 16;
 }
 
 LyricalLabel::LyricalLabel() : applied_(0), did_shake_(false)
@@ -62,7 +60,7 @@ void LyricalLabel::clear_attributes(Attribute::Type type)
     }
 }
 
-void LyricalLabel::set_color(Colorb c, uint_t start, uint_t length)
+void LyricalLabel::set_color(Colorb c, uint32_t start, uint32_t length)
 {
     attributes_.emplace_back(c, start, length);
     set_needs_update(kStaleAttribute);
@@ -74,13 +72,17 @@ void LyricalLabel::set_text(const char* text)
     Label::set_text(text);
 }
 
-void LyricalLabel::set_offset(const Vec2i& offset, uint_t start, uint_t length)
+void LyricalLabel::set_offset(const Vec2i& offset,
+                              uint32_t start,
+                              uint32_t length)
 {
     attributes_.emplace_back(offset, start, length);
     set_needs_update(kStaleAttribute);
 }
 
-void LyricalLabel::set_shaking(uint_t magnitude, uint_t start, uint_t length)
+void LyricalLabel::set_shaking(uint32_t magnitude,
+                               uint32_t start,
+                               uint32_t length)
 {
     attributes_.emplace_back(magnitude, start, length);
     if (!animators_[static_cast<int>(Animation::Shake)])
@@ -103,13 +105,14 @@ void LyricalLabel::start_animation(Animation animation, int interval)
                         return;
 
                     clear_attributes(Attribute::Type::Offset);
-                    const uint_t size = attributes_.size();
-                    for (uint_t i = 0; i < size; ++i)
+                    const uint32_t size =
+                        static_cast<uint32_t>(attributes_.size());
+                    for (uint32_t i = 0; i < size; ++i)
                     {
                         auto&& attr = attributes_[i];
                         if (attr.type == Attribute::Type::Shake)
                         {
-                            for (uint_t j = 0; j < attr.length; ++j)
+                            for (uint32_t j = 0; j < attr.length; ++j)
                             {
                                 const Vec2i magnitude(
                                     rainbow::random(attr.magnitude),
@@ -143,10 +146,11 @@ void LyricalLabel::stop_animation(Animation animation)
     {
         case Animation::Shake:
             clear_attributes(Attribute::Type::Offset);
-            rainbow::remove_if(attributes_,
-                               [](const Attribute& attr) {
-                                   return attr.type == Attribute::Type::Shake;
-                               });
+            rainbow::remove_if(  //
+                attributes_,
+                [](const Attribute& attr) {
+                    return attr.type == Attribute::Type::Shake;
+                });
             break;
         case Animation::Typing:
             set_cutoff(std::numeric_limits<decltype(cutoff())>::max());
@@ -178,7 +182,7 @@ void LyricalLabel::update()
             switch (attr.type)
             {
                 case Attribute::Type::Color:
-                    for (uint_t i = interval.x; i < interval.y; ++i)
+                    for (uint32_t i = interval.x; i < interval.y; ++i)
                     {
                         buffer[i].color.r = attr.color[0];
                         buffer[i].color.g = attr.color[1];
@@ -187,7 +191,7 @@ void LyricalLabel::update()
                     }
                     break;
                 case Attribute::Type::Offset:
-                    for (uint_t i = interval.x; i < interval.y; ++i)
+                    for (uint32_t i = interval.x; i < interval.y; ++i)
                     {
                         buffer[i].position.x += attr.offset[0];
                         buffer[i].position.y += attr.offset[1];
@@ -206,7 +210,7 @@ void LyricalLabel::update()
 
 auto LyricalLabel::get_interval(const Attribute& attr) -> Vec2u
 {
-    const uint_t final = static_cast<uint_t>(length()) * 4;
+    const uint32_t final = static_cast<uint32_t>(length()) * 4;
     return {std::min(attr.start * 4, final),
             std::min((attr.start + attr.length) * 4, final)};
 }
@@ -227,12 +231,12 @@ void LyricalLabel::undo_from(std::vector<Attribute>::const_iterator first)
         {
             case Attribute::Type::Color: {
                 auto c = color();
-                for (uint_t i = interval.x; i < interval.y; ++i)
+                for (uint32_t i = interval.x; i < interval.y; ++i)
                     buffer[i].color = c;
                 break;
             }
             case Attribute::Type::Offset:
-                for (uint_t i = interval.x; i < interval.y; ++i)
+                for (uint32_t i = interval.x; i < interval.y; ++i)
                 {
                     buffer[i].position.x -= attr->offset[0];
                     buffer[i].position.y -= attr->offset[1];
@@ -246,7 +250,7 @@ void LyricalLabel::undo_from(std::vector<Attribute>::const_iterator first)
     applied_ -= std::distance(first, attributes_.cend());
 }
 
-LyricalLabel::Attribute::Attribute(Colorb c, uint_t start, uint_t len)
+LyricalLabel::Attribute::Attribute(Colorb c, uint32_t start, uint32_t len)
     : type(Type::Color), start(start), length(len)
 {
     color[0] = c.r;
@@ -255,12 +259,16 @@ LyricalLabel::Attribute::Attribute(Colorb c, uint_t start, uint_t len)
     color[3] = c.a;
 }
 
-LyricalLabel::Attribute::Attribute(uint_t magnitude, uint_t start, uint_t len)
-    : type(Type::Shake), start(start), length(len), magnitude(magnitude) {}
+LyricalLabel::Attribute::Attribute(uint32_t magnitude,
+                                   uint32_t start,
+                                   uint32_t len)
+    : type(Type::Shake), start(start), length(len), magnitude(magnitude)
+{
+}
 
 LyricalLabel::Attribute::Attribute(const Vec2i& offset_,
-                                   uint_t start,
-                                   uint_t len)
+                                   uint32_t start,
+                                   uint32_t len)
     : type(Type::Offset), start(start), length(len)
 {
     offset[0] = offset_.x;

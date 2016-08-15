@@ -35,12 +35,12 @@ else()
         http://kcat.strangesoft.net/openal-binaries/openal-soft-1.17.2-bin.zip
         2128f30ddc32baa77c49a28d9dd9a5e53178851d
         ${LOCAL_LIBRARY}/openal-soft)
-    copy_to_build_dir(openal-soft bin/Win32/soft_oal.dll OpenAL32.dll)
     if(CMAKE_SIZEOF_VOID_P EQUAL 8)
       set(OPENAL_ARCH Win64)
     else()
       set(OPENAL_ARCH Win32)
     endif()
+    copy_to_build_dir(openal-soft bin/${OPENAL_ARCH}/soft_oal.dll OpenAL32.dll)
     set(OPENAL_INCLUDE_DIR ${LOCAL_LIBRARY}/openal-soft/include)
     set(OPENAL_LIBRARY ${LOCAL_LIBRARY}/openal-soft/libs/${OPENAL_ARCH}/libOpenAL32.dll.a)
     message(STATUS "Found OpenAL: ${OPENAL_LIBRARY}")

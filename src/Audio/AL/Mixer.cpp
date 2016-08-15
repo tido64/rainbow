@@ -169,7 +169,11 @@ void ALMixer::process()
             }
             ALuint bid{};
             alSourceUnqueueBuffers(channel.id(), 1, &bid);
-            alBufferData(bid, sound->format, buffer, length, sound->rate);
+            alBufferData(bid,
+                         sound->format,
+                         buffer,
+                         static_cast<ALsizei>(length),
+                         sound->rate);
             alSourceQueueBuffers(channel.id(), 1, &bid);
         }
 
@@ -275,9 +279,8 @@ auto rainbow::audio::load_sound(const char* path) -> Sound*
     alBufferData(sound->buffer,
                  sound->format,
                  buffer.get(),
-                 audio_file->read(buffer.get(), size),
+                 static_cast<ALsizei>(audio_file->read(buffer.get(), size)),
                  sound->rate);
-
     return sound;
 }
 
@@ -377,7 +380,7 @@ auto rainbow::audio::play(Sound* sound, Vec2f position) -> Channel*
             alBufferData(channel->buffers()[i],
                          sound->format,
                          buffer,
-                         size,
+                         static_cast<ALsizei>(size),
                          sound->rate);
             if (size < sizeof(buffer))
                 break;

@@ -20,21 +20,20 @@
 #include "Graphics/OpenGL.h"
 #include "Graphics/TextureManager.h"
 
-using rainbow::array_size;
 using rainbow::Texture;
+using rainbow::array_size;
 
 using uchar_t = unsigned char;
-using uint_t = unsigned int;
 
 namespace
 {
-    const float kGlyphMargin = 2.0f;     ///< Margin around rendered font glyph.
-    const uint_t kASCIIOffset = 32;      ///< Start loading from character 32.
-    const uint_t kDPI = 96;              ///< Horizontal/vertical resolution in dpi.
-    const uint_t kGlyphPadding = 3;      ///< Padding around font glyph texture.
-    const uint_t kGlyphPadding2 = kGlyphPadding * 2;
-    const int kNumGlyphsPerColRow = 12;  ///< Number of glyphs per column/row on texture.
-    const int kPixelFormat = 64;         ///< 26.6 fixed-point pixel coordinates.
+    constexpr float kGlyphMargin = 2.0f;          ///< Margin around rendered font glyph.
+    constexpr uint32_t kASCIIOffset = 32;         ///< Start loading from character 32.
+    constexpr uint32_t kDPI = 96;                 ///< Horizontal/vertical resolution in dpi.
+    constexpr uint32_t kGlyphPadding = 3;         ///< Padding around font glyph texture.
+    constexpr uint32_t kGlyphPadding2 = kGlyphPadding * 2;
+    constexpr uint32_t kNumGlyphsPerColRow = 12;  ///< Number of glyphs per column/row on texture.
+    constexpr int kPixelFormat = 64;              ///< 26.6 fixed-point pixel coordinates.
 
     void copy_bitmap_into(uchar_t* dst,
                           const Vec2u& dst_sz,
@@ -45,9 +44,9 @@ namespace
         const size_t stride = (dst_sz.x - src_sz.x) * 2;
         size_t i = 0;
         uchar_t* ptr = dst + (off.y * dst_sz.x + off.x) * 2;
-        for (uint_t y = 0; y < src_sz.y; ++y)
+        for (uint32_t y = 0; y < src_sz.y; ++y)
         {
-            for (uint_t x = 0; x < src_sz.x; ++x)
+            for (uint32_t x = 0; x < src_sz.x; ++x)
             {
                 *ptr = std::numeric_limits<uchar_t>::max();
                 *(++ptr) = src[i];
@@ -93,7 +92,7 @@ namespace
             FT_Error error =
                 FT_New_Memory_Face(library,
                                    static_cast<const FT_Byte*>(font.bytes()),
-                                   font.size(),
+                                   static_cast<FT_Long>(font.size()),
                                    0,
                                    &face_);
             R_ASSERT(!error, "Failed to load font face");
@@ -159,7 +158,7 @@ FontAtlas::FontAtlas(const char* name, const Data& font, float pt)
         });
 }
 
-auto FontAtlas::get_glyph(uint_t c) const -> const FontGlyph*
+auto FontAtlas::get_glyph(uint32_t c) const -> const FontGlyph*
 {
 #if FONTATLAS_EXTENDED > 0
     if (c >= 0x80u)
@@ -181,11 +180,11 @@ void FontAtlas::load(TextureManager& texture_manager,
 {
     R_ASSERT(font, "Failed to load font");
 
-    for (uint_t i = 0; i < kNumCharacters; ++i)
+    for (uint32_t i = 0; i < kNumCharacters; ++i)
         charset_[i].code = i + kASCIIOffset;
 
 #if FONTATLAS_EXTENDED > 0
-    const unsigned int characters[]{
+    const uint32_t characters[]{
         0x00c5,  // LATIN CAPITAL LETTER A WITH RING ABOVE
         0x00c6,  // LATIN CAPITAL LETTER AE
         0x00d8,  // LATIN CAPITAL LETTER O WITH STROKE
@@ -229,7 +228,7 @@ void FontAtlas::load(TextureManager& texture_manager,
 
         // Make sure bitmap data has enough space to the right. Otherwise, start
         // a new line.
-        const uint_t width = bitmap.width + kGlyphPadding2;
+        const uint32_t width = bitmap.width + kGlyphPadding2;
         if (offset.x + width > size.x)
         {
             offset.x = 0;

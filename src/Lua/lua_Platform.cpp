@@ -21,7 +21,7 @@ NS_RAINBOW_LUA_MODULE_BEGIN(platform)
         lua_pushliteral(L, "locale");
         {
             auto locales = system_info::locales();
-            lua_createtable(L, locales.size(), 0);
+            lua_createtable(L, static_cast<int>(locales.size()), 0);
             int i = 0;
             for (auto&& locale : locales)
             {
@@ -33,7 +33,7 @@ NS_RAINBOW_LUA_MODULE_BEGIN(platform)
 
         // Retrieve physical memory
         lua_pushliteral(L, "memory");
-        lua_pushinteger(L, system_info::memory());
+        lua_pushinteger(L, static_cast<int>(system_info::memory()));
         lua_rawset(L, -3);
 
         // rainbow.platform.screen

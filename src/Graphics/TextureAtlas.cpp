@@ -45,7 +45,7 @@ auto TextureAtlas::add_region(int x, int y, int w, int h) -> unsigned int
 
     const Vec2f v0(x / width, y / height);
     const Vec2f v1((x + w) / width, (y + h) / height);
-    const size_t i = regions_.size();
+    const auto i = static_cast<unsigned int>(regions_.size());
     regions_.emplace_back(v0, v1);
     regions_[i].atlas = texture_;
     return i;

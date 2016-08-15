@@ -27,8 +27,8 @@ NS_RAINBOW_LUA_MODULE_BEGIN(input)
         };
 
         int acceleration = -1;
+        int event_count = -1;
         int events = -1;
-        size_t event_count = std::numeric_limits<size_t>::max();
 
         const char* const kInputEvents[]{"key_down",
                                          "key_up",
@@ -92,7 +92,7 @@ NS_RAINBOW_LUA_MODULE_BEGIN(input)
                 lua_pushnil(L);
             else
             {
-                lua_createtable(L, 0, pointers.size());
+                lua_createtable(L, 0, static_cast<int>(pointers.size()));
                 for (auto&& p : pointers)
                 {
                     lua_pushinteger(L, p.hash);

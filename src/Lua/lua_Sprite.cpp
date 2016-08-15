@@ -4,8 +4,6 @@
 
 #include "Lua/lua_Sprite.h"
 
-using uint_t = unsigned int;
-
 NS_RAINBOW_LUA_BEGIN
 {
     constexpr bool Sprite::is_constructible;
@@ -99,10 +97,11 @@ NS_RAINBOW_LUA_BEGIN
         if (!self)
             return 0;
 
-        const Colorb color(static_cast<uint_t>(lua_tointeger(L, 2)) & 0xff,
-                           static_cast<uint_t>(lua_tointeger(L, 3)) & 0xff,
-                           static_cast<uint_t>(lua_tointeger(L, 4)) & 0xff,
-                           static_cast<uint_t>(optinteger(L, 5, 0xff)) & 0xff);
+        const Colorb color(
+            static_cast<uint32_t>(lua_tointeger(L, 2)) & 0xff,
+            static_cast<uint32_t>(lua_tointeger(L, 3)) & 0xff,
+            static_cast<uint32_t>(lua_tointeger(L, 4)) & 0xff,
+            static_cast<uint32_t>(optinteger(L, 5, 0xff)) & 0xff);
         self->sprite_->set_color(color);
         return 0;
     }
@@ -111,7 +110,7 @@ NS_RAINBOW_LUA_BEGIN
     {
         // <sprite>:set_normal(<texture>)
         return set1i(L, [](SpriteRef& sprite, int normal) {
-            sprite->set_normal(static_cast<uint_t>(normal));
+            sprite->set_normal(static_cast<uint32_t>(normal));
         });
     }
 
@@ -158,7 +157,7 @@ NS_RAINBOW_LUA_BEGIN
     {
         // <sprite>:set_texture(<texture>)
         return set1i(L, [](SpriteRef& sprite, int texture) {
-            sprite->set_texture(static_cast<uint_t>(texture));
+            sprite->set_texture(static_cast<uint32_t>(texture));
         });
     }
 

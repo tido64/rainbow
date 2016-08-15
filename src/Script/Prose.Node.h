@@ -37,9 +37,9 @@ auto create_animation(lua_State* L,
                       rainbow::SceneNode* parent) -> Prose::Asset
 {
     const auto table = lua_gettop(L);
-    const size_t num_frames = lua_rawlen(L, table);
+    const auto num_frames = static_cast<int>(lua_rawlen(L, table));
     auto frames = std::make_unique<Animation::Frame[]>(num_frames + 1);
-    for (size_t i = 0; i < num_frames; ++i)
+    for (int i = 0; i < num_frames; ++i)
     {
         lua_rawgeti(L, table, i + 1);
         frames[i] = lua_tointeger(L, -1);

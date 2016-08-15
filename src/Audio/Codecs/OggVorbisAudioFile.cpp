@@ -97,8 +97,13 @@ auto OggVorbisAudioFile::read(void* dst, size_t size) -> size_t
     // Read until buffer is full.
     do
     {
-        read =
-            ov_read(&vf_, buffer + offset, size - offset, 0, 2, 1, &bitstream);
+        read = ov_read(&vf_,
+                       buffer + offset,
+                       static_cast<int>(size - offset),
+                       /* bigendianp */ 0,
+                       /* word */ 2,
+                       /* sgned */ 1,
+                       &bitstream);
         if (read <= 0)
             break;
 

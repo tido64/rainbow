@@ -19,7 +19,7 @@ class SpriteRef
 {
 public:
     SpriteRef() : batch_(nullptr), i_(0) {}
-    SpriteRef(NotNull<SpriteBatch*> batch, size_t i) : batch_(batch), i_(i) {}
+    SpriteRef(NotNull<SpriteBatch*> batch, uint32_t i) : batch_(batch), i_(i) {}
 
     auto operator*() -> Sprite& { return get(); }
     auto operator*() const -> const Sprite& { return get(); }

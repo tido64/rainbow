@@ -171,7 +171,7 @@ namespace rainbow
                  "package.searchers table does not exist");
 
         // Make space in the top slot for our loader.
-        for (size_t i = lua_rawlen(state_, -1); i > 0; --i)
+        for (int i = static_cast<int>(lua_rawlen(state_, -1)); i > 0; --i)
         {
             lua_rawgeti(state_, -1, i);
             lua_rawseti(state_, -2, i + 1);

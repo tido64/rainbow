@@ -13,14 +13,14 @@ namespace rainbow
 
 namespace
 {
-    template <size_t N>
+    template <int N>
     void set_sprite_ids(SpriteRef (&refs)[N])
     {
-        for (size_t i = 0; i < N; ++i)
+        for (int i = 0; i < N; ++i)
             refs[i]->set_id(i + 1);
 
-        for (size_t i = 0; i < N; ++i)
-            ASSERT_EQ(i + 1, static_cast<size_t>(refs[i]->id()));
+        for (int i = 0; i < N; ++i)
+            ASSERT_EQ(i + 1, refs[i]->id());
     }
 
     void update(SpriteBatch& batch)

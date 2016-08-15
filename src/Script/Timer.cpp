@@ -16,8 +16,10 @@ auto TimerManager::set_timer(Timer::Closure func,
     Timer* t;
     if (free_ < 0)
     {
-        timers_.emplace_back(
-            std::move(func), interval, repeat_count, timers_.size());
+        timers_.emplace_back(std::move(func),
+                             interval,
+                             repeat_count,
+                             static_cast<int>(timers_.size()));
         t = &timers_.back();
     }
     else
