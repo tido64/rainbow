@@ -12,6 +12,8 @@
 #include "ThirdParty/Box2D/Lua/Dynamics/Fixture.h"
 #include "ThirdParty/Box2D/StableWorld.h"
 
+class Drawable;
+
 NS_B2_LUA_BEGIN
 {
     int BodyDef(lua_State* L)
@@ -139,7 +141,7 @@ NS_B2_LUA_BEGIN
         using rainbow::lua::Sprite;
 
         // <b2.Body>:Bind(<rainbow.sprite>)
-        rainbow::lua::Argument<Sprite>::is_required(L, 2);
+        rainbow::lua::checkargs<Body, Sprite>(L);
 
         Body* self = Bind::self(L);
         if (!self)
@@ -166,7 +168,7 @@ NS_B2_LUA_BEGIN
         if (lua_gettop(L) == 2)
         {
             // <b2.Body>:CreateFixture(<b2.FixtureDef>)
-            rainbow::lua::Argument<void*>::is_required(L, 2);
+            rainbow::lua::checkargs<Body, void*>(L);
 
             const b2FixtureDef& fd = GetFixtureDef(L);
             fixture = self->get()->CreateFixture(&fd);
@@ -174,8 +176,7 @@ NS_B2_LUA_BEGIN
         else
         {
             // <b2.Body>:CreateFixture(<b2.Shape>, density)
-            //rainbow::lua::Argument<void*>::is_required(L, 2);
-            rainbow::lua::Argument<lua_Number>::is_required(L, 3);
+            rainbow::lua::checkargs<Body, Drawable, lua_Number>(L);
 
             const float density = lua_tonumber(L, 3);
             lua_settop(L, 2);
@@ -188,7 +189,7 @@ NS_B2_LUA_BEGIN
     int Body::DestroyFixture(lua_State* L)
     {
         // <b2.Body>:DestroyFixture(<b2.Fixture>)
-        rainbow::lua::Argument<Fixture>::is_required(L, 2);
+        rainbow::lua::checkargs<Body, Fixture>(L);
 
         Body* self = Bind::self(L);
         if (!self)
@@ -203,9 +204,7 @@ NS_B2_LUA_BEGIN
     int Body::SetTransform(lua_State* L)
     {
         // <b2.Body>:SetTransform(x, y, r)
-        rainbow::lua::Argument<lua_Number>::is_required(L, 2);
-        rainbow::lua::Argument<lua_Number>::is_required(L, 3);
-        rainbow::lua::Argument<lua_Number>::is_required(L, 4);
+        rainbow::lua::checkargs<Body, lua_Number, lua_Number, lua_Number>(L);
 
         Body* self = Bind::self(L);
         if (!self)
@@ -274,11 +273,12 @@ NS_B2_LUA_BEGIN
     int Body::ApplyForce(lua_State* L)
     {
         // <b2.Body>:ApplyForce(impulse.x, impulse.y, point.x, point.y, wake)
-        rainbow::lua::Argument<lua_Number>::is_required(L, 2);
-        rainbow::lua::Argument<lua_Number>::is_required(L, 3);
-        rainbow::lua::Argument<lua_Number>::is_required(L, 4);
-        rainbow::lua::Argument<lua_Number>::is_required(L, 5);
-        rainbow::lua::Argument<bool>::is_required(L, 6);
+        rainbow::lua::checkargs<Body,
+                                lua_Number,
+                                lua_Number,
+                                lua_Number,
+                                lua_Number,
+                                bool>(L);
 
         Body* self = Bind::self(L);
         if (!self)
@@ -292,9 +292,7 @@ NS_B2_LUA_BEGIN
     int Body::ApplyForceToCenter(lua_State* L)
     {
         // <b2.Body>:ApplyForceToCenter(impulse.x, impulse.y, wake)
-        rainbow::lua::Argument<lua_Number>::is_required(L, 2);
-        rainbow::lua::Argument<lua_Number>::is_required(L, 3);
-        rainbow::lua::Argument<bool>::is_required(L, 4);
+        rainbow::lua::checkargs<Body, lua_Number, lua_Number, bool>(L);
 
         Body* self = Bind::self(L);
         if (!self)
@@ -307,8 +305,7 @@ NS_B2_LUA_BEGIN
     int Body::ApplyTorque(lua_State* L)
     {
         // <b2.Body>:ApplyTorque(torque, wake)
-        rainbow::lua::Argument<lua_Number>::is_required(L, 2);
-        rainbow::lua::Argument<bool>::is_required(L, 3);
+        rainbow::lua::checkargs<Body, lua_Number, bool>(L);
 
         Body* self = Bind::self(L);
         if (!self)
@@ -321,11 +318,12 @@ NS_B2_LUA_BEGIN
     int Body::ApplyLinearImpulse(lua_State* L)
     {
         // <b2.Body>:ApplyLinearImpulse(impulse.x, impulse.y, point.x, point.y, wake)
-        rainbow::lua::Argument<lua_Number>::is_required(L, 2);
-        rainbow::lua::Argument<lua_Number>::is_required(L, 3);
-        rainbow::lua::Argument<lua_Number>::is_required(L, 4);
-        rainbow::lua::Argument<lua_Number>::is_required(L, 5);
-        rainbow::lua::Argument<bool>::is_required(L, 6);
+        rainbow::lua::checkargs<Body,
+                                lua_Number,
+                                lua_Number,
+                                lua_Number,
+                                lua_Number,
+                                bool>(L);
 
         Body* self = Bind::self(L);
         if (!self)
@@ -339,8 +337,7 @@ NS_B2_LUA_BEGIN
     int Body::ApplyAngularImpulse(lua_State* L)
     {
         // <b2.Body>:ApplyAngularImpulse(impulse, wake)
-        rainbow::lua::Argument<lua_Number>::is_required(L, 2);
-        rainbow::lua::Argument<bool>::is_required(L, 3);
+        rainbow::lua::checkargs<Body, lua_Number, bool>(L);
 
         Body* self = Bind::self(L);
         if (!self)
@@ -374,10 +371,8 @@ NS_B2_LUA_BEGIN
 
     int Body::SetMassData(lua_State* L)
     {
-        rainbow::lua::Argument<lua_Number>::is_required(L, 2);
-        rainbow::lua::Argument<lua_Number>::is_required(L, 3);
-        rainbow::lua::Argument<lua_Number>::is_required(L, 4);
-        rainbow::lua::Argument<lua_Number>::is_required(L, 5);
+        rainbow::lua::
+            checkargs<Body, lua_Number, lua_Number, lua_Number, lua_Number>(L);
 
         Body* self = Bind::self(L);
         if (!self)
@@ -403,8 +398,7 @@ NS_B2_LUA_BEGIN
 
     int Body::GetWorldPoint(lua_State* L)
     {
-        rainbow::lua::Argument<lua_Number>::is_required(L, 2);
-        rainbow::lua::Argument<lua_Number>::is_required(L, 3);
+        rainbow::lua::checkargs<Body, lua_Number, lua_Number>(L);
 
         return get1fv(L,
                       [](const b2Body* body, const b2Vec2& p) {
@@ -415,8 +409,7 @@ NS_B2_LUA_BEGIN
 
     int Body::GetWorldVector(lua_State* L)
     {
-        rainbow::lua::Argument<lua_Number>::is_required(L, 2);
-        rainbow::lua::Argument<lua_Number>::is_required(L, 3);
+        rainbow::lua::checkargs<Body, lua_Number, lua_Number>(L);
 
         return get1fv(L,
                       [](const b2Body* body, const b2Vec2& v) {
@@ -427,8 +420,7 @@ NS_B2_LUA_BEGIN
 
     int Body::GetLocalPoint(lua_State* L)
     {
-        rainbow::lua::Argument<lua_Number>::is_required(L, 2);
-        rainbow::lua::Argument<lua_Number>::is_required(L, 3);
+        rainbow::lua::checkargs<Body, lua_Number, lua_Number>(L);
 
         return get1fv(L,
                       [](const b2Body* body, const b2Vec2& p) {
@@ -439,8 +431,7 @@ NS_B2_LUA_BEGIN
 
     int Body::GetLocalVector(lua_State* L)
     {
-        rainbow::lua::Argument<lua_Number>::is_required(L, 2);
-        rainbow::lua::Argument<lua_Number>::is_required(L, 3);
+        rainbow::lua::checkargs<Body, lua_Number, lua_Number>(L);
 
         return get1fv(L,
                       [](const b2Body* body, const b2Vec2& v) {
@@ -451,8 +442,7 @@ NS_B2_LUA_BEGIN
 
     int Body::GetLinearVelocityFromWorldPoint(lua_State* L)
     {
-        rainbow::lua::Argument<lua_Number>::is_required(L, 2);
-        rainbow::lua::Argument<lua_Number>::is_required(L, 3);
+        rainbow::lua::checkargs<Body, lua_Number, lua_Number>(L);
 
         return get1fv(L,
                       [](const b2Body* body, const b2Vec2& p) {
@@ -463,8 +453,7 @@ NS_B2_LUA_BEGIN
 
     int Body::GetLinearVelocityFromLocalPoint(lua_State* L)
     {
-        rainbow::lua::Argument<lua_Number>::is_required(L, 2);
-        rainbow::lua::Argument<lua_Number>::is_required(L, 3);
+        rainbow::lua::checkargs<Body, lua_Number, lua_Number>(L);
 
         return get1fv(L,
                       [](const b2Body* body, const b2Vec2& p) {
@@ -483,7 +472,7 @@ NS_B2_LUA_BEGIN
     int Body::SetLinearDamping(lua_State* L)
     {
         // <b2.Body>:SetLinearDamping(damping)
-        rainbow::lua::Argument<lua_Number>::is_required(L, 2);
+        rainbow::lua::checkargs<Body, lua_Number>(L);
 
         Body* self = Bind::self(L);
         if (!self)

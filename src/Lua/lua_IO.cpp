@@ -13,7 +13,7 @@ namespace
     int load(lua_State* L)
     {
         // rainbow.io.load(filename)
-        rainbow::lua::Argument<char*>::is_required(L, 1);
+        rainbow::lua::checkargs<char*>(L);
 
         Data blob = Data::load_document(lua_tostring(L, 1));
         if (!blob)
@@ -26,9 +26,7 @@ namespace
     int save(lua_State* L)
     {
         // rainbow.io.save(filename, data, size)
-        rainbow::lua::Argument<char*>::is_required(L, 1);
-        rainbow::lua::Argument<char*>::is_required(L, 2);
-        rainbow::lua::Argument<lua_Number>::is_required(L, 3);
+        rainbow::lua::checkargs<char*, char*, lua_Number>(L);
 
         Data blob(lua_tostring(L, 2),
                   lua_tointeger(L, 3),

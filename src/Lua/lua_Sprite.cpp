@@ -88,10 +88,11 @@ NS_RAINBOW_LUA_BEGIN
     int Sprite::set_color(lua_State* L)
     {
         // <sprite>:set_color(r, g, b, a = 255)
-        Argument<lua_Number>::is_required(L, 2);
-        Argument<lua_Number>::is_required(L, 3);
-        Argument<lua_Number>::is_required(L, 4);
-        Argument<lua_Number>::is_optional(L, 5);
+        checkargs<Sprite,
+                  lua_Number,
+                  lua_Number,
+                  lua_Number,
+                  nil_or<lua_Number>>(L);
 
         Sprite* self = Bind::self(L);
         if (!self)
@@ -141,8 +142,7 @@ NS_RAINBOW_LUA_BEGIN
     int Sprite::set_scale(lua_State* L)
     {
         // <sprite>:set_scale(fx, fy = fx)
-        Argument<lua_Number>::is_required(L, 2);
-        Argument<lua_Number>::is_optional(L, 3);
+        checkargs<Sprite, lua_Number, nil_or<lua_Number>>(L);
 
         Sprite* self = Bind::self(L);
         if (!self)

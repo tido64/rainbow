@@ -8,6 +8,7 @@
 #include <utility>
 
 #include "Lua/LuaMacros.h"
+#include "Platform/Macros.h"
 
 // A 'verify' macro is defined in 'AssertMacros.h' in the OS X SDK.
 #ifdef verify
@@ -27,27 +28,45 @@ extern "C" {
 
 NS_RAINBOW_LUA_BEGIN
 {
+    namespace detail
+    {
+        template <typename T>
+        void checktype(lua_State* L, int n);
+
+        template <typename T, typename... Args>
+        void checkargs(lua_State* L, int n)
+        {
+            checktype<T>(L, n);
+            checkargs<Args...>(L, n + 1);
+        }
+
+        template <>
+        inline void checkargs<std::nullptr_t>(lua_State*, int)
+        {
+        }
+    }
+
+    template <typename T>
+    struct nil_or
+    {
+    };
+
+    template <typename... Args>
+    void checkargs(lua_State* L)
+    {
+#ifdef NDEBUG
+        NOT_USED(L);
+#else
+        detail::checkargs<Args..., std::nullptr_t>(L, 1);
+#endif  // NDEBUG
+    }
+
     template <typename... Args>
     void verify(lua_State* L, bool success, const char* error, Args&&... args)
     {
         if (!success)
             luaL_error(L, error, std::forward<Args>(args)...);
     }
-
-    template <typename T>
-    struct Argument
-    {
-        static void is_optional(lua_State* L, int n);
-        static void is_required(lua_State* L, int n);
-    };
-
-#ifdef NDEBUG
-    template <typename T>
-    void Argument<T>::is_optional(lua_State*, int) {}
-
-    template <typename T>
-    void Argument<T>::is_required(lua_State*, int) {}
-#endif  // NDEBUG
 } NS_RAINBOW_LUA_END
 
 #endif  // LUA_LUASYNTAX_H_

@@ -124,14 +124,13 @@ NS_RAINBOW_LUA_BEGIN
         int obj;
         if (lua_isnoneornil(L, 3))
         {
-            Argument<T>::is_required(L, 2);
+            checkargs<SceneGraph, T>(L);
             node = self->node_;
             obj = 2;
         }
         else
         {
-            Argument<SceneNode>::is_required(L, 2);
-            Argument<T>::is_required(L, 3);
+            checkargs<SceneGraph, SceneNode, T>(L);
             node = tonode(L, 2);
             obj = 3;
         }
@@ -171,7 +170,7 @@ NS_RAINBOW_LUA_BEGIN
     int SceneGraph::add_node(lua_State* L)
     {
         // rainbow.scenegraph:add_node([parent])
-        Argument<SceneNode>::is_optional(L, 2);
+        checkargs<SceneGraph, nil_or<SceneNode>>(L);
 
         SceneGraph* self = Bind::self(L);
         if (!self)
@@ -190,8 +189,7 @@ NS_RAINBOW_LUA_BEGIN
     int SceneGraph::attach_program(lua_State* L)
     {
         // rainbow.scenegraph:attach_program(node, program)
-        Argument<SceneNode>::is_required(L, 2);
-        Argument<Shader>::is_required(L, 3);
+        checkargs<SceneGraph, SceneNode, Shader>(L);
 
         SceneGraph* self = Bind::self(L);
         if (!self)
@@ -206,7 +204,7 @@ NS_RAINBOW_LUA_BEGIN
     int SceneGraph::disable(lua_State* L)
     {
         // rainbow.scenegraph:disable(node)
-        Argument<SceneNode>::is_required(L, 2);
+        checkargs<SceneGraph, SceneNode>(L);
 
         tonode(L, 2)->set_enabled(false);
         return 0;
@@ -215,7 +213,7 @@ NS_RAINBOW_LUA_BEGIN
     int SceneGraph::enable(lua_State* L)
     {
         // rainbow.scenegraph:enable(node)
-        Argument<SceneNode>::is_required(L, 2);
+        checkargs<SceneGraph, SceneNode>(L);
 
         tonode(L, 2)->set_enabled(true);
         return 0;
@@ -224,7 +222,7 @@ NS_RAINBOW_LUA_BEGIN
     int SceneGraph::remove(lua_State* L)
     {
         // rainbow.scenegraph:remove(node)
-        Argument<SceneNode>::is_required(L, 2);
+        checkargs<SceneGraph, SceneNode>(L);
 
         SceneNode* node = tonode(L, 2);
         R_ASSERT(unregister_node(node), "Failed to unregister node");
@@ -235,8 +233,7 @@ NS_RAINBOW_LUA_BEGIN
     int SceneGraph::set_parent(lua_State* L)
     {
         // rainbow.scenegraph:set_parent(parent, child)
-        Argument<SceneNode>::is_required(L, 2);
-        Argument<SceneNode>::is_required(L, 3);
+        checkargs<SceneGraph, SceneNode, SceneNode>(L);
 
         tonode(L, 2)->add_child(tonode(L, 3));
         return 0;
@@ -245,8 +242,7 @@ NS_RAINBOW_LUA_BEGIN
     int SceneGraph::set_tag(lua_State* L)
     {
         // rainbow.scenegraph:set_tag(node, tag)
-        Argument<SceneNode>::is_required(L, 2);
-        Argument<char*>::is_required(L, 3);
+        checkargs<SceneGraph, SceneNode, char*>(L);
 
 #if USE_NODE_TAGS
         tonode(L, 2)->set_tag(lua_tostring(L, 3));
@@ -257,9 +253,7 @@ NS_RAINBOW_LUA_BEGIN
     int SceneGraph::move(lua_State* L)
     {
         // rainbow.scenegraph:move(node, x, y)
-        Argument<SceneNode>::is_required(L, 2);
-        Argument<lua_Number>::is_required(L, 3);
-        Argument<lua_Number>::is_required(L, 4);
+        checkargs<SceneGraph, SceneNode, lua_Number, lua_Number>(L);
 
         const Vec2f delta(lua_tonumber(L, 3), lua_tonumber(L, 4));
         if (delta.is_zero())
@@ -277,7 +271,7 @@ NS_RAINBOW_LUA_BEGIN
 
     ScopedNode::ScopedNode(lua_State* L) : node_(nullptr), state_(L)
     {
-        Argument<SceneNode>::is_required(L, 1);
+        checkargs<SceneNode>(L);
         node_ = tonode(L, 1);
     }
 

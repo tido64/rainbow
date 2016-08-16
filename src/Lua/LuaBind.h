@@ -32,7 +32,7 @@ NS_RAINBOW_LUA_BEGIN
         template <typename F>
         static int set1b(lua_State* L, F&& set)
         {
-            Argument<bool>::is_required(L, 2);
+            checkargs<T, bool>(L);
 
             T* self = Bind::self(L);
             if (!self)
@@ -57,7 +57,7 @@ NS_RAINBOW_LUA_BEGIN
         template <typename F>
         static int set1f(lua_State* L, F&& set)
         {
-            Argument<lua_Number>::is_required(L, 2);
+            checkargs<T, lua_Number>(L);
 
             T* self = Bind::self(L);
             if (!self)
@@ -83,8 +83,7 @@ NS_RAINBOW_LUA_BEGIN
         template <typename F>
         static int set1fv(lua_State* L, F&& set)
         {
-            Argument<lua_Number>::is_required(L, 2);
-            Argument<lua_Number>::is_required(L, 3);
+            checkargs<T, lua_Number, lua_Number>(L);
 
             T* self = Bind::self(L);
             if (!self)
@@ -97,8 +96,7 @@ NS_RAINBOW_LUA_BEGIN
         template <typename F>
         static int set2f(lua_State* L, F&& set)
         {
-            Argument<lua_Number>::is_required(L, 2);
-            Argument<lua_Number>::is_required(L, 3);
+            checkargs<T, lua_Number, lua_Number>(L);
 
             T* self = Bind::self(L);
             if (!self)
@@ -122,7 +120,7 @@ NS_RAINBOW_LUA_BEGIN
         template <typename F>
         static int set1i(lua_State* L, F&& set)
         {
-            Argument<lua_Number>::is_required(L, 2);
+            checkargs<T, lua_Number>(L);
 
             T* self = Bind::self(L);
             if (!self)
@@ -135,7 +133,7 @@ NS_RAINBOW_LUA_BEGIN
         template <typename U, typename F>
         static int set1ud(lua_State* L, F&& set)
         {
-            Argument<U>::is_required(L, 2);
+            checkargs<T, U>(L);
 
             T* self = Bind::self(L);
             if (!self)

@@ -47,10 +47,11 @@ NS_B2_LUA_BEGIN
 
     int EdgeShape::Set(lua_State* L)
     {
-        rainbow::lua::Argument<lua_Number>::is_required(L, 2);
-        rainbow::lua::Argument<lua_Number>::is_required(L, 3);
-        rainbow::lua::Argument<lua_Number>::is_required(L, 4);
-        rainbow::lua::Argument<lua_Number>::is_required(L, 5);
+        rainbow::lua::checkargs<EdgeShape,
+                                lua_Number,
+                                lua_Number,
+                                lua_Number,
+                                lua_Number>(L);
 
         EdgeShape* self = Bind::self(L);
         if (!self)

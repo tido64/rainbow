@@ -7,7 +7,7 @@
 #include "Graphics/Shaders/Diffuse.h"
 #include "Lua/LuaBind.h"
 
-namespace
+NS_RAINBOW_LUA_MODULE_BEGIN(shaders)
 {
     class Diffuse final : public rainbow::lua::Shader,
                           private rainbow::lua::Bind<Diffuse>
@@ -32,10 +32,7 @@ namespace
     };
 
     int diffuse(lua_State* L) { return rainbow::lua::alloc<Diffuse>(L); }
-}
 
-NS_RAINBOW_LUA_MODULE_BEGIN(shaders)
-{
     void init(lua_State* L)
     {
         // Initialise "rainbow.shaders" namespace
@@ -48,20 +45,20 @@ NS_RAINBOW_LUA_MODULE_BEGIN(shaders)
     }
 } NS_RAINBOW_LUA_MODULE_END(shaders)
 
-constexpr bool Diffuse::is_constructible;
+constexpr bool rainbow::lua::shaders::Diffuse::is_constructible;
 
-const char Diffuse::class_name[] = "shaders.diffuse";
+const char rainbow::lua::shaders::Diffuse::class_name[] = "shaders.diffuse";
 
-const luaL_Reg Diffuse::functions[]{
-    {"set_cutoff",    &Diffuse::set_cutoff},
-    {"set_radius",    &Diffuse::set_radius},
-    {"set_position",  &Diffuse::set_position},
+const luaL_Reg rainbow::lua::shaders::Diffuse::functions[]{
+    {"set_cutoff",    &rainbow::lua::shaders::Diffuse::set_cutoff},
+    {"set_radius",    &rainbow::lua::shaders::Diffuse::set_radius},
+    {"set_position",  &rainbow::lua::shaders::Diffuse::set_position},
     {nullptr,         nullptr}};
 
-int Diffuse::set_cutoff(lua_State* L)
+int rainbow::lua::shaders::Diffuse::set_cutoff(lua_State* L)
 {
     // <diffuse>:set_cutoff(cutoff)
-    rainbow::lua::Argument<lua_Number>::is_required(L, 2);
+    checkargs<Diffuse, lua_Number>(L);
 
     Diffuse* self = Bind::self(L);
     if (!self)
@@ -71,10 +68,10 @@ int Diffuse::set_cutoff(lua_State* L)
     return 0;
 }
 
-int Diffuse::set_radius(lua_State* L)
+int rainbow::lua::shaders::Diffuse::set_radius(lua_State* L)
 {
     // <diffuse>:set_radius(radius)
-    rainbow::lua::Argument<lua_Number>::is_required(L, 2);
+    checkargs<Diffuse, lua_Number>(L);
 
     Diffuse* self = Bind::self(L);
     if (!self)
@@ -84,12 +81,10 @@ int Diffuse::set_radius(lua_State* L)
     return 0;
 }
 
-int Diffuse::set_position(lua_State* L)
+int rainbow::lua::shaders::Diffuse::set_position(lua_State* L)
 {
     // <diffuse>:set_position(x, y, z = 100.0)
-    rainbow::lua::Argument<lua_Number>::is_required(L, 2);
-    rainbow::lua::Argument<lua_Number>::is_required(L, 3);
-    rainbow::lua::Argument<lua_Number>::is_optional(L, 4);
+    checkargs<Diffuse, lua_Number, lua_Number, nil_or<lua_Number>>(L);
 
     Diffuse* self = Bind::self(L);
     if (!self)

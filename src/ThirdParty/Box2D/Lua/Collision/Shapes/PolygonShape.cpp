@@ -57,8 +57,7 @@ NS_B2_LUA_BEGIN
 
     int PolygonShape::Set(lua_State* L)
     {
-        rainbow::lua::Argument<void*>::is_required(L, 2);
-        rainbow::lua::Argument<lua_Number>::is_required(L, 3);
+        rainbow::lua::checkargs<PolygonShape, void*, lua_Number>(L);
 
         PolygonShape* self = Bind::self(L);
         if (!self)
@@ -78,9 +77,6 @@ NS_B2_LUA_BEGIN
 
     int PolygonShape::SetAsBox(lua_State* L)
     {
-        rainbow::lua::Argument<lua_Number>::is_required(L, 2);
-        rainbow::lua::Argument<lua_Number>::is_required(L, 3);
-
         PolygonShape* self = Bind::self(L);
         if (!self)
             return 0;
@@ -89,12 +85,18 @@ NS_B2_LUA_BEGIN
         LUA_ASSERT(L, n == 3 || n == 5, "3 or 5 parameters expected");
 
         if (n == 3)
+        {
+            rainbow::lua::checkargs<PolygonShape, lua_Number, lua_Number>(L);
             self->get()->SetAsBox(lua_tonumber(L, 2), lua_tonumber(L, 3));
+        }
         else
         {
-            rainbow::lua::Argument<lua_Number>::is_required(L, 4);
-            rainbow::lua::Argument<lua_Number>::is_required(L, 5);
-            rainbow::lua::Argument<lua_Number>::is_required(L, 6);
+            rainbow::lua::checkargs<PolygonShape,
+                                    lua_Number,
+                                    lua_Number,
+                                    lua_Number,
+                                    lua_Number,
+                                    lua_Number>(L);
 
             self->get()->SetAsBox(lua_tonumber(L, 2),
                                   lua_tonumber(L, 3),

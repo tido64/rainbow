@@ -19,16 +19,40 @@ namespace rainbow
         struct Channel;
         struct Sound;
     }
-}
 
-namespace b2
-{
     namespace lua
     {
-        class Body;
-        class Fixture;
+        class Animation;
+        class Font;
+        class Label;
+        class SceneGraph;
+        class Shader;
+        class Sprite;
+        class SpriteBatch;
+        class Texture;
+
+        namespace shaders
+        {
+            class Diffuse;
+        }
     }
-}
+}  // rainbow
+
+namespace b2 { namespace lua
+{
+    class Body;
+    class CircleShape;
+    class Contact;
+    class EdgeShape;
+    class Fixture;
+    class PolygonShape;
+    class World;
+}}  // namespace b2::lua
+
+namespace spine { namespace lua
+{
+    class Skeleton;
+}}
 
 namespace
 {
@@ -69,18 +93,18 @@ namespace
     }
 }
 
-NS_RAINBOW_LUA_BEGIN
+namespace rainbow { namespace lua { namespace detail
 {
     /* bool */
 
     template <>
-    void Argument<bool>::is_optional(lua_State* L, int n)
+    void checktype<nil_or<bool>>(lua_State* L, int n)
     {
         optional(L, n, is_boolean, "nil or boolean");
     }
 
     template <>
-    void Argument<bool>::is_required(lua_State* L, int n)
+    void checktype<bool>(lua_State* L, int n)
     {
         require(L, n, is_boolean, "boolean");
     }
@@ -88,13 +112,13 @@ NS_RAINBOW_LUA_BEGIN
     /* char* */
 
     template <>
-    void Argument<char*>::is_optional(lua_State* L, int n)
+    void checktype<nil_or<char*>>(lua_State* L, int n)
     {
         optional(L, n, lua_isstring, "nil or string");
     }
 
     template <>
-    void Argument<char*>::is_required(lua_State* L, int n)
+    void checktype<char*>(lua_State* L, int n)
     {
         require(L, n, lua_isstring, "string");
     }
@@ -102,13 +126,13 @@ NS_RAINBOW_LUA_BEGIN
     /* void */
 
     template <>
-    void Argument<void*>::is_optional(lua_State* L, int n)
+    void checktype<nil_or<void*>>(lua_State* L, int n)
     {
         optional(L, n, is_table, "table");
     }
 
     template <>
-    void Argument<void*>::is_required(lua_State* L, int n)
+    void checktype<void*>(lua_State* L, int n)
     {
         require(L, n, is_table, "table");
     }
@@ -116,7 +140,7 @@ NS_RAINBOW_LUA_BEGIN
     /* Drawable */
 
     template <>
-    void Argument<Drawable>::is_required(lua_State* L, int n)
+    void checktype<Drawable>(lua_State* L, int n)
     {
         require(L, n, is_userdata, "drawable");
     }
@@ -124,13 +148,13 @@ NS_RAINBOW_LUA_BEGIN
     /* rainbow::SceneNode */
 
     template <>
-    void Argument<SceneNode>::is_optional(lua_State* L, int n)
+    void checktype<nil_or<SceneNode>>(lua_State* L, int n)
     {
         optional(L, n, lua_isuserdata, "nil or node");
     }
 
     template <>
-    void Argument<SceneNode>::is_required(lua_State* L, int n)
+    void checktype<SceneNode>(lua_State* L, int n)
     {
         require(L, n, lua_isuserdata, "node");
     }
@@ -138,13 +162,13 @@ NS_RAINBOW_LUA_BEGIN
     /* rainbow::audio */
 
     template <>
-    void Argument<rainbow::audio::Channel>::is_required(lua_State* L, int n)
+    void checktype<audio::Channel>(lua_State* L, int n)
     {
         require(L, n, is_table, "channel");
     }
 
     template <>
-    void Argument<rainbow::audio::Sound>::is_required(lua_State* L, int n)
+    void checktype<audio::Sound>(lua_State* L, int n)
     {
         require(L, n, is_table, "sound");
     }
@@ -152,53 +176,53 @@ NS_RAINBOW_LUA_BEGIN
     /* lua_Number */
 
     template <>
-    void Argument<lua_Number>::is_optional(lua_State* L, int n)
+    void checktype<nil_or<lua_Number>>(lua_State* L, int n)
     {
         optional(L, n, lua_isnumber, "nil or number");
     }
 
     template <>
-    void Argument<lua_Number>::is_required(lua_State* L, int n)
+    void checktype<lua_Number>(lua_State* L, int n)
     {
         require(L, n, lua_isnumber, "number");
     }
 
     /* rainbow::lua::Animation */
 
-    class Animation;
-
     template <>
-    void Argument<Animation>::is_required(lua_State* L, int n)
+    void checktype<Animation>(lua_State* L, int n)
     {
         require(L, n, is_userdata, "animation");
     }
 
     /* rainbow::lua::Font */
 
-    class Font;
-
     template <>
-    void Argument<Font>::is_required(lua_State* L, int n)
+    void checktype<Font>(lua_State* L, int n)
     {
         require(L, n, is_userdata, "font");
     }
 
     /* rainbow::lua::Label */
 
-    class Label;
-
     template <>
-    void Argument<Label>::is_required(lua_State* L, int n)
+    void checktype<Label>(lua_State* L, int n)
     {
         require(L, n, is_userdata, "label");
     }
 
-    /* rainbow::lua::Shader */
-
-    class Shader;
+    /* rainbow::lua::SceneGraph */
 
     template <>
-    void Argument<Shader>::is_required(lua_State* L, int n)
+    void checktype<SceneGraph>(lua_State* L, int n)
+    {
+        require(L, n, is_userdata, "scenegraph");
+    }
+
+    /* rainbow::lua::Shader */
+
+    template <>
+    void checktype<Shader>(lua_State* L, int n)
     {
         if (!((lua_isnumber(L, n) && lua_tointeger(L, n) == 0) ||
               lua_isuserdata(L, n)))
@@ -209,53 +233,93 @@ NS_RAINBOW_LUA_BEGIN
 
     /* rainbow::lua::Sprite */
 
-    class Sprite;
-
     template <>
-    void Argument<Sprite>::is_optional(lua_State* L, int n)
+    void checktype<nil_or<Sprite>>(lua_State* L, int n)
     {
         optional(L, n, is_userdata, "nil or sprite");
     }
 
     template <>
-    void Argument<Sprite>::is_required(lua_State* L, int n)
+    void checktype<Sprite>(lua_State* L, int n)
     {
         require(L, n, is_userdata, "sprite");
     }
 
     /* rainbow::lua::SpriteBatch */
 
-    class SpriteBatch;
-
     template <>
-    void Argument<SpriteBatch>::is_required(lua_State* L, int n)
+    void checktype<SpriteBatch>(lua_State* L, int n)
     {
         require(L, n, is_userdata, "sprite batch");
     }
 
     /* rainbow::lua::Texture */
 
-    class Texture;
-
     template <>
-    void Argument<Texture>::is_required(lua_State* L, int n)
+    void checktype<Texture>(lua_State* L, int n)
     {
         require(L, n, is_userdata, "texture");
+    }
+
+    /* rainbow::lua::shaders::Diffuse */
+
+    template <>
+    void checktype<shaders::Diffuse>(lua_State* L, int n)
+    {
+        require(L, n, is_userdata, "shaders.diffuse");
     }
 
     /* Box2D */
 
     template <>
-    void Argument<b2::lua::Body>::is_required(lua_State* L, int n)
+    void checktype<b2::lua::Body>(lua_State* L, int n)
     {
         luaL_checkudata(L, n, "b2Body");
     }
 
     template <>
-    void Argument<b2::lua::Fixture>::is_required(lua_State* L, int n)
+    void checktype<b2::lua::CircleShape>(lua_State* L, int n)
+    {
+        luaL_checkudata(L, n, "CircleShape");
+    }
+
+    template <>
+    void checktype<b2::lua::Contact>(lua_State* L, int n)
+    {
+        luaL_checkudata(L, n, "b2Contact");
+    }
+
+    template <>
+    void checktype<b2::lua::EdgeShape>(lua_State* L, int n)
+    {
+        luaL_checkudata(L, n, "EdgeShape");
+    }
+
+    template <>
+    void checktype<b2::lua::Fixture>(lua_State* L, int n)
     {
         luaL_checkudata(L, n, "b2Fixture");
     }
-} NS_RAINBOW_LUA_END
 
-#endif
+    template <>
+    void checktype<b2::lua::PolygonShape>(lua_State* L, int n)
+    {
+        luaL_checkudata(L, n, "PolygonShape");
+    }
+
+    template <>
+    void checktype<b2::lua::World>(lua_State* L, int n)
+    {
+        luaL_checkudata(L, n, "World");
+    }
+
+    /* Spine */
+
+    template <>
+    void checktype<spine::lua::Skeleton>(lua_State* L, int n)
+    {
+        luaL_checkudata(L, n, "skeleton");
+    }
+}}}  // namespace rainbow::lua::detail
+
+#endif  // NDEBUG

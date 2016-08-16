@@ -25,11 +25,12 @@ NS_B2_LUA_BEGIN
     protected:
         static int TestPoint(lua_State* L)
         {
-            rainbow::lua::Argument<lua_Number>::is_required(L, 2);
-            rainbow::lua::Argument<lua_Number>::is_required(L, 3);
-            rainbow::lua::Argument<lua_Number>::is_required(L, 4);
-            rainbow::lua::Argument<lua_Number>::is_required(L, 5);
-            rainbow::lua::Argument<lua_Number>::is_required(L, 6);
+            rainbow::lua::checkargs<T,
+                                    lua_Number,
+                                    lua_Number,
+                                    lua_Number,
+                                    lua_Number,
+                                    lua_Number>(L);
 
             T* self = T::self(L);
             if (!self)

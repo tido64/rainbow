@@ -29,7 +29,7 @@ namespace
     int load_sound(lua_State* L)
     {
         // rainbow.audio.load_sound(file)
-        rainbow::lua::Argument<char*>::is_required(L, 1);
+        rainbow::lua::checkargs<char*>(L);
 
         Sound* sound = rainbow::audio::load_sound(lua_tostring(L, 1));
         if (sound == nullptr)
@@ -42,7 +42,7 @@ namespace
     int load_stream(lua_State* L)
     {
         // rainbow.audio.load_stream(file)
-        rainbow::lua::Argument<char*>::is_required(L, 1);
+        rainbow::lua::checkargs<char*>(L);
 
         Sound* sound = rainbow::audio::load_stream(lua_tostring(L, 1));
         if (sound == nullptr)
@@ -55,7 +55,7 @@ namespace
     int release(lua_State* L)
     {
         // rainbow.audio.release(<sound>)
-        rainbow::lua::Argument<Sound>::is_required(L, 1);
+        rainbow::lua::checkargs<Sound>(L);
 
         auto sound = tosound(L);
         if (sound != nullptr)
@@ -66,7 +66,7 @@ namespace
     int is_paused(lua_State* L)
     {
         // rainbow.audio.is_paused(<channel>)
-        rainbow::lua::Argument<Channel>::is_required(L, 1);
+        rainbow::lua::checkargs<Channel>(L);
 
         Channel* channel = tochannel(L);
         lua_pushboolean(L, channel && rainbow::audio::is_paused(channel));
@@ -76,7 +76,7 @@ namespace
     int is_playing(lua_State* L)
     {
         // rainbow.audio.is_playing(<channel>)
-        rainbow::lua::Argument<Channel>::is_required(L, 1);
+        rainbow::lua::checkargs<Channel>(L);
 
         Channel* channel = tochannel(L);
         lua_pushboolean(L, channel && rainbow::audio::is_playing(channel));
@@ -86,8 +86,7 @@ namespace
     int set_loop_count(lua_State* L)
     {
         // rainbow.audio.set_loop_count(<channel>, loop_count)
-        rainbow::lua::Argument<Channel>::is_required(L, 1);
-        rainbow::lua::Argument<lua_Number>::is_required(L, 2);
+        rainbow::lua::checkargs<Channel, lua_Number>(L);
 
         const int loop_count = lua_tointeger(L, 2);
         lua_settop(L, 1);
@@ -101,8 +100,7 @@ namespace
     int set_volume(lua_State* L)
     {
         // rainbow.audio.set_volume(<channel>, volume)
-        rainbow::lua::Argument<Channel>::is_required(L, 1);
-        rainbow::lua::Argument<lua_Number>::is_required(L, 2);
+        rainbow::lua::checkargs<Channel, lua_Number>(L);
 
         const float volume = lua_tonumber(L, 2);
         lua_settop(L, 1);
@@ -116,9 +114,7 @@ namespace
     int set_world_position(lua_State* L)
     {
         // rainbow.audio.set_world_position(<channel>, x, y)
-        rainbow::lua::Argument<Channel>::is_required(L, 1);
-        rainbow::lua::Argument<lua_Number>::is_required(L, 2);
-        rainbow::lua::Argument<lua_Number>::is_required(L, 3);
+        rainbow::lua::checkargs<Channel, lua_Number, lua_Number>(L);
 
         const Vec2f position(lua_tonumber(L, 2), lua_tonumber(L, 3));
         lua_settop(L, 1);
@@ -132,7 +128,7 @@ namespace
     int pause(lua_State* L)
     {
         // rainbow.audio.pause(<channel>)
-        rainbow::lua::Argument<Channel>::is_required(L, 1);
+        rainbow::lua::checkargs<Channel>(L);
 
         Channel* channel = tochannel(L);
         if (channel != nullptr)
@@ -143,9 +139,9 @@ namespace
     int play(lua_State* L)
     {
         // rainbow.audio.play(<channel>|<sound>[, x, y])
-        rainbow::lua::Argument<void*>::is_required(L, 1);
-        rainbow::lua::Argument<lua_Number>::is_optional(L, 2);
-        rainbow::lua::Argument<lua_Number>::is_optional(L, 3);
+        rainbow::lua::checkargs<void*,
+                                rainbow::lua::nil_or<lua_Number>,
+                                rainbow::lua::nil_or<lua_Number>>(L);
 
         Channel* channel;
 
@@ -190,7 +186,7 @@ namespace
     int stop(lua_State* L)
     {
         // rainbow.audio.stop(<sound>)
-        rainbow::lua::Argument<Sound>::is_required(L, 1);
+        rainbow::lua::checkargs<Sound>(L);
 
         Channel* channel = tochannel(L);
         if (channel != nullptr)

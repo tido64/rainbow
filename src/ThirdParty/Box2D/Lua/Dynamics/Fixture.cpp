@@ -143,7 +143,7 @@ NS_B2_LUA_BEGIN
 
     int Fixture::SetFilterData(lua_State* L)
     {
-        rainbow::lua::Argument<void*>::is_required(L, 2);
+        rainbow::lua::checkargs<Fixture, void*>(L);
 
         Fixture* self = Bind::self(L);
         if (!self)
@@ -189,8 +189,7 @@ NS_B2_LUA_BEGIN
 
     int Fixture::TestPoint(lua_State* L)
     {
-        rainbow::lua::Argument<lua_Number>::is_required(L, 2);
-        rainbow::lua::Argument<lua_Number>::is_required(L, 3);
+        rainbow::lua::checkargs<Fixture, lua_Number, lua_Number>(L);
 
         return get1b(
             L,
@@ -259,7 +258,7 @@ NS_B2_LUA_BEGIN
 
     int Fixture::Dump(lua_State* L)
     {
-        rainbow::lua::Argument<lua_Number>::is_required(L, 2);
+        rainbow::lua::checkargs<Fixture, lua_Number>(L);
 
         Fixture* self = Bind::self(L);
         if (!self)

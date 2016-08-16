@@ -22,7 +22,7 @@ NS_RAINBOW_LUA_BEGIN
     Texture::Texture(lua_State* L)
     {
         // rainbow.texture("/path/to/texture")
-        Argument<char*>::is_required(L, 1);
+        checkargs<char*>(L);
 
         const auto path = rainbow::filesystem::relative(lua_tostring(L, 1));
         texture_ = make_shared<TextureAtlas>(path);
@@ -35,10 +35,7 @@ NS_RAINBOW_LUA_BEGIN
     int Texture::create(lua_State* L)
     {
         // <texture>:create(x, y, width, height)
-        Argument<lua_Number>::is_required(L, 2);
-        Argument<lua_Number>::is_required(L, 3);
-        Argument<lua_Number>::is_required(L, 4);
-        Argument<lua_Number>::is_required(L, 5);
+        checkargs<Texture, lua_Number, lua_Number, lua_Number, lua_Number>(L);
 
         Texture* self = Bind::self(L);
         if (!self)

@@ -481,8 +481,7 @@ namespace spine { namespace lua
 
     Skeleton::Skeleton(lua_State* L) : state_(L)
     {
-        rainbow::lua::Argument<char*>::is_required(L, 1);
-        rainbow::lua::Argument<lua_Number>::is_optional(L, 2);
+        rainbow::lua::checkargs<char*, rainbow::lua::nil_or<lua_Number>>(L);
 
         skeleton_.reset(::Skeleton::from_json(
             lua_tostring(L, 1), rainbow::lua::optnumber(L, 2, 1.0f)));
@@ -490,10 +489,8 @@ namespace spine { namespace lua
 
     auto Skeleton::add_animation(lua_State* L) -> int
     {
-        rainbow::lua::Argument<lua_Number>::is_required(L, 2);
-        rainbow::lua::Argument<char*>::is_required(L, 3);
-        rainbow::lua::Argument<bool>::is_required(L, 4);
-        rainbow::lua::Argument<lua_Number>::is_required(L, 5);
+        rainbow::lua::
+            checkargs<Skeleton, lua_Number, char*, bool, lua_Number>(L);
 
         Skeleton* self = Bind::self(L);
         if (!self)
@@ -526,7 +523,7 @@ namespace spine { namespace lua
 
     auto Skeleton::get_current_animation(lua_State* L) -> int
     {
-        rainbow::lua::Argument<lua_Number>::is_required(L, 2);
+        rainbow::lua::checkargs<Skeleton, lua_Number>(L);
 
         Skeleton* self = Bind::self(L);
         if (!self)
@@ -553,9 +550,7 @@ namespace spine { namespace lua
 
     auto Skeleton::set_animation(lua_State* L) -> int
     {
-        rainbow::lua::Argument<lua_Number>::is_required(L, 2);
-        rainbow::lua::Argument<char*>::is_required(L, 3);
-        rainbow::lua::Argument<bool>::is_required(L, 4);
+        rainbow::lua::checkargs<Skeleton, lua_Number, char*, bool>(L);
 
         Skeleton* self = Bind::self(L);
         if (!self)
@@ -570,9 +565,7 @@ namespace spine { namespace lua
 
     auto Skeleton::set_animation_mix(lua_State* L) -> int
     {
-        rainbow::lua::Argument<char*>::is_required(L, 2);
-        rainbow::lua::Argument<char*>::is_required(L, 3);
-        rainbow::lua::Argument<lua_Number>::is_required(L, 4);
+        rainbow::lua::checkargs<Skeleton, char*, char*, lua_Number>(L);
 
         Skeleton* self = Bind::self(L);
         if (!self)
@@ -587,8 +580,8 @@ namespace spine { namespace lua
 
     auto Skeleton::set_attachment(lua_State* L) -> int
     {
-        rainbow::lua::Argument<char*>::is_required(L, 2);
-        rainbow::lua::Argument<char*>::is_optional(L, 3);
+        rainbow::lua::
+            checkargs<Skeleton, char*, rainbow::lua::nil_or<char*>>(L);
 
         Skeleton* self = Bind::self(L);
         if (!self)
@@ -601,8 +594,7 @@ namespace spine { namespace lua
 
     auto Skeleton::set_flip(lua_State* L) -> int
     {
-        rainbow::lua::Argument<bool>::is_required(L, 2);
-        rainbow::lua::Argument<bool>::is_required(L, 3);
+        rainbow::lua::checkargs<Skeleton, bool, bool>(L);
 
         Skeleton* self = Bind::self(L);
         if (!self)
@@ -614,7 +606,7 @@ namespace spine { namespace lua
 
     auto Skeleton::set_listener(lua_State* L) -> int
     {
-        rainbow::lua::Argument<void*>::is_optional(L, 2);
+        rainbow::lua::checkargs<Skeleton, rainbow::lua::nil_or<void*>>(L);
 
         Skeleton* self = Bind::self(L);
         if (!self)
@@ -643,7 +635,7 @@ namespace spine { namespace lua
 
     auto Skeleton::set_skin(lua_State* L) -> int
     {
-        rainbow::lua::Argument<char*>::is_optional(L, 2);
+        rainbow::lua::checkargs<Skeleton, rainbow::lua::nil_or<char*>>(L);
 
         Skeleton* self = Bind::self(L);
         if (!self)

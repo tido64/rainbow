@@ -95,8 +95,8 @@ NS_B2_LUA_BEGIN
 
     World::World(lua_State* L) : contact_listener_(LUA_NOREF), state_(L)
     {
-        rainbow::lua::Argument<lua_Number>::is_optional(L, 1);
-        rainbow::lua::Argument<lua_Number>::is_optional(L, 2);
+        rainbow::lua::checkargs<rainbow::lua::nil_or<lua_Number>,
+                                rainbow::lua::nil_or<lua_Number>>(L);
 
         switch (lua_gettop(L))
         {
@@ -174,7 +174,7 @@ NS_B2_LUA_BEGIN
 
     int World::SetContactListener(lua_State* L)
     {
-        rainbow::lua::Argument<void*>::is_optional(L, 2);
+        rainbow::lua::checkargs<World, rainbow::lua::nil_or<void*>>(L);
 
         World* self = Bind::self(L);
         if (!self)
@@ -207,7 +207,7 @@ NS_B2_LUA_BEGIN
 
     int World::CreateBody(lua_State* L)
     {
-        rainbow::lua::Argument<void*>::is_required(L, 2);
+        rainbow::lua::checkargs<World, void*>(L);
 
         World* self = Bind::self(L);
         if (!self)
@@ -220,7 +220,7 @@ NS_B2_LUA_BEGIN
 
     int World::DestroyBody(lua_State* L)
     {
-        rainbow::lua::Argument<Body>::is_required(L, 2);
+        rainbow::lua::checkargs<World, Body>(L);
 
         World* self = Bind::self(L);
         if (!self)
@@ -236,9 +236,10 @@ NS_B2_LUA_BEGIN
 
     int World::Step(lua_State* L)
     {
-        rainbow::lua::Argument<lua_Number>::is_required(L, 2);
-        rainbow::lua::Argument<lua_Number>::is_optional(L, 3);
-        rainbow::lua::Argument<lua_Number>::is_optional(L, 4);
+        rainbow::lua::checkargs<World,
+                                lua_Number,
+                                rainbow::lua::nil_or<lua_Number>,
+                                rainbow::lua::nil_or<lua_Number>>(L);
 
         World* self = Bind::self(L);
         if (!self)

@@ -40,7 +40,7 @@ NS_RAINBOW_LUA_MODULE_BEGIN(input)
         int is_key_down(lua_State* L)
         {
             // rainbow.input.is_key_down(key)
-            Argument<lua_Number>::is_required(L, 1);
+            checkargs<lua_Number>(L);
 
             const unsigned key = static_cast<unsigned>(lua_tointeger(L, 1));
             lua_pushboolean(

@@ -54,10 +54,7 @@ NS_RAINBOW_LUA_BEGIN
     Animation::Animation(lua_State* L)
     {
         // rainbow.animation(<sprite>, frames{}, fps, loop_delay = 0)
-        Argument<Sprite>::is_optional(L, 1);
-        Argument<void*>::is_required(L, 2);
-        Argument<lua_Number>::is_required(L, 3);
-        Argument<lua_Number>::is_optional(L, 4);
+        checkargs<nil_or<Sprite>, void*, lua_Number, nil_or<lua_Number>>(L);
 
         SpriteRef sprite;
         replacetable(L, 1);
@@ -101,7 +98,7 @@ NS_RAINBOW_LUA_BEGIN
     int Animation::set_frames(lua_State* L)
     {
         // <animation>:set_frames({f1, f2, ...})
-        Argument<void*>::is_required(L, 2);
+        checkargs<Animation, void*>(L);
 
         Animation* self = Bind::self(L);
         if (!self)
@@ -113,7 +110,7 @@ NS_RAINBOW_LUA_BEGIN
 
     int Animation::set_listener(lua_State* L)
     {
-        rainbow::lua::Argument<void*>::is_optional(L, 2);
+        checkargs<Animation, nil_or<void*>>(L);
 
         Animation* self = Bind::self(L);
         if (!self)

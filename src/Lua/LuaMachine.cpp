@@ -33,7 +33,7 @@ namespace
 
     int exit(lua_State* L)
     {
-        rainbow::lua::Argument<char*>::is_optional(L, 1);
+        rainbow::lua::checkargs<rainbow::lua::nil_or<char*>>(L);
 
         lua_getglobal(L, kLuaRainbowInstance);
         if (lua_islightuserdata(L, -1))

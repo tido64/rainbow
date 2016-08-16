@@ -9,16 +9,13 @@
 #include "Lua/LuaSyntax.h"
 
 using rainbow::graphics::TextureFilter;
-using rainbow::lua::Argument;
 
 namespace
 {
     int set_clear_color(lua_State* L)
     {
         // rainbow.renderer.set_clear_color(0xrr, 0xgg, 0xbb)
-        Argument<lua_Number>::is_required(L, 1);
-        Argument<lua_Number>::is_required(L, 2);
-        Argument<lua_Number>::is_required(L, 3);
+        rainbow::lua::checkargs<lua_Number, lua_Number, lua_Number>(L);
 
         const float r = lua_tonumber(L, 1) / 255.0f;
         const float g = lua_tonumber(L, 2) / 255.0f;
@@ -30,7 +27,7 @@ namespace
     int set_filter(lua_State* L)
     {
         // rainbow.renderer.set_filter(filter)
-        Argument<lua_Number>::is_required(L, 1);
+        rainbow::lua::checkargs<lua_Number>(L);
 
         const int filter = lua_tointeger(L, 1);
         LUA_ASSERT(L,
@@ -43,10 +40,10 @@ namespace
     int set_projection(lua_State* L)
     {
         // rainbow.renderer.set_projection(left, bottom, right, top)
-        Argument<lua_Number>::is_required(L, 1);
-        Argument<lua_Number>::is_required(L, 2);
-        Argument<lua_Number>::is_required(L, 3);
-        Argument<lua_Number>::is_required(L, 4);
+        rainbow::lua::checkargs<lua_Number,
+                                lua_Number,
+                                lua_Number,
+                                lua_Number>(L);
 
         rainbow::graphics::set_projection({lua_tonumber(L, 1),
                                            lua_tonumber(L, 2),

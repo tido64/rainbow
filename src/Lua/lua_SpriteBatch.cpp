@@ -22,7 +22,7 @@ NS_RAINBOW_LUA_BEGIN
 
     SpriteBatch::SpriteBatch(lua_State* L) : batch_(optinteger(L, 1, 4))
     {
-        Argument<lua_Number>::is_required(L, 1);
+        checkargs<lua_Number>(L);
     }
 
     int SpriteBatch::add(lua_State* L)
@@ -32,10 +32,11 @@ NS_RAINBOW_LUA_BEGIN
              "instead.");
 
         // <spritebatch>:add(x, y, width, height)
-        Argument<lua_Number>::is_required(L, 2);
-        Argument<lua_Number>::is_required(L, 3);
-        Argument<lua_Number>::is_required(L, 4);
-        Argument<lua_Number>::is_required(L, 5);
+        checkargs<SpriteBatch,
+                  lua_Number,
+                  lua_Number,
+                  lua_Number,
+                  lua_Number>(L);
 
         SpriteBatch* self = Bind::self(L);
         if (!self)
@@ -55,8 +56,7 @@ NS_RAINBOW_LUA_BEGIN
     int SpriteBatch::create_sprite(lua_State* L)
     {
         // <spritebatch>:create_sprite(width, height)
-        Argument<lua_Number>::is_required(L, 2);
-        Argument<lua_Number>::is_required(L, 3);
+        checkargs<SpriteBatch, lua_Number, lua_Number>(L);
 
         SpriteBatch* self = Bind::self(L);
         if (!self)
@@ -77,7 +77,7 @@ NS_RAINBOW_LUA_BEGIN
         return set1ud<Texture>(
             L,
             [](::SpriteBatch* batch, SharedPtr<TextureAtlas> atlas) {
-              batch->set_normal(atlas);
+                batch->set_normal(atlas);
             });
     }
 
@@ -87,7 +87,7 @@ NS_RAINBOW_LUA_BEGIN
         return set1ud<Texture>(
             L,
             [](::SpriteBatch* batch, SharedPtr<TextureAtlas> atlas) {
-              batch->set_texture(atlas);
+                batch->set_texture(atlas);
             });
     }
 } NS_RAINBOW_LUA_END
