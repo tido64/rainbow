@@ -54,17 +54,14 @@ namespace rainbow
     /// <summary>Fast inverse square root by 0x5f3759df.</summary>
     inline auto fast_invsqrt(float x)
     {
-        float xhalf = x * 0.5f;
-#ifdef __GNUC__
-#   pragma GCC diagnostic push
-#   pragma GCC diagnostic ignored "-Wstrict-aliasing"
-#endif
-        int i = *reinterpret_cast<int*>(&x);
-        i = 0x5f3759df - (i >> 1);
-        x = *reinterpret_cast<float*>(&i);
-#ifdef __GNUC__
-#   pragma GCC diagnostic pop
-#endif
+        const float xhalf = x * 0.5f;
+        union {
+            uint32_t u;
+            float f;
+        };
+        f = x;
+        u = 0x5f3759df - (u >> 1);
+        x = f;
         return x * (1.5f - (xhalf * x * x));
     }
 
