@@ -215,7 +215,9 @@ else()
     list(APPEND SOURCE_FILES
          src/Common/impl/DataMap_Win.cpp
          src/Common/impl/DataMap_Win.h
-         src/Platform/impl/SystemInfo_Win.cpp)
+         src/Platform/impl/SystemInfo_Win.cpp
+         tools/make.ps1
+         appveyor.yml)
   else()
     list(APPEND SOURCE_FILES
          src/Common/impl/DataMap_Unix.cpp
@@ -370,9 +372,11 @@ endif()
 
 foreach(src IN LISTS SOURCE_FILES)
   string(REGEX REPLACE "^src/" "" src_file ${src})
-  set_property(
-      SOURCE ${src}
-      APPEND PROPERTY COMPILE_DEFINITIONS "SRC_FILE=\"${src_file}\"")
+  if(NOT src_file STREQUAL "")
+    set_property(
+        SOURCE ${src}
+        APPEND PROPERTY COMPILE_DEFINITIONS "SRC_FILE=\"${src_file}\"")
+  endif()
 endforeach()
 add_executable(rainbow ${SOURCE_FILES})
 
@@ -380,9 +384,11 @@ add_executable(rainbow ${SOURCE_FILES})
 if(MSVC OR XCODE)
   foreach(filename IN LISTS SOURCE_FILES)
     get_filename_component(directory ${filename} DIRECTORY)
-    string(REGEX REPLACE "^src" "Source Files" directory ${directory})
-    string(REPLACE "/" "\\" directory ${directory})
-    source_group(${directory} FILES ${filename})
+    if(NOT directory STREQUAL "")
+      string(REGEX REPLACE "^src" "Source Files" directory ${directory})
+      string(REPLACE "/" "\\" directory ${directory})
+      source_group(${directory} FILES ${filename})
+    endif()
   endforeach()
   if(UNIT_TESTS)
     set_target_properties(

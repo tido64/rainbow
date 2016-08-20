@@ -77,7 +77,7 @@ namespace rainbow
     }
 
     /// <summary>
-    ///   Compares two floating point numbers and approximate their equality.
+    ///   Compares two floating point numbers and approximates their equality.
     /// </summary>
     /// <returns><c>true</c> when approximately equal.</returns>
     template <typename T, typename = FloatingPoint<T>>
