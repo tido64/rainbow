@@ -20,6 +20,17 @@
 
 namespace rainbow
 {
+    /// <summary>
+    ///   Compares two floating point numbers and approximates their equality.
+    /// </summary>
+    /// <returns><c>true</c> when approximately equal.</returns>
+    template <typename T, typename = FloatingPoint<T>>
+    bool are_equal(T a, T b)
+    {
+        return std::abs(a - b) <= std::max(std::abs(a), std::abs(b)) *
+                                      std::numeric_limits<T>::epsilon();
+    }
+
     template <typename T, size_t N>
     constexpr auto array_size(const T (&)[N])
     {
@@ -84,17 +95,6 @@ namespace rainbow
     inline bool is_almost_zero(float x)
     {
         return std::abs(x) < std::numeric_limits<float>::epsilon() * 10.0f;
-    }
-
-    /// <summary>
-    ///   Compares two floating point numbers and approximates their equality.
-    /// </summary>
-    /// <returns><c>true</c> when approximately equal.</returns>
-    template <typename T, typename = FloatingPoint<T>>
-    bool is_equal(T a, T b)
-    {
-        return std::abs(a - b) <= std::max(std::abs(a), std::abs(b)) *
-                                      std::numeric_limits<T>::epsilon();
     }
 
     /// <summary>Determines whether an integer is a power of 2.</summary>

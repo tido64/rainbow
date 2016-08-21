@@ -30,8 +30,8 @@ namespace rainbow
         template <typename U = T>
         auto is_zero() const -> EnableIfFloatingPoint<U, bool>
         {
-            return is_equal<T>(0.0, this->x) && is_equal<T>(0.0, this->y) &&
-                   is_equal<T>(0.0, this->z);
+            return are_equal<T>(0.0, this->x) && are_equal<T>(0.0, this->y) &&
+                   are_equal<T>(0.0, this->z);
         }
 
         auto operator+=(const Vec3& v) -> Vec3&

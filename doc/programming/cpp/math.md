@@ -191,6 +191,14 @@ Equivalent to `v.x == w.x && v.y == w.y`.
 ## Miscellaneous
 
 ```c++
+template <typename T, typename = FloatingPoint<T>>
+bool  are_equal  (T a, T b);
+```
+
+Returns whether two floating point numbers are (almost) equal. Based on the
+`AlmostEqualRelative()` implementation from a [Random ASCII blog post][1].
+
+```c++
 template <typename T>
 T  clamp  (T x, T min_val, T max_val);
 ```
@@ -202,13 +210,5 @@ float  fast_invsqrt  (float x);
 ```
 
 Returns an approximation of 1/√x using the infamous constant 0x5f3759df.
-
-```c++
-template <typename T, typename = FloatingPoint<T>>
-bool  is_equal  (T a, T b);
-```
-
-Returns whether two floating point numbers are (almost) equal. Based on the
-`AlmostEqualRelative()` implementation from a [Random ASCII blog post][1].
 
 [1]: https://randomascii.wordpress.com/2012/02/25/comparing-floating-point-numbers-2012-edition/ "Comparing Floating Point Numbers, 2012 Edition"

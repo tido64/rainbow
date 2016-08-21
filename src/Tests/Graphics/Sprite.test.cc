@@ -227,7 +227,7 @@ TEST(SpriteTest, Rotates)
             if (deg == 0 || deg == 360)
                 ASSERT_FLOAT_EQ(scale + scale, p[2].x);
             else
-                ASSERT_FALSE(rainbow::is_equal<float>(p[2].x, scale + scale));
+                ASSERT_FALSE(rainbow::are_equal<float>(p[2].x, scale + scale));
             ASSERT_EQ(-p[2], p[0]);
             ASSERT_EQ(-p[3], p[1]);
             ASSERT_FLOAT_EQ(width, p[0].distance(p[1]));

@@ -85,7 +85,7 @@ namespace rainbow
         template <typename U = T>
         auto is_zero() const -> EnableIfFloatingPoint<U, bool>
         {
-            return is_equal<T>(0, x) && is_equal<T>(0, y);
+            return are_equal<T>(0, x) && are_equal<T>(0, y);
         }
 
         auto normal() const

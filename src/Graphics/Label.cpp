@@ -9,7 +9,7 @@
 #include "Common/UTF8.h"
 #include "Math/Transform.h"
 
-using rainbow::is_equal;
+using rainbow::are_equal;
 
 namespace
 {
@@ -51,7 +51,7 @@ void Label::set_position(const Vec2f& position)
 
 void Label::set_rotation(float r)
 {
-    if (is_equal(r, angle_))
+    if (are_equal(r, angle_))
         return;
 
     angle_ = r;
@@ -60,7 +60,7 @@ void Label::set_rotation(float r)
 
 void Label::set_scale(float f)
 {
-    if (is_equal(f, scale_))
+    if (are_equal(f, scale_))
         return;
 
     scale_ = rainbow::clamp(f, 0.01f, 1.0f);

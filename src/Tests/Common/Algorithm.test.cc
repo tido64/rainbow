@@ -31,6 +31,17 @@ namespace
         0x00c5, 0x00c6, 0x00d8, 0x00e5, 0x00e6, 0x00f8, 0x20ac, 0x1f4a9};
 }
 
+TEST(AlgorithmTest, ApproximatesFloatEquality)
+{
+    DEFINE_NOT_FN(not_equal, rainbow::are_equal<float>, float);
+
+    ASSERT_PRED2(rainbow::are_equal<float>, 0.0f, 0.0f);
+    ASSERT_PRED2(rainbow::are_equal<float>, 0.0f, -0.0f);
+    ASSERT_PRED2(not_equal, 0.0f, 0.00001f);
+    ASSERT_PRED2(not_equal, 0.0f, -0.00001f);
+    ASSERT_PRED2(rainbow::are_equal<float>, 3.14285714f, 22.0f / 7.0f);
+}
+
 TEST(AlgorithmTest, RoundsUpToNearestPowerOfTwo)
 {
     unsigned int p = 1;
@@ -52,8 +63,9 @@ TEST(AlgorithmTest, ClampsValues)
 
 TEST(AlgorithmTest, ConvertsRadiansToDegrees)
 {
-    ASSERT_PRED2(
-        rainbow::is_equal<float>, kPi, rainbow::radians(rainbow::degrees(kPi)));
+    ASSERT_PRED2(rainbow::are_equal<float>,
+                 kPi,
+                 rainbow::radians(rainbow::degrees(kPi)));
 }
 
 TEST(AlgorithmTest, ApproximatesInverseSquareRoot)
@@ -89,17 +101,6 @@ TEST(AlgorithmTest, ApproximatesZeroFloat)
     ASSERT_PRED1(definitely_not_zero, -kNotZero);
     ASSERT_PRED1(definitely_not_zero, std::numeric_limits<float>::lowest());
     ASSERT_PRED1(definitely_not_zero, std::numeric_limits<float>::max());
-}
-
-TEST(AlgorithmTest, ApproximatesFloatEquality)
-{
-    DEFINE_NOT_FN(not_equal, rainbow::is_equal<float>, float);
-
-    ASSERT_PRED2(rainbow::is_equal<float>, 0.0f, 0.0f);
-    ASSERT_PRED2(rainbow::is_equal<float>, 0.0f, -0.0f);
-    ASSERT_PRED2(not_equal, 0.0f, 0.00001f);
-    ASSERT_PRED2(not_equal, 0.0f, -0.00001f);
-    ASSERT_PRED2(rainbow::is_equal<float>, 3.14285714f, 22.0f / 7.0f);
 }
 
 TEST(AlgorithmTest, IsPowerOfTwo)
@@ -146,8 +147,9 @@ TEST(AlgorithmTest, QuickErasesElementsInContainer)
 
 TEST(AlgorithmTest, ConvertsDegreesToRadians)
 {
-    ASSERT_PRED2(
-        rainbow::is_equal<float>, kPi, rainbow::degrees(rainbow::radians(kPi)));
+    ASSERT_PRED2(rainbow::are_equal<float>,
+                 kPi,
+                 rainbow::degrees(rainbow::radians(kPi)));
 }
 
 TEST(AlgorithmTest, RemovesValuesFromContainer)
