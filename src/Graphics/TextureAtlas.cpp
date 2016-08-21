@@ -10,6 +10,7 @@
 
 #define kInvalidColorDepth "Invalid colour depth"
 
+using rainbow::Image;
 using rainbow::Texture;
 using rainbow::filesystem::Path;
 
@@ -63,27 +64,27 @@ void TextureAtlas::set_regions(const ArrayView<int>& rects)
 }
 
 void TextureAtlas::load(TextureManager& texture_manager,
-                        const rainbow::Texture& texture,
+                        const Texture& texture,
                         const DataMap& data,
                         float scale)
 {
     R_ASSERT(data, "Failed to load texture");
 
-    const rainbow::Image& image = rainbow::Image::decode(data, scale);
+    const Image& image = Image::decode(data, scale);
     if (!image.data)
         return;
 
     switch (image.format)
     {
 #ifdef GL_OES_compressed_ETC1_RGB8_texture
-        case rainbow::Image::Format::ETC1:
+        case Image::Format::ETC1:
             texture_manager.upload_compressed(
                 texture, GL_ETC1_RGB8_OES, image.width, image.height,
                 image.size, image.data);
             break;
 #endif  // ETC1
 #ifdef GL_IMG_texture_compression_pvrtc
-        case rainbow::Image::Format::PVRTC: {
+        case Image::Format::PVRTC: {
             R_ASSERT(image.depth == 2 || image.depth == 4, kInvalidColorDepth);
             R_ASSERT(image.channels == 3 || image.channels == 4,
                      "Invalid number of colour channels");
@@ -106,6 +107,17 @@ void TextureAtlas::load(TextureManager& texture_manager,
             break;
         }
 #endif  // PVRTC
+#ifdef GL_EXT_texture_compression_s3tc
+        case Image::Format::S3TC:
+            texture_manager.upload_compressed(
+                texture,
+                image.channels,
+                image.width,
+                image.height,
+                static_cast<unsigned int>(image.size),
+                image.data);
+            break;
+#endif  // DDS
         default: {
             GLint format = 0;
             GLint internal = 0;

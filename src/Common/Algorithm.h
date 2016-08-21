@@ -110,6 +110,14 @@ namespace rainbow
                (1.0f - kLowPassAlpha) * low_pass;
     }
 
+    constexpr auto make_fourcc(char a, char b, char c, char d) -> uint32_t
+    {
+        return static_cast<uint32_t>(a) |  //
+               (static_cast<uint32_t>(b) << 8) |
+               (static_cast<uint32_t>(c) << 16) |
+               (static_cast<uint32_t>(d) << 24);
+    }
+
     /// <summary>
     ///   Removes the element at <paramref name="pos"/> by swapping it with the
     ///   last element in <paramref name="container"/> and popping it.

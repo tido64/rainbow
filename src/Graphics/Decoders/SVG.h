@@ -5,6 +5,7 @@
 #ifndef GRAPHICS_DECODERS_SVG_H_
 #define GRAPHICS_DECODERS_SVG_H_
 
+#include "Common/Algorithm.h"
 #include "ThirdParty/NanoSVG/NanoSVG.h"
 
 #define USE_SVG
@@ -13,7 +14,13 @@ namespace svg
 {
     bool check(const DataMap& data)
     {
-        return strstr(reinterpret_cast<const char*>(data.data()), "<svg ");
+        const auto p = data.data();
+        return data.size() > 5 &&  //
+               p[0] == '<' &&      //
+               p[1] == 's' &&      //
+               p[2] == 'v' &&      //
+               p[3] == 'g' &&      //
+               p[4] == ' ';
     }
 
     auto decode(const DataMap& data, float scale)

@@ -120,6 +120,12 @@ TEST(AlgorithmTest, IsPowerOfTwo)
     }
 }
 
+TEST(AlgorithmTest, MakesFourCC)
+{
+    ASSERT_EQ(0x20534444u, rainbow::make_fourcc('D', 'D', 'S', ' '));
+    ASSERT_EQ(0x03525650u, rainbow::make_fourcc('P', 'V', 'R', 3));
+}
+
 TEST(AlgorithmTest, QuickErasesElementsInContainer)
 {
     std::vector<int> v{1, 2, 3, 4, 5};

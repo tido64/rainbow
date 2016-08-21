@@ -97,11 +97,19 @@ namespace rainbow
 #ifdef GL_IMG_texture_compression_pvrtc
 #   include "Graphics/Decoders/PVRTC.h"
 #endif  // GL_IMG_texture_compression_pvrtc
+#ifdef GL_EXT_texture_compression_s3tc
+#   include "Graphics/Decoders/DDS.h"
+#endif  // GL_EXT_texture_compression_s3tc
 
 namespace rainbow
 {
     Image Image::decode(const DataMap& data, float scale)
     {
+#ifdef USE_DDS
+        if (dds::check(data))
+            return dds::decode(data);
+#endif  // USE_DDS
+
 #ifdef USE_PVRTC
         if (pvrtc::check(data))
             return pvrtc::decode(data);

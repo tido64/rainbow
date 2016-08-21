@@ -66,6 +66,7 @@ set(SOURCE_FILES
     src/Graphics/Animation.h
     src/Graphics/Buffer.cpp
     src/Graphics/Buffer.h
+    src/Graphics/Decoders/DDS.h
     src/Graphics/Decoders/PNG.h
     src/Graphics/Decoders/PVRTC.h
     src/Graphics/Decoders/SVG.h
@@ -260,6 +261,7 @@ if(UNIT_TESTS)
        src/Tests/Config.test.cc
        src/Tests/FileSystem/Path.test.cc
        src/Tests/Graphics/Animation.test.cc
+       src/Tests/Graphics/Decoders.test.cc
        src/Tests/Graphics/SceneGraph.test.cc
        src/Tests/Graphics/Sprite.test.cc
        src/Tests/Graphics/SpriteBatch.test.cc

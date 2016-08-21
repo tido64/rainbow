@@ -11,35 +11,39 @@
 
 #define USE_PVRTC
 
+namespace
+{
+    constexpr uint32_t kPVRHeaderVersion3 = 0x03525650;  // "PVR3"
+
+    /// PVRTC texture header, as specified by Imagination Technologies Ltd.
+    /// \see http://www.imgtec.net/powervr/insider/docs/PVR%20File%20Format.Specification.1.0.11.External.pdf
+    struct PVRTexHeader
+    {
+        static auto from_map(const DataMap& data)
+        {
+            return reinterpret_cast<const PVRTexHeader*>(data.data());
+        }
+
+        uint32_t version;
+        uint32_t flags;
+        uint64_t pixel_format;
+        uint32_t colour_space;
+        uint32_t channel_type;
+        uint32_t height;
+        uint32_t width;
+        uint32_t depth;
+        uint32_t num_surfaces;
+        uint32_t num_faces;
+        uint32_t mipmap_count;
+        uint32_t metadata_size;
+    };
+}
+
 namespace pvrtc
 {
-    namespace
-    {
-        const unsigned int kPVRHeaderVersion3 = 0x03525650;  // = "PVR3"
-
-        /// PVRTC texture header, as specified by Imagination Technologies Ltd.
-        /// \see http://www.imgtec.net/powervr/insider/docs/PVR%20File%20Format.Specification.1.0.11.External.pdf
-        struct PVRTexHeader
-        {
-            uint32_t version;
-            uint32_t flags;
-            uint64_t pixel_format;
-            uint32_t colour_space;
-            uint32_t channel_type;
-            uint32_t height;
-            uint32_t width;
-            uint32_t depth;
-            uint32_t num_surfaces;
-            uint32_t num_faces;
-            uint32_t mipmap_count;
-            uint32_t metadata_size;
-        };
-    }
-
     bool check(const DataMap& data)
     {
-        return *reinterpret_cast<const uint32_t*>(data.data()) ==
-               kPVRHeaderVersion3;
+        return PVRTexHeader::from_map(data)->version == kPVRHeaderVersion3;
     }
 
     auto decode(const DataMap& data)
@@ -48,8 +52,7 @@ namespace pvrtc
         image.format = rainbow::Image::Format::PVRTC;
 
 #ifdef RAINBOW_OS_IOS
-        const PVRTexHeader* header =
-            reinterpret_cast<const PVRTexHeader*>(data.data());
+        auto header = PVRTexHeader::from_map(data);
         R_ASSERT(CFSwapInt32LittleToHost(header->mipmap_count) == 1,
                  "Mipmaps are not supported");
 
