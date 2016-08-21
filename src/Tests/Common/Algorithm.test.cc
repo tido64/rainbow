@@ -58,7 +58,7 @@ TEST(AlgorithmTest, ConvertsRadiansToDegrees)
 
 TEST(AlgorithmTest, ApproximatesInverseSquareRoot)
 {
-    const double kErrorMargin = 0.017478;
+    constexpr double kErrorMargin = 0.017478;
     for (double f = 0.01; f < 10000; f += 0.01)
         ASSERT_NEAR(1 / sqrt(f), rainbow::fast_invsqrt(f), kErrorMargin);
 }
@@ -76,11 +76,27 @@ TEST(AlgorithmTest, RoundsDownToNearestPowerOfTwo)
     }
 }
 
+TEST(AlgorithmTest, ApproximatesZeroFloat)
+{
+    DEFINE_NOT_FN(definitely_not_zero, rainbow::is_almost_zero, float);
+
+    ASSERT_PRED1(rainbow::is_almost_zero, 0.0f);
+    ASSERT_PRED1(rainbow::is_almost_zero, -0.0f);
+
+    constexpr float kNotZero = std::numeric_limits<float>::epsilon() * 10.0f;
+
+    ASSERT_PRED1(definitely_not_zero, kNotZero);
+    ASSERT_PRED1(definitely_not_zero, -kNotZero);
+    ASSERT_PRED1(definitely_not_zero, std::numeric_limits<float>::lowest());
+    ASSERT_PRED1(definitely_not_zero, std::numeric_limits<float>::max());
+}
+
 TEST(AlgorithmTest, ApproximatesFloatEquality)
 {
     DEFINE_NOT_FN(not_equal, rainbow::is_equal<float>, float);
 
     ASSERT_PRED2(rainbow::is_equal<float>, 0.0f, 0.0f);
+    ASSERT_PRED2(rainbow::is_equal<float>, 0.0f, -0.0f);
     ASSERT_PRED2(not_equal, 0.0f, 0.00001f);
     ASSERT_PRED2(not_equal, 0.0f, -0.00001f);
     ASSERT_PRED2(rainbow::is_equal<float>, 3.14285714f, 22.0f / 7.0f);

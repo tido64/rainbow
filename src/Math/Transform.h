@@ -61,7 +61,7 @@ namespace rainbow
                    const Vec2<Float>& scale,
                    ArraySpan<Vertex> data)
     {
-        if (!rainbow::is_equal(angle, 0.0f))
+        if (!rainbow::is_almost_zero(angle))
         {
             const Float cos_r = std::cos(-angle);
             const Float sin_r = std::sin(-angle);

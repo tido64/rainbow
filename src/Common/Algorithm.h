@@ -1,6 +1,6 @@
 // Provides algorithms and mathematical methods.
 //
-// \see http://graphics.stanford.edu/~seander/bithacks.html
+// \see https://graphics.stanford.edu/~seander/bithacks.html
 //
 // Copyright (c) 2010-16 Bifrost Entertainment AS and Tommy Nguyen
 // Distributed under the MIT License.
@@ -77,14 +77,24 @@ namespace rainbow
     }
 
     /// <summary>
+    ///   Returns whether <paramref name="x"/> is practically zero. A number is
+    ///   considered almost zero if it's within <c>10 * epsilon</c>. On some
+    ///   hardware, this is 0.0000011920929.
+    /// </summary>
+    inline bool is_almost_zero(float x)
+    {
+        return std::abs(x) < std::numeric_limits<float>::epsilon() * 10.0f;
+    }
+
+    /// <summary>
     ///   Compares two floating point numbers and approximates their equality.
     /// </summary>
     /// <returns><c>true</c> when approximately equal.</returns>
     template <typename T, typename = FloatingPoint<T>>
     bool is_equal(T a, T b)
     {
-        return fabs(a - b) <=
-               fmax(fabs(a), fabs(b)) * std::numeric_limits<T>::epsilon();
+        return std::abs(a - b) <= std::max(std::abs(a), std::abs(b)) *
+                                      std::numeric_limits<T>::epsilon();
     }
 
     /// <summary>Determines whether an integer is a power of 2.</summary>
@@ -96,7 +106,7 @@ namespace rainbow
     /// <summary>Low-pass filter.</summary>
     inline auto low_pass(float value, float low_pass)
     {
-        return kLowPassAlpha * powf(10.0f, value * kLowPassAlpha) +
+        return kLowPassAlpha * std::pow(10.0f, value * kLowPassAlpha) +
                (1.0f - kLowPassAlpha) * low_pass;
     }
 

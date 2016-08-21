@@ -11,7 +11,6 @@
 #include "Input/Pointer.h"
 
 using heimdall::Gatekeeper;
-using rainbow::is_equal;
 using rainbow::string_view;
 
 #if USE_LUA_SCRIPT

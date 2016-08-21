@@ -107,7 +107,7 @@ void Label::update_internal()
         width_ = 0;
         unsigned int start = 0;
         unsigned int count = 0;
-        const bool is_rotated = !is_equal(angle_, 0.0f);
+        const bool is_rotated = !rainbow::is_almost_zero(angle_);
         const Vec2f R = (is_rotated ? Vec2f(cosf(-angle_), sinf(-angle_))
                                     : Vec2f(1.0f, 0.0f));
         const bool needs_alignment =
