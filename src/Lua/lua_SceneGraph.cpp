@@ -98,9 +98,6 @@ NS_RAINBOW_LUA_BEGIN
         return static_cast<SceneGraph*>(new (data) SceneGraph(root));
     }
 
-#ifdef _MSC_VER
-#   pragma warning(suppress: 4100)
-#endif
     void SceneGraph::destroy(lua_State* L, SceneGraph* scenegraph)
     {
         lua_getglobal(L, "rainbow");
@@ -109,6 +106,12 @@ NS_RAINBOW_LUA_BEGIN
         lua_rawset(L, -3);
         lua_pop(L, 1);
         scenegraph->~SceneGraph();
+
+#ifdef _MSC_VER
+        // Suppress false 'scenegraph: unreferenced formal parameter'. See
+        // https://msdn.microsoft.com/en-us/library/26kb9fy0.aspx.
+        NOT_USED(scenegraph);
+#endif
     }
 
     SceneGraph::SceneGraph(SceneNode* root) : node_(root) {}

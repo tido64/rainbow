@@ -6,13 +6,15 @@ local Coroutine = require("Coroutine")
 
 local MAX_NUM_SPRITES = 256
 local NUM_BATCHES = 256
+local SAMPLE_SIZE = 60
 
+local g_frame_idx = 1
+local g_frame_times = table.create(SAMPLE_SIZE)
 local g_scene = {
     batches = table.create and table.create(NUM_BATCHES) or {},
     routine = nil,
     sprites = table.create and table.create(MAX_NUM_SPRITES * NUM_BATCHES) or {}
 }
-local g_timer = 0
 
 local function shake()
     local pi = math.pi
@@ -38,37 +40,42 @@ local function spawn()
     local atlas = rainbow.texture("canvas.png")
     local texture = atlas:create(448, 108, 100, 100)
 
-    for i = 1, NUM_BATCHES do
-        local batch = rainbow.spritebatch(256)
-        rainbow.scenegraph:add_batch(batch)
-        batch:set_texture(atlas)
-        batches[i] = batch
-    end
-
-    for i = 1, NUM_BATCHES do
-        batch = batches[i]
-        for j = 1, MAX_NUM_SPRITES do
-            local sprite = batch:create_sprite(32, 32)
-            sprite:set_position(random(width), random(height))
-            sprite:set_texture(texture)
-            sprites[(i - 1) * MAX_NUM_SPRITES + j] = sprite
+    local current = 1
+    while true do
+        local frame = g_frame_times[1]
+        for i = 2, SAMPLE_SIZE do
+            frame = frame + g_frame_times[i]
+        end
+        if frame / SAMPLE_SIZE < 18 then
+            local batch = rainbow.spritebatch(MAX_NUM_SPRITES)
+            rainbow.scenegraph:add_batch(batch)
+            batch:set_texture(atlas)
+            local i = (current - 1) * MAX_NUM_SPRITES
+            for j = 1, MAX_NUM_SPRITES do
+                local sprite = batch:create_sprite(32, 32)
+                sprite:set_position(random(width), random(height))
+                sprite:set_texture(texture)
+                sprites[i + j] = sprite
+            end
+            print("Sprites count: " .. current * MAX_NUM_SPRITES)
+            batches[current] = batch
+            current = current + 1;
         end
         Coroutine.wait(50)
     end
-
-    print("Sprites count: " .. NUM_BATCHES * MAX_NUM_SPRITES)
 end
 
 function init()
     rainbow.seed(0)
+    for i = 1, SAMPLE_SIZE do
+        g_frame_times[i] = 0
+    end
     collectgarbage("stop")
     Coroutine.start(spawn)
     Coroutine.start(shake)
 end
 
 function update(dt)
-    g_timer = g_timer + dt
-    if g_timer >= 20000 then
-        --error("Done")
-    end
+    g_frame_times[g_frame_idx + 1] = dt
+    g_frame_idx = (g_frame_idx + 1) % SAMPLE_SIZE
 end
