@@ -111,7 +111,7 @@ namespace rainbow
     }
 
     LuaMachine::LuaMachine()
-        : state_(luaL_newstate()), internal_(0), traceback_(0),
+        : state_(lua::newstate().release()), internal_(0), traceback_(0),
           scenegraph_(nullptr) {}
 
     LuaMachine::~LuaMachine()

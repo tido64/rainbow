@@ -350,8 +350,7 @@ auto Prose::from_lua(const char* path) -> Prose*
     if (!script)
         return nullptr;
 
-    std::unique_ptr<lua_State, decltype(&lua_close)> L(luaL_newstate(),
-                                                       lua_close);
+    auto L = rainbow::lua::newstate();
     lua_gc(L.get(), LUA_GCSTOP, 0);
     lua_createtable(L.get(), 0, 1);
     lua_pushliteral(L.get(), "platform");

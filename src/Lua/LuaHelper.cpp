@@ -143,6 +143,12 @@ NS_RAINBOW_LUA_BEGIN
         return 1;
     }
 
+    auto newstate() -> std::unique_ptr<lua_State, decltype(&lua_close)>
+    {
+        lua_State* L = luaL_newstate();
+        return {L, &lua_close};
+    }
+
     template <>
     void push<bool>(lua_State* L, bool b)
     {

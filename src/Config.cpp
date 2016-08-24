@@ -37,8 +37,7 @@ rainbow::Config::Config()
     if (!config)
         return;
 
-    std::unique_ptr<lua_State, decltype(&lua_close)> L(
-        luaL_newstate(), lua_close);
+    auto L = lua::newstate();
     if (lua::load(L.get(), config, kConfigModule) == 0)
         return;
 

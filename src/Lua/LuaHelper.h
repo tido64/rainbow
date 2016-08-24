@@ -138,6 +138,9 @@ NS_RAINBOW_LUA_BEGIN
               const char* name,
               bool exec = true) -> int;
 
+    /// <summary>Creates a new Lua state.</summary>
+    auto newstate() -> std::unique_ptr<lua_State, decltype(&lua_close)>;
+
     /// <summary>
     ///   Returns the value returned from <see cref="luaL_optinteger"/> but
     ///   without the extra type check if <c>NDEBUG</c> is defined.
