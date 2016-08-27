@@ -39,16 +39,16 @@ end
 function Kim:key_down(key, modifiers)
     local distance = 64
     local moved = false
-    if key == 97 then  -- Left
+    if key == 1 then  -- Left / A
         self.origin[1] = self.origin[1] - distance
         moved = true
-    elseif key == 100 then  -- Right
+    elseif key == 4 then  -- Right / D
         self.origin[1] = self.origin[1] + distance
         moved = true
-    elseif key == 115 then  -- Down
+    elseif key == 19 then  -- Down / S
         self.origin[2] = self.origin[2] - distance
         moved = true
-    elseif key == 119 then  -- Up
+    elseif key == 23 then  -- Up / W
         self.origin[2] = self.origin[2] + distance
         moved = true
     end
@@ -56,9 +56,9 @@ function Kim:key_down(key, modifiers)
         local screen = rainbow.platform.screen
         rainbow.renderer.set_projection(
             self.origin[1],
-            self.origin[2] + screen.height,
+            self.origin[2],
             self.origin[1] + screen.width,
-            self.origin[2])
+            self.origin[2] + screen.height)
     end
 end
 
