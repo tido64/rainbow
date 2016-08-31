@@ -61,15 +61,13 @@ namespace rainbow
                    const Vec2<Float>& scale,
                    ArraySpan<Vertex> data)
     {
-        if (!rainbow::is_almost_zero(angle))
+        if (!is_almost_zero(angle))
         {
-            const Float cos_r = std::cos(-angle);
-            const Float sin_r = std::sin(-angle);
-
-            const Vec2<Float> s_sin_r(scale.x * sin_r, scale.y * sin_r);
-            const Vec2<Float> s_cos_r(scale.x * cos_r, scale.y * cos_r);
-
-            transform(quad, position, s_sin_r, s_cos_r, data);
+            transform(quad,
+                      position,
+                      std::sin(-angle) * scale,
+                      std::cos(-angle) * scale,
+                      data);
         }
         else
         {
@@ -80,16 +78,14 @@ namespace rainbow
     template <typename T, typename Vertex>
     void transform(const T& sprite, ArraySpan<Vertex> data)
     {
-        Vec2f quad[4];
-        quad[0].x = sprite.width() * -sprite.pivot().x;
-        quad[0].y = sprite.height() * -(1 - sprite.pivot().y);
-        quad[1].x = quad[0].x + sprite.width();
-        quad[1].y = quad[0].y;
-        quad[2].x = quad[1].x;
-        quad[2].y = quad[1].y + sprite.height();
-        quad[3].x = quad[0].x;
-        quad[3].y = quad[2].y;
-
+        const float x0 = sprite.width() * -sprite.pivot().x;
+        const float y0 = sprite.height() * (sprite.pivot().y - 1);
+        const Vec2f quad[4]{
+            {x0, y0},
+            {x0 + sprite.width(), y0},
+            {x0 + sprite.width(), y0 + sprite.height()},
+            {x0, y0 + sprite.height()},
+        };
         transform(
             quad, sprite.position(), sprite.angle(), sprite.scale(), data);
     }
