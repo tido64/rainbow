@@ -23,7 +23,7 @@ namespace rainbow
                                        int num_segments,
                                        F&& f)
     {
-        const double increment = 2.0 * kPi / num_segments;
+        const double increment = 2.0 * kPi<double> / num_segments;
         const float sin_inc = std::sin(increment);
         const float cos_inc = std::cos(increment);
         Vec2f r0 = Vec2f::Left;

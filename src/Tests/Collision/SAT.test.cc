@@ -117,7 +117,7 @@ TEST(CollisionTest, SeparatingAxisTheorem)
     // S0: 0° / S1: 45°
 
     s1->set_position(Vec2f::Zero);
-    s1->rotate(rainbow::radians(45));
+    s1->rotate(rainbow::radians(45.0f));
     update(batch);
 
     ASSERT_TRUE(rainbow::overlaps(s0, s1));
@@ -243,7 +243,7 @@ TEST(CollisionTest, SeparatingAxisTheorem)
 
     // Lower left quadrant
 
-    s0->rotate(rainbow::radians(45));
+    s0->rotate(rainbow::radians(45.0f));
     s1->set_position({diagonal * -0.5f, diagonal * -0.5f});
     update(batch);
 

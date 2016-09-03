@@ -9,8 +9,6 @@
 #ifndef PLATFORM_MACROS_H_
 #define PLATFORM_MACROS_H_
 
-#include <cstddef>
-
 #if defined(__ANDROID__)
 #   define RAINBOW_OS_ANDROID
 #elif defined(__APPLE__)

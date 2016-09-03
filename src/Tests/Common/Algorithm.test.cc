@@ -11,6 +11,8 @@
 
 namespace
 {
+    constexpr auto kPi = rainbow::kPi<float>;
+
     constexpr unsigned char kInvalidUTF8[]{
         'B', 'l',  'o', 'w',  'z', 'y', ' ', 'n', 'i', 'g', 'h',
         't', '-',  'f', 'r',  'u', 'm', 'p', 's', ' ', 'v', 'e',

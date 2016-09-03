@@ -111,7 +111,7 @@ namespace rainbow { namespace timing
     inline auto ease_in_sine(float a, float b, float t)
     {
         const float c = b - a;
-        return a + c - c * cos(t * static_cast<float>(kPi_2));
+        return a + c - c * std::cos(t * kPi_2<float>);
     }
 
     inline auto ease_out_back(float a, float b, float t)
@@ -151,7 +151,7 @@ namespace rainbow { namespace timing
 
     inline auto ease_out_sine(float a, float b, float t)
     {
-        return a + (b - a) * sin(t * static_cast<float>(kPi_2));
+        return a + (b - a) * std::sin(t * kPi_2<float>);
     }
 
     template <typename F>
@@ -200,7 +200,7 @@ namespace rainbow { namespace timing
 
     inline auto ease_in_out_sine(float a, float b, float t)
     {
-        return a - (b - a) / 2.0f * (cos(kPi * t) - 1.0f);
+        return a - (b - a) / 2.0f * (std::cos(kPi<float> * t) - 1.0f);
     }
 }}  // namespace rainbow::timing
 

@@ -51,15 +51,16 @@ namespace rainbow
     }
 
     template <typename T>
-    auto clamp(T x, T min_val, T max_val)
+    constexpr auto clamp(T x, T min_val, T max_val)
     {
         return std::min(std::max(x, min_val), max_val);
     }
 
     /// <summary>Converts radians to degrees.</summary>
-    inline auto degrees(float r)
+    template <typename T, typename = FloatingPoint<T>>
+    constexpr auto degrees(T r)
     {
-        return r * static_cast<float>(kRadian);
+        return r * kRadian<T>;
     }
 
     /// <summary>Fast inverse square root by 0x5f3759df.</summary>
@@ -89,8 +90,8 @@ namespace rainbow
 
     /// <summary>
     ///   Returns whether <paramref name="x"/> is practically zero. A number is
-    ///   considered almost zero if it's within <c>10 * epsilon</c>. On some
-    ///   hardware, this is 0.0000011920929.
+    ///   considered almost zero if it's within <c>10 * ε</c>. On some hardware,
+    ///   this is 0.0000011920929.
     /// </summary>
     inline bool is_almost_zero(float x)
     {
@@ -98,7 +99,7 @@ namespace rainbow
     }
 
     /// <summary>Determines whether an integer is a power of 2.</summary>
-    inline bool is_pow2(unsigned int i)
+    constexpr bool is_pow2(unsigned int i)
     {
         return i && !(i & (i - 1));
     }
@@ -110,7 +111,7 @@ namespace rainbow
                (1.0f - kLowPassAlpha) * low_pass;
     }
 
-    constexpr auto make_fourcc(char a, char b, char c, char d) -> uint32_t
+    constexpr auto make_fourcc(char a, char b, char c, char d)
     {
         return static_cast<uint32_t>(a) |  //
                (static_cast<uint32_t>(b) << 8) |
@@ -130,9 +131,10 @@ namespace rainbow
     }
 
     /// <summary>Converts degrees to radians.</summary>
-    inline auto radians(float d)
+    template <typename T, typename = FloatingPoint<T>>
+    constexpr auto radians(T d)
     {
-        return d * static_cast<float>(kDegree);
+        return d * kDegree<T>;
     }
 
     /// <summary>
@@ -179,9 +181,9 @@ namespace rainbow
     ///   <paramref name="x"/> == 0, or <paramref name="x"/> > 0 respectively.
     /// </summary>
     template <typename T>
-    auto signum(T x)
+    constexpr auto signum(T x)
     {
-        return (x > T(0)) - (x < T(0));
+        return (x > T{}) - (x < T{});
     }
 
     template <typename Enum>

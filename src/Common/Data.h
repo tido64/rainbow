@@ -5,6 +5,8 @@
 #ifndef COMMON_DATA_H_
 #define COMMON_DATA_H_
 
+#include <cstddef>
+
 #include "Common/Constraints.h"
 #include "Common/NonCopyable.h"
 #include "Platform/Macros.h"

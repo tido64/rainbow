@@ -34,7 +34,7 @@ namespace b2
     class StableWorld final : public b2World, public DebuggableWorld
     {
     public:
-        StableWorld(float gx = 0.0f, float gy = kStandardGravity);
+        StableWorld(float gx = 0.0f, float gy = rainbow::kStandardGravity);
         ~StableWorld();
 
         // b2World overrides.

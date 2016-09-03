@@ -6,6 +6,7 @@
 
 #include "Graphics/Sprite.h"
 #include "Graphics/TextureAtlas.h"
+#include "Tests/TestHelpers.h"
 
 namespace rainbow
 {
@@ -197,6 +198,8 @@ TEST(SpriteTest, Translates)
 
 TEST(SpriteTest, Rotates)
 {
+    DEFINE_NOT_FN(not_equal, rainbow::are_equal<float>, float);
+
     Sprite sprite(4, 2);
 
     ASSERT_EQ(0.0f, sprite.angle());
@@ -211,7 +214,7 @@ TEST(SpriteTest, Rotates)
         sprite.set_scale(scale);
         for (int deg = 0; deg <= 360; ++deg)
         {
-            const float rad = rainbow::radians(deg);
+            const float rad = rainbow::radians<float>(deg);
             sprite.set_rotation(rad);
 
             ASSERT_TRUE(is_stale(sprite, kStaleBuffer));
@@ -227,7 +230,7 @@ TEST(SpriteTest, Rotates)
             if (deg == 0 || deg == 360)
                 ASSERT_FLOAT_EQ(scale + scale, p[2].x);
             else
-                ASSERT_FALSE(rainbow::are_equal<float>(p[2].x, scale + scale));
+                ASSERT_PRED2(not_equal, p[2].x, scale + scale);
             ASSERT_EQ(-p[2], p[0]);
             ASSERT_EQ(-p[3], p[1]);
             ASSERT_FLOAT_EQ(width, p[0].distance(p[1]));
@@ -248,7 +251,7 @@ TEST(SpriteTest, Rotates)
     int i = 1;
     for (int deg = 1; deg <= 4; ++deg)
     {
-        const float r = rainbow::radians(deg * i);
+        const float r = rainbow::radians<float>(deg * i);
         angle += r;
         sprite.rotate(r);
 

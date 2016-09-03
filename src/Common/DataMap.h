@@ -5,6 +5,7 @@
 #ifndef COMMON_DATAMAP_H_
 #define COMMON_DATAMAP_H_
 
+#include <cstddef>
 #include <cstdint>
 #include <utility>
 

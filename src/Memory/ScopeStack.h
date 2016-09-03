@@ -5,6 +5,7 @@
 #ifndef MEMORY_SCOPESTACK_H_
 #define MEMORY_SCOPESTACK_H_
 
+#include <cstddef>
 #include <functional>
 #include <memory>
 
