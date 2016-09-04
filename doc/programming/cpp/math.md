@@ -7,26 +7,35 @@ stated.
 ## Power of 2
 
 ```c++
-bool  is_pow2  (unsigned int i);
+unsigned int  ceil_pow2  (unsigned int i);
 ```
 
-Returns whether integer `i` is a power of 2.
-
-```c++
-unsigned int  next_pow2  (unsigned int i);
-```
-
-Returns the smallest power of 2 greater than or equal to `i`.
+Rounds `i` up to the nearest power of 2.
 
 !!! note
 
     0 is incorrectly considered a power of 2.
 
+```c++
+unsigned int  floor_pow2  (unsigned int i);
+```
+
+Rounds `i` down to the nearest power of 2.
+
+```c++
+bool  is_pow2  (unsigned int i);
+```
+
+Returns whether integer `i` is a power of 2.
+
 ## Trigonometry
 
 ```c++
-float  degrees  (float r);
-float  radian   (float d);
+template <typename T, typename = FloatingPoint<T>>
+T  degrees  (T r);
+
+template <typename T, typename = FloatingPoint<T>>
+T  radian   (T d);
 ```
 
 Converts values between degrees and radians.
@@ -210,5 +219,12 @@ float  fast_invsqrt  (float x);
 ```
 
 Returns an approximation of 1/√x using the infamous constant 0x5f3759df.
+
+```c++
+bool  is_almost_zero  (float x);
+```
+
+Returns whether `x` is practically zero. A number is considered almost zero if
+it's within `10 * ε`. On some hardware, this is 0.0000011920929.
 
 [1]: https://randomascii.wordpress.com/2012/02/25/comparing-floating-point-numbers-2012-edition/ "Comparing Floating Point Numbers, 2012 Edition"

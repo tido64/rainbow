@@ -52,19 +52,19 @@ the timer is running normally, and `false` when it is finished or has been
 paused.
 
 ```c++
-int   Timer::elapsed  () const;
+int  Timer::elapsed  () const;
 ```
 
 Returns the elapsed time.
 
 ```c++
-int   Timer::interval  () const;
+int  Timer::interval  () const;
 ```
 
 Returns the timer's delay/interval in milliseconds.
 
 ```c++
-int   Timer::repeat_count  () const;
+int  Timer::repeat_count  () const;
 ```
 
 Returns the number of times the action will be repeated. Note that this number

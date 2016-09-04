@@ -16,7 +16,7 @@ Next, we'll need to install the dependencies:
 
 * [CMake](https://cmake.org/)
 * [FMOD](https://www.fmod.org/) (only if you want to use FMOD Studio)
-* [Ogg Vorbis](http://www.vorbis.com/) (only if you want to use OpenAL)
+* [Ogg Vorbis](https://www.xiph.org/vorbis/) (only if you want to use OpenAL)
 * [OpenAL Soft](http://kcat.strangesoft.net/openal.html) (only if you want to use OpenAL)
 * [SDL](https://libsdl.org/) (Windows only)
 

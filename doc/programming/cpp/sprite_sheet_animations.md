@@ -142,7 +142,7 @@ In this example, we set up a walking animation using the simplified API.
 
 namespace
 {
-    const int kTextureRegions[]{
+    constexpr int kTextureRegions[]{
         400, 724, 104, 149,
         504, 724, 104, 149,
         608, 724, 104, 149,
@@ -150,7 +150,7 @@ namespace
         816, 724, 104, 149,
         920, 724, 104, 149};
 
-    const Animation::Frame kAnimationFrames[]{
+    constexpr Animation::Frame kAnimationFrames[]{
         0, 1, 2, 3, 4, 5, Animation::kAnimationEnd};
 }
 

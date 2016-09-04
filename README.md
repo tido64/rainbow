@@ -43,7 +43,7 @@ Rainbow is mostly built on
 - Skeletal animation imported directly from
   [Spine](http://esotericsoftware.com/)
 - Text rendering (supports TrueType and OpenType via
-  [FreeType](http://www.freetype.org/))
+  [FreeType](https://freetype.org/))
 - Texture atlas ([PNG](http://libpng.org/pub/png/libpng.html) and PVRTC)
 
 ### Input
@@ -195,11 +195,12 @@ Use the provided Xcode project under `rainbow/build/xcode4/`.
 
 - [CMake](https://cmake.org/)
 - [Mesa](http://www.mesa3d.org/)
-- [Ogg Vorbis](http://www.vorbis.com/) (optional with `-DUSE_FMOD_STUDIO=1`)
+- [Ogg Vorbis](https://www.xiph.org/vorbis/) (optional with
+  `-DUSE_FMOD_STUDIO=1`)
 - [OpenAL Soft](http://kcat.strangesoft.net/openal.html) (optional with
   `-DUSE_FMOD_STUDIO=1`)
 - [SDL](https://libsdl.org/)
-- [MinGW-w64](http://mingw-w64.org/) (for cross-compiling only)
+- [MinGW-w64](https://mingw-w64.org/) (for cross-compiling only)
 
 You can install most of these using your favourite package manager.
 
@@ -210,7 +211,8 @@ work.
 ### Mac OS X
 
 - [CMake](https://cmake.org/)
-- [Ogg Vorbis](http://www.vorbis.com/) (optional with `-DUSE_FMOD_STUDIO=1`)
+- [Ogg Vorbis](https://www.xiph.org/vorbis/) (optional with
+  `-DUSE_FMOD_STUDIO=1`)
 - [SDL](https://libsdl.org/)
 - [Xcode](https://itunes.apple.com/no/app/xcode/id497799835?mt=12)
 
@@ -225,7 +227,7 @@ installed. SDL will be downloaded automatically by the build script.
   `-DUSE_FMOD_STUDIO=1`)
 - [SDL](https://libsdl.org/)
 - [Visual Studio Community](https://www.visualstudio.com/en-us/products/visual-studio-community-vs.aspx)
-  (2015 with Update 2 or later)
+  (2015 with Update 3 or later)
 
 The process of downloading and setting up OpenAL Soft and SDL is fully automated
 by the build scripts. Simply run the PowerShell script, `tools\make.ps1`, and
