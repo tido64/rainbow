@@ -35,7 +35,7 @@ namespace
 
 TEST(AlgorithmTest, ApproximatesFloatEquality)
 {
-    DEFINE_NOT_FN(not_equal, rainbow::are_equal<float>, float);
+    auto not_equal = rainbow::test::not_fn(rainbow::are_equal<float>);
 
     ASSERT_PRED2(rainbow::are_equal<float>, 0.0f, 0.0f);
     ASSERT_PRED2(rainbow::are_equal<float>, 0.0f, -0.0f);
@@ -92,7 +92,7 @@ TEST(AlgorithmTest, RoundsDownToNearestPowerOfTwo)
 
 TEST(AlgorithmTest, ApproximatesZeroFloat)
 {
-    DEFINE_NOT_FN(definitely_not_zero, rainbow::is_almost_zero, float);
+    auto definitely_not_zero = rainbow::test::not_fn(rainbow::is_almost_zero);
 
     ASSERT_PRED1(rainbow::is_almost_zero, 0.0f);
     ASSERT_PRED1(rainbow::is_almost_zero, -0.0f);
@@ -107,7 +107,7 @@ TEST(AlgorithmTest, ApproximatesZeroFloat)
 
 TEST(AlgorithmTest, IsPowerOfTwo)
 {
-    DEFINE_NOT_FN(not_pow2, rainbow::is_pow2, unsigned int);
+    auto not_pow2 = rainbow::test::not_fn(rainbow::is_pow2);
 
     unsigned int p = 1;
     for (unsigned int i = 0; i < 100; ++i)

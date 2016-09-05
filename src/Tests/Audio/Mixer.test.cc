@@ -16,8 +16,8 @@ namespace
     constexpr int kMaxAudioChannels = 8;
     constexpr const char kAudioTestFile[] = "Silence.ogg";
 
-    DEFINE_NOT_FN(not_paused, rainbow::audio::is_paused, Channel*);
-    DEFINE_NOT_FN(not_playing, rainbow::audio::is_playing, Channel*);
+    auto not_paused = rainbow::test::not_fn(rainbow::audio::is_paused);
+    auto not_playing = rainbow::test::not_fn(rainbow::audio::is_playing);
 
     struct Static
     {

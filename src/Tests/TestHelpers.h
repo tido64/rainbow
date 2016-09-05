@@ -2,21 +2,36 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
-#define DEFINE_NOT_FN(name, fn, in_type)                                       \
-    rainbow::Not<decltype(&fn), in_type> name{fn}
+#include <type_traits>
+#include <utility>
 
-namespace rainbow
+namespace rainbow { namespace test
 {
-    template <typename P, typename T>
-    class Not
+    namespace detail
     {
-    public:
-        Not(P predicate) : pred_(predicate) {}
+        template <typename F>
+        class Not
+        {
+        public:
+            explicit Not(F&& predicate) noexcept
+                : predicate_(std::move(predicate))
+            {
+            }
 
-        bool operator()(T a) const { return !pred_(a); }
-        bool operator()(T a, T b) const { return !pred_(a, b); }
+            template <typename... Args>
+            bool operator()(Args&&... args) const
+            {
+                return !predicate_(std::forward<Args>(args)...);
+            }
 
-    private:
-        P pred_;
-    };
-}
+        private:
+            F predicate_;
+        };
+    }
+
+    template <typename F>
+    auto not_fn(F&& predicate)
+    {
+        return detail::Not<std::decay_t<F>>{std::forward<F>(predicate)};
+    }
+}}  // namespace rainbow::test

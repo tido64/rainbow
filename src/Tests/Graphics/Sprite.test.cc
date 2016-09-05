@@ -198,7 +198,7 @@ TEST(SpriteTest, Translates)
 
 TEST(SpriteTest, Rotates)
 {
-    DEFINE_NOT_FN(not_equal, rainbow::are_equal<float>, float);
+    auto not_equal = rainbow::test::not_fn(rainbow::are_equal<float>);
 
     Sprite sprite(4, 2);
 
