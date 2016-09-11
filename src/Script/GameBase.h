@@ -64,32 +64,34 @@ namespace rainbow
             return std::shared_ptr<Prose>(Prose::from_lua(path));
         }
     }
+
+    class GameBase
+    {
+    public:
+        static auto create(Director& director) -> std::unique_ptr<GameBase>;
+
+        virtual ~GameBase() = default;
+
+        auto input() -> Input& { return director_.input(); }
+        auto scenegraph() -> SceneNode& { return director_.scenegraph(); }
+
+        void terminate() { director_.terminate(); }
+        void terminate(const char* error) { director_.terminate(error); }
+
+        void init(const Vec2i& screen_size) { init_impl(screen_size); }
+        void update(unsigned long dt) { update_impl(dt); }
+        void on_memory_warning() { on_memory_warning_impl(); }
+
+    protected:
+        GameBase(Director& director) : director_(director) {}
+
+    private:
+        Director& director_;
+
+        virtual void init_impl(const Vec2i&) {}
+        virtual void update_impl(unsigned long) {}
+        virtual void on_memory_warning_impl() {}
+    };
 }
-
-class GameBase
-{
-public:
-    static auto create(rainbow::Director& director)
-        -> std::unique_ptr<GameBase>;
-
-    virtual ~GameBase() = default;
-
-    auto input() -> Input& { return director_.input(); }
-    auto scenegraph() -> rainbow::SceneNode& { return director_.scenegraph(); }
-
-    void terminate() { director_.terminate(); }
-    void terminate(const char* error) { director_.terminate(error); }
-
-    virtual void init(const Vec2i&) {}
-    virtual void update(unsigned long) {}
-
-    virtual void on_memory_warning() {}
-
-protected:
-    GameBase(rainbow::Director& director) : director_(director) {}
-
-private:
-    rainbow::Director& director_;
-};
 
 #endif

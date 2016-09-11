@@ -9,21 +9,24 @@
 #include "Lua/LuaMachine.h"
 #include "Script/GameBase.h"
 
-class LuaScript final : public GameBase, public InputListener
+class LuaScript final : public rainbow::GameBase, public InputListener
 {
 public:
-    LuaScript(rainbow::Director& director) : GameBase(director) {}
+    LuaScript(rainbow::Director& director) : rainbow::GameBase(director) {}
     ~LuaScript() override;
 
     lua_State* state() const { return lua_; }
 
-    void init(const Vec2i& screen) override;
-    void update(unsigned long) override;
-
-    void on_memory_warning() override;
-
 private:
     rainbow::LuaMachine lua_;
+
+    // rainbow::GameBase implementation details.
+
+    void init_impl(const Vec2i& screen) override;
+    void update_impl(unsigned long) override;
+    void on_memory_warning_impl() override;
+
+    // InputListener implementation details.
 
     bool on_key_down_impl(const rainbow::KeyStroke&) override;
     bool on_key_up_impl(const rainbow::KeyStroke&) override;

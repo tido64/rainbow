@@ -7,16 +7,16 @@
 
 #include "Script/GameBase.h"
 
-class NoGame final : public GameBase
+class NoGame final : public rainbow::GameBase
 {
 public:
-    NoGame(rainbow::Director& director) : GameBase(director) {}
-
-    void init(const Vec2i& screen) override;
-    void update(unsigned long dt) override;
+    NoGame(rainbow::Director& director) : rainbow::GameBase(director) {}
 
 private:
     rainbow::spritebatch_t batch_;
+
+    void init_impl(const Vec2i& screen) override;
+    void update_impl(unsigned long dt) override;
 };
 
 #endif

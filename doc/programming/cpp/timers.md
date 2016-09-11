@@ -106,13 +106,17 @@ private:
     int counter_ = 0;
 };
 
-class TimerExample final : public GameBase
+class TimerExample final : public rainbow::GameBase
 {
 public:
     TimerExample(rainbow::Director &director)
-        : GameBase(director), repeated_(nullptr)  {}
+        : rainbow::GameBase(director), repeated_(nullptr)  {}
 
-    void init(const Vec2i &) override
+private:
+    Timer *repeated_;
+    RepeatableAction action_;
+
+    void init_impl(const Vec2i &) override
     {
         // Create a delayed action using a function.
         TimerManager::Get()->set_timer(&action, 500, 0);
@@ -129,7 +133,7 @@ public:
             std::bind(&RepeatableAction::action, action_), 500, 4);
     }
 
-    void update(const unsigned long) override
+    void update_impl(const unsigned long) override
     {
         if (repeated_ && !repeated_->is_active())
         {
@@ -138,15 +142,12 @@ public:
             LOGI("The repeated timer was cleared.");
         }
     }
-
-private:
-    Timer *repeated_;
-    RepeatableAction action_;
 };
 
-GameBase* GameBase::create(rainbow::Director &director)
+auto rainbow::GameBase::create(rainbow::Director& director)
+    -> std::unique_ptr<rainbow::GameBase>
 {
-    return new TimerExample(director);
+    return std::make_unique<TimerExample>(director);
 }
 ```
 

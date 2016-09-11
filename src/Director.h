@@ -12,10 +12,11 @@
 #include "Script/Timer.h"
 
 class Data;
-class GameBase;
 
 namespace rainbow
 {
+    class GameBase;
+
     /// <summary>
     ///   Simple game loop for Lua-scripted games. Must be created after having
     ///   set up an OpenGL context.

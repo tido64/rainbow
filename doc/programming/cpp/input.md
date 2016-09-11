@@ -23,7 +23,7 @@ pointer and pass it around. The pointer is guaranteed to be valid throughout the
 lifetime of your main class.
 
 ```c++
-void MyGame::init(const Vec2i&)
+void MyGame::init_impl(const Vec2i&)
 {
     Input* input_manager = &input();
     […]
@@ -84,22 +84,22 @@ The coordinate space origin is at the lower left corner, same as world space.
 ## Example
 
 In this example, we implement keyboard and mouse delegates. We subscribe to
-input events in `init()`, and unsubscribe in the main class' destructor. While
-this example is running, we type "rainbow" and click on the mouse at two random
-places on the screen. Finally, we close the window using the keyboard shortcut
-Ctrl+Q/⌘Q.
+input events in `init_impl()`, and unsubscribe in the main class' destructor.
+While this example is running, we type "rainbow" and click on the mouse at two
+random places on the screen. Finally, we close the window using the keyboard
+shortcut Ctrl+Q/⌘Q.
 
 ```c++
-#include "Input/Key.h"
 #include "Input/Pointer.h"
+#include "Input/VirtualKey.h"
 #include "Script/GameBase.h"
 
 class InputHandler final : public InputListener
 {
 private:
-    bool on_key_down_impl(const Key& k) override
+    bool on_key_down_impl(const rainbow::KeyStroke& k) override
     {
-        LOGI("Pressed a key: %c", static_cast<char>(k.key));
+        LOGI("Pressed a key: %c", rainbow::to_keycode(k.key));
         return true;
     }
 
@@ -111,10 +111,10 @@ private:
     }
 };
 
-class InputExample final : public GameBase
+class InputExample final : public rainbow::GameBase
 {
 public:
-    InputExample(rainbow::Director& director) : GameBase(director) {}
+    InputExample(rainbow::Director& director) : rainbow::GameBase(director) {}
 
     ~InputExample()
     {
@@ -123,18 +123,19 @@ public:
         input().unsubscribe(&input_handler_);
     }
 
-    void init(const Vec2i&)
+private:
+    InputHandler input_handler_;
+
+    void init_impl(const Vec2i&) override
     {
         input().subscribe(&input_handler_);
     }
-
-private:
-    InputHandler input_handler_;
 };
 
-GameBase* GameBase::create(rainbow::Director& director)
+auto rainbow::GameBase::create(rainbow::Director& director)
+    -> std::unique_ptr<rainbow::GameBase>
 {
-    return new InputExample(director);
+    return std::make_unique<InputExample>(director);
 }
 ```
 

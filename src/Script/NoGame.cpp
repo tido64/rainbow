@@ -7,7 +7,9 @@
 #include "Resources/Rainbow.svg.h"
 #include "Script/Transition.h"
 
-void NoGame::init(const Vec2i& screen)
+using rainbow::GameBase;
+
+void NoGame::init_impl(const Vec2i& screen)
 {
     constexpr const float kDesiredHeight = 1440.0f;
 
@@ -40,7 +42,7 @@ void NoGame::init(const Vec2i& screen)
     scenegraph().add_child(batch_);
 }
 
-void NoGame::update(unsigned long)
+void NoGame::update_impl(unsigned long)
 {
     static bool run_once = false;
     if (!run_once)

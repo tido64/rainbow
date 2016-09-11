@@ -46,56 +46,55 @@ suspend_on_focus_lost = true
 ## Entry Point
 
 Any class that derives from `GameBase` is a potential entry point. The class may
-also override any or none of the methods `init()` and `update()`. Although, not
-overriding any of them will display nothing.
+also override any or none of the methods `init_impl()` and `update_impl()`.
+Although, not overriding any of them will display nothing.
 
 ```c++
-class MyGame final : public GameBase
+class MyGame final : public rainbow::GameBase
 {
 public:
-    MyGame(rainbow::Director &director) : GameBase(director) {}
-
-    void init(const Vec2i &screen) override;
-    void update(const unsigned long dt) override;
+    MyGame(rainbow::Director& director) : rainbow::GameBase(director) {}
 
 private:
     rainbow::spritebatch_t batch_;
+
+    void init_impl(const Vec2i &screen) override;
+    void update_impl(unsigned long dt) override;
 };
 ```
 
-The engine will call `init()` once on startup, after a graphics context has been
-created. From then on, `update()` will be called every frame. `dt` is the time
-passed since last frame, in milliseconds.
+The engine will call `init_impl()` once on startup, after a graphics context has
+been created. From then on, `update_impl()` will be called every frame. `dt` is
+the time passed since last frame, in milliseconds.
 
 Finally, let Rainbow know which class to use by implementing
 `GameBase::create()`:
 
 ```c++
-GameBase* GameBase::create(rainbow::Director &director)
+auto rainbow::GameBase::create(rainbow::Director& director)
+    -> std::unique_ptr<rainbow::GameBase>
 {
-    return new MyGame(director);
+    return std::make_unique<MyGame>(director);
 }
 ```
 
-See `Script/NoGame.cpp` and `Script/NoGame.h` for a full example. We will add
-sprites to the screen in the following sections.
+See `Script/NoGame.cpp` and `Script/NoGame.h` for a complete example. We will
+add sprites to the screen in the following sections.
 
 ## Sprite Batches
 
 One of Rainbow's philosophies is to always batch sprites. So in order to create
-a sprite, one must first create a batch. We will implement `init()`:
+a sprite, one must first create a batch. We will implement `init_impl()`:
 
 ```c++
-void init(const Vec2i &screen)
+void MyGame::init_impl(const Vec2i& screen)
 {
-    const unsigned int hint = 2;  // Intended number of sprites in batch
+    constexpr unsigned int hint = 2;  // Intended number of sprites in batch
     batch_ = rainbow::spritebatch(hint);
 ```
 
-The `hint` tells Rainbow that we intend to create a batch of two sprites. Note
-that this does not prevent us from adding more sprites. In fact, this parameter
-can be omitted entirely. However, specifying a hint will prevent Rainbow from
-using more memory than necessary. Next, we'll create two sprites:
+The `hint` tells Rainbow that we intend to create a batch of two sprites. Next,
+we'll create two sprites:
 
 ```c++
     auto sprite1 = batch_->create_sprite(100, 100);
@@ -129,7 +128,7 @@ changing the texture of every sprite in a batch by changing only the texture
 atlas. Rainbow does not prevent you from loading the same asset.
 
 Please refer to the API reference for full details. For displaying text, look up
-`FontAtlas` and `Label`. We will implement the rest of `init()` next.
+`FontAtlas` and `Label`. We will implement the rest of `init_impl()` next.
 
 ## Scene Graph
 
@@ -217,10 +216,11 @@ return {
 }
 ```
 
-If you save the table in `tutorial.prose.lua`, we can implement our `init()`:
+If you save the table in `tutorial.prose.lua`, we can implement our
+`init_impl()`:
 
 ```c++
-void MyGame::init(const Vec2i &screen)
+void MyGame::init_impl(const Vec2i& screen)
 {
     scene_ = rainbow::prose::from_table("tutorial.prose.lua");
 

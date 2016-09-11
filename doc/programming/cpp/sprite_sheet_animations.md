@@ -138,6 +138,7 @@ animation object that triggered `event`.
 In this example, we set up a walking animation using the simplified API.
 
 ```c++
+#include "FileSystem/FileSystem.h"
 #include "Script/GameBase.h"
 
 namespace
@@ -156,7 +157,8 @@ namespace
 
 rainbow::texture_t load_texture()
 {
-    auto texture = rainbow::texture("monkey.png");
+    auto texture_path = rainbow::filesystem::relative("monkey.png");
+    auto texture = rainbow::texture(texture_path);
     texture->set_regions(kTextureRegions);
     return texture;
 }
@@ -180,15 +182,24 @@ void animation_event_handler(Animation*, Animation::Event e)
     }
 }
 
-class AnimationExample final : public GameBase
+class AnimationExample final : public rainbow::GameBase
 {
 public:
-    AnimationExample(rainbow::Director& director) : GameBase(director) {}
+    AnimationExample(rainbow::Director& director) : rainbow::GameBase(director)
+    {
+    }
+
     ~AnimationExample() { animation_->release(); }
 
-    void init(const Vec2i& screen) override
+private:
+    rainbow::spritebatch_t batch_;
+    rainbow::animation_t animation_;
+
+    void init_impl(const Vec2i& screen) override
     {
-        TextureManager::Get()->set_filter(GL_NEAREST);
+        TextureManager::Get()->set_filter(
+            rainbow::graphics::TextureFilter::Nearest);
+
         auto texture = load_texture();
         batch_ = rainbow::spritebatch(1);
         batch_->set_texture(texture);
@@ -207,15 +218,12 @@ public:
 
         animation_->start();
     }
-
-private:
-    rainbow::spritebatch_t batch_;
-    rainbow::animation_t animation_;
 };
 
-GameBase* GameBase::create(rainbow::Director& director)
+auto rainbow::GameBase::create(rainbow::Director& director)
+    -> std::unique_ptr<rainbow::GameBase>
 {
-    return new AnimationExample(director);
+    return std::make_unique<AnimationExample>(director);
 }
 ```
 
@@ -226,18 +234,24 @@ Output:
 And an alternative implementation using "manual" object lifetime management:
 
 ```c++
-class AnimationExample final : public GameBase
+class AnimationExample final : public rainbow::GameBase
 {
 public:
     AnimationExample(rainbow::Director& director)
-        : GameBase(director), batch_(1),
+        : rainbow::GameBase(director), batch_(1),
           animation_(SpriteRef{}, Animation::Frames(kAnimationFrames), 6, 0) {}
 
     ~AnimationExample() { animation_.release(); }
 
-    void init(const Vec2i& screen) override
+private:
+    SpriteBatch batch_;
+    Animation animation_;
+
+    void init_impl(const Vec2i& screen) override
     {
-        TextureManager::Get()->set_filter(GL_NEAREST);
+        TextureManager::Get()->set_filter(
+            rainbow::graphics::TextureFilter::Nearest);
+
         auto texture = load_texture();
         batch_.set_texture(texture);
 
@@ -252,10 +266,6 @@ public:
 
         animation_.start();
     }
-
-private:
-    SpriteBatch batch_;
-    Animation animation_;
 };
 ```
 

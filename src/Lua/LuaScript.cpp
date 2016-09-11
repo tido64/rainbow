@@ -10,11 +10,12 @@
 #include "Lua/lua_Input.h"
 #include "Lua/lua_Platform.h"
 
+using rainbow::GameBase;
 using rainbow::KeyStroke;
 
 LuaScript::~LuaScript() { lua_.close(); }
 
-void LuaScript::init(const Vec2i& screen)
+void LuaScript::init_impl(const Vec2i& screen)
 {
     if (lua_.init(this, &scenegraph()) != LUA_OK)
     {
@@ -35,14 +36,17 @@ void LuaScript::init(const Vec2i& screen)
     input().subscribe(this);
 }
 
-void LuaScript::update(unsigned long dt)
+void LuaScript::update_impl(unsigned long dt)
 {
     if (lua_.update(dt))
         terminate();
     rainbow::lua::input::clear(lua_);
 }
 
-void LuaScript::on_memory_warning() { lua_gc(lua_, LUA_GCCOLLECT, 0); }
+void LuaScript::on_memory_warning_impl()
+{
+    lua_gc(lua_, LUA_GCCOLLECT, 0);
+}
 
 bool LuaScript::on_key_down_impl(const KeyStroke& k)
 {
@@ -80,7 +84,7 @@ bool LuaScript::on_pointer_moved_impl(const ArrayView<Pointer>& pointers)
     return true;
 }
 
-std::unique_ptr<GameBase> GameBase::create(rainbow::Director& director)
+auto GameBase::create(rainbow::Director& director) -> std::unique_ptr<GameBase>
 {
     return std::make_unique<LuaScript>(director);
 }
