@@ -8,7 +8,7 @@
 #   include <emscripten.h>
 #elif defined(RAINBOW_OS_WINDOWS)
 #   if defined(_MSC_VER) && defined(NDEBUG)
-        // TODO: http://public.kitware.com/Bug/view.php?id=12566
+        // TODO: https://gitlab.kitware.com/cmake/cmake/issues/12566
 #       pragma comment(linker, "/SUBSYSTEM:WINDOWS")
 #   endif
 #   include "Graphics/OpenGL.h"
@@ -31,21 +31,35 @@ namespace
 #ifdef RAINBOW_TEST
         return rainbow::run_tests(argc, argv);
 #else
-        return 0;
         NOT_USED(argc);
         NOT_USED(argv);
+        return 0;
 #endif  // RAINBOW_TEST
     }
 
     bool should_run_tests(int& argc, char**& argv)
     {
-        const bool run = (argc < 2 ? false : strcmp(argv[1], "--test") == 0);
-        if (run)
+#ifdef RAINBOW_TEST
+        if (argc < 2)
+            return false;
+
+        // Check for --test flag.
+        if (strcmp(argv[1], "--test") == 0)
         {
             --argc;
             ++argv;
+            return true;
         }
-        return run;
+
+        // Check for Google Test flags.
+        constexpr char kGTestFlag[] = "--gtest";
+        constexpr size_t kGTestFlagLength = rainbow::array_size(kGTestFlag) - 1;
+        return strncmp(argv[1], kGTestFlag, kGTestFlagLength) == 0;
+#else
+        NOT_USED(argc);
+        NOT_USED(argv);
+        return false;
+#endif  // RAINBOW_TEST
     }
 }
 
@@ -95,6 +109,7 @@ auto main(int argc, char* argv[]) -> int
         LOGF("%s", controller.error());
         return 1;
     }
+
     return 0;
 }
 
