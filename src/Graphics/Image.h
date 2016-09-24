@@ -126,6 +126,7 @@ namespace rainbow
 #endif  // USE_SVG
 
 #ifdef USE_UIKIT
+        NOT_USED(scale);
         return uikit::decode(data);
 #else
         return {};

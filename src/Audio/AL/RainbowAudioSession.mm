@@ -87,7 +87,7 @@ using rainbow::audio::ALMixer;
 - (void)didReceiveInterruptionNotification:(NSNotification*)notification
 {
     NSNumber* interuptionType =
-        [notification.userInfo objectForKey:AVAudioSessionInterruptionTypeKey];
+        notification.userInfo[AVAudioSessionInterruptionTypeKey];
     switch (interuptionType.unsignedIntegerValue)
     {
         case AVAudioSessionInterruptionTypeBegan:
