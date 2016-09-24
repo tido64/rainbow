@@ -14,11 +14,6 @@ struct Pointer
     int32_t x;           ///< Position of pointer (x-component).
     int32_t y;           ///< Position of pointer (y-component).
     uint64_t timestamp;  ///< The relative time at which this event occurred, in milliseconds.
-
-    Pointer() : hash(0), x(0), y(0), timestamp(0) {}
-
-    Pointer(uint32_t hash, int32_t x, int32_t y, uint64_t t)
-        : hash(hash), x(x), y(y), timestamp(t) {}
 };
 
 #endif

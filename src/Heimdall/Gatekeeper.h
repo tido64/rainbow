@@ -5,8 +5,10 @@
 #ifndef HEIMDALL_GATEKEEPER_H_
 #define HEIMDALL_GATEKEEPER_H_
 
-#include <mutex>
-#include <queue>
+#if USE_LUA_SCRIPT
+#   include <mutex>
+#   include <queue>
+#endif  // USE_LUA_SCRIPT
 
 #include "Director.h"
 #include "Heimdall/ChangeMonitor.h"

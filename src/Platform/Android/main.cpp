@@ -183,7 +183,7 @@ void android_handle_display(AInstance* a)
     eglQuerySurface(a->display, a->surface, EGL_HEIGHT, &height);
 
     // Load game
-    a->director->init(Vec2i(width, height));
+    a->director->init(Vec2i{width, height});
     a->initialised = !a->director->terminated();
 }
 
@@ -376,8 +376,8 @@ auto get_pointer_event(AInputEvent* event, int32_t index) -> Pointer
 {
     const Vec2i& point = rainbow::graphics::convert_to_flipped_view(Vec2i(
         AMotionEvent_getX(event, index), AMotionEvent_getY(event, index)));
-    return Pointer(AMotionEvent_getPointerId(event, index),
-                   point.x,
-                   point.y,
-                   AMotionEvent_getEventTime(event));
+    return {static_cast<uint32_t>(AMotionEvent_getPointerId(event, index)),
+            point.x,
+            point.y,
+            static_cast<uint64_t>(AMotionEvent_getEventTime(event))};
 }

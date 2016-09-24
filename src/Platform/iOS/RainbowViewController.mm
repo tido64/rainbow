@@ -5,7 +5,6 @@
 #import "RainbowViewController.h"
 
 #import <CoreMotion/CoreMotion.h>
-#import <objc/runtime.h>
 
 #include "Common/Data.h"
 #include "Config.h"
@@ -42,20 +41,6 @@ namespace
     std::unique_ptr<Director> _director;
     CMMotionManager* _motionManager;
     Pointer _pointers[kMaxTouches];
-}
-
-+ (void)load
-{
-    static dispatch_once_t dispatchOnce;
-    dispatch_once(&dispatchOnce, ^{
-        if (![UIScreen instancesRespondToSelector:@selector(coordinateSpace)])
-        {
-            Class klass = [self class];
-            method_exchangeImplementations(
-                class_getInstanceMethod(klass, @selector(convertTouches:)),
-                class_getInstanceMethod(klass, @selector(touchesFromSet:)));
-        }
-    });
 }
 
 - (instancetype)init
@@ -113,9 +98,10 @@ namespace
     {
         const CGPoint p = [view convertPoint:[touch locationInView:view]
                            toCoordinateSpace:space];
-        ptr->hash = touch.hash;
-        ptr->x = p.x * scale;
-        ptr->y = (height - p.y) * scale;
+        *ptr = Pointer{static_cast<uint32_t>(touch.hash),
+                       static_cast<int32_t>(p.x * scale),
+                       static_cast<int32_t>((height - p.y) * scale),
+                       0};
         ++ptr;
     }
     return self.pointers;
@@ -152,19 +138,19 @@ namespace
 - (void)touchesBegan:(NSSet*)touches withEvent:(UIEvent*)event
 {
     _director->input().on_pointer_began(
-        ArrayView<Pointer>([self convertTouches:touches], touches.count));
+        ArrayView<Pointer>{[self convertTouches:touches], touches.count});
 }
 
 - (void)touchesMoved:(NSSet*)touches withEvent:(UIEvent*)event
 {
     _director->input().on_pointer_moved(
-        ArrayView<Pointer>([self convertTouches:touches], touches.count));
+        ArrayView<Pointer>{[self convertTouches:touches], touches.count});
 }
 
 - (void)touchesEnded:(NSSet*)touches withEvent:(UIEvent*)event
 {
     _director->input().on_pointer_ended(
-        ArrayView<Pointer>([self convertTouches:touches], touches.count));
+        ArrayView<Pointer>{[self convertTouches:touches], touches.count});
 }
 
 - (void)touchesCancelled:(NSSet*)touches withEvent:(UIEvent*)event
@@ -223,69 +209,5 @@ namespace
 }
 
 - (BOOL)prefersStatusBarHidden { return YES; }
-
-#pragma mark - Deprecated in iOS 8.0
-
-- (Pointer*)touchesFromSet:(NSSet*)touches
-{
-    R_ASSERT(touches.count <= kMaxTouches, "Unsupported number of touches");
-
-    UIScreen* screen = self.view.window.screen;
-    const CGSize size = GetScreenSize(screen);
-    const CGFloat scale = screen.scale;
-    Pointer* ptr = self.pointers;
-    switch ([UIApplication sharedApplication].statusBarOrientation)
-    {
-        case UIInterfaceOrientationPortrait:
-            for (UITouch* touch in touches)
-            {
-                const CGPoint p = [touch locationInView:nil];
-                ptr->hash = touch.hash;
-                ptr->x = p.x * scale;
-                ptr->y = size.height - p.y * scale;
-                ptr->timestamp = touch.timestamp * 1000.0;
-                ++ptr;
-            }
-            break;
-        case UIInterfaceOrientationPortraitUpsideDown:
-            for (UITouch* touch in touches)
-            {
-                const CGPoint p = [touch locationInView:nil];
-                ptr->hash = touch.hash;
-                ptr->x = size.width - p.x * scale;
-                ptr->y = p.y * scale;
-                ptr->timestamp = touch.timestamp * 1000.0;
-                ++ptr;
-            }
-            break;
-        case UIInterfaceOrientationLandscapeLeft:
-            for (UITouch* touch in touches)
-            {
-                const CGPoint p = [touch locationInView:nil];
-                ptr->hash = touch.hash;
-                ptr->x = size.height - p.y * scale;
-                ptr->y = size.width - p.x * scale;
-                ptr->timestamp = touch.timestamp * 1000.0;
-                ++ptr;
-            }
-            break;
-        case UIInterfaceOrientationLandscapeRight:
-            for (UITouch* touch in touches)
-            {
-                const CGPoint p = [touch locationInView:nil];
-                ptr->hash = touch.hash;
-                ptr->x = p.y * scale;
-                ptr->y = p.x * scale;
-                ptr->timestamp = touch.timestamp * 1000.0;
-                ++ptr;
-            }
-            break;
-        default:
-            R_ASSERT(false, "Reached unreachable code.");
-            UNREACHABLE();
-            break;
-    }
-    return self.pointers;
-}
 
 @end

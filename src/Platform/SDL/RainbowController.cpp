@@ -19,9 +19,9 @@ using rainbow::KeyStroke;
 
 namespace
 {
-    const unsigned int kInactiveSleepTime = 100;
+    constexpr unsigned int kInactiveSleepTime = 100;
 
-    const uint32_t kMouseButtons[]{
+    constexpr uint32_t kMouseButtons[]{
         SDL_BUTTON_LEFT,
         SDL_BUTTON_MIDDLE,
         SDL_BUTTON_RIGHT,
@@ -150,18 +150,18 @@ bool RainbowController::run()
                 break;
             case SDL_CONTROLLERAXISMOTION:
                 director_.input().on_controller_axis_motion(
-                    ControllerAxisMotion(
-                        event.caxis.which,
+                    ControllerAxisMotion{
+                        static_cast<uint32_t>(event.caxis.which),
                         static_cast<ControllerAxis>(event.caxis.axis),
                         event.caxis.value,
-                        event.caxis.timestamp));
+                        event.caxis.timestamp});
                 break;
             case SDL_CONTROLLERBUTTONDOWN:
                 director_.input().on_controller_button_down(
-                    ControllerButtonEvent(
-                        event.cbutton.which,
+                    ControllerButtonEvent{
+                        static_cast<uint32_t>(event.cbutton.which),
                         static_cast<ControllerButton>(event.cbutton.button),
-                        event.cbutton.timestamp));
+                        event.cbutton.timestamp});
                 break;
             case SDL_CONTROLLERBUTTONUP:
                 director_.input().on_controller_button_up(ControllerButtonEvent(
@@ -228,7 +228,7 @@ void RainbowController::on_mouse_down(uint32_t button,
                                       const Vec2i& point,
                                       unsigned long timestamp)
 {
-    Pointer p(button, point.x, point.y, timestamp);
+    Pointer p{button, point.x, point.y, timestamp};
     director_.input().on_pointer_began(p);
 }
 
@@ -238,13 +238,13 @@ void RainbowController::on_mouse_motion(uint32_t buttons,
 {
     if (buttons > 0)
     {
-        Pointer p[SDL_BUTTON_X2];
+        Pointer p[rainbow::array_size(kMouseButtons)];
         size_t i = 0;
         for (auto button : kMouseButtons)
         {
             if (buttons & SDL_BUTTON(button))
             {
-                p[i] = Pointer(button, point.x, point.y, timestamp);
+                p[i] = Pointer{button, point.x, point.y, timestamp};
                 ++i;
             }
         }
@@ -252,7 +252,7 @@ void RainbowController::on_mouse_motion(uint32_t buttons,
     }
     else
     {
-        Pointer p(0, point.x, point.y, timestamp);
+        Pointer p{0, point.x, point.y, timestamp};
         director_.input().on_pointer_moved(p);
     }
 }
@@ -261,7 +261,7 @@ void RainbowController::on_mouse_up(uint32_t button,
                                     const Vec2i& point,
                                     unsigned long timestamp)
 {
-    Pointer p(button, point.x, point.y, timestamp);
+    Pointer p{button, point.x, point.y, timestamp};
     director_.input().on_pointer_ended(p);
 }
 

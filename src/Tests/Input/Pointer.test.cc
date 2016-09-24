@@ -80,20 +80,11 @@ namespace
     };
 }
 
-TEST_F(PointerTest, IsZeroByDefault)
-{
-    const Pointer p;
-
-    ASSERT_EQ(0u, p.hash);
-    ASSERT_EQ(0, p.x);
-    ASSERT_EQ(0, p.y);
-    ASSERT_EQ(0ull, p.timestamp);
-}
-
 TEST_F(PointerTest, pointer_began)
 {
-    Pointer p1(1, 2, 3, 0);
+    Pointer p1{1, 2, 3, 0};
     input.on_pointer_began(p1);
+
     ASSERT_TRUE(is_triggered(Events::Began));
     ASSERT_FALSE(is_triggered(0xff ^ Events::Began));
 }
@@ -101,22 +92,25 @@ TEST_F(PointerTest, pointer_began)
 TEST_F(PointerTest, pointer_canceled)
 {
     input.on_pointer_canceled();
+
     ASSERT_TRUE(is_triggered(Events::Canceled));
     ASSERT_FALSE(is_triggered(0xff ^ Events::Canceled));
 }
 
 TEST_F(PointerTest, pointer_ended)
 {
-    Pointer p1(1, 2, 3, 0);
+    Pointer p1{1, 2, 3, 0};
     input.on_pointer_ended(p1);
+
     ASSERT_TRUE(is_triggered(Events::Ended));
     ASSERT_FALSE(is_triggered(0xff ^ Events::Ended));
 }
 
 TEST_F(PointerTest, pointer_moved)
 {
-    Pointer p1(1, 2, 3, 0);
+    Pointer p1{1, 2, 3, 0};
     input.on_pointer_moved(p1);
+
     ASSERT_TRUE(is_triggered(Events::Moved));
     ASSERT_FALSE(is_triggered(0xff ^ Events::Moved));
 }
