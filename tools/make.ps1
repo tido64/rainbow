@@ -16,7 +16,6 @@ $LuaDescription = "Enable Lua scripting"
 $PhysicsDescription = "Enable physics module (Box2D)"
 $SpineDescription = "Enable Spine runtime"
 $UnitTestsDescription = "Enable unit tests"
-$VectorDescription = "Enable vector drawing library (NanoVG)"
 
 $Shell = New-Object -ComObject Shell.Application
 
@@ -45,7 +44,6 @@ elseif ($Help) {
 	Write-Output "  -DUSE_LUA_SCRIPT=1       $LuaDescription"
 	Write-Output "  -DUSE_PHYSICS=1          $PhysicsDescription"
 	Write-Output "  -DUSE_SPINE=1            $SpineDescription"
-	Write-Output "  -DUSE_VECTOR=1           $VectorDescription"
 	Write-Output ""
 	Write-Output "CMake options are passed directly to CMake so you can set variables like"
 	Write-Output "-DCMAKE_BUILD_TYPE=<type> among others."
@@ -95,10 +93,6 @@ else {
 		AutoSize = $true
 		Text = $SpineDescription
 	}
-	$VectorCheckBox = New-Object System.Windows.Forms.CheckBox -Property @{
-		AutoSize = $true
-		Text = $VectorDescription
-	}
 
 	$AcceptButton = New-Object System.Windows.Forms.Button -Property @{
 		DialogResult = [System.Windows.Forms.DialogResult]::OK
@@ -129,7 +123,6 @@ else {
 		$LuaCheckBox,
 		$PhysicsCheckBox,
 		$SpineCheckBox,
-		$VectorCheckBox,
 		$ButtonLayout));
 
 	$Form = New-Object System.Windows.Forms.Form -Property @{
@@ -170,9 +163,6 @@ else {
 	}
 	if ($SpineCheckBox.Checked) {
 		$Options += "-DUSE_SPINE=1"
-	}
-	if ($VectorCheckBox.Checked) {
-		$Options += "-DUSE_VECTOR=1"
 	}
 
 	Push-Location $OutputFolder

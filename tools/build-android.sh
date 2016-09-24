@@ -109,7 +109,6 @@ model {
                 '-I$PROJECT/lib/Lua',
                 '-I$PROJECT/lib/libpng',
                 '-I$PROJECT/lib/nanosvg/src',
-                '-I$PROJECT/lib/nanovg/src',
                 '-I$PROJECT/lib/spine-runtimes/spine-c/include',
                 '-I$NATIVE_APP_GLUE',
             ])
@@ -129,7 +128,6 @@ model {
                 '-I$PROJECT/lib/Lua',
                 '-I$PROJECT/lib/libpng',
                 '-I$PROJECT/lib/nanosvg/src',
-                '-I$PROJECT/lib/nanovg/src',
                 '-I$PROJECT/lib/spine-runtimes/spine-c/include',
                 '-I$NATIVE_APP_GLUE',
                 '-DRAINBOW_AUDIO_FMOD=1',

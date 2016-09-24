@@ -18,7 +18,6 @@ option(USE_HEIMDALL     "Enable Heimdall debugging facilities" OFF)
 option(USE_LUA_SCRIPT   "Enable Lua scripting" ON)
 option(USE_PHYSICS      "Enable physics module (Box2D)" OFF)
 option(USE_SPINE        "Enable Spine runtime" OFF)
-option(USE_VECTOR       "Enable vector drawing library (NanoVG)" OFF)
 
 # Auto-generate files
 execute_process(COMMAND tools/shaders-gen.py WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
@@ -366,12 +365,6 @@ if(USE_SPINE)
        src/ThirdParty/Spine/spine-rainbow.h)
 endif()
 
-if(USE_VECTOR)
-  list(APPEND SOURCE_FILES
-       src/ThirdParty/NanoVG/NanoVG.cpp
-       src/ThirdParty/NanoVG/NanoVG.h)
-endif()
-
 foreach(src IN LISTS SOURCE_FILES)
   string(REGEX REPLACE "^src/" "" src_file ${src})
   if(NOT src_file STREQUAL "")
@@ -418,9 +411,6 @@ if(USE_SPINE)
 endif()
 include(${LOCAL_MODULE_PATH}/zlib.cmake)
 include(${LOCAL_MODULE_PATH}/libpng.cmake)
-if(USE_VECTOR)
-  include(${LOCAL_MODULE_PATH}/nanovg.cmake)
-endif()
 
 set(SOURCE_FILES ${SOURCE_FILES} CACHE STRING "For external scripts")
 

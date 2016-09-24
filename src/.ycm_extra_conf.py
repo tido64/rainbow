@@ -52,7 +52,6 @@ def ProjectFlags():
     '-I', os.path.join(project_path, 'lib', 'SDL', 'include'),
     '-I', os.path.join(project_path, 'lib', 'libpng'),
     '-I', os.path.join(project_path, 'lib', 'nanosvg', 'src'),
-    '-I', os.path.join(project_path, 'lib', 'nanovg', 'src'),
     '-I', os.path.join(project_path, 'lib', 'spine-runtimes', 'spine-c', 'include'),
     '-I', os.path.join(project_path, 'lib', 'googletest', 'googletest', 'include'),
     '-DRAINBOW_AUDIO_AL=1',

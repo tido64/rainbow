@@ -40,7 +40,6 @@
 				"-I$project_path/lib/SDL/include",
 				"-I$project_path/lib/libpng",
 				"-I$project_path/lib/nanosvg/src",
-				"-I$project_path/lib/nanovg/src",
 				"-I$project_path/lib/spine-runtimes/spine-c/include",
 				"-I$project_path/lib/googletest/googletest/include",
 				"-DRAINBOW_AUDIO_AL=1",
