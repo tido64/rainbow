@@ -21,7 +21,7 @@ namespace rainbow
     ///   Simple game loop for Lua-scripted games. Must be created after having
     ///   set up an OpenGL context.
     /// </summary>
-    class Director : private NonCopyable<Director>
+    class Director final : private NonCopyable<Director>
     {
     public:
         Director();

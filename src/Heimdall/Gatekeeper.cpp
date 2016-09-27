@@ -46,11 +46,11 @@ Gatekeeper::Gatekeeper()
 void Gatekeeper::init(const Vec2i& screen)
 {
     overlay_.initialize(scenegraph_);
-    input().subscribe(&overlay_);
-    input().subscribe(&overlay_activator_);
+    director_.input().subscribe(&overlay_);
+    director_.input().subscribe(&overlay_activator_);
 
-    Director::init(screen);
-    if (terminated())
+    director_.init(screen);
+    if (director_.terminated())
         return;
 
 #if USE_LUA_SCRIPT
@@ -65,7 +65,7 @@ void Gatekeeper::init(const Vec2i& screen)
 void Gatekeeper::update(unsigned long dt)
 {
 #if USE_LUA_SCRIPT
-    lua_State* L = static_cast<LuaScript*>(script())->state();
+    lua_State* L = static_cast<LuaScript*>(director_.script())->state();
     while (!changed_files_.empty())
     {
         std::unique_ptr<char[]> file;
@@ -84,7 +84,7 @@ void Gatekeeper::update(unsigned long dt)
     }
 #endif  // USE_LUA_SCRIPT
 
-    Director::update(dt);
+    director_.update(dt);
 
     if (!overlay_.is_enabled())
         overlay_activator_.update(dt);
