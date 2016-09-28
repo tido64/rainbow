@@ -17,19 +17,6 @@ namespace
 {
     constexpr NSTimeInterval kAccelerometerUpdateInterval = 1.0 / 60.0;
     constexpr NSUInteger kMaxTouches = 16;
-
-    CGSize GetScreenSize(UIScreen* screen)
-    {
-        if (![screen respondsToSelector:@selector(nativeBounds)])
-        {
-            CGSize size = screen.bounds.size;
-            const CGFloat scale = screen.scale;
-            size.width *= scale;
-            size.height *= scale;
-            return size;
-        }
-        return screen.nativeBounds.size;
-    }
 }
 
 @interface RainbowViewController ()
@@ -175,7 +162,7 @@ namespace
 
     [_motionManager startAccelerometerUpdates];
 
-    CGSize size = GetScreenSize([UIScreen mainScreen]);
+    CGSize size = UIScreen.mainScreen.nativeBounds.size;
     if (self.supportedInterfaceOrientations ==
         UIInterfaceOrientationMaskLandscape)
     {
