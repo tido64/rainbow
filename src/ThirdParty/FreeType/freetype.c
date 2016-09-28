@@ -7,13 +7,13 @@
 #define FT_CONFIG_MODULES_H  <ftmodule.h>
 
 // Base components
-#include <base/ftsystem.c>
-#include <base/ftinit.c>
-#include <base/ftdebug.c>
 #include <base/ftbase.c>
 #include <base/ftbbox.c>
-#include <base/ftglyph.c>
 #include <base/ftbitmap.c>
+#include <base/ftdebug.c>
+#include <base/ftglyph.c>
+#include <base/ftinit.c>
+#include <base/ftsystem.c>
 
 // Font drivers
 #include <cff/cff.c>
