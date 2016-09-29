@@ -260,34 +260,6 @@ TEST(SpriteBatchTest, ExcessSpritesAreDiscarded)
     }
 }
 
-TEST(SpriteBatchTest, DISABLED_ExpandsToAccommodateNewSprites)
-{
-    SpriteBatch batch(rainbow::ISolemnlySwearThatIAmOnlyTesting{});
-    uint32_t capacity = batch.capacity();
-    for (uint32_t i = 0; i < capacity; ++i)
-        batch.create_sprite(i + 1, i + 1);
-    update(batch);
-
-    ASSERT_EQ(capacity, batch.size());
-
-    batch.create_sprite(capacity + 1, capacity + 1);
-    update(batch);
-
-    ASSERT_LT(batch.size(), batch.capacity());
-    ASSERT_GT(batch.capacity(), capacity);
-
-    auto&& vertices = batch.vertices();
-    for (uint32_t i = 0; i < batch.size(); ++i)
-    {
-        const float s = (i + 1) * 0.5f;
-        const uint32_t j = i * 4;
-        ASSERT_EQ(Vec2f(-s, -s), vertices[j].position);
-        ASSERT_EQ(Vec2f(s, -s), vertices[j + 1].position);
-        ASSERT_EQ(Vec2f(s, s), vertices[j + 2].position);
-        ASSERT_EQ(Vec2f(-s, s), vertices[j + 3].position);
-    }
-}
-
 TEST_F(SpriteBatchOperationsTest, SpritesShareASingleBuffer)
 {
     ASSERT_EQ(count * 6, batch.vertex_count());
