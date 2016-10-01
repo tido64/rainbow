@@ -240,8 +240,11 @@ void FontAtlas::load(TextureManager& texture_manager,
         {
             R_ASSERT(bitmap.num_grays == 256, "");
             R_ASSERT(bitmap.pixel_mode == FT_PIXEL_MODE_GRAY, "");
-            copy_bitmap_into(buffer.get(), size, offset + kGlyphPadding,
-                             bitmap.buffer, Vec2u(bitmap.width, bitmap.rows));
+            copy_bitmap_into(buffer.get(),
+                             size,
+                             offset + kGlyphPadding,
+                             bitmap.buffer,
+                             Vec2u(bitmap.width, bitmap.rows));
         }
 
         // Save font glyph data.

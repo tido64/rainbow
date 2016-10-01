@@ -14,9 +14,9 @@ namespace rainbow
     class SceneNode;
 
     inline auto move(rainbow::SceneNode* node,
-                       const Vec2f& delta,
-                       int duration,
-                       TimingFunction timing)
+                     const Vec2f& delta,
+                     int duration,
+                     TimingFunction timing)
     {
         return TimerManager::Get()->set_timer(
             Move<rainbow::SceneNode*>(node, delta, duration, std::move(timing)),
@@ -45,9 +45,9 @@ namespace rainbow
 
     template <typename T>
     auto move(T component,
-                Vec2f destination,
-                int duration,
-                TimingFunction timing)
+              Vec2f destination,
+              int duration,
+              TimingFunction timing)
     {
         destination -= component->position();
         return TimerManager::Get()->set_timer(

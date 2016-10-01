@@ -29,19 +29,19 @@ public:
             Offset,
             Shake
         } type;
-        unsigned int start;
-        unsigned int length;
+        uint32_t start;
+        uint32_t length;
 
         union
         {
             unsigned char color[4];
-            unsigned int magnitude;
+            uint32_t magnitude;
             int offset[2];
         };
 
-        Attribute(Colorb color, unsigned int start, unsigned int len);
-        Attribute(unsigned int magnitude, unsigned int start, unsigned int len);
-        Attribute(const Vec2i& offset, unsigned int start, unsigned int len);
+        Attribute(Colorb color, uint32_t start, uint32_t len);
+        Attribute(uint32_t magnitude, uint32_t start, uint32_t len);
+        Attribute(const Vec2i& offset, uint32_t start, uint32_t len);
     };
 
     LyricalLabel();
@@ -62,23 +62,19 @@ public:
     /// <param name="color">The color to set.</param>
     /// <param name="start">Offset to the first character in range.</param>
     /// <param name="length">Number of characters in range.</param>
-    void set_color(Colorb color, unsigned int start, unsigned int length);
+    void set_color(Colorb color, uint32_t start, uint32_t length);
 
     /// <summary>Offsets characters' positions in given range.</summary>
     /// <param name="offset">The vector to offset by.</param>
     /// <param name="start">Offset to the first character in range.</param>
     /// <param name="length">Number of characters in range.</param>
-    void set_offset(const Vec2i& offset,
-                    unsigned int start,
-                    unsigned int length);
+    void set_offset(const Vec2i& offset, uint32_t start, uint32_t length);
 
     /// <summary>Shake characters in given range.</summary>
     /// <param name="magnitude">The magnitude of the shaking.</param>
     /// <param name="start">Offset to the first character in range.</param>
     /// <param name="length">Number of characters in range.</param>
-    void set_shaking(unsigned int magnitude,
-                     unsigned int start,
-                     unsigned int length);
+    void set_shaking(uint32_t magnitude, uint32_t start, uint32_t length);
 
     /// <summary>Sets text to display.</summary>
     void set_text(const char*);
@@ -113,7 +109,7 @@ public:
 
 private:
     std::vector<Attribute> attributes_;
-    unsigned int applied_;
+    uint32_t applied_;
     bool did_shake_;
     Timer* animators_[static_cast<int>(Animation::Count)];
 

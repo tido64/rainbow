@@ -5,43 +5,38 @@
 #ifndef COMMON_COLOR_H_
 #define COMMON_COLOR_H_
 
+#include <cstdint>
+
 namespace rainbow
 {
-    static_assert(sizeof(unsigned int) >= 4, "int is less than 32-bits");
-
-    /// <summary>
-    ///   Structure for storing a colour (RGBA) using unsigned bytes.
-    /// </summary>
+    /// <summary>Structure for storing a colour (RGBA) using bytes.</summary>
     struct Colorb
     {
-        unsigned char r, g, b, a;
+        uint8_t r, g, b, a;
 
         constexpr Colorb() : r(0xff), g(0xff), b(0xff), a(0xff) {}
 
-        constexpr Colorb(unsigned int rgba)
-            : r(0xff & (rgba >> 24)), g(0xff & (rgba >> 16)),
-              b(0xff & (rgba >> 8)), a(0xff & rgba) {}
-
-        constexpr Colorb(unsigned char r,
-                         unsigned char g,
-                         unsigned char b,
-                         unsigned char a = 0xff)
-            : r(r), g(g), b(b), a(a) {}
-
-        auto operator=(unsigned int c) -> Colorb&
+        constexpr Colorb(uint8_t r, uint8_t g, uint8_t b, uint8_t a = 0xff)
+            : r(r), g(g), b(b), a(a)
         {
-            r = 0xff & (c >> 24);
-            g = 0xff & (c >> 16);
-            b = 0xff & (c >> 8);
-            a = 0xff & c;
-            return *this;
         }
 
-        friend bool operator!=(Colorb a, Colorb b) { return !(a == b); }
-
-        friend bool operator==(Colorb a, Colorb b)
+        constexpr Colorb(uint32_t rgba)
+            : r(0xff & (rgba >> 24)), g(0xff & (rgba >> 16)),
+              b(0xff & (rgba >> 8)), a(0xff & rgba)
         {
-            return a.r == b.r && a.g == b.g && a.b == b.b && a.a == b.a;
+        }
+
+        auto operator=(uint32_t c) -> Colorb& { return *this = Colorb{c}; }
+
+        friend bool operator!=(Colorb lhs, Colorb rhs) { return !(lhs == rhs); }
+
+        friend bool operator==(Colorb lhs, Colorb rhs)
+        {
+            return lhs.r == rhs.r &&  //
+                   lhs.g == rhs.g &&  //
+                   lhs.b == rhs.b &&  //
+                   lhs.a == rhs.a;
         }
     };
 
@@ -52,24 +47,20 @@ namespace rainbow
 
         constexpr Colorf() : r(1.0f), g(1.0f), b(1.0f), a(1.0f) {}
 
-        constexpr Colorf(unsigned int c)
-            : r((0xff & (c >> 24)) * 1.0f / 255.0f),
-              g((0xff & (c >> 16)) * 1.0f / 255.0f),
-              b((0xff & (c >> 8)) * 1.0f / 255.0f),
-              a((0xff & (c)) * 1.0f / 255.0f) {}
-
         constexpr Colorf(float r, float g, float b, float a = 1.0f)
-            : r(r), g(g), b(b), a(a) {}
-
-        auto operator=(unsigned int c) -> Colorf&
+            : r(r), g(g), b(b), a(a)
         {
-            const float white = 1.0f / 255.0f;
-            r = (0xff & (c >> 24)) * white;
-            g = (0xff & (c >> 16)) * white;
-            b = (0xff & (c >> 8)) * white;
-            a = (0xff & c) * white;
-            return *this;
         }
+
+        constexpr Colorf(uint32_t c)
+            : r((0xff & (c >> 24)) * (1.0f / 255.0f)),
+              g((0xff & (c >> 16)) * (1.0f / 255.0f)),
+              b((0xff & (c >> 8)) * (1.0f / 255.0f)),
+              a((0xff & (c)) * (1.0f / 255.0f))
+        {
+        }
+
+        auto operator=(uint32_t c) -> Colorf& { return *this = Colorf{c}; }
     };
 }
 

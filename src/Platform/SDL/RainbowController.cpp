@@ -226,7 +226,7 @@ void RainbowController::on_controller_disconnected(int instance_id)
 
 void RainbowController::on_mouse_down(uint32_t button,
                                       const Vec2i& point,
-                                      unsigned long timestamp)
+                                      uint64_t timestamp)
 {
     Pointer p{button, point.x, point.y, timestamp};
     director_.input().on_pointer_began(p);
@@ -234,7 +234,7 @@ void RainbowController::on_mouse_down(uint32_t button,
 
 void RainbowController::on_mouse_motion(uint32_t buttons,
                                         const Vec2i& point,
-                                        unsigned long timestamp)
+                                        uint64_t timestamp)
 {
     if (buttons > 0)
     {
@@ -259,7 +259,7 @@ void RainbowController::on_mouse_motion(uint32_t buttons,
 
 void RainbowController::on_mouse_up(uint32_t button,
                                     const Vec2i& point,
-                                    unsigned long timestamp)
+                                    uint64_t timestamp)
 {
     Pointer p{button, point.x, point.y, timestamp};
     director_.input().on_pointer_ended(p);
