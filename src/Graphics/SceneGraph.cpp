@@ -55,50 +55,27 @@ namespace
         }
     };
 
-    class LabelNode final : public SceneNode
+    template <typename T>
+    class PrimitiveNode final : public SceneNode
     {
     public:
-        LabelNode(Label& label) : label_(label) {}
+        PrimitiveNode(T& primitive) : primitive_(primitive) {}
 
     private:
-        Label& label_;
+        T& primitive_;
 
-        void draw_impl() const override { rainbow::graphics::draw(label_); }
+        void draw_impl() const override { rainbow::graphics::draw(primitive_); }
 
         void move_impl(const Vec2f& delta) const override
         {
-            label_.move(delta);
+            primitive_.move(delta);
         }
 
-        void update_impl(unsigned long) const override
-        {
-            label_.update();
-        }
+        void update_impl(unsigned long) const override { primitive_.update(); }
     };
 
-    class SpriteBatchNode final : public SceneNode
-    {
-    public:
-        SpriteBatchNode(SpriteBatch& batch) : sprite_batch_(batch) {}
-
-    private:
-        SpriteBatch& sprite_batch_;
-
-        void draw_impl() const override
-        {
-            rainbow::graphics::draw(sprite_batch_);
-        }
-
-        void move_impl(const Vec2f& delta) const override
-        {
-            sprite_batch_.move(delta);
-        }
-
-        void update_impl(unsigned long) const override
-        {
-            sprite_batch_.update();
-        }
-    };
+    using LabelNode = PrimitiveNode<Label>;
+    using SpriteBatchNode = PrimitiveNode<SpriteBatch>;
 }
 
 void SceneNode::draw() const
