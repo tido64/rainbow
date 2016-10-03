@@ -163,7 +163,7 @@ void Sprite::show()
     state_ |= kStaleMask;
 }
 
-auto Sprite::update(ArraySpan<SpriteVertex> vertex_array,
+auto Sprite::update(const ArraySpan<SpriteVertex>& vertex_array,
                     const TextureAtlas& texture) -> bool
 {
     if ((state_ & kStaleMask) == 0)
@@ -213,8 +213,8 @@ auto Sprite::update(ArraySpan<SpriteVertex> vertex_array,
     return true;
 }
 
-auto Sprite::update(ArraySpan<Vec2f> normal_array, const TextureAtlas& normal)
-    -> bool
+auto Sprite::update(const ArraySpan<Vec2f>& normal_array,
+                    const TextureAtlas& normal) -> bool
 {
     if ((state_ & kStaleNormalMap) == 0)
         return false;

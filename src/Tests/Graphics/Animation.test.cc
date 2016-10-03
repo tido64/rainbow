@@ -38,7 +38,7 @@ namespace
 
         void update()
         {
-            sprite_->update(ArraySpan<SpriteVertex>(vertex_array_, 4), *atlas_);
+            sprite_->update(ArraySpan<SpriteVertex>{vertex_array_, 4}, *atlas_);
         }
 
         void SetUp() override

@@ -341,7 +341,7 @@ auto android_handle_motion(struct android_app* app, AInputEvent* event)
                                    AMOTION_EVENT_ACTION_POINTER_INDEX_MASK) >>
                                   AMOTION_EVENT_ACTION_POINTER_INDEX_SHIFT;
             Pointer p = get_pointer_event(event, index);
-            director->input().on_pointer_began(ArrayView<Pointer>(p));
+            director->input().on_pointer_began(ArrayView<Pointer>{p});
             break;
         }
         case AMOTION_EVENT_ACTION_UP:
@@ -350,7 +350,7 @@ auto android_handle_motion(struct android_app* app, AInputEvent* event)
                                    AMOTION_EVENT_ACTION_POINTER_INDEX_MASK) >>
                                   AMOTION_EVENT_ACTION_POINTER_INDEX_SHIFT;
             Pointer p = get_pointer_event(event, index);
-            director->input().on_pointer_ended(ArrayView<Pointer>(p));
+            director->input().on_pointer_ended(ArrayView<Pointer>{p});
             break;
         }
         case AMOTION_EVENT_ACTION_MOVE: {
@@ -359,7 +359,7 @@ auto android_handle_motion(struct android_app* app, AInputEvent* event)
             for (size_t i = 0; i < count; ++i)
                 pointers[i] = get_pointer_event(event, i);
             director->input().on_pointer_moved(
-                ArrayView<Pointer>(pointers.get(), count));
+                ArrayView<Pointer>{pointers.get(), count});
             break;
         }
         case AMOTION_EVENT_ACTION_CANCEL:

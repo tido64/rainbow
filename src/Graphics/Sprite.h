@@ -149,14 +149,14 @@ public:
     /// <returns>
     ///   <c>true</c> if the buffer has changed; <c>false</c> otherwise.
     /// </returns>
-    auto update(ArraySpan<SpriteVertex> vertex_array,
+    auto update(const ArraySpan<SpriteVertex>& vertex_array,
                 const TextureAtlas& texture) -> bool;
 
     /// <summary>Updates the normal buffer.</summary>
     /// <returns>
     ///   <c>true</c> if the buffer has changed; <c>false</c> otherwise.
     /// </returns>
-    auto update(ArraySpan<Vec2f> normal_array,
+    auto update(const ArraySpan<Vec2f>& normal_array,
                 const TextureAtlas& normal) -> bool;
 
     auto operator=(Sprite&&) -> Sprite&;

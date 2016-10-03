@@ -67,7 +67,7 @@ std::unique_ptr<IAudioFile> IAudioFile::open(const char* path)
     }
 
 #ifdef USE_OGGVORBIS
-    if (OggVorbisAudioFile::signature_matches(ArrayView<char>(signature)))
+    if (OggVorbisAudioFile::signature_matches(ArrayView<char>{signature}))
     {
         return std::unique_ptr<IAudioFile>{
             std::make_unique<OggVorbisAudioFile>(std::move(file))};
