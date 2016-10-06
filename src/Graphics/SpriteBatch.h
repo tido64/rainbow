@@ -107,8 +107,14 @@ public:
     void bind_textures() const;
 
     /// <summary>Brings sprite to front.</summary>
-    /// <remarks>Invalidates all references.</remarks>
-    void bring_to_front(const SpriteRef&);
+    void bring_to_front(uint32_t i);
+
+    /// <summary>Brings sprite to front.</summary>
+    void bring_to_front(const SpriteRef& ref)
+    {
+        R_ASSERT(ref.batch_ == this, "Sprite does not belong to this batch");
+        bring_to_front(ref.i_);
+    }
 
     /// <summary>Clears all sprites.</summary>
     void clear() { count_ = 0; }
@@ -119,11 +125,17 @@ public:
     /// <returns>
     ///   Reference to the newly created sprite, positioned at (0,0).
     /// </returns>
-    auto create_sprite(unsigned int width, unsigned int height) -> SpriteRef;
+    auto create_sprite(uint32_t width, uint32_t height) -> SpriteRef;
 
     /// <summary>Erases a sprite from the batch.</summary>
-    /// <remarks>Invalidates all references.</remarks>
-    void erase(const SpriteRef&);
+    void erase(uint32_t i);
+
+    /// <summary>Erases a sprite from the batch.</summary>
+    void erase(const SpriteRef& ref)
+    {
+        R_ASSERT(ref.batch_ == this, "Sprite does not belong to this batch");
+        erase(ref.i_);
+    }
 
     /// <summary>Returns the first sprite with the given id.</summary>
     auto find_sprite_by_id(int id) const -> SpriteRef;
@@ -132,7 +144,15 @@ public:
     void move(const Vec2f&);
 
     /// <summary>Swaps two sprites' positions in the batch.</summary>
-    void swap(const SpriteRef&, const SpriteRef&);
+    void swap(uint32_t i, uint32_t j);
+
+    /// <summary>Swaps two sprites' positions in the batch.</summary>
+    void swap(const SpriteRef& a, const SpriteRef& b)
+    {
+        R_ASSERT(a.batch_ == b.batch_,
+                 "Cannot swap sprites from different batches.");
+        swap(a.i_, b.i_);
+    }
 
     /// <summary>Updates the batch of sprites.</summary>
     void update();

@@ -58,15 +58,12 @@ void SpriteBatch::bind_textures() const
     texture_->bind();
 }
 
-void SpriteBatch::bring_to_front(const SpriteRef& s)
+void SpriteBatch::bring_to_front(uint32_t i)
 {
-    R_ASSERT(s.batch_ == this, "Sprite does not belong to this batch");
-
-    sprites_.move(s.i_, count_ - 1);
+    sprites_.move(i, count_ - 1);
 }
 
-auto SpriteBatch::create_sprite(unsigned int width, unsigned int height)
-    -> SpriteRef
+auto SpriteBatch::create_sprite(uint32_t width, uint32_t height) -> SpriteRef
 {
     if (count_ == sprites_.size())
     {
@@ -87,9 +84,9 @@ auto SpriteBatch::create_sprite(unsigned int width, unsigned int height)
     return {this, sprites_.find_iterator(count_++)};
 }
 
-void SpriteBatch::erase(const SpriteRef& s)
+void SpriteBatch::erase(uint32_t i)
 {
-    bring_to_front(s);
+    bring_to_front(i);
     sprites_.data()[--count_].~Sprite();
 }
 
@@ -114,15 +111,12 @@ void SpriteBatch::move(const Vec2f& delta)
         sprite.move(delta);
 }
 
-void SpriteBatch::swap(const SpriteRef& a, const SpriteRef& b)
+void SpriteBatch::swap(uint32_t i, uint32_t j)
 {
-    if (a == b)
+    if (i == j)
         return;
 
-    R_ASSERT(a.batch_ == b.batch_,
-             "Cannot swap sprites from different batches.");
-
-    sprites_.swap(a.i_, b.i_);
+    sprites_.swap(i, j);
 }
 
 void SpriteBatch::update()
