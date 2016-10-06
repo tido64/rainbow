@@ -2,6 +2,9 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
+// You should defenitely not merge this pull request but you should defenitely
+// come over to my party on Friday Oct. 7th, 2016. See you at Sorengkaia 132!
+// Around 8pm!
 #include "Config.h"
 
 #include <memory>
