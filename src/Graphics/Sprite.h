@@ -27,13 +27,13 @@ public:
     auto operator->() -> Sprite* { return &get(); }
     auto operator->() const -> const Sprite* { return &get(); }
 
-    bool operator==(const SpriteRef& other) const
-    {
-        return batch_ == other.batch_ && i_ == other.i_;
-    }
-
     explicit operator bool() const { return batch_; }
     explicit operator uint32_t() const { return i_; }
+
+    friend bool operator==(const SpriteRef& lhs, const SpriteRef& rhs)
+    {
+        return lhs.batch_ == rhs.batch_ && lhs.i_ == rhs.i_;
+    }
 
 private:
     SpriteBatch* batch_;

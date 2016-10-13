@@ -58,19 +58,19 @@ namespace rainbow
         ///   Returns the angle (in radians) between two points.
         /// </summary>
         template <typename U>
-        auto angle(const Vec2<U>& v) const -> float
+        auto angle(const Vec2<U>& v) const
         {
-            return atan2f(v.y - y, v.x - x);
+            return std::atan2(v.y - y, v.x - x);
         }
 
         /// <summary>Returns the distance between two points.</summary>
-        auto distance(const Vec2& v) const -> float
+        auto distance(const Vec2& v) const
         {
-            return sqrt(distance_sq(v));
+            return std::sqrt(distance_sq(v));
         }
 
         /// <summary>Returns the distance between two points, squared.</summary>
-        auto distance_sq(const Vec2& v) const -> float
+        auto distance_sq(const Vec2& v) const
         {
             const Vec2 w = *this - v;
             return w * w;

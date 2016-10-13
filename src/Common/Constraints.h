@@ -22,12 +22,9 @@ using Arithmetic = std::enable_if_t<std::is_arithmetic<T>::value>;
 
 template <typename T>
 using CharType = std::enable_if_t<
-    std::is_same<std::make_unsigned_t<T>, unsigned char>::value>;
+    std::is_same<std::make_unsigned_t<std::decay_t<T>>, unsigned char>::value>;
 
 template <typename T>
 using FloatingPoint = EnableIfFloatingPoint<T>;
-
-template <typename T>
-using PlainType = std::remove_pointer_t<std::decay_t<T>>;
 
 #endif

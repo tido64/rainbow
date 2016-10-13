@@ -94,11 +94,12 @@ protected:
     }
 };
 
-template <typename T,
-          typename F,
-          typename... Args>
+template <typename T, typename F, typename... Args>
 void for_each(T& node, F&& f, Args&&... args)
 {
+    static_assert(std::is_base_of<TreeNode<std::decay_t<T>>, T>::value,
+                  "T must be a subclass of TreeNode");
+
     f(node, std::forward<Args>(args)...);
     for (auto&& child : node.children_)
         for_each(*child, f, std::forward<Args>(args)...);
