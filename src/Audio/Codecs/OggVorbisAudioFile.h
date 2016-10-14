@@ -6,14 +6,14 @@
 #define AUDIO_CODECS_OGGVORBISAUDIOFILE_H_
 
 #include "Platform/Macros.h"
-#ifdef RAINBOW_OS_MACOS
-#   pragma GCC diagnostic push
-#   pragma GCC diagnostic ignored "-Wold-style-cast"
-#   pragma GCC diagnostic ignored "-Wunused-variable"
+#ifdef __clang__
+#   pragma clang diagnostic push
+#   pragma clang diagnostic ignored "-Wold-style-cast"
+#   pragma clang diagnostic ignored "-Wunused-variable"
 #endif
 #include <vorbis/vorbisfile.h>
-#ifdef RAINBOW_OS_MACOS
-#   pragma GCC diagnostic pop
+#ifdef __clang__
+#   pragma clang diagnostic pop
 #endif
 
 #include "Audio/AudioFile.h"
