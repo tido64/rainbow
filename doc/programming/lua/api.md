@@ -104,8 +104,18 @@ Stops the animation.
 ## rainbow.audio
 
 > Audio consists mainly of the sound object and the audio channel. The sound object is basically an audio buffer. It can be wholly loaded, or it can stream from disk. A sound object is played on an audio channel. An audio channel can only play one sound object at a time but the sound object can be used by any number of channels. As raw audio data can take a large amount of memory, it is recommended to only create static sound objects for short audio files (such as sound effects).
-
-> Officially, Rainbow supports only [Ogg Vorbis](https://en.wikipedia.org/wiki/Vorbis) audio format. However, on iOS, the [list of supported audio formats](https://developer.apple.com/library/ios/documentation/AudioVideo/Conceptual/MultimediaPG/UsingAudio/UsingAudio.html#//apple_ref/doc/uid/TP40009767-CH2-SW9) includes AAC (MPEG-4 Advanced Audio Coding), ALAC (Apple Lossless), HE-AAC (MPEG-4 High Efficiency AAC), iLBC (internet Low Bit Rate Codec), IMA4 (IMA/ADPCM), Linear PCM (uncompressed, linear pulse code modulation), MP3, µ-law and a-law. Of these, AAC, ALAC, HE-AAC and MP3 are hardware-assisted. Mac OS X also supports these in addition to [Ogg Vorbis](https://en.wikipedia.org/wiki/Vorbis). On Android, the list of supported audio formats vary with each device but MP3 and Ogg Vorbis are both safe bets.
+>
+> #### Supported Audio Codecs
+>
+> | Audio decoder                       | Supported platforms            |
+> |-------------------------------------|--------------------------------|
+> | AAC (MPEG-4 Advanced Audio Coding)  | iOS, macOS                     |
+> | ALAC (Apple Lossless)               | iOS, macOS                     |
+> | HE-AAC (MPEG-4 High Efficiency AAC) | iOS, macOS                     |
+> | MP3 (MPEG-1 audio layer 3)          | Android, iOS, macOS            |
+> | Ogg Vorbis                          | Android, Linux, macOS, Windows |
+>
+> This table is not exhaustive. Your target devices may support more decoders than listed here. Please check the appropriate documentations.
 
 ### rainbow.audio.is_paused(channel)
 

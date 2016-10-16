@@ -14,6 +14,7 @@
 
 ### C++
 
+- [Audio](programming/cpp/audio.md)
 - [Input](programming/cpp/input.md)
 - [Math](programming/cpp/math.md)
 - [Sprite Sheet Animations](programming/cpp/sprite_sheet_animations.md)

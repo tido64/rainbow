@@ -37,19 +37,19 @@ namespace rainbow { namespace audio
 
     // Playback
 
-    bool is_paused(Channel* channel);
-    bool is_playing(Channel* channel);
+    bool is_paused(Channel*);
+    bool is_playing(Channel*);
 
-    void set_loop_count(Channel* channel, int count);
-    void set_volume(Channel* channel, float volume);
-    void set_world_position(Channel* channel, Vec2f pos);
+    void set_loop_count(Channel*, int count);
+    void set_volume(Channel*, float volume);
+    void set_world_position(Channel*, Vec2f position);
 
-    void pause(Channel* channel);
+    void pause(Channel*);
 
-    auto play(Channel* channel) -> Channel*;
-    auto play(Sound* sound, Vec2f world_position = Vec2f::Zero) -> Channel*;
+    auto play(Channel*) -> Channel*;
+    auto play(Sound*, Vec2f world_position = Vec2f::Zero) -> Channel*;
 
-    void stop(Channel* channel);
+    void stop(Channel*);
 }}  // rainbow::audio
 
 #include "Platform/Macros.h"
