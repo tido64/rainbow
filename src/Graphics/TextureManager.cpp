@@ -6,6 +6,7 @@
 
 #include "Graphics/Renderer.h"
 
+using rainbow::Passkey;
 using rainbow::Texture;
 using rainbow::graphics::TextureFilter;
 
@@ -52,7 +53,7 @@ namespace
 Texture::Texture(const Texture& texture)
     : name_(texture.name_), size_(texture.size_)
 {
-    TextureManager::Get()->retain(*this);
+    TextureManager::Get()->retain(*this, {});
 }
 
 Texture::~Texture()
@@ -60,7 +61,7 @@ Texture::~Texture()
     if (name_ == 0)
         return;
 
-    TextureManager::Get()->release(*this);
+    TextureManager::Get()->release(*this, {});
 }
 
 void Texture::bind() const
@@ -76,12 +77,28 @@ void Texture::bind(unsigned int unit) const
 auto Texture::operator=(Texture&& texture) -> Texture&
 {
     if (name_ > 0)
-        TextureManager::Get()->release(*this);
+        TextureManager::Get()->release(*this, {});
     name_ = texture.name_;
     size_ = texture.size_;
     texture.name_ = 0;
     texture.size_ = Vec2u::Zero;
     return *this;
+}
+
+TextureManager::TextureManager(const Passkey<rainbow::graphics::State>&)
+    : mag_filter_(TextureFilter::Linear), min_filter_(TextureFilter::Linear)
+#if RAINBOW_RECORD_VMEM_USAGE
+    , mem_peak_(0.0), mem_used_(0.0)
+#endif
+{
+    std::fill_n(active_, kNumTextureUnits, 0);
+    make_global();
+}
+
+TextureManager::~TextureManager()
+{
+    for (const rainbow::detail::Texture& texture : textures_)
+        glDeleteTextures(1, &texture.name);
 }
 
 void TextureManager::set_filter(TextureFilter filter)
@@ -137,39 +154,6 @@ void TextureManager::trim()
 #if RAINBOW_RECORD_VMEM_USAGE
     update_usage();
 #endif
-}
-
-TextureManager::TextureManager()
-    : mag_filter_(TextureFilter::Linear), min_filter_(TextureFilter::Linear)
-#if RAINBOW_RECORD_VMEM_USAGE
-    , mem_peak_(0.0), mem_used_(0.0)
-#endif
-{
-    std::fill_n(active_, kNumTextureUnits, 0);
-    make_global();
-}
-
-TextureManager::~TextureManager()
-{
-    for (const rainbow::detail::Texture& texture : textures_)
-        glDeleteTextures(1, &texture.name);
-}
-
-auto TextureManager::create_texture(std::string id) -> Texture
-{
-    GLuint name;
-    glGenTextures(1, &name);
-    textures_.emplace_back(std::move(id), name);
-
-    bind(name);
-    glTexParameteri(
-        GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, texture_filter(min_filter_));
-    glTexParameteri(
-        GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, texture_filter(mag_filter_));
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-    return textures_.back();
 }
 
 void TextureManager::upload(const Texture& texture,
@@ -228,18 +212,35 @@ void TextureManager::upload_compressed(const Texture& texture,
                });
 }
 
-void TextureManager::release(const Texture& t)
+void TextureManager::release(const Texture& t, const Passkey<Texture>&)
 {
     perform_if(textures_, t, [](rainbow::detail::Texture& texture) {
         --texture.use_count;
     });
 }
 
-void TextureManager::retain(const Texture& t)
+void TextureManager::retain(const Texture& t, const Passkey<Texture>&)
 {
     perform_if(textures_, t, [](rainbow::detail::Texture& texture) {
         ++texture.use_count;
     });
+}
+
+auto TextureManager::create_texture(std::string id) -> Texture
+{
+    GLuint name;
+    glGenTextures(1, &name);
+    textures_.emplace_back(std::move(id), name);
+
+    bind(name);
+    glTexParameteri(
+        GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, texture_filter(min_filter_));
+    glTexParameteri(
+        GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, texture_filter(mag_filter_));
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+    return textures_.back();
 }
 
 #if RAINBOW_RECORD_VMEM_USAGE

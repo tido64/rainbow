@@ -29,15 +29,8 @@ namespace rainbow
                 : id(std::move(id_)), name(name_), width(0), height(0), size(0),
                   use_count(0) {}
 
-            friend bool operator==(const Texture& t, const std::string& id)
-            {
-                return t.id == id;
-            }
-
-            friend bool operator==(const Texture& t, unsigned int name)
-            {
-                return t.name == name;
-            }
+            auto operator==(unsigned int name_) { return name == name_; }
+            auto operator==(const std::string& id_) { return id == id_; }
         };
     }
 

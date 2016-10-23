@@ -112,8 +112,8 @@ public:
     /// <summary>Brings sprite to front.</summary>
     void bring_to_front(const SpriteRef& ref)
     {
-        R_ASSERT(ref.batch_ == this, "Sprite does not belong to this batch");
-        bring_to_front(ref.i_);
+        R_ASSERT(ref.batch() == this, "Sprite does not belong to this batch");
+        bring_to_front(ref.index());
     }
 
     /// <summary>Clears all sprites.</summary>
@@ -133,8 +133,8 @@ public:
     /// <summary>Erases a sprite from the batch.</summary>
     void erase(const SpriteRef& ref)
     {
-        R_ASSERT(ref.batch_ == this, "Sprite does not belong to this batch");
-        erase(ref.i_);
+        R_ASSERT(ref.batch() == this, "Sprite does not belong to this batch");
+        erase(ref.index());
     }
 
     /// <summary>Returns the first sprite with the given id.</summary>
@@ -149,9 +149,9 @@ public:
     /// <summary>Swaps two sprites' positions in the batch.</summary>
     void swap(const SpriteRef& a, const SpriteRef& b)
     {
-        R_ASSERT(a.batch_ == b.batch_,
+        R_ASSERT(a.batch() == b.batch(),
                  "Cannot swap sprites from different batches.");
-        swap(a.i_, b.i_);
+        swap(a.index(), b.index());
     }
 
     /// <summary>Updates the batch of sprites.</summary>

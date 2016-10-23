@@ -120,6 +120,12 @@ namespace rainbow { namespace graphics
         TextureManager texture_manager;
         ShaderManager shader_manager;
 
+        State()
+            : texture_manager(Passkey<State>{}),
+              shader_manager(Passkey<State>{})
+        {
+        }
+
         ~State();
 
         bool initialize();

@@ -10,6 +10,9 @@
 #include <functional>
 
 #include "Common/Global.h"
+#include "Common/Passkey.h"
+
+class TimerManager;
 
 class Timer : private NonCopyable<Timer>
 {
@@ -24,10 +27,20 @@ public:
     auto elapsed() const { return elapsed_; }
     auto interval() const { return interval_; }
     auto is_active() const { return active_ && interval_ > 0; }
+    auto next_free() const { return free_; }
     auto repeat_count() const { return repeat_count_; }
 
     void pause() { active_ = false; }
     void resume() { active_ = true; }
+
+    // Internal API
+
+    auto clear(int free, const rainbow::Passkey<TimerManager>&) -> int;
+    void reset(Closure func,
+               int interval,
+               int repeat_count,
+               const rainbow::Passkey<TimerManager>&);
+    void update(uint64_t dt, const rainbow::Passkey<TimerManager>&);
 
 private:
     bool active_;
@@ -38,13 +51,6 @@ private:
     int repeat_count_;
     int free_;
     const int id_;
-
-    auto clear(int free) -> int;
-    void update(unsigned long dt);
-
-    auto operator=(Timer&& t) -> Timer&;
-
-    friend class TimerManager;
 };
 
 class TimerManager : public Global<TimerManager>
@@ -56,7 +62,7 @@ public:
     auto set_timer(Timer::Closure func, int interval, int repeat_count)
         -> Timer*;
 
-    void update(unsigned long dt);
+    void update(uint64_t dt);
 
 private:
     std::deque<Timer> timers_;

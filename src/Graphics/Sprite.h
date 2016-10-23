@@ -21,6 +21,9 @@ public:
     SpriteRef() : batch_(nullptr), i_(0) {}
     SpriteRef(NotNull<SpriteBatch*> batch, uint32_t i) : batch_(batch), i_(i) {}
 
+    auto batch() const -> const SpriteBatch* { return batch_; }
+    auto index() const { return i_; }
+
     auto operator*() -> Sprite& { return get(); }
     auto operator*() const -> const Sprite& { return get(); }
 
@@ -32,7 +35,7 @@ public:
 
     friend bool operator==(const SpriteRef& lhs, const SpriteRef& rhs)
     {
-        return lhs.batch_ == rhs.batch_ && lhs.i_ == rhs.i_;
+        return lhs.batch() == rhs.batch() && lhs.index() == rhs.index();
     }
 
 private:
@@ -40,8 +43,6 @@ private:
     uint32_t i_;
 
     auto get() const -> Sprite&;
-
-    friend SpriteBatch;
 };
 
 /// <summary>A textured quad.</summary>

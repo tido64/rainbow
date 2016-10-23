@@ -6,6 +6,7 @@
 #define SCRIPT_COMPONENTS_STATECOMPONENT_H_
 
 #include "Common/Logging.h"
+#include "Common/Passkey.h"
 #include "Script/Components/ScriptComponent.h"
 
 namespace rainbow
@@ -16,6 +17,11 @@ namespace rainbow
     {
     public:
         auto next() const { return next_; }
+
+        void set_next(IState* next, const Passkey<StateComponent>&)
+        {
+            next_ = next;
+        }
 
         void update(StateComponent& component, Actor& actor, unsigned long dt)
         {
@@ -45,8 +51,6 @@ namespace rainbow
         virtual void on_enter_impl(StateComponent&, Actor&) {}
         virtual void on_exit_impl(StateComponent&, Actor&) {}
         virtual auto to_string_impl() const -> const char* = 0;
-
-        friend StateComponent;
     };
 
     class StateComponent : public IScriptComponent
@@ -90,7 +94,7 @@ namespace rainbow
 
         void push_state(IState& state)
         {
-            state.next_ = top_;
+            state.set_next(top_, {});
             top_ = &state;
             state.on_enter(*this, actor());
         }
@@ -107,7 +111,7 @@ namespace rainbow
             if (!prev)
                 return;
 
-            prev->next_ = state.next();
+            prev->set_next(state.next(), {});
             exit_state(state);
         }
 
@@ -128,7 +132,7 @@ namespace rainbow
 
         void exit_state(IState& state)
         {
-            state.next_ = nullptr;
+            state.set_next(nullptr, {});
             state.on_exit(*this, actor());
         }
 

@@ -4,41 +4,9 @@
 
 #include "Script/Timer.h"
 
-void TimerManager::clear_timer(Timer* t)
-{
-    free_ = t->clear(free_);
-}
+using rainbow::Passkey;
 
-auto TimerManager::set_timer(Timer::Closure func,
-                             int interval,
-                             int repeat_count) -> Timer*
-{
-    Timer* t;
-    if (free_ < 0)
-    {
-        timers_.emplace_back(std::move(func),
-                             interval,
-                             repeat_count,
-                             static_cast<int>(timers_.size()));
-        t = &timers_.back();
-    }
-    else
-    {
-        t = &timers_[free_];
-        free_ = t->free_;
-        *t = Timer(std::move(func), interval, repeat_count);
-    }
-    return t;
-}
-
-void TimerManager::update(unsigned long dt)
-{
-    const size_t count = timers_.size();
-    for (size_t i = 0; i < count; ++i)
-        timers_[i].update(dt);
-}
-
-auto Timer::clear(int free) -> int
+auto Timer::clear(int free, const Passkey<TimerManager>&) -> int
 {
     interval_ = 0;
     tick_ = {};  // Always clear as resources may be retained in the closure.
@@ -46,7 +14,21 @@ auto Timer::clear(int free) -> int
     return id_;
 }
 
-void Timer::update(unsigned long dt)
+void Timer::reset(Closure func,
+                  int interval,
+                  int repeat_count,
+                  const Passkey<TimerManager>&)
+{
+    active_ = true;
+    elapsed_ = 0;
+    interval_ = interval;
+    countdown_ = repeat_count;
+    repeat_count_ = repeat_count;
+    tick_ = std::move(func);
+    free_ = -1;
+}
+
+void Timer::update(uint64_t dt, const Passkey<TimerManager>&)
 {
     if (!is_active())
         return;
@@ -67,14 +49,36 @@ void Timer::update(unsigned long dt)
     elapsed_ -= ticks * interval_;
 }
 
-auto Timer::operator=(Timer&& t) -> Timer&
+void TimerManager::clear_timer(Timer* t)
 {
-    active_ = true;
-    elapsed_ = 0;
-    interval_ = t.interval_;
-    countdown_ = t.repeat_count_;
-    repeat_count_ = t.repeat_count_;
-    tick_ = std::move(t.tick_);
-    free_ = -1;
-    return *this;
+    free_ = t->clear(free_, {});
+}
+
+auto TimerManager::set_timer(Timer::Closure func,
+                             int interval,
+                             int repeat_count) -> Timer*
+{
+    Timer* t;
+    if (free_ < 0)
+    {
+        timers_.emplace_back(std::move(func),
+                             interval,
+                             repeat_count,
+                             static_cast<int>(timers_.size()));
+        t = &timers_.back();
+    }
+    else
+    {
+        t = &timers_[free_];
+        free_ = t->next_free();
+        t->reset(std::move(func), interval, repeat_count, {});
+    }
+    return t;
+}
+
+void TimerManager::update(uint64_t dt)
+{
+    const size_t count = timers_.size();
+    for (size_t i = 0; i < count; ++i)
+        timers_[i].update(dt, {});
 }

@@ -12,10 +12,14 @@
 class LuaScript final : public rainbow::GameBase, public InputListener
 {
 public:
-    LuaScript(rainbow::Director& director) : rainbow::GameBase(director) {}
+    LuaScript(rainbow::Director& director)
+        : rainbow::GameBase(director), lua_({})
+    {
+    }
+
     ~LuaScript() override;
 
-    lua_State* state() const { return lua_; }
+    auto state() const -> lua_State* { return lua_; }
 
 private:
     rainbow::LuaMachine lua_;

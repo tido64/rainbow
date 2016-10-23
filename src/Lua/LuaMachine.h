@@ -6,6 +6,7 @@
 #define LUA_LUAMACHINE_H_
 
 #include "Common/NonCopyable.h"
+#include "Common/Passkey.h"
 
 class Data;
 class LuaScript;
@@ -20,14 +21,21 @@ namespace rainbow
     /// <summary>Embeds Lua scripting engine.</summary>
     class LuaMachine : private NonCopyable<LuaMachine>
     {
-        friend LuaScript;
-
     public:
+        LuaMachine(const Passkey<LuaScript>&);
+        ~LuaMachine();
+
+        /// <summary>Initialises a new Lua state.</summary>
+        auto init(LuaScript* instance, SceneNode* root) -> int;
+
+        /// <summary>Uninitialises current Lua state and closes it.</summary>
+        void close();
+
         /// <summary>Loads and initialises game script.</summary>
-        int start(const Data& main);
+        auto start(const Data& main) -> int;
 
         /// <summary>Calls game update function.</summary>
-        int update(unsigned long t);
+        auto update(unsigned long t) -> int;
 
         operator lua_State*() const { return state_; }
 
@@ -36,12 +44,6 @@ namespace rainbow
         int internal_;
         int traceback_;
         lua::SceneGraph* scenegraph_;
-
-        LuaMachine();
-        ~LuaMachine();
-
-        void close();
-        int init(LuaScript* instance, SceneNode* root);
     };
 }
 

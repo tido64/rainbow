@@ -132,6 +132,23 @@ ShaderManager::~ShaderManager()
         glDeleteShader(shader);
 }
 
+bool ShaderManager::init()
+{
+    Shader::Params shaders[]{
+        {Shader::kTypeVertex, 0, rainbow::shaders::kFixed2Dv,
+         rainbow::shaders::integrated::kFixed2Dv},
+        {Shader::kTypeFragment, 0, rainbow::shaders::kFixed2Df,
+         rainbow::shaders::integrated::kFixed2Df},
+        {Shader::kTypeInvalid, 0, nullptr, nullptr}};
+    const auto pid = compile(shaders, nullptr);
+
+    R_ASSERT(pid != kInvalidProgram, "Failed to compile default shader");
+    NOT_USED(pid);
+
+    make_global();
+    return true;
+}
+
 auto ShaderManager::compile(Shader::Params* shaders,
                             const Shader::AttributeParams* attributes)
     -> unsigned int
@@ -230,21 +247,4 @@ void ShaderManager::use(unsigned int program)
         }
 #endif  // !USE_VERTEX_ARRAY_OBJECT
     }
-}
-
-bool ShaderManager::init()
-{
-    Shader::Params shaders[]{
-        {Shader::kTypeVertex, 0, rainbow::shaders::kFixed2Dv,
-         rainbow::shaders::integrated::kFixed2Dv},
-        {Shader::kTypeFragment, 0, rainbow::shaders::kFixed2Df,
-         rainbow::shaders::integrated::kFixed2Df},
-        {Shader::kTypeInvalid, 0, nullptr, nullptr}};
-    const auto pid = compile(shaders, nullptr);
-
-    R_ASSERT(pid != kInvalidProgram, "Failed to compile default shader");
-    NOT_USED(pid);
-
-    make_global();
-    return true;
 }

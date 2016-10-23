@@ -8,6 +8,7 @@
 #include <vector>
 
 #include "Common/Global.h"
+#include "Common/Passkey.h"
 #include "Graphics/Texture.h"
 
 #define RAINBOW_RECORD_VMEM_USAGE !defined(NDEBUG) || defined(USE_HEIMDALL)
@@ -28,6 +29,9 @@ namespace rainbow { namespace graphics
 class TextureManager : public Global<TextureManager>
 {
 public:
+    TextureManager(const rainbow::Passkey<rainbow::graphics::State>&);
+    ~TextureManager();
+
     auto mag_filter() const { return mag_filter_; }
     auto min_filter() const { return min_filter_; }
 
@@ -103,6 +107,20 @@ public:
                            unsigned int size,
                            const void* data);
 
+    // Internal API
+
+    /// <summary>
+    ///   [Internal] Used by <see cref="rainbow::Texture"/> to release itself.
+    /// </summary>
+    void release(const rainbow::Texture& t,
+                 const rainbow::Passkey<rainbow::Texture>&);
+
+    /// <summary>
+    ///   [Internal] Used by <see cref="rainbow::Texture"/> to retain itself.
+    /// </summary>
+    void retain(const rainbow::Texture& t,
+                const rainbow::Passkey<rainbow::Texture>&);
+
 #if RAINBOW_RECORD_VMEM_USAGE
     struct MemoryUsage
     {
@@ -127,21 +145,12 @@ private:
     double mem_used_;
 #endif
 
-    TextureManager();
-    ~TextureManager();
-
     auto create_texture(std::string id) -> rainbow::Texture;
-
-    void release(const rainbow::Texture& t);
-    void retain(const rainbow::Texture& t);
 
 #if RAINBOW_RECORD_VMEM_USAGE
     /// <summary>Updates and prints total texture memory used.</summary>
     void update_usage();
 #endif
-
-    friend rainbow::Texture;
-    friend rainbow::graphics::State;
 };
 
 #endif

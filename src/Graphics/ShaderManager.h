@@ -8,6 +8,7 @@
 #include <vector>
 
 #include "Common/Global.h"
+#include "Common/Passkey.h"
 #include "Graphics/OpenGL.h"
 #include "Graphics/ShaderDetails.h"
 #include "Math/Vec2.h"
@@ -44,13 +45,10 @@ public:
         unsigned int program_;
     };
 
-    ShaderManager(const rainbow::ISolemnlySwearThatIAmOnlyTesting&)
-        : ShaderManager()
-    {
-        make_global();
-    }
-
+    ShaderManager(const rainbow::Passkey<rainbow::graphics::State>&) {}
     ~ShaderManager();
+
+    bool init();
 
     /// <summary>Compiles program.</summary>
     /// <param name="shaders">Shader parameters.</param>
@@ -84,16 +82,15 @@ public:
     /// <summary>Activates program.</summary>
     void use(unsigned int program);
 
+    ShaderManager(const rainbow::ISolemnlySwearThatIAmOnlyTesting&)
+    {
+        make_global();
+    }
+
 private:
-    unsigned int current_;                   ///< Currently used program.
-    std::vector<Shader::Details> programs_;  ///< Linked shader programs.
-    std::vector<unsigned int> shaders_;      ///< Compiled shaders.
-
-    ShaderManager() : current_(kInvalidProgram) {}
-
-    bool init();
-
-    friend rainbow::graphics::State;
+    unsigned int current_ = kInvalidProgram;  ///< Currently used program.
+    std::vector<Shader::Details> programs_;   ///< Linked shader programs.
+    std::vector<unsigned int> shaders_;       ///< Compiled shaders.
 };
 
 #endif
