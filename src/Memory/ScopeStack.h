@@ -56,7 +56,8 @@ namespace rainbow
             R_ASSERT(std::less_equal<void*>()(block_.get(), ref) &&
                          std::less<void*>()(ref, end_),
                      "Cannot retain a pointer allocated outside of block");
-            ++ref->refs_;
+
+            ref->retain();
         }
 
         void rewind(void* ptr) { end_ = static_cast<char*>(ptr); }

@@ -12,8 +12,6 @@
 #include "Common/Logging.h"
 #include "Common/NonCopyable.h"
 
-namespace rainbow { class LinearAllocator; }
-
 /// <summary>Makes a class reference countable.</summary>
 /// <remarks>
 ///   Subclasses of <see cref="RefCounted"/> can be wrapped with
@@ -21,15 +19,18 @@ namespace rainbow { class LinearAllocator; }
 /// </remarks>
 class RefCounted : private NonCopyable<RefCounted>
 {
+public:
+    auto use_count() const { return refs_; }
+
+    auto release() { return --refs_; }
+    void retain() { ++refs_; }
+
 protected:
     RefCounted() : refs_(0) {}
     ~RefCounted() = default;
 
 private:
-    unsigned int refs_;
-
-    friend rainbow::LinearAllocator;
-    template <typename T> friend class SharedPtr;
+    uint32_t refs_;
 };
 
 /// <summary>
@@ -53,27 +54,27 @@ public:
     }
 
     /// <summary>Copies pointer and increments its reference counter.</summary>
-    SharedPtr(const SharedPtr<T>& ptr) : ptr_(ptr.ptr_)
-    {
-        if (!ptr.ptr_)
-            return;
-
-        ++ptr.ptr_->refs_;
-    }
+    SharedPtr(const SharedPtr<T>& ptr) : SharedPtr(ptr.ptr_) {}
 
     /// <summary>
     ///   Takes over pointer. Does not increase its reference count and will
     ///   leave the other pointer empty.
     /// </summary>
-    SharedPtr(SharedPtr<T>&& ptr) : ptr_(ptr.ptr_) { ptr.ptr_ = nullptr; }
+    SharedPtr(SharedPtr<T>&& ptr) noexcept : ptr_(ptr.ptr_)
+    {
+        ptr.ptr_ = nullptr;
+    }
 
-    /// <summary>Sets pointer and increment its reference counter.</summary>
+    /// <summary>Sets pointer and increments its reference counter.</summary>
+    SharedPtr(std::unique_ptr<T> ptr) : SharedPtr(ptr.release()) {}
+
+    /// <summary>Sets pointer and increments its reference counter.</summary>
     explicit SharedPtr(T* ptr) : ptr_(ptr)
     {
         if (!ptr)
             return;
 
-        ++ptr->refs_;
+        ptr->retain();
     }
 
     ~SharedPtr() { reset(); }
@@ -84,29 +85,22 @@ public:
     /// <summary>
     ///   Returns the number of references to the managed object.
     /// </summary>
-    auto use_count() const { return ptr_->refs_; }
+    auto use_count() const { return ptr_->use_count(); }
 
     /// <summary>Releases the managed object.</summary>
-    void reset()
-    {
-        R_ASSERT(!ptr_ || ptr_->refs_ > 0,
-                 "This object should've been deleted by now");
-
-        if (ptr_ && !--ptr_->refs_)
-            delete ptr_;
-        ptr_ = nullptr;
-    }
+    void reset() { reset_internal(nullptr); }
 
     /// <summary>Replaces the managed object.</summary>
     void reset(T* ptr)
     {
         if (ptr == ptr_)
             return;
-        reset();
-        ptr_ = ptr;
+
+        reset_internal(ptr);
         if (!ptr)
             return;
-        ++ptr->refs_;
+
+        ptr->retain();
     }
 
     /// <summary>Dereferences pointer to the managed object.</summary>
@@ -135,8 +129,7 @@ public:
     /// </summary>
     auto operator=(SharedPtr<T>&& ptr) -> SharedPtr<T>&
     {
-        reset();
-        ptr_ = ptr.ptr_;
+        reset_internal(ptr.ptr_);
         ptr.ptr_ = nullptr;
         return *this;
     }
@@ -148,13 +141,22 @@ public:
 
 private:
     T* ptr_;  ///< Actual pointer managed by this shared pointer.
+
+    void reset_internal(T* ptr)
+    {
+        R_ASSERT(!ptr_ || ptr_->use_count() > 0,
+                 "This object should've been deleted by now");
+
+        if (ptr_ && ptr_->release() == 0)
+            delete ptr_;
+        ptr_ = ptr;
+    }
 };
 
 template <typename T, typename... Args>
 auto make_shared(Args&&... args)
 {
-    auto obj = std::make_unique<T>(std::forward<Args>(args)...);
-    return SharedPtr<T>{obj.release()};
+    return SharedPtr<T>{std::make_unique<T>(std::forward<Args>(args)...)};
 }
 
 #endif
