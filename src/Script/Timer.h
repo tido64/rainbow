@@ -5,29 +5,20 @@
 #ifndef SCRIPT_TIMER_H_
 #define SCRIPT_TIMER_H_
 
-#include <algorithm>
-#include <deque>
 #include <functional>
 
 #include "Common/Global.h"
 #include "Common/Passkey.h"
+#include "Memory/Pool.h"
 
 class TimerManager;
 
 class Timer : private NonCopyable<Timer>
 {
 public:
-    using Closure = std::function<void()>;
-
-    Timer(Closure func, int interval, int repeat_count, int id = 0)
-        : active_(true), interval_(interval), elapsed_(0),
-          countdown_(repeat_count), tick_(std::move(func)),
-          repeat_count_(repeat_count), free_(-1), id_(id) {}
-
     auto elapsed() const { return elapsed_; }
     auto interval() const { return interval_; }
     auto is_active() const { return active_ && interval_ > 0; }
-    auto next_free() const { return free_; }
     auto repeat_count() const { return repeat_count_; }
 
     void pause() { active_ = false; }
@@ -35,11 +26,33 @@ public:
 
     // Internal API
 
-    auto clear(int free, const rainbow::Passkey<TimerManager>&) -> int;
-    void reset(Closure func,
+    template <typename F>
+    Timer(F&& func,
+          int interval,
+          int repeat_count,
+          const rainbow::Passkey<TimerManager>&)
+        : active_(true), interval_(interval), elapsed_(0),
+          countdown_(repeat_count), tick_(std::forward<F>(func)),
+          repeat_count_(repeat_count)
+    {
+    }
+
+    void dispose(const rainbow::Passkey<TimerManager>&);
+
+    template <typename F>
+    void reset(F&& func,
                int interval,
                int repeat_count,
-               const rainbow::Passkey<TimerManager>&);
+               const rainbow::Passkey<TimerManager>&)
+    {
+        active_ = true;
+        interval_ = interval;
+        elapsed_ = 0;
+        countdown_ = repeat_count;
+        tick_ = std::forward<F>(func);
+        repeat_count_ = repeat_count;
+    }
+
     void update(uint64_t dt, const rainbow::Passkey<TimerManager>&);
 
 private:
@@ -47,26 +60,33 @@ private:
     int interval_;
     int elapsed_;
     int countdown_;
-    Closure tick_;
+    std::function<void()> tick_;
     int repeat_count_;
-    int free_;
-    const int id_;
 };
 
 class TimerManager : public Global<TimerManager>
 {
 public:
-    TimerManager() : free_(-1) { make_global(); }
+    TimerManager() { make_global(); }
 
-    void clear_timer(Timer* t);
-    auto set_timer(Timer::Closure func, int interval, int repeat_count)
-        -> Timer*;
+    void clear_timer(Timer* t)
+    {
+        timers_.release(t, rainbow::Passkey<TimerManager>{});
+    }
+
+    template <typename F>
+    auto set_timer(F&& func, int interval, int repeat_count) -> Timer*
+    {
+        return timers_.construct(std::forward<F>(func),
+                                 interval,
+                                 repeat_count,
+                                 rainbow::Passkey<TimerManager>{});
+    }
 
     void update(uint64_t dt);
 
 private:
-    std::deque<Timer> timers_;
-    int free_;
+    rainbow::Pool<Timer> timers_;
 };
 
 #endif

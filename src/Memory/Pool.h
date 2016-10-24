@@ -5,6 +5,7 @@
 #include <deque>
 #include <utility>
 
+#include "Common/NonCopyable.h"
 #include "Memory/NotNull.h"
 
 namespace rainbow
@@ -12,18 +13,22 @@ namespace rainbow
     namespace detail
     {
         template <typename T>
-        struct PoolItem
+        struct PoolItem : private NonCopyable<PoolItem<T>>
         {
             T element;
             PoolItem* next_free;
 
             template <typename... Args>
             PoolItem(Args&&... args)
-                : element(std::forward<Args>(args)...), next_free(nullptr) {}
+                : element(std::forward<Args>(args)...), next_free(this)
+            {
+            }
         };
     }
 
-    /// <summary>Memory pool for larger number of reusable elements.</summary>
+    /// <summary>
+    ///   Memory pool for elements that are created and deleted often.
+    /// </summary>
     template <typename T, typename Container = std::deque<detail::PoolItem<T>>>
     class Pool
     {
@@ -52,45 +57,61 @@ namespace rainbow
             if (!free_)
             {
                 pool_.emplace_back(std::forward<Args>(args)...);
-                return &pool_.back().element;
+                auto& i = pool_.back();
+                R_ASSERT(i.next_free == &i, "Expected sentinel");
+                return &i.element;
             }
 
             value_type& element = pop();
-            element = value_type{std::forward<Args>(args)...};
+            element.reset(std::forward<Args>(args)...);
             return &element;
         }
 
         /// <summary>Releases the element to the pool for reuse.</summary>
         /// <remarks>The pointer is invalidated after return.</remarks>
-        void release(NotNull<value_type*> element)
+        template <typename... Args>
+        void release(NotNull<value_type*> element, Args&&... args)
         {
-            element->dispose();
+            element->dispose(std::forward<Args>(args)...);
 
-            Entry* e = get_entry(element);
-            R_ASSERT(&e->element == element.get(), "This shouldn't happen.");
+            auto i = get_iterator(element);
+            i->next_free = free_;
+            free_ = i;
+        }
 
-            e->next_free = free_;
-            free_ = e;
+        template <typename U, typename V, typename F>
+        friend void for_each(Pool<U, V>& pool, F&& action)
+        {
+            const auto size = pool.size();
+            for (size_t i = 0; i < size; ++i)
+            {
+                auto& item = pool.pool_[i];
+                if (item.next_free != &item)
+                    continue;
+
+                action(item.element);
+            }
         }
 
     private:
-        using Entry = detail::PoolItem<value_type>;
-
-        Entry* free_ = nullptr;
+        detail::PoolItem<value_type>* free_ = nullptr;
         Container pool_;
 
         /// <summary>Pops and returns the next reusable element.</summary>
         auto pop() -> value_type&
         {
-            Entry* e = free_;
-            free_ = e->next_free;
-            return e->element;
+            auto i = free_;
+            free_ = i->next_free;
+            i->next_free = i;  // Set sentinel to indicate item is alive.
+            return i->element;
         }
 
-        /// <summary>Returns the element's entry in the pool.<summary>
-        static auto get_entry(NotNull<value_type*> element)
+        /// <summary>Returns the element's iterator.<summary>
+        static auto get_iterator(NotNull<value_type*> element)
         {
-            return reinterpret_cast<Entry*>(element.get());
+            auto i = reinterpret_cast<decltype(free_)>(element.get());
+            R_ASSERT(&i->element == element.get(), "This shouldn't happen.");
+            return i;
         }
     };
 }

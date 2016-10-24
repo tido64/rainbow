@@ -18,11 +18,13 @@ namespace
 class Integer
 {
 public:
-    Integer() : value_(0) {}
+    Integer() : value_(0) { NOT_USED(padding_); }
     Integer(int value) : value_(value) {}
-    Integer(size_t value) : value_(static_cast<int>(value)) {}
+
+    auto is_disposed() const { return value_ == kDisposed; }
 
     void dispose() { value_ = kDisposed; }
+    void reset(int new_value) { value_ = new_value; }
 
     operator int() const { return value_; }
 
@@ -41,8 +43,8 @@ TYPED_TEST(PoolTest, ClearsElements)
     auto item1 = pool.construct(1);
 
     ASSERT_EQ(2u, pool.size());
-    ASSERT_EQ(TypeParam(0), *item0);
-    ASSERT_EQ(TypeParam(1), *item1);
+    ASSERT_EQ(TypeParam{0}, *item0);
+    ASSERT_EQ(TypeParam{1}, *item1);
 
     pool.clear();
 
@@ -57,44 +59,90 @@ TYPED_TEST(PoolTest, ReusesElements)
     for (size_t i = 0; i < rainbow::array_size(arr); ++i)
     {
         ASSERT_EQ(i, pool.size());
-        arr[i] = pool.construct(i);
+        arr[i] = pool.construct(static_cast<int>(i));
     }
 
     pool.release(arr[2]);
 
     ASSERT_EQ(rainbow::array_size(arr), pool.size());
-    ASSERT_EQ(TypeParam(0), *arr[0]);
-    ASSERT_EQ(TypeParam(1), *arr[1]);
-    ASSERT_EQ(TypeParam(kDisposed), *arr[2]);
-    ASSERT_EQ(TypeParam(3), *arr[3]);
-    ASSERT_EQ(TypeParam(4), *arr[4]);
+    ASSERT_EQ(TypeParam{0}, *arr[0]);
+    ASSERT_EQ(TypeParam{1}, *arr[1]);
+    ASSERT_EQ(TypeParam{kDisposed}, *arr[2]);
+    ASSERT_EQ(TypeParam{3}, *arr[3]);
+    ASSERT_EQ(TypeParam{4}, *arr[4]);
 
     pool.release(arr[0]);
 
     ASSERT_EQ(rainbow::array_size(arr), pool.size());
-    ASSERT_EQ(TypeParam(kDisposed), *arr[0]);
-    ASSERT_EQ(TypeParam(1), *arr[1]);
-    ASSERT_EQ(TypeParam(kDisposed), *arr[2]);
-    ASSERT_EQ(TypeParam(3), *arr[3]);
-    ASSERT_EQ(TypeParam(4), *arr[4]);
+    ASSERT_EQ(TypeParam{kDisposed}, *arr[0]);
+    ASSERT_EQ(TypeParam{1}, *arr[1]);
+    ASSERT_EQ(TypeParam{kDisposed}, *arr[2]);
+    ASSERT_EQ(TypeParam{3}, *arr[3]);
+    ASSERT_EQ(TypeParam{4}, *arr[4]);
 
     pool.release(arr[4]);
 
     ASSERT_EQ(rainbow::array_size(arr), pool.size());
-    ASSERT_EQ(TypeParam(kDisposed), *arr[0]);
-    ASSERT_EQ(TypeParam(1), *arr[1]);
-    ASSERT_EQ(TypeParam(kDisposed), *arr[2]);
-    ASSERT_EQ(TypeParam(3), *arr[3]);
-    ASSERT_EQ(TypeParam(kDisposed), *arr[4]);
+    ASSERT_EQ(TypeParam{kDisposed}, *arr[0]);
+    ASSERT_EQ(TypeParam{1}, *arr[1]);
+    ASSERT_EQ(TypeParam{kDisposed}, *arr[2]);
+    ASSERT_EQ(TypeParam{3}, *arr[3]);
+    ASSERT_EQ(TypeParam{kDisposed}, *arr[4]);
 
     arr[0] = pool.construct(4);
     arr[2] = pool.construct(6);
     arr[4] = pool.construct(8);
 
     ASSERT_EQ(rainbow::array_size(arr), pool.size());
-    ASSERT_EQ(TypeParam(4), *arr[0]);
-    ASSERT_EQ(TypeParam(1), *arr[1]);
-    ASSERT_EQ(TypeParam(6), *arr[2]);
-    ASSERT_EQ(TypeParam(3), *arr[3]);
-    ASSERT_EQ(TypeParam(8), *arr[4]);
+    ASSERT_EQ(TypeParam{4}, *arr[0]);
+    ASSERT_EQ(TypeParam{1}, *arr[1]);
+    ASSERT_EQ(TypeParam{6}, *arr[2]);
+    ASSERT_EQ(TypeParam{3}, *arr[3]);
+    ASSERT_EQ(TypeParam{8}, *arr[4]);
+}
+
+TYPED_TEST(PoolTest, IteratesOnlyActiveElements)
+{
+    rainbow::Pool<TypeParam> pool;
+    TypeParam* arr[]{
+        pool.construct(0),
+        pool.construct(1),
+        pool.construct(2),
+        pool.construct(3),
+        pool.construct(4)};
+
+    pool.release(arr[2]);
+    pool.release(arr[4]);
+
+    ASSERT_EQ(rainbow::array_size(arr), pool.size());
+    ASSERT_EQ(TypeParam{0}, *arr[0]);
+    ASSERT_EQ(TypeParam{1}, *arr[1]);
+    ASSERT_EQ(TypeParam{kDisposed}, *arr[2]);
+    ASSERT_EQ(TypeParam{3}, *arr[3]);
+    ASSERT_EQ(TypeParam{kDisposed}, *arr[4]);
+
+    size_t i = 0;
+    for_each(pool, [&i](TypeParam& item) {
+        ASSERT_FALSE(item.is_disposed());
+        ++i;
+    });
+
+    ASSERT_EQ(pool.size() - 2, i);
+
+    arr[4] = pool.construct(6);
+
+    ASSERT_EQ(rainbow::array_size(arr), pool.size());
+    ASSERT_EQ(TypeParam{0}, *arr[0]);
+    ASSERT_EQ(TypeParam{1}, *arr[1]);
+    ASSERT_EQ(TypeParam{kDisposed}, *arr[2]);
+    ASSERT_EQ(TypeParam{3}, *arr[3]);
+    ASSERT_EQ(TypeParam{6}, *arr[4]);
+
+    i = 0;
+    for_each(pool, [&i](TypeParam& item) {
+        ASSERT_FALSE(item.is_disposed());
+        ++i;
+    });
+
+    ASSERT_EQ(pool.size() - 1, i);
 }
