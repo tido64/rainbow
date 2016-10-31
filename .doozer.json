@@ -1,0 +1,128 @@
+{
+  "targets": {
+    "xenial-amd64/gcc/debug/cpp": {
+      "buildenv": "xenial-amd64",
+      "environment": {
+        "GENERATOR": "Ninja"
+      },
+      "builddeps": [
+        "build-essential",
+        "cmake",
+        "libgl1-mesa-dev",
+        "libopenal-dev",
+        "libsdl2-dev",
+        "libvorbis-dev",
+        "ninja-build"
+      ],
+      "submodules": [
+        "lib/FreeType",
+        "lib/box2d",
+        "lib/googletest",
+        "lib/imgui",
+        "lib/libpng",
+        "lib/nanosvg",
+        "lib/spine-runtimes",
+        "lib/zlib"
+      ],
+      "buildcmd": [
+        "mkdir out",
+        "cd out",
+        "../tools/build.sh -DCMAKE_BUILD_TYPE=Debug -DUNIT_TESTS=1 -DUSE_HEIMDALL=1 -DUSE_LUA_SCRIPT=0 -DUSE_PHYSICS=1 -DUSE_SPINE=1",
+        "./rainbow --gtest_filter=-AudioTest*"
+      ]
+    },
+    "xenial-amd64/gcc/debug/lua": {
+      "buildenv": "xenial-amd64",
+      "environment": {
+        "GENERATOR": "Ninja"
+      },
+      "builddeps": [
+        "build-essential",
+        "cmake",
+        "libgl1-mesa-dev",
+        "libopenal-dev",
+        "libsdl2-dev",
+        "libvorbis-dev",
+        "ninja-build"
+      ],
+      "submodules": [
+        "lib/FreeType",
+        "lib/box2d",
+        "lib/googletest",
+        "lib/imgui",
+        "lib/libpng",
+        "lib/nanosvg",
+        "lib/spine-runtimes",
+        "lib/zlib"
+      ],
+      "buildcmd": [
+        "mkdir out",
+        "cd out",
+        "../tools/build.sh -DCMAKE_BUILD_TYPE=Debug -DUNIT_TESTS=1 -DUSE_HEIMDALL=1 -DUSE_PHYSICS=1 -DUSE_SPINE=1",
+        "./rainbow --gtest_filter=-AudioTest*"
+      ]
+    },
+    "xenial-amd64/gcc/release/cpp": {
+      "buildenv": "xenial-amd64",
+      "environment": {
+        "GENERATOR": "Ninja"
+      },
+      "builddeps": [
+        "build-essential",
+        "cmake",
+        "libgl1-mesa-dev",
+        "libopenal-dev",
+        "libsdl2-dev",
+        "libvorbis-dev",
+        "ninja-build"
+      ],
+      "submodules": [
+        "lib/FreeType",
+        "lib/box2d",
+        "lib/googletest",
+        "lib/imgui",
+        "lib/libpng",
+        "lib/nanosvg",
+        "lib/spine-runtimes",
+        "lib/zlib"
+      ],
+      "buildcmd": [
+        "mkdir out",
+        "cd out",
+        "../tools/build.sh -DCMAKE_BUILD_TYPE=Release -DUNIT_TESTS=1 -DUSE_LUA_SCRIPT=0 -DUSE_PHYSICS=1 -DUSE_SPINE=1",
+        "./rainbow --gtest_filter=-AudioTest*"
+      ]
+    },
+    "xenial-amd64/gcc/release/lua": {
+      "buildenv": "xenial-amd64",
+      "environment": {
+        "GENERATOR": "Ninja"
+      },
+      "builddeps": [
+        "build-essential",
+        "cmake",
+        "libgl1-mesa-dev",
+        "libopenal-dev",
+        "libsdl2-dev",
+        "libvorbis-dev",
+        "ninja-build"
+      ],
+      "submodules": [
+        "lib/FreeType",
+        "lib/box2d",
+        "lib/googletest",
+        "lib/imgui",
+        "lib/libpng",
+        "lib/nanosvg",
+        "lib/spine-runtimes",
+        "lib/zlib"
+      ],
+      "buildcmd": [
+        "mkdir out",
+        "cd out",
+        "../tools/build.sh -DCMAKE_BUILD_TYPE=Release -DUNIT_TESTS=1 -DUSE_PHYSICS=1 -DUSE_SPINE=1",
+        "./rainbow --gtest_filter=-AudioTest*"
+      ]
+    }
+  }
+}

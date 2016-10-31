@@ -5,7 +5,8 @@
 
 RAINBOW=$(cd -P "$(dirname $0)/.." && pwd)
 
-if [[ "$(git rev-parse --show-toplevel 2> /dev/null)" == "$RAINBOW" ]]; then
+if [[ $(git ls-files --error-unmatch . 2> /dev/null) ]] && \
+   [[ "$(git rev-parse --show-toplevel 2> /dev/null)" == "$RAINBOW" ]]; then
   echo "$0: Cannot run while still inside the repository"
   exit 0
 fi
