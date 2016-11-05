@@ -8,6 +8,7 @@
 #if USE_LUA_SCRIPT
 #   include <mutex>
 #   include <queue>
+#   include <string>
 #endif  // USE_LUA_SCRIPT
 
 #include "Director.h"
@@ -48,7 +49,7 @@ namespace heimdall
     private:
         rainbow::Director director_;
 #if USE_LUA_SCRIPT
-        std::queue<std::unique_ptr<char[]>> changed_files_;
+        std::queue<std::string> changed_files_;
 #endif  // USE_LUA_SCRIPT
         Overlay overlay_;
         OverlayActivator overlay_activator_;

@@ -5,6 +5,8 @@
 #ifndef INPUT_VIRTUALKEY_H_
 #define INPUT_VIRTUALKEY_H_
 
+#include <cstdint>
+
 namespace rainbow
 {
     /// <summary>Virtual key codes.</summary>
@@ -153,19 +155,19 @@ namespace rainbow
 
     struct KeyMods
     {
-        static constexpr unsigned int None        = 0;
-        static constexpr unsigned int LeftShift   = 1 << 0;
-        static constexpr unsigned int RightShift  = 1 << 1;
-        static constexpr unsigned int Shift       = LeftShift | RightShift;
-        static constexpr unsigned int LeftCtrl    = 1 << 2;
-        static constexpr unsigned int RightCtrl   = 1 << 3;
-        static constexpr unsigned int Ctrl        = LeftCtrl | RightCtrl;
-        static constexpr unsigned int LeftAlt     = 1 << 4;
-        static constexpr unsigned int RightAlt    = 1 << 5;
-        static constexpr unsigned int Alt         = LeftAlt | RightAlt;
-        static constexpr unsigned int LeftSuper   = 1 << 6;
-        static constexpr unsigned int RightSuper  = 1 << 7;
-        static constexpr unsigned int Super       = LeftSuper | RightSuper;
+        static constexpr uint32_t None        = 0;
+        static constexpr uint32_t LeftShift   = 1 << 0;
+        static constexpr uint32_t RightShift  = 1 << 1;
+        static constexpr uint32_t Shift       = LeftShift | RightShift;
+        static constexpr uint32_t LeftCtrl    = 1 << 2;
+        static constexpr uint32_t RightCtrl   = 1 << 3;
+        static constexpr uint32_t Ctrl        = LeftCtrl | RightCtrl;
+        static constexpr uint32_t LeftAlt     = 1 << 4;
+        static constexpr uint32_t RightAlt    = 1 << 5;
+        static constexpr uint32_t Alt         = LeftAlt | RightAlt;
+        static constexpr uint32_t LeftSuper   = 1 << 6;
+        static constexpr uint32_t RightSuper  = 1 << 7;
+        static constexpr uint32_t Super       = LeftSuper | RightSuper;
     };
 
     struct KeyStroke
@@ -174,7 +176,7 @@ namespace rainbow
         static auto from_event(const T& event) -> KeyStroke;
 
         VirtualKey key;
-        unsigned int mods;
+        uint32_t mods;
     };
 }
 

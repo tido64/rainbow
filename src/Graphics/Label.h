@@ -30,6 +30,12 @@ public:
     Label();
     virtual ~Label() = default;
 
+    /// <summary>Returns label text alignment.</summary>
+    auto alignment() const { return alignment_; }
+
+    /// <summary>Returns label angle of rotation.</summary>
+    auto angle() const { return angle_; }
+
     /// <summary>Returns label text color.</summary>
     auto color() const { return color_; }
 
@@ -41,6 +47,9 @@ public:
 
     /// <summary>Returns label position.</summary>
     auto position() const -> const Vec2f& { return position_; }
+
+    /// <summary>Returns label scale.</summary>
+    auto scale() const { return scale_; }
 
     /// <summary>Returns the string.</summary>
     auto text() const { return text_.get(); }

@@ -22,7 +22,7 @@ namespace
     class Library
     {
     public:
-        explicit Library(const char* path);
+        explicit Library(const std::string& path);
 
         auto name() const -> const string_view& { return name_; }
         auto open() const -> Data;
@@ -55,9 +55,8 @@ void Gatekeeper::init(const Vec2i& screen)
 
 #if USE_LUA_SCRIPT
     monitor_.set_callback([this](const char* path) {
-        auto file = rainbow::make_string_copy(path);
         std::lock_guard<std::mutex> lock(changed_files_mutex_);
-        changed_files_.emplace(std::move(file));
+        changed_files_.emplace(path);
     });
 #endif  // USE_LUA_SCRIPT
 }
@@ -68,14 +67,14 @@ void Gatekeeper::update(unsigned long dt)
     lua_State* L = static_cast<LuaScript*>(director_.script())->state();
     while (!changed_files_.empty())
     {
-        std::unique_ptr<char[]> file;
+        std::string file;
         {
             std::lock_guard<std::mutex> lock(changed_files_mutex_);
             file = std::move(changed_files_.front());
             changed_files_.pop();
         }
 
-        const Library library(file.get());
+        const Library library(file);
         if (!library)
             continue;
 
@@ -93,9 +92,9 @@ void Gatekeeper::update(unsigned long dt)
 }
 
 #if USE_LUA_SCRIPT
-Library::Library(const char* path) : path_(path)
+Library::Library(const std::string& path) : path_(path.c_str())
 {
-    string_view filename = rainbow::filesystem::absolute(path).filename();
+    string_view filename = rainbow::filesystem::absolute(path_).filename();
     if (filename.length() < 5 || !rainbow::ends_with(filename, ".lua"))
     {
         path_ = nullptr;

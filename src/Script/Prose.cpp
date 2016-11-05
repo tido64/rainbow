@@ -4,6 +4,8 @@
 
 #include "Script/Prose.h"
 
+#include <string>
+
 #include "Common/Data.h"
 #include "Common/String.h"
 #include "FileSystem/File.h"
@@ -270,10 +272,12 @@ namespace
 #include "Script/Prose.Resource.h"
 
 #if USE_NODE_TAGS
-    auto basename_without_extension(const char* path) -> std::unique_ptr<char[]>
+    auto basename_without_extension(const char* path)
     {
+        std::string basename;
+
         if (!path)
-            return {};
+            return basename;
 
         const char* i = path;
         const char* start = path;
@@ -289,10 +293,11 @@ namespace
         if (end <= start)
             end = i;
         if (start >= end)
-            return {};
+            return basename;
 
         const ptrdiff_t length = end - start;
-        return rainbow::make_string_copy(string_view(start, length));
+        basename = std::string{start, static_cast<size_t>(length)};
+        return basename;
     }
 #endif
 
@@ -393,8 +398,9 @@ auto Prose::from_lua(const char* path) -> Prose*
                 scene->stack_,
                 scene->node_);
 #if USE_NODE_TAGS
-    if (const auto& name = basename_without_extension(path))
-        scene->node()->set_tag(name.get());
+    auto basename = basename_without_extension(path);
+    if (!basename.empty())
+        scene->node()->set_tag(std::move(basename));
 #endif  // USE_NODE_TAGS
     return scene.release();
 }
