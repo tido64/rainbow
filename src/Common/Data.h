@@ -6,6 +6,7 @@
 #define COMMON_DATA_H_
 
 #include <cstddef>
+#include <cstdint>
 
 #include "Common/Constraints.h"
 #include "Common/NonCopyable.h"
@@ -24,7 +25,7 @@ class File;
 ///     iOS, it is safe to perform a static cast of this type to an
 ///     <c>NSData</c> or <c>NSMutableData</c> (which in turn can be cast to a
 ///     <c>CFData</c> or <c>CFMutableData</c>). On other platforms, it can be
-///     casted to a <c>void*</c> or an <c>unsigned char*</c>.
+///     casted to a <c>void*</c> or a <c>uint8_t*</c>.
 ///   </para>
 /// </remarks>
 class Data : private NonCopyable<Data>
@@ -36,13 +37,13 @@ public:
         Reference
     };
 
-    template <typename T, size_t N, typename = CharType<T>>
+    template <typename T, size_t N, typename = ByteType<T>>
     static auto from_bytes(const T (&bytes)[N])
     {
         return Data{bytes, N, Ownership::Reference};
     }
 
-    template <typename T, size_t N, typename = CharType<T>>
+    template <typename T, size_t N, typename = ByteType<T>>
     static auto from_literal(const T (&literal)[N])
     {
         return Data{literal, N - 1, Ownership::Reference};
@@ -94,11 +95,7 @@ public:
     explicit operator bool() const { return data_; }
     operator void*() const { return data_; }
     operator char*() const { return static_cast<char*>(data_); }
-
-    operator unsigned char*() const
-    {
-        return static_cast<unsigned char*>(data_);
-    }
+    operator uint8_t*() const { return static_cast<uint8_t*>(data_); }
 
 #ifdef RAINBOW_OS_IOS
     operator NSData*() const

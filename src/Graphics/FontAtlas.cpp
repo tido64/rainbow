@@ -23,8 +23,6 @@
 using rainbow::Texture;
 using rainbow::array_size;
 
-using uchar_t = unsigned char;
-
 namespace
 {
     constexpr float kGlyphMargin = 2.0f;          ///< Margin around rendered font glyph.
@@ -35,20 +33,20 @@ namespace
     constexpr uint32_t kNumGlyphsPerColRow = 12;  ///< Number of glyphs per column/row on texture.
     constexpr int kPixelFormat = 64;              ///< 26.6 fixed-point pixel coordinates.
 
-    void copy_bitmap_into(uchar_t* dst,
+    void copy_bitmap_into(uint8_t* dst,
                           const Vec2u& dst_sz,
                           const Vec2u& off,
-                          const uchar_t* src,
+                          const uint8_t* src,
                           const Vec2u& src_sz)
     {
         const size_t stride = (dst_sz.x - src_sz.x) * 2;
         size_t i = 0;
-        uchar_t* ptr = dst + (off.y * dst_sz.x + off.x) * 2;
+        uint8_t* ptr = dst + (off.y * dst_sz.x + off.x) * 2;
         for (uint32_t y = 0; y < src_sz.y; ++y)
         {
             for (uint32_t x = 0; x < src_sz.x; ++x)
             {
-                *ptr = std::numeric_limits<uchar_t>::max();
+                *ptr = std::numeric_limits<uint8_t>::max();
                 *(++ptr) = src[i];
                 ++ptr;
                 ++i;
@@ -171,7 +169,7 @@ auto FontAtlas::get_glyph(uint32_t c) const -> const FontGlyph*
         return (i == last ? nullptr : i);
     }
 #endif
-    return &charset_[static_cast<uchar_t>(c) - kASCIIOffset];
+    return &charset_[static_cast<uint8_t>(c) - kASCIIOffset];
 }
 
 void FontAtlas::load(TextureManager& texture_manager,

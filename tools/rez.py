@@ -15,7 +15,7 @@ def main(resource):
     guard = name.upper() + "_H\n"
     rez = '#ifndef ' + guard \
         + '#define ' + guard + "\n" \
-        + 'constexpr unsigned char ' + name + "[]{"
+        + 'constexpr uint8_t ' + name + "[]{"
 
     f = open(resource, 'rb')
     if bytes_per_line > 0:

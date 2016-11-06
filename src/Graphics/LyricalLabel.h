@@ -34,7 +34,7 @@ public:
 
         union
         {
-            unsigned char color[4];
+            uint8_t color[4];
             uint32_t magnitude;
             int offset[2];
         };

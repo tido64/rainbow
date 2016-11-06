@@ -46,7 +46,7 @@ namespace png
             image.channels = PNG_IMAGE_SAMPLE_CHANNELS(PNG_FORMAT_RGBA);
         }
 
-        auto buffer = std::make_unique<unsigned char[]>(PNG_IMAGE_SIZE(pi));
+        auto buffer = std::make_unique<uint8_t[]>(PNG_IMAGE_SIZE(pi));
         png_image_finish_read(
             &pi, nullptr, buffer.get(), PNG_IMAGE_ROW_STRIDE(pi), nullptr);
         image.data = buffer.release();

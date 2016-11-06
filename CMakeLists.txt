@@ -314,8 +314,6 @@ if(USE_HEIMDALL)
        src/Heimdall/Overlay.h
        src/Heimdall/OverlayActivator.cpp
        src/Heimdall/OverlayActivator.h
-       src/Resources/Inconsolata.otf.h
-       src/Resources/NewsCycle-Regular.ttf.h
        src/ThirdParty/ImGui/imconfig.h
        src/ThirdParty/ImGui/ImGuiHelper.cpp
        src/ThirdParty/ImGui/ImGuiHelper.h)

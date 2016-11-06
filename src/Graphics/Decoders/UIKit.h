@@ -45,7 +45,7 @@ namespace uikit
 
         CGColorSpaceRef color_space = CGColorSpaceCreateDeviceRGB();
         auto buffer =
-            std::make_unique<unsigned char[]>(image.height * image.width * 4);
+            std::make_unique<uint8_t[]>(image.height * image.width * 4);
         CGContextRef context = CGBitmapContextCreate(
             buffer.get(),
             image.width,

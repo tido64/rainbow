@@ -84,10 +84,10 @@ NS_RAINBOW_LUA_BEGIN
         if (!self)
             return 0;
 
-        const unsigned char r = lua_tointeger(L, 2);
-        const unsigned char g = lua_tointeger(L, 3);
-        const unsigned char b = lua_tointeger(L, 4);
-        const unsigned char a = optinteger(L, 5, 0xff);
+        const uint8_t r = lua_tointeger(L, 2);
+        const uint8_t g = lua_tointeger(L, 3);
+        const uint8_t b = lua_tointeger(L, 4);
+        const uint8_t a = optinteger(L, 5, 0xff);
         self->label_.set_color(Colorb(r, g, b, a));
         return 0;
     }

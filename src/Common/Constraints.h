@@ -5,6 +5,7 @@
 #ifndef COMMON_CONSTRAINTS_H_
 #define COMMON_CONSTRAINTS_H_
 
+#include <cstdint>
 #include <type_traits>
 
 template <typename T, typename U>
@@ -21,8 +22,8 @@ template <typename T>
 using Arithmetic = std::enable_if_t<std::is_arithmetic<T>::value>;
 
 template <typename T>
-using CharType = std::enable_if_t<
-    std::is_same<std::make_unsigned_t<std::decay_t<T>>, unsigned char>::value>;
+using ByteType = std::enable_if_t<
+    std::is_same<std::make_unsigned_t<std::decay_t<T>>, uint8_t>::value>;
 
 template <typename T>
 using FloatingPoint = EnableIfFloatingPoint<T>;
