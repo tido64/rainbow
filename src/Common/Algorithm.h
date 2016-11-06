@@ -27,8 +27,8 @@ namespace rainbow
     template <typename T, typename = FloatingPoint<T>>
     bool are_equal(T a, T b)
     {
-        return std::abs(a - b) <= std::max(std::abs(a), std::abs(b)) *
-                                      std::numeric_limits<T>::epsilon();
+        const auto max = std::max(std::abs(a), std::abs(b));
+        return std::abs(a - b) <= max * std::numeric_limits<T>::epsilon();
     }
 
     template <typename T, size_t N>
