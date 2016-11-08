@@ -210,9 +210,9 @@ auto rainbow::filesystem::user(const char* p) -> Path
 #else
     auto data_path = user_data_path();
     std::error_code error;
-    if (!data_path || (!is_directory(data_path, error) &&
-                       (!create_directories(data_path, error) ||
-                        !is_directory(data_path, error))))
+    if (data_path == nullptr || (!is_directory(data_path, error) &&
+                                 (!create_directories(data_path, error) ||
+                                  !is_directory(data_path, error))))
     {
         return {};
     }

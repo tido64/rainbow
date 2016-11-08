@@ -17,7 +17,7 @@ namespace rainbow
               is_embedded_(true) {}
 
         explicit DataMapUnix(const filesystem::Path& path);
-        DataMapUnix(DataMapUnix&& data);
+        DataMapUnix(DataMapUnix&& data) noexcept;
         ~DataMapUnix();
 
         auto data() const -> const uint8_t*

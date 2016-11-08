@@ -42,7 +42,7 @@ void NoGame::init_impl(const Vec2i& screen)
     scenegraph().add_child(batch_);
 }
 
-void NoGame::update_impl(unsigned long)
+void NoGame::update_impl(uint64_t)
 {
     static bool run_once = false;
     if (!run_once)

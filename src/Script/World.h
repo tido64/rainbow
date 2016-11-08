@@ -66,7 +66,7 @@ namespace rainbow
             return actor;
         }
 
-        void update(unsigned long dt)
+        void update(uint64_t dt)
         {
             for (auto&& entity : entities_)
                 entity.actor->update(dt);

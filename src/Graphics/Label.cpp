@@ -89,7 +89,7 @@ void Label::move(const Vec2f& delta)
 
 void Label::update()
 {
-    if (stale_)
+    if (stale_ != 0)
     {
         update_internal();
         upload();
@@ -100,9 +100,9 @@ void Label::update()
 void Label::update_internal()
 {
     // Note: This algorithm currently does not support font kerning.
-    if (stale_ & kStaleBuffer)
+    if ((stale_ & kStaleBuffer) != 0)
     {
-        if (stale_ & kStaleBufferSize)
+        if ((stale_ & kStaleBufferSize) != 0)
             vertices_ = std::make_unique<SpriteVertex[]>(size_ * 4);
         width_ = 0;
         unsigned int start = 0;
@@ -131,7 +131,7 @@ void Label::update_internal()
                 }
 
                 const FontGlyph* glyph = font_->get_glyph(ch);
-                if (!glyph)
+                if (glyph == nullptr)
                     return;
 
                 pen.x += glyph->left * scale_;
@@ -153,7 +153,7 @@ void Label::update_internal()
         count_ = count * 4;
         save(start, count, pen.x - origin_x, R, needs_alignment);
     }
-    else if (stale_ & kStaleColor)
+    else if ((stale_ & kStaleColor) != 0)
     {
         std::for_each(vertices_.get(),
                       vertices_.get() + count_,

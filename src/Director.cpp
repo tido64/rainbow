@@ -59,7 +59,7 @@ namespace rainbow
         scenegraph_.update(0);
     }
 
-    void Director::update(unsigned long dt)
+    void Director::update(uint64_t dt)
     {
         R_ASSERT(!terminated_, "App should have terminated by now");
 

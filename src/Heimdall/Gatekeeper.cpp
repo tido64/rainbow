@@ -70,7 +70,7 @@ void Gatekeeper::init(const Vec2i& screen)
 #endif  // USE_LUA_SCRIPT
 }
 
-void Gatekeeper::update(unsigned long dt)
+void Gatekeeper::update(uint64_t dt)
 {
 #if USE_LUA_SCRIPT
     while (!changed_files_.empty())

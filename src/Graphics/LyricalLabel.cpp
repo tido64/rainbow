@@ -22,7 +22,7 @@ LyricalLabel::~LyricalLabel()
 {
     for (auto&& animator : animators_)
     {
-        if (animator)
+        if (animator != nullptr)
             TimerManager::Get()->clear_timer(animator);
     }
 }
@@ -85,14 +85,14 @@ void LyricalLabel::set_shaking(uint32_t magnitude,
                                uint32_t length)
 {
     attributes_.emplace_back(magnitude, start, length);
-    if (!animators_[static_cast<int>(Animation::Shake)])
+    if (animators_[static_cast<int>(Animation::Shake)] == nullptr)
         start_animation(Animation::Shake, 15);
 }
 
 void LyricalLabel::start_animation(Animation animation, int interval)
 {
     auto i = static_cast<int>(animation);
-    if (animators_[i])
+    if (animators_[i] != nullptr)
         return;
 
     switch (animation)
@@ -139,7 +139,7 @@ void LyricalLabel::start_animation(Animation animation, int interval)
 void LyricalLabel::stop_animation(Animation animation)
 {
     const int i = static_cast<int>(animation);
-    if (!animators_[i])
+    if (animators_[i] == nullptr)
         return;
 
     switch (animation)

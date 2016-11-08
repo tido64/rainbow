@@ -46,7 +46,7 @@ namespace
 
     auto weak_ref(lua_State* L) -> int
     {
-        if (!L || WeakRef::RegistryIndex < 0)
+        if (L == nullptr || WeakRef::RegistryIndex < 0)
             return LUA_NOREF;
 
         lua_rawgeti(L, LUA_REGISTRYINDEX, WeakRef::RegistryIndex);
@@ -77,7 +77,7 @@ NS_RAINBOW_LUA_BEGIN
 
     void WeakRef::get() const
     {
-        if (!state_ || ref_ < 0 || RegistryIndex < 0)
+        if (state_ == nullptr || ref_ < 0 || RegistryIndex < 0)
         {
             lua_pushnil(state_);
             return;
@@ -126,7 +126,7 @@ NS_RAINBOW_LUA_BEGIN
     {
         const char* module = lua_tostring(L, -1);
         const int result = load_module(L, module, ".lua");
-        return !result ? load_module(L, module, "/init.lua") : result;
+        return result == 0 ? load_module(L, module, "/init.lua") : result;
     }
 
     auto load(lua_State* L, const Data& chunk, const char* name, bool exec)
@@ -209,7 +209,7 @@ NS_RAINBOW_LUA_BEGIN
 
         lua_pushliteral(L, "__userdata");
         lua_rawget(L, n);
-        if (!lua_isuserdata(L, -1))
+        if (!isuserdata(L, -1))
         {
             lua_pop(L, 1);
             return;
@@ -224,9 +224,9 @@ NS_RAINBOW_LUA_BEGIN
 
         int depth = -1;
         lua_Debug ar;
-        while (lua_getstack(L, ++depth, &ar)) {}
+        while (lua_getstack(L, ++depth, &ar) != 0) {}
         --depth;
-        while (lua_getstack(L, ++g_level, &ar))
+        while (lua_getstack(L, ++g_level, &ar) != 0)
         {
             lua_getinfo(L, "Sl", &ar);
             g_callstack[depth - g_level].currentline = ar.currentline;
@@ -244,7 +244,7 @@ NS_RAINBOW_LUA_BEGIN
         lua_pushliteral(L, "__type");
         lua_rawget(L, -2);
         const char* type = lua_tostring(L, -1);
-        if (!type)
+        if (type == nullptr)
         {
             LUA_ASSERT(L, type, kLuaErrorType, name);
             lua_pop(L, 1);

@@ -61,12 +61,12 @@ void Animation::stop()
         callback_(this, Event::End);
 }
 
-void Animation::update(unsigned long dt)
+void Animation::update(uint64_t dt)
 {
     if (is_stopped())
         return;
 
-    accumulated_ += std::min<unsigned int>(dt, interval_ * 5);
+    accumulated_ += std::min<uint32_t>(dt, interval_ * 5);
     while (accumulated_ >= interval_)
     {
         // Consume first as |accumulated_| may be reset during a tick, leading

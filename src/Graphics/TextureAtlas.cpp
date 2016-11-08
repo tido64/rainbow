@@ -71,7 +71,7 @@ void TextureAtlas::load(TextureManager& texture_manager,
     R_ASSERT(data, "Failed to load texture");
 
     const Image& image = Image::decode(data, scale);
-    if (!image.data)
+    if (image.data == nullptr)
         return;
 
     switch (image.format)

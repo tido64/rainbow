@@ -24,7 +24,7 @@ namespace heimdall
         }
 
         void reset();
-        void update(unsigned long dt);
+        void update(uint64_t dt);
 
     private:
         int resistance_;

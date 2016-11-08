@@ -58,7 +58,7 @@ namespace
             if (!glsl)
             {
                 LOGE("Failed to load shader: %s", shader.source);
-                if (!shader.fallback)
+                if (shader.fallback == nullptr)
                 {
                     R_ABORT("No fallback was found");
                     return ShaderManager::kInvalidProgram;
@@ -83,7 +83,7 @@ namespace
 
         const String& error =
             verify(id, GL_COMPILE_STATUS, glGetShaderiv, glGetShaderInfoLog);
-        if (error.get())
+        if (error != nullptr)
         {
             glDeleteShader(id);
             R_ABORT(
@@ -106,13 +106,13 @@ namespace
         {
             glAttachShader(program, shader->id);
         }
-        for (auto attrib = attributes; attrib->name; ++attrib)
+        for (auto attrib = attributes; attrib->name != nullptr; ++attrib)
             glBindAttribLocation(program, attrib->index, attrib->name);
         glLinkProgram(program);
 
         const String& error = verify(
             program, GL_LINK_STATUS, glGetProgramiv, glGetProgramInfoLog);
-        if (error.get())
+        if (error != nullptr)
         {
             glDeleteProgram(program);
             R_ABORT("GLSL: Failed to link program: %s", error.get());
@@ -155,7 +155,7 @@ auto ShaderManager::compile(Shader::Params* shaders,
 {
     for (auto shader = shaders; shader->type != Shader::kTypeInvalid; ++shader)
     {
-        if (!shader->source)
+        if (shader->source == nullptr)
         {
             shader->id = shaders_[shader->id];
             continue;
@@ -168,8 +168,11 @@ auto ShaderManager::compile(Shader::Params* shaders,
         shaders_.push_back(id);
         shader->id = id;
     }
-    if (!attributes)
-        attributes = kAttributeDefaultParams;
+    if (attributes == nullptr)
+    {
+        attributes = static_cast<const Shader::AttributeParams*>(
+            kAttributeDefaultParams);
+    }
 
     const unsigned int program = link_program(shaders, attributes);
     if (program == kInvalidProgram)

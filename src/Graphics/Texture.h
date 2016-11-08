@@ -61,7 +61,7 @@ namespace rainbow
         operator unsigned int() const { return name_; }
 
         auto operator=(const Texture& texture) -> Texture& = delete;
-        auto operator=(Texture&& texture) -> Texture&;
+        auto operator=(Texture&& texture) noexcept -> Texture&;
 
     private:
         unsigned int name_;

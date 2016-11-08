@@ -63,7 +63,7 @@ namespace
         std::for_each(glyphs,
                       glyphs + count,
                       [&face, &max](const FontGlyph& glyph) {
-            if (FT_Load_Char(face, glyph.code, FT_LOAD_DEFAULT))
+            if (FT_Load_Char(face, glyph.code, FT_LOAD_DEFAULT) != 0)
             {
                 max.x = 0;
                 R_ABORT("Failed to load characters");
@@ -103,7 +103,7 @@ namespace
 
         ~FontFace()
         {
-            if (!face_)
+            if (face_ == nullptr)
                 return;
 
             FT_Done_Face(face_);
@@ -128,7 +128,7 @@ namespace
 
         ~FontLibrary()
         {
-            if (!library_)
+            if (library_ == nullptr)
                 return;
 
             FT_Done_FreeType(library_);
@@ -234,7 +234,7 @@ void FontAtlas::load(TextureManager& texture_manager,
         }
 
         // Copy bitmap data to texture.
-        if (bitmap.buffer)
+        if (bitmap.buffer != nullptr)
         {
             R_ASSERT(bitmap.num_grays == 256, "");
             R_ASSERT(bitmap.pixel_mode == FT_PIXEL_MODE_GRAY, "");
@@ -249,7 +249,7 @@ void FontAtlas::load(TextureManager& texture_manager,
         glyph.advance = slot->advance.x / kPixelFormat;
         glyph.left = slot->bitmap_left;
 
-        SpriteVertex* vx = glyph.quad;
+        auto vx = static_cast<SpriteVertex*>(glyph.quad);
 
         vx[0].position.x = -kGlyphMargin;
         vx[0].position.y = static_cast<float>(slot->bitmap_top -
@@ -282,7 +282,8 @@ void FontAtlas::load(TextureManager& texture_manager,
             {
                 FT_Get_Kerning(
                     face, left.code, glyph.code, FT_KERNING_DEFAULT, &kerning);
-                glyph.kern[++i] = static_cast<short>(kerning.x / kPixelFormat);
+                glyph.kern[++i] =
+                    static_cast<int16_t>(kerning.x / kPixelFormat);
             }
         }
 #endif

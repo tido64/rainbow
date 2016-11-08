@@ -8,7 +8,7 @@ void Link::append(Link* node)
 {
     node->pop();
     node->prev_ = this;
-    if (next_)
+    if (next_ != nullptr)
     {
         next_->prev_ = node;
         node->next_ = next_;
@@ -18,9 +18,9 @@ void Link::append(Link* node)
 
 void Link::pop()
 {
-    if (prev_)
+    if (prev_ != nullptr)
         prev_->next_ = next_;
-    if (next_)
+    if (next_ != nullptr)
     {
         next_->prev_ = prev_;
         next_ = nullptr;
@@ -32,7 +32,7 @@ void Link::pop()
 
 void Link::on_end_link_removed(Link* node)
 {
-    if (!prev_)
+    if (prev_ == nullptr)
         return;
 
     prev_->on_end_link_removed(node);

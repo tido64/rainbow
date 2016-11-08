@@ -42,14 +42,14 @@ namespace heimdall
 
     private:
         rainbow::SceneNode* node_;
-        std::deque<unsigned long> frame_times_;
+        std::deque<uint64_t> frame_times_;
         std::deque<float> vmem_usage_;
         bool pinned_;
 
         // Drawable implementation details
 
         void draw_impl() override;
-        void update_impl(unsigned long) override;
+        void update_impl(uint64_t) override;
 
         // InputListener implementation details
 

@@ -17,7 +17,7 @@ namespace rainbow
               handle_(nullptr) {}
 
         explicit DataMapWin(const filesystem::Path& path);
-        DataMapWin(DataMapWin&&);
+        DataMapWin(DataMapWin&&) noexcept;
         ~DataMapWin();
 
         auto data() const -> const uint8_t*

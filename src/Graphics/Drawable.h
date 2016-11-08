@@ -18,13 +18,13 @@ public:
     void move(const Vec2f& delta) { move_impl(delta); }
 
     void draw() { draw_impl(); }
-    void update(unsigned long dt) { update_impl(dt); }
+    void update(uint64_t dt) { update_impl(dt); }
 
 private:
     virtual void move_impl(const Vec2f&) {}
 
     virtual void draw_impl() = 0;
-    virtual void update_impl(unsigned long dt) = 0;
+    virtual void update_impl(uint64_t dt) = 0;
 };
 
 #endif

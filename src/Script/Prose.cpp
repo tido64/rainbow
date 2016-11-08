@@ -25,7 +25,6 @@
 #define kProseUnknownProperty  "Prose: Unknown property '%s' on %s: %s"
 
 using rainbow::SceneNode;
-using rainbow::string_view;
 
 enum class Prose::AssetType
 {
@@ -47,7 +46,7 @@ Prose::Prose(size_t size)
 
 Prose::~Prose()
 {
-    if (!node_->parent())
+    if (node_->parent() == nullptr)
         delete node_;
     else
         node_->remove();
@@ -66,7 +65,7 @@ template <>
 auto Prose::get_asset<Animation>(const std::string& name) -> Animation*
 {
     auto animation = get_asset<Animation, AssetType::Animation>(name);
-    if (!animation)
+    if (animation == nullptr)
         R_ABORT("Prose: No such animation: %s", name.c_str());
     return animation;
 }
@@ -75,7 +74,7 @@ template <>
 auto Prose::get_asset<FontAtlas>(const std::string& name) -> FontAtlas*
 {
     auto font = get_asset<FontAtlas, AssetType::FontAtlas>(name);
-    if (!font)
+    if (font == nullptr)
         R_ABORT("Prose: No such font: %s", name.c_str());
     return font;
 }
@@ -84,7 +83,7 @@ template <>
 auto Prose::get_asset<Label>(const std::string& name) -> Label*
 {
     auto label = get_asset<Label, AssetType::Label>(name);
-    if (!label)
+    if (label == nullptr)
         R_ABORT("Prose: No such label: %s", name.c_str());
     return label;
 }
@@ -93,7 +92,7 @@ template <>
 auto Prose::get_asset<SceneNode>(const std::string& name) -> SceneNode*
 {
     auto node = get_asset<SceneNode, AssetType::Node>(name);
-    if (!node)
+    if (node == nullptr)
         R_ABORT("Prose: No such node: %s", name.c_str());
     return node;
 }
@@ -102,7 +101,7 @@ template <>
 auto Prose::get_asset<Sprite>(const std::string& name) -> Sprite*
 {
     auto sprite = get_asset<Sprite, AssetType::Sprite>(name);
-    if (!sprite)
+    if (sprite == nullptr)
         R_ABORT("Prose: No such sprite: %s", name.c_str());
     return sprite;
 }
@@ -111,7 +110,7 @@ template <>
 auto Prose::get_asset<SpriteBatch>(const std::string& name) -> SpriteBatch*
 {
     auto batch = get_asset<SpriteBatch, AssetType::SpriteBatch>(name);
-    if (!batch)
+    if (batch == nullptr)
         R_ABORT("Prose: No such sprite batch: %s", name.c_str());
     return batch;
 }
@@ -120,7 +119,7 @@ template <>
 auto Prose::get_asset<TextureAtlas>(const std::string& name) -> TextureAtlas*
 {
     auto texture = get_asset<TextureAtlas, AssetType::TextureAtlas>(name);
-    if (!texture)
+    if (texture == nullptr)
         R_ABORT("Prose: No such texture: %s", name.c_str());
     return texture;
 }
@@ -276,13 +275,13 @@ namespace
     {
         std::string basename;
 
-        if (!path)
+        if (path == nullptr)
             return basename;
 
         const char* i = path;
         const char* start = path;
         const char* end = path;
-        while (*i)
+        while (*i != '\0')
         {
             if (*i == '.')
                 end = i;

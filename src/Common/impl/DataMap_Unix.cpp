@@ -4,7 +4,7 @@
 
 #include "Common/DataMap.h"
 
-#include <errno.h>
+#include <cerrno>
 #include <fcntl.h>
 #include <sys/mman.h>
 
@@ -26,7 +26,7 @@ DataMapUnix::DataMapUnix(const Path& path)
     }
 
     len_ = f.size();
-    if (!len_)
+    if (len_ == 0)
     {
         LOGE(kErrorFileRead, path.c_str(), errno);
     }
@@ -48,7 +48,7 @@ DataMapUnix::DataMapUnix(const Path& path)
     }
 }
 
-DataMapUnix::DataMapUnix(DataMapUnix&& data)
+DataMapUnix::DataMapUnix(DataMapUnix&& data) noexcept
     : len_(data.len_), off_(data.off_), addr_(data.addr_),
       is_embedded_(data.is_embedded_)
 {

@@ -50,7 +50,7 @@ namespace
             return size;
         }
 
-        auto seek(long, int) -> int override { return 0; }
+        auto seek(int64_t, int) -> int override { return 0; }
         auto write(const void*, size_t) -> size_t override { return 0; }
         /*explicit*/ operator bool() const override { return true; }
     };

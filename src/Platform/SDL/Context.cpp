@@ -16,9 +16,9 @@ namespace
 
     auto window_size(const rainbow::Config& config)
     {
-        return (!config.width() || !config.height()
-                    ? Vec2i{1280, 720}
-                    : Vec2i{config.width(), config.height()});
+        return config.width() == 0 || config.height() == 0
+                   ? Vec2i{1280, 720}
+                   : Vec2i{config.width(), config.height()};
     }
 }
 
@@ -55,14 +55,14 @@ SDLContext::SDLContext(const rainbow::Config& config)
                                size.x,
                                size.y,
                                flags);
-    if (!window_)
+    if (window_ == nullptr)
     {
         R_ABORT("SDL: Failed to create window: %s", SDL_GetError());
         return;
     }
 
     context_ = SDL_GL_CreateContext(window_);
-    if (!context_)
+    if (context_ == nullptr)
     {
         R_ABORT("SDL: Failed to create GL context: %s", SDL_GetError());
         return;
@@ -90,12 +90,12 @@ SDLContext::SDLContext(const rainbow::Config& config)
 
 SDLContext::~SDLContext()
 {
-    if (!SDL_WasInit(SDL_INIT_VIDEO))
+    if (SDL_WasInit(SDL_INIT_VIDEO) == 0)
         return;
 
-    if (window_)
+    if (window_ != nullptr)
     {
-        if (context_)
+        if (context_ != nullptr)
             SDL_GL_DeleteContext(context_);
         SDL_DestroyWindow(window_);
     }

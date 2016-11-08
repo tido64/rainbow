@@ -8,6 +8,8 @@
 
 #include <lua.hpp>
 
+#include "Lua/LuaHelper.h"
+
 class Drawable;
 
 namespace rainbow
@@ -68,7 +70,7 @@ namespace
 
     bool is_userdata(lua_State* L, int n)
     {
-        return lua_isuserdata(L, n) || is_table(L, n);
+        return rainbow::lua::isuserdata(L, n) || is_table(L, n);
     }
 
     int type_error(lua_State* L, int n, const char* type)
@@ -224,8 +226,7 @@ namespace rainbow { namespace lua { namespace detail
     template <>
     void checktype<Shader>(lua_State* L, int n)
     {
-        if (!((lua_isnumber(L, n) && lua_tointeger(L, n) == 0) ||
-              lua_isuserdata(L, n)))
+        if (!((isnumber(L, n) && lua_tointeger(L, n) == 0) || isuserdata(L, n)))
         {
             luaL_argerror(L, n, "shader");
         }

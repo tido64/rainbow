@@ -74,7 +74,7 @@ void Texture::bind(unsigned int unit) const
     TextureManager::Get()->bind(name_, unit);
 }
 
-auto Texture::operator=(Texture&& texture) -> Texture&
+auto Texture::operator=(Texture&& texture) noexcept -> Texture&
 {
     if (name_ > 0)
         TextureManager::Get()->release(*this, {});

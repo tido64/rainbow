@@ -23,7 +23,7 @@ namespace rainbow { namespace graphics
         static void unbind();
 
         VertexArray() = default;
-        VertexArray(VertexArray&&);
+        VertexArray(VertexArray&&) noexcept;
         ~VertexArray();
 
         /// <summary>Binds this vertex array object.</summary>

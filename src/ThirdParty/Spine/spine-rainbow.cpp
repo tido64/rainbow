@@ -346,7 +346,7 @@ void Skeleton::draw()
     rainbow::graphics::draw_arrays(*this, 0, num_vertices_);
 }
 
-void Skeleton::update(unsigned long dt)
+void Skeleton::update(uint64_t dt)
 {
     const float delta = dt / 1000.0f;
     spSkeleton_update(skeleton_, delta);
@@ -660,7 +660,7 @@ namespace spine { namespace lua
 
     void Skeleton::draw_impl() { skeleton_->draw(); }
 
-    void Skeleton::update_impl(unsigned long dt)
+    void Skeleton::update_impl(uint64_t dt)
     {
         skeleton_->update(dt);
     }

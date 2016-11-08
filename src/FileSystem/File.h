@@ -5,6 +5,7 @@
 #ifndef FILESYSTEM_FILE_H_
 #define FILESYSTEM_FILE_H_
 
+#include <cstdint>
 #include <cstdio>
 
 #include "Common/NonCopyable.h"
@@ -40,7 +41,7 @@ public:
     /// </param>
     /// <param name="origin">Position to which offset is added.</param>
     /// <returns>0 upon success, nonzero value otherwise.</returns>
-    virtual auto seek(long offset, int origin) -> int = 0;
+    virtual auto seek(int64_t offset, int origin) -> int = 0;
 
     /// <summary>Writes buffer at <paramref name="buffer"/> to file.</summary>
     /// <param name="buffer">Source buffer.</param>
@@ -61,7 +62,7 @@ public:
     static auto open_write(const char* path) -> File;
 
     File() : is_asset_(false), stream_(nullptr) {}
-    File(File&&);
+    File(File&&) noexcept;
     ~File();
 
     /// <summary>Returns the file size.</summary>
@@ -86,7 +87,7 @@ public:
     /// </param>
     /// <param name="origin">Position to which offset is added.</param>
     /// <returns>0 upon success, nonzero value otherwise.</returns>
-    auto seek(long offset, int origin) -> int;
+    auto seek(int64_t offset, int origin) -> int;
 
     /// <summary>Writes buffer at <paramref name="buffer"/> to file.</summary>
     /// <param name="buffer">Source buffer.</param>

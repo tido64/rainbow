@@ -220,7 +220,7 @@ auto LuaMachine::start(const Data& main) -> int
 #endif
 }
 
-auto LuaMachine::update(unsigned long t) -> int
+auto LuaMachine::update(uint64_t t) -> int
 {
 #ifndef NDEBUG
     lua_rawgeti(state_, LUA_REGISTRYINDEX, traceback_);

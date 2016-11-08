@@ -20,7 +20,7 @@ namespace
     class AnimationNode final : public SceneNode
     {
     public:
-        AnimationNode(Animation& animation) : animation_(animation) {}
+        explicit AnimationNode(Animation& animation) : animation_(animation) {}
 
     private:
         Animation& animation_;
@@ -28,7 +28,7 @@ namespace
         void draw_impl() const override {}
         void move_impl(const Vec2f&) const override {}
 
-        void update_impl(unsigned long dt) const override
+        void update_impl(uint64_t dt) const override
         {
             animation_.update(dt);
         }
@@ -49,7 +49,7 @@ namespace
             drawable_.move(delta);
         }
 
-        void update_impl(unsigned long dt) const override
+        void update_impl(uint64_t dt) const override
         {
             drawable_.update(dt);
         }
@@ -59,7 +59,7 @@ namespace
     class PrimitiveNode final : public SceneNode
     {
     public:
-        PrimitiveNode(T& primitive) : primitive_(primitive) {}
+        explicit PrimitiveNode(T& primitive) : primitive_(primitive) {}
 
     private:
         T& primitive_;
@@ -71,7 +71,7 @@ namespace
             primitive_.move(delta);
         }
 
-        void update_impl(unsigned long) const override { primitive_.update(); }
+        void update_impl(uint64_t) const override { primitive_.update(); }
     };
 
     using LabelNode = PrimitiveNode<Label>;
@@ -100,7 +100,7 @@ void SceneNode::move(const Vec2f& delta) const
     }, delta);
 }
 
-void SceneNode::update(unsigned long dt) const
+void SceneNode::update(uint64_t dt) const
 {
     if (!is_enabled())
         return;

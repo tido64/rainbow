@@ -18,7 +18,7 @@ void VertexArray::unbind()
 #endif
 }
 
-VertexArray::VertexArray(VertexArray&& va) : array_(va.array_)
+VertexArray::VertexArray(VertexArray&& va) noexcept : array_(va.array_)
 {
 #ifdef USE_VERTEX_ARRAY_OBJECT
     va.array_ = 0;
@@ -28,7 +28,7 @@ VertexArray::VertexArray(VertexArray&& va) : array_(va.array_)
 VertexArray::~VertexArray()
 {
 #ifdef USE_VERTEX_ARRAY_OBJECT
-    if (!array_)
+    if (array_ == 0)
         return;
 
     glDeleteVertexArrays(1, &array_);
@@ -53,7 +53,7 @@ void VertexArray::reconfigure(std::function<void()>&& array_state)
     rainbow::graphics::bind_element_array();
     array_state();
     glBindVertexArray(0);
-    if (array_)
+    if (array_ != 0)
         glDeleteVertexArrays(1, &array_);
     array_ = array;
 #else

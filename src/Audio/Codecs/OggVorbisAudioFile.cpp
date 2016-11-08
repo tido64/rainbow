@@ -57,7 +57,7 @@ bool OggVorbisAudioFile::signature_matches(const ArrayView<char>& id)
     return id.size() >= size && strncmp(id.begin(), kIdOggVorbis, size) == 0;
 }
 
-OggVorbisAudioFile::OggVorbisAudioFile(File&& f)
+OggVorbisAudioFile::OggVorbisAudioFile(File f)
     : file_(std::move(f)), vi_(nullptr)
 {
     const int result = ov_open_callbacks(
@@ -89,7 +89,7 @@ auto OggVorbisAudioFile::size() const -> size_t
 
 auto OggVorbisAudioFile::read(void* dst, size_t size) -> size_t
 {
-    long read = 0;
+    int64_t read = 0;
     int bitstream = 0;
     char* buffer = static_cast<char*>(dst);
     size_t offset = 0;
@@ -114,7 +114,7 @@ auto OggVorbisAudioFile::read(void* dst, size_t size) -> size_t
     return offset;
 }
 
-auto OggVorbisAudioFile::seek(long offset, int) -> int
+auto OggVorbisAudioFile::seek(int64_t offset, int) -> int
 {
     const int result = ov_raw_seek(&vf_, offset);
     if (result != 0)

@@ -110,7 +110,7 @@ public:
     void set_skin(const char* skin);
 
     void draw();
-    void update(unsigned long dt);
+    void update(uint64_t dt);
 
 private:
     spSkeleton* skeleton_;
@@ -174,7 +174,7 @@ namespace spine
 
             void move_impl(const Vec2f& delta) override;
             void draw_impl() override;
-            void update_impl(unsigned long dt) override;
+            void update_impl(uint64_t dt) override;
         };
     }
 }

@@ -160,7 +160,7 @@ public:
     auto update(const ArraySpan<Vec2f>& normal_array,
                 const TextureAtlas& normal) -> bool;
 
-    auto operator=(Sprite&&) -> Sprite&;
+    auto operator=(Sprite&&) noexcept -> Sprite&;
 
 #if USE_SPRITE_FUNCTION_CHAINING
     auto angle(float angle) -> Sprite&

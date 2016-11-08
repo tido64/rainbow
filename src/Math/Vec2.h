@@ -51,8 +51,8 @@ namespace rainbow
         value_type x;
         value_type y;
 
-        constexpr Vec2() : Vec2(0, 0) {}
-        constexpr Vec2(value_type x, value_type y) : x(x), y(y) {}
+        constexpr Vec2() noexcept : Vec2(0, 0) {}
+        constexpr Vec2(value_type x, value_type y) noexcept : x(x), y(y) {}
 
         /// <summary>
         ///   Returns the angle (in radians) between two points.

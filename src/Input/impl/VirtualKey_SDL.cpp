@@ -523,21 +523,21 @@ namespace rainbow
     auto KeyStroke::from_event(const SDL_Keysym& keysym) -> KeyStroke
     {
         unsigned int mods{};
-        if (keysym.mod & KMOD_LSHIFT)
+        if ((keysym.mod & KMOD_LSHIFT) != 0)
             mods |= KeyMods::LeftShift;
-        if (keysym.mod & KMOD_RSHIFT)
+        if ((keysym.mod & KMOD_RSHIFT) != 0)
             mods |= KeyMods::RightShift;
-        if (keysym.mod & KMOD_LCTRL)
+        if ((keysym.mod & KMOD_LCTRL) != 0)
             mods |= KeyMods::LeftCtrl;
-        if (keysym.mod & KMOD_RCTRL)
+        if ((keysym.mod & KMOD_RCTRL) != 0)
             mods |= KeyMods::RightCtrl;
-        if (keysym.mod & KMOD_LALT)
+        if ((keysym.mod & KMOD_LALT) != 0)
             mods |= KeyMods::LeftAlt;
-        if (keysym.mod & KMOD_RALT)
+        if ((keysym.mod & KMOD_RALT) != 0)
             mods |= KeyMods::RightAlt;
-        if (keysym.mod & KMOD_LGUI)
+        if ((keysym.mod & KMOD_LGUI) != 0)
             mods |= KeyMods::LeftSuper;
-        if (keysym.mod & KMOD_RGUI)
+        if ((keysym.mod & KMOD_RGUI) != 0)
             mods |= KeyMods::RightSuper;
         return {to_virtualkey(keysym), mods};
     }

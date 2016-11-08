@@ -104,7 +104,7 @@ public:
     /// <summary>
     ///   Must be called every frame for as long as it's meant to be active.
     /// </summary>
-    void update(unsigned long dt);
+    void update(uint64_t dt);
 
 private:
     bool stopped_;

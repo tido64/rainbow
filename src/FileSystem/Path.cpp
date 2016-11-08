@@ -30,7 +30,7 @@ auto Path::extension() const -> const char*
 
 auto Path::filename() const -> const char*
 {
-    auto p = path_.find_last_of("/\\");
+    auto p = path_.find_last_of(R"(/\)");
     return p == std::string::npos ? c_str() : c_str() + p + 1;
 }
 
@@ -42,10 +42,10 @@ auto Path::cfurl() const -> CFURLRef
         reinterpret_cast<const UInt8*>(c_str()),
         path_.length(),
         kCFStringEncodingUTF8,
-        false,
+        FALSE,
         kCFAllocatorNull);
     CFURLRef url = CFURLCreateWithFileSystemPath(
-        kCFAllocatorDefault, str, kCFURLPOSIXPathStyle, false);
+        kCFAllocatorDefault, str, kCFURLPOSIXPathStyle, FALSE);
     CFRelease(str);
     return url;
 }

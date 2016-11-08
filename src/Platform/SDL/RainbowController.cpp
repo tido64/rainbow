@@ -73,7 +73,7 @@ bool RainbowController::run()
         return false;
 
     SDL_Event event;
-    while (SDL_PollEvent(&event))
+    while (SDL_PollEvent(&event) != 0)
     {
         switch (event.type)
         {
@@ -198,7 +198,7 @@ bool RainbowController::run()
 
 void RainbowController::on_controller_connected(int device_index)
 {
-    if (!SDL_IsGameController(device_index))
+    if (SDL_IsGameController(device_index) == 0)
         return;
 
     auto controller = SDL_GameControllerOpen(device_index);
@@ -214,7 +214,7 @@ void RainbowController::on_controller_disconnected(int instance_id)
         if (std::get<0>(*i) == instance_id)
         {
             auto controller = std::get<1>(*i);
-            if (SDL_GameControllerGetAttached(controller))
+            if (SDL_GameControllerGetAttached(controller) != 0)
                 SDL_GameControllerClose(controller);
 
             rainbow::quick_erase(game_controllers_, i);
@@ -242,7 +242,7 @@ void RainbowController::on_mouse_motion(uint32_t buttons,
         size_t i = 0;
         for (auto button : kMouseButtons)
         {
-            if (buttons & SDL_BUTTON(button))
+            if ((buttons & SDL_BUTTON(button)) != 0)
             {
                 p[i] = Pointer{button, point.x, point.y, timestamp};
                 ++i;

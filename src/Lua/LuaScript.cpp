@@ -36,7 +36,7 @@ void LuaScript::init_impl(const Vec2i& screen)
     input().subscribe(this);
 }
 
-void LuaScript::update_impl(unsigned long dt)
+void LuaScript::update_impl(uint64_t dt)
 {
     if (lua_.update(dt))
         terminate();

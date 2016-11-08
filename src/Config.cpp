@@ -42,23 +42,23 @@ rainbow::Config::Config()
         return;
 
     lua_getglobal(L.get(), "accelerometer");
-    if (lua_isboolean(L.get(), -1))
-        accelerometer_ = lua_toboolean(L.get(), -1);
+    if (lua::isboolean(L.get(), -1))
+        accelerometer_ = lua::toboolean(L.get(), -1);
 
 #ifdef RAINBOW_SDL
     lua_getglobal(L.get(), "allow_high_dpi");
-    if (lua_isboolean(L.get(), -1))
-        high_dpi_ = lua_toboolean(L.get(), -1);
+    if (lua::isboolean(L.get(), -1))
+        high_dpi_ = lua::toboolean(L.get(), -1);
 
     lua_getglobal(L.get(), "msaa");
-    if (lua_isnumber(L.get(), -1))
+    if (lua::isnumber(L.get(), -1))
     {
         msaa_ = std::min(floor_pow2(lua::tointeger(L.get(), -1)), kMaxMSAA);
     }
 #endif
 
     lua_getglobal(L.get(), "resolution");
-    if (lua_istable(L.get(), -1))
+    if (lua::istable(L.get(), -1))
     {
         lua_rawgeti(L.get(), -1, 1);
         width_ = lua::tointeger(L.get(), -1);
@@ -68,7 +68,7 @@ rainbow::Config::Config()
 
 #ifdef RAINBOW_SDL
     lua_getglobal(L.get(), "suspend_on_focus_lost");
-    if (lua_isboolean(L.get(), -1))
-        suspend_ = lua_toboolean(L.get(), -1);
+    if (lua::isboolean(L.get(), -1))
+        suspend_ = lua::toboolean(L.get(), -1);
 #endif
 }

@@ -42,14 +42,14 @@ auto File::open_write(const char* path) -> File
     return File{rainbow::filesystem::user(path), "wb"};
 }
 
-File::File(File&& f) : is_asset_(f.is_asset_), stream_(f.stream_)
+File::File(File&& f) noexcept : is_asset_(f.is_asset_), stream_(f.stream_)
 {
     f.stream_ = nullptr;
 }
 
 File::~File()
 {
-    if (!stream_)
+    if (stream_ == nullptr)
         return;
 
 #if defined(RAINBOW_OS_ANDROID)
@@ -80,7 +80,7 @@ auto File::read(void* dst, size_t size) -> size_t
     return fread(dst, sizeof(char), size, stream_);
 }
 
-auto File::seek(long offset, int origin) -> int
+auto File::seek(int64_t offset, int origin) -> int
 {
     return fseek(stream_, offset, origin);
 }
@@ -101,7 +101,7 @@ File::File(const Path& path) : is_asset_(true), stream_(nullptr)
 #else
     stream_ = fopen(path.c_str(), "rb");
 #endif
-    if (!stream_)
+    if (stream_ == nullptr)
         LOGE("File: Failed to open '%s'", path.c_str());
 }
 

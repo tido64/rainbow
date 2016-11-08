@@ -60,7 +60,7 @@ DataMapWin::DataMapWin(const Path& path)
     CloseHandle(fh);
 }
 
-DataMapWin::DataMapWin(DataMapWin&& data)
+DataMapWin::DataMapWin(DataMapWin&& data) noexcept
     : len_(data.len_), off_(data.off_), addr_(data.addr_), handle_(data.handle_)
 {
     data.len_ = 0;

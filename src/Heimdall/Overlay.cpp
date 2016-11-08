@@ -11,7 +11,6 @@
 
 using heimdall::Overlay;
 using rainbow::KeyStroke;
-using rainbow::Rect;
 using rainbow::SceneNode;
 
 namespace graphics = rainbow::graphics;
@@ -71,7 +70,7 @@ void Overlay::draw_impl()
     ImGui::Render();
 }
 
-void Overlay::update_impl(unsigned long dt)
+void Overlay::update_impl(uint64_t dt)
 {
     frame_times_.pop_front();
     frame_times_.push_back(dt);

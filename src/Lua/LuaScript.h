@@ -27,7 +27,7 @@ private:
     // rainbow::GameBase implementation details.
 
     void init_impl(const Vec2i& screen) override;
-    void update_impl(unsigned long) override;
+    void update_impl(uint64_t) override;
     void on_memory_warning_impl() override;
 
     // InputListener implementation details.

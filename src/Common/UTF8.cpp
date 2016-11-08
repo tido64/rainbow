@@ -50,13 +50,14 @@ namespace rainbow
         const uint8_t reject = state >> 3;
         const uint8_t nonascii = octet >> 7;
         const uint8_t klass =
-            (!nonascii ? 0 : (0xf & (utf8_classtab[(octet >> 3) & 0xf] >>
-                                     (4 * (octet & 7)))));
+            (nonascii == 0 ? 0 : (0xf & (utf8_classtab[(octet >> 3) & 0xf] >>
+                                         (4 * (octet & 7)))));
 
         *cpp = (state == kUTF8Accept ? (octet & (0xffU >> klass))
                                      : ((octet & 0x3fU) | (*cpp << 6)));
 
-        return (reject ? kUTF8Reject
-                       : (0xf & (utf8_statetab[klass] >> (4 * (state & 7)))));
+        return reject != 0
+                   ? kUTF8Reject
+                   : (0xf & (utf8_statetab[klass] >> (4 * (state & 7))));
     }
 }

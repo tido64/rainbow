@@ -99,7 +99,7 @@ auto AppleAudioFile::read(void* dst, size_t size) -> size_t
     return frames * format_.mBytesPerFrame;
 }
 
-auto AppleAudioFile::seek(long offset, int) -> int
+auto AppleAudioFile::seek(int64_t offset, int) -> int
 {
     return ExtAudioFileSeek(ref_, offset);
 }

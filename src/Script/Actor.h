@@ -82,7 +82,7 @@ namespace rainbow
         void show() { render_component()->show(); }
 
         /// <summary>Called every frame update.</summary>
-        void update(unsigned long dt)
+        void update(uint64_t dt)
         {
             if (!is_enabled())
                 return;

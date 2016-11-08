@@ -79,7 +79,7 @@ namespace rainbow
         void terminate(const char* error) { director_.terminate(error); }
 
         void init(const Vec2i& screen_size) { init_impl(screen_size); }
-        void update(unsigned long dt) { update_impl(dt); }
+        void update(uint64_t dt) { update_impl(dt); }
         void on_memory_warning() { on_memory_warning_impl(); }
 
     protected:
@@ -89,7 +89,7 @@ namespace rainbow
         Director& director_;
 
         virtual void init_impl(const Vec2i&) {}
-        virtual void update_impl(unsigned long) {}
+        virtual void update_impl(uint64_t) {}
         virtual void on_memory_warning_impl() {}
     };
 }

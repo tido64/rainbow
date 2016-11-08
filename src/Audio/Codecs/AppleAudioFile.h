@@ -31,7 +31,7 @@ namespace rainbow { namespace audio
 
         auto size() const -> size_t override;
         auto read(void*, size_t) -> size_t override;
-        auto seek(long, int) -> int override;
+        auto seek(int64_t, int) -> int override;
         auto write(const void*, size_t) -> size_t override { return 0; }
         explicit operator bool() const override { return ref_ != nullptr; }
 

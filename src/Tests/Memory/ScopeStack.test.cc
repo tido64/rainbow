@@ -34,9 +34,9 @@ namespace
 
 TEST(LinearAllocatorTest, AlignedSizeFitsAnyType)
 {
-    for (size_t size : {sizeof(char),
-                        sizeof(short),
-                        sizeof(int),
+    for (size_t size : {sizeof(int8_t),
+                        sizeof(int16_t),
+                        sizeof(int32_t),
                         sizeof(double),
                         sizeof(LinearAllocator),
                         sizeof(ScopeStack),

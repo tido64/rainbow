@@ -5,6 +5,8 @@
 #ifndef LUA_LUAMACHINE_H_
 #define LUA_LUAMACHINE_H_
 
+#include <cstdint>
+
 #include "Common/NonCopyable.h"
 #include "Common/Passkey.h"
 
@@ -35,7 +37,7 @@ namespace rainbow
         auto start(const Data& main) -> int;
 
         /// <summary>Calls game update function.</summary>
-        auto update(unsigned long t) -> int;
+        auto update(uint64_t t) -> int;
 
         operator lua_State*() const { return state_; }
 

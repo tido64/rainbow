@@ -46,7 +46,7 @@ namespace xorshift
         // This is the jump function for the generator. It is equivalent
         // to 2^512 calls to next(); it can be used to generate 2^512
         // non-overlapping subsequences for parallel computations.
-        void discard(unsigned long long)
+        void discard(uint64_t)
         {
             uint64_t t[16]{};
             for (auto i : kJump)

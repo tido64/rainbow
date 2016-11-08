@@ -15,8 +15,7 @@ namespace rainbow { namespace graphics
     {
     public:
         Buffer();
-        explicit Buffer(const rainbow::ISolemnlySwearThatIAmOnlyTesting&);
-        Buffer(Buffer&&);
+        Buffer(Buffer&&) noexcept;
         ~Buffer();
 
         /// <summary>
@@ -32,6 +31,13 @@ namespace rainbow { namespace graphics
         ///   the GPU buffer.
         /// </summary>
         void upload(const void* data, size_t size) const;
+
+#ifdef RAINBOW_TEST
+        explicit Buffer(const rainbow::ISolemnlySwearThatIAmOnlyTesting&)
+            : id_(0)
+        {
+        }
+#endif
 
     private:
         unsigned int id_;

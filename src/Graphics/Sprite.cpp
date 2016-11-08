@@ -179,14 +179,14 @@ auto Sprite::update(const ArraySpan<SpriteVertex>& vertex_array,
         return true;
     }
 
-    if (state_ & kStaleBuffer)
+    if ((state_ & kStaleBuffer) != 0)
     {
-        if (state_ & kStalePosition)
+        if ((state_ & kStalePosition) != 0)
             center_ = position_;
 
         rainbow::transform(*this, vertex_array);
     }
-    else if (state_ & kStalePosition)
+    else if ((state_ & kStalePosition) != 0)
     {
         position_ -= center_;
         vertex_array[0].position += position_;
@@ -197,7 +197,7 @@ auto Sprite::update(const ArraySpan<SpriteVertex>& vertex_array,
         position_ = center_;
     }
 
-    if (state_ & kStaleTexture)
+    if ((state_ & kStaleTexture) != 0)
     {
         const unsigned int f = flip_index(state_);
         const auto& tx = texture[texture_];
@@ -228,7 +228,7 @@ auto Sprite::update(const ArraySpan<Vec2f>& normal_array,
     return true;
 }
 
-auto Sprite::operator=(Sprite&& s) -> Sprite&
+auto Sprite::operator=(Sprite&& s) noexcept -> Sprite&
 {
     state_ = s.state_ | kStaleMask;
     center_ = s.center_;

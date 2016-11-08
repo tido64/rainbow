@@ -119,6 +119,42 @@ NS_RAINBOW_LUA_BEGIN
         return 0;
     }
 
+    /// <summary>
+    ///   Returns <c>true</c> if the value at the given index is a boolean, and
+    ///   <c>false</c> otherwise.
+    /// </summary>
+    inline auto isboolean(lua_State* L, int index)
+    {
+        return lua_isboolean(L, index) != 0;
+    }
+
+    /// <summary>
+    ///   Returns <c>true</c> if the value at the given index is a number or a
+    ///   string convertible to a number, and <c>false</c> otherwise.
+    /// </summary>
+    inline auto isnumber(lua_State* L, int index)
+    {
+        return lua_isnumber(L, index) != 0;
+    }
+
+    /// <summary>
+    ///   Returns <c>true</c> if the value at the given index is a table, and
+    ///   <c>false</c> otherwise.
+    /// </summary>
+    inline auto istable(lua_State* L, int index)
+    {
+        return lua_istable(L, index) != 0;
+    }
+
+    /// <summary>
+    ///   Returns <c>true</c> if the value at the given index is a userdata
+    ///   (either full or light), and <c>false</c> otherwise.
+    /// </summary>
+    inline auto isuserdata(lua_State* L, int index)
+    {
+        return lua_isuserdata(L, index) != 0;
+    }
+
     /// <summary>Custom Lua package loader.</summary>
     auto load(lua_State* L) -> int;
 
@@ -251,6 +287,15 @@ NS_RAINBOW_LUA_BEGIN
     /// <summary>Sets debugging hook.</summary>
     void sethook(lua_State* L,
                  int mask = LUA_MASKCALL | LUA_MASKRET | LUA_MASKLINE);
+
+    /// <summary>
+    ///   Converts the Lua value at the given acceptable index to a boolean
+    ///   value.
+    /// </summary>
+    inline auto toboolean(lua_State* L, int index)
+    {
+        return lua_toboolean(L, index) != 0;
+    }
 
     /// <summary>
     ///   Returns the value returned from <see cref="luaL_checkinteger"/> or

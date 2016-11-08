@@ -10,7 +10,7 @@
 #include "Graphics/SpriteBatch.h"
 
 // clang-format off
-#define S0(i)  (i) * 4
+#define S0(i)  ((i) * 4)
 #define S1(i)  S0(i), S0(i) + 1, S0(i) + 2, S0(i) + 2, S0(i) + 3, S0(i)
 
 #define S4(i)        S1((i)),    S1((i) +    1),    S1((i) +    2),    S1((i) +    3)
@@ -215,7 +215,7 @@ auto graphics::convert_to_view(const Vec2i& p) -> Vec2i
 bool graphics::has_extension(const char* extension)
 {
     static auto gl_extensions = gl_get_string(GL_EXTENSIONS);
-    return strstr(gl_extensions, extension);
+    return strstr(gl_extensions, extension) != nullptr;
 }
 
 void graphics::reset()
@@ -271,7 +271,7 @@ bool State::initialize()
     if (!shader_manager.init())
         return false;
 
-    const unsigned short kDefaultIndices[]{S4096(0)};
+    const uint16_t kDefaultIndices[]{S4096(0)};
     static_assert(
         sizeof(kDefaultIndices) == kMaxSprites * 6 * sizeof(kDefaultIndices[0]),
         "Number of indices do not match set number of sprites");

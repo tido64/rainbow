@@ -23,7 +23,7 @@ namespace rainbow
             next_ = next;
         }
 
-        void update(StateComponent& component, Actor& actor, unsigned long dt)
+        void update(StateComponent& component, Actor& actor, uint64_t dt)
         {
             update_impl(component, actor, dt);
         }
@@ -47,7 +47,7 @@ namespace rainbow
     private:
         IState* next_;
 
-        virtual void update_impl(StateComponent&, Actor&, unsigned long dt) = 0;
+        virtual void update_impl(StateComponent&, Actor&, uint64_t dt) = 0;
         virtual void on_enter_impl(StateComponent&, Actor&) {}
         virtual void on_exit_impl(StateComponent&, Actor&) {}
         virtual auto to_string_impl() const -> const char* = 0;
@@ -153,7 +153,7 @@ namespace rainbow
 
         void initialize_impl(Actor& actor) override { actor_ = &actor; }
 
-        void update_impl(unsigned long dt) override
+        void update_impl(uint64_t dt) override
         {
             state()->update(*this, actor(), dt);
         }

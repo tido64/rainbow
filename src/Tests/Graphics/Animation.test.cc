@@ -15,7 +15,7 @@ namespace rainbow
 namespace
 {
     constexpr size_t kNumFrames = 4;
-    constexpr unsigned long kFrameTime = 1000 / kNumFrames;
+    constexpr uint64_t kFrameTime = 1000 / kNumFrames;
 
     class AnimationTest : public ::testing::Test
     {

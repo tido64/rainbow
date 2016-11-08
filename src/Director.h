@@ -54,7 +54,7 @@ namespace rainbow
 
         /// <summary>Updates world.</summary>
         /// <param name="dt">Milliseconds since last frame.</param>
-        void update(unsigned long dt);
+        void update(uint64_t dt);
 
         void on_focus_gained();
         void on_focus_lost();

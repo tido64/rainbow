@@ -89,7 +89,7 @@ namespace
             render->set_draw_list(cmd_list);
             for (auto&& cmd : cmd_list->CmdBuffer)
             {
-                if (cmd.UserCallback)
+                if (cmd.UserCallback != nullptr)
                 {
                     cmd.UserCallback(cmd_list, &cmd);
                 }
@@ -175,7 +175,7 @@ namespace rainbow { namespace imgui
             static_cast<intptr_t>(renderable->texture()));
     }
 
-    bool new_frame(unsigned long dt)
+    bool new_frame(uint64_t dt)
     {
         auto& window_size = graphics::window_size();
         auto& io = ImGui::GetIO();

@@ -31,7 +31,7 @@ namespace rainbow { namespace imgui
         ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings;
 
     void init();
-    bool new_frame(unsigned long dt);
+    bool new_frame(uint64_t dt);
     bool set_key_state(const KeyStroke& key, bool down);
     bool set_mouse_state(const ArrayView<Pointer>& pointers);
     bool set_mouse_state(const ArrayView<Pointer>& pointers, bool down);

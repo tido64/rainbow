@@ -28,7 +28,7 @@ void OverlayActivator::reset()
     shortcut_primed_ = 0;
 }
 
-void OverlayActivator::update(unsigned long dt)
+void OverlayActivator::update(uint64_t dt)
 {
     if (resistance_ == 0)
     {

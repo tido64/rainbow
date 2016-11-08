@@ -17,21 +17,21 @@ namespace rainbow
         void initialize(Actor& actor) { initialize_impl(actor); }
 
         /// <summary>Called every frame update.</summary>
-        void update(unsigned long dt) { update_impl(dt); }
+        void update(uint64_t dt) { update_impl(dt); }
 
     protected:
         ~IScriptComponent() = default;
 
     private:
         virtual void initialize_impl(Actor&) = 0;
-        virtual void update_impl(unsigned long dt) = 0;
+        virtual void update_impl(uint64_t dt) = 0;
     };
 
     class DummyScriptComponent final : public IScriptComponent
     {
     private:
         void initialize_impl(Actor&) override {}
-        void update_impl(unsigned long) override {}
+        void update_impl(uint64_t) override {}
     };
 }
 

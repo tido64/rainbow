@@ -40,7 +40,7 @@ namespace heimdall
         void init(const Vec2i& screen);
         void terminate() { director_.terminate(); }
         void terminate(const char* error) { director_.terminate(error); }
-        void update(unsigned long dt);
+        void update(uint64_t dt);
 
         void on_focus_gained() { director_.on_focus_gained(); }
         void on_focus_lost() { director_.on_focus_lost(); }
