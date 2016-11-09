@@ -1,0 +1,18 @@
+image: ubuntu:16.10
+pipelines:
+  default:
+    - step:
+        script:
+          - apt-get update
+          - apt-get --assume-yes install cmake g++ git libgl1-mesa-dev libopenal-dev libsdl2-dev libvorbis-dev ninja-build
+          - git submodule update --init
+          - mkdir out-lua-debug && cd out-lua-debug
+          - ../tools/build.sh -DCMAKE_BUILD_TYPE=Debug -DUNIT_TESTS=1 -DUSE_HEIMDALL=1 -DUSE_PHYSICS=1 -DUSE_SPINE=1
+          - ./rainbow --gtest_filter=-AudioTest*
+          - cd .. && mkdir out-lua-release && cd out-lua-release
+          - ../tools/build.sh -DCMAKE_BUILD_TYPE=Release -DUSE_HEIMDALL=1 -DUSE_PHYSICS=1 -DUSE_SPINE=1
+          - cd .. && mkdir out-cpp-debug && cd out-cpp-debug
+          - ../tools/build.sh -DCMAKE_BUILD_TYPE=Debug -DUNIT_TESTS=1 -DUSE_HEIMDALL=1 -DUSE_LUA_SCRIPT=0 -DUSE_PHYSICS=1 -DUSE_SPINE=1
+          - ./rainbow --gtest_filter=-AudioTest*
+          - cd .. && mkdir out-cpp-release && cd out-cpp-release
+          - ../tools/build.sh -DCMAKE_BUILD_TYPE=Release -DUSE_HEIMDALL=1 -DUSE_LUA_SCRIPT=0 -DUSE_PHYSICS=1 -DUSE_SPINE=1
