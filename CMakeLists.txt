@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.4.3)
 
 project(Rainbow)
 set(LOCAL_MODULE_PATH ${PROJECT_SOURCE_DIR}/build/cmake)
@@ -202,6 +202,8 @@ if(ANDROID)
        src/Common/impl/DataMap_Android.cpp
        src/Common/impl/DataMap_Android.h
        src/Platform/Android/main.cpp
+       # Workaround for https://github.com/android-ndk/ndk/issues/184
+       src/Platform/Android/mulodi4.c
        src/Platform/impl/SystemInfo_Android.cpp
        src/Platform/impl/SystemInfo_Unix.cpp)
 else()
@@ -371,7 +373,11 @@ foreach(src IN LISTS SOURCE_FILES)
         APPEND PROPERTY COMPILE_DEFINITIONS "SRC_FILE=\"${src_file}\"")
   endif()
 endforeach()
-add_executable(rainbow ${SOURCE_FILES})
+if(ANDROID)
+  add_library(rainbow SHARED ${SOURCE_FILES})
+else()
+  add_executable(rainbow ${SOURCE_FILES})
+endif()
 
 # IDE project source file groups
 if(MSVC OR XCODE)

@@ -22,6 +22,7 @@ public class RainbowActivity extends NativeActivity
         System.loadLibrary("c++_shared");
         System.loadLibrary("fmod");
         System.loadLibrary("fmodstudio");
+        System.loadLibrary("rainbow");
     }
 
     // region NativeActivity overrides

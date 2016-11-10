@@ -2,8 +2,6 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
-#include "Platform/Macros.h"
-
 #include <memory>
 
 #include <EGL/egl.h>

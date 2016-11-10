@@ -3,31 +3,33 @@
 # Distributed under the MIT License.
 # (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
-APP_ID="com.bifrostentertainment.rainbow"
-BUILD_TOOLS_VERSION=24.0.2
-GRADLE_VERSION=2.10
+APP_NAME=${APP_NAME:-Rainbow}
+APP_ID=com.bifrostentertainment.rainbow
+BUILD_TOOLS_VERSION=${BUILD_TOOLS_VERSION:-25.0.0}
+GRADLE_ANDROID_PLUGIN_VERSION=${GRADLE_ANDROID_PLUGIN_VERSION:-2.2.2}
+GRADLE_VERSION=${GRADLE_VERSION:-2.14.1}
 MIN_SDK_VERSION=${MIN_SDK_VERSION:-15}
-TARGET_SDK_VERSION=${TARGET_SDK_VERSION:-22}
+TARGET_SDK_VERSION=${TARGET_SDK_VERSION:-23}
 
+APP_MODULE=app
 PROJECT=$(cd -P "$(dirname $0)/.." && pwd)
-TARGET=rainbow
 
 # Auto-generate files
 pushd $PROJECT > /dev/null
 tools/shaders-gen.py
 popd > /dev/null
 
-echo -n "Removing stale files…"
-rm -fr .gradle .idea build build.gradle* gradle gradlew gradlew.bat local.properties src *.iml
+echo -n "Removing stale files..."
+rm -fr *.iml .gradle .idea $APP_MODULE build build.gradle gradle gradlew gradlew.bat local.properties settings.gradle src
 echo " done"
 
-echo -n "Generating project files…"
+echo -n "Generating project files..."
 android --silent create project \
-        --name "Rainbow" \
+        --name "$APP_NAME" \
         --activity "RainbowActivity" \
-        --package "$APP_ID" \
-        --gradle-version 1.5.+ \
-        --target "android-$TARGET_SDK_VERSION" \
+        --package $APP_ID \
+        --gradle-version $GRADLE_ANDROID_PLUGIN_VERSION \
+        --target android-$TARGET_SDK_VERSION \
         --gradle \
         --path . \
     || exit 1
@@ -38,16 +40,17 @@ sed -e 's/http\\/https\\/' -i '' gradle/wrapper/gradle-wrapper.properties
 
 # Add ndk.dir to local.properties
 echo $(sed -e '$!d' -e 's/sdk.dir/ndk.dir/' local.properties)/ndk-bundle >> local.properties
-NATIVE_APP_GLUE=$(sed -e '$!d' -e 's/ndk.dir=//' local.properties)/sources/android/native_app_glue
 
 # Configure project
 cat > build.gradle << BUILD_GRADLE
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
 buildscript {
     repositories {
         jcenter()
     }
     dependencies {
-        classpath "com.android.tools.build:gradle-experimental:0.7.2"
+        classpath 'com.android.tools.build:gradle:$GRADLE_ANDROID_PLUGIN_VERSION'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -60,139 +63,76 @@ allprojects {
     }
 }
 
-apply plugin: "com.android.model.application"
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
+BUILD_GRADLE
 
-model {
-    repositories {
-        prebuilt(PrebuiltLibraries) {
-            fmod {
-                binaries.withType(SharedLibraryBinary) {
-                    sharedLibraryFile = file("$PROJECT/lib/FMOD/lib/android/\${targetPlatform.getName()}/libfmod.so")
-                }
-            }
-            fmodstudio {
-                binaries.withType(SharedLibraryBinary) {
-                    sharedLibraryFile = file("$PROJECT/lib/FMOD/lib/android/\${targetPlatform.getName()}/libfmodstudio.so")
-                }
+mkdir $APP_MODULE
+cat > $APP_MODULE/build.gradle << APP_BUILD_GRADLE
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion $TARGET_SDK_VERSION
+    buildToolsVersion '$BUILD_TOOLS_VERSION'
+    defaultConfig {
+        applicationId '$APP_ID'
+        minSdkVersion $MIN_SDK_VERSION
+        targetSdkVersion $TARGET_SDK_VERSION
+        versionCode 1
+        versionName '1.0'
+        externalNativeBuild {
+            cmake {
+                abiFilters 'armeabi-v7a'
+                arguments '-DANDROID_ARM_NEON=TRUE', '-DANDROID_PLATFORM=android-$TARGET_SDK_VERSION', '-DANDROID_STL=c++_shared'
             }
         }
     }
-    android {
-        compileSdkVersion $TARGET_SDK_VERSION
-        buildToolsVersion '$BUILD_TOOLS_VERSION'
-
-        defaultConfig {
-            applicationId '$APP_ID'
-            minSdkVersion.apiLevel $MIN_SDK_VERSION
-            targetSdkVersion.apiLevel $TARGET_SDK_VERSION
-            versionCode 1
-            versionName '1.0'
-        }
-        buildTypes {
-            release {
-                minifyEnabled = false
-                ndk { debuggable true }
-                proguardFiles.add(file('proguard-rules.pro'))
-            }
-        }
-        ndk {
-            moduleName 'rainbow'
-            toolchain 'clang'
-            CFlags.addAll([
-                '-std=c11',
-                '-w',
-                '-I$PROJECT/src/ThirdParty/FreeType',
-                '-I$PROJECT/src/ThirdParty/libpng',
-                '-I$PROJECT/lib',
-                '-I$PROJECT/lib/FreeType/include',
-                '-I$PROJECT/lib/FreeType/src',
-                '-I$PROJECT/lib/Lua',
-                '-I$PROJECT/lib/libpng',
-                '-I$PROJECT/lib/nanosvg/src',
-                '-I$PROJECT/lib/spine-runtimes/spine-c/include',
-                '-I$NATIVE_APP_GLUE',
-            ])
-            cppFlags.addAll([
-                '-std=c++14',
-                '-Wall',
-                '-Wextra',
-                '-Woverloaded-virtual',
-                '-Wsign-promo',
-                '-I$PROJECT/src',
-                '-I$PROJECT/src/ThirdParty/FreeType',
-                '-I$PROJECT/src/ThirdParty/libpng',
-                '-I$PROJECT/lib',
-                '-I$PROJECT/lib/box2d/Box2D',
-                '-I$PROJECT/lib/FMOD/inc',
-                '-I$PROJECT/lib/FreeType/include',
-                '-I$PROJECT/lib/Lua',
-                '-I$PROJECT/lib/libpng',
-                '-I$PROJECT/lib/nanosvg/src',
-                '-I$PROJECT/lib/spine-runtimes/spine-c/include',
-                '-I$NATIVE_APP_GLUE',
-                '-DRAINBOW_AUDIO_FMOD=1',
-                '$@',
-                '-fno-rtti',
-                '-fno-exceptions',
-            ])
-            ldLibs.addAll(['android', 'EGL', 'GLESv2', 'log', 'z'])
-            stl 'c++_shared'
-        }
-        productFlavors {
-            create('arm') {
-                ndk {
-                    abiFilters.add('armeabi-v7a')
-                }
-            }
-            //create('fat')
-        }
-        sources {
-            main {
-                jni {
-                    dependencies {
-                        library 'fmod'
-                        library 'fmodstudio'
-                    }
-                }
-            }
+    buildTypes {
+        release {
+            minifyEnabled = false
+            ndk { debuggable true }
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    android.lintOptions {
+    externalNativeBuild {
+        cmake {
+            path '$PROJECT/CMakeLists.txt'
+        }
+    }
+    lintOptions {
         disable 'GoogleAppIndexingWarning'
+    }
+    sourceSets {
+        main {
+            assets.srcDirs = ['src/main/assets']
+            jniLibs.srcDirs = ['$PROJECT/lib/FMOD/lib/android']
+        }
     }
 }
 
 dependencies {
-    compile fileTree(dir: 'src/main/jniLibs', include: ['*.jar'])
+    compile fileTree(dir: 'libs', include: ['*.jar'])
 }
+APP_BUILD_GRADLE
 
-task wrapper(type: Wrapper) {
-    gradleVersion = '$GRADLE_VERSION'
-}
-BUILD_GRADLE
+echo "include ':$APP_MODULE'" > settings.gradle
 echo " done"
 
-echo -n "Gathering source files…"
-SOURCE_FILES=$(cmake -DANDROID=1 $@ -L $PROJECT | grep SOURCE_FILES | sed -e 's/^SOURCE_FILES:STRING=//' -e 's/[^;]*\.h;//g' -e 's/;/ /g')
-SOURCE_FILES=${SOURCE_FILES//$PROJECT\//}
-rm -fr CMakeCache.txt CMakeFiles Makefile cmake_install.cmake
-mkdir src/main/jni
-for file in $SOURCE_FILES; do
-  ln -s $PROJECT/$file src/main/jni/
-done
-ln -s $NATIVE_APP_GLUE/android_native_app_glue.c src/main/jni/
+echo -n "Gathering source files..."
+mkdir src/main/cpp
 
 # Replace placeholder RainbowActivity with real implementation
 MODULE_PATH=${APP_ID//./\/}
-rm src/main/java/$MODULE_PATH/RainbowActivity.java
-ln -s $PROJECT/src/Platform/Android/RainbowActivity.java src/main/java/$MODULE_PATH/
+cp $PROJECT/src/Platform/Android/RainbowActivity.java src/main/java/$MODULE_PATH/
 
 # Link third-party libraries
-mkdir -p src/main/jniLibs
-ln -s $PROJECT/lib/FMOD/lib/android/fmod.jar src/main/jniLibs/
+APP_MODULE_LIBS=$APP_MODULE/libs
+mkdir -p $APP_MODULE_LIBS
+ln -s $PROJECT/lib/FMOD/lib/android/fmod.jar $APP_MODULE_LIBS/
 echo " done"
 
-echo -n "Generating src/main/AndroidManifest.xml…"
+echo -n "Generating $APP_MODULE/src/main/AndroidManifest.xml..."
 cat > src/main/AndroidManifest.xml << ANDROIDMANIFEST_XML
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
@@ -223,7 +163,7 @@ cat > src/main/AndroidManifest.xml << ANDROIDMANIFEST_XML
 ANDROIDMANIFEST_XML
 echo " done"
 
-echo -n "Generating src/main/res/values/themes.xml…"
+echo -n "Generating $APP_MODULE/src/main/res/values/themes.xml..."
 mkdir -p src/main/res/values
 cat > src/main/res/values/themes.xml << THEMES_XML
 <?xml version="1.0" encoding="utf-8"?>
@@ -233,7 +173,7 @@ cat > src/main/res/values/themes.xml << THEMES_XML
 THEMES_XML
 echo " done"
 
-echo -n "Generating src/main/res/values-v11/themes.xml…"
+echo -n "Generating $APP_MODULE/src/main/res/values-v11/themes.xml..."
 mkdir -p src/main/res/values-v11
 cat > src/main/res/values-v11/themes.xml << THEMES_XML
 <?xml version="1.0" encoding="utf-8"?>
@@ -243,9 +183,10 @@ cat > src/main/res/values-v11/themes.xml << THEMES_XML
 THEMES_XML
 echo " done"
 
-echo -n "Removing unused resources…"
+echo -n "Removing unused resources..."
 rm src/main/res/layout/main.xml
 rmdir src/main/res/layout
+mv src $APP_MODULE/
 echo " done"
 
 ./gradlew

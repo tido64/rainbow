@@ -31,7 +31,9 @@ extern ANativeActivity* g_native_activity;
 
 namespace
 {
+#ifndef RAINBOW_OS_ANDROID
     constexpr char kUserDataPath[] = kPathSeparator "user";
+#endif
 
     std::string g_current_path;
 }
