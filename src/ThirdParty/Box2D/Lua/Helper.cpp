@@ -23,7 +23,7 @@ namespace b2
     bool gettable<bool>(lua_State* L, const char* field, size_t length)
     {
         getfield(L, field, length);
-        const bool b = lua_toboolean(L, -1);
+        const bool b = rainbow::lua::toboolean(L, -1);
         lua_pop(L, 1);
         return b;
     }

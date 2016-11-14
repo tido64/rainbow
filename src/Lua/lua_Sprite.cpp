@@ -42,7 +42,7 @@ NS_RAINBOW_LUA_BEGIN
     int Sprite::get_color(lua_State* L)
     {
         Sprite* self = Bind::self(L);
-        if (!self)
+        if (self == nullptr)
             return 0;
 
         const Colorb& c = self->sprite_->color();
@@ -77,7 +77,7 @@ NS_RAINBOW_LUA_BEGIN
     int Sprite::get_size(lua_State* L)
     {
         Sprite* self = Bind::self(L);
-        if (!self)
+        if (self == nullptr)
             return 0;
 
         lua_pushnumber(L, self->sprite_->width());
@@ -95,7 +95,7 @@ NS_RAINBOW_LUA_BEGIN
                   nil_or<lua_Number>>(L);
 
         Sprite* self = Bind::self(L);
-        if (!self)
+        if (self == nullptr)
             return 0;
 
         const Colorb color(
@@ -145,7 +145,7 @@ NS_RAINBOW_LUA_BEGIN
         checkargs<Sprite, lua_Number, nil_or<lua_Number>>(L);
 
         Sprite* self = Bind::self(L);
-        if (!self)
+        if (self == nullptr)
             return 0;
 
         const float fx = lua_tonumber(L, 2);
@@ -164,7 +164,7 @@ NS_RAINBOW_LUA_BEGIN
     int Sprite::mirror(lua_State* L)
     {
         Sprite* self = Bind::self(L);
-        if (!self)
+        if (self == nullptr)
             return 0;
 
         self->sprite_->mirror();

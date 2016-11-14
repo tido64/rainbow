@@ -77,7 +77,7 @@ NS_B2_LUA_BEGIN
         for (int i = 0; i < b2Shape::e_typeCount; ++i)
         {
             void* ud = luaL_testudata(L, -1, kShapeTypes[i]);
-            if (ud)
+            if (ud != nullptr)
             {
                 switch (i)
                 {

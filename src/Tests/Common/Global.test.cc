@@ -17,7 +17,7 @@ namespace
     class GlobalObject : public Global<GlobalObject>
     {
     public:
-        GlobalObject(InitStatus status)
+        explicit GlobalObject(InitStatus status)
         {
             if (status == InitStatus::Success)
                 make_global();

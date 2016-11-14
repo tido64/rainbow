@@ -39,7 +39,7 @@ namespace b2
           prev_r(bd->angle) {}
 
     StableWorld::StableWorld(float gx, float gy)
-        : b2World(b2Vec2(gx, gy)), elapsed_(0.0)
+        : b2World(b2Vec2(gx, gy)), elapsed_(0.0), debug_draw_(nullptr)
     {
         SetAutoClearForces(false);  // TODO: Needed?
     }
@@ -48,11 +48,11 @@ namespace b2
 
     void StableWorld::SetDebugDraw(b2Draw* debugDraw)
     {
-        if (debug_draw_)
+        if (debug_draw_ != nullptr)
             debug_draw_->Remove(this);
         b2World::SetDebugDraw(debugDraw);
         debug_draw_ = static_cast<DebugDraw*>(debugDraw);
-        if (debug_draw_)
+        if (debug_draw_ != nullptr)
             debug_draw_->Add(this);
     }
 

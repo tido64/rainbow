@@ -138,6 +138,16 @@ NS_RAINBOW_LUA_BEGIN
     }
 
     /// <summary>
+    ///   Returns <c>true</c> if the value at the given index is a string or a
+    ///   number (which is always convertible to a string), and <c>false</c>
+    ///   otherwise.
+    /// </summary>
+    inline auto isstring(lua_State* L, int index)
+    {
+        return lua_isstring(L, index) != 0;
+    }
+
+    /// <summary>
     ///   Returns <c>true</c> if the value at the given index is a table, and
     ///   <c>false</c> otherwise.
     /// </summary>

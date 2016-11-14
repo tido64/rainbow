@@ -17,7 +17,7 @@ NS_RAINBOW_LUA_MODULE_BEGIN(shaders)
         static const char class_name[];
         static const luaL_Reg functions[];
 
-        explicit Diffuse(lua_State* L) : lighting_(lua_toboolean(L, 1)) {}
+        explicit Diffuse(lua_State* L) : lighting_(toboolean(L, 1)) {}
 
         const rainbow::shaders::Diffuse* get() const { return &lighting_; }
 
@@ -61,7 +61,7 @@ int rainbow::lua::shaders::Diffuse::set_cutoff(lua_State* L)
     checkargs<Diffuse, lua_Number>(L);
 
     Diffuse* self = Bind::self(L);
-    if (!self)
+    if (self == nullptr)
         return 0;
 
     self->lighting_.set_cutoff(lua_tonumber(L, 2));
@@ -74,7 +74,7 @@ int rainbow::lua::shaders::Diffuse::set_radius(lua_State* L)
     checkargs<Diffuse, lua_Number>(L);
 
     Diffuse* self = Bind::self(L);
-    if (!self)
+    if (self == nullptr)
         return 0;
 
     self->lighting_.set_radius(lua_tonumber(L, 2));
@@ -87,7 +87,7 @@ int rainbow::lua::shaders::Diffuse::set_position(lua_State* L)
     checkargs<Diffuse, lua_Number, lua_Number, nil_or<lua_Number>>(L);
 
     Diffuse* self = Bind::self(L);
-    if (!self)
+    if (self == nullptr)
         return 0;
 
     self->lighting_.set_position(lua_tonumber(L, 2),

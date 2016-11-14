@@ -25,7 +25,7 @@ NS_B2_LUA_BEGIN
 
     CircleShape::CircleShape(lua_State* L) : is_owner_(false)
     {
-        if (lua_isuserdata(L, -1))
+        if (rainbow::lua::isuserdata(L, -1))
             circle_.reset(static_cast<b2CircleShape*>(lua_touserdata(L, -1)));
         else
         {

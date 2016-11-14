@@ -61,7 +61,7 @@ namespace
         size_t num_vertices = 0;
         TextureAtlas* texture = nullptr;
         for_each(skeleton, [&num_vertices, &texture](const spSlot* slot) {
-            if (!slot->attachment)
+            if (slot->attachment == nullptr)
                 return;
             switch (slot->attachment->type)
             {
@@ -90,7 +90,7 @@ namespace
                 }
             }
         });
-        if (atlas)
+        if (atlas != nullptr)
             *atlas = texture;
         return num_vertices;
     }
@@ -137,13 +137,14 @@ namespace
         lua_insert(sk->state(), -2);
         lua_pushinteger(sk->state(), track);
         int nargs = 3;
-        if (event)
+        if (event != nullptr)
         {
             R_ASSERT(type == SP_ANIMATION_EVENT,
                      "Should only occur on animation events");
 
-            lua_pushstring(sk->state(),
-                           (!event->data ? nullptr : event->data->name));
+            lua_pushstring(
+                sk->state(),
+                (event->data == nullptr ? nullptr : event->data->name));
             ++nargs;
         }
         lua_pushinteger(sk->state(), loop_count);
@@ -213,7 +214,7 @@ extern "C"
     {
         const DataMap data{rainbow::filesystem::relative(path)};
         *length = static_cast<int>(data.size());
-        char* blob = new char[data.size()];
+        auto blob = new char[data.size()];
         memcpy(blob, data.data(), data.size());
         return blob;
     }
@@ -227,7 +228,7 @@ auto Skeleton::from_json(const char* path, float scale) -> Skeleton*
     if (*ext != '.')
     {
         ext = strrchr(path, '.');
-        if (!ext)
+        if (ext == nullptr)
             ext = path + length;
     }
     const std::string atlas_path = std::string{path, ext} + ".atlas";
@@ -236,7 +237,7 @@ auto Skeleton::from_json(const char* path, float scale) -> Skeleton*
     json->scale = scale;
     spSkeletonData* data = spSkeletonJson_readSkeletonDataFile(json, path);
     spSkeletonJson_dispose(json);
-    if (!data)
+    if (data == nullptr)
     {
         LOGE("Spine: %s", json->error);
         return nullptr;
@@ -310,7 +311,7 @@ void Skeleton::clear_tracks()
 auto Skeleton::get_current_animation(int track) -> const char*
 {
     spTrackEntry* entry = spAnimationState_getCurrent(state_, track);
-    return (!entry ? nullptr : entry->animation->name);
+    return entry == nullptr ? nullptr : entry->animation->name;
 }
 
 auto Skeleton::get_skin() -> const char*
@@ -365,7 +366,7 @@ void Skeleton::update(uint64_t dt)
 
     size_t i = 0;
     for_each(skeleton_, [this, &i](spSlot* slot) {
-        if (!slot->attachment)
+        if (slot->attachment == nullptr)
             return;
 
         switch (slot->attachment->type)
@@ -493,13 +494,13 @@ namespace spine { namespace lua
             checkargs<Skeleton, lua_Number, char*, bool, lua_Number>(L);
 
         Skeleton* self = Bind::self(L);
-        if (!self)
+        if (self == nullptr)
             return 0;
 
         self->skeleton_->add_animation(
             lua_tointeger(L, 2),
             lua_tostring(L, 3),
-            lua_toboolean(L, 4),
+            rainbow::lua::toboolean(L, 4),
             lua_tonumber(L, 5));
         return 0;
     }
@@ -514,7 +515,7 @@ namespace spine { namespace lua
     auto Skeleton::clear_tracks(lua_State* L) -> int
     {
         Skeleton* self = Bind::self(L);
-        if (!self)
+        if (self == nullptr)
             return 0;
 
         self->skeleton_->clear_tracks();
@@ -526,12 +527,12 @@ namespace spine { namespace lua
         rainbow::lua::checkargs<Skeleton, lua_Number>(L);
 
         Skeleton* self = Bind::self(L);
-        if (!self)
+        if (self == nullptr)
             return 0;
 
         const char* name =
             self->skeleton_->get_current_animation(lua_tointeger(L, 2));
-        if (!name)
+        if (name == nullptr)
             return 0;
 
         lua_pushstring(L, name);
@@ -541,7 +542,7 @@ namespace spine { namespace lua
     auto Skeleton::get_skin(lua_State* L) -> int
     {
         Skeleton* self = Bind::self(L);
-        if (!self)
+        if (self == nullptr)
             return 0;
 
         lua_pushstring(L, self->skeleton_->get_skin());
@@ -553,13 +554,13 @@ namespace spine { namespace lua
         rainbow::lua::checkargs<Skeleton, lua_Number, char*, bool>(L);
 
         Skeleton* self = Bind::self(L);
-        if (!self)
+        if (self == nullptr)
             return 0;
 
         self->skeleton_->set_animation(
             lua_tointeger(L, 2),
             lua_tostring(L, 3),
-            lua_toboolean(L, 4));
+            rainbow::lua::toboolean(L, 4));
         return 0;
     }
 
@@ -568,7 +569,7 @@ namespace spine { namespace lua
         rainbow::lua::checkargs<Skeleton, char*, char*, lua_Number>(L);
 
         Skeleton* self = Bind::self(L);
-        if (!self)
+        if (self == nullptr)
             return 0;
 
         self->skeleton_->set_animation_mix(
@@ -584,7 +585,7 @@ namespace spine { namespace lua
             checkargs<Skeleton, char*, rainbow::lua::nil_or<char*>>(L);
 
         Skeleton* self = Bind::self(L);
-        if (!self)
+        if (self == nullptr)
             return 0;
 
         self->skeleton_->set_attachment(lua_tostring(L, 2),
@@ -597,10 +598,11 @@ namespace spine { namespace lua
         rainbow::lua::checkargs<Skeleton, bool, bool>(L);
 
         Skeleton* self = Bind::self(L);
-        if (!self)
+        if (self == nullptr)
             return 0;
 
-        self->skeleton_->set_flip(lua_toboolean(L, 2), lua_toboolean(L, 3));
+        self->skeleton_->set_flip(
+            rainbow::lua::toboolean(L, 2), rainbow::lua::toboolean(L, 3));
         return 0;
     }
 
@@ -609,7 +611,7 @@ namespace spine { namespace lua
         rainbow::lua::checkargs<Skeleton, rainbow::lua::nil_or<void*>>(L);
 
         Skeleton* self = Bind::self(L);
-        if (!self)
+        if (self == nullptr)
             return 0;
 
         if (!lua_istable(L, 2))
@@ -638,7 +640,7 @@ namespace spine { namespace lua
         rainbow::lua::checkargs<Skeleton, rainbow::lua::nil_or<char*>>(L);
 
         Skeleton* self = Bind::self(L);
-        if (!self)
+        if (self == nullptr)
             return 0;
 
         self->skeleton_->set_skin(lua_tostring(L, 2));

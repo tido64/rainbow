@@ -34,7 +34,7 @@ namespace
 
         bool is_triggered(unsigned int flags)
         {
-            return flags_ & flags;
+            return (flags_ & flags) != 0;
         }
 
     protected:

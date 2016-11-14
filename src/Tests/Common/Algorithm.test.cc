@@ -73,8 +73,11 @@ TEST(AlgorithmTest, ConvertsRadiansToDegrees)
 TEST(AlgorithmTest, ApproximatesInverseSquareRoot)
 {
     constexpr double kErrorMargin = 0.017478;
-    for (double f = 0.01; f < 10000; f += 0.01)
+    for (int i = 1; i < 1000000; ++i)
+    {
+        const double f = i / 100.0;
         ASSERT_NEAR(1 / sqrt(f), rainbow::fast_invsqrt(f), kErrorMargin);
+    }
 }
 
 TEST(AlgorithmTest, RoundsDownToNearestPowerOfTwo)

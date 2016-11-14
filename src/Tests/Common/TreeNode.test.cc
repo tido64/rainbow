@@ -11,7 +11,7 @@ namespace
     class TestNode : public TreeNode<TestNode>
     {
     public:
-        TestNode(bool& deleted) : deleted_(deleted) { deleted_ = false; }
+        explicit TestNode(bool& deleted) : deleted_(deleted) { deleted_ = false; }
         TestNode(TestNode&&) = default;
         ~TestNode() { deleted_ = true; }
 
@@ -20,7 +20,7 @@ namespace
             return children_;
         }
 
-        auto operator=(TestNode&& node) -> TestNode&
+        auto operator=(TestNode&& node) noexcept -> TestNode&
         {
             TreeNode::operator=(std::move(node));
             return *this;
@@ -45,7 +45,7 @@ TEST(TreeNodeTest, MoveConstructs)
     TestNode root(root_deleted);
 
     bool node_deleted = false;
-    TestNode* node = new TestNode(node_deleted);
+    auto node = new TestNode(node_deleted);
     root.add_child(node);
 
     ASSERT_FALSE(root.children().empty());
@@ -63,7 +63,7 @@ TEST(TreeNodeTest, MoveAssigns)
     TestNode root(root_deleted);
 
     bool node_deleted = false;
-    TestNode* node = new TestNode(node_deleted);
+    auto node = new TestNode(node_deleted);
     root.add_child(node);
 
     ASSERT_FALSE(root.children().empty());
@@ -83,7 +83,7 @@ TEST(TreeNodeTest, AddsAndRemovesNodes)
     TestNode root(root_deleted);
 
     bool node_deleted = false;
-    TestNode* node = new TestNode(node_deleted);
+    auto node = new TestNode(node_deleted);
     root.add_child(node);
 
     ASSERT_FALSE(node_deleted);
@@ -104,7 +104,7 @@ TEST(TreeNodeTest, RemovedNodesAreDeleted)
     bool root_deleted = false;
     TestNode root(root_deleted);
     bool node_deleted = false;
-    TestNode* node = new TestNode(node_deleted);
+    auto node = new TestNode(node_deleted);
     root.add_child(node);
     ASSERT_FALSE(node_deleted);
     node->remove();
@@ -115,7 +115,7 @@ TEST(TreeNodeTest, RemovedNodesAreDeleted)
 TEST(TreeNodeTest, RemovesOrphanNodes)
 {
     bool node_deleted = false;
-    TestNode* node = new TestNode(node_deleted);
+    auto node = new TestNode(node_deleted);
     ASSERT_FALSE(node_deleted);
     node->remove();
     ASSERT_TRUE(node_deleted);

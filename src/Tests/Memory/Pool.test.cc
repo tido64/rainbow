@@ -19,7 +19,7 @@ class Integer
 {
 public:
     Integer() : value_(0) { NOT_USED(padding_); }
-    Integer(int value) : value_(value) {}
+    explicit Integer(int value) : value_(value) {}
 
     auto is_disposed() const { return value_ == kDisposed; }
 

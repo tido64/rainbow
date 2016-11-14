@@ -65,11 +65,11 @@ NS_B2_LUA_BEGIN
     int Contact::GetNext(lua_State* L)
     {
         Contact* self = Bind::self(L);
-        if (!self)
+        if (self == nullptr)
             return 0;
 
         self->reset(self->get()->GetNext());
-        lua_pushboolean(L, !!self->get());
+        rainbow::lua::push(L, self->get() != nullptr);
         return 1;
     }
 
@@ -118,7 +118,7 @@ NS_B2_LUA_BEGIN
     int Contact::ResetFriction(lua_State* L)
     {
         Contact* self = Bind::self(L);
-        if (!self)
+        if (self == nullptr)
             return 0;
 
         self->get()->ResetFriction();
@@ -142,7 +142,7 @@ NS_B2_LUA_BEGIN
     int Contact::ResetRestitution(lua_State* L)
     {
         Contact* self = Bind::self(L);
-        if (!self)
+        if (self == nullptr)
             return 0;
 
         self->get()->ResetRestitution();

@@ -12,7 +12,7 @@ namespace
     {
         int value;
 
-        Number(int v) : value(v) {}
+        explicit Number(int v) : value(v) {}
 
         auto next() const { return static_cast<Number*>(Link::next()); }
     };

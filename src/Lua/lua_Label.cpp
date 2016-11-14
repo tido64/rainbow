@@ -29,14 +29,14 @@ NS_RAINBOW_LUA_BEGIN
         // rainbow.label(["string"])
         checkargs<nil_or<char*>>(L);
 
-        if (lua_isstring(L, 1))
+        if (isstring(L, 1))
             label_.set_text(lua_tostring(L, 1));
     }
 
     int Label::get_color(lua_State* L)
     {
         Label* self = Bind::self(L);
-        if (!self)
+        if (self == nullptr)
             return 0;
 
         const Colorb& c = self->label_.color();
@@ -53,7 +53,7 @@ NS_RAINBOW_LUA_BEGIN
         checkargs<Label, char*>(L);
 
         Label* self = Bind::self(L);
-        if (!self)
+        if (self == nullptr)
             return 0;
 
         switch (*lua_tostring(L, 2))
@@ -81,7 +81,7 @@ NS_RAINBOW_LUA_BEGIN
                   nil_or<lua_Number>>(L);
 
         Label* self = Bind::self(L);
-        if (!self)
+        if (self == nullptr)
             return 0;
 
         const uint8_t r = lua_tointeger(L, 2);
@@ -132,7 +132,7 @@ NS_RAINBOW_LUA_BEGIN
         checkargs<Label, char*>(L);
 
         Label* self = Bind::self(L);
-        if (!self)
+        if (self == nullptr)
             return 0;
 
         self->label_.set_text(lua_tostring(L, 2));

@@ -144,7 +144,7 @@ NS_B2_LUA_BEGIN
         rainbow::lua::checkargs<Body, Sprite>(L);
 
         Body* self = Bind::self(L);
-        if (!self)
+        if (self == nullptr)
             return 0;
 
         b2Body* body = self->get();
@@ -161,7 +161,7 @@ NS_B2_LUA_BEGIN
     int Body::CreateFixture(lua_State* L)
     {
         Body* self = Bind::self(L);
-        if (!self)
+        if (self == nullptr)
             return 0;
 
         b2Fixture* fixture;
@@ -192,7 +192,7 @@ NS_B2_LUA_BEGIN
         rainbow::lua::checkargs<Body, Fixture>(L);
 
         Body* self = Bind::self(L);
-        if (!self)
+        if (self == nullptr)
             return 0;
 
         auto fixture = rainbow::lua::touserdata<Fixture>(L, 2);
@@ -207,7 +207,7 @@ NS_B2_LUA_BEGIN
         rainbow::lua::checkargs<Body, lua_Number, lua_Number, lua_Number>(L);
 
         Body* self = Bind::self(L);
-        if (!self)
+        if (self == nullptr)
             return 0;
 
         self->get()->SetTransform(Vec2(L, 2, 3), lua_tonumber(L, 4));
@@ -281,11 +281,11 @@ NS_B2_LUA_BEGIN
                                 bool>(L);
 
         Body* self = Bind::self(L);
-        if (!self)
+        if (self == nullptr)
             return 0;
 
         self->get()->ApplyForce(
-            Vec2(L, 2, 3), Vec2(L, 4, 5), lua_toboolean(L, 6));
+            Vec2(L, 2, 3), Vec2(L, 4, 5), rainbow::lua::toboolean(L, 6));
         return 0;
     }
 
@@ -295,10 +295,11 @@ NS_B2_LUA_BEGIN
         rainbow::lua::checkargs<Body, lua_Number, lua_Number, bool>(L);
 
         Body* self = Bind::self(L);
-        if (!self)
+        if (self == nullptr)
             return 0;
 
-        self->get()->ApplyForceToCenter(Vec2(L, 2, 3), lua_toboolean(L, 4));
+        self->get()->ApplyForceToCenter(
+            Vec2(L, 2, 3), rainbow::lua::toboolean(L, 4));
         return 0;
     }
 
@@ -308,10 +309,11 @@ NS_B2_LUA_BEGIN
         rainbow::lua::checkargs<Body, lua_Number, bool>(L);
 
         Body* self = Bind::self(L);
-        if (!self)
+        if (self == nullptr)
             return 0;
 
-        self->get()->ApplyTorque(lua_tonumber(L, 2), lua_toboolean(L, 3));
+        self->get()->ApplyTorque(
+            lua_tonumber(L, 2), rainbow::lua::toboolean(L, 3));
         return 0;
     }
 
@@ -326,11 +328,11 @@ NS_B2_LUA_BEGIN
                                 bool>(L);
 
         Body* self = Bind::self(L);
-        if (!self)
+        if (self == nullptr)
             return 0;
 
         self->get()->ApplyLinearImpulse(
-            Vec2(L, 2, 3), Vec2(L, 4, 5), lua_toboolean(L, 6));
+            Vec2(L, 2, 3), Vec2(L, 4, 5), rainbow::lua::toboolean(L, 6));
         return 0;
     }
 
@@ -340,11 +342,11 @@ NS_B2_LUA_BEGIN
         rainbow::lua::checkargs<Body, lua_Number, bool>(L);
 
         Body* self = Bind::self(L);
-        if (!self)
+        if (self == nullptr)
             return 0;
 
         self->get()->ApplyAngularImpulse(lua_tonumber(L, 2),
-                                         lua_toboolean(L, 3));
+                                         rainbow::lua::toboolean(L, 3));
         return 0;
     }
 
@@ -361,7 +363,7 @@ NS_B2_LUA_BEGIN
     int Body::GetMassData(lua_State* L)
     {
         Body* self = Bind::self(L);
-        if (!self)
+        if (self == nullptr)
             return 0;
 
         b2MassData mass;
@@ -375,7 +377,7 @@ NS_B2_LUA_BEGIN
             checkargs<Body, lua_Number, lua_Number, lua_Number, lua_Number>(L);
 
         Body* self = Bind::self(L);
-        if (!self)
+        if (self == nullptr)
             return 0;
 
         const b2MassData mass{
@@ -389,7 +391,7 @@ NS_B2_LUA_BEGIN
     int Body::ResetMassData(lua_State* L)
     {
         Body* self = Bind::self(L);
-        if (!self)
+        if (self == nullptr)
             return 0;
 
         self->get()->ResetMassData();
@@ -475,7 +477,7 @@ NS_B2_LUA_BEGIN
         rainbow::lua::checkargs<Body, lua_Number>(L);
 
         Body* self = Bind::self(L);
-        if (!self)
+        if (self == nullptr)
             return 0;
 
         self->get()->SetLinearDamping(lua_tonumber(L, 2));
@@ -604,7 +606,7 @@ NS_B2_LUA_BEGIN
     int Body::Dump(lua_State* L)
     {
         Body* self = Bind::self(L);
-        if (!self)
+        if (self == nullptr)
             return 0;
 
         self->get()->Dump();

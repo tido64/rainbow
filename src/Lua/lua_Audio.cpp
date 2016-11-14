@@ -69,7 +69,8 @@ namespace
         rainbow::lua::checkargs<Channel>(L);
 
         Channel* channel = tochannel(L);
-        lua_pushboolean(L, channel && rainbow::audio::is_paused(channel));
+        rainbow::lua::push(
+            L, channel != nullptr && rainbow::audio::is_paused(channel));
         return 1;
     }
 
@@ -79,7 +80,8 @@ namespace
         rainbow::lua::checkargs<Channel>(L);
 
         Channel* channel = tochannel(L);
-        lua_pushboolean(L, channel && rainbow::audio::is_playing(channel));
+        rainbow::lua::push(
+            L, channel != nullptr && rainbow::audio::is_playing(channel));
         return 1;
     }
 

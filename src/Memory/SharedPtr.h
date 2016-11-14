@@ -144,10 +144,10 @@ private:
 
     void reset_internal(T* ptr)
     {
-        R_ASSERT(!ptr_ || ptr_->use_count() > 0,
+        R_ASSERT(ptr_ == nullptr || ptr_->use_count() > 0,
                  "This object should've been deleted by now");
 
-        if (ptr_ && ptr_->release() == 0)
+        if (ptr_ != nullptr && ptr_->release() == 0)
             delete ptr_;
         ptr_ = ptr;
     }

@@ -107,7 +107,7 @@ namespace b2
         glBindBuffer(GL_ARRAY_BUFFER, g_debug_draw_buffer);  // For uploading.
         for (auto world : worlds_)
         {
-            if (!world)
+            if (world == nullptr)
                 break;
 
             ptm_ = world->GetPTM();

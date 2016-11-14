@@ -32,7 +32,7 @@ namespace
     public:
         bool is_triggered(unsigned int flags) const
         {
-            return flags_ & flags;
+            return (flags_ & flags) != 0;
         }
 
         void reset() { flags_ = 0; }
@@ -86,7 +86,8 @@ namespace
     class TestController final : public TestControllerListener
     {
     public:
-        TestController(Input& input) : TestController(kTestControllerId, input)
+        explicit TestController(Input& input)
+            : TestController(kTestControllerId, input)
         {
         }
 

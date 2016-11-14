@@ -38,7 +38,7 @@ NS_RAINBOW_LUA_BEGIN
         checkargs<Texture, lua_Number, lua_Number, lua_Number, lua_Number>(L);
 
         Texture* self = Bind::self(L);
-        if (!self)
+        if (self == nullptr)
             return 0;
 
         const int x = lua_tointeger(L, 2);
@@ -52,7 +52,7 @@ NS_RAINBOW_LUA_BEGIN
     int Texture::trim(lua_State* L)
     {
         Texture* self = Bind::self(L);
-        if (!self)
+        if (self == nullptr)
             return 0;
 
         self->texture_->trim();

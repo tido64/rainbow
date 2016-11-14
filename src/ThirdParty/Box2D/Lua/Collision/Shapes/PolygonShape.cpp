@@ -28,7 +28,7 @@ NS_B2_LUA_BEGIN
 
     PolygonShape::PolygonShape(lua_State* L) : is_owner_(false)
     {
-        if (lua_isuserdata(L, -1))
+        if (rainbow::lua::isuserdata(L, -1))
             polygon_.reset(static_cast<b2PolygonShape*>(lua_touserdata(L, -1)));
         else
         {
@@ -60,7 +60,7 @@ NS_B2_LUA_BEGIN
         rainbow::lua::checkargs<PolygonShape, void*, lua_Number>(L);
 
         PolygonShape* self = Bind::self(L);
-        if (!self)
+        if (self == nullptr)
             return 0;
 
         const int count = static_cast<int>(lua_tointeger(L, 3));
@@ -78,7 +78,7 @@ NS_B2_LUA_BEGIN
     int PolygonShape::SetAsBox(lua_State* L)
     {
         PolygonShape* self = Bind::self(L);
-        if (!self)
+        if (self == nullptr)
             return 0;
 
         const int n = lua_gettop(L);

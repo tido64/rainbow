@@ -58,11 +58,10 @@ NS_RAINBOW_LUA_BEGIN
 
         SpriteRef sprite;
         replacetable(L, 1);
-        if (lua_isuserdata(L, 1))
+        if (isuserdata(L, 1))
             sprite = touserdata<Sprite>(L, 1)->get();
         animation_ = std::make_unique<::Animation>(
-            sprite, get_frames(L, 2), lua_tointeger(L, 3),
-            optinteger(L, 4, 0));
+            sprite, get_frames(L, 2), lua_tointeger(L, 3), optinteger(L, 4, 0));
     }
 
     int Animation::current_frame(lua_State* L)
@@ -101,7 +100,7 @@ NS_RAINBOW_LUA_BEGIN
         checkargs<Animation, void*>(L);
 
         Animation* self = Bind::self(L);
-        if (!self)
+        if (self == nullptr)
             return 0;
 
         self->animation_->set_frames(get_frames(L, 2));
@@ -113,7 +112,7 @@ NS_RAINBOW_LUA_BEGIN
         checkargs<Animation, nil_or<void*>>(L);
 
         Animation* self = Bind::self(L);
-        if (!self)
+        if (self == nullptr)
             return 0;
 
         if (!lua_istable(L, 2))
@@ -181,7 +180,7 @@ NS_RAINBOW_LUA_BEGIN
     int Animation::rewind(lua_State* L)
     {
         Animation* self = Bind::self(L);
-        if (!self)
+        if (self == nullptr)
             return 0;
 
         self->animation_->rewind();
@@ -191,7 +190,7 @@ NS_RAINBOW_LUA_BEGIN
     int Animation::start(lua_State* L)
     {
         Animation* self = Bind::self(L);
-        if (!self)
+        if (self == nullptr)
             return 0;
 
         self->animation_->start();
@@ -201,7 +200,7 @@ NS_RAINBOW_LUA_BEGIN
     int Animation::stop(lua_State* L)
     {
         Animation* self = Bind::self(L);
-        if (!self)
+        if (self == nullptr)
             return 0;
 
         self->animation_->stop();

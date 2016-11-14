@@ -22,7 +22,7 @@ namespace
     class TestInputListener : public InputListener
     {
     public:
-        TestInputListener(bool consume)
+        explicit TestInputListener(bool consume)
             : consume_(consume), axis_motion_(false), button_down_(false),
               button_up_(false), controller_connected_(false),
               controller_disconnected_(false), key_down_(false), key_up_(false),

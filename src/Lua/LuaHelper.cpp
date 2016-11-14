@@ -152,7 +152,7 @@ NS_RAINBOW_LUA_BEGIN
     template <>
     void push<bool>(lua_State* L, bool b)
     {
-        lua_pushboolean(L, b);
+        lua_pushboolean(L, static_cast<int>(b));
     }
 
     template <>

@@ -177,7 +177,7 @@ NS_B2_LUA_BEGIN
         rainbow::lua::checkargs<World, rainbow::lua::nil_or<void*>>(L);
 
         World* self = Bind::self(L);
-        if (!self)
+        if (self == nullptr)
             return 0;
 
         if (self->contact_listener_ != LUA_NOREF)
@@ -210,7 +210,7 @@ NS_B2_LUA_BEGIN
         rainbow::lua::checkargs<World, void*>(L);
 
         World* self = Bind::self(L);
-        if (!self)
+        if (self == nullptr)
             return 0;
 
         const b2BodyDef& bd = GetBodyDef(L);
@@ -223,7 +223,7 @@ NS_B2_LUA_BEGIN
         rainbow::lua::checkargs<World, Body>(L);
 
         World* self = Bind::self(L);
-        if (!self)
+        if (self == nullptr)
             return 0;
 
         self->get()->DestroyBody(rainbow::lua::touserdata<Body>(L, 2)->get());
@@ -242,7 +242,7 @@ NS_B2_LUA_BEGIN
                                 rainbow::lua::nil_or<lua_Number>>(L);
 
         World* self = Bind::self(L);
-        if (!self)
+        if (self == nullptr)
             return 0;
 
         self->get()->Step(
@@ -407,7 +407,7 @@ NS_B2_LUA_BEGIN
     int World::Dump(lua_State* L)
     {
         World* self = Bind::self(L);
-        if (!self)
+        if (self == nullptr)
             return 0;
 
         self->get()->Dump();

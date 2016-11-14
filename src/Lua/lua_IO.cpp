@@ -31,7 +31,7 @@ namespace
         Data blob(lua_tostring(L, 2),
                   lua_tointeger(L, 3),
                   Data::Ownership::Reference);
-        lua_pushboolean(L, blob.save(lua_tostring(L, 1)));
+        rainbow::lua::push(L, blob.save(lua_tostring(L, 1)));
         return 1;
     }
 }

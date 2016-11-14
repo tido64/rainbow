@@ -53,7 +53,7 @@ TEST(PathTest, CreatesDirectories)
         auto p = path.string().substr(0, offset);
         ASSERT_TRUE(rainbow::filesystem::is_directory(p.c_str(), error));
         ASSERT_EQ(0, rmdir(p.c_str()));
-        offset = p.rfind(kPathSeparator, offset);
+        offset = p.rfind(kPathSeparatorCharacter, offset);
     }
 }
 
@@ -68,9 +68,13 @@ TEST(PathTest, RelativeToCurrentPath)
 {
     char cwd[256];
     ASSERT_EQ(cwd, getcwd(cwd, sizeof(cwd)));
-    strcat(cwd, kPathSeparator kTestFileName);
 
-    ASSERT_STREQ(cwd, rainbow::filesystem::relative(kTestFileName).c_str());
+    std::string path{cwd};
+    path += kPathSeparatorCharacter;
+    path += kTestFileName;
+
+    ASSERT_STREQ(
+        path.c_str(), rainbow::filesystem::relative(kTestFileName).c_str());
 }
 
 TEST(PathTest, RelativeToRoot)

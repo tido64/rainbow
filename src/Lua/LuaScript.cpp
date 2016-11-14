@@ -38,7 +38,7 @@ void LuaScript::init_impl(const Vec2i& screen)
 
 void LuaScript::update_impl(uint64_t dt)
 {
-    if (lua_.update(dt))
+    if (lua_.update(dt) != 0)
         terminate();
     rainbow::lua::input::clear(lua_);
 }

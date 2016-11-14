@@ -37,7 +37,7 @@ NS_B2_LUA_BEGIN
                 return 0;
 
             const b2Transform t(Vec2(L, 2, 3), b2Rot(lua_tonumber(L, 4)));
-            lua_pushboolean(L, self->get()->TestPoint(t, Vec2(L, 5, 6)));
+            rainbow::lua::push(L, self->get()->TestPoint(t, Vec2(L, 5, 6)));
             return 1;
         }
 

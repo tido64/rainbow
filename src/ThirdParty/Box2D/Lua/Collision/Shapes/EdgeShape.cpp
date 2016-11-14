@@ -24,7 +24,7 @@ NS_B2_LUA_BEGIN
 
     EdgeShape::EdgeShape(lua_State* L) : is_owner_(false)
     {
-        if (lua_isuserdata(L, -1))
+        if (rainbow::lua::isuserdata(L, -1))
             edge_.reset(static_cast<b2EdgeShape*>(lua_touserdata(L, -1)));
         else
         {
@@ -54,7 +54,7 @@ NS_B2_LUA_BEGIN
                                 lua_Number>(L);
 
         EdgeShape* self = Bind::self(L);
-        if (!self)
+        if (self == nullptr)
             return 0;
 
         self->get()->Set(Vec2(L, 2, 3), Vec2(L, 4, 5));

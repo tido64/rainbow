@@ -121,7 +121,7 @@ NS_B2_LUA_BEGIN
     int Fixture::GetShape(lua_State* L)
     {
         Fixture* self = Bind::self(L);
-        if (!self)
+        if (self == nullptr)
             return 0;
 
         return Shape(L, self->get()->GetShape());
@@ -146,7 +146,7 @@ NS_B2_LUA_BEGIN
         rainbow::lua::checkargs<Fixture, void*>(L);
 
         Fixture* self = Bind::self(L);
-        if (!self)
+        if (self == nullptr)
             return 0;
 
         self->get()->SetFilterData(GetFilter(L));
@@ -156,7 +156,7 @@ NS_B2_LUA_BEGIN
     int Fixture::GetFilterData(lua_State* L)
     {
         Fixture* self = Bind::self(L);
-        if (!self)
+        if (self == nullptr)
             return 0;
 
         const b2Filter& filter = self->get()->GetFilterData();
@@ -166,7 +166,7 @@ NS_B2_LUA_BEGIN
     int Fixture::Refilter(lua_State* L)
     {
         Fixture* self = Bind::self(L);
-        if (!self)
+        if (self == nullptr)
             return 0;
 
         self->get()->Refilter();
@@ -204,7 +204,7 @@ NS_B2_LUA_BEGIN
     int Fixture::GetMassData(lua_State* L)
     {
         Fixture* self = Bind::self(L);
-        if (!self)
+        if (self == nullptr)
             return 0;
 
         b2MassData mass;
@@ -261,7 +261,7 @@ NS_B2_LUA_BEGIN
         rainbow::lua::checkargs<Fixture, lua_Number>(L);
 
         Fixture* self = Bind::self(L);
-        if (!self)
+        if (self == nullptr)
             return 0;
 
         self->get()->Dump(static_cast<int32>(lua_tointeger(L, 2)));

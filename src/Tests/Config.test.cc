@@ -42,7 +42,7 @@ namespace
     class ScopedCurrentDirectory
     {
     public:
-        ScopedCurrentDirectory(const char* path)
+        explicit ScopedCurrentDirectory(const char* path)
         {
             working_dir_ = rainbow::filesystem::current_path();
             rainbow::filesystem::set_current_path(path);
@@ -61,7 +61,8 @@ namespace
     {
     public:
         template <size_t N>
-        ScopedConfig(const char (&config)[N]) : ScopedConfig(config, N - 1)
+        explicit ScopedConfig(const char (&config)[N])
+            : ScopedConfig(config, N - 1)
         {
         }
 

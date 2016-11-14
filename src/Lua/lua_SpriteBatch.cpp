@@ -39,7 +39,7 @@ NS_RAINBOW_LUA_BEGIN
                   lua_Number>(L);
 
         SpriteBatch* self = Bind::self(L);
-        if (!self)
+        if (self == nullptr)
             return 0;
 
         const int x = lua_tointeger(L, 2);
@@ -59,7 +59,7 @@ NS_RAINBOW_LUA_BEGIN
         checkargs<SpriteBatch, lua_Number, lua_Number>(L);
 
         SpriteBatch* self = Bind::self(L);
-        if (!self)
+        if (self == nullptr)
             return 0;
 
         const int w = lua_tointeger(L, 2);

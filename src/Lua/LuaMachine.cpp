@@ -94,7 +94,7 @@ LuaMachine::~LuaMachine()
 
 void LuaMachine::close()
 {
-    if (!state_)
+    if (state_ == nullptr)
         return;
 
     lua::WeakRef::RegistryIndex = LUA_NOREF;

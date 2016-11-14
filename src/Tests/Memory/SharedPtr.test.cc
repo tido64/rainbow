@@ -11,7 +11,7 @@ namespace
     class SharedPtrTestStruct : public RefCounted
     {
     public:
-        SharedPtrTestStruct(bool& flag) : flag(flag) {}
+        explicit SharedPtrTestStruct(bool& flag) : flag(flag) {}
         ~SharedPtrTestStruct() { flag = true; }
 
     private:
@@ -29,7 +29,7 @@ TEST(SharedPtrTest, IsEmptyByDefault)
 TEST(SharedPtrTest, ManagesReferenceCountedObjects)
 {
     bool foo_deleted = false;
-    SharedPtrTestStruct* foo = new SharedPtrTestStruct(foo_deleted);
+    auto foo = new SharedPtrTestStruct(foo_deleted);
     {
         SharedPtr<SharedPtrTestStruct> foo_ptr1(foo);
         ASSERT_EQ(foo, foo_ptr1.get());
@@ -83,8 +83,8 @@ TEST(SharedPtrTest, IncrementsTheCounterOnManagedObjects)
 {
     bool foo_deleted = false;
     bool bar_deleted = false;
-    SharedPtrTestStruct* foo = new SharedPtrTestStruct(foo_deleted);
-    SharedPtrTestStruct* bar = new SharedPtrTestStruct(bar_deleted);
+    auto foo = new SharedPtrTestStruct(foo_deleted);
+    auto bar = new SharedPtrTestStruct(bar_deleted);
     {
         SharedPtr<SharedPtrTestStruct> foo_ptr(foo);
         SharedPtr<SharedPtrTestStruct> bar_ptr(bar);
@@ -106,8 +106,8 @@ TEST(SharedPtrTest, Assigns)
 {
     bool foo_deleted = false;
     bool bar_deleted = false;
-    SharedPtrTestStruct* foo = new SharedPtrTestStruct(foo_deleted);
-    SharedPtrTestStruct* bar = new SharedPtrTestStruct(bar_deleted);
+    auto foo = new SharedPtrTestStruct(foo_deleted);
+    auto bar = new SharedPtrTestStruct(bar_deleted);
     {
         SharedPtr<SharedPtrTestStruct> foo_ptr(foo);
         SharedPtr<SharedPtrTestStruct> bar_ptr(bar);
@@ -128,7 +128,7 @@ TEST(SharedPtrTest, Assigns)
 TEST(SharedPtrTest, AssignsItself)
 {
     bool foo_deleted = false;
-    SharedPtrTestStruct* foo = new SharedPtrTestStruct(foo_deleted);
+    auto foo = new SharedPtrTestStruct(foo_deleted);
     {
         SharedPtr<SharedPtrTestStruct> foo_ptr(foo);
         ASSERT_EQ(foo, foo_ptr.get());
@@ -148,7 +148,7 @@ TEST(SharedPtrTest, AssignsItself)
 TEST(SharedPtrTest, MoveSemantics)
 {
     bool foo_deleted = false;
-    SharedPtrTestStruct* foo = new SharedPtrTestStruct(foo_deleted);
+    auto foo = new SharedPtrTestStruct(foo_deleted);
     {
         SharedPtr<SharedPtrTestStruct> foo_ptr(foo);
         ASSERT_EQ(foo, foo_ptr.get());

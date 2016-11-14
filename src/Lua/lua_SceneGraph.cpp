@@ -23,9 +23,9 @@ namespace
 
     bool is_valid_node(lua_State* L, int n, SceneNode* node)
     {
-        if (!node)
+        if (node == nullptr)
             return luaL_argerror(L, n, "invalid node");
-        if (!g_nodes.count(node))
+        if (g_nodes.count(node) == 0)
             return luaL_argerror(L, n, "non-existing node");
         return true;
     }
@@ -120,7 +120,7 @@ NS_RAINBOW_LUA_BEGIN
     int SceneGraph::add_child(lua_State* L, F&& touserdata)
     {
         SceneGraph* self = Bind::self(L);
-        if (!self)
+        if (self == nullptr)
             return 0;
 
         SceneNode* node;
@@ -176,10 +176,10 @@ NS_RAINBOW_LUA_BEGIN
         checkargs<SceneGraph, nil_or<SceneNode>>(L);
 
         SceneGraph* self = Bind::self(L);
-        if (!self)
+        if (self == nullptr)
             return 0;
 
-        SceneNode* node = (lua_isuserdata(L, 2) ? tonode(L, 2) : self->node_);
+        SceneNode* node = (isuserdata(L, 2) ? tonode(L, 2) : self->node_);
         R_ASSERT(node != nullptr, "This shouldn't ever happen.");
         ASSUME(node != nullptr);
 
@@ -195,11 +195,11 @@ NS_RAINBOW_LUA_BEGIN
         checkargs<SceneGraph, SceneNode, Shader>(L);
 
         SceneGraph* self = Bind::self(L);
-        if (!self)
+        if (self == nullptr)
             return 0;
 
-        int program = (lua_isuserdata(L, 3) ? unchecked_cast<Shader>(L, 3)->id()
-                                            : 0);
+        const int program =
+            isuserdata(L, 3) ? unchecked_cast<Shader>(L, 3)->id() : 0;
         tonode(L, 2)->attach_program(program);
         return 0;
     }
@@ -280,7 +280,7 @@ NS_RAINBOW_LUA_BEGIN
 
     ScopedNode::~ScopedNode()
     {
-        if (!node_)
+        if (node_ == nullptr)
             return;
 
         lua_getglobal(state_, "rainbow");
