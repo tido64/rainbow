@@ -8,14 +8,14 @@
 #include "Math/Vec2.h"
 
 /// <summary>A drawable interface.</summary>
-class Drawable
+class IDrawable
 {
 public:
-    virtual ~Drawable() = default;
+    virtual ~IDrawable() {}
 
-    Drawable* get() { return this; }
+    auto get() { return this; }
 
-    void move(const Vec2f& delta) { move_impl(delta); }
+    void move(const Vec2f& distance) { move_impl(distance); }
 
     void draw() { draw_impl(); }
     void update(uint64_t dt) { update_impl(dt); }

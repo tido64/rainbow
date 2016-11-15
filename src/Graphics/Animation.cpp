@@ -4,7 +4,7 @@
 
 #include "Graphics/Animation.h"
 
-Animation::Animation(const SpriteRef& sprite,
+Animation::Animation(const SpriteRef& sprite,  // NOLINT
                      Frames frames,
                      unsigned int fps,
                      int delay)

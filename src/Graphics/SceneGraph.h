@@ -15,7 +15,7 @@
 #include "Common/TreeNode.h"
 #include "Math/Vec2.h"
 
-class Drawable;
+class IDrawable;
 
 namespace rainbow
 {
@@ -32,12 +32,12 @@ namespace rainbow
         static auto create() -> std::unique_ptr<SceneNode>;
 
         /// <summary>Creates a node with specified drawable.</summary>
-        static auto create(Drawable& drawable) -> std::unique_ptr<SceneNode>;
+        static auto create(IDrawable& drawable) -> std::unique_ptr<SceneNode>;
 
         /// <summary>Creates a node with specified component.</summary>
         template <
             typename T,
-            std::enable_if_t<!std::is_base_of<Drawable, T>::value>* = nullptr>
+            std::enable_if_t<!std::is_base_of<IDrawable, T>::value>* = nullptr>
         static auto create(T& component) -> std::unique_ptr<SceneNode>;
 
         virtual ~SceneNode() = default;

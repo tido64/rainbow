@@ -12,7 +12,7 @@
 #include "ThirdParty/Box2D/Lua/Dynamics/Fixture.h"
 #include "ThirdParty/Box2D/StableWorld.h"
 
-class Drawable;
+class IDrawable;
 
 NS_B2_LUA_BEGIN
 {
@@ -176,7 +176,7 @@ NS_B2_LUA_BEGIN
         else
         {
             // <b2.Body>:CreateFixture(<b2.Shape>, density)
-            rainbow::lua::checkargs<Body, Drawable, lua_Number>(L);
+            rainbow::lua::checkargs<Body, IDrawable, lua_Number>(L);
 
             const float density = lua_tonumber(L, 3);
             lua_settop(L, 2);

@@ -37,16 +37,16 @@ namespace
     class DrawableNode final : public SceneNode
     {
     public:
-        DrawableNode(Drawable& drawable) : drawable_(drawable) {}
+        DrawableNode(IDrawable& drawable) : drawable_(drawable) {}  // NOLINT
 
     private:
-        Drawable& drawable_;
+        IDrawable& drawable_;
 
         void draw_impl() const override { drawable_.draw(); }
 
-        void move_impl(const Vec2f& delta) const override
+        void move_impl(const Vec2f& distance) const override
         {
-            drawable_.move(delta);
+            drawable_.move(distance);
         }
 
         void update_impl(uint64_t dt) const override
@@ -66,9 +66,9 @@ namespace
 
         void draw_impl() const override { rainbow::graphics::draw(primitive_); }
 
-        void move_impl(const Vec2f& delta) const override
+        void move_impl(const Vec2f& distance) const override
         {
-            primitive_.move(delta);
+            primitive_.move(distance);
         }
 
         void update_impl(uint64_t) const override { primitive_.update(); }
@@ -93,11 +93,11 @@ void SceneNode::draw() const
         child->draw();
 }
 
-void SceneNode::move(const Vec2f& delta) const
+void SceneNode::move(const Vec2f& distance) const
 {
-    for_each(*this, [](const SceneNode& node, const Vec2f& delta) {
-        node.move_impl(delta);
-    }, delta);
+    for_each(*this, [](const SceneNode& node, const Vec2f& distance) {
+        node.move_impl(distance);
+    }, distance);
 }
 
 void SceneNode::update(uint64_t dt) const
@@ -121,7 +121,7 @@ auto SceneNode::create() -> std::unique_ptr<SceneNode>
     return std::unique_ptr<SceneNode>{std::make_unique<GroupNode>()};
 }
 
-auto SceneNode::create(Drawable& drawable) -> std::unique_ptr<SceneNode>
+auto SceneNode::create(IDrawable& drawable) -> std::unique_ptr<SceneNode>
 {
     return std::unique_ptr<SceneNode>{std::make_unique<DrawableNode>(drawable)};
 }

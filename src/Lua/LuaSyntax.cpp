@@ -10,7 +10,7 @@
 
 #include "Lua/LuaHelper.h"
 
-class Drawable;
+class IDrawable;
 
 namespace rainbow
 {
@@ -139,10 +139,10 @@ namespace rainbow { namespace lua { namespace detail
         require(L, n, is_table, "table");
     }
 
-    /* Drawable */
+    /* IDrawable */
 
     template <>
-    void checktype<Drawable>(lua_State* L, int n)
+    void checktype<IDrawable>(lua_State* L, int n)
     {
         require(L, n, is_userdata, "drawable");
     }

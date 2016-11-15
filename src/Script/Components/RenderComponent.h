@@ -82,10 +82,10 @@ namespace rainbow
     private:
         SpriteBatch batch_;
 
-        void move_impl(const Vec2f& delta) override
+        void move_impl(const Vec2f& distance) override
         {
             for (auto&& sprite : batch())
-                sprite.move(delta);
+                sprite.move(distance);
         }
     };
 }

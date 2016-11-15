@@ -132,7 +132,7 @@ namespace spine
 {
     namespace lua
     {
-        class Skeleton final : public Drawable,
+        class Skeleton final : public IDrawable,
                                private rainbow::lua::Bind<Skeleton>
         {
         public:
@@ -170,9 +170,9 @@ namespace spine
             lua_State* state_;
             rainbow::lua::WeakRef listener_;
 
-            // Implement Drawable.
+            // Implement IDrawable.
 
-            void move_impl(const Vec2f& delta) override;
+            void move_impl(const Vec2f& distance) override;
             void draw_impl() override;
             void update_impl(uint64_t dt) override;
         };

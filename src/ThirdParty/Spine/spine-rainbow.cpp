@@ -269,8 +269,8 @@ Skeleton::~Skeleton()
 
 void Skeleton::set_flip(bool x, bool y)
 {
-    skeleton_->flipX = x;
-    skeleton_->flipY = y;
+    skeleton_->flipX = static_cast<int>(x);
+    skeleton_->flipY = static_cast<int>(y);
 }
 
 void Skeleton::set_listener(spAnimationStateListener listener, void* self)
@@ -290,7 +290,8 @@ void Skeleton::add_animation(int track,
                              bool loop,
                              float delay)
 {
-    spAnimationState_addAnimationByName(state_, track, animation, loop, delay);
+    spAnimationState_addAnimationByName(
+        state_, track, animation, static_cast<int>(loop), delay);
 }
 
 void Skeleton::bind_textures() const
@@ -321,7 +322,8 @@ auto Skeleton::get_skin() -> const char*
 
 void Skeleton::set_animation(int track, const char* animation, bool loop)
 {
-    spAnimationState_setAnimationByName(state_, track, animation, loop);
+    spAnimationState_setAnimationByName(
+        state_, track, animation, static_cast<int>(loop));
 }
 
 void Skeleton::set_animation_mix(const char* from,
@@ -654,10 +656,10 @@ namespace spine { namespace lua
         });
     }
 
-    void Skeleton::move_impl(const Vec2f& delta)
+    void Skeleton::move_impl(const Vec2f& distance)
     {
-        skeleton_->skeleton()->x += delta.x;
-        skeleton_->skeleton()->y += delta.y;
+        skeleton_->skeleton()->x += distance.x;
+        skeleton_->skeleton()->y += distance.y;
     }
 
     void Skeleton::draw_impl() { skeleton_->draw(); }

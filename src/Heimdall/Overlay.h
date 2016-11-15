@@ -15,7 +15,7 @@ namespace rainbow { struct Rect; }
 
 namespace heimdall
 {
-    class Overlay final : public Drawable, public InputListener
+    class Overlay final : public IDrawable, public InputListener
     {
     public:
         Overlay();
@@ -46,7 +46,7 @@ namespace heimdall
         std::deque<float> vmem_usage_;
         bool pinned_;
 
-        // Drawable implementation details
+        // IDrawable implementation details
 
         void draw_impl() override;
         void update_impl(uint64_t) override;

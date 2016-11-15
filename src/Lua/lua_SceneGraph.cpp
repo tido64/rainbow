@@ -161,7 +161,7 @@ NS_RAINBOW_LUA_BEGIN
     int SceneGraph::add_drawable(lua_State* L)
     {
         // rainbow.scenegraph:add_drawable([node], <drawable>)
-        return add_child<Drawable>(L, unchecked_cast<Drawable>);
+        return add_child<IDrawable>(L, unchecked_cast<IDrawable>);
     }
 
     int SceneGraph::add_label(lua_State* L)

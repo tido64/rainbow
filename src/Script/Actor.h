@@ -76,7 +76,7 @@ namespace rainbow
         void mirror() { render_component()->mirror(); }
 
         /// <summary>Moves actor by (x,y).</summary>
-        void move(const Vec2f& delta) { move_impl(delta); }
+        void move(const Vec2f& distance) { move_impl(distance); }
 
         /// <summary>Shows actor if it is currently hidden.</summary>
         void show() { render_component()->show(); }
@@ -143,9 +143,9 @@ namespace rainbow
         /// </summary>
         virtual void initialize_render_component_impl() = 0;
 
-        virtual void move_impl(const Vec2f& delta)
+        virtual void move_impl(const Vec2f& distance)
         {
-            render_component()->move(delta);
+            render_component()->move(distance);
         }
 
         /// <summary>Called when actor has been disabled.</summary>

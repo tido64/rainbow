@@ -25,10 +25,10 @@ namespace rainbow
         void disable() { node_->set_enabled(false); }
         void enable() { node_->set_enabled(true); }
 
-        void move(const Vec2f& delta)
+        void move(const Vec2f& distance)
         {
-            position_ += delta;
-            move_impl(delta);
+            position_ += distance;
+            move_impl(distance);
         }
 
     private:

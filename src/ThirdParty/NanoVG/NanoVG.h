@@ -23,7 +23,7 @@
 
 namespace nvg
 {
-    class Canvas : public Drawable
+    class Canvas : public IDrawable
     {
     public:
         Canvas();
