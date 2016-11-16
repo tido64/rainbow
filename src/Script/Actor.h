@@ -14,7 +14,7 @@ namespace rainbow
     class Actor
     {
     public:
-        virtual ~Actor() = default;
+        virtual ~Actor() {}
 
         auto animation_component() { return animation_component_impl(); }
         bool is_enabled() const { return render_component()->is_enabled(); }

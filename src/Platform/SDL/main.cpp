@@ -26,7 +26,7 @@
 
 namespace
 {
-    auto run_tests(int& argc, char**& argv) -> int
+    auto run_tests(int& argc, char**& argv) -> int  // NOLINT
     {
 #ifdef RAINBOW_TEST
         return rainbow::run_tests(argc, argv);

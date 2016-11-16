@@ -14,9 +14,9 @@ namespace
     }
 }
 
-void Chrono::sleep(duration::rep ms)
+void Chrono::sleep(duration::rep milliseconds)
 {
-    std::this_thread::sleep_for(duration(ms));
+    std::this_thread::sleep_for(duration(milliseconds));
 }
 
 auto Chrono::system_now() -> Chrono::duration

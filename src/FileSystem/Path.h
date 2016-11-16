@@ -53,7 +53,7 @@ namespace rainbow { namespace filesystem
     private:
         std::string path_;
 
-        explicit Path(const char* file);
+        explicit Path(const char* path) : path_(path) {}
 
         friend auto absolute(const char* path) -> Path;
         friend auto relative(const char* path) -> Path;

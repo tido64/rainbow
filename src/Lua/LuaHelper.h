@@ -51,7 +51,7 @@ NS_RAINBOW_LUA_BEGIN
     ///   Outputs information about the error, and dumps the stack if
     ///   applicable.
     /// </summary>
-    void error(lua_State* L, int lua_error);
+    void error(lua_State* L, int result);
 
     /// <summary>
     ///   Returns the pointer returned from <see cref="luaL_checkudata"/> or

@@ -103,10 +103,10 @@ public:
 
     /// <summary>Sets the pivot point for rotation and translation.</summary>
     /// <param name="p">Normalised pivot point.</param>
-    void set_pivot(const Vec2f& p);
+    void set_pivot(const Vec2f& pivot);
 
     /// <summary>Sets sprite position (absolute).</summary>
-    void set_position(const Vec2f&);
+    void set_position(const Vec2f& position);
 
     /// <summary>Sets angle of rotation (in radian).</summary>
     void set_rotation(float r);

@@ -23,7 +23,7 @@ NS_RAINBOW_LUA_MODULE_BEGIN(input)
 {
     void init(lua_State* L);
 
-    void accelerated(lua_State* L, const Acceleration& acceleration);
+    void accelerated(lua_State* L, const Acceleration&);
 
     void clear(lua_State* L);
 

@@ -57,6 +57,12 @@ set(SOURCE_FILES
     src/Director.h
     src/FileSystem/File.cpp
     src/FileSystem/File.h
+    src/FileSystem/FileOps/CloseFile.h
+    src/FileSystem/FileOps/FileSize.h
+    src/FileSystem/FileOps/IsValidHandle.h
+    src/FileSystem/FileOps/Read.h
+    src/FileSystem/FileOps/Seek.h
+    src/FileSystem/FileOps/Write.h
     src/FileSystem/FileSystem.cpp
     src/FileSystem/FileSystem.h
     src/FileSystem/Path.cpp
@@ -434,6 +440,7 @@ set_property(
         ${SPINE_INCLUDE_DIR}
         ${ZLIB_INCLUDE_DIR}
         ${AUDIO_INCLUDE_DIRS}
+        ${LOCAL_LIBRARY}/variant/include
         ${TEST_INCLUDE_DIR}
 )
 target_link_libraries(rainbow

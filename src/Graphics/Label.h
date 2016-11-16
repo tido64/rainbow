@@ -28,7 +28,7 @@ public:
     static const unsigned int kStaleMask        = 0xffffu;
 
     Label();
-    virtual ~Label() = default;
+    virtual ~Label() {}
 
     /// <summary>Returns label text alignment.</summary>
     auto alignment() const { return alignment_; }

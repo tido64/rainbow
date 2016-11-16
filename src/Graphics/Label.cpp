@@ -108,8 +108,8 @@ void Label::update_internal()
         unsigned int start = 0;
         unsigned int count = 0;
         const bool is_rotated = !rainbow::is_almost_zero(angle_);
-        const Vec2f R = (is_rotated ? Vec2f(cosf(-angle_), sinf(-angle_))
-                                    : Vec2f(1.0f, 0.0f));
+        const Vec2f R = is_rotated ? Vec2f{cosf(-angle_), sinf(-angle_)}
+                                   : Vec2f::Right;
         const bool needs_alignment =
             alignment_ != TextAlignment::Left || is_rotated;
         Vec2f pen = (needs_alignment ? Vec2f::Zero : position_);

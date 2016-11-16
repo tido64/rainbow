@@ -8,6 +8,15 @@
 #include <cstdint>
 #include <cstdio>
 
+#ifdef _MSC_VER
+#   pragma warning(push)
+#   pragma warning(disable: 4996)
+#endif
+#include <mapbox/variant.hpp>
+#ifdef _MSC_VER
+#   pragma warning(pop)
+#endif
+
 #include "Common/NonCopyable.h"
 
 struct AAsset;
@@ -17,7 +26,7 @@ namespace rainbow { namespace filesystem { class Path; }}
 class IFile : private NonCopyable<IFile>
 {
 public:
-    virtual ~IFile() = default;
+    virtual ~IFile() {}
 
     /// <summary>Returns the file size.</summary>
     virtual auto size() const -> size_t = 0;
@@ -61,9 +70,15 @@ public:
     static auto open_document(const char* path) -> File;
     static auto open_write(const char* path) -> File;
 
-    File() : is_asset_(false), stream_(nullptr) {}
-    File(File&&) noexcept;
+    File(File&& file) noexcept : handle_(std::move(file.handle_))
+    {
+        file.handle_ = nullptr;
+    }
+
     ~File();
+
+    /// <summary>Returns whether this instance has an associated file.</summary>
+    auto is_open() const -> bool;
 
     /// <summary>Returns the file size.</summary>
     auto size() const -> size_t;
@@ -95,18 +110,12 @@ public:
     /// <returns>Number of bytes written.</returns>
     auto write(const void* buffer, size_t size) -> size_t;
 
-    explicit operator bool() const { return stream_; }
-    operator AAsset*() const { return asset_; }
-    operator FILE*() const { return stream_; }
+    explicit operator bool() const { return is_open(); }
+    operator AAsset*() const;
+    operator FILE*() const;
 
 private:
-    bool is_asset_;  ///< Whether this file is an asset.
-
-    union
-    {
-        AAsset* asset_;
-        FILE* stream_;
-    };
+    mapbox::util::variant<std::nullptr_t, AAsset*, FILE*> handle_;
 
     explicit File(const rainbow::filesystem::Path& path);
     File(const rainbow::filesystem::Path& path, const char* mode);

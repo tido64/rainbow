@@ -40,7 +40,7 @@ namespace rainbow
             std::enable_if_t<!std::is_base_of<IDrawable, T>::value>* = nullptr>
         static auto create(T& component) -> std::unique_ptr<SceneNode>;
 
-        virtual ~SceneNode() = default;
+        virtual ~SceneNode() {}
 
         /// <summary>Returns whether this node is enabled.</summary>
         bool is_enabled() const { return enabled_; }
@@ -92,7 +92,7 @@ namespace rainbow
         void draw() const;
 
         /// <summary>Recursively moves all sprites by (x,y).</summary>
-        void move(const Vec2f& delta) const;
+        void move(const Vec2f& distance) const;
 
         /// <summary>Updates this node and all its enabled children.</summary>
         void update(uint64_t dt) const;

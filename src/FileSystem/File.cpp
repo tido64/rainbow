@@ -4,23 +4,36 @@
 
 #include "FileSystem/File.h"
 
-#include <sys/stat.h>
-
-#include "Platform/Macros.h"
-#ifdef RAINBOW_OS_ANDROID
-#   include <android/native_activity.h>
-#endif
-
 #include "Common/Logging.h"
+#include "FileSystem/FileOps/CloseFile.h"
+#include "FileSystem/FileOps/FileSize.h"
+#include "FileSystem/FileOps/IsValidHandle.h"
+#include "FileSystem/FileOps/Read.h"
+#include "FileSystem/FileOps/Seek.h"
+#include "FileSystem/FileOps/Write.h"
 #include "FileSystem/FileSystem.h"
 
 #if defined(RAINBOW_OS_ANDROID)
 extern ANativeActivity* g_native_activity;
-#elif defined(RAINBOW_OS_WINDOWS)
-#   define fileno _fileno
 #endif
 
 using rainbow::filesystem::Path;
+using rainbow::filesystem::ops::CloseFile;
+using rainbow::filesystem::ops::FileSize;
+using rainbow::filesystem::ops::IsValidHandle;
+using rainbow::filesystem::ops::Read;
+using rainbow::filesystem::ops::Seek;
+using rainbow::filesystem::ops::Write;
+
+namespace
+{
+    template <typename T, typename V>
+    auto variant_get(const V& variant)
+    {
+        return !variant.template is<T>() ? T{}
+                                         : variant.template get_unchecked<T>();
+    }
+}
 
 auto File::open(const Path& path) -> File
 {
@@ -34,79 +47,73 @@ auto File::open_asset(const char* path) -> File
 
 auto File::open_document(const char* path) -> File
 {
-    return File{rainbow::filesystem::user(path), "r+b"};
+    return {rainbow::filesystem::user(path), "r+b"};
 }
 
 auto File::open_write(const char* path) -> File
 {
-    return File{rainbow::filesystem::user(path), "wb"};
-}
-
-File::File(File&& f) noexcept : is_asset_(f.is_asset_), stream_(f.stream_)
-{
-    f.stream_ = nullptr;
+    return {rainbow::filesystem::user(path), "wb"};
 }
 
 File::~File()
 {
-    if (stream_ == nullptr)
-        return;
+    mapbox::util::apply_visitor(CloseFile{}, handle_);
+}
 
-#if defined(RAINBOW_OS_ANDROID)
-    if (is_asset_)
-        AAsset_close(asset_);
-    else
-#endif
-        fclose(stream_);
+auto File::is_open() const -> bool
+{
+    return mapbox::util::apply_visitor(IsValidHandle{}, handle_);
 }
 
 auto File::size() const -> size_t
 {
-#ifdef RAINBOW_OS_ANDROID
-    if (is_asset_)
-        return AAsset_getLength(asset_);
-#endif
-    const int fd = fileno(stream_);
-    struct stat file_status;
-    return (fstat(fd, &file_status) != 0 ? 0 : file_status.st_size);
+    return mapbox::util::apply_visitor(FileSize{}, handle_);
 }
 
 auto File::read(void* dst, size_t size) -> size_t
 {
-#ifdef RAINBOW_OS_ANDROID
-    if (is_asset_)
-        return AAsset_read(asset_, dst, size);
-#endif
-    return fread(dst, sizeof(char), size, stream_);
+    return mapbox::util::apply_visitor(Read{dst, size}, handle_);
 }
 
 auto File::seek(int64_t offset, int origin) -> int
 {
-    return fseek(stream_, offset, origin);
+    return mapbox::util::apply_visitor(Seek{offset, origin}, handle_);
 }
 
 auto File::write(const void* buffer, size_t size) -> size_t
 {
-    return fwrite(buffer, sizeof(char), size, stream_);
+    return mapbox::util::apply_visitor(Write{buffer, size}, handle_);
 }
 
-File::File(const Path& path) : is_asset_(true), stream_(nullptr)
+File::operator AAsset*() const
+{
+    return variant_get<AAsset*>(handle_);
+}
+
+File::operator FILE*() const
+{
+    return variant_get<FILE*>(handle_);
+}
+
+File::File(const Path& path)
 {
     if (path.empty())
         return;
 
 #ifdef RAINBOW_OS_ANDROID
-    asset_ = AAssetManager_open(
+    handle_ = AAssetManager_open(
         g_native_activity->assetManager, path.c_str(), AASSET_MODE_UNKNOWN);
 #else
-    stream_ = fopen(path.c_str(), "rb");
+    handle_ = fopen(path.c_str(), "rb");
 #endif
-    if (stream_ == nullptr)
+    if (!is_open())
+    {
+        handle_ = nullptr;
         LOGE("File: Failed to open '%s'", path.c_str());
+    }
 }
 
 File::File(const Path& path, const char* mode)
-    : is_asset_(false), stream_(nullptr)
+    : handle_(fopen(path.c_str(), mode))
 {
-    stream_ = fopen(path.c_str(), mode);
 }

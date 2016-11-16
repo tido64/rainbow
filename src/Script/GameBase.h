@@ -70,7 +70,7 @@ namespace rainbow
     public:
         static auto create(Director& director) -> std::unique_ptr<GameBase>;
 
-        virtual ~GameBase() = default;
+        virtual ~GameBase() {}
 
         auto input() -> Input& { return director_.input(); }
         auto scenegraph() -> SceneNode& { return director_.scenegraph(); }

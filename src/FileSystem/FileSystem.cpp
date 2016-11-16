@@ -38,9 +38,9 @@ namespace
     std::string g_current_path;
 }
 
-auto rainbow::filesystem::absolute(const char* p) -> Path
+auto rainbow::filesystem::absolute(const char* path) -> Path
 {
-    return Path{p};
+    return Path{path};
 }
 
 bool rainbow::filesystem::create_directories(const char* path,

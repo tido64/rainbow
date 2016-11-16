@@ -18,10 +18,6 @@ namespace
 #endif
 }
 
-Path::Path(const char* p) : path_(p)
-{
-}
-
 auto Path::extension() const -> const char*
 {
     auto p = path_.rfind('.');

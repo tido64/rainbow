@@ -74,7 +74,7 @@ auto graphics::memory_info() -> graphics::MemoryInfo
         return 0;
     }();
 
-    MemoryInfo meminfo;
+    MemoryInfo meminfo{};
     switch (pname)
     {
         case GL_TEXTURE_FREE_MEMORY_ATI: {
@@ -90,8 +90,6 @@ auto graphics::memory_info() -> graphics::MemoryInfo
                           &meminfo.total_available);
             break;
         default:
-            meminfo.current_available = 0;
-            meminfo.total_available = 0;
             break;
     }
     return meminfo;

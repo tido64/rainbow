@@ -150,33 +150,33 @@ NS_RAINBOW_LUA_BEGIN
     }
 
     template <>
-    void push<bool>(lua_State* L, bool b)
+    void push<bool>(lua_State* L, bool value)
     {
-        lua_pushboolean(L, static_cast<int>(b));
+        lua_pushboolean(L, static_cast<int>(value));
     }
 
     template <>
-    void push<const char*>(lua_State* L, const char* str)
+    void push<const char*>(lua_State* L, const char* value)
     {
-        lua_pushstring(L, str);
+        lua_pushstring(L, value);
     }
 
     template <>
-    void push<lua_CFunction>(lua_State* L, lua_CFunction c)
+    void push<lua_CFunction>(lua_State* L, lua_CFunction value)
     {
-        lua_pushcfunction(L, c);
+        lua_pushcfunction(L, value);
     }
 
     template <>
-    void push<lua_Integer>(lua_State* L, lua_Integer i)
+    void push<lua_Integer>(lua_State* L, lua_Integer value)
     {
-        lua_pushinteger(L, i);
+        lua_pushinteger(L, value);
     }
 
     template <>
-    void push<lua_Number>(lua_State* L, lua_Number n)
+    void push<lua_Number>(lua_State* L, lua_Number value)
     {
-        lua_pushnumber(L, n);
+        lua_pushnumber(L, value);
     }
 
     void pushpointer(lua_State* L, void* ptr, const char* name)
