@@ -10,7 +10,7 @@
 #include "Lua/LuaMacros.h"
 #include "Platform/Macros.h"
 
-// A 'verify' macro is defined in 'AssertMacros.h' in the OS X SDK.
+// A 'verify' macro is defined in 'AssertMacros.h' in the macOS SDK.
 #ifdef verify
 #   undef verify
 #endif

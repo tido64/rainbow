@@ -19,8 +19,8 @@ found in file `THIRDPARTY`.
 
 Rainbow runs on most popular operating systems:
 
-| Android | iOS | Linux | Mac OS X | Windows |
-|:-------:|:---:|:-----:|:--------:|:-------:|
+| Android | iOS | Linux | macOS | Windows |
+|:-------:|:---:|:-----:|:-----:|:-------:|
 | ✓ | ✓ | [![Linux build Status](https://travis-ci.org/tn0502/rainbow.svg?branch=master)](https://travis-ci.org/tn0502/rainbow) | ✓ | [![Windows build status](https://ci.appveyor.com/api/projects/status/oajtxwu9d9lrayk0?svg=true)](https://ci.appveyor.com/project/Tommy/rainbow) |
 
 ### Audio
@@ -30,7 +30,7 @@ the same professional tools that AAA studios use. There is also an open source
 alternative built on OpenAL. Audio format support depends on the platform.
 Typically, MP3 and Ogg Vorbis on Android, and
 [AAC, ALAC, and MP3](https://developer.apple.com/library/ios/documentation/AudioVideo/Conceptual/MultimediaPG/UsingAudio/UsingAudio.html#//apple_ref/doc/uid/TP40009767-CH2-SW33)
-on iOS and OS X.
+on iOS and macOS.
 
 ### Graphics
 
@@ -49,7 +49,7 @@ Rainbow is mostly built on
 ### Input
 
 - Accelerometer (Android and iOS)
-- Keyboard and mouse (Linux/Mac OS X/Windows)
+- Keyboard and mouse (Linux/macOS/Windows)
 - Microphone (Android and iOS)
 - Touch (Android and iOS)
 
@@ -76,8 +76,9 @@ First of all, clone the repository:
 	$ git clone --recursive https://bitbucket.org/tido/rainbow.git
 
 The repository only includes some of the libraries required to build Rainbow.
-The remaining requisites is listed on each platform's section. They must be
-installed or copied into the repository before you can start building Rainbow.
+The remaining requisites are listed in each platform's section below. They must
+be installed or copied into the repository before you can start building
+Rainbow.
 
 Easiest way to build Rainbow is to use the provided build scripts:
 
@@ -96,7 +97,9 @@ permission:
 For Windows developers, run the PowerShell script `tools\make.ps1` (right-click
 on it and select _Run with PowerShell_). It will take you through the steps.
 
-For iOS builds, see the corresponding section.
+For iOS builds, see the corresponding section below. More detailed instructions
+can be found in the
+[documentation](https://rainbow.readthedocs.io/en/latest/programming/development/building_rainbow_for_pc/).
 
 ### Building with FMOD Studio
 
@@ -152,7 +155,7 @@ lib/FMOD/lib/linux/x86_64/libfmodstudio.so
 lib/FMOD/lib/linux/x86_64/libfmodstudio.so.5
 lib/FMOD/lib/linux/x86_64/libfmodstudio.so.5.14
 
-# Mac OS X
+# macOS
 lib/FMOD/lib/mac/libfmod.dylib
 lib/FMOD/lib/mac/libfmodstudio.dylib
 
@@ -168,7 +171,7 @@ lib/FMOD/lib/windows/fmodstudio_vc.lib
 ```
 
 Note that you don't need to download libraries for all platforms. They're only
-listed for sake of completeness. If you're on Mac OS or Linux, you can use
+listed for sake of completeness. If you're on Linux or macOS, you can use
 `tools/fmod-import-tool.sh` to copy the files into place.
 
 ### Android
@@ -178,7 +181,7 @@ listed for sake of completeness. If you're on Mac OS or Linux, you can use
 
 Once you've installed both, open `rainbow/tools/build-android.sh` and change
 `NDK_HOME` to point at the NDK. The build script will create a debuggable and
-installable APK but is currently only available on Linux/Mac OS X. You can still
+installable APK but is currently only available on Linux/macOS. You can still
 compile for Android on Windows, it just requires some manual labour.
 
 Follow the steps outlined earlier and specify `android` for `platform`:
@@ -208,7 +211,7 @@ Windows builds can be built using MinGW-w64 by issuing `windows` as platform.
 However, this method hasn't been maintained in quite some time and may no longer
 work.
 
-### Mac OS X
+### macOS
 
 - [CMake](https://cmake.org/)
 - [Ogg Vorbis](https://www.xiph.org/vorbis/) (optional with
@@ -216,9 +219,9 @@ work.
 - [SDL](https://libsdl.org/)
 - [Xcode](https://itunes.apple.com/no/app/xcode/id497799835?mt=12)
 
-CMake and Ogg Vorbis can be installed through [Homebrew](http://brew.sh/) or
-[MacPorts](https://www.macports.org/). Xcode's Command Line Tools must be
-installed. SDL will be downloaded automatically by the build script.
+CMake, Ogg Vorbis, and SDL can be installed through [Homebrew](http://brew.sh/)
+or [MacPorts](https://www.macports.org/). Xcode's Command Line Tools must be
+installed.
 
 ### Windows
 

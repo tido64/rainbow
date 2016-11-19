@@ -10,7 +10,7 @@ Pick a demo under `demos`. For the purpose of this tutorial, we'll try to get
 
 1. Create a folder to contain Android files.
 2. Copy `transitions` into this folder.
-3. Follow steps 2-4 for Linux/Mac OS X/Windows.
+3. Follow steps 2-4 for Linux/macOS/Windows.
 4. Rename `transitions` `assets`.
 
 From the folder in step 1, run the build script:
@@ -36,7 +36,7 @@ Start the app on your device.
 
 You should now be able to run this demo in the simulator or on your device.
 
-## Linux / Mac OS X / Windows
+## Linux / macOS / Windows
 
 1. Copy this folder somewhere. In the following steps, we'll be copying more
    stuff into this folder. This will be your game folder.

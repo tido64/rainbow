@@ -28,7 +28,7 @@ the screen.
 ### `config` (optional)
 
 The configuration file is just another Lua script. It enables/disables features
-and sets the window size (Linux/Mac OS X/Windows).
+and sets the window size (Linux/macOS/Windows).
 
 ```lua
 accelerometer = false|true

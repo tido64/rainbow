@@ -73,7 +73,7 @@ if [ -f "$SRC"/lowlevel/lib/x86_64/libfmod.so.*.* ]; then
   fi
 fi
 
-# Mac OS X
+# macOS
 if [ -f "$SRC/lowlevel/lib/libfmod.dylib" ]; then
   mkdir -p lib/mac
   cp -v "$SRC/lowlevel/lib/libfmod.dylib" lib/mac/

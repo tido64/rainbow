@@ -90,7 +90,7 @@ bool ALMixer::initialize(int max_channels)
 
     alcMakeContextCurrent(context.get());
 
-    // OS X: Clear any errors from previous sessions.
+    // macOS: Clear any errors from previous sessions.
     alGetError();
 
     auto sources = std::make_unique<ALuint[]>(max_channels);

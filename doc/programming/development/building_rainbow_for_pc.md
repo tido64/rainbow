@@ -33,16 +33,12 @@ the instructions in `README.md` for more details.
 | Arch Linux    | `pacman -S --needed cmake gcc libvorbis mesa openal sdl2` |
 | Debian/Ubuntu | `apt-get install build-essential cmake libgl1-mesa-dev libopenal-dev libsdl2-dev libvorbis-dev` |
 
-### Mac OS X
+### macOS
 
 1. Download and install [Xcode](https://itunes.apple.com/app/xcode/id497799835?mt=12) from the App Store.
 2. Install the Command Line Tools Package by running `xcode-select --install` in Terminal.
 3. Install [Homebrew](http://brew.sh/) (or [MacPorts](https://www.macports.org/)).
-4. Install the rest of the dependencies: `brew install cmake libogg libvorbis pkg-config`
-
-!!! note
-
-    The correct version of SDL will be automatically downloaded by the build script.
+4. Install the rest of the dependencies: `brew install cmake libogg libvorbis pkg-config sdl2`
 
 ### Windows
 
@@ -84,7 +80,7 @@ Example: Build Rainbow with physics and Spine support for game development.
 
 You can pass any number of CMake options. For platform specific options, see the corresponding sections.
 
-### Linux / Mac OS X
+### Linux / macOS
 
 Rainbow must be built outside of the source tree. So you'll need to first make a directory for building Rainbow, then run the build script:
 
@@ -96,7 +92,7 @@ cd rainbow-build
 
 The build script will generate project files and start building Rainbow.
 
-By default, [GCC](https://gcc.gnu.org/) and Clang will be used to compile both C and C++ code on Linux and OS X respectively. Unix Makefiles is the default generator on Linux, and Xcode on OS X. You can change these by prefixing environment variables. For instance, to use GCC and [Ninja](https://ninja-build.org/) in place of Clang and Makefiles:
+By default, [GCC](https://gcc.gnu.org/) and Clang will be used to compile both C and C++ code on Linux and macOS respectively. Unix Makefiles is the default generator on Linux, and Xcode on macOS. You can change these by prefixing environment variables. For instance, to use GCC and [Ninja](https://ninja-build.org/) in place of Clang and Makefiles:
 
 ```bash
 CC=gcc CXX=g++ GENERATOR=Ninja /path/to/rainbow/tools/build.sh [option ...]
