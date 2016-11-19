@@ -382,7 +382,7 @@ endforeach()
 if(ANDROID)
   add_library(rainbow SHARED ${SOURCE_FILES})
 else()
-  add_executable(rainbow ${SOURCE_FILES})
+  add_executable(rainbow ${SOURCE_FILES} ${RESOURCE_FILES})
 endif()
 
 # IDE project source file groups

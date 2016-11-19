@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+  <Type Name="Animation">
+    <DisplayString Condition="stopped_ == false">Animation [playing frame={frame_}]</DisplayString>
+    <DisplayString Condition="stopped_ != false">Animation [stopped frame={frame_}]</DisplayString>
+    <Expand>
+      <Item Name="[frame rate]">1000 / interval_</Item>
+      <Item Condition="sprite_.batch_ != nullptr" Name="[sprite]">(*sprite_.batch_)[sprite_.i_]</Item>
+    </Expand>
+  </Type>
+  <Type Name="ArraySpan&lt;*&gt;">
+    <DisplayString>{{ size={size_} }</DisplayString>
+    <Expand>
+      <ArrayItems>
+        <Size>size_</Size>
+        <ValuePointer>data_</ValuePointer>
+      </ArrayItems>
+    </Expand>
+  </Type>
+  <Type Name="FontAtlas">
+    <DisplayString>{{pt={pt_} color={color_}}}</DisplayString>
+  </Type>
+  <Type Name="Label">
+    <DisplayString>{text_._Mypair._Myval2,s8}</DisplayString>
+    <Expand>
+      <Item Name="[text]">text_._Mypair._Myval2,s8</Item>
+      <Item Name="[font]">*font_.ptr_</Item>
+      <Item Name="[color]">color_</Item>
+      <Item Name="[alignment]">alignment_</Item>
+      <Item Name="[position]">position_</Item>
+      <Item Name="[angle]">angle_</Item>
+      <Item Name="[width]">width_</Item>
+    </Expand>
+  </Type>
+  <Type Name="SharedPtr&lt;*&gt;">
+    <DisplayString Condition="ptr_ == nullptr">empty</DisplayString>
+    <DisplayString Condition="ptr_->refs_ == 1">SharedPtr {*ptr_} [{ptr_->refs_} strong ref]</DisplayString>
+    <DisplayString Condition="ptr_->refs_ != 1">SharedPtr {*ptr_} [{ptr_->refs_} strong refs]</DisplayString>
+    <Expand>
+      <Item Condition="ptr_ != nullptr" Name="[ptr]">*ptr_</Item>
+    </Expand>
+  </Type>
+  <Type Name="Sprite">
+    <DisplayString>{{position={position_} width={width_} height={height_}}}</DisplayString>
+    <Expand>
+      <Item Name="[color]">color_</Item>
+      <Item Name="[scale]">scale_</Item>
+      <Item Name="[angle]">angle_</Item>
+      <Item Name="[pivot]">pivot_</Item>
+    </Expand>
+  </Type>
+  <Type Name="SpriteBatch">
+    <DisplayString>{{ size={count_} }</DisplayString>
+    <Expand>
+      <Item Name="[normal]">normal_</Item>
+      <Item Name="[texture]">texture_</Item>
+      <ArrayItems>
+        <Size>count_</Size>
+        <ValuePointer>sprites_.data_</ValuePointer>
+      </ArrayItems>
+    </Expand>
+  </Type>
+  <Type Name="SpriteRef">
+    <DisplayString>{{batch={batch_} i={i_}}}</DisplayString>
+    <Expand>
+      <ExpandedItem>(*batch_)[i_]</ExpandedItem>
+    </Expand>
+  </Type>
+  <Type Name="StableArray&lt;*&gt;">
+    <DisplayString>{{ size={size_} }</DisplayString>
+    <Expand>
+      <ArrayItems>
+        <Size>size_</Size>
+        <ValuePointer>indices_</ValuePointer>
+      </ArrayItems>
+      <ArrayItems>
+        <Size>size_</Size>
+        <ValuePointer>data_</ValuePointer>
+      </ArrayItems>
+    </Expand>
+  </Type>
+  <Type Name="TextureAtlas">
+    <DisplayString>{texture_}</DisplayString>
+    <Expand>
+      <ExpandedItem>regions_</ExpandedItem>
+    </Expand>
+  </Type>
+  <Type Name="TextureManager">
+    <DisplayString>{{active={active_} textures={textures_}}}</DisplayString>
+    <Expand>
+      <Item Name="[mag filter]">mag_filter_</Item>
+      <Item Name="[min filter]">min_filter_</Item>
+      <ExpandedItem>textures_</ExpandedItem>
+    </Expand>
+  </Type>
+  <Type Name="TreeNode">
+    <DisplayString>{{parent={parent_} children={children_}}}</DisplayString>
+  </Type>
+  <Type Name="`anonymous-namespace'::AnimationNode">
+    <DisplayString>{{enabled={enabled_} shader={program_}}}</DisplayString>
+    <Expand>
+      <Item Name="[animation]">animation_</Item>
+      <ExpandedItem>(rainbow::SceneNode*)this</ExpandedItem>
+    </Expand>
+  </Type>
+  <Type Name="`anonymous-namespace'::DrawableNode">
+    <DisplayString>{{enabled={enabled_} shader={program_}}}</DisplayString>
+    <Expand>
+      <Item Name="[drawable]">drawable_</Item>
+      <ExpandedItem>(rainbow::SceneNode*)this</ExpandedItem>
+    </Expand>
+  </Type>
+  <Type Name="`anonymous-namespace'::PrimitiveNode&lt;*&gt;">
+    <DisplayString>{{enabled={enabled_} shader={program_}}}</DisplayString>
+    <Expand>
+      <Item Condition="primitive_.text_ != nullptr" Name="[label]" Optional="true">primitive_</Item>
+      <Item Condition="primitive_.sprites_.size_ &gt;= 0" Name="[sprite batch]" Optional="true">primitive_</Item>
+      <ExpandedItem>(rainbow::SceneNode*)this</ExpandedItem>
+    </Expand>
+  </Type>
+  <Type Name="rainbow::SceneNode">
+    <DisplayString Condition="parent_ == nullptr">root {{enabled={enabled_} shader={program_}}}</DisplayString>
+    <DisplayString Condition="parent_ != nullptr">{{enabled={enabled_} shader={program_}}}</DisplayString>
+    <Expand>
+      <Item Name="[tag]" Optional="true">tag_</Item>
+      <Item Condition="parent_ != nullptr" Name="[parent]">*parent_</Item>
+      <ExpandedItem>children_</ExpandedItem>
+    </Expand>
+  </Type>
+  <Type Name="rainbow::Texture">
+    <DisplayString>{{name={name_} width={size_.x} height={size_.y}}}</DisplayString>
+  </Type>
+  <Type Name="rainbow::filesystem::Path">
+    <DisplayString>{path_,s8}</DisplayString>
+  </Type>
+  <Type Name="rainbow::graphics::Buffer">
+    <DisplayString>{{name={id_}}}</DisplayString>
+  </Type>
+  <Type Name="rainbow::graphics::VertexArray">
+    <DisplayString>{{name={array_}}}</DisplayString>
+  </Type>
+</AutoVisualizer>
