@@ -18,6 +18,7 @@
 #include "Config.h"
 #include "Director.h"
 #include "FileSystem/FileSystem.h"
+#include "Platform/Diagnostics.h"
 #include "Platform/SDL/Context.h"
 #include "Platform/SDL/RainbowController.h"
 #ifdef RAINBOW_TEST
@@ -88,6 +89,7 @@ auto main(int argc, char* argv[]) -> int
 
     if (should_run_tests(argc, argv))
     {
+        rainbow::diagnostics::attach_crash_dumper();
         rainbow::filesystem::current_path();
         return run_tests(argc, argv);
     }

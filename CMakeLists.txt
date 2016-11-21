@@ -135,6 +135,7 @@ set(SOURCE_FILES
     src/Memory/StableArray.h
     src/Memory/TempBuffer.cpp
     src/Memory/TempBuffer.h
+    src/Platform/Diagnostics.h
     src/Platform/Macros.h
     src/Platform/SystemInfo.h
     src/Script/Actor.h
@@ -223,16 +224,19 @@ else()
     list(APPEND SOURCE_FILES
          src/Common/impl/DataMap_Win.cpp
          src/Common/impl/DataMap_Win.h
+         src/Platform/impl/Diagnostics_Win.cpp
          src/Platform/impl/SystemInfo_Win.cpp
          tools/make.ps1
          appveyor.yml)
   else()
     list(APPEND SOURCE_FILES
          src/Common/impl/DataMap_Unix.cpp
-         src/Common/impl/DataMap_Unix.h)
+         src/Common/impl/DataMap_Unix.h
+         src/Platform/impl/Diagnostics_Unix.cpp)
     if(APPLE)
       list(APPEND SOURCE_FILES
            src/Graphics/Decoders/UIKit.h
+           src/Platform/impl/Diagnostics_Apple.cpp
            src/Platform/impl/SystemInfo_Apple.cpp)
     else()
       list(APPEND SOURCE_FILES src/Platform/impl/SystemInfo_Unix.cpp)
@@ -245,10 +249,7 @@ if(UNIT_TESTS)
   set(TEST_INCLUDE_DIR ${LOCAL_LIBRARY}/googletest/googletest/include)
   set(TEST_LIBRARY googletest)
   add_library(${TEST_LIBRARY} STATIC lib/googletest/googletest/src/gtest-all.cc)
-  set_property(
-      TARGET ${TEST_LIBRARY}
-      APPEND
-      PROPERTY COMPILE_FLAGS -w)
+  set_property(TARGET ${TEST_LIBRARY} APPEND PROPERTY COMPILE_FLAGS -w)
   set_property(
       TARGET ${TEST_LIBRARY}
       APPEND
@@ -290,9 +291,7 @@ endif()
 
 if(USE_FMOD_STUDIO)
   add_definitions(-DRAINBOW_AUDIO_FMOD=1)
-  list(APPEND SOURCE_FILES
-       src/Audio/FMOD/Mixer.cpp
-       src/Audio/FMOD/Mixer.h)
+  list(APPEND SOURCE_FILES src/Audio/FMOD/Mixer.cpp src/Audio/FMOD/Mixer.h)
 else()
   add_definitions(-DRAINBOW_AUDIO_AL=1)
   list(APPEND SOURCE_FILES
@@ -421,8 +420,6 @@ if(USE_SPINE)
 endif()
 include(${LOCAL_MODULE_PATH}/zlib.cmake)
 include(${LOCAL_MODULE_PATH}/libpng.cmake)
-
-set(SOURCE_FILES ${SOURCE_FILES} CACHE STRING "For external scripts")
 
 # Rainbow
 set_property(

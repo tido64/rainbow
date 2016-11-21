@@ -1,4 +1,5 @@
 # Generated files
+*.aps
 *.swp
 .DS_Store
 .browse.VC.*
