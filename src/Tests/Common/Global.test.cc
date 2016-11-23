@@ -14,7 +14,7 @@ namespace
         Fail
     };
 
-    class GlobalObject : public Global<GlobalObject>
+    class GlobalObject : public rainbow::Global<GlobalObject>
     {
     public:
         explicit GlobalObject(InitStatus status)

@@ -14,12 +14,12 @@
 
 namespace png
 {
-    bool check(const DataMap& data)
+    bool check(const rainbow::DataMap& data)
     {
         return png_sig_cmp(data.data(), 0, 8) == 0;
     }
 
-    auto decode(const DataMap& data)
+    auto decode(const rainbow::DataMap& data)
     {
         rainbow::Image image;
         image.format = rainbow::Image::Format::PNG;

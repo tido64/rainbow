@@ -24,7 +24,7 @@
 #   ifdef _MSC_VER
 #       define LOG_F(level, fmt, ...)                                          \
             printf(LOG_FMT(level, fmt) "\n",                                   \
-                   Chrono::system_now().count(),                               \
+                   rainbow::Chrono::system_now().count(),                      \
                    __VA_ARGS__)
 #       define LOGE(fmt, ...) LOG_F("ERROR", fmt, __VA_ARGS__)
 #       define LOGF(fmt, ...) LOG_F("FATAL", fmt, __VA_ARGS__)
@@ -32,7 +32,7 @@
 #       define LOG_EX(...) , __VA_ARGS__
 #       define LOG_F(level, fmt, ...)                                          \
             printf(LOG_FMT(level, fmt) "%c",                                   \
-                   Chrono::system_now().count()                                \
+                   rainbow::Chrono::system_now().count()                       \
                    LOG_EX(__VA_ARGS__))
 #       define LOGE(...) LOG_F("ERROR", __VA_ARGS__, '\n')
 #       define LOGF(...) LOG_F("FATAL", __VA_ARGS__, '\n')

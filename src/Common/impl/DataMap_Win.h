@@ -36,8 +36,8 @@ namespace rainbow
         void* addr_;
         void* handle_;
     };
-}
 
-using DataMap = rainbow::TDataMap<rainbow::DataMapWin>;
+    using DataMap = TDataMap<DataMapWin>;
+}
 
 #endif

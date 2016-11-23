@@ -19,6 +19,6 @@ namespace rainbow { namespace audio
         std::unique_ptr<IAudioFile> file;
         const char* key;
     };
-}}  // rainbow::audio
+}}  // namespace rainbow::audio
 
 #endif

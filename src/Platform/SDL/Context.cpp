@@ -9,12 +9,16 @@
 #include "Common/Logging.h"
 #include "Config.h"
 
+using rainbow::Config;
+using rainbow::SDLContext;
+using rainbow::Vec2i;
+
 namespace
 {
     static_assert(SDL_VERSION_ATLEAST(2, 0, 0),
                   "Rainbow requires SDL version 2.0.0 or higher");
 
-    auto window_size(const rainbow::Config& config)
+    auto window_size(const Config& config)
     {
         return config.width() == 0 || config.height() == 0
                    ? Vec2i{1280, 720}
@@ -22,7 +26,7 @@ namespace
     }
 }
 
-SDLContext::SDLContext(const rainbow::Config& config)
+SDLContext::SDLContext(const Config& config)
     : window_(nullptr), vsync_(false), fullscreen_(0), context_(nullptr)
 {
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER) < 0)

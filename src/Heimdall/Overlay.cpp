@@ -11,7 +11,9 @@
 
 using heimdall::Overlay;
 using rainbow::KeyStroke;
+using rainbow::Pointer;
 using rainbow::SceneNode;
+using rainbow::graphics::TextureManager;
 
 namespace graphics = rainbow::graphics;
 

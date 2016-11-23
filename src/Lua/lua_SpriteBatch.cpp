@@ -76,8 +76,8 @@ NS_RAINBOW_LUA_BEGIN
         // <spritebatch>:set_normal(<texture>)
         return set1ud<Texture>(
             L,
-            [](::SpriteBatch* batch, SharedPtr<TextureAtlas> atlas) {
-                batch->set_normal(atlas);
+            [](rainbow::SpriteBatch* batch, SharedPtr<TextureAtlas> atlas) {
+                batch->set_normal(std::move(atlas));
             });
     }
 
@@ -86,8 +86,8 @@ NS_RAINBOW_LUA_BEGIN
         // <spritebatch>:set_texture(<texture>)
         return set1ud<Texture>(
             L,
-            [](::SpriteBatch* batch, SharedPtr<TextureAtlas> atlas) {
-                batch->set_texture(atlas);
+            [](rainbow::SpriteBatch* batch, SharedPtr<TextureAtlas> atlas) {
+                batch->set_texture(std::move(atlas));
             });
     }
 } NS_RAINBOW_LUA_END

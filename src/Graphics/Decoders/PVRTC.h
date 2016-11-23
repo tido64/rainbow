@@ -19,7 +19,7 @@ namespace
     /// \see http://www.imgtec.net/powervr/insider/docs/PVR%20File%20Format.Specification.1.0.11.External.pdf
     struct PVRTexHeader
     {
-        static auto from_map(const DataMap& data)
+        static auto from_map(const rainbow::DataMap& data)
         {
             return reinterpret_cast<const PVRTexHeader*>(data.data());
         }
@@ -41,12 +41,12 @@ namespace
 
 namespace pvrtc
 {
-    bool check(const DataMap& data)
+    bool check(const rainbow::DataMap& data)
     {
         return PVRTexHeader::from_map(data)->version == kPVRHeaderVersion3;
     }
 
-    auto decode(const DataMap& data)
+    auto decode(const rainbow::DataMap& data)
     {
         rainbow::Image image;
         image.format = rainbow::Image::Format::PVRTC;

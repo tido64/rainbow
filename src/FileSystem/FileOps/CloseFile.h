@@ -23,6 +23,6 @@ namespace rainbow { namespace filesystem { namespace ops
         {
         }
     };
-}}}  // rainbow::filesystem::ops
+}}}  // namespace rainbow::filesystem::ops
 
 #endif

@@ -43,11 +43,11 @@ namespace rainbow { namespace graphics
         }
 
     private:
-    #ifdef USE_VERTEX_ARRAY_OBJECT
-        unsigned int array_ = 0;
-    #else
+#ifdef USE_VERTEX_ARRAY_OBJECT
+        uint32_t array_ = 0;
+#else
         std::function<void()> array_;
-    #endif
+#endif
     };
 }}  // namespace rainbow::graphics
 

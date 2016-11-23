@@ -6,6 +6,8 @@
 
 #include <thread>
 
+using rainbow::Chrono;
+
 namespace
 {
     Chrono::clock::duration now()

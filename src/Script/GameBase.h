@@ -29,7 +29,8 @@ namespace rainbow
     template <typename... Args>
     auto font(Args&&... args)
     {
-        auto font = ::make_shared<FontAtlas>(std::forward<Args>(args)...);
+        auto font =
+            rainbow::make_shared<FontAtlas>(std::forward<Args>(args)...);
         R_ASSERT(font->is_valid(), "rainbow::font: Failed to create font");
         return font;
     }
@@ -51,9 +52,10 @@ namespace rainbow
     template <typename... Args>
     auto texture(Args&&... args)
     {
-        auto texture = ::make_shared<TextureAtlas>(std::forward<Args>(args)...);
-        R_ASSERT(texture->is_valid(),
-                 "rainbow::texture: Failed to create texture");
+        auto texture =
+            rainbow::make_shared<TextureAtlas>(std::forward<Args>(args)...);
+        R_ASSERT(
+            texture->is_valid(), "rainbow::texture: Failed to create texture");
         return texture;
     }
 

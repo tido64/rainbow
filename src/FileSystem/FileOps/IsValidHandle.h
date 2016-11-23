@@ -15,6 +15,6 @@ namespace rainbow { namespace filesystem { namespace ops
             return ptr != nullptr;
         }
     };
-}}}  // rainbow::filesystem::ops
+}}}  // namespace rainbow::filesystem::ops
 
 #endif

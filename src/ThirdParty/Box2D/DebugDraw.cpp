@@ -11,6 +11,9 @@
 #include "Graphics/VertexArray.h"
 #include "Math/Geometry.h"
 
+using rainbow::Vec2f;
+using rainbow::graphics::ShaderManager;
+
 namespace
 {
     const float32 kAxisScale = 0.4f;

@@ -4,5 +4,7 @@
 
 #include "Heimdall/ChangeMonitor.h"
 
+using heimdall::ChangeMonitor;
+
 ChangeMonitor::ChangeMonitor(const char*) {}
 ChangeMonitor::~ChangeMonitor() {}

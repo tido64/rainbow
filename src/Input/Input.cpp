@@ -6,8 +6,10 @@
 
 using rainbow::ControllerAxisMotion;
 using rainbow::ControllerButtonEvent;
+using rainbow::Input;
 using rainbow::KeyMods;
 using rainbow::KeyStroke;
+using rainbow::Pointer;
 using rainbow::VirtualKey;
 
 namespace
@@ -43,7 +45,7 @@ constexpr unsigned int Input::kNumSupportedControllers;
 template <typename F>
 void Input::process_controller(unsigned int id, F&& process)
 {
-    for (auto i = 0u; i < rainbow::array_size(controllers_); ++i)
+    for (auto i = 0u; i < array_size(controllers_); ++i)
     {
         if (controllers_[i].id() == id)
         {
@@ -108,7 +110,7 @@ void Input::on_controller_button_up(const ControllerButtonEvent& button)
 void Input::on_controller_connected(unsigned int id)
 {
     int port = -1;
-    for (auto i = 0u; i < rainbow::array_size(controllers_); ++i)
+    for (auto i = 0u; i < array_size(controllers_); ++i)
     {
         if (controllers_[i].id() == id)
             return;

@@ -22,6 +22,7 @@
 // clang-format on
 
 using rainbow::Rect;
+using rainbow::Vec2i;
 using rainbow::graphics::State;
 
 namespace graphics = rainbow::graphics;

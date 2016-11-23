@@ -10,26 +10,26 @@
 
 #include "Math/Vec2.h"
 
-namespace rainbow
-{
-    struct ISolemnlySwearThatIAmOnlyTesting;
+namespace rainbow { struct ISolemnlySwearThatIAmOnlyTesting; }
 
+namespace rainbow { namespace graphics
+{
     namespace detail
     {
         struct Texture
         {
             std::string id;
-            unsigned int name;
-            unsigned int width;
-            unsigned int height;
-            unsigned int size;
-            unsigned int use_count;
+            uint32_t name;
+            uint32_t width;
+            uint32_t height;
+            uint32_t size;
+            uint32_t use_count;
 
-            Texture(std::string id_, unsigned int name_)
+            Texture(std::string id_, uint32_t name_)
                 : id(std::move(id_)), name(name_), width(0), height(0), size(0),
                   use_count(0) {}
 
-            auto operator==(unsigned int name_) { return name == name_; }
+            auto operator==(uint32_t name_) { return name == name_; }
             auto operator==(const std::string& id_) { return id == id_; }
         };
     }
@@ -55,16 +55,16 @@ namespace rainbow
         auto height() const { return size_.y; }
 
         void bind() const;
-        void bind(unsigned int unit) const;
+        void bind(uint32_t unit) const;
 
         explicit operator bool() const { return name_ != 0; }
-        operator unsigned int() const { return name_; }
+        operator uint32_t() const { return name_; }
 
         auto operator=(const Texture& texture) -> Texture& = delete;
         auto operator=(Texture&& texture) noexcept -> Texture&;
 
     private:
-        unsigned int name_;
+        uint32_t name_;
         Vec2u size_;
     };
 
@@ -82,7 +82,7 @@ namespace rainbow
     struct TextureRegion
     {
         Vec2f vx[4];
-        unsigned int atlas;
+        uint32_t atlas;
 
         TextureRegion() : atlas(0) {}
 
@@ -98,8 +98,8 @@ namespace rainbow
             vx[3].y = v0.y;
         }
 
-        operator unsigned int() const { return atlas; }
+        operator uint32_t() const { return atlas; }
     };
-}
+}}  // namespace rainbow::graphics
 
 #endif

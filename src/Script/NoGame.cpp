@@ -8,10 +8,13 @@
 #include "Script/Transition.h"
 
 using rainbow::GameBase;
+using rainbow::Sprite;
+using rainbow::Vec2f;
+using rainbow::Vec2i;
 
 void NoGame::init_impl(const Vec2i& screen)
 {
-    constexpr const float kDesiredHeight = 1440.0f;
+    constexpr float kDesiredHeight = 1440.0f;
 
     const float scale = screen.y / kDesiredHeight;
     const float logo_scale = 0.1f * scale;

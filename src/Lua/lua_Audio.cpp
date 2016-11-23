@@ -8,13 +8,14 @@
 #include "Lua/LuaHelper.h"
 #include "Lua/LuaSyntax.h"
 
+using rainbow::Vec2f;
 using rainbow::audio::Channel;
 using rainbow::audio::Sound;
 
 namespace
 {
-    constexpr const char kChannelType[] = "rainbow::audio::Channel";
-    constexpr const char kSoundType[] = "rainbow::audio::Sound";
+    constexpr char kChannelType[] = "rainbow::audio::Channel";
+    constexpr char kSoundType[] = "rainbow::audio::Sound";
 
     Channel* tochannel(lua_State* L)
     {

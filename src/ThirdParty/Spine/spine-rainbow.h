@@ -18,8 +18,11 @@
 #   include "Lua/LuaBind.h"
 #endif  // USE_LUA_SCRIPT
 
-struct SpriteVertex;
-class TextureAtlas;
+namespace rainbow
+{
+    struct SpriteVertex;
+    class TextureAtlas;
+}
 
 struct spAtlas;
 
@@ -49,7 +52,7 @@ public:
     /// <summary>
     ///   Sets the drawing position of the skeleton in world coordinates.
     /// </summary>
-    void set_position(const Vec2f& position);
+    void set_position(const rainbow::Vec2f& position);
 
     /// <summary>Sets time dilation factor.</summary>
     void set_time_scale(float scale) { time_scale_ = scale; }
@@ -116,11 +119,11 @@ private:
     spSkeleton* skeleton_;
     spAnimationState* state_;
     float time_scale_;
-    std::unique_ptr<SpriteVertex[]> vertices_;
+    std::unique_ptr<rainbow::SpriteVertex[]> vertices_;
     size_t num_vertices_;
     rainbow::graphics::Buffer vertex_buffer_;
     rainbow::graphics::VertexArray array_;
-    TextureAtlas* texture_;
+    rainbow::TextureAtlas* texture_;
     size_t max_vertices_;
     spAnimationStateData* animation_data_;
     spAtlas* atlas_;
@@ -132,7 +135,7 @@ namespace spine
 {
     namespace lua
     {
-        class Skeleton final : public IDrawable,
+        class Skeleton final : public rainbow::IDrawable,
                                private rainbow::lua::Bind<Skeleton>
         {
         public:
@@ -142,14 +145,14 @@ namespace spine
 
             Skeleton(lua_State*);
 
-            ::Skeleton* get() const { return skeleton_.get(); }
+            auto get() const { return skeleton_.get(); }
 
-            const rainbow::lua::WeakRef& listener() const
+            auto listener() const -> const rainbow::lua::WeakRef&
             {
                 return listener_;
             }
 
-            lua_State* state() const { return state_; }
+            auto state() const { return state_; }
 
         private:
             static int add_animation(lua_State*);
@@ -172,7 +175,7 @@ namespace spine
 
             // Implement IDrawable.
 
-            void move_impl(const Vec2f& distance) override;
+            void move_impl(const rainbow::Vec2f& distance) override;
             void draw_impl() override;
             void update_impl(uint64_t dt) override;
         };

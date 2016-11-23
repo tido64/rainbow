@@ -10,7 +10,10 @@
 #include "Lua/LuaScript.h"
 #include "Resources/Rainbow.lua.h"
 
+using rainbow::Chrono;
+using rainbow::Data;
 using rainbow::LuaMachine;
+using rainbow::LuaScript;
 
 namespace
 {

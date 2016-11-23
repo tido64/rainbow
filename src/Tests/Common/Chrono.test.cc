@@ -6,6 +6,8 @@
 
 #include "Common/Chrono.h"
 
+using rainbow::Chrono;
+
 TEST(ChronoTest, TimeDifferenceBetweenUpdates)
 {
     const Chrono::duration::rep threshold = 20;

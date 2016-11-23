@@ -9,32 +9,35 @@
 
 #include "Common/NonCopyable.h"
 
-/// <summary>Simple class for keeping time.</summary>
-/// <remarks>Resolution of time is in milliseconds.</remarks>
-class Chrono : private NonCopyable<Chrono>
+namespace rainbow
 {
-public:
-    using clock = std::chrono::steady_clock;
-    using duration = std::chrono::milliseconds;
+    /// <summary>Simple class for keeping time.</summary>
+    /// <remarks>Resolution of time is in milliseconds.</remarks>
+    class Chrono : private NonCopyable<Chrono>
+    {
+    public:
+        using clock = std::chrono::steady_clock;
+        using duration = std::chrono::milliseconds;
 
-    static void sleep(duration::rep milliseconds);
-    static auto system_now() -> duration;
-    static auto time_since_epoch() -> std::chrono::seconds;
+        static void sleep(duration::rep milliseconds);
+        static auto system_now() -> duration;
+        static auto time_since_epoch() -> std::chrono::seconds;
 
-    Chrono();
+        Chrono();
 
-    /// <summary>
-    ///   Returns the time difference between current and previous frame.
-    /// </summary>
-    auto delta() const { return delta_.count(); }
+        /// <summary>
+        ///   Returns the time difference between current and previous frame.
+        /// </summary>
+        auto delta() const { return delta_.count(); }
 
-    /// <summary>Moves the clock one tick forward.</summary>
-    void tick();
+        /// <summary>Moves the clock one tick forward.</summary>
+        void tick();
 
-protected:
-    duration delta_;
-    clock::duration current_;
-    clock::duration previous_;
-};
+    private:
+        duration delta_;
+        clock::duration current_;
+        clock::duration previous_;
+    };
+}
 
 #endif

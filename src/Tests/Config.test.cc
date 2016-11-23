@@ -15,24 +15,24 @@ using rainbow::filesystem::Path;
 
 namespace
 {
-    constexpr const char kConfigTestPath[] =
+    constexpr char kConfigTestPath[] =
         "rainbow-test-random-path-to-avoid-existing-config-files";
 
-    constexpr const char kAlternateConfig[] =
+    constexpr char kAlternateConfig[] =
         "accelerometer = true;\n"
         "allow_high_dpi = false;\n"
         "msaa = 6;\n"
         "resolution = {750,1334};\n"
         "suspend_on_focus_lost = true;\n";
 
-    constexpr const char kInvalidConfig[] = "@";
+    constexpr char kInvalidConfig[] = "@";
 
-    constexpr const char kSparseConfig[] =
+    constexpr char kSparseConfig[] =
         "allow_high_dpi = true;\n"
         "msaa = 10;\n"
         "suspend_on_focus_lost = false;\n";
 
-    constexpr const char kStandardConfig[] =
+    constexpr char kStandardConfig[] =
         "accelerometer = false;\n"
         "allow_high_dpi = true;\n"
         "msaa = 4;\n"

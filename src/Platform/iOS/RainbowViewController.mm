@@ -13,6 +13,9 @@
 
 #pragma clang diagnostic ignored "-Wunused-parameter"
 
+using rainbow::Pointer;
+using rainbow::Vec2i;
+
 namespace
 {
     constexpr NSTimeInterval kAccelerometerUpdateInterval = 1.0 / 60.0;

@@ -11,6 +11,8 @@
 #include "Input/VirtualKey.h"
 
 using heimdall::OverlayActivator;
+using rainbow::KeyStroke;
+using rainbow::Pointer;
 using rainbow::VirtualKey;
 
 namespace
@@ -42,7 +44,7 @@ void OverlayActivator::update(uint64_t dt)
     }
 }
 
-bool OverlayActivator::on_key_down_impl(const rainbow::KeyStroke& key)
+bool OverlayActivator::on_key_down_impl(const KeyStroke& key)
 {
     if (!overlay_->is_enabled())
     {
@@ -61,7 +63,7 @@ bool OverlayActivator::on_key_down_impl(const rainbow::KeyStroke& key)
     return false;
 }
 
-bool OverlayActivator::on_key_up_impl(const rainbow::KeyStroke& key)
+bool OverlayActivator::on_key_up_impl(const KeyStroke& key)
 {
     if (!overlay_->is_enabled() &&
         (key.key == VirtualKey::LeftCtrl || key.key == VirtualKey::RightCtrl))

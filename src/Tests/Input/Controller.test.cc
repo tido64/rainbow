@@ -12,6 +12,8 @@ using rainbow::ControllerAxis;
 using rainbow::ControllerAxisMotion;
 using rainbow::ControllerButton;
 using rainbow::ControllerButtonEvent;
+using rainbow::Input;
+using rainbow::InputListener;
 
 namespace
 {

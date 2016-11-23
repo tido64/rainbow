@@ -19,7 +19,7 @@ NS_RAINBOW_LUA_BEGIN
 
         SpriteBatch(lua_State* L);
 
-        ::SpriteBatch* get() { return &batch_; }
+        auto get() { return &batch_; }
 
     private:
         static int add(lua_State*);
@@ -27,7 +27,7 @@ NS_RAINBOW_LUA_BEGIN
         static int set_normal(lua_State*);
         static int set_texture(lua_State*);
 
-        ::SpriteBatch batch_;
+        rainbow::SpriteBatch batch_;
     };
 } NS_RAINBOW_LUA_END
 

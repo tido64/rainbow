@@ -20,8 +20,12 @@
 #include "Graphics/OpenGL.h"
 #include "Graphics/TextureManager.h"
 
-using rainbow::Texture;
-using rainbow::array_size;
+using rainbow::Data;
+using rainbow::FontAtlas;
+using rainbow::FontGlyph;
+using rainbow::Vec2u;
+using rainbow::graphics::Texture;
+using rainbow::graphics::TextureManager;
 
 namespace
 {
@@ -173,7 +177,7 @@ auto FontAtlas::get_glyph(uint32_t c) const -> const FontGlyph*
 }
 
 void FontAtlas::load(TextureManager& texture_manager,
-                     const rainbow::Texture& texture,
+                     const Texture& texture,
                      const Data& font)
 {
     R_ASSERT(font, "Failed to load font");
@@ -206,8 +210,8 @@ void FontAtlas::load(TextureManager& texture_manager,
     const Vec2u& max = max_glyph_size(face, charset_, array_size(charset_));
     if (max.is_zero())
         return;
-    const Vec2u size(rainbow::ceil_pow2(max.x * kNumGlyphsPerColRow),
-                     rainbow::ceil_pow2(max.y * kNumGlyphsPerColRow));
+    const Vec2u size(ceil_pow2(max.x * kNumGlyphsPerColRow),
+                     ceil_pow2(max.y * kNumGlyphsPerColRow));
 
     // GL_LUMINANCE8_ALPHA8 buffer
     Vec2u offset(size.x * size.y * 2, 0);

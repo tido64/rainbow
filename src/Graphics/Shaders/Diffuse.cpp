@@ -7,6 +7,8 @@
 #include "Graphics/Renderer.h"
 #include "Graphics/Shaders.h"
 
+using rainbow::graphics::ShaderManager;
+
 namespace
 {
     Shader::Params sDiffuseLight2Df{

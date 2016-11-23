@@ -35,3 +35,10 @@ namespace rainbow { namespace test
         return detail::Not<std::decay_t<F>>{std::forward<F>(predicate)};
     }
 }}  // namespace rainbow::test
+
+namespace rainbow
+{
+    struct ISolemnlySwearThatIAmOnlyTesting
+    {
+    };
+}

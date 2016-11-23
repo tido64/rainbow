@@ -10,6 +10,8 @@
 #include "Common/Data.h"
 #include "FileSystem/FileSystem.h"
 
+using rainbow::Data;
+
 namespace
 {
     const char kSecretData[] = "It's a double-rainbow!\n";

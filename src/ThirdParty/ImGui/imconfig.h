@@ -35,9 +35,9 @@
 
 //---- Define constructor and implicit cast operators to convert back<>forth from your math types and ImVec2/ImVec4.
 #define IM_VEC2_CLASS_EXTRA                                                 \
-        ImVec2(const Vec2f& f) : x(f.x), y(f.y) {}                          \
-        ImVec2(const Vec2i& i) : x(i.x), y(i.y) {}                          \
-        operator Vec2f() const { return Vec2f{x, y}; }
+        ImVec2(const rainbow::Vec2f& f) : x(f.x), y(f.y) {}                 \
+        ImVec2(const rainbow::Vec2i& i) : x(i.x), y(i.y) {}                 \
+        operator rainbow::Vec2f() const { return rainbow::Vec2f{x, y}; }
 /*
 #define IM_VEC4_CLASS_EXTRA                                                 \
         ImVec4(const MyVec4& f) { x = f.x; y = f.y; z = f.z; w = f.w; }     \

@@ -21,104 +21,111 @@
 
 struct AAsset;
 
-namespace rainbow { namespace filesystem { class Path; }}
-
-class IFile : private NonCopyable<IFile>
+namespace rainbow
 {
-public:
-    virtual ~IFile() {}
+    namespace filesystem { class Path; }
 
-    /// <summary>Returns the file size.</summary>
-    virtual auto size() const -> size_t = 0;
-
-    /// <summary>
-    ///   Reads <paramref name="size"/> bytes from file into buffer
-    ///   <paramref name="dst"/>.
-    /// </summary>
-    /// <param name="dst">[out] Destination buffer.</param>
-    /// <param name="size">Number of bytes to read.</param>
-    /// <returns>Number of bytes read.</returns>
-    virtual auto read(void* dst, size_t size) -> size_t = 0;
-
-    /// <summary>
-    ///   Sets the file position indicator for the file stream to the value
-    ///   pointed to by <paramref name="offset"/>.
-    ///   <seealso cref="fseek"/>
-    /// </summary>
-    /// <param name="offset">
-    ///   Number of bytes to shift the position relative to origin.
-    /// </param>
-    /// <param name="origin">Position to which offset is added.</param>
-    /// <returns>0 upon success, nonzero value otherwise.</returns>
-    virtual auto seek(int64_t offset, int origin) -> int = 0;
-
-    /// <summary>Writes buffer at <paramref name="buffer"/> to file.</summary>
-    /// <param name="buffer">Source buffer.</param>
-    /// <param name="size">Number of bytes to write.</param>
-    /// <returns>Number of bytes written.</returns>
-    virtual auto write(const void* buffer, size_t size) -> size_t = 0;
-
-    /// <summary>Returns whether the file was successfully opened.</summary>
-    virtual /*explicit*/ operator bool() const = 0;
-};
-
-class File final : private NonCopyable<File>
-{
-public:
-    static auto open(const rainbow::filesystem::Path& path) -> File;
-    static auto open_asset(const char* path) -> File;
-    static auto open_document(const char* path) -> File;
-    static auto open_write(const char* path) -> File;
-
-    File(File&& file) noexcept : handle_(std::move(file.handle_))
+    class IFile : private NonCopyable<IFile>
     {
-        file.handle_ = nullptr;
-    }
+    public:
+        virtual ~IFile() {}
 
-    ~File();
+        /// <summary>Returns the file size.</summary>
+        virtual auto size() const -> size_t = 0;
 
-    /// <summary>Returns whether this instance has an associated file.</summary>
-    auto is_open() const -> bool;
+        /// <summary>
+        ///   Reads <paramref name="size"/> bytes from file into buffer
+        ///   <paramref name="dst"/>.
+        /// </summary>
+        /// <param name="dst">[out] Destination buffer.</param>
+        /// <param name="size">Number of bytes to read.</param>
+        /// <returns>Number of bytes read.</returns>
+        virtual auto read(void* dst, size_t size) -> size_t = 0;
 
-    /// <summary>Returns the file size.</summary>
-    auto size() const -> size_t;
+        /// <summary>
+        ///   Sets the file position indicator for the file stream to the value
+        ///   pointed to by <paramref name="offset"/>.
+        ///   <seealso cref="fseek"/>
+        /// </summary>
+        /// <param name="offset">
+        ///   Number of bytes to shift the position relative to origin.
+        /// </param>
+        /// <param name="origin">Position to which offset is added.</param>
+        /// <returns>0 upon success, nonzero value otherwise.</returns>
+        virtual auto seek(int64_t offset, int origin) -> int = 0;
 
-    /// <summary>
-    ///   Reads <paramref name="size"/> bytes from file into buffer
-    ///   <paramref name="dst"/>.
-    /// </summary>
-    /// <param name="dst">[out] Destination buffer.</param>
-    /// <param name="size">Number of bytes to read.</param>
-    /// <returns>Number of bytes read.</returns>
-    auto read(void* dst, size_t size) -> size_t;
+        /// <summary>Writes <paramref name="buffer"/> to file.</summary>
+        /// <param name="buffer">Source buffer.</param>
+        /// <param name="size">Number of bytes to write.</param>
+        /// <returns>Number of bytes written.</returns>
+        virtual auto write(const void* buffer, size_t size) -> size_t = 0;
 
-    /// <summary>
-    ///   Sets the file position indicator for the file stream to the value
-    ///   pointed to by <paramref name="offset"/>.
-    ///   <seealso cref="fseek"/>
-    /// </summary>
-    /// <param name="offset">
-    ///   Number of bytes to shift the position relative to origin.
-    /// </param>
-    /// <param name="origin">Position to which offset is added.</param>
-    /// <returns>0 upon success, nonzero value otherwise.</returns>
-    auto seek(int64_t offset, int origin) -> int;
+        /// <summary>Returns whether the file was successfully opened.</summary>
+        virtual /*explicit*/ operator bool() const = 0;
+    };
 
-    /// <summary>Writes buffer at <paramref name="buffer"/> to file.</summary>
-    /// <param name="buffer">Source buffer.</param>
-    /// <param name="size">Number of bytes to write.</param>
-    /// <returns>Number of bytes written.</returns>
-    auto write(const void* buffer, size_t size) -> size_t;
+    class File final : private NonCopyable<File>
+    {
+    public:
+        static auto open(const filesystem::Path& path) -> File;
+        static auto open_asset(const char* path) -> File;
+        static auto open_document(const char* path) -> File;
+        static auto open_write(const char* path) -> File;
 
-    explicit operator bool() const { return is_open(); }
-    operator AAsset*() const;
-    operator FILE*() const;
+        File(File&& file) noexcept : handle_(std::move(file.handle_))
+        {
+            file.handle_ = nullptr;
+        }
 
-private:
-    mapbox::util::variant<std::nullptr_t, AAsset*, FILE*> handle_;
+        ~File();
 
-    explicit File(const rainbow::filesystem::Path& path);
-    File(const rainbow::filesystem::Path& path, const char* mode);
-};
+        /// <summary>
+        ///   Returns whether this instance has an associated file.
+        /// </summary>
+        auto is_open() const -> bool;
+
+        /// <summary>Returns the file size.</summary>
+        auto size() const -> size_t;
+
+        /// <summary>
+        ///   Reads <paramref name="size"/> bytes from file into buffer
+        ///   <paramref name="dst"/>.
+        /// </summary>
+        /// <param name="dst">[out] Destination buffer.</param>
+        /// <param name="size">Number of bytes to read.</param>
+        /// <returns>Number of bytes read.</returns>
+        auto read(void* dst, size_t size) -> size_t;
+
+        /// <summary>
+        ///   Sets the file position indicator for the file stream to the value
+        ///   pointed to by <paramref name="offset"/>.
+        ///   <seealso cref="fseek"/>
+        /// </summary>
+        /// <param name="offset">
+        ///   Number of bytes to shift the position relative to origin.
+        /// </param>
+        /// <param name="origin">Position to which offset is added.</param>
+        /// <returns>0 upon success, nonzero value otherwise.</returns>
+        auto seek(int64_t offset, int origin) -> int;
+
+        /// <summary>
+        ///   Writes buffer at <paramref name="buffer"/> to file.
+        /// </summary>
+        /// <param name="buffer">Source buffer.</param>
+        /// <param name="size">Number of bytes to write.</param>
+        /// <returns>Number of bytes written.</returns>
+        auto write(const void* buffer, size_t size) -> size_t;
+
+        explicit operator bool() const { return is_open(); }
+        operator AAsset*() const;
+        operator FILE*() const;
+
+    private:
+        mapbox::util::variant<std::nullptr_t, AAsset*, FILE*> handle_;
+
+        explicit File(const filesystem::Path& path);
+        File(const filesystem::Path& path, const char* mode);
+    };
+}
 
 #endif

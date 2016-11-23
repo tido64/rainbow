@@ -10,10 +10,16 @@
 #include "Graphics/Renderer.h"
 #include "Graphics/SpriteBatch.h"
 
+using rainbow::Animation;
+using rainbow::IDrawable;
+using rainbow::Label;
+using rainbow::SceneNode;
+using rainbow::SpriteBatch;
+using rainbow::Vec2f;
+using rainbow::graphics::ShaderManager;
+
 static_assert(ShaderManager::kInvalidProgram == 0,
               "Inlined SceneNode(Type, void*) assumes kInvalidProgram == 0");
-
-using rainbow::SceneNode;
 
 namespace
 {

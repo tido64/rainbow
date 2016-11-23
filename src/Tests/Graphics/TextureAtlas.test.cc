@@ -5,11 +5,10 @@
 #include <gtest/gtest.h>
 
 #include "Graphics/TextureAtlas.h"
+#include "Tests/TestHelpers.h"
 
-namespace rainbow
-{
-    struct ISolemnlySwearThatIAmOnlyTesting {};
-}
+using rainbow::TextureAtlas;
+using rainbow::Vec2f;
 
 TEST(TextureAtlasTest, AddsRegions)
 {

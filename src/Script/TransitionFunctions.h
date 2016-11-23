@@ -10,13 +10,13 @@
 #include "Common/Color.h"
 #include "Math/Vec2.h"
 
-using TimingFunction = std::function<float(float, float, float)>;
-
 namespace rainbow
 {
+    using TimingFunction = std::function<float(float, float, float)>;
+
     namespace timing
     {
-        const int kInterval = 4;
+        constexpr int kInterval = 4;
     }
 
     inline auto repeat_count_from_duration(int duration) -> int

@@ -18,6 +18,6 @@ namespace rainbow { namespace audio
     };
 
     using Mixer = TMixer<DummyMixer>;
-}}  // rainbow::audio
+}}  // namespace rainbow::audio
 
 #endif

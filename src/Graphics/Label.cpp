@@ -9,11 +9,15 @@
 #include "Common/UTF8.h"
 #include "Math/Transform.h"
 
-using rainbow::are_equal;
+using rainbow::Colorb;
+using rainbow::FontAtlas;
+using rainbow::Label;
+using rainbow::SharedPtr;
+using rainbow::Vec2f;
 
 namespace
 {
-    const float kAlignmentFactor[]{0.0f, 1.0f, 0.5f};
+    constexpr float kAlignmentFactor[]{0.0f, 1.0f, 0.5f};
 }
 
 Label::Label()
@@ -63,7 +67,7 @@ void Label::set_scale(float f)
     if (are_equal(f, scale_))
         return;
 
-    scale_ = rainbow::clamp(f, 0.01f, 1.0f);
+    scale_ = clamp(f, 0.01f, 1.0f);
     set_needs_update(kStaleBuffer);
 }
 
@@ -107,7 +111,7 @@ void Label::update_internal()
         width_ = 0;
         unsigned int start = 0;
         unsigned int count = 0;
-        const bool is_rotated = !rainbow::is_almost_zero(angle_);
+        const bool is_rotated = !is_almost_zero(angle_);
         const Vec2f R = is_rotated ? Vec2f{cosf(-angle_), sinf(-angle_)}
                                    : Vec2f::Right;
         const bool needs_alignment =
@@ -116,7 +120,7 @@ void Label::update_internal()
         const float origin_x = pen.x;
         SpriteVertex* vx = vertices_.get();
 
-        rainbow::for_each_utf8(
+        for_each_utf8(
             text_.get(),
             [this, &start, &count, &pen, origin_x, R, needs_alignment, &vx](
                 uint32_t ch)
@@ -188,7 +192,7 @@ void Label::save(unsigned int start,
             ](SpriteVertex& v) {
                 auto p = v.position;
                 p.x -= offset;
-                v.position = rainbow::transform_srt(p, sin_r, cos_r, translate);
+                v.position = transform_srt(p, sin_r, cos_r, translate);
             });
     }
     if (width > width_)

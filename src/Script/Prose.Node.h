@@ -33,8 +33,8 @@ void set_color_and_transform(lua_State* L, T asset)
 
 auto create_animation(lua_State* L,
                       const SpriteRef& sprite,
-                      rainbow::ScopeStack& stack,
-                      rainbow::SceneNode* parent) -> Prose::Asset
+                      ScopeStack& stack,
+                      SceneNode* parent) -> Prose::Asset
 {
     const auto table = lua_gettop(L);
     const auto num_frames = static_cast<int>(lua_rawlen(L, table));
@@ -79,8 +79,8 @@ auto create_animation(lua_State* L,
 
 auto create_label(lua_State* L,
                   Prose& scene,
-                  rainbow::ScopeStack& stack,
-                  rainbow::SceneNode* parent) -> Prose::Asset
+                  ScopeStack& stack,
+                  SceneNode* parent) -> Prose::Asset
 {
     auto label = stack.allocate<Label>();
     set_color_and_transform(L, label);
@@ -111,8 +111,8 @@ auto create_label(lua_State* L,
 
 auto create_sprite(lua_State* L,
                    SpriteBatch* batch,
-                   rainbow::ScopeStack& stack,
-                   rainbow::SceneNode* parent) -> Prose::Asset
+                   ScopeStack& stack,
+                   SceneNode* parent) -> Prose::Asset
 {
     SpriteRef sprite;
     if (!has_key(L, "size"))
@@ -154,9 +154,9 @@ auto create_sprite(lua_State* L,
 
 auto create_spritebatch(lua_State* L,
                         Prose& scene,
-                        rainbow::ScopeStack& stack,
+                        ScopeStack& stack,
                         uint32_t count,
-                        rainbow::SceneNode* parent) -> Prose::Asset
+                        SceneNode* parent) -> Prose::Asset
 {
     auto batch = stack.allocate<SpriteBatch>(count);
     auto field = get_field(L, "texture");
@@ -179,8 +179,8 @@ auto node_type(lua_State* L)
 auto create_node(lua_State* L,
                  Prose& scene,
                  Prose::AssetMap& assets,
-                 rainbow::ScopeStack& stack,
-                 rainbow::SceneNode* parent) -> Prose::Asset
+                 ScopeStack& stack,
+                 SceneNode* parent) -> Prose::Asset
 {
     Prose::Asset asset = no_asset();
     switch (node_type(L))

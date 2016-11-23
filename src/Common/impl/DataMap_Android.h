@@ -24,8 +24,8 @@ namespace rainbow
         size_t off_;
         const File asset_;
     };
-}
 
-using DataMap = rainbow::TDataMap<rainbow::DataMapAndroid>;
+    using DataMap = TDataMap<DataMapAndroid>;
+}
 
 #endif

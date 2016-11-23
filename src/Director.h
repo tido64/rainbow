@@ -11,10 +11,9 @@
 #include "Input/Input.h"
 #include "Script/Timer.h"
 
-class Data;
-
 namespace rainbow
 {
+    class Data;
     class GameBase;
 
     /// <summary>

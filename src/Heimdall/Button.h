@@ -12,7 +12,7 @@ namespace heimdall
     class Button
     {
     public:
-        Label& drawable() { return label_; }
+        rainbow::Label& drawable() { return label_; }
 
         template <typename F>
         void set_action(F&& action)
@@ -46,7 +46,7 @@ namespace heimdall
         void press() const { action_(); }
 
     private:
-        Label label_;
+        rainbow::Label label_;
         std::function<void()> action_;
     };
 }

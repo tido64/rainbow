@@ -5,10 +5,10 @@
 #ifndef COLLISION_SAT_H_
 #define COLLISION_SAT_H_
 
-class SpriteRef;
-
 namespace rainbow
 {
+    class SpriteRef;
+
     bool overlaps(const SpriteRef& a, const SpriteRef& b);
 }
 

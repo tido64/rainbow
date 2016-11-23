@@ -19,28 +19,33 @@
 
 struct lua_State;
 
-class ChangeMonitor : private NonCopyable<ChangeMonitor>
+namespace heimdall
 {
-public:
-    using Callback = std::function<void(const char*)>;
+    class ChangeMonitor : private rainbow::NonCopyable<ChangeMonitor>
+    {
+    public:
+        explicit ChangeMonitor(const char* directory);
+        ~ChangeMonitor();
 
-    explicit ChangeMonitor(const char* directory);
-    ~ChangeMonitor();
+        template <typename F>
+        void set_callback(F&& callback)
+        {
+            callback_ = std::move(callback);
+        }
 
-    void set_callback(Callback&& callback) { callback_ = std::move(callback); }
+        void on_modified(const char* path) { callback_(path); }
 
-    void on_modified(const char* path) { callback_(path); }
-
-private:
+    private:
 #if defined(RAINBOW_OS_MACOS)
-    FSEventStreamRef stream_;
-    FSEventStreamContext context_;
+        FSEventStreamRef stream_;
+        FSEventStreamContext context_;
 #elif defined(RAINBOW_OS_WINDOWS)
-    bool monitoring_;
-    HANDLE hDirectory_;
-    std::future<void> worker_;
+        bool monitoring_;
+        HANDLE hDirectory_;
+        std::future<void> worker_;
 #endif
-    Callback callback_;
-};
+        std::function<void(const char*)> callback_;
+    };
+}
 
 #endif

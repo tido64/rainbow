@@ -7,8 +7,9 @@
 #include "Graphics/Renderer.h"
 
 using rainbow::Passkey;
-using rainbow::Texture;
+using rainbow::graphics::Texture;
 using rainbow::graphics::TextureFilter;
+using rainbow::graphics::TextureManager;
 
 namespace
 {
@@ -69,7 +70,7 @@ void Texture::bind() const
     TextureManager::Get()->bind(name_);
 }
 
-void Texture::bind(unsigned int unit) const
+void Texture::bind(uint32_t unit) const
 {
     TextureManager::Get()->bind(name_, unit);
 }
@@ -97,7 +98,7 @@ TextureManager::TextureManager(const Passkey<rainbow::graphics::State>&)
 
 TextureManager::~TextureManager()
 {
-    for (const rainbow::detail::Texture& texture : textures_)
+    for (const detail::Texture& texture : textures_)
         glDeleteTextures(1, &texture.name);
 }
 
@@ -107,7 +108,7 @@ void TextureManager::set_filter(TextureFilter filter)
     min_filter_ = filter;
 }
 
-void TextureManager::bind(unsigned int name)
+void TextureManager::bind(uint32_t name)
 {
     if (name == active_[0])
         return;
@@ -116,7 +117,7 @@ void TextureManager::bind(unsigned int name)
     active_[0] = name;
 }
 
-void TextureManager::bind(unsigned int name, unsigned int unit)
+void TextureManager::bind(uint32_t name, uint32_t unit)
 {
     R_ASSERT(unit < kNumTextureUnits, "Invalid texture unit");
 
@@ -134,9 +135,7 @@ void TextureManager::trim()
     auto first = std::remove_if(
         textures_.begin(),
         textures_.end(),
-        [](const rainbow::detail::Texture& texture) {
-            return texture.use_count == 0;
-        });
+        [](const detail::Texture& texture) { return texture.use_count == 0; });
     auto end = textures_.end();
     if (first == end)
         return;
@@ -173,7 +172,7 @@ void TextureManager::upload(const Texture& texture,
 
     perform_if(textures_,
                texture,
-               [this, width, height](rainbow::detail::Texture& texture) {
+               [this, width, height](detail::Texture& texture) {
                    texture.width = width;
                    texture.height = height;
                    texture.size = width * height * 4;
@@ -201,7 +200,7 @@ void TextureManager::upload_compressed(const Texture& texture,
 
     perform_if(textures_,
                texture,
-               [this, width, height, size](rainbow::detail::Texture& texture) {
+               [this, width, height, size](detail::Texture& texture) {
                    texture.width = width;
                    texture.height = height;
                    texture.size = size;
@@ -214,14 +213,14 @@ void TextureManager::upload_compressed(const Texture& texture,
 
 void TextureManager::release(const Texture& t, const Passkey<Texture>&)
 {
-    perform_if(textures_, t, [](rainbow::detail::Texture& texture) {
+    perform_if(textures_, t, [](detail::Texture& texture) {
         --texture.use_count;
     });
 }
 
 void TextureManager::retain(const Texture& t, const Passkey<Texture>&)
 {
-    perform_if(textures_, t, [](rainbow::detail::Texture& texture) {
+    perform_if(textures_, t, [](detail::Texture& texture) {
         ++texture.use_count;
     });
 }

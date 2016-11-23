@@ -10,11 +10,12 @@
 #include "Common/Algorithm.h"
 #include "Common/Logging.h"
 
+using rainbow::File;
 using rainbow::audio::OggVorbisAudioFile;
 
 namespace
 {
-    constexpr const char kIdOggVorbis[] = "OggS";
+    constexpr char kIdOggVorbis[] = "OggS";
 
     void ov_log_error(int err)
     {

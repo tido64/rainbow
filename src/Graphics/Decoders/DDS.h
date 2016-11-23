@@ -59,7 +59,7 @@ namespace
 
     struct DDSFile
     {
-        static auto from_map(const DataMap& data)
+        static auto from_map(const rainbow::DataMap& data)
         {
             return reinterpret_cast<const DDSFile*>(data.data());
         }
@@ -71,12 +71,12 @@ namespace
 
 namespace dds
 {
-    bool check(const DataMap& data)
+    bool check(const rainbow::DataMap& data)
     {
         return DDSFile::from_map(data)->dwMagic == kDDSMagic;
     }
 
-    auto decode(const DataMap& data)
+    auto decode(const rainbow::DataMap& data)
     {
         rainbow::Image image;
         image.format = rainbow::Image::Format::S3TC;

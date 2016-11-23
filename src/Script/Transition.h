@@ -13,13 +13,13 @@ namespace rainbow
 {
     class SceneNode;
 
-    inline auto move(rainbow::SceneNode* node,
+    inline auto move(SceneNode* node,
                      const Vec2f& delta,
                      int duration,
                      TimingFunction timing)
     {
         return TimerManager::Get()->set_timer(
-            Move<rainbow::SceneNode*>(node, delta, duration, std::move(timing)),
+            Move<SceneNode*>(node, delta, duration, std::move(timing)),
             timing::kInterval,
             repeat_count_from_duration(duration));
     }

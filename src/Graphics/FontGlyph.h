@@ -7,19 +7,22 @@
 
 #include "Graphics/SpriteVertex.h"
 
-/// <summary>
-///   Font glyph structure for storing advance and a textured sprite.
-/// </summary>
-struct FontGlyph
+namespace rainbow
 {
-    unsigned int code;     ///< UTF-32 code.
-    int advance;           ///< Horizontal advancement.
-    int left;              ///< Left alignment.
-    SpriteVertex quad[4];  ///< Sprite vertices.
+    /// <summary>
+    ///   Font glyph structure for storing advance and a textured sprite.
+    /// </summary>
+    struct FontGlyph
+    {
+        uint32_t code;         ///< UTF-32 code.
+        int32_t advance;       ///< Horizontal advancement.
+        int32_t left;          ///< Left alignment.
+        SpriteVertex quad[4];  ///< Sprite vertices.
 
 #ifdef FONTATLAS_KERNING
-    int16_t kern[95];      ///< Font kerning information for each character.
+        int16_t kern[95];  ///< Font kerning information for each character.
 #endif
-};
+    };
+}
 
 #endif

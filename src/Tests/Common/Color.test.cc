@@ -8,6 +8,9 @@
 #include "Common/Color.h"
 #include "Common/Logging.h"
 
+using rainbow::Colorb;
+using rainbow::Colorf;
+
 namespace
 {
     constexpr uint8_t kAlpha = 0x78;

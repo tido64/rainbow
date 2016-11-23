@@ -59,13 +59,15 @@ NS_RAINBOW_LUA_BEGIN
         switch (*lua_tostring(L, 2))
         {
             case 'c':
-                self->label_.set_alignment(::Label::TextAlignment::Center);
+                self->label_.set_alignment(
+                    rainbow::Label::TextAlignment::Center);
                 break;
             case 'r':
-                self->label_.set_alignment(::Label::TextAlignment::Right);
+                self->label_.set_alignment(
+                    rainbow::Label::TextAlignment::Right);
                 break;
             default:
-                self->label_.set_alignment(::Label::TextAlignment::Left);
+                self->label_.set_alignment(rainbow::Label::TextAlignment::Left);
                 break;
         }
         return 0;
@@ -97,15 +99,15 @@ NS_RAINBOW_LUA_BEGIN
         // <label>:set_font(<font>)
         return set1ud<Font>(
             L,
-            [](::Label* label, SharedPtr<FontAtlas> font) {
-              label->set_font(font);
+            [](rainbow::Label* label, SharedPtr<FontAtlas> font) {
+              label->set_font(std::move(font));
             });
     }
 
     int Label::set_position(lua_State* L)
     {
         // <label>:set_position(x, y)
-        return set1fv(L, [](::Label* label, const Vec2f& position) {
+        return set1fv(L, [](rainbow::Label* label, const Vec2f& position) {
             label->set_position(position);
         });
     }
@@ -113,7 +115,7 @@ NS_RAINBOW_LUA_BEGIN
     int Label::set_rotation(lua_State* L)
     {
         // <label>:set_rotation(r)
-        return set1f(L, [](::Label* label, float r) {
+        return set1f(L, [](rainbow::Label* label, float r) {
             label->set_rotation(r);
         });
     }
@@ -121,7 +123,7 @@ NS_RAINBOW_LUA_BEGIN
     int Label::set_scale(lua_State* L)
     {
         // <label>:set_scale(f)
-        return set1f(L, [](::Label* label, float f) {
+        return set1f(L, [](rainbow::Label* label, float f) {
             label->set_scale(f);
         });
     }
@@ -142,7 +144,7 @@ NS_RAINBOW_LUA_BEGIN
     int Label::move(lua_State* L)
     {
         // <label>:move(x, y)
-        return set1fv(L, [](::Label* label, const Vec2f& delta) {
+        return set1fv(L, [](rainbow::Label* label, const Vec2f& delta) {
             label->move(delta);
         });
     }

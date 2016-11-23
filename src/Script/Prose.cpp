@@ -24,7 +24,20 @@
 #define kProseNoSuchFile       "Prose: No such file: %s"
 #define kProseUnknownProperty  "Prose: Unknown property '%s' on %s: %s"
 
+using rainbow::Animation;
+using rainbow::Colorb;
+using rainbow::FontAtlas;
+using rainbow::Data;
+using rainbow::Label;
+using rainbow::Prose;
 using rainbow::SceneNode;
+using rainbow::ScopeStack;
+using rainbow::SharedPtr;
+using rainbow::Sprite;
+using rainbow::SpriteRef;
+using rainbow::SpriteBatch;
+using rainbow::TextureAtlas;
+using rainbow::Vec2f;
 
 enum class Prose::AssetType
 {
@@ -60,6 +73,11 @@ auto Prose::get_asset(const std::string& name) -> T*
                 ? nullptr
                 : static_cast<T*>(asset->second.ptr));
 }
+
+// Workaround for https://gcc.gnu.org/bugzilla/show_bug.cgi?id=56480
+#if defined(__GNUC__) && !defined(__clang__)
+namespace rainbow {
+#endif
 
 template <>
 auto Prose::get_asset<Animation>(const std::string& name) -> Animation*
@@ -123,6 +141,10 @@ auto Prose::get_asset<TextureAtlas>(const std::string& name) -> TextureAtlas*
         R_ABORT("Prose: No such texture: %s", name.c_str());
     return texture;
 }
+
+#if defined(__GNUC__) && !defined(__clang__)
+}  // Workaround for https://gcc.gnu.org/bugzilla/show_bug.cgi?id=56480
+#endif
 
 auto Prose::get_animation(const std::string& name) -> Animation*
 {
@@ -305,19 +327,19 @@ namespace
         switch (type)
         {
             case Prose::AssetType::Animation:
-                return rainbow::ScopeStack::size_of<Animation>();
+                return ScopeStack::size_of<Animation>();
             case Prose::AssetType::FontAtlas:
-                return rainbow::ScopeStack::size_of<FontAtlas>();
+                return ScopeStack::size_of<FontAtlas>();
             case Prose::AssetType::Label:
-                return rainbow::ScopeStack::size_of<Label>();
+                return ScopeStack::size_of<Label>();
             case Prose::AssetType::Node:
-                return rainbow::ScopeStack::size_of<SceneNode>();
+                return ScopeStack::size_of<SceneNode>();
             case Prose::AssetType::SpriteBatch:
-                return rainbow::ScopeStack::size_of<SpriteBatch>();
+                return ScopeStack::size_of<SpriteBatch>();
             case Prose::AssetType::Sound:
-                return rainbow::ScopeStack::size_of<void*>();
+                return ScopeStack::size_of<void*>();
             case Prose::AssetType::TextureAtlas:
-                return rainbow::ScopeStack::size_of<TextureAtlas>();
+                return ScopeStack::size_of<TextureAtlas>();
             default:
                 return 0;
         }

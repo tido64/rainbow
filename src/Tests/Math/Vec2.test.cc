@@ -6,6 +6,9 @@
 
 #include "Math/Vec2.h"
 
+using rainbow::Vec2f;
+using rainbow::Vec2i;
+
 TEST(Vec2Test, Angle)
 {
     const Vec2i v0;

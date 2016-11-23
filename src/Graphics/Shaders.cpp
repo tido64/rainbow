@@ -6,21 +6,7 @@
 
 #include "Graphics/OpenGL.h"
 
-namespace rainbow
+namespace rainbow { namespace shaders { namespace integrated
 {
-    namespace shaders
-    {
-        namespace integrated
-        {
-            #include "Graphics/Shaders/Shaders.h"
-        }
-
-        const char kDiffuseLight2Df[]      = "Shaders/DiffuseLight2D.fsh";
-        const char kDiffuseLightNormalf[]  = "Shaders/DiffuseLightNormal.fsh";
-        const char kFixed2Df[]             = "Shaders/Fixed2D.fsh";
-        const char kFixed2Dv[]             = "Shaders/Fixed2D.vsh";
-        const char kNormalMappedv[]        = "Shaders/NormalMapped.vsh";
-        const char kSimple2Dv[]            = "Shaders/Simple2D.vsh";
-        const char kSimplef[]              = "Shaders/Simple.fsh";
-    }
-}
+    #include "Graphics/Shaders/Shaders.h"
+}}}  // namespace rainbow::shaders::integrated

@@ -33,10 +33,7 @@ namespace rainbow { namespace graphics
         void upload(const void* data, size_t size) const;
 
 #ifdef RAINBOW_TEST
-        explicit Buffer(const rainbow::ISolemnlySwearThatIAmOnlyTesting&)
-            : id_(0)
-        {
-        }
+        explicit Buffer(const ISolemnlySwearThatIAmOnlyTesting&) : id_(0) {}
 #endif
 
     private:

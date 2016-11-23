@@ -7,37 +7,41 @@
 
 #include "Common/Constraints.h"
 
-class Link
+namespace rainbow
 {
-public:
-    Link() : next_(nullptr), prev_(nullptr) {}
-
-    auto next() const { return next_; }
-    auto prev() const { return prev_; }
-
-    void append(Link* node);
-    void pop();
-
-    template <typename T, typename F, typename = EnableIfBaseOf<Link, T>>
-    friend auto for_each(T* node, F&& f) -> bool
+    class Link
     {
-        while (node)
+    public:
+        Link() : next_(nullptr), prev_(nullptr) {}
+
+        auto next() const { return next_; }
+        auto prev() const { return prev_; }
+
+        void append(Link* node);
+        void pop();
+
+        template <typename T, typename F, typename = EnableIfBaseOf<Link, T>>
+        friend auto for_each(T* node, F&& f) -> bool
         {
-            if (f(node))
-                return true;
-            node = node->next();
+            while (node)
+            {
+                if (f(node))
+                    return true;
+
+                node = node->next();
+            }
+            return false;
         }
-        return false;
-    }
 
-protected:
-    ~Link() { pop(); }
+    protected:
+        ~Link() { pop(); }
 
-private:
-    Link* next_;
-    Link* prev_;
+    private:
+        Link* next_;
+        Link* prev_;
 
-    virtual void on_end_link_removed(Link* node);
-};
+        virtual void on_end_link_removed(Link* node);
+    };
+}
 
 #endif

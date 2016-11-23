@@ -15,7 +15,7 @@ public:
 private:
     rainbow::spritebatch_t batch_;
 
-    void init_impl(const Vec2i& screen) override;
+    void init_impl(const rainbow::Vec2i& screen) override;
     void update_impl(uint64_t dt) override;
 };
 

@@ -11,11 +11,10 @@
 #include "Input/Pointer.h"
 #include "Platform/SDL/Context.h"
 
-using rainbow::ControllerAxis;
-using rainbow::ControllerAxisMotion;
-using rainbow::ControllerButton;
-using rainbow::ControllerButtonEvent;
-using rainbow::KeyStroke;
+using rainbow::Config;
+using rainbow::RainbowController;
+using rainbow::SDLContext;
+using rainbow::Vec2i;
 
 namespace
 {
@@ -50,8 +49,7 @@ namespace
     }
 }
 
-RainbowController::RainbowController(SDLContext& context,
-                                     const rainbow::Config& config)
+RainbowController::RainbowController(SDLContext& context, const Config& config)
     : context_(context), suspend_on_focus_lost_(config.suspend())
 {
     if (director_.terminated())
@@ -132,19 +130,19 @@ bool RainbowController::run()
                 break;
             case SDL_MOUSEMOTION:
                 on_mouse_motion(event.motion.state,
-                                rainbow::graphics::convert_to_flipped_view(
+                                graphics::convert_to_flipped_view(
                                     Vec2i(event.motion.x, event.motion.y)),
                                 event.motion.timestamp);
                 break;
             case SDL_MOUSEBUTTONDOWN:
                 on_mouse_down(event.button.button,
-                              rainbow::graphics::convert_to_flipped_view(
+                              graphics::convert_to_flipped_view(
                                   Vec2i(event.button.x, event.button.y)),
                               event.button.timestamp);
                 break;
             case SDL_MOUSEBUTTONUP:
                 on_mouse_up(event.button.button,
-                            rainbow::graphics::convert_to_flipped_view(
+                            graphics::convert_to_flipped_view(
                                 Vec2i(event.button.x, event.button.y)),
                             event.button.timestamp);
                 break;
@@ -217,7 +215,7 @@ void RainbowController::on_controller_disconnected(int instance_id)
             if (SDL_GameControllerGetAttached(controller) != 0)
                 SDL_GameControllerClose(controller);
 
-            rainbow::quick_erase(game_controllers_, i);
+            quick_erase(game_controllers_, i);
             director_.input().on_controller_disconnected(instance_id);
             break;
         }
@@ -238,7 +236,7 @@ void RainbowController::on_mouse_motion(uint32_t buttons,
 {
     if (buttons > 0)
     {
-        Pointer p[rainbow::array_size(kMouseButtons)];
+        Pointer p[array_size(kMouseButtons)];
         size_t i = 0;
         for (auto button : kMouseButtons)
         {
@@ -268,9 +266,9 @@ void RainbowController::on_mouse_up(uint32_t button,
 void RainbowController::on_window_resized()
 {
     const Vec2i& size = context_.window_size();
-    if (size == rainbow::graphics::window_size())
+    if (size == graphics::window_size())
         return;
 
     const Vec2i& viewport = context_.drawable_size();
-    rainbow::graphics::set_window_size(size, viewport.x / size.x);
+    graphics::set_window_size(size, viewport.x / size.x);
 }

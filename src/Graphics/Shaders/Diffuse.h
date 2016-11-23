@@ -24,7 +24,7 @@ namespace rainbow { namespace shaders
         int cutoff_;    ///< Maximum distance of the light's influence.
         int radius_;    ///< Light source's radius.
         int position_;  ///< Position of the light source.
-        unsigned int program_;
+        uint32_t program_;
     };
 }}  // namespace rainbow::shaders
 

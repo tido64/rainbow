@@ -11,7 +11,10 @@
 #include "Lua/lua_Platform.h"
 
 using rainbow::GameBase;
+using rainbow::LuaScript;
 using rainbow::KeyStroke;
+using rainbow::Pointer;
+using rainbow::Vec2i;
 
 LuaScript::~LuaScript() { lua_.close(); }
 

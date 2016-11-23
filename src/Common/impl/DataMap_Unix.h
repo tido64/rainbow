@@ -36,8 +36,8 @@ namespace rainbow
         void* addr_;
         const bool is_embedded_;
     };
-}
 
-using DataMap = rainbow::TDataMap<rainbow::DataMapUnix>;
+    using DataMap = TDataMap<DataMapUnix>;
+}
 
 #endif

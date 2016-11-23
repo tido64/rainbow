@@ -29,13 +29,15 @@
 #include "Graphics/VertexArray.h"
 #include "Input/VirtualKey.h"
 
+using rainbow::Vec2f;
 using rainbow::graphics::Buffer;
 using rainbow::graphics::ElementBuffer;
 using rainbow::graphics::ScopedProjection;
 using rainbow::graphics::ScopedScissorTest;
+using rainbow::graphics::Texture;
 using rainbow::graphics::TextureFilter;
+using rainbow::graphics::TextureManager;
 using rainbow::graphics::VertexArray;
-using rainbow::Texture;
 
 namespace
 {

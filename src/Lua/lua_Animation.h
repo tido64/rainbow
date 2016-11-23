@@ -21,7 +21,7 @@ NS_RAINBOW_LUA_BEGIN
 
         Animation(lua_State*);
 
-        ::Animation* get() { return animation_.get(); }
+        auto get() { return animation_.get(); }
 
     private:
         static int current_frame(lua_State*);
@@ -36,7 +36,7 @@ NS_RAINBOW_LUA_BEGIN
         static int start(lua_State*);
         static int stop(lua_State*);
 
-        std::unique_ptr<::Animation> animation_;
+        std::unique_ptr<rainbow::Animation> animation_;
         WeakRef listener_;
     };
 } NS_RAINBOW_LUA_END

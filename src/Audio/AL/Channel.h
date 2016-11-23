@@ -35,6 +35,6 @@ namespace rainbow { namespace audio
         unsigned int buffers_[kNumBuffers]{0, 0, 0};
         Sound* sound_;
     };
-}}  // rainbow::audio
+}}  // namespace rainbow::audio
 
 #endif

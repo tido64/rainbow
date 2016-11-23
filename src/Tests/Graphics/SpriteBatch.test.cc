@@ -5,11 +5,14 @@
 #include <gtest/gtest.h>
 
 #include "Graphics/SpriteBatch.h"
+#include "Tests/TestHelpers.h"
 
-namespace rainbow
-{
-    struct ISolemnlySwearThatIAmOnlyTesting {};
-}
+using rainbow::Sprite;
+using rainbow::SpriteBatch;
+using rainbow::SpriteRef;
+using rainbow::SpriteVertex;
+using rainbow::TextureAtlas;
+using rainbow::Vec2f;
 
 namespace
 {
@@ -95,7 +98,7 @@ TEST(SpriteBatchTest, MoveConstructs)
     rainbow::ISolemnlySwearThatIAmOnlyTesting mock;
 
     SpriteBatch batch(mock);
-    auto atlas = make_shared<TextureAtlas>(mock);
+    auto atlas = rainbow::make_shared<TextureAtlas>(mock);
     batch.set_texture(atlas);
 
     for (uint32_t i = 0; i < batch.capacity(); ++i)

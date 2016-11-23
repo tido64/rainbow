@@ -8,33 +8,41 @@
 #include "Common/Logging.h"
 #include "Common/NonCopyable.h"
 
-template <typename T>
-class Global : private NonCopyable<Global<T>>
+namespace rainbow
 {
-public:
-    static auto Get()
+    template <typename T>
+    class Global : private NonCopyable<Global<T>>
     {
-        R_ASSERT(s_instance, "Instance not yet created or already destroyed");
-        return s_instance;
-    }
+    public:
+        static auto Get()
+        {
+            R_ASSERT(s_instance != nullptr,
+                     "Instance not yet created or already destroyed");
 
-protected:
-    Global() = default;
-    ~Global() { s_instance = nullptr; }
+            return s_instance;
+        }
 
-    bool is_global() const { return s_instance == static_cast<const T*>(this); }
+    protected:
+        Global() = default;
+        ~Global() { s_instance = nullptr; }
 
-    void make_global()
-    {
-        R_ASSERT(!s_instance, "An instance already exists");
-        s_instance = static_cast<T*>(this);
-    }
+        bool is_global() const
+        {
+            return s_instance == static_cast<const T*>(this);
+        }
 
-private:
-    static T* s_instance;
-};
+        void make_global()
+        {
+            R_ASSERT(s_instance == nullptr, "An instance already exists");
+            s_instance = static_cast<T*>(this);
+        }
 
-template <typename T>
-T* Global<T>::s_instance = nullptr;
+    private:
+        static T* s_instance;
+    };
+
+    template <typename T>
+    T* Global<T>::s_instance = nullptr;
+}
 
 #endif

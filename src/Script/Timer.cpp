@@ -5,6 +5,8 @@
 #include "Script/Timer.h"
 
 using rainbow::Passkey;
+using rainbow::Timer;
+using rainbow::TimerManager;
 
 void Timer::dispose(const Passkey<TimerManager>&)
 {

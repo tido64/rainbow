@@ -7,6 +7,8 @@
 #include "Common/Random.h"
 #include "Memory/StableArray.h"
 
+using rainbow::StableArray;
+
 namespace
 {
     template <size_t N>

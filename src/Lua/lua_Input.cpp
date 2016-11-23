@@ -9,9 +9,6 @@
 #include "Lua/LuaHelper.h"
 #include "Lua/LuaSyntax.h"
 
-using rainbow::KeyStroke;
-using rainbow::VirtualKey;
-
 NS_RAINBOW_LUA_MODULE_BEGIN(input)
 {
     namespace

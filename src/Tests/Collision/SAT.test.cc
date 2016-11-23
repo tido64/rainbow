@@ -6,11 +6,11 @@
 
 #include "Collision/SAT.h"
 #include "Graphics/SpriteBatch.h"
+#include "Tests/TestHelpers.h"
 
-namespace rainbow
-{
-    struct ISolemnlySwearThatIAmOnlyTesting {};
-}
+using rainbow::SpriteBatch;
+using rainbow::SpriteVertex;
+using rainbow::Vec2f;
 
 namespace
 {

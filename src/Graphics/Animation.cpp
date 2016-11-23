@@ -4,6 +4,9 @@
 
 #include "Graphics/Animation.h"
 
+using rainbow::Animation;
+using rainbow::SpriteRef;
+
 Animation::Animation(const SpriteRef& sprite,  // NOLINT
                      Frames frames,
                      unsigned int fps,

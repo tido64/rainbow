@@ -6,10 +6,11 @@
 
 #include "Graphics/SceneGraph.h"
 #include "Graphics/ShaderManager.h"
-
-namespace rainbow { struct ISolemnlySwearThatIAmOnlyTesting {}; }
+#include "Tests/TestHelpers.h"
 
 using rainbow::SceneNode;
+using rainbow::Vec2f;
+using rainbow::graphics::ShaderManager;
 
 namespace
 {

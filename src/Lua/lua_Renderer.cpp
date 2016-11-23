@@ -9,6 +9,7 @@
 #include "Lua/LuaSyntax.h"
 
 using rainbow::graphics::TextureFilter;
+using rainbow::graphics::TextureManager;
 
 namespace
 {

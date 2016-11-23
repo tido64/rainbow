@@ -16,8 +16,6 @@
 #include "Heimdall/Overlay.h"
 #include "Heimdall/OverlayActivator.h"
 
-struct Pointer;
-
 namespace heimdall
 {
     /// <summary>Overlay for debugging options.</summary>
@@ -28,7 +26,7 @@ namespace heimdall
 
         bool active() const { return director_.active(); }
         auto error() const { return director_.error(); }
-        auto input() -> Input& { return director_.input(); }
+        auto input() -> rainbow::Input& { return director_.input(); }
         auto terminated() const { return director_.terminated(); }
 
         void draw()
@@ -37,7 +35,7 @@ namespace heimdall
             scenegraph_.draw();
         }
 
-        void init(const Vec2i& screen);
+        void init(const rainbow::Vec2i& screen);
         void terminate() { director_.terminate(); }
         void terminate(const char* error) { director_.terminate(error); }
         void update(uint64_t dt);

@@ -6,11 +6,15 @@
 
 #include "Graphics/Animation.h"
 #include "Graphics/SpriteBatch.h"
+#include "Tests/TestHelpers.h"
 
-namespace rainbow
-{
-    struct ISolemnlySwearThatIAmOnlyTesting {};
-}
+using rainbow::Animation;
+using rainbow::SharedPtr;
+using rainbow::SpriteBatch;
+using rainbow::SpriteRef;
+using rainbow::SpriteVertex;
+using rainbow::TextureAtlas;
+using rainbow::Vec2f;
 
 namespace
 {
@@ -21,7 +25,7 @@ namespace
     {
     public:
         AnimationTest()
-            : atlas_(make_shared<TextureAtlas>(mock)),
+            : atlas_(rainbow::make_shared<TextureAtlas>(mock)),
               batch_(mock),
               sprite_(batch_.create_sprite(2, 2)),
               vertex_array_(batch_.vertices()),

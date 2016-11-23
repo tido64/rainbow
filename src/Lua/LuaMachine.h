@@ -10,14 +10,14 @@
 #include "Common/NonCopyable.h"
 #include "Common/Passkey.h"
 
-class Data;
-class LuaScript;
 struct lua_State;
 
 namespace rainbow
 {
     namespace lua { class SceneGraph; }
 
+    class Data;
+    class LuaScript;
     class SceneNode;
 
     /// <summary>Embeds Lua scripting engine.</summary>

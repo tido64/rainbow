@@ -15,7 +15,8 @@ namespace rainbow { struct Rect; }
 
 namespace heimdall
 {
-    class Overlay final : public IDrawable, public InputListener
+    class Overlay final : public rainbow::IDrawable,
+                          public rainbow::InputListener
     {
     public:
         Overlay();
@@ -55,10 +56,10 @@ namespace heimdall
 
         bool on_key_down_impl(const rainbow::KeyStroke&) override;
         bool on_key_up_impl(const rainbow::KeyStroke&) override;
-        bool on_pointer_began_impl(const ArrayView<Pointer>&) override;
+        bool on_pointer_began_impl(const ArrayView<rainbow::Pointer>&) override;
         bool on_pointer_canceled_impl() override;
-        bool on_pointer_ended_impl(const ArrayView<Pointer>&) override;
-        bool on_pointer_moved_impl(const ArrayView<Pointer>&) override;
+        bool on_pointer_ended_impl(const ArrayView<rainbow::Pointer>&) override;
+        bool on_pointer_moved_impl(const ArrayView<rainbow::Pointer>&) override;
     };
 }
 

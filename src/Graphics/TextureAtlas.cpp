@@ -10,9 +10,12 @@
 
 #define kInvalidColorDepth "Invalid colour depth"
 
+using rainbow::DataMap;
 using rainbow::Image;
-using rainbow::Texture;
+using rainbow::TextureAtlas;
 using rainbow::filesystem::Path;
+using rainbow::graphics::Texture;
+using rainbow::graphics::TextureManager;
 
 TextureAtlas::TextureAtlas(const Path& path, float scale)
 {
@@ -36,7 +39,7 @@ TextureAtlas::TextureAtlas(const char* id, const DataMap& data, float scale)
         });
 }
 
-auto TextureAtlas::add_region(int x, int y, int w, int h) -> unsigned int
+auto TextureAtlas::add_region(int x, int y, int w, int h) -> uint32_t
 {
     const float width = static_cast<float>(texture_.width());
     const float height = static_cast<float>(texture_.height());
@@ -46,7 +49,7 @@ auto TextureAtlas::add_region(int x, int y, int w, int h) -> unsigned int
 
     const Vec2f v0(x / width, y / height);
     const Vec2f v1((x + w) / width, (y + h) / height);
-    const auto i = static_cast<unsigned int>(regions_.size());
+    const auto i = static_cast<uint32_t>(regions_.size());
     regions_.emplace_back(v0, v1);
     regions_[i].atlas = texture_;
     return i;
@@ -114,7 +117,7 @@ void TextureAtlas::load(TextureManager& texture_manager,
                 image.channels,
                 image.width,
                 image.height,
-                static_cast<unsigned int>(image.size),
+                static_cast<uint32_t>(image.size),
                 image.data);
             break;
 #endif  // DDS

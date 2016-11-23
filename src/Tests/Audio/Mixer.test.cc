@@ -14,7 +14,7 @@ using rainbow::audio::Sound;
 namespace
 {
     constexpr int kMaxAudioChannels = 8;
-    constexpr const char kAudioTestFile[] = "Silence.ogg";
+    constexpr char kAudioTestFile[] = "Silence.ogg";
 
     auto not_paused = rainbow::test::not_fn(rainbow::audio::is_paused);
     auto not_playing = rainbow::test::not_fn(rainbow::audio::is_playing);

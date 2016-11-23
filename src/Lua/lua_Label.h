@@ -19,7 +19,7 @@ NS_RAINBOW_LUA_BEGIN
 
         Label(lua_State*);
 
-        ::Label* get() { return &label_; }
+        auto get() { return &label_; }
 
     private:
         static int get_color(lua_State*);
@@ -32,7 +32,7 @@ NS_RAINBOW_LUA_BEGIN
         static int set_text(lua_State*);
         static int move(lua_State*);
 
-        ::Label label_;
+        rainbow::Label label_;
     };
 }
 NS_RAINBOW_LUA_END

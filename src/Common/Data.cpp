@@ -9,6 +9,9 @@
 #include "Common/Logging.h"
 #include "FileSystem/File.h"
 
+using rainbow::Data;
+using rainbow::File;
+
 auto Data::load_asset(const char* asset) -> Data
 {
     return Data(File::open_asset(asset));
@@ -67,5 +70,7 @@ void Data::allocate(size_t size)
         static_cast<char*>(data_)[size] = 0;
     }
     else  // Pad with zeros.
+    {
         memset(static_cast<char*>(data_) + size, 0, allocated_ - size);
+    }
 }

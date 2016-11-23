@@ -5,17 +5,22 @@
 #ifndef COMMON_NONCOPYABLE_H_
 #define COMMON_NONCOPYABLE_H_
 
-/// Prevents objects of a class from being copy-constructed or assigned.
-template <typename T>
-class NonCopyable
+namespace rainbow
 {
-protected:
-    NonCopyable() = default;
-    ~NonCopyable() = default;
+    /// <summary>
+    ///   Prevents objects of a class from being copy-constructed or assigned.
+    /// </summary>
+    template <typename T>
+    class NonCopyable
+    {
+    public:
+        NonCopyable(const NonCopyable&) = delete;
+        auto operator=(const NonCopyable&) -> NonCopyable& = delete;
 
-private:
-    NonCopyable(const NonCopyable&) = delete;
-    auto operator=(const NonCopyable&) -> NonCopyable& = delete;
-};
+    protected:
+        NonCopyable() = default;
+        ~NonCopyable() = default;
+    };
+}
 
 #endif

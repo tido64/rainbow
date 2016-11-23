@@ -4,6 +4,8 @@
 
 #include "Common/Link.h"
 
+using rainbow::Link;
+
 void Link::append(Link* node)
 {
     node->pop();
@@ -20,13 +22,17 @@ void Link::pop()
 {
     if (prev_ != nullptr)
         prev_->next_ = next_;
+
     if (next_ != nullptr)
     {
         next_->prev_ = prev_;
         next_ = nullptr;
     }
     else
+    {
         on_end_link_removed(this);
+    }
+
     prev_ = nullptr;
 }
 

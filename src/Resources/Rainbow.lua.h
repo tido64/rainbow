@@ -5,7 +5,7 @@
 #ifndef RESOURCES_RAINBOW_LUA_H_
 #define RESOURCES_RAINBOW_LUA_H_
 
-constexpr const char Rainbow_lua[] = R"lua(
+constexpr char Rainbow_lua[] = R"lua(
 
 local assert = assert
 local getmetatable = getmetatable

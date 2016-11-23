@@ -11,8 +11,11 @@
 using rainbow::ControllerAxisMotion;
 using rainbow::ControllerButton;
 using rainbow::ControllerButtonEvent;
+using rainbow::Input;
+using rainbow::InputListener;
 using rainbow::KeyMods;
 using rainbow::KeyStroke;
+using rainbow::Pointer;
 using rainbow::VirtualKey;
 
 namespace

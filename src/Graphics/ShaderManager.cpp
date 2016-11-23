@@ -13,8 +13,11 @@
 
 // For platforms not using GLEW.
 #ifndef GLAPIENTRY
-#define GLAPIENTRY
+#   define GLAPIENTRY
 #endif
+
+using rainbow::Data;
+using rainbow::graphics::ShaderManager;
 
 namespace
 {
@@ -135,10 +138,10 @@ ShaderManager::~ShaderManager()
 bool ShaderManager::init()
 {
     Shader::Params shaders[]{
-        {Shader::kTypeVertex, 0, rainbow::shaders::kFixed2Dv,
-         rainbow::shaders::integrated::kFixed2Dv},
-        {Shader::kTypeFragment, 0, rainbow::shaders::kFixed2Df,
-         rainbow::shaders::integrated::kFixed2Df},
+        {Shader::kTypeVertex, 0, shaders::kFixed2Dv,
+         shaders::integrated::kFixed2Dv},
+        {Shader::kTypeFragment, 0, shaders::kFixed2Df,
+         shaders::integrated::kFixed2Df},
         {Shader::kTypeInvalid, 0, nullptr, nullptr}};
     const auto pid = compile(shaders, nullptr);
 
@@ -198,7 +201,7 @@ void ShaderManager::update_projection()
     // Where <c>b</c> = bottom, <c>f</c> = far, <c>l</c> = left, <c>n</c> =
     // near, <c>r</c> = right, <c>t</c> = top, and near = -1.0 and far = 1.0.
     // The matrix is stored in column-major order.
-    const auto& rect = rainbow::graphics::projection();
+    const auto& rect = graphics::projection();
     const float projection[]{
         2.0f / (rect.right - rect.left), 0.0f, 0.0f, 0.0f,
         0.0f, 2.0f / (rect.top - rect.bottom), 0.0f, 0.0f,

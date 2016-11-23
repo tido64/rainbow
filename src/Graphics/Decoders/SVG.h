@@ -12,7 +12,7 @@
 
 namespace svg
 {
-    bool check(const DataMap& data)
+    bool check(const rainbow::DataMap& data)
     {
         const auto p = data.data();
         return data.size() > 5 &&  //
@@ -23,7 +23,7 @@ namespace svg
                p[4] == ' ';
     }
 
-    auto decode(const DataMap& data, float scale)
+    auto decode(const rainbow::DataMap& data, float scale)
     {
         using NSVGImage = std::unique_ptr<NSVGimage, decltype(&nsvgDelete)>;
         using NSVGRasterizer =

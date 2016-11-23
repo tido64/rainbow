@@ -15,7 +15,7 @@
 #include "Common/String.h"
 #include "Lua/LuaMacros.h"
 
-class Data;
+namespace rainbow { class Data; }
 
 NS_RAINBOW_LUA_BEGIN
 {

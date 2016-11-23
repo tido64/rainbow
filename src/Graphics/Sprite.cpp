@@ -7,29 +7,36 @@
 #include "Graphics/SpriteBatch.h"
 #include "Math/Transform.h"
 
+using rainbow::Colorb;
+using rainbow::Sprite;
+using rainbow::SpriteRef;
+using rainbow::SpriteVertex;
+using rainbow::TextureAtlas;
+using rainbow::Vec2f;
+
 namespace
 {
-    constexpr unsigned int kStaleBuffer     = 1u << 0;
-    constexpr unsigned int kStalePosition   = 1u << 1;
-    constexpr unsigned int kStaleTexture    = 1u << 2;
-    constexpr unsigned int kStaleNormalMap  = 1u << 3;
-    constexpr unsigned int kStaleMask       = 0xffffu;
-    constexpr unsigned int kIsHidden        = 1u << 16;
-    constexpr unsigned int kIsFlipped       = 1u << 17;
-    constexpr unsigned int kIsMirrored      = 1u << 18;
+    constexpr uint32_t kStaleBuffer     = 1u << 0;
+    constexpr uint32_t kStalePosition   = 1u << 1;
+    constexpr uint32_t kStaleTexture    = 1u << 2;
+    constexpr uint32_t kStaleNormalMap  = 1u << 3;
+    constexpr uint32_t kStaleMask       = 0xffffu;
+    constexpr uint32_t kIsHidden        = 1u << 16;
+    constexpr uint32_t kIsFlipped       = 1u << 17;
+    constexpr uint32_t kIsMirrored      = 1u << 18;
 
-    const unsigned int kFlipTable[]{
+    constexpr uint32_t kFlipTable[]{
         0, 1, 2, 3,   // Normal
         3, 2, 1, 0,   // Flipped
         1, 0, 3, 2,   // Mirrored
         2, 3, 0, 1};  // Flipped + mirrored
-    constexpr unsigned int kFlipVertically = 4;
-    constexpr unsigned int kFlipHorizontally = 8;
+    constexpr uint32_t kFlipVertically = 4;
+    constexpr uint32_t kFlipHorizontally = 8;
 
     static_assert((kIsFlipped >> 0xf) == kFlipVertically, "");
     static_assert((kIsMirrored >> 0xf) == kFlipHorizontally, "");
 
-    unsigned int flip_index(unsigned int state)
+    uint32_t flip_index(uint32_t state)
     {
         return ((state & kIsFlipped) >> 0xf) + ((state & kIsMirrored) >> 0xf);
     }

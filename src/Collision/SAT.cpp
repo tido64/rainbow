@@ -6,6 +6,10 @@
 
 #include "Graphics/Sprite.h"
 
+using rainbow::SpriteRef;
+using rainbow::SpriteVertex;
+using rainbow::Vec2f;
+
 namespace
 {
     struct Quad

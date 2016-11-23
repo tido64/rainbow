@@ -50,7 +50,7 @@ namespace rainbow { namespace audio
     auto play(Sound*, Vec2f world_position = Vec2f::Zero) -> Channel*;
 
     void stop(Channel*);
-}}  // rainbow::audio
+}}  // namespace rainbow::audio
 
 #include "Platform/Macros.h"
 #if defined(RAINBOW_AUDIO_AL)

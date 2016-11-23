@@ -15,10 +15,10 @@
 #include "Common/TreeNode.h"
 #include "Math/Vec2.h"
 
-class IDrawable;
-
 namespace rainbow
 {
+    class IDrawable;
+
     /// <summary>A single node in a scene graph.</summary>
     /// <remarks>
     ///   May represent an animation, label, sprite batch, or a group node.

@@ -6,6 +6,8 @@
 
 #include "Common/Logging.h"
 
+using heimdall::ChangeMonitor;
+
 ChangeMonitor::ChangeMonitor(const char* directory)
     : monitoring_(false), callback_([](const char*) {})
 {

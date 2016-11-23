@@ -16,7 +16,6 @@
 #endif
 
 #include "Config.h"
-#include "Director.h"
 #include "FileSystem/FileSystem.h"
 #include "Platform/Diagnostics.h"
 #include "Platform/SDL/Context.h"
@@ -24,6 +23,9 @@
 #ifdef RAINBOW_TEST
 #   include "Tests/Tests.h"
 #endif
+
+using rainbow::SDLContext;
+using rainbow::RainbowController;
 
 namespace
 {

@@ -64,7 +64,4 @@ namespace rainbow
     };
 }
 
-using Colorb = rainbow::Colorb;
-using Colorf = rainbow::Colorf;
-
 #endif

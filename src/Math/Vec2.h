@@ -206,10 +206,10 @@ namespace rainbow
 
     template <typename T>
     const Vec2<T, Arithmetic<T>> Vec2<T, Arithmetic<T>>::Zero;
-}
 
-using Vec2f = rainbow::Vec2<float>;
-using Vec2i = rainbow::Vec2<int>;
-using Vec2u = rainbow::Vec2<unsigned>;
+    using Vec2f = rainbow::Vec2<float>;
+    using Vec2i = rainbow::Vec2<int>;
+    using Vec2u = rainbow::Vec2<unsigned>;
+}
 
 #endif

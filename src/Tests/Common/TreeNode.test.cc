@@ -6,12 +6,18 @@
 
 #include "Common/TreeNode.h"
 
+using rainbow::TreeNode;
+
 namespace
 {
     class TestNode : public TreeNode<TestNode>
     {
     public:
-        explicit TestNode(bool& deleted) : deleted_(deleted) { deleted_ = false; }
+        explicit TestNode(bool& deleted) : deleted_(deleted)
+        {
+            deleted_ = false;
+        }
+
         TestNode(TestNode&&) = default;
         ~TestNode() { deleted_ = true; }
 

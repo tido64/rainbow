@@ -6,12 +6,18 @@
 
 #include "Graphics/Renderer.h"
 
+using rainbow::SharedPtr;
+using rainbow::SpriteBatch;
+using rainbow::SpriteRef;
+using rainbow::SpriteVertex;
+using rainbow::TextureAtlas;
+using rainbow::Vec2f;
+
 SpriteBatch::SpriteBatch(uint32_t count)
     : sprites_(count), vertices_(std::make_unique<SpriteVertex[]>(count * 4)),
       count_(0), visible_(true)
 {
-    R_ASSERT(count <= rainbow::graphics::kMaxSprites,  //
-             "Hard-coded limit reached");
+    R_ASSERT(count <= graphics::kMaxSprites, "Hard-coded limit reached");
 
     array_.reconfigure([this] { bind_arrays(); });
 }

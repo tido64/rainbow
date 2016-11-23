@@ -6,6 +6,9 @@
 
 #include "Memory/SharedPtr.h"
 
+using rainbow::RefCounted;
+using rainbow::SharedPtr;
+
 namespace
 {
     class SharedPtrTestStruct : public RefCounted

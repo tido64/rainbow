@@ -8,6 +8,8 @@
 #include "Lua/LuaHelper.h"
 #include "Lua/LuaSyntax.h"
 
+using rainbow::Data;
+
 namespace
 {
     int load(lua_State* L)

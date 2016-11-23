@@ -8,15 +8,18 @@
 #include "Common/Color.h"
 #include "Math/Vec2.h"
 
-/// <summary>
-///   A typical sprite vertex contains x- and y-coordinates for position and
-///   texture.
-/// </summary>
-struct SpriteVertex
+namespace rainbow
 {
-    Colorb color;    ///< Texture colour, usually white.
-    Vec2f texcoord;  ///< Texture coordinates.
-    Vec2f position;  ///< Position of vertex.
-};
+    /// <summary>
+    ///   A typical sprite vertex contains x- and y-coordinates for position and
+    ///   texture.
+    /// </summary>
+    struct SpriteVertex
+    {
+        Colorb color;    ///< Texture colour, usually white.
+        Vec2f texcoord;  ///< Texture coordinates.
+        Vec2f position;  ///< Position of vertex.
+    };
+}
 
 #endif

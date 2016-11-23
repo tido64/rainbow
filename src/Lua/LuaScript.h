@@ -9,36 +9,36 @@
 #include "Lua/LuaMachine.h"
 #include "Script/GameBase.h"
 
-class LuaScript final : public rainbow::GameBase, public InputListener
+namespace rainbow
 {
-public:
-    LuaScript(rainbow::Director& director)
-        : rainbow::GameBase(director), lua_({})
+    class LuaScript final : public GameBase, public InputListener
     {
-    }
+    public:
+        LuaScript(Director& director) : GameBase(director), lua_({}) {}
 
-    ~LuaScript() override;
+        ~LuaScript() override;
 
-    auto state() const -> lua_State* { return lua_; }
+        auto state() const -> lua_State* { return lua_; }
 
-private:
-    rainbow::LuaMachine lua_;
+    private:
+        LuaMachine lua_;
 
-    // rainbow::GameBase implementation details.
+        // GameBase implementation details.
 
-    void init_impl(const Vec2i& screen) override;
-    void update_impl(uint64_t) override;
-    void on_memory_warning_impl() override;
+        void init_impl(const Vec2i& screen) override;
+        void update_impl(uint64_t) override;
+        void on_memory_warning_impl() override;
 
-    // InputListener implementation details.
+        // InputListener implementation details.
 
-    bool on_key_down_impl(const rainbow::KeyStroke&) override;
-    bool on_key_up_impl(const rainbow::KeyStroke&) override;
+        bool on_key_down_impl(const KeyStroke&) override;
+        bool on_key_up_impl(const KeyStroke&) override;
 
-    bool on_pointer_began_impl(const ArrayView<Pointer>&) override;
-    bool on_pointer_canceled_impl() override;
-    bool on_pointer_ended_impl(const ArrayView<Pointer>&) override;
-    bool on_pointer_moved_impl(const ArrayView<Pointer>&) override;
-};
+        bool on_pointer_began_impl(const ArrayView<Pointer>&) override;
+        bool on_pointer_canceled_impl() override;
+        bool on_pointer_ended_impl(const ArrayView<Pointer>&) override;
+        bool on_pointer_moved_impl(const ArrayView<Pointer>&) override;
+    };
+}
 
 #endif

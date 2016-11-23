@@ -7,6 +7,11 @@
 #include "Common/Random.h"
 #include "Script/Timer.h"
 
+using rainbow::Colorb;
+using rainbow::LyricalLabel;
+using rainbow::Vec2i;
+using rainbow::Vec2u;
+
 namespace
 {
     constexpr uint32_t kStaleAttribute = 1u << 16;
@@ -14,8 +19,7 @@ namespace
 
 LyricalLabel::LyricalLabel() : applied_(0), did_shake_(false)
 {
-    std::uninitialized_fill_n(
-        animators_, rainbow::array_size(animators_), nullptr);
+    std::uninitialized_fill_n(animators_, array_size(animators_), nullptr);
 }
 
 LyricalLabel::~LyricalLabel()
@@ -114,9 +118,8 @@ void LyricalLabel::start_animation(Animation animation, int interval)
                         {
                             for (uint32_t j = 0; j < attr.length; ++j)
                             {
-                                const Vec2i magnitude(
-                                    rainbow::random(attr.magnitude),
-                                    rainbow::random(attr.magnitude));
+                                const Vec2i magnitude(random(attr.magnitude),
+                                                      random(attr.magnitude));
                                 set_offset(magnitude, attr.start + j, 1);
                             }
                         }
@@ -146,7 +149,7 @@ void LyricalLabel::stop_animation(Animation animation)
     {
         case Animation::Shake:
             clear_attributes(Attribute::Type::Offset);
-            rainbow::remove_if(  //
+            remove_if(  //
                 attributes_,
                 [](const Attribute& attr) {
                     return attr.type == Attribute::Type::Shake;

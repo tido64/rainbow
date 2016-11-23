@@ -10,10 +10,9 @@
 
 #include "Lua/LuaHelper.h"
 
-class IDrawable;
-
 namespace rainbow
 {
+    class IDrawable;
     class SceneNode;
 
     namespace audio

@@ -15,6 +15,10 @@
 #include "FileSystem/FileSystem.h"
 #include "Input/Pointer.h"
 
+using rainbow::Chrono;
+using rainbow::Pointer;
+using rainbow::Vec2i;
+
 ANativeActivity* g_native_activity;
 
 struct AInstance

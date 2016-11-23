@@ -10,27 +10,30 @@
 
 #include "Math/Vec2.h"
 
-namespace rainbow { class Config; }
-
-class SDLContext
+namespace rainbow
 {
-public:
-    SDLContext(const rainbow::Config& config);
-    ~SDLContext();
+    class Config;
 
-    auto drawable_size() const -> Vec2i;
-    auto window_size() const -> Vec2i;
+    class SDLContext
+    {
+    public:
+        SDLContext(const Config& config);
+        ~SDLContext();
 
-    void swap() const;
-    void toggle_fullscreen();
+        auto drawable_size() const -> Vec2i;
+        auto window_size() const -> Vec2i;
 
-    explicit operator bool() const { return context_; }
+        void swap() const;
+        void toggle_fullscreen();
 
-private:
-    SDL_Window* window_;     ///< Window handle.
-    bool vsync_;             ///< Whether vertical sync is enabled.
-    uint32_t fullscreen_;    ///< Whether the window is in full screen mode.
-    SDL_GLContext context_;  ///< OpenGL context handle.
-};
+        explicit operator bool() const { return context_; }
+
+    private:
+        SDL_Window* window_;     ///< Window handle.
+        bool vsync_;             ///< Whether vertical sync is enabled.
+        uint32_t fullscreen_;    ///< Whether the window is in full screen mode.
+        SDL_GLContext context_;  ///< OpenGL context handle.
+    };
+}
 
 #endif

@@ -17,6 +17,8 @@
 #   define USE_DDS 1
 #endif
 
+using rainbow::DataMap;
+
 #ifdef USE_DDS
 namespace dds
 {

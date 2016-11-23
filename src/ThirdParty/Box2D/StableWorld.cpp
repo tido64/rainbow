@@ -8,11 +8,13 @@
 
 #include "ThirdParty/Box2D/DebugDraw.h"
 
+using rainbow::Vec2f;
+
 namespace
 {
-    const float kFixedStep = 1.0f / 100.0f;
-    const float kStepsPerMs = 1.0f / kFixedStep / 1000.0f;
-    const int kMaxSteps = 10;
+    constexpr float kFixedStep = 1.0f / 100.0f;
+    constexpr float kStepsPerMs = 1.0f / kFixedStep / 1000.0f;
+    constexpr int kMaxSteps = 10;
 
     template <typename F, typename... Args>
     void ForEachDynamicBody(b2Body* body, F&& f, Args&&... args)

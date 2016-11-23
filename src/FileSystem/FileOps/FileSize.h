@@ -33,7 +33,7 @@ namespace rainbow { namespace filesystem { namespace ops
         template <typename T>
         auto operator()(T) const -> size_t { return 0; }
     };
-}}}  // rainbow::filesystem::ops
+}}}  // namespace rainbow::filesystem::ops
 
 #ifdef RAINBOW_OS_WINDOWS
 #   undef fileno

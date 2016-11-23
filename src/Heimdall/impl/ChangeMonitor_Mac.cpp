@@ -10,11 +10,13 @@
 #include "Common/Logging.h"
 #include "Common/NonCopyable.h"
 
+using heimdall::ChangeMonitor;
+
 namespace
 {
-    const FSEventStreamEventFlags kFileModified =
+    constexpr FSEventStreamEventFlags kFileModified =
         kFSEventStreamEventFlagItemModified | kFSEventStreamEventFlagItemIsFile;
-    const CFTimeInterval kFSEventLatency = 0.5;
+    constexpr CFTimeInterval kFSEventLatency = 0.5;
 
     void callback(ConstFSEventStreamRef /*streamRef*/,
                   void* clientCallBackInfo,

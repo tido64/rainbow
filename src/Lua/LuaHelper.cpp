@@ -10,6 +10,8 @@
 #include "Lua/LuaDebugging.h"
 #include "Lua/LuaSyntax.h"
 
+using rainbow::Data;
+using rainbow::File;
 using rainbow::lua::WeakRef;
 using rainbow::string_view;
 

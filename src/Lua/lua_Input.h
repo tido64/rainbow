@@ -10,13 +10,13 @@
 #include "Lua/LuaMacros.h"
 #include "Memory/Array.h"
 
-class Acceleration;
-struct Pointer;
 struct lua_State;
 
 namespace rainbow
 {
+    class Acceleration;
     struct KeyStroke;
+    struct Pointer;
 }
 
 NS_RAINBOW_LUA_MODULE_BEGIN(input)
@@ -27,8 +27,8 @@ NS_RAINBOW_LUA_MODULE_BEGIN(input)
 
     void clear(lua_State* L);
 
-    void on_key_down(lua_State* L, const rainbow::KeyStroke& key);
-    void on_key_up(lua_State* L, const rainbow::KeyStroke& key);
+    void on_key_down(lua_State* L, const KeyStroke& key);
+    void on_key_up(lua_State* L, const KeyStroke& key);
 
     void on_pointer_began(lua_State* L, const ArrayView<Pointer>& pointers);
     void on_pointer_canceled(lua_State* L);

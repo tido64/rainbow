@@ -17,6 +17,7 @@
 extern ANativeActivity* g_native_activity;
 #endif
 
+using rainbow::File;
 using rainbow::filesystem::Path;
 using rainbow::filesystem::ops::CloseFile;
 using rainbow::filesystem::ops::FileSize;
@@ -42,17 +43,17 @@ auto File::open(const Path& path) -> File
 
 auto File::open_asset(const char* path) -> File
 {
-    return File{rainbow::filesystem::relative(path)};
+    return File{filesystem::relative(path)};
 }
 
 auto File::open_document(const char* path) -> File
 {
-    return {rainbow::filesystem::user(path), "r+b"};
+    return {filesystem::user(path), "r+b"};
 }
 
 auto File::open_write(const char* path) -> File
 {
-    return {rainbow::filesystem::user(path), "wb"};
+    return {filesystem::user(path), "wb"};
 }
 
 File::~File()

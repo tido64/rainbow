@@ -8,10 +8,13 @@
 #include "Graphics/TextureAtlas.h"
 #include "Tests/TestHelpers.h"
 
-namespace rainbow
-{
-    struct ISolemnlySwearThatIAmOnlyTesting {};
-}
+using rainbow::Colorb;
+using rainbow::SharedPtr;
+using rainbow::Sprite;
+using rainbow::SpriteRef;
+using rainbow::SpriteVertex;
+using rainbow::TextureAtlas;
+using rainbow::Vec2f;
 
 namespace
 {
@@ -25,7 +28,7 @@ namespace
 
     auto create_texture()
     {
-        auto atlas = make_shared<TextureAtlas>(mock);
+        auto atlas = rainbow::make_shared<TextureAtlas>(mock);
         atlas->add_region(0, 0, 1, 1);
         return atlas;
     }

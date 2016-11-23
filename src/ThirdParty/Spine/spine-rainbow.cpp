@@ -15,6 +15,11 @@
 #include "Graphics/SpriteVertex.h"
 #include "Graphics/TextureAtlas.h"
 
+using rainbow::DataMap;
+using rainbow::SpriteVertex;
+using rainbow::TextureAtlas;
+using rainbow::Vec2f;
+
 namespace
 {
 #ifndef NDEBUG

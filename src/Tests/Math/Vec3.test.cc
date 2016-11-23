@@ -6,6 +6,8 @@
 
 #include "Math/Vec3.h"
 
+using rainbow::Vec3f;
+
 TEST(Vec3Test, ZeroLength)
 {
     Vec3f v0;

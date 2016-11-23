@@ -8,6 +8,10 @@
 #include "Input/InputListener.h"
 #include "Input/Pointer.h"
 
+using rainbow::Input;
+using rainbow::InputListener;
+using rainbow::Pointer;
+
 namespace
 {
     class PointerTest : public InputListener, public ::testing::Test
