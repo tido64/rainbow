@@ -91,7 +91,7 @@ function update(dt)
   -- Called every frame. |dt| is the time since last frame in milliseconds.
 end
 
--- There is no draw function. Later, we'll use the scene graph to get things
+-- There is no draw function. Later, we'll use the render queue to get things
 -- onto the screen.
 ```
 
@@ -166,41 +166,31 @@ atlas. Rainbow does not prevent you from loading the same asset.
 Please refer to the API reference for full details. For displaying text, look up
 `FontAtlas` and `Label`.
 
-## Scene Graph
+## Render Queue
 
 Anything that needs to be updated and/or drawn every frame, must be added to
-the scene graph. The scene graph is traversed depth-first (see example graph).
-
-```
-       1
-     / | \
-    2  3  7
-      / \  \
-     4   5  8
-         |
-         6
-```
-
-You can therefore determine the draw order by adding your batches appropriately.
+the render queue. The render queue determines the order in which objects are
+drawn.
 
 Now we'll add the batches we've created earlier:
 
 ```c++
-    // Add batch to root node.
-    auto node = scenegraph().add_batch(batch);
+    // Add batch to the render queue. Note that the render queue is only
+    // accessible from the entry point. If you need it elsewhere, you must pass
+    // along its pointer.
+    auto unit = render_queue().emplace_back(batch_);
 
     // Position our sprites at the center of the screen.
     const float cx = screen.x * 0.5f;
     const float cy = screen.y * 0.5f;
-    sprite1->set_position(Vec2f(cx - 50, cy));
-    sprite2->set_position(Vec2f(cx + 50, cy));
+    sprite1->set_position(Vec2f{cx - 50, cy});
+    sprite2->set_position(Vec2f{cx + 50, cy});
 }
 ```
 
 ```lua
-    -- Add batch to root node. If we wanted this batch under a different node,
-    -- we'd pass the parent node as first parameter.
-    local node = rainbow.scenegraph:add_batch(batch)
+    -- Add batch to the render queue.
+    local unit = rainbow.renderqueue:add(batch)
 
     -- Position our sprites at the center of the screen.
     local screen = rainbow.platform.screen
@@ -214,16 +204,12 @@ end
 If you compile and run this code, you should see two identical sprites next to
 each other at the center of the screen.
 
-Note that the root node is only accessible from the entry point. If you need it
-elsewhere, you must pass along its pointer. Or you can create and pass a child
-node, and avoid spamming the root node.
-
 As always, refer to the API reference for full details.
 
 ## Prose
 
-Sometimes, dealing with the scene graph can be confusing or frustrating if you
-can't fully visualise the tree. However, with Prose, you can define entire
+Sometimes, dealing with the render queue can be confusing or frustrating if you
+can't fully visualise the order. However, with Prose, you can define entire
 scenes using a much simpler, and arguably more visual, syntax. Prose is just a
 specially structured Lua table. Creating an empty scene with Prose looks
 something like:
@@ -274,6 +260,7 @@ point:
 void MyGame::init_impl(const Vec2i& screen)
 {
     scene_ = rainbow::prose::from_table("tutorial.prose.lua");
+    render_queue().emplace_back(scene_);
 
     // You can also access assets and resources through this object. We retrieve
     // them by name:

@@ -80,14 +80,17 @@ NS_RAINBOW_LUA_BEGIN
     }
 
     /// <summary>Creates a Lua wrapped object.</summary>
-    template <typename T, typename = LuaBindable<T>>
-    auto alloc(lua_State* L) -> int
+    template <typename T, typename... Args>
+    auto alloc(lua_State* L, Args&&... args) -> int
     {
+        static_assert(
+            std::is_base_of<Bind<T>, T>::value, "T must be a subclass of Bind");
+
         void* data = lua_newuserdata(L, sizeof(T));
         luaL_setmetatable(L, T::class_name);
         // Stash the userdata so we can return it later.
         const int ref = luaL_ref(L, LUA_REGISTRYINDEX);
-        new (data) T(L);
+        new (data) T(L, std::forward<Args>(args)...);
         lua_rawgeti(L, LUA_REGISTRYINDEX, ref);
         luaL_unref(L, LUA_REGISTRYINDEX, ref);
         return 1;
@@ -347,6 +350,12 @@ NS_RAINBOW_LUA_BEGIN
     ///   The pointer on the top of the stack if valid, else <c>nullptr</c>.
     /// </returns>
     auto topointer(lua_State* L, const char* name) -> void*;
+
+    template <typename T>
+    auto tryuserdata(lua_State* L, int index)
+    {
+        return static_cast<T*>(luaL_testudata(L, index, T::class_name));
+    }
 } NS_RAINBOW_LUA_END
 
 #endif

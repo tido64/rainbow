@@ -136,7 +136,7 @@ namespace rainbow
         /// <summary>
         ///   Called when the animation component should be initialised.
         /// </summary>
-        virtual void initialize_animation_component_impl(SceneNode&) {}
+        virtual void initialize_animation_component_impl() {}
 
         /// <summary>
         ///   Called when the render component should be initialised.

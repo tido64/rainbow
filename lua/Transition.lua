@@ -141,7 +141,7 @@ function Transition.move(node, x, y, duration, transition)
             end
         end
     else
-        assert(type(node) == "table", "Invalid object");
+        assert(type(node) == "table", "Invalid object")
         assert(node.move, "Object must implement :move()")
     end
     return Transition.new(node, move, { x0, y0 }, { x, y }, duration, transition)

@@ -23,7 +23,7 @@ function SceneIntro:new()
         scene = Prose.from_table(scenedef),
         timer = 0
     }, SceneIntro)
-    rainbow.scenegraph:disable(self.scene.objects.logo_batch.node)
+    rainbow.renderqueue:disable(self.scene.objects.logo_batch.unit)
     return self
 end
 
@@ -51,18 +51,19 @@ end
 
 function SceneIntro:tick()
     rainbow.input.subscribe(self)
-    rainbow.scenegraph:enable(self.scene.objects.logo_batch.node)
+    rainbow.renderqueue:enable(self.scene.objects.logo_batch.unit)
 end
 
 function SceneIntro:pointer_began()
-    rainbow.input.unsubscribe(self);
-    self.scene = nil;
+    rainbow.input.unsubscribe(self)
+    self.scene = nil
 end
 
 function SceneIntro:update(dt)
     if not self.scene then
-        return "scummbar";
+        return "scummbar"
     end
+    collectgarbage("step")
 end
 
 function SceneIntro:key_down() end

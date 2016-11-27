@@ -26,24 +26,13 @@ namespace rainbow
             terminate("Failed to initialise audio engine");
         else if (!renderer_.initialize())
             terminate("Failed to initialise renderer");
-#if USE_NODE_TAGS
-        scenegraph_.set_tag("root");
-#endif
     }
 
     Director::~Director()
     {
         // Clean up before we tear down the graphics context.
         script_.reset();
-    }
-
-    void Director::draw()
-    {
-        graphics::clear();
-        scenegraph_.draw();
-#ifdef USE_PHYSICS
-        b2::DebugDraw::Draw();
-#endif  // USE_PHYSICS
+        render_queue_.clear();
     }
 
     void Director::init(const Vec2i& screen)
@@ -56,7 +45,16 @@ namespace rainbow
         if (terminated())
             return;
 
-        scenegraph_.update(0);
+        graphics::update(render_queue_, 0);
+    }
+
+    void Director::draw()
+    {
+        graphics::clear();
+        graphics::draw(render_queue_);
+#ifdef USE_PHYSICS
+        b2::DebugDraw::Draw();
+#endif  // USE_PHYSICS
     }
 
     void Director::update(uint64_t dt)
@@ -66,7 +64,7 @@ namespace rainbow
         mixer_.process();
         timer_manager_.update(dt);
         script_->update(dt);
-        scenegraph_.update(dt);
+        graphics::update(render_queue_, dt);
         graphics::TextureManager::Get()->trim();
     }
 

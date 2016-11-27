@@ -32,7 +32,7 @@ function init()
     sprite:set_scale(scale)
     sprite:set_texture(assets:create(1088, 0, width, height))
 
-    rainbow.scenegraph:add_batch(batch)
+    rainbow.renderqueue:add(batch)
 
     local recorder = rainbow.audio.recorder()
     recorder:record()

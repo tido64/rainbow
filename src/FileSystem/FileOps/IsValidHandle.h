@@ -1,8 +1,6 @@
 #ifndef FILESYSTEM_FILEOPS_ISVALIDHANDLE_H_
 #define FILESYSTEM_FILEOPS_ISVALIDHANDLE_H_
 
-#include <mapbox/variant.hpp>
-
 namespace rainbow { namespace filesystem { namespace ops
 {
     struct IsValidHandle

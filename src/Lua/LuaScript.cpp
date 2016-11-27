@@ -20,7 +20,7 @@ LuaScript::~LuaScript() { lua_.close(); }
 
 void LuaScript::init_impl(const Vec2i& screen)
 {
-    if (lua_.init(this, &scenegraph()) != LUA_OK)
+    if (lua_.init(this, render_queue()) != LUA_OK)
     {
         terminate("Failed to initialise Lua");
         return;

@@ -32,15 +32,6 @@
       <Item Name="[width]">width_</Item>
     </Expand>
   </Type>
-  <Type Name="rainbow::SceneNode">
-    <DisplayString Condition="parent_ == nullptr">root {{enabled={enabled_} shader={program_}}}</DisplayString>
-    <DisplayString Condition="parent_ != nullptr">{{enabled={enabled_} shader={program_}}}</DisplayString>
-    <Expand>
-      <Item Name="[tag]" Optional="true">tag_</Item>
-      <Item Condition="parent_ != nullptr" Name="[parent]">*parent_</Item>
-      <ExpandedItem>children_</ExpandedItem>
-    </Expand>
-  </Type>
   <Type Name="rainbow::SharedPtr&lt;*&gt;">
     <DisplayString Condition="ptr_ == nullptr">empty</DisplayString>
     <DisplayString Condition="ptr_->refs_ == 1">SharedPtr {*ptr_} [{ptr_->refs_} strong ref]</DisplayString>
@@ -103,6 +94,14 @@
   <Type Name="rainbow::graphics::Buffer">
     <DisplayString>{{name={id_}}}</DisplayString>
   </Type>
+  <Type Name="rainbow::graphics::RenderUnit">
+    <DisplayString Condition="enabled_ == false">{{tag={tag_}}} [disabled]</DisplayString>
+    <DisplayString Condition="enabled_ != false">{{tag={tag_}}} [enabled]</DisplayString>
+    <Expand>
+      <Item Name="[program]">program_</Item>
+      <ExpandedItem>variant_</ExpandedItem>
+    </Expand>
+  </Type>
   <Type Name="rainbow::graphics::Texture">
     <DisplayString>{{name={name_} width={size_.x} height={size_.y}}}</DisplayString>
   </Type>
@@ -116,27 +115,5 @@
   </Type>
   <Type Name="rainbow::graphics::VertexArray">
     <DisplayString>{{name={array_}}}</DisplayString>
-  </Type>
-  <Type Name="`anonymous-namespace'::AnimationNode">
-    <DisplayString>{{enabled={enabled_} shader={program_}}}</DisplayString>
-    <Expand>
-      <Item Name="[animation]">animation_</Item>
-      <ExpandedItem>(rainbow::SceneNode*)this</ExpandedItem>
-    </Expand>
-  </Type>
-  <Type Name="`anonymous-namespace'::DrawableNode">
-    <DisplayString>{{enabled={enabled_} shader={program_}}}</DisplayString>
-    <Expand>
-      <Item Name="[drawable]">drawable_</Item>
-      <ExpandedItem>(rainbow::SceneNode*)this</ExpandedItem>
-    </Expand>
-  </Type>
-  <Type Name="`anonymous-namespace'::PrimitiveNode&lt;*&gt;">
-    <DisplayString>{{enabled={enabled_} shader={program_}}}</DisplayString>
-    <Expand>
-      <Item Condition="primitive_.text_ != nullptr" Name="[label]" Optional="true">primitive_</Item>
-      <Item Condition="primitive_.sprites_.size_ &gt;= 0" Name="[sprite batch]" Optional="true">primitive_</Item>
-      <ExpandedItem>(rainbow::SceneNode*)this</ExpandedItem>
-    </Expand>
   </Type>
 </AutoVisualizer>

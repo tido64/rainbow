@@ -19,7 +19,7 @@
 
 local Coroutine = require("Coroutine")
 
-local g_label_node
+local g_label
 local screen = rainbow.platform.screen
 local y_offset = { 0.55, 0.63, 0.71 }
 
@@ -50,9 +50,10 @@ function init()
     local label = rainbow.label()
     label:set_alignment('c')
     label:set_font(rainbow.font("OpenSans-Light.ttf", 60))
-    g_label_node = rainbow.scenegraph:add_label(label)
+    rainbow.renderqueue:add(label)
     Coroutine.start(change, label)
     rainbow.seed(0)
+    g_label = label
 end
 
 function update(dt) end

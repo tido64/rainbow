@@ -12,15 +12,12 @@
 using heimdall::Overlay;
 using rainbow::KeyStroke;
 using rainbow::Pointer;
-using rainbow::SceneNode;
 using rainbow::graphics::TextureManager;
 
 namespace graphics = rainbow::graphics;
 
 namespace
 {
-    constexpr size_t kDataSampleSize = 100;
-
     template <typename T>
     float at(void* data, int i)
     {
@@ -45,22 +42,13 @@ namespace
     }
 }
 
-Overlay::Overlay()
-    : node_(nullptr), frame_times_(kDataSampleSize),
-      vmem_usage_(kDataSampleSize), pinned_(false)
-{
-}
-
 Overlay::~Overlay()
 {
     rainbow::imgui::shutdown();
 }
 
-void Overlay::initialize(SceneNode& parent)
+void Overlay::initialize()
 {
-    node_ = parent.add_child(*this);
-    node_->set_enabled(false);
-
     rainbow::imgui::init();
 }
 

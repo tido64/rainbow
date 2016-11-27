@@ -24,6 +24,8 @@ namespace heimdall
     public:
         Gatekeeper();
 
+        void init(const rainbow::Vec2i& screen);
+
         bool active() const { return director_.active(); }
         auto error() const { return director_.error(); }
         auto input() -> rainbow::Input& { return director_.input(); }
@@ -32,10 +34,9 @@ namespace heimdall
         void draw()
         {
             director_.draw();
-            scenegraph_.draw();
+            overlay_.draw();
         }
 
-        void init(const rainbow::Vec2i& screen);
         void terminate() { director_.terminate(); }
         void terminate(const char* error) { director_.terminate(error); }
         void update(uint64_t dt);
@@ -46,14 +47,11 @@ namespace heimdall
 
     private:
         rainbow::Director director_;
-#if USE_LUA_SCRIPT
-        std::queue<std::function<void()>> changed_files_;
-#endif  // USE_LUA_SCRIPT
         Overlay overlay_;
         OverlayActivator overlay_activator_;
-        rainbow::GroupNode scenegraph_;
 #if USE_LUA_SCRIPT
         std::mutex changed_files_mutex_;
+        std::queue<std::function<void()>> changed_files_;
         ChangeMonitor monitor_;
 #endif  // USE_LUA_SCRIPT
     };

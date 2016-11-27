@@ -80,7 +80,7 @@ function Kim:pointer_began(pointers)
         -- Move to point in 0.5 seconds. Squared ease-in effect.
         for h,p in pairs(pointers) do
             local x, y = self.sprite:get_position()
-            self.moving = Transition.move(self.node, p.x - x, p.y - y, 500, Transition.Functions.easeinout_cubic)
+            self.moving = Transition.move(self.sprite, p.x - x, p.y - y, 500, Transition.Functions.easeinout_cubic)
             self.alpha = Transition.fadeto(self.sprite, 0xff, 500)
             self.alternate = true
             break

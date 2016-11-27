@@ -37,7 +37,6 @@ on iOS and macOS.
 Rainbow is mostly built on
 [OpenGL ES 2.0](https://www.khronos.org/opengles/2_X/) and features:
 
-- Scene graph
 - Sprites-based rendering with explicit batching
 - Animation with traditional sprite sheets, or…
 - Skeletal animation imported directly from

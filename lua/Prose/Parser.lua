@@ -12,7 +12,7 @@ local tonumber = tonumber
 local type = type
 
 local rainbow = rainbow
-local scenegraph = rainbow.scenegraph
+local renderqueue = rainbow.renderqueue
 
 --
 -- Helper functions
@@ -169,30 +169,24 @@ local function create_resources(resources)
     return F.maph(create_resource, resources)
 end
 
-local function create_nodes(parent, resources, nodes)
+local function create_nodes(uid, resources, nodes)
     local f = function(t, node)
         if node.sprites then
             local batch, sprites = create_batch(node, resources)
             copy_into(t, sprites)
-            batch.node = scenegraph:add_batch(parent, batch)
+            batch.unit = renderqueue:add(batch, uid .. node.name)
             for _,sprite in pairs(sprites) do
                 for name, animation in pairs(sprite.animations or {}) do
-                    local node = scenegraph:add_animation(batch.node, animation)
-                    scenegraph:set_tag(node, name)
+                    renderqueue:add(animation, uid .. name)
                 end
             end
-            scenegraph:set_tag(batch.node, node.name)
             insert(t, node.name, batch)
         elseif node.font then
             local label = create_label(node, resources)
-            label.node = scenegraph:add_label(parent, label)
-            scenegraph:set_tag(label.node, node.name)
+            label.unit = renderqueue:add(label, uid .. node.name)
             insert(t, node.name, label)
         elseif node.nodes then
-            local group = scenegraph:add_node(parent)
-            copy_into(t, create_nodes(group, resources, node.nodes))
-            scenegraph:set_tag(group, node.name)
-            insert(t, node.name, group)
+            copy_into(t, create_nodes(uid, resources, node.nodes))
         else
             print("Unknown element: " .. node.name)
         end
@@ -204,5 +198,5 @@ end
 return {
     create_resources = create_resources,
     create_nodes = create_nodes,
-    version = 1.1
+    version = 100
 }

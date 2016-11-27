@@ -8,6 +8,8 @@
 #include <string>
 #include <unordered_map>
 
+#include "Graphics/Drawable.h"
+#include "Graphics/RenderQueue.h"
 #include "Memory/ScopeStack.h"
 
 namespace rainbow
@@ -15,12 +17,11 @@ namespace rainbow
     class Animation;
     class FontAtlas;
     class Label;
-    class SceneNode;
     class Sprite;
     class SpriteBatch;
     class TextureAtlas;
 
-    class Prose
+    class Prose final : public IDrawable
     {
     public:
         enum class AssetType;
@@ -29,7 +30,9 @@ namespace rainbow
         {
             AssetType type;
             void* ptr;
-            SceneNode* node;
+            uint32_t id;
+
+            static auto none() -> Asset;
         };
 
         using AssetMap = std::unordered_map<std::string, Asset>;
@@ -37,9 +40,6 @@ namespace rainbow
         static auto from_lua(const char* path) -> Prose*;
 
         Prose(size_t size);
-        ~Prose();
-
-        auto node() { return node_; }
 
         template <typename T>
         auto get_asset(const std::string& name) -> T*;
@@ -47,7 +47,6 @@ namespace rainbow
         auto get_animation(const std::string& name) -> Animation*;
         auto get_font(const std::string& name) -> FontAtlas*;
         auto get_label(const std::string& name) -> Label*;
-        auto get_node(const std::string& name) -> SceneNode*;
         auto get_sprite(const std::string& name) -> Sprite*;
         auto get_spritebatch(const std::string& name) -> SpriteBatch*;
         auto get_texture(const std::string& name) -> TextureAtlas*;
@@ -56,10 +55,20 @@ namespace rainbow
         AssetMap assets_;
         LinearAllocator allocator_;
         ScopeStack stack_;
-        SceneNode* node_;
+        graphics::RenderQueue render_queue_;
 
-        template <typename T, Prose::AssetType Type>
-        auto get_asset(const std::string& name) -> T*;
+        template <typename T, AssetType Type>
+        auto get_asset(const std::string& name, const char* error) -> T*;
+
+        void draw_impl() override
+        {
+            graphics::draw(render_queue_);
+        }
+
+        void update_impl(uint64_t dt) override
+        {
+            graphics::update(render_queue_, dt);
+        }
     };
 }
 

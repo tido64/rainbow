@@ -48,7 +48,7 @@ local function spawn()
         end
         if frame / SAMPLE_SIZE < 18 then
             local batch = rainbow.spritebatch(MAX_NUM_SPRITES)
-            rainbow.scenegraph:add_batch(batch)
+            rainbow.renderqueue:add(batch)
             batch:set_texture(atlas)
             local i = (current - 1) * MAX_NUM_SPRITES
             for j = 1, MAX_NUM_SPRITES do
@@ -59,7 +59,7 @@ local function spawn()
             end
             print("Sprites count: " .. current * MAX_NUM_SPRITES)
             batches[current] = batch
-            current = current + 1;
+            current = current + 1
         end
         Coroutine.wait(50)
     end

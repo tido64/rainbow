@@ -9,16 +9,14 @@
 
 #include "Common/NonCopyable.h"
 #include "Common/Passkey.h"
+#include "Graphics/RenderQueue.h"
 
 struct lua_State;
 
 namespace rainbow
 {
-    namespace lua { class SceneGraph; }
-
     class Data;
     class LuaScript;
-    class SceneNode;
 
     /// <summary>Embeds Lua scripting engine.</summary>
     class LuaMachine : private NonCopyable<LuaMachine>
@@ -28,7 +26,7 @@ namespace rainbow
         ~LuaMachine();
 
         /// <summary>Initialises a new Lua state.</summary>
-        auto init(LuaScript* instance, SceneNode* root) -> int;
+        auto init(LuaScript* instance, graphics::RenderQueue& queue) -> int;
 
         /// <summary>Uninitialises current Lua state and closes it.</summary>
         void close();
@@ -45,7 +43,6 @@ namespace rainbow
         lua_State* state_;
         int internal_;
         int traceback_;
-        lua::SceneGraph* scenegraph_;
     };
 }
 

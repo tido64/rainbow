@@ -85,8 +85,7 @@ rainbow::Timer*  rainbow::move  (T component,
 
 Animates `component` moving towards `destination`.
 
-Components must be [translatable](#translatable). However, there is a
-specialised implementation for scene nodes that takes a relative vector instead.
+Components must be [translatable](#translatable).
 
 ### Rotate Transition
 
@@ -171,7 +170,7 @@ public:
 private:
     rainbow::spritebatch_t batch_;
 
-    void init_impl(const Vec2i &screen) override
+    void init_impl(const rainbow::Vec2i &screen) override
     {
         batch_ = rainbow::spritebatch(1);
 
@@ -180,11 +179,11 @@ private:
         batch_->set_texture(texture);
 
         auto logo = batch_->create_sprite(392, 710);
-        logo->set_color(Colorb(0xffffff00));
-        logo->set_position(Vec2f(screen.x * 0.5f, screen.y * 0.5f));
+        logo->set_color(rainbow::Colorb{0xffffff00});
+        logo->set_position(rainbow::Vec2f{screen.x * 0.5f, screen.y * 0.5f});
         logo->set_scale(0.5);
         logo->set_texture(texture->add_region(1, 1, 392, 710));
-        scenegraph().add_child(batch_);
+        render_queue().emplace_back(batch_);
 
         rainbow::fade(logo, 1.0f, 1500, rainbow::timing::linear);
     }
@@ -203,8 +202,8 @@ Output (refresh if you missed the animation):
 
 ## Caveats and Known Issues
 
-Transitions are based on timers and will therefore run regardless of the active
-state of the component's node. The `Timer` object returned by the transition
-function can be used to pause/resume the animation.
+Transitions are based on timers and will therefore run regardless of the enabled
+state of the component's render unit. The `Timer` object returned by the
+transition function can be used to pause/resume the animation.
 
 [Easing Functions Cheat Sheet]: http://easings.net/ "Easing Functions Cheat Sheet"

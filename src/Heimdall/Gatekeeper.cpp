@@ -47,7 +47,7 @@ Gatekeeper::Gatekeeper()
 
 void Gatekeeper::init(const Vec2i& screen)
 {
-    overlay_.initialize(scenegraph_);
+    overlay_.initialize();
     director_.input().subscribe(&overlay_);
     director_.input().subscribe(&overlay_activator_);
 
@@ -96,5 +96,5 @@ void Gatekeeper::update(uint64_t dt)
     if (!overlay_.is_enabled())
         overlay_activator_.update(dt);
 
-    scenegraph_.update(dt);
+    overlay_.update(dt);
 }

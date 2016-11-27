@@ -51,6 +51,7 @@ set(SOURCE_FILES
     src/Common/TypeInfo.h
     src/Common/UTF8.cpp
     src/Common/UTF8.h
+    src/Common/Variant.h
     src/Config.cpp
     src/Config.h
     src/Director.cpp
@@ -89,8 +90,8 @@ set(SOURCE_FILES
     src/Graphics/OpenGL.h
     src/Graphics/Renderer.cpp
     src/Graphics/Renderer.h
-    src/Graphics/SceneGraph.cpp
-    src/Graphics/SceneGraph.h
+    src/Graphics/RenderQueue.cpp
+    src/Graphics/RenderQueue.h
     src/Graphics/ShaderDetails.h
     src/Graphics/ShaderManager.cpp
     src/Graphics/ShaderManager.h
@@ -179,8 +180,8 @@ if(USE_LUA_SCRIPT)
        src/Lua/lua_Random.h
        src/Lua/lua_Renderer.cpp
        src/Lua/lua_Renderer.h
-       src/Lua/lua_SceneGraph.cpp
-       src/Lua/lua_SceneGraph.h
+       src/Lua/lua_RenderQueue.cpp
+       src/Lua/lua_RenderQueue.h
        src/Lua/lua_Shaders.cpp
        src/Lua/lua_Shaders.h
        src/Lua/lua_Sprite.cpp
@@ -245,7 +246,7 @@ else()
 endif()
 
 if(UNIT_TESTS)
-  add_definitions(-DRAINBOW_TEST)
+  add_definitions(-DGTEST_HAS_TR1_TUPLE=0 -DGTEST_LANG_CXX11=1 -DRAINBOW_TEST)
   set(TEST_INCLUDE_DIR ${LOCAL_LIBRARY}/googletest/googletest/include)
   set(TEST_LIBRARY googletest)
   add_library(${TEST_LIBRARY} STATIC lib/googletest/googletest/src/gtest-all.cc)
@@ -270,7 +271,7 @@ if(UNIT_TESTS)
        src/Tests/FileSystem/Path.test.cc
        src/Tests/Graphics/Animation.test.cc
        src/Tests/Graphics/Decoders.test.cc
-       src/Tests/Graphics/SceneGraph.test.cc
+       src/Tests/Graphics/RenderQueue.test.cc
        src/Tests/Graphics/Sprite.test.cc
        src/Tests/Graphics/SpriteBatch.test.cc
        src/Tests/Graphics/TextureAtlas.test.cc

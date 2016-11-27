@@ -40,9 +40,9 @@ function init()
     }
     rainbow.input.subscribe(input_delegate)
 
-    print("Press \"1\" to play a mono sound (drumloop)");
-    print("Press \"2\" to play a mono sound (jaguar)");
-    print("Press \"3\" to play a stereo sound (swish)");
+    print("Press \"1\" to play a mono sound (drumloop)")
+    print("Press \"2\" to play a mono sound (jaguar)")
+    print("Press \"3\" to play a stereo sound (swish)")
 end
 
 function update(dt)

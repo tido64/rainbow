@@ -9,7 +9,6 @@
 #include <unordered_map>
 
 #include "Graphics/Animation.h"
-#include "Graphics/SceneGraph.h"
 #include "Graphics/Sprite.h"
 #include "Script/Components/RenderComponent.h"
 
@@ -143,7 +142,7 @@ namespace rainbow
     class AnimationComponent : public IAnimationComponent
     {
     public:
-        void initialize(RenderComponent& render, SceneNode& parent)
+        void initialize(RenderComponent& render)
         {
             R_ASSERT(render.batch().size() >= N,
                      "At least one sprite per animator required.");
@@ -152,7 +151,6 @@ namespace rainbow
             {
                 auto& animation = animators_[i].animation();
                 animation.set_sprite(render.sprite(i));
-                parent.add_child(animation);
             }
         }
 

@@ -8,7 +8,6 @@
 #include <deque>
 
 #include "Graphics/Drawable.h"
-#include "Graphics/SceneGraph.h"
 #include "Input/InputListener.h"
 
 namespace rainbow { struct Rect; }
@@ -18,34 +17,34 @@ namespace heimdall
     class Overlay final : public rainbow::IDrawable,
                           public rainbow::InputListener
     {
+        static constexpr size_t kDataSampleSize = 100;
+
     public:
-        Overlay();
-        ~Overlay() override;
+        Overlay()
+            : enabled_(false), pinned_(false), frame_times_(kDataSampleSize),
+              vmem_usage_(kDataSampleSize)
+        {
+        }
 
-        void initialize(rainbow::SceneNode& parent);
+        ~Overlay();
 
-        auto is_enabled() const { return node_->is_enabled(); }
-        auto node() const { return node_; }
+        void initialize();
 
-        void disable() { node_->set_enabled(false); }
+        auto is_enabled() const { return enabled_; }
+
+        void disable() { enabled_ = false; }
 
         void enable()
         {
-            node_->set_enabled(true);
+            enabled_ = true;
             pinned_ = true;
         }
 
-        template <typename T>
-        void add_child(T& component) const
-        {
-            node_->add_child(component);
-        }
-
     private:
-        rainbow::SceneNode* node_;
+        bool enabled_;
+        bool pinned_;
         std::deque<uint64_t> frame_times_;
         std::deque<float> vmem_usage_;
-        bool pinned_;
 
         // IDrawable implementation details
 

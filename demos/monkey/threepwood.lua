@@ -4,6 +4,9 @@
 -- Distributed under the MIT License.
 -- (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
+local THREEPWOOD = "Threepwood"
+local THREEPWOOD_WALKING = "Threepwood walking"
+
 Threepwood = {}
 Threepwood.__index = Threepwood
 
@@ -47,17 +50,17 @@ end
 setmetatable(Threepwood, { __call = Threepwood.new })
 
 function Threepwood:destruct()
+    rainbow.renderqueue:erase(THREEPWOOD)
     self.batch = nil
-    self.node = nil
     self.walkingl = nil
     self.walkingr = nil
 end
 
-function Threepwood:init(parent, x, y)
+function Threepwood:init(x, y)
     self.x = x
     self.y = y
     self.sprite:set_position(self.x, self.y)
-    self.node = rainbow.scenegraph:add_batch(parent, self.batch)
+    rainbow.renderqueue:add(self.batch, THREEPWOOD)
 end
 
 function Threepwood:get_position()
@@ -71,7 +74,7 @@ function Threepwood:move(pos)
 
     -- Determine the direction Guybrush is facing and start the walking animation.
     if self.animating then
-        rainbow.scenegraph:remove(self.animating)
+        rainbow.renderqueue:erase(THREEPWOOD_WALKING)
     end
     self.walk = pos
     if self.x < self.walk.x then
@@ -83,12 +86,13 @@ function Threepwood:move(pos)
         self.face = -1
         self.walking = self.walkingl
     end
-    self.animating = rainbow.scenegraph:add_animation(self.node, self.walking)
+    self.animating = true
+    rainbow.renderqueue:add(self.walking, THREEPWOOD_WALKING)
     self.walking:start()
 end
 
 function Threepwood:stop()
-    rainbow.scenegraph:remove(self.animating)
+    rainbow.renderqueue:erase(THREEPWOOD_WALKING)
     self.animating = false
     self.sprite:set_texture(self.direction)
     self.walk = false

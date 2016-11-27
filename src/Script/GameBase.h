@@ -75,7 +75,11 @@ namespace rainbow
         virtual ~GameBase() {}
 
         auto input() -> Input& { return director_.input(); }
-        auto scenegraph() -> SceneNode& { return director_.scenegraph(); }
+
+        auto render_queue() -> graphics::RenderQueue&
+        {
+            return director_.render_queue();
+        }
 
         void terminate() { director_.terminate(); }
         void terminate(const char* error) { director_.terminate(error); }

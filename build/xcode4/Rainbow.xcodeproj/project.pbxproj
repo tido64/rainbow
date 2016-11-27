@@ -101,7 +101,6 @@
 		1939A21D152C425D00494609 /* FontAtlas.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1939A1C0152C425D00494609 /* FontAtlas.cpp */; };
 		1939A21E152C425D00494609 /* Label.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1939A1C3152C425D00494609 /* Label.cpp */; };
 		1939A220152C425D00494609 /* Renderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1939A1C8152C425D00494609 /* Renderer.cpp */; };
-		1939A221152C425D00494609 /* SceneGraph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1939A1CA152C425D00494609 /* SceneGraph.cpp */; };
 		1939A227152C425D00494609 /* Sprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1939A1D4152C425D00494609 /* Sprite.cpp */; };
 		1939A228152C425D00494609 /* SpriteBatch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1939A1D6152C425D00494609 /* SpriteBatch.cpp */; };
 		1939A229152C425D00494609 /* TextureAtlas.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1939A1D9152C425D00494609 /* TextureAtlas.cpp */; };
@@ -112,7 +111,6 @@
 		1939A230152C425D00494609 /* lua_Input.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1939A1ED152C425D00494609 /* lua_Input.cpp */; };
 		1939A231152C425D00494609 /* lua_Label.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1939A1EF152C425D00494609 /* lua_Label.cpp */; };
 		1939A233152C425D00494609 /* lua_Random.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1939A1F4152C425D00494609 /* lua_Random.cpp */; };
-		1939A235152C425D00494609 /* lua_SceneGraph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1939A1F8152C425D00494609 /* lua_SceneGraph.cpp */; };
 		1939A236152C425D00494609 /* lua_Sprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1939A1FA152C425D00494609 /* lua_Sprite.cpp */; };
 		1939A237152C425D00494609 /* lua_SpriteBatch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1939A1FC152C425D00494609 /* lua_SpriteBatch.cpp */; };
 		1939A238152C425D00494609 /* lua_Texture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1939A1FE152C425D00494609 /* lua_Texture.cpp */; };
@@ -189,6 +187,8 @@
 		19905B8B152C50FA00BDD15C /* Transition.lua in Resources */ = {isa = PBXBuildFile; fileRef = 19905B81152C50FA00BDD15C /* Transition.lua */; };
 		19937CBA1D398336009F8917 /* TempBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19937CB81D398336009F8917 /* TempBuffer.cpp */; };
 		19AF58A0167FFA0800F54B27 /* Overlay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19AF589C167FFA0800F54B27 /* Overlay.cpp */; };
+		19B051331E0339E600FE624A /* RenderQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19B051311E0339E600FE624A /* RenderQueue.cpp */; };
+		19B051361E033A1000FE624A /* lua_RenderQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19B051341E033A1000FE624A /* lua_RenderQueue.cpp */; };
 		19D045AA18071D6D00968F00 /* Chrono.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19D045A918071D6D00968F00 /* Chrono.cpp */; };
 		19D9318A1834AFCE00F0137E /* ChangeMonitor_Stub.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19D931871834AFCE00F0137E /* ChangeMonitor_Stub.cpp */; };
 		19DB48B61CA6A4BD00999675 /* ImGuiHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19DB48B41CA6A4BD00999675 /* ImGuiHelper.cpp */; };
@@ -420,8 +420,6 @@
 		1939A1C5152C425D00494609 /* OpenGL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenGL.h; sourceTree = "<group>"; };
 		1939A1C8152C425D00494609 /* Renderer.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = Renderer.cpp; sourceTree = "<group>"; };
 		1939A1C9152C425D00494609 /* Renderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Renderer.h; sourceTree = "<group>"; };
-		1939A1CA152C425D00494609 /* SceneGraph.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = SceneGraph.cpp; sourceTree = "<group>"; };
-		1939A1CB152C425D00494609 /* SceneGraph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SceneGraph.h; sourceTree = "<group>"; };
 		1939A1D3152C425D00494609 /* Shaders.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Shaders.h; sourceTree = "<group>"; };
 		1939A1D4152C425D00494609 /* Sprite.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = Sprite.cpp; sourceTree = "<group>"; };
 		1939A1D5152C425D00494609 /* Sprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Sprite.h; sourceTree = "<group>"; };
@@ -447,8 +445,6 @@
 		1939A1F3152C425D00494609 /* lua_Platform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lua_Platform.h; sourceTree = "<group>"; };
 		1939A1F4152C425D00494609 /* lua_Random.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = lua_Random.cpp; sourceTree = "<group>"; };
 		1939A1F5152C425D00494609 /* lua_Random.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lua_Random.h; sourceTree = "<group>"; };
-		1939A1F8152C425D00494609 /* lua_SceneGraph.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = lua_SceneGraph.cpp; sourceTree = "<group>"; };
-		1939A1F9152C425D00494609 /* lua_SceneGraph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lua_SceneGraph.h; sourceTree = "<group>"; };
 		1939A1FA152C425D00494609 /* lua_Sprite.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = lua_Sprite.cpp; sourceTree = "<group>"; };
 		1939A1FB152C425D00494609 /* lua_Sprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lua_Sprite.h; sourceTree = "<group>"; };
 		1939A1FC152C425D00494609 /* lua_SpriteBatch.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = lua_SpriteBatch.cpp; sourceTree = "<group>"; };
@@ -576,6 +572,10 @@
 		19937CB91D398336009F8917 /* TempBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TempBuffer.h; sourceTree = "<group>"; };
 		19AF589C167FFA0800F54B27 /* Overlay.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Overlay.cpp; sourceTree = "<group>"; };
 		19AF589D167FFA0800F54B27 /* Overlay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Overlay.h; sourceTree = "<group>"; };
+		19B051311E0339E600FE624A /* RenderQueue.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RenderQueue.cpp; sourceTree = "<group>"; };
+		19B051321E0339E600FE624A /* RenderQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RenderQueue.h; sourceTree = "<group>"; };
+		19B051341E033A1000FE624A /* lua_RenderQueue.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = lua_RenderQueue.cpp; sourceTree = "<group>"; };
+		19B051351E033A1000FE624A /* lua_RenderQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lua_RenderQueue.h; sourceTree = "<group>"; };
 		19B2D7E21AFB4A0E00660D38 /* Pointer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Pointer.h; sourceTree = "<group>"; };
 		19BE0C7E1C98B2110041EE8C /* Array.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Array.h; sourceTree = "<group>"; };
 		19BE0C7F1C98B2110041EE8C /* NotNull.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NotNull.h; sourceTree = "<group>"; };
@@ -984,8 +984,8 @@
 				1939A1C5152C425D00494609 /* OpenGL.h */,
 				1939A1C8152C425D00494609 /* Renderer.cpp */,
 				1939A1C9152C425D00494609 /* Renderer.h */,
-				1939A1CA152C425D00494609 /* SceneGraph.cpp */,
-				1939A1CB152C425D00494609 /* SceneGraph.h */,
+				19B051311E0339E600FE624A /* RenderQueue.cpp */,
+				19B051321E0339E600FE624A /* RenderQueue.h */,
 				191484E61891BD87004014D7 /* ShaderDetails.h */,
 				19EBC54F16599D9F00D3B5D7 /* ShaderManager.cpp */,
 				19EBC55016599D9F00D3B5D7 /* ShaderManager.h */,
@@ -1034,18 +1034,6 @@
 		1939A1E6152C425D00494609 /* Lua */ = {
 			isa = PBXGroup;
 			children = (
-				19DCB2831746AB7C00660000 /* LuaBind.h */,
-				195D565717D90E0D00C78117 /* LuaDebugging.h */,
-				19E91FC01682B1460054D61F /* LuaHelper.cpp */,
-				19E91FC11682B1460054D61F /* LuaHelper.h */,
-				193929BA16E243E90018340B /* LuaMachine.cpp */,
-				193929BB16E243E90018340B /* LuaMachine.h */,
-				19FDF4931942FCFB00B5F21B /* LuaMacros.h */,
-				193929BC16E243E90018340B /* LuaModules.h */,
-				198F42791A9151F500BE7A73 /* LuaScript.cpp */,
-				198F427A1A9151F500BE7A73 /* LuaScript.h */,
-				19FDF4941942FCFB00B5F21B /* LuaSyntax.cpp */,
-				19FDF4951942FCFB00B5F21B /* LuaSyntax.h */,
 				1939A1E7152C425D00494609 /* lua_Animation.cpp */,
 				1939A1E8152C425D00494609 /* lua_Animation.h */,
 				1939A1E9152C425D00494609 /* lua_Audio.cpp */,
@@ -1064,8 +1052,8 @@
 				1939A1F5152C425D00494609 /* lua_Random.h */,
 				19ED191A1682247D00AAA323 /* lua_Renderer.cpp */,
 				19ED191B1682247D00AAA323 /* lua_Renderer.h */,
-				1939A1F8152C425D00494609 /* lua_SceneGraph.cpp */,
-				1939A1F9152C425D00494609 /* lua_SceneGraph.h */,
+				19B051341E033A1000FE624A /* lua_RenderQueue.cpp */,
+				19B051351E033A1000FE624A /* lua_RenderQueue.h */,
 				1962F1E8184930FA00E1CAF4 /* lua_Shaders.cpp */,
 				1962F1E9184930FA00E1CAF4 /* lua_Shaders.h */,
 				1939A1FA152C425D00494609 /* lua_Sprite.cpp */,
@@ -1074,6 +1062,18 @@
 				1939A1FD152C425D00494609 /* lua_SpriteBatch.h */,
 				1939A1FE152C425D00494609 /* lua_Texture.cpp */,
 				1939A1FF152C425D00494609 /* lua_Texture.h */,
+				19DCB2831746AB7C00660000 /* LuaBind.h */,
+				195D565717D90E0D00C78117 /* LuaDebugging.h */,
+				19E91FC01682B1460054D61F /* LuaHelper.cpp */,
+				19E91FC11682B1460054D61F /* LuaHelper.h */,
+				193929BA16E243E90018340B /* LuaMachine.cpp */,
+				193929BB16E243E90018340B /* LuaMachine.h */,
+				19FDF4931942FCFB00B5F21B /* LuaMacros.h */,
+				193929BC16E243E90018340B /* LuaModules.h */,
+				198F42791A9151F500BE7A73 /* LuaScript.cpp */,
+				198F427A1A9151F500BE7A73 /* LuaScript.h */,
+				19FDF4941942FCFB00B5F21B /* LuaSyntax.cpp */,
+				19FDF4951942FCFB00B5F21B /* LuaSyntax.h */,
 			);
 			name = Lua;
 			path = ../../../src/Lua;
@@ -1680,6 +1680,7 @@
 				19E7748A1A02C8D3005DE249 /* OverlayActivator.cpp in Sources */,
 				1960AFD41A4E278E0015A3AD /* Fixture.cpp in Sources */,
 				1960AFD21A4E278E0015A3AD /* Body.cpp in Sources */,
+				19B051361E033A1000FE624A /* lua_RenderQueue.cpp in Sources */,
 				1939A164152C401300494609 /* lmem.c in Sources */,
 				198F42AB1A9152E000BE7A73 /* SkeletonBounds.c in Sources */,
 				1939A165152C401300494609 /* loadlib.c in Sources */,
@@ -1699,6 +1700,7 @@
 				1939A173152C401300494609 /* lvm.c in Sources */,
 				1939A174152C401300494609 /* lzio.c in Sources */,
 				1962F1EA184930FA00E1CAF4 /* lua_Shaders.cpp in Sources */,
+				19B051331E0339E600FE624A /* RenderQueue.cpp in Sources */,
 				1939A211152C425D00494609 /* Config.cpp in Sources */,
 				1939A21B152C425D00494609 /* Director.cpp in Sources */,
 				198F429A1A9152E000BE7A73 /* AnimationStateData.c in Sources */,
@@ -1706,7 +1708,6 @@
 				1939A21D152C425D00494609 /* FontAtlas.cpp in Sources */,
 				1939A21E152C425D00494609 /* Label.cpp in Sources */,
 				1939A220152C425D00494609 /* Renderer.cpp in Sources */,
-				1939A221152C425D00494609 /* SceneGraph.cpp in Sources */,
 				1939A227152C425D00494609 /* Sprite.cpp in Sources */,
 				1960AFD01A4E278E0015A3AD /* PolygonShape.cpp in Sources */,
 				198F42AA1A9152E000BE7A73 /* Skeleton.c in Sources */,
@@ -1722,7 +1723,6 @@
 				1939A231152C425D00494609 /* lua_Label.cpp in Sources */,
 				1960AFD71A4E278E0015A3AD /* StableWorld.cpp in Sources */,
 				1939A233152C425D00494609 /* lua_Random.cpp in Sources */,
-				1939A235152C425D00494609 /* lua_SceneGraph.cpp in Sources */,
 				1939A236152C425D00494609 /* lua_Sprite.cpp in Sources */,
 				1939A237152C425D00494609 /* lua_SpriteBatch.cpp in Sources */,
 				1939A238152C425D00494609 /* lua_Texture.cpp in Sources */,

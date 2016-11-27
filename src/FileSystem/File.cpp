@@ -26,16 +26,6 @@ using rainbow::filesystem::ops::Read;
 using rainbow::filesystem::ops::Seek;
 using rainbow::filesystem::ops::Write;
 
-namespace
-{
-    template <typename T, typename V>
-    auto variant_get(const V& variant)
-    {
-        return !variant.template is<T>() ? T{}
-                                         : variant.template get_unchecked<T>();
-    }
-}
-
 auto File::open(const Path& path) -> File
 {
     return File{path};
@@ -58,42 +48,42 @@ auto File::open_write(const char* path) -> File
 
 File::~File()
 {
-    mapbox::util::apply_visitor(CloseFile{}, handle_);
+    visit(CloseFile{}, handle_);
 }
 
 auto File::is_open() const -> bool
 {
-    return mapbox::util::apply_visitor(IsValidHandle{}, handle_);
+    return visit(IsValidHandle{}, handle_);
 }
 
 auto File::size() const -> size_t
 {
-    return mapbox::util::apply_visitor(FileSize{}, handle_);
+    return visit(FileSize{}, handle_);
 }
 
 auto File::read(void* dst, size_t size) -> size_t
 {
-    return mapbox::util::apply_visitor(Read{dst, size}, handle_);
+    return visit(Read{dst, size}, handle_);
 }
 
 auto File::seek(int64_t offset, int origin) -> int
 {
-    return mapbox::util::apply_visitor(Seek{offset, origin}, handle_);
+    return visit(Seek{offset, origin}, handle_);
 }
 
 auto File::write(const void* buffer, size_t size) -> size_t
 {
-    return mapbox::util::apply_visitor(Write{buffer, size}, handle_);
+    return visit(Write{buffer, size}, handle_);
 }
 
 File::operator AAsset*() const
 {
-    return variant_get<AAsset*>(handle_);
+    return get<AAsset*>(handle_);
 }
 
 File::operator FILE*() const
 {
-    return variant_get<FILE*>(handle_);
+    return get<FILE*>(handle_);
 }
 
 File::File(const Path& path)

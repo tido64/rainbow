@@ -14,10 +14,12 @@ using rainbow::Chrono;
 using rainbow::Data;
 using rainbow::LuaMachine;
 using rainbow::LuaScript;
+using rainbow::graphics::RenderQueue;
 
 namespace
 {
-    const char kLuaRainbowInstance[] = "__rainbow_instance";
+    constexpr char kLuaRainbowInstance[] = "__rainbow_instance";
+    constexpr char kRainbow[] = "rainbow";
 
     auto breakpoint(lua_State* L)
     {
@@ -84,8 +86,7 @@ namespace
 }
 
 LuaMachine::LuaMachine(const rainbow::Passkey<LuaScript>&)
-    : state_(lua::newstate().release()), internal_(0), traceback_(0),
-      scenegraph_(nullptr)
+    : state_(lua::newstate().release()), internal_(0), traceback_(0)
 {
 }
 
@@ -103,12 +104,19 @@ void LuaMachine::close()
     lua::WeakRef::RegistryIndex = LUA_NOREF;
     lua_pushnil(state_);
     lua_setglobal(state_, kLuaRainbowInstance);
-    lua::SceneGraph::destroy(state_, scenegraph_);
+
+    // Remove "rainbow.renderqueue".
+    lua_getglobal(state_, kRainbow);
+    lua_pushstring(state_, lua::RenderQueue::class_name);
+    lua_pushnil(state_);
+    lua_rawset(state_, -3);
+    lua_pop(state_, 1);
+
     lua_close(state_);
     state_ = nullptr;
 }
 
-auto LuaMachine::init(LuaScript* instance, rainbow::SceneNode* root) -> int
+auto LuaMachine::init(LuaScript* instance, RenderQueue& queue) -> int
 {
     luaR_openlibs(state_);
 
@@ -127,14 +135,15 @@ auto LuaMachine::init(LuaScript* instance, rainbow::SceneNode* root) -> int
     // Set "rainbow.time_since_epoch".
     luaR_rawsetcfunction(state_, "time_since_epoch", time_since_epoch);
 
-    // Initialize "rainbow.scenegraph".
-    scenegraph_ = lua::SceneGraph::create(state_, root);
-
     // Bind C++ objects.
     lua::bind(state_);
 
-    const char rainbow[] = "rainbow";
-    lua_setglobal(state_, rainbow);
+    // Initialize "rainbow.renderqueue".
+    lua_pushstring(state_, lua::RenderQueue::class_name);
+    lua::alloc<lua::RenderQueue>(state_, queue);
+    lua_rawset(state_, -3);
+
+    lua_setglobal(state_, kRainbow);
 
     R_ASSERT(lua_gettop(state_) == 0, "Stack not empty");
 
@@ -161,7 +170,7 @@ auto LuaMachine::init(LuaScript* instance, rainbow::SceneNode* root) -> int
     R_ASSERT(lua_gettop(state_) == 0, "Stack not empty");
 
     // Load our internal script.
-    if (lua::load(state_, Data::from_literal(Rainbow_lua), rainbow) == 0)
+    if (lua::load(state_, Data::from_literal(Rainbow_lua), kRainbow) == 0)
         return luaL_error(state_, "Failed to load internal Lua script");
 
     lua_getglobal(state_, "__update");

@@ -8,16 +8,8 @@
 #include <cstdint>
 #include <cstdio>
 
-#ifdef _MSC_VER
-#   pragma warning(push)
-#   pragma warning(disable: 4996)
-#endif
-#include <mapbox/variant.hpp>
-#ifdef _MSC_VER
-#   pragma warning(pop)
-#endif
-
 #include "Common/NonCopyable.h"
+#include "Common/Variant.h"
 
 struct AAsset;
 
@@ -121,7 +113,7 @@ namespace rainbow
         operator FILE*() const;
 
     private:
-        mapbox::util::variant<std::nullptr_t, AAsset*, FILE*> handle_;
+        variant<std::nullptr_t, AAsset*, FILE*> handle_;
 
         explicit File(const filesystem::Path& path);
         File(const filesystem::Path& path, const char* mode);

@@ -29,7 +29,7 @@ setmetatable(SceneSCUMMBar, { __call = SceneSCUMMBar.new })
 function SceneSCUMMBar:init()
     playSound(self.scene.resources.bgm)
     rainbow.input.subscribe(self)
-    threepwood:init(self.scene.node, global_scale * 30, global_scale * 30)
+    threepwood:init(global_scale * 30, global_scale * 30)
     local objects = self.scene.objects
     objects.chandelier.animations.drink:start()
     objects.bythewindow.animations.drink:start()
@@ -50,7 +50,12 @@ function SceneSCUMMBar:update(dt)
         else  -- right to left
             self.split = math.min(screen.width, self.split + v)
         end
-        rainbow.scenegraph:move(self.scene.node, v, 0)
+        threepwood.sprite:move(v, 0)
+        local objects = self.scene.objects
+        objects.bg:move(v, 0)
+        objects.chandelier:move(v, 0)
+        objects.bythewindow:move(v, 0)
+        objects.intheback:move(v, 0)
     else
         local x = threepwood:get_position()
         if x > screen.width - self.edge_margin * 0.5 then

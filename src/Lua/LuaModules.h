@@ -15,7 +15,7 @@
 #include "Lua/lua_Platform.h"
 #include "Lua/lua_Random.h"
 #include "Lua/lua_Renderer.h"
-#include "Lua/lua_SceneGraph.h"
+#include "Lua/lua_RenderQueue.h"
 #include "Lua/lua_Shaders.h"
 #include "Lua/lua_Sprite.h"
 #include "Lua/lua_SpriteBatch.h"
@@ -33,7 +33,7 @@ NS_RAINBOW_LUA_BEGIN
         reg<Animation>(L);
         reg<Font>(L);
         reg<Label>(L);
-        reg<ScopedNode>(L);
+        reg<RenderQueue>(L);
         reg<Sprite>(L);
         reg<SpriteBatch>(L);
         reg<Texture>(L);

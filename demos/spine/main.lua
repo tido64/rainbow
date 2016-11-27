@@ -32,7 +32,7 @@ function init()
 
     boy = create_boy()
     boy:set_position(screen.width * 0.33, screen.height * 0.1)
-    rainbow.scenegraph:add_drawable(boy)
+    rainbow.renderqueue:add(boy)
 
     local animation_state_handler = {
         on_animation_start = function(self, track, loop_count)

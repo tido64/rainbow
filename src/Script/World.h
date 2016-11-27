@@ -8,7 +8,6 @@
 #include <vector>
 
 #include "Common/TypeInfo.h"
-#include "Graphics/SceneGraph.h"
 #include "Script/Actor.h"
 
 namespace rainbow
@@ -48,11 +47,11 @@ namespace rainbow
 
         /// <summary>
         ///   Spawns an actor of type <typeparamref name="T"/> at specified
-        ///   location and node.
+        ///   location.
         /// </summary>
         /// <returns>Actor that just spawned.</returns>
         template <typename T, typename... Args>
-        auto spawn(const Vec2f& position, SceneNode& node, Args&&... args)
+        auto spawn(const Vec2f& position, Args&&... args)
         {
             static_assert(std::is_base_of<Actor, T>::value,
                           "Entity type must be derived from Actor.");
@@ -62,7 +61,6 @@ namespace rainbow
 
             actor->initialize(std::forward<Args>(args)...);
             actor->set_position(position);
-            node.add_child(actor->node());
             return actor;
         }
 

@@ -12,27 +12,30 @@ auto create_font(lua_State* L, ScopeStack& stack) -> Prose::Asset
     if (pt < 1.0f)
     {
         LOGE("Prose: Invalid size for font: %s", path);
-        return no_asset();
+        return Prose::Asset::none();
     }
+
     const Data& data = Data::load_asset(path);
     if (!data)
     {
         LOGE(kProseFailedOpening, path);
-        return no_asset();
+        return Prose::Asset::none();
     }
+
     auto font = stack.allocate<FontAtlas>(data, pt);
     if (!font->is_valid())
     {
-        LOGE(kProseFailedLoading, "font", path);
-        return no_asset();
+        LOGE(kProseFailedLoading, kKeyFont, path);
+        return Prose::Asset::none();
     }
-    return {Prose::AssetType::FontAtlas, font, nullptr};
+
+    return {Prose::AssetType::FontAtlas, font, 0};
 }
 
 auto create_sound(lua_State*, ScopeStack&) -> Prose::Asset
 {
     LOGW("Prose: Sound is not yet implemented");
-    return {Prose::AssetType::Sound, nullptr, nullptr};
+    return {Prose::AssetType::Sound, nullptr, 0};
 }
 
 auto create_texture(lua_State* L, ScopeStack& stack) -> Prose::Asset
@@ -42,7 +45,7 @@ auto create_texture(lua_State* L, ScopeStack& stack) -> Prose::Asset
     if (lua_next(L, -2) == 0 || lua_type(L, -1) != LUA_TSTRING)
     {
         lua_settop(L, top);
-        return no_asset();
+        return Prose::Asset::none();
     }
 
     const auto path = rainbow::filesystem::relative(lua_tostring(L, -1));
@@ -52,15 +55,15 @@ auto create_texture(lua_State* L, ScopeStack& stack) -> Prose::Asset
     {
         LOGE(kProseNoSuchFile, path.c_str());
         lua_pop(L, 1);
-        return no_asset();
+        return Prose::Asset::none();
     }
 
     auto texture = stack.allocate<TextureAtlas>(path);
     if (!texture->is_valid())
     {
-        LOGE(kProseFailedLoading, "texture", path.c_str());
+        LOGE(kProseFailedLoading, kKeyTexture, path.c_str());
         lua_pop(L, 1);
-        return no_asset();
+        return Prose::Asset::none();
     }
 
     stack.retain(texture);
@@ -68,7 +71,10 @@ auto create_texture(lua_State* L, ScopeStack& stack) -> Prose::Asset
     {
         if (!lua_istable(L, -1))
         {
-            LOGW(kProseUnknownProperty, table_name(L), "texture", path.c_str());
+            LOGW(kProseUnknownProperty,
+                 table_name(L),
+                 kKeyTexture,
+                 path.c_str());
             lua_pop(L, 1);
             continue;
         }
@@ -83,7 +89,7 @@ auto create_texture(lua_State* L, ScopeStack& stack) -> Prose::Asset
         lua_pop(L, 5);
         texture->add_region(x, y, width, height);
     }
-    return {Prose::AssetType::TextureAtlas, texture, nullptr};
+    return {Prose::AssetType::TextureAtlas, texture, 0};
 }
 
 bool ends_with(const char* str, const char* suffix)
@@ -97,6 +103,7 @@ bool ends_with(const char* str, const char* suffix)
     for (size_t i = 0; i < suffix_length; ++i, ++s)
         if (tolower(*s) != tolower(suffix[i]))
             return false;
+
     return true;
 }
 
@@ -128,7 +135,7 @@ auto create_resource(lua_State* L,
                      ScopeStack& stack,
                      Prose::AssetMap& assets) -> Prose::Asset
 {
-    Prose::Asset asset = no_asset();
+    auto asset = Prose::Asset::none();
     switch (resource_type(L))
     {
         case Prose::AssetType::FontAtlas:
@@ -141,9 +148,9 @@ auto create_resource(lua_State* L,
             asset = create_texture(L, stack);
             break;
         default:
-            break;
+            return asset;
     }
-    if (asset.type != Prose::AssetType::None)
-        assets[table_name(L)] = asset;
+
+    assets[table_name(L)] = asset;
     return asset;
 }

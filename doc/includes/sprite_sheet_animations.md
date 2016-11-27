@@ -28,11 +28,9 @@ frames. For instance, setting `fps` to 30 and `delay` to 2, will make the
 animation wait 66⅔ ms before playing the next cycle. A negative `delay`
 disables looping.
 
-Before an animation can be played, it must also be added to the scene graph.
-Typically, it is added as a child node of the sprite's batch node. This makes it
-easier to enable and disable batches along with their animations. This also
-means that batches of animations can be created and assigned a sprite at a later
-point in time.
+Before an animation can be played, it must also be added to the render queue.
+Batches of animations can be created and assigned a sprite at a later point in
+time.
 
 ### Starting and Stopping Animations
 
@@ -49,8 +47,8 @@ function animation:stop        ()  --> void
 ```
 
 An animation will always start from the beginning. There is no pause function
-because animations live in the scene graph, and can therefore be paused by
-disabling its node.
+because animations live in the render queue and can therefore be paused by
+disabling its render unit.
 
 ### Navigating the Animation
 
@@ -276,10 +274,9 @@ private:
             sprite, rainbow::Animation::Frames(kAnimationFrames), 6, 0);
         animation_->set_callback(&animation_event_handler);
 
-        // Add the sprite batch to the root node, and the animation to the
-        // batch's node so we can disable them both easily.
-        auto node = scenegraph().add_child(batch_);
-        node->add_child(animation_);
+        // Add the sprite batch and the animation to the render queue.
+        render_queue().emplace_back(batch_);
+        render_queue().emplace_back(animation_);
 
         animation_->start();
     }
@@ -322,8 +319,8 @@ function init()
     local animation = rainbow.animation(sprite, ANIMATION_FRAMES, 6, 0)
     animation:start()
 
-    rainbow.scenegraph:add_batch(batch);
-    rainbow.scenegraph:add_animation(animation);
+    rainbow.renderqueue:add(batch);
+    rainbow.renderqueue:add(animation);
 
     g_batch = batch
     g_animation = animation
@@ -372,8 +369,8 @@ private:
         animation_.set_sprite(sprite);
         animation_.set_callback(&animation_event_handler);
 
-        auto node = scenegraph().add_child(batch_);
-        node->add_child(animation_);
+        render_queue().emplace_back(batch_);
+        render_queue().emplace_back(animation_);
 
         animation_.start();
     }

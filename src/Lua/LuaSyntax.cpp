@@ -13,7 +13,6 @@
 namespace rainbow
 {
     class IDrawable;
-    class SceneNode;
 
     namespace audio
     {
@@ -26,7 +25,7 @@ namespace rainbow
         class Animation;
         class Font;
         class Label;
-        class SceneGraph;
+        class RenderQueue;
         class Shader;
         class Sprite;
         class SpriteBatch;
@@ -146,20 +145,6 @@ namespace rainbow { namespace lua { namespace detail
         require(L, n, is_userdata, "drawable");
     }
 
-    /* rainbow::SceneNode */
-
-    template <>
-    void checktype<nil_or<SceneNode>>(lua_State* L, int n)
-    {
-        optional(L, n, lua_isuserdata, "nil or node");
-    }
-
-    template <>
-    void checktype<SceneNode>(lua_State* L, int n)
-    {
-        require(L, n, lua_isuserdata, "node");
-    }
-
     /* rainbow::audio */
 
     template <>
@@ -212,12 +197,12 @@ namespace rainbow { namespace lua { namespace detail
         require(L, n, is_userdata, "label");
     }
 
-    /* rainbow::lua::SceneGraph */
+    /* rainbow::lua::RenderQueue */
 
     template <>
-    void checktype<SceneGraph>(lua_State* L, int n)
+    void checktype<RenderQueue>(lua_State* L, int n)
     {
-        require(L, n, is_userdata, "scenegraph");
+        require(L, n, is_userdata, "renderqueue");
     }
 
     /* rainbow::lua::Shader */

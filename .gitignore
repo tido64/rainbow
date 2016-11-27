@@ -3,6 +3,7 @@
 *.swp
 .DS_Store
 .browse.VC.*
+.vs/
 Rainbow.sublime-workspace
 project.xcworkspace/
 src/.ycm_extra_conf.pyc
@@ -27,3 +28,14 @@ lib/dSFMT/test.c
 lib/ogg/
 lib/openal-soft/
 lib/vorbis/
+
+# Demos
+/demos/**/*.ogg
+/demos/**/*.png
+/demos/**/Coroutine.lua
+/demos/**/Functional.lua
+/demos/**/Math.lua
+/demos/**/Prose/
+/demos/**/Timer.lua
+/demos/**/Transition.lua
+/demos/**/TransitionFunctions.lua

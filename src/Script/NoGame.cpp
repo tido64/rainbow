@@ -18,8 +18,8 @@ void NoGame::init_impl(const Vec2i& screen)
 
     const float scale = screen.y / kDesiredHeight;
     const float logo_scale = 0.1f * scale;
-    const unsigned int logo_width = kRainbowLogoWidth * logo_scale;
-    const unsigned int logo_height = kRainbowLogoHeight * logo_scale;
+    const uint32_t logo_width = kRainbowLogoWidth * logo_scale;
+    const uint32_t logo_height = kRainbowLogoHeight * logo_scale;
 
     auto texture = rainbow::texture(
         kRainbowLogoURI,
@@ -28,7 +28,7 @@ void NoGame::init_impl(const Vec2i& screen)
         std::make_tuple(0, 64, 0, 0),                     // 0
         std::make_tuple(0, 0, logo_width, logo_height));  // 1
 
-    const unsigned int logo_padding = 32 * scale;
+    const uint32_t logo_padding = 32 * scale;
     const Vec2f center{screen.x * 0.5f, screen.y * 0.5f};
 
     batch_ = rainbow::spritebatch(
@@ -42,7 +42,7 @@ void NoGame::init_impl(const Vec2i& screen)
             .texture(1)
             .color(0x000000ff));
 
-    scenegraph().add_child(batch_);
+    render_queue().emplace_back(batch_);
 }
 
 void NoGame::update_impl(uint64_t)

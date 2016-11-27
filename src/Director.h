@@ -7,7 +7,7 @@
 
 #include "Audio/Mixer.h"
 #include "Graphics/Renderer.h"
-#include "Graphics/SceneGraph.h"
+#include "Graphics/RenderQueue.h"
 #include "Input/Input.h"
 #include "Script/Timer.h"
 
@@ -26,18 +26,18 @@ namespace rainbow
         Director();
         ~Director();
 
+        /// <summary>Loads and initialises main script.</summary>
+        void init(const Vec2i& screen);
+
         bool active() const { return active_; }
         auto error() const { return error_; }
         auto input() -> Input& { return input_; }
         auto mixer() -> audio::Mixer& { return mixer_; }
-        auto scenegraph() -> GroupNode& { return scenegraph_; }
+        auto render_queue() -> graphics::RenderQueue& { return render_queue_; }
         auto script() { return script_.get(); }
         bool terminated() const { return terminated_; }
 
         void draw();
-
-        /// <summary>Loads and initialises main script.</summary>
-        void init(const Vec2i& screen);
 
         void terminate()
         {
@@ -67,7 +67,7 @@ namespace rainbow
         const char* error_;
         TimerManager timer_manager_;
         std::unique_ptr<GameBase> script_;
-        GroupNode scenegraph_;
+        graphics::RenderQueue render_queue_;
         Input input_;
         graphics::State renderer_;
         audio::Mixer mixer_;
