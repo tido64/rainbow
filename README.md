@@ -44,7 +44,11 @@ Rainbow is mostly built on
   [Spine](http://esotericsoftware.com/)
 - Text rendering (supports TrueType and OpenType via
   [FreeType](https://freetype.org/))
-- Texture atlas ([PNG](http://libpng.org/pub/png/libpng.html) and PVRTC)
+- Texture atlas
+  ([DDS](https://msdn.microsoft.com/en-us/library/windows/desktop/bb943991(v=vs.85).aspx),
+   [PNG](http://libpng.org/pub/png/libpng.html),
+   [PVRTC](https://community.imgtec.com/developers/powervr/tools/pvrtextool/),
+   and [SVG](https://www.w3.org/Graphics/SVG/))
 
 ### Input
 

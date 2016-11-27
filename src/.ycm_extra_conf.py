@@ -32,6 +32,7 @@ def SystemIncludeDirectoryFlags():
 def ProjectFlags():
   project_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..')
   flags = [
+    '-x c++',
     '-std=c++14',
     '-Werror',
     '-pedantic',
@@ -53,6 +54,7 @@ def ProjectFlags():
     '-I', os.path.join(project_path, 'lib', 'libpng'),
     '-I', os.path.join(project_path, 'lib', 'nanosvg', 'src'),
     '-I', os.path.join(project_path, 'lib', 'spine-runtimes', 'spine-c', 'include'),
+    '-I', os.path.join(project_path, 'lib', 'variant', 'include'),
     '-I', os.path.join(project_path, 'lib', 'googletest', 'googletest', 'include'),
     '-DRAINBOW_AUDIO_AL=1',
     '-DUSE_PHYSICS=1',

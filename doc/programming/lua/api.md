@@ -228,7 +228,7 @@ Terminates Rainbow with an optional error message. Don't pass a message if it is
 ## rainbow.font
 
 > Font objects are used by [labels](#rainbowlabel) to display text. Like textures, it is recommended to reuse them whenever possible. A font object is created with a fixed point size and cannot be resized. If a different size is desired, a new font object must be created.
-
+>
 > Rainbow currently supports OpenType and TrueType fonts.
 
 ### rainbow.font(path, size)
@@ -267,7 +267,7 @@ end
 ```
 
 > As seen in the example, the easiest way is to define an ``InputListener`` and inherit from it, then define the functions that are needed. The important point here is that all event handlers must be implemented even if they'll do nothing.
-
+>
 > For pointer events, a table of events are sent with each notification. It is iterated as above. The ``hash`` value uniquely identifies a touch or mouse button for the duration of it touching the screen or mouse button being held. Touch or mouse click location is stored in ``pointer``:
 
 ```lua
@@ -677,7 +677,7 @@ Rotates sprite by given angle.
 ## rainbow.spritebatch
 
 > Sprite batches are meant to enforce grouping of [sprites](#rainbowsprite) in order to avoid drawing each [sprite](#rainbowsprite) separately.
-
+>
 > The sprites in a batch are drawn using [painter's algorithm](https://en.wikipedia.org/wiki/Painter's_algorithm) and should therefore be created in the order they want to be drawn.
 
 ### rainbow.spritebatch(count)
@@ -707,8 +707,8 @@ Sets [texture atlas](#rainbowtexture).
 ## rainbow.texture
 
 > Texture objects are images decoded and sent to the graphics card as texture. Textures are normally stored as raw bitmaps unless they were stored in a compressed format supported by the platform (e.g. ETC1 or PVRTC). This means that a 1024x1024 texture will normally occupy 4MB. In order to save memory, they are assumed to be [atlases](https://en.wikipedia.org/wiki/Texture_atlas) and should be reused whenever possible.
-
-> Rainbow currently supports PNG and PVRTC.
+>
+> Rainbow currently supports [DDS](https://msdn.microsoft.com/en-us/library/windows/desktop/bb943991(v=vs.85).aspx), [PNG](http://libpng.org/pub/png/libpng.html), [PVRTC](https://community.imgtec.com/developers/powervr/tools/pvrtextool/), and [SVG](https://www.w3.org/Graphics/SVG/).
 
 !!! note
 
@@ -1131,7 +1131,7 @@ Scales a drawable to given desired factor(s).
 ## Box2D
 
 > First of all, you'll find the official [Box2D user manual here](http://box2d.org/documentation/).
-
+>
 > There isn't much to say about Rainbow's Box2D wrappers. You can easily use the official doc and replace all occurrences of ``b2*`` with ``b2.*`` in Lua. For instance, to create a dynamic body and centre it on the screen:
 
 ```lua
