@@ -1,4 +1,4 @@
-# Lua API Reference
+# Lua API Reference (will be migrated)
 
 ## rainbow.animation
 

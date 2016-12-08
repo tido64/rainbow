@@ -4,7 +4,7 @@
 
 First, make sure you've installed [Git](https://git-scm.com/downloads) as that's what we'll be using to retrieve the source code. The following command will download Rainbow and all of its submodules into a folder named `rainbow`:
 
-```bash
+```shell
 git clone --recursive https://bitbucket.org/tido/rainbow.git
 ```
 
@@ -45,9 +45,7 @@ the instructions in `README.md` for more details.
 1. Download and install [Visual Studio Community](https://www.visualstudio.com/en-us/products/visual-studio-community-vs.aspx).
 2. Download and install [CMake](https://cmake.org/download/).
 
-!!! note
-
-    The build scripts will automatically download and set up OpenAL Soft and SDL for you.
+<aside class="notice">The build scripts will automatically download and set up OpenAL Soft and SDL for you.</aside>
 
 ## Compiling Rainbow
 
@@ -72,7 +70,7 @@ Available features and build configurations:
 
 Example: Build Rainbow with physics and Spine support for game development.
 
-```bash
+```shell
 /path/to/rainbow/tools/build.sh -DCMAKE_BUILD_TYPE=Debug \
                                 -DUSE_PHYSICS=1 \
                                 -DUSE_SPINE=1
@@ -84,7 +82,7 @@ You can pass any number of CMake options. For platform specific options, see the
 
 Rainbow must be built outside of the source tree. So you'll need to first make a directory for building Rainbow, then run the build script:
 
-```bash
+```shell
 mkdir rainbow-build
 cd rainbow-build
 /path/to/rainbow/tools/build.sh -DCMAKE_BUILD_TYPE=<configuration> [option ...]
@@ -94,13 +92,13 @@ The build script will generate project files and start building Rainbow.
 
 By default, [GCC](https://gcc.gnu.org/) and Clang will be used to compile both C and C++ code on Linux and macOS respectively. Unix Makefiles is the default generator on Linux, and Xcode on macOS. You can change these by prefixing environment variables. For instance, to use GCC and [Ninja](https://ninja-build.org/) in place of Clang and Makefiles:
 
-```bash
+```shell
 CC=gcc CXX=g++ GENERATOR=Ninja /path/to/rainbow/tools/build.sh [option ...]
 ```
 
 If you have problems running `build.sh`, make sure it has execution permission:
 
-```bash
+```shell
 chmod +x /path/to/rainbow/tools/build.sh
 ```
 

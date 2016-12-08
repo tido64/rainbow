@@ -12,7 +12,7 @@ error.
 To access the timer manager, use the static `Get()` method:
 
 ```c++
-TimerManager *timer_manager = TimerManager::Get();
+TimerManager* timer_manager = TimerManager::Get();
 ```
 
 ### Creating and Clearing Timers
@@ -21,7 +21,7 @@ TimerManager *timer_manager = TimerManager::Get();
 Timer*  TimerManager::set_timer    (Timer::Closure func,
                                     const int interval,
                                     const int repeat_count);
-  void  TimerManager::clear_timer  (Timer *t);
+  void  TimerManager::clear_timer  (Timer* t);
 ```
 
 `Timer::Closure` is defined as a callable whose signature is `void()`. The
@@ -109,35 +109,36 @@ private:
 class TimerExample final : public rainbow::GameBase
 {
 public:
-    TimerExample(rainbow::Director &director)
+    TimerExample(rainbow::Director& director)
         : rainbow::GameBase(director), repeated_(nullptr)  {}
 
 private:
-    Timer *repeated_;
+    rainbow::Timer* repeated_;
     RepeatableAction action_;
 
-    void init_impl(const Vec2i &) override
+    void init_impl(const rainbow::Vec2i&) override
     {
         // Create a delayed action using a function.
-        TimerManager::Get()->set_timer(&action, 500, 0);
+        rainbow::TimerManager::Get()->set_timer(&action, 500, 0);
 
         // Create a repeated action using a functor.
-        repeated_ = TimerManager::Get()->set_timer(RepeatableAction(), 500, 4);
+        repeated_ =
+            rainbow::TimerManager::Get()->set_timer(RepeatableAction{}, 500, 4);
 
         // Create a delayed action using a lambda function.
-        TimerManager::Get()->set_timer(
+        rainbow::TimerManager::Get()->set_timer(
             [] { LOGI("A delayed action was performed."); }, 500, 0);
 
         // Create a repeated action using a bound member function.
-        TimerManager::Get()->set_timer(
+        rainbow::TimerManager::Get()->set_timer(
             std::bind(&RepeatableAction::action, action_), 500, 4);
     }
 
-    void update_impl(const unsigned long) override
+    void update_impl(uint64_t) override
     {
         if (repeated_ && !repeated_->is_active())
         {
-            TimerManager::Get()->clear_timer(repeated_);
+            rainbow::TimerManager::Get()->clear_timer(repeated_);
             repeated_ = nullptr;
             LOGI("The repeated timer was cleared.");
         }

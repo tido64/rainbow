@@ -12,9 +12,7 @@ unsigned int  ceil_pow2  (unsigned int i);
 
 Rounds `i` up to the nearest power of 2.
 
-!!! note
-
-    0 is incorrectly considered a power of 2.
+<aside class="notice">0 is incorrectly considered a power of 2.</aside>
 
 ```c++
 unsigned int  floor_pow2  (unsigned int i);
@@ -46,9 +44,9 @@ Converts values between degrees and radians.
 There are currently three predefined `Vec2` types in the global namespace.
 
 ```c++
-using Vec2f = rainbow::Vec2<float>;
-using Vec2i = rainbow::Vec2<int>;
-using Vec2u = rainbow::Vec2<unsigned>;
+using Vec2f = Vec2<float>;
+using Vec2i = Vec2<int>;
+using Vec2u = Vec2<unsigned>;
 ```
 
 ### Constants

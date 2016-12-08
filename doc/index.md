@@ -1,30 +1,28 @@
-# Rainbow Documentation
+---
+title: Rainbow Documentation
 
-## Getting Started
+language_tabs:
+  - cpp: C++
+  - lua: Lua
 
-- [Quick Start Guide](getting_started/quick_start.md)
-- [C++ Basics](getting_started/cpp_basics.md)
-- [Lua Basics](getting_started/lua_basics.md)
+toc_footers:
+  - <a href="https://bitbucket.org/tido/rainbow">Fork the code</a>
+  - <a href="https://trello.com/b/r2TqudY6/rainbow">Roadmap</a>
+  - <a href="https://github.com/lord/slate">Documentation powered by Slate</a>
 
-## Programming Guide
+includes:
+  - building_rainbow_for_pc
+  - quick_start
+  - basics
+  - audio
+  - input
+  - math
+  - sprite_sheet_animations
+  - timers
+  - transitions
+  - lua_api
+  - coding_standard
+  - license
 
-### Development Setup
-
-- [Building Rainbow for PC](programming/development/building_rainbow_for_pc.md)
-
-### C++
-
-- [Audio](programming/cpp/audio.md)
-- [Input](programming/cpp/input.md)
-- [Math](programming/cpp/math.md)
-- [Sprite Sheet Animations](programming/cpp/sprite_sheet_animations.md)
-- [Timers](programming/cpp/timers.md)
-- [Transitions](programming/cpp/transitions.md)
-
-### Lua
-
-- [Lua API](programming/lua/api.md)
-
-## Contributing
-
-- [Coding Standard](contributing/coding_standard.md)
+search: true
+---

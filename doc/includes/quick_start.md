@@ -1,4 +1,4 @@
-# Quick Start Guide
+# Quick Start
 
 Before you start, please make sure you've read `README.md`. The following
 tutorials will assume that you've already built Rainbow.
@@ -15,11 +15,15 @@ Pick a demo under `demos`. For the purpose of this tutorial, we'll try to get
 
 From the folder in step 1, run the build script:
 
-	$ /path/to/rainbow/tools/build.sh android
+```shell
+/path/to/rainbow/tools/build.sh android
+```
 
 Connect your device and install it:
 
-	$ adb install -r bin/Rainbow-debug.apk
+```shell
+adb install -r bin/Rainbow-debug.apk
+```
 
 Start the app on your device.
 
@@ -49,15 +53,17 @@ You should now be able to run this demo in the simulator or on your device.
 
 Now your demo folder should contain at least the following files:
 
-	Kim.lua
-	Math.lua
-	Transition.lua
-	TransitionFunctions.lua
-	canvas.png
-	main.lua
+  - Kim.lua
+  - Math.lua
+  - Transition.lua
+  - TransitionFunctions.lua
+  - canvas.png
+  - main.lua
 
 Start the demo:
 
-	$ rainbow /path/to/demo
+```shell
+rainbow /path/to/demo
+```
 
 Or if you're on Windows, drag and drop the folder on `rainbow.exe`.

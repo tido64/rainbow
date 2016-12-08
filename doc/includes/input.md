@@ -30,11 +30,20 @@ void MyGame::init_impl(const Vec2i&)
 }
 ```
 
+```lua
+local input = rainbow.input
+```
+
 ### Subscribing
 
 ```c++
 void  Input::subscribe    (InputListener* i);
 void  Input::unsubscribe  (InputListener* i);
+```
+
+```lua
+function rainbow.input.subscribe    (i)  --> void
+function rainbow.input.unsubscribe  (i)  --> void
 ```
 
 Subscribes/unsubscribes listener `i` to input events. A listener will always be
@@ -94,7 +103,7 @@ shortcut Ctrl+Q/⌘Q.
 #include "Input/VirtualKey.h"
 #include "Script/GameBase.h"
 
-class InputHandler final : public InputListener
+class InputHandler final : public rainbow::InputListener
 {
 private:
     bool on_key_down_impl(const rainbow::KeyStroke& k) override
@@ -103,7 +112,8 @@ private:
         return true;
     }
 
-    bool on_pointer_began_impl(const ArrayView<Pointer>& pointers) override
+    bool on_pointer_began_impl(
+        const ArrayView<rainbow::Pointer>& pointers) override
     {
         for (auto&& p : pointers)
             LOGI("Pressed mouse button %u at %i,%i", p.hash, p.x, p.y);
@@ -126,7 +136,7 @@ public:
 private:
     InputHandler input_handler_;
 
-    void init_impl(const Vec2i&) override
+    void init_impl(const rainbow::Vec2i&) override
     {
         input().subscribe(&input_handler_);
     }

@@ -29,6 +29,12 @@ Sound*  rainbow::audio::load_stream  (const char* path);
 void    rainbow::audio::release      (Sound*);
 ```
 
+```lua
+function rainbow.audio.load_sound   (path)   --> sound
+function rainbow.audio.load_stream  (path)   --> sound
+function rainbow.audio.release      (sound)  --> void
+```
+
 Loads the audio file at given path, and returns a handle for a `Sound` resource
 if successful. Otherwise, a `nullptr` is returned. `load_sound` will load the
 whole file into memory, while `load_stream` will only open the file and stream
@@ -47,6 +53,15 @@ Channel*  rainbow::audio::play        (Sound*, Vec2f world_position = Vec2f::Zer
 void      rainbow::audio::stop        (Channel*);
 ```
 
+```lua
+function rainbow.audio.is_paused   (channel)              --> bool
+function rainbow.audio.is_playing  (channel)              --> bool
+function rainbow.audio.pause       (channel)              --> void
+function rainbow.audio.play        (channel)              --> channel
+function rainbow.audio.play        (sound, x = 0, y = 0)  --> channel
+function rainbow.audio.stop        (channel)              --> void
+```
+
 Once a `Sound` resource is obtained, it can be played by calling `play`. This,
 in turn, will return a `Channel` handle that can be used to pause/resume/stop
 the playback. The handle cannot be used to restart playback if it's stopped.
@@ -59,6 +74,12 @@ to be reused by subsequent calls to `play(Sound*, ...)`.
 void  rainbow::audio::set_loop_count      (Channel*, int count);
 void  rainbow::audio::set_volume          (Channel*, float volume);
 void  rainbow::audio::set_world_position  (Channel*, Vec2f position);
+```
+
+```lua
+function rainbow.audio.set_loop_count      (channel, count)   --> void
+function rainbow.audio.set_volume          (channel, volume)  --> void
+function rainbow.audio.set_world_position  (channel, x, y)    --> void
 ```
 
 A currently playing channel can be further configured. Currently, you can set

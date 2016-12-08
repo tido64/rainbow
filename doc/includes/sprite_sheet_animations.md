@@ -14,9 +14,13 @@ Animation(const SpriteRef &sprite,
           int delay = 0);
 ```
 
-`frames` is an array of texture ids that are played back in succession and is
-terminated with `Animation::kAnimationEnd`. The playback rate is determined by
-frames per second, or `fps`.
+```lua
+function rainbow.animation(sprite, frames, fps, delay = 0)  --> animation
+```
+
+`frames` is an array of texture ids that are played back in succession. In C++,
+the array must be terminated with `Animation::kAnimationEnd`. The playback rate
+is determined by frames per second, or `fps`.
 
 By default, an animation always loops without any delays between each cycle.
 Setting `delay` to anything greater than 0, will introduce delays, measured in
@@ -38,6 +42,12 @@ void  Animation::start       ();
 void  Animation::stop        ();
 ```
 
+```lua
+function animation:is_stopped  ()  --> bool
+function animation:start       ()  --> void
+function animation:stop        ()  --> void
+```
+
 An animation will always start from the beginning. There is no pause function
 because animations live in the scene graph, and can therefore be paused by
 disabling its node.
@@ -48,10 +58,18 @@ disabling its node.
 unsigned int  current_frame  () const;
 ```
 
-Returns the currently displayed frame; `Animation::kAnimationEnd` if none.
+```lua
+function animation:current_frame  ()  --> int
+```
+
+Returns the currently displayed frame; `Animation::kAnimationEnd` (-1) if none.
 
 ```c++
 unsigned int  frame_rate  () const;
+```
+
+```lua
+-- not available
 ```
 
 Returns the frame rate in frames per second.
@@ -60,10 +78,18 @@ Returns the frame rate in frames per second.
 void  Animation::jump_to  (unsigned int frame);
 ```
 
+```lua
+function animation:jump_to  (frame)  --> void
+```
+
 Jumps to the specified frame.
 
 ```c++
 void  Animation::rewind  ();
+```
+
+```lua
+function animation:rewind  ()  --> void
 ```
 
 Rewinds the animation. Equivalent to `jump_to(0)`.
@@ -74,11 +100,19 @@ Rewinds the animation. Equivalent to `jump_to(0)`.
 void  Animation::set_delay  (int delay);
 ```
 
+```lua
+function animation:set_delay  (delay)  --> void
+```
+
 Sets number of frames to delay before the animation loops. Negative numbers
 disable looping.
 
 ```c++
 void  Animation::set_frame_rate  (unsigned int fps);
+```
+
+```lua
+function animation:set_frame_rate  (fps)  --> void
 ```
 
 Sets the frame rate in frames per second.
@@ -87,10 +121,18 @@ Sets the frame rate in frames per second.
 void  Animation::set_frames  (std::unique_ptr<const Frame[]> frames);
 ```
 
+```lua
+function animation:set_frames  (frames)  --> void
+```
+
 Sets new frames to be played.
 
 ```c++
 const Frame*  release  ();
+```
+
+```lua
+-- not available
 ```
 
 Releases ownership of animation frames and returns it.
@@ -107,9 +149,13 @@ Returns the target sprite.
 void  Animation::set_sprite  (const SpriteRef &sprite);
 ```
 
+```lua
+function animation:set_sprite  (sprite)  --> void
+```
+
 Sets the sprite to animate.
 
-### Animation Callback Events
+## Animation Callback Events
 
 There are three events that are fired during an animation's lifetime.
 
@@ -127,15 +173,34 @@ You can subscribe to these events using:
 
 ```c++
 void   Animation::set_callback  (Animation::Callback f);
+
+// Where `Animation::Callback` is a callable whose signature is
+// `void(Animation *animation, Animation::Event event)`, and `animation` is the
+// animation object that triggered `event`.
 ```
 
-Where `Animation::Callback` is a callable whose signature is
-`void(Animation *animation, Animation::Event event)`, and `animation` is the
-animation object that triggered `event`.
+```lua
+function animation:set_listener  (listener)  --> void
+
+-- Table with functions `on_animation_start`, `on_animation_end` and/or
+-- `on_animation_complete` implemented. Such as:
+
+local animation_state_handler = {
+    on_animation_start = function(self)
+        print("> Animation has started")
+    end,
+    on_animation_end = function(self)
+        print("> Animation has ended")
+    end,
+    on_animation_complete = function(self)
+        print("> Animation has completed")
+    end
+}
+```
 
 ## Example
 
-In this example, we set up a walking animation using the simplified API.
+In this example, we set up a walking animation.
 
 ```c++
 #include "FileSystem/FileSystem.h"
@@ -143,6 +208,9 @@ In this example, we set up a walking animation using the simplified API.
 
 namespace
 {
+    constexpr rainbow::Animation::Frame kAnimationFrames[]{
+        0, 1, 2, 3, 4, 5, rainbow::Animation::kAnimationEnd};
+
     constexpr int kTextureRegions[]{
         400, 724, 104, 149,
         504, 724, 104, 149,
@@ -150,9 +218,6 @@ namespace
         712, 724, 104, 149,
         816, 724, 104, 149,
         920, 724, 104, 149};
-
-    constexpr Animation::Frame kAnimationFrames[]{
-        0, 1, 2, 3, 4, 5, Animation::kAnimationEnd};
 }
 
 rainbow::texture_t load_texture()
@@ -163,20 +228,20 @@ rainbow::texture_t load_texture()
     return texture;
 }
 
-void animation_event_handler(Animation*, Animation::Event e)
+void animation_event_handler(rainbow::Animation*, rainbow::Animation::Event e)
 {
     switch (e)
     {
-        case Animation::Event::Start:
+        case rainbow::Animation::Event::Start:
             // Handle animation start here.
             break;
-        case Animation::Event::End:
+        case rainbow::Animation::Event::End:
             // Handle animation end here.
             break;
-        case Animation::Event::Complete:
+        case rainbow::Animation::Event::Complete:
             // Handle animation cycle complete here.
             break;
-        case Animation::Event::Frame:
+        case rainbow::Animation::Event::Frame:
             // Handle animation frame update here.
             break;
     }
@@ -195,9 +260,9 @@ private:
     rainbow::spritebatch_t batch_;
     rainbow::animation_t animation_;
 
-    void init_impl(const Vec2i& screen) override
+    void init_impl(const rainbow::Vec2i& screen) override
     {
-        TextureManager::Get()->set_filter(
+        rainbow::graphics::TextureManager::Get()->set_filter(
             rainbow::graphics::TextureFilter::Nearest);
 
         auto texture = load_texture();
@@ -205,10 +270,10 @@ private:
         batch_->set_texture(texture);
 
         auto sprite = batch_->create_sprite(104, 149);
-        sprite->set_position(Vec2f(screen.x * 0.5f, screen.y * 0.5f));
+        sprite->set_position(rainbow::Vec2f(screen.x * 0.5f, screen.y * 0.5f));
 
         animation_ = rainbow::animation(
-            sprite, Animation::Frames(kAnimationFrames), 6, 0);
+            sprite, rainbow::Animation::Frames(kAnimationFrames), 6, 0);
         animation_->set_callback(&animation_event_handler);
 
         // Add the sprite batch to the root node, and the animation to the
@@ -227,36 +292,82 @@ auto rainbow::GameBase::create(rainbow::Director& director)
 }
 ```
 
+```lua
+local ANIMATION_FRAMES = {0, 1, 2, 3, 4, 5}
+
+local g_animation = nil
+local g_batch = nil
+
+local function load_texture()
+    local texture = rainbow.texture("monkey.png")
+    texture:create(400, 724, 104, 149)
+    texture:create(504, 724, 104, 149)
+    texture:create(608, 724, 104, 149)
+    texture:create(712, 724, 104, 149)
+    texture:create(816, 724, 104, 149)
+    texture:create(920, 724, 104, 149)
+    return texture
+end
+
+function init()
+    -- Turn off texture filtering.
+    rainbow.renderer.set_filter(gl.NEAREST)
+
+    local batch = rainbow.spritebatch(1)
+    batch:set_texture(load_texture())
+
+    local sprite = batch:create_sprite(104, 149)
+    sprite:set_position(rainbow.platform.screen.width * 0.5, rainbow.platform.screen.height * 0.5)
+
+    local animation = rainbow.animation(sprite, ANIMATION_FRAMES, 6, 0)
+    animation:start()
+
+    rainbow.scenegraph:add_batch(batch);
+    rainbow.scenegraph:add_animation(animation);
+
+    g_batch = batch
+    g_animation = animation
+end
+
+function update(dt)
+end
+```
+
 Output:
 
 ![Walking Animation](sprite_sheet_animations_output.gif)
 
-And an alternative implementation using "manual" object lifetime management:
-
 ```c++
+// An alternative implementation using "manual" object lifetime management:
+
 class AnimationExample final : public rainbow::GameBase
 {
 public:
     AnimationExample(rainbow::Director& director)
         : rainbow::GameBase(director), batch_(1),
-          animation_(SpriteRef{}, Animation::Frames(kAnimationFrames), 6, 0) {}
+          animation_(rainbow::SpriteRef{},
+                     rainbow::Animation::Frames(kAnimationFrames),
+                     6,
+                     0)
+    {
+    }
 
     ~AnimationExample() { animation_.release(); }
 
 private:
-    SpriteBatch batch_;
-    Animation animation_;
+    rainbow::SpriteBatch batch_;
+    rainbow::Animation animation_;
 
-    void init_impl(const Vec2i& screen) override
+    void init_impl(const rainbow::Vec2i& screen) override
     {
-        TextureManager::Get()->set_filter(
+        rainbow::graphics::TextureManager::Get()->set_filter(
             rainbow::graphics::TextureFilter::Nearest);
 
         auto texture = load_texture();
         batch_.set_texture(texture);
 
         auto sprite = batch_.create_sprite(104, 149);
-        sprite->set_position(Vec2f(screen.x * 0.5f, screen.y * 0.5f));
+        sprite->set_position(rainbow::Vec2f(screen.x * 0.5f, screen.y * 0.5f));
 
         animation_.set_sprite(sprite);
         animation_.set_callback(&animation_event_handler);

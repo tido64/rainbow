@@ -9,7 +9,7 @@ Distributed under the MIT License (see accompanying file `LICENSE` or copy at
 https://opensource.org/licenses/MIT). Licenses for third-party software can be
 found in file `THIRDPARTY`.
 
-- [Documentation](https://rainbow.readthedocs.io/)
+- [Documentation](https://tido.bitbucket.io/rainbow/)
 - [Roadmap](https://trello.com/b/r2TqudY6/rainbow)
 - [Discussion](https://groups.google.com/forum/#!forum/rainbow-tech)
 
@@ -103,7 +103,7 @@ on it and select _Run with PowerShell_). It will take you through the steps.
 
 For iOS builds, see the corresponding section below. More detailed instructions
 can be found in the
-[documentation](https://rainbow.readthedocs.io/en/latest/programming/development/building_rainbow_for_pc/).
+[documentation](https://tido.bitbucket.io/rainbow/#building-rainbow-for-pc).
 
 ### Building with FMOD Studio
 
@@ -245,7 +245,7 @@ Alternatively, see "Linux" for cross-compilation.
 
 ## Learning
 
-Check out the [documentation here](https://rainbow.readthedocs.io/) or under
+Check out the [documentation here](https://tido.bitbucket.io/rainbow/) or under
 `doc`, and the demos under `demos`. Note: In order to run a demo, you'll need to
 copy some files from `lua` into the folder of the demo you want to run. It's
 easier to copy all even if you won't need everything.
