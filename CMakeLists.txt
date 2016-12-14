@@ -142,7 +142,6 @@ set(SOURCE_FILES
     src/Script/Actor.h
     src/Script/Components/AnimationComponent.h
     src/Script/Components/RenderComponent.h
-    src/Script/Components/SceneComponent.h
     src/Script/Components/ScriptComponent.h
     src/Script/Components/StateComponent.h
     src/Script/GameBase.h

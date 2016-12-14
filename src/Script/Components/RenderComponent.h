@@ -6,11 +6,10 @@
 #define SCRIPT_COMPONENTS_RENDERCOMPONENT_H_
 
 #include "Graphics/SpriteBatch.h"
-#include "Script/Components/SceneComponent.h"
 
 namespace rainbow
 {
-    class RenderComponent : public SceneComponent
+    class RenderComponent
     {
     public:
         auto batch() -> SpriteBatch& { return batch_; }
@@ -67,6 +66,11 @@ namespace rainbow
                 sprite.mirror();
         }
 
+        /// <summary>
+        ///   Moves render component by specified <paramref name="distance"/>.
+        /// </summary>
+        void move(const Vec2f& distance) { batch().move(distance); }
+
         /// <summary>Shows render component.</summary>
         void show() { batch().set_visible(true); }
 
@@ -81,12 +85,6 @@ namespace rainbow
 
     private:
         SpriteBatch batch_;
-
-        void move_impl(const Vec2f& distance) override
-        {
-            for (auto&& sprite : batch())
-                sprite.move(distance);
-        }
     };
 }
 

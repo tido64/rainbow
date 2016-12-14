@@ -175,7 +175,6 @@ namespace spine
 
             // Implement IDrawable.
 
-            void move_impl(const rainbow::Vec2f& distance) override;
             void draw_impl() override;
             void update_impl(uint64_t dt) override;
         };

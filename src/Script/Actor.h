@@ -17,13 +17,9 @@ namespace rainbow
         virtual ~Actor() {}
 
         auto animation_component() { return animation_component_impl(); }
-        bool is_enabled() const { return render_component()->is_enabled(); }
+        bool is_enabled() const { return enabled_; }
         bool is_mirrored() const { return render_component()->is_mirrored(); }
-        auto node() const { return render_component()->node(); }
-        auto position() const { return render_component()->position(); }
-
-        /// <summary>Sets actor position.</summary>
-        void set_position(const Vec2f& p) { set_position_impl(p); }
+        auto position() const { return position_; }
 
         /// <summary>Sets local angle of rotation (in radian).</summary>
         void set_local_rotation(float r)
@@ -45,10 +41,13 @@ namespace rainbow
             render_component()->set_local_scale(scale);
         }
 
+        /// <summary>Sets actor position.</summary>
+        void set_position(const Vec2f& p) { set_position_impl(p); }
+
         /// <summary>Disables actor.</summary>
         void disable()
         {
-            render_component()->disable();
+            enabled_ = false;
             on_disabled_impl();
         }
 
@@ -58,7 +57,7 @@ namespace rainbow
         /// <summary>Enables actor.</summary>
         void enable()
         {
-            render_component()->enable();
+            enabled_ = true;
             on_enabled_impl();
         }
 
@@ -109,12 +108,13 @@ namespace rainbow
         void initialize_components()
         {
             initialize_render_component_impl();
-            node()->add_child(render_component()->batch());
-            initialize_animation_component_impl(*node());
+            initialize_animation_component_impl();
             script_component()->initialize(*this);
         }
 
     private:
+        bool enabled_ = true;
+        Vec2f position_;
         RenderComponent render_component_;
 
         virtual auto animation_component_impl() -> IAnimationComponent*
@@ -130,7 +130,8 @@ namespace rainbow
 
         virtual void set_position_impl(const Vec2f& p)
         {
-            render_component()->set_position(p);
+            render_component()->move(p - position_);
+            position_ = p;
         }
 
         /// <summary>
@@ -146,6 +147,7 @@ namespace rainbow
         virtual void move_impl(const Vec2f& distance)
         {
             render_component()->move(distance);
+            position_ += distance;
         }
 
         /// <summary>Called when actor has been disabled.</summary>

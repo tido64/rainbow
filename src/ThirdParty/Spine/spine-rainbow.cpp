@@ -661,12 +661,6 @@ namespace spine { namespace lua
         });
     }
 
-    void Skeleton::move_impl(const Vec2f& distance)
-    {
-        skeleton_->skeleton()->x += distance.x;
-        skeleton_->skeleton()->y += distance.y;
-    }
-
     void Skeleton::draw_impl() { skeleton_->draw(); }
 
     void Skeleton::update_impl(uint64_t dt)

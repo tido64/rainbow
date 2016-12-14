@@ -23,7 +23,7 @@ namespace rainbow
     class Animator
     {
     public:
-        Animator() : active_(-1), animation_(SpriteRef{}, nullptr, 1) {}
+        Animator() : active_(-1), animation_({}, nullptr, 1) {}
 
         ~Animator()
         {
@@ -59,11 +59,12 @@ namespace rainbow
         /// </param>
         void add(int name,
                  const Animation::Frame* frames,
-                 unsigned int frame_rate,
+                 uint32_t frame_rate,
                  int delay = 0,
                  Animation::Callback callback = nullptr)
         {
-            animations_[name] = Animation{frame_rate, frames, delay, callback};
+            animations_[name] =
+                AnimationStrip{frame_rate, delay, frames, callback};
         }
 
         /// <summary>
@@ -77,17 +78,17 @@ namespace rainbow
         auto set(int name) { return set(name, animations_.at(name)); }
 
     private:
-        struct Animation
+        struct AnimationStrip
         {
-            unsigned int frame_rate;
-            const ::Animation::Frame* frames;
+            uint32_t frame_rate;
             int delay;
-            ::Animation::Callback callback;
+            const Animation::Frame* frames;
+            Animation::Callback callback;
         };
 
         int active_;
-        ::Animation animation_;
-        std::unordered_map<int, Animation> animations_;
+        Animation animation_;
+        std::unordered_map<int, AnimationStrip> animations_;
 
         void release()
         {
@@ -95,13 +96,13 @@ namespace rainbow
             animation_.release();
         }
 
-        auto set(int name, const Animation& anim) -> ::Animation*
+        auto set(int name, const AnimationStrip& strip) -> Animation*
         {
             release();
-            animation_.set_frame_rate(anim.frame_rate);
-            animation_.set_frames(::Animation::Frames(anim.frames));
-            animation_.set_delay(anim.delay);
-            animation_.set_callback(anim.callback);
+            animation_.set_frame_rate(strip.frame_rate);
+            animation_.set_frames(Animation::Frames(strip.frames));
+            animation_.set_delay(strip.delay);
+            animation_.set_callback(strip.callback);
             animation_.start();
             active_ = name;
             return &animation_;

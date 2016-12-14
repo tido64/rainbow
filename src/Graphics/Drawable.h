@@ -17,14 +17,10 @@ namespace rainbow
 
         auto get() { return this; }
 
-        void move(const Vec2f& distance) { move_impl(distance); }
-
         void draw() { draw_impl(); }
         void update(uint64_t dt) { update_impl(dt); }
 
     private:
-        virtual void move_impl(const Vec2f&) {}
-
         virtual void draw_impl() = 0;
         virtual void update_impl(uint64_t dt) = 0;
     };
