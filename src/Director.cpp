@@ -39,9 +39,12 @@ namespace rainbow
     {
         random.seed();
         graphics::set_resolution(screen);
-        script_ = GameBase::create(*this);
-        script_->init(screen);
 
+        script_ = GameBase::create(*this);
+        if (terminated())
+            return;
+
+        script_->init(screen);
         if (terminated())
             return;
 
