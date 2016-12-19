@@ -4,6 +4,10 @@
 
 #include "Input/Input.h"
 
+#define kInvalidControllerAxis    "Invalid controller axis"
+#define kInvalidControllerButton  "Invalid controller button"
+#define kInvalidVirtualKey        "Invalid virtual key"
+
 using rainbow::ControllerAxisMotion;
 using rainbow::ControllerButtonEvent;
 using rainbow::Input;
@@ -73,6 +77,10 @@ void Input::accelerated(double x, double y, double z, double t)
 
 void Input::on_controller_axis_motion(const ControllerAxisMotion& motion)
 {
+    R_ASSERT(static_cast<int>(motion.axis) >= 0 &&
+                 motion.axis < ControllerAxis::Count,
+             kInvalidControllerAxis);
+
     process_controller(motion.id, [this, motion](unsigned int i) {
         controllers_[i].on_axis_motion(motion);
         auto event = motion;
@@ -85,6 +93,10 @@ void Input::on_controller_axis_motion(const ControllerAxisMotion& motion)
 
 void Input::on_controller_button_down(const ControllerButtonEvent& button)
 {
+    R_ASSERT(static_cast<int>(button.button) >= 0 &&
+                 button.button < ControllerButton::Count,
+             kInvalidControllerButton);
+
     process_controller(button.id, [this, button](unsigned int i) {
         controllers_[i].on_button_down(button);
         auto event = button;
@@ -97,6 +109,10 @@ void Input::on_controller_button_down(const ControllerButtonEvent& button)
 
 void Input::on_controller_button_up(const ControllerButtonEvent& button)
 {
+    R_ASSERT(static_cast<int>(button.button) >= 0 &&
+                 button.button < ControllerButton::Count,
+             kInvalidControllerButton);
+
     process_controller(button.id, [this, button](unsigned int i) {
         controllers_[i].on_button_up(button);
         auto event = button;
@@ -145,6 +161,9 @@ void Input::on_controller_disconnected(unsigned int id)
 
 void Input::on_key_down(const KeyStroke& k)
 {
+    R_ASSERT(static_cast<int>(k.key) >= 0 && k.key < VirtualKey::KeyCount,
+             kInvalidVirtualKey);
+
     flip_keys(k, keys_, [](decltype(keys_)& keys, unsigned pos) {
         keys.set(pos);
     });
@@ -154,6 +173,9 @@ void Input::on_key_down(const KeyStroke& k)
 
 void Input::on_key_up(const KeyStroke& k)
 {
+    R_ASSERT(static_cast<int>(k.key) >= 0 && k.key < VirtualKey::KeyCount,
+             kInvalidVirtualKey);
+
     flip_keys(k, keys_, [](decltype(keys_)& keys, unsigned pos) {
         keys.reset(pos);
     });

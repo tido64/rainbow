@@ -265,7 +265,7 @@ namespace
         lua_pushnil(L);
         while (lua_next(L, -2) != 0)
         {
-            auto asset = parse(L, std::forward<Args>(args)...);
+            const auto asset = parse(L, std::forward<Args>(args)...);
             if (asset.type == Prose::AssetType::None)
                 LOGE("Prose: Failed to parse '%s'", table_name(L));
             lua_pop(L, 1);

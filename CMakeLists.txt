@@ -112,6 +112,7 @@ set(SOURCE_FILES
     src/Graphics/VertexArray.cpp
     src/Graphics/VertexArray.h
     src/Input/Acceleration.h
+    src/Input/Controller.h
     src/Input/impl/VirtualKey_SDL.cpp
     src/Input/Input.cpp
     src/Input/Input.h

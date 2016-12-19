@@ -5,6 +5,7 @@
 #ifndef MEMORY_ARRAY_H_
 #define MEMORY_ARRAY_H_
 
+#include <array>
 #include <cstddef>
 
 #include "Memory/NotNull.h"
@@ -17,15 +18,19 @@ public:
 
     constexpr ArraySpan(std::nullptr_t) : size_(0), data_(nullptr) {}
 
-    constexpr ArraySpan(std::nullptr_t, size_t) : size_(0), data_(nullptr) {}
+    constexpr ArraySpan(NotNull<T*> data, size_t size)
+        : size_(size), data_(data) {}
 
     constexpr ArraySpan(T& data) : ArraySpan(&data, 1) {}
 
     template <size_t N>
     constexpr ArraySpan(T (&data)[N]) : ArraySpan(data, N) {}
 
-    constexpr ArraySpan(NotNull<T*> data, size_t size)
-        : size_(size), data_(data) {}
+    template <typename U, size_t N>
+    constexpr ArraySpan(const std::array<U, N>& arr)
+        : ArraySpan(arr.data(), arr.size())
+    {
+    }
 
     auto data() const { return data_; }
     bool empty() const { return size_ == 0; }

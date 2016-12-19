@@ -5,6 +5,7 @@
 #ifndef INPUT_CONTROLLER_H_
 #define INPUT_CONTROLLER_H_
 
+#include <array>
 #include <bitset>
 #include <cstdint>
 #include <memory>
@@ -55,13 +56,17 @@ namespace rainbow
         uint64_t timestamp;
 
         ControllerAxisMotion()
-            : id(0), axis(ControllerAxis::Invalid), value(0), timestamp(0) {}
+            : ControllerAxisMotion(0, ControllerAxis::Invalid, 0, 0)
+        {
+        }
 
-        ControllerAxisMotion(uint32_t id,
-                             ControllerAxis axis,
-                             int32_t value,
-                             uint64_t timestamp)
-            : id(id), axis(axis), value(value), timestamp(timestamp) {}
+        ControllerAxisMotion(uint32_t id_,
+                             ControllerAxis axis_,
+                             int32_t value_,
+                             uint64_t timestamp_)
+            : id(id_), axis(axis_), value(value_), timestamp(timestamp_)
+        {
+        }
     };
 
     struct ControllerButtonEvent
@@ -71,12 +76,16 @@ namespace rainbow
         uint64_t timestamp;
 
         ControllerButtonEvent()
-            : id(0), button(ControllerButton::Invalid), timestamp(0) {}
+            : ControllerButtonEvent(0, ControllerButton::Invalid, 0)
+        {
+        }
 
-        ControllerButtonEvent(uint32_t id,
-                              ControllerButton button,
-                              uint64_t timestamp)
-            : id(id), button(button), timestamp(timestamp) {}
+        ControllerButtonEvent(uint32_t id_,
+                              ControllerButton button_,
+                              uint64_t timestamp_)
+            : id(id_), button(button_), timestamp(timestamp_)
+        {
+        }
     };
 
     class ControllerState
@@ -105,8 +114,8 @@ namespace rainbow
         void unassign()
         {
             id_ = kNoController;
-            std::uninitialized_fill_n(axes_, array_size(axes_), 0);
             buttons_.reset();
+            std::uninitialized_fill_n(axes_.data(), axes_.size(), 0);
         }
 
         void on_axis_motion(const ControllerAxisMotion& motion)
@@ -139,8 +148,8 @@ namespace rainbow
 
     private:
         uint32_t id_;
-        int axes_[to_underlying_type(ControllerAxis::Count)];
         std::bitset<to_underlying_type(ControllerButton::Count)> buttons_;
+        std::array<int, to_underlying_type(ControllerAxis::Count)> axes_;
     };
 }
 

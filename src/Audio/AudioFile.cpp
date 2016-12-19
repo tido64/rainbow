@@ -5,6 +5,7 @@
 #include "Audio/AudioFile.h"
 
 #include <algorithm>
+#include <array>
 
 #include "Common/Logging.h"
 
@@ -58,16 +59,16 @@ namespace
 
 std::unique_ptr<IAudioFile> IAudioFile::open(const char* path)
 {
-    char signature[8]{};
+    std::array<char, 8> signature{};
     File file = File::open_asset(path);
     if (file)
     {
-        file.read(signature, sizeof(signature));
+        file.read(signature.data(), signature.size());
         file.seek(0, SEEK_SET);
     }
 
 #ifdef USE_OGGVORBIS
-    if (OggVorbisAudioFile::signature_matches(ArrayView<char>{signature}))
+    if (OggVorbisAudioFile::signature_matches(signature))
     {
         return std::unique_ptr<IAudioFile>{
             std::make_unique<OggVorbisAudioFile>(std::move(file))};

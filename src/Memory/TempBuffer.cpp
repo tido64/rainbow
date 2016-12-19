@@ -4,16 +4,18 @@
 
 #include "Memory/TempBuffer.h"
 
+#include <array>
+
 namespace rainbow
 {
     auto get_temp_buffer(size_t size) -> void*
     {
-        constexpr size_t kTempBufferSize = 2048;
+        constexpr size_t kTempBufferSize = 8192;
 
         if (size > kTempBufferSize)
             return nullptr;
 
-        static char buffer[kTempBufferSize];
-        return buffer;
+        static std::array<uint8_t, kTempBufferSize> buffer;
+        return buffer.data();
     }
 }

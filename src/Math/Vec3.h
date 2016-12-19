@@ -59,8 +59,8 @@ namespace rainbow
         }
     };
 
-    using Vec3d = rainbow::Vec3<double>;
-    using Vec3f = rainbow::Vec3<float>;
+    using Vec3d = Vec3<double>;
+    using Vec3f = Vec3<float>;
 }
 
 #endif

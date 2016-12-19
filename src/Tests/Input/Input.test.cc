@@ -8,6 +8,7 @@
 #include "Input/Input.h"
 #include "Input/InputListener.h"
 
+using rainbow::ControllerAxis;
 using rainbow::ControllerAxisMotion;
 using rainbow::ControllerButton;
 using rainbow::ControllerButtonEvent;
@@ -150,7 +151,8 @@ TEST(InputTest, BaseInputListenerDoesNothing)
     ASSERT_TRUE(test_input_listener.controller_connected());
 
     ASSERT_FALSE(test_input_listener.axis_motion());
-    input.on_controller_axis_motion(ControllerAxisMotion());
+    input.on_controller_axis_motion(
+        ControllerAxisMotion{0, ControllerAxis::LeftX, 0, 0});
     ASSERT_TRUE(test_input_listener.axis_motion());
 
     const ControllerButtonEvent button(0, ControllerButton::A, 0);

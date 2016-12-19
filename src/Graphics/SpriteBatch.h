@@ -32,7 +32,7 @@ namespace rainbow
 
         template <typename... Args>
         SpriteBatch(SharedPtr<TextureAtlas> texture, Args&&... sprites)
-            : SpriteBatch(sizeof...(sprites))
+            : SpriteBatch(sizeof...(Args))
         {
             set_texture(std::move(texture));
             add(std::forward<Args>(sprites)...);

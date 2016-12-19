@@ -52,10 +52,10 @@ namespace
     }
 }
 
-bool OggVorbisAudioFile::signature_matches(const ArrayView<char>& id)
+bool OggVorbisAudioFile::signature_matches(const std::array<char, 8>& id)
 {
     const size_t size = array_size(kIdOggVorbis);
-    return id.size() >= size && strncmp(id.begin(), kIdOggVorbis, size) == 0;
+    return id.size() >= size && strncmp(id.data(), kIdOggVorbis, size) == 0;
 }
 
 OggVorbisAudioFile::OggVorbisAudioFile(File f)
@@ -92,7 +92,7 @@ auto OggVorbisAudioFile::read(void* dst, size_t size) -> size_t
 {
     int64_t read = 0;
     int bitstream = 0;
-    char* buffer = static_cast<char*>(dst);
+    const auto buffer = static_cast<char*>(dst);
     size_t offset = 0;
 
     // Read until buffer is full.

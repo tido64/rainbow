@@ -4,22 +4,11 @@
 
 #include "Graphics/Renderer.h"
 
+#include <array>
 #include <cstring>
 
 #include "Graphics/Label.h"
 #include "Graphics/SpriteBatch.h"
-
-// clang-format off
-#define S0(i)  ((i) * 4)
-#define S1(i)  S0(i), S0(i) + 1, S0(i) + 2, S0(i) + 2, S0(i) + 3, S0(i)
-
-#define S4(i)        S1((i)),    S1((i) +    1),    S1((i) +    2),    S1((i) +    3)
-#define S16(i)       S4((i)),    S4((i) +    4),    S4((i) +    8),    S4((i) +   12)
-#define S64(i)      S16((i)),   S16((i) +   16),   S16((i) +   32),   S16((i) +   48)
-#define S256(i)     S64((i)),   S64((i) +   64),   S64((i) +  128),   S64((i) +  192)
-#define S1024(i)   S256((i)),  S256((i) +  256),  S256((i) +  512),  S256((i) +  768)
-#define S4096(i)  S1024((i)), S1024((i) + 1024), S1024((i) + 2048), S1024((i) + 3072)
-// clang-format on
 
 using rainbow::Rect;
 using rainbow::Vec2i;
@@ -270,15 +259,23 @@ bool State::initialize()
     if (!shader_manager.init())
         return false;
 
-    const uint16_t kDefaultIndices[]{S4096(0)};
-    static_assert(
-        sizeof(kDefaultIndices) == kMaxSprites * 6 * sizeof(kDefaultIndices[0]),
-        "Number of indices do not match set number of sprites");
+    std::array<uint16_t, kMaxSprites * 6> default_indices;
+    for (size_t i = 0; i < kMaxSprites; ++i)
+    {
+        const auto index = i * 6;
+        const auto vertex = static_cast<uint16_t>(i * 4);
+        default_indices[index] = vertex;
+        default_indices[index + 1] = vertex + 1;
+        default_indices[index + 2] = vertex + 2;
+        default_indices[index + 3] = vertex + 2;
+        default_indices[index + 4] = vertex + 3;
+        default_indices[index + 5] = vertex;
+    }
 
     unsigned int buffer;
     glGenBuffers(1, &buffer);
     element_buffer = buffer;
-    element_buffer.upload(kDefaultIndices, sizeof(kDefaultIndices));
+    element_buffer.upload(default_indices.data(), default_indices.size());
 
     const bool success = glGetError() == GL_NO_ERROR;
     if (success)

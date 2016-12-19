@@ -6,6 +6,7 @@
 #define AUDIO_AL_CHANNEL_H_
 
 #include <algorithm>
+#include <array>
 
 #include "Audio/AL/Sound.h"
 
@@ -18,21 +19,21 @@ namespace rainbow { namespace audio
     public:
         static constexpr int kNumBuffers = 3;
 
-        Channel(unsigned int id, unsigned int* buffers)
-            : id_(id), sound_(nullptr)
+        Channel(uint32_t id, uint32_t* buffers)
+            : id_(id), buffers_({}), sound_(nullptr)
         {
-            std::copy_n(buffers, kNumBuffers, buffers_);
+            std::copy_n(buffers, kNumBuffers, buffers_.data());
         }
 
-        auto buffers() { return buffers_; }
+        auto buffers() { return buffers_.data(); }
         auto id() const { return id_; }
 
         auto sound() const { return sound_; }
         void set_sound(Sound* sound) { sound_ = sound; }
 
     private:
-        const unsigned int id_;
-        unsigned int buffers_[kNumBuffers]{0, 0, 0};
+        const uint32_t id_;
+        std::array<uint32_t, kNumBuffers> buffers_;
         Sound* sound_;
     };
 }}  // namespace rainbow::audio

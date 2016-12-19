@@ -5,6 +5,8 @@
 #ifndef AUDIO_CODECS_OGGVORBISAUDIOFILE_H_
 #define AUDIO_CODECS_OGGVORBISAUDIOFILE_H_
 
+#include <array>
+
 #include "Platform/Macros.h"
 #ifdef __clang__
 #   pragma clang diagnostic push
@@ -17,14 +19,13 @@
 #endif
 
 #include "Audio/AudioFile.h"
-#include "Memory/Array.h"
 
 namespace rainbow { namespace audio
 {
     class OggVorbisAudioFile final : public IAudioFile
     {
     public:
-        static bool signature_matches(const ArrayView<char>& signature);
+        static bool signature_matches(const std::array<char, 8>& signature);
 
         OggVorbisAudioFile(File);
         ~OggVorbisAudioFile() override;

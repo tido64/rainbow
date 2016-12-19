@@ -22,6 +22,7 @@
 #include "Audio/Mixer.h"
 #include "Common/Logging.h"
 #include "FileSystem/Path.h"
+#include "Memory/TempBuffer.h"
 
 using rainbow::audio::ALMixer;
 using rainbow::audio::Channel;
@@ -62,7 +63,7 @@ namespace
         return get_channel_type(channel) == AL_UNDETERMINED;
     }
 
-    bool is_fail(ALenum result) { return result != AL_NO_ERROR; }
+    constexpr bool is_fail(ALenum result) { return result != AL_NO_ERROR; }
 }
 
 bool ALMixer::initialize(int max_channels)
@@ -129,7 +130,7 @@ bool ALMixer::initialize(int max_channels)
 
 void ALMixer::process()
 {
-    static char buffer[kAudioBufferSize];
+    auto buffer = get_temp_buffer<uint8_t>(kAudioBufferSize);
     for (Channel& channel : channels_)
     {
         const auto state = get_channel_state(channel);
@@ -151,7 +152,7 @@ void ALMixer::process()
         alGetSourcei(channel.id(), AL_BUFFERS_PROCESSED, &processed);
         for (ALint i = 0; i < processed; ++i)
         {
-            size_t length = stream->read(buffer, sizeof(buffer));
+            size_t length = stream->read(buffer, kAudioBufferSize);
             if (length == 0)
             {
                 if (sound->loop_count == 0)
@@ -165,7 +166,7 @@ void ALMixer::process()
                     --sound->loop_count;
                 }
                 stream->rewind();
-                length = stream->read(buffer, sizeof(buffer));
+                length = stream->read(buffer, kAudioBufferSize);
             }
             ALuint bid{};
             alSourceUnqueueBuffers(channel.id(), 1, &bid);
@@ -368,7 +369,7 @@ auto rainbow::audio::play(Sound* sound, Vec2f position) -> Channel*
 
     if (sound->stream)
     {
-        static char buffer[kAudioBufferSize];
+        auto buffer = get_temp_buffer<uint8_t>(kAudioBufferSize);
 
         // TODO: Prevent streaming from an already streaming sound.
         sound->file->rewind();
@@ -376,15 +377,16 @@ auto rainbow::audio::play(Sound* sound, Vec2f position) -> Channel*
         int i{};
         for (; i < Channel::kNumBuffers; ++i)
         {
-            const size_t size = sound->file->read(buffer, sizeof(buffer));
+            const size_t size = sound->file->read(buffer, kAudioBufferSize);
             alBufferData(channel->buffers()[i],
                          sound->format,
                          buffer,
                          static_cast<ALsizei>(size),
                          sound->rate);
-            if (size < sizeof(buffer))
+            if (size < kAudioBufferSize)
                 break;
         }
+
         alSourceQueueBuffers(channel->id(), i, channel->buffers());
     }
     else

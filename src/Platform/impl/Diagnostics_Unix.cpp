@@ -4,6 +4,7 @@
 
 #include "Platform/Diagnostics.h"
 
+#include <array>
 #include <csignal>
 #include <cstdlib>
 #include <string>
@@ -28,10 +29,10 @@ void rainbow::diagnostics::attach_crash_dumper()
         return;
 
     static const auto backtrace = [] {
-        static char cmd[kBufferSize];
+        static std::array<char, kBufferSize> cmd;
         const auto pid = getpid();
-        snprintf(cmd, kBufferSize, kBacktraceCommand, pid, pid);
-        return cmd;
+        snprintf(cmd.data(), kBufferSize, kBacktraceCommand, pid, pid);
+        return cmd.data();
     }();
     std::signal(SIGSEGV, [](int sig) {
 #pragma GCC diagnostic push
