@@ -1,0 +1,21 @@
+root = true
+
+[*]
+indent_style = space
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+[*.{cpp,cs,h,lua,m,mm,py}]
+indent_size = 4
+end_of_line = lf
+
+[*.{cpp,h,m,mm}]
+max_line_length = 80
+
+[*.cs]
+max_line_length = 100
+
+[*.{cmake,json,natvis,sh,yml},CMakeLists.txt]
+indent_size = 2
+end_of_line = lf

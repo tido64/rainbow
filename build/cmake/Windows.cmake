@@ -1,8 +1,9 @@
 if(WIN32)
   set(CMAKE_FIND_LIBRARY_SUFFIXES ".a" ".lib" ".dll.a" ".dll")
   list(APPEND RESOURCE_FILES
-       ${PROJECT_SOURCE_DIR}/build/windows/Rainbow.natvis
-       ${PROJECT_SOURCE_DIR}/build/windows/Rainbow.rc)
+       .editorconfig
+       build/windows/Rainbow.natvis
+       build/windows/Rainbow.rc)
   add_definitions(
       -D_CRT_SECURE_NO_WARNINGS=1
       -D_SCL_SECURE_NO_WARNINGS=1
