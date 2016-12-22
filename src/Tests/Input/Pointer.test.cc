@@ -44,7 +44,7 @@ namespace
     protected:
         Input input;
 
-        void SetUp() override { input.subscribe(this); }
+        void SetUp() override { input.subscribe(*this); }
 
     private:
         unsigned int flags_;

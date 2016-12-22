@@ -21,11 +21,7 @@ namespace rainbow
     {
     public:
         SpriteRef() : batch_(nullptr), i_(0) {}
-
-        SpriteRef(NotNull<SpriteBatch*> batch, uint32_t i)
-            : batch_(batch), i_(i)
-        {
-        }
+        SpriteRef(SpriteBatch& batch, uint32_t i) : batch_(&batch), i_(i) {}
 
         auto batch() const -> const SpriteBatch* { return batch_; }
         auto index() const { return i_; }

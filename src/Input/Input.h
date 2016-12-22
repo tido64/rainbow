@@ -68,11 +68,11 @@ namespace rainbow
 
         /// <summary>Subscribes an object to input events.</summary>
         /// <param name="i">The object to subscribe.</param>
-        void subscribe(NotNull<InputListener*> i);
+        void subscribe(InputListener& i);
 
         /// <summary>Unsubscribes an object from input events.</summary>
         /// <param name="i">The object to unsubscribe.</param>
-        void unsubscribe(NotNull<InputListener*> i);
+        void unsubscribe(InputListener& i);
 
         /// <summary>Acceleration event.</summary>
         /// <param name="x">Acceleration data (x-value).</param>

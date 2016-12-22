@@ -95,7 +95,7 @@ namespace
 
         TestController(unsigned int id, Input& input) : id_(id), input_(input)
         {
-            input.subscribe(this);
+            input.subscribe(*this);
             input.on_controller_connected(id);
             flags_ ^= Events::Connected;
         }
@@ -130,7 +130,7 @@ namespace
         void SetUp() override
         {
             port_ = kTestListenerId;
-            input.subscribe(this);
+            input.subscribe(*this);
         }
     };
 }

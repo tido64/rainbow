@@ -48,8 +48,8 @@ Gatekeeper::Gatekeeper()
 void Gatekeeper::init(const Vec2i& screen)
 {
     overlay_.initialize();
-    director_.input().subscribe(&overlay_);
-    director_.input().subscribe(&overlay_activator_);
+    director_.input().subscribe(overlay_);
+    director_.input().subscribe(overlay_activator_);
 
     director_.init(screen);
     if (director_.terminated())

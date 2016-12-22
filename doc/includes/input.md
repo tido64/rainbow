@@ -37,16 +37,16 @@ local input = rainbow.input
 ### Subscribing
 
 ```c++
-void  Input::subscribe    (InputListener* i);
-void  Input::unsubscribe  (InputListener* i);
+void  Input::subscribe    (InputListener& listener);
+void  Input::unsubscribe  (InputListener& listener);
 ```
 
 ```lua
-function rainbow.input.subscribe    (i)  --> void
-function rainbow.input.unsubscribe  (i)  --> void
+function rainbow.input.subscribe    (listener)  --> void
+function rainbow.input.unsubscribe  (listener)  --> void
 ```
 
-Subscribes/unsubscribes listener `i` to input events. A listener will always be
+Subscribes/unsubscribes `listener` to input events. A listener will always be
 added to the end of the chain, regardless if it was previously subscribed. A
 deleted listener will automatically unsubscribe itself.
 
@@ -130,7 +130,7 @@ public:
     {
         // The following line is strictly unnecessary as |input_handler_| will
         // automatically unsubscribe itself on destruction.
-        input().unsubscribe(&input_handler_);
+        input().unsubscribe(input_handler_);
     }
 
 private:
@@ -138,7 +138,7 @@ private:
 
     void init_impl(const rainbow::Vec2i&) override
     {
-        input().subscribe(&input_handler_);
+        input().subscribe(input_handler_);
     }
 };
 

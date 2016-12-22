@@ -85,7 +85,7 @@ namespace
     }
 }
 
-LuaMachine::LuaMachine(const rainbow::Passkey<LuaScript>&)
+LuaMachine::LuaMachine(rainbow::Passkey<LuaScript>)
     : state_(lua::newstate().release()), internal_(0), traceback_(0)
 {
 }
@@ -116,7 +116,7 @@ void LuaMachine::close()
     state_ = nullptr;
 }
 
-auto LuaMachine::init(LuaScript* instance, RenderQueue& queue) -> int
+auto LuaMachine::init(LuaScript& instance, RenderQueue& queue) -> int
 {
     luaR_openlibs(state_);
 
@@ -128,7 +128,7 @@ auto LuaMachine::init(LuaScript* instance, RenderQueue& queue) -> int
     luaR_rawsetcfunction(state_, "breakpoint", breakpoint);
 
     // Set "rainbow.exit".
-    lua_pushlightuserdata(state_, instance);
+    lua_pushlightuserdata(state_, &instance);
     lua_setglobal(state_, kLuaRainbowInstance);
     luaR_rawsetcfunction(state_, "exit", &exit);
 

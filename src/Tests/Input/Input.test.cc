@@ -143,8 +143,8 @@ TEST(InputTest, BaseInputListenerDoesNothing)
     BaseInputListener base_input_listener;
     TestInputListener test_input_listener(false);
     Input input;
-    input.subscribe(&base_input_listener);
-    input.subscribe(&test_input_listener);
+    input.subscribe(base_input_listener);
+    input.subscribe(test_input_listener);
 
     ASSERT_FALSE(test_input_listener.controller_connected());
     input.on_controller_connected(0);
@@ -254,8 +254,8 @@ TEST(InputTest, PreventsFurtherPropagation)
     Input input;
     TestInputListener listeners[]{TestInputListener{true},
                                   TestInputListener{false}};
-    input.subscribe(listeners);
-    input.subscribe(listeners + 1);
+    input.subscribe(listeners[0]);
+    input.subscribe(listeners[1]);
     input.on_pointer_began(nullptr);
 
     ASSERT_TRUE(listeners[0]);
@@ -269,7 +269,7 @@ TEST(InputTest, Unsubscribes)
                                   TestInputListener{true},
                                   TestInputListener{true}};
     for (auto& i : listeners)
-        input.subscribe(&i);
+        input.subscribe(i);
     input.on_pointer_began(nullptr);
 
     ASSERT_TRUE(listeners[0]);
@@ -278,7 +278,7 @@ TEST(InputTest, Unsubscribes)
 
     for (auto& i : listeners)
         i.reset();
-    input.unsubscribe(listeners + 1);
+    input.unsubscribe(listeners[1]);
     input.on_pointer_began(nullptr);
 
     ASSERT_TRUE(listeners[0]);
@@ -295,8 +295,8 @@ TEST(InputTest, UnsubscribesWhenDeleted)
                                       TestInputListener{false},
                                       TestInputListener{false}};
         for (auto& i : listeners)
-            input.subscribe(&i);
-        input.subscribe(&l);
+            input.subscribe(i);
+        input.subscribe(l);
         input.on_pointer_began(nullptr);
         for (auto& i : listeners)
         {
@@ -314,23 +314,23 @@ TEST(InputTest, IsNotifiedOfPoppedEndLinks)
     TestInputListener a{true};
     {
         TestInputListener b{false};
-        input.subscribe(&b);
+        input.subscribe(b);
         {
             TestInputListener c{true};
-            input.subscribe(&c);
+            input.subscribe(c);
             input.on_pointer_began(nullptr);
             ASSERT_TRUE(b);
             ASSERT_TRUE(c);
             b.reset();
         }
-        input.subscribe(&a);
+        input.subscribe(a);
         input.on_pointer_began(nullptr);
         ASSERT_TRUE(b);
         ASSERT_TRUE(a);
     }
-    input.unsubscribe(&a);
+    input.unsubscribe(a);
     a.reset();
-    input.subscribe(&a);
+    input.subscribe(a);
     input.on_pointer_began(nullptr);
     ASSERT_TRUE(a);
 }

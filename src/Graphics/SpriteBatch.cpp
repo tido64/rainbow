@@ -87,7 +87,7 @@ auto SpriteBatch::create_sprite(uint32_t width, uint32_t height) -> SpriteRef
     std::fill_n(vertices_.get() + offset, 4, SpriteVertex{});
     if (normals_)
         std::fill_n(normals_.get() + offset, 4, Vec2f::Zero);
-    return {this, sprites_.find_iterator(count_++)};
+    return {*this, sprites_.find_iterator(count_++)};
 }
 
 void SpriteBatch::erase(uint32_t i)
@@ -102,7 +102,7 @@ auto SpriteBatch::find_sprite_by_id(int id) const -> SpriteRef
     for (uint32_t i = 0; i < count_; ++i)
     {
         if (sprites[i].id() == id)
-            return {const_cast<SpriteBatch*>(this), sprites_.find_iterator(i)};
+            return {*const_cast<SpriteBatch*>(this), sprites_.find_iterator(i)};
     }
 
     return {};

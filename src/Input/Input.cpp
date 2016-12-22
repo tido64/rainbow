@@ -59,15 +59,15 @@ void Input::process_controller(unsigned int id, F&& process)
     }
 }
 
-void Input::subscribe(NotNull<InputListener*> i)
+void Input::subscribe(InputListener& i)
 {
-    last_listener_->append(i);
-    last_listener_ = i;
+    last_listener_->append(&i);
+    last_listener_ = &i;
 }
 
-void Input::unsubscribe(NotNull<InputListener*> i)
+void Input::unsubscribe(InputListener& i)
 {
-    i->pop();
+    i.pop();
 }
 
 void Input::accelerated(double x, double y, double z, double t)

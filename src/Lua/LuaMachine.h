@@ -22,11 +22,11 @@ namespace rainbow
     class LuaMachine : private NonCopyable<LuaMachine>
     {
     public:
-        LuaMachine(const Passkey<LuaScript>&);
+        LuaMachine(Passkey<LuaScript>);
         ~LuaMachine();
 
         /// <summary>Initialises a new Lua state.</summary>
-        auto init(LuaScript* instance, graphics::RenderQueue& queue) -> int;
+        auto init(LuaScript& instance, graphics::RenderQueue& queue) -> int;
 
         /// <summary>Uninitialises current Lua state and closes it.</summary>
         void close();
