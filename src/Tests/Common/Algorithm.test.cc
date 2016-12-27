@@ -80,6 +80,29 @@ TEST(AlgorithmTest, ApproximatesInverseSquareRoot)
     }
 }
 
+TEST(AlgorithmTest, FindsValueInContainer)
+{
+    auto iter = std::begin(kUTF32);
+    for (auto&& value : kUTF32)
+        ASSERT_EQ(iter++, rainbow::find(kUTF32, value));
+    ASSERT_EQ(std::end(kUTF32), iter);
+    ASSERT_EQ(std::begin(kUTF8), rainbow::find(kUTF8, 0xc3));
+}
+
+TEST(AlgorithmTest, FindsValueInContainerAndInvokesAction)
+{
+    int result = 0;
+    auto count = [&result](unsigned char) { ++result; };
+    rainbow::find_invoke(kUTF8, 0xc3, count);
+
+    ASSERT_EQ(1, result);
+
+    result = 0;
+    rainbow::find_invoke(kUTF8, 0xff, count);
+
+    ASSERT_EQ(0, result);
+}
+
 TEST(AlgorithmTest, RoundsDownToNearestPowerOfTwo)
 {
     ASSERT_EQ(0u, rainbow::floor_pow2(0));

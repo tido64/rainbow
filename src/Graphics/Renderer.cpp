@@ -259,7 +259,8 @@ bool State::initialize()
     if (!shader_manager.init())
         return false;
 
-    std::array<uint16_t, kMaxSprites * 6> default_indices;
+    constexpr size_t kElementBufferSize = kMaxSprites * 6;
+    auto default_indices = std::make_unique<uint16_t[]>(kElementBufferSize);
     for (size_t i = 0; i < kMaxSprites; ++i)
     {
         const auto index = i * 6;
@@ -275,7 +276,7 @@ bool State::initialize()
     unsigned int buffer;
     glGenBuffers(1, &buffer);
     element_buffer = buffer;
-    element_buffer.upload(default_indices.data(), default_indices.size());
+    element_buffer.upload(default_indices.get(), kElementBufferSize);
 
     const bool success = glGetError() == GL_NO_ERROR;
     if (success)

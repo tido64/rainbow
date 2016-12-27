@@ -77,6 +77,31 @@ namespace rainbow
         return x * (1.5f - (xhalf * x * x));
     }
 
+    /// <summary>
+    ///   Finds the first element equal to <paramref name="value"/>.
+    /// </summary>
+    template <typename Container, typename T>
+    auto find(Container&& container, const T& value)
+    {
+        return std::find(std::begin(std::forward<Container>(container)),
+                         std::end(std::forward<Container>(container)),
+                         value);
+    }
+
+    /// <summary>
+    ///   Finds the first element equal to <paramref name="value"/>, and invokes
+    ///   <paramref name="action"/> with the element as parameter if found.
+    /// </summary>
+    template <typename Container, typename T, typename F>
+    void find_invoke(Container&& container, const T& value, F&& action)
+    {
+        auto i = rainbow::find(std::forward<Container>(container), value);
+        if (i == std::end(std::forward<Container>(container)))
+            return;
+
+        action(*i);
+    }
+
     /// <summary>Rounds down to the nearest power of 2.</summary>
     inline auto floor_pow2(unsigned int i)
     {
@@ -138,12 +163,12 @@ namespace rainbow
     }
 
     /// <summary>
-    ///   Removes the first element equal to <paramref name="val"/>.
+    ///   Removes the first element equal to <paramref name="value"/>.
     /// </summary>
-    template <typename T>
-    auto remove(T& container, const typename T::value_type& val)
+    template <typename Container, typename T>
+    auto remove(Container& container, const T& value)
     {
-        auto i = std::find(std::begin(container), std::end(container), val);
+        auto i = find(container, value);
         return (i == std::end(container) ? i : container.erase(i));
     }
 

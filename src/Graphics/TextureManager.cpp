@@ -13,33 +13,21 @@ using rainbow::graphics::TextureManager;
 
 namespace
 {
-#ifndef NDEBUG
     void assert_texture_size(unsigned int width, unsigned int height)
     {
+#ifndef NDEBUG
         const unsigned int max_texture_size =
             rainbow::graphics::max_texture_size();
         R_ASSERT(width <= max_texture_size && height <= max_texture_size,
                  "Texture dimension exceeds max texture size supported by "
                  "hardware");
-    }
 #else
-#   define assert_texture_size(...) static_cast<void>(0)
+        NOT_USED(width);
+        NOT_USED(height);
 #endif
-
-    template <typename Container, typename T, typename F>
-    void perform_if(Container& container, const T& value, F&& action)
-    {
-        for (auto&& element : container)
-        {
-            if (element == value)
-            {
-                action(element);
-                break;
-            }
-        }
     }
 
-    int texture_filter(TextureFilter filter)
+    auto texture_filter(TextureFilter filter) -> int
     {
         switch (filter)
         {
@@ -140,13 +128,17 @@ void TextureManager::trim()
     if (first == end)
         return;
 
-    for (auto i = first; i != end; ++i)
-    {
-        glDeleteTextures(1, &i->name);
+    std::for_each(  //
+        first,
+        end,
 #if RAINBOW_RECORD_VMEM_USAGE
-        mem_used_ -= i->size;
+        [this](const detail::Texture& texture) {
+            mem_used_ -= texture.size;
+#else
+        [](const detail::Texture& texture) {
 #endif
-    }
+            glDeleteTextures(1, &texture.name);
+        });
 
     textures_.erase(first, end);
 
@@ -170,17 +162,16 @@ void TextureManager::upload(const Texture& texture,
 
     R_ASSERT(glGetError() == GL_NO_ERROR, "Failed to upload texture");
 
-    perform_if(textures_,
-               texture,
-               [this, width, height](detail::Texture& texture) {
-                   texture.width = width;
-                   texture.height = height;
-                   texture.size = width * height * 4;
+    find_invoke(
+        textures_, texture, [this, width, height](detail::Texture& texture) {
+            texture.width = width;
+            texture.height = height;
+            texture.size = width * height * 4;
 #if RAINBOW_RECORD_VMEM_USAGE
-                   mem_used_ += texture.size;
-                   update_usage();
+            mem_used_ += texture.size;
+            update_usage();
 #endif
-               });
+        });
 }
 
 void TextureManager::upload_compressed(const Texture& texture,
@@ -198,31 +189,29 @@ void TextureManager::upload_compressed(const Texture& texture,
 
     R_ASSERT(glGetError() == GL_NO_ERROR, "Failed to upload texture");
 
-    perform_if(textures_,
-               texture,
-               [this, width, height, size](detail::Texture& texture) {
-                   texture.width = width;
-                   texture.height = height;
-                   texture.size = size;
+    find_invoke(textures_,
+                texture,
+                [this, width, height, size](detail::Texture& texture) {
+                    texture.width = width;
+                    texture.height = height;
+                    texture.size = size;
 #if RAINBOW_RECORD_VMEM_USAGE
-                   mem_used_ += texture.size;
-                   update_usage();
+                    mem_used_ += texture.size;
+                    update_usage();
 #endif
-               });
+                });
 }
 
 void TextureManager::release(const Texture& t, const Passkey<Texture>&)
 {
-    perform_if(textures_, t, [](detail::Texture& texture) {
-        --texture.use_count;
-    });
+    find_invoke(
+        textures_, t, [](detail::Texture& texture) { --texture.use_count; });
 }
 
 void TextureManager::retain(const Texture& t, const Passkey<Texture>&)
 {
-    perform_if(textures_, t, [](detail::Texture& texture) {
-        ++texture.use_count;
-    });
+    find_invoke(
+        textures_, t, [](detail::Texture& texture) { ++texture.use_count; });
 }
 
 auto TextureManager::create_texture(std::string id) -> Texture
@@ -245,7 +234,7 @@ auto TextureManager::create_texture(std::string id) -> Texture
 #if RAINBOW_RECORD_VMEM_USAGE
 auto TextureManager::memory_usage() const -> TextureManager::MemoryUsage
 {
-    const double M = 1e-6;
+    constexpr double M = 1e-6;
     return {mem_used_ * M, mem_peak_ * M};
 }
 

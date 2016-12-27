@@ -66,7 +66,7 @@ namespace rainbow { namespace graphics
         template <typename F>
         auto create(const std::string& id, F&& loader) -> Texture
         {
-            auto t = std::find(textures_.begin(), textures_.end(), id);
+            auto t = find(textures_, id);
             if (t == textures_.end())
             {
                 loader(*this, create_texture(id));

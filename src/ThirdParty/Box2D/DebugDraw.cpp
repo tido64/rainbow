@@ -82,7 +82,7 @@ namespace b2
 
     void DebugDraw::Add(DebuggableWorld* world)
     {
-        auto i = std::find(std::begin(worlds_), std::end(worlds_), nullptr);
+        auto i = rainbow::find(worlds_, nullptr);
         if (i == std::end(worlds_))
             return;
         *i = world;
