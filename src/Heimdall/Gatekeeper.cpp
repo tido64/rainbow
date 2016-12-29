@@ -58,18 +58,20 @@ void Gatekeeper::init(const Vec2i& screen)
 #if USE_LUA_SCRIPT
     monitor_.set_callback([this](const char* path) {
         auto p = rainbow::filesystem::absolute(path);
-        rainbow::string_view filename = p.filename();
+        std::string filename = p.filename();
         if (filename.length() < 5 || !rainbow::ends_with(filename, ".lua"))
             return;
 
-        const size_t offset = filename.data() - p.c_str();
-        const size_t length = filename.length() - 4;
         std::lock_guard<std::mutex> lock(changed_files_mutex_);
-        changed_files_.emplace([this, path = std::move(p), offset, length] {
-            rainbow::string_view name{path.c_str() + offset, length};
-            LOGI("Reloading '%s'...", name.data());
-            lua_State* L = static_cast<LuaScript*>(director_.script())->state();
-            rainbow::lua::reload(L, open_module(path), name);
+        changed_files_.emplace([
+            this,
+            path = std::move(p),
+            module = std::move(filename)
+        ]() mutable {
+            LOGI("Reloading '%s'...", module.c_str());
+            module.erase(module.length() - 4, 4);
+            auto L = static_cast<LuaScript*>(director_.script())->state();
+            rainbow::lua::reload(L, open_module(path), module.c_str());
         });
     });
 #endif  // USE_LUA_SCRIPT

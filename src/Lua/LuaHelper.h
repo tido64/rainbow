@@ -287,9 +287,7 @@ NS_RAINBOW_LUA_BEGIN
     ///   Name of the chunk. Used for debug information.
     /// </param>
     /// <returns>Number of successfully reloaded chunks.</returns>
-    auto reload(lua_State* L,
-                const Data& chunk,
-                const rainbow::string_view& name) -> int;
+    auto reload(lua_State* L, const Data& chunk, const char* name) -> int;
 
     /// <summary>
     ///   Replaces the table at index <paramref name="n"/> with its userdata if

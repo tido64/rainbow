@@ -265,6 +265,7 @@ if(UNIT_TESTS)
        src/Tests/Common/Global.test.cc
        src/Tests/Common/Link.test.cc
        src/Tests/Common/Random.test.cc
+       src/Tests/Common/String.test.cc
        src/Tests/Common/TreeNode.test.cc
        src/Tests/Common/TypeInfo.test.cc
        src/Tests/Config.test.cc

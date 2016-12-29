@@ -7,43 +7,59 @@
 
 #include <cstring>
 #include <memory>
-
-#if __cpp_lib_experimental_string_view < 201411
-#   include <string>
-#else
-#   include <experimental/string_view>
-#endif
+#include <string>
 
 namespace rainbow
 {
-#if __cpp_lib_experimental_string_view < 201411
-    class string_view
+    using zstring = const char*;
+
+    enum class StringComparison
     {
-    public:
-        string_view() : data_(nullptr), length_(0) {}
-        string_view(const char* str) : data_(str), length_(strlen(str)) {}
-        string_view(const char* str, size_t length)
-            : data_(str), length_(length) {}
-        string_view(const std::string& str)
-            : data_(str.data()), length_(str.length()) {}
-
-        auto data() const { return data_; }
-        auto length() const { return length_; }
-
-    private:
-        const char* data_;
-        size_t length_;
+        Ordinal,
+        IgnoreCase
     };
-#else
-    using std::experimental::string_view;
-#endif
 
     template <size_t N>
-    bool ends_with(const string_view& str, const char (&postfix)[N])
+    bool ends_with(zstring str, size_t str_length, const char (&suffix)[N])
     {
         constexpr size_t length = N - 1;
-        return str.length() >= length &&
-               memcmp(str.data() + str.length() - length, postfix, length) == 0;
+        return str_length >= length &&
+               memcmp(str + str_length - length, suffix, length) == 0;
+    }
+
+    template <size_t N>
+    bool ends_with(zstring str, const char (&suffix)[N])
+    {
+        return ends_with(str, strlen(str), suffix);
+    }
+
+    template <size_t N>
+    bool ends_with(zstring str,
+                   const char (&suffix)[N],
+                   StringComparison comparison)
+    {
+        const auto str_length = strlen(str);
+        if (comparison == StringComparison::Ordinal)
+            return ends_with(str, str_length, suffix);
+
+        constexpr size_t suffix_length = N - 1;
+        if (suffix_length > str_length)
+            return false;
+
+        zstring s = str + str_length - suffix_length;
+        for (size_t i = 0; i < suffix_length; ++i, ++s)
+        {
+            if (tolower(*s) != tolower(suffix[i]))
+                return false;
+        }
+
+        return true;
+    }
+
+    template <size_t N>
+    bool ends_with(const std::string& str, const char (&suffix)[N])
+    {
+        return ends_with(str.c_str(), str.length(), suffix);
     }
 }
 

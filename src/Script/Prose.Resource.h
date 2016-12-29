@@ -92,42 +92,39 @@ auto create_texture(lua_State* L, ScopeStack& stack) -> Prose::Asset
     return {Prose::AssetType::TextureAtlas, texture, 0};
 }
 
-bool ends_with(const char* str, const char* suffix)
-{
-    const auto str_length = strlen(str);
-    const auto suffix_length = strlen(suffix);
-    if (suffix_length > str_length)
-        return false;
-
-    const char* s = str + str_length - suffix_length;
-    for (size_t i = 0; i < suffix_length; ++i, ++s)
-        if (tolower(*s) != tolower(suffix[i]))
-            return false;
-
-    return true;
-}
-
 auto resource_type(lua_State* L) -> Prose::AssetType
 {
+    using rainbow::StringComparison;
+
     const auto field = lua_type(L, -1);
     if (field == LUA_TSTRING)
     {
         const char* file = lua_tostring(L, -1);
-        return (!ends_with(file, ".mp3") && !ends_with(file, ".ogg")
-                    ? Prose::AssetType::None
-                    : Prose::AssetType::Sound);
+        const bool is_audio =
+            rainbow::ends_with(file, ".mp3", StringComparison::IgnoreCase) ||
+            rainbow::ends_with(file, ".ogg", StringComparison::IgnoreCase);
+        return !is_audio ? Prose::AssetType::None : Prose::AssetType::Sound;
     }
     else if (field == LUA_TTABLE)
     {
         ScopedField field(L, 1);
         if (lua_type(L, -1) != LUA_TSTRING)
             return Prose::AssetType::None;
+
         const char* file = lua_tostring(L, -1);
-        if (ends_with(file, ".png") || ends_with(file, ".pvr"))
+        if (rainbow::ends_with(file, ".png", StringComparison::IgnoreCase) ||
+            rainbow::ends_with(file, ".pvr", StringComparison::IgnoreCase))
+        {
             return Prose::AssetType::TextureAtlas;
-        if (ends_with(file, ".otf") || ends_with(file, ".ttf"))
+        }
+
+        if (rainbow::ends_with(file, ".otf", StringComparison::IgnoreCase) ||
+            rainbow::ends_with(file, ".ttf", StringComparison::IgnoreCase))
+        {
             return Prose::AssetType::FontAtlas;
+        }
     }
+
     return Prose::AssetType::None;
 }
 

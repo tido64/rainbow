@@ -13,7 +13,6 @@
 using rainbow::Data;
 using rainbow::File;
 using rainbow::lua::WeakRef;
-using rainbow::string_view;
 
 namespace
 {
@@ -189,7 +188,7 @@ NS_RAINBOW_LUA_BEGIN
         luaR_rawsetstring(L, "__type", name);
     }
 
-    auto reload(lua_State* L, const Data& chunk, const string_view& name) -> int
+    auto reload(lua_State* L, const Data& chunk, const char* name) -> int
     {
         lua_getglobal(L, "package");
         lua_pushliteral(L, "loaded");
@@ -197,11 +196,11 @@ NS_RAINBOW_LUA_BEGIN
 
         R_ASSERT(lua_istable(L, -1), "Missing control table 'package.loaded'");
 
-        lua_pushlstring(L, name.data(), name.length());
+        lua_pushstring(L, name);
         lua_pushnil(L);
         lua_rawset(L, -3);
         lua_pop(L, 2);
-        return load(L, chunk, name.data(), true);
+        return load(L, chunk, name, true);
     }
 
     void replacetable(lua_State* L, int n)
