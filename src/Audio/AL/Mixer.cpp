@@ -34,16 +34,6 @@ namespace
 
     ALMixer* al_mixer = nullptr;
 
-    struct ALCContextDestroyer
-    {
-        void operator()(ALCcontext* ctx) const { alcDestroyContext(ctx); }
-    };
-
-    struct ALCDeviceCloser
-    {
-        void operator()(ALCdevice* device) const { alcCloseDevice(device); }
-    };
-
     auto get_channel_state(const Channel& channel)
     {
         ALint state{};
@@ -66,6 +56,21 @@ namespace
     constexpr bool is_fail(ALenum result) { return result != AL_NO_ERROR; }
 }
 
+namespace std
+{
+    template <>
+    struct default_delete<ALCcontext>
+    {
+        void operator()(ALCcontext* ctx) const { alcDestroyContext(ctx); }
+    };
+
+    template <>
+    struct default_delete<ALCdevice>
+    {
+        void operator()(ALCdevice* device) const { alcCloseDevice(device); }
+    };
+}
+
 bool ALMixer::initialize(int max_channels)
 {
     R_ASSERT(al_mixer == nullptr, "OpenAL is already initialised");
@@ -74,15 +79,15 @@ bool ALMixer::initialize(int max_channels)
     audio_session_ = [RainbowAudioSession audioSessionWithMixer:this];
 #endif
 
-    std::unique_ptr<ALCdevice, ALCDeviceCloser> device(alcOpenDevice(nullptr));
+    std::unique_ptr<ALCdevice> device{alcOpenDevice(nullptr)};
     if (device == nullptr)
     {
         LOGE("OpenAL: Failed to open audio device (code: 0x%x)", alGetError());
         return false;
     }
 
-    std::unique_ptr<ALCcontext, ALCContextDestroyer> context(
-        alcCreateContext(device.get(), nullptr));
+    std::unique_ptr<ALCcontext> context{
+        alcCreateContext(device.get(), nullptr)};
     if (context == nullptr)
     {
         LOGE("OpenAL: Failed to create context (code: 0x%x)", alGetError());
@@ -250,8 +255,7 @@ ALMixer::~ALMixer()
         alDeleteBuffers(Channel::kNumBuffers, channel.buffers());
     }
 
-    std::unique_ptr<ALCdevice, ALCDeviceCloser> device(
-        alcGetContextsDevice(context_));
+    std::unique_ptr<ALCdevice> device{alcGetContextsDevice(context_)};
     alcDestroyContext(context_);
 }
 

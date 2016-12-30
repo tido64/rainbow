@@ -52,9 +52,7 @@ rainbow::Config::Config()
 
     lua_getglobal(L.get(), "msaa");
     if (lua::isnumber(L.get(), -1))
-    {
         msaa_ = std::min(floor_pow2(lua::tointeger(L.get(), -1)), kMaxMSAA);
-    }
 #endif
 
     lua_getglobal(L.get(), "resolution");

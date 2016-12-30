@@ -17,6 +17,15 @@
 
 namespace rainbow { class Data; }
 
+namespace std
+{
+    template <>
+    struct default_delete<lua_State>
+    {
+        void operator()(lua_State* L) const { lua_close(L); }
+    };
+}
+
 NS_RAINBOW_LUA_BEGIN
 {
     template <typename T>
@@ -188,7 +197,10 @@ NS_RAINBOW_LUA_BEGIN
               bool exec = true) -> int;
 
     /// <summary>Creates a new Lua state.</summary>
-    auto newstate() -> std::unique_ptr<lua_State, decltype(&lua_close)>;
+    inline auto newstate()
+    {
+        return std::unique_ptr<lua_State>{luaL_newstate()};
+    }
 
     /// <summary>
     ///   Returns the value returned from <see cref="luaL_optinteger"/> but

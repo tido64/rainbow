@@ -10,6 +10,24 @@
 
 #define USE_SVG
 
+namespace std
+{
+    template <>
+    struct default_delete<NSVGimage>
+    {
+        void operator()(NSVGimage* image) { nsvgDelete(image); }
+    };
+
+    template <>
+    struct default_delete<NSVGrasterizer>
+    {
+        void operator()(NSVGrasterizer* rasterizer)
+        {
+            nsvgDeleteRasterizer(rasterizer);
+        }
+    };
+}
+
 namespace svg
 {
     bool check(const rainbow::DataMap& data)
@@ -25,19 +43,15 @@ namespace svg
 
     auto decode(const rainbow::DataMap& data, float scale)
     {
-        using NSVGImage = std::unique_ptr<NSVGimage, decltype(&nsvgDelete)>;
-        using NSVGRasterizer =
-            std::unique_ptr<NSVGrasterizer, decltype(&nsvgDeleteRasterizer)>;
-
         rainbow::Image image;
         image.format = rainbow::Image::Format::SVG;
 
-        NSVGImage img(nullptr, nsvgDelete);
+        std::unique_ptr<NSVGimage> img;
         {
             auto svg = std::make_unique<char[]>(data.size());
             std::copy(data.data(), data.data() + data.size(), svg.get());
             img.reset(nsvgParse(svg.get(), "px", 96.0f));
-            if (!img)
+            if (img == nullptr)
                 return image;
         }
 
@@ -48,7 +62,7 @@ namespace svg
         image.size = image.width * image.height * 4;
 
         auto buffer = std::make_unique<uint8_t[]>(image.size);
-        NSVGRasterizer rasterizer(nsvgCreateRasterizer(), nsvgDeleteRasterizer);
+        std::unique_ptr<NSVGrasterizer> rasterizer{nsvgCreateRasterizer()};
         nsvgRasterize(rasterizer.get(),
                       img.get(),
                       0.0f,
