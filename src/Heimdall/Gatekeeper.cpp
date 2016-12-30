@@ -62,8 +62,7 @@ void Gatekeeper::init(const Vec2i& screen)
         if (filename.length() < 5 || !rainbow::ends_with(filename, ".lua"))
             return;
 
-        std::lock_guard<std::mutex> lock(changed_files_mutex_);
-        changed_files_.emplace([
+        changed_files_->emplace([
             this,
             path = std::move(p),
             module = std::move(filename)
@@ -80,17 +79,16 @@ void Gatekeeper::init(const Vec2i& screen)
 void Gatekeeper::update(uint64_t dt)
 {
 #if USE_LUA_SCRIPT
-    while (!changed_files_.empty())
-    {
-        std::function<void()> reload_module;
+    changed_files_.invoke([](auto& changed_files) {
+        while (!changed_files->empty())
         {
-            std::lock_guard<std::mutex> lock(changed_files_mutex_);
-            reload_module = std::move(changed_files_.front());
-            changed_files_.pop();
+            std::function<void()> reload_module =
+                std::move(changed_files->front());
+            changed_files->pop();
+            changed_files.invoke_unlocked(
+                [&reload_module](auto&) { reload_module(); });
         }
-
-        reload_module();
-    }
+    });
 #endif  // USE_LUA_SCRIPT
 
     director_.update(dt);

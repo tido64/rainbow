@@ -157,7 +157,8 @@ set(SOURCE_FILES
     src/Script/TransitionFunctions.h
     src/Script/World.h
     src/ThirdParty/NanoSVG/NanoSVG.cpp
-    src/ThirdParty/NanoSVG/NanoSVG.h)
+    src/ThirdParty/NanoSVG/NanoSVG.h
+    src/Threading/Synchronized.h)
 
 if(USE_LUA_SCRIPT)
   add_definitions(-DUSE_LUA_SCRIPT=1)

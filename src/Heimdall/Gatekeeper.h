@@ -7,12 +7,12 @@
 
 #if USE_LUA_SCRIPT
 #   include <functional>
-#   include <mutex>
 #   include <queue>
+#   include "Heimdall/ChangeMonitor.h"
+#   include "Threading/Synchronized.h"
 #endif  // USE_LUA_SCRIPT
 
 #include "Director.h"
-#include "Heimdall/ChangeMonitor.h"
 #include "Heimdall/Overlay.h"
 #include "Heimdall/OverlayActivator.h"
 
@@ -50,8 +50,7 @@ namespace heimdall
         Overlay overlay_;
         OverlayActivator overlay_activator_;
 #if USE_LUA_SCRIPT
-        std::mutex changed_files_mutex_;
-        std::queue<std::function<void()>> changed_files_;
+        rainbow::Synchronized<std::queue<std::function<void()>>> changed_files_;
         ChangeMonitor monitor_;
 #endif  // USE_LUA_SCRIPT
     };
