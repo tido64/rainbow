@@ -99,7 +99,7 @@ namespace rainbow
         auto width() const { return width_; }
 
         /// <summary>Sets sprite colour.</summary>
-        void set_color(Colorb c);
+        void set_color(Color c);
 
         /// <summary>Sets the identifier for the sprite</summary>
         void set_id(int id) { id_ = id; }
@@ -177,7 +177,7 @@ namespace rainbow
             return *this;
         }
 
-        auto color(Colorb c) -> Sprite&
+        auto color(Color c) -> Sprite&
         {
             set_color(c);
             return *this;
@@ -229,7 +229,7 @@ namespace rainbow
         Vec2f center_;            ///< Committed position.
         Vec2f position_;          ///< Uncommitted position.
         unsigned int texture_ = 0;
-        Colorb color_;
+        Color color_;
         unsigned int width_ = 0;      ///< Width of sprite (not scaled).
         unsigned int height_ = 0;     ///< Height of sprite (not scaled).
         float angle_ = 0.0f;          ///< Angle of rotation.

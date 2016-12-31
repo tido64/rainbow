@@ -24,7 +24,7 @@
 #define kProseUnknownProperty  "Prose: Unknown property '%s' on %s: %s"
 
 using rainbow::Animation;
-using rainbow::Colorb;
+using rainbow::Color;
 using rainbow::FontAtlas;
 using rainbow::Data;
 using rainbow::Label;

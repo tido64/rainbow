@@ -8,15 +8,14 @@ void set_color_and_transform(lua_State* L, T asset)
     if (has_key(L, kKeyColor))
     {
         auto field = get_field(L, kKeyColor);
-        asset->set_color(
-            Colorb(static_cast<unsigned int>(lua_tointeger(L, -1))));
+        asset->set_color(Color{static_cast<uint8_t>(lua_tointeger(L, -1))});
     }
     if (has_key(L, kKeyPosition))
     {
         auto field = get_field(L, kKeyPosition);
         lua_rawgeti(L, -1, 1);
         lua_rawgeti(L, -2, 2);
-        asset->set_position(Vec2f(lua_tonumber(L, -2), lua_tonumber(L, -1)));
+        asset->set_position(Vec2f{lua_tonumber(L, -2), lua_tonumber(L, -1)});
         lua_pop(L, 2);
     }
     if (has_key(L, kKeyRotation))

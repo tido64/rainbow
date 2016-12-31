@@ -7,7 +7,7 @@
 #include "Common/Random.h"
 #include "Script/Timer.h"
 
-using rainbow::Colorb;
+using rainbow::Color;
 using rainbow::LyricalLabel;
 using rainbow::Vec2i;
 using rainbow::Vec2u;
@@ -64,7 +64,7 @@ void LyricalLabel::clear_attributes(Attribute::Type type)
     }
 }
 
-void LyricalLabel::set_color(Colorb c, uint32_t start, uint32_t length)
+void LyricalLabel::set_color(Color c, uint32_t start, uint32_t length)
 {
     attributes_.emplace_back(c, start, length);
     set_needs_update(kStaleAttribute);
@@ -253,7 +253,7 @@ void LyricalLabel::undo_from(std::vector<Attribute>::const_iterator first)
     applied_ -= std::distance(first, attributes_.cend());
 }
 
-LyricalLabel::Attribute::Attribute(Colorb c, uint32_t start, uint32_t len)
+LyricalLabel::Attribute::Attribute(Color c, uint32_t start, uint32_t len)
     : type(Type::Color), start(start), length(len)
 {
     color[0] = c.r;

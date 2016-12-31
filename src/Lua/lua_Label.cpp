@@ -39,7 +39,7 @@ NS_RAINBOW_LUA_BEGIN
         if (self == nullptr)
             return 0;
 
-        const Colorb& c = self->label_.color();
+        const Color& c = self->label_.color();
         lua_pushinteger(L, c.r);
         lua_pushinteger(L, c.g);
         lua_pushinteger(L, c.b);
@@ -90,7 +90,7 @@ NS_RAINBOW_LUA_BEGIN
         const uint8_t g = lua_tointeger(L, 3);
         const uint8_t b = lua_tointeger(L, 4);
         const uint8_t a = optinteger(L, 5, 0xff);
-        self->label_.set_color(Colorb(r, g, b, a));
+        self->label_.set_color(Color{r, g, b, a});
         return 0;
     }
 
@@ -100,7 +100,7 @@ NS_RAINBOW_LUA_BEGIN
         return set1ud<Font>(
             L,
             [](rainbow::Label* label, SharedPtr<FontAtlas> font) {
-              label->set_font(std::move(font));
+                label->set_font(std::move(font));
             });
     }
 

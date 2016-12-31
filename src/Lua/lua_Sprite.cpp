@@ -45,7 +45,7 @@ NS_RAINBOW_LUA_BEGIN
         if (self == nullptr)
             return 0;
 
-        const Colorb& c = self->sprite_->color();
+        const Color& c = self->sprite_->color();
         lua_pushinteger(L, c.r);
         lua_pushinteger(L, c.g);
         lua_pushinteger(L, c.b);
@@ -98,7 +98,7 @@ NS_RAINBOW_LUA_BEGIN
         if (self == nullptr)
             return 0;
 
-        const Colorb color(
+        const Color color(
             static_cast<uint32_t>(lua_tointeger(L, 2)) & 0xff,
             static_cast<uint32_t>(lua_tointeger(L, 3)) & 0xff,
             static_cast<uint32_t>(lua_tointeger(L, 4)) & 0xff,

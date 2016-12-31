@@ -16,7 +16,7 @@ namespace rainbow
     /// </summary>
     struct SpriteVertex
     {
-        Colorb color;    ///< Texture colour, usually white.
+        Color color;     ///< Texture colour; white by default.
         Vec2f texcoord;  ///< Texture coordinates.
         Vec2f position;  ///< Position of vertex.
     };

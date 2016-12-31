@@ -18,8 +18,8 @@ transition. Which definitions they must implement will be specified.
 A colourable component must implement methods for getting and setting colour.
 
 ```c++
-Colorb  Colourable::color      () const;
-void    Colourable::set_color  (Colorb);
+Color  Colourable::color      () const;
+void   Colourable::set_color  (Color);
 ```
 
 #### Rotatable
@@ -179,7 +179,7 @@ private:
         batch_->set_texture(texture);
 
         auto logo = batch_->create_sprite(392, 710);
-        logo->set_color(rainbow::Colorb{0xffffff00});
+        logo->set_color(rainbow::Color{0xffffff00});
         logo->set_position(rainbow::Vec2f{screen.x * 0.5f, screen.y * 0.5f});
         logo->set_scale(0.5);
         logo->set_texture(texture->add_region(1, 1, 392, 710));

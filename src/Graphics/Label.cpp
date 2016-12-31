@@ -9,7 +9,7 @@
 #include "Common/UTF8.h"
 #include "Math/Transform.h"
 
-using rainbow::Colorb;
+using rainbow::Color;
 using rainbow::FontAtlas;
 using rainbow::Label;
 using rainbow::SharedPtr;
@@ -34,7 +34,7 @@ void Label::set_alignment(TextAlignment a)
     set_needs_update(kStaleBuffer);
 }
 
-void Label::set_color(Colorb c)
+void Label::set_color(Color c)
 {
     color_ = c;
     set_needs_update(kStaleColor);

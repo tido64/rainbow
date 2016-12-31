@@ -75,7 +75,7 @@ namespace rainbow
         void set_alignment(TextAlignment);
 
         /// <summary>Sets text color.</summary>
-        void set_color(Colorb c);
+        void set_color(Color c);
 
         /// <summary>Sets text font.</summary>
         void set_font(SharedPtr<FontAtlas>);
@@ -127,7 +127,7 @@ namespace rainbow
         VertexBuffer vertices_;        ///< Client vertex buffer.
         String text_;                  ///< Content of this label.
         Vec2f position_;               ///< Position of the text (bottom left).
-        Colorb color_;                 ///< Color of the text.
+        Color color_;                  ///< Text colour.
         float scale_;                  ///< Label scale factor.
         TextAlignment alignment_;      ///< Text alignment.
         float angle_;                  ///< Angle of rotation.

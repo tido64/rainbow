@@ -20,7 +20,7 @@ namespace heimdall
             action_ = std::move(action);
         }
 
-        void set_color(Colorb color) { label_.set_color(color); }
+        void set_color(Color color) { label_.set_color(color); }
 
         void set_font(SharedPtr<FontAtlas> font)
         {

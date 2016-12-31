@@ -61,7 +61,7 @@ namespace rainbow
 
         void operator()()
         {
-            Colorb color = this->component_->color();
+            Color color = this->component_->color();
             const int d = this->timing_(0.0f, this->delta_, this->tick());
             color.a += d - this->previous_;
             this->component_->set_color(color);

@@ -8,7 +8,7 @@
 #include "Graphics/TextureAtlas.h"
 #include "Tests/TestHelpers.h"
 
-using rainbow::Colorb;
+using rainbow::Color;
 using rainbow::SharedPtr;
 using rainbow::Sprite;
 using rainbow::SpriteRef;
@@ -108,8 +108,8 @@ TEST(SpriteTest, PlacedAtOriginOnCreation)
 
 TEST(SpriteTest, CanBeColored)
 {
+    constexpr Color color(0xec, 0xef, 0xf1);
     Sprite sprite(2, 2);
-    const Colorb color(0xec, 0xef, 0xf1);
 
     ASSERT_TRUE(is_stale(sprite, kStaleBuffer));
     ASSERT_NE(color, sprite.color());

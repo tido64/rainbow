@@ -7,7 +7,7 @@
 #include "Graphics/SpriteBatch.h"
 #include "Math/Transform.h"
 
-using rainbow::Colorb;
+using rainbow::Color;
 using rainbow::Sprite;
 using rainbow::SpriteRef;
 using rainbow::SpriteVertex;
@@ -72,7 +72,7 @@ auto Sprite::is_mirrored() const -> bool
     return (state_ & kIsMirrored) == kIsMirrored;
 }
 
-void Sprite::set_color(Colorb c)
+void Sprite::set_color(Color c)
 {
     state_ |= kStaleTexture;
     color_ = c;

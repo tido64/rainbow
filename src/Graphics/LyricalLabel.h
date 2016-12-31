@@ -41,7 +41,7 @@ namespace rainbow
                 int offset[2];
             };
 
-            Attribute(Colorb color, uint32_t start, uint32_t len);
+            Attribute(Color color, uint32_t start, uint32_t len);
             Attribute(uint32_t magnitude, uint32_t start, uint32_t len);
             Attribute(const Vec2i& offset, uint32_t start, uint32_t len);
         };
@@ -64,7 +64,7 @@ namespace rainbow
         /// <param name="color">The color to set.</param>
         /// <param name="start">Offset to the first character in range.</param>
         /// <param name="length">Number of characters in range.</param>
-        void set_color(Colorb color, uint32_t start, uint32_t length);
+        void set_color(Color color, uint32_t start, uint32_t length);
 
         /// <summary>Offsets characters' positions in given range.</summary>
         /// <param name="offset">The vector to offset by.</param>

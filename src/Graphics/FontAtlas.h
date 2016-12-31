@@ -70,7 +70,7 @@ namespace rainbow
 
     private:
         const float pt_;             ///< Font point size.
-        Colorb color_;               ///< Font colour.
+        Color color_;                ///< Font colour.
         int height_;                 ///< Font line height.
         graphics::Texture texture_;  ///< Texture name.
         FontGlyph charset_[kNumCharacters + FONTATLAS_EXTENDED];  ///< Character set.
