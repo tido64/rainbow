@@ -4,18 +4,20 @@
 
 #include "Common/Link.h"
 
+#include "Common/Logging.h"
+
 using rainbow::Link;
 
-void Link::append(Link* node)
+void Link::append(Link& node)
 {
-    node->pop();
-    node->prev_ = this;
+    node.pop();
+    node.prev_ = this;
     if (next_ != nullptr)
     {
-        next_->prev_ = node;
-        node->next_ = next_;
+        next_->prev_ = &node;
+        node.next_ = next_;
     }
-    next_ = node;
+    next_ = &node;
 }
 
 void Link::pop()
@@ -28,18 +30,20 @@ void Link::pop()
         next_->prev_ = prev_;
         next_ = nullptr;
     }
-    else
+    else if (prev_ != nullptr)
     {
-        on_end_link_removed(this);
+        on_end_link_changed(*prev_);
     }
 
     prev_ = nullptr;
 }
 
-void Link::on_end_link_removed(Link* node)
+void Link::on_end_link_changed(Link& new_link)
 {
+    R_ASSERT(new_link.next() == nullptr, "An end link doesn't have a tail");
+
     if (prev_ == nullptr)
         return;
 
-    prev_->on_end_link_removed(node);
+    prev_->on_end_link_changed(new_link);
 }

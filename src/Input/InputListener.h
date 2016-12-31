@@ -95,7 +95,7 @@ namespace rainbow
         }
 
     protected:
-        ~InputListener() = default;
+        ~InputListener() {}
 
     private:
         virtual bool on_controller_axis_motion_impl(const ControllerAxisMotion&)
@@ -143,6 +143,10 @@ namespace rainbow
         {
             return false;
         }
+
+        // Link implementation details
+
+        void on_end_link_changed(Link& new_link) final;
 
         friend class Input;
     };

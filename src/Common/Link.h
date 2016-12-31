@@ -12,20 +12,18 @@ namespace rainbow
     class Link
     {
     public:
-        Link() : next_(nullptr), prev_(nullptr) {}
-
         auto next() const { return next_; }
         auto prev() const { return prev_; }
 
-        void append(Link* node);
+        void append(Link& node);
         void pop();
 
         template <typename T, typename F, typename = EnableIfBaseOf<Link, T>>
         friend auto for_each(T* node, F&& f) -> bool
         {
-            while (node)
+            while (node != nullptr)
             {
-                if (f(node))
+                if (f(*node))
                     return true;
 
                 node = node->next();
@@ -37,10 +35,10 @@ namespace rainbow
         ~Link() { pop(); }
 
     private:
-        Link* next_;
-        Link* prev_;
+        Link* next_ = nullptr;
+        Link* prev_ = nullptr;
 
-        virtual void on_end_link_removed(Link* node);
+        virtual void on_end_link_changed(Link& new_link);
     };
 }
 

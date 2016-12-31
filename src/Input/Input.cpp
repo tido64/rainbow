@@ -11,8 +11,10 @@
 using rainbow::ControllerAxisMotion;
 using rainbow::ControllerButtonEvent;
 using rainbow::Input;
+using rainbow::InputListener;
 using rainbow::KeyMods;
 using rainbow::KeyStroke;
+using rainbow::Passkey;
 using rainbow::Pointer;
 using rainbow::VirtualKey;
 
@@ -59,15 +61,15 @@ void Input::process_controller(unsigned int id, F&& process)
     }
 }
 
-void Input::subscribe(InputListener& i)
+void Input::subscribe(InputListener& listener)
 {
-    last_listener_->append(&i);
-    last_listener_ = &i;
+    last_listener_->append(listener);
+    last_listener_ = &listener;
 }
 
-void Input::unsubscribe(InputListener& i)
+void Input::unsubscribe(InputListener& listener)
 {
-    i.pop();
+    listener.pop();
 }
 
 void Input::accelerated(double x, double y, double z, double t)
@@ -85,8 +87,8 @@ void Input::on_controller_axis_motion(const ControllerAxisMotion& motion)
         controllers_[i].on_axis_motion(motion);
         auto event = motion;
         event.id = i;
-        for_each(next(), [&event](InputListener* i) {
-            return i->on_controller_axis_motion(event);
+        for_each(next(), [&event](InputListener& listener) {
+            return listener.on_controller_axis_motion(event);
         });
     });
 }
@@ -101,8 +103,8 @@ void Input::on_controller_button_down(const ControllerButtonEvent& button)
         controllers_[i].on_button_down(button);
         auto event = button;
         event.id = i;
-        for_each(next(), [&event](InputListener* i) {
-            return i->on_controller_button_down(event);
+        for_each(next(), [&event](InputListener& listener) {
+            return listener.on_controller_button_down(event);
         });
     });
 }
@@ -117,8 +119,8 @@ void Input::on_controller_button_up(const ControllerButtonEvent& button)
         controllers_[i].on_button_up(button);
         auto event = button;
         event.id = i;
-        for_each(next(), [&event](InputListener* i) {
-            return i->on_controller_button_up(event);
+        for_each(next(), [&event](InputListener& listener) {
+            return listener.on_controller_button_up(event);
         });
     });
 }
@@ -141,8 +143,8 @@ void Input::on_controller_connected(unsigned int id)
     controllers_[port].assign(id);
     LOGI("Controller %u plugged into port %d", id, port + 1);
 
-    for_each(next(), [port](InputListener* i) {
-        return i->on_controller_connected(port);
+    for_each(next(), [port](InputListener& listener) {
+        return listener.on_controller_connected(port);
     });
 }
 
@@ -153,8 +155,8 @@ void Input::on_controller_disconnected(unsigned int id)
         LOGI("Controller %u unplugged from port %d", controller.id(), i + 1);
         controller.unassign();
 
-        for_each(next(), [i](InputListener* listener) {
-            return listener->on_controller_disconnected(i);
+        for_each(next(), [i](InputListener& listener) {
+            return listener.on_controller_disconnected(i);
         });
     });
 }
@@ -168,7 +170,9 @@ void Input::on_key_down(const KeyStroke& k)
         keys.set(pos);
     });
 
-    for_each(next(), [&k](InputListener* i) { return i->on_key_down(k); });
+    for_each(next(), [&k](InputListener& listener) {  //
+        return listener.on_key_down(k);
+    });
 }
 
 void Input::on_key_up(const KeyStroke& k)
@@ -180,36 +184,50 @@ void Input::on_key_up(const KeyStroke& k)
         keys.reset(pos);
     });
 
-    for_each(next(), [&k](InputListener* i) { return i->on_key_up(k); });
+    for_each(next(), [&k](InputListener& listener) {  //
+        return listener.on_key_up(k);
+    });
+}
+
+void Input::on_last_listener_changed(InputListener& new_listener,
+                                     Passkey<InputListener>)
+{
+    last_listener_ = &new_listener;
 }
 
 void Input::on_pointer_began(const ArrayView<Pointer>& pointers)
 {
-    for_each(next(), [&pointers](InputListener* i) {
-        return i->on_pointer_began(pointers);
+    for_each(next(), [&pointers](InputListener& listener) {
+        return listener.on_pointer_began(pointers);
     });
 }
 
 void Input::on_pointer_canceled()
 {
-    for_each(next(), [](InputListener* i) { return i->on_pointer_canceled(); });
+    for_each(next(), [](InputListener& listener) {
+        return listener.on_pointer_canceled();
+    });
 }
 
 void Input::on_pointer_ended(const ArrayView<Pointer>& pointers)
 {
-    for_each(next(), [&pointers](InputListener* i) {
-        return i->on_pointer_ended(pointers);
+    for_each(next(), [&pointers](InputListener& listener) {
+        return listener.on_pointer_ended(pointers);
     });
 }
 
 void Input::on_pointer_moved(const ArrayView<Pointer>& pointers)
 {
-    for_each(next(), [&pointers](InputListener* i) {
-        return i->on_pointer_moved(pointers);
+    for_each(next(), [&pointers](InputListener& listener) {
+        return listener.on_pointer_moved(pointers);
     });
 }
 
-void Input::on_end_link_removed(Link* node)
+void InputListener::on_end_link_changed(Link& new_link)
 {
-    last_listener_ = static_cast<InputListener*>(node)->prev();
+    auto input = Input::Get();
+    if (input == nullptr)
+        return;
+
+    input->on_last_listener_changed(static_cast<InputListener&>(new_link), {});
 }

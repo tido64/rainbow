@@ -14,13 +14,7 @@ namespace rainbow
     class Global : private NonCopyable<Global<T>>
     {
     public:
-        static auto Get()
-        {
-            R_ASSERT(s_instance != nullptr,
-                     "Instance not yet created or already destroyed");
-
-            return s_instance;
-        }
+        static auto Get() { return s_instance; }
 
     protected:
         Global() = default;

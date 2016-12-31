@@ -39,7 +39,7 @@ TEST(LinkTest, AppendsItemAfterCurrent)
         const auto o = n.next();
         ASSERT_EQ(nullptr, m.prev());
 
-        n.append(&m);
+        n.append(m);
 
         ASSERT_EQ(&n, m.prev());
         ASSERT_EQ(o, m.next());
@@ -63,14 +63,14 @@ TEST(LinkTest, PopsItemBeforeInsertion)
     Number numbers[]{Number{1}, Number{2}, Number{3}, Number{4}};
     Number n{0};
 
-    std::for_each(numbers, numbers + 4, [&n](Number& m) { n.append(&m); });
+    std::for_each(numbers, numbers + 4, [&n](Number& m) { n.append(m); });
 
     ASSERT_EQ(numbers + 3, n.next());
     ASSERT_EQ(&n, numbers[3].prev());
     ASSERT_EQ(numbers + 2, numbers[3].next());
     ASSERT_EQ(nullptr, numbers[0].next());
 
-    numbers[0].append(numbers + 3);
+    numbers[0].append(numbers[3]);
 
     ASSERT_EQ(numbers + 3, numbers[0].next());
     ASSERT_EQ(numbers, numbers[3].prev());
@@ -84,7 +84,7 @@ TEST(LinkTest, RemovesItselfWhenPopped)
     Number numbers[]{Number{1}, Number{2}, Number{3}, Number{4}};
     Number n{0};
 
-    std::for_each(numbers, numbers + 4, [&n](Number& m) { n.append(&m); });
+    std::for_each(numbers, numbers + 4, [&n](Number& m) { n.append(m); });
 
     ASSERT_EQ(numbers + 3, n.next());
     ASSERT_EQ(nullptr, n.prev());
@@ -127,13 +127,13 @@ TEST(LinkTest, PopsItselfOnDestruction)
     ASSERT_EQ(nullptr, a.next());
     {
         Number b{1};
-        a.append(&b);
+        a.append(b);
         ASSERT_EQ(&b, a.next());
         ASSERT_EQ(&a, b.prev());
         ASSERT_EQ(nullptr, b.next());
         {
             Number c{1};
-            b.append(&c);
+            b.append(c);
             ASSERT_EQ(&c, b.next());
             ASSERT_EQ(&b, c.prev());
             ASSERT_EQ(&a, b.prev());
@@ -148,23 +148,23 @@ TEST(LinkTest, PopsItselfOnDestruction)
 TEST(LinkTest, ForEachTraversesLinks)
 {
     Number numbers[]{Number{0}, Number{1}, Number{2}, Number{3}, Number{4}};
-    numbers[0].append(&numbers[4]);
-    numbers[0].append(&numbers[3]);
-    numbers[0].append(&numbers[2]);
-    numbers[0].append(&numbers[1]);
+    numbers[0].append(numbers[4]);
+    numbers[0].append(numbers[3]);
+    numbers[0].append(numbers[2]);
+    numbers[0].append(numbers[1]);
 
     int prev = -1;
-    ASSERT_FALSE(for_each(numbers, [&prev](const Number* n) {
-        [&] { ASSERT_GT(n->value, prev); }();
-        prev = n->value;
+    ASSERT_FALSE(for_each(numbers, [&prev](const Number& n) {
+        [&] { ASSERT_GT(n.value, prev); }();
+        prev = n.value;
         return false;
     }));
     ASSERT_EQ(numbers[4].value, prev);
 
     const int max = 3;
-    ASSERT_TRUE(for_each(numbers, [max, &prev](const Number* n) {
-        prev = n->value;
-        return n->value >= max;
+    ASSERT_TRUE(for_each(numbers, [max, &prev](const Number& n) {
+        prev = n.value;
+        return n.value >= max;
     }));
     ASSERT_EQ(max, prev);
 }

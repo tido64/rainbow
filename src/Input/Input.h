@@ -8,6 +8,7 @@
 #include <bitset>
 
 #include "Common/Global.h"
+#include "Common/Passkey.h"
 #include "Input/Acceleration.h"
 #include "Input/Controller.h"
 #include "Input/InputListener.h"
@@ -53,7 +54,9 @@ namespace rainbow
             return controllers_[controller].is_down(btn);
         }
 
-        /// <summary>Returns whether specified key is currently pressed.</summary>
+        /// <summary>
+        ///   Returns whether specified key is currently pressed.
+        /// </summary>
         bool is_down(VirtualKey key) const
         {
             return keys_[to_underlying_type(key)];
@@ -67,12 +70,12 @@ namespace rainbow
         }
 
         /// <summary>Subscribes an object to input events.</summary>
-        /// <param name="i">The object to subscribe.</param>
-        void subscribe(InputListener& i);
+        /// <param name="listener">The object to subscribe.</param>
+        void subscribe(InputListener& listener);
 
         /// <summary>Unsubscribes an object from input events.</summary>
-        /// <param name="i">The object to unsubscribe.</param>
-        void unsubscribe(InputListener& i);
+        /// <param name="listener">The object to unsubscribe.</param>
+        void unsubscribe(InputListener& listener);
 
         /// <summary>Acceleration event.</summary>
         /// <param name="x">Acceleration data (x-value).</param>
@@ -91,6 +94,9 @@ namespace rainbow
 
         void on_key_down(const KeyStroke&);
         void on_key_up(const KeyStroke&);
+
+        void on_last_listener_changed(InputListener& new_listener,
+                                      Passkey<InputListener>);
 
         void on_pointer_began(const ArrayView<Pointer>& pointers);
         void on_pointer_canceled();
@@ -122,10 +128,6 @@ namespace rainbow
 
         template <typename F>
         void process_controller(unsigned int id, F&& process);
-
-        // Link overrides.
-
-        void on_end_link_removed(Link* node) override;
     };
 }
 
