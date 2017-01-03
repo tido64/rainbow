@@ -51,7 +51,7 @@ constexpr unsigned int Input::kNumSupportedControllers;
 template <typename F>
 void Input::process_controller(unsigned int id, F&& process)
 {
-    for (auto i = 0u; i < array_size(controllers_); ++i)
+    for (auto i = 0u; i < controllers_.size(); ++i)
     {
         if (controllers_[i].id() == id)
         {
@@ -128,7 +128,7 @@ void Input::on_controller_button_up(const ControllerButtonEvent& button)
 void Input::on_controller_connected(unsigned int id)
 {
     int port = -1;
-    for (auto i = 0u; i < array_size(controllers_); ++i)
+    for (auto i = 0u; i < controllers_.size(); ++i)
     {
         if (controllers_[i].id() == id)
             return;
@@ -167,7 +167,7 @@ void Input::on_key_down(const KeyStroke& k)
              kInvalidVirtualKey);
 
     flip_keys(k, keys_, [](decltype(keys_)& keys, unsigned pos) {
-        keys.set(pos);
+        keys[pos] = true;
     });
 
     for_each(next(), [&k](InputListener& listener) {  //
@@ -181,7 +181,7 @@ void Input::on_key_up(const KeyStroke& k)
              kInvalidVirtualKey);
 
     flip_keys(k, keys_, [](decltype(keys_)& keys, unsigned pos) {
-        keys.reset(pos);
+        keys[pos] = false;
     });
 
     for_each(next(), [&k](InputListener& listener) {  //

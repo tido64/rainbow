@@ -6,7 +6,6 @@
 #define INPUT_CONTROLLER_H_
 
 #include <array>
-#include <bitset>
 #include <cstdint>
 #include <memory>
 
@@ -94,7 +93,7 @@ namespace rainbow
             std::numeric_limits<uint32_t>::max();
 
     public:
-        ControllerState() { unassign(); }
+        ControllerState() : id_(kNoController), buttons_({}), axes_({}) {}
 
         auto id() const { return id_; }
         bool is_assigned() const { return id_ != kNoController; }
@@ -114,8 +113,8 @@ namespace rainbow
         void unassign()
         {
             id_ = kNoController;
-            buttons_.reset();
-            std::uninitialized_fill_n(axes_.data(), axes_.size(), 0);
+            buttons_.fill(false);
+            axes_.fill(0);
         }
 
         void on_axis_motion(const ControllerAxisMotion& motion)
@@ -131,7 +130,7 @@ namespace rainbow
             R_ASSERT(event.id == id_,
                      "Controller button event for wrong controller");
 
-            buttons_.set(to_integral_value(event.button));
+            buttons_[to_integral_value(event.button)] = true;
         }
 
         void on_button_up(const ControllerButtonEvent& event)
@@ -139,16 +138,19 @@ namespace rainbow
             R_ASSERT(event.id == id_,
                      "Controller button event for wrong controller");
 
-            buttons_.reset(to_integral_value(event.button));
+            buttons_[to_integral_value(event.button)] = false;
         }
 
 #ifdef RAINBOW_TEST
-        auto buttons_down() const { return buttons_.count(); }
+        auto buttons_down() const
+        {
+            return std::count(buttons_.cbegin(), buttons_.cend(), true);
+        }
 #endif  // RAINBOW_TEST
 
     private:
         uint32_t id_;
-        std::bitset<to_integral_value(ControllerButton::Count)> buttons_;
+        std::array<bool, to_integral_value(ControllerButton::Count)> buttons_;
         std::array<int, to_integral_value(ControllerAxis::Count)> axes_;
     };
 }

@@ -5,8 +5,6 @@
 #ifndef INPUT_INPUT_H_
 #define INPUT_INPUT_H_
 
-#include <bitset>
-
 #include "Common/Global.h"
 #include "Common/Passkey.h"
 #include "Input/Acceleration.h"
@@ -35,7 +33,7 @@ namespace rainbow
     public:
         static constexpr unsigned int kNumSupportedControllers = 4;
 
-        Input() : last_listener_(this) { make_global(); }
+        Input() : keys_({}), last_listener_(this) { make_global(); }
 
         /// <summary>
         ///   Returns the value of the specified axis on specified controller.
@@ -117,12 +115,15 @@ namespace rainbow
                 [](auto&& controller) { return controller.is_assigned(); });
         }
 
-        auto keys_down() const { return keys_.count(); }
+        auto keys_down() const
+        {
+            return std::count(keys_.cbegin(), keys_.cend(), true);
+        }
 #endif  // RAINBOW_TEST
 
     private:
-        ControllerState controllers_[kNumSupportedControllers];
-        std::bitset<to_integral_value(VirtualKey::KeyCount)> keys_;
+        std::array<ControllerState, kNumSupportedControllers> controllers_;
+        std::array<bool, to_integral_value(VirtualKey::KeyCount)> keys_;
         Acceleration acceleration_;  ///< Accelerometer data
         InputListener* last_listener_;
 
