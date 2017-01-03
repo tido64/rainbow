@@ -59,7 +59,7 @@ namespace rainbow
         /// </summary>
         bool is_down(VirtualKey key) const
         {
-            return keys_[to_underlying_type(key)];
+            return keys_[to_integral_value(key)];
         }
 
         /// <summary>Clears all input listeners.</summary>
@@ -122,7 +122,7 @@ namespace rainbow
 
     private:
         ControllerState controllers_[kNumSupportedControllers];
-        std::bitset<to_underlying_type(VirtualKey::KeyCount)> keys_;
+        std::bitset<to_integral_value(VirtualKey::KeyCount)> keys_;
         Acceleration acceleration_;  ///< Accelerometer data
         InputListener* last_listener_;
 

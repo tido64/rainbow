@@ -212,7 +212,7 @@ namespace rainbow
     }
 
     template <typename Enum>
-    constexpr auto to_underlying_type(Enum value)
+    constexpr auto to_integral_value(Enum value)
     {
         return static_cast<std::underlying_type_t<Enum>>(value);
     }

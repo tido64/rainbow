@@ -103,12 +103,12 @@ namespace rainbow
 
         auto axis(ControllerAxis axis) const
         {
-            return axes_[to_underlying_type(axis)];
+            return axes_[to_integral_value(axis)];
         }
 
         bool is_down(ControllerButton button) const
         {
-            return buttons_[to_underlying_type(button)];
+            return buttons_[to_integral_value(button)];
         }
 
         void unassign()
@@ -123,7 +123,7 @@ namespace rainbow
             R_ASSERT(motion.id == id_,
                      "Controller axis motion event for wrong controller");
 
-            axes_[to_underlying_type(motion.axis)] = motion.value;
+            axes_[to_integral_value(motion.axis)] = motion.value;
         }
 
         void on_button_down(const ControllerButtonEvent& event)
@@ -131,7 +131,7 @@ namespace rainbow
             R_ASSERT(event.id == id_,
                      "Controller button event for wrong controller");
 
-            buttons_.set(to_underlying_type(event.button));
+            buttons_.set(to_integral_value(event.button));
         }
 
         void on_button_up(const ControllerButtonEvent& event)
@@ -139,7 +139,7 @@ namespace rainbow
             R_ASSERT(event.id == id_,
                      "Controller button event for wrong controller");
 
-            buttons_.reset(to_underlying_type(event.button));
+            buttons_.reset(to_integral_value(event.button));
         }
 
 #ifdef RAINBOW_TEST
@@ -148,8 +148,8 @@ namespace rainbow
 
     private:
         uint32_t id_;
-        std::bitset<to_underlying_type(ControllerButton::Count)> buttons_;
-        std::array<int, to_underlying_type(ControllerAxis::Count)> axes_;
+        std::bitset<to_integral_value(ControllerButton::Count)> buttons_;
+        std::array<int, to_integral_value(ControllerAxis::Count)> axes_;
     };
 }
 
