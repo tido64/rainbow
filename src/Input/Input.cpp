@@ -12,39 +12,10 @@ using rainbow::ControllerAxisMotion;
 using rainbow::ControllerButtonEvent;
 using rainbow::Input;
 using rainbow::InputListener;
-using rainbow::KeyMods;
 using rainbow::KeyStroke;
 using rainbow::Passkey;
 using rainbow::Pointer;
 using rainbow::VirtualKey;
-
-namespace
-{
-    template <typename T, typename F>
-    void flip_keys(const KeyStroke& stroke, T&& keys, F&& flip)
-    {
-        flip(keys, static_cast<unsigned>(stroke.key));
-        if (stroke.mods != KeyMods::None)
-        {
-            if ((stroke.mods & KeyMods::LeftShift) == KeyMods::LeftShift)
-                flip(keys, static_cast<unsigned>(VirtualKey::LeftShift));
-            if ((stroke.mods & KeyMods::RightShift) == KeyMods::RightShift)
-                flip(keys, static_cast<unsigned>(VirtualKey::RightShift));
-            if ((stroke.mods & KeyMods::LeftCtrl) == KeyMods::LeftCtrl)
-                flip(keys, static_cast<unsigned>(VirtualKey::LeftCtrl));
-            if ((stroke.mods & KeyMods::RightCtrl) == KeyMods::RightCtrl)
-                flip(keys, static_cast<unsigned>(VirtualKey::RightCtrl));
-            if ((stroke.mods & KeyMods::LeftAlt) == KeyMods::LeftAlt)
-                flip(keys, static_cast<unsigned>(VirtualKey::LeftAlt));
-            if ((stroke.mods & KeyMods::RightAlt) == KeyMods::RightAlt)
-                flip(keys, static_cast<unsigned>(VirtualKey::RightAlt));
-            if ((stroke.mods & KeyMods::LeftSuper) == KeyMods::LeftSuper)
-                flip(keys, static_cast<unsigned>(VirtualKey::LeftSuper));
-            if ((stroke.mods & KeyMods::RightSuper) == KeyMods::RightSuper)
-                flip(keys, static_cast<unsigned>(VirtualKey::RightSuper));
-        }
-    }
-}
 
 constexpr unsigned int Input::kNumSupportedControllers;
 
@@ -166,10 +137,7 @@ void Input::on_key_down(const KeyStroke& k)
     R_ASSERT(static_cast<int>(k.key) >= 0 && k.key < VirtualKey::KeyCount,
              kInvalidVirtualKey);
 
-    flip_keys(k, keys_, [](decltype(keys_)& keys, unsigned pos) {
-        keys[pos] = true;
-    });
-
+    keys_[rainbow::to_integral_value(k.key)] = true;
     for_each(next(), [&k](InputListener& listener) {  //
         return listener.on_key_down(k);
     });
@@ -180,10 +148,7 @@ void Input::on_key_up(const KeyStroke& k)
     R_ASSERT(static_cast<int>(k.key) >= 0 && k.key < VirtualKey::KeyCount,
              kInvalidVirtualKey);
 
-    flip_keys(k, keys_, [](decltype(keys_)& keys, unsigned pos) {
-        keys[pos] = false;
-    });
-
+    keys_[rainbow::to_integral_value(k.key)] = false;
     for_each(next(), [&k](InputListener& listener) {  //
         return listener.on_key_up(k);
     });
