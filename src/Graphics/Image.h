@@ -43,17 +43,23 @@ namespace rainbow
         /// </remarks>
         static Image decode(const DataMap&, float scale);
 
-        Format format = Format::Unknown;
-        unsigned int width = 0;
-        unsigned int height = 0;
-        unsigned int depth = 0;
-        unsigned int channels = 0;
-        size_t size = 0;
-        const uint8_t* data = nullptr;
+        Format format;
+        uint32_t width;
+        uint32_t height;
+        uint32_t depth;
+        uint32_t channels;
+        size_t size;
+        const uint8_t* data;
 
-        Image() = default;
+        Image() : Image(Format::Unknown) {}
 
-        Image(Image&& image)
+        Image(Format format_)
+            : format(format_), width(0), height(0), depth(0), channels(0),
+              size(0), data(nullptr)
+        {
+        }
+
+        Image(Image&& image) noexcept
             : format(image.format), width(image.width), height(image.height),
               depth(image.depth), channels(image.channels), size(image.size),
               data(image.data)

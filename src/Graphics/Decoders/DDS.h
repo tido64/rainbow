@@ -78,8 +78,7 @@ namespace dds
 
     auto decode(const rainbow::DataMap& data)
     {
-        rainbow::Image image;
-        image.format = rainbow::Image::Format::S3TC;
+        rainbow::Image image{rainbow::Image::Format::S3TC};
 
         auto dds = DDSFile::from_map(data);
         image.width = dds->header.dwWidth;

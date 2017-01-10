@@ -43,8 +43,7 @@ namespace svg
 
     auto decode(const rainbow::DataMap& data, float scale)
     {
-        rainbow::Image image;
-        image.format = rainbow::Image::Format::SVG;
+        rainbow::Image image{rainbow::Image::Format::SVG};
 
         std::unique_ptr<NSVGimage> img;
         {

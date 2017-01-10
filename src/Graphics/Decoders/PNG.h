@@ -21,11 +21,9 @@ namespace png
 
     auto decode(const rainbow::DataMap& data)
     {
-        rainbow::Image image;
-        image.format = rainbow::Image::Format::PNG;
+        rainbow::Image image{rainbow::Image::Format::PNG};
 
-        png_image pi;
-        memset(&pi, 0, sizeof(pi));
+        png_image pi{};
         pi.version = PNG_IMAGE_VERSION;
 
         if (!png_image_begin_read_from_memory(&pi, data.data(), data.size()))

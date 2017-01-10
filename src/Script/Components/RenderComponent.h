@@ -19,25 +19,6 @@ namespace rainbow
         auto second() { return sprite(1); }
         auto third() { return sprite(2); }
 
-        /// <summary>Sets local angle of rotation (in radian).</summary>
-        void set_local_rotation(float r)
-        {
-            for (auto&& sprite : batch())
-                sprite.set_rotation(r);
-        }
-
-        /// <summary>Sets uniform local scaling factor.</summary>
-        /// <param name="f">Scaling factor for both axes.</param>
-        void set_local_scale(float f) { set_local_scale(Vec2f{f, f}); }
-
-        /// <summary>Sets non-uniform local scaling factor.</summary>
-        /// <param name="f">Scaling factors for x- and y-axis.</param>
-        void set_local_scale(const Vec2f& scale)
-        {
-            for (auto&& sprite : batch())
-                sprite.set_scale(scale);
-        }
-
         /// <summary>Sets texture.</summary>
         /// <param name="id">Identifier of the texture to set.</param>
         void set_texture(SharedPtr<TextureAtlas> texture)
@@ -80,7 +61,7 @@ namespace rainbow
             R_ASSERT(
                 i < batch().size(), "Tried to access a sprite out of range.");
 
-            return {&batch(), i};
+            return {batch(), i};
         }
 
     private:

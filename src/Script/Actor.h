@@ -18,28 +18,8 @@ namespace rainbow
 
         auto animation_component() { return animation_component_impl(); }
         bool is_enabled() const { return enabled_; }
-        bool is_mirrored() const { return render_component()->is_mirrored(); }
+        bool is_mirrored() const { return render_component_.is_mirrored(); }
         auto position() const { return position_; }
-
-        /// <summary>Sets local angle of rotation (in radian).</summary>
-        void set_local_rotation(float r)
-        {
-            render_component()->set_local_rotation(r);
-        }
-
-        /// <summary>Sets uniform local scaling factor.</summary>
-        /// <param name="f">Scaling factor for both axes.</param>
-        void set_local_scale(float f)
-        {
-            render_component()->set_local_scale(f);
-        }
-
-        /// <summary>Sets non-uniform local scaling factor.</summary>
-        /// <param name="f">Scaling factors for x- and y-axis.</param>
-        void set_local_scale(const Vec2f& scale)
-        {
-            render_component()->set_local_scale(scale);
-        }
 
         /// <summary>Sets actor position.</summary>
         void set_position(const Vec2f& p) { set_position_impl(p); }
@@ -62,7 +42,7 @@ namespace rainbow
         }
 
         /// <summary>Hides actor if it is currently shown.</summary>
-        void hide() { render_component()->hide(); }
+        void hide() { render_component_.hide(); }
 
         /// <summary>Called on actor creation.</summary>
         void initialize()
@@ -72,13 +52,13 @@ namespace rainbow
         }
 
         /// <summary>Mirrors actor.</summary>
-        void mirror() { render_component()->mirror(); }
+        void mirror() { render_component_.mirror(); }
 
         /// <summary>Moves actor by (x,y).</summary>
         void move(const Vec2f& distance) { move_impl(distance); }
 
         /// <summary>Shows actor if it is currently hidden.</summary>
-        void show() { render_component()->show(); }
+        void show() { render_component_.show(); }
 
         /// <summary>Called every frame update.</summary>
         void update(uint64_t dt)
@@ -130,7 +110,7 @@ namespace rainbow
 
         virtual void set_position_impl(const Vec2f& p)
         {
-            render_component()->move(p - position_);
+            render_component_.move(p - position_);
             position_ = p;
         }
 
@@ -146,7 +126,7 @@ namespace rainbow
 
         virtual void move_impl(const Vec2f& distance)
         {
-            render_component()->move(distance);
+            render_component_.move(distance);
             position_ += distance;
         }
 

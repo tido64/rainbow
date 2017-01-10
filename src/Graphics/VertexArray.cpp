@@ -4,7 +4,6 @@
 
 #include "Graphics/VertexArray.h"
 
-#include "Graphics/OpenGL.h"
 #include "Graphics/Renderer.h"
 
 using rainbow::graphics::VertexArray;

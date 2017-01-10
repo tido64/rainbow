@@ -90,9 +90,9 @@ namespace rainbow
         void jump_to(unsigned int frame);
 
         /// <summary>
-        ///   Releases ownership of animation frames and returns it.
+        ///   Releases ownership of animation frames, and returns it.
         /// </summary>
-        const Frame* release() { return frames_.release(); }
+        auto release() { return frames_.release(); }
 
         /// <summary>Rewinds animation.</summary>
         void rewind() { jump_to(0); }

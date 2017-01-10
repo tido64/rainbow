@@ -48,8 +48,7 @@ namespace pvrtc
 
     auto decode(const rainbow::DataMap& data)
     {
-        rainbow::Image image;
-        image.format = rainbow::Image::Format::PVRTC;
+        rainbow::Image image{rainbow::Image::Format::PVRTC};
 
 #ifdef RAINBOW_OS_IOS
         auto header = PVRTexHeader::from_map(data);
