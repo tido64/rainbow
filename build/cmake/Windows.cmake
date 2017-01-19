@@ -1,7 +1,9 @@
 if(WIN32)
+  set(CFLAG_NO_WARNINGS /W0)
   set(CMAKE_FIND_LIBRARY_SUFFIXES ".a" ".lib" ".dll.a" ".dll")
   list(APPEND RESOURCE_FILES
        .editorconfig
+       build/cmake/Windows.cmake
        build/windows/Rainbow.natvis
        build/windows/Rainbow.rc)
   add_definitions(
@@ -62,7 +64,7 @@ if(WIN32)
     # /MTd: Creates a debug multithreaded executable file using LIBCMTD.lib.
     # /Oi: Generates intrinsic functions.
     # /W0: Disables all compiler warnings.
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /W0")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${CFLAG_NO_WARNINGS}")
     set(CMAKE_C_FLAGS_MINSIZEREL "${CMAKE_C_FLAGS_MINSIZEREL} /Oi /MT")
     set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} /Oi /MT")
     set(CMAKE_C_FLAGS_RELWITHDEBINFO "${CMAKE_C_FLAGS_RELWITHDEBINFO} /MTd")

@@ -18,9 +18,7 @@ endif()
 
 set(ZLIB_LIBRARY z)
 add_library(${ZLIB_LIBRARY} STATIC ${ZLIB_SRC})
-set_property(
-    TARGET ${ZLIB_LIBRARY}
-    APPEND PROPERTY INCLUDE_DIRECTORIES ${ZLIB_INCLUDE_DIR})
+target_include_directories(${ZLIB_LIBRARY} PUBLIC ${ZLIB_INCLUDE_DIR})
 add_dependencies(rainbow ${ZLIB_LIBRARY})
 
 endif()

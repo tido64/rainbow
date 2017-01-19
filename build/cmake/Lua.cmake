@@ -13,7 +13,7 @@ foreach(file ${LUA_CORE_SRC} ${LUA_LIB_SRC})
 endforeach()
 
 add_library(lua STATIC ${LUA_SRC})
-set_property(TARGET lua APPEND PROPERTY INCLUDE_DIRECTORIES ${LUA_INCLUDE_DIR})
+target_include_directories(lua PUBLIC ${LUA_INCLUDE_DIR})
 add_dependencies(rainbow lua)
 
 list(APPEND SOURCE_FILES ${LUA_SRC})

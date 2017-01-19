@@ -251,11 +251,11 @@ if(UNIT_TESTS)
   set(TEST_INCLUDE_DIR ${LOCAL_LIBRARY}/googletest/googletest/include)
   set(TEST_LIBRARY googletest)
   add_library(${TEST_LIBRARY} STATIC lib/googletest/googletest/src/gtest-all.cc)
-  set_property(TARGET ${TEST_LIBRARY} APPEND PROPERTY COMPILE_FLAGS -w)
-  set_property(
-      TARGET ${TEST_LIBRARY}
-      APPEND
-      PROPERTY INCLUDE_DIRECTORIES ${TEST_INCLUDE_DIR} ${LOCAL_LIBRARY}/googletest/googletest)
+  target_compile_options(${TEST_LIBRARY} PRIVATE ${CFLAG_NO_WARNINGS})
+  target_include_directories(
+      ${TEST_LIBRARY}
+      PUBLIC ${TEST_INCLUDE_DIR}
+      PRIVATE ${LOCAL_LIBRARY}/googletest/googletest)
   list(APPEND SOURCE_FILES
        src/Tests/Audio/Mixer.test.cc
        src/Tests/Collision/SAT.test.cc
@@ -389,6 +389,7 @@ endif()
 
 # IDE project source file groups
 if(MSVC OR XCODE)
+  list(APPEND SOURCE_FILES ${RESOURCE_FILES})
   foreach(filename IN LISTS SOURCE_FILES)
     get_filename_component(directory ${filename} DIRECTORY)
     if(NOT directory STREQUAL "")
@@ -425,23 +426,15 @@ include(${LOCAL_MODULE_PATH}/zlib.cmake)
 include(${LOCAL_MODULE_PATH}/libpng.cmake)
 
 # Rainbow
-set_property(
-    TARGET rainbow
-    APPEND PROPERTY INCLUDE_DIRECTORIES
+target_include_directories(
+    rainbow
+    PRIVATE
         ${PROJECT_SOURCE_DIR}/src
         ${LOCAL_LIBRARY}
-        ${BOX2D_INCLUDE_DIR}
-        ${FREETYPE_INCLUDE_DIR}
-        ${LIBPNG_INCLUDE_DIR}
-        ${LUA_INCLUDE_DIR}
         ${LOCAL_LIBRARY}/nanosvg/src
-        ${NANOVG_INCLUDE_DIR}
         ${SDL2_INCLUDE_DIRS}
-        ${SPINE_INCLUDE_DIR}
-        ${ZLIB_INCLUDE_DIR}
         ${AUDIO_INCLUDE_DIRS}
         ${LOCAL_LIBRARY}/variant/include
-        ${TEST_INCLUDE_DIR}
 )
 target_link_libraries(rainbow
     ${TEST_LIBRARY} ${PHYSICS_LIBRARY} ${SPINE_LIBRARY} ${VECTOR_LIBRARY}

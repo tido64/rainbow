@@ -232,7 +232,7 @@ installed.
 - [OpenAL Soft](http://kcat.strangesoft.net/openal.html) (optional with
   `-DUSE_FMOD_STUDIO=1`)
 - [SDL](https://libsdl.org/)
-- [Visual Studio Community](https://www.visualstudio.com/en-us/products/visual-studio-community-vs.aspx)
+- [Visual Studio Community](https://www.visualstudio.com/vs/community/)
   (2015 with Update 3 or later)
 
 The process of downloading and setting up OpenAL Soft and SDL is fully automated

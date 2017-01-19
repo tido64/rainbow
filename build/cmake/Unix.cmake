@@ -1,4 +1,5 @@
 if(MINGW OR UNIX)
+  set(CFLAG_NO_WARNINGS -w)
   if(UNIT_TESTS)
     set(RAINBOW_COMMON_CFLAGS "-frtti -fexceptions --coverage")
   else()
@@ -27,7 +28,7 @@ if(MINGW OR UNIX)
   endif()
 
   # Set CFLAGS and CXXFLAGS
-  set(CMAKE_C_FLAGS   "-pipe ${RAINBOW_CSTD} -w ${RAINBOW_COMMON_CFLAGS}")
+  set(CMAKE_C_FLAGS   "-pipe ${RAINBOW_CSTD} ${CFLAG_NO_WARNINGS} ${RAINBOW_COMMON_CFLAGS}")
   set(CMAKE_CXX_FLAGS "-pipe ${RAINBOW_CXXSTD} ${RAINBOW_CXX_WARNINGS} ${RAINBOW_COMMON_CFLAGS}")
 
   if(APPLE)
