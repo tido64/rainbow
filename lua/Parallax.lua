@@ -18,7 +18,7 @@
 --   - There's a 1:1 mapping between batches and layers even though, logically,
 --     batches can be on the same layer.
 --
--- Copyright (c) 2010-16 Bifrost Entertainment AS and Tommy Nguyen
+-- Copyright (c) 2010-present Bifrost Entertainment AS and Tommy Nguyen
 -- Distributed under the MIT License.
 -- (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 

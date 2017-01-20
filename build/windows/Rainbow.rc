@@ -26,7 +26,7 @@ BEGIN
 			VALUE "FileDescription",   "Rainbow 2D Game Engine"
 			VALUE "FileVersion",       RAINBOW_VERSION_STR
 			VALUE "InternalName",      "Rainbow"
-			VALUE "LegalCopyright",    "Copyright \251 2010-14 Bifrost Entertainment AS"
+			VALUE "LegalCopyright",    "Copyright \251 2010-present Bifrost Entertainment AS"
 			VALUE "OriginalFilename",  "rainbow.exe"
 			VALUE "ProductName",       "Rainbow"
 			VALUE "ProductVersion",    RAINBOW_VERSION_STR

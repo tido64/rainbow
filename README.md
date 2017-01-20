@@ -3,7 +3,7 @@
 Rainbow is a fast, scriptable, cross-platform, 2D game engine written in modern
 C++.
 
-Copyright &copy; 2010-16 Bifrost Entertainment AS and Tommy Nguyen.
+Copyright &copy; 2010-present Bifrost Entertainment AS and Tommy Nguyen.
 
 Distributed under the MIT License (see accompanying file `LICENSE` or copy at
 https://opensource.org/licenses/MIT). Licenses for third-party software can be

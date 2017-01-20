@@ -3,7 +3,7 @@
 -- Adapted from Niklas Frykholm's solution for enforcing local declaration:
 --   http://lua-users.org/wiki/DetectingUndefinedVariables
 --
--- Copyright (c) 2010-16 Bifrost Entertainment AS and Tommy Nguyen
+-- Copyright (c) 2010-present Bifrost Entertainment AS and Tommy Nguyen
 -- Distributed under the MIT License.
 -- (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 

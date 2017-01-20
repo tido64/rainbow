@@ -1,4 +1,4 @@
-// Copyright (c) 2010-16 Bifrost Entertainment AS and Tommy Nguyen
+// Copyright (c) 2010-present Bifrost Entertainment AS and Tommy Nguyen
 
 #ifndef RESOURCES_RAINBOW_SVG_H_
 #define RESOURCES_RAINBOW_SVG_H_
