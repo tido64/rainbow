@@ -51,7 +51,7 @@ void Animation::start()
     stopped_ = false;
     rewind();
     if (callback_)
-        callback_(this, Event::Start);
+        callback_(this, AnimationEvent::Start);
 }
 
 void Animation::stop()
@@ -61,7 +61,7 @@ void Animation::stop()
 
     stopped_ = true;
     if (callback_)
-        callback_(this, Event::End);
+        callback_(this, AnimationEvent::End);
 }
 
 void Animation::update(uint64_t dt)
@@ -98,7 +98,7 @@ void Animation::tick()
         }
         if (idled_ == 0 && callback_)
         {
-            callback_(this, Event::Complete);
+            callback_(this, AnimationEvent::Complete);
             if (is_stopped())
                 return;
         }
@@ -114,7 +114,7 @@ void Animation::tick()
     {
         ++frame_;
         if (callback_)
-            callback_(this, Event::Frame);
+            callback_(this, AnimationEvent::Frame);
     }
     sprite_->set_texture(frames_[frame_]);
 }

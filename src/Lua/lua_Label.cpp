@@ -56,20 +56,9 @@ NS_RAINBOW_LUA_BEGIN
         if (self == nullptr)
             return 0;
 
-        switch (*lua_tostring(L, 2))
-        {
-            case 'c':
-                self->label_.set_alignment(
-                    rainbow::Label::TextAlignment::Center);
-                break;
-            case 'r':
-                self->label_.set_alignment(
-                    rainbow::Label::TextAlignment::Right);
-                break;
-            default:
-                self->label_.set_alignment(rainbow::Label::TextAlignment::Left);
-                break;
-        }
+        const TextAlignment alignment =
+            text_alignment_from_char(*lua_tostring(L, 2));
+        self->label_.set_alignment(alignment);
         return 0;
     }
 

@@ -157,14 +157,14 @@ Sets the sprite to animate.
 
 There are three events that are fired during an animation's lifetime.
 
-* `Animation::Event::Start` fires when a stopped animation is started.
+* `AnimationEvent::Start` fires when a stopped animation is started.
 
-* `Animation::Event::End` fires when an animation is stopped.
+* `AnimationEvent::End` fires when an animation is stopped.
 
-* `Animation::Event::Complete` fires immediately after an animation completes a
+* `AnimationEvent::Complete` fires immediately after an animation completes a
   single cycle, before the delay preceding the next.
 
-* `Animation::Event::Frame` fires for each frame that does not trigger `End` or
+* `AnimationEvent::Frame` fires for each frame that does not trigger `End` or
   `Complete` events.
 
 You can subscribe to these events using:
@@ -173,7 +173,7 @@ You can subscribe to these events using:
 void   Animation::set_callback  (Animation::Callback f);
 
 // Where `Animation::Callback` is a callable whose signature is
-// `void(Animation *animation, Animation::Event event)`, and `animation` is the
+// `void(Animation *animation, AnimationEvent event)`, and `animation` is the
 // animation object that triggered `event`.
 ```
 
@@ -226,20 +226,20 @@ rainbow::texture_t load_texture()
     return texture;
 }
 
-void animation_event_handler(rainbow::Animation*, rainbow::Animation::Event e)
+void animation_event_handler(rainbow::Animation*, rainbow::AnimationEvent e)
 {
     switch (e)
     {
-        case rainbow::Animation::Event::Start:
+        case rainbow::AnimationEvent::Start:
             // Handle animation start here.
             break;
-        case rainbow::Animation::Event::End:
+        case rainbow::AnimationEvent::End:
             // Handle animation end here.
             break;
-        case rainbow::Animation::Event::Complete:
+        case rainbow::AnimationEvent::Complete:
             // Handle animation cycle complete here.
             break;
-        case rainbow::Animation::Event::Frame:
+        case rainbow::AnimationEvent::Frame:
             // Handle animation frame update here.
             break;
     }

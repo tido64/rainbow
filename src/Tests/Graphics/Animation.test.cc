@@ -9,6 +9,7 @@
 #include "Tests/TestHelpers.h"
 
 using rainbow::Animation;
+using rainbow::AnimationEvent;
 using rainbow::SharedPtr;
 using rainbow::SpriteBatch;
 using rainbow::SpriteRef;
@@ -296,20 +297,20 @@ TEST_F(AnimationTest, EventCallbacksAreCalledOnlyOnce)
     int stopped = 0;
     int completed = 0;
     int frame = 0;
-    animation_.set_callback([&](Animation* a, Animation::Event e) {
+    animation_.set_callback([&](Animation* a, AnimationEvent e) {
         ASSERT_EQ(a, &animation_);
         switch (e)
         {
-            case Animation::Event::Start:
+            case AnimationEvent::Start:
                 ++started;
                 break;
-            case Animation::Event::End:
+            case AnimationEvent::End:
                 ++stopped;
                 break;
-            case Animation::Event::Complete:
+            case AnimationEvent::Complete:
                 ++completed;
                 break;
-            case Animation::Event::Frame:
+            case AnimationEvent::Frame:
                 ++frame;
                 break;
             default:
@@ -360,10 +361,10 @@ TEST_F(AnimationTest, EventCallbacksAreCalledOnlyOnce)
 TEST_F(AnimationTest, FiresCompleteEventAfterFrameChange)
 {
     unsigned int completed = 0;
-    animation_.set_callback([&completed](Animation* a, Animation::Event e) {
+    animation_.set_callback([&completed](Animation* a, AnimationEvent e) {
         switch (e)
         {
-            case Animation::Event::Complete:
+            case AnimationEvent::Complete:
                 ASSERT_NE(0u, a->current_frame());
                 if (++completed == 2)
                     a->stop();
@@ -399,10 +400,10 @@ TEST_F(AnimationTest, FiresCompleteEventAfterFrameChange)
 TEST_F(AnimationTest, FiresFrameEventOnFrameChange)
 {
     unsigned int frame = 0;
-    animation_.set_callback([&frame](Animation* a, Animation::Event e) {
+    animation_.set_callback([&frame](Animation* a, AnimationEvent e) {
         switch (e)
         {
-            case Animation::Event::Frame:
+            case AnimationEvent::Frame:
                 ASSERT_EQ(frame, a->current_frame());
                 break;
             default:

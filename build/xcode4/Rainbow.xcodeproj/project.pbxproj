@@ -1840,6 +1840,7 @@
 				);
 				HEADER_SEARCH_PATHS = (
 					../../src,
+					../../include,
 					../../lib,
 					../../lib/box2d/Box2D,
 					../../src/ThirdParty/FreeType,
@@ -1973,6 +1974,7 @@
 				);
 				HEADER_SEARCH_PATHS = (
 					../../src,
+					../../include,
 					../../lib,
 					../../lib/box2d/Box2D,
 					../../src/ThirdParty/FreeType,
@@ -2008,6 +2010,7 @@
 				);
 				HEADER_SEARCH_PATHS = (
 					../../src,
+					../../include,
 					../../lib,
 					../../lib/box2d/Box2D,
 					../../src/ThirdParty/FreeType,

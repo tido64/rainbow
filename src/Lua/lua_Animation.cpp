@@ -124,7 +124,7 @@ NS_RAINBOW_LUA_BEGIN
         lua_settop(L, 2);
         self->listener_.reset(L);
         self->animation_->set_callback(
-            [L, self](rainbow::Animation*, rainbow::Animation::Event e) {
+            [L, self](rainbow::Animation*, AnimationEvent e) {
                 self->listener_.get();
                 if (lua_isnil(L, -1))
                 {
@@ -135,16 +135,16 @@ NS_RAINBOW_LUA_BEGIN
 
                 switch (e)
                 {
-                    case rainbow::Animation::Event::Start:
+                    case AnimationEvent::Start:
                         lua_getfield(L, -1, "on_animation_start");
                         break;
-                    case rainbow::Animation::Event::End:
+                    case AnimationEvent::End:
                         lua_getfield(L, -1, "on_animation_end");
                         break;
-                    case rainbow::Animation::Event::Complete:
+                    case AnimationEvent::Complete:
                         lua_getfield(L, -1, "on_animation_complete");
                         break;
-                    case rainbow::Animation::Event::Frame:
+                    case AnimationEvent::Frame:
                         lua_getfield(L, -1, "on_animation_frame");
                         break;
                 }

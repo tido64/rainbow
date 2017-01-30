@@ -9,6 +9,8 @@
 #include <limits>
 #include <memory>
 
+#include <Rainbow/AnimationEvent.h>
+
 #include "Common/NonCopyable.h"
 #include "Graphics/Sprite.h"
 
@@ -18,15 +20,7 @@ namespace rainbow
     class Animation : private NonCopyable<Animation>
     {
     public:
-        enum class Event
-        {
-            Start,
-            End,
-            Complete,
-            Frame
-        };
-
-        using Callback = std::function<void(Animation*, Event)>;
+        using Callback = std::function<void(Animation*, AnimationEvent)>;
         using Frame = unsigned int;
         using Frames = std::unique_ptr<const Frame[]>;
 

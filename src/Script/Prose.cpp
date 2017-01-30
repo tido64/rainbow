@@ -34,6 +34,7 @@ using rainbow::SharedPtr;
 using rainbow::Sprite;
 using rainbow::SpriteRef;
 using rainbow::SpriteBatch;
+using rainbow::TextAlignment;
 using rainbow::TextureAtlas;
 using rainbow::Vec2f;
 using rainbow::graphics::RenderQueue;

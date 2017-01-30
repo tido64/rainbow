@@ -84,12 +84,8 @@ auto create_label(lua_State* L,
     if (has_key(L, kKeyAlignment))
     {
         auto field = get_field(L, kKeyAlignment);
-        Label::TextAlignment alignment = Label::TextAlignment::Left;
-        const char* set = lua_tostring(L, -1);
-        if (*set == 'c')
-            alignment = Label::TextAlignment::Center;
-        else if (*set == 'r')
-            alignment = Label::TextAlignment::Right;
+        const TextAlignment alignment =
+            rainbow::text_alignment_from_char(*lua_tostring(L, -1));
         label->set_alignment(alignment);
     }
     if (has_key(L, kKeyFont))

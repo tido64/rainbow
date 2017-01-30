@@ -7,6 +7,8 @@
 
 #include <memory>
 
+#include <Rainbow/TextAlignment.h>
+
 #include "Graphics/Buffer.h"
 #include "Graphics/FontAtlas.h"
 #include "Graphics/VertexArray.h"
@@ -17,13 +19,6 @@ namespace rainbow
     class Label : private NonCopyable<Label>
     {
     public:
-        enum class TextAlignment
-        {
-            Left,
-            Right,
-            Center
-        };
-
         static constexpr uint32_t kStaleBuffer      = 1u << 0;
         static constexpr uint32_t kStaleBufferSize  = 1u << 1;
         static constexpr uint32_t kStaleColor       = 1u << 2;

@@ -13,6 +13,7 @@ using rainbow::Color;
 using rainbow::FontAtlas;
 using rainbow::Label;
 using rainbow::SharedPtr;
+using rainbow::TextAlignment;
 using rainbow::Vec2f;
 
 namespace

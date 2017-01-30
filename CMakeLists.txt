@@ -27,6 +27,8 @@ include(${LOCAL_MODULE_PATH}/Unix.cmake)
 include(${LOCAL_MODULE_PATH}/Windows.cmake)
 
 set(SOURCE_FILES
+    include/Rainbow/AnimationEvent.h
+    include/Rainbow/TextAlignment.h
     src/Audio/Mixer.h
     src/Collision/SAT.cpp
     src/Collision/SAT.h
@@ -428,6 +430,8 @@ include(${LOCAL_MODULE_PATH}/libpng.cmake)
 # Rainbow
 target_include_directories(
     rainbow
+    PUBLIC
+        ${PROJECT_SOURCE_DIR}/include
     PRIVATE
         ${PROJECT_SOURCE_DIR}/src
         ${LOCAL_LIBRARY}
