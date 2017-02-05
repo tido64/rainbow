@@ -10,8 +10,6 @@
 #include "Graphics/Drawable.h"
 #include "Input/InputListener.h"
 
-namespace rainbow { struct Rect; }
-
 namespace heimdall
 {
     class Overlay final : public rainbow::IDrawable,

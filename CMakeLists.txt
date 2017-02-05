@@ -284,6 +284,7 @@ if(UNIT_TESTS)
        src/Tests/Input/Pointer.test.cc
        src/Tests/Input/VirtualKey.test.cc
        src/Tests/Lua/LuaHelper.test.cc
+       src/Tests/Math/Geometry.test.cc
        src/Tests/Math/Vec2.test.cc
        src/Tests/Math/Vec3.test.cc
        src/Tests/Memory/Pool.test.cc
