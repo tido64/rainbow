@@ -118,6 +118,7 @@ NS_RAINBOW_LUA_BEGIN
             default:
                 break;
         }
+
         LOGE("Lua %s error: %s", desc, lua_tostring(L, -1));
         lua_pop(L, 1);
         dump_stack(L);
@@ -197,21 +198,6 @@ NS_RAINBOW_LUA_BEGIN
         return load(L, chunk, name, true);
     }
 
-    void replacetable(lua_State* L, int n)
-    {
-        if (!lua_istable(L, n))
-            return;
-
-        lua_pushliteral(L, "__userdata");
-        lua_rawget(L, n);
-        if (!isuserdata(L, -1))
-        {
-            lua_pop(L, 1);
-            return;
-        }
-        lua_replace(L, n);
-    }
-
     void sethook(lua_State* L, int mask)
     {
         if (g_level >= 0)
@@ -256,5 +242,20 @@ NS_RAINBOW_LUA_BEGIN
 
         NOT_USED(name);
         NOT_USED(kLuaErrorType);
+    }
+
+    void unwrapuserdata(lua_State* L, int n)
+    {
+        if (!lua_istable(L, n))
+            return;
+
+        lua_pushliteral(L, "__userdata");
+        lua_rawget(L, n);
+        if (!isuserdata(L, -1))
+        {
+            lua_pop(L, 1);
+            return;
+        }
+        lua_replace(L, n);
     }
 } NS_RAINBOW_LUA_END

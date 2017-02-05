@@ -150,7 +150,7 @@ NS_B2_LUA_BEGIN
 
         b2Body* body = self->get();
         auto state = static_cast<BodyState*>(body->GetUserData());
-        rainbow::lua::replacetable(L, 2);
+        rainbow::lua::unwrapuserdata(L, 2);
         state->sprite = rainbow::lua::touserdata<Sprite>(L, 2)->get();
         auto& pos = body->GetPosition();
         state->sprite->set_position(Vec2f(pos.x, pos.y));

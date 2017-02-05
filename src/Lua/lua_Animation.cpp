@@ -57,7 +57,7 @@ NS_RAINBOW_LUA_BEGIN
         checkargs<nil_or<Sprite>, void*, lua_Number, nil_or<lua_Number>>(L);
 
         SpriteRef sprite;
-        replacetable(L, 1);
+        unwrapuserdata(L, 1);
         if (isuserdata(L, 1))
             sprite = touserdata<Sprite>(L, 1)->get();
         animation_ = std::make_unique<rainbow::Animation>(

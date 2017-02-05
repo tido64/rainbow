@@ -301,12 +301,6 @@ NS_RAINBOW_LUA_BEGIN
     /// <returns>Number of successfully reloaded chunks.</returns>
     auto reload(lua_State* L, const Data& chunk, const char* name) -> int;
 
-    /// <summary>
-    ///   Replaces the table at index <paramref name="n"/> with its userdata if
-    ///   one exists.
-    /// </summary>
-    void replacetable(lua_State* L, int n);
-
     /// <summary>Sets debugging hook.</summary>
     void sethook(lua_State* L,
                  int mask = LUA_MASKCALL | LUA_MASKRET | LUA_MASKLINE);
@@ -366,6 +360,11 @@ NS_RAINBOW_LUA_BEGIN
     {
         return static_cast<T*>(luaL_testudata(L, index, T::class_name));
     }
+
+    /// <summary>
+    ///   Unwraps the userdata at index <paramref name="n"/> if possible.
+    /// </summary>
+    void unwrapuserdata(lua_State* L, int n);
 } NS_RAINBOW_LUA_END
 
 #endif

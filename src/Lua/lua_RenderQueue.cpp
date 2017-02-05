@@ -176,7 +176,7 @@ namespace rainbow { namespace lua
                               int index) -> int
     {
         auto iter = render_queue_->end();
-        replacetable(L, index);
+        unwrapuserdata(L, index);
         if (auto animation = tryuserdata<Animation>(L, index))
         {
             iter = render_queue_->emplace(pos, *animation->get());
