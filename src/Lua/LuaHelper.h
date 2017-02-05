@@ -137,7 +137,7 @@ NS_RAINBOW_LUA_BEGIN
     /// </summary>
     inline auto isboolean(lua_State* L, int index)
     {
-        return lua_isboolean(L, index) != 0;
+        return lua_isboolean(L, index);
     }
 
     /// <summary>
@@ -165,7 +165,7 @@ NS_RAINBOW_LUA_BEGIN
     /// </summary>
     inline auto istable(lua_State* L, int index)
     {
-        return lua_istable(L, index) != 0;
+        return lua_istable(L, index);
     }
 
     /// <summary>

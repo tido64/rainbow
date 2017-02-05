@@ -56,19 +56,9 @@ namespace spine { namespace lua
 
 namespace
 {
-    bool is_boolean(lua_State* L, int n)
+    bool iswrappeduserdata(lua_State* L, int n)
     {
-        return lua_type(L, n) == LUA_TBOOLEAN;
-    }
-
-    bool is_table(lua_State* L, int n)
-    {
-        return lua_type(L, n) == LUA_TTABLE;
-    }
-
-    bool is_userdata(lua_State* L, int n)
-    {
-        return rainbow::lua::isuserdata(L, n) || is_table(L, n);
+        return rainbow::lua::isuserdata(L, n) || rainbow::lua::istable(L, n);
     }
 
     int type_error(lua_State* L, int n, const char* type)
@@ -100,13 +90,13 @@ namespace rainbow { namespace lua { namespace detail
     template <>
     void checktype<nil_or<bool>>(lua_State* L, int n)
     {
-        optional(L, n, is_boolean, "nil or boolean");
+        optional(L, n, isboolean, "nil or boolean");
     }
 
     template <>
     void checktype<bool>(lua_State* L, int n)
     {
-        require(L, n, is_boolean, "boolean");
+        require(L, n, isboolean, "boolean");
     }
 
     /* char* */
@@ -128,13 +118,13 @@ namespace rainbow { namespace lua { namespace detail
     template <>
     void checktype<nil_or<void*>>(lua_State* L, int n)
     {
-        optional(L, n, is_table, "table");
+        optional(L, n, istable, "table");
     }
 
     template <>
     void checktype<void*>(lua_State* L, int n)
     {
-        require(L, n, is_table, "table");
+        require(L, n, istable, "table");
     }
 
     /* IDrawable */
@@ -142,7 +132,7 @@ namespace rainbow { namespace lua { namespace detail
     template <>
     void checktype<IDrawable>(lua_State* L, int n)
     {
-        require(L, n, is_userdata, "drawable");
+        require(L, n, iswrappeduserdata, "drawable");
     }
 
     /* rainbow::audio */
@@ -150,13 +140,13 @@ namespace rainbow { namespace lua { namespace detail
     template <>
     void checktype<audio::Channel>(lua_State* L, int n)
     {
-        require(L, n, is_table, "channel");
+        require(L, n, istable, "channel");
     }
 
     template <>
     void checktype<audio::Sound>(lua_State* L, int n)
     {
-        require(L, n, is_table, "sound");
+        require(L, n, istable, "sound");
     }
 
     /* lua_Number */
@@ -164,13 +154,13 @@ namespace rainbow { namespace lua { namespace detail
     template <>
     void checktype<nil_or<lua_Number>>(lua_State* L, int n)
     {
-        optional(L, n, lua_isnumber, "nil or number");
+        optional(L, n, isnumber, "nil or number");
     }
 
     template <>
     void checktype<lua_Number>(lua_State* L, int n)
     {
-        require(L, n, lua_isnumber, "number");
+        require(L, n, isnumber, "number");
     }
 
     /* rainbow::lua::Animation */
@@ -178,7 +168,7 @@ namespace rainbow { namespace lua { namespace detail
     template <>
     void checktype<Animation>(lua_State* L, int n)
     {
-        require(L, n, is_userdata, "animation");
+        require(L, n, iswrappeduserdata, "animation");
     }
 
     /* rainbow::lua::Font */
@@ -186,7 +176,7 @@ namespace rainbow { namespace lua { namespace detail
     template <>
     void checktype<Font>(lua_State* L, int n)
     {
-        require(L, n, is_userdata, "font");
+        require(L, n, iswrappeduserdata, "font");
     }
 
     /* rainbow::lua::Label */
@@ -194,7 +184,7 @@ namespace rainbow { namespace lua { namespace detail
     template <>
     void checktype<Label>(lua_State* L, int n)
     {
-        require(L, n, is_userdata, "label");
+        require(L, n, iswrappeduserdata, "label");
     }
 
     /* rainbow::lua::RenderQueue */
@@ -202,7 +192,7 @@ namespace rainbow { namespace lua { namespace detail
     template <>
     void checktype<RenderQueue>(lua_State* L, int n)
     {
-        require(L, n, is_userdata, "renderqueue");
+        require(L, n, iswrappeduserdata, "renderqueue");
     }
 
     /* rainbow::lua::Shader */
@@ -221,13 +211,13 @@ namespace rainbow { namespace lua { namespace detail
     template <>
     void checktype<nil_or<Sprite>>(lua_State* L, int n)
     {
-        optional(L, n, is_userdata, "nil or sprite");
+        optional(L, n, iswrappeduserdata, "nil or sprite");
     }
 
     template <>
     void checktype<Sprite>(lua_State* L, int n)
     {
-        require(L, n, is_userdata, "sprite");
+        require(L, n, iswrappeduserdata, "sprite");
     }
 
     /* rainbow::lua::SpriteBatch */
@@ -235,7 +225,7 @@ namespace rainbow { namespace lua { namespace detail
     template <>
     void checktype<SpriteBatch>(lua_State* L, int n)
     {
-        require(L, n, is_userdata, "sprite batch");
+        require(L, n, iswrappeduserdata, "sprite batch");
     }
 
     /* rainbow::lua::Texture */
@@ -243,7 +233,7 @@ namespace rainbow { namespace lua { namespace detail
     template <>
     void checktype<Texture>(lua_State* L, int n)
     {
-        require(L, n, is_userdata, "texture");
+        require(L, n, iswrappeduserdata, "texture");
     }
 
     /* rainbow::lua::shaders::Diffuse */
@@ -251,7 +241,7 @@ namespace rainbow { namespace lua { namespace detail
     template <>
     void checktype<shaders::Diffuse>(lua_State* L, int n)
     {
-        require(L, n, is_userdata, "shaders.diffuse");
+        require(L, n, iswrappeduserdata, "shaders.diffuse");
     }
 
     /* Box2D */
