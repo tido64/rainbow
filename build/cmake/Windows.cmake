@@ -48,7 +48,6 @@ if(WIN32)
       -DNOWH=1               # SetWindowsHook and WH_*
       -DNOWINABLE=1
       -DNOWINDOWSTATION=1
-      -DNOWINMESSAGES=1      # WM_*, EM_*, LB_*, CB_*
       -DNOWINOFFSETS=1       # GWL_*, GCL_*, associated routines
       -DNOWINSTYLES=1        # WS_*, CS_*, ES_*, LBS_*, SBS_*, CBS_*
       -DVC_EXTRALEAN=1

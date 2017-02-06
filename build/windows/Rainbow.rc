@@ -1,5 +1,6 @@
 #include <winver.h>
 
+#define IDI_ICON1            101
 #define RAINBOW_VERSION      1,0,0,0
 #define RAINBOW_VERSION_STR  "1.0.0.0"
 
@@ -16,11 +17,11 @@ FILEFLAGSMASK   VS_FFI_FILEFLAGSMASK
 FILEFLAGS       RAINBOW_DEBUG
 FILEOS          VOS_NT_WINDOWS32
 FILETYPE        VFT_APP
-FILESUBTYPE     0
+FILESUBTYPE     VFT2_UNKNOWN
 BEGIN
 	BLOCK "StringFileInfo"
 	BEGIN
-		BLOCK "040904b0"
+		BLOCK "00000000"
 		BEGIN
 			VALUE "CompanyName",       "Bifrost Entertainment AS"
 			VALUE "FileDescription",   "Rainbow 2D Game Engine"
@@ -37,3 +38,4 @@ BEGIN
 		VALUE "Translation", 0x409, 1252
 	END
 END
+//IDI_ICON1 ICON "app.ico"
