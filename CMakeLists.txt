@@ -223,6 +223,8 @@ else()
        src/Platform/SDL/Context.h
        src/Platform/SDL/RainbowController.cpp
        src/Platform/SDL/RainbowController.h
+       src/Platform/SDL/Utilities.cpp
+       src/Platform/SDL/Utilities.h
        src/Platform/SDL/main.cpp)
   if(WIN32)
     list(APPEND SOURCE_FILES

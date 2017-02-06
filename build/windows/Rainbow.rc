@@ -38,4 +38,4 @@ BEGIN
 		VALUE "Translation", 0x409, 1252
 	END
 END
-//IDI_ICON1 ICON "app.ico"
+IDI_ICON1 ICON "app.ico"

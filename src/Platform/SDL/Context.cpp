@@ -8,6 +8,7 @@
 
 #include "Common/Logging.h"
 #include "Config.h"
+#include "Platform/SDL/Utilities.h"
 
 using rainbow::Config;
 using rainbow::SDLContext;
@@ -64,6 +65,8 @@ SDLContext::SDLContext(const Config& config)
         R_ABORT("SDL: Failed to create window: %s", SDL_GetError());
         return;
     }
+
+    set_window_icon(window_);
 
     context_ = SDL_GL_CreateContext(window_);
     if (context_ == nullptr)
