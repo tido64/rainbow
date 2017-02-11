@@ -1,5 +1,5 @@
 // This file was auto-generated with 'tools/shaders-gen.py'.
-// Copyright (c) 2016 Bifrost Entertainment AS and Tommy Nguyen.
+// Copyright (c) 2017 Bifrost Entertainment AS and Tommy Nguyen.
 // Distributed under the MIT License.
 
 const char kDiffuseLight2Df[] =

@@ -79,7 +79,7 @@ namespace rainbow
         void set_shaking(uint32_t magnitude, uint32_t start, uint32_t length);
 
         /// <summary>Sets text to display.</summary>
-        void set_text(const char*);
+        void set_text(czstring);
 
         /// <summary>Starts an animation.</summary>
         /// <param name="animation">The animation to start.</param>

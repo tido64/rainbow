@@ -29,6 +29,6 @@
     rainbow::lua::rawset<lua_Number>(L, k, strllen(k), (v))
 
 #define luaR_rawsetstring(L, k, v) \
-    rainbow::lua::rawset<const char*>(L, k, strllen(k), (v))
+    rainbow::lua::rawset<czstring>(L, k, strllen(k), (v))
 
 #endif  // LUA_LUAMACROS_H_

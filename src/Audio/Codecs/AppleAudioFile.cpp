@@ -10,6 +10,7 @@
 #include "FileSystem/FileSystem.h"
 
 using rainbow::audio::AppleAudioFile;
+using rainbow::czstring;
 
 namespace
 {
@@ -26,7 +27,7 @@ namespace
     }
 }
 
-AppleAudioFile::AppleAudioFile(const char* file) : ref_(nullptr)
+AppleAudioFile::AppleAudioFile(czstring file) : ref_(nullptr)
 {
     const auto path = filesystem::relative(file);
 #ifdef RAINBOW_OS_MACOS

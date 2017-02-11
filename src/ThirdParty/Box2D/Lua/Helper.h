@@ -31,14 +31,14 @@ namespace b2
 {
     b2Vec2 Vec2(lua_State* L, int m, int n);
 
-    void getfield(lua_State* L, const char* field, size_t length);
+    void getfield(lua_State* L, rainbow::czstring field, size_t length);
 
     template <typename T>
-    T gettable(lua_State* L, const char* field, size_t length);
+    T gettable(lua_State* L, rainbow::czstring field, size_t length);
 
-    void rawsetnil(lua_State* L, const char* field, size_t length);
+    void rawsetnil(lua_State* L, rainbow::czstring field, size_t length);
 
-    int rawsetvec2(lua_State* L, const char* field, size_t length);
+    int rawsetvec2(lua_State* L, rainbow::czstring field, size_t length);
 }
 
 #endif

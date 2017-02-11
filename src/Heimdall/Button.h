@@ -32,7 +32,7 @@ namespace heimdall
             label_.set_position(position);
         }
 
-        void set_text(const char* text) { label_.set_text(text); }
+        void set_text(czstring text) { label_.set_text(text); }
 
         bool hit_test(const Vec2i& point) const
         {

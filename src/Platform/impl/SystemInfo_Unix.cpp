@@ -4,9 +4,10 @@
 
 #include "Platform/SystemInfo.h"
 
-#include <cstring>
 #include <locale.h>
 #include <unistd.h>
+
+#include "Common/String.h"
 
 namespace rainbow { namespace system_info
 {
@@ -17,28 +18,28 @@ namespace rainbow { namespace system_info
 
     auto locales() -> std::vector<std::string>
     {
-        const char* lc = setlocale(LC_ALL, nullptr);
-        if (!lc)
+        czstring lc = setlocale(LC_ALL, nullptr);
+        if (lc == nullptr)
         {
             lc = setlocale(LC_MESSAGES, nullptr);
         }
         else
         {
             constexpr char kLCMessages[] = "LC_MESSAGES";
-            const char* lc_msg = strstr(lc, kLCMessages);
-            if (lc_msg)
+            czstring lc_msg = strstr(lc, kLCMessages);
+            if (lc_msg != nullptr)
                 lc = lc_msg + sizeof(kLCMessages);
         }
 
         std::vector<std::string> locales;
-        if (!lc || (lc[0] == 'C' && lc[1] == '\0'))
+        if (lc == nullptr || (lc[0] == 'C' && lc[1] == '\0'))
         {
             locales.emplace_back("en");
         }
         else
         {
-            const char* first = lc;
-            for (const char* c = first; *c != '\0'; ++c)
+            czstring first = lc;
+            for (czstring c = first; *c != '\0'; ++c)
             {
                 if (*c == ';')
                 {

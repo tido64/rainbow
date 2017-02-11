@@ -12,6 +12,7 @@
 
 using rainbow::File;
 using rainbow::audio::OggVorbisAudioFile;
+using rainbow::czstring;
 
 namespace
 {
@@ -19,7 +20,7 @@ namespace
 
     void ov_log_error(int err)
     {
-        const char* error = "Undocumented error.";
+        czstring error = "Undocumented error.";
         switch (err)
         {
             case OV_EREAD:
@@ -52,10 +53,10 @@ namespace
     }
 }
 
-bool OggVorbisAudioFile::signature_matches(const std::array<char, 8>& id)
+bool OggVorbisAudioFile::signature_matches(const std::array<uint8_t, 8>& id)
 {
-    const size_t size = array_size(kIdOggVorbis);
-    return id.size() >= size && strncmp(id.data(), kIdOggVorbis, size) == 0;
+    constexpr size_t size = array_size(kIdOggVorbis) - 1;
+    return id.size() >= size && memcmp(id.data(), kIdOggVorbis, size) == 0;
 }
 
 OggVorbisAudioFile::OggVorbisAudioFile(File f)

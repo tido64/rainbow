@@ -29,13 +29,13 @@ namespace rainbow { namespace graphics
     };
 
     auto draw_count() -> unsigned int;
-    auto gl_version() -> const char*;
+    auto gl_version() -> czstring;
     auto max_texture_size() -> int;
     auto memory_info() -> MemoryInfo;
     auto projection() -> const Rect&;
-    auto renderer() -> const char*;
+    auto renderer() -> czstring;
     auto resolution() -> const Vec2i&;
-    auto vendor() -> const char*;
+    auto vendor() -> czstring;
     auto window_size() -> const Vec2i&;
 
     void set_projection(const Rect&);
@@ -75,7 +75,7 @@ namespace rainbow { namespace graphics
 #endif
     }
 
-    bool has_extension(const char* extension);
+    bool has_extension(czstring extension);
 
     void reset();
 

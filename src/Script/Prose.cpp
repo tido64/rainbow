@@ -37,6 +37,7 @@ using rainbow::SpriteBatch;
 using rainbow::TextAlignment;
 using rainbow::TextureAtlas;
 using rainbow::Vec2f;
+using rainbow::czstring;
 using rainbow::graphics::RenderQueue;
 
 namespace
@@ -86,7 +87,7 @@ Prose::Prose(size_t size) : allocator_(size), stack_(allocator_)
 }
 
 template <typename T, Prose::AssetType Type>
-auto Prose::get_asset(const std::string& name, const char* type_name) -> T*
+auto Prose::get_asset(const std::string& name, czstring type_name) -> T*
 {
     auto asset = assets_.find(name);
     if (asset == assets_.end() || asset->second.type != Type)
@@ -183,13 +184,13 @@ namespace
     public:
         ScopedField(lua_State* L, int n) : state_(L) { lua_rawgeti(L, -1, n); }
 
-        ScopedField(lua_State* L, const char* s) : state_(L)
+        ScopedField(lua_State* L, czstring s) : state_(L)
         {
             lua_pushstring(L, s);
             lua_rawget(L, -2);
         }
 
-        ScopedField(lua_State* L, const char* s, size_t len) : state_(L)
+        ScopedField(lua_State* L, czstring s, size_t len) : state_(L)
         {
             lua_pushlstring(L, s, len);
             lua_rawget(L, -2);
@@ -217,7 +218,7 @@ namespace
         return !lua_isnil(L, -1);
     }
 
-    auto table_length(lua_State *L, const char* name)
+    auto table_length(lua_State *L, czstring name)
     {
         ScopedField table{L, name};
         R_ASSERT(lua_istable(L, -1), "Table expected");
@@ -232,7 +233,7 @@ namespace
         return length;
     }
 
-    auto table_name(lua_State* L) -> const char*
+    auto table_name(lua_State* L) -> czstring
     {
         if (has_key(L, kKeyName))
         {
@@ -243,8 +244,7 @@ namespace
         switch (lua_type(L, -2))
         {
             case LUA_TNUMBER: {
-                const char* name =
-                    lua_pushfstring(L, "#%d", lua_tointeger(L, -2));
+                czstring name = lua_pushfstring(L, "#%d", lua_tointeger(L, -2));
                 lua_pop(L, 1);
                 return name;
             }
@@ -258,7 +258,7 @@ namespace
     }
 
     template <typename F, typename... Args>
-    void parse_table(lua_State* L, const char* name, F&& parse, Args&&... args)
+    void parse_table(lua_State* L, czstring name, F&& parse, Args&&... args)
     {
         ScopedField table{L, name};
         R_ASSERT(lua_istable(L, -1), "Table expected");
@@ -320,7 +320,7 @@ namespace
     }
 }
 
-auto Prose::from_lua(const char* path) -> Prose*
+auto Prose::from_lua(czstring path) -> Prose*
 {
     const Data script{File::open(rainbow::filesystem::relative(path))};
     if (!script)

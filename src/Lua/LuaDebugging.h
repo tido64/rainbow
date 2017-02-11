@@ -16,16 +16,16 @@ NS_RAINBOW_LUA_BEGIN
 {
     namespace
     {
-        const int kLuaMaxStack = 256;
+        constexpr int kLuaMaxStack = 256;
 
-        const char* const kLuaHookNames[]{
+        czstring const kLuaHookNames[]{
             "call", "return", "line", "count", "tail call"};
 
         struct Line
         {
             int currentline;
             int nparams;
-            const char* source;
+            czstring source;
         };
 
         char g_command = 0;
@@ -71,7 +71,7 @@ NS_RAINBOW_LUA_BEGIN
     void dump_locals(lua_State* L, lua_Debug* ar)
     {
         int i = 0;
-        const char* local = lua_getlocal(L, ar, ++i);
+        czstring local = lua_getlocal(L, ar, ++i);
         while (local)
         {
             if (*local == '(')
@@ -159,7 +159,7 @@ NS_RAINBOW_LUA_BEGIN
                         else
                         {
                             int i = 0;
-                            const char* local = lua_getlocal(L, ar, ++i);
+                            czstring local = lua_getlocal(L, ar, ++i);
                             while (local && *local != '(')
                                 local = lua_getlocal(L, ar, ++i);
                             g_callstack[g_level].nparams = i - 1;
@@ -210,7 +210,7 @@ NS_RAINBOW_LUA_BEGIN
             {
                 for (int i = 1; i <= nparams; ++i)
                 {
-                    const char* local = lua_getlocal(L, ar, i);
+                    czstring local = lua_getlocal(L, ar, i);
                     if (lua_type(L, -1) == LUA_TFUNCTION)
                     {
                         lua_pop(L, 1);

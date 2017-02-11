@@ -16,7 +16,7 @@
 
 namespace
 {
-    const char* const kShapeTypes[]{
+    rainbow::czstring const kShapeTypes[]{
         b2::lua::CircleShape::class_name,
         b2::lua::EdgeShape::class_name,
         b2::lua::PolygonShape::class_name,

@@ -11,6 +11,7 @@
 #include "FileSystem/File.h"
 #include "FileSystem/FileSystem.h"
 
+using rainbow::czstring;
 using rainbow::filesystem::Path;
 
 namespace
@@ -42,7 +43,7 @@ namespace
     class ScopedCurrentDirectory
     {
     public:
-        explicit ScopedCurrentDirectory(const char* path)
+        explicit ScopedCurrentDirectory(czstring path)
         {
             working_dir_ = rainbow::filesystem::current_path();
             rainbow::filesystem::set_current_path(path);
@@ -77,7 +78,7 @@ namespace
         Path path_;
         ScopedCurrentDirectory working_directory_;
 
-        ScopedConfig(const char* config, size_t length)
+        ScopedConfig(czstring config, size_t length)
             : path_(rainbow::filesystem::relative(kConfigTestPath)),
               working_directory_(kConfigTestPath)
         {

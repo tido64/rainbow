@@ -12,6 +12,7 @@
 
 using rainbow::Data;
 using rainbow::File;
+using rainbow::czstring;
 using rainbow::lua::WeakRef;
 
 namespace
@@ -23,7 +24,7 @@ namespace
     constexpr char kLuaErrorSyntax[] = "syntax";
     constexpr char kLuaErrorType[] = "Object is not of type '%s'";
 
-    auto load_module(lua_State* L, const char* module, const char* suffix)
+    auto load_module(lua_State* L, czstring module, czstring suffix)
         -> int
     {
         const auto filename = std::string{module} + suffix;
@@ -100,7 +101,7 @@ NS_RAINBOW_LUA_BEGIN
     {
         R_ASSERT(result != LUA_OK, "No error to report");
 
-        const char* desc = kLuaErrorGeneral;
+        czstring desc = kLuaErrorGeneral;
         switch (result)
         {
             case LUA_ERRRUN:
@@ -126,12 +127,12 @@ NS_RAINBOW_LUA_BEGIN
 
     auto load(lua_State* L) -> int
     {
-        const char* module = lua_tostring(L, -1);
+        czstring module = lua_tostring(L, -1);
         const int result = load_module(L, module, ".lua");
         return result == 0 ? load_module(L, module, "/init.lua") : result;
     }
 
-    auto load(lua_State* L, const Data& chunk, const char* name, bool exec)
+    auto load(lua_State* L, const Data& chunk, czstring name, bool exec)
         -> int
     {
         int e = luaL_loadbuffer(L, chunk, chunk.size(), name);
@@ -152,7 +153,7 @@ NS_RAINBOW_LUA_BEGIN
     }
 
     template <>
-    void push<const char*>(lua_State* L, const char* value)
+    void push<czstring>(lua_State* L, czstring value)
     {
         lua_pushstring(L, value);
     }
@@ -175,7 +176,7 @@ NS_RAINBOW_LUA_BEGIN
         lua_pushnumber(L, value);
     }
 
-    void pushpointer(lua_State* L, void* ptr, const char* name)
+    void pushpointer(lua_State* L, void* ptr, czstring name)
     {
         lua_createtable(L, 1, 1);
         lua_pushlightuserdata(L, ptr);
@@ -183,7 +184,7 @@ NS_RAINBOW_LUA_BEGIN
         luaR_rawsetstring(L, "__type", name);
     }
 
-    auto reload(lua_State* L, const Data& chunk, const char* name) -> int
+    auto reload(lua_State* L, const Data& chunk, czstring name) -> int
     {
         lua_getglobal(L, "package");
         lua_pushliteral(L, "loaded");
@@ -218,14 +219,14 @@ NS_RAINBOW_LUA_BEGIN
         lua_sethook(L, lua_Hook, mask, 0);
     }
 
-    auto topointer(lua_State* L, const char* name) -> void*
+    auto topointer(lua_State* L, czstring name) -> void*
     {
         LUA_ASSERT(L, !lua_isnil(L, -1), "Unexpected nil value");
         LUA_ASSERT(L, lua_istable(L, -1), kLuaErrorType, name);
 
         lua_pushliteral(L, "__type");
         lua_rawget(L, -2);
-        const char* type = lua_tostring(L, -1);
+        czstring type = lua_tostring(L, -1);
         if (type == nullptr)
         {
             LUA_ASSERT(L, type, kLuaErrorType, name);

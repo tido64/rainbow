@@ -110,7 +110,7 @@ NS_RAINBOW_LUA_BEGIN
               int nargs,
               int nresults,
               int errfunc,
-              const char* err,
+              czstring err,
               Args&&... args) -> int
     {
         const int result = lua_pcall(L, nargs, nresults, errfunc);
@@ -193,7 +193,7 @@ NS_RAINBOW_LUA_BEGIN
     /// <returns>Number of successfully loaded chunks.</returns>
     auto load(lua_State* L,
               const Data& chunk,
-              const char* name,
+              czstring name,
               bool exec = true) -> int;
 
     /// <summary>Creates a new Lua state.</summary>
@@ -240,7 +240,7 @@ NS_RAINBOW_LUA_BEGIN
     /// <param name="L">Lua state.</param>
     /// <param name="ptr">The pointer to push on the stack.</param>
     /// <param name="name">Name of the pointer type.</param>
-    void pushpointer(lua_State* L, void* ptr, const char* name);
+    void pushpointer(lua_State* L, void* ptr, czstring name);
 
     /// <summary>
     ///   Does the equivalent of <c>t[field] = value</c>, where <c>t</c> is the
@@ -251,7 +251,7 @@ NS_RAINBOW_LUA_BEGIN
     /// <param name="length">Length of <paramref name="field"/>.</param>
     /// <param name="value">The value to assign.</param>
     template <typename T>
-    void rawset(lua_State* L, const char* field, size_t length, T value)
+    void rawset(lua_State* L, czstring field, size_t length, T value)
     {
         lua_pushlstring(L, field, length);
         push<T>(L, value);
@@ -299,7 +299,7 @@ NS_RAINBOW_LUA_BEGIN
     ///   Name of the chunk. Used for debug information.
     /// </param>
     /// <returns>Number of successfully reloaded chunks.</returns>
-    auto reload(lua_State* L, const Data& chunk, const char* name) -> int;
+    auto reload(lua_State* L, const Data& chunk, czstring name) -> int;
 
     /// <summary>Sets debugging hook.</summary>
     void sethook(lua_State* L,
@@ -353,7 +353,7 @@ NS_RAINBOW_LUA_BEGIN
     /// <returns>
     ///   The pointer on the top of the stack if valid, else <c>nullptr</c>.
     /// </returns>
-    auto topointer(lua_State* L, const char* name) -> void*;
+    auto topointer(lua_State* L, czstring name) -> void*;
 
     template <typename T>
     auto tryuserdata(lua_State* L, int index)

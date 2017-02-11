@@ -11,13 +11,14 @@
 
 using rainbow::Data;
 using rainbow::File;
+using rainbow::czstring;
 
-auto Data::load_asset(const char* asset) -> Data
+auto Data::load_asset(czstring asset) -> Data
 {
     return Data(File::open_asset(asset));
 }
 
-auto Data::load_document(const char* document) -> Data
+auto Data::load_document(czstring document) -> Data
 {
     return Data(File::open_document(document));
 }
@@ -48,7 +49,7 @@ Data::~Data()
     operator delete(data_);
 }
 
-bool Data::save(const char* path) const
+bool Data::save(czstring path) const
 {
     R_ASSERT(data_, "No data to save");
     R_ASSERT(sz_ > 0, "Data is set but size is 0");
@@ -67,10 +68,10 @@ void Data::allocate(size_t size)
         operator delete(data_);
         allocated_ = size + 1;
         data_ = operator new(allocated_);
-        static_cast<char*>(data_)[size] = 0;
+        static_cast<uint8_t*>(data_)[size] = 0;
     }
     else  // Pad with zeros.
     {
-        memset(static_cast<char*>(data_) + size, 0, allocated_ - size);
+        memset(static_cast<uint8_t*>(data_) + size, 0, allocated_ - size);
     }
 }

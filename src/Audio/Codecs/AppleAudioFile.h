@@ -14,7 +14,7 @@ namespace rainbow { namespace audio
     class AppleAudioFile final : public IAudioFile
     {
     public:
-        AppleAudioFile(const char* file);
+        AppleAudioFile(czstring file);
         ~AppleAudioFile() override;
 
         // IAudioFile overrides.

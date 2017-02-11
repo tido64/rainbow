@@ -19,6 +19,7 @@ using heimdall::Gatekeeper;
 using rainbow::Data;
 using rainbow::File;
 using rainbow::Vec2i;
+using rainbow::czstring;
 
 namespace
 {
@@ -56,7 +57,7 @@ void Gatekeeper::init(const Vec2i& screen)
         return;
 
 #if USE_LUA_SCRIPT
-    monitor_.set_callback([this](const char* path) {
+    monitor_.set_callback([this](czstring path) {
         auto p = rainbow::filesystem::absolute(path);
         std::string filename = p.filename();
         if (filename.length() < 5 || !rainbow::ends_with(filename, ".lua"))

@@ -10,6 +10,7 @@
 
 #include "Common/Constraints.h"
 #include "Common/NonCopyable.h"
+#include "Common/String.h"
 #include "Platform/Macros.h"
 
 namespace rainbow
@@ -51,8 +52,8 @@ namespace rainbow
             return Data{literal, N - 1, Ownership::Reference};
         }
 
-        static auto load_asset(const char* asset) -> Data;
-        static auto load_document(const char* document) -> Data;
+        static auto load_asset(czstring asset) -> Data;
+        static auto load_document(czstring document) -> Data;
 
         /// <summary>
         ///   Constructs an empty data object. No memory will be allocated.
@@ -94,7 +95,7 @@ namespace rainbow
 
         /// <summary>Saves data to file.</summary>
         /// <returns><c>true</c> on success, <c>false</c> otherwise.</returns>
-        bool save(const char* path) const;
+        bool save(czstring path) const;
 
         /// <summary>Returns the size of this buffer.</summary>
         auto size() const { return sz_; }

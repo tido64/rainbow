@@ -27,12 +27,12 @@ NS_RAINBOW_LUA_MODULE_BEGIN(input)
         int event_count = -1;
         int events = -1;
 
-        const char* const kInputEvents[]{"key_down",
-                                         "key_up",
-                                         "pointer_began",
-                                         "pointer_canceled",
-                                         "pointer_ended",
-                                         "pointer_moved"};
+        czstring const kInputEvents[]{"key_down",
+                                      "key_up",
+                                      "pointer_began",
+                                      "pointer_canceled",
+                                      "pointer_ended",
+                                      "pointer_moved"};
 
         int is_key_down(lua_State* L)
         {

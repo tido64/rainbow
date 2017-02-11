@@ -208,7 +208,7 @@ auto create_node(lua_State* L,
             return asset;
     }
 
-    const char* name = table_name(L);
+    czstring name = table_name(L);
     if (asset.type != Prose::AssetType::Node)
     {
         render_queue[asset.id].set_tag(name);

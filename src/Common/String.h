@@ -11,7 +11,11 @@
 
 namespace rainbow
 {
-    using zstring = const char*;
+    template <typename CharT>
+    using basic_zstring = CharT*;
+
+    using czstring = basic_zstring<const char>;
+    using zstring = basic_zstring<char>;
 
     enum class StringComparison
     {
@@ -20,7 +24,7 @@ namespace rainbow
     };
 
     template <size_t N>
-    bool ends_with(zstring str, size_t str_length, const char (&suffix)[N])
+    bool ends_with(czstring str, size_t str_length, const char (&suffix)[N])
     {
         constexpr size_t length = N - 1;
         return str_length >= length &&
@@ -28,13 +32,13 @@ namespace rainbow
     }
 
     template <size_t N>
-    bool ends_with(zstring str, const char (&suffix)[N])
+    bool ends_with(czstring str, const char (&suffix)[N])
     {
         return ends_with(str, strlen(str), suffix);
     }
 
     template <size_t N>
-    bool ends_with(zstring str,
+    bool ends_with(czstring str,
                    const char (&suffix)[N],
                    StringComparison comparison)
     {
@@ -46,7 +50,7 @@ namespace rainbow
         if (suffix_length > str_length)
             return false;
 
-        zstring s = str + str_length - suffix_length;
+        czstring s = str + str_length - suffix_length;
         for (size_t i = 0; i < suffix_length; ++i, ++s)
         {
             if (tolower(*s) != tolower(suffix[i]))

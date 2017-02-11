@@ -34,7 +34,7 @@ namespace rainbow
         }
 
         LinearAllocator(size_t size)
-            : block_(std::make_unique<char[]>(size)), end_(block_.get())
+            : block_(std::make_unique<uint8_t[]>(size)), end_(block_.get())
 #ifndef NDEBUG
             , size_(size)
 #endif
@@ -60,11 +60,11 @@ namespace rainbow
             ref->retain();
         }
 
-        void rewind(void* ptr) { end_ = static_cast<char*>(ptr); }
+        void rewind(void* ptr) { end_ = static_cast<uint8_t*>(ptr); }
 
     private:
-        std::unique_ptr<char[]> block_;
-        char* end_;
+        std::unique_ptr<uint8_t[]> block_;
+        uint8_t* end_;
 #ifndef NDEBUG
         const size_t size_;
 #endif
@@ -135,7 +135,7 @@ namespace rainbow
 
         auto address_of(BlockHeader* b) -> void*
         {
-            return reinterpret_cast<char*>(b) +
+            return reinterpret_cast<uint8_t*>(b) +
                    LinearAllocator::aligned_size(sizeof(*b));
         }
 

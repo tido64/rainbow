@@ -17,6 +17,7 @@
 #endif
 
 using rainbow::Data;
+using rainbow::czstring;
 using rainbow::graphics::ShaderManager;
 
 namespace
@@ -67,19 +68,19 @@ namespace
                     return ShaderManager::kInvalidProgram;
                 }
                 // Local variable required for Android compiler (NDK r10e).
-                const char* source = shader.fallback;
+                czstring source = shader.fallback;
                 glShaderSource(id, 1, &source, nullptr);
             }
             else
             {
-                const char* source = glsl;
+                czstring source = glsl;
                 glShaderSource(id, 1, &source, nullptr);
             }
         }
         else
         {
             // Local variable required for Android compiler (NDK r10e).
-            const char* source = shader.fallback;
+            czstring source = shader.fallback;
             glShaderSource(id, 1, &source, nullptr);
         }
         glCompileShader(id);

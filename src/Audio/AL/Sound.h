@@ -17,7 +17,7 @@ namespace rainbow { namespace audio
         int loop_count = 0;
         unsigned int buffer = 0;
         std::unique_ptr<IAudioFile> file;
-        const char* key = nullptr;
+        czstring key = nullptr;
     };
 }}  // namespace rainbow::audio
 

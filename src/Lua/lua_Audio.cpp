@@ -11,6 +11,7 @@
 using rainbow::Vec2f;
 using rainbow::audio::Channel;
 using rainbow::audio::Sound;
+using rainbow::czstring;
 
 namespace
 {
@@ -150,7 +151,7 @@ namespace
 
         lua_pushliteral(L, "__type");
         lua_rawget(L, 1);
-        const char* type = lua_tostring(L, -1);
+        czstring type = lua_tostring(L, -1);
 
         if (strcmp(type, kSoundType) == 0)
         {

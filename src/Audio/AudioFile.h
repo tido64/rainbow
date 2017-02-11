@@ -14,7 +14,7 @@ namespace rainbow { namespace audio
     class IAudioFile : public IFile
     {
     public:
-        static std::unique_ptr<IAudioFile> open(const char* path);
+        static std::unique_ptr<IAudioFile> open(czstring path);
 
         virtual auto channels() const -> int = 0;
         virtual auto rate() const -> int = 0;

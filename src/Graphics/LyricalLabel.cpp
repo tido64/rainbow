@@ -11,6 +11,7 @@ using rainbow::Color;
 using rainbow::LyricalLabel;
 using rainbow::Vec2i;
 using rainbow::Vec2u;
+using rainbow::czstring;
 
 namespace
 {
@@ -70,7 +71,7 @@ void LyricalLabel::set_color(Color c, uint32_t start, uint32_t length)
     set_needs_update(kStaleAttribute);
 }
 
-void LyricalLabel::set_text(const char* text)
+void LyricalLabel::set_text(czstring text)
 {
     clear_animations();
     Label::set_text(text);

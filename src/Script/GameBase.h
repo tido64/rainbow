@@ -35,7 +35,7 @@ namespace rainbow
         return font;
     }
 
-    inline auto label(const char* string = nullptr)
+    inline auto label(czstring string = nullptr)
     {
         auto label = std::make_shared<Label>();
         if (string != nullptr)
@@ -61,7 +61,7 @@ namespace rainbow
 
     namespace prose
     {
-        inline auto from_lua(const char* path)
+        inline auto from_lua(czstring path)
         {
             return std::shared_ptr<Prose>(Prose::from_lua(path));
         }
@@ -82,7 +82,7 @@ namespace rainbow
         }
 
         void terminate() { director_.terminate(); }
-        void terminate(const char* error) { director_.terminate(error); }
+        void terminate(czstring error) { director_.terminate(error); }
 
         void init(const Vec2i& screen_size) { init_impl(screen_size); }
         void update(uint64_t dt) { update_impl(dt); }

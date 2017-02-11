@@ -13,6 +13,7 @@
 using rainbow::DataMap;
 using rainbow::Image;
 using rainbow::TextureAtlas;
+using rainbow::czstring;
 using rainbow::filesystem::Path;
 using rainbow::graphics::Texture;
 using rainbow::graphics::TextureManager;
@@ -28,7 +29,7 @@ TextureAtlas::TextureAtlas(const Path& path, float scale)
         });
 }
 
-TextureAtlas::TextureAtlas(const char* id, const DataMap& data, float scale)
+TextureAtlas::TextureAtlas(czstring id, const DataMap& data, float scale)
 {
     texture_ = TextureManager::Get()->create(
         id,

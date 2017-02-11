@@ -7,6 +7,7 @@
 #define FONTATLAS_EXTENDED 6
 //#define FONTATLAS_KERNING
 
+#include "Common/String.h"
 #include "Graphics/FontGlyph.h"
 #include "Graphics/Texture.h"
 #include "Memory/SharedPtr.h"
@@ -45,8 +46,8 @@ namespace rainbow
     class FontAtlas : public RefCounted
     {
     public:
-        FontAtlas(const char* path, float pt);
-        FontAtlas(const char* name, const Data& font, float pt);
+        FontAtlas(czstring path, float pt);
+        FontAtlas(czstring name, const Data& font, float pt);
 
         /// <summary>Returns the line height.</summary>
         auto height() const { return height_; }

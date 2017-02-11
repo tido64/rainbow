@@ -9,6 +9,7 @@
 #include <cstdio>
 
 #include "Common/NonCopyable.h"
+#include "Common/String.h"
 #include "Common/Variant.h"
 
 struct AAsset;
@@ -60,9 +61,9 @@ namespace rainbow
     {
     public:
         static auto open(const filesystem::Path& path) -> File;
-        static auto open_asset(const char* path) -> File;
-        static auto open_document(const char* path) -> File;
-        static auto open_write(const char* path) -> File;
+        static auto open_asset(czstring path) -> File;
+        static auto open_document(czstring path) -> File;
+        static auto open_write(czstring path) -> File;
 
         File(File&& file) noexcept : handle_(std::move(file.handle_))
         {
@@ -116,7 +117,7 @@ namespace rainbow
         variant<std::nullptr_t, AAsset*, FILE*> handle_;
 
         explicit File(const filesystem::Path& path);
-        File(const filesystem::Path& path, const char* mode);
+        File(const filesystem::Path& path, czstring mode);
     };
 }
 

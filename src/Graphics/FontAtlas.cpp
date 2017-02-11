@@ -24,6 +24,7 @@ using rainbow::Data;
 using rainbow::FontAtlas;
 using rainbow::FontGlyph;
 using rainbow::Vec2u;
+using rainbow::czstring;
 using rainbow::graphics::Texture;
 using rainbow::graphics::TextureManager;
 
@@ -146,10 +147,10 @@ namespace
     };
 }
 
-FontAtlas::FontAtlas(const char* path, float pt)
+FontAtlas::FontAtlas(czstring path, float pt)
     : FontAtlas(path, Data::load_asset(path), pt) {}
 
-FontAtlas::FontAtlas(const char* name, const Data& font, float pt)
+FontAtlas::FontAtlas(czstring name, const Data& font, float pt)
     : pt_(pt), height_(0)
 {
     texture_ = TextureManager::Get()->create(

@@ -10,6 +10,7 @@
 #include <vector>
 
 #include "Common/DataMap.h"
+#include "Common/String.h"
 #include "Graphics/Texture.h"
 #include "Memory/Array.h"
 #include "Memory/SharedPtr.h"
@@ -52,10 +53,10 @@ namespace rainbow
             add_regions(std::forward<Args>(regions)...);
         }
 
-        TextureAtlas(const char* id, const DataMap& data, float scale = 1.0f);
+        TextureAtlas(czstring id, const DataMap& data, float scale = 1.0f);
 
         template <typename... Args>
-        TextureAtlas(const char* id,
+        TextureAtlas(czstring id,
                      const DataMap& data,
                      float scale,
                      Args&&... regions)

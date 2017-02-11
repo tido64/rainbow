@@ -25,7 +25,7 @@ namespace rainbow { namespace audio
     class OggVorbisAudioFile final : public IAudioFile
     {
     public:
-        static bool signature_matches(const std::array<char, 8>& signature);
+        static bool signature_matches(const std::array<uint8_t, 8>& signature);
 
         OggVorbisAudioFile(File);
         ~OggVorbisAudioFile() override;

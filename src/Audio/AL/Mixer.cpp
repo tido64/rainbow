@@ -27,6 +27,7 @@
 using rainbow::audio::ALMixer;
 using rainbow::audio::Channel;
 using rainbow::audio::Sound;
+using rainbow::czstring;
 
 namespace
 {
@@ -205,7 +206,7 @@ void ALMixer::suspend(bool should_suspend)
     }
 }
 
-auto ALMixer::create_sound(const char* path) -> Sound*
+auto ALMixer::create_sound(czstring path) -> Sound*
 {
     auto i = sounds_.find(path);
     if (i == sounds_.end())
@@ -259,7 +260,7 @@ ALMixer::~ALMixer()
     alcDestroyContext(context_);
 }
 
-auto rainbow::audio::load_sound(const char* path) -> Sound*
+auto rainbow::audio::load_sound(czstring path) -> Sound*
 {
     auto sound = al_mixer->create_sound(path);
     if (sound == nullptr || sound->buffer > 0)
@@ -289,7 +290,7 @@ auto rainbow::audio::load_sound(const char* path) -> Sound*
     return sound;
 }
 
-auto rainbow::audio::load_stream(const char* path) -> Sound*
+auto rainbow::audio::load_stream(czstring path) -> Sound*
 {
     auto sound = al_mixer->create_sound(path);
     if (sound == nullptr || sound->file != nullptr)

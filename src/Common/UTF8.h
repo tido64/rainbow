@@ -7,6 +7,8 @@
 
 #include <cstdint>
 
+#include "Common/String.h"
+
 namespace rainbow
 {
     constexpr uint8_t kUTF8Accept = 0;
@@ -20,7 +22,7 @@ namespace rainbow
     ///   code point in <paramref name="str"/>.
     /// </summary>
     template <typename F>
-    void for_each_utf8(const char* str, F&& f)
+    void for_each_utf8(czstring str, F&& f)
     {
         uint32_t code_point;
         uint8_t state = kUTF8Accept;

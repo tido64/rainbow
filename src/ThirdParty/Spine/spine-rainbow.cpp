@@ -19,6 +19,7 @@ using rainbow::DataMap;
 using rainbow::SpriteVertex;
 using rainbow::TextureAtlas;
 using rainbow::Vec2f;
+using rainbow::czstring;
 
 namespace
 {
@@ -225,11 +226,11 @@ extern "C"
     }
 }  // extern "C"
 
-auto Skeleton::from_json(const char* path, float scale) -> Skeleton*
+auto Skeleton::from_json(czstring path, float scale) -> Skeleton*
 {
     // Copy the path and replace ".json" with ".atlas"
     const size_t length = strlen(path);
-    const char* ext = path + length - 5;
+    czstring ext = path + length - 5;
     if (*ext != '.')
     {
         ext = strrchr(path, '.');
@@ -291,7 +292,7 @@ void Skeleton::set_position(const Vec2f& p)
 }
 
 void Skeleton::add_animation(int track,
-                             const char* animation,
+                             czstring animation,
                              bool loop,
                              float delay)
 {
@@ -314,36 +315,36 @@ void Skeleton::clear_tracks()
     spAnimationState_clearTracks(state_);
 }
 
-auto Skeleton::get_current_animation(int track) -> const char*
+auto Skeleton::get_current_animation(int track) -> czstring
 {
     spTrackEntry* entry = spAnimationState_getCurrent(state_, track);
     return entry == nullptr ? nullptr : entry->animation->name;
 }
 
-auto Skeleton::get_skin() -> const char*
+auto Skeleton::get_skin() -> czstring
 {
     return skeleton_->skin->name;
 }
 
-void Skeleton::set_animation(int track, const char* animation, bool loop)
+void Skeleton::set_animation(int track, czstring animation, bool loop)
 {
     spAnimationState_setAnimationByName(
         state_, track, animation, static_cast<int>(loop));
 }
 
-void Skeleton::set_animation_mix(const char* from,
-                                 const char* to,
+void Skeleton::set_animation_mix(czstring from,
+                                 czstring to,
                                  float duration)
 {
     spAnimationStateData_setMixByName(animation_data_, from, to, duration);
 }
 
-void Skeleton::set_attachment(const char* slot, const char* attachment)
+void Skeleton::set_attachment(czstring slot, czstring attachment)
 {
     spSkeleton_setAttachment(skeleton_, slot, attachment);
 }
 
-void Skeleton::set_skin(const char* skin)
+void Skeleton::set_skin(czstring skin)
 {
     spSkeleton_setSkinByName(skeleton_, skin);
     spSkeleton_setToSetupPose(skeleton_);
@@ -537,7 +538,7 @@ namespace spine { namespace lua
         if (self == nullptr)
             return 0;
 
-        const char* name =
+        czstring name =
             self->skeleton_->get_current_animation(lua_tointeger(L, 2));
         if (name == nullptr)
             return 0;

@@ -7,9 +7,10 @@
 #include "Common/Logging.h"
 
 using heimdall::ChangeMonitor;
+using rainbow::czstring;
 
-ChangeMonitor::ChangeMonitor(const char* directory)
-    : monitoring_(false), callback_([](const char*) {})
+ChangeMonitor::ChangeMonitor(czstring directory)
+    : monitoring_(false), callback_([](czstring) {})
 {
     hDirectory_ =
         CreateFileA(directory,
@@ -40,7 +41,7 @@ ChangeMonitor::ChangeMonitor(const char* directory)
             if (dwBytesReturned == 0)
                 continue;
 
-            const char* lpBuffer = reinterpret_cast<char*>(buffer.get());
+            const uint8_t* lpBuffer = reinterpret_cast<uint8_t*>(buffer.get());
             const FILE_NOTIFY_INFORMATION* lpInfo = nullptr;
             do
             {

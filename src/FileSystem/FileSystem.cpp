@@ -38,12 +38,12 @@ namespace
     std::string g_current_path;
 }
 
-auto rainbow::filesystem::absolute(const char* path) -> Path
+auto rainbow::filesystem::absolute(czstring path) -> Path
 {
     return Path{path};
 }
 
-bool rainbow::filesystem::create_directories(const char* path,
+bool rainbow::filesystem::create_directories(czstring path,
                                              std::error_code& error)
 {
 #if USE_STD_FILESYSTEM
@@ -87,7 +87,7 @@ bool rainbow::filesystem::create_directories(const char* path,
 #endif
 }
 
-auto rainbow::filesystem::current_path(const char* path) -> const char*
+auto rainbow::filesystem::current_path(czstring path) -> czstring
 {
     if (g_current_path.empty())
     {
@@ -110,16 +110,16 @@ auto rainbow::filesystem::current_path(const char* path) -> const char*
     return g_current_path.c_str();
 }
 
-auto rainbow::filesystem::executable_path(const char* argv0) -> const char*
+auto rainbow::filesystem::executable_path(czstring executable) -> czstring
 {
     static std::string exec_path;
     if (exec_path.empty())
     {
 #if USE_STD_FILESYSTEM
-        exec_path = stdfs::absolute(argv0).u8string();
+        exec_path = stdfs::absolute(executable).u8string();
 #else
         char path[PATH_MAX]{};
-        realpath(argv0, path);
+        realpath(executable, path);
         exec_path = path;
 #endif
     }
@@ -127,7 +127,7 @@ auto rainbow::filesystem::executable_path(const char* argv0) -> const char*
     return exec_path.c_str();
 }
 
-bool rainbow::filesystem::is_directory(const char* path, std::error_code& error)
+bool rainbow::filesystem::is_directory(czstring path, std::error_code& error)
 {
 #if USE_STD_FILESYSTEM
     return stdfs::is_directory(path, error);
@@ -138,7 +138,7 @@ bool rainbow::filesystem::is_directory(const char* path, std::error_code& error)
 #endif
 }
 
-bool rainbow::filesystem::is_regular_file(const char* path,
+bool rainbow::filesystem::is_regular_file(czstring path,
                                           std::error_code& error)
 {
 #if USE_STD_FILESYSTEM
@@ -150,7 +150,7 @@ bool rainbow::filesystem::is_regular_file(const char* path,
 #endif
 }
 
-auto rainbow::filesystem::relative(const char* p) -> Path
+auto rainbow::filesystem::relative(czstring p) -> Path
 {
 #if defined(RAINBOW_OS_ANDROID)
     Path path;
@@ -179,7 +179,7 @@ auto rainbow::filesystem::relative(const char* p) -> Path
 #endif
 }
 
-bool rainbow::filesystem::remove(const char* path, std::error_code& error)
+bool rainbow::filesystem::remove(czstring path, std::error_code& error)
 {
 #if USE_STD_FILESYSTEM
     return stdfs::remove(path, error);
@@ -189,7 +189,7 @@ bool rainbow::filesystem::remove(const char* path, std::error_code& error)
 #endif
 }
 
-auto rainbow::filesystem::user(const char* p) -> Path
+auto rainbow::filesystem::user(czstring p) -> Path
 {
 #ifdef RAINBOW_OS_IOS
     NSError* err = nil;
@@ -225,13 +225,13 @@ auto rainbow::filesystem::user(const char* p) -> Path
 #endif  // RAINBOW_OS_IOS
 }
 
-auto rainbow::filesystem::user_data_path() -> const char*
+auto rainbow::filesystem::user_data_path() -> czstring
 {
     static std::string data_path;
     if (data_path.empty())
     {
 #ifdef RAINBOW_OS_ANDROID
-        const char* path = g_native_activity->externalDataPath;
+        czstring path = g_native_activity->externalDataPath;
         if (path == nullptr)
             path = g_native_activity->internalDataPath;
         if (path != nullptr)
@@ -245,7 +245,7 @@ auto rainbow::filesystem::user_data_path() -> const char*
 }
 
 #ifdef RAINBOW_TEST
-void rainbow::filesystem::set_current_path(const char* path)
+void rainbow::filesystem::set_current_path(czstring path)
 {
     g_current_path = path;
 }

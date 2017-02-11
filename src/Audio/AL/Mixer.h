@@ -28,7 +28,7 @@ namespace rainbow { namespace audio
         void process();
         void suspend(bool should_suspend);
 
-        auto create_sound(const char* path) -> Sound*;
+        auto create_sound(czstring path) -> Sound*;
         auto get_channel() -> Channel*;
         void release(Sound* sound);
 

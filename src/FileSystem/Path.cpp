@@ -7,6 +7,7 @@
 #include "Common/Logging.h"
 #include "FileSystem/FileSystem.h"
 
+using rainbow::czstring;
 using rainbow::filesystem::Path;
 
 namespace
@@ -18,13 +19,13 @@ namespace
 #endif
 }
 
-auto Path::extension() const -> const char*
+auto Path::extension() const -> czstring
 {
     auto p = path_.rfind('.');
     return p == std::string::npos ? "" : c_str() + p;
 }
 
-auto Path::filename() const -> const char*
+auto Path::filename() const -> czstring
 {
     auto p = path_.find_last_of(R"(/\)");
     return p == std::string::npos ? c_str() : c_str() + p + 1;
@@ -59,7 +60,7 @@ auto Path::nsurl() const -> NSURL*
 }
 #endif
 
-auto Path::operator/=(const char* p) -> Path&
+auto Path::operator/=(czstring p) -> Path&
 {
     if (path_.back() != kPathSeparator)
         path_ += kPathSeparator;

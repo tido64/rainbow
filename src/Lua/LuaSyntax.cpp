@@ -54,6 +54,8 @@ namespace spine { namespace lua
     class Skeleton;
 }}
 
+using rainbow::czstring;
+
 namespace
 {
     bool iswrappeduserdata(lua_State* L, int n)
@@ -61,22 +63,22 @@ namespace
         return rainbow::lua::isuserdata(L, n) || rainbow::lua::istable(L, n);
     }
 
-    int type_error(lua_State* L, int n, const char* type)
+    int type_error(lua_State* L, int n, czstring type)
     {
-        const char* msg = lua_pushfstring(
+        czstring msg = lua_pushfstring(
             L, "%s expected, got %s", type, luaL_typename(L, n));
         return luaL_argerror(L, n, msg);
     }
 
     template <typename F>
-    void optional(lua_State* L, int n, F&& is_type, const char* type)
+    void optional(lua_State* L, int n, F&& is_type, czstring type)
     {
         if (!lua_isnoneornil(L, n) && !is_type(L, n))
             type_error(L, n, type);
     }
 
     template <typename F>
-    void require(lua_State* L, int n, F&& is_type, const char* type)
+    void require(lua_State* L, int n, F&& is_type, czstring type)
     {
         if (!is_type(L, n))
             type_error(L, n, type);

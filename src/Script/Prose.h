@@ -37,7 +37,7 @@ namespace rainbow
 
         using AssetMap = std::unordered_map<std::string, Asset>;
 
-        static auto from_lua(const char* path) -> Prose*;
+        static auto from_lua(czstring path) -> Prose*;
 
         Prose(size_t size);
 
@@ -58,7 +58,7 @@ namespace rainbow
         graphics::RenderQueue render_queue_;
 
         template <typename T, AssetType Type>
-        auto get_asset(const std::string& name, const char* error) -> T*;
+        auto get_asset(const std::string& name, czstring error) -> T*;
 
         void draw_impl() override
         {

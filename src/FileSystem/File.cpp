@@ -18,6 +18,7 @@ extern ANativeActivity* g_native_activity;
 #endif
 
 using rainbow::File;
+using rainbow::czstring;
 using rainbow::filesystem::Path;
 using rainbow::filesystem::ops::CloseFile;
 using rainbow::filesystem::ops::FileSize;
@@ -31,17 +32,17 @@ auto File::open(const Path& path) -> File
     return File{path};
 }
 
-auto File::open_asset(const char* path) -> File
+auto File::open_asset(czstring path) -> File
 {
     return File{filesystem::relative(path)};
 }
 
-auto File::open_document(const char* path) -> File
+auto File::open_document(czstring path) -> File
 {
     return {filesystem::user(path), "r+b"};
 }
 
-auto File::open_write(const char* path) -> File
+auto File::open_write(czstring path) -> File
 {
     return {filesystem::user(path), "wb"};
 }
@@ -104,7 +105,7 @@ File::File(const Path& path)
     }
 }
 
-File::File(const Path& path, const char* mode)
+File::File(const Path& path, czstring mode)
     : handle_(fopen(path.c_str(), mode))
 {
 }

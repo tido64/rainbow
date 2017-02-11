@@ -11,6 +11,7 @@
 #include "Common/NonCopyable.h"
 
 using heimdall::ChangeMonitor;
+using rainbow::czstring;
 
 namespace
 {
@@ -37,8 +38,8 @@ namespace
     }
 }
 
-ChangeMonitor::ChangeMonitor(const char* directory)
-    : stream_(nullptr), callback_([](const char*) {})
+ChangeMonitor::ChangeMonitor(czstring directory)
+    : stream_(nullptr), callback_([](czstring) {})
 {
     memset(&context_, 0, sizeof(context_));
     context_.info = this;

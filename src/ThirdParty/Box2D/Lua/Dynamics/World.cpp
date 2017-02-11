@@ -26,7 +26,7 @@ namespace b2
 
     void on_contact(lua_State* L,
                     int listener,
-                    const char* event,
+                    rainbow::czstring event,
                     b2Contact* contact)
     {
         lua_rawgeti(L, LUA_REGISTRYINDEX, listener);

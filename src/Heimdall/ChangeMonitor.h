@@ -16,6 +16,7 @@
 #endif
 
 #include "Common/NonCopyable.h"
+#include "Common/String.h"
 
 struct lua_State;
 
@@ -24,7 +25,7 @@ namespace heimdall
     class ChangeMonitor : private rainbow::NonCopyable<ChangeMonitor>
     {
     public:
-        explicit ChangeMonitor(const char* directory);
+        explicit ChangeMonitor(rainbow::czstring directory);
         ~ChangeMonitor();
 
         template <typename F>
@@ -33,7 +34,7 @@ namespace heimdall
             callback_ = std::move(callback);
         }
 
-        void on_modified(const char* path) { callback_(path); }
+        void on_modified(rainbow::czstring path) { callback_(path); }
 
     private:
 #if defined(RAINBOW_OS_MACOS)
@@ -44,7 +45,7 @@ namespace heimdall
         HANDLE hDirectory_;
         std::future<void> worker_;
 #endif
-        std::function<void(const char*)> callback_;
+        std::function<void(rainbow::czstring)> callback_;
     };
 }
 

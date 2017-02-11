@@ -10,6 +10,7 @@
 #include <spine/AnimationState.h>
 #include <spine/AnimationStateData.h>
 
+#include "Common/String.h"
 #include "Graphics/Buffer.h"
 #include "Graphics/Drawable.h"
 #include "Graphics/VertexArray.h"
@@ -29,7 +30,8 @@ struct spAtlas;
 class Skeleton
 {
 public:
-    static auto from_json(const char* path, float scale = 1.0f) -> Skeleton*;
+    static auto from_json(rainbow::czstring path, float scale = 1.0f)
+        -> Skeleton*;
 
     Skeleton(spSkeletonData* data, spAtlas* atlas);
     ~Skeleton();
@@ -63,7 +65,7 @@ public:
     ///   is used plus the negative delay.
     /// </summary>
     void add_animation(int track,
-                       const char* animation,
+                       rainbow::czstring animation,
                        bool loop,
                        float delay);
 
@@ -84,24 +86,26 @@ public:
     /// <summary>
     ///   Returns the name of the current animation on specified track.
     /// </summary>
-    auto get_current_animation(int track) -> const char*;
+    auto get_current_animation(int track) -> rainbow::czstring;
 
     /// <summary>Returns the name of the current skin.</summary>
-    auto get_skin() -> const char*;
+    auto get_skin() -> rainbow::czstring;
 
     /// <summary>
     ///   Sets the current animation. Any queued animations are cleared.
     /// </summary>
-    void set_animation(int track, const char* animation, bool loop);
+    void set_animation(int track, rainbow::czstring animation, bool loop);
 
     /// <summary>Sets crossfading duration for a pair of animations.</summary>
-    void set_animation_mix(const char* from, const char* to, float duration);
+    void set_animation_mix(rainbow::czstring from,
+                           rainbow::czstring to,
+                           float duration);
 
     /// <summary>
     ///   Sets the attachment for the slot and attachment name. The skeleton
     ///   looks first in its skin, then in the skeleton data's default skin.
     /// </summary>
-    void set_attachment(const char* slot, const char* attachment);
+    void set_attachment(rainbow::czstring slot, rainbow::czstring attachment);
 
     /// <summary>
     ///   Sets the skin used to look up attachments not found in the
@@ -110,7 +114,7 @@ public:
     ///   was attached.
     /// </summary>
     /// <param name="skin">May be <c>nullptr</c>.</param>
-    void set_skin(const char* skin);
+    void set_skin(rainbow::czstring skin);
 
     void draw();
     void update(uint64_t dt);

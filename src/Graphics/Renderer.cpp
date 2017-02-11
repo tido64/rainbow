@@ -5,13 +5,13 @@
 #include "Graphics/Renderer.h"
 
 #include <array>
-#include <cstring>
 
 #include "Graphics/Label.h"
 #include "Graphics/SpriteBatch.h"
 
 using rainbow::Rect;
 using rainbow::Vec2i;
+using rainbow::czstring;
 using rainbow::graphics::State;
 
 namespace graphics = rainbow::graphics;
@@ -23,7 +23,7 @@ namespace
 
     auto gl_get_string(GLenum name)
     {
-        return reinterpret_cast<const char*>(glGetString(name));
+        return reinterpret_cast<czstring>(glGetString(name));
     }
 }
 
@@ -39,7 +39,7 @@ auto graphics::draw_count() -> unsigned int
     return g_draw_count;
 }
 
-auto graphics::gl_version() -> const char*
+auto graphics::gl_version() -> czstring
 {
     return gl_get_string(GL_VERSION);
 }
@@ -90,7 +90,7 @@ auto graphics::projection() -> const Rect&
     return g_state->rect;
 }
 
-auto graphics::renderer() -> const char*
+auto graphics::renderer() -> czstring
 {
     return gl_get_string(GL_RENDERER);
 }
@@ -100,7 +100,7 @@ auto graphics::resolution() -> const Vec2i&
     return g_state->view;
 }
 
-auto graphics::vendor() -> const char*
+auto graphics::vendor() -> czstring
 {
     return gl_get_string(GL_VENDOR);
 }
@@ -200,7 +200,7 @@ auto graphics::convert_to_view(const Vec2i& p) -> Vec2i
                      g_state->origin.y / g_state->zoom);
 }
 
-bool graphics::has_extension(const char* extension)
+bool graphics::has_extension(czstring extension)
 {
     static auto gl_extensions = gl_get_string(GL_EXTENSIONS);
     return strstr(gl_extensions, extension) != nullptr;

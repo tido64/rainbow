@@ -25,6 +25,7 @@
 using rainbow::audio::Channel;
 using rainbow::audio::FMODMixer;
 using rainbow::audio::Sound;
+using rainbow::czstring;
 
 namespace
 {
@@ -39,12 +40,12 @@ namespace
     }
 
     template <typename F>
-    auto create_sound(F&& create, const char* path) -> FMOD::Sound*
+    auto create_sound(F&& create, czstring path) -> FMOD::Sound*
     {
 #ifdef RAINBOW_OS_ANDROID
         std::string uri("file:///android_asset/");
         uri += path;
-        const char* asset = uri.c_str();
+        auto asset = uri.c_str();
 #else
         const auto p = rainbow::filesystem::relative(path);
         std::error_code error;
@@ -54,7 +55,8 @@ namespace
             UNREACHABLE();
             return nullptr;
         }
-        const char* asset = p.c_str();
+
+        auto asset = p.c_str();
 #endif
 
         FMOD::Sound* sound;
@@ -144,7 +146,7 @@ FMODMixer::~FMODMixer()
     fmod_studio = nullptr;
 }
 
-auto rainbow::audio::load_sound(const char* path) -> Sound*
+auto rainbow::audio::load_sound(czstring path) -> Sound*
 {
     ASSUME(fmod_system != nullptr);
 
@@ -160,7 +162,7 @@ auto rainbow::audio::load_sound(const char* path) -> Sound*
     return to_opaque(sound);
 }
 
-auto rainbow::audio::load_stream(const char* path) -> Sound*
+auto rainbow::audio::load_stream(czstring path) -> Sound*
 {
     ASSUME(fmod_system != nullptr);
 

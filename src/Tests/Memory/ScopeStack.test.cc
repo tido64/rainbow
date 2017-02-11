@@ -53,11 +53,11 @@ TEST(LinearAllocatorTest, AllocatesEnoughSpace)
     constexpr ptrdiff_t data_size = sizeof(sizeof(char[100]));
 
     LinearAllocator allocator(1024);
-    const char* begin = static_cast<const char*>(allocator.end());
+    const uint8_t* begin = static_cast<const uint8_t*>(allocator.end());
 
     ASSERT_EQ(begin, allocator.allocate(data_size));
 
-    const char* end = static_cast<const char*>(allocator.end());
+    const uint8_t* end = static_cast<const uint8_t*>(allocator.end());
 
     ASSERT_GE(end - begin, data_size);
 
@@ -72,7 +72,7 @@ TEST(ScopeStackTest, ResetsStack)
     const uint32_t kSecond = 0xdeadbeef;
 
     LinearAllocator allocator(1024);
-    const char* allocator_begin = static_cast<const char*>(allocator.end());
+    const uint8_t* allocator_begin = static_cast<const uint8_t*>(allocator.end());
 
     ScopeStack stack(allocator);
     const auto i = stack.allocate<uint32_t>(kFirst);
@@ -106,7 +106,8 @@ TEST(ScopeStackTest, RewindsAllocator)
     const uint32_t kSecond = 0xdeadbeef;
 
     LinearAllocator allocator(1024);
-    const char* allocator_begin = static_cast<const char*>(allocator.end());
+    const uint8_t* allocator_begin =
+        static_cast<const uint8_t*>(allocator.end());
     {
         ScopeStack stack(allocator);
         const auto i = stack.allocate<uint32_t>(kFirst);
@@ -130,7 +131,8 @@ TEST(ScopeStackTest, CallsDestructorsInReverseOrder)
     bool deleted2 = false;
     bool deleted3 = false;
     LinearAllocator allocator(1024);
-    const char* allocator_begin = static_cast<const char*>(allocator.end());
+    const uint8_t* allocator_begin =
+        static_cast<const uint8_t*>(allocator.end());
     {
         ScopeStack stack(allocator);
         DeleteMe** order_p = order;

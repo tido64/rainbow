@@ -25,6 +25,7 @@
 #endif  // USE_OGGVORBIS
 
 using rainbow::audio::IAudioFile;
+using rainbow::czstring;
 
 namespace
 {
@@ -47,7 +48,7 @@ namespace
 
         auto read(void* dst, size_t size) -> size_t override
         {
-            std::fill_n(static_cast<char*>(dst), size, 0);
+            std::fill_n(static_cast<uint8_t*>(dst), size, 0);
             return size;
         }
 
@@ -57,9 +58,9 @@ namespace
     };
 }
 
-std::unique_ptr<IAudioFile> IAudioFile::open(const char* path)
+std::unique_ptr<IAudioFile> IAudioFile::open(czstring path)
 {
-    std::array<char, 8> signature{};
+    std::array<uint8_t, 8> signature{};
     File file = File::open_asset(path);
     if (file)
     {

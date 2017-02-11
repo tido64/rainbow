@@ -15,6 +15,7 @@ using rainbow::Label;
 using rainbow::SharedPtr;
 using rainbow::TextAlignment;
 using rainbow::Vec2f;
+using rainbow::czstring;
 
 namespace
 {
@@ -72,7 +73,7 @@ void Label::set_scale(float f)
     set_needs_update(kStaleBuffer);
 }
 
-void Label::set_text(const char* text)
+void Label::set_text(czstring text)
 {
     const size_t len = strlen(text);
     if (len > size_)

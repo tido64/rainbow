@@ -6,6 +6,7 @@
 #define AUDIO_MIXER_H_
 
 #include "Common/NonCopyable.h"
+#include "Common/String.h"
 #include "Math/Vec2.h"
 
 namespace rainbow { namespace audio
@@ -31,8 +32,8 @@ namespace rainbow { namespace audio
 
     // Sound management
 
-    auto load_sound(const char* path) -> Sound*;
-    auto load_stream(const char* path) -> Sound*;
+    auto load_sound(czstring path) -> Sound*;
+    auto load_stream(czstring path) -> Sound*;
     void release(Sound* sound);
 
     // Playback

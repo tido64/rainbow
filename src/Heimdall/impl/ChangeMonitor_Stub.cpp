@@ -6,5 +6,5 @@
 
 using heimdall::ChangeMonitor;
 
-ChangeMonitor::ChangeMonitor(const char*) {}
+ChangeMonitor::ChangeMonitor(rainbow::czstring) {}
 ChangeMonitor::~ChangeMonitor() {}

@@ -38,7 +38,7 @@ namespace rainbow
             on_exit_impl(component, actor);
         }
 
-        auto to_string() const -> const char* { return to_string_impl(); }
+        auto to_string() const -> czstring { return to_string_impl(); }
 
     protected:
         IState() : next_(nullptr) {}
@@ -50,7 +50,7 @@ namespace rainbow
         virtual void update_impl(StateComponent&, Actor&, uint64_t dt) = 0;
         virtual void on_enter_impl(StateComponent&, Actor&) {}
         virtual void on_exit_impl(StateComponent&, Actor&) {}
-        virtual auto to_string_impl() const -> const char* = 0;
+        virtual auto to_string_impl() const -> czstring = 0;
     };
 
     class StateComponent : public IScriptComponent

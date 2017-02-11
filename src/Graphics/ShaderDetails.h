@@ -5,6 +5,7 @@
 #ifndef GRAPHICS_SHADERDETAILS_H_
 #define GRAPHICS_SHADERDETAILS_H_
 
+#include "Common/String.h"
 #include "Graphics/OpenGL.h"
 
 namespace Shader
@@ -31,7 +32,7 @@ namespace Shader
     struct AttributeParams
     {
         unsigned int index;
-        const char* name;
+        rainbow::czstring name;
     };
 
     struct Details
@@ -50,8 +51,8 @@ namespace Shader
     {
         Type type;
         unsigned int id;
-        const char* source;
-        const char* fallback;
+        rainbow::czstring source;
+        rainbow::czstring fallback;
     };
 }
 

@@ -7,6 +7,7 @@
 
 #include <utility>
 
+#include "Common/String.h"
 #include "Lua/LuaMacros.h"
 #include "Platform/Macros.h"
 
@@ -62,7 +63,7 @@ NS_RAINBOW_LUA_BEGIN
     }
 
     template <typename... Args>
-    void verify(lua_State* L, bool success, const char* error, Args&&... args)
+    void verify(lua_State* L, bool success, czstring error, Args&&... args)
     {
         if (!success)
             luaL_error(L, error, std::forward<Args>(args)...);

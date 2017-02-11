@@ -4,6 +4,8 @@
 
 #include "ThirdParty/Box2D/Lua/Helper.h"
 
+using rainbow::czstring;
+
 namespace b2
 {
     b2Vec2 Vec2(lua_State* L, int m, int n)
@@ -11,7 +13,7 @@ namespace b2
         return b2Vec2(lua_tonumber(L, m), lua_tonumber(L, n));
     }
 
-    void getfield(lua_State* L, const char* field, size_t length)
+    void getfield(lua_State* L, czstring field, size_t length)
     {
         lua_pushlstring(L, field, length);
         lua_gettable(L, -2);
@@ -20,7 +22,7 @@ namespace b2
     }
 
     template <>
-    bool gettable<bool>(lua_State* L, const char* field, size_t length)
+    bool gettable<bool>(lua_State* L, czstring field, size_t length)
     {
         getfield(L, field, length);
         const bool b = rainbow::lua::toboolean(L, -1);
@@ -30,7 +32,7 @@ namespace b2
 
     template <>
     lua_Integer gettable<lua_Integer>(lua_State* L,
-                                      const char* field,
+                                      czstring field,
                                       size_t length)
     {
         getfield(L, field, length);
@@ -41,7 +43,7 @@ namespace b2
 
     template <>
     lua_Number gettable<lua_Number>(lua_State* L,
-                                    const char* field,
+                                    czstring field,
                                     size_t length)
     {
         getfield(L, field, length);
@@ -51,7 +53,7 @@ namespace b2
     }
 
     template <>
-    b2Vec2 gettable<b2Vec2>(lua_State* L, const char* field, size_t length)
+    b2Vec2 gettable<b2Vec2>(lua_State* L, czstring field, size_t length)
     {
         getfield(L, field, length);
         const b2Vec2 v(luaR_getnumber(L, "x"), luaR_getnumber(L, "y"));
@@ -59,14 +61,14 @@ namespace b2
         return v;
     }
 
-    void rawsetnil(lua_State* L, const char* field, size_t length)
+    void rawsetnil(lua_State* L, czstring field, size_t length)
     {
         lua_pushlstring(L, field, length);
         lua_pushnil(L);
         lua_rawset(L, -3);
     }
 
-    int rawsetvec2(lua_State* L, const char* field, size_t length)
+    int rawsetvec2(lua_State* L, czstring field, size_t length)
     {
         lua_pushlstring(L, field, length);
         lua_createtable(L, 0, 2);

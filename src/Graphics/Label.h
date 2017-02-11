@@ -93,7 +93,7 @@ namespace rainbow
         void set_scale(float f);
 
         /// <summary>Sets text to display.</summary>
-        void set_text(const char*);
+        void set_text(czstring);
 
         /// <summary>Binds all used textures.</summary>
         void bind_textures() const { font_->bind(); }

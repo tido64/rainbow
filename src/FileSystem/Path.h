@@ -5,12 +5,12 @@
 #ifndef FILESYSTEM_PATH_H_
 #define FILESYSTEM_PATH_H_
 
-#include <string>
-
 #include "Platform/Macros.h"
 #ifdef RAINBOW_OS_MACOS
 #   include <CoreFoundation/CoreFoundation.h>
 #endif
+
+#include "Common/String.h"
 
 namespace rainbow { namespace filesystem
 {
@@ -20,8 +20,8 @@ namespace rainbow { namespace filesystem
         Path() = default;
 
         bool empty() const { return path_.empty(); }
-        auto extension() const -> const char*;
-        auto filename() const -> const char*;
+        auto extension() const -> czstring;
+        auto filename() const -> czstring;
 
         auto c_str() const { return path_.c_str(); }
         auto string() const -> const std::string& { return u8string(); }
@@ -48,16 +48,16 @@ namespace rainbow { namespace filesystem
             return *this;
         }
 
-        auto operator/=(const char* p) -> Path&;
+        auto operator/=(czstring p) -> Path&;
 
     private:
         std::string path_;
 
-        explicit Path(const char* path) : path_(path) {}
+        explicit Path(czstring path) : path_(path) {}
 
-        friend auto absolute(const char* path) -> Path;
-        friend auto relative(const char* path) -> Path;
-        friend auto user(const char* path) -> Path;
+        friend auto absolute(czstring path) -> Path;
+        friend auto relative(czstring path) -> Path;
+        friend auto user(czstring path) -> Path;
     };
 }}  // namespace rainbow::filesystem
 

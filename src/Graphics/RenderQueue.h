@@ -71,12 +71,12 @@ namespace rainbow { namespace graphics
             return lhs.variant_ == rhs.variant_;
         }
 
-        friend bool operator==(const char* tag, const RenderUnit& unit)
+        friend bool operator==(czstring tag, const RenderUnit& unit)
         {
             return tag == unit.tag();
         }
 
-        friend bool operator==(const RenderUnit& unit, const char* tag)
+        friend bool operator==(const RenderUnit& unit, czstring tag)
         {
             return unit.tag() == tag;
         }

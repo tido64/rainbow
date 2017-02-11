@@ -5,7 +5,7 @@
 auto create_font(lua_State* L, ScopeStack& stack) -> Prose::Asset
 {
     lua_rawgeti(L, -1, 1);
-    const char* path = lua_tostring(L, -1);
+    czstring path = lua_tostring(L, -1);
     lua_rawgeti(L, -2, 2);
     const float pt = lua_tonumber(L, -1);
     lua_pop(L, 2);
@@ -99,7 +99,7 @@ auto resource_type(lua_State* L) -> Prose::AssetType
     const auto field = lua_type(L, -1);
     if (field == LUA_TSTRING)
     {
-        const char* file = lua_tostring(L, -1);
+        czstring file = lua_tostring(L, -1);
         const bool is_audio =
             rainbow::ends_with(file, ".mp3", StringComparison::IgnoreCase) ||
             rainbow::ends_with(file, ".ogg", StringComparison::IgnoreCase);
@@ -111,7 +111,7 @@ auto resource_type(lua_State* L) -> Prose::AssetType
         if (lua_type(L, -1) != LUA_TSTRING)
             return Prose::AssetType::None;
 
-        const char* file = lua_tostring(L, -1);
+        czstring file = lua_tostring(L, -1);
         if (rainbow::ends_with(file, ".png", StringComparison::IgnoreCase) ||
             rainbow::ends_with(file, ".pvr", StringComparison::IgnoreCase))
         {

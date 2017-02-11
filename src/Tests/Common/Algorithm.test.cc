@@ -9,6 +9,8 @@
 #include "Common/UTF8.h"
 #include "Tests/TestHelpers.h"
 
+using rainbow::czstring;
+
 namespace
 {
     constexpr auto kPi = rainbow::kPi<float>;
@@ -284,7 +286,7 @@ TEST(AlgorithmTest, ExtractsSignOfRealNumbers)
 TEST(AlgorithmTest, IteratesUTF8String)
 {
     size_t i = 0;
-    rainbow::for_each_utf8(reinterpret_cast<const char*>(kUTF8),
+    rainbow::for_each_utf8(reinterpret_cast<czstring>(kUTF8),
                            [&i](uint32_t ch) {
                                ASSERT_EQ(kUTF32[i], ch);
                                ++i;
@@ -292,7 +294,7 @@ TEST(AlgorithmTest, IteratesUTF8String)
     ASSERT_EQ(rainbow::array_size(kUTF32), i);
 
     i = 0;
-    rainbow::for_each_utf8(reinterpret_cast<const char*>(kInvalidUTF8),
+    rainbow::for_each_utf8(reinterpret_cast<czstring>(kInvalidUTF8),
                            [&i](uint32_t ch) {
                                ASSERT_EQ(kInvalidUTF8[i], ch);
                                ++i;
