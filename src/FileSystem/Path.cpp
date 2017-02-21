@@ -6,6 +6,9 @@
 
 #include "Common/Logging.h"
 #include "FileSystem/FileSystem.h"
+#ifdef RAINBOW_OS_IOS
+#   include "Platform/iOS/NSString+Rainbow.h"
+#endif
 
 using rainbow::czstring;
 using rainbow::filesystem::Path;
@@ -51,11 +54,8 @@ auto Path::cfurl() const -> CFURLRef
 #ifdef RAINBOW_OS_IOS
 auto Path::nsurl() const -> NSURL*
 {
-    NSString* path = [[NSString alloc]
-        initWithBytesNoCopy:const_cast<void*>(static_cast<const void*>(c_str()))
-                     length:path_.length()
-                   encoding:NSUTF8StringEncoding
-               freeWhenDone:NO];
+    NSString* path = [NSString stringWithUTF8StringNoCopy:c_str()
+                                                   length:path_.length()];
     return [NSURL fileURLWithPath:path isDirectory:NO];
 }
 #endif

@@ -68,7 +68,10 @@ namespace
     reinterpret_cast<GLKView*>(self.view).context = context;
 }
 
-- (Pointer*)pointers { return _pointers; }
+- (Pointer*)pointers
+{
+    return _pointers;
+}
 
 /// Returns an array of UITouches converted to the coordinate space of our
 /// viewport.
@@ -121,7 +124,10 @@ namespace
 
 #pragma mark - GLKViewController overrides
 
-- (NSInteger)preferredFramesPerSecond { return 60; }
+- (NSInteger)preferredFramesPerSecond
+{
+    return 60;
+}
 
 #pragma mark - UIResponder overrides
 
@@ -178,7 +184,10 @@ namespace
     _director->init(Vec2i(size.width, size.height));
 }
 
-- (BOOL)shouldAutorotate { return YES; }
+- (BOOL)shouldAutorotate
+{
+    return YES;
+}
 
 - (void)didReceiveMemoryWarning
 {
@@ -198,6 +207,9 @@ namespace
     [super viewDidDisappear:animated];
 }
 
-- (BOOL)prefersStatusBarHidden { return YES; }
+- (BOOL)prefersStatusBarHidden
+{
+    return YES;
+}
 
 @end

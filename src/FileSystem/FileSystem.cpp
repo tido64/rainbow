@@ -4,8 +4,6 @@
 
 #include "FileSystem/FileSystem.h"
 
-#include <string>
-
 #include "Platform/Macros.h"
 #if USE_STD_FILESYSTEM
 #   include <experimental/filesystem>
@@ -13,20 +11,21 @@ namespace stdfs = std::experimental::filesystem;
 #else
 #   include <climits>
 #   include <cstdlib>
-#   include <cstring>
 #   include <sys/stat.h>
 #   include <unistd.h>
-#   ifdef RAINBOW_OS_ANDROID
-#       include <android/native_activity.h>
-extern ANativeActivity* g_native_activity;
-#   endif
 #   include "Common/Logging.h"
 #endif
 
-#ifdef RAINBOW_OS_WINDOWS
+#if defined(RAINBOW_OS_WINDOWS)
 #   define kPathSeparator "\\"
 #else
 #   define kPathSeparator "/"
+#   if defined(RAINBOW_OS_ANDROID)
+#       include <android/native_activity.h>
+extern ANativeActivity* g_native_activity;
+#   elif defined(RAINBOW_OS_IOS)
+#       include "Platform/iOS/NSString+Rainbow.h"
+#   endif
 #endif
 
 namespace
@@ -166,15 +165,10 @@ auto rainbow::filesystem::relative(czstring p) -> Path
     }
     return path;
 #elif defined(RAINBOW_OS_IOS)
-    auto string = [[NSString alloc]
-        initWithBytesNoCopy:const_cast<void*>(static_cast<const void*>(p))
-                     length:strlen(p)
-                   encoding:NSUTF8StringEncoding
-               freeWhenDone:NO];
-    string = [[NSBundle mainBundle]
-        pathForResource:[string stringByDeletingPathExtension]
-                 ofType:[string pathExtension]];
-    return !string ? Path{} : Path{[string UTF8String]};
+    NSString* str = [NSString stringWithUTF8StringNoCopy:p];
+    str = [NSBundle.mainBundle pathForResource:str.stringByDeletingPathExtension
+                                        ofType:str.pathExtension];
+    return str == nil ? Path{} : Path{str.UTF8String};
 #else
     Path path{assets_path()};
     path /= p;
@@ -210,22 +204,18 @@ auto rainbow::filesystem::user(czstring p) -> Path
 {
 #ifdef RAINBOW_OS_IOS
     NSError* err = nil;
-    auto library_dir = [[[NSFileManager defaultManager]  //
+    auto library_dir = [[NSFileManager.defaultManager  //
           URLForDirectory:NSLibraryDirectory
                  inDomain:NSUserDomainMask
         appropriateForURL:nil
                    create:YES
                     error:&err] path];
-    if (!library_dir)
+    if (library_dir == nil)
         return {};
 
-    auto path = [[NSString alloc]
-        initWithBytesNoCopy:const_cast<void*>(static_cast<const void*>(p))
-                     length:strlen(p)
-                   encoding:NSUTF8StringEncoding
-               freeWhenDone:NO];
+    NSString* path = [NSString stringWithUTF8StringNoCopy:p];
     path = [library_dir stringByAppendingPathComponent:path];
-    return Path{[path UTF8String]};
+    return Path{path.UTF8String};
 #else
     auto data_path = user_data_path();
     std::error_code error;

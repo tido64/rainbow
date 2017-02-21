@@ -189,6 +189,7 @@
 		19AF58A0167FFA0800F54B27 /* Overlay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19AF589C167FFA0800F54B27 /* Overlay.cpp */; };
 		19B051331E0339E600FE624A /* RenderQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19B051311E0339E600FE624A /* RenderQueue.cpp */; };
 		19B051361E033A1000FE624A /* lua_RenderQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19B051341E033A1000FE624A /* lua_RenderQueue.cpp */; };
+		19CBB6351E5E4BFA00378BBF /* NSString+Rainbow.m in Sources */ = {isa = PBXBuildFile; fileRef = 19CBB6341E5E4BFA00378BBF /* NSString+Rainbow.m */; };
 		19D045AA18071D6D00968F00 /* Chrono.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19D045A918071D6D00968F00 /* Chrono.cpp */; };
 		19D9318A1834AFCE00F0137E /* ChangeMonitor_Stub.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19D931871834AFCE00F0137E /* ChangeMonitor_Stub.cpp */; };
 		19DB48B61CA6A4BD00999675 /* ImGuiHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19DB48B41CA6A4BD00999675 /* ImGuiHelper.cpp */; };
@@ -579,6 +580,8 @@
 		19B2D7E21AFB4A0E00660D38 /* Pointer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Pointer.h; sourceTree = "<group>"; };
 		19BE0C7E1C98B2110041EE8C /* Array.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Array.h; sourceTree = "<group>"; };
 		19BE0C7F1C98B2110041EE8C /* NotNull.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NotNull.h; sourceTree = "<group>"; };
+		19CBB6331E5E4BFA00378BBF /* NSString+Rainbow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Rainbow.h"; sourceTree = "<group>"; };
+		19CBB6341E5E4BFA00378BBF /* NSString+Rainbow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Rainbow.m"; sourceTree = "<group>"; };
 		19D045A918071D6D00968F00 /* Chrono.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Chrono.cpp; sourceTree = "<group>"; };
 		19D3204717BD6BD4007BDC67 /* UIKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIKit.h; sourceTree = "<group>"; };
 		19D3204817BD6BD4007BDC67 /* PVRTC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PVRTC.h; sourceTree = "<group>"; };
@@ -1306,6 +1309,8 @@
 		198964591C4AE0080011BA15 /* iOS */ = {
 			isa = PBXGroup;
 			children = (
+				19CBB6331E5E4BFA00378BBF /* NSString+Rainbow.h */,
+				19CBB6341E5E4BFA00378BBF /* NSString+Rainbow.m */,
 				1989645A1C4AE0080011BA15 /* RainbowViewController.h */,
 				1989645B1C4AE0080011BA15 /* RainbowViewController.mm */,
 			);
@@ -1609,6 +1614,7 @@
 				19D9318A1834AFCE00F0137E /* ChangeMonitor_Stub.cpp in Sources */,
 				19DFE5351C6002890079CB58 /* Mixer.cpp in Sources */,
 				1939A05C152C401300494609 /* b2Timer.cpp in Sources */,
+				19CBB6351E5E4BFA00378BBF /* NSString+Rainbow.m in Sources */,
 				1939A05D152C401300494609 /* b2Body.cpp in Sources */,
 				1939A05E152C401300494609 /* b2ContactManager.cpp in Sources */,
 				1939A05F152C401300494609 /* b2Fixture.cpp in Sources */,
