@@ -30,6 +30,13 @@ using mode_t = uint16_t;
 
 using rainbow::filesystem::Path;
 
+TEST(PathTest, AssetsPath)
+{
+    char cwd[256];
+    ASSERT_EQ(cwd, getcwd(cwd, sizeof(cwd)));
+    ASSERT_STREQ(cwd, rainbow::filesystem::assets_path());
+}
+
 TEST(PathTest, CreatesDirectories)
 {
     char random[32];
@@ -55,13 +62,6 @@ TEST(PathTest, CreatesDirectories)
         ASSERT_EQ(0, rmdir(p.c_str()));
         offset = p.rfind(kPathSeparatorCharacter, offset);
     }
-}
-
-TEST(PathTest, CurrentPath)
-{
-    char cwd[256];
-    ASSERT_EQ(cwd, getcwd(cwd, sizeof(cwd)));
-    ASSERT_STREQ(cwd, rainbow::filesystem::current_path());
 }
 
 TEST(PathTest, RelativeToCurrentPath)

@@ -41,7 +41,7 @@ namespace
 Gatekeeper::Gatekeeper()
     : overlay_activator_(&overlay_)
 #if USE_LUA_SCRIPT
-    , monitor_(rainbow::filesystem::current_path())
+    , monitor_(rainbow::filesystem::assets_path())
 #endif  // USE_LUA_SCRIPT
 {
 }

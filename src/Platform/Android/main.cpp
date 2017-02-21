@@ -83,7 +83,6 @@ void android_main(struct android_app* state)
     state->onInputEvent = android_handle_input;
     ainstance.app = state;
     g_native_activity = state->activity;
-    rainbow::filesystem::current_path();
 
     // Prepare to monitor accelerometer
     ainstance.sensorManager = ASensorManager_getInstance();

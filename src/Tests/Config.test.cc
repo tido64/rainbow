@@ -40,22 +40,22 @@ namespace
         "resolution = {1920,1080};\n"
         "suspend_on_focus_lost = false;\n";
 
-    class ScopedCurrentDirectory
+    class ScopedAssetsDirectory
     {
     public:
-        explicit ScopedCurrentDirectory(czstring path)
+        explicit ScopedAssetsDirectory(czstring path)
+            : assets_path_(rainbow::filesystem::assets_path())
         {
-            working_dir_ = rainbow::filesystem::current_path();
-            rainbow::filesystem::set_current_path(path);
+            rainbow::filesystem::set_assets_path(path);
         }
 
-        ~ScopedCurrentDirectory()
+        ~ScopedAssetsDirectory()
         {
-            rainbow::filesystem::set_current_path(working_dir_.c_str());
+            rainbow::filesystem::set_assets_path(assets_path_.c_str());
         }
 
     private:
-        std::string working_dir_;
+        std::string assets_path_;
     };
 
     class ScopedConfig
@@ -76,11 +76,11 @@ namespace
 
     private:
         Path path_;
-        ScopedCurrentDirectory working_directory_;
+        ScopedAssetsDirectory assets_path_;
 
         ScopedConfig(czstring config, size_t length)
             : path_(rainbow::filesystem::relative(kConfigTestPath)),
-              working_directory_(kConfigTestPath)
+              assets_path_(kConfigTestPath)
         {
             std::error_code error;
             rainbow::filesystem::create_directories(path_, error);
@@ -95,7 +95,7 @@ namespace
 
 TEST(ConfigTest, NoConfiguration)
 {
-    ScopedCurrentDirectory test(kConfigTestPath);
+    ScopedAssetsDirectory test(kConfigTestPath);
     rainbow::Config config;
 
     ASSERT_EQ(0, config.width());

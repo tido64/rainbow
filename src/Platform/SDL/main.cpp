@@ -87,19 +87,13 @@ auto main() -> int
 
 auto main(int argc, char* argv[]) -> int
 {
-    rainbow::filesystem::executable_path(argv[0]);
+    rainbow::filesystem::initialize({argv, static_cast<size_t>(argc)});
 
     if (should_run_tests(argc, argv))
     {
         rainbow::diagnostics::attach_crash_dumper();
-        rainbow::filesystem::current_path();
         return run_tests(argc, argv);
     }
-
-    if (argc < 2)
-        rainbow::filesystem::current_path();
-    else
-        rainbow::filesystem::current_path(argv[1]);
 
     const rainbow::Config config;
     SDLContext context(config);

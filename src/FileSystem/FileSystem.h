@@ -8,11 +8,15 @@
 #include <system_error>
 
 #include "FileSystem/Path.h"
+#include "Memory/Array.h"
 
 namespace rainbow { namespace filesystem
 {
     /// <summary>Creates an absolute path.</summary>
     auto absolute(czstring path) -> Path;
+
+    /// <summary>Returns assets path.</summary>
+    auto assets_path() -> czstring;
 
     /// <summary>Creates new directories.</summary>
     bool create_directories(czstring path, std::error_code& error);
@@ -21,11 +25,11 @@ namespace rainbow { namespace filesystem
         return create_directories(path.c_str(), error);
     }
 
-    /// <summary>Returns current working directory.</summary>
-    auto current_path(czstring path = nullptr) -> czstring;
-
     /// <summary>Returns path of executable.</summary>
-    auto executable_path(czstring executable = nullptr) -> czstring;
+    auto executable_path() -> czstring;
+
+    /// <summary>Initializes the file subsystem.</summary>
+    void initialize(ArrayView<zstring> args);
 
     /// <summary>
     ///   Returns whether <paramref name="path"/> refers to a directory.
@@ -57,6 +61,9 @@ namespace rainbow { namespace filesystem
         return remove(path.c_str(), error);
     }
 
+    /// <summary>Returns current working directory.</summary>
+    auto system_current_path() -> std::string;
+
     /// <summary>Creates a path relative to the user's data directory.</summary>
     auto user(czstring path) -> Path;
 
@@ -64,8 +71,8 @@ namespace rainbow { namespace filesystem
     auto user_data_path() -> czstring;
 
 #ifdef RAINBOW_TEST
-    /// <summary>Sets current working directory.</summary>
-    void set_current_path(czstring path);
+    /// <summary>Sets assets path.</summary>
+    void set_assets_path(czstring path);
 #endif
 }}  // namespace rainbow::filesystem
 

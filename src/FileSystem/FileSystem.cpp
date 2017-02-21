@@ -35,12 +35,18 @@ namespace
     constexpr char kUserDataPath[] = kPathSeparator "user";
 #endif
 
-    std::string g_current_path;
+    std::string g_assets_path;
+    std::string g_exec_path;
 }
 
 auto rainbow::filesystem::absolute(czstring path) -> Path
 {
     return Path{path};
+}
+
+auto rainbow::filesystem::assets_path() -> czstring
+{
+    return g_assets_path.c_str();
 }
 
 bool rainbow::filesystem::create_directories(czstring path,
@@ -87,44 +93,41 @@ bool rainbow::filesystem::create_directories(czstring path,
 #endif
 }
 
-auto rainbow::filesystem::current_path(czstring path) -> czstring
+auto rainbow::filesystem::executable_path() -> czstring
 {
-    if (g_current_path.empty())
-    {
-        if (path != nullptr)
-        {
-            g_current_path = path;
-        }
-        else
-        {
-#if USE_STD_FILESYSTEM
-            g_current_path = stdfs::current_path().u8string();
-#else
-            char cwd[PATH_MAX]{};
-            if (getcwd(cwd, PATH_MAX) == cwd)
-                g_current_path = cwd;
-#endif
-        }
-    }
-
-    return g_current_path.c_str();
+    return g_exec_path.c_str();
 }
 
-auto rainbow::filesystem::executable_path(czstring executable) -> czstring
+void rainbow::filesystem::initialize(ArrayView<zstring> argv)
 {
-    static std::string exec_path;
-    if (exec_path.empty())
-    {
+    if (!g_exec_path.empty())
+        return;
+
+    czstring executable = argv[0];
 #if USE_STD_FILESYSTEM
-        exec_path = stdfs::absolute(executable).u8string();
+    g_exec_path = stdfs::absolute(executable).u8string();
 #else
-        char path[PATH_MAX]{};
-        realpath(executable, path);
-        exec_path = path;
+    char path[PATH_MAX];
+    realpath(executable, path);
+    g_exec_path = path;
 #endif
+
+    R_ASSERT(!g_exec_path.empty(),
+             "Failed to canonicalize absolute path to executable");
+
+    if (argv.size() >= 2)
+    {
+        czstring current_path = argv[1];
+        std::error_code error;
+        if (is_directory(current_path, error) ||
+            is_regular_file(current_path, error))
+        {
+            g_assets_path = current_path;
+            return;
+        }
     }
 
-    return exec_path.c_str();
+    g_assets_path = system_current_path();
 }
 
 bool rainbow::filesystem::is_directory(czstring path, std::error_code& error)
@@ -173,7 +176,7 @@ auto rainbow::filesystem::relative(czstring p) -> Path
                  ofType:[string pathExtension]];
     return !string ? Path{} : Path{[string UTF8String]};
 #else
-    Path path{current_path()};
+    Path path{assets_path()};
     path /= p;
     return path;
 #endif
@@ -186,6 +189,20 @@ bool rainbow::filesystem::remove(czstring path, std::error_code& error)
 #else
     NOT_USED(error);
     return ::remove(path) == 0;
+#endif
+}
+
+auto rainbow::filesystem::system_current_path() -> std::string
+{
+#if USE_STD_FILESYSTEM
+    return stdfs::current_path().u8string();
+#else
+    char cwd[PATH_MAX];
+    zstring result = getcwd(cwd, PATH_MAX);
+
+    R_ASSERT(result == cwd, "Failed to get current working directory");
+
+    return result;
 #endif
 }
 
@@ -237,7 +254,7 @@ auto rainbow::filesystem::user_data_path() -> czstring
         if (path != nullptr)
             data_path = path;
 #else
-        data_path = g_current_path + kUserDataPath;
+        data_path = g_assets_path + kUserDataPath;
 #endif
     }
 
@@ -245,8 +262,8 @@ auto rainbow::filesystem::user_data_path() -> czstring
 }
 
 #ifdef RAINBOW_TEST
-void rainbow::filesystem::set_current_path(czstring path)
+void rainbow::filesystem::set_assets_path(czstring path)
 {
-    g_current_path = path;
+    g_assets_path = path;
 }
 #endif
