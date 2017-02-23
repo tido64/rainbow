@@ -43,7 +43,6 @@ using rainbow::graphics::RenderQueue;
 namespace
 {
     constexpr char kKeyAlignment[] = "alignment";
-    constexpr char kKeyAnimation[] = "animation";
     constexpr char kKeyAnimations[] = "animations";
     constexpr char kKeyColor[] = "color";
     constexpr char kKeyDelay[] = "delay";
@@ -58,7 +57,6 @@ namespace
     constexpr char kKeyRotation[] = "rotation";
     constexpr char kKeyScale[] = "scale";
     constexpr char kKeySize[] = "size";
-    constexpr char kKeySprite[] = "sprite";
     constexpr char kKeySprites[] = "sprites";
     constexpr char kKeyText[] = "text";
     constexpr char kKeyTexture[] = "texture";

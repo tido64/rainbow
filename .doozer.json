@@ -1,5 +1,109 @@
 {
   "targets": {
+    "osx/clang/debug/cpp": {
+      "buildenv": "osx",
+      "environment": {
+        "GENERATOR": "Ninja"
+      },
+      "homebrew": {
+        "formulae": ["cmake", "libogg", "libvorbis", "ninja", "pkg-config", "sdl2"]
+      },
+      "submodules": [
+        "lib/FreeType",
+        "lib/box2d",
+        "lib/googletest",
+        "lib/imgui",
+        "lib/libpng",
+        "lib/nanosvg",
+        "lib/spine-runtimes",
+        "lib/variant",
+        "lib/zlib"
+      ],
+      "buildcmd": [
+        "mkdir out",
+        "cd out",
+        "../tools/build.sh -DCMAKE_BUILD_TYPE=Debug -DUNIT_TESTS=1 -DUSE_HEIMDALL=1 -DUSE_LUA_SCRIPT=0 -DUSE_PHYSICS=1 -DUSE_SPINE=1",
+        "./rainbow --gtest_filter=-AudioTest*:ChronoTest.TimeDifferenceBetweenUpdates"
+      ]
+    },
+    "osx/clang/debug/lua": {
+      "buildenv": "osx",
+      "environment": {
+        "GENERATOR": "Ninja"
+      },
+      "homebrew": {
+        "formulae": ["cmake", "libogg", "libvorbis", "ninja", "pkg-config", "sdl2"]
+      },
+      "submodules": [
+        "lib/FreeType",
+        "lib/box2d",
+        "lib/googletest",
+        "lib/imgui",
+        "lib/libpng",
+        "lib/nanosvg",
+        "lib/spine-runtimes",
+        "lib/variant",
+        "lib/zlib"
+      ],
+      "buildcmd": [
+        "mkdir out",
+        "cd out",
+        "../tools/build.sh -DCMAKE_BUILD_TYPE=Debug -DUNIT_TESTS=1 -DUSE_HEIMDALL=1 -DUSE_PHYSICS=1 -DUSE_SPINE=1",
+        "./rainbow --gtest_filter=-AudioTest*:ChronoTest.TimeDifferenceBetweenUpdates"
+      ]
+    },
+    "osx/clang/release/cpp": {
+      "buildenv": "osx",
+      "environment": {
+        "GENERATOR": "Ninja"
+      },
+      "homebrew": {
+        "formulae": ["cmake", "libogg", "libvorbis", "ninja", "pkg-config", "sdl2"]
+      },
+      "submodules": [
+        "lib/FreeType",
+        "lib/box2d",
+        "lib/googletest",
+        "lib/imgui",
+        "lib/libpng",
+        "lib/nanosvg",
+        "lib/spine-runtimes",
+        "lib/variant",
+        "lib/zlib"
+      ],
+      "buildcmd": [
+        "mkdir out",
+        "cd out",
+        "../tools/build.sh -DCMAKE_BUILD_TYPE=Release -DUNIT_TESTS=1 -DUSE_LUA_SCRIPT=0 -DUSE_PHYSICS=1 -DUSE_SPINE=1",
+        "./rainbow --gtest_filter=-AudioTest*:ChronoTest.TimeDifferenceBetweenUpdates"
+      ]
+    },
+    "osx/clang/release/lua": {
+      "buildenv": "osx",
+      "environment": {
+        "GENERATOR": "Ninja"
+      },
+      "homebrew": {
+        "formulae": ["cmake", "libogg", "libvorbis", "ninja", "pkg-config", "sdl2"]
+      },
+      "submodules": [
+        "lib/FreeType",
+        "lib/box2d",
+        "lib/googletest",
+        "lib/imgui",
+        "lib/libpng",
+        "lib/nanosvg",
+        "lib/spine-runtimes",
+        "lib/variant",
+        "lib/zlib"
+      ],
+      "buildcmd": [
+        "mkdir out",
+        "cd out",
+        "../tools/build.sh -DCMAKE_BUILD_TYPE=Release -DUNIT_TESTS=1 -DUSE_PHYSICS=1 -DUSE_SPINE=1",
+        "./rainbow --gtest_filter=-AudioTest*:ChronoTest.TimeDifferenceBetweenUpdates"
+      ]
+    },
     "xenial-amd64/gcc/debug/cpp": {
       "buildenv": "xenial-amd64",
       "environment": {

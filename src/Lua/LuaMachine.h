@@ -42,7 +42,9 @@ namespace rainbow
     private:
         lua_State* state_;
         int internal_;
+#ifndef NDEBUG
         int traceback_;
+#endif
     };
 }
 

@@ -48,7 +48,7 @@ auto create_animation(lua_State* L,
 
     unsigned int fps = 0;
     if (!has_key(L, kKeyFps))
-        R_ABORT(kProseMissingProperty, kKeyFps, kKeyAnimation, table_name(L));
+        R_ABORT(kProseMissingProperty, kKeyFps, "animation", table_name(L));
     else
     {
         auto field = get_field(L, kKeyFps);
@@ -111,7 +111,7 @@ auto create_sprite(lua_State* L,
 {
     SpriteRef sprite;
     if (!has_key(L, kKeySize))
-        R_ABORT(kProseMissingProperty, kKeySize, kKeySprite, table_name(L));
+        R_ABORT(kProseMissingProperty, kKeySize, "sprite", table_name(L));
     else
     {
         auto field = get_field(L, kKeySize);
@@ -122,7 +122,7 @@ auto create_sprite(lua_State* L,
         lua_pop(L, 2);
     }
     if (!has_key(L, kKeyTexture))
-        R_ABORT(kProseMissingProperty, kKeyTexture, kKeySprite, table_name(L));
+        R_ABORT(kProseMissingProperty, kKeyTexture, "sprite", table_name(L));
     else
     {
         auto field = get_field(L, kKeyTexture);

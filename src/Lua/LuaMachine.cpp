@@ -86,7 +86,10 @@ namespace
 }
 
 LuaMachine::LuaMachine(rainbow::Passkey<LuaScript>)
-    : state_(lua::newstate().release()), internal_(0), traceback_(0)
+    : state_(lua::newstate().release()), internal_(0)
+#ifndef NDEBUG
+    , traceback_(0)
+#endif
 {
 }
 
