@@ -36,7 +36,7 @@ else()
     download_library(
         openal-soft
         http://kcat.strangesoft.net/openal-binaries/openal-soft-1.17.2-bin.zip
-        2128f30ddc32baa77c49a28d9dd9a5e53178851d
+        2797595206a9571997ed61f2509c7317bbc6c0dc3e5f385774c1901e33e14512
         ${LOCAL_LIBRARY}/openal-soft)
     if(CMAKE_SIZEOF_VOID_P EQUAL 8)
       set(OPENAL_ARCH Win64)

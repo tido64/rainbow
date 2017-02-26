@@ -10,8 +10,8 @@ clone_depth: 16
 cache:
   - '%APPVEYOR_BUILD_FOLDER%-build\lib\ogg\src\libogg-1.3.2.tar.gz'
   - '%APPVEYOR_BUILD_FOLDER%-build\lib\openal-soft\src\openal-soft-1.17.2-bin.zip'
-  - '%APPVEYOR_BUILD_FOLDER%-build\lib\sdl2-bin\src\SDL2-2.0.4-win32-x86.zip'
-  - '%APPVEYOR_BUILD_FOLDER%-build\lib\sdl2-dev\src\SDL2-devel-2.0.4-VC.zip'
+  - '%APPVEYOR_BUILD_FOLDER%-build\lib\sdl2-bin\src\SDL2-2.0.5-win32-x86.zip'
+  - '%APPVEYOR_BUILD_FOLDER%-build\lib\sdl2-dev\src\SDL2-devel-2.0.5-VC.zip'
   - '%APPVEYOR_BUILD_FOLDER%-build\lib\vorbis\src\libvorbis-1.3.5.tar.gz'
 before_build:
   - git submodule update --init
@@ -26,7 +26,7 @@ after_build:
   - copy "%APPVEYOR_BUILD_FOLDER%\LICENSE" "rainbow-v%APPVEYOR_BUILD_VERSION%\LICENSE.txt"
   - copy "%APPVEYOR_BUILD_FOLDER%\lib\openal-soft\COPYING" "rainbow-v%APPVEYOR_BUILD_VERSION%\COPYING-OPENAL.txt"
   - copy "%APPVEYOR_BUILD_FOLDER%\lib\openal-soft\bin\Win32\soft_oal.dll" "rainbow-v%APPVEYOR_BUILD_VERSION%\OpenAL32.dll"
-  - 7z x -o"rainbow-v%APPVEYOR_BUILD_VERSION%" "%APPVEYOR_BUILD_FOLDER%-build\lib\sdl2-bin\src\SDL2-2.0.4-win32-x86.zip"
+  - 7z x -o"rainbow-v%APPVEYOR_BUILD_VERSION%" "%APPVEYOR_BUILD_FOLDER%-build\lib\sdl2-bin\src\SDL2-2.0.5-win32-x86.zip"
   - 7z a "rainbow-v%APPVEYOR_BUILD_VERSION%.zip" "rainbow-v%APPVEYOR_BUILD_VERSION%"
   - appveyor PushArtifact "rainbow-v%APPVEYOR_BUILD_VERSION%.zip"
 test: off

@@ -32,7 +32,7 @@ function(download_library name url url_hash destination)
       ${name}
       PREFIX ${CMAKE_BINARY_DIR}/lib/${name}
       URL ${url}
-      URL_HASH SHA1=${url_hash}
+      URL_HASH SHA256=${url_hash}
       CONFIGURE_COMMAND ""
       BUILD_COMMAND ""
       INSTALL_COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_BINARY_DIR}/lib/${name}/src/${name} ${destination}
