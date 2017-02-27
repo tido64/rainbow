@@ -14,8 +14,8 @@ addons:
       - pulseaudio
 install:
   - mkdir -p local
-  - if [[ ! -x local/bin/cmake ]]; then curl -LO http://cmake.org/files/v3.6/cmake-3.6.2-Linux-x86_64.sh; fi
-  - if [[ -f cmake-3.6.2-Linux-x86_64.sh ]]; then sh cmake-3.6.2-Linux-x86_64.sh --prefix=local --skip-license; fi
+  - if [[ ! -x local/bin/cmake ]]; then curl -LO http://cmake.org/files/v3.6/cmake-3.6.3-Linux-x86_64.sh; fi
+  - if [[ -f cmake-3.6.3-Linux-x86_64.sh ]]; then sh cmake-3.6.3-Linux-x86_64.sh --prefix=local --skip-license; fi
   - export CC=gcc-6 CXX=g++-6 PATH=$(pwd)/local/bin:$PATH
 script:
   - mkdir $TRAVIS_BUILD_DIR-build
@@ -40,5 +40,4 @@ env:
   - CMAKE_BUILD_TYPE=RelWithDebInfo
 os:
   - linux
-sudo: required
 dist: trusty
