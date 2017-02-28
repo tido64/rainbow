@@ -4,8 +4,6 @@
 
 #include "Platform/SDL/Context.h"
 
-#include <SDL.h>
-
 #include "Common/Logging.h"
 #include "Config.h"
 
@@ -104,20 +102,6 @@ SDLContext::~SDLContext()
         SDL_DestroyWindow(window_);
     }
     SDL_Quit();
-}
-
-auto SDLContext::drawable_size() const -> Vec2i
-{
-    Vec2i size;
-    SDL_GL_GetDrawableSize(window_, &size.x, &size.y);
-    return size;
-}
-
-auto SDLContext::window_size() const -> Vec2i
-{
-    Vec2i size;
-    SDL_GetWindowSize(window_, &size.x, &size.y);
-    return size;
 }
 
 void SDLContext::swap() const

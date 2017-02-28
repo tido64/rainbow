@@ -13,19 +13,16 @@ using rainbow::graphics::TextureManager;
 
 namespace
 {
+#ifndef NDEBUG
     void assert_texture_size(unsigned int width, unsigned int height)
     {
-#ifndef NDEBUG
         const unsigned int max_texture_size =
             rainbow::graphics::max_texture_size();
         R_ASSERT(width <= max_texture_size && height <= max_texture_size,
                  "Texture dimension exceeds max texture size supported by "
                  "hardware");
-#else
-        NOT_USED(width);
-        NOT_USED(height);
-#endif
     }
+#endif
 
     auto texture_filter(TextureFilter filter) -> int
     {
@@ -154,7 +151,7 @@ void TextureManager::upload(const Texture& texture,
                             unsigned int format,
                             const void* data)
 {
-    assert_texture_size(width, height);
+    IF_DEBUG(assert_texture_size(width, height));
 
     bind(texture);
     glTexImage2D(GL_TEXTURE_2D, 0, internal_format, width, height, 0, format,
@@ -181,7 +178,7 @@ void TextureManager::upload_compressed(const Texture& texture,
                                        unsigned int size,
                                        const void* data)
 {
-    assert_texture_size(width, height);
+    IF_DEBUG(assert_texture_size(width, height));
 
     bind(texture);
     glCompressedTexImage2D(

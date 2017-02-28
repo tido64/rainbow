@@ -79,4 +79,12 @@
                  : static_cast<void>(0))
 #endif  // NDEBUG
 
+#ifndef NDEBUG
+#   define IF_DEBUG(expr) expr
+#   define IF_DEBUG_ELSE(expr, _) expr
+#else
+#   define IF_DEBUG(_) static_cast<void>(0)
+#   define IF_DEBUG_ELSE(_, expr) expr
+#endif
+
 #endif  // COMMON_LOGGING_H_

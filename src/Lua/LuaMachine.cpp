@@ -19,15 +19,12 @@ using rainbow::graphics::RenderQueue;
 namespace
 {
     constexpr char kLuaRainbowInstance[] = "__rainbow_instance";
+    constexpr int kNumErrFuncs = IF_DEBUG_ELSE(1, 0);
     constexpr char kRainbow[] = "rainbow";
 
     auto breakpoint(lua_State* L)
     {
-#ifndef NDEBUG
-        rainbow::lua::sethook(L);
-#else
-        NOT_USED(L);
-#endif
+        IF_DEBUG_ELSE(rainbow::lua::sethook(L), NOT_USED(L));
         return 0;
     }
 
@@ -224,27 +221,18 @@ auto LuaMachine::start(const Data& main) -> int
     if (lua::load(state_, main, "main") == 0)
         return luaL_error(state_, "Failed to load main script");
 
-#ifndef NDEBUG
-    lua_rawgeti(state_, LUA_REGISTRYINDEX, traceback_);
-#endif
+    IF_DEBUG(lua_rawgeti(state_, LUA_REGISTRYINDEX, traceback_));
+
     lua_getglobal(state_, "init");
-#ifndef NDEBUG
-    return lua::call(state_, 0, 0, 1, "Failed to initialise main script");
-#else
-    return lua::call(state_, 0, 0, 0, "Failed to initialise main script");
-#endif
+    return lua::call(
+        state_, 0, 0, kNumErrFuncs, "Failed to initialise main script");
 }
 
 auto LuaMachine::update(uint64_t t) -> int
 {
-#ifndef NDEBUG
-    lua_rawgeti(state_, LUA_REGISTRYINDEX, traceback_);
-#endif
+    IF_DEBUG(lua_rawgeti(state_, LUA_REGISTRYINDEX, traceback_));
+
     lua_rawgeti(state_, LUA_REGISTRYINDEX, internal_);
     lua_pushinteger(state_, t);
-#ifndef NDEBUG
-    return lua::call(state_, 1, 0, 1, "Failed to call 'update'");
-#else
-    return lua::call(state_, 1, 0, 0, "Failed to call 'update'");
-#endif
+    return lua::call(state_, 1, 0, kNumErrFuncs, "Failed to call 'update'");
 }

@@ -11,6 +11,7 @@
 #include <lua.hpp>
 
 #include "Common/Constraints.h"
+#include "Common/Logging.h"
 #include "Common/NonCopyable.h"
 #include "Common/String.h"
 #include "Lua/LuaMacros.h"
@@ -70,11 +71,9 @@ NS_RAINBOW_LUA_BEGIN
     template <typename T, typename = LuaBindable<T>>
     auto touserdata(lua_State* L, int n) -> T*
     {
-#ifndef NDEBUG
-        return static_cast<T*>(luaL_checkudata(L, n, T::class_name));
-#else
-        return static_cast<T*>(lua_touserdata(L, n));
-#endif
+        return static_cast<T*>(IF_DEBUG_ELSE(
+            luaL_checkudata(L, n, T::class_name),
+            lua_touserdata(L, n)));
     }
 
     /// <summary>
@@ -204,28 +203,22 @@ NS_RAINBOW_LUA_BEGIN
 
     /// <summary>
     ///   Returns the value returned from <see cref="luaL_optinteger"/> but
-    ///   without the extra type check if <c>NDEBUG</c> is defined.
+    ///   without the extra type check if not in debug mode.
     /// </summary>
     inline auto optinteger(lua_State* L, int n, lua_Integer def)
     {
-#ifndef NDEBUG
-        return luaL_optinteger(L, n, def);
-#else
-        return luaL_opt(L, lua_tointeger, n, def);
-#endif
+        return IF_DEBUG_ELSE(luaL_optinteger(L, n, def),  //
+                             luaL_opt(L, lua_tointeger, n, def));
     }
 
     /// <summary>
     ///   Returns the value returned from <see cref="luaL_optnumber"/> but
-    ///   without the extra type check if <c>NDEBUG</c> is defined.
+    ///   without the extra type check if not in debug mode.
     /// </summary>
     inline auto optnumber(lua_State* L, int n, lua_Number def)
     {
-#ifndef NDEBUG
-        return luaL_optnumber(L, n, def);
-#else
-        return luaL_opt(L, lua_tonumber, n, def);
-#endif
+        return IF_DEBUG_ELSE(luaL_optnumber(L, n, def),  //
+                             luaL_opt(L, lua_tonumber, n, def));
     }
 
     template <typename T>
@@ -321,11 +314,7 @@ NS_RAINBOW_LUA_BEGIN
     /// </summary>
     inline auto tointeger(lua_State* L, int n)
     {
-#ifndef NDEBUG
-        return luaL_checkinteger(L, n);
-#else
-        return lua_tointeger(L, n);
-#endif
+        return IF_DEBUG_ELSE(luaL_checkinteger(L, n), lua_tointeger(L, n));
     }
 
     /// <summary>
@@ -335,11 +324,7 @@ NS_RAINBOW_LUA_BEGIN
     /// </summary>
     inline auto tonumber(lua_State* L, int n)
     {
-#ifndef NDEBUG
-        return luaL_checknumber(L, n);
-#else
-        return lua_tonumber(L, n);
-#endif
+        return IF_DEBUG_ELSE(luaL_checknumber(L, n), lua_tonumber(L, n));
     }
 
     /// <summary>Returns the pointer on top of the stack.</summary>

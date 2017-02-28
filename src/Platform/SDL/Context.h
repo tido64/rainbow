@@ -20,8 +20,19 @@ namespace rainbow
         SDLContext(const Config& config);
         ~SDLContext();
 
-        auto drawable_size() const -> Vec2i;
-        auto window_size() const -> Vec2i;
+        auto drawable_size() const -> Vec2i
+        {
+            Vec2i size;
+            SDL_GL_GetDrawableSize(window_, &size.x, &size.y);
+            return size;
+        }
+
+        auto window_size() const -> Vec2i
+        {
+            Vec2i size;
+            SDL_GetWindowSize(window_, &size.x, &size.y);
+            return size;
+        }
 
         void swap() const;
         void toggle_fullscreen();

@@ -58,9 +58,7 @@ namespace rainbow { namespace graphics
         glDrawElements(
             GL_TRIANGLES, obj.vertex_count(), GL_UNSIGNED_SHORT, nullptr);
 
-#ifndef NDEBUG
-        ++detail::g_draw_count_accumulator;
-#endif
+        IF_DEBUG(++detail::g_draw_count_accumulator);
     }
 
     template <typename T>
@@ -70,9 +68,7 @@ namespace rainbow { namespace graphics
         obj.bind_textures();
         glDrawArrays(GL_TRIANGLES, first, count);
 
-#ifndef NDEBUG
-        ++detail::g_draw_count_accumulator;
-#endif
+        IF_DEBUG(++detail::g_draw_count_accumulator);
     }
 
     bool has_extension(czstring extension);
