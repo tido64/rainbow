@@ -1,8 +1,8 @@
 /* pnglibconf.h - library build configuration */
 
-/* libpng version 1.6.19, July 23, 2015 */
+/* libpng version 1.6.28, January 5, 2017 */
 
-/* Copyright (c) 1998-2014 Glenn Randers-Pehrson */
+/* Copyright (c) 1998-2016 Glenn Randers-Pehrson */
 
 /* This code is released under the libpng license. */
 /* For conditions of distribution and use, see the disclaimer */
@@ -107,6 +107,7 @@
 #define PNG_SIMPLIFIED_READ_SUPPORTED
 /*#undef PNG_SIMPLIFIED_WRITE_AFIRST_SUPPORTED*/
 /*#undef PNG_SIMPLIFIED_WRITE_BGR_SUPPORTED*/
+/*#undef PNG_SIMPLIFIED_WRITE_STDIO_SUPPORTED*/
 /*#undef PNG_SIMPLIFIED_WRITE_SUPPORTED*/
 #define PNG_STDIO_SUPPORTED
 /*#undef PNG_STORE_UNKNOWN_CHUNKS_SUPPORTED*/

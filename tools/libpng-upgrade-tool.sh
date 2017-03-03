@@ -6,10 +6,9 @@
 dst=$(cd -P "$(dirname $0)/../src/ThirdParty/libpng" && pwd)
 [ -d "$dst" ] || exit $(stat "$dst")
 [ -f png.c ] || exit $(stat png.c)
-./autogen.sh
+./autogen.sh || exit 1
 cp "$dst/pngusr.h" .
-make clean > /dev/null
-CPPFLAGS='-DPNG_USER_CONFIG' ./configure --disable-dependency-tracking --enable-shared=no
-make pnglibconf.h
+CPPFLAGS='-DPNG_USER_CONFIG' ./configure --disable-dependency-tracking --enable-shared=no || exit 1
+make pnglibconf.h || exit 1
 cp config.h "$dst"
 cp pnglibconf.h "$dst"
