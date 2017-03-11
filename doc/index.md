@@ -12,6 +12,7 @@ toc_footers:
 
 includes:
   - building_rainbow_for_pc
+  - building_rainbow_for_mobile
   - quick_start
   - basics
   - audio

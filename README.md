@@ -76,18 +76,23 @@ Rainbow is mostly built on
 
 First of all, clone the repository:
 
-	$ git clone --recursive https://bitbucket.org/tido/rainbow.git
+	git clone --recursive https://bitbucket.org/tido/rainbow.git
 
 The repository only includes some of the libraries required to build Rainbow.
 The remaining requisites are listed in each platform's section below. They must
 be installed or copied into the repository before you can start building
 Rainbow.
 
+More details can be found in the
+[documentation](https://tido.bitbucket.io/rainbow/#building-rainbow-for-pc).
+
+### On Linux/macOS
+
 Easiest way to build Rainbow is to use the provided build scripts:
 
-	$ mkdir rainbow-build
-	$ cd rainbow-build
-	$ /path/to/rainbow/tools/build.sh [platform] [options]
+	mkdir rainbow-build
+	cd rainbow-build
+	/path/to/rainbow/tools/build.sh [platform] [options]
 
 Run `build.sh help` to get an overview of options and configurations. `platform`
 can be omitted if compiling a native build (i.e. not cross-compiling).
@@ -95,90 +100,12 @@ can be omitted if compiling a native build (i.e. not cross-compiling).
 If you have problems running `build.sh`, please make sure it has execution
 permission:
 
-	$ chmod +x /path/to/rainbow/tools/build.sh
+	chmod +x /path/to/rainbow/tools/build.sh
 
-For Windows developers, run the PowerShell script `tools\make.ps1` (right-click
-on it and select _Run with PowerShell_). It will take you through the steps.
+### On Windows
 
-For iOS builds, see the corresponding section below. More detailed instructions
-can be found in the
-[documentation](https://tido.bitbucket.io/rainbow/#building-rainbow-for-pc).
-
-### Building with FMOD Studio
-
-The default audio backend for all platforms is currently OpenAL. If you want to
-use FMOD Studio, run `build.sh` with `-DUSE_FMOD_STUDIO=1` or replace
-`RAINBOW_AUDIO_AL=1` with `RAINBOW_AUDIO_FMOD=1` in the project file.
-
-FMOD's licence prevents redistribution of its files so you'll have to download
-them yourself [here](https://www.fmod.org/download/). Extract or install it and
-move the files into the repository under `lib/FMOD/`. For more details, please
-[read the documentation](https://tido.bitbucket.io/rainbow/#setting-up).
-
-### Android
-
-- [Android NDK](https://developer.android.com/tools/sdk/ndk/)
-- [Android SDK](https://developer.android.com/sdk/)
-
-Once you've installed both, open `rainbow/tools/build-android.sh` and change
-`NDK_HOME` to point at the NDK. The build script will create a debuggable and
-installable APK but is currently only available on Linux/macOS. You can still
-compile for Android on Windows, it just requires some manual labour.
-
-Follow the steps outlined earlier and specify `android` for `platform`:
-
-	$ /path/to/rainbow/tools/build.sh android [options]
-
-### iOS
-
-- [Xcode](https://itunes.apple.com/no/app/xcode/id497799835?mt=12)
-
-Use the provided Xcode project under `rainbow/build/xcode4/`.
-
-### Linux (and cross-compiling for Windows)
-
-- [CMake](https://cmake.org/)
-- [Mesa](http://www.mesa3d.org/)
-- [Ogg Vorbis](https://www.xiph.org/vorbis/) (optional with
-  `-DUSE_FMOD_STUDIO=1`)
-- [OpenAL Soft](http://kcat.strangesoft.net/openal.html) (optional with
-  `-DUSE_FMOD_STUDIO=1`)
-- [SDL](https://libsdl.org/)
-- [MinGW-w64](https://mingw-w64.org/) (for cross-compiling only)
-
-You can install most of these using your favourite package manager.
-
-Windows builds can be built using MinGW-w64 by issuing `windows` as platform.
-However, this method hasn't been maintained in quite some time and may no longer
-work.
-
-### macOS
-
-- [CMake](https://cmake.org/)
-- [Ogg Vorbis](https://www.xiph.org/vorbis/) (optional with
-  `-DUSE_FMOD_STUDIO=1`)
-- [SDL](https://libsdl.org/)
-- [Xcode](https://itunes.apple.com/no/app/xcode/id497799835?mt=12)
-
-CMake, Ogg Vorbis, and SDL can be installed through [Homebrew](http://brew.sh/)
-or [MacPorts](https://www.macports.org/). Xcode's Command Line Tools must be
-installed.
-
-### Windows
-
-- [CMake](https://cmake.org/)
-- [OpenAL Soft](http://kcat.strangesoft.net/openal.html) (optional with
-  `-DUSE_FMOD_STUDIO=1`)
-- [SDL](https://libsdl.org/)
-- [Visual Studio Community](https://www.visualstudio.com/vs/community/)
-  (2015 with Update 3 or later)
-
-The process of downloading and setting up OpenAL Soft and SDL is fully automated
-by the build scripts. Simply run the PowerShell script, `tools\make.ps1`, and
-follow the wizard. If you get a prompt about execution policy, you can simply
-dismiss it as the script doesn't require any special rights.
-
-Alternatively, see "Linux" for cross-compilation.
+Run the PowerShell script `tools\make.ps1` (right-click on it and select
+_Run with PowerShell_). It will take you through the steps.
 
 ## Learning
 
@@ -192,9 +119,9 @@ Rainbow.
 
 Once you've copied all the necessary files, run `rainbow` inside the folder:
 
-	$ cd /path/to/demo
-	$ rainbow
+	cd /path/to/demo
+	rainbow
 
 Or with the path as argument:
 
-	$ rainbow /path/to/demo
+	rainbow /path/to/demo

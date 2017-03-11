@@ -17,5 +17,36 @@
   "files.encoding": "utf8",
   "files.eol": "\n",
   "files.trimTrailingWhitespace": true,
-  "files.insertFinalNewline": true
+  "files.insertFinalNewline": true,
+  "[cmake]": {
+    "editor.tabSize": 2
+  },
+  "[cpp]": {
+    "editor.rulers": [80],
+    "editor.tabSize": 4
+  },
+  "[csharp]": {
+    "editor.tabSize": 4
+  },
+  "[java]": {
+    "editor.tabSize": 4
+  },
+  "[json]": {
+    "editor.tabSize": 2
+  },
+  "[lua]": {
+    "editor.tabSize": 4
+  },
+  "[markdown]": {
+    "editor.rulers": [80],
+    "editor.insertSpaces": false,
+    "editor.wordWrap": "on",
+    "editor.quickSuggestions": false
+  },
+  "[objective-c]": {
+    "editor.tabSize": 4
+  },
+  "[yaml]": {
+    "editor.tabSize": 2
+  }
 }
