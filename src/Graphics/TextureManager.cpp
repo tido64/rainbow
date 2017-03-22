@@ -73,7 +73,7 @@ auto Texture::operator=(Texture&& texture) noexcept -> Texture&
 
 TextureManager::TextureManager(const Passkey<rainbow::graphics::State>&)
     : mag_filter_(TextureFilter::Linear), min_filter_(TextureFilter::Linear)
-#if RAINBOW_RECORD_VMEM_USAGE
+#if RAINBOW_DEVMODE
     , mem_peak_(0.0), mem_used_(0.0)
 #endif
 {
@@ -128,7 +128,7 @@ void TextureManager::trim()
     std::for_each(  //
         first,
         end,
-#if RAINBOW_RECORD_VMEM_USAGE
+#if RAINBOW_DEVMODE
         [this](const detail::Texture& texture) {
             mem_used_ -= texture.size;
 #else
@@ -139,9 +139,7 @@ void TextureManager::trim()
 
     textures_.erase(first, end);
 
-#if RAINBOW_RECORD_VMEM_USAGE
-    update_usage();
-#endif
+    IF_DEVMODE(update_usage());
 }
 
 void TextureManager::upload(const Texture& texture,
@@ -164,7 +162,7 @@ void TextureManager::upload(const Texture& texture,
             texture.width = width;
             texture.height = height;
             texture.size = width * height * 4;
-#if RAINBOW_RECORD_VMEM_USAGE
+#if RAINBOW_DEVMODE
             mem_used_ += texture.size;
             update_usage();
 #endif
@@ -192,7 +190,7 @@ void TextureManager::upload_compressed(const Texture& texture,
                     texture.width = width;
                     texture.height = height;
                     texture.size = size;
-#if RAINBOW_RECORD_VMEM_USAGE
+#if RAINBOW_DEVMODE
                     mem_used_ += texture.size;
                     update_usage();
 #endif
@@ -228,7 +226,7 @@ auto TextureManager::create_texture(std::string id) -> Texture
     return textures_.back();
 }
 
-#if RAINBOW_RECORD_VMEM_USAGE
+#if RAINBOW_DEVMODE
 auto TextureManager::memory_usage() const -> TextureManager::MemoryUsage
 {
     constexpr double M = 1e-6;

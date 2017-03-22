@@ -8,6 +8,7 @@
 #include <deque>
 
 #include "Graphics/Drawable.h"
+#include "Graphics/RenderQueue.h"
 #include "Input/InputListener.h"
 
 namespace heimdall
@@ -18,9 +19,9 @@ namespace heimdall
         static constexpr size_t kDataSampleSize = 100;
 
     public:
-        Overlay()
-            : enabled_(false), pinned_(false), frame_times_(kDataSampleSize),
-              vmem_usage_(kDataSampleSize)
+        Overlay(const rainbow::graphics::RenderQueue& render_queue)
+            : enabled_(false), pinned_(false), render_queue_(render_queue),
+              frame_times_(kDataSampleSize), vmem_usage_(kDataSampleSize)
         {
         }
 
@@ -41,6 +42,7 @@ namespace heimdall
     private:
         bool enabled_;
         bool pinned_;
+        const rainbow::graphics::RenderQueue& render_queue_;
         std::deque<uint64_t> frame_times_;
         std::deque<float> vmem_usage_;
 

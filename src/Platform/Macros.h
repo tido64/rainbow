@@ -34,8 +34,12 @@
 #   define RAINBOW_SDL
 #endif
 
-#define RAINBOW_BUILD \
-    "Rainbow / Bifrost Entertainment Property / Built " __DATE__
+#define RAINBOW_BUILD "Rainbow / Built " __DATE__
+#ifdef USE_HEIMDALL
+#   define RAINBOW_WINDOW_TITLE RAINBOW_BUILD " / Press Ctrl+F11 for dev menu"
+#else
+#   define RAINBOW_WINDOW_TITLE RAINBOW_BUILD
+#endif
 
 #if defined(__GNUC__)
 #   if defined(__clang__)

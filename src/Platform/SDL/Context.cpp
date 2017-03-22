@@ -51,7 +51,7 @@ SDLContext::SDLContext(const Config& config)
     const uint32_t flags = SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN |
                            (config.high_dpi() ? SDL_WINDOW_ALLOW_HIGHDPI : 0);
     const Vec2i& size = ::window_size(config);
-    window_ = SDL_CreateWindow(RAINBOW_BUILD,
+    window_ = SDL_CreateWindow(RAINBOW_WINDOW_TITLE,
                                SDL_WINDOWPOS_CENTERED,
                                SDL_WINDOWPOS_CENTERED,
                                size.x,

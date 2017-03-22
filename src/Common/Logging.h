@@ -87,4 +87,12 @@
 #   define IF_DEBUG_ELSE(_, expr) expr
 #endif
 
+#if !defined(NDEBUG) || defined(USE_HEIMDALL)
+#   define RAINBOW_DEVMODE 1
+#   define IF_DEVMODE(expr) expr
+#else
+#   define RAINBOW_DEVMODE 0
+#   define IF_DEVMODE(_) static_cast<void>(0)
+#endif
+
 #endif  // COMMON_LOGGING_H_

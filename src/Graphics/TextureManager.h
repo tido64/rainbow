@@ -11,8 +11,6 @@
 #include "Common/Passkey.h"
 #include "Graphics/Texture.h"
 
-#define RAINBOW_RECORD_VMEM_USAGE !defined(NDEBUG) || defined(USE_HEIMDALL)
-
 namespace rainbow { namespace graphics
 {
     struct State;
@@ -122,7 +120,7 @@ namespace rainbow { namespace graphics
         /// </summary>
         void retain(const Texture& t, const Passkey<Texture>&);
 
-#if RAINBOW_RECORD_VMEM_USAGE
+#if RAINBOW_DEVMODE
         struct MemoryUsage
         {
             double used;
@@ -141,14 +139,14 @@ namespace rainbow { namespace graphics
         TextureFilter mag_filter_;
         TextureFilter min_filter_;
 
-#if RAINBOW_RECORD_VMEM_USAGE
+#if RAINBOW_DEVMODE
         double mem_peak_;
         double mem_used_;
 #endif
 
         auto create_texture(std::string id) -> Texture;
 
-#if RAINBOW_RECORD_VMEM_USAGE
+#if RAINBOW_DEVMODE
         /// <summary>Updates and prints total texture memory used.</summary>
         void update_usage();
 #endif

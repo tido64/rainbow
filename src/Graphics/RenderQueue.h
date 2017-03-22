@@ -56,7 +56,7 @@ namespace rainbow { namespace graphics
         }
 
         auto is_enabled() const { return enabled_; }
-        auto object() -> variant_type& { return variant_; }
+        auto object() const -> const variant_type& { return variant_; }
         auto program() const { return program_; }
         auto tag() const -> const std::string& { return tag_; }
 

@@ -6,12 +6,38 @@
 
 #include <numeric>
 
+#include "Graphics/Animation.h"
+#include "Graphics/Label.h"
 #include "Graphics/Renderer.h"
+#include "Graphics/SpriteBatch.h"
 #include "ThirdParty/ImGui/ImGuiHelper.h"
 
+#define BRIEF(type, properties) "(" #type ") " properties
+#define ONLY_TAG(type) BRIEF(type, "tag=\"%s\"")
+#define WITH_TAG(type, properties) BRIEF(type, properties " tag=\"%s\"")
+
+#define IM_TEXT_BOOL(source, prop)                                             \
+    ImGui::Text(#prop " = %s", (source).prop() ? "true" : "false")
+#define IM_TEXT_COLOR(source, prop)                                            \
+    ImGui::Text(#prop " = rgba(%u, %u, %u, %u)",                               \
+                (source).prop().r,                                             \
+                (source).prop().g,                                             \
+                (source).prop().b,                                             \
+                (source).prop().a)
+#define IM_TEXT_NUMBER(source, prop) ImGui::Text(#prop " = %f", (source).prop())
+#define IM_TEXT_UINT32(source, prop) ImGui::Text(#prop " = %u", (source).prop())
+#define IM_TEXT_VEC2(source, prop)                                             \
+    ImGui::Text(#prop " = %f,%f", (source).prop().x, (source).prop().y)
+
 using heimdall::Overlay;
+using rainbow::Animation;
+using rainbow::IDrawable;
 using rainbow::KeyStroke;
+using rainbow::Label;
 using rainbow::Pointer;
+using rainbow::Sprite;
+using rainbow::SpriteBatch;
+using rainbow::czstring;
 using rainbow::graphics::TextureManager;
 
 namespace graphics = rainbow::graphics;
@@ -19,10 +45,37 @@ namespace graphics = rainbow::graphics;
 namespace
 {
     template <typename T>
+    void print_address(const T* obj)
+    {
+        ImGui::Text("address = %p", static_cast<const void*>(obj));
+    }
+
+    template <typename T>
     float at(void* data, int i)
     {
         auto& container = *static_cast<T*>(data);
         return container[i];
+    }
+
+    void create_node(const Sprite& sprite)
+    {
+        if (ImGui::TreeNode(&sprite,
+                            BRIEF(Sprite, "id=%i width=%u height=%u"),
+                            sprite.id(),
+                            sprite.width(),
+                            sprite.height()))
+        {
+            print_address(&sprite);
+            IM_TEXT_VEC2(sprite, position);
+            IM_TEXT_COLOR(sprite, color);
+            IM_TEXT_VEC2(sprite, scale);
+            IM_TEXT_NUMBER(sprite, angle);
+            IM_TEXT_VEC2(sprite, pivot);
+            IM_TEXT_BOOL(sprite, is_flipped);
+            IM_TEXT_BOOL(sprite, is_hidden);
+            IM_TEXT_BOOL(sprite, is_mirrored);
+            ImGui::TreePop();
+        }
     }
 
     template <typename Container>
@@ -40,6 +93,64 @@ namespace
     {
         static_cast<void>(std::snprintf(std::forward<Args>(args)...));
     }
+
+    struct CreateNode
+    {
+        czstring tag;
+
+        void operator()(Animation* animation) const
+        {
+            if (ImGui::TreeNode(animation,
+                                WITH_TAG(Animation, "%s frame=%u"),
+                                animation->is_stopped() ? "stopped" : "playing",
+                                animation->current_frame(),
+                                tag))
+            {
+                print_address(animation);
+                IM_TEXT_UINT32(*animation, frame_rate);
+                create_node(*animation->sprite());
+                ImGui::TreePop();
+            }
+        }
+
+        void operator()(Label* label) const
+        {
+            if (ImGui::TreeNode(
+                    label, WITH_TAG(Label, "%s"), label->text(), tag))
+            {
+                print_address(label);
+                IM_TEXT_VEC2(*label, position);
+                ImGui::TreePop();
+            }
+        }
+
+        void operator()(SpriteBatch* batch) const
+        {
+            if (ImGui::TreeNode(batch,
+                                WITH_TAG(SpriteBatch, "size=%u"),
+                                batch->size(),
+                                tag))
+            {
+                print_address(batch);
+                IM_TEXT_BOOL(*batch, is_visible);
+
+                for (auto&& sprite : *batch)
+                    create_node(sprite);
+
+                ImGui::TreePop();
+            }
+        }
+
+        template <typename T>
+        void operator()(T&& drawable) const
+        {
+            if (ImGui::TreeNode(drawable, ONLY_TAG(IDrawable), tag))
+            {
+                print_address(drawable);
+                ImGui::TreePop();
+            }
+        }
+    };
 }
 
 Overlay::~Overlay()
@@ -139,6 +250,13 @@ void Overlay::update_impl(uint64_t dt)
                         "Video memory: %i kB free", meminfo.current_available);
                 }
             }
+        }
+
+        if (ImGui::CollapsingHeader(
+                "Render Queue", nullptr, ImGuiTreeNodeFlags_NoAutoOpenOnLog))
+        {
+            for (auto&& unit : render_queue_)
+                rainbow::visit(CreateNode{unit.tag().c_str()}, unit.object());
         }
 
         ImGui::End();
