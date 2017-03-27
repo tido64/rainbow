@@ -1,4 +1,15 @@
 {
+  "submodules": [
+    "lib/FreeType",
+    "lib/box2d",
+    "lib/googletest",
+    "lib/imgui",
+    "lib/libpng",
+    "lib/nanosvg",
+    "lib/spine-runtimes",
+    "lib/variant",
+    "lib/zlib"
+  ],
   "targets": {
     "osx/clang/debug/cpp": {
       "buildenv": "osx",
@@ -8,17 +19,6 @@
       "homebrew": {
         "formulae": ["cmake", "libogg", "libvorbis", "ninja", "pkg-config", "sdl2"]
       },
-      "submodules": [
-        "lib/FreeType",
-        "lib/box2d",
-        "lib/googletest",
-        "lib/imgui",
-        "lib/libpng",
-        "lib/nanosvg",
-        "lib/spine-runtimes",
-        "lib/variant",
-        "lib/zlib"
-      ],
       "buildcmd": [
         "mkdir out",
         "cd out",
@@ -34,17 +34,6 @@
       "homebrew": {
         "formulae": ["cmake", "libogg", "libvorbis", "ninja", "pkg-config", "sdl2"]
       },
-      "submodules": [
-        "lib/FreeType",
-        "lib/box2d",
-        "lib/googletest",
-        "lib/imgui",
-        "lib/libpng",
-        "lib/nanosvg",
-        "lib/spine-runtimes",
-        "lib/variant",
-        "lib/zlib"
-      ],
       "buildcmd": [
         "mkdir out",
         "cd out",
@@ -60,17 +49,6 @@
       "homebrew": {
         "formulae": ["cmake", "libogg", "libvorbis", "ninja", "pkg-config", "sdl2"]
       },
-      "submodules": [
-        "lib/FreeType",
-        "lib/box2d",
-        "lib/googletest",
-        "lib/imgui",
-        "lib/libpng",
-        "lib/nanosvg",
-        "lib/spine-runtimes",
-        "lib/variant",
-        "lib/zlib"
-      ],
       "buildcmd": [
         "mkdir out",
         "cd out",
@@ -86,17 +64,6 @@
       "homebrew": {
         "formulae": ["cmake", "libogg", "libvorbis", "ninja", "pkg-config", "sdl2"]
       },
-      "submodules": [
-        "lib/FreeType",
-        "lib/box2d",
-        "lib/googletest",
-        "lib/imgui",
-        "lib/libpng",
-        "lib/nanosvg",
-        "lib/spine-runtimes",
-        "lib/variant",
-        "lib/zlib"
-      ],
       "buildcmd": [
         "mkdir out",
         "cd out",
@@ -117,17 +84,6 @@
         "libsdl2-dev",
         "libvorbis-dev",
         "ninja-build"
-      ],
-      "submodules": [
-        "lib/FreeType",
-        "lib/box2d",
-        "lib/googletest",
-        "lib/imgui",
-        "lib/libpng",
-        "lib/nanosvg",
-        "lib/spine-runtimes",
-        "lib/variant",
-        "lib/zlib"
       ],
       "buildcmd": [
         "mkdir out",
@@ -150,17 +106,6 @@
         "libvorbis-dev",
         "ninja-build"
       ],
-      "submodules": [
-        "lib/FreeType",
-        "lib/box2d",
-        "lib/googletest",
-        "lib/imgui",
-        "lib/libpng",
-        "lib/nanosvg",
-        "lib/spine-runtimes",
-        "lib/variant",
-        "lib/zlib"
-      ],
       "buildcmd": [
         "mkdir out",
         "cd out",
@@ -182,17 +127,6 @@
         "libvorbis-dev",
         "ninja-build"
       ],
-      "submodules": [
-        "lib/FreeType",
-        "lib/box2d",
-        "lib/googletest",
-        "lib/imgui",
-        "lib/libpng",
-        "lib/nanosvg",
-        "lib/spine-runtimes",
-        "lib/variant",
-        "lib/zlib"
-      ],
       "buildcmd": [
         "mkdir out",
         "cd out",
@@ -213,17 +147,6 @@
         "libsdl2-dev",
         "libvorbis-dev",
         "ninja-build"
-      ],
-      "submodules": [
-        "lib/FreeType",
-        "lib/box2d",
-        "lib/googletest",
-        "lib/imgui",
-        "lib/libpng",
-        "lib/nanosvg",
-        "lib/spine-runtimes",
-        "lib/variant",
-        "lib/zlib"
       ],
       "buildcmd": [
         "mkdir out",
