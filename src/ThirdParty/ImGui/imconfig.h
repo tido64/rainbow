@@ -7,6 +7,7 @@
 #ifndef THIRDPARTY_IMGUI_IMCONFIG_H_
 #define THIRDPARTY_IMGUI_IMCONFIG_H_
 
+#include "Common/Color.h"
 #include "Common/Logging.h"
 #include "Math/Vec2.h"
 
@@ -34,15 +35,24 @@
 #define IMGUI_STB_NAMESPACE stb
 
 //---- Define constructor and implicit cast operators to convert back<>forth from your math types and ImVec2/ImVec4.
-#define IM_VEC2_CLASS_EXTRA                                                 \
-        ImVec2(const rainbow::Vec2f& f) : x(f.x), y(f.y) {}                 \
-        ImVec2(const rainbow::Vec2i& i) : x(i.x), y(i.y) {}                 \
-        operator rainbow::Vec2f() const { return rainbow::Vec2f{x, y}; }
-/*
-#define IM_VEC4_CLASS_EXTRA                                                 \
-        ImVec4(const MyVec4& f) { x = f.x; y = f.y; z = f.z; w = f.w; }     \
-        operator MyVec4() const { return MyVec4(x,y,z,w); }
-*/
+#define IM_VEC2_CLASS_EXTRA                                                    \
+    ImVec2(const rainbow::Vec2f& f) : x(f.x), y(f.y) {}                        \
+    ImVec2(const rainbow::Vec2i& i) : x(i.x), y(i.y) {}                        \
+    operator rainbow::Vec2f() const { return rainbow::Vec2f{x, y}; }
+
+#define IM_VEC4_CLASS_EXTRA                                                    \
+    ImVec4(const rainbow::Color& c)                                            \
+        : x(c.r / 255.0f), y(c.g / 255.0f), z(c.b / 255.0f), w(c.a / 255.0f)   \
+    {                                                                          \
+    }                                                                          \
+                                                                               \
+    operator rainbow::Color() const                                            \
+    {                                                                          \
+        return rainbow::Color{static_cast<uint8_t>(x * 255),                   \
+                              static_cast<uint8_t>(y * 255),                   \
+                              static_cast<uint8_t>(z * 255),                   \
+                              static_cast<uint8_t>(w * 255)};                  \
+    }
 
 //---- Tip: You can add extra functions within the ImGui:: namespace, here or in your own headers files.
 //---- e.g. create variants of the ImGui::Value() helper for your low-level math types, or your own widgets/helpers.

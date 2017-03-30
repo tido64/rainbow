@@ -19,11 +19,18 @@
 #define IM_TEXT_BOOL(source, prop)                                             \
     ImGui::Text(#prop " = %s", (source).prop() ? "true" : "false")
 #define IM_TEXT_COLOR(source, prop)                                            \
-    ImGui::Text(#prop " = rgba(%u, %u, %u, %u)",                               \
-                (source).prop().r,                                             \
-                (source).prop().g,                                             \
-                (source).prop().b,                                             \
-                (source).prop().a)
+    do                                                                         \
+    {                                                                          \
+        ImGui::Text(#prop " = ");                                              \
+        ImGui::SameLine();                                                     \
+        ImGui::ColorButton((source).prop(), true);                             \
+        ImGui::SameLine();                                                     \
+        ImGui::Text("rgba(%u, %u, %u, %u)",                                    \
+                    (source).prop().r,                                         \
+                    (source).prop().g,                                         \
+                    (source).prop().b,                                         \
+                    (source).prop().a);                                        \
+    } while (false)
 #define IM_TEXT_NUMBER(source, prop) ImGui::Text(#prop " = %f", (source).prop())
 #define IM_TEXT_UINT32(source, prop) ImGui::Text(#prop " = %u", (source).prop())
 #define IM_TEXT_VEC2(source, prop)                                             \
@@ -120,6 +127,7 @@ namespace
             {
                 print_address(label);
                 IM_TEXT_VEC2(*label, position);
+                IM_TEXT_COLOR(*label, color);
                 ImGui::TreePop();
             }
         }
@@ -195,7 +203,6 @@ void Overlay::update_impl(uint64_t dt)
         ImGui::Checkbox(pinned_ ? "Unpin" : "Pin", &pinned_);
 
         if (ImGui::CollapsingHeader("Performance",
-                                    nullptr,
                                     ImGuiTreeNodeFlags_NoAutoOpenOnLog |
                                         ImGuiTreeNodeFlags_DefaultOpen))
         {
@@ -252,11 +259,17 @@ void Overlay::update_impl(uint64_t dt)
             }
         }
 
-        if (ImGui::CollapsingHeader(
-                "Render Queue", nullptr, ImGuiTreeNodeFlags_NoAutoOpenOnLog))
-        {
-            for (auto&& unit : render_queue_)
-                rainbow::visit(CreateNode{unit.tag().c_str()}, unit.object());
+        const ImGuiTreeNodeFlags collapsing_header_flags =
+            ImGuiTreeNodeFlags_NoTreePushOnOpen |
+            ImGuiTreeNodeFlags_NoAutoOpenOnLog |
+            ImGuiTreeNodeFlags_CollapsingHeader;
+        if (ImGui::TreeNodeEx(&render_queue_,
+                              collapsing_header_flags,
+                              "Render Queue (%zu unit%s)",
+                              render_queue_.size(),
+                              render_queue_.size() == 1 ? "" : "s")) {
+          for (auto &&unit : render_queue_)
+            rainbow::visit(CreateNode{unit.tag().c_str()}, unit.object());
         }
 
         ImGui::End();
