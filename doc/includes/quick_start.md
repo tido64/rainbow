@@ -27,7 +27,7 @@ Start the app on your device.
 
 ## iOS
 
-1. Open `build/xcode4/Rainbow.xcodeproj` in Xcode.
+1. Open `build/ios/Rainbow.xcodeproj` in Xcode.
 2. Expand `Resources` to see all the convenience libraries.
 3. Right-click `Resources` and choose "Add Files to Rainbow...".
 4. Navigate to `demos` and select `transitions`. Leave "Destination" unchecked

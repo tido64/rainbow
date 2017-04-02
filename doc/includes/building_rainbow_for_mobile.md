@@ -43,7 +43,7 @@ options, type `build.sh help` or see [Compiling Rainbow](#compiling-rainbow).
 
 Install [Xcode](https://itunes.apple.com/no/app/xcode/id497799835?mt=12) from
 the App Store, then open the provided Xcode project
-`rainbow/build/xcode4/Rainbow.xcodeproj`.
+`build/ios/Rainbow.xcodeproj`.
 
 The default audio backend is currently OpenAL. If you want to use FMOD Studio,
 replace `RAINBOW_AUDIO_AL=1` with `RAINBOW_AUDIO_FMOD=1` in the project's

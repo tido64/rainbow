@@ -29,9 +29,12 @@ namespace rainbow
 
         auto operator=(uint32_t c) -> Color& { return *this = Color{c}; }
 
-        friend bool operator!=(Color lhs, Color rhs) { return !(lhs == rhs); }
+        friend constexpr bool operator!=(Color lhs, Color rhs)
+        {
+            return !(lhs == rhs);
+        }
 
-        friend bool operator==(Color lhs, Color rhs)
+        friend constexpr bool operator==(Color lhs, Color rhs)
         {
             return lhs.r == rhs.r &&  //
                    lhs.g == rhs.g &&  //

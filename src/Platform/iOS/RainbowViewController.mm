@@ -54,7 +54,7 @@ namespace
 - (void)dealloc
 {
     _director.release();
-    if ([EAGLContext currentContext] == self.context)
+    if (EAGLContext.currentContext == self.context)
         [EAGLContext setCurrentContext:nil];
 }
 
@@ -162,14 +162,13 @@ namespace
 
     self.view.multipleTouchEnabled = YES;
     self.context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
-    if (!self.context)
+    if (self.context == nil)
     {
         NSLog(@"[Rainbow] Failed to create ES context");
         return;
     }
-    [EAGLContext setCurrentContext:self.context];
 
-    [_motionManager startAccelerometerUpdates];
+    [EAGLContext setCurrentContext:self.context];
 
     CGSize size = UIScreen.mainScreen.nativeBounds.size;
     if (self.supportedInterfaceOrientations ==
@@ -184,17 +183,6 @@ namespace
     _director->init(Vec2i(size.width, size.height));
 }
 
-- (BOOL)shouldAutorotate
-{
-    return YES;
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    _director->on_memory_warning();
-}
-
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
@@ -205,6 +193,17 @@ namespace
 {
     [_motionManager stopAccelerometerUpdates];
     [super viewDidDisappear:animated];
+}
+
+- (BOOL)shouldAutorotate
+{
+    return YES;
+}
+
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    _director->on_memory_warning();
 }
 
 - (BOOL)prefersStatusBarHidden
