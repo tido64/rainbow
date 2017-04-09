@@ -49,11 +49,11 @@ namespace rainbow
 }
 
 #if defined(RAINBOW_OS_ANDROID)
-#   include "Common/impl/DataMap_Android.h"
+#   include "Common/impl/DataMap.android.h"
 #elif defined(RAINBOW_OS_WINDOWS)
-#   include "Common/impl/DataMap_Win.h"
+#   include "Common/impl/DataMap.win.h"
 #else
-#   include "Common/impl/DataMap_Unix.h"
+#   include "Common/impl/DataMap.unix.h"
 #endif
 
 #endif

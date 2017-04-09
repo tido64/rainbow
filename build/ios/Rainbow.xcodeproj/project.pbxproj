@@ -13,7 +13,7 @@
 		1923F97F1AF6400A0012C078 /* UTF8.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1923F97D1AF6400A0012C078 /* UTF8.cpp */; };
 		193458551D5A3884008482E8 /* FileSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 193458531D5A3884008482E8 /* FileSystem.cpp */; };
 		193929B316E1932E0018340B /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 193929B216E1932E0018340B /* CoreMotion.framework */; };
-		193929B816E23D5F0018340B /* SystemInfo_Apple.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 193929B716E23D5F0018340B /* SystemInfo_Apple.cpp */; };
+		193929B816E23D5F0018340B /* SystemInfo.apple.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 193929B716E23D5F0018340B /* SystemInfo.apple.cpp */; };
 		193929BD16E243E90018340B /* LuaMachine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 193929BA16E243E90018340B /* LuaMachine.cpp */; };
 		193929C716E352540018340B /* Timer.lua in Resources */ = {isa = PBXBuildFile; fileRef = 193929C616E352540018340B /* Timer.lua */; };
 		1939A04B152C401300494609 /* b2BroadPhase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19399E15152C401300494609 /* b2BroadPhase.cpp */; };
@@ -126,7 +126,7 @@
 		1948C02D152C397D00E9B854 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1948C02B152C397D00E9B854 /* InfoPlist.strings */; };
 		1948C02F152C397D00E9B854 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1948C02E152C397D00E9B854 /* main.m */; };
 		1948C033152C397D00E9B854 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1948C032152C397D00E9B854 /* AppDelegate.m */; };
-		1949374D1756795900CF3FC6 /* DataMap_Unix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1949374B1756795900CF3FC6 /* DataMap_Unix.cpp */; };
+		1949374D1756795900CF3FC6 /* DataMap.unix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1949374B1756795900CF3FC6 /* DataMap.unix.cpp */; };
 		1960AFCE1A4E278E0015A3AD /* Box2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1960AFB61A4E278E0015A3AD /* Box2D.cpp */; };
 		1960AFCF1A4E278E0015A3AD /* EdgeShape.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1960AFBA1A4E278E0015A3AD /* EdgeShape.cpp */; };
 		1960AFD01A4E278E0015A3AD /* PolygonShape.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1960AFBC1A4E278E0015A3AD /* PolygonShape.cpp */; };
@@ -191,7 +191,7 @@
 		19B051361E033A1000FE624A /* lua_RenderQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19B051341E033A1000FE624A /* lua_RenderQueue.cpp */; };
 		19CBB6351E5E4BFA00378BBF /* NSString+Rainbow.m in Sources */ = {isa = PBXBuildFile; fileRef = 19CBB6341E5E4BFA00378BBF /* NSString+Rainbow.m */; };
 		19D045AA18071D6D00968F00 /* Chrono.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19D045A918071D6D00968F00 /* Chrono.cpp */; };
-		19D9318A1834AFCE00F0137E /* ChangeMonitor_Stub.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19D931871834AFCE00F0137E /* ChangeMonitor_Stub.cpp */; };
+		19D9318A1834AFCE00F0137E /* ChangeMonitor.stub.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19D931871834AFCE00F0137E /* ChangeMonitor.stub.cpp */; };
 		19DB48B61CA6A4BD00999675 /* ImGuiHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19DB48B41CA6A4BD00999675 /* ImGuiHelper.cpp */; };
 		19DB48B91CA6AAFE00999675 /* ElementBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19DB48B71CA6AAFE00999675 /* ElementBuffer.cpp */; };
 		19DCB2731741A1D000660000 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 19DCB2721741A1D000660000 /* libz.dylib */; };
@@ -232,7 +232,7 @@
 		193458531D5A3884008482E8 /* FileSystem.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = FileSystem.cpp; sourceTree = "<group>"; };
 		193458541D5A3884008482E8 /* FileSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileSystem.h; sourceTree = "<group>"; };
 		193929B216E1932E0018340B /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
-		193929B716E23D5F0018340B /* SystemInfo_Apple.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SystemInfo_Apple.cpp; sourceTree = "<group>"; };
+		193929B716E23D5F0018340B /* SystemInfo.apple.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SystemInfo.apple.cpp; sourceTree = "<group>"; };
 		193929BA16E243E90018340B /* LuaMachine.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = LuaMachine.cpp; sourceTree = "<group>"; };
 		193929BB16E243E90018340B /* LuaMachine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LuaMachine.h; sourceTree = "<group>"; };
 		193929BC16E243E90018340B /* LuaModules.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LuaModules.h; sourceTree = "<group>"; };
@@ -471,8 +471,8 @@
 		1948C030152C397D00E9B854 /* Rainbow-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Rainbow-Prefix.pch"; sourceTree = "<group>"; };
 		1948C031152C397D00E9B854 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		1948C032152C397D00E9B854 /* AppDelegate.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; path = AppDelegate.m; sourceTree = "<group>"; };
-		1949374B1756795900CF3FC6 /* DataMap_Unix.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = DataMap_Unix.cpp; sourceTree = "<group>"; };
-		1949374C1756795900CF3FC6 /* DataMap_Unix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataMap_Unix.h; sourceTree = "<group>"; };
+		1949374B1756795900CF3FC6 /* DataMap.unix.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = DataMap.unix.cpp; sourceTree = "<group>"; };
+		1949374C1756795900CF3FC6 /* DataMap.unix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataMap.unix.h; sourceTree = "<group>"; };
 		1949374E1756796D00CF3FC6 /* DataMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataMap.h; sourceTree = "<group>"; };
 		195D565617D90DD100C78117 /* Functional.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Functional.h; sourceTree = "<group>"; };
 		195D565717D90E0D00C78117 /* LuaDebugging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LuaDebugging.h; sourceTree = "<group>"; };
@@ -592,7 +592,7 @@
 		19D562101CAD011400827F72 /* Vec2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Vec2.h; sourceTree = "<group>"; };
 		19D562111CAD011400827F72 /* Vec3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Vec3.h; sourceTree = "<group>"; };
 		19D931841834AFC200F0137E /* ChangeMonitor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChangeMonitor.h; sourceTree = "<group>"; };
-		19D931871834AFCE00F0137E /* ChangeMonitor_Stub.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = ChangeMonitor_Stub.cpp; sourceTree = "<group>"; };
+		19D931871834AFCE00F0137E /* ChangeMonitor.stub.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = ChangeMonitor.stub.cpp; sourceTree = "<group>"; };
 		19DB48B31CA6A4BD00999675 /* imconfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = imconfig.h; sourceTree = "<group>"; };
 		19DB48B41CA6A4BD00999675 /* ImGuiHelper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ImGuiHelper.cpp; sourceTree = "<group>"; };
 		19DB48B51CA6A4BD00999675 /* ImGuiHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImGuiHelper.h; sourceTree = "<group>"; };
@@ -958,8 +958,8 @@
 		1939A187152C425D00494609 /* impl */ = {
 			isa = PBXGroup;
 			children = (
-				1949374B1756795900CF3FC6 /* DataMap_Unix.cpp */,
-				1949374C1756795900CF3FC6 /* DataMap_Unix.h */,
+				1949374B1756795900CF3FC6 /* DataMap.unix.cpp */,
+				1949374C1756795900CF3FC6 /* DataMap.unix.h */,
 			);
 			path = impl;
 			sourceTree = "<group>";
@@ -1418,7 +1418,7 @@
 		19D931851834AFCE00F0137E /* impl */ = {
 			isa = PBXGroup;
 			children = (
-				19D931871834AFCE00F0137E /* ChangeMonitor_Stub.cpp */,
+				19D931871834AFCE00F0137E /* ChangeMonitor.stub.cpp */,
 			);
 			path = impl;
 			sourceTree = "<group>";
@@ -1487,7 +1487,7 @@
 		19F98DA4171B5DC000A85873 /* impl */ = {
 			isa = PBXGroup;
 			children = (
-				193929B716E23D5F0018340B /* SystemInfo_Apple.cpp */,
+				193929B716E23D5F0018340B /* SystemInfo.apple.cpp */,
 			);
 			path = impl;
 			sourceTree = "<group>";
@@ -1611,7 +1611,7 @@
 				198F42B11A9152E000BE7A73 /* SlotData.c in Sources */,
 				1939A05A152C401300494609 /* b2Settings.cpp in Sources */,
 				1939A05B152C401300494609 /* b2StackAllocator.cpp in Sources */,
-				19D9318A1834AFCE00F0137E /* ChangeMonitor_Stub.cpp in Sources */,
+				19D9318A1834AFCE00F0137E /* ChangeMonitor.stub.cpp in Sources */,
 				19DFE5351C6002890079CB58 /* Mixer.cpp in Sources */,
 				1939A05C152C401300494609 /* b2Timer.cpp in Sources */,
 				19CBB6351E5E4BFA00378BBF /* NSString+Rainbow.m in Sources */,
@@ -1748,7 +1748,7 @@
 				19FDF4961942FCFB00B5F21B /* LuaSyntax.cpp in Sources */,
 				19DFE5361C6002890079CB58 /* AudioFile.cpp in Sources */,
 				19D045AA18071D6D00968F00 /* Chrono.cpp in Sources */,
-				193929B816E23D5F0018340B /* SystemInfo_Apple.cpp in Sources */,
+				193929B816E23D5F0018340B /* SystemInfo.apple.cpp in Sources */,
 				19937CBA1D398336009F8917 /* TempBuffer.cpp in Sources */,
 				198F42A51A9152E000BE7A73 /* IkConstraint.c in Sources */,
 				193929BD16E243E90018340B /* LuaMachine.cpp in Sources */,
@@ -1757,7 +1757,7 @@
 				1946B7AE1836E54600F74A3B /* File.cpp in Sources */,
 				198F42AE1A9152E000BE7A73 /* Skin.c in Sources */,
 				19655DEB187C65AF0053C398 /* freetype.c in Sources */,
-				1949374D1756795900CF3FC6 /* DataMap_Unix.cpp in Sources */,
+				1949374D1756795900CF3FC6 /* DataMap.unix.cpp in Sources */,
 				198F429C1A9152E000BE7A73 /* AtlasAttachmentLoader.c in Sources */,
 				19865982175E98F700723171 /* Data.cpp in Sources */,
 			);

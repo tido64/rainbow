@@ -115,7 +115,7 @@ set(SOURCE_FILES
     src/Graphics/VertexArray.h
     src/Input/Acceleration.h
     src/Input/Controller.h
-    src/Input/impl/VirtualKey_SDL.cpp
+    src/Input/impl/VirtualKey.sdl.cpp
     src/Input/Input.cpp
     src/Input/Input.h
     src/Input/InputListener.h
@@ -210,13 +210,13 @@ endif()
 
 if(ANDROID)
   list(APPEND SOURCE_FILES
-       src/Common/impl/DataMap_Android.cpp
-       src/Common/impl/DataMap_Android.h
+       src/Common/impl/DataMap.android.cpp
+       src/Common/impl/DataMap.android.h
        src/Platform/Android/main.cpp
        # Workaround for https://github.com/android-ndk/ndk/issues/184
        src/Platform/Android/mulodi4.c
-       src/Platform/impl/SystemInfo_Android.cpp
-       src/Platform/impl/SystemInfo_Unix.cpp)
+       src/Platform/impl/SystemInfo.android.cpp
+       src/Platform/impl/SystemInfo.unix.cpp)
 else()
   list(APPEND SOURCE_FILES
        src/Platform/SDL/Context.cpp
@@ -226,24 +226,24 @@ else()
        src/Platform/SDL/main.cpp)
   if(WIN32)
     list(APPEND SOURCE_FILES
-         src/Common/impl/DataMap_Win.cpp
-         src/Common/impl/DataMap_Win.h
-         src/Platform/impl/Diagnostics_Win.cpp
-         src/Platform/impl/SystemInfo_Win.cpp
+         src/Common/impl/DataMap.win.cpp
+         src/Common/impl/DataMap.win.h
+         src/Platform/impl/Diagnostics.win.cpp
+         src/Platform/impl/SystemInfo.win.cpp
          tools/make.ps1
          appveyor.yml)
   else()
     list(APPEND SOURCE_FILES
-         src/Common/impl/DataMap_Unix.cpp
-         src/Common/impl/DataMap_Unix.h
-         src/Platform/impl/Diagnostics_Unix.cpp)
+         src/Common/impl/DataMap.unix.cpp
+         src/Common/impl/DataMap.unix.h
+         src/Platform/impl/Diagnostics.unix.cpp)
     if(APPLE)
       list(APPEND SOURCE_FILES
            src/Graphics/Decoders/UIKit.h
-           src/Platform/impl/Diagnostics_Apple.cpp
-           src/Platform/impl/SystemInfo_Apple.cpp)
+           src/Platform/impl/Diagnostics.apple.cpp
+           src/Platform/impl/SystemInfo.apple.cpp)
     else()
-      list(APPEND SOURCE_FILES src/Platform/impl/SystemInfo_Unix.cpp)
+      list(APPEND SOURCE_FILES src/Platform/impl/SystemInfo.unix.cpp)
     endif()
   endif()
 endif()
@@ -332,11 +332,11 @@ if(USE_HEIMDALL)
        src/ThirdParty/ImGui/ImGuiHelper.cpp
        src/ThirdParty/ImGui/ImGuiHelper.h)
   if(APPLE)
-    list(APPEND SOURCE_FILES src/Heimdall/impl/ChangeMonitor_Mac.cpp)
+    list(APPEND SOURCE_FILES src/Heimdall/impl/ChangeMonitor.mac.cpp)
   elseif(WIN32)
-    list(APPEND SOURCE_FILES src/Heimdall/impl/ChangeMonitor_Win.cpp)
+    list(APPEND SOURCE_FILES src/Heimdall/impl/ChangeMonitor.win.cpp)
   else()
-    list(APPEND SOURCE_FILES src/Heimdall/impl/ChangeMonitor_Stub.cpp)
+    list(APPEND SOURCE_FILES src/Heimdall/impl/ChangeMonitor.stub.cpp)
   endif()
 endif()
 
