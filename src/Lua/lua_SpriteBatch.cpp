@@ -7,41 +7,27 @@
 #include "Lua/lua_Sprite.h"
 #include "Lua/lua_Texture.h"
 
-NS_RAINBOW_LUA_BEGIN
+using rainbow::lua::SpriteBatch;
+
+SpriteBatch::SpriteBatch(lua_State* L)
+    : batch_(rainbow::lua::optinteger(L, 1, 4))
 {
-    constexpr bool SpriteBatch::is_constructible;
+    checkargs<lua_Number>(L);
+}
 
-    const char SpriteBatch::class_name[] = "spritebatch";
+auto SpriteBatch::add(lua_State* L) -> int
+{
+    LOGW("<spritebatch>:add() is deprecated, use <spritebatch>:create_sprite() "
+         "and <sprite>:set_texture() instead.");
 
-    const luaL_Reg SpriteBatch::functions[]{
-        {"add",            &SpriteBatch::add},
-        {"create_sprite",  &SpriteBatch::create_sprite},
-        {"set_normal",     &SpriteBatch::set_normal},
-        {"set_texture",    &SpriteBatch::set_texture},
-        {nullptr,          nullptr}};
+    // <spritebatch>:add(x, y, width, height)
+    checkargs<SpriteBatch,  //
+              lua_Number,
+              lua_Number,
+              lua_Number,
+              lua_Number>(L);
 
-    SpriteBatch::SpriteBatch(lua_State* L) : batch_(optinteger(L, 1, 4))
-    {
-        checkargs<lua_Number>(L);
-    }
-
-    int SpriteBatch::add(lua_State* L)
-    {
-        LOGW("<spritebatch>:add() is deprecated, use "
-             "<spritebatch>:create_sprite() and <sprite>:set_texture() "
-             "instead.");
-
-        // <spritebatch>:add(x, y, width, height)
-        checkargs<SpriteBatch,
-                  lua_Number,
-                  lua_Number,
-                  lua_Number,
-                  lua_Number>(L);
-
-        SpriteBatch* self = Bind::self(L);
-        if (self == nullptr)
-            return 0;
-
+    return with_self(L, [](SpriteBatch* self, lua_State* L) {
         const int x = lua_tointeger(L, 2);
         const int y = lua_tointeger(L, 3);
         const int w = lua_tointeger(L, 4);
@@ -51,17 +37,15 @@ NS_RAINBOW_LUA_BEGIN
         auto sprite = self->batch_.add(x, y, w, h);
         lua_pushlightuserdata(L, &sprite);
         return alloc<Sprite>(L);
-    }
+    });
+}
 
-    int SpriteBatch::create_sprite(lua_State* L)
-    {
-        // <spritebatch>:create_sprite(width, height)
-        checkargs<SpriteBatch, lua_Number, lua_Number>(L);
+auto SpriteBatch::create_sprite(lua_State* L) -> int
+{
+    // <spritebatch>:create_sprite(width, height)
+    checkargs<SpriteBatch, lua_Number, lua_Number>(L);
 
-        SpriteBatch* self = Bind::self(L);
-        if (self == nullptr)
-            return 0;
-
+    return with_self(L, [](SpriteBatch* self, lua_State* L) {
         const int w = lua_tointeger(L, 2);
         const int h = lua_tointeger(L, 3);
 
@@ -69,25 +53,33 @@ NS_RAINBOW_LUA_BEGIN
         auto sprite = self->batch_.create_sprite(w, h);
         lua_pushlightuserdata(L, &sprite);
         return alloc<Sprite>(L);
-    }
+    });
+}
 
-    int SpriteBatch::set_normal(lua_State* L)
-    {
-        // <spritebatch>:set_normal(<texture>)
-        return set1ud<Texture>(
-            L,
-            [](rainbow::SpriteBatch* batch, SharedPtr<TextureAtlas> atlas) {
-                batch->set_normal(std::move(atlas));
-            });
-    }
+auto SpriteBatch::set_normal(lua_State* L) -> int
+{
+    // <spritebatch>:set_normal(<texture>)
+    return set1ud<Texture>(
+        L,
+        [](rainbow::SpriteBatch* batch, SharedPtr<TextureAtlas> atlas) {
+            batch->set_normal(std::move(atlas));
+        });
+}
 
-    int SpriteBatch::set_texture(lua_State* L)
-    {
-        // <spritebatch>:set_texture(<texture>)
-        return set1ud<Texture>(
-            L,
-            [](rainbow::SpriteBatch* batch, SharedPtr<TextureAtlas> atlas) {
-                batch->set_texture(std::move(atlas));
-            });
-    }
-} NS_RAINBOW_LUA_END
+auto SpriteBatch::set_texture(lua_State* L) -> int
+{
+    // <spritebatch>:set_texture(<texture>)
+    return set1ud<Texture>(
+        L,
+        [](rainbow::SpriteBatch* batch, SharedPtr<TextureAtlas> atlas) {
+            batch->set_texture(std::move(atlas));
+        });
+}
+
+LUA_REG_OBJECT(SpriteBatch, "spritebatch") {
+    LUA_REG_OBJECT_FUNC(SpriteBatch, add),
+    LUA_REG_OBJECT_FUNC(SpriteBatch, create_sprite),
+    LUA_REG_OBJECT_FUNC(SpriteBatch, set_normal),
+    LUA_REG_OBJECT_FUNC(SpriteBatch, set_texture),
+    LUA_REG_OBJECT_END()
+};

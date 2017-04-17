@@ -9,42 +9,40 @@
 
 class b2Contact;
 
-NS_B2_LUA_BEGIN
+namespace b2 { namespace lua
 {
-    class Contact : private rainbow::lua::Bind<Contact>
+    class Contact : private rainbow::lua::Object<Contact>
     {
     public:
-        static constexpr bool is_constructible = false;
-        static const char class_name[];
-        static const luaL_Reg functions[];
+        LUA_REG_OBJECT_PROPS(false)
 
         explicit Contact(lua_State*);
 
-        b2Contact* get() const { return contact_; }
+        auto get() const { return contact_; }
         void reset(b2Contact* contact) { contact_ = contact; }
 
     private:
-        static int GetManifold(lua_State*);
-        static int GetWorldManifold(lua_State*);
-        static int IsTouching(lua_State*);
-        static int SetEnabled(lua_State*);
-        static int IsEnabled(lua_State*);
-        static int GetNext(lua_State*);
-        static int GetFixtureA(lua_State*);
-        static int GetChildIndexA(lua_State*);
-        static int GetFixtureB(lua_State*);
-        static int GetChildIndexB(lua_State*);
-        static int SetFriction(lua_State*);
-        static int GetFriction(lua_State*);
-        static int ResetFriction(lua_State*);
-        static int SetRestitution(lua_State*);
-        static int GetRestitution(lua_State*);
-        static int ResetRestitution(lua_State*);
-        static int SetTangentSpeed(lua_State*);
-        static int GetTangentSpeed(lua_State*);
+        static auto GetManifold(lua_State*) -> int;
+        static auto GetWorldManifold(lua_State*) -> int;
+        static auto IsTouching(lua_State*) -> int;
+        static auto SetEnabled(lua_State*) -> int;
+        static auto IsEnabled(lua_State*) -> int;
+        static auto GetNext(lua_State*) -> int;
+        static auto GetFixtureA(lua_State*) -> int;
+        static auto GetChildIndexA(lua_State*) -> int;
+        static auto GetFixtureB(lua_State*) -> int;
+        static auto GetChildIndexB(lua_State*) -> int;
+        static auto SetFriction(lua_State*) -> int;
+        static auto GetFriction(lua_State*) -> int;
+        static auto ResetFriction(lua_State*) -> int;
+        static auto SetRestitution(lua_State*) -> int;
+        static auto GetRestitution(lua_State*) -> int;
+        static auto ResetRestitution(lua_State*) -> int;
+        static auto SetTangentSpeed(lua_State*) -> int;
+        static auto GetTangentSpeed(lua_State*) -> int;
 
         b2Contact* contact_;
     };
-} NS_B2_LUA_END
+}}  // namespace b2::lua
 
 #endif

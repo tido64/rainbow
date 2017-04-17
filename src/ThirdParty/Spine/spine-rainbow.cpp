@@ -468,26 +468,6 @@ void Skeleton::update(uint64_t dt)
 #if USE_LUA_SCRIPT
 namespace spine { namespace lua
 {
-    constexpr bool Skeleton::is_constructible;
-
-    const char Skeleton::class_name[] = "skeleton";
-
-    const luaL_Reg Skeleton::functions[]{
-        {"add_animation",          &Skeleton::add_animation},
-        {"clear_track",            &Skeleton::clear_track},
-        {"clear_tracks",           &Skeleton::clear_tracks},
-        {"get_current_animation",  &Skeleton::get_current_animation},
-        {"get_skin",               &Skeleton::get_skin},
-        {"set_animation",          &Skeleton::set_animation},
-        {"set_animation_mix",      &Skeleton::set_animation_mix},
-        {"set_attachment",         &Skeleton::set_attachment},
-        {"set_flip",               &Skeleton::set_flip},
-        {"set_listener",           &Skeleton::set_listener},
-        {"set_position",           &Skeleton::set_position},
-        {"set_skin",               &Skeleton::set_skin},
-        {"set_time_scale",         &Skeleton::set_time_scale},
-        {nullptr,                  nullptr}};
-
     Skeleton::Skeleton(lua_State* L) : state_(L)
     {
         rainbow::lua::checkargs<char*, rainbow::lua::nil_or<lua_Number>>(L);
@@ -501,16 +481,13 @@ namespace spine { namespace lua
         rainbow::lua::
             checkargs<Skeleton, lua_Number, char*, bool, lua_Number>(L);
 
-        Skeleton* self = Bind::self(L);
-        if (self == nullptr)
+        return with_self(L, [](Skeleton* self, lua_State* L) {
+            self->skeleton_->add_animation(lua_tointeger(L, 2),
+                                           lua_tostring(L, 3),
+                                           rainbow::lua::toboolean(L, 4),
+                                           lua_tonumber(L, 5));
             return 0;
-
-        self->skeleton_->add_animation(
-            lua_tointeger(L, 2),
-            lua_tostring(L, 3),
-            rainbow::lua::toboolean(L, 4),
-            lua_tonumber(L, 5));
-        return 0;
+        });
     }
 
     auto Skeleton::clear_track(lua_State* L) -> int
@@ -522,69 +499,56 @@ namespace spine { namespace lua
 
     auto Skeleton::clear_tracks(lua_State* L) -> int
     {
-        Skeleton* self = Bind::self(L);
-        if (self == nullptr)
+        return with_self(L, [](Skeleton* self, lua_State*) {
+            self->skeleton_->clear_tracks();
             return 0;
-
-        self->skeleton_->clear_tracks();
-        return 0;
+        });
     }
 
     auto Skeleton::get_current_animation(lua_State* L) -> int
     {
         rainbow::lua::checkargs<Skeleton, lua_Number>(L);
 
-        Skeleton* self = Bind::self(L);
-        if (self == nullptr)
-            return 0;
+        return with_self(L, [](Skeleton* self, lua_State* L) {
+            czstring name =
+                self->skeleton_->get_current_animation(lua_tointeger(L, 2));
+            if (name == nullptr)
+                return 0;
 
-        czstring name =
-            self->skeleton_->get_current_animation(lua_tointeger(L, 2));
-        if (name == nullptr)
-            return 0;
-
-        lua_pushstring(L, name);
-        return 1;
+            lua_pushstring(L, name);
+            return 1;
+        });
     }
 
     auto Skeleton::get_skin(lua_State* L) -> int
     {
-        Skeleton* self = Bind::self(L);
-        if (self == nullptr)
-            return 0;
-
-        lua_pushstring(L, self->skeleton_->get_skin());
-        return 1;
+        return with_self(L, [](Skeleton* self, lua_State* L) {
+            lua_pushstring(L, self->skeleton_->get_skin());
+            return 1;
+        });
     }
 
     auto Skeleton::set_animation(lua_State* L) -> int
     {
         rainbow::lua::checkargs<Skeleton, lua_Number, char*, bool>(L);
 
-        Skeleton* self = Bind::self(L);
-        if (self == nullptr)
+        return with_self(L, [](Skeleton* self, lua_State* L) {
+            self->skeleton_->set_animation(lua_tointeger(L, 2),
+                                           lua_tostring(L, 3),
+                                           rainbow::lua::toboolean(L, 4));
             return 0;
-
-        self->skeleton_->set_animation(
-            lua_tointeger(L, 2),
-            lua_tostring(L, 3),
-            rainbow::lua::toboolean(L, 4));
-        return 0;
+        });
     }
 
     auto Skeleton::set_animation_mix(lua_State* L) -> int
     {
         rainbow::lua::checkargs<Skeleton, char*, char*, lua_Number>(L);
 
-        Skeleton* self = Bind::self(L);
-        if (self == nullptr)
+        return with_self(L, [](Skeleton* self, lua_State* L) {
+            self->skeleton_->set_animation_mix(
+                lua_tostring(L, 2), lua_tostring(L, 3), lua_tonumber(L, 4));
             return 0;
-
-        self->skeleton_->set_animation_mix(
-            lua_tostring(L, 2),
-            lua_tostring(L, 3),
-            lua_tonumber(L, 4));
-        return 0;
+        });
     }
 
     auto Skeleton::set_attachment(lua_State* L) -> int
@@ -592,48 +556,42 @@ namespace spine { namespace lua
         rainbow::lua::
             checkargs<Skeleton, char*, rainbow::lua::nil_or<char*>>(L);
 
-        Skeleton* self = Bind::self(L);
-        if (self == nullptr)
+        return with_self(L, [](Skeleton* self, lua_State* L) {
+            self->skeleton_->set_attachment(lua_tostring(L, 2),
+                                            lua_tostring(L, 3));
             return 0;
-
-        self->skeleton_->set_attachment(lua_tostring(L, 2),
-                                        lua_tostring(L, 3));
-        return 0;
+        });
     }
 
     auto Skeleton::set_flip(lua_State* L) -> int
     {
         rainbow::lua::checkargs<Skeleton, bool, bool>(L);
 
-        Skeleton* self = Bind::self(L);
-        if (self == nullptr)
+        return with_self(L, [](Skeleton* self, lua_State* L) {
+            self->skeleton_->set_flip(
+                rainbow::lua::toboolean(L, 2), rainbow::lua::toboolean(L, 3));
             return 0;
-
-        self->skeleton_->set_flip(
-            rainbow::lua::toboolean(L, 2), rainbow::lua::toboolean(L, 3));
-        return 0;
+        });
     }
 
     auto Skeleton::set_listener(lua_State* L) -> int
     {
         rainbow::lua::checkargs<Skeleton, rainbow::lua::nil_or<void*>>(L);
 
-        Skeleton* self = Bind::self(L);
-        if (self == nullptr)
+        return with_self(L, [](Skeleton* self, lua_State* L) {
+            if (!lua_istable(L, 2))
+            {
+                self->listener_.reset();
+                self->skeleton_->set_listener(nullptr, nullptr);
+            }
+            else
+            {
+                lua_settop(L, 2);
+                self->listener_.reset(L);
+                self->skeleton_->set_listener(on_animation_state_event, self);
+            }
             return 0;
-
-        if (!lua_istable(L, 2))
-        {
-            self->listener_.reset();
-            self->skeleton_->set_listener(nullptr, nullptr);
-        }
-        else
-        {
-            lua_settop(L, 2);
-            self->listener_.reset(L);
-            self->skeleton_->set_listener(on_animation_state_event, self);
-        }
-        return 0;
+        });
     }
 
     auto Skeleton::set_position(lua_State* L) -> int
@@ -647,12 +605,10 @@ namespace spine { namespace lua
     {
         rainbow::lua::checkargs<Skeleton, rainbow::lua::nil_or<char*>>(L);
 
-        Skeleton* self = Bind::self(L);
-        if (self == nullptr)
+        return with_self(L, [](Skeleton* self, lua_State* L) {
+            self->skeleton_->set_skin(lua_tostring(L, 2));
             return 0;
-
-        self->skeleton_->set_skin(lua_tostring(L, 2));
-        return 0;
+        });
     }
 
     auto Skeleton::set_time_scale(lua_State* L) -> int
@@ -668,6 +624,23 @@ namespace spine { namespace lua
     {
         skeleton_->update(dt);
     }
+
+    LUA_REG_OBJECT(Skeleton, "skeleton") {
+        LUA_REG_OBJECT_FUNC(Skeleton, add_animation),
+        LUA_REG_OBJECT_FUNC(Skeleton, clear_track),
+        LUA_REG_OBJECT_FUNC(Skeleton, clear_tracks),
+        LUA_REG_OBJECT_FUNC(Skeleton, get_current_animation),
+        LUA_REG_OBJECT_FUNC(Skeleton, get_skin),
+        LUA_REG_OBJECT_FUNC(Skeleton, set_animation),
+        LUA_REG_OBJECT_FUNC(Skeleton, set_animation_mix),
+        LUA_REG_OBJECT_FUNC(Skeleton, set_attachment),
+        LUA_REG_OBJECT_FUNC(Skeleton, set_flip),
+        LUA_REG_OBJECT_FUNC(Skeleton, set_listener),
+        LUA_REG_OBJECT_FUNC(Skeleton, set_position),
+        LUA_REG_OBJECT_FUNC(Skeleton, set_skin),
+        LUA_REG_OBJECT_FUNC(Skeleton, set_time_scale),
+        LUA_REG_OBJECT_END()
+    };
 }}  // namespace spine::lua
 
 #endif  // USE_LUA_SCRIPT

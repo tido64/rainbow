@@ -9,7 +9,7 @@
 
 #include <Box2D/Dynamics/b2WorldCallbacks.h>
 
-#include "Lua/LuaBind.h"
+#include "Lua/Object.h"
 
 namespace b2
 {
@@ -18,17 +18,15 @@ namespace b2
     namespace lua
     {
         class World : public b2ContactListener,
-                      private rainbow::lua::Bind<World>
+                      private rainbow::lua::Object<World>
         {
         public:
-            static constexpr bool is_constructible = true;
-            static const char class_name[];
-            static const luaL_Reg functions[];
+            LUA_REG_OBJECT_PROPS(true)
 
             explicit World(lua_State*);
             ~World();
 
-            StableWorld* get() const { return world_.get(); }
+            auto get() const { return world_.get(); }
 
             // Implement b2ContactListener
 
@@ -38,45 +36,45 @@ namespace b2
             void PostSolve(b2Contact*, const b2ContactImpulse*) override;
 
         private:
-            static int GetPTM(lua_State*);
-            static int SetPTM(lua_State*);
+            static auto GetPTM(lua_State*) -> int;
+            static auto SetPTM(lua_State*) -> int;
 
-            static int SetDestructionListener(lua_State*);
-            static int SetContactFilter(lua_State*);
-            static int SetContactListener(lua_State*);
-            static int SetDebugDraw(lua_State*);
-            static int CreateBody(lua_State*);
-            static int DestroyBody(lua_State*);
-            static int CreateJoint(lua_State*);
-            static int DestroyJoint(lua_State*);
-            static int Step(lua_State*);
-            static int QueryAABB(lua_State*);
-            static int RayCast(lua_State*);
-            static int GetBodyList(lua_State*);
-            static int GetJointList(lua_State*);
-            static int GetContactList(lua_State*);
-            static int SetAllowSleeping(lua_State*);
-            static int GetAllowSleeping(lua_State*);
-            static int SetWarmStarting(lua_State*);
-            static int GetWarmStarting(lua_State*);
-            static int SetContinuousPhysics(lua_State*);
-            static int GetContinuousPhysics(lua_State*);
-            static int SetSubStepping(lua_State*);
-            static int GetSubStepping(lua_State*);
-            static int GetProxyCount(lua_State*);
-            static int GetBodyCount(lua_State*);
-            static int GetJointCount(lua_State*);
-            static int GetContactCount(lua_State*);
-            static int GetTreeHeight(lua_State*);
-            static int GetTreeBalance(lua_State*);
-            static int GetTreeQuality(lua_State*);
-            static int SetGravity(lua_State*);
-            static int GetGravity(lua_State*);
-            static int IsLocked(lua_State*);
-            static int ShiftOrigin(lua_State*);
-            static int GetContactManager(lua_State*);
-            static int GetProfile(lua_State*);
-            static int Dump(lua_State*);
+            static auto SetDestructionListener(lua_State*) -> int;
+            static auto SetContactFilter(lua_State*) -> int;
+            static auto SetContactListener(lua_State*) -> int;
+            static auto SetDebugDraw(lua_State*) -> int;
+            static auto CreateBody(lua_State*) -> int;
+            static auto DestroyBody(lua_State*) -> int;
+            static auto CreateJoint(lua_State*) -> int;
+            static auto DestroyJoint(lua_State*) -> int;
+            static auto Step(lua_State*) -> int;
+            static auto QueryAABB(lua_State*) -> int;
+            static auto RayCast(lua_State*) -> int;
+            static auto GetBodyList(lua_State*) -> int;
+            static auto GetJointList(lua_State*) -> int;
+            static auto GetContactList(lua_State*) -> int;
+            static auto SetAllowSleeping(lua_State*) -> int;
+            static auto GetAllowSleeping(lua_State*) -> int;
+            static auto SetWarmStarting(lua_State*) -> int;
+            static auto GetWarmStarting(lua_State*) -> int;
+            static auto SetContinuousPhysics(lua_State*) -> int;
+            static auto GetContinuousPhysics(lua_State*) -> int;
+            static auto SetSubStepping(lua_State*) -> int;
+            static auto GetSubStepping(lua_State*) -> int;
+            static auto GetProxyCount(lua_State*) -> int;
+            static auto GetBodyCount(lua_State*) -> int;
+            static auto GetJointCount(lua_State*) -> int;
+            static auto GetContactCount(lua_State*) -> int;
+            static auto GetTreeHeight(lua_State*) -> int;
+            static auto GetTreeBalance(lua_State*) -> int;
+            static auto GetTreeQuality(lua_State*) -> int;
+            static auto SetGravity(lua_State*) -> int;
+            static auto GetGravity(lua_State*) -> int;
+            static auto IsLocked(lua_State*) -> int;
+            static auto ShiftOrigin(lua_State*) -> int;
+            static auto GetContactManager(lua_State*) -> int;
+            static auto GetProfile(lua_State*) -> int;
+            static auto Dump(lua_State*) -> int;
 
             std::unique_ptr<StableWorld> world_;
             int contact_listener_;

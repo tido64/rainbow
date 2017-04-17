@@ -10,91 +10,89 @@
 class b2Body;
 struct b2BodyDef;
 
-NS_B2_LUA_BEGIN
+namespace b2 { namespace lua
 {
-    int BodyDef(lua_State* L);
-    b2BodyDef GetBodyDef(lua_State* L);
+    auto BodyDef(lua_State* L) -> int;
+    auto GetBodyDef(lua_State* L) -> b2BodyDef;
 
-    class Body : private rainbow::lua::Bind<Body>
+    class Body : private rainbow::lua::Object<Body>
     {
     public:
-        static constexpr bool is_constructible = false;
-        static const char class_name[];
-        static const luaL_Reg functions[];
+        LUA_REG_OBJECT_PROPS(false)
 
         static void Init(lua_State*);
 
         explicit Body(lua_State*);
 
-        b2Body* get() const { return body_; }
+        auto get() const { return body_; }
         void reset() { body_ = nullptr; }
 
     private:
-        static int Bind(lua_State*);
+        static auto Bind(lua_State*) -> int;
 
-        static int CreateFixture(lua_State*);
-        static int DestroyFixture(lua_State*);
+        static auto CreateFixture(lua_State*) -> int;
+        static auto DestroyFixture(lua_State*) -> int;
 
-        static int SetTransform(lua_State*);
-        static int GetPosition(lua_State*);
-        static int GetAngle(lua_State*);
-        static int GetWorldCenter(lua_State*);
-        static int GetLocalCenter(lua_State*);
+        static auto SetTransform(lua_State*) -> int;
+        static auto GetPosition(lua_State*) -> int;
+        static auto GetAngle(lua_State*) -> int;
+        static auto GetWorldCenter(lua_State*) -> int;
+        static auto GetLocalCenter(lua_State*) -> int;
 
-        static int SetLinearVelocity(lua_State*);
-        static int GetLinearVelocity(lua_State*);
-        static int SetAngularVelocity(lua_State*);
-        static int GetAngularVelocity(lua_State*);
+        static auto SetLinearVelocity(lua_State*) -> int;
+        static auto GetLinearVelocity(lua_State*) -> int;
+        static auto SetAngularVelocity(lua_State*) -> int;
+        static auto GetAngularVelocity(lua_State*) -> int;
 
-        static int ApplyForce(lua_State*);
-        static int ApplyForceToCenter(lua_State*);
-        static int ApplyTorque(lua_State*);
-        static int ApplyLinearImpulse(lua_State*);
-        static int ApplyAngularImpulse(lua_State*);
+        static auto ApplyForce(lua_State*) -> int;
+        static auto ApplyForceToCenter(lua_State*) -> int;
+        static auto ApplyTorque(lua_State*) -> int;
+        static auto ApplyLinearImpulse(lua_State*) -> int;
+        static auto ApplyAngularImpulse(lua_State*) -> int;
 
-        static int GetMass(lua_State*);
-        static int GetInertia(lua_State*);
-        static int GetMassData(lua_State*);
-        static int SetMassData(lua_State*);
-        static int ResetMassData(lua_State*);
+        static auto GetMass(lua_State*) -> int;
+        static auto GetInertia(lua_State*) -> int;
+        static auto GetMassData(lua_State*) -> int;
+        static auto SetMassData(lua_State*) -> int;
+        static auto ResetMassData(lua_State*) -> int;
 
-        static int GetWorldPoint(lua_State*);
-        static int GetWorldVector(lua_State*);
-        static int GetLocalPoint(lua_State*);
-        static int GetLocalVector(lua_State*);
-        static int GetLinearVelocityFromWorldPoint(lua_State*);
-        static int GetLinearVelocityFromLocalPoint(lua_State*);
+        static auto GetWorldPoint(lua_State*) -> int;
+        static auto GetWorldVector(lua_State*) -> int;
+        static auto GetLocalPoint(lua_State*) -> int;
+        static auto GetLocalVector(lua_State*) -> int;
+        static auto GetLinearVelocityFromWorldPoint(lua_State*) -> int;
+        static auto GetLinearVelocityFromLocalPoint(lua_State*) -> int;
 
-        static int GetLinearDamping(lua_State*);
-        static int SetLinearDamping(lua_State*);
-        static int GetAngularDamping(lua_State*);
-        static int SetAngularDamping(lua_State*);
+        static auto GetLinearDamping(lua_State*) -> int;
+        static auto SetLinearDamping(lua_State*) -> int;
+        static auto GetAngularDamping(lua_State*) -> int;
+        static auto SetAngularDamping(lua_State*) -> int;
 
-        static int GetGravityScale(lua_State*);
-        static int SetGravityScale(lua_State*);
+        static auto GetGravityScale(lua_State*) -> int;
+        static auto SetGravityScale(lua_State*) -> int;
 
-        static int SetBullet(lua_State*);
-        static int IsBullet(lua_State*);
+        static auto SetBullet(lua_State*) -> int;
+        static auto IsBullet(lua_State*) -> int;
 
-        static int SetSleepingAllowed(lua_State*);
-        static int IsSleepingAllowed(lua_State*);
-        static int SetAwake(lua_State*);
-        static int IsAwake(lua_State*);
-        static int SetActive(lua_State*);
-        static int IsActive(lua_State*);
+        static auto SetSleepingAllowed(lua_State*) -> int;
+        static auto IsSleepingAllowed(lua_State*) -> int;
+        static auto SetAwake(lua_State*) -> int;
+        static auto IsAwake(lua_State*) -> int;
+        static auto SetActive(lua_State*) -> int;
+        static auto IsActive(lua_State*) -> int;
 
-        static int SetFixedRotation(lua_State*);
-        static int IsFixedRotation(lua_State*);
+        static auto SetFixedRotation(lua_State*) -> int;
+        static auto IsFixedRotation(lua_State*) -> int;
 
-        static int GetFixtureList(lua_State*);
-        static int GetJointList(lua_State*);
-        static int GetContactList(lua_State*);
-        static int GetNext(lua_State*);
+        static auto GetFixtureList(lua_State*) -> int;
+        static auto GetJointList(lua_State*) -> int;
+        static auto GetContactList(lua_State*) -> int;
+        static auto GetNext(lua_State*) -> int;
 
-        static int Dump(lua_State*);
+        static auto Dump(lua_State*) -> int;
 
         b2Body* body_;
     };
-} NS_B2_LUA_END
+}}  // namespace b2::lua
 
 #endif

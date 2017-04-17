@@ -14,10 +14,7 @@
 #   pragma GCC diagnostic pop
 #endif
 
-#include "Lua/LuaBind.h"
-
-#define NS_B2_LUA_BEGIN namespace b2 { namespace lua
-#define NS_B2_LUA_END }
+#include "Lua/Object.h"
 
 #define luaR_getboolean(L, k)  gettable<bool>(L, k, strllen(k))
 #define luaR_getfield(L, k)    getfield(L, k, strllen(k))

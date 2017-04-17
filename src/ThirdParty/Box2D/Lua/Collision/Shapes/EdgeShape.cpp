@@ -4,71 +4,46 @@
 
 #include "ThirdParty/Box2D/Lua/Collision/Shapes/EdgeShape.h"
 
-#include <Box2D/Collision/Shapes/b2EdgeShape.h>
+using b2::lua::EdgeShape;
 
-NS_B2_LUA_BEGIN
+auto EdgeShape::GetType(lua_State* L) -> int
 {
-    constexpr bool EdgeShape::is_constructible;
+    lua_pushinteger(L, b2Shape::e_edge);
+    return 1;
+}
 
-    const char EdgeShape::class_name[] = "EdgeShape";
+auto EdgeShape::Set(lua_State* L) -> int
+{
+    rainbow::lua::checkargs<EdgeShape,
+                            lua_Number,
+                            lua_Number,
+                            lua_Number,
+                            lua_Number>(L);
 
-    const luaL_Reg EdgeShape::functions[]{
-        {"GetType",        &EdgeShape::GetType},
-        {"Set",            &EdgeShape::Set},
-        {"GetChildCount",  &EdgeShape::GetChildCount},
-        {"TestPoint",      &EdgeShape::TestPoint},
-        {"RayCast",        &EdgeShape::RayCast},
-        {"ComputeAABB",    &EdgeShape::ComputeAABB},
-        {"ComputeMass",    &EdgeShape::ComputeMass},
-        {nullptr,          nullptr}};
-
-    EdgeShape::EdgeShape(lua_State* L) : is_owner_(false)
-    {
-        if (rainbow::lua::isuserdata(L, -1))
-            edge_.reset(static_cast<b2EdgeShape*>(lua_touserdata(L, -1)));
-        else
-        {
-            edge_ = std::make_unique<b2EdgeShape>();
-            is_owner_ = true;
-        }
-    }
-
-    EdgeShape::~EdgeShape()
-    {
-        if (!is_owner_)
-            edge_.release();
-    }
-
-    int EdgeShape::GetType(lua_State* L)
-    {
-        lua_pushinteger(L, b2Shape::e_edge);
-        return 1;
-    }
-
-    int EdgeShape::Set(lua_State* L)
-    {
-        rainbow::lua::checkargs<EdgeShape,
-                                lua_Number,
-                                lua_Number,
-                                lua_Number,
-                                lua_Number>(L);
-
-        EdgeShape* self = Bind::self(L);
-        if (self == nullptr)
-            return 0;
-
+    return with_self(L, [](EdgeShape* self, lua_State* L) {
         self->get()->Set(Vec2(L, 2, 3), Vec2(L, 4, 5));
         return 0;
-    }
+    });
+}
 
-    int EdgeShape::GetChildCount(lua_State* L)
-    {
-        lua_pushinteger(L, 1);
-        return 1;
-    }
+auto EdgeShape::GetChildCount(lua_State* L) -> int
+{
+    lua_pushinteger(L, 1);
+    return 1;
+}
 
-    int EdgeShape::TestPoint(lua_State*)
-    {
-        return 0;
-    }
-} NS_B2_LUA_END
+auto EdgeShape::TestPoint(lua_State*) -> int
+{
+    return 0;
+}
+
+LUA_REG_OBJECT(EdgeShape, "EdgeShape") {
+    LUA_REG_OBJECT_FUNC(EdgeShape, GetType),
+    LUA_REG_OBJECT_FUNC(EdgeShape, Set),
+    LUA_REG_OBJECT_FUNC(EdgeShape, GetChildCount),
+    LUA_REG_OBJECT_FUNC(EdgeShape, TestPoint),
+    LUA_REG_OBJECT_FUNC(EdgeShape, RayCast),
+    LUA_REG_OBJECT_FUNC(EdgeShape, ComputeAABB),
+    LUA_REG_OBJECT_FUNC(EdgeShape, ComputeMass),
+    LUA_REG_OBJECT_END()
+};

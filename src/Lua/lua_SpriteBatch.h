@@ -6,29 +6,27 @@
 #define LUA_SPRITEBATCH_H_
 
 #include "Graphics/SpriteBatch.h"
-#include "Lua/LuaBind.h"
+#include "Lua/Object.h"
 
-NS_RAINBOW_LUA_BEGIN
+namespace rainbow { namespace lua
 {
-    class SpriteBatch : private Bind<SpriteBatch>
+    class SpriteBatch : private Object<SpriteBatch>
     {
     public:
-        static constexpr bool is_constructible = true;
-        static const char class_name[];
-        static const luaL_Reg functions[];
+        LUA_REG_OBJECT_PROPS(true)
 
-        SpriteBatch(lua_State* L);
+        explicit SpriteBatch(lua_State*);
 
         auto get() { return &batch_; }
 
     private:
-        static int add(lua_State*);
-        static int create_sprite(lua_State*);
-        static int set_normal(lua_State*);
-        static int set_texture(lua_State*);
+        static auto add(lua_State*) -> int;
+        static auto create_sprite(lua_State*) -> int;
+        static auto set_normal(lua_State*) -> int;
+        static auto set_texture(lua_State*) -> int;
 
         rainbow::SpriteBatch batch_;
     };
-} NS_RAINBOW_LUA_END
+}}  // rainbow::lua
 
 #endif

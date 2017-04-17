@@ -4,65 +4,25 @@
 
 #include "ThirdParty/Box2D/Lua/Collision/Shapes/PolygonShape.h"
 
-#include <memory>
+using b2::lua::PolygonShape;
 
-#include <Box2D/Collision/Shapes/b2PolygonShape.h>
-
-NS_B2_LUA_BEGIN
+auto PolygonShape::GetType(lua_State* L) -> int
 {
-    constexpr bool PolygonShape::is_constructible;
+    lua_pushinteger(L, b2Shape::e_polygon);
+    return 1;
+}
 
-    const char PolygonShape::class_name[] = "PolygonShape";
+auto PolygonShape::GetChildCount(lua_State* L) -> int
+{
+    lua_pushinteger(L, 1);
+    return 1;
+}
 
-    const luaL_Reg PolygonShape::functions[]{
-        {"GetType",        &PolygonShape::GetType},
-        {"GetChildCount",  &PolygonShape::GetChildCount},
-        {"Set",            &PolygonShape::Set},
-        {"SetAsBox",       &PolygonShape::SetAsBox},
-        {"TestPoint",      &PolygonShape::TestPoint},
-        {"RayCast",        &PolygonShape::RayCast},
-        {"ComputeAABB",    &PolygonShape::ComputeAABB},
-        {"ComputeMass",    &PolygonShape::ComputeMass},
-        {"Validate",       &PolygonShape::Validate},
-        {nullptr,          nullptr}};
+auto PolygonShape::Set(lua_State* L) -> int
+{
+    rainbow::lua::checkargs<PolygonShape, void*, lua_Number>(L);
 
-    PolygonShape::PolygonShape(lua_State* L) : is_owner_(false)
-    {
-        if (rainbow::lua::isuserdata(L, -1))
-            polygon_.reset(static_cast<b2PolygonShape*>(lua_touserdata(L, -1)));
-        else
-        {
-            polygon_ = std::make_unique<b2PolygonShape>();
-            is_owner_ = true;
-        }
-    }
-
-    PolygonShape::~PolygonShape()
-    {
-        if (!is_owner_)
-            polygon_.release();
-    }
-
-    int PolygonShape::GetType(lua_State* L)
-    {
-        lua_pushinteger(L, b2Shape::e_polygon);
-        return 1;
-    }
-
-    int PolygonShape::GetChildCount(lua_State* L)
-    {
-        lua_pushinteger(L, 1);
-        return 1;
-    }
-
-    int PolygonShape::Set(lua_State* L)
-    {
-        rainbow::lua::checkargs<PolygonShape, void*, lua_Number>(L);
-
-        PolygonShape* self = Bind::self(L);
-        if (self == nullptr)
-            return 0;
-
+    return with_self(L, [](PolygonShape* self, lua_State* L) {
         const int count = static_cast<int>(lua_tointeger(L, 3));
         auto points = std::make_unique<b2Vec2[]>(count);
         for (int i = 0; i < count; ++i)
@@ -73,14 +33,12 @@ NS_B2_LUA_BEGIN
         }
         self->get()->Set(points.get(), count);
         return 0;
-    }
+    });
+}
 
-    int PolygonShape::SetAsBox(lua_State* L)
-    {
-        PolygonShape* self = Bind::self(L);
-        if (self == nullptr)
-            return 0;
-
+auto PolygonShape::SetAsBox(lua_State* L) -> int
+{
+    return with_self(L, [](PolygonShape* self, lua_State* L) {
         const int n = lua_gettop(L);
         LUA_ASSERT(L, n == 3 || n == 5, "3 or 5 parameters expected");
 
@@ -103,13 +61,27 @@ NS_B2_LUA_BEGIN
                                   Vec2(L, 4, 5),
                                   lua_tonumber(L, 6));
         }
-        return 0;
-    }
 
-    int PolygonShape::Validate(lua_State* L)
-    {
-        return get1b(L, [](const b2PolygonShape* polygon) {
-            return polygon->Validate();
-        });
-    }
-} NS_B2_LUA_END
+        return 0;
+    });
+}
+
+auto PolygonShape::Validate(lua_State* L) -> int
+{
+    return get1b(L, [](const b2PolygonShape* polygon) {
+        return polygon->Validate();
+    });
+}
+
+LUA_REG_OBJECT(PolygonShape, "PolygonShape") {
+    LUA_REG_OBJECT_FUNC(PolygonShape, GetType),
+    LUA_REG_OBJECT_FUNC(PolygonShape, GetChildCount),
+    LUA_REG_OBJECT_FUNC(PolygonShape, Set),
+    LUA_REG_OBJECT_FUNC(PolygonShape, SetAsBox),
+    LUA_REG_OBJECT_FUNC(PolygonShape, TestPoint),
+    LUA_REG_OBJECT_FUNC(PolygonShape, RayCast),
+    LUA_REG_OBJECT_FUNC(PolygonShape, ComputeAABB),
+    LUA_REG_OBJECT_FUNC(PolygonShape, ComputeMass),
+    LUA_REG_OBJECT_FUNC(PolygonShape, Validate),
+    LUA_REG_OBJECT_END()
+};

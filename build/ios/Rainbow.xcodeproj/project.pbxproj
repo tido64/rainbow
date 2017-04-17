@@ -599,7 +599,7 @@
 		19DB48B71CA6AAFE00999675 /* ElementBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ElementBuffer.cpp; sourceTree = "<group>"; };
 		19DB48B81CA6AAFE00999675 /* ElementBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ElementBuffer.h; sourceTree = "<group>"; };
 		19DCB2721741A1D000660000 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
-		19DCB2831746AB7C00660000 /* LuaBind.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LuaBind.h; sourceTree = "<group>"; };
+		19DCB2831746AB7C00660000 /* Object.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Object.h; sourceTree = "<group>"; };
 		19DF40451C98B415001482BC /* TypeInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TypeInfo.h; sourceTree = "<group>"; };
 		19DF40461C98B425001482BC /* String.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = String.h; sourceTree = "<group>"; };
 		19DF40481C98B4AF001482BC /* Pool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Pool.h; sourceTree = "<group>"; };
@@ -1065,7 +1065,6 @@
 				1939A1FD152C425D00494609 /* lua_SpriteBatch.h */,
 				1939A1FE152C425D00494609 /* lua_Texture.cpp */,
 				1939A1FF152C425D00494609 /* lua_Texture.h */,
-				19DCB2831746AB7C00660000 /* LuaBind.h */,
 				195D565717D90E0D00C78117 /* LuaDebugging.h */,
 				19E91FC01682B1460054D61F /* LuaHelper.cpp */,
 				19E91FC11682B1460054D61F /* LuaHelper.h */,
@@ -1077,6 +1076,7 @@
 				198F427A1A9151F500BE7A73 /* LuaScript.h */,
 				19FDF4941942FCFB00B5F21B /* LuaSyntax.cpp */,
 				19FDF4951942FCFB00B5F21B /* LuaSyntax.h */,
+				19DCB2831746AB7C00660000 /* Object.h */,
 			);
 			name = Lua;
 			path = ../../../src/Lua;

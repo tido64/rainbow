@@ -6,42 +6,40 @@
 #define LUA_SPRITE_H_
 
 #include "Graphics/Sprite.h"
-#include "Lua/LuaBind.h"
+#include "Lua/Object.h"
 
-NS_RAINBOW_LUA_BEGIN
+namespace rainbow { namespace lua
 {
-    class Sprite : private Bind<Sprite>
+    class Sprite : private Object<Sprite>
     {
     public:
-        static constexpr bool is_constructible = false;
-        static const char class_name[];
-        static const luaL_Reg functions[];
+        LUA_REG_OBJECT_PROPS(false)
 
-        Sprite(lua_State*);
+        explicit Sprite(lua_State*);
 
         auto get() -> SpriteRef& { return sprite_; }
 
     private:
-        static int get_angle(lua_State*);
-        static int get_color(lua_State*);
-        static int get_pivot(lua_State*);
-        static int get_position(lua_State*);
-        static int get_scale(lua_State*);
-        static int get_size(lua_State*);
-        static int set_color(lua_State*);
-        static int set_normal(lua_State*);
-        static int set_pivot(lua_State*);
-        static int set_position(lua_State*);
-        static int set_rotation(lua_State*);
-        static int set_scale(lua_State*);
-        static int set_texture(lua_State*);
+        static auto get_angle(lua_State*) -> int;
+        static auto get_color(lua_State*) -> int;
+        static auto get_pivot(lua_State*) -> int;
+        static auto get_position(lua_State*) -> int;
+        static auto get_scale(lua_State*) -> int;
+        static auto get_size(lua_State*) -> int;
+        static auto set_color(lua_State*) -> int;
+        static auto set_normal(lua_State*) -> int;
+        static auto set_pivot(lua_State*) -> int;
+        static auto set_position(lua_State*) -> int;
+        static auto set_rotation(lua_State*) -> int;
+        static auto set_scale(lua_State*) -> int;
+        static auto set_texture(lua_State*) -> int;
 
-        static int mirror(lua_State*);
-        static int move(lua_State*);
-        static int rotate(lua_State*);
+        static auto mirror(lua_State*) -> int;
+        static auto move(lua_State*) -> int;
+        static auto rotate(lua_State*) -> int;
 
         SpriteRef sprite_;
     };
-} NS_RAINBOW_LUA_END
+}}  // rainbow::lua
 
 #endif

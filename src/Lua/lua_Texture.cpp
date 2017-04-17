@@ -8,54 +8,44 @@
 
 #include "FileSystem/FileSystem.h"
 
-NS_RAINBOW_LUA_BEGIN
+using rainbow::lua::Texture;
+
+Texture::Texture(lua_State* L)
 {
-    constexpr bool Texture::is_constructible;
+    // rainbow.texture("/path/to/texture")
+    checkargs<char*>(L);
 
-    const char Texture::class_name[] = "texture";
+    const auto path = rainbow::filesystem::relative(lua_tostring(L, 1));
+    texture_ = make_shared<TextureAtlas>(path);
+    if (!texture_->is_valid())
+        luaL_error(L, "rainbow.texture: Failed to create texture");
+}
 
-    const luaL_Reg Texture::functions[]{
-        {"create",  &Texture::create},
-        {"trim",    &Texture::trim},
-        {nullptr,   nullptr}};
+auto Texture::create(lua_State* L) -> int
+{
+    // <texture>:create(x, y, width, height)
+    checkargs<Texture, lua_Number, lua_Number, lua_Number, lua_Number>(L);
 
-    Texture::Texture(lua_State* L)
-    {
-        // rainbow.texture("/path/to/texture")
-        checkargs<char*>(L);
-
-        const auto path = rainbow::filesystem::relative(lua_tostring(L, 1));
-        texture_ = make_shared<TextureAtlas>(path);
-        if (!texture_->is_valid())
-            luaL_error(L, "rainbow.texture: Failed to create texture");
-    }
-
-    SharedPtr<TextureAtlas> Texture::get() const { return texture_; }
-
-    int Texture::create(lua_State* L)
-    {
-        // <texture>:create(x, y, width, height)
-        checkargs<Texture, lua_Number, lua_Number, lua_Number, lua_Number>(L);
-
-        Texture* self = Bind::self(L);
-        if (self == nullptr)
-            return 0;
-
+    return with_self(L, [](Texture* self, lua_State* L) {
         const int x = lua_tointeger(L, 2);
         const int y = lua_tointeger(L, 3);
         const int w = lua_tointeger(L, 4);
         const int h = lua_tointeger(L, 5);
         lua_pushinteger(L, self->texture_->add_region(x, y, w, h));
         return 1;
-    }
+    });
+}
 
-    int Texture::trim(lua_State* L)
-    {
-        Texture* self = Bind::self(L);
-        if (self == nullptr)
-            return 0;
-
+auto Texture::trim(lua_State* L) -> int
+{
+    return with_self(L, [](Texture* self, lua_State*) {
         self->texture_->trim();
         return 0;
-    }
-} NS_RAINBOW_LUA_END
+    });
+}
+
+LUA_REG_OBJECT(Texture, "texture") {
+    LUA_REG_OBJECT_FUNC(Texture, create),
+    LUA_REG_OBJECT_FUNC(Texture, trim),
+    LUA_REG_OBJECT_END()
+};

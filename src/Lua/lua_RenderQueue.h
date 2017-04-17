@@ -7,19 +7,17 @@
 
 #include "Common/NonCopyable.h"
 #include "Graphics/RenderQueue.h"
-#include "Lua/LuaBind.h"
+#include "Lua/Object.h"
 
 namespace rainbow { namespace lua
 {
-    class RenderQueue : private Bind<RenderQueue>,
-                        private NonCopyable<RenderQueue>
+    class RenderQueue : private NonCopyable<RenderQueue>,
+                        private Object<RenderQueue>
     {
     public:
-        static constexpr bool is_constructible = false;
-        static const char class_name[];
-        static const luaL_Reg functions[];
+        LUA_REG_OBJECT_PROPS(false)
 
-        RenderQueue(lua_State*) {}
+        explicit RenderQueue(lua_State*) {}
 
         RenderQueue(lua_State*, graphics::RenderQueue& queue)
             : render_queue_(std::addressof(queue))
@@ -45,6 +43,6 @@ namespace rainbow { namespace lua
                      lua_State*,
                      int index) -> int;
     };
-}}
+}}  // rainbow::lua
 
 #endif

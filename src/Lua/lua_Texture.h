@@ -6,27 +6,25 @@
 #define LUA_TEXTURE_H_
 
 #include "Graphics/TextureAtlas.h"
-#include "Lua/LuaBind.h"
+#include "Lua/Object.h"
 
-NS_RAINBOW_LUA_BEGIN
+namespace rainbow { namespace lua
 {
-    class Texture : private Bind<Texture>
+    class Texture : private Object<Texture>
     {
     public:
-        static constexpr bool is_constructible = true;
-        static const char class_name[];
-        static const luaL_Reg functions[];
+        LUA_REG_OBJECT_PROPS(true)
 
-        Texture(lua_State*);
+        explicit Texture(lua_State*);
 
-        SharedPtr<TextureAtlas> get() const;
+        auto get() const { return texture_; }
 
     private:
-        static int create(lua_State*);
-        static int trim(lua_State*);
+        static auto create(lua_State*) -> int;
+        static auto trim(lua_State*) -> int;
 
         SharedPtr<TextureAtlas> texture_;
     };
-} NS_RAINBOW_LUA_END
+}}  // namespace rainbow::lua
 
 #endif

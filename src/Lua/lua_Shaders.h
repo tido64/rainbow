@@ -9,21 +9,21 @@
 
 struct lua_State;
 
-NS_RAINBOW_LUA_BEGIN
+namespace rainbow { namespace lua
 {
     class Shader
     {
     public:
-        virtual int id() const = 0;
+        virtual auto id() const -> int = 0;
 
     protected:
-        ~Shader() = default;
+        ~Shader() {}
     };
-} NS_RAINBOW_LUA_END
+}}  // rainbow::lua
 
-NS_RAINBOW_LUA_MODULE_BEGIN(shaders)
+namespace rainbow { namespace lua { namespace shaders
 {
     void init(lua_State*);
-} NS_RAINBOW_LUA_MODULE_END(shaders)
+}}}  // rainbow::lua::shaders
 
 #endif

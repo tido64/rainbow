@@ -27,13 +27,13 @@ namespace std
     };
 }
 
-NS_RAINBOW_LUA_BEGIN
+namespace rainbow { namespace lua
 {
     template <typename T>
-    class Bind;
+    class Object;
 
     template <typename T>
-    using LuaBindable = std::enable_if_t<std::is_base_of<Bind<T>, T>::value>;
+    using LuaObject = std::enable_if_t<std::is_base_of<Object<T>, T>::value>;
 
     /// <summary>
     ///   The equivalent of <see cref="std::weak_ptr"/> for Lua objects.
@@ -68,7 +68,7 @@ NS_RAINBOW_LUA_BEGIN
     ///   <see cref="lua_touserdata"/>, depending on whether <c>NDEBUG</c> is
     ///   defined.
     /// </summary>
-    template <typename T, typename = LuaBindable<T>>
+    template <typename T, typename = LuaObject<T>>
     auto touserdata(lua_State* L, int n) -> T*
     {
         return static_cast<T*>(IF_DEBUG_ELSE(
@@ -80,7 +80,7 @@ NS_RAINBOW_LUA_BEGIN
     ///   Returns the string representing a Lua wrapped object. The format of
     ///   the string is "<type name>: <address>".
     /// <//summary>
-    template <typename T, typename = LuaBindable<T>>
+    template <typename T, typename = LuaObject<T>>
     auto tostring(lua_State* L)
     {
         lua_pushfstring(L, "%s: %p", T::class_name, touserdata<T>(L, 1));
@@ -91,8 +91,8 @@ NS_RAINBOW_LUA_BEGIN
     template <typename T, typename... Args>
     auto alloc(lua_State* L, Args&&... args) -> int
     {
-        static_assert(
-            std::is_base_of<Bind<T>, T>::value, "T must be a subclass of Bind");
+        static_assert(std::is_base_of<Object<T>, T>::value,
+                      "T must be a subclass of Object");
 
         void* data = lua_newuserdata(L, sizeof(T));
         luaL_setmetatable(L, T::class_name);
@@ -123,7 +123,7 @@ NS_RAINBOW_LUA_BEGIN
         return LUA_OK;
     }
 
-    template <typename T, typename = LuaBindable<T>>
+    template <typename T, typename = LuaObject<T>>
     auto dealloc(lua_State* L)
     {
         touserdata<T>(L, 1)->~T();
@@ -263,7 +263,7 @@ NS_RAINBOW_LUA_BEGIN
     ///     <item>http://lua-users.org/wiki/LunaWrapper</item>
     ///   </list>
     /// </remarks>
-    template <typename T, typename = LuaBindable<T>>
+    template <typename T, typename = LuaObject<T>>
     void reg(lua_State* L)
     {
         if (T::is_constructible)
@@ -350,6 +350,6 @@ NS_RAINBOW_LUA_BEGIN
     ///   Unwraps the userdata at index <paramref name="n"/> if possible.
     /// </summary>
     void unwrapuserdata(lua_State* L, int n);
-} NS_RAINBOW_LUA_END
+}}  // namespace rainbow::lua
 
 #endif

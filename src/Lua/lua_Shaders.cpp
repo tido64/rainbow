@@ -5,33 +5,30 @@
 #include "Lua/lua_Shaders.h"
 
 #include "Graphics/Shaders/Diffuse.h"
-#include "Lua/LuaBind.h"
+#include "Lua/Object.h"
 
-NS_RAINBOW_LUA_MODULE_BEGIN(shaders)
+namespace rainbow { namespace lua { namespace shaders
 {
-    class Diffuse final : public rainbow::lua::Shader,
-                          private rainbow::lua::Bind<Diffuse>
+    class Diffuse final : public Shader, private Object<Diffuse>
     {
     public:
-        static constexpr bool is_constructible = false;
-        static const char class_name[];
-        static const luaL_Reg functions[];
+        LUA_REG_OBJECT_PROPS(false)
 
         explicit Diffuse(lua_State* L) : lighting_(toboolean(L, 1)) {}
 
-        const rainbow::shaders::Diffuse* get() const { return &lighting_; }
+        auto get() const { return &lighting_; }
 
-        int id() const override { return lighting_.id(); }
+        auto id() const -> int override { return lighting_.id(); }
 
     private:
-        static int set_cutoff(lua_State*);
-        static int set_radius(lua_State*);
-        static int set_position(lua_State*);
+        static auto set_cutoff(lua_State*) -> int;
+        static auto set_radius(lua_State*) -> int;
+        static auto set_position(lua_State*) -> int;
 
         rainbow::shaders::Diffuse lighting_;
     };
 
-    int diffuse(lua_State* L) { return rainbow::lua::alloc<Diffuse>(L); }
+    auto diffuse(lua_State* L) { return alloc<Diffuse>(L); }
 
     void init(lua_State* L)
     {
@@ -43,55 +40,46 @@ NS_RAINBOW_LUA_MODULE_BEGIN(shaders)
 
         reg<Diffuse>(L);
     }
-} NS_RAINBOW_LUA_MODULE_END(shaders)
+}}}  // rainbow::lua::shaders
 
-constexpr bool rainbow::lua::shaders::Diffuse::is_constructible;
-
-const char rainbow::lua::shaders::Diffuse::class_name[] = "shaders.diffuse";
-
-const luaL_Reg rainbow::lua::shaders::Diffuse::functions[]{
-    {"set_cutoff",    &rainbow::lua::shaders::Diffuse::set_cutoff},
-    {"set_radius",    &rainbow::lua::shaders::Diffuse::set_radius},
-    {"set_position",  &rainbow::lua::shaders::Diffuse::set_position},
-    {nullptr,         nullptr}};
-
-int rainbow::lua::shaders::Diffuse::set_cutoff(lua_State* L)
+auto rainbow::lua::shaders::Diffuse::set_cutoff(lua_State* L) -> int
 {
     // <diffuse>:set_cutoff(cutoff)
     checkargs<Diffuse, lua_Number>(L);
 
-    Diffuse* self = Bind::self(L);
-    if (self == nullptr)
+    return with_self(L, [](Diffuse* self, lua_State* L) {
+        self->lighting_.set_cutoff(lua_tonumber(L, 2));
         return 0;
-
-    self->lighting_.set_cutoff(lua_tonumber(L, 2));
-    return 0;
+    });
 }
 
-int rainbow::lua::shaders::Diffuse::set_radius(lua_State* L)
+auto rainbow::lua::shaders::Diffuse::set_radius(lua_State* L) -> int
 {
     // <diffuse>:set_radius(radius)
     checkargs<Diffuse, lua_Number>(L);
 
-    Diffuse* self = Bind::self(L);
-    if (self == nullptr)
+    return with_self(L, [](Diffuse* self, lua_State* L) {
+        self->lighting_.set_radius(lua_tonumber(L, 2));
         return 0;
-
-    self->lighting_.set_radius(lua_tonumber(L, 2));
-    return 0;
+    });
 }
 
-int rainbow::lua::shaders::Diffuse::set_position(lua_State* L)
+auto rainbow::lua::shaders::Diffuse::set_position(lua_State* L) -> int
 {
     // <diffuse>:set_position(x, y, z = 100.0)
     checkargs<Diffuse, lua_Number, lua_Number, nil_or<lua_Number>>(L);
 
-    Diffuse* self = Bind::self(L);
-    if (self == nullptr)
+    return with_self(L, [](Diffuse* self, lua_State* L) {
+        self->lighting_.set_position(lua_tonumber(L, 2),
+                                     lua_tonumber(L, 3),
+                                     rainbow::lua::optnumber(L, 4, 100.0));
         return 0;
-
-    self->lighting_.set_position(lua_tonumber(L, 2),
-                                 lua_tonumber(L, 3),
-                                 rainbow::lua::optnumber(L, 4, 100.0));
-    return 0;
+    });
 }
+
+LUA_REG_OBJECT(rainbow::lua::shaders::Diffuse, "shaders.diffuse") {
+    LUA_REG_OBJECT_FUNC(rainbow::lua::shaders::Diffuse, set_cutoff),
+    LUA_REG_OBJECT_FUNC(rainbow::lua::shaders::Diffuse, set_radius),
+    LUA_REG_OBJECT_FUNC(rainbow::lua::shaders::Diffuse, set_position),
+    LUA_REG_OBJECT_END()
+};

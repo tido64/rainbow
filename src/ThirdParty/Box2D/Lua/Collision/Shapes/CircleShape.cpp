@@ -4,65 +4,42 @@
 
 #include "ThirdParty/Box2D/Lua/Collision/Shapes/CircleShape.h"
 
-#include <Box2D/Collision/Shapes/b2CircleShape.h>
+using b2::lua::CircleShape;
 
-NS_B2_LUA_BEGIN
+auto CircleShape::GetType(lua_State* L) -> int
 {
-    constexpr bool CircleShape::is_constructible;
+    lua_pushinteger(L, b2Shape::e_circle);
+    return 1;
+}
 
-    const char CircleShape::class_name[] = "CircleShape";
+auto CircleShape::GetRadius(lua_State* L) -> int
+{
+    return get1f(L, [](const b2CircleShape* circle) {
+        return circle->m_radius;
+    });
+}
 
-    const luaL_Reg CircleShape::functions[]{
-        {"GetType",        &CircleShape::GetType},
-        {"GetRadius",      &CircleShape::GetRadius},
-        {"SetRadius",      &CircleShape::SetRadius},
-        {"GetChildCount",  &CircleShape::GetChildCount},
-        {"TestPoint",      &CircleShape::TestPoint},
-        {"RayCast",        &CircleShape::RayCast},
-        {"ComputeAABB",    &CircleShape::ComputeAABB},
-        {"ComputeMass",    &CircleShape::ComputeMass},
-        {nullptr,          nullptr}};
+auto CircleShape::SetRadius(lua_State* L) -> int
+{
+    return set1f(L, [](b2CircleShape* circle, float r) {
+        circle->m_radius = r;
+    });
+}
 
-    CircleShape::CircleShape(lua_State* L) : is_owner_(false)
-    {
-        if (rainbow::lua::isuserdata(L, -1))
-            circle_.reset(static_cast<b2CircleShape*>(lua_touserdata(L, -1)));
-        else
-        {
-            circle_ = std::make_unique<b2CircleShape>();
-            is_owner_ = true;
-        }
-    }
+auto CircleShape::GetChildCount(lua_State* L) -> int
+{
+    lua_pushinteger(L, 1);
+    return 1;
+}
 
-    CircleShape::~CircleShape()
-    {
-        if (!is_owner_)
-            circle_.release();
-    }
-
-    int CircleShape::GetType(lua_State* L)
-    {
-        lua_pushinteger(L, b2Shape::e_circle);
-        return 1;
-    }
-
-    int CircleShape::GetRadius(lua_State* L)
-    {
-        return get1f(L, [](const b2CircleShape* circle) {
-            return circle->m_radius;
-        });
-    }
-
-    int CircleShape::SetRadius(lua_State* L)
-    {
-        return set1f(L, [](b2CircleShape* circle, float r) {
-            circle->m_radius = r;
-        });
-    }
-
-    int CircleShape::GetChildCount(lua_State* L)
-    {
-        lua_pushinteger(L, 1);
-        return 1;
-    }
-} NS_B2_LUA_END
+LUA_REG_OBJECT(CircleShape, "CircleShape") {
+    LUA_REG_OBJECT_FUNC(CircleShape, GetType),
+    LUA_REG_OBJECT_FUNC(CircleShape, GetRadius),
+    LUA_REG_OBJECT_FUNC(CircleShape, SetRadius),
+    LUA_REG_OBJECT_FUNC(CircleShape, GetChildCount),
+    LUA_REG_OBJECT_FUNC(CircleShape, TestPoint),
+    LUA_REG_OBJECT_FUNC(CircleShape, RayCast),
+    LUA_REG_OBJECT_FUNC(CircleShape, ComputeAABB),
+    LUA_REG_OBJECT_FUNC(CircleShape, ComputeMass),
+    LUA_REG_OBJECT_END()
+};

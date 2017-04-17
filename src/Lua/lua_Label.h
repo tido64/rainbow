@@ -6,35 +6,32 @@
 #define LUA_LABEL_H_
 
 #include "Graphics/Label.h"
-#include "Lua/LuaBind.h"
+#include "Lua/Object.h"
 
-NS_RAINBOW_LUA_BEGIN
+namespace rainbow { namespace lua
 {
-    class Label : private Bind<Label>
+    class Label : private Object<Label>
     {
     public:
-        static constexpr bool is_constructible = true;
-        static const char class_name[];
-        static const luaL_Reg functions[];
+        LUA_REG_OBJECT_PROPS(true)
 
-        Label(lua_State*);
+        explicit Label(lua_State*);
 
         auto get() { return &label_; }
 
     private:
-        static int get_color(lua_State*);
-        static int set_alignment(lua_State*);
-        static int set_color(lua_State*);
-        static int set_font(lua_State*);
-        static int set_position(lua_State*);
-        static int set_rotation(lua_State*);
-        static int set_scale(lua_State*);
-        static int set_text(lua_State*);
-        static int move(lua_State*);
+        static auto get_color(lua_State*) -> int;
+        static auto set_alignment(lua_State*) -> int;
+        static auto set_color(lua_State*) -> int;
+        static auto set_font(lua_State*) -> int;
+        static auto set_position(lua_State*) -> int;
+        static auto set_rotation(lua_State*) -> int;
+        static auto set_scale(lua_State*) -> int;
+        static auto set_text(lua_State*) -> int;
+        static auto move(lua_State*) -> int;
 
         rainbow::Label label_;
     };
-}
-NS_RAINBOW_LUA_END
+}}  // rainbow::lua
 
 #endif

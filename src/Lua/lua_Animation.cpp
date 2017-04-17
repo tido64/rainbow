@@ -6,12 +6,14 @@
 
 #include "Lua/lua_Sprite.h"
 
+using rainbow::lua::Animation;
+
 namespace
 {
-    const char kErrorHandlingAnimationStateEvent[] =
+    constexpr char kErrorHandlingAnimationStateEvent[] =
         "An error occurred while handling an animation state event";
 
-    rainbow::Animation::Frames get_frames(lua_State* L, int n)
+    auto get_frames(lua_State* L, int n)
     {
         const size_t count = lua_rawlen(L, n);
         auto frames = std::make_unique<rainbow::Animation::Frame[]>(count + 1);
@@ -31,96 +33,72 @@ namespace
     }
 }
 
-NS_RAINBOW_LUA_BEGIN
+Animation::Animation(lua_State* L)
 {
-    constexpr bool Animation::is_constructible;
+    // rainbow.animation(<sprite>, frames{}, fps, loop_delay = 0)
+    checkargs<nil_or<Sprite>, void*, lua_Number, nil_or<lua_Number>>(L);
 
-    const char Animation::class_name[] = "animation";
+    SpriteRef sprite;
+    unwrapuserdata(L, 1);
+    if (isuserdata(L, 1))
+        sprite = touserdata<Sprite>(L, 1)->get();
+    animation_ = std::make_unique<rainbow::Animation>(
+        sprite, get_frames(L, 2), lua_tointeger(L, 3), optinteger(L, 4, 0));
+}
 
-    const luaL_Reg Animation::functions[]{
-        {"current_frame",   &Animation::current_frame},
-        {"is_stopped",      &Animation::is_stopped},
-        {"set_delay",       &Animation::set_delay},
-        {"set_frame_rate",  &Animation::set_frame_rate},
-        {"set_frames",      &Animation::set_frames},
-        {"set_listener",    &Animation::set_listener},
-        {"set_sprite",      &Animation::set_sprite},
-        {"jump_to",         &Animation::jump_to},
-        {"rewind",          &Animation::rewind},
-        {"start",           &Animation::start},
-        {"stop",            &Animation::stop},
-        {nullptr,           nullptr}};
+auto Animation::current_frame(lua_State* L) -> int
+{
+    return get1i(L, [](rainbow::Animation* animation) {
+        return animation->current_frame();
+    });
+}
 
-    Animation::Animation(lua_State* L)
-    {
-        // rainbow.animation(<sprite>, frames{}, fps, loop_delay = 0)
-        checkargs<nil_or<Sprite>, void*, lua_Number, nil_or<lua_Number>>(L);
+auto Animation::is_stopped(lua_State* L) -> int
+{
+    return get1b(L, [](const rainbow::Animation* animation) {
+        return animation->is_stopped();
+    });
+}
 
-        SpriteRef sprite;
-        unwrapuserdata(L, 1);
-        if (isuserdata(L, 1))
-            sprite = touserdata<Sprite>(L, 1)->get();
-        animation_ = std::make_unique<rainbow::Animation>(
-            sprite, get_frames(L, 2), lua_tointeger(L, 3), optinteger(L, 4, 0));
-    }
+auto Animation::set_delay(lua_State* L) -> int
+{
+    // <animation>:set_delay(delay_in_ms)
+    return set1i(L, [](rainbow::Animation* animation, int delay) {
+        animation->set_delay(delay);
+    });
+}
 
-    int Animation::current_frame(lua_State* L)
-    {
-        return get1i(L, [](rainbow::Animation* animation) {
-            return animation->current_frame();
-        });
-    }
+auto Animation::set_frame_rate(lua_State* L) -> int
+{
+    // <animation>:set_frame_rate(fps)
+    return set1i(L, [](rainbow::Animation* animation, int fps) {
+        animation->set_frame_rate(fps);
+    });
+}
 
-    int Animation::is_stopped(lua_State* L)
-    {
-        return get1b(L, [](const rainbow::Animation* animation) {
-            return animation->is_stopped();
-        });
-    }
+auto Animation::set_frames(lua_State* L) -> int
+{
+    // <animation>:set_frames({f1, f2, ...})
+    checkargs<Animation, void*>(L);
 
-    int Animation::set_delay(lua_State* L)
-    {
-        // <animation>:set_delay(delay_in_ms)
-        return set1i(L, [](rainbow::Animation* animation, int delay) {
-            animation->set_delay(delay);
-        });
-    }
-
-    int Animation::set_frame_rate(lua_State* L)
-    {
-        // <animation>:set_frame_rate(fps)
-        return set1i(L, [](rainbow::Animation* animation, int fps) {
-            animation->set_frame_rate(fps);
-        });
-    }
-
-    int Animation::set_frames(lua_State* L)
-    {
-        // <animation>:set_frames({f1, f2, ...})
-        checkargs<Animation, void*>(L);
-
-        Animation* self = Bind::self(L);
-        if (self == nullptr)
-            return 0;
-
+    return with_self(L, [](Animation* self, lua_State* L) {
         self->animation_->set_frames(get_frames(L, 2));
         return 0;
-    }
+    });
+}
 
-    int Animation::set_listener(lua_State* L)
-    {
-        checkargs<Animation, nil_or<void*>>(L);
+auto Animation::set_listener(lua_State* L) -> int
+{
+    checkargs<Animation, nil_or<void*>>(L);
 
-        Animation* self = Bind::self(L);
-        if (self == nullptr)
-            return 0;
-
+    return with_self(L, [](Animation* self, lua_State* L) {
         if (!lua_istable(L, 2))
         {
             self->listener_.reset();
             self->animation_->set_callback(nullptr);
             return 0;
         }
+
         lua_settop(L, 2);
         self->listener_.reset(L);
         self->animation_->set_callback(
@@ -157,53 +135,63 @@ NS_RAINBOW_LUA_BEGIN
                 lua_insert(L, -2);
                 call(L, 1, 0, 0, kErrorHandlingAnimationStateEvent);
             });
+
         return 0;
-    }
+    });
+}
 
-    int Animation::set_sprite(lua_State* L)
-    {
-        // <animation>:set_sprite(<sprite>)
-        return set1ud<Sprite>(
-            L,
-            [](rainbow::Animation* animation, const SpriteRef& sprite) {
-              animation->set_sprite(sprite);
-            });
-    }
-
-    int Animation::jump_to(lua_State* L)
-    {
-        return set1i(L, [](rainbow::Animation* animation, int frame) {
-            animation->jump_to(static_cast<unsigned int>(frame));
+auto Animation::set_sprite(lua_State* L) -> int
+{
+    // <animation>:set_sprite(<sprite>)
+    return set1ud<Sprite>(
+        L,
+        [](rainbow::Animation* animation, const SpriteRef& sprite) {
+            animation->set_sprite(sprite);
         });
-    }
+}
 
-    int Animation::rewind(lua_State* L)
-    {
-        Animation* self = Bind::self(L);
-        if (self == nullptr)
-            return 0;
+auto Animation::jump_to(lua_State* L) -> int
+{
+    return set1i(L, [](rainbow::Animation* animation, int frame) {
+        animation->jump_to(static_cast<unsigned int>(frame));
+    });
+}
 
+auto Animation::rewind(lua_State* L) -> int
+{
+    return with_self(L, [](Animation* self, lua_State*) {
         self->animation_->rewind();
         return 0;
-    }
+    });
+}
 
-    int Animation::start(lua_State* L)
-    {
-        Animation* self = Bind::self(L);
-        if (self == nullptr)
-            return 0;
-
+auto Animation::start(lua_State* L) -> int
+{
+    return with_self(L, [](Animation* self, lua_State*) {
         self->animation_->start();
         return 0;
-    }
+    });
+}
 
-    int Animation::stop(lua_State* L)
-    {
-        Animation* self = Bind::self(L);
-        if (self == nullptr)
-            return 0;
-
+auto Animation::stop(lua_State* L) -> int
+{
+    return with_self(L, [](Animation* self, lua_State*) {
         self->animation_->stop();
         return 0;
-    }
-} NS_RAINBOW_LUA_END
+    });
+}
+
+LUA_REG_OBJECT(Animation, "animation") {
+    LUA_REG_OBJECT_FUNC(Animation, current_frame),
+    LUA_REG_OBJECT_FUNC(Animation, is_stopped),
+    LUA_REG_OBJECT_FUNC(Animation, set_delay),
+    LUA_REG_OBJECT_FUNC(Animation, set_frame_rate),
+    LUA_REG_OBJECT_FUNC(Animation, set_frames),
+    LUA_REG_OBJECT_FUNC(Animation, set_listener),
+    LUA_REG_OBJECT_FUNC(Animation, set_sprite),
+    LUA_REG_OBJECT_FUNC(Animation, jump_to),
+    LUA_REG_OBJECT_FUNC(Animation, rewind),
+    LUA_REG_OBJECT_FUNC(Animation, start),
+    LUA_REG_OBJECT_FUNC(Animation, stop),
+    LUA_REG_OBJECT_END()
+};

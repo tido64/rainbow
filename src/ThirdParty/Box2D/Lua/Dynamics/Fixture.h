@@ -11,55 +11,53 @@ struct b2Filter;
 class b2Fixture;
 struct b2FixtureDef;
 
-NS_B2_LUA_BEGIN
+namespace b2 { namespace lua
 {
-    int Filter(lua_State* L);
-    int Filter(lua_State* L, const b2Filter& filter);
-    b2Filter GetFilter(lua_State* L);
+    auto Filter(lua_State*) -> int;
+    auto Filter(lua_State*, const b2Filter& filter) -> int;
+    auto GetFilter(lua_State*) -> b2Filter;
 
-    int FixtureDef(lua_State* L);
-    b2FixtureDef GetFixtureDef(lua_State* L);
+    auto FixtureDef(lua_State*) -> int;
+    auto GetFixtureDef(lua_State*) -> b2FixtureDef;
 
-    class Fixture : private rainbow::lua::Bind<Fixture>
+    class Fixture : private rainbow::lua::Object<Fixture>
     {
     public:
-        static constexpr bool is_constructible = false;
-        static const char class_name[];
-        static const luaL_Reg functions[];
+        LUA_REG_OBJECT_PROPS(false)
 
         static void Init(lua_State*);
 
         explicit Fixture(lua_State*);
 
-        b2Fixture* get() const { return fixture_; }
+        auto get() const { return fixture_; }
         void reset() { fixture_ = nullptr; }
 
     private:
-        static int GetType(lua_State*);
-        static int GetShape(lua_State*);
-        static int SetSensor(lua_State*);
-        static int IsSensor(lua_State*);
-        static int SetFilterData(lua_State*);
-        static int GetFilterData(lua_State*);
-        static int Refilter(lua_State*);
-        static int GetBody(lua_State*);
-        static int GetNext(lua_State*);
-        //static int GetUserData(lua_State*);
-        //static int SetUserData(lua_State*);
-        static int TestPoint(lua_State*);
-        static int RayCast(lua_State*);
-        static int GetMassData(lua_State*);
-        static int SetDensity(lua_State*);
-        static int GetDensity(lua_State*);
-        static int GetFriction(lua_State*);
-        static int SetFriction(lua_State*);
-        static int GetRestitution(lua_State*);
-        static int SetRestitution(lua_State*);
-        static int GetAABB(lua_State*);
-        static int Dump(lua_State*);
+        static auto GetType(lua_State*) -> int;
+        static auto GetShape(lua_State*) -> int;
+        static auto SetSensor(lua_State*) -> int;
+        static auto IsSensor(lua_State*) -> int;
+        static auto SetFilterData(lua_State*) -> int;
+        static auto GetFilterData(lua_State*) -> int;
+        static auto Refilter(lua_State*) -> int;
+        static auto GetBody(lua_State*) -> int;
+        static auto GetNext(lua_State*) -> int;
+        //static auto GetUserData(lua_State*) -> int;
+        //static auto SetUserData(lua_State*) -> int;
+        static auto TestPoint(lua_State*) -> int;
+        static auto RayCast(lua_State*) -> int;
+        static auto GetMassData(lua_State*) -> int;
+        static auto SetDensity(lua_State*) -> int;
+        static auto GetDensity(lua_State*) -> int;
+        static auto GetFriction(lua_State*) -> int;
+        static auto SetFriction(lua_State*) -> int;
+        static auto GetRestitution(lua_State*) -> int;
+        static auto SetRestitution(lua_State*) -> int;
+        static auto GetAABB(lua_State*) -> int;
+        static auto Dump(lua_State*) -> int;
 
         b2Fixture* fixture_;
     };
-} NS_B2_LUA_END
+}}  // namespace b2::lua
 
 #endif

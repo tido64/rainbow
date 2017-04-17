@@ -6,24 +6,22 @@
 #define LUA_FONT_H_
 
 #include "Graphics/FontAtlas.h"
-#include "Lua/LuaBind.h"
+#include "Lua/Object.h"
 
-NS_RAINBOW_LUA_BEGIN
+namespace rainbow { namespace lua
 {
-    class Font : private Bind<Font>
+    class Font : private Object<Font>
     {
     public:
-        static constexpr bool is_constructible = true;
-        static const char class_name[];
-        static const luaL_Reg functions[];
+        LUA_REG_OBJECT_PROPS(true)
 
-        Font(lua_State*);
+        explicit Font(lua_State*);
 
-        SharedPtr<FontAtlas> get() const;
+        auto get() const { return font_; }
 
     private:
         SharedPtr<FontAtlas> font_;
     };
-} NS_RAINBOW_LUA_END
+}}  // namespace rainbow::lua
 
 #endif

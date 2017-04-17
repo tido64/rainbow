@@ -5,35 +5,34 @@
 #ifndef THIRDPARTY_BOX2D_LUA_COLLISION_SHAPES_EDGESHAPE_H_
 #define THIRDPARTY_BOX2D_LUA_COLLISION_SHAPES_EDGESHAPE_H_
 
-#include <memory>
+#ifdef __GNUC__
+#   pragma GCC diagnostic push
+#   pragma GCC diagnostic ignored "-Wstrict-aliasing"
+#endif
+#include <Box2D/Collision/Shapes/b2EdgeShape.h>
+#ifdef __GNUC__
+#   pragma GCC diagnostic pop
+#endif
 
 #include "ThirdParty/Box2D/Lua/Collision/Shapes/Shape.h"
 
 class b2EdgeShape;
 
-NS_B2_LUA_BEGIN
+namespace b2 { namespace lua
 {
-    class EdgeShape : public ShapeBase<EdgeShape>
+    class EdgeShape : public ShapeBase<EdgeShape, b2EdgeShape>
     {
     public:
-        static constexpr bool is_constructible = true;
-        static const char class_name[];
-        static const luaL_Reg functions[];
+        LUA_REG_OBJECT_PROPS(true)
 
-        explicit EdgeShape(lua_State*);
-        ~EdgeShape();
-
-        b2EdgeShape* get() const { return edge_.get(); }
+        explicit EdgeShape(lua_State* L) : ShapeBase(L) {}
 
     private:
-        static int GetType(lua_State*);
-        static int Set(lua_State*);
-        static int GetChildCount(lua_State*);
-        static int TestPoint(lua_State*) /* override */;
-
-        std::unique_ptr<b2EdgeShape> edge_;
-        bool is_owner_;
+        static auto GetType(lua_State*) -> int;
+        static auto Set(lua_State*) -> int;
+        static auto GetChildCount(lua_State*) -> int;
+        static auto TestPoint(lua_State*) -> int /* override */;
     };
-} NS_B2_LUA_END
+}}  // namespace b2::lua
 
 #endif

@@ -8,158 +8,156 @@
 
 #include "ThirdParty/Box2D/Lua/Dynamics/Fixture.h"
 
-NS_B2_LUA_BEGIN
+using b2::lua::Contact;
+
+Contact::Contact(lua_State*) : contact_(nullptr)
 {
-    constexpr bool Contact::is_constructible;
+}
 
-    const char Contact::class_name[] = "b2Contact";
+auto Contact::GetManifold(lua_State*) -> int
+{
+    return -1;
+}
 
-    const luaL_Reg Contact::functions[]{
-        {"GetManifold",       &Contact::GetManifold},
-        {"GetWorldManifold",  &Contact::GetWorldManifold},
-        {"IsTouching",        &Contact::IsTouching},
-        {"SetEnabled",        &Contact::SetEnabled},
-        {"IsEnabled",         &Contact::IsEnabled},
-        {"GetNext",           &Contact::GetNext},
-        {"GetFixtureA",       &Contact::GetFixtureA},
-        {"GetChildIndexA",    &Contact::GetChildIndexA},
-        {"GetFixtureB",       &Contact::GetFixtureB},
-        {"GetChildIndexB",    &Contact::GetChildIndexB},
-        {"SetFriction",       &Contact::SetFriction},
-        {"GetFriction",       &Contact::GetFriction},
-        {"ResetFriction",     &Contact::ResetFriction},
-        {"SetRestitution",    &Contact::SetRestitution},
-        {"GetRestitution",    &Contact::GetRestitution},
-        {"ResetRestitution",  &Contact::ResetRestitution},
-        {"SetTangentSpeed",   &Contact::SetTangentSpeed},
-        {"GetTangentSpeed",   &Contact::GetTangentSpeed},
-        {nullptr,             nullptr}};
+auto Contact::GetWorldManifold(lua_State*) -> int
+{
+    return -1;
+}
 
-    Contact::Contact(lua_State*) : contact_(nullptr) {}
+auto Contact::IsTouching(lua_State* L) -> int
+{
+    return get1b(L, [](const b2Contact* contact) {
+        return contact->IsTouching();
+    });
+}
 
-    int Contact::GetManifold(lua_State*) { return -1; }
+auto Contact::SetEnabled(lua_State* L) -> int
+{
+    return set1b(L, [](b2Contact* contact, bool enabled) {
+        contact->SetEnabled(enabled);
+    });
+}
 
-    int Contact::GetWorldManifold(lua_State*) { return -1; }
+auto Contact::IsEnabled(lua_State* L) -> int
+{
+    return get1b(L, [](const b2Contact* contact) {
+        return contact->IsEnabled();
+    });
+}
 
-    int Contact::IsTouching(lua_State* L)
-    {
-        return get1b(L, [](const b2Contact* contact) {
-            return contact->IsTouching();
-        });
-    }
-
-    int Contact::SetEnabled(lua_State* L)
-    {
-        return set1b(L, [](b2Contact* contact, bool enabled) {
-            contact->SetEnabled(enabled);
-        });
-    }
-
-    int Contact::IsEnabled(lua_State* L)
-    {
-        return get1b(L, [](const b2Contact* contact) {
-            return contact->IsEnabled();
-        });
-    }
-
-    int Contact::GetNext(lua_State* L)
-    {
-        Contact* self = Bind::self(L);
-        if (self == nullptr)
-            return 0;
-
+auto Contact::GetNext(lua_State* L) -> int
+{
+    return with_self(L, [](Contact* self, lua_State* L) {
         self->reset(self->get()->GetNext());
         rainbow::lua::push(L, self->get() != nullptr);
         return 1;
-    }
+    });
+}
 
-    int Contact::GetFixtureA(lua_State* L)
-    {
-        return get1ud<Fixture>(L, [](b2Contact* contact) {
-            return contact->GetFixtureA();
-        });
-    }
+auto Contact::GetFixtureA(lua_State* L) -> int
+{
+    return get1ud<Fixture>(L, [](b2Contact* contact) {
+        return contact->GetFixtureA();
+    });
+}
 
-    int Contact::GetChildIndexA(lua_State* L)
-    {
-        return get1i(L, [](const b2Contact* contact) {
-            return contact->GetChildIndexA();
-        });
-    }
+auto Contact::GetChildIndexA(lua_State* L) -> int
+{
+    return get1i(L, [](const b2Contact* contact) {
+        return contact->GetChildIndexA();
+    });
+}
 
-    int Contact::GetFixtureB(lua_State* L)
-    {
-        return get1ud<Fixture>(L, [](b2Contact* contact) {
-            return contact->GetFixtureB();
-        });
-    }
+auto Contact::GetFixtureB(lua_State* L) -> int
+{
+    return get1ud<Fixture>(L, [](b2Contact* contact) {
+        return contact->GetFixtureB();
+    });
+}
 
-    int Contact::GetChildIndexB(lua_State* L)
-    {
-        return get1i(L, [](const b2Contact* contact) {
-            return contact->GetChildIndexB();
-        });
-    }
+auto Contact::GetChildIndexB(lua_State* L) -> int
+{
+    return get1i(L, [](const b2Contact* contact) {
+        return contact->GetChildIndexB();
+    });
+}
 
-    int Contact::SetFriction(lua_State* L)
-    {
-        return set1f(L, [](b2Contact* contact, float friction) {
-            contact->SetFriction(friction);
-        });
-    }
+auto Contact::SetFriction(lua_State* L) -> int
+{
+    return set1f(L, [](b2Contact* contact, float friction) {
+        contact->SetFriction(friction);
+    });
+}
 
-    int Contact::GetFriction(lua_State* L)
-    {
-        return get1f(L, [](const b2Contact* contact) {
-            return contact->GetFriction();
-        });
-    }
+auto Contact::GetFriction(lua_State* L) -> int
+{
+    return get1f(L, [](const b2Contact* contact) {
+        return contact->GetFriction();
+    });
+}
 
-    int Contact::ResetFriction(lua_State* L)
-    {
-        Contact* self = Bind::self(L);
-        if (self == nullptr)
-            return 0;
-
+auto Contact::ResetFriction(lua_State* L) -> int
+{
+    return with_self(L, [](Contact* self, lua_State*) {
         self->get()->ResetFriction();
         return 0;
-    }
+    });
+}
 
-    int Contact::SetRestitution(lua_State* L)
-    {
-        return set1f(L, [](b2Contact* contact, float r) {
-            contact->SetRestitution(r);
-        });
-    }
+auto Contact::SetRestitution(lua_State* L) -> int
+{
+    return set1f(L, [](b2Contact* contact, float r) {
+        contact->SetRestitution(r);
+    });
+}
 
-    int Contact::GetRestitution(lua_State* L)
-    {
-        return get1f(L, [](const b2Contact* contact) {
-            return contact->GetRestitution();
-        });
-    }
+auto Contact::GetRestitution(lua_State* L) -> int
+{
+    return get1f(L, [](const b2Contact* contact) {
+        return contact->GetRestitution();
+    });
+}
 
-    int Contact::ResetRestitution(lua_State* L)
-    {
-        Contact* self = Bind::self(L);
-        if (self == nullptr)
-            return 0;
-
+auto Contact::ResetRestitution(lua_State* L) -> int
+{
+    return with_self(L, [](Contact* self, lua_State*) {
         self->get()->ResetRestitution();
         return 0;
-    }
+    });
+}
 
-    int Contact::SetTangentSpeed(lua_State* L)
-    {
-        return set1f(L, [](b2Contact* contact, float speed) {
-            contact->SetTangentSpeed(speed);
-        });
-    }
+auto Contact::SetTangentSpeed(lua_State* L) -> int
+{
+    return set1f(L, [](b2Contact* contact, float speed) {
+        contact->SetTangentSpeed(speed);
+    });
+}
 
-    int Contact::GetTangentSpeed(lua_State* L)
-    {
-        return get1f(L, [](const b2Contact* contact) {
-            return contact->GetTangentSpeed();
-        });
-    }
-} NS_B2_LUA_END
+auto Contact::GetTangentSpeed(lua_State* L) -> int
+{
+    return get1f(L, [](const b2Contact* contact) {
+        return contact->GetTangentSpeed();
+    });
+}
+
+LUA_REG_OBJECT(Contact, "b2Contact") {
+    LUA_REG_OBJECT_FUNC(Contact, GetManifold),
+    LUA_REG_OBJECT_FUNC(Contact, GetWorldManifold),
+    LUA_REG_OBJECT_FUNC(Contact, IsTouching),
+    LUA_REG_OBJECT_FUNC(Contact, SetEnabled),
+    LUA_REG_OBJECT_FUNC(Contact, IsEnabled),
+    LUA_REG_OBJECT_FUNC(Contact, GetNext),
+    LUA_REG_OBJECT_FUNC(Contact, GetFixtureA),
+    LUA_REG_OBJECT_FUNC(Contact, GetChildIndexA),
+    LUA_REG_OBJECT_FUNC(Contact, GetFixtureB),
+    LUA_REG_OBJECT_FUNC(Contact, GetChildIndexB),
+    LUA_REG_OBJECT_FUNC(Contact, SetFriction),
+    LUA_REG_OBJECT_FUNC(Contact, GetFriction),
+    LUA_REG_OBJECT_FUNC(Contact, ResetFriction),
+    LUA_REG_OBJECT_FUNC(Contact, SetRestitution),
+    LUA_REG_OBJECT_FUNC(Contact, GetRestitution),
+    LUA_REG_OBJECT_FUNC(Contact, ResetRestitution),
+    LUA_REG_OBJECT_FUNC(Contact, SetTangentSpeed),
+    LUA_REG_OBJECT_FUNC(Contact, GetTangentSpeed),
+    LUA_REG_OBJECT_END()
+};

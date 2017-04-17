@@ -193,12 +193,12 @@ if(USE_LUA_SCRIPT)
        src/Lua/lua_SpriteBatch.h
        src/Lua/lua_Texture.cpp
        src/Lua/lua_Texture.h
-       src/Lua/LuaBind.h
        src/Lua/LuaMachine.cpp
        src/Lua/LuaMachine.h
        src/Lua/LuaModules.h
        src/Lua/LuaScript.cpp
        src/Lua/LuaScript.h
+       src/Lua/Object.h
        src/Resources/Rainbow.lua.h)
 else()
   add_definitions(-DUSE_LUA_SCRIPT=0)

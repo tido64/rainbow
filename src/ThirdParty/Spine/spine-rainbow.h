@@ -16,7 +16,7 @@
 #include "Graphics/VertexArray.h"
 
 #if USE_LUA_SCRIPT
-#   include "Lua/LuaBind.h"
+#   include "Lua/Object.h"
 #endif  // USE_LUA_SCRIPT
 
 namespace rainbow
@@ -135,55 +135,50 @@ private:
 };
 
 #if USE_LUA_SCRIPT
-namespace spine
+namespace spine { namespace lua
 {
-    namespace lua
+    class Skeleton final : public rainbow::IDrawable,
+                           private rainbow::lua::Object<Skeleton>
     {
-        class Skeleton final : public rainbow::IDrawable,
-                               private rainbow::lua::Bind<Skeleton>
+    public:
+        LUA_REG_OBJECT_PROPS(true)
+
+        explicit Skeleton(lua_State*);
+
+        auto get() const { return skeleton_.get(); }
+
+        auto listener() const -> const rainbow::lua::WeakRef&
         {
-        public:
-            static constexpr bool is_constructible = true;
-            static const char class_name[];
-            static const luaL_Reg functions[];
+            return listener_;
+        }
 
-            Skeleton(lua_State*);
+        auto state() const { return state_; }
 
-            auto get() const { return skeleton_.get(); }
+    private:
+        static int add_animation(lua_State*);
+        static int clear_track(lua_State*);
+        static int clear_tracks(lua_State*);
+        static int get_current_animation(lua_State*);
+        static int get_skin(lua_State*);
+        static int set_animation(lua_State*);
+        static int set_animation_mix(lua_State*);
+        static int set_attachment(lua_State*);
+        static int set_flip(lua_State*);
+        static int set_listener(lua_State*);
+        static int set_position(lua_State*);
+        static int set_skin(lua_State*);
+        static int set_time_scale(lua_State*);
 
-            auto listener() const -> const rainbow::lua::WeakRef&
-            {
-                return listener_;
-            }
+        std::unique_ptr<::Skeleton> skeleton_;
+        lua_State* state_;
+        rainbow::lua::WeakRef listener_;
 
-            auto state() const { return state_; }
+        // Implement IDrawable.
 
-        private:
-            static int add_animation(lua_State*);
-            static int clear_track(lua_State*);
-            static int clear_tracks(lua_State*);
-            static int get_current_animation(lua_State*);
-            static int get_skin(lua_State*);
-            static int set_animation(lua_State*);
-            static int set_animation_mix(lua_State*);
-            static int set_attachment(lua_State*);
-            static int set_flip(lua_State*);
-            static int set_listener(lua_State*);
-            static int set_position(lua_State*);
-            static int set_skin(lua_State*);
-            static int set_time_scale(lua_State*);
-
-            std::unique_ptr<::Skeleton> skeleton_;
-            lua_State* state_;
-            rainbow::lua::WeakRef listener_;
-
-            // Implement IDrawable.
-
-            void draw_impl() override;
-            void update_impl(uint64_t dt) override;
-        };
-    }
-}
+        void draw_impl() override;
+        void update_impl(uint64_t dt) override;
+    };
+}}
 #endif  // USE_LUA_SCRIPT
 
 #endif  // THIRDPARTY_SPINE_SPINE_RAINBOW_H_
