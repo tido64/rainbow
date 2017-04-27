@@ -271,7 +271,7 @@ void android_handle_event(struct android_app* app, int32_t cmd)
                     a->sensorEventQueue, a->accelerometerSensor,
                     (1000L / 60) * 1000);
             }
-            a->director->mixer().suspend(false);
+            a->director->on_focus_gained();
             a->active = true;
             break;
         case APP_CMD_LOST_FOCUS:
@@ -305,7 +305,7 @@ void android_handle_event(struct android_app* app, int32_t cmd)
                 ASensorEventQueue_disableSensor(
                     a->sensorEventQueue, a->accelerometerSensor);
             }
-            a->director->mixer().suspend(true);
+            a->director->on_focus_lost();
             break;
         case APP_CMD_DESTROY:
             a->active = false;

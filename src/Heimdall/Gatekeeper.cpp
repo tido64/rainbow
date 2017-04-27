@@ -12,12 +12,12 @@
 #   include "Lua/LuaHelper.h"
 #   include "Lua/LuaScript.h"
 
+using rainbow::File;
 using rainbow::LuaScript;
 #endif  // USE_LUA_SCRIPT
 
 using heimdall::Gatekeeper;
 using rainbow::Data;
-using rainbow::File;
 using rainbow::Vec2i;
 using rainbow::czstring;
 

@@ -438,11 +438,13 @@ target_include_directories(
         ${PROJECT_SOURCE_DIR}/src
         ${LOCAL_LIBRARY}
         ${LOCAL_LIBRARY}/nanosvg/src
+        ${LOCAL_LIBRARY}/variant/include
+        ${LUA_INCLUDE_DIR}
         ${SDL2_INCLUDE_DIRS}
         ${AUDIO_INCLUDE_DIRS}
-        ${LOCAL_LIBRARY}/variant/include
 )
-target_link_libraries(rainbow
+target_link_libraries(
+    rainbow
     ${TEST_LIBRARY} ${PHYSICS_LIBRARY} ${SPINE_LIBRARY} ${VECTOR_LIBRARY}
     freetype lua png ${SDL2_LIBRARIES}
     ${AUDIO_LIBRARIES} ${OPENGL_ext_LIBRARY} ${OPENGL_gl_LIBRARY}

@@ -57,7 +57,7 @@
 
 #define NOT_USED(v) static_cast<void>(v)
 
-#if (defined(__apple_build_version__) && CLANG_VERSION > 80000) ||             \
+#if (defined(__apple_build_version__) && CLANG_VERSION > 80100) ||             \
     (!defined(__apple_build_version__) && CLANG_VERSION >= 30900) ||           \
     GCC_VERSION >= 50300 ||                                                    \
     defined(_MSC_VER) ||                                                       \

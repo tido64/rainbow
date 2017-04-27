@@ -29,7 +29,8 @@ namespace rainbow
 
         auto operator=(uint32_t c) -> Color& { return *this = Color{c}; }
 
-        friend constexpr bool operator!=(Color lhs, Color rhs)
+        // TODO: Having constexpr here breaks Xcode 8.3
+        friend bool operator!=(Color lhs, Color rhs)
         {
             return !(lhs == rhs);
         }

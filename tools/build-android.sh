@@ -5,11 +5,11 @@
 
 APP_NAME=${APP_NAME:-Rainbow}
 APP_ID=com.bifrostentertainment.rainbow
-BUILD_TOOLS_VERSION=${BUILD_TOOLS_VERSION:-25.0.0}
-GRADLE_ANDROID_PLUGIN_VERSION=${GRADLE_ANDROID_PLUGIN_VERSION:-2.2.2}
-GRADLE_VERSION=${GRADLE_VERSION:-2.14.1}
-MIN_SDK_VERSION=${MIN_SDK_VERSION:-15}
-TARGET_SDK_VERSION=${TARGET_SDK_VERSION:-23}
+BUILD_TOOLS_VERSION=${BUILD_TOOLS_VERSION:-25.0.3}
+GRADLE_ANDROID_PLUGIN_VERSION=${GRADLE_ANDROID_PLUGIN_VERSION:-2.3.1}
+GRADLE_VERSION=${GRADLE_VERSION:-3.5}
+MIN_SDK_VERSION=${MIN_SDK_VERSION:-19}
+TARGET_SDK_VERSION=${TARGET_SDK_VERSION:-25}
 
 APP_MODULE=app
 PROJECT=$(cd -P "$(dirname $0)/.." && pwd)
@@ -68,6 +68,11 @@ task clean(type: Delete) {
 }
 BUILD_GRADLE
 
+ARGUMENTS=""
+for arg in $@; do
+  ARGUMENTS+=", '$arg'"
+done
+
 mkdir $APP_MODULE
 cat > $APP_MODULE/build.gradle << APP_BUILD_GRADLE
 apply plugin: 'com.android.application'
@@ -83,15 +88,19 @@ android {
         versionName '1.0'
         externalNativeBuild {
             cmake {
-                abiFilters 'armeabi-v7a'
-                arguments '-DANDROID_ARM_NEON=TRUE', '-DANDROID_PLATFORM=android-$TARGET_SDK_VERSION', '-DANDROID_STL=c++_shared'
+                arguments '-DANDROID_ARM_NEON=TRUE', '-DANDROID_STL=c++_shared'$ARGUMENTS
             }
+        }
+        ndk {
+            abiFilters 'armeabi-v7a'
         }
     }
     buildTypes {
         release {
-            minifyEnabled = false
-            ndk { debuggable true }
+            minifyEnabled false
+            ndk {
+                debuggable true
+            }
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -120,6 +129,7 @@ echo "include ':$APP_MODULE'" > settings.gradle
 echo " done"
 
 echo -n "Gathering source files..."
+mkdir src/main/assets
 mkdir src/main/cpp
 
 # Replace placeholder RainbowActivity with real implementation
@@ -139,14 +149,12 @@ cat > src/main/AndroidManifest.xml << ANDROIDMANIFEST_XML
           package="com.bifrostentertainment.rainbow">
   <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
   <!-- uses-permission android:name="android.permission.RECORD_AUDIO" / -->
-  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
-                   android:maxSdkVersion="18" />
   <uses-feature android:name="android.hardware.screen.portrait"
                 android:glEsVersion="0x00020000" />
   <application android:allowBackup="true"
                android:icon="@drawable/ic_launcher"
                android:label="@string/app_name"
-               android:theme="@style/Rainbow.Theme.Default">
+               android:theme="@android:style/Theme.DeviceDefault.NoActionBar.Fullscreen">
     <activity android:configChanges="orientation|screenSize"
               android:label="@string/app_name"
               android:launchMode="singleTask"
@@ -161,26 +169,6 @@ cat > src/main/AndroidManifest.xml << ANDROIDMANIFEST_XML
   </application>
 </manifest>
 ANDROIDMANIFEST_XML
-echo " done"
-
-echo -n "Generating $APP_MODULE/src/main/res/values/themes.xml..."
-mkdir -p src/main/res/values
-cat > src/main/res/values/themes.xml << THEMES_XML
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-  <style name="Rainbow.Theme.Default" parent="@android:style/Theme.NoTitleBar.Fullscreen"></style>
-</resources>
-THEMES_XML
-echo " done"
-
-echo -n "Generating $APP_MODULE/src/main/res/values-v11/themes.xml..."
-mkdir -p src/main/res/values-v11
-cat > src/main/res/values-v11/themes.xml << THEMES_XML
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-  <style name="Rainbow.Theme.Default" parent="@android:style/Theme.Holo.NoActionBar.Fullscreen"></style>
-</resources>
-THEMES_XML
 echo " done"
 
 echo -n "Removing unused resources..."
