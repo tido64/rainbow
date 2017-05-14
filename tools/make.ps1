@@ -7,7 +7,6 @@ param (
 	[switch]$Generate,
 	[switch]$Help)
 
-$Generator = "Visual Studio 14"
 $SourcePath = Join-Path (Split-Path (Get-Variable MyInvocation).Value.MyCommand.Path) .. -Resolve
 
 $FMODDescription = "Enable FMOD Studio audio engine"
@@ -23,17 +22,11 @@ function Make
 {
 	param ($options)
 
-	cmake $options -G $Generator $SourcePath
+	cmake $options -A x64 $SourcePath
 	.\Rainbow.sln
 }
 
-if ($Clean) {
-	Remove-Item * -include *.dir,*.vcxproj,*.vcxproj.filters,*.vcxproj.user,cmake_install.cmake,CMakeCache.txt,CMakeFiles,Debug,ipch,lib,MinSizeRel,Rainbow.sdf,Rainbow.sln,Release,RelWithDebInfo,Win32 -recurse
-}
-elseif ($Generate) {
-	Make "$args"
-}
-elseif ($Help) {
+if ($Help) {
 	$Script = $MyInvocation.InvocationName
 	Write-Output "Syntax: $Script [-Clean|-Generate [option ...]]"
 	Write-Output ""
@@ -47,6 +40,12 @@ elseif ($Help) {
 	Write-Output ""
 	Write-Output "CMake options are passed directly to CMake so you can set variables like"
 	Write-Output "-DCMAKE_BUILD_TYPE=<type> among others."
+}
+elseif ($Clean) {
+	Remove-Item * -include *.dir,*.vcxproj,*.vcxproj.filters,*.vcxproj.user,cmake_install.cmake,CMakeCache.txt,CMakeFiles,Debug,ipch,lib,MinSizeRel,Rainbow.sdf,Rainbow.sln,Release,RelWithDebInfo,Win32 -recurse
+}
+elseif ($Generate) {
+	Make "$args"
 }
 else {
 	Add-Type -AssemblyName System.Windows.Forms
