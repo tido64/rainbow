@@ -18,21 +18,18 @@ TEST(StringTest, ComparesStringEndings)
 {
     const std::string str{TEST_STRING};
 
-    ASSERT_TRUE(rainbow::ends_with(str.c_str(), str.length(), ""));
     ASSERT_TRUE(rainbow::ends_with(str.c_str(), str.length(), TEST_SUFFIX));
     ASSERT_TRUE(rainbow::ends_with(str.c_str(), str.length(), TEST_STRING));
     ASSERT_FALSE(rainbow::ends_with(str.c_str(), str.length(), TEST_STRINGL));
     ASSERT_FALSE(rainbow::ends_with(str.c_str(), str.length(), WRONG_LONG));
     ASSERT_FALSE(rainbow::ends_with(str.c_str(), str.length(), WRONG_SHORT));
 
-    ASSERT_TRUE(rainbow::ends_with(str.c_str(), ""));
     ASSERT_TRUE(rainbow::ends_with(str.c_str(), TEST_SUFFIX));
     ASSERT_TRUE(rainbow::ends_with(str.c_str(), TEST_STRING));
     ASSERT_FALSE(rainbow::ends_with(str.c_str(), TEST_STRINGL));
     ASSERT_FALSE(rainbow::ends_with(str.c_str(), WRONG_LONG));
     ASSERT_FALSE(rainbow::ends_with(str.c_str(), WRONG_SHORT));
 
-    ASSERT_TRUE(rainbow::ends_with(str.c_str(), "", StringComparison::Ordinal));
     ASSERT_TRUE(rainbow::ends_with(
         str.c_str(), TEST_SUFFIX, StringComparison::Ordinal));
     ASSERT_TRUE(rainbow::ends_with(
@@ -44,8 +41,6 @@ TEST(StringTest, ComparesStringEndings)
     ASSERT_FALSE(rainbow::ends_with(
         str.c_str(), WRONG_SHORT, StringComparison::Ordinal));
 
-    ASSERT_TRUE(
-        rainbow::ends_with(str.c_str(), "", StringComparison::IgnoreCase));
     ASSERT_TRUE(rainbow::ends_with(
         str.c_str(), TEST_SUFFIX, StringComparison::IgnoreCase));
     ASSERT_TRUE(rainbow::ends_with(
@@ -57,7 +52,6 @@ TEST(StringTest, ComparesStringEndings)
     ASSERT_FALSE(rainbow::ends_with(
         str.c_str(), WRONG_SHORT, StringComparison::IgnoreCase));
 
-    ASSERT_TRUE(rainbow::ends_with(str, ""));
     ASSERT_TRUE(rainbow::ends_with(str, TEST_SUFFIX));
     ASSERT_TRUE(rainbow::ends_with(str, TEST_STRING));
     ASSERT_FALSE(rainbow::ends_with(str, TEST_STRINGL));

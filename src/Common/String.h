@@ -27,6 +27,10 @@ namespace rainbow
     bool ends_with(czstring str, size_t str_length, const char (&suffix)[N])
     {
         constexpr size_t length = N - 1;
+
+        static_assert(
+            length > 0, "Comparing against empty suffix makes no sense");
+
         return str_length >= length &&
                memcmp(str + str_length - length, suffix, length) == 0;
     }
