@@ -12,19 +12,16 @@ namespace rainbow
     protected:
         template <size_t N>
         DataMapWin(const uint8_t (&bytes)[N])
-            : len_(N), off_(0),
-              addr_(const_cast<void*>(static_cast<const void*>(bytes))),
-              handle_(nullptr) {}
+            : len_(N), off_(0), addr_(static_cast<const uint8_t*>(bytes)),
+              handle_(nullptr)
+        {
+        }
 
         explicit DataMapWin(const filesystem::Path& path);
         DataMapWin(DataMapWin&&) noexcept;
         ~DataMapWin();
 
-        auto data() const -> const uint8_t*
-        {
-            return static_cast<uint8_t*>(addr_) + off_;
-        }
-
+        auto data() const -> const uint8_t* { return addr_ + off_; }
         void offset(size_t offset) { off_ = offset; }
         auto size() const -> size_t { return len_ - off_; }
 
@@ -33,7 +30,7 @@ namespace rainbow
     private:
         size_t len_;
         size_t off_;
-        void* addr_;
+        const uint8_t* addr_;
         void* handle_;
     };
 

@@ -47,7 +47,8 @@ DataMapWin::DataMapWin(const Path& path)
         else
         {
             len_ = size.QuadPart;
-            addr_ = MapViewOfFile(handle_, FILE_MAP_READ, 0, 0, 0);
+            addr_ = static_cast<uint8_t*>(
+                MapViewOfFile(handle_, FILE_MAP_READ, 0, 0, 0));
             if (addr_ == nullptr)
             {
                 CloseHandle(handle_);

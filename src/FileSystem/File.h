@@ -65,6 +65,8 @@ namespace rainbow
         static auto open_document(czstring path) -> File;
         static auto open_write(czstring path) -> File;
 
+        File() : handle_(nullptr) {}
+
         File(File&& file) noexcept : handle_(std::move(file.handle_))
         {
             file.handle_ = nullptr;
@@ -110,8 +112,8 @@ namespace rainbow
         auto write(const void* buffer, size_t size) -> size_t;
 
         explicit operator bool() const { return is_open(); }
-        operator AAsset*() const;
-        operator FILE*() const;
+        explicit operator AAsset*() const;
+        explicit operator FILE*() const;
 
     private:
         variant<std::nullptr_t, AAsset*, FILE*> handle_;

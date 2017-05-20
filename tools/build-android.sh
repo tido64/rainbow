@@ -6,7 +6,7 @@
 APP_NAME=${APP_NAME:-Rainbow}
 APP_ID=com.bifrostentertainment.rainbow
 BUILD_TOOLS_VERSION=${BUILD_TOOLS_VERSION:-25.0.3}
-GRADLE_ANDROID_PLUGIN_VERSION=${GRADLE_ANDROID_PLUGIN_VERSION:-2.3.1}
+GRADLE_ANDROID_PLUGIN_VERSION=${GRADLE_ANDROID_PLUGIN_VERSION:-2.3.2}
 GRADLE_VERSION=${GRADLE_VERSION:-3.5}
 MIN_SDK_VERSION=${MIN_SDK_VERSION:-19}
 TARGET_SDK_VERSION=${TARGET_SDK_VERSION:-25}
@@ -20,7 +20,7 @@ tools/shaders-gen.py
 popd > /dev/null
 
 echo -n "Removing stale files..."
-rm -fr *.iml .gradle .idea $APP_MODULE build build.gradle gradle gradlew gradlew.bat local.properties settings.gradle src
+rm -fr *.iml .DS_Store .gradle .idea $APP_MODULE build build.gradle gradle gradlew gradlew.bat local.properties settings.gradle src
 echo " done"
 
 echo -n "Generating project files..."

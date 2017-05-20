@@ -24,13 +24,11 @@ namespace rainbow
     class TDataMap : private T, private NonCopyable<TDataMap<T>>
     {
     public:
-#ifndef RAINBOW_OS_ANDROID
         template <size_t N>
         TDataMap(const uint8_t (&bytes)[N]) : T(bytes) {}
-#endif
 
         explicit TDataMap(const filesystem::Path& path) : T(path) {}
-        TDataMap(TDataMap&& data) : T(std::move(data)) {}
+        TDataMap(TDataMap&& data) noexcept : T(std::move(data)) {}
 
         /// <summary>Returns offset raw byte array.</summary>
         /// <returns>

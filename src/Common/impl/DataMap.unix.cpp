@@ -32,7 +32,7 @@ DataMapUnix::DataMapUnix(const Path& path)
     }
     else
     {
-        const int fd = fileno(f);
+        const int fd = fileno(static_cast<FILE*>(f));
 #ifdef F_NOCACHE
         fcntl(fd, F_NOCACHE, 1);
 #endif
