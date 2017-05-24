@@ -8,6 +8,7 @@
 #include <array>
 
 #include "Common/Logging.h"
+#include "FileSystem/File.h"
 
 #if defined(RAINBOW_OS_IOS) || defined(RAINBOW_OS_MACOS)
 #   define USE_AUDIOTOOLBOX 1
@@ -39,11 +40,6 @@ namespace
 
         auto channels() const -> int override { return 1; }
         auto rate() const -> int override { return kFallbackBufferSize >> 1; }
-
-        void rewind() override {}
-
-        // IFile implementation.
-
         auto size() const -> size_t override { return kAudioBufferSize; }
 
         auto read(void* dst, size_t size) -> size_t override
@@ -52,20 +48,21 @@ namespace
             return size;
         }
 
-        auto seek(int64_t, int) -> int override { return 0; }
-        auto write(const void*, size_t) -> size_t override { return 0; }
-        /*explicit*/ operator bool() const override { return true; }
+        bool seek(int64_t) override { return false; }
+
+        // TODO: Add `explicit` when MSVC2015 is deprecated.
+        operator bool() const override { return true; }
     };
 }
 
 std::unique_ptr<IAudioFile> IAudioFile::open(czstring path)
 {
     std::array<uint8_t, 8> signature{};
-    File file = File::open_asset(path);
+    File file = File::open(path, FileType::Asset);
     if (file)
     {
         file.read(signature.data(), signature.size());
-        file.seek(0, SEEK_SET);
+        file.seek(0);
     }
 
 #ifdef USE_OGGVORBIS

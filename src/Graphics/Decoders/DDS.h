@@ -59,11 +59,6 @@ namespace
 
     struct DDSFile
     {
-        static auto from_map(const rainbow::DataMap& data)
-        {
-            return reinterpret_cast<const DDSFile*>(data.data());
-        }
-
         uint32_t dwMagic;
         DDSHeader header;
     };
@@ -71,21 +66,21 @@ namespace
 
 namespace dds
 {
-    bool check(const rainbow::DataMap& data)
+    bool check(const rainbow::Data& data)
     {
-        return DDSFile::from_map(data)->dwMagic == kDDSMagic;
+        return data.as<DDSFile*>()->dwMagic == kDDSMagic;
     }
 
-    auto decode(const rainbow::DataMap& data)
+    auto decode(const rainbow::Data& data)
     {
         rainbow::Image image{rainbow::Image::Format::S3TC};
 
-        auto dds = DDSFile::from_map(data);
+        auto dds = data.as<DDSFile*>();
         image.width = dds->header.dwWidth;
         image.height = dds->header.dwHeight;
         image.depth = dds->header.dwDepth;
         image.size = dds->header.dwPitchOrLinearSize;
-        image.data = data.data() + sizeof(*dds);
+        image.data = data.bytes() + sizeof(*dds);
 
         const DDSPixelFormat& ddspf = dds->header.ddspf;
         R_ASSERT((ddspf.dwFlags & kDDPFFourCC) == kDDPFFourCC,

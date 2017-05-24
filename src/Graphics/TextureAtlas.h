@@ -9,7 +9,7 @@
 #include <type_traits>
 #include <vector>
 
-#include "Common/DataMap.h"
+#include "Common/Data.h"
 #include "Common/String.h"
 #include "Graphics/Texture.h"
 #include "Memory/Array.h"
@@ -41,23 +41,21 @@ namespace rainbow
     class TextureAtlas : public RefCounted
     {
     public:
-        explicit TextureAtlas(const filesystem::Path& path, float scale = 1.0f);
+        explicit TextureAtlas(czstring path, float scale = 1.0f);
 
         template <typename... Args>
-        TextureAtlas(const filesystem::Path& path,
-                     float scale,
-                     Args&&... regions)
+        TextureAtlas(czstring path, float scale, Args&&... regions)
             : TextureAtlas(path, scale)
         {
             regions_.reserve(sizeof...(regions));
             add_regions(std::forward<Args>(regions)...);
         }
 
-        TextureAtlas(czstring id, const DataMap& data, float scale = 1.0f);
+        TextureAtlas(czstring id, const Data& data, float scale = 1.0f);
 
         template <typename... Args>
         TextureAtlas(czstring id,
-                     const DataMap& data,
+                     const Data& data,
                      float scale,
                      Args&&... regions)
             : TextureAtlas(id, data, scale)
@@ -132,7 +130,7 @@ namespace rainbow
 
         void load(graphics::TextureManager& texture_manager,
                   const graphics::Texture& texture,
-                  const DataMap& data,
+                  const Data& data,
                   float scale);
     };
 }

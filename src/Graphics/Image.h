@@ -5,7 +5,7 @@
 #ifndef GRAPHICS_IMAGE_H_
 #define GRAPHICS_IMAGE_H_
 
-#include "Common/DataMap.h"
+#include "Common/Data.h"
 
 namespace rainbow
 {
@@ -41,7 +41,7 @@ namespace rainbow
         ///     </item>
         ///   </list>
         /// </remarks>
-        static Image decode(const DataMap&, float scale);
+        static Image decode(const Data&, float scale);
 
         Format format;
         uint32_t width;
@@ -109,7 +109,7 @@ namespace rainbow
 
 namespace rainbow
 {
-    Image Image::decode(const DataMap& data, float scale)
+    Image Image::decode(const Data& data, float scale)
     {
 #ifdef USE_DDS
         if (dds::check(data))

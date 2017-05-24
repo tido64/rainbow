@@ -17,10 +17,13 @@
 #endif
 
 #include "Common/Data.h"
+#include "FileSystem/File.h"
 #include "Graphics/OpenGL.h"
 #include "Graphics/TextureManager.h"
 
 using rainbow::Data;
+using rainbow::File;
+using rainbow::FileType;
 using rainbow::FontAtlas;
 using rainbow::FontGlyph;
 using rainbow::Vec2u;
@@ -148,7 +151,7 @@ namespace
 }
 
 FontAtlas::FontAtlas(czstring path, float pt)
-    : FontAtlas(path, Data::load_asset(path), pt) {}
+    : FontAtlas(path, File::read(path, FileType::Asset), pt) {}
 
 FontAtlas::FontAtlas(czstring name, const Data& font, float pt)
     : pt_(pt), height_(0)

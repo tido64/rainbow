@@ -33,7 +33,7 @@ rainbow::Config::Config()
         return;
     }
 
-    const Data config(File::open(path));
+    const Data& config = File::read(kConfigModule, FileType::Asset);
     if (!config)
         return;
 

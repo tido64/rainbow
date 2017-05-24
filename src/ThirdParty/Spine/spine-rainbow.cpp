@@ -9,13 +9,15 @@
 #include <spine/SkeletonJson.h>
 #include <spine/extension.h>
 
-#include "Common/DataMap.h"
-#include "FileSystem/FileSystem.h"
+#include "Common/Data.h"
+#include "FileSystem/File.h"
 #include "Graphics/Renderer.h"
 #include "Graphics/SpriteVertex.h"
 #include "Graphics/TextureAtlas.h"
 
-using rainbow::DataMap;
+using rainbow::Data;
+using rainbow::File;
+using rainbow::FileType;
 using rainbow::SpriteVertex;
 using rainbow::TextureAtlas;
 using rainbow::Vec2f;
@@ -199,10 +201,9 @@ namespace
 
 extern "C"
 {
-    void _spAtlasPage_createTexture(spAtlasPage* self, const char* path)
+    void _spAtlasPage_createTexture(spAtlasPage* self, czstring path)
     {
-        auto texture =
-            std::make_unique<TextureAtlas>(rainbow::filesystem::relative(path));
+        auto texture = std::make_unique<TextureAtlas>(path);
         if (!texture->is_valid())
             return;
 
@@ -216,13 +217,13 @@ extern "C"
         delete static_cast<TextureAtlas*>(self->rendererObject);
     }
 
-    auto _spUtil_readFile(const char* path, int* length) -> char*
+    auto _spUtil_readFile(czstring path, int* length) -> char*
     {
-        const DataMap data{rainbow::filesystem::relative(path)};
+        const Data& data = File::read(path, FileType::Asset);
         *length = static_cast<int>(data.size());
-        auto blob = new char[data.size()];
-        memcpy(blob, data.data(), data.size());
-        return blob;
+        auto blob = std::make_unique<char[]>(data.size());
+        memcpy(blob.get(), data.bytes(), data.size());
+        return blob.release();
     }
 }  // extern "C"
 
@@ -245,9 +246,11 @@ auto Skeleton::from_json(czstring path, float scale) -> Skeleton*
     spSkeletonJson_dispose(json);
     if (data == nullptr)
     {
-        LOGE("Spine: %s", json->error);
+        const bool no_message = json->error == nullptr || *json->error == '\0';
+        LOGE("Spine: %s", no_message ? "No skeleton data" : json->error);
         return nullptr;
     }
+
     return new Skeleton(data, atlas);
 }
 

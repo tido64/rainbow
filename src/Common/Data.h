@@ -15,8 +15,6 @@
 
 namespace rainbow
 {
-    class File;
-
     /// <summary>Wrapper for byte buffers.</summary>
     /// <remarks>
     ///   <para>
@@ -52,9 +50,6 @@ namespace rainbow
             return Data{literal, N - 1, Ownership::Reference};
         }
 
-        static auto load_asset(czstring asset) -> Data;
-        static auto load_document(czstring document) -> Data;
-
         /// <summary>
         ///   Constructs an empty data object. No memory will be allocated.
         /// </summary>
@@ -73,11 +68,6 @@ namespace rainbow
             d.data_ = nullptr;
         }
 
-        /// <summary>
-        ///   Constructs a data object with the contents of the file.
-        /// </summary>
-        explicit Data(File&&);
-
         /// <summary>Constructs a wrapper around a buffer.</summary>
         Data(const void* buffer, size_t size, Ownership ownership)
             : ownership_(ownership), allocated_(size), sz_(size),
@@ -87,23 +77,22 @@ namespace rainbow
 
         ~Data();
 
+        template <typename T>
+        auto as() const
+        {
+            return static_cast<const T>(data_);
+        }
+
         /// <summary>Returns raw byte array.</summary>
         /// <returns>
         ///   Pointer to array. Returns <c>nullptr</c> if buffer is empty.
         /// </returns>
-        auto bytes() const { return data_; }
-
-        /// <summary>Saves data to file.</summary>
-        /// <returns><c>true</c> on success, <c>false</c> otherwise.</returns>
-        bool save(czstring path) const;
+        auto bytes() const { return as<uint8_t*>(); }
 
         /// <summary>Returns the size of this buffer.</summary>
         auto size() const { return sz_; }
 
         explicit operator bool() const { return data_; }
-        operator void*() const { return data_; }
-        operator char*() const { return static_cast<char*>(data_); }
-        operator uint8_t*() const { return static_cast<uint8_t*>(data_); }
 
 #ifdef RAINBOW_OS_IOS
         operator NSData*() const
@@ -126,12 +115,6 @@ namespace rainbow
         size_t allocated_;     ///< Allocated memory size.
         size_t sz_;            ///< Size of used buffer, not necessarily equal to allocated.
         void* data_;           ///< Actual buffer, implemented as a C-array.
-
-        /// <summary>
-        ///   Resizes allocated memory segment. If the requested allocation size
-        ///   is smaller than current allocated size, nothing will happen.
-        /// </summary>
-        void allocate(size_t size);
     };
 }
 

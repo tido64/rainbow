@@ -13,15 +13,14 @@
 
 namespace uikit
 {
-    auto decode(const rainbow::DataMap& map)
+    auto decode(const rainbow::Data& source)
     {
         rainbow::Image image;
 
-        NSData* data = [NSData
-            dataWithBytesNoCopy:const_cast<void*>(
-                                    static_cast<const void*>(map.data()))
-                         length:map.size()
-                   freeWhenDone:NO];
+        NSData* data =
+            [NSData dataWithBytesNoCopy:const_cast<void*>(source.as<void*>())
+                                 length:source.size()
+                           freeWhenDone:NO];
         UIImage* uiimage = [UIImage imageWithData:data];
         if (!uiimage)
         {

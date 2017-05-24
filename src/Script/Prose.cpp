@@ -9,7 +9,6 @@
 #include "Common/Data.h"
 #include "Common/String.h"
 #include "FileSystem/File.h"
-#include "FileSystem/FileSystem.h"
 #include "Graphics/Animation.h"
 #include "Graphics/Label.h"
 #include "Graphics/Renderer.h"
@@ -20,13 +19,14 @@
 #define kProseFailedLoading    "Prose: Failed to load %s: %s"
 #define kProseFailedOpening    "Prose: Failed to open file: %s"
 #define kProseMissingProperty  "Prose: Missing property '%s' on %s: %s"
-#define kProseNoSuchFile       "Prose: No such file: %s"
 #define kProseUnknownProperty  "Prose: Unknown property '%s' on %s: %s"
 
 using rainbow::Animation;
 using rainbow::Color;
 using rainbow::FontAtlas;
 using rainbow::Data;
+using rainbow::File;
+using rainbow::FileType;
 using rainbow::Label;
 using rainbow::Prose;
 using rainbow::ScopeStack;
@@ -320,7 +320,7 @@ namespace
 
 auto Prose::from_lua(czstring path) -> Prose*
 {
-    const Data script{File::open(rainbow::filesystem::relative(path))};
+    const Data& script = File::read(path, FileType::Asset);
     if (!script)
         return nullptr;
 

@@ -7,6 +7,7 @@
 #include "Resources/Rainbow.svg.h"
 #include "Script/Transition.h"
 
+using rainbow::Data;
 using rainbow::GameBase;
 using rainbow::Sprite;
 using rainbow::Vec2f;
@@ -23,7 +24,7 @@ void NoGame::init_impl(const Vec2i& screen)
 
     auto texture = rainbow::texture(
         kRainbowLogoURI,
-        kRainbowLogo,
+        Data::from_literal(kRainbowLogo),
         logo_scale,
         std::make_tuple(0, 64, 0, 0),                     // 0
         std::make_tuple(0, 0, logo_width, logo_height));  // 1

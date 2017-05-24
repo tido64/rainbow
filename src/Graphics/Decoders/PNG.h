@@ -14,19 +14,20 @@
 
 namespace png
 {
-    bool check(const rainbow::DataMap& data)
+    bool check(const rainbow::Data& data)
     {
-        return png_sig_cmp(data.data(), 0, 8) == 0;
+        return png_sig_cmp(data.as<png_const_bytep>(), 0, 8) == 0;
     }
 
-    auto decode(const rainbow::DataMap& data)
+    auto decode(const rainbow::Data& data)
     {
         rainbow::Image image{rainbow::Image::Format::PNG};
 
         png_image pi{};
         pi.version = PNG_IMAGE_VERSION;
 
-        if (!png_image_begin_read_from_memory(&pi, data.data(), data.size()))
+        auto memory = data.as<png_const_voidp>();
+        if (!png_image_begin_read_from_memory(&pi, memory, data.size()))
             return image;
 
         image.width = pi.width;

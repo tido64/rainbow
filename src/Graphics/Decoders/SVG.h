@@ -30,9 +30,9 @@ namespace std
 
 namespace svg
 {
-    bool check(const rainbow::DataMap& data)
+    bool check(const rainbow::Data& data)
     {
-        const auto p = data.data();
+        const auto p = data.bytes();
         return data.size() > 5 &&  //
                p[0] == '<' &&      //
                p[1] == 's' &&      //
@@ -41,14 +41,14 @@ namespace svg
                p[4] == ' ';
     }
 
-    auto decode(const rainbow::DataMap& data, float scale)
+    auto decode(const rainbow::Data& data, float scale)
     {
         rainbow::Image image{rainbow::Image::Format::SVG};
 
         std::unique_ptr<NSVGimage> img;
         {
             auto svg = std::make_unique<char[]>(data.size());
-            std::copy(data.data(), data.data() + data.size(), svg.get());
+            std::copy(data.bytes(), data.bytes() + data.size(), svg.get());
             img.reset(nsvgParse(svg.get(), "px", 96.0f));
             if (img == nullptr)
                 return image;

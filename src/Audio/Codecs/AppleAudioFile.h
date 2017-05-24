@@ -25,14 +25,11 @@ namespace rainbow { namespace audio
         }
 
         auto rate() const -> int override { return format_.mSampleRate; }
-        void rewind() override { seek(0, 0); }
-
-        // IFile overrides.
-
         auto size() const -> size_t override;
+
         auto read(void*, size_t) -> size_t override;
-        auto seek(int64_t, int) -> int override;
-        auto write(const void*, size_t) -> size_t override { return 0; }
+        bool seek(int64_t) override;
+
         explicit operator bool() const override { return ref_ != nullptr; }
 
     private:

@@ -4,39 +4,34 @@
 
 #include "Graphics/TextureAtlas.h"
 
-#include "FileSystem/FileSystem.h"
+#include "FileSystem/File.h"
 #include "Graphics/Image.h"
 #include "Graphics/TextureManager.h"
 
 #define kInvalidColorDepth "Invalid colour depth"
 
-using rainbow::DataMap;
+using rainbow::Data;
 using rainbow::Image;
 using rainbow::TextureAtlas;
 using rainbow::czstring;
-using rainbow::filesystem::Path;
 using rainbow::graphics::Texture;
 using rainbow::graphics::TextureManager;
 
-TextureAtlas::TextureAtlas(const Path& path, float scale)
+TextureAtlas::TextureAtlas(czstring path, float scale)
 {
     texture_ = TextureManager::Get()->create(
-        path.u8string(),
-        [this, &path, scale](
-            TextureManager& texture_manager, const Texture& texture)
-        {
-            load(texture_manager, texture, DataMap{path}, scale);
+        path,
+        [this, path, scale](TextureManager& txr_manager, const Texture& txr) {
+            load(txr_manager, txr, File::read(path, FileType::Asset), scale);
         });
 }
 
-TextureAtlas::TextureAtlas(czstring id, const DataMap& data, float scale)
+TextureAtlas::TextureAtlas(czstring id, const Data& data, float scale)
 {
     texture_ = TextureManager::Get()->create(
         id,
-        [this, &data, scale](
-            TextureManager& texture_manager, const Texture& texture)
-        {
-            load(texture_manager, texture, data, scale);
+        [this, &data, scale](TextureManager& txr_manager, const Texture& txr) {
+            load(txr_manager, txr, data, scale);
         });
 }
 
@@ -69,7 +64,7 @@ void TextureAtlas::set_regions(const ArrayView<int>& rects)
 
 void TextureAtlas::load(TextureManager& texture_manager,
                         const Texture& texture,
-                        const DataMap& data,
+                        const Data& data,
                         float scale)
 {
     R_ASSERT(data, "Failed to load texture");

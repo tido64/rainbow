@@ -5,10 +5,15 @@
 #include "Lua/lua_IO.h"
 
 #include "Common/Data.h"
+#include "FileSystem/File.h"
 #include "Lua/LuaHelper.h"
 #include "Lua/LuaSyntax.h"
 
 using rainbow::Data;
+using rainbow::File;
+using rainbow::FileType;
+using rainbow::WriteableFile;
+using rainbow::czstring;
 
 namespace
 {
@@ -17,11 +22,11 @@ namespace
         // rainbow.io.load(filename)
         rainbow::lua::checkargs<char*>(L);
 
-        Data blob = Data::load_document(lua_tostring(L, 1));
-        if (!blob)
+        const Data& data = File::read(lua_tostring(L, 1), FileType::UserFile);
+        if (!data)
             lua_pushnil(L);
         else
-            lua_pushlstring(L, blob, blob.size());
+            lua_pushlstring(L, data.as<char*>(), data.size());
         return 1;
     }
 
@@ -30,22 +35,19 @@ namespace
         // rainbow.io.save(filename, data, size)
         rainbow::lua::checkargs<char*, char*, lua_Number>(L);
 
-        Data blob(lua_tostring(L, 2),
-                  lua_tointeger(L, 3),
-                  Data::Ownership::Reference);
-        rainbow::lua::push(L, blob.save(lua_tostring(L, 1)));
+        const auto size = static_cast<size_t>(lua_tointeger(L, 3));
+        const Data data(lua_tostring(L, 2), size, Data::Ownership::Reference);
+        czstring path = lua_tostring(L, 1);
+        rainbow::lua::push(L, WriteableFile::write(path, data) == size);
         return 1;
     }
 }
 
-NS_RAINBOW_LUA_MODULE_BEGIN(io)
+void rainbow::lua::io::init(lua_State* L)
 {
-    void init(lua_State* L)
-    {
-        lua_pushliteral(L, "io");
-        lua_createtable(L, 0, 2);
-        luaR_rawsetcfunction(L, "load", &::load);
-        luaR_rawsetcfunction(L, "save", &::save);
-        lua_rawset(L, -3);
-    }
-} NS_RAINBOW_LUA_MODULE_END(io)
+    lua_pushliteral(L, "io");
+    lua_createtable(L, 0, 2);
+    luaR_rawsetcfunction(L, "load", &::load);
+    luaR_rawsetcfunction(L, "save", &::save);
+    lua_rawset(L, -3);
+}

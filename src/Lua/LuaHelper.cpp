@@ -6,12 +6,12 @@
 
 #include "Common/Data.h"
 #include "FileSystem/File.h"
-#include "FileSystem/FileSystem.h"
 #include "Lua/LuaDebugging.h"
 #include "Lua/LuaSyntax.h"
 
 using rainbow::Data;
 using rainbow::File;
+using rainbow::FileType;
 using rainbow::czstring;
 using rainbow::lua::WeakRef;
 
@@ -24,24 +24,14 @@ namespace
     constexpr char kLuaErrorSyntax[] = "syntax";
     constexpr char kLuaErrorType[] = "Object is not of type '%s'";
 
-    auto load_module(lua_State* L, czstring module, czstring suffix)
-        -> int
+    auto load_module(lua_State* L, czstring module, czstring suffix) -> int
     {
         const auto filename = std::string{module} + suffix;
-        const auto asset = rainbow::filesystem::relative(filename.c_str());
-
-#ifndef RAINBOW_OS_ANDROID
-        std::error_code error;
-        if (!rainbow::filesystem::is_regular_file(asset, error))
-            return 0;
-#endif  // RAINBOW_OS_ANDROID
-
-        File file = File::open(asset);
-        if (!file)
+        const Data& chunk = File::read(filename.c_str(), FileType::Asset);
+        if (!chunk)
             return 0;
 
-        const int result =
-            rainbow::lua::load(L, Data(std::move(file)), module, false);
+        const int result = rainbow::lua::load(L, chunk, module, false);
         return result == 0 ? luaL_error(L, "Failed to load '%s'", module)
                            : result;
     }
@@ -135,7 +125,7 @@ NS_RAINBOW_LUA_BEGIN
     auto load(lua_State* L, const Data& chunk, czstring name, bool exec)
         -> int
     {
-        int e = luaL_loadbuffer(L, chunk, chunk.size(), name);
+        int e = luaL_loadbuffer(L, chunk.as<char*>(), chunk.size(), name);
         if (e == LUA_OK && exec)
             e = lua_pcall(L, 0, LUA_MULTRET, 0);
         if (e != LUA_OK)

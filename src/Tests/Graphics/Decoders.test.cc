@@ -4,7 +4,7 @@
 
 #include <gtest/gtest.h>
 
-#include "Common/DataMap.h"
+#include "Common/Data.h"
 #include "Graphics/OpenGL.h"
 #ifndef RAINBOW_OS_IOS
 #   define USE_PNG 1
@@ -17,12 +17,12 @@
 #   define USE_DDS 1
 #endif
 
-using rainbow::DataMap;
+using rainbow::Data;
 
 #ifdef USE_DDS
 namespace dds
 {
-    extern bool check(const DataMap& data);
+    extern bool check(const Data& data);
 }
 
 TEST(DecodersTest, DetectsDDS)
@@ -30,15 +30,15 @@ TEST(DecodersTest, DetectsDDS)
    constexpr uint8_t kNotDDSSignature[]{' ', 'S', 'D', 'D'};
    constexpr uint8_t kDDSSignature[]{'D', 'D', 'S', ' '};
 
-   ASSERT_TRUE(dds::check(DataMap{kDDSSignature}));
-   ASSERT_FALSE(dds::check(DataMap{kNotDDSSignature}));
+   ASSERT_TRUE(dds::check(Data::from_bytes(kDDSSignature)));
+   ASSERT_FALSE(dds::check(Data::from_bytes(kNotDDSSignature)));
 }
 #endif  // USE_DDS
 
 #ifdef USE_PNG
 namespace png
 {
-    extern bool check(const DataMap& data);
+    extern bool check(const Data& data);
 }
 
 TEST(DecodersTest, DetectsPNG)
@@ -46,15 +46,15 @@ TEST(DecodersTest, DetectsPNG)
    constexpr uint8_t kNotPNGSignature[]{10, 26, 10, 13, 71, 78, 80, 137};
    constexpr uint8_t kPNGSignature[]{137, 80, 78, 71, 13, 10, 26, 10};
 
-   ASSERT_TRUE(png::check(DataMap{kPNGSignature}));
-   ASSERT_FALSE(png::check(DataMap{kNotPNGSignature}));
+   ASSERT_TRUE(png::check(Data::from_bytes(kPNGSignature)));
+   ASSERT_FALSE(png::check(Data::from_bytes(kNotPNGSignature)));
 }
 #endif  // USE_PNG
 
 #ifdef USE_PVRTC
 namespace pvrtc
 {
-    extern bool check(const DataMap& data);
+    extern bool check(const Data& data);
 }
 
 TEST(DecodersTest, DetectsPVRTC)
@@ -62,15 +62,15 @@ TEST(DecodersTest, DetectsPVRTC)
    constexpr uint8_t kNotPVRTCSignature[]{'3', 'R', 'V', 'P'};
    constexpr uint8_t kPVRTCSignature[]{'P', 'V', 'R', '3'};
 
-   ASSERT_TRUE(pvrtc::check(DataMap{kPVRTCSignature}));
-   ASSERT_FALSE(pvrtc::check(DataMap{kNotPVRTCSignature}));
+   ASSERT_TRUE(pvrtc::check(Data::from_bytes(kPVRTCSignature)));
+   ASSERT_FALSE(pvrtc::check(Data::from_bytes(kNotPVRTCSignature)));
 }
 #endif  // USE_PVRTC
 
 #ifdef USE_SVG
 namespace svg
 {
-    extern bool check(const DataMap& data);
+    extern bool check(const Data& data);
 }
 
 TEST(DecodersTest, DetectsSVG)
@@ -78,7 +78,7 @@ TEST(DecodersTest, DetectsSVG)
    constexpr uint8_t kNotSVGSignature[]{'\0', ' ', 'g', 'v', 's', '<'};
    constexpr uint8_t kSVGSignature[]{'<', 's', 'v', 'g', ' ', '\0'};
 
-   ASSERT_TRUE(svg::check(DataMap{kSVGSignature}));
-   ASSERT_FALSE(svg::check(DataMap{kNotSVGSignature}));
+   ASSERT_TRUE(svg::check(Data::from_bytes(kSVGSignature)));
+   ASSERT_FALSE(svg::check(Data::from_bytes(kNotSVGSignature)));
 }
 #endif  // USE_SVG

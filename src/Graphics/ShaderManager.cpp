@@ -7,6 +7,7 @@
 #include <memory>
 
 #include "Common/Data.h"
+#include "FileSystem/File.h"
 #include "FileSystem/FileSystem.h"
 #include "Graphics/Renderer.h"
 #include "Graphics/Shaders.h"
@@ -17,6 +18,8 @@
 #endif
 
 using rainbow::Data;
+using rainbow::File;
+using rainbow::FileType;
 using rainbow::czstring;
 using rainbow::graphics::ShaderManager;
 
@@ -58,7 +61,7 @@ namespace
         if (rainbow::filesystem::is_regular_file(
                 rainbow::filesystem::relative(shader.source), error_code))
         {
-            const Data& glsl = Data::load_asset(shader.source);
+            const Data& glsl = File::read(shader.source, FileType::Asset);
             if (!glsl)
             {
                 LOGE("Failed to load shader: %s", shader.source);
@@ -73,7 +76,7 @@ namespace
             }
             else
             {
-                czstring source = glsl;
+                czstring source = glsl.as<char*>();
                 glShaderSource(id, 1, &source, nullptr);
             }
         }

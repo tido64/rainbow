@@ -100,9 +100,9 @@ auto AppleAudioFile::read(void* dst, size_t size) -> size_t
     return frames * format_.mBytesPerFrame;
 }
 
-auto AppleAudioFile::seek(int64_t offset, int) -> int
+bool AppleAudioFile::seek(int64_t offset)
 {
-    return ExtAudioFileSeek(ref_, offset);
+    return ExtAudioFileSeek(ref_, offset) == noErr;
 }
 
 #endif  // RAINBOW_AUDIO_AL

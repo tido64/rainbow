@@ -12,7 +12,6 @@
 #include "Common/Chrono.h"
 #include "Common/Data.h"
 #include "Director.h"
-#include "FileSystem/FileSystem.h"
 #include "Input/Pointer.h"
 
 using rainbow::Chrono;

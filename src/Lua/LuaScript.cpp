@@ -7,6 +7,7 @@
 #include <lua.hpp>
 
 #include "Common/Data.h"
+#include "FileSystem/File.h"
 #include "Lua/lua_Input.h"
 #include "Lua/lua_Platform.h"
 
@@ -28,7 +29,7 @@ void LuaScript::init_impl(const Vec2i& screen)
 
     rainbow::lua::platform::update(lua_, screen);
 
-    const Data& main = Data::load_asset("main.lua");
+    const Data& main = File::read("main.lua", FileType::Asset);
     R_ASSERT(main, "Failed to load 'main.lua'");
     if (lua_.start(main) != LUA_OK || lua_.update(0) != LUA_OK)
     {

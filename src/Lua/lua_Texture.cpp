@@ -6,8 +6,6 @@
 
 #include <lua.hpp>
 
-#include "FileSystem/FileSystem.h"
-
 using rainbow::lua::Texture;
 
 Texture::Texture(lua_State* L)
@@ -15,8 +13,7 @@ Texture::Texture(lua_State* L)
     // rainbow.texture("/path/to/texture")
     checkargs<char*>(L);
 
-    const auto path = rainbow::filesystem::relative(lua_tostring(L, 1));
-    texture_ = make_shared<TextureAtlas>(path);
+    texture_ = make_shared<TextureAtlas>(lua_tostring(L, 1));
     if (!texture_->is_valid())
         luaL_error(L, "rainbow.texture: Failed to create texture");
 }

@@ -19,11 +19,6 @@ namespace
     /// \see http://www.imgtec.net/powervr/insider/docs/PVR%20File%20Format.Specification.1.0.11.External.pdf
     struct PVRTexHeader
     {
-        static auto from_map(const rainbow::DataMap& data)
-        {
-            return reinterpret_cast<const PVRTexHeader*>(data.data());
-        }
-
         uint32_t version;
         uint32_t flags;
         uint64_t pixel_format;
@@ -41,17 +36,17 @@ namespace
 
 namespace pvrtc
 {
-    bool check(const rainbow::DataMap& data)
+    bool check(const rainbow::Data& data)
     {
-        return PVRTexHeader::from_map(data)->version == kPVRHeaderVersion3;
+        return data.as<PVRTexHeader*>()->version == kPVRHeaderVersion3;
     }
 
-    auto decode(const rainbow::DataMap& data)
+    auto decode(const rainbow::Data& data)
     {
         rainbow::Image image{rainbow::Image::Format::PVRTC};
 
 #ifdef RAINBOW_OS_IOS
-        auto header = PVRTexHeader::from_map(data);
+        auto header = data.as<PVRTexHeader*>();
         R_ASSERT(CFSwapInt32LittleToHost(header->mipmap_count) == 1,
                  "Mipmaps are not supported");
 
@@ -70,7 +65,7 @@ namespace pvrtc
         image.size = image.width * image.height * image.depth >> 3;
         R_ASSERT(offset + image.size == data.size(),
                  "Unsupported PVR file format");
-        image.data = data.data() + offset;
+        image.data = data.bytes() + offset;
 #else
         NOT_USED(data);
 #endif

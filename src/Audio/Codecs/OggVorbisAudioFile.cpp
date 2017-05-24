@@ -116,10 +116,14 @@ auto OggVorbisAudioFile::read(void* dst, size_t size) -> size_t
     return offset;
 }
 
-auto OggVorbisAudioFile::seek(int64_t offset, int) -> int
+bool OggVorbisAudioFile::seek(int64_t offset)
 {
     const int result = ov_raw_seek(&vf_, offset);
     if (result != 0)
+    {
         ov_log_error(result);
-    return result;
+        return false;
+    }
+
+    return true;
 }

@@ -33,6 +33,12 @@ namespace rainbow
         return !v.template is<T>() ? T{} : v.template get_unchecked<T>();
     }
 
+    template <typename T, typename... Types>
+    constexpr auto holds_alternative(const variant<Types...>& v)
+    {
+        return v.template is<T>();
+    }
+
     template <typename... Args>
     auto visit(Args&&... args)
     {
@@ -48,10 +54,16 @@ namespace rainbow
     template <typename... Types>
     using variant = std::variant<Types...>;
 
-    template <typename V>
-    auto get(V&& v)
+    template <typename... Types>
+    auto get(variant<Types...>&& v)
     {
         return std::get<T>(std::forward<V>(v));
+    }
+
+    template <typename T, typename... Types>
+    constexpr auto holds_alternative(const variant<Types...>& v)
+    {
+        return std::holds_alternative<T>(v);
     }
 
     template <typename... Args>

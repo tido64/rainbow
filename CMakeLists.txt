@@ -40,7 +40,6 @@ set(SOURCE_FILES
     src/Common/Constraints.h
     src/Common/Data.cpp
     src/Common/Data.h
-    src/Common/DataMap.h
     src/Common/Functional.h
     src/Common/Global.h
     src/Common/Link.cpp
@@ -58,16 +57,10 @@ set(SOURCE_FILES
     src/Config.h
     src/Director.cpp
     src/Director.h
-    src/FileSystem/File.cpp
     src/FileSystem/File.h
-    src/FileSystem/FileOps/CloseFile.h
-    src/FileSystem/FileOps/FileSize.h
-    src/FileSystem/FileOps/IsValidHandle.h
-    src/FileSystem/FileOps/Read.h
-    src/FileSystem/FileOps/Seek.h
-    src/FileSystem/FileOps/Write.h
     src/FileSystem/FileSystem.cpp
     src/FileSystem/FileSystem.h
+    src/FileSystem/impl/File.system.h
     src/FileSystem/Path.cpp
     src/FileSystem/Path.h
     src/Graphics/Animation.cpp
@@ -210,8 +203,7 @@ endif()
 
 if(ANDROID)
   list(APPEND SOURCE_FILES
-       src/Common/impl/DataMap.android.cpp
-       src/Common/impl/DataMap.android.h
+       src/FileSystem/impl/File.android.h
        src/Platform/Android/main.cpp
        # Workaround for https://github.com/android-ndk/ndk/issues/184
        src/Platform/Android/mulodi4.c
@@ -226,16 +218,12 @@ else()
        src/Platform/SDL/main.cpp)
   if(WIN32)
     list(APPEND SOURCE_FILES
-         src/Common/impl/DataMap.win.cpp
-         src/Common/impl/DataMap.win.h
          src/Platform/impl/Diagnostics.win.cpp
          src/Platform/impl/SystemInfo.win.cpp
          tools/make.ps1
          appveyor.yml)
   else()
     list(APPEND SOURCE_FILES
-         src/Common/impl/DataMap.unix.cpp
-         src/Common/impl/DataMap.unix.h
          src/Platform/impl/Diagnostics.unix.cpp)
     if(APPLE)
       list(APPEND SOURCE_FILES
@@ -272,6 +260,7 @@ if(UNIT_TESTS)
        src/Tests/Common/TreeNode.test.cc
        src/Tests/Common/TypeInfo.test.cc
        src/Tests/Config.test.cc
+       src/Tests/FileSystem/File.test.cc
        src/Tests/FileSystem/Path.test.cc
        src/Tests/Graphics/Animation.test.cc
        src/Tests/Graphics/Decoders.test.cc

@@ -19,6 +19,7 @@
 #endif
 
 #include "Audio/AudioFile.h"
+#include "FileSystem/File.h"
 
 namespace rainbow { namespace audio
 {
@@ -30,19 +31,15 @@ namespace rainbow { namespace audio
         OggVorbisAudioFile(File);
         ~OggVorbisAudioFile() override;
 
-        // IAudioFile overrides.
-
         auto channels() const -> int override { return vi_->channels; }
         auto rate() const -> int override { return vi_->rate; }
-        void rewind() override { seek(0, 0); }
-
-        // IFile overrides.
-
         auto size() const -> size_t override;
+
         auto read(void*, size_t) -> size_t override;
-        auto seek(int64_t, int) -> int override;
-        auto write(const void*, size_t) -> size_t override { return 0; }
-        /*explicit*/ operator bool() const override { return vi_ != nullptr; }
+        bool seek(int64_t) override;
+
+        // TODO: Add `explicit` when MSVC2015 is deprecated.
+        operator bool() const override { return vi_ != nullptr; }
 
     private:
         File file_;

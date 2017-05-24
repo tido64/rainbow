@@ -13,6 +13,7 @@
 #   include "Lua/LuaScript.h"
 
 using rainbow::File;
+using rainbow::FileType;
 using rainbow::LuaScript;
 #endif  // USE_LUA_SCRIPT
 
@@ -27,9 +28,9 @@ namespace
     auto open_module(const rainbow::filesystem::Path& path) -> Data
     {
 #if defined(RAINBOW_OS_MACOS)
-        return Data{File::open(path)};
+        return File::read(path.string().c_str());
 #elif defined(RAINBOW_OS_WINDOWS)
-        return Data::load_asset(path.string().c_str());
+        return File::read(path.string().c_str(), FileType::Asset);
 #else
         NOT_USED(path);
         return {};

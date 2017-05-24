@@ -15,14 +15,7 @@ auto create_font(lua_State* L, ScopeStack& stack) -> Prose::Asset
         return Prose::Asset::none();
     }
 
-    const Data& data = Data::load_asset(path);
-    if (!data)
-    {
-        LOGE(kProseFailedOpening, path);
-        return Prose::Asset::none();
-    }
-
-    auto font = stack.allocate<FontAtlas>(data, pt);
+    auto font = stack.allocate<FontAtlas>(path, pt);
     if (!font->is_valid())
     {
         LOGE(kProseFailedLoading, kKeyFont, path);
@@ -48,20 +41,12 @@ auto create_texture(lua_State* L, ScopeStack& stack) -> Prose::Asset
         return Prose::Asset::none();
     }
 
-    const auto path = rainbow::filesystem::relative(lua_tostring(L, -1));
+    czstring path = lua_tostring(L, -1);
     lua_pop(L, 1);
-    std::error_code error;
-    if (!rainbow::filesystem::is_regular_file(path, error))
-    {
-        LOGE(kProseNoSuchFile, path.c_str());
-        lua_pop(L, 1);
-        return Prose::Asset::none();
-    }
-
     auto texture = stack.allocate<TextureAtlas>(path);
     if (!texture->is_valid())
     {
-        LOGE(kProseFailedLoading, kKeyTexture, path.c_str());
+        LOGE(kProseFailedLoading, kKeyTexture, path);
         lua_pop(L, 1);
         return Prose::Asset::none();
     }
@@ -71,10 +56,7 @@ auto create_texture(lua_State* L, ScopeStack& stack) -> Prose::Asset
     {
         if (!lua_istable(L, -1))
         {
-            LOGW(kProseUnknownProperty,
-                 table_name(L),
-                 kKeyTexture,
-                 path.c_str());
+            LOGW(kProseUnknownProperty, table_name(L), kKeyTexture, path);
             lua_pop(L, 1);
             continue;
         }

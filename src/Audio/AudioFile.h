@@ -7,19 +7,26 @@
 
 #include <memory>
 
-#include "FileSystem/File.h"
+#include "Common/NonCopyable.h"
+#include "Common/String.h"
 
 namespace rainbow { namespace audio
 {
-    class IAudioFile : public IFile
+    struct IAudioFile : private NonCopyable<IAudioFile>
     {
-    public:
-        static std::unique_ptr<IAudioFile> open(czstring path);
+        static auto open(czstring path) -> std::unique_ptr<IAudioFile>;
+
+        virtual ~IAudioFile() {}
 
         virtual auto channels() const -> int = 0;
         virtual auto rate() const -> int = 0;
+        virtual auto size() const -> size_t = 0;
 
-        virtual void rewind() = 0;
+        virtual auto read(void* dst, size_t size) -> size_t = 0;
+        void rewind() { seek(0); }
+        virtual bool seek(int64_t offset) = 0;
+
+        virtual /* explicit */ operator bool() const = 0;
     };
 }}  // namespace rainbow::audio
 
