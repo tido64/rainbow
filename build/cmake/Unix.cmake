@@ -33,7 +33,8 @@ if(MINGW OR UNIX)
 
   if(APPLE)
     find_library(CORESERVICES_LIBRARY CoreServices REQUIRED)
-    set(PLATFORM_LIBRARIES ${CORESERVICES_LIBRARY})
+    find_library(FOUNDATION_FRAMEWORK Foundation REQUIRED)
+    set(PLATFORM_LIBRARIES ${CORESERVICES_LIBRARY} ${FOUNDATION_FRAMEWORK})
   else()
     # Debug- and release-specific flags
     set(CMAKE_CXX_FLAGS_DEBUG   "-g -O0 -ftrapv")

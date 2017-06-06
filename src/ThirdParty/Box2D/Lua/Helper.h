@@ -16,13 +16,13 @@
 
 #include "Lua/Object.h"
 
-#define luaR_getboolean(L, k)  gettable<bool>(L, k, strllen(k))
-#define luaR_getfield(L, k)    getfield(L, k, strllen(k))
-#define luaR_getinteger(L, k)  gettable<lua_Integer>(L, k, strllen(k))
-#define luaR_getnumber(L, k)   gettable<lua_Number>(L, k, strllen(k))
-#define luaR_getvec2(L, k)     gettable<b2Vec2>(L, k, strllen(k))
-#define luaR_rawsetnil(L, k)   rawsetnil(L, k, strllen(k))
-#define luaR_rawsetvec2(L, k)  rawsetvec2(L, k, strllen(k))
+#define luaR_getboolean(L, k)  gettable<bool>(L, k, rainbow::strllen(k))
+#define luaR_getfield(L, k)    getfield(L, k, rainbow::strllen(k))
+#define luaR_getinteger(L, k)  gettable<lua_Integer>(L, k, rainbow::strllen(k))
+#define luaR_getnumber(L, k)   gettable<lua_Number>(L, k, rainbow::strllen(k))
+#define luaR_getvec2(L, k)     gettable<b2Vec2>(L, k, rainbow::strllen(k))
+#define luaR_rawsetnil(L, k)   rawsetnil(L, k, rainbow::strllen(k))
+#define luaR_rawsetvec2(L, k)  rawsetvec2(L, k, rainbow::strllen(k))
 
 namespace b2
 {

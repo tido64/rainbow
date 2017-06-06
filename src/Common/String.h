@@ -69,6 +69,12 @@ namespace rainbow
     {
         return ends_with(str.c_str(), str.length(), suffix);
     }
+
+    template <size_t N>
+    constexpr auto strllen(const char (&)[N]) noexcept
+    {
+        return N - 1;
+    }
 }
 
 #endif

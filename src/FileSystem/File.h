@@ -40,8 +40,7 @@ namespace rainbow
 
     namespace detail
     {
-        // TODO: Replace `inline` with `constexpr` when MSVC2015 is deprecated.
-        inline auto file_access_mode(FileType type)
+        constexpr auto file_access_mode(FileType type)
         {
             switch (type)
             {
@@ -52,8 +51,7 @@ namespace rainbow
             }
         }
 
-        // TODO: Replace `inline` with `constexpr` when MSVC2015 is deprecated.
-        inline auto seek_origin(SeekOrigin origin)
+        constexpr auto seek_origin(SeekOrigin origin)
         {
             switch (origin)
             {

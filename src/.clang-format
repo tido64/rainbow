@@ -1,4 +1,3 @@
-Language: Cpp
 BasedOnStyle: LLVM
 AccessModifierOffset: -4
 AllowShortFunctionsOnASingleLine: Inline

@@ -34,13 +34,6 @@
 #   define RAINBOW_SDL
 #endif
 
-#define RAINBOW_BUILD "Rainbow / Built " __DATE__
-#ifdef USE_HEIMDALL
-#   define RAINBOW_WINDOW_TITLE RAINBOW_BUILD " / Press Ctrl+F11 for dev menu"
-#else
-#   define RAINBOW_WINDOW_TITLE RAINBOW_BUILD
-#endif
-
 #if defined(__GNUC__)
 #   if defined(__clang__)
 #       define ASSUME(expr) __builtin_assume(expr)
@@ -54,11 +47,5 @@
 #endif
 
 #define NOT_USED(v) static_cast<void>(v)
-
-#if __has_include(<experimental/filesystem>) || __has_include(<filesystem>)
-#   define HAS_FILESYSTEM 1
-#else
-#   define HAS_FILESYSTEM 0
-#endif
 
 #endif  // PLATFORM_MACROS_H_

@@ -59,9 +59,10 @@ set(SOURCE_FILES
     src/FileSystem/File.h
     src/FileSystem/FileSystem.cpp
     src/FileSystem/FileSystem.h
-    src/FileSystem/impl/File.system.h
+    src/FileSystem/KnownPaths.h
     src/FileSystem/Path.cpp
     src/FileSystem/Path.h
+    src/FileSystem/impl/File.system.h
     src/Graphics/Animation.cpp
     src/Graphics/Animation.h
     src/Graphics/Buffer.cpp
@@ -203,6 +204,7 @@ endif()
 if(ANDROID)
   list(APPEND SOURCE_FILES
        src/FileSystem/impl/File.android.h
+       src/FileSystem/impl/KnownPaths.android.cpp
        src/Platform/Android/main.cpp
        # Workaround for https://github.com/android-ndk/ndk/issues/184
        src/Platform/Android/mulodi4.c
@@ -217,8 +219,9 @@ else()
        src/Platform/SDL/main.cpp)
   if(WIN32)
     list(APPEND SOURCE_FILES
-         src/Platform/impl/Diagnostics.win.cpp
-         src/Platform/impl/SystemInfo.win.cpp
+         src/FileSystem/impl/KnownPaths.windows.cpp
+         src/Platform/impl/Diagnostics.windows.cpp
+         src/Platform/impl/SystemInfo.windows.cpp
          tools/make.ps1
          appveyor.yml)
   else()
@@ -226,11 +229,14 @@ else()
          src/Platform/impl/Diagnostics.unix.cpp)
     if(APPLE)
       list(APPEND SOURCE_FILES
+           src/FileSystem/impl/KnownPaths.cocoa.mm
            src/Graphics/Decoders/UIKit.h
            src/Platform/impl/Diagnostics.apple.cpp
            src/Platform/impl/SystemInfo.apple.cpp)
     else()
-      list(APPEND SOURCE_FILES src/Platform/impl/SystemInfo.unix.cpp)
+      list(APPEND SOURCE_FILES
+           src/FileSystem/impl/KnownPaths.unix.cpp
+           src/Platform/impl/SystemInfo.unix.cpp)
     endif()
   endif()
 endif()
@@ -283,6 +289,13 @@ if(UNIT_TESTS)
        src/Tests/Tests.cpp
        src/Tests/Tests.h
        src/Tests/TextAlignment.test.cc)
+  if(APPLE)
+    list(APPEND SOURCE_FILES
+         src/Tests/FileSystem/KnownPaths.test.cocoa.cc)
+  elseif(WIN32)
+    list(APPEND SOURCE_FILES
+         src/Tests/FileSystem/KnownPaths.test.windows.cc)
+  endif()
 endif()
 
 if(USE_FMOD_STUDIO)
@@ -321,9 +334,9 @@ if(USE_HEIMDALL)
        src/ThirdParty/ImGui/ImGuiHelper.cpp
        src/ThirdParty/ImGui/ImGuiHelper.h)
   if(APPLE)
-    list(APPEND SOURCE_FILES src/Heimdall/impl/ChangeMonitor.mac.cpp)
+    list(APPEND SOURCE_FILES src/Heimdall/impl/ChangeMonitor.macos.cpp)
   elseif(WIN32)
-    list(APPEND SOURCE_FILES src/Heimdall/impl/ChangeMonitor.win.cpp)
+    list(APPEND SOURCE_FILES src/Heimdall/impl/ChangeMonitor.windows.cpp)
   else()
     list(APPEND SOURCE_FILES src/Heimdall/impl/ChangeMonitor.stub.cpp)
   endif()

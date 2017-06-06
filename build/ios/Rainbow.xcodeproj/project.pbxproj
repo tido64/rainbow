@@ -192,6 +192,7 @@
 		19DB48B61CA6A4BD00999675 /* ImGuiHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19DB48B41CA6A4BD00999675 /* ImGuiHelper.cpp */; };
 		19DB48B91CA6AAFE00999675 /* ElementBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19DB48B71CA6AAFE00999675 /* ElementBuffer.cpp */; };
 		19DCB2731741A1D000660000 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 19DCB2721741A1D000660000 /* libz.dylib */; };
+		19DEA1951F2E0D2200A5ABF4 /* KnownPaths.cocoa.mm in Sources */ = {isa = PBXBuildFile; fileRef = 19DEA1941F2E0D2200A5ABF4 /* KnownPaths.cocoa.mm */; };
 		19DFE5351C6002890079CB58 /* Mixer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19DFE5221C6002890079CB58 /* Mixer.cpp */; };
 		19DFE5361C6002890079CB58 /* AudioFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19DFE5251C6002890079CB58 /* AudioFile.cpp */; };
 		19DFE5371C6002890079CB58 /* AppleAudioFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19DFE5281C6002890079CB58 /* AppleAudioFile.cpp */; };
@@ -587,6 +588,8 @@
 		19DB48B81CA6AAFE00999675 /* ElementBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ElementBuffer.h; sourceTree = "<group>"; };
 		19DCB2721741A1D000660000 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		19DCB2831746AB7C00660000 /* Object.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Object.h; sourceTree = "<group>"; };
+		19DEA1941F2E0D2200A5ABF4 /* KnownPaths.cocoa.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = KnownPaths.cocoa.mm; sourceTree = "<group>"; };
+		19DEA1961F2E0D3F00A5ABF4 /* KnownPaths.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KnownPaths.h; sourceTree = "<group>"; };
 		19DF40451C98B415001482BC /* TypeInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TypeInfo.h; sourceTree = "<group>"; };
 		19DF40461C98B425001482BC /* String.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = String.h; sourceTree = "<group>"; };
 		19DF40481C98B4AF001482BC /* Pool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Pool.h; sourceTree = "<group>"; };
@@ -650,6 +653,7 @@
 			isa = PBXGroup;
 			children = (
 				19018EBD1EEDA64D00724B3E /* File.system.h */,
+				19DEA1941F2E0D2200A5ABF4 /* KnownPaths.cocoa.mm */,
 			);
 			path = impl;
 			sourceTree = "<group>";
@@ -1071,6 +1075,7 @@
 				1946B7AB1836E54600F74A3B /* File.h */,
 				193458531D5A3884008482E8 /* FileSystem.cpp */,
 				193458541D5A3884008482E8 /* FileSystem.h */,
+				19DEA1961F2E0D3F00A5ABF4 /* KnownPaths.h */,
 				1946B7AC1836E54600F74A3B /* Path.cpp */,
 				1946B7AD1836E54600F74A3B /* Path.h */,
 			);
@@ -1654,6 +1659,7 @@
 				19E7748A1A02C8D3005DE249 /* OverlayActivator.cpp in Sources */,
 				1960AFD41A4E278E0015A3AD /* Fixture.cpp in Sources */,
 				1960AFD21A4E278E0015A3AD /* Body.cpp in Sources */,
+				19DEA1951F2E0D2200A5ABF4 /* KnownPaths.cocoa.mm in Sources */,
 				19B051361E033A1000FE624A /* lua_RenderQueue.cpp in Sources */,
 				1939A164152C401300494609 /* lmem.c in Sources */,
 				198F42AB1A9152E000BE7A73 /* SkeletonBounds.c in Sources */,

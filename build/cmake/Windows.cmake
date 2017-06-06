@@ -13,7 +13,6 @@ if(WIN32)
       -DNOATOM=1             # Atom Manager routines
       -DNOCOLOR=1            # Screen colors
       -DNOCOMM=1             # COMM driver routines
-      -DNOCTLMGR=1           # Control and Dialog routines
       -DNODEFERWINDOWPOS=1   # DeferWindowPos routines
       -DNODESKTOP=1          # Desktop-specific access flags
       -DNODRAWTEXT=1         # DrawText() and DT_*
