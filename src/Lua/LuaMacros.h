@@ -6,6 +6,7 @@
 #define LUA_LUAMACROS_H_
 
 #include "Common/Algorithm.h"
+#include "Common/String.h"
 
 #define NS_RAINBOW_LUA_BEGIN namespace rainbow { namespace lua
 #define NS_RAINBOW_LUA_END }
@@ -14,21 +15,19 @@
     namespace rainbow { namespace lua { namespace module
 #define NS_RAINBOW_LUA_MODULE_END(module) }}
 
-#define strllen(literal) (rainbow::array_size(literal) - 1)
-
 #define luaR_rawsetboolean(L, k, v) \
-    rainbow::lua::rawset<bool>(L, k, strllen(k), (v))
+    rainbow::lua::rawset<bool>(L, k, rainbow::strllen(k), (v))
 
 #define luaR_rawsetcfunction(L, k, v) \
-    rainbow::lua::rawset<lua_CFunction>(L, k, strllen(k), (v))
+    rainbow::lua::rawset<lua_CFunction>(L, k, rainbow::strllen(k), (v))
 
 #define luaR_rawsetinteger(L, k, v) \
-    rainbow::lua::rawset<lua_Integer>(L, k, strllen(k), (v))
+    rainbow::lua::rawset<lua_Integer>(L, k, rainbow::strllen(k), (v))
 
 #define luaR_rawsetnumber(L, k, v) \
-    rainbow::lua::rawset<lua_Number>(L, k, strllen(k), (v))
+    rainbow::lua::rawset<lua_Number>(L, k, rainbow::strllen(k), (v))
 
 #define luaR_rawsetstring(L, k, v) \
-    rainbow::lua::rawset<czstring>(L, k, strllen(k), (v))
+    rainbow::lua::rawset<czstring>(L, k, rainbow::strllen(k), (v))
 
 #endif  // LUA_LUAMACROS_H_

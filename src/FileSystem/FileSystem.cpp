@@ -4,6 +4,8 @@
 
 #include "FileSystem/FileSystem.h"
 
+#include "Config.h"
+#include "FileSystem/KnownPaths.h"
 #include "Platform/Macros.h"
 #if HAS_FILESYSTEM
 #   include <experimental/filesystem>
@@ -16,26 +18,16 @@ namespace stdfs = std::experimental::filesystem;
 #   include "Common/Logging.h"
 #endif
 
-#if defined(RAINBOW_OS_WINDOWS)
-#   define kPathSeparator "\\"
-#else
-#   define kPathSeparator "/"
-#   if defined(RAINBOW_OS_ANDROID)
-#       include <android/native_activity.h>
+#if defined(RAINBOW_OS_ANDROID)
+#   include <android/native_activity.h>
 extern ANativeActivity* g_native_activity;
-#   elif defined(RAINBOW_OS_IOS)
-#       include "Platform/iOS/NSString+Rainbow.h"
-#   endif
+#elif defined(RAINBOW_OS_IOS)
+#   include "Platform/iOS/NSString+Rainbow.h"
 #endif
 
 namespace
 {
-#ifndef RAINBOW_OS_ANDROID
-    constexpr char kUserDataPath[] = kPathSeparator "user";
-#endif
-
     std::string g_assets_path;
-    std::string g_exec_path;
 }
 
 auto rainbow::filesystem::absolute(czstring path) -> Path
@@ -94,25 +86,14 @@ bool rainbow::filesystem::create_directories(czstring path,
 
 auto rainbow::filesystem::executable_path() -> czstring
 {
-    return g_exec_path.c_str();
+    static std::string executable_path = get_executable_path();
+    return executable_path.c_str();
 }
 
 void rainbow::filesystem::initialize(ArrayView<zstring> args)
 {
-    if (!g_exec_path.empty())
+    if (!g_assets_path.empty())
         return;
-
-    czstring executable = args[0];
-#if HAS_FILESYSTEM
-    g_exec_path = stdfs::absolute(executable).u8string();
-#else
-    char path[PATH_MAX];
-    realpath(executable, path);
-    g_exec_path = path;
-#endif
-
-    R_ASSERT(!g_exec_path.empty(),
-             "Failed to canonicalize absolute path to executable");
 
     if (args.size() >= 2)
     {
@@ -234,21 +215,14 @@ auto rainbow::filesystem::user(czstring path) -> Path
 
 auto rainbow::filesystem::user_data_path() -> czstring
 {
-    static std::string data_path;
-    if (data_path.empty())
-    {
-#ifdef RAINBOW_OS_ANDROID
-        czstring path = g_native_activity->externalDataPath;
-        if (path == nullptr)
-            path = g_native_activity->internalDataPath;
-        if (path != nullptr)
-            data_path = path;
+#if defined(RAINBOW_OS_WINDOWS)
+    constexpr char kPathSeparator = '\\';
 #else
-        data_path = g_assets_path + kUserDataPath;
+    constexpr char kPathSeparator = '/';
 #endif
-    }
-
-    return data_path.c_str();
+    static std::string save_directory =
+        get_save_directory() + kPathSeparator + RAINBOW_PRODUCT_NAME;
+    return save_directory.c_str();
 }
 
 #ifdef RAINBOW_TEST
