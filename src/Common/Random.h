@@ -130,6 +130,8 @@ namespace rainbow
         std::uniform_real_distribution<double> dis;
         xorshift::xorshift1024star gen;
 
+        Random() noexcept {}
+
         void seed(uint64_t seed = 0) { gen.seed(seed); }
 
         auto operator()() { return dis(gen); }

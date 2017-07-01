@@ -5,6 +5,7 @@
 #ifndef COMMON_FUNCTIONAL_H_
 #define COMMON_FUNCTIONAL_H_
 
+#include <functional>
 #include <iterator>
 #include <utility>
 
@@ -12,6 +13,9 @@
 
 namespace rainbow
 {
+    template <typename T>
+    using out = std::reference_wrapper<T>;
+
     template <typename F, typename T>
     auto filter(F&& pred, const T& list) -> T
     {

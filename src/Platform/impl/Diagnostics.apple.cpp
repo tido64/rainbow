@@ -11,8 +11,7 @@
 
 bool rainbow::diagnostics::is_debugger_attached()
 {
-    kinfo_proc info;
-    info.kp_proc.p_flag = 0;
+    kinfo_proc info{};
     size_t size = sizeof(info);
     int mib[4]{CTL_KERN, KERN_PROC, KERN_PROC_PID, getpid()};
     const int result = sysctl(mib, array_size(mib), &info, &size, nullptr, 0);

@@ -70,7 +70,7 @@ bool RainbowController::run()
     if (director_.terminated())
         return false;
 
-    SDL_Event event;
+    SDL_Event event;  // NOLINT(cppcoreguidelines-pro-type-member-init)
     while (SDL_PollEvent(&event) != 0)
     {
         switch (event.type)

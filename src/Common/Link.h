@@ -5,20 +5,48 @@
 #ifndef COMMON_LINK_H_
 #define COMMON_LINK_H_
 
-#include "Common/Constraints.h"
+#include "Common/Logging.h"
 
 namespace rainbow
 {
+    template <typename T>
     class Link
     {
     public:
         auto next() const { return next_; }
         auto prev() const { return prev_; }
 
-        void append(Link& node);
-        void pop();
+        void append(T& node)
+        {
+            node.pop();
+            node.prev_ = static_cast<T*>(this);
+            if (next_ != nullptr)
+            {
+                next_->prev_ = &node;
+                node.next_ = next_;
+            }
+            next_ = &node;
+        }
 
-        template <typename T, typename F, typename = EnableIfBaseOf<Link, T>>
+        void pop()
+        {
+            if (prev_ != nullptr)
+                prev_->next_ = next_;
+
+            if (next_ != nullptr)
+            {
+                next_->prev_ = prev_;
+                next_ = nullptr;
+            }
+            else if (prev_ != nullptr)
+            {
+                on_end_link_changed(*prev_);
+            }
+
+            prev_ = nullptr;
+        }
+
+        template <typename F>
         friend auto for_each(T* node, F&& f) -> bool
         {
             while (node != nullptr)
@@ -35,10 +63,19 @@ namespace rainbow
         ~Link() { pop(); }
 
     private:
-        Link* next_ = nullptr;
-        Link* prev_ = nullptr;
+        T* next_ = nullptr;
+        T* prev_ = nullptr;
 
-        virtual void on_end_link_changed(Link& new_link);
+        virtual void on_end_link_changed(T& new_link)
+        {
+            R_ASSERT(new_link.next() == nullptr,  //
+                     "An end link doesn't have a tail");
+
+            if (prev_ == nullptr)
+                return;
+
+            prev_->on_end_link_changed(new_link);
+        }
     };
 }
 

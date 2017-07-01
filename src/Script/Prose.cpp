@@ -7,6 +7,7 @@
 #include <string>
 
 #include "Common/Data.h"
+#include "Common/Functional.h"
 #include "Common/String.h"
 #include "FileSystem/File.h"
 #include "Graphics/Animation.h"
@@ -28,6 +29,7 @@ using rainbow::Data;
 using rainbow::File;
 using rainbow::FileType;
 using rainbow::Label;
+using rainbow::NonCopyable;
 using rainbow::Prose;
 using rainbow::ScopeStack;
 using rainbow::SharedPtr;
@@ -39,6 +41,7 @@ using rainbow::TextureAtlas;
 using rainbow::Vec2f;
 using rainbow::czstring;
 using rainbow::graphics::RenderQueue;
+using rainbow::out;
 
 namespace
 {
@@ -177,7 +180,7 @@ namespace
 {
     constexpr int kProseVersion = 100;
 
-    class ScopedField
+    class ScopedField : private NonCopyable<ScopedField>
     {
     public:
         ScopedField(lua_State* L, int n) : state_(L) { lua_rawgeti(L, -1, n); }
@@ -194,10 +197,31 @@ namespace
             lua_rawget(L, -2);
         }
 
-        ~ScopedField() { lua_pop(state_, 1); }
+        ScopedField(ScopedField&& field) noexcept : state_(field.state_)
+        {
+            field.state_ = nullptr;
+        }
+
+        ~ScopedField() { pop(); }
+
+        ScopedField& operator=(ScopedField&& field) noexcept
+        {
+            pop();
+            state_ = field.state_;
+            field.state_ = nullptr;
+            return *this;
+        }
 
     private:
         lua_State* state_;
+
+        void pop()
+        {
+            if (state_ == nullptr)
+                return;
+
+            lua_pop(state_, 1);
+        }
     };
 
     template <size_t N>
@@ -295,20 +319,24 @@ namespace
         }
     }
 
-    auto compute_size(lua_State* L, size_t& total_size) -> Prose::Asset
+    auto compute_size(lua_State* L, out<size_t> total_size)
+        -> Prose::Asset
     {
         auto type = node_type(L);
         if (type == Prose::AssetType::None)
             type = resource_type(L);
         else if (type == Prose::AssetType::SpriteBatch)
-            parse_table(L, kKeySprites, &compute_size, total_size);
+            parse_table(L, kKeySprites, &compute_size, std::ref(total_size));
         if (type == Prose::AssetType::None)
         {
             if (has_key(L, kKeyTexture))
             {
                 type = Prose::AssetType::Sprite;
                 if (has_key(L, kKeyAnimations))
-                    parse_table(L, kKeyAnimations, &compute_size, total_size);
+                {
+                    parse_table(
+                        L, kKeyAnimations, &compute_size, std::ref(total_size));
+                }
             }
             else if (has_key(L, kKeyFps))
                 type = Prose::AssetType::Animation;
@@ -355,8 +383,8 @@ auto Prose::from_lua(czstring path) -> Prose*
 
     // Compute the memory requirement for this scene.
     size_t total_size = 0;
-    parse_table(L.get(), kKeyResources, &compute_size, total_size);
-    parse_table(L.get(), kKeyNodes, &compute_size, total_size);
+    parse_table(L.get(), kKeyResources, &compute_size, std::ref(total_size));
+    parse_table(L.get(), kKeyNodes, &compute_size, std::ref(total_size));
 
     auto scene = std::make_unique<Prose>(total_size);
     parse_table(

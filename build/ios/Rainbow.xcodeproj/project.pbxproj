@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		190497DF168293DB0037F5EC /* lua_IO.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 190497DE168293DB0037F5EC /* lua_IO.cpp */; };
 		190497E41682963F0037F5EC /* lua_Platform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 190497E31682963F0037F5EC /* lua_Platform.cpp */; };
-		1910099819FDA3A70036D5F4 /* Link.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1910099619FDA3A70036D5F4 /* Link.cpp */; };
 		1923F97F1AF6400A0012C078 /* UTF8.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1923F97D1AF6400A0012C078 /* UTF8.cpp */; };
 		193458551D5A3884008482E8 /* FileSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 193458531D5A3884008482E8 /* FileSystem.cpp */; };
 		193929B316E1932E0018340B /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 193929B216E1932E0018340B /* CoreMotion.framework */; };
@@ -216,7 +215,6 @@
 		190CD1C01DDF952E00B0EAD4 /* Passkey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Passkey.h; sourceTree = "<group>"; };
 		1910099419FDA3A70036D5F4 /* Constraints.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constraints.h; sourceTree = "<group>"; };
 		1910099519FDA3A70036D5F4 /* Global.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Global.h; sourceTree = "<group>"; };
-		1910099619FDA3A70036D5F4 /* Link.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Link.cpp; sourceTree = "<group>"; };
 		1910099719FDA3A70036D5F4 /* Link.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Link.h; sourceTree = "<group>"; };
 		191484E61891BD87004014D7 /* ShaderDetails.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShaderDetails.h; sourceTree = "<group>"; };
 		1923F97D1AF6400A0012C078 /* UTF8.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UTF8.cpp; sourceTree = "<group>"; };
@@ -921,7 +919,6 @@
 				1939A186152C425D00494609 /* Data.h */,
 				195D565617D90DD100C78117 /* Functional.h */,
 				1910099519FDA3A70036D5F4 /* Global.h */,
-				1910099619FDA3A70036D5F4 /* Link.cpp */,
 				1910099719FDA3A70036D5F4 /* Link.h */,
 				190A0ADA15E0294C0088D8B7 /* Logging.h */,
 				19F9890C15FBBB3B005A5F69 /* NonCopyable.h */,
@@ -1627,7 +1624,6 @@
 				1939A076152C401300494609 /* b2WheelJoint.cpp in Sources */,
 				198F429D1A9152E000BE7A73 /* Attachment.c in Sources */,
 				1939A078152C401300494609 /* b2Rope.cpp in Sources */,
-				1910099819FDA3A70036D5F4 /* Link.cpp in Sources */,
 				1960AFD31A4E278E0015A3AD /* Contact.cpp in Sources */,
 				198F429B1A9152E000BE7A73 /* Atlas.c in Sources */,
 				1939A152152C401300494609 /* lapi.c in Sources */,

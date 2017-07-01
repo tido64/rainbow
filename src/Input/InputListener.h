@@ -16,18 +16,18 @@ namespace rainbow
     struct Pointer;
 
     /// <summary>Interface for input listeners.</summary>
-    class InputListener : private Link
+    class InputListener : private Link<InputListener>
     {
     public:
         /// <summary>
         ///   Returns the next input listener; <c>nullptr</c> if none.
         /// </summary>
-        auto next() const { return static_cast<InputListener*>(Link::next()); }
+        auto next() const { return Link::next(); }
 
         /// <summary>
         ///   Returns the previous input listener; <c>nullptr</c> if none.
         /// </summary>
-        auto prev() const { return static_cast<InputListener*>(Link::prev()); }
+        auto prev() const { return Link::prev(); }
 
         bool on_controller_axis_motion(const ControllerAxisMotion& motion)
         {
@@ -146,9 +146,10 @@ namespace rainbow
 
         // Link implementation details
 
-        void on_end_link_changed(Link& new_link) final;
+        void on_end_link_changed(InputListener& new_link) final;
 
         friend class Input;
+        friend Link;
     };
 }
 

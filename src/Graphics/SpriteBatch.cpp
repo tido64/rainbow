@@ -13,8 +13,16 @@ using rainbow::SpriteVertex;
 using rainbow::TextureAtlas;
 using rainbow::Vec2f;
 
+namespace
+{
+    constexpr auto operator"" _z(unsigned long long int u) -> size_t
+    {
+        return u;
+    }
+}
+
 SpriteBatch::SpriteBatch(uint32_t count)
-    : sprites_(count), vertices_(std::make_unique<SpriteVertex[]>(count * 4)),
+    : sprites_(count), vertices_(std::make_unique<SpriteVertex[]>(count * 4_z)),
       count_(0), visible_(true)
 {
     R_ASSERT(count <= graphics::kMaxSprites, "Hard-coded limit reached");
@@ -38,7 +46,7 @@ void SpriteBatch::set_normal(SharedPtr<TextureAtlas> texture)
 {
     if (!normals_)
     {
-        normals_ = std::make_unique<Vec2f[]>(sprites_.size() * 4);
+        normals_ = std::make_unique<Vec2f[]>(sprites_.size() * 4_z);
         array_.reconfigure([this] { bind_arrays(); });
     }
 
@@ -50,10 +58,10 @@ void SpriteBatch::set_texture(SharedPtr<TextureAtlas> texture)
     texture_ = std::move(texture);
 }
 
-auto SpriteBatch::add(int x, int y, int w, int h) -> SpriteRef
+auto SpriteBatch::add(int x, int y, int width, int height) -> SpriteRef
 {
-    auto sprite = create_sprite(w, h);
-    sprite->set_texture(texture_->add_region(x, y, w, h));
+    auto sprite = create_sprite(width, height);
+    sprite->set_texture(texture_->add_region(x, y, width, height));
     return sprite;
 }
 

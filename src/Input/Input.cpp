@@ -17,7 +17,7 @@ using rainbow::Passkey;
 using rainbow::Pointer;
 using rainbow::VirtualKey;
 
-constexpr unsigned int Input::kNumSupportedControllers;
+constexpr unsigned int Input::kNumSupportedControllers;  // NOLINT(readability-redundant-declaration)
 
 template <typename F>
 void Input::process_controller(unsigned int id, F&& process)
@@ -188,11 +188,11 @@ void Input::on_pointer_moved(const ArrayView<Pointer>& pointers)
     });
 }
 
-void InputListener::on_end_link_changed(Link& new_link)
+void InputListener::on_end_link_changed(InputListener& new_link)
 {
     auto input = Input::Get();
     if (input == nullptr)
         return;
 
-    input->on_last_listener_changed(static_cast<InputListener&>(new_link), {});
+    input->on_last_listener_changed(new_link, {});
 }

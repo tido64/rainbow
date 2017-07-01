@@ -50,8 +50,8 @@ namespace
 
         bool seek(int64_t) override { return false; }
 
-        // TODO: Add `explicit` when MSVC2015 is deprecated.
-        operator bool() const override { return true; }
+        // TODO: Add `explicit` when MSVC2015 is deprecated (and remove NOLINT).
+        operator bool() const override { return true; }  // NOLINT
     };
 }
 

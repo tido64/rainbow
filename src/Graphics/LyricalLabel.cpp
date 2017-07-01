@@ -18,9 +18,8 @@ namespace
     constexpr uint32_t kStaleAttribute = 1u << 16;
 }
 
-LyricalLabel::LyricalLabel() : applied_(0), did_shake_(false)
+LyricalLabel::LyricalLabel() : applied_(0), did_shake_(false), animators_{}
 {
-    std::uninitialized_fill_n(animators_, array_size(animators_), nullptr);
 }
 
 LyricalLabel::~LyricalLabel()
@@ -65,9 +64,9 @@ void LyricalLabel::clear_attributes(Attribute::Type type)
     }
 }
 
-void LyricalLabel::set_color(Color c, uint32_t start, uint32_t length)
+void LyricalLabel::set_color(Color color, uint32_t start, uint32_t length)
 {
-    attributes_.emplace_back(c, start, length);
+    attributes_.emplace_back(color, start, length);
     set_needs_update(kStaleAttribute);
 }
 
@@ -110,8 +109,7 @@ void LyricalLabel::start_animation(Animation animation, int interval)
                         return;
 
                     clear_attributes(Attribute::Type::Offset);
-                    const uint32_t size =
-                        static_cast<uint32_t>(attributes_.size());
+                    const auto size = static_cast<uint32_t>(attributes_.size());
                     for (uint32_t i = 0; i < size; ++i)
                     {
                         auto&& attr = attributes_[i];
@@ -142,7 +140,7 @@ void LyricalLabel::start_animation(Animation animation, int interval)
 
 void LyricalLabel::stop_animation(Animation animation)
 {
-    const int i = static_cast<int>(animation);
+    const auto i = static_cast<int>(animation);
     if (animators_[i] == nullptr)
         return;
 
@@ -254,27 +252,29 @@ void LyricalLabel::undo_from(std::vector<Attribute>::const_iterator first)
     applied_ -= std::distance(first, attributes_.cend());
 }
 
-LyricalLabel::Attribute::Attribute(Color c, uint32_t start, uint32_t len)
+LyricalLabel::Attribute::Attribute(Color color,  // NOLINT
+                                   uint32_t start,
+                                   uint32_t len)
     : type(Type::Color), start(start), length(len)
 {
-    color[0] = c.r;
-    color[1] = c.g;
-    color[2] = c.b;
-    color[3] = c.a;
+    this->color[0] = color.r;
+    this->color[1] = color.g;
+    this->color[2] = color.b;
+    this->color[3] = color.a;
 }
 
-LyricalLabel::Attribute::Attribute(uint32_t magnitude,
+LyricalLabel::Attribute::Attribute(uint32_t magnitude,  // NOLINT
                                    uint32_t start,
                                    uint32_t len)
     : type(Type::Shake), start(start), length(len), magnitude(magnitude)
 {
 }
 
-LyricalLabel::Attribute::Attribute(const Vec2i& offset_,
+LyricalLabel::Attribute::Attribute(const Vec2i& offset,  // NOLINT
                                    uint32_t start,
                                    uint32_t len)
     : type(Type::Offset), start(start), length(len)
 {
-    offset[0] = offset_.x;
-    offset[1] = offset_.y;
+    this->offset[0] = offset.x;
+    this->offset[1] = offset.y;
 }

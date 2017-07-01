@@ -14,7 +14,7 @@ using rainbow::Vec2f;
 
 namespace
 {
-    void update(SpriteBatch& batch)
+    void update(SpriteBatch& batch)  // NOLINT(google-runtime-references)
     {
         auto sprites = batch.sprites();
         for (uint32_t i = 0; i < batch.size(); ++i)

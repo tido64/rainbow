@@ -167,10 +167,10 @@ void ALMixer::process()
                     stop(&channel);
                     break;
                 }
-                else if (sound->loop_count > 0)
-                {
+
+                if (sound->loop_count > 0)
                     --sound->loop_count;
-                }
+
                 stream->rewind();
                 length = stream->read(buffer, kAudioBufferSize);
             }
@@ -350,7 +350,7 @@ void rainbow::audio::set_volume(Channel* channel, float volume)
 void rainbow::audio::set_world_position(Channel* channel, Vec2f position)
 {
     const ALfloat pos[]{position.x, position.y, 0.0f};
-    alSourcefv(channel->id(), AL_POSITION, pos);
+    alSourcefv(channel->id(), AL_POSITION, static_cast<const ALfloat*>(pos));
 }
 
 void rainbow::audio::pause(Channel* channel)
@@ -367,7 +367,7 @@ auto rainbow::audio::play(Channel* channel) -> Channel*
     return channel;
 }
 
-auto rainbow::audio::play(Sound* sound, Vec2f position) -> Channel*
+auto rainbow::audio::play(Sound* sound, Vec2f world_position) -> Channel*
 {
     Channel* channel = al_mixer->get_channel();
     channel->set_sound(sound);
@@ -402,7 +402,7 @@ auto rainbow::audio::play(Sound* sound, Vec2f position) -> Channel*
     set_loop_count(channel, 0);
     set_volume(channel, 1.0f);
 
-    set_world_position(channel, position);
+    set_world_position(channel, world_position);
     alSourcePlay(channel->id());
     return channel;
 }

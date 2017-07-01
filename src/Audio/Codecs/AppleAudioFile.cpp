@@ -27,7 +27,7 @@ namespace
     }
 }
 
-AppleAudioFile::AppleAudioFile(czstring file) : ref_(nullptr)
+AppleAudioFile::AppleAudioFile(czstring file) : format_{}, ref_(nullptr)
 {
     const auto path = filesystem::relative(file);
 #ifdef RAINBOW_OS_MACOS
@@ -44,7 +44,6 @@ AppleAudioFile::AppleAudioFile(czstring file) : ref_(nullptr)
         return;
 
     UInt32 size = sizeof(format_);
-    memset(&format_, 0, size);
     auto result = ExtAudioFileGetProperty(
         ref_, kExtAudioFileProperty_FileDataFormat, &size, &format_);
     if (result != noErr)
@@ -90,14 +89,14 @@ auto AppleAudioFile::size() const -> size_t
 auto AppleAudioFile::read(void* dst, size_t size) -> size_t
 {
     UInt32 frames = size / format_.mBytesPerFrame;
-    AudioBufferList buffer;
+    AudioBufferList buffer{};
     buffer.mNumberBuffers = 1;
     buffer.mBuffers[0].mNumberChannels = format_.mChannelsPerFrame;
     buffer.mBuffers[0].mDataByteSize = size;
     buffer.mBuffers[0].mData = dst;
     if (ExtAudioFileRead(ref_, &frames, &buffer) != noErr)
         LOGE("AudioToolbox: Failed to read <%p>", static_cast<void*>(ref_));
-    return frames * format_.mBytesPerFrame;
+    return frames * static_cast<size_t>(format_.mBytesPerFrame);
 }
 
 bool AppleAudioFile::seek(int64_t offset)

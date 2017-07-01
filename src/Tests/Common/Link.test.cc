@@ -8,16 +8,11 @@
 
 namespace
 {
-    struct Number : public rainbow::Link
+    struct Number : public rainbow::Link<Number>
     {
         int value;
 
         explicit Number(int v) : value(v) {}
-
-        auto next() const
-        {
-            return static_cast<Number*>(rainbow::Link::next());
-        }
     };
 }
 

@@ -23,7 +23,7 @@ namespace
 
     auto gl_get_string(GLenum name)
     {
-        return reinterpret_cast<czstring>(glGetString(name));
+        return reinterpret_cast<czstring>(glGetString(name));  // NOLINT
     }
 }
 
@@ -134,13 +134,13 @@ void graphics::set_resolution(const Vec2i& resolution)
     R_ASSERT(glGetError() == GL_NO_ERROR, "Failed to set resolution");
 }
 
-void graphics::set_window_size(const Vec2i& new_size, float factor)
+void graphics::set_window_size(const Vec2i& size, float factor)
 {
     R_ASSERT(g_state != nullptr,
              "Cannot set window size with an uninitialised renderer");
 
-    g_state->scale = static_cast<float>(g_state->view.x) / new_size.x;
-    if (factor * new_size == g_state->view)
+    g_state->scale = static_cast<float>(g_state->view.x) / size.x;
+    if (factor * size == g_state->view)
     {
         g_state->zoom = 1.0f;
         g_state->origin.x = 0;
@@ -148,7 +148,7 @@ void graphics::set_window_size(const Vec2i& new_size, float factor)
     }
     else
     {
-        const Vec2i actual_size = factor * new_size;
+        const Vec2i actual_size = factor * size;
         g_state->zoom =
             std::min(static_cast<float>(actual_size.x) / g_state->view.x,
                      static_cast<float>(actual_size.y) / g_state->view.y);
@@ -157,12 +157,12 @@ void graphics::set_window_size(const Vec2i& new_size, float factor)
         g_state->origin.y =
             (actual_size.y - g_state->view.y * g_state->zoom) * 0.5f;
     }
-    g_state->window = new_size;
+    g_state->window = size;
 
     glViewport(g_state->origin.x,
                g_state->origin.y,
-               new_size.x * factor - g_state->origin.x * 2,
-               new_size.y * factor - g_state->origin.y * 2);
+               size.x * factor - g_state->origin.x * 2,
+               size.y * factor - g_state->origin.y * 2);
 }
 
 void graphics::bind_element_array()

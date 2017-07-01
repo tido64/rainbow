@@ -11,14 +11,20 @@ using rainbow::graphics::ShaderManager;
 
 namespace
 {
-    Shader::Params sDiffuseLight2Df{
-        Shader::kTypeFragment, 0, rainbow::shaders::kDiffuseLight2Df,
+    Shader::Params sDiffuseLight2Df{  // NOLINT(cppcoreguidelines-interfaces-global-init)
+        Shader::kTypeFragment,
+        0,
+        rainbow::shaders::kDiffuseLight2Df,
         rainbow::shaders::integrated::kDiffuseLight2Df};
-    Shader::Params sDiffuseLightNormalf{
-        Shader::kTypeFragment, 0, rainbow::shaders::kDiffuseLightNormalf,
+    Shader::Params sDiffuseLightNormalf{  // NOLINT(cppcoreguidelines-interfaces-global-init)
+        Shader::kTypeFragment,
+        0,
+        rainbow::shaders::kDiffuseLightNormalf,
         rainbow::shaders::integrated::kDiffuseLightNormalf};
-    Shader::Params sNormalMappedf{
-        Shader::kTypeVertex, 0, rainbow::shaders::kNormalMappedv,
+    Shader::Params sNormalMappedf{  // NOLINT(cppcoreguidelines-interfaces-global-init)
+        Shader::kTypeVertex,
+        0,
+        rainbow::shaders::kNormalMappedv,
         rainbow::shaders::integrated::kNormalMappedv};
 }
 

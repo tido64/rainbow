@@ -142,11 +142,11 @@ void Label::update_internal()
 
                 pen.x += glyph->left * scale_;
 
-                for (size_t i = 0; i < 4; ++i)
+                for (auto&& quad : glyph->quad)
                 {
                     vx->color = color_;
-                    vx->texcoord = glyph->quad[i].texcoord;
-                    vx->position = glyph->quad[i].position;
+                    vx->texcoord = quad.texcoord;
+                    vx->position = quad.position;
                     vx->position *= scale_;
                     vx->position += pen;
                     ++vx;

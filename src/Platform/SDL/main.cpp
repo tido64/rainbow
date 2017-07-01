@@ -15,6 +15,7 @@
 #   include <GL/glew.c>
 #endif
 
+#include "Common/Functional.h"
 #include "Config.h"
 #include "FileSystem/FileSystem.h"
 #include "Platform/Diagnostics.h"
@@ -26,10 +27,11 @@
 
 using rainbow::SDLContext;
 using rainbow::RainbowController;
+using rainbow::out;
 
 namespace
 {
-    auto run_tests(int& argc, char**& argv) -> int  // NOLINT
+    auto run_tests(int argc, char* argv[]) -> int
     {
 #ifdef RAINBOW_TEST
         return rainbow::run_tests(argc, argv);
@@ -40,7 +42,7 @@ namespace
 #endif  // RAINBOW_TEST
     }
 
-    bool should_run_tests(int& argc, char**& argv)
+    bool should_run_tests(out<int> argc, out<char**> argv)
     {
 #ifdef RAINBOW_TEST
         if (argc < 2)
@@ -89,7 +91,7 @@ auto main(int argc, char* argv[]) -> int
 {
     rainbow::filesystem::initialize({argv, static_cast<size_t>(argc)});
 
-    if (should_run_tests(argc, argv))
+    if (should_run_tests(std::ref(argc), std::ref(argv)))
     {
         rainbow::diagnostics::attach_crash_dumper();
         return run_tests(argc, argv);

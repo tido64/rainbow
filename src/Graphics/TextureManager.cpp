@@ -72,12 +72,11 @@ auto Texture::operator=(Texture&& texture) noexcept -> Texture&
 }
 
 TextureManager::TextureManager(const Passkey<rainbow::graphics::State>&)
-    : mag_filter_(TextureFilter::Linear), min_filter_(TextureFilter::Linear)
+    : active_{}, mag_filter_(TextureFilter::Linear), min_filter_(TextureFilter::Linear)
 #if RAINBOW_DEVMODE
     , mem_peak_(0.0), mem_used_(0.0)
 #endif
 {
-    std::fill_n(active_, kNumTextureUnits, 0);
     make_global();
 }
 

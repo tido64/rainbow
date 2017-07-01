@@ -39,7 +39,7 @@ auto Path::cfurl() const -> CFURLRef
 {
     CFStringRef str = CFStringCreateWithBytesNoCopy(  //
         kCFAllocatorDefault,
-        reinterpret_cast<const UInt8*>(c_str()),
+        reinterpret_cast<const UInt8*>(path_.data()),  // NOLINT
         path_.length(),
         kCFStringEncodingUTF8,
         FALSE,

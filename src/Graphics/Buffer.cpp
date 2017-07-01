@@ -10,9 +10,12 @@
 
 using rainbow::graphics::Buffer;
 
+#define s_offsetof(type, field)                                                \
+    reinterpret_cast<const void*>(offsetof(type, field)))  // NOLINT
+
 namespace
 {
-    unsigned int glGenBuffer()
+    auto glGenBuffer()
     {
         unsigned int id;
         glGenBuffers(1, &id);
@@ -20,7 +23,9 @@ namespace
     }
 }
 
-Buffer::Buffer() : id_(glGenBuffer()) {}
+Buffer::Buffer() : id_(glGenBuffer())
+{
+}
 
 Buffer::Buffer(Buffer&& buffer) noexcept : id_(buffer.id_)
 {
@@ -45,7 +50,7 @@ void Buffer::bind() const
         GL_UNSIGNED_BYTE,
         GL_TRUE,
         sizeof(SpriteVertex),
-        reinterpret_cast<void*>(offsetof(SpriteVertex, color)));
+        s_offsetof(SpriteVertex, color);
     glEnableVertexAttribArray(Shader::kAttributeTexCoord);
     glVertexAttribPointer(
         Shader::kAttributeTexCoord,
@@ -53,7 +58,7 @@ void Buffer::bind() const
         GL_FLOAT,
         GL_FALSE,
         sizeof(SpriteVertex),
-        reinterpret_cast<void*>(offsetof(SpriteVertex, texcoord)));
+        s_offsetof(SpriteVertex, texcoord);
     glEnableVertexAttribArray(Shader::kAttributeVertex);
     glVertexAttribPointer(
         Shader::kAttributeVertex,
@@ -61,7 +66,7 @@ void Buffer::bind() const
         GL_FLOAT,
         GL_TRUE,
         sizeof(SpriteVertex),
-        reinterpret_cast<void*>(offsetof(SpriteVertex, position)));
+        s_offsetof(SpriteVertex, position);
 }
 
 void Buffer::bind(unsigned int index) const

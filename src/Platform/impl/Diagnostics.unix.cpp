@@ -37,7 +37,7 @@ void rainbow::diagnostics::attach_crash_dumper()
     std::signal(SIGSEGV, [](int sig) {
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-result"
-        std::system(backtrace);
+        std::system(backtrace);  // NOLINT
 #pragma GCC diagnostic pop
         std::exit(sig);
     });

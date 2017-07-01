@@ -53,14 +53,16 @@ namespace
     }
 }
 
-bool OggVorbisAudioFile::signature_matches(const std::array<uint8_t, 8>& id)
+bool OggVorbisAudioFile::signature_matches(
+    const std::array<uint8_t, 8>& signature)
 {
     constexpr size_t size = array_size(kIdOggVorbis) - 1;
-    return id.size() >= size && memcmp(id.data(), kIdOggVorbis, size) == 0;
+    return signature.size() >= size &&
+           memcmp(signature.data(), kIdOggVorbis, size) == 0;
 }
 
 OggVorbisAudioFile::OggVorbisAudioFile(File f)
-    : file_(std::move(f)), vi_(nullptr)
+    : file_(std::move(f)), vf_{}, vi_(nullptr)
 {
     const int result = ov_open_callbacks(
         static_cast<FILE*>(file_), &vf_, nullptr, 0, OV_CALLBACKS_DEFAULT);
@@ -86,7 +88,8 @@ OggVorbisAudioFile::~OggVorbisAudioFile()
 
 auto OggVorbisAudioFile::size() const -> size_t
 {
-    return ov_pcm_total(const_cast<OggVorbis_File*>(&vf_), -1) * channels() * 2;
+    auto vf = const_cast<OggVorbis_File*>(&vf_);  // NOLINT
+    return ov_pcm_total(vf, -1) * channels() * 2;
 }
 
 auto OggVorbisAudioFile::read(void* dst, size_t size) -> size_t

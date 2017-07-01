@@ -61,7 +61,7 @@ namespace
 
 NS_RAINBOW_LUA_BEGIN
 {
-    int WeakRef::RegistryIndex = LUA_NOREF;
+    int WeakRef::RegistryIndex = LUA_NOREF;  // NOLINT
 
     WeakRef::WeakRef(lua_State* L) : state_(L), ref_(weak_ref(L)) {}
 
@@ -195,7 +195,7 @@ NS_RAINBOW_LUA_BEGIN
             return;
 
         int depth = -1;
-        lua_Debug ar;
+        lua_Debug ar{};
         while (lua_getstack(L, ++depth, &ar) != 0) {}
         --depth;
         while (lua_getstack(L, ++g_level, &ar) != 0)

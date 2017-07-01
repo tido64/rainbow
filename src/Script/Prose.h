@@ -58,7 +58,7 @@ namespace rainbow
         graphics::RenderQueue render_queue_;
 
         template <typename T, AssetType Type>
-        auto get_asset(const std::string& name, czstring error) -> T*;
+        auto get_asset(const std::string& name, czstring type_name) -> T*;
 
         void draw_impl() override
         {

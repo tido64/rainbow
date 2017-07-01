@@ -97,12 +97,12 @@ auto rainbow::filesystem::executable_path() -> czstring
     return g_exec_path.c_str();
 }
 
-void rainbow::filesystem::initialize(ArrayView<zstring> argv)
+void rainbow::filesystem::initialize(ArrayView<zstring> args)
 {
     if (!g_exec_path.empty())
         return;
 
-    czstring executable = argv[0];
+    czstring executable = args[0];
 #if USE_STD_FILESYSTEM
     g_exec_path = stdfs::absolute(executable).u8string();
 #else
@@ -114,9 +114,9 @@ void rainbow::filesystem::initialize(ArrayView<zstring> argv)
     R_ASSERT(!g_exec_path.empty(),
              "Failed to canonicalize absolute path to executable");
 
-    if (argv.size() >= 2)
+    if (args.size() >= 2)
     {
-        czstring current_path = argv[1];
+        czstring current_path = args[1];
         std::error_code error;
         if (is_directory(current_path, error) ||
             is_regular_file(current_path, error))
@@ -152,27 +152,27 @@ bool rainbow::filesystem::is_regular_file(czstring path,
 #endif
 }
 
-auto rainbow::filesystem::relative(czstring p) -> Path
+auto rainbow::filesystem::relative(czstring path) -> Path
 {
 #if defined(RAINBOW_OS_ANDROID)
-    Path path;
+    Path relative_path;
     // Android doesn't ignore multiple '/' in paths.
-    for (int i = 0; p[i] != '\0'; ++i)
+    for (int i = 0; path[i] != '\0'; ++i)
     {
-        if (p[i] == '/' && p[i + 1] == '/')
+        if (path[i] == '/' && path[i + 1] == '/')
             continue;
-        path += p[i];
+        relative_path += path[i];
     }
-    return path;
+    return relative_path;
 #elif defined(RAINBOW_OS_IOS)
-    NSString* str = [NSString stringWithUTF8StringNoCopy:p];
+    NSString* str = [NSString stringWithUTF8StringNoCopy:path];
     str = [NSBundle.mainBundle pathForResource:str.stringByDeletingPathExtension
                                         ofType:str.pathExtension];
     return str == nil ? Path{} : Path{str.UTF8String};
 #else
-    Path path{assets_path()};
-    path /= p;
-    return path;
+    Path relative_path{assets_path()};
+    relative_path /= path;
+    return relative_path;
 #endif
 }
 
@@ -200,7 +200,7 @@ auto rainbow::filesystem::system_current_path() -> std::string
 #endif
 }
 
-auto rainbow::filesystem::user(czstring p) -> Path
+auto rainbow::filesystem::user(czstring path) -> Path
 {
 #ifdef RAINBOW_OS_IOS
     NSError* err = nil;
@@ -213,9 +213,9 @@ auto rainbow::filesystem::user(czstring p) -> Path
     if (library_dir == nil)
         return {};
 
-    NSString* path = [NSString stringWithUTF8StringNoCopy:p];
-    path = [library_dir stringByAppendingPathComponent:path];
-    return Path{path.UTF8String};
+    NSString* user_path = [NSString stringWithUTF8StringNoCopy:path];
+    user_path = [library_dir stringByAppendingPathComponent:user_path];
+    return Path{user_path.UTF8String};
 #else
     auto data_path = user_data_path();
     std::error_code error;
@@ -226,9 +226,9 @@ auto rainbow::filesystem::user(czstring p) -> Path
         return {};
     }
 
-    Path path{user_data_path()};
-    path /= p;
-    return path;
+    Path user_path{user_data_path()};
+    user_path /= path;
+    return user_path;
 #endif  // RAINBOW_OS_IOS
 }
 

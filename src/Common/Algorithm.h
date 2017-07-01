@@ -32,7 +32,7 @@ namespace rainbow
     }
 
     template <typename T, size_t N>
-    constexpr auto array_size(const T (&)[N])
+    constexpr auto array_size(const T (&)[N]) noexcept
     {
         return N;
     }

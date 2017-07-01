@@ -10,7 +10,7 @@
 #   pragma GCC diagnostic push
 #   pragma GCC diagnostic ignored "-Wold-style-cast"
 #endif
-#include <ft2build.h>
+#include <ft2build.h>  // NOLINT(llvm-include-order)
 #include FT_CFF_DRIVER_H
 #ifdef __GNUC__
 #   pragma GCC diagnostic pop
@@ -26,6 +26,7 @@ using rainbow::File;
 using rainbow::FileType;
 using rainbow::FontAtlas;
 using rainbow::FontGlyph;
+using rainbow::NonCopyable;
 using rainbow::Vec2u;
 using rainbow::czstring;
 using rainbow::graphics::Texture;
@@ -47,7 +48,7 @@ namespace
                           const uint8_t* src,
                           const Vec2u& src_sz)
     {
-        const size_t stride = (dst_sz.x - src_sz.x) * 2;
+        const auto stride = (dst_sz.x - src_sz.x) * 2;
         size_t i = 0;
         uint8_t* ptr = dst + (off.y * dst_sz.x + off.x) * 2;
         for (uint32_t y = 0; y < src_sz.y; ++y)
@@ -63,14 +64,14 @@ namespace
         }
     }
 
-    Vec2u max_glyph_size(const FT_Face& face,
+    Vec2u max_glyph_size(FT_Face face,
                          const FontGlyph* glyphs,
                          size_t count)
     {
         Vec2u max;
         std::for_each(glyphs,
                       glyphs + count,
-                      [&face, &max](const FontGlyph& glyph) {
+                      [face, &max](const FontGlyph& glyph) {
             if (FT_Load_Char(face, glyph.code, FT_LOAD_DEFAULT) != 0)
             {
                 max.x = 0;
@@ -90,7 +91,7 @@ namespace
                      max.y / kPixelFormat + kGlyphPadding2);
     }
 
-    class FontFace
+    class FontFace : private NonCopyable<FontFace>
     {
     public:
         FontFace(FT_Library library, const Data& font) : face_(nullptr)
@@ -118,17 +119,18 @@ namespace
         }
 
         FT_Face operator->() const { return face_; }
+
         explicit operator bool() const { return face_ != nullptr; }
-        operator const FT_Face&() const { return face_; }
+        explicit operator FT_Face() const { return face_; }
 
     private:
         FT_Face face_;
     };
 
-    class FontLibrary
+    class FontLibrary : private NonCopyable<FontFace>
     {
     public:
-        FontLibrary() : library_(nullptr)
+        FontLibrary() : library_{}
         {
             FT_Init_FreeType(&library_);
             R_ASSERT(library_, "Failed to initialise FreeType");
@@ -143,7 +145,7 @@ namespace
         }
 
         explicit operator bool() const { return library_ != nullptr; }
-        operator const FT_Library&() const { return library_; }
+        explicit operator FT_Library() const { return library_; }
 
     private:
         FT_Library library_;
@@ -206,14 +208,17 @@ void FontAtlas::load(TextureManager& texture_manager,
     if (!library)
         return;
 
-    FontFace face(library, font);
+    FontFace face(static_cast<FT_Library>(library), font);
     if (!face)
         return;
 
-    FT_Set_Char_Size(face, 0, pt_ * kPixelFormat, kDPI, kDPI);
-    const Vec2u& max = max_glyph_size(face, charset_, array_size(charset_));
+    FT_Set_Char_Size(
+        static_cast<FT_Face>(face), 0, pt_ * kPixelFormat, kDPI, kDPI);
+    const Vec2u& max = max_glyph_size(
+        static_cast<FT_Face>(face), charset_, array_size(charset_));
     if (max.is_zero())
         return;
+
     const Vec2u size(ceil_pow2(max.x * kNumGlyphsPerColRow),
                      ceil_pow2(max.y * kNumGlyphsPerColRow));
 
@@ -227,9 +232,9 @@ void FontAtlas::load(TextureManager& texture_manager,
     const Vec2f pixel(1.0f / size.x, 1.0f / size.y);
     for (auto& glyph : charset_)
     {
-        FT_Load_Char(face, glyph.code, FT_LOAD_RENDER);
+        FT_Load_Char(static_cast<FT_Face>(face), glyph.code, FT_LOAD_RENDER);
 
-        const FT_GlyphSlot& slot = face->glyph;
+        FT_GlyphSlot slot = face->glyph;
         const FT_Bitmap& bitmap = slot->bitmap;
 
         // Make sure bitmap data has enough space to the right. Otherwise, start

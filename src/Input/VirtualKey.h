@@ -151,7 +151,7 @@ namespace rainbow
     ///   Converts a platform key event to a <see cref="VirtualKey"/>.
     /// </summary>
     template <typename T>
-    auto to_virtualkey(const T& event) -> VirtualKey;
+    auto to_virtualkey(const T&) -> VirtualKey;
 
     struct KeyMods
     {
@@ -173,7 +173,7 @@ namespace rainbow
     struct KeyStroke
     {
         template <typename T>
-        static auto from_event(const T& event) -> KeyStroke;
+        static auto from_event(const T&) -> KeyStroke;
 
         VirtualKey key;
         uint32_t mods;

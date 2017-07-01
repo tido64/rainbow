@@ -4,8 +4,9 @@
 
 #include "Platform/SystemInfo.h"
 
-#include <sys/types.h>
 #include <sys/sysctl.h>
+#include <sys/types.h>
+
 #include <CoreFoundation/CoreFoundation.h>
 
 namespace rainbow { namespace system_info
@@ -37,10 +38,9 @@ namespace rainbow { namespace system_info
         char tmp[16];
         for (int i = 0; i < count; ++i)
         {
-            CFStringRef lang = static_cast<CFStringRef>(
+            auto lang = static_cast<CFStringRef>(
                 CFArrayGetValueAtIndex(preferred_langs, i));
-            CFStringGetCString(
-                lang, tmp, sizeof(tmp), kCFStringEncodingUTF8);
+            CFStringGetCString(lang, tmp, sizeof(tmp), kCFStringEncodingUTF8);
             locales.emplace_back(tmp);
         }
         CFRelease(preferred_langs);

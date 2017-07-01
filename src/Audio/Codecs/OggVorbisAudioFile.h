@@ -38,8 +38,8 @@ namespace rainbow { namespace audio
         auto read(void*, size_t) -> size_t override;
         bool seek(int64_t) override;
 
-        // TODO: Add `explicit` when MSVC2015 is deprecated.
-        operator bool() const override { return vi_ != nullptr; }
+        // TODO: Add `explicit` when MSVC2015 is deprecated (and remove NOLINT).
+        operator bool() const override { return vi_ != nullptr; }  // NOLINT
 
     private:
         File file_;

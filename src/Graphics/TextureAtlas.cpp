@@ -35,31 +35,37 @@ TextureAtlas::TextureAtlas(czstring id, const Data& data, float scale)
         });
 }
 
-auto TextureAtlas::add_region(int x, int y, int w, int h) -> uint32_t
+auto TextureAtlas::add_region(int x, int y, int width, int height) -> uint32_t
 {
-    const float width = static_cast<float>(texture_.width());
-    const float height = static_cast<float>(texture_.height());
+    const auto txr_width = static_cast<float>(texture_.width());
+    const auto txr_height = static_cast<float>(texture_.height());
 
-    R_ASSERT(x >= 0 && (x + w) <= width && y >= 0 && (y + h) <= height,
+    R_ASSERT(x >= 0 && (x + width) <= txr_width && y >= 0 &&
+                 (y + height) <= txr_height,
              "Invalid dimensions");
 
-    const Vec2f v0(x / width, y / height);
-    const Vec2f v1((x + w) / width, (y + h) / height);
+    const Vec2f v0(x / txr_width, y / txr_height);
+    const Vec2f v1((x + width) / txr_width, (y + height) / txr_height);
     const auto i = static_cast<uint32_t>(regions_.size());
     regions_.emplace_back(v0, v1);
     regions_[i].atlas = texture_;
     return i;
 }
 
-void TextureAtlas::set_regions(const ArrayView<int>& rects)
+void TextureAtlas::set_regions(const ArrayView<int>& rectangles)
 {
-    R_ASSERT(rects.size() % 4 == 0,
+    R_ASSERT(rectangles.size() % 4 == 0,
              "Rectangle data size must be a multiple of 4");
 
     regions_.clear();
-    regions_.reserve(rects.size() / 4);
-    for (size_t i = 0; i < rects.size(); i += 4)
-        add_region(rects[i], rects[i + 1], rects[i + 2], rects[i + 3]);
+    regions_.reserve(rectangles.size() / 4);
+    for (size_t i = 0; i < rectangles.size(); i += 4)
+    {
+        add_region(rectangles[i],
+                   rectangles[i + 1],
+                   rectangles[i + 2],
+                   rectangles[i + 3]);
+    }
 }
 
 void TextureAtlas::load(TextureManager& texture_manager,

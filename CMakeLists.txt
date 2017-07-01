@@ -42,7 +42,6 @@ set(SOURCE_FILES
     src/Common/Data.h
     src/Common/Functional.h
     src/Common/Global.h
-    src/Common/Link.cpp
     src/Common/Link.h
     src/Common/Logging.h
     src/Common/NonCopyable.h
