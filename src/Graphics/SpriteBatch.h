@@ -41,12 +41,12 @@ namespace rainbow
         SpriteBatch(SpriteBatch&&) noexcept;
 
         /// <summary>Returns a pointer to the beginning.</summary>
-        auto begin() { return sprites_.data(); }
-        auto begin() const { return sprites_.data(); }
+        RAINBOW_INTERNAL auto begin() { return sprites_.data(); }
+        RAINBOW_INTERNAL auto begin() const { return sprites_.data(); }
 
         /// <summary>Returns a pointer to the end.</summary>
-        auto end() { return begin() + count_; }
-        auto end() const { return begin() + count_; }
+        RAINBOW_INTERNAL auto end() { return begin() + count_; }
+        RAINBOW_INTERNAL auto end() const { return begin() + count_; }
 
         /// <summary>Returns whether the batch is visible.</summary>
         auto is_visible() const { return visible_; }
@@ -69,12 +69,14 @@ namespace rainbow
         }
 
         /// <summary>Returns the vertex array object.</summary>
+        RAINBOW_INTERNAL
         auto vertex_array() const -> const graphics::VertexArray&
         {
             return array_;
         }
 
         /// <summary>Returns the vertex count.</summary>
+        RAINBOW_INTERNAL
         auto vertex_count() const { return !visible_ ? 0 : count_ * 6; }
 
         /// <summary>Assigns a normal map.</summary>
@@ -106,7 +108,7 @@ namespace rainbow
         auto at(uint32_t i) const -> const Sprite& { return (*this)[i]; }
 
         /// <summary>Binds all used textures.</summary>
-        void bind_textures() const;
+        RAINBOW_INTERNAL void bind_textures() const;
 
         /// <summary>Brings sprite to front.</summary>
         void bring_to_front(uint32_t i);
@@ -161,7 +163,7 @@ namespace rainbow
         }
 
         /// <summary>Updates the batch of sprites.</summary>
-        void update();
+        RAINBOW_INTERNAL void update();
 
         auto operator[](uint32_t i) -> Sprite& { return sprites_[i]; }
 

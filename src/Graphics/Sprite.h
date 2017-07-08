@@ -5,11 +5,14 @@
 #ifndef GRAPHICS_SPRITE_H_
 #define GRAPHICS_SPRITE_H_
 
+#include "Common/Attributes.h"
 #include "Common/NonCopyable.h"
 #include "Graphics/SpriteVertex.h"
 #include "Memory/Array.h"
 
-#define USE_SPRITE_FUNCTION_CHAINING 1
+#ifndef USE_SPRITE_FUNCTION_CHAINING
+#   define USE_SPRITE_FUNCTION_CHAINING 1
+#endif
 
 namespace rainbow
 {
@@ -91,6 +94,7 @@ namespace rainbow
         auto position() const { return position_; }
         auto scale() const { return scale_; }
 
+        RAINBOW_INTERNAL
         auto vertex_array() const -> const SpriteVertex*
         {
             return vertex_array_;
@@ -158,6 +162,7 @@ namespace rainbow
         /// <returns>
         ///   <c>true</c> if the buffer has changed; <c>false</c> otherwise.
         /// </returns>
+        RAINBOW_INTERNAL
         auto update(const ArraySpan<SpriteVertex>& vertex_array,
                     const TextureAtlas& texture) -> bool;
 
@@ -165,6 +170,7 @@ namespace rainbow
         /// <returns>
         ///   <c>true</c> if the buffer has changed; <c>false</c> otherwise.
         /// </returns>
+        RAINBOW_INTERNAL
         auto update(const ArraySpan<Vec2f>& normal_array,
                     const TextureAtlas& normal) -> bool;
 
