@@ -1,0 +1,117 @@
+{
+    "configurations": [
+        {
+            "name": "Mac",
+            "includePath": [
+                "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include",
+                "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1",
+                "/usr/local/include",
+                "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/8.1.0/include",
+                "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include",
+                "/usr/include",
+                "${workspaceRoot}/include",
+                "${workspaceRoot}/src",
+                "${workspaceRoot}/src/ThirdParty/FreeType",
+                "${workspaceRoot}/src/ThirdParty/libpng",
+                "${workspaceRoot}/lib",
+                "${workspaceRoot}/lib/FreeType/include",
+                "${workspaceRoot}/lib/Lua",
+                "${workspaceRoot}/lib/box2d/Box2D",
+                "${workspaceRoot}/lib/libpng",
+                "${workspaceRoot}/lib/nanosvg/src",
+                "${workspaceRoot}/lib/spine-runtimes/spine-c/include",
+                "${workspaceRoot}/lib/variant/include",
+                "${workspaceRoot}/lib/zlib"
+            ],
+            "defines": [],
+            "browse": {
+                "path": [
+                    "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include",
+                    "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1",
+                    "/usr/local/include",
+                    "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/8.1.0/include",
+                    "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include",
+                    "/usr/include",
+                    "${workspaceRoot}/include",
+                    "${workspaceRoot}/src",
+                    "${workspaceRoot}/lib"
+                ],
+                "limitSymbolsToIncludedHeaders": true,
+                "databaseFilename": ""
+            },
+            "intelliSenseMode": "clang-x64"
+        },
+        {
+            "name": "Linux",
+            "includePath": [
+                "/usr/include",
+                "/usr/local/include",
+                "${workspaceRoot}/include",
+                "${workspaceRoot}/src",
+                "${workspaceRoot}/src/ThirdParty/FreeType",
+                "${workspaceRoot}/src/ThirdParty/libpng",
+                "${workspaceRoot}/lib",
+                "${workspaceRoot}/lib/FreeType/include",
+                "${workspaceRoot}/lib/Lua",
+                "${workspaceRoot}/lib/box2d/Box2D",
+                "${workspaceRoot}/lib/libpng",
+                "${workspaceRoot}/lib/nanosvg/src",
+                "${workspaceRoot}/lib/spine-runtimes/spine-c/include",
+                "${workspaceRoot}/lib/variant/include",
+                "${workspaceRoot}/lib/zlib"
+            ],
+            "defines": [],
+            "browse": {
+                "path": [
+                    "/usr/include",
+                    "/usr/local/include",
+                    "${workspaceRoot}/include",
+                    "${workspaceRoot}/src",
+                    "${workspaceRoot}/lib"
+                ],
+                "limitSymbolsToIncludedHeaders": true,
+                "databaseFilename": ""
+            },
+            "intelliSenseMode": "clang-x64"
+        },
+        {
+            "name": "Win32",
+            "includePath": [
+                "C:/Program Files (x86)/Microsoft Visual Studio 14.0/VC/include",
+                "C:/Program Files (x86)/Microsoft Visual Studio/2017/Community/VC/Tools/MSVC/14.10.25017/include",
+                "C:/Program Files (x86)/Windows Kits/10/Include/10.0.15063.0/um",
+                "${workspaceRoot}/include",
+                "${workspaceRoot}/src",
+                "${workspaceRoot}/src/ThirdParty/FreeType",
+                "${workspaceRoot}/src/ThirdParty/libpng",
+                "${workspaceRoot}/lib",
+                "${workspaceRoot}/lib/FreeType/include",
+                "${workspaceRoot}/lib/Lua",
+                "${workspaceRoot}/lib/box2d/Box2D",
+                "${workspaceRoot}/lib/libpng",
+                "${workspaceRoot}/lib/nanosvg/src",
+                "${workspaceRoot}/lib/spine-runtimes/spine-c/include",
+                "${workspaceRoot}/lib/variant/include",
+                "${workspaceRoot}/lib/zlib"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE"
+            ],
+            "browse": {
+                "path": [
+                    "C:/Program Files (x86)/Microsoft Visual Studio 14.0/VC/include/*",
+                    "C:/Program Files (x86)/Microsoft Visual Studio/2017/Community/VC/Tools/MSVC/14.10.25017/include",
+                    "C:/Program Files (x86)/Windows Kits/10/Include/10.0.15063.0/um",
+                    "${workspaceRoot}/include",
+                    "${workspaceRoot}/src",
+                    "${workspaceRoot}/lib"
+                ],
+                "limitSymbolsToIncludedHeaders": true,
+                "databaseFilename": ""
+            },
+            "intelliSenseMode": "msvc-x64"
+        }
+    ],
+    "version": 2
+}

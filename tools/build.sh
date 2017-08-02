@@ -3,10 +3,11 @@
 # Distributed under the MIT License.
 # (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
-RAINBOW=$(cd -P "$(dirname $0)/.." && pwd)
+project_root=$(cd -P "$(dirname $0)/.." && pwd)
+cmake="cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=1"
 
 if [[ $(git ls-files --error-unmatch . 2> /dev/null) ]] && \
-   [[ "$(git rev-parse --show-toplevel 2> /dev/null)" == "$RAINBOW" ]]; then
+   [[ "$(git rev-parse --show-toplevel 2> /dev/null)" == "$project_root" ]]; then
   echo "$0: Cannot run while still inside the repository"
   exit 0
 fi
@@ -23,11 +24,6 @@ function compile {
       $ANALYZER make
       ;;
     "Xcode")
-      local configuration="Debug"
-      if [[ "$ARGS" =~ CMAKE_BUILD_TYPE=([A-za-z]+) ]]; then
-        configuration=${BASH_REMATCH[1]}
-      fi
-      #xcrun xcodebuild -project Rainbow.xcodeproj -configuration $configuration -arch $(uname -m) build
       open Rainbow.xcodeproj
       ;;
     *)
@@ -37,8 +33,8 @@ function compile {
 
 # Prune arguments
 if [[ ! -z "$2" ]]; then
-  ARGS=$@
-  ARGS=${ARGS#* }
+  args=$@
+  args=${args#* }
 fi
 
 case $1 in
@@ -64,10 +60,10 @@ case $1 in
     echo "  NDK_TOOLCHAIN_VERSION    Android: Compiler used by ndk-build"
     ;;
   "analyze")
-    ANALYZER=scan-build CC=ccc-analyzer CXX=c++-analyzer $SHELL $0 $ARGS
+    ANALYZER=scan-build CC=ccc-analyzer CXX=c++-analyzer $SHELL $0 $args
     ;;
   "android")
-    $SHELL "$RAINBOW/tools/build-android.sh" $ARGS
+    $SHELL "$project_root/tools/build-android.sh" $args
     ;;
   "clean")
     rm -fr CMakeFiles CMakeScripts Debug MinSizeRel Rainbow.* Release RelWithDebInfo
@@ -79,8 +75,8 @@ case $1 in
       echo "$0: Could not find Emscripten"
       exit 1
     fi
-    cmake -DCMAKE_TOOLCHAIN_FILE="$EMSCRIPTEN/cmake/Modules/Platform/Emscripten.cmake" \
-          $ARGS "$RAINBOW" &&
+    $cmake -DCMAKE_TOOLCHAIN_FILE="$EMSCRIPTEN/cmake/Modules/Platform/Emscripten.cmake" \
+           $args "$project_root" &&
     compile Emscripten
     ;;
   "help")
@@ -88,18 +84,18 @@ case $1 in
     ;;
   "linux")
     GENERATOR=${GENERATOR:-Unix Makefiles}
-    cmake $ARGS -G "$GENERATOR" "$RAINBOW" &&
+    $cmake $args -G "$GENERATOR" "$project_root" &&
     compile "$GENERATOR"
     ;;
   "mac")
     GENERATOR=${GENERATOR:-Xcode}
-    cmake $ARGS -G "$GENERATOR" "$RAINBOW" &&
+    $cmake $args -G "$GENERATOR" "$project_root" &&
     compile "$GENERATOR"
     ;;
   "windows")
     GENERATOR=${GENERATOR:-Unix Makefiles}
-    cmake -DCMAKE_TOOLCHAIN_FILE="$RAINBOW/build/cmake/MinGW.cmake" \
-          $ARGS -G "$GENERATOR" "$RAINBOW" &&
+    $cmake -DCMAKE_TOOLCHAIN_FILE="$project_root/build/cmake/MinGW.cmake" \
+           $args -G "$GENERATOR" "$project_root" &&
     compile "$GENERATOR"
     ;;
   *)  # Attempt to detect platform

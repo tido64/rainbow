@@ -7,7 +7,7 @@
 CMakeSettings.json
 Rainbow.sublime-workspace
 project.xcworkspace/
-src/.ycm_extra_conf.pyc
+src/compile_commands.json
 xcuserdata/
 
 # Libraries
