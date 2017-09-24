@@ -281,7 +281,8 @@ if(UNIT_TESTS)
        src/Tests/Memory/StableArray.test.cc
        src/Tests/TestHelpers.h
        src/Tests/Tests.cpp
-       src/Tests/Tests.h)
+       src/Tests/Tests.h
+       src/Tests/TextAlignment.test.cc)
 endif()
 
 if(USE_FMOD_STUDIO)

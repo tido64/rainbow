@@ -14,7 +14,7 @@ namespace rainbow
         Center
     };
 
-    inline auto text_alignment_from_char(char c)
+    constexpr auto text_alignment_from_char(char c)
     {
         switch (c)
         {
