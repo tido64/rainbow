@@ -5,8 +5,7 @@
 #ifndef COMMON_VARIANT_H_
 #define COMMON_VARIANT_H_
 
-#if (__cplusplus <= 201402L && !defined(_MSC_VER)) || \
-    (defined(_MSC_VER) && _MSC_VER <= 1900)
+#if !__has_include(<variant>)
 #   ifdef _MSC_VER
 #       pragma warning(push)
 #       pragma warning(disable: 4996)
@@ -54,10 +53,10 @@ namespace rainbow
     template <typename... Types>
     using variant = std::variant<Types...>;
 
-    template <typename... Types>
+    template <typename T, typename... Types>
     auto get(variant<Types...>&& v)
     {
-        return std::get<T>(std::forward<V>(v));
+        return std::get<T>(std::forward<Types...>(v));
     }
 
     template <typename T, typename... Types>

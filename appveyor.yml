@@ -4,7 +4,7 @@ branches:
     - master
     - tido/work
 skip_tags: true
-image: Visual Studio 2015
+image: Visual Studio 2017
 configuration: RelWithDebInfo
 clone_depth: 16
 cache:
@@ -17,7 +17,7 @@ before_build:
   - git submodule update --init
   - if not exist "%APPVEYOR_BUILD_FOLDER%-build" mkdir "%APPVEYOR_BUILD_FOLDER%-build"
   - cd "%APPVEYOR_BUILD_FOLDER%-build"
-  - cmake -DUSE_HEIMDALL=1 -DUSE_PHYSICS=1 -DUSE_SPINE=1 -G "Visual Studio 14" "%APPVEYOR_BUILD_FOLDER%"
+  - cmake -DUSE_HEIMDALL=1 -DUSE_PHYSICS=1 -DUSE_SPINE=1 -G "Visual Studio 15" "%APPVEYOR_BUILD_FOLDER%"
 build_script:
   - msbuild "%APPVEYOR_BUILD_FOLDER%-build\Rainbow.sln" /maxcpucount /verbosity:minimal /logger:"%ProgramFiles%\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 after_build:

@@ -79,11 +79,10 @@
 
 static int os_execute (lua_State *L) {
   const char *cmd = luaL_optstring(L, 1, NULL);
-  int stat = system(cmd);
   if (cmd != NULL)
-    return luaL_execresult(L, stat);
+    return luaL_execresult(L, -1);
   else {
-    lua_pushboolean(L, stat);  /* true if there is a shell */
+    lua_pushboolean(L, 0);  /* true if there is a shell */
     return 1;
   }
 }

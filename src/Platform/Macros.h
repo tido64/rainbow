@@ -44,10 +44,8 @@
 #if defined(__GNUC__)
 #   if defined(__clang__)
 #       define ASSUME(expr) __builtin_assume(expr)
-#       define CLANG_VERSION (__clang_major__ * 10000 + __clang_minor__ * 100)
 #   else
 #       define ASSUME(expr) static_cast<void>(0)
-#       define GCC_VERSION (__GNUC__ * 10000 + __GNUC_MINOR__ * 100)
 #   endif
 #   define UNREACHABLE() __builtin_unreachable()
 #elif defined(_MSC_VER)
@@ -57,14 +55,10 @@
 
 #define NOT_USED(v) static_cast<void>(v)
 
-#if (defined(__apple_build_version__) && CLANG_VERSION > 80100) ||             \
-    (!defined(__apple_build_version__) && CLANG_VERSION >= 30900) ||           \
-    GCC_VERSION >= 50300 ||                                                    \
-    defined(_MSC_VER) ||                                                       \
-    __cpp_lib_experimental_filesystem >= 201406
-#   define USE_STD_FILESYSTEM 1
+#if __has_include(<experimental/filesystem>) || __has_include(<filesystem>)
+#   define HAS_FILESYSTEM 1
 #else
-#   define USE_STD_FILESYSTEM 0
+#   define HAS_FILESYSTEM 0
 #endif
 
 #endif  // PLATFORM_MACROS_H_

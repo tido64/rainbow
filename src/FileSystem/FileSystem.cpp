@@ -5,7 +5,7 @@
 #include "FileSystem/FileSystem.h"
 
 #include "Platform/Macros.h"
-#if USE_STD_FILESYSTEM
+#if HAS_FILESYSTEM
 #   include <experimental/filesystem>
 namespace stdfs = std::experimental::filesystem;
 #else
@@ -51,7 +51,7 @@ auto rainbow::filesystem::assets_path() -> czstring
 bool rainbow::filesystem::create_directories(czstring path,
                                              std::error_code& error)
 {
-#if USE_STD_FILESYSTEM
+#if HAS_FILESYSTEM
     return stdfs::create_directories(path, error);
 #else
     bool end = false;
@@ -103,7 +103,7 @@ void rainbow::filesystem::initialize(ArrayView<zstring> args)
         return;
 
     czstring executable = args[0];
-#if USE_STD_FILESYSTEM
+#if HAS_FILESYSTEM
     g_exec_path = stdfs::absolute(executable).u8string();
 #else
     char path[PATH_MAX];
@@ -131,7 +131,7 @@ void rainbow::filesystem::initialize(ArrayView<zstring> args)
 
 bool rainbow::filesystem::is_directory(czstring path, std::error_code& error)
 {
-#if USE_STD_FILESYSTEM
+#if HAS_FILESYSTEM
     return stdfs::is_directory(path, error);
 #else
     NOT_USED(error);
@@ -143,7 +143,7 @@ bool rainbow::filesystem::is_directory(czstring path, std::error_code& error)
 bool rainbow::filesystem::is_regular_file(czstring path,
                                           std::error_code& error)
 {
-#if USE_STD_FILESYSTEM
+#if HAS_FILESYSTEM
     return stdfs::is_regular_file(path, error);
 #else
     NOT_USED(error);
@@ -178,7 +178,7 @@ auto rainbow::filesystem::relative(czstring path) -> Path
 
 bool rainbow::filesystem::remove(czstring path, std::error_code& error)
 {
-#if USE_STD_FILESYSTEM
+#if HAS_FILESYSTEM
     return stdfs::remove(path, error);
 #else
     NOT_USED(error);
@@ -188,7 +188,7 @@ bool rainbow::filesystem::remove(czstring path, std::error_code& error)
 
 auto rainbow::filesystem::system_current_path() -> std::string
 {
-#if USE_STD_FILESYSTEM
+#if HAS_FILESYSTEM
     return stdfs::current_path().u8string();
 #else
     char cwd[PATH_MAX];
