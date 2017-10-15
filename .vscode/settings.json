@@ -36,9 +36,6 @@
   "[json]": {
     "editor.tabSize": 2
   },
-  "[lua]": {
-    "editor.tabSize": 4
-  },
   "[markdown]": {
     "editor.rulers": [80],
     "editor.insertSpaces": false,
@@ -48,7 +45,17 @@
   "[objective-c]": {
     "editor.tabSize": 4
   },
+  "[typescript]": {
+    "editor.formatOnSave": true,
+    "editor.tabSize": 2
+  },
   "[yaml]": {
     "editor.tabSize": 2
-  }
+  },
+  "json.schemas": [
+    {
+      "fileMatch": ["*.scene.json"],
+      "url": "/js/rainbow-scene.schema.json"
+    }
+  ]
 }

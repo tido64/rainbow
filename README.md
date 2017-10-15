@@ -48,6 +48,7 @@ Rainbow is mostly built on
    [PNG](http://libpng.org/pub/png/libpng.html),
    [PVRTC](https://community.imgtec.com/developers/powervr/tools/pvrtextool/),
    and [SVG](https://www.w3.org/Graphics/SVG/))
+- 2d rigid body physics provided by [Box2D](http://box2d.org/)
 
 ### Input
 
@@ -56,19 +57,12 @@ Rainbow is mostly built on
 - Microphone (Android and iOS)
 - Touch (Android and iOS)
 
-### And more…
-
-- [Lua](https://www.lua.org/) scripting language with debugging console and hot
-  reloading
-- 2d rigid body physics provided by [Box2D](http://box2d.org/)
-
 ## Structure
 
 	build/  # Build related files
-	demos/  # Lua demos
 	doc/    # Documentation
+	js/     # JavaScript playground
 	lib/    # Third party libraries Rainbow depend on
-	lua/    # Lua convenience libraries
 	src/    # Rainbow source code
 	tools/  # Tools such as the build script
 
@@ -107,21 +101,15 @@ permission:
 Run the PowerShell script `tools\make.ps1` (right-click on it and select
 _Run with PowerShell_). It will take you through the steps.
 
-## Learning
+## Getting started
 
 Check out the [documentation here](https://tido.bitbucket.io/rainbow/) or under
-`doc`, and the demos under `demos`. Note: In order to run a demo, you'll need to
-copy some files from `lua` into the folder of the demo you want to run. It's
-easier to copy all even if you won't need everything.
+`doc`, and the playground under `js`. You can start the playground by running
+`rainbow` inside the folder:
 
-Some demos may use resources that (unfortunately) cannot be distributed with
-Rainbow.
-
-Once you've copied all the necessary files, run `rainbow` inside the folder:
-
-	cd /path/to/demo
+	cd /path/to/rainbow/js
 	rainbow
 
 Or with the path as argument:
 
-	rainbow /path/to/demo
+	rainbow /path/to/rainbow/js

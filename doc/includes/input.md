@@ -16,13 +16,13 @@ subscribers.
 Note that we do not differentiate mouse and touch events. Both are considered
 pointer events.
 
-## Input Management
+## Input Management (C++ only)
 
 The input manager is only accessible from the entry point but you can store a
 pointer and pass it around. The pointer is guaranteed to be valid throughout the
 lifetime of your main class.
 
-```c++
+```cpp
 void MyGame::init_impl(const Vec2i&)
 {
     Input* input_manager = &input();
@@ -30,20 +30,15 @@ void MyGame::init_impl(const Vec2i&)
 }
 ```
 
-```lua
+```typescript
 local input = rainbow.input
 ```
 
 ### Subscribing
 
-```c++
+```cpp
 void  Input::subscribe    (InputListener& listener);
 void  Input::unsubscribe  (InputListener& listener);
-```
-
-```lua
-function rainbow.input.subscribe    (listener)  --> void
-function rainbow.input.unsubscribe  (listener)  --> void
 ```
 
 Subscribes/unsubscribes `listener` to input events. A listener will always be
@@ -56,7 +51,7 @@ Key events come in two flavours, one for when a key is pushed down and one for
 when it is released. Listeners may implement any of the following methods to
 receive key events.
 
-```c++
+```cpp
 bool  InputListener::on_key_down_impl  (const Key& key) override;
 bool  InputListener::on_key_up_impl    (const Key& key) override;
 ```
@@ -67,7 +62,7 @@ bitmask so you easily can check for multiple states. For instance, to check
 whether both `Ctrl` and `⇧ Shift` is pressed, perform a bitwise OR of the two
 buttons and check for equality:
 
-```c++
+```cpp
 if (key.modifier == (Key::Mods::Shift | Key::Mods::Ctrl))
     LOGI("Ctrl+Shift is currently pressed");
 ```
@@ -76,7 +71,7 @@ if (key.modifier == (Key::Mods::Shift | Key::Mods::Ctrl))
 
 Implement any of the following methods to receive mouse/touch events.
 
-```c++
+```cpp
 bool  InputListener::on_pointer_began_impl     (const ArrayView<Pointer>& pointers) override;
 bool  InputListener::on_pointer_canceled_impl  () override;
 bool  InputListener::on_pointer_ended_impl     (const ArrayView<Pointer>& pointers) override;
@@ -98,7 +93,7 @@ While this example is running, we type "rainbow" and click on the mouse at two
 random places on the screen. Finally, we close the window using the keyboard
 shortcut Ctrl+Q/⌘Q.
 
-```c++
+```cpp
 #include "Input/Pointer.h"
 #include "Input/VirtualKey.h"
 #include "Script/GameBase.h"

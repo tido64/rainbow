@@ -11,7 +11,6 @@ $SourcePath = Join-Path (Split-Path (Get-Variable MyInvocation).Value.MyCommand.
 
 $FMODDescription = "Enable FMOD Studio audio engine"
 $HeimdallDescription = "Enable Heimdall debugging facilities"
-$LuaDescription = "Enable Lua scripting"
 $PhysicsDescription = "Enable physics module (Box2D)"
 $SpineDescription = "Enable Spine runtime"
 $UnitTestsDescription = "Enable unit tests"
@@ -34,7 +33,6 @@ if ($Help) {
 	Write-Output "  -DUNIT_TESTS=1           $UnitTestsDescription"
 	Write-Output "  -DUSE_FMOD_STUDIO=1      $FMODDescription"
 	Write-Output "  -DUSE_HEIMDALL=1         $HeimdallDescription"
-	Write-Output "  -DUSE_LUA_SCRIPT=1       $LuaDescription"
 	Write-Output "  -DUSE_PHYSICS=1          $PhysicsDescription"
 	Write-Output "  -DUSE_SPINE=1            $SpineDescription"
 	Write-Output ""
@@ -79,11 +77,6 @@ else {
 		AutoSize = $true
 		Text = $HeimdallDescription
 	}
-	$LuaCheckBox = New-Object System.Windows.Forms.CheckBox -Property @{
-		AutoSize = $true
-		Checked = $true
-		Text = $LuaDescription
-	}
 	$PhysicsCheckBox = New-Object System.Windows.Forms.CheckBox -Property @{
 		AutoSize = $true
 		Text = $PhysicsDescription
@@ -119,7 +112,6 @@ else {
 		$UnitTestsCheckBox,
 		$FMODCheckBox,
 		$HeimdallCheckBox,
-		$LuaCheckBox,
 		$PhysicsCheckBox,
 		$SpineCheckBox,
 		$ButtonLayout));
@@ -153,9 +145,6 @@ else {
 	}
 	if ($HeimdallCheckBox.Checked) {
 		$Options += "-DUSE_HEIMDALL=1"
-	}
-	if (!$LuaCheckBox.Checked) {
-		$Options += "-DUSE_LUA_SCRIPT=0"
 	}
 	if ($PhysicsCheckBox.Checked) {
 		$Options += "-DUSE_PHYSICS=1"

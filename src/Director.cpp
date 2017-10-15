@@ -4,8 +4,9 @@
 
 #include "Director.h"
 
+#include "Common/Logging.h"
 #include "Common/Random.h"
-#include "Script/GameBase.h"
+#include "Script/NoGame.h"
 
 #ifdef USE_PHYSICS
 #   include "ThirdParty/Box2D/DebugDraw.h"
@@ -42,7 +43,13 @@ namespace rainbow
 
         script_ = GameBase::create(*this);
         if (terminated())
-            return;
+        {
+            LOGF("%s", error());
+            LOGI("Booting 'NoGame'...");
+            script_ = std::make_unique<NoGame>(*this);
+            active_ = true;
+            terminated_ = false;
+        }
 
         script_->init(screen);
         if (terminated())

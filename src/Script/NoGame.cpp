@@ -7,10 +7,7 @@
 #include "Resources/Rainbow.svg.h"
 #include "Script/Transition.h"
 
-using rainbow::Data;
-using rainbow::GameBase;
-using rainbow::Sprite;
-using rainbow::Vec2f;
+using rainbow::NoGame;
 using rainbow::Vec2i;
 
 void NoGame::init_impl(const Vec2i& screen)
@@ -19,12 +16,12 @@ void NoGame::init_impl(const Vec2i& screen)
 
     const float scale = screen.y / kDesiredHeight;
     const float logo_scale = 0.1f * scale;
-    const uint32_t logo_width = kRainbowLogoWidth * logo_scale;
-    const uint32_t logo_height = kRainbowLogoHeight * logo_scale;
+    const uint32_t logo_width = assets::kLogoWidth * logo_scale;
+    const uint32_t logo_height = assets::kLogoHeight * logo_scale;
 
-    auto texture = rainbow::texture(
-        kRainbowLogoURI,
-        Data::from_literal(kRainbowLogo),
+    auto texture = rainbow::make_shared<TextureAtlas>(
+        assets::kLogoURI,
+        Data::from_literal(assets::kLogo),
         logo_scale,
         std::make_tuple(0, 64, 0, 0),                     // 0
         std::make_tuple(0, 0, logo_width, logo_height));  // 1
@@ -32,7 +29,7 @@ void NoGame::init_impl(const Vec2i& screen)
     const uint32_t logo_padding = 32 * scale;
     const Vec2f center{screen.x * 0.5f, screen.y * 0.5f};
 
-    batch_ = rainbow::spritebatch(
+    batch_ = std::make_unique<SpriteBatch>(
         texture,
         Sprite{logo_width + logo_padding, logo_height + logo_padding}  // 0
             .position(center)
@@ -54,9 +51,4 @@ void NoGame::update_impl(uint64_t)
         run_once = true;
         rainbow::fade(&batch_->at(0), 1.0f, 2000, &rainbow::timing::linear);
     }
-}
-
-auto GameBase::create(rainbow::Director& director) -> std::unique_ptr<GameBase>
-{
-    return std::make_unique<NoGame>(director);
 }

@@ -89,12 +89,19 @@ namespace rainbow
 
     class ControllerState
     {
+        using AxisStates =
+            std::array<int, to_integral_value(ControllerAxis::Count)>;
+        using ButtonStates =
+            std::array<bool, to_integral_value(ControllerButton::Count)>;
+
         static constexpr uint32_t kNoController =
             std::numeric_limits<uint32_t>::max();
 
     public:
         ControllerState() : id_(kNoController), buttons_({}), axes_({}) {}
 
+        auto axes() const -> const AxisStates& { return axes_; }
+        auto buttons() const -> const ButtonStates& { return buttons_; }
         auto id() const { return id_; }
         bool is_assigned() const { return id_ != kNoController; }
 
@@ -150,8 +157,8 @@ namespace rainbow
 
     private:
         uint32_t id_;
-        std::array<bool, to_integral_value(ControllerButton::Count)> buttons_;
-        std::array<int, to_integral_value(ControllerAxis::Count)> axes_;
+        ButtonStates buttons_;
+        AxisStates axes_;
     };
 }
 

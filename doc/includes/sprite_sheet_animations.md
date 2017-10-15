@@ -1,21 +1,21 @@
 # Sprite Sheet Animations
 
 A sprite sheet animation is a frame-based animation (like traditional animation)
-where we take a sprite and change its texture at set intervals.
+where we take a sprite and change its texture at set interval.
 
 ## Animation Management
 
 ### Creating Sprite Sheet Animations
 
-```c++
+```cpp
 Animation(const SpriteRef &sprite,
-          std::unique_ptr<const Frame[]> frames,
+          std::unique_ptr<Frame[]> frames,
           unsigned int fps,
           int delay = 0);
 ```
 
-```lua
-function rainbow.animation(sprite, frames, fps, delay = 0)  --> animation
+```typescript
+Rainbow.Animation(sprite: Sprite, frames: number[], fps: number, delay: number);
 ```
 
 `frames` is an array of texture ids that are played back in succession. In C++,
@@ -34,16 +34,15 @@ time.
 
 ### Starting and Stopping Animations
 
-```c++
+```cpp
 bool  Animation::is_stopped  () const;
 void  Animation::start       ();
 void  Animation::stop        ();
 ```
 
-```lua
-function animation:is_stopped  ()  --> bool
-function animation:start       ()  --> void
-function animation:stop        ()  --> void
+```typescript
+function start(): void;
+function stop(): void;
 ```
 
 An animation will always start from the beginning. There is no pause function
@@ -52,103 +51,99 @@ disabling its render unit.
 
 ### Navigating the Animation
 
-```c++
+```cpp
 unsigned int  current_frame  () const;
 ```
 
-```lua
-function animation:current_frame  ()  --> int
+```typescript
+function currentFrame(): number;
 ```
 
 Returns the currently displayed frame; `Animation::Frame::end()` (-1) if none.
 
-```c++
+```cpp
 unsigned int  frame_rate  () const;
 ```
 
-```lua
--- not available
+```typescript
+function frameRate(): number;
 ```
 
 Returns the frame rate in frames per second.
 
-```c++
+```cpp
 void  Animation::jump_to  (unsigned int frame);
 ```
 
-```lua
-function animation:jump_to  (frame)  --> void
+```typescript
+function jumpTo(frame: number): void;
 ```
 
 Jumps to the specified frame.
 
-```c++
+```cpp
 void  Animation::rewind  ();
 ```
 
-```lua
-function animation:rewind  ()  --> void
+```typescript
+function rewind(): void;
 ```
 
 Rewinds the animation. Equivalent to `jump_to(0)`.
 
 ### Modifying the Animation Sequence
 
-```c++
+```cpp
 void  Animation::set_delay  (int delay);
 ```
 
-```lua
-function animation:set_delay  (delay)  --> void
+```typescript
+function setDelay(delay: number): void;
 ```
 
 Sets number of frames to delay before the animation loops. Negative numbers
 disable looping.
 
-```c++
+```cpp
 void  Animation::set_frame_rate  (unsigned int fps);
 ```
 
-```lua
-function animation:set_frame_rate  (fps)  --> void
+```typescript
+function setFrameRate(fps: number): void;
 ```
 
 Sets the frame rate in frames per second.
 
-```c++
-void  Animation::set_frames  (std::unique_ptr<const Frame[]> frames);
+```cpp
+void  Animation::set_frames  (std::unique_ptr<Frame[]> frames);
 ```
 
-```lua
-function animation:set_frames  (frames)  --> void
+```typescript
+function setFrames(frames: number[]): void;
 ```
 
 Sets new frames to be played.
 
-```c++
+```cpp
 const Frame*  release  ();
-```
-
-```lua
--- not available
 ```
 
 Releases ownership of animation frames and returns it.
 
 ### Changing Sprite To Animate
 
-```c++
+```cpp
 SpriteRef  sprite  () const;
 ```
 
 Returns the target sprite.
 
-```c++
+```cpp
 void  Animation::set_sprite  (const SpriteRef &sprite);
 ```
 
-```lua
-function animation:set_sprite  (sprite)  --> void
+```typescript
+function setSprite(sprite: Sprite): void;
 ```
 
 Sets the sprite to animate.
@@ -169,7 +164,7 @@ There are three events that are fired during an animation's lifetime.
 
 You can subscribe to these events using:
 
-```c++
+```cpp
 void   Animation::set_callback  (Animation::Callback f);
 
 // Where `Animation::Callback` is a callable whose signature is
@@ -177,22 +172,26 @@ void   Animation::set_callback  (Animation::Callback f);
 // animation object that triggered `event`.
 ```
 
-```lua
-function animation:set_listener  (listener)  --> void
+```typescript
+function setCallback(callback: (animation: Animation, event: AnimationEvent) => void): void;
 
--- Table with functions `on_animation_start`, `on_animation_end` and/or
--- `on_animation_complete` implemented. Such as:
+// Example:
 
-local animation_state_handler = {
-    on_animation_start = function(self)
-        print("> Animation has started")
-    end,
-    on_animation_end = function(self)
-        print("> Animation has ended")
-    end,
-    on_animation_complete = function(self)
-        print("> Animation has completed")
-    end
+(animation, event) => {
+  switch (event) {
+    case Rainbow.AnimationEvent.Start:
+      console.log("> Animation has started");
+      break;
+    case Rainbow.AnimationEvent.End:
+      console.log("> Animation has ended");
+      break;
+    case Rainbow.AnimationEvent.Complete:
+      console.log("> Animation has completed");
+      break;
+    case Rainbow.AnimationEvent.Frame:
+      console.log("> Animation is displaying frame", animation.currentFrame());
+      break;
+  }
 }
 ```
 
@@ -200,15 +199,13 @@ local animation_state_handler = {
 
 In this example, we set up a walking animation.
 
-```c++
+```cpp
 #include "FileSystem/FileSystem.h"
+#include "Graphics/Animation.h"
 #include "Script/GameBase.h"
 
 namespace
 {
-    constexpr rainbow::Animation::Frame kAnimationFrames[]{
-        0, 1, 2, 3, 4, 5, rainbow::Animation::Frame::end()};
-
     constexpr int kTextureRegions[]{
         400, 724, 104, 149,
         504, 724, 104, 149,
@@ -216,12 +213,15 @@ namespace
         712, 724, 104, 149,
         816, 724, 104, 149,
         920, 724, 104, 149};
+
+    rainbow::Animation::Frame kAnimationFrames[]{
+        0, 1, 2, 3, 4, 5, rainbow::Animation::Frame::end()};
 }
 
-rainbow::texture_t load_texture()
+auto load_texture()
 {
     auto texture_path = rainbow::filesystem::relative("monkey.png");
-    auto texture = rainbow::texture(texture_path);
+    auto texture = rainbow::make_shared<rainbow::TextureAtlas>(texture_path.c_str());
     texture->set_regions(kTextureRegions);
     return texture;
 }
@@ -244,98 +244,6 @@ void animation_event_handler(rainbow::Animation*, rainbow::AnimationEvent e)
             break;
     }
 }
-
-class AnimationExample final : public rainbow::GameBase
-{
-public:
-    AnimationExample(rainbow::Director& director) : rainbow::GameBase(director)
-    {
-    }
-
-    ~AnimationExample() { animation_->release(); }
-
-private:
-    rainbow::spritebatch_t batch_;
-    rainbow::animation_t animation_;
-
-    void init_impl(const rainbow::Vec2i& screen) override
-    {
-        rainbow::graphics::TextureManager::Get()->set_filter(
-            rainbow::graphics::TextureFilter::Nearest);
-
-        auto texture = load_texture();
-        batch_ = rainbow::spritebatch(1);
-        batch_->set_texture(texture);
-
-        auto sprite = batch_->create_sprite(104, 149);
-        sprite->set_position(rainbow::Vec2f(screen.x * 0.5f, screen.y * 0.5f));
-
-        animation_ = rainbow::animation(
-            sprite, rainbow::Animation::Frames(kAnimationFrames), 6, 0);
-        animation_->set_callback(&animation_event_handler);
-
-        // Add the sprite batch and the animation to the render queue.
-        render_queue().emplace_back(batch_);
-        render_queue().emplace_back(animation_);
-
-        animation_->start();
-    }
-};
-
-auto rainbow::GameBase::create(rainbow::Director& director)
-    -> std::unique_ptr<rainbow::GameBase>
-{
-    return std::make_unique<AnimationExample>(director);
-}
-```
-
-```lua
-local ANIMATION_FRAMES = {0, 1, 2, 3, 4, 5}
-
-local g_animation = nil
-local g_batch = nil
-
-local function load_texture()
-    local texture = rainbow.texture("monkey.png")
-    texture:create(400, 724, 104, 149)
-    texture:create(504, 724, 104, 149)
-    texture:create(608, 724, 104, 149)
-    texture:create(712, 724, 104, 149)
-    texture:create(816, 724, 104, 149)
-    texture:create(920, 724, 104, 149)
-    return texture
-end
-
-function init()
-    -- Turn off texture filtering.
-    rainbow.renderer.set_filter(gl.NEAREST)
-
-    local batch = rainbow.spritebatch(1)
-    batch:set_texture(load_texture())
-
-    local sprite = batch:create_sprite(104, 149)
-    sprite:set_position(rainbow.platform.screen.width * 0.5, rainbow.platform.screen.height * 0.5)
-
-    local animation = rainbow.animation(sprite, ANIMATION_FRAMES, 6, 0)
-    animation:start()
-
-    rainbow.renderqueue:add(batch);
-    rainbow.renderqueue:add(animation);
-
-    g_batch = batch
-    g_animation = animation
-end
-
-function update(dt)
-end
-```
-
-Output:
-
-![Walking Animation](sprite_sheet_animations_output.gif)
-
-```c++
-// An alternative implementation using "manual" object lifetime management:
 
 class AnimationExample final : public rainbow::GameBase
 {
@@ -375,9 +283,61 @@ private:
         animation_.start();
     }
 };
+
+auto rainbow::GameBase::create(rainbow::Director& director)
+    -> std::unique_ptr<rainbow::GameBase>
+{
+    return std::make_unique<AnimationExample>(director);
+}
 ```
 
-## Caveats and Known Issues
+```typescript
+/// <reference path="./index.d.ts" />
+
+interface World {
+  screen: { width: number; height: number };
+  batch: Rainbow.SpriteBatch;
+  animation: Rainbow.Animation;
+}
+
+let world: World;
+
+function init(width: number, height: number) {
+  const texture = new Rainbow.Texture("monkey.png");
+  texture.addRegion(400, 724, 104, 149);
+  texture.addRegion(504, 724, 104, 149);
+  texture.addRegion(608, 724, 104, 149);
+  texture.addRegion(712, 724, 104, 149);
+  texture.addRegion(816, 724, 104, 149);
+  texture.addRegion(920, 724, 104, 149);
+
+  const batch = new Rainbow.SpriteBatch(1);
+  batch.setTexture(texture);
+
+  const sprite = batch.createSprite(104, 149);
+  sprite.setPosition({ x: width * 0.5, y: height * 0.5 });
+
+  const animation = new Rainbow.Animation(sprite, [0, 1, 2, 3, 4, 5], 6, 0);
+  animation.start();
+
+  Rainbow.RenderQueue.add(batch);
+  Rainbow.RenderQueue.add(animation);
+
+  world = {
+    screen: { width, height },
+    batch,
+    animation
+  };
+}
+
+function update(dt: number) {}
+```
+
+Output:
+
+![Walking Animation](sprite_sheet_animations_output.gif)
+
+## Caveats and Known Limitations
 
 Currently, an animation object takes ownership of the frames array and will
 attempt to delete it on destruction.

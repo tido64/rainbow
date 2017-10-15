@@ -2,8 +2,8 @@
 title: Rainbow Documentation
 
 language_tabs:
+  - typescript: JavaScript
   - cpp: C++
-  - lua: Lua
 
 toc_footers:
   - <a href="https://bitbucket.org/tido/rainbow">Fork the code</a>
@@ -17,11 +17,10 @@ includes:
   - basics
   - audio
   - input
-  - math
   - sprite_sheet_animations
+  - math
   - timers
   - transitions
-  - lua_api
   - coding_standard
   - license
 

@@ -6,7 +6,7 @@ if ! grep -q "Slate: API Documentation Generator" README.md 2> /dev/null; then
 fi
 
 function install {
-  if [[ ! -f vendor/bundle/ruby/2.4.0/bin/middleman ]]; then
+  if [[ ! -f vendor/bundle/ruby/2.5.0/bin/middleman ]]; then
     echo "Installing missing gems..."
     bundle install --deployment || exit 1
   fi

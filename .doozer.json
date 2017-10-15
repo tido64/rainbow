@@ -11,148 +11,28 @@
     "lib/zlib"
   ],
   "targets": {
-    "osx/clang/debug/cpp": {
+    "osx/clang/debug": {
       "buildenv": "osx",
-      "environment": {
-        "GENERATOR": "Ninja"
-      },
       "homebrew": {
         "formulae": ["cmake", "libogg", "libvorbis", "ninja", "pkg-config", "sdl2"]
       },
       "buildcmd": [
         "mkdir out",
         "cd out",
-        "../tools/build.sh -DCMAKE_BUILD_TYPE=Debug -DUNIT_TESTS=1 -DUSE_HEIMDALL=1 -DUSE_LUA_SCRIPT=0 -DUSE_PHYSICS=1 -DUSE_SPINE=1",
+        "GENERATOR=Ninja ../tools/build.sh -DCMAKE_BUILD_TYPE=Debug -DUNIT_TESTS=1 -DUSE_HEIMDALL=1 -DUSE_PHYSICS=1 -DUSE_SPINE=1",
         "./rainbow --gtest_filter=-AudioTest*:ChronoTest.TimeDifferenceBetweenUpdates"
       ]
     },
-    "osx/clang/debug/lua": {
+    "osx/clang/release": {
       "buildenv": "osx",
-      "environment": {
-        "GENERATOR": "Ninja"
-      },
       "homebrew": {
         "formulae": ["cmake", "libogg", "libvorbis", "ninja", "pkg-config", "sdl2"]
       },
       "buildcmd": [
         "mkdir out",
         "cd out",
-        "../tools/build.sh -DCMAKE_BUILD_TYPE=Debug -DUNIT_TESTS=1 -DUSE_HEIMDALL=1 -DUSE_PHYSICS=1 -DUSE_SPINE=1",
+        "GENERATOR=Ninja ../tools/build.sh -DCMAKE_BUILD_TYPE=Release -DUNIT_TESTS=1 -DUSE_PHYSICS=1 -DUSE_SPINE=1",
         "./rainbow --gtest_filter=-AudioTest*:ChronoTest.TimeDifferenceBetweenUpdates"
-      ]
-    },
-    "osx/clang/release/cpp": {
-      "buildenv": "osx",
-      "environment": {
-        "GENERATOR": "Ninja"
-      },
-      "homebrew": {
-        "formulae": ["cmake", "libogg", "libvorbis", "ninja", "pkg-config", "sdl2"]
-      },
-      "buildcmd": [
-        "mkdir out",
-        "cd out",
-        "../tools/build.sh -DCMAKE_BUILD_TYPE=Release -DUNIT_TESTS=1 -DUSE_LUA_SCRIPT=0 -DUSE_PHYSICS=1 -DUSE_SPINE=1",
-        "./rainbow --gtest_filter=-AudioTest*:ChronoTest.TimeDifferenceBetweenUpdates"
-      ]
-    },
-    "osx/clang/release/lua": {
-      "buildenv": "osx",
-      "environment": {
-        "GENERATOR": "Ninja"
-      },
-      "homebrew": {
-        "formulae": ["cmake", "libogg", "libvorbis", "ninja", "pkg-config", "sdl2"]
-      },
-      "buildcmd": [
-        "mkdir out",
-        "cd out",
-        "../tools/build.sh -DCMAKE_BUILD_TYPE=Release -DUNIT_TESTS=1 -DUSE_PHYSICS=1 -DUSE_SPINE=1",
-        "./rainbow --gtest_filter=-AudioTest*:ChronoTest.TimeDifferenceBetweenUpdates"
-      ]
-    },
-    "xenial-amd64/gcc/debug/cpp": {
-      "buildenv": "xenial-amd64",
-      "environment": {
-        "GENERATOR": "Ninja"
-      },
-      "builddeps": [
-        "build-essential",
-        "cmake",
-        "libgl1-mesa-dev",
-        "libopenal-dev",
-        "libsdl2-dev",
-        "libvorbis-dev",
-        "ninja-build"
-      ],
-      "buildcmd": [
-        "mkdir out",
-        "cd out",
-        "../tools/build.sh -DCMAKE_BUILD_TYPE=Debug -DUNIT_TESTS=1 -DUSE_HEIMDALL=1 -DUSE_LUA_SCRIPT=0 -DUSE_PHYSICS=1 -DUSE_SPINE=1",
-        "./rainbow --gtest_filter=-AudioTest*"
-      ]
-    },
-    "xenial-amd64/gcc/debug/lua": {
-      "buildenv": "xenial-amd64",
-      "environment": {
-        "GENERATOR": "Ninja"
-      },
-      "builddeps": [
-        "build-essential",
-        "cmake",
-        "libgl1-mesa-dev",
-        "libopenal-dev",
-        "libsdl2-dev",
-        "libvorbis-dev",
-        "ninja-build"
-      ],
-      "buildcmd": [
-        "mkdir out",
-        "cd out",
-        "../tools/build.sh -DCMAKE_BUILD_TYPE=Debug -DUNIT_TESTS=1 -DUSE_HEIMDALL=1 -DUSE_PHYSICS=1 -DUSE_SPINE=1",
-        "./rainbow --gtest_filter=-AudioTest*"
-      ]
-    },
-    "xenial-amd64/gcc/release/cpp": {
-      "buildenv": "xenial-amd64",
-      "environment": {
-        "GENERATOR": "Ninja"
-      },
-      "builddeps": [
-        "build-essential",
-        "cmake",
-        "libgl1-mesa-dev",
-        "libopenal-dev",
-        "libsdl2-dev",
-        "libvorbis-dev",
-        "ninja-build"
-      ],
-      "buildcmd": [
-        "mkdir out",
-        "cd out",
-        "../tools/build.sh -DCMAKE_BUILD_TYPE=Release -DUNIT_TESTS=1 -DUSE_LUA_SCRIPT=0 -DUSE_PHYSICS=1 -DUSE_SPINE=1",
-        "./rainbow --gtest_filter=-AudioTest*"
-      ]
-    },
-    "xenial-amd64/gcc/release/lua": {
-      "buildenv": "xenial-amd64",
-      "environment": {
-        "GENERATOR": "Ninja"
-      },
-      "builddeps": [
-        "build-essential",
-        "cmake",
-        "libgl1-mesa-dev",
-        "libopenal-dev",
-        "libsdl2-dev",
-        "libvorbis-dev",
-        "ninja-build"
-      ],
-      "buildcmd": [
-        "mkdir out",
-        "cd out",
-        "../tools/build.sh -DCMAKE_BUILD_TYPE=Release -DUNIT_TESTS=1 -DUSE_PHYSICS=1 -DUSE_SPINE=1",
-        "./rainbow --gtest_filter=-AudioTest*"
       ]
     }
   }

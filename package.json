@@ -1,0 +1,41 @@
+{
+  "name": "rainbow",
+  "version": "1.0.0",
+  "description": "Rainbow is a scriptable, cross-platform, 2D game engine written in modern C++.",
+  "main": "index.js",
+  "directories": {
+    "doc": "doc",
+    "lib": "lib"
+  },
+  "scripts": {
+    "build": "tsc --project js",
+    "generate-bindings": "tsc --target ES2015 --module commonjs --strict --noImplicitAny --strictNullChecks --noImplicitThis --alwaysStrict --noUnusedLocals --noImplicitReturns tools/generate-bindings.ts && node tools/generate-bindings.js",
+    "prettier": "prettier --write --no-config .vscode/*.json js/*.json tools/*.ts",
+    "tsc": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@bitbucket.org/tido/rainbow.git"
+  },
+  "keywords": [
+    "android",
+    "cpp",
+    "cross-platform",
+    "game-engine",
+    "ios",
+    "javascript",
+    "linux",
+    "macos",
+    "typescript",
+    "windows"
+  ],
+  "author": "Tommy Nguyen",
+  "license": "MIT",
+  "homepage": "https://bitbucket.org/tido/rainbow#readme",
+  "devDependencies": {
+    "@types/node": "^8.5.9",
+    "prettier": "^1.10.2",
+    "tslint": "^5.9.1",
+    "typescript": "^2.7.1"
+  }
+}

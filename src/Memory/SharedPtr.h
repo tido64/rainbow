@@ -163,6 +163,15 @@ namespace rainbow
         }
     };
 
+    template <typename T>
+    struct IsSharedPtr : std::false_type {};
+
+    template <typename T>
+    struct IsSharedPtr<SharedPtr<T>> : std::true_type {};
+
+    template <typename T>
+    inline constexpr bool is_shared_ptr = IsSharedPtr<T>::value;
+
     template <typename T, typename... Args>
     auto make_shared(Args&&... args)
     {

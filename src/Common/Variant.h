@@ -54,13 +54,13 @@ namespace rainbow
     using variant = std::variant<Types...>;
 
     template <typename T, typename... Types>
-    auto get(variant<Types...>&& v)
+    auto get(variant<Types...>& v)
     {
-        return std::get<T>(std::forward<Types...>(v));
+        return std::get<T>(v);
     }
 
     template <typename T, typename... Types>
-    constexpr auto holds_alternative(const variant<Types...>& v)
+    constexpr auto holds_alternative(const variant<Types...>& v) noexcept
     {
         return std::holds_alternative<T>(v);
     }

@@ -1,4 +1,7 @@
 coverage:
   ignore:
+  - build/.*
   - lib/.*
+  - src/Resources/.*
+  - src/Script/JavaScript/Modules.g.h
   - src/Tests/.*

@@ -33,7 +33,24 @@ namespace rainbow
     public:
         static constexpr unsigned int kNumSupportedControllers = 4;
 
+        using ControllerStates =
+            std::array<ControllerState, kNumSupportedControllers>;
+        using KeyboardState =
+            std::array<bool, to_integral_value(VirtualKey::KeyCount)>;
+
         Input() : keys_({}), last_listener_(this) { make_global(); }
+
+        auto acceleration() const -> const Acceleration&
+        {
+            return acceleration_;
+        }
+
+        auto controller_states() const -> const ControllerStates&
+        {
+            return controllers_;
+        }
+
+        auto keyboard_state() const -> const KeyboardState& { return keys_; }
 
         /// <summary>
         ///   Returns the value of the specified axis on specified controller.
@@ -122,8 +139,8 @@ namespace rainbow
 #endif  // RAINBOW_TEST
 
     private:
-        std::array<ControllerState, kNumSupportedControllers> controllers_;
-        std::array<bool, to_integral_value(VirtualKey::KeyCount)> keys_;
+        ControllerStates controllers_;
+        KeyboardState keys_;
         Acceleration acceleration_;  ///< Accelerometer data
         InputListener* last_listener_;
 

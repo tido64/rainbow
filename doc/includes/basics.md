@@ -2,51 +2,31 @@
 
 ## File Structure
 
-  - config
-  - main.lua (Lua only)
+  - config.json
+  - index.bundle.js
 
-### `config` (optional)
+### `config.json` (optional)
 
-The configuration file is just a Lua script. It enables/disables features and
+The configuration file is just a JSON. It enables/disables features, and
 sets the window size (Linux/macOS/Windows).
 
-```
-accelerometer = false|true
--- Specifies whether the accelerometer is used.
-
-allow_high_dpi = false|true
--- Specifies whether to create windows in high DPI mode. On smartphones and
--- tablets, this option is always set to true.
-
-msaa = 0|2|4|8
--- Sets number of samples for multisample anti-aliasing. This feature is not
--- available on smartphones/tablets.
-
-resolution = {width, height}
--- Specifies the preferred screen resolution or window size. It also
--- determines whether we are in landscape or portrait mode. On
--- smartphones/tablets, width and height have no meaning as the whole screen
--- will always be used.
-
-suspend_on_focus_lost = false|true
--- Specifies whether to suspend when focus is lost. This parameter is
--- ignored on smartphones/tablets.
-```
-
-If no configuration file is present, or the file is somehow unavailable, Rainbow
-falls back to the following:
-
-```
-accelerometer = true
-allow_high_dpi = false
-msaa = 0
-resolution = {0, 0}  -- implies landscape mode
-suspend_on_focus_lost = true
+```json
+{
+  "$schema": "./rainbow-config.schema.json",
+  "accelerometer": true,
+  "allowHighDPI": false,
+  "msaa": 0,
+  "resolution": {
+    "width": 1280,
+    "height": 720
+  },
+  "suspendOnFocusLost": true
+}
 ```
 
 ## Entry Point
 
-```c++
+```cpp
 // Any class that derives from `GameBase` is a potential entry point. The class
 // may also override any or none of the methods `init_impl()` and
 // `update_impl()`. Although, not overriding any of them will display nothing.
@@ -80,19 +60,19 @@ auto rainbow::GameBase::create(rainbow::Director& director)
 // add sprites to the screen in the following sections.
 ```
 
-```lua
--- 'main.lua' must implement the following two entry-point functions:
+```typescript
+// 'index.bundle.js' must implement the following two entry-point functions:
 
-function init()
-  -- Called once on startup.
-end
+function init(width, height) {
+  // Called once on startup.
+}
 
-function update(dt)
-  -- Called every frame. |dt| is the time since last frame in milliseconds.
-end
+function update(dt) {
+  // Called every frame. |dt| is the time since last frame in milliseconds.
+}
 
--- There is no draw function. Later, we'll use the render queue to get things
--- onto the screen.
+// There is no draw function. Later, we'll use the render queue to get things
+// onto the screen.
 ```
 
 ## Sprite Batches
@@ -100,60 +80,58 @@ end
 One of Rainbow's philosophies is to always batch sprites. So in order to create
 a sprite, one must first create a batch.
 
-```c++
+```cpp
 void MyGame::init_impl(const Vec2i& screen)
 {
     constexpr unsigned int count = 2;  // Intended number of sprites in batch
     batch_ = rainbow::spritebatch(count);
 ```
 
-```lua
-function init()
-    local count = 2  -- Intended number of sprites in batch
-    local batch = rainbow.spritebatch(count)
+```typescript
+function init(screenWidth, screenHeight) {
+  const count = 2;  // Intended number of sprites in batch
+  const batch = new Rainbow.SpriteBatch(count);
 ```
 
 The `count` tells Rainbow that we intend to create a batch of two sprites. Next,
 we'll create two sprites:
 
-```c++
+```cpp
     auto sprite1 = batch_->create_sprite(100, 100);
     auto sprite2 = batch_->create_sprite(100, 100);
 ```
 
-```lua
-    local sprite1 = batch:create_sprite(100, 100)
-    local sprite2 = batch:create_sprite(100, 100)
+```typescript
+  const sprite1 = batch.createSprite(100, 100);
+  const sprite2 = batch.createSprite(100, 100);
 ```
 
 The order in which sprites are created are important as it determines the draw
-order. Here, `sprite1` is drawn first, followed by `sprite2`. Currently, you
-cannot arbitrarily switch the order of sprites in a batch. If you need to do so,
-it's better to split the batch.
+order. Here, `sprite1` is drawn first, followed by `sprite2`.
 
 Now we have a sprite batch containing two untextured sprites. Let's add a
 texture:
 
-```c++
+```cpp
     // Load the texture atlas.
     auto atlas = rainbow::texture("canvas.png");
     batch_->set_texture(atlas);
 
     // Create a texture from the atlas, and assign to our sprites.
-    auto texture = atlas:create(Vec2i(448, 108), 100, 100);
+    auto texture = atlas->create(Vec2i{448, 108}, 100, 100);
     sprite1->set_texture(texture);
     sprite2->set_texture(texture);
 ```
 
-```lua
-    -- Load the texture atlas.
-    local atlas = rainbow.texture("canvas.png")
-    batch:set_texture(atlas)
+```typescript
+  // Load the texture atlas.
+  const atlas = new Rainbow.Texture("canvas.png");
+  batch.setTexture(atlas);
 
-    -- Create a texture from the atlas, and assign to our sprites.
-    local texture = atlas:create(448, 108, 100, 100)
-    sprite1:set_texture(texture)
-    sprite2:set_texture(texture)
+  // Create a texture from the atlas, and assign to our sprites.
+  const texture = atlas.addRegion(448, 108, 100, 100);
+  sprite1.setTexture(texture);
+  sprite2.setTexture(texture);
 ```
 
 First, we load the actual texture. Textures are always loaded into atlases which
@@ -174,7 +152,7 @@ drawn.
 
 Now we'll add the batches we've created earlier:
 
-```c++
+```cpp
     // Add batch to the render queue. Note that the render queue is only
     // accessible from the entry point. If you need it elsewhere, you must pass
     // along its pointer.
@@ -188,17 +166,16 @@ Now we'll add the batches we've created earlier:
 }
 ```
 
-```lua
-    -- Add batch to the render queue.
-    local unit = rainbow.renderqueue:add(batch)
+```typescript
+  // Add batch to the render queue.
+  const unit = Rainbow.RenderQueue.add(batch);
 
-    -- Position our sprites at the center of the screen.
-    local screen = rainbow.platform.screen
-    local cx = screen.width * 0.5
-    local cy = screen.height * 0.5
-    sprite1:set_position(cx - 50, cy)
-    sprite2:set_position(cx + 50, cy)
-end
+  // Position our sprites at the center of the screen.
+  const cx = screenWidth * 0.5;
+  const cy = screenHeight * 0.5;
+  sprite1.setPosition({ x: cx - 50, y: cy });
+  sprite2.setPosition({ x: cx + 50, y: cy });
+}
 ```
 
 If you compile and run this code, you should see two identical sprites next to
@@ -206,81 +183,88 @@ each other at the center of the screen.
 
 As always, refer to the API reference for full details.
 
-## Prose
+## Scenes
 
 Sometimes, dealing with the render queue can be confusing or frustrating if you
-can't fully visualise the order. However, with Prose, you can define entire
-scenes using a much simpler, and arguably more visual, syntax. Prose is just a
-specially structured Lua table. Creating an empty scene with Prose looks
-something like:
+can't fully visualise the order. However, you can define entire scenes with
+JSON. An empty scene looks something like:
 
-```
-return {
-  version = 100,   -- declare Prose version
-  resources = {},  -- declare fonts, sounds or textures here
-  nodes = {}       -- declare animations, labels or sprites here
+```json
+{
+  "$schema": "./rainbow-scene.schema.json",
+  "assets": [ /* declare fonts, sounds or textures here */ ],
+  "entities": [ /* declare animations, labels or sprites here */ ]
 }
 ```
 
-We can recreate the earlier scene (annotated with the equivalent code):
+We can recreate the earlier scene:
 
-```
-local screen = rainbow.platform.screen
-local cx, cy = screen.width * 0.5, screen.height * 0.5
-return {
-  version = 100,
-  resources = {
-    "atlas" = {                    -- auto atlas =
-      "canvas.png",                --     rainbow::texture("canvas.png");
-      {448, 108, 100, 100}         -- auto texture0 =
-    }                              --     atlas->create_texture(...);
-  },
-  nodes = {
-    { name = "batch",              -- auto batch = rainbow::spritebatch(2);
-      texture = "atlas",           -- batch->set_texture(atlas);
-      { name = "sprite1"           -- auto sprite1 =
-        size = {100, 100},         --     batch->create_sprite(100, 100);
-        position = {cx - 50, cy},  -- sprite1->set_position(...);
-        texture = 0                -- sprite1->set_texture(texture0);
-      },
-      { name = "sprite2"           -- auto sprite2 =
-        size = {100, 100},         --     batch->create_sprite(100, 100);
-        position = {cx + 50, cy},  -- sprite2->set_position(...);
-        texture = 0                -- sprite2->set_texture(texture0);
-      }
+```json
+{
+  "$schema": "./rainbow-scene.schema.json",
+  "assets": [
+    {
+      "id": "atlas",
+      "path": "canvas.png",
+      "regions": [[448, 108, 100, 100]]
     }
-  }
+  ],
+  "entities": [
+    {
+      "id": "batch",
+      "texture": "atlas",
+      "sprites": [
+        {
+          "id": "sprite1",
+          "width": 100,
+          "height": 100,
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "texture": 0
+        },
+        {
+          "id": "sprite2",
+          "width": 100,
+          "height": 100,
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "texture": 0
+        }
+      ]
+    }
+  ]
 }
 ```
 
-If you save the table in `tutorial.prose.lua`, we can implement our new entry
-point:
+If you save the file as `my.scene.json`, we can implement our new entry point:
 
-```c++
+```cpp
 void MyGame::init_impl(const Vec2i& screen)
 {
-    scene_ = rainbow::prose::from_table("tutorial.prose.lua");
+    scene_ = std::make_unique<rainbow::Scene>("my.scene.json");
     render_queue().emplace_back(scene_);
 
     // You can also access assets and resources through this object. We retrieve
     // them by name:
 
-    // auto batch = scene_->get_spritebatch("batch");
-    // auto sprite1 = scene_->get_sprite("sprite1");
+    // auto batch = scene_->get<SpriteBatch>("batch");
+    // auto sprite1 = scene_->get<SpriteRef>("sprite1");
 }
 ```
 
-```lua
-function init()
-    local Prose = require("Prose")
-    -- Prose lets you create entire scenes from a table
+```typescript
+function init(screenWidth, screenHeight) {
+  scene = new Rainbow.Scene("my.scene.json");
+  Rainbow.RenderQueue.add(scene, "myScene");
 
-    scene = Prose.from_table(require("tutorial.prose"))
-    -- You can also access nodes and resources through this object. For
-    -- instance, to access the batch:
-    local batch = scene.objects.batch
-end
+  // Position our sprites at the center of the screen.
+  const cx = screenWidth * 0.5;
+  const cy = screenHeight * 0.5;
+  scene.sprite1.setPosition({ x: cx - 50, y: cy });
+  scene.sprite2.setPosition({ x: cx + 50, y: cy });
+}
 ```
-
-For a more complete example, see file `scummbar.lua` and its accompanying file
-`scummbar.prose.lua` of the `monkey` demo.

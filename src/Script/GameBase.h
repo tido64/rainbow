@@ -6,67 +6,9 @@
 #define SCRIPT_GAMEBASE_H_
 
 #include "Director.h"
-#include "Graphics/Animation.h"
-#include "Graphics/Label.h"
-#include "Graphics/SpriteBatch.h"
-#include "Script/Prose.h"
 
 namespace rainbow
 {
-    using animation_t = std::shared_ptr<Animation>;
-    using font_t = SharedPtr<FontAtlas>;
-    using label_t = std::shared_ptr<Label>;
-    using prose_t = std::shared_ptr<Prose>;
-    using spritebatch_t = std::shared_ptr<SpriteBatch>;
-    using texture_t = SharedPtr<TextureAtlas>;
-
-    template <typename... Args>
-    auto animation(Args&&... args)
-    {
-        return std::make_shared<Animation>(std::forward<Args>(args)...);
-    }
-
-    template <typename... Args>
-    auto font(Args&&... args)
-    {
-        auto font =
-            rainbow::make_shared<FontAtlas>(std::forward<Args>(args)...);
-        R_ASSERT(font->is_valid(), "rainbow::font: Failed to create font");
-        return font;
-    }
-
-    inline auto label(czstring string = nullptr)
-    {
-        auto label = std::make_shared<Label>();
-        if (string != nullptr)
-            label->set_text(string);
-        return label;
-    }
-
-    template <typename... Args>
-    auto spritebatch(Args&&... args)
-    {
-        return std::make_shared<SpriteBatch>(std::forward<Args>(args)...);
-    }
-
-    template <typename... Args>
-    auto texture(Args&&... args)
-    {
-        auto texture =
-            rainbow::make_shared<TextureAtlas>(std::forward<Args>(args)...);
-        R_ASSERT(
-            texture->is_valid(), "rainbow::texture: Failed to create texture");
-        return texture;
-    }
-
-    namespace prose
-    {
-        inline auto from_lua(czstring path)
-        {
-            return std::shared_ptr<Prose>(Prose::from_lua(path));
-        }
-    }
-
     class GameBase
     {
     public:

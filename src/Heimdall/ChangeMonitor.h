@@ -18,8 +18,6 @@
 #include "Common/NonCopyable.h"
 #include "Common/String.h"
 
-struct lua_State;
-
 namespace heimdall
 {
     class ChangeMonitor : private rainbow::NonCopyable<ChangeMonitor>

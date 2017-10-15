@@ -6,9 +6,7 @@ First, make sure you've installed [Git](https://git-scm.com/downloads) as that's
 what we'll be using to retrieve the source code. The following command will
 download Rainbow and all of its submodules into a folder named `rainbow`:
 
-```shell
-git clone --recursive https://bitbucket.org/tido/rainbow.git
-```
+`git clone --recursive https://bitbucket.org/tido/rainbow.git`
 
 If you're using a graphical UI for Git, make sure to checkout the submodules as
 well.
@@ -32,9 +30,11 @@ Install the dependencies:
 
 Once installed:
 
-	mkdir out
-	cd out
-	/path/to/rainbow/tools/build.sh android [options]
+```bash
+mkdir out
+cd out
+/path/to/rainbow/tools/build.sh android [options]
+```
 
 The build script will create a debuggable and installable APK. For a list of
 options, type `build.sh help` or see [Compiling Rainbow](#compiling-rainbow).
