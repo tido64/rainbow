@@ -1,4 +1,4 @@
-# Timers
+# Timers (C++ only)
 
 Timers perform delayed actions or repeat actions at set intervals.
 
@@ -170,7 +170,7 @@ Output:
 [1428273730380|INFO] The repeated timer was cleared.
 ```
 
-## Caveats and Known Issues
+## Caveats and Known Limitations
 
 Timer handlers are reused. This implies that an old handler may be used to
 manipulate a more recent timer.

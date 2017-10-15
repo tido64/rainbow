@@ -45,7 +45,6 @@ case $1 in
     echo "  -DUNIT_TESTS=1           Enable unit tests"
     echo "  -DUSE_FMOD_STUDIO=1      Enable FMOD Studio audio engine"
     echo "  -DUSE_HEIMDALL=1         Enable Heimdall debugging facilities"
-    echo "  -DUSE_LUA_SCRIPT=1       Enable Lua scripting"
     echo "  -DUSE_PHYSICS=1          Enable physics module (Box2D)"
     echo "  -DUSE_SPINE=1            Enable Spine runtime"
     echo

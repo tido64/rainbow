@@ -6,8 +6,8 @@
 #define DIRECTOR_H_
 
 #include "Audio/Mixer.h"
-#include "Graphics/Renderer.h"
 #include "Graphics/RenderQueue.h"
+#include "Graphics/Renderer.h"
 #include "Input/Input.h"
 #include "Script/Timer.h"
 
@@ -17,8 +17,8 @@ namespace rainbow
     class GameBase;
 
     /// <summary>
-    ///   Simple game loop for Lua-scripted games. Must be created after having
-    ///   set up an OpenGL context.
+    ///   Simple game loop. Must be created after having set up an OpenGL
+    ///   context.
     /// </summary>
     class Director final : private NonCopyable<Director>
     {
@@ -72,7 +72,7 @@ namespace rainbow
         graphics::State renderer_;
         audio::Mixer mixer_;
     };
-}
+}  // namespace rainbow
 
 #ifdef USE_HEIMDALL
 #   include "Heimdall/Gatekeeper.h"

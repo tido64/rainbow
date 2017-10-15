@@ -15,7 +15,6 @@ option(UNIT_TESTS  "Compile unit tests" OFF)
 # Features
 option(USE_FMOD_STUDIO  "Enable FMOD Studio audio engine" OFF)
 option(USE_HEIMDALL     "Enable Heimdall debugging facilities" OFF)
-option(USE_LUA_SCRIPT   "Enable Lua scripting" ON)
 option(USE_PHYSICS      "Enable physics module (Box2D)" OFF)
 option(USE_SPINE        "Enable Spine runtime" OFF)
 
@@ -113,12 +112,6 @@ set(SOURCE_FILES
     src/Input/InputListener.h
     src/Input/Pointer.h
     src/Input/VirtualKey.h
-    src/Lua/LuaDebugging.h
-    src/Lua/LuaHelper.cpp
-    src/Lua/LuaHelper.h
-    src/Lua/LuaMacros.h
-    src/Lua/LuaSyntax.cpp
-    src/Lua/LuaSyntax.h
     src/Math/Geometry.h
     src/Math/Transform.h
     src/Math/Vec2.h
@@ -134,16 +127,27 @@ set(SOURCE_FILES
     src/Platform/Diagnostics.h
     src/Platform/Macros.h
     src/Platform/SystemInfo.h
+    src/Resources/Rainbow.svg.h
     src/Script/Actor.h
     src/Script/Components/AnimationComponent.h
     src/Script/Components/RenderComponent.h
     src/Script/Components/ScriptComponent.h
     src/Script/Components/StateComponent.h
+    src/Script/JavaScript/Audio.h
+    src/Script/JavaScript/Console.h
+    src/Script/JavaScript/Helper.cpp
+    src/Script/JavaScript/Helper.h
+    src/Script/JavaScript/Input.h
+    src/Script/JavaScript/JavaScript.cpp
+    src/Script/JavaScript/JavaScript.h
+    src/Script/JavaScript/Module.h
+    src/Script/JavaScript/Modules.g.h
+    src/Script/JavaScript/RenderQueue.h
     src/Script/GameBase.h
-    src/Script/Prose.Node.h
-    src/Script/Prose.Resource.h
-    src/Script/Prose.cpp
-    src/Script/Prose.h
+    src/Script/NoGame.cpp
+    src/Script/NoGame.h
+    src/Script/Scene.cpp
+    src/Script/Scene.h
     src/Script/Timer.cpp
     src/Script/Timer.h
     src/Script/TimingFunctions.h
@@ -152,53 +156,8 @@ set(SOURCE_FILES
     src/Script/World.h
     src/ThirdParty/NanoSVG/NanoSVG.cpp
     src/ThirdParty/NanoSVG/NanoSVG.h
-    src/Threading/Synchronized.h)
-
-if(USE_LUA_SCRIPT)
-  add_definitions(-DUSE_LUA_SCRIPT=1)
-  list(APPEND SOURCE_FILES
-       src/Lua/lua_Animation.cpp
-       src/Lua/lua_Animation.h
-       src/Lua/lua_Audio.cpp
-       src/Lua/lua_Audio.h
-       src/Lua/lua_Font.cpp
-       src/Lua/lua_Font.h
-       src/Lua/lua_Input.cpp
-       src/Lua/lua_Input.h
-       src/Lua/lua_IO.cpp
-       src/Lua/lua_IO.h
-       src/Lua/lua_Label.cpp
-       src/Lua/lua_Label.h
-       src/Lua/lua_Platform.cpp
-       src/Lua/lua_Platform.h
-       src/Lua/lua_Random.cpp
-       src/Lua/lua_Random.h
-       src/Lua/lua_Renderer.cpp
-       src/Lua/lua_Renderer.h
-       src/Lua/lua_RenderQueue.cpp
-       src/Lua/lua_RenderQueue.h
-       src/Lua/lua_Shaders.cpp
-       src/Lua/lua_Shaders.h
-       src/Lua/lua_Sprite.cpp
-       src/Lua/lua_Sprite.h
-       src/Lua/lua_SpriteBatch.cpp
-       src/Lua/lua_SpriteBatch.h
-       src/Lua/lua_Texture.cpp
-       src/Lua/lua_Texture.h
-       src/Lua/LuaMachine.cpp
-       src/Lua/LuaMachine.h
-       src/Lua/LuaModules.h
-       src/Lua/LuaScript.cpp
-       src/Lua/LuaScript.h
-       src/Lua/Object.h
-       src/Resources/Rainbow.lua.h)
-else()
-  add_definitions(-DUSE_LUA_SCRIPT=0)
-  list(APPEND SOURCE_FILES
-       src/Resources/Rainbow.svg.h
-       src/Script/NoGame.cpp
-       src/Script/NoGame.h)
-endif()
+    src/Threading/Synchronized.h
+)
 
 if(ANDROID)
   list(APPEND SOURCE_FILES
@@ -282,7 +241,6 @@ if(UNIT_TESTS)
       src/Tests/Input/Input.test.cc
       src/Tests/Input/Pointer.test.cc
       src/Tests/Input/VirtualKey.test.cc
-      src/Tests/Lua/LuaHelper.test.cc
       src/Tests/Math/Geometry.test.cc
       src/Tests/Math/Vec2.test.cc
       src/Tests/Math/Vec3.test.cc
@@ -290,6 +248,7 @@ if(UNIT_TESTS)
       src/Tests/Memory/ScopeStack.test.cc
       src/Tests/Memory/SharedPtr.test.cc
       src/Tests/Memory/StableArray.test.cc
+      src/Tests/Script/JavaScript.test.cc
       src/Tests/TestHelpers.h
       src/Tests/Tests.cpp
       src/Tests/Tests.h
@@ -351,30 +310,6 @@ if(USE_PHYSICS)
       src/ThirdParty/Box2D/StableWorld.cpp
       src/ThirdParty/Box2D/StableWorld.h
   )
-  if(USE_LUA_SCRIPT)
-    list(APPEND SOURCE_FILES
-        src/ThirdParty/Box2D/Lua/Box2D.cpp
-        src/ThirdParty/Box2D/Lua/Box2D.h
-        src/ThirdParty/Box2D/Lua/Dynamics/Body.cpp
-        src/ThirdParty/Box2D/Lua/Dynamics/Body.h
-        src/ThirdParty/Box2D/Lua/Dynamics/Contacts/Contact.cpp
-        src/ThirdParty/Box2D/Lua/Dynamics/Contacts/Contact.h
-        src/ThirdParty/Box2D/Lua/Dynamics/Fixture.cpp
-        src/ThirdParty/Box2D/Lua/Dynamics/Fixture.h
-        src/ThirdParty/Box2D/Lua/Dynamics/World.cpp
-        src/ThirdParty/Box2D/Lua/Dynamics/World.h
-        src/ThirdParty/Box2D/Lua/Collision/Shapes/CircleShape.cpp
-        src/ThirdParty/Box2D/Lua/Collision/Shapes/CircleShape.h
-        src/ThirdParty/Box2D/Lua/Collision/Shapes/EdgeShape.cpp
-        src/ThirdParty/Box2D/Lua/Collision/Shapes/EdgeShape.h
-        src/ThirdParty/Box2D/Lua/Collision/Shapes/PolygonShape.cpp
-        src/ThirdParty/Box2D/Lua/Collision/Shapes/PolygonShape.h
-        src/ThirdParty/Box2D/Lua/Collision/Shapes/Shape.cpp
-        src/ThirdParty/Box2D/Lua/Collision/Shapes/Shape.h
-        src/ThirdParty/Box2D/Lua/Helper.cpp
-        src/ThirdParty/Box2D/Lua/Helper.h
-    )
-  endif()
 endif()
 
 if(USE_SPINE)
@@ -427,8 +362,8 @@ endif()
 if(USE_PHYSICS)
   include(${LOCAL_MODULE_PATH}/Box2D.cmake)
 endif()
+include(${LOCAL_MODULE_PATH}/Duktape.cmake)
 include(${LOCAL_MODULE_PATH}/FreeType.cmake)
-include(${LOCAL_MODULE_PATH}/Lua.cmake)
 include(${LOCAL_MODULE_PATH}/SDL2.cmake)
 if(USE_SPINE)
   include(${LOCAL_MODULE_PATH}/Spine.cmake)

@@ -9,43 +9,32 @@ namespace rainbow
 {
     /// <summary>Load game configuration.</summary>
     /// <remarks>
-    ///   Rudimentary config-file parser. File must be named <c>config</c> and
-    ///   reside next to <c>main.lua</c>. Currently supports the following keys:
+    ///   Configuration is a simple JSON file. File must be named
+    ///   <c>config.json</c> and reside in app root. Please use the schema
+    ///   <c>js/rainbow-config.schema.json</c> for IntelliSense:
     ///
-    ///   <list type="bullet">
-    ///     <item>
-    ///       <c>accelerometer = false|true</c><br/>
-    ///       Specifies whether the accelerometer is used.
-    ///     </item>
-    ///     <item>
-    ///       <c>allow_high_dpi = false|true</c><br/>
-    ///       Specifies whether to create windows in high DPI mode.
-    ///     </item>
-    ///     <item>
-    ///       <c>msaa = 0|2|4|8</c><br/>
-    ///       Sets number of samples for multisample anti-aliasing.
-    ///     </item>
-    ///     <item>
-    ///       <c>resolution = {width, height}</c><br/>
-    ///       Specifies the preferred screen resolution or window size. It also
-    ///       determines whether we are in landscape or portrait mode.
-    ///     </item>
-    ///     <item>
-    ///       <c>suspend_on_focus_lost = false|true</c><br/>
-    ///       Specifies whether to suspend when focus is lost.
-    ///     </item>
-    ///   </list>
+    ///   <code>
+    ///   {
+    ///     "$schema": "./rainbow-config.schema.json"
+    ///   }
+    ///   </code>
     ///
     ///   If no configuration file is present, or the file is somehow
     ///   unavailable, the following are the default values:
     ///
-    ///   <list type="bullet">
-    ///     <item><c>accelerometer = true</c></item>
-    ///     <item><c>allow_high_dpi = false</c></item>
-    ///     <item><c>msaa = 0</c></item>
-    ///     <item><c>resolution = {0, 0}</c> (implying landscape mode)</item>
-    ///     <item><c>suspend_on_focus_lost = true</c></item>
-    ///   </list>
+    ///   <code>
+    ///   {
+    ///     "$schema": "./rainbow-config.schema.json",
+    ///     "accelerometer": true,
+    ///     "allowHighDPI": false,
+    ///     "msaa": 0,
+    ///     "resolution": {
+    ///       "width": 0,
+    ///       "height": 0
+    ///     },
+    ///     "suspendOnFocusLost": true
+    ///   }
+    ///   </code>
     /// </remarks>
     class Config
     {

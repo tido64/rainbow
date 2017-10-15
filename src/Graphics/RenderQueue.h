@@ -45,7 +45,13 @@ namespace rainbow { namespace graphics
         }
 
         template <typename T>
-        RenderUnit(std::shared_ptr<T> variant, std::string tag = {})
+        RenderUnit(std::shared_ptr<T>& variant, std::string tag = {})
+            : RenderUnit(*variant, std::move(tag))
+        {
+        }
+
+        template <typename T>
+        RenderUnit(std::unique_ptr<T>& variant, std::string tag = {})
             : RenderUnit(*variant, std::move(tag))
         {
         }

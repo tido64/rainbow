@@ -1,0 +1,32 @@
+// Place your settings in this file to overwrite default and user settings.
+{
+  "editor.rulers": [80, 100],
+  "editor.insertSpaces": true,
+  "files.exclude": {
+    "**/.DS_Store": true,
+    "**/.git": true
+  },
+  "files.encoding": "utf8",
+  "files.eol": "\n",
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+  "[json]": {
+    "editor.tabSize": 2
+  },
+  "[markdown]": {
+    "editor.rulers": [80],
+    "editor.insertSpaces": false,
+    "editor.wordWrap": "on",
+    "editor.quickSuggestions": false
+  },
+  "[typescript]": {
+    "editor.formatOnSave": true,
+    "editor.tabSize": 2
+  },
+  "json.schemas": [
+    {
+      "fileMatch": ["*.scene.json"],
+      "url": "/rainbow-scene.schema.json"
+    }
+  ]
+}

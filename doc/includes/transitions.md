@@ -1,4 +1,4 @@
-# Transitions
+# Transitions (C++ only)
 
 Transitions provide a simple way to animate properties of a sprite such as
 opacity or position.
@@ -200,7 +200,7 @@ Output (refresh if you missed the animation):
 
 ![Fade-In Animation](transitions_output.gif)
 
-## Caveats and Known Issues
+## Caveats and Known Limitations
 
 Transitions are based on timers and will therefore run regardless of the enabled
 state of the component's render unit. The `Timer` object returned by the

@@ -5,13 +5,6 @@
 #ifndef HEIMDALL_GATEKEEPER_H_
 #define HEIMDALL_GATEKEEPER_H_
 
-#if USE_LUA_SCRIPT
-#   include <functional>
-#   include <queue>
-#   include "Heimdall/ChangeMonitor.h"
-#   include "Threading/Synchronized.h"
-#endif  // USE_LUA_SCRIPT
-
 #include "Director.h"
 #include "Heimdall/Overlay.h"
 #include "Heimdall/OverlayActivator.h"
@@ -49,10 +42,6 @@ namespace heimdall
         rainbow::Director director_;
         Overlay overlay_;
         OverlayActivator overlay_activator_;
-#if USE_LUA_SCRIPT
-        rainbow::Synchronized<std::queue<std::function<void()>>> changed_files_;
-        ChangeMonitor monitor_;
-#endif  // USE_LUA_SCRIPT
     };
 }
 

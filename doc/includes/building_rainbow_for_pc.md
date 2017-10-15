@@ -6,9 +6,7 @@ First, make sure you've installed [Git](https://git-scm.com/downloads) as that's
 what we'll be using to retrieve the source code. The following command will
 download Rainbow and all of its submodules into a folder named `rainbow`:
 
-```shell
-git clone --recursive https://bitbucket.org/tido/rainbow.git
-```
+`git clone --recursive https://bitbucket.org/tido/rainbow.git`
 
 If you're using a graphical UI for Git, make sure to checkout the submodules as
 well.
@@ -23,9 +21,9 @@ Next, we'll need to install the dependencies:
 * [OpenAL Soft](http://kcat.strangesoft.net/openal.html) (**optional:** only if you want to use OpenAL)
 * [SDL](https://libsdl.org/)
 
-If you've decided to use FMOD Studio, download the FMOD Studio API package for
-your platform. You will need to extract or install it, and copy the files into
-place. Please see the instructions for your platform below.
+If you decide to use FMOD Studio, download the FMOD Studio API package for your
+platform. You will need to extract or install it, and copy the files into place.
+Please see the instructions for your platform below.
 
 On Linux or macOS, `tools/fmod-import-tool.sh` will help you copy the files into
 place.
@@ -34,9 +32,9 @@ place.
 
 1. Use your distro's package manager to install the dependencies:
 
-|               |                                                                                     |
-|---------------|-------------------------------------------------------------------------------------|
-| Arch Linux    | `pacman -S --needed cmake gcc libvorbis mesa openal sdl2` |
+|               |                                                              |
+|---------------|--------------------------------------------------------------|
+| Arch Linux    | `pacman -S --needed cmake gcc libvorbis mesa openal sdl2`    |
 | Debian/Ubuntu | `apt-get install build-essential cmake libgl1-mesa-dev libopenal-dev libsdl2-dev libvorbis-dev` |
 
 2. **Optional:** Copy FMOD headers into `lib/FMOD/inc/`, and binaries into `lib/FMOD/lib/linux/`:
@@ -71,8 +69,8 @@ lib/FMOD/lib/linux/x86_64/libfmodstudio.so.5.14
 
 1. Download and install [Xcode](https://itunes.apple.com/app/xcode/id497799835?mt=12) from the App Store.
 2. Install the Command Line Tools Package by running `xcode-select --install` in Terminal.
-3. Install [Homebrew](http://brew.sh/) (or [MacPorts](https://www.macports.org/)).
-4. Install the rest of the dependencies: `brew install cmake libogg libvorbis pkg-config sdl2`
+3. Install [Homebrew](https://brew.sh/).
+4. Install build dependencies: `brew install cmake libogg libvorbis pkg-config sdl2`
 5. **Optional:** Copy FMOD headers into `lib/FMOD/inc/`, and binaries into `lib/FMOD/lib/mac/`:
 
 ```bash
@@ -132,21 +130,21 @@ Available features and build configurations:
 | `Debug`             | Compiles Rainbow in debug mode with little or no optimizations.     |
 | `Release`           | Compiles Rainbow in release mode with most optimizations turned on. |
 | `RelWithDebInfo`    | Similar to `Release` but with debugging symbols.                    |
-| `MinSizeRel`        | Similar to `Release` with an extra effort to make the binary small. |
+| `MinSizeRel`        | Similar to `Release` with emphasis on small binary size.            |
 
-| Feature flag      | Description                                                                   |
-|:------------------|:------------------------------------------------------------------------------|
-| `SCRIPTING`       | Scripting language: `C++` or `Lua`. This is set to Lua if omitted.            |
-| `UNIT_TESTS`      | Compiles unit tests. Only useful for engine developers.                       |
-| `USE_FMOD_STUDIO` | Replaces Rainbow's custom audio engine with FMOD Studio.                      |
-| `USE_HEIMDALL`    | Compiles in Rainbow's debug overlay and other debugging facilities.           |
-| `USE_PHYSICS`     | Compiles in Box2D and its Lua wrappers.                                       |
-| `USE_SPINE`       | Enables support for loading Spine rigs.                                       |
+| Feature flag      | Description                                                         |
+|:------------------|:--------------------------------------------------------------------|
+| `UNIT_TESTS`      | Compiles unit tests. Only useful for engine developers.             |
+| `USE_FMOD_STUDIO` | Replaces Rainbow's custom audio engine with FMOD Studio.            |
+| `USE_HEIMDALL`    | Compiles in Rainbow's debug overlay and other debugging facilities. |
+| `USE_PHYSICS`     | Compiles in Box2D.                                                  |
+| `USE_SPINE`       | Enables support for loading Spine rigs.                             |
 
 Example: Build Rainbow with physics and Spine support for game development.
 
 ```shell
 /path/to/rainbow/tools/build.sh -DCMAKE_BUILD_TYPE=Debug \
+                                -DUSE_HEIMDALL=1 \
                                 -DUSE_PHYSICS=1 \
                                 -DUSE_SPINE=1
 ```
@@ -173,15 +171,11 @@ generator on Linux, and Xcode on macOS. You can change these by prefixing
 environment variables. For instance, to use GCC and
 [Ninja](https://ninja-build.org/) in place of Clang and Makefiles:
 
-```shell
-CC=gcc CXX=g++ GENERATOR=Ninja /path/to/rainbow/tools/build.sh [option ...]
-```
+`CC=gcc CXX=g++ GENERATOR=Ninja /path/to/rainbow/tools/build.sh [option ...]`
 
 If you have problems running `build.sh`, make sure it has execution permission:
 
-```shell
-chmod +x /path/to/rainbow/tools/build.sh
-```
+`chmod +x /path/to/rainbow/tools/build.sh`
 
 ### Windows
 

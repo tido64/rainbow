@@ -3,7 +3,8 @@
   // for the documentation about the extensions.json format
   "recommendations": [
     "EditorConfig.EditorConfig",
-    "ms-vscode.cpptools",
-    "ms-vscode.csharp"
+    "eg2.tslint",
+    "esbenp.prettier-vscode",
+    "ms-vscode.cpptools"
   ]
 }

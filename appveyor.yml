@@ -21,8 +21,9 @@ build_script:
   - msbuild "%APPVEYOR_BUILD_FOLDER%-build\Rainbow.sln" /maxcpucount /verbosity:minimal /logger:"%ProgramFiles%\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 after_build:
   - mkdir "rainbow-v%APPVEYOR_BUILD_VERSION%"
-  - copy "%APPVEYOR_BUILD_FOLDER%-build\%CONFIGURATION%\rainbow.exe" "rainbow-v%APPVEYOR_BUILD_VERSION%"
   - copy "%APPVEYOR_BUILD_FOLDER%\LICENSE" "rainbow-v%APPVEYOR_BUILD_VERSION%\LICENSE.txt"
+  - copy "%APPVEYOR_BUILD_FOLDER%\js\*" "rainbow-v%APPVEYOR_BUILD_VERSION%"
+  - copy "%APPVEYOR_BUILD_FOLDER%-build\%CONFIGURATION%\rainbow.exe" "rainbow-v%APPVEYOR_BUILD_VERSION%"
   - copy "%APPVEYOR_BUILD_FOLDER%-build\openal-soft-prefix\src\openal-soft\COPYING" "rainbow-v%APPVEYOR_BUILD_VERSION%\COPYING-OPENAL.txt"
   - copy "%APPVEYOR_BUILD_FOLDER%-build\openal-soft-prefix\src\openal-soft\bin\Win32\soft_oal.dll" "rainbow-v%APPVEYOR_BUILD_VERSION%\OpenAL32.dll"
   - 7z x -o"rainbow-v%APPVEYOR_BUILD_VERSION%" "%APPVEYOR_BUILD_FOLDER%-build\sdl2-bin-prefix\src\SDL2-2.0.7-win32-x86.zip"

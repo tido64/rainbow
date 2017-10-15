@@ -93,15 +93,20 @@ namespace rainbow
 
         ScopeStack(LinearAllocator& allocator)
             : allocator_(allocator), blocks_(nullptr),
-              rewind_point_(static_cast<BlockHeader*>(allocator.end())) {}
+              rewind_point_(static_cast<BlockHeader*>(allocator.end()))
+        {
+        }
 
         ~ScopeStack() { reset(); }
 
         template <typename T, typename... Args>
         auto allocate(Args&&... args)
         {
-            return new (address_of(new_block<T>()))
-                T(std::forward<Args>(args)...);
+            auto obj =
+                new (address_of(new_block<T>())) T(std::forward<Args>(args)...);
+            if constexpr (std::is_base_of_v<RefCounted, T>)
+                allocator_.retain(obj);
+            return obj;
         }
 
         void reset()
@@ -113,8 +118,6 @@ namespace rainbow
             }
             allocator_.rewind(rewind_point_);
         }
-
-        void retain(RefCounted* ref) const { allocator_.retain(ref); }
 
     private:
         template <typename T>

@@ -316,7 +316,9 @@ TEST_F(ControllerTest, SupportsMultipleControllers)
 
             ASSERT_EQ(0u, input.buttons_down(j));
             if (controllers[j])
+            {
                 ASSERT_FALSE(controllers[j]->is_triggered(0xff));
+            }
         }
 
         input.on_controller_button_up(button(1000 + i));
@@ -369,7 +371,9 @@ TEST_F(ControllerTest, SupportsMultipleControllers)
 
             ASSERT_EQ(0u, input.buttons_down(j));
             if (controllers[j])
+            {
                 ASSERT_FALSE(controllers[j]->is_triggered(0xff));
+            }
         }
 
         input.on_controller_button_up(button(1000 + i));

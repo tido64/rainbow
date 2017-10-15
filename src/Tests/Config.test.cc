@@ -20,25 +20,37 @@ namespace
         "rainbow-test-random-path-to-avoid-existing-config-files";
 
     constexpr char kAlternateConfig[] =
-        "accelerometer = true;\n"
-        "allow_high_dpi = false;\n"
-        "msaa = 6;\n"
-        "resolution = {750,1334};\n"
-        "suspend_on_focus_lost = true;\n";
+        "{"
+        "  \"accelerometer\": true,"
+        "  \"allowHighDPI\": false,"
+        "  \"msaa\": 6,"
+        "  \"resolution\": {"
+        "    \"width\": 750,"
+        "    \"height\": 1334"
+        "  },"
+        "  \"suspendOnFocusLost\": true"
+        "}";
 
-    constexpr char kInvalidConfig[] = "@";
+    constexpr char kInvalidConfig[] = "💩";
 
     constexpr char kSparseConfig[] =
-        "allow_high_dpi = true;\n"
-        "msaa = 10;\n"
-        "suspend_on_focus_lost = false;\n";
+        "{"
+        "  \"allowHighDPI\": true,"
+        "  \"msaa\": 10,"
+        "  \"suspendOnFocusLost\": false"
+        "}";
 
     constexpr char kStandardConfig[] =
-        "accelerometer = false;\n"
-        "allow_high_dpi = true;\n"
-        "msaa = 4;\n"
-        "resolution = {1920,1080};\n"
-        "suspend_on_focus_lost = false;\n";
+        "{"
+        "  \"accelerometer\": false,"
+        "  \"allowHighDPI\": true,"
+        "  \"msaa\": 4,"
+        "  \"resolution\": {"
+        "    \"width\": 1920,"
+        "    \"height\": 1080"
+        "  },"
+        "  \"suspendOnFocusLost\": false"
+        "}";
 
     class ScopedAssetsDirectory
     {
@@ -84,7 +96,7 @@ namespace
         {
             std::error_code error;
             rainbow::filesystem::create_directories(path_, error);
-            path_ /= "config";
+            path_ /= "config.json";
             FILE* fd = fopen(path_.c_str(), "wb");
             [fd] { ASSERT_NE(nullptr, fd); }();
             fwrite(config, sizeof(*config), length, fd);
@@ -95,6 +107,10 @@ namespace
 
 TEST(ConfigTest, NoConfiguration)
 {
+    {
+        ScopedConfig clear{kInvalidConfig};
+    }
+
     ScopedAssetsDirectory test(kConfigTestPath);
     rainbow::Config config;
 

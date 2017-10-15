@@ -5,18 +5,22 @@
 #ifndef SCRIPT_NOGAME_H_
 #define SCRIPT_NOGAME_H_
 
+#include "Graphics/SpriteBatch.h"
 #include "Script/GameBase.h"
 
-class NoGame final : public rainbow::GameBase
+namespace rainbow
 {
-public:
-    NoGame(rainbow::Director& director) : rainbow::GameBase(director) {}
+    class NoGame final : public GameBase
+    {
+    public:
+        NoGame(Director& director) : GameBase(director) {}
 
-private:
-    rainbow::spritebatch_t batch_;
+    private:
+        std::unique_ptr<SpriteBatch> batch_;
 
-    void init_impl(const rainbow::Vec2i& screen) override;
-    void update_impl(uint64_t dt) override;
-};
+        void init_impl(const Vec2i& screen) override;
+        void update_impl(uint64_t dt) override;
+    };
+}
 
 #endif

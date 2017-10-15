@@ -1,0 +1,40 @@
+{
+  "$schema": "http://json-schema.org/schema#",
+  "$id": "https://tido.bitbucket.io/rainbow/rainbow-config.schema.json",
+  "title": "Config",
+  "type": "object",
+  "properties": {
+    "accelerometer": {
+      "description": "Specifies whether the accelerometer is used.",
+      "type": "boolean"
+    },
+    "allowHighDPI": {
+      "description": "Specifies whether to create windows in high DPI mode. On smartphones and tablets, this option is always set to true.",
+      "type": "boolean"
+    },
+    "msaa": {
+      "description": "Sets number of samples for multisample anti-aliasing. This feature is not available on smartphones/tablets.",
+      "type": "integer",
+      "minimum": 0
+    },
+    "resolution": {
+      "description": "Specifies the preferred screen resolution or window size. It also determines whether we are in landscape or portrait mode. On smartphones/tablets, width and height have no meaning as the whole screen will always be used.",
+      "type": "object",
+      "required": ["width", "height"],
+      "properties": {
+        "width": {
+          "type": "integer",
+          "minimum": 640
+        },
+        "height": {
+          "type": "integer",
+          "minimum": 480
+        }
+      }
+    },
+    "suspendOnFocusLost": {
+      "description": "Specifies whether to suspend when focus is lost. This parameter is ignored on smartphones/tablets.",
+      "type": "boolean"
+    }
+  }
+}

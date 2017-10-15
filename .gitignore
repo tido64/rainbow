@@ -1,16 +1,20 @@
 # Generated files
 *.aps
+*.js
+*.js.map
 *.swp
 .DS_Store
 .browse.VC.*
 .vs/
 CMakeSettings.json
 Rainbow.sublime-workspace
+node_modules/
 project.xcworkspace/
 src/compile_commands.json
 xcuserdata/
 
 # Libraries
+build/ios/lib/
 lib/**/*.cmake
 lib/**/*.txt
 lib/**/.git*
@@ -25,14 +29,3 @@ lib/**/makefile
 lib/FMOD/
 lib/dSFMT/check.sh
 lib/dSFMT/test.c
-
-# Demos
-/demos/**/*.ogg
-/demos/**/*.png
-/demos/**/Coroutine.lua
-/demos/**/Functional.lua
-/demos/**/Math.lua
-/demos/**/Prose/
-/demos/**/Timer.lua
-/demos/**/Transition.lua
-/demos/**/TransitionFunctions.lua

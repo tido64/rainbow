@@ -1,4 +1,4 @@
-# Math
+# Math (C++ only)
 
 Small collection of common mathematical functions and convenient algorithms. All
 of these functions are available under namespace `rainbow` unless otherwise
