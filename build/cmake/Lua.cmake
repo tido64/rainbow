@@ -15,5 +15,3 @@ endforeach()
 add_library(lua STATIC ${LUA_SRC})
 target_include_directories(lua PUBLIC ${LUA_INCLUDE_DIR})
 add_dependencies(rainbow lua)
-
-list(APPEND SOURCE_FILES ${LUA_SRC})

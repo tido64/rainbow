@@ -6,5 +6,3 @@ target_include_directories(
     PUBLIC ${LIBPNG_INCLUDE_DIR}
     PRIVATE ${ZLIB_INCLUDE_DIR})
 add_dependencies(rainbow png)
-
-list(APPEND SOURCE_FILES ${THIRD_PARTY}/libpng/libpng.c)

@@ -11,5 +11,3 @@ add_dependencies(rainbow nanovg)
 
 set(VECTOR_LIBRARY nanovg)
 message(STATUS "Compile with vector drawing library: NanoVG")
-
-list(APPEND SOURCE_FILES ${NANOVG_SRC})

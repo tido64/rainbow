@@ -12,5 +12,3 @@ add_dependencies(rainbow box2d)
 
 set(PHYSICS_LIBRARY box2d)
 message(STATUS "Compile with physics: Box2D")
-
-list(APPEND SOURCE_FILES ${BOX2D_SRC})

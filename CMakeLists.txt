@@ -428,7 +428,6 @@ target_include_directories(
         ${LOCAL_LIBRARY}
         ${LOCAL_LIBRARY}/nanosvg/src
         ${LOCAL_LIBRARY}/variant/include
-        ${LUA_INCLUDE_DIR}
         ${SDL2_INCLUDE_DIRS}
         ${AUDIO_INCLUDE_DIRS}
 )

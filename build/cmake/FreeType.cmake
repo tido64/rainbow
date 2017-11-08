@@ -6,5 +6,3 @@ target_include_directories(
     PUBLIC ${FREETYPE_INCLUDE_DIR}
     PRIVATE ${LOCAL_LIBRARY}/FreeType/src)
 add_dependencies(rainbow freetype)
-
-list(APPEND SOURCE_FILES ${THIRD_PARTY}/FreeType/freetype.c)
