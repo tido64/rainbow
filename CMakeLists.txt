@@ -202,33 +202,38 @@ endif()
 
 if(ANDROID)
   list(APPEND SOURCE_FILES
-       src/FileSystem/impl/File.android.h
-       src/Platform/Android/main.cpp
-       # Workaround for https://github.com/android-ndk/ndk/issues/184
-       src/Platform/Android/mulodi4.c
-       src/Platform/impl/SystemInfo.android.cpp
-       src/Platform/impl/SystemInfo.unix.cpp)
+      src/FileSystem/impl/File.android.h
+      src/Platform/Android/main.cpp
+      # Workaround for https://github.com/android-ndk/ndk/issues/184
+      src/Platform/Android/mulodi4.c
+      src/Platform/impl/SystemInfo.android.cpp
+      src/Platform/impl/SystemInfo.unix.cpp
+  )
 else()
   list(APPEND SOURCE_FILES
-       src/Platform/SDL/Context.cpp
-       src/Platform/SDL/Context.h
-       src/Platform/SDL/RainbowController.cpp
-       src/Platform/SDL/RainbowController.h
-       src/Platform/SDL/main.cpp)
+      src/Platform/SDL/Context.cpp
+      src/Platform/SDL/Context.h
+      src/Platform/SDL/RainbowController.cpp
+      src/Platform/SDL/RainbowController.h
+      src/Platform/SDL/main.cpp
+  )
   if(WIN32)
     list(APPEND SOURCE_FILES
-         src/Platform/impl/Diagnostics.win.cpp
-         src/Platform/impl/SystemInfo.win.cpp
-         tools/make.ps1
-         appveyor.yml)
+        src/Platform/impl/Diagnostics.win.cpp
+        src/Platform/impl/SystemInfo.win.cpp
+        tools/make.ps1
+        appveyor.yml
+    )
   else()
     list(APPEND SOURCE_FILES
-         src/Platform/impl/Diagnostics.unix.cpp)
+        src/Platform/impl/Diagnostics.unix.cpp
+    )
     if(APPLE)
       list(APPEND SOURCE_FILES
-           src/Graphics/Decoders/UIKit.h
-           src/Platform/impl/Diagnostics.apple.cpp
-           src/Platform/impl/SystemInfo.apple.cpp)
+          src/Graphics/Decoders/UIKit.h
+          src/Platform/impl/Diagnostics.apple.cpp
+          src/Platform/impl/SystemInfo.apple.cpp
+      )
     else()
       list(APPEND SOURCE_FILES src/Platform/impl/SystemInfo.unix.cpp)
     endif()
@@ -236,53 +241,60 @@ else()
 endif()
 
 if(UNIT_TESTS)
-  add_definitions(-DGTEST_HAS_TR1_TUPLE=0 -DGTEST_LANG_CXX11=1 -DRAINBOW_TEST)
-  set(TEST_INCLUDE_DIR ${LOCAL_LIBRARY}/googletest/googletest/include)
   set(TEST_LIBRARY googletest)
   add_library(${TEST_LIBRARY} STATIC lib/googletest/googletest/src/gtest-all.cc)
+  target_compile_definitions(
+      ${TEST_LIBRARY}
+      PUBLIC
+          GTEST_HAS_TR1_TUPLE=0
+          GTEST_LANG_CXX11=1
+          RAINBOW_TEST
+  )
   target_compile_options(${TEST_LIBRARY} PRIVATE ${CFLAG_NO_WARNINGS})
   target_include_directories(
       ${TEST_LIBRARY}
-      PUBLIC ${TEST_INCLUDE_DIR}
-      PRIVATE ${LOCAL_LIBRARY}/googletest/googletest)
+      PUBLIC ${LOCAL_LIBRARY}/googletest/googletest/include
+      PRIVATE ${LOCAL_LIBRARY}/googletest/googletest
+  )
   list(APPEND SOURCE_FILES
-       src/Tests/Audio/Mixer.test.cc
-       src/Tests/Collision/SAT.test.cc
-       src/Tests/Common/Algorithm.test.cc
-       src/Tests/Common/Chrono.test.cc
-       src/Tests/Common/Color.test.cc
-       src/Tests/Common/Data.test.cc
-       src/Tests/Common/Global.test.cc
-       src/Tests/Common/Link.test.cc
-       src/Tests/Common/Random.test.cc
-       src/Tests/Common/String.test.cc
-       src/Tests/Common/TreeNode.test.cc
-       src/Tests/Common/TypeInfo.test.cc
-       src/Tests/Config.test.cc
-       src/Tests/FileSystem/File.test.cc
-       src/Tests/FileSystem/Path.test.cc
-       src/Tests/Graphics/Animation.test.cc
-       src/Tests/Graphics/Decoders.test.cc
-       src/Tests/Graphics/RenderQueue.test.cc
-       src/Tests/Graphics/Sprite.test.cc
-       src/Tests/Graphics/SpriteBatch.test.cc
-       src/Tests/Graphics/TextureAtlas.test.cc
-       src/Tests/Input/Controller.test.cc
-       src/Tests/Input/Input.test.cc
-       src/Tests/Input/Pointer.test.cc
-       src/Tests/Input/VirtualKey.test.cc
-       src/Tests/Lua/LuaHelper.test.cc
-       src/Tests/Math/Geometry.test.cc
-       src/Tests/Math/Vec2.test.cc
-       src/Tests/Math/Vec3.test.cc
-       src/Tests/Memory/Pool.test.cc
-       src/Tests/Memory/ScopeStack.test.cc
-       src/Tests/Memory/SharedPtr.test.cc
-       src/Tests/Memory/StableArray.test.cc
-       src/Tests/TestHelpers.h
-       src/Tests/Tests.cpp
-       src/Tests/Tests.h
-       src/Tests/TextAlignment.test.cc)
+      src/Tests/Audio/Mixer.test.cc
+      src/Tests/Collision/SAT.test.cc
+      src/Tests/Common/Algorithm.test.cc
+      src/Tests/Common/Chrono.test.cc
+      src/Tests/Common/Color.test.cc
+      src/Tests/Common/Data.test.cc
+      src/Tests/Common/Global.test.cc
+      src/Tests/Common/Link.test.cc
+      src/Tests/Common/Random.test.cc
+      src/Tests/Common/String.test.cc
+      src/Tests/Common/TreeNode.test.cc
+      src/Tests/Common/TypeInfo.test.cc
+      src/Tests/Config.test.cc
+      src/Tests/FileSystem/File.test.cc
+      src/Tests/FileSystem/Path.test.cc
+      src/Tests/Graphics/Animation.test.cc
+      src/Tests/Graphics/Decoders.test.cc
+      src/Tests/Graphics/RenderQueue.test.cc
+      src/Tests/Graphics/Sprite.test.cc
+      src/Tests/Graphics/SpriteBatch.test.cc
+      src/Tests/Graphics/TextureAtlas.test.cc
+      src/Tests/Input/Controller.test.cc
+      src/Tests/Input/Input.test.cc
+      src/Tests/Input/Pointer.test.cc
+      src/Tests/Input/VirtualKey.test.cc
+      src/Tests/Lua/LuaHelper.test.cc
+      src/Tests/Math/Geometry.test.cc
+      src/Tests/Math/Vec2.test.cc
+      src/Tests/Math/Vec3.test.cc
+      src/Tests/Memory/Pool.test.cc
+      src/Tests/Memory/ScopeStack.test.cc
+      src/Tests/Memory/SharedPtr.test.cc
+      src/Tests/Memory/StableArray.test.cc
+      src/Tests/TestHelpers.h
+      src/Tests/Tests.cpp
+      src/Tests/Tests.h
+      src/Tests/TextAlignment.test.cc
+  )
 endif()
 
 if(USE_FMOD_STUDIO)
@@ -291,35 +303,38 @@ if(USE_FMOD_STUDIO)
 else()
   add_definitions(-DRAINBOW_AUDIO_AL=1)
   list(APPEND SOURCE_FILES
-       src/Audio/AL/Channel.h
-       src/Audio/AL/Mixer.cpp
-       src/Audio/AL/Mixer.h
-       src/Audio/AL/Sound.h
-       src/Audio/AudioFile.cpp
-       src/Audio/AudioFile.h
-       src/Audio/Codecs/OggVorbisAudioFile.cpp
-       src/Audio/Codecs/OggVorbisAudioFile.h)
+      src/Audio/AL/Channel.h
+      src/Audio/AL/Mixer.cpp
+      src/Audio/AL/Mixer.h
+      src/Audio/AL/Sound.h
+      src/Audio/AudioFile.cpp
+      src/Audio/AudioFile.h
+      src/Audio/Codecs/OggVorbisAudioFile.cpp
+      src/Audio/Codecs/OggVorbisAudioFile.h
+  )
   if(APPLE)
     list(APPEND SOURCE_FILES
-         src/Audio/Codecs/AppleAudioFile.cpp
-         src/Audio/Codecs/AppleAudioFile.h)
+        src/Audio/Codecs/AppleAudioFile.cpp
+        src/Audio/Codecs/AppleAudioFile.h
+    )
   endif()
 endif()
 
 if(USE_HEIMDALL)
   add_definitions(-DUSE_HEIMDALL)
   list(APPEND SOURCE_FILES
-       src/Heimdall/Button.h
-       src/Heimdall/ChangeMonitor.h
-       src/Heimdall/Gatekeeper.cpp
-       src/Heimdall/Gatekeeper.h
-       src/Heimdall/Overlay.cpp
-       src/Heimdall/Overlay.h
-       src/Heimdall/OverlayActivator.cpp
-       src/Heimdall/OverlayActivator.h
-       src/ThirdParty/ImGui/imconfig.h
-       src/ThirdParty/ImGui/ImGuiHelper.cpp
-       src/ThirdParty/ImGui/ImGuiHelper.h)
+      src/Heimdall/Button.h
+      src/Heimdall/ChangeMonitor.h
+      src/Heimdall/Gatekeeper.cpp
+      src/Heimdall/Gatekeeper.h
+      src/Heimdall/Overlay.cpp
+      src/Heimdall/Overlay.h
+      src/Heimdall/OverlayActivator.cpp
+      src/Heimdall/OverlayActivator.h
+      src/ThirdParty/ImGui/imconfig.h
+      src/ThirdParty/ImGui/ImGuiHelper.cpp
+      src/ThirdParty/ImGui/ImGuiHelper.h
+  )
   if(APPLE)
     list(APPEND SOURCE_FILES src/Heimdall/impl/ChangeMonitor.mac.cpp)
   elseif(WIN32)
@@ -331,39 +346,42 @@ endif()
 
 if(USE_PHYSICS)
   list(APPEND SOURCE_FILES
-       src/ThirdParty/Box2D/DebugDraw.cpp
-       src/ThirdParty/Box2D/DebugDraw.h
-       src/ThirdParty/Box2D/StableWorld.cpp
-       src/ThirdParty/Box2D/StableWorld.h)
+      src/ThirdParty/Box2D/DebugDraw.cpp
+      src/ThirdParty/Box2D/DebugDraw.h
+      src/ThirdParty/Box2D/StableWorld.cpp
+      src/ThirdParty/Box2D/StableWorld.h
+  )
   if(USE_LUA_SCRIPT)
     list(APPEND SOURCE_FILES
-         src/ThirdParty/Box2D/Lua/Box2D.cpp
-         src/ThirdParty/Box2D/Lua/Box2D.h
-         src/ThirdParty/Box2D/Lua/Dynamics/Body.cpp
-         src/ThirdParty/Box2D/Lua/Dynamics/Body.h
-         src/ThirdParty/Box2D/Lua/Dynamics/Contacts/Contact.cpp
-         src/ThirdParty/Box2D/Lua/Dynamics/Contacts/Contact.h
-         src/ThirdParty/Box2D/Lua/Dynamics/Fixture.cpp
-         src/ThirdParty/Box2D/Lua/Dynamics/Fixture.h
-         src/ThirdParty/Box2D/Lua/Dynamics/World.cpp
-         src/ThirdParty/Box2D/Lua/Dynamics/World.h
-         src/ThirdParty/Box2D/Lua/Collision/Shapes/CircleShape.cpp
-         src/ThirdParty/Box2D/Lua/Collision/Shapes/CircleShape.h
-         src/ThirdParty/Box2D/Lua/Collision/Shapes/EdgeShape.cpp
-         src/ThirdParty/Box2D/Lua/Collision/Shapes/EdgeShape.h
-         src/ThirdParty/Box2D/Lua/Collision/Shapes/PolygonShape.cpp
-         src/ThirdParty/Box2D/Lua/Collision/Shapes/PolygonShape.h
-         src/ThirdParty/Box2D/Lua/Collision/Shapes/Shape.cpp
-         src/ThirdParty/Box2D/Lua/Collision/Shapes/Shape.h
-         src/ThirdParty/Box2D/Lua/Helper.cpp
-         src/ThirdParty/Box2D/Lua/Helper.h)
+        src/ThirdParty/Box2D/Lua/Box2D.cpp
+        src/ThirdParty/Box2D/Lua/Box2D.h
+        src/ThirdParty/Box2D/Lua/Dynamics/Body.cpp
+        src/ThirdParty/Box2D/Lua/Dynamics/Body.h
+        src/ThirdParty/Box2D/Lua/Dynamics/Contacts/Contact.cpp
+        src/ThirdParty/Box2D/Lua/Dynamics/Contacts/Contact.h
+        src/ThirdParty/Box2D/Lua/Dynamics/Fixture.cpp
+        src/ThirdParty/Box2D/Lua/Dynamics/Fixture.h
+        src/ThirdParty/Box2D/Lua/Dynamics/World.cpp
+        src/ThirdParty/Box2D/Lua/Dynamics/World.h
+        src/ThirdParty/Box2D/Lua/Collision/Shapes/CircleShape.cpp
+        src/ThirdParty/Box2D/Lua/Collision/Shapes/CircleShape.h
+        src/ThirdParty/Box2D/Lua/Collision/Shapes/EdgeShape.cpp
+        src/ThirdParty/Box2D/Lua/Collision/Shapes/EdgeShape.h
+        src/ThirdParty/Box2D/Lua/Collision/Shapes/PolygonShape.cpp
+        src/ThirdParty/Box2D/Lua/Collision/Shapes/PolygonShape.h
+        src/ThirdParty/Box2D/Lua/Collision/Shapes/Shape.cpp
+        src/ThirdParty/Box2D/Lua/Collision/Shapes/Shape.h
+        src/ThirdParty/Box2D/Lua/Helper.cpp
+        src/ThirdParty/Box2D/Lua/Helper.h
+    )
   endif()
 endif()
 
 if(USE_SPINE)
   list(APPEND SOURCE_FILES
-       src/ThirdParty/Spine/spine-rainbow.cpp
-       src/ThirdParty/Spine/spine-rainbow.h)
+      src/ThirdParty/Spine/spine-rainbow.cpp
+      src/ThirdParty/Spine/spine-rainbow.h
+  )
 endif()
 
 foreach(src IN LISTS SOURCE_FILES)
@@ -392,8 +410,9 @@ if(MSVC OR XCODE)
     endif()
   endforeach()
   if(UNIT_TESTS)
-    set_target_properties(
-        rainbow PROPERTIES XCODE_ATTRIBUTE_GCC_INSTRUMENT_PROGRAM_FLOW_ARCS "YES")
+    set_target_properties(rainbow PROPERTIES
+        XCODE_ATTRIBUTE_GCC_INSTRUMENT_PROGRAM_FLOW_ARCS "YES"
+    )
   endif()
 endif()
 

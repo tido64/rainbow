@@ -11,13 +11,14 @@ foreach(file ${ZLIB_SRCZ} ${ZLIB_SRCG})
   list(APPEND ZLIB_SRC ${ZLIB_INCLUDE_DIR}/${file})
 endforeach()
 
-add_definitions(-DHAVE_STDARG_H)
-if(NOT WIN32)
-  add_definitions(-DHAVE_UNISTD_H)
-endif()
-
 set(ZLIB_LIBRARY z)
 add_library(${ZLIB_LIBRARY} STATIC ${ZLIB_SRC})
+target_compile_definitions(
+    ${ZLIB_LIBRARY}
+    PUBLIC
+        HAVE_STDARG_H
+        $<$<NOT:$<C_COMPILER_ID:MSVC>>:HAVE_UNISTD_H>
+)
 target_include_directories(${ZLIB_LIBRARY} PUBLIC ${ZLIB_INCLUDE_DIR})
 add_dependencies(rainbow ${ZLIB_LIBRARY})
 

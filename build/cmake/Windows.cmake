@@ -2,10 +2,11 @@ if(WIN32)
   set(CFLAG_NO_WARNINGS /W0)
   set(CMAKE_FIND_LIBRARY_SUFFIXES ".a" ".lib" ".dll.a" ".dll")
   list(APPEND RESOURCE_FILES
-       .editorconfig
-       build/cmake/Windows.cmake
-       build/windows/Rainbow.natvis
-       build/windows/Rainbow.rc)
+      .editorconfig
+      build/cmake/Windows.cmake
+      build/windows/Rainbow.natvis
+      build/windows/Rainbow.rc
+  )
   add_definitions(
       -D_CRT_SECURE_NO_WARNINGS=1
       -D_SCL_SECURE_NO_WARNINGS=1
@@ -51,7 +52,8 @@ if(WIN32)
       -DNOWINOFFSETS=1       # GWL_*, GCL_*, associated routines
       -DNOWINSTYLES=1        # WS_*, CS_*, ES_*, LBS_*, SBS_*, CBS_*
       -DVC_EXTRALEAN=1
-      -DWIN32_LEAN_AND_MEAN=1)
+      -DWIN32_LEAN_AND_MEAN=1
+  )
   if(MSVC)
     # Warning C4065: switch statement contains 'default' but no 'case' labels
     # Warning C4244: 'argument': conversion from 'type1' to 'type2', possible loss of data
@@ -84,6 +86,7 @@ if(WIN32)
         -D__MSVCRT_VERSION__=0x800
         -D_WIN32_WINNT=0x0600
         -DNTDDI_VERSION=0x06000000
-        -DWINVER=0x0600)
+        -DWINVER=0x0600
+    )
   endif()
 endif()
