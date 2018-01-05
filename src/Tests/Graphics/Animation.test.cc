@@ -53,9 +53,9 @@ namespace
                 atlas_->add_region(16, 16, 16, 16),
                 atlas_->add_region(32, 32, 16, 16),
                 atlas_->add_region(48, 48, 16, 16),
-                Animation::kAnimationEnd});
+                Animation::Frame::end()});
             batch_.set_texture(atlas_);
-            sprite_->set_texture(frames[0]);
+            sprite_->set_texture(static_cast<uint32_t>(frames[0]));
             update();
             animation_.set_frames(std::move(frames));
             for (size_t i = 0; i < 4; ++i)
@@ -197,7 +197,7 @@ TEST_F(AnimationTest, ChangesFrameRate)
 
 TEST_F(AnimationTest, ResetsAnimationFrames)
 {
-    const Animation::Frame kAnimationFrames[3]{1, 0, Animation::kAnimationEnd};
+    Animation::Frame kAnimationFrames[3]{1, 0, Animation::Frame::end()};
 
     animation_.start();
 

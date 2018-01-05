@@ -46,7 +46,7 @@ namespace rainbow
         /// <param name="name">Name of the animation.</param>
         /// <param name="frames">
         ///   Array of texture ids to be used as frames, terminated with
-        ///   <see cref="Animation::kAnimationEnd"/>. Caller must make sure the
+        ///   <see cref="Animation::Frame::end()"/>. Caller must make sure the
         ///   array outlives the component.
         /// </param>
         /// <param name="frame_rate">Frame rate in frames per second.</param>
@@ -58,7 +58,7 @@ namespace rainbow
         ///   Optional. Callback for start, end, and complete (loop) events.
         /// </param>
         void add(int name,
-                 const Animation::Frame* frames,
+                 Animation::Frame* frames,
                  uint32_t frame_rate,
                  int delay = 0,
                  Animation::Callback callback = nullptr)
@@ -82,7 +82,7 @@ namespace rainbow
         {
             uint32_t frame_rate;
             int delay;
-            const Animation::Frame* frames;
+            Animation::Frame* frames;
             Animation::Callback callback;
         };
 

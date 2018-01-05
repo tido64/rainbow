@@ -84,12 +84,12 @@ void Animation::set_current_frame()
     if (!frames_ || !sprite_)
         return;
 
-    sprite_->set_texture(frames_[frame_]);
+    sprite_->set_texture(static_cast<uint32_t>(frames_[frame_]));
 }
 
 void Animation::tick()
 {
-    if (frames_[frame_ + 1] == kAnimationEnd)
+    if (frames_[frame_ + 1] == Frame::end())
     {
         if (delay_ < 0)
         {
@@ -116,5 +116,5 @@ void Animation::tick()
         if (callback_)
             callback_(this, AnimationEvent::Frame);
     }
-    sprite_->set_texture(frames_[frame_]);
+    sprite_->set_texture(static_cast<uint32_t>(frames_[frame_]));
 }

@@ -44,7 +44,7 @@ auto create_animation(lua_State* L,
         frames[i] = lua_tointeger(L, -1);
     }
     lua_settop(L, table);
-    frames[num_frames] = Animation::kAnimationEnd;
+    frames[num_frames] = Animation::Frame::end();
 
     unsigned int fps = 0;
     if (!has_key(L, kKeyFps))
@@ -62,13 +62,8 @@ auto create_animation(lua_State* L,
         delay = lua_tointeger(L, -1);
     }
 
-    auto animation = stack.allocate<Animation>(
-        sprite,
-        Animation::Frames(
-            // The cast is necessary for Visual Studio 2013.
-            static_cast<const Animation::Frame*>(frames.release())),
-        fps,
-        delay);
+    auto animation =
+        stack.allocate<Animation>(sprite, std::move(frames), fps, delay);
     render_queue.emplace_back(*animation, table_name(L));
     const auto id = static_cast<uint32_t>(render_queue.size() - 1);
     return {Prose::AssetType::Animation, animation, id};

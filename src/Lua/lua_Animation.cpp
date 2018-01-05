@@ -26,10 +26,8 @@ namespace
                             return lua_tointeger(L, -1);
                         });
         lua_pop(L, i);
-        frames[count] = rainbow::Animation::kAnimationEnd;
-        return rainbow::Animation::Frames(
-            // The cast is necessary for Visual Studio 2013.
-            static_cast<const rainbow::Animation::Frame*>(frames.release()));
+        frames[count] = rainbow::Animation::Frame::end();
+        return frames;
     }
 }
 

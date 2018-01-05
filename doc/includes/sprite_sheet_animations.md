@@ -19,7 +19,7 @@ function rainbow.animation(sprite, frames, fps, delay = 0)  --> animation
 ```
 
 `frames` is an array of texture ids that are played back in succession. In C++,
-the array must be terminated with `Animation::kAnimationEnd`. The playback rate
+the array must be terminated with `Animation::Frame::end()`. The playback rate
 is determined by frames per second, or `fps`.
 
 By default, an animation always loops without any delays between each cycle.
@@ -60,7 +60,7 @@ unsigned int  current_frame  () const;
 function animation:current_frame  ()  --> int
 ```
 
-Returns the currently displayed frame; `Animation::kAnimationEnd` (-1) if none.
+Returns the currently displayed frame; `Animation::Frame::end()` (-1) if none.
 
 ```c++
 unsigned int  frame_rate  () const;
@@ -207,7 +207,7 @@ In this example, we set up a walking animation.
 namespace
 {
     constexpr rainbow::Animation::Frame kAnimationFrames[]{
-        0, 1, 2, 3, 4, 5, rainbow::Animation::kAnimationEnd};
+        0, 1, 2, 3, 4, 5, rainbow::Animation::Frame::end()};
 
     constexpr int kTextureRegions[]{
         400, 724, 104, 149,

@@ -20,18 +20,38 @@ namespace rainbow
     class Animation : private NonCopyable<Animation>
     {
     public:
-        using Callback = std::function<void(Animation*, AnimationEvent)>;
-        using Frame = unsigned int;
-        using Frames = std::unique_ptr<const Frame[]>;
+        class Frame
+        {
+        public:
+            static constexpr auto end()
+            {
+                return std::numeric_limits<uint32_t>::max();
+            }
 
-        static constexpr Frame kAnimationEnd =
-            std::numeric_limits<Frame>::max();
+            constexpr Frame() : frame_(end()) {}
+            constexpr Frame(uint32_t frame) : frame_(frame) {}
+
+            auto operator=(uint32_t frame) { return frame_ = frame; }
+
+            constexpr explicit operator uint32_t() const { return frame_; }
+
+            friend constexpr auto operator==(Frame lhs, uint32_t rhs)
+            {
+                return lhs.frame_ == rhs;
+            }
+
+        private:
+            uint32_t frame_;
+        };
+
+        using Callback = std::function<void(Animation*, AnimationEvent)>;
+        using Frames = std::unique_ptr<Frame[]>;
 
         /// <summary>Constructs a sprite animation.</summary>
         /// <param name="sprite">The sprite to animate.</param>
         /// <param name="frames">
         ///   Array of texture ids to be used as frames, terminated with
-        ///   <c>kAnimationEnd</c>.
+        ///   <c>Frame::end()</c>.
         /// </param>
         /// <param name="fps">Frames per second.</param>
         /// <param name="delay">
@@ -73,7 +93,7 @@ namespace rainbow
         /// <remarks>This method takes ownership of the array.</remarks>
         /// <param name="frames">
         ///   Array of texture ids to be used as frames, terminated with
-        ///   <c>kAnimationEnd</c>.
+        ///   <c>Frame::end()</c>.
         /// </param>
         void set_frames(Frames frames);
 
@@ -105,14 +125,36 @@ namespace rainbow
 
     private:
         bool stopped_;
-        unsigned int accumulated_;  ///< Accumulated monotonic time.
-        unsigned int interval_;     ///< Time till a tick.
-        unsigned int frame_;        ///< Current frame.
-        Frames frames_;             ///< Array of texture ids to be used as frames, terminated with <c>kAnimationEnd</c>.
-        SpriteRef sprite_;          ///< The sprite to animate.
-        int delay_;                 ///< Number of frames to delay before the animation loops. Negative numbers disable looping.
-        int idled_;                 ///< Number of frames idled.
-        Callback callback_;         ///< Event callback.
+
+        /// <summary>Accumulated monotonic time.</summary>
+        unsigned int accumulated_;
+
+        /// <summary>Time till a tick.</summary>
+        unsigned int interval_;
+
+        /// <summary>Current frame.</summary>
+        unsigned int frame_;
+
+        /// <summary>
+        ///   Array of texture ids to be used as frames, terminated with
+        ///   <c>Frame::end()</c>.
+        /// </summary>
+        Frames frames_;
+
+        /// <summary>The sprite to animate.</summary>
+        SpriteRef sprite_;
+
+        /// <summary>
+        ///   Number of frames to delay before the animation loops. Negative
+        ///   numbers disable looping.
+        /// </summary>
+        int delay_;
+
+        /// <summary>Number of frames idled.</summary>
+        int idled_;
+
+        /// <summary>Event callback.</summary>
+        Callback callback_;
 
         void set_current_frame();
 
