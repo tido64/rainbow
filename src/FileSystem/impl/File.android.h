@@ -5,10 +5,11 @@
 #ifndef FILESYSTEM_IMPL_FILE_ANDROID_H_
 #define FILESYSTEM_IMPL_FILE_ANDROID_H_
 
+#include <variant>
+
 #include <android/native_activity.h>
 
 #include "Common/String.h"
-#include "Common/Variant.h"
 #include "FileSystem/File.h"
 #include "FileSystem/FileSystem.h"
 
@@ -20,7 +21,7 @@ extern ANativeActivity* g_native_activity;
 
 namespace rainbow { namespace android
 {
-    using FileHandle = variant<std::nullptr_t, AAsset*, FILE*>;
+    using FileHandle = std::variant<std::nullptr_t, AAsset*, FILE*>;
 
     class File
     {
@@ -32,6 +33,9 @@ namespace rainbow { namespace android
 
             auto handle = AAssetManager_open(
                 g_native_activity->assetManager, path, AASSET_MODE_UNKNOWN);
+            if (handle == nullptr)
+                return false;
+
             file.set_handle(handle);
             return true;
         }
@@ -48,12 +52,12 @@ namespace rainbow { namespace android
             }
         }
 
-        auto handle() const -> FILE* { return get<FILE*>(handle_); }
+        auto handle() const -> FILE* { return std::get<FILE*>(handle_); }
 
         template <typename T>
         void set_handle(T stream)
         {
-            R_ASSERT(holds_alternative<nullptr_t>(handle_),
+            R_ASSERT(std::holds_alternative<std::nullptr_t>(handle_),
                      "Should only be set only once");
 
             handle_ = stream;
@@ -61,36 +65,37 @@ namespace rainbow { namespace android
 
         auto is_platform_handle() const
         {
-            return holds_alternative<AAsset*>(handle_);
+            return std::holds_alternative<AAsset*>(handle_);
         }
 
         auto size() const -> size_t
         {
-            return AAsset_getLength64(get<AAsset*>(handle_));
+            return AAsset_getLength64(std::get<AAsset*>(handle_));
         }
 
         void close()
         {
-            AAsset_close(get<AAsset*>(handle_));
+            AAsset_close(std::get<AAsset*>(handle_));
             handle_ = nullptr;
         }
 
         auto read(void* dst, size_t size) const -> size_t
         {
-            return std::max(AAsset_read(get<AAsset*>(handle_), dst, size), 0);
+            auto handle = std::get<AAsset*>(handle_);
+            return std::max(AAsset_read(handle, dst, size), 0);
         }
 
         bool seek(int64_t offset, SeekOrigin origin) const
         {
             const int whence = detail::seek_origin(origin);
-            return AAsset_seek64(get<AAsset*>(handle_), offset, whence) >= 0;
+            auto handle = std::get<AAsset*>(handle_);
+            return AAsset_seek64(handle, offset, whence) >= 0;
         }
 
         explicit operator bool() const
         {
-            return handle_ != nullptr &&
-                   handle_ != static_cast<AAsset*>(nullptr) &&
-                   handle_ != static_cast<FILE*>(nullptr);
+            return std::visit(
+                [](auto&& handle) { return handle != nullptr; }, handle_);
         }
 
     private:

@@ -28,7 +28,7 @@ Install the dependencies:
 * [CMake](https://cmake.org/)
 * [FMOD](https://www.fmod.org/)
 
-Once installed:
+Once installed, create a Gradle project:
 
 ```bash
 mkdir out
@@ -36,8 +36,8 @@ cd out
 /path/to/rainbow/tools/build.sh android [options]
 ```
 
-The build script will create a debuggable and installable APK. For a list of
-options, type `build.sh help` or see [Compiling Rainbow](#compiling-rainbow).
+Next, import the Gradle project in Android Studio. For a list of options, type
+`build.sh help` or see [Compiling Rainbow](#compiling-rainbow).
 
 ### Build for iOS
 

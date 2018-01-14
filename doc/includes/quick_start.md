@@ -7,15 +7,8 @@ following tutorials will assume that you've already built Rainbow.
 
 ## Android
 
-1. In your Android project folder, create a directory named `assets`.
-2. Copy the contents of `js` into this folder.
-
-Build Rainbow again so assets get bundled with the APK. Connect your device and
-install it:
-
-`adb install -r bin/Rainbow-debug.apk`
-
-Start the app on your device.
+1. Import the Gradle project in Android Studio.
+2. Run the app on your device or emulator.
 
 ## iOS
 

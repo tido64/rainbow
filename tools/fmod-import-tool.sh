@@ -33,22 +33,16 @@ cp -v "$SRC/studio/inc/fmod_studio_common.h" inc/
 
 # Android
 if [ -d "$SRC/lowlevel/lib/armeabi-v7a" ]; then
-  if [ -d "$SRC/lowlevel/lib/armeabi" ]; then
-    mkdir -p lib/android/armeabi
-    cp -v "$SRC/lowlevel/lib/armeabi/libfmod.so" lib/android/armeabi/
-    cp -v "$SRC/studio/lib/armeabi/libfmodstudio.so" lib/android/armeabi/
-  fi
-  mkdir -p lib/android/armeabi-v7a
-  cp -v "$SRC/lowlevel/lib/armeabi-v7a/libfmod.so" lib/android/armeabi-v7a/
-  cp -v "$SRC/studio/lib/armeabi-v7a/libfmodstudio.so" lib/android/armeabi-v7a/
+  for arch in "arm64-v8a" "armeabi" "armeabi-v7a" "x86"; do
+    if [ -d "$SRC/lowlevel/lib/$arch" ]; then
+      mkdir -p lib/android/$arch
+      cp -v "$SRC/lowlevel/lib/$arch/libfmod.so" lib/android/$arch/
+      cp -v "$SRC/studio/lib/$arch/libfmodstudio.so" lib/android/$arch/
+    fi
+  done
   if [ -f "$SRC/lowlevel/lib/fmod.jar" ]; then
     mkdir -p lib/android
     cp -v "$SRC/lowlevel/lib/fmod.jar" lib/android/
-  fi
-  if [ -d "$SRC/lowlevel/lib/x86" ]; then
-    mkdir -p lib/android/x86
-    cp -v "$SRC/lowlevel/lib/x86/libfmod.so" lib/android/x86/
-    cp -v "$SRC/studio/lib/x86/libfmodstudio.so" lib/android/x86/
   fi
 fi
 

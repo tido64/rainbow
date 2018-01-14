@@ -5,11 +5,11 @@
 
 APP_NAME=${APP_NAME:-Rainbow}
 APP_ID=com.bifrostentertainment.rainbow
-BUILD_TOOLS_VERSION=${BUILD_TOOLS_VERSION:-25.0.3}
-GRADLE_ANDROID_PLUGIN_VERSION=${GRADLE_ANDROID_PLUGIN_VERSION:-2.3.2}
-GRADLE_VERSION=${GRADLE_VERSION:-3.5}
+BUILD_TOOLS_VERSION=${BUILD_TOOLS_VERSION:-27.0.3}
+GRADLE_ANDROID_PLUGIN_VERSION=${GRADLE_ANDROID_PLUGIN_VERSION:-3.0.1}
+GRADLE_VERSION=${GRADLE_VERSION:-4.4.1}
 MIN_SDK_VERSION=${MIN_SDK_VERSION:-19}
-TARGET_SDK_VERSION=${TARGET_SDK_VERSION:-25}
+TARGET_SDK_VERSION=${TARGET_SDK_VERSION:-26}
 
 APP_MODULE=app
 PROJECT=$(cd -P "$(dirname $0)/.." && pwd)
@@ -20,60 +20,22 @@ tools/shaders-gen.py
 popd > /dev/null
 
 echo -n "Removing stale files..."
-rm -fr *.iml .DS_Store .gradle .idea $APP_MODULE build build.gradle gradle gradlew gradlew.bat local.properties settings.gradle src
+rm -fr *.iml .DS_Store .gradle .idea $APP_MODULE build build.gradle gradle local.properties log.txt settings.gradle
 echo " done"
 
 echo -n "Generating project files..."
-android --silent create project \
-        --name "$APP_NAME" \
-        --activity "RainbowActivity" \
-        --package $APP_ID \
-        --gradle-version $GRADLE_ANDROID_PLUGIN_VERSION \
-        --target android-$TARGET_SDK_VERSION \
-        --gradle \
-        --path . \
-    || exit 1
+mkdir -p $APP_MODULE/libs
+mkdir -p $APP_MODULE/src/main/assets
+mkdir -p $APP_MODULE/src/main/java/${APP_ID//./\/}
+mkdir -p $APP_MODULE/src/main/res/values
+mkdir -p gradle/wrapper
 
-# Set Gradle Wrapper version
-sed -e "s/gradle-[0-9]*\.[0-9]*/gradle-$GRADLE_VERSION/" -i '' gradle/wrapper/gradle-wrapper.properties
-sed -e 's/http\\/https\\/' -i '' gradle/wrapper/gradle-wrapper.properties
-
-# Add ndk.dir to local.properties
-echo $(sed -e '$!d' -e 's/sdk.dir/ndk.dir/' local.properties)/ndk-bundle >> local.properties
-
-# Configure project
-cat > build.gradle << BUILD_GRADLE
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
-
-buildscript {
-    repositories {
-        jcenter()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:$GRADLE_ANDROID_PLUGIN_VERSION'
-
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
-    }
-}
-
-allprojects {
-    repositories {
-        jcenter()
-    }
-}
-
-task clean(type: Delete) {
-    delete rootProject.buildDir
-}
-BUILD_GRADLE
-
-ARGUMENTS=""
+CMAKE_ARGUMENTS=""
 for arg in $@; do
-  ARGUMENTS+=", '$arg'"
+  CMAKE_ARGUMENTS+=$',\n                          '
+  CMAKE_ARGUMENTS+="'$arg'"
 done
 
-mkdir $APP_MODULE
 cat > $APP_MODULE/build.gradle << APP_BUILD_GRADLE
 apply plugin: 'com.android.application'
 
@@ -88,11 +50,12 @@ android {
         versionName '1.0'
         externalNativeBuild {
             cmake {
-                arguments '-DANDROID_ARM_NEON=TRUE', '-DANDROID_STL=c++_shared'$ARGUMENTS
+                arguments '-DANDROID_ARM_NEON=TRUE',
+                          '-DANDROID_STL=c++_shared'$CMAKE_ARGUMENTS
             }
         }
         ndk {
-            abiFilters 'armeabi-v7a'
+            abiFilters 'arm64-v8a'
         }
     }
     buildTypes {
@@ -121,39 +84,22 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
 }
 APP_BUILD_GRADLE
 
-echo "include ':$APP_MODULE'" > settings.gradle
-echo " done"
-
-echo -n "Gathering source files..."
-mkdir src/main/assets
-mkdir src/main/cpp
-
-# Replace placeholder RainbowActivity with real implementation
-MODULE_PATH=${APP_ID//./\/}
-cp $PROJECT/src/Platform/Android/RainbowActivity.java src/main/java/$MODULE_PATH/
-
-# Link third-party libraries
-APP_MODULE_LIBS=$APP_MODULE/libs
-mkdir -p $APP_MODULE_LIBS
-ln -s $PROJECT/lib/FMOD/lib/android/fmod.jar $APP_MODULE_LIBS/
-echo " done"
-
-echo -n "Generating $APP_MODULE/src/main/AndroidManifest.xml..."
-cat > src/main/AndroidManifest.xml << ANDROIDMANIFEST_XML
+cat > $APP_MODULE/src/main/AndroidManifest.xml << ANDROIDMANIFEST_XML
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.bifrostentertainment.rainbow">
+          package="$APP_ID">
   <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
   <!-- uses-permission android:name="android.permission.RECORD_AUDIO" / -->
-  <uses-feature android:name="android.hardware.screen.portrait"
-                android:glEsVersion="0x00020000" />
+  <uses-feature android:glEsVersion="0x00020000" />
+  <uses-feature android:name="android.hardware.screen.portrait" />
   <application android:allowBackup="true"
-               android:icon="@drawable/ic_launcher"
+               android:icon="@mipmap/ic_launcher"
                android:label="@string/app_name"
+               android:roundIcon="@mipmap/ic_launcher_round"
                android:theme="@android:style/Theme.DeviceDefault.NoActionBar.Fullscreen">
     <activity android:configChanges="orientation|screenSize"
               android:label="@string/app_name"
@@ -169,12 +115,66 @@ cat > src/main/AndroidManifest.xml << ANDROIDMANIFEST_XML
   </application>
 </manifest>
 ANDROIDMANIFEST_XML
+
+cat > build.gradle << BUILD_GRADLE
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+buildscript {
+    repositories {
+        google()
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:$GRADLE_ANDROID_PLUGIN_VERSION'
+
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        jcenter()
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
+BUILD_GRADLE
+
+cat > gradle/wrapper/gradle-wrapper.properties << GRADLE_WRAPPER
+# $(date)
+distributionBase=GRADLE_USER_HOME
+distributionPath=wrapper/dists
+zipStoreBase=GRADLE_USER_HOME
+zipStorePath=wrapper/dists
+distributionUrl=https\://services.gradle.org/distributions/gradle-$GRADLE_VERSION-all.zip
+GRADLE_WRAPPER
+
+echo "include ':$APP_MODULE'" > settings.gradle
 echo " done"
 
-echo -n "Removing unused resources..."
-rm src/main/res/layout/main.xml
-rmdir src/main/res/layout
-mv src $APP_MODULE/
+echo -n "Gathering source files..."
+
+# Link third-party libraries
+ln -s $PROJECT/lib/FMOD/lib/android/fmod.jar $APP_MODULE/libs/
+
+# Assets
+cp $PROJECT/js/*.{js,js.map,png,ttf} $APP_MODULE/src/main/assets/
+
+# Copy RainbowActivity.java
+cp $PROJECT/src/Platform/Android/RainbowActivity.java $APP_MODULE/src/main/java/${APP_ID//./\/}/
+
+# Resources
+cp -R $PROJECT/build/android/$APP_MODULE/src/main/res/{drawable,mipmap}* $APP_MODULE/src/main/res/
+cat > $APP_MODULE/src/main/res/values/strings.xml << STRINGS_XML
+<resources>
+    <string name="app_name">$APP_NAME</string>
+</resources>
+STRINGS_XML
+
 echo " done"
 
-./gradlew
+gradle

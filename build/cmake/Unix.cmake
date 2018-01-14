@@ -28,8 +28,15 @@ if(MINGW OR UNIX)
   endif()
 
   # Set CFLAGS and CXXFLAGS
-  set(CMAKE_C_FLAGS   "-pipe ${RAINBOW_CSTD} ${CFLAG_NO_WARNINGS} ${RAINBOW_COMMON_CFLAGS}")
-  set(CMAKE_CXX_FLAGS "-pipe ${RAINBOW_CXXSTD} ${RAINBOW_CXX_WARNINGS} ${RAINBOW_COMMON_CFLAGS}")
+  set(RAINBOW_C_FLAGS   "-pipe ${RAINBOW_CSTD} ${CFLAG_NO_WARNINGS} ${RAINBOW_COMMON_CFLAGS}")
+  set(RAINBOW_CXX_FLAGS "-pipe ${RAINBOW_CXXSTD} ${RAINBOW_CXX_WARNINGS} ${RAINBOW_COMMON_CFLAGS}")
+  if(${CMAKE_C_FLAGS} MATCHES "-isystem")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${RAINBOW_C_FLAGS}")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${RAINBOW_CXX_FLAGS}")
+  else()
+    set(CMAKE_C_FLAGS ${RAINBOW_C_FLAGS})
+    set(CMAKE_CXX_FLAGS ${RAINBOW_CXX_FLAGS})
+  endif()
 
   if(APPLE)
     find_library(CORESERVICES_LIBRARY CoreServices REQUIRED)
@@ -41,8 +48,10 @@ if(MINGW OR UNIX)
 
     # Set LDFLAGS
     if(ANDROID)
+      # Export ANativeActivity_onCreate(); see https://github.com/android-ndk/ndk/issues/381
+      set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -u ANativeActivity_onCreate")
       include_directories(${ANDROID_NDK}/sources/android/native_app_glue)
-      add_library(native_app_glue ${ANDROID_NDK}/sources/android/native_app_glue/android_native_app_glue.c)
+      add_library(native_app_glue STATIC ${ANDROID_NDK}/sources/android/native_app_glue/android_native_app_glue.c)
       target_link_libraries(native_app_glue log)
       set(PLATFORM_LIBRARIES EGL GLESv2 native_app_glue log android z)
     elseif(NOT MINGW)

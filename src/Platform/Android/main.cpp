@@ -67,9 +67,6 @@ namespace
 
 void android_main(struct android_app* state)
 {
-    app_dummy();
-    //sleep(5);  // Sleep a little so GDB can attach itself
-
     pthread_key_create(&s_thread_key, detach_current_thread);
 
     JNIEnv* env;

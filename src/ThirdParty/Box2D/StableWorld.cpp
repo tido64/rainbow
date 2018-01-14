@@ -137,7 +137,7 @@ namespace b2
     {
         ForEachDynamicBody(
             GetBodyList(),
-            [this](b2Body* body)
+            [](b2Body* body)
             {
                 auto d = GetBodyState(body);
                 const auto& t = body->GetTransform();
