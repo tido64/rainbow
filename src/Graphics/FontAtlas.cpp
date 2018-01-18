@@ -158,10 +158,12 @@ FontAtlas::FontAtlas(czstring path, float pt)
 FontAtlas::FontAtlas(czstring name, const Data& font, float pt)
     : pt_(pt), height_(0)
 {
+    std::string font_with_size{name};
+    font_with_size += '@';
+    font_with_size += std::to_string(pt);
     texture_ = TextureManager::Get()->create(
-        name,
-        [this, &font](TextureManager& texture_manager, const Texture& texture)
-        {
+        font_with_size,
+        [this, &font](TextureManager& texture_manager, const Texture& texture) {
             load(texture_manager, texture, font);
         });
 }
