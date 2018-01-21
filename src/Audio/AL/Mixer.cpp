@@ -369,7 +369,13 @@ auto rainbow::audio::play(Channel* channel) -> Channel*
 
 auto rainbow::audio::play(Sound* sound, Vec2f world_position) -> Channel*
 {
+    if (sound == nullptr)
+        return nullptr;
+
     Channel* channel = al_mixer->get_channel();
+    if (channel == nullptr)
+        return nullptr;
+
     channel->set_sound(sound);
 
     if (sound->stream)
