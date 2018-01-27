@@ -418,10 +418,9 @@ endif()
 
 # Dynamic libraries
 include(${LOCAL_MODULE_PATH}/Audio.cmake)
-if(ANDROID)
-  set(OPENGL_gl_LIBRARY "")
-else()
+if(NOT ANDROID)
   find_package(OpenGL REQUIRED)
+  target_link_libraries(rainbow ${OPENGL_ext_LIBRARY} ${OPENGL_gl_LIBRARY})
 endif()
 
 # Static libraries
@@ -447,13 +446,5 @@ target_include_directories(
         ${LOCAL_LIBRARY}
         ${LOCAL_LIBRARY}/nanosvg/src
         ${LOCAL_LIBRARY}/variant/include
-        ${SDL2_INCLUDE_DIRS}
-        ${AUDIO_INCLUDE_DIRS}
 )
-target_link_libraries(
-    rainbow
-    ${TEST_LIBRARY} ${PHYSICS_LIBRARY} ${SPINE_LIBRARY} ${VECTOR_LIBRARY}
-    freetype lua png ${SDL2_LIBRARIES}
-    ${AUDIO_LIBRARIES} ${OPENGL_ext_LIBRARY} ${OPENGL_gl_LIBRARY}
-    ${ZLIB_LIBRARY} ${PLATFORM_LIBRARIES}
-)
+target_link_libraries(rainbow ${TEST_LIBRARY} ${PLATFORM_LIBRARIES})

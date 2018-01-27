@@ -22,7 +22,7 @@ function Make
 {
 	param ($options)
 
-	cmake $options -A x64 $SourcePath
+	cmake -DCMAKE_TOOLCHAIN_FILE="$SourcePath\lib\vcpkg\scripts\buildsystems\vcpkg.cmake" -DVCPKG_TARGET_TRIPLET=x64-windows-static $options -A x64 $SourcePath
 	.\Rainbow.sln
 }
 

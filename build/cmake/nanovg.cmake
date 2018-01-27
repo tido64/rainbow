@@ -11,7 +11,6 @@ target_include_directories(
     PUBLIC ${LOCAL_LIBRARY}/nanovg/src
     PRIVATE ${FREETYPE_INCLUDE_DIR}
 )
-add_dependencies(rainbow nanovg)
+target_link_libraries(rainbow nanovg)
 
-set(VECTOR_LIBRARY nanovg)
 message(STATUS "Compile with vector drawing library: NanoVG")

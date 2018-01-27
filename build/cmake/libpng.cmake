@@ -7,4 +7,5 @@ target_include_directories(
     PRIVATE
         ${ZLIB_INCLUDE_DIR}
 )
-add_dependencies(rainbow png)
+target_link_libraries(png z)
+target_link_libraries(rainbow png)
