@@ -1,4 +1,10 @@
 if(WIN32)
+  if(NOT VCPKG_PATH)
+    set(VCPKG_PATH ${LOCAL_LIBRARY}/vcpkg)
+  endif()
+  if(NOT EXISTS ${VCPKG_PATH}/vcpkg.exe)
+    execute_process(COMMAND bootstrap-vcpkg.bat WORKING_DIRECTORY ${VCPKG_PATH})
+  endif()
   set(CFLAG_NO_WARNINGS /W0)
   set(CMAKE_FIND_LIBRARY_SUFFIXES ".a" ".lib" ".dll.a" ".dll")
   list(APPEND RESOURCE_FILES

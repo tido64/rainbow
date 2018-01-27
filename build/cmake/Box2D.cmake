@@ -9,7 +9,6 @@ target_include_directories(
     PUBLIC ${BOX2D_INCLUDE_DIR}
     PRIVATE ${PROJECT_SOURCE_DIR}/src
 )
-add_dependencies(rainbow box2d)
+target_link_libraries(rainbow box2d)
 
-set(PHYSICS_LIBRARY box2d)
 message(STATUS "Compile with physics: Box2D")

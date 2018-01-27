@@ -7,4 +7,4 @@ target_include_directories(
     PRIVATE
         ${LOCAL_LIBRARY}/FreeType/src
 )
-add_dependencies(rainbow freetype)
+target_link_libraries(rainbow freetype)

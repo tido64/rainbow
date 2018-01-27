@@ -8,25 +8,24 @@ image: Visual Studio 2017
 configuration: RelWithDebInfo
 clone_depth: 16
 cache:
-  - '%APPVEYOR_BUILD_FOLDER%-build\lib\ogg\src\libogg-1.3.2.tar.gz'
-  - '%APPVEYOR_BUILD_FOLDER%-build\lib\openal-soft\src\openal-soft-1.17.2-bin.zip'
-  - '%APPVEYOR_BUILD_FOLDER%-build\lib\sdl2-bin\src\SDL2-2.0.5-win32-x86.zip'
-  - '%APPVEYOR_BUILD_FOLDER%-build\lib\sdl2-dev\src\SDL2-devel-2.0.5-VC.zip'
-  - '%APPVEYOR_BUILD_FOLDER%-build\lib\vorbis\src\libvorbis-1.3.5.tar.gz'
+  - C:\tools\vcpkg\installed\
+  - '%APPVEYOR_BUILD_FOLDER%-build\openal-soft-prefix\src\openal-soft-1.18.2-bin.zip'
+  - '%APPVEYOR_BUILD_FOLDER%-build\sdl2-bin-prefix\src\SDL2-2.0.7-win32-x86.zip'
+  - '%APPVEYOR_BUILD_FOLDER%-build\sdl2-dev-prefix\src\SDL2-devel-2.0.7-VC.zip'
 before_build:
-  - git submodule update --init
+  - git submodule update --init -- lib/FreeType lib/box2d lib/imgui lib/libpng lib/nanosvg lib/spine-runtimes lib/zlib
   - if not exist "%APPVEYOR_BUILD_FOLDER%-build" mkdir "%APPVEYOR_BUILD_FOLDER%-build"
   - cd "%APPVEYOR_BUILD_FOLDER%-build"
-  - cmake -DUSE_HEIMDALL=1 -DUSE_PHYSICS=1 -DUSE_SPINE=1 -G "Visual Studio 15" "%APPVEYOR_BUILD_FOLDER%"
+  - cmake -DCMAKE_TOOLCHAIN_FILE=C:/tools/vcpkg/scripts/buildsystems/vcpkg.cmake -DUSE_HEIMDALL=1 -DUSE_PHYSICS=1 -DUSE_SPINE=1 -DVCPKG_PATH=C:/tools/vcpkg -G "Visual Studio 15" "%APPVEYOR_BUILD_FOLDER%"
 build_script:
   - msbuild "%APPVEYOR_BUILD_FOLDER%-build\Rainbow.sln" /maxcpucount /verbosity:minimal /logger:"%ProgramFiles%\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 after_build:
   - mkdir "rainbow-v%APPVEYOR_BUILD_VERSION%"
   - copy "%APPVEYOR_BUILD_FOLDER%-build\%CONFIGURATION%\rainbow.exe" "rainbow-v%APPVEYOR_BUILD_VERSION%"
   - copy "%APPVEYOR_BUILD_FOLDER%\LICENSE" "rainbow-v%APPVEYOR_BUILD_VERSION%\LICENSE.txt"
-  - copy "%APPVEYOR_BUILD_FOLDER%\lib\openal-soft\COPYING" "rainbow-v%APPVEYOR_BUILD_VERSION%\COPYING-OPENAL.txt"
-  - copy "%APPVEYOR_BUILD_FOLDER%\lib\openal-soft\bin\Win32\soft_oal.dll" "rainbow-v%APPVEYOR_BUILD_VERSION%\OpenAL32.dll"
-  - 7z x -o"rainbow-v%APPVEYOR_BUILD_VERSION%" "%APPVEYOR_BUILD_FOLDER%-build\lib\sdl2-bin\src\SDL2-2.0.5-win32-x86.zip"
+  - copy "%APPVEYOR_BUILD_FOLDER%-build\openal-soft-prefix\src\openal-soft\COPYING" "rainbow-v%APPVEYOR_BUILD_VERSION%\COPYING-OPENAL.txt"
+  - copy "%APPVEYOR_BUILD_FOLDER%-build\openal-soft-prefix\src\openal-soft\bin\Win32\soft_oal.dll" "rainbow-v%APPVEYOR_BUILD_VERSION%\OpenAL32.dll"
+  - 7z x -o"rainbow-v%APPVEYOR_BUILD_VERSION%" "%APPVEYOR_BUILD_FOLDER%-build\sdl2-bin-prefix\src\SDL2-2.0.7-win32-x86.zip"
   - 7z a "rainbow-v%APPVEYOR_BUILD_VERSION%.zip" "rainbow-v%APPVEYOR_BUILD_VERSION%"
   - appveyor PushArtifact "rainbow-v%APPVEYOR_BUILD_VERSION%.zip"
 test: off

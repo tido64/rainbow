@@ -1,6 +1,6 @@
 if(EMSCRIPTEN)
   find_package(OpenAL REQUIRED)
-  set(AUDIO_LIBRARIES ${OPENAL_LIBRARY})
+  target_link_libraries(rainbow ${OPENAL_LIBRARY})
 elseif(USE_FMOD_STUDIO)
   set(AUDIO_INCLUDE_DIRS ${LOCAL_LIBRARY}/FMOD/inc)
   if(WIN32)
@@ -35,87 +35,40 @@ else()
   if(WIN32)
     download_library(
         openal-soft
-        http://kcat.strangesoft.net/openal-binaries/openal-soft-1.17.2-bin.zip
-        2797595206a9571997ed61f2509c7317bbc6c0dc3e5f385774c1901e33e14512
-        ${LOCAL_LIBRARY}/openal-soft)
+        http://kcat.strangesoft.net/openal-binaries/openal-soft-1.18.2-bin.zip
+        893ba969cb0f883be66782320781a8f077e1edf5ed3701bd3fe15f59066d94af
+    )
+    ExternalProject_Get_Property(openal-soft SOURCE_DIR)
     if(CMAKE_SIZEOF_VOID_P EQUAL 8)
       set(OPENAL_ARCH Win64)
     else()
       set(OPENAL_ARCH Win32)
     endif()
     copy_to_build_dir(openal-soft bin/${OPENAL_ARCH}/soft_oal.dll OpenAL32.dll)
-    set(OPENAL_INCLUDE_DIR ${LOCAL_LIBRARY}/openal-soft/include)
-    set(OPENAL_LIBRARY ${LOCAL_LIBRARY}/openal-soft/libs/${OPENAL_ARCH}/libOpenAL32.dll.a)
-    message(STATUS "Found OpenAL: ${OPENAL_LIBRARY}")
+    target_include_directories(rainbow PRIVATE ${SOURCE_DIR}/include)
+    target_link_libraries(rainbow ${SOURCE_DIR}/libs/${OPENAL_ARCH}/libOpenAL32.dll.a)
+    message(STATUS "Found OpenAL: ${SOURCE_DIR}/libs/${OPENAL_ARCH}/libOpenAL32.dll.a")
 
-    # libogg
-    set(OGG_LIBRARY ${CMAKE_STATIC_LIBRARY_PREFIX}ogg${CMAKE_STATIC_LIBRARY_SUFFIX})
-    set(OGG_PREFIX ${CMAKE_BINARY_DIR}/lib/ogg)
-    set(OGG_ROOT ${OGG_PREFIX}/src/libogg)
-    set(OGG_BUILD_DIR ${OGG_PREFIX}/src/libogg-build)
-    ExternalProject_Add(
-        libogg
-        PREFIX ${OGG_PREFIX}
-        URL http://downloads.xiph.org/releases/ogg/libogg-1.3.2.tar.gz
-        URL_HASH SHA256=e19ee34711d7af328cb26287f4137e70630e7261b17cbe3cd41011d73a654692
-        PATCH_COMMAND
-            ${CMAKE_COMMAND} -E copy
-                ${LOCAL_MODULE_PATH}/ogg/CMakeLists.txt
-                ${OGG_ROOT}
-        BUILD_BYPRODUCTS ${OGG_BUILD_DIR}/${OGG_LIBRARY}
-        INSTALL_COMMAND
-            ${CMAKE_COMMAND} -E copy_directory
-                ${OGG_ROOT}/include/ogg
-                ${LOCAL_LIBRARY}/ogg
-        LOG_DOWNLOAD ON
-        LOG_CONFIGURE ON
-        LOG_BUILD ON
-        LOG_INSTALL ON)
-    add_static_library(ogg ${OGG_BUILD_DIR})
+    execute_process(COMMAND ${VCPKG_PATH}/vcpkg.exe install
+        libogg:${VCPKG_TARGET_TRIPLET}
+        libvorbis:${VCPKG_TARGET_TRIPLET}
+    )
 
-    # libvorbis
-    set(VORBIS_LIBRARY ${CMAKE_STATIC_LIBRARY_PREFIX}vorbis${CMAKE_STATIC_LIBRARY_SUFFIX})
-    set(VORBIS_PREFIX ${CMAKE_BINARY_DIR}/lib/vorbis)
-    set(VORBIS_ROOT ${VORBIS_PREFIX}/src/libvorbis)
-    set(VORBIS_BUILD_DIR ${VORBIS_PREFIX}/src/libvorbis-build/lib)
-    set(VORBISFILE_LIBRARY ${CMAKE_STATIC_LIBRARY_PREFIX}vorbisfile${CMAKE_STATIC_LIBRARY_SUFFIX})
-    ExternalProject_Add(
-        libvorbis
-        PREFIX ${VORBIS_PREFIX}
-        URL http://downloads.xiph.org/releases/vorbis/libvorbis-1.3.5.tar.gz
-        URL_HASH SHA256=6efbcecdd3e5dfbf090341b485da9d176eb250d893e3eb378c428a2db38301ce
-        PATCH_COMMAND
-            ${CMAKE_COMMAND} -E copy_directory
-                ${LOCAL_MODULE_PATH}/vorbis
-                ${VORBIS_ROOT}
-        CMAKE_ARGS -DOGG_IMPORTED=1 -DOGG_ROOT=${OGG_ROOT}
-        BUILD_BYPRODUCTS
-            ${VORBIS_BUILD_DIR}/${VORBIS_LIBRARY}
-            ${VORBIS_BUILD_DIR}/${VORBISFILE_LIBRARY}
-        INSTALL_COMMAND
-            ${CMAKE_COMMAND} -E copy_directory
-                ${VORBIS_ROOT}/include/vorbis
-                ${LOCAL_LIBRARY}/vorbis
-        LOG_DOWNLOAD ON
-        LOG_CONFIGURE ON
-        LOG_BUILD ON
-        LOG_INSTALL ON)
-    add_static_library(vorbis ${VORBIS_BUILD_DIR})
-    add_static_library(vorbisfile ${VORBIS_BUILD_DIR})
+    find_path(VORBIS_INCLUDE_DIR vorbis/vorbisfile.h)
+    target_include_directories(rainbow PRIVATE ${VORBIS_INCLUDE_DIR})
 
-    add_dependencies(libvorbis libogg)
-    add_dependencies(rainbow openal-soft libogg libvorbis)
-    set(AUDIO_LIBRARIES vorbisfile vorbis ogg)
+    find_library(OGG_LIBRARY ogg)
+    find_library(VORBIS_LIBRARY vorbis)
+    find_library(VORBISFILE_LIBRARY vorbisfile)
+    target_link_libraries(rainbow ${VORBISFILE_LIBRARY} ${VORBIS_LIBRARY} ${OGG_LIBRARY})
   else()
     find_package(OpenAL REQUIRED)
     pkg_check_modules(VORBIS REQUIRED ogg vorbis vorbisfile)
-    set(AUDIO_INCLUDE_DIRS ${VORBIS_INCLUDE_DIRS})
-    set(AUDIO_LIBRARIES ${VORBIS_LDFLAGS})
+    target_include_directories(rainbow PRIVATE ${OPENAL_INCLUDE_DIR} ${VORBIS_INCLUDE_DIRS})
+    target_link_libraries(rainbow ${VORBIS_LDFLAGS} ${OPENAL_LIBRARY})
     if(APPLE)
       find_library(AUDIOTOOLBOX_LIBRARY AudioToolbox REQUIRED)
-      set(PLATFORM_LIBRARIES ${AUDIOTOOLBOX_LIBRARY} ${PLATFORM_LIBRARIES})
+      target_link_libraries(rainbow ${AUDIOTOOLBOX_LIBRARY})
     endif()
   endif()
-  list(APPEND AUDIO_INCLUDE_DIRS ${OPENAL_INCLUDE_DIR})
-  list(APPEND AUDIO_LIBRARIES ${OPENAL_LIBRARY})
 endif()
