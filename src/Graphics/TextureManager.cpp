@@ -119,22 +119,19 @@ void TextureManager::trim()
     auto first = std::remove_if(
         textures_.begin(),
         textures_.end(),
-        [](const detail::Texture& texture) { return texture.use_count == 0; });
+        [this](const detail::Texture& texture) {
+            if (texture.use_count == 0)
+            {
+                IF_DEVMODE(mem_used_ -= texture.size);
+                glDeleteTextures(1, &texture.name);
+                return true;
+            }
+
+            return false;
+        });
     auto end = textures_.end();
     if (first == end)
         return;
-
-    std::for_each(  //
-        first,
-        end,
-#if RAINBOW_DEVMODE
-        [this](const detail::Texture& texture) {
-            mem_used_ -= texture.size;
-#else
-        [](const detail::Texture& texture) {
-#endif
-            glDeleteTextures(1, &texture.name);
-        });
 
     textures_.erase(first, end);
 
