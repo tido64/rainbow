@@ -16,7 +16,7 @@ before_build:
   - git submodule update --init -- lib/FreeType lib/box2d lib/imgui lib/libpng lib/nanosvg lib/spine-runtimes lib/zlib
   - if not exist "%APPVEYOR_BUILD_FOLDER%-build" mkdir "%APPVEYOR_BUILD_FOLDER%-build"
   - cd "%APPVEYOR_BUILD_FOLDER%-build"
-  - cmake -DCMAKE_TOOLCHAIN_FILE=C:/tools/vcpkg/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=x86-windows-static -DUSE_HEIMDALL=1 -DUSE_PHYSICS=1 -DUSE_SPINE=1 -DVCPKG_PATH=C:/tools/vcpkg -G "Visual Studio 15" "%APPVEYOR_BUILD_FOLDER%"
+  - cmake -DCMAKE_TOOLCHAIN_FILE=C:/tools/vcpkg/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=x86-windows-static -DUSE_HEIMDALL=1 -DUSE_PHYSICS=1 -DUSE_SPINE=1 -DVCPKG_PATH=C:/tools/vcpkg "%APPVEYOR_BUILD_FOLDER%"
 build_script:
   - msbuild "%APPVEYOR_BUILD_FOLDER%-build\Rainbow.sln" /maxcpucount /verbosity:minimal /logger:"%ProgramFiles%\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 after_build:

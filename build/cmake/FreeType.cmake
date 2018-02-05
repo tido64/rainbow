@@ -5,6 +5,7 @@ target_include_directories(
         ${THIRD_PARTY}/FreeType
         ${LOCAL_LIBRARY}/FreeType/include
     PRIVATE
+        ${LOCAL_LIBRARY}/FreeType/builds
         ${LOCAL_LIBRARY}/FreeType/src
 )
 target_link_libraries(rainbow freetype)

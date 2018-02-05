@@ -11,7 +11,7 @@
 #   pragma GCC diagnostic ignored "-Wold-style-cast"
 #endif
 #include <ft2build.h>  // NOLINT(llvm-include-order)
-#include FT_CFF_DRIVER_H
+#include FT_FREETYPE_H
 #ifdef __GNUC__
 #   pragma GCC diagnostic pop
 #endif
