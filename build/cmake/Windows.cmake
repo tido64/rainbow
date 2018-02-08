@@ -86,6 +86,19 @@ if(WIN32)
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /NODEFAULTLIB:msvcrt.lib")
     set(CMAKE_EXE_LINKER_FLAGS_DEBUG "${CMAKE_EXE_LINKER_FLAGS_DEBUG} /INCREMENTAL:NO /NODEFAULTLIB:libcmt.lib")
     set(CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO "${CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO} /INCREMENTAL:NO /NODEFAULTLIB:libcmt.lib")
+
+    set(RAINBOW_VCXPROJ_USER "${CMAKE_CURRENT_BINARY_DIR}/Rainbow.vcxproj.user")
+    if(NOT EXISTS ${RAINBOW_VCXPROJ_USER})
+      file(WRITE ${RAINBOW_VCXPROJ_USER}
+          "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
+          "<Project ToolsVersion=\"15.0\" xmlns=\"http://schemas.microsoft.com/developer/msbuild/2003\">\n"
+          "  <PropertyGroup>\n"
+          "    <LocalDebuggerCommandArguments>${PROJECT_SOURCE_DIR}/js</LocalDebuggerCommandArguments>\n"
+          "    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>\n"
+          "  </PropertyGroup>\n"
+          "</Project>\n"
+      )
+    endif()
   else()
     add_definitions(
         -D__MSVCRT__
