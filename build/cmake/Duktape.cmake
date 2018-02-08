@@ -46,3 +46,5 @@ target_include_directories(
 
 add_dependencies(duktape duktape-source)
 target_link_libraries(rainbow duktape)
+
+set(EMCC_FLAGS "${EMCC_FLAGS} -DEMSCRIPTEN --preload-file ${PROJECT_SOURCE_DIR}/js@/ --memory-init-file 0")

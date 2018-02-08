@@ -134,6 +134,21 @@ You'll find an overview of configuration and feature flags further below.
 2. Open `build/ios/Rainbow.xcodeproj` in Xcode.
 3. Build and run the current scheme.
 
+## Building for Web
+
+1. Install [Emscripten](https://kripken.github.io/emscripten-site/docs/getting_started/downloads.html).
+2. Install [CMake](https://cmake.org/download/).
+3. Make a directory for building Rainbow, invoke CMake, and build:
+
+    ```shell
+    mkdir rainbow-build
+    cd rainbow-build
+    emcmake cmake -DCMAKE_BUILD_TYPE=<configuration> [option ...] /path/to/rainbow
+    emmake make
+    ```
+
+4. Open `rainbow.html` in a browser.
+
 ## Build Configuration
 
 Available features and build configurations:

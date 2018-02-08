@@ -266,13 +266,22 @@ if(USE_FMOD_STUDIO)
   add_definitions(-DRAINBOW_AUDIO_FMOD=1)
   list(APPEND SOURCE_FILES src/Audio/FMOD/Mixer.cpp src/Audio/FMOD/Mixer.h)
 else()
+  if (EMSCRIPTEN)
+    list(APPEND SOURCE_FILES
+        src/Audio/AL/Mixer.cpp
+        src/Audio/AL/Mixer.h
+    )
+  else()
+    list(APPEND SOURCE_FILES
+        src/Audio/cubeb/Mixer.cpp
+        src/Audio/cubeb/Mixer.h
+    )
+  endif()
   list(APPEND SOURCE_FILES
       src/Audio/AudioFile.cpp
       src/Audio/AudioFile.h
       src/Audio/Codecs/OggVorbisAudioFile.cpp
       src/Audio/Codecs/OggVorbisAudioFile.h
-      src/Audio/cubeb/Mixer.cpp
-      src/Audio/cubeb/Mixer.h
   )
   if(APPLE)
     list(APPEND SOURCE_FILES
@@ -355,7 +364,7 @@ endif()
 
 # Dynamic libraries
 include(${LOCAL_MODULE_PATH}/Audio.cmake)
-if(NOT ANDROID)
+if(NOT ANDROID AND NOT EMSCRIPTEN)
   find_package(OpenGL REQUIRED)
   target_link_libraries(rainbow ${OPENGL_ext_LIBRARY} ${OPENGL_gl_LIBRARY})
 endif()
@@ -372,6 +381,11 @@ if(USE_SPINE)
 endif()
 include(${LOCAL_MODULE_PATH}/zlib.cmake)
 include(${LOCAL_MODULE_PATH}/libpng.cmake)
+
+if(EMSCRIPTEN)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -s WASM=1 ${EMCC_FLAGS}")
+  set(CMAKE_EXECUTABLE_SUFFIX ".html")
+endif()
 
 # Rainbow
 target_include_directories(

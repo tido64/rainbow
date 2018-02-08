@@ -120,7 +120,11 @@ void TextureManager::trim()
     auto first = std::remove_if(  //
         textures_.begin(),
         textures_.end(),
+#ifdef USE_HEIMDALL
         [this](auto&& texture) {
+#else
+        [](auto&& texture) {
+#endif
             auto& detail = texture.second;
             if (detail.use_count == 0)
             {

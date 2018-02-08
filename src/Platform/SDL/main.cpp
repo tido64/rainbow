@@ -3,7 +3,7 @@
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
 #include "Platform/Macros.h"
-#if defined(RAINBOW_JS)
+#if defined(RAINBOW_WEB)
 #   pragma clang diagnostic ignored "-Wunused-function"
 #   include <emscripten.h>
 #elif defined(RAINBOW_OS_WINDOWS)
@@ -68,7 +68,7 @@ namespace
     }
 }
 
-#ifdef RAINBOW_JS
+#ifdef RAINBOW_WEB
 
 SDLContext* g_context = nullptr;
 RainbowController* g_controller = nullptr;
@@ -77,6 +77,9 @@ void emscripten_main() { g_controller->run(); }
 
 auto main() -> int
 {
+    rainbow::filesystem::initialize(
+        *std::make_unique<Bundle>(nullptr, "").release());
+
     const rainbow::Config config;
     g_context = std::make_unique<SDLContext>(config).release();
     g_controller =
@@ -112,4 +115,4 @@ auto main(int argc, char* argv[]) -> int
     return controller.error().value();
 }
 
-#endif  // RAINBOW_JS
+#endif  // RAINBOW_WEB

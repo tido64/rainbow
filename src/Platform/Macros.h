@@ -24,8 +24,8 @@
 #elif defined(_WIN32)
 #   define RAINBOW_OS_WINDOWS
 #elif defined(__EMSCRIPTEN__)
-#   define RAINBOW_JS
 #   define RAINBOW_OS_UNIX
+#   define RAINBOW_WEB
 #endif
 
 // Platforms that make use of physical buttons (keyboards, gamepads, etc.)
@@ -66,7 +66,7 @@
 
 // TODO: As of v16.1, Android NDK has filesystem header but not the binary.
 #if (__has_include(<experimental/filesystem>) || __has_include(<filesystem>)) \
-    && !defined(RAINBOW_OS_ANDROID)
+    && !defined(RAINBOW_OS_ANDROID) && !defined(RAINBOW_WEB)
 #   define HAS_FILESYSTEM 1
 #else
 #   define HAS_FILESYSTEM 0

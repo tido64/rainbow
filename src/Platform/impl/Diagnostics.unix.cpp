@@ -43,7 +43,7 @@ void rainbow::diagnostics::attach_crash_dumper()
     });
 }
 
-#ifndef RAINBOW_OS_MACOS
+#if !defined(RAINBOW_OS_MACOS) && !defined(RAINBOW_WEB)
 #include <sys/ptrace.h>
 #include <sys/wait.h>
 

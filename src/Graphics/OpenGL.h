@@ -9,7 +9,7 @@
 
 #include "Platform/Macros.h"
 
-#if defined(RAINBOW_OS_ANDROID) || defined(RAINBOW_JS)
+#if defined(RAINBOW_OS_ANDROID) || defined(RAINBOW_WEB)
 #   include <GLES2/gl2.h>
 #   include <GLES2/gl2ext.h>
 #elif defined(RAINBOW_OS_IOS)
@@ -49,7 +49,7 @@
 #   define GL_GPU_MEMORY_INFO_CURRENT_AVAILABLE_VIDMEM_NVX 0x9049
 #endif
 
-#if !defined(RAINBOW_OS_ANDROID) && !defined(RAINBOW_JS)
+#if !defined(RAINBOW_OS_ANDROID) && !defined(RAINBOW_WEB)
 #   define USE_VERTEX_ARRAY_OBJECT 1
 #endif
 

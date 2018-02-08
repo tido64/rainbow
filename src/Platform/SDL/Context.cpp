@@ -78,7 +78,7 @@ SDLContext::SDLContext(const Config& config)
         return;
     }
 
-#ifdef RAINBOW_JS
+#ifdef RAINBOW_WEB
     vsync_ = true;
 #else
     SDL_GL_SetSwapInterval(1);
