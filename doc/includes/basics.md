@@ -5,7 +5,7 @@
   - config.json
   - index.bundle.js
 
-### `config.json` (optional)
+## `config.json` (optional)
 
 The configuration file is just a JSON. It enables/disables features, and
 sets the window size (Linux/macOS/Windows).

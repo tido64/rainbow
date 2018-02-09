@@ -153,12 +153,9 @@ Sets the sprite to animate.
 There are three events that are fired during an animation's lifetime.
 
 * `AnimationEvent::Start` fires when a stopped animation is started.
-
 * `AnimationEvent::End` fires when an animation is stopped.
-
 * `AnimationEvent::Complete` fires immediately after an animation completes a
   single cycle, before the delay preceding the next.
-
 * `AnimationEvent::Frame` fires for each frame that does not trigger `End` or
   `Complete` events.
 

@@ -11,9 +11,7 @@ toc_footers:
   - <a href="https://github.com/lord/slate">Documentation powered by Slate</a>
 
 includes:
-  - building_rainbow_for_pc
-  - building_rainbow_for_mobile
-  - quick_start
+  - getting_started
   - basics
   - audio
   - input

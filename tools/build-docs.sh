@@ -17,6 +17,8 @@ function install {
   ln -s $rainbow/doc/images source/images
   ln -s $rainbow/doc/includes source/includes
   ln -s $rainbow/doc/index.md source/index.html.md
+
+  git apply --ignore-space-change $rainbow/tools/slate-collapse-right-column.patch
 }
 
 case $1 in

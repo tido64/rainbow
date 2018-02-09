@@ -10,13 +10,13 @@ sound effects).
 
 ## Supported Audio Codecs
 
-| Audio decoder                       | Supported platforms            |
-|-------------------------------------|--------------------------------|
-| AAC (MPEG-4 Advanced Audio Coding)  | iOS, macOS                     |
-| ALAC (Apple Lossless)               | iOS, macOS                     |
-| HE-AAC (MPEG-4 High Efficiency AAC) | iOS, macOS                     |
-| MP3 (MPEG-1 audio layer 3)          | Android, iOS, macOS            |
-| Ogg Vorbis                          | Android, Linux, macOS, Windows |
+| OS      | AAC | ALAC | HE-AAC | MP3 | Ogg |
+|---------|:---:|:----:|:------:|:---:|:---:|
+| Windows |     |      |        |     |  ✓  |
+| macOS   |  ✓  |   ✓  |    ✓   |  ✓  |  ✓  |
+| Linux   |     |      |        |     |  ✓  |
+| Android |     |      |        |  ✓  |  ✓  |
+| iOS     |  ✓  |   ✓  |    ✓   |  ✓  |     |
 
 This table is not exhaustive. Your target devices may support more decoders than
 listed here. Please check the appropriate documentations.
