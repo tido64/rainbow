@@ -1,120 +1,131 @@
 # Rainbow [![codecov](https://codecov.io/gh/tn0502/rainbow/branch/master/graph/badge.svg)](https://codecov.io/gh/tn0502/rainbow)
 
 Rainbow is a fast, scriptable, cross-platform, 2D game engine written in modern
-C++.
+C++. Games can be written in both C++ and JavaScript (but you really should make
+your life easier and try [TypeScript](https://www.typescriptlang.org/)). Check
+out the [examples](#examples) below.
 
-Copyright &copy; 2010-present Bifrost Entertainment AS and Tommy Nguyen.
+[[Documentation](https://tido.bitbucket.io/rainbow/)] Get started. It's a good
+place to start learning what you can do with Rainbow.
 
-Distributed under the MIT License (see accompanying file `LICENSE` or copy at
-https://opensource.org/licenses/MIT). Licenses for third-party software can be
-found in file `THIRDPARTY`.
+[[Forum](https://groups.google.com/forum/#!forum/rainbow-tech)] Get answers, or
+even better, share your awesome work!
 
-- [Documentation](https://tido.bitbucket.io/rainbow/)
-- [Roadmap](https://trello.com/b/r2TqudY6/rainbow)
-- [Discussion](https://groups.google.com/forum/#!forum/rainbow-tech)
+[[Roadmap](https://trello.com/b/r2TqudY6/rainbow)] Find planned features and
+future directions.
 
-## Features
-
-### Cross-platform
-
-Rainbow runs on most popular operating systems:
+Rainbow currently runs on the following platforms:
 
 | Platform | Status |
 |----------|--------|
+| Windows  | [![Windows build status](https://ci.appveyor.com/api/projects/status/oajtxwu9d9lrayk0/branch/master?svg=true)](https://ci.appveyor.com/project/Tommy/rainbow/branch/master) |
+| macOS    | [![macOS build status](https://doozer.io/badge/tn0502/rainbow/buildstatus/master)](https://doozer.io/tn0502/rainbow) |
+| Linux    | [![Linux build status](https://travis-ci.org/tn0502/rainbow.svg?branch=master)](https://travis-ci.org/tn0502/rainbow) |
 | Android  | 🚧     |
 | iOS      | ✓      |
-| Linux    | [![Linux build status](https://travis-ci.org/tn0502/rainbow.svg?branch=master)](https://travis-ci.org/tn0502/rainbow) |
-| macOS    | [![macOS build status](https://doozer.io/badge/tn0502/rainbow/buildstatus/master)](https://doozer.io/tn0502/rainbow) |
-| Web      | 🚧     |
-| Windows  | [![Windows build status](https://ci.appveyor.com/api/projects/status/oajtxwu9d9lrayk0/branch/master?svg=true)](https://ci.appveyor.com/project/Tommy/rainbow/branch/master) |
 
-### Audio
+We even have a prototype that runs in your browser. [Give it a try!](https://tido.bitbucket.io/rainbow.js/)
 
-Rainbow integrates [FMOD Studio](https://www.fmod.org/), giving you access to
-the same professional tools that AAA studios use. There is also an open source
-alternative built on OpenAL. Audio format support depends on the platform.
-Typically, MP3 and Ogg Vorbis on Android, and
-[AAC, ALAC, and MP3](https://developer.apple.com/library/ios/documentation/AudioVideo/Conceptual/MultimediaPG/UsingAudio/UsingAudio.html#//apple_ref/doc/uid/TP40009767-CH2-SW33)
-on iOS and macOS.
+## Examples
 
-### Graphics
+### Label
 
-Rainbow is mostly built on
-[OpenGL ES 2.0](https://www.khronos.org/opengles/2_X/) and features:
+```typescript
+const font = new Rainbow.Font("OpenSans-Light.ttf", 60);
 
-- Sprites-based rendering with explicit batching
-- Animation with traditional sprite sheets, or…
-- Skeletal animation imported directly from
-  [Spine](http://esotericsoftware.com/)
-- Text rendering (supports TrueType and OpenType via
-  [FreeType](https://freetype.org/))
-- Texture atlas
-  ([DDS](https://msdn.microsoft.com/en-us/library/windows/desktop/bb943991(v=vs.85).aspx),
-   [PNG](http://libpng.org/pub/png/libpng.html),
-   [PVRTC](https://community.imgtec.com/developers/powervr/tools/pvrtextool/),
-   and [SVG](https://www.w3.org/Graphics/SVG/))
-- 2d rigid body physics provided by [Box2D](http://box2d.org/)
+const label = new Rainbow.Label();
+label.setAlignment(Rainbow.TextAlignment.Center);
+label.setFont(font);
+label.setPosition({ x: screenWidth * 0.5, y: screenHeight * 0.55 });
+label.setText("Hello\nWorld");
 
-### Input
+Rainbow.RenderQueue.add(label);
+```
 
-- Accelerometer (Android and iOS)
-- Keyboard and mouse (Linux/macOS/Windows)
-- Microphone (Android and iOS)
-- Touch (Android and iOS)
+![](doc/images/hello_world.png)
+
+### Sprite Sheet Animation
+
+```typescript
+const texture = new Rainbow.Texture("monkey.png");
+const frames = [
+  texture.addRegion(400, 724, 104, 149);
+  texture.addRegion(504, 724, 104, 149);
+  texture.addRegion(608, 724, 104, 149);
+  texture.addRegion(712, 724, 104, 149);
+  texture.addRegion(816, 724, 104, 149);
+  texture.addRegion(920, 724, 104, 149);
+];
+
+const batch = new Rainbow.SpriteBatch(1);
+batch.setTexture(texture);
+
+const sprite = batch.createSprite(104, 149);
+sprite.setPosition({ x: screenWidth * 0.5, y: screenHeight * 0.5 });
+
+const animation = new Rainbow.Animation(sprite, frames, 6, 0);
+animation.start();
+
+Rainbow.RenderQueue.add(batch);
+Rainbow.RenderQueue.add(animation);
+```
+
+![](doc/images/sprite_sheet_animations_output.gif)
 
 ## Structure
 
-	build/  # Build related files
-	doc/    # Documentation
-	js/     # JavaScript playground
-	lib/    # Third party libraries Rainbow depend on
-	src/    # Rainbow source code
-	tools/  # Tools such as the build script
-
-## Building
-
-First of all, clone the repository:
-
-	git clone --recursive https://bitbucket.org/tido/rainbow.git
-
-The repository only includes some of the libraries required to build Rainbow.
-The remaining requisites are listed in each platform's section below. They must
-be installed or copied into the repository before you can start building
-Rainbow.
-
-More details can be found in the
-[documentation](https://tido.bitbucket.io/rainbow/#building-rainbow-for-pc).
-
-### On Linux/macOS
-
-Easiest way to build Rainbow is to use the provided build scripts:
-
-	mkdir rainbow-build
-	cd rainbow-build
-	/path/to/rainbow/tools/build.sh [platform] [options]
-
-Run `build.sh help` to get an overview of options and configurations. `platform`
-can be omitted if compiling a native build (i.e. not cross-compiling).
-
-If you have problems running `build.sh`, please make sure it has execution
-permission:
-
-	chmod +x /path/to/rainbow/tools/build.sh
-
-### On Windows
-
-Run the PowerShell script `tools\make.ps1` (right-click on it and select
-_Run with PowerShell_). It will take you through the steps.
-
-## Getting started
-
-Check out the [documentation here](https://tido.bitbucket.io/rainbow/) or under
-`doc`, and the playground under `js`. You can start the playground by running
-`rainbow` inside the folder:
-
-	cd /path/to/rainbow/js
 	rainbow
+	├── build    # Build related files
+	├── doc      # Documentation
+	├── include  # Public Rainbow headers
+	├── js       # JavaScript playground
+	├── lib      # Third party dependencies
+	├── src      # Rainbow source code
+	└── tools    # Build scripts, JS bindings generator, and other tools...
 
-Or with the path as argument:
+## Contribute
 
-	rainbow /path/to/rainbow/js
+* [Submit bugs](https://bitbucket.org/tido/rainbow/issues?status=new&status=open).
+* [Review code, or submit fixes and improvements](https://bitbucket.org/tido/rainbow/pull-requests/).
+* Please make sure to read our [coding standard](https://tido.bitbucket.io/rainbow/#coding-standard).
+
+## Dependencies
+
+* [Duktape](http://duktape.org/)
+* [FreeType](https://freetype.org/)
+* [Mapbox Variant](https://github.com/mapbox/variant)
+* [NanoSVG](https://github.com/memononen/nanosvg)
+* [Ogg Vorbis](https://xiph.org/vorbis/)
+* [OpenAL Soft](http://openal-soft.org/)
+* [OpenGL 2.1](https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/) /
+    [OpenGL ES 2.0](https://www.khronos.org/opengles/2_X/)
+* [SDL](https://www.libsdl.org/)
+* [libpng](https://github.com/glennrp/libpng)
+* [zlib](https://github.com/madler/zlib)
+* Optional:
+  * [Box2D](http://box2d.org/)
+  * [FMOD](https://www.fmod.com/)
+  * [Spine](http://esotericsoftware.com/)
+  * [dear imgui](https://github.com/ocornut/imgui)
+
+## License
+
+Copyright (c) 2010-present Bifrost Entertainment AS and Tommy Nguyen.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
