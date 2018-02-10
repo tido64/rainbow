@@ -19,7 +19,7 @@ namespace
     {
         return u;
     }
-}
+}  // namespace
 
 SpriteBatch::SpriteBatch(uint32_t count)
     : sprites_(count), vertices_(std::make_unique<SpriteVertex[]>(count * 4_z)),
@@ -56,13 +56,6 @@ void SpriteBatch::set_normal(SharedPtr<TextureAtlas> texture)
 void SpriteBatch::set_texture(SharedPtr<TextureAtlas> texture)
 {
     texture_ = std::move(texture);
-}
-
-auto SpriteBatch::add(int x, int y, int width, int height) -> SpriteRef
-{
-    auto sprite = create_sprite(width, height);
-    sprite->set_texture(texture_->add_region(x, y, width, height));
-    return sprite;
 }
 
 void SpriteBatch::bind_textures() const

@@ -86,22 +86,6 @@ namespace rainbow
         /// <summary>Sets batch visibility.</summary>
         void set_visible(bool visible) { visible_ = visible; }
 
-        /// <summary>
-        ///   Adds a textured sprite to the batch given texture coordinates.
-        /// </summary>
-        /// <param name="x">
-        ///   Origin (x-component) of the texture assigned to the sprite.
-        /// </param>
-        /// <param name="y">
-        ///   Origin (y-component) of the texture assigned to the sprite.
-        /// </param>
-        /// <param name="width">Width of the texture and sprite.</param>
-        /// <param name="height">Height of the texture and sprite.</param>
-        /// <returns>
-        ///   Reference to the newly created sprite, positioned at (x,y).
-        /// </returns>
-        auto add(int x, int y, int width, int height) -> SpriteRef;
-
         auto at(uint32_t i) -> Sprite& { return (*this)[i]; }
         auto at(uint32_t i) const -> const Sprite& { return (*this)[i]; }
 
@@ -114,7 +98,7 @@ namespace rainbow
         /// <summary>Brings sprite to front.</summary>
         void bring_to_front(const SpriteRef& ref)
         {
-            R_ASSERT(ref.batch() == this,
+            R_ASSERT(ref.batch() == this,  //
                      "Sprite does not belong to this batch");
 
             bring_to_front(ref.index());
@@ -137,7 +121,7 @@ namespace rainbow
         /// <summary>Erases a sprite from the batch.</summary>
         void erase(const SpriteRef& ref)
         {
-            R_ASSERT(ref.batch() == this,
+            R_ASSERT(ref.batch() == this,  //
                      "Sprite does not belong to this batch");
 
             erase(ref.index());
@@ -181,15 +165,33 @@ namespace rainbow
 
     private:
         StableArray<Sprite> sprites_;
-        std::unique_ptr<SpriteVertex[]> vertices_;  ///< Client vertex buffer.
-        std::unique_ptr<Vec2f[]> normals_;          ///< Client normal buffer.
-        uint32_t count_;                            ///< Number of sprites.
-        graphics::Buffer vertex_buffer_;            ///< Shared, interleaved vertex buffer.
-        graphics::Buffer normal_buffer_;            ///< Shared normal buffer.
-        graphics::VertexArray array_;               ///< Vertex array object.
-        SharedPtr<TextureAtlas> normal_;            ///< Normal map used by all sprites in the batch.
-        SharedPtr<TextureAtlas> texture_;           ///< Texture atlas used by all sprites in the batch.
-        bool visible_;                              ///< Whether the batch is visible.
+
+        /// <summary>Client vertex buffer.</summary>
+        std::unique_ptr<SpriteVertex[]> vertices_;
+
+        /// <summary>Client normal buffer.</summary>
+        std::unique_ptr<Vec2f[]> normals_;
+
+        /// <summary>Number of sprites.</summary>
+        uint32_t count_;
+
+        /// <summary>Shared, interleaved vertex buffer.</summary>
+        graphics::Buffer vertex_buffer_;
+
+        /// <summary>Shared normal buffer.</summary>
+        graphics::Buffer normal_buffer_;
+
+        /// <summary>Vertex array object.</summary>
+        graphics::VertexArray array_;
+
+        /// <summary>Normal map used by all sprites in the batch.</summary>
+        SharedPtr<TextureAtlas> normal_;
+
+        /// <summary>Texture atlas used by all sprites in the batch.</summary>
+        SharedPtr<TextureAtlas> texture_;
+
+        /// <summary>Whether the batch is visible.</summary>
+        bool visible_;
 
         void add() {}
 
@@ -207,6 +209,6 @@ namespace rainbow
         /// <summary>Sets the array state for this batch.</summary>
         void bind_arrays() const;
     };
-}
+}  // namespace rainbow
 
 #endif
