@@ -1,6 +1,30 @@
 language: cpp
-compiler:
-  - gcc
+branches:
+  only:
+    - master
+matrix:
+  include:
+    - os: linux
+      dist: trusty
+      env: BUILD_TYPE=Debug
+    - os: linux
+      dist: trusty
+      env: BUILD_TYPE=MinSizeRel
+    - os: linux
+      dist: trusty
+      env: BUILD_TYPE=RelWithDebInfo
+    - os: osx
+      osx_image: xcode9.2
+      env: BUILD_TYPE=Debug
+    - os: osx
+      osx_image: xcode9.2
+      env: BUILD_TYPE=MinSizeRel
+    - os: osx
+      osx_image: xcode9.2
+      env: BUILD_TYPE=RelWithDebInfo
+    - os: osx
+      osx_image: xcode9.2
+      env: BUILD_TYPE=iOS
 addons:
   apt:
     sources:
@@ -12,32 +36,14 @@ addons:
       - libvorbis-dev
       - ninja-build
       - pulseaudio
-install:
-  - mkdir -p local
-  - if [[ ! -x local/bin/cmake ]]; then curl -LO http://cmake.org/files/v3.6/cmake-3.6.3-Linux-x86_64.sh; fi
-  - if [[ -f cmake-3.6.3-Linux-x86_64.sh ]]; then sh cmake-3.6.3-Linux-x86_64.sh --prefix=local --skip-license; fi
-  - export CC=gcc-7 CXX=g++-7 PATH=$(pwd)/local/bin:$PATH
-script:
-  - mkdir $TRAVIS_BUILD_DIR-build
-  - cd $TRAVIS_BUILD_DIR-build
-  - GENERATOR=Ninja $TRAVIS_BUILD_DIR/tools/build.sh -DCMAKE_BUILD_TYPE=$CMAKE_BUILD_TYPE -DUNIT_TESTS=1 -DUSE_PHYSICS=1 -DUSE_SPINE=1
-  - ./rainbow --test
 cache:
   directories:
     - local
+before_install:
+  - tools/travis.sh before_install
+script:
+  - tools/travis.sh script
 after_success:
-  - cd $TRAVIS_BUILD_DIR
-  - if [[ "$CMAKE_BUILD_TYPE" == "Debug" ]]; then cp -r $TRAVIS_BUILD_DIR-build/CMakeFiles/rainbow.dir/src .; fi
-  - if [[ "$CMAKE_BUILD_TYPE" == "Debug" ]]; then bash <(curl -s https://codecov.io/bash) -x gcov-7; fi
-branches:
-  only:
-    - master
+  - tools/travis.sh after_success
 notifications:
   email: false
-env:
-  - CMAKE_BUILD_TYPE=Debug
-  - CMAKE_BUILD_TYPE=MinSizeRel
-  - CMAKE_BUILD_TYPE=RelWithDebInfo
-os:
-  - linux
-dist: trusty

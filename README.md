@@ -1,4 +1,9 @@
-# Rainbow [![codecov](https://codecov.io/gh/tn0502/rainbow/branch/master/graph/badge.svg)](https://codecov.io/gh/tn0502/rainbow)
+# Rainbow
+
+[![codecov](https://codecov.io/gh/tn0502/rainbow/branch/master/graph/badge.svg)](https://codecov.io/gh/tn0502/rainbow)
+[![Windows build status](https://ci.appveyor.com/api/projects/status/oajtxwu9d9lrayk0/branch/master?svg=true)](https://ci.appveyor.com/project/Tommy/rainbow/branch/master)
+[![Linux/iOS/macOS build status](https://travis-ci.org/tn0502/rainbow.svg?branch=master)](https://travis-ci.org/tn0502/rainbow)
+[![macOS build status](https://doozer.io/badge/tn0502/rainbow/buildstatus/master)](https://doozer.io/tn0502/rainbow)
 
 Rainbow is a fast, scriptable, cross-platform, 2D game engine written in modern
 C++. Games can be written in both C++ and JavaScript (but you really should make
@@ -16,15 +21,14 @@ future directions.
 
 Rainbow currently runs on the following platforms:
 
-| Platform | Status |
-|----------|--------|
-| Windows  | [![Windows build status](https://ci.appveyor.com/api/projects/status/oajtxwu9d9lrayk0/branch/master?svg=true)](https://ci.appveyor.com/project/Tommy/rainbow/branch/master) |
-| macOS    | [![macOS build status](https://doozer.io/badge/tn0502/rainbow/buildstatus/master)](https://doozer.io/tn0502/rainbow) |
-| Linux    | [![Linux build status](https://travis-ci.org/tn0502/rainbow.svg?branch=master)](https://travis-ci.org/tn0502/rainbow) |
-| Android  | 🚧     |
-| iOS      | ✓      |
+- [x] Windows
+- [x] macOS
+- [x] Linux
+- [x] Android
+- [x] iOS
 
-We even have a prototype that runs in your browser. [Give it a try!](https://tido.bitbucket.io/rainbow.js/)
+We even have a prototype that runs in your browser.
+[Give it a try!](https://tido.bitbucket.io/rainbow.js/)
 
 ## Examples
 
