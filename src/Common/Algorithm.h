@@ -11,8 +11,10 @@
 
 #include <algorithm>
 #include <cmath>
+#include <functional>
 #include <iterator>
 #include <limits>
+#include <type_traits>
 #include <utility>
 
 #include "Common/Constants.h"
@@ -111,6 +113,13 @@ namespace rainbow
         i |= i >> 8;
         i |= i >> 16;
         return i - (i >> 1);
+    }
+
+    template <typename T>
+    void hash_combine(size_t& seed, T&& value)
+    {
+        const auto hash = std::hash<std::decay_t<T>>{}(value);
+        seed ^= hash + 0x9e3779b9 + (seed << 6) + (seed >> 2);
     }
 
     /// <summary>

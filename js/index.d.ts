@@ -85,17 +85,13 @@ declare namespace Rainbow {
     Count = 15,
   }
 
-  export class Font {
-    private readonly $type: "Rainbow.Font";
-    constructor(path: string, pt: number);
-  }
-
   export class Label {
     private readonly $type: "Rainbow.Label";
     constructor();
     alignment(): TextAlignment;
     angle(): number;
     color(): { r: number, g: number, b: number, a: number };
+    height(): number;
     length(): number;
     position(): { x: number, y: number };
     scale(): number;
@@ -103,7 +99,8 @@ declare namespace Rainbow {
     width(): number;
     setAlignment(alignment: TextAlignment): void;
     setColor(color: { r: number, g: number, b: number, a: number }): void;
-    setFont(font: Font): void;
+    setFont(font: string): void;
+    setFontSize(fontSize: number): void;
     setPosition(position: { x: number, y: number }): void;
     setRotation(r: number): void;
     setScale(factor: number): void;

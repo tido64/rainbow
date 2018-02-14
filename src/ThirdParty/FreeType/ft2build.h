@@ -4,7 +4,11 @@
 #if defined(__IPHONE_OS_VERSION_MIN_REQUIRED)
 #   define FT_CONFIG_OPTION_SYSTEM_ZLIB
 #endif
-#define FT_CONFIG_MODULES_H  <ftmodule.h>
+#ifndef RAINBOW_BUILD_FREETYPE_WITHOUT_HARFBUZZ
+#   define FT_CONFIG_OPTION_USE_HARFBUZZ
+#endif
+
+#define FT_CONFIG_MODULES_H <ftmodule.h>
 
 #include <freetype/config/ftheader.h>
 #include FT_CONFIG_CONFIG_H

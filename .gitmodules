@@ -19,6 +19,9 @@
 [submodule "lib/spine-runtimes"]
 	path = lib/spine-runtimes
 	url = https://github.com/EsotericSoftware/spine-runtimes.git
+[submodule "lib/stb"]
+	path = lib/stb
+	url = https://github.com/nothings/stb.git
 [submodule "lib/variant"]
 	path = lib/variant
 	url = https://github.com/mapbox/variant.git

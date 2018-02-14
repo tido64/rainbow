@@ -10,7 +10,6 @@
 #include "Common/TypeInfo.h"
 #include "Audio/Mixer.h"
 #include "Graphics/Animation.h"
-#include "Graphics/FontAtlas.h"
 #include "Graphics/Label.h"
 #include "Graphics/RenderQueue.h"
 #include "Graphics/Sprite.h"
@@ -242,18 +241,6 @@ void rainbow::duk::register_module<rainbow::ControllerButton>(duk_context* ctx, 
 }
 
 template <>
-void rainbow::duk::register_module<rainbow::SharedPtr<rainbow::FontAtlas>>(duk_context* ctx, duk_idx_t rainbow)
-{
-    duk::push_constructor<SharedPtr<rainbow::FontAtlas>, czstring, float>(ctx);
-    duk::put_prototype<SharedPtr<rainbow::FontAtlas>, Allocation::HeapAllocated>(ctx, [](duk_context* ctx) {
-        duk::push_literal(ctx, "Rainbow.Font");
-        duk::put_prop_literal(ctx, -2, DUKR_WELLKNOWN_SYMBOL_TOSTRINGTAG);
-    });
-    duk_freeze(ctx, -1);
-    duk::put_prop_literal(ctx, rainbow, "Font");
-}
-
-template <>
 void rainbow::duk::register_module<rainbow::Label>(duk_context* ctx, duk_idx_t rainbow)
 {
     duk::push_constructor<Label>(ctx);
@@ -288,6 +275,16 @@ void rainbow::duk::register_module<rainbow::Label>(duk_context* ctx, duk_idx_t r
             },
             0);
         duk::put_prop_literal(ctx, -2, "color");
+        duk_push_c_function(
+            ctx,
+            [](duk_context* ctx) -> duk_ret_t {
+                auto obj = duk::push_this<Label>(ctx);
+                auto result = obj->height();
+                duk::push(ctx, result);
+                return 1;
+            },
+            0);
+        duk::put_prop_literal(ctx, -2, "height");
         duk_push_c_function(
             ctx,
             [](duk_context* ctx) -> duk_ret_t {
@@ -362,12 +359,22 @@ void rainbow::duk::register_module<rainbow::Label>(duk_context* ctx, duk_idx_t r
             ctx,
             [](duk_context* ctx) -> duk_ret_t {
                 auto obj = duk::push_this<Label>(ctx);
-                auto args = duk::get_args<SharedPtr<FontAtlas>>(ctx);
+                auto args = duk::get_args<czstring>(ctx);
                 obj->set_font(duk::forward(std::get<0>(args)));
                 return 0;
             },
             1);
         duk::put_prop_literal(ctx, -2, "setFont");
+        duk_push_c_function(
+            ctx,
+            [](duk_context* ctx) -> duk_ret_t {
+                auto obj = duk::push_this<Label>(ctx);
+                auto args = duk::get_args<int>(ctx);
+                obj->set_font_size(duk::forward(std::get<0>(args)));
+                return 0;
+            },
+            1);
+        duk::put_prop_literal(ctx, -2, "setFontSize");
         duk_push_c_function(
             ctx,
             [](duk_context* ctx) -> duk_ret_t {
@@ -1096,7 +1103,6 @@ namespace rainbow::duk
         duk::register_module<AnimationEvent>(ctx, obj_idx);
         duk::register_module<ControllerAxis>(ctx, obj_idx);
         duk::register_module<ControllerButton>(ctx, obj_idx);
-        duk::register_module<SharedPtr<FontAtlas>>(ctx, obj_idx);
         duk::register_module<Label>(ctx, obj_idx);
         duk::register_module<SpriteRef>(ctx, obj_idx);
         duk::register_module<SpriteBatch>(ctx, obj_idx);

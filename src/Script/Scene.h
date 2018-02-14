@@ -19,14 +19,12 @@
 
 namespace rainbow
 {
-    class FontAtlas;
     class TextureAtlas;
 
     class Scene final : public IDrawable
     {
         using asset_type = variant<  //
             Animation*,
-            FontAtlas*,
             Label*,
             SpriteBatch*,
             TextureAtlas*>;

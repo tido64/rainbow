@@ -18,7 +18,8 @@ class Audial implements Demo {
 
     this.label = new Rainbow.Label();
     this.label.setAlignment(Rainbow.TextAlignment.Center);
-    this.label.setFont(new Rainbow.Font("OpenSans-Light.ttf", 21));
+    this.label.setFont("OpenSans-Light.ttf");
+    this.label.setFontSize(21);
     this.label.setPosition({ x: width * 0.5, y: height * 0.5 });
     Rainbow.RenderQueue.add(this.label);
 
@@ -165,7 +166,8 @@ class Labels implements Demo {
 
     this.label = new Rainbow.Label();
     this.label.setAlignment(Rainbow.TextAlignment.Center);
-    this.label.setFont(new Rainbow.Font("OpenSans-Light.ttf", 60));
+    this.label.setFont("OpenSans-Light.ttf");
+    this.label.setFontSize(60);
     Rainbow.RenderQueue.add(this.label);
 
     const Thread = Duktape.Thread;
@@ -338,7 +340,6 @@ let State: {
   currentDemo: number;
   demo: Demo;
   label: Rainbow.Label;
-  fontSize: number;
   labelPos: { x: number; y: number };
 };
 
@@ -352,28 +353,30 @@ function init(width: number, height: number) {
   const currentDemo = 3;
   const demo = createDemo[currentDemo]();
 
-  const fontSize = 24;
-  const labelPos = { x: width * 0.85, y: 16 };
+  const margin = 16;
+  const labelPos = { x: width - margin, y: margin };
   const label = new Rainbow.Label();
-  label.setFont(new Rainbow.Font("OpenSans-Light.ttf", fontSize));
+  label.setAlignment(Rainbow.TextAlignment.Right);
+  label.setFont("OpenSans-Light.ttf");
+  label.setFontSize(24);
   label.setPosition(labelPos);
   label.setText("NEXT DEMO");
   Rainbow.RenderQueue.add(label);
 
-  State = { createDemo, currentDemo, demo, label, fontSize, labelPos };
+  State = { createDemo, currentDemo, demo, label, labelPos };
 }
 
 function update(dt: number) {
   const pointersDown = Rainbow.Input.pointersDown;
   if (pointersDown.length > 0) {
-    const { label, fontSize, labelPos } = State;
+    const { label, labelPos } = State;
     const padding = 8;
     const p = pointersDown[0];
     const didHit =
-      p.x >= labelPos.x - padding &&
-      p.x <= labelPos.x + label.width() + padding &&
+      p.x >= labelPos.x - label.width() - padding &&
+      p.x <= labelPos.x + padding &&
       p.y >= labelPos.y - padding &&
-      p.y <= labelPos.y + fontSize + padding;
+      p.y <= labelPos.y + label.height() + padding;
     if (didHit) {
       const { createDemo, currentDemo, demo } = State;
 

@@ -142,7 +142,7 @@ changing the texture of every sprite in a batch by changing only the texture
 atlas. Rainbow does not prevent you from loading the same asset.
 
 Please refer to the API reference for full details. For displaying text, look up
-`FontAtlas` and `Label`.
+`Label`.
 
 ## Render Queue
 

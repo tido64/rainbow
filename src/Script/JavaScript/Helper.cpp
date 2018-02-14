@@ -4,13 +4,11 @@
 
 #include "Script/JavaScript/Helper.h"
 
-#include "Graphics/FontAtlas.h"
 #include "Graphics/TextureAtlas.h"
 #include "Input/VirtualKey.h"
 
 using rainbow::Animation;
 using rainbow::Color;
-using rainbow::FontAtlas;
 using rainbow::SharedPtr;
 using rainbow::TextureAtlas;
 using rainbow::Vec2f;
@@ -137,13 +135,6 @@ auto rainbow::duk::get<Color>(duk_context* ctx, duk_idx_t idx) -> Color
             static_cast<uint8_t>(duk_require_int(ctx, -3)),
             static_cast<uint8_t>(duk_require_int(ctx, -2)),
             static_cast<uint8_t>(duk_require_int(ctx, -1))};
-}
-
-template <>
-auto rainbow::duk::get<SharedPtr<FontAtlas>>(duk_context* ctx, duk_idx_t idx)
-    -> SharedPtr<FontAtlas>
-{
-    return get_shared<FontAtlas>(ctx, idx);
 }
 
 template <>

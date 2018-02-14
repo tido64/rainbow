@@ -48,8 +48,6 @@ set(SOURCE_FILES
     src/Common/String.h
     src/Common/TreeNode.h
     src/Common/TypeInfo.h
-    src/Common/UTF8.cpp
-    src/Common/UTF8.h
     src/Common/Variant.h
     src/Config.cpp
     src/Config.h
@@ -72,14 +70,9 @@ set(SOURCE_FILES
     src/Graphics/Drawable.h
     src/Graphics/ElementBuffer.cpp
     src/Graphics/ElementBuffer.h
-    src/Graphics/FontAtlas.cpp
-    src/Graphics/FontAtlas.h
-    src/Graphics/FontGlyph.h
     src/Graphics/Image.h
     src/Graphics/Label.cpp
     src/Graphics/Label.h
-    src/Graphics/LyricalLabel.cpp
-    src/Graphics/LyricalLabel.h
     src/Graphics/OpenGL.h
     src/Graphics/Renderer.cpp
     src/Graphics/Renderer.h
@@ -154,6 +147,10 @@ set(SOURCE_FILES
     src/Script/Transition.h
     src/Script/TransitionFunctions.h
     src/Script/World.h
+    src/Text/FontCache.cpp
+    src/Text/FontCache.h
+    src/Text/Typesetter.cpp
+    src/Text/Typesetter.h
     src/ThirdParty/NanoSVG/NanoSVG.cpp
     src/ThirdParty/NanoSVG/NanoSVG.h
     src/Threading/Synchronized.h
@@ -282,7 +279,6 @@ endif()
 if(USE_HEIMDALL)
   add_definitions(-DUSE_HEIMDALL)
   list(APPEND SOURCE_FILES
-      src/Heimdall/Button.h
       src/Heimdall/ChangeMonitor.h
       src/Heimdall/Gatekeeper.cpp
       src/Heimdall/Gatekeeper.h

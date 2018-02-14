@@ -15,7 +15,8 @@ var Audial = /** @class */ (function () {
         console.log("Demo: Audial");
         this.label = new Rainbow.Label();
         this.label.setAlignment(Rainbow.TextAlignment.Center);
-        this.label.setFont(new Rainbow.Font("OpenSans-Light.ttf", 21));
+        this.label.setFont("OpenSans-Light.ttf");
+        this.label.setFontSize(21);
         this.label.setPosition({ x: width * 0.5, y: height * 0.5 });
         Rainbow.RenderQueue.add(this.label);
         var Thread = Duktape.Thread;
@@ -131,7 +132,8 @@ var Labels = /** @class */ (function () {
         this.screen = { width: width, height: height };
         this.label = new Rainbow.Label();
         this.label.setAlignment(Rainbow.TextAlignment.Center);
-        this.label.setFont(new Rainbow.Font("OpenSans-Light.ttf", 60));
+        this.label.setFont("OpenSans-Light.ttf");
+        this.label.setFontSize(60);
         Rainbow.RenderQueue.add(this.label);
         var Thread = Duktape.Thread;
         var frame = 0;
@@ -273,25 +275,27 @@ function init(width, height) {
     ];
     var currentDemo = 3;
     var demo = createDemo[currentDemo]();
-    var fontSize = 24;
-    var labelPos = { x: width * 0.85, y: 16 };
+    var margin = 16;
+    var labelPos = { x: width - margin, y: margin };
     var label = new Rainbow.Label();
-    label.setFont(new Rainbow.Font("OpenSans-Light.ttf", fontSize));
+    label.setAlignment(Rainbow.TextAlignment.Right);
+    label.setFont("OpenSans-Light.ttf");
+    label.setFontSize(24);
     label.setPosition(labelPos);
     label.setText("NEXT DEMO");
     Rainbow.RenderQueue.add(label);
-    State = { createDemo: createDemo, currentDemo: currentDemo, demo: demo, label: label, fontSize: fontSize, labelPos: labelPos };
+    State = { createDemo: createDemo, currentDemo: currentDemo, demo: demo, label: label, labelPos: labelPos };
 }
 function update(dt) {
     var pointersDown = Rainbow.Input.pointersDown;
     if (pointersDown.length > 0) {
-        var label = State.label, fontSize = State.fontSize, labelPos = State.labelPos;
+        var label = State.label, labelPos = State.labelPos;
         var padding = 8;
         var p = pointersDown[0];
-        var didHit = p.x >= labelPos.x - padding &&
-            p.x <= labelPos.x + label.width() + padding &&
+        var didHit = p.x >= labelPos.x - label.width() - padding &&
+            p.x <= labelPos.x + padding &&
             p.y >= labelPos.y - padding &&
-            p.y <= labelPos.y + fontSize + padding;
+            p.y <= labelPos.y + label.height() + padding;
         if (didHit) {
             var createDemo = State.createDemo, currentDemo = State.currentDemo, demo = State.demo;
             demo.deinit();

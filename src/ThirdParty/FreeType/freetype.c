@@ -14,6 +14,7 @@
 #include <base/ftsystem.c>
 #include <cff/cff.c>
 #include <gzip/ftgzip.c>
+#include <psaux/psaux.c>
 #include <pshinter/pshinter.c>
 #include <psnames/psnames.c>
 #include <sfnt/sfnt.c>

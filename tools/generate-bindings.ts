@@ -78,14 +78,6 @@ const modules: TypeInfo[] = [
   },
   {
     type: "class",
-    name: "Font",
-    source: "Graphics/FontAtlas.h",
-    sourceName: "SharedPtr<rainbow::FontAtlas>",
-    ctor: [{ type: "czstring", name: "path" }, { type: "float", name: "pt" }],
-    methods: []
-  },
-  {
-    type: "class",
     name: "Label",
     source: "Graphics/Label.h",
     sourceName: "Label",
@@ -94,11 +86,12 @@ const modules: TypeInfo[] = [
       { name: "alignment", parameters: [], returnType: "TextAlignment" },
       { name: "angle", parameters: [], returnType: "float" },
       { name: "color", parameters: [], returnType: "Color" },
+      { name: "height", parameters: [], returnType: "float" },
       { name: "length", parameters: [], returnType: "uint32_t" },
       { name: "position", parameters: [], returnType: "Vec2f" },
       { name: "scale", parameters: [], returnType: "float" },
       { name: "text", parameters: [], returnType: "czstring" },
-      { name: "width", parameters: [], returnType: "uint32_t" },
+      { name: "width", parameters: [], returnType: "float" },
       {
         name: "set_alignment",
         parameters: [{ type: "TextAlignment", name: "alignment" }]
@@ -106,7 +99,11 @@ const modules: TypeInfo[] = [
       { name: "set_color", parameters: [{ type: "Color", name: "color" }] },
       {
         name: "set_font",
-        parameters: [{ type: "SharedPtr<FontAtlas>", name: "font" }]
+        parameters: [{ type: "czstring", name: "font" }]
+      },
+      {
+        name: "set_font_size",
+        parameters: [{ type: "int", name: "fontSize" }]
       },
       {
         name: "set_position",
@@ -134,7 +131,7 @@ const modules: TypeInfo[] = [
       { name: "pivot", parameters: [], returnType: "Vec2f" },
       { name: "position", parameters: [], returnType: "Vec2f" },
       { name: "scale", parameters: [], returnType: "Vec2f" },
-      { name: "width", parameters: [], returnType: "float" },
+      { name: "width", parameters: [], returnType: "uint32_t" },
       { name: "set_color", parameters: [{ type: "Color", name: "color" }] },
       { name: "set_id", parameters: [{ type: "int", name: "id" }] },
       { name: "set_normal", parameters: [{ type: "uint32_t", name: "id" }] },
@@ -442,7 +439,6 @@ type NativeType =
   | "Channel|Sound"
   | "Channel|undefined"
   | "Color"
-  | "SharedPtr<FontAtlas>"
   | "SharedPtr<TextureAtlas>"
   | "Sound"
   | "Sound|undefined"
@@ -718,8 +714,6 @@ function mapToTypeScriptTypeImpl(type?: NativeType): string {
       return "number[]";
     case "Color":
       return "{ r: number, g: number, b: number, a: number }";
-    case "SharedPtr<FontAtlas>":
-      return "Font";
     case "SharedPtr<TextureAtlas>":
       return "Texture";
     case "SpriteRef":

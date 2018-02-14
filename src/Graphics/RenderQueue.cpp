@@ -9,8 +9,10 @@
 #include "Graphics/Label.h"
 #include "Graphics/Renderer.h"
 #include "Graphics/SpriteBatch.h"
+#include "Text/FontCache.h"
 
 using rainbow::Animation;
+using rainbow::FontCache;
 using rainbow::Label;
 using rainbow::SpriteBatch;
 using rainbow::graphics::RenderQueue;
@@ -21,7 +23,11 @@ namespace
     {
         void operator()(Animation*) const {}
 
-        void operator()(Label* label) const { rainbow::graphics::draw(*label); }
+        void operator()(Label* label) const
+        {
+            FontCache::Get()->bind_texture();
+            rainbow::graphics::draw(*label);
+        }
 
         void operator()(SpriteBatch* sprite_batch) const
         {

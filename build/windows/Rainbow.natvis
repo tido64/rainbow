@@ -17,9 +17,6 @@
       <Item Condition="sprite_.batch_ != nullptr" Name="[sprite]">(*sprite_.batch_)[sprite_.i_]</Item>
     </Expand>
   </Type>
-  <Type Name="rainbow::FontAtlas">
-    <DisplayString>{{pt={pt_} color={color_}}}</DisplayString>
-  </Type>
   <Type Name="rainbow::Label">
     <DisplayString>{text_._Mypair._Myval2,s8}</DisplayString>
     <Expand>

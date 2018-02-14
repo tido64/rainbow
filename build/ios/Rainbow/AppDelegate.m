@@ -3,7 +3,7 @@
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
 #import "AppDelegate.h"
-#import "RainbowViewController.h"
+#import "Platform/iOS/RainbowViewController.h"
 
 #pragma clang diagnostic ignored "-Wunused-parameter"
 
@@ -11,8 +11,8 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
-    self.window.backgroundColor = [UIColor blackColor];
+    self.window = [[UIWindow alloc] initWithFrame:UIScreen.mainScreen.bounds];
+    self.window.backgroundColor = UIColor.blackColor;
     self.window.rootViewController = [[RainbowViewController alloc] init];
     [self.window makeKeyAndVisible];
     return YES;

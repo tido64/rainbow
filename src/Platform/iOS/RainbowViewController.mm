@@ -2,7 +2,7 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
-#import "RainbowViewController.h"
+#import "Platform/iOS/RainbowViewController.h"
 
 #import <CoreMotion/CoreMotion.h>
 

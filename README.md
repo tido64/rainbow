@@ -35,11 +35,10 @@ We even have a prototype that runs in your browser.
 ### Label
 
 ```typescript
-const font = new Rainbow.Font("OpenSans-Light.ttf", 60);
-
 const label = new Rainbow.Label();
 label.setAlignment(Rainbow.TextAlignment.Center);
-label.setFont(font);
+label.setFont("OpenSans-Light.ttf");
+label.setFontSize(60);
 label.setPosition({ x: screenWidth * 0.5, y: screenHeight * 0.55 });
 label.setText("Hello\nWorld");
 
@@ -97,6 +96,7 @@ Rainbow.RenderQueue.add(animation);
 
 * [Duktape](http://duktape.org/)
 * [FreeType](https://freetype.org/)
+* [HarfBuzz](https://wiki.freedesktop.org/www/Software/HarfBuzz/)
 * [Mapbox Variant](https://github.com/mapbox/variant)
 * [NanoSVG](https://github.com/memononen/nanosvg)
 * [Ogg Vorbis](https://xiph.org/vorbis/)

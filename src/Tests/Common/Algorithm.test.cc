@@ -6,19 +6,11 @@
 
 #include "Common/Algorithm.h"
 #include "Common/Logging.h"
-#include "Common/UTF8.h"
 #include "Tests/TestHelpers.h"
-
-using rainbow::czstring;
 
 namespace
 {
     constexpr auto kPi = rainbow::kPi<float>;
-
-    constexpr unsigned char kInvalidUTF8[]{
-        'B', 'l',  'o', 'w',  'z', 'y', ' ', 'n', 'i', 'g', 'h',
-        't', '-',  'f', 'r',  'u', 'm', 'p', 's', ' ', 'v', 'e',
-        'x', '\'', 'd', 0xff, 'J', 'a', 'c', 'k', ' ', 'Q', '.'};
 
     constexpr unsigned char kUTF8[]{
         0xc3, 0x85,              // LATIN CAPITAL LETTER A WITH RING ABOVE
@@ -281,23 +273,4 @@ TEST(AlgorithmTest, ExtractsSignOfRealNumbers)
     ASSERT_GT(0, rainbow::signum(-10));
     ASSERT_EQ(0, rainbow::signum(0));
     ASSERT_LT(0, rainbow::signum(10));
-}
-
-TEST(AlgorithmTest, IteratesUTF8String)
-{
-    size_t i = 0;
-    rainbow::for_each_utf8(reinterpret_cast<czstring>(kUTF8),
-                           [&i](uint32_t ch) {
-                               ASSERT_EQ(kUTF32[i], ch);
-                               ++i;
-                           });
-    ASSERT_EQ(rainbow::array_size(kUTF32), i);
-
-    i = 0;
-    rainbow::for_each_utf8(reinterpret_cast<czstring>(kInvalidUTF8),
-                           [&i](uint32_t ch) {
-                               ASSERT_EQ(kInvalidUTF8[i], ch);
-                               ++i;
-                           });
-    ASSERT_EQ(25u, i);
 }

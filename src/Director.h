@@ -10,6 +10,7 @@
 #include "Graphics/Renderer.h"
 #include "Input/Input.h"
 #include "Script/Timer.h"
+#include "Text/Typesetter.h"
 
 namespace rainbow
 {
@@ -71,6 +72,7 @@ namespace rainbow
         Input input_;
         graphics::State renderer_;
         audio::Mixer mixer_;
+        Typesetter typesetter_;
     };
 }  // namespace rainbow
 

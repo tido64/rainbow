@@ -6,11 +6,16 @@
 #define GRAPHICS_LABEL_H_
 
 #include <memory>
+#include <string>
+#include <vector>
 
 #include <Rainbow/TextAlignment.h>
 
+#include "Common/Color.h"
+#include "Common/String.h"
+#include "Math/Vec2.h"
 #include "Graphics/Buffer.h"
-#include "Graphics/FontAtlas.h"
+#include "Graphics/SpriteVertex.h"
 #include "Graphics/VertexArray.h"
 
 namespace rainbow
@@ -37,10 +42,19 @@ namespace rainbow
         auto color() const { return color_; }
 
         /// <summary>Returns the assigned font.</summary>
-        auto font() const -> const FontAtlas& { return *font_.get(); }
+        auto font() const -> const std::string& { return font_face_; }
+
+        /// <summary>Returns font size.</summary>
+        auto font_size() const { return font_size_; }
+
+        /// <summary>Returns label height.</summary>
+        auto height() const { return size_.y; }
 
         /// <summary>Returns the number of characters.</summary>
-        auto length() const { return count_ / 4; }
+        auto length() const
+        {
+            return static_cast<uint32_t>(vertices_.size() / 4);
+        }
 
         /// <summary>Returns label position.</summary>
         auto position() const -> const Vec2f& { return position_; }
@@ -49,7 +63,7 @@ namespace rainbow
         auto scale() const { return scale_; }
 
         /// <summary>Returns the string.</summary>
-        auto text() const { return text_.get(); }
+        auto text() const { return text_.c_str(); }
 
         /// <summary>Returns the vertex array object.</summary>
         auto vertex_array() const -> const graphics::VertexArray&
@@ -60,11 +74,12 @@ namespace rainbow
         /// <summary>Returns the vertex count.</summary>
         auto vertex_count() const
         {
-            return std::min(count_ + (count_ >> 1), cutoff_);
+            const auto count = vertices_.size();
+            return static_cast<int>(count + (count >> 1));
         }
 
         /// <summary>Returns label width.</summary>
-        auto width() const { return width_; }
+        auto width() const { return size_.x; }
 
         /// <summary>Sets text alignment.</summary>
         void set_alignment(TextAlignment);
@@ -73,7 +88,10 @@ namespace rainbow
         void set_color(Color c);
 
         /// <summary>Sets text font.</summary>
-        void set_font(SharedPtr<FontAtlas>);
+        void set_font(czstring font_face);
+
+        /// <summary>Sets font size.</summary>
+        void set_font_size(int font_size);
 
         /// <summary>Sets label as needing update.</summary>
         void set_needs_update(unsigned int what) { stale_ |= what; }
@@ -96,7 +114,7 @@ namespace rainbow
         void set_text(czstring);
 
         /// <summary>Binds all used textures.</summary>
-        void bind_textures() const { font_->bind(); }
+        void bind_textures() const { }
 
         /// <summary>Moves label by (x,y).</summary>
         void move(const Vec2f&);
@@ -105,47 +123,52 @@ namespace rainbow
         virtual void update();
 
     protected:
-        auto cutoff() const -> int { return cutoff_ / 6; }
-        void set_cutoff(int cutoff) { cutoff_ = cutoff * 6; }
-
         auto state() const { return stale_; }
-        auto vertex_buffer() const { return vertices_.get(); }
+        auto vertex_buffer() const { return vertices_.data(); }
 
         void clear_state() { stale_ = 0; }
         void update_internal();
         void upload() const;
 
     private:
-        using String = std::unique_ptr<char[]>;
-        using VertexBuffer = std::unique_ptr<SpriteVertex[]>;
+        /// <summary>Flags indicating need for update.</summary>
+        unsigned int stale_;
 
-        VertexBuffer vertices_;        ///< Client vertex buffer.
-        String text_;                  ///< Content of this label.
-        Vec2f position_;               ///< Position of the text (bottom left).
-        Color color_;                  ///< Text colour.
-        float scale_;                  ///< Label scale factor.
-        TextAlignment alignment_;      ///< Text alignment.
-        float angle_;                  ///< Angle of rotation.
-        unsigned int count_;           ///< Number of characters * 4 (i.e. vertices).
-        unsigned int stale_;           ///< Flags indicating need for update.
-        unsigned int width_;           ///< Label width.
-        unsigned int cutoff_;          ///< Number of characters to render.
-        size_t size_;                  ///< Size of the char array.
-        graphics::Buffer buffer_;      ///< Vertex buffer.
-        graphics::VertexArray array_;  ///< Vertex array object.
-        SharedPtr<FontAtlas> font_;    ///< The font used in this label.
+        /// <summary>Vertex array object.</summary>
+        graphics::VertexArray array_;
 
-        /// <summary>Saves line width and aligns the line if needed.</summary>
-        /// <param name="start">First character of line.</param>
-        /// <param name="end">End character.</param>
-        /// <param name="width">Width of line.</param>
-        /// <param name="R">Rotation vector.</param>
-        /// <param name="needs_alignment">Whether alignment is needed.</param>
-        void save(unsigned int start,
-                  unsigned int end,
-                  float width,
-                  const Vec2f& R,
-                  bool needs_alignment);
+        /// <summary>Client vertex buffer.</summary>
+        std::vector<SpriteVertex> vertices_;
+
+        /// <summary>Content of this label.</summary>
+        std::string text_;
+
+        /// <summary>Font used to draw the text.</summary>
+        std::string font_face_;
+
+        /// <summary>Font size used to draw the text.</summary>
+        int font_size_;
+
+        /// <summary>Text alignment.</summary>
+        TextAlignment alignment_;
+
+        /// <summary>Position of the text (bottom left).</summary>
+        Vec2f position_;
+
+        /// <summary>Text colour.</summary>
+        Color color_;
+
+        /// <summary>Label scale factor.</summary>
+        float scale_;
+
+        /// <summary>Angle of rotation.</summary>
+        float angle_;
+
+        /// <summary>Label size.</summary>
+        Vec2f size_;
+
+        /// <summary>Vertex buffer.</summary>
+        graphics::Buffer buffer_;
     };
 }
 

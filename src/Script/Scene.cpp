@@ -10,7 +10,6 @@
 #include "JavaScript/Helper.h"
 
 using rainbow::Animation;
-using rainbow::FontAtlas;
 using rainbow::Label;
 using rainbow::Passkey;
 using rainbow::Scene;
@@ -163,9 +162,6 @@ auto Scene::from_json(duk_context* ctx, czstring path) -> std::unique_ptr<Scene>
             case AssetType::Audio:
                 total_size += ScopeStack::size_of<void*>();
                 break;
-            case AssetType::Font:
-                total_size += ScopeStack::size_of<FontAtlas>();
-                break;
             case AssetType::Label:
                 total_size += ScopeStack::size_of<Label>();
                 break;
@@ -211,22 +207,10 @@ Scene::Scene(duk_context* ctx, size_t size, const Passkey<Scene>&)
                 break;
             }
 
-            case AssetType::Font:
-            {
-                auto font = stack_.allocate<FontAtlas>(
-                    get_prop_literal<const char*>(ctx, -1, "path"),
-                    get_prop_literal<float>(ctx, -1, "fontSize"));
-                store_asset(ctx, font);
-                break;
-            }
-
             case AssetType::Label:
             {
                 auto label = stack_.allocate<Label>();
-
-                label->set_font(SharedPtr<FontAtlas>(get<FontAtlas>(
-                    get_prop_literal<const char*>(ctx, -1, "font"))));
-
+                label->set_font(get_prop_literal<const char*>(ctx, -1, "font"));
                 label->set_text(get_prop_literal<const char*>(ctx, -1, "text"));
                 label->set_position(
                     get_prop_literal<Vec2f>(ctx, -1, "position"));

@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1923F97F1AF6400A0012C078 /* UTF8.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1923F97D1AF6400A0012C078 /* UTF8.cpp */; };
 		193458551D5A3884008482E8 /* FileSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 193458531D5A3884008482E8 /* FileSystem.cpp */; };
 		193929B316E1932E0018340B /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 193929B216E1932E0018340B /* CoreMotion.framework */; };
 		193929B816E23D5F0018340B /* SystemInfo.apple.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 193929B716E23D5F0018340B /* SystemInfo.apple.cpp */; };
@@ -61,7 +60,6 @@
 		1939A211152C425D00494609 /* Config.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1939A1A0152C425D00494609 /* Config.cpp */; };
 		1939A21B152C425D00494609 /* Director.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1939A1BA152C425D00494609 /* Director.cpp */; };
 		1939A21C152C425D00494609 /* Animation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1939A1BD152C425D00494609 /* Animation.cpp */; };
-		1939A21D152C425D00494609 /* FontAtlas.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1939A1C0152C425D00494609 /* FontAtlas.cpp */; };
 		1939A21E152C425D00494609 /* Label.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1939A1C3152C425D00494609 /* Label.cpp */; };
 		1939A220152C425D00494609 /* Renderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1939A1C8152C425D00494609 /* Renderer.cpp */; };
 		1939A227152C425D00494609 /* Sprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1939A1D4152C425D00494609 /* Sprite.cpp */; };
@@ -91,7 +89,6 @@
 		196CB728161E4ADD0068C809 /* Gatekeeper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 196CB725161E4ADD0068C809 /* Gatekeeper.cpp */; };
 		196CB72F161E4D940068C809 /* b2MotorJoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 196CB72D161E4D940068C809 /* b2MotorJoint.cpp */; };
 		197396DD15A505F60064BF7D /* TextureManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 197396DB15A505F60064BF7D /* TextureManager.cpp */; };
-		198644C31B531CDD004378CF /* LyricalLabel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 198644C11B531CDD004378CF /* LyricalLabel.cpp */; };
 		19865982175E98F700723171 /* Data.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19865981175E98F700723171 /* Data.cpp */; };
 		1989645C1C4AE0080011BA15 /* RainbowViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1989645B1C4AE0080011BA15 /* RainbowViewController.mm */; };
 		198EA19E2012733F00BB3FB4 /* OpenSans-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 198EA19A2012733F00BB3FB4 /* OpenSans-Light.ttf */; };
@@ -127,6 +124,43 @@
 		19937CBA1D398336009F8917 /* TempBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19937CB81D398336009F8917 /* TempBuffer.cpp */; };
 		19AF58A0167FFA0800F54B27 /* Overlay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19AF589C167FFA0800F54B27 /* Overlay.cpp */; };
 		19B051331E0339E600FE624A /* RenderQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19B051311E0339E600FE624A /* RenderQueue.cpp */; };
+		19B3990E2041E8E400581AE0 /* FontCache.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19B3990A2041E8E400581AE0 /* FontCache.cpp */; };
+		19B3990F2041E8E400581AE0 /* Typesetter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19B3990C2041E8E400581AE0 /* Typesetter.cpp */; };
+		19B3995E20420F4B00581AE0 /* hb-font.cc in Sources */ = {isa = PBXBuildFile; fileRef = 19B3995C20420F4B00581AE0 /* hb-font.cc */; };
+		19B3995F20420F4B00581AE0 /* hb-ft.cc in Sources */ = {isa = PBXBuildFile; fileRef = 19B3995D20420F4B00581AE0 /* hb-ft.cc */; };
+		19B3996120420F6D00581AE0 /* hb-ot-layout.cc in Sources */ = {isa = PBXBuildFile; fileRef = 19B3996020420F6D00581AE0 /* hb-ot-layout.cc */; };
+		19B3996320420F8700581AE0 /* hb-buffer.cc in Sources */ = {isa = PBXBuildFile; fileRef = 19B3996220420F8700581AE0 /* hb-buffer.cc */; };
+		19B3996520420F9F00581AE0 /* hb-set.cc in Sources */ = {isa = PBXBuildFile; fileRef = 19B3996420420F9F00581AE0 /* hb-set.cc */; };
+		19B3996720420FD700581AE0 /* hb-ot-tag.cc in Sources */ = {isa = PBXBuildFile; fileRef = 19B3996620420FD700581AE0 /* hb-ot-tag.cc */; };
+		19B3996B20421A6200581AE0 /* hb-coretext.cc in Sources */ = {isa = PBXBuildFile; fileRef = 19B3996820421A6100581AE0 /* hb-coretext.cc */; };
+		19B3996C20421A6200581AE0 /* hb-blob.cc in Sources */ = {isa = PBXBuildFile; fileRef = 19B3996920421A6100581AE0 /* hb-blob.cc */; };
+		19B3996D20421A6200581AE0 /* hb-common.cc in Sources */ = {isa = PBXBuildFile; fileRef = 19B3996A20421A6100581AE0 /* hb-common.cc */; };
+		19B3996F20421AB600581AE0 /* hb-face.cc in Sources */ = {isa = PBXBuildFile; fileRef = 19B3996E20421AB600581AE0 /* hb-face.cc */; };
+		19B3997320421B2000581AE0 /* hb-ucdn.cc in Sources */ = {isa = PBXBuildFile; fileRef = 19B3997020421B1F00581AE0 /* hb-ucdn.cc */; };
+		19B3997420421B2000581AE0 /* hb-fallback-shape.cc in Sources */ = {isa = PBXBuildFile; fileRef = 19B3997120421B2000581AE0 /* hb-fallback-shape.cc */; };
+		19B3997520421B2000581AE0 /* hb-unicode.cc in Sources */ = {isa = PBXBuildFile; fileRef = 19B3997220421B2000581AE0 /* hb-unicode.cc */; };
+		19B3998420421B6100581AE0 /* ucdn.c in Sources */ = {isa = PBXBuildFile; fileRef = 19B3997C20421B6000581AE0 /* ucdn.c */; };
+		19B3998620421BE400581AE0 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 19B3998520421BE400581AE0 /* CoreText.framework */; };
+		19B3998820421C0300581AE0 /* hb-shape.cc in Sources */ = {isa = PBXBuildFile; fileRef = 19B3998720421C0300581AE0 /* hb-shape.cc */; };
+		19B3998A20421C4500581AE0 /* hb-shape-plan.cc in Sources */ = {isa = PBXBuildFile; fileRef = 19B3998920421C4500581AE0 /* hb-shape-plan.cc */; };
+		19B3998C20421C7600581AE0 /* hb-ot-var.cc in Sources */ = {isa = PBXBuildFile; fileRef = 19B3998B20421C7600581AE0 /* hb-ot-var.cc */; };
+		19B3998E20421CB300581AE0 /* hb-ot-shape.cc in Sources */ = {isa = PBXBuildFile; fileRef = 19B3998D20421CB300581AE0 /* hb-ot-shape.cc */; };
+		19B3999020421CD700581AE0 /* hb-shaper.cc in Sources */ = {isa = PBXBuildFile; fileRef = 19B3998F20421CD700581AE0 /* hb-shaper.cc */; };
+		19B3999F20421D2900581AE0 /* hb-ot-shape-complex-thai.cc in Sources */ = {isa = PBXBuildFile; fileRef = 19B3999120421D2700581AE0 /* hb-ot-shape-complex-thai.cc */; };
+		19B399A020421D2900581AE0 /* hb-ot-shape-complex-tibetan.cc in Sources */ = {isa = PBXBuildFile; fileRef = 19B3999220421D2700581AE0 /* hb-ot-shape-complex-tibetan.cc */; };
+		19B399A120421D2900581AE0 /* hb-ot-shape-complex-hebrew.cc in Sources */ = {isa = PBXBuildFile; fileRef = 19B3999320421D2700581AE0 /* hb-ot-shape-complex-hebrew.cc */; };
+		19B399A220421D2900581AE0 /* hb-ot-shape-complex-use.cc in Sources */ = {isa = PBXBuildFile; fileRef = 19B3999420421D2700581AE0 /* hb-ot-shape-complex-use.cc */; };
+		19B399A320421D2900581AE0 /* hb-ot-shape-complex-indic.cc in Sources */ = {isa = PBXBuildFile; fileRef = 19B3999520421D2700581AE0 /* hb-ot-shape-complex-indic.cc */; };
+		19B399A420421D2900581AE0 /* hb-ot-shape-complex-hangul.cc in Sources */ = {isa = PBXBuildFile; fileRef = 19B3999620421D2700581AE0 /* hb-ot-shape-complex-hangul.cc */; };
+		19B399A520421D2900581AE0 /* hb-ot-shape-fallback.cc in Sources */ = {isa = PBXBuildFile; fileRef = 19B3999720421D2800581AE0 /* hb-ot-shape-fallback.cc */; };
+		19B399A620421D2900581AE0 /* hb-ot-shape-complex-arabic.cc in Sources */ = {isa = PBXBuildFile; fileRef = 19B3999820421D2800581AE0 /* hb-ot-shape-complex-arabic.cc */; };
+		19B399A720421D2900581AE0 /* hb-ot-shape-complex-khmer.cc in Sources */ = {isa = PBXBuildFile; fileRef = 19B3999920421D2800581AE0 /* hb-ot-shape-complex-khmer.cc */; };
+		19B399A820421D2900581AE0 /* hb-ot-shape-complex-indic-table.cc in Sources */ = {isa = PBXBuildFile; fileRef = 19B3999A20421D2800581AE0 /* hb-ot-shape-complex-indic-table.cc */; };
+		19B399A920421D2900581AE0 /* hb-ot-shape-complex-default.cc in Sources */ = {isa = PBXBuildFile; fileRef = 19B3999B20421D2800581AE0 /* hb-ot-shape-complex-default.cc */; };
+		19B399AA20421D2900581AE0 /* hb-ot-shape-normalize.cc in Sources */ = {isa = PBXBuildFile; fileRef = 19B3999C20421D2800581AE0 /* hb-ot-shape-normalize.cc */; };
+		19B399AB20421D2900581AE0 /* hb-ot-shape-complex-myanmar.cc in Sources */ = {isa = PBXBuildFile; fileRef = 19B3999D20421D2800581AE0 /* hb-ot-shape-complex-myanmar.cc */; };
+		19B399AC20421D2900581AE0 /* hb-ot-shape-complex-use-table.cc in Sources */ = {isa = PBXBuildFile; fileRef = 19B3999E20421D2800581AE0 /* hb-ot-shape-complex-use-table.cc */; };
+		19B399AE20421D5600581AE0 /* hb-ot-map.cc in Sources */ = {isa = PBXBuildFile; fileRef = 19B399AD20421D5500581AE0 /* hb-ot-map.cc */; };
 		19CB0669200AC971005D6740 /* duktape.c in Sources */ = {isa = PBXBuildFile; fileRef = 19CB0668200AC971005D6740 /* duktape.c */; };
 		19CB066B200AC97F005D6740 /* duk_module_node.c in Sources */ = {isa = PBXBuildFile; fileRef = 19CB066A200AC97F005D6740 /* duk_module_node.c */; };
 		19CBB6351E5E4BFA00378BBF /* NSString+Rainbow.m in Sources */ = {isa = PBXBuildFile; fileRef = 19CBB6341E5E4BFA00378BBF /* NSString+Rainbow.m */; };
@@ -154,8 +188,6 @@
 		1910099519FDA3A70036D5F4 /* Global.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Global.h; sourceTree = "<group>"; };
 		1910099719FDA3A70036D5F4 /* Link.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Link.h; sourceTree = "<group>"; };
 		191484E61891BD87004014D7 /* ShaderDetails.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShaderDetails.h; sourceTree = "<group>"; };
-		1923F97D1AF6400A0012C078 /* UTF8.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UTF8.cpp; sourceTree = "<group>"; };
-		1923F97E1AF6400A0012C078 /* UTF8.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UTF8.h; sourceTree = "<group>"; };
 		192A0B9B1681EF84009218EB /* SpriteVertex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpriteVertex.h; sourceTree = "<group>"; };
 		193458531D5A3884008482E8 /* FileSystem.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = FileSystem.cpp; sourceTree = "<group>"; };
 		193458541D5A3884008482E8 /* FileSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileSystem.h; sourceTree = "<group>"; };
@@ -253,18 +285,6 @@
 		19399E71152C401300494609 /* b2WheelJoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = b2WheelJoint.h; sourceTree = "<group>"; };
 		19399E74152C401300494609 /* b2Rope.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = b2Rope.cpp; sourceTree = "<group>"; };
 		19399E75152C401300494609 /* b2Rope.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = b2Rope.h; sourceTree = "<group>"; };
-		19399E79152C401300494609 /* dSFMT-params.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "dSFMT-params.h"; sourceTree = "<group>"; };
-		19399E7A152C401300494609 /* dSFMT-params11213.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "dSFMT-params11213.h"; sourceTree = "<group>"; };
-		19399E7B152C401300494609 /* dSFMT-params1279.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "dSFMT-params1279.h"; sourceTree = "<group>"; };
-		19399E7C152C401300494609 /* dSFMT-params132049.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "dSFMT-params132049.h"; sourceTree = "<group>"; };
-		19399E7D152C401300494609 /* dSFMT-params19937.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "dSFMT-params19937.h"; sourceTree = "<group>"; };
-		19399E7E152C401300494609 /* dSFMT-params216091.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "dSFMT-params216091.h"; sourceTree = "<group>"; };
-		19399E7F152C401300494609 /* dSFMT-params2203.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "dSFMT-params2203.h"; sourceTree = "<group>"; };
-		19399E80152C401300494609 /* dSFMT-params4253.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "dSFMT-params4253.h"; sourceTree = "<group>"; };
-		19399E81152C401300494609 /* dSFMT-params44497.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "dSFMT-params44497.h"; sourceTree = "<group>"; };
-		19399E82152C401300494609 /* dSFMT-params521.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "dSFMT-params521.h"; sourceTree = "<group>"; };
-		19399E83152C401300494609 /* dSFMT-params86243.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "dSFMT-params86243.h"; sourceTree = "<group>"; };
-		19399E90152C401300494609 /* dSFMT.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dSFMT.h; sourceTree = "<group>"; };
 		1939A176152C418700494609 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
 		1939A178152C41C000494609 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		1939A181152C425D00494609 /* Chrono.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Chrono.h; sourceTree = "<group>"; };
@@ -273,16 +293,13 @@
 		1939A186152C425D00494609 /* Data.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Data.h; sourceTree = "<group>"; };
 		1939A197152C425D00494609 /* Random.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Random.h; sourceTree = "<group>"; };
 		1939A19C152C425D00494609 /* TreeNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TreeNode.h; sourceTree = "<group>"; };
-		1939A1A0152C425D00494609 /* Config.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; name = Config.cpp; path = ../../../src/Config.cpp; sourceTree = "<group>"; };
-		1939A1A1152C425D00494609 /* Config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Config.h; path = ../../../src/Config.h; sourceTree = "<group>"; };
-		1939A1BA152C425D00494609 /* Director.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; name = Director.cpp; path = ../../../src/Director.cpp; sourceTree = "<group>"; };
-		1939A1BB152C425D00494609 /* Director.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Director.h; path = ../../../src/Director.h; sourceTree = "<group>"; };
+		1939A1A0152C425D00494609 /* Config.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = Config.cpp; sourceTree = "<group>"; };
+		1939A1A1152C425D00494609 /* Config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Config.h; sourceTree = "<group>"; };
+		1939A1BA152C425D00494609 /* Director.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = Director.cpp; sourceTree = "<group>"; };
+		1939A1BB152C425D00494609 /* Director.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Director.h; sourceTree = "<group>"; };
 		1939A1BD152C425D00494609 /* Animation.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = Animation.cpp; sourceTree = "<group>"; };
 		1939A1BE152C425D00494609 /* Animation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Animation.h; sourceTree = "<group>"; };
 		1939A1BF152C425D00494609 /* Drawable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Drawable.h; sourceTree = "<group>"; };
-		1939A1C0152C425D00494609 /* FontAtlas.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = FontAtlas.cpp; sourceTree = "<group>"; };
-		1939A1C1152C425D00494609 /* FontAtlas.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FontAtlas.h; sourceTree = "<group>"; };
-		1939A1C2152C425D00494609 /* FontGlyph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FontGlyph.h; sourceTree = "<group>"; };
 		1939A1C3152C425D00494609 /* Label.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = Label.cpp; sourceTree = "<group>"; };
 		1939A1C4152C425D00494609 /* Label.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Label.h; sourceTree = "<group>"; };
 		1939A1C5152C425D00494609 /* OpenGL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenGL.h; sourceTree = "<group>"; };
@@ -337,8 +354,8 @@
 		1960AFCD1A4E278E0015A3AD /* StableWorld.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StableWorld.h; sourceTree = "<group>"; };
 		1962F1E5184930D900E1CAF4 /* Diffuse.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Diffuse.cpp; sourceTree = "<group>"; };
 		1962F1E6184930D900E1CAF4 /* Diffuse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Diffuse.h; sourceTree = "<group>"; };
-		19655DE9187C65AF0053C398 /* freetype.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = freetype.c; path = ../../src/ThirdParty/FreeType/freetype.c; sourceTree = "<group>"; };
-		19655DEA187C65AF0053C398 /* ftmodule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ftmodule.h; path = ../../src/ThirdParty/FreeType/ftmodule.h; sourceTree = "<group>"; };
+		19655DE9187C65AF0053C398 /* freetype.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = freetype.c; sourceTree = "<group>"; };
+		19655DEA187C65AF0053C398 /* ftmodule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ftmodule.h; sourceTree = "<group>"; };
 		196911CB1713564A002BC2E4 /* VertexArray.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = VertexArray.cpp; sourceTree = "<group>"; };
 		196911CC1713564A002BC2E4 /* VertexArray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VertexArray.h; sourceTree = "<group>"; };
 		196C0A70189082860042190D /* Shaders.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Shaders.cpp; sourceTree = "<group>"; };
@@ -349,9 +366,6 @@
 		196CB72E161E4D940068C809 /* b2MotorJoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = b2MotorJoint.h; sourceTree = "<group>"; };
 		197396DB15A505F60064BF7D /* TextureManager.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = TextureManager.cpp; sourceTree = "<group>"; };
 		197396DC15A505F60064BF7D /* TextureManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextureManager.h; sourceTree = "<group>"; };
-		198644BD1B531CBD004378CF /* Button.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Button.h; sourceTree = "<group>"; };
-		198644C11B531CDD004378CF /* LyricalLabel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LyricalLabel.cpp; sourceTree = "<group>"; };
-		198644C21B531CDD004378CF /* LyricalLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LyricalLabel.h; sourceTree = "<group>"; };
 		19865981175E98F700723171 /* Data.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = Data.cpp; sourceTree = "<group>"; };
 		1987ADA6194F34BF003D2B3E /* libfmod_iphoneos.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libfmod_iphoneos.a; path = ../../lib/FMOD/lib/ios/libfmod_iphoneos.a; sourceTree = "<group>"; };
 		1987ADA7194F34BF003D2B3E /* libfmod_iphonesimulator.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libfmod_iphonesimulator.a; path = ../../lib/FMOD/lib/ios/libfmod_iphonesimulator.a; sourceTree = "<group>"; };
@@ -406,6 +420,48 @@
 		19B051311E0339E600FE624A /* RenderQueue.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = RenderQueue.cpp; sourceTree = "<group>"; };
 		19B051321E0339E600FE624A /* RenderQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RenderQueue.h; sourceTree = "<group>"; };
 		19B2D7E21AFB4A0E00660D38 /* Pointer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Pointer.h; sourceTree = "<group>"; };
+		19B3990A2041E8E400581AE0 /* FontCache.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = FontCache.cpp; sourceTree = "<group>"; };
+		19B3990B2041E8E400581AE0 /* FontCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FontCache.h; sourceTree = "<group>"; };
+		19B3990C2041E8E400581AE0 /* Typesetter.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = Typesetter.cpp; sourceTree = "<group>"; };
+		19B3990D2041E8E400581AE0 /* Typesetter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Typesetter.h; sourceTree = "<group>"; };
+		19B399102041F41900581AE0 /* ft2build.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ft2build.h; sourceTree = "<group>"; };
+		19B3995C20420F4B00581AE0 /* hb-font.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "hb-font.cc"; sourceTree = "<group>"; };
+		19B3995D20420F4B00581AE0 /* hb-ft.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "hb-ft.cc"; sourceTree = "<group>"; };
+		19B3996020420F6D00581AE0 /* hb-ot-layout.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "hb-ot-layout.cc"; sourceTree = "<group>"; };
+		19B3996220420F8700581AE0 /* hb-buffer.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "hb-buffer.cc"; sourceTree = "<group>"; };
+		19B3996420420F9F00581AE0 /* hb-set.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "hb-set.cc"; sourceTree = "<group>"; };
+		19B3996620420FD700581AE0 /* hb-ot-tag.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "hb-ot-tag.cc"; sourceTree = "<group>"; };
+		19B3996820421A6100581AE0 /* hb-coretext.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "hb-coretext.cc"; sourceTree = "<group>"; };
+		19B3996920421A6100581AE0 /* hb-blob.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "hb-blob.cc"; sourceTree = "<group>"; };
+		19B3996A20421A6100581AE0 /* hb-common.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "hb-common.cc"; sourceTree = "<group>"; };
+		19B3996E20421AB600581AE0 /* hb-face.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "hb-face.cc"; sourceTree = "<group>"; };
+		19B3997020421B1F00581AE0 /* hb-ucdn.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "hb-ucdn.cc"; sourceTree = "<group>"; };
+		19B3997120421B2000581AE0 /* hb-fallback-shape.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "hb-fallback-shape.cc"; sourceTree = "<group>"; };
+		19B3997220421B2000581AE0 /* hb-unicode.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "hb-unicode.cc"; sourceTree = "<group>"; };
+		19B3997C20421B6000581AE0 /* ucdn.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ucdn.c; sourceTree = "<group>"; };
+		19B3997D20421B6000581AE0 /* ucdn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ucdn.h; sourceTree = "<group>"; };
+		19B3997E20421B6000581AE0 /* ucdn_db.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ucdn_db.h; sourceTree = "<group>"; };
+		19B3998520421BE400581AE0 /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
+		19B3998720421C0300581AE0 /* hb-shape.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "hb-shape.cc"; sourceTree = "<group>"; };
+		19B3998920421C4500581AE0 /* hb-shape-plan.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "hb-shape-plan.cc"; sourceTree = "<group>"; };
+		19B3998B20421C7600581AE0 /* hb-ot-var.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "hb-ot-var.cc"; sourceTree = "<group>"; };
+		19B3998D20421CB300581AE0 /* hb-ot-shape.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "hb-ot-shape.cc"; sourceTree = "<group>"; };
+		19B3998F20421CD700581AE0 /* hb-shaper.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "hb-shaper.cc"; sourceTree = "<group>"; };
+		19B3999120421D2700581AE0 /* hb-ot-shape-complex-thai.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "hb-ot-shape-complex-thai.cc"; sourceTree = "<group>"; };
+		19B3999220421D2700581AE0 /* hb-ot-shape-complex-tibetan.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "hb-ot-shape-complex-tibetan.cc"; sourceTree = "<group>"; };
+		19B3999320421D2700581AE0 /* hb-ot-shape-complex-hebrew.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "hb-ot-shape-complex-hebrew.cc"; sourceTree = "<group>"; };
+		19B3999420421D2700581AE0 /* hb-ot-shape-complex-use.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "hb-ot-shape-complex-use.cc"; sourceTree = "<group>"; };
+		19B3999520421D2700581AE0 /* hb-ot-shape-complex-indic.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "hb-ot-shape-complex-indic.cc"; sourceTree = "<group>"; };
+		19B3999620421D2700581AE0 /* hb-ot-shape-complex-hangul.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "hb-ot-shape-complex-hangul.cc"; sourceTree = "<group>"; };
+		19B3999720421D2800581AE0 /* hb-ot-shape-fallback.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "hb-ot-shape-fallback.cc"; sourceTree = "<group>"; };
+		19B3999820421D2800581AE0 /* hb-ot-shape-complex-arabic.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "hb-ot-shape-complex-arabic.cc"; sourceTree = "<group>"; };
+		19B3999920421D2800581AE0 /* hb-ot-shape-complex-khmer.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "hb-ot-shape-complex-khmer.cc"; sourceTree = "<group>"; };
+		19B3999A20421D2800581AE0 /* hb-ot-shape-complex-indic-table.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "hb-ot-shape-complex-indic-table.cc"; sourceTree = "<group>"; };
+		19B3999B20421D2800581AE0 /* hb-ot-shape-complex-default.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "hb-ot-shape-complex-default.cc"; sourceTree = "<group>"; };
+		19B3999C20421D2800581AE0 /* hb-ot-shape-normalize.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "hb-ot-shape-normalize.cc"; sourceTree = "<group>"; };
+		19B3999D20421D2800581AE0 /* hb-ot-shape-complex-myanmar.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "hb-ot-shape-complex-myanmar.cc"; sourceTree = "<group>"; };
+		19B3999E20421D2800581AE0 /* hb-ot-shape-complex-use-table.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "hb-ot-shape-complex-use-table.cc"; sourceTree = "<group>"; };
+		19B399AD20421D5500581AE0 /* hb-ot-map.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "hb-ot-map.cc"; sourceTree = "<group>"; };
 		19BE0C7E1C98B2110041EE8C /* Array.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Array.h; sourceTree = "<group>"; };
 		19BE0C7F1C98B2110041EE8C /* NotNull.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NotNull.h; sourceTree = "<group>"; };
 		19CB0668200AC971005D6740 /* duktape.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = duktape.c; path = src/duktape.c; sourceTree = "<group>"; };
@@ -466,6 +522,7 @@
 				1939A240152C435000494609 /* AVFoundation.framework in Frameworks */,
 				1948C027152C397D00E9B854 /* CoreGraphics.framework in Frameworks */,
 				193929B316E1932E0018340B /* CoreMotion.framework in Frameworks */,
+				19B3998620421BE400581AE0 /* CoreText.framework in Frameworks */,
 				1948C025152C397D00E9B854 /* Foundation.framework in Frameworks */,
 				1939A177152C418700494609 /* GLKit.framework in Frameworks */,
 				1939A23C152C42ED00494609 /* OpenAL.framework in Frameworks */,
@@ -496,7 +553,7 @@
 				19399E11152C401300494609 /* Box2D.h */,
 			);
 			name = Box2D;
-			path = ../../../lib/box2d/Box2D/Box2D;
+			path = box2d/Box2D/Box2D;
 			sourceTree = "<group>";
 		};
 		19399E14152C401300494609 /* Collision */ = {
@@ -643,34 +700,15 @@
 			path = Rope;
 			sourceTree = "<group>";
 		};
-		19399E76152C401300494609 /* dSFMT */ = {
-			isa = PBXGroup;
-			children = (
-				19399E79152C401300494609 /* dSFMT-params.h */,
-				19399E7A152C401300494609 /* dSFMT-params11213.h */,
-				19399E7B152C401300494609 /* dSFMT-params1279.h */,
-				19399E7C152C401300494609 /* dSFMT-params132049.h */,
-				19399E7D152C401300494609 /* dSFMT-params19937.h */,
-				19399E7E152C401300494609 /* dSFMT-params216091.h */,
-				19399E7F152C401300494609 /* dSFMT-params2203.h */,
-				19399E80152C401300494609 /* dSFMT-params4253.h */,
-				19399E81152C401300494609 /* dSFMT-params44497.h */,
-				19399E82152C401300494609 /* dSFMT-params521.h */,
-				19399E83152C401300494609 /* dSFMT-params86243.h */,
-				19399E90152C401300494609 /* dSFMT.h */,
-			);
-			name = dSFMT;
-			path = ../../../lib/dSFMT;
-			sourceTree = "<group>";
-		};
 		19399EAF152C401300494609 /* FreeType */ = {
 			isa = PBXGroup;
 			children = (
 				19655DE9187C65AF0053C398 /* freetype.c */,
+				19B399102041F41900581AE0 /* ft2build.h */,
 				19655DEA187C65AF0053C398 /* ftmodule.h */,
 			);
 			name = FreeType;
-			path = ../../../lib/FreeType;
+			path = ../src/ThirdParty/FreeType;
 			sourceTree = "<group>";
 		};
 		1939A180152C425D00494609 /* Common */ = {
@@ -694,11 +732,8 @@
 				19DF40461C98B425001482BC /* String.h */,
 				1939A19C152C425D00494609 /* TreeNode.h */,
 				19DF40451C98B415001482BC /* TypeInfo.h */,
-				1923F97D1AF6400A0012C078 /* UTF8.cpp */,
-				1923F97E1AF6400A0012C078 /* UTF8.h */,
 			);
-			name = Common;
-			path = ../../../src/Common;
+			path = Common;
 			sourceTree = "<group>";
 		};
 		1939A1BC152C425D00494609 /* Graphics */ = {
@@ -713,14 +748,9 @@
 				1939A1BF152C425D00494609 /* Drawable.h */,
 				19DB48B71CA6AAFE00999675 /* ElementBuffer.cpp */,
 				19DB48B81CA6AAFE00999675 /* ElementBuffer.h */,
-				1939A1C0152C425D00494609 /* FontAtlas.cpp */,
-				1939A1C1152C425D00494609 /* FontAtlas.h */,
-				1939A1C2152C425D00494609 /* FontGlyph.h */,
 				19D3204A17BD6BD4007BDC67 /* Image.h */,
 				1939A1C3152C425D00494609 /* Label.cpp */,
 				1939A1C4152C425D00494609 /* Label.h */,
-				198644C11B531CDD004378CF /* LyricalLabel.cpp */,
-				198644C21B531CDD004378CF /* LyricalLabel.h */,
 				1939A1C5152C425D00494609 /* OpenGL.h */,
 				1939A1C8152C425D00494609 /* Renderer.cpp */,
 				1939A1C9152C425D00494609 /* Renderer.h */,
@@ -744,8 +774,7 @@
 				196911CB1713564A002BC2E4 /* VertexArray.cpp */,
 				196911CC1713564A002BC2E4 /* VertexArray.h */,
 			);
-			name = Graphics;
-			path = ../../../src/Graphics;
+			path = Graphics;
 			sourceTree = "<group>";
 		};
 		1939A1CE152C425D00494609 /* Shaders */ = {
@@ -767,8 +796,7 @@
 				1939A1E5152C425D00494609 /* InputListener.h */,
 				19B2D7E21AFB4A0E00660D38 /* Pointer.h */,
 			);
-			name = Input;
-			path = ../../../src/Input;
+			path = Input;
 			sourceTree = "<group>";
 		};
 		19455D28197F1C98003E4A79 /* Box2D */ = {
@@ -792,8 +820,7 @@
 				1946B7AC1836E54600F74A3B /* Path.cpp */,
 				1946B7AD1836E54600F74A3B /* Path.h */,
 			);
-			name = FileSystem;
-			path = ../../../src/FileSystem;
+			path = FileSystem;
 			sourceTree = "<group>";
 		};
 		1948C013152C397D00E9B854 = {
@@ -821,6 +848,7 @@
 				1939A23F152C435000494609 /* AVFoundation.framework */,
 				1948C026152C397D00E9B854 /* CoreGraphics.framework */,
 				193929B216E1932E0018340B /* CoreMotion.framework */,
+				19B3998520421BE400581AE0 /* CoreText.framework */,
 				1948C024152C397D00E9B854 /* Foundation.framework */,
 				1939A176152C418700494609 /* GLKit.framework */,
 				1939A23B152C42EC00494609 /* OpenAL.framework */,
@@ -851,10 +879,10 @@
 		1948C029152C397D00E9B854 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				1948C02A152C397D00E9B854 /* Rainbow-Info.plist */,
 				1948C02B152C397D00E9B854 /* InfoPlist.strings */,
-				1948C02E152C397D00E9B854 /* main.m */,
+				1948C02A152C397D00E9B854 /* Rainbow-Info.plist */,
 				1948C030152C397D00E9B854 /* Rainbow-Prefix.pch */,
+				1948C02E152C397D00E9B854 /* main.m */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -863,12 +891,13 @@
 			isa = PBXGroup;
 			children = (
 				19399E10152C401300494609 /* Box2D */,
-				19399E76152C401300494609 /* dSFMT */,
 				19CB0663200AC691005D6740 /* duktape */,
 				19399EAF152C401300494609 /* FreeType */,
+				19B399112041FA2E00581AE0 /* HarfBuzz */,
 				198F427C1A9152E000BE7A73 /* Spine */,
 			);
 			name = Libraries;
+			path = ../../../lib;
 			sourceTree = "<group>";
 		};
 		1948C03A152C3A3600E9B854 /* Source */ = {
@@ -884,6 +913,7 @@
 				19F2038A1AAC5500005CD913 /* Memory */,
 				1986919F16DED44D00BC4830 /* Platform */,
 				198F42661A9151CB00BE7A73 /* Script */,
+				19B399092041E8E400581AE0 /* Text */,
 				1963EA32197F1BA400107228 /* ThirdParty */,
 				1939A1A0152C425D00494609 /* Config.cpp */,
 				1939A1A1152C425D00494609 /* Config.h */,
@@ -891,6 +921,7 @@
 				1939A1BB152C425D00494609 /* Director.h */,
 			);
 			name = Source;
+			path = ../../../src;
 			sourceTree = "<group>";
 		};
 		195ACC35200ABA9D00FB7EDD /* JavaScript */ = {
@@ -917,15 +948,13 @@
 				19DB48B21CA6A4BD00999675 /* ImGui */,
 				198F42B21A91531000BE7A73 /* Spine */,
 			);
-			name = ThirdParty;
-			path = ../../../src/ThirdParty;
+			path = ThirdParty;
 			sourceTree = "<group>";
 		};
 		196CB724161E4ADD0068C809 /* Heimdall */ = {
 			isa = PBXGroup;
 			children = (
 				19D931851834AFCE00F0137E /* impl */,
-				198644BD1B531CBD004378CF /* Button.h */,
 				19D931841834AFC200F0137E /* ChangeMonitor.h */,
 				196CB725161E4ADD0068C809 /* Gatekeeper.cpp */,
 				196CB726161E4ADD0068C809 /* Gatekeeper.h */,
@@ -934,8 +963,7 @@
 				19E774871A02C8D3005DE249 /* OverlayActivator.cpp */,
 				19E774881A02C8D3005DE249 /* OverlayActivator.h */,
 			);
-			name = Heimdall;
-			path = ../../../src/Heimdall;
+			path = Heimdall;
 			sourceTree = "<group>";
 		};
 		1986919F16DED44D00BC4830 /* Platform */ = {
@@ -946,8 +974,7 @@
 				198BE0A7174A5F420036055E /* Macros.h */,
 				19F98DA5171B5DDF00A85873 /* SystemInfo.h */,
 			);
-			name = Platform;
-			path = ../../../src/Platform;
+			path = Platform;
 			sourceTree = "<group>";
 		};
 		198964591C4AE0080011BA15 /* iOS */ = {
@@ -976,8 +1003,7 @@
 				198F42731A9151CB00BE7A73 /* Transition.h */,
 				198F42741A9151CB00BE7A73 /* TransitionFunctions.h */,
 			);
-			name = Script;
-			path = ../../../src/Script;
+			path = Script;
 			sourceTree = "<group>";
 		};
 		198F427C1A9152E000BE7A73 /* Spine */ = {
@@ -1012,7 +1038,7 @@
 				198F42971A9152E000BE7A73 /* SlotData.c */,
 			);
 			name = Spine;
-			path = "../../../lib/spine-runtimes/spine-c/src/spine";
+			path = "spine-runtimes/spine-c/src/spine";
 			sourceTree = "<group>";
 		};
 		198F42B21A91531000BE7A73 /* Spine */ = {
@@ -1036,6 +1062,69 @@
 			path = ../../js;
 			sourceTree = "<group>";
 		};
+		19B399092041E8E400581AE0 /* Text */ = {
+			isa = PBXGroup;
+			children = (
+				19B3990A2041E8E400581AE0 /* FontCache.cpp */,
+				19B3990B2041E8E400581AE0 /* FontCache.h */,
+				19B3990C2041E8E400581AE0 /* Typesetter.cpp */,
+				19B3990D2041E8E400581AE0 /* Typesetter.h */,
+			);
+			path = Text;
+			sourceTree = "<group>";
+		};
+		19B399112041FA2E00581AE0 /* HarfBuzz */ = {
+			isa = PBXGroup;
+			children = (
+				19B3997620421B6000581AE0 /* hb-ucdn */,
+				19B3996920421A6100581AE0 /* hb-blob.cc */,
+				19B3996220420F8700581AE0 /* hb-buffer.cc */,
+				19B3996A20421A6100581AE0 /* hb-common.cc */,
+				19B3996820421A6100581AE0 /* hb-coretext.cc */,
+				19B3996E20421AB600581AE0 /* hb-face.cc */,
+				19B3997120421B2000581AE0 /* hb-fallback-shape.cc */,
+				19B3995C20420F4B00581AE0 /* hb-font.cc */,
+				19B3995D20420F4B00581AE0 /* hb-ft.cc */,
+				19B3996020420F6D00581AE0 /* hb-ot-layout.cc */,
+				19B399AD20421D5500581AE0 /* hb-ot-map.cc */,
+				19B3999820421D2800581AE0 /* hb-ot-shape-complex-arabic.cc */,
+				19B3999B20421D2800581AE0 /* hb-ot-shape-complex-default.cc */,
+				19B3999620421D2700581AE0 /* hb-ot-shape-complex-hangul.cc */,
+				19B3999320421D2700581AE0 /* hb-ot-shape-complex-hebrew.cc */,
+				19B3999A20421D2800581AE0 /* hb-ot-shape-complex-indic-table.cc */,
+				19B3999520421D2700581AE0 /* hb-ot-shape-complex-indic.cc */,
+				19B3999920421D2800581AE0 /* hb-ot-shape-complex-khmer.cc */,
+				19B3999D20421D2800581AE0 /* hb-ot-shape-complex-myanmar.cc */,
+				19B3999120421D2700581AE0 /* hb-ot-shape-complex-thai.cc */,
+				19B3999220421D2700581AE0 /* hb-ot-shape-complex-tibetan.cc */,
+				19B3999E20421D2800581AE0 /* hb-ot-shape-complex-use-table.cc */,
+				19B3999420421D2700581AE0 /* hb-ot-shape-complex-use.cc */,
+				19B3999720421D2800581AE0 /* hb-ot-shape-fallback.cc */,
+				19B3999C20421D2800581AE0 /* hb-ot-shape-normalize.cc */,
+				19B3998D20421CB300581AE0 /* hb-ot-shape.cc */,
+				19B3996620420FD700581AE0 /* hb-ot-tag.cc */,
+				19B3998B20421C7600581AE0 /* hb-ot-var.cc */,
+				19B3996420420F9F00581AE0 /* hb-set.cc */,
+				19B3998920421C4500581AE0 /* hb-shape-plan.cc */,
+				19B3998720421C0300581AE0 /* hb-shape.cc */,
+				19B3998F20421CD700581AE0 /* hb-shaper.cc */,
+				19B3997020421B1F00581AE0 /* hb-ucdn.cc */,
+				19B3997220421B2000581AE0 /* hb-unicode.cc */,
+			);
+			name = HarfBuzz;
+			path = ../build/ios/lib/harfbuzz/src;
+			sourceTree = "<group>";
+		};
+		19B3997620421B6000581AE0 /* hb-ucdn */ = {
+			isa = PBXGroup;
+			children = (
+				19B3997C20421B6000581AE0 /* ucdn.c */,
+				19B3997D20421B6000581AE0 /* ucdn.h */,
+				19B3997E20421B6000581AE0 /* ucdn_db.h */,
+			);
+			path = "hb-ucdn";
+			sourceTree = "<group>";
+		};
 		19CB0663200AC691005D6740 /* duktape */ = {
 			isa = PBXGroup;
 			children = (
@@ -1043,7 +1132,7 @@
 				19CB0668200AC971005D6740 /* duktape.c */,
 			);
 			name = duktape;
-			path = ../lib/duktape;
+			path = ../build/ios/lib/duktape;
 			sourceTree = "<group>";
 		};
 		19D3204617BD6BD4007BDC67 /* Decoders */ = {
@@ -1064,8 +1153,7 @@
 				19D562101CAD011400827F72 /* Vec2.h */,
 				19D562111CAD011400827F72 /* Vec3.h */,
 			);
-			name = Math;
-			path = ../../../src/Math;
+			path = Math;
 			sourceTree = "<group>";
 		};
 		19D931851834AFCE00F0137E /* impl */ = {
@@ -1095,8 +1183,7 @@
 				19DFE5261C6002890079CB58 /* AudioFile.h */,
 				19DFE5301C6002890079CB58 /* Mixer.h */,
 			);
-			name = Audio;
-			path = ../../../src/Audio;
+			path = Audio;
 			sourceTree = "<group>";
 		};
 		19DFE5201C6002890079CB58 /* AL */ = {
@@ -1133,8 +1220,7 @@
 				19937CB81D398336009F8917 /* TempBuffer.cpp */,
 				19937CB91D398336009F8917 /* TempBuffer.h */,
 			);
-			name = Memory;
-			path = ../../../src/Memory;
+			path = Memory;
 			sourceTree = "<group>";
 		};
 		19F98DA4171B5DC000A85873 /* impl */ = {
@@ -1231,7 +1317,9 @@
 				1948C033152C397D00E9B854 /* AppDelegate.m in Sources */,
 				198F42A81A9152E000BE7A73 /* MeshAttachment.c in Sources */,
 				1939A04B152C401300494609 /* b2BroadPhase.cpp in Sources */,
+				19B399AC20421D2900581AE0 /* hb-ot-shape-complex-use-table.cc in Sources */,
 				1939A04C152C401300494609 /* b2CollideCircle.cpp in Sources */,
+				19B3996C20421A6200581AE0 /* hb-blob.cc in Sources */,
 				1939A04D152C401300494609 /* b2CollideEdge.cpp in Sources */,
 				198F42A41A9152E000BE7A73 /* extension.c in Sources */,
 				1939A04E152C401300494609 /* b2CollidePolygon.cpp in Sources */,
@@ -1243,7 +1331,9 @@
 				1939A052152C401300494609 /* b2TimeOfImpact.cpp in Sources */,
 				19DFE5371C6002890079CB58 /* AppleAudioFile.cpp in Sources */,
 				19DB48B91CA6AAFE00999675 /* ElementBuffer.cpp in Sources */,
+				19B399A620421D2900581AE0 /* hb-ot-shape-complex-arabic.cc in Sources */,
 				198F42781A9151CB00BE7A73 /* Timer.cpp in Sources */,
+				19B3999F20421D2900581AE0 /* hb-ot-shape-complex-thai.cc in Sources */,
 				1939A053152C401300494609 /* b2ChainShape.cpp in Sources */,
 				1939A054152C401300494609 /* b2CircleShape.cpp in Sources */,
 				198F42A61A9152E000BE7A73 /* IkConstraintData.c in Sources */,
@@ -1253,7 +1343,6 @@
 				1939A057152C401300494609 /* b2BlockAllocator.cpp in Sources */,
 				1939A058152C401300494609 /* b2Draw.cpp in Sources */,
 				1939A059152C401300494609 /* b2Math.cpp in Sources */,
-				1923F97F1AF6400A0012C078 /* UTF8.cpp in Sources */,
 				198F42B11A9152E000BE7A73 /* SlotData.c in Sources */,
 				1939A05A152C401300494609 /* b2Settings.cpp in Sources */,
 				1939A05B152C401300494609 /* b2StackAllocator.cpp in Sources */,
@@ -1261,10 +1350,12 @@
 				19DFE5351C6002890079CB58 /* Mixer.cpp in Sources */,
 				1939A05C152C401300494609 /* b2Timer.cpp in Sources */,
 				19CBB6351E5E4BFA00378BBF /* NSString+Rainbow.m in Sources */,
+				19B399A020421D2900581AE0 /* hb-ot-shape-complex-tibetan.cc in Sources */,
 				1939A05D152C401300494609 /* b2Body.cpp in Sources */,
 				1939A05E152C401300494609 /* b2ContactManager.cpp in Sources */,
 				1939A05F152C401300494609 /* b2Fixture.cpp in Sources */,
 				1939A060152C401300494609 /* b2Island.cpp in Sources */,
+				19B399A120421D2900581AE0 /* hb-ot-shape-complex-hebrew.cc in Sources */,
 				1939A061152C401300494609 /* b2World.cpp in Sources */,
 				1939A062152C401300494609 /* b2WorldCallbacks.cpp in Sources */,
 				1939A063152C401300494609 /* b2ChainAndCircleContact.cpp in Sources */,
@@ -1272,38 +1363,51 @@
 				1939A065152C401300494609 /* b2CircleContact.cpp in Sources */,
 				19DB48B61CA6A4BD00999675 /* ImGuiHelper.cpp in Sources */,
 				19DFE53D1C6142F40079CB58 /* RainbowAudioSession.mm in Sources */,
+				19B3998420421B6100581AE0 /* ucdn.c in Sources */,
+				19B399A820421D2900581AE0 /* hb-ot-shape-complex-indic-table.cc in Sources */,
+				19B3996520420F9F00581AE0 /* hb-set.cc in Sources */,
+				19B399A720421D2900581AE0 /* hb-ot-shape-complex-khmer.cc in Sources */,
 				198F42991A9152E000BE7A73 /* AnimationState.c in Sources */,
 				1939A066152C401300494609 /* b2Contact.cpp in Sources */,
 				1939A067152C401300494609 /* b2ContactSolver.cpp in Sources */,
+				19B399A220421D2900581AE0 /* hb-ot-shape-complex-use.cc in Sources */,
 				198F42A91A9152E000BE7A73 /* RegionAttachment.c in Sources */,
 				1939A068152C401300494609 /* b2EdgeAndCircleContact.cpp in Sources */,
+				19B399A420421D2900581AE0 /* hb-ot-shape-complex-hangul.cc in Sources */,
+				19B3998C20421C7600581AE0 /* hb-ot-var.cc in Sources */,
 				1939A069152C401300494609 /* b2EdgeAndPolygonContact.cpp in Sources */,
 				1939A06A152C401300494609 /* b2PolygonAndCircleContact.cpp in Sources */,
 				1939A06B152C401300494609 /* b2PolygonContact.cpp in Sources */,
 				1939A06C152C401300494609 /* b2DistanceJoint.cpp in Sources */,
 				1939A06D152C401300494609 /* b2FrictionJoint.cpp in Sources */,
+				19B399AA20421D2900581AE0 /* hb-ot-shape-normalize.cc in Sources */,
 				1939A06E152C401300494609 /* b2GearJoint.cpp in Sources */,
+				19B3996F20421AB600581AE0 /* hb-face.cc in Sources */,
 				198F42AC1A9152E000BE7A73 /* SkeletonData.c in Sources */,
+				19B3996D20421A6200581AE0 /* hb-common.cc in Sources */,
 				1939A06F152C401300494609 /* b2Joint.cpp in Sources */,
 				19EF136D1A7036DD00D7AAA9 /* DebugDraw.cpp in Sources */,
 				1939A070152C401300494609 /* b2MouseJoint.cpp in Sources */,
 				198F429F1A9152E000BE7A73 /* Bone.c in Sources */,
 				1939A071152C401300494609 /* b2PrismaticJoint.cpp in Sources */,
+				19B3997520421B2000581AE0 /* hb-unicode.cc in Sources */,
 				19CB066B200AC97F005D6740 /* duk_module_node.c in Sources */,
 				1939A072152C401300494609 /* b2PulleyJoint.cpp in Sources */,
 				1939A073152C401300494609 /* b2RevoluteJoint.cpp in Sources */,
 				196C0A72189082860042190D /* Shaders.cpp in Sources */,
 				1939A074152C401300494609 /* b2RopeJoint.cpp in Sources */,
 				198F42AD1A9152E000BE7A73 /* SkeletonJson.c in Sources */,
-				198644C31B531CDD004378CF /* LyricalLabel.cpp in Sources */,
 				198F42A21A9152E000BE7A73 /* Event.c in Sources */,
 				1939A075152C401300494609 /* b2WeldJoint.cpp in Sources */,
 				1939A076152C401300494609 /* b2WheelJoint.cpp in Sources */,
 				195ACC46200ABAAE00FB7EDD /* Scene.cpp in Sources */,
 				198F429D1A9152E000BE7A73 /* Attachment.c in Sources */,
+				19B399A320421D2900581AE0 /* hb-ot-shape-complex-indic.cc in Sources */,
 				1939A078152C401300494609 /* b2Rope.cpp in Sources */,
 				198F429B1A9152E000BE7A73 /* Atlas.c in Sources */,
+				19B3995F20420F4B00581AE0 /* hb-ft.cc in Sources */,
 				198F42A71A9152E000BE7A73 /* Json.c in Sources */,
+				19B3998A20421C4500581AE0 /* hb-shape-plan.cc in Sources */,
 				1989645C1C4AE0080011BA15 /* RainbowViewController.mm in Sources */,
 				198F429E1A9152E000BE7A73 /* AttachmentLoader.c in Sources */,
 				198F42AF1A9152E000BE7A73 /* SkinnedMeshAttachment.c in Sources */,
@@ -1313,42 +1417,57 @@
 				195ACC47200ABAAE00FB7EDD /* NoGame.cpp in Sources */,
 				19E7748A1A02C8D3005DE249 /* OverlayActivator.cpp in Sources */,
 				198F42AB1A9152E000BE7A73 /* SkeletonBounds.c in Sources */,
+				19B3995E20420F4B00581AE0 /* hb-font.cc in Sources */,
 				1962F1E7184930D900E1CAF4 /* Diffuse.cpp in Sources */,
 				198F42B01A9152E000BE7A73 /* Slot.c in Sources */,
+				19B3996120420F6D00581AE0 /* hb-ot-layout.cc in Sources */,
 				19B051331E0339E600FE624A /* RenderQueue.cpp in Sources */,
+				19B3999020421CD700581AE0 /* hb-shaper.cc in Sources */,
 				1939A211152C425D00494609 /* Config.cpp in Sources */,
 				1939A21B152C425D00494609 /* Director.cpp in Sources */,
+				19B3996320420F8700581AE0 /* hb-buffer.cc in Sources */,
+				19B399AB20421D2900581AE0 /* hb-ot-shape-complex-myanmar.cc in Sources */,
 				198F429A1A9152E000BE7A73 /* AnimationStateData.c in Sources */,
 				1939A21C152C425D00494609 /* Animation.cpp in Sources */,
-				1939A21D152C425D00494609 /* FontAtlas.cpp in Sources */,
 				19CB0669200AC971005D6740 /* duktape.c in Sources */,
 				1939A21E152C425D00494609 /* Label.cpp in Sources */,
+				19B3997420421B2000581AE0 /* hb-fallback-shape.cc in Sources */,
 				1939A220152C425D00494609 /* Renderer.cpp in Sources */,
 				1939A227152C425D00494609 /* Sprite.cpp in Sources */,
 				198F42AA1A9152E000BE7A73 /* Skeleton.c in Sources */,
 				1939A228152C425D00494609 /* SpriteBatch.cpp in Sources */,
 				1939A229152C425D00494609 /* TextureAtlas.cpp in Sources */,
+				19B3996B20421A6200581AE0 /* hb-coretext.cc in Sources */,
 				1939A22C152C425D00494609 /* Input.cpp in Sources */,
+				19B3998820421C0300581AE0 /* hb-shape.cc in Sources */,
 				198F42A31A9152E000BE7A73 /* EventData.c in Sources */,
 				1960AFD71A4E278E0015A3AD /* StableWorld.cpp in Sources */,
 				198F42981A9152E000BE7A73 /* Animation.c in Sources */,
 				197396DD15A505F60064BF7D /* TextureManager.cpp in Sources */,
 				196CB728161E4ADD0068C809 /* Gatekeeper.cpp in Sources */,
+				19B3998E20421CB300581AE0 /* hb-ot-shape.cc in Sources */,
 				196CB72F161E4D940068C809 /* b2MotorJoint.cpp in Sources */,
 				19EBC55116599D9F00D3B5D7 /* ShaderManager.cpp in Sources */,
+				19B399A920421D2900581AE0 /* hb-ot-shape-complex-default.cc in Sources */,
+				19B3997320421B2000581AE0 /* hb-ucdn.cc in Sources */,
 				19AF58A0167FFA0800F54B27 /* Overlay.cpp in Sources */,
 				198F42A11A9152E000BE7A73 /* BoundingBoxAttachment.c in Sources */,
 				19DFE5361C6002890079CB58 /* AudioFile.cpp in Sources */,
 				19D045AA18071D6D00968F00 /* Chrono.cpp in Sources */,
+				19B3990E2041E8E400581AE0 /* FontCache.cpp in Sources */,
 				193929B816E23D5F0018340B /* SystemInfo.apple.cpp in Sources */,
 				19937CBA1D398336009F8917 /* TempBuffer.cpp in Sources */,
 				198F42A51A9152E000BE7A73 /* IkConstraint.c in Sources */,
 				198F42A01A9152E000BE7A73 /* BoneData.c in Sources */,
 				196911CD1713564A002BC2E4 /* VertexArray.cpp in Sources */,
 				198F42AE1A9152E000BE7A73 /* Skin.c in Sources */,
+				19B3990F2041E8E400581AE0 /* Typesetter.cpp in Sources */,
 				19655DEB187C65AF0053C398 /* freetype.c in Sources */,
 				198F429C1A9152E000BE7A73 /* AtlasAttachmentLoader.c in Sources */,
+				19B399A520421D2900581AE0 /* hb-ot-shape-fallback.cc in Sources */,
+				19B399AE20421D5600581AE0 /* hb-ot-map.cc in Sources */,
 				19865982175E98F700723171 /* Data.cpp in Sources */,
+				19B3996720420FD700581AE0 /* hb-ot-tag.cc in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1409,6 +1528,7 @@
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				USE_HEADERMAP = NO;
 				VALIDATE_PRODUCT = YES;
 				WARNING_CFLAGS = (
 					"-Wall",
@@ -1436,6 +1556,11 @@
 					"USE_PHYSICS=1",
 					"USE_SPINE=1",
 					"FONS_USE_FREETYPE=1",
+					"HAVE_CORETEXT=1",
+					"HAVE_FALLBACK=1",
+					"HAVE_FREETYPE=1",
+					"HAVE_OT=1",
+					"HAVE_UCDN=1",
 				);
 				HEADER_SEARCH_PATHS = (
 					../../src,
@@ -1447,6 +1572,8 @@
 					../../src/ThirdParty/FreeType,
 					../../lib/FreeType/include,
 					../../lib/FreeType/src,
+					lib/harfbuzz/src,
+					"lib/harfbuzz/src/hb-ucdn",
 					"../../lib/spine-runtimes/spine-c/include",
 					../../lib/variant/include,
 				);
@@ -1502,6 +1629,7 @@
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				USE_HEADERMAP = NO;
 				WARNING_CFLAGS = (
 					"-Wall",
 					"-Wextra",
@@ -1554,6 +1682,7 @@
 				OTHER_CPLUSPLUSFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				USE_HEADERMAP = NO;
 				VALIDATE_PRODUCT = YES;
 				WARNING_CFLAGS = (
 					"-Wall",
@@ -1581,6 +1710,11 @@
 					"USE_PHYSICS=1",
 					"USE_SPINE=1",
 					"FONS_USE_FREETYPE=1",
+					"HAVE_CORETEXT=1",
+					"HAVE_FALLBACK=1",
+					"HAVE_FREETYPE=1",
+					"HAVE_OT=1",
+					"HAVE_UCDN=1",
 				);
 				HEADER_SEARCH_PATHS = (
 					../../src,
@@ -1592,6 +1726,8 @@
 					../../src/ThirdParty/FreeType,
 					../../lib/FreeType/include,
 					../../lib/FreeType/src,
+					lib/harfbuzz/src,
+					"lib/harfbuzz/src/hb-ucdn",
 					"../../lib/spine-runtimes/spine-c/include",
 					../../lib/variant/include,
 				);
@@ -1618,6 +1754,11 @@
 					"USE_PHYSICS=1",
 					"USE_SPINE=1",
 					"FONS_USE_FREETYPE=1",
+					"HAVE_CORETEXT=1",
+					"HAVE_FALLBACK=1",
+					"HAVE_FREETYPE=1",
+					"HAVE_OT=1",
+					"HAVE_UCDN=1",
 				);
 				HEADER_SEARCH_PATHS = (
 					../../src,
@@ -1629,6 +1770,8 @@
 					../../src/ThirdParty/FreeType,
 					../../lib/FreeType/include,
 					../../lib/FreeType/src,
+					lib/harfbuzz/src,
+					"lib/harfbuzz/src/hb-ucdn",
 					"../../lib/spine-runtimes/spine-c/include",
 					../../lib/variant/include,
 				);

@@ -155,6 +155,7 @@ void TextureManager::upload(const Texture& texture,
 
     find_invoke(
         textures_, texture, [this, width, height](detail::Texture& texture) {
+            IF_DEVMODE(mem_used_ -= texture.size);
             texture.width = width;
             texture.height = height;
             texture.size = width * height * 4;

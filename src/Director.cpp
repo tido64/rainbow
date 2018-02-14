@@ -75,7 +75,10 @@ namespace rainbow
         timer_manager_.update(dt);
         script_->update(dt);
         graphics::update(render_queue_, dt);
-        graphics::TextureManager::Get()->trim();
+
+        auto& texture_manager = *graphics::TextureManager::Get();
+        FontCache::Get()->update(texture_manager);
+        texture_manager.trim();
     }
 
     void Director::on_focus_gained()
