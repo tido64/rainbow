@@ -5,7 +5,7 @@
 #ifndef GRAPHICS_SHADERS_H_
 #define GRAPHICS_SHADERS_H_
 
-namespace rainbow { namespace shaders
+namespace rainbow::shaders
 {
     namespace integrated
     {
@@ -25,6 +25,6 @@ namespace rainbow { namespace shaders
     constexpr char kNormalMappedv[]        = "Shaders/NormalMapped.vsh";
     constexpr char kSimple2Dv[]            = "Shaders/Simple2D.vsh";
     constexpr char kSimplef[]              = "Shaders/Simple.fsh";
-}}  // namespace rainbow::shaders
+}  // namespace rainbow::shaders
 
 #endif

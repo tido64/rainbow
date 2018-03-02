@@ -10,7 +10,7 @@
 #include "Common/NonCopyable.h"
 #include "Common/String.h"
 
-namespace rainbow { namespace audio
+namespace rainbow::audio
 {
     struct IAudioFile : private NonCopyable<IAudioFile>
     {
@@ -28,6 +28,6 @@ namespace rainbow { namespace audio
 
         virtual /* explicit */ operator bool() const = 0;
     };
-}}  // namespace rainbow::audio
+}  // namespace rainbow::audio
 
 #endif

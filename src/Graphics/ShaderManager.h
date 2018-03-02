@@ -13,9 +13,12 @@
 #include "Graphics/ShaderDetails.h"
 #include "Math/Vec2.h"
 
-namespace rainbow { struct ISolemnlySwearThatIAmOnlyTesting; }
+namespace rainbow
+{
+    struct ISolemnlySwearThatIAmOnlyTesting;
+}
 
-namespace rainbow { namespace graphics
+namespace rainbow::graphics
 {
     struct State;
 
@@ -89,6 +92,6 @@ namespace rainbow { namespace graphics
         std::vector<Shader::Details> programs_;   ///< Linked shader programs.
         std::vector<unsigned int> shaders_;       ///< Compiled shaders.
     };
-}}  // namespace rainbow::graphics
+}  // namespace rainbow::graphics
 
 #endif

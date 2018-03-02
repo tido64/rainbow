@@ -10,11 +10,11 @@
 #include "Common/NonCopyable.h"
 #include "Graphics/OpenGL.h"
 
-namespace rainbow { namespace graphics
+namespace rainbow::graphics
 {
     /// <summary>
-    ///   Manages a vertex array object for any drawable type. On Android, vertex
-    ///   array objects are emulated.
+    ///   Manages a vertex array object for any drawable type. On Android,
+    ///   vertex array objects are emulated.
     /// </summary>
     class VertexArray : NonCopyable<VertexArray>
     {
@@ -49,6 +49,6 @@ namespace rainbow { namespace graphics
         std::function<void()> array_;
 #endif
     };
-}}  // namespace rainbow::graphics
+}  // namespace rainbow::graphics
 
 #endif

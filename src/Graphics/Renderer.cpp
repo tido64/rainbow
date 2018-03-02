@@ -25,14 +25,14 @@ namespace
     {
         return reinterpret_cast<czstring>(glGetString(name));  // NOLINT
     }
-}
+}  // namespace
 
-namespace rainbow { namespace graphics { namespace detail
+namespace rainbow::graphics::detail
 {
 #ifndef NDEBUG
     unsigned int g_draw_count_accumulator = 0;
 #endif  // NDEBUG
-}}}
+}  // namespace rainbow::graphics::detail
 
 auto graphics::draw_count() -> unsigned int
 {

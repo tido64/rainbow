@@ -10,7 +10,7 @@
 
 #include "Audio/AL/Sound.h"
 
-namespace rainbow { namespace audio
+namespace rainbow::audio
 {
     struct Sound;
 
@@ -36,6 +36,6 @@ namespace rainbow { namespace audio
         std::array<uint32_t, kNumBuffers> buffers_;
         Sound* sound_;
     };
-}}  // namespace rainbow::audio
+}  // namespace rainbow::audio
 
 #endif

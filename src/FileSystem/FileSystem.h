@@ -10,7 +10,7 @@
 #include "FileSystem/Path.h"
 #include "Memory/Array.h"
 
-namespace rainbow { namespace filesystem
+namespace rainbow::filesystem
 {
     /// <summary>Creates an absolute path.</summary>
     auto absolute(czstring path) -> Path;
@@ -74,6 +74,6 @@ namespace rainbow { namespace filesystem
     /// <summary>Sets assets path.</summary>
     void set_assets_path(czstring path);
 #endif
-}}  // namespace rainbow::filesystem
+}  // namespace rainbow::filesystem
 
 #endif

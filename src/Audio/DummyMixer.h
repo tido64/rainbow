@@ -7,7 +7,7 @@
 
 #include "Audio/Mixer.h"
 
-namespace rainbow { namespace audio
+namespace rainbow::audio
 {
     class DummyMixer
     {
@@ -18,6 +18,6 @@ namespace rainbow { namespace audio
     };
 
     using Mixer = TMixer<DummyMixer>;
-}}  // namespace rainbow::audio
+}  // namespace rainbow::audio
 
 #endif

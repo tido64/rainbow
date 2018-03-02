@@ -2,10 +2,10 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
-namespace rainbow { namespace audio
+namespace rainbow::audio
 {
     class ALMixer;
-}}
+}
 
 @interface RainbowAudioSession : NSObject
 + (instancetype)audioSessionWithMixer:(rainbow::audio::ALMixer*)mixer;

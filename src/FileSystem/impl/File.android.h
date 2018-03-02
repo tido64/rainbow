@@ -19,7 +19,7 @@ struct AAsset;
 
 extern ANativeActivity* g_native_activity;
 
-namespace rainbow { namespace android
+namespace rainbow::android
 {
     using FileHandle = std::variant<std::nullptr_t, AAsset*, FILE*>;
 
@@ -101,7 +101,7 @@ namespace rainbow { namespace android
     private:
         FileHandle handle_;
     };
-}}  // namespace rainbow::android
+}  // namespace rainbow::android
 
 namespace rainbow
 {

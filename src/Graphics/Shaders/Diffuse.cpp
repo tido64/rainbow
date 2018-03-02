@@ -28,7 +28,7 @@ namespace
         rainbow::shaders::integrated::kNormalMappedv};
 }
 
-namespace rainbow { namespace shaders
+namespace rainbow::shaders
 {
     Diffuse::Diffuse(bool normal)
         : cutoff_(0), radius_(0), position_(0),
@@ -96,4 +96,4 @@ namespace rainbow { namespace shaders
         auto&& p = graphics::convert_to_screen(Vec2i(x, y));
         glUniform3f(position_, p.x, p.y, z);
     }
-}}  // namespace rainbow::shaders
+}  // namespace rainbow::shaders

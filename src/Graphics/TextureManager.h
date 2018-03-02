@@ -11,7 +11,7 @@
 #include "Common/Passkey.h"
 #include "Graphics/Texture.h"
 
-namespace rainbow { namespace graphics
+namespace rainbow::graphics
 {
     struct State;
 
@@ -151,6 +151,6 @@ namespace rainbow { namespace graphics
         void update_usage();
 #endif
     };
-}}  // namespace rainbow::graphics
+}  // namespace rainbow::graphics
 
 #endif

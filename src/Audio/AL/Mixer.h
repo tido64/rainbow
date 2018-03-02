@@ -19,7 +19,7 @@ typedef struct ALCcontext_struct ALCcontext;
 @class RainbowAudioSession;
 #endif
 
-namespace rainbow { namespace audio
+namespace rainbow::audio
 {
     class ALMixer
     {
@@ -45,6 +45,6 @@ namespace rainbow { namespace audio
     };
 
     using Mixer = TMixer<ALMixer>;
-}}  // namespace rainbow::audio
+}  // namespace rainbow::audio
 
 #endif

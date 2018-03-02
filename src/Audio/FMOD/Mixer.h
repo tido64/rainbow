@@ -7,7 +7,7 @@
 
 #include "Audio/Mixer.h"
 
-namespace rainbow { namespace audio
+namespace rainbow::audio
 {
     class FMODMixer
     {
@@ -21,6 +21,6 @@ namespace rainbow { namespace audio
     };
 
     using Mixer = TMixer<FMODMixer>;
-}}  // namespace rainbow::audio
+}  // namespace rainbow::audio
 
 #endif

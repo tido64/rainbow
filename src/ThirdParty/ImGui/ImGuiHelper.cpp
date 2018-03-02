@@ -5,8 +5,8 @@
 #include "ThirdParty/ImGui/ImGuiHelper.h"
 
 #ifdef __GNUC__
-    // TODO: This is a workaround for 'diagnostic push' bug in GCC. See
-    // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=53431 for details.
+// TODO: This is a workaround for 'diagnostic push' bug in GCC. See
+// https://gcc.gnu.org/bugzilla/show_bug.cgi?id=53431 for details.
 #   ifdef __clang__
 #       pragma GCC diagnostic push
 #       pragma GCC diagnostic ignored "-Wformat-pedantic"
@@ -118,176 +118,174 @@ namespace
 
         rainbow::graphics::bind_element_array();
     }
+}  // namespace
+
+void rainbow::imgui::init()
+{
+    auto& io = ImGui::GetIO();
+    io.IniFilename = nullptr;
+#ifdef RAINBOW_SDL
+    io.KeyMap[ImGuiKey_Tab] = to_keycode(VirtualKey::Tab);
+    io.KeyMap[ImGuiKey_LeftArrow] = to_scancode(VirtualKey::Left);
+    io.KeyMap[ImGuiKey_RightArrow] = to_scancode(VirtualKey::Right);
+    io.KeyMap[ImGuiKey_UpArrow] = to_scancode(VirtualKey::Up);
+    io.KeyMap[ImGuiKey_DownArrow] = to_scancode(VirtualKey::Down);
+    io.KeyMap[ImGuiKey_PageUp] = to_scancode(VirtualKey::PageUp);
+    io.KeyMap[ImGuiKey_PageDown] = to_scancode(VirtualKey::PageDown);
+    io.KeyMap[ImGuiKey_Home] = to_scancode(VirtualKey::Home);
+    io.KeyMap[ImGuiKey_End] = to_scancode(VirtualKey::End);
+    io.KeyMap[ImGuiKey_Delete] = to_keycode(VirtualKey::Delete);
+    io.KeyMap[ImGuiKey_Backspace] = to_keycode(VirtualKey::Backspace);
+    io.KeyMap[ImGuiKey_Enter] = to_keycode(VirtualKey::Return);
+    io.KeyMap[ImGuiKey_Escape] = to_keycode(VirtualKey::Escape);
+    io.KeyMap[ImGuiKey_A] = to_keycode(VirtualKey::A);
+    io.KeyMap[ImGuiKey_C] = to_keycode(VirtualKey::C);
+    io.KeyMap[ImGuiKey_V] = to_keycode(VirtualKey::V);
+    io.KeyMap[ImGuiKey_X] = to_keycode(VirtualKey::X);
+    io.KeyMap[ImGuiKey_Y] = to_keycode(VirtualKey::Y);
+    io.KeyMap[ImGuiKey_Z] = to_keycode(VirtualKey::Z);
+#endif  // RAINBOW_SDL
+    io.RenderDrawListsFn = &render_draw_lists;
+
+    unsigned int buffer;
+    glGenBuffers(1, &buffer);
+    auto renderable = std::make_unique<Renderable>().release();
+    renderable->element_buffer() = buffer;
+    renderable->vertex_array().reconfigure([&renderable] {
+        renderable->element_buffer().bind();
+        renderable->vertex_buffer().bind();
+    });
+    io.UserData = renderable;
+
+    auto texture_manager = TextureManager::Get();
+    const TextureFilter filter = texture_manager->mag_filter();
+    texture_manager->set_filter(TextureFilter::Nearest);
+    renderable->texture() = texture_manager->create(
+        "rainbow://dear_imgui/ProggyClean.ttf",
+        [&io](TextureManager& texture_manager, const Texture& texture) {
+            unsigned char* pixels;
+            int width, height;
+            io.Fonts->GetTexDataAsRGBA32(&pixels, &width, &height);
+            texture_manager.upload(
+                texture, GL_RGBA8, width, height, GL_RGBA, pixels);
+        });
+    texture_manager->set_filter(filter);
+
+    io.Fonts->TexID =
+        reinterpret_cast<void*>(static_cast<intptr_t>(renderable->texture()));
 }
 
-namespace rainbow { namespace imgui
+bool rainbow::imgui::new_frame(uint64_t dt)
 {
-    void init()
+    auto& window_size = graphics::window_size();
+    auto& io = ImGui::GetIO();
+    if (g_window_scale.x == 0.0f)
     {
-        auto& io = ImGui::GetIO();
-        io.IniFilename = nullptr;
-#ifdef RAINBOW_SDL
-        io.KeyMap[ImGuiKey_Tab] = to_keycode(VirtualKey::Tab);
-        io.KeyMap[ImGuiKey_LeftArrow] = to_scancode(VirtualKey::Left);
-        io.KeyMap[ImGuiKey_RightArrow] = to_scancode(VirtualKey::Right);
-        io.KeyMap[ImGuiKey_UpArrow] = to_scancode(VirtualKey::Up);
-        io.KeyMap[ImGuiKey_DownArrow] = to_scancode(VirtualKey::Down);
-        io.KeyMap[ImGuiKey_PageUp] = to_scancode(VirtualKey::PageUp);
-        io.KeyMap[ImGuiKey_PageDown] = to_scancode(VirtualKey::PageDown);
-        io.KeyMap[ImGuiKey_Home] = to_scancode(VirtualKey::Home);
-        io.KeyMap[ImGuiKey_End] = to_scancode(VirtualKey::End);
-        io.KeyMap[ImGuiKey_Delete] = to_keycode(VirtualKey::Delete);
-        io.KeyMap[ImGuiKey_Backspace] = to_keycode(VirtualKey::Backspace);
-        io.KeyMap[ImGuiKey_Enter] = to_keycode(VirtualKey::Return);
-        io.KeyMap[ImGuiKey_Escape] = to_keycode(VirtualKey::Escape);
-        io.KeyMap[ImGuiKey_A] = to_keycode(VirtualKey::A);
-        io.KeyMap[ImGuiKey_C] = to_keycode(VirtualKey::C);
-        io.KeyMap[ImGuiKey_V] = to_keycode(VirtualKey::V);
-        io.KeyMap[ImGuiKey_X] = to_keycode(VirtualKey::X);
-        io.KeyMap[ImGuiKey_Y] = to_keycode(VirtualKey::Y);
-        io.KeyMap[ImGuiKey_Z] = to_keycode(VirtualKey::Z);
-#endif  // RAINBOW_SDL
-        io.RenderDrawListsFn = &render_draw_lists;
-
-        unsigned int buffer;
-        glGenBuffers(1, &buffer);
-        auto renderable = std::make_unique<Renderable>().release();
-        renderable->element_buffer() = buffer;
-        renderable->vertex_array().reconfigure([&renderable] {
-            renderable->element_buffer().bind();
-            renderable->vertex_buffer().bind();
-        });
-        io.UserData = renderable;
-
-        auto texture_manager = TextureManager::Get();
-        const TextureFilter filter = texture_manager->mag_filter();
-        texture_manager->set_filter(TextureFilter::Nearest);
-        renderable->texture() = texture_manager->create(
-            "rainbow://dear_imgui/ProggyClean.ttf",
-            [&io](TextureManager& texture_manager, const Texture& texture) {
-                unsigned char* pixels;
-                int width, height;
-                io.Fonts->GetTexDataAsRGBA32(&pixels, &width, &height);
-                texture_manager.upload(
-                    texture, GL_RGBA8, width, height, GL_RGBA, pixels);
-            });
-        texture_manager->set_filter(filter);
-
-        io.Fonts->TexID = reinterpret_cast<void*>(
-            static_cast<intptr_t>(renderable->texture()));
+        g_initial_window_width = window_size.x;
+        auto& resolution = graphics::resolution();
+        g_window_scale =
+            Vec2f{static_cast<float>(resolution.x) / window_size.x,
+                  static_cast<float>(resolution.y) / window_size.y};
+        io.DisplaySize = window_size;
     }
 
-    bool new_frame(uint64_t dt)
-    {
-        auto& window_size = graphics::window_size();
-        auto& io = ImGui::GetIO();
-        if (g_window_scale.x == 0.0f)
-        {
-            g_initial_window_width = window_size.x;
-            auto& resolution = graphics::resolution();
-            g_window_scale =
-                Vec2f{static_cast<float>(resolution.x) / window_size.x,
-                      static_cast<float>(resolution.y) / window_size.y};
-            io.DisplaySize = window_size;
-        }
+    io.DeltaTime = dt * 0.001f;
+    io.DisplayFramebufferScale =
+        g_window_scale * window_size.x / g_initial_window_width;
 
-        io.DeltaTime = dt * 0.001f;
-        io.DisplayFramebufferScale =
-            g_window_scale * window_size.x / g_initial_window_width;
+    ImGui::NewFrame();
 
-        ImGui::NewFrame();
+    return io.WantCaptureMouse ||
+           std::none_of(std::cbegin(io.MouseDown),
+                        std::cend(io.MouseDown),
+                        [](bool state) { return state; });
+}
 
-        return io.WantCaptureMouse ||
-               std::none_of(std::cbegin(io.MouseDown),
-                            std::cend(io.MouseDown),
-                            [](bool state) { return state; });
-    }
-
-    bool set_key_state(const KeyStroke& key, bool down)
-    {
-        auto& io = ImGui::GetIO();
+bool rainbow::imgui::set_key_state(const KeyStroke& key, bool down)
+{
+    auto& io = ImGui::GetIO();
 #ifdef RAINBOW_SDL
-        switch (key.key)
-        {
-            case VirtualKey::Home:
-            case VirtualKey::PageUp:
-            case VirtualKey::End:
-            case VirtualKey::PageDown:
-            case VirtualKey::Right:
-            case VirtualKey::Left:
-            case VirtualKey::Down:
-            case VirtualKey::Up:
-                io.KeysDown[to_scancode(key.key)] = down;
-                break;
-            case VirtualKey::LeftCtrl:
-                io.KeyCtrl = down;
-                break;
-            case VirtualKey::LeftShift:
-                io.KeyShift = down;
-                break;
-            case VirtualKey::LeftAlt:
-                io.KeyAlt = down;
-                break;
-            case VirtualKey::RightCtrl:
-                io.KeyCtrl = down;
-                break;
-            case VirtualKey::RightShift:
-                io.KeyShift = down;
-                break;
-            case VirtualKey::RightAlt:
-                io.KeyAlt = down;
-                break;
-            default: {
-                const int keycode = to_keycode(key.key);
-                if (static_cast<unsigned>(keycode) < array_size(io.KeysDown))
-                {
-                    io.KeysDown[keycode] = down;
+    switch (key.key)
+    {
+        case VirtualKey::Home:
+        case VirtualKey::PageUp:
+        case VirtualKey::End:
+        case VirtualKey::PageDown:
+        case VirtualKey::Right:
+        case VirtualKey::Left:
+        case VirtualKey::Down:
+        case VirtualKey::Up:
+            io.KeysDown[to_scancode(key.key)] = down;
+            break;
+        case VirtualKey::LeftCtrl:
+            io.KeyCtrl = down;
+            break;
+        case VirtualKey::LeftShift:
+            io.KeyShift = down;
+            break;
+        case VirtualKey::LeftAlt:
+            io.KeyAlt = down;
+            break;
+        case VirtualKey::RightCtrl:
+            io.KeyCtrl = down;
+            break;
+        case VirtualKey::RightShift:
+            io.KeyShift = down;
+            break;
+        case VirtualKey::RightAlt:
+            io.KeyAlt = down;
+            break;
+        default: {
+            const int keycode = to_keycode(key.key);
+            if (static_cast<unsigned>(keycode) < array_size(io.KeysDown))
+            {
+                io.KeysDown[keycode] = down;
 
-                    // TODO: Implement SDL_TEXTINPUT
-                    if (down)
-                        io.AddInputCharacter(keycode);
-                }
-                break;
+                // TODO: Implement SDL_TEXTINPUT
+                if (down)
+                    io.AddInputCharacter(keycode);
             }
+            break;
         }
+    }
 #else
-        NOT_USED(key);
-        NOT_USED(down);
+    NOT_USED(key);
+    NOT_USED(down);
 #endif  // RAINBOW_SDL
-        return io.WantCaptureKeyboard;
-    }
+    return io.WantCaptureKeyboard;
+}
 
-    bool set_mouse_state(const ArrayView<Pointer>& p)
+bool rainbow::imgui::set_mouse_state(const ArrayView<Pointer>& p)
+{
+    auto& io = ImGui::GetIO();
+    auto& pos = io.MousePos;
+    pos.x = p[0].x / g_window_scale.x;
+    pos.y = (graphics::resolution().y - p[0].y) / g_window_scale.y;
+    return false;
+}
+
+bool rainbow::imgui::set_mouse_state(const ArrayView<Pointer>& pointers,
+                                     bool down)
+{
+    // For details, see SDL_mouse.h.
+    static constexpr int kMouseButtons[]{0, 2, 1, 3, 4};
+
+    auto& io = ImGui::GetIO();
+    for (auto&& p : pointers)
     {
-        auto& io = ImGui::GetIO();
-        auto& pos = io.MousePos;
-        pos.x = p[0].x / g_window_scale.x;
-        pos.y = (graphics::resolution().y - p[0].y) / g_window_scale.y;
-        return false;
+        if (p.hash > array_size(io.MouseDown))
+            continue;
+
+        const int index = kMouseButtons[p.hash - 1];
+        io.MouseDown[index] = down;
     }
 
-    bool set_mouse_state(const ArrayView<Pointer>& pointers, bool down)
-    {
-        // For details, see SDL_mouse.h.
-        static constexpr int kMouseButtons[]{0, 2, 1, 3, 4};
+    return io.WantCaptureMouse;
+}
 
-        auto& io = ImGui::GetIO();
-        for (auto&& p : pointers)
-        {
-            if (p.hash > array_size(io.MouseDown))
-                continue;
-
-            const int index = kMouseButtons[p.hash - 1];
-            io.MouseDown[index] = down;
-        }
-
-        return io.WantCaptureMouse;
-    }
-
-    void shutdown()
-    {
-        auto& io = ImGui::GetIO();
-        delete static_cast<Renderable*>(io.UserData);
-        ImGui::Shutdown();
-    }
-}}  // namespace rainbow::imgui
+void rainbow::imgui::shutdown()
+{
+    auto& io = ImGui::GetIO();
+    delete static_cast<Renderable*>(io.UserData);
+    ImGui::Shutdown();
+}

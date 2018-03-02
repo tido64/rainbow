@@ -9,7 +9,7 @@
 
 #include "Audio/AudioFile.h"
 
-namespace rainbow { namespace audio
+namespace rainbow::audio
 {
     class AppleAudioFile final : public IAudioFile
     {
@@ -36,6 +36,6 @@ namespace rainbow { namespace audio
         AudioStreamBasicDescription format_;
         ExtAudioFileRef ref_;
     };
-}}  // namespace rainbow::audio
+}  // namespace rainbow::audio
 
 #endif

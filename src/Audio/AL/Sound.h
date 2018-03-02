@@ -7,7 +7,7 @@
 
 #include "Audio/AudioFile.h"
 
-namespace rainbow { namespace audio
+namespace rainbow::audio
 {
     struct Sound
     {
@@ -19,6 +19,6 @@ namespace rainbow { namespace audio
         std::unique_ptr<IAudioFile> file;
         czstring key = nullptr;
     };
-}}  // namespace rainbow::audio
+}  // namespace rainbow::audio
 
 #endif

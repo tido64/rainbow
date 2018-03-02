@@ -9,7 +9,7 @@
 #include "Common/String.h"
 #include "Math/Vec2.h"
 
-namespace rainbow { namespace audio
+namespace rainbow::audio
 {
     struct Channel;
     struct Sound;
@@ -51,7 +51,7 @@ namespace rainbow { namespace audio
     auto play(Sound*, Vec2f world_position = Vec2f::Zero) -> Channel*;
 
     void stop(Channel*);
-}}  // namespace rainbow::audio
+}  // namespace rainbow::audio
 
 #include "Platform/Macros.h"
 #if defined(RAINBOW_AUDIO_AL)

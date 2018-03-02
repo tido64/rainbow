@@ -7,7 +7,7 @@
 
 #include "Math/Vec3.h"
 
-namespace rainbow { namespace shaders
+namespace rainbow::shaders
 {
     class Diffuse
     {
@@ -26,6 +26,6 @@ namespace rainbow { namespace shaders
         int position_;  ///< Position of the light source.
         uint32_t program_;
     };
-}}  // namespace rainbow::shaders
+}  // namespace rainbow::shaders
 
 #endif

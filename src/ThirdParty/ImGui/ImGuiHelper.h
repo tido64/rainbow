@@ -24,7 +24,7 @@ namespace rainbow
     struct KeyStroke;
 }
 
-namespace rainbow { namespace imgui
+namespace rainbow::imgui
 {
     constexpr ImGuiWindowFlags kDefaultWindowFlags =  //
         ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse |
@@ -36,6 +36,6 @@ namespace rainbow { namespace imgui
     bool set_mouse_state(const ArrayView<Pointer>& pointers);
     bool set_mouse_state(const ArrayView<Pointer>& pointers, bool down);
     void shutdown();
-}}  // namespace rainbow::imgui
+}  // namespace rainbow::imgui
 
 #endif

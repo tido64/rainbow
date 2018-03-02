@@ -8,7 +8,7 @@
 #include "FileSystem/File.h"
 #include "FileSystem/FileSystem.h"
 
-namespace rainbow { namespace system
+namespace rainbow::system
 {
     class File
     {
@@ -55,7 +55,7 @@ namespace rainbow { namespace system
     private:
         FILE* stream_;
     };
-}}  // namespace rainbow::system
+}  // namespace rainbow::system
 
 namespace rainbow
 {

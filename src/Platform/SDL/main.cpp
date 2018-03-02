@@ -25,24 +25,24 @@
 #   include "Tests/Tests.h"
 #endif
 
-using rainbow::SDLContext;
 using rainbow::RainbowController;
+using rainbow::SDLContext;
 using rainbow::out;
 
 namespace
 {
-    auto run_tests(int argc, char* argv[]) -> int
+    auto run_tests([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
+        -> int
     {
 #ifdef RAINBOW_TEST
         return rainbow::run_tests(argc, argv);
 #else
-        NOT_USED(argc);
-        NOT_USED(argv);
         return 0;
 #endif  // RAINBOW_TEST
     }
 
-    bool should_run_tests(out<int> argc, out<char**> argv)
+    bool should_run_tests([[maybe_unused]] out<int> argc,
+                          [[maybe_unused]] out<char**> argv)
     {
 #ifdef RAINBOW_TEST
         if (argc < 2)
@@ -61,8 +61,6 @@ namespace
         constexpr size_t kGTestFlagLength = rainbow::array_size(kGTestFlag) - 1;
         return strncmp(argv[1], kGTestFlag, kGTestFlagLength) == 0;
 #else
-        NOT_USED(argc);
-        NOT_USED(argv);
         return false;
 #endif  // RAINBOW_TEST
     }

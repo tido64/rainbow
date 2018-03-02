@@ -4,14 +4,17 @@
 
 #include "Platform/SystemInfo.h"
 
-namespace rainbow { namespace system_info
+bool rainbow::system_info::has_accelerometer()
 {
-    bool has_accelerometer() { return true; }
+    return true;
+}
 
-    bool has_touchscreen() { return true; }
+bool rainbow::system_info::has_touchscreen()
+{
+    return true;
+}
 
-    auto locales() -> std::vector<std::string>
-    {
-        return {"en"};
-    }
-}}  // namespace rainbow::system_info
+auto rainbow::system_info::locales() -> std::vector<std::string>
+{
+    return {"en"};
+}

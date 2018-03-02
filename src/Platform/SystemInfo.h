@@ -10,7 +10,7 @@
 
 #include "Platform/Macros.h"
 
-namespace rainbow { namespace system_info
+namespace rainbow::system_info
 {
     /// <summary>
     ///   Returns whether the platform has an accelerometer.
@@ -27,6 +27,6 @@ namespace rainbow { namespace system_info
     ///   Returns total number of physical memory installed in megabytes.
     /// </summary>
     auto memory() -> size_t;
-}}  // namespace rainbow::system_info
+}  // namespace rainbow::system_info
 
 #endif

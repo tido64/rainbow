@@ -21,7 +21,7 @@
 #include "Audio/AudioFile.h"
 #include "FileSystem/File.h"
 
-namespace rainbow { namespace audio
+namespace rainbow::audio
 {
     class OggVorbisAudioFile final : public IAudioFile
     {
@@ -46,6 +46,6 @@ namespace rainbow { namespace audio
         OggVorbis_File vf_;
         vorbis_info* vi_;
     };
-}}  // namespace rainbow::audio
+}  // namespace rainbow::audio
 
 #endif

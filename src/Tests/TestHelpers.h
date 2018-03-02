@@ -5,7 +5,7 @@
 #include <type_traits>
 #include <utility>
 
-namespace rainbow { namespace test
+namespace rainbow::test
 {
     namespace detail
     {
@@ -27,18 +27,18 @@ namespace rainbow { namespace test
         private:
             F predicate_;
         };
-    }
+    }  // namespace detail
 
     template <typename F>
     auto not_fn(F&& predicate)
     {
         return detail::Not<std::decay_t<F>>{std::forward<F>(predicate)};
     }
-}}  // namespace rainbow::test
+}  // namespace rainbow::test
 
 namespace rainbow
 {
     struct ISolemnlySwearThatIAmOnlyTesting
     {
     };
-}
+}  // namespace rainbow

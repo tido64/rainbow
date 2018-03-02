@@ -12,7 +12,7 @@
 
 #include "Common/String.h"
 
-namespace rainbow { namespace filesystem
+namespace rainbow::filesystem
 {
     class Path
     {
@@ -59,6 +59,6 @@ namespace rainbow { namespace filesystem
         friend auto relative(czstring path) -> Path;
         friend auto user(czstring path) -> Path;
     };
-}}  // namespace rainbow::filesystem
+}  // namespace rainbow::filesystem
 
 #endif

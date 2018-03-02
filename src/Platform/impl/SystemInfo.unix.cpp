@@ -9,53 +9,55 @@
 
 #include "Common/String.h"
 
-namespace rainbow { namespace system_info
-{
 #ifdef RAINBOW_OS_UNIX
-    bool has_accelerometer() { return false; }
+bool rainbow::system_info::has_accelerometer()
+{
+    return false;
+}
 
-    bool has_touchscreen() { return false; }
+bool rainbow::system_info::has_touchscreen()
+{
+    return false;
+}
 
-    auto locales() -> std::vector<std::string>
+auto rainbow::system_info::locales() -> std::vector<std::string>
+{
+    czstring lc = setlocale(LC_ALL, nullptr);
+    if (lc == nullptr)
     {
-        czstring lc = setlocale(LC_ALL, nullptr);
-        if (lc == nullptr)
-        {
-            lc = setlocale(LC_MESSAGES, nullptr);
-        }
-        else
-        {
-            constexpr char kLCMessages[] = "LC_MESSAGES";
-            czstring lc_msg = strstr(lc, kLCMessages);
-            if (lc_msg != nullptr)
-                lc = lc_msg + sizeof(kLCMessages);
-        }
+        lc = setlocale(LC_MESSAGES, nullptr);
+    }
+    else
+    {
+        constexpr char kLCMessages[] = "LC_MESSAGES";
+        czstring lc_msg = strstr(lc, kLCMessages);
+        if (lc_msg != nullptr)
+            lc = lc_msg + sizeof(kLCMessages);
+    }
 
-        std::vector<std::string> locales;
-        if (lc == nullptr || (lc[0] == 'C' && lc[1] == '\0'))
+    std::vector<std::string> locales;
+    if (lc == nullptr || (lc[0] == 'C' && lc[1] == '\0'))
+    {
+        locales.emplace_back("en");
+    }
+    else
+    {
+        czstring first = lc;
+        for (czstring c = first; *c != '\0'; ++c)
         {
-            locales.emplace_back("en");
-        }
-        else
-        {
-            czstring first = lc;
-            for (czstring c = first; *c != '\0'; ++c)
+            if (*c == ';')
             {
-                if (*c == ';')
-                {
-                    if (c > first)
-                        locales.emplace_back(first, c);
-                    first = c + 1;
-                }
+                if (c > first)
+                    locales.emplace_back(first, c);
+                first = c + 1;
             }
         }
-        return locales;
     }
+    return locales;
+}
 #endif
 
-    auto memory() -> size_t
-    {
-        return sysconf(_SC_PAGE_SIZE) / 1024 *
-               sysconf(_SC_PHYS_PAGES) / 1024;
-    }
-}}  // namespace rainbow::system_info
+auto rainbow::system_info::memory() -> size_t
+{
+    return sysconf(_SC_PAGE_SIZE) / 1024 * sysconf(_SC_PHYS_PAGES) / 1024;
+}

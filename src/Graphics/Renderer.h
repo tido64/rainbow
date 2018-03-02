@@ -10,16 +10,16 @@
 #include "Graphics/TextureManager.h"
 #include "Math/Geometry.h"
 
-namespace rainbow { namespace graphics
+namespace rainbow::graphics
 {
     namespace detail
     {
 #ifndef NDEBUG
         extern unsigned int g_draw_count_accumulator;
 #endif
-    }
+    }  // namespace detail
 
-    ///<summary>Hard-coded limit on number of sprites.</summary>
+    /// <summary>Hard-coded limit on number of sprites.</summary>
     static constexpr size_t kMaxSprites = 4096;
 
     struct MemoryInfo
@@ -126,6 +126,6 @@ namespace rainbow { namespace graphics
 
         bool initialize();
     };
-}}  // namespace rainbow::graphics
+}  // namespace rainbow::graphics
 
 #endif

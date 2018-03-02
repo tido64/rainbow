@@ -5,7 +5,7 @@
 #ifndef PLATFORM_DIAGNOSTICS_H_
 #define PLATFORM_DIAGNOSTICS_H_
 
-namespace rainbow { namespace diagnostics
+namespace rainbow::diagnostics
 {
     /// <summary>
     ///   Attempts to attach handler to dump a backtrace on crash.
@@ -14,6 +14,6 @@ namespace rainbow { namespace diagnostics
 
     /// <summary>Returns whether a debugger is attached.</summary>
     bool is_debugger_attached();
-}}  // namespace rainbow::diagnostics
+}  // namespace rainbow::diagnostics
 
 #endif

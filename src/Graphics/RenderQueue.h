@@ -18,9 +18,9 @@ namespace rainbow
     class IDrawable;
     class Label;
     class SpriteBatch;
-}
+}  // namespace rainbow
 
-namespace rainbow { namespace graphics
+namespace rainbow::graphics
 {
     class RenderUnit
     {
@@ -99,6 +99,6 @@ namespace rainbow { namespace graphics
     void draw(RenderQueue& queue);
 
     void update(RenderQueue& queue, uint64_t dt);
-}}  // namespace rainbow::graphics
+}  // namespace rainbow::graphics
 
 #endif

@@ -9,12 +9,9 @@
 
 #include "Common/Constants.h"
 
-namespace rainbow { namespace timing
+namespace rainbow::timing
 {
-    inline auto back(float t)
-    {
-        return t * t * (2.70158f * t - 1.70158f);
-    }
+    inline auto back(float t) { return t * t * (2.70158f * t - 1.70158f); }
 
     inline auto bounce(float t)
     {
@@ -37,15 +34,9 @@ namespace rainbow { namespace timing
         return 7.5625f * t * t + .984375f;
     }
 
-    inline auto cubic(float t)
-    {
-        return t * t * t;
-    }
+    inline auto cubic(float t) { return t * t * t; }
 
-    inline auto exponential(float t)
-    {
-        return std::pow(2, 10 * (t - 1));
-    }
+    inline auto exponential(float t) { return std::pow(2, 10 * (t - 1)); }
 
     template <typename F>
     auto flip(F&& f, float t) -> float
@@ -53,25 +44,13 @@ namespace rainbow { namespace timing
         return 1.0f - f(1.0f - t);
     }
 
-    inline auto quadratic(float t)
-    {
-        return t * t;
-    }
+    inline auto quadratic(float t) { return t * t; }
 
-    inline auto quartic(float t)
-    {
-        return t * t * t * t;
-    }
+    inline auto quartic(float t) { return t * t * t * t; }
 
-    inline auto quintic(float t)
-    {
-        return t * t * t * t * t;
-    }
+    inline auto quintic(float t) { return t * t * t * t * t; }
 
-    inline auto linear(float a, float b, float t)
-    {
-        return a + (b - a) * t;
-    }
+    inline auto linear(float a, float b, float t) { return a + (b - a) * t; }
 
     inline auto ease_in_back(float a, float b, float t)
     {
@@ -202,6 +181,6 @@ namespace rainbow { namespace timing
     {
         return a - (b - a) / 2.0f * (std::cos(kPi<float> * t) - 1.0f);
     }
-}}  // namespace rainbow::timing
+}  // namespace rainbow::timing
 
 #endif

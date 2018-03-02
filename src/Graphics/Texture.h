@@ -10,9 +10,12 @@
 
 #include "Math/Vec2.h"
 
-namespace rainbow { struct ISolemnlySwearThatIAmOnlyTesting; }
+namespace rainbow
+{
+    struct ISolemnlySwearThatIAmOnlyTesting;
+}
 
-namespace rainbow { namespace graphics
+namespace rainbow::graphics
 {
     namespace detail
     {
@@ -27,12 +30,14 @@ namespace rainbow { namespace graphics
 
             Texture(std::string id_, uint32_t name_)
                 : id(std::move(id_)), name(name_), width(0), height(0), size(0),
-                  use_count(0) {}
+                  use_count(0)
+            {
+            }
 
             auto operator==(uint32_t name_) { return name == name_; }
             auto operator==(const std::string& id_) { return id == id_; }
         };
-    }
+    }  // namespace detail
 
     class Texture
     {
@@ -46,7 +51,9 @@ namespace rainbow { namespace graphics
         }
 
         explicit Texture(const ISolemnlySwearThatIAmOnlyTesting&)
-            : name_(0), size_(64, 64) {}
+            : name_(0), size_(64, 64)
+        {
+        }
 
         Texture(const Texture& texture);
         ~Texture();
@@ -100,6 +107,6 @@ namespace rainbow { namespace graphics
 
         operator uint32_t() const { return atlas; }
     };
-}}  // namespace rainbow::graphics
+}  // namespace rainbow::graphics
 
 #endif

@@ -6,7 +6,7 @@
 
 #include "Graphics/OpenGL.h"
 
-namespace rainbow { namespace shaders { namespace integrated
+namespace rainbow::shaders::integrated
 {
-    #include "Graphics/Shaders/Shaders.h"
-}}}  // namespace rainbow::shaders::integrated
+#include "Graphics/Shaders/Shaders.h"
+}  // namespace rainbow::shaders::integrated

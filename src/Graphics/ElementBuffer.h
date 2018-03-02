@@ -7,7 +7,7 @@
 
 #include <cstdlib>
 
-namespace rainbow { namespace graphics
+namespace rainbow::graphics
 {
     class ElementBuffer
     {
@@ -26,6 +26,6 @@ namespace rainbow { namespace graphics
     private:
         unsigned int buffer_ = 0;
     };
-}}  // namespace rainbow::graphics
+}  // namespace rainbow::graphics
 
 #endif

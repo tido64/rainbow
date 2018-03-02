@@ -7,9 +7,12 @@
 
 #include <cstddef>
 
-namespace rainbow { struct ISolemnlySwearThatIAmOnlyTesting; }
+namespace rainbow
+{
+    struct ISolemnlySwearThatIAmOnlyTesting;
+}
 
-namespace rainbow { namespace graphics
+namespace rainbow::graphics
 {
     class Buffer
     {
@@ -39,6 +42,6 @@ namespace rainbow { namespace graphics
     private:
         unsigned int id_;
     };
-}}  // namespace rainbow::graphics
+}  // namespace rainbow::graphics
 
 #endif
