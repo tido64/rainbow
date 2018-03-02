@@ -38,11 +38,10 @@ namespace
 #endif
     }
 
-    bool is_quit(const SDL_Keysym& keysym)
+    bool is_quit([[maybe_unused]] const SDL_Keysym& keysym)
     {
 #ifdef RAINBOW_OS_MACOS
         return false;
-        NOT_USED(keysym);
 #else
         return keysym.sym == SDLK_q && (keysym.mod & KMOD_LCTRL);
 #endif

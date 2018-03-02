@@ -201,7 +201,8 @@ bool rainbow::imgui::new_frame(uint64_t dt)
                         [](bool state) { return state; });
 }
 
-bool rainbow::imgui::set_key_state(const KeyStroke& key, bool down)
+bool rainbow::imgui::set_key_state([[maybe_unused]] const KeyStroke& key,
+                                   [[maybe_unused]] bool down)
 {
     auto& io = ImGui::GetIO();
 #ifdef RAINBOW_SDL
@@ -248,9 +249,6 @@ bool rainbow::imgui::set_key_state(const KeyStroke& key, bool down)
             break;
         }
     }
-#else
-    NOT_USED(key);
-    NOT_USED(down);
 #endif  // RAINBOW_SDL
     return io.WantCaptureKeyboard;
 }

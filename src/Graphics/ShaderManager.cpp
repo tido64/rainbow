@@ -147,10 +147,9 @@ bool ShaderManager::init()
         {Shader::kTypeFragment, 0, shaders::kFixed2Df,
          shaders::integrated::kFixed2Df},
         {Shader::kTypeInvalid, 0, nullptr, nullptr}};
-    const auto pid = compile(shaders, nullptr);
+    [[maybe_unused]] const auto pid = compile(shaders, nullptr);
 
     R_ASSERT(pid != kInvalidProgram, "Failed to compile default shader");
-    NOT_USED(pid);
 
     make_global();
     return true;

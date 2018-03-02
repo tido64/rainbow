@@ -41,7 +41,7 @@ namespace pvrtc
         return data.as<PVRTexHeader*>()->version == kPVRHeaderVersion3;
     }
 
-    auto decode(const rainbow::Data& data)
+    auto decode([[maybe_unused]] const rainbow::Data& data)
     {
         rainbow::Image image{rainbow::Image::Format::PVRTC};
 
@@ -66,8 +66,6 @@ namespace pvrtc
         R_ASSERT(offset + image.size == data.size(),
                  "Unsupported PVR file format");
         image.data = data.bytes() + offset;
-#else
-        NOT_USED(data);
 #endif
 
         return image;

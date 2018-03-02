@@ -129,24 +129,23 @@ void rainbow::filesystem::initialize(ArrayView<zstring> args)
     g_assets_path = system_current_path();
 }
 
-bool rainbow::filesystem::is_directory(czstring path, std::error_code& error)
+bool rainbow::filesystem::is_directory(czstring path,
+                                       [[maybe_unused]] std::error_code& error)
 {
 #if HAS_FILESYSTEM
     return stdfs::is_directory(path, error);
 #else
-    NOT_USED(error);
     struct stat sb;
     return stat(path, &sb) == 0 && S_ISDIR(sb.st_mode);
 #endif
 }
 
 bool rainbow::filesystem::is_regular_file(czstring path,
-                                          std::error_code& error)
+                                          [[maybe_unused]] std::error_code& error)
 {
 #if HAS_FILESYSTEM
     return stdfs::is_regular_file(path, error);
 #else
-    NOT_USED(error);
     struct stat sb;
     return stat(path, &sb) == 0 && S_ISREG(sb.st_mode);
 #endif
@@ -176,12 +175,12 @@ auto rainbow::filesystem::relative(czstring path) -> Path
 #endif
 }
 
-bool rainbow::filesystem::remove(czstring path, std::error_code& error)
+bool rainbow::filesystem::remove(czstring path,
+                                 [[maybe_unused]] std::error_code& error)
 {
 #if HAS_FILESYSTEM
     return stdfs::remove(path, error);
 #else
-    NOT_USED(error);
     return ::remove(path) == 0;
 #endif
 }

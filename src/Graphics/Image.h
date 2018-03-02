@@ -109,7 +109,7 @@ namespace rainbow
 
 namespace rainbow
 {
-    Image Image::decode(const Data& data, float scale)
+    Image Image::decode(const Data& data, [[maybe_unused]] float scale)
     {
 #ifdef USE_DDS
         if (dds::check(data))
@@ -132,7 +132,6 @@ namespace rainbow
 #endif  // USE_SVG
 
 #ifdef USE_UIKIT
-        NOT_USED(scale);
         return uikit::decode(data);
 #else
         return {};
