@@ -20,11 +20,12 @@ else()
   )
 
   # Download HarfBuzz releases to avoid dependency on Ragel
+  find_git(GIT)
   ExternalProject_Add(
       harfbuzz
       URL https://github.com/harfbuzz/harfbuzz/releases/download/${HARFBUZZ_TARGET_VERSION}/harfbuzz-${HARFBUZZ_TARGET_VERSION}.tar.bz2
       URL_HASH SHA256=${HARFBUZZ_URL_HASH}
-      PATCH_COMMAND git apply ${PROJECT_SOURCE_DIR}/tools/harfbuzz-disable-tests.patch
+      PATCH_COMMAND ${GIT} apply ${PROJECT_SOURCE_DIR}/tools/harfbuzz-disable-tests.patch
       CMAKE_ARGS
           -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>
           -DFREETYPE_INCLUDE_DIR_freetype2=${LOCAL_LIBRARY}/FreeType/include
