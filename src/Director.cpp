@@ -46,7 +46,7 @@ namespace rainbow
         {
             LOGF("%s", error());
             LOGI("Booting 'NoGame'...");
-            script_ = std::make_unique<NoGame>(*this);
+            script_ = std::make_unique<NoGame>(*this, error());
             active_ = true;
             terminated_ = false;
         }

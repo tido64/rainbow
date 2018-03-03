@@ -82,6 +82,7 @@
 		195ACC46200ABAAE00FB7EDD /* Scene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 195ACC44200ABAAD00FB7EDD /* Scene.cpp */; };
 		195ACC47200ABAAE00FB7EDD /* NoGame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 195ACC45200ABAAD00FB7EDD /* NoGame.cpp */; };
 		1960AFD71A4E278E0015A3AD /* StableWorld.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1960AFCC1A4E278E0015A3AD /* StableWorld.cpp */; };
+		1960F19A204B532E00258DDE /* SystemFonts.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1960F199204B532D00258DDE /* SystemFonts.cpp */; };
 		1962F1E7184930D900E1CAF4 /* Diffuse.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1962F1E5184930D900E1CAF4 /* Diffuse.cpp */; };
 		19655DEB187C65AF0053C398 /* freetype.c in Sources */ = {isa = PBXBuildFile; fileRef = 19655DE9187C65AF0053C398 /* freetype.c */; };
 		196911CD1713564A002BC2E4 /* VertexArray.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 196911CB1713564A002BC2E4 /* VertexArray.cpp */; };
@@ -352,6 +353,8 @@
 		195D565617D90DD100C78117 /* Functional.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Functional.h; sourceTree = "<group>"; };
 		1960AFCC1A4E278E0015A3AD /* StableWorld.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = StableWorld.cpp; sourceTree = "<group>"; };
 		1960AFCD1A4E278E0015A3AD /* StableWorld.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StableWorld.h; sourceTree = "<group>"; };
+		1960F197204B39BD00258DDE /* SystemFonts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SystemFonts.h; sourceTree = "<group>"; };
+		1960F199204B532D00258DDE /* SystemFonts.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = SystemFonts.cpp; sourceTree = "<group>"; };
 		1962F1E5184930D900E1CAF4 /* Diffuse.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Diffuse.cpp; sourceTree = "<group>"; };
 		1962F1E6184930D900E1CAF4 /* Diffuse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Diffuse.h; sourceTree = "<group>"; };
 		19655DE9187C65AF0053C398 /* freetype.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = freetype.c; sourceTree = "<group>"; };
@@ -1067,6 +1070,8 @@
 			children = (
 				19B3990A2041E8E400581AE0 /* FontCache.cpp */,
 				19B3990B2041E8E400581AE0 /* FontCache.h */,
+				1960F199204B532D00258DDE /* SystemFonts.cpp */,
+				1960F197204B39BD00258DDE /* SystemFonts.h */,
 				19B3990C2041E8E400581AE0 /* Typesetter.cpp */,
 				19B3990D2041E8E400581AE0 /* Typesetter.h */,
 			);
@@ -1398,6 +1403,7 @@
 				1939A074152C401300494609 /* b2RopeJoint.cpp in Sources */,
 				198F42AD1A9152E000BE7A73 /* SkeletonJson.c in Sources */,
 				198F42A21A9152E000BE7A73 /* Event.c in Sources */,
+				1960F19A204B532E00258DDE /* SystemFonts.cpp in Sources */,
 				1939A075152C401300494609 /* b2WeldJoint.cpp in Sources */,
 				1939A076152C401300494609 /* b2WheelJoint.cpp in Sources */,
 				195ACC46200ABAAE00FB7EDD /* Scene.cpp in Sources */,

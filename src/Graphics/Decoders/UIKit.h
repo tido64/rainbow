@@ -22,9 +22,9 @@ namespace uikit
                                  length:source.size()
                            freeWhenDone:NO];
         UIImage* uiimage = [UIImage imageWithData:data];
-        if (!uiimage)
+        if (uiimage == nil)
         {
-            R_ASSERT(uiimage, "Unknown texture format");
+            R_ASSERT(uiimage != nil, "Unknown texture format");
             return image;
         }
 

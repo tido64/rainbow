@@ -34,7 +34,7 @@ void Label::set_color(Color c)
 
 void Label::set_font(czstring font_face)
 {
-    font_face_ = font_face;
+    font_face_ = font_face == nullptr ? "" : font_face;
     set_needs_update(kStaleBuffer);
 }
 

@@ -7,6 +7,7 @@
 #include "Common/Logging.h"
 #include "FileSystem/File.h"
 #include "Graphics/OpenGL.h"
+#include "Text/SystemFonts.h"
 
 using rainbow::FontCache;
 using rainbow::SpriteVertex;
@@ -81,7 +82,9 @@ auto FontCache::get(std::string font_name) -> FT_Face
     auto search = font_cache_.find(font_name);
     if (search == font_cache_.end())
     {
-        auto data = File::read(font_name.c_str(), FileType::Asset);
+        auto data = font_name.empty()
+                        ? text::monospace_font()
+                        : File::read(font_name.c_str(), FileType::Asset);
         FT_Face face;
         [[maybe_unused]] FT_Error error =
             FT_New_Memory_Face(library_,

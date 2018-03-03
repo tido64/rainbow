@@ -149,6 +149,8 @@ set(SOURCE_FILES
     src/Script/World.h
     src/Text/FontCache.cpp
     src/Text/FontCache.h
+    src/Text/SystemFonts.cpp
+    src/Text/SystemFonts.h
     src/Text/Typesetter.cpp
     src/Text/Typesetter.h
     src/ThirdParty/NanoSVG/NanoSVG.cpp
