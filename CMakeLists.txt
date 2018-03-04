@@ -121,11 +121,6 @@ set(SOURCE_FILES
     src/Platform/Macros.h
     src/Platform/SystemInfo.h
     src/Resources/Rainbow.svg.h
-    src/Script/Actor.h
-    src/Script/Components/AnimationComponent.h
-    src/Script/Components/RenderComponent.h
-    src/Script/Components/ScriptComponent.h
-    src/Script/Components/StateComponent.h
     src/Script/JavaScript/Audio.h
     src/Script/JavaScript/Console.h
     src/Script/JavaScript/Helper.cpp
@@ -146,7 +141,6 @@ set(SOURCE_FILES
     src/Script/TimingFunctions.h
     src/Script/Transition.h
     src/Script/TransitionFunctions.h
-    src/Script/World.h
     src/Text/FontCache.cpp
     src/Text/FontCache.h
     src/Text/SystemFonts.cpp
