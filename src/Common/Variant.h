@@ -5,15 +5,27 @@
 #ifndef COMMON_VARIANT_H_
 #define COMMON_VARIANT_H_
 
-#if !__has_include(<variant>)
-#   ifdef _MSC_VER
-#       pragma warning(push)
-#       pragma warning(disable: 4996)
-#   endif
-#   include <mapbox/variant.hpp>
-#   ifdef _MSC_VER
-#       pragma warning(pop)
-#   endif
+#if !__has_include(<optional>)
+#   include <experimental/optional>
+
+namespace std
+{
+    using experimental::make_optional;
+    using experimental::nullopt;
+}  // namespace std
+
+#else
+#   include <optional>
+#endif
+
+#ifdef _MSC_VER
+#   pragma warning(push)
+#   pragma warning(disable : 4996)
+#endif
+#include <mapbox/variant.hpp>
+#ifdef _MSC_VER
+#   pragma warning(pop)
+#endif
 
 namespace rainbow
 {
@@ -23,13 +35,17 @@ namespace rainbow
     template <typename T, typename... Types>
     auto get(variant<Types...>& v)
     {
-        return !v.template is<T>() ? T{} : v.template get_unchecked<T>();
+        return !v.template is<T>()
+                   ? std::nullopt
+                   : std::make_optional(v.template get_unchecked<T>());
     }
 
     template <typename T, typename... Types>
     auto get(const variant<Types...>& v)
     {
-        return !v.template is<T>() ? T{} : v.template get_unchecked<T>();
+        return !v.template is<T>()
+                   ? std::nullopt
+                   : std::make_optional(v.template get_unchecked<T>());
     }
 
     template <typename T, typename... Types>
@@ -43,34 +59,6 @@ namespace rainbow
     {
         return mapbox::util::apply_visitor(std::forward<Args>(args)...);
     }
-}
-#else
-#   include <utility>
-#   include <variant>
-
-namespace rainbow
-{
-    template <typename... Types>
-    using variant = std::variant<Types...>;
-
-    template <typename T, typename... Types>
-    auto get(variant<Types...>& v)
-    {
-        return std::get<T>(v);
-    }
-
-    template <typename T, typename... Types>
-    constexpr auto holds_alternative(const variant<Types...>& v) noexcept
-    {
-        return std::holds_alternative<T>(v);
-    }
-
-    template <typename... Args>
-    auto visit(Args&&... args)
-    {
-        return std::visit(std::forward<Args>(args)...);
-    }
-}
-#endif
+}  // namespace rainbow
 
 #endif

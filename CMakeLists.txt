@@ -221,6 +221,7 @@ if(UNIT_TESTS)
       src/Tests/Common/String.test.cc
       src/Tests/Common/TreeNode.test.cc
       src/Tests/Common/TypeInfo.test.cc
+      src/Tests/Common/Variant.test.cc
       src/Tests/Config.test.cc
       src/Tests/FileSystem/File.test.cc
       src/Tests/FileSystem/Path.test.cc

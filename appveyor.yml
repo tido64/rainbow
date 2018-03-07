@@ -15,7 +15,7 @@ cache:
   - '%APPVEYOR_BUILD_FOLDER%-build\sdl2-bin-prefix\src\SDL2-2.0.7-win32-x86.zip'
   - '%APPVEYOR_BUILD_FOLDER%-build\sdl2-dev-prefix\src\SDL2-devel-2.0.7-VC.zip'
 before_build:
-  - git submodule update --init -- lib/FreeType lib/box2d lib/imgui lib/libpng lib/nanosvg lib/spine-runtimes lib/stb lib/zlib
+  - git submodule update --init -- lib/FreeType lib/box2d lib/imgui lib/libpng lib/nanosvg lib/spine-runtimes lib/stb lib/variant lib/zlib
   - if not exist "%APPVEYOR_BUILD_FOLDER%-build" mkdir "%APPVEYOR_BUILD_FOLDER%-build"
   - cd "%APPVEYOR_BUILD_FOLDER%-build"
   - cmake -DCMAKE_TOOLCHAIN_FILE=C:/tools/vcpkg/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=x86-windows-static -DUSE_HEIMDALL=1 -DUSE_PHYSICS=1 -DUSE_SPINE=1 -DVCPKG_PATH=C:/tools/vcpkg "%APPVEYOR_BUILD_FOLDER%"

@@ -41,9 +41,9 @@ namespace rainbow
             R_ASSERT(!key.empty(), "Empty keys are invalid");
 
             auto i = asset_map_.find(key);
-            const auto holds_asset = i != asset_map_.end() &&
-                                     rainbow::holds_alternative<T*>(i->second);
-            return !holds_asset ? nullptr : rainbow::get<T*>(i->second);
+            return i == asset_map_.end()
+                       ? nullptr
+                       : rainbow::get<T*>(i->second).value_or(nullptr);
         }
 
     private:
@@ -59,6 +59,6 @@ namespace rainbow
         void draw_impl() override;
         void update_impl(uint64_t dt) override;
     };
-}
+}  // namespace rainbow
 
 #endif

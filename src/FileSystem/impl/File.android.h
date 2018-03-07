@@ -5,11 +5,10 @@
 #ifndef FILESYSTEM_IMPL_FILE_ANDROID_H_
 #define FILESYSTEM_IMPL_FILE_ANDROID_H_
 
-#include <variant>
-
 #include <android/native_activity.h>
 
 #include "Common/String.h"
+#include "Common/Variant.h"
 #include "FileSystem/File.h"
 #include "FileSystem/FileSystem.h"
 
@@ -21,7 +20,7 @@ extern ANativeActivity* g_native_activity;
 
 namespace rainbow::android
 {
-    using FileHandle = std::variant<std::nullptr_t, AAsset*, FILE*>;
+    using FileHandle = variant<std::nullptr_t, AAsset*, FILE*>;
 
     class File
     {
@@ -52,49 +51,49 @@ namespace rainbow::android
             }
         }
 
-        auto handle() const -> FILE* { return std::get<FILE*>(handle_); }
+        auto handle() const -> FILE* { return get<FILE*>(handle_).value(); }
 
         template <typename T>
         void set_handle(T stream)
         {
-            R_ASSERT(std::holds_alternative<std::nullptr_t>(handle_),
-                     "Should only be set only once");
+            R_ASSERT(holds_alternative<std::nullptr_t>(handle_),
+                     "Should only be set once");
 
             handle_ = stream;
         }
 
         auto is_platform_handle() const
         {
-            return std::holds_alternative<AAsset*>(handle_);
+            return holds_alternative<AAsset*>(handle_);
         }
 
         auto size() const -> size_t
         {
-            return AAsset_getLength64(std::get<AAsset*>(handle_));
+            return AAsset_getLength64(get<AAsset*>(handle_).value());
         }
 
         void close()
         {
-            AAsset_close(std::get<AAsset*>(handle_));
+            AAsset_close(get<AAsset*>(handle_).value());
             handle_ = nullptr;
         }
 
         auto read(void* dst, size_t size) const -> size_t
         {
-            auto handle = std::get<AAsset*>(handle_);
+            auto handle = get<AAsset*>(handle_).value();
             return std::max(AAsset_read(handle, dst, size), 0);
         }
 
         bool seek(int64_t offset, SeekOrigin origin) const
         {
             const int whence = detail::seek_origin(origin);
-            auto handle = std::get<AAsset*>(handle_);
+            auto handle = get<AAsset*>(handle_).value();
             return AAsset_seek64(handle, offset, whence) >= 0;
         }
 
         explicit operator bool() const
         {
-            return std::visit(
+            return visit(
                 [](auto&& handle) { return handle != nullptr; }, handle_);
         }
 
