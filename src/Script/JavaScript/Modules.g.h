@@ -22,11 +22,6 @@
 #include <Rainbow/TextAlignment.h>
 #include "Script/JavaScript/Helper.h"
 
-#ifdef __GNUC__
-#   pragma GCC diagnostic push
-#   pragma GCC diagnostic ignored "-Wunused-variable"
-#endif
-
 // clang-format off
 
 template <>
@@ -1090,10 +1085,6 @@ void rainbow::duk::register_module<rainbow::VirtualKey>(duk_context* ctx, duk_id
     duk_freeze(ctx, -1);
     duk::put_prop_literal(ctx, rainbow, "VirtualKey");
 }
-
-#ifdef __GNUC__
-#   pragma GCC diagnostic pop
-#endif
 
 namespace rainbow::duk
 {

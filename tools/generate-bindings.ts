@@ -485,11 +485,6 @@ function generateCppBindings(typeInfo: TypeInfo[]): string {
       }, []),
     '#include "Script/JavaScript/Helper.h"',
     "",
-    "#ifdef __GNUC__",
-    "#   pragma GCC diagnostic push",
-    '#   pragma GCC diagnostic ignored "-Wunused-variable"',
-    "#endif",
-    "",
     "// clang-format off",
     ...typeInfo.filter(type => type.type !== "module").map(type => {
       const sourceName = type.sourceName;
@@ -572,10 +567,6 @@ function generateCppBindings(typeInfo: TypeInfo[]): string {
         "}"
       ].join("\n");
     }),
-    "",
-    "#ifdef __GNUC__",
-    "#   pragma GCC diagnostic pop",
-    "#endif",
     "",
     "namespace rainbow::duk",
     "{",
