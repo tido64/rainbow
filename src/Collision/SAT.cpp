@@ -4,6 +4,8 @@
 
 #include "Collision/SAT.h"
 
+#include <algorithm>
+
 #include "Graphics/Sprite.h"
 
 using rainbow::SpriteRef;
@@ -14,16 +16,15 @@ namespace
 {
     struct Quad
     {
-        Vec2f v0;
-        Vec2f v1;
-        Vec2f v2;
-        Vec2f v3;
+        Vec2f v0, v1, v2, v3;
 
         explicit Quad(const SpriteRef& sprite) : Quad(sprite->vertex_array()) {}
 
         explicit Quad(const SpriteVertex* vertices)
             : v0(vertices[0].position), v1(vertices[1].position),
-              v2(vertices[2].position), v3(vertices[3].position) {}
+              v2(vertices[2].position), v3(vertices[3].position)
+        {
+        }
     };
 
     template <typename T>
@@ -49,24 +50,17 @@ namespace
             axes[7] = (b.v0 - b.v3).normal().normalize();
         }
 
-        for (int i = 0; i < count; ++i)
-        {
-            const Vec2f& axis = axes[i];
+        return std::all_of(axes, axes + count, [&a, &b](const Vec2f& axis) {
             const float a_dots[]{
                 axis * a.v0, axis * a.v1, axis * a.v2, axis * a.v3};
             const float b_dots[]{
                 axis * b.v0, axis * b.v1, axis * b.v2, axis * b.v3};
-            if (!overlaps(
-                    std::minmax_element(std::begin(a_dots), std::end(a_dots)),
-                    std::minmax_element(std::begin(b_dots), std::end(b_dots))))
-            {
-                return false;
-            }
-        }
-
-        return true;
+            return overlaps(
+                std::minmax_element(std::begin(a_dots), std::end(a_dots)),
+                std::minmax_element(std::begin(b_dots), std::end(b_dots)));
+        });
     }
-}
+}  // namespace
 
 bool rainbow::overlaps(const SpriteRef& a, const SpriteRef& b)
 {
