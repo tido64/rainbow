@@ -15,7 +15,7 @@ namespace rainbow
         if (size > kTempBufferSize)
             return nullptr;
 
-        static std::array<uint8_t, kTempBufferSize> buffer;
+        thread_local std::array<uint8_t, kTempBufferSize> buffer;
         return buffer.data();
     }
 }

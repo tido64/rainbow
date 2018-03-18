@@ -9,6 +9,7 @@
 #include "Graphics/OpenGL.h"
 #include "Text/SystemFonts.h"
 
+using rainbow::Color;
 using rainbow::FontCache;
 using rainbow::SpriteVertex;
 using rainbow::Vec2i;
@@ -27,22 +28,16 @@ namespace
 
     void blit(const uint8_t* src,
               const stbrp_rect& src_rect,
-              uint8_t* dst,
+              Color* dst,
               const Vec2i& dst_sz)
     {
-        const auto stride = (dst_sz.x - src_rect.w) * 2;
-        size_t i = 0;
-        uint8_t* ptr = dst + (src_rect.y * dst_sz.x + src_rect.x) * 2;
-        for (uint32_t y = 0; y < src_rect.h; ++y)
+        for (uint32_t row = 0; row < src_rect.h; ++row)
         {
-            for (uint32_t x = 0; x < src_rect.w; ++x)
-            {
-                *ptr = std::numeric_limits<uint8_t>::max();  // luminance
-                *(++ptr) = src[i];                           // alpha
-                ++ptr;
-                ++i;
-            }
-            ptr += stride;
+            auto out = dst + ((src_rect.y + row) * dst_sz.x + src_rect.x);
+            const auto begin = src + src_rect.w * row;
+            std::transform(begin, begin + src_rect.w, out, [](uint8_t alpha) {
+                return Color{0xff, 0xff, 0xff, alpha};
+            });
         }
     }
 }  // namespace
@@ -56,7 +51,7 @@ FontCache::FontCache() : is_stale_(false)
                       bin_nodes_.data(),
                       static_cast<int>(bin_nodes_.size()));
 
-    constexpr size_t size = kTextureSize * kTextureSize * 2;
+    constexpr size_t size = kTextureSize * kTextureSize * 4;
     bitmap_ = std::make_unique<uint8_t[]>(size);
     std::fill_n(bitmap_.get(), size, 0);
 
@@ -141,7 +136,10 @@ auto FontCache::get_glyph(FT_Face face, int32_t font_size, uint32_t glyph_index)
         rect.x += kGlyphMargin;
         rect.y += kGlyphMargin;
 
-        blit(bitmap.buffer, rect, bitmap_.get(), {kTextureSize, kTextureSize});
+        blit(bitmap.buffer,
+             rect,
+             reinterpret_cast<Color*>(bitmap_.get()),
+             {kTextureSize, kTextureSize});
         is_stale_ = true;
 
         std::array<SpriteVertex, 4> vx;
@@ -179,12 +177,8 @@ void FontCache::update(TextureManager& texture_manager)
         auto data = bitmap_.get();
         auto upload = [data](TextureManager& texture_manager,
                              const Texture& texture) {
-            texture_manager.upload(texture,
-                                   GL_LUMINANCE_ALPHA,
-                                   kTextureSize,
-                                   kTextureSize,
-                                   GL_LUMINANCE_ALPHA,
-                                   data);
+            texture_manager.upload(
+                texture, GL_RGBA, kTextureSize, kTextureSize, GL_RGBA, data);
         };
         if (!texture_)
             texture_ = texture_manager.create("rainbow://font_cache", upload);
