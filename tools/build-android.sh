@@ -16,7 +16,7 @@ PROJECT=$(cd -P "$(dirname $0)/.." && pwd)
 
 # Auto-generate files
 pushd $PROJECT > /dev/null
-tools/shaders-gen.py
+command -v yarn 1> /dev/null && yarn generate-shaders
 popd > /dev/null
 
 echo -n "Removing stale files..."

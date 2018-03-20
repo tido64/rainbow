@@ -306,7 +306,6 @@
 		1939A1C5152C425D00494609 /* OpenGL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenGL.h; sourceTree = "<group>"; };
 		1939A1C8152C425D00494609 /* Renderer.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = Renderer.cpp; sourceTree = "<group>"; };
 		1939A1C9152C425D00494609 /* Renderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Renderer.h; sourceTree = "<group>"; };
-		1939A1D3152C425D00494609 /* Shaders.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Shaders.h; sourceTree = "<group>"; };
 		1939A1D4152C425D00494609 /* Sprite.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = Sprite.cpp; sourceTree = "<group>"; };
 		1939A1D5152C425D00494609 /* Sprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Sprite.h; sourceTree = "<group>"; };
 		1939A1D6152C425D00494609 /* SpriteBatch.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = SpriteBatch.cpp; sourceTree = "<group>"; };
@@ -785,7 +784,6 @@
 			children = (
 				1962F1E5184930D900E1CAF4 /* Diffuse.cpp */,
 				1962F1E6184930D900E1CAF4 /* Diffuse.h */,
-				1939A1D3152C425D00494609 /* Shaders.h */,
 			);
 			path = Shaders;
 			sourceTree = "<group>";

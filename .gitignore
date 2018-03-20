@@ -12,6 +12,7 @@ node_modules/
 project.xcworkspace/
 src/compile_commands.json
 xcuserdata/
+yarn-error.log
 
 # Libraries
 build/ios/lib/

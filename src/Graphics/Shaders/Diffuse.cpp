@@ -9,25 +9,6 @@
 
 using rainbow::graphics::ShaderManager;
 
-namespace
-{
-    Shader::Params sDiffuseLight2Df{  // NOLINT(cppcoreguidelines-interfaces-global-init)
-        Shader::kTypeFragment,
-        0,
-        rainbow::shaders::kDiffuseLight2Df,
-        rainbow::shaders::integrated::kDiffuseLight2Df};
-    Shader::Params sDiffuseLightNormalf{  // NOLINT(cppcoreguidelines-interfaces-global-init)
-        Shader::kTypeFragment,
-        0,
-        rainbow::shaders::kDiffuseLightNormalf,
-        rainbow::shaders::integrated::kDiffuseLightNormalf};
-    Shader::Params sNormalMappedf{  // NOLINT(cppcoreguidelines-interfaces-global-init)
-        Shader::kTypeVertex,
-        0,
-        rainbow::shaders::kNormalMappedv,
-        rainbow::shaders::integrated::kNormalMappedv};
-}
-
 namespace rainbow::shaders
 {
     Diffuse::Diffuse(bool normal)
@@ -37,8 +18,8 @@ namespace rainbow::shaders
         if (normal)
         {
             Shader::Params shaders[]{
-                sNormalMappedf,
-                sDiffuseLightNormalf,
+                gl::NormalMapped_vert(),
+                gl::DiffuseLightNormal_frag(),
                 {Shader::kTypeInvalid, 0, nullptr, nullptr}};
             const Shader::AttributeParams attributes[]{
                 {Shader::kAttributeVertex, "vertex"},
@@ -52,7 +33,7 @@ namespace rainbow::shaders
         {
             Shader::Params shaders[]{
                 {Shader::kTypeVertex, 0, nullptr, nullptr},  // kFixed2Dv
-                sDiffuseLight2Df,
+                gl::DiffuseLight2D_frag(),
                 {Shader::kTypeInvalid, 0, nullptr, nullptr}};
             program_ = ShaderManager::Get()->compile(shaders, nullptr);
         }

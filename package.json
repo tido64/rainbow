@@ -9,7 +9,9 @@
   },
   "scripts": {
     "build": "tsc --project js",
-    "generate-bindings": "tsc --target ES2015 --module commonjs --strict --noImplicitAny --strictNullChecks --noImplicitThis --alwaysStrict --noUnusedLocals --noImplicitReturns tools/generate-bindings.ts && node tools/generate-bindings.js",
+    "compile": "tsc --target ES2016 --module commonjs --strict --noImplicitAny --strictNullChecks --noImplicitThis --alwaysStrict --noUnusedLocals --noImplicitReturns",
+    "generate-bindings": "yarn compile tools/generate-bindings.ts && node tools/generate-bindings.js",
+    "generate-shaders": "yarn compile tools/generate-shaders.ts && node tools/generate-shaders.js",
     "prettier": "prettier --write --no-config .vscode/*.json js/*.json tools/*.ts",
     "tsc": "tsc"
   },

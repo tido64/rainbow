@@ -142,10 +142,8 @@ ShaderManager::~ShaderManager()
 bool ShaderManager::init()
 {
     Shader::Params shaders[]{
-        {Shader::kTypeVertex, 0, shaders::kFixed2Dv,
-         shaders::integrated::kFixed2Dv},
-        {Shader::kTypeFragment, 0, shaders::kFixed2Df,
-         shaders::integrated::kFixed2Df},
+        gl::Fixed2D_vert(),
+        gl::Fixed2D_frag(),
         {Shader::kTypeInvalid, 0, nullptr, nullptr}};
     [[maybe_unused]] const auto pid = compile(shaders, nullptr);
 

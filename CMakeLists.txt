@@ -18,9 +18,6 @@ option(USE_HEIMDALL     "Enable Heimdall debugging facilities" OFF)
 option(USE_PHYSICS      "Enable physics module (Box2D)" OFF)
 option(USE_SPINE        "Enable Spine runtime" OFF)
 
-# Auto-generate files
-execute_process(COMMAND tools/shaders-gen.py WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
-
 # Platform-specific flags
 include(${LOCAL_MODULE_PATH}/Unix.cmake)
 include(${LOCAL_MODULE_PATH}/Windows.cmake)

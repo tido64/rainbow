@@ -35,7 +35,7 @@ function download {
 }
 
 pushd ${project_root} 1> /dev/null
-tools/shaders-gen.py
+command -v yarn 1> /dev/null && yarn generate-shaders
 
 mkdir -p ${project_root}/build/ios/lib
 pushd ${project_root}/build/ios/lib 1> /dev/null
