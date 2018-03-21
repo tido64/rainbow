@@ -51,12 +51,18 @@ fs.writeFile(
     "}  // namespace",
     "",
     ...shaders.map(file => {
+      const isHeader = isShaderHeader(file);
       const name = makeSafeName(file);
-      const shaderType = inferShaderType(file);
+      const [returnType, returnValue] = isHeader
+        ? ["rainbow::czstring", `k${name}`]
+        : [
+            "Shader::Params",
+            `{${inferShaderType(file)}, 0, "Shaders/${file}", k${name}}`
+          ];
       return [
-        `auto rainbow::gl::${name}() -> Shader::Params`,
+        `auto rainbow::gl::${name}() -> ${returnType}`,
         "{",
-        `    return {${shaderType}, 0, "Shaders/${file}", k${name}};`,
+        `    return ${returnValue};`,
         "}",
         ""
       ].join("\n");
@@ -73,12 +79,16 @@ fs.writeFile(
   [
     copyright,
     "",
+    '#include "Common/String.h"',
     '#include "Graphics/ShaderDetails.h"',
     "",
     "namespace rainbow::gl",
     "{",
     ...shaders.map(
-      file => `    auto ${makeSafeName(file)}() -> Shader::Params;`
+      file =>
+        isShaderHeader(file)
+          ? `    auto ${makeSafeName(file)}() -> czstring;`
+          : `    auto ${makeSafeName(file)}() -> Shader::Params;`
     ),
     "}  // namespace rainbow::gl",
     ""
@@ -104,7 +114,11 @@ function isCodeLine(line: string): boolean {
 }
 
 function isShader(file: string): boolean {
-  return [".frag", ".vert"].includes(path.extname(file));
+  return [".glsl", ".frag", ".vert"].includes(path.extname(file));
+}
+
+function isShaderHeader(file: string): boolean {
+  return path.extname(file) === ".glsl";
 }
 
 function makeSafeName(file: string): string {

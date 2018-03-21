@@ -2,9 +2,10 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
-varying lowp vec4 v_color;
+#version 100
 
-void main()
-{
-    gl_FragColor = v_color;
-}
+#ifdef GL_FRAGMENT_PRECISION_HIGH
+precision highp float;
+#else
+precision mediump float;
+#endif

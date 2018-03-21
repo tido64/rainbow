@@ -4,6 +4,7 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
+#include "Common/String.h"
 #include "Graphics/ShaderDetails.h"
 
 namespace rainbow::gl
@@ -12,6 +13,8 @@ namespace rainbow::gl
     auto DiffuseLightNormal_frag() -> Shader::Params;
     auto Fixed2D_frag() -> Shader::Params;
     auto Fixed2D_vert() -> Shader::Params;
+    auto GL2_1_header_glsl() -> czstring;
+    auto GLES2_header_glsl() -> czstring;
     auto NormalMapped_vert() -> Shader::Params;
     auto Simple_frag() -> Shader::Params;
     auto Simple2D_vert() -> Shader::Params;

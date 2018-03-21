@@ -11,15 +11,6 @@
 namespace
 {
     constexpr char kDiffuseLight2D_frag[] =
-        "#ifdef GL_ES\n"
-        "#   ifdef GL_FRAGMENT_PRECISION_HIGH\n"
-        "precision highp float;\n"
-        "#   else\n"
-        "precision mediump float;\n"
-        "#   endif\n"
-        "#else\n"
-        "#   define lowp\n"
-        "#endif\n"
         "uniform float cutoff;\n"
         "uniform float radius;\n"
         "uniform vec3 light;\n"
@@ -42,15 +33,6 @@ namespace
         "}\n";
 
     constexpr char kDiffuseLightNormal_frag[] =
-        "#ifdef GL_ES\n"
-        "#   ifdef GL_FRAGMENT_PRECISION_HIGH\n"
-        "precision highp float;\n"
-        "#   else\n"
-        "precision mediump float;\n"
-        "#   endif\n"
-        "#else\n"
-        "#   define lowp\n"
-        "#endif\n"
         "uniform float cutoff;\n"
         "uniform float radius;\n"
         "uniform vec3 light;\n"
@@ -75,15 +57,6 @@ namespace
         "}\n";
 
     constexpr char kFixed2D_frag[] =
-        "#ifdef GL_ES\n"
-        "#   ifdef GL_FRAGMENT_PRECISION_HIGH\n"
-        "precision highp float;\n"
-        "#   else\n"
-        "precision mediump float;\n"
-        "#   endif\n"
-        "#else\n"
-        "#   define lowp\n"
-        "#endif\n"
         "uniform sampler2D texture;\n"
         "varying lowp vec4 v_color;\n"
         "varying vec2 v_texcoord;\n"
@@ -93,15 +66,6 @@ namespace
         "}\n";
 
     constexpr char kFixed2D_vert[] =
-        "#ifdef GL_ES\n"
-        "#   ifdef GL_FRAGMENT_PRECISION_HIGH\n"
-        "precision highp float;\n"
-        "#   else\n"
-        "precision mediump float;\n"
-        "#   endif\n"
-        "#else\n"
-        "#   define lowp\n"
-        "#endif\n"
         "uniform mat4 mvp_matrix;\n"
         "attribute vec4 color;\n"
         "attribute vec2 texcoord;\n"
@@ -115,16 +79,19 @@ namespace
             "gl_Position = mvp_matrix * vec4(vertex, 0.0, 1.0);\n"
         "}\n";
 
-    constexpr char kNormalMapped_vert[] =
-        "#ifdef GL_ES\n"
-        "#   ifdef GL_FRAGMENT_PRECISION_HIGH\n"
+    constexpr char kGL2_1_header_glsl[] =
+        "#version 120\n"
+        "#define lowp\n";
+
+    constexpr char kGLES2_header_glsl[] =
+        "#version 100\n"
+        "#ifdef GL_FRAGMENT_PRECISION_HIGH\n"
         "precision highp float;\n"
-        "#   else\n"
-        "precision mediump float;\n"
-        "#   endif\n"
         "#else\n"
-        "#   define lowp\n"
-        "#endif\n"
+        "precision mediump float;\n"
+        "#endif\n";
+
+    constexpr char kNormalMapped_vert[] =
         "uniform mat4 mvp_matrix;\n"
         "attribute vec4 color;\n"
         "attribute vec2 normal;\n"
@@ -142,15 +109,6 @@ namespace
         "}\n";
 
     constexpr char kSimple_frag[] =
-        "#ifdef GL_ES\n"
-        "#   ifdef GL_FRAGMENT_PRECISION_HIGH\n"
-        "precision highp float;\n"
-        "#   else\n"
-        "precision mediump float;\n"
-        "#   endif\n"
-        "#else\n"
-        "#   define lowp\n"
-        "#endif\n"
         "varying lowp vec4 v_color;\n"
         "void main()\n"
         "{\n"
@@ -158,15 +116,6 @@ namespace
         "}\n";
 
     constexpr char kSimple2D_vert[] =
-        "#ifdef GL_ES\n"
-        "#   ifdef GL_FRAGMENT_PRECISION_HIGH\n"
-        "precision highp float;\n"
-        "#   else\n"
-        "precision mediump float;\n"
-        "#   endif\n"
-        "#else\n"
-        "#   define lowp\n"
-        "#endif\n"
         "uniform mat4 mvp_matrix;\n"
         "attribute vec4 color;\n"
         "attribute vec2 vertex;\n"
@@ -196,6 +145,16 @@ auto rainbow::gl::Fixed2D_frag() -> Shader::Params
 auto rainbow::gl::Fixed2D_vert() -> Shader::Params
 {
     return {Shader::kTypeVertex, 0, "Shaders/Fixed2D.vert", kFixed2D_vert};
+}
+
+auto rainbow::gl::GL2_1_header_glsl() -> rainbow::czstring
+{
+    return kGL2_1_header_glsl;
+}
+
+auto rainbow::gl::GLES2_header_glsl() -> rainbow::czstring
+{
+    return kGLES2_header_glsl;
 }
 
 auto rainbow::gl::NormalMapped_vert() -> Shader::Params

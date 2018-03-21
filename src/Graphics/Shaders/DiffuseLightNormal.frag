@@ -2,16 +2,6 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
-#ifdef GL_ES
-#   ifdef GL_FRAGMENT_PRECISION_HIGH
-precision highp float;
-#   else
-precision mediump float;
-#   endif
-#else
-#   define lowp
-#endif
-
 uniform float cutoff;  ///< Max distance from light source.
 uniform float radius;  ///< Radius of max light intensity.
 uniform vec3 light;    ///< Light source's screen position.

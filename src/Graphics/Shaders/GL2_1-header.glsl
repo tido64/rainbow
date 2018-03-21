@@ -2,9 +2,6 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
-varying lowp vec4 v_color;
+#version 120
 
-void main()
-{
-    gl_FragColor = v_color;
-}
+#define lowp

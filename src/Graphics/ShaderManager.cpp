@@ -33,6 +33,17 @@ namespace
         {Shader::kAttributeTexCoord, "texcoord"},
         {Shader::kAttributeNone, nullptr}};
 
+    void shader_source(GLuint shader, czstring string)
+    {
+#ifdef GL_ES_VERSION_2_0
+        auto glsl_header = rainbow::gl::GLES2_header_glsl();
+#else
+        auto glsl_header = rainbow::gl::GL2_1_header_glsl();
+#endif
+        const czstring source[]{glsl_header, string};
+        glShaderSource(shader, 2, source, nullptr);
+    }
+
     template <typename F, typename G>
     auto verify(GLuint id, GLenum pname, F&& glGetiv, G&& glGetInfoLog)
         -> String
@@ -70,21 +81,17 @@ namespace
                     R_ABORT("No fallback was found");
                     return ShaderManager::kInvalidProgram;
                 }
-                // Local variable required for Android compiler (NDK r10e).
-                czstring source = shader.fallback;
-                glShaderSource(id, 1, &source, nullptr);
+
+                shader_source(id, shader.fallback);
             }
             else
             {
-                czstring source = glsl.as<char*>();
-                glShaderSource(id, 1, &source, nullptr);
+                shader_source(id, glsl.as<char*>());
             }
         }
         else
         {
-            // Local variable required for Android compiler (NDK r10e).
-            czstring source = shader.fallback;
-            glShaderSource(id, 1, &source, nullptr);
+            shader_source(id, shader.fallback);
         }
         glCompileShader(id);
 
