@@ -7,6 +7,7 @@
     "lib/libpng",
     "lib/nanosvg",
     "lib/spine-runtimes",
+    "lib/stb",
     "lib/variant",
     "lib/zlib"
   ],
@@ -19,8 +20,7 @@
       "buildcmd": [
         "mkdir out",
         "cd out",
-        "GENERATOR=Ninja ../tools/build.sh -DCMAKE_BUILD_TYPE=Debug -DUNIT_TESTS=1 -DUSE_HEIMDALL=1 -DUSE_PHYSICS=1 -DUSE_SPINE=1",
-        "./rainbow --gtest_filter=-AudioTest*:ChronoTest.TimeDifferenceBetweenUpdates"
+        "GENERATOR=Ninja ../tools/build.sh -DCMAKE_BUILD_TYPE=Debug -DUSE_HEIMDALL=1 -DUSE_PHYSICS=1 -DUSE_SPINE=1"
       ]
     },
     "osx/clang/release": {
@@ -31,8 +31,7 @@
       "buildcmd": [
         "mkdir out",
         "cd out",
-        "GENERATOR=Ninja ../tools/build.sh -DCMAKE_BUILD_TYPE=Release -DUNIT_TESTS=1 -DUSE_PHYSICS=1 -DUSE_SPINE=1",
-        "./rainbow --gtest_filter=-AudioTest*:ChronoTest.TimeDifferenceBetweenUpdates"
+        "GENERATOR=Ninja ../tools/build.sh -DCMAKE_BUILD_TYPE=Release -DUSE_PHYSICS=1 -DUSE_SPINE=1"
       ]
     }
   }
