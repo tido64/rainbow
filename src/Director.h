@@ -18,8 +18,7 @@ namespace rainbow
     class GameBase;
 
     /// <summary>
-    ///   Simple game loop. Must be created after having set up an OpenGL
-    ///   context.
+    ///   Simple game loop. Must be created after having set up a video context.
     /// </summary>
     class Director final : private NonCopyable<Director>
     {

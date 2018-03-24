@@ -45,60 +45,36 @@ TEST(RenderQueueTest, UnitsHaveReasonableDefaults)
     const auto& unit1 = queue.front();
 
     ASSERT_TRUE(unit1.is_enabled());
-    ASSERT_FALSE(unit1.has_program());
     ASSERT_TRUE(unit1.tag().empty());
 
     const auto& unit2 = queue.back();
 
     ASSERT_TRUE(unit2.is_enabled());
-    ASSERT_FALSE(unit2.has_program());
     ASSERT_EQ(tag2, unit2.tag());
-}
-
-TEST(RenderQueueTest, SetsUnitShaderProgram)
-{
-    TestDrawable drawables[2];
-    RenderQueue queue{drawables[0], drawables[1]};
-    auto& unit1 = queue.front();
-    auto& unit2 = queue.back();
-
-    ASSERT_FALSE(unit1.has_program());
-    ASSERT_FALSE(unit2.has_program());
-
-    constexpr uint32_t kRandomProgram = 42;
-    unit1.set_program(kRandomProgram);
-
-    ASSERT_TRUE(unit1.has_program());
-    ASSERT_EQ(kRandomProgram, unit1.program());
-    ASSERT_FALSE(unit2.has_program());
-    ASSERT_EQ(rainbow::graphics::ShaderManager::kInvalidProgram,  //
-              unit2.program());
-
-    unit1.set_program(rainbow::graphics::ShaderManager::kInvalidProgram);
-    unit2.set_program(kRandomProgram);
-
-    ASSERT_FALSE(unit1.has_program());
-    ASSERT_EQ(rainbow::graphics::ShaderManager::kInvalidProgram,  //
-              unit1.program());
-    ASSERT_TRUE(unit2.has_program());
-    ASSERT_EQ(kRandomProgram, unit2.program());
 }
 
 TEST(RenderQueueTest, SetsUnitTag)
 {
+    const std::string kRandomTag = "42";
+    const std::string kSecureRandomTag = "4";
+
     TestDrawable drawables[2];
-    RenderQueue queue{drawables[0], drawables[1]};
+    RenderQueue queue{{drawables[0], kRandomTag}, drawables[1]};
     auto& unit1 = queue.front();
     auto& unit2 = queue.back();
 
-    ASSERT_TRUE(unit1.tag().empty());
-    ASSERT_TRUE(unit2.tag().empty());
-
-    const std::string kRandomTag = "42";
-    unit1.set_tag(kRandomTag);
-
     ASSERT_FALSE(unit1.tag().empty());
     ASSERT_EQ(kRandomTag, unit1.tag());
+    ASSERT_EQ(kRandomTag.c_str(), unit1);
+    ASSERT_EQ(unit1, kRandomTag.c_str());
+    ASSERT_TRUE(unit2.tag().empty());
+
+    unit1.set_tag(kSecureRandomTag);
+
+    ASSERT_FALSE(unit1.tag().empty());
+    ASSERT_EQ(kSecureRandomTag, unit1.tag());
+    ASSERT_EQ(kSecureRandomTag.c_str(), unit1);
+    ASSERT_EQ(unit1, kSecureRandomTag.c_str());
     ASSERT_TRUE(unit2.tag().empty());
 
     unit1.set_tag({});
@@ -107,6 +83,14 @@ TEST(RenderQueueTest, SetsUnitTag)
     ASSERT_TRUE(unit1.tag().empty());
     ASSERT_FALSE(unit2.tag().empty());
     ASSERT_EQ(kRandomTag, unit2.tag());
+    ASSERT_EQ(kRandomTag.c_str(), unit2);
+    ASSERT_EQ(unit2, kRandomTag.c_str());
+    ASSERT_NE(unit1, unit2);
+
+    unit1.set_tag({});
+    unit2.set_tag({});
+
+    ASSERT_NE(unit1, unit2);
 }
 
 TEST(RenderQueueTest, UpdatesOnlyEnabledUnits)
@@ -141,6 +125,8 @@ TEST(RenderQueueTest, UpdatesOnlyEnabledUnits)
     ASSERT_EQ(2, drawables[8].update_count());
     ASSERT_EQ(2, drawables[9].update_count());
 
-    for (auto&& drawable : drawables)
-        ASSERT_EQ(0, drawable.draw_count());
+    ASSERT_TRUE(std::all_of(
+        std::begin(drawables), std::end(drawables), [](auto&& drawable) {
+            return drawable.draw_count() == 0;
+        }));
 }

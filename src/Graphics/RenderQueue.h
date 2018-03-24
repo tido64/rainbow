@@ -9,8 +9,8 @@
 #include <string>
 #include <vector>
 
+#include "Common/String.h"
 #include "Common/Variant.h"
-#include "Graphics/ShaderManager.h"
 
 namespace rainbow
 {
@@ -32,9 +32,7 @@ namespace rainbow::graphics
             SpriteBatch*>;
 
         template <typename T>
-        RenderUnit(T& variant)
-            : enabled_(true), program_(ShaderManager::kInvalidProgram),
-              variant_(&variant)
+        RenderUnit(T& variant) : enabled_(true), variant_(&variant)
         {
         }
 
@@ -56,17 +54,10 @@ namespace rainbow::graphics
         {
         }
 
-        auto has_program() const
-        {
-            return program_ != ShaderManager::kInvalidProgram;
-        }
-
         auto is_enabled() const { return enabled_; }
         auto object() const -> const variant_type& { return variant_; }
-        auto program() const { return program_; }
         auto tag() const -> const std::string& { return tag_; }
 
-        void set_program(uint32_t program) { program_ = program; }
         void set_tag(std::string tag) { tag_ = std::move(tag); }
 
         void disable() { enabled_ = false; }
@@ -75,6 +66,11 @@ namespace rainbow::graphics
         friend bool operator==(const RenderUnit& lhs, const RenderUnit& rhs)
         {
             return lhs.variant_ == rhs.variant_;
+        }
+
+        friend bool operator!=(const RenderUnit& lhs, const RenderUnit& rhs)
+        {
+            return !(lhs == rhs);
         }
 
         friend bool operator==(czstring tag, const RenderUnit& unit)
@@ -89,7 +85,6 @@ namespace rainbow::graphics
 
     private:
         bool enabled_;
-        uint32_t program_;
         variant_type variant_;
         std::string tag_;
     };

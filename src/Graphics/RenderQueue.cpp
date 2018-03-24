@@ -67,10 +67,6 @@ void rainbow::graphics::draw(RenderQueue& queue)
         if (!unit.is_enabled())
             continue;
 
-        ShaderManager::Context context;
-        if (unit.has_program())
-            ShaderManager::Get()->use(unit.program());
-
         visit(DrawCommand{}, unit.object());
     }
 }
