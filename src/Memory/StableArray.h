@@ -11,7 +11,7 @@
 
 #include "Common/Logging.h"
 #include "Common/NonCopyable.h"
-#include "Memory/TempBuffer.h"
+#include "Memory/SmallBuffer.h"
 
 namespace rainbow
 {
@@ -147,7 +147,7 @@ namespace rainbow
             const size_type count = upper - lower + 1;
 
             std::unique_ptr<size_type[]> scoped_buffer;
-            size_type* sorted_indices = get_temp_buffer<size_type>(count);
+            size_type* sorted_indices = get_small_buffer<size_type>(count);
             if (sorted_indices == nullptr)
             {
                 scoped_buffer = std::make_unique<size_type[]>(count);

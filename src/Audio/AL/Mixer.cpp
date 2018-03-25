@@ -22,7 +22,7 @@
 #include "Audio/Mixer.h"
 #include "Common/Logging.h"
 #include "FileSystem/Path.h"
-#include "Memory/TempBuffer.h"
+#include "Memory/SmallBuffer.h"
 
 using rainbow::audio::ALMixer;
 using rainbow::audio::Channel;
@@ -136,7 +136,7 @@ bool ALMixer::initialize(int max_channels)
 
 void ALMixer::process()
 {
-    auto buffer = get_temp_buffer<uint8_t>(kAudioBufferSize);
+    auto buffer = get_small_buffer<uint8_t>(kAudioBufferSize);
     for (Channel& channel : channels_)
     {
         const auto state = get_channel_state(channel);
@@ -380,7 +380,7 @@ auto rainbow::audio::play(Sound* sound, Vec2f world_position) -> Channel*
 
     if (sound->stream)
     {
-        auto buffer = get_temp_buffer<uint8_t>(kAudioBufferSize);
+        auto buffer = get_small_buffer<uint8_t>(kAudioBufferSize);
 
         // TODO: Prevent streaming from an already streaming sound.
         sound->file->rewind();

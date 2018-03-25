@@ -122,7 +122,7 @@
 		198F42B01A9152E000BE7A73 /* Slot.c in Sources */ = {isa = PBXBuildFile; fileRef = 198F42961A9152E000BE7A73 /* Slot.c */; };
 		198F42B11A9152E000BE7A73 /* SlotData.c in Sources */ = {isa = PBXBuildFile; fileRef = 198F42971A9152E000BE7A73 /* SlotData.c */; };
 		198F42B51A91531000BE7A73 /* spine-rainbow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 198F42B31A91531000BE7A73 /* spine-rainbow.cpp */; };
-		19937CBA1D398336009F8917 /* TempBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19937CB81D398336009F8917 /* TempBuffer.cpp */; };
+		19937CBA1D398336009F8917 /* SmallBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19937CB81D398336009F8917 /* SmallBuffer.cpp */; };
 		19AF58A0167FFA0800F54B27 /* Overlay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19AF589C167FFA0800F54B27 /* Overlay.cpp */; };
 		19B051331E0339E600FE624A /* RenderQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19B051311E0339E600FE624A /* RenderQueue.cpp */; };
 		19B3990E2041E8E400581AE0 /* FontCache.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19B3990A2041E8E400581AE0 /* FontCache.cpp */; };
@@ -415,8 +415,8 @@
 		198F42B31A91531000BE7A73 /* spine-rainbow.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = "spine-rainbow.cpp"; sourceTree = "<group>"; };
 		198F42B41A91531000BE7A73 /* spine-rainbow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "spine-rainbow.h"; sourceTree = "<group>"; };
 		19937CB71D398336009F8917 /* StableArray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StableArray.h; sourceTree = "<group>"; };
-		19937CB81D398336009F8917 /* TempBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TempBuffer.cpp; sourceTree = "<group>"; };
-		19937CB91D398336009F8917 /* TempBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TempBuffer.h; sourceTree = "<group>"; };
+		19937CB81D398336009F8917 /* SmallBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SmallBuffer.cpp; sourceTree = "<group>"; };
+		19937CB91D398336009F8917 /* SmallBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SmallBuffer.h; sourceTree = "<group>"; };
 		19AF589C167FFA0800F54B27 /* Overlay.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = Overlay.cpp; sourceTree = "<group>"; };
 		19AF589D167FFA0800F54B27 /* Overlay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Overlay.h; sourceTree = "<group>"; };
 		19B051311E0339E600FE624A /* RenderQueue.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = RenderQueue.cpp; sourceTree = "<group>"; };
@@ -1219,9 +1219,9 @@
 				19DF40481C98B4AF001482BC /* Pool.h */,
 				19F2038C1AAC551D005CD913 /* ScopeStack.h */,
 				19F2038D1AAC551D005CD913 /* SharedPtr.h */,
+				19937CB81D398336009F8917 /* SmallBuffer.cpp */,
+				19937CB91D398336009F8917 /* SmallBuffer.h */,
 				19937CB71D398336009F8917 /* StableArray.h */,
-				19937CB81D398336009F8917 /* TempBuffer.cpp */,
-				19937CB91D398336009F8917 /* TempBuffer.h */,
 			);
 			path = Memory;
 			sourceTree = "<group>";
@@ -1460,7 +1460,7 @@
 				19D045AA18071D6D00968F00 /* Chrono.cpp in Sources */,
 				19B3990E2041E8E400581AE0 /* FontCache.cpp in Sources */,
 				193929B816E23D5F0018340B /* SystemInfo.apple.cpp in Sources */,
-				19937CBA1D398336009F8917 /* TempBuffer.cpp in Sources */,
+				19937CBA1D398336009F8917 /* SmallBuffer.cpp in Sources */,
 				198F42A51A9152E000BE7A73 /* IkConstraint.c in Sources */,
 				198F42A01A9152E000BE7A73 /* BoneData.c in Sources */,
 				196911CD1713564A002BC2E4 /* VertexArray.cpp in Sources */,
