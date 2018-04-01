@@ -69,6 +69,11 @@ namespace rainbow
     {
         return ends_with(str.c_str(), str.length(), suffix);
     }
+
+    constexpr bool is_empty(czstring str)
+    {
+        return str == nullptr || *str == '\0';
+    }
 }
 
 #endif

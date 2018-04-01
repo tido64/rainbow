@@ -58,3 +58,11 @@ TEST(StringTest, ComparesStringEndings)
     ASSERT_FALSE(rainbow::ends_with(str, WRONG_LONG));
     ASSERT_FALSE(rainbow::ends_with(str, WRONG_SHORT));
 }
+
+TEST(StringTest, ChecksWhetherStringIsEmpty)
+{
+    ASSERT_TRUE(rainbow::is_empty(nullptr));
+    ASSERT_TRUE(rainbow::is_empty(""));
+    ASSERT_TRUE(rainbow::is_empty("\0"));
+    ASSERT_FALSE(rainbow::is_empty("🌈"));
+}
