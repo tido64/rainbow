@@ -142,6 +142,8 @@ TEST(LinkTest, PopsItselfOnDestruction)
 
 TEST(LinkTest, ForEachTraversesLinks)
 {
+    static constexpr int kMax = 3;
+
     Number numbers[]{Number{0}, Number{1}, Number{2}, Number{3}, Number{4}};
     numbers[0].append(numbers[4]);
     numbers[0].append(numbers[3]);
@@ -156,10 +158,9 @@ TEST(LinkTest, ForEachTraversesLinks)
     }));
     ASSERT_EQ(numbers[4].value, prev);
 
-    const int max = 3;
-    ASSERT_TRUE(for_each(numbers, [max, &prev](const Number& n) {
+    ASSERT_TRUE(for_each(numbers, [&prev](const Number& n) {
         prev = n.value;
-        return n.value >= max;
+        return n.value >= kMax;
     }));
-    ASSERT_EQ(max, prev);
+    ASSERT_EQ(kMax, prev);
 }
