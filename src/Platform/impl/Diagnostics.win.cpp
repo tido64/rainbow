@@ -12,5 +12,5 @@ void rainbow::diagnostics::attach_crash_dumper()
 
 bool rainbow::diagnostics::is_debugger_attached()
 {
-    return IsDebuggerPresent() != 0;
+    return IsDebuggerPresent() != FALSE;
 }

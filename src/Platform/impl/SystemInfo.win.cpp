@@ -6,16 +6,6 @@
 
 #include <Windows.h>
 
-namespace
-{
-    bool HasGetUserDefaultLocaleName()
-    {
-        HMODULE hModule = GetModuleHandle(TEXT("kernel32.dll"));
-        return hModule != nullptr &&
-               GetProcAddress(hModule, "GetUserDefaultLocaleName") != nullptr;
-    }
-}  // namespace
-
 bool rainbow::system_info::has_accelerometer()
 {
     return false;
@@ -23,41 +13,23 @@ bool rainbow::system_info::has_accelerometer()
 
 bool rainbow::system_info::has_touchscreen()
 {
-    return false;
+    return GetSystemMetrics(SM_MAXIMUMTOUCHES) > 0;
 }
 
 auto rainbow::system_info::locales() -> std::vector<std::string>
 {
     std::vector<std::string> locales{{}};
 
-    if (!HasGetUserDefaultLocaleName())  // Windows 98, XP
+    wchar_t wname[LOCALE_NAME_MAX_LENGTH];
+    const int size = GetUserDefaultLocaleName(wname, LOCALE_NAME_MAX_LENGTH);
+    if (size > 0)
     {
-        const LCID lcid = GetUserDefaultLCID();
-        char lc_data[LOCALE_NAME_MAX_LENGTH];
-        int length = GetLocaleInfo(lcid, LOCALE_SISO639LANGNAME, lc_data, 9);
-        lc_data[length++] = '-';
-        GetLocaleInfo(lcid, LOCALE_SISO3166CTRYNAME, lc_data + length, 9);
-        locales[0] = lc_data;
-    }
-    else  // Windows Vista and later
-    {
-        wchar_t wname[LOCALE_NAME_MAX_LENGTH];
-        const int size =
-            GetUserDefaultLocaleName(wname, LOCALE_NAME_MAX_LENGTH);
-        if (size > 0)
+        char name[LOCALE_NAME_MAX_LENGTH];
+        if (WideCharToMultiByte(
+                CP_UTF8, 0, wname, -1, name, sizeof(name), nullptr, nullptr) >
+            0)
         {
-            char name[LOCALE_NAME_MAX_LENGTH];
-            if (WideCharToMultiByte(CP_UTF8,
-                                    0,
-                                    wname,
-                                    -1,
-                                    name,
-                                    sizeof(name),
-                                    nullptr,
-                                    nullptr) > 0)
-            {
-                locales[0] = name;
-            }
+            locales[0] = name;
         }
     }
 

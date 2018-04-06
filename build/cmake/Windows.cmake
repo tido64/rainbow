@@ -48,7 +48,6 @@ if(WIN32)
       -DNOSHOWWINDOW=1       # SW_*
       -DNOSOUND=1            # Sound driver routines
       -DNOSYSCOMMANDS=1      # SC_*
-      -DNOSYSMETRICS=1       # SM_*
       -DNOSYSPARAMSINFO      # Parameter for SystemParametersInfo
       -DNOTEXTMETRIC=1       # typedef TEXTMETRIC and associated routines
       -DNOVIRTUALKEYCODES=1  # VK_*
