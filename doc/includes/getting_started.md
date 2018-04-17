@@ -170,8 +170,8 @@ You'll find an overview of configuration and feature flags further below.
 ## Building for iOS
 
 1. Install [Xcode](https://itunes.apple.com/no/app/xcode/id497799835?mt=12) from the App Store.
-1. Open `build/ios/Rainbow.xcodeproj` in Xcode.
-2. Build and run the current scheme.
+2. Open `build/ios/Rainbow.xcodeproj` in Xcode.
+3. Build and run the current scheme.
 
 ## Build Configuration
 

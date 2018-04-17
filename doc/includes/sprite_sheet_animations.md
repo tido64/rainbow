@@ -25,8 +25,8 @@ is determined by frames per second, or `fps`.
 By default, an animation always loops without any delays between each cycle.
 Setting `delay` to anything greater than 0, will introduce delays, measured in
 frames. For instance, setting `fps` to 30 and `delay` to 2, will make the
-animation wait 66⅔ ms before playing the next cycle. A negative `delay`
-disables looping.
+animation wait 66⅔ ms before playing the next cycle. A negative `delay` disables
+looping.
 
 Before an animation can be played, it must also be added to the render queue.
 Batches of animations can be created and assigned a sprite at a later point in

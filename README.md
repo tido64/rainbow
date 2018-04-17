@@ -21,11 +21,11 @@ future directions.
 
 Rainbow currently runs on the following platforms:
 
-- [x] Windows
-- [x] macOS
-- [x] Linux
-- [x] Android
-- [x] iOS
+* [x] Windows
+* [x] macOS
+* [x] Linux
+* [x] Android
+* [x] iOS
 
 We even have a prototype that runs in your browser.
 [Give it a try!](https://tido.bitbucket.io/rainbow.js/)
@@ -77,20 +77,21 @@ Rainbow.RenderQueue.add(animation);
 
 ## Structure
 
-	rainbow
-	├── build    # Build related files
-	├── doc      # Documentation
-	├── include  # Public Rainbow headers
-	├── js       # JavaScript playground
-	├── lib      # Third party dependencies
-	├── src      # Rainbow source code
-	└── tools    # Build scripts, JS bindings generator, and other tools...
+    rainbow
+    ├── build    # Build related files
+    ├── doc      # Documentation
+    ├── include  # Public Rainbow headers
+    ├── js       # JavaScript playground
+    ├── lib      # Third party dependencies
+    ├── src      # Rainbow source code
+    └── tools    # Build scripts, JS bindings generator, and other tools...
 
 ## Contribute
 
 * [Submit bugs](https://bitbucket.org/tido/rainbow/issues?status=new&status=open).
 * [Review code, or submit fixes and improvements](https://bitbucket.org/tido/rainbow/pull-requests/).
-* Please make sure to read our [coding standard](https://tido.bitbucket.io/rainbow/#coding-standard).
+* Please make sure to read our
+  [coding standard](https://tido.bitbucket.io/rainbow/#coding-standard).
 
 ## Dependencies
 
@@ -102,7 +103,7 @@ Rainbow.RenderQueue.add(animation);
 * [Ogg Vorbis](https://xiph.org/vorbis/)
 * [OpenAL Soft](http://openal-soft.org/)
 * [OpenGL 2.1](https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/) /
-    [OpenGL ES 2.0](https://www.khronos.org/opengles/2_X/)
+  [OpenGL ES 2.0](https://www.khronos.org/opengles/2_X/)
 * [SDL](https://www.libsdl.org/)
 * [libpng](https://github.com/glennrp/libpng)
 * [zlib](https://github.com/madler/zlib)

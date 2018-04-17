@@ -12,7 +12,7 @@
     "compile": "tsc --target ES2016 --module commonjs --strict --noImplicitAny --strictNullChecks --noImplicitThis --alwaysStrict --noUnusedLocals --noImplicitReturns",
     "generate-bindings": "yarn compile tools/generate-bindings.ts && node tools/generate-bindings.js",
     "generate-shaders": "yarn compile tools/generate-shaders.ts && node tools/generate-shaders.js",
-    "prettier": "prettier --write --no-config .vscode/*.json js/*.json tools/*.ts",
+    "prettier": "prettier --no-config --prose-wrap always --write .vscode/*.json README.md doc/**/*.md js/*.json tools/*.ts",
     "tsc": "tsc"
   },
   "repository": {
@@ -35,9 +35,9 @@
   "license": "MIT",
   "homepage": "https://bitbucket.org/tido/rainbow#readme",
   "devDependencies": {
-    "@types/node": "^8.5.9",
-    "prettier": "^1.10.2",
-    "tslint": "^5.9.1",
-    "typescript": "^2.7.1"
+    "@types/node": "8.10.8",
+    "prettier": "1.12.1",
+    "tslint": "5.9.1",
+    "typescript": "2.8.1"
   }
 }

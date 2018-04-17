@@ -4,8 +4,8 @@ Timers perform delayed actions or repeat actions at set intervals.
 
 ## Timer Management
 
-Timers are managed by a global `TimerManager`. Any void returning callable
-can be used to create a timer. Timers may safely be created and cleared by timer
+Timers are managed by a global `TimerManager`. Any void returning callable can
+be used to create a timer. Timers may safely be created and cleared by timer
 callbacks. Additionally, timers may clear themselves on callback without causing
 error.
 

@@ -125,31 +125,31 @@ Components must be [scalable](#scalable).
 
 The following functions are available:
 
-- `rainbow::timing::linear`
-- `rainbow::timing::ease_in_back`
-- `rainbow::timing::ease_in_bounce`
-- `rainbow::timing::ease_in_cubic`
-- `rainbow::timing::ease_in_exponential`
-- `rainbow::timing::ease_in_quadratic`
-- `rainbow::timing::ease_in_quartic`
-- `rainbow::timing::ease_in_quintic`
-- `rainbow::timing::ease_in_sine`
-- `rainbow::timing::ease_out_back`
-- `rainbow::timing::ease_out_bounce`
-- `rainbow::timing::ease_out_cubic`
-- `rainbow::timing::ease_out_exponential`
-- `rainbow::timing::ease_out_quadratic`
-- `rainbow::timing::ease_out_quartic`
-- `rainbow::timing::ease_out_quintic`
-- `rainbow::timing::ease_out_sine`
-- `rainbow::timing::ease_in_out_back`
-- `rainbow::timing::ease_in_out_bounce`
-- `rainbow::timing::ease_in_out_cubic`
-- `rainbow::timing::ease_in_out_exponential`
-- `rainbow::timing::ease_in_out_quadratic`
-- `rainbow::timing::ease_in_out_quartic`
-- `rainbow::timing::ease_in_out_quintic`
-- `rainbow::timing::ease_in_out_sine`
+* `rainbow::timing::linear`
+* `rainbow::timing::ease_in_back`
+* `rainbow::timing::ease_in_bounce`
+* `rainbow::timing::ease_in_cubic`
+* `rainbow::timing::ease_in_exponential`
+* `rainbow::timing::ease_in_quadratic`
+* `rainbow::timing::ease_in_quartic`
+* `rainbow::timing::ease_in_quintic`
+* `rainbow::timing::ease_in_sine`
+* `rainbow::timing::ease_out_back`
+* `rainbow::timing::ease_out_bounce`
+* `rainbow::timing::ease_out_cubic`
+* `rainbow::timing::ease_out_exponential`
+* `rainbow::timing::ease_out_quadratic`
+* `rainbow::timing::ease_out_quartic`
+* `rainbow::timing::ease_out_quintic`
+* `rainbow::timing::ease_out_sine`
+* `rainbow::timing::ease_in_out_back`
+* `rainbow::timing::ease_in_out_bounce`
+* `rainbow::timing::ease_in_out_cubic`
+* `rainbow::timing::ease_in_out_exponential`
+* `rainbow::timing::ease_in_out_quadratic`
+* `rainbow::timing::ease_in_out_quartic`
+* `rainbow::timing::ease_in_out_quintic`
+* `rainbow::timing::ease_in_out_sine`
 
 To see how each of these behave visually, see [Easing Functions Cheat Sheet].
 

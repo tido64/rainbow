@@ -2,13 +2,13 @@
 
 ## File Structure
 
-  - config.json
-  - index.bundle.js
+* config.json
+* index.bundle.js
 
 ## `config.json` (optional)
 
-The configuration file is just a JSON. It enables/disables features, and
-sets the window size (Linux/macOS/Windows).
+The configuration file is just a JSON. It enables/disables features, and sets
+the window size (Linux/macOS/Windows).
 
 ```json
 {
@@ -146,9 +146,8 @@ Please refer to the API reference for full details. For displaying text, look up
 
 ## Render Queue
 
-Anything that needs to be updated and/or drawn every frame, must be added to
-the render queue. The render queue determines the order in which objects are
-drawn.
+Anything that needs to be updated and/or drawn every frame, must be added to the
+render queue. The render queue determines the order in which objects are drawn.
 
 Now we'll add the batches we've created earlier:
 
@@ -192,8 +191,12 @@ JSON. An empty scene looks something like:
 ```json
 {
   "$schema": "./rainbow-scene.schema.json",
-  "assets": [ /* declare fonts, sounds or textures here */ ],
-  "entities": [ /* declare animations, labels or sprites here */ ]
+  "assets": [
+    /* declare fonts, sounds or textures here */
+  ],
+  "entities": [
+    /* declare animations, labels or sprites here */
+  ]
 }
 ```
 

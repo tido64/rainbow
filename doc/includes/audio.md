@@ -11,12 +11,12 @@ sound effects).
 ## Supported Audio Codecs
 
 | OS      | AAC | ALAC | HE-AAC | MP3 | Ogg |
-|---------|:---:|:----:|:------:|:---:|:---:|
+| ------- | :-: | :--: | :----: | :-: | :-: |
 | Windows |     |      |        |     |  ✓  |
-| macOS   |  ✓  |   ✓  |    ✓   |  ✓  |  ✓  |
+| macOS   |  ✓  |  ✓   |   ✓    |  ✓  |  ✓  |
 | Linux   |     |      |        |     |  ✓  |
 | Android |     |      |        |  ✓  |  ✓  |
-| iOS     |  ✓  |   ✓  |    ✓   |  ✓  |     |
+| iOS     |  ✓  |  ✓   |   ✓    |  ✓  |     |
 
 This table is not exhaustive. Your target devices may support more decoders than
 listed here. Please check the appropriate documentations.
