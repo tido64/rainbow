@@ -22,7 +22,7 @@ namespace rainbow
     public:
         RainbowController(SDLContext& context, const Config& config);
 
-        auto error() const -> czstring { return director_.error(); }
+        auto error() const -> std::error_code { return director_.error(); }
 
         bool run();
 

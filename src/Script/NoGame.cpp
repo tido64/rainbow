@@ -43,12 +43,12 @@ void NoGame::init_impl(const Vec2i& screen)
     render_queue().emplace_back(batch_);
 
 #if !defined(RAINBOW_OS_IOS)  // TODO: Can't access system fonts on iOS
-    if (error_ != nullptr)
+    if (error_)
     {
         label_ = std::make_unique<Label>();
         label_->set_color(Color{0xF4, 0x43, 0x36});
         label_->set_font_size(24 * scale);
-        label_->set_text(error_);
+        label_->set_text(error_.message().c_str());
 
         // Force an update to get measurements early.
         label_->update();

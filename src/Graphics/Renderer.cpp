@@ -6,6 +6,7 @@
 
 #include <array>
 
+#include "Common/Error.h"
 #include "Graphics/Label.h"
 #include "Graphics/SpriteBatch.h"
 
@@ -238,7 +239,7 @@ State::~State()
         g_state = nullptr;
 }
 
-bool State::initialize()
+auto State::initialize() -> std::error_code
 {
     R_ASSERT(g_state == nullptr, "Renderer is already initialised");
 
@@ -246,8 +247,8 @@ bool State::initialize()
     GLenum err = glewInit();
     if (err != GLEW_OK)
     {
-        LOGF("Failed to initialise GLEW: %s", glewGetErrorString(err));
-        return false;
+        LOGF("%s", glewGetErrorString(err));
+        return ErrorCode::GLEWInitializationFailed;
     }
 #endif
 
@@ -257,7 +258,7 @@ bool State::initialize()
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     if (!shader_manager.init())
-        return false;
+        return ErrorCode::ShaderManagerInitializationFailed;
 
     constexpr size_t kElementBufferSize = kMaxSprites * 6;
     auto default_indices = std::make_unique<uint16_t[]>(kElementBufferSize);
@@ -278,9 +279,9 @@ bool State::initialize()
     element_buffer = buffer;
     element_buffer.upload(default_indices.get(), kElementBufferSize);
 
-    const bool success = glGetError() == GL_NO_ERROR;
-    if (success)
-        g_state = this;
+    if (glGetError() != GL_NO_ERROR)
+        return ErrorCode::RenderInitializationFailed;
 
-    return success;
+    g_state = this;
+    return ErrorCode::Success;
 }

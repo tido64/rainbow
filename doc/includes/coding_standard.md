@@ -1,8 +1,8 @@
 # Coding Standard
 
 For starters, please read through the
-[C++ Core Guidelines](https://github.com/isocpp/CppCoreGuidelines). Some of its
-points may only be repeated here on this page for emphasis.
+[C++ Core Guidelines](https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines).
+Some of its points may only be repeated here on this page for emphasis.
 
 ## General Practices
 
@@ -124,15 +124,15 @@ Use forward declarations whenever possible to avoid unnecessary `#include`s.
 Declare public members first, followed by protected, and finally private. Within
 each section, use the following order:
 
-1.  `using`s, enums, and inner classes/structs
-2.  Constants (static const data members)
-3.  Static methods
-4.  Data members (except static const data members)
-5.  Constructors
-6.  Destructor
-7.  Accessors and mutators
-8.  Methods
-9.  Event handlers
+1. `using`s, enums, and inner classes/structs
+2. Constants (static const data members)
+3. Static methods
+4. Data members (except static const data members)
+5. Constructors
+6. Destructor
+7. Accessors and mutators
+8. Methods
+9. Event handlers
 10. Operator overloads
 11. Overrides
 

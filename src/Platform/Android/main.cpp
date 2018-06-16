@@ -169,7 +169,7 @@ void android_handle_display(AInstance* a)
     a->director = std::make_unique<Director>();
     if (a->director->terminated())
     {
-        LOGF("%s", a->director->error());
+        LOGF("%s", a->director->error().message().c_str());
         a->done = true;
         return;
     }

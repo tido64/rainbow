@@ -31,7 +31,7 @@ namespace heimdall
         }
 
         void terminate() { director_.terminate(); }
-        void terminate(rainbow::czstring error) { director_.terminate(error); }
+        void terminate(std::error_code error) { director_.terminate(error); }
         void update(uint64_t dt);
 
         void on_focus_gained() { director_.on_focus_gained(); }

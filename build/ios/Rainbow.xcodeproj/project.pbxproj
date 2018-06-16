@@ -123,6 +123,7 @@
 		198F42B11A9152E000BE7A73 /* SlotData.c in Sources */ = {isa = PBXBuildFile; fileRef = 198F42971A9152E000BE7A73 /* SlotData.c */; };
 		198F42B51A91531000BE7A73 /* spine-rainbow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 198F42B31A91531000BE7A73 /* spine-rainbow.cpp */; };
 		19937CBA1D398336009F8917 /* SmallBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19937CB81D398336009F8917 /* SmallBuffer.cpp */; };
+		19A9025320EECAAE0084A669 /* Error.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19A9025120EECAAE0084A669 /* Error.cpp */; };
 		19AF58A0167FFA0800F54B27 /* Overlay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19AF589C167FFA0800F54B27 /* Overlay.cpp */; };
 		19B051331E0339E600FE624A /* RenderQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19B051311E0339E600FE624A /* RenderQueue.cpp */; };
 		19B3990E2041E8E400581AE0 /* FontCache.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19B3990A2041E8E400581AE0 /* FontCache.cpp */; };
@@ -417,6 +418,9 @@
 		19937CB71D398336009F8917 /* StableArray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StableArray.h; sourceTree = "<group>"; };
 		19937CB81D398336009F8917 /* SmallBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SmallBuffer.cpp; sourceTree = "<group>"; };
 		19937CB91D398336009F8917 /* SmallBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SmallBuffer.h; sourceTree = "<group>"; };
+		19A9025020EECAAE0084A669 /* Error.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Error.h; sourceTree = "<group>"; };
+		19A9025120EECAAE0084A669 /* Error.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Error.cpp; sourceTree = "<group>"; };
+		19A9025220EECAAE0084A669 /* Variant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Variant.h; sourceTree = "<group>"; };
 		19AF589C167FFA0800F54B27 /* Overlay.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = Overlay.cpp; sourceTree = "<group>"; };
 		19AF589D167FFA0800F54B27 /* Overlay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Overlay.h; sourceTree = "<group>"; };
 		19B051311E0339E600FE624A /* RenderQueue.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = RenderQueue.cpp; sourceTree = "<group>"; };
@@ -724,6 +728,8 @@
 				1910099419FDA3A70036D5F4 /* Constraints.h */,
 				19865981175E98F700723171 /* Data.cpp */,
 				1939A186152C425D00494609 /* Data.h */,
+				19A9025120EECAAE0084A669 /* Error.cpp */,
+				19A9025020EECAAE0084A669 /* Error.h */,
 				195D565617D90DD100C78117 /* Functional.h */,
 				1910099519FDA3A70036D5F4 /* Global.h */,
 				1910099719FDA3A70036D5F4 /* Link.h */,
@@ -734,6 +740,7 @@
 				19DF40461C98B425001482BC /* String.h */,
 				1939A19C152C425D00494609 /* TreeNode.h */,
 				19DF40451C98B415001482BC /* TypeInfo.h */,
+				19A9025220EECAAE0084A669 /* Variant.h */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -1419,6 +1426,7 @@
 				193458551D5A3884008482E8 /* FileSystem.cpp in Sources */,
 				1942A50A18985D450050CF5C /* Buffer.cpp in Sources */,
 				195ACC47200ABAAE00FB7EDD /* NoGame.cpp in Sources */,
+				19A9025320EECAAE0084A669 /* Error.cpp in Sources */,
 				19E7748A1A02C8D3005DE249 /* OverlayActivator.cpp in Sources */,
 				198F42AB1A9152E000BE7A73 /* SkeletonBounds.c in Sources */,
 				19B3995E20420F4B00581AE0 /* hb-font.cc in Sources */,

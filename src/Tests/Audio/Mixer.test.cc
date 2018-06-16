@@ -43,7 +43,7 @@ namespace
 
         void SetUp() override
         {
-            ASSERT_TRUE(mixer_.initialize(kMaxAudioChannels));
+            ASSERT_FALSE(mixer_.initialize(kMaxAudioChannels));
             sound_ = sound_type_.load();
             ASSERT_NE(nullptr, sound_);
         }
@@ -145,7 +145,7 @@ TYPED_TEST(AudioTest, StopsPlaybackWhenSoundIsReleased)
 TEST(AudioTest, CanPlaySingleSoundOnMultipleChannels)
 {
     Mixer mixer_;
-    ASSERT_TRUE(mixer_.initialize(kMaxAudioChannels));
+    ASSERT_FALSE(mixer_.initialize(kMaxAudioChannels));
     auto sound = rainbow::audio::load_sound(kAudioTestFile);
 
     Channel* channels[kMaxAudioChannels];

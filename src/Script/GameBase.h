@@ -24,7 +24,7 @@ namespace rainbow
         }
 
         void terminate() { director_.terminate(); }
-        void terminate(czstring error) { director_.terminate(error); }
+        void terminate(std::error_code error) { director_.terminate(error); }
 
         void init(const Vec2i& screen_size) { init_impl(screen_size); }
         void update(uint64_t dt) { update_impl(dt); }

@@ -5,6 +5,8 @@
 #ifndef GRAPHICS_RENDERER_H_
 #define GRAPHICS_RENDERER_H_
 
+#include <system_error>
+
 #include "Graphics/ElementBuffer.h"
 #include "Graphics/ShaderManager.h"
 #include "Graphics/TextureManager.h"
@@ -66,7 +68,7 @@ namespace rainbow::graphics
     {
         obj.vertex_array().bind();
         obj.bind_textures();
-        glDrawArrays(GL_TRIANGLES, first, count);
+        glDrawArrays(GL_TRIANGLES, first, static_cast<GLsizei>(count));
 
         IF_DEBUG(++detail::g_draw_count_accumulator);
     }
@@ -124,7 +126,7 @@ namespace rainbow::graphics
 
         ~State();
 
-        bool initialize();
+        auto initialize() -> std::error_code;
     };
 }  // namespace rainbow::graphics
 

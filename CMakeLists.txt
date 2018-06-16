@@ -36,6 +36,8 @@ set(SOURCE_FILES
     src/Common/Constraints.h
     src/Common/Data.cpp
     src/Common/Data.h
+    src/Common/Error.cpp
+    src/Common/Error.h
     src/Common/Functional.h
     src/Common/Global.h
     src/Common/Link.h

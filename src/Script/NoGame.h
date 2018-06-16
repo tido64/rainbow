@@ -5,6 +5,7 @@
 #ifndef SCRIPT_NOGAME_H_
 #define SCRIPT_NOGAME_H_
 
+#include "Common/Error.h"
 #include "Graphics/Label.h"
 #include "Graphics/SpriteBatch.h"
 #include "Script/GameBase.h"
@@ -14,7 +15,7 @@ namespace rainbow
     class NoGame final : public GameBase
     {
     public:
-        NoGame(Director& director, czstring error = nullptr)
+        NoGame(Director& director, std::error_code error = ErrorCode::Success)
             : GameBase(director), error_(error)
         {
         }
@@ -22,7 +23,7 @@ namespace rainbow
     private:
         std::unique_ptr<SpriteBatch> batch_;
         std::unique_ptr<Label> label_;
-        czstring error_;
+        std::error_code error_;
 
         void init_impl(const Vec2i& screen) override;
         void update_impl(uint64_t dt) override;

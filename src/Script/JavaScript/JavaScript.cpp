@@ -13,9 +13,9 @@
 #include "Script/JavaScript/Modules.g.h"
 #include "Script/JavaScript/RenderQueue.h"
 
-#define TRY(x)                                                                 \
+#define ENSURE(x)                                                              \
     if (!(x))                                                                  \
-    terminate("An error occurred while executing JavaScript")
+    terminate(ErrorCode::ErrorExecutingScript)
 
 using rainbow::Director;
 using rainbow::GameBase;
@@ -35,7 +35,7 @@ namespace
 
         std::terminate();
     }
-}
+}  // namespace
 
 rainbow::duk::Context::Context()
     : context_(duk_create_heap(nullptr, nullptr, nullptr, this, &on_fatal))
@@ -86,7 +86,7 @@ JavaScript::JavaScript(Director& director)
                                       data.size()) != 0)
     {
         LOGF("JavaScript: %s", duk_safe_to_string(context_, -1));
-        terminate("Failed to compile 'index.bundle.js'");
+        terminate(ErrorCode::ScriptCompilationFailed);
     }
     else
     {
@@ -105,12 +105,12 @@ bool JavaScript::update_controller_id(unsigned int i)
 void JavaScript::init_impl(const Vec2i& screen_size)
 {
     input().subscribe(*this);
-    TRY(duk::call(context_, "init", screen_size.x, screen_size.y));
+    ENSURE(duk::call(context_, "init", screen_size.x, screen_size.y));
 }
 
 void JavaScript::update_impl(uint64_t dt)
 {
-    TRY(duk::call(context_, "update", dt));
+    ENSURE(duk::call(context_, "update", dt));
 
     if (has_pointer_events_)
     {
@@ -123,7 +123,7 @@ void JavaScript::update_impl(uint64_t dt)
 
 void JavaScript::on_memory_warning_impl()
 {
-    TRY(duk::opt_call(context_, "onMemoryWarning"));
+    ENSURE(duk::opt_call(context_, "onMemoryWarning"));
 
     // From Duktape documentation:
     // You may want to call this function twice to ensure even objects with

@@ -102,7 +102,7 @@ auto main(int argc, char* argv[]) -> int
 
     RainbowController controller(context, config);
     while (controller.run()) {}
-    return controller.error() != nullptr;
+    return controller.error().value();
 }
 
 #endif  // RAINBOW_JS

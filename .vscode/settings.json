@@ -38,8 +38,8 @@
   },
   "[markdown]": {
     "editor.insertSpaces": false,
-    "editor.rulers": [80],
     "editor.quickSuggestions": false,
+    "editor.rulers": [80],
     "editor.wordWrap": "on"
   },
   "[objective-c]": {

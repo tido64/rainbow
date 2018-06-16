@@ -45,7 +45,7 @@ namespace rainbow
             terminated_ = true;
         }
 
-        void terminate(czstring error)
+        void terminate(std::error_code error)
         {
             terminate();
             error_ = error;
@@ -64,7 +64,7 @@ namespace rainbow
     private:
         bool active_;
         bool terminated_;
-        czstring error_;
+        std::error_code error_;
         TimerManager timer_manager_;
         std::unique_ptr<GameBase> script_;
         graphics::RenderQueue render_queue_;

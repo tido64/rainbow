@@ -21,12 +21,13 @@ namespace rainbow
 {
     Random random;
 
-    Director::Director() : active_(true), terminated_(false), error_(nullptr)
+    Director::Director()
+        : active_(true), terminated_(false), error_(ErrorCode::Success)
     {
-        if (!mixer_.initialize(kMaxAudioChannels))
-            terminate("Failed to initialise audio engine");
-        else if (!renderer_.initialize())
-            terminate("Failed to initialise renderer");
+        if (std::error_code error = mixer_.initialize(kMaxAudioChannels))
+            terminate(error);
+        else if (std::error_code error = renderer_.initialize())
+            terminate(error);
     }
 
     Director::~Director()
@@ -42,18 +43,18 @@ namespace rainbow
         graphics::set_resolution(screen);
 
         script_ = GameBase::create(*this);
+        if (!terminated())
+            script_->init(screen);
+
         if (terminated())
         {
-            LOGF("%s", error());
+            LOGF("%s", error().message().c_str());
             LOGI("Booting 'NoGame'...");
             script_ = std::make_unique<NoGame>(*this, error());
             active_ = true;
             terminated_ = false;
+            script_->init(screen);
         }
-
-        script_->init(screen);
-        if (terminated())
-            return;
 
         graphics::update(render_queue_, 0);
     }

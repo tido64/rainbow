@@ -56,13 +56,13 @@ well.
 
 ## Building for macOS
 
-1. Download and install [Xcode](https://itunes.apple.com/app/xcode/id497799835?mt=12) from the App Store.
+1. Install [Xcode](https://itunes.apple.com/app/xcode/id497799835?mt=12) from App Store.
 
-2. Install the Command Line Tools Package by running `xcode-select --install` in Terminal.
+2. Once Xcode is installed, launch it once to install Command Line Tools.
 
 3. Install [Homebrew](https://brew.sh/).
 
-4. Install build dependencies: `brew install cmake libogg libvorbis pkg-config sdl2`
+4. Install build dependencies from the root of the repo: `brew bundle`
 
 5. **Optional:** Download FMOD Studio API, extract it, and point
    `tools/fmod-import-tool.sh` at the directory you extracted it to. This should

@@ -5,6 +5,7 @@
 #ifndef AUDIO_MIXER_H_
 #define AUDIO_MIXER_H_
 
+#include "Common/Error.h"
 #include "Common/NonCopyable.h"
 #include "Common/String.h"
 #include "Math/Vec2.h"
@@ -18,9 +19,11 @@ namespace rainbow::audio
     class TMixer : private T, private NonCopyable<TMixer<T>>
     {
     public:
-        bool initialize(int max_channels)
+        auto initialize(int max_channels) -> std::error_code
         {
-            return impl().initialize(max_channels);
+            return !impl().initialize(max_channels)
+                       ? ErrorCode::AudioInitializationFailed
+                       : ErrorCode::Success;
         }
 
         void process() { impl().process(); }
