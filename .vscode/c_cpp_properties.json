@@ -20,6 +20,8 @@
                 "${workspaceRoot}/lib/FreeType/include",
                 "${workspaceRoot}/lib/FreeType/src",
                 "${workspaceRoot}/lib/box2d/Box2D",
+                "${workspaceRoot}/lib/cubeb/include",
+                "${workspaceRoot}/lib/cubeb/src",
                 "${workspaceRoot}/lib/duktape/src",
                 "${workspaceRoot}/lib/duktape/extras/module-node",
                 "${workspaceRoot}/lib/libpng",
@@ -49,7 +51,8 @@
             "macFrameworkPath": [
                 "/System/Library/Frameworks",
                 "/Library/Frameworks"
-            ]
+            ],
+            "compileCommands": "${workspaceFolder}/src/compile_commands.json"
         },
         {
             "name": "Linux",
@@ -64,6 +67,8 @@
                 "${workspaceRoot}/lib/FreeType/include",
                 "${workspaceRoot}/lib/FreeType/src",
                 "${workspaceRoot}/lib/box2d/Box2D",
+                "${workspaceRoot}/lib/cubeb/include",
+                "${workspaceRoot}/lib/cubeb/src",
                 "${workspaceRoot}/lib/duktape/src",
                 "${workspaceRoot}/lib/duktape/extras/module-node",
                 "${workspaceRoot}/lib/libpng",
@@ -102,6 +107,8 @@
                 "${workspaceRoot}/lib/FreeType/builds",
                 "${workspaceRoot}/lib/FreeType/src",
                 "${workspaceRoot}/lib/box2d/Box2D",
+                "${workspaceRoot}/lib/cubeb/include",
+                "${workspaceRoot}/lib/cubeb/src",
                 "${workspaceRoot}/lib/duktape/src",
                 "${workspaceRoot}/lib/duktape/extras/module-node",
                 "${workspaceRoot}/lib/libpng",

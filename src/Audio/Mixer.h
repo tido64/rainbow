@@ -61,12 +61,8 @@ namespace rainbow::audio
 #   include "Audio/AL/Mixer.h"
 #elif defined(RAINBOW_AUDIO_FMOD)
 #   include "Audio/FMOD/Mixer.h"
-#elif defined(RAINBOW_AUDIO_WWISE)
-#   include "Audio/Wwise/Mixer.h"
-#elif defined(RAINBOW_AUDIO_XAUDIO2)
-#   include "Audio/XAudio2/Mixer.h"
 #else
-#   include "Audio/DummyMixer.h"
+#   include "Audio/cubeb/Mixer.h"
 #endif
 
 #endif

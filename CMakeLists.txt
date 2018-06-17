@@ -258,16 +258,13 @@ if(USE_FMOD_STUDIO)
   add_definitions(-DRAINBOW_AUDIO_FMOD=1)
   list(APPEND SOURCE_FILES src/Audio/FMOD/Mixer.cpp src/Audio/FMOD/Mixer.h)
 else()
-  add_definitions(-DRAINBOW_AUDIO_AL=1)
   list(APPEND SOURCE_FILES
-      src/Audio/AL/Channel.h
-      src/Audio/AL/Mixer.cpp
-      src/Audio/AL/Mixer.h
-      src/Audio/AL/Sound.h
       src/Audio/AudioFile.cpp
       src/Audio/AudioFile.h
       src/Audio/Codecs/OggVorbisAudioFile.cpp
       src/Audio/Codecs/OggVorbisAudioFile.h
+      src/Audio/cubeb/Mixer.cpp
+      src/Audio/cubeb/Mixer.h
   )
   if(APPLE)
     list(APPEND SOURCE_FILES

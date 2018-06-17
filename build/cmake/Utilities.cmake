@@ -1,5 +1,9 @@
 include(ExternalProject)
 
+function(add_sanitizers name)
+# noop; removes dependency on sanitizers-cmake
+endfunction()
+
 function(copy_to_build_dir name source destination)
   ExternalProject_Get_Property(${name} SOURCE_DIR)
   ExternalProject_Add_Step(

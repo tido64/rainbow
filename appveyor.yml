@@ -11,12 +11,11 @@ cache:
   - C:\tools\vcpkg\installed\
   - '%APPVEYOR_BUILD_FOLDER%-build\duktape-source-prefix\src\duktape-2.2.0.tar.xz'
   - '%APPVEYOR_BUILD_FOLDER%-build\harfbuzz-prefix\src\harfbuzz-1.7.5.tar.bz2'
-  - '%APPVEYOR_BUILD_FOLDER%-build\openal-soft-prefix\src\openal-soft-1.18.2-bin.zip'
   - '%APPVEYOR_BUILD_FOLDER%-build\sdl2-bin-prefix\src\SDL2-2.0.7-win32-x86.zip'
   - '%APPVEYOR_BUILD_FOLDER%-build\sdl2-dev-prefix\src\SDL2-devel-2.0.7-VC.zip'
 configuration: RelWithDebInfo
 before_build:
-  - git submodule update --init -- lib/FreeType lib/box2d lib/imgui lib/libpng lib/nanosvg lib/spine-runtimes lib/stb lib/variant lib/zlib
+  - git submodule update --init -- lib/FreeType lib/box2d lib/cubeb lib/imgui lib/libpng lib/nanosvg lib/spine-runtimes lib/stb lib/variant lib/zlib
   - if not exist "%APPVEYOR_BUILD_FOLDER%-build" mkdir "%APPVEYOR_BUILD_FOLDER%-build"
   - cd "%APPVEYOR_BUILD_FOLDER%-build"
   - cmake -DCMAKE_TOOLCHAIN_FILE=C:/tools/vcpkg/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=x86-windows-static -DUSE_HEIMDALL=1 -DUSE_PHYSICS=1 -DUSE_SPINE=1 -DVCPKG_PATH=C:/tools/vcpkg "%APPVEYOR_BUILD_FOLDER%"
@@ -27,8 +26,6 @@ after_build:
   - copy "%APPVEYOR_BUILD_FOLDER%\LICENSE" "rainbow-v%APPVEYOR_BUILD_VERSION%\LICENSE.txt"
   - copy "%APPVEYOR_BUILD_FOLDER%\js\*" "rainbow-v%APPVEYOR_BUILD_VERSION%"
   - copy "%APPVEYOR_BUILD_FOLDER%-build\%CONFIGURATION%\rainbow.exe" "rainbow-v%APPVEYOR_BUILD_VERSION%"
-  - copy "%APPVEYOR_BUILD_FOLDER%-build\openal-soft-prefix\src\openal-soft\COPYING" "rainbow-v%APPVEYOR_BUILD_VERSION%\COPYING-OPENAL.txt"
-  - copy "%APPVEYOR_BUILD_FOLDER%-build\openal-soft-prefix\src\openal-soft\bin\Win32\soft_oal.dll" "rainbow-v%APPVEYOR_BUILD_VERSION%\OpenAL32.dll"
   - 7z x -o"rainbow-v%APPVEYOR_BUILD_VERSION%" "%APPVEYOR_BUILD_FOLDER%-build\sdl2-bin-prefix\src\SDL2-2.0.7-win32-x86.zip"
   - 7z a "rainbow-v%APPVEYOR_BUILD_VERSION%.zip" "rainbow-v%APPVEYOR_BUILD_VERSION%"
   - appveyor PushArtifact "rainbow-v%APPVEYOR_BUILD_VERSION%.zip"

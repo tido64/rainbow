@@ -37,23 +37,13 @@ elseif(USE_FMOD_STUDIO)
 
   message(STATUS "Found FMOD Studio: ${LOCAL_LIBRARY}/FMOD/lib/${FMOD_ARCH}")
 else()
-  if(WIN32)
-    download_library(
-        openal-soft
-        http://kcat.strangesoft.net/openal-binaries/openal-soft-1.18.2-bin.zip
-        893ba969cb0f883be66782320781a8f077e1edf5ed3701bd3fe15f59066d94af
-    )
-    ExternalProject_Get_Property(openal-soft SOURCE_DIR)
-    if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-      set(OPENAL_ARCH Win64)
-    else()
-      set(OPENAL_ARCH Win32)
-    endif()
-    copy_to_build_dir(openal-soft bin/${OPENAL_ARCH}/soft_oal.dll OpenAL32.dll)
-    target_include_directories(rainbow PRIVATE ${SOURCE_DIR}/include)
-    target_link_libraries(rainbow ${SOURCE_DIR}/libs/${OPENAL_ARCH}/libOpenAL32.dll.a)
-    message(STATUS "Found OpenAL: ${SOURCE_DIR}/libs/${OPENAL_ARCH}/libOpenAL32.dll.a")
+  set(BUILD_TESTS OFF CACHE BOOL "Build tests")
+  set(USE_WINMM OFF)
+  add_subdirectory(${LOCAL_LIBRARY}/cubeb EXCLUDE_FROM_ALL)
+  target_compile_options(cubeb PRIVATE ${CFLAG_NO_WARNINGS})
+  target_link_libraries(rainbow cubeb)
 
+  if(WIN32)
     execute_process(COMMAND ${VCPKG_PATH}/vcpkg.exe install
         libogg:${VCPKG_TARGET_TRIPLET}
         libvorbis:${VCPKG_TARGET_TRIPLET}
@@ -67,10 +57,9 @@ else()
     find_library(VORBISFILE_LIBRARY vorbisfile)
     target_link_libraries(rainbow ${VORBISFILE_LIBRARY} ${VORBIS_LIBRARY} ${OGG_LIBRARY})
   else()
-    find_package(OpenAL REQUIRED)
     pkg_check_modules(VORBIS REQUIRED ogg vorbis vorbisfile)
-    target_include_directories(rainbow PRIVATE ${OPENAL_INCLUDE_DIR} ${VORBIS_INCLUDE_DIRS})
-    target_link_libraries(rainbow ${VORBIS_LDFLAGS} ${OPENAL_LIBRARY})
+    target_include_directories(rainbow PRIVATE ${VORBIS_INCLUDE_DIRS})
+    target_link_libraries(rainbow ${VORBIS_LDFLAGS})
     if(APPLE)
       find_library(AUDIOTOOLBOX_LIBRARY AudioToolbox REQUIRED)
       target_link_libraries(rainbow ${AUDIOTOOLBOX_LIBRARY})

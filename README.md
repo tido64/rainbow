@@ -101,10 +101,10 @@ Rainbow.RenderQueue.add(animation);
 * [Mapbox Variant](https://github.com/mapbox/variant)
 * [NanoSVG](https://github.com/memononen/nanosvg)
 * [Ogg Vorbis](https://xiph.org/vorbis/)
-* [OpenAL Soft](http://openal-soft.org/)
 * [OpenGL 2.1](https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/) /
   [OpenGL ES 2.0](https://www.khronos.org/opengles/2_X/)
 * [SDL](https://www.libsdl.org/)
+* [cubeb](https://github.com/kinetiknz/cubeb)
 * [libpng](https://github.com/glennrp/libpng)
 * [zlib](https://github.com/madler/zlib)
 * Optional:

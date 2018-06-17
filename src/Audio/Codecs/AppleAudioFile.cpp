@@ -2,8 +2,6 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
-#ifdef RAINBOW_AUDIO_AL
-
 #include "Audio/Codecs/AppleAudioFile.h"
 
 #include "Common/Logging.h"
@@ -103,5 +101,3 @@ bool AppleAudioFile::seek(int64_t offset)
 {
     return ExtAudioFileSeek(ref_, offset) == noErr;
 }
-
-#endif  // RAINBOW_AUDIO_AL

@@ -2,6 +2,7 @@
   "submodules": [
     "lib/FreeType",
     "lib/box2d",
+    "lib/cubeb",
     "lib/googletest",
     "lib/imgui",
     "lib/libpng",
