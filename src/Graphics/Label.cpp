@@ -65,7 +65,7 @@ void Label::set_scale(float f)
     if (are_equal(f, scale_))
         return;
 
-    scale_ = clamp(f, 0.01f, 1.0f);
+    scale_ = std::clamp(f, 0.01f, 1.0f);
     set_needs_update(kStaleBuffer);
 }
 

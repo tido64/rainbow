@@ -52,12 +52,6 @@ namespace rainbow
         return ++i;
     }
 
-    template <typename T>
-    constexpr auto clamp(T x, T min_val, T max_val)
-    {
-        return std::min(std::max(x, min_val), max_val);
-    }
-
     /// <summary>Converts radians to degrees.</summary>
     template <typename T, typename = FloatingPoint<T>>
     constexpr auto degrees(T r)

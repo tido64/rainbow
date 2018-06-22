@@ -49,14 +49,6 @@ TEST(AlgorithmTest, RoundsUpToNearestPowerOfTwo)
     }
 }
 
-TEST(AlgorithmTest, ClampsValues)
-{
-    ASSERT_EQ(1, rainbow::clamp(10, 0, 1));
-    ASSERT_EQ(0, rainbow::clamp(-10, 0, 1));
-    ASSERT_EQ(0, rainbow::clamp(0, 0, 1));
-    ASSERT_EQ(1, rainbow::clamp(1, 0, 1));
-}
-
 TEST(AlgorithmTest, ConvertsRadiansToDegrees)
 {
     ASSERT_PRED2(rainbow::are_equal<float>,
