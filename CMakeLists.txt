@@ -110,6 +110,7 @@ set(SOURCE_FILES
     src/Math/Vec2.h
     src/Math/Vec3.h
     src/Memory/Array.h
+    src/Memory/BoundedPool.h
     src/Memory/NotNull.h
     src/Memory/Pool.h
     src/Memory/ScopeStack.h
@@ -239,6 +240,7 @@ if(UNIT_TESTS)
       src/Tests/Math/Geometry.test.cc
       src/Tests/Math/Vec2.test.cc
       src/Tests/Math/Vec3.test.cc
+      src/Tests/Memory/BoundedPool.test.cc
       src/Tests/Memory/Pool.test.cc
       src/Tests/Memory/ScopeStack.test.cc
       src/Tests/Memory/SharedPtr.test.cc
