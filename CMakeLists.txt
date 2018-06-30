@@ -44,6 +44,7 @@ set(SOURCE_FILES
     src/Common/Logging.h
     src/Common/NonCopyable.h
     src/Common/Random.h
+    src/Common/RawPtr.h
     src/Common/String.h
     src/Common/TreeNode.h
     src/Common/TypeInfo.h
@@ -217,6 +218,7 @@ if(UNIT_TESTS)
       src/Tests/Common/Global.test.cc
       src/Tests/Common/Link.test.cc
       src/Tests/Common/Random.test.cc
+      src/Tests/Common/RawPtr.test.cc
       src/Tests/Common/String.test.cc
       src/Tests/Common/TreeNode.test.cc
       src/Tests/Common/TypeInfo.test.cc
