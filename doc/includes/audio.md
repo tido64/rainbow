@@ -15,7 +15,7 @@ sound effects).
 | Windows |     |      |        |     |  ✓  |
 | macOS   |  ✓  |  ✓   |   ✓    |  ✓  |  ✓  |
 | Linux   |     |      |        |     |  ✓  |
-| Android |     |      |        |  ✓  |  ✓  |
+| Android |     |      |        |     |  ✓  |
 | iOS     |  ✓  |  ✓   |   ✓    |  ✓  |     |
 
 This table is not exhaustive. Your target devices may support more decoders than

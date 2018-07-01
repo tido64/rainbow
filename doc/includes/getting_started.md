@@ -116,56 +116,17 @@ You'll find an overview of configuration and feature flags further below.
 ## Building for Android
 
 1. Install [Android Studio](https://developer.android.com/studio/).
-
 2. Install [CMake](https://cmake.org/).
+3. **Optional:** Download FMOD Studio API, extract it, and point
+   `tools/fmod-import-tool.sh` at the directory you extracted it to. This should
+   copy all the necessary files into the `lib` folder.
+4. Open `build/android/` in Android Studio.
+5. Run the app on your device or emulator.
 
-3. Download FMOD Studio API, and extract it. Copy the headers into
-   `lib/FMOD/inc/`, and binaries into `lib/FMOD/lib/android/`. You should end up
-   with the following:
-
-    ```shell
-    rainbow/lib/FMOD
-    ├── inc
-    │   ├── fmod.h
-    │   ├── fmod.hpp
-    │   ├── fmod_codec.h
-    │   ├── fmod_common.h
-    │   ├── fmod_dsp.h
-    │   ├── fmod_dsp_effects.h
-    │   ├── fmod_errors.h
-    │   ├── fmod_output.h
-    │   ├── fmod_studio.h
-    │   ├── fmod_studio.hpp
-    │   └── fmod_studio_common.h
-    └── lib
-        └── android
-            ├── arm64-v8a
-            │   ├── libfmod.so
-            │   └── libfmodstudio.so
-            ├── armeabi
-            │   ├── libfmod.so
-            │   └── libfmodstudio.so
-            ├── armeabi-v7a
-            │   ├── libfmod.so
-            │   └── libfmodstudio.so
-            ├── fmod.jar
-            └── x86
-                ├── libfmod.so
-                └── libfmodstudio.so
-    ```
-
-
-4. Make a directory for the Gradle project, then run the build script:
-
-    ```shell
-    mkdir rainbow-build
-    cd rainbow-build
-    /path/to/rainbow/tools/build.sh android [option ...]
-    ```
-
-5. Import the Gradle project in Android Studio.
-
-6. Run the app on your device or emulator.
+<aside class="notice">
+    If you get an error about selecting Android SDK, press Ctrl/⌘+Shift+A and
+    search for "Sync Project with Gradle Files".
+</aside>
 
 ## Building for iOS
 

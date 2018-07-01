@@ -1,13 +1,20 @@
 # Generated files
 *.aps
+*.iml
 *.js
 *.js.map
 *.swp
 .DS_Store
 .browse.VC.*
+.externalNativeBuild/
+.gradle/
+.idea/
 .vs/
 CMakeSettings.json
 Rainbow.sublime-workspace
+build/android/app/build/
+build/android/build/
+local.properties
 node_modules/
 package-lock.json
 project.xcworkspace/
