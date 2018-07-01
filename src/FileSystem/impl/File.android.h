@@ -51,6 +51,13 @@ namespace rainbow::android
             }
         }
 
+        File() : handle_(nullptr) {}
+
+        File(File&& file) noexcept : handle_(file.handle_)
+        {
+            file.handle_ = nullptr;
+        }
+
         auto handle() const -> FILE* { return get<FILE*>(handle_).value(); }
 
         template <typename T>

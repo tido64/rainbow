@@ -105,7 +105,7 @@ namespace rainbow
         constexpr TFile() = default;
         TFile(TFile&& file) noexcept : T(std::move(file)) {}
 
-        virtual ~TFile()
+        ~TFile()
         {
             if (!*this)
                 return;

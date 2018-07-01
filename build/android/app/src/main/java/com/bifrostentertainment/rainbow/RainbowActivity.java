@@ -10,14 +10,14 @@ import android.app.NativeActivity;
 import android.os.Bundle;
 import android.view.View;
 
-import org.fmod.FMOD;
+//import org.fmod.FMOD;
 
 public class RainbowActivity extends NativeActivity {
 
     static {
         System.loadLibrary("c++_shared");
-        System.loadLibrary("fmod");
-        System.loadLibrary("fmodstudio");
+        //System.loadLibrary("fmod");
+        //System.loadLibrary("fmodstudio");
         System.loadLibrary("rainbow");
     }
 
@@ -42,12 +42,12 @@ public class RainbowActivity extends NativeActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        FMOD.init(this);
+        //FMOD.init(this);
     }
 
     @Override
     protected void onDestroy() {
-        FMOD.close();
+        //FMOD.close();
         super.onDestroy();
     }
 

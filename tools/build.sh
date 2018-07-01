@@ -39,7 +39,7 @@ fi
 
 case $1 in
   "--help")
-    echo "Syntax: $(basename $0) [analyze|android|clean|linux|mac|windows] [option ...]"
+    echo "Syntax: $(basename $0) [analyze|clean|linux|mac|windows] [option ...]"
     echo
     echo "Options:"
     echo "  -DUNIT_TESTS=1           Enable unit tests"
@@ -55,14 +55,9 @@ case $1 in
     echo "  CC                       C compiler command"
     echo "  CXX                      C++ compiler command"
     echo "  GENERATOR                CMake: Specify a build system generator"
-    echo "  NDK_DEBUG                Android: Compile debuggable binary"
-    echo "  NDK_TOOLCHAIN_VERSION    Android: Compiler used by ndk-build"
     ;;
   "analyze")
     ANALYZER=scan-build CC=ccc-analyzer CXX=c++-analyzer $SHELL $0 $args
-    ;;
-  "android")
-    $SHELL "$project_root/tools/build-android.sh" $args
     ;;
   "clean")
     rm -fr CMakeFiles CMakeScripts Debug MinSizeRel Rainbow.* Release RelWithDebInfo

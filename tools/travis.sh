@@ -3,12 +3,23 @@ case $1 in
   "before_install")
     case $TRAVIS_OS_NAME in
       "linux")
-        if [[ ! -x local/bin/cmake-3.10.2 ]]; then
-          curl -LO https://cmake.org/files/v3.10/cmake-3.10.2-Linux-x86_64.sh
-          if [[ -f cmake-3.10.2-Linux-x86_64.sh ]]; then
+        if [[ "$BUILD_TYPE" == "Android" ]]; then
+          echo y | sdkmanager "ndk-bundle"
+          echo y | sdkmanager "cmake;3.6.4111459"
+          if [[ ! -f local/gradle-4.8.1 ]]; then
+            rm -r local
+            curl -LO https://services.gradle.org/distributions/gradle-4.8.1-bin.zip
+            unzip gradle-4.8.1-bin.zip
+            mv gradle-4.8.1 local
+            touch local/gradle-4.8.1
+          fi
+        else
+          if [[ ! -f local/cmake-3.11.4 ]]; then
+            rm -r local
+            curl -LO https://cmake.org/files/v3.11/cmake-3.11.4-Linux-x86_64.sh
             mkdir -p local
-            sh cmake-3.10.2-Linux-x86_64.sh --prefix=local --skip-license
-            touch local/bin/cmake-3.10.2
+            sh cmake-3.11.4-Linux-x86_64.sh --prefix=local --skip-license
+            touch local/cmake-3.11.4
           fi
         fi
         ;;
@@ -27,7 +38,10 @@ case $1 in
         export TEST_ARGS="--gtest_filter=-AudioTest*:ChronoTest.TimeDifferenceBetweenUpdates"
         ;;
     esac
-    if [[ "$BUILD_TYPE" == "iOS" ]]; then
+    if [[ "$BUILD_TYPE" == "Android" ]]; then
+      cd build/android/
+      TERM=dumb gradle build
+    elif [[ "$BUILD_TYPE" == "iOS" ]]; then
       xcodebuild -project build/ios/Rainbow.xcodeproj -scheme Rainbow -arch arm64 CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO | xcpretty
     else
       mkdir $TRAVIS_BUILD_DIR-build
