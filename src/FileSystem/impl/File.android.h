@@ -91,6 +91,13 @@ namespace rainbow::android
             return AAsset_seek64(handle, offset, whence) >= 0;
         }
 
+        auto tell() const -> size_t
+        {
+            auto handle = get<AAsset*>(handle_).value();
+            return AAsset_getLength64(handle) -
+                   AAsset_getRemainingLength64(handle);
+        }
+
         explicit operator bool() const
         {
             return visit(

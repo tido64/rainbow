@@ -33,7 +33,6 @@ addons:
       - g++-7
       - libpulse-dev
       - libsdl2-dev
-      - libvorbis-dev
       - ninja-build
       - pulseaudio
 cache:

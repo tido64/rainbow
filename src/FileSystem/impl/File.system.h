@@ -48,6 +48,7 @@ namespace rainbow::system
         void close() {}
         constexpr auto read(void*, size_t) const -> size_t { return 0; }
         constexpr bool seek(int64_t, SeekOrigin) const { return false; }
+        constexpr auto tell() const -> size_t { return 0; }
         constexpr auto write(const void*, size_t) const -> size_t { return 0; }
 
         explicit operator bool() const { return stream_ != nullptr; }
@@ -63,6 +64,6 @@ namespace rainbow
     using File = TFile<system::File>;
 #endif
     using WriteableFile = TWriteableFile<system::File>;
-}
+}  // namespace rainbow
 
 #endif

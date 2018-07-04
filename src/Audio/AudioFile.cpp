@@ -25,8 +25,8 @@
 #   include "Audio/Codecs/OggVorbisAudioFile.h"
 #endif  // USE_OGGVORBIS
 
-using rainbow::audio::IAudioFile;
 using rainbow::czstring;
+using rainbow::audio::IAudioFile;
 
 namespace
 {
@@ -53,9 +53,9 @@ namespace
         // TODO: Add `explicit` when MSVC2015 is deprecated (and remove NOLINT).
         operator bool() const override { return true; }  // NOLINT
     };
-}
+}  // namespace
 
-std::unique_ptr<IAudioFile> IAudioFile::open(czstring path)
+auto IAudioFile::open(czstring path) -> std::unique_ptr<IAudioFile>
 {
     std::array<uint8_t, 8> signature{};
     File file = File::open(path, FileType::Asset);

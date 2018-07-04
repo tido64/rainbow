@@ -7,16 +7,18 @@
     "lib/imgui",
     "lib/libpng",
     "lib/nanosvg",
+    "lib/ogg",
     "lib/spine-runtimes",
     "lib/stb",
     "lib/variant",
+    "lib/vorbis",
     "lib/zlib"
   ],
   "targets": {
     "osx/clang/debug": {
       "buildenv": "osx",
       "homebrew": {
-        "formulae": ["cmake", "libogg", "libvorbis", "ninja", "pkg-config", "sdl2"]
+        "formulae": ["cmake", "ninja", "pkg-config", "sdl2"]
       },
       "buildcmd": [
         "mkdir out",
@@ -27,7 +29,7 @@
     "osx/clang/release": {
       "buildenv": "osx",
       "homebrew": {
-        "formulae": ["cmake", "libogg", "libvorbis", "ninja", "pkg-config", "sdl2"]
+        "formulae": ["cmake", "ninja", "pkg-config", "sdl2"]
       },
       "buildcmd": [
         "mkdir out",

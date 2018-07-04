@@ -10,13 +10,28 @@
 #include "Common/Algorithm.h"
 #include "Common/Logging.h"
 
+using rainbow::czstring;
 using rainbow::File;
 using rainbow::audio::OggVorbisAudioFile;
-using rainbow::czstring;
 
 namespace
 {
     constexpr char kIdOggVorbis[] = "OggS";
+
+    ov_callbacks ov_callbacks_asset{
+        [](void* buffer, size_t size, size_t count, void* stream) {
+            auto file = static_cast<File*>(stream);
+            return file->read(buffer, size * count);
+        },
+        [](void* stream, ogg_int64_t offset, int origin) -> int {
+            auto file = static_cast<File*>(stream);
+            return !file->seek(offset, rainbow::detail::seek_origin(origin));
+        },
+        [](void*) { return 0; },
+        [](void* stream) -> long {
+            auto file = static_cast<File*>(stream);
+            return file->tell();
+        }};
 
     void ov_log_error(int err)
     {
@@ -51,7 +66,7 @@ namespace
         }
         LOGE("Vorbis: %s", error);
     }
-}
+}  // namespace
 
 bool OggVorbisAudioFile::signature_matches(
     const std::array<uint8_t, 8>& signature)
@@ -64,8 +79,8 @@ bool OggVorbisAudioFile::signature_matches(
 OggVorbisAudioFile::OggVorbisAudioFile(File f)
     : file_(std::move(f)), vf_{}, vi_(nullptr)
 {
-    const int result = ov_open_callbacks(
-        static_cast<FILE*>(file_), &vf_, nullptr, 0, OV_CALLBACKS_DEFAULT);
+    const int result =
+        ov_open_callbacks(&file_, &vf_, nullptr, 0, ov_callbacks_asset);
     if (result < 0)
     {
         ov_log_error(result);

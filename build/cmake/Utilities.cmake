@@ -32,7 +32,6 @@ endfunction()
 function(find_git name)
   if(WIN32)
     file(GLOB_RECURSE GIT_SEARCH
-        "${VCPKG_PATH}/downloads/MinGit*/git.exe"
         "C:/Program Files/Git/bin/git.exe"
         "C:/Program Files (x86)/Git/bin/git.exe"
     )

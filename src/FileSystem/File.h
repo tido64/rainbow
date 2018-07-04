@@ -40,8 +40,7 @@ namespace rainbow
 
     namespace detail
     {
-        // TODO: Replace `inline` with `constexpr` when MSVC2015 is deprecated.
-        inline auto file_access_mode(FileType type)
+        constexpr auto file_access_mode(FileType type)
         {
             switch (type)
             {
@@ -52,8 +51,20 @@ namespace rainbow
             }
         }
 
-        // TODO: Replace `inline` with `constexpr` when MSVC2015 is deprecated.
-        inline auto seek_origin(SeekOrigin origin)
+        constexpr auto seek_origin(int origin)
+        {
+            switch (origin)
+            {
+                case SEEK_CUR:
+                    return SeekOrigin::Current;
+                case SEEK_END:
+                    return SeekOrigin::End;
+                default:
+                    return SeekOrigin::Set;
+            }
+        }
+
+        constexpr auto seek_origin(SeekOrigin origin)
         {
             switch (origin)
             {
@@ -65,7 +76,7 @@ namespace rainbow
                     return SEEK_SET;
             }
         }
-    }
+    }  // namespace detail
 
     template <typename T>
     class TFile : protected T, private NonCopyable<T>
@@ -172,6 +183,18 @@ namespace rainbow
             return fseek(stream, offset, origin) == 0;
         }
 
+        /// <summary>Returns the current file position indicator.</summary>
+        auto tell() const -> size_t
+        {
+            if (T::is_platform_handle())
+                return T::tell();
+
+            R_ASSERT(T::handle() != nullptr, "No file handle");
+
+            auto stream = T::handle();
+            return ftell(stream);
+        }
+
         /// <summary>
         ///   Returns whether this instance has an associated file.
         /// </summary>
@@ -260,7 +283,7 @@ namespace rainbow
             return fwrite(buffer, sizeof(uint8_t), size, T::handle());
         }
     };
-}
+}  // namespace rainbow
 
 #ifdef RAINBOW_OS_ANDROID
 #   include "FileSystem/impl/File.android.h"

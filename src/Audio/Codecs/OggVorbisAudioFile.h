@@ -8,14 +8,14 @@
 #include <array>
 
 #include "Platform/Macros.h"
-#ifdef __clang__
-#   pragma clang diagnostic push
-#   pragma clang diagnostic ignored "-Wold-style-cast"
-#   pragma clang diagnostic ignored "-Wunused-variable"
+#ifdef __GNUC__
+#   pragma GCC diagnostic push
+#   pragma GCC diagnostic ignored "-Wold-style-cast"
+#   pragma GCC diagnostic ignored "-Wunused-variable"
 #endif
 #include <vorbis/vorbisfile.h>
-#ifdef __clang__
-#   pragma clang diagnostic pop
+#ifdef __GNUC__
+#   pragma GCC diagnostic pop
 #endif
 
 #include "Audio/AudioFile.h"
