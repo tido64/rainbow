@@ -98,6 +98,10 @@ auto main(int argc, char* argv[]) -> int
         return run_tests(argc, argv);
     }
 
+#ifdef RAINBOW_OS_WINDOWS
+    SetConsoleOutputCP(CP_UTF8);
+#endif
+
     const rainbow::Config config;
     SDLContext context(config);
     if (!context)

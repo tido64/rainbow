@@ -113,6 +113,7 @@ namespace rainbow
         void on_last_listener_changed(InputListener& new_listener,
                                       Passkey<InputListener>);
 
+        void on_mouse_wheel(const ArrayView<Pointer>& wheels);
         void on_pointer_began(const ArrayView<Pointer>& pointers);
         void on_pointer_canceled();
         void on_pointer_ended(const ArrayView<Pointer>& pointers);

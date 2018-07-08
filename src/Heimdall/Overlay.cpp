@@ -23,7 +23,8 @@
     {                                                                          \
         ImGui::Text(#prop " = ");                                              \
         ImGui::SameLine();                                                     \
-        ImGui::ColorButton((source).prop(), true);                             \
+        ImGui::ColorButton(                                                    \
+            "", (source).prop(), ImGuiColorEditFlags_NoLabel, ImVec2(14, 14)); \
         ImGui::SameLine();                                                     \
         ImGui::Text("rgba(%u, %u, %u, %u)",                                    \
                     (source).prop().r,                                         \
@@ -38,19 +39,21 @@
 
 using heimdall::Overlay;
 using rainbow::Animation;
+using rainbow::czstring;
 using rainbow::IDrawable;
 using rainbow::KeyStroke;
 using rainbow::Label;
 using rainbow::Pointer;
 using rainbow::Sprite;
 using rainbow::SpriteBatch;
-using rainbow::czstring;
-using rainbow::graphics::TextureManager;
 
 namespace graphics = rainbow::graphics;
 
 namespace
 {
+    constexpr float kWindowWidth = 400.0f;
+    constexpr float kWindowHeight = 400.0f;
+
     template <typename T>
     void print_address(const T* obj)
     {
@@ -58,7 +61,7 @@ namespace
     }
 
     template <typename T>
-    float at(void* data, int i)
+    auto at(void* data, int i) -> float
     {
         auto& container = *static_cast<T*>(data);
         return container[i];
@@ -86,19 +89,25 @@ namespace
     }
 
     template <typename Container>
-    float mean(const Container& container)
+    auto mean(const Container& container)
     {
-        return static_cast<float>(
-                   std::accumulate(container.cbegin(),
-                                   container.cend(),
-                                   typename Container::value_type{})) /
-               container.size();
+        return std::accumulate(std::begin(container),
+                               std::end(container),
+                               typename Container::value_type{}) /
+               static_cast<float>(container.size());
     }
 
     template <typename... Args>
     void snprintf_q(Args&&... args)
     {
         static_cast<void>(std::snprintf(std::forward<Args>(args)...));
+    }
+
+    template <typename Container>
+    auto upper_limit(const Container& container)
+    {
+        return rainbow::ceil_pow2(static_cast<unsigned int>(std::ceil(
+            *std::max_element(std::begin(container), std::end(container)))));
     }
 
     struct CreateNode
@@ -159,7 +168,7 @@ namespace
             }
         }
     };
-}
+}  // namespace
 
 Overlay::~Overlay()
 {
@@ -173,10 +182,11 @@ void Overlay::initialize()
 
 void Overlay::draw_impl()
 {
-    if (!is_enabled())
+    auto draw_data = ImGui::GetDrawData();
+    if (draw_data == nullptr || !draw_data->Valid)
         return;
 
-    ImGui::Render();
+    rainbow::imgui::render(draw_data);
 }
 
 void Overlay::update_impl(uint64_t dt)
@@ -184,29 +194,23 @@ void Overlay::update_impl(uint64_t dt)
     frame_times_.pop_front();
     frame_times_.push_back(dt);
     vmem_usage_.pop_front();
-    vmem_usage_.push_back(TextureManager::Get()->memory_usage().used);
+    vmem_usage_.push_back(texture_manager_.memory_usage().used);
 
     if (!is_enabled())
         return;
 
-    if (!rainbow::imgui::new_frame(dt) && !pinned_)
-    {
-        disable();
-        return;
-    }
-
     char buffer[128];
-    if (ImGui::Begin("", nullptr, rainbow::imgui::kDefaultWindowFlags))
+    rainbow::imgui::new_frame(dt);
+    if (ImGui::Begin("Rainbow (built " __DATE__ ")",
+                     &enabled_,
+                     rainbow::imgui::kDefaultWindowFlags) &&
+        ImGui::BeginChild("Body", ImVec2{kWindowWidth, kWindowHeight}))
     {
-        ImGui::LabelText("", "Rainbow (built " __DATE__ ")");
-        ImGui::SameLine(0.0f, 120.0f);
-        ImGui::Checkbox(pinned_ ? "Unpin" : "Pin", &pinned_);
-
         if (ImGui::CollapsingHeader("Performance",
                                     ImGuiTreeNodeFlags_NoAutoOpenOnLog |
                                         ImGuiTreeNodeFlags_DefaultOpen))
         {
-            const ImVec2 graph_size(400, 100);
+            const ImVec2 graph_size{kWindowWidth, 100};
 
             ImGui::TextWrapped("Draw count: %u", graphics::draw_count());
 
@@ -235,12 +239,13 @@ void Overlay::update_impl(uint64_t dt)
                              0,
                              buffer,
                              std::numeric_limits<float>::min(),
-                             1.0f,
+                             upper_limit(vmem_usage_),
                              graph_size);
 
             ImGui::TextWrapped("OpenGL %s", graphics::gl_version());
             ImGui::TextWrapped("Vendor: %s", graphics::vendor());
             ImGui::TextWrapped("Renderer: %s", graphics::renderer());
+
             const auto meminfo = graphics::memory_info();
             if (meminfo.current_available > 0)
             {
@@ -267,13 +272,17 @@ void Overlay::update_impl(uint64_t dt)
                               collapsing_header_flags,
                               "Render Queue (%zu unit%s)",
                               render_queue_.size(),
-                              render_queue_.size() == 1 ? "" : "s")) {
-          for (auto &&unit : render_queue_)
-            rainbow::visit(CreateNode{unit.tag().c_str()}, unit.object());
+                              render_queue_.size() == 1 ? "" : "s"))
+        {
+            for (auto&& unit : render_queue_)
+                rainbow::visit(CreateNode{unit.tag().c_str()}, unit.object());
         }
 
-        ImGui::End();
+        ImGui::EndChild();
     }
+
+    ImGui::End();
+    ImGui::Render();
 }
 
 bool Overlay::on_key_down_impl(const KeyStroke& key)
@@ -284,6 +293,11 @@ bool Overlay::on_key_down_impl(const KeyStroke& key)
 bool Overlay::on_key_up_impl(const KeyStroke& key)
 {
     return is_enabled() && rainbow::imgui::set_key_state(key, false);
+}
+
+bool Overlay::on_mouse_wheel_impl(const ArrayView<Pointer>& w)
+{
+    return is_enabled() && rainbow::imgui::set_mouse_wheel(w);
 }
 
 bool Overlay::on_pointer_began_impl(const ArrayView<Pointer>& p)

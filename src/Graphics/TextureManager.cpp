@@ -34,7 +34,7 @@ namespace
                 return GL_LINEAR;
         }
     }
-}
+}  // namespace
 
 Texture::Texture(const Texture& texture)
     : name_(texture.name_), size_(texture.size_)
@@ -72,7 +72,8 @@ auto Texture::operator=(Texture&& texture) noexcept -> Texture&
 }
 
 TextureManager::TextureManager(const Passkey<rainbow::graphics::State>&)
-    : active_{}, mag_filter_(TextureFilter::Linear), min_filter_(TextureFilter::Linear)
+    : active_{}, mag_filter_(TextureFilter::Linear),
+      min_filter_(TextureFilter::Linear)
 #if RAINBOW_DEVMODE
     , mem_peak_(0.0), mem_used_(0.0)
 #endif
@@ -116,7 +117,7 @@ void TextureManager::bind(uint32_t name, uint32_t unit)
 
 void TextureManager::trim()
 {
-    auto first = std::remove_if(
+    auto first = std::remove_if(  //
         textures_.begin(),
         textures_.end(),
         [this](const detail::Texture& texture) {
@@ -159,10 +160,8 @@ void TextureManager::upload(const Texture& texture,
             texture.width = width;
             texture.height = height;
             texture.size = width * height * 4;
-#if RAINBOW_DEVMODE
-            mem_used_ += texture.size;
-            update_usage();
-#endif
+            IF_DEVMODE(mem_used_ += texture.size);
+            IF_DEVMODE(update_usage());
         });
 }
 
@@ -187,10 +186,8 @@ void TextureManager::upload_compressed(const Texture& texture,
                     texture.width = width;
                     texture.height = height;
                     texture.size = size;
-#if RAINBOW_DEVMODE
-                    mem_used_ += texture.size;
-                    update_usage();
-#endif
+                    IF_DEVMODE(mem_used_ += texture.size);
+                    IF_DEVMODE(update_usage());
                 });
 }
 
@@ -234,7 +231,5 @@ void TextureManager::update_usage()
 {
     if (mem_used_ > mem_peak_)
         mem_peak_ = mem_used_;
-
-    LOGD("Video: %.2f MBs of textures", memory_usage().used);
 }
 #endif

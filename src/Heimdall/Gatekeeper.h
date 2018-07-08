@@ -43,7 +43,7 @@ namespace heimdall
         Overlay overlay_;
         OverlayActivator overlay_activator_;
     };
-}
+}  // namespace heimdall
 
 using Director = heimdall::Gatekeeper;
 

@@ -7,8 +7,8 @@
 #include <algorithm>
 
 #include "Heimdall/Overlay.h"
+#include "Input/Input.h"
 #include "Input/Pointer.h"
-#include "Input/VirtualKey.h"
 
 using heimdall::OverlayActivator;
 using rainbow::KeyStroke;
@@ -19,7 +19,7 @@ namespace
 {
     const uint32_t kNoPointer = std::numeric_limits<uint32_t>::max();
     const int kTimeTillActivation = 2000;
-}
+}  // namespace
 
 void OverlayActivator::reset()
 {
@@ -27,7 +27,6 @@ void OverlayActivator::reset()
     time_till_activation_ = kTimeTillActivation;
     pointers_[0] = kNoPointer;
     pointers_[1] = kNoPointer;
-    shortcut_primed_ = 0;
 }
 
 void OverlayActivator::update(uint64_t dt)
@@ -46,29 +45,24 @@ void OverlayActivator::update(uint64_t dt)
 
 bool OverlayActivator::on_key_down_impl(const KeyStroke& key)
 {
-    if (!overlay_->is_enabled())
+    if (!overlay_->is_enabled() && key.key == VirtualKey::F2)
     {
-        if (shortcut_primed_ > 0 && key.key == VirtualKey::F11)
+#ifdef RAINBOW_OS_MACOS
+        constexpr auto LeftSuper = VirtualKey::LeftSuper;
+        constexpr auto RightSuper = VirtualKey::RightSuper;
+#else
+        constexpr auto LeftSuper = VirtualKey::LeftCtrl;
+        constexpr auto RightSuper = VirtualKey::RightCtrl;
+#endif
+        auto& keyboard_state = rainbow::Input::Get()->keyboard_state();
+        if ((keyboard_state[to_integral_value(VirtualKey::LeftAlt)] ||
+             keyboard_state[to_integral_value(VirtualKey::RightAlt)]) &&
+            (keyboard_state[to_integral_value(LeftSuper)] ||
+             keyboard_state[to_integral_value(RightSuper)]))
         {
-            shortcut_primed_ = 0;
             overlay_->enable();
             return true;
         }
-        if (key.key == VirtualKey::LeftCtrl || key.key == VirtualKey::RightCtrl)
-        {
-            ++shortcut_primed_;
-        }
-    }
-
-    return false;
-}
-
-bool OverlayActivator::on_key_up_impl(const KeyStroke& key)
-{
-    if (!overlay_->is_enabled() &&
-        (key.key == VirtualKey::LeftCtrl || key.key == VirtualKey::RightCtrl))
-    {
-        shortcut_primed_ = std::max(shortcut_primed_ - 1, 0);
     }
 
     return false;

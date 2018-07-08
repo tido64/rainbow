@@ -54,12 +54,14 @@ namespace rainbow
             return on_controller_disconnected_impl(id);
         }
 
-        bool on_key_down(const KeyStroke& k)
-        {
-            return on_key_down_impl(k);
-        }
+        bool on_key_down(const KeyStroke& k) { return on_key_down_impl(k); }
 
         bool on_key_up(const KeyStroke& k) { return on_key_up_impl(k); }
+
+        bool on_mouse_wheel(const ArrayView<Pointer>& wheels)
+        {
+            return on_mouse_wheel_impl(wheels);
+        }
 
         /// <summary>User puts finger down on the device; mouse down.</summary>
         /// <param name="count">Number of pointers.</param>
@@ -127,6 +129,11 @@ namespace rainbow
         virtual bool on_key_down_impl(const KeyStroke&) { return false; }
         virtual bool on_key_up_impl(const KeyStroke&) { return false; }
 
+        virtual bool on_mouse_wheel_impl(const ArrayView<Pointer>&)
+        {
+            return false;
+        }
+
         virtual bool on_pointer_began_impl(const ArrayView<Pointer>&)
         {
             return false;
@@ -151,6 +158,6 @@ namespace rainbow
         friend class Input;
         friend Link;
     };
-}
+}  // namespace rainbow
 
 #endif

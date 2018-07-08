@@ -13,6 +13,9 @@ include(${LOCAL_MODULE_PATH}/Utilities.cmake)
 option(UNIT_TESTS  "Compile unit tests" OFF)
 
 # Features
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+  set(USE_HEIMDALL ON CACHE BOOL "Enable Heimdall debugging facilities")
+endif()
 option(USE_FMOD_STUDIO  "Enable FMOD Studio audio engine" OFF)
 option(USE_HEIMDALL     "Enable Heimdall debugging facilities" OFF)
 option(USE_PHYSICS      "Enable physics module (Box2D)" OFF)

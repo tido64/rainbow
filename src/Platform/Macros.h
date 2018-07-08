@@ -36,7 +36,12 @@
 
 #define RAINBOW_BUILD "Rainbow / Built " __DATE__
 #ifdef USE_HEIMDALL
-#   define RAINBOW_WINDOW_TITLE RAINBOW_BUILD " / Press Ctrl+F11 for dev menu"
+#   ifdef RAINBOW_OS_MACOS
+#       define RAINBOW_SHORTCUT_DIAGNOSTIC_TOOLS "Press ⌥⌘F2 for diagnostic tools"
+#   else
+#       define RAINBOW_SHORTCUT_DIAGNOSTIC_TOOLS "Press Ctrl+Alt+F2 for diagnostic tools"
+#   endif
+#   define RAINBOW_WINDOW_TITLE RAINBOW_BUILD " / " RAINBOW_SHORTCUT_DIAGNOSTIC_TOOLS
 #else
 #   define RAINBOW_WINDOW_TITLE RAINBOW_BUILD
 #endif

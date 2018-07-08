@@ -43,19 +43,15 @@ void VertexArray::bind() const
 #endif
 }
 
-void VertexArray::reconfigure(std::function<void()>&& array_state)
+auto VertexArray::init_state() const -> GLuint
 {
 #ifdef USE_VERTEX_ARRAY_OBJECT
     GLuint array;
     glGenVertexArrays(1, &array);
     glBindVertexArray(array);
     graphics::bind_element_array();
-    array_state();
-    glBindVertexArray(0);
-    if (array_ != 0)
-        glDeleteVertexArrays(1, &array_);
-    array_ = array;
+    return array;
 #else
-    array_ = std::move(array_state);
+    return 0;
 #endif
 }

@@ -32,7 +32,20 @@ namespace rainbow::graphics
         /// <summary>
         ///   Reconfigures this vertex array object with a new set of states.
         /// </summary>
-        void reconfigure(std::function<void()>&& array_state);
+        template <typename F>
+        void reconfigure(F&& array_state)
+        {
+#ifdef USE_VERTEX_ARRAY_OBJECT
+            GLuint array = init_state();
+            array_state();
+            glBindVertexArray(0);
+            if (array_ != 0)
+                glDeleteVertexArrays(1, &array_);
+            array_ = array;
+#else
+            array_ = std::forward<F>(array_state);
+#endif
+        }
 
         /// <summary>
         ///   Returns whether this vertex array object is valid.
@@ -48,6 +61,8 @@ namespace rainbow::graphics
 #else
         std::function<void()> array_;
 #endif
+
+        auto init_state() const -> GLuint;
     };
 }  // namespace rainbow::graphics
 

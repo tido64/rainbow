@@ -160,6 +160,13 @@ void Input::on_last_listener_changed(InputListener& new_listener,
     last_listener_ = &new_listener;
 }
 
+void Input::on_mouse_wheel(const ArrayView<Pointer>& wheels)
+{
+    for_each(next(), [&wheels](InputListener& listener) {
+        return listener.on_mouse_wheel(wheels);
+    });
+}
+
 void Input::on_pointer_began(const ArrayView<Pointer>& pointers)
 {
     for_each(next(), [&pointers](InputListener& listener) {

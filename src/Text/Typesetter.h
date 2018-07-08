@@ -38,16 +38,16 @@ namespace rainbow
         Typesetter();
         ~Typesetter();
 
+        auto font_cache() -> FontCache& { return font_cache_; }
+
         auto draw_text(std::string_view text,
                        const Vec2f& position,
                        const TextAttributes& attributes,
-                       Vec2f* size = nullptr)
-            -> std::vector<SpriteVertex>;
+                       Vec2f* size = nullptr) -> std::vector<SpriteVertex>;
 
         auto layout_text(std::string_view text,
                          const TextAttributes& attributes,
-                         Vec2f* size = nullptr)
-            -> std::vector<GlyphPosition>;
+                         Vec2f* size = nullptr) -> std::vector<GlyphPosition>;
 
     private:
         FontCache font_cache_;

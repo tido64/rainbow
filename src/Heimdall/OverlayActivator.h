@@ -30,13 +30,11 @@ namespace heimdall
         int resistance_;
         int time_till_activation_;
         uint32_t pointers_[2];
-        int shortcut_primed_;
         Overlay* overlay_;
 
         // InputListener implementation details
 
         bool on_key_down_impl(const rainbow::KeyStroke&) override;
-        bool on_key_up_impl(const rainbow::KeyStroke&) override;
         bool on_pointer_began_impl(const ArrayView<rainbow::Pointer>&) override;
         bool on_pointer_canceled_impl() override;
         bool on_pointer_ended_impl(const ArrayView<rainbow::Pointer>&) override;

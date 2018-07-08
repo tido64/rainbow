@@ -74,14 +74,14 @@ namespace rainbow
     {
         R_ASSERT(!terminated_, "App should have terminated by now");
 
-        mixer_.process();
         timer_manager_.update(dt);
         script_->update(dt);
-        graphics::update(render_queue_, dt);
 
-        auto& texture_manager = *graphics::TextureManager::Get();
-        FontCache::Get()->update(texture_manager);
-        texture_manager.trim();
+        graphics::update(render_queue_, dt);
+        font_cache().update(renderer_.texture_manager);
+        renderer_.texture_manager.trim();
+
+        mixer_.process();
     }
 
     void Director::on_focus_gained()

@@ -145,6 +145,20 @@ bool RainbowController::run()
                                 Vec2i(event.button.x, event.button.y)),
                             event.button.timestamp);
                 break;
+            case SDL_MOUSEWHEEL:
+                director_.input().on_mouse_wheel(Pointer{
+                    event.wheel.which,
+#if SDL_VERSION_ATLEAST(2, 0, 4)
+                    event.wheel.direction == SDL_MOUSEWHEEL_NORMAL
+                        ? event.wheel.x
+                        : event.wheel.x * -1,
+#else
+                    event.wheel.x,
+#endif
+                    event.wheel.y,
+                    event.wheel.timestamp,
+                });
+                break;
             case SDL_CONTROLLERAXISMOTION:
                 director_.input().on_controller_axis_motion(
                     ControllerAxisMotion{

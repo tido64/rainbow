@@ -27,14 +27,15 @@ namespace rainbow
 namespace rainbow::imgui
 {
     constexpr ImGuiWindowFlags kDefaultWindowFlags =  //
-        ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse |
-        ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings;
+        ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoSavedSettings;
 
     void init();
-    bool new_frame(uint64_t dt);
+    void new_frame(uint64_t dt);
+    void render(ImDrawData*);
     bool set_key_state(const KeyStroke& key, bool down);
     bool set_mouse_state(const ArrayView<Pointer>& pointers);
     bool set_mouse_state(const ArrayView<Pointer>& pointers, bool down);
+    bool set_mouse_wheel(const ArrayView<Pointer>& wheels);
     void shutdown();
 }  // namespace rainbow::imgui
 

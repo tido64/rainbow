@@ -13,6 +13,7 @@
 #   endif
 #   pragma GCC diagnostic ignored "-Wformat"
 #   pragma GCC diagnostic ignored "-Wold-style-cast"
+#   pragma GCC diagnostic ignored "-Wsign-promo"
 #   pragma GCC diagnostic ignored "-Wtype-limits"
 #   pragma GCC diagnostic ignored "-Wunused-function"
 #   pragma GCC diagnostic ignored "-Wunused-parameter"
@@ -69,59 +70,11 @@ namespace
         VertexArray vertex_array_;
         Texture texture_;
     };
-
-    void render_draw_lists(ImDrawData* draw_data)
-    {
-        auto& io = ImGui::GetIO();
-        draw_data->ScaleClipRects(io.DisplayFramebufferScale);
-
-        ScopedProjection projection(
-            {0.0f, io.DisplaySize.y, io.DisplaySize.x, 0.0f});
-        ScopedScissorTest scissor_test;
-
-        const int window_height =
-            static_cast<int>(io.DisplaySize.y * io.DisplayFramebufferScale.y);
-        auto render = static_cast<Renderable*>(io.UserData);
-        render->vertex_array().bind();
-        for (int i = 0; i < draw_data->CmdListsCount; ++i)
-        {
-            const ImDrawList* cmd_list = draw_data->CmdLists[i];
-            const ImDrawIdx* idx_buffer_offset = nullptr;
-
-            render->set_draw_list(cmd_list);
-            for (auto&& cmd : cmd_list->CmdBuffer)
-            {
-                if (cmd.UserCallback != nullptr)
-                {
-                    cmd.UserCallback(cmd_list, &cmd);
-                }
-                else
-                {
-                    TextureManager::Get()->bind(static_cast<GLuint>(
-                        reinterpret_cast<intptr_t>(cmd.TextureId)));
-                    rainbow::graphics::scissor(
-                        static_cast<int>(cmd.ClipRect.x),
-                        static_cast<int>(window_height - cmd.ClipRect.w),
-                        static_cast<int>(cmd.ClipRect.z - cmd.ClipRect.x),
-                        static_cast<int>(cmd.ClipRect.w - cmd.ClipRect.y));
-                    glDrawElements(  //
-                        GL_TRIANGLES,
-                        static_cast<GLsizei>(cmd.ElemCount),
-                        sizeof(ImDrawIdx) == 2 ? GL_UNSIGNED_SHORT
-                                               : GL_UNSIGNED_INT,
-                        idx_buffer_offset);
-                }
-
-                idx_buffer_offset += cmd.ElemCount;
-            }
-        }
-
-        rainbow::graphics::bind_element_array();
-    }
 }  // namespace
 
 void rainbow::imgui::init()
 {
+    ImGui::CreateContext();
     auto& io = ImGui::GetIO();
     io.IniFilename = nullptr;
 #ifdef RAINBOW_SDL
@@ -145,7 +98,6 @@ void rainbow::imgui::init()
     io.KeyMap[ImGuiKey_Y] = to_keycode(VirtualKey::Y);
     io.KeyMap[ImGuiKey_Z] = to_keycode(VirtualKey::Z);
 #endif  // RAINBOW_SDL
-    io.RenderDrawListsFn = &render_draw_lists;
 
     unsigned int buffer;
     glGenBuffers(1, &buffer);
@@ -175,7 +127,7 @@ void rainbow::imgui::init()
         reinterpret_cast<void*>(static_cast<intptr_t>(renderable->texture()));
 }
 
-bool rainbow::imgui::new_frame(uint64_t dt)
+void rainbow::imgui::new_frame(uint64_t dt)
 {
     auto& window_size = graphics::window_size();
     auto& io = ImGui::GetIO();
@@ -194,11 +146,56 @@ bool rainbow::imgui::new_frame(uint64_t dt)
         g_window_scale * window_size.x / g_initial_window_width;
 
     ImGui::NewFrame();
+}
 
-    return io.WantCaptureMouse ||
-           std::none_of(std::cbegin(io.MouseDown),
-                        std::cend(io.MouseDown),
-                        [](bool state) { return state; });
+void rainbow::imgui::render(ImDrawData* draw_data)
+{
+    auto& io = ImGui::GetIO();
+    draw_data->ScaleClipRects(io.DisplayFramebufferScale);
+
+    ScopedProjection projection(
+        {0.0f, io.DisplaySize.y, io.DisplaySize.x, 0.0f});
+    ScopedScissorTest scissor_test;
+
+    const int window_height =
+        static_cast<int>(io.DisplaySize.y * io.DisplayFramebufferScale.y);
+    auto render = static_cast<Renderable*>(io.UserData);
+    render->vertex_array().bind();
+    for (int i = 0; i < draw_data->CmdListsCount; ++i)
+    {
+        const ImDrawList* cmd_list = draw_data->CmdLists[i];
+        const ImDrawIdx* idx_buffer_offset = nullptr;
+
+        render->set_draw_list(cmd_list);
+        for (auto&& cmd : cmd_list->CmdBuffer)
+        {
+            if (cmd.UserCallback != nullptr)
+            {
+                cmd.UserCallback(cmd_list, &cmd);
+            }
+            else
+            {
+                TextureManager::Get()->bind(static_cast<GLuint>(
+                    reinterpret_cast<intptr_t>(cmd.TextureId)));
+                rainbow::graphics::scissor(
+                    static_cast<int>(cmd.ClipRect.x),
+                    static_cast<int>(window_height - cmd.ClipRect.w),
+                    static_cast<int>(cmd.ClipRect.z - cmd.ClipRect.x),
+                    static_cast<int>(cmd.ClipRect.w - cmd.ClipRect.y));
+                glDrawElements(  //
+                    GL_TRIANGLES,
+                    static_cast<GLsizei>(cmd.ElemCount),
+                    sizeof(ImDrawIdx) == 2 ? GL_UNSIGNED_SHORT
+                                           : GL_UNSIGNED_INT,
+                    idx_buffer_offset);
+            }
+
+            idx_buffer_offset += cmd.ElemCount;
+        }
+    }
+
+    draw_data->Clear();
+    rainbow::graphics::bind_element_array();
 }
 
 bool rainbow::imgui::set_key_state([[maybe_unused]] const KeyStroke& key,
@@ -259,7 +256,7 @@ bool rainbow::imgui::set_mouse_state(const ArrayView<Pointer>& p)
     auto& pos = io.MousePos;
     pos.x = p[0].x / g_window_scale.x;
     pos.y = (graphics::resolution().y - p[0].y) / g_window_scale.y;
-    return false;
+    return io.WantCaptureMouse;
 }
 
 bool rainbow::imgui::set_mouse_state(const ArrayView<Pointer>& pointers,
@@ -281,9 +278,18 @@ bool rainbow::imgui::set_mouse_state(const ArrayView<Pointer>& pointers,
     return io.WantCaptureMouse;
 }
 
+bool rainbow::imgui::set_mouse_wheel(const ArrayView<Pointer>& wheels)
+{
+    // 1 unit scrolls about 5 lines text. Adjust to make it 1:1.
+    auto& io = ImGui::GetIO();
+    io.MouseWheel = wheels[0].y * 0.2f;
+    io.MouseWheelH = wheels[0].x * 0.2f;
+    return io.WantCaptureMouse;
+}
+
 void rainbow::imgui::shutdown()
 {
     auto& io = ImGui::GetIO();
     delete static_cast<Renderable*>(io.UserData);
-    ImGui::Shutdown();
+    ImGui::DestroyContext();
 }

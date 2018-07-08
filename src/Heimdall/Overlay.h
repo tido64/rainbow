@@ -9,6 +9,7 @@
 
 #include "Graphics/Drawable.h"
 #include "Graphics/RenderQueue.h"
+#include "Graphics/TextureManager.h"
 #include "Input/InputListener.h"
 
 namespace heimdall
@@ -19,9 +20,11 @@ namespace heimdall
         static constexpr size_t kDataSampleSize = 100;
 
     public:
-        Overlay(const rainbow::graphics::RenderQueue& render_queue)
-            : enabled_(false), pinned_(false), render_queue_(render_queue),
-              frame_times_(kDataSampleSize), vmem_usage_(kDataSampleSize)
+        Overlay(const rainbow::graphics::TextureManager& texture_manager,
+                const rainbow::graphics::RenderQueue& render_queue)
+            : enabled_(false), texture_manager_(texture_manager),
+              render_queue_(render_queue), frame_times_(kDataSampleSize),
+              vmem_usage_(kDataSampleSize)
         {
         }
 
@@ -32,16 +35,11 @@ namespace heimdall
         auto is_enabled() const { return enabled_; }
 
         void disable() { enabled_ = false; }
-
-        void enable()
-        {
-            enabled_ = true;
-            pinned_ = true;
-        }
+        void enable() { enabled_ = true; }
 
     private:
         bool enabled_;
-        bool pinned_;
+        const rainbow::graphics::TextureManager& texture_manager_;
         const rainbow::graphics::RenderQueue& render_queue_;
         std::deque<uint64_t> frame_times_;
         std::deque<float> vmem_usage_;
@@ -55,11 +53,12 @@ namespace heimdall
 
         bool on_key_down_impl(const rainbow::KeyStroke&) override;
         bool on_key_up_impl(const rainbow::KeyStroke&) override;
+        bool on_mouse_wheel_impl(const ArrayView<rainbow::Pointer>&) override;
         bool on_pointer_began_impl(const ArrayView<rainbow::Pointer>&) override;
         bool on_pointer_canceled_impl() override;
         bool on_pointer_ended_impl(const ArrayView<rainbow::Pointer>&) override;
         bool on_pointer_moved_impl(const ArrayView<rainbow::Pointer>&) override;
     };
-}
+}  // namespace heimdall
 
 #endif

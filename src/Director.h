@@ -33,11 +33,17 @@ namespace rainbow
 
         bool active() const { return active_; }
         auto error() const { return error_; }
+        auto font_cache() -> FontCache& { return typesetter_.font_cache(); }
         auto input() -> Input& { return input_; }
         auto mixer() -> audio::Mixer& { return mixer_; }
         auto render_queue() -> graphics::RenderQueue& { return render_queue_; }
         auto script() { return script_.get(); }
         bool terminated() const { return terminated_; }
+
+        auto texture_manager() -> graphics::TextureManager&
+        {
+            return renderer_.texture_manager;
+        }
 
         void draw();
 

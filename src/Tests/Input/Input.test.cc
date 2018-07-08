@@ -26,12 +26,7 @@ namespace
     class TestInputListener : public InputListener
     {
     public:
-        explicit TestInputListener(bool consume)
-            : consume_(consume), axis_motion_(false), button_down_(false),
-              button_up_(false), controller_connected_(false),
-              controller_disconnected_(false), key_down_(false), key_up_(false),
-              pointer_began_(false), pointer_canceled_(false),
-              pointer_ended_(false), pointer_moved_(false) {}
+        explicit TestInputListener(bool consume) : consume_(consume) {}
 
         bool axis_motion() const { return axis_motion_; }
         bool button_down() const { return button_down_; }
@@ -45,6 +40,7 @@ namespace
 
         bool key_down() const { return key_down_; }
         bool key_up() const { return key_up_; }
+        bool mouse_wheel() const { return mouse_wheel_; }
         bool pointer_began() const { return pointer_began_; }
         bool pointer_canceled() const { return pointer_canceled_; }
         bool pointer_ended() const { return pointer_ended_; }
@@ -56,17 +52,18 @@ namespace
 
     private:
         const bool consume_;
-        bool axis_motion_;
-        bool button_down_;
-        bool button_up_;
-        bool controller_connected_;
-        bool controller_disconnected_;
-        bool key_down_;
-        bool key_up_;
-        bool pointer_began_;
-        bool pointer_canceled_;
-        bool pointer_ended_;
-        bool pointer_moved_;
+        bool axis_motion_ = false;
+        bool button_down_ = false;
+        bool button_up_ = false;
+        bool controller_connected_ = false;
+        bool controller_disconnected_ = false;
+        bool key_down_ = false;
+        bool key_up_ = false;
+        bool mouse_wheel_ = false;
+        bool pointer_began_ = false;
+        bool pointer_canceled_ = false;
+        bool pointer_ended_ = false;
+        bool pointer_moved_ = false;
 
         bool on_controller_axis_motion_impl(
             const ControllerAxisMotion&) override
@@ -109,6 +106,12 @@ namespace
         bool on_key_up_impl(const KeyStroke&) override
         {
             key_up_ = true;
+            return consume_;
+        }
+
+        bool on_mouse_wheel_impl(const ArrayView<Pointer>&) override
+        {
+            mouse_wheel_ = true;
             return consume_;
         }
 
@@ -176,6 +179,10 @@ TEST(InputTest, BaseInputListenerDoesNothing)
     ASSERT_FALSE(test_input_listener.key_up());
     input.on_key_up(KeyStroke{});
     ASSERT_TRUE(test_input_listener.key_up());
+
+    ASSERT_FALSE(test_input_listener.mouse_wheel());
+    input.on_mouse_wheel(nullptr);
+    ASSERT_TRUE(test_input_listener.mouse_wheel());
 
     ASSERT_FALSE(test_input_listener.pointer_began());
     input.on_pointer_began(nullptr);
