@@ -53,7 +53,8 @@ namespace rainbow::duk::module
 
         thread_local std::string module;
         module = resolved_id;
-        module += kModuleExtension;
+        if (!ends_with(module, kModuleExtension))
+            module += kModuleExtension;
 
         const auto data = File::read(module.c_str(), FileType::Asset);
         throw_if(ctx,
