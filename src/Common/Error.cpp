@@ -30,7 +30,9 @@ namespace
                 case ErrorCode::RenderInitializationFailed:
                     return "Failed to initialise renderer";
                 case ErrorCode::ScriptCompilationFailed:
-                    return "Failed to compile 'index.bundle.js'";
+                    return "Failed to compile JS";
+                case ErrorCode::ScriptNotFound:
+                    return "No script was found";
                 case ErrorCode::ErrorExecutingScript:
                     return "An error occurred while executing JavaScript";
                 default:

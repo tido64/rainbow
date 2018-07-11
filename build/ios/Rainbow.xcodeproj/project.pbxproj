@@ -93,7 +93,7 @@
 		19865982175E98F700723171 /* Data.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19865981175E98F700723171 /* Data.cpp */; };
 		1989645C1C4AE0080011BA15 /* RainbowViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1989645B1C4AE0080011BA15 /* RainbowViewController.mm */; };
 		198EA19E2012733F00BB3FB4 /* OpenSans-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 198EA19A2012733F00BB3FB4 /* OpenSans-Light.ttf */; };
-		198EA1A02012733F00BB3FB4 /* index.bundle.js in Resources */ = {isa = PBXBuildFile; fileRef = 198EA19C2012733F00BB3FB4 /* index.bundle.js */; };
+		198EA1A02012733F00BB3FB4 /* index.js in Resources */ = {isa = PBXBuildFile; fileRef = 198EA19C2012733F00BB3FB4 /* index.js */; };
 		198F42781A9151CB00BE7A73 /* Timer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 198F42701A9151CB00BE7A73 /* Timer.cpp */; };
 		198F42981A9152E000BE7A73 /* Animation.c in Sources */ = {isa = PBXBuildFile; fileRef = 198F427D1A9152E000BE7A73 /* Animation.c */; };
 		198F42991A9152E000BE7A73 /* AnimationState.c in Sources */ = {isa = PBXBuildFile; fileRef = 198F427E1A9152E000BE7A73 /* AnimationState.c */; };
@@ -377,9 +377,9 @@
 		1989645A1C4AE0080011BA15 /* RainbowViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RainbowViewController.h; sourceTree = "<group>"; };
 		1989645B1C4AE0080011BA15 /* RainbowViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = RainbowViewController.mm; sourceTree = "<group>"; };
 		198BE0A7174A5F420036055E /* Macros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Macros.h; sourceTree = "<group>"; };
-		198EA1992012733F00BB3FB4 /* index.bundle.js.map */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = index.bundle.js.map; sourceTree = "<group>"; };
+		198EA1992012733F00BB3FB4 /* index.js.map */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = index.js.map; sourceTree = "<group>"; };
 		198EA19A2012733F00BB3FB4 /* OpenSans-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSans-Light.ttf"; sourceTree = "<group>"; };
-		198EA19C2012733F00BB3FB4 /* index.bundle.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = index.bundle.js; sourceTree = "<group>"; };
+		198EA19C2012733F00BB3FB4 /* index.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = index.js; sourceTree = "<group>"; };
 		198F42681A9151CB00BE7A73 /* GameBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameBase.h; sourceTree = "<group>"; };
 		198F42701A9151CB00BE7A73 /* Timer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Timer.cpp; sourceTree = "<group>"; };
 		198F42711A9151CB00BE7A73 /* Timer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Timer.h; sourceTree = "<group>"; };
@@ -1061,8 +1061,8 @@
 		19905B73152C50C100BDD15C /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				198EA19C2012733F00BB3FB4 /* index.bundle.js */,
-				198EA1992012733F00BB3FB4 /* index.bundle.js.map */,
+				198EA19C2012733F00BB3FB4 /* index.js */,
+				198EA1992012733F00BB3FB4 /* index.js.map */,
 				198EA19A2012733F00BB3FB4 /* OpenSans-Light.ttf */,
 				19E9F8DC2023D75F008E50E3 /* p1_spritesheet.png */,
 			);
@@ -1295,7 +1295,7 @@
 				19E85AA91858DCBD00D8B170 /* Images.xcassets in Resources */,
 				1948C02D152C397D00E9B854 /* InfoPlist.strings in Resources */,
 				198EA19E2012733F00BB3FB4 /* OpenSans-Light.ttf in Resources */,
-				198EA1A02012733F00BB3FB4 /* index.bundle.js in Resources */,
+				198EA1A02012733F00BB3FB4 /* index.js in Resources */,
 				19E9F8DD2023D75F008E50E3 /* p1_spritesheet.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

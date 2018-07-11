@@ -307,4 +307,4 @@ function update(dt) {
     }
     State.demo.update(dt);
 }
-//# sourceMappingURL=index.bundle.js.map
+//# sourceMappingURL=index.js.map

@@ -13,15 +13,6 @@
 using rainbow::czstring;
 using rainbow::filesystem::Path;
 
-namespace
-{
-#ifdef RAINBOW_OS_WINDOWS
-    constexpr char kPathSeparator = '\\';
-#else
-    constexpr char kPathSeparator = '/';
-#endif
-}
-
 auto Path::extension() const -> czstring
 {
     auto p = path_.rfind('.');
@@ -54,15 +45,15 @@ auto Path::cfurl() const -> CFURLRef
 #ifdef RAINBOW_OS_IOS
 auto Path::nsurl() const -> NSURL*
 {
-    NSString* path = [NSString stringWithUTF8StringNoCopy:c_str()
-                                                   length:path_.length()];
+    NSString* path =
+        [NSString stringWithUTF8StringNoCopy:c_str() length:path_.length()];
     return [NSURL fileURLWithPath:path isDirectory:NO];
 }
 #endif
 
 auto Path::operator/=(czstring p) -> Path&
 {
-    if (path_.back() != kPathSeparator)
-        path_ += kPathSeparator;
+    if (path_.back() != *filesystem::path_separator())
+        path_ += *filesystem::path_separator();
     return *this += p;
 }

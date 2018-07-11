@@ -82,7 +82,7 @@ case $1 in
     compile "$GENERATOR"
     ;;
   "mac")
-    GENERATOR=${GENERATOR:-Xcode}
+    GENERATOR=${GENERATOR:-Unix Makefiles}
     $cmake $args -G "$GENERATOR" "$project_root" &&
     compile "$GENERATOR"
     ;;

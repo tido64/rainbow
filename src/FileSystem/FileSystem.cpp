@@ -27,6 +27,7 @@ extern ANativeActivity* g_native_activity;
 #       include "Platform/iOS/NSString+Rainbow.h"
 #   endif
 #endif
+#include "FileSystem/Bundle.h"
 
 namespace
 {
@@ -34,9 +35,8 @@ namespace
     constexpr char kUserDataPath[] = kPathSeparator "user";
 #endif
 
-    std::string g_assets_path;
-    std::string g_exec_path;
-}
+    const rainbow::Bundle* g_bundle{};
+}  // namespace
 
 auto rainbow::filesystem::absolute(czstring path) -> Path
 {
@@ -45,7 +45,7 @@ auto rainbow::filesystem::absolute(czstring path) -> Path
 
 auto rainbow::filesystem::assets_path() -> czstring
 {
-    return g_assets_path.c_str();
+    return g_bundle == nullptr ? nullptr : g_bundle->assets_path();
 }
 
 bool rainbow::filesystem::create_directories(czstring path,
@@ -94,39 +94,29 @@ bool rainbow::filesystem::create_directories(czstring path,
 
 auto rainbow::filesystem::executable_path() -> czstring
 {
-    return g_exec_path.c_str();
+    return g_bundle == nullptr ? nullptr : g_bundle->exec_path();
 }
 
-void rainbow::filesystem::initialize(ArrayView<zstring> args)
+bool rainbow::filesystem::exists(czstring p)
 {
-    if (!g_exec_path.empty())
-        return;
-
-    czstring executable = args[0];
-#if HAS_FILESYSTEM
-    g_exec_path = stdfs::absolute(executable).u8string();
+    auto path = relative(p);
+#if defined(RAINBOW_OS_ANDROID)
+    auto asset = AAssetManager_open(
+        g_native_activity->assetManager, path.c_str(), AASSET_MODE_UNKNOWN);
+    AAsset_close(asset);
+    return asset != nullptr;
+#elif HAS_FILESYSTEM
+    std::error_code error;
+    return stdfs::exists(path.c_str(), error);
 #else
-    char path[PATH_MAX];
-    realpath(executable, path);
-    g_exec_path = path;
+    struct stat sb;
+    return stat(path.c_str(), &sb) == 0;
 #endif
+}
 
-    R_ASSERT(!g_exec_path.empty(),
-             "Failed to canonicalize absolute path to executable");
-
-    if (args.size() >= 2)
-    {
-        czstring current_path = args[1];
-        std::error_code error;
-        if (is_directory(current_path, error) ||
-            is_regular_file(current_path, error))
-        {
-            g_assets_path = current_path;
-            return;
-        }
-    }
-
-    g_assets_path = system_current_path();
+void rainbow::filesystem::initialize(const Bundle& bundle)
+{
+    g_bundle = &bundle;
 }
 
 bool rainbow::filesystem::is_directory(czstring path,
@@ -140,8 +130,8 @@ bool rainbow::filesystem::is_directory(czstring path,
 #endif
 }
 
-bool rainbow::filesystem::is_regular_file(czstring path,
-                                          [[maybe_unused]] std::error_code& error)
+bool rainbow::filesystem::is_regular_file(
+    czstring path, [[maybe_unused]] std::error_code& error)
 {
 #if HAS_FILESYSTEM
     return stdfs::is_regular_file(path, error);
@@ -149,6 +139,16 @@ bool rainbow::filesystem::is_regular_file(czstring path,
     struct stat sb;
     return stat(path, &sb) == 0 && S_ISREG(sb.st_mode);
 #endif
+}
+
+auto rainbow::filesystem::main_script() -> czstring
+{
+    return g_bundle == nullptr ? nullptr : g_bundle->main_script();
+}
+
+auto rainbow::filesystem::path_separator() -> czstring
+{
+    return kPathSeparator;
 }
 
 auto rainbow::filesystem::relative(czstring path) -> Path
@@ -243,7 +243,8 @@ auto rainbow::filesystem::user_data_path() -> czstring
         if (path != nullptr)
             data_path = path;
 #else
-        data_path = g_assets_path + kUserDataPath;
+        data_path = assets_path();
+        data_path += kUserDataPath;
 #endif
     }
 
@@ -251,8 +252,8 @@ auto rainbow::filesystem::user_data_path() -> czstring
 }
 
 #ifdef RAINBOW_TEST
-void rainbow::filesystem::set_assets_path(czstring path)
+namespace rainbow::filesystem::test
 {
-    g_assets_path = path;
-}
+    auto bundle() -> const Bundle* { return g_bundle; }
+}  // namespace rainbow::filesystem::test
 #endif

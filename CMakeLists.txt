@@ -53,6 +53,8 @@ set(SOURCE_FILES
     src/Config.h
     src/Director.cpp
     src/Director.h
+    src/FileSystem/Bundle.cpp
+    src/FileSystem/Bundle.h
     src/FileSystem/File.h
     src/FileSystem/FileSystem.cpp
     src/FileSystem/FileSystem.h
@@ -225,6 +227,7 @@ if(UNIT_TESTS)
       src/Tests/Common/TypeInfo.test.cc
       src/Tests/Common/Variant.test.cc
       src/Tests/Config.test.cc
+      src/Tests/FileSystem/Bundle.test.cc
       src/Tests/FileSystem/File.test.cc
       src/Tests/FileSystem/Path.test.cc
       src/Tests/Graphics/Animation.test.cc

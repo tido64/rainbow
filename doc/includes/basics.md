@@ -3,7 +3,7 @@
 ## File Structure
 
 * config.json
-* index.bundle.js
+* index.js
 
 ## `config.json` (optional)
 
@@ -61,7 +61,7 @@ auto rainbow::GameBase::create(rainbow::Director& director)
 ```
 
 ```typescript
-// 'index.bundle.js' must implement the following two entry-point functions:
+// 'index.js' must implement the following two entry-point functions:
 
 function init(width, height) {
   // Called once on startup.

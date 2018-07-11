@@ -8,11 +8,19 @@
 
 #include "Common/Algorithm.h"
 #include "Config.h"
+#include "FileSystem/Bundle.h"
 #include "FileSystem/File.h"
 #include "FileSystem/FileSystem.h"
 
+using rainbow::Bundle;
 using rainbow::czstring;
+using rainbow::zstring;
 using rainbow::filesystem::Path;
+
+namespace rainbow::filesystem::test
+{
+    auto bundle() -> const Bundle*;
+}  // namespace rainbow::filesystem::test
 
 namespace
 {
@@ -56,18 +64,20 @@ namespace
     {
     public:
         explicit ScopedAssetsDirectory(czstring path)
-            : assets_path_(rainbow::filesystem::assets_path())
+            : current_bundle_(rainbow::filesystem::test::bundle()),
+              scope_bundle_(current_bundle_->exec_path(), path)
         {
-            rainbow::filesystem::set_assets_path(path);
+            rainbow::filesystem::initialize(scope_bundle_);
         }
 
         ~ScopedAssetsDirectory()
         {
-            rainbow::filesystem::set_assets_path(assets_path_.c_str());
+            rainbow::filesystem::initialize(*current_bundle_);
         }
 
     private:
-        std::string assets_path_;
+        const Bundle* current_bundle_;
+        Bundle scope_bundle_;
     };
 
     class ScopedConfig
@@ -103,7 +113,7 @@ namespace
             fclose(fd);
         }
     };
-}
+}  // namespace
 
 TEST(ConfigTest, NoConfiguration)
 {

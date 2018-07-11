@@ -17,6 +17,7 @@ namespace rainbow
         ShaderManagerInitializationFailed,
         RenderInitializationFailed,
         ScriptCompilationFailed,
+        ScriptNotFound,
         ErrorExecutingScript
     };
 }

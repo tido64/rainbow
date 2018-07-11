@@ -76,10 +76,42 @@ JavaScript::JavaScript(Director& director)
 
     R_ASSERT(duk_get_top(context_) == 0, "We didn't clean up properly!");
 
-    constexpr char index_bundle_js[] = "index.bundle.js";
-    duk::push_literal(context_, index_bundle_js);
+    auto index_js = filesystem::main_script();
+    if (index_js == nullptr)
+    {
+        constexpr const char* const kEntryPoints[]{
+            "index.js",
+            "index.bs.js",
+            "main.jsbundle",
+        };
 
-    const auto data = File::read(index_bundle_js, FileType::Asset);
+        auto end = std::end(kEntryPoints);
+        auto i = std::find_if(std::begin(kEntryPoints), end, [](auto&& path) {
+            return filesystem::exists(path);
+        });
+        if (i == end)
+        {
+            LOGE("No script was found at these locations:");
+            auto assets_path = filesystem::assets_path() == nullptr
+                                   ? "assets"
+                                   : filesystem::assets_path();
+            for (auto&& path : kEntryPoints)
+            {
+                LOGE("    %s%s%s",
+                     assets_path,
+                     filesystem::path_separator(),
+                     path);
+            }
+            terminate(ErrorCode::ScriptNotFound);
+            return;
+        }
+
+        index_js = *i;
+    }
+
+    duk::push(context_, index_js);
+
+    const auto data = File::read(index_js, FileType::Asset);
     if (duk_pcompile_lstring_filename(context_,
                                       DUK_COMPILE_STRICT,
                                       data.as<const char*>(),

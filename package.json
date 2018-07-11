@@ -36,8 +36,8 @@
   "homepage": "https://bitbucket.org/tido/rainbow#readme",
   "devDependencies": {
     "@types/node": "8.10.20",
-    "prettier": "1.13.5",
+    "prettier": "1.13.7",
     "tslint": "5.10.0",
-    "typescript": "2.8.3"
+    "typescript": "2.9.2"
   }
 }

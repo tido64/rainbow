@@ -17,6 +17,7 @@
 
 #include "Common/Functional.h"
 #include "Config.h"
+#include "FileSystem/Bundle.h"
 #include "FileSystem/FileSystem.h"
 #include "Platform/Diagnostics.h"
 #include "Platform/SDL/Context.h"
@@ -25,9 +26,10 @@
 #   include "Tests/Tests.h"
 #endif
 
+using rainbow::Bundle;
+using rainbow::out;
 using rainbow::RainbowController;
 using rainbow::SDLContext;
-using rainbow::out;
 
 namespace
 {
@@ -87,7 +89,8 @@ auto main() -> int
 
 auto main(int argc, char* argv[]) -> int
 {
-    rainbow::filesystem::initialize({argv, static_cast<size_t>(argc)});
+    const Bundle bundle{{argv, static_cast<size_t>(argc)}};
+    rainbow::filesystem::initialize(bundle);
 
     if (should_run_tests(std::ref(argc), std::ref(argv)))
     {

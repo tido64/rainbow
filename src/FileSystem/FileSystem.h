@@ -8,7 +8,11 @@
 #include <system_error>
 
 #include "FileSystem/Path.h"
-#include "Memory/Array.h"
+
+namespace rainbow
+{
+    class Bundle;
+}
 
 namespace rainbow::filesystem
 {
@@ -28,8 +32,13 @@ namespace rainbow::filesystem
     /// <summary>Returns path of executable.</summary>
     auto executable_path() -> czstring;
 
+    /// <summary>
+    ///   Returns whether the specified path refers to an existing file.
+    /// </summary>
+    bool exists(czstring path);
+
     /// <summary>Initializes the file subsystem.</summary>
-    void initialize(ArrayView<zstring> args);
+    void initialize(const Bundle& bundle);
 
     /// <summary>
     ///   Returns whether <paramref name="path"/> refers to a directory.
@@ -48,6 +57,12 @@ namespace rainbow::filesystem
     {
         return is_regular_file(path.c_str(), error);
     }
+
+    /// <summary>Returns main script name; <c>nullptr</c> if unset.</summary>
+    auto main_script() -> czstring;
+
+    /// <summary>Returns the platform specific path separator.</summary>
+    auto path_separator() -> czstring;
 
     /// <summary>
     ///   Creates a path relative to the current working directory.
@@ -69,11 +84,6 @@ namespace rainbow::filesystem
 
     /// <summary>Returns user data directory.</summary>
     auto user_data_path() -> czstring;
-
-#ifdef RAINBOW_TEST
-    /// <summary>Sets assets path.</summary>
-    void set_assets_path(czstring path);
-#endif
 }  // namespace rainbow::filesystem
 
 #endif
