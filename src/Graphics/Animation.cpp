@@ -4,6 +4,8 @@
 
 #include "Graphics/Animation.h"
 
+#include "Director.h"
+
 using rainbow::Animation;
 using rainbow::SpriteRef;
 
@@ -12,7 +14,9 @@ Animation::Animation(const SpriteRef& sprite,  // NOLINT
                      unsigned int fps,
                      int delay)
     : stopped_(true), accumulated_(0), interval_(1000 / fps), frame_(0),
-      frames_(std::move(frames)), sprite_(sprite), delay_(delay), idled_(0) {}
+      frames_(std::move(frames)), sprite_(sprite), delay_(delay), idled_(0)
+{
+}
 
 void Animation::set_frame_rate(unsigned int fps)
 {
@@ -118,3 +122,11 @@ void Animation::tick()
     }
     sprite_->set_texture(static_cast<uint32_t>(frames_[frame_]));
 }
+
+#ifndef NDEBUG
+Animation::~Animation()
+{
+    Director::assert_unused(
+        this, "Animation deleted but is still in the render queue.");
+}
+#endif

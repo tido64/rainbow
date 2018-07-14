@@ -4,20 +4,29 @@
 
 #include "Graphics/Label.h"
 
+#include "Director.h"
 #include "Math/Transform.h"
 #include "Text/Typesetter.h"
 
 using rainbow::Color;
+using rainbow::czstring;
 using rainbow::Label;
 using rainbow::TextAlignment;
 using rainbow::Vec2f;
-using rainbow::czstring;
 
 Label::Label()
     : stale_(0), font_size_(15), alignment_(TextAlignment::Left), scale_(1.0f),
       angle_(0.0f)
 {
     array_.reconfigure([this] { buffer_.bind(); });
+}
+
+Label::~Label()
+{
+#ifndef NDEBUG
+    Director::assert_unused(
+        this, "Label deleted but is still in the render queue.");
+#endif
 }
 
 void Label::set_alignment(TextAlignment a)

@@ -13,10 +13,10 @@
 
 #include "Common/Color.h"
 #include "Common/String.h"
-#include "Math/Vec2.h"
 #include "Graphics/Buffer.h"
 #include "Graphics/SpriteVertex.h"
 #include "Graphics/VertexArray.h"
+#include "Math/Vec2.h"
 
 namespace rainbow
 {
@@ -30,7 +30,7 @@ namespace rainbow
         static constexpr uint32_t kStaleMask        = 0xffffu;
 
         Label();
-        virtual ~Label() {}
+        virtual ~Label();
 
         /// <summary>Returns label text alignment.</summary>
         auto alignment() const { return alignment_; }

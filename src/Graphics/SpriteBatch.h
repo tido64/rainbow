@@ -154,6 +154,10 @@ namespace rainbow
             return sprites_[i];
         }
 
+#ifndef NDEBUG
+        ~SpriteBatch();
+#endif
+
 #ifdef RAINBOW_TEST
         explicit SpriteBatch(const ISolemnlySwearThatIAmOnlyTesting&);
 

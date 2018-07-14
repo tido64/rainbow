@@ -4,6 +4,7 @@
 
 #include "Graphics/SpriteBatch.h"
 
+#include "Director.h"
 #include "Graphics/Renderer.h"
 
 using rainbow::SharedPtr;
@@ -164,6 +165,14 @@ void SpriteBatch::bind_arrays() const
     if (normals_)
         normal_buffer_.bind(Shader::kAttributeNormal);
 }
+
+#ifndef NDEBUG
+SpriteBatch::~SpriteBatch()
+{
+    Director::assert_unused(
+        this, "SpriteBatch deleted but is still in the render queue.");
+}
+#endif
 
 #ifdef RAINBOW_TEST
 SpriteBatch::SpriteBatch(const rainbow::ISolemnlySwearThatIAmOnlyTesting& test)

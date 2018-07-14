@@ -123,6 +123,10 @@ namespace rainbow
         /// </summary>
         void update(uint64_t dt);
 
+#ifndef NDEBUG
+        ~Animation();
+#endif
+
     private:
         bool stopped_;
 

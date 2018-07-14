@@ -6,6 +6,7 @@
 #define DIRECTOR_H_
 
 #include "Audio/Mixer.h"
+#include "Common/Global.h"
 #include "Graphics/RenderQueue.h"
 #include "Graphics/Renderer.h"
 #include "Input/Input.h"
@@ -20,7 +21,8 @@ namespace rainbow
     /// <summary>
     ///   Simple game loop. Must be created after having set up a video context.
     /// </summary>
-    class Director final : private NonCopyable<Director>
+    class Director final
+        : IF_DEBUG_ELSE(public Global<Director>, private NonCopyable<Director>)
     {
     public:
         Director();
@@ -60,6 +62,26 @@ namespace rainbow
 
         /// <summary>Called when a low memory warning has been issued.</summary>
         void on_memory_warning();
+
+#ifndef NDEBUG
+        template <typename T>
+        static void assert_unused(T* ptr, czstring reason)
+        {
+            auto director = Get();
+            if (director == nullptr)
+                return;
+
+            auto& render_queue = director->render_queue();
+            auto is_same_object = [ptr](auto&& unit) {
+                return get<T*>(unit.object()) == ptr;
+            };
+            R_ASSERT(
+                director->terminated() || std::none_of(std::begin(render_queue),
+                                                       std::end(render_queue),
+                                                       is_same_object),
+                reason);
+        }
+#endif
 
     private:
         bool active_;

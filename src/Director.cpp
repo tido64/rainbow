@@ -28,6 +28,8 @@ namespace rainbow
             terminate(error);
         else if (std::error_code error = renderer_.initialize())
             terminate(error);
+
+        IF_DEBUG(make_global());
     }
 
     Director::~Director()
