@@ -54,7 +54,7 @@ else {
 		if ([string]::IsNullOrEmpty($BuildFolder.Self.Path)) {
 			exit
 		}
-		if (!$BuildFolder.Self.Path.StartsWith($SourcePath)) {
+		if ([string]::Compare($BuildFolder, $SourcePath, [StringComparison]::InvariantCultureIgnoreCase) -ne 0) {
 			$OutputFolder = $BuildFolder.Self.Path
 			break
 		}

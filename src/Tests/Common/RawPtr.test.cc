@@ -20,21 +20,21 @@ TEST(RawPtrTest, ConcatenatesUpperLowerBits)
 
         ASSERT_EQ(kMax, high.upper());
         ASSERT_EQ(0u, high.lower());
-        ASSERT_EQ(reinterpret_cast<void*>(0xffffffff00000000), high.get());
+        ASSERT_EQ(reinterpret_cast<void*>(0xffffffff00000000ull), high.get());
     }
     {
         RawPtr<void> low{0u, kMax};
 
         ASSERT_EQ(0u, low.upper());
         ASSERT_EQ(kMax, low.lower());
-        ASSERT_EQ(reinterpret_cast<void*>(0x00000000ffffffff), low.get());
+        ASSERT_EQ(reinterpret_cast<void*>(0x00000000ffffffffull), low.get());
     }
 }
 
 TEST(RawPtrTest, SplitsUpperLowerBits)
 {
     {
-        auto p = reinterpret_cast<void*>(0xffffffff00000000);
+        auto p = reinterpret_cast<void*>(0xffffffff00000000ull);
         RawPtr<void> high{p};
 
         ASSERT_EQ(p, high.get());
@@ -42,7 +42,7 @@ TEST(RawPtrTest, SplitsUpperLowerBits)
         ASSERT_EQ(0u, high.lower());
     }
     {
-        auto p = reinterpret_cast<void*>(0x00000000ffffffff);
+        auto p = reinterpret_cast<void*>(0x00000000ffffffffull);
         RawPtr<void> low{p};
 
         ASSERT_EQ(p, low.get());
