@@ -5,6 +5,8 @@
 import * as fs from "fs";
 import * as path from "path";
 
+const EOL = "\n";
+
 const sourcePath = path.resolve(path.dirname(process.argv[1]), "../src");
 const outputBindingsPath = path.join(
   sourcePath,
@@ -15,50 +17,6 @@ const outputBindingsPath = path.join(
 const outputDeclarationPath = path.join(sourcePath, "..", "js", "index.d.ts");
 
 const modules: TypeInfo[] = [
-  {
-    type: "class",
-    name: "Animation",
-    source: "Graphics/Animation.h",
-    sourceName: "Animation",
-    ctor: [
-      { type: "SpriteRef", name: "sprite" },
-      { type: "Animation::Frames", name: "frames" },
-      { type: "uint32_t", name: "fps" },
-      { type: "int", name: "delay" }
-    ],
-    methods: [
-      { name: "current_frame", parameters: [], returnType: "uint32_t" },
-      { name: "frame_rate", parameters: [], returnType: "uint32_t" },
-      { name: "sprite", parameters: [], returnType: "SpriteRef" },
-      {
-        name: "set_callback",
-        parameters: [{ type: "Animation::Callback", name: "callback" }]
-      },
-      {
-        name: "set_delay",
-        parameters: [{ type: "int", name: "delay" }]
-      },
-      {
-        name: "set_frame_rate",
-        parameters: [{ type: "uint32_t", name: "fps" }]
-      },
-      {
-        name: "set_frames",
-        parameters: [{ type: "Animation::Frames", name: "frames" }]
-      },
-      {
-        name: "set_sprite",
-        parameters: [{ type: "SpriteRef", name: "sprite" }]
-      },
-      {
-        name: "jump_to",
-        parameters: [{ type: "uint32_t", name: "frame" }]
-      },
-      { name: "rewind", parameters: [] },
-      { name: "start", parameters: [] },
-      { name: "stop", parameters: [] }
-    ]
-  },
   {
     type: "enum",
     name: "AnimationEvent",
@@ -78,6 +36,20 @@ const modules: TypeInfo[] = [
     name: "ControllerButton",
     source: "Input/Controller.h",
     sourceName: "ControllerButton",
+    values: []
+  },
+  {
+    type: "enum",
+    name: "TextAlignment",
+    source: "../include/Rainbow/TextAlignment.h",
+    sourceName: "TextAlignment",
+    values: []
+  },
+  {
+    type: "enum",
+    name: "VirtualKey",
+    source: "Input/VirtualKey.h",
+    sourceName: "VirtualKey",
     values: []
   },
   {
@@ -157,6 +129,70 @@ const modules: TypeInfo[] = [
   },
   {
     type: "class",
+    name: "Texture",
+    source: "Graphics/TextureAtlas.h",
+    sourceName: "SharedPtr<rainbow::TextureAtlas>",
+    ctor: [{ type: "czstring", name: "path" }],
+    methods: [
+      {
+        name: "add_region",
+        parameters: [
+          { type: "int", name: "x" },
+          { type: "int", name: "y" },
+          { type: "int", name: "width" },
+          { type: "int", name: "height" }
+        ],
+        returnType: "uint32_t"
+      },
+      { name: "trim", parameters: [] }
+    ]
+  },
+  {
+    type: "class",
+    name: "Animation",
+    source: "Graphics/Animation.h",
+    sourceName: "Animation",
+    ctor: [
+      { type: "SpriteRef", name: "sprite" },
+      { type: "Animation::Frames", name: "frames" },
+      { type: "uint32_t", name: "fps" },
+      { type: "int", name: "delay" }
+    ],
+    methods: [
+      { name: "current_frame", parameters: [], returnType: "uint32_t" },
+      { name: "frame_rate", parameters: [], returnType: "uint32_t" },
+      { name: "sprite", parameters: [], returnType: "SpriteRef" },
+      {
+        name: "set_callback",
+        parameters: [{ type: "Animation::Callback", name: "callback" }]
+      },
+      {
+        name: "set_delay",
+        parameters: [{ type: "int", name: "delay" }]
+      },
+      {
+        name: "set_frame_rate",
+        parameters: [{ type: "uint32_t", name: "fps" }]
+      },
+      {
+        name: "set_frames",
+        parameters: [{ type: "Animation::Frames", name: "frames" }]
+      },
+      {
+        name: "set_sprite",
+        parameters: [{ type: "SpriteRef", name: "sprite" }]
+      },
+      {
+        name: "jump_to",
+        parameters: [{ type: "uint32_t", name: "frame" }]
+      },
+      { name: "rewind", parameters: [] },
+      { name: "start", parameters: [] },
+      { name: "stop", parameters: [] }
+    ]
+  },
+  {
+    type: "class",
     name: "SpriteBatch",
     source: "Graphics/SpriteBatch.h",
     sourceName: "SpriteBatch",
@@ -200,40 +236,6 @@ const modules: TypeInfo[] = [
     ]
   },
   {
-    type: "enum",
-    name: "TextAlignment",
-    source: "../include/Rainbow/TextAlignment.h",
-    sourceName: "TextAlignment",
-    values: []
-  },
-  {
-    type: "class",
-    name: "Texture",
-    source: "Graphics/TextureAtlas.h",
-    sourceName: "SharedPtr<rainbow::TextureAtlas>",
-    ctor: [{ type: "czstring", name: "path" }],
-    methods: [
-      {
-        name: "add_region",
-        parameters: [
-          { type: "int", name: "x" },
-          { type: "int", name: "y" },
-          { type: "int", name: "width" },
-          { type: "int", name: "height" }
-        ],
-        returnType: "uint32_t"
-      },
-      { name: "trim", parameters: [] }
-    ]
-  },
-  {
-    type: "enum",
-    name: "VirtualKey",
-    source: "Input/VirtualKey.h",
-    sourceName: "VirtualKey",
-    values: []
-  },
-  {
     type: "module",
     name: "Audio",
     source: "Audio/Mixer.h",
@@ -251,8 +253,7 @@ const modules: TypeInfo[] = [
       },
       {
         name: "release",
-        parameters: [{ type: "Sound", name: "sound" }],
-        returnType: "undefined"
+        parameters: [{ type: "Sound", name: "sound" }]
       },
       {
         name: "is_paused",
@@ -322,21 +323,21 @@ const modules: TypeInfo[] = [
           "ReadonlyArray<Readonly<{ id: number, buttons: Int8Array, axes: Int32Array }>>",
         name: "controllers"
       },
-      { type: "Int8Array", name: "keysDown" },
+      { type: "Int8Array", name: "keys_down" },
       {
         type:
           "ReadonlyArray<Readonly<{ hash: number, x: number, y: number, timestamp: number }>>",
-        name: "pointersDown"
+        name: "pointers_down"
       },
       {
         type:
           "ReadonlyArray<Readonly<{ hash: number, x: number, y: number, timestamp: number }>>",
-        name: "pointersMoved"
+        name: "pointers_moved"
       },
       {
         type:
           "ReadonlyArray<Readonly<{ hash: number, x: number, y: number, timestamp: number }>>",
-        name: "pointersUp"
+        name: "pointers_up"
       }
     ]
   },
@@ -430,11 +431,12 @@ interface ParameterInfo {
 }
 
 interface PropertyInfo {
-  type: string;
+  type: NativeType;
   name: string;
 }
 
 type NativeType =
+  | ""
   | "Animation::Callback"
   | "Animation::Frames"
   | "Animation|Label|SpriteBatch"
@@ -443,6 +445,11 @@ type NativeType =
   | "Channel|Sound"
   | "Channel|undefined"
   | "Color"
+  | "Float64Array"
+  | "Int32Array"
+  | "Int8Array"
+  | "ReadonlyArray<Readonly<{ hash: number, x: number, y: number, timestamp: number }>>" // TODO
+  | "ReadonlyArray<Readonly<{ id: number, buttons: Int8Array, axes: Int32Array }>>" // TODO
   | "SharedPtr<TextureAtlas>"
   | "Sound"
   | "Sound|undefined"
@@ -453,8 +460,7 @@ type NativeType =
   | "czstring"
   | "float"
   | "int"
-  | "uint32_t"
-  | "undefined";
+  | "uint32_t";
 
 type TypeInfo = ClassInfo | EnumInfo | ModuleInfo;
 
@@ -569,7 +575,7 @@ function generateCppBindings(typeInfo: TypeInfo[]): string {
         "    duk_freeze(ctx, -1);",
         `    duk::put_prop_literal(ctx, rainbow, "${type.name}");`,
         "}"
-      ].join("\n");
+      ].join(EOL);
     }),
     "",
     "namespace rainbow::duk",
@@ -590,10 +596,171 @@ function generateCppBindings(typeInfo: TypeInfo[]): string {
     "",
     "#endif",
     ""
-  ].join("\n");
+  ].join(EOL);
+}
+
+function generateOCamlDeclaration(typeInfo: TypeInfo[]): string {
+  const mapToLabeledType = (info: ParameterInfo): string => {
+    const isOptional = info.type.lastIndexOf("|undefined") > 0;
+    const type = (type => {
+      switch (type) {
+        case "Animation::Callback":
+          return "(animation -> int -> unit)";
+        case "Animation::Frames":
+          return "int list";
+        case "Animation|Label|SpriteBatch":
+          return "drawable";
+        case "Animation|Label|SpriteBatch|czstring|int":
+          return "renderunit";
+        case "Float64Array":
+          return "Js.Typed_array.Float64Array.t";
+        case "Int8Array":
+          return "Js.Typed_array.Int8Array.t";
+        case "SharedPtr<TextureAtlas>":
+          return "texture";
+        case "SpriteRef":
+          return "sprite";
+        case "Vec2f":
+          return "vec2";
+        case "czstring":
+          return "string";
+        case "uint32_t":
+          return "int";
+        default:
+          return (
+            (type && type.toLowerCase().replace(/\|undefined/, "")) || "unit"
+          );
+      }
+    })(info.type);
+    return `${!info.name || type === info.name ? "" : `${info.name}:`}${type}${
+      isOptional ? " option" : ""
+    }`;
+  };
+  const declareType = (info: TypeInfo): string => {
+    switch (info.type) {
+      case "class": {
+        const typeName = info.name.toLowerCase();
+        const declaration = `type ${typeName}`;
+        return [
+          declaration,
+          ...(!info.ctor
+            ? []
+            : [
+                `external create_${typeName} : ${info.ctor
+                  .map(mapToLabeledType)
+                  .join(" -> ") || "unit"} -> ${typeName} = "${
+                  info.name
+                }" [@@bs.new][@@bs.scope "Rainbow"]`
+              ]),
+          ...info.methods.map(
+            info =>
+              `external ${info.name} : ${typeName} -> ${[
+                ...info.parameters,
+                { type: info.returnType || ("" as ""), name: "" }
+              ]
+                .map(mapToLabeledType)
+                .join(" -> ")} = "${toCamelCase(info.name)}" [@@bs.send]`
+          )
+        ].join(EOL);
+      }
+      case "enum": {
+        return [
+          `type ${info.name.toLowerCase()} =`,
+          ...info.values.map(value => `  | ${value.name}`)
+        ].join(EOL);
+      }
+      case "module": {
+        return [
+          `(* ${info.name} *)`,
+          ...map(info.types, declareType),
+          ...map(
+            info.properties,
+            property =>
+              `external ${property.name} : unit -> ${mapToLabeledType({
+                type: property.type,
+                name: ""
+              })} = "${toCamelCase(
+                property.name
+              )}" [@@bs.get][@@bs.scope ("Rainbow", "${info.name}")]`
+          ),
+          ...map(
+            info.functions,
+            fn =>
+              `external ${fn.name} : ${[
+                ...fn.parameters,
+                { type: fn.returnType || ("" as ""), name: "" }
+              ]
+                .map(mapToLabeledType)
+                .join(" -> ")} = "${toCamelCase(
+                fn.name
+              )}" [@@bs.val][@@bs.scope ("Rainbow", "${info.name}")]`
+          )
+        ].join(EOL);
+      }
+    }
+  };
+  return [
+    "(* This file was generated by `tools/generate-bindings.ts`. DO NOT MODIFY!",
+    " *",
+    " * Copyright (c) 2010-present Bifrost Entertainment AS and Tommy Nguyen",
+    " * Distributed under the MIT License.",
+    " * (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)",
+    " *)",
+    "",
+    "type color = {",
+    "  r : int;",
+    "  g : int;",
+    "  b : int;",
+    "  a : int;",
+    "} [@@bs.deriving abstract]",
+    "",
+    "type vec2 = {",
+    "  x : float;",
+    "  y : float;",
+    "} [@@bs.deriving abstract]",
+    "",
+    typeInfo.map(declareType).join(EOL + EOL)
+  ].join(EOL);
 }
 
 function generateTypeScriptDeclaration(typeInfo: TypeInfo[]): string {
+  const _mapToTypeScriptType = (type?: NativeType): string => {
+    switch (type) {
+      case "Animation::Callback":
+        return "(animation: Animation, event: AnimationEvent) => void";
+      case "Animation::Frames":
+        return "number[]";
+      case "Color":
+        return "{ r: number, g: number, b: number, a: number }";
+      case "SharedPtr<TextureAtlas>":
+        return "Texture";
+      case "SpriteRef":
+        return "Sprite";
+      case "Vec2f":
+        return "{ x: number, y: number }";
+      case "bool":
+        return "boolean";
+      case "czstring":
+        return "string";
+      case "float":
+        return "number";
+      case "int":
+        return "number";
+      case "uint32_t":
+        return "number";
+      default:
+        return type || "void";
+    }
+  };
+  const mapToTypeScriptType = (type?: NativeType): string => {
+    return !type
+      ? _mapToTypeScriptType(type)
+      : type
+          .split("|")
+          .map(t => _mapToTypeScriptType(t.trim() as NativeType))
+          .sort()
+          .join(" | ");
+  };
   const getParams = (parameters: ParameterInfo[]) => {
     return parameters
       .map(p => `${p.name}: ${mapToTypeScriptType(p.type)}`)
@@ -623,7 +790,7 @@ function generateTypeScriptDeclaration(typeInfo: TypeInfo[]): string {
             getFunctionDeclaration(method, true, indent)
           ),
           `${indent}  }`
-        ].join("\n");
+        ].join(EOL);
       case "enum":
         return [
           `${indent}  export enum ${module.name} {`,
@@ -631,25 +798,20 @@ function generateTypeScriptDeclaration(typeInfo: TypeInfo[]): string {
             value => `${indent}    ${value.name} = ${value.integralValue},`
           ),
           `${indent}  }`
-        ].join("\n");
+        ].join(EOL);
       case "module":
         return [
           `${indent}  export namespace ${module.name} {`,
-          ...(!module.properties
-            ? []
-            : module.properties.map(
-                prop => `${indent}    const ${prop.name}: ${prop.type}`
-              )),
-          ...(!module.functions
-            ? []
-            : module.functions.map(f =>
-                getFunctionDeclaration(f, false, indent)
-              )),
-          ...(!module.types
-            ? []
-            : module.types.map(t => getDeclaration(t, "  "))),
+          ...map(
+            module.properties,
+            prop => `${indent}    const ${toCamelCase(prop.name)}: ${prop.type}`
+          ),
+          ...map(module.functions, f =>
+            getFunctionDeclaration(f, false, indent)
+          ),
+          ...map(module.types, t => getDeclaration(t, "  ")),
           `${indent}  }`
-        ].join("\n");
+        ].join(EOL);
     }
   };
   return [
@@ -688,46 +850,15 @@ function generateTypeScriptDeclaration(typeInfo: TypeInfo[]): string {
     ((): string[] => typeInfo.map(m => getDeclaration(m)))().join("\n\n"),
     "}",
     ""
-  ].join("\n");
+  ].join(EOL);
 }
 
-function mapToTypeScriptType(type?: NativeType): string {
-  return !type
-    ? mapToTypeScriptTypeImpl(type)
-    : type
-        .split("|")
-        .map(t => mapToTypeScriptTypeImpl(t.trim() as NativeType))
-        .sort()
-        .join(" | ");
-}
-
-function mapToTypeScriptTypeImpl(type?: NativeType): string {
-  switch (type) {
-    case "Animation::Callback":
-      return "(animation: Animation, event: AnimationEvent) => void";
-    case "Animation::Frames":
-      return "number[]";
-    case "Color":
-      return "{ r: number, g: number, b: number, a: number }";
-    case "SharedPtr<TextureAtlas>":
-      return "Texture";
-    case "SpriteRef":
-      return "Sprite";
-    case "Vec2f":
-      return "{ x: number, y: number }";
-    case "bool":
-      return "boolean";
-    case "czstring":
-      return "string";
-    case "float":
-      return "number";
-    case "int":
-      return "number";
-    case "uint32_t":
-      return "number";
-    default:
-      return type || "void";
-  }
+function map<T, U>(
+  array: T[] | null | undefined,
+  callbackfn: (value: T, index: number, array: T[]) => U,
+  thisArg?: any
+): U[] {
+  return !array ? [] : array.map<U>(callbackfn, thisArg);
 }
 
 function preprocess(info: TypeInfo): TypeInfo {

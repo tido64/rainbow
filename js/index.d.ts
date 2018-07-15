@@ -30,23 +30,6 @@ declare namespace Duktape {
 }
 
 declare namespace Rainbow {
-  export class Animation {
-    private readonly $type: "Rainbow.Animation";
-    constructor(sprite: Sprite, frames: number[], fps: number, delay: number);
-    currentFrame(): number;
-    frameRate(): number;
-    sprite(): Sprite;
-    setCallback(callback: (animation: Animation, event: AnimationEvent) => void): void;
-    setDelay(delay: number): void;
-    setFrameRate(fps: number): void;
-    setFrames(frames: number[]): void;
-    setSprite(sprite: Sprite): void;
-    jumpTo(frame: number): void;
-    rewind(): void;
-    start(): void;
-    stop(): void;
-  }
-
   export enum AnimationEvent {
     Start = 0,
     End = 1,
@@ -85,83 +68,10 @@ declare namespace Rainbow {
     Count = 15,
   }
 
-  export class Label {
-    private readonly $type: "Rainbow.Label";
-    constructor();
-    alignment(): TextAlignment;
-    angle(): number;
-    color(): { r: number, g: number, b: number, a: number };
-    height(): number;
-    length(): number;
-    position(): { x: number, y: number };
-    scale(): number;
-    text(): string;
-    width(): number;
-    setAlignment(alignment: TextAlignment): void;
-    setColor(color: { r: number, g: number, b: number, a: number }): void;
-    setFont(font: string): void;
-    setFontSize(fontSize: number): void;
-    setPosition(position: { x: number, y: number }): void;
-    setRotation(r: number): void;
-    setScale(factor: number): void;
-    setText(text: string): void;
-    move(delta: { x: number, y: number }): void;
-  }
-
-  export class Sprite {
-    private readonly $type: "Rainbow.Sprite";
-    angle(): number;
-    color(): { r: number, g: number, b: number, a: number };
-    height(): number;
-    id(): number;
-    isFlipped(): boolean;
-    isHidden(): boolean;
-    isMirrored(): boolean;
-    pivot(): { x: number, y: number };
-    position(): { x: number, y: number };
-    scale(): { x: number, y: number };
-    width(): number;
-    setColor(color: { r: number, g: number, b: number, a: number }): void;
-    setId(id: number): void;
-    setNormal(id: number): void;
-    setPivot(pivot: { x: number, y: number }): void;
-    setPosition(position: { x: number, y: number }): void;
-    setRotation(r: number): void;
-    setScale(factor: { x: number, y: number }): void;
-    setTexture(id: number): void;
-    flip(): void;
-    hide(): void;
-    mirror(): void;
-    move(dt: { x: number, y: number }): void;
-    rotate(r: number): void;
-    show(): void;
-  }
-
-  export class SpriteBatch {
-    private readonly $type: "Rainbow.SpriteBatch";
-    constructor(count: number);
-    isVisible(): boolean;
-    setNormal(texture: Texture): void;
-    setTexture(texture: Texture): void;
-    setVisible(visible: boolean): void;
-    clear(): void;
-    createSprite(width: number, height: number): Sprite;
-    erase(i: number): void;
-    findSpriteById(id: number): Sprite;
-    swap(a: Sprite, b: Sprite): void;
-  }
-
   export enum TextAlignment {
     Left = 0,
     Right = 1,
     Center = 2,
-  }
-
-  export class Texture {
-    private readonly $type: "Rainbow.Texture";
-    constructor(path: string);
-    addRegion(x: number, y: number, width: number, height: number): number;
-    trim(): void;
   }
 
   export enum VirtualKey {
@@ -289,10 +199,100 @@ declare namespace Rainbow {
     KeyCount = 121,
   }
 
+  export class Label {
+    private readonly $type: "Rainbow.Label";
+    constructor();
+    alignment(): TextAlignment;
+    angle(): number;
+    color(): { r: number, g: number, b: number, a: number };
+    height(): number;
+    length(): number;
+    position(): { x: number, y: number };
+    scale(): number;
+    text(): string;
+    width(): number;
+    setAlignment(alignment: TextAlignment): void;
+    setColor(color: { r: number, g: number, b: number, a: number }): void;
+    setFont(font: string): void;
+    setFontSize(fontSize: number): void;
+    setPosition(position: { x: number, y: number }): void;
+    setRotation(r: number): void;
+    setScale(factor: number): void;
+    setText(text: string): void;
+    move(delta: { x: number, y: number }): void;
+  }
+
+  export class Sprite {
+    private readonly $type: "Rainbow.Sprite";
+    angle(): number;
+    color(): { r: number, g: number, b: number, a: number };
+    height(): number;
+    id(): number;
+    isFlipped(): boolean;
+    isHidden(): boolean;
+    isMirrored(): boolean;
+    pivot(): { x: number, y: number };
+    position(): { x: number, y: number };
+    scale(): { x: number, y: number };
+    width(): number;
+    setColor(color: { r: number, g: number, b: number, a: number }): void;
+    setId(id: number): void;
+    setNormal(id: number): void;
+    setPivot(pivot: { x: number, y: number }): void;
+    setPosition(position: { x: number, y: number }): void;
+    setRotation(r: number): void;
+    setScale(factor: { x: number, y: number }): void;
+    setTexture(id: number): void;
+    flip(): void;
+    hide(): void;
+    mirror(): void;
+    move(dt: { x: number, y: number }): void;
+    rotate(r: number): void;
+    show(): void;
+  }
+
+  export class Texture {
+    private readonly $type: "Rainbow.Texture";
+    constructor(path: string);
+    addRegion(x: number, y: number, width: number, height: number): number;
+    trim(): void;
+  }
+
+  export class Animation {
+    private readonly $type: "Rainbow.Animation";
+    constructor(sprite: Sprite, frames: number[], fps: number, delay: number);
+    currentFrame(): number;
+    frameRate(): number;
+    sprite(): Sprite;
+    setCallback(callback: (animation: Animation, event: AnimationEvent) => void): void;
+    setDelay(delay: number): void;
+    setFrameRate(fps: number): void;
+    setFrames(frames: number[]): void;
+    setSprite(sprite: Sprite): void;
+    jumpTo(frame: number): void;
+    rewind(): void;
+    start(): void;
+    stop(): void;
+  }
+
+  export class SpriteBatch {
+    private readonly $type: "Rainbow.SpriteBatch";
+    constructor(count: number);
+    isVisible(): boolean;
+    setNormal(texture: Texture): void;
+    setTexture(texture: Texture): void;
+    setVisible(visible: boolean): void;
+    clear(): void;
+    createSprite(width: number, height: number): Sprite;
+    erase(i: number): void;
+    findSpriteById(id: number): Sprite;
+    swap(a: Sprite, b: Sprite): void;
+  }
+
   export namespace Audio {
     function loadSound(path: string): Sound | undefined;
     function loadStream(path: string): Sound | undefined;
-    function release(sound: Sound): undefined;
+    function release(sound: Sound): void;
     function isPaused(channel: Channel): boolean;
     function isPlaying(channel: Channel): boolean;
     function setLoopCount(channel: Channel, count: number): void;

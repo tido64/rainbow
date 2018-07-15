@@ -25,135 +25,6 @@
 // clang-format off
 
 template <>
-void rainbow::duk::register_module<rainbow::Animation>(duk_context* ctx, duk_idx_t rainbow)
-{
-    duk::push_constructor<Animation, SpriteRef, Animation::Frames, uint32_t, int>(ctx);
-    duk::put_prototype<Animation, Allocation::HeapAllocated>(ctx, [](duk_context* ctx) {
-        duk_push_c_function(
-            ctx,
-            [](duk_context* ctx) -> duk_ret_t {
-                auto obj = duk::push_this<Animation>(ctx);
-                auto result = obj->current_frame();
-                duk::push(ctx, result);
-                return 1;
-            },
-            0);
-        duk::put_prop_literal(ctx, -2, "currentFrame");
-        duk_push_c_function(
-            ctx,
-            [](duk_context* ctx) -> duk_ret_t {
-                auto obj = duk::push_this<Animation>(ctx);
-                auto result = obj->frame_rate();
-                duk::push(ctx, result);
-                return 1;
-            },
-            0);
-        duk::put_prop_literal(ctx, -2, "frameRate");
-        duk_push_c_function(
-            ctx,
-            [](duk_context* ctx) -> duk_ret_t {
-                auto obj = duk::push_this<Animation>(ctx);
-                auto result = obj->sprite();
-                duk::push(ctx, result);
-                return 1;
-            },
-            0);
-        duk::put_prop_literal(ctx, -2, "sprite");
-        duk_push_c_function(
-            ctx,
-            [](duk_context* ctx) -> duk_ret_t {
-                auto obj = duk::push_this<Animation>(ctx);
-                auto args = duk::get_args<Animation::Callback>(ctx);
-                obj->set_callback(duk::forward(std::get<0>(args)));
-                return 0;
-            },
-            1);
-        duk::put_prop_literal(ctx, -2, "setCallback");
-        duk_push_c_function(
-            ctx,
-            [](duk_context* ctx) -> duk_ret_t {
-                auto obj = duk::push_this<Animation>(ctx);
-                auto args = duk::get_args<int>(ctx);
-                obj->set_delay(duk::forward(std::get<0>(args)));
-                return 0;
-            },
-            1);
-        duk::put_prop_literal(ctx, -2, "setDelay");
-        duk_push_c_function(
-            ctx,
-            [](duk_context* ctx) -> duk_ret_t {
-                auto obj = duk::push_this<Animation>(ctx);
-                auto args = duk::get_args<uint32_t>(ctx);
-                obj->set_frame_rate(duk::forward(std::get<0>(args)));
-                return 0;
-            },
-            1);
-        duk::put_prop_literal(ctx, -2, "setFrameRate");
-        duk_push_c_function(
-            ctx,
-            [](duk_context* ctx) -> duk_ret_t {
-                auto obj = duk::push_this<Animation>(ctx);
-                auto args = duk::get_args<Animation::Frames>(ctx);
-                obj->set_frames(duk::forward(std::get<0>(args)));
-                return 0;
-            },
-            1);
-        duk::put_prop_literal(ctx, -2, "setFrames");
-        duk_push_c_function(
-            ctx,
-            [](duk_context* ctx) -> duk_ret_t {
-                auto obj = duk::push_this<Animation>(ctx);
-                auto args = duk::get_args<SpriteRef>(ctx);
-                obj->set_sprite(duk::forward(std::get<0>(args)));
-                return 0;
-            },
-            1);
-        duk::put_prop_literal(ctx, -2, "setSprite");
-        duk_push_c_function(
-            ctx,
-            [](duk_context* ctx) -> duk_ret_t {
-                auto obj = duk::push_this<Animation>(ctx);
-                auto args = duk::get_args<uint32_t>(ctx);
-                obj->jump_to(duk::forward(std::get<0>(args)));
-                return 0;
-            },
-            1);
-        duk::put_prop_literal(ctx, -2, "jumpTo");
-        duk_push_c_function(
-            ctx,
-            [](duk_context* ctx) -> duk_ret_t {
-                auto obj = duk::push_this<Animation>(ctx);
-                obj->rewind();
-                return 0;
-            },
-            0);
-        duk::put_prop_literal(ctx, -2, "rewind");
-        duk_push_c_function(
-            ctx,
-            [](duk_context* ctx) -> duk_ret_t {
-                auto obj = duk::push_this<Animation>(ctx);
-                obj->start();
-                return 0;
-            },
-            0);
-        duk::put_prop_literal(ctx, -2, "start");
-        duk_push_c_function(
-            ctx,
-            [](duk_context* ctx) -> duk_ret_t {
-                auto obj = duk::push_this<Animation>(ctx);
-                obj->stop();
-                return 0;
-            },
-            0);
-        duk::put_prop_literal(ctx, -2, "stop");
-        duk::push_literal(ctx, "Rainbow.Animation");
-        duk::put_prop_literal(ctx, -2, DUKR_WELLKNOWN_SYMBOL_TOSTRINGTAG);
-    });
-    duk_freeze(ctx, -1);
-    duk::put_prop_literal(ctx, rainbow, "Animation");
-}
-
-template <>
 void rainbow::duk::register_module<rainbow::AnimationEvent>(duk_context* ctx, duk_idx_t rainbow)
 {
     const auto obj_idx = duk_push_bare_object(ctx);
@@ -233,6 +104,272 @@ void rainbow::duk::register_module<rainbow::ControllerButton>(duk_context* ctx, 
     duk::put_prop_literal(ctx, obj_idx, "Count");
     duk_freeze(ctx, -1);
     duk::put_prop_literal(ctx, rainbow, "ControllerButton");
+}
+
+template <>
+void rainbow::duk::register_module<rainbow::TextAlignment>(duk_context* ctx, duk_idx_t rainbow)
+{
+    const auto obj_idx = duk_push_bare_object(ctx);
+    duk_push_int(ctx, static_cast<int>(TextAlignment::Left));
+    duk::put_prop_literal(ctx, obj_idx, "Left");
+    duk_push_int(ctx, static_cast<int>(TextAlignment::Right));
+    duk::put_prop_literal(ctx, obj_idx, "Right");
+    duk_push_int(ctx, static_cast<int>(TextAlignment::Center));
+    duk::put_prop_literal(ctx, obj_idx, "Center");
+    duk_freeze(ctx, -1);
+    duk::put_prop_literal(ctx, rainbow, "TextAlignment");
+}
+
+template <>
+void rainbow::duk::register_module<rainbow::VirtualKey>(duk_context* ctx, duk_idx_t rainbow)
+{
+    const auto obj_idx = duk_push_bare_object(ctx);
+    duk_push_int(ctx, static_cast<int>(VirtualKey::Unknown));
+    duk::put_prop_literal(ctx, obj_idx, "Unknown");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::A));
+    duk::put_prop_literal(ctx, obj_idx, "A");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::B));
+    duk::put_prop_literal(ctx, obj_idx, "B");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::C));
+    duk::put_prop_literal(ctx, obj_idx, "C");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::D));
+    duk::put_prop_literal(ctx, obj_idx, "D");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::E));
+    duk::put_prop_literal(ctx, obj_idx, "E");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::F));
+    duk::put_prop_literal(ctx, obj_idx, "F");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::G));
+    duk::put_prop_literal(ctx, obj_idx, "G");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::H));
+    duk::put_prop_literal(ctx, obj_idx, "H");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::I));
+    duk::put_prop_literal(ctx, obj_idx, "I");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::J));
+    duk::put_prop_literal(ctx, obj_idx, "J");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::K));
+    duk::put_prop_literal(ctx, obj_idx, "K");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::L));
+    duk::put_prop_literal(ctx, obj_idx, "L");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::M));
+    duk::put_prop_literal(ctx, obj_idx, "M");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::N));
+    duk::put_prop_literal(ctx, obj_idx, "N");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::O));
+    duk::put_prop_literal(ctx, obj_idx, "O");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::P));
+    duk::put_prop_literal(ctx, obj_idx, "P");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::Q));
+    duk::put_prop_literal(ctx, obj_idx, "Q");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::R));
+    duk::put_prop_literal(ctx, obj_idx, "R");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::S));
+    duk::put_prop_literal(ctx, obj_idx, "S");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::T));
+    duk::put_prop_literal(ctx, obj_idx, "T");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::U));
+    duk::put_prop_literal(ctx, obj_idx, "U");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::V));
+    duk::put_prop_literal(ctx, obj_idx, "V");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::W));
+    duk::put_prop_literal(ctx, obj_idx, "W");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::X));
+    duk::put_prop_literal(ctx, obj_idx, "X");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::Y));
+    duk::put_prop_literal(ctx, obj_idx, "Y");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::Z));
+    duk::put_prop_literal(ctx, obj_idx, "Z");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::Number1));
+    duk::put_prop_literal(ctx, obj_idx, "Number1");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::Number2));
+    duk::put_prop_literal(ctx, obj_idx, "Number2");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::Number3));
+    duk::put_prop_literal(ctx, obj_idx, "Number3");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::Number4));
+    duk::put_prop_literal(ctx, obj_idx, "Number4");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::Number5));
+    duk::put_prop_literal(ctx, obj_idx, "Number5");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::Number6));
+    duk::put_prop_literal(ctx, obj_idx, "Number6");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::Number7));
+    duk::put_prop_literal(ctx, obj_idx, "Number7");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::Number8));
+    duk::put_prop_literal(ctx, obj_idx, "Number8");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::Number9));
+    duk::put_prop_literal(ctx, obj_idx, "Number9");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::Number0));
+    duk::put_prop_literal(ctx, obj_idx, "Number0");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::Return));
+    duk::put_prop_literal(ctx, obj_idx, "Return");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::Escape));
+    duk::put_prop_literal(ctx, obj_idx, "Escape");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::Backspace));
+    duk::put_prop_literal(ctx, obj_idx, "Backspace");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::Tab));
+    duk::put_prop_literal(ctx, obj_idx, "Tab");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::Space));
+    duk::put_prop_literal(ctx, obj_idx, "Space");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::Minus));
+    duk::put_prop_literal(ctx, obj_idx, "Minus");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::Equals));
+    duk::put_prop_literal(ctx, obj_idx, "Equals");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::LeftBracket));
+    duk::put_prop_literal(ctx, obj_idx, "LeftBracket");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::RightBracket));
+    duk::put_prop_literal(ctx, obj_idx, "RightBracket");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::Backslash));
+    duk::put_prop_literal(ctx, obj_idx, "Backslash");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::Semicolon));
+    duk::put_prop_literal(ctx, obj_idx, "Semicolon");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::Apostrophe));
+    duk::put_prop_literal(ctx, obj_idx, "Apostrophe");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::Grave));
+    duk::put_prop_literal(ctx, obj_idx, "Grave");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::Comma));
+    duk::put_prop_literal(ctx, obj_idx, "Comma");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::Period));
+    duk::put_prop_literal(ctx, obj_idx, "Period");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::Slash));
+    duk::put_prop_literal(ctx, obj_idx, "Slash");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::CapsLock));
+    duk::put_prop_literal(ctx, obj_idx, "CapsLock");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::F1));
+    duk::put_prop_literal(ctx, obj_idx, "F1");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::F2));
+    duk::put_prop_literal(ctx, obj_idx, "F2");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::F3));
+    duk::put_prop_literal(ctx, obj_idx, "F3");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::F4));
+    duk::put_prop_literal(ctx, obj_idx, "F4");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::F5));
+    duk::put_prop_literal(ctx, obj_idx, "F5");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::F6));
+    duk::put_prop_literal(ctx, obj_idx, "F6");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::F7));
+    duk::put_prop_literal(ctx, obj_idx, "F7");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::F8));
+    duk::put_prop_literal(ctx, obj_idx, "F8");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::F9));
+    duk::put_prop_literal(ctx, obj_idx, "F9");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::F10));
+    duk::put_prop_literal(ctx, obj_idx, "F10");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::F11));
+    duk::put_prop_literal(ctx, obj_idx, "F11");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::F12));
+    duk::put_prop_literal(ctx, obj_idx, "F12");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::PrintScreen));
+    duk::put_prop_literal(ctx, obj_idx, "PrintScreen");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::ScrollLock));
+    duk::put_prop_literal(ctx, obj_idx, "ScrollLock");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::Pause));
+    duk::put_prop_literal(ctx, obj_idx, "Pause");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::Insert));
+    duk::put_prop_literal(ctx, obj_idx, "Insert");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::Home));
+    duk::put_prop_literal(ctx, obj_idx, "Home");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::PageUp));
+    duk::put_prop_literal(ctx, obj_idx, "PageUp");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::Delete));
+    duk::put_prop_literal(ctx, obj_idx, "Delete");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::End));
+    duk::put_prop_literal(ctx, obj_idx, "End");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::PageDown));
+    duk::put_prop_literal(ctx, obj_idx, "PageDown");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::Right));
+    duk::put_prop_literal(ctx, obj_idx, "Right");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::Left));
+    duk::put_prop_literal(ctx, obj_idx, "Left");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::Down));
+    duk::put_prop_literal(ctx, obj_idx, "Down");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::Up));
+    duk::put_prop_literal(ctx, obj_idx, "Up");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::NumLock));
+    duk::put_prop_literal(ctx, obj_idx, "NumLock");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::KP_Divide));
+    duk::put_prop_literal(ctx, obj_idx, "KP_Divide");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::KP_Multiply));
+    duk::put_prop_literal(ctx, obj_idx, "KP_Multiply");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::KP_Minus));
+    duk::put_prop_literal(ctx, obj_idx, "KP_Minus");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::KP_Plus));
+    duk::put_prop_literal(ctx, obj_idx, "KP_Plus");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::KP_Enter));
+    duk::put_prop_literal(ctx, obj_idx, "KP_Enter");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::KP_1));
+    duk::put_prop_literal(ctx, obj_idx, "KP_1");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::KP_2));
+    duk::put_prop_literal(ctx, obj_idx, "KP_2");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::KP_3));
+    duk::put_prop_literal(ctx, obj_idx, "KP_3");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::KP_4));
+    duk::put_prop_literal(ctx, obj_idx, "KP_4");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::KP_5));
+    duk::put_prop_literal(ctx, obj_idx, "KP_5");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::KP_6));
+    duk::put_prop_literal(ctx, obj_idx, "KP_6");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::KP_7));
+    duk::put_prop_literal(ctx, obj_idx, "KP_7");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::KP_8));
+    duk::put_prop_literal(ctx, obj_idx, "KP_8");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::KP_9));
+    duk::put_prop_literal(ctx, obj_idx, "KP_9");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::KP_0));
+    duk::put_prop_literal(ctx, obj_idx, "KP_0");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::KP_Period));
+    duk::put_prop_literal(ctx, obj_idx, "KP_Period");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::LessThan));
+    duk::put_prop_literal(ctx, obj_idx, "LessThan");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::Application));
+    duk::put_prop_literal(ctx, obj_idx, "Application");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::Power));
+    duk::put_prop_literal(ctx, obj_idx, "Power");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::KP_Equals));
+    duk::put_prop_literal(ctx, obj_idx, "KP_Equals");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::F13));
+    duk::put_prop_literal(ctx, obj_idx, "F13");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::F14));
+    duk::put_prop_literal(ctx, obj_idx, "F14");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::F15));
+    duk::put_prop_literal(ctx, obj_idx, "F15");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::F16));
+    duk::put_prop_literal(ctx, obj_idx, "F16");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::F17));
+    duk::put_prop_literal(ctx, obj_idx, "F17");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::F18));
+    duk::put_prop_literal(ctx, obj_idx, "F18");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::F19));
+    duk::put_prop_literal(ctx, obj_idx, "F19");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::F20));
+    duk::put_prop_literal(ctx, obj_idx, "F20");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::F21));
+    duk::put_prop_literal(ctx, obj_idx, "F21");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::F22));
+    duk::put_prop_literal(ctx, obj_idx, "F22");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::F23));
+    duk::put_prop_literal(ctx, obj_idx, "F23");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::F24));
+    duk::put_prop_literal(ctx, obj_idx, "F24");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::LeftCtrl));
+    duk::put_prop_literal(ctx, obj_idx, "LeftCtrl");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::LeftShift));
+    duk::put_prop_literal(ctx, obj_idx, "LeftShift");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::LeftAlt));
+    duk::put_prop_literal(ctx, obj_idx, "LeftAlt");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::LeftSuper));
+    duk::put_prop_literal(ctx, obj_idx, "LeftSuper");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::RightCtrl));
+    duk::put_prop_literal(ctx, obj_idx, "RightCtrl");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::RightShift));
+    duk::put_prop_literal(ctx, obj_idx, "RightShift");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::RightAlt));
+    duk::put_prop_literal(ctx, obj_idx, "RightAlt");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::RightSuper));
+    duk::put_prop_literal(ctx, obj_idx, "RightSuper");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::Mode));
+    duk::put_prop_literal(ctx, obj_idx, "Mode");
+    duk_push_int(ctx, static_cast<int>(VirtualKey::KeyCount));
+    duk::put_prop_literal(ctx, obj_idx, "KeyCount");
+    duk_freeze(ctx, -1);
+    duk::put_prop_literal(ctx, rainbow, "VirtualKey");
 }
 
 template <>
@@ -686,6 +823,167 @@ void rainbow::duk::register_module<rainbow::SpriteRef>(duk_context* ctx, duk_idx
 }
 
 template <>
+void rainbow::duk::register_module<rainbow::SharedPtr<rainbow::TextureAtlas>>(duk_context* ctx, duk_idx_t rainbow)
+{
+    duk::push_constructor<SharedPtr<rainbow::TextureAtlas>, czstring>(ctx);
+    duk::put_prototype<SharedPtr<rainbow::TextureAtlas>, Allocation::HeapAllocated>(ctx, [](duk_context* ctx) {
+        duk_push_c_function(
+            ctx,
+            [](duk_context* ctx) -> duk_ret_t {
+                auto obj = duk::push_this<SharedPtr<rainbow::TextureAtlas>>(ctx);
+                auto args = duk::get_args<int, int, int, int>(ctx);
+                auto result = obj->add_region(duk::forward(std::get<0>(args)), duk::forward(std::get<1>(args)), duk::forward(std::get<2>(args)), duk::forward(std::get<3>(args)));
+                duk::push(ctx, result);
+                return 1;
+            },
+            4);
+        duk::put_prop_literal(ctx, -2, "addRegion");
+        duk_push_c_function(
+            ctx,
+            [](duk_context* ctx) -> duk_ret_t {
+                auto obj = duk::push_this<SharedPtr<rainbow::TextureAtlas>>(ctx);
+                obj->trim();
+                return 0;
+            },
+            0);
+        duk::put_prop_literal(ctx, -2, "trim");
+        duk::push_literal(ctx, "Rainbow.Texture");
+        duk::put_prop_literal(ctx, -2, DUKR_WELLKNOWN_SYMBOL_TOSTRINGTAG);
+    });
+    duk_freeze(ctx, -1);
+    duk::put_prop_literal(ctx, rainbow, "Texture");
+}
+
+template <>
+void rainbow::duk::register_module<rainbow::Animation>(duk_context* ctx, duk_idx_t rainbow)
+{
+    duk::push_constructor<Animation, SpriteRef, Animation::Frames, uint32_t, int>(ctx);
+    duk::put_prototype<Animation, Allocation::HeapAllocated>(ctx, [](duk_context* ctx) {
+        duk_push_c_function(
+            ctx,
+            [](duk_context* ctx) -> duk_ret_t {
+                auto obj = duk::push_this<Animation>(ctx);
+                auto result = obj->current_frame();
+                duk::push(ctx, result);
+                return 1;
+            },
+            0);
+        duk::put_prop_literal(ctx, -2, "currentFrame");
+        duk_push_c_function(
+            ctx,
+            [](duk_context* ctx) -> duk_ret_t {
+                auto obj = duk::push_this<Animation>(ctx);
+                auto result = obj->frame_rate();
+                duk::push(ctx, result);
+                return 1;
+            },
+            0);
+        duk::put_prop_literal(ctx, -2, "frameRate");
+        duk_push_c_function(
+            ctx,
+            [](duk_context* ctx) -> duk_ret_t {
+                auto obj = duk::push_this<Animation>(ctx);
+                auto result = obj->sprite();
+                duk::push(ctx, result);
+                return 1;
+            },
+            0);
+        duk::put_prop_literal(ctx, -2, "sprite");
+        duk_push_c_function(
+            ctx,
+            [](duk_context* ctx) -> duk_ret_t {
+                auto obj = duk::push_this<Animation>(ctx);
+                auto args = duk::get_args<Animation::Callback>(ctx);
+                obj->set_callback(duk::forward(std::get<0>(args)));
+                return 0;
+            },
+            1);
+        duk::put_prop_literal(ctx, -2, "setCallback");
+        duk_push_c_function(
+            ctx,
+            [](duk_context* ctx) -> duk_ret_t {
+                auto obj = duk::push_this<Animation>(ctx);
+                auto args = duk::get_args<int>(ctx);
+                obj->set_delay(duk::forward(std::get<0>(args)));
+                return 0;
+            },
+            1);
+        duk::put_prop_literal(ctx, -2, "setDelay");
+        duk_push_c_function(
+            ctx,
+            [](duk_context* ctx) -> duk_ret_t {
+                auto obj = duk::push_this<Animation>(ctx);
+                auto args = duk::get_args<uint32_t>(ctx);
+                obj->set_frame_rate(duk::forward(std::get<0>(args)));
+                return 0;
+            },
+            1);
+        duk::put_prop_literal(ctx, -2, "setFrameRate");
+        duk_push_c_function(
+            ctx,
+            [](duk_context* ctx) -> duk_ret_t {
+                auto obj = duk::push_this<Animation>(ctx);
+                auto args = duk::get_args<Animation::Frames>(ctx);
+                obj->set_frames(duk::forward(std::get<0>(args)));
+                return 0;
+            },
+            1);
+        duk::put_prop_literal(ctx, -2, "setFrames");
+        duk_push_c_function(
+            ctx,
+            [](duk_context* ctx) -> duk_ret_t {
+                auto obj = duk::push_this<Animation>(ctx);
+                auto args = duk::get_args<SpriteRef>(ctx);
+                obj->set_sprite(duk::forward(std::get<0>(args)));
+                return 0;
+            },
+            1);
+        duk::put_prop_literal(ctx, -2, "setSprite");
+        duk_push_c_function(
+            ctx,
+            [](duk_context* ctx) -> duk_ret_t {
+                auto obj = duk::push_this<Animation>(ctx);
+                auto args = duk::get_args<uint32_t>(ctx);
+                obj->jump_to(duk::forward(std::get<0>(args)));
+                return 0;
+            },
+            1);
+        duk::put_prop_literal(ctx, -2, "jumpTo");
+        duk_push_c_function(
+            ctx,
+            [](duk_context* ctx) -> duk_ret_t {
+                auto obj = duk::push_this<Animation>(ctx);
+                obj->rewind();
+                return 0;
+            },
+            0);
+        duk::put_prop_literal(ctx, -2, "rewind");
+        duk_push_c_function(
+            ctx,
+            [](duk_context* ctx) -> duk_ret_t {
+                auto obj = duk::push_this<Animation>(ctx);
+                obj->start();
+                return 0;
+            },
+            0);
+        duk::put_prop_literal(ctx, -2, "start");
+        duk_push_c_function(
+            ctx,
+            [](duk_context* ctx) -> duk_ret_t {
+                auto obj = duk::push_this<Animation>(ctx);
+                obj->stop();
+                return 0;
+            },
+            0);
+        duk::put_prop_literal(ctx, -2, "stop");
+        duk::push_literal(ctx, "Rainbow.Animation");
+        duk::put_prop_literal(ctx, -2, DUKR_WELLKNOWN_SYMBOL_TOSTRINGTAG);
+    });
+    duk_freeze(ctx, -1);
+    duk::put_prop_literal(ctx, rainbow, "Animation");
+}
+
+template <>
 void rainbow::duk::register_module<rainbow::SpriteBatch>(duk_context* ctx, duk_idx_t rainbow)
 {
     duk::push_constructor<SpriteBatch, uint32_t>(ctx);
@@ -788,318 +1086,20 @@ void rainbow::duk::register_module<rainbow::SpriteBatch>(duk_context* ctx, duk_i
     duk::put_prop_literal(ctx, rainbow, "SpriteBatch");
 }
 
-template <>
-void rainbow::duk::register_module<rainbow::TextAlignment>(duk_context* ctx, duk_idx_t rainbow)
-{
-    const auto obj_idx = duk_push_bare_object(ctx);
-    duk_push_int(ctx, static_cast<int>(TextAlignment::Left));
-    duk::put_prop_literal(ctx, obj_idx, "Left");
-    duk_push_int(ctx, static_cast<int>(TextAlignment::Right));
-    duk::put_prop_literal(ctx, obj_idx, "Right");
-    duk_push_int(ctx, static_cast<int>(TextAlignment::Center));
-    duk::put_prop_literal(ctx, obj_idx, "Center");
-    duk_freeze(ctx, -1);
-    duk::put_prop_literal(ctx, rainbow, "TextAlignment");
-}
-
-template <>
-void rainbow::duk::register_module<rainbow::SharedPtr<rainbow::TextureAtlas>>(duk_context* ctx, duk_idx_t rainbow)
-{
-    duk::push_constructor<SharedPtr<rainbow::TextureAtlas>, czstring>(ctx);
-    duk::put_prototype<SharedPtr<rainbow::TextureAtlas>, Allocation::HeapAllocated>(ctx, [](duk_context* ctx) {
-        duk_push_c_function(
-            ctx,
-            [](duk_context* ctx) -> duk_ret_t {
-                auto obj = duk::push_this<SharedPtr<rainbow::TextureAtlas>>(ctx);
-                auto args = duk::get_args<int, int, int, int>(ctx);
-                auto result = obj->add_region(duk::forward(std::get<0>(args)), duk::forward(std::get<1>(args)), duk::forward(std::get<2>(args)), duk::forward(std::get<3>(args)));
-                duk::push(ctx, result);
-                return 1;
-            },
-            4);
-        duk::put_prop_literal(ctx, -2, "addRegion");
-        duk_push_c_function(
-            ctx,
-            [](duk_context* ctx) -> duk_ret_t {
-                auto obj = duk::push_this<SharedPtr<rainbow::TextureAtlas>>(ctx);
-                obj->trim();
-                return 0;
-            },
-            0);
-        duk::put_prop_literal(ctx, -2, "trim");
-        duk::push_literal(ctx, "Rainbow.Texture");
-        duk::put_prop_literal(ctx, -2, DUKR_WELLKNOWN_SYMBOL_TOSTRINGTAG);
-    });
-    duk_freeze(ctx, -1);
-    duk::put_prop_literal(ctx, rainbow, "Texture");
-}
-
-template <>
-void rainbow::duk::register_module<rainbow::VirtualKey>(duk_context* ctx, duk_idx_t rainbow)
-{
-    const auto obj_idx = duk_push_bare_object(ctx);
-    duk_push_int(ctx, static_cast<int>(VirtualKey::Unknown));
-    duk::put_prop_literal(ctx, obj_idx, "Unknown");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::A));
-    duk::put_prop_literal(ctx, obj_idx, "A");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::B));
-    duk::put_prop_literal(ctx, obj_idx, "B");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::C));
-    duk::put_prop_literal(ctx, obj_idx, "C");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::D));
-    duk::put_prop_literal(ctx, obj_idx, "D");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::E));
-    duk::put_prop_literal(ctx, obj_idx, "E");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::F));
-    duk::put_prop_literal(ctx, obj_idx, "F");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::G));
-    duk::put_prop_literal(ctx, obj_idx, "G");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::H));
-    duk::put_prop_literal(ctx, obj_idx, "H");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::I));
-    duk::put_prop_literal(ctx, obj_idx, "I");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::J));
-    duk::put_prop_literal(ctx, obj_idx, "J");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::K));
-    duk::put_prop_literal(ctx, obj_idx, "K");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::L));
-    duk::put_prop_literal(ctx, obj_idx, "L");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::M));
-    duk::put_prop_literal(ctx, obj_idx, "M");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::N));
-    duk::put_prop_literal(ctx, obj_idx, "N");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::O));
-    duk::put_prop_literal(ctx, obj_idx, "O");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::P));
-    duk::put_prop_literal(ctx, obj_idx, "P");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::Q));
-    duk::put_prop_literal(ctx, obj_idx, "Q");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::R));
-    duk::put_prop_literal(ctx, obj_idx, "R");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::S));
-    duk::put_prop_literal(ctx, obj_idx, "S");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::T));
-    duk::put_prop_literal(ctx, obj_idx, "T");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::U));
-    duk::put_prop_literal(ctx, obj_idx, "U");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::V));
-    duk::put_prop_literal(ctx, obj_idx, "V");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::W));
-    duk::put_prop_literal(ctx, obj_idx, "W");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::X));
-    duk::put_prop_literal(ctx, obj_idx, "X");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::Y));
-    duk::put_prop_literal(ctx, obj_idx, "Y");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::Z));
-    duk::put_prop_literal(ctx, obj_idx, "Z");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::Number1));
-    duk::put_prop_literal(ctx, obj_idx, "Number1");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::Number2));
-    duk::put_prop_literal(ctx, obj_idx, "Number2");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::Number3));
-    duk::put_prop_literal(ctx, obj_idx, "Number3");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::Number4));
-    duk::put_prop_literal(ctx, obj_idx, "Number4");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::Number5));
-    duk::put_prop_literal(ctx, obj_idx, "Number5");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::Number6));
-    duk::put_prop_literal(ctx, obj_idx, "Number6");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::Number7));
-    duk::put_prop_literal(ctx, obj_idx, "Number7");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::Number8));
-    duk::put_prop_literal(ctx, obj_idx, "Number8");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::Number9));
-    duk::put_prop_literal(ctx, obj_idx, "Number9");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::Number0));
-    duk::put_prop_literal(ctx, obj_idx, "Number0");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::Return));
-    duk::put_prop_literal(ctx, obj_idx, "Return");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::Escape));
-    duk::put_prop_literal(ctx, obj_idx, "Escape");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::Backspace));
-    duk::put_prop_literal(ctx, obj_idx, "Backspace");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::Tab));
-    duk::put_prop_literal(ctx, obj_idx, "Tab");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::Space));
-    duk::put_prop_literal(ctx, obj_idx, "Space");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::Minus));
-    duk::put_prop_literal(ctx, obj_idx, "Minus");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::Equals));
-    duk::put_prop_literal(ctx, obj_idx, "Equals");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::LeftBracket));
-    duk::put_prop_literal(ctx, obj_idx, "LeftBracket");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::RightBracket));
-    duk::put_prop_literal(ctx, obj_idx, "RightBracket");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::Backslash));
-    duk::put_prop_literal(ctx, obj_idx, "Backslash");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::Semicolon));
-    duk::put_prop_literal(ctx, obj_idx, "Semicolon");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::Apostrophe));
-    duk::put_prop_literal(ctx, obj_idx, "Apostrophe");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::Grave));
-    duk::put_prop_literal(ctx, obj_idx, "Grave");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::Comma));
-    duk::put_prop_literal(ctx, obj_idx, "Comma");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::Period));
-    duk::put_prop_literal(ctx, obj_idx, "Period");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::Slash));
-    duk::put_prop_literal(ctx, obj_idx, "Slash");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::CapsLock));
-    duk::put_prop_literal(ctx, obj_idx, "CapsLock");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::F1));
-    duk::put_prop_literal(ctx, obj_idx, "F1");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::F2));
-    duk::put_prop_literal(ctx, obj_idx, "F2");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::F3));
-    duk::put_prop_literal(ctx, obj_idx, "F3");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::F4));
-    duk::put_prop_literal(ctx, obj_idx, "F4");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::F5));
-    duk::put_prop_literal(ctx, obj_idx, "F5");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::F6));
-    duk::put_prop_literal(ctx, obj_idx, "F6");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::F7));
-    duk::put_prop_literal(ctx, obj_idx, "F7");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::F8));
-    duk::put_prop_literal(ctx, obj_idx, "F8");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::F9));
-    duk::put_prop_literal(ctx, obj_idx, "F9");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::F10));
-    duk::put_prop_literal(ctx, obj_idx, "F10");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::F11));
-    duk::put_prop_literal(ctx, obj_idx, "F11");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::F12));
-    duk::put_prop_literal(ctx, obj_idx, "F12");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::PrintScreen));
-    duk::put_prop_literal(ctx, obj_idx, "PrintScreen");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::ScrollLock));
-    duk::put_prop_literal(ctx, obj_idx, "ScrollLock");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::Pause));
-    duk::put_prop_literal(ctx, obj_idx, "Pause");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::Insert));
-    duk::put_prop_literal(ctx, obj_idx, "Insert");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::Home));
-    duk::put_prop_literal(ctx, obj_idx, "Home");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::PageUp));
-    duk::put_prop_literal(ctx, obj_idx, "PageUp");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::Delete));
-    duk::put_prop_literal(ctx, obj_idx, "Delete");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::End));
-    duk::put_prop_literal(ctx, obj_idx, "End");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::PageDown));
-    duk::put_prop_literal(ctx, obj_idx, "PageDown");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::Right));
-    duk::put_prop_literal(ctx, obj_idx, "Right");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::Left));
-    duk::put_prop_literal(ctx, obj_idx, "Left");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::Down));
-    duk::put_prop_literal(ctx, obj_idx, "Down");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::Up));
-    duk::put_prop_literal(ctx, obj_idx, "Up");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::NumLock));
-    duk::put_prop_literal(ctx, obj_idx, "NumLock");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::KP_Divide));
-    duk::put_prop_literal(ctx, obj_idx, "KP_Divide");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::KP_Multiply));
-    duk::put_prop_literal(ctx, obj_idx, "KP_Multiply");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::KP_Minus));
-    duk::put_prop_literal(ctx, obj_idx, "KP_Minus");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::KP_Plus));
-    duk::put_prop_literal(ctx, obj_idx, "KP_Plus");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::KP_Enter));
-    duk::put_prop_literal(ctx, obj_idx, "KP_Enter");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::KP_1));
-    duk::put_prop_literal(ctx, obj_idx, "KP_1");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::KP_2));
-    duk::put_prop_literal(ctx, obj_idx, "KP_2");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::KP_3));
-    duk::put_prop_literal(ctx, obj_idx, "KP_3");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::KP_4));
-    duk::put_prop_literal(ctx, obj_idx, "KP_4");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::KP_5));
-    duk::put_prop_literal(ctx, obj_idx, "KP_5");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::KP_6));
-    duk::put_prop_literal(ctx, obj_idx, "KP_6");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::KP_7));
-    duk::put_prop_literal(ctx, obj_idx, "KP_7");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::KP_8));
-    duk::put_prop_literal(ctx, obj_idx, "KP_8");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::KP_9));
-    duk::put_prop_literal(ctx, obj_idx, "KP_9");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::KP_0));
-    duk::put_prop_literal(ctx, obj_idx, "KP_0");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::KP_Period));
-    duk::put_prop_literal(ctx, obj_idx, "KP_Period");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::LessThan));
-    duk::put_prop_literal(ctx, obj_idx, "LessThan");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::Application));
-    duk::put_prop_literal(ctx, obj_idx, "Application");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::Power));
-    duk::put_prop_literal(ctx, obj_idx, "Power");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::KP_Equals));
-    duk::put_prop_literal(ctx, obj_idx, "KP_Equals");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::F13));
-    duk::put_prop_literal(ctx, obj_idx, "F13");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::F14));
-    duk::put_prop_literal(ctx, obj_idx, "F14");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::F15));
-    duk::put_prop_literal(ctx, obj_idx, "F15");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::F16));
-    duk::put_prop_literal(ctx, obj_idx, "F16");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::F17));
-    duk::put_prop_literal(ctx, obj_idx, "F17");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::F18));
-    duk::put_prop_literal(ctx, obj_idx, "F18");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::F19));
-    duk::put_prop_literal(ctx, obj_idx, "F19");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::F20));
-    duk::put_prop_literal(ctx, obj_idx, "F20");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::F21));
-    duk::put_prop_literal(ctx, obj_idx, "F21");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::F22));
-    duk::put_prop_literal(ctx, obj_idx, "F22");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::F23));
-    duk::put_prop_literal(ctx, obj_idx, "F23");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::F24));
-    duk::put_prop_literal(ctx, obj_idx, "F24");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::LeftCtrl));
-    duk::put_prop_literal(ctx, obj_idx, "LeftCtrl");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::LeftShift));
-    duk::put_prop_literal(ctx, obj_idx, "LeftShift");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::LeftAlt));
-    duk::put_prop_literal(ctx, obj_idx, "LeftAlt");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::LeftSuper));
-    duk::put_prop_literal(ctx, obj_idx, "LeftSuper");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::RightCtrl));
-    duk::put_prop_literal(ctx, obj_idx, "RightCtrl");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::RightShift));
-    duk::put_prop_literal(ctx, obj_idx, "RightShift");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::RightAlt));
-    duk::put_prop_literal(ctx, obj_idx, "RightAlt");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::RightSuper));
-    duk::put_prop_literal(ctx, obj_idx, "RightSuper");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::Mode));
-    duk::put_prop_literal(ctx, obj_idx, "Mode");
-    duk_push_int(ctx, static_cast<int>(VirtualKey::KeyCount));
-    duk::put_prop_literal(ctx, obj_idx, "KeyCount");
-    duk_freeze(ctx, -1);
-    duk::put_prop_literal(ctx, rainbow, "VirtualKey");
-}
-
 namespace rainbow::duk
 {
     void register_all_modules(duk_context* ctx, duk_idx_t obj_idx)
     {
-        duk::register_module<Animation>(ctx, obj_idx);
         duk::register_module<AnimationEvent>(ctx, obj_idx);
         duk::register_module<ControllerAxis>(ctx, obj_idx);
         duk::register_module<ControllerButton>(ctx, obj_idx);
+        duk::register_module<TextAlignment>(ctx, obj_idx);
+        duk::register_module<VirtualKey>(ctx, obj_idx);
         duk::register_module<Label>(ctx, obj_idx);
         duk::register_module<SpriteRef>(ctx, obj_idx);
-        duk::register_module<SpriteBatch>(ctx, obj_idx);
-        duk::register_module<TextAlignment>(ctx, obj_idx);
         duk::register_module<SharedPtr<TextureAtlas>>(ctx, obj_idx);
-        duk::register_module<VirtualKey>(ctx, obj_idx);
+        duk::register_module<Animation>(ctx, obj_idx);
+        duk::register_module<SpriteBatch>(ctx, obj_idx);
     }
 }
 
