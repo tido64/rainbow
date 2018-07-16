@@ -198,55 +198,55 @@ TEST(InputTest, KeysArePollable)
 {
     Input input;
 
-    ASSERT_EQ(0u, input.keys_down());
+    ASSERT_EQ(input.keys_down(), 0u);
 
     input.on_key_down({VirtualKey::W, KeyMods::None});
 
-    ASSERT_EQ(1u, input.keys_down());
+    ASSERT_EQ(input.keys_down(), 1u);
     ASSERT_TRUE(input.is_down(VirtualKey::W));
 
     input.on_key_up({VirtualKey::W, KeyMods::None});
 
-    ASSERT_EQ(0u, input.keys_down());
+    ASSERT_EQ(input.keys_down(), 0u);
     ASSERT_FALSE(input.is_down(VirtualKey::W));
 
     input.on_key_down({VirtualKey::LeftShift, KeyMods::None});
 
-    ASSERT_EQ(1u, input.keys_down());
+    ASSERT_EQ(input.keys_down(), 1u);
     ASSERT_FALSE(input.is_down(VirtualKey::W));
     ASSERT_TRUE(input.is_down(VirtualKey::LeftShift));
 
     input.on_key_down({VirtualKey::LeftCtrl, KeyMods::LeftShift});
 
-    ASSERT_EQ(2u, input.keys_down());
+    ASSERT_EQ(input.keys_down(), 2u);
     ASSERT_FALSE(input.is_down(VirtualKey::W));
     ASSERT_TRUE(input.is_down(VirtualKey::LeftCtrl));
     ASSERT_TRUE(input.is_down(VirtualKey::LeftShift));
 
     input.on_key_down({VirtualKey::W, KeyMods::LeftShift | KeyMods::LeftCtrl});
 
-    ASSERT_EQ(3u, input.keys_down());
+    ASSERT_EQ(input.keys_down(), 3u);
     ASSERT_TRUE(input.is_down(VirtualKey::W));
     ASSERT_TRUE(input.is_down(VirtualKey::LeftShift));
     ASSERT_TRUE(input.is_down(VirtualKey::LeftCtrl));
 
     input.on_key_up({VirtualKey::LeftCtrl, KeyMods::LeftShift});
 
-    ASSERT_EQ(2u, input.keys_down());
+    ASSERT_EQ(input.keys_down(), 2u);
     ASSERT_TRUE(input.is_down(VirtualKey::W));
     ASSERT_FALSE(input.is_down(VirtualKey::LeftCtrl));
     ASSERT_TRUE(input.is_down(VirtualKey::LeftShift));
 
     input.on_key_up({VirtualKey::W, KeyMods::LeftShift});
 
-    ASSERT_EQ(1u, input.keys_down());
+    ASSERT_EQ(input.keys_down(), 1u);
     ASSERT_FALSE(input.is_down(VirtualKey::W));
     ASSERT_FALSE(input.is_down(VirtualKey::LeftCtrl));
     ASSERT_TRUE(input.is_down(VirtualKey::LeftShift));
 
     input.on_key_up({VirtualKey::S, KeyMods::LeftShift});
 
-    ASSERT_EQ(1u, input.keys_down());
+    ASSERT_EQ(input.keys_down(), 1u);
     ASSERT_FALSE(input.is_down(VirtualKey::S));
     ASSERT_FALSE(input.is_down(VirtualKey::W));
     ASSERT_FALSE(input.is_down(VirtualKey::LeftCtrl));
@@ -255,7 +255,7 @@ TEST(InputTest, KeysArePollable)
     input.on_key_down({VirtualKey::W, KeyMods::LeftShift});
     input.on_key_down({VirtualKey::S, KeyMods::LeftShift});
 
-    ASSERT_EQ(3u, input.keys_down());
+    ASSERT_EQ(input.keys_down(), 3u);
     ASSERT_TRUE(input.is_down(VirtualKey::S));
     ASSERT_TRUE(input.is_down(VirtualKey::W));
     ASSERT_FALSE(input.is_down(VirtualKey::LeftCtrl));

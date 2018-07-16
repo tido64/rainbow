@@ -44,16 +44,16 @@ TYPED_TEST(DataTest, EncapsulatesInMemoryData)
     Data blob = this->data_();
 
     ASSERT_TRUE(blob);
-    ASSERT_EQ(kSecretData, blob.as<char*>());
-    ASSERT_EQ(this->data_.size(), blob.size());
-    ASSERT_EQ(0, memcmp(blob.bytes(), kSecretData, blob.size()));
+    ASSERT_EQ(blob.as<char*>(), kSecretData);
+    ASSERT_EQ(blob.size(), this->data_.size());
+    ASSERT_EQ(memcmp(blob.bytes(), kSecretData, blob.size()), 0);
 
     Data moved_blob{std::move(blob)};
 
     ASSERT_FALSE(blob);
-    ASSERT_EQ(nullptr, blob.bytes());
-    ASSERT_EQ(0u, blob.size());
-    ASSERT_EQ(kSecretData, moved_blob.as<char*>());
-    ASSERT_EQ(this->data_.size(), moved_blob.size());
-    ASSERT_EQ(0, memcmp(moved_blob.bytes(), kSecretData, moved_blob.size()));
+    ASSERT_EQ(blob.bytes(), nullptr);
+    ASSERT_EQ(blob.size(), 0u);
+    ASSERT_EQ(moved_blob.as<char*>(), kSecretData);
+    ASSERT_EQ(moved_blob.size(), this->data_.size());
+    ASSERT_EQ(memcmp(moved_blob.bytes(), kSecretData, moved_blob.size()), 0);
 }

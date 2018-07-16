@@ -42,13 +42,13 @@ TYPED_TEST(PoolTest, ClearsElements)
     auto item0 = pool.construct(0);
     auto item1 = pool.construct(1);
 
-    ASSERT_EQ(2u, pool.size());
-    ASSERT_EQ(TypeParam{0}, *item0);
-    ASSERT_EQ(TypeParam{1}, *item1);
+    ASSERT_EQ(pool.size(), 2u);
+    ASSERT_EQ(*item0, TypeParam{0});
+    ASSERT_EQ(*item1, TypeParam{1});
 
     pool.clear();
 
-    ASSERT_EQ(0u, pool.size());
+    ASSERT_EQ(pool.size(), 0u);
 }
 
 TYPED_TEST(PoolTest, ReusesElements)
@@ -58,47 +58,47 @@ TYPED_TEST(PoolTest, ReusesElements)
 
     for (size_t i = 0; i < rainbow::array_size(arr); ++i)
     {
-        ASSERT_EQ(i, pool.size());
+        ASSERT_EQ(pool.size(), i);
         arr[i] = pool.construct(static_cast<int>(i));
     }
 
     pool.release(arr[2]);
 
-    ASSERT_EQ(rainbow::array_size(arr), pool.size());
-    ASSERT_EQ(TypeParam{0}, *arr[0]);
-    ASSERT_EQ(TypeParam{1}, *arr[1]);
-    ASSERT_EQ(TypeParam{kDisposed}, *arr[2]);
-    ASSERT_EQ(TypeParam{3}, *arr[3]);
-    ASSERT_EQ(TypeParam{4}, *arr[4]);
+    ASSERT_EQ(pool.size(), rainbow::array_size(arr));
+    ASSERT_EQ(*arr[0], TypeParam{0});
+    ASSERT_EQ(*arr[1], TypeParam{1});
+    ASSERT_EQ(*arr[2], TypeParam{kDisposed});
+    ASSERT_EQ(*arr[3], TypeParam{3});
+    ASSERT_EQ(*arr[4], TypeParam{4});
 
     pool.release(arr[0]);
 
-    ASSERT_EQ(rainbow::array_size(arr), pool.size());
-    ASSERT_EQ(TypeParam{kDisposed}, *arr[0]);
-    ASSERT_EQ(TypeParam{1}, *arr[1]);
-    ASSERT_EQ(TypeParam{kDisposed}, *arr[2]);
-    ASSERT_EQ(TypeParam{3}, *arr[3]);
-    ASSERT_EQ(TypeParam{4}, *arr[4]);
+    ASSERT_EQ(pool.size(), rainbow::array_size(arr));
+    ASSERT_EQ(*arr[0], TypeParam{kDisposed});
+    ASSERT_EQ(*arr[1], TypeParam{1});
+    ASSERT_EQ(*arr[2], TypeParam{kDisposed});
+    ASSERT_EQ(*arr[3], TypeParam{3});
+    ASSERT_EQ(*arr[4], TypeParam{4});
 
     pool.release(arr[4]);
 
-    ASSERT_EQ(rainbow::array_size(arr), pool.size());
-    ASSERT_EQ(TypeParam{kDisposed}, *arr[0]);
-    ASSERT_EQ(TypeParam{1}, *arr[1]);
-    ASSERT_EQ(TypeParam{kDisposed}, *arr[2]);
-    ASSERT_EQ(TypeParam{3}, *arr[3]);
-    ASSERT_EQ(TypeParam{kDisposed}, *arr[4]);
+    ASSERT_EQ(pool.size(), rainbow::array_size(arr));
+    ASSERT_EQ(*arr[0], TypeParam{kDisposed});
+    ASSERT_EQ(*arr[1], TypeParam{1});
+    ASSERT_EQ(*arr[2], TypeParam{kDisposed});
+    ASSERT_EQ(*arr[3], TypeParam{3});
+    ASSERT_EQ(*arr[4], TypeParam{kDisposed});
 
     arr[0] = pool.construct(4);
     arr[2] = pool.construct(6);
     arr[4] = pool.construct(8);
 
-    ASSERT_EQ(rainbow::array_size(arr), pool.size());
-    ASSERT_EQ(TypeParam{4}, *arr[0]);
-    ASSERT_EQ(TypeParam{1}, *arr[1]);
-    ASSERT_EQ(TypeParam{6}, *arr[2]);
-    ASSERT_EQ(TypeParam{3}, *arr[3]);
-    ASSERT_EQ(TypeParam{8}, *arr[4]);
+    ASSERT_EQ(pool.size(), rainbow::array_size(arr));
+    ASSERT_EQ(*arr[0], TypeParam{4});
+    ASSERT_EQ(*arr[1], TypeParam{1});
+    ASSERT_EQ(*arr[2], TypeParam{6});
+    ASSERT_EQ(*arr[3], TypeParam{3});
+    ASSERT_EQ(*arr[4], TypeParam{8});
 }
 
 TYPED_TEST(PoolTest, IteratesOnlyActiveElements)
@@ -114,12 +114,12 @@ TYPED_TEST(PoolTest, IteratesOnlyActiveElements)
     pool.release(arr[2]);
     pool.release(arr[4]);
 
-    ASSERT_EQ(rainbow::array_size(arr), pool.size());
-    ASSERT_EQ(TypeParam{0}, *arr[0]);
-    ASSERT_EQ(TypeParam{1}, *arr[1]);
-    ASSERT_EQ(TypeParam{kDisposed}, *arr[2]);
-    ASSERT_EQ(TypeParam{3}, *arr[3]);
-    ASSERT_EQ(TypeParam{kDisposed}, *arr[4]);
+    ASSERT_EQ(pool.size(), rainbow::array_size(arr));
+    ASSERT_EQ(*arr[0], TypeParam{0});
+    ASSERT_EQ(*arr[1], TypeParam{1});
+    ASSERT_EQ(*arr[2], TypeParam{kDisposed});
+    ASSERT_EQ(*arr[3], TypeParam{3});
+    ASSERT_EQ(*arr[4], TypeParam{kDisposed});
 
     size_t i = 0;
     for_each(pool, [&i](TypeParam& item) {
@@ -127,16 +127,16 @@ TYPED_TEST(PoolTest, IteratesOnlyActiveElements)
         ++i;
     });
 
-    ASSERT_EQ(pool.size() - 2, i);
+    ASSERT_EQ(i, pool.size() - 2);
 
     arr[4] = pool.construct(6);
 
-    ASSERT_EQ(rainbow::array_size(arr), pool.size());
-    ASSERT_EQ(TypeParam{0}, *arr[0]);
-    ASSERT_EQ(TypeParam{1}, *arr[1]);
-    ASSERT_EQ(TypeParam{kDisposed}, *arr[2]);
-    ASSERT_EQ(TypeParam{3}, *arr[3]);
-    ASSERT_EQ(TypeParam{6}, *arr[4]);
+    ASSERT_EQ(pool.size(), rainbow::array_size(arr));
+    ASSERT_EQ(*arr[0], TypeParam{0});
+    ASSERT_EQ(*arr[1], TypeParam{1});
+    ASSERT_EQ(*arr[2], TypeParam{kDisposed});
+    ASSERT_EQ(*arr[3], TypeParam{3});
+    ASSERT_EQ(*arr[4], TypeParam{6});
 
     i = 0;
     for_each(pool, [&i](TypeParam& item) {
@@ -144,5 +144,5 @@ TYPED_TEST(PoolTest, IteratesOnlyActiveElements)
         ++i;
     });
 
-    ASSERT_EQ(pool.size() - 1, i);
+    ASSERT_EQ(i, pool.size() - 1);
 }

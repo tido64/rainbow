@@ -26,7 +26,7 @@ TEST(Vec2Test, Distance)
 TEST(Vec2Test, DotProduct)
 {
     const Vec2i v0(3, 4);
-    ASSERT_EQ(25, (v0 * v0));
+    ASSERT_EQ((v0 * v0), 25);
 }
 
 TEST(Vec2Test, ZeroLength)
@@ -62,8 +62,8 @@ TEST(Vec2Test, Assigns)
     Vec2i v0;
     const Vec2i v1(5, 2);
     v0 = v1;
-    ASSERT_EQ(5, v0.x);
-    ASSERT_EQ(2, v0.y);
+    ASSERT_EQ(v0.x, 5);
+    ASSERT_EQ(v0.y, 2);
 }
 
 TEST(Vec2Test, Translates)
@@ -72,24 +72,24 @@ TEST(Vec2Test, Translates)
     const Vec2i v1(3, 4);
 
     const Vec2i v2 = v0 + v1;
-    ASSERT_NE(&v2, &v0);
-    ASSERT_NE(&v2, &v1);
-    ASSERT_EQ(4, v2.x);
-    ASSERT_EQ(6, v2.y);
+    ASSERT_NE(&v0, &v2);
+    ASSERT_NE(&v1, &v2);
+    ASSERT_EQ(v2.x, 4);
+    ASSERT_EQ(v2.y, 6);
 
     const Vec2i v3 = v1 + v0;
-    ASSERT_NE(&v3, &v0);
-    ASSERT_NE(&v3, &v1);
-    ASSERT_EQ(4, v3.x);
-    ASSERT_EQ(6, v3.y);
+    ASSERT_NE(&v0, &v3);
+    ASSERT_NE(&v1, &v3);
+    ASSERT_EQ(v3.x, 4);
+    ASSERT_EQ(v3.y, 6);
 
     v0 += v1;
-    ASSERT_EQ(4, v0.x);
-    ASSERT_EQ(6, v0.y);
+    ASSERT_EQ(v0.x, 4);
+    ASSERT_EQ(v0.y, 6);
 
     const Vec2i v4 = v0 + 1;
-    ASSERT_EQ(5, v4.x);
-    ASSERT_EQ(7, v4.y);
+    ASSERT_EQ(v4.x, 5);
+    ASSERT_EQ(v4.y, 7);
 }
 
 TEST(Vec2Test, TranslatesNegative)
@@ -98,20 +98,20 @@ TEST(Vec2Test, TranslatesNegative)
     const Vec2i v1(3, 4);
 
     const Vec2i v2 = v0 - v1;
-    ASSERT_NE(&v2, &v0);
-    ASSERT_NE(&v2, &v1);
-    ASSERT_EQ(-2, v2.x);
-    ASSERT_EQ(-2, v2.y);
+    ASSERT_NE(&v0, &v2);
+    ASSERT_NE(&v1, &v2);
+    ASSERT_EQ(v2.x, -2);
+    ASSERT_EQ(v2.y, -2);
 
     const Vec2i v3 = v1 - v0;
-    ASSERT_NE(&v3, &v0);
-    ASSERT_NE(&v3, &v1);
-    ASSERT_EQ(2, v3.x);
-    ASSERT_EQ(2, v3.y);
+    ASSERT_NE(&v0, &v3);
+    ASSERT_NE(&v1, &v3);
+    ASSERT_EQ(v3.x, 2);
+    ASSERT_EQ(v3.y, 2);
 
     v0 -= v1;
-    ASSERT_EQ(-2, v0.x);
-    ASSERT_EQ(-2, v0.y);
+    ASSERT_EQ(v0.x, -2);
+    ASSERT_EQ(v0.y, -2);
 }
 
 TEST(Vec2Test, ScalesUp)
@@ -120,13 +120,13 @@ TEST(Vec2Test, ScalesUp)
     const Vec2i v1(3, 4);
 
     const Vec2i v2 = 2 * v0;
-    ASSERT_NE(&v2, &v0);
-    ASSERT_EQ(10, v2.x);
-    ASSERT_EQ(4, v2.y);
+    ASSERT_NE(&v0, &v2);
+    ASSERT_EQ(v2.x, 10);
+    ASSERT_EQ(v2.y, 4);
 
     v0 *= 2;
-    ASSERT_EQ(10, v0.x);
-    ASSERT_EQ(4, v0.y);
+    ASSERT_EQ(v0.x, 10);
+    ASSERT_EQ(v0.y, 4);
 }
 
 TEST(Vec2Test, ScalesDown)
@@ -134,11 +134,11 @@ TEST(Vec2Test, ScalesDown)
     Vec2i v0(4, 8);
 
     const Vec2i v2 = v0 / 2;
-    ASSERT_NE(&v2, &v0);
-    ASSERT_EQ(2, v2.x);
-    ASSERT_EQ(4, v2.y);
+    ASSERT_NE(&v0, &v2);
+    ASSERT_EQ(v2.x, 2);
+    ASSERT_EQ(v2.y, 4);
 
     v0 /= 2;
-    ASSERT_EQ(2, v0.x);
-    ASSERT_EQ(4, v0.y);
+    ASSERT_EQ(v0.x, 2);
+    ASSERT_EQ(v0.y, 4);
 }

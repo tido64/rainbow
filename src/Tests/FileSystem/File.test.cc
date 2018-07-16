@@ -12,12 +12,12 @@
 #   define _rmdir rmdir
 #endif
 
+using rainbow::czstring;
 using rainbow::Data;
 using rainbow::File;
 using rainbow::FileType;
 using rainbow::SeekOrigin;
 using rainbow::WriteableFile;
-using rainbow::czstring;
 
 #define ASSERT_EMPTY_DATA(tmpfile, file_type)                                  \
     do                                                                         \
@@ -30,7 +30,7 @@ using rainbow::czstring;
     do                                                                         \
     {                                                                          \
         const auto& file = File::open(tmpfile.c_str(), file_type);             \
-        ASSERT_EQ(0u, file.size());                                            \
+        ASSERT_EQ(file.size(), 0u);                                            \
     } while (false)
 
 namespace
@@ -78,7 +78,7 @@ namespace
 
     using TestFile = rainbow::TFile<TestFileImpl>;
     using TestWriteableFile = rainbow::TWriteableFile<TestFileImpl>;
-}
+}  // namespace
 
 TEST(FileTest, HandlesInvalidPaths)
 {
@@ -100,7 +100,7 @@ TEST(FileTest, HandlesEmptyFiles)
         ASSERT_EMPTY_DATA(tmpfile, FileType::Asset);
         ASSERT_EMPTY_FILE(tmpfile, FileType::Asset);
 
-        ASSERT_EQ(0, std::remove(tmpfile.c_str()));
+        ASSERT_EQ(std::remove(tmpfile.c_str()), 0);
     }
     {
         namespace fs = rainbow::filesystem;
@@ -115,14 +115,14 @@ TEST(FileTest, HandlesEmptyFiles)
         const auto& tmppath = fs::user(tmpfile.c_str());
 
         SCOPED_TRACE(tmppath.c_str());
-        ASSERT_EQ(0, std::remove(tmppath.c_str()));
+        ASSERT_EQ(std::remove(tmppath.c_str()), 0);
 
         // Wait until the file has been removed...
         struct stat file_status;
         while (stat(tmppath.c_str(), &file_status) == 0) {}
 
         SCOPED_TRACE(fs::user_data_path());
-        ASSERT_EQ(0, _rmdir(fs::user_data_path()));
+        ASSERT_EQ(_rmdir(fs::user_data_path()), 0);
     }
 }
 
@@ -132,30 +132,30 @@ TEST(FileTest, SupportsPlatformImplementation)
 
     ASSERT_TRUE(file);
     ASSERT_TRUE(file.seek(rainbow::kInvalidFileSize));
-    ASSERT_EQ(kTestFileSuccess, file.size());
-    ASSERT_EQ(kTestFileSuccess, file.read(nullptr, rainbow::kInvalidFileSize));
+    ASSERT_EQ(file.size(), kTestFileSuccess);
+    ASSERT_EQ(file.read(nullptr, rainbow::kInvalidFileSize), kTestFileSuccess);
 
     const auto& writeable_file = TestWriteableFile::open("/");
 
     ASSERT_TRUE(writeable_file);
     ASSERT_TRUE(writeable_file.seek(rainbow::kInvalidFileSize));
-    ASSERT_EQ(kTestFileSuccess, writeable_file.size());
-    ASSERT_EQ(kTestFileSuccess,  //
-              writeable_file.read(nullptr, rainbow::kInvalidFileSize));
-    ASSERT_EQ(kTestFileSuccess,  //
-              writeable_file.write(nullptr, rainbow::kInvalidFileSize));
+    ASSERT_EQ(writeable_file.size(), kTestFileSuccess);
+    ASSERT_EQ(writeable_file.read(nullptr, rainbow::kInvalidFileSize),
+              kTestFileSuccess);
+    ASSERT_EQ(writeable_file.write(nullptr, rainbow::kInvalidFileSize),
+              kTestFileSuccess);
 }
 
 TEST(FileTypeTest, CorrespondsToFileAccessMode)
 {
-    ASSERT_STREQ("rb", rainbow::detail::file_access_mode(FileType::Asset));
-    ASSERT_STREQ("rb", rainbow::detail::file_access_mode(FileType::UserAsset));
-    ASSERT_STREQ("w+b", rainbow::detail::file_access_mode(FileType::UserFile));
+    ASSERT_STREQ(rainbow::detail::file_access_mode(FileType::Asset), "rb");
+    ASSERT_STREQ(rainbow::detail::file_access_mode(FileType::UserAsset), "rb");
+    ASSERT_STREQ(rainbow::detail::file_access_mode(FileType::UserFile), "w+b");
 }
 
 TEST(SeekOriginTest, CorrespondsToSeekOriginParameter)
 {
-    ASSERT_EQ(SEEK_CUR, rainbow::detail::seek_origin(SeekOrigin::Current));
-    ASSERT_EQ(SEEK_END, rainbow::detail::seek_origin(SeekOrigin::End));
-    ASSERT_EQ(SEEK_SET, rainbow::detail::seek_origin(SeekOrigin::Set));
+    ASSERT_EQ(rainbow::detail::seek_origin(SeekOrigin::Current), SEEK_CUR);
+    ASSERT_EQ(rainbow::detail::seek_origin(SeekOrigin::End), SEEK_END);
+    ASSERT_EQ(rainbow::detail::seek_origin(SeekOrigin::Set), SEEK_SET);
 }

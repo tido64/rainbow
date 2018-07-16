@@ -28,33 +28,33 @@ TEST(GeometryTest, WalksCircleEdge)
             ASSERT_NEAR(v1.distance(Vec2f::Zero), kRadius, 0.00002f);
         });
 
-    ASSERT_EQ(kSegments, count);
+    ASSERT_EQ(count, kSegments);
 }
 
 TEST(GeometryTest, ReturnsRectangleVertices)
 {
     const Rect rect0;
 
-    ASSERT_EQ(Vec2f::Zero, rect0.bottom_left());
-    ASSERT_EQ(Vec2f::Zero, rect0.bottom_right());
-    ASSERT_EQ(Vec2f::Zero, rect0.top_left());
-    ASSERT_EQ(Vec2f::Zero, rect0.top_right());
+    ASSERT_EQ(rect0.bottom_left(), Vec2f::Zero);
+    ASSERT_EQ(rect0.bottom_right(), Vec2f::Zero);
+    ASSERT_EQ(rect0.top_left(), Vec2f::Zero);
+    ASSERT_EQ(rect0.top_right(), Vec2f::Zero);
 
     const Rect rect1{1, 1, 1, 1};
 
-    ASSERT_EQ(Vec2f::One, rect1.bottom_left());
-    ASSERT_EQ(Vec2f::One, rect1.bottom_right());
-    ASSERT_EQ(Vec2f::One, rect1.top_left());
-    ASSERT_EQ(Vec2f::One, rect1.top_right());
+    ASSERT_EQ(rect1.bottom_left(), Vec2f::One);
+    ASSERT_EQ(rect1.bottom_right(), Vec2f::One);
+    ASSERT_EQ(rect1.top_left(), Vec2f::One);
+    ASSERT_EQ(rect1.top_right(), Vec2f::One);
 
     const Rect rect2{1, 2, 3, 4};
 
-    ASSERT_EQ(Vec2f(1, 2), rect2.bottom_left());
-    ASSERT_EQ(Vec2f(3, 2), rect2.bottom_right());
-    ASSERT_EQ(Vec2f(1, 4), rect2.top_left());
-    ASSERT_EQ(Vec2f(3, 4), rect2.top_right());
+    ASSERT_EQ(rect2.bottom_left(), Vec2f(1, 2));
+    ASSERT_EQ(rect2.bottom_right(), Vec2f(3, 2));
+    ASSERT_EQ(rect2.top_left(), Vec2f(1, 4));
+    ASSERT_EQ(rect2.top_right(), Vec2f(3, 4));
 
-    ASSERT_NE(rect0, rect1);
-    ASSERT_EQ(Rect(), rect0);
-    ASSERT_EQ(Rect(1, 1, 1, 1), rect1);
+    ASSERT_NE(rect1, rect0);
+    ASSERT_EQ(rect0, Rect());
+    ASSERT_EQ(rect1, Rect(1, 1, 1, 1));
 }

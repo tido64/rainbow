@@ -60,21 +60,21 @@ TEST(RandomTest, Seed)
     rand2.seed(kSeed);
 
     for (unsigned int i = 0; i < kSampleSize; ++i)
-        ASSERT_EQ(rand1(), rand2(0.0, 1.0));
+        ASSERT_EQ(rand2(0.0, 1.0), rand1());
 
     rand2.seed(kSeed);
 
-    ASSERT_NE(rand1(), rand2(0.0, 1.0));
+    ASSERT_NE(rand2(0.0, 1.0), rand1());
 
     rand1.seed(kSeed);
     rand2.seed(kSeed);
 
-    ASSERT_EQ(rand1(), rand2(0.0, 1.0));
+    ASSERT_EQ(rand2(0.0, 1.0), rand1());
 
     rand1.seed();
     rand2.seed();
 
-    ASSERT_NE(rand1(), rand2(0.0, 1.0));
+    ASSERT_NE(rand2(0.0, 1.0), rand1());
 }
 
 TEST(RandomTest, SeededInRange01)

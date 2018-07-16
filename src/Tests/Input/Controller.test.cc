@@ -139,57 +139,57 @@ TEST_F(ControllerTest, EventsAreInvalidByDefault)
 {
     const ControllerAxisMotion axis;
 
-    ASSERT_EQ(0u, axis.id);
-    ASSERT_EQ(ControllerAxis::Invalid, axis.axis);
-    ASSERT_EQ(0, axis.value);
-    ASSERT_EQ(0ull, axis.timestamp);
+    ASSERT_EQ(axis.id, 0u);
+    ASSERT_EQ(axis.axis, ControllerAxis::Invalid);
+    ASSERT_EQ(axis.value, 0);
+    ASSERT_EQ(axis.timestamp, 0ull);
 
     const ControllerButtonEvent button;
 
-    ASSERT_EQ(0u, button.id);
-    ASSERT_EQ(ControllerButton::Invalid, button.button);
-    ASSERT_EQ(0ull, button.timestamp);
+    ASSERT_EQ(button.id, 0u);
+    ASSERT_EQ(button.button, ControllerButton::Invalid);
+    ASSERT_EQ(button.timestamp, 0ull);
 }
 
 TEST_F(ControllerTest, HandlesAxisMotion)
 {
     input.on_controller_axis_motion(axis_motion());
 
-    ASSERT_EQ(0u, input.connected_controllers());
+    ASSERT_EQ(input.connected_controllers(), 0u);
     ASSERT_FALSE(is_triggered(0xff));
 
     TestController test_controller(input);
 
-    ASSERT_EQ(1u, input.connected_controllers());
+    ASSERT_EQ(input.connected_controllers(), 1u);
     ASSERT_FALSE(test_controller.is_triggered(0xff));
 
     auto motion = axis_motion();
     input.on_controller_axis_motion(motion);
 
-    ASSERT_EQ(0u, input.buttons_down(0));
+    ASSERT_EQ(input.buttons_down(0), 0u);
     ASSERT_TRUE(is_triggered(Events::AxisMotion));
     ASSERT_TRUE(test_controller.is_triggered(Events::AxisMotion));
     ASSERT_FALSE(test_controller.is_triggered(0xff ^ Events::AxisMotion));
-    ASSERT_EQ(motion.value, input.axis(0, motion.axis));
+    ASSERT_EQ(input.axis(0, motion.axis), motion.value);
 }
 
 TEST_F(ControllerTest, HandlesButtonDown)
 {
     input.on_controller_button_down(button());
 
-    ASSERT_EQ(0u, input.connected_controllers());
+    ASSERT_EQ(input.connected_controllers(), 0u);
     ASSERT_FALSE(is_triggered(0xff));
 
     TestController test_controller(input);
 
-    ASSERT_EQ(1u, input.connected_controllers());
+    ASSERT_EQ(input.connected_controllers(), 1u);
     ASSERT_FALSE(test_controller.is_triggered(0xff));
-    ASSERT_EQ(0u, input.buttons_down(0));
+    ASSERT_EQ(input.buttons_down(0), 0u);
 
     auto down = button();
     input.on_controller_button_down(down);
 
-    ASSERT_EQ(1u, input.buttons_down(0));
+    ASSERT_EQ(input.buttons_down(0), 1u);
     ASSERT_TRUE(is_triggered(Events::ButtonDown));
     ASSERT_TRUE(test_controller.is_triggered(Events::ButtonDown));
     ASSERT_FALSE(test_controller.is_triggered(0xff ^ Events::ButtonDown));
@@ -200,24 +200,24 @@ TEST_F(ControllerTest, HandlesButtonUp)
 {
     input.on_controller_button_up(button());
 
-    ASSERT_EQ(0u, input.connected_controllers());
+    ASSERT_EQ(input.connected_controllers(), 0u);
     ASSERT_FALSE(is_triggered(0xff));
 
     TestController test_controller(input);
 
-    ASSERT_EQ(1u, input.connected_controllers());
+    ASSERT_EQ(input.connected_controllers(), 1u);
     ASSERT_FALSE(test_controller.is_triggered(0xff));
-    ASSERT_EQ(0u, input.buttons_down(0));
+    ASSERT_EQ(input.buttons_down(0), 0u);
 
     auto pressed = button();
     input.on_controller_button_down(pressed);
 
-    ASSERT_EQ(1u, input.buttons_down(0));
+    ASSERT_EQ(input.buttons_down(0), 1u);
     ASSERT_TRUE(input.is_down(0, pressed.button));
 
     input.on_controller_button_up(button());
 
-    ASSERT_EQ(0u, input.buttons_down(0));
+    ASSERT_EQ(input.buttons_down(0), 0u);
     ASSERT_TRUE(is_triggered(Events::ButtonUp));
     ASSERT_TRUE(test_controller.is_triggered(Events::ButtonUp));
     ASSERT_FALSE(test_controller.is_triggered(
@@ -229,16 +229,16 @@ TEST_F(ControllerTest, HandlesDisconnect)
 {
     input.on_controller_disconnected(kTestControllerId);
 
-    ASSERT_EQ(0u, input.connected_controllers());
+    ASSERT_EQ(input.connected_controllers(), 0u);
     ASSERT_FALSE(is_triggered(0xff));
     {
         TestController test_controller(input);
 
-        ASSERT_EQ(1u, input.connected_controllers());
+        ASSERT_EQ(input.connected_controllers(), 1u);
         ASSERT_TRUE(is_triggered(Events::Connected));
         ASSERT_FALSE(test_controller.is_triggered(0xff));
     }
-    ASSERT_EQ(0u, input.connected_controllers());
+    ASSERT_EQ(input.connected_controllers(), 0u);
     ASSERT_TRUE(is_triggered(Events::Disconnected));
     ASSERT_FALSE(
         is_triggered(0xff ^ (Events::Connected | Events::Disconnected)));
@@ -246,7 +246,7 @@ TEST_F(ControllerTest, HandlesDisconnect)
 
 TEST_F(ControllerTest, SupportsMultipleControllers)
 {
-    ASSERT_EQ(0u, input.connected_controllers());
+    ASSERT_EQ(input.connected_controllers(), 0u);
 
     std::unique_ptr<TestController> controllers[]{
         std::make_unique<TestController>(1000, input),
@@ -255,13 +255,13 @@ TEST_F(ControllerTest, SupportsMultipleControllers)
         std::make_unique<TestController>(1003, input),
     };
 
-    ASSERT_EQ(4u, input.connected_controllers());
+    ASSERT_EQ(input.connected_controllers(), 4u);
 
     for (int i = 0; i < 4; ++i)
     {
         input.on_controller_button_down(button(1000 + i));
 
-        ASSERT_EQ(1u, input.buttons_down(i));
+        ASSERT_EQ(input.buttons_down(i), 1u);
         ASSERT_TRUE(controllers[i]->is_triggered(Events::ButtonDown));
         ASSERT_FALSE(controllers[i]->is_triggered(0xff ^ Events::ButtonDown));
 
@@ -270,7 +270,7 @@ TEST_F(ControllerTest, SupportsMultipleControllers)
             if (j == i)
                 continue;
 
-            ASSERT_EQ(0u, input.buttons_down(j));
+            ASSERT_EQ(input.buttons_down(j), 0u);
             ASSERT_FALSE(controllers[j]->is_triggered(0xff));
         }
 
@@ -280,7 +280,7 @@ TEST_F(ControllerTest, SupportsMultipleControllers)
 
     controllers[2].reset();
 
-    ASSERT_EQ(3u, input.connected_controllers());
+    ASSERT_EQ(input.connected_controllers(), 3u);
     ASSERT_TRUE(is_triggered(Events::Disconnected));
 
     for (int i = 0; i < 4; ++i)
@@ -299,14 +299,14 @@ TEST_F(ControllerTest, SupportsMultipleControllers)
 
         if (i != 2)
         {
-            ASSERT_EQ(1u, input.buttons_down(i));
+            ASSERT_EQ(input.buttons_down(i), 1u);
             ASSERT_TRUE(controllers[i]->is_triggered(Events::ButtonDown));
             ASSERT_FALSE(
                 controllers[i]->is_triggered(0xff ^ Events::ButtonDown));
         }
         else
         {
-            ASSERT_EQ(0u, input.buttons_down(i));
+            ASSERT_EQ(input.buttons_down(i), 0u);
         }
 
         for (int j = 0; j < 4; ++j)
@@ -314,7 +314,7 @@ TEST_F(ControllerTest, SupportsMultipleControllers)
             if (j == i)
                 continue;
 
-            ASSERT_EQ(0u, input.buttons_down(j));
+            ASSERT_EQ(input.buttons_down(j), 0u);
             if (controllers[j])
             {
                 ASSERT_FALSE(controllers[j]->is_triggered(0xff));
@@ -328,19 +328,19 @@ TEST_F(ControllerTest, SupportsMultipleControllers)
 
     input.on_controller_button_down(button(1000));
 
-    ASSERT_EQ(1u, input.buttons_down(0));
+    ASSERT_EQ(input.buttons_down(0), 1u);
 
     controllers[0].reset();
 
     for (int i = 0; i < 4; ++i)
     {
         SCOPED_TRACE(i);
-        ASSERT_EQ(0u, input.buttons_down(i));
+        ASSERT_EQ(input.buttons_down(i), 0u);
     }
 
-    ASSERT_EQ(2u, input.connected_controllers());
+    ASSERT_EQ(input.connected_controllers(), 2u);
     ASSERT_TRUE(is_triggered(Events::Disconnected));
-    ASSERT_EQ(0u, input.buttons_down(0));
+    ASSERT_EQ(input.buttons_down(0), 0u);
 
     for (int i = 0; i < 4; ++i)
     {
@@ -358,7 +358,7 @@ TEST_F(ControllerTest, SupportsMultipleControllers)
 
         if (i % 2 != 0)
         {
-            ASSERT_EQ(1u, input.buttons_down(i));
+            ASSERT_EQ(input.buttons_down(i), 1u);
             ASSERT_TRUE(controllers[i]->is_triggered(Events::ButtonDown));
             ASSERT_FALSE(
                 controllers[i]->is_triggered(0xff ^ Events::ButtonDown));
@@ -369,7 +369,7 @@ TEST_F(ControllerTest, SupportsMultipleControllers)
             if (j == i)
                 continue;
 
-            ASSERT_EQ(0u, input.buttons_down(j));
+            ASSERT_EQ(input.buttons_down(j), 0u);
             if (controllers[j])
             {
                 ASSERT_FALSE(controllers[j]->is_triggered(0xff));
@@ -383,7 +383,7 @@ TEST_F(ControllerTest, SupportsMultipleControllers)
 
     controllers[2] = std::make_unique<TestController>(1002, input);
 
-    ASSERT_EQ(3u, input.connected_controllers());
+    ASSERT_EQ(input.connected_controllers(), 3u);
 
     for (int i = 0; i < 4; ++i)
     {
@@ -395,14 +395,14 @@ TEST_F(ControllerTest, SupportsMultipleControllers)
                 for (int j = 0; j < 4; ++j)
                 {
                     SCOPED_TRACE(j);
-                    ASSERT_EQ(0u, input.buttons_down(j));
+                    ASSERT_EQ(input.buttons_down(j), 0u);
                 }
                 break;
             case 2:
-                ASSERT_EQ(1u, input.buttons_down(0));
+                ASSERT_EQ(input.buttons_down(0), 1u);
                 break;
             default:
-                ASSERT_EQ(1u, input.buttons_down(i));
+                ASSERT_EQ(input.buttons_down(i), 1u);
                 break;
         }
 
@@ -428,33 +428,33 @@ TEST_F(ControllerTest, SupportsMultipleControllers)
 
     controllers[0] = std::make_unique<TestController>(1000, input);
 
-    ASSERT_EQ(4u, input.connected_controllers());
+    ASSERT_EQ(input.connected_controllers(), 4u);
 
     TestController ctrl5(5000, input);
 
-    ASSERT_EQ(4u, input.connected_controllers());
+    ASSERT_EQ(input.connected_controllers(), 4u);
 }
 
 TEST_F(ControllerTest, IgnoresDuplicateControllers)
 {
-    ASSERT_EQ(0u, input.connected_controllers());
+    ASSERT_EQ(input.connected_controllers(), 0u);
     {
         TestController ctrl1(input);
 
-        ASSERT_EQ(1u, input.connected_controllers());
+        ASSERT_EQ(input.connected_controllers(), 1u);
 
         TestController ctrl1_dupe(input);
 
-        ASSERT_EQ(1u, input.connected_controllers());
+        ASSERT_EQ(input.connected_controllers(), 1u);
     }
-    ASSERT_EQ(0u, input.connected_controllers());
+    ASSERT_EQ(input.connected_controllers(), 0u);
     {
         TestController ctrl1(1001, input);
         TestController ctrl2(1002, input);
         TestController ctrl3(1003, input);
         TestController ctrl4(1004, input);
 
-        ASSERT_EQ(4u, input.connected_controllers());
+        ASSERT_EQ(input.connected_controllers(), 4u);
 
         reset();
         TestController ctrl1_dupe(1001, input);
@@ -462,32 +462,32 @@ TEST_F(ControllerTest, IgnoresDuplicateControllers)
         TestController ctrl3_dupe(1003, input);
         TestController ctrl4_dupe(1004, input);
 
-        ASSERT_EQ(4u, input.connected_controllers());
+        ASSERT_EQ(input.connected_controllers(), 4u);
         ASSERT_FALSE(is_triggered(0xff));
     }
-    ASSERT_EQ(0u, input.connected_controllers());
+    ASSERT_EQ(input.connected_controllers(), 0u);
 }
 
 TEST_F(ControllerTest, IgnoresExcessControllers)
 {
-    ASSERT_EQ(0u, input.connected_controllers());
+    ASSERT_EQ(input.connected_controllers(), 0u);
 
     std::unique_ptr<TestController>
         controllers[Input::kNumSupportedControllers];
     for (unsigned int i = 0; i < Input::kNumSupportedControllers; ++i)
         controllers[i] = std::make_unique<TestController>(1000 + i, input);
 
-    ASSERT_EQ(Input::kNumSupportedControllers, input.connected_controllers());
+    ASSERT_EQ(input.connected_controllers(), Input::kNumSupportedControllers);
 
     reset();
     TestController ctrl5(5000, input);
 
-    ASSERT_EQ(Input::kNumSupportedControllers, input.connected_controllers());
+    ASSERT_EQ(input.connected_controllers(), Input::kNumSupportedControllers);
     ASSERT_FALSE(is_triggered(0xff));
 
     TestController ctrl6(6000, input);
 
-    ASSERT_EQ(Input::kNumSupportedControllers, input.connected_controllers());
+    ASSERT_EQ(input.connected_controllers(), Input::kNumSupportedControllers);
     ASSERT_FALSE(is_triggered(0xff));
 }
 
@@ -513,14 +513,14 @@ TEST_F(ControllerTest, AxesArePollable)
             for (int j = 0; j < kNumControllers; ++j)
             {
                 const int value = j == i ? 255 : 0;
-                ASSERT_EQ(value, input.axis(j, event.axis));
+                ASSERT_EQ(input.axis(j, event.axis), value);
             }
 
             event.value = 0;
             input.on_controller_axis_motion(event);
 
             for (int j = 0; j < kNumControllers; ++j)
-                ASSERT_EQ(0, input.axis(j, event.axis));
+                ASSERT_EQ(input.axis(j, event.axis), 0);
         }
     }
 }

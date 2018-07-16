@@ -50,7 +50,7 @@ TEST(RenderQueueTest, UnitsHaveReasonableDefaults)
     const auto& unit2 = queue.back();
 
     ASSERT_TRUE(unit2.is_enabled());
-    ASSERT_EQ(tag2, unit2.tag());
+    ASSERT_EQ(unit2.tag(), tag2);
 }
 
 TEST(RenderQueueTest, SetsUnitTag)
@@ -64,17 +64,17 @@ TEST(RenderQueueTest, SetsUnitTag)
     auto& unit2 = queue.back();
 
     ASSERT_FALSE(unit1.tag().empty());
-    ASSERT_EQ(kRandomTag, unit1.tag());
-    ASSERT_EQ(kRandomTag.c_str(), unit1);
+    ASSERT_EQ(unit1.tag(), kRandomTag);
     ASSERT_EQ(unit1, kRandomTag.c_str());
+    ASSERT_EQ(kRandomTag.c_str(), unit1);
     ASSERT_TRUE(unit2.tag().empty());
 
     unit1.set_tag(kSecureRandomTag);
 
     ASSERT_FALSE(unit1.tag().empty());
-    ASSERT_EQ(kSecureRandomTag, unit1.tag());
-    ASSERT_EQ(kSecureRandomTag.c_str(), unit1);
+    ASSERT_EQ(unit1.tag(), kSecureRandomTag);
     ASSERT_EQ(unit1, kSecureRandomTag.c_str());
+    ASSERT_EQ(kSecureRandomTag.c_str(), unit1);
     ASSERT_TRUE(unit2.tag().empty());
 
     unit1.set_tag({});
@@ -82,15 +82,15 @@ TEST(RenderQueueTest, SetsUnitTag)
 
     ASSERT_TRUE(unit1.tag().empty());
     ASSERT_FALSE(unit2.tag().empty());
-    ASSERT_EQ(kRandomTag, unit2.tag());
-    ASSERT_EQ(kRandomTag.c_str(), unit2);
+    ASSERT_EQ(unit2.tag(), kRandomTag);
     ASSERT_EQ(unit2, kRandomTag.c_str());
-    ASSERT_NE(unit1, unit2);
+    ASSERT_EQ(kRandomTag.c_str(), unit2);
+    ASSERT_NE(unit2, unit1);
 
     unit1.set_tag({});
     unit2.set_tag({});
 
-    ASSERT_NE(unit1, unit2);
+    ASSERT_NE(unit2, unit1);
 }
 
 TEST(RenderQueueTest, UpdatesOnlyEnabledUnits)
@@ -105,8 +105,8 @@ TEST(RenderQueueTest, UpdatesOnlyEnabledUnits)
 
     for (size_t i = 0; i < queue.size(); ++i)
     {
-        ASSERT_EQ(queue[i].is_enabled() ? 1 : 0, drawables[i].update_count());
-        ASSERT_EQ(0, drawables[i].draw_count());
+        ASSERT_EQ(drawables[i].update_count(), queue[i].is_enabled() ? 1 : 0);
+        ASSERT_EQ(drawables[i].draw_count(), 0);
     }
 
     queue[1].enable();
@@ -114,16 +114,16 @@ TEST(RenderQueueTest, UpdatesOnlyEnabledUnits)
     queue[6].disable();
     rainbow::graphics::update(queue, kDeltaTime);
 
-    ASSERT_EQ(2, drawables[0].update_count());
-    ASSERT_EQ(1, drawables[1].update_count());
-    ASSERT_EQ(2, drawables[2].update_count());
-    ASSERT_EQ(2, drawables[3].update_count());
-    ASSERT_EQ(2, drawables[4].update_count());
-    ASSERT_EQ(2, drawables[5].update_count());
-    ASSERT_EQ(1, drawables[6].update_count());
-    ASSERT_EQ(0, drawables[7].update_count());
-    ASSERT_EQ(2, drawables[8].update_count());
-    ASSERT_EQ(2, drawables[9].update_count());
+    ASSERT_EQ(drawables[0].update_count(), 2);
+    ASSERT_EQ(drawables[1].update_count(), 1);
+    ASSERT_EQ(drawables[2].update_count(), 2);
+    ASSERT_EQ(drawables[3].update_count(), 2);
+    ASSERT_EQ(drawables[4].update_count(), 2);
+    ASSERT_EQ(drawables[5].update_count(), 2);
+    ASSERT_EQ(drawables[6].update_count(), 1);
+    ASSERT_EQ(drawables[7].update_count(), 0);
+    ASSERT_EQ(drawables[8].update_count(), 2);
+    ASSERT_EQ(drawables[9].update_count(), 2);
 
     ASSERT_TRUE(std::all_of(
         std::begin(drawables), std::end(drawables), [](auto&& drawable) {

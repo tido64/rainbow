@@ -32,10 +32,10 @@ TEST(GlobalTest, GlobalOnlyWhenExplicitlyMadeSo)
     GlobalObject success(InitStatus::Success);
 
     ASSERT_TRUE(success.is_global());
-    ASSERT_EQ(&success, GlobalObject::Get());
+    ASSERT_EQ(GlobalObject::Get(), &success);
 
     GlobalObject fail(InitStatus::Fail);
 
     ASSERT_FALSE(fail.is_global());
-    ASSERT_EQ(&success, GlobalObject::Get());
+    ASSERT_EQ(GlobalObject::Get(), &success);
 }

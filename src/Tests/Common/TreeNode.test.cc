@@ -59,7 +59,7 @@ TEST(TreeNodeTest, MoveConstructs)
     TestNode new_root(std::move(root));
 
     ASSERT_FALSE(node_deleted);
-    ASSERT_EQ(node, new_root.children().at(0));
+    ASSERT_EQ(new_root.children().at(0), node);
     ASSERT_TRUE(root.children().empty());
 }
 
@@ -79,7 +79,7 @@ TEST(TreeNodeTest, MoveAssigns)
     new_root = std::move(root);
 
     ASSERT_FALSE(node_deleted);
-    ASSERT_EQ(node, new_root.children().at(0));
+    ASSERT_EQ(new_root.children().at(0), node);
     ASSERT_TRUE(root.children().empty());
 }
 
@@ -95,9 +95,9 @@ TEST(TreeNodeTest, AddsAndRemovesNodes)
     ASSERT_FALSE(node_deleted);
     ASSERT_FALSE(root.parent());
 
-    ASSERT_EQ(1u, root.children().size());
-    ASSERT_EQ(node, root.children().at(0));
-    ASSERT_EQ(&root, node->parent());
+    ASSERT_EQ(root.children().size(), 1u);
+    ASSERT_EQ(root.children().at(0), node);
+    ASSERT_EQ(node->parent(), &root);
 
     root.remove_child(node);
 
@@ -142,50 +142,50 @@ TEST(TreeNodeTest, ReparentsNodes)
     root.add_child(nodes[1]);
     nodes[1]->add_child(nodes[2]);
 
-    ASSERT_EQ(2u, root.children().size());
-    ASSERT_EQ(nodes[0], root.children().at(0));
-    ASSERT_EQ(nodes[1], root.children().at(1));
+    ASSERT_EQ(root.children().size(), 2u);
+    ASSERT_EQ(root.children().at(0), nodes[0]);
+    ASSERT_EQ(root.children().at(1), nodes[1]);
 
-    ASSERT_EQ(&root, nodes[0]->parent());
+    ASSERT_EQ(nodes[0]->parent(), &root);
     ASSERT_TRUE(nodes[0]->children().empty());
 
-    ASSERT_EQ(&root, nodes[1]->parent());
-    ASSERT_EQ(1u, nodes[1]->children().size());
-    ASSERT_EQ(nodes[2], nodes[1]->children().at(0));
+    ASSERT_EQ(nodes[1]->parent(), &root);
+    ASSERT_EQ(nodes[1]->children().size(), 1u);
+    ASSERT_EQ(nodes[1]->children().at(0), nodes[2]);
 
-    ASSERT_EQ(nodes[1], nodes[2]->parent());
+    ASSERT_EQ(nodes[2]->parent(), nodes[1]);
     ASSERT_TRUE(nodes[2]->children().empty());
 
     nodes[0]->add_child(nodes[1]);
 
-    ASSERT_EQ(1u, root.children().size());
-    ASSERT_EQ(nodes[0], root.children().at(0));
+    ASSERT_EQ(root.children().size(), 1u);
+    ASSERT_EQ(root.children().at(0), nodes[0]);
 
-    ASSERT_EQ(&root, nodes[0]->parent());
-    ASSERT_EQ(1u, nodes[0]->children().size());
-    ASSERT_EQ(nodes[1], nodes[0]->children().at(0));
+    ASSERT_EQ(nodes[0]->parent(), &root);
+    ASSERT_EQ(nodes[0]->children().size(), 1u);
+    ASSERT_EQ(nodes[0]->children().at(0), nodes[1]);
 
-    ASSERT_EQ(nodes[0], nodes[1]->parent());
-    ASSERT_EQ(1u, nodes[1]->children().size());
-    ASSERT_EQ(nodes[2], nodes[1]->children().at(0));
+    ASSERT_EQ(nodes[1]->parent(), nodes[0]);
+    ASSERT_EQ(nodes[1]->children().size(), 1u);
+    ASSERT_EQ(nodes[1]->children().at(0), nodes[2]);
 
-    ASSERT_EQ(nodes[1], nodes[2]->parent());
+    ASSERT_EQ(nodes[2]->parent(), nodes[1]);
     ASSERT_TRUE(nodes[2]->children().empty());
 
     root.add_child(nodes[1]);
 
-    ASSERT_EQ(2u, root.children().size());
-    ASSERT_EQ(nodes[0], root.children().at(0));
-    ASSERT_EQ(nodes[1], root.children().at(1));
+    ASSERT_EQ(root.children().size(), 2u);
+    ASSERT_EQ(root.children().at(0), nodes[0]);
+    ASSERT_EQ(root.children().at(1), nodes[1]);
 
-    ASSERT_EQ(&root, nodes[0]->parent());
+    ASSERT_EQ(nodes[0]->parent(), &root);
     ASSERT_TRUE(nodes[0]->children().empty());
 
-    ASSERT_EQ(&root, nodes[1]->parent());
-    ASSERT_EQ(1u, nodes[1]->children().size());
-    ASSERT_EQ(nodes[2], nodes[1]->children().at(0));
+    ASSERT_EQ(nodes[1]->parent(), &root);
+    ASSERT_EQ(nodes[1]->children().size(), 1u);
+    ASSERT_EQ(nodes[1]->children().at(0), nodes[2]);
 
-    ASSERT_EQ(nodes[1], nodes[2]->parent());
+    ASSERT_EQ(nodes[2]->parent(), nodes[1]);
     ASSERT_TRUE(nodes[2]->children().empty());
 
     ASSERT_FALSE(deleted[0]);
@@ -212,26 +212,26 @@ TEST(TreeNodeTest, DeletesChildrenOnDestruction)
     nodes[2]->add_child(nodes[3]);
     nodes[2]->add_child(nodes[4]);
 
-    ASSERT_EQ(1u, root.children().size());
-    ASSERT_EQ(nodes[0], root.children().at(0));
+    ASSERT_EQ(root.children().size(), 1u);
+    ASSERT_EQ(root.children().at(0), nodes[0]);
 
-    ASSERT_EQ(&root, nodes[0]->parent());
-    ASSERT_EQ(2u, nodes[0]->children().size());
-    ASSERT_EQ(nodes[1], nodes[0]->children().at(0));
-    ASSERT_EQ(nodes[2], nodes[0]->children().at(1));
+    ASSERT_EQ(nodes[0]->parent(), &root);
+    ASSERT_EQ(nodes[0]->children().size(), 2u);
+    ASSERT_EQ(nodes[0]->children().at(0), nodes[1]);
+    ASSERT_EQ(nodes[0]->children().at(1), nodes[2]);
 
-    ASSERT_EQ(nodes[0], nodes[1]->parent());
+    ASSERT_EQ(nodes[1]->parent(), nodes[0]);
     ASSERT_TRUE(nodes[1]->children().empty());
 
-    ASSERT_EQ(nodes[0], nodes[2]->parent());
-    ASSERT_EQ(2u, nodes[2]->children().size());
-    ASSERT_EQ(nodes[3], nodes[2]->children().at(0));
-    ASSERT_EQ(nodes[4], nodes[2]->children().at(1));
+    ASSERT_EQ(nodes[2]->parent(), nodes[0]);
+    ASSERT_EQ(nodes[2]->children().size(), 2u);
+    ASSERT_EQ(nodes[2]->children().at(0), nodes[3]);
+    ASSERT_EQ(nodes[2]->children().at(1), nodes[4]);
 
-    ASSERT_EQ(nodes[2], nodes[3]->parent());
+    ASSERT_EQ(nodes[3]->parent(), nodes[2]);
     ASSERT_TRUE(nodes[3]->children().empty());
 
-    ASSERT_EQ(nodes[2], nodes[4]->parent());
+    ASSERT_EQ(nodes[4]->parent(), nodes[2]);
     ASSERT_TRUE(nodes[4]->children().empty());
 
     nodes[2]->remove();
@@ -242,9 +242,9 @@ TEST(TreeNodeTest, DeletesChildrenOnDestruction)
     ASSERT_TRUE(deleted[3]);
     ASSERT_TRUE(deleted[4]);
 
-    ASSERT_EQ(&root, nodes[0]->parent());
-    ASSERT_EQ(1u, nodes[0]->children().size());
-    ASSERT_EQ(nodes[0], nodes[1]->parent());
+    ASSERT_EQ(nodes[0]->parent(), &root);
+    ASSERT_EQ(nodes[0]->children().size(), 1u);
+    ASSERT_EQ(nodes[1]->parent(), nodes[0]);
 
     nodes[0]->remove();
 

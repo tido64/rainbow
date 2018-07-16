@@ -23,16 +23,16 @@ namespace
     {
         StableArray<SizableStruct<Padding>> array(Size);
 
-        ASSERT_EQ(Size, array.size());
+        ASSERT_EQ(array.size(), Size);
 
         const auto header_size = reinterpret_cast<uintptr_t>(array.data()) -
                                  reinterpret_cast<uintptr_t>(&array);
 
         ASSERT_LE(Size * sizeof(array[0]), header_size);
-        ASSERT_EQ(0u, header_size % alignof(SizableStruct<Padding>));
-        ASSERT_EQ(0u,
-                  reinterpret_cast<uintptr_t>(array.data()) %
-                      alignof(SizableStruct<Padding>));
+        ASSERT_EQ(header_size % alignof(SizableStruct<Padding>), 0u);
+        ASSERT_EQ(reinterpret_cast<uintptr_t>(array.data()) %
+                      alignof(SizableStruct<Padding>),
+                  0u);
     }
 }
 
@@ -50,7 +50,7 @@ TEST(StableArrayTest, FindsIterators)
     for (uint32_t i = 0; i < array.size(); ++i)
     {
         auto iter = array.find_iterator(i);
-        ASSERT_EQ(i + 10, array[iter].id);
+        ASSERT_EQ(array[iter].id, i + 10);
     }
 }
 
@@ -60,7 +60,7 @@ TEST(StableArrayTest, IteratesWithForEach)
     for_each(array, [i = 0](auto&& s) mutable { s.id = i++; });
 
     for (uint32_t i = 0; i < array.size(); ++i)
-        ASSERT_EQ(i, array[i].id);
+        ASSERT_EQ(array[i].id, i);
 }
 
 TEST(StableArrayTest, IteratorsAreStableAfterMoves)
@@ -70,75 +70,75 @@ TEST(StableArrayTest, IteratorsAreStableAfterMoves)
 
     array.move(1, 4);  // -> 0 2 3 4 1 5
 
-    ASSERT_EQ(0u, array.data()[0].id);
-    ASSERT_EQ(2u, array.data()[1].id);
-    ASSERT_EQ(3u, array.data()[2].id);
-    ASSERT_EQ(4u, array.data()[3].id);
-    ASSERT_EQ(1u, array.data()[4].id);
-    ASSERT_EQ(5u, array.data()[5].id);
+    ASSERT_EQ(array.data()[0].id, 0u);
+    ASSERT_EQ(array.data()[1].id, 2u);
+    ASSERT_EQ(array.data()[2].id, 3u);
+    ASSERT_EQ(array.data()[3].id, 4u);
+    ASSERT_EQ(array.data()[4].id, 1u);
+    ASSERT_EQ(array.data()[5].id, 5u);
 
     for (uint32_t i = 0; i < array.size(); ++i)
-        ASSERT_EQ(i, array[i].id);
+        ASSERT_EQ(array[i].id, i);
 
     array.move(2, 4);  // -> 0 3 4 1 2 5
 
-    ASSERT_EQ(0u, array.data()[0].id);
-    ASSERT_EQ(3u, array.data()[1].id);
-    ASSERT_EQ(4u, array.data()[2].id);
-    ASSERT_EQ(1u, array.data()[3].id);
-    ASSERT_EQ(2u, array.data()[4].id);
-    ASSERT_EQ(5u, array.data()[5].id);
+    ASSERT_EQ(array.data()[0].id, 0u);
+    ASSERT_EQ(array.data()[1].id, 3u);
+    ASSERT_EQ(array.data()[2].id, 4u);
+    ASSERT_EQ(array.data()[3].id, 1u);
+    ASSERT_EQ(array.data()[4].id, 2u);
+    ASSERT_EQ(array.data()[5].id, 5u);
 
     for (uint32_t i = 0; i < array.size(); ++i)
-        ASSERT_EQ(i, array[i].id);
+        ASSERT_EQ(array[i].id, i);
 
     array.move(5, 5);  // -> 0 3 4 1 2 5
 
-    ASSERT_EQ(0u, array.data()[0].id);
-    ASSERT_EQ(3u, array.data()[1].id);
-    ASSERT_EQ(4u, array.data()[2].id);
-    ASSERT_EQ(1u, array.data()[3].id);
-    ASSERT_EQ(2u, array.data()[4].id);
-    ASSERT_EQ(5u, array.data()[5].id);
+    ASSERT_EQ(array.data()[0].id, 0u);
+    ASSERT_EQ(array.data()[1].id, 3u);
+    ASSERT_EQ(array.data()[2].id, 4u);
+    ASSERT_EQ(array.data()[3].id, 1u);
+    ASSERT_EQ(array.data()[4].id, 2u);
+    ASSERT_EQ(array.data()[5].id, 5u);
 
     for (uint32_t i = 0; i < array.size(); ++i)
-        ASSERT_EQ(i, array[i].id);
+        ASSERT_EQ(array[i].id, i);
 
     array.move(5, 0);  // -> 5 0 3 4 1 2
 
-    ASSERT_EQ(5u, array.data()[0].id);
-    ASSERT_EQ(0u, array.data()[1].id);
-    ASSERT_EQ(3u, array.data()[2].id);
-    ASSERT_EQ(4u, array.data()[3].id);
-    ASSERT_EQ(1u, array.data()[4].id);
-    ASSERT_EQ(2u, array.data()[5].id);
+    ASSERT_EQ(array.data()[0].id, 5u);
+    ASSERT_EQ(array.data()[1].id, 0u);
+    ASSERT_EQ(array.data()[2].id, 3u);
+    ASSERT_EQ(array.data()[3].id, 4u);
+    ASSERT_EQ(array.data()[4].id, 1u);
+    ASSERT_EQ(array.data()[5].id, 2u);
 
     for (uint32_t i = 0; i < array.size(); ++i)
-        ASSERT_EQ(i, array[i].id);
+        ASSERT_EQ(array[i].id, i);
 
     array.move(3, 1);  // -> 5 3 0 4 1 2
 
-    ASSERT_EQ(5u, array.data()[0].id);
-    ASSERT_EQ(3u, array.data()[1].id);
-    ASSERT_EQ(0u, array.data()[2].id);
-    ASSERT_EQ(4u, array.data()[3].id);
-    ASSERT_EQ(1u, array.data()[4].id);
-    ASSERT_EQ(2u, array.data()[5].id);
+    ASSERT_EQ(array.data()[0].id, 5u);
+    ASSERT_EQ(array.data()[1].id, 3u);
+    ASSERT_EQ(array.data()[2].id, 0u);
+    ASSERT_EQ(array.data()[3].id, 4u);
+    ASSERT_EQ(array.data()[4].id, 1u);
+    ASSERT_EQ(array.data()[5].id, 2u);
 
     for (uint32_t i = 0; i < array.size(); ++i)
-        ASSERT_EQ(i, array[i].id);
+        ASSERT_EQ(array[i].id, i);
 
     array.move(3, 2);  // -> 5 0 3 4 1 2
 
-    ASSERT_EQ(5u, array.data()[0].id);
-    ASSERT_EQ(0u, array.data()[1].id);
-    ASSERT_EQ(3u, array.data()[2].id);
-    ASSERT_EQ(4u, array.data()[3].id);
-    ASSERT_EQ(1u, array.data()[4].id);
-    ASSERT_EQ(2u, array.data()[5].id);
+    ASSERT_EQ(array.data()[0].id, 5u);
+    ASSERT_EQ(array.data()[1].id, 0u);
+    ASSERT_EQ(array.data()[2].id, 3u);
+    ASSERT_EQ(array.data()[3].id, 4u);
+    ASSERT_EQ(array.data()[4].id, 1u);
+    ASSERT_EQ(array.data()[5].id, 2u);
 
     for (uint32_t i = 0; i < array.size(); ++i)
-        ASSERT_EQ(i, array[i].id);
+        ASSERT_EQ(array[i].id, i);
 }
 
 TEST(StableArrayTest, IteratorsAreStableAfterSwaps)
@@ -148,49 +148,49 @@ TEST(StableArrayTest, IteratorsAreStableAfterSwaps)
 
     array.swap(1, 5);
 
-    ASSERT_EQ(0u, array.data()[0].id);
-    ASSERT_EQ(5u, array.data()[1].id);
-    ASSERT_EQ(2u, array.data()[2].id);
-    ASSERT_EQ(3u, array.data()[3].id);
-    ASSERT_EQ(4u, array.data()[4].id);
-    ASSERT_EQ(1u, array.data()[5].id);
+    ASSERT_EQ(array.data()[0].id, 0u);
+    ASSERT_EQ(array.data()[1].id, 5u);
+    ASSERT_EQ(array.data()[2].id, 2u);
+    ASSERT_EQ(array.data()[3].id, 3u);
+    ASSERT_EQ(array.data()[4].id, 4u);
+    ASSERT_EQ(array.data()[5].id, 1u);
 
     for (uint32_t i = 0; i < array.size(); ++i)
-        ASSERT_EQ(i, array[i].id);
+        ASSERT_EQ(array[i].id, i);
 
     array.swap(1, 5);
 
     for (uint32_t i = 0; i < array.size(); ++i)
     {
-        ASSERT_EQ(i, array.data()[i].id);
-        ASSERT_EQ(i, array[i].id);
+        ASSERT_EQ(array.data()[i].id, i);
+        ASSERT_EQ(array[i].id, i);
     }
 
     array.swap(3, 0);
     array.swap(2, 5);
     array.swap(2, 4);
 
-    ASSERT_EQ(3u, array.data()[0].id);
-    ASSERT_EQ(1u, array.data()[1].id);
-    ASSERT_EQ(5u, array.data()[2].id);
-    ASSERT_EQ(0u, array.data()[3].id);
-    ASSERT_EQ(2u, array.data()[4].id);
-    ASSERT_EQ(4u, array.data()[5].id);
+    ASSERT_EQ(array.data()[0].id, 3u);
+    ASSERT_EQ(array.data()[1].id, 1u);
+    ASSERT_EQ(array.data()[2].id, 5u);
+    ASSERT_EQ(array.data()[3].id, 0u);
+    ASSERT_EQ(array.data()[4].id, 2u);
+    ASSERT_EQ(array.data()[5].id, 4u);
 
     for (uint32_t i = 0; i < array.size(); ++i)
-        ASSERT_EQ(i, array[i].id);
+        ASSERT_EQ(array[i].id, i);
 
     array.swap(3, 3);
 
-    ASSERT_EQ(3u, array.data()[0].id);
-    ASSERT_EQ(1u, array.data()[1].id);
-    ASSERT_EQ(5u, array.data()[2].id);
-    ASSERT_EQ(0u, array.data()[3].id);
-    ASSERT_EQ(2u, array.data()[4].id);
-    ASSERT_EQ(4u, array.data()[5].id);
+    ASSERT_EQ(array.data()[0].id, 3u);
+    ASSERT_EQ(array.data()[1].id, 1u);
+    ASSERT_EQ(array.data()[2].id, 5u);
+    ASSERT_EQ(array.data()[3].id, 0u);
+    ASSERT_EQ(array.data()[4].id, 2u);
+    ASSERT_EQ(array.data()[5].id, 4u);
 
     for (uint32_t i = 0; i < array.size(); ++i)
-        ASSERT_EQ(i, array[i].id);
+        ASSERT_EQ(array[i].id, i);
 
     rainbow::Random random;
     random.seed();
@@ -198,6 +198,6 @@ TEST(StableArrayTest, IteratorsAreStableAfterSwaps)
     {
         array.swap(random(array.size()), random(array.size()));
         for (uint32_t i = 0; i < array.size(); ++i)
-            ASSERT_EQ(i, array[i].id);
+            ASSERT_EQ(array[i].id, i);
     }
 }

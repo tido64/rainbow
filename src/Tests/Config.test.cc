@@ -108,7 +108,7 @@ namespace
             rainbow::filesystem::create_directories(path_, error);
             path_ /= "config.json";
             FILE* fd = fopen(path_.c_str(), "wb");
-            [fd] { ASSERT_NE(nullptr, fd); }();
+            [fd] { ASSERT_NE(fd, nullptr); }();
             fwrite(config, sizeof(*config), length, fd);
             fclose(fd);
         }
@@ -124,11 +124,11 @@ TEST(ConfigTest, NoConfiguration)
     ScopedAssetsDirectory test(kConfigTestPath);
     rainbow::Config config;
 
-    ASSERT_EQ(0, config.width());
-    ASSERT_EQ(0, config.height());
+    ASSERT_EQ(config.width(), 0);
+    ASSERT_EQ(config.height(), 0);
     ASSERT_FALSE(config.high_dpi());
     ASSERT_FALSE(config.is_portrait());
-    ASSERT_EQ(0u, config.msaa());
+    ASSERT_EQ(config.msaa(), 0u);
     ASSERT_TRUE(config.suspend());
 }
 
@@ -137,11 +137,11 @@ TEST(ConfigTest, EmptyConfiguration)
     ScopedConfig conf("");
     rainbow::Config config;
 
-    ASSERT_EQ(0, config.width());
-    ASSERT_EQ(0, config.height());
+    ASSERT_EQ(config.width(), 0);
+    ASSERT_EQ(config.height(), 0);
     ASSERT_FALSE(config.high_dpi());
     ASSERT_FALSE(config.is_portrait());
-    ASSERT_EQ(0u, config.msaa());
+    ASSERT_EQ(config.msaa(), 0u);
     ASSERT_TRUE(config.suspend());
 }
 
@@ -150,11 +150,11 @@ TEST(ConfigTest, InvalidConfiguration)
     ScopedConfig conf(kInvalidConfig);
     rainbow::Config config;
 
-    ASSERT_EQ(0, config.width());
-    ASSERT_EQ(0, config.height());
+    ASSERT_EQ(config.width(), 0);
+    ASSERT_EQ(config.height(), 0);
     ASSERT_FALSE(config.high_dpi());
     ASSERT_FALSE(config.is_portrait());
-    ASSERT_EQ(0u, config.msaa());
+    ASSERT_EQ(config.msaa(), 0u);
     ASSERT_TRUE(config.suspend());
 }
 
@@ -163,11 +163,11 @@ TEST(ConfigTest, NormalConfiguration)
     ScopedConfig config(kStandardConfig);
     rainbow::Config c;
 
-    ASSERT_EQ(1920, c.width());
-    ASSERT_EQ(1080, c.height());
+    ASSERT_EQ(c.width(), 1920);
+    ASSERT_EQ(c.height(), 1080);
     ASSERT_TRUE(c.high_dpi());
     ASSERT_FALSE(c.is_portrait());
-    ASSERT_EQ(4u, c.msaa());
+    ASSERT_EQ(c.msaa(), 4u);
     ASSERT_FALSE(c.needs_accelerometer());
     ASSERT_FALSE(c.suspend());
 }
@@ -177,11 +177,11 @@ TEST(ConfigTest, AlternateConfiguration)
     ScopedConfig config(kAlternateConfig);
     rainbow::Config c;
 
-    ASSERT_EQ(750, c.width());
-    ASSERT_EQ(1334, c.height());
+    ASSERT_EQ(c.width(), 750);
+    ASSERT_EQ(c.height(), 1334);
     ASSERT_FALSE(c.high_dpi());
     ASSERT_TRUE(c.is_portrait());
-    ASSERT_EQ(4u, c.msaa());
+    ASSERT_EQ(c.msaa(), 4u);
     ASSERT_TRUE(c.needs_accelerometer());
     ASSERT_TRUE(c.suspend());
 }
@@ -191,10 +191,10 @@ TEST(ConfigTest, SparseConfiguration)
     ScopedConfig config(kSparseConfig);
     rainbow::Config c;
 
-    ASSERT_EQ(0, c.width());
-    ASSERT_EQ(0, c.height());
+    ASSERT_EQ(c.width(), 0);
+    ASSERT_EQ(c.height(), 0);
     ASSERT_TRUE(c.high_dpi());
     ASSERT_FALSE(c.is_portrait());
-    ASSERT_EQ(8u, c.msaa());
+    ASSERT_EQ(c.msaa(), 8u);
     ASSERT_FALSE(c.suspend());
 }

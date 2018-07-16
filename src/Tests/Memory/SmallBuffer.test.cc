@@ -12,13 +12,13 @@ TEST(SmallBufferTest, IsReused)
 
     const auto small_buffer = rainbow::get_small_buffer(kRandomCount);
 
-    ASSERT_EQ(small_buffer, rainbow::get_small_buffer<int16_t>(kRandomCount));
-    ASSERT_EQ(small_buffer, rainbow::get_small_buffer<int32_t>(kRandomCount));
-    ASSERT_EQ(small_buffer, rainbow::get_small_buffer<int64_t>(kRandomCount));
+    ASSERT_EQ(rainbow::get_small_buffer<int16_t>(kRandomCount), small_buffer);
+    ASSERT_EQ(rainbow::get_small_buffer<int32_t>(kRandomCount), small_buffer);
+    ASSERT_EQ(rainbow::get_small_buffer<int64_t>(kRandomCount), small_buffer);
 }
 
 TEST(SmallBufferTest, ReturnsNullOnLargeRequests)
 {
     constexpr size_t kLargeishCount = 1 << 19;
-    ASSERT_EQ(nullptr, rainbow::get_small_buffer(kLargeishCount));
+    ASSERT_EQ(rainbow::get_small_buffer(kLargeishCount), nullptr);
 }

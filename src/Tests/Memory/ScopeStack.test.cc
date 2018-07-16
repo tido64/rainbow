@@ -44,7 +44,7 @@ TEST(LinearAllocatorTest, AlignedSizeFitsAnyType)
     {
         const size_t aligned = LinearAllocator::aligned_size(size);
         ASSERT_GE(aligned, size);
-        ASSERT_EQ(0u, aligned % alignof(std::max_align_t));
+        ASSERT_EQ(aligned % alignof(std::max_align_t), 0u);
     }
 }
 
@@ -55,7 +55,7 @@ TEST(LinearAllocatorTest, AllocatesEnoughSpace)
     LinearAllocator allocator(1024);
     const uint8_t* begin = static_cast<const uint8_t*>(allocator.end());
 
-    ASSERT_EQ(begin, allocator.allocate(data_size));
+    ASSERT_EQ(allocator.allocate(data_size), begin);
 
     const uint8_t* end = static_cast<const uint8_t*>(allocator.end());
 
@@ -63,7 +63,7 @@ TEST(LinearAllocatorTest, AllocatesEnoughSpace)
 
     const size_t aligned_double = LinearAllocator::aligned_size(data_size);
 
-    ASSERT_EQ(begin + aligned_double, end);
+    ASSERT_EQ(end, begin + aligned_double);
 }
 
 TEST(ScopeStackTest, ResetsStack)
@@ -77,27 +77,27 @@ TEST(ScopeStackTest, ResetsStack)
     ScopeStack stack(allocator);
     const auto i = stack.allocate<uint32_t>(kFirst);
 
-    ASSERT_EQ(*i, kFirst);
+    ASSERT_EQ(kFirst, *i);
     ASSERT_GT(allocator.end(), allocator_begin);
 
     const auto j = stack.allocate<uint32_t>(kSecond);
 
-    ASSERT_EQ(*i, kFirst);
-    ASSERT_EQ(*j, kSecond);
+    ASSERT_EQ(kFirst, *i);
+    ASSERT_EQ(kSecond, *j);
 
     stack.reset();
 
-    ASSERT_EQ(allocator_begin, allocator.end());
+    ASSERT_EQ(allocator.end(), allocator_begin);
 
     const auto k = stack.allocate<uint32_t>(kFirst);
 
-    ASSERT_EQ(*k, kFirst);
+    ASSERT_EQ(kFirst, *k);
     ASSERT_GT(allocator.end(), allocator_begin);
 
     const auto l = stack.allocate<uint32_t>(kSecond);
 
-    ASSERT_EQ(*k, kFirst);
-    ASSERT_EQ(*l, kSecond);
+    ASSERT_EQ(kFirst, *k);
+    ASSERT_EQ(kSecond, *l);
 }
 
 TEST(ScopeStackTest, RewindsAllocator)
@@ -112,15 +112,15 @@ TEST(ScopeStackTest, RewindsAllocator)
         ScopeStack stack(allocator);
         const auto i = stack.allocate<uint32_t>(kFirst);
 
-        ASSERT_EQ(*i, kFirst);
+        ASSERT_EQ(kFirst, *i);
         ASSERT_GT(allocator.end(), allocator_begin);
 
         const auto j = stack.allocate<uint32_t>(kSecond);
 
-        ASSERT_EQ(*i, kFirst);
-        ASSERT_EQ(*j, kSecond);
+        ASSERT_EQ(kFirst, *i);
+        ASSERT_EQ(kSecond, *j);
     }
-    ASSERT_EQ(allocator_begin, allocator.end());
+    ASSERT_EQ(allocator.end(), allocator_begin);
 }
 
 TEST(ScopeStackTest, CallsDestructorsInReverseOrder)
@@ -147,8 +147,8 @@ TEST(ScopeStackTest, CallsDestructorsInReverseOrder)
     ASSERT_TRUE(deleted1);
     ASSERT_TRUE(deleted2);
     ASSERT_TRUE(deleted3);
-    ASSERT_EQ(subjects[2], order[0]);
-    ASSERT_EQ(subjects[1], order[1]);
-    ASSERT_EQ(subjects[0], order[2]);
-    ASSERT_EQ(allocator_begin, allocator.end());
+    ASSERT_EQ(order[0], subjects[2]);
+    ASSERT_EQ(order[1], subjects[1]);
+    ASSERT_EQ(order[2], subjects[0]);
+    ASSERT_EQ(allocator.end(), allocator_begin);
 }

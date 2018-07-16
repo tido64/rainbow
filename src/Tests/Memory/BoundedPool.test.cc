@@ -13,7 +13,7 @@ using rainbow::BoundedPool;
 TEST(BoundedPoolTest, EmptyByDefault)
 {
     ASSERT_TRUE(BoundedPool<int>{}.empty());
-    ASSERT_EQ(nullptr, BoundedPool<int>{}.next());
+    ASSERT_EQ(BoundedPool<int>{}.next(), nullptr);
 }
 
 TEST(BoundedPoolTest, GeneratesNItems)
@@ -25,12 +25,12 @@ TEST(BoundedPoolTest, GeneratesNItems)
     {
         ASSERT_FALSE(pool.empty());
         auto item = pool.next();
-        ASSERT_NE(nullptr, item);
-        ASSERT_EQ(i, *item);
+        ASSERT_NE(item, nullptr);
+        ASSERT_EQ(*item, i);
     }
 
     ASSERT_TRUE(pool.empty());
-    ASSERT_EQ(nullptr, pool.next());
+    ASSERT_EQ(pool.next(), nullptr);
 }
 
 TEST(BoundedPoolTest, IteratesOverAllItems)
@@ -39,7 +39,7 @@ TEST(BoundedPoolTest, IteratesOverAllItems)
 
     BoundedPool<int> pool{[i = 0]() mutable { return i++; }, kCount};
     int j = -1;
-    for_each(pool, [&j](auto&& i) mutable { ASSERT_EQ(++j, i); });
+    for_each(pool, [&j](auto&& i) mutable { ASSERT_EQ(i, ++j); });
 }
 
 TEST(BoundedPoolTest, ReturnsItemsToThePool)
@@ -52,7 +52,7 @@ TEST(BoundedPoolTest, ReturnsItemsToThePool)
         store[i] = pool.next();
 
     ASSERT_TRUE(pool.empty());
-    ASSERT_EQ(nullptr, pool.next());
+    ASSERT_EQ(pool.next(), nullptr);
 
     for (auto&& i : store)
         pool.release(*i);
@@ -62,11 +62,11 @@ TEST(BoundedPoolTest, ReturnsItemsToThePool)
     for (int i = 0; i < kCount; ++i)
     {
         store[i] = pool.next();
-        ASSERT_EQ(kCount - i - 1, *store[i]);
+        ASSERT_EQ(*store[i], kCount - i - 1);
     }
 
     ASSERT_TRUE(pool.empty());
-    ASSERT_EQ(nullptr, pool.next());
+    ASSERT_EQ(pool.next(), nullptr);
 
     for (auto&& i : store)
     {
@@ -75,8 +75,8 @@ TEST(BoundedPoolTest, ReturnsItemsToThePool)
     }
 
     for (int i = 0; i < kCount; ++i)
-        ASSERT_EQ(i, *pool.next());
+        ASSERT_EQ(*pool.next(), i);
 
     ASSERT_TRUE(pool.empty());
-    ASSERT_EQ(nullptr, pool.next());
+    ASSERT_EQ(pool.next(), nullptr);
 }

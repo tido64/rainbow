@@ -14,7 +14,7 @@ TEST(ChronoTest, TimeDifferenceBetweenUpdates)
     const Chrono::duration::rep times[]{16, 1000, 0};
 
     Chrono chrono;
-    ASSERT_EQ(0, chrono.delta());
+    ASSERT_EQ(chrono.delta(), 0);
 
     for (int i = 0; times[i] > 0; ++i)
     {

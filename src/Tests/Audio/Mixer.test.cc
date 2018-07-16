@@ -45,7 +45,7 @@ namespace
         {
             ASSERT_FALSE(mixer_.initialize(kMaxAudioChannels));
             sound_ = sound_type_.load();
-            ASSERT_NE(nullptr, sound_);
+            ASSERT_NE(sound_, nullptr);
         }
 
     protected:
@@ -65,7 +65,7 @@ TYPED_TEST(AudioTest, ControlsChannelPlayback)
     ASSERT_PRED1(not_paused, channel);
     ASSERT_PRED1(rainbow::audio::is_playing, channel);
 
-    ASSERT_EQ(channel, rainbow::audio::play(channel));
+    ASSERT_EQ(rainbow::audio::play(channel), channel);
 
     ASSERT_PRED1(not_paused, channel);
     ASSERT_PRED1(rainbow::audio::is_playing, channel);
@@ -114,7 +114,7 @@ TYPED_TEST(AudioTest, ReusesChannels)
     ASSERT_PRED1(not_paused, channel);
     ASSERT_PRED1(not_playing, channel);
 
-    ASSERT_EQ(channel, rainbow::audio::play(this->sound_));
+    ASSERT_EQ(rainbow::audio::play(this->sound_), channel);
 
     ASSERT_PRED1(not_paused, channel);
     ASSERT_PRED1(rainbow::audio::is_playing, channel);
@@ -124,7 +124,7 @@ TYPED_TEST(AudioTest, ReusesChannels)
 
 TYPED_TEST(AudioTest, ReusesSounds)
 {
-    ASSERT_EQ(this->sound_, this->sound_type_.load());
+    ASSERT_EQ(this->sound_type_.load(), this->sound_);
     rainbow::audio::release(this->sound_);
 }
 #endif  // RAINBOW_AUDIO_AL
@@ -155,7 +155,7 @@ TEST(AudioTest, CanPlaySingleSoundOnMultipleChannels)
     for (int i = 0; i < kMaxAudioChannels; ++i)
     {
         for (int j = i + 1; j < kMaxAudioChannels; ++j)
-            ASSERT_NE(channels[i], channels[j]);
+            ASSERT_NE(channels[j], channels[i]);
     }
 
     for (int i = 0; i < kMaxAudioChannels; i += 2)
@@ -187,9 +187,9 @@ TEST(AudioTest, CanPlaySingleSoundOnMultipleChannels)
     {
         auto ch = rainbow::audio::play(channels[i]);
         if (i % 2 == 0)
-            ASSERT_EQ(channels[i], ch);
+            ASSERT_EQ(ch, channels[i]);
         else
-            ASSERT_EQ(nullptr, ch);
+            ASSERT_EQ(ch, nullptr);
     }
 
     for (int i = 0; i < kMaxAudioChannels; ++i)

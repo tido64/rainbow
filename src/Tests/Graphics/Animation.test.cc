@@ -66,10 +66,10 @@ namespace
 
 TEST_F(AnimationTest, IsStoppedInitially)
 {
-    ASSERT_EQ(0u, animation_.current_frame());
+    ASSERT_EQ(animation_.current_frame(), 0u);
     ASSERT_TRUE(animation_.is_stopped());
     for (size_t i = 0; i < 4; ++i)
-        ASSERT_EQ(uv_[i], vertex_array_[i].texcoord);
+        ASSERT_EQ(vertex_array_[i].texcoord, uv_[i]);
 }
 
 TEST_F(AnimationTest, AlwaysPlaysFromTheBeginning)
@@ -78,23 +78,23 @@ TEST_F(AnimationTest, AlwaysPlaysFromTheBeginning)
     animation_.update(kFrameTime);
     update();
 
-    ASSERT_EQ(1u, animation_.current_frame());
-    ASSERT_EQ(Vec2f(0.25f, 0.5f), vertex_array_[0].texcoord);
-    ASSERT_EQ(Vec2f(0.5f, 0.5f), vertex_array_[1].texcoord);
-    ASSERT_EQ(Vec2f(0.5f, 0.25f), vertex_array_[2].texcoord);
-    ASSERT_EQ(Vec2f(0.25f, 0.25f), vertex_array_[3].texcoord);
+    ASSERT_EQ(animation_.current_frame(), 1u);
+    ASSERT_EQ(vertex_array_[0].texcoord, Vec2f(0.25f, 0.5f));
+    ASSERT_EQ(vertex_array_[1].texcoord, Vec2f(0.5f, 0.5f));
+    ASSERT_EQ(vertex_array_[2].texcoord, Vec2f(0.5f, 0.25f));
+    ASSERT_EQ(vertex_array_[3].texcoord, Vec2f(0.25f, 0.25f));
 
     animation_.stop();
 
     ASSERT_TRUE(animation_.is_stopped());
-    ASSERT_EQ(1u, animation_.current_frame());
+    ASSERT_EQ(animation_.current_frame(), 1u);
 
     animation_.start();
     update();
 
-    ASSERT_EQ(0u, animation_.current_frame());
+    ASSERT_EQ(animation_.current_frame(), 0u);
     for (size_t i = 0; i < 4; ++i)
-        ASSERT_EQ(uv_[i], vertex_array_[i].texcoord);
+        ASSERT_EQ(vertex_array_[i].texcoord, uv_[i]);
 }
 
 TEST_F(AnimationTest, StoppedAnimationsDontProgressOnUpdate)
@@ -102,9 +102,9 @@ TEST_F(AnimationTest, StoppedAnimationsDontProgressOnUpdate)
     animation_.update(kFrameTime * 2);
     update();
 
-    ASSERT_EQ(0u, animation_.current_frame());
+    ASSERT_EQ(animation_.current_frame(), 0u);
     for (size_t i = 0; i < 4; ++i)
-        ASSERT_EQ(uv_[i], vertex_array_[i].texcoord);
+        ASSERT_EQ(vertex_array_[i].texcoord, uv_[i]);
 }
 
 TEST_F(AnimationTest, LoopsByDefault)
@@ -113,10 +113,10 @@ TEST_F(AnimationTest, LoopsByDefault)
     ASSERT_FALSE(animation_.is_stopped());
     for (unsigned int i = 0; i < kNumFrames * 2; ++i)
     {
-        ASSERT_EQ(i % kNumFrames, animation_.current_frame());
+        ASSERT_EQ(animation_.current_frame(), i % kNumFrames);
         animation_.update(kFrameTime);
     }
-    ASSERT_EQ(0u, animation_.current_frame());
+    ASSERT_EQ(animation_.current_frame(), 0u);
 }
 
 TEST_F(AnimationTest, DisablesLooping)
@@ -125,8 +125,8 @@ TEST_F(AnimationTest, DisablesLooping)
     animation_.start();
     for (unsigned int i = 0; i < kNumFrames * 2; ++i)
     {
-        ASSERT_EQ(std::min<unsigned int>(i, kNumFrames - 1),
-                  animation_.current_frame());
+        ASSERT_EQ(animation_.current_frame(),
+                  std::min<unsigned int>(i, kNumFrames - 1));
         animation_.update(kFrameTime);
     }
 }
@@ -136,28 +136,28 @@ TEST_F(AnimationTest, SetsDelayBetweenLoops)
     animation_.set_delay(1);
     animation_.start();
     animation_.update(kFrameTime * 3);
-    ASSERT_EQ(3u, animation_.current_frame());
+    ASSERT_EQ(animation_.current_frame(), 3u);
     animation_.update(kFrameTime);
-    ASSERT_EQ(3u, animation_.current_frame());
+    ASSERT_EQ(animation_.current_frame(), 3u);
     animation_.update(kFrameTime);
-    ASSERT_EQ(0u, animation_.current_frame());
+    ASSERT_EQ(animation_.current_frame(), 0u);
     animation_.update(kFrameTime * 3);
-    ASSERT_EQ(3u, animation_.current_frame());
+    ASSERT_EQ(animation_.current_frame(), 3u);
     animation_.update(kFrameTime);
-    ASSERT_EQ(3u, animation_.current_frame());
+    ASSERT_EQ(animation_.current_frame(), 3u);
     animation_.update(kFrameTime);
-    ASSERT_EQ(0u, animation_.current_frame());
+    ASSERT_EQ(animation_.current_frame(), 0u);
 }
 
 TEST_F(AnimationTest, ChangesFrameRate)
 {
     animation_.start();
 
-    ASSERT_EQ(0u, animation_.current_frame());
+    ASSERT_EQ(animation_.current_frame(), 0u);
 
     animation_.update(kFrameTime);
 
-    ASSERT_EQ(1u, animation_.current_frame());
+    ASSERT_EQ(animation_.current_frame(), 1u);
 
     animation_.set_frame_rate(60);
 
@@ -165,34 +165,34 @@ TEST_F(AnimationTest, ChangesFrameRate)
 
     animation_.update(16);
 
-    ASSERT_EQ(2u, animation_.current_frame());
+    ASSERT_EQ(animation_.current_frame(), 2u);
 
     animation_.update(16);
 
-    ASSERT_EQ(3u, animation_.current_frame());
+    ASSERT_EQ(animation_.current_frame(), 3u);
 
     animation_.stop();
     animation_.set_frame_rate(1);
     animation_.start();
     animation_.update(1000);
 
-    ASSERT_EQ(1u, animation_.current_frame());
+    ASSERT_EQ(animation_.current_frame(), 1u);
 
     animation_.update(500);
 
-    ASSERT_EQ(1u, animation_.current_frame());
+    ASSERT_EQ(animation_.current_frame(), 1u);
 
     animation_.set_frame_rate(2);
 
-    ASSERT_EQ(1u, animation_.current_frame());
+    ASSERT_EQ(animation_.current_frame(), 1u);
 
     animation_.update(250);
 
-    ASSERT_EQ(2u, animation_.current_frame());
+    ASSERT_EQ(animation_.current_frame(), 2u);
 
     animation_.update(500);
 
-    ASSERT_EQ(3u, animation_.current_frame());
+    ASSERT_EQ(animation_.current_frame(), 3u);
 }
 
 TEST_F(AnimationTest, ResetsAnimationFrames)
@@ -202,15 +202,15 @@ TEST_F(AnimationTest, ResetsAnimationFrames)
     animation_.start();
 
     for (size_t i = 0; i < 4; ++i)
-        ASSERT_EQ(uv_[i], vertex_array_[i].texcoord);
+        ASSERT_EQ(vertex_array_[i].texcoord, uv_[i]);
 
     animation_.set_frames(Animation::Frames(kAnimationFrames));
     update();
 
-    ASSERT_EQ(Vec2f(0.25f, 0.5f), vertex_array_[0].texcoord);
-    ASSERT_EQ(Vec2f(0.5f, 0.5f), vertex_array_[1].texcoord);
-    ASSERT_EQ(Vec2f(0.5f, 0.25f), vertex_array_[2].texcoord);
-    ASSERT_EQ(Vec2f(0.25f, 0.25f), vertex_array_[3].texcoord);
+    ASSERT_EQ(vertex_array_[0].texcoord, Vec2f(0.25f, 0.5f));
+    ASSERT_EQ(vertex_array_[1].texcoord, Vec2f(0.5f, 0.5f));
+    ASSERT_EQ(vertex_array_[2].texcoord, Vec2f(0.5f, 0.25f));
+    ASSERT_EQ(vertex_array_[3].texcoord, Vec2f(0.25f, 0.25f));
 
     animation_.release();
 }
@@ -221,25 +221,25 @@ TEST_F(AnimationTest, ResetsTargetSprite)
     animation_.update(kFrameTime);
     update();
 
-    ASSERT_EQ(1u, animation_.current_frame());
-    ASSERT_EQ(Vec2f(0.25f, 0.5f), vertex_array_[0].texcoord);
-    ASSERT_EQ(Vec2f(0.5f, 0.5f), vertex_array_[1].texcoord);
-    ASSERT_EQ(Vec2f(0.5f, 0.25f), vertex_array_[2].texcoord);
-    ASSERT_EQ(Vec2f(0.25f, 0.25f), vertex_array_[3].texcoord);
+    ASSERT_EQ(animation_.current_frame(), 1u);
+    ASSERT_EQ(vertex_array_[0].texcoord, Vec2f(0.25f, 0.5f));
+    ASSERT_EQ(vertex_array_[1].texcoord, Vec2f(0.5f, 0.5f));
+    ASSERT_EQ(vertex_array_[2].texcoord, Vec2f(0.5f, 0.25f));
+    ASSERT_EQ(vertex_array_[3].texcoord, Vec2f(0.25f, 0.25f));
 
     sprite_->set_texture(0);
     update();
 
     for (size_t i = 0; i < 4; ++i)
-        ASSERT_EQ(uv_[i], vertex_array_[i].texcoord);
+        ASSERT_EQ(vertex_array_[i].texcoord, uv_[i]);
 
     animation_.set_sprite(sprite_);
     update();
 
-    ASSERT_EQ(Vec2f(0.25f, 0.5f), vertex_array_[0].texcoord);
-    ASSERT_EQ(Vec2f(0.5f, 0.5f), vertex_array_[1].texcoord);
-    ASSERT_EQ(Vec2f(0.5f, 0.25f), vertex_array_[2].texcoord);
-    ASSERT_EQ(Vec2f(0.25f, 0.25f), vertex_array_[3].texcoord);
+    ASSERT_EQ(vertex_array_[0].texcoord, Vec2f(0.25f, 0.5f));
+    ASSERT_EQ(vertex_array_[1].texcoord, Vec2f(0.5f, 0.5f));
+    ASSERT_EQ(vertex_array_[2].texcoord, Vec2f(0.5f, 0.25f));
+    ASSERT_EQ(vertex_array_[3].texcoord, Vec2f(0.25f, 0.25f));
 }
 
 TEST_F(AnimationTest, JumpsToSpecificFrames)
@@ -248,27 +248,27 @@ TEST_F(AnimationTest, JumpsToSpecificFrames)
     animation_.update(kFrameTime);
     update();
 
-    ASSERT_EQ(1u, animation_.current_frame());
-    ASSERT_EQ(Vec2f(0.25f, 0.5f), vertex_array_[0].texcoord);
-    ASSERT_EQ(Vec2f(0.5f, 0.5f), vertex_array_[1].texcoord);
-    ASSERT_EQ(Vec2f(0.5f, 0.25f), vertex_array_[2].texcoord);
-    ASSERT_EQ(Vec2f(0.25f, 0.25f), vertex_array_[3].texcoord);
+    ASSERT_EQ(animation_.current_frame(), 1u);
+    ASSERT_EQ(vertex_array_[0].texcoord, Vec2f(0.25f, 0.5f));
+    ASSERT_EQ(vertex_array_[1].texcoord, Vec2f(0.5f, 0.5f));
+    ASSERT_EQ(vertex_array_[2].texcoord, Vec2f(0.5f, 0.25f));
+    ASSERT_EQ(vertex_array_[3].texcoord, Vec2f(0.25f, 0.25f));
 
     animation_.jump_to(0);
     update();
 
-    ASSERT_EQ(0u, animation_.current_frame());
+    ASSERT_EQ(animation_.current_frame(), 0u);
     for (size_t i = 0; i < 4; ++i)
-        ASSERT_EQ(uv_[i], vertex_array_[i].texcoord);
+        ASSERT_EQ(vertex_array_[i].texcoord, uv_[i]);
 
     animation_.jump_to(1);
     update();
 
-    ASSERT_EQ(1u, animation_.current_frame());
-    ASSERT_EQ(Vec2f(0.25f, 0.5f), vertex_array_[0].texcoord);
-    ASSERT_EQ(Vec2f(0.5f, 0.5f), vertex_array_[1].texcoord);
-    ASSERT_EQ(Vec2f(0.5f, 0.25f), vertex_array_[2].texcoord);
-    ASSERT_EQ(Vec2f(0.25f, 0.25f), vertex_array_[3].texcoord);
+    ASSERT_EQ(animation_.current_frame(), 1u);
+    ASSERT_EQ(vertex_array_[0].texcoord, Vec2f(0.25f, 0.5f));
+    ASSERT_EQ(vertex_array_[1].texcoord, Vec2f(0.5f, 0.5f));
+    ASSERT_EQ(vertex_array_[2].texcoord, Vec2f(0.5f, 0.25f));
+    ASSERT_EQ(vertex_array_[3].texcoord, Vec2f(0.25f, 0.25f));
 }
 
 TEST_F(AnimationTest, Rewinds)
@@ -277,18 +277,18 @@ TEST_F(AnimationTest, Rewinds)
     animation_.update(kFrameTime);
     update();
 
-    ASSERT_EQ(1u, animation_.current_frame());
-    ASSERT_EQ(Vec2f(0.25f, 0.5f), vertex_array_[0].texcoord);
-    ASSERT_EQ(Vec2f(0.5f, 0.5f), vertex_array_[1].texcoord);
-    ASSERT_EQ(Vec2f(0.5f, 0.25f), vertex_array_[2].texcoord);
-    ASSERT_EQ(Vec2f(0.25f, 0.25f), vertex_array_[3].texcoord);
+    ASSERT_EQ(animation_.current_frame(), 1u);
+    ASSERT_EQ(vertex_array_[0].texcoord, Vec2f(0.25f, 0.5f));
+    ASSERT_EQ(vertex_array_[1].texcoord, Vec2f(0.5f, 0.5f));
+    ASSERT_EQ(vertex_array_[2].texcoord, Vec2f(0.5f, 0.25f));
+    ASSERT_EQ(vertex_array_[3].texcoord, Vec2f(0.25f, 0.25f));
 
     animation_.rewind();
     update();
 
-    ASSERT_EQ(0u, animation_.current_frame());
+    ASSERT_EQ(animation_.current_frame(), 0u);
     for (size_t i = 0; i < 4; ++i)
-        ASSERT_EQ(uv_[i], vertex_array_[i].texcoord);
+        ASSERT_EQ(vertex_array_[i].texcoord, uv_[i]);
 }
 
 TEST_F(AnimationTest, EventCallbacksAreCalledOnlyOnce)
@@ -298,7 +298,7 @@ TEST_F(AnimationTest, EventCallbacksAreCalledOnlyOnce)
     int completed = 0;
     int frame = 0;
     animation_.set_callback([&](Animation* a, AnimationEvent e) {
-        ASSERT_EQ(a, &animation_);
+        ASSERT_EQ(&animation_, a);
         switch (e)
         {
             case AnimationEvent::Start:
@@ -320,42 +320,42 @@ TEST_F(AnimationTest, EventCallbacksAreCalledOnlyOnce)
 
     animation_.stop();
 
-    ASSERT_EQ(0, started);
-    ASSERT_EQ(0, stopped);
+    ASSERT_EQ(started, 0);
+    ASSERT_EQ(stopped, 0);
 
     animation_.start();
 
-    ASSERT_EQ(1, started);
-    ASSERT_EQ(0, frame);
+    ASSERT_EQ(started, 1);
+    ASSERT_EQ(frame, 0);
 
     animation_.start();
 
-    ASSERT_EQ(1, started);
-    ASSERT_EQ(0, frame);
+    ASSERT_EQ(started, 1);
+    ASSERT_EQ(frame, 0);
 
     animation_.update(kFrameTime * 3);
 
-    ASSERT_EQ(1, started);
-    ASSERT_EQ(0, stopped);
-    ASSERT_EQ(0, completed);
-    ASSERT_EQ(3, frame);
+    ASSERT_EQ(started, 1);
+    ASSERT_EQ(stopped, 0);
+    ASSERT_EQ(completed, 0);
+    ASSERT_EQ(frame, 3);
 
     animation_.update(kFrameTime);
 
-    ASSERT_EQ(1, completed);
-    ASSERT_EQ(3, frame);
+    ASSERT_EQ(completed, 1);
+    ASSERT_EQ(frame, 3);
 
     animation_.update(kFrameTime);
 
-    ASSERT_EQ(1, completed);
-    ASSERT_EQ(4, frame);
+    ASSERT_EQ(completed, 1);
+    ASSERT_EQ(frame, 4);
 
     animation_.stop();
 
-    ASSERT_EQ(1, started);
-    ASSERT_EQ(1, stopped);
-    ASSERT_EQ(1, completed);
-    ASSERT_EQ(4, frame);
+    ASSERT_EQ(started, 1);
+    ASSERT_EQ(stopped, 1);
+    ASSERT_EQ(completed, 1);
+    ASSERT_EQ(frame, 4);
 }
 
 TEST_F(AnimationTest, FiresCompleteEventAfterFrameChange)
@@ -365,7 +365,7 @@ TEST_F(AnimationTest, FiresCompleteEventAfterFrameChange)
         switch (e)
         {
             case AnimationEvent::Complete:
-                ASSERT_NE(0u, a->current_frame());
+                ASSERT_NE(a->current_frame(), 0u);
                 if (++completed == 2)
                     a->stop();
                 break;
@@ -377,23 +377,23 @@ TEST_F(AnimationTest, FiresCompleteEventAfterFrameChange)
     animation_.start();
     animation_.update(kFrameTime * 3);
 
-    ASSERT_EQ(0u, completed);
-    ASSERT_EQ(3u, animation_.current_frame());
+    ASSERT_EQ(completed, 0u);
+    ASSERT_EQ(animation_.current_frame(), 3u);
 
     animation_.update(kFrameTime);
 
-    ASSERT_EQ(1u, completed);
-    ASSERT_EQ(0u, animation_.current_frame());
+    ASSERT_EQ(completed, 1u);
+    ASSERT_EQ(animation_.current_frame(), 0u);
 
     animation_.update(kFrameTime * 4);
 
-    ASSERT_EQ(2u, completed);
+    ASSERT_EQ(completed, 2u);
     ASSERT_TRUE(animation_.is_stopped());
-    ASSERT_EQ(3u, animation_.current_frame());
+    ASSERT_EQ(animation_.current_frame(), 3u);
 
     animation_.start();
 
-    ASSERT_EQ(0u, animation_.current_frame());
+    ASSERT_EQ(animation_.current_frame(), 0u);
 
 }
 
@@ -404,7 +404,7 @@ TEST_F(AnimationTest, FiresFrameEventOnFrameChange)
         switch (e)
         {
             case AnimationEvent::Frame:
-                ASSERT_EQ(frame, a->current_frame());
+                ASSERT_EQ(a->current_frame(), frame);
                 break;
             default:
                 break;

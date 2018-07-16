@@ -43,7 +43,7 @@ TEST(AlgorithmTest, RoundsUpToNearestPowerOfTwo)
     unsigned int p = 1;
     for (unsigned int i = 1; i < 100; ++i)
     {
-        ASSERT_EQ(p, rainbow::ceil_pow2(i));
+        ASSERT_EQ(rainbow::ceil_pow2(i), p);
         if (i == p)
             p *= 2;
     }
@@ -70,9 +70,9 @@ TEST(AlgorithmTest, FindsValueInContainer)
 {
     auto iter = std::begin(kUTF32);
     for (auto&& value : kUTF32)
-        ASSERT_EQ(iter++, rainbow::find(kUTF32, value));
-    ASSERT_EQ(std::end(kUTF32), iter);
-    ASSERT_EQ(std::begin(kUTF8), rainbow::find(kUTF8, 0xc3));
+        ASSERT_EQ(rainbow::find(kUTF32, value), iter++);
+    ASSERT_EQ(iter, std::end(kUTF32));
+    ASSERT_EQ(rainbow::find(kUTF8, 0xc3), std::begin(kUTF8));
 }
 
 TEST(AlgorithmTest, FindsValueInContainerAndInvokesAction)
@@ -81,24 +81,24 @@ TEST(AlgorithmTest, FindsValueInContainerAndInvokesAction)
     auto count = [&result](unsigned char) { ++result; };
     rainbow::find_invoke(kUTF8, 0xc3, count);
 
-    ASSERT_EQ(1, result);
+    ASSERT_EQ(result, 1);
 
     result = 0;
     rainbow::find_invoke(kUTF8, 0xff, count);
 
-    ASSERT_EQ(0, result);
+    ASSERT_EQ(result, 0);
 }
 
 TEST(AlgorithmTest, RoundsDownToNearestPowerOfTwo)
 {
-    ASSERT_EQ(0u, rainbow::floor_pow2(0));
+    ASSERT_EQ(rainbow::floor_pow2(0), 0u);
 
     unsigned int p = 1;
     for (unsigned int i = 1; i < 100; ++i)
     {
         if (i == p * 2)
             p = i;
-        ASSERT_EQ(p, rainbow::floor_pow2(i));
+        ASSERT_EQ(rainbow::floor_pow2(i), p);
     }
 }
 
@@ -136,8 +136,8 @@ TEST(AlgorithmTest, IsPowerOfTwo)
 
 TEST(AlgorithmTest, MakesFourCC)
 {
-    ASSERT_EQ(0x20534444u, rainbow::make_fourcc('D', 'D', 'S', ' '));
-    ASSERT_EQ(0x03525650u, rainbow::make_fourcc('P', 'V', 'R', 3));
+    ASSERT_EQ(rainbow::make_fourcc('D', 'D', 'S', ' '), 0x20534444u);
+    ASSERT_EQ(rainbow::make_fourcc('P', 'V', 'R', 3), 0x03525650u);
 }
 
 TEST(AlgorithmTest, QuickErasesElementsInContainer)
@@ -145,24 +145,24 @@ TEST(AlgorithmTest, QuickErasesElementsInContainer)
     std::vector<int> v{1, 2, 3, 4, 5};
     rainbow::quick_erase(v, v.begin());
 
-    ASSERT_EQ(4u, v.size());
-    ASSERT_EQ(5, v[0]);
-    ASSERT_EQ(2, v[1]);
-    ASSERT_EQ(3, v[2]);
-    ASSERT_EQ(4, v[3]);
+    ASSERT_EQ(v.size(), 4u);
+    ASSERT_EQ(v[0], 5);
+    ASSERT_EQ(v[1], 2);
+    ASSERT_EQ(v[2], 3);
+    ASSERT_EQ(v[3], 4);
 
     rainbow::quick_erase(v, v.begin() + 1);
 
-    ASSERT_EQ(3u, v.size());
-    ASSERT_EQ(5, v[0]);
-    ASSERT_EQ(4, v[1]);
-    ASSERT_EQ(3, v[2]);
+    ASSERT_EQ(v.size(), 3u);
+    ASSERT_EQ(v[0], 5);
+    ASSERT_EQ(v[1], 4);
+    ASSERT_EQ(v[2], 3);
 
     rainbow::quick_erase(v, v.end() - 1);
 
-    ASSERT_EQ(2u, v.size());
-    ASSERT_EQ(5, v[0]);
-    ASSERT_EQ(4, v[1]);
+    ASSERT_EQ(v.size(), 2u);
+    ASSERT_EQ(v[0], 5);
+    ASSERT_EQ(v[1], 4);
 }
 
 TEST(AlgorithmTest, ConvertsDegreesToRadians)
@@ -177,25 +177,25 @@ TEST(AlgorithmTest, RemovesValuesFromContainer)
     std::vector<int> v{1, 2, 3, 4, 3};
     rainbow::remove(v, 3);
 
-    ASSERT_EQ(4u, v.size());
-    ASSERT_EQ(1, v[0]);
-    ASSERT_EQ(2, v[1]);
-    ASSERT_EQ(4, v[2]);
-    ASSERT_EQ(3, v[3]);
+    ASSERT_EQ(v.size(), 4u);
+    ASSERT_EQ(v[0], 1);
+    ASSERT_EQ(v[1], 2);
+    ASSERT_EQ(v[2], 4);
+    ASSERT_EQ(v[3], 3);
 
     rainbow::remove(v, 3);
 
-    ASSERT_EQ(3u, v.size());
-    ASSERT_EQ(1, v[0]);
-    ASSERT_EQ(2, v[1]);
-    ASSERT_EQ(4, v[2]);
+    ASSERT_EQ(v.size(), 3u);
+    ASSERT_EQ(v[0], 1);
+    ASSERT_EQ(v[1], 2);
+    ASSERT_EQ(v[2], 4);
 
     rainbow::remove(v, 9000);
 
-    ASSERT_EQ(3u, v.size());
-    ASSERT_EQ(1, v[0]);
-    ASSERT_EQ(2, v[1]);
-    ASSERT_EQ(4, v[2]);
+    ASSERT_EQ(v.size(), 3u);
+    ASSERT_EQ(v[0], 1);
+    ASSERT_EQ(v[1], 2);
+    ASSERT_EQ(v[2], 4);
 }
 
 TEST(AlgorithmTest, RemovesValuesSatisfyingPredicatesFromContainer)
@@ -203,17 +203,17 @@ TEST(AlgorithmTest, RemovesValuesSatisfyingPredicatesFromContainer)
     std::vector<int> v{1, 2, 3, 4, 5, 6};
     rainbow::remove_if(v, [](int i) { return i % 2 == 0; });
 
-    ASSERT_EQ(3u, v.size());
-    ASSERT_EQ(1, v[0]);
-    ASSERT_EQ(3, v[1]);
-    ASSERT_EQ(5, v[2]);
+    ASSERT_EQ(v.size(), 3u);
+    ASSERT_EQ(v[0], 1);
+    ASSERT_EQ(v[1], 3);
+    ASSERT_EQ(v[2], 5);
 
     rainbow::remove_if(v, [](int i) { return i > 5; });
 
-    ASSERT_EQ(3u, v.size());
-    ASSERT_EQ(1, v[0]);
-    ASSERT_EQ(3, v[1]);
-    ASSERT_EQ(5, v[2]);
+    ASSERT_EQ(v.size(), 3u);
+    ASSERT_EQ(v[0], 1);
+    ASSERT_EQ(v[1], 3);
+    ASSERT_EQ(v[2], 5);
 }
 
 TEST(AlgorithmTest, RotatesLeft)
@@ -221,21 +221,21 @@ TEST(AlgorithmTest, RotatesLeft)
     std::vector<int> nums{1, 2, 3, 4, 5};
     rainbow::rotate_left(nums);
 
-    ASSERT_EQ(5u, nums.size());
-    ASSERT_EQ(2, nums[0]);
-    ASSERT_EQ(3, nums[1]);
-    ASSERT_EQ(4, nums[2]);
-    ASSERT_EQ(5, nums[3]);
-    ASSERT_EQ(1, nums[4]);
+    ASSERT_EQ(nums.size(), 5u);
+    ASSERT_EQ(nums[0], 2);
+    ASSERT_EQ(nums[1], 3);
+    ASSERT_EQ(nums[2], 4);
+    ASSERT_EQ(nums[3], 5);
+    ASSERT_EQ(nums[4], 1);
 
     rainbow::rotate_left(nums);
 
-    ASSERT_EQ(5u, nums.size());
-    ASSERT_EQ(3, nums[0]);
-    ASSERT_EQ(4, nums[1]);
-    ASSERT_EQ(5, nums[2]);
-    ASSERT_EQ(1, nums[3]);
-    ASSERT_EQ(2, nums[4]);
+    ASSERT_EQ(nums.size(), 5u);
+    ASSERT_EQ(nums[0], 3);
+    ASSERT_EQ(nums[1], 4);
+    ASSERT_EQ(nums[2], 5);
+    ASSERT_EQ(nums[3], 1);
+    ASSERT_EQ(nums[4], 2);
 }
 
 TEST(AlgorithmTest, RotatesRight)
@@ -243,26 +243,26 @@ TEST(AlgorithmTest, RotatesRight)
     std::vector<int> nums{1, 2, 3, 4, 5};
     rainbow::rotate_right(nums);
 
-    ASSERT_EQ(5u, nums.size());
-    ASSERT_EQ(5, nums[0]);
-    ASSERT_EQ(1, nums[1]);
-    ASSERT_EQ(2, nums[2]);
-    ASSERT_EQ(3, nums[3]);
-    ASSERT_EQ(4, nums[4]);
+    ASSERT_EQ(nums.size(), 5u);
+    ASSERT_EQ(nums[0], 5);
+    ASSERT_EQ(nums[1], 1);
+    ASSERT_EQ(nums[2], 2);
+    ASSERT_EQ(nums[3], 3);
+    ASSERT_EQ(nums[4], 4);
 
     rainbow::rotate_right(nums);
 
-    ASSERT_EQ(5u, nums.size());
-    ASSERT_EQ(4, nums[0]);
-    ASSERT_EQ(5, nums[1]);
-    ASSERT_EQ(1, nums[2]);
-    ASSERT_EQ(2, nums[3]);
-    ASSERT_EQ(3, nums[4]);
+    ASSERT_EQ(nums.size(), 5u);
+    ASSERT_EQ(nums[0], 4);
+    ASSERT_EQ(nums[1], 5);
+    ASSERT_EQ(nums[2], 1);
+    ASSERT_EQ(nums[3], 2);
+    ASSERT_EQ(nums[4], 3);
 }
 
 TEST(AlgorithmTest, ExtractsSignOfRealNumbers)
 {
     ASSERT_GT(0, rainbow::signum(-10));
-    ASSERT_EQ(0, rainbow::signum(0));
+    ASSERT_EQ(rainbow::signum(0), 0);
     ASSERT_LT(0, rainbow::signum(10));
 }

@@ -15,13 +15,13 @@ TEST(TextAlignmentTest, FromChar)
         switch (c)
         {
             case 'c':
-                ASSERT_EQ(rainbow::TextAlignment::Center, alignment);
+                ASSERT_EQ(alignment, rainbow::TextAlignment::Center);
                 break;
             case 'r':
-                ASSERT_EQ(rainbow::TextAlignment::Right, alignment);
+                ASSERT_EQ(alignment, rainbow::TextAlignment::Right);
                 break;
             default:
-                ASSERT_EQ(rainbow::TextAlignment::Left, alignment);
+                ASSERT_EQ(alignment, rainbow::TextAlignment::Left);
                 break;
         }
     }

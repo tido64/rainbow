@@ -33,8 +33,8 @@ using rainbow::filesystem::Path;
 TEST(PathTest, AssetsPath)
 {
     char cwd[256];
-    ASSERT_EQ(cwd, getcwd(cwd, sizeof(cwd)));
-    ASSERT_STREQ(cwd, rainbow::filesystem::assets_path());
+    ASSERT_EQ(getcwd(cwd, sizeof(cwd)), cwd);
+    ASSERT_STREQ(rainbow::filesystem::assets_path(), cwd);
 }
 
 TEST(PathTest, CreatesDirectories)
@@ -59,7 +59,7 @@ TEST(PathTest, CreatesDirectories)
     {
         auto p = path.string().substr(0, offset);
         ASSERT_TRUE(rainbow::filesystem::is_directory(p.c_str(), error));
-        ASSERT_EQ(0, rmdir(p.c_str()));
+        ASSERT_EQ(rmdir(p.c_str()), 0);
         offset = p.rfind(kPathSeparatorCharacter, offset);
     }
 }
@@ -67,19 +67,19 @@ TEST(PathTest, CreatesDirectories)
 TEST(PathTest, RelativeToCurrentPath)
 {
     char cwd[256];
-    ASSERT_EQ(cwd, getcwd(cwd, sizeof(cwd)));
+    ASSERT_EQ(getcwd(cwd, sizeof(cwd)), cwd);
 
     std::string path{cwd};
     path += kPathSeparatorCharacter;
     path += kTestFileName;
 
     ASSERT_STREQ(
-        path.c_str(), rainbow::filesystem::relative(kTestFileName).c_str());
+        rainbow::filesystem::relative(kTestFileName).c_str(), path.c_str());
 }
 
 TEST(PathTest, RelativeToRoot)
 {
-    ASSERT_STREQ(kTestPath, rainbow::filesystem::absolute(kTestPath).c_str());
+    ASSERT_STREQ(rainbow::filesystem::absolute(kTestPath).c_str(), kTestPath);
 }
 
 TEST(PathTest, SetsPath)
@@ -87,22 +87,22 @@ TEST(PathTest, SetsPath)
     Path path;
     ASSERT_STRNE(kTestPath, path.c_str());
     path = kTestPath;
-    ASSERT_STREQ(kTestPath, path.c_str());
+    ASSERT_STREQ(path.c_str(), kTestPath);
 }
 
 TEST(PathTest, AppendsPathComponents)
 {
     Path path;
     path = kTestPath;
-    ASSERT_STREQ(kTestPath, path.c_str());
+    ASSERT_STREQ(path.c_str(), kTestPath);
     path /= kTestFileName;
-    ASSERT_STREQ(kTestPath kPathSeparator kTestFileName, path.c_str());
+    ASSERT_STREQ(path.c_str(), kTestPath kPathSeparator kTestFileName);
     path /= kPathSeparator;
     ASSERT_STREQ(
-        kTestPath kPathSeparator kTestFileName kPathSeparator kPathSeparator,
-        path.c_str());
+        path.c_str(),
+        kTestPath kPathSeparator kTestFileName kPathSeparator kPathSeparator);
     path /= kTestFileName;
-    ASSERT_STREQ(kTestPath kPathSeparator kTestFileName kPathSeparator
-                     kPathSeparator kTestFileName,
-                 path.c_str());
+    ASSERT_STREQ(path.c_str(),
+                 kTestPath kPathSeparator kTestFileName kPathSeparator
+                     kPathSeparator kTestFileName);
 }

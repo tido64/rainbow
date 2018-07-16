@@ -25,6 +25,6 @@ TEST(VirtualKeyTest, ScancodeToVirtualKeyMappingIsConsistent)
         SDL_Keysym keysym{};
         keysym.scancode = static_cast<SDL_Scancode>(rainbow::to_scancode(vk));
 #endif  // RAINBOW_SDL
-        ASSERT_EQ(vk, rainbow::to_virtualkey(keysym));
+        ASSERT_EQ(rainbow::to_virtualkey(keysym), vk);
     }
 }

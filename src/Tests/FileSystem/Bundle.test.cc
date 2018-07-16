@@ -28,9 +28,9 @@ TEST(BundleTest, WithoutArguments)
     Bundle bundle{args};
     auto cwd = fs::system_current_path();
 
-    ASSERT_EQ(cwd, bundle.assets_path());
-    ASSERT_EQ(cwd + fs::path_separator() + executable, bundle.exec_path());
-    ASSERT_EQ(nullptr, bundle.main_script());
+    ASSERT_EQ(bundle.assets_path(), cwd);
+    ASSERT_EQ(bundle.exec_path(), cwd + fs::path_separator() + executable);
+    ASSERT_EQ(bundle.main_script(), nullptr);
 }
 
 TEST(BundleTest, WithNonExistingPath)
@@ -42,9 +42,9 @@ TEST(BundleTest, WithNonExistingPath)
     Bundle bundle{args};
     auto cwd = fs::system_current_path();
 
-    ASSERT_EQ(cwd, bundle.assets_path());
-    ASSERT_EQ(cwd + fs::path_separator() + executable, bundle.exec_path());
-    ASSERT_EQ(nullptr, bundle.main_script());
+    ASSERT_EQ(bundle.assets_path(), cwd);
+    ASSERT_EQ(bundle.exec_path(), cwd + fs::path_separator() + executable);
+    ASSERT_EQ(bundle.main_script(), nullptr);
 }
 
 TEST(BundleTest, WithScriptDirectory)
@@ -58,9 +58,9 @@ TEST(BundleTest, WithScriptDirectory)
     Bundle bundle{args};
     auto cwd = fs::system_current_path();
 
-    ASSERT_EQ(directory, bundle.assets_path());
-    ASSERT_EQ(cwd + fs::path_separator() + executable, bundle.exec_path());
-    ASSERT_EQ(nullptr, bundle.main_script());
+    ASSERT_EQ(bundle.assets_path(), directory);
+    ASSERT_EQ(bundle.exec_path(), cwd + fs::path_separator() + executable);
+    ASSERT_EQ(bundle.main_script(), nullptr);
 }
 
 TEST(BundleTest, WithScriptInSameDirectory)
@@ -74,9 +74,9 @@ TEST(BundleTest, WithScriptInSameDirectory)
     Bundle bundle{args};
     auto cwd = fs::system_current_path();
 
-    ASSERT_EQ(cwd, bundle.assets_path());
-    ASSERT_EQ(cwd + fs::path_separator() + executable, bundle.exec_path());
-    ASSERT_EQ(script, bundle.main_script());
+    ASSERT_EQ(bundle.assets_path(), cwd);
+    ASSERT_EQ(bundle.exec_path(), cwd + fs::path_separator() + executable);
+    ASSERT_EQ(bundle.main_script(), script);
 }
 
 TEST(BundleTest, WithScriptInAnotherDirectory)
@@ -93,7 +93,7 @@ TEST(BundleTest, WithScriptInAnotherDirectory)
     Bundle bundle{args};
     auto cwd = fs::system_current_path();
 
-    ASSERT_EQ(directory, bundle.assets_path());
-    ASSERT_EQ(cwd + fs::path_separator() + executable, bundle.exec_path());
-    ASSERT_EQ(script, bundle.main_script());
+    ASSERT_EQ(bundle.assets_path(), directory);
+    ASSERT_EQ(bundle.exec_path(), cwd + fs::path_separator() + executable);
+    ASSERT_EQ(bundle.main_script(), script);
 }

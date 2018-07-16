@@ -24,34 +24,34 @@ TEST(ColorTest, IsWhiteByDefault)
 {
     constexpr Color cb;
 
-    ASSERT_EQ(255, cb.r);
-    ASSERT_EQ(255, cb.g);
-    ASSERT_EQ(255, cb.b);
-    ASSERT_EQ(255, cb.a);
+    ASSERT_EQ(cb.r, 255);
+    ASSERT_EQ(cb.g, 255);
+    ASSERT_EQ(cb.b, 255);
+    ASSERT_EQ(cb.a, 255);
 }
 
 TEST(ColorTest, ConstructsColor)
 {
     constexpr Color c(kTestColor);
 
-    ASSERT_EQ(kRed, c.r);
-    ASSERT_EQ(kGreen, c.g);
-    ASSERT_EQ(kBlue, c.b);
-    ASSERT_EQ(kAlpha, c.a);
+    ASSERT_EQ(c.r, kRed);
+    ASSERT_EQ(c.g, kGreen);
+    ASSERT_EQ(c.b, kBlue);
+    ASSERT_EQ(c.a, kAlpha);
 
     constexpr Color d(kRed, kGreen, kBlue, kAlpha);
 
-    ASSERT_EQ(kRed, d.r);
-    ASSERT_EQ(kGreen, d.g);
-    ASSERT_EQ(kBlue, d.b);
-    ASSERT_EQ(kAlpha, d.a);
+    ASSERT_EQ(d.r, kRed);
+    ASSERT_EQ(d.g, kGreen);
+    ASSERT_EQ(d.b, kBlue);
+    ASSERT_EQ(d.a, kAlpha);
 
     constexpr Color e(kRed, kGreen, kBlue);
 
-    ASSERT_EQ(kRed, e.r);
-    ASSERT_EQ(kGreen, e.g);
-    ASSERT_EQ(kBlue, e.b);
-    ASSERT_EQ(0xff, e.a);
+    ASSERT_EQ(e.r, kRed);
+    ASSERT_EQ(e.g, kGreen);
+    ASSERT_EQ(e.b, kBlue);
+    ASSERT_EQ(e.a, 0xff);
 }
 
 TEST(ColorTest, AssignsIntegerColor)
@@ -59,8 +59,8 @@ TEST(ColorTest, AssignsIntegerColor)
     Color c;
     c = kTestColor;
 
-    ASSERT_EQ(kRed, c.r);
-    ASSERT_EQ(kGreen, c.g);
-    ASSERT_EQ(kBlue, c.b);
-    ASSERT_EQ(kAlpha, c.a);
+    ASSERT_EQ(c.r, kRed);
+    ASSERT_EQ(c.g, kGreen);
+    ASSERT_EQ(c.b, kBlue);
+    ASSERT_EQ(c.a, kAlpha);
 }

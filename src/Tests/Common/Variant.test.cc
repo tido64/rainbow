@@ -14,7 +14,7 @@ namespace
     public:
         TestVisitor(T value) : value_(value) {}
 
-        void operator()(T value) const { ASSERT_EQ(value_, value); }
+        void operator()(T value) const { ASSERT_EQ(value, value_); }
 
         template <typename U>
         void operator()(U&&) const
@@ -32,16 +32,16 @@ TEST(VariantTest, ReturnsReferenceToValue)
     const rainbow::variant<void*, uint32_t> v{this};
 
     ASSERT_TRUE(rainbow::holds_alternative<void*>(v));
-    ASSERT_EQ(this, rainbow::get<void*>(v).value_or(nullptr));
+    ASSERT_EQ(rainbow::get<void*>(v).value_or(nullptr), this);
     ASSERT_FALSE(rainbow::holds_alternative<uint32_t>(v));
-    ASSERT_EQ(std::nullopt, rainbow::get<uint32_t>(v));
+    ASSERT_EQ(rainbow::get<uint32_t>(v), std::nullopt);
 
     rainbow::variant<void*, uint32_t> w{1};
 
     ASSERT_FALSE(rainbow::holds_alternative<void*>(w));
-    ASSERT_EQ(std::nullopt, rainbow::get<void*>(w));
+    ASSERT_EQ(rainbow::get<void*>(w), std::nullopt);
     ASSERT_TRUE(rainbow::holds_alternative<uint32_t>(w));
-    ASSERT_EQ(1u, rainbow::get<uint32_t>(w).value_or(0xabad1dea));
+    ASSERT_EQ(rainbow::get<uint32_t>(w).value_or(0xabad1dea), 1u);
 }
 
 TEST(VariantTest, AppliesVisitor)

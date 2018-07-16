@@ -14,7 +14,7 @@ TEST(TextureAtlasTest, AddsRegions)
 {
     TextureAtlas atlas{rainbow::ISolemnlySwearThatIAmOnlyTesting{}};
 
-    ASSERT_EQ(0u, atlas.size());
+    ASSERT_EQ(atlas.size(), 0u);
 
     const unsigned int regions[]{
         atlas.add_region(1, 1, 1, 1),
@@ -22,7 +22,7 @@ TEST(TextureAtlasTest, AddsRegions)
         atlas.add_region(3, 3, 3, 3),
     };
 
-    ASSERT_EQ(3u, atlas.size());
+    ASSERT_EQ(atlas.size(), 3u);
 
     int check = 0;
     for (auto i : regions)
@@ -30,10 +30,10 @@ TEST(TextureAtlasTest, AddsRegions)
         const float value = ++check / 64.0f;
         auto& region = atlas[i];
 
-        ASSERT_EQ(Vec2f(value, value), region.vx[3]);
-        ASSERT_EQ(Vec2f(value + value, value), region.vx[2]);
-        ASSERT_EQ(Vec2f(value + value, value + value), region.vx[1]);
-        ASSERT_EQ(Vec2f(value, value + value), region.vx[0]);
+        ASSERT_EQ(region.vx[3], Vec2f(value, value));
+        ASSERT_EQ(region.vx[2], Vec2f(value + value, value));
+        ASSERT_EQ(region.vx[1], Vec2f(value + value, value + value));
+        ASSERT_EQ(region.vx[0], Vec2f(value, value + value));
     }
 }
 
@@ -43,36 +43,36 @@ TEST(TextureAtlasTest, SetsRegions)
     TextureAtlas atlas{rainbow::ISolemnlySwearThatIAmOnlyTesting{}};
     atlas.set_regions(regions);
 
-    ASSERT_EQ(3u, atlas.size());
+    ASSERT_EQ(atlas.size(), 3u);
 
     atlas.add_region(4, 4, 4, 4);
 
-    ASSERT_EQ(4u, atlas.size());
+    ASSERT_EQ(atlas.size(), 4u);
 
     for (unsigned int i = 0; i < atlas.size(); ++i)
     {
         const float value = (i + 1) / 64.0f;
         auto& region = atlas[i];
 
-        ASSERT_EQ(Vec2f(value, value), region.vx[3]);
-        ASSERT_EQ(Vec2f(value + value, value), region.vx[2]);
-        ASSERT_EQ(Vec2f(value + value, value + value), region.vx[1]);
-        ASSERT_EQ(Vec2f(value, value + value), region.vx[0]);
+        ASSERT_EQ(region.vx[3], Vec2f(value, value));
+        ASSERT_EQ(region.vx[2], Vec2f(value + value, value));
+        ASSERT_EQ(region.vx[1], Vec2f(value + value, value + value));
+        ASSERT_EQ(region.vx[0], Vec2f(value, value + value));
     }
 
     const int regions2[]{4, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 6};
     atlas.set_regions(regions2);
 
-    ASSERT_EQ(3u, atlas.size());
+    ASSERT_EQ(atlas.size(), 3u);
 
     for (unsigned int i = 0; i < atlas.size(); ++i)
     {
         const float value = (i + 4) / 64.0f;
         auto& region = atlas[i];
 
-        ASSERT_EQ(Vec2f(value, value), region.vx[3]);
-        ASSERT_EQ(Vec2f(value + value, value), region.vx[2]);
-        ASSERT_EQ(Vec2f(value + value, value + value), region.vx[1]);
-        ASSERT_EQ(Vec2f(value, value + value), region.vx[0]);
+        ASSERT_EQ(region.vx[3], Vec2f(value, value));
+        ASSERT_EQ(region.vx[2], Vec2f(value + value, value));
+        ASSERT_EQ(region.vx[1], Vec2f(value + value, value + value));
+        ASSERT_EQ(region.vx[0], Vec2f(value, value + value));
     }
 }
