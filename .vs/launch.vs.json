@@ -1,0 +1,22 @@
+{
+  "version": "0.2.1",
+  "defaults": {},
+  "configurations": [
+    {
+      "type": "default",
+      "project": "CMakeLists.txt",
+      "projectTarget": "rainbow.exe (Debug\\rainbow.exe)",
+      "name": "​Rainbow",
+      "currentDir": "${projectDir}\\build\\windows\\CMakeBuild\\${cmake.name}",
+      "args": [ "${projectDir}\\js" ]
+    },
+    {
+      "type": "default",
+      "project": "CMakeLists.txt",
+      "projectTarget": "rainbow.exe (Debug\\rainbow.exe)",
+      "name": "​Rainbow Tests",
+      "currentDir": "${projectDir}\\build\\windows\\CMakeBuild\\${cmake.name}",
+      "args": [ "--gtest_filter=*" ]
+    }
+  ]
+}

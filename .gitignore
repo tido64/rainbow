@@ -1,4 +1,5 @@
 # Generated files
+!.vs/launch.vs.json
 !js/index.js*
 *.aps
 *.iml
@@ -11,7 +12,7 @@
 .gradle/
 .idea/
 .vs/
-CMakeSettings.json
+CMakeBuild/
 Rainbow.sublime-workspace
 build/android/app/build/
 build/android/build/

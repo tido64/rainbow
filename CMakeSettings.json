@@ -1,0 +1,21 @@
+{
+  // See https://go.microsoft.com/fwlink/?linkid=834763 for more information about this file.
+  "configurations": [
+    {
+      "name": "x64-Debug",
+      "generator": "Visual Studio 15 2017 Win64",
+      "configurationType": "Debug",
+      "buildRoot": "${projectDir}\\build\\windows\\CMakeBuild\\${name}",
+      "cmakeCommandArgs": "-DUNIT_TESTS=1 -DUSE_HEIMDALL=1 -DUSE_PHYSICS=0 -DUSE_SPINE=0",
+      "buildCommandArgs": "-m -v:minimal"
+    },
+    {
+      "name": "x64-Release",
+      "generator": "Visual Studio 15 2017 Win64",
+      "configurationType": "Release",
+      "buildRoot": "${projectDir}\\build\\windows\\CMakeBuild\\${name}",
+      "cmakeCommandArgs": "-DUNIT_TESTS=0 -DUSE_HEIMDALL=1 -DUSE_PHYSICS=0 -DUSE_SPINE=0",
+      "buildCommandArgs": "-m -v:minimal"
+    }
+  ]
+}
