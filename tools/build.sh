@@ -4,7 +4,6 @@
 # (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
 project_root=$(cd -P "$(dirname $0)/.." && pwd)
-cmake="cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=1"
 
 if [[ $(git ls-files --error-unmatch . 2> /dev/null) ]] && \
    [[ "$(git rev-parse --show-toplevel 2> /dev/null)" == "$project_root" ]]; then
@@ -29,6 +28,23 @@ function compile {
     *)
       ;;
   esac
+}
+
+function generator {
+  if [[ ! -z $GENERATOR ]]; then
+    echo "$GENERATOR"
+  elif brew ls --versions ninja &> /dev/null || \
+       pacman -Qi ninja &> /dev/null || \
+       dpkg -l ninja-build &> /dev/null; then
+    echo "Ninja"
+  else
+    echo "Unix Makefiles"
+  fi
+}
+
+function run_cmake {
+  cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=1 $@ -G "$(generator)" "$project_root" || return 1
+  return 0
 }
 
 # Prune arguments
@@ -69,28 +85,23 @@ case $1 in
       echo "$0: Could not find Emscripten"
       exit 1
     fi
-    $cmake -DCMAKE_TOOLCHAIN_FILE="$EMSCRIPTEN/cmake/Modules/Platform/Emscripten.cmake" \
-           $args "$project_root" &&
+    run_cmake -DCMAKE_TOOLCHAIN_FILE="$EMSCRIPTEN/cmake/Modules/Platform/Emscripten.cmake" $args &&
     compile Emscripten
     ;;
   "help")
     $SHELL $0 --help
     ;;
   "linux")
-    GENERATOR=${GENERATOR:-Unix Makefiles}
-    $cmake $args -G "$GENERATOR" "$project_root" &&
-    compile "$GENERATOR"
+    run_cmake $args &&
+    compile "$(generator)"
     ;;
   "mac")
-    GENERATOR=${GENERATOR:-Unix Makefiles}
-    $cmake $args -G "$GENERATOR" "$project_root" &&
-    compile "$GENERATOR"
+    run_cmake $args &&
+    compile "$(generator)"
     ;;
   "windows")
-    GENERATOR=${GENERATOR:-Unix Makefiles}
-    $cmake -DCMAKE_TOOLCHAIN_FILE="$project_root/build/cmake/MinGW.cmake" \
-           $args -G "$GENERATOR" "$project_root" &&
-    compile "$GENERATOR"
+    run_cmake -DCMAKE_TOOLCHAIN_FILE="$project_root/build/cmake/MinGW.cmake" $args &&
+    compile "$(generator)"
     ;;
   *)  # Attempt to detect platform
     case $(uname) in
