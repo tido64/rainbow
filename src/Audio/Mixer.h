@@ -26,6 +26,7 @@ namespace rainbow::audio
                        : ErrorCode::Success;
         }
 
+        void clear() { impl().clear(); }
         void process() { impl().process(); }
         void suspend(bool should_suspend) { impl().suspend(should_suspend); }
 

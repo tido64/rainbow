@@ -13,12 +13,6 @@ using rainbow::Vec2i;
 #   define HORIZONTAL "───────────────────────────────────────────"
 #endif
 
-Gatekeeper::Gatekeeper()
-    : overlay_(director_.texture_manager(), director_.render_queue()),
-      overlay_activator_(&overlay_)
-{
-}
-
 void Gatekeeper::init(const Vec2i& screen)
 {
     overlay_.initialize();

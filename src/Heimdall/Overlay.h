@@ -8,9 +8,12 @@
 #include <deque>
 
 #include "Graphics/Drawable.h"
-#include "Graphics/RenderQueue.h"
-#include "Graphics/TextureManager.h"
 #include "Input/InputListener.h"
+
+namespace rainbow
+{
+    class Director;
+}
 
 namespace heimdall
 {
@@ -20,11 +23,9 @@ namespace heimdall
         static constexpr size_t kDataSampleSize = 100;
 
     public:
-        Overlay(const rainbow::graphics::TextureManager& texture_manager,
-                const rainbow::graphics::RenderQueue& render_queue)
-            : enabled_(false), texture_manager_(texture_manager),
-              render_queue_(render_queue), frame_times_(kDataSampleSize),
-              vmem_usage_(kDataSampleSize)
+        Overlay(rainbow::Director& director)
+            : enabled_(false), director_(director),
+              frame_times_(kDataSampleSize), vmem_usage_(kDataSampleSize)
         {
         }
 
@@ -39,10 +40,13 @@ namespace heimdall
 
     private:
         bool enabled_;
-        const rainbow::graphics::TextureManager& texture_manager_;
-        const rainbow::graphics::RenderQueue& render_queue_;
+        rainbow::Director& director_;
         std::deque<uint64_t> frame_times_;
         std::deque<float> vmem_usage_;
+
+        void draw_menu_bar();
+        void draw_performance();
+        void draw_render_queue();
 
         // IDrawable implementation details
 

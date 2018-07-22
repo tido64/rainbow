@@ -27,7 +27,8 @@ namespace rainbow
 namespace rainbow::imgui
 {
     constexpr ImGuiWindowFlags kDefaultWindowFlags =  //
-        ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoSavedSettings;
+        ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoSavedSettings |
+        ImGuiWindowFlags_MenuBar;
 
     void init();
     void new_frame(uint64_t dt);

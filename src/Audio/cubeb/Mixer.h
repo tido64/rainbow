@@ -40,6 +40,8 @@ namespace rainbow::audio
     {
     public:
         bool initialize(int max_channels);
+
+        void clear();
         void process();
         void suspend(bool should_suspend);
 

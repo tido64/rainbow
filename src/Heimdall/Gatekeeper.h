@@ -15,7 +15,7 @@ namespace heimdall
     class Gatekeeper final
     {
     public:
-        Gatekeeper();
+        Gatekeeper() : overlay_(director_), overlay_activator_(&overlay_) {}
 
         void init(const rainbow::Vec2i& screen);
 

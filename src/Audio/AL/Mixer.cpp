@@ -134,6 +134,17 @@ bool ALMixer::initialize(int max_channels)
     return true;
 }
 
+void ALMixer::clear()
+{
+    for (auto&& channel : channels_)
+    {
+        if (channel.sound() != nullptr)
+            stop(&channel);
+    }
+
+    sounds_.clear();
+}
+
 void ALMixer::process()
 {
     auto buffer = get_small_buffer<uint8_t>(kAudioBufferSize);

@@ -75,6 +75,16 @@ bool CubebMixer::initialize(int max_channels)
     return true;
 }
 
+void CubebMixer::clear()
+{
+    for_each(channels_, [this](auto&& ch) {
+        if (ch.state != ChannelState::Stopped)
+            release_channel(ch);
+    });
+    process();
+    sounds_.clear();
+}
+
 void CubebMixer::process()
 {
     std::lock_guard<std::mutex> guard(drain_lock_);

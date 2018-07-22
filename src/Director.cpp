@@ -43,22 +43,7 @@ namespace rainbow
     {
         random.seed();
         graphics::set_resolution(screen);
-
-        script_ = GameBase::create(*this);
-        if (!terminated())
-            script_->init(screen);
-
-        if (terminated())
-        {
-            LOGF("%s", error().message().c_str());
-            LOGI("Booting 'NoGame'...");
-            script_ = std::make_unique<NoGame>(*this, error());
-            active_ = true;
-            terminated_ = false;
-            script_->init(screen);
-        }
-
-        graphics::update(render_queue_, 0);
+        start();
     }
 
     void Director::draw()
@@ -68,6 +53,22 @@ namespace rainbow
 #ifdef USE_PHYSICS
         b2::DebugDraw::Draw();
 #endif  // USE_PHYSICS
+    }
+
+    void Director::restart()
+    {
+        terminate();
+
+        script_.reset();
+        timer_manager_.clear();
+        render_queue_.clear();
+        mixer_.clear();
+
+        active_ = true;
+        terminated_ = false;
+        error_ = ErrorCode::Success;
+
+        start();
     }
 
     void Director::update(uint64_t dt)
@@ -103,5 +104,24 @@ namespace rainbow
         R_ASSERT(!terminated_, "App should have terminated by now");
 
         script_->on_memory_warning();
+    }
+
+    void Director::start()
+    {
+        script_ = GameBase::create(*this);
+        if (!terminated())
+            script_->init(renderer_.view);
+
+        if (terminated())
+        {
+            LOGF("%s", error().message().c_str());
+            LOGI("Booting 'NoGame'...");
+            script_ = std::make_unique<NoGame>(*this, error());
+            active_ = true;
+            terminated_ = false;
+            script_->init(renderer_.view);
+        }
+
+        graphics::update(render_queue_, 0);
     }
 }

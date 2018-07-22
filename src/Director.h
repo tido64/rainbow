@@ -46,6 +46,7 @@ namespace rainbow
         }
 
         void draw();
+        void restart();
 
         void terminate()
         {
@@ -100,6 +101,8 @@ namespace rainbow
         graphics::State renderer_;
         audio::Mixer mixer_;
         Typesetter typesetter_;
+
+        void start();
     };
 }  // namespace rainbow
 

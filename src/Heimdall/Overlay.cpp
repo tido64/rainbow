@@ -6,6 +6,7 @@
 
 #include <numeric>
 
+#include "Director.h"
 #include "Graphics/Animation.h"
 #include "Graphics/Label.h"
 #include "Graphics/Renderer.h"
@@ -194,95 +195,127 @@ void Overlay::update_impl(uint64_t dt)
     frame_times_.pop_front();
     frame_times_.push_back(dt);
     vmem_usage_.pop_front();
-    vmem_usage_.push_back(texture_manager_.memory_usage().used);
+    vmem_usage_.push_back(director_.texture_manager().memory_usage().used);
 
     if (!is_enabled())
         return;
 
-    char buffer[128];
     rainbow::imgui::new_frame(dt);
     if (ImGui::Begin("Rainbow (built " __DATE__ ")",
                      &enabled_,
-                     rainbow::imgui::kDefaultWindowFlags) &&
-        ImGui::BeginChild("Body", ImVec2{kWindowWidth, kWindowHeight}))
+                     rainbow::imgui::kDefaultWindowFlags))
     {
-        if (ImGui::CollapsingHeader("Performance",
-                                    ImGuiTreeNodeFlags_NoAutoOpenOnLog |
-                                        ImGuiTreeNodeFlags_DefaultOpen))
+        draw_menu_bar();
+
+        if (ImGui::BeginChild("Body", ImVec2{kWindowWidth, kWindowHeight}))
         {
-            const ImVec2 graph_size{kWindowWidth, 100};
-
-            ImGui::TextWrapped("Draw count: %u", graphics::draw_count());
-
-            snprintf_q(buffer,
-                       rainbow::array_size(buffer),
-                       "Frame time: %.01f ms/frame",
-                       mean(frame_times_));
-            ImGui::PlotLines("",
-                             at<decltype(frame_times_)>,
-                             &frame_times_,
-                             static_cast<int>(frame_times_.size()),
-                             0,
-                             buffer,
-                             std::numeric_limits<float>::min(),
-                             100.0f,
-                             graph_size);
-
-            snprintf_q(buffer,
-                       rainbow::array_size(buffer),
-                       "Video memory: %.2f MBs",
-                       vmem_usage_.back());
-            ImGui::PlotLines("",
-                             at<decltype(vmem_usage_)>,
-                             &vmem_usage_,
-                             static_cast<int>(vmem_usage_.size()),
-                             0,
-                             buffer,
-                             std::numeric_limits<float>::min(),
-                             upper_limit(vmem_usage_),
-                             graph_size);
-
-            ImGui::TextWrapped("OpenGL %s", graphics::gl_version());
-            ImGui::TextWrapped("Vendor: %s", graphics::vendor());
-            ImGui::TextWrapped("Renderer: %s", graphics::renderer());
-
-            const auto meminfo = graphics::memory_info();
-            if (meminfo.current_available > 0)
-            {
-                if (meminfo.total_available > 0)
-                {
-                    ImGui::TextWrapped(  //
-                        "Video memory: %i / %i kB free",
-                        meminfo.current_available,
-                        meminfo.total_available);
-                }
-                else
-                {
-                    ImGui::TextWrapped(
-                        "Video memory: %i kB free", meminfo.current_available);
-                }
-            }
+            draw_performance();
+            draw_render_queue();
         }
-
-        const ImGuiTreeNodeFlags collapsing_header_flags =
-            ImGuiTreeNodeFlags_NoTreePushOnOpen |
-            ImGuiTreeNodeFlags_NoAutoOpenOnLog |
-            ImGuiTreeNodeFlags_CollapsingHeader;
-        if (ImGui::TreeNodeEx(&render_queue_,
-                              collapsing_header_flags,
-                              "Render Queue (%zu unit%s)",
-                              render_queue_.size(),
-                              render_queue_.size() == 1 ? "" : "s"))
-        {
-            for (auto&& unit : render_queue_)
-                rainbow::visit(CreateNode{unit.tag().c_str()}, unit.object());
-        }
-
         ImGui::EndChild();
     }
 
     ImGui::End();
     ImGui::Render();
+}
+
+void Overlay::draw_menu_bar()
+{
+    if (!ImGui::BeginMenuBar())
+        return;
+
+    if (ImGui::BeginMenu("Debug"))
+    {
+        if (ImGui::MenuItem("Restart"))
+            director_.restart();
+        ImGui::EndMenu();
+    }
+    ImGui::EndMenuBar();
+}
+
+void Overlay::draw_performance()
+{
+    if (!ImGui::CollapsingHeader("Performance",
+                                 ImGuiTreeNodeFlags_NoAutoOpenOnLog |
+                                     ImGuiTreeNodeFlags_DefaultOpen))
+    {
+        return;
+    }
+
+    const ImVec2 graph_size{kWindowWidth, 100};
+
+    ImGui::TextWrapped("Draw count: %u", graphics::draw_count());
+
+    char buffer[128];
+    snprintf_q(buffer,
+               rainbow::array_size(buffer),
+               "Frame time: %.01f ms/frame",
+               mean(frame_times_));
+    ImGui::PlotLines("",
+                     at<decltype(frame_times_)>,
+                     &frame_times_,
+                     static_cast<int>(frame_times_.size()),
+                     0,
+                     buffer,
+                     std::numeric_limits<float>::min(),
+                     100.0f,
+                     graph_size);
+
+    snprintf_q(buffer,
+               rainbow::array_size(buffer),
+               "Video memory: %.2f MBs",
+               vmem_usage_.back());
+    ImGui::PlotLines("",
+                     at<decltype(vmem_usage_)>,
+                     &vmem_usage_,
+                     static_cast<int>(vmem_usage_.size()),
+                     0,
+                     buffer,
+                     std::numeric_limits<float>::min(),
+                     upper_limit(vmem_usage_),
+                     graph_size);
+
+    ImGui::TextWrapped("OpenGL %s", graphics::gl_version());
+    ImGui::TextWrapped("Vendor: %s", graphics::vendor());
+    ImGui::TextWrapped("Renderer: %s", graphics::renderer());
+
+    const auto meminfo = graphics::memory_info();
+    if (meminfo.current_available > 0)
+    {
+        if (meminfo.total_available > 0)
+        {
+            ImGui::TextWrapped(  //
+                "Video memory: %i / %i kB free",
+                meminfo.current_available,
+                meminfo.total_available);
+        }
+        else
+        {
+            ImGui::TextWrapped(
+                "Video memory: %i kB free", meminfo.current_available);
+        }
+    }
+}
+
+void Overlay::draw_render_queue()
+{
+    constexpr ImGuiTreeNodeFlags kCollapsingHeaderFlags =
+        ImGuiTreeNodeFlags_NoTreePushOnOpen |
+        ImGuiTreeNodeFlags_NoAutoOpenOnLog |
+        ImGuiTreeNodeFlags_CollapsingHeader;
+
+    auto& render_queue = director_.render_queue();
+    if (!ImGui::TreeNodeEx(&render_queue,
+                           kCollapsingHeaderFlags,
+                           "Render Queue (%zu unit%s)",
+                           render_queue.size(),
+                           render_queue.size() == 1 ? "" : "s"))
+    {
+        return;
+    }
+
+    for (auto&& unit : render_queue)
+        rainbow::visit(CreateNode{unit.tag().c_str()}, unit.object());
 }
 
 bool Overlay::on_key_down_impl(const KeyStroke& key)

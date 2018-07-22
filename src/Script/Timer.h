@@ -71,6 +71,8 @@ namespace rainbow
     public:
         TimerManager() { make_global(); }
 
+        void clear() { timers_.clear(); }
+
         void clear_timer(Timer* t)
         {
             timers_.release(t, Passkey<TimerManager>{});
