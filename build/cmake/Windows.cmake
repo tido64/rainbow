@@ -46,7 +46,6 @@ if(WIN32)
       -DNOTEXTMETRIC=1       # typedef TEXTMETRIC and associated routines
       -DNOVIRTUALKEYCODES=1  # VK_*
       -DNOWH=1               # SetWindowsHook and WH_*
-      -DNOWINABLE=1
       -DNOWINDOWSTATION=1
       -DNOWINOFFSETS=1       # GWL_*, GCL_*, associated routines
       -DNOWINSTYLES=1        # WS_*, CS_*, ES_*, LBS_*, SBS_*, CBS_*

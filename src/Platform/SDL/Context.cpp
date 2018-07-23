@@ -4,6 +4,11 @@
 
 #include "Platform/SDL/Context.h"
 
+#include "Platform/Macros.h"
+#ifdef RAINBOW_OS_WINDOWS
+#   include <Windows.h>
+#endif
+
 #include "Common/Logging.h"
 #include "Config.h"
 
@@ -33,9 +38,12 @@ SDLContext::SDLContext(const Config& config)
         return;
     }
 
-#ifdef RAINBOW_OS_MACOS
+#if defined(RAINBOW_OS_MACOS)
     // Prevent the full screen window from being minimized when losing focus.
     SDL_SetHint(SDL_HINT_VIDEO_MINIMIZE_ON_FOCUS_LOSS, "0");
+#elif defined(RAINBOW_OS_WINDOWS)
+    if (config.high_dpi())
+        SetProcessDPIAware();
 #endif
 
     SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);

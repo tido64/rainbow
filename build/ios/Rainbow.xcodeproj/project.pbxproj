@@ -486,7 +486,7 @@
 		19D931841834AFC200F0137E /* ChangeMonitor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChangeMonitor.h; sourceTree = "<group>"; };
 		19D931871834AFCE00F0137E /* ChangeMonitor.stub.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = ChangeMonitor.stub.cpp; sourceTree = "<group>"; };
 		19DB48B31CA6A4BD00999675 /* imconfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = imconfig.h; sourceTree = "<group>"; };
-		19DB48B41CA6A4BD00999675 /* ImGuiHelper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ImGuiHelper.cpp; sourceTree = "<group>"; };
+		19DB48B41CA6A4BD00999675 /* ImGuiHelper.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = ImGuiHelper.cpp; sourceTree = "<group>"; };
 		19DB48B51CA6A4BD00999675 /* ImGuiHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImGuiHelper.h; sourceTree = "<group>"; };
 		19DB48B71CA6AAFE00999675 /* ElementBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ElementBuffer.cpp; sourceTree = "<group>"; };
 		19DB48B81CA6AAFE00999675 /* ElementBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ElementBuffer.h; sourceTree = "<group>"; };

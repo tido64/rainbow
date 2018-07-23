@@ -29,6 +29,7 @@
 #include "Graphics/Renderer.h"
 #include "Graphics/VertexArray.h"
 #include "Input/VirtualKey.h"
+#include "Text/SystemFonts.h"
 
 using rainbow::Vec2f;
 using rainbow::graphics::Buffer;
@@ -42,6 +43,11 @@ using rainbow::graphics::VertexArray;
 
 namespace
 {
+    constexpr ImWchar kCommandKey = 0x2318;
+    constexpr ImWchar kOptionKey = 0x2325;
+    constexpr ImWchar kGlyphRanges[]{
+        0x0020, 0x00ff, kCommandKey, kCommandKey, kOptionKey, kOptionKey, 0};
+
     float g_initial_window_width = 0.0f;
     Vec2f g_window_scale;
 
@@ -72,7 +78,7 @@ namespace
     };
 }  // namespace
 
-void rainbow::imgui::init()
+void rainbow::imgui::init(float font_size, float scale)
 {
     ImGui::CreateContext();
     auto& io = ImGui::GetIO();
@@ -99,6 +105,21 @@ void rainbow::imgui::init()
     io.KeyMap[ImGuiKey_Z] = to_keycode(VirtualKey::Z);
 #endif  // RAINBOW_SDL
 
+    const float scaled_font_size = font_size * scale;
+    if (rainbow::text::monospace_font_path() == nullptr)
+    {
+        ImFontConfig font_config;
+        font_config.SizePixels = scaled_font_size;
+        io.Fonts->AddFontDefault(&font_config);
+    }
+    else
+    {
+        io.Fonts->AddFontFromFileTTF(rainbow::text::monospace_font_path(),
+                                     scaled_font_size,
+                                     nullptr,
+                                     kGlyphRanges);
+    }
+
     unsigned int buffer;
     glGenBuffers(1, &buffer);
     auto renderable = std::make_unique<Renderable>().release();
@@ -113,7 +134,7 @@ void rainbow::imgui::init()
     const TextureFilter filter = texture_manager->mag_filter();
     texture_manager->set_filter(TextureFilter::Nearest);
     renderable->texture() = texture_manager->create(
-        "rainbow://dear_imgui/ProggyClean.ttf",
+        "rainbow://dear_imgui/monospace",
         [&io](TextureManager& texture_manager, const Texture& texture) {
             unsigned char* pixels;
             int width, height;
@@ -233,7 +254,8 @@ bool rainbow::imgui::set_key_state([[maybe_unused]] const KeyStroke& key,
         case VirtualKey::RightAlt:
             io.KeyAlt = down;
             break;
-        default: {
+        default:
+        {
             const int keycode = to_keycode(key.key);
             if (static_cast<unsigned>(keycode) < array_size(io.KeysDown))
             {
@@ -259,22 +281,25 @@ bool rainbow::imgui::set_mouse_state(const ArrayView<Pointer>& p)
     return io.WantCaptureMouse;
 }
 
-bool rainbow::imgui::set_mouse_state(const ArrayView<Pointer>& pointers,
-                                     bool down)
+bool rainbow::imgui::set_mouse_state(const ArrayView<Pointer>& p, bool down)
 {
-    // For details, see SDL_mouse.h.
+    // Map SDL_BUTTON -> ImGuiIO::MouseDown.
     static constexpr int kMouseButtons[]{0, 2, 1, 3, 4};
 
+    // Always update mouse position as we don't know whether an actual mouse or
+    // touch pad is attached.
+    set_mouse_state(p);
+
     auto& io = ImGui::GetIO();
-    for (auto&& p : pointers)
-    {
-        if (p.hash > array_size(io.MouseDown))
-            continue;
-
-        const int index = kMouseButtons[p.hash - 1];
-        io.MouseDown[index] = down;
-    }
-
+    const auto hash =
+#ifndef RAINBOW_SDL
+        // Map number of fingers to SDL_BUTTON.
+        kMouseButtons[std::min<size_t>(p.size() - 1, 4)] + 1;
+#else
+        p[0].hash;
+#endif
+    const int index = kMouseButtons[hash - 1];
+    io.MouseDown[index] = down;
     return io.WantCaptureMouse;
 }
 

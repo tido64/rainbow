@@ -120,7 +120,7 @@ namespace rainbow::graphics
         /// </summary>
         void retain(const Texture& t, const Passkey<Texture>&);
 
-#if RAINBOW_DEVMODE
+#ifdef USE_HEIMDALL
         struct MemoryUsage
         {
             double used;
@@ -139,14 +139,14 @@ namespace rainbow::graphics
         TextureFilter mag_filter_;
         TextureFilter min_filter_;
 
-#if RAINBOW_DEVMODE
+#ifdef USE_HEIMDALL
         double mem_peak_;
         double mem_used_;
 #endif
 
         auto create_texture(std::string id) -> Texture;
 
-#if RAINBOW_DEVMODE
+#ifdef USE_HEIMDALL
         /// <summary>Updates and prints total texture memory used.</summary>
         void update_usage();
 #endif

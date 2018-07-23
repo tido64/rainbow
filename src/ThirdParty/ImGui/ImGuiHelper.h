@@ -30,7 +30,7 @@ namespace rainbow::imgui
         ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoSavedSettings |
         ImGuiWindowFlags_MenuBar;
 
-    void init();
+    void init(float font_size, float scale);
     void new_frame(uint64_t dt);
     void render(ImDrawData*);
     bool set_key_state(const KeyStroke& key, bool down);

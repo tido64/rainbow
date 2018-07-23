@@ -36,7 +36,11 @@
 
 #define RAINBOW_BUILD "Rainbow / Built " __DATE__
 #ifdef USE_HEIMDALL
-#   ifdef RAINBOW_OS_MACOS
+#   if defined(RAINBOW_OS_ANDROID)
+#       define RAINBOW_SHORTCUT_DIAGNOSTIC_TOOLS "Shake or press Ctrl+M (or ⌘M) for diagnostic tools"
+#   elif defined(RAINBOW_OS_IOS)
+#       define RAINBOW_SHORTCUT_DIAGNOSTIC_TOOLS "Shake or press Command+D for diagnostic tools"
+#   elif defined(RAINBOW_OS_MACOS)
 #       define RAINBOW_SHORTCUT_DIAGNOSTIC_TOOLS "Press ⌥⌘F2 for diagnostic tools"
 #   else
 #       define RAINBOW_SHORTCUT_DIAGNOSTIC_TOOLS "Press Ctrl+Alt+F2 for diagnostic tools"

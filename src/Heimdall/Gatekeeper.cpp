@@ -7,22 +7,11 @@
 using heimdall::Gatekeeper;
 using rainbow::Vec2i;
 
-#ifdef RAINBOW_OS_MACOS
-#   define HORIZONTAL "────────────────────────────────────"
-#else
-#   define HORIZONTAL "───────────────────────────────────────────"
-#endif
-
 void Gatekeeper::init(const Vec2i& screen)
 {
-    overlay_.initialize();
+    overlay_.initialize(screen);
     director_.input().subscribe(overlay_);
     director_.input().subscribe(overlay_activator_);
-
-    LOGI("┌" HORIZONTAL "┐");
-    LOGI("│  " RAINBOW_SHORTCUT_DIAGNOSTIC_TOOLS ".  │");
-    LOGI("└" HORIZONTAL "┘");
-
     director_.init(screen);
 }
 

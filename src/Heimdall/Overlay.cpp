@@ -40,6 +40,7 @@
 
 using heimdall::Overlay;
 using rainbow::Animation;
+using rainbow::Color;
 using rainbow::czstring;
 using rainbow::IDrawable;
 using rainbow::KeyStroke;
@@ -47,13 +48,22 @@ using rainbow::Label;
 using rainbow::Pointer;
 using rainbow::Sprite;
 using rainbow::SpriteBatch;
+using rainbow::Vec2i;
 
 namespace graphics = rainbow::graphics;
 
 namespace
 {
-    constexpr float kWindowWidth = 400.0f;
-    constexpr float kWindowHeight = 400.0f;
+    constexpr uint64_t kStartUpMessageMaxDuration = 8000;
+    constexpr float kStyleFontSize = 13.0f;
+    constexpr float kStylePlotHeight = 100.0f;
+#if defined(RAINBOW_OS_ANDROID) || defined(RAINBOW_OS_IOS)
+    constexpr float kStyleScreenHeight = 600.0f;
+#else
+    constexpr float kStyleScreenHeight = 1200.0f;
+#endif
+    constexpr float kStyleWindowWidth = 400.0f;
+    constexpr float kStyleWindowHeight = 400.0f;
 
     template <typename T>
     void print_address(const T* obj)
@@ -87,6 +97,12 @@ namespace
             IM_TEXT_BOOL(sprite, is_mirrored);
             ImGui::TreePop();
         }
+    }
+
+    auto display_scale(Vec2i resolution, float screen_height)
+    {
+        return std::max(
+            std::min(resolution.x, resolution.y) / screen_height, 1.0f);
     }
 
     template <typename Container>
@@ -176,47 +192,10 @@ Overlay::~Overlay()
     rainbow::imgui::shutdown();
 }
 
-void Overlay::initialize()
+void Overlay::initialize(Vec2i resolution)
 {
-    rainbow::imgui::init();
-}
-
-void Overlay::draw_impl()
-{
-    auto draw_data = ImGui::GetDrawData();
-    if (draw_data == nullptr || !draw_data->Valid)
-        return;
-
-    rainbow::imgui::render(draw_data);
-}
-
-void Overlay::update_impl(uint64_t dt)
-{
-    frame_times_.pop_front();
-    frame_times_.push_back(dt);
-    vmem_usage_.pop_front();
-    vmem_usage_.push_back(director_.texture_manager().memory_usage().used);
-
-    if (!is_enabled())
-        return;
-
-    rainbow::imgui::new_frame(dt);
-    if (ImGui::Begin("Rainbow (built " __DATE__ ")",
-                     &enabled_,
-                     rainbow::imgui::kDefaultWindowFlags))
-    {
-        draw_menu_bar();
-
-        if (ImGui::BeginChild("Body", ImVec2{kWindowWidth, kWindowHeight}))
-        {
-            draw_performance();
-            draw_render_queue();
-        }
-        ImGui::EndChild();
-    }
-
-    ImGui::End();
-    ImGui::Render();
+    const float scale = display_scale(resolution, kStyleScreenHeight);
+    rainbow::imgui::init(kStyleFontSize, scale);
 }
 
 void Overlay::draw_menu_bar()
@@ -233,7 +212,7 @@ void Overlay::draw_menu_bar()
     ImGui::EndMenuBar();
 }
 
-void Overlay::draw_performance()
+void Overlay::draw_performance(float scale)
 {
     if (!ImGui::CollapsingHeader("Performance",
                                  ImGuiTreeNodeFlags_NoAutoOpenOnLog |
@@ -242,7 +221,8 @@ void Overlay::draw_performance()
         return;
     }
 
-    const ImVec2 graph_size{kWindowWidth, 100};
+    const ImVec2 graph_size{
+        kStyleWindowWidth * scale, kStylePlotHeight * scale};
 
     ImGui::TextWrapped("Draw count: %u", graphics::draw_count());
 
@@ -316,6 +296,84 @@ void Overlay::draw_render_queue()
 
     for (auto&& unit : render_queue)
         rainbow::visit(CreateNode{unit.tag().c_str()}, unit.object());
+}
+
+void Overlay::draw_startup_message()
+{
+    constexpr ImGuiWindowFlags kMinimalWindowFlags =  //
+        ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize |
+        ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse |
+        ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings |
+        ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_NoFocusOnAppearing |
+        ImGuiWindowFlags_NoNav;
+
+    ImGui::SetNextWindowPos({4.0f, 4.0f}, ImGuiCond_Once);
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+
+    if (ImGui::Begin("", nullptr, kMinimalWindowFlags))
+    {
+        const ImVec4 yellow = Color{0xff, 0xeb, 0x3b};
+        ImGui::TextColored(yellow, RAINBOW_SHORTCUT_DIAGNOSTIC_TOOLS ".");
+    }
+
+    ImGui::PopStyleVar();
+    ImGui::End();
+}
+
+void Overlay::draw_impl()
+{
+    auto draw_data = ImGui::GetDrawData();
+    if (draw_data == nullptr || !draw_data->Valid)
+        return;
+
+    rainbow::imgui::render(draw_data);
+}
+
+void Overlay::update_impl(uint64_t dt)
+{
+    static uint64_t startup_message_duration = 0;
+
+    frame_times_.pop_front();
+    frame_times_.push_back(dt);
+    vmem_usage_.pop_front();
+    vmem_usage_.push_back(director_.texture_manager().memory_usage().used);
+
+    if (!is_enabled())
+    {
+        if (startup_message_duration < kStartUpMessageMaxDuration)
+        {
+            startup_message_duration += dt;
+
+            rainbow::imgui::new_frame(dt);
+            draw_startup_message();
+            ImGui::Render();
+        }
+        return;
+    }
+
+    startup_message_duration = kStartUpMessageMaxDuration;
+
+    rainbow::imgui::new_frame(dt);
+    if (ImGui::Begin("Rainbow (built " __DATE__ ")",
+                     &enabled_,
+                     rainbow::imgui::kDefaultWindowFlags))
+    {
+        draw_menu_bar();
+
+        const float scale =
+            ImGui::GetIO().Fonts->Fonts[0]->FontSize / kStyleFontSize;
+        const ImVec2 window_size{
+            kStyleWindowWidth * scale, kStyleWindowHeight * scale};
+        if (ImGui::BeginChild("Body", window_size))
+        {
+            draw_performance(scale);
+            draw_render_queue();
+        }
+        ImGui::EndChild();
+    }
+
+    ImGui::End();
+    ImGui::Render();
 }
 
 bool Overlay::on_key_down_impl(const KeyStroke& key)

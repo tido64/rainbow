@@ -74,7 +74,7 @@ auto Texture::operator=(Texture&& texture) noexcept -> Texture&
 TextureManager::TextureManager(const Passkey<rainbow::graphics::State>&)
     : active_{}, mag_filter_(TextureFilter::Linear),
       min_filter_(TextureFilter::Linear)
-#if RAINBOW_DEVMODE
+#ifdef USE_HEIMDALL
     , mem_peak_(0.0), mem_used_(0.0)
 #endif
 {
@@ -220,7 +220,7 @@ auto TextureManager::create_texture(std::string id) -> Texture
     return textures_.back();
 }
 
-#if RAINBOW_DEVMODE
+#ifdef USE_HEIMDALL
 auto TextureManager::memory_usage() const -> TextureManager::MemoryUsage
 {
     constexpr double M = 1e-6;

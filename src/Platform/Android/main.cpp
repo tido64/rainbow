@@ -13,42 +13,43 @@
 #include "Common/Data.h"
 #include "Director.h"
 #include "Input/Pointer.h"
+#include "Platform/Android/ShakeGestureDetector.h"
 
 using rainbow::Chrono;
 using rainbow::Pointer;
+using rainbow::ShakeGestureDetector;
 using rainbow::Vec2i;
 
 ANativeActivity* g_native_activity;
 
 struct AInstance
 {
-    bool active;  ///< Whether the window is in focus.
-    bool done;    ///< Whether the user has requested to quit.
-    bool initialised;
+    /// <summary>Whether the window is in focus.</summary>
+    bool active = false;
 
-    struct android_app* app;
-    ASensorManager* sensorManager;
-    const ASensor* accelerometerSensor;
-    ASensorEventQueue* sensorEventQueue;
+    /// <summary>Whether the user has requested to quit.</summary>
+    bool done = false;
 
-    EGLDisplay display;
-    EGLSurface surface;
-    EGLContext context;
+    bool initialised = false;
+
+    android_app* app = nullptr;
+    ASensorManager* sensor_manager = nullptr;
+    const ASensor* accelerometer_sensor = nullptr;
+    ASensorEventQueue* sensor_event_queue = nullptr;
+
+    EGLDisplay display = EGL_NO_DISPLAY;
+    EGLSurface surface = EGL_NO_SURFACE;
+    EGLContext context = EGL_NO_CONTEXT;
+
     std::unique_ptr<Director> director;
-
-    AInstance()
-        : active(false), done(false), initialised(false), app(nullptr),
-          sensorManager(nullptr), accelerometerSensor(nullptr),
-          sensorEventQueue(nullptr), display(EGL_NO_DISPLAY),
-          surface(EGL_NO_SURFACE), context(EGL_NO_CONTEXT) {}
 };
 
 void android_destroy_display(AInstance*);
 void android_handle_display(AInstance*);
 void android_init_display(AInstance*);
-void android_handle_event(struct android_app*, int32_t cmd);
-auto android_handle_input(struct android_app*, AInputEvent*) -> int32_t;
-auto android_handle_motion(struct android_app*, AInputEvent*) -> int32_t;
+void android_handle_event(android_app*, int32_t cmd);
+auto android_handle_input(android_app*, AInputEvent*) -> int32_t;
+auto android_handle_motion(android_app*, AInputEvent*) -> int32_t;
 auto get_pointer_event(AInputEvent*, int32_t index) -> Pointer;
 
 namespace
@@ -63,9 +64,9 @@ namespace
         static_cast<JavaVM*>(vm)->DetachCurrentThread();
         pthread_setspecific(s_thread_key, nullptr);
     }
-}
+}  // namespace
 
-void android_main(struct android_app* state)
+void android_main(android_app* state)
 {
     pthread_key_create(&s_thread_key, detach_current_thread);
 
@@ -81,15 +82,24 @@ void android_main(struct android_app* state)
     g_native_activity = state->activity;
 
     // Prepare to monitor accelerometer
-    ainstance.sensorManager = ASensorManager_getInstance();
-    ainstance.accelerometerSensor = ASensorManager_getDefaultSensor(
-        ainstance.sensorManager, ASENSOR_TYPE_ACCELEROMETER);
-    if (ainstance.accelerometerSensor)
+    ainstance.sensor_manager = ASensorManager_getInstance();
+    ainstance.accelerometer_sensor = ASensorManager_getDefaultSensor(
+        ainstance.sensor_manager, ASENSOR_TYPE_ACCELEROMETER);
+    if (ainstance.accelerometer_sensor != nullptr)
     {
-        ainstance.sensorEventQueue = ASensorManager_createEventQueue(
-            ainstance.sensorManager, state->looper, LOOPER_ID_USER, nullptr,
-            nullptr);
+        ainstance.sensor_event_queue =
+            ASensorManager_createEventQueue(ainstance.sensor_manager,
+                                            state->looper,
+                                            LOOPER_ID_USER,
+                                            nullptr,
+                                            nullptr);
     }
+
+#ifdef USE_HEIMDALL
+    ShakeGestureDetector shake_gesture_detector([&instance = ainstance]() {
+        instance.director->show_diagnostic_tools();
+    });
+#endif
 
     Chrono chrono;
     while (!ainstance.done)
@@ -98,11 +108,13 @@ void android_main(struct android_app* state)
         int events;
         struct android_poll_source* source;
 
-        while ((ident = ALooper_pollAll(
-                    (!ainstance.active ? -1 : 0), nullptr, &events,
-                    reinterpret_cast<void**>(&source))) >= 0)
+        while ((ident = ALooper_pollAll((!ainstance.active ? -1 : 0),
+                                        nullptr,
+                                        &events,
+                                        reinterpret_cast<void**>(&source))) >=
+               0)
         {
-            if (source)
+            if (source != nullptr)
                 source->process(state, source);
 
             if (ainstance.done)
@@ -110,12 +122,18 @@ void android_main(struct android_app* state)
 
             // If a sensor has data, process it now.
             if (ainstance.active && ident == LOOPER_ID_USER &&
-                ainstance.accelerometerSensor)
+                ainstance.accelerometer_sensor)
             {
                 ASensorEvent event;
                 while (ASensorEventQueue_getEvents(
-                           ainstance.sensorEventQueue, &event, 1) > 0)
+                           ainstance.sensor_event_queue, &event, 1) > 0)
                 {
+#ifdef USE_HEIMDALL
+                    shake_gesture_detector.update({event.acceleration.x,
+                                                   event.acceleration.y,
+                                                   event.acceleration.z},
+                                                  event.timestamp);
+#endif
                     ainstance.director->input().accelerated(
                         event.acceleration.x,
                         event.acceleration.y,
@@ -193,14 +211,15 @@ void android_init_display(AInstance* a)
         eglInitialize(dpy, 0, 0);
     }
 
-    const EGLint attrib_list[]{
+    constexpr EGLint attrib_list[]{
         EGL_ALPHA_SIZE, 8,
         EGL_BLUE_SIZE, 8,
         EGL_GREEN_SIZE, 8,
         EGL_RED_SIZE, 8,
         EGL_SURFACE_TYPE, EGL_WINDOW_BIT,
         EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT,
-        EGL_NONE};
+        EGL_NONE
+    };
     EGLConfig config;
     EGLint nconfigs;
     eglChooseConfig(dpy, attrib_list, &config, 1, &nconfigs);
@@ -223,7 +242,7 @@ void android_init_display(AInstance* a)
     EGLContext& ctx = a->context;
     if (ctx == EGL_NO_CONTEXT)
     {
-        const EGLint gles_attrib[]{EGL_CONTEXT_CLIENT_VERSION, 2, EGL_NONE};
+        constexpr EGLint gles_attrib[]{EGL_CONTEXT_CLIENT_VERSION, 2, EGL_NONE};
         ctx = eglCreateContext(dpy, config, EGL_NO_CONTEXT, gles_attrib);
         if (ctx == EGL_NO_CONTEXT)
         {
@@ -239,7 +258,7 @@ void android_init_display(AInstance* a)
         android_handle_display(a);
 }
 
-void android_handle_event(struct android_app* app, int32_t cmd)
+void android_handle_event(android_app* app, int32_t cmd)
 {
     AInstance* a = static_cast<AInstance*>(app->userData);
     switch (cmd)
@@ -258,36 +277,37 @@ void android_handle_event(struct android_app* app, int32_t cmd)
             break;
         case APP_CMD_GAINED_FOCUS:
             // When our app gains focus, we start monitoring the accelerometer.
-            if (a->accelerometerSensor)
+            if (a->accelerometer_sensor)
             {
                 ASensorEventQueue_enableSensor(
-                    a->sensorEventQueue, a->accelerometerSensor);
+                    a->sensor_event_queue, a->accelerometer_sensor);
                 // We'd like to get 60 events per second (in us).
-                ASensorEventQueue_setEventRate(
-                    a->sensorEventQueue, a->accelerometerSensor,
-                    (1000L / 60) * 1000);
+                ASensorEventQueue_setEventRate(a->sensor_event_queue,
+                                               a->accelerometer_sensor,
+                                               (1000 * 1000) / 60);
             }
             a->director->on_focus_gained();
             a->active = true;
             break;
         case APP_CMD_LOST_FOCUS:
-            a->active = false;
             break;
         case APP_CMD_LOW_MEMORY:
             a->director->on_memory_warning();
             break;
         case APP_CMD_RESUME:
-            if (a->surface)
+            if (a->surface != EGL_NO_SURFACE)
             {
                 eglMakeCurrent(a->display, a->surface, a->surface, a->context);
 
                 // From NVIDIA:
-                // Note that in some cases, only the onPause is received on suspend, in which case, the
-                // focus lost callback actually comes when the device is resumed to the lock screen. In
-                // other words, resuming sends an indication that you have been resumed (onResume)
-                // and then an indication that you are hidden (focus lost). And the unlock case remains
-                // unchanged (focus regained).
-                if (a->active)
+                // Note that in some cases, only the onPause is received on
+                // suspend, in which case, the focus lost callback actually
+                // comes when the device is resumed to the lock screen. In other
+                // words, resuming sends an indication that you have been
+                // resumed (onResume) and then an indication that you are hidden
+                // (focus lost). And the unlock case remains unchanged (focus
+                // regained).
+                if (!a->active)
                     android_handle_event(app, APP_CMD_GAINED_FOCUS);
             }
             break;
@@ -296,12 +316,13 @@ void android_handle_event(struct android_app* app, int32_t cmd)
         case APP_CMD_PAUSE:
             eglMakeCurrent(
                 a->display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
-            if (a->accelerometerSensor)
+            if (a->accelerometer_sensor != nullptr)
             {
                 ASensorEventQueue_disableSensor(
-                    a->sensorEventQueue, a->accelerometerSensor);
+                    a->sensor_event_queue, a->accelerometer_sensor);
             }
             a->director->on_focus_lost();
+            a->active = false;
             break;
         case APP_CMD_DESTROY:
             a->active = false;
@@ -312,57 +333,78 @@ void android_handle_event(struct android_app* app, int32_t cmd)
     }
 }
 
-auto android_handle_input(struct android_app* app, AInputEvent* event)
-    -> int32_t
+auto android_handle_input(android_app* app, AInputEvent* event) -> int32_t
 {
     switch (AInputEvent_getType(event))
     {
         case AINPUT_EVENT_TYPE_KEY:
-            return AKeyEvent_getKeyCode(event) == AKEYCODE_BACK;
+            switch (AKeyEvent_getKeyCode(event))
+            {
+                case AKEYCODE_BACK:
+                    return 1;
+#ifdef USE_HEIMDALL
+                case AKEYCODE_MENU:
+                    if (AKeyEvent_getAction(event) == AKEY_EVENT_ACTION_DOWN)
+                    {
+                        static_cast<AInstance*>(app->userData)
+                            ->director->show_diagnostic_tools();
+                    }
+                    return 1;
+#endif
+                default:
+                    return 0;
+            }
+
         case AINPUT_EVENT_TYPE_MOTION:
             return android_handle_motion(app, event);
+
         default:
             return 0;
     }
 }
 
-auto android_handle_motion(struct android_app* app, AInputEvent* event)
-    -> int32_t
+auto android_handle_motion(android_app* app, AInputEvent* event) -> int32_t
 {
-    Director* director = static_cast<AInstance*>(app->userData)->director.get();
+    auto& input = static_cast<AInstance*>(app->userData)->director->input();
     switch (AMotionEvent_getAction(event) & AMOTION_EVENT_ACTION_MASK)
     {
         case AMOTION_EVENT_ACTION_DOWN:
-        case AMOTION_EVENT_ACTION_POINTER_DOWN: {
+        case AMOTION_EVENT_ACTION_POINTER_DOWN:
+        {
             const int32_t index = (AMotionEvent_getAction(event) &
                                    AMOTION_EVENT_ACTION_POINTER_INDEX_MASK) >>
                                   AMOTION_EVENT_ACTION_POINTER_INDEX_SHIFT;
             Pointer p = get_pointer_event(event, index);
-            director->input().on_pointer_began(ArrayView<Pointer>{p});
+            input.on_pointer_began(ArrayView<Pointer>{p});
             break;
         }
+
         case AMOTION_EVENT_ACTION_UP:
-        case AMOTION_EVENT_ACTION_POINTER_UP: {
+        case AMOTION_EVENT_ACTION_POINTER_UP:
+        {
             const int32_t index = (AMotionEvent_getAction(event) &
                                    AMOTION_EVENT_ACTION_POINTER_INDEX_MASK) >>
                                   AMOTION_EVENT_ACTION_POINTER_INDEX_SHIFT;
             Pointer p = get_pointer_event(event, index);
-            director->input().on_pointer_ended(ArrayView<Pointer>{p});
+            input.on_pointer_ended(ArrayView<Pointer>{p});
             break;
         }
-        case AMOTION_EVENT_ACTION_MOVE: {
+
+        case AMOTION_EVENT_ACTION_MOVE:
+        {
             const size_t count = AMotionEvent_getPointerCount(event);
             auto pointers = std::make_unique<Pointer[]>(count);
             for (size_t i = 0; i < count; ++i)
                 pointers[i] = get_pointer_event(event, i);
-            director->input().on_pointer_moved(
-                ArrayView<Pointer>{pointers.get(), count});
+            input.on_pointer_moved(ArrayView<Pointer>{pointers.get(), count});
             break;
         }
+
         case AMOTION_EVENT_ACTION_CANCEL:
         case AMOTION_EVENT_ACTION_OUTSIDE:
-            director->input().on_pointer_canceled();
+            input.on_pointer_canceled();
             break;
+
         default:
             break;
     }

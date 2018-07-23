@@ -7,29 +7,23 @@
 #include <sys/stat.h>
 
 #include "Platform/Macros.h"
+#ifdef RAINBOW_OS_WINDOWS
+#   define fileno _fileno
+#endif
 
+using rainbow::czstring;
 using rainbow::Data;
 
 namespace
 {
-    constexpr char kDefaultMonospaceFont[] =
-#if defined(RAINBOW_OS_ANDROID)
-        "/system/fonts/DroidSansMono.ttf";
-#elif defined(RAINBOW_OS_MACOS)
-        "/System/Library/Fonts/Menlo.ttc";
-#elif defined(RAINBOW_OS_UNIX)
-        "/usr/share/fonts/TTF/DejaVuSansMono.ttf";
-#elif defined(RAINBOW_OS_WINDOWS)
-        "C:/Windows/Fonts/consola.ttf";
-#   define fileno _fileno
-#else
-        "";
-#endif
-
     class MonospaceFont
     {
     public:
-        MonospaceFont() : file_(fopen(kDefaultMonospaceFont, "rb")) {}
+        MonospaceFont()
+            : file_(fopen(rainbow::text::monospace_font_path(), "rb"))
+        {
+        }
+
         ~MonospaceFont() { fclose(file_); }
 
         auto file_size() const -> size_t
@@ -59,4 +53,20 @@ auto rainbow::text::monospace_font() -> Data
         return {};
 
     return {buffer.release(), size, Data::Ownership::Owner};
+}
+
+auto rainbow::text::monospace_font_path() -> czstring
+{
+    return
+#if defined(RAINBOW_OS_ANDROID)
+        "/system/fonts/DroidSansMono.ttf";
+#elif defined(RAINBOW_OS_MACOS)
+        "/System/Library/Fonts/Menlo.ttc";
+#elif defined(RAINBOW_OS_UNIX)
+        "/usr/share/fonts/TTF/DejaVuSansMono.ttf";
+#elif defined(RAINBOW_OS_WINDOWS)
+        "C:/Windows/Fonts/consola.ttf";
+#else
+        nullptr;
+#endif
 }

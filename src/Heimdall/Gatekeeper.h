@@ -30,6 +30,8 @@ namespace heimdall
             overlay_.draw();
         }
 
+        void show_diagnostic_tools() { overlay_.enable(); }
+
         void terminate() { director_.terminate(); }
         void terminate(std::error_code error) { director_.terminate(error); }
         void update(uint64_t dt);

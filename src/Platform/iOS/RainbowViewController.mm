@@ -131,28 +131,36 @@ namespace
 
 #pragma mark - UIResponder overrides
 
-- (void)touchesBegan:(NSSet*)touches withEvent:(UIEvent*)event
+- (void)touchesBegan:(NSSet*)touches withEvent:(nullable UIEvent*)event
 {
     _director->input().on_pointer_began(
         ArrayView<Pointer>{[self convertTouches:touches], touches.count});
 }
 
-- (void)touchesMoved:(NSSet*)touches withEvent:(UIEvent*)event
+- (void)touchesMoved:(NSSet*)touches withEvent:(nullable UIEvent*)event
 {
     _director->input().on_pointer_moved(
         ArrayView<Pointer>{[self convertTouches:touches], touches.count});
 }
 
-- (void)touchesEnded:(NSSet*)touches withEvent:(UIEvent*)event
+- (void)touchesEnded:(NSSet*)touches withEvent:(nullable UIEvent*)event
 {
     _director->input().on_pointer_ended(
         ArrayView<Pointer>{[self convertTouches:touches], touches.count});
 }
 
-- (void)touchesCancelled:(NSSet*)touches withEvent:(UIEvent*)event
+- (void)touchesCancelled:(NSSet*)touches withEvent:(nullable UIEvent*)event
 {
     _director->input().on_pointer_canceled();
 }
+
+#ifdef USE_HEIMDALL
+- (void)motionEnded:(UIEventSubtype)motion withEvent:(nullable UIEvent *)event
+{
+    if (motion == UIEventSubtypeMotionShake)
+        [self showDiagnosticTools];
+}
+#endif
 
 #pragma mark - UIViewController overrides
 
@@ -164,7 +172,7 @@ namespace
     self.context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
     if (self.context == nil)
     {
-        NSLog(@"[Rainbow] Failed to create ES context");
+        NSLog(@"Failed to create ES context");
         return;
     }
 
@@ -181,6 +189,14 @@ namespace
     }
     _director = std::make_unique<Director>();
     _director->init(Vec2i(size.width, size.height));
+
+#ifdef USE_HEIMDALL
+    UIKeyCommand* showDiagnosticTools =
+        [UIKeyCommand keyCommandWithInput:@"d"
+                            modifierFlags:UIKeyModifierCommand
+                                   action:@selector(showDiagnosticTools)];
+    [self addKeyCommand:showDiagnosticTools];
+#endif
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -210,5 +226,14 @@ namespace
 {
     return YES;
 }
+
+#pragma mark - Private
+
+#ifdef USE_HEIMDALL
+- (void)showDiagnosticTools
+{
+    _director->show_diagnostic_tools();
+}
+#endif
 
 @end

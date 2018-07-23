@@ -34,6 +34,7 @@ namespace rainbow
         bool active() const { return active_; }
         auto error() const { return error_; }
         auto font_cache() -> FontCache& { return typesetter_.font_cache(); }
+        auto graphics_context() -> graphics::State& { return renderer_; }
         auto input() -> Input& { return input_; }
         auto mixer() -> audio::Mixer& { return mixer_; }
         auto render_queue() -> graphics::RenderQueue& { return render_queue_; }

@@ -31,7 +31,7 @@ namespace heimdall
 
         ~Overlay();
 
-        void initialize();
+        void initialize(rainbow::Vec2i resolution);
 
         auto is_enabled() const { return enabled_; }
 
@@ -45,8 +45,9 @@ namespace heimdall
         std::deque<float> vmem_usage_;
 
         void draw_menu_bar();
-        void draw_performance();
+        void draw_performance(float scale);
         void draw_render_queue();
+        void draw_startup_message();
 
         // IDrawable implementation details
 
