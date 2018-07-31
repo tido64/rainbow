@@ -61,22 +61,22 @@ namespace
 
     auto get_asset_type(czstring path, size_t length)
     {
-        if (rainbow::ends_with(path, length, "mp3") ||
-            rainbow::ends_with(path, length, "ogg"))
+        if (rainbow::ends_with({path, length}, "mp3") ||
+            rainbow::ends_with({path, length}, "ogg"))
         {
             return AssetType::Audio;
         }
 
-        if (rainbow::ends_with(path, length, "dds") ||
-            rainbow::ends_with(path, length, "png") ||
-            rainbow::ends_with(path, length, "pvr") ||
-            rainbow::ends_with(path, length, "svg"))
+        if (rainbow::ends_with({path, length}, "dds") ||
+            rainbow::ends_with({path, length}, "png") ||
+            rainbow::ends_with({path, length}, "pvr") ||
+            rainbow::ends_with({path, length}, "svg"))
         {
             return AssetType::Texture;
         }
 
-        if (rainbow::ends_with(path, length, "otf") ||
-            rainbow::ends_with(path, length, "ttf"))
+        if (rainbow::ends_with({path, length}, "otf") ||
+            rainbow::ends_with({path, length}, "ttf"))
         {
             return AssetType::Font;
         }

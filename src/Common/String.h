@@ -24,37 +24,30 @@ namespace rainbow
     };
 
     template <size_t N>
-    bool ends_with(czstring str, size_t str_length, const char (&suffix)[N])
+    bool ends_with(std::string_view str, const char (&suffix)[N])
     {
         constexpr size_t length = N - 1;
 
         static_assert(
             length > 0, "Comparing against empty suffix makes no sense");
 
-        return str_length >= length &&
-               memcmp(str + str_length - length, suffix, length) == 0;
+        return str.length() >= length &&
+               memcmp(str.data() + str.length() - length, suffix, length) == 0;
     }
 
     template <size_t N>
-    bool ends_with(czstring str, const char (&suffix)[N])
-    {
-        return ends_with(str, strlen(str), suffix);
-    }
-
-    template <size_t N>
-    bool ends_with(czstring str,
+    bool ends_with(std::string_view str,
                    const char (&suffix)[N],
                    StringComparison comparison)
     {
-        const auto str_length = strlen(str);
         if (comparison == StringComparison::Ordinal)
-            return ends_with(str, str_length, suffix);
+            return ends_with(str, suffix);
 
         constexpr size_t suffix_length = N - 1;
-        if (suffix_length > str_length)
+        if (suffix_length > str.length())
             return false;
 
-        czstring s = str + str_length - suffix_length;
+        czstring s = str.data() + str.length() - suffix_length;
         for (size_t i = 0; i < suffix_length; ++i, ++s)
         {
             if (tolower(*s) != tolower(suffix[i]))
@@ -64,16 +57,10 @@ namespace rainbow
         return true;
     }
 
-    template <size_t N>
-    bool ends_with(const std::string& str, const char (&suffix)[N])
-    {
-        return ends_with(str.c_str(), str.length(), suffix);
-    }
-
     constexpr bool is_empty(czstring str)
     {
         return str == nullptr || *str == '\0';
     }
-}
+}  // namespace rainbow
 
 #endif

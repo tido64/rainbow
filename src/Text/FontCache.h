@@ -84,7 +84,7 @@ namespace rainbow
 
         void bind_texture() const { texture_.bind(); }
 
-        auto get(std::string font_name) -> FT_Face;
+        auto get(std::string_view font_name) -> FT_Face;
         auto get_glyph(FT_Face face, int32_t font_size, uint32_t glyph_index)
             -> std::array<SpriteVertex, 4>;
 

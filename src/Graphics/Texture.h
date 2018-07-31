@@ -35,7 +35,7 @@ namespace rainbow::graphics
             }
 
             auto operator==(uint32_t name_) { return name == name_; }
-            auto operator==(const std::string& id_) { return id == id_; }
+            auto operator==(std::string_view id_) { return id == id_; }
         };
     }  // namespace detail
 

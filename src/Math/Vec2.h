@@ -97,14 +97,14 @@ namespace rainbow
         auto normalize() const
             -> EnableIfIntegral<U, Vec2<float, Arithmetic<float>>>
         {
-            const float h = sqrt(x * x + y * y);
+            const float h = std::sqrt(x * x + y * y);
             return {x / h, y / h};
         }
 
         template <typename U = T>
         auto normalize() const -> EnableIfFloatingPoint<U, Vec2>
         {
-            const value_type h = sqrt(x * x + y * y);
+            const value_type h = std::sqrt(x * x + y * y);
             return {x / h, y / h};
         }
 

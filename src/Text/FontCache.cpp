@@ -40,6 +40,11 @@ namespace
             });
         }
     }
+
+    auto make_key(std::string_view key)  // TODO: Avoid copying to make map key
+    {
+        return std::string{key.data(), key.length()};
+    }
 }  // namespace
 
 FontCache::FontCache() : is_stale_(false)
@@ -72,14 +77,14 @@ FontCache::~FontCache()
     FT_Done_FreeType(library_);
 }
 
-auto FontCache::get(std::string font_name) -> FT_Face
+auto FontCache::get(std::string_view font_name) -> FT_Face
 {
-    auto search = font_cache_.find(font_name);
+    auto search = font_cache_.find(make_key(font_name));
     if (search == font_cache_.end())
     {
         auto data = font_name.empty()
                         ? text::monospace_font()
-                        : File::read(font_name.c_str(), FileType::Asset);
+                        : File::read(font_name.data(), FileType::Asset);
         FT_Face face;
         [[maybe_unused]] FT_Error error =
             FT_New_Memory_Face(library_,

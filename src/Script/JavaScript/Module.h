@@ -15,7 +15,11 @@ extern "C" {  // TODO: Remove workaround with Duktape v2.3.0
 
 #include "FileSystem/File.h"
 
-namespace rainbow::duk::module
+using rainbow::ends_with;
+using rainbow::File;
+using rainbow::FileType;
+
+namespace
 {
     template <typename... Args>
     auto throw_if(duk_context* ctx,
@@ -40,28 +44,36 @@ namespace rainbow::duk::module
         return 0;
     }
 
-    auto load(duk_context* ctx) -> duk_ret_t
+    auto module_path(duk_context* ctx)
     {
         constexpr char kModuleExtension[] = ".js";
 
         // Entry stack: [ resolved_id exports module ]
-        auto resolved_id = duk_get_string(ctx, 0);
-        throw_if(ctx,
-                 is_empty(resolved_id),
-                 DUK_ERR_TYPE_ERROR,
-                 "invalid module name");
+        duk_size_t id_length;
+        auto resolved_id = duk_get_lstring(ctx, 0, &id_length);
+        throw_if(
+            ctx, id_length == 0, DUK_ERR_TYPE_ERROR, "invalid module name");
 
-        thread_local std::string module;
-        module = resolved_id;
-        if (!ends_with(module, kModuleExtension))
+        if (!ends_with({resolved_id, id_length}, kModuleExtension))
+        {
+            thread_local std::string module;
+            module = resolved_id;
             module += kModuleExtension;
+            return module.c_str();
+        }
 
-        const auto data = File::read(module.c_str(), FileType::Asset);
-        throw_if(ctx,
-                 !data,
-                 DUK_RET_ERROR,
-                 "error loading module: %s",
-                 resolved_id);
+        return resolved_id;
+    }
+}  // namespace
+
+namespace rainbow::duk::module
+{
+    auto load(duk_context* ctx) -> duk_ret_t
+    {
+        auto path = module_path(ctx);
+        const auto data = File::read(path, FileType::Asset);
+
+        throw_if(ctx, !data, DUK_RET_ERROR, "error loading module: %s", path);
 
         duk_push_lstring(ctx, data.as<const char*>(), data.size());
         return 1;

@@ -62,7 +62,7 @@ TEST(AlgorithmTest, ApproximatesInverseSquareRoot)
     for (int i = 1; i < 1000000; ++i)
     {
         const double f = i / 100.0;
-        ASSERT_NEAR(1 / sqrt(f), rainbow::fast_invsqrt(f), kErrorMargin);
+        ASSERT_NEAR(1 / std::sqrt(f), rainbow::fast_invsqrt(f), kErrorMargin);
     }
 }
 
