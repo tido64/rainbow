@@ -5,11 +5,10 @@
 #ifndef GRAPHICS_TEXTUREMANAGER_H_
 #define GRAPHICS_TEXTUREMANAGER_H_
 
-#include <vector>
-
 #include "Common/Global.h"
 #include "Common/Passkey.h"
 #include "Graphics/Texture.h"
+#include "Memory/ArrayMap.h"
 
 namespace rainbow::graphics
 {
@@ -62,15 +61,16 @@ namespace rainbow::graphics
         /// </param>
         /// <returns>Texture name.</returns>
         template <typename F>
-        auto create(const std::string& id, F&& loader) -> Texture
+        auto create(std::string_view id, F&& loader) -> Texture
         {
-            auto t = find(textures_, id);
+            auto t = textures_.find(id);
             if (t == textures_.end())
             {
                 loader(*this, create_texture(id));
                 return textures_.back();
             }
-            return *t;
+
+            return t->second;
         }
 
         /// <summary>Deletes unused textures.</summary>
@@ -135,7 +135,7 @@ namespace rainbow::graphics
         static constexpr size_t kNumTextureUnits = 2;
 
         uint32_t active_[kNumTextureUnits];
-        std::vector<detail::Texture> textures_;
+        ArrayMap<std::string, detail::Texture> textures_;
         TextureFilter mag_filter_;
         TextureFilter min_filter_;
 
@@ -144,7 +144,7 @@ namespace rainbow::graphics
         double mem_used_;
 #endif
 
-        auto create_texture(std::string id) -> Texture;
+        auto create_texture(std::string_view id) -> Texture;
 
 #ifdef USE_HEIMDALL
         /// <summary>Updates and prints total texture memory used.</summary>

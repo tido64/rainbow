@@ -8,12 +8,12 @@
 #include <mutex>
 #include <string>
 #include <thread>
-#include <unordered_map>
 
 #include <cubeb/cubeb.h>
 
 #include "Audio/AudioFile.h"
 #include "Audio/Mixer.h"
+#include "Memory/ArrayMap.h"
 #include "Memory/BoundedPool.h"
 
 namespace rainbow::audio
@@ -59,7 +59,7 @@ namespace rainbow::audio
         std::vector<Channel*> drain_;
         std::thread::id thread_id_;
         BoundedPool<Channel> channels_;
-        std::unordered_map<intptr_t, std::string> sounds_;
+        ArrayMap<intptr_t, std::string> sounds_;
         cubeb* context_ = nullptr;
 
         void suspend(int (*suspend)(cubeb_stream*));

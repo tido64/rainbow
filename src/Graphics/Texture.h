@@ -21,21 +21,15 @@ namespace rainbow::graphics
     {
         struct Texture
         {
-            std::string id;
-            uint32_t name;
-            uint32_t width;
-            uint32_t height;
-            uint32_t size;
-            uint32_t use_count;
+            uint32_t name = 0;
+            uint32_t width = 0;
+            uint32_t height = 0;
+            uint32_t size = 0;
+            uint32_t use_count = 0;
 
-            Texture(std::string id_, uint32_t name_)
-                : id(std::move(id_)), name(name_), width(0), height(0), size(0),
-                  use_count(0)
-            {
-            }
+            Texture(uint32_t name_) : name(name_) {}
 
-            auto operator==(uint32_t name_) { return name == name_; }
-            auto operator==(std::string_view id_) { return id == id_; }
+            auto operator==(uint32_t name_) const { return name == name_; }
         };
     }  // namespace detail
 

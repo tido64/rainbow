@@ -468,6 +468,8 @@
 		19B3999D20421D2800581AE0 /* hb-ot-shape-complex-myanmar.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "hb-ot-shape-complex-myanmar.cc"; sourceTree = "<group>"; };
 		19B3999E20421D2800581AE0 /* hb-ot-shape-complex-use-table.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "hb-ot-shape-complex-use-table.cc"; sourceTree = "<group>"; };
 		19B399AD20421D5500581AE0 /* hb-ot-map.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "hb-ot-map.cc"; sourceTree = "<group>"; };
+		19B645A22114E73F005D4CAE /* ArrayMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArrayMap.h; sourceTree = "<group>"; };
+		19B645A32114E73F005D4CAE /* BoundedPool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BoundedPool.h; sourceTree = "<group>"; };
 		19BE0C7E1C98B2110041EE8C /* Array.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Array.h; sourceTree = "<group>"; };
 		19BE0C7F1C98B2110041EE8C /* NotNull.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NotNull.h; sourceTree = "<group>"; };
 		19CB0668200AC971005D6740 /* duktape.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = duktape.c; path = src/duktape.c; sourceTree = "<group>"; };
@@ -1222,6 +1224,8 @@
 			isa = PBXGroup;
 			children = (
 				19BE0C7E1C98B2110041EE8C /* Array.h */,
+				19B645A22114E73F005D4CAE /* ArrayMap.h */,
+				19B645A32114E73F005D4CAE /* BoundedPool.h */,
 				19BE0C7F1C98B2110041EE8C /* NotNull.h */,
 				19DF40481C98B4AF001482BC /* Pool.h */,
 				19F2038C1AAC551D005CD913 /* ScopeStack.h */,

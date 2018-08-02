@@ -84,20 +84,6 @@ namespace rainbow
                          value);
     }
 
-    /// <summary>
-    ///   Finds the first element equal to <paramref name="value"/>, and invokes
-    ///   <paramref name="action"/> with the element as parameter if found.
-    /// </summary>
-    template <typename Container, typename T, typename F>
-    void find_invoke(Container&& container, const T& value, F&& action)
-    {
-        auto i = rainbow::find(std::forward<Container>(container), value);
-        if (i == std::end(std::forward<Container>(container)))
-            return;
-
-        action(*i);
-    }
-
     /// <summary>Rounds down to the nearest power of 2.</summary>
     inline auto floor_pow2(unsigned int i)
     {

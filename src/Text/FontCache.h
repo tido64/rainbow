@@ -24,6 +24,7 @@
 #include "Common/Algorithm.h"
 #include "Common/Data.h"
 #include "Common/Global.h"
+#include "Memory/ArrayMap.h"
 #include "Graphics/SpriteVertex.h"
 #include "Graphics/Texture.h"
 #include "Graphics/TextureManager.h"
@@ -94,7 +95,7 @@ namespace rainbow
         bool is_stale_;
         graphics::Texture texture_;
         std::unordered_map<GlyphCacheIndex, GlyphInfo> glyph_cache_;
-        std::unordered_map<std::string, FontFace> font_cache_;
+        ArrayMap<std::string, FontFace> font_cache_;
         stbrp_context bin_context_;
         std::array<stbrp_node, kTextureSize> bin_nodes_;
         std::unique_ptr<uint8_t[]> bitmap_;

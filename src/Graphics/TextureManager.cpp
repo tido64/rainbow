@@ -83,8 +83,8 @@ TextureManager::TextureManager(const Passkey<rainbow::graphics::State>&)
 
 TextureManager::~TextureManager()
 {
-    for (const detail::Texture& texture : textures_)
-        glDeleteTextures(1, &texture.name);
+    for (auto&& texture : textures_)
+        glDeleteTextures(1, &texture.second.name);
 }
 
 void TextureManager::set_filter(TextureFilter filter)
@@ -120,11 +120,12 @@ void TextureManager::trim()
     auto first = std::remove_if(  //
         textures_.begin(),
         textures_.end(),
-        [this](const detail::Texture& texture) {
-            if (texture.use_count == 0)
+        [this](auto&& texture) {
+            auto& detail = texture.second;
+            if (detail.use_count == 0)
             {
-                IF_DEVMODE(mem_used_ -= texture.size);
-                glDeleteTextures(1, &texture.name);
+                IF_DEVMODE(mem_used_ -= detail.size);
+                glDeleteTextures(1, &detail.name);
                 return true;
             }
 
@@ -154,15 +155,17 @@ void TextureManager::upload(const Texture& texture,
 
     R_ASSERT(glGetError() == GL_NO_ERROR, "Failed to upload texture");
 
-    find_invoke(
-        textures_, texture, [this, width, height](detail::Texture& texture) {
-            IF_DEVMODE(mem_used_ -= texture.size);
-            texture.width = width;
-            texture.height = height;
-            texture.size = width * height * 4;
-            IF_DEVMODE(mem_used_ += texture.size);
-            IF_DEVMODE(update_usage());
-        });
+    auto t = textures_.find_value(texture);
+    if (t == textures_.end())
+        return;
+
+    auto& detail = t->second;
+    IF_DEVMODE(mem_used_ -= detail.size);
+    detail.width = width;
+    detail.height = height;
+    detail.size = width * height * 4;
+    IF_DEVMODE(mem_used_ += detail.size);
+    IF_DEVMODE(update_usage());
 }
 
 void TextureManager::upload_compressed(const Texture& texture,
@@ -180,34 +183,43 @@ void TextureManager::upload_compressed(const Texture& texture,
 
     R_ASSERT(glGetError() == GL_NO_ERROR, "Failed to upload texture");
 
-    find_invoke(textures_,
-                texture,
-                [this, width, height, size](detail::Texture& texture) {
-                    texture.width = width;
-                    texture.height = height;
-                    texture.size = size;
-                    IF_DEVMODE(mem_used_ += texture.size);
-                    IF_DEVMODE(update_usage());
-                });
+    auto t = textures_.find_value(texture);
+    if (t == textures_.end())
+        return;
+
+    auto& detail = t->second;
+    detail.width = width;
+    detail.height = height;
+    detail.size = size;
+    IF_DEVMODE(mem_used_ += detail.size);
+    IF_DEVMODE(update_usage());
 }
 
-void TextureManager::release(const Texture& t, const Passkey<Texture>&)
+void TextureManager::release(const Texture& texture, const Passkey<Texture>&)
 {
-    find_invoke(
-        textures_, t, [](detail::Texture& texture) { --texture.use_count; });
+    auto t = textures_.find_value(texture);
+    if (t == textures_.end())
+        return;
+
+    auto& detail = t->second;
+    --detail.use_count;
 }
 
-void TextureManager::retain(const Texture& t, const Passkey<Texture>&)
+void TextureManager::retain(const Texture& texture, const Passkey<Texture>&)
 {
-    find_invoke(
-        textures_, t, [](detail::Texture& texture) { ++texture.use_count; });
+    auto t = textures_.find_value(texture);
+    if (t == textures_.end())
+        return;
+
+    auto& detail = t->second;
+    ++detail.use_count;
 }
 
-auto TextureManager::create_texture(std::string id) -> Texture
+auto TextureManager::create_texture(std::string_view id) -> Texture
 {
     GLuint name;
     glGenTextures(1, &name);
-    textures_.emplace_back(std::move(id), name);
+    textures_.emplace(id, name);
 
     bind(name);
     glTexParameteri(

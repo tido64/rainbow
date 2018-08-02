@@ -75,20 +75,6 @@ TEST(AlgorithmTest, FindsValueInContainer)
     ASSERT_EQ(rainbow::find(kUTF8, 0xc3), std::begin(kUTF8));
 }
 
-TEST(AlgorithmTest, FindsValueInContainerAndInvokesAction)
-{
-    int result = 0;
-    auto count = [&result](unsigned char) { ++result; };
-    rainbow::find_invoke(kUTF8, 0xc3, count);
-
-    ASSERT_EQ(result, 1);
-
-    result = 0;
-    rainbow::find_invoke(kUTF8, 0xff, count);
-
-    ASSERT_EQ(result, 0);
-}
-
 TEST(AlgorithmTest, RoundsDownToNearestPowerOfTwo)
 {
     ASSERT_EQ(rainbow::floor_pow2(0), 0u);

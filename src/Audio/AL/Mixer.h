@@ -6,12 +6,12 @@
 #define AUDIO_AL_MIXER_H_
 
 #include <string>
-#include <unordered_map>
 #include <vector>
 
 #include "Audio/AL/Channel.h"
 #include "Audio/AL/Sound.h"
 #include "Audio/Mixer.h"
+#include "Memory/ArrayMap.h"
 
 typedef struct ALCcontext_struct ALCcontext;
 
@@ -39,7 +39,7 @@ namespace rainbow::audio
 
     private:
         std::vector<Channel> channels_;
-        std::unordered_map<std::string, Sound> sounds_;
+        ArrayMap<std::string, Sound> sounds_;
         ALCcontext* context_ = nullptr;
 #ifdef RAINBOW_OS_IOS
         RainbowAudioSession* audio_session_ = nil;

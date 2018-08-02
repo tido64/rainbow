@@ -40,11 +40,6 @@ namespace
             });
         }
     }
-
-    auto make_key(std::string_view key)  // TODO: Avoid copying to make map key
-    {
-        return std::string{key.data(), key.length()};
-    }
 }  // namespace
 
 FontCache::FontCache() : is_stale_(false)
@@ -79,7 +74,7 @@ FontCache::~FontCache()
 
 auto FontCache::get(std::string_view font_name) -> FT_Face
 {
-    auto search = font_cache_.find(make_key(font_name));
+    auto search = font_cache_.find(font_name);
     if (search == font_cache_.end())
     {
         auto data = font_name.empty()
@@ -100,8 +95,7 @@ auto FontCache::get(std::string_view font_name) -> FT_Face
 
         R_ASSERT(error == 0, "Failed to select character map");
 
-        font_cache_.emplace(
-            std::move(font_name), FontFace{face, std::move(data)});
+        font_cache_.emplace(font_name, FontFace{face, std::move(data)});
         return face;
     }
 
