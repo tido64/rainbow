@@ -183,10 +183,9 @@ void rainbow::duk::push(duk_context* ctx, const Color& c)
 void rainbow::duk::push(duk_context* ctx, const SpriteRef& ref)
 {
     const auto obj_idx = duk_push_bare_object(ctx);
-    push(ctx, ref.batch());
-    duk::put_prop_literal(ctx, obj_idx, DUKR_HIDDEN_SYMBOL_SPRITEBATCH);
-    push(ctx, ref.index());
-    duk::put_prop_literal(ctx, obj_idx, DUKR_HIDDEN_SYMBOL_INDEX);
+    auto buf = duk_push_fixed_buffer(ctx, sizeof(SpriteRef));
+    new (buf) SpriteRef(ref);
+    duk::put_prop_literal(ctx, obj_idx, DUKR_HIDDEN_SYMBOL_ADDRESS);
 
     ScopedStack stack{ctx};
 

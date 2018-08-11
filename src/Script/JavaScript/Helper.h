@@ -29,8 +29,6 @@
 
 #define DUKR_HIDDEN_SYMBOL_ADDRESS DUK_HIDDEN_SYMBOL("address")
 #define DUKR_HIDDEN_SYMBOL_CALLBACK DUK_HIDDEN_SYMBOL("callback")
-#define DUKR_HIDDEN_SYMBOL_INDEX DUK_HIDDEN_SYMBOL("index")
-#define DUKR_HIDDEN_SYMBOL_SPRITEBATCH DUK_HIDDEN_SYMBOL("spritebatch")
 #define DUKR_HIDDEN_SYMBOL_TYPE DUK_HIDDEN_SYMBOL("type")
 #define DUKR_WELLKNOWN_SYMBOL_TOSTRINGTAG                                      \
     DUK_WELLKNOWN_SYMBOL("Symbol.toStringTag")
@@ -148,11 +146,8 @@ namespace rainbow::duk
     {
         ScopedStack stack{ctx};
 
-        duk::get_prop_literal(ctx, idx, DUKR_HIDDEN_SYMBOL_SPRITEBATCH);
-        duk::get_prop_literal(ctx, idx, DUKR_HIDDEN_SYMBOL_INDEX);
-
-        return {*static_cast<SpriteBatch*>(duk_require_pointer(ctx, -2)),
-                duk_require_uint(ctx, -1)};
+        duk::get_prop_literal(ctx, idx, DUKR_HIDDEN_SYMBOL_ADDRESS);
+        return *static_cast<SpriteRef*>(duk_require_buffer(ctx, -1, nullptr));
     }
 
     template <>
