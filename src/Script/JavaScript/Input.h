@@ -63,42 +63,43 @@ namespace rainbow::duk
         duk::put_prop_literal(ctx, -2, "pointersMoved");
         duk_push_array(ctx);
         duk::put_prop_literal(ctx, -2, "pointersUp");
+
+        // Stash the module for quicker access
+        duk_push_global_stash(ctx);
+        duk_dup(ctx, -2);
+        duk_put_prop_index(ctx, -2, DUKR_IDX_INPUT);
+        duk_pop(ctx);
     }
 
     void clear_pointer_events(duk_context* ctx)
     {
-        duk::ScopedStack stack{ctx};
-
-        duk_push_global_object(ctx);
-        duk::get_prop_literal(ctx, -1, "Rainbow");
-        duk::get_prop_literal(ctx, -1, "Input");
+        duk_push_global_stash(ctx);
+        duk_get_prop_index(ctx, -1, DUKR_IDX_INPUT);
 
         duk::get_prop_literal(ctx, -1, "pointersDown");
-        duk_push_int(ctx, 0);
-        duk::put_prop_literal(ctx, -2, "length");
+        duk_set_length(ctx, -1, 0);
         duk_pop(ctx);
 
         duk::get_prop_literal(ctx, -1, "pointersMoved");
-        duk_push_int(ctx, 0);
-        duk::put_prop_literal(ctx, -2, "length");
+        duk_set_length(ctx, -1, 0);
         duk_pop(ctx);
 
         duk::get_prop_literal(ctx, -1, "pointersUp");
-        duk_push_int(ctx, 0);
-        duk::put_prop_literal(ctx, -2, "length");
+        duk_set_length(ctx, -1, 0);
+
+        duk_pop_3(ctx);
     }
 
     void update_controller_id(duk_context* ctx, unsigned int port, uint32_t id)
     {
-        duk::ScopedStack stack{ctx};
-
-        duk_push_global_object(ctx);
-        duk::get_prop_literal(ctx, -1, "Rainbow");
-        duk::get_prop_literal(ctx, -1, "Input");
+        duk_push_global_stash(ctx);
+        duk_get_prop_index(ctx, -1, DUKR_IDX_INPUT);
         duk::get_prop_literal(ctx, -1, "controllers");
         duk_get_prop_index(ctx, -1, port);
         duk::push(ctx, id);
         duk::put_prop_literal(ctx, -2, "id");
+
+        duk_pop_n(ctx, 4);
     }
 
     template <size_t N>
@@ -106,11 +107,8 @@ namespace rainbow::duk
                               const char (&event_name)[N],
                               const ArrayView<Pointer>& pointers)
     {
-        duk::ScopedStack stack{ctx};
-
-        duk_push_global_object(ctx);
-        duk::get_prop_literal(ctx, -1, "Rainbow");
-        duk::get_prop_literal(ctx, -1, "Input");
+        duk_push_global_stash(ctx);
+        duk_get_prop_index(ctx, -1, DUKR_IDX_INPUT);
         duk::get_prop_literal(ctx, -1, event_name);
 
         duk_uarridx_t i = 0;
@@ -123,6 +121,8 @@ namespace rainbow::duk
             DUKR_PUT_PROP(p, timestamp);
             duk_put_prop_index(ctx, -2, i++);
         }
+
+        duk_pop_3(ctx);
     }
 }  // namespace rainbow::duk
 

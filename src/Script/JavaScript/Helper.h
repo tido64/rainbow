@@ -30,6 +30,8 @@
 #define DUKR_HIDDEN_SYMBOL_ADDRESS DUK_HIDDEN_SYMBOL("address")
 #define DUKR_HIDDEN_SYMBOL_CALLBACK DUK_HIDDEN_SYMBOL("callback")
 #define DUKR_HIDDEN_SYMBOL_TYPE DUK_HIDDEN_SYMBOL("type")
+#define DUKR_IDX_INPUT 0
+#define DUKR_IDX_SPRITE_PROTOTYPE 1
 #define DUKR_WELLKNOWN_SYMBOL_TOSTRINGTAG                                      \
     DUK_WELLKNOWN_SYMBOL("Symbol.toStringTag")
 
@@ -48,7 +50,11 @@ namespace rainbow::duk
         {
         }
 
-        ~ScopedStack() { duk_set_top(context_, index_); }
+        ~ScopedStack()
+        {
+            auto count = duk_get_top(context_) - index_;
+            duk_pop_n(context_, count);
+        }
 
     private:
         duk_context* context_;
@@ -105,7 +111,7 @@ namespace rainbow::duk
                           duk_idx_t obj_idx,
                           const char (&key)[N])
     {
-        return duk_get_prop_lstring(ctx, obj_idx, key, N - 1);
+        return duk_get_prop_literal_raw(ctx, obj_idx, key, N - 1);
     }
 
     template <typename T>
@@ -136,7 +142,7 @@ namespace rainbow::duk
     }
 
     template <>
-    inline auto get<const char*>(duk_context* ctx, duk_idx_t idx) -> const char*
+    inline auto get<czstring>(duk_context* ctx, duk_idx_t idx) -> czstring
     {
         return duk_require_string(ctx, idx);
     }
@@ -144,10 +150,10 @@ namespace rainbow::duk
     template <>
     inline auto get<SpriteRef>(duk_context* ctx, duk_idx_t idx) -> SpriteRef
     {
-        ScopedStack stack{ctx};
-
         duk::get_prop_literal(ctx, idx, DUKR_HIDDEN_SYMBOL_ADDRESS);
-        return *static_cast<SpriteRef*>(duk_require_buffer(ctx, -1, nullptr));
+        auto ptr = duk_require_buffer(ctx, -1, nullptr);
+        duk_pop(ctx);
+        return *static_cast<SpriteRef*>(ptr);
     }
 
     template <>
@@ -202,7 +208,7 @@ namespace rainbow::duk
     }
 
     template <typename... Args>
-    void push(duk_context* ctx, const char* str, Args&&... args)
+    void push(duk_context* ctx, czstring str, Args&&... args)
     {
         duk_push_string(ctx, str);
         push(ctx, std::forward<Args>(args)...);
@@ -215,11 +221,11 @@ namespace rainbow::duk
         push(ctx, std::forward<Args>(args)...);
     }
 
-    void push(duk_context* ctx, const Color&);
-    void push(duk_context* ctx, const SpriteRef&);
-    void push(duk_context* ctx, const Vec2f&);
-    void push(duk_context* ctx, audio::Channel*);
-    void push(duk_context* ctx, audio::Sound*);
+    void push(duk_context*, const Color&);
+    void push(duk_context*, const SpriteRef&);
+    void push(duk_context*, const Vec2f&);
+    void push(duk_context*, audio::Channel*);
+    void push(duk_context*, audio::Sound*);
 
     inline void push(duk_context* ctx, TextAlignment alignment)
     {
@@ -237,7 +243,7 @@ namespace rainbow::duk
                           duk_idx_t obj_idx,
                           const char (&key)[N])
     {
-        return duk_put_prop_lstring(ctx, obj_idx, key, N - 1);
+        return duk_put_prop_literal_raw(ctx, obj_idx, key, N - 1);
     }
 
     inline void put_instance(duk_context* ctx, duk_idx_t obj_idx, void* ptr)
@@ -274,10 +280,10 @@ namespace rainbow::duk
         }
     }
 
-    template <typename... Args>
-    bool call(duk_context* ctx, const char* func, Args&&... args)
+    template <size_t N, typename... Args>
+    bool call(duk_context* ctx, const char (&func)[N], Args&&... args)
     {
-        duk_get_global_string(ctx, func);
+        duk_get_global_literal_raw(ctx, func, N - 1);
         duk::push(ctx, std::forward<Args>(args)...);
 #ifdef NDEBUG
         duk_call(ctx, sizeof...(args));
@@ -333,13 +339,13 @@ namespace rainbow::duk
                           duk_idx_t obj_idx,
                           const char (&key)[N])
     {
-        return duk_has_prop_lstring(ctx, obj_idx, key, N - 1);
+        return duk_has_prop_literal_raw(ctx, obj_idx, key, N - 1);
     }
 
-    template <typename... Args>
-    bool opt_call(duk_context* ctx, const char* func, Args&&... args)
+    template <size_t N, typename... Args>
+    bool opt_call(duk_context* ctx, const char (&func)[N], Args&&... args)
     {
-        if (duk_get_global_string(ctx, func))
+        if (duk_get_global_literal_raw(ctx, func, N - 1))
             return call(ctx, func, std::forward<Args>(args)...);
 
         duk_pop(ctx);
@@ -383,7 +389,7 @@ namespace rainbow::duk
     template <size_t N>
     void push_literal(duk_context* ctx, const char (&str)[N])
     {
-        duk_push_lstring(ctx, str, N - 1);
+        duk_push_literal_raw(ctx, str, N - 1);
     }
 
     template <typename T>
@@ -436,16 +442,16 @@ namespace rainbow::duk
     template <typename T>
     void register_module(duk_context* ctx, duk_idx_t rainbow);
 
-    template <typename F>
+    template <typename F, size_t N>
     void register_module(duk_context* ctx,
                          duk_idx_t rainbow,
-                         const char* key,
+                         const char (&key)[N],
                          F&& put_props)
     {
         const auto obj_idx = duk_push_bare_object(ctx);
         put_props(ctx);
         duk_freeze(ctx, obj_idx);
-        duk_put_prop_string(ctx, rainbow, key);
+        put_prop_literal(ctx, rainbow, key);
 
         R_ASSERT(duk_get_top(ctx) == 1, "We didn't clean up properly!");
     }

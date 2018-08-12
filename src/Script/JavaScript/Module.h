@@ -8,10 +8,7 @@
 #include <string>
 
 #include <duktape.h>
-
-extern "C" {  // TODO: Remove workaround with Duktape v2.3.0
 #include <duk_module_node.h>
-}
 
 #include "FileSystem/File.h"
 
@@ -108,9 +105,9 @@ namespace rainbow::duk::module
     {
         duk_push_object(ctx);
         duk_push_c_function(ctx, module::load, -1);
-        duk_put_prop_string(ctx, -2, "load");
+        duk_put_prop_literal(ctx, -2, "load");
         duk_push_c_function(ctx, module::resolve, -1);
-        duk_put_prop_string(ctx, -2, "resolve");
+        duk_put_prop_literal(ctx, -2, "resolve");
         duk_module_node_init(ctx);
     }
 }  // namespace rainbow::duk::module

@@ -72,7 +72,17 @@ JavaScript::JavaScript(Director& director)
         });
     duk::register_all_modules(context_, rainbow);
     duk_freeze(context_, rainbow);
-    duk_put_global_string(context_, "Rainbow");
+    duk_put_global_literal(context_, "Rainbow");
+
+    R_ASSERT(duk_get_top(context_) == 0, "We didn't clean up properly!");
+
+    duk_push_global_object(context_);
+    duk::get_prop_literal(context_, -1, "Rainbow");
+    duk::get_prop_literal(context_, -1, "Sprite");
+    duk_push_global_stash(context_);
+    duk::get_prop_literal(context_, -2, "prototype");
+    duk_put_prop_index(context_, -2, DUKR_IDX_SPRITE_PROTOTYPE);
+    duk_pop_n(context_, 4);
 
     R_ASSERT(duk_get_top(context_) == 0, "We didn't clean up properly!");
 
