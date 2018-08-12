@@ -21,35 +21,34 @@ using rainbow::Vec2f;
         duk::put_prop_literal(ctx, obj_idx, #prop);                            \
     } while (false)
 
-#define PUSH_TAGGED_POINTER(ctx, ptr, tag)                                     \
-    do                                                                         \
-    {                                                                          \
-        const auto obj_idx = duk_push_bare_object(ctx);                        \
-        duk::push(                                                             \
-            ctx,                                                               \
-            const_cast<void*>(                                                 \
-                type_id<std::remove_pointer_t<decltype(ptr)>>().value()));     \
-        duk::put_prop_literal(ctx, obj_idx, DUKR_HIDDEN_SYMBOL_TYPE);          \
-        duk::put_instance(ctx, obj_idx, ptr);                                  \
-        duk::push_literal(ctx, tag);                                           \
-        duk::put_prop_literal(ctx, -2, DUKR_WELLKNOWN_SYMBOL_TOSTRINGTAG);     \
-        duk_freeze(ctx, obj_idx);                                              \
-    } while (false)
-
 namespace rainbow::duk
 {
     template <typename T>
     auto get_shared(duk_context* ctx, duk_idx_t idx) -> SharedPtr<T>
     {
-        ScopedStack stack{ctx};
-
         duk_require_object(ctx, idx);
-        return *static_cast<SharedPtr<T>*>(duk::push_instance(ctx, idx));
+        auto ptr = static_cast<SharedPtr<T>*>(duk::push_instance(ctx, idx));
+        duk_pop(ctx);
+        return *ptr;
     }
 
     void push(duk_context* ctx, VirtualKey key)
     {
         duk_push_int(ctx, static_cast<int>(key));
+    }
+
+    template <typename T, size_t N>
+    void push_tagged_pointer(duk_context* ctx, T ptr, const char (&tag)[N])
+    {
+        const auto obj_idx = duk_push_bare_object(ctx);
+        duk::push(ctx,
+                  const_cast<void*>(
+                      type_id<std::remove_pointer_t<decltype(ptr)>>().value()));
+        duk::put_prop_literal(ctx, obj_idx, DUKR_HIDDEN_SYMBOL_TYPE);
+        duk::put_instance(ctx, obj_idx, ptr);
+        duk::push_literal(ctx, tag);
+        duk::put_prop_literal(ctx, obj_idx, DUKR_WELLKNOWN_SYMBOL_TOSTRINGTAG);
+        duk_freeze(ctx, obj_idx);
     }
 }
 
@@ -105,8 +104,6 @@ template <>
 auto rainbow::duk::get<Animation::Frames>(duk_context* ctx, duk_idx_t idx)
     -> Animation::Frames
 {
-    ScopedStack stack{ctx};
-
     auto size = duk_get_length(ctx, idx);
     auto frames = std::make_unique<Animation::Frame[]>(size + 1);
 
@@ -124,17 +121,18 @@ auto rainbow::duk::get<Animation::Frames>(duk_context* ctx, duk_idx_t idx)
 template <>
 auto rainbow::duk::get<Color>(duk_context* ctx, duk_idx_t idx) -> Color
 {
-    ScopedStack stack{ctx};
-
     duk::get_prop_literal(ctx, idx, "r");
     duk::get_prop_literal(ctx, idx, "g");
     duk::get_prop_literal(ctx, idx, "b");
     duk::get_prop_literal(ctx, idx, "a");
 
-    return {static_cast<uint8_t>(duk_require_int(ctx, -4)),
+    Color c{static_cast<uint8_t>(duk_require_int(ctx, -4)),
             static_cast<uint8_t>(duk_require_int(ctx, -3)),
             static_cast<uint8_t>(duk_require_int(ctx, -2)),
             static_cast<uint8_t>(duk_require_int(ctx, -1))};
+
+    duk_pop_n(ctx, 4);
+    return c;
 }
 
 template <>
@@ -147,13 +145,14 @@ auto rainbow::duk::get<SharedPtr<TextureAtlas>>(duk_context* ctx, duk_idx_t idx)
 template <>
 auto rainbow::duk::get<Vec2f>(duk_context* ctx, duk_idx_t idx) -> Vec2f
 {
-    ScopedStack stack{ctx};
-
     duk::get_prop_literal(ctx, idx, "x");
     duk::get_prop_literal(ctx, idx, "y");
 
-    return {static_cast<float>(duk_require_number(ctx, -2)),
+    Vec2f v{static_cast<float>(duk_require_number(ctx, -2)),
             static_cast<float>(duk_require_number(ctx, -1))};
+
+    duk_pop_2(ctx);
+    return v;
 }
 
 template <>
@@ -187,15 +186,14 @@ void rainbow::duk::push(duk_context* ctx, const SpriteRef& ref)
     new (buf) SpriteRef(ref);
     duk::put_prop_literal(ctx, obj_idx, DUKR_HIDDEN_SYMBOL_ADDRESS);
 
-    ScopedStack stack{ctx};
-
-    duk_push_global_object(ctx);
-    duk::get_prop_literal(ctx, -1, "Rainbow");
-    duk::get_prop_literal(ctx, -1, "Sprite");
-    duk::get_prop_literal(ctx, -1, "prototype");
-
+    duk_push_global_stash(ctx);
+    duk_get_prop_index(ctx, -1, DUKR_IDX_SPRITE_PROTOTYPE);
     duk_set_prototype(ctx, obj_idx);
     duk_freeze(ctx, obj_idx);
+
+    duk_pop(ctx);
+
+    R_ASSERT(duk_get_top(ctx) == obj_idx + 1, "We didn't clean up properly!");
 }
 
 void rainbow::duk::push(duk_context* ctx, const Vec2f& v)
@@ -207,10 +205,10 @@ void rainbow::duk::push(duk_context* ctx, const Vec2f& v)
 
 void rainbow::duk::push(duk_context* ctx, audio::Channel* channel)
 {
-    PUSH_TAGGED_POINTER(ctx, channel, "Rainbow.Channel");
+    push_tagged_pointer(ctx, channel, "Rainbow.Channel");
 }
 
 void rainbow::duk::push(duk_context* ctx, audio::Sound* sound)
 {
-    PUSH_TAGGED_POINTER(ctx, sound, "Rainbow.Sound");
+    push_tagged_pointer(ctx, sound, "Rainbow.Sound");
 }

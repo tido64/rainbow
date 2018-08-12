@@ -1,5 +1,5 @@
-set(DUK_TARGET_VERSION 2.2.0)
-set(DUK_URL_HASH 62f72206427633077cb02e7ccd2599ace4d254db409334593b86d262c0d50c14)
+set(DUK_TARGET_VERSION 2.3.0)
+set(DUK_URL_HASH ed6e2f3ab2061628a7aeee27ccff16538ba6a151480cccf2e846bd061e45afe8)
 
 download_library(
     duktape-source

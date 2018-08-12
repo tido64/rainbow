@@ -14,7 +14,7 @@ namespace rainbow::duk::console
     auto join_strings(duk_context* ctx)
     {
         const auto nargs = duk_get_top(ctx);
-        duk_push_lstring(ctx, " ", 1);
+        duk_push_literal(ctx, " ");
         duk_insert(ctx, 0);
         duk_join(ctx, nargs);
         return duk_require_string(ctx, -1);
@@ -58,7 +58,7 @@ namespace rainbow::duk::console
         duk_push_bare_object(ctx);
         duk_put_function_list(ctx, -1, funcs);
         duk_freeze(ctx, -1);
-        duk_put_global_string(ctx, "console");
+        duk_put_global_literal(ctx, "console");
     }
 }  // namespace rainbow::duk::console
 
