@@ -299,8 +299,10 @@ function update(dt) {
         if (didHit) {
             var createDemo = State.createDemo, currentDemo = State.currentDemo, demo = State.demo;
             demo.deinit();
+            Duktape.gc();
             var nextDemo = (currentDemo + 1) % createDemo.length;
             var newDemo = createDemo[nextDemo]();
+            Duktape.gc();
             State = __assign({}, State, { currentDemo: nextDemo, demo: newDemo });
             return;
         }

@@ -159,8 +159,6 @@ void JavaScript::update_impl(uint64_t dt)
         has_pointer_events_ = false;
         duk::clear_pointer_events(context_);
     }
-
-    duk_gc(context_, 0);
 }
 
 void JavaScript::on_memory_warning_impl()
