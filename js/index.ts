@@ -381,8 +381,11 @@ function update(dt: number) {
       const { createDemo, currentDemo, demo } = State;
 
       demo.deinit();
+      Duktape.gc();
+
       const nextDemo = (currentDemo + 1) % createDemo.length;
       const newDemo = createDemo[nextDemo]();
+      Duktape.gc();
 
       State = {
         ...State,

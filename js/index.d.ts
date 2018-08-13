@@ -13,6 +13,7 @@ declare namespace Duktape {
   function dec(format: "base64" | "hex" | "jc" | "jx", value: string): Buffer | string;
   function info(value: any): {};
   function act(index: number): {};
+  function gc(flags?: number): void;
   function compact(o: {}): void;
 
   let errCreate: ((e: Error) => Error) | undefined;
