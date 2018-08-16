@@ -121,6 +121,7 @@ namespace rainbow
 
         /// <summary>Populates the vertex array.</summary>
         virtual void update();
+        void upload();
 
     protected:
         auto state() const { return stale_; }
@@ -128,7 +129,6 @@ namespace rainbow
 
         void clear_state() { stale_ = 0; }
         void update_internal();
-        void upload() const;
 
     private:
         /// <summary>Flags indicating need for update.</summary>

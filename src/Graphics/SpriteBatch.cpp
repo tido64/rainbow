@@ -23,8 +23,7 @@ namespace
 }  // namespace
 
 SpriteBatch::SpriteBatch(uint32_t count)
-    : sprites_(count), vertices_(std::make_unique<SpriteVertex[]>(count * 4_z)),
-      count_(0), visible_(true)
+    : sprites_(count), vertices_(std::make_unique<SpriteVertex[]>(count * 4_z))
 {
     R_ASSERT(count <= graphics::kMaxSprites, "Hard-coded limit reached");
 
@@ -34,11 +33,11 @@ SpriteBatch::SpriteBatch(uint32_t count)
 SpriteBatch::SpriteBatch(SpriteBatch&& batch) noexcept
     : sprites_(std::move(batch.sprites_)),
       vertices_(std::move(batch.vertices_)),
-      normals_(std::move(batch.normals_)), count_(batch.count_),
+      normals_(std::move(batch.normals_)), state_(batch.state_),
       vertex_buffer_(std::move(batch.vertex_buffer_)),
       normal_buffer_(std::move(batch.normal_buffer_)),
       array_(std::move(batch.array_)), normal_(std::move(batch.normal_)),
-      texture_(std::move(batch.texture_)), visible_(batch.visible_)
+      texture_(std::move(batch.texture_))
 {
     batch.clear();
 }
@@ -68,12 +67,13 @@ void SpriteBatch::bind_textures() const
 
 void SpriteBatch::bring_to_front(uint32_t i)
 {
-    sprites_.move(i, count_ - 1);
+    sprites_.move(i, size() - 1);
 }
 
 auto SpriteBatch::create_sprite(uint32_t width, uint32_t height) -> SpriteRef
 {
-    if (count_ == sprites_.size())
+    const auto sz = size();
+    if (sz == sprites_.size())
     {
         LOGW(
             "Tried to add a sprite (size: %ux%u) to a full SpriteBatch "
@@ -84,24 +84,27 @@ auto SpriteBatch::create_sprite(uint32_t width, uint32_t height) -> SpriteRef
         return {};
     }
 
-    new (sprites_.data() + count_) Sprite(width, height);
-    const uint32_t offset = count_ * 4;
+    new (sprites_.data() + sz) Sprite(width, height);
+    state_.increment();
+
+    const uint32_t offset = sz * 4;
     std::fill_n(vertices_.get() + offset, 4, SpriteVertex{});
     if (normals_)
         std::fill_n(normals_.get() + offset, 4, Vec2f::Zero);
-    return {*this, sprites_.find_iterator(count_++)};
+
+    return {*this, sprites_.find_iterator(sz)};
 }
 
 void SpriteBatch::erase(uint32_t i)
 {
     bring_to_front(i);
-    sprites_.data()[--count_].~Sprite();
+    sprites_.data()[state_.decrement()].~Sprite();
 }
 
 auto SpriteBatch::find_sprite_by_id(int id) const -> SpriteRef
 {
     auto sprites = sprites_.data();
-    for (uint32_t i = 0; i < count_; ++i)
+    for (uint32_t i = 0; i < size(); ++i)
     {
         if (sprites[i].id() == id)
             return {*const_cast<SpriteBatch*>(this), sprites_.find_iterator(i)};
@@ -133,7 +136,7 @@ void SpriteBatch::update()
     auto sprites = sprites_.data();
     if (normals_)
     {
-        for (uint32_t i = 0; i < count_; ++i)
+        for (uint32_t i = 0; i < size(); ++i)
         {
             ArraySpan<Vec2f> normal_buffer{normals_.get() + i * 4, 4};
             ArraySpan<SpriteVertex> vertex_buffer{vertices_.get() + i * 4, 4};
@@ -143,16 +146,21 @@ void SpriteBatch::update()
     }
     else
     {
-        for (uint32_t i = 0; i < count_; ++i)
+        for (uint32_t i = 0; i < size(); ++i)
         {
             ArraySpan<SpriteVertex> buffer{vertices_.get() + i * 4, 4};
             needs_update |= sprites[i].update(buffer, *texture_);
         }
     }
 
-    if (needs_update)
+    state_.set_needs_update(needs_update);
+}
+
+void SpriteBatch::upload() const
+{
+    if (state_.needs_update())
     {
-        const uint32_t count = count_ * 4;
+        const auto count = size() * 4;
         vertex_buffer_.upload(vertices_.get(), count * sizeof(SpriteVertex));
         if (normals_)
             normal_buffer_.upload(normals_.get(), count * sizeof(Vec2f));
@@ -177,8 +185,8 @@ SpriteBatch::~SpriteBatch()
 #ifdef RAINBOW_TEST
 SpriteBatch::SpriteBatch(const rainbow::ISolemnlySwearThatIAmOnlyTesting& test)
     : sprites_(4), vertices_(std::make_unique<SpriteVertex[]>(4 * 4)),
-      count_(0), vertex_buffer_(test), normal_buffer_(test),
-      texture_(make_shared<TextureAtlas>(test)), visible_(true)
+      vertex_buffer_(test), normal_buffer_(test),
+      texture_(make_shared<TextureAtlas>(test))
 {
     texture_->add_region(0, 0, 1, 1);
 }

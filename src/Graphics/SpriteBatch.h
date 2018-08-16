@@ -25,6 +25,41 @@ namespace rainbow
     /// </remarks>
     class SpriteBatch : private NonCopyable<SpriteBatch>
     {
+    INTERNAL:
+        class State
+        {
+            static constexpr uint32_t kSizeMask = 0xffffff;
+            static constexpr uint32_t kUpdateBit = 1 << 24;
+            static constexpr uint32_t kVisibilityBit = 1 << 25;
+
+        public:
+            auto is_visible() const { return (state_ & kVisibilityBit) != 0; }
+            auto needs_update() const { return (state_ & kUpdateBit) != 0; }
+            auto size() const { return state_ & kSizeMask; }
+
+            void set_needs_update(bool value) { set(kUpdateBit, value); }
+            void set_visible(bool visible) { set(kVisibilityBit, visible); }
+
+            void clear_size() { state_ &= ~kSizeMask; }
+            auto decrement() { return add(-1); }
+            auto increment() { return add(1); }
+
+        private:
+            uint32_t state_ = kVisibilityBit;
+
+            auto add(int32_t i) -> uint32_t
+            {
+                const auto size = (state_ + i) & kSizeMask;
+                state_ = size | (state_ & ~kSizeMask);
+                return size;
+            }
+
+            void set(uint32_t bit, int32_t value)
+            {
+                state_ ^= (static_cast<uint32_t>(-value) ^ state_) & bit;
+            }
+        };
+
     public:
         /// <summary>Creates a batch of sprites.</summary>
         /// <param name="count">Number of sprites to allocate for.</param>
@@ -45,11 +80,11 @@ namespace rainbow
         auto begin() const { return sprites_.data(); }
 
         /// <summary>Returns a pointer to the end.</summary>
-        auto end() { return begin() + count_; }
-        auto end() const { return begin() + count_; }
+        auto end() { return begin() + size(); }
+        auto end() const { return begin() + size(); }
 
         /// <summary>Returns whether the batch is visible.</summary>
-        auto is_visible() const { return visible_; }
+        auto is_visible() const { return state_.is_visible(); }
 
         /// <summary>Returns current normal map.</summary>
         auto normal() const -> const TextureAtlas&
@@ -59,7 +94,7 @@ namespace rainbow
         }
 
         /// <summary>Returns sprite count.</summary>
-        auto size() const { return count_; }
+        auto size() const -> uint32_t { return state_.size(); }
 
         /// <summary>Returns current texture.</summary>
         auto texture() const -> TextureAtlas&
@@ -75,7 +110,7 @@ namespace rainbow
         }
 
         /// <summary>Returns the vertex count.</summary>
-        auto vertex_count() const { return !visible_ ? 0 : count_ * 6; }
+        auto vertex_count() const { return !is_visible() ? 0 : size() * 6; }
 
         /// <summary>Assigns a normal map.</summary>
         void set_normal(SharedPtr<TextureAtlas> texture);
@@ -84,7 +119,7 @@ namespace rainbow
         void set_texture(SharedPtr<TextureAtlas> texture);
 
         /// <summary>Sets batch visibility.</summary>
-        void set_visible(bool visible) { visible_ = visible; }
+        void set_visible(bool visible) { state_.set_visible(visible); }
 
         auto at(uint32_t i) -> Sprite& { return (*this)[i]; }
         auto at(uint32_t i) const -> const Sprite& { return (*this)[i]; }
@@ -105,7 +140,7 @@ namespace rainbow
         }
 
         /// <summary>Clears all sprites.</summary>
-        void clear() { count_ = 0; }
+        void clear() { state_.clear_size(); }
 
         /// <summary>Creates a sprite.</summary>
         /// <param name="width">Width of the sprite.</param>
@@ -146,6 +181,7 @@ namespace rainbow
 
         /// <summary>Updates the batch of sprites.</summary>
         void update();
+        void upload() const;
 
         auto operator[](uint32_t i) -> Sprite& { return sprites_[i]; }
 
@@ -176,8 +212,10 @@ namespace rainbow
         /// <summary>Client normal buffer.</summary>
         std::unique_ptr<Vec2f[]> normals_;
 
-        /// <summary>Number of sprites.</summary>
-        uint32_t count_;
+        /// <summary>
+        ///   State contains number of sprites, visibility, and staleness.
+        /// </summary>
+        State state_;
 
         /// <summary>Shared, interleaved vertex buffer.</summary>
         graphics::Buffer vertex_buffer_;
@@ -193,9 +231,6 @@ namespace rainbow
 
         /// <summary>Texture atlas used by all sprites in the batch.</summary>
         SharedPtr<TextureAtlas> texture_;
-
-        /// <summary>Whether the batch is visible.</summary>
-        bool visible_;
 
         void add() {}
 

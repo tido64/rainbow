@@ -53,6 +53,7 @@ namespace heimdall
 
         void draw_impl() override;
         void update_impl(uint64_t) override;
+        void upload_impl() override {}
 
         // InputListener implementation details
 

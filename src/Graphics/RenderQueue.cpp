@@ -4,6 +4,11 @@
 
 #include "Graphics/RenderQueue.h"
 
+#include "Platform/Macros.h"
+#if HAS_EXECUTION_POLICY
+#   include <execution>
+#endif
+
 #include "Graphics/Animation.h"
 #include "Graphics/Drawable.h"
 #include "Graphics/Label.h"
@@ -58,7 +63,18 @@ namespace
             unit->update(dt);
         }
     };
-}
+
+    struct UploadCommand
+    {
+        void operator()(Animation*) const {}
+
+        template <typename T>
+        void operator()(T&& unit) const
+        {
+            unit->upload();
+        }
+    };
+}  // namespace
 
 void rainbow::graphics::draw(RenderQueue& queue)
 {
@@ -79,5 +95,31 @@ void rainbow::graphics::update(RenderQueue& queue, uint64_t dt)
             continue;
 
         visit(UpdateCommand{dt}, unit.object());
+        visit(UploadCommand{}, unit.object());
     }
+}
+
+void rainbow::graphics::update_parallel(RenderQueue& queue, uint64_t dt)
+{
+#if HAS_EXECUTION_POLICY
+    static std::vector<RenderUnit::variant_type> uploads;
+
+    uploads.resize(queue.size());
+    std::transform(std::execution::par_unseq,
+                   queue.begin(),
+                   queue.end(),
+                   uploads.begin(),
+                   [dt](auto&& unit) -> RenderUnit::variant_type {
+                       if (!unit.is_enabled())
+                           return static_cast<Animation*>(nullptr);
+
+                       visit(UpdateCommand{dt}, unit.object());
+                       return unit.object();
+                   });
+    std::for_each(std::begin(uploads), std::end(uploads), [](auto&& unit) {
+        visit(UploadCommand{}, unit);
+    });
+#else
+    update(queue, dt);
+#endif
 }

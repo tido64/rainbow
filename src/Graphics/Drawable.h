@@ -19,10 +19,12 @@ namespace rainbow
 
         void draw() { draw_impl(); }
         void update(uint64_t dt) { update_impl(dt); }
+        void upload() { upload_impl(); }
 
     private:
         virtual void draw_impl() = 0;
         virtual void update_impl(uint64_t dt) = 0;
+        virtual void upload_impl() = 0;
     };
 }
 

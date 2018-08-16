@@ -58,6 +58,7 @@ namespace rainbow
         LinearAllocator allocator_;
         ScopeStack stack_;
         graphics::RenderQueue render_queue_;
+        uint64_t dt_;
 
         void store_asset(duk_context* ctx, asset_type ptr);
 
@@ -65,6 +66,7 @@ namespace rainbow
 
         void draw_impl() override;
         void update_impl(uint64_t dt) override;
+        void upload_impl() override;
     };
 }  // namespace rainbow
 

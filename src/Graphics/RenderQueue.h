@@ -94,6 +94,7 @@ namespace rainbow::graphics
     void draw(RenderQueue& queue);
 
     void update(RenderQueue& queue, uint64_t dt);
+    void update_parallel(RenderQueue& queue, uint64_t dt);
 }  // namespace rainbow::graphics
 
 #endif

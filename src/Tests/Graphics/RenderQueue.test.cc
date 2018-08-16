@@ -32,6 +32,8 @@ namespace
         {
             updated_ += dt != kDeltaTime ? 0 : 1;
         }
+
+        void upload_impl() override {}
     };
 }
 

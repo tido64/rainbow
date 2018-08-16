@@ -93,11 +93,7 @@ void Label::move(const Vec2f& delta)
 void Label::update()
 {
     if (stale_ != 0)
-    {
         update_internal();
-        upload();
-        clear_state();
-    }
 }
 
 void Label::update_internal()
@@ -119,7 +115,12 @@ void Label::update_internal()
     }
 }
 
-void Label::upload() const
+void Label::upload()
 {
-    buffer_.upload(vertices_.data(), vertices_.size() * sizeof(vertices_[0]));
+    if (stale_ != 0)
+    {
+        buffer_.upload(
+            vertices_.data(), vertices_.size() * sizeof(vertices_[0]));
+        clear_state();
+    }
 }

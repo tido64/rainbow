@@ -62,7 +62,19 @@
 #   define UNREACHABLE() __assume(0)
 #endif
 
+#ifdef RAINBOW_TEST
+#   define INTERNAL public
+#else
+#   define INTERNAL private
+#endif
+
 #define NOT_USED(v) static_cast<void>(v)
+
+#if (__has_include(<execution>) || __has_include(<execution>))
+#   define HAS_EXECUTION_POLICY 1
+#else
+#   define HAS_EXECUTION_POLICY 0
+#endif
 
 // TODO: As of v16.1, Android NDK has filesystem header but not the binary.
 #if (__has_include(<experimental/filesystem>) || __has_include(<filesystem>)) \

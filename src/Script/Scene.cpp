@@ -356,5 +356,10 @@ void Scene::draw_impl()
 
 void Scene::update_impl(uint64_t dt)
 {
-    graphics::update(render_queue_, dt);
+    dt_ = dt;
+}
+
+void Scene::upload_impl()
+{
+    graphics::update_parallel(render_queue_, dt_);
 }

@@ -78,7 +78,7 @@ namespace rainbow
         timer_manager_.update(dt);
         script_->update(dt);
 
-        graphics::update(render_queue_, dt);
+        graphics::update_parallel(render_queue_, dt);
         font_cache().update(renderer_.texture_manager);
         renderer_.texture_manager.trim();
 
@@ -122,6 +122,6 @@ namespace rainbow
             script_->init(renderer_.view);
         }
 
-        graphics::update(render_queue_, 0);
+        graphics::update_parallel(render_queue_, 0);
     }
 }

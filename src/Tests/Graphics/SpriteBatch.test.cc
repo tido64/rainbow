@@ -93,6 +93,96 @@ namespace
     };
 }
 
+TEST(SpriteBatchStateTest, SetsNeedsUpdate)
+{
+    SpriteBatch::State state;
+
+    ASSERT_TRUE(state.is_visible());
+    ASSERT_FALSE(state.needs_update());
+    ASSERT_EQ(state.size(), 0u);
+
+    state.set_needs_update(true);
+
+    ASSERT_TRUE(state.is_visible());
+    ASSERT_TRUE(state.needs_update());
+    ASSERT_EQ(state.size(), 0u);
+
+    state.set_needs_update(false);
+
+    ASSERT_TRUE(state.is_visible());
+    ASSERT_FALSE(state.needs_update());
+    ASSERT_EQ(state.size(), 0u);
+}
+
+TEST(SpriteBatchStateTest, SetsSize)
+{
+    SpriteBatch::State state;
+
+    ASSERT_TRUE(state.is_visible());
+    ASSERT_FALSE(state.needs_update());
+    ASSERT_EQ(state.size(), 0u);
+
+    ASSERT_EQ(state.increment(), 1u);
+
+    ASSERT_TRUE(state.is_visible());
+    ASSERT_FALSE(state.needs_update());
+    ASSERT_EQ(state.size(), 1u);
+
+    ASSERT_EQ(state.decrement(), 0u);
+
+    ASSERT_TRUE(state.is_visible());
+    ASSERT_FALSE(state.needs_update());
+    ASSERT_EQ(state.size(), 0u);
+
+    for (auto i = 0u; i < 0xffffffu; ++i)
+    {
+        ASSERT_EQ(state.increment(), i + 1);
+        ASSERT_TRUE(state.is_visible());
+        ASSERT_FALSE(state.needs_update());
+        ASSERT_EQ(state.size(), i + 1);
+    }
+
+    ASSERT_EQ(state.increment(), 0u);
+
+    ASSERT_TRUE(state.is_visible());
+    ASSERT_FALSE(state.needs_update());
+    ASSERT_EQ(state.size(), 0u);
+
+    for (auto i = 0u; i < 0xffffffu; ++i)
+        ASSERT_EQ(state.increment(), i + 1);
+
+    ASSERT_TRUE(state.is_visible());
+    ASSERT_FALSE(state.needs_update());
+    ASSERT_EQ(state.size(), 0xffffffu);
+
+    state.clear_size();
+
+    ASSERT_TRUE(state.is_visible());
+    ASSERT_FALSE(state.needs_update());
+    ASSERT_EQ(state.size(), 0u);
+}
+
+TEST(SpriteBatchStateTest, SetsVisibility)
+{
+    SpriteBatch::State state;
+
+    ASSERT_TRUE(state.is_visible());
+    ASSERT_FALSE(state.needs_update());
+    ASSERT_EQ(state.size(), 0u);
+
+    state.set_visible(false);
+
+    ASSERT_FALSE(state.is_visible());
+    ASSERT_FALSE(state.needs_update());
+    ASSERT_EQ(state.size(), 0u);
+
+    state.set_visible(true);
+
+    ASSERT_TRUE(state.is_visible());
+    ASSERT_FALSE(state.needs_update());
+    ASSERT_EQ(state.size(), 0u);
+}
+
 TEST(SpriteBatchTest, MoveConstructs)
 {
     rainbow::ISolemnlySwearThatIAmOnlyTesting mock;
