@@ -4,21 +4,151 @@
 
 #include "Config.h"
 
-#include <memory>
+#include <string_view>
 
+#include <rapidjson/error/en.h>
+#include <rapidjson/reader.h>
+
+#include "Common/Algorithm.h"
 #include "Common/Data.h"
 #include "Common/Logging.h"
 #include "FileSystem/File.h"
 #include "FileSystem/FileSystem.h"
-#include "Script/JavaScript/Helper.h"
-#include "Script/JavaScript/JavaScript.h"
 
 namespace
 {
-#ifdef RAINBOW_SDL
     constexpr unsigned int kMaxMSAA = 16;
-#endif
-}
+
+    enum class ConfigKey
+    {
+        Root,
+        Accelerometer,
+        AllowHighDPI,
+        MSAA,
+        Resolution,
+        ResolutionWidth,
+        ResolutionHeight,
+        SuspendOnFocusLost,
+    };
+
+    template <size_t N>
+    constexpr auto make_string(const char (&str)[N])
+    {
+        return std::string_view{str, N - 1};
+    }
+
+}  // namespace
+
+class rainbow::ConfigReaderHandler
+    : public rapidjson::BaseReaderHandler<rapidjson::UTF8<>,
+                                          ConfigReaderHandler>
+{
+public:
+    ConfigReaderHandler(Config& config)
+        : config_(config), key_(ConfigKey::Root), level_(0)
+    {
+    }
+
+    bool Default() { return false; }
+
+    bool Bool(bool value)
+    {
+        switch (key_)
+        {
+            case ConfigKey::Accelerometer:
+                config_.accelerometer_ = value;
+                break;
+            case ConfigKey::AllowHighDPI:
+                config_.high_dpi_ = value;
+                break;
+            case ConfigKey::SuspendOnFocusLost:
+                config_.suspend_ = value;
+                break;
+            default:
+                return false;
+        }
+
+        return true;
+    }
+
+    bool Int(int value)
+    {
+        switch (key_)
+        {
+            case ConfigKey::MSAA:
+                config_.msaa_ = std::min(floor_pow2(value), kMaxMSAA);
+                break;
+            case ConfigKey::ResolutionWidth:
+                config_.width_ = value;
+                break;
+            case ConfigKey::ResolutionHeight:
+                config_.height_ = value;
+                break;
+            default:
+                return false;
+        }
+        return true;
+    }
+
+    bool Uint(unsigned value) { return Int(static_cast<int>(value)); }
+    bool Int64(int64_t value) { return Int(static_cast<int>(value)); }
+    bool Uint64(uint64_t value) { return Int(static_cast<int>(value)); }
+    bool Double(double value) { return Int(static_cast<int>(value)); }
+
+    bool StartObject()
+    {
+        ++level_;
+        return true;
+    }
+
+    bool Key(const char* str, size_t len, bool)
+    {
+        const std::string_view key{str, len};
+        switch (key_)
+        {
+            case ConfigKey::Resolution:
+            case ConfigKey::ResolutionWidth:
+            case ConfigKey::ResolutionHeight:
+                if (level_ != 2)
+                    return false;
+                if (key == make_string("width"))
+                    key_ = ConfigKey::ResolutionWidth;
+                else if (key == make_string("height"))
+                    key_ = ConfigKey::ResolutionHeight;
+                break;
+
+            default:
+                if (level_ != 1)
+                    return false;
+                if (key == make_string("accelerometer"))
+                    key_ = ConfigKey::Accelerometer;
+                else if (key == make_string("allowHighDPI"))
+                    key_ = ConfigKey::AllowHighDPI;
+                else if (key == make_string("msaa"))
+                    key_ = ConfigKey::MSAA;
+                else if (key == make_string("resolution"))
+                    key_ = ConfigKey::Resolution;
+                else if (key == make_string("suspendOnFocusLost"))
+                    key_ = ConfigKey::SuspendOnFocusLost;
+                else
+                    key_ = ConfigKey::Root;
+                break;
+        }
+        return true;
+    }
+
+    bool EndObject(size_t)
+    {
+        key_ = ConfigKey::Root;
+        --level_;
+        return true;
+    }
+
+private:
+    Config& config_;
+    ConfigKey key_;
+    int level_;
+};
 
 rainbow::Config::Config()
     : accelerometer_(true), high_dpi_(false), suspend_(true), width_(0),
@@ -38,62 +168,13 @@ rainbow::Config::Config()
     if (!config)
         return;
 
-    duk::Context ctx;
-    duk_push_lstring(ctx, config.as<const char*>(), config.size());
-    if (duk_safe_call(  //
-            ctx,
-            [](duk_context* ctx, void*) -> duk_ret_t {
-                duk_json_decode(ctx, -1);
-                return 1;
-            },
-            nullptr,
-            1,
-            1) != DUK_EXEC_SUCCESS)
+    rapidjson::Reader reader;
+    ConfigReaderHandler handler(*this);
+    rapidjson::StringStream ss(config.as<const char*>());
+    if (!reader.Parse<rapidjson::kParseStopWhenDoneFlag>(ss, handler))
     {
-        return;
+        LOGE("config.json:%zu: %s",
+             reader.GetErrorOffset(),
+             rapidjson::GetParseError_En(reader.GetParseErrorCode()));
     }
-
-    if (duk::get_prop_literal(ctx, -1, "accelerometer") &&
-        duk_is_boolean(ctx, -1))
-    {
-        accelerometer_ = duk::get<bool>(ctx, -1);
-    }
-    duk_pop(ctx);
-
-#ifdef RAINBOW_SDL
-    if (duk::get_prop_literal(ctx, -1, "allowHighDPI") &&
-        duk_is_boolean(ctx, -1))
-    {
-        high_dpi_ = duk::get<bool>(ctx, -1);
-    }
-    duk_pop(ctx);
-
-    if (duk::get_prop_literal(ctx, -1, "msaa") && duk_is_number(ctx, -1))
-    {
-        auto value = floor_pow2(duk_get_uint_default(ctx, -1, 0));
-        msaa_ = std::min(value, kMaxMSAA);
-    }
-    duk_pop(ctx);
-#endif
-
-    if (duk::get_prop_literal(ctx, -1, "resolution") && duk_is_object(ctx, -1))
-    {
-        duk::get_prop_literal(ctx, -1, "width");
-        width_ = duk_get_int_default(ctx, -1, 0);
-
-        duk::get_prop_literal(ctx, -2, "height");
-        height_ = duk_get_int_default(ctx, -1, 0);
-
-        duk_pop_2(ctx);
-    }
-    duk_pop(ctx);
-
-#ifdef RAINBOW_SDL
-    if (duk::get_prop_literal(ctx, -1, "suspendOnFocusLost") &&
-        duk_is_boolean(ctx, -1))
-    {
-        suspend_ = duk::get<bool>(ctx, -1);
-    }
-    duk_pop(ctx);
-#endif
 }

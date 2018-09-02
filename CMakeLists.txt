@@ -350,6 +350,7 @@ target_include_directories(
         ${LOCAL_LIBRARY}
         ${LOCAL_LIBRARY}/abseil-cpp
         ${LOCAL_LIBRARY}/nanosvg/src
+        ${LOCAL_LIBRARY}/rapidjson/include
         ${LOCAL_LIBRARY}/variant/include
 )
 
@@ -399,7 +400,8 @@ elseif(APPLE)
     set(CMAKE_EXE_LINKER_FLAGS "--coverage")
   endif()
   find_library(CORESERVICES_LIBRARY CoreServices REQUIRED)
-  target_link_libraries(rainbow ${CORESERVICES_LIBRARY})
+  find_library(JAVASCRIPTCORE_LIBRARY JavaScriptCore REQUIRED)
+  set(PLATFORM_LIBRARIES ${CORESERVICES_LIBRARY} ${JAVASCRIPTCORE_LIBRARY})
 elseif(UNIX AND NOT MINGW)
   if(UNIT_TESTS)
     set(CMAKE_EXE_LINKER_FLAGS "--coverage")

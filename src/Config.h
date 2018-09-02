@@ -7,6 +7,8 @@
 
 namespace rainbow
 {
+    class ConfigReaderHandler;
+
     /// <summary>Load game configuration.</summary>
     /// <remarks>
     ///   Configuration is a simple JSON file. File must be named
@@ -73,7 +75,9 @@ namespace rainbow
         int width_;
         int height_;
         unsigned int msaa_;
+
+        friend ConfigReaderHandler;
     };
-}
+}  // namespace rainbow
 
 #endif
