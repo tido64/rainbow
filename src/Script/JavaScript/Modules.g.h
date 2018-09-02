@@ -7,8 +7,10 @@
 #ifndef SCRIPT_JAVASCRIPT_MODULES_H_
 #define SCRIPT_JAVASCRIPT_MODULES_H_
 
-#include "Common/TypeInfo.h"
+#include <Rainbow/AnimationEvent.h>
+#include <Rainbow/TextAlignment.h>
 #include "Audio/Mixer.h"
+#include "Common/TypeInfo.h"
 #include "Graphics/Animation.h"
 #include "Graphics/Label.h"
 #include "Graphics/RenderQueue.h"
@@ -18,8 +20,6 @@
 #include "Input/Controller.h"
 #include "Input/Input.h"
 #include "Input/VirtualKey.h"
-#include <Rainbow/AnimationEvent.h>
-#include <Rainbow/TextAlignment.h>
 #include "Script/JavaScript/Helper.h"
 
 // clang-format off

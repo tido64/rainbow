@@ -35,9 +35,9 @@
   "license": "MIT",
   "homepage": "https://bitbucket.org/tido/rainbow#readme",
   "devDependencies": {
-    "@types/node": "8.10.20",
-    "prettier": "1.13.7",
-    "tslint": "5.10.0",
-    "typescript": "2.9.2"
+    "@types/node": "^8.10.0",
+    "prettier": "^1.14.0",
+    "tslint": "^5.11.0",
+    "typescript": "^3.1.0"
   }
 }

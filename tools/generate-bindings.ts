@@ -5,6 +5,8 @@
 import * as fs from "fs";
 import * as path from "path";
 
+const EOL = "\n";
+
 const sourcePath = path.resolve(path.dirname(process.argv[1]), "../src");
 const outputBindingsPath = path.join(
   sourcePath,
@@ -386,35 +388,35 @@ const modules: TypeInfo[] = [
   }
 ];
 
-interface ClassInfo {
+type ClassInfo = {
   type: "class";
   name: string;
   source: string;
   sourceName: string;
   ctor?: ParameterInfo[] | null;
   methods: FunctionInfo[];
-}
+};
 
-interface EnumInfo {
+type EnumInfo = {
   type: "enum";
   name: string;
   source: string;
   sourceName: string;
   values: EnumValueInfo[];
-}
+};
 
-interface EnumValueInfo {
+type EnumValueInfo = {
   name: string;
   integralValue: number;
-}
+};
 
-interface FunctionInfo {
+type FunctionInfo = {
   name: string;
   parameters: ParameterInfo[];
   returnType?: NativeType;
-}
+};
 
-interface ModuleInfo {
+type ModuleInfo = {
   type: "module";
   name: string;
   source: string;
@@ -422,17 +424,17 @@ interface ModuleInfo {
   properties?: PropertyInfo[];
   functions?: FunctionInfo[];
   types?: (ClassInfo | EnumInfo)[];
-}
+};
 
-interface ParameterInfo {
+type ParameterInfo = {
   type: NativeType;
   name: string;
-}
+};
 
-interface PropertyInfo {
+type PropertyInfo = {
   type: string;
   name: string;
-}
+};
 
 type NativeType =
   | "Animation::Callback"
@@ -458,6 +460,51 @@ type NativeType =
 
 type TypeInfo = ClassInfo | EnumInfo | ModuleInfo;
 
+declare global {
+  interface String {
+    toCamelCase(): string;
+  }
+}
+
+String.prototype.toCamelCase = function(): string {
+  return this.split("")
+    .reduce((arr: string[], char: string, index: number) => {
+      if (char === "_") {
+        return arr;
+      }
+
+      if (this[index - 1] === "_") {
+        arr.push(char.toUpperCase());
+      } else {
+        arr.push(char);
+      }
+      return arr;
+    }, [])
+    .join("");
+};
+
+function generateIncludes(
+  typeInfo: TypeInfo[],
+  extraIncludes: string[] = []
+): string[] {
+  return typeInfo
+    .map(type => type.source)
+    .concat(extraIncludes)
+    .sort()
+    .map(
+      include =>
+        `#include ${
+          include.lastIndexOf("../include/Rainbow/", 0) === 0
+            ? `<${include.replace("../include/", "")}>`
+            : `"${include}"`
+        }`
+    )
+    .reduce<string[]>((arr, header) => {
+      const length = arr.length;
+      return length > 0 && header == arr[length - 1] ? arr : [...arr, header];
+    }, []);
+}
+
 function generateCppBindings(typeInfo: TypeInfo[]): string {
   const joinTypeParams = (parameters: ParameterInfo[]): string => {
     return parameters.map(p => p.type.replace(/&+$/g, "")).join(", ");
@@ -472,22 +519,10 @@ function generateCppBindings(typeInfo: TypeInfo[]): string {
     "#ifndef SCRIPT_JAVASCRIPT_MODULES_H_",
     "#define SCRIPT_JAVASCRIPT_MODULES_H_",
     "",
-    '#include "Common/TypeInfo.h"',
-    ...typeInfo
-      .map(
-        type =>
-          `#include ${
-            type.source.lastIndexOf("../include/Rainbow/", 0) === 0
-              ? `<${type.source.replace("../include/", "")}>`
-              : `"${type.source}"`
-          }`
-      )
-      .sort()
-      .reduce<string[]>((arr, header) => {
-        const length = arr.length;
-        return length > 0 && header == arr[length - 1] ? arr : [...arr, header];
-      }, []),
-    '#include "Script/JavaScript/Helper.h"',
+    ...generateIncludes(typeInfo, [
+      "Common/TypeInfo.h",
+      "Script/JavaScript/Helper.h"
+    ]),
     "",
     "// clang-format off",
     ...typeInfo.filter(type => type.type !== "module").map(type => {
@@ -536,9 +571,7 @@ function generateCppBindings(typeInfo: TypeInfo[]): string {
                       `                return ${result ? 1 : 0};`,
                       "            },",
                       `            ${method.parameters.length});`,
-                      `        duk::put_prop_literal(ctx, -2, "${toCamelCase(
-                        method.name
-                      )}");`
+                      `        duk::put_prop_literal(ctx, -2, "${method.name.toCamelCase()}");`
                     ];
                   })
                   .reduce<string[]>((arr, lines) => {
@@ -569,7 +602,7 @@ function generateCppBindings(typeInfo: TypeInfo[]): string {
         "    duk_freeze(ctx, -1);",
         `    duk::put_prop_literal(ctx, rainbow, "${type.name}");`,
         "}"
-      ].join("\n");
+      ].join(EOL);
     }),
     "",
     "namespace rainbow::duk",
@@ -590,7 +623,7 @@ function generateCppBindings(typeInfo: TypeInfo[]): string {
     "",
     "#endif",
     ""
-  ].join("\n");
+  ].join(EOL);
 }
 
 function generateTypeScriptDeclaration(typeInfo: TypeInfo[]): string {
@@ -605,7 +638,7 @@ function generateTypeScriptDeclaration(typeInfo: TypeInfo[]): string {
     indent: string
   ) => {
     const functionKeyword = isClassMember ? "" : "function ";
-    const name = toCamelCase(func.name);
+    const name = func.name.toCamelCase();
     const params = getParams(func.parameters);
     const returnType = mapToTypeScriptType(func.returnType);
     return `${indent}    ${functionKeyword}${name}(${params}): ${returnType};`;
@@ -623,7 +656,7 @@ function generateTypeScriptDeclaration(typeInfo: TypeInfo[]): string {
             getFunctionDeclaration(method, true, indent)
           ),
           `${indent}  }`
-        ].join("\n");
+        ].join(EOL);
       case "enum":
         return [
           `${indent}  export enum ${module.name} {`,
@@ -631,7 +664,7 @@ function generateTypeScriptDeclaration(typeInfo: TypeInfo[]): string {
             value => `${indent}    ${value.name} = ${value.integralValue},`
           ),
           `${indent}  }`
-        ].join("\n");
+        ].join(EOL);
       case "module":
         return [
           `${indent}  export namespace ${module.name} {`,
@@ -649,7 +682,7 @@ function generateTypeScriptDeclaration(typeInfo: TypeInfo[]): string {
             ? []
             : module.types.map(t => getDeclaration(t, "  "))),
           `${indent}  }`
-        ].join("\n");
+        ].join(EOL);
     }
   };
   return [
@@ -689,7 +722,7 @@ function generateTypeScriptDeclaration(typeInfo: TypeInfo[]): string {
     ((): string[] => typeInfo.map(m => getDeclaration(m)))().join("\n\n"),
     "}",
     ""
-  ].join("\n");
+  ].join(EOL);
 }
 
 function mapToTypeScriptType(type?: NativeType): string {
@@ -769,27 +802,6 @@ function preprocess(info: TypeInfo): TypeInfo {
       };
     })
   };
-}
-
-function toCamelCase(str: string): string {
-  let shouldUpperCase = false;
-  return str
-    .split("")
-    .reduce<string[]>((arr, char) => {
-      if (char === "_") {
-        shouldUpperCase = true;
-        return arr;
-      }
-
-      if (shouldUpperCase) {
-        shouldUpperCase = false;
-        arr.push(char.toUpperCase());
-      } else {
-        arr.push(char);
-      }
-      return arr;
-    }, [])
-    .join("");
 }
 
 function writeFile(path: string, data: string): void {

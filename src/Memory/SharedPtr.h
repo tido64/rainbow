@@ -79,7 +79,7 @@ namespace rainbow
         /// </summary>
         explicit SharedPtr(T* ptr) : ptr_(ptr)
         {
-            if (!ptr)
+            if (ptr == nullptr)
                 return;
 
             ptr->retain();
