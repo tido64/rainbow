@@ -1,23 +1,25 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 3a593666..1743b78e 100644
+index e881dbd1..b91469b4 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -525,7 +525,8 @@ if (UNIX OR MINGW)
+@@ -545,7 +545,8 @@ if (UNIX OR MINGW)
  
-   # Make sure we don't link to libstdc++
    if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+     # Make sure we don't link to libstdc++
 -    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-rtti -fno-exceptions")
 +    set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC")
 +    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-rtti -fno-exceptions -fPIC")
      set (CMAKE_CXX_IMPLICIT_LINK_LIBRARIES "m") # libm
      set (CMAKE_CXX_IMPLICIT_LINK_DIRECTORIES "")
      set_target_properties(harfbuzz PROPERTIES LINKER_LANGUAGE C)
-@@ -784,19 +785,6 @@ if (UNIX AND CMAKE_GENERATOR STREQUAL "Ninja")
+@@ -816,53 +816,3 @@ if (UNIX AND CMAKE_GENERATOR STREQUAL "Ninja")
+     set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fdiagnostics-color")
+   endif ()
  endif ()
- 
- 
+-
+-
 -## src/ executables
--foreach (prog main test test-would-substitute test-size-params test-buffer-serialize hb-ot-tag)
+-foreach (prog main test test-would-substitute test-size-params test-buffer-serialize hb-ot-tag test-unicode-ranges)
 -  set (prog_name ${prog})
 -  if (${prog_name} STREQUAL "test")
 -    # test can not be used as a valid executable name on cmake, lets special case it
@@ -28,14 +30,38 @@ index 3a593666..1743b78e 100644
 -endforeach ()
 -set_target_properties(hb-ot-tag PROPERTIES COMPILE_FLAGS "-DMAIN")
 -
+-## Tests
+-if (UNIX OR MINGW)
+-  if (BUILD_SHARED_LIBS)
+-    # generate harfbuzz.def after build completion
+-    add_custom_command(TARGET harfbuzz POST_BUILD
+-      COMMAND "${PYTHON_EXECUTABLE}" ${PROJECT_SOURCE_DIR}/src/gen-def.py ${PROJECT_BINARY_DIR}/harfbuzz.def ${project_headers}
+-      WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/src)
 -
- ## Tests
- if (UNIX OR MINGW)
-   if (BUILD_SHARED_LIBS)
-@@ -826,7 +814,3 @@ if (UNIX OR MINGW)
-     check-c-linkage-decls.sh check-header-guards.sh check-externs.sh check-includes.sh
-     PROPERTIES WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/src)
- endif ()
+-    add_test(NAME check-static-inits.sh
+-      COMMAND ${PROJECT_SOURCE_DIR}/src/check-static-inits.sh
+-      WORKING_DIRECTORY ${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/harfbuzz.dir/src # ugly hack
+-    )
+-    add_test(NAME check-libstdc++.sh COMMAND ${PROJECT_SOURCE_DIR}/src/check-libstdc++.sh)
+-    add_test(NAME check-symbols.sh COMMAND ${PROJECT_SOURCE_DIR}/src/check-symbols.sh)
+-
+-    set_tests_properties(
+-      check-static-inits.sh check-libstdc++.sh check-symbols.sh
+-      PROPERTIES
+-        ENVIRONMENT "libs=.;srcdir=${PROJECT_SOURCE_DIR}/src"
+-        SKIP_RETURN_CODE 77)
+-  endif ()
+-
+-  add_test(NAME check-c-linkage-decls.sh COMMAND ./check-c-linkage-decls.sh)
+-  add_test(NAME check-header-guards.sh COMMAND ./check-header-guards.sh)
+-  add_test(NAME check-externs.sh COMMAND ./check-externs.sh)
+-  add_test(NAME check-includes.sh COMMAND ./check-includes.sh)
+-  set_tests_properties(
+-    check-c-linkage-decls.sh check-header-guards.sh check-externs.sh check-includes.sh
+-    PROPERTIES
+-      WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/src
+-      SKIP_RETURN_CODE 77)
+-endif ()
 -
 -# Needs to come last so that variables defined above are passed to
 -# subdirectories.
