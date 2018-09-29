@@ -6,12 +6,12 @@ case $1 in
         if [[ "$BUILD_TYPE" == "Android" ]]; then
           echo y | sdkmanager "ndk-bundle"
           echo y | sdkmanager "cmake;3.6.4111459"
-          if [[ ! -f local/gradle-4.8.1 ]]; then
+          if [[ ! -f local/gradle-4.10.2 ]]; then
             rm -r local
-            curl -LO https://services.gradle.org/distributions/gradle-4.8.1-bin.zip
-            unzip gradle-4.8.1-bin.zip
-            mv gradle-4.8.1 local
-            touch local/gradle-4.8.1
+            curl -LO https://services.gradle.org/distributions/gradle-4.10.2-bin.zip
+            unzip gradle-4.10.2-bin.zip
+            mv gradle-4.10.2 local
+            touch local/gradle-4.10.2
           fi
         else
           if [[ ! -f local/cmake-3.11.4 ]]; then
