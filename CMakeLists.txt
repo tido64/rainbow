@@ -360,6 +360,7 @@ target_include_directories(
     PRIVATE
         ${PROJECT_SOURCE_DIR}/src
         ${LOCAL_LIBRARY}
+        ${LOCAL_LIBRARY}/abseil-cpp
         ${LOCAL_LIBRARY}/nanosvg/src
         ${LOCAL_LIBRARY}/variant/include
 )
@@ -379,6 +380,10 @@ if(USE_SPINE)
 endif()
 include(${LOCAL_MODULE_PATH}/zlib.cmake)
 include(${LOCAL_MODULE_PATH}/libpng.cmake)
+
+set(ABSL_COMPILE_CXXFLAGS ${CFLAG_NO_WARNINGS})
+add_subdirectory(${LOCAL_LIBRARY}/abseil-cpp)
+target_link_libraries(rainbow absl::container absl::hash)
 
 # Dynamic libraries
 include(${LOCAL_MODULE_PATH}/Audio.cmake)

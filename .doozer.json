@@ -1,6 +1,7 @@
 {
   "submodules": [
     "lib/FreeType",
+    "lib/abseil-cpp",
     "lib/box2d",
     "lib/cubeb",
     "lib/googletest",
