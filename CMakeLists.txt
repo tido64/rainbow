@@ -348,6 +348,7 @@ target_include_directories(
     PRIVATE
         ${PROJECT_SOURCE_DIR}/src
         ${LOCAL_LIBRARY}
+        ${LOCAL_LIBRARY}/abseil-cpp
         ${LOCAL_LIBRARY}/nanosvg/src
         ${LOCAL_LIBRARY}/variant/include
 )
@@ -367,6 +368,16 @@ if(USE_SPINE)
 endif()
 include(${LOCAL_MODULE_PATH}/zlib.cmake)
 include(${LOCAL_MODULE_PATH}/libpng.cmake)
+
+add_subdirectory(${LOCAL_LIBRARY}/abseil-cpp)
+if(MSVC)
+  # TODO: Abseil recommends against relying on internal names but there is
+  # currently no other way to suppress these warnings.
+  target_compile_options(absl_container PUBLIC /DSWISSTABLE_HAVE_SSE2=0 /wd4245 /wd4267 /wd4324 /wd4996)
+  target_compile_options(absl_memory PUBLIC /wd4996)
+  target_compile_options(absl_strings PUBLIC /wd4127)
+endif()
+target_link_libraries(rainbow absl::container absl::hash)
 
 # Dynamic libraries
 include(${LOCAL_MODULE_PATH}/Audio.cmake)

@@ -14,7 +14,7 @@ cache:
   - '%APPVEYOR_BUILD_FOLDER%-build\sdl2-dev-prefix\src\SDL2-devel-2.0.7-VC.zip'
 configuration: RelWithDebInfo
 before_build:
-  - git submodule update --init -- lib/FreeType lib/box2d lib/cubeb lib/imgui lib/libpng lib/nanosvg lib/ogg lib/spine-runtimes lib/stb lib/variant lib/vorbis lib/zlib
+  - git submodule update --init -- lib/FreeType lib/abseil-cpp lib/box2d lib/cubeb lib/imgui lib/libpng lib/nanosvg lib/ogg lib/spine-runtimes lib/stb lib/variant lib/vorbis lib/zlib
   - if not exist "%APPVEYOR_BUILD_FOLDER%-build" mkdir "%APPVEYOR_BUILD_FOLDER%-build"
   - cd "%APPVEYOR_BUILD_FOLDER%-build"
   - cmake -DUSE_HEIMDALL=1 -DUSE_PHYSICS=1 -DUSE_SPINE=1 "%APPVEYOR_BUILD_FOLDER%"

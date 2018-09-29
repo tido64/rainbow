@@ -95,6 +95,7 @@ Rainbow.RenderQueue.add(animation);
 
 ## Dependencies
 
+* [Abseil](https://abseil.io/)
 * [Duktape](http://duktape.org/)
 * [FreeType](https://freetype.org/)
 * [HarfBuzz](https://wiki.freedesktop.org/www/Software/HarfBuzz/)

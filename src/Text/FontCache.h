@@ -7,12 +7,14 @@
 
 #include <array>
 #include <string>
-#include <unordered_map>
 
 #ifdef __GNUC__
 #   pragma GCC diagnostic push
+#   pragma GCC diagnostic ignored "-Wpedantic"
 #   pragma GCC diagnostic ignored "-Wold-style-cast"
+#   pragma GCC diagnostic ignored "-Woverflow"
 #endif
+#include <absl/container/flat_hash_map.h>
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #ifdef __GNUC__
@@ -24,10 +26,10 @@
 #include "Common/Algorithm.h"
 #include "Common/Data.h"
 #include "Common/Global.h"
-#include "Memory/ArrayMap.h"
 #include "Graphics/SpriteVertex.h"
 #include "Graphics/Texture.h"
 #include "Graphics/TextureManager.h"
+#include "Memory/ArrayMap.h"
 
 namespace rainbow
 {
@@ -43,6 +45,13 @@ namespace rainbow
         int32_t font_size;
         uint32_t index;
 
+        template <typename H>
+        friend auto AbslHashValue(H hash_state, const GlyphCacheIndex& i) -> H
+        {
+            return H::combine(
+                std::move(hash_state), i.face, i.font_size, i.index);
+        }
+
         friend bool operator==(const GlyphCacheIndex& lhs,
                                const GlyphCacheIndex& rhs)
         {
@@ -56,22 +65,6 @@ namespace rainbow
         std::array<SpriteVertex, 4> vertices;
     };
 }  // namespace rainbow
-
-namespace std
-{
-    template <>
-    struct hash<rainbow::GlyphCacheIndex>
-    {
-        auto operator()(const rainbow::GlyphCacheIndex& glyph) const -> size_t
-        {
-            size_t seed = 0;
-            rainbow::hash_combine(seed, glyph.face);
-            rainbow::hash_combine(seed, glyph.font_size);
-            rainbow::hash_combine(seed, glyph.index);
-            return seed;
-        }
-    };
-}  // namespace std
 
 namespace rainbow
 {
@@ -94,7 +87,7 @@ namespace rainbow
     private:
         bool is_stale_;
         graphics::Texture texture_;
-        std::unordered_map<GlyphCacheIndex, GlyphInfo> glyph_cache_;
+        absl::flat_hash_map<GlyphCacheIndex, GlyphInfo> glyph_cache_;
         ArrayMap<std::string, FontFace> font_cache_;
         stbrp_context bin_context_;
         std::array<stbrp_node, kTextureSize> bin_nodes_;

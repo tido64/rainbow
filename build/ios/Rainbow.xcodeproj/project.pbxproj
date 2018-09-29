@@ -165,6 +165,9 @@
 		19B399AB20421D2900581AE0 /* hb-ot-shape-complex-myanmar.cc in Sources */ = {isa = PBXBuildFile; fileRef = 19B3999D20421D2800581AE0 /* hb-ot-shape-complex-myanmar.cc */; };
 		19B399AC20421D2900581AE0 /* hb-ot-shape-complex-use-table.cc in Sources */ = {isa = PBXBuildFile; fileRef = 19B3999E20421D2800581AE0 /* hb-ot-shape-complex-use-table.cc */; };
 		19B399AE20421D5600581AE0 /* hb-ot-map.cc in Sources */ = {isa = PBXBuildFile; fileRef = 19B399AD20421D5500581AE0 /* hb-ot-map.cc */; };
+		19B6C57D21696426000D5400 /* raw_hash_set.cc in Sources */ = {isa = PBXBuildFile; fileRef = 19B6C55421696425000D5400 /* raw_hash_set.cc */; };
+		19B6C59D216964C6000D5400 /* hash.cc in Sources */ = {isa = PBXBuildFile; fileRef = 19B6C590216964C6000D5400 /* hash.cc */; };
+		19B6C59F216964C6000D5400 /* city.cc in Sources */ = {isa = PBXBuildFile; fileRef = 19B6C595216964C6000D5400 /* city.cc */; };
 		19CB0669200AC971005D6740 /* duktape.c in Sources */ = {isa = PBXBuildFile; fileRef = 19CB0668200AC971005D6740 /* duktape.c */; };
 		19CB066B200AC97F005D6740 /* duk_module_node.c in Sources */ = {isa = PBXBuildFile; fileRef = 19CB066A200AC97F005D6740 /* duk_module_node.c */; };
 		19CBB6351E5E4BFA00378BBF /* NSString+Rainbow.m in Sources */ = {isa = PBXBuildFile; fileRef = 19CBB6341E5E4BFA00378BBF /* NSString+Rainbow.m */; };
@@ -472,6 +475,31 @@
 		19B399AD20421D5500581AE0 /* hb-ot-map.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "hb-ot-map.cc"; sourceTree = "<group>"; };
 		19B645A22114E73F005D4CAE /* ArrayMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArrayMap.h; sourceTree = "<group>"; };
 		19B645A32114E73F005D4CAE /* BoundedPool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BoundedPool.h; sourceTree = "<group>"; };
+		19B6C53D21696425000D5400 /* node_hash_map.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = node_hash_map.h; sourceTree = "<group>"; };
+		19B6C53E21696425000D5400 /* flat_hash_map.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = flat_hash_map.h; sourceTree = "<group>"; };
+		19B6C54221696425000D5400 /* fixed_array.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fixed_array.h; sourceTree = "<group>"; };
+		19B6C54921696425000D5400 /* compressed_tuple.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = compressed_tuple.h; sourceTree = "<group>"; };
+		19B6C54B21696425000D5400 /* container_memory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = container_memory.h; sourceTree = "<group>"; };
+		19B6C54C21696425000D5400 /* node_hash_policy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = node_hash_policy.h; sourceTree = "<group>"; };
+		19B6C55021696425000D5400 /* raw_hash_set.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = raw_hash_set.h; sourceTree = "<group>"; };
+		19B6C55121696425000D5400 /* hash_function_defaults.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hash_function_defaults.h; sourceTree = "<group>"; };
+		19B6C55421696425000D5400 /* raw_hash_set.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = raw_hash_set.cc; sourceTree = "<group>"; };
+		19B6C55721696425000D5400 /* hashtable_debug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hashtable_debug.h; sourceTree = "<group>"; };
+		19B6C55821696425000D5400 /* raw_hash_map.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = raw_hash_map.h; sourceTree = "<group>"; };
+		19B6C55B21696425000D5400 /* layout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = layout.h; sourceTree = "<group>"; };
+		19B6C55C21696425000D5400 /* hashtable_debug_hooks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hashtable_debug_hooks.h; sourceTree = "<group>"; };
+		19B6C55D21696425000D5400 /* hash_policy_traits.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hash_policy_traits.h; sourceTree = "<group>"; };
+		19B6C56421696425000D5400 /* tracked.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tracked.h; sourceTree = "<group>"; };
+		19B6C56821696425000D5400 /* inlined_vector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = inlined_vector.h; sourceTree = "<group>"; };
+		19B6C56D21696425000D5400 /* flat_hash_set.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = flat_hash_set.h; sourceTree = "<group>"; };
+		19B6C56F21696425000D5400 /* node_hash_set.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = node_hash_set.h; sourceTree = "<group>"; };
+		19B6C590216964C6000D5400 /* hash.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = hash.cc; sourceTree = "<group>"; };
+		19B6C591216964C6000D5400 /* spy_hash_state.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = spy_hash_state.h; sourceTree = "<group>"; };
+		19B6C592216964C6000D5400 /* city_crc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = city_crc.h; sourceTree = "<group>"; };
+		19B6C594216964C6000D5400 /* city.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = city.h; sourceTree = "<group>"; };
+		19B6C595216964C6000D5400 /* city.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = city.cc; sourceTree = "<group>"; };
+		19B6C596216964C6000D5400 /* hash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hash.h; sourceTree = "<group>"; };
+		19B6C59A216964C6000D5400 /* hash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hash.h; sourceTree = "<group>"; };
 		19BE0C7E1C98B2110041EE8C /* Array.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Array.h; sourceTree = "<group>"; };
 		19BE0C7F1C98B2110041EE8C /* NotNull.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NotNull.h; sourceTree = "<group>"; };
 		19CB0668200AC971005D6740 /* duktape.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = duktape.c; path = src/duktape.c; sourceTree = "<group>"; };
@@ -900,8 +928,9 @@
 		1948C039152C3A2600E9B854 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				19B6C53B21696352000D5400 /* Abseil */,
 				19399E10152C401300494609 /* Box2D */,
-				19CB0663200AC691005D6740 /* duktape */,
+				19CB0663200AC691005D6740 /* Duktape */,
 				19399EAF152C401300494609 /* FreeType */,
 				19B399112041FA2E00581AE0 /* HarfBuzz */,
 				198F427C1A9152E000BE7A73 /* Spine */,
@@ -1139,13 +1168,78 @@
 			path = "hb-ucdn";
 			sourceTree = "<group>";
 		};
-		19CB0663200AC691005D6740 /* duktape */ = {
+		19B6C53B21696352000D5400 /* Abseil */ = {
+			isa = PBXGroup;
+			children = (
+				19B6C53C21696425000D5400 /* container */,
+				19B6C58C216964C6000D5400 /* hash */,
+			);
+			name = Abseil;
+			path = "abseil-cpp/absl";
+			sourceTree = "<group>";
+		};
+		19B6C53C21696425000D5400 /* container */ = {
+			isa = PBXGroup;
+			children = (
+				19B6C54221696425000D5400 /* fixed_array.h */,
+				19B6C53E21696425000D5400 /* flat_hash_map.h */,
+				19B6C56D21696425000D5400 /* flat_hash_set.h */,
+				19B6C56821696425000D5400 /* inlined_vector.h */,
+				19B6C54421696425000D5400 /* internal */,
+				19B6C53D21696425000D5400 /* node_hash_map.h */,
+				19B6C56F21696425000D5400 /* node_hash_set.h */,
+			);
+			path = container;
+			sourceTree = "<group>";
+		};
+		19B6C54421696425000D5400 /* internal */ = {
+			isa = PBXGroup;
+			children = (
+				19B6C54921696425000D5400 /* compressed_tuple.h */,
+				19B6C54B21696425000D5400 /* container_memory.h */,
+				19B6C55121696425000D5400 /* hash_function_defaults.h */,
+				19B6C55D21696425000D5400 /* hash_policy_traits.h */,
+				19B6C55C21696425000D5400 /* hashtable_debug_hooks.h */,
+				19B6C55721696425000D5400 /* hashtable_debug.h */,
+				19B6C55B21696425000D5400 /* layout.h */,
+				19B6C54C21696425000D5400 /* node_hash_policy.h */,
+				19B6C55821696425000D5400 /* raw_hash_map.h */,
+				19B6C55421696425000D5400 /* raw_hash_set.cc */,
+				19B6C55021696425000D5400 /* raw_hash_set.h */,
+				19B6C56421696425000D5400 /* tracked.h */,
+			);
+			path = internal;
+			sourceTree = "<group>";
+		};
+		19B6C58C216964C6000D5400 /* hash */ = {
+			isa = PBXGroup;
+			children = (
+				19B6C59A216964C6000D5400 /* hash.h */,
+				19B6C58F216964C6000D5400 /* internal */,
+			);
+			path = hash;
+			sourceTree = "<group>";
+		};
+		19B6C58F216964C6000D5400 /* internal */ = {
+			isa = PBXGroup;
+			children = (
+				19B6C592216964C6000D5400 /* city_crc.h */,
+				19B6C595216964C6000D5400 /* city.cc */,
+				19B6C594216964C6000D5400 /* city.h */,
+				19B6C590216964C6000D5400 /* hash.cc */,
+				19B6C596216964C6000D5400 /* hash.h */,
+				19B6C591216964C6000D5400 /* spy_hash_state.h */,
+			);
+			path = internal;
+			sourceTree = "<group>";
+		};
+		19CB0663200AC691005D6740 /* Duktape */ = {
 			isa = PBXGroup;
 			children = (
 				19CB066A200AC97F005D6740 /* duk_module_node.c */,
 				19CB0668200AC971005D6740 /* duktape.c */,
 			);
-			name = duktape;
+			name = Duktape;
 			path = ../build/ios/lib/duktape;
 			sourceTree = "<group>";
 		};
@@ -1425,6 +1519,7 @@
 				198F429B1A9152E000BE7A73 /* Atlas.c in Sources */,
 				19B3995F20420F4B00581AE0 /* hb-ft.cc in Sources */,
 				198F42A71A9152E000BE7A73 /* Json.c in Sources */,
+				19B6C59F216964C6000D5400 /* city.cc in Sources */,
 				19B3998A20421C4500581AE0 /* hb-shape-plan.cc in Sources */,
 				1989645C1C4AE0080011BA15 /* RainbowViewController.mm in Sources */,
 				198F429E1A9152E000BE7A73 /* AttachmentLoader.c in Sources */,
@@ -1457,6 +1552,7 @@
 				1939A228152C425D00494609 /* SpriteBatch.cpp in Sources */,
 				1939A229152C425D00494609 /* TextureAtlas.cpp in Sources */,
 				196540D52169FBE10052A9FA /* hb-static.cc in Sources */,
+				19B6C59D216964C6000D5400 /* hash.cc in Sources */,
 				19B3996B20421A6200581AE0 /* hb-coretext.cc in Sources */,
 				1939A22C152C425D00494609 /* Input.cpp in Sources */,
 				19B3998820421C0300581AE0 /* hb-shape.cc in Sources */,
@@ -1469,6 +1565,7 @@
 				196CB72F161E4D940068C809 /* b2MotorJoint.cpp in Sources */,
 				19EBC55116599D9F00D3B5D7 /* ShaderManager.cpp in Sources */,
 				19B399A920421D2900581AE0 /* hb-ot-shape-complex-default.cc in Sources */,
+				19B6C57D21696426000D5400 /* raw_hash_set.cc in Sources */,
 				19B3997320421B2000581AE0 /* hb-ucdn.cc in Sources */,
 				19AF58A0167FFA0800F54B27 /* Overlay.cpp in Sources */,
 				198F42A11A9152E000BE7A73 /* BoundingBoxAttachment.c in Sources */,
@@ -1583,11 +1680,13 @@
 					"HAVE_FREETYPE=1",
 					"HAVE_OT=1",
 					"HAVE_UCDN=1",
+					"GLES_SILENCE_DEPRECATION=1",
 				);
 				HEADER_SEARCH_PATHS = (
 					../../src,
 					../../include,
 					../../lib,
+					"../../lib/abseil-cpp",
 					../../lib/box2d/Box2D,
 					lib/duktape/src,
 					"lib/duktape/extras/module-node",
@@ -1741,11 +1840,13 @@
 					"HAVE_FREETYPE=1",
 					"HAVE_OT=1",
 					"HAVE_UCDN=1",
+					"GLES_SILENCE_DEPRECATION=1",
 				);
 				HEADER_SEARCH_PATHS = (
 					../../src,
 					../../include,
 					../../lib,
+					"../../lib/abseil-cpp",
 					../../lib/box2d/Box2D,
 					lib/duktape/src,
 					"lib/duktape/extras/module-node",
@@ -1785,11 +1886,13 @@
 					"HAVE_FREETYPE=1",
 					"HAVE_OT=1",
 					"HAVE_UCDN=1",
+					"GLES_SILENCE_DEPRECATION=1",
 				);
 				HEADER_SEARCH_PATHS = (
 					../../src,
 					../../include,
 					../../lib,
+					"../../lib/abseil-cpp",
 					../../lib/box2d/Box2D,
 					lib/duktape/src,
 					"lib/duktape/extras/module-node",

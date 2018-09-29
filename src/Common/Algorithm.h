@@ -98,13 +98,6 @@ namespace rainbow
         return i - (i >> 1);
     }
 
-    template <typename T>
-    void hash_combine(size_t& seed, T&& value)
-    {
-        const auto hash = std::hash<std::decay_t<T>>{}(value);
-        seed ^= hash + 0x9e3779b9 + (seed << 6) + (seed >> 2);
-    }
-
     /// <summary>
     ///   Returns whether <paramref name="x"/> is practically zero. A number is
     ///   considered almost zero if it's within <c>10 * ε</c>. On some hardware,

@@ -6,8 +6,16 @@
 #define SCRIPT_SCENE_H_
 
 #include <string>
-#include <unordered_map>
 
+#ifdef __GNUC__
+#   pragma GCC diagnostic push
+#   pragma GCC diagnostic ignored "-Wpedantic"
+#   pragma GCC diagnostic ignored "-Woverflow"
+#endif
+#include <absl/container/flat_hash_map.h>
+#ifdef __GNUC__
+#   pragma GCC diagnostic pop
+#endif
 #include <duktape.h>
 
 #include "Common/Passkey.h"
@@ -47,7 +55,7 @@ namespace rainbow
         }
 
     private:
-        std::unordered_map<std::string, asset_type> asset_map_;
+        absl::flat_hash_map<std::string, asset_type> asset_map_;
         LinearAllocator allocator_;
         ScopeStack stack_;
         graphics::RenderQueue render_queue_;

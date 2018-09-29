@@ -16,6 +16,7 @@
 #   include <OpenGLES/ES2/gl.h>
 #   include <OpenGLES/ES2/glext.h>
 #elif defined(RAINBOW_OS_MACOS)
+#   define GL_SILENCE_DEPRECATION 1
 #   include <OpenGL/gl.h>
 #   define glBindVertexArray     glBindVertexArrayAPPLE
 #   define glDeleteVertexArrays  glDeleteVertexArraysAPPLE
