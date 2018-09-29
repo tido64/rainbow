@@ -353,14 +353,21 @@ if(MSVC OR XCODE)
   endif()
 endif()
 
-# Dynamic libraries
-include(${LOCAL_MODULE_PATH}/Audio.cmake)
-if(NOT ANDROID)
-  find_package(OpenGL REQUIRED)
-  target_link_libraries(rainbow ${OPENGL_ext_LIBRARY} ${OPENGL_gl_LIBRARY})
-endif()
+target_include_directories(
+    rainbow
+    PUBLIC
+        ${PROJECT_SOURCE_DIR}/include
+    PRIVATE
+        ${PROJECT_SOURCE_DIR}/src
+        ${LOCAL_LIBRARY}
+        ${LOCAL_LIBRARY}/nanosvg/src
+        ${LOCAL_LIBRARY}/variant/include
+)
 
 # Static libraries
+if(TEST_LIBRARY)
+  target_link_libraries(rainbow ${TEST_LIBRARY})
+endif()
 if(USE_PHYSICS)
   include(${LOCAL_MODULE_PATH}/Box2D.cmake)
 endif()
@@ -373,15 +380,25 @@ endif()
 include(${LOCAL_MODULE_PATH}/zlib.cmake)
 include(${LOCAL_MODULE_PATH}/libpng.cmake)
 
-# Rainbow
-target_include_directories(
-    rainbow
-    PUBLIC
-        ${PROJECT_SOURCE_DIR}/include
-    PRIVATE
-        ${PROJECT_SOURCE_DIR}/src
-        ${LOCAL_LIBRARY}
-        ${LOCAL_LIBRARY}/nanosvg/src
-        ${LOCAL_LIBRARY}/variant/include
-)
-target_link_libraries(rainbow ${TEST_LIBRARY} ${PLATFORM_LIBRARIES})
+# Dynamic libraries
+include(${LOCAL_MODULE_PATH}/Audio.cmake)
+if(NOT ANDROID)
+  find_package(OpenGL REQUIRED)
+  target_link_libraries(rainbow ${OPENGL_ext_LIBRARY} ${OPENGL_gl_LIBRARY})
+endif()
+
+# Platform libraries
+if(ANDROID)
+  # Export ANativeActivity_onCreate(); see https://github.com/android-ndk/ndk/issues/381
+  set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -u ANativeActivity_onCreate")
+  add_library(native_app_glue STATIC ${ANDROID_NDK}/sources/android/native_app_glue/android_native_app_glue.c)
+  target_include_directories(native_app_glue PUBLIC ${ANDROID_NDK}/sources/android/native_app_glue)
+  target_link_libraries(native_app_glue log)
+  target_link_libraries(rainbow EGL GLESv2 native_app_glue log android z)
+elseif(APPLE)
+  find_library(CORESERVICES_LIBRARY CoreServices REQUIRED)
+  target_link_libraries(rainbow ${CORESERVICES_LIBRARY})
+elseif(UNIX AND NOT MINGW)
+  set(CMAKE_EXE_LINKER_FLAGS "-Wl,-z,now -Wl,-z,relro -pie -pthread")
+  target_link_libraries(rainbow m rt stdc++fs)
+endif()
