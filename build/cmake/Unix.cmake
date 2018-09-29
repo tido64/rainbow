@@ -41,25 +41,9 @@ if(MINGW OR UNIX)
     set(CMAKE_CXX_FLAGS ${RAINBOW_CXX_FLAGS})
   endif()
 
-  if(APPLE)
-    find_library(CORESERVICES_LIBRARY CoreServices REQUIRED)
-    set(PLATFORM_LIBRARIES ${CORESERVICES_LIBRARY})
-  else()
+  if(NOT APPLE)
     # Debug- and release-specific flags
     set(CMAKE_CXX_FLAGS_DEBUG   "-g -O0 -ftrapv")
     set(CMAKE_CXX_FLAGS_RELEASE "-Os -D_FORTIFY_SOURCE=2")
-
-    # Set LDFLAGS
-    if(ANDROID)
-      # Export ANativeActivity_onCreate(); see https://github.com/android-ndk/ndk/issues/381
-      set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -u ANativeActivity_onCreate")
-      include_directories(${ANDROID_NDK}/sources/android/native_app_glue)
-      add_library(native_app_glue STATIC ${ANDROID_NDK}/sources/android/native_app_glue/android_native_app_glue.c)
-      target_link_libraries(native_app_glue log)
-      set(PLATFORM_LIBRARIES EGL GLESv2 native_app_glue log android z)
-    elseif(NOT MINGW)
-      set(CMAKE_EXE_LINKER_FLAGS "-Wl,-z,now -Wl,-z,relro -pie -pthread")
-      set(PLATFORM_LIBRARIES m rt stdc++fs)
-    endif()
   endif()
 endif()
