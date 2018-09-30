@@ -1,5 +1,4 @@
 if(WIN32)
-  set(CFLAG_NO_WARNINGS /W0)
   set(CMAKE_FIND_LIBRARY_SUFFIXES ".a" ".lib" ".dll.a" ".dll")
   list(APPEND RESOURCE_FILES
       .editorconfig
@@ -60,10 +59,12 @@ if(WIN32)
     # /GR-: Disables run-time type information (RTTI).
     # /Oi: Generates intrinsic functions.
     # /W0: Disables all compiler warnings.
+    set(RAINBOW_CXX_WARNINGS /wd4065 /wd4244 /wd4456 /wd4800 /W4 /WX)
+    set(CFLAG_NO_WARNINGS /W0)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${CFLAG_NO_WARNINGS}")
     set(CMAKE_C_FLAGS_MINSIZEREL "${CMAKE_C_FLAGS_MINSIZEREL} /Oi")
     set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} /Oi")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /GR- /wd4065 /wd4244 /wd4456 /wd4800 /W4 /WX /std:c++latest /permissive-")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /GR- /std:c++latest /permissive-")
     set(CMAKE_CXX_FLAGS_MINSIZEREL "${CMAKE_CXX_FLAGS_MINSIZEREL} /Oi")
     set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /Oi")
     string(REGEX REPLACE "/D NDEBUG" "" MSVC_CXX_FLAGS_RELWITHDEBINFO ${CMAKE_CXX_FLAGS_RELWITHDEBINFO})

@@ -1,5 +1,4 @@
 if(MINGW OR UNIX)
-  set(CFLAG_NO_WARNINGS -w)
   if(UNIT_TESTS)
     set(RAINBOW_COMMON_CFLAGS "-frtti -fexceptions --coverage")
   else()
@@ -27,12 +26,13 @@ if(MINGW OR UNIX)
     endif()
 
     # Compiler warning flags
-    set(RAINBOW_CXX_WARNINGS "-Werror -pedantic -Wall -Wextra -Wold-style-cast -Woverloaded-virtual -Wsign-promo")
+    set(RAINBOW_CXX_WARNINGS -Werror -pedantic -Wall -Wextra -Wold-style-cast -Woverloaded-virtual -Wsign-promo)
   endif()
 
   # Set CFLAGS and CXXFLAGS
+  set(CFLAG_NO_WARNINGS -w)
   set(RAINBOW_C_FLAGS   "-pipe ${RAINBOW_CSTD} ${CFLAG_NO_WARNINGS} ${RAINBOW_COMMON_CFLAGS}")
-  set(RAINBOW_CXX_FLAGS "-pipe ${RAINBOW_CXXSTD} ${RAINBOW_CXX_WARNINGS} ${RAINBOW_COMMON_CFLAGS}")
+  set(RAINBOW_CXX_FLAGS "-pipe ${RAINBOW_CXXSTD} ${RAINBOW_COMMON_CFLAGS}")
   if(${CMAKE_C_FLAGS} MATCHES "-isystem")
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${RAINBOW_C_FLAGS}")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${RAINBOW_CXX_FLAGS}")

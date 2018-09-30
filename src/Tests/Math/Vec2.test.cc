@@ -117,7 +117,6 @@ TEST(Vec2Test, TranslatesNegative)
 TEST(Vec2Test, ScalesUp)
 {
     Vec2i v0(5, 2);
-    const Vec2i v1(3, 4);
 
     const Vec2i v2 = 2 * v0;
     ASSERT_NE(&v0, &v2);

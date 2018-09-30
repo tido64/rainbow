@@ -353,6 +353,7 @@ if(MSVC OR XCODE)
   endif()
 endif()
 
+target_compile_options(rainbow PRIVATE ${RAINBOW_CXX_WARNINGS})
 target_include_directories(
     rainbow
     PUBLIC
