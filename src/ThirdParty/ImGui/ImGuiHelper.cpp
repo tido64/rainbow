@@ -120,15 +120,17 @@ void rainbow::imgui::init(float font_size, float scale)
                                      kGlyphRanges);
     }
 
+    auto renderable = std::make_unique<Renderable>().release();
+    io.UserData = renderable;
+
     unsigned int buffer;
     glGenBuffers(1, &buffer);
-    auto renderable = std::make_unique<Renderable>().release();
     renderable->element_buffer() = buffer;
-    renderable->vertex_array().reconfigure([&renderable] {
+    renderable->vertex_array().reconfigure([] {
+        auto renderable = static_cast<Renderable*>(ImGui::GetIO().UserData);
         renderable->element_buffer().bind();
         renderable->vertex_buffer().bind();
     });
-    io.UserData = renderable;
 
     auto texture_manager = TextureManager::Get();
     const TextureFilter filter = texture_manager->mag_filter();
