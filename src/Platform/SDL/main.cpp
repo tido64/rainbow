@@ -2,6 +2,11 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
+#ifndef NDEBUG
+#   include <absl/debugging/failure_signal_handler.h>
+#   include <absl/debugging/symbolize.h>
+#endif
+
 #include "Platform/Macros.h"
 #if defined(RAINBOW_JS)
 #   pragma clang diagnostic ignored "-Wunused-function"
@@ -18,7 +23,6 @@
 #include "Config.h"
 #include "FileSystem/Bundle.h"
 #include "FileSystem/FileSystem.h"
-#include "Platform/Diagnostics.h"
 #include "Platform/SDL/Context.h"
 #include "Platform/SDL/RainbowController.h"
 #ifdef RAINBOW_TEST
@@ -88,14 +92,16 @@ auto main() -> int
 
 auto main(int argc, char* argv[]) -> int
 {
+#ifndef NDEBUG
+    absl::InitializeSymbolizer(argv[0]);
+    absl::InstallFailureSignalHandler(absl::FailureSignalHandlerOptions{});
+#endif
+
     const Bundle bundle{{argv, static_cast<size_t>(argc)}};
     rainbow::filesystem::initialize(bundle);
 
     if (should_run_tests(std::ref(argc), std::ref(argv)))
-    {
-        rainbow::diagnostics::attach_crash_dumper();
         return run_tests(argc, argv);
-    }
 
 #ifdef RAINBOW_OS_WINDOWS
     SetConsoleOutputCP(CP_UTF8);

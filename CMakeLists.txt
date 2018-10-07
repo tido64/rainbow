@@ -126,7 +126,6 @@ set(SOURCE_FILES
     src/Memory/SmallBuffer.cpp
     src/Memory/SmallBuffer.h
     src/Memory/StableArray.h
-    src/Platform/Diagnostics.h
     src/Platform/Macros.h
     src/Platform/SystemInfo.h
     src/Resources/Rainbow.svg.h
@@ -186,26 +185,19 @@ else()
     list(APPEND SOURCE_FILES
         lib/glad/glad.c
         src/Heimdall/impl/ChangeMonitor.win.cpp
-        src/Platform/impl/Diagnostics.win.cpp
         src/Platform/impl/SystemInfo.win.cpp
         tools/make.ps1
     )
+  elseif(APPLE)
+    list(APPEND SOURCE_FILES
+        src/Graphics/Decoders/UIKit.h
+        src/Heimdall/impl/ChangeMonitor.mac.cpp
+        src/Platform/impl/SystemInfo.apple.cpp
+    )
   else()
     list(APPEND SOURCE_FILES
-        src/Platform/impl/Diagnostics.unix.cpp
-    )
-    if(APPLE)
-      list(APPEND SOURCE_FILES
-          src/Graphics/Decoders/UIKit.h
-          src/Heimdall/impl/ChangeMonitor.mac.cpp
-          src/Platform/impl/Diagnostics.apple.cpp
-          src/Platform/impl/SystemInfo.apple.cpp
-      )
-    else()
-      list(APPEND SOURCE_FILES
-          src/Heimdall/impl/ChangeMonitor.stub.cpp
-          src/Platform/impl/SystemInfo.unix.cpp)
-    endif()
+        src/Heimdall/impl/ChangeMonitor.stub.cpp
+        src/Platform/impl/SystemInfo.unix.cpp)
   endif()
 endif()
 
@@ -377,7 +369,13 @@ if(MSVC)
   target_compile_options(absl_memory PUBLIC /wd4996)
   target_compile_options(absl_strings PUBLIC /wd4127)
 endif()
-target_link_libraries(rainbow absl::container absl::hash)
+target_link_libraries(
+    rainbow
+    absl::container
+    absl::hash
+    $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:absl::failure_signal_handler>
+    $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:absl::symbolize>
+)
 
 # Dynamic libraries
 include(${LOCAL_MODULE_PATH}/Audio.cmake)
