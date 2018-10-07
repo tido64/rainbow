@@ -30,6 +30,7 @@ function download {
       echo "Unknown archive type: $tarball"
       exit 1
     fi
+    rm -r ${name}
     mv ${src} ${name}
   fi
 }
@@ -51,5 +52,9 @@ download harfbuzz \
   ${harfbuzz_bz2} \
   ${harfbuzz_hash} \
   harfbuzz-${harfbuzz_version}
+
+pushd harfbuzz 1> /dev/null
+patch --force src/hb-coretext.cc ${project_root}/tools/harfbuzz-fix-iOS-build.patch
+popd 1> /dev/null
 
 popd 1> /dev/null

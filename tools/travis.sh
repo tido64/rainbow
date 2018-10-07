@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -e
 case $1 in
   "before_install")
     case $TRAVIS_OS_NAME in

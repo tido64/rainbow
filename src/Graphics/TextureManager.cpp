@@ -6,6 +6,12 @@
 
 #include "Graphics/Renderer.h"
 
+#ifdef USE_HEIMDALL
+#   define IF_DEVMODE_CAPTURE(x) x
+#else
+#   define IF_DEVMODE_CAPTURE(x)
+#endif
+
 using rainbow::Passkey;
 using rainbow::graphics::Texture;
 using rainbow::graphics::TextureFilter;
@@ -120,7 +126,7 @@ void TextureManager::trim()
     auto first = std::remove_if(  //
         textures_.begin(),
         textures_.end(),
-        [this](auto&& texture) {
+        [IF_DEVMODE_CAPTURE(this)](auto&& texture) {
             auto& detail = texture.second;
             if (detail.use_count == 0)
             {

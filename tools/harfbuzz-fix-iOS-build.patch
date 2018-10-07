@@ -1,0 +1,34 @@
+From fd910158b72903be07f1366c1b3f80f2eace57f1 Mon Sep 17 00:00:00 2001
+From: Tommy Nguyen <tn0502@gmail.com>
+Date: Sun, 7 Oct 2018 10:01:38 +0200
+Subject: [PATCH] Fix iOS build
+
+---
+ src/hb-coretext.cc | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/hb-coretext.cc b/src/hb-coretext.cc
+index a7ba85f8..c618763e 100644
+--- a/src/hb-coretext.cc
++++ b/src/hb-coretext.cc
+@@ -210,7 +210,7 @@ create_ct_font (CGFontRef cg_font, CGFloat font_size)
+   }
+ 
+   CFURLRef original_url = nullptr;
+-#if MAC_OS_X_VERSION_MIN_REQUIRED < 1060
++#if !TARGET_OS_IOS && MAC_OS_X_VERSION_MIN_REQUIRED < 1060
+   ATSFontRef atsFont;
+   FSRef fsref;
+   OSStatus status;
+@@ -240,7 +240,7 @@ create_ct_font (CGFontRef cg_font, CGFloat font_size)
+        * process in Blink. This can be detected by the new file URL location
+        * that the newly found font points to. */
+       CFURLRef new_url = nullptr;
+-#if MAC_OS_X_VERSION_MIN_REQUIRED < 1060
++#if !TARGET_OS_IOS && MAC_OS_X_VERSION_MIN_REQUIRED < 1060
+       atsFont = CTFontGetPlatformFont (new_ct_font, NULL);
+       status = ATSFontGetFileReference (atsFont, &fsref);
+       if (status == noErr)
+-- 
+2.19.0
+
