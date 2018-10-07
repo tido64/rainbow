@@ -202,7 +202,7 @@ namespace rainbow
         template <typename T, typename... Args>
         void add(T&& sprite, Args&&... sprites)
         {
-            static_assert(std::is_same<std::decay_t<T>, Sprite>::value,
+            static_assert(std::is_same_v<std::decay_t<T>, Sprite>,
                           "Elements must be of type Sprite");
 
             auto s = create_sprite(0, 0);

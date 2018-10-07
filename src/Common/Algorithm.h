@@ -18,7 +18,6 @@
 #include <utility>
 
 #include "Common/Constants.h"
-#include "Common/Constraints.h"
 
 namespace rainbow
 {
@@ -26,11 +25,14 @@ namespace rainbow
     ///   Compares two floating point numbers and approximates their equality.
     /// </summary>
     /// <returns><c>true</c> when approximately equal.</returns>
-    template <typename T, typename = FloatingPoint<T>>
+    template <typename T>
     bool are_equal(T a, T b)
     {
-        const auto max = std::max(std::abs(a), std::abs(b));
-        return std::abs(a - b) <= max * std::numeric_limits<T>::epsilon();
+        if constexpr (std::is_floating_point_v<T>)
+        {
+            const auto max = std::max(std::abs(a), std::abs(b));
+            return std::abs(a - b) <= max * std::numeric_limits<T>::epsilon();
+        }
     }
 
     template <typename T, size_t N>
@@ -53,10 +55,11 @@ namespace rainbow
     }
 
     /// <summary>Converts radians to degrees.</summary>
-    template <typename T, typename = FloatingPoint<T>>
+    template <typename T>
     constexpr auto degrees(T r)
     {
-        return r * kRadian<T>;
+        if constexpr (std::is_floating_point_v<T>)
+            return r * kRadian<T>;
     }
 
     /// <summary>Fast inverse square root by 0x5f3759df.</summary>
@@ -145,10 +148,11 @@ namespace rainbow
     }
 
     /// <summary>Converts degrees to radians.</summary>
-    template <typename T, typename = FloatingPoint<T>>
+    template <typename T>
     constexpr auto radians(T d)
     {
-        return d * kDegree<T>;
+        if constexpr (std::is_floating_point_v<T>)
+            return d * kDegree<T>;
     }
 
     /// <summary>

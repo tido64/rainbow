@@ -10,11 +10,8 @@
 namespace rainbow
 {
     /// <summary>Structure for storing a two-dimensional vector.</summary>
-    template <typename T, typename Enable = void>
-    struct Vec2;
-
     template <typename T>
-    struct Vec2<T, Arithmetic<T>>
+    struct Vec2
     {
         using value_type = T;
 
@@ -76,16 +73,12 @@ namespace rainbow
             return w * w;
         }
 
-        template <typename U = T>
-        auto is_zero() const -> EnableIfIntegral<U, bool>
+        bool is_zero() const
         {
-            return x == 0 && y == 0;
-        }
-
-        template <typename U = T>
-        auto is_zero() const -> EnableIfFloatingPoint<U, bool>
-        {
-            return are_equal<T>(0, x) && are_equal<T>(0, y);
+            if constexpr (std::is_integral_v<T>)
+                return x == 0 && y == 0;
+            else
+                return are_equal<T>(0, x) && are_equal<T>(0, y);
         }
 
         auto normal() const
@@ -93,19 +86,18 @@ namespace rainbow
             return Vec2{-y, x};
         }
 
-        template <typename U = T>
         auto normalize() const
-            -> EnableIfIntegral<U, Vec2<float, Arithmetic<float>>>
         {
-            const float h = std::sqrt(x * x + y * y);
-            return {x / h, y / h};
-        }
-
-        template <typename U = T>
-        auto normalize() const -> EnableIfFloatingPoint<U, Vec2>
-        {
-            const value_type h = std::sqrt(x * x + y * y);
-            return {x / h, y / h};
+            if constexpr (std::is_integral_v<T>)
+            {
+                const float h = std::sqrt(x * x + y * y);
+                return Vec2<float>{x / h, y / h};
+            }
+            else
+            {
+                const value_type h = std::sqrt(x * x + y * y);
+                return Vec2{x / h, y / h};
+            }
         }
 
         auto operator-() const
@@ -190,22 +182,22 @@ namespace rainbow
     };
 
     template <typename T>
-    const Vec2<T, Arithmetic<T>> Vec2<T, Arithmetic<T>>::Down(0, -1);
+    const Vec2<T> Vec2<T>::Down(0, -1);
 
     template <typename T>
-    const Vec2<T, Arithmetic<T>> Vec2<T, Arithmetic<T>>::Left(-1, 0);
+    const Vec2<T> Vec2<T>::Left(-1, 0);
 
     template <typename T>
-    const Vec2<T, Arithmetic<T>> Vec2<T, Arithmetic<T>>::One(1, 1);
+    const Vec2<T> Vec2<T>::One(1, 1);
 
     template <typename T>
-    const Vec2<T, Arithmetic<T>> Vec2<T, Arithmetic<T>>::Right(1, 0);
+    const Vec2<T> Vec2<T>::Right(1, 0);
 
     template <typename T>
-    const Vec2<T, Arithmetic<T>> Vec2<T, Arithmetic<T>>::Up(0, 1);
+    const Vec2<T> Vec2<T>::Up(0, 1);
 
     template <typename T>
-    const Vec2<T, Arithmetic<T>> Vec2<T, Arithmetic<T>>::Zero;
+    const Vec2<T> Vec2<T>::Zero;
 
     using Vec2f = Vec2<float>;
     using Vec2i = Vec2<int32_t>;

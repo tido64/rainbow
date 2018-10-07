@@ -30,7 +30,7 @@ public:
     NotNull(const NotNull& other) = default;
 
     template <typename U,
-              typename = std::enable_if<std::is_convertible<U, T>::value>>
+              typename = std::enable_if<std::is_convertible_v<U, T>>>
     NotNull(const NotNull<U>& other) : ptr_(other.get()) {}
 
     auto get() const { return ptr_; }

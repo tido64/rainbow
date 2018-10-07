@@ -188,7 +188,6 @@
 		19018EBD1EEDA64D00724B3E /* File.system.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = File.system.h; sourceTree = "<group>"; };
 		190A0ADA15E0294C0088D8B7 /* Logging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Logging.h; sourceTree = "<group>"; };
 		190CD1C01DDF952E00B0EAD4 /* Passkey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Passkey.h; sourceTree = "<group>"; };
-		1910099419FDA3A70036D5F4 /* Constraints.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constraints.h; sourceTree = "<group>"; };
 		1910099519FDA3A70036D5F4 /* Global.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Global.h; sourceTree = "<group>"; };
 		1910099719FDA3A70036D5F4 /* Link.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Link.h; sourceTree = "<group>"; };
 		191484E61891BD87004014D7 /* ShaderDetails.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShaderDetails.h; sourceTree = "<group>"; };
@@ -296,7 +295,6 @@
 		1939A185152C425D00494609 /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		1939A186152C425D00494609 /* Data.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Data.h; sourceTree = "<group>"; };
 		1939A197152C425D00494609 /* Random.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Random.h; sourceTree = "<group>"; };
-		1939A19C152C425D00494609 /* TreeNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TreeNode.h; sourceTree = "<group>"; };
 		1939A1A0152C425D00494609 /* Config.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = Config.cpp; sourceTree = "<group>"; };
 		1939A1A1152C425D00494609 /* Config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Config.h; sourceTree = "<group>"; };
 		1939A1BA152C425D00494609 /* Director.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = Director.cpp; sourceTree = "<group>"; };
@@ -731,7 +729,6 @@
 				1939A181152C425D00494609 /* Chrono.h */,
 				1939A184152C425D00494609 /* Color.h */,
 				1939A185152C425D00494609 /* Constants.h */,
-				1910099419FDA3A70036D5F4 /* Constraints.h */,
 				19865981175E98F700723171 /* Data.cpp */,
 				1939A186152C425D00494609 /* Data.h */,
 				19A9025120EECAAE0084A669 /* Error.cpp */,
@@ -744,7 +741,6 @@
 				190CD1C01DDF952E00B0EAD4 /* Passkey.h */,
 				1939A197152C425D00494609 /* Random.h */,
 				19DF40461C98B425001482BC /* String.h */,
-				1939A19C152C425D00494609 /* TreeNode.h */,
 				19DF40451C98B415001482BC /* TypeInfo.h */,
 				19A9025220EECAAE0084A669 /* Variant.h */,
 			);

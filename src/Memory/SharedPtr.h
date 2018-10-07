@@ -51,7 +51,7 @@ namespace rainbow
         /// <summary>Constructs an empty shared pointer.</summary>
         SharedPtr() : ptr_(nullptr)
         {
-            static_assert(std::is_base_of<RefCounted, T>::value,
+            static_assert(std::is_base_of_v<RefCounted, T>,
                           "Managed objects must be a subclass of RefCounted");
         }
 

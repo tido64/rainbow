@@ -36,7 +36,6 @@ set(SOURCE_FILES
     src/Common/Chrono.h
     src/Common/Color.h
     src/Common/Constants.h
-    src/Common/Constraints.h
     src/Common/Data.cpp
     src/Common/Data.h
     src/Common/Error.cpp
@@ -49,7 +48,6 @@ set(SOURCE_FILES
     src/Common/Random.h
     src/Common/RawPtr.h
     src/Common/String.h
-    src/Common/TreeNode.h
     src/Common/TypeInfo.h
     src/Common/Variant.h
     src/Config.cpp
@@ -227,7 +225,6 @@ if(UNIT_TESTS)
       src/Tests/Common/Random.test.cc
       src/Tests/Common/RawPtr.test.cc
       src/Tests/Common/String.test.cc
-      src/Tests/Common/TreeNode.test.cc
       src/Tests/Common/TypeInfo.test.cc
       src/Tests/Common/Variant.test.cc
       src/Tests/Config.test.cc

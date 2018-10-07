@@ -13,6 +13,7 @@ namespace rainbow::system
     class File
     {
     protected:
+        static constexpr auto is_platform_handle() { return false; }
         static constexpr bool open(czstring, FileType, File&) { return false; }
 
         static auto resolve_path(czstring path, FileType file_type)
@@ -42,7 +43,6 @@ namespace rainbow::system
             stream_ = stream;
         }
 
-        constexpr auto is_platform_handle() const { return false; }
         constexpr auto size() const -> size_t { return 0; }
 
         void close() {}

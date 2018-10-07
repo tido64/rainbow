@@ -16,6 +16,12 @@
 #include "Common/NonCopyable.h"
 #include "Platform/Macros.h"
 
+#ifdef RAINBOW_OS_ANDROID
+#   define CONSTEXPR
+#else
+#   define CONSTEXPR constexpr
+#endif
+
 #ifndef RAINBOW_OS_WINDOWS
 #   define _fileno fileno
 #endif
@@ -110,7 +116,7 @@ namespace rainbow
             if (!*this)
                 return;
 
-            if (T::is_platform_handle())
+            if CONSTEXPR (T::is_platform_handle())
                 T::close();
             else
                 fclose(T::handle());
@@ -119,15 +125,19 @@ namespace rainbow
         /// <summary>Returns the file size; -1 on error.</summary>
         auto size() const -> size_t
         {
-            if (T::is_platform_handle())
+            if CONSTEXPR (T::is_platform_handle())
+            {
                 return T::size();
+            }
+            else
+            {
+                R_ASSERT(T::handle() != nullptr, "No file handle");
 
-            R_ASSERT(T::handle() != nullptr, "No file handle");
-
-            struct stat file_status;
-            const int fd = _fileno(T::handle());
-            return fstat(fd, &file_status) != 0 ? kInvalidFileSize
-                                                : file_status.st_size;
+                struct stat file_status;
+                const int fd = _fileno(T::handle());
+                return fstat(fd, &file_status) != 0 ? kInvalidFileSize
+                                                    : file_status.st_size;
+            }
         }
 
         /// <summary>
@@ -139,12 +149,16 @@ namespace rainbow
         /// <returns>Number of bytes read.</returns>
         auto read(void* dst, size_t size) const -> size_t
         {
-            if (T::is_platform_handle())
+            if CONSTEXPR (T::is_platform_handle())
+            {
                 return T::read(dst, size);
+            }
+            else
+            {
+                R_ASSERT(T::handle() != nullptr, "No file handle");
 
-            R_ASSERT(T::handle() != nullptr, "No file handle");
-
-            return fread(dst, sizeof(uint8_t), size, T::handle());
+                return fread(dst, sizeof(uint8_t), size, T::handle());
+            }
         }
 
         /// <summary>
@@ -173,26 +187,34 @@ namespace rainbow
         /// <returns><c>true</c> upon success; <c>false</c> otherwise.</returns>
         bool seek(int64_t offset, SeekOrigin seek_origin) const
         {
-            if (T::is_platform_handle())
+            if CONSTEXPR (T::is_platform_handle())
+            {
                 return T::seek(offset, seek_origin);
+            }
+            else
+            {
+                R_ASSERT(T::handle() != nullptr, "No file handle");
 
-            R_ASSERT(T::handle() != nullptr, "No file handle");
-
-            auto stream = T::handle();
-            const int origin = detail::seek_origin(seek_origin);
-            return fseek(stream, offset, origin) == 0;
+                auto stream = T::handle();
+                const int origin = detail::seek_origin(seek_origin);
+                return fseek(stream, offset, origin) == 0;
+            }
         }
 
         /// <summary>Returns the current file position indicator.</summary>
         auto tell() const -> size_t
         {
-            if (T::is_platform_handle())
+            if CONSTEXPR (T::is_platform_handle())
+            {
                 return T::tell();
+            }
+            else
+            {
+                R_ASSERT(T::handle() != nullptr, "No file handle");
 
-            R_ASSERT(T::handle() != nullptr, "No file handle");
-
-            auto stream = T::handle();
-            return ftell(stream);
+                auto stream = T::handle();
+                return ftell(stream);
+            }
         }
 
         /// <summary>
@@ -202,7 +224,10 @@ namespace rainbow
 
         explicit operator FILE*() const
         {
-            return T::is_platform_handle() ? nullptr : T::handle();
+            if CONSTEXPR(T::is_platform_handle())
+                return nullptr;
+            else
+                return T::handle();
         }
 
 #if defined(RAINBOW_OS_MACOS) && defined(USE_HEIMDALL)
@@ -275,15 +300,21 @@ namespace rainbow
         {
             R_ASSERT(size > 0, "No data to write");
 
-            if (T::is_platform_handle())
+            if CONSTEXPR (T::is_platform_handle())
+            {
                 return T::write(buffer, size);
+            }
+            else
+            {
+                R_ASSERT(T::handle() != nullptr, "No file handle");
 
-            R_ASSERT(T::handle() != nullptr, "No file handle");
-
-            return fwrite(buffer, sizeof(uint8_t), size, T::handle());
+                return fwrite(buffer, sizeof(uint8_t), size, T::handle());
+            }
         }
     };
 }  // namespace rainbow
+
+#undef CONSTEXPR
 
 #ifdef RAINBOW_OS_ANDROID
 #   include "FileSystem/impl/File.android.h"

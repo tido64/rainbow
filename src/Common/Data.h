@@ -8,7 +8,6 @@
 #include <cstddef>
 #include <cstdint>
 
-#include "Common/Constraints.h"
 #include "Common/NonCopyable.h"
 #include "Common/String.h"
 #include "Platform/Macros.h"
@@ -38,16 +37,18 @@ namespace rainbow
             Reference
         };
 
-        template <typename T, size_t N, typename = ByteType<T>>
+        template <typename T, size_t N>
         static auto from_bytes(const T (&bytes)[N])
         {
-            return Data{bytes, N, Ownership::Reference};
+            if (std::is_same_v<std::make_unsigned_t<std::decay_t<T>>, uint8_t>)
+                return Data{bytes, N, Ownership::Reference};
         }
 
-        template <typename T, size_t N, typename = ByteType<T>>
+        template <typename T, size_t N>
         static auto from_literal(const T (&literal)[N])
         {
-            return Data{literal, N - 1, Ownership::Reference};
+            if (std::is_same_v<std::make_unsigned_t<std::decay_t<T>>, uint8_t>)
+                return Data{literal, N - 1, Ownership::Reference};
         }
 
         /// <summary>

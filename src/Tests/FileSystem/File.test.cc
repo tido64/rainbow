@@ -40,6 +40,8 @@ namespace
     class TestFileImpl
     {
     protected:
+        static constexpr auto is_platform_handle() { return true; }
+
         static constexpr bool open(czstring, FileType, TestFileImpl&)
         {
             return true;
@@ -56,7 +58,6 @@ namespace
         auto handle() const -> FILE* { return nullptr; }
         void set_handle(FILE*) {}
 
-        constexpr auto is_platform_handle() const { return true; }
         constexpr auto size() const -> size_t { return kTestFileSuccess; }
 
         void close() {}

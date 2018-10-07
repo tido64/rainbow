@@ -105,7 +105,7 @@ namespace rainbow
     private:
         template <std::size_t I, typename T>
         static constexpr bool is_integral_v =
-            std::is_integral<typename std::tuple_element<I, T>::type>::value;
+            std::is_integral_v<typename std::tuple_element<I, T>::type>;
 
         graphics::Texture texture_;                     ///< Texture atlas' id.
         std::vector<graphics::TextureRegion> regions_;  ///< Defined texture regions.
