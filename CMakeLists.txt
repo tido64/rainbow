@@ -13,9 +13,6 @@ include(${LOCAL_MODULE_PATH}/Utilities.cmake)
 option(UNIT_TESTS  "Compile unit tests" OFF)
 
 # Features
-if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-  set(USE_HEIMDALL ON CACHE BOOL "Enable Heimdall debugging facilities")
-endif()
 option(USE_FMOD_STUDIO  "Enable FMOD Studio audio engine" OFF)
 option(USE_HEIMDALL     "Enable Heimdall debugging facilities" OFF)
 option(USE_PHYSICS      "Enable physics module (Box2D)" OFF)
@@ -84,10 +81,10 @@ set(SOURCE_FILES
     src/Graphics/ShaderDetails.h
     src/Graphics/ShaderManager.cpp
     src/Graphics/ShaderManager.h
-    src/Graphics/Shaders/Diffuse.cpp
-    src/Graphics/Shaders/Diffuse.h
     src/Graphics/Shaders.cpp
     src/Graphics/Shaders.h
+    src/Graphics/Shaders/Diffuse.cpp
+    src/Graphics/Shaders/Diffuse.h
     src/Graphics/Sprite.cpp
     src/Graphics/Sprite.h
     src/Graphics/SpriteBatch.cpp
@@ -100,6 +97,13 @@ set(SOURCE_FILES
     src/Graphics/TextureManager.h
     src/Graphics/VertexArray.cpp
     src/Graphics/VertexArray.h
+    src/Heimdall/ChangeMonitor.h
+    src/Heimdall/Gatekeeper.cpp
+    src/Heimdall/Gatekeeper.h
+    src/Heimdall/Overlay.cpp
+    src/Heimdall/Overlay.h
+    src/Heimdall/OverlayActivator.cpp
+    src/Heimdall/OverlayActivator.h
     src/Input/Acceleration.h
     src/Input/Controller.h
     src/Input/impl/VirtualKey.sdl.cpp
@@ -126,6 +130,7 @@ set(SOURCE_FILES
     src/Platform/Macros.h
     src/Platform/SystemInfo.h
     src/Resources/Rainbow.svg.h
+    src/Script/GameBase.h
     src/Script/JavaScript/Audio.h
     src/Script/JavaScript/Console.h
     src/Script/JavaScript/Helper.cpp
@@ -136,7 +141,6 @@ set(SOURCE_FILES
     src/Script/JavaScript/Module.h
     src/Script/JavaScript/Modules.g.h
     src/Script/JavaScript/RenderQueue.h
-    src/Script/GameBase.h
     src/Script/NoGame.cpp
     src/Script/NoGame.h
     src/Script/Scene.cpp
@@ -152,6 +156,9 @@ set(SOURCE_FILES
     src/Text/SystemFonts.h
     src/Text/Typesetter.cpp
     src/Text/Typesetter.h
+    src/ThirdParty/ImGui/imconfig.h
+    src/ThirdParty/ImGui/ImGuiHelper.cpp
+    src/ThirdParty/ImGui/ImGuiHelper.h
     src/ThirdParty/NanoSVG/NanoSVG.cpp
     src/ThirdParty/NanoSVG/NanoSVG.h
     src/Threading/Synchronized.h
@@ -160,6 +167,7 @@ set(SOURCE_FILES
 if(ANDROID)
   list(APPEND SOURCE_FILES
       src/FileSystem/impl/File.android.h
+      src/Heimdall/impl/ChangeMonitor.stub.cpp
       src/Platform/Android/main.cpp
       # Workaround for https://github.com/android-ndk/ndk/issues/184
       src/Platform/Android/mulodi4.c
@@ -176,6 +184,7 @@ else()
   )
   if(WIN32)
     list(APPEND SOURCE_FILES
+        src/Heimdall/impl/ChangeMonitor.win.cpp
         src/Platform/impl/Diagnostics.win.cpp
         src/Platform/impl/SystemInfo.win.cpp
         tools/make.ps1
@@ -188,11 +197,14 @@ else()
     if(APPLE)
       list(APPEND SOURCE_FILES
           src/Graphics/Decoders/UIKit.h
+          src/Heimdall/impl/ChangeMonitor.mac.cpp
           src/Platform/impl/Diagnostics.apple.cpp
           src/Platform/impl/SystemInfo.apple.cpp
       )
     else()
-      list(APPEND SOURCE_FILES src/Platform/impl/SystemInfo.unix.cpp)
+      list(APPEND SOURCE_FILES
+          src/Heimdall/impl/ChangeMonitor.stub.cpp
+          src/Platform/impl/SystemInfo.unix.cpp)
     endif()
   endif()
 endif()
@@ -279,29 +291,6 @@ else()
   endif()
 endif()
 
-if(USE_HEIMDALL)
-  add_definitions(-DUSE_HEIMDALL)
-  list(APPEND SOURCE_FILES
-      src/Heimdall/ChangeMonitor.h
-      src/Heimdall/Gatekeeper.cpp
-      src/Heimdall/Gatekeeper.h
-      src/Heimdall/Overlay.cpp
-      src/Heimdall/Overlay.h
-      src/Heimdall/OverlayActivator.cpp
-      src/Heimdall/OverlayActivator.h
-      src/ThirdParty/ImGui/imconfig.h
-      src/ThirdParty/ImGui/ImGuiHelper.cpp
-      src/ThirdParty/ImGui/ImGuiHelper.h
-  )
-  if(APPLE)
-    list(APPEND SOURCE_FILES src/Heimdall/impl/ChangeMonitor.mac.cpp)
-  elseif(WIN32)
-    list(APPEND SOURCE_FILES src/Heimdall/impl/ChangeMonitor.win.cpp)
-  else()
-    list(APPEND SOURCE_FILES src/Heimdall/impl/ChangeMonitor.stub.cpp)
-  endif()
-endif()
-
 if(USE_PHYSICS)
   list(APPEND SOURCE_FILES
       src/ThirdParty/Box2D/DebugDraw.cpp
@@ -350,6 +339,7 @@ if(MSVC OR XCODE)
   endif()
 endif()
 
+target_compile_definitions(rainbow PRIVATE $<$<OR:$<CONFIG:Debug>,$<BOOL:${USE_HEIMDALL}>>:USE_HEIMDALL>)
 target_compile_options(rainbow PRIVATE ${RAINBOW_CXX_WARNINGS})
 target_include_directories(
     rainbow

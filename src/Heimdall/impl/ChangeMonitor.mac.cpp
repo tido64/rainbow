@@ -4,6 +4,8 @@
 
 #include "Heimdall/ChangeMonitor.h"
 
+#ifdef USE_HEIMDALL
+
 #include <memory>
 #include <CoreFoundation/CoreFoundation.h>
 
@@ -79,3 +81,5 @@ ChangeMonitor::~ChangeMonitor()
     FSEventStreamInvalidate(stream_);
     FSEventStreamRelease(stream_);
 }
+
+#endif  // USE_HEIMDALL

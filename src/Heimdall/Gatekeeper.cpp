@@ -4,6 +4,8 @@
 
 #include "Heimdall/Gatekeeper.h"
 
+#ifdef USE_HEIMDALL
+
 using heimdall::Gatekeeper;
 using rainbow::Vec2i;
 
@@ -24,3 +26,5 @@ void Gatekeeper::update(uint64_t dt)
 
     overlay_.update(dt);
 }
+
+#endif  // USE_HEIMDALL

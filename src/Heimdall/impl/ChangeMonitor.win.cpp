@@ -4,6 +4,8 @@
 
 #include "Heimdall/ChangeMonitor.h"
 
+#ifdef USE_HEIMDALL
+
 #include "Common/Logging.h"
 
 using heimdall::ChangeMonitor;
@@ -82,3 +84,5 @@ ChangeMonitor::~ChangeMonitor()
     CancelIoEx(hDirectory_, nullptr);
     CloseHandle(hDirectory_);
 }
+
+#endif  // USE_HEIMDALL

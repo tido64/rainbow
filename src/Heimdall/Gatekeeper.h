@@ -47,6 +47,8 @@ namespace heimdall
     };
 }  // namespace heimdall
 
+#ifdef USE_HEIMDALL
 using Director = heimdall::Gatekeeper;
+#endif  // USE_HEIMDALL
 
 #endif  // HEIMDALL_GATEKEEPER_H_

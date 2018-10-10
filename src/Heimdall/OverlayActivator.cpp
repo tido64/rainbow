@@ -4,6 +4,8 @@
 
 #include "Heimdall/OverlayActivator.h"
 
+#ifdef USE_HEIMDALL
+
 #include <algorithm>
 
 #include "Heimdall/Overlay.h"
@@ -120,3 +122,5 @@ bool OverlayActivator::on_pointer_ended_impl(const ArrayView<Pointer>& pointers)
     }
     return prevent_propagation;
 }
+
+#endif  // USE_HEIMDALL

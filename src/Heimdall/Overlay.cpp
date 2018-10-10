@@ -4,6 +4,8 @@
 
 #include "Heimdall/Overlay.h"
 
+#ifdef USE_HEIMDALL
+
 #include <numeric>
 
 #include "Director.h"
@@ -412,3 +414,5 @@ bool Overlay::on_pointer_moved_impl(const ArrayView<Pointer>& p)
 {
     return is_enabled() && rainbow::imgui::set_mouse_state(p);
 }
+
+#endif  // USE_HEIMDALL
