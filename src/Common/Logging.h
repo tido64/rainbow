@@ -63,15 +63,19 @@
 #   else
 #       define R_ABORT(...) (LOGF(__VA_ARGS__), std::abort())
 #   endif  // _MSC_VER
-#   ifndef __PRETTY_FUNCTION__
-#       define __PRETTY_FUNCTION__ __func__
+#   if defined(_MSC_VER)
+#       define RAINBOW_PRETTY_FUNCTION __FUNCSIG__
+#   elif defined(__GNUC__)
+#       define RAINBOW_PRETTY_FUNCTION __PRETTY_FUNCTION__
+#   else
+#       define RAINBOW_PRETTY_FUNCTION __func__
 #   endif
 #   ifndef SRC_FILE
 #       define SRC_FILE __FILE__
 #   endif
 #   define R_ASSERT(expr, reason)                                              \
         (!(expr) ? R_ABORT("%s: %s (aborted at %s:%i: %s)",                    \
-                           __PRETTY_FUNCTION__,                                \
+                           RAINBOW_PRETTY_FUNCTION,                            \
                            reason,                                             \
                            SRC_FILE,                                           \
                            __LINE__,                                           \
