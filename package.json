@@ -12,6 +12,7 @@
     "compile": "tsc --target ES2016 --module commonjs --strict --noImplicitAny --strictNullChecks --noImplicitThis --alwaysStrict --noUnusedLocals --noImplicitReturns",
     "generate-bindings": "yarn compile tools/generate-bindings.ts && node tools/generate-bindings.js",
     "generate-shaders": "yarn compile tools/generate-shaders.ts && node tools/generate-shaders.js",
+    "import-asset": "yarn compile tools/import-asset.ts && node tools/import-asset.js",
     "prettier": "prettier --no-config --prose-wrap always --write .vscode/*.json README.md doc/**/*.md js/*.json tools/*.ts",
     "tsc": "tsc"
   },
