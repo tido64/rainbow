@@ -3,6 +3,7 @@
 !js/index.js*
 *.aps
 *.iml
+*.jar
 *.js
 *.js.map
 *.swp
@@ -16,6 +17,8 @@ CMakeBuild/
 Rainbow.sublime-workspace
 build/android/app/build/
 build/android/build/
+gradlew
+gradlew.bat
 local.properties
 node_modules/
 package-lock.json
