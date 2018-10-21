@@ -25,8 +25,6 @@ using rainbow::graphics::ShaderManager;
 
 namespace
 {
-    using String = std::unique_ptr<char[]>;
-
     const Shader::AttributeParams kAttributeDefaultParams[]{
         {Shader::kAttributeVertex, "vertex"},
         {Shader::kAttributeColor, "color"},
@@ -46,7 +44,7 @@ namespace
 
     template <typename F, typename G>
     auto verify(GLuint id, GLenum pname, F&& glGetiv, G&& glGetInfoLog)
-        -> String
+        -> std::string
     {
         GLint status = GL_FALSE;
         glGetiv(id, pname, &status);
@@ -57,9 +55,9 @@ namespace
             if (info_len == 0)
                 return {};
 
-            auto log = std::make_unique<char[]>(info_len);
-            glGetInfoLog(id, info_len, nullptr, log.get());
-            return log;
+            std::string info(info_len, '\0');
+            glGetInfoLog(id, info_len, nullptr, info.data());
+            return info;
         }
 
         return {};
@@ -95,15 +93,15 @@ namespace
         }
         glCompileShader(id);
 
-        const String& error =
+        const auto& error =
             verify(id, GL_COMPILE_STATUS, glGetShaderiv, glGetShaderInfoLog);
-        if (error != nullptr)
+        if (!error.empty())
         {
             glDeleteShader(id);
             R_ABORT(
                 "GLSL: Failed to compile %s shader: %s",
                 (shader.type == Shader::kTypeVertex ? "vertex" : "fragment"),
-                error.get());
+                error.c_str());
             UNREACHABLE();
             return ShaderManager::kInvalidProgram;
         }
@@ -124,12 +122,12 @@ namespace
             glBindAttribLocation(program, attrib->index, attrib->name);
         glLinkProgram(program);
 
-        const String& error = verify(
+        const auto& error = verify(
             program, GL_LINK_STATUS, glGetProgramiv, glGetProgramInfoLog);
-        if (error != nullptr)
+        if (!error.empty())
         {
             glDeleteProgram(program);
-            R_ABORT("GLSL: Failed to link program: %s", error.get());
+            R_ABORT("GLSL: Failed to link program: %s", error.c_str());
             UNREACHABLE();
             return ShaderManager::kInvalidProgram;
         }

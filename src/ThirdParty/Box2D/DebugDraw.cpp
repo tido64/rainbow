@@ -115,12 +115,14 @@ namespace b2
             world->DrawDebugData();
         }
 
-        upload(triangles_.size() * sizeof(triangles_[0]), triangles_.data());
-        glDrawArrays(GL_TRIANGLES, 0, triangles_.size());
+        const auto triangles_count = static_cast<GLsizei>(triangles_.size());
+        upload(triangles_count * sizeof(triangles_[0]), triangles_.data());
+        glDrawArrays(GL_TRIANGLES, 0, triangles_count);
         triangles_.clear();
 
-        upload(lines_.size() * sizeof(lines_[0]), lines_.data());
-        glDrawArrays(GL_LINES, 0, lines_.size());
+        const auto lines_count = static_cast<GLsizei>(lines_.size());
+        upload(lines_count * sizeof(lines_[0]), lines_.data());
+        glDrawArrays(GL_LINES, 0, lines_count);
         lines_.clear();
     }
 

@@ -191,6 +191,9 @@ namespace
 
 Overlay::~Overlay()
 {
+    if (ImGui::GetCurrentContext() == nullptr)
+        return;
+
     rainbow::imgui::shutdown();
 }
 
