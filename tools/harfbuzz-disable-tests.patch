@@ -2,16 +2,6 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index e881dbd1..b91469b4 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -545,7 +545,8 @@ if (UNIX OR MINGW)
- 
-   if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-     # Make sure we don't link to libstdc++
--    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-rtti -fno-exceptions")
-+    set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC")
-+    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-rtti -fno-exceptions -fPIC")
-     set (CMAKE_CXX_IMPLICIT_LINK_LIBRARIES "m") # libm
-     set (CMAKE_CXX_IMPLICIT_LINK_DIRECTORIES "")
-     set_target_properties(harfbuzz PROPERTIES LINKER_LANGUAGE C)
 @@ -816,53 +816,3 @@ if (UNIX AND CMAKE_GENERATOR STREQUAL "Ninja")
      set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fdiagnostics-color")
    endif ()

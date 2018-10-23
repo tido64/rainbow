@@ -1,6 +1,6 @@
 if(MINGW OR UNIX)
   if(UNIT_TESTS)
-    set(RAINBOW_COMMON_CFLAGS "-frtti -fexceptions --coverage")
+    set(RAINBOW_COMMON_CFLAGS "-frtti -fexceptions")
   else()
     set(RAINBOW_COMMON_CFLAGS "-fno-rtti -fno-exceptions")
   endif()

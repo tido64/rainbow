@@ -28,6 +28,7 @@ else()
       PATCH_COMMAND ${GIT} apply ${PROJECT_SOURCE_DIR}/tools/harfbuzz-disable-tests.patch
       CMAKE_ARGS
           -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>
+          -DCMAKE_POSITION_INDEPENDENT_CODE=ON
           -DFREETYPE_INCLUDE_DIR_freetype2=${LOCAL_LIBRARY}/FreeType/include
           -DFREETYPE_INCLUDE_DIR_ft2build=${THIRD_PARTY}/FreeType
           -DFREETYPE_LIBRARY=$<TARGET_FILE:freetype-bootstrap>
