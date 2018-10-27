@@ -13,7 +13,7 @@ namespace rainbow
     {
         Success,
         AudioInitializationFailed,
-        GLEWInitializationFailed,
+        GLInitializationFailed,
         ShaderManagerInitializationFailed,
         RenderInitializationFailed,
         ScriptCompilationFailed,

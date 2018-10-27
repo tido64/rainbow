@@ -12,7 +12,6 @@
 #       pragma comment(linker, "/SUBSYSTEM:WINDOWS")
 #   endif
 #   include "Graphics/OpenGL.h"
-#   include <GL/glew.c>
 #endif
 
 #include "Common/Functional.h"

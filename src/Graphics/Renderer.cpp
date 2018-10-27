@@ -243,13 +243,9 @@ auto State::initialize() -> std::error_code
 {
     R_ASSERT(g_state == nullptr, "Renderer is already initialised");
 
-#ifdef __glew_h__
-    GLenum err = glewInit();
-    if (err != GLEW_OK)
-    {
-        LOGF("%s", glewGetErrorString(err));
-        return ErrorCode::GLEWInitializationFailed;
-    }
+#ifdef __glad_h_
+    if (!gladLoadGL())
+        return ErrorCode::GLInitializationFailed;
 #endif
 
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);

@@ -23,7 +23,7 @@ namespace
                     return {};
                 case ErrorCode::AudioInitializationFailed:
                     return "Failed to initialise audio engine";
-                case ErrorCode::GLEWInitializationFailed:
+                case ErrorCode::GLInitializationFailed:
                     return "Failed to initialise GLEW";
                 case ErrorCode::ShaderManagerInitializationFailed:
                     return "Failed to initialise shaders";

@@ -22,11 +22,7 @@
 #   define glDeleteVertexArrays  glDeleteVertexArraysAPPLE
 #   define glGenVertexArrays     glGenVertexArraysAPPLE
 #elif defined(RAINBOW_OS_WINDOWS)
-#   include <Windows.h>
-#   define GLEW_NO_GLU
-#   define GLEW_STATIC
-#   include <GL/glew.h>
-#   include <GL/glext.h>
+#   include <glad/glad.h>
 #else
 #   define GL_GLEXT_PROTOTYPES 1
 #   include <GL/gl.h>
@@ -34,10 +30,18 @@
 #endif
 
 #ifdef GL_ES_VERSION_2_0
-#   define GL_RGBA8              GL_RGBA
-#   define glBindVertexArray     glBindVertexArrayOES
-#   define glDeleteVertexArrays  glDeleteVertexArraysOES
-#   define glGenVertexArrays     glGenVertexArraysOES
+#   ifndef GL_RGBA8
+#       define GL_RGBA8 GL_RGBA
+#   endif
+#   ifndef glBindVertexArray
+#       define glBindVertexArray glBindVertexArrayOES
+#   endif
+#   ifndef glDeleteVertexArrays
+#       define glDeleteVertexArrays glDeleteVertexArraysOES
+#   endif
+#   ifndef glGenVertexArrays
+#       define glGenVertexArrays glGenVertexArraysOES
+#   endif
 #endif
 
 #ifndef GL_TEXTURE_FREE_MEMORY_ATI

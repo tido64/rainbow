@@ -184,6 +184,7 @@ else()
   )
   if(WIN32)
     list(APPEND SOURCE_FILES
+        lib/glad/glad.c
         src/Heimdall/impl/ChangeMonitor.win.cpp
         src/Platform/impl/Diagnostics.win.cpp
         src/Platform/impl/SystemInfo.win.cpp
