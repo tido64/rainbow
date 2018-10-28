@@ -103,6 +103,7 @@ Rainbow.RenderQueue.add(animation);
 * [Ogg Vorbis](https://xiph.org/vorbis/)
 * [OpenGL 2.1](https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/) /
   [OpenGL ES 2.0](https://www.khronos.org/opengles/2_X/)
+* [RapidJSON](https://github.com/Tencent/rapidjson)
 * [SDL](https://www.libsdl.org/)
 * [cubeb](https://github.com/kinetiknz/cubeb)
 * [libpng](https://github.com/glennrp/libpng)

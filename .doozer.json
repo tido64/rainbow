@@ -9,6 +9,7 @@
     "lib/libpng",
     "lib/nanosvg",
     "lib/ogg",
+    "lib/rapidjson",
     "lib/spine-runtimes",
     "lib/stb",
     "lib/variant",
