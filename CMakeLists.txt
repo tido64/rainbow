@@ -348,6 +348,7 @@ target_include_directories(
         ${LOCAL_LIBRARY}
         ${LOCAL_LIBRARY}/abseil-cpp
         ${LOCAL_LIBRARY}/nanosvg/src
+        ${LOCAL_LIBRARY}/rapidjson/include
         ${LOCAL_LIBRARY}/variant/include
 )
 

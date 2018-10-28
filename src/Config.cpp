@@ -4,21 +4,189 @@
 
 #include "Config.h"
 
-#include <memory>
+#include <array>
 
+#include <rapidjson/error/en.h>
+#include <rapidjson/reader.h>
+#include <rapidjson/stream.h>
+
+#include "Common/Algorithm.h"
 #include "Common/Data.h"
 #include "Common/Logging.h"
 #include "FileSystem/File.h"
 #include "FileSystem/FileSystem.h"
-#include "Script/JavaScript/Helper.h"
-#include "Script/JavaScript/JavaScript.h"
 
 namespace
 {
-#ifdef RAINBOW_SDL
     constexpr unsigned int kMaxMSAA = 16;
-#endif
-}
+}  // namespace
+
+class rainbow::detail::ConfigSAXParser final
+    : public rapidjson::BaseReaderHandler<rapidjson::UTF8<>, ConfigSAXParser>
+{
+public:
+    explicit ConfigSAXParser(Config& config)
+        : current_key_(nullptr), config_(config)
+    {
+    }
+
+    bool Default() { return false; }
+
+    bool Bool(bool val)
+    {
+        switch (current_key())
+        {
+            case ConfigKey::Accelerometer:
+                config_.accelerometer_ = val;
+                break;
+            case ConfigKey::AllowHighDPI:
+                config_.high_dpi_ = val;
+                break;
+            case ConfigKey::SuspendOnFocusLost:
+                config_.suspend_ = val;
+                break;
+            default:
+                return false;
+        }
+
+        pop();
+        return true;
+    }
+
+    bool Uint(unsigned int val)
+    {
+        switch (parent_key())
+        {
+            case ConfigKey::Root:
+                switch (current_key())
+                {
+                    case ConfigKey::MSAA:
+                        config_.msaa_ = std::min(floor_pow2(val), kMaxMSAA);
+                        break;
+                    default:
+                        return false;
+                }
+                break;
+
+            case ConfigKey::Resolution:
+                switch (current_key())
+                {
+                    case ConfigKey::Width:
+                        config_.width_ = val;
+                        break;
+                    case ConfigKey::Height:
+                        config_.height_ = val;
+                        break;
+                    default:
+                        return false;
+                }
+                break;
+
+            default:
+                return false;
+        }
+
+        pop();
+        return true;
+    }
+
+    bool String(czstring, size_t, bool)
+    {
+        const auto is_schema = current_key() == ConfigKey::Schema;
+        pop();
+        return is_schema;
+    }
+
+    bool StartObject()
+    {
+        if (current_key_ == nullptr)
+        {
+            stack_[0] = ConfigKey::Root;
+            current_key_ = stack_.data();
+            return true;
+        }
+
+        return parent_key() == ConfigKey::Root &&
+               current_key() == ConfigKey::Resolution;
+    }
+
+    bool Key(const char* str, size_t length, bool)
+    {
+        const std::string_view val(str, length);
+        switch (current_key())
+        {
+            case ConfigKey::Root:
+                if (val == "$schema")
+                    push(ConfigKey::Schema);
+                else if (val == "accelerometer")
+                    push(ConfigKey::Accelerometer);
+                else if (val == "allowHighDPI")
+                    push(ConfigKey::AllowHighDPI);
+                else if (val == "msaa")
+                    push(ConfigKey::MSAA);
+                else if (val == "resolution")
+                    push(ConfigKey::Resolution);
+                else if (val == "suspendOnFocusLost")
+                    push(ConfigKey::SuspendOnFocusLost);
+                else
+                    return false;
+                break;
+
+            case ConfigKey::Resolution:
+                if (val == "width")
+                    push(ConfigKey::Width);
+                else if (val == "height")
+                    push(ConfigKey::Height);
+                else
+                    return false;
+                break;
+
+            default:
+                return false;
+        }
+        return true;
+    }
+
+    bool EndObject(size_t)
+    {
+        pop();
+        return true;
+    }
+
+private:
+    enum class ConfigKey
+    {
+        Root,
+        Accelerometer,
+        AllowHighDPI,
+        Height,
+        MSAA,
+        Resolution,
+        Schema,
+        SuspendOnFocusLost,
+        Width,
+    };
+
+    std::array<ConfigKey, 3> stack_;
+    ConfigKey* current_key_;
+    Config& config_;
+
+    auto current_key() const -> ConfigKey
+    {
+        R_ASSERT(current_key_ != nullptr, "Malformed JSON");
+        return *current_key_;
+    }
+
+    auto parent_key() const -> ConfigKey
+    {
+        R_ASSERT(current_key_ > stack_.data(), "Malformed JSON");
+        return *(current_key_ - 1);
+    }
+
+    void pop() { --current_key_; }
+
+    void push(ConfigKey key) { *(++current_key_) = key; }
+};
 
 rainbow::Config::Config()
     : accelerometer_(true), high_dpi_(false), suspend_(true), width_(0),
@@ -38,62 +206,20 @@ rainbow::Config::Config()
     if (!config)
         return;
 
-    duk::Context ctx;
-    duk_push_lstring(ctx, config.as<const char*>(), config.size());
-    if (duk_safe_call(  //
-            ctx,
-            [](duk_context* ctx, void*) -> duk_ret_t {
-                duk_json_decode(ctx, -1);
-                return 1;
-            },
-            nullptr,
-            1,
-            1) != DUK_EXEC_SUCCESS)
+    rapidjson::Reader reader;
+    rapidjson::StringStream is{config.as<const char*>()};
+    detail::ConfigSAXParser handler{*this};
+    if (!reader.Parse<rapidjson::kParseStopWhenDoneFlag>(is, handler))
     {
-        return;
+        const auto offset = reader.GetErrorOffset();
+        std::string context(
+            std::string_view(config.as<const char*>(), config.size())
+                .substr(offset, 8));
+        if (context.length() == 8)
+            context.append(3, '.');
+        LOGE("config.json +%zugo near '%s': %s",
+             offset,
+             context.c_str(),
+             rapidjson::GetParseError_En(reader.GetParseErrorCode()));
     }
-
-    if (duk::get_prop_literal(ctx, -1, "accelerometer") &&
-        duk_is_boolean(ctx, -1))
-    {
-        accelerometer_ = duk::get<bool>(ctx, -1);
-    }
-    duk_pop(ctx);
-
-#ifdef RAINBOW_SDL
-    if (duk::get_prop_literal(ctx, -1, "allowHighDPI") &&
-        duk_is_boolean(ctx, -1))
-    {
-        high_dpi_ = duk::get<bool>(ctx, -1);
-    }
-    duk_pop(ctx);
-
-    if (duk::get_prop_literal(ctx, -1, "msaa") && duk_is_number(ctx, -1))
-    {
-        auto value = floor_pow2(duk_get_uint_default(ctx, -1, 0));
-        msaa_ = std::min(value, kMaxMSAA);
-    }
-    duk_pop(ctx);
-#endif
-
-    if (duk::get_prop_literal(ctx, -1, "resolution") && duk_is_object(ctx, -1))
-    {
-        duk::get_prop_literal(ctx, -1, "width");
-        width_ = duk_get_int_default(ctx, -1, 0);
-
-        duk::get_prop_literal(ctx, -2, "height");
-        height_ = duk_get_int_default(ctx, -1, 0);
-
-        duk_pop_2(ctx);
-    }
-    duk_pop(ctx);
-
-#ifdef RAINBOW_SDL
-    if (duk::get_prop_literal(ctx, -1, "suspendOnFocusLost") &&
-        duk_is_boolean(ctx, -1))
-    {
-        suspend_ = duk::get<bool>(ctx, -1);
-    }
-    duk_pop(ctx);
-#endif
 }

@@ -25,6 +25,7 @@
                 "${workspaceRoot}/lib/duktape/extras/module-node",
                 "${workspaceRoot}/lib/libpng",
                 "${workspaceRoot}/lib/nanosvg/src",
+                "${workspaceRoot}/lib/rapidjson/include",
                 "${workspaceRoot}/lib/SDL/include",
                 "${workspaceRoot}/lib/spine-runtimes/spine-c/include",
                 "${workspaceRoot}/lib/variant/include",
@@ -71,6 +72,7 @@
                 "${workspaceRoot}/lib/duktape/extras/module-node",
                 "${workspaceRoot}/lib/libpng",
                 "${workspaceRoot}/lib/nanosvg/src",
+                "${workspaceRoot}/lib/rapidjson/include",
                 "${workspaceRoot}/lib/spine-runtimes/spine-c/include",
                 "${workspaceRoot}/lib/variant/include",
                 "${workspaceRoot}/lib/zlib"
@@ -111,6 +113,7 @@
                 "${workspaceRoot}/lib/duktape/extras/module-node",
                 "${workspaceRoot}/lib/libpng",
                 "${workspaceRoot}/lib/nanosvg/src",
+                "${workspaceRoot}/lib/rapidjson/include",
                 "${workspaceRoot}/lib/SDL/include",
                 "${workspaceRoot}/lib/spine-runtimes/spine-c/include",
                 "${workspaceRoot}/lib/variant/include",

@@ -1699,6 +1699,7 @@
 					../../lib/FreeType/src,
 					lib/harfbuzz/src,
 					"lib/harfbuzz/src/hb-ucdn",
+					../../lib/rapidjson/include,
 					"../../lib/spine-runtimes/spine-c/include",
 					../../lib/variant/include,
 				);
@@ -1859,6 +1860,7 @@
 					../../lib/FreeType/src,
 					lib/harfbuzz/src,
 					"lib/harfbuzz/src/hb-ucdn",
+					../../lib/rapidjson/include,
 					"../../lib/spine-runtimes/spine-c/include",
 					../../lib/variant/include,
 				);
@@ -1905,6 +1907,7 @@
 					../../lib/FreeType/src,
 					lib/harfbuzz/src,
 					"lib/harfbuzz/src/hb-ucdn",
+					../../lib/rapidjson/include,
 					"../../lib/spine-runtimes/spine-c/include",
 					../../lib/variant/include,
 				);

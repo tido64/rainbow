@@ -51,6 +51,7 @@ namespace
 
     constexpr char kStandardConfig[] =
         "{"
+        "  \"$schema\": \"./rainbow-config.schema.json\","
         "  \"accelerometer\": false,"
         "  \"allowHighDPI\": true,"
         "  \"msaa\": 4,"
