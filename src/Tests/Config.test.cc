@@ -29,37 +29,39 @@ namespace
         "rainbow-test-random-path-to-avoid-existing-config-files";
 
     constexpr char kAlternateConfig[] =
-        "{"
-        "  \"accelerometer\": true,"
-        "  \"allowHighDPI\": false,"
-        "  \"msaa\": 6,"
-        "  \"resolution\": {"
-        "    \"width\": 750,"
-        "    \"height\": 1334"
-        "  },"
-        "  \"suspendOnFocusLost\": true"
-        "}";
+        "[core]\n"
+        "ResolutionWidth = 750\n"
+        "ResolutionHeight = 1334\n"
+        "MSAA = 6\n"
+        "AllowHiDPI = 0\n"
+        "SuspendOnFocusLost = 1\n"
+        "Accelerometer = 1\n";
 
     constexpr char kInvalidConfig[] = "💩";
 
+    constexpr char kMissingValuesConfig[] =
+        "[core]\n"
+        "ResolutionWidth =\n"
+        "ResolutionHeight =\n"
+        "MSAA =\n"
+        "AllowHiDPI =\n"
+        "SuspendOnFocusLost =\n"
+        "Accelerometer =\n";
+
     constexpr char kSparseConfig[] =
-        "{"
-        "  \"allowHighDPI\": true,"
-        "  \"msaa\": 10,"
-        "  \"suspendOnFocusLost\": false"
-        "}";
+        "[core]\n"
+        "MSAA = 10\n"
+        "AllowHiDPI = true\n"
+        "SuspendOnFocusLost = false\n";
 
     constexpr char kStandardConfig[] =
-        "{"
-        "  \"accelerometer\": false,"
-        "  \"allowHighDPI\": true,"
-        "  \"msaa\": 4,"
-        "  \"resolution\": {"
-        "    \"width\": 1920,"
-        "    \"height\": 1080"
-        "  },"
-        "  \"suspendOnFocusLost\": false"
-        "}";
+        "[core]\n"
+        "ResolutionWidth = 1920\n"
+        "ResolutionHeight = 1080\n"
+        "MSAA = 4\n"
+        "AllowHiDPI = true\n"
+        "SuspendOnFocusLost = false\n"
+        "Accelerometer = false\n";
 
     class ScopedAssetsDirectory
     {
@@ -107,7 +109,7 @@ namespace
         {
             std::error_code error;
             rainbow::filesystem::create_directories(path_, error);
-            path_ /= "config.json";
+            path_ /= "config.ini";
             FILE* fd = fopen(path_.c_str(), "wb");
             [fd] { ASSERT_NE(fd, nullptr); }();
             fwrite(config, sizeof(*config), length, fd);
@@ -127,7 +129,7 @@ TEST(ConfigTest, NoConfiguration)
 
     ASSERT_EQ(config.width(), 0);
     ASSERT_EQ(config.height(), 0);
-    ASSERT_FALSE(config.high_dpi());
+    ASSERT_FALSE(config.hidpi());
     ASSERT_FALSE(config.is_portrait());
     ASSERT_EQ(config.msaa(), 0u);
     ASSERT_TRUE(config.suspend());
@@ -140,7 +142,7 @@ TEST(ConfigTest, EmptyConfiguration)
 
     ASSERT_EQ(config.width(), 0);
     ASSERT_EQ(config.height(), 0);
-    ASSERT_FALSE(config.high_dpi());
+    ASSERT_FALSE(config.hidpi());
     ASSERT_FALSE(config.is_portrait());
     ASSERT_EQ(config.msaa(), 0u);
     ASSERT_TRUE(config.suspend());
@@ -153,7 +155,7 @@ TEST(ConfigTest, InvalidConfiguration)
 
     ASSERT_EQ(config.width(), 0);
     ASSERT_EQ(config.height(), 0);
-    ASSERT_FALSE(config.high_dpi());
+    ASSERT_FALSE(config.hidpi());
     ASSERT_FALSE(config.is_portrait());
     ASSERT_EQ(config.msaa(), 0u);
     ASSERT_TRUE(config.suspend());
@@ -166,7 +168,7 @@ TEST(ConfigTest, NormalConfiguration)
 
     ASSERT_EQ(c.width(), 1920);
     ASSERT_EQ(c.height(), 1080);
-    ASSERT_TRUE(c.high_dpi());
+    ASSERT_TRUE(c.hidpi());
     ASSERT_FALSE(c.is_portrait());
     ASSERT_EQ(c.msaa(), 4u);
     ASSERT_FALSE(c.needs_accelerometer());
@@ -180,7 +182,7 @@ TEST(ConfigTest, AlternateConfiguration)
 
     ASSERT_EQ(c.width(), 750);
     ASSERT_EQ(c.height(), 1334);
-    ASSERT_FALSE(c.high_dpi());
+    ASSERT_FALSE(c.hidpi());
     ASSERT_TRUE(c.is_portrait());
     ASSERT_EQ(c.msaa(), 4u);
     ASSERT_TRUE(c.needs_accelerometer());
@@ -194,8 +196,21 @@ TEST(ConfigTest, SparseConfiguration)
 
     ASSERT_EQ(c.width(), 0);
     ASSERT_EQ(c.height(), 0);
-    ASSERT_TRUE(c.high_dpi());
+    ASSERT_TRUE(c.hidpi());
     ASSERT_FALSE(c.is_portrait());
     ASSERT_EQ(c.msaa(), 8u);
     ASSERT_FALSE(c.suspend());
+}
+
+TEST(ConfigTest, MissingValues)
+{
+    ScopedConfig conf(kMissingValuesConfig);
+    rainbow::Config config;
+
+    ASSERT_EQ(config.width(), 0);
+    ASSERT_EQ(config.height(), 0);
+    ASSERT_FALSE(config.hidpi());
+    ASSERT_FALSE(config.is_portrait());
+    ASSERT_EQ(config.msaa(), 0u);
+    ASSERT_TRUE(config.suspend());
 }

@@ -42,7 +42,7 @@ SDLContext::SDLContext(const Config& config)
     // Prevent the full screen window from being minimized when losing focus.
     SDL_SetHint(SDL_HINT_VIDEO_MINIMIZE_ON_FOCUS_LOSS, "0");
 #elif defined(RAINBOW_OS_WINDOWS)
-    if (config.high_dpi())
+    if (config.hidpi())
         SetProcessDPIAware();
 #endif
 
@@ -57,7 +57,7 @@ SDLContext::SDLContext(const Config& config)
     }
 
     const uint32_t flags = SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN |
-                           (config.high_dpi() ? SDL_WINDOW_ALLOW_HIGHDPI : 0);
+                           (config.hidpi() ? SDL_WINDOW_ALLOW_HIGHDPI : 0);
     const Vec2i& size = ::window_size(config);
     window_ = SDL_CreateWindow(RAINBOW_WINDOW_TITLE,
                                SDL_WINDOWPOS_CENTERED,

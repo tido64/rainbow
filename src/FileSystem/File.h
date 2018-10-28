@@ -264,10 +264,13 @@ namespace rainbow
             if (size == 0)
                 return {};
 
-            auto buffer = std::make_unique<uint8_t[]>(size);
+            auto buffer = std::make_unique<uint8_t[]>(size + 1);
             if (file.read(buffer.get(), size) != size)
                 return {};
 
+            // Ensure the buffer is null-terminated so it also can be used as a
+            // string without copying.
+            buffer[size] = 0;
             return {buffer.release(), size, Data::Ownership::Owner};
         }
     };
