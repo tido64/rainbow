@@ -189,7 +189,6 @@ else()
         src/Platform/impl/Diagnostics.win.cpp
         src/Platform/impl/SystemInfo.win.cpp
         tools/make.ps1
-        appveyor.yml
     )
   else()
     list(APPEND SOURCE_FILES

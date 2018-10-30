@@ -1,8 +1,8 @@
 # Rainbow
 
-[![codecov](https://codecov.io/gh/tn0502/rainbow/branch/master/graph/badge.svg)](https://codecov.io/gh/tn0502/rainbow)
-[![Windows build status](https://ci.appveyor.com/api/projects/status/oajtxwu9d9lrayk0/branch/master?svg=true)](https://ci.appveyor.com/project/Tommy/rainbow/branch/master)
-[![Linux/iOS/macOS build status](https://travis-ci.org/tn0502/rainbow.svg?branch=master)](https://travis-ci.org/tn0502/rainbow)
+[![Code coverage](https://codecov.io/gh/tn0502/rainbow/branch/master/graph/badge.svg)](https://codecov.io/gh/tn0502/rainbow)
+[![Build status](https://tido64.visualstudio.com/Rainbow/_apis/build/status/Rainbow%20CI?branchName=master)](https://tido64.visualstudio.com/Rainbow/_build/latest?definitionId=1)
+[![macOS/Linux/Android/iOS build status](https://travis-ci.org/tn0502/rainbow.svg?branch=master)](https://travis-ci.org/tn0502/rainbow)
 [![macOS build status](https://doozer.io/badge/tn0502/rainbow/buildstatus/master)](https://doozer.io/tn0502/rainbow)
 
 Rainbow is a fast, scriptable, cross-platform, 2D game engine written in modern
