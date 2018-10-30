@@ -2,6 +2,8 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
+#include <functional>
+
 #include <gtest/gtest.h>
 
 #include "Graphics/Sprite.h"
@@ -201,7 +203,7 @@ TEST(SpriteTest, Translates)
 
 TEST(SpriteTest, Rotates)
 {
-    auto not_equal = rainbow::test::not_fn(rainbow::are_equal<float>);
+    auto not_equal = std::not_fn(rainbow::are_equal<float>);
 
     Sprite sprite(4, 2);
 

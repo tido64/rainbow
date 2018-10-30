@@ -2,10 +2,11 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
+#include <functional>
+
 #include <gtest/gtest.h>
 
 #include "Audio/Mixer.h"
-#include "Tests/TestHelpers.h"
 
 using rainbow::audio::Channel;
 using rainbow::audio::Mixer;
@@ -16,8 +17,8 @@ namespace
     constexpr int kMaxAudioChannels = 8;
     constexpr char kAudioTestFile[] = "Silence.ogg";
 
-    auto not_paused = rainbow::test::not_fn(rainbow::audio::is_paused);
-    auto not_playing = rainbow::test::not_fn(rainbow::audio::is_playing);
+    auto not_paused = std::not_fn(rainbow::audio::is_paused);
+    auto not_playing = std::not_fn(rainbow::audio::is_playing);
 
     struct Static
     {

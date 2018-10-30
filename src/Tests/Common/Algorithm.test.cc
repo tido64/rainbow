@@ -2,11 +2,12 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
+#include <functional>
+
 #include <gtest/gtest.h>
 
 #include "Common/Algorithm.h"
 #include "Common/Logging.h"
-#include "Tests/TestHelpers.h"
 
 namespace
 {
@@ -29,7 +30,7 @@ namespace
 
 TEST(AlgorithmTest, ApproximatesFloatEquality)
 {
-    auto not_equal = rainbow::test::not_fn(rainbow::are_equal<float>);
+    auto not_equal = std::not_fn(rainbow::are_equal<float>);
 
     ASSERT_PRED2(rainbow::are_equal<float>, 0.0f, 0.0f);
     ASSERT_PRED2(rainbow::are_equal<float>, 0.0f, -0.0f);
@@ -90,7 +91,7 @@ TEST(AlgorithmTest, RoundsDownToNearestPowerOfTwo)
 
 TEST(AlgorithmTest, ApproximatesZeroFloat)
 {
-    auto definitely_not_zero = rainbow::test::not_fn(rainbow::is_almost_zero);
+    auto definitely_not_zero = std::not_fn(rainbow::is_almost_zero);
 
     ASSERT_PRED1(rainbow::is_almost_zero, 0.0f);
     ASSERT_PRED1(rainbow::is_almost_zero, -0.0f);
@@ -105,7 +106,7 @@ TEST(AlgorithmTest, ApproximatesZeroFloat)
 
 TEST(AlgorithmTest, IsPowerOfTwo)
 {
-    auto not_pow2 = rainbow::test::not_fn(rainbow::is_pow2);
+    auto not_pow2 = std::not_fn(rainbow::is_pow2);
 
     unsigned int p = 1;
     for (unsigned int i = 0; i < 100; ++i)
