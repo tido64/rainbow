@@ -20,6 +20,7 @@
 #endif
 #include <imgui/imgui.cpp>
 #include <imgui/imgui_draw.cpp>
+#include <imgui/imgui_widgets.cpp>
 #ifdef __clang__
 #   pragma GCC diagnostic pop
 #endif
