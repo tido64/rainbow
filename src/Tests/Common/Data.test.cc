@@ -35,9 +35,21 @@ namespace
     };
 
     using DataTestTypes = ::testing::Types<FromBytes, FromLiteral>;
+
+    struct DataTestTypeNames
+    {
+        template <typename T>
+        static auto GetName(int) -> std::string
+        {
+            if constexpr (std::is_same_v<T, FromBytes>)
+                return "RawBytes";
+            else if constexpr (std::is_same_v<T, FromLiteral>)
+                return "StringLiteral";
+        }
+    };
 }  // namespace
 
-TYPED_TEST_CASE(DataTest, DataTestTypes);
+TYPED_TEST_CASE(DataTest, DataTestTypes, DataTestTypeNames);
 
 TYPED_TEST(DataTest, EncapsulatesInMemoryData)
 {

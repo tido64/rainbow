@@ -22,10 +22,7 @@ namespace
 
     struct Static
     {
-        auto load() const
-        {
-            return rainbow::audio::load_sound(kAudioTestFile);
-        }
+        auto load() const { return rainbow::audio::load_sound(kAudioTestFile); }
     };
 
     struct Stream
@@ -54,10 +51,23 @@ namespace
         Sound* sound_;
         T sound_type_;
     };
-}
 
-using AudioSoundTypes = ::testing::Types<Static, Stream>;
-TYPED_TEST_CASE(AudioTest, AudioSoundTypes);
+    using AudioSoundTypes = ::testing::Types<Static, Stream>;
+
+    struct AudioSoundTypeNames
+    {
+        template <typename T>
+        static auto GetName(int) -> std::string
+        {
+            if constexpr (std::is_same_v<T, Static>)
+                return "Sound";
+            else if constexpr (std::is_same_v<T, Stream>)
+                return "Stream";
+        }
+    };
+}  // namespace
+
+TYPED_TEST_CASE(AudioTest, AudioSoundTypes, AudioSoundTypeNames);
 
 TYPED_TEST(AudioTest, ControlsChannelPlayback)
 {

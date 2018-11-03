@@ -12,29 +12,42 @@ namespace
     constexpr int kDisposed = -1;
 
     template <typename T>
-    class PoolTest : public ::testing::Test {};
-}
+    class PoolTest : public ::testing::Test
+    {
+    };
 
-class Integer
-{
-public:
-    Integer() : value_(0) { NOT_USED(padding_); }
-    explicit Integer(int value) : value_(value) {}
+    class Integer
+    {
+    public:
+        Integer() : value_(0) { NOT_USED(padding_); }
+        explicit Integer(int value) : value_(value) {}
 
-    auto is_disposed() const { return value_ == kDisposed; }
+        auto is_disposed() const { return value_ == kDisposed; }
 
-    void dispose() { value_ = kDisposed; }
-    void reset(int new_value) { value_ = new_value; }
+        void dispose() { value_ = kDisposed; }
+        void reset(int new_value) { value_ = new_value; }
 
-    operator int() const { return value_; }
+        operator int() const { return value_; }
 
-private:
-    int value_;
-    int padding_[7];
-};
+    private:
+        int value_;
+        int padding_[7];
+    };
 
-using Types = ::testing::Types<Integer>;
-TYPED_TEST_CASE(PoolTest, Types);
+    using Types = ::testing::Types<Integer>;
+
+    struct PoolTestTypeNames
+    {
+        template <typename T>
+        static auto GetName(int) -> std::string
+        {
+            if constexpr (std::is_same_v<T, Integer>)
+                return "Integer";
+        }
+    };
+}  // namespace
+
+TYPED_TEST_CASE(PoolTest, Types, PoolTestTypeNames);
 
 TYPED_TEST(PoolTest, ClearsElements)
 {
@@ -104,12 +117,11 @@ TYPED_TEST(PoolTest, ReusesElements)
 TYPED_TEST(PoolTest, IteratesOnlyActiveElements)
 {
     rainbow::Pool<TypeParam> pool;
-    TypeParam* arr[]{
-        pool.construct(0),
-        pool.construct(1),
-        pool.construct(2),
-        pool.construct(3),
-        pool.construct(4)};
+    TypeParam* arr[]{pool.construct(0),
+                     pool.construct(1),
+                     pool.construct(2),
+                     pool.construct(3),
+                     pool.construct(4)};
 
     pool.release(arr[2]);
     pool.release(arr[4]);
