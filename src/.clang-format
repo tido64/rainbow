@@ -15,6 +15,7 @@ IncludeCategories:
   - Regex: '.\*'
     Priority: 10
 IndentCaseLabels: true
+IndentPPDirectives: AfterHash
 IndentWidth: 4
 NamespaceIndentation: All
 PenaltyBreakBeforeFirstCallParameter: 0
