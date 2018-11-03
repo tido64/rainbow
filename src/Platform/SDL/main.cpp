@@ -30,46 +30,8 @@
 #endif
 
 using rainbow::Bundle;
-using rainbow::out;
 using rainbow::RainbowController;
 using rainbow::SDLContext;
-
-namespace
-{
-    auto run_tests([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
-        -> int
-    {
-#ifdef RAINBOW_TEST
-        return rainbow::run_tests(argc, argv);
-#else
-        return 0;
-#endif  // RAINBOW_TEST
-    }
-
-    bool should_run_tests([[maybe_unused]] out<int> argc,
-                          [[maybe_unused]] out<char**> argv)
-    {
-#ifdef RAINBOW_TEST
-        if (argc < 2)
-            return false;
-
-        // Check for --test flag.
-        if (strcmp(argv[1], "--test") == 0)
-        {
-            --argc;
-            ++argv;
-            return true;
-        }
-
-        // Check for Google Test flags.
-        constexpr char kGTestFlag[] = "--gtest";
-        constexpr size_t kGTestFlagLength = rainbow::array_size(kGTestFlag) - 1;
-        return strncmp(argv[1], kGTestFlag, kGTestFlagLength) == 0;
-#else
-        return false;
-#endif  // RAINBOW_TEST
-    }
-}
 
 #ifdef RAINBOW_JS
 
@@ -100,8 +62,10 @@ auto main(int argc, char* argv[]) -> int
     const Bundle bundle{{argv, static_cast<size_t>(argc)}};
     rainbow::filesystem::initialize(bundle);
 
-    if (should_run_tests(std::ref(argc), std::ref(argv)))
-        return run_tests(argc, argv);
+#ifdef RAINBOW_TEST
+    if (rainbow::should_run_tests(std::ref(argc), std::ref(argv)))
+        return rainbow::run_tests(argc, argv);
+#endif
 
 #ifdef RAINBOW_OS_WINDOWS
     SetConsoleOutputCP(CP_UTF8);

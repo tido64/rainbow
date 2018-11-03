@@ -332,7 +332,12 @@ if(MSVC OR XCODE)
 endif()
 
 target_compile_definitions(rainbow PRIVATE $<$<OR:$<CONFIG:Debug>,$<BOOL:${USE_HEIMDALL}>>:USE_HEIMDALL>)
-target_compile_options(rainbow PRIVATE ${RAINBOW_CXX_WARNINGS} $<$<BOOL:${UNIT_TESTS}>:--coverage>)
+target_compile_options(
+    rainbow
+    PRIVATE
+        ${RAINBOW_CXX_WARNINGS}
+        $<$<AND:$<NOT:$<CXX_COMPILER_ID:MSVC>>,$<BOOL:${UNIT_TESTS}>>:--coverage>
+)
 target_include_directories(
     rainbow
     PUBLIC
