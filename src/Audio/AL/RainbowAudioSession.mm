@@ -12,12 +12,6 @@
 
 using rainbow::audio::ALMixer;
 
-@interface RainbowAudioSession ()
-- (void)activate;
-- (void)didReceiveInterruptionNotification:(NSDictionary*)notification;
-- (void)didReceiveRouteChangeNotification:(NSDictionary*)notification;
-@end
-
 @implementation RainbowAudioSession
 {
     ALMixer* _mixer;

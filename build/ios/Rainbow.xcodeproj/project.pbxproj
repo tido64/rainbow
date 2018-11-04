@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 48;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -1410,11 +1410,15 @@
 			);
 			inputPaths = (
 			);
+			outputFileListPaths = (
+				"$(SRCROOT)/duktape.xcfilelist",
+				"$(SRCROOT)/harfbuzz.xcfilelist",
+			);
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "../../tools/xcode-prebuild.sh";
+			shellScript = "../../tools/xcode-prebuild.sh\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 

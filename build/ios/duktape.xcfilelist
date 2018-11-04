@@ -1,0 +1,6 @@
+lib/duktape/src/duk_config.h
+lib/duktape/src/duktape.c
+lib/duktape/src/duktape.h
+lib/duktape/extras/module-node/duk_module_node.c
+lib/duktape/extras/module-node/duk_module_node.h
+lib/duktape/extras/module-node/test.c
