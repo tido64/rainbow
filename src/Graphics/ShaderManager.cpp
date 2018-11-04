@@ -12,11 +12,6 @@
 #include "Graphics/Renderer.h"
 #include "Graphics/Shaders.h"
 
-// For platforms not using GLEW.
-#ifndef GLAPIENTRY
-#   define GLAPIENTRY
-#endif
-
 using rainbow::Data;
 using rainbow::File;
 using rainbow::FileType;

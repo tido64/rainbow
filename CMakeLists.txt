@@ -224,6 +224,7 @@ if(UNIT_TESTS)
       src/Tests/Common/Chrono.test.cc
       src/Tests/Common/Color.test.cc
       src/Tests/Common/Data.test.cc
+      src/Tests/Common/Error.test.cc
       src/Tests/Common/Global.test.cc
       src/Tests/Common/Link.test.cc
       src/Tests/Common/Random.test.cc

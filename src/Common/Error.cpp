@@ -24,7 +24,7 @@ namespace
                 case ErrorCode::AudioInitializationFailed:
                     return "Failed to initialise audio engine";
                 case ErrorCode::GLInitializationFailed:
-                    return "Failed to initialise GLEW";
+                    return "Failed to initialise OpenGL";
                 case ErrorCode::ShaderManagerInitializationFailed:
                     return "Failed to initialise shaders";
                 case ErrorCode::RenderInitializationFailed:

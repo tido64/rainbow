@@ -18,7 +18,8 @@ namespace rainbow
         RenderInitializationFailed,
         ScriptCompilationFailed,
         ScriptNotFound,
-        ErrorExecutingScript
+        ErrorExecutingScript,
+        Unknown  // Unknown is always the last element.
     };
 }
 
