@@ -1,15 +1,10 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "module": "commonjs",
-    "sourceMap": true,
-    "alwaysStrict": true,
-    "noImplicitAny": true,
     "noImplicitReturns": true,
-    "noImplicitThis": true,
-    "noUnusedLocals": false,
-    "strictFunctionTypes": true,
-    "strictNullChecks": true
+    "noUnusedLocals": true,
+    "sourceMap": true,
+    "strict": true,
   },
   "files": [
     "index.ts"

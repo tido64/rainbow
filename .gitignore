@@ -12,6 +12,7 @@
 .externalNativeBuild/
 .gradle/
 .idea/
+.pnp/
 .vs/
 CMakeBuild/
 Rainbow.sublime-workspace
