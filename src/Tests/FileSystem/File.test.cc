@@ -53,7 +53,8 @@ namespace
         }
 
         constexpr TestFileImpl() {}
-        TestFileImpl(File&&) noexcept {}
+
+        explicit TestFileImpl(File&&) noexcept {}
 
         auto handle() const -> FILE* { return nullptr; }
         void set_handle(FILE*) {}

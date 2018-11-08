@@ -93,8 +93,9 @@ namespace xorshift
             {
                 std::random_device rand_dev;
                 std::uniform_int_distribution<uint64_t> dist;
-                for (auto&& s : s_)
-                    s = dist(rand_dev);
+                std::generate(std::begin(s_), std::end(s_), [&rand_dev, &dist] {
+                    return dist(rand_dev);
+                });
             }
         }
 
@@ -128,8 +129,6 @@ namespace rainbow
     {
         std::uniform_real_distribution<double> dis;
         xorshift::xorshift1024star gen;
-
-        Random() noexcept {}
 
         void seed(uint64_t seed = 0) { gen.seed(seed); }
 

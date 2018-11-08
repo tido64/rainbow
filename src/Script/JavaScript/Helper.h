@@ -46,7 +46,8 @@ namespace rainbow::duk
     class ScopedStack
     {
     public:
-        ScopedStack(duk_context* ctx) : context_(ctx), index_(duk_get_top(ctx))
+        explicit ScopedStack(duk_context* ctx)
+            : context_(ctx), index_(duk_get_top(ctx))
         {
         }
 

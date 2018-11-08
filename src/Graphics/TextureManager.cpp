@@ -77,7 +77,7 @@ auto Texture::operator=(Texture&& texture) noexcept -> Texture&
     return *this;
 }
 
-TextureManager::TextureManager(const Passkey<rainbow::graphics::State>&)
+TextureManager::TextureManager(const Passkey<rainbow::graphics::Context>&)
     : active_{}, mag_filter_(TextureFilter::Linear),
       min_filter_(TextureFilter::Linear)
 #ifdef USE_HEIMDALL

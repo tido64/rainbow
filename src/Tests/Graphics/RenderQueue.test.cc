@@ -8,6 +8,7 @@
 #include "Graphics/RenderQueue.h"
 
 using rainbow::graphics::RenderQueue;
+using rainbow::graphics::RenderUnit;
 
 namespace
 {
@@ -97,8 +98,10 @@ TEST(RenderQueueTest, UpdatesOnlyEnabledUnits)
 {
     TestDrawable drawables[10];
     RenderQueue queue;
-    for (auto&& drawable : drawables)
-        queue.emplace_back(drawable);
+    std::transform(std::begin(drawables),
+                   std::end(drawables),
+                   std::back_inserter(queue),
+                   [](auto&& drawable) -> RenderUnit { return drawable; });
     queue[1].disable();
     queue[7].disable();
     rainbow::graphics::update(queue, kDeltaTime);

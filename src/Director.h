@@ -34,7 +34,7 @@ namespace rainbow
         bool active() const { return active_; }
         auto error() const { return error_; }
         auto font_cache() -> FontCache& { return typesetter_.font_cache(); }
-        auto graphics_context() -> graphics::State& { return renderer_; }
+        auto graphics_context() -> graphics::Context& { return renderer_; }
         auto input() -> Input& { return input_; }
         auto mixer() -> audio::Mixer& { return mixer_; }
         auto render_queue() -> graphics::RenderQueue& { return render_queue_; }
@@ -99,7 +99,7 @@ namespace rainbow
         std::unique_ptr<GameBase> script_;
         graphics::RenderQueue render_queue_;
         Input input_;
-        graphics::State renderer_;
+        graphics::Context renderer_;
         audio::Mixer mixer_;
         Typesetter typesetter_;
 

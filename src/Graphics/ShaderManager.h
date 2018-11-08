@@ -11,6 +11,7 @@
 #include "Common/Passkey.h"
 #include "Graphics/OpenGL.h"
 #include "Graphics/ShaderDetails.h"
+#include "Math/Geometry.h"
 #include "Math/Vec2.h"
 
 namespace rainbow
@@ -20,7 +21,7 @@ namespace rainbow
 
 namespace rainbow::graphics
 {
-    struct State;
+    struct Context;
 
     class ShaderManager : public Global<ShaderManager>
     {
@@ -45,7 +46,11 @@ namespace rainbow::graphics
             unsigned int program_;
         };
 
-        ShaderManager(const Passkey<State>&) {}
+        ShaderManager(graphics::Context& ctx, const Passkey<graphics::Context>&)
+            : context_(&ctx)
+        {
+        }
+
         ~ShaderManager();
 
         bool init();
@@ -89,6 +94,7 @@ namespace rainbow::graphics
 
     private:
         unsigned int current_ = kInvalidProgram;  ///< Currently used program.
+        graphics::Context* context_ = nullptr;
         std::vector<Shader::Details> programs_;   ///< Linked shader programs.
         std::vector<unsigned int> shaders_;       ///< Compiled shaders.
     };

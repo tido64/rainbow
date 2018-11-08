@@ -19,6 +19,7 @@ using rainbow::Chrono;
 using rainbow::Pointer;
 using rainbow::ShakeGestureDetector;
 using rainbow::Vec2i;
+using rainbow::graphics::Context;
 
 ANativeActivity* g_native_activity;
 
@@ -50,7 +51,7 @@ void android_init_display(AInstance*);
 void android_handle_event(android_app*, int32_t cmd);
 auto android_handle_input(android_app*, AInputEvent*) -> int32_t;
 auto android_handle_motion(android_app*, AInputEvent*) -> int32_t;
-auto get_pointer_event(AInputEvent*, int32_t index) -> Pointer;
+auto get_pointer_event(const Context&, AInputEvent*, int32_t index) -> Pointer;
 
 namespace
 {
@@ -365,7 +366,7 @@ auto android_handle_input(android_app* app, AInputEvent* event) -> int32_t
 
 auto android_handle_motion(android_app* app, AInputEvent* event) -> int32_t
 {
-    auto& input = static_cast<AInstance*>(app->userData)->director->input();
+    auto& director = static_cast<AInstance*>(app->userData)->director;
     switch (AMotionEvent_getAction(event) & AMOTION_EVENT_ACTION_MASK)
     {
         case AMOTION_EVENT_ACTION_DOWN:
@@ -374,8 +375,9 @@ auto android_handle_motion(android_app* app, AInputEvent* event) -> int32_t
             const int32_t index = (AMotionEvent_getAction(event) &
                                    AMOTION_EVENT_ACTION_POINTER_INDEX_MASK) >>
                                   AMOTION_EVENT_ACTION_POINTER_INDEX_SHIFT;
-            Pointer p = get_pointer_event(event, index);
-            input.on_pointer_began(ArrayView<Pointer>{p});
+            Pointer p =
+                get_pointer_event(director->graphics_context(), event, index);
+            director->input().on_pointer_began(ArrayView<Pointer>{p});
             break;
         }
 
@@ -385,8 +387,9 @@ auto android_handle_motion(android_app* app, AInputEvent* event) -> int32_t
             const int32_t index = (AMotionEvent_getAction(event) &
                                    AMOTION_EVENT_ACTION_POINTER_INDEX_MASK) >>
                                   AMOTION_EVENT_ACTION_POINTER_INDEX_SHIFT;
-            Pointer p = get_pointer_event(event, index);
-            input.on_pointer_ended(ArrayView<Pointer>{p});
+            Pointer p =
+                get_pointer_event(director->graphics_context(), event, index);
+            director->input().on_pointer_ended(ArrayView<Pointer>{p});
             break;
         }
 
@@ -394,15 +397,20 @@ auto android_handle_motion(android_app* app, AInputEvent* event) -> int32_t
         {
             const size_t count = AMotionEvent_getPointerCount(event);
             auto pointers = std::make_unique<Pointer[]>(count);
-            for (size_t i = 0; i < count; ++i)
-                pointers[i] = get_pointer_event(event, i);
-            input.on_pointer_moved(ArrayView<Pointer>{pointers.get(), count});
+            std::generate_n(
+                pointers.get(),
+                count,
+                [&ctx = director->graphics_context(), event, i = 0]() mutable {
+                    return get_pointer_event(ctx, event, i++);
+                });
+            director->input().on_pointer_moved(
+                ArrayView<Pointer>{pointers.get(), count});
             break;
         }
 
         case AMOTION_EVENT_ACTION_CANCEL:
         case AMOTION_EVENT_ACTION_OUTSIDE:
-            input.on_pointer_canceled();
+            director->input().on_pointer_canceled();
             break;
 
         default:
@@ -411,10 +419,13 @@ auto android_handle_motion(android_app* app, AInputEvent* event) -> int32_t
     return 1;
 }
 
-auto get_pointer_event(AInputEvent* event, int32_t index) -> Pointer
+auto get_pointer_event(const Context& ctx, AInputEvent* event, int32_t index)
+    -> Pointer
 {
-    const Vec2i& point = rainbow::graphics::convert_to_flipped_view(Vec2i(
-        AMotionEvent_getX(event, index), AMotionEvent_getY(event, index)));
+    const Vec2i& point = rainbow::graphics::convert_to_flipped_view(
+        ctx,
+        Vec2i(
+            AMotionEvent_getX(event, index), AMotionEvent_getY(event, index)));
     return {static_cast<uint32_t>(AMotionEvent_getPointerId(event, index)),
             point.x,
             point.y,

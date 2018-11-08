@@ -32,14 +32,9 @@ namespace rainbow::graphics
             SpriteBatch*>;
 
         template <typename T>
-        RenderUnit(T& variant) : enabled_(true), variant_(&variant)
+        RenderUnit(T& variant, std::string tag = {})
+            : enabled_(true), variant_(&variant), tag_(std::move(tag))
         {
-        }
-
-        template <typename T>
-        RenderUnit(T& variant, std::string tag) : RenderUnit(variant)
-        {
-            tag_ = std::move(tag);
         }
 
         template <typename T>

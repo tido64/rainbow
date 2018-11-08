@@ -44,6 +44,8 @@ namespace heimdall
         std::deque<uint64_t> frame_times_;
         std::deque<float> vmem_usage_;
 
+        auto surface_height() const;
+
         void draw_menu_bar();
         void draw_performance(float scale);
         void draw_render_queue();

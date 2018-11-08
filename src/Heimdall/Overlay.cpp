@@ -203,6 +203,11 @@ void Overlay::initialize(Vec2i resolution)
     rainbow::imgui::init(kStyleFontSize, scale);
 }
 
+auto Overlay::surface_height() const
+{
+    return director_.graphics_context().surface_size.y;
+}
+
 void Overlay::draw_menu_bar()
 {
     if (!ImGui::BeginMenuBar())
@@ -331,7 +336,7 @@ void Overlay::draw_impl()
     if (draw_data == nullptr || !draw_data->Valid)
         return;
 
-    rainbow::imgui::render(draw_data);
+    rainbow::imgui::render(director_.graphics_context(), draw_data);
 }
 
 void Overlay::update_impl(uint64_t dt)
@@ -349,7 +354,7 @@ void Overlay::update_impl(uint64_t dt)
         {
             startup_message_duration += dt;
 
-            rainbow::imgui::new_frame(dt);
+            rainbow::imgui::new_frame(director_.graphics_context(), dt);
             draw_startup_message();
             ImGui::Render();
         }
@@ -358,7 +363,7 @@ void Overlay::update_impl(uint64_t dt)
 
     startup_message_duration = kStartUpMessageMaxDuration;
 
-    rainbow::imgui::new_frame(dt);
+    rainbow::imgui::new_frame(director_.graphics_context(), dt);
     if (ImGui::Begin("Rainbow (built " __DATE__ ")",
                      &enabled_,
                      rainbow::imgui::kDefaultWindowFlags))
@@ -398,24 +403,26 @@ bool Overlay::on_mouse_wheel_impl(const ArrayView<Pointer>& w)
 
 bool Overlay::on_pointer_began_impl(const ArrayView<Pointer>& p)
 {
-    return is_enabled() && rainbow::imgui::set_mouse_state(p, true);
+    return is_enabled() &&
+           rainbow::imgui::set_mouse_state(p, surface_height(), true);
 }
 
 bool Overlay::on_pointer_canceled_impl()
 {
-    for (auto&& state : ImGui::GetIO().MouseDown)
-        state = false;
+    auto& state = ImGui::GetIO().MouseDown;
+    std::fill(std::begin(state), std::end(state), false);
     return is_enabled();
 }
 
 bool Overlay::on_pointer_ended_impl(const ArrayView<Pointer>& p)
 {
-    return is_enabled() && rainbow::imgui::set_mouse_state(p, false);
+    return is_enabled() &&
+           rainbow::imgui::set_mouse_state(p, surface_height(), false);
 }
 
 bool Overlay::on_pointer_moved_impl(const ArrayView<Pointer>& p)
 {
-    return is_enabled() && rainbow::imgui::set_mouse_state(p);
+    return is_enabled() && rainbow::imgui::set_mouse_state(p, surface_height());
 }
 
 #endif  // USE_HEIMDALL

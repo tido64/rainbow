@@ -12,7 +12,7 @@ namespace
     class TestVisitor
     {
     public:
-        TestVisitor(T value) : value_(value) {}
+        explicit TestVisitor(T value) : value_(value) {}
 
         void operator()(T value) const { ASSERT_EQ(value, value_); }
 

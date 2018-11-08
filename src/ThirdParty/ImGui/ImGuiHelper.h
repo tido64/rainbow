@@ -24,6 +24,11 @@ namespace rainbow
     struct KeyStroke;
 }
 
+namespace rainbow::graphics
+{
+    struct Context;
+}
+
 namespace rainbow::imgui
 {
     constexpr ImGuiWindowFlags kDefaultWindowFlags =  //
@@ -31,11 +36,13 @@ namespace rainbow::imgui
         ImGuiWindowFlags_MenuBar;
 
     void init(float font_size, float scale);
-    void new_frame(uint64_t dt);
-    void render(ImDrawData*);
+    void new_frame(const graphics::Context&, uint64_t dt);
+    void render(graphics::Context&, ImDrawData*);
     bool set_key_state(const KeyStroke& key, bool down);
-    bool set_mouse_state(const ArrayView<Pointer>& pointers);
-    bool set_mouse_state(const ArrayView<Pointer>& pointers, bool down);
+    bool set_mouse_state(const ArrayView<Pointer>&, int surface_height);
+    bool set_mouse_state(const ArrayView<Pointer>&,
+                         int surface_height,
+                         bool down);
     bool set_mouse_wheel(const ArrayView<Pointer>& wheels);
     void shutdown();
 }  // namespace rainbow::imgui

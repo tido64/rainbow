@@ -34,6 +34,7 @@
 
 using rainbow::Vec2f;
 using rainbow::graphics::Buffer;
+using rainbow::graphics::Context;
 using rainbow::graphics::ElementBuffer;
 using rainbow::graphics::ScopedProjection;
 using rainbow::graphics::ScopedScissorTest;
@@ -151,34 +152,32 @@ void rainbow::imgui::init(float font_size, float scale)
         reinterpret_cast<void*>(static_cast<intptr_t>(renderable->texture()));
 }
 
-void rainbow::imgui::new_frame(uint64_t dt)
+void rainbow::imgui::new_frame(const Context& ctx, uint64_t dt)
 {
-    auto& window_size = graphics::window_size();
     auto& io = ImGui::GetIO();
     if (g_window_scale.x == 0.0f)
     {
-        g_initial_window_width = window_size.x;
-        auto& resolution = graphics::resolution();
+        g_initial_window_width = ctx.window_size.x;
         g_window_scale =
-            Vec2f{static_cast<float>(resolution.x) / window_size.x,
-                  static_cast<float>(resolution.y) / window_size.y};
-        io.DisplaySize = window_size;
+            Vec2f{static_cast<float>(ctx.surface_size.x) / ctx.window_size.x,
+                  static_cast<float>(ctx.surface_size.y) / ctx.window_size.y};
+        io.DisplaySize = ctx.window_size;
     }
 
     io.DeltaTime = dt * 0.001f;
     io.DisplayFramebufferScale =
-        g_window_scale * window_size.x / g_initial_window_width;
+        g_window_scale * ctx.window_size.x / g_initial_window_width;
 
     ImGui::NewFrame();
 }
 
-void rainbow::imgui::render(ImDrawData* draw_data)
+void rainbow::imgui::render(Context& ctx, ImDrawData* draw_data)
 {
     auto& io = ImGui::GetIO();
     draw_data->ScaleClipRects(io.DisplayFramebufferScale);
 
     ScopedProjection projection(
-        {0.0f, io.DisplaySize.y, io.DisplaySize.x, 0.0f});
+        ctx, {0.0f, io.DisplaySize.y, io.DisplaySize.x, 0.0f});
     ScopedScissorTest scissor_test;
 
     const int window_height =
@@ -202,6 +201,7 @@ void rainbow::imgui::render(ImDrawData* draw_data)
                 TextureManager::Get()->bind(static_cast<GLuint>(
                     reinterpret_cast<intptr_t>(cmd.TextureId)));
                 rainbow::graphics::scissor(
+                    ctx,
                     static_cast<int>(cmd.ClipRect.x),
                     static_cast<int>(window_height - cmd.ClipRect.w),
                     static_cast<int>(cmd.ClipRect.z - cmd.ClipRect.x),
@@ -275,23 +275,26 @@ bool rainbow::imgui::set_key_state([[maybe_unused]] const KeyStroke& key,
     return io.WantCaptureKeyboard;
 }
 
-bool rainbow::imgui::set_mouse_state(const ArrayView<Pointer>& p)
+bool rainbow::imgui::set_mouse_state(const ArrayView<Pointer>& p,
+                                     int surface_height)
 {
     auto& io = ImGui::GetIO();
     auto& pos = io.MousePos;
     pos.x = p[0].x / g_window_scale.x;
-    pos.y = (graphics::resolution().y - p[0].y) / g_window_scale.y;
+    pos.y = (surface_height - p[0].y) / g_window_scale.y;
     return io.WantCaptureMouse;
 }
 
-bool rainbow::imgui::set_mouse_state(const ArrayView<Pointer>& p, bool down)
+bool rainbow::imgui::set_mouse_state(const ArrayView<Pointer>& p,
+                                     int surface_height,
+                                     bool down)
 {
     // Map SDL_BUTTON -> ImGuiIO::MouseDown.
     static constexpr int kMouseButtons[]{0, 2, 1, 3, 4};
 
     // Always update mouse position as we don't know whether an actual mouse or
     // touch pad is attached.
-    set_mouse_state(p);
+    set_mouse_state(p, surface_height);
 
     auto& io = ImGui::GetIO();
     const auto hash =

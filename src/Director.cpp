@@ -42,7 +42,7 @@ namespace rainbow
     void Director::init(const Vec2i& screen)
     {
         random.seed();
-        graphics::set_resolution(screen);
+        graphics::set_surface_size(renderer_, screen);
         start();
     }
 
@@ -110,7 +110,7 @@ namespace rainbow
     {
         script_ = GameBase::create(*this);
         if (!terminated())
-            script_->init(renderer_.view);
+            script_->init(renderer_.surface_size);
 
         if (terminated())
         {
@@ -119,7 +119,7 @@ namespace rainbow
             script_ = std::make_unique<NoGame>(*this, error());
             active_ = true;
             terminated_ = false;
-            script_->init(renderer_.view);
+            script_->init(renderer_.surface_size);
         }
 
         graphics::update(render_queue_, 0);

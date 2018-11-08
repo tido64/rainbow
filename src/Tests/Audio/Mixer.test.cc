@@ -160,8 +160,9 @@ TEST(AudioTest, CanPlaySingleSoundOnMultipleChannels)
     auto sound = rainbow::audio::load_sound(kAudioTestFile);
 
     Channel* channels[kMaxAudioChannels];
-    for (auto&& channel : channels)
-        channel = rainbow::audio::play(sound);
+    std::generate(std::begin(channels), std::end(channels), [sound] {
+        return rainbow::audio::play(sound);
+    });
 
     for (int i = 0; i < kMaxAudioChannels; ++i)
     {

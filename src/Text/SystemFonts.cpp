@@ -6,9 +6,10 @@
 
 #include <sys/stat.h>
 
+#include "Common/NonCopyable.h"
 #include "Platform/Macros.h"
 #ifdef RAINBOW_OS_WINDOWS
-#   define fileno _fileno
+#    define fileno _fileno
 #endif
 
 using rainbow::czstring;
@@ -16,7 +17,7 @@ using rainbow::Data;
 
 namespace
 {
-    class MonospaceFont
+    class MonospaceFont : private rainbow::NonCopyable<MonospaceFont>
     {
     public:
         MonospaceFont()

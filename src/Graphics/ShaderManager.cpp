@@ -12,10 +12,10 @@
 #include "Graphics/Renderer.h"
 #include "Graphics/Shaders.h"
 
+using rainbow::czstring;
 using rainbow::Data;
 using rainbow::File;
 using rainbow::FileType;
-using rainbow::czstring;
 using rainbow::graphics::ShaderManager;
 
 namespace
@@ -202,7 +202,7 @@ void ShaderManager::update_projection()
     // Where <c>b</c> = bottom, <c>f</c> = far, <c>l</c> = left, <c>n</c> =
     // near, <c>r</c> = right, <c>t</c> = top, and near = -1.0 and far = 1.0.
     // The matrix is stored in column-major order.
-    const auto& rect = graphics::projection();
+    const auto& rect = context_->projection;
     const float projection[]{
         2.0f / (rect.right - rect.left), 0.0f, 0.0f, 0.0f,
         0.0f, 2.0f / (rect.top - rect.bottom), 0.0f, 0.0f,

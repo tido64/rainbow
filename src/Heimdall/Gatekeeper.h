@@ -21,6 +21,12 @@ namespace heimdall
 
         bool active() const { return director_.active(); }
         auto error() const { return director_.error(); }
+
+        auto graphics_context() -> rainbow::graphics::Context&
+        {
+            return director_.graphics_context();
+        }
+
         auto input() -> rainbow::Input& { return director_.input(); }
         auto terminated() const { return director_.terminated(); }
 

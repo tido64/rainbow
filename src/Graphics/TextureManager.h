@@ -12,7 +12,7 @@
 
 namespace rainbow::graphics
 {
-    struct State;
+    struct Context;
 
     enum class TextureFilter
     {
@@ -25,7 +25,7 @@ namespace rainbow::graphics
     class TextureManager : public Global<TextureManager>
     {
     public:
-        TextureManager(const Passkey<State>&);
+        TextureManager(const Passkey<Context>&);
         ~TextureManager();
 
         auto mag_filter() const { return mag_filter_; }

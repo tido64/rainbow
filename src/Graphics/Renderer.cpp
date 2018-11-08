@@ -4,23 +4,24 @@
 
 #include "Graphics/Renderer.h"
 
-#include <array>
+#include <string_view>
 
 #include "Common/Error.h"
-#include "Graphics/Label.h"
-#include "Graphics/SpriteBatch.h"
+#include "Graphics/VertexArray.h"
 
+using namespace std::literals::string_view_literals;
+
+using rainbow::czstring;
 using rainbow::Rect;
 using rainbow::Vec2i;
-using rainbow::czstring;
-using rainbow::graphics::State;
+using rainbow::graphics::Context;
 
 namespace graphics = rainbow::graphics;
 
 namespace
 {
     unsigned int g_draw_count = 0;
-    State* g_state = nullptr;
+    Context* g_context = nullptr;
 
     auto gl_get_string(GLenum name)
     {
@@ -28,12 +29,12 @@ namespace
     }
 }  // namespace
 
+#ifndef NDEBUG
 namespace rainbow::graphics::detail
 {
-#ifndef NDEBUG
     unsigned int g_draw_count_accumulator = 0;
-#endif  // NDEBUG
 }  // namespace rainbow::graphics::detail
+#endif  // NDEBUG
 
 auto graphics::draw_count() -> unsigned int
 {
@@ -58,9 +59,10 @@ auto graphics::max_texture_size() -> int
 auto graphics::memory_info() -> graphics::MemoryInfo
 {
     static const GLenum pname = [] {
-        if (has_extension("GL_NVX_gpu_memory_info"))
+        std::string_view ext(gl_get_string(GL_EXTENSIONS));
+        if (ext.find("GL_NVX_gpu_memory_info"sv) != std::string_view::npos)
             return GL_GPU_MEMORY_INFO_CURRENT_AVAILABLE_VIDMEM_NVX;
-        if (has_extension("GL_ATI_meminfo"))
+        if (ext.find("GL_ATI_meminfo"sv) != std::string_view::npos)
             return GL_TEXTURE_FREE_MEMORY_ATI;
         return 0;
     }();
@@ -68,7 +70,8 @@ auto graphics::memory_info() -> graphics::MemoryInfo
     MemoryInfo meminfo{};
     switch (pname)
     {
-        case GL_TEXTURE_FREE_MEMORY_ATI: {
+        case GL_TEXTURE_FREE_MEMORY_ATI:
+        {
             GLint info[4];
             glGetIntegerv(pname, info);
             meminfo.current_available = info[0];
@@ -86,19 +89,9 @@ auto graphics::memory_info() -> graphics::MemoryInfo
     return meminfo;
 }
 
-auto graphics::projection() -> const Rect&
-{
-    return g_state->rect;
-}
-
 auto graphics::renderer() -> czstring
 {
     return gl_get_string(GL_RENDERER);
-}
-
-auto graphics::resolution() -> const Vec2i&
-{
-    return g_state->view;
 }
 
 auto graphics::vendor() -> czstring
@@ -106,69 +99,53 @@ auto graphics::vendor() -> czstring
     return gl_get_string(GL_VENDOR);
 }
 
-auto graphics::window_size() -> const Vec2i&
+void graphics::set_projection(Context& ctx, const Rect& projection)
 {
-    return g_state->window;
+    ctx.projection = projection;
+    ctx.shader_manager.update_projection();
 }
 
-void graphics::set_projection(const Rect& projection)
+void graphics::set_surface_size(Context& ctx, const Vec2i& resolution)
 {
-    R_ASSERT(g_state != nullptr,
-             "Cannot set projection with an uninitialised renderer");
-
-    g_state->rect = projection;
-    g_state->shader_manager.update_projection();
-}
-
-void graphics::set_resolution(const Vec2i& resolution)
-{
-    R_ASSERT(g_state != nullptr,
-             "Cannot set resolution with an uninitialised renderer");
-
-    g_state->view = resolution;
-    g_state->rect.right = g_state->rect.left + resolution.x;
-    g_state->rect.top = g_state->rect.bottom + resolution.y;
-    g_state->shader_manager.update_viewport();
-    set_window_size(g_state->window.is_zero() ? g_state->view
-                                              : g_state->window);
+    ctx.surface_size = resolution;
+    ctx.projection.right = ctx.projection.left + resolution.x;
+    ctx.projection.top = ctx.projection.bottom + resolution.y;
+    ctx.shader_manager.update_viewport();
+    set_window_size(
+        ctx, ctx.window_size.is_zero() ? ctx.surface_size : ctx.window_size);
 
     R_ASSERT(glGetError() == GL_NO_ERROR, "Failed to set resolution");
 }
 
-void graphics::set_window_size(const Vec2i& size, float factor)
+void graphics::set_window_size(Context& ctx, const Vec2i& size, float factor)
 {
-    R_ASSERT(g_state != nullptr,
-             "Cannot set window size with an uninitialised renderer");
-
-    g_state->scale = static_cast<float>(g_state->view.x) / size.x;
-    if (factor * size == g_state->view)
+    ctx.scale = static_cast<float>(ctx.surface_size.x) / size.x;
+    if (factor * size == ctx.surface_size)
     {
-        g_state->zoom = 1.0f;
-        g_state->origin.x = 0;
-        g_state->origin.y = 0;
+        ctx.zoom = 1.0f;
+        ctx.origin.x = 0;
+        ctx.origin.y = 0;
     }
     else
     {
         const Vec2i actual_size = factor * size;
-        g_state->zoom =
-            std::min(static_cast<float>(actual_size.x) / g_state->view.x,
-                     static_cast<float>(actual_size.y) / g_state->view.y);
-        g_state->origin.x =
-            (actual_size.x - g_state->view.x * g_state->zoom) * 0.5f;
-        g_state->origin.y =
-            (actual_size.y - g_state->view.y * g_state->zoom) * 0.5f;
+        ctx.zoom =
+            std::min(static_cast<float>(actual_size.x) / ctx.surface_size.x,
+                     static_cast<float>(actual_size.y) / ctx.surface_size.y);
+        ctx.origin.x = (actual_size.x - ctx.surface_size.x * ctx.zoom) * 0.5f;
+        ctx.origin.y = (actual_size.y - ctx.surface_size.y * ctx.zoom) * 0.5f;
     }
-    g_state->window = size;
+    ctx.window_size = size;
 
-    glViewport(g_state->origin.x,
-               g_state->origin.y,
-               size.x * factor - g_state->origin.x * 2,
-               size.y * factor - g_state->origin.y * 2);
+    glViewport(ctx.origin.x,
+               ctx.origin.y,
+               size.x * factor - ctx.origin.x * 2,
+               size.y * factor - ctx.origin.y * 2);
 }
 
 void graphics::bind_element_array()
 {
-    g_state->element_buffer.bind();
+    g_context->element_buffer.bind();
 }
 
 void graphics::clear()
@@ -181,31 +158,33 @@ void graphics::clear()
 #endif
 }
 
-auto graphics::convert_to_flipped_view(const Vec2i& p) -> Vec2i
+auto graphics::convert_to_flipped_view(const Context& ctx, const Vec2i& p)
+    -> Vec2i
 {
-    return convert_to_view(Vec2i(p.x, g_state->window.y - p.y));
+    return convert_to_view(ctx, {p.x, ctx.window_size.y - p.y});
 }
 
 auto graphics::convert_to_screen(const Vec2i& p) -> Vec2i
 {
+    return Vec2i(g_context->origin.x +
+                     (p.x - g_context->projection.left) * g_context->zoom,
+                 g_context->origin.y +
+                     (p.y - g_context->projection.bottom) * g_context->zoom);
+}
+
+auto graphics::convert_to_view(const Context& ctx, const Vec2i& p) -> Vec2i
+{
     return Vec2i(
-        g_state->origin.x + (p.x - g_state->rect.left) * g_state->zoom,
-        g_state->origin.y + (p.y - g_state->rect.bottom) * g_state->zoom);
+        ctx.projection.left + p.x * ctx.scale - ctx.origin.x / ctx.zoom,
+        ctx.projection.bottom + p.y * ctx.scale - ctx.origin.y / ctx.zoom);
 }
 
-auto graphics::convert_to_view(const Vec2i& p) -> Vec2i
+#ifndef NDEBUG
+void graphics::increment_draw_count()
 {
-    return Vec2i(g_state->rect.left + p.x * g_state->scale -
-                     g_state->origin.x / g_state->zoom,
-                 g_state->rect.bottom + p.y * g_state->scale -
-                     g_state->origin.y / g_state->zoom);
+    ++detail::g_draw_count_accumulator;
 }
-
-bool graphics::has_extension(czstring extension)
-{
-    static auto gl_extensions = gl_get_string(GL_EXTENSIONS);
-    return strstr(gl_extensions, extension) != nullptr;
-}
+#endif  // NDEBUG
 
 void graphics::reset()
 {
@@ -221,27 +200,27 @@ void graphics::reset()
     glActiveTexture(GL_TEXTURE0);
 }
 
-void graphics::scissor(int x, int y, int width, int height)
+void graphics::scissor(const Context& ctx, int x, int y, int width, int height)
 {
-    glScissor(g_state->origin.x + x, g_state->origin.y + y, width, height);
+    glScissor(ctx.origin.x + x, ctx.origin.y + y, width, height);
 }
 
-void graphics::unbind_all()
+void graphics::unbind_all(Context& ctx)
 {
     VertexArray::unbind();
-    g_state->shader_manager.use(ShaderManager::kInvalidProgram);
-    g_state->texture_manager.bind();
+    ctx.shader_manager.use(ShaderManager::kInvalidProgram);
+    ctx.texture_manager.bind();
 }
 
-State::~State()
+Context::~Context()
 {
-    if (this == g_state)
-        g_state = nullptr;
+    if (this == g_context)
+        g_context = nullptr;
 }
 
-auto State::initialize() -> std::error_code
+auto Context::initialize() -> std::error_code
 {
-    R_ASSERT(g_state == nullptr, "Renderer is already initialised");
+    R_ASSERT(g_context == nullptr, "Renderer is already initialised");
 
 #ifdef __glad_h_
     if (!gladLoadGL())
@@ -278,6 +257,6 @@ auto State::initialize() -> std::error_code
     if (glGetError() != GL_NO_ERROR)
         return ErrorCode::RenderInitializationFailed;
 
-    g_state = this;
+    g_context = this;
     return ErrorCode::Success;
 }

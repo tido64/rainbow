@@ -109,21 +109,20 @@ auto OggVorbisAudioFile::size() const -> size_t
 
 auto OggVorbisAudioFile::read(void* dst, size_t size) -> size_t
 {
-    int64_t read = 0;
-    int bitstream = 0;
     const auto buffer = static_cast<char*>(dst);
     size_t offset = 0;
+    int bitstream = 0;
 
     // Read until buffer is full.
     do
     {
-        read = ov_read(&vf_,
-                       buffer + offset,
-                       static_cast<int>(size - offset),
-                       /* bigendianp */ 0,
-                       /* word */ 2,
-                       /* sgned */ 1,
-                       &bitstream);
+        const int64_t read = ov_read(&vf_,
+                                     buffer + offset,
+                                     static_cast<int>(size - offset),
+                                     /* bigendianp */ 0,
+                                     /* word */ 2,
+                                     /* sgned */ 1,
+                                     &bitstream);
         if (read <= 0)
             break;
 
