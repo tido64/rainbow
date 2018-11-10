@@ -13,6 +13,7 @@
 #include "Graphics/ShaderDetails.h"
 #include "Math/Geometry.h"
 #include "Math/Vec2.h"
+#include "Memory/Array.h"
 
 namespace rainbow
 {
@@ -39,10 +40,16 @@ namespace rainbow::graphics
         class Context
         {
         public:
-            Context() : program_(ShaderManager::Get()->current_) {}
-            ~Context() { ShaderManager::Get()->use(program_); }
+            Context(ShaderManager& sm, unsigned int program)
+                : shader_manager_(sm), program_(sm.current_)
+            {
+                sm.use(program);
+            }
+
+            ~Context() { shader_manager_.use(program_); }
 
         private:
+            ShaderManager& shader_manager_;
             unsigned int program_;
         };
 
@@ -53,6 +60,11 @@ namespace rainbow::graphics
 
         ~ShaderManager();
 
+        auto graphics_context() const -> graphics::Context&
+        {
+            return *context_;
+        }
+
         bool init();
 
         /// <summary>Compiles program.</summary>
@@ -61,7 +73,7 @@ namespace rainbow::graphics
         /// <returns>
         ///   Unique program identifier; <c>kInvalidProgram</c> if unsuccessful.
         /// </returns>
-        auto compile(Shader::Params* shaders,
+        auto compile(ArraySpan<Shader::Params> shaders,
                      const Shader::AttributeParams* attributes) -> unsigned int;
 
         /// <summary>Returns current program details.</summary>
@@ -86,6 +98,12 @@ namespace rainbow::graphics
 
         /// <summary>Activates program.</summary>
         void use(unsigned int program);
+
+        /// <summary>Activates program in current scope only.</summary>
+        auto use_scoped(unsigned int program) -> Context
+        {
+            return Context(*this, program);
+        }
 
         ShaderManager(const ISolemnlySwearThatIAmOnlyTesting&)
         {

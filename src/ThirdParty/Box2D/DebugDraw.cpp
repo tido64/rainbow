@@ -47,9 +47,7 @@ namespace b2
         if (g_debug_draw_program == 0)
         {
             Shader::Params shaders[]{
-                rainbow::gl::Simple2D_vert(),
-                rainbow::gl::Simple_frag(),
-                {Shader::kTypeInvalid, 0, nullptr, nullptr}};
+                rainbow::gl::Simple2D_vert(), rainbow::gl::Simple_frag()};
             const Shader::AttributeParams attributes[]{
                 {Shader::kAttributeVertex, "vertex"},
                 {Shader::kAttributeColor, "color"},
@@ -102,8 +100,7 @@ namespace b2
             return;
         }
 
-        ShaderManager::Context context;
-        ShaderManager::Get()->use(g_debug_draw_program);
+        auto context = ShaderManager::Get()->use_scoped(g_debug_draw_program);
         g_debug_draw_vao.bind();
         glBindBuffer(GL_ARRAY_BUFFER, g_debug_draw_buffer);  // For uploading.
         for (auto world : worlds_)

@@ -104,15 +104,12 @@ namespace
         return id;
     }
 
-    auto link_program(const Shader::Params* shaders,
+    auto link_program(ArraySpan<Shader::Params> shaders,
                       const Shader::AttributeParams* attributes) -> unsigned int
     {
         const GLuint program = glCreateProgram();
-        for (auto shader = shaders; shader->type != Shader::kTypeInvalid;
-             ++shader)
-        {
-            glAttachShader(program, shader->id);
-        }
+        for (auto&& shader : shaders)
+            glAttachShader(program, shader.id);
         for (auto attrib = attributes; attrib->name != nullptr; ++attrib)
             glBindAttribLocation(program, attrib->index, attrib->name);
         glLinkProgram(program);
@@ -141,10 +138,7 @@ ShaderManager::~ShaderManager()
 
 bool ShaderManager::init()
 {
-    Shader::Params shaders[]{
-        gl::Fixed2D_vert(),
-        gl::Fixed2D_frag(),
-        {Shader::kTypeInvalid, 0, nullptr, nullptr}};
+    Shader::Params shaders[]{gl::Fixed2D_vert(), gl::Fixed2D_frag()};
     [[maybe_unused]] const auto pid = compile(shaders, nullptr);
 
     R_ASSERT(pid != kInvalidProgram, "Failed to compile default shader");
@@ -153,24 +147,27 @@ bool ShaderManager::init()
     return true;
 }
 
-auto ShaderManager::compile(Shader::Params* shaders,
+auto ShaderManager::compile(ArraySpan<Shader::Params> shaders,
                             const Shader::AttributeParams* attributes)
     -> unsigned int
 {
-    for (auto shader = shaders; shader->type != Shader::kTypeInvalid; ++shader)
+    for (auto&& shader : shaders)
     {
-        if (shader->source == nullptr)
+        if (shader.source == nullptr)
         {
-            shader->id = shaders_[shader->id];
+            shader.id = shaders_[shader.id];
             continue;
         }
-        if (shader->id > 0)
+
+        if (shader.id > 0)
             continue;
-        const unsigned int id = compile_shader(*shader);
+
+        const unsigned int id = compile_shader(shader);
         if (id == kInvalidProgram)
             return id;
+
         shaders_.push_back(id);
-        shader->id = id;
+        shader.id = id;
     }
     if (attributes == nullptr)
     {

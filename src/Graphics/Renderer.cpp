@@ -164,12 +164,10 @@ auto graphics::convert_to_flipped_view(const Context& ctx, const Vec2i& p)
     return convert_to_view(ctx, {p.x, ctx.window_size.y - p.y});
 }
 
-auto graphics::convert_to_screen(const Vec2i& p) -> Vec2i
+auto graphics::convert_to_screen(const Context& ctx, const Vec2i& p) -> Vec2i
 {
-    return Vec2i(g_context->origin.x +
-                     (p.x - g_context->projection.left) * g_context->zoom,
-                 g_context->origin.y +
-                     (p.y - g_context->projection.bottom) * g_context->zoom);
+    return Vec2i(ctx.origin.x + (p.x - ctx.projection.left) * ctx.zoom,
+                 ctx.origin.y + (p.y - ctx.projection.bottom) * ctx.zoom);
 }
 
 auto graphics::convert_to_view(const Context& ctx, const Vec2i& p) -> Vec2i

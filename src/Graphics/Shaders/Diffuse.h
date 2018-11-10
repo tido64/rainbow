@@ -7,12 +7,17 @@
 
 #include "Math/Vec3.h"
 
+namespace rainbow::graphics
+{
+    class ShaderManager;
+}
+
 namespace rainbow::shaders
 {
     class Diffuse
     {
     public:
-        Diffuse(bool normal = false);
+        Diffuse(graphics::ShaderManager&, bool normal = false);
 
         auto id() const { return program_; }
 
@@ -21,6 +26,7 @@ namespace rainbow::shaders
         void set_position(float x, float y, float z = 100.0f) const;
 
     private:
+        graphics::ShaderManager& shader_manager_;
         int cutoff_;    ///< Maximum distance of the light's influence.
         int radius_;    ///< Light source's radius.
         int position_;  ///< Position of the light source.

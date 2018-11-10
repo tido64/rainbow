@@ -21,7 +21,6 @@ namespace Shader
 
     enum Type : unsigned int
     {
-        kTypeInvalid = 0,
         kTypeFragment = GL_FRAGMENT_SHADER,
         kTypeVertex = GL_VERTEX_SHADER
 #ifdef GL_GEOMETRY_SHADER

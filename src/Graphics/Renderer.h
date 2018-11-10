@@ -56,7 +56,7 @@ namespace rainbow::graphics
     void clear();
 
     auto convert_to_flipped_view(const Context&, const Vec2i&) -> Vec2i;
-    auto convert_to_screen(const Vec2i&) -> Vec2i;
+    auto convert_to_screen(const Context&, const Vec2i&) -> Vec2i;
     auto convert_to_view(const Context&, const Vec2i&) -> Vec2i;
 
     void increment_draw_count();
