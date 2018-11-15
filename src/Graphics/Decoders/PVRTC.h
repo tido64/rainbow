@@ -32,7 +32,7 @@ namespace
         uint32_t mipmap_count;
         uint32_t metadata_size;
     };
-}
+}  // namespace
 
 namespace pvrtc
 {
@@ -63,13 +63,13 @@ namespace pvrtc
         const size_t offset =
             sizeof(*header) + CFSwapInt32LittleToHost(header->metadata_size);
         image.size = image.width * image.height * image.depth >> 3;
-        R_ASSERT(offset + image.size == data.size(),
-                 "Unsupported PVR file format");
+        R_ASSERT(
+            offset + image.size == data.size(), "Unsupported PVR file format");
         image.data = data.bytes() + offset;
 #endif
 
         return image;
     }
-}
+}  // namespace pvrtc
 
 #endif

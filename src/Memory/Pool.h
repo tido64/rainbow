@@ -24,7 +24,7 @@ namespace rainbow
             {
             }
         };
-    }
+    }  // namespace detail
 
     /// <summary>
     ///   Memory pool for elements that are created and deleted often.
@@ -114,4 +114,4 @@ namespace rainbow
             return i;
         }
     };
-}
+}  // namespace rainbow

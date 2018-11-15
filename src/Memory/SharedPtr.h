@@ -164,10 +164,14 @@ namespace rainbow
     };
 
     template <typename T>
-    struct IsSharedPtr : std::false_type {};
+    struct IsSharedPtr : std::false_type
+    {
+    };
 
     template <typename T>
-    struct IsSharedPtr<SharedPtr<T>> : std::true_type {};
+    struct IsSharedPtr<SharedPtr<T>> : std::true_type
+    {
+    };
 
     template <typename T>
     inline constexpr bool is_shared_ptr = IsSharedPtr<T>::value;
@@ -177,6 +181,6 @@ namespace rainbow
     {
         return SharedPtr<T>{std::make_unique<T>(std::forward<Args>(args)...)};
     }
-}
+}  // namespace rainbow
 
 #endif

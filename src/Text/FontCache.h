@@ -9,16 +9,16 @@
 #include <string>
 
 #ifdef __GNUC__
-#   pragma GCC diagnostic push
-#   pragma GCC diagnostic ignored "-Wpedantic"
-#   pragma GCC diagnostic ignored "-Wold-style-cast"
-#   pragma GCC diagnostic ignored "-Woverflow"
+#    pragma GCC diagnostic push
+#    pragma GCC diagnostic ignored "-Wpedantic"
+#    pragma GCC diagnostic ignored "-Wold-style-cast"
+#    pragma GCC diagnostic ignored "-Woverflow"
 #endif
 #include <absl/container/flat_hash_map.h>
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #ifdef __GNUC__
-#   pragma GCC diagnostic pop
+#    pragma GCC diagnostic pop
 #endif
 
 #include <stb/stb_rect_pack.h>

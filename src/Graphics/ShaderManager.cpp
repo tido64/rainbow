@@ -126,7 +126,7 @@ namespace
 
         return program;
     }
-}
+}  // namespace
 
 ShaderManager::~ShaderManager()
 {
@@ -179,15 +179,15 @@ auto ShaderManager::compile(ArraySpan<Shader::Params> shaders,
     if (program == kInvalidProgram)
         return program;
 
-    programs_.emplace_back(program,
-                           glGetUniformLocation(program, "mvp_matrix"));
+    programs_.emplace_back(
+        program, glGetUniformLocation(program, "mvp_matrix"));
     return static_cast<unsigned int>(programs_.size());
 }
 
 void ShaderManager::update_projection()
 {
-    R_ASSERT(get_program().mvp_matrix >= 0,
-             "Shader is missing a projection matrix");
+    R_ASSERT(
+        get_program().mvp_matrix >= 0, "Shader is missing a projection matrix");
 
     // The orthographic projection matrix is defined as:
     //

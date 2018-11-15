@@ -24,6 +24,6 @@ namespace rainbow
         virtual void draw_impl() = 0;
         virtual void update_impl(uint64_t dt) = 0;
     };
-}
+}  // namespace rainbow
 
 #endif

@@ -91,20 +91,20 @@ namespace rainbow
             }
         }
     };
-}
+}  // namespace rainbow
 
 #include "Graphics/OpenGL.h"
 #if defined(RAINBOW_OS_IOS)
-#   include "Graphics/Decoders/UIKit.h"
+#    include "Graphics/Decoders/UIKit.h"
 #else
-#   include "Graphics/Decoders/PNG.h"
-#   include "Graphics/Decoders/SVG.h"
+#    include "Graphics/Decoders/PNG.h"
+#    include "Graphics/Decoders/SVG.h"
 #endif
 #ifdef GL_IMG_texture_compression_pvrtc
-#   include "Graphics/Decoders/PVRTC.h"
+#    include "Graphics/Decoders/PVRTC.h"
 #endif  // GL_IMG_texture_compression_pvrtc
 #ifdef GL_EXT_texture_compression_s3tc
-#   include "Graphics/Decoders/DDS.h"
+#    include "Graphics/Decoders/DDS.h"
 #endif  // GL_EXT_texture_compression_s3tc
 
 namespace rainbow
@@ -137,6 +137,6 @@ namespace rainbow
         return {};
 #endif
     }
-}
+}  // namespace rainbow
 
 #endif

@@ -2,10 +2,11 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
+#include "Input/Input.h"
+
 #include <gtest/gtest.h>
 
 #include "Input/Controller.h"
-#include "Input/Input.h"
 #include "Input/InputListener.h"
 
 using rainbow::ControllerAxis;
@@ -21,7 +22,9 @@ using rainbow::VirtualKey;
 
 namespace
 {
-    class BaseInputListener : public InputListener {};
+    class BaseInputListener : public InputListener
+    {
+    };
 
     class TestInputListener : public InputListener
     {
@@ -139,7 +142,7 @@ namespace
             return consume_;
         }
     };
-}
+}  // namespace
 
 TEST(InputTest, BaseInputListenerDoesNothing)
 {
@@ -272,8 +275,8 @@ TEST(InputTest, KeysArePollable)
 TEST(InputTest, PreventsFurtherPropagation)
 {
     Input input;
-    TestInputListener listeners[]{TestInputListener{true},
-                                  TestInputListener{false}};
+    TestInputListener listeners[]{
+        TestInputListener{true}, TestInputListener{false}};
     input.subscribe(listeners[0]);
     input.subscribe(listeners[1]);
     input.on_pointer_began(nullptr);

@@ -2,11 +2,12 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
+#include "Input/Pointer.h"
+
 #include <gtest/gtest.h>
 
 #include "Input/Input.h"
 #include "Input/InputListener.h"
-#include "Input/Pointer.h"
 
 using rainbow::Input;
 using rainbow::InputListener;
@@ -82,7 +83,7 @@ namespace
             return true;
         }
     };
-}
+}  // namespace
 
 TEST_F(PointerTest, pointer_began)
 {

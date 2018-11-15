@@ -109,7 +109,7 @@ namespace rainbow::duk
         {
             q.emplace(q.cbegin() + duk_require_int(ctx, 0), t);
         }
-    }
+    }  // namespace
 
     void initialize_renderqueue(duk_context* ctx, graphics::RenderQueue& q)
     {

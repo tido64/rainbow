@@ -5,7 +5,7 @@
 #include "Common/Logging.h"
 #include "Math/Vec2.h"
 
-#define IM_ASSERT(_EXPR)  R_ASSERT((_EXPR), "dear imgui")
+#define IM_ASSERT(_EXPR) R_ASSERT((_EXPR), "dear imgui")
 #define IMGUI_DISABLE_OBSOLETE_FUNCTIONS
 #define IMGUI_DISABLE_DEMO_WINDOWS
 #define IMGUI_STB_NAMESPACE stb

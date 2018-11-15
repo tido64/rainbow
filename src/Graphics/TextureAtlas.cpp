@@ -10,10 +10,10 @@
 
 #define kInvalidColorDepth "Invalid colour depth"
 
+using rainbow::czstring;
 using rainbow::Data;
 using rainbow::Image;
 using rainbow::TextureAtlas;
-using rainbow::czstring;
 using rainbow::graphics::Texture;
 using rainbow::graphics::TextureManager;
 

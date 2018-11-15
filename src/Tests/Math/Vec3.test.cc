@@ -2,9 +2,9 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
-#include <gtest/gtest.h>
-
 #include "Math/Vec3.h"
+
+#include <gtest/gtest.h>
 
 using rainbow::Vec3f;
 

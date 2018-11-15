@@ -202,6 +202,6 @@ namespace rainbow
     {
         return static_cast<std::underlying_type_t<Enum>>(value);
     }
-}
+}  // namespace rainbow
 
 #endif

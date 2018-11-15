@@ -6,8 +6,8 @@
 
 #include "Platform/Macros.h"
 #ifdef RAINBOW_SDL
-#   include <SDL_config.h>
-#   include <SDL_keyboard.h>
+#    include <SDL_config.h>
+#    include <SDL_keyboard.h>
 #endif  // RAINBOW_SDL
 
 #include <gtest/gtest.h>

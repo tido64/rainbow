@@ -7,14 +7,14 @@
 #include "Common/Data.h"
 #include "Graphics/OpenGL.h"
 #ifndef RAINBOW_OS_IOS
-#   define USE_PNG 1
-#   define USE_SVG 1
+#    define USE_PNG 1
+#    define USE_SVG 1
 #endif
 #ifdef GL_IMG_texture_compression_pvrtc
-#   define USE_PVRTC 1
+#    define USE_PVRTC 1
 #endif
 #ifdef GL_EXT_texture_compression_s3tc
-#   define USE_DDS 1
+#    define USE_DDS 1
 #endif
 
 using rainbow::Data;
@@ -27,11 +27,11 @@ namespace dds
 
 TEST(DecodersTest, DetectsDDS)
 {
-   constexpr uint8_t kNotDDSSignature[]{' ', 'S', 'D', 'D'};
-   constexpr uint8_t kDDSSignature[]{'D', 'D', 'S', ' '};
+    constexpr uint8_t kNotDDSSignature[]{' ', 'S', 'D', 'D'};
+    constexpr uint8_t kDDSSignature[]{'D', 'D', 'S', ' '};
 
-   ASSERT_TRUE(dds::check(Data::from_bytes(kDDSSignature)));
-   ASSERT_FALSE(dds::check(Data::from_bytes(kNotDDSSignature)));
+    ASSERT_TRUE(dds::check(Data::from_bytes(kDDSSignature)));
+    ASSERT_FALSE(dds::check(Data::from_bytes(kNotDDSSignature)));
 }
 #endif  // USE_DDS
 
@@ -43,11 +43,11 @@ namespace png
 
 TEST(DecodersTest, DetectsPNG)
 {
-   constexpr uint8_t kNotPNGSignature[]{10, 26, 10, 13, 71, 78, 80, 137};
-   constexpr uint8_t kPNGSignature[]{137, 80, 78, 71, 13, 10, 26, 10};
+    constexpr uint8_t kNotPNGSignature[]{10, 26, 10, 13, 71, 78, 80, 137};
+    constexpr uint8_t kPNGSignature[]{137, 80, 78, 71, 13, 10, 26, 10};
 
-   ASSERT_TRUE(png::check(Data::from_bytes(kPNGSignature)));
-   ASSERT_FALSE(png::check(Data::from_bytes(kNotPNGSignature)));
+    ASSERT_TRUE(png::check(Data::from_bytes(kPNGSignature)));
+    ASSERT_FALSE(png::check(Data::from_bytes(kNotPNGSignature)));
 }
 #endif  // USE_PNG
 
@@ -59,11 +59,11 @@ namespace pvrtc
 
 TEST(DecodersTest, DetectsPVRTC)
 {
-   constexpr uint8_t kNotPVRTCSignature[]{'3', 'R', 'V', 'P'};
-   constexpr uint8_t kPVRTCSignature[]{'P', 'V', 'R', '3'};
+    constexpr uint8_t kNotPVRTCSignature[]{'3', 'R', 'V', 'P'};
+    constexpr uint8_t kPVRTCSignature[]{'P', 'V', 'R', '3'};
 
-   ASSERT_TRUE(pvrtc::check(Data::from_bytes(kPVRTCSignature)));
-   ASSERT_FALSE(pvrtc::check(Data::from_bytes(kNotPVRTCSignature)));
+    ASSERT_TRUE(pvrtc::check(Data::from_bytes(kPVRTCSignature)));
+    ASSERT_FALSE(pvrtc::check(Data::from_bytes(kNotPVRTCSignature)));
 }
 #endif  // USE_PVRTC
 
@@ -75,10 +75,10 @@ namespace svg
 
 TEST(DecodersTest, DetectsSVG)
 {
-   constexpr uint8_t kNotSVGSignature[]{'\0', ' ', 'g', 'v', 's', '<'};
-   constexpr uint8_t kSVGSignature[]{'<', 's', 'v', 'g', ' ', '\0'};
+    constexpr uint8_t kNotSVGSignature[]{'\0', ' ', 'g', 'v', 's', '<'};
+    constexpr uint8_t kSVGSignature[]{'<', 's', 'v', 'g', ' ', '\0'};
 
-   ASSERT_TRUE(svg::check(Data::from_bytes(kSVGSignature)));
-   ASSERT_FALSE(svg::check(Data::from_bytes(kNotSVGSignature)));
+    ASSERT_TRUE(svg::check(Data::from_bytes(kSVGSignature)));
+    ASSERT_FALSE(svg::check(Data::from_bytes(kNotSVGSignature)));
 }
 #endif  // USE_SVG

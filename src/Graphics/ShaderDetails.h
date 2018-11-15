@@ -43,7 +43,9 @@ namespace Shader
 
         Details(unsigned int program, int mvp_matrix)
             : texture0(true), texture1(false), program(program),
-              mvp_matrix(mvp_matrix) {}
+              mvp_matrix(mvp_matrix)
+        {
+        }
     };
 
     struct Params
@@ -53,6 +55,6 @@ namespace Shader
         rainbow::czstring source;
         rainbow::czstring fallback;
     };
-}
+}  // namespace Shader
 
 #endif

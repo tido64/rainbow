@@ -2,10 +2,11 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
+#include "Common/Color.h"
+
 #include <gtest/gtest.h>
 
 #include "Common/Algorithm.h"
-#include "Common/Color.h"
 #include "Common/Logging.h"
 
 using rainbow::Color;
@@ -18,7 +19,7 @@ namespace
     constexpr uint8_t kRed = 0x12;
 
     constexpr uint32_t kTestColor = 0x12345678;
-}
+}  // namespace
 
 TEST(ColorTest, IsWhiteByDefault)
 {

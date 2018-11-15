@@ -50,7 +50,9 @@ namespace rainbow
 
         Rect() : Rect(0.0f, 0.0f, 0.0f, 0.0f) {}
         Rect(float left_, float bottom_, float right_, float top_)
-            : left(left_), bottom(bottom_), right(right_), top(top_) {}
+            : left(left_), bottom(bottom_), right(right_), top(top_)
+        {
+        }
 
         auto bottom_left() const { return Vec2f{left, bottom}; }
         auto bottom_right() const { return Vec2f{right, bottom}; }
@@ -68,6 +70,6 @@ namespace rainbow
                    r.right == s.right && r.top == s.top;
         }
     };
-}
+}  // namespace rainbow
 
 #endif

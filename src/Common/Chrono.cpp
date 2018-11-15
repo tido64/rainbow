@@ -14,7 +14,7 @@ namespace
     {
         return Chrono::clock::now().time_since_epoch();
     }
-}
+}  // namespace
 
 void Chrono::sleep(duration::rep milliseconds)
 {
@@ -32,9 +32,7 @@ auto Chrono::time_since_epoch() -> std::chrono::seconds
     return std::chrono::duration_cast<std::chrono::seconds>(now());
 }
 
-Chrono::Chrono() : delta_(0), current_(now()), previous_(current_)
-{
-}
+Chrono::Chrono() : delta_(0), current_(now()), previous_(current_) {}
 
 void Chrono::tick()
 {

@@ -15,13 +15,13 @@
 #include "Graphics/SpriteVertex.h"
 #include "Graphics/TextureAtlas.h"
 
+using rainbow::czstring;
 using rainbow::Data;
 using rainbow::File;
 using rainbow::FileType;
 using rainbow::SpriteVertex;
 using rainbow::TextureAtlas;
 using rainbow::Vec2f;
-using rainbow::czstring;
 
 namespace
 {
@@ -138,7 +138,7 @@ namespace
         }
         return mesh->trianglesCount;
     }
-}
+}  // namespace
 
 extern "C"
 {
@@ -276,9 +276,7 @@ void Skeleton::set_animation(int track, czstring animation, bool loop)
         state_, track, animation, static_cast<int>(loop));
 }
 
-void Skeleton::set_animation_mix(czstring from,
-                                 czstring to,
-                                 float duration)
+void Skeleton::set_animation_mix(czstring from, czstring to, float duration)
 {
     spAnimationStateData_setMixByName(animation_data_, from, to, duration);
 }

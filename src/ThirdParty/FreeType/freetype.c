@@ -20,7 +20,7 @@
 #include <truetype/truetype.c>
 
 #ifdef _WIN32
-#   include <windows/ftdebug.c>
+#    include <windows/ftdebug.c>
 #else
-#   include <base/ftdebug.c>
+#    include <base/ftdebug.c>
 #endif

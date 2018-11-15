@@ -2,9 +2,10 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
+#include "Input/Controller.h"
+
 #include <gtest/gtest.h>
 
-#include "Input/Controller.h"
 #include "Input/Input.h"
 #include "Input/InputListener.h"
 
@@ -110,8 +111,7 @@ namespace
         Input& input_;
     };
 
-    class ControllerTest : public TestControllerListener,
-                           public ::testing::Test
+    class ControllerTest : public TestControllerListener, public ::testing::Test
     {
     public:
         auto axis_motion(unsigned int id = kTestControllerId) const
@@ -133,7 +133,7 @@ namespace
             input.subscribe(*this);
         }
     };
-}
+}  // namespace
 
 TEST_F(ControllerTest, EventsAreInvalidByDefault)
 {
@@ -495,7 +495,10 @@ TEST_F(ControllerTest, AxesArePollable)
 {
     constexpr int kNumControllers = 4;
     TestController controllers[kNumControllers]{
-        {1000, input}, {1001, input}, {1002, input}, {1003, input},
+        {1000, input},
+        {1001, input},
+        {1002, input},
+        {1003, input},
     };
 
     for (int i = 0; i < kNumControllers; ++i)
@@ -504,10 +507,8 @@ TEST_F(ControllerTest, AxesArePollable)
              axis < rainbow::to_integral_value(ControllerAxis::Count);
              ++axis)
         {
-            ControllerAxisMotion event(controllers[i].id(),
-                                       static_cast<ControllerAxis>(axis),
-                                       255,
-                                       1);
+            ControllerAxisMotion event(
+                controllers[i].id(), static_cast<ControllerAxis>(axis), 255, 1);
             input.on_controller_axis_motion(event);
 
             for (int j = 0; j < kNumControllers; ++j)
@@ -529,7 +530,10 @@ TEST_F(ControllerTest, ButtonsArePollable)
 {
     constexpr int kNumControllers = 4;
     TestController controllers[kNumControllers]{
-        {1000, input}, {1001, input}, {1002, input}, {1003, input},
+        {1000, input},
+        {1001, input},
+        {1002, input},
+        {1003, input},
     };
 
     for (int i = 0; i < kNumControllers; ++i)

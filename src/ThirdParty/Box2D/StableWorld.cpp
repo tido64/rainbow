@@ -32,13 +32,15 @@ namespace
     {
         return static_cast<b2::BodyState*>(body->GetUserData());
     }
-}
+}  // namespace
 
 namespace b2
 {
     BodyState::BodyState(const b2BodyDef* bd)
         : curr_p(bd->position), prev_p(bd->position), curr_r(bd->angle),
-          prev_r(bd->angle) {}
+          prev_r(bd->angle)
+    {
+    }
 
     StableWorld::StableWorld(float gx, float gy)
         : b2World(b2Vec2(gx, gy)), elapsed_(0.0), debug_draw_(nullptr)
@@ -100,8 +102,7 @@ namespace b2
         const float ratio = elapsed_ * kStepsPerMs;
         ForEachDynamicBody(
             GetBodyList(),
-            [this](b2Body* body, float ratio, float rest)
-            {
+            [this](b2Body* body, float ratio, float rest) {
                 if (!body->IsAwake())
                     return;
 
@@ -119,32 +120,26 @@ namespace b2
 
     void StableWorld::RestoreState()
     {
-        ForEachDynamicBody(
-            GetBodyList(),
-            [this](b2Body* body)
-            {
-                auto d = GetBodyState(body);
-                if (!d->sprite)
-                    return;
+        ForEachDynamicBody(GetBodyList(), [this](b2Body* body) {
+            auto d = GetBodyState(body);
+            if (!d->sprite)
+                return;
 
-                const Vec2f position(d->curr_p.x * ptm_, d->curr_p.y * ptm_);
-                d->sprite->set_position(position);
-                d->sprite->set_rotation(d->curr_r);
-            });
+            const Vec2f position(d->curr_p.x * ptm_, d->curr_p.y * ptm_);
+            d->sprite->set_position(position);
+            d->sprite->set_rotation(d->curr_r);
+        });
     }
 
     void StableWorld::SaveState()
     {
-        ForEachDynamicBody(
-            GetBodyList(),
-            [](b2Body* body)
-            {
-                auto d = GetBodyState(body);
-                const auto& t = body->GetTransform();
-                d->prev_p = d->curr_p;
-                d->curr_p = t.p;
-                d->prev_r = d->curr_r;
-                d->curr_r = t.q.GetAngle();
-            });
+        ForEachDynamicBody(GetBodyList(), [](b2Body* body) {
+            auto d = GetBodyState(body);
+            const auto& t = body->GetTransform();
+            d->prev_p = d->curr_p;
+            d->curr_p = t.p;
+            d->prev_r = d->curr_r;
+            d->curr_r = t.q.GetAngle();
+        });
     }
-}
+}  // namespace b2

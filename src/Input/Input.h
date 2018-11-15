@@ -148,6 +148,6 @@ namespace rainbow
         template <typename F>
         void process_controller(unsigned int id, F&& process);
     };
-}
+}  // namespace rainbow
 
 #endif

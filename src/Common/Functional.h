@@ -102,6 +102,6 @@ namespace rainbow
         using U = typename T::value_type;
         return foldl1([](U a, U b) { return a + b; }, list);
     }
-}
+}  // namespace rainbow
 
 #endif

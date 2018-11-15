@@ -58,7 +58,7 @@ namespace
             unit->update(dt);
         }
     };
-}
+}  // namespace
 
 void rainbow::graphics::draw(RenderQueue& queue)
 {

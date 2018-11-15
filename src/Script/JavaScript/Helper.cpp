@@ -50,7 +50,7 @@ namespace rainbow::duk
         duk::put_prop_literal(ctx, obj_idx, DUKR_WELLKNOWN_SYMBOL_TOSTRINGTAG);
         duk_freeze(ctx, obj_idx);
     }
-}
+}  // namespace rainbow::duk
 
 void rainbow::duk::dump_context(duk_context* ctx)
 {
@@ -83,9 +83,8 @@ auto rainbow::duk::get<Animation::Callback>(duk_context* ctx, duk_idx_t idx)
 
     duk_dup(ctx, idx);
     duk::put_prop_literal(ctx, -2, DUKR_HIDDEN_SYMBOL_CALLBACK);
-    return [ ctx, ptr = duk_get_heapptr(ctx, -1) ](
-        Animation*, AnimationEvent event)
-    {
+    return [ctx, ptr = duk_get_heapptr(ctx, -1)](
+               Animation*, AnimationEvent event) {
         duk_push_heapptr(ctx, ptr);
         // => [ animation ]
         duk::get_prop_literal(ctx, -1, DUKR_HIDDEN_SYMBOL_CALLBACK);

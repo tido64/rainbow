@@ -7,7 +7,7 @@
 
 #include "Platform/Macros.h"
 #ifdef RAINBOW_OS_MACOS
-#   include <CoreFoundation/CoreFoundation.h>
+#    include <CoreFoundation/CoreFoundation.h>
 #endif
 
 #include "Common/String.h"

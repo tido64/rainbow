@@ -2,11 +2,11 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
+#include "Audio/Mixer.h"
+
 #include <functional>
 
 #include <gtest/gtest.h>
-
-#include "Audio/Mixer.h"
 
 using rainbow::audio::Channel;
 using rainbow::audio::Mixer;

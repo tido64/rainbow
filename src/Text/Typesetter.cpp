@@ -16,12 +16,12 @@
 
 #include "Common/Logging.h"
 
+using rainbow::czstring;
 using rainbow::GlyphPosition;
 using rainbow::SpriteVertex;
 using rainbow::TextAttributes;
 using rainbow::Typesetter;
 using rainbow::Vec2f;
-using rainbow::czstring;
 
 namespace
 {

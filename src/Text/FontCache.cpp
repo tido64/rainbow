@@ -189,10 +189,10 @@ void FontCache::update(TextureManager& texture_manager)
 
 #define STB_RECT_PACK_IMPLEMENTATION
 #ifdef __GNUC__
-#   pragma GCC diagnostic push
-#   pragma GCC diagnostic ignored "-Wold-style-cast"
+#    pragma GCC diagnostic push
+#    pragma GCC diagnostic ignored "-Wold-style-cast"
 #endif
 #include <stb/stb_rect_pack.h>
 #ifdef __GNUC__
-#   pragma GCC diagnostic pop
+#    pragma GCC diagnostic pop
 #endif

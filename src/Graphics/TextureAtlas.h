@@ -17,7 +17,10 @@
 
 namespace rainbow
 {
-    namespace graphics { class TextureManager; }
+    namespace graphics
+    {
+        class TextureManager;
+    }
 
     /// <summary>Texture atlas loaded from an image file.</summary>
     /// <remarks>
@@ -133,6 +136,6 @@ namespace rainbow
                   const Data& data,
                   float scale);
     };
-}
+}  // namespace rainbow
 
 #endif

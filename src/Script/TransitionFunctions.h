@@ -57,7 +57,9 @@ namespace rainbow
     public:
         Fade(T component, int opacity, int duration, TimingFunction timing)
             : Transition<T, int>(
-                  component, opacity, duration, std::move(timing)) {}
+                  component, opacity, duration, std::move(timing))
+        {
+        }
 
         void operator()()
         {
@@ -78,7 +80,9 @@ namespace rainbow
              int duration,
              TimingFunction timing)
             : Transition<T, Vec2f>(
-                  component, delta, duration, std::move(timing)) {}
+                  component, delta, duration, std::move(timing))
+        {
+        }
 
         void operator()()
         {
@@ -113,7 +117,9 @@ namespace rainbow
     {
     public:
         Scale(T component, const Vec2f& f, int duration, TimingFunction timing)
-            : Transition<T, Vec2f>(component, f, duration, std::move(timing)) {}
+            : Transition<T, Vec2f>(component, f, duration, std::move(timing))
+        {
+        }
 
         void operator()()
         {
@@ -126,6 +132,6 @@ namespace rainbow
             this->previous_ = d;
         }
     };
-}
+}  // namespace rainbow
 
 #endif

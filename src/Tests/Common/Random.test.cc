@@ -2,15 +2,15 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
-#include <gtest/gtest.h>
-
 #include "Common/Random.h"
+
+#include <gtest/gtest.h>
 
 namespace
 {
     constexpr unsigned int kSampleSize = 1u << 16;
     constexpr uint64_t kSeed = UINT64_C(1181783497276652981);
-}
+}  // namespace
 
 TEST(RandomTest, InRange01)
 {

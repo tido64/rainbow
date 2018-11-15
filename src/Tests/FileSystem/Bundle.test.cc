@@ -2,16 +2,17 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
+#include "FileSystem/Bundle.h"
+
 #include <gtest/gtest.h>
 
-#include "FileSystem/Bundle.h"
 #include "FileSystem/FileSystem.h"
 #include "Tests/TestHelpers.h"
 
 using rainbow::Bundle;
+using rainbow::zstring;
 using rainbow::test::ScopedDirectory;
 using rainbow::test::ScopedFile;
-using rainbow::zstring;
 
 namespace fs = rainbow::filesystem;
 

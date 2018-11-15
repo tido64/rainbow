@@ -39,6 +39,6 @@ namespace heimdall
         bool on_pointer_canceled_impl() override;
         bool on_pointer_ended_impl(const ArrayView<rainbow::Pointer>&) override;
     };
-}
+}  // namespace heimdall
 
 #endif  // HEIMDALL_OVERLAYACTIVATOR_H_

@@ -27,14 +27,14 @@ namespace
         if (condition)
         {
 #ifdef __GNUC__
-#   pragma GCC diagnostic push
-#   pragma GCC diagnostic ignored "-Wold-style-cast"
+#    pragma GCC diagnostic push
+#    pragma GCC diagnostic ignored "-Wold-style-cast"
 #endif
             duk_push_error_object(ctx, err_code, std::forward<Args>(args)...);
             NOT_USED(duk_throw(ctx));
             UNREACHABLE();
 #ifdef __GNUC__
-#   pragma GCC diagnostic pop
+#    pragma GCC diagnostic pop
 #endif
         }
 

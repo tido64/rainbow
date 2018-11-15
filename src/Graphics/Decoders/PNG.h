@@ -52,6 +52,6 @@ namespace png
 
         return image;
     }
-}
+}  // namespace png
 
 #endif

@@ -167,6 +167,6 @@ namespace rainbow
             std::for_each(sorted_indices, sorted_indices + count, rotate);
         }
     };
-}
+}  // namespace rainbow
 
 #endif

@@ -19,7 +19,7 @@ namespace rainbow
 {
     struct SpriteVertex;
     class TextureAtlas;
-}
+}  // namespace rainbow
 
 struct spAtlas;
 

@@ -19,12 +19,16 @@ public:
     constexpr ArraySpan(std::nullptr_t) : size_(0), data_(nullptr) {}
 
     constexpr ArraySpan(NotNull<T*> data, size_t size)
-        : size_(size), data_(data) {}
+        : size_(size), data_(data)
+    {
+    }
 
     constexpr ArraySpan(T& data) : ArraySpan(&data, 1) {}
 
     template <size_t N>
-    constexpr ArraySpan(T (&data)[N]) : ArraySpan(data, N) {}
+    constexpr ArraySpan(T (&data)[N]) : ArraySpan(data, N)
+    {
+    }
 
     template <typename U, size_t N>
     constexpr ArraySpan(const std::array<U, N>& arr)

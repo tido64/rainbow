@@ -2,9 +2,9 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
-#include <gtest/gtest.h>
-
 #include "Memory/SharedPtr.h"
+
+#include <gtest/gtest.h>
 
 using rainbow::RefCounted;
 using rainbow::SharedPtr;
@@ -20,7 +20,7 @@ namespace
     private:
         bool& flag;
     };
-}
+}  // namespace
 
 TEST(SharedPtrTest, IsEmptyByDefault)
 {

@@ -40,7 +40,7 @@ namespace
     {
         return ((state & kIsFlipped) >> 0xf) + ((state & kIsMirrored) >> 0xf);
     }
-}
+}  // namespace
 
 auto SpriteRef::get() const -> Sprite&
 {

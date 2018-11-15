@@ -2,10 +2,11 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
+#include "Graphics/RenderQueue.h"
+
 #include <gtest/gtest.h>
 
 #include "Graphics/Drawable.h"
-#include "Graphics/RenderQueue.h"
 
 using rainbow::graphics::RenderQueue;
 using rainbow::graphics::RenderUnit;
@@ -24,17 +25,14 @@ namespace
         int drawn_ = 0;
         int updated_ = 0;
 
-        void draw_impl() override
-        {
-            ++drawn_;
-        }
+        void draw_impl() override { ++drawn_; }
 
         void update_impl(uint64_t dt) override
         {
             updated_ += dt != kDeltaTime ? 0 : 1;
         }
     };
-}
+}  // namespace
 
 TEST(RenderQueueTest, UnitsHaveReasonableDefaults)
 {

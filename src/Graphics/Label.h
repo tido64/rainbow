@@ -114,7 +114,7 @@ namespace rainbow
         void set_text(czstring);
 
         /// <summary>Binds all used textures.</summary>
-        void bind_textures() const { }
+        void bind_textures() const {}
 
         /// <summary>Moves label by (x,y).</summary>
         void move(const Vec2f&);
@@ -170,6 +170,6 @@ namespace rainbow
         /// <summary>Vertex buffer.</summary>
         graphics::Buffer buffer_;
     };
-}
+}  // namespace rainbow
 
 #endif

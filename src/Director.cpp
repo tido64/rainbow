@@ -9,7 +9,7 @@
 #include "Script/NoGame.h"
 
 #ifdef USE_PHYSICS
-#   include "ThirdParty/Box2D/DebugDraw.h"
+#    include "ThirdParty/Box2D/DebugDraw.h"
 #endif  // USE_PHYSICS
 
 namespace
@@ -124,4 +124,4 @@ namespace rainbow
 
         graphics::update(render_queue_, 0);
     }
-}
+}  // namespace rainbow

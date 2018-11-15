@@ -2,12 +2,13 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
+#include "Config.h"
+
 #include <string>
 
 #include <gtest/gtest.h>
 
 #include "Common/Algorithm.h"
-#include "Config.h"
 #include "FileSystem/Bundle.h"
 #include "FileSystem/File.h"
 #include "FileSystem/FileSystem.h"

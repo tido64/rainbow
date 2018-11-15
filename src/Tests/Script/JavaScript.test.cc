@@ -2,13 +2,14 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
+#include "Script/JavaScript/JavaScript.h"
+
 #include <climits>
 
 #include <gtest/gtest.h>
 
 #include "Common/Constants.h"
 #include "Script/JavaScript/Helper.h"
-#include "Script/JavaScript/JavaScript.h"
 
 namespace
 {

@@ -40,6 +40,6 @@ namespace rainbow
         virtual void update_impl(uint64_t) {}
         virtual void on_memory_warning_impl() {}
     };
-}
+}  // namespace rainbow
 
 #endif

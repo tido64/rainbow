@@ -19,6 +19,6 @@ namespace rainbow::assets
         R"(<path style="fill: none; fill-rule: evenodd; stroke: #fff; stroke-width: 40px;" d="M83.017,934c0-322.525,261.458-583.983,583.983-583.983"/>)"
         R"(<path style="fill: none; fill-rule: evenodd; stroke: #fff; stroke-width: 40px;" d="M20.984,934c0-356.785,289.231-646.016,646.016-646.016"/>)"
         R"(</svg>)";
-}
+}  // namespace rainbow::assets
 
 #endif

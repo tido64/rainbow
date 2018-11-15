@@ -113,8 +113,8 @@ namespace rainbow::graphics
     private:
         unsigned int current_ = kInvalidProgram;  ///< Currently used program.
         graphics::Context* context_ = nullptr;
-        std::vector<Shader::Details> programs_;   ///< Linked shader programs.
-        std::vector<unsigned int> shaders_;       ///< Compiled shaders.
+        std::vector<Shader::Details> programs_;  ///< Linked shader programs.
+        std::vector<unsigned int> shaders_;      ///< Compiled shaders.
     };
 }  // namespace rainbow::graphics
 

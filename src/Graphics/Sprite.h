@@ -239,7 +239,7 @@ namespace rainbow
         int id_ = kNoId;                        ///< Sprite identifier.
         SpriteVertex* vertex_array_ = nullptr;  ///< Interleaved vertex array.
     };
-}
+}  // namespace rainbow
 
 #undef USE_SPRITE_FUNCTION_CHAINING
 #endif

@@ -5,6 +5,7 @@
 #ifndef MEMORY_BOUNDEDPOOL_H_
 #define MEMORY_BOUNDEDPOOL_H_
 
+#include <algorithm>
 #include <vector>
 
 #include "Common/Logging.h"

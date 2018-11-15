@@ -46,7 +46,7 @@ namespace
         return keysym.sym == SDLK_q && (keysym.mod & KMOD_LCTRL);
 #endif
     }
-}
+}  // namespace
 
 RainbowController::RainbowController(SDLContext& context, const Config& config)
     : context_(context), suspend_on_focus_lost_(config.suspend())

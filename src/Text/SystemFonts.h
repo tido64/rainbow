@@ -11,6 +11,6 @@ namespace rainbow::text
 {
     auto monospace_font() -> Data;
     auto monospace_font_path() -> czstring;
-}
+}  // namespace rainbow::text
 
 #endif

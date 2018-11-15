@@ -160,6 +160,6 @@ namespace rainbow
         ButtonStates buttons_;
         AxisStates axes_;
     };
-}
+}  // namespace rainbow
 
 #endif

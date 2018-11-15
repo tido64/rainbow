@@ -62,7 +62,7 @@ namespace
         uint32_t dwMagic;
         DDSHeader header;
     };
-}
+}  // namespace
 
 namespace dds
 {
@@ -106,6 +106,6 @@ namespace dds
 
         return image;
     }
-}
+}  // namespace dds
 
 #endif

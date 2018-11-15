@@ -2,9 +2,9 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
-#include <gtest/gtest.h>
-
 #include "Common/String.h"
+
+#include <gtest/gtest.h>
 
 #define TEST_SUFFIX ".h"
 #define TEST_STRING "String" TEST_SUFFIX

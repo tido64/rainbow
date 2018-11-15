@@ -2,9 +2,10 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
+#include "Graphics/SpriteBatch.h"
+
 #include <gtest/gtest.h>
 
-#include "Graphics/SpriteBatch.h"
 #include "Tests/TestHelpers.h"
 
 using rainbow::Sprite;
@@ -78,10 +79,13 @@ namespace
     public:
         SpriteBatchOperationsTest()
             : batch(rainbow::ISolemnlySwearThatIAmOnlyTesting{}),
-              refs{batch.create_sprite(1, 1), batch.create_sprite(2, 1),
-                   batch.create_sprite(1, 2), batch.create_sprite(2, 2)},
-              count(rainbow::array_size(refs)),
-              vertices(batch.vertices()) {}
+              refs{batch.create_sprite(1, 1),
+                   batch.create_sprite(2, 1),
+                   batch.create_sprite(1, 2),
+                   batch.create_sprite(2, 2)},
+              count(rainbow::array_size(refs)), vertices(batch.vertices())
+        {
+        }
 
     protected:
         SpriteBatch batch;
@@ -91,7 +95,7 @@ namespace
 
         void SetUp() override { update(batch); }
     };
-}
+}  // namespace
 
 TEST(SpriteBatchTest, MoveConstructs)
 {

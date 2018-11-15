@@ -25,7 +25,7 @@ namespace rainbow
                       const Vec2<Float>& scale,
                       const Vec2<Float>& position)
     {
-        return Vec2<Float>{scale.x * p.x + position.x,   //
+        return Vec2<Float>{scale.x * p.x + position.x,  //
                            scale.y * p.y + position.y};
     }
 
@@ -89,6 +89,6 @@ namespace rainbow
         transform(
             quad, sprite.position(), sprite.angle(), sprite.scale(), data);
     }
-}
+}  // namespace rainbow
 
 #endif

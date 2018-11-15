@@ -45,6 +45,6 @@ namespace rainbow
         uint32_t fullscreen_;    ///< Whether the window is in full screen mode.
         SDL_GLContext context_;  ///< OpenGL context handle.
     };
-}
+}  // namespace rainbow
 
 #endif

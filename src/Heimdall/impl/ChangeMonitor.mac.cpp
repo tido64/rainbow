@@ -38,7 +38,7 @@ namespace
             monitor->on_modified(paths[i]);
         }
     }
-}
+}  // namespace
 
 ChangeMonitor::ChangeMonitor(czstring directory)
     : stream_(nullptr), callback_([](czstring) {})

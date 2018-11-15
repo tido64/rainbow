@@ -2,9 +2,9 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
-#include <gtest/gtest.h>
-
 #include "Common/TypeInfo.h"
+
+#include <gtest/gtest.h>
 
 using rainbow::type_id;
 using rainbow::type_id_t;

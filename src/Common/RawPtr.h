@@ -5,6 +5,8 @@
 #ifndef COMMON_RAWPTR_H_
 #define COMMON_RAWPTR_H_
 
+#include <cstdint>
+
 namespace rainbow
 {
     template <typename T>

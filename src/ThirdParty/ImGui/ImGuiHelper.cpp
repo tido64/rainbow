@@ -7,22 +7,22 @@
 #ifdef __GNUC__
 // TODO: This is a workaround for 'diagnostic push' bug in GCC. See
 // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=53431 for details.
-#   ifdef __clang__
-#       pragma GCC diagnostic push
-#       pragma GCC diagnostic ignored "-Wformat-pedantic"
-#   endif
-#   pragma GCC diagnostic ignored "-Wformat"
-#   pragma GCC diagnostic ignored "-Wold-style-cast"
-#   pragma GCC diagnostic ignored "-Wsign-promo"
-#   pragma GCC diagnostic ignored "-Wtype-limits"
-#   pragma GCC diagnostic ignored "-Wunused-function"
-#   pragma GCC diagnostic ignored "-Wunused-parameter"
+#    ifdef __clang__
+#        pragma GCC diagnostic push
+#        pragma GCC diagnostic ignored "-Wformat-pedantic"
+#    endif
+#    pragma GCC diagnostic ignored "-Wformat"
+#    pragma GCC diagnostic ignored "-Wold-style-cast"
+#    pragma GCC diagnostic ignored "-Wsign-promo"
+#    pragma GCC diagnostic ignored "-Wtype-limits"
+#    pragma GCC diagnostic ignored "-Wunused-function"
+#    pragma GCC diagnostic ignored "-Wunused-parameter"
 #endif
 #include <imgui/imgui.cpp>
 #include <imgui/imgui_draw.cpp>
 #include <imgui/imgui_widgets.cpp>
 #ifdef __clang__
-#   pragma GCC diagnostic pop
+#    pragma GCC diagnostic pop
 #endif
 
 #include "Graphics/Buffer.h"

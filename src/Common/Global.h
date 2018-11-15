@@ -37,6 +37,6 @@ namespace rainbow
 
     template <typename T>
     T* Global<T>::s_instance = nullptr;
-}
+}  // namespace rainbow
 
 #endif

@@ -167,6 +167,6 @@ namespace rainbow
         /// </summary>
         void tick();
     };
-}
+}  // namespace rainbow
 
 #endif

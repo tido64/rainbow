@@ -50,6 +50,6 @@ namespace rainbow
 
         void on_window_resized();
     };
-}
+}  // namespace rainbow
 
 #endif

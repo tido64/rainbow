@@ -5,14 +5,14 @@
 #include <cstdio>
 
 #if defined(__GNUC__)
-#   pragma GCC diagnostic push
-#   ifndef __clang__
-#      pragma GCC diagnostic ignored "-Wpedantic"
-#   endif
-#   pragma GCC diagnostic ignored "-Wold-style-cast"
+#    pragma GCC diagnostic push
+#    ifndef __clang__
+#        pragma GCC diagnostic ignored "-Wpedantic"
+#    endif
+#    pragma GCC diagnostic ignored "-Wold-style-cast"
 #elif defined(_MSC_VER)
-#   pragma warning(push)
-#   pragma warning(disable:4702)
+#    pragma warning(push)
+#    pragma warning(disable : 4702)
 #endif
 
 #define NANOSVG_IMPLEMENTATION
@@ -22,7 +22,7 @@
 #include <nanosvgrast.h>
 
 #if defined(__GNUC__)
-#   pragma GCC diagnostic pop
+#    pragma GCC diagnostic pop
 #elif defined(_MSC_VER)
-#   pragma warning(pop)
+#    pragma warning(pop)
 #endif

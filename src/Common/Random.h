@@ -5,6 +5,7 @@
 #ifndef COMMON_RANDOM_H_
 #define COMMON_RANDOM_H_
 
+#include <algorithm>
 #include <cstdint>
 #include <random>
 
@@ -50,18 +51,18 @@ namespace xorshift
             uint64_t t[16]{};
             for (auto i : kJump)
             {
-                for(int b = 0; b < 64; ++b)
+                for (int b = 0; b < 64; ++b)
                 {
                     if (i & 1ULL << b)
                     {
-                        for(int j = 0; j < 16; ++j)
+                        for (int j = 0; j < 16; ++j)
                             t[j] ^= s_[(j + p_) & 15];
                     }
                     (*this)();
                 }
             }
 
-            for(int j = 0; j < 16; ++j)
+            for (int j = 0; j < 16; ++j)
                 s_[(j + p_) & 15] = t[j];
         }
 
@@ -149,6 +150,6 @@ namespace rainbow
     };
 
     extern Random random;
-}
+}  // namespace rainbow
 
 #endif

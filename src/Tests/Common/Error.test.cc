@@ -2,6 +2,8 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
+#include "Common/Error.h"
+
 #include <string>
 #include <string_view>
 #include <vector>
@@ -9,7 +11,6 @@
 #include <gtest/gtest.h>
 
 #include "Common/Algorithm.h"
-#include "Common/Error.h"
 
 using namespace std::literals::string_view_literals;
 

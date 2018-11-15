@@ -8,8 +8,8 @@
 
 #include "Common/Logging.h"
 
-using rainbow::Data;
 using rainbow::czstring;
+using rainbow::Data;
 
 Data::~Data()
 {

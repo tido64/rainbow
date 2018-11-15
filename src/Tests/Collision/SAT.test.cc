@@ -2,9 +2,10 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
+#include "Collision/SAT.h"
+
 #include <gtest/gtest.h>
 
-#include "Collision/SAT.h"
 #include "Graphics/SpriteBatch.h"
 #include "Tests/TestHelpers.h"
 
@@ -23,7 +24,7 @@ namespace
             sprites[i].update(buffer, batch.texture());
         }
     }
-}
+}  // namespace
 
 TEST(CollisionTest, SeparatingAxisTheorem)
 {

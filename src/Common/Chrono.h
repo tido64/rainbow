@@ -38,6 +38,6 @@ namespace rainbow
         clock::duration current_;
         clock::duration previous_;
     };
-}
+}  // namespace rainbow
 
 #endif

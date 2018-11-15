@@ -2,14 +2,15 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
+#include "FileSystem/File.h"
+
 #include <gtest/gtest.h>
 
 #include "Common/Random.h"
-#include "FileSystem/File.h"
 #include "FileSystem/FileSystem.h"
 
 #ifdef RAINBOW_OS_UNIX
-#   define _rmdir rmdir
+#    define _rmdir rmdir
 #endif
 
 using rainbow::czstring;
@@ -121,7 +122,9 @@ TEST(FileTest, HandlesEmptyFiles)
 
         // Wait until the file has been removed...
         struct stat file_status;
-        while (stat(tmppath.c_str(), &file_status) == 0) {}
+        while (stat(tmppath.c_str(), &file_status) == 0)
+        {
+        }
 
         SCOPED_TRACE(fs::user_data_path());
         ASSERT_EQ(_rmdir(fs::user_data_path()), 0);

@@ -10,13 +10,13 @@
 #include "JavaScript/Helper.h"
 
 using rainbow::Animation;
+using rainbow::czstring;
 using rainbow::Label;
 using rainbow::Passkey;
 using rainbow::Scene;
 using rainbow::ScopeStack;
 using rainbow::SpriteBatch;
 using rainbow::TextureAtlas;
-using rainbow::czstring;
 
 namespace duk = rainbow::duk;
 
@@ -132,7 +132,7 @@ namespace
 
         return true;
     }
-}
+}  // namespace
 
 auto Scene::from_json(duk_context* ctx, czstring path) -> std::unique_ptr<Scene>
 {

@@ -11,18 +11,18 @@
 #include "FileSystem/File.h"
 
 #if defined(RAINBOW_OS_IOS) || defined(RAINBOW_OS_MACOS)
-#   define USE_AUDIOTOOLBOX 1
+#    define USE_AUDIOTOOLBOX 1
 #endif
 #if !defined(RAINBOW_OS_IOS)
-#   define USE_OGGVORBIS 1
+#    define USE_OGGVORBIS 1
 #endif
 
 #ifdef USE_AUDIOTOOLBOX
-#   include "Audio/Codecs/AppleAudioFile.h"
+#    include "Audio/Codecs/AppleAudioFile.h"
 #endif  // USE_AUDIOTOOLBOX
 
 #ifdef USE_OGGVORBIS
-#   include "Audio/Codecs/OggVorbisAudioFile.h"
+#    include "Audio/Codecs/OggVorbisAudioFile.h"
 #endif  // USE_OGGVORBIS
 
 using rainbow::czstring;

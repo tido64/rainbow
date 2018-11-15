@@ -7,15 +7,15 @@
 #include "Common/Logging.h"
 #include "FileSystem/FileSystem.h"
 
-using rainbow::audio::AppleAudioFile;
 using rainbow::czstring;
+using rainbow::audio::AppleAudioFile;
 
 namespace
 {
     constexpr unsigned int kBitsPerChannel = 16;
 
-    template<typename C, typename T>
-    auto bridge_cast(T &var) -> C
+    template <typename C, typename T>
+    auto bridge_cast(T& var) -> C
     {
 #ifdef RAINBOW_OS_IOS
         return (__bridge C)var;
@@ -23,7 +23,7 @@ namespace
         return var;
 #endif
     }
-}
+}  // namespace
 
 AppleAudioFile::AppleAudioFile(czstring file) : format_{}, ref_(nullptr)
 {

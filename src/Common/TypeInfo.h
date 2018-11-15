@@ -47,6 +47,6 @@ namespace rainbow
     {
         return type_id_t::id<std::decay_t<T>>();
     }
-}
+}  // namespace rainbow
 
 #endif

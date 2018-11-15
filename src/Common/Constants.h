@@ -29,6 +29,6 @@ namespace rainbow
     // Other constants
 
     constexpr float kLowPassAlpha = 0.5f;
-}
+}  // namespace rainbow
 
 #endif

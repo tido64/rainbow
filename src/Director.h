@@ -108,7 +108,7 @@ namespace rainbow
 }  // namespace rainbow
 
 #ifdef USE_HEIMDALL
-#   include "Heimdall/Gatekeeper.h"
+#    include "Heimdall/Gatekeeper.h"
 #else
 using Director = rainbow::Director;
 #endif

@@ -28,7 +28,7 @@ namespace rainbow
 
             auto is_valid() const -> bool { return context_ != nullptr; }
         };
-    }
+    }  // namespace duk
 
     class JavaScript final : public GameBase, public InputListener
     {
@@ -58,6 +58,6 @@ namespace rainbow
         bool on_pointer_ended_impl(const ArrayView<Pointer>&) override;
         bool on_pointer_moved_impl(const ArrayView<Pointer>&) override;
     };
-}
+}  // namespace rainbow
 
 #endif

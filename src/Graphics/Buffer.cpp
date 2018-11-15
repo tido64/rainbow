@@ -21,11 +21,9 @@ namespace
         glGenBuffers(1, &id);
         return id;
     }
-}
+}  // namespace
 
-Buffer::Buffer() : id_(glGenBuffer())
-{
-}
+Buffer::Buffer() : id_(glGenBuffer()) {}
 
 Buffer::Buffer(Buffer&& buffer) noexcept : id_(buffer.id_)
 {

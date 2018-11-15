@@ -2,10 +2,11 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
+#include "Memory/Pool.h"
+
 #include <gtest/gtest.h>
 
 #include "Common/Algorithm.h"
-#include "Memory/Pool.h"
 
 namespace
 {

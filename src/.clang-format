@@ -7,13 +7,17 @@ BinPackArguments: false
 BinPackParameters: false
 BreakBeforeBraces: Allman
 FixNamespaceComments: true
+IncludeBlocks: Regroup
 IncludeCategories:
-  - Regex: '^["<](AL|AVFoundation|AudioToolbox|Box2D|CoreMotion|CoreServices|EGL|GL|GLES2|GLKit|OpenAL|OpenGL|OpenGLES|SDL|UIKit|android|boost|fmod|gtest|vorbis)[\/_]'
-    Priority: 2
-  - Regex: '^<'
+  - Regex: '^<(experimental/)?[_a-z]+>'
     Priority: 1
-  - Regex: '.\*'
+  - Regex: '^<(sys/[a-z]+|direct|locale|unistd)\.h>'
+    Priority: 1
+  - Regex: '^<'
+    Priority: 2
+  - Regex: '.*'
     Priority: 10
+IncludeIsMainRegex: "(\\.(android|apple|mac|sdl|test|unix|win))?$"
 IndentCaseLabels: true
 IndentPPDirectives: AfterHash
 IndentWidth: 4

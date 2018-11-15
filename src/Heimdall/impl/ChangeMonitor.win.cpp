@@ -37,9 +37,14 @@ ChangeMonitor::ChangeMonitor(czstring directory)
             std::this_thread::sleep_for(std::chrono::seconds(1));
             DWORD dwBytesReturned = 0;
             ReadDirectoryChangesW(
-                hDirectory_, buffer.get(), nBufferLength, TRUE,
+                hDirectory_,
+                buffer.get(),
+                nBufferLength,
+                TRUE,
                 FILE_NOTIFY_CHANGE_LAST_WRITE | FILE_NOTIFY_CHANGE_CREATION,
-                &dwBytesReturned, nullptr, nullptr);
+                &dwBytesReturned,
+                nullptr,
+                nullptr);
             if (dwBytesReturned == 0)
                 continue;
 

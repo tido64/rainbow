@@ -20,6 +20,6 @@ namespace rainbow
         Vec2f texcoord;  ///< Texture coordinates.
         Vec2f position;  ///< Position of vertex.
     };
-}
+}  // namespace rainbow
 
 #endif

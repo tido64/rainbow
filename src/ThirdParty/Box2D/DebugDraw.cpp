@@ -6,8 +6,8 @@
 
 #include <memory>
 
-#include "Graphics/Shaders.h"
 #include "Graphics/ShaderManager.h"
+#include "Graphics/Shaders.h"
 #include "Graphics/VertexArray.h"
 #include "Math/Geometry.h"
 
@@ -27,7 +27,7 @@ namespace
     {
         glBufferData(GL_ARRAY_BUFFER, size, data, GL_STREAM_DRAW);
     }
-}
+}  // namespace
 
 namespace b2
 {
@@ -63,12 +63,18 @@ namespace b2
                 glBindBuffer(GL_ARRAY_BUFFER, g_debug_draw_buffer);
                 glEnableVertexAttribArray(Shader::kAttributeColor);
                 glVertexAttribPointer(
-                    Shader::kAttributeColor, 4, GL_FLOAT, GL_FALSE,
+                    Shader::kAttributeColor,
+                    4,
+                    GL_FLOAT,
+                    GL_FALSE,
                     sizeof(Vertex),
                     reinterpret_cast<void*>(offsetof(Vertex, color)));
                 glEnableVertexAttribArray(Shader::kAttributeVertex);
                 glVertexAttribPointer(
-                    Shader::kAttributeVertex, 2, GL_FLOAT, GL_TRUE,
+                    Shader::kAttributeVertex,
+                    2,
+                    GL_FLOAT,
+                    GL_TRUE,
                     sizeof(Vertex),
                     reinterpret_cast<void*>(offsetof(Vertex, vertex)));
             });
@@ -206,4 +212,4 @@ namespace b2
         p2 = p1 + kAxisScale * xf.q.GetYAxis();
         DrawSegment(p1, p2, b2Color(0.0f, 1.0f, 0.0f));
     }
-}
+}  // namespace b2

@@ -49,13 +49,13 @@ bool OverlayActivator::on_key_down_impl(const KeyStroke& key)
 {
     if (!overlay_->is_enabled() && key.key == VirtualKey::F2)
     {
-#ifdef RAINBOW_OS_MACOS
+#    ifdef RAINBOW_OS_MACOS
         constexpr auto LeftSuper = VirtualKey::LeftSuper;
         constexpr auto RightSuper = VirtualKey::RightSuper;
-#else
+#    else
         constexpr auto LeftSuper = VirtualKey::LeftCtrl;
         constexpr auto RightSuper = VirtualKey::RightCtrl;
-#endif
+#    endif
         auto& keyboard_state = rainbow::Input::Get()->keyboard_state();
         if ((keyboard_state[to_integral_value(VirtualKey::LeftAlt)] ||
              keyboard_state[to_integral_value(VirtualKey::RightAlt)]) &&

@@ -8,14 +8,14 @@
 
 #include "Platform/Macros.h"
 #if defined(RAINBOW_OS_IOS) || defined(RAINBOW_OS_MACOS)
-#   include <OpenAL/al.h>
-#   include <OpenAL/alc.h>
-#   ifdef RAINBOW_OS_IOS
-#       import "Audio/AL/RainbowAudioSession.h"
-#   endif
+#    include <OpenAL/al.h>
+#    include <OpenAL/alc.h>
+#    ifdef RAINBOW_OS_IOS
+#        import "Audio/AL/RainbowAudioSession.h"
+#    endif
 #else
-#   include <AL/al.h>
-#   include <AL/alc.h>
+#    include <AL/al.h>
+#    include <AL/alc.h>
 #endif
 
 #include "Audio/AudioFile.h"
@@ -24,10 +24,10 @@
 #include "FileSystem/Path.h"
 #include "Memory/SmallBuffer.h"
 
+using rainbow::czstring;
 using rainbow::audio::ALMixer;
 using rainbow::audio::Channel;
 using rainbow::audio::Sound;
-using rainbow::czstring;
 
 namespace
 {
@@ -55,7 +55,7 @@ namespace
     }
 
     constexpr bool is_fail(ALenum result) { return result != AL_NO_ERROR; }
-}
+}  // namespace
 
 namespace std
 {
@@ -70,7 +70,7 @@ namespace std
     {
         void operator()(ALCdevice* device) const { alcCloseDevice(device); }
     };
-}
+}  // namespace std
 
 bool ALMixer::initialize(int max_channels)
 {

@@ -18,7 +18,7 @@
 #define PNG_NO_WRITE_SUPPORTED
 
 #ifndef PNG_ZLIB_VERNUM
-#define PNG_ZLIB_VERNUM 0
+#    define PNG_ZLIB_VERNUM 0
 #endif
 
 #endif

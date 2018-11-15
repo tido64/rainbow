@@ -2,11 +2,12 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
+#include "Graphics/Sprite.h"
+
 #include <functional>
 
 #include <gtest/gtest.h>
 
-#include "Graphics/Sprite.h"
 #include "Graphics/TextureAtlas.h"
 #include "Tests/TestHelpers.h"
 
@@ -84,12 +85,9 @@ namespace
 
         void update() { sprite.update(vertex_array, *atlas); }
 
-        void SetUp() override
-        {
-            update();
-        }
+        void SetUp() override { update(); }
     };
-}
+}  // namespace
 
 TEST(SpriteTest, PlacedAtOriginOnCreation)
 {

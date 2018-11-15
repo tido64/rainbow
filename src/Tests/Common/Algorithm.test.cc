@@ -2,11 +2,12 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
+#include "Common/Algorithm.h"
+
 #include <functional>
 
 #include <gtest/gtest.h>
 
-#include "Common/Algorithm.h"
 #include "Common/Logging.h"
 
 namespace
@@ -26,7 +27,7 @@ namespace
 
     constexpr uint32_t kUTF32[]{
         0x00c5, 0x00c6, 0x00d8, 0x00e5, 0x00e6, 0x00f8, 0x20ac, 0x1f4a9};
-}
+}  // namespace
 
 TEST(AlgorithmTest, ApproximatesFloatEquality)
 {

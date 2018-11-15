@@ -9,10 +9,11 @@
 
 #include "Platform/Macros.h"
 #if defined(RAINBOW_OS_MACOS)
-#   include <CoreServices/CoreServices.h>
+#    include <CoreServices/CoreServices.h>
 #elif defined(RAINBOW_OS_WINDOWS)
-#   include <future>
-#   include <Windows.h>
+#    include <future>
+
+#    include <Windows.h>
 #endif
 
 #include "Common/NonCopyable.h"
@@ -45,6 +46,6 @@ namespace heimdall
 #endif
         std::function<void(rainbow::czstring)> callback_;
     };
-}
+}  // namespace heimdall
 
 #endif

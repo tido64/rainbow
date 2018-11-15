@@ -6,13 +6,13 @@
 #define THIRDPARTY_BOX2D_STABLEWORLD_H_
 
 #ifdef __GNUC__
-#   pragma GCC diagnostic push
-#   pragma GCC diagnostic ignored "-Wold-style-cast"
-#   pragma GCC diagnostic ignored "-Wstrict-aliasing"
+#    pragma GCC diagnostic push
+#    pragma GCC diagnostic ignored "-Wold-style-cast"
+#    pragma GCC diagnostic ignored "-Wstrict-aliasing"
 #endif
 #include <Box2D/Dynamics/b2World.h>
 #ifdef __GNUC__
-#   pragma GCC diagnostic pop
+#    pragma GCC diagnostic pop
 #endif
 
 #include "Graphics/Sprite.h"
@@ -58,6 +58,6 @@ namespace b2
         void RestoreState();
         void SaveState();
     };
-}
+}  // namespace b2
 
 #endif

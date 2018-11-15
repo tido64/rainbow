@@ -2,9 +2,10 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
+#include "Graphics/Animation.h"
+
 #include <gtest/gtest.h>
 
-#include "Graphics/Animation.h"
 #include "Graphics/SpriteBatch.h"
 #include "Tests/TestHelpers.h"
 
@@ -26,11 +27,12 @@ namespace
     {
     public:
         AnimationTest()
-            : atlas_(rainbow::make_shared<TextureAtlas>(mock)),
-              batch_(mock),
+            : atlas_(rainbow::make_shared<TextureAtlas>(mock)), batch_(mock),
               sprite_(batch_.create_sprite(2, 2)),
               vertex_array_(batch_.vertices()),
-              animation_(sprite_, nullptr, kNumFrames, 0) {}
+              animation_(sprite_, nullptr, kNumFrames, 0)
+        {
+        }
 
     protected:
         rainbow::ISolemnlySwearThatIAmOnlyTesting mock;
@@ -62,7 +64,7 @@ namespace
                 uv_[i] = vertex_array_[i].texcoord;
         }
     };
-}
+}  // namespace
 
 TEST_F(AnimationTest, IsStoppedInitially)
 {
@@ -394,7 +396,6 @@ TEST_F(AnimationTest, FiresCompleteEventAfterFrameChange)
     animation_.start();
 
     ASSERT_EQ(animation_.current_frame(), 0u);
-
 }
 
 TEST_F(AnimationTest, FiresFrameEventOnFrameChange)

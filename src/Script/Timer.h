@@ -92,6 +92,6 @@ namespace rainbow
     private:
         Pool<Timer> timers_;
     };
-}
+}  // namespace rainbow
 
 #endif

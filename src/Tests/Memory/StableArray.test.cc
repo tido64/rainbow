@@ -2,10 +2,11 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
+#include "Memory/StableArray.h"
+
 #include <gtest/gtest.h>
 
 #include "Common/Random.h"
-#include "Memory/StableArray.h"
 
 using rainbow::StableArray;
 
@@ -34,7 +35,7 @@ namespace
                       alignof(SizableStruct<Padding>),
                   0u);
     }
-}
+}  // namespace
 
 TEST(StableArrayTest, AllocatesAlignedStore)
 {

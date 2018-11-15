@@ -16,6 +16,6 @@ namespace rainbow
 
         friend T;
     };
-}
+}  // namespace rainbow
 
 #endif

@@ -7,7 +7,7 @@
 #include "Common/Logging.h"
 #include "FileSystem/FileSystem.h"
 #ifdef RAINBOW_OS_IOS
-#   include "Platform/iOS/NSString+Rainbow.h"
+#    include "Platform/iOS/NSString+Rainbow.h"
 #endif
 
 using rainbow::czstring;

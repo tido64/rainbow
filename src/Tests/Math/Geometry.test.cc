@@ -2,10 +2,11 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
+#include "Math/Geometry.h"
+
 #include <gtest/gtest.h>
 
 #include "Common/Constants.h"
-#include "Math/Geometry.h"
 
 using rainbow::Rect;
 using rainbow::Vec2f;

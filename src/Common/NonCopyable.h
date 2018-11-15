@@ -21,6 +21,6 @@ namespace rainbow
         NonCopyable() = default;
         ~NonCopyable() = default;
     };
-}
+}  // namespace rainbow
 
 #endif

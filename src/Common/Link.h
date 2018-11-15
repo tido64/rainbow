@@ -77,6 +77,6 @@ namespace rainbow
             prev_->on_end_link_changed(new_link);
         }
     };
-}
+}  // namespace rainbow
 
 #endif

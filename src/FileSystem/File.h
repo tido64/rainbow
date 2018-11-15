@@ -17,13 +17,13 @@
 #include "Platform/Macros.h"
 
 #ifdef RAINBOW_OS_ANDROID
-#   define CONSTEXPR
+#    define CONSTEXPR
 #else
-#   define CONSTEXPR constexpr
+#    define CONSTEXPR constexpr
 #endif
 
 #ifndef RAINBOW_OS_WINDOWS
-#   define _fileno fileno
+#    define _fileno fileno
 #endif
 
 namespace rainbow
@@ -317,16 +317,16 @@ namespace rainbow
 #undef CONSTEXPR
 
 #ifdef RAINBOW_OS_ANDROID
-#   include "FileSystem/impl/File.android.h"
+#    include "FileSystem/impl/File.android.h"
 #endif
 #include "FileSystem/impl/File.system.h"
 
 #ifndef RAINBOW_OS_WINDOWS
-#   undef _fileno
+#    undef _fileno
 #endif
 
 #ifdef USE_PLATFORM_FILE
-#   undef USE_PLATFORM_FILE
+#    undef USE_PLATFORM_FILE
 #endif
 
 #endif

@@ -69,6 +69,6 @@ namespace rainbow
         return scale(
             component, Vec2f(factor, factor), duration, std::move(timing));
     }
-}
+}  // namespace rainbow
 
 #endif

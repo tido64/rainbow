@@ -2,9 +2,9 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
-#include <gtest/gtest.h>
-
 #include "Common/Global.h"
+
+#include <gtest/gtest.h>
 
 namespace
 {
@@ -25,7 +25,7 @@ namespace
 
         using Global::is_global;
     };
-}
+}  // namespace
 
 TEST(GlobalTest, GlobalOnlyWhenExplicitlyMadeSo)
 {

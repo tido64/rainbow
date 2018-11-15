@@ -279,7 +279,7 @@ namespace rainbow::duk
                     T(forward(std::get<I>(std::forward<Tuple>(t)))...);
             }
         }
-    }
+    }  // namespace detail
 
     template <size_t N, typename... Args>
     bool call(duk_context* ctx, const char (&func)[N], Args&&... args)

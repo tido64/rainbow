@@ -6,7 +6,7 @@
 #define COMMON_VARIANT_H_
 
 #if !__has_include(<optional>)
-#   include <experimental/optional>
+#    include <experimental/optional>
 
 namespace std
 {
@@ -15,16 +15,16 @@ namespace std
 }  // namespace std
 
 #else
-#   include <optional>
+#    include <optional>
 #endif
 
 #ifdef _MSC_VER
-#   pragma warning(push)
-#   pragma warning(disable : 4996)
+#    pragma warning(push)
+#    pragma warning(disable : 4996)
 #endif
 #include <mapbox/variant.hpp>
 #ifdef _MSC_VER
-#   pragma warning(pop)
+#    pragma warning(pop)
 #endif
 
 namespace rainbow

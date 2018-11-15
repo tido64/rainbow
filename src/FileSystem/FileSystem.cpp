@@ -6,26 +6,27 @@
 
 #include "Platform/Macros.h"
 #if HAS_FILESYSTEM
-#   include <experimental/filesystem>
+#    include <experimental/filesystem>
 namespace stdfs = std::experimental::filesystem;
 #else
-#   include <climits>
-#   include <cstdlib>
-#   include <sys/stat.h>
-#   include <unistd.h>
-#   include "Common/Logging.h"
+#    include <climits>
+#    include <cstdlib>
+#    include <sys/stat.h>
+#    include <unistd.h>
+
+#    include "Common/Logging.h"
 #endif
 
 #if defined(RAINBOW_OS_WINDOWS)
-#   define kPathSeparator "\\"
+#    define kPathSeparator "\\"
 #else
-#   define kPathSeparator "/"
-#   if defined(RAINBOW_OS_ANDROID)
-#       include <android/native_activity.h>
+#    define kPathSeparator "/"
+#    if defined(RAINBOW_OS_ANDROID)
+#        include <android/native_activity.h>
 extern ANativeActivity* g_native_activity;
-#   elif defined(RAINBOW_OS_IOS)
-#       include "Platform/iOS/NSString+Rainbow.h"
-#   endif
+#    elif defined(RAINBOW_OS_IOS)
+#        include "Platform/iOS/NSString+Rainbow.h"
+#    endif
 #endif
 #include "FileSystem/Bundle.h"
 

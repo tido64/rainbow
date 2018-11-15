@@ -59,11 +59,11 @@ namespace rainbow::audio
 
 #include "Platform/Macros.h"
 #if defined(RAINBOW_AUDIO_AL)
-#   include "Audio/AL/Mixer.h"
+#    include "Audio/AL/Mixer.h"
 #elif defined(RAINBOW_AUDIO_FMOD)
-#   include "Audio/FMOD/Mixer.h"
+#    include "Audio/FMOD/Mixer.h"
 #else
-#   include "Audio/cubeb/Mixer.h"
+#    include "Audio/cubeb/Mixer.h"
 #endif
 
 #endif

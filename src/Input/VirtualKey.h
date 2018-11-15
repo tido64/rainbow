@@ -178,6 +178,6 @@ namespace rainbow
         VirtualKey key;
         uint32_t mods;
     };
-}
+}  // namespace rainbow
 
 #endif

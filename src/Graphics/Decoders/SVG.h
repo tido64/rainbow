@@ -26,7 +26,7 @@ namespace std
             nsvgDeleteRasterizer(rasterizer);
         }
     };
-}
+}  // namespace std
 
 namespace svg
 {
@@ -75,6 +75,6 @@ namespace svg
         image.data = buffer.release();
         return image;
     }
-}
+}  // namespace svg
 
 #endif

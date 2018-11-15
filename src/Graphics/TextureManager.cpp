@@ -7,9 +7,9 @@
 #include "Graphics/Renderer.h"
 
 #ifdef USE_HEIMDALL
-#   define IF_DEVMODE_CAPTURE(x) x
+#    define IF_DEVMODE_CAPTURE(x) x
 #else
-#   define IF_DEVMODE_CAPTURE(x)
+#    define IF_DEVMODE_CAPTURE(x)
 #endif
 
 using rainbow::Passkey;

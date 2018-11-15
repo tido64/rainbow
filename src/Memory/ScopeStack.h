@@ -154,6 +154,6 @@ namespace rainbow
             return block;
         }
     };
-}
+}  // namespace rainbow
 
 #endif

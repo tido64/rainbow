@@ -61,10 +61,7 @@ namespace rainbow
         }
 
         /// <summary>Returns the distance between two points.</summary>
-        auto distance(const Vec2& v) const
-        {
-            return std::sqrt(distance_sq(v));
-        }
+        auto distance(const Vec2& v) const { return std::sqrt(distance_sq(v)); }
 
         /// <summary>Returns the distance between two points, squared.</summary>
         auto distance_sq(const Vec2& v) const
@@ -81,10 +78,7 @@ namespace rainbow
                 return are_equal<T>(0, x) && are_equal<T>(0, y);
         }
 
-        auto normal() const
-        {
-            return Vec2{-y, x};
-        }
+        auto normal() const { return Vec2{-y, x}; }
 
         auto normalize() const
         {
@@ -100,40 +94,22 @@ namespace rainbow
             }
         }
 
-        auto operator-() const
-        {
-            return Vec2{-x, -y};
-        }
+        auto operator-() const { return Vec2{-x, -y}; }
 
-        auto operator*(const Vec2& v) const
-        {
-            return x * v.x + y * v.y;
-        }
+        auto operator*(const Vec2& v) const { return x * v.x + y * v.y; }
 
-        auto operator*(value_type f) const
-        {
-            return Vec2{x * f, y * f};
-        }
+        auto operator*(value_type f) const { return Vec2{x * f, y * f}; }
 
-        auto operator/(value_type f) const
-        {
-            return Vec2{x / f, y / f};
-        }
+        auto operator/(value_type f) const { return Vec2{x / f, y / f}; }
 
-        auto operator+(const Vec2& v) const
-        {
-            return Vec2{x + v.x, y + v.y};
-        }
+        auto operator+(const Vec2& v) const { return Vec2{x + v.x, y + v.y}; }
 
         auto operator+(value_type offset) const
         {
             return Vec2{x + offset, y + offset};
         }
 
-        auto operator-(const Vec2& v) const
-        {
-            return Vec2{x - v.x, y - v.y};
-        }
+        auto operator-(const Vec2& v) const { return Vec2{x - v.x, y - v.y}; }
 
         auto operator-(value_type offset) const
         {
@@ -202,6 +178,6 @@ namespace rainbow
     using Vec2f = Vec2<float>;
     using Vec2i = Vec2<int32_t>;
     using Vec2u = Vec2<uint32_t>;
-}
+}  // namespace rainbow
 
 #endif

@@ -8,12 +8,12 @@
 #include <vector>
 
 #ifdef __GNUC__
-#   pragma GCC diagnostic push
-#   pragma GCC diagnostic ignored "-Wstrict-aliasing"
+#    pragma GCC diagnostic push
+#    pragma GCC diagnostic ignored "-Wstrict-aliasing"
 #endif
 #include <Box2D/Common/b2Draw.h>
 #ifdef __GNUC__
-#   pragma GCC diagnostic pop
+#    pragma GCC diagnostic pop
 #endif
 
 namespace b2
@@ -80,6 +80,6 @@ namespace b2
         std::vector<Vertex> triangles_;
         DebuggableWorld* worlds_[kMaxNumWorlds];
     };
-}
+}  // namespace b2
 
 #endif

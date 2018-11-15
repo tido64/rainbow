@@ -7,25 +7,25 @@
 #include <string>
 
 #ifdef __GNUC__
-#   pragma GCC diagnostic push
-#   pragma GCC diagnostic ignored "-Wignored-qualifiers"
-#   pragma GCC diagnostic ignored "-Wold-style-cast"
-#   pragma GCC diagnostic ignored "-Wunused-function"
-#   pragma GCC diagnostic ignored "-Wunused-parameter"
+#    pragma GCC diagnostic push
+#    pragma GCC diagnostic ignored "-Wignored-qualifiers"
+#    pragma GCC diagnostic ignored "-Wold-style-cast"
+#    pragma GCC diagnostic ignored "-Wunused-function"
+#    pragma GCC diagnostic ignored "-Wunused-parameter"
 #endif
 #include <fmod_errors.h>
 #include <fmod_studio.hpp>
 #ifdef __GNUC__
-#   pragma GCC diagnostic pop
+#    pragma GCC diagnostic pop
 #endif
 
 #include "Common/Logging.h"
 #include "FileSystem/FileSystem.h"
 
+using rainbow::czstring;
 using rainbow::audio::Channel;
 using rainbow::audio::FMODMixer;
 using rainbow::audio::Sound;
-using rainbow::czstring;
 
 namespace
 {
@@ -89,7 +89,7 @@ namespace
     {
         return static_cast<Sound*>(static_cast<void*>(sound));
     }
-}
+}  // namespace
 
 bool FMODMixer::initialize(int max_channels)
 {

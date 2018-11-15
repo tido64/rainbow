@@ -6,7 +6,7 @@
 
 #include "Platform/Macros.h"
 #ifdef RAINBOW_OS_WINDOWS
-#   include <Windows.h>
+#    include <Windows.h>
 #endif
 
 #include "Common/Logging.h"
@@ -27,7 +27,7 @@ namespace
                    ? Vec2i{1280, 720}
                    : Vec2i{config.width(), config.height()};
     }
-}
+}  // namespace
 
 SDLContext::SDLContext(const Config& config)
     : window_(nullptr), vsync_(false), fullscreen_(0), context_(nullptr)

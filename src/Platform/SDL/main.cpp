@@ -38,7 +38,10 @@ using rainbow::SDLContext;
 SDLContext* g_context = nullptr;
 RainbowController* g_controller = nullptr;
 
-void emscripten_main() { g_controller->run(); }
+void emscripten_main()
+{
+    g_controller->run();
+}
 
 auto main() -> int
 {

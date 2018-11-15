@@ -8,13 +8,13 @@
 #include <string>
 
 #ifdef __GNUC__
-#   pragma GCC diagnostic push
-#   pragma GCC diagnostic ignored "-Wpedantic"
-#   pragma GCC diagnostic ignored "-Woverflow"
+#    pragma GCC diagnostic push
+#    pragma GCC diagnostic ignored "-Wpedantic"
+#    pragma GCC diagnostic ignored "-Woverflow"
 #endif
 #include <absl/container/flat_hash_map.h>
 #ifdef __GNUC__
-#   pragma GCC diagnostic pop
+#    pragma GCC diagnostic pop
 #endif
 #include <duktape.h>
 

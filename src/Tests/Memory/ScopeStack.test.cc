@@ -2,11 +2,11 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
+#include "Memory/ScopeStack.h"
+
 #include <cstddef>
 
 #include <gtest/gtest.h>
-
-#include "Memory/ScopeStack.h"
 
 using rainbow::LinearAllocator;
 using rainbow::ScopeStack;
@@ -17,7 +17,9 @@ namespace
     {
     public:
         DeleteMe(bool& deleted, DeleteMe**& order)
-            : deleted_(deleted), order_(order) {}
+            : deleted_(deleted), order_(order)
+        {
+        }
 
         ~DeleteMe()
         {
@@ -30,7 +32,7 @@ namespace
         bool& deleted_;
         DeleteMe**& order_;
     };
-}
+}  // namespace
 
 TEST(LinearAllocatorTest, AlignedSizeFitsAnyType)
 {
@@ -72,7 +74,8 @@ TEST(ScopeStackTest, ResetsStack)
     const uint32_t kSecond = 0xdeadbeef;
 
     LinearAllocator allocator(1024);
-    const uint8_t* allocator_begin = static_cast<const uint8_t*>(allocator.end());
+    const uint8_t* allocator_begin =
+        static_cast<const uint8_t*>(allocator.end());
 
     ScopeStack stack(allocator);
     const auto i = stack.allocate<uint32_t>(kFirst);
