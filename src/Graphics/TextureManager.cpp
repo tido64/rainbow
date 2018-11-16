@@ -251,3 +251,88 @@ void TextureManager::update_usage()
         mem_peak_ = mem_used_;
 }
 #endif
+
+#include "FileSystem/File.h"
+#include "Graphics/Image.h"
+#include "Graphics/Vulkan.h"
+
+using rainbow::graphics::v2::Filter;
+using rainbow::graphics::v2::TextureMap;
+using rainbow::vk::CommandBuffer;
+
+namespace
+{
+    auto to_filter(Filter f)
+    {
+        switch (f)
+        {
+            case Filter::Nearest:
+                return rainbow::vk::Filter::Nearest;
+            case Filter::Linear:
+                return rainbow::vk::Filter::Linear;
+            case Filter::Cubic:
+                return rainbow::vk::Filter::CubicIMG;
+        }
+    }
+}
+
+void rainbow::vk::update_descriptor(
+    const CommandBuffer& command_buffer,
+    const rainbow::graphics::v2::Texture& texture,
+    uint32_t binding)
+{
+    vk::update_descriptor(  //
+        command_buffer,
+        *reinterpret_cast<const vk::Texture*>(texture.data),
+        binding);
+}
+
+TextureMap::~TextureMap()
+{
+    for (auto&& texture : texture_map_)
+        reinterpret_cast<vk::Texture*>(texture.second.data)->destroy(device_);
+}
+
+auto TextureMap::get(std::string_view path,
+                     float scale,
+                     Filter mag_filter,
+                     Filter min_filter) -> const Texture&
+{
+    static_assert(sizeof(Texture::data) == sizeof(vk::Texture));
+
+    auto [iter, inserted] = texture_map_.try_emplace(path);
+    if (inserted)
+    {
+        auto data = File::read(path.data(), FileType::Asset);
+        auto image = Image::decode(data, scale);
+        auto& texture = iter->second;
+        new (texture.data) vk::Texture(
+            device_, image, to_filter(mag_filter), to_filter(min_filter));
+        texture.width = image.width;
+        texture.height = image.height;
+#ifdef USE_HEIMDALL
+        texture.size = image.size;
+        mem_used_ += image.size;
+        if (mem_used_ > mem_peak_)
+            mem_peak_ = mem_used_;
+#endif
+    }
+
+    return iter->second;
+}
+
+void TextureMap::release(std::string_view path)
+{
+    if (auto node = texture_map_.extract(path))
+    {
+        IF_DEVMODE(mem_used_ -= node.mapped().size);
+        reinterpret_cast<vk::Texture*>(node.mapped().data)->destroy(device_);
+    }
+}
+
+auto TextureMap::try_get(std::string_view path) const -> std::optional<Texture>
+{
+    auto iter = texture_map_.find(path);
+    return iter == texture_map_.end() ? std::nullopt
+                                      : std::make_optional(iter->second);
+}

@@ -8,7 +8,7 @@
 #include "Common/Algorithm.h"
 #include "Common/Logging.h"
 
-// https://msdn.microsoft.com/en-us/library/windows/desktop/bb943991(v=vs.85).aspx
+// https://docs.microsoft.com/en-us/windows/desktop/direct3ddds/dx-graphics-dds-pguide
 #define USE_DDS
 
 namespace
@@ -73,7 +73,7 @@ namespace dds
 
     auto decode(const rainbow::Data& data)
     {
-        rainbow::Image image{rainbow::Image::Format::S3TC};
+        rainbow::Image image{};
 
         auto dds = data.as<DDSFile*>();
         image.width = dds->header.dwWidth;
@@ -89,15 +89,17 @@ namespace dds
         switch (ddspf.dwFourCC)
         {
             case kFourCCDXT1:
-                image.channels = (ddspf.dwFlags & kDDPFRGBA) == kDDPFRGBA
-                                     ? GL_COMPRESSED_RGBA_S3TC_DXT1_EXT
-                                     : GL_COMPRESSED_RGB_S3TC_DXT1_EXT;
+                image.format = rainbow::Image::Format::BC1;
+                image.channels =
+                    (ddspf.dwFlags & kDDPFRGBA) == kDDPFRGBA ? 4 : 3;
                 break;
             case kFourCCDXT3:
-                image.channels = GL_COMPRESSED_RGBA_S3TC_DXT3_EXT;
+                image.format = rainbow::Image::Format::BC2;
+                image.channels = 4;
                 break;
             case kFourCCDXT5:
-                image.channels = GL_COMPRESSED_RGBA_S3TC_DXT5_EXT;
+                image.format = rainbow::Image::Format::BC3;
+                image.channels = 4;
                 break;
             default:
                 R_ASSERT(false, "Unsupported DDS image format");

@@ -15,9 +15,12 @@ namespace rainbow
         {
             Unknown,
             ATITC,  // Adreno
+            BC1,    // DXT1
+            BC2,    // DXT3
+            BC3,    // DXT5
             ETC1,   // OpenGL ES standard
+            ETC2,   // OpenGL ES 3.0 standard
             PVRTC,  // iOS, OMAP43xx, PowerVR
-            S3TC,   // Desktops, Tegra
             PNG,
             SVG,
         };
@@ -41,7 +44,7 @@ namespace rainbow
         ///     </item>
         ///   </list>
         /// </remarks>
-        static Image decode(const Data&, float scale);
+        static auto decode(const Data&, float scale) -> Image;
 
         Format format;
         uint32_t width;
@@ -78,9 +81,11 @@ namespace rainbow
             switch (format)
             {
                 case Format::ATITC:
+                case Format::BC1:
+                case Format::BC2:
+                case Format::BC3:
                 case Format::ETC1:
                 case Format::PVRTC:
-                case Format::S3TC:
                     break;
 
                 case Format::PNG:
@@ -93,6 +98,7 @@ namespace rainbow
     };
 }  // namespace rainbow
 
+#if !defined(GRAPHICS_VULKAN_H_) && !defined(GRAPHICS_TEXTUREMANAGER_H_)  // TODO: Remove
 #include "Graphics/OpenGL.h"
 #if defined(RAINBOW_OS_IOS)
 #    include "Graphics/Decoders/UIKit.h"
@@ -139,4 +145,5 @@ namespace rainbow
     }
 }  // namespace rainbow
 
+#endif  // GRAPHICS_VULKAN_H_
 #endif

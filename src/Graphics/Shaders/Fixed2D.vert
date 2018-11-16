@@ -2,18 +2,23 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
-uniform mat4 mvp_matrix;
+#version 460
 
-attribute vec4 color;
-attribute vec2 texcoord;
-attribute vec2 vertex;
+layout(binding = 0) uniform MatrixBlock
+{
+    mat4 modelViewProjection;
+};
 
-varying lowp vec4 v_color;
-varying vec2 v_texcoord;
+layout(location = 0) in uvec4 color;
+layout(location = 1) in vec2 texCoord;
+layout(location = 2) in vec2 position;
+
+layout(location = 0) out vec4 fragColor;
+layout(location = 1) out vec2 fragTexCoord;
 
 void main()
 {
-    v_color = color;
-    v_texcoord = texcoord;
-    gl_Position = mvp_matrix * vec4(vertex, 0.0, 1.0);
+    fragColor = color / 255.0;
+    fragTexCoord = texCoord;
+    gl_Position = modelViewProjection * vec4(position, 0.0, 1.0);
 }

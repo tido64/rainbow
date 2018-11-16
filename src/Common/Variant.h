@@ -22,6 +22,9 @@ namespace std
 #    pragma warning(push)
 #    pragma warning(disable : 4996)
 #endif
+#ifdef __EXCEPTIONS
+#    undef __EXCEPTIONS
+#endif
 #include <mapbox/variant.hpp>
 #ifdef _MSC_VER
 #    pragma warning(pop)

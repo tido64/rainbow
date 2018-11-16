@@ -17,7 +17,7 @@ IncludeCategories:
     Priority: 2
   - Regex: '.*'
     Priority: 10
-IncludeIsMainRegex: "(\\.(android|apple|mac|sdl|test|unix|win))?$"
+IncludeIsMainRegex: "(\\.(android|apple|mac(os)?|sdl|test|unix|win))?$"
 IndentCaseLabels: true
 IndentPPDirectives: AfterHash
 IndentWidth: 4

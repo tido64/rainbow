@@ -113,7 +113,9 @@ void TextureAtlas::load(TextureManager& texture_manager,
         }
 #endif  // PVRTC
 #ifdef GL_EXT_texture_compression_s3tc
-        case Image::Format::S3TC:
+        case Image::Format::BC1:
+        case Image::Format::BC2:
+        case Image::Format::BC3:
             texture_manager.upload_compressed(
                 texture,
                 image.channels,
@@ -157,4 +159,38 @@ void TextureAtlas::load(TextureManager& texture_manager,
             break;
         }
     }
+}
+
+#include "Graphics/TextureManager.h"
+#include "Graphics/Vulkan.h"
+
+using rainbow::vk::CommandBuffer;
+
+auto rainbow::v2::TextureAtlas::add(Rect region) -> uint32_t
+{
+    const auto index = regions_.size();
+    regions_.push_back(region);
+    return index;
+}
+
+void rainbow::v2::TextureAtlas::set(ArrayView<Rect> rects)
+{
+    regions_.clear();
+    regions_.reserve(rects.size());
+    std::copy(rects.begin(), rects.end(), std::back_inserter(regions_));
+}
+
+void rainbow::vk::update_descriptor(const CommandBuffer& command_buffer,
+                                    const rainbow::v2::TextureAtlas& atlas,
+                                    uint32_t binding)
+{
+    auto texture = atlas.texture_manager().try_get(atlas.path());
+    if (!texture)
+    {
+        R_ABORT("'%s' has not been initialized or was already released",
+                atlas.path().data());
+        return;
+    }
+
+    update_descriptor(command_buffer, *texture, binding);
 }

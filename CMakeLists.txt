@@ -98,6 +98,8 @@ set(SOURCE_FILES
     src/Graphics/TextureManager.h
     src/Graphics/VertexArray.cpp
     src/Graphics/VertexArray.h
+    src/Graphics/Vulkan.cpp
+    src/Graphics/Vulkan.h
     src/Heimdall/ChangeMonitor.h
     src/Heimdall/Gatekeeper.cpp
     src/Heimdall/Gatekeeper.h
@@ -180,25 +182,32 @@ else()
       src/Platform/SDL/Context.h
       src/Platform/SDL/RainbowController.cpp
       src/Platform/SDL/RainbowController.h
+      src/Platform/SDL/Window.cpp
+      src/Platform/SDL/Window.h
       src/Platform/SDL/main.cpp
   )
   if(WIN32)
     list(APPEND SOURCE_FILES
         lib/glad/glad.c
         src/Heimdall/impl/ChangeMonitor.win.cpp
+        src/Platform/SDL/Window.win.cpp
         src/Platform/impl/SystemInfo.win.cpp
         tools/make.ps1
     )
   elseif(APPLE)
     list(APPEND SOURCE_FILES
         src/Graphics/Decoders/UIKit.h
+        src/Graphics/Vulkan.macos.mm
         src/Heimdall/impl/ChangeMonitor.mac.cpp
+        src/Platform/SDL/Window.macos.cpp
         src/Platform/impl/SystemInfo.apple.cpp
     )
   else()
     list(APPEND SOURCE_FILES
         src/Heimdall/impl/ChangeMonitor.stub.cpp
-        src/Platform/impl/SystemInfo.unix.cpp)
+        src/Platform/SDL/Window.unix.cpp
+        src/Platform/impl/SystemInfo.unix.cpp
+    )
   endif()
 endif()
 
@@ -347,6 +356,7 @@ target_include_directories(
     PRIVATE
         ${PROJECT_SOURCE_DIR}/src
         ${LOCAL_LIBRARY}
+        ${LOCAL_LIBRARY}/VulkanMemoryAllocator/src
         ${LOCAL_LIBRARY}/abseil-cpp
         ${LOCAL_LIBRARY}/nanosvg/src
         ${LOCAL_LIBRARY}/rapidjson/include
@@ -405,7 +415,8 @@ elseif(APPLE)
     set(CMAKE_EXE_LINKER_FLAGS "--coverage")
   endif()
   find_library(CORESERVICES_LIBRARY CoreServices REQUIRED)
-  target_link_libraries(rainbow ${CORESERVICES_LIBRARY})
+  find_library(QUARTZCORE_LIBRARY QuartzCore REQUIRED)
+  target_link_libraries(rainbow ${CORESERVICES_LIBRARY} ${QUARTZCORE_LIBRARY})
 elseif(UNIX AND NOT MINGW)
   if(UNIT_TESTS)
     set(CMAKE_EXE_LINKER_FLAGS "--coverage")
