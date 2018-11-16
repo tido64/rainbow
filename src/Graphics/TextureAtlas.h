@@ -5,6 +5,8 @@
 #ifndef GRAPHICS_TEXTUREATLAS_H_
 #define GRAPHICS_TEXTUREATLAS_H_
 
+#include <array>
+#include <string_view>
 #include <tuple>
 #include <type_traits>
 #include <vector>
@@ -137,5 +139,126 @@ namespace rainbow
                   float scale);
     };
 }  // namespace rainbow
+
+namespace rainbow::v2
+{
+    class TextureAtlas;
+}
+
+namespace rainbow::graphics::v2
+{
+    class TextureMap;
+}
+
+namespace rainbow::vk
+{
+    class CommandBuffer;
+
+    void update_descriptor(const CommandBuffer&,
+                           const v2::TextureAtlas&,
+                           uint32_t binding = 1);
+}  // namespace rainbow::vk
+
+namespace rainbow::v2
+{
+    struct Rect
+    {
+        float x;
+        float y;
+        float width;
+        float height;
+    };
+
+    class TextureAtlas : public RefCounted
+    {
+    public:
+        TextureAtlas(const graphics::v2::TextureMap& texture_manager,
+                     std::string_view path)
+            : path_(path), texture_manager_(texture_manager)
+        {
+        }
+
+        template <typename... Args>
+        TextureAtlas(graphics::v2::TextureMap& texture_manager,
+                     std::string_view path,
+                     Args&&... args)
+            : TextureAtlas(texture_manager, path)
+        {
+            add(std::forward<Args>(args)...);
+        }
+
+        auto path() const { return path_; }
+
+        auto texture_manager() const -> const graphics::v2::TextureMap&
+        {
+            return texture_manager_;
+        }
+
+        /// <summary>Adds a texture region.</summary>
+        /// <param name="region">Region to add.</param>
+        /// <returns>The id of the region.</returns>
+        auto add(Rect region) -> uint32_t;
+
+        /// <summary>Adds multiple texture regions.</summary>
+        /// <param name="regions">Regions to add.</param>
+        template <typename... Args>
+        void add(Args&&... regions)
+        {
+            static_assert((std::is_convertible_v<Args, Rect> && ...));
+
+            regions_.reserve(regions_.size() + sizeof...(Args));
+            (regions_.push_back(std::forward<Args>(regions)), ...);
+        }
+
+        /// <summary>
+        ///   Replaces the current set of texture regions with the set in the
+        ///   specified array.
+        /// </summary>
+        void set(ArrayView<Rect>);
+
+        /// <summary>Trims the internal texture region storage.</summary>
+        void trim() { regions_.shrink_to_fit(); }
+
+        /// <summary>
+        ///   Returns vertices for the texture region with specified id.
+        /// </summary>
+        /// <remarks>
+        ///   <code>
+        ///     3 ┌─────┐ 2
+        ///       │     │
+        ///       │     │
+        ///     0 └─────┘ 1
+        ///   </code>
+        ///   Textures are read into memory upside-down. Therefore, the order of
+        ///   the UV coordinates are flipped vertically, giving us (3,2,1) and
+        ///   (1,0,3).
+        /// </remarks>
+        auto operator[](uint32_t i) const -> std::array<Vec2f, 6>
+        {
+            const auto& rect = regions_[i];
+            return {{
+                {rect.x, rect.y + rect.height},
+                {rect.x + rect.width, rect.y + rect.height},
+                {rect.x + rect.width, rect.y},
+                {rect.x + rect.width, rect.y},
+                {rect.x, rect.y},
+                {rect.x, rect.y + rect.height},
+            }};
+        }
+
+    private:
+        std::vector<Rect> regions_;
+        std::string_view path_;
+        const graphics::v2::TextureMap& texture_manager_;
+
+#ifdef RAINBOW_TEST
+    public:
+        explicit TextureAtlas(const ISolemnlySwearThatIAmOnlyTesting&)
+            : path_("test")
+        {
+        }
+#endif
+    };
+}  // namespace rainbow::v2
 
 #endif

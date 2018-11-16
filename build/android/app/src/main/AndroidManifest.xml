@@ -4,11 +4,14 @@
 
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
 
-    <uses-feature android:glEsVersion="0x00020000" />
     <uses-feature
         android:name="android.hardware.gamepad"
         android:required="false" />
     <uses-feature android:name="android.hardware.screen.portrait" />
+    <uses-feature
+        android:name="android.hardware.vulkan.level"
+        android:version="0"
+        android:required="true" />
 
     <application
         android:allowBackup="true"
