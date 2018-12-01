@@ -414,9 +414,21 @@ elseif(APPLE)
   if(UNIT_TESTS)
     set(CMAKE_EXE_LINKER_FLAGS "--coverage")
   endif()
+  find_library(APPKIT_LIBRARY AppKit REQUIRED)
   find_library(CORESERVICES_LIBRARY CoreServices REQUIRED)
+  find_library(FOUNDATION_LIBRARY Foundation REQUIRED)
+  find_library(METAL_LIBRARY Metal REQUIRED)
   find_library(QUARTZCORE_LIBRARY QuartzCore REQUIRED)
-  target_link_libraries(rainbow ${CORESERVICES_LIBRARY} ${QUARTZCORE_LIBRARY})
+  target_link_libraries(
+      rainbow
+      /Users/tido/Downloads/vulkansdk-macos-1.1.92.1/macOS/lib/libvulkan.dylib
+      /Users/tido/Downloads/vulkansdk-macos-1.1.92.1/macOS/lib/libMoltenVK.dylib
+      ${APPKIT_LIBRARY}
+      ${CORESERVICES_LIBRARY}
+      ${FOUNDATION_LIBRARY}
+      ${METAL_LIBRARY}
+      ${QUARTZCORE_LIBRARY}
+  )
 elseif(UNIX AND NOT MINGW)
   if(UNIT_TESTS)
     set(CMAKE_EXE_LINKER_FLAGS "--coverage")

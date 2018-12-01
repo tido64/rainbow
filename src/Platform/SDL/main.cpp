@@ -24,6 +24,7 @@
 #include "FileSystem/Bundle.h"
 #include "FileSystem/FileSystem.h"
 #include "Platform/SDL/Context.h"
+#include "Platform/SDL/Window.h"
 #include "Platform/SDL/RainbowController.h"
 #ifdef RAINBOW_TEST
 #   include "Tests/Tests.h"
@@ -75,6 +76,9 @@ auto main(int argc, char* argv[]) -> int
 #endif
 
     const rainbow::Config config;
+    rainbow::sdl::open_window(config);
+    return 0;
+
     SDLContext context(config);
     if (!context)
         return 1;
