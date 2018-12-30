@@ -17,6 +17,11 @@ namespace rainbow
 {
     struct ISolemnlySwearThatIAmOnlyTesting;
 
+    namespace graphics
+    {
+        class Driver;
+    }
+
     /// <summary>A drawable batch of sprites.</summary>
     /// <remarks>
     ///   All sprites share a common vertex buffer object (at different offsets)
@@ -28,14 +33,19 @@ namespace rainbow
     public:
         /// <summary>Creates a batch of sprites.</summary>
         /// <param name="count">Number of sprites to allocate for.</param>
-        SpriteBatch(uint32_t count);
+        SpriteBatch(graphics::Driver&, uint32_t count);
 
         template <typename... Args>
-        SpriteBatch(SharedPtr<TextureAtlas> texture, Args&&... sprites)
-            : SpriteBatch(sizeof...(Args))
+        SpriteBatch(graphics::Driver& driver,
+                    SharedPtr<TextureAtlas> texture,
+                    Args&&... sprites)
+            : SpriteBatch(driver, sizeof...(Args))
         {
+            static_assert((std::is_same_v<std::decay_t<Args>, Sprite> && ...),
+                          "Elements must be of type Sprite");
+
             set_texture(std::move(texture));
-            add(std::forward<Args>(sprites)...);
+            (add(std::move<Args>(sprites)), ...);
         }
 
         SpriteBatch(SpriteBatch&&) noexcept;
@@ -50,13 +60,6 @@ namespace rainbow
 
         /// <summary>Returns whether the batch is visible.</summary>
         auto is_visible() const { return visible_; }
-
-        /// <summary>Returns current normal map.</summary>
-        auto normal() const -> const TextureAtlas&
-        {
-            R_ASSERT(normal_.get(), "Normal texture is not set");
-            return *normal_.get();
-        }
 
         /// <summary>Returns sprite count.</summary>
         auto size() const { return count_; }
@@ -76,9 +79,6 @@ namespace rainbow
 
         /// <summary>Returns the vertex count.</summary>
         auto vertex_count() const { return !visible_ ? 0 : count_ * 6; }
-
-        /// <summary>Assigns a normal map.</summary>
-        void set_normal(SharedPtr<TextureAtlas> texture);
 
         /// <summary>Assigns a texture atlas.</summary>
         void set_texture(SharedPtr<TextureAtlas> texture);
@@ -173,23 +173,14 @@ namespace rainbow
         /// <summary>Client vertex buffer.</summary>
         std::unique_ptr<SpriteVertex[]> vertices_;
 
-        /// <summary>Client normal buffer.</summary>
-        std::unique_ptr<Vec2f[]> normals_;
-
         /// <summary>Number of sprites.</summary>
         uint32_t count_;
 
         /// <summary>Shared, interleaved vertex buffer.</summary>
         graphics::Buffer vertex_buffer_;
 
-        /// <summary>Shared normal buffer.</summary>
-        graphics::Buffer normal_buffer_;
-
         /// <summary>Vertex array object.</summary>
         graphics::VertexArray array_;
-
-        /// <summary>Normal map used by all sprites in the batch.</summary>
-        SharedPtr<TextureAtlas> normal_;
 
         /// <summary>Texture atlas used by all sprites in the batch.</summary>
         SharedPtr<TextureAtlas> texture_;
@@ -197,17 +188,10 @@ namespace rainbow
         /// <summary>Whether the batch is visible.</summary>
         bool visible_;
 
-        void add() {}
-
-        template <typename T, typename... Args>
-        void add(T&& sprite, Args&&... sprites)
+        void add(Sprite&& sprite)
         {
-            static_assert(std::is_same_v<std::decay_t<T>, Sprite>,
-                          "Elements must be of type Sprite");
-
             auto s = create_sprite(0, 0);
             *s = std::move(sprite);
-            add(std::forward<Args>(sprites)...);
         }
 
         /// <summary>Sets the array state for this batch.</summary>

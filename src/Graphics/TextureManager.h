@@ -204,6 +204,8 @@ namespace rainbow::graphics::v2
         TextureMap(const vk::LogicalDevice& device) : device_(device) {}
         ~TextureMap();
 
+        auto hash_function() const { return texture_map_.hash_function(); }
+
         auto get(std::string_view path,
                  float scale = 1.0f,
                  Filter mag_filter = Filter::Cubic,
@@ -212,6 +214,8 @@ namespace rainbow::graphics::v2
         void release(std::string_view path);
 
         auto try_get(std::string_view path) const -> std::optional<Texture>;
+        auto try_get(std::string_view path, size_t hash) const
+            -> std::optional<Texture>;
 
         auto operator[](std::string_view path) -> const Texture&
         {

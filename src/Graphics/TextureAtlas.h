@@ -6,7 +6,7 @@
 #define GRAPHICS_TEXTUREATLAS_H_
 
 #include <array>
-#include <string_view>
+#include <string>
 #include <tuple>
 #include <type_traits>
 #include <vector>
@@ -173,10 +173,7 @@ namespace rainbow::v2
     {
     public:
         TextureAtlas(const graphics::v2::TextureMap& texture_manager,
-                     std::string_view path)
-            : path_(path), texture_manager_(texture_manager)
-        {
-        }
+                     std::string_view path);
 
         template <typename... Args>
         TextureAtlas(graphics::v2::TextureMap& texture_manager,
@@ -187,7 +184,8 @@ namespace rainbow::v2
             add(std::forward<Args>(args)...);
         }
 
-        auto path() const { return path_; }
+        auto hash() const { return hash_; }
+        auto path() const { return std::string_view{path_}; }
 
         auto texture_manager() const -> const graphics::v2::TextureMap&
         {
@@ -233,10 +231,10 @@ namespace rainbow::v2
         ///   the UV coordinates are flipped vertically, giving us (3,2,1) and
         ///   (1,0,3).
         /// </remarks>
-        auto operator[](uint32_t i) const -> std::array<Vec2f, 6>
+        auto operator[](uint32_t i) const
         {
             const auto& rect = regions_[i];
-            return {{
+            return std::array<Vec2f, 6>{{
                 {rect.x, rect.y + rect.height},
                 {rect.x + rect.width, rect.y + rect.height},
                 {rect.x + rect.width, rect.y},
@@ -248,7 +246,8 @@ namespace rainbow::v2
 
     private:
         std::vector<Rect> regions_;
-        std::string_view path_;
+        std::string path_;
+        size_t hash_;
         const graphics::v2::TextureMap& texture_manager_;
 
 #ifdef RAINBOW_TEST

@@ -69,6 +69,7 @@ set(SOURCE_FILES
     src/Graphics/Decoders/PVRTC.h
     src/Graphics/Decoders/SVG.h
     src/Graphics/Drawable.h
+    src/Graphics/Driver.h
     src/Graphics/ElementBuffer.cpp
     src/Graphics/ElementBuffer.h
     src/Graphics/Image.h

@@ -14,7 +14,7 @@ using rainbow::Label;
 using rainbow::TextAlignment;
 using rainbow::Vec2f;
 
-Label::Label()
+Label::Label(graphics::Driver&)
     : stale_(0), font_size_(15), alignment_(TextAlignment::Left), scale_(1.0f),
       angle_(0.0f)
 {
