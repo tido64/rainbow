@@ -332,7 +332,13 @@ void TextureMap::release(std::string_view path)
 
 auto TextureMap::try_get(std::string_view path) const -> std::optional<Texture>
 {
-    auto iter = texture_map_.find(path);
+    return try_get(path, texture_map_.hash_function()(path));
+}
+
+auto TextureMap::try_get(std::string_view path, size_t hash) const
+    -> std::optional<Texture>
+{
+    auto iter = texture_map_.find(path, hash);
     return iter == texture_map_.end() ? std::nullopt
                                       : std::make_optional(iter->second);
 }

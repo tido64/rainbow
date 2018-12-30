@@ -213,7 +213,6 @@ const modules = [
       { name: "width", parameters: [], returnType: "uint32_t" },
       { name: "set_color", parameters: [{ type: "Color", name: "color" }] },
       { name: "set_id", parameters: [{ type: "int", name: "id" }] },
-      { name: "set_normal", parameters: [{ type: "uint32_t", name: "id" }] },
       { name: "set_pivot", parameters: [{ type: "Vec2f", name: "pivot" }] },
       {
         name: "set_position",
@@ -238,10 +237,6 @@ const modules = [
     ctor: [{ type: "uint32_t", name: "count" }],
     methods: [
       { name: "is_visible", parameters: [], returnType: "bool" },
-      {
-        name: "set_normal",
-        parameters: [{ type: "SharedPtr<TextureAtlas>", name: "texture" }]
-      },
       {
         name: "set_texture",
         parameters: [{ type: "SharedPtr<TextureAtlas>", name: "texture" }]

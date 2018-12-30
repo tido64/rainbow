@@ -166,6 +166,13 @@ void TextureAtlas::load(TextureManager& texture_manager,
 
 using rainbow::vk::CommandBuffer;
 
+rainbow::v2::TextureAtlas::TextureAtlas(
+    const graphics::v2::TextureMap& texture_manager, std::string_view path)
+    : path_(path), hash_(texture_manager.hash_function()(path)),
+      texture_manager_(texture_manager)
+{
+}
+
 auto rainbow::v2::TextureAtlas::add(Rect region) -> uint32_t
 {
     const auto index = regions_.size();
@@ -184,7 +191,7 @@ void rainbow::vk::update_descriptor(const CommandBuffer& command_buffer,
                                     const rainbow::v2::TextureAtlas& atlas,
                                     uint32_t binding)
 {
-    auto texture = atlas.texture_manager().try_get(atlas.path());
+    auto texture = atlas.texture_manager().try_get(atlas.path(), atlas.hash());
     if (!texture)
     {
         R_ABORT("'%s' has not been initialized or was already released",

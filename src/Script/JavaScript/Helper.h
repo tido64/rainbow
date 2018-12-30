@@ -20,6 +20,7 @@
 #include "Graphics/Sprite.h"
 #include "Memory/Array.h"
 #include "Memory/SharedPtr.h"
+#include "Script/GameBase.h"
 
 #define dukr_type_error(ctx, ...)                                              \
     duk_error_raw((ctx),                                                       \
@@ -165,6 +166,13 @@ namespace rainbow::duk
         return static_cast<TextAlignment>(duk_require_int(ctx, idx));
     }
 
+    inline auto get_udata(duk_context* ctx)
+    {
+        duk_memory_functions funcs;
+        duk_get_memory_functions(ctx, &funcs);
+        return static_cast<GameBase*>(funcs.udata);
+    }
+
     inline void push(duk_context*) {}
 
     template <typename... Args>
@@ -265,11 +273,21 @@ namespace rainbow::duk
         }
 
         template <typename T, typename Tuple, size_t... I>
-        constexpr auto make_from_tuple_in(void* ptr,
+        constexpr auto make_from_tuple_in(duk_context* ctx,
+                                          void* ptr,
                                           [[maybe_unused]] Tuple&& t,
                                           std::index_sequence<I...>) -> T*
         {
-            if constexpr (is_shared_ptr<T>)
+            if constexpr (std::is_same_v<T, Label>)
+            {
+                return get_udata(ctx)->make_label(ptr);
+            }
+            else if constexpr (std::is_same_v<T, SpriteBatch>)
+            {
+                return get_udata(ctx)->make_spritebatch(
+                    ptr, std::get<I>(std::forward<Tuple>(t))...);
+            }
+            else if constexpr (is_shared_ptr<T>)
             {
                 return new (ptr) T(std::make_unique<typename T::element_type>(
                     forward(std::get<I>(std::forward<Tuple>(t)))...));
@@ -367,6 +385,7 @@ namespace rainbow::duk
 
                 void* ptr = duk_alloc(ctx, sizeof(T));
                 detail::make_from_tuple_in<T>(
+                    ctx,
                     ptr,
                     args,
                     std::make_index_sequence<std::tuple_size_v<

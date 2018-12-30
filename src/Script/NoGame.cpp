@@ -29,7 +29,7 @@ void NoGame::init_impl(const Vec2i& screen)
     const uint32_t logo_padding = 32 * scale;
     const Vec2f center{screen.x * 0.5f, screen.y * 0.5f};
 
-    batch_ = std::make_unique<SpriteBatch>(
+    batch_ = make_spritebatch(
         texture,
         Sprite{logo_width + logo_padding, logo_height + logo_padding}  // 0
             .position(center)
@@ -45,7 +45,7 @@ void NoGame::init_impl(const Vec2i& screen)
 #if !defined(RAINBOW_OS_IOS)  // TODO: Can't access system fonts on iOS
     if (error_)
     {
-        label_ = std::make_unique<Label>();
+        label_ = make_label();
         label_->set_color(Color{0xF4, 0x43, 0x36});
         label_->set_font_size(24 * scale);
         label_->set_text(error_.message().c_str());

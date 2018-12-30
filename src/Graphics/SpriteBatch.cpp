@@ -13,6 +13,7 @@ using rainbow::SpriteRef;
 using rainbow::SpriteVertex;
 using rainbow::TextureAtlas;
 using rainbow::Vec2f;
+using rainbow::graphics::Driver;
 
 namespace
 {
@@ -22,7 +23,7 @@ namespace
     }
 }  // namespace
 
-SpriteBatch::SpriteBatch(uint32_t count)
+SpriteBatch::SpriteBatch(Driver&, uint32_t count)
     : sprites_(count), vertices_(std::make_unique<SpriteVertex[]>(count * 4_z)),
       count_(0), visible_(true)
 {
@@ -33,25 +34,12 @@ SpriteBatch::SpriteBatch(uint32_t count)
 
 SpriteBatch::SpriteBatch(SpriteBatch&& batch) noexcept
     : sprites_(std::move(batch.sprites_)),
-      vertices_(std::move(batch.vertices_)),
-      normals_(std::move(batch.normals_)), count_(batch.count_),
+      vertices_(std::move(batch.vertices_)), count_(batch.count_),
       vertex_buffer_(std::move(batch.vertex_buffer_)),
-      normal_buffer_(std::move(batch.normal_buffer_)),
-      array_(std::move(batch.array_)), normal_(std::move(batch.normal_)),
-      texture_(std::move(batch.texture_)), visible_(batch.visible_)
+      array_(std::move(batch.array_)), texture_(std::move(batch.texture_)),
+      visible_(batch.visible_)
 {
     batch.clear();
-}
-
-void SpriteBatch::set_normal(SharedPtr<TextureAtlas> texture)
-{
-    if (!normals_)
-    {
-        normals_ = std::make_unique<Vec2f[]>(sprites_.size() * 4_z);
-        array_.reconfigure([this] { bind_arrays(); });
-    }
-
-    normal_ = std::move(texture);
 }
 
 void SpriteBatch::set_texture(SharedPtr<TextureAtlas> texture)
@@ -61,8 +49,6 @@ void SpriteBatch::set_texture(SharedPtr<TextureAtlas> texture)
 
 void SpriteBatch::bind_textures() const
 {
-    if (normal_)
-        normal_->bind(1);
     texture_->bind();
 }
 
@@ -87,8 +73,6 @@ auto SpriteBatch::create_sprite(uint32_t width, uint32_t height) -> SpriteRef
     new (sprites_.data() + count_) Sprite(width, height);
     const uint32_t offset = count_ * 4;
     std::fill_n(vertices_.get() + offset, 4, SpriteVertex{});
-    if (normals_)
-        std::fill_n(normals_.get() + offset, 4, Vec2f::Zero);
     return {*this, sprites_.find_iterator(count_++)};
 }
 
@@ -131,39 +115,22 @@ void SpriteBatch::update()
 {
     bool needs_update = false;
     auto sprites = sprites_.data();
-    if (normals_)
+    for (uint32_t i = 0; i < count_; ++i)
     {
-        for (uint32_t i = 0; i < count_; ++i)
-        {
-            ArraySpan<Vec2f> normal_buffer{normals_.get() + i * 4, 4};
-            ArraySpan<SpriteVertex> vertex_buffer{vertices_.get() + i * 4, 4};
-            needs_update |= sprites[i].update(normal_buffer, *normal_) |
-                            sprites[i].update(vertex_buffer, *texture_);
-        }
-    }
-    else
-    {
-        for (uint32_t i = 0; i < count_; ++i)
-        {
-            ArraySpan<SpriteVertex> buffer{vertices_.get() + i * 4, 4};
-            needs_update |= sprites[i].update(buffer, *texture_);
-        }
+        ArraySpan<SpriteVertex> buffer{vertices_.get() + i * 4, 4};
+        needs_update |= sprites[i].update(buffer, *texture_);
     }
 
     if (needs_update)
     {
         const uint32_t count = count_ * 4;
         vertex_buffer_.upload(vertices_.get(), count * sizeof(SpriteVertex));
-        if (normals_)
-            normal_buffer_.upload(normals_.get(), count * sizeof(Vec2f));
     }
 }
 
 void SpriteBatch::bind_arrays() const
 {
     vertex_buffer_.bind();
-    if (normals_)
-        normal_buffer_.bind(Shader::kAttributeNormal);
 }
 
 #ifndef NDEBUG
@@ -177,7 +144,7 @@ SpriteBatch::~SpriteBatch()
 #ifdef RAINBOW_TEST
 SpriteBatch::SpriteBatch(const rainbow::ISolemnlySwearThatIAmOnlyTesting& test)
     : sprites_(4), vertices_(std::make_unique<SpriteVertex[]>(4 * 4)),
-      count_(0), vertex_buffer_(test), normal_buffer_(test),
+      count_(0), vertex_buffer_(test),
       texture_(make_shared<TextureAtlas>(test)), visible_(true)
 {
     texture_->add_region(0, 0, 1, 1);

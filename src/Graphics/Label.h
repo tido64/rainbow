@@ -21,6 +21,11 @@
 
 namespace rainbow
 {
+    namespace graphics
+    {
+        class Driver;
+    }
+
     /// <summary>Label for displaying text.</summary>
     class Label : private NonCopyable<Label>
     {
@@ -30,7 +35,7 @@ namespace rainbow
         static constexpr uint32_t kStaleColor       = 1u << 2;
         static constexpr uint32_t kStaleMask        = 0xffffu;
 
-        Label();
+        Label(graphics::Driver&);
         virtual ~Label();
 
         /// <summary>Returns label text alignment.</summary>

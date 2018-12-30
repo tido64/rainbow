@@ -12,12 +12,14 @@
 
 namespace rainbow
 {
+    class JavaScript;
+
     namespace duk
     {
         class Context : private NonCopyable<Context>
         {
         public:
-            Context();
+            Context(JavaScript&);
             ~Context();
 
             explicit operator bool() const { return is_valid(); }

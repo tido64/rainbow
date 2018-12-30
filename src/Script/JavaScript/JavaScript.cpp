@@ -30,15 +30,15 @@ namespace
         if (msg != nullptr)
             LOGF("JavaScript: %s", msg);
 
-        auto context = static_cast<rainbow::duk::Context*>(udata);
-        rainbow::duk::dump_context(*context);
+        auto js = static_cast<JavaScript*>(udata);
+        rainbow::duk::dump_context(js->context());
 
         std::terminate();
     }
 }  // namespace
 
-rainbow::duk::Context::Context()
-    : context_(duk_create_heap(nullptr, nullptr, nullptr, this, &on_fatal))
+rainbow::duk::Context::Context(JavaScript& js)
+    : context_(duk_create_heap(nullptr, nullptr, nullptr, &js, &on_fatal))
 {
 }
 
@@ -51,7 +51,7 @@ rainbow::duk::Context::~Context()
 }
 
 JavaScript::JavaScript(Director& director)
-    : GameBase(director), has_pointer_events_(false)
+    : GameBase(director), context_(*this), has_pointer_events_(false)
 {
     if (!context_)
         return;

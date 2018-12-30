@@ -567,16 +567,6 @@ void rainbow::duk::register_module<rainbow::SpriteRef>(duk_context* ctx, duk_idx
             ctx,
             [](duk_context* ctx) -> duk_ret_t {
                 auto obj = duk::push_this<SpriteRef>(ctx);
-                auto args = duk::get_args<uint32_t>(ctx);
-                obj->set_normal(duk::forward(std::get<0>(args)));
-                return 0;
-            },
-            1);
-        duk::put_prop_literal(ctx, -2, "setNormal");
-        duk_push_c_function(
-            ctx,
-            [](duk_context* ctx) -> duk_ret_t {
-                auto obj = duk::push_this<SpriteRef>(ctx);
                 auto args = duk::get_args<Vec2f>(ctx);
                 obj->set_pivot(duk::forward(std::get<0>(args)));
                 return 0;
@@ -701,16 +691,6 @@ void rainbow::duk::register_module<rainbow::SpriteBatch>(duk_context* ctx, duk_i
             },
             0);
         duk::put_prop_literal(ctx, -2, "isVisible");
-        duk_push_c_function(
-            ctx,
-            [](duk_context* ctx) -> duk_ret_t {
-                auto obj = duk::push_this<SpriteBatch>(ctx);
-                auto args = duk::get_args<SharedPtr<TextureAtlas>>(ctx);
-                obj->set_normal(duk::forward(std::get<0>(args)));
-                return 0;
-            },
-            1);
-        duk::put_prop_literal(ctx, -2, "setNormal");
         duk_push_c_function(
             ctx,
             [](duk_context* ctx) -> duk_ret_t {
