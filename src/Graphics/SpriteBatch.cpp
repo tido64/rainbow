@@ -4,10 +4,8 @@
 
 #include "Graphics/SpriteBatch.h"
 
-#include "Director.h"
-#include "Graphics/Renderer.h"
+#include "Graphics/Driver.h"
 
-using rainbow::SharedPtr;
 using rainbow::SpriteBatch;
 using rainbow::SpriteRef;
 using rainbow::SpriteVertex;
@@ -15,41 +13,28 @@ using rainbow::TextureAtlas;
 using rainbow::Vec2f;
 using rainbow::graphics::Driver;
 
-namespace
+SpriteBatch::SpriteBatch(const Driver& driver, uint32_t count)
+    : sprites_(count),
+      vertices_(std::make_unique<SpriteVertex[]>(count * size_t{4})), count_(0),
+      vertex_buffer_(driver.make_buffer<vk::VertexBuffer>(
+          count * 4 * sizeof(SpriteVertex))),
+      visible_(true)
 {
-    constexpr auto operator"" _z(unsigned long long int u) -> size_t
-    {
-        return u;
-    }
-}  // namespace
-
-SpriteBatch::SpriteBatch(Driver&, uint32_t count)
-    : sprites_(count), vertices_(std::make_unique<SpriteVertex[]>(count * 4_z)),
-      count_(0), visible_(true)
-{
-    R_ASSERT(count <= graphics::kMaxSprites, "Hard-coded limit reached");
-
-    array_.reconfigure([this] { bind_arrays(); });
+    R_ASSERT(count <= vk::IndexBuffer::kMaxSprites, "Hard-coded limit reached");
 }
 
 SpriteBatch::SpriteBatch(SpriteBatch&& batch) noexcept
     : sprites_(std::move(batch.sprites_)),
       vertices_(std::move(batch.vertices_)), count_(batch.count_),
       vertex_buffer_(std::move(batch.vertex_buffer_)),
-      array_(std::move(batch.array_)), texture_(std::move(batch.texture_)),
-      visible_(batch.visible_)
+      texture_(std::move(batch.texture_)), visible_(batch.visible_)
 {
     batch.clear();
 }
 
-void SpriteBatch::set_texture(SharedPtr<TextureAtlas> texture)
+void SpriteBatch::set_texture(std::shared_ptr<TextureAtlas> texture)
 {
     texture_ = std::move(texture);
-}
-
-void SpriteBatch::bind_textures() const
-{
-    texture_->bind();
 }
 
 void SpriteBatch::bring_to_front(uint32_t i)
@@ -62,7 +47,7 @@ auto SpriteBatch::create_sprite(uint32_t width, uint32_t height) -> SpriteRef
     if (count_ == sprites_.size())
     {
         LOGW(
-            "Tried to add a sprite (size: %ux%u) to a full SpriteBatch "
+            "Tried to add a sprite (size: %ux%u) to a full sprite batch "
             "(capacity: %u). Increase the capacity and try again.",
             width,
             height,
@@ -94,7 +79,7 @@ auto SpriteBatch::find_sprite_by_id(int id) const -> SpriteRef
     return {};
 }
 
-void SpriteBatch::move(const Vec2f& delta)
+void SpriteBatch::move(Vec2f delta)
 {
     if (delta.is_zero())
         return;
@@ -124,29 +109,31 @@ void SpriteBatch::update()
     if (needs_update)
     {
         const uint32_t count = count_ * 4;
-        vertex_buffer_.upload(vertices_.get(), count * sizeof(SpriteVertex));
+        vertex_buffer_.copy(ArraySpan<SpriteVertex>(vertices_.get(), count));
     }
 }
-
-void SpriteBatch::bind_arrays() const
-{
-    vertex_buffer_.bind();
-}
-
-#ifndef NDEBUG
-SpriteBatch::~SpriteBatch()
-{
-    Director::assert_unused(
-        this, "SpriteBatch deleted but is still in the render queue.");
-}
-#endif
 
 #ifdef RAINBOW_TEST
 SpriteBatch::SpriteBatch(const rainbow::ISolemnlySwearThatIAmOnlyTesting& test)
     : sprites_(4), vertices_(std::make_unique<SpriteVertex[]>(4 * 4)),
       count_(0), vertex_buffer_(test),
-      texture_(make_shared<TextureAtlas>(test)), visible_(true)
+      texture_(std::make_shared<TextureAtlas>(test)), visible_(true)
 {
     texture_->add_region(0, 0, 1, 1);
 }
 #endif  // RAINBOW_TEST
+
+void rainbow::vk::draw(const CommandBuffer& command_buffer,
+                       const SpriteBatch& sprite_batch,
+                       const IndexBuffer& index_buffer)
+{
+    const auto vertex_count = sprite_batch.vertex_count();
+    if (vertex_count == 0)
+        return;
+
+    update_descriptor(command_buffer, sprite_batch.texture());
+    draw(command_buffer,
+         sprite_batch.vertex_buffer(),
+         vertex_count,
+         index_buffer);
+}

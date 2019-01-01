@@ -547,7 +547,6 @@
 		19EF136B1A7036DD00D7AAA9 /* DebugDraw.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DebugDraw.cpp; sourceTree = "<group>"; };
 		19EF136C1A7036DD00D7AAA9 /* DebugDraw.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DebugDraw.h; sourceTree = "<group>"; };
 		19F2038C1AAC551D005CD913 /* ScopeStack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScopeStack.h; sourceTree = "<group>"; };
-		19F2038D1AAC551D005CD913 /* SharedPtr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SharedPtr.h; sourceTree = "<group>"; };
 		19F9890C15FBBB3B005A5F69 /* NonCopyable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NonCopyable.h; sourceTree = "<group>"; };
 		19F98DA5171B5DDF00A85873 /* SystemInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SystemInfo.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -1327,7 +1326,6 @@
 				19BE0C7F1C98B2110041EE8C /* NotNull.h */,
 				19DF40481C98B4AF001482BC /* Pool.h */,
 				19F2038C1AAC551D005CD913 /* ScopeStack.h */,
-				19F2038D1AAC551D005CD913 /* SharedPtr.h */,
 				19937CB81D398336009F8917 /* SmallBuffer.cpp */,
 				19937CB91D398336009F8917 /* SmallBuffer.h */,
 				19937CB71D398336009F8917 /* StableArray.h */,

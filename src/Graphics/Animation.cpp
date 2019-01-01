@@ -4,7 +4,7 @@
 
 #include "Graphics/Animation.h"
 
-#include "Director.h"
+#include "Common/TypeCast.h"
 
 using rainbow::Animation;
 using rainbow::SpriteRef;
@@ -122,11 +122,3 @@ void Animation::tick()
     }
     sprite_->set_texture(static_cast<uint32_t>(frames_[frame_]));
 }
-
-#ifndef NDEBUG
-Animation::~Animation()
-{
-    Director::assert_unused(
-        this, "Animation deleted but is still in the render queue.");
-}
-#endif

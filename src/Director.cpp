@@ -6,6 +6,7 @@
 
 #include "Common/Logging.h"
 #include "Common/Random.h"
+#include "Graphics/Driver.h"
 #include "Script/NoGame.h"
 
 #ifdef USE_PHYSICS
@@ -20,108 +21,104 @@ namespace
 namespace rainbow
 {
     Random random;
+}
 
-    Director::Director()
-        : active_(true), terminated_(false), error_(ErrorCode::Success)
-    {
-        if (std::error_code error = mixer_.initialize(kMaxAudioChannels))
-            terminate(error);
-        else if (std::error_code error = renderer_.initialize())
-            terminate(error);
+rainbow::Director::Director(const graphics::Driver& driver)
+    : texture_manager_(driver.device()), typesetter_(texture_manager_),
+      command_buffer_(driver.swapchain(), driver.default_pipeline()),
+      index_buffer_(driver.device())
+{
+    if (std::error_code error = mixer_.initialize(kMaxAudioChannels))
+        terminate(error);
+}
 
-        IF_DEBUG(make_global());
-    }
+rainbow::Director::~Director()
+{
+    // Clean up before we tear down the graphics context.
+    script_.reset();
+    render_queue_.clear();
+}
 
-    Director::~Director()
-    {
-        // Clean up before we tear down the graphics context.
-        script_.reset();
-        render_queue_.clear();
-    }
+void rainbow::Director::init(Vec2i)
+{
+    random.seed();
+    start();
+}
 
-    void Director::init(const Vec2i& screen)
-    {
-        random.seed();
-        graphics::set_surface_size(renderer_, screen);
-        start();
-    }
-
-    void Director::draw()
-    {
-        graphics::clear();
-        graphics::draw(render_queue_);
+void rainbow::Director::draw()
+{
+    command_buffer_.begin();
+    graphics::draw(command_buffer_, render_queue_, index_buffer_);
+    command_buffer_.end();
 #ifdef USE_PHYSICS
-        b2::DebugDraw::Draw();
+    b2::DebugDraw::Draw();
 #endif  // USE_PHYSICS
-    }
+}
 
-    void Director::restart()
+void rainbow::Director::restart()
+{
+    terminate();
+
+    script_.reset();
+    timer_manager_.clear();
+    render_queue_.clear();
+    mixer_.clear();
+
+    active_ = true;
+    terminated_ = false;
+    error_ = ErrorCode::Success;
+
+    start();
+}
+
+void rainbow::Director::update(uint64_t dt)
+{
+    R_ASSERT(!terminated_, "App should have terminated by now");
+
+    timer_manager_.update(dt);
+    script_->update(dt);
+
+    mixer_.process();
+    graphics::update(render_queue_, dt);
+    font_cache().update(texture_manager_.device());
+}
+
+void rainbow::Director::on_focus_gained()
+{
+    R_ASSERT(!terminated_, "App should have terminated by now");
+
+    active_ = true;
+    mixer_.suspend(false);
+}
+
+void rainbow::Director::on_focus_lost()
+{
+    active_ = false;
+    mixer_.suspend(true);
+}
+
+void rainbow::Director::on_memory_warning()
+{
+    R_ASSERT(!terminated_, "App should have terminated by now");
+
+    script_->on_memory_warning();
+}
+
+void rainbow::Director::start()
+{
+    script_ = GameBase::create(*this);
+    if (!terminated())
+        script_->init(surface_size_);
+
+    if (terminated())
     {
-        terminate();
-
-        script_.reset();
-        timer_manager_.clear();
-        render_queue_.clear();
-        mixer_.clear();
-
+        LOGF("%s", error().message().c_str());
+        LOGI("Booting 'NoGame'...");
+        script_ = std::make_unique<NoGame>(*this, error());
         active_ = true;
         terminated_ = false;
-        error_ = ErrorCode::Success;
-
-        start();
+        script_->init(surface_size_);
     }
 
-    void Director::update(uint64_t dt)
-    {
-        R_ASSERT(!terminated_, "App should have terminated by now");
-
-        timer_manager_.update(dt);
-        script_->update(dt);
-
-        graphics::update(render_queue_, dt);
-        font_cache().update(renderer_.texture_manager);
-        renderer_.texture_manager.trim();
-
-        mixer_.process();
-    }
-
-    void Director::on_focus_gained()
-    {
-        R_ASSERT(!terminated_, "App should have terminated by now");
-
-        active_ = true;
-        mixer_.suspend(false);
-    }
-
-    void Director::on_focus_lost()
-    {
-        active_ = false;
-        mixer_.suspend(true);
-    }
-
-    void Director::on_memory_warning()
-    {
-        R_ASSERT(!terminated_, "App should have terminated by now");
-
-        script_->on_memory_warning();
-    }
-
-    void Director::start()
-    {
-        script_ = GameBase::create(*this);
-        if (!terminated())
-            script_->init(renderer_.surface_size);
-
-        if (terminated())
-        {
-            LOGF("%s", error().message().c_str());
-            LOGI("Booting 'NoGame'...");
-            script_ = std::make_unique<NoGame>(*this, error());
-            active_ = true;
-            terminated_ = false;
-            script_->init(renderer_.surface_size);
-        }
-
-        graphics::update(render_queue_, 0);
-    }
-}  // namespace rainbow
+    graphics::update(render_queue_, 0);
+}

@@ -11,82 +11,79 @@
 
 #include "Common/String.h"
 #include "Common/Variant.h"
+#include "Graphics/RenderUnit.h"
 
-namespace rainbow
+namespace rainbow::vk
 {
-    class Animation;
-    class IDrawable;
-    class Label;
-    class SpriteBatch;
-}  // namespace rainbow
+    class CommandBuffer;
+    class IndexBuffer;
+}  // namespace rainbow::vk
 
 namespace rainbow::graphics
 {
-    class RenderUnit
+    class RenderNode
     {
     public:
-        using variant_type = variant<  //
-            Animation*,
-            IDrawable*,
-            Label*,
-            SpriteBatch*>;
+        using variant_type = RenderUnit;
 
         template <typename T>
-        RenderUnit(T& variant, std::string tag = {})
-            : enabled_(true), variant_(&variant), tag_(std::move(tag))
+        RenderNode(T& unit, std::string tag = {})
+            : enabled_(true), unit_(&unit), tag_(std::move(tag))
         {
         }
 
         template <typename T>
-        RenderUnit(std::shared_ptr<T>& variant, std::string tag = {})
-            : RenderUnit(*variant, std::move(tag))
+        RenderNode(std::shared_ptr<T>& variant, std::string tag = {})
+            : RenderNode(*variant, std::move(tag))
         {
         }
 
         template <typename T>
-        RenderUnit(std::unique_ptr<T>& variant, std::string tag = {})
-            : RenderUnit(*variant, std::move(tag))
+        RenderNode(std::unique_ptr<T>& variant, std::string tag = {})
+            : RenderNode(*variant, std::move(tag))
         {
         }
 
         auto is_enabled() const { return enabled_; }
-        auto object() const -> const variant_type& { return variant_; }
-        auto tag() const -> const std::string& { return tag_; }
+        auto tag() const -> std::string_view { return tag_; }
+        auto unit() const -> const variant_type& { return unit_; }
 
         void set_tag(std::string tag) { tag_ = std::move(tag); }
 
         void disable() { enabled_ = false; }
         void enable() { enabled_ = true; }
 
-        friend bool operator==(const RenderUnit& lhs, const RenderUnit& rhs)
+        friend bool operator==(const RenderNode& lhs, const RenderNode& rhs)
         {
-            return lhs.variant_ == rhs.variant_;
+            return lhs.unit_ == rhs.unit_;
         }
 
-        friend bool operator!=(const RenderUnit& lhs, const RenderUnit& rhs)
+        friend bool operator!=(const RenderNode& lhs, const RenderNode& rhs)
         {
             return !(lhs == rhs);
         }
 
-        friend bool operator==(czstring tag, const RenderUnit& unit)
+        friend bool operator==(czstring tag, const RenderNode& unit)
         {
             return tag == unit.tag();
         }
 
-        friend bool operator==(const RenderUnit& unit, czstring tag)
+        friend bool operator==(const RenderNode& unit, czstring tag)
         {
             return unit.tag() == tag;
         }
 
     private:
         bool enabled_;
-        variant_type variant_;
+        variant_type unit_;
         std::string tag_;
     };
 
-    using RenderQueue = std::vector<RenderUnit>;
+    using RenderQueue = std::vector<RenderNode>;
 
-    void draw(RenderQueue& queue);
+    void draw(const vk::CommandBuffer&,
+              const RenderQueue&,
+              const vk::IndexBuffer&);
 
     void update(RenderQueue& queue, uint64_t dt);
 }  // namespace rainbow::graphics

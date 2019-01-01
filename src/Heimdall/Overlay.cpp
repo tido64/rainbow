@@ -12,7 +12,6 @@
 #include "Director.h"
 #include "Graphics/Animation.h"
 #include "Graphics/Label.h"
-#include "Graphics/Renderer.h"
 #include "Graphics/SpriteBatch.h"
 #include "ThirdParty/ImGui/ImGuiHelper.h"
 
@@ -270,26 +269,16 @@ void Overlay::draw_performance(float scale)
         upper_limit(vmem_usage_),
         graph_size);
 
-    ImGui::TextWrapped("OpenGL %s", graphics::gl_version());
-    ImGui::TextWrapped("Vendor: %s", graphics::vendor());
-    ImGui::TextWrapped("Renderer: %s", graphics::renderer());
+    // TODO: Implement
+    const rainbow::vk::DeviceProperties properties{};
 
-    const auto meminfo = graphics::memory_info();
-    if (meminfo.current_available > 0)
-    {
-        if (meminfo.total_available > 0)
-        {
-            ImGui::TextWrapped(  //
-                "Video memory: %i / %i kB free",
-                meminfo.current_available,
-                meminfo.total_available);
-        }
-        else
-        {
-            ImGui::TextWrapped(
-                "Video memory: %i kB free", meminfo.current_available);
-        }
-    }
+    ImGui::TextWrapped(  //
+        "Vulkan version %u.%u.%u",
+        properties.api_version >> 22,
+        properties.api_version >> 12 & 0xA,
+        properties.api_version & 0xC);
+    ImGui::TextWrapped("Device: %s", properties.device_name);
+    ImGui::TextWrapped("Video memory: %i", properties.memory_heap_size);
 }
 
 void Overlay::draw_render_queue()
@@ -310,7 +299,7 @@ void Overlay::draw_render_queue()
     }
 
     for (auto&& unit : render_queue)
-        rainbow::visit(CreateNode{unit.tag().c_str()}, unit.object());
+        rainbow::visit(CreateNode{unit.tag().data()}, unit.unit());
 }
 
 void Overlay::draw_startup_message()

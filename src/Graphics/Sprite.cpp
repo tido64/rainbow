@@ -19,7 +19,6 @@ namespace
     constexpr uint32_t kStaleBuffer     = 1u << 0;
     constexpr uint32_t kStalePosition   = 1u << 1;
     constexpr uint32_t kStaleTexture    = 1u << 2;
-    constexpr uint32_t kStaleNormalMap  = 1u << 3;
     constexpr uint32_t kStaleMask       = 0xffffu;
     constexpr uint32_t kIsHidden        = 1u << 16;
     constexpr uint32_t kIsFlipped       = 1u << 17;
@@ -51,7 +50,7 @@ Sprite::Sprite(Sprite&& s) noexcept
     : state_(s.state_ | kStaleMask), center_(s.center_), position_(s.position_),
       texture_(s.texture_), color_(s.color_), width_(s.width_),
       height_(s.height_), angle_(s.angle_), pivot_(s.pivot_), scale_(s.scale_),
-      normal_map_(s.normal_map_), id_(s.id_), vertex_array_(s.vertex_array_)
+      id_(s.id_), vertex_array_(s.vertex_array_)
 {
     s.id_ = kNoId;
     s.vertex_array_ = nullptr;
@@ -76,12 +75,6 @@ void Sprite::set_color(Color c)
 {
     state_ |= kStaleTexture;
     color_ = c;
-}
-
-void Sprite::set_normal(unsigned int id)
-{
-    state_ |= kStaleNormalMap;
-    normal_map_ = id;
 }
 
 void Sprite::set_pivot(const Vec2f& pivot)
@@ -211,27 +204,12 @@ auto Sprite::update(const ArraySpan<SpriteVertex>& vertex_array,
         for (unsigned int i = 0; i < 4; ++i)
         {
             vertex_array[kFlipTable[f + i]].color = color_;
-            vertex_array[kFlipTable[f + i]].texcoord = tx.vx[i];
+            vertex_array[kFlipTable[f + i]].texcoord = tx[i];
         }
     }
 
     state_ &= ~kStaleMask;
     vertex_array_ = vertex_array.data();
-    return true;
-}
-
-auto Sprite::update(const ArraySpan<Vec2f>& normal_array,
-                    const TextureAtlas& normal) -> bool
-{
-    if ((state_ & kStaleNormalMap) == 0)
-        return false;
-
-    state_ ^= kStaleNormalMap;
-
-    const unsigned int f = flip_index(state_);
-    const auto& tx = normal[normal_map_];
-    for (unsigned int i = 0; i < 4; ++i)
-        normal_array[kFlipTable[f + i]] = tx.vx[i];
     return true;
 }
 
@@ -247,7 +225,6 @@ auto Sprite::operator=(Sprite&& s) noexcept -> Sprite&
     angle_ = s.angle_;
     pivot_ = s.pivot_;
     scale_ = s.scale_;
-    normal_map_ = s.normal_map_;
     id_ = s.id_;
     vertex_array_ = s.vertex_array_;
 

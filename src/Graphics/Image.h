@@ -54,11 +54,15 @@ namespace rainbow
         size_t size;
         const uint8_t* data;
 
-        Image() : Image(Format::Unknown) {}
-
-        Image(Format format_)
-            : format(format_), width(0), height(0), depth(0), channels(0),
-              size(0), data(nullptr)
+        Image(Format format_ = Format::Unknown,
+              uint32_t width_ = 0,
+              uint32_t height_ = 0,
+              uint32_t depth_ = 0,
+              uint32_t channels_ = 0,
+              size_t size_ = 0,
+              const uint8_t* data_ = nullptr)
+            : format(format_), width(width_), height(height_), depth(depth_),
+              channels(channels_), size(size_), data(data_)
         {
         }
 
@@ -98,50 +102,51 @@ namespace rainbow
     };
 }  // namespace rainbow
 
-#if !defined(GRAPHICS_VULKAN_H_) && !defined(GRAPHICS_TEXTUREMANAGER_H_)  // TODO: Remove
-#include "Graphics/OpenGL.h"
-#if defined(RAINBOW_OS_IOS)
-#    include "Graphics/Decoders/UIKit.h"
-#else
-#    include "Graphics/Decoders/PNG.h"
-#    include "Graphics/Decoders/SVG.h"
-#endif
-#ifdef GL_IMG_texture_compression_pvrtc
-#    include "Graphics/Decoders/PVRTC.h"
-#endif  // GL_IMG_texture_compression_pvrtc
-#ifdef GL_EXT_texture_compression_s3tc
-#    include "Graphics/Decoders/DDS.h"
-#endif  // GL_EXT_texture_compression_s3tc
+#if !defined(GRAPHICS_VULKAN_H_) &&                                            \
+    !defined(GRAPHICS_TEXTUREMANAGER_H_)  // TODO: Remove
+#    include "Graphics/OpenGL.h"
+#    if defined(RAINBOW_OS_IOS)
+#        include "Graphics/Decoders/UIKit.h"
+#    else
+#        include "Graphics/Decoders/PNG.h"
+#        include "Graphics/Decoders/SVG.h"
+#    endif
+#    ifdef GL_IMG_texture_compression_pvrtc
+#        include "Graphics/Decoders/PVRTC.h"
+#    endif  // GL_IMG_texture_compression_pvrtc
+#    ifdef GL_EXT_texture_compression_s3tc
+#        include "Graphics/Decoders/DDS.h"
+#    endif  // GL_EXT_texture_compression_s3tc
 
 namespace rainbow
 {
     Image Image::decode(const Data& data, [[maybe_unused]] float scale)
     {
-#ifdef USE_DDS
+#    ifdef USE_DDS
         if (dds::check(data))
             return dds::decode(data);
-#endif  // USE_DDS
+#    endif  // USE_DDS
 
-#ifdef USE_PVRTC
+#    ifdef USE_PVRTC
         if (pvrtc::check(data))
             return pvrtc::decode(data);
-#endif  // USE_PVRTC
+#    endif  // USE_PVRTC
 
-#ifdef USE_PNG
+#    ifdef USE_PNG
         if (png::check(data))
             return png::decode(data);
-#endif  // USE_PNG
+#    endif  // USE_PNG
 
-#ifdef USE_SVG
+#    ifdef USE_SVG
         if (svg::check(data))
             return svg::decode(data, scale);
-#endif  // USE_SVG
+#    endif  // USE_SVG
 
-#ifdef USE_UIKIT
+#    ifdef USE_UIKIT
         return uikit::decode(data);
-#else
+#    else
         return {};
-#endif
+#    endif
     }
 }  // namespace rainbow
 

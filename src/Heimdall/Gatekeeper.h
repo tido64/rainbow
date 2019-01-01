@@ -15,20 +15,37 @@ namespace heimdall
     class Gatekeeper final
     {
     public:
-        Gatekeeper() : overlay_(director_), overlay_activator_(&overlay_) {}
+        Gatekeeper(const rainbow::graphics::Driver& driver)
+            : director_(driver), overlay_(director_),
+              overlay_activator_(&overlay_)
+        {
+        }
 
-        void init(const rainbow::Vec2i& screen);
+        void init(rainbow::Vec2i screen);
 
         bool active() const { return director_.active(); }
         auto error() const { return director_.error(); }
 
-        auto graphics_context() -> rainbow::graphics::Context&
+        auto font_cache() -> rainbow::FontCache&
         {
-            return director_.graphics_context();
+            return director_.font_cache();
         }
 
         auto input() -> rainbow::Input& { return director_.input(); }
-        auto terminated() const { return director_.terminated(); }
+        auto mixer() -> rainbow::audio::Mixer& { return director_.mixer(); }
+
+        auto render_queue() -> rainbow::graphics::RenderQueue&
+        {
+            return director_.render_queue();
+        }
+
+        auto script() { return director_.script(); }
+        bool terminated() const { return director_.terminated(); }
+
+        auto texture_manager() -> rainbow::graphics::TextureManager&
+        {
+            return director_.texture_manager();
+        }
 
         void draw()
         {
@@ -40,6 +57,7 @@ namespace heimdall
 
         void terminate() { director_.terminate(); }
         void terminate(std::error_code error) { director_.terminate(error); }
+
         void update(uint64_t dt);
 
         void on_focus_gained() { director_.on_focus_gained(); }

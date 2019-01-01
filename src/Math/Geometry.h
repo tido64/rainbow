@@ -40,36 +40,6 @@ namespace rainbow
         }
         f(v0, start);
     }
-
-    struct Rect
-    {
-        float left;
-        float bottom;
-        float right;
-        float top;
-
-        Rect() : Rect(0.0f, 0.0f, 0.0f, 0.0f) {}
-        Rect(float left_, float bottom_, float right_, float top_)
-            : left(left_), bottom(bottom_), right(right_), top(top_)
-        {
-        }
-
-        auto bottom_left() const { return Vec2f{left, bottom}; }
-        auto bottom_right() const { return Vec2f{right, bottom}; }
-        auto top_left() const { return Vec2f{left, top}; }
-        auto top_right() const { return Vec2f{right, top}; }
-
-        friend bool operator!=(const Rect& r, const Rect& s)
-        {
-            return !(r == s);
-        }
-
-        friend bool operator==(const Rect& r, const Rect& s)
-        {
-            return r.left == s.left && r.bottom == s.bottom &&
-                   r.right == s.right && r.top == s.top;
-        }
-    };
 }  // namespace rainbow
 
 #endif

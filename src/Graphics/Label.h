@@ -5,18 +5,16 @@
 #ifndef GRAPHICS_LABEL_H_
 #define GRAPHICS_LABEL_H_
 
-#include <memory>
 #include <string>
 #include <vector>
 
 #include <Rainbow/TextAlignment.h>
 
 #include "Common/Color.h"
-#include "Common/String.h"
 #include "Common/TypeCast.h"
-#include "Graphics/Buffer.h"
+#include "Graphics/LifetimeTracked.h"
 #include "Graphics/SpriteVertex.h"
-#include "Graphics/VertexArray.h"
+#include "Graphics/Vulkan.h"
 #include "Math/Vec2.h"
 
 namespace rainbow
@@ -27,16 +25,16 @@ namespace rainbow
     }
 
     /// <summary>Label for displaying text.</summary>
-    class Label : private NonCopyable<Label>
+    class Label : public LifetimeTracked<Label>, NonCopyable<Label>
     {
     public:
-        static constexpr uint32_t kStaleBuffer      = 1u << 0;
-        static constexpr uint32_t kStaleBufferSize  = 1u << 1;
-        static constexpr uint32_t kStaleColor       = 1u << 2;
-        static constexpr uint32_t kStaleMask        = 0xffffu;
+        static constexpr uint32_t kStaleBuffer = 1u << 0;
+        static constexpr uint32_t kStaleBufferSize = 1u << 1;
+        static constexpr uint32_t kStaleColor = 1u << 2;
+        static constexpr uint32_t kStaleMask = 0xffffu;
 
-        Label(graphics::Driver&);
-        virtual ~Label();
+        Label(const graphics::Driver&);
+        virtual ~Label() = default;
 
         /// <summary>Returns label text alignment.</summary>
         auto alignment() const { return alignment_; }
@@ -63,7 +61,7 @@ namespace rainbow
         }
 
         /// <summary>Returns label position.</summary>
-        auto position() const -> const Vec2f& { return position_; }
+        auto position() const { return position_; }
 
         /// <summary>Returns label scale.</summary>
         auto scale() const { return scale_; }
@@ -71,17 +69,17 @@ namespace rainbow
         /// <summary>Returns the string.</summary>
         auto text() const { return text_.c_str(); }
 
-        /// <summary>Returns the vertex array object.</summary>
-        auto vertex_array() const -> const graphics::VertexArray&
+        /// <summary>Returns the vertex buffer.</summary>
+        auto vertex_buffer() const -> const vk::DynamicVertexBuffer&
         {
-            return array_;
+            return buffer_;
         }
 
         /// <summary>Returns the vertex count.</summary>
         auto vertex_count() const
         {
             const auto count = vertices_.size();
-            return narrow_cast<int>(count + (count >> 1));
+            return narrow_cast<uint32_t>(count + (count >> 1));
         }
 
         /// <summary>Returns label width.</summary>
@@ -94,16 +92,16 @@ namespace rainbow
         void set_color(Color c);
 
         /// <summary>Sets text font.</summary>
-        void set_font(czstring font_face);
+        void set_font(std::string font_face);
 
         /// <summary>Sets font size.</summary>
         void set_font_size(int font_size);
 
         /// <summary>Sets label as needing update.</summary>
-        void set_needs_update(unsigned int what) { stale_ |= what; }
+        void set_needs_update(uint32_t what) { stale_ |= what; }
 
         /// <summary>Sets position of text.</summary>
-        void set_position(const Vec2f&);
+        void set_position(Vec2f);
 
         /// <summary>
         ///   Sets angle of rotation (in radian). Pivot depends on text
@@ -117,31 +115,28 @@ namespace rainbow
         void set_scale(float f);
 
         /// <summary>Sets text to display.</summary>
-        void set_text(czstring);
-
-        /// <summary>Binds all used textures.</summary>
-        void bind_textures() const {}
+        void set_text(std::string);
 
         /// <summary>Moves label by (x,y).</summary>
-        void move(const Vec2f&);
+        void move(Vec2f);
 
         /// <summary>Populates the vertex array.</summary>
         virtual void update();
 
     protected:
         auto state() const { return stale_; }
-        auto vertex_buffer() const { return vertices_.data(); }
+        auto vertices() const { return vertices_.data(); }
 
         void clear_state() { stale_ = 0; }
         void update_internal();
-        void upload() const;
+        void upload();
 
     private:
         /// <summary>Flags indicating need for update.</summary>
-        unsigned int stale_;
+        uint32_t stale_;
 
-        /// <summary>Vertex array object.</summary>
-        graphics::VertexArray array_;
+        /// <summary>Vertex buffer.</summary>
+        vk::DynamicVertexBuffer buffer_;
 
         /// <summary>Client vertex buffer.</summary>
         std::vector<SpriteVertex> vertices_;
@@ -172,10 +167,12 @@ namespace rainbow
 
         /// <summary>Label size.</summary>
         Vec2f size_;
-
-        /// <summary>Vertex buffer.</summary>
-        graphics::Buffer buffer_;
     };
+
+    namespace vk
+    {
+        void draw(const CommandBuffer&, const Label&, const IndexBuffer&);
+    }
 }  // namespace rainbow
 
 #endif

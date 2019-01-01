@@ -9,6 +9,7 @@
 
 #include "Graphics/Drawable.h"
 #include "Input/InputListener.h"
+#include "Math/Vec2.h"
 
 namespace rainbow
 {

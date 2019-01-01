@@ -5,8 +5,10 @@
 #ifndef GRAPHICS_TEXTUREMANAGER_H_
 #define GRAPHICS_TEXTUREMANAGER_H_
 
+#include <cstdint>
 #include <optional>
 #include <string>
+#include <tuple>
 
 #ifdef __GNUC__
 #    pragma GCC diagnostic push
@@ -18,170 +20,17 @@
 #    pragma GCC diagnostic pop
 #endif
 
-#include "Common/Global.h"
-#include "Common/Passkey.h"
-#include "Graphics/Texture.h"
-#include "Memory/ArrayMap.h"
-
-namespace rainbow::graphics::v2
+namespace rainbow
 {
-    struct Texture;
+    struct Image;
 }
 
 namespace rainbow::vk
 {
-    class CommandBuffer;
     class LogicalDevice;
-
-    void update_descriptor(const CommandBuffer&,
-                           const graphics::v2::Texture&,
-                           uint32_t binding = 1);
-}  // namespace rainbow::vk
+}
 
 namespace rainbow::graphics
-{
-    struct Context;
-
-    enum class TextureFilter
-    {
-        Linear,
-        Nearest,
-        TextureFilterCount
-    };
-
-    /// <summary>Manages texture resources.</summary>
-    class TextureManager : public Global<TextureManager>
-    {
-    public:
-        TextureManager(const Passkey<Context>&);
-        ~TextureManager();
-
-        auto mag_filter() const { return mag_filter_; }
-        auto min_filter() const { return min_filter_; }
-
-        /// <summary>Sets texture filtering function.</summary>
-        /// <remarks>
-        ///   Existing textures are not affected by this setting.
-        /// </remarks>
-        void set_filter(TextureFilter filter);
-
-        /// <summary>Makes texture active on current rendering target.</summary>
-        /// <param name="name">
-        ///   Name of texture. If omitted, binds the default texture.
-        /// </param>
-        void bind(uint32_t name = 0);
-
-        /// <summary>Makes texture active on specified unit.</summary>
-        /// <param name="name">Name of texture.</param>
-        /// <param name="unit">Texture unit to bind to.</param>
-        void bind(uint32_t name, uint32_t unit);
-
-        /// <summary>
-        ///   Loads texture for unique identifier, using the specified loader.
-        /// </summary>
-        /// <remarks>
-        ///   If a texture with the same identifier already exists, it will
-        ///   immediately be returned, saving a call to the loader.
-        /// </remarks>
-        /// <param name="id">A unique identifier.</param>
-        /// <param name="loader">
-        ///   Function for loading and <see cref="upload"/> data.
-        /// </param>
-        /// <returns>Texture name.</returns>
-        template <typename F>
-        auto create(std::string_view id, F&& loader) -> Texture
-        {
-            auto t = textures_.find(id);
-            if (t == textures_.end())
-            {
-                loader(*this, create_texture(id));
-                return textures_.back();
-            }
-
-            return t->second;
-        }
-
-        /// <summary>Deletes unused textures.</summary>
-        void trim();
-
-        /// <summary>Uploads image data to specified texture.</summary>
-        /// <param name="name">Target texture.</param>
-        /// <param name="internal_format">
-        ///   Internal format of the texture.
-        /// </param>
-        /// <param name="width">Width of the texture.</param>
-        /// <param name="height">Height of the texture.</param>
-        /// <param name="format">Format of the image data.</param>
-        /// <param name="data">Image data.</param>
-        void upload(const Texture& texture,
-                    unsigned int internal_format,
-                    unsigned int width,
-                    unsigned int height,
-                    unsigned int format,
-                    const void* data);
-
-        /// <summary>
-        ///   Uploads compressed image data to specified texture.
-        /// </summary>
-        /// <param name="name">Target texture.</param>
-        /// <param name="format">Compression format.</param>
-        /// <param name="width">Width of the texture.</param>
-        /// <param name="height">Height of the texture.</param>
-        /// <param name="size">Data size.</param>
-        /// <param name="data">Image data.</param>
-        void upload_compressed(const Texture& texture,
-                               unsigned int format,
-                               unsigned int width,
-                               unsigned int height,
-                               unsigned int size,
-                               const void* data);
-
-        // Internal API
-
-        /// <summary>
-        ///   [Internal] Used by <see cref="Texture"/> to release itself.
-        /// </summary>
-        void release(const Texture& t, const Passkey<Texture>&);
-
-        /// <summary>
-        ///   [Internal] Used by <see cref="Texture"/> to retain itself.
-        /// </summary>
-        void retain(const Texture& t, const Passkey<Texture>&);
-
-#ifdef USE_HEIMDALL
-        struct MemoryUsage
-        {
-            double used;
-            double peak;
-        };
-
-        /// <summary>Returns total video memory used by textures.</summary>
-        auto memory_usage() const -> MemoryUsage;
-#endif
-
-    private:
-        static constexpr size_t kNumTextureUnits = 2;
-
-        uint32_t active_[kNumTextureUnits];
-        ArrayMap<std::string, detail::Texture> textures_;
-        TextureFilter mag_filter_;
-        TextureFilter min_filter_;
-
-#ifdef USE_HEIMDALL
-        double mem_peak_;
-        double mem_used_;
-#endif
-
-        auto create_texture(std::string_view id) -> Texture;
-
-#ifdef USE_HEIMDALL
-        /// <summary>Updates and prints total texture memory used.</summary>
-        void update_usage();
-#endif
-    };
-}  // namespace rainbow::graphics
-
-namespace rainbow::graphics::v2
 {
     enum class Filter
     {
@@ -195,19 +44,27 @@ namespace rainbow::graphics::v2
         intptr_t data[4];
         uint32_t width = 0;
         uint32_t height = 0;
+#ifdef USE_HEIMDALL
         uint32_t size = 0;
+#endif
     };
 
-    class TextureMap
+    class TextureManager
     {
     public:
-        TextureMap(const vk::LogicalDevice& device) : device_(device) {}
-        ~TextureMap();
+        TextureManager(const vk::LogicalDevice& device) : device_(device) {}
+        ~TextureManager();
 
+        auto device() const -> const vk::LogicalDevice& { return device_; }
         auto hash_function() const { return texture_map_.hash_function(); }
 
         auto get(std::string_view path,
                  float scale = 1.0f,
+                 Filter mag_filter = Filter::Cubic,
+                 Filter min_filter = Filter::Linear) -> const Texture&;
+
+        auto get(std::string_view path,
+                 const Image&,
                  Filter mag_filter = Filter::Cubic,
                  Filter min_filter = Filter::Linear) -> const Texture&;
 
@@ -217,14 +74,18 @@ namespace rainbow::graphics::v2
         auto try_get(std::string_view path, size_t hash) const
             -> std::optional<Texture>;
 
-        auto operator[](std::string_view path) -> const Texture&
-        {
-            return get(path);
-        }
+        void update(std::string_view path, size_t hash, const Image&) const;
 
     private:
-        absl::flat_hash_map<std::string, Texture> texture_map_;
+        using container_type = absl::flat_hash_map<std::string, Texture>;
+
+        container_type texture_map_;
         const vk::LogicalDevice& device_;
+
+        void load(const Image&,
+                  Filter mag_filter,
+                  Filter min_filter,
+                  container_type::iterator);
 
 #ifdef USE_HEIMDALL
     public:
@@ -238,6 +99,18 @@ namespace rainbow::graphics::v2
         size_t mem_peak_ = 0;
 #endif
     };
-}  // namespace rainbow::graphics::v2
+}  // namespace rainbow::graphics
+
+namespace rainbow::vk
+{
+    class CommandBuffer;
+    class Texture;
+
+    auto to_texture(const graphics::Texture&) -> const Texture&;
+
+    void update_descriptor(const CommandBuffer&,
+                           const graphics::Texture&,
+                           uint32_t binding = 1);
+}  // namespace rainbow::vk
 
 #endif
