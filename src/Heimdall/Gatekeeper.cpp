@@ -9,7 +9,7 @@
 using heimdall::Gatekeeper;
 using rainbow::Vec2i;
 
-void Gatekeeper::init(const Vec2i& screen)
+void Gatekeeper::init(Vec2i screen)
 {
     overlay_.initialize(screen);
     director_.input().subscribe(overlay_);

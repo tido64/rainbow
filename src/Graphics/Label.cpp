@@ -4,29 +4,20 @@
 
 #include "Graphics/Label.h"
 
-#include "Director.h"
-#include "Math/Transform.h"
+#include "Graphics/Driver.h"
 #include "Text/Typesetter.h"
 
 using rainbow::Color;
-using rainbow::czstring;
 using rainbow::Label;
 using rainbow::TextAlignment;
 using rainbow::Vec2f;
+using rainbow::graphics::Driver;
 
-Label::Label(graphics::Driver&)
-    : stale_(0), font_size_(15), alignment_(TextAlignment::Left), scale_(1.0f),
+Label::Label(const Driver& driver)
+    : stale_(0), buffer_(driver.make_buffer<vk::DynamicVertexBuffer>()),
+      font_size_(15), alignment_(TextAlignment::Left), scale_(1.0f),
       angle_(0.0f)
 {
-    array_.reconfigure([this] { buffer_.bind(); });
-}
-
-Label::~Label()
-{
-#ifndef NDEBUG
-    Director::assert_unused(
-        this, "Label deleted but is still in the render queue.");
-#endif
 }
 
 void Label::set_alignment(TextAlignment a)
@@ -41,9 +32,9 @@ void Label::set_color(Color c)
     set_needs_update(kStaleColor);
 }
 
-void Label::set_font(czstring font_face)
+void Label::set_font(std::string font_face)
 {
-    font_face_ = font_face == nullptr ? "" : font_face;
+    font_face_ = std::move(font_face);
     set_needs_update(kStaleBuffer);
 }
 
@@ -53,7 +44,7 @@ void Label::set_font_size(int font_size)
     set_needs_update(kStaleBuffer);
 }
 
-void Label::set_position(const Vec2f& position)
+void Label::set_position(Vec2f position)
 {
     position_.x = std::round(position.x);
     position_.y = std::round(position.y);
@@ -78,13 +69,13 @@ void Label::set_scale(float f)
     set_needs_update(kStaleBuffer);
 }
 
-void Label::set_text(czstring text)
+void Label::set_text(std::string text)
 {
-    text_ = text;
+    text_ = std::move(text);
     set_needs_update(kStaleBuffer);
 }
 
-void Label::move(const Vec2f& delta)
+void Label::move(Vec2f delta)
 {
     position_ += delta;
     set_needs_update(kStaleBuffer);
@@ -119,7 +110,19 @@ void Label::update_internal()
     }
 }
 
-void Label::upload() const
+void Label::upload()
 {
-    buffer_.upload(vertices_.data(), vertices_.size() * sizeof(vertices_[0]));
+    buffer_.copy(vertices_);
+}
+
+void rainbow::vk::draw(const CommandBuffer& command_buffer,
+                       const Label& label,
+                       const IndexBuffer& index_buffer)
+{
+    const auto vertex_count = label.vertex_count();
+    if (vertex_count == 0)
+        return;
+
+    update_descriptor(command_buffer, FontCache::Get()->texture());
+    draw(command_buffer, label.vertex_buffer(), vertex_count, index_buffer);
 }

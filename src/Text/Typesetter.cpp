@@ -5,13 +5,13 @@
 #include "Text/Typesetter.h"
 
 #ifdef __GNUC__
-#   pragma GCC diagnostic push
-#   pragma GCC diagnostic ignored "-Wold-style-cast"
+#    pragma GCC diagnostic push
+#    pragma GCC diagnostic ignored "-Wold-style-cast"
 #endif
 #include <hb.h>
 #include <hb-ft.h>
 #ifdef __GNUC__
-#   pragma GCC diagnostic pop
+#    pragma GCC diagnostic pop
 #endif
 
 #include "Common/Logging.h"
@@ -23,6 +23,7 @@ using rainbow::SpriteVertex;
 using rainbow::TextAttributes;
 using rainbow::Typesetter;
 using rainbow::Vec2f;
+using rainbow::graphics::TextureManager;
 
 namespace
 {
@@ -55,7 +56,8 @@ namespace
     }
 }  // namespace
 
-Typesetter::Typesetter()
+Typesetter::Typesetter(graphics::TextureManager& texture_manager)
+    : font_cache_(texture_manager)
 {
     buffer_ = hb_buffer_create();
     R_ASSERT(hb_buffer_allocation_successful(buffer_),  //
@@ -70,7 +72,7 @@ Typesetter::~Typesetter()
 }
 
 auto Typesetter::draw_text(std::string_view text,
-                           const Vec2f& position,
+                           Vec2f position,
                            const TextAttributes& attributes,
                            Vec2f* size) -> std::vector<SpriteVertex>
 {

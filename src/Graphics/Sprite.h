@@ -104,10 +104,6 @@ namespace rainbow
         /// <summary>Sets the identifier for the sprite</summary>
         void set_id(int id) { id_ = id; }
 
-        /// <summary>Sets normal map.</summary>
-        /// <param name="id">Identifier of the normal map to set.</param>
-        void set_normal(unsigned int id);
-
         /// <summary>Sets pivot point for rotation and translation.</summary>
         /// <param name="p">Normalised pivot point.</param>
         void set_pivot(const Vec2f& pivot);
@@ -161,13 +157,6 @@ namespace rainbow
         auto update(const ArraySpan<SpriteVertex>& vertex_array,
                     const TextureAtlas& texture) -> bool;
 
-        /// <summary>Updates the normal buffer.</summary>
-        /// <returns>
-        ///   <c>true</c> if the buffer has changed; <c>false</c> otherwise.
-        /// </returns>
-        auto update(const ArraySpan<Vec2f>& normal_array,
-                    const TextureAtlas& normal) -> bool;
-
         auto operator=(Sprite&&) noexcept -> Sprite&;
 
 #if USE_SPRITE_FUNCTION_CHAINING
@@ -186,12 +175,6 @@ namespace rainbow
         auto id(int id) -> Sprite&
         {
             set_id(id);
-            return *this;
-        }
-
-        auto normal(unsigned int id) -> Sprite&
-        {
-            set_normal(id);
             return *this;
         }
 
@@ -235,7 +218,6 @@ namespace rainbow
         float angle_ = 0.0f;          ///< Angle of rotation.
         Vec2f pivot_ = {0.5f, 0.5f};  ///< Pivot point (normalised).
         Vec2f scale_ = Vec2f::One;    ///< Scaling factor.
-        unsigned int normal_map_ = 0;
         int id_ = kNoId;                        ///< Sprite identifier.
         SpriteVertex* vertex_array_ = nullptr;  ///< Interleaved vertex array.
     };

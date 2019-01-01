@@ -23,16 +23,19 @@
 
 #include <stb/stb_rect_pack.h>
 
-#include "Common/Algorithm.h"
 #include "Common/Data.h"
 #include "Common/Global.h"
 #include "Graphics/SpriteVertex.h"
-#include "Graphics/Texture.h"
-#include "Graphics/TextureManager.h"
+#include "Graphics/Vulkan.h"
 #include "Memory/ArrayMap.h"
 
 namespace rainbow
 {
+    namespace graphics
+    {
+        class TextureManager;
+    }
+
     struct FontFace
     {
         FT_Face face;
@@ -64,29 +67,29 @@ namespace rainbow
     {
         std::array<SpriteVertex, 4> vertices;
     };
-}  // namespace rainbow
 
-namespace rainbow
-{
     class FontCache : public Global<FontCache>
     {
     public:
-        static constexpr int kTextureSize = 1024;
+        static constexpr auto kTexturePath =
+            std::string_view{"rainbow://font_cache"};
+        static constexpr auto kTextureSize = 1024u;
 
-        FontCache();
+        FontCache(graphics::TextureManager&);
         ~FontCache();
 
-        void bind_texture() const { texture_.bind(); }
+        auto texture() const -> const vk::Texture& { return texture_; }
 
         auto get(std::string_view font_name) -> FT_Face;
+
         auto get_glyph(FT_Face face, int32_t font_size, uint32_t glyph_index)
             -> std::array<SpriteVertex, 4>;
 
-        void update(graphics::TextureManager& texture_manager);
+        void update(const vk::LogicalDevice&);
 
     private:
         bool is_stale_;
-        graphics::Texture texture_;
+        vk::Texture texture_;
         absl::flat_hash_map<GlyphCacheIndex, GlyphInfo> glyph_cache_;
         ArrayMap<std::string, FontFace> font_cache_;
         stbrp_context bin_context_;

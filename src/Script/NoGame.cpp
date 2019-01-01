@@ -19,7 +19,7 @@ void NoGame::init_impl(const Vec2i& screen)
     const uint32_t logo_width = assets::kLogoWidth * logo_scale;
     const uint32_t logo_height = assets::kLogoHeight * logo_scale;
 
-    auto texture = rainbow::make_shared<TextureAtlas>(
+    auto texture = std::make_shared<TextureAtlas>(
         assets::kLogoURI,
         Data::from_literal(assets::kLogo),
         logo_scale,

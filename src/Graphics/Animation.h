@@ -12,12 +12,13 @@
 #include <Rainbow/AnimationEvent.h>
 
 #include "Common/NonCopyable.h"
+#include "Graphics/LifetimeTracked.h"
 #include "Graphics/Sprite.h"
 
 namespace rainbow
 {
     /// <summary>Sprite animation using sprite sheets.</summary>
-    class Animation : private NonCopyable<Animation>
+    class Animation : public LifetimeTracked<Animation>, NonCopyable<Animation>
     {
     public:
         class Frame
@@ -122,10 +123,6 @@ namespace rainbow
         ///   Must be called every frame for as long as it's meant to be active.
         /// </summary>
         void update(uint64_t dt);
-
-#ifndef NDEBUG
-        ~Animation();
-#endif
 
     private:
         bool stopped_;

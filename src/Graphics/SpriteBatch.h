@@ -7,37 +7,38 @@
 
 #include <type_traits>
 
-#include "Graphics/Buffer.h"
+#include "Graphics/LifetimeTracked.h"
 #include "Graphics/Sprite.h"
 #include "Graphics/TextureAtlas.h"
-#include "Graphics/VertexArray.h"
+#include "Graphics/Vulkan.h"
 #include "Memory/StableArray.h"
+
+namespace rainbow::graphics
+{
+    class Driver;
+}
 
 namespace rainbow
 {
     struct ISolemnlySwearThatIAmOnlyTesting;
 
-    namespace graphics
-    {
-        class Driver;
-    }
-
     /// <summary>A drawable batch of sprites.</summary>
     /// <remarks>
     ///   All sprites share a common vertex buffer object (at different offsets)
-    ///   and are drawn with a single glDraw call. The sprites must use the same
+    ///   and are drawn with a single draw call. The sprites must use the same
     ///   texture atlas.
     /// </remarks>
-    class SpriteBatch : private NonCopyable<SpriteBatch>
+    class SpriteBatch : public LifetimeTracked<SpriteBatch>,
+                        NonCopyable<SpriteBatch>
     {
     public:
         /// <summary>Creates a batch of sprites.</summary>
         /// <param name="count">Number of sprites to allocate for.</param>
-        SpriteBatch(graphics::Driver&, uint32_t count);
+        SpriteBatch(const graphics::Driver&, uint32_t count);
 
         template <typename... Args>
-        SpriteBatch(graphics::Driver& driver,
-                    SharedPtr<TextureAtlas> texture,
+        SpriteBatch(const graphics::Driver& driver,
+                    std::shared_ptr<TextureAtlas> texture,
                     Args&&... sprites)
             : SpriteBatch(driver, sizeof...(Args))
         {
@@ -71,26 +72,23 @@ namespace rainbow
             return *texture_.get();
         }
 
-        /// <summary>Returns the vertex array object.</summary>
-        auto vertex_array() const -> const graphics::VertexArray&
+        /// <summary>Returns the vertex buffer.</summary>
+        auto vertex_buffer() const -> const vk::VertexBuffer&
         {
-            return array_;
+            return vertex_buffer_;
         }
 
         /// <summary>Returns the vertex count.</summary>
         auto vertex_count() const { return !visible_ ? 0 : count_ * 6; }
 
         /// <summary>Assigns a texture atlas.</summary>
-        void set_texture(SharedPtr<TextureAtlas> texture);
+        void set_texture(std::shared_ptr<TextureAtlas> texture);
 
         /// <summary>Sets batch visibility.</summary>
         void set_visible(bool visible) { visible_ = visible; }
 
         auto at(uint32_t i) -> Sprite& { return (*this)[i]; }
         auto at(uint32_t i) const -> const Sprite& { return (*this)[i]; }
-
-        /// <summary>Binds all used textures.</summary>
-        void bind_textures() const;
 
         /// <summary>Brings sprite to front.</summary>
         void bring_to_front(uint32_t i);
@@ -131,7 +129,7 @@ namespace rainbow
         auto find_sprite_by_id(int id) const -> SpriteRef;
 
         /// <summary>Moves all sprites by (x,y).</summary>
-        void move(const Vec2f&);
+        void move(Vec2f);
 
         /// <summary>Swaps two sprites' positions in the batch.</summary>
         void swap(uint32_t i, uint32_t j);
@@ -154,19 +152,6 @@ namespace rainbow
             return sprites_[i];
         }
 
-#ifndef NDEBUG
-        ~SpriteBatch();
-#endif
-
-#ifdef RAINBOW_TEST
-        explicit SpriteBatch(const ISolemnlySwearThatIAmOnlyTesting&);
-
-        auto capacity() const { return sprites_.size(); }
-        auto sprites() { return sprites_.data(); }
-        auto sprites() const { return sprites_.data(); }
-        auto vertices() const { return vertices_.get(); }
-#endif
-
     private:
         StableArray<Sprite> sprites_;
 
@@ -177,13 +162,10 @@ namespace rainbow
         uint32_t count_;
 
         /// <summary>Shared, interleaved vertex buffer.</summary>
-        graphics::Buffer vertex_buffer_;
-
-        /// <summary>Vertex array object.</summary>
-        graphics::VertexArray array_;
+        vk::VertexBuffer vertex_buffer_;
 
         /// <summary>Texture atlas used by all sprites in the batch.</summary>
-        SharedPtr<TextureAtlas> texture_;
+        std::shared_ptr<TextureAtlas> texture_;
 
         /// <summary>Whether the batch is visible.</summary>
         bool visible_;
@@ -194,9 +176,21 @@ namespace rainbow
             *s = std::move(sprite);
         }
 
-        /// <summary>Sets the array state for this batch.</summary>
-        void bind_arrays() const;
+#ifdef RAINBOW_TEST
+    public:
+        explicit SpriteBatch(const ISolemnlySwearThatIAmOnlyTesting&);
+
+        auto capacity() const { return sprites_.size(); }
+        auto sprites() { return sprites_.data(); }
+        auto sprites() const { return sprites_.data(); }
+        auto vertices() const { return vertices_.get(); }
+#endif
     };
+
+    namespace vk
+    {
+        void draw(const CommandBuffer&, const SpriteBatch&, const IndexBuffer&);
+    }
 }  // namespace rainbow
 
 #endif

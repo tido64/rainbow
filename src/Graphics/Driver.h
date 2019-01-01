@@ -2,11 +2,17 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
+#ifndef GRAPHICS_DRIVER_H_
+#define GRAPHICS_DRIVER_H_
+
+#include <type_traits>
+
+#include "Common/NonCopyable.h"
 #include "Graphics/Vulkan.h"
 
 namespace rainbow::graphics
 {
-    class Driver
+    class Driver : private NonCopyable<Driver>
     {
     public:
         Driver(vk::PlatformWindow window,
@@ -14,13 +20,8 @@ namespace rainbow::graphics
                    vk::make_app_info(RAINBOW_WINDOW_TITLE, 1, 0, 0))
             : instance_(app_info), surface_(instance_, window),
               swapchain_(vk::PhysicalDevice{instance_}, surface_),
-              pipeline_(swapchain_), command_buffer_(swapchain_, pipeline_)
+              pipeline_(swapchain_)
         {
-        }
-
-        auto default_command_buffer() -> vk::CommandBuffer&
-        {
-            return command_buffer_;
         }
 
         auto default_pipeline() const -> const vk::Pipeline&
@@ -33,14 +34,23 @@ namespace rainbow::graphics
             return swapchain_.device();
         }
 
+        auto swapchain() const -> const vk::Swapchain& { return swapchain_; }
+
         template <typename T>
-        auto make_buffer(size_t size)
+        auto make_buffer() const
+        {
+            static_assert(std::is_base_of_v<vk::DynamicBuffer, T>);
+            return T{device()};
+        }
+
+        template <typename T>
+        auto make_buffer(size_t size) const
         {
             static_assert(std::is_base_of_v<vk::Buffer, T>);
             return T{device(), size};
         }
 
-        auto make_projection_matrix()
+        auto make_projection_matrix() const
         {
             return vk::ProjectionMatrix{swapchain_};
         }
@@ -52,6 +62,7 @@ namespace rainbow::graphics
         vk::Surface surface_;
         vk::Swapchain swapchain_;
         vk::Pipeline pipeline_;
-        vk::CommandBuffer command_buffer_;
     };
 }  // namespace rainbow::graphics
+
+#endif

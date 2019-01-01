@@ -124,7 +124,6 @@ declare namespace Rainbow {
     width(): number;
     setColor(color: { r: number, g: number, b: number, a: number }): void;
     setId(id: number): void;
-    setNormal(id: number): void;
     setPivot(pivot: { x: number, y: number }): void;
     setPosition(position: { x: number, y: number }): void;
     setRotation(r: number): void;
@@ -142,7 +141,6 @@ declare namespace Rainbow {
     private readonly $type: "Rainbow.SpriteBatch";
     constructor(count: number);
     isVisible(): boolean;
-    setNormal(texture: Texture): void;
     setTexture(texture: Texture): void;
     setVisible(visible: boolean): void;
     clear(): void;

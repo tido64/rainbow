@@ -5,15 +5,15 @@
 #ifndef GRAPHICS_DRAWABLE_H_
 #define GRAPHICS_DRAWABLE_H_
 
-#include "Math/Vec2.h"
+#include "Graphics/LifetimeTracked.h"
 
 namespace rainbow
 {
     /// <summary>A drawable interface.</summary>
-    class IDrawable
+    class IDrawable : public LifetimeTracked<IDrawable>
     {
     public:
-        virtual ~IDrawable() {}
+        virtual ~IDrawable() = default;
 
         auto get() { return this; }
 

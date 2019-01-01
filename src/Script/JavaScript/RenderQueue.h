@@ -47,8 +47,8 @@ namespace rainbow::duk
                     return std::find_if(  //
                         queue->begin(),
                         queue->end(),
-                        [tag](graphics::RenderUnit& unit) {
-                            return unit == tag;
+                        [tag](graphics::RenderNode& node) {
+                            return node == tag;
                         });
                 }
                 else
@@ -57,10 +57,10 @@ namespace rainbow::duk
                     return std::find_if(
                         queue->begin(),
                         queue->end(),
-                        [target](graphics::RenderUnit& unit) {
+                        [target](graphics::RenderNode& node) {
                             return rainbow::visit(
                                 [target](auto&& ptr) { return ptr == target; },
-                                unit.object());
+                                node.unit());
                         });
                 }
             })(ctx, obj_idx, queue);
@@ -78,7 +78,7 @@ namespace rainbow::duk
                                 ApplyFunction<Label> fl,
                                 ApplyFunction<SpriteBatch> fs) -> duk_ret_t
         {
-            constexpr char kIncompatibleTypeForRenderUnit[] =
+            constexpr char kIncompatibleTypeForRenderNode[] =
                 "Expected Animation, Label, SpriteBatch, or a drawable";
 
             duk_require_type_mask(ctx, obj_idx, DUK_TYPE_MASK_OBJECT);
@@ -86,7 +86,7 @@ namespace rainbow::duk
             auto& q = *duk::push_this<graphics::RenderQueue>(ctx);
 
             if (!duk::get_prop_literal(ctx, obj_idx, DUKR_HIDDEN_SYMBOL_TYPE))
-                dukr_type_error(ctx, kIncompatibleTypeForRenderUnit);
+                dukr_type_error(ctx, kIncompatibleTypeForRenderNode);
 
             auto type = duk_get_pointer(ctx, -1);
             auto ptr = duk::push_instance(ctx, obj_idx);
@@ -97,7 +97,7 @@ namespace rainbow::duk
             else if (type == type_id<SpriteBatch>().value())
                 fs(ctx, q, *static_cast<SpriteBatch*>(ptr));
             else
-                dukr_type_error(ctx, kIncompatibleTypeForRenderUnit);
+                dukr_type_error(ctx, kIncompatibleTypeForRenderNode);
 
             return 0;
         }

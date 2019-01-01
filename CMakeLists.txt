@@ -62,43 +62,31 @@ set(SOURCE_FILES
     src/FileSystem/Path.h
     src/Graphics/Animation.cpp
     src/Graphics/Animation.h
-    src/Graphics/Buffer.cpp
-    src/Graphics/Buffer.h
     src/Graphics/Decoders/DDS.h
     src/Graphics/Decoders/PNG.h
     src/Graphics/Decoders/PVRTC.h
     src/Graphics/Decoders/SVG.h
     src/Graphics/Drawable.h
     src/Graphics/Driver.h
-    src/Graphics/ElementBuffer.cpp
-    src/Graphics/ElementBuffer.h
     src/Graphics/Image.h
     src/Graphics/Label.cpp
     src/Graphics/Label.h
+    src/Graphics/LifetimeTracked.h
     src/Graphics/OpenGL.h
-    src/Graphics/Renderer.cpp
-    src/Graphics/Renderer.h
     src/Graphics/RenderQueue.cpp
     src/Graphics/RenderQueue.h
-    src/Graphics/ShaderDetails.h
-    src/Graphics/ShaderManager.cpp
-    src/Graphics/ShaderManager.h
+    src/Graphics/RenderUnit.h
     src/Graphics/Shaders.cpp
     src/Graphics/Shaders.h
-    src/Graphics/Shaders/Diffuse.cpp
-    src/Graphics/Shaders/Diffuse.h
     src/Graphics/Sprite.cpp
     src/Graphics/Sprite.h
     src/Graphics/SpriteBatch.cpp
     src/Graphics/SpriteBatch.h
     src/Graphics/SpriteVertex.h
-    src/Graphics/Texture.h
     src/Graphics/TextureAtlas.cpp
     src/Graphics/TextureAtlas.h
     src/Graphics/TextureManager.cpp
     src/Graphics/TextureManager.h
-    src/Graphics/VertexArray.cpp
-    src/Graphics/VertexArray.h
     src/Graphics/Vulkan.cpp
     src/Graphics/Vulkan.h
     src/Heimdall/ChangeMonitor.h
@@ -126,7 +114,6 @@ set(SOURCE_FILES
     src/Memory/NotNull.h
     src/Memory/Pool.h
     src/Memory/ScopeStack.h
-    src/Memory/SharedPtr.h
     src/Memory/SmallBuffer.cpp
     src/Memory/SmallBuffer.h
     src/Memory/StableArray.h
@@ -146,8 +133,6 @@ set(SOURCE_FILES
     src/Script/JavaScript/RenderQueue.h
     src/Script/NoGame.cpp
     src/Script/NoGame.h
-    src/Script/Scene.cpp
-    src/Script/Scene.h
     src/Script/Timer.cpp
     src/Script/Timer.h
     src/Script/TimingFunctions.h
@@ -264,7 +249,6 @@ if(UNIT_TESTS)
       src/Tests/Memory/BoundedPool.test.cc
       src/Tests/Memory/Pool.test.cc
       src/Tests/Memory/ScopeStack.test.cc
-      src/Tests/Memory/SharedPtr.test.cc
       src/Tests/Memory/SmallBuffer.test.cc
       src/Tests/Memory/StableArray.test.cc
       src/Tests/Script/JavaScript.test.cc

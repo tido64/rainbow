@@ -17,6 +17,11 @@
 
 struct hb_buffer_t;
 
+namespace rainbow::graphics
+{
+    class TextureManager;
+}
+
 namespace rainbow
 {
     struct GlyphPosition
@@ -25,6 +30,7 @@ namespace rainbow
         Vec2f position;
     };
 
+    // TODO: This should include color.
     struct TextAttributes
     {
         const std::string& font_face;
@@ -35,13 +41,13 @@ namespace rainbow
     class Typesetter : public Global<Typesetter>
     {
     public:
-        Typesetter();
+        Typesetter(graphics::TextureManager&);
         ~Typesetter();
 
         auto font_cache() -> FontCache& { return font_cache_; }
 
         auto draw_text(std::string_view text,
-                       const Vec2f& position,
+                       Vec2f position,
                        const TextAttributes& attributes,
                        Vec2f* size = nullptr) -> std::vector<SpriteVertex>;
 
