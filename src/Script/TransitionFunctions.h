@@ -8,6 +8,7 @@
 #include <functional>
 
 #include "Common/Color.h"
+#include "Common/TypeCast.h"
 #include "Math/Vec2.h"
 
 namespace rainbow
@@ -21,7 +22,7 @@ namespace rainbow
 
     inline auto repeat_count_from_duration(int duration) -> int
     {
-        return std::ceil(static_cast<float>(duration) / timing::kInterval);
+        return std::ceil(narrow_cast<float>(duration) / timing::kInterval);
     }
 
     template <typename T, typename U>
@@ -47,7 +48,7 @@ namespace rainbow
         auto tick() -> float
         {
             elapsed_ += timing::kInterval;
-            return std::min(static_cast<float>(elapsed_) / duration_, 1.0f);
+            return std::min(narrow_cast<float>(elapsed_) / duration_, 1.0f);
         }
     };
 

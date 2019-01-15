@@ -196,12 +196,6 @@ namespace rainbow
     {
         return (x > T{}) - (x < T{});
     }
-
-    template <typename Enum>
-    constexpr auto to_integral_value(Enum value)
-    {
-        return static_cast<std::underlying_type_t<Enum>>(value);
-    }
 }  // namespace rainbow
 
 #endif

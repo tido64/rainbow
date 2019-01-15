@@ -21,6 +21,7 @@
 #include "Audio/AudioFile.h"
 #include "Audio/Mixer.h"
 #include "Common/Logging.h"
+#include "Common/TypeCast.h"
 #include "FileSystem/Path.h"
 #include "Memory/SmallBuffer.h"
 
@@ -187,11 +188,12 @@ void ALMixer::process()
             }
             ALuint bid{};
             alSourceUnqueueBuffers(channel.id(), 1, &bid);
-            alBufferData(bid,
-                         sound->format,
-                         buffer,
-                         static_cast<ALsizei>(length),
-                         sound->rate);
+            alBufferData(  //
+                bid,
+                sound->format,
+                buffer,
+                narrow_cast<ALsizei>(length),
+                sound->rate);
             alSourceQueueBuffers(channel.id(), 1, &bid);
         }
 
@@ -293,11 +295,12 @@ auto rainbow::audio::load_sound(czstring path) -> Sound*
     const size_t size = audio_file->size();
     auto buffer = std::make_unique<char[]>(size);
     alGenBuffers(1, &sound->buffer);
-    alBufferData(sound->buffer,
-                 sound->format,
-                 buffer.get(),
-                 static_cast<ALsizei>(audio_file->read(buffer.get(), size)),
-                 sound->rate);
+    alBufferData(  //
+        sound->buffer,
+        sound->format,
+        buffer.get(),
+        narrow_cast<ALsizei>(audio_file->read(buffer.get(), size)),
+        sound->rate);
     return sound;
 }
 
@@ -400,11 +403,12 @@ auto rainbow::audio::play(Sound* sound, Vec2f world_position) -> Channel*
         for (; i < Channel::kNumBuffers; ++i)
         {
             const size_t size = sound->file->read(buffer, kAudioBufferSize);
-            alBufferData(channel->buffers()[i],
-                         sound->format,
-                         buffer,
-                         static_cast<ALsizei>(size),
-                         sound->rate);
+            alBufferData(  //
+                channel->buffers()[i],
+                sound->format,
+                buffer,
+                narrow_cast<ALsizei>(size),
+                sound->rate);
             if (size < kAudioBufferSize)
                 break;
         }

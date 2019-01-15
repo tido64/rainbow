@@ -517,90 +517,95 @@ function generateCppBindings(typeInfo: TypeInfo[]): string {
     "#define SCRIPT_JAVASCRIPT_MODULES_H_",
     "",
     ...generateIncludes(typeInfo, [
+      "Common/TypeCast.h",
       "Common/TypeInfo.h",
       "Script/JavaScript/Helper.h"
     ]),
     "",
     "// clang-format off",
-    ...typeInfo.filter(type => type.type !== "module").map(type => {
-      const sourceName = type.sourceName;
-      return [
-        "",
-        "template <>",
-        `void rainbow::duk::register_module<rainbow::${sourceName}>(duk_context* ctx, duk_idx_t rainbow)`,
-        "{",
-        ...((): string[] => {
-          switch (type.type) {
-            case "class":
-              return [
-                type.ctor
-                  ? `    duk::push_constructor<${sourceName}${
-                      type.ctor.length === 0
-                        ? ""
-                        : `, ${joinTypeParams(type.ctor)}`
-                    }>(ctx);`
-                  : "    duk_push_bare_object(ctx);",
-                `    duk::put_prototype<${sourceName}, Allocation::${
-                  type.ctor ? "HeapAllocated" : "NoHeap"
-                }>(ctx, [](duk_context* ctx) {`,
-                ...type.methods
-                  .map(method => {
-                    const typeParams = joinTypeParams(method.parameters);
-                    const result = !method.returnType ? "" : "auto result = ";
-                    return [
-                      "        duk_push_c_function(",
-                      "            ctx,",
-                      "            [](duk_context* ctx) -> duk_ret_t {",
-                      `                auto obj = duk::push_this<${sourceName}>(ctx);`,
-                      ...(typeParams
-                        ? [
-                            `                auto args = duk::get_args<${typeParams}>(ctx);`
-                          ]
-                        : []),
-                      `                ${result}obj->${
-                        method.name
-                      }(${method.parameters
-                        .map((p, i) => `duk::forward(std::get<${i}>(args))`)
-                        .join(", ")});`,
-                      ...(result
-                        ? [`                duk::push(ctx, result);`]
-                        : []),
-                      `                return ${result ? 1 : 0};`,
-                      "            },",
-                      `            ${method.parameters.length});`,
-                      `        duk::put_prop_literal(ctx, -2, "${method.name.toCamelCase()}");`
-                    ];
-                  })
-                  .reduce<string[]>((arr, lines) => {
-                    return [...arr, ...lines];
-                  }, []),
-                `        duk::push_literal(ctx, "Rainbow.${type.name}");`,
-                "        duk::put_prop_literal(ctx, -2, DUKR_WELLKNOWN_SYMBOL_TOSTRINGTAG);",
-                "    });"
-              ];
-            case "enum":
-              return [
-                "    const auto obj_idx = duk_push_bare_object(ctx);",
-                ...type.values
-                  .map(value => [
-                    `    duk_push_int(ctx, static_cast<int>(${sourceName}::${
-                      value.name
-                    }));`,
-                    `    duk::put_prop_literal(ctx, obj_idx, "${value.name}");`
-                  ])
-                  .reduce<string[]>((arr, lines) => {
-                    return [...arr, ...lines];
-                  }, [])
-              ];
-            case "module":
-              return [];
-          }
-        })(),
-        "    duk_freeze(ctx, -1);",
-        `    duk::put_prop_literal(ctx, rainbow, "${type.name}");`,
-        "}"
-      ].join(EOL);
-    }),
+    ...typeInfo
+      .filter(({ type }) => type !== "module")
+      .map(type => {
+        const sourceName = type.sourceName;
+        return [
+          "",
+          "template <>",
+          `void rainbow::duk::register_module<rainbow::${sourceName}>(duk_context* ctx, duk_idx_t rainbow)`,
+          "{",
+          ...((): string[] => {
+            switch (type.type) {
+              case "class":
+                return [
+                  type.ctor
+                    ? `    duk::push_constructor<${sourceName}${
+                        type.ctor.length === 0
+                          ? ""
+                          : `, ${joinTypeParams(type.ctor)}`
+                      }>(ctx);`
+                    : "    duk_push_bare_object(ctx);",
+                  `    duk::put_prototype<${sourceName}, Allocation::${
+                    type.ctor ? "HeapAllocated" : "NoHeap"
+                  }>(ctx, [](duk_context* ctx) {`,
+                  ...type.methods
+                    .map(method => {
+                      const typeParams = joinTypeParams(method.parameters);
+                      const result = !method.returnType ? "" : "auto result = ";
+                      return [
+                        "        duk_push_c_function(",
+                        "            ctx,",
+                        "            [](duk_context* ctx) -> duk_ret_t {",
+                        `                auto obj = duk::push_this<${sourceName}>(ctx);`,
+                        ...(typeParams
+                          ? [
+                              `                auto args = duk::get_args<${typeParams}>(ctx);`
+                            ]
+                          : []),
+                        `                ${result}obj->${
+                          method.name
+                        }(${method.parameters
+                          .map((p, i) => `duk::forward(std::get<${i}>(args))`)
+                          .join(", ")});`,
+                        ...(result
+                          ? [`                duk::push(ctx, result);`]
+                          : []),
+                        `                return ${result ? 1 : 0};`,
+                        "            },",
+                        `            ${method.parameters.length});`,
+                        `        duk::put_prop_literal(ctx, -2, "${method.name.toCamelCase()}");`
+                      ];
+                    })
+                    .reduce<string[]>((arr, lines) => {
+                      return [...arr, ...lines];
+                    }, []),
+                  `        duk::push_literal(ctx, "Rainbow.${type.name}");`,
+                  "        duk::put_prop_literal(ctx, -2, DUKR_WELLKNOWN_SYMBOL_TOSTRINGTAG);",
+                  "    });"
+                ];
+              case "enum":
+                return [
+                  "    const auto obj_idx = duk_push_bare_object(ctx);",
+                  ...type.values
+                    .map(value => [
+                      `    duk_push_int(ctx, to_underlying_type(${sourceName}::${
+                        value.name
+                      }));`,
+                      `    duk::put_prop_literal(ctx, obj_idx, "${
+                        value.name
+                      }");`
+                    ])
+                    .reduce<string[]>((arr, lines) => {
+                      return [...arr, ...lines];
+                    }, [])
+                ];
+              case "module":
+                return [];
+            }
+          })(),
+          "    duk_freeze(ctx, -1);",
+          `    duk::put_prop_literal(ctx, rainbow, "${type.name}");`,
+          "}"
+        ].join(EOL);
+      }),
     "",
     "namespace rainbow::duk",
     "{",

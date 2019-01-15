@@ -13,6 +13,7 @@
 
 #include "Common/Color.h"
 #include "Common/String.h"
+#include "Common/TypeCast.h"
 #include "Graphics/Buffer.h"
 #include "Graphics/SpriteVertex.h"
 #include "Graphics/VertexArray.h"
@@ -53,7 +54,7 @@ namespace rainbow
         /// <summary>Returns the number of characters.</summary>
         auto length() const
         {
-            return static_cast<uint32_t>(vertices_.size() / 4);
+            return narrow_cast<uint32_t>(vertices_.size() / 4);
         }
 
         /// <summary>Returns label position.</summary>
@@ -75,7 +76,7 @@ namespace rainbow
         auto vertex_count() const
         {
             const auto count = vertices_.size();
-            return static_cast<int>(count + (count >> 1));
+            return narrow_cast<int>(count + (count >> 1));
         }
 
         /// <summary>Returns label width.</summary>

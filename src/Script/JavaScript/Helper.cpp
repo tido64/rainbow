@@ -34,7 +34,7 @@ namespace rainbow::duk
 
     void push(duk_context* ctx, VirtualKey key)
     {
-        duk_push_int(ctx, static_cast<int>(key));
+        duk_push_int(ctx, to_underlying_type(key));
     }
 
     template <typename T, size_t N>
@@ -91,7 +91,7 @@ auto rainbow::duk::get<Animation::Callback>(duk_context* ctx, duk_idx_t idx)
         // => [ animation callback ]
         duk_dup(ctx, -2);
         // => [ animation callback animation ]
-        duk::push(ctx, to_integral_value(event));
+        duk::push(ctx, to_underlying_type(event));
         // => [ animation callback animation event ]
         duk_pcall(ctx, 2);
         // => [ animation ]
@@ -125,10 +125,10 @@ auto rainbow::duk::get<Color>(duk_context* ctx, duk_idx_t idx) -> Color
     duk::get_prop_literal(ctx, idx, "b");
     duk::get_prop_literal(ctx, idx, "a");
 
-    Color c{static_cast<uint8_t>(duk_require_int(ctx, -4)),
-            static_cast<uint8_t>(duk_require_int(ctx, -3)),
-            static_cast<uint8_t>(duk_require_int(ctx, -2)),
-            static_cast<uint8_t>(duk_require_int(ctx, -1))};
+    Color c{narrow_cast<uint8_t>(duk_require_int(ctx, -4)),
+            narrow_cast<uint8_t>(duk_require_int(ctx, -3)),
+            narrow_cast<uint8_t>(duk_require_int(ctx, -2)),
+            narrow_cast<uint8_t>(duk_require_int(ctx, -1))};
 
     duk_pop_n(ctx, 4);
     return c;
@@ -147,8 +147,8 @@ auto rainbow::duk::get<Vec2f>(duk_context* ctx, duk_idx_t idx) -> Vec2f
     duk::get_prop_literal(ctx, idx, "x");
     duk::get_prop_literal(ctx, idx, "y");
 
-    Vec2f v{static_cast<float>(duk_require_number(ctx, -2)),
-            static_cast<float>(duk_require_number(ctx, -1))};
+    Vec2f v{narrow_cast<float>(duk_require_number(ctx, -2)),
+            narrow_cast<float>(duk_require_number(ctx, -1))};
 
     duk_pop_2(ctx);
     return v;

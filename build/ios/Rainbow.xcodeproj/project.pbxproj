@@ -502,6 +502,7 @@
 		19B6C59A216964C6000D5400 /* hash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hash.h; sourceTree = "<group>"; };
 		19BE0C7E1C98B2110041EE8C /* Array.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Array.h; sourceTree = "<group>"; };
 		19BE0C7F1C98B2110041EE8C /* NotNull.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NotNull.h; sourceTree = "<group>"; };
+		19C5EDA721EE99D900CA08DC /* TypeCast.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TypeCast.h; sourceTree = "<group>"; };
 		19CB0668200AC971005D6740 /* duktape.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = duktape.c; path = src/duktape.c; sourceTree = "<group>"; };
 		19CB066A200AC97F005D6740 /* duk_module_node.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = duk_module_node.c; path = "extras/module-node/duk_module_node.c"; sourceTree = "<group>"; };
 		19CBB6331E5E4BFA00378BBF /* NSString+Rainbow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Rainbow.h"; sourceTree = "<group>"; };
@@ -769,6 +770,7 @@
 				190CD1C01DDF952E00B0EAD4 /* Passkey.h */,
 				1939A197152C425D00494609 /* Random.h */,
 				19DF40461C98B425001482BC /* String.h */,
+				19C5EDA721EE99D900CA08DC /* TypeCast.h */,
 				19DF40451C98B415001482BC /* TypeInfo.h */,
 				19A9025220EECAAE0084A669 /* Variant.h */,
 			);

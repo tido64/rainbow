@@ -91,9 +91,9 @@ namespace
     {
         const CGPoint p = [view convertPoint:[touch locationInView:view]
                            toCoordinateSpace:space];
-        *ptr = Pointer{static_cast<uint32_t>(touch.hash),
-                       static_cast<int32_t>(p.x * scale),
-                       static_cast<int32_t>((height - p.y) * scale),
+        *ptr = Pointer{rainbow::narrow_cast<uint32_t>(touch.hash),
+                       rainbow::truncate<int32_t>(p.x * scale),
+                       rainbow::truncate<int32_t>((height - p.y) * scale),
                        0};
         ++ptr;
     }

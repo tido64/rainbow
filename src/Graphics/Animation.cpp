@@ -20,7 +20,7 @@ Animation::Animation(const SpriteRef& sprite,  // NOLINT
 
 void Animation::set_frame_rate(unsigned int fps)
 {
-    const float progress = static_cast<float>(accumulated_) / interval_;
+    const float progress = narrow_cast<float>(accumulated_) / interval_;
     interval_ = 1000 / fps;
     accumulated_ = interval_ * progress;
 }

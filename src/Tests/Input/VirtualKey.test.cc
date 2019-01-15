@@ -12,12 +12,14 @@
 
 #include <gtest/gtest.h>
 
+#include "Common/TypeCast.h"
+
 using rainbow::VirtualKey;
 
 TEST(VirtualKeyTest, ScancodeToVirtualKeyMappingIsConsistent)
 {
-    for (auto i = static_cast<int>(VirtualKey::Unknown);
-         i < static_cast<int>(VirtualKey::KeyCount);
+    for (auto i = rainbow::to_underlying_type(VirtualKey::Unknown);
+         i < rainbow::to_underlying_type(VirtualKey::KeyCount);
          ++i)
     {
         const auto vk = static_cast<VirtualKey>(i);

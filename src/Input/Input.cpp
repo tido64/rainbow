@@ -50,7 +50,7 @@ void Input::accelerated(double x, double y, double z, double t)
 
 void Input::on_controller_axis_motion(const ControllerAxisMotion& motion)
 {
-    R_ASSERT(static_cast<int>(motion.axis) >= 0 &&
+    R_ASSERT(to_underlying_type(motion.axis) >= 0 &&
                  motion.axis < ControllerAxis::Count,
              kInvalidControllerAxis);
 
@@ -66,7 +66,7 @@ void Input::on_controller_axis_motion(const ControllerAxisMotion& motion)
 
 void Input::on_controller_button_down(const ControllerButtonEvent& button)
 {
-    R_ASSERT(static_cast<int>(button.button) >= 0 &&
+    R_ASSERT(to_underlying_type(button.button) >= 0 &&
                  button.button < ControllerButton::Count,
              kInvalidControllerButton);
 
@@ -82,7 +82,7 @@ void Input::on_controller_button_down(const ControllerButtonEvent& button)
 
 void Input::on_controller_button_up(const ControllerButtonEvent& button)
 {
-    R_ASSERT(static_cast<int>(button.button) >= 0 &&
+    R_ASSERT(to_underlying_type(button.button) >= 0 &&
                  button.button < ControllerButton::Count,
              kInvalidControllerButton);
 
@@ -105,7 +105,7 @@ void Input::on_controller_connected(unsigned int id)
             return;
 
         if (port < 0 && !controllers_[i].is_assigned())
-            port = static_cast<int>(i);
+            port = narrow_cast<int>(i);
     }
 
     if (port < 0)
@@ -134,10 +134,10 @@ void Input::on_controller_disconnected(unsigned int id)
 
 void Input::on_key_down(const KeyStroke& k)
 {
-    R_ASSERT(static_cast<int>(k.key) >= 0 && k.key < VirtualKey::KeyCount,
+    R_ASSERT(to_underlying_type(k.key) >= 0 && k.key < VirtualKey::KeyCount,
              kInvalidVirtualKey);
 
-    keys_[rainbow::to_integral_value(k.key)] = true;
+    keys_[to_underlying_type(k.key)] = true;
     for_each(next(), [&k](InputListener& listener) {  //
         return listener.on_key_down(k);
     });
@@ -145,10 +145,10 @@ void Input::on_key_down(const KeyStroke& k)
 
 void Input::on_key_up(const KeyStroke& k)
 {
-    R_ASSERT(static_cast<int>(k.key) >= 0 && k.key < VirtualKey::KeyCount,
+    R_ASSERT(to_underlying_type(k.key) >= 0 && k.key < VirtualKey::KeyCount,
              kInvalidVirtualKey);
 
-    keys_[rainbow::to_integral_value(k.key)] = false;
+    keys_[to_underlying_type(k.key)] = false;
     for_each(next(), [&k](InputListener& listener) {  //
         return listener.on_key_up(k);
     });

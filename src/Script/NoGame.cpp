@@ -54,7 +54,7 @@ void NoGame::init_impl(const Vec2i& screen)
         label_->update();
         const float margin = 16 * scale;
         label_->set_position(
-            {margin, static_cast<float>(screen.y) - label_->height() - margin});
+            {margin, narrow_cast<float>(screen.y) - label_->height() - margin});
 
         render_queue().emplace_back(label_);
     }

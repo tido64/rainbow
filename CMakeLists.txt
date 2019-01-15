@@ -45,6 +45,7 @@ set(SOURCE_FILES
     src/Common/Random.h
     src/Common/RawPtr.h
     src/Common/String.h
+    src/Common/TypeCast.h
     src/Common/TypeInfo.h
     src/Common/Variant.h
     src/Config.cpp

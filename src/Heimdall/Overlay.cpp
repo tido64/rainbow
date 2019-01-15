@@ -8,6 +8,7 @@
 
 #include <numeric>
 
+#include "Common/TypeCast.h"
 #include "Director.h"
 #include "Graphics/Animation.h"
 #include "Graphics/Label.h"
@@ -113,7 +114,7 @@ namespace
         return std::accumulate(std::begin(container),
                                std::end(container),
                                typename Container::value_type{}) /
-               static_cast<float>(container.size());
+               rainbow::narrow_cast<float>(container.size());
     }
 
     template <typename... Args>
@@ -125,7 +126,7 @@ namespace
     template <typename Container>
     auto upper_limit(const Container& container)
     {
-        return rainbow::ceil_pow2(static_cast<unsigned int>(std::ceil(
+        return rainbow::ceil_pow2(rainbow::truncate<unsigned int>(std::ceil(
             *std::max_element(std::begin(container), std::end(container)))));
     }
 
@@ -237,33 +238,37 @@ void Overlay::draw_performance(float scale)
     ImGui::TextWrapped("Draw count: %u", graphics::draw_count());
 
     char buffer[128];
-    snprintf_q(buffer,
-               rainbow::array_size(buffer),
-               "Frame time: %.01f ms/frame",
-               mean(frame_times_));
-    ImGui::PlotLines("",
-                     at<decltype(frame_times_)>,
-                     &frame_times_,
-                     static_cast<int>(frame_times_.size()),
-                     0,
-                     buffer,
-                     std::numeric_limits<float>::min(),
-                     100.0f,
-                     graph_size);
+    snprintf_q(  //
+        buffer,
+        rainbow::array_size(buffer),
+        "Frame time: %.01f ms/frame",
+        mean(frame_times_));
+    ImGui::PlotLines(  //
+        "",
+        at<decltype(frame_times_)>,
+        &frame_times_,
+        rainbow::narrow_cast<int>(frame_times_.size()),
+        0,
+        buffer,
+        std::numeric_limits<float>::min(),
+        100.0f,
+        graph_size);
 
-    snprintf_q(buffer,
-               rainbow::array_size(buffer),
-               "Video memory: %.2f MBs",
-               vmem_usage_.back());
-    ImGui::PlotLines("",
-                     at<decltype(vmem_usage_)>,
-                     &vmem_usage_,
-                     static_cast<int>(vmem_usage_.size()),
-                     0,
-                     buffer,
-                     std::numeric_limits<float>::min(),
-                     upper_limit(vmem_usage_),
-                     graph_size);
+    snprintf_q(  //
+        buffer,
+        rainbow::array_size(buffer),
+        "Video memory: %.2f MBs",
+        vmem_usage_.back());
+    ImGui::PlotLines(  //
+        "",
+        at<decltype(vmem_usage_)>,
+        &vmem_usage_,
+        rainbow::narrow_cast<int>(vmem_usage_.size()),
+        0,
+        buffer,
+        std::numeric_limits<float>::min(),
+        upper_limit(vmem_usage_),
+        graph_size);
 
     ImGui::TextWrapped("OpenGL %s", graphics::gl_version());
     ImGui::TextWrapped("Vendor: %s", graphics::vendor());
