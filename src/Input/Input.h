@@ -36,7 +36,7 @@ namespace rainbow
         using ControllerStates =
             std::array<ControllerState, kNumSupportedControllers>;
         using KeyboardState =
-            std::array<bool, to_integral_value(VirtualKey::KeyCount)>;
+            std::array<bool, to_underlying_type(VirtualKey::KeyCount)>;
 
         Input() : keys_({}), last_listener_(this) { make_global(); }
 
@@ -74,7 +74,7 @@ namespace rainbow
         /// </summary>
         bool is_down(VirtualKey key) const
         {
-            return keys_[to_integral_value(key)];
+            return keys_[to_underlying_type(key)];
         }
 
         /// <summary>Clears all input listeners.</summary>

@@ -117,8 +117,8 @@ auto CubebMixer::create_stream(Sound* source) -> Channel*
         /* rate */ static_cast<uint32_t>(audio_file->rate()),
         /* channels */ static_cast<uint32_t>(audio_file->channels()),
         /* layout */ audio_file->channels() == 1
-            ? static_cast<uint32_t>(CUBEB_LAYOUT_MONO)
-            : static_cast<uint32_t>(CUBEB_LAYOUT_STEREO),
+            ? static_cast<cubeb_channel_layout>(CUBEB_LAYOUT_MONO)
+            : static_cast<cubeb_channel_layout>(CUBEB_LAYOUT_STEREO),
         /* prefs */ CUBEB_STREAM_PREF_NONE,
     };
     uint32_t latency = 0;

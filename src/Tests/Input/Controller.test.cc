@@ -504,7 +504,7 @@ TEST_F(ControllerTest, AxesArePollable)
     for (int i = 0; i < kNumControllers; ++i)
     {
         for (int axis = 0;
-             axis < rainbow::to_integral_value(ControllerAxis::Count);
+             axis < rainbow::to_underlying_type(ControllerAxis::Count);
              ++axis)
         {
             ControllerAxisMotion event(
@@ -539,7 +539,7 @@ TEST_F(ControllerTest, ButtonsArePollable)
     for (int i = 0; i < kNumControllers; ++i)
     {
         for (int button = 0;
-             button < rainbow::to_integral_value(ControllerButton::Count);
+             button < rainbow::to_underlying_type(ControllerButton::Count);
              ++button)
         {
             const ControllerButtonEvent event(

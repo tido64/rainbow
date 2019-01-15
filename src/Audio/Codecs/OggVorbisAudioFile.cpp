@@ -9,6 +9,7 @@
 
 #include "Common/Algorithm.h"
 #include "Common/Logging.h"
+#include "Common/TypeCast.h"
 
 using rainbow::czstring;
 using rainbow::File;
@@ -116,13 +117,14 @@ auto OggVorbisAudioFile::read(void* dst, size_t size) -> size_t
     // Read until buffer is full.
     do
     {
-        const int64_t read = ov_read(&vf_,
-                                     buffer + offset,
-                                     static_cast<int>(size - offset),
-                                     /* bigendianp */ 0,
-                                     /* word */ 2,
-                                     /* sgned */ 1,
-                                     &bitstream);
+        const int64_t read = ov_read(  //
+            &vf_,
+            buffer + offset,
+            narrow_cast<int>(size - offset),
+            /* bigendianp */ 0,
+            /* word */ 2,
+            /* sgned */ 1,
+            &bitstream);
         if (read <= 0)
             break;
 

@@ -159,8 +159,8 @@ void rainbow::imgui::new_frame(const Context& ctx, uint64_t dt)
     {
         g_initial_window_width = ctx.window_size.x;
         g_window_scale =
-            Vec2f{static_cast<float>(ctx.surface_size.x) / ctx.window_size.x,
-                  static_cast<float>(ctx.surface_size.y) / ctx.window_size.y};
+            Vec2f{narrow_cast<float>(ctx.surface_size.x) / ctx.window_size.x,
+                  narrow_cast<float>(ctx.surface_size.y) / ctx.window_size.y};
         io.DisplaySize = ctx.window_size;
     }
 
@@ -181,7 +181,7 @@ void rainbow::imgui::render(Context& ctx, ImDrawData* draw_data)
     ScopedScissorTest scissor_test;
 
     const int window_height =
-        static_cast<int>(io.DisplaySize.y * io.DisplayFramebufferScale.y);
+        truncate<int>(io.DisplaySize.y * io.DisplayFramebufferScale.y);
     auto render = static_cast<Renderable*>(io.UserData);
     render->vertex_array().bind();
     for (int i = 0; i < draw_data->CmdListsCount; ++i)
@@ -202,10 +202,10 @@ void rainbow::imgui::render(Context& ctx, ImDrawData* draw_data)
                     reinterpret_cast<intptr_t>(cmd.TextureId)));
                 rainbow::graphics::scissor(
                     ctx,
-                    static_cast<int>(cmd.ClipRect.x),
-                    static_cast<int>(window_height - cmd.ClipRect.w),
-                    static_cast<int>(cmd.ClipRect.z - cmd.ClipRect.x),
-                    static_cast<int>(cmd.ClipRect.w - cmd.ClipRect.y));
+                    truncate<int>(cmd.ClipRect.x),
+                    truncate<int>(window_height - cmd.ClipRect.w),
+                    truncate<int>(cmd.ClipRect.z - cmd.ClipRect.x),
+                    truncate<int>(cmd.ClipRect.w - cmd.ClipRect.y));
                 glDrawElements(  //
                     GL_TRIANGLES,
                     static_cast<GLsizei>(cmd.ElemCount),

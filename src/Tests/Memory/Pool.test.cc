@@ -7,6 +7,7 @@
 #include <gtest/gtest.h>
 
 #include "Common/Algorithm.h"
+#include "Common/TypeCast.h"
 
 namespace
 {
@@ -73,7 +74,7 @@ TYPED_TEST(PoolTest, ReusesElements)
     for (size_t i = 0; i < rainbow::array_size(arr); ++i)
     {
         ASSERT_EQ(pool.size(), i);
-        arr[i] = pool.construct(static_cast<int>(i));
+        arr[i] = pool.construct(rainbow::narrow_cast<int>(i));
     }
 
     pool.release(arr[2]);

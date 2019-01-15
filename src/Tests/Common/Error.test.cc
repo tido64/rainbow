@@ -11,6 +11,7 @@
 #include <gtest/gtest.h>
 
 #include "Common/Algorithm.h"
+#include "Common/TypeCast.h"
 
 using namespace std::literals::string_view_literals;
 
@@ -28,10 +29,10 @@ TEST(ErrorTest, HaveUniqueMessages)
     using rainbow::ErrorCode;
 
     std::vector<std::string> error_messages;
-    error_messages.reserve(rainbow::to_integral_value(ErrorCode::Unknown));
+    error_messages.reserve(rainbow::to_underlying_type(ErrorCode::Unknown));
 
-    for (auto i = rainbow::to_integral_value(ErrorCode::Success) + 1;
-         i <= rainbow::to_integral_value(ErrorCode::Unknown);
+    for (auto i = rainbow::to_underlying_type(ErrorCode::Success) + 1;
+         i <= rainbow::to_underlying_type(ErrorCode::Unknown);
          ++i)
     {
         const auto error = rainbow::make_error_code(static_cast<ErrorCode>(i));

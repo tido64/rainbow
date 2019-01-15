@@ -14,6 +14,7 @@
 
 #include "Audio/Mixer.h"
 #include "Common/Logging.h"
+#include "Common/TypeCast.h"
 #include "Common/TypeInfo.h"
 #include "Graphics/Animation.h"
 #include "Graphics/Sprite.h"
@@ -230,7 +231,7 @@ namespace rainbow::duk
 
     inline void push(duk_context* ctx, TextAlignment alignment)
     {
-        duk_push_int(ctx, static_cast<int>(alignment));
+        duk_push_int(ctx, to_underlying_type(alignment));
     }
 
     inline auto push_instance(duk_context* ctx, duk_idx_t obj_idx) -> void*

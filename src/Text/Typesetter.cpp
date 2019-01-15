@@ -15,6 +15,7 @@
 #endif
 
 #include "Common/Logging.h"
+#include "Common/TypeCast.h"
 
 using rainbow::czstring;
 using rainbow::GlyphPosition;
@@ -40,7 +41,7 @@ namespace
 
     auto suggest_line_break(std::string_view text, int start) -> int
     {
-        const auto length = static_cast<int>(text.length());
+        const auto length = rainbow::narrow_cast<int>(text.length());
         int i = 0;
         while (start + i < length && text[start + i] != '\n')
             ++i;
@@ -49,8 +50,8 @@ namespace
 
     constexpr auto to_vec2(hb_position_t x, hb_position_t y) -> Vec2f
     {
-        return Vec2f{x / static_cast<float>(kPixelFormat),
-                     y / static_cast<float>(kPixelFormat)};
+        return Vec2f{x / rainbow::narrow_cast<float>(kPixelFormat),
+                     y / rainbow::narrow_cast<float>(kPixelFormat)};
     }
 }  // namespace
 
@@ -101,14 +102,14 @@ auto Typesetter::layout_text(std::string_view text,
     FT_Set_Char_Size(
         font_face, 0, attributes.font_size * kPixelFormat, 0, kDPI);
     const auto line_height =
-        font_face->size->metrics.height / static_cast<float>(kPixelFormat);
+        font_face->size->metrics.height / narrow_cast<float>(kPixelFormat);
     auto font = hb_ft_font_create(font_face, nullptr);
     hb_ft_font_set_load_flags(font, FT_LOAD_DEFAULT);
 
     float width = 0.0f;
     int line_count = 0;
     int start = 0;
-    const auto length = static_cast<int>(text.length());
+    const auto length = narrow_cast<int>(text.length());
     while (start < length)
     {
         hb_buffer_reset(buffer_);

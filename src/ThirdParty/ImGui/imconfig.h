@@ -3,6 +3,7 @@
 
 #include "Common/Color.h"
 #include "Common/Logging.h"
+#include "Common/TypeCast.h"
 #include "Math/Vec2.h"
 
 #define IM_ASSERT(_EXPR) R_ASSERT((_EXPR), "dear imgui")
@@ -23,10 +24,10 @@
                                                                                \
     operator rainbow::Color() const                                            \
     {                                                                          \
-        return rainbow::Color{static_cast<uint8_t>(x * 255),                   \
-                              static_cast<uint8_t>(y * 255),                   \
-                              static_cast<uint8_t>(z * 255),                   \
-                              static_cast<uint8_t>(w * 255)};                  \
+        return rainbow::Color{rainbow::narrow_cast<uint8_t>(x * 255),          \
+                              rainbow::narrow_cast<uint8_t>(y * 255),          \
+                              rainbow::narrow_cast<uint8_t>(z * 255),          \
+                              rainbow::narrow_cast<uint8_t>(w * 255)};         \
     }
 
 #define IMGUI_OVERRIDE_DRAWVERT_STRUCT_LAYOUT                                  \

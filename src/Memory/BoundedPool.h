@@ -9,6 +9,7 @@
 #include <vector>
 
 #include "Common/Logging.h"
+#include "Common/TypeCast.h"
 
 namespace rainbow
 {
@@ -57,7 +58,7 @@ namespace rainbow
             R_ASSERT(&(*i) == &item, "This shouldn't happen.");
 #endif
             item.next_free = next_free_;
-            next_free_ = static_cast<int>(std::distance(items_.data(), &item));
+            next_free_ = narrow_cast<int>(std::distance(items_.data(), &item));
 
             R_ASSERT(&items_[next_free_] == &item, "This shouldn't happen.");
         }

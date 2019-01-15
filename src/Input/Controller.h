@@ -9,8 +9,8 @@
 #include <cstdint>
 #include <memory>
 
-#include "Common/Algorithm.h"
 #include "Common/Logging.h"
+#include "Common/TypeCast.h"
 
 namespace rainbow
 {
@@ -90,9 +90,9 @@ namespace rainbow
     class ControllerState
     {
         using AxisStates =
-            std::array<int, to_integral_value(ControllerAxis::Count)>;
+            std::array<int, to_underlying_type(ControllerAxis::Count)>;
         using ButtonStates =
-            std::array<bool, to_integral_value(ControllerButton::Count)>;
+            std::array<bool, to_underlying_type(ControllerButton::Count)>;
 
         static constexpr uint32_t kNoController =
             std::numeric_limits<uint32_t>::max();
@@ -109,12 +109,12 @@ namespace rainbow
 
         auto axis(ControllerAxis axis) const
         {
-            return axes_[to_integral_value(axis)];
+            return axes_[to_underlying_type(axis)];
         }
 
         bool is_down(ControllerButton button) const
         {
-            return buttons_[to_integral_value(button)];
+            return buttons_[to_underlying_type(button)];
         }
 
         void unassign()
@@ -129,7 +129,7 @@ namespace rainbow
             R_ASSERT(motion.id == id_,
                      "Controller axis motion event for wrong controller");
 
-            axes_[to_integral_value(motion.axis)] = motion.value;
+            axes_[to_underlying_type(motion.axis)] = motion.value;
         }
 
         void on_button_down(const ControllerButtonEvent& event)
@@ -137,7 +137,7 @@ namespace rainbow
             R_ASSERT(event.id == id_,
                      "Controller button event for wrong controller");
 
-            buttons_[to_integral_value(event.button)] = true;
+            buttons_[to_underlying_type(event.button)] = true;
         }
 
         void on_button_up(const ControllerButtonEvent& event)
@@ -145,7 +145,7 @@ namespace rainbow
             R_ASSERT(event.id == id_,
                      "Controller button event for wrong controller");
 
-            buttons_[to_integral_value(event.button)] = false;
+            buttons_[to_underlying_type(event.button)] = false;
         }
 
 #ifdef RAINBOW_TEST

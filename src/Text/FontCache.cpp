@@ -5,6 +5,7 @@
 #include "Text/FontCache.h"
 
 #include "Common/Logging.h"
+#include "Common/TypeCast.h"
 #include "FileSystem/File.h"
 #include "Graphics/OpenGL.h"
 #include "Text/SystemFonts.h"
@@ -49,7 +50,7 @@ FontCache::FontCache() : is_stale_(false)
                       texture_size,
                       texture_size,
                       bin_nodes_.data(),
-                      static_cast<int>(bin_nodes_.size()));
+                      narrow_cast<int>(bin_nodes_.size()));
 
     constexpr size_t size = kTextureSize * kTextureSize * 4;
     bitmap_ = std::make_unique<uint8_t[]>(size);

@@ -36,7 +36,7 @@ void OverlayActivator::update(uint64_t dt)
     if (resistance_ == 0)
     {
         time_till_activation_ =
-            std::max(time_till_activation_ - static_cast<int>(dt), 0);
+            std::max(time_till_activation_ - rainbow::narrow_cast<int>(dt), 0);
         if (time_till_activation_ == 0)
         {
             reset();
@@ -57,10 +57,10 @@ bool OverlayActivator::on_key_down_impl(const KeyStroke& key)
         constexpr auto RightSuper = VirtualKey::RightCtrl;
 #    endif
         auto& keyboard_state = rainbow::Input::Get()->keyboard_state();
-        if ((keyboard_state[to_integral_value(VirtualKey::LeftAlt)] ||
-             keyboard_state[to_integral_value(VirtualKey::RightAlt)]) &&
-            (keyboard_state[to_integral_value(LeftSuper)] ||
-             keyboard_state[to_integral_value(RightSuper)]))
+        if ((keyboard_state[to_underlying_type(VirtualKey::LeftAlt)] ||
+             keyboard_state[to_underlying_type(VirtualKey::RightAlt)]) &&
+            (keyboard_state[to_underlying_type(LeftSuper)] ||
+             keyboard_state[to_underlying_type(RightSuper)]))
         {
             overlay_->enable();
             return true;

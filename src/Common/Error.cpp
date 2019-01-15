@@ -6,6 +6,8 @@
 
 #include <string>
 
+#include "Common/TypeCast.h"
+
 namespace
 {
     class RainbowErrorCategory final : public std::error_category
@@ -46,5 +48,5 @@ namespace
 
 auto rainbow::make_error_code(rainbow::ErrorCode c) noexcept -> std::error_code
 {
-    return {static_cast<int>(c), sRainbowErrorCategory};
+    return {to_underlying_type(c), sRainbowErrorCategory};
 }
