@@ -311,12 +311,12 @@ declare namespace Rainbow {
   }
 
   export namespace Input {
-    const acceleration: Float64Array
-    const controllers: ReadonlyArray<Readonly<{ id: number, buttons: Int8Array, axes: Int32Array }>>
-    const keysDown: Int8Array
-    const pointersDown: ReadonlyArray<Readonly<{ hash: number, x: number, y: number, timestamp: number }>>
-    const pointersMoved: ReadonlyArray<Readonly<{ hash: number, x: number, y: number, timestamp: number }>>
-    const pointersUp: ReadonlyArray<Readonly<{ hash: number, x: number, y: number, timestamp: number }>>
+    const acceleration: Float64Array;
+    const controllers: ReadonlyArray<Readonly<{ id: number, buttons: Int8Array, axes: Int32Array }>>;
+    const keysDown: Int8Array;
+    const pointersDown: ReadonlyArray<Readonly<{ hash: number, x: number, y: number, timestamp: number }>>;
+    const pointersMoved: ReadonlyArray<Readonly<{ hash: number, x: number, y: number, timestamp: number }>>;
+    const pointersUp: ReadonlyArray<Readonly<{ hash: number, x: number, y: number, timestamp: number }>>;
   }
 
   export namespace RenderQueue {

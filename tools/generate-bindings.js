@@ -2,22 +2,94 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
-import * as fs from "fs";
-import * as path from "path";
-import { makeBanner } from "./import-asset";
+// @ts-check
+"use strict";
+
+const fs = require("fs");
+const path = require("path");
+const { makeBanner, writeFile } = require("./import-asset");
 
 const EOL = "\n";
 
 const sourcePath = path.resolve(__dirname, "..", "src");
-const outputBindingsPath = path.join(
-  sourcePath,
-  "Script",
-  "JavaScript",
-  "Modules.g.h"
-);
-const outputDeclarationPath = path.join(sourcePath, "..", "js", "index.d.ts");
 
-const modules: TypeInfo[] = [
+/**
+ * @typedef {
+     | "Animation::Callback"
+     | "Animation::Frames"
+     | "Animation|Label|SpriteBatch"
+     | "Animation|Label|SpriteBatch|czstring|int"
+     | "Channel"
+     | "Channel|Sound"
+     | "Channel|undefined"
+     | "Color"
+     | "SharedPtr<TextureAtlas>"
+     | "Sound"
+     | "Sound|undefined"
+     | "SpriteRef"
+     | "TextAlignment"
+     | "Vec2f"
+     | "bool"
+     | "czstring"
+     | "float"
+     | "int"
+     | "uint32_t"
+     | "undefined"
+ * } NativeType
+ *
+ * @typedef {{
+ *   type: NativeType;
+ *   name: string;
+ * }} ParameterInfo
+ *
+ * @typedef {{
+ *   type: string;
+ *   name: string;
+ * }} PropertyInfo
+ *
+ * @typedef {{
+ *   type: "class";
+ *   name: string;
+ *   source: string;
+ *   sourceName: string;
+ *   ctor?: ParameterInfo[] | null;
+ *   methods: FunctionInfo[];
+ * }} ClassInfo
+ *
+ * @typedef {{
+ *   type: "enum";
+ *   name: string;
+ *   source: string;
+ *   sourceName: string;
+ *   values: EnumValueInfo[];
+ * }} EnumInfo
+ *
+ * @typedef {{
+ *   name: string;
+ *   integralValue: number;
+ * }} EnumValueInfo
+ *
+ * @typedef {{
+ *   name: string;
+ *   parameters: ParameterInfo[];
+ *   returnType?: NativeType;
+ * }} FunctionInfo
+ *
+ * @typedef {{
+ *   type: "module";
+ *   name: string;
+ *   source: string;
+ *   sourceName: string;
+ *   properties?: PropertyInfo[];
+ *   functions?: FunctionInfo[];
+ *   types?: (ClassInfo | EnumInfo)[];
+ * }} ModuleInfo
+ *
+ * @typedef {ClassInfo | EnumInfo | ModuleInfo} TypeInfo
+ */
+
+/** @type {TypeInfo[]} */
+const modules = [
   {
     type: "class",
     name: "Animation",
@@ -389,237 +461,143 @@ const modules: TypeInfo[] = [
   }
 ];
 
-type ClassInfo = {
-  type: "class";
-  name: string;
-  source: string;
-  sourceName: string;
-  ctor?: ParameterInfo[] | null;
-  methods: FunctionInfo[];
-};
+/**
+ * Generates C++ bindings.
+ * @param {TypeInfo[]} typeInfo
+ * @returns {string}
+ */
+function generateCppBindings(typeInfo) {
+  /** @type {(typeInfo: ClassInfo) => string[]} */
+  const defineClass = ({ ctor, methods, name, sourceName }) => {
+    return [
+      ctor
+        ? `    duk::push_constructor<${sourceName}${
+            ctor.length === 0 ? "" : `, ${joinTypeParams(ctor)}`
+          }>(ctx);`
+        : "    duk_push_bare_object(ctx);",
+      `    duk::put_prototype<${sourceName}, Allocation::${
+        ctor ? "HeapAllocated" : "NoHeap"
+      }>(ctx, [](duk_context* ctx) {`,
+      ...methods.map(registerMethod(sourceName)),
+      `        duk::push_literal(ctx, "Rainbow.${name}");`,
+      "        duk::put_prop_literal(ctx, -2, DUKR_WELLKNOWN_SYMBOL_TOSTRINGTAG);",
+      "    });"
+    ];
+  };
 
-type EnumInfo = {
-  type: "enum";
-  name: string;
-  source: string;
-  sourceName: string;
-  values: EnumValueInfo[];
-};
+  /** @type {(sourceName: string) => (value: EnumValueInfo) => string} */
+  const registerEnumValue = sourceName => ({ name }) => {
+    return `    duk_push_int(ctx, to_underlying_type(${sourceName}::${name}));
+    duk::put_prop_literal(ctx, obj_idx, "${name}");`;
+  };
 
-type EnumValueInfo = {
-  name: string;
-  integralValue: number;
-};
+  /** @type {(typeInfo: EnumInfo) => string[]} */
+  const defineEnum = ({ sourceName, values }) => {
+    return [
+      "    const auto obj_idx = duk_push_bare_object(ctx);",
+      ...values.map(registerEnumValue(sourceName))
+    ];
+  };
 
-type FunctionInfo = {
-  name: string;
-  parameters: ParameterInfo[];
-  returnType?: NativeType;
-};
+  /** @type {(typeInfo: TypeInfo) => string} */
+  const defineModule = typeInfo => {
+    const sourceName = typeInfo.sourceName;
+    return [
+      "",
+      "template <>",
+      `void rainbow::duk::register_module<rainbow::${sourceName}>(duk_context* ctx, duk_idx_t rainbow)`,
+      "{",
+      .../** @type {() => string[]} */ (() => {
+        switch (typeInfo.type) {
+          case "class":
+            return defineClass(typeInfo);
+          case "enum":
+            return defineEnum(typeInfo);
+          case "module":
+            return [];
+        }
+      })(),
+      "    duk_freeze(ctx, -1);",
+      `    duk::put_prop_literal(ctx, rainbow, "${typeInfo.name}");`,
+      "}"
+    ].join(EOL);
+  };
 
-type ModuleInfo = {
-  type: "module";
-  name: string;
-  source: string;
-  sourceName: string;
-  properties?: PropertyInfo[];
-  functions?: FunctionInfo[];
-  types?: (ClassInfo | EnumInfo)[];
-};
+  /** @type {(typeInfo: TypeInfo[], extraIncludes?: string[]) => string[]} */
+  const includeHeaders = (typeInfo, extraIncludes = []) => {
+    return typeInfo
+      .map(type => type.source)
+      .concat(extraIncludes)
+      .sort()
+      .reduce(
+        (includes, p, i, typeInfo) => {
+          if (i === 0 || p !== typeInfo[i - 1]) {
+            const header =
+              p.lastIndexOf("../include/Rainbow/", 0) === 0
+                ? `<${p.replace("../include/", "")}>`
+                : `"${p}"`;
+            includes.push(`#include ${header}`);
+          }
+          return includes;
+        },
+        /** @type {string[]} */ ([])
+      );
+  };
 
-type ParameterInfo = {
-  type: NativeType;
-  name: string;
-};
-
-type PropertyInfo = {
-  type: string;
-  name: string;
-};
-
-type NativeType =
-  | "Animation::Callback"
-  | "Animation::Frames"
-  | "Animation|Label|SpriteBatch"
-  | "Animation|Label|SpriteBatch|czstring|int"
-  | "Channel"
-  | "Channel|Sound"
-  | "Channel|undefined"
-  | "Color"
-  | "SharedPtr<TextureAtlas>"
-  | "Sound"
-  | "Sound|undefined"
-  | "SpriteRef"
-  | "TextAlignment"
-  | "Vec2f"
-  | "bool"
-  | "czstring"
-  | "float"
-  | "int"
-  | "uint32_t"
-  | "undefined";
-
-type TypeInfo = ClassInfo | EnumInfo | ModuleInfo;
-
-declare global {
-  interface String {
-    toCamelCase(): string;
-  }
-}
-
-String.prototype.toCamelCase = function(): string {
-  return this.split("")
-    .reduce((arr: string[], char: string, index: number) => {
-      if (char === "_") {
-        return arr;
-      }
-
-      if (this[index - 1] === "_") {
-        arr.push(char.toUpperCase());
-      } else {
-        arr.push(char);
-      }
-      return arr;
-    }, [])
-    .join("");
-};
-
-function generateIncludes(
-  typeInfo: TypeInfo[],
-  extraIncludes: string[] = []
-): string[] {
-  return typeInfo
-    .map(type => type.source)
-    .concat(extraIncludes)
-    .sort()
-    .map(
-      include =>
-        `#include ${
-          include.lastIndexOf("../include/Rainbow/", 0) === 0
-            ? `<${include.replace("../include/", "")}>`
-            : `"${include}"`
-        }`
-    )
-    .reduce<string[]>((arr, header) => {
-      const length = arr.length;
-      return length > 0 && header == arr[length - 1] ? arr : [...arr, header];
-    }, []);
-}
-
-function generateCppBindings(typeInfo: TypeInfo[]): string {
-  const joinTypeParams = (parameters: ParameterInfo[]): string => {
+  /** @type {(parameters: ParameterInfo[]) => string} */
+  const joinTypeParams = parameters => {
     return parameters.map(p => p.type.replace(/&+$/g, "")).join(", ");
   };
+
+  /** @type {(sourceName: string) => (method: FunctionInfo) => string} */
+  const registerMethod = sourceName => ({ name, parameters, returnType }) => {
+    const typeParams = joinTypeParams(parameters);
+    const result = !returnType ? "" : "auto result = ";
+    return [
+      "        duk_push_c_function(",
+      "            ctx,",
+      "            [](duk_context* ctx) -> duk_ret_t {",
+      `                auto obj = duk::push_this<${sourceName}>(ctx);`,
+      ...(typeParams
+        ? [`                auto args = duk::get_args<${typeParams}>(ctx);`]
+        : []),
+      `                ${result}obj->${name}(${parameters
+        .map((p, i) => `duk::forward(std::get<${i}>(args))`)
+        .join(", ")});`,
+      ...(result ? [`                duk::push(ctx, result);`] : []),
+      `                return ${result ? 1 : 0};`,
+      "            },",
+      `            ${parameters.length});`,
+      `        duk::put_prop_literal(ctx, -2, "${toCamelCase(name)}");`
+    ].join(EOL);
+  };
+
+  /** @type {(typeInfo: TypeInfo) => string} */
+  const registerModule = ({ sourceName }) => {
+    const typeName = sourceName.replace(/rainbow::/g, "");
+    return `        duk::register_module<${typeName}>(ctx, obj_idx);`;
+  };
+
   return [
     makeBanner(__filename),
     "",
     "#ifndef SCRIPT_JAVASCRIPT_MODULES_H_",
     "#define SCRIPT_JAVASCRIPT_MODULES_H_",
     "",
-    ...generateIncludes(typeInfo, [
+    ...includeHeaders(typeInfo, [
       "Common/TypeCast.h",
       "Common/TypeInfo.h",
       "Script/JavaScript/Helper.h"
     ]),
     "",
     "// clang-format off",
-    ...typeInfo
-      .filter(({ type }) => type !== "module")
-      .map(type => {
-        const sourceName = type.sourceName;
-        return [
-          "",
-          "template <>",
-          `void rainbow::duk::register_module<rainbow::${sourceName}>(duk_context* ctx, duk_idx_t rainbow)`,
-          "{",
-          ...((): string[] => {
-            switch (type.type) {
-              case "class":
-                return [
-                  type.ctor
-                    ? `    duk::push_constructor<${sourceName}${
-                        type.ctor.length === 0
-                          ? ""
-                          : `, ${joinTypeParams(type.ctor)}`
-                      }>(ctx);`
-                    : "    duk_push_bare_object(ctx);",
-                  `    duk::put_prototype<${sourceName}, Allocation::${
-                    type.ctor ? "HeapAllocated" : "NoHeap"
-                  }>(ctx, [](duk_context* ctx) {`,
-                  ...type.methods
-                    .map(method => {
-                      const typeParams = joinTypeParams(method.parameters);
-                      const result = !method.returnType ? "" : "auto result = ";
-                      return [
-                        "        duk_push_c_function(",
-                        "            ctx,",
-                        "            [](duk_context* ctx) -> duk_ret_t {",
-                        `                auto obj = duk::push_this<${sourceName}>(ctx);`,
-                        ...(typeParams
-                          ? [
-                              `                auto args = duk::get_args<${typeParams}>(ctx);`
-                            ]
-                          : []),
-                        `                ${result}obj->${
-                          method.name
-                        }(${method.parameters
-                          .map((p, i) => `duk::forward(std::get<${i}>(args))`)
-                          .join(", ")});`,
-                        ...(result
-                          ? [`                duk::push(ctx, result);`]
-                          : []),
-                        `                return ${result ? 1 : 0};`,
-                        "            },",
-                        `            ${method.parameters.length});`,
-                        `        duk::put_prop_literal(ctx, -2, "${method.name.toCamelCase()}");`
-                      ];
-                    })
-                    .reduce<string[]>((arr, lines) => {
-                      return [...arr, ...lines];
-                    }, []),
-                  `        duk::push_literal(ctx, "Rainbow.${type.name}");`,
-                  "        duk::put_prop_literal(ctx, -2, DUKR_WELLKNOWN_SYMBOL_TOSTRINGTAG);",
-                  "    });"
-                ];
-              case "enum":
-                return [
-                  "    const auto obj_idx = duk_push_bare_object(ctx);",
-                  ...type.values
-                    .map(value => [
-                      `    duk_push_int(ctx, to_underlying_type(${sourceName}::${
-                        value.name
-                      }));`,
-                      `    duk::put_prop_literal(ctx, obj_idx, "${
-                        value.name
-                      }");`
-                    ])
-                    .reduce<string[]>((arr, lines) => {
-                      return [...arr, ...lines];
-                    }, [])
-                ];
-              case "module":
-                return [];
-            }
-          })(),
-          "    duk_freeze(ctx, -1);",
-          `    duk::put_prop_literal(ctx, rainbow, "${type.name}");`,
-          "}"
-        ].join(EOL);
-      }),
+    ...typeInfo.filter(({ type }) => type !== "module").map(defineModule),
     "",
     "namespace rainbow::duk",
     "{",
     "    void register_all_modules(duk_context* ctx, duk_idx_t obj_idx)",
     "    {",
-    ...typeInfo
-      .filter(type => type.type !== "module")
-      .map(
-        type =>
-          `        duk::register_module<${type.sourceName.replace(
-            /rainbow::/g,
-            ""
-          )}>(ctx, obj_idx);`
-      ),
+    ...typeInfo.filter(({ type }) => type !== "module").map(registerModule),
     "    }",
     "}",
     "",
@@ -628,141 +606,165 @@ function generateCppBindings(typeInfo: TypeInfo[]): string {
   ].join(EOL);
 }
 
-function generateTypeScriptDeclaration(typeInfo: TypeInfo[]): string {
-  const getParams = (parameters: ParameterInfo[]) => {
-    return parameters
-      .map(p => `${p.name}: ${mapToTypeScriptType(p.type)}`)
-      .join(", ");
+/**
+ * Generates TypeScript declaration file.
+ * @param {TypeInfo[]} typeInfo
+ * @returns {string}
+ */
+function generateTypeScriptDeclaration(typeInfo) {
+  /** @type {(typeInfo: ClassInfo, indent: string) => string} */
+  const declareClass = ({ ctor, methods, name }, indent) => {
+    return [
+      `${indent}  export class ${name} {`,
+      `${indent}    private readonly $type: "Rainbow.${name}";`,
+      ...(!ctor ? [] : [`${indent}    constructor(${joinParams(ctor)});`]),
+      ...methods.map(method => declareFunction(method, true, indent)),
+      `${indent}  }`
+    ].join(EOL);
   };
-  const getFunctionDeclaration = (
-    func: FunctionInfo,
-    isClassMember: boolean,
-    indent: string
-  ) => {
-    const functionKeyword = isClassMember ? "" : "function ";
-    const name = func.name.toCamelCase();
-    const params = getParams(func.parameters);
-    const returnType = mapToTypeScriptType(func.returnType);
-    return `${indent}    ${functionKeyword}${name}(${params}): ${returnType};`;
+
+  /** @type {(typeInfo: EnumInfo, indent: string) => string} */
+  const declareEnum = ({ name, values }, indent) => {
+    return [
+      `${indent}  export enum ${name} {`,
+      ...values.map(defineEnumValue(indent)),
+      `${indent}  }`
+    ].join(EOL);
   };
-  const getDeclaration = (module: TypeInfo, indent: string = ""): string => {
-    switch (module.type) {
+
+  /** @type {(func: FunctionInfo, isClassMember: boolean, indent: string) => string} */
+  const declareFunction = (func, isClassMember, indent) => {
+    const keyword = isClassMember ? "" : "function ";
+    const name = toCamelCase(func.name);
+    const params = joinParams(func.parameters);
+    const returnType = toTypeScriptType(func.returnType);
+    return `${indent}    ${keyword}${name}(${params}): ${returnType};`;
+  };
+
+  /** @type {(typeInfo: ModuleInfo, indent: string) => string} */
+  const declareModule = ({ functions, name, properties, types }, indent) => {
+    return [
+      `${indent}  export namespace ${name} {`,
+      ...map(properties, declareProp(indent)),
+      ...map(functions, f => declareFunction(f, false, indent)),
+      ...map(types, t => declareType(t, "  ")),
+      `${indent}  }`
+    ].join(EOL);
+  };
+
+  /** @type {(indent: string) => (prop: PropertyInfo) => string} */
+  const declareProp = indent => prop =>
+    `${indent}    const ${prop.name}: ${prop.type};`;
+
+  /** @type {(t: TypeInfo, indent?: string) => string} */
+  const declareType = (t, indent = "") => {
+    switch (t.type) {
       case "class":
-        return [
-          `${indent}  export class ${module.name} {`,
-          `${indent}    private readonly $type: "Rainbow.${module.name}";`,
-          ...(!module.ctor
-            ? []
-            : [`${indent}    constructor(${getParams(module.ctor)});`]),
-          ...module.methods.map(method =>
-            getFunctionDeclaration(method, true, indent)
-          ),
-          `${indent}  }`
-        ].join(EOL);
+        return declareClass(t, indent);
       case "enum":
-        return [
-          `${indent}  export enum ${module.name} {`,
-          ...module.values.map(
-            value => `${indent}    ${value.name} = ${value.integralValue},`
-          ),
-          `${indent}  }`
-        ].join(EOL);
+        return declareEnum(t, indent);
       case "module":
-        return [
-          `${indent}  export namespace ${module.name} {`,
-          ...(!module.properties
-            ? []
-            : module.properties.map(
-                prop => `${indent}    const ${prop.name}: ${prop.type}`
-              )),
-          ...(!module.functions
-            ? []
-            : module.functions.map(f =>
-                getFunctionDeclaration(f, false, indent)
-              )),
-          ...(!module.types
-            ? []
-            : module.types.map(t => getDeclaration(t, "  "))),
-          `${indent}  }`
-        ].join(EOL);
+        return declareModule(t, indent);
     }
   };
-  return [
-    makeBanner(__filename),
-    "",
-    "declare namespace Duktape {",
-    "  const version: number;",
-    "  const env: string;",
-    "",
-    "  function fin(o: {}, finalizer?: () => void): (() => void) | undefined;",
-    '  function enc(format: "base64" | "hex" | "jc" | "jx", ...values: any[]): string;',
-    '  function dec(format: "base64" | "hex" | "jc" | "jx", value: string): Buffer | string;',
-    "  function info(value: any): {};",
-    "  function act(index: number): {};",
-    "  function gc(flags?: number): void;",
-    "  function compact(o: {}): void;",
-    "",
-    "  let errCreate: ((e: Error) => Error) | undefined;",
-    "  let errThrow: ((e: Error) => Error) | undefined;",
-    "",
-    "  class Thread {",
-    "    static current(): Thread;",
-    "    static resume(thread: Thread, value?: any, thrown?: boolean): any;",
-    "    static yield(value?: any, thrown?: boolean): any;",
-    "",
-    '    private readonly $type: "Duktape.Thread";',
-    "",
-    "    constructor(yielder: (value?: any) => any);",
-    "  }",
-    "}",
-    "",
-    "declare namespace Rainbow {",
-    ((): string[] => typeInfo.map(m => getDeclaration(m)))().join("\n\n"),
-    "}",
-    ""
-  ].join(EOL);
-}
 
-function mapToTypeScriptType(type?: NativeType): string {
-  return !type
-    ? mapToTypeScriptTypeImpl(type)
-    : type
-        .split("|")
-        .map(t => mapToTypeScriptTypeImpl(t.trim() as NativeType))
-        .sort()
-        .join(" | ");
-}
+  /** @type {(indent: string) => (value: EnumValueInfo) => string} */
+  const defineEnumValue = indent => value =>
+    `${indent}    ${value.name} = ${value.integralValue},`;
 
-function mapToTypeScriptTypeImpl(type?: NativeType): string {
-  switch (type) {
-    case "Animation::Callback":
-      return "(animation: Animation, event: AnimationEvent) => void";
-    case "Animation::Frames":
-      return "number[]";
-    case "Color":
-      return "{ r: number, g: number, b: number, a: number }";
-    case "SharedPtr<TextureAtlas>":
-      return "Texture";
-    case "SpriteRef":
-      return "Sprite";
-    case "Vec2f":
-      return "{ x: number, y: number }";
-    case "bool":
-      return "boolean";
-    case "czstring":
-      return "string";
-    case "float":
-      return "number";
-    case "int":
-      return "number";
-    case "uint32_t":
-      return "number";
-    default:
-      return type || "void";
+  /** @type {(parameters: ParameterInfo[]) => string} */
+  const joinParams = parameters => {
+    return parameters
+      .map(p => `${p.name}: ${toTypeScriptType(p.type)}`)
+      .join(", ");
+  };
+
+  /** @type {(type?: NativeType) => string} */
+  const toTypeScriptType = type => {
+    return (type || "")
+      .split("|")
+      .map(t => {
+        switch (t) {
+          case "Animation::Callback":
+            return "(animation: Animation, event: AnimationEvent) => void";
+          case "Animation::Frames":
+            return "number[]";
+          case "Color":
+            return "{ r: number, g: number, b: number, a: number }";
+          case "SharedPtr<TextureAtlas>":
+            return "Texture";
+          case "SpriteRef":
+            return "Sprite";
+          case "Vec2f":
+            return "{ x: number, y: number }";
+          case "bool":
+            return "boolean";
+          case "czstring":
+            return "string";
+          case "float":
+            return "number";
+          case "int":
+            return "number";
+          case "uint32_t":
+            return "number";
+          default:
+            return t || "void";
+        }
+      })
+      .sort()
+      .join(" | ");
+  };
+
+  return `${makeBanner(__filename)}
+
+declare namespace Duktape {
+  const version: number;
+  const env: string;
+
+  function fin(o: {}, finalizer?: () => void): (() => void) | undefined;
+  function enc(format: "base64" | "hex" | "jc" | "jx", ...values: any[]): string;
+  function dec(format: "base64" | "hex" | "jc" | "jx", value: string): Buffer | string;
+  function info(value: any): {};
+  function act(index: number): {};
+  function gc(flags?: number): void;
+  function compact(o: {}): void;
+
+  let errCreate: ((e: Error) => Error) | undefined;
+  let errThrow: ((e: Error) => Error) | undefined;
+
+  class Thread {
+    static current(): Thread;
+    static resume(thread: Thread, value?: any, thrown?: boolean): any;
+    static yield(value?: any, thrown?: boolean): any;
+
+    private readonly $type: "Duktape.Thread";
+
+    constructor(yielder: (value?: any) => any);
   }
 }
 
-function preprocess(info: TypeInfo): TypeInfo {
+declare namespace Rainbow {
+${typeInfo.map(m => declareType(m)).join(`${EOL}${EOL}`)}
+}
+`;
+}
+
+/**
+ * @template T, U
+ * @param {T[]=} array
+ * @param {(value: T, index: number, array: T[]) => U} f
+ * @returns {U[]}
+ */
+function map(array, f) {
+  return !array ? [] : array.map(f);
+}
+
+/**
+ * Pre-processes specified type information.
+ * @param {TypeInfo} info
+ * @returns {TypeInfo}
+ */
+function preprocess(info) {
   if (info.type !== "enum") {
     return info;
   }
@@ -771,12 +773,15 @@ function preprocess(info: TypeInfo): TypeInfo {
     sourcePath,
     info.source.replace(/[/\\]+/g, path.sep)
   );
+
+  // eslint-disable-next-line no-console
   console.log(`${info.name} <- ${sourceFilePath}`);
 
   const data = fs.readFileSync(sourceFilePath);
   const marker = `${info.type}[\\s\\w]+?${info.sourceName}`;
   const source = data.toString("utf8");
   if (!new RegExp(marker, "g").test(source)) {
+    // eslint-disable-next-line no-console
     console.error(`'${info.sourceName}' was not found in '${sourceFilePath}'`);
     return info;
   }
@@ -784,6 +789,7 @@ function preprocess(info: TypeInfo): TypeInfo {
   const re = new RegExp(`${marker}.*?{(.*?)};`, "g");
   const matches = re.exec(source.replace(/\s+/g, " "));
   if (!matches) {
+    // eslint-disable-next-line no-console
     console.error(`Failed to extract values for '${info.sourceName}'`);
     return info;
   }
@@ -802,19 +808,39 @@ function preprocess(info: TypeInfo): TypeInfo {
   };
 }
 
-function writeFile(path: string, data: string): void {
-  fs.writeFile(path, data, { encoding: "utf8" }, err => {
-    if (err) {
-      throw err;
-    }
-    console.log(`-> ${path}`);
-  });
+/**
+ * Returns a copy of the string in camelCase.
+ * @param {string} str
+ */
+function toCamelCase(str) {
+  return str
+    .split("")
+    .reduce(
+      (arr, char, index) => {
+        if (char === "_") {
+          return arr;
+        }
+
+        if (str[index - 1] === "_") {
+          arr.push(char.toUpperCase());
+        } else {
+          arr.push(char);
+        }
+        return arr;
+      },
+      /** @type {string[]} */ ([])
+    )
+    .join("");
 }
 
 const typeInfo = modules.map(preprocess);
-
-const cppBindings = generateCppBindings(typeInfo);
-writeFile(outputBindingsPath, cppBindings);
-
-const tsDecl = generateTypeScriptDeclaration(typeInfo);
-writeFile(outputDeclarationPath, tsDecl);
+[
+  {
+    generate: generateCppBindings,
+    output: path.join(sourcePath, "Script", "JavaScript", "Modules.g.h")
+  },
+  {
+    generate: generateTypeScriptDeclaration,
+    output: path.join(sourcePath, "..", "js", "index.d.ts")
+  }
+].forEach(({ generate, output }) => writeFile(output, generate(typeInfo)));

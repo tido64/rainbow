@@ -2,24 +2,6 @@
   "name": "rainbow",
   "version": "1.0.0",
   "description": "Rainbow is a scriptable, cross-platform, 2D game engine written in modern C++.",
-  "main": "index.js",
-  "directories": {
-    "doc": "doc",
-    "lib": "lib"
-  },
-  "scripts": {
-    "build": "tsc --project js",
-    "compile": "tsc --target ES2017 --module commonjs --noImplicitReturns --noUnusedLocals --sourceMap --strict",
-    "generate-bindings": "yarn compile tools/generate-bindings.ts && node tools/generate-bindings.js",
-    "generate-shaders": "yarn compile tools/generate-shaders.ts && node tools/generate-shaders.js",
-    "import-asset": "yarn compile tools/import-asset.ts && node tools/import-asset.js",
-    "prettier": "prettier --no-config --prose-wrap always --write .vscode/*.json README.md doc/**/*.md js/*.json tools/*.ts",
-    "tsc": "tsc"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+ssh://git@bitbucket.org/tido/rainbow.git"
-  },
   "keywords": [
     "android",
     "cpp",
@@ -32,13 +14,32 @@
     "typescript",
     "windows"
   ],
-  "author": "Tommy Nguyen",
   "license": "MIT",
   "homepage": "https://bitbucket.org/tido/rainbow#readme",
+  "bugs": "https://bitbucket.org/tido/rainbow/issues?status=new&status=open",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@bitbucket.org/tido/rainbow.git"
+  },
+  "author": "Tommy Nguyen",
+  "main": "index.js",
+  "directories": {
+    "doc": "doc",
+    "lib": "lib"
+  },
+  "scripts": {
+    "build": "tsc --project js",
+    "check:tools": "tsc --build tsconfig.tools.json && yarn lint:tools",
+    "generate:bindings": "node tools/generate-bindings.js",
+    "generate:shaders": "node tools/generate-shaders.js",
+    "import-asset": "node tools/import-asset.js",
+    "lint:tools": "eslint tools/",
+    "prettier:all": "prettier --no-config --prose-wrap always --write .vscode/*.json README.md doc/**/*.md js/*.json tools/*.js"
+  },
   "devDependencies": {
     "@types/node": "^10.12.0",
-    "prettier": "^1.15.0",
-    "tslint": "^5.11.0",
-    "typescript": "^3.1.0"
+    "eslint": "^5.13.0",
+    "prettier": "^1.16.0",
+    "typescript": "^3.3.0"
   }
 }
