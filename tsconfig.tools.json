@@ -1,0 +1,14 @@
+{
+  "extends": "./js/tsconfig",
+  "compilerOptions": {
+    "target": "esnext",
+    "noEmit": true,
+    "allowJs": true,
+    "checkJs": true
+  },
+  "files": [
+    "tools/generate-bindings.js",
+    "tools/generate-shaders.js",
+    "tools/import-asset.js"
+  ]
+}

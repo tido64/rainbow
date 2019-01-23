@@ -4,9 +4,7 @@
     "noImplicitReturns": true,
     "noUnusedLocals": true,
     "sourceMap": true,
-    "strict": true,
+    "strict": true
   },
-  "files": [
-    "index.ts"
-  ]
+  "files": ["index.ts"]
 }

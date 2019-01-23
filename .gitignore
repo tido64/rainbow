@@ -4,8 +4,6 @@
 *.aps
 *.iml
 *.jar
-*.js
-*.js.map
 *.swp
 .DS_Store
 .browse.VC.*
@@ -20,6 +18,8 @@ build/android/app/build/
 build/android/build/
 gradlew
 gradlew.bat
+js/*.js
+js/*.js.map
 local.properties
 node_modules/
 package-lock.json
