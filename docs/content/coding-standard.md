@@ -1,4 +1,7 @@
-# Coding Standard
+---
+id: coding-standard
+title: Coding Standard
+---
 
 For starters, please read through the
 [C++ Core Guidelines](https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines).
@@ -158,13 +161,13 @@ each section, use the following order:
 ## Formatting
 
 Use the provided `.clang-format` configuration to format any written code. There
-should be a [ClangFormat](http://clang.llvm.org/docs/ClangFormat.html) plugin
+should be a [ClangFormat](https://clang.llvm.org/docs/ClangFormat.html) plugin
 for your favourite editor:
 
 * Sublime Text: [Clang Format](https://github.com/rosshemsley/SublimeClangFormat)
-* Visual Studio: [clang-format plugin](http://llvm.org/builds/)
 * Vim: [vim-clang-format](https://github.com/rhysd/vim-clang-format)
-* Xcode: [ClangFormat-Xcode](https://github.com/travisjeffery/ClangFormat-Xcode)
+* Visual Studio: [clang-format plugin](https://llvm.org/builds/)
+* Visual Studio Code: [C/C++ for Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools)
 
 ## Using Linters
 
@@ -174,5 +177,5 @@ You can tell CMake to run **clang-tidy** as part of the build process by passing
 ## Other Guidelines
 
 * [Google C++ Style Guide](https://google-styleguide.googlecode.com/svn/trunk/cppguide.html)
-* [LLVM Coding Standards](http://llvm.org/docs/CodingStandards.html)
+* [LLVM Coding Standards](https://llvm.org/docs/CodingStandards.html)
 * [Unreal Engine Coding Standard](https://docs.unrealengine.com/latest/INT/Programming/Development/CodingStandard/)

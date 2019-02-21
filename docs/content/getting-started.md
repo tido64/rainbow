@@ -1,4 +1,7 @@
-# Getting Started
+---
+id: getting-started
+title: Getting Started
+---
 
 ## Download the Source Code
 
@@ -6,7 +9,7 @@ First, make sure you've installed [Git](https://git-scm.com/downloads) as that's
 what we'll be using to retrieve the source code. The following command will
 download Rainbow and all of its submodules into a folder named `rainbow`:
 
-`git clone --recursive https://bitbucket.org/tido/rainbow.git`
+`git clone --recursive https://github.com/tido64/rainbow.git`
 
 If you're using a graphical UI for Git, make sure to checkout the submodules as
 well.

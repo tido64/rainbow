@@ -1,4 +1,7 @@
-# Basics
+---
+id: basics
+title: Basics
+---
 
 ## File Structure
 
@@ -26,6 +29,25 @@ the window size (Linux/macOS/Windows).
 
 ## Entry Point
 
+<!--DOCUSAURUS_CODE_TABS-->
+
+<!-- TypeScript -->
+```typescript
+// 'index.js' must implement the following two entry-point functions:
+
+function init(width, height) {
+  // Called once on startup.
+}
+
+function update(dt) {
+  // Called every frame. |dt| is the time since last frame in milliseconds.
+}
+
+// There is no draw function. Later, we'll use the render queue to get things
+// onto the screen.
+```
+
+<!-- C++ -->
 ```cpp
 // Any class that derives from `GameBase` is a potential entry point. The class
 // may also override any or none of the methods `init_impl()` and
@@ -60,26 +82,23 @@ auto rainbow::GameBase::create(rainbow::Director& director)
 // add sprites to the screen in the following sections.
 ```
 
-```typescript
-// 'index.js' must implement the following two entry-point functions:
-
-function init(width, height) {
-  // Called once on startup.
-}
-
-function update(dt) {
-  // Called every frame. |dt| is the time since last frame in milliseconds.
-}
-
-// There is no draw function. Later, we'll use the render queue to get things
-// onto the screen.
-```
+<!--END_DOCUSAURUS_CODE_TABS-->
 
 ## Sprite Batches
 
 One of Rainbow's philosophies is to always batch sprites. So in order to create
 a sprite, one must first create a batch.
 
+<!--DOCUSAURUS_CODE_TABS-->
+
+<!-- TypeScript -->
+```typescript
+function init(screenWidth, screenHeight) {
+  const count = 2;  // Intended number of sprites in batch
+  const batch = new Rainbow.SpriteBatch(count);
+```
+
+<!-- C++ -->
 ```cpp
 void MyGame::init_impl(const Vec2i& screen)
 {
@@ -87,24 +106,26 @@ void MyGame::init_impl(const Vec2i& screen)
     batch_ = rainbow::spritebatch(count);
 ```
 
-```typescript
-function init(screenWidth, screenHeight) {
-  const count = 2;  // Intended number of sprites in batch
-  const batch = new Rainbow.SpriteBatch(count);
-```
+<!--END_DOCUSAURUS_CODE_TABS-->
 
 The `count` tells Rainbow that we intend to create a batch of two sprites. Next,
 we'll create two sprites:
 
+<!--DOCUSAURUS_CODE_TABS-->
+
+<!-- TypeScript -->
+```typescript
+  const sprite1 = batch.createSprite(100, 100);
+  const sprite2 = batch.createSprite(100, 100);
+```
+
+<!-- C++ -->
 ```cpp
     auto sprite1 = batch_->create_sprite(100, 100);
     auto sprite2 = batch_->create_sprite(100, 100);
 ```
 
-```typescript
-  const sprite1 = batch.createSprite(100, 100);
-  const sprite2 = batch.createSprite(100, 100);
-```
+<!--END_DOCUSAURUS_CODE_TABS-->
 
 The order in which sprites are created are important as it determines the draw
 order. Here, `sprite1` is drawn first, followed by `sprite2`.
@@ -112,6 +133,21 @@ order. Here, `sprite1` is drawn first, followed by `sprite2`.
 Now we have a sprite batch containing two untextured sprites. Let's add a
 texture:
 
+<!--DOCUSAURUS_CODE_TABS-->
+
+<!-- TypeScript -->
+```typescript
+  // Load the texture atlas.
+  const atlas = new Rainbow.Texture("canvas.png");
+  batch.setTexture(atlas);
+
+  // Create a texture from the atlas, and assign to our sprites.
+  const texture = atlas.addRegion(448, 108, 100, 100);
+  sprite1.setTexture(texture);
+  sprite2.setTexture(texture);
+```
+
+<!-- C++ -->
 ```cpp
     // Load the texture atlas.
     auto atlas = rainbow::texture("canvas.png");
@@ -123,16 +159,7 @@ texture:
     sprite2->set_texture(texture);
 ```
 
-```typescript
-  // Load the texture atlas.
-  const atlas = new Rainbow.Texture("canvas.png");
-  batch.setTexture(atlas);
-
-  // Create a texture from the atlas, and assign to our sprites.
-  const texture = atlas.addRegion(448, 108, 100, 100);
-  sprite1.setTexture(texture);
-  sprite2.setTexture(texture);
-```
+<!--END_DOCUSAURUS_CODE_TABS-->
 
 First, we load the actual texture. Textures are always loaded into atlases which
 can be assigned to sprite batches. "Actual" textures are created by defining a
@@ -151,6 +178,22 @@ render queue. The render queue determines the order in which objects are drawn.
 
 Now we'll add the batches we've created earlier:
 
+<!--DOCUSAURUS_CODE_TABS-->
+
+<!-- TypeScript -->
+```typescript
+  // Add batch to the render queue.
+  const unit = Rainbow.RenderQueue.add(batch);
+
+  // Position our sprites at the center of the screen.
+  const cx = screenWidth * 0.5;
+  const cy = screenHeight * 0.5;
+  sprite1.setPosition({ x: cx - 50, y: cy });
+  sprite2.setPosition({ x: cx + 50, y: cy });
+}
+```
+
+<!-- C++ -->
 ```cpp
     // Add batch to the render queue. Note that the render queue is only
     // accessible from the entry point. If you need it elsewhere, you must pass
@@ -165,17 +208,7 @@ Now we'll add the batches we've created earlier:
 }
 ```
 
-```typescript
-  // Add batch to the render queue.
-  const unit = Rainbow.RenderQueue.add(batch);
-
-  // Position our sprites at the center of the screen.
-  const cx = screenWidth * 0.5;
-  const cy = screenHeight * 0.5;
-  sprite1.setPosition({ x: cx - 50, y: cy });
-  sprite2.setPosition({ x: cx + 50, y: cy });
-}
-```
+<!--END_DOCUSAURUS_CODE_TABS-->
 
 If you compile and run this code, you should see two identical sprites next to
 each other at the center of the screen.
@@ -245,6 +278,23 @@ We can recreate the earlier scene:
 
 If you save the file as `my.scene.json`, we can implement our new entry point:
 
+<!--DOCUSAURUS_CODE_TABS-->
+
+<!-- TypeScript -->
+```typescript
+function init(screenWidth, screenHeight) {
+  scene = new Rainbow.Scene("my.scene.json");
+  Rainbow.RenderQueue.add(scene, "myScene");
+
+  // Position our sprites at the center of the screen.
+  const cx = screenWidth * 0.5;
+  const cy = screenHeight * 0.5;
+  scene.sprite1.setPosition({ x: cx - 50, y: cy });
+  scene.sprite2.setPosition({ x: cx + 50, y: cy });
+}
+```
+
+<!-- C++ -->
 ```cpp
 void MyGame::init_impl(const Vec2i& screen)
 {
@@ -259,15 +309,4 @@ void MyGame::init_impl(const Vec2i& screen)
 }
 ```
 
-```typescript
-function init(screenWidth, screenHeight) {
-  scene = new Rainbow.Scene("my.scene.json");
-  Rainbow.RenderQueue.add(scene, "myScene");
-
-  // Position our sprites at the center of the screen.
-  const cx = screenWidth * 0.5;
-  const cy = screenHeight * 0.5;
-  scene.sprite1.setPosition({ x: cx - 50, y: cy });
-  scene.sprite2.setPosition({ x: cx + 50, y: cy });
-}
-```
+<!--END_DOCUSAURUS_CODE_TABS-->

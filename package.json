@@ -15,11 +15,11 @@
     "windows"
   ],
   "license": "MIT",
-  "homepage": "https://bitbucket.org/tido/rainbow#readme",
-  "bugs": "https://bitbucket.org/tido/rainbow/issues?status=new&status=open",
+  "homepage": "https://github.com/tido64/rainbow#rainbow",
+  "bugs": "https://github.com/tido64/rainbow/issues",
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@bitbucket.org/tido/rainbow.git"
+    "url": "https://github.com/tido64/rainbow.git"
   },
   "author": "Tommy Nguyen",
   "main": "index.js",
