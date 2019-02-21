@@ -1,4 +1,7 @@
-# Input
+---
+id: input
+title: Input
+---
 
 The input manager listens to hardware input triggered by a user and fires the
 appropriate events to all subscribed listeners. Such events may include key
@@ -28,10 +31,6 @@ void MyGame::init_impl(const Vec2i&)
     Input* input_manager = &input();
     […]
 }
-```
-
-```typescript
-local input = rainbow.input
 ```
 
 ### Subscribing

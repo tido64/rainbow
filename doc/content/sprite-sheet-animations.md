@@ -1,4 +1,7 @@
-# Sprite Sheet Animations
+---
+id: sprite-sheet-animations
+title: Sprite Sheet Animations
+---
 
 A sprite sheet animation is a frame-based animation (like traditional animation)
 where we take a sprite and change its texture at set interval.
@@ -7,6 +10,14 @@ where we take a sprite and change its texture at set interval.
 
 ### Creating Sprite Sheet Animations
 
+<!--DOCUSAURUS_CODE_TABS-->
+
+<!-- TypeScript -->
+```typescript
+Rainbow.Animation(sprite: Sprite, frames: number[], fps: number, delay: number);
+```
+
+<!-- C++ -->
 ```cpp
 Animation(const SpriteRef &sprite,
           std::unique_ptr<Frame[]> frames,
@@ -14,9 +25,7 @@ Animation(const SpriteRef &sprite,
           int delay = 0);
 ```
 
-```typescript
-Rainbow.Animation(sprite: Sprite, frames: number[], fps: number, delay: number);
-```
+<!--END_DOCUSAURUS_CODE_TABS-->
 
 `frames` is an array of texture ids that are played back in succession. In C++,
 the array must be terminated with `Animation::Frame::end()`. The playback rate
@@ -34,16 +43,22 @@ time.
 
 ### Starting and Stopping Animations
 
+<!--DOCUSAURUS_CODE_TABS-->
+
+<!-- TypeScript -->
+```typescript
+function start(): void;
+function stop(): void;
+```
+
+<!-- C++ -->
 ```cpp
 bool  Animation::is_stopped  () const;
 void  Animation::start       ();
 void  Animation::stop        ();
 ```
 
-```typescript
-function start(): void;
-function stop(): void;
-```
+<!--END_DOCUSAURUS_CODE_TABS-->
 
 An animation will always start from the beginning. There is no pause function
 because animations live in the render queue and can therefore be paused by
@@ -51,76 +66,118 @@ disabling its render unit.
 
 ### Navigating the Animation
 
-```cpp
-unsigned int  current_frame  () const;
-```
+<!--DOCUSAURUS_CODE_TABS-->
 
+<!-- TypeScript -->
 ```typescript
 function currentFrame(): number;
 ```
 
-Returns the currently displayed frame; `Animation::Frame::end()` (-1) if none.
-
+<!-- C++ -->
 ```cpp
-unsigned int  frame_rate  () const;
+unsigned int  current_frame  () const;
 ```
 
+<!--END_DOCUSAURUS_CODE_TABS-->
+
+Returns the currently displayed frame; `Animation::Frame::end()` (-1) if none.
+
+<!--DOCUSAURUS_CODE_TABS-->
+
+<!-- TypeScript -->
 ```typescript
 function frameRate(): number;
 ```
 
-Returns the frame rate in frames per second.
-
+<!-- C++ -->
 ```cpp
-void  Animation::jump_to  (unsigned int frame);
+unsigned int  frame_rate  () const;
 ```
 
+<!--END_DOCUSAURUS_CODE_TABS-->
+
+Returns the frame rate in frames per second.
+
+<!--DOCUSAURUS_CODE_TABS-->
+
+<!-- TypeScript -->
 ```typescript
 function jumpTo(frame: number): void;
 ```
 
+<!-- C++ -->
+```cpp
+void  Animation::jump_to  (unsigned int frame);
+```
+
+<!--END_DOCUSAURUS_CODE_TABS-->
+
 Jumps to the specified frame.
 
+<!--DOCUSAURUS_CODE_TABS-->
+
+<!-- TypeScript -->
+```typescript
+function rewind(): void;
+```
+
+<!-- C++ -->
 ```cpp
 void  Animation::rewind  ();
 ```
 
-```typescript
-function rewind(): void;
-```
+<!--END_DOCUSAURUS_CODE_TABS-->
 
 Rewinds the animation. Equivalent to `jump_to(0)`.
 
 ### Modifying the Animation Sequence
 
-```cpp
-void  Animation::set_delay  (int delay);
-```
+<!--DOCUSAURUS_CODE_TABS-->
 
+<!-- TypeScript -->
 ```typescript
 function setDelay(delay: number): void;
 ```
 
+<!-- C++ -->
+```cpp
+void  Animation::set_delay  (int delay);
+```
+
+<!--END_DOCUSAURUS_CODE_TABS-->
+
 Sets number of frames to delay before the animation loops. Negative numbers
 disable looping.
 
-```cpp
-void  Animation::set_frame_rate  (unsigned int fps);
-```
+<!--DOCUSAURUS_CODE_TABS-->
 
+<!-- TypeScript -->
 ```typescript
 function setFrameRate(fps: number): void;
 ```
 
+<!-- C++ -->
+```cpp
+void  Animation::set_frame_rate  (unsigned int fps);
+```
+
+<!--END_DOCUSAURUS_CODE_TABS-->
+
 Sets the frame rate in frames per second.
 
+<!--DOCUSAURUS_CODE_TABS-->
+
+<!-- TypeScript -->
+```typescript
+function setFrames(frames: number[]): void;
+```
+
+<!-- C++ -->
 ```cpp
 void  Animation::set_frames  (std::unique_ptr<Frame[]> frames);
 ```
 
-```typescript
-function setFrames(frames: number[]): void;
-```
+<!--END_DOCUSAURUS_CODE_TABS-->
 
 Sets new frames to be played.
 
@@ -138,13 +195,19 @@ SpriteRef  sprite  () const;
 
 Returns the target sprite.
 
+<!--DOCUSAURUS_CODE_TABS-->
+
+<!-- TypeScript -->
+```typescript
+function setSprite(sprite: Sprite): void;
+```
+
+<!-- C++ -->
 ```cpp
 void  Animation::set_sprite  (const SpriteRef &sprite);
 ```
 
-```typescript
-function setSprite(sprite: Sprite): void;
-```
+<!--END_DOCUSAURUS_CODE_TABS-->
 
 Sets the sprite to animate.
 
@@ -161,14 +224,9 @@ There are three events that are fired during an animation's lifetime.
 
 You can subscribe to these events using:
 
-```cpp
-void   Animation::set_callback  (Animation::Callback f);
+<!--DOCUSAURUS_CODE_TABS-->
 
-// Where `Animation::Callback` is a callable whose signature is
-// `void(Animation *animation, AnimationEvent event)`, and `animation` is the
-// animation object that triggered `event`.
-```
-
+<!-- TypeScript -->
 ```typescript
 function setCallback(callback: (animation: Animation, event: AnimationEvent) => void): void;
 
@@ -192,10 +250,69 @@ function setCallback(callback: (animation: Animation, event: AnimationEvent) => 
 }
 ```
 
+<!-- C++ -->
+```cpp
+void   Animation::set_callback  (Animation::Callback f);
+
+// Where `Animation::Callback` is a callable whose signature is
+// `void(Animation *animation, AnimationEvent event)`, and `animation` is the
+// animation object that triggered `event`.
+```
+
+<!--END_DOCUSAURUS_CODE_TABS-->
+
 ## Example
 
 In this example, we set up a walking animation.
 
+<!--DOCUSAURUS_CODE_TABS-->
+
+<!-- TypeScript -->
+```typescript
+/// <reference path="./index.d.ts" />
+
+interface World {
+  screen: { width: number; height: number };
+  batch: Rainbow.SpriteBatch;
+  animation: Rainbow.Animation;
+}
+
+let world: World;
+
+function init(width: number, height: number) {
+  const texture = new Rainbow.Texture("monkey.png");
+  const walkingFrames = [
+    texture.addRegion(400, 724, 104, 149);
+    texture.addRegion(504, 724, 104, 149);
+    texture.addRegion(608, 724, 104, 149);
+    texture.addRegion(712, 724, 104, 149);
+    texture.addRegion(816, 724, 104, 149);
+    texture.addRegion(920, 724, 104, 149);
+  ];
+
+  const batch = new Rainbow.SpriteBatch(1);
+  batch.setTexture(texture);
+
+  const sprite = batch.createSprite(104, 149);
+  sprite.setPosition({ x: width * 0.5, y: height * 0.5 });
+
+  const animation = new Rainbow.Animation(sprite, walkingFrames, 6, 0);
+  animation.start();
+
+  Rainbow.RenderQueue.add(batch);
+  Rainbow.RenderQueue.add(animation);
+
+  world = {
+    screen: { width, height },
+    batch,
+    animation
+  };
+}
+
+function update(dt: number) {}
+```
+
+<!-- C++ -->
 ```cpp
 #include "FileSystem/FileSystem.h"
 #include "Graphics/Animation.h"
@@ -288,53 +405,11 @@ auto rainbow::GameBase::create(rainbow::Director& director)
 }
 ```
 
-```typescript
-/// <reference path="./index.d.ts" />
-
-interface World {
-  screen: { width: number; height: number };
-  batch: Rainbow.SpriteBatch;
-  animation: Rainbow.Animation;
-}
-
-let world: World;
-
-function init(width: number, height: number) {
-  const texture = new Rainbow.Texture("monkey.png");
-  const walkingFrames = [
-    texture.addRegion(400, 724, 104, 149);
-    texture.addRegion(504, 724, 104, 149);
-    texture.addRegion(608, 724, 104, 149);
-    texture.addRegion(712, 724, 104, 149);
-    texture.addRegion(816, 724, 104, 149);
-    texture.addRegion(920, 724, 104, 149);
-  ];
-
-  const batch = new Rainbow.SpriteBatch(1);
-  batch.setTexture(texture);
-
-  const sprite = batch.createSprite(104, 149);
-  sprite.setPosition({ x: width * 0.5, y: height * 0.5 });
-
-  const animation = new Rainbow.Animation(sprite, walkingFrames, 6, 0);
-  animation.start();
-
-  Rainbow.RenderQueue.add(batch);
-  Rainbow.RenderQueue.add(animation);
-
-  world = {
-    screen: { width, height },
-    batch,
-    animation
-  };
-}
-
-function update(dt: number) {}
-```
+<!--END_DOCUSAURUS_CODE_TABS-->
 
 Output:
 
-![Walking animation](sprite_sheet_animations_output.gif)
+![Walking animation](assets/sprite-sheet-animations-example.gif)
 
 ## Caveats and Known Limitations
 

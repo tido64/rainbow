@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/schema#",
-  "$id": "https://tido.bitbucket.io/rainbow/rainbow-scene.schema.json",
+  "$id": "https://tido64.github.io/rainbow/rainbow-scene.schema.json",
   "title": "Scene",
   "type": "object",
   "definitions": {

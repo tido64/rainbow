@@ -1,4 +1,7 @@
-# Audio
+---
+id: audio
+title: Audio
+---
 
 Audio consists mainly of the sound object and the audio channel. The sound
 object is basically an audio buffer. It can be wholly loaded, or it can stream
@@ -23,17 +26,23 @@ listed here. Please check the appropriate documentations.
 
 ## Resource Management
 
+<!--DOCUSAURUS_CODE_TABS-->
+
+<!-- TypeScript -->
+```typescript
+function Rainbow.Audio.loadSound(path: string): Sound;
+function Rainbow.Audio.loadStream(path: string): Sound;
+function Rainbow.Audio.release(sound: Sound): undefined;
+```
+
+<!-- C++ -->
 ```cpp
 Sound*  rainbow::audio::load_sound   (const char* path);
 Sound*  rainbow::audio::load_stream  (const char* path);
 void    rainbow::audio::release      (Sound*);
 ```
 
-```typescript
-function Rainbow.Audio.loadSound(path: string): Sound;
-function Rainbow.Audio.loadStream(path: string): Sound;
-function Rainbow.Audio.release(sound: Sound): undefined;
-```
+<!--END_DOCUSAURUS_CODE_TABS-->
 
 Loads the audio file at given path, and returns a handle for a `Sound` resource
 if successful. Otherwise, a `nullptr` is returned. `load_sound` will load the
@@ -44,6 +53,18 @@ To release an audio resource, call `release` with the handle.
 
 ## Playback
 
+<!--DOCUSAURUS_CODE_TABS-->
+
+<!-- TypeScript -->
+```typescript
+function Rainbow.Audio.isPaused(channel: Channel): boolean;
+function Rainbow.Audio.isPlaying(channel: Channel): boolean;
+function Rainbow.Audio.pause(channel: Channel): void;
+function Rainbow.Audio.play(audial: Channel | Sound): Channel;
+function Rainbow.Audio.stop(channel: Channel): void;
+```
+
+<!-- C++ -->
 ```cpp
 bool      rainbow::audio::is_paused   (Channel*);
 bool      rainbow::audio::is_playing  (Channel*);
@@ -53,13 +74,7 @@ Channel*  rainbow::audio::play        (Sound*, Vec2f world_position = Vec2f::Zer
 void      rainbow::audio::stop        (Channel*);
 ```
 
-```typescript
-function Rainbow.Audio.isPaused(channel: Channel): boolean;
-function Rainbow.Audio.isPlaying(channel: Channel): boolean;
-function Rainbow.Audio.pause(channel: Channel): void;
-function Rainbow.Audio.play(audial: Channel | Sound): Channel;
-function Rainbow.Audio.stop(channel: Channel): void;
-```
+<!--END_DOCUSAURUS_CODE_TABS-->
 
 Once a `Sound` resource is obtained, it can be played by calling `play`. This,
 in turn, will return a `Channel` handle that can be used to pause/resume/stop
@@ -69,17 +84,23 @@ to be reused by subsequent calls to `play(Sound*, ...)`.
 
 ## Configuration
 
+<!--DOCUSAURUS_CODE_TABS-->
+
+<!-- TypeScript -->
+```typescript
+function Rainbow.Audio.setLoopCount(channel: Channel, count: number): void;
+function Rainbow.Audio.setVolume(channel: Channel, volume: number): void;
+function Rainbow.Audio.setWorldPosition(channel: Channel, position: { x: number, y: number }): void;
+```
+
+<!-- C++ -->
 ```cpp
 void  rainbow::audio::set_loop_count      (Channel*, int count);
 void  rainbow::audio::set_volume          (Channel*, float volume);
 void  rainbow::audio::set_world_position  (Channel*, Vec2f position);
 ```
 
-```typescript
-function Rainbow.Audio.setLoopCount(channel: Channel, count: number): void;
-function Rainbow.Audio.setVolume(channel: Channel, volume: number): void;
-function Rainbow.Audio.setWorldPosition(channel: Channel, position: { x: number, y: number }): void;
-```
+<!--END_DOCUSAURUS_CODE_TABS-->
 
 A currently playing channel can be further configured. Currently, you can set
 the number of times it should loop, its volume, and world position.

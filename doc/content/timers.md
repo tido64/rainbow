@@ -1,4 +1,7 @@
-# Timers (C++ only)
+---
+id: timers
+title: Timers (C++ only)
+---
 
 Timers perform delayed actions or repeat actions at set intervals.
 

@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/schema#",
-  "$id": "https://tido.bitbucket.io/rainbow/rainbow-config.schema.json",
+  "$id": "https://tido64.github.io/rainbow/rainbow-config.schema.json",
   "title": "Config",
   "type": "object",
   "properties": {

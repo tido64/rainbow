@@ -1,4 +1,7 @@
-# Getting Started
+---
+id: getting-started
+title: Getting Started
+---
 
 ## Download the Source Code
 
@@ -6,7 +9,7 @@ First, make sure you've installed [Git](https://git-scm.com/downloads) as that's
 what we'll be using to retrieve the source code. The following command will
 download Rainbow and all of its submodules into a folder named `rainbow`:
 
-`git clone --recursive https://bitbucket.org/tido/rainbow.git`
+`git clone --recursive https://github.com/tido64/rainbow.git`
 
 If you're using a graphical UI for Git, make sure to checkout the submodules as
 well.
@@ -91,7 +94,7 @@ You'll find an overview of configuration and feature flags further below.
     |               |                                                          |
     |---------------|----------------------------------------------------------|
     | Arch Linux    | `pacman -S --needed cmake gcc mesa ninja pulseaudio sdl2`      |
-    | Debian/Ubuntu | `apt install build-essential cmake libgl1-mesa-dev libpulse-dev libsdl2-dev ninja pkg-config pulseaudio` |
+    | Debian/Ubuntu | `apt install build-essential cmake libgl1-mesa-dev libpulse-dev libsdl2-dev ninja-build pkg-config pulseaudio` |
 
 2. **Optional:** Download FMOD Studio API, extract it, and point
    `tools/fmod-import-tool.sh` at the directory you extracted it to. This should
