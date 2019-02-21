@@ -1,4 +1,7 @@
-# Transitions (C++ only)
+---
+id: transitions
+title: Transitions (C++ only)
+---
 
 Transitions provide a simple way to animate properties of a sprite such as
 opacity or position.
@@ -198,7 +201,7 @@ auto rainbow::GameBase::create(rainbow::Director& director)
 
 Output (refresh if you missed the animation):
 
-![Fade-In Animation](transitions_output.gif)
+![Fade-In Animation](assets/transitions-example.gif)
 
 ## Caveats and Known Limitations
 
@@ -206,4 +209,4 @@ Transitions are based on timers and will therefore run regardless of the enabled
 state of the component's render unit. The `Timer` object returned by the
 transition function can be used to pause/resume the animation.
 
-[Easing Functions Cheat Sheet]: http://easings.net/ "Easing Functions Cheat Sheet"
+[Easing Functions Cheat Sheet]: https://easings.net/ "Easing Functions Cheat Sheet"
