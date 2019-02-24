@@ -50,7 +50,7 @@ case $1 in
     case $TARGET_OS in
       "Android")
         cd build/android/
-        TERM=dumb gradle build --no-daemon
+        TERM=dumb gradle build
         ;;
       "iOS")
         xcodebuild -project build/ios/Rainbow.xcodeproj -scheme Rainbow -arch arm64 CODE_SIGNING_ALLOWED=NO | xcpretty
