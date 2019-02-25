@@ -9,6 +9,10 @@
 #include <cstdint>
 #include <memory>
 
+#ifdef RAINBOW_TEST
+#    include <algorithm>
+#endif
+
 #include "Common/Logging.h"
 #include "Common/TypeCast.h"
 
