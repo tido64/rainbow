@@ -5,6 +5,10 @@
 #include "Platform/SDL/Window.h"
 
 #include "Config.h"
+#include "FileSystem/File.h"
+#include "Graphics/Driver.h"
+#include "Graphics/SpriteVertex.h"
+#include "Graphics/TextureManager.h"
 #include "Graphics/Vulkan.h"
 
 using rainbow::Config;
@@ -54,42 +58,39 @@ void rainbow::sdl::open_window(const Config& config)
         return;
 
     Chrono chrono;
-    vk::Instance instance(vk::make_app_info(RAINBOW_WINDOW_TITLE, 1, 0, 0));
-    if (!instance)
+    graphics::Driver driver(window);
+    if (!driver)
         return;
 
-    vk::Surface surface(instance, window);
-    if (!surface)
-        return;
-
-    vk::PhysicalDevice device(instance);
-    if (!device)
-        return;
-
-    vk::Swapchain swapchain(device, surface);
-    if (!swapchain)
-        return;
-
-    vk::Pipeline pipeline(swapchain);
-    if (!pipeline)
-        return;
-
-    vk::CommandBuffer command_buffer(swapchain, pipeline);
-    vk::ModelViewProjection mvp(swapchain);
+    auto mvp = driver.make_projection_matrix();
+    graphics::TextureManager texture_manager(driver.device());
+    auto index_buffer = vk::IndexBuffer{driver.device()};
 
     chrono.tick();
     LOGI("Vulkan: Initialization time: %" PRId64 " ms", chrono.delta());
 
-    for (auto i = 0u; i < 300; ++i)
+    SpriteVertex vertices[]{
+        {{}, {0.0f / 508, 97.0f / 288}, {604, 311}},
+        {{}, {72.0f / 508, 97.0f / 288}, {676, 311}},
+        {{}, {72.0f / 508, 0.0f / 288}, {676, 408}},
+        {{}, {72.0f / 508, 0.0f / 288}, {676, 408}},
+        {{}, {0.0f / 508, 0.0f / 288}, {604, 408}},
+        {{}, {0.0f / 508, 97.0f / 288}, {604, 311}},
+    };
+    auto sprite_buffer = driver.make_buffer<vk::VertexBuffer>(sizeof(vertices));
+    sprite_buffer.copy(ArraySpan<SpriteVertex>{vertices, array_size(vertices)});
+
+    auto texture = texture_manager.get("p1_spritesheet.png");
+
+    while (true)
     {
-        vk::update_descriptor(command_buffer, mvp);
-        vk::VertexBuffer buf(swapchain.device(), 128);
         SDL_Event event;  // NOLINT(cppcoreguidelines-pro-type-member-init)
         while (SDL_PollEvent(&event) != 0)
         {
             switch (event.type)
             {
                 case SDL_QUIT:
+                    texture_manager.release("p1_spritesheet.png");
                     return;
 
                 case SDL_WINDOWEVENT:
@@ -104,7 +105,11 @@ void rainbow::sdl::open_window(const Config& config)
             }
         }
 
+        auto& command_buffer = driver.default_command_buffer();
         command_buffer.begin();
+        vk::update_descriptor(command_buffer, mvp);
+        vk::update_descriptor(command_buffer, texture);
+        vk::draw(command_buffer, sprite_buffer, array_size(vertices), index_buffer);
         command_buffer.end();
 
         chrono.tick();

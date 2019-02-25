@@ -5,6 +5,7 @@
 #ifndef SCRIPT_JAVASCRIPT_HELPER_H_
 #define SCRIPT_JAVASCRIPT_HELPER_H_
 
+#include <memory>
 #include <tuple>
 #include <type_traits>
 #include <utility>
@@ -19,7 +20,6 @@
 #include "Graphics/Animation.h"
 #include "Graphics/Sprite.h"
 #include "Memory/Array.h"
-#include "Memory/SharedPtr.h"
 #include "Script/GameBase.h"
 
 #define dukr_type_error(ctx, ...)                                              \
@@ -36,6 +36,22 @@
 #define DUKR_IDX_SPRITE_PROTOTYPE 1
 #define DUKR_WELLKNOWN_SYMBOL_TOSTRINGTAG                                      \
     DUK_WELLKNOWN_SYMBOL("Symbol.toStringTag")
+
+namespace rainbow
+{
+    template <typename T>
+    struct IsSharedPtr : std::false_type
+    {
+    };
+
+    template <typename T>
+    struct IsSharedPtr<std::shared_ptr<T>> : std::true_type
+    {
+    };
+
+    template <typename T>
+    inline constexpr bool is_shared_ptr = IsSharedPtr<T>::value;
+}  // namespace rainbow
 
 namespace rainbow::duk
 {

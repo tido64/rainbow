@@ -21,10 +21,10 @@ void NoGame::init_impl(const Vec2i& screen)
 
     auto texture = std::make_shared<TextureAtlas>(
         assets::kLogoURI,
-        Data::from_literal(assets::kLogo),
-        logo_scale,
-        std::make_tuple(0, 64, 0, 0),                     // 0
-        std::make_tuple(0, 0, logo_width, logo_height));  // 1
+        //Data::from_literal(assets::kLogo),
+        //logo_scale,
+        Rect{0, 64, 0, 0},                     // 0
+        Rect{0, 0, narrow_cast<float>(logo_width), narrow_cast<float>(logo_height)});  // 1
 
     const uint32_t logo_padding = 32 * scale;
     const Vec2f center{screen.x * 0.5f, screen.y * 0.5f};

@@ -6,6 +6,7 @@
 #define SCRIPT_GAMEBASE_H_
 
 #include "Director.h"
+#include "Graphics/Driver.h"
 #include "Graphics/Label.h"
 #include "Graphics/SpriteBatch.h"
 #include "Graphics/TextureAtlas.h"
@@ -90,6 +91,7 @@ namespace rainbow
 
     private:
         Director& director_;
+        graphics::Driver driver_;  // TODO: Remove
 
         virtual void init_impl(const Vec2i& screen_size) = 0;
         virtual void update_impl(uint64_t dt) = 0;
