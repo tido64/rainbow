@@ -58,6 +58,7 @@ case $1 in
       "Linux")
         cd out
         find CMakeFiles -name *.gc*
+        pwd
         bash <(curl -s https://codecov.io/bash) -R .. -x gcov-7 -K
         ;;
     esac
