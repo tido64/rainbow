@@ -57,7 +57,7 @@ case $1 in
     case $TARGET_OS in
       "Linux")
         cd out
-        cat build.ninja
+        find CMakeFiles -name *.gc*
         bash <(curl -s https://codecov.io/bash) -R .. -x gcov-7 -K
         ;;
     esac
