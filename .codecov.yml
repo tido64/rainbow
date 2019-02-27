@@ -1,0 +1,8 @@
+coverage:
+  ignore:
+    - build/.*
+    - lib/.*
+    - src/Graphics/Shaders.*
+    - src/Resources/.*
+    - src/Script/JavaScript/Modules.g.h
+    - src/Tests/.*
