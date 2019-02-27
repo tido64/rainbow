@@ -57,8 +57,7 @@ case $1 in
     case $TARGET_OS in
       "Linux")
         cd out
-        find CMakeFiles -name *.gc*
-        pwd
+        echo $PATH
         bash <(curl -s https://codecov.io/bash) -X coveragepy -R .. -p . -x gcov-7 -K
         ;;
     esac
