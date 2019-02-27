@@ -59,7 +59,7 @@ case $1 in
         cd out
         find CMakeFiles -name *.gc*
         pwd
-        bash <(curl -s https://codecov.io/bash) -R .. -x gcov-7 -K
+        bash <(curl -s https://codecov.io/bash) -X coveragepy -R .. -p . -x gcov-7 -K
         ;;
     esac
     ;;
