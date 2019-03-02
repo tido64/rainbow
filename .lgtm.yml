@@ -1,0 +1,24 @@
+path_classifiers:
+  generated:
+    - "**/*.g.*"
+  library:
+    - lib
+  test:
+    - "**/*.test.cc"
+extraction:
+  cpp:
+    prepare:
+      packages:
+        - libpulse-dev
+        - libsdl2-dev
+        - pkg-config
+        - pulseaudio
+    configure:
+      command:
+        - mkdir out
+        - cd out
+        - cmake -DCMAKE_BUILD_TYPE=Debug -DUSE_PHYSICS=1 -DUSE_SPINE=1 ..
+    index:
+      build_command:
+        - cd out
+        - make -j2
