@@ -58,19 +58,20 @@ namespace svg
         image.height = rainbow::ceil_pow2(img->height * scale);
         image.depth = 32;
         image.channels = 4;
-        image.size = image.width * image.height * 4;
+        image.size = static_cast<size_t>(image.width) * image.height * 4;
 
         auto buffer = std::make_unique<uint8_t[]>(image.size);
         std::unique_ptr<NSVGrasterizer> rasterizer{nsvgCreateRasterizer()};
-        nsvgRasterize(rasterizer.get(),
-                      img.get(),
-                      0.0f,
-                      0.0f,
-                      scale,
-                      buffer.get(),
-                      img->width * scale,
-                      img->height * scale,
-                      image.width * 4);
+        nsvgRasterize(  //
+            rasterizer.get(),
+            img.get(),
+            0.0f,
+            0.0f,
+            scale,
+            buffer.get(),
+            img->width * scale,
+            img->height * scale,
+            image.width * 4);
 
         image.data = buffer.release();
         return image;

@@ -2,6 +2,9 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
+#ifndef FILESYSTEM_BUNDLE_H_
+#define FILESYSTEM_BUNDLE_H_
+
 #include "Common/String.h"
 #include "Memory/Array.h"
 
@@ -23,3 +26,5 @@ namespace rainbow
         czstring main_script_;
     };
 }  // namespace rainbow
+
+#endif

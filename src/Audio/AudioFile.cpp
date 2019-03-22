@@ -50,8 +50,7 @@ namespace
 
         bool seek(int64_t) override { return false; }
 
-        // TODO: Add `explicit` when MSVC2015 is deprecated (and remove NOLINT).
-        operator bool() const override { return true; }  // NOLINT
+        explicit operator bool() const override { return true; }
     };
 }  // namespace
 
@@ -61,8 +60,9 @@ auto IAudioFile::open(czstring path) -> std::unique_ptr<IAudioFile>
     File file = File::open(path, FileType::Asset);
     if (file)
     {
-        file.read(signature.data(), signature.size());
-        file.seek(0);
+        [[maybe_unused]] auto read =
+            file.read(signature.data(), signature.size());
+        [[maybe_unused]] auto error = file.seek(0);
     }
 
 #ifdef USE_OGGVORBIS

@@ -31,7 +31,11 @@ namespace rainbow
             constexpr Frame() : frame_(end()) {}
             constexpr Frame(uint32_t frame) : frame_(frame) {}
 
-            auto operator=(uint32_t frame) { return frame_ = frame; }
+            auto operator=(uint32_t frame) -> Frame&
+            {
+                frame_ = frame;
+                return *this;
+            }
 
             constexpr explicit operator uint32_t() const { return frame_; }
 
