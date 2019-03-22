@@ -91,10 +91,19 @@ You'll find an overview of configuration and feature flags further below.
 
 1. Use your distro's package manager to install the dependencies:
 
-    |               |                                                          |
-    |---------------|----------------------------------------------------------|
-    | Arch Linux    | `pacman -S --needed cmake gcc mesa ninja pulseaudio sdl2`      |
-    | Debian/Ubuntu | `apt install build-essential cmake libgl1-mesa-dev libpulse-dev libsdl2-dev ninja-build pkg-config pulseaudio` |
+<!--DOCUSAURUS_CODE_TABS-->
+
+<!-- ArchLinux -->
+```bash
+pacman -S --needed cmake gcc mesa ninja pulseaudio sdl2
+```
+
+<!-- Debian/Ubuntu -->
+```bash
+apt install build-essential cmake libgl1-mesa-dev libpulse-dev libsdl2-dev ninja-build pkg-config pulseaudio
+```
+
+<!--END_DOCUSAURUS_CODE_TABS-->
 
 2. **Optional:** Download FMOD Studio API, extract it, and point
    `tools/fmod-import-tool.sh` at the directory you extracted it to. This should
