@@ -24,7 +24,7 @@ module.exports = {
   scripts: ["https://buttons.github.io/buttons.js"],
   onPageNav: "separate",
   cleanUrl: true,
-  customDocsPath: "docs/content",
+  customDocsPath: "doc/content",
   ogImage: "",
   twitterImage: "",
   repoUrl: "https://github.com/tido64/rainbow"
