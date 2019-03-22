@@ -40,7 +40,7 @@ namespace rainbow
             }
             else if (prev_ != nullptr)
             {
-                on_end_link_changed(*prev_);
+                prev_->on_end_link_changed(*prev_);
             }
 
             prev_ = nullptr;
