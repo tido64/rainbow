@@ -1,5 +1,6 @@
 # Rainbow
 
+[![Language grade: C/C++](https://img.shields.io/lgtm/grade/cpp/g/tido64/rainbow.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/tido64/rainbow/context:cpp)
 [![Code coverage](https://codecov.io/gh/tido64/rainbow/branch/master/graph/badge.svg)](https://codecov.io/gh/tido64/rainbow)
 [![Build status](https://tido64.visualstudio.com/Rainbow/_apis/build/status/Rainbow%20CI?branchName=master)](https://tido64.visualstudio.com/Rainbow/_build/latest?definitionId=1)
 [![macOS build status](https://doozer.io/badge/tn0502/rainbow/buildstatus/master)](https://doozer.io/tn0502/rainbow)
