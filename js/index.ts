@@ -87,6 +87,11 @@ class Audial implements Demo {
 
       this.label.setText("Streaming (different channel)...");
       channel = Audio.play(this.music);
+      if (!channel) {
+        this.label.setText(`Failed to play '${streamPath}'`);
+        return;
+      }
+
       Thread.yield(1000);
 
       this.label.setText("Delete both buffer and stream");

@@ -72,6 +72,10 @@ var Audial = /** @class */ (function () {
             Thread.yield(1000);
             _this.label.setText("Streaming (different channel)...");
             channel = Audio.play(_this.music);
+            if (!channel) {
+                _this.label.setText("Failed to play '" + streamPath + "'");
+                return;
+            }
             Thread.yield(1000);
             _this.label.setText("Delete both buffer and stream");
             _this.music = Audio.release(_this.music);

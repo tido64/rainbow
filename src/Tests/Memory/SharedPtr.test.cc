@@ -134,13 +134,25 @@ TEST(SharedPtrTest, AssignsItself)
     auto foo = new SharedPtrTestStruct(foo_deleted);
     {
         SharedPtr<SharedPtrTestStruct> foo_ptr(foo);
+
         ASSERT_EQ(foo_ptr.get(), foo);
         ASSERT_EQ(foo_ptr.use_count(), 1u);
+
         foo_ptr.reset(foo);
+
         ASSERT_FALSE(foo_deleted);
         ASSERT_EQ(foo_ptr.get(), foo);
         ASSERT_EQ(foo_ptr.use_count(), 1u);
+
+#if defined(__clang__) && __apple_build_version__ >= 10000000
+#    pragma clang diagnostic push
+#    pragma clang diagnostic ignored "-Wself-assign-overloaded"
+#endif
         foo_ptr = foo_ptr;
+#if defined(__clang__) && __apple_build_version__ >= 10000000
+#    pragma clang diagnostic pop
+#endif
+
         ASSERT_FALSE(foo_deleted);
         ASSERT_EQ(foo_ptr.get(), foo);
         ASSERT_EQ(foo_ptr.use_count(), 1u);
