@@ -1,3 +1,7 @@
+<p align="center"><img src="/src/Resources/logotype-horizontal.png"></p>
+
+Logo courtesy of [@Tobaloidee](https://github.com/Tobaloidee)
+
 # Rainbow
 
 [![Language grade: C/C++](https://img.shields.io/lgtm/grade/cpp/g/tido64/rainbow.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/tido64/rainbow/context:cpp)
