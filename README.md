@@ -1,3 +1,5 @@
+<p align="center"><img src="/logo/logotype-horizontal.png"></p>
+
 # Rainbow
 
 [![Language grade: C/C++](https://img.shields.io/lgtm/grade/cpp/g/tido64/rainbow.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/tido64/rainbow/context:cpp)
