@@ -1,8 +1,12 @@
-<p align="center"><img src="/src/Resources/logotype-horizontal.png"></p>
+<p align="center">
+  <img alt="Rainbow" src="src/Resources/logotype-horizontal.png" />
+  <br />
+  <span style="font-size: smaller;">
+    Logo courtesy of <a href="https://github.com/Tobaloidee" rel="nofollow">@Tobaloidee</a>
+  </span>
+</p>
 
-Logo courtesy of [@Tobaloidee](https://github.com/Tobaloidee)
-
-# Rainbow
+#
 
 [![Language grade: C/C++](https://img.shields.io/lgtm/grade/cpp/g/tido64/rainbow.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/tido64/rainbow/context:cpp)
 [![Code coverage](https://codecov.io/gh/tido64/rainbow/branch/master/graph/badge.svg)](https://codecov.io/gh/tido64/rainbow)
@@ -17,8 +21,8 @@ out the [examples](#examples) below.
 [[Documentation](https://tido64.github.io/rainbow/)] Get started. It's a good
 place to start learning what you can do with Rainbow.
 
-[[Forum](https://groups.google.com/forum/#!forum/rainbow-tech)] Get answers, or
-even better, share your awesome work!
+[[Forum](https://www.reddit.com/r/rainbowtech)] Get answers, or even better,
+share your awesome work!
 
 [[Roadmap](https://trello.com/b/r2TqudY6/rainbow)] Find planned features and
 future directions.
@@ -100,7 +104,7 @@ Rainbow.RenderQueue.add(animation);
 ## Dependencies
 
 * [Abseil](https://abseil.io/)
-* [Duktape](http://duktape.org/)
+* [Duktape](https://duktape.org/)
 * [FreeType](https://freetype.org/)
 * [HarfBuzz](https://wiki.freedesktop.org/www/Software/HarfBuzz/)
 * [Mapbox Variant](https://github.com/mapbox/variant)
