@@ -42,40 +42,11 @@ namespace
         return 0;
     }
 
-    template <typename F>
-    void get_path(duk_context* ctx, F&& load)
-    {
-        constexpr char kModuleExtension[] = ".js";
-
-        // Entry stack: [ resolved_id exports module ]
-        duk_size_t id_length;
-        auto resolved_id = duk_get_lstring(ctx, 0, &id_length);
-        throw_if(
-            ctx, id_length == 0, DUK_ERR_TYPE_ERROR, "invalid module name");
-
-        if (!ends_with({resolved_id, id_length}, kModuleExtension))
-        {
-            auto buf = static_cast<char*>(duk_alloc(
-                ctx, id_length + rainbow::array_size(kModuleExtension) + 1));
-
-            memcpy(buf, resolved_id, id_length);
-            memcpy(buf + id_length,
-                   kModuleExtension,
-                   rainbow::array_size(kModuleExtension));
-            buf[id_length + rainbow::array_size(kModuleExtension)] = '\0';
-            load(ctx, buf);
-            duk_free(ctx, buf);
-        }
-        else
-        {
-            load(ctx, resolved_id);
-        }
-    }
-
     bool is_relative(const fs::path& path)
     {
         auto str = path.c_str();
-        return str[0] == '.' && (str[1] == '/' || (str[1] == '.' && str[2] == '/'));
+        return str[0] == '.' &&
+               (str[1] == '/' || (str[1] == '.' && str[2] == '/'));
     }
 
     auto push(duk_context* ctx, fs::path&& path)
@@ -88,11 +59,15 @@ namespace
 
 auto rainbow::duk::module::load(duk_context* ctx) -> duk_ret_t
 {
-    get_path(ctx, [](duk_context* ctx, const char* path) {
-        const auto data = File::read(path, FileType::Asset);
-        throw_if(ctx, !data, DUK_RET_ERROR, "error loading module: %s", path);
-        duk_push_lstring(ctx, data.as<const char*>(), data.size());
-    });
+    // Entry stack: [ resolved_id exports module ]
+    duk_size_t id_length;
+    auto resolved_id = duk_get_lstring(ctx, 0, &id_length);
+    throw_if(ctx, id_length == 0, DUK_ERR_TYPE_ERROR, "invalid module name");
+
+    const auto data = File::read(resolved_id, FileType::Asset);
+    throw_if(
+        ctx, !data, DUK_RET_ERROR, "error loading module: %s", resolved_id);
+    duk_push_lstring(ctx, data.as<const char*>(), data.size());
     return 1;
 }
 
