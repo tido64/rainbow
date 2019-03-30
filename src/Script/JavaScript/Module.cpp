@@ -80,7 +80,8 @@ auto rainbow::duk::module::resolve(duk_context* ctx) -> duk_ret_t
         ctx, is_empty(requested_id), DUK_RET_TYPE_ERROR, "invalid module name");
 
     fs::path requested(requested_id);
-    requested.replace_extension(".js");
+    if (requested.extension() != ".js")
+        requested += ".js";
 
     if (!is_relative(requested))
         return push(ctx, std::move(requested));

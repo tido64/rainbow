@@ -70,40 +70,28 @@ TEST_F(JSModuleTest, ResolvesMainModuleRelativePaths)
     duk_push_literal(context_, "");
 
     ASSERT_EQ(duk::module::resolve(context_), 1);
-
-    auto result = duk_get_string(context_, 2);
-
-    ASSERT_STREQ(result, "requested.js");
+    ASSERT_STREQ(duk_get_string(context_, 2), "requested.js");
 
     duk_set_top(context_, 0);
     duk_push_literal(context_, "requested.js");
     duk_push_literal(context_, "");
 
     ASSERT_EQ(duk::module::resolve(context_), 1);
-
-    result = duk_get_string(context_, 2);
-
-    ASSERT_STREQ(result, "requested.js");
+    ASSERT_STREQ(duk_get_string(context_, 2), "requested.js");
 
     duk_set_top(context_, 0);
     duk_push_literal(context_, "requested");
     duk_push_literal(context_, "parent");
 
     ASSERT_EQ(duk::module::resolve(context_), 1);
-
-    result = duk_get_string(context_, 2);
-
-    ASSERT_STREQ(result, "requested.js");
+    ASSERT_STREQ(duk_get_string(context_, 2), "requested.js");
 
     duk_set_top(context_, 0);
     duk_push_literal(context_, "requested");
     duk_push_literal(context_, "grandparent/parent");
 
     ASSERT_EQ(duk::module::resolve(context_), 1);
-
-    result = duk_get_string(context_, 2);
-
-    ASSERT_STREQ(result, "requested.js");
+    ASSERT_STREQ(duk_get_string(context_, 2), "requested.js");
 }
 
 TEST_F(JSModuleTest, ResolvesRelativePaths)
@@ -112,78 +100,63 @@ TEST_F(JSModuleTest, ResolvesRelativePaths)
     duk_push_literal(context_, "");
 
     ASSERT_EQ(duk::module::resolve(context_), 1);
-
-    auto result = duk_get_string(context_, 2);
-
-    ASSERT_STREQ(result, "./requested.js");
+    ASSERT_STREQ(duk_get_string(context_, 2), "./requested.js");
 
     duk_set_top(context_, 0);
     duk_push_literal(context_, "./requested.js");
     duk_push_literal(context_, "");
 
     ASSERT_EQ(duk::module::resolve(context_), 1);
-
-    result = duk_get_string(context_, 2);
-
-    ASSERT_STREQ(result, "./requested.js");
+    ASSERT_STREQ(duk_get_string(context_, 2), "./requested.js");
 
     duk_set_top(context_, 0);
     duk_push_literal(context_, "../requested");
     duk_push_literal(context_, "");
 
     ASSERT_EQ(duk::module::resolve(context_), 1);
-
-    result = duk_get_string(context_, 2);
-
-    ASSERT_STREQ(result, "../requested.js");
+    ASSERT_STREQ(duk_get_string(context_, 2), "../requested.js");
 
     duk_set_top(context_, 0);
     duk_push_literal(context_, "./requested");
     duk_push_literal(context_, "parent");
 
     ASSERT_EQ(duk::module::resolve(context_), 1);
-
-    result = duk_get_string(context_, 2);
-
-    ASSERT_STREQ(result, "./requested.js");
+    ASSERT_STREQ(duk_get_string(context_, 2), "./requested.js");
 
     duk_set_top(context_, 0);
     duk_push_literal(context_, "./requested");
     duk_push_literal(context_, "./parent");
 
     ASSERT_EQ(duk::module::resolve(context_), 1);
-
-    result = duk_get_string(context_, 2);
-
-    ASSERT_STREQ(result, "./requested.js");
+    ASSERT_STREQ(duk_get_string(context_, 2), "./requested.js");
 
     duk_set_top(context_, 0);
     duk_push_literal(context_, "./requested");
     duk_push_literal(context_, "./grandparent/parent");
 
     ASSERT_EQ(duk::module::resolve(context_), 1);
-
-    result = duk_get_string(context_, 2);
-
-    ASSERT_STREQ(result, "./grandparent/requested.js");
+    ASSERT_STREQ(duk_get_string(context_, 2), "./grandparent/requested.js");
 
     duk_set_top(context_, 0);
     duk_push_literal(context_, "./requested");
     duk_push_literal(context_, "../grandparent/parent");
 
     ASSERT_EQ(duk::module::resolve(context_), 1);
-
-    result = duk_get_string(context_, 2);
-
-    ASSERT_STREQ(result, "../grandparent/requested.js");
+    ASSERT_STREQ(duk_get_string(context_, 2), "../grandparent/requested.js");
 
     duk_set_top(context_, 0);
     duk_push_literal(context_, "../requested");
     duk_push_literal(context_, "./grandparent/parent");
 
     ASSERT_EQ(duk::module::resolve(context_), 1);
+    ASSERT_STREQ(duk_get_string(context_, 2), "./requested.js");
+}
 
-    result = duk_get_string(context_, 2);
+TEST_F(JSModuleTest, PreservesExtensions)
+{
+    duk_push_literal(context_, "./requested.base");
+    duk_push_literal(context_, "");
 
-    ASSERT_STREQ(result, "./requested.js");
+    ASSERT_EQ(duk::module::resolve(context_), 1);
+    ASSERT_STREQ(duk_get_string(context_, 2), "./requested.base.js");
 }
