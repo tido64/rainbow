@@ -126,6 +126,8 @@
 		198F42B51A91531000BE7A73 /* spine-rainbow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 198F42B31A91531000BE7A73 /* spine-rainbow.cpp */; };
 		19937CBA1D398336009F8917 /* SmallBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19937CB81D398336009F8917 /* SmallBuffer.cpp */; };
 		19A9025320EECAAE0084A669 /* Error.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19A9025120EECAAE0084A669 /* Error.cpp */; };
+		19AB746E224FB76A0020C5A7 /* Module.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19AB746D224FB76A0020C5A7 /* Module.cpp */; };
+		19AB747C224FB8280020C5A7 /* path.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19AB747A224FB8280020C5A7 /* path.cpp */; };
 		19AF58A0167FFA0800F54B27 /* Overlay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19AF589C167FFA0800F54B27 /* Overlay.cpp */; };
 		19B051331E0339E600FE624A /* RenderQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19B051311E0339E600FE624A /* RenderQueue.cpp */; };
 		19B3990E2041E8E400581AE0 /* FontCache.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19B3990A2041E8E400581AE0 /* FontCache.cpp */; };
@@ -426,6 +428,14 @@
 		19A9025020EECAAE0084A669 /* Error.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Error.h; sourceTree = "<group>"; };
 		19A9025120EECAAE0084A669 /* Error.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Error.cpp; sourceTree = "<group>"; };
 		19A9025220EECAAE0084A669 /* Variant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Variant.h; sourceTree = "<group>"; };
+		19AB746D224FB76A0020C5A7 /* Module.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = Module.cpp; sourceTree = "<group>"; };
+		19AB7474224FB8280020C5A7 /* enable_if.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = enable_if.hpp; sourceTree = "<group>"; };
+		19AB7475224FB8280020C5A7 /* config.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = config.hpp; sourceTree = "<group>"; };
+		19AB7477224FB8280020C5A7 /* path_traits.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = path_traits.hpp; sourceTree = "<group>"; };
+		19AB7478224FB8280020C5A7 /* config.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = config.hpp; sourceTree = "<group>"; };
+		19AB7479224FB8280020C5A7 /* path.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = path.hpp; sourceTree = "<group>"; };
+		19AB747A224FB8280020C5A7 /* path.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = path.cpp; sourceTree = "<group>"; };
+		19AB747B224FB8280020C5A7 /* assert.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = assert.hpp; sourceTree = "<group>"; };
 		19AF589C167FFA0800F54B27 /* Overlay.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = Overlay.cpp; sourceTree = "<group>"; };
 		19AF589D167FFA0800F54B27 /* Overlay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Overlay.h; sourceTree = "<group>"; };
 		19B051311E0339E600FE624A /* RenderQueue.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = RenderQueue.cpp; sourceTree = "<group>"; };
@@ -931,6 +941,7 @@
 			isa = PBXGroup;
 			children = (
 				19B6C53B21696352000D5400 /* Abseil */,
+				19AB7472224FB8280020C5A7 /* boost */,
 				19399E10152C401300494609 /* Box2D */,
 				19CB0663200AC691005D6740 /* Duktape */,
 				19399EAF152C401300494609 /* FreeType */,
@@ -975,6 +986,7 @@
 				195ACC3A200ABA9D00FB7EDD /* Input.h */,
 				195ACC3B200ABA9D00FB7EDD /* JavaScript.cpp */,
 				195ACC3C200ABA9D00FB7EDD /* JavaScript.h */,
+				19AB746D224FB76A0020C5A7 /* Module.cpp */,
 				195ACC3D200ABA9D00FB7EDD /* Module.h */,
 				195ACC3E200ABA9D00FB7EDD /* Modules.g.h */,
 				195ACC3F200ABA9D00FB7EDD /* RenderQueue.h */,
@@ -1101,6 +1113,36 @@
 			);
 			name = Resources;
 			path = ../../js;
+			sourceTree = "<group>";
+		};
+		19AB7472224FB8280020C5A7 /* boost */ = {
+			isa = PBXGroup;
+			children = (
+				19AB747B224FB8280020C5A7 /* assert.hpp */,
+				19AB7475224FB8280020C5A7 /* config.hpp */,
+				19AB7473224FB8280020C5A7 /* core */,
+				19AB7476224FB8280020C5A7 /* filesystem */,
+			);
+			path = boost;
+			sourceTree = "<group>";
+		};
+		19AB7473224FB8280020C5A7 /* core */ = {
+			isa = PBXGroup;
+			children = (
+				19AB7474224FB8280020C5A7 /* enable_if.hpp */,
+			);
+			path = core;
+			sourceTree = "<group>";
+		};
+		19AB7476224FB8280020C5A7 /* filesystem */ = {
+			isa = PBXGroup;
+			children = (
+				19AB7478224FB8280020C5A7 /* config.hpp */,
+				19AB7477224FB8280020C5A7 /* path_traits.hpp */,
+				19AB747A224FB8280020C5A7 /* path.cpp */,
+				19AB7479224FB8280020C5A7 /* path.hpp */,
+			);
+			path = filesystem;
 			sourceTree = "<group>";
 		};
 		19B399092041E8E400581AE0 /* Text */ = {
@@ -1377,6 +1419,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 			);
 			mainGroup = 1948C013152C397D00E9B854;
@@ -1477,6 +1520,7 @@
 				1939A063152C401300494609 /* b2ChainAndCircleContact.cpp in Sources */,
 				1939A064152C401300494609 /* b2ChainAndPolygonContact.cpp in Sources */,
 				1939A065152C401300494609 /* b2CircleContact.cpp in Sources */,
+				19AB746E224FB76A0020C5A7 /* Module.cpp in Sources */,
 				19DB48B61CA6A4BD00999675 /* ImGuiHelper.cpp in Sources */,
 				19DFE53D1C6142F40079CB58 /* RainbowAudioSession.mm in Sources */,
 				19B3998420421B6100581AE0 /* ucdn.c in Sources */,
@@ -1490,6 +1534,7 @@
 				198F42A91A9152E000BE7A73 /* RegionAttachment.c in Sources */,
 				1939A068152C401300494609 /* b2EdgeAndCircleContact.cpp in Sources */,
 				19B399A420421D2900581AE0 /* hb-ot-shape-complex-hangul.cc in Sources */,
+				19AB747C224FB8280020C5A7 /* path.cpp in Sources */,
 				19B3998C20421C7600581AE0 /* hb-ot-var.cc in Sources */,
 				1939A069152C401300494609 /* b2EdgeAndPolygonContact.cpp in Sources */,
 				1939A06A152C401300494609 /* b2PolygonAndCircleContact.cpp in Sources */,

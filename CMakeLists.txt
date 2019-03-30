@@ -25,6 +25,7 @@ include(${LOCAL_MODULE_PATH}/Windows.cmake)
 set(SOURCE_FILES
     include/Rainbow/AnimationEvent.h
     include/Rainbow/TextAlignment.h
+    lib/boost/filesystem/path.cpp
     src/Audio/Mixer.h
     src/Collision/SAT.cpp
     src/Collision/SAT.h
@@ -138,6 +139,7 @@ set(SOURCE_FILES
     src/Script/JavaScript/Input.h
     src/Script/JavaScript/JavaScript.cpp
     src/Script/JavaScript/JavaScript.h
+    src/Script/JavaScript/Module.cpp
     src/Script/JavaScript/Module.h
     src/Script/JavaScript/Modules.g.h
     src/Script/JavaScript/RenderQueue.h
@@ -257,6 +259,7 @@ if(UNIT_TESTS)
       src/Tests/Memory/SharedPtr.test.cc
       src/Tests/Memory/SmallBuffer.test.cc
       src/Tests/Memory/StableArray.test.cc
+      src/Tests/Script/JS/Module.test.cc
       src/Tests/Script/JavaScript.test.cc
       src/Tests/TestHelpers.h
       src/Tests/Tests.cpp
