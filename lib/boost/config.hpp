@@ -9,11 +9,11 @@
 
 //  ----- system -----
 
-# if defined(_WIN32) || defined(__CYGWIN__) // Windows default, including MinGW and Cygwin
-#   define BOOST_WINDOWS_API 1
-# else
-#   define BOOST_POSIX_API 1
-# endif
+#if 0 // defined(_WIN32) || defined(__CYGWIN__) // Windows default, including MinGW and Cygwin
+#  define BOOST_WINDOWS_API 1
+#else
+#  define BOOST_POSIX_API 1
+#endif
 
 //  ----- utility -----
 

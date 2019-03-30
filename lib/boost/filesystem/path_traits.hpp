@@ -306,7 +306,7 @@ namespace path_traits {
     std::string & to,
 #                endif
     const codecvt_type&);
-
+/*
   //  non-contiguous containers without codecvt
   template <class Container, class U> inline
     // disable_if aids broken compilers (IBM, old GCC, etc.) and is harmless for
@@ -319,7 +319,7 @@ namespace path_traits {
       convert(seq.c_str(), seq.c_str()+seq.size(), to);
     }
   }
-
+*/
   //  c_str
   template <class T, class U> inline
     void dispatch(T * const & c_str, U& to)

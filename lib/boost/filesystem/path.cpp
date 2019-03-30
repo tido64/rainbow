@@ -169,14 +169,14 @@ namespace filesystem
   }
 
 # ifdef BOOST_WINDOWS_API
-
+/*
   BOOST_FILESYSTEM_DECL path path::generic_path() const
   {
     path tmp(*this);
     std::replace(tmp.m_pathname.begin(), tmp.m_pathname.end(), L'\\', L'/');
     return tmp;
   }
-
+*/
 # endif  // BOOST_WINDOWS_API
 
   BOOST_FILESYSTEM_DECL int path::compare(const path& p) const BOOST_NOEXCEPT
