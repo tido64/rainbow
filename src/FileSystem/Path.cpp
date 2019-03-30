@@ -4,34 +4,21 @@
 
 #include "FileSystem/Path.h"
 
-#include "Common/Logging.h"
 #include "FileSystem/FileSystem.h"
 #ifdef RAINBOW_OS_IOS
 #    include "Platform/iOS/NSString+Rainbow.h"
 #endif
 
-using rainbow::czstring;
 using rainbow::filesystem::Path;
 
-auto Path::extension() const -> czstring
-{
-    auto p = path_.rfind('.');
-    return p == std::string::npos ? "" : c_str() + p;
-}
-
-auto Path::filename() const -> czstring
-{
-    auto p = path_.find_last_of(R"(/\)");
-    return p == std::string::npos ? c_str() : c_str() + p + 1;
-}
-
 #ifdef RAINBOW_OS_MACOS
-auto Path::cfurl() const -> CFURLRef
+auto rainbow::filesystem::make_cfurl(const Path& p) -> CFURLRef
 {
+    const auto& native = p.native();
     CFStringRef str = CFStringCreateWithBytesNoCopy(  //
         kCFAllocatorDefault,
-        reinterpret_cast<const UInt8*>(path_.data()),  // NOLINT
-        path_.length(),
+        reinterpret_cast<const UInt8*>(native.data()),  // NOLINT
+        native.length(),
         kCFStringEncodingUTF8,
         FALSE,
         kCFAllocatorNull);
@@ -43,17 +30,11 @@ auto Path::cfurl() const -> CFURLRef
 #endif
 
 #ifdef RAINBOW_OS_IOS
-auto Path::nsurl() const -> NSURL*
+auto rainbow::filesystem::make_nsurl(const Path& p) -> NSURL*
 {
-    NSString* path =
-        [NSString stringWithUTF8StringNoCopy:c_str() length:path_.length()];
+    const auto& native = p.native();
+    NSString* path = [NSString stringWithUTF8StringNoCopy:native.c_str()
+                                                   length:native.length()];
     return [NSURL fileURLWithPath:path isDirectory:NO];
 }
 #endif
-
-auto Path::operator/=(czstring p) -> Path&
-{
-    if (path_.back() != *filesystem::path_separator())
-        path_ += *filesystem::path_separator();
-    return *this += p;
-}

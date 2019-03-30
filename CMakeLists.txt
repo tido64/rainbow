@@ -238,7 +238,7 @@ if(UNIT_TESTS)
       src/Tests/Config.test.cc
       src/Tests/FileSystem/Bundle.test.cc
       src/Tests/FileSystem/File.test.cc
-      src/Tests/FileSystem/Path.test.cc
+      src/Tests/FileSystem/FileSystem.test.cc
       src/Tests/Graphics/Animation.test.cc
       src/Tests/Graphics/Decoders.test.cc
       src/Tests/Graphics/RenderQueue.test.cc
