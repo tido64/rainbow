@@ -300,7 +300,7 @@ namespace path_traits {
 
   BOOST_FILESYSTEM_DECL
     void dispatch(const directory_entry & de,
-#                ifdef BOOST_WINDOWS_API
+#                if 0 //def BOOST_WINDOWS_API
     std::wstring & to,
 #                else
     std::string & to,
@@ -334,7 +334,7 @@ namespace path_traits {
 
   BOOST_FILESYSTEM_DECL
     void dispatch(const directory_entry & de,
-#                ifdef BOOST_WINDOWS_API
+#                if 0 //def BOOST_WINDOWS_API
     std::wstring & to
 #                else
     std::string & to

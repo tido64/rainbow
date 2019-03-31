@@ -7,6 +7,7 @@
 
 #include <system_error>
 
+#include "Common/String.h"
 #include "FileSystem/Path.h"
 
 namespace rainbow

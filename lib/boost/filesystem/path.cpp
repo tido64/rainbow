@@ -74,15 +74,15 @@ namespace
 
 # ifdef BOOST_WINDOWS_API
 
-  const wchar_t* const separators = L"/\\";
-  const wchar_t* separator_string = L"/";
-  const wchar_t* preferred_separator_string = L"\\";
-  const wchar_t colon = L':';
-  const wchar_t questionmark = L'?';
+  const value_type* const separators = "/\\";
+  const value_type* separator_string = "/";
+  const value_type* preferred_separator_string = "\\";
+  const value_type colon = ':';
+  const value_type questionmark = '?';
 
-  inline bool is_letter(wchar_t c)
+  inline bool is_letter(value_type c)
   {
-    return (c >= L'a' && c <=L'z') || (c >= L'A' && c <=L'Z');
+    return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
   }
 
 # else
@@ -684,7 +684,7 @@ namespace filesystem
     BOOST_FILESYSTEM_DECL
     const path&  dot_path()
     {
-#   ifdef BOOST_WINDOWS_API
+#   if 0 //def BOOST_WINDOWS_API
       static const fs::path dot_pth(L".");
 #   else
       static const fs::path dot_pth(".");
@@ -695,7 +695,7 @@ namespace filesystem
     BOOST_FILESYSTEM_DECL
     const path&  dot_dot_path()
     {
-#   ifdef BOOST_WINDOWS_API
+#   if 0 //def BOOST_WINDOWS_API
       static const fs::path dot_dot(L"..");
 #   else
       static const fs::path dot_dot("..");

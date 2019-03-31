@@ -6,16 +6,16 @@
 
 #include <string>
 
-#include <boost/filesystem/path.hpp>
 #include <duk_module_node.h>
 
 #include "Common/Algorithm.h"
 #include "FileSystem/File.h"
+#include "FileSystem/Path.h"
 
-namespace fs = boost::filesystem;
 using rainbow::ends_with;
 using rainbow::File;
 using rainbow::FileType;
+using rainbow::filesystem::Path;
 
 namespace
 {
@@ -42,16 +42,16 @@ namespace
         return 0;
     }
 
-    bool is_relative(const fs::path& path)
+    bool is_relative(const Path& path)
     {
         auto str = path.c_str();
         return str[0] == '.' &&
                (str[1] == '/' || (str[1] == '.' && str[2] == '/'));
     }
 
-    auto push(duk_context* ctx, fs::path&& path)
+    auto push(duk_context* ctx, Path&& path)
     {
-        auto str = path.lexically_normal().string();
+        auto str = path.lexically_normal().native();
         duk_push_lstring(ctx, str.c_str(), str.length());
         return 1;
     }
@@ -79,7 +79,7 @@ auto rainbow::duk::module::resolve(duk_context* ctx) -> duk_ret_t
     throw_if(
         ctx, is_empty(requested_id), DUK_RET_TYPE_ERROR, "invalid module name");
 
-    fs::path requested(requested_id);
+    Path requested(requested_id);
     if (requested.extension() != ".js")
         requested += ".js";
 
@@ -91,7 +91,7 @@ auto rainbow::duk::module::resolve(duk_context* ctx) -> duk_ret_t
     if (parent_id_length == 0)
         return push(ctx, std::move(requested));
 
-    fs::path parent(parent_id);
+    Path parent(parent_id);
     return push(ctx, parent.parent_path() / requested);
 }
 

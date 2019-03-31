@@ -30,14 +30,14 @@ using mode_t = uint16_t;
 
 using rainbow::filesystem::Path;
 
-TEST(PathTest, AssetsPath)
+TEST(FileSystemTest, AssetsPath)
 {
     char cwd[256];
     ASSERT_EQ(getcwd(cwd, sizeof(cwd)), cwd);
     ASSERT_STREQ(rainbow::filesystem::assets_path(), cwd);
 }
 
-TEST(PathTest, CreatesDirectories)
+TEST(FileSystemTest, CreatesDirectories)
 {
     char random[32];
     snprintf(random,
@@ -64,7 +64,7 @@ TEST(PathTest, CreatesDirectories)
     }
 }
 
-TEST(PathTest, RelativeToCurrentPath)
+TEST(FileSystemTest, RelativeToCurrentPath)
 {
     char cwd[256];
     ASSERT_EQ(getcwd(cwd, sizeof(cwd)), cwd);
@@ -77,32 +77,7 @@ TEST(PathTest, RelativeToCurrentPath)
         rainbow::filesystem::relative(kTestFileName).c_str(), path.c_str());
 }
 
-TEST(PathTest, RelativeToRoot)
+TEST(FileSystemTest, RelativeToRoot)
 {
     ASSERT_STREQ(rainbow::filesystem::absolute(kTestPath).c_str(), kTestPath);
-}
-
-TEST(PathTest, SetsPath)
-{
-    Path path;
-    ASSERT_STRNE(kTestPath, path.c_str());
-    path = kTestPath;
-    ASSERT_STREQ(path.c_str(), kTestPath);
-}
-
-TEST(PathTest, AppendsPathComponents)
-{
-    Path path;
-    path = kTestPath;
-    ASSERT_STREQ(path.c_str(), kTestPath);
-    path /= kTestFileName;
-    ASSERT_STREQ(path.c_str(), kTestPath kPathSeparator kTestFileName);
-    path /= kPathSeparator;
-    ASSERT_STREQ(
-        path.c_str(),
-        kTestPath kPathSeparator kTestFileName kPathSeparator kPathSeparator);
-    path /= kTestFileName;
-    ASSERT_STREQ(path.c_str(),
-                 kTestPath kPathSeparator kTestFileName kPathSeparator
-                     kPathSeparator kTestFileName);
 }

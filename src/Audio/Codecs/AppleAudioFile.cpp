@@ -29,9 +29,9 @@ AppleAudioFile::AppleAudioFile(czstring file) : format_{}, ref_(nullptr)
 {
     const auto path = filesystem::relative(file);
 #ifdef RAINBOW_OS_MACOS
-    CFURLRef url = path.cfurl();
+    CFURLRef url = filesystem::make_cfurl(path);
 #else
-    NSURL* url = path.nsurl();
+    NSURL* url = filesystem::make_nsurl(path);
 #endif
     if (ExtAudioFileOpenURL(bridge_cast<CFURLRef>(url), &ref_) != noErr)
         LOGE("AudioToolbox: Failed to open '%s'", file);

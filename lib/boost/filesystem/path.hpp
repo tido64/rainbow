@@ -61,10 +61,10 @@ namespace filesystem
     //  represent paths.
 
 # ifdef BOOST_WINDOWS_API
-    typedef wchar_t                        value_type;
-    BOOST_STATIC_CONSTEXPR value_type      separator = L'/';
-    BOOST_STATIC_CONSTEXPR value_type      preferred_separator = L'\\';
-    BOOST_STATIC_CONSTEXPR value_type      dot = L'.';
+    typedef char                           value_type;
+    BOOST_STATIC_CONSTEXPR value_type      separator = '/';
+    BOOST_STATIC_CONSTEXPR value_type      preferred_separator = '\\';
+    BOOST_STATIC_CONSTEXPR value_type      dot = '.';
 # else
     typedef char                           value_type;
     BOOST_STATIC_CONSTEXPR value_type      separator = '/';
@@ -408,7 +408,7 @@ namespace filesystem
     template <class String>
     String string(const codecvt_type& cvt) const;
 
-#   ifdef BOOST_WINDOWS_API
+#   if 0 //def BOOST_WINDOWS_API
     const std::string string() const
     {
       std::string tmp;
