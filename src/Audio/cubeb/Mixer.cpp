@@ -198,8 +198,8 @@ void CubebMixer::remove_path(intptr_t index)
 auto CubebMixer::store_path(czstring path) -> intptr_t
 {
     static intptr_t index = 0;
-    decltype(sounds_)::iterator i;
-    std::tie(i, std::ignore) = sounds_.emplace(++index, path);
+    auto [i, _] = sounds_.insert_or_assign(++index, path);
+    NOT_USED(_);
     return i->first;
 }
 

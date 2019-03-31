@@ -9,11 +9,19 @@
 #include <string>
 #include <thread>
 
+#ifdef __GNUC__
+#    pragma GCC diagnostic push
+#    pragma GCC diagnostic ignored "-Wpedantic"
+#    pragma GCC diagnostic ignored "-Woverflow"
+#endif
+#include <absl/container/flat_hash_map.h>
+#ifdef __GNUC__
+#    pragma GCC diagnostic pop
+#endif
 #include <cubeb/cubeb.h>
 
 #include "Audio/AudioFile.h"
 #include "Audio/Mixer.h"
-#include "Memory/ArrayMap.h"
 #include "Memory/BoundedPool.h"
 
 namespace rainbow::audio
@@ -59,7 +67,7 @@ namespace rainbow::audio
         std::vector<Channel*> drain_;
         std::thread::id thread_id_;
         BoundedPool<Channel> channels_;
-        ArrayMap<intptr_t, std::string> sounds_;
+        absl::flat_hash_map<intptr_t, std::string> sounds_;
         cubeb* context_ = nullptr;
 
         void suspend(int (*suspend)(cubeb_stream*));
