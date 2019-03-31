@@ -1415,12 +1415,12 @@
 				LastUpgradeCheck = 0930;
 			};
 			buildConfigurationList = 1948C018152C397D00E9B854 /* Build configuration list for PBXProject "Rainbow" */;
-			compatibilityVersion = "Xcode 8.0";
-			developmentRegion = English;
+			compatibilityVersion = "Xcode 10.0";
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
-				English,
 				en,
+				Base,
 			);
 			mainGroup = 1948C013152C397D00E9B854;
 			productRefGroup = 1948C01F152C397D00E9B854 /* Products */;

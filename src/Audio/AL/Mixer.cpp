@@ -221,13 +221,9 @@ void ALMixer::suspend(bool should_suspend)
 
 auto ALMixer::create_sound(czstring path) -> Sound*
 {
-    auto i = sounds_.find(path);
-    if (i == sounds_.end())
-    {
-        sounds_[path] = Sound{};
-        i = sounds_.find(path);
-        i->second.key = i->first.c_str();
-    }
+    auto [i, _] = sounds_.insert_or_assign(path, {});
+    NOT_USED(_);
+    i->second.key = i->first.c_str();
     return &i->second;
 }
 

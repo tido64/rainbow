@@ -8,10 +8,11 @@
 #include <string>
 #include <vector>
 
+#include <absl/container/node_hash_map.h>
+
 #include "Audio/AL/Channel.h"
 #include "Audio/AL/Sound.h"
 #include "Audio/Mixer.h"
-#include "Memory/ArrayMap.h"
 
 typedef struct ALCcontext_struct ALCcontext;
 
@@ -39,7 +40,7 @@ namespace rainbow::audio
 
     private:
         std::vector<Channel> channels_;
-        ArrayMap<std::string, Sound> sounds_;
+        absl::node_hash_map<std::string, Sound> sounds_;
         ALCcontext* context_ = nullptr;
 #ifdef RAINBOW_OS_IOS
         RainbowAudioSession* audio_session_ = nil;
