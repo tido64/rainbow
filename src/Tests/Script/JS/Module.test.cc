@@ -9,11 +9,11 @@
 #include "Tests/TestHelpers.h"
 
 #ifdef RAINBOW_OS_WINDOWS
-#    define P2(a, b) a "\\" b
-#    define P3(a, b, c) a "\\" b "\\" c
+#    define JOIN2(a, b) a "\\" b
+#    define JOIN3(a, b, c) a "\\" b "\\" c
 #else
-#    define P2(a, b) a "/" b
-#    define P3(a, b, c) a "/" b "/" c
+#    define JOIN2(a, b) a "/" b
+#    define JOIN3(a, b, c) a "/" b "/" c
 #endif
 
 namespace
@@ -108,35 +108,35 @@ TEST_F(JSModuleTest, ResolvesRelativePaths)
     duk_push_literal(context_, "");
 
     ASSERT_EQ(duk::module::resolve(context_), 1);
-    ASSERT_STREQ(duk_get_string(context_, 2), P2(".", "requested.js"));
+    ASSERT_STREQ(duk_get_string(context_, 2), JOIN2(".", "requested.js"));
 
     duk_set_top(context_, 0);
     duk_push_literal(context_, "./requested.js");
     duk_push_literal(context_, "");
 
     ASSERT_EQ(duk::module::resolve(context_), 1);
-    ASSERT_STREQ(duk_get_string(context_, 2), P2(".", "requested.js"));
+    ASSERT_STREQ(duk_get_string(context_, 2), JOIN2(".", "requested.js"));
 
     duk_set_top(context_, 0);
     duk_push_literal(context_, "../requested");
     duk_push_literal(context_, "");
 
     ASSERT_EQ(duk::module::resolve(context_), 1);
-    ASSERT_STREQ(duk_get_string(context_, 2), P2("..", "requested.js"));
+    ASSERT_STREQ(duk_get_string(context_, 2), JOIN2("..", "requested.js"));
 
     duk_set_top(context_, 0);
     duk_push_literal(context_, "./requested");
     duk_push_literal(context_, "parent");
 
     ASSERT_EQ(duk::module::resolve(context_), 1);
-    ASSERT_STREQ(duk_get_string(context_, 2), P2(".", "requested.js"));
+    ASSERT_STREQ(duk_get_string(context_, 2), JOIN2(".", "requested.js"));
 
     duk_set_top(context_, 0);
     duk_push_literal(context_, "./requested");
     duk_push_literal(context_, "./parent");
 
     ASSERT_EQ(duk::module::resolve(context_), 1);
-    ASSERT_STREQ(duk_get_string(context_, 2), P2(".", "requested.js"));
+    ASSERT_STREQ(duk_get_string(context_, 2), JOIN2(".", "requested.js"));
 
     duk_set_top(context_, 0);
     duk_push_literal(context_, "./requested");
@@ -144,22 +144,22 @@ TEST_F(JSModuleTest, ResolvesRelativePaths)
 
     ASSERT_EQ(duk::module::resolve(context_), 1);
     ASSERT_STREQ(
-        duk_get_string(context_, 2), P3(".", "grandparent", "requested.js"));
+        duk_get_string(context_, 2), JOIN3(".", "grandparent", "requested.js"));
 
     duk_set_top(context_, 0);
     duk_push_literal(context_, "./requested");
     duk_push_literal(context_, "../grandparent/parent");
 
     ASSERT_EQ(duk::module::resolve(context_), 1);
-    ASSERT_STREQ(
-        duk_get_string(context_, 2), P3("..", "grandparent", "requested.js"));
+    ASSERT_STREQ(duk_get_string(context_, 2),
+                 JOIN3("..", "grandparent", "requested.js"));
 
     duk_set_top(context_, 0);
     duk_push_literal(context_, "../requested");
     duk_push_literal(context_, "./grandparent/parent");
 
     ASSERT_EQ(duk::module::resolve(context_), 1);
-    ASSERT_STREQ(duk_get_string(context_, 2), P2(".", "requested.js"));
+    ASSERT_STREQ(duk_get_string(context_, 2), JOIN2(".", "requested.js"));
 }
 
 TEST_F(JSModuleTest, PreservesExtensions)
@@ -168,5 +168,5 @@ TEST_F(JSModuleTest, PreservesExtensions)
     duk_push_literal(context_, "");
 
     ASSERT_EQ(duk::module::resolve(context_), 1);
-    ASSERT_STREQ(duk_get_string(context_, 2), P2(".", "requested.base.js"));
+    ASSERT_STREQ(duk_get_string(context_, 2), JOIN2(".", "requested.base.js"));
 }
