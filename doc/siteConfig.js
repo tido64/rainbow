@@ -9,8 +9,8 @@ module.exports = {
   organizationName: "tido64",
   headerLinks: [],
   users,
-  headerIcon: "",
-  footerIcon: "",
+  headerIcon: "img/logo.png",
+  footerIcon: "img/logo.png",
   favicon: "",
   colors: {
     primaryColor: "#212121",
