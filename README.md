@@ -8,10 +8,10 @@
 
 #
 
-[![Language grade: C/C++](https://img.shields.io/lgtm/grade/cpp/g/tido64/rainbow.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/tido64/rainbow/context:cpp)
-[![Code coverage](https://codecov.io/gh/tido64/rainbow/branch/master/graph/badge.svg)](https://codecov.io/gh/tido64/rainbow)
-[![Build status](https://tido64.visualstudio.com/Rainbow/_apis/build/status/Rainbow%20CI?branchName=master)](https://tido64.visualstudio.com/Rainbow/_build/latest?definitionId=1)
-[![macOS build status](https://doozer.io/badge/tn0502/rainbow/buildstatus/master)](https://doozer.io/tn0502/rainbow)
+[![Language grade: C/C++][lgtm-cpp-badge]][lgtm-cpp]
+[![Code coverage][codecov-badge]][codecov]
+[![Build status][azure-badge]][azure]
+[![macOS build status][doozer-badge]][doozer]
 
 Rainbow is a fast, scriptable, cross-platform, 2D game engine written in modern
 C++. Games can be written in both C++ and JavaScript (but you really should make
@@ -89,7 +89,7 @@ Rainbow.RenderQueue.add(animation);
     ├── build    # Build related files
     ├── doc      # Documentation
     ├── include  # Public Rainbow headers
-    ├── js       # JavaScript playground
+    ├── js       # JS playground
     ├── lib      # Third party dependencies
     ├── src      # Rainbow source code
     └── tools    # Build scripts, JS bindings generator, and other tools...
@@ -103,24 +103,23 @@ Rainbow.RenderQueue.add(animation);
 
 ## Dependencies
 
-* [Abseil](https://abseil.io/)
-* [Duktape](https://duktape.org/)
-* [FreeType](https://freetype.org/)
-* [HarfBuzz](https://wiki.freedesktop.org/www/Software/HarfBuzz/)
-* [Mapbox Variant](https://github.com/mapbox/variant)
-* [NanoSVG](https://github.com/memononen/nanosvg)
-* [Ogg Vorbis](https://xiph.org/vorbis/)
-* [OpenGL 2.1](https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/) /
-  [OpenGL ES 2.0](https://www.khronos.org/opengles/2_X/)
-* [SDL](https://www.libsdl.org/)
-* [cubeb](https://github.com/kinetiknz/cubeb)
-* [libpng](https://github.com/glennrp/libpng)
-* [zlib](https://github.com/madler/zlib)
-* Optional:
-  * [Box2D](http://box2d.org/)
-  * [FMOD](https://www.fmod.com/)
-  * [Spine](http://esotericsoftware.com/)
-  * [dear imgui](https://github.com/ocornut/imgui)
+| Name                | Version  | License             | Required |
+|---------------------|----------|---------------------|:--------:|
+| [Abseil][]          | 45221ccc | Apache 2.0          |    ✓     |
+| [cubeb][]           | 9a7a5515 | ISC                 |    ✓     |
+| [Dear ImGui][]      | 1.65     | MIT                 |    ✓     |
+| [Duktape][]         | 2.3.0    | MIT                 |    ✓     |
+| [FreeType][]        | 2.9.1    | FreeType            |    ✓     |
+| [HarfBuzz][]        | 1.9.0    | Old MIT             |    ✓     |
+| [libpng][]          | 1.6.35   | zlib                |    ✓     |
+| [Mapbox Variant][]  | 1.1.5    | BSD-3               |    ✓     |
+| [NanoSVG][]         | dc12d905 | zlib                |    ✓     |
+| [Ogg Vorbis][]      | 1.3.3    | BSD-3               |    ✓     |
+| [SDL][]             | 2.0.9    | zlib                |    ✓     |
+| [zlib][]            | 1.2.8    | zlib                |    ✓     |
+| [Box2D][]           | 784a646c | zlib                |          |
+| [FMOD][]            | 1.05.x   | Proprietary         |          |
+| [Spine][]           | f8a76c64 | Spine Runtimes v2.2 |          |
 
 ## License
 
@@ -143,3 +142,30 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
+
+<!-- Badges -->
+[azure-badge]: https://tido64.visualstudio.com/Rainbow/_apis/build/status/Rainbow%20CI?branchName=master
+[azure]: https://tido64.visualstudio.com/Rainbow/_build/latest?definitionId=1
+[codecov-badge]: https://codecov.io/gh/tido64/rainbow/branch/master/graph/badge.svg
+[codecov]: https://codecov.io/gh/tido64/rainbow
+[doozer-badge]: https://doozer.io/badge/tn0502/rainbow/buildstatus/master
+[doozer]: https://doozer.io/tn0502/rainbow
+[lgtm-cpp-badge]: https://img.shields.io/lgtm/grade/cpp/g/tido64/rainbow.svg?logo=lgtm&logoWidth=18
+[lgtm-cpp]: https://lgtm.com/projects/g/tido64/rainbow/context:cpp
+
+<!-- Dependencies -->
+[Abseil]: https://abseil.io/ "Abseil"
+[Box2D]: http://box2d.org/ "Box2D | A 2D Physics Engine for Games"
+[cubeb]: https://github.com/kinetiknz/cubeb "cubeb"
+[Dear ImGui]: https://github.com/ocornut/imgui "Dear ImGui"
+[Duktape]: https://duktape.org/ "Duktape"
+[FMOD]: https://www.fmod.com/ "FMOD"
+[FreeType]: https://freetype.org/ "FreeType"
+[HarfBuzz]: https://wiki.freedesktop.org/www/Software/HarfBuzz/ "HarfBuzz"
+[libpng]: https://github.com/glennrp/libpng "libpng"
+[Mapbox Variant]: https://github.com/mapbox/variant "Mapbox Variant"
+[NanoSVG]: https://github.com/memononen/nanosvg "NanoSVG"
+[Ogg Vorbis]: https://xiph.org/vorbis/ "Ogg Vorbis"
+[SDL]: https://www.libsdl.org/ "Simple DirectMedia Layer"
+[Spine]: http://esotericsoftware.com/ "Spine: 2D skeletal animation for games"
+[zlib]: https://github.com/madler/zlib "zlib"
