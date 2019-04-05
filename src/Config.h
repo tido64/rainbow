@@ -9,31 +9,20 @@ namespace rainbow
 {
     /// <summary>Load game configuration.</summary>
     /// <remarks>
-    ///   Configuration is a simple JSON file. File must be named
-    ///   <c>config.json</c> and reside in app root. Please use the schema
-    ///   <c>js/rainbow-config.schema.json</c> for IntelliSense:
-    ///
-    ///   <code>
-    ///   {
-    ///     "$schema": "./rainbow-config.schema.json"
-    ///   }
-    ///   </code>
+    ///   Configuration is a simple INI file. File must be named
+    ///   <c>config.ini</c> and reside in app root.
     ///
     ///   If no configuration file is present, or the file is somehow
     ///   unavailable, the following are the default values:
     ///
     ///   <code>
-    ///   {
-    ///     "$schema": "./rainbow-config.schema.json",
-    ///     "accelerometer": true,
-    ///     "allowHighDPI": false,
-    ///     "msaa": 0,
-    ///     "resolution": {
-    ///       "width": 0,
-    ///       "height": 0
-    ///     },
-    ///     "suspendOnFocusLost": true
-    ///   }
+    ///   [core]
+    ///   ResolutionWidth = 1280
+    ///   ResolutionHeight = 720
+    ///   MSAA = 0
+    ///   AllowHiDPI = false
+    ///   SuspendOnFocusLost = true
+    ///   Accelerometer = false
     ///   </code>
     /// </remarks>
     class Config
@@ -48,9 +37,9 @@ namespace rainbow
         auto height() const { return height_; }
 
         /// <summary>
-        ///   Returns whether to create windows in high DPI mode.
+        ///   Returns whether to create windows in HiDPI mode.
         /// </summary>
-        bool high_dpi() const { return high_dpi_; }
+        bool hidpi() const { return hidpi_; }
 
         /// <summary>Returns whether the screen is in portrait mode.</summary>
         bool is_portrait() const { return width_ < height_; }
@@ -67,13 +56,13 @@ namespace rainbow
         bool suspend() const { return suspend_; }
 
     private:
-        bool accelerometer_;
-        bool high_dpi_;
-        bool suspend_;
         int width_;
         int height_;
         unsigned int msaa_;
+        bool hidpi_;
+        bool suspend_;
+        bool accelerometer_;
     };
-}
+}  // namespace rainbow
 
 #endif

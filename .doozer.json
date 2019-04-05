@@ -9,6 +9,7 @@
     "lib/libpng",
     "lib/nanosvg",
     "lib/ogg",
+    "lib/panini",
     "lib/spine-runtimes",
     "lib/stb",
     "lib/variant",
