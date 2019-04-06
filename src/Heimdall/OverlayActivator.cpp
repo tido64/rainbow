@@ -84,7 +84,7 @@ bool OverlayActivator::on_pointer_began_impl(const ArrayView<Pointer>& pointers)
             if (pointers.size() < 2)
                 break;
             i = 1;
-            // Fall through.
+            [[fallthrough]];
         case 1:
             pointers_[1] = pointers[i].hash;
             --resistance_;
