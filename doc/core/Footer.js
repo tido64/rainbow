@@ -2,6 +2,7 @@
 const React = require("react");
 
 /**
+ * Returns the URL for specified doc page.
  * @typedef {{
  *     title: string;
  *     baseUrl: string;
@@ -10,15 +11,6 @@ const React = require("react");
  *     docsUrl: string;
  *     footerIcon?: string
  * }} DocusaurusConfig
- *
- * @typedef {{
- *   config: DocusaurusConfig;
- *   language: string;
- * }} FooterProps
- */
-
-/**
- * Returns the URL for specified doc page.
  * @param {string} doc
  * @param {DocusaurusConfig} config
  * @param {string} language
@@ -32,6 +24,10 @@ function docUrl(doc, config, language) {
 
 /**
  * Documentation footer.
+ * @typedef {{
+ *   config: DocusaurusConfig;
+ *   language: string;
+ * }} FooterProps
  * @param {FooterProps} props
  */
 function Footer(props) {
@@ -60,6 +56,7 @@ function Footer(props) {
         </div>
         <div>
           <h5>Community</h5>
+          <a href="https://www.reddit.com/r/rainbowtech">Forum</a>
           <a href="https://github.com/tido64/rainbow/issues">Issues</a>
           <a href="https://github.com/tido64/rainbow/pulls">Pull Requests</a>
           <a href="https://trello.com/b/r2TqudY6/rainbow">Roadmap</a>
