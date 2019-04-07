@@ -1,9 +1,10 @@
 # Generated files
 !.vs/launch.vs.json
-!js/index.js*
+!js/index.js
 *.aps
 *.iml
 *.jar
+*.js.map
 *.swp
 .DS_Store
 .browse.VC.*
@@ -20,7 +21,6 @@ build/android/build/
 gradlew
 gradlew.bat
 js/*.js
-js/*.js.map
 local.properties
 node_modules/
 package-lock.json
