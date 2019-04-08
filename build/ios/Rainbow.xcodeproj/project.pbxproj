@@ -91,6 +91,7 @@
 		196C0A72189082860042190D /* Shaders.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 196C0A70189082860042190D /* Shaders.cpp */; };
 		196CB728161E4ADD0068C809 /* Gatekeeper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 196CB725161E4ADD0068C809 /* Gatekeeper.cpp */; };
 		196CB72F161E4D940068C809 /* b2MotorJoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 196CB72D161E4D940068C809 /* b2MotorJoint.cpp */; };
+		1972A081225D31CD0071415E /* Image.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1972A080225D31CD0071415E /* Image.cpp */; };
 		197396DD15A505F60064BF7D /* TextureManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 197396DB15A505F60064BF7D /* TextureManager.cpp */; };
 		19865982175E98F700723171 /* Data.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19865981175E98F700723171 /* Data.cpp */; };
 		1989645C1C4AE0080011BA15 /* RainbowViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1989645B1C4AE0080011BA15 /* RainbowViewController.mm */; };
@@ -170,6 +171,7 @@
 		19B6C57D21696426000D5400 /* raw_hash_set.cc in Sources */ = {isa = PBXBuildFile; fileRef = 19B6C55421696425000D5400 /* raw_hash_set.cc */; };
 		19B6C59D216964C6000D5400 /* hash.cc in Sources */ = {isa = PBXBuildFile; fileRef = 19B6C590216964C6000D5400 /* hash.cc */; };
 		19B6C59F216964C6000D5400 /* city.cc in Sources */ = {isa = PBXBuildFile; fileRef = 19B6C595216964C6000D5400 /* city.cc */; };
+		19C66962225C11B9004245ED /* NanoSVG.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19C66960225C11B8004245ED /* NanoSVG.cpp */; };
 		19CB0669200AC971005D6740 /* duktape.c in Sources */ = {isa = PBXBuildFile; fileRef = 19CB0668200AC971005D6740 /* duktape.c */; };
 		19CB066B200AC97F005D6740 /* duk_module_node.c in Sources */ = {isa = PBXBuildFile; fileRef = 19CB066A200AC97F005D6740 /* duk_module_node.c */; };
 		19CBB6351E5E4BFA00378BBF /* NSString+Rainbow.m in Sources */ = {isa = PBXBuildFile; fileRef = 19CBB6341E5E4BFA00378BBF /* NSString+Rainbow.m */; };
@@ -374,6 +376,7 @@
 		196CB726161E4ADD0068C809 /* Gatekeeper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Gatekeeper.h; sourceTree = "<group>"; };
 		196CB72D161E4D940068C809 /* b2MotorJoint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = b2MotorJoint.cpp; sourceTree = "<group>"; };
 		196CB72E161E4D940068C809 /* b2MotorJoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = b2MotorJoint.h; sourceTree = "<group>"; };
+		1972A080225D31CD0071415E /* Image.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = Image.cpp; sourceTree = "<group>"; };
 		197396DB15A505F60064BF7D /* TextureManager.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = TextureManager.cpp; sourceTree = "<group>"; };
 		197396DC15A505F60064BF7D /* TextureManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextureManager.h; sourceTree = "<group>"; };
 		19865981175E98F700723171 /* Data.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = Data.cpp; sourceTree = "<group>"; };
@@ -513,12 +516,14 @@
 		19BE0C7E1C98B2110041EE8C /* Array.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Array.h; sourceTree = "<group>"; };
 		19BE0C7F1C98B2110041EE8C /* NotNull.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NotNull.h; sourceTree = "<group>"; };
 		19C5EDA721EE99D900CA08DC /* TypeCast.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TypeCast.h; sourceTree = "<group>"; };
+		19C6695E225C106D004245ED /* SVG.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SVG.h; sourceTree = "<group>"; };
+		19C66960225C11B8004245ED /* NanoSVG.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NanoSVG.cpp; sourceTree = "<group>"; };
+		19C66961225C11B8004245ED /* NanoSVG.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NanoSVG.h; sourceTree = "<group>"; };
 		19CB0668200AC971005D6740 /* duktape.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = duktape.c; path = src/duktape.c; sourceTree = "<group>"; };
 		19CB066A200AC97F005D6740 /* duk_module_node.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = duk_module_node.c; path = "extras/module-node/duk_module_node.c"; sourceTree = "<group>"; };
 		19CBB6331E5E4BFA00378BBF /* NSString+Rainbow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Rainbow.h"; sourceTree = "<group>"; };
 		19CBB6341E5E4BFA00378BBF /* NSString+Rainbow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Rainbow.m"; sourceTree = "<group>"; };
 		19D045A918071D6D00968F00 /* Chrono.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Chrono.cpp; sourceTree = "<group>"; };
-		19D3204717BD6BD4007BDC67 /* UIKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIKit.h; sourceTree = "<group>"; };
 		19D3204817BD6BD4007BDC67 /* PVRTC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PVRTC.h; sourceTree = "<group>"; };
 		19D3204917BD6BD4007BDC67 /* PNG.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNG.h; sourceTree = "<group>"; };
 		19D3204A17BD6BD4007BDC67 /* Image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Image.h; sourceTree = "<group>"; };
@@ -799,6 +804,7 @@
 				1939A1BF152C425D00494609 /* Drawable.h */,
 				19DB48B71CA6AAFE00999675 /* ElementBuffer.cpp */,
 				19DB48B81CA6AAFE00999675 /* ElementBuffer.h */,
+				1972A080225D31CD0071415E /* Image.cpp */,
 				19D3204A17BD6BD4007BDC67 /* Image.h */,
 				1939A1C3152C425D00494609 /* Label.cpp */,
 				1939A1C4152C425D00494609 /* Label.h */,
@@ -999,6 +1005,7 @@
 			children = (
 				19455D28197F1C98003E4A79 /* Box2D */,
 				19DB48B21CA6A4BD00999675 /* ImGui */,
+				19C6695F225C11B8004245ED /* NanoSVG */,
 				198F42B21A91531000BE7A73 /* Spine */,
 			);
 			path = ThirdParty;
@@ -1277,6 +1284,15 @@
 			path = internal;
 			sourceTree = "<group>";
 		};
+		19C6695F225C11B8004245ED /* NanoSVG */ = {
+			isa = PBXGroup;
+			children = (
+				19C66960225C11B8004245ED /* NanoSVG.cpp */,
+				19C66961225C11B8004245ED /* NanoSVG.h */,
+			);
+			path = NanoSVG;
+			sourceTree = "<group>";
+		};
 		19CB0663200AC691005D6740 /* Duktape */ = {
 			isa = PBXGroup;
 			children = (
@@ -1292,7 +1308,7 @@
 			children = (
 				19D3204917BD6BD4007BDC67 /* PNG.h */,
 				19D3204817BD6BD4007BDC67 /* PVRTC.h */,
-				19D3204717BD6BD4007BDC67 /* UIKit.h */,
+				19C6695E225C106D004245ED /* SVG.h */,
 			);
 			path = Decoders;
 			sourceTree = "<group>";
@@ -1478,6 +1494,7 @@
 				1939A04B152C401300494609 /* b2BroadPhase.cpp in Sources */,
 				19B399AC20421D2900581AE0 /* hb-ot-shape-complex-use-table.cc in Sources */,
 				1939A04C152C401300494609 /* b2CollideCircle.cpp in Sources */,
+				19C66962225C11B9004245ED /* NanoSVG.cpp in Sources */,
 				19B3996C20421A6200581AE0 /* hb-blob.cc in Sources */,
 				1939A04D152C401300494609 /* b2CollideEdge.cpp in Sources */,
 				198F42A41A9152E000BE7A73 /* extension.c in Sources */,
@@ -1516,6 +1533,7 @@
 				1939A060152C401300494609 /* b2Island.cpp in Sources */,
 				19B399A120421D2900581AE0 /* hb-ot-shape-complex-hebrew.cc in Sources */,
 				1939A061152C401300494609 /* b2World.cpp in Sources */,
+				1972A081225D31CD0071415E /* Image.cpp in Sources */,
 				1939A062152C401300494609 /* b2WorldCallbacks.cpp in Sources */,
 				1939A063152C401300494609 /* b2ChainAndCircleContact.cpp in Sources */,
 				1939A064152C401300494609 /* b2ChainAndPolygonContact.cpp in Sources */,
@@ -1746,6 +1764,7 @@
 					../../lib/FreeType/src,
 					lib/harfbuzz/src,
 					"lib/harfbuzz/src/hb-ucdn",
+					../../lib/nanosvg/src,
 					"../../lib/spine-runtimes/spine-c/include",
 					../../lib/variant/include,
 				);
@@ -1906,6 +1925,7 @@
 					../../lib/FreeType/src,
 					lib/harfbuzz/src,
 					"lib/harfbuzz/src/hb-ucdn",
+					../../lib/nanosvg/src,
 					"../../lib/spine-runtimes/spine-c/include",
 					../../lib/variant/include,
 				);
@@ -1952,6 +1972,7 @@
 					../../lib/FreeType/src,
 					lib/harfbuzz/src,
 					"lib/harfbuzz/src/hb-ucdn",
+					../../lib/nanosvg/src,
 					"../../lib/spine-runtimes/spine-c/include",
 					../../lib/variant/include,
 				);

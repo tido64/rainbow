@@ -6,6 +6,7 @@
 
 #include "FileSystem/File.h"
 #include "Graphics/Image.h"
+#include "Graphics/OpenGL.h"
 #include "Graphics/TextureManager.h"
 
 #define kInvalidColorDepth "Invalid colour depth"
