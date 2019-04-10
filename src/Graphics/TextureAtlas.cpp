@@ -114,10 +114,29 @@ void TextureAtlas::load(TextureManager& texture_manager,
         }
 #endif  // PVRTC
 #ifdef GL_EXT_texture_compression_s3tc
-        case Image::Format::S3TC:
-            texture_manager.upload_compressed(
+        case Image::Format::BC1:
+            texture_manager.upload_compressed(  //
                 texture,
-                image.channels,
+                image.channels == 4 ? GL_COMPRESSED_RGBA_S3TC_DXT1_EXT
+                                    : GL_COMPRESSED_RGB_S3TC_DXT1_EXT,
+                image.width,
+                image.height,
+                static_cast<uint32_t>(image.size),
+                image.data);
+            break;
+        case Image::Format::BC2:
+            texture_manager.upload_compressed(  //
+                texture,
+                GL_COMPRESSED_RGBA_S3TC_DXT3_EXT,
+                image.width,
+                image.height,
+                static_cast<uint32_t>(image.size),
+                image.data);
+            break;
+        case Image::Format::BC3:
+            texture_manager.upload_compressed(  //
+                texture,
+                GL_COMPRESSED_RGBA_S3TC_DXT5_EXT,
                 image.width,
                 image.height,
                 static_cast<uint32_t>(image.size),

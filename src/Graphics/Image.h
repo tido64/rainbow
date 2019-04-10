@@ -20,9 +20,11 @@ namespace rainbow
         {
             Unknown,
             ATITC,  // Adreno
+            BC1,    // DXT1
+            BC2,    // DXT3
+            BC3,    // DXT5
             ETC1,   // OpenGL ES standard
             PVRTC,  // iOS, OMAP43xx, PowerVR
-            S3TC,   // Desktops, Tegra
             PNG,
             SVG,
         };
@@ -87,9 +89,11 @@ namespace rainbow
             switch (format)
             {
                 case Format::ATITC:
+                case Format::BC1:
+                case Format::BC2:
+                case Format::BC3:
                 case Format::ETC1:
                 case Format::PVRTC:
-                case Format::S3TC:
                     break;
 
                 case Format::PNG:
