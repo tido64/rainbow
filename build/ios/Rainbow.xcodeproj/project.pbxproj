@@ -91,6 +91,7 @@
 		196C0A72189082860042190D /* Shaders.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 196C0A70189082860042190D /* Shaders.cpp */; };
 		196CB728161E4ADD0068C809 /* Gatekeeper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 196CB725161E4ADD0068C809 /* Gatekeeper.cpp */; };
 		196CB72F161E4D940068C809 /* b2MotorJoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 196CB72D161E4D940068C809 /* b2MotorJoint.cpp */; };
+		196DFF73225E6BED0053D6A4 /* libpng.c in Sources */ = {isa = PBXBuildFile; fileRef = 196DFF72225E6BED0053D6A4 /* libpng.c */; };
 		1972A081225D31CD0071415E /* Image.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1972A080225D31CD0071415E /* Image.cpp */; };
 		197396DD15A505F60064BF7D /* TextureManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 197396DB15A505F60064BF7D /* TextureManager.cpp */; };
 		19865982175E98F700723171 /* Data.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19865981175E98F700723171 /* Data.cpp */; };
@@ -376,6 +377,10 @@
 		196CB726161E4ADD0068C809 /* Gatekeeper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Gatekeeper.h; sourceTree = "<group>"; };
 		196CB72D161E4D940068C809 /* b2MotorJoint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = b2MotorJoint.cpp; sourceTree = "<group>"; };
 		196CB72E161E4D940068C809 /* b2MotorJoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = b2MotorJoint.h; sourceTree = "<group>"; };
+		196DFF6F225E6BED0053D6A4 /* config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = "<group>"; };
+		196DFF70225E6BED0053D6A4 /* pngusr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pngusr.h; sourceTree = "<group>"; };
+		196DFF71225E6BED0053D6A4 /* pnglibconf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pnglibconf.h; sourceTree = "<group>"; };
+		196DFF72225E6BED0053D6A4 /* libpng.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = libpng.c; sourceTree = "<group>"; };
 		1972A080225D31CD0071415E /* Image.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = Image.cpp; sourceTree = "<group>"; };
 		197396DB15A505F60064BF7D /* TextureManager.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = TextureManager.cpp; sourceTree = "<group>"; };
 		197396DC15A505F60064BF7D /* TextureManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextureManager.h; sourceTree = "<group>"; };
@@ -1005,6 +1010,7 @@
 			children = (
 				19455D28197F1C98003E4A79 /* Box2D */,
 				19DB48B21CA6A4BD00999675 /* ImGui */,
+				196DFF6E225E6BED0053D6A4 /* libpng */,
 				19C6695F225C11B8004245ED /* NanoSVG */,
 				198F42B21A91531000BE7A73 /* Spine */,
 			);
@@ -1024,6 +1030,17 @@
 				19E774881A02C8D3005DE249 /* OverlayActivator.h */,
 			);
 			path = Heimdall;
+			sourceTree = "<group>";
+		};
+		196DFF6E225E6BED0053D6A4 /* libpng */ = {
+			isa = PBXGroup;
+			children = (
+				196DFF6F225E6BED0053D6A4 /* config.h */,
+				196DFF70225E6BED0053D6A4 /* pngusr.h */,
+				196DFF71225E6BED0053D6A4 /* pnglibconf.h */,
+				196DFF72225E6BED0053D6A4 /* libpng.c */,
+			);
+			path = libpng;
 			sourceTree = "<group>";
 		};
 		1986919F16DED44D00BC4830 /* Platform */ = {
@@ -1577,6 +1594,7 @@
 				196C0A72189082860042190D /* Shaders.cpp in Sources */,
 				1939A074152C401300494609 /* b2RopeJoint.cpp in Sources */,
 				198F42AD1A9152E000BE7A73 /* SkeletonJson.c in Sources */,
+				196DFF73225E6BED0053D6A4 /* libpng.c in Sources */,
 				198F42A21A9152E000BE7A73 /* Event.c in Sources */,
 				1960F19A204B532E00258DDE /* SystemFonts.cpp in Sources */,
 				1939A075152C401300494609 /* b2WeldJoint.cpp in Sources */,
@@ -1764,6 +1782,8 @@
 					../../lib/FreeType/src,
 					lib/harfbuzz/src,
 					"lib/harfbuzz/src/hb-ucdn",
+					../../src/ThirdParty/libpng,
+					../../lib/libpng,
 					../../lib/nanosvg/src,
 					"../../lib/spine-runtimes/spine-c/include",
 					../../lib/variant/include,
@@ -1925,6 +1945,8 @@
 					../../lib/FreeType/src,
 					lib/harfbuzz/src,
 					"lib/harfbuzz/src/hb-ucdn",
+					../../src/ThirdParty/libpng,
+					../../lib/libpng,
 					../../lib/nanosvg/src,
 					"../../lib/spine-runtimes/spine-c/include",
 					../../lib/variant/include,
@@ -1972,6 +1994,8 @@
 					../../lib/FreeType/src,
 					lib/harfbuzz/src,
 					"lib/harfbuzz/src/hb-ucdn",
+					../../src/ThirdParty/libpng,
+					../../lib/libpng,
 					../../lib/nanosvg/src,
 					"../../lib/spine-runtimes/spine-c/include",
 					../../lib/variant/include,

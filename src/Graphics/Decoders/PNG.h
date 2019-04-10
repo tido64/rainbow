@@ -8,16 +8,7 @@
 #include <cstring>
 #include <memory>
 
-#include "Platform/Macros.h"
-#ifdef RAINBOW_USE_COREGRAPHICS
-#    ifdef RAINBOW_OS_MACOS
-#        include <ApplicationServices/ApplicationServices.h>
-#    else
-#        include <CoreGraphics/CoreGraphics.h>
-#    endif
-#else
-#    include <png.h>
-#endif
+#include <png.h>
 
 namespace png
 {
@@ -29,44 +20,6 @@ namespace png
 
     auto decode(const rainbow::Data& data)
     {
-#ifdef RAINBOW_USE_COREGRAPHICS
-        auto data_provider = CGDataProviderCreateWithData(
-            nullptr, data.bytes(), data.size(), nullptr);
-        auto image_ref = CGImageCreateWithPNGDataProvider(
-            data_provider, nullptr, false, kCGRenderingIntentDefault);
-
-        const auto width = CGImageGetWidth(image_ref);
-        const auto height = CGImageGetHeight(image_ref);
-        const auto depth = CGImageGetBitsPerPixel(image_ref);
-        const auto bits_per_component = CGImageGetBitsPerComponent(image_ref);
-        const auto channels = depth / bits_per_component;
-        const auto size = width * height * depth / 8;
-
-        auto buffer = std::make_unique<uint8_t[]>(size);
-        auto context = CGBitmapContextCreate(  //
-            buffer.get(),
-            width,
-            height,
-            bits_per_component,
-            width * depth / 8,
-            CGImageGetColorSpace(image_ref),
-            kCGImageAlphaPremultipliedLast);
-        CGContextSetBlendMode(context, kCGBlendModeCopy);
-        CGContextDrawImage(context, CGRectMake(0, 0, width, height), image_ref);
-
-        CGContextRelease(context);
-        CGImageRelease(image_ref);
-        CGDataProviderRelease(data_provider);
-
-        return rainbow::Image(  //
-            rainbow::Image::Format::PNG,
-            width,
-            height,
-            depth,
-            channels,
-            size,
-            buffer.release());
-#else
         png_image pi{};
         pi.version = PNG_IMAGE_VERSION;
 
@@ -90,7 +43,6 @@ namespace png
             /* channels */ PNG_IMAGE_SAMPLE_CHANNELS(pi.format),
             size,
             buffer.release());
-#endif
     }
 }  // namespace png
 

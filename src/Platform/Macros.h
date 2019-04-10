@@ -18,7 +18,6 @@
 #   else
 #       define RAINBOW_OS_IOS
 #   endif
-#   define RAINBOW_USE_COREGRAPHICS
 #elif defined(__linux__)
 #   define RAINBOW_OS_LINUX
 #   define RAINBOW_OS_UNIX
