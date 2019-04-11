@@ -4,6 +4,7 @@
 
 #include "Graphics/TextureAtlas.h"
 
+#include "Common/TypeCast.h"
 #include "FileSystem/File.h"
 #include "Graphics/Image.h"
 #include "Graphics/OpenGL.h"
@@ -159,23 +160,21 @@ void TextureAtlas::load(TextureManager& texture_manager,
     switch (image.format)
     {
 #ifdef RAINBOW_HAS_COMPRESSED_TEXTURES
-#    ifdef GL_EXT_texture_compression_s3tc
         case Image::Format::BC1:
+            [[fallthrough]];
         case Image::Format::BC2:
+            [[fallthrough]];
         case Image::Format::BC3:
-#    endif
-#    ifdef GL_OES_compressed_ETC1_RGB8_texture
+            [[fallthrough]];
         case Image::Format::ETC1:
-#    endif
-#    ifdef GL_IMG_texture_compression_pvrtc
+            [[fallthrough]];
         case Image::Format::PVRTC:
-#    endif
             texture_manager.upload_compressed(  //
                 texture,
                 compression_format(image),
                 image.width,
                 image.height,
-                static_cast<uint32_t>(image.size),
+                narrow_cast<uint32_t>(image.size),
                 image.data);
             break;
 #endif  // RAINBOW_HAS_COMPRESSED_TEXTURES
