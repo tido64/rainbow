@@ -13,27 +13,38 @@ using rainbow::ControllerAxis;
 using rainbow::ControllerAxisMotion;
 using rainbow::ControllerButton;
 using rainbow::ControllerButtonEvent;
+using rainbow::ControllerID;
 using rainbow::Input;
 using rainbow::InputListener;
 
 namespace
 {
-    constexpr unsigned int kTestControllerId = 1000;
-    constexpr unsigned int kTestListenerId = 9000;
+    constexpr uint32_t kControllerTestFixtureID = 9000;
+    constexpr ControllerID kTestControllerId = 1000;
 
     struct Events
     {
-        static constexpr unsigned int AxisMotion    = 1u << 0;
-        static constexpr unsigned int ButtonDown    = 1u << 1;
-        static constexpr unsigned int ButtonUp      = 1u << 2;
-        static constexpr unsigned int Connected     = 1u << 3;
-        static constexpr unsigned int Disconnected  = 1u << 4;
+        static constexpr uint32_t AxisMotion = 1u << 0;
+        static constexpr uint32_t ButtonDown = 1u << 1;
+        static constexpr uint32_t ButtonUp = 1u << 2;
+        static constexpr uint32_t Connected = 1u << 3;
+        static constexpr uint32_t Disconnected = 1u << 4;
     };
+
+    auto axis_motion(ControllerID id = kTestControllerId)
+    {
+        return ControllerAxisMotion(id, ControllerAxis::LeftX, 255, 1);
+    }
+
+    auto button(ControllerID id = kTestControllerId)
+    {
+        return ControllerButtonEvent(id, ControllerButton::A, 1);
+    }
 
     class TestControllerListener : public InputListener
     {
     public:
-        bool is_triggered(unsigned int flags) const
+        bool is_triggered(uint32_t flags) const
         {
             return (flags_ & flags) != 0;
         }
@@ -41,14 +52,21 @@ namespace
         void reset() { flags_ = 0; }
 
     protected:
-        unsigned int port_ = Input::kNumSupportedControllers;
-        unsigned int flags_ = 0;
+        uint32_t port_ = Input::kNumSupportedControllers;
+        uint32_t flags_ = 0;
 
     private:
+        bool is_fixture() const { return port_ == kControllerTestFixtureID; }
+
+        bool is_target_controller(ControllerID id) const
+        {
+            return id == static_cast<ControllerID>(port_);
+        }
+
         bool on_controller_axis_motion_impl(
             const ControllerAxisMotion& motion) override
         {
-            if (port_ == kTestListenerId || port_ == motion.id)
+            if (is_fixture() || is_target_controller(motion.id))
                 flags_ |= Events::AxisMotion;
             return false;
         }
@@ -56,7 +74,7 @@ namespace
         bool on_controller_button_down_impl(
             const ControllerButtonEvent& btn) override
         {
-            if (port_ == kTestListenerId || port_ == btn.id)
+            if (is_fixture() || is_target_controller(btn.id))
                 flags_ |= Events::ButtonDown;
             return false;
         }
@@ -64,23 +82,23 @@ namespace
         bool on_controller_button_up_impl(
             const ControllerButtonEvent& btn) override
         {
-            if (port_ == kTestListenerId || port_ == btn.id)
+            if (is_fixture() || is_target_controller(btn.id))
                 flags_ |= Events::ButtonUp;
             return false;
         }
 
-        bool on_controller_connected_impl(unsigned int i) override
+        bool on_controller_connected_impl(uint32_t port) override
         {
             if (port_ == Input::kNumSupportedControllers)
-                port_ = i;
-            if (port_ == kTestListenerId || port_ == i)
+                port_ = port;
+            if (is_fixture() || port_ == port)
                 flags_ |= Events::Connected;
             return false;
         }
 
-        bool on_controller_disconnected_impl(unsigned int i) override
+        bool on_controller_disconnected_impl(uint32_t port) override
         {
-            if (port_ == kTestListenerId || port_ == i)
+            if (is_fixture() || port_ == port)
                 flags_ |= Events::Disconnected;
             return false;
         }
@@ -94,7 +112,7 @@ namespace
         {
         }
 
-        TestController(unsigned int id, Input& input) : id_(id), input_(input)
+        TestController(ControllerID id, Input& input) : id_(id), input_(input)
         {
             input.subscribe(*this);
             input.on_controller_connected(id);
@@ -107,46 +125,44 @@ namespace
         auto port() const { return port_; }
 
     private:
-        unsigned int id_;
+        ControllerID id_;
         Input& input_;
     };
 
     class ControllerTest : public TestControllerListener, public ::testing::Test
     {
-    public:
-        auto axis_motion(unsigned int id = kTestControllerId) const
-        {
-            return ControllerAxisMotion(id, ControllerAxis::LeftX, 255, 1);
-        }
-
-        auto button(unsigned int id = kTestControllerId) const
-        {
-            return ControllerButtonEvent(id, ControllerButton::A, 1);
-        }
-
     protected:
         Input input;
 
         void SetUp() override
         {
-            port_ = kTestListenerId;
+            port_ = kControllerTestFixtureID;
             input.subscribe(*this);
         }
     };
 }  // namespace
 
+TEST_F(ControllerTest, ControllersAreUnplugged)
+{
+    ASSERT_EQ(input.connected_controllers(), 0u);
+
+    const auto& states = input.controller_states();
+    for (auto i = 0u; i < states.size(); ++i)
+        ASSERT_EQ(states[i].id(), -1);
+}
+
 TEST_F(ControllerTest, EventsAreInvalidByDefault)
 {
     const ControllerAxisMotion axis;
 
-    ASSERT_EQ(axis.id, 0u);
+    ASSERT_EQ(axis.id, 0);
     ASSERT_EQ(axis.axis, ControllerAxis::Invalid);
     ASSERT_EQ(axis.value, 0);
     ASSERT_EQ(axis.timestamp, 0ull);
 
     const ControllerButtonEvent button;
 
-    ASSERT_EQ(button.id, 0u);
+    ASSERT_EQ(button.id, 0);
     ASSERT_EQ(button.button, ControllerButton::Invalid);
     ASSERT_EQ(button.timestamp, 0ull);
 }
@@ -474,7 +490,7 @@ TEST_F(ControllerTest, IgnoresExcessControllers)
 
     std::unique_ptr<TestController>
         controllers[Input::kNumSupportedControllers];
-    for (unsigned int i = 0; i < Input::kNumSupportedControllers; ++i)
+    for (uint32_t i = 0; i < Input::kNumSupportedControllers; ++i)
         controllers[i] = std::make_unique<TestController>(1000 + i, input);
 
     ASSERT_EQ(input.connected_controllers(), Input::kNumSupportedControllers);

@@ -44,14 +44,14 @@ namespace rainbow
             return on_controller_button_up_impl(button);
         }
 
-        bool on_controller_connected(unsigned int id)
+        bool on_controller_connected(uint32_t port)
         {
-            return on_controller_connected_impl(id);
+            return on_controller_connected_impl(port);
         }
 
-        bool on_controller_disconnected(unsigned int id)
+        bool on_controller_disconnected(uint32_t port)
         {
-            return on_controller_disconnected_impl(id);
+            return on_controller_disconnected_impl(port);
         }
 
         bool on_key_down(const KeyStroke& k) { return on_key_down_impl(k); }
@@ -116,12 +116,12 @@ namespace rainbow
             return false;
         }
 
-        virtual bool on_controller_connected_impl(unsigned int)
+        virtual bool on_controller_connected_impl(uint32_t)
         {
             return false;
         }
 
-        virtual bool on_controller_disconnected_impl(unsigned int)
+        virtual bool on_controller_disconnected_impl(uint32_t)
         {
             return false;
         }

@@ -88,13 +88,13 @@ namespace
             return consume_;
         }
 
-        bool on_controller_connected_impl(unsigned int) override
+        bool on_controller_connected_impl(uint32_t) override
         {
             controller_connected_ = true;
             return consume_;
         }
 
-        bool on_controller_disconnected_impl(unsigned int) override
+        bool on_controller_disconnected_impl(uint32_t) override
         {
             controller_disconnected_ = true;
             return consume_;

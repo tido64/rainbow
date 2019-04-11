@@ -41,7 +41,7 @@ namespace rainbow
         duk::Context context_;
         bool has_pointer_events_;
 
-        bool update_controller_id(unsigned int i);
+        bool update_controller_id(uint32_t port);
 
         // GameBase implementation details.
 
@@ -51,8 +51,8 @@ namespace rainbow
 
         // InputListener implementation details.
 
-        bool on_controller_connected_impl(unsigned int i) override;
-        bool on_controller_disconnected_impl(unsigned int i) override;
+        bool on_controller_connected_impl(uint32_t port) override;
+        bool on_controller_disconnected_impl(uint32_t port) override;
         bool on_pointer_began_impl(const ArrayView<Pointer>&) override;
         bool on_pointer_canceled_impl() override;
         bool on_pointer_ended_impl(const ArrayView<Pointer>&) override;

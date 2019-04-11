@@ -34,7 +34,7 @@ namespace rainbow::duk
         {
             duk_push_bare_object(ctx);
 
-            duk_push_uint(ctx, state.id());
+            duk::push(ctx, state.id());
             duk::put_prop_literal(ctx, -2, "id");
 
             auto&& buttons = state.buttons();
@@ -90,7 +90,7 @@ namespace rainbow::duk
         duk_pop_3(ctx);
     }
 
-    void update_controller_id(duk_context* ctx, unsigned int port, uint32_t id)
+    void update_controller_id(duk_context* ctx, uint32_t port, ControllerID id)
     {
         duk_push_global_stash(ctx);
         duk_get_prop_index(ctx, -1, DUKR_IDX_INPUT);
