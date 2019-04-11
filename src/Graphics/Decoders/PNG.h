@@ -20,12 +20,14 @@ namespace png
 
     auto decode(const rainbow::Data& data)
     {
+        using rainbow::Image;
+
         png_image pi{};
         pi.version = PNG_IMAGE_VERSION;
 
         auto memory = data.as<png_const_voidp>();
         if (!png_image_begin_read_from_memory(&pi, memory, data.size()))
-            return rainbow::Image(rainbow::Image::Format::PNG);
+            return Image(Image::Format::PNG);
 
         pi.format = PNG_IMAGE_PIXEL_CHANNELS(pi.format) == 2 ? PNG_FORMAT_GA
                                                              : PNG_FORMAT_RGBA;
@@ -35,8 +37,8 @@ namespace png
         png_image_finish_read(
             &pi, nullptr, buffer.get(), PNG_IMAGE_ROW_STRIDE(pi), nullptr);
 
-        return rainbow::Image(  //
-            rainbow::Image::Format::PNG,
+        return Image(  //
+            Image::Format::PNG,
             pi.width,
             pi.height,
             /* depth */ PNG_IMAGE_SAMPLE_SIZE(pi.format) * 8,
