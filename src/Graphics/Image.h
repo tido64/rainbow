@@ -5,19 +5,26 @@
 #ifndef GRAPHICS_IMAGE_H_
 #define GRAPHICS_IMAGE_H_
 
-#include "Common/Data.h"
+#include <cstddef>
+#include <cstdint>
+
+#include "Common/NonCopyable.h"
 
 namespace rainbow
 {
+    class Data;
+
     struct Image : private NonCopyable<Image>
     {
         enum class Format
         {
             Unknown,
             ATITC,  // Adreno
+            BC1,    // DXT1
+            BC2,    // DXT3
+            BC3,    // DXT5
             ETC1,   // OpenGL ES standard
             PVRTC,  // iOS, OMAP43xx, PowerVR
-            S3TC,   // Desktops, Tegra
             PNG,
             SVG,
         };
@@ -41,7 +48,7 @@ namespace rainbow
         ///     </item>
         ///   </list>
         /// </remarks>
-        static Image decode(const Data&, float scale);
+        static auto decode(const Data&, float scale) -> Image;
 
         Format format;
         uint32_t width;
@@ -51,11 +58,15 @@ namespace rainbow
         size_t size;
         const uint8_t* data;
 
-        Image() : Image(Format::Unknown) {}
-
-        Image(Format format_)
-            : format(format_), width(0), height(0), depth(0), channels(0),
-              size(0), data(nullptr)
+        Image(Format format_ = Format::Unknown,
+              uint32_t width_ = 0,
+              uint32_t height_ = 0,
+              uint32_t depth_ = 0,
+              uint32_t channels_ = 0,
+              size_t size_ = 0,
+              const uint8_t* data_ = nullptr)
+            : format(format_), width(width_), height(height_), depth(depth_),
+              channels(channels_), size(size_), data(data_)
         {
         }
 
@@ -78,9 +89,11 @@ namespace rainbow
             switch (format)
             {
                 case Format::ATITC:
+                case Format::BC1:
+                case Format::BC2:
+                case Format::BC3:
                 case Format::ETC1:
                 case Format::PVRTC:
-                case Format::S3TC:
                     break;
 
                 case Format::PNG:
@@ -91,52 +104,6 @@ namespace rainbow
             }
         }
     };
-}  // namespace rainbow
-
-#include "Graphics/OpenGL.h"
-#if defined(RAINBOW_OS_IOS)
-#    include "Graphics/Decoders/UIKit.h"
-#else
-#    include "Graphics/Decoders/PNG.h"
-#    include "Graphics/Decoders/SVG.h"
-#endif
-#ifdef GL_IMG_texture_compression_pvrtc
-#    include "Graphics/Decoders/PVRTC.h"
-#endif  // GL_IMG_texture_compression_pvrtc
-#ifdef GL_EXT_texture_compression_s3tc
-#    include "Graphics/Decoders/DDS.h"
-#endif  // GL_EXT_texture_compression_s3tc
-
-namespace rainbow
-{
-    Image Image::decode(const Data& data, [[maybe_unused]] float scale)
-    {
-#ifdef USE_DDS
-        if (dds::check(data))
-            return dds::decode(data);
-#endif  // USE_DDS
-
-#ifdef USE_PVRTC
-        if (pvrtc::check(data))
-            return pvrtc::decode(data);
-#endif  // USE_PVRTC
-
-#ifdef USE_PNG
-        if (png::check(data))
-            return png::decode(data);
-#endif  // USE_PNG
-
-#ifdef USE_SVG
-        if (svg::check(data))
-            return svg::decode(data, scale);
-#endif  // USE_SVG
-
-#ifdef USE_UIKIT
-        return uikit::decode(data);
-#else
-        return {};
-#endif
-    }
 }  // namespace rainbow
 
 #endif

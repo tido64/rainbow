@@ -72,6 +72,7 @@ set(SOURCE_FILES
     src/Graphics/Drawable.h
     src/Graphics/ElementBuffer.cpp
     src/Graphics/ElementBuffer.h
+    src/Graphics/Image.cpp
     src/Graphics/Image.h
     src/Graphics/Label.cpp
     src/Graphics/Label.h
@@ -193,7 +194,6 @@ else()
     )
   elseif(APPLE)
     list(APPEND SOURCE_FILES
-        src/Graphics/Decoders/UIKit.h
         src/Heimdall/impl/ChangeMonitor.mac.cpp
         src/Platform/impl/SystemInfo.apple.cpp
     )
@@ -241,6 +241,7 @@ if(UNIT_TESTS)
       src/Tests/FileSystem/FileSystem.test.cc
       src/Tests/Graphics/Animation.test.cc
       src/Tests/Graphics/Decoders.test.cc
+      src/Tests/Graphics/Image.test.cc
       src/Tests/Graphics/RenderQueue.test.cc
       src/Tests/Graphics/Sprite.test.cc
       src/Tests/Graphics/SpriteBatch.test.cc

@@ -10,47 +10,41 @@
 
 #include <png.h>
 
-#define USE_PNG
-
 namespace png
 {
     bool check(const rainbow::Data& data)
     {
-        return png_sig_cmp(data.as<png_const_bytep>(), 0, 8) == 0;
+        constexpr uint8_t png_signature[8]{137, 80, 78, 71, 13, 10, 26, 10};
+        return memcmp(data.bytes(), png_signature, sizeof(png_signature)) == 0;
     }
 
     auto decode(const rainbow::Data& data)
     {
-        rainbow::Image image{rainbow::Image::Format::PNG};
+        using rainbow::Image;
 
         png_image pi{};
         pi.version = PNG_IMAGE_VERSION;
 
         auto memory = data.as<png_const_voidp>();
         if (!png_image_begin_read_from_memory(&pi, memory, data.size()))
-            return image;
+            return Image(Image::Format::PNG);
 
-        image.width = pi.width;
-        image.height = pi.height;
-        if (PNG_IMAGE_PIXEL_CHANNELS(pi.format) == 2)
-        {
-            pi.format = PNG_FORMAT_GA;
-            image.depth = PNG_IMAGE_SAMPLE_SIZE(PNG_FORMAT_GA) * 8;
-            image.channels = PNG_IMAGE_SAMPLE_CHANNELS(PNG_FORMAT_GA);
-        }
-        else
-        {
-            pi.format = PNG_FORMAT_RGBA;
-            image.depth = PNG_IMAGE_SAMPLE_SIZE(PNG_FORMAT_RGBA) * 8;
-            image.channels = PNG_IMAGE_SAMPLE_CHANNELS(PNG_FORMAT_RGBA);
-        }
+        pi.format = PNG_IMAGE_PIXEL_CHANNELS(pi.format) == 2 ? PNG_FORMAT_GA
+                                                             : PNG_FORMAT_RGBA;
 
-        auto buffer = std::make_unique<uint8_t[]>(PNG_IMAGE_SIZE(pi));
+        const auto size = PNG_IMAGE_SIZE(pi);
+        auto buffer = std::make_unique<uint8_t[]>(size);
         png_image_finish_read(
             &pi, nullptr, buffer.get(), PNG_IMAGE_ROW_STRIDE(pi), nullptr);
-        image.data = buffer.release();
 
-        return image;
+        return Image(  //
+            Image::Format::PNG,
+            pi.width,
+            pi.height,
+            /* depth */ PNG_IMAGE_SAMPLE_SIZE(pi.format) * 8,
+            /* channels */ PNG_IMAGE_SAMPLE_CHANNELS(pi.format),
+            size,
+            buffer.release());
     }
 }  // namespace png
 

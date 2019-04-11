@@ -6,10 +6,7 @@
 
 #include "Common/Data.h"
 #include "Graphics/OpenGL.h"
-#ifndef RAINBOW_OS_IOS
-#    define USE_PNG 1
-#    define USE_SVG 1
-#endif
+
 #ifdef GL_IMG_texture_compression_pvrtc
 #    define USE_PVRTC 1
 #endif
@@ -35,7 +32,6 @@ TEST(DecodersTest, DetectsDDS)
 }
 #endif  // USE_DDS
 
-#ifdef USE_PNG
 namespace png
 {
     extern bool check(const Data& data);
@@ -49,7 +45,6 @@ TEST(DecodersTest, DetectsPNG)
     ASSERT_TRUE(png::check(Data::from_bytes(kPNGSignature)));
     ASSERT_FALSE(png::check(Data::from_bytes(kNotPNGSignature)));
 }
-#endif  // USE_PNG
 
 #ifdef USE_PVRTC
 namespace pvrtc
@@ -67,7 +62,6 @@ TEST(DecodersTest, DetectsPVRTC)
 }
 #endif  // USE_PVRTC
 
-#ifdef USE_SVG
 namespace svg
 {
     extern bool check(const Data& data);
@@ -81,4 +75,3 @@ TEST(DecodersTest, DetectsSVG)
     ASSERT_TRUE(svg::check(Data::from_bytes(kSVGSignature)));
     ASSERT_FALSE(svg::check(Data::from_bytes(kNotSVGSignature)));
 }
-#endif  // USE_SVG
