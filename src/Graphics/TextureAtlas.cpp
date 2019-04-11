@@ -18,6 +18,81 @@ using rainbow::TextureAtlas;
 using rainbow::graphics::Texture;
 using rainbow::graphics::TextureManager;
 
+#if defined(GL_OES_compressed_ETC1_RGB8_texture) ||                            \
+    defined(GL_IMG_texture_compression_pvrtc) ||                               \
+    defined(GL_EXT_texture_compression_s3tc)
+#    define RAINBOW_SUPPORTS_COMPRESSED_TEXTURES
+#endif
+
+namespace
+{
+#ifdef RAINBOW_SUPPORTS_COMPRESSED_TEXTURES
+    constexpr auto compression_format(const Image& image)
+    {
+        switch (image.format)
+        {
+#    ifdef GL_OES_compressed_ETC1_RGB8_texture
+            case Image::Format::ETC1:
+                return GL_ETC1_RGB8_OES;
+#    endif  // ETC1
+#    ifdef GL_IMG_texture_compression_pvrtc
+            case Image::Format::PVRTC:
+                R_ASSERT(
+                    image.depth == 2 || image.depth == 4, kInvalidColorDepth);
+                R_ASSERT(image.channels == 3 || image.channels == 4,
+                         "Invalid number of colour channels");
+                if (image.channels == 3)
+                {
+                    return image.depth == 2
+                               ? GL_COMPRESSED_RGB_PVRTC_2BPPV1_IMG
+                               : GL_COMPRESSED_RGB_PVRTC_4BPPV1_IMG;
+                }
+                return image.depth == 2 ? GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG
+                                        : GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG;
+#    endif  // PVRTC
+#    ifdef GL_EXT_texture_compression_s3tc
+            case Image::Format::BC1:
+                return image.channels == 4 ? GL_COMPRESSED_RGBA_S3TC_DXT1_EXT
+                                           : GL_COMPRESSED_RGB_S3TC_DXT1_EXT;
+            case Image::Format::BC2:
+                return GL_COMPRESSED_RGBA_S3TC_DXT3_EXT;
+            case Image::Format::BC3:
+                return GL_COMPRESSED_RGBA_S3TC_DXT5_EXT;
+#    endif  // DDS
+            default:
+                R_ASSERT(false, "Unknown compressed texture format");
+                return 0;
+        }
+    }
+#endif  // RAINBOW_SUPPORTS_COMPRESSED_TEXTURES
+
+    constexpr auto internal_format(const Image& image)
+    {
+        switch (image.channels)
+        {
+            case 1:
+                R_ASSERT(image.depth == 8, kInvalidColorDepth);
+                return std::make_tuple(GL_LUMINANCE, GL_LUMINANCE);
+            case 2:
+                R_ASSERT(image.depth == 16, kInvalidColorDepth);
+                return std::make_tuple(GL_LUMINANCE_ALPHA, GL_LUMINANCE_ALPHA);
+            case 3:
+                R_ASSERT(image.depth == 16 || image.depth == 24,  //
+                         kInvalidColorDepth);
+                return std::make_tuple(
+                    GL_RGB, image.depth == 16 ? GL_RGBA4 : GL_RGBA8);
+            case 4:
+                R_ASSERT(image.depth == 16 || image.depth == 32,  //
+                         kInvalidColorDepth);
+                return std::make_tuple(
+                    GL_RGBA, image.depth == 16 ? GL_RGBA4 : GL_RGBA8);
+            default:
+                R_ASSERT(false, "Unknown image format");
+                return std::make_tuple(GL_RGBA, GL_RGBA8);
+        }
+    }
+}  // namespace
+
 TextureAtlas::TextureAtlas(czstring path, float scale)
 {
     texture_ = TextureManager::Get()->create(
@@ -62,10 +137,11 @@ void TextureAtlas::set_regions(const ArrayView<int>& rectangles)
     regions_.reserve(rectangles.size() / 4);
     for (size_t i = 0; i < rectangles.size(); i += 4)
     {
-        add_region(rectangles[i],
-                   rectangles[i + 1],
-                   rectangles[i + 2],
-                   rectangles[i + 3]);
+        add_region(  //
+            rectangles[i],
+            rectangles[i + 1],
+            rectangles[i + 2],
+            rectangles[i + 3]);
     }
 }
 
@@ -82,97 +158,36 @@ void TextureAtlas::load(TextureManager& texture_manager,
 
     switch (image.format)
     {
-#ifdef GL_OES_compressed_ETC1_RGB8_texture
-        case Image::Format::ETC1:
-            texture_manager.upload_compressed(
-                texture, GL_ETC1_RGB8_OES, image.width, image.height,
-                image.size, image.data);
-            break;
-#endif  // ETC1
-#ifdef GL_IMG_texture_compression_pvrtc
-        case Image::Format::PVRTC: {
-            R_ASSERT(image.depth == 2 || image.depth == 4, kInvalidColorDepth);
-            R_ASSERT(image.channels == 3 || image.channels == 4,
-                     "Invalid number of colour channels");
-            GLint internal = 0;
-            if (image.channels == 3)
-            {
-                internal = (image.depth == 2
-                    ? GL_COMPRESSED_RGB_PVRTC_2BPPV1_IMG
-                    : GL_COMPRESSED_RGB_PVRTC_4BPPV1_IMG);
-            }
-            else
-            {
-                internal = (image.depth == 2
-                    ? GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG
-                    : GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG);
-            }
-            texture_manager.upload_compressed(
-                texture, internal, image.width, image.height, image.size,
-                image.data);
-            break;
-        }
-#endif  // PVRTC
-#ifdef GL_EXT_texture_compression_s3tc
+#ifdef RAINBOW_SUPPORTS_COMPRESSED_TEXTURES
+#    ifdef GL_EXT_texture_compression_s3tc
         case Image::Format::BC1:
-            texture_manager.upload_compressed(  //
-                texture,
-                image.channels == 4 ? GL_COMPRESSED_RGBA_S3TC_DXT1_EXT
-                                    : GL_COMPRESSED_RGB_S3TC_DXT1_EXT,
-                image.width,
-                image.height,
-                static_cast<uint32_t>(image.size),
-                image.data);
-            break;
         case Image::Format::BC2:
-            texture_manager.upload_compressed(  //
-                texture,
-                GL_COMPRESSED_RGBA_S3TC_DXT3_EXT,
-                image.width,
-                image.height,
-                static_cast<uint32_t>(image.size),
-                image.data);
-            break;
         case Image::Format::BC3:
+#    endif
+#    ifdef GL_OES_compressed_ETC1_RGB8_texture
+        case Image::Format::ETC1:
+#    endif
+#    ifdef GL_IMG_texture_compression_pvrtc
+        case Image::Format::PVRTC:
+#    endif
             texture_manager.upload_compressed(  //
                 texture,
-                GL_COMPRESSED_RGBA_S3TC_DXT5_EXT,
+                compression_format(image),
                 image.width,
                 image.height,
                 static_cast<uint32_t>(image.size),
                 image.data);
             break;
-#endif  // DDS
-        default: {
-            GLint format = 0;
-            GLint internal = 0;
-            switch (image.channels)
-            {
-                case 1:
-                    R_ASSERT(image.depth == 8, kInvalidColorDepth);
-                    format = GL_LUMINANCE;
-                    internal = GL_LUMINANCE;
-                    break;
-                case 2:
-                    R_ASSERT(image.depth == 16, kInvalidColorDepth);
-                    format = GL_LUMINANCE_ALPHA;
-                    internal = GL_LUMINANCE_ALPHA;
-                    break;
-                case 3:
-                    R_ASSERT(image.depth == 16 || image.depth == 24,
-                             kInvalidColorDepth);
-                    format = GL_RGB;
-                    internal = (image.depth == 16 ? GL_RGBA4 : GL_RGBA8);
-                    break;
-                case 4:
-                    R_ASSERT(image.depth == 16 || image.depth == 32,
-                             kInvalidColorDepth);
-                    format = GL_RGBA;
-                    internal = (image.depth == 16 ? GL_RGBA4 : GL_RGBA8);
-                    break;
-            }
-            texture_manager.upload(
-                texture, internal, image.width, image.height, format,
+#endif  // RAINBOW_SUPPORTS_COMPRESSED_TEXTURES
+        default:
+        {
+            const auto [format, internal] = internal_format(image);
+            texture_manager.upload(  //
+                texture,
+                internal,
+                image.width,
+                image.height,
+                format,
                 image.data);
             break;
         }
