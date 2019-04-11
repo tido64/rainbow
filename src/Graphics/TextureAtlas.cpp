@@ -9,6 +9,12 @@
 #include "Graphics/OpenGL.h"
 #include "Graphics/TextureManager.h"
 
+#if defined(GL_OES_compressed_ETC1_RGB8_texture) ||                            \
+    defined(GL_IMG_texture_compression_pvrtc) ||                               \
+    defined(GL_EXT_texture_compression_s3tc)
+#    define RAINBOW_HAS_COMPRESSED_TEXTURES
+#endif
+
 #define kInvalidColorDepth "Invalid colour depth"
 
 using rainbow::czstring;
@@ -18,15 +24,9 @@ using rainbow::TextureAtlas;
 using rainbow::graphics::Texture;
 using rainbow::graphics::TextureManager;
 
-#if defined(GL_OES_compressed_ETC1_RGB8_texture) ||                            \
-    defined(GL_IMG_texture_compression_pvrtc) ||                               \
-    defined(GL_EXT_texture_compression_s3tc)
-#    define RAINBOW_SUPPORTS_COMPRESSED_TEXTURES
-#endif
-
 namespace
 {
-#ifdef RAINBOW_SUPPORTS_COMPRESSED_TEXTURES
+#ifdef RAINBOW_HAS_COMPRESSED_TEXTURES
     constexpr auto compression_format(const Image& image)
     {
         switch (image.format)
@@ -64,7 +64,7 @@ namespace
                 return 0;
         }
     }
-#endif  // RAINBOW_SUPPORTS_COMPRESSED_TEXTURES
+#endif  // RAINBOW_HAS_COMPRESSED_TEXTURES
 
     constexpr auto internal_format(const Image& image)
     {
@@ -158,7 +158,7 @@ void TextureAtlas::load(TextureManager& texture_manager,
 
     switch (image.format)
     {
-#ifdef RAINBOW_SUPPORTS_COMPRESSED_TEXTURES
+#ifdef RAINBOW_HAS_COMPRESSED_TEXTURES
 #    ifdef GL_EXT_texture_compression_s3tc
         case Image::Format::BC1:
         case Image::Format::BC2:
@@ -178,7 +178,7 @@ void TextureAtlas::load(TextureManager& texture_manager,
                 static_cast<uint32_t>(image.size),
                 image.data);
             break;
-#endif  // RAINBOW_SUPPORTS_COMPRESSED_TEXTURES
+#endif  // RAINBOW_HAS_COMPRESSED_TEXTURES
         default:
         {
             const auto [format, internal] = internal_format(image);
