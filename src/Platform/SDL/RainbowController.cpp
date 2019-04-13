@@ -12,6 +12,7 @@
 #include "Platform/SDL/Context.h"
 
 using rainbow::Config;
+using rainbow::ControllerID;
 using rainbow::RainbowController;
 using rainbow::SDLContext;
 using rainbow::Vec2i;
@@ -165,7 +166,7 @@ bool RainbowController::run()
             case SDL_CONTROLLERAXISMOTION:
                 director_.input().on_controller_axis_motion(
                     ControllerAxisMotion{
-                        static_cast<uint32_t>(event.caxis.which),
+                        event.caxis.which,
                         static_cast<ControllerAxis>(event.caxis.axis),
                         event.caxis.value,
                         event.caxis.timestamp});
@@ -173,7 +174,7 @@ bool RainbowController::run()
             case SDL_CONTROLLERBUTTONDOWN:
                 director_.input().on_controller_button_down(
                     ControllerButtonEvent{
-                        static_cast<uint32_t>(event.cbutton.which),
+                        event.cbutton.which,
                         static_cast<ControllerButton>(event.cbutton.button),
                         event.cbutton.timestamp});
                 break;
@@ -210,7 +211,7 @@ bool RainbowController::run()
     return true;
 }
 
-void RainbowController::on_controller_connected(int device_index)
+void RainbowController::on_controller_connected(ControllerID device_index)
 {
     if (SDL_IsGameController(device_index) == 0)
         return;
@@ -221,7 +222,7 @@ void RainbowController::on_controller_connected(int device_index)
     director_.input().on_controller_connected(id);
 }
 
-void RainbowController::on_controller_disconnected(int instance_id)
+void RainbowController::on_controller_disconnected(ControllerID instance_id)
 {
     for (auto i = game_controllers_.begin(); i < game_controllers_.end(); ++i)
     {

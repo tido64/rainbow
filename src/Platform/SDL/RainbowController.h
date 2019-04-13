@@ -33,8 +33,8 @@ namespace rainbow
         const bool suspend_on_focus_lost_;
         std::vector<GameController> game_controllers_;
 
-        void on_controller_connected(int device_index);
-        void on_controller_disconnected(int instance_id);
+        void on_controller_connected(ControllerID device_index);
+        void on_controller_disconnected(ControllerID instance_id);
 
         void on_mouse_down(uint32_t button,
                            const Vec2i& point,

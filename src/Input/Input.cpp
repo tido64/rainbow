@@ -10,6 +10,7 @@
 
 using rainbow::ControllerAxisMotion;
 using rainbow::ControllerButtonEvent;
+using rainbow::ControllerID;
 using rainbow::Input;
 using rainbow::InputListener;
 using rainbow::KeyStroke;
@@ -17,10 +18,10 @@ using rainbow::Passkey;
 using rainbow::Pointer;
 using rainbow::VirtualKey;
 
-constexpr unsigned int Input::kNumSupportedControllers;  // NOLINT(readability-redundant-declaration)
+constexpr uint32_t Input::kNumSupportedControllers;  // NOLINT(readability-redundant-declaration)
 
 template <typename F>
-void Input::process_controller(unsigned int id, F&& process)
+void Input::process_controller(ControllerID id, F&& process)
 {
     for (auto i = 0u; i < controllers_.size(); ++i)
     {
@@ -96,15 +97,16 @@ void Input::on_controller_button_up(const ControllerButtonEvent& button)
     });
 }
 
-void Input::on_controller_connected(unsigned int id)
+void Input::on_controller_connected(ControllerID id)
 {
-    int port = -1;
+    int32_t port = -1;
     for (auto i = 0u; i < controllers_.size(); ++i)
     {
-        if (controllers_[i].id() == id)
+        auto& controller = controllers_[i];
+        if (controller.id() == id)
             return;
 
-        if (port < 0 && !controllers_[i].is_assigned())
+        if (port < 0 && !controller.is_assigned())
             port = narrow_cast<int>(i);
     }
 
@@ -114,12 +116,13 @@ void Input::on_controller_connected(unsigned int id)
     controllers_[port].assign(id);
     LOGI("Controller %u plugged into port %d", id, port + 1);
 
-    for_each(next(), [port](InputListener& listener) {
-        return listener.on_controller_connected(port);
-    });
+    for_each(
+        next(), [port = static_cast<uint32_t>(port)](InputListener& listener) {
+            return listener.on_controller_connected(port);
+        });
 }
 
-void Input::on_controller_disconnected(unsigned int id)
+void Input::on_controller_disconnected(ControllerID id)
 {
     process_controller(id, [this](unsigned int i) {
         auto& controller = controllers_[i];

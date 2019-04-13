@@ -138,9 +138,10 @@ JavaScript::JavaScript(Director& director)
     duk_pop(context_);
 }
 
-bool JavaScript::update_controller_id(unsigned int i)
+bool JavaScript::update_controller_id(uint32_t port)
 {
-    duk::update_controller_id(context_, i, input().controller_states()[i].id());
+    const auto controller_id = input().controller_states()[port].id();
+    duk::update_controller_id(context_, port, controller_id);
     return true;
 }
 
@@ -173,14 +174,14 @@ void JavaScript::on_memory_warning_impl()
     duk_gc(context_, DUK_GC_COMPACT);
 }
 
-bool JavaScript::on_controller_connected_impl(unsigned int i)
+bool JavaScript::on_controller_connected_impl(uint32_t port)
 {
-    return update_controller_id(i);
+    return update_controller_id(port);
 }
 
-bool JavaScript::on_controller_disconnected_impl(unsigned int i)
+bool JavaScript::on_controller_disconnected_impl(uint32_t port)
 {
-    return update_controller_id(i);
+    return update_controller_id(port);
 }
 
 bool JavaScript::on_pointer_began_impl(const ArrayView<Pointer>& pointers)

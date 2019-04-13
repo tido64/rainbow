@@ -104,8 +104,8 @@ namespace rainbow
         void on_controller_axis_motion(const ControllerAxisMotion&);
         void on_controller_button_down(const ControllerButtonEvent&);
         void on_controller_button_up(const ControllerButtonEvent&);
-        void on_controller_connected(unsigned int id);
-        void on_controller_disconnected(unsigned int id);
+        void on_controller_connected(ControllerID id);
+        void on_controller_disconnected(ControllerID id);
 
         void on_key_down(const KeyStroke&);
         void on_key_up(const KeyStroke&);
@@ -146,7 +146,7 @@ namespace rainbow
         InputListener* last_listener_;
 
         template <typename F>
-        void process_controller(unsigned int id, F&& process);
+        void process_controller(ControllerID id, F&& process);
     };
 }  // namespace rainbow
 

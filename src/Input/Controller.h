@@ -18,6 +18,8 @@
 
 namespace rainbow
 {
+    using ControllerID = int32_t;
+
     enum class ControllerAxis
     {
         Invalid = -1,
@@ -53,7 +55,7 @@ namespace rainbow
 
     struct ControllerAxisMotion
     {
-        uint32_t id;
+        ControllerID id;
         ControllerAxis axis;
         int32_t value;
         uint64_t timestamp;
@@ -63,7 +65,7 @@ namespace rainbow
         {
         }
 
-        ControllerAxisMotion(uint32_t id_,
+        ControllerAxisMotion(ControllerID id_,
                              ControllerAxis axis_,
                              int32_t value_,
                              uint64_t timestamp_)
@@ -74,7 +76,7 @@ namespace rainbow
 
     struct ControllerButtonEvent
     {
-        uint32_t id;
+        ControllerID id;
         ControllerButton button;
         uint64_t timestamp;
 
@@ -83,7 +85,7 @@ namespace rainbow
         {
         }
 
-        ControllerButtonEvent(uint32_t id_,
+        ControllerButtonEvent(ControllerID id_,
                               ControllerButton button_,
                               uint64_t timestamp_)
             : id(id_), button(button_), timestamp(timestamp_)
@@ -98,18 +100,17 @@ namespace rainbow
         using ButtonStates =
             std::array<bool, to_underlying_type(ControllerButton::Count)>;
 
-        static constexpr uint32_t kNoController =
-            std::numeric_limits<uint32_t>::max();
+        static constexpr ControllerID kNoController = -1;
 
     public:
-        ControllerState() : id_(kNoController), buttons_({}), axes_({}) {}
+        ControllerState() : id_(kNoController), buttons_{}, axes_{} {}
 
         auto axes() const -> const AxisStates& { return axes_; }
         auto buttons() const -> const ButtonStates& { return buttons_; }
         auto id() const { return id_; }
         bool is_assigned() const { return id_ != kNoController; }
 
-        void assign(uint32_t id) { id_ = id; }
+        void assign(ControllerID id) { id_ = id; }
 
         auto axis(ControllerAxis axis) const
         {
@@ -160,7 +161,7 @@ namespace rainbow
 #endif  // RAINBOW_TEST
 
     private:
-        uint32_t id_;
+        ControllerID id_;
         ButtonStates buttons_;
         AxisStates axes_;
     };
