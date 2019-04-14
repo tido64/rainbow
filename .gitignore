@@ -12,6 +12,7 @@
 .idea/
 .pnp/
 .vs/
+.vscode/ipch/
 CMakeBuild/
 Rainbow.sublime-workspace
 build/android/app/build/

@@ -82,9 +82,6 @@
       <ExpandedItem>regions_</ExpandedItem>
     </Expand>
   </Type>
-  <Type Name="rainbow::filesystem::Path">
-    <DisplayString>{path_,s8}</DisplayString>
-  </Type>
   <Type Name="rainbow::graphics::Buffer">
     <DisplayString>{{name={id_}}}</DisplayString>
   </Type>

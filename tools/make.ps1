@@ -5,7 +5,8 @@
 param (
 	[switch]$Clean,
 	[switch]$Generate,
-	[switch]$Help)
+	[switch]$Help
+)
 
 $SourcePath = Join-Path (Split-Path (Get-Variable MyInvocation).Value.MyCommand.Path) .. -Resolve
 
@@ -14,8 +15,6 @@ $HeimdallDescription = "Enable Heimdall debugging facilities"
 $PhysicsDescription = "Enable physics module (Box2D)"
 $SpineDescription = "Enable Spine runtime"
 $UnitTestsDescription = "Enable unit tests"
-
-$Shell = New-Object -ComObject Shell.Application
 
 function Make
 {
@@ -47,23 +46,6 @@ elseif ($Generate) {
 }
 else {
 	Add-Type -AssemblyName System.Windows.Forms
-
-	$OutputFolder = ""
-	while ([string]::IsNullOrEmpty($OutputFolder)) {
-		$BuildFolder = $Shell.BrowseForFolder(0, "Please select an empty folder for building Rainbow", 0x1)
-		if ([string]::IsNullOrEmpty($BuildFolder.Self.Path)) {
-			exit
-		}
-		if ([string]::Compare($BuildFolder, $SourcePath, [StringComparison]::InvariantCultureIgnoreCase) -ne 0) {
-			$OutputFolder = $BuildFolder.Self.Path
-			break
-		}
-		[void][System.Windows.Forms.MessageBox]::Show(
-			"Please choose an empty folder outside the repository.",
-			"Cannot build inside the repository.",
-			[System.Windows.Forms.MessageBoxButtons]::OK,
-			[System.Windows.Forms.MessageBoxIcon]::Information)
-	}
 
 	$UnitTestsCheckBox = New-Object System.Windows.Forms.CheckBox -Property @{
 		AutoSize = $true
@@ -114,7 +96,8 @@ else {
 		$HeimdallCheckBox,
 		$PhysicsCheckBox,
 		$SpineCheckBox,
-		$ButtonLayout));
+		$ButtonLayout
+	));
 
 	$Form = New-Object System.Windows.Forms.Form -Property @{
 		AcceptButton = $AcceptButton
@@ -153,7 +136,7 @@ else {
 		$Options += "-DUSE_SPINE=1"
 	}
 
-	Push-Location $OutputFolder
+	Push-Location $SourcePath\build\windows
 	Make $Options
 	Pop-Location
 }
