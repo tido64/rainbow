@@ -55,7 +55,8 @@ well.
    select _Run with PowerShell_. You can dismiss any prompts about execution
    policy.
 
-5. When Visual Studio opens the project, simply hit `F5` to build and run.
+5. When Visual Studio opens the project, right-click on `rainbow` and select
+   `Set as StartUp Project`. Then hit `F5` to build and run.
 
 ## Building for macOS
 

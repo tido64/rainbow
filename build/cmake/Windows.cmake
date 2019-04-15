@@ -3,8 +3,8 @@ if(WIN32)
   list(APPEND RESOURCE_FILES
       .editorconfig
       build/cmake/Windows.cmake
-      build/windows/Rainbow.natvis
-      build/windows/Rainbow.rc
+      src/Resources/Rainbow.natvis
+      src/Resources/Rainbow.rc
   )
   add_definitions(
       -D_CRT_SECURE_NO_WARNINGS=1
