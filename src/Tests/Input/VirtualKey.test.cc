@@ -48,9 +48,9 @@ TEST(VirtualKeyTest, MapsKeyMods)
         {KMOD_RALT, KeyMods::RightAlt},
         {KMOD_LGUI, KeyMods::LeftSuper},
         {KMOD_RGUI, KeyMods::RightSuper},
-        {KMOD_NUM, KeyMods::KeyMods::None},   // Unimplemented
-        {KMOD_CAPS, KeyMods::KeyMods::None},  // Unimplemented
-        {KMOD_MODE, KeyMods::KeyMods::None},  // Unimplemented
+        {KMOD_NUM, KeyMods::None},   // Unimplemented
+        {KMOD_CAPS, KeyMods::None},  // Unimplemented
+        {KMOD_MODE, KeyMods::None},  // Unimplemented
         // Left + right combinations
         {KMOD_CTRL, KeyMods::Ctrl},
         {KMOD_SHIFT, KeyMods::Shift},
