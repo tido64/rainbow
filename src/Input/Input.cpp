@@ -137,8 +137,7 @@ void Input::on_controller_disconnected(ControllerID id)
 
 void Input::on_key_down(const KeyStroke& k)
 {
-    R_ASSERT(to_underlying_type(k.key) >= 0 && k.key < VirtualKey::KeyCount,
-             kInvalidVirtualKey);
+    R_ASSERT(k.key < VirtualKey::KeyCount, kInvalidVirtualKey);
 
     keys_[to_underlying_type(k.key)] = true;
     for_each(next(), [&k](InputListener& listener) {  //
@@ -148,8 +147,7 @@ void Input::on_key_down(const KeyStroke& k)
 
 void Input::on_key_up(const KeyStroke& k)
 {
-    R_ASSERT(to_underlying_type(k.key) >= 0 && k.key < VirtualKey::KeyCount,
-             kInvalidVirtualKey);
+    R_ASSERT(k.key < VirtualKey::KeyCount, kInvalidVirtualKey);
 
     keys_[to_underlying_type(k.key)] = false;
     for_each(next(), [&k](InputListener& listener) {  //

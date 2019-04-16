@@ -10,7 +10,7 @@
 namespace rainbow
 {
     /// <summary>Virtual key codes.</summary>
-    enum class VirtualKey
+    enum class VirtualKey : uint32_t
     {
         Unknown,
         A,
@@ -136,6 +136,23 @@ namespace rainbow
         KeyCount
     };
 
+    namespace KeyMods
+    {
+        static constexpr uint32_t None = 0;
+        static constexpr uint32_t LeftShift = 1 << 0;
+        static constexpr uint32_t RightShift = 1 << 1;
+        static constexpr uint32_t Shift = LeftShift | RightShift;
+        static constexpr uint32_t LeftCtrl = 1 << 2;
+        static constexpr uint32_t RightCtrl = 1 << 3;
+        static constexpr uint32_t Ctrl = LeftCtrl | RightCtrl;
+        static constexpr uint32_t LeftAlt = 1 << 4;
+        static constexpr uint32_t RightAlt = 1 << 5;
+        static constexpr uint32_t Alt = LeftAlt | RightAlt;
+        static constexpr uint32_t LeftSuper = 1 << 6;
+        static constexpr uint32_t RightSuper = 1 << 7;
+        static constexpr uint32_t Super = LeftSuper | RightSuper;
+    }  // namespace KeyMods
+
     /// <summary>
     ///   Returns key code for the corresponding <see cref="VirtualKey"/>
     ///   according to the current keyboard layout.
@@ -152,23 +169,6 @@ namespace rainbow
     /// </summary>
     template <typename T>
     auto to_virtualkey(const T&) -> VirtualKey;
-
-    struct KeyMods
-    {
-        static constexpr uint32_t None        = 0;
-        static constexpr uint32_t LeftShift   = 1 << 0;
-        static constexpr uint32_t RightShift  = 1 << 1;
-        static constexpr uint32_t Shift       = LeftShift | RightShift;
-        static constexpr uint32_t LeftCtrl    = 1 << 2;
-        static constexpr uint32_t RightCtrl   = 1 << 3;
-        static constexpr uint32_t Ctrl        = LeftCtrl | RightCtrl;
-        static constexpr uint32_t LeftAlt     = 1 << 4;
-        static constexpr uint32_t RightAlt    = 1 << 5;
-        static constexpr uint32_t Alt         = LeftAlt | RightAlt;
-        static constexpr uint32_t LeftSuper   = 1 << 6;
-        static constexpr uint32_t RightSuper  = 1 << 7;
-        static constexpr uint32_t Super       = LeftSuper | RightSuper;
-    };
 
     struct KeyStroke
     {

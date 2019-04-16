@@ -37,10 +37,12 @@ namespace
     bool overlaps(const Quad& a, float ar, const Quad& b, float br)
     {
         int count = 4;
-        Vec2f axes[8]{(a.v1 - a.v0).normal().normalize(),
-                      (a.v2 - a.v1).normal().normalize(),
-                      (a.v3 - a.v2).normal().normalize(),
-                      (a.v0 - a.v3).normal().normalize()};
+        Vec2f axes[8]{
+            (a.v1 - a.v0).normal().normalize(),
+            (a.v2 - a.v1).normal().normalize(),
+            (a.v3 - a.v2).normal().normalize(),
+            (a.v0 - a.v3).normal().normalize(),
+        };
         if (!rainbow::are_equal(ar, br))
         {
             count = 8;
