@@ -462,11 +462,121 @@ const modules = [
 ];
 
 /**
- * Generates C++ bindings.
+ * Generate #includes.
+ * @param {TypeInfo[]} typeInfo
+ * @param {string[]} extraIncludes
+ * @returns {string[]}
+ */
+function generateIncludes(typeInfo, extraIncludes = []) {
+  return typeInfo
+    .map(type => type.source)
+    .concat(extraIncludes)
+    .sort()
+    .reduce(
+      (includes, p, i, typeInfo) => {
+        if (i === 0 || p !== typeInfo[i - 1]) {
+          const header =
+            p.lastIndexOf("../include/Rainbow/", 0) === 0
+              ? `<${p.replace("../include/", "")}>`
+              : `"${p}"`;
+          includes.push(`#include ${header}`);
+        }
+        return includes;
+      },
+      /** @type {string[]} */ ([])
+    );
+}
+
+/**
+ * @template T, U
+ * @param {T[]=} array
+ * @param {(value: T, index: number, array: T[]) => U} f
+ * @returns {U[]}
+ */
+function map(array, f) {
+  return !array ? [] : array.map(f);
+}
+
+/**
+ * Pre-processes specified type information.
+ * @param {TypeInfo} info
+ * @returns {TypeInfo}
+ */
+function preprocess(info) {
+  if (info.type !== "enum") {
+    return info;
+  }
+
+  const sourceFilePath = path.join(
+    sourcePath,
+    info.source.replace(/[/\\]+/g, path.sep)
+  );
+
+  // eslint-disable-next-line no-console
+  console.log(`${info.name} <- ${sourceFilePath}`);
+
+  const data = fs.readFileSync(sourceFilePath);
+  const marker = `${info.type}[\\s\\w]+?${info.sourceName}`;
+  const source = data.toString("utf8");
+  if (!new RegExp(marker, "g").test(source)) {
+    // eslint-disable-next-line no-console
+    console.error(`'${info.sourceName}' was not found in '${sourceFilePath}'`);
+    return info;
+  }
+
+  const re = new RegExp(`${marker}.*?{(.*?)};`, "g");
+  const matches = re.exec(source.replace(/\s+/g, " "));
+  if (!matches) {
+    // eslint-disable-next-line no-console
+    console.error(`Failed to extract values for '${info.sourceName}'`);
+    return info;
+  }
+
+  let count = -1;
+  return {
+    ...info,
+    values: matches[1].split(",").map(value => {
+      const parts = value.split("=");
+      count = parts[1] ? parseInt(parts[1]) : count + 1;
+      return {
+        name: parts[0].trim(),
+        integralValue: count
+      };
+    })
+  };
+}
+
+/**
+ * Returns a copy of the string in camelCase.
+ * @param {string} str
+ */
+function toCamelCase(str) {
+  return str
+    .split("")
+    .reduce(
+      (arr, char, index) => {
+        if (char === "_") {
+          return arr;
+        }
+
+        if (str[index - 1] === "_") {
+          arr.push(char.toUpperCase());
+        } else {
+          arr.push(char);
+        }
+        return arr;
+      },
+      /** @type {string[]} */ ([])
+    )
+    .join("");
+}
+
+/**
+ * Generates C++ bindings for Duktape.
  * @param {TypeInfo[]} typeInfo
  * @returns {string}
  */
-function generateCppBindings(typeInfo) {
+function duk_generateCppBindings(typeInfo) {
   /** @type {(typeInfo: ClassInfo) => string[]} */
   const defineClass = ({ ctor, methods, name, sourceName }) => {
     return [
@@ -523,27 +633,6 @@ function generateCppBindings(typeInfo) {
     ].join(EOL);
   };
 
-  /** @type {(typeInfo: TypeInfo[], extraIncludes?: string[]) => string[]} */
-  const includeHeaders = (typeInfo, extraIncludes = []) => {
-    return typeInfo
-      .map(type => type.source)
-      .concat(extraIncludes)
-      .sort()
-      .reduce(
-        (includes, p, i, typeInfo) => {
-          if (i === 0 || p !== typeInfo[i - 1]) {
-            const header =
-              p.lastIndexOf("../include/Rainbow/", 0) === 0
-                ? `<${p.replace("../include/", "")}>`
-                : `"${p}"`;
-            includes.push(`#include ${header}`);
-          }
-          return includes;
-        },
-        /** @type {string[]} */ ([])
-      );
-  };
-
   /** @type {(parameters: ParameterInfo[]) => string} */
   const joinTypeParams = parameters => {
     return parameters.map(p => p.type.replace(/&+$/g, "")).join(", ");
@@ -584,7 +673,7 @@ function generateCppBindings(typeInfo) {
     "#ifndef SCRIPT_JAVASCRIPT_MODULES_H_",
     "#define SCRIPT_JAVASCRIPT_MODULES_H_",
     "",
-    ...includeHeaders(typeInfo, [
+    ...generateIncludes(typeInfo, [
       "Common/TypeCast.h",
       "Common/TypeInfo.h",
       "Script/JavaScript/Helper.h"
@@ -604,6 +693,170 @@ function generateCppBindings(typeInfo) {
     "#endif",
     ""
   ].join(EOL);
+}
+
+/**
+ * Generates C++ bindings for V8.
+ * @param {TypeInfo[]} typeInfo
+ * @returns {string}
+ */
+function v8_generateCppBindings(typeInfo) {
+  /** @type {(parameters: ParameterInfo[], indentation: string) => string} */
+  const generateArguments = (parameters, indentation) =>
+    [
+      ...(parameters.length > 0
+        ? [`${indentation}auto context = isolate->GetCurrentContext();`]
+        : []),
+      ...parameters.map(
+        ({ name, type }, index) =>
+          `${indentation}auto ${name} = unwrap<${type}>(context, info[${index}]);`
+      ),
+      ...(parameters.length > 0 ? [""] : [])
+    ].join(EOL);
+
+  /** @type {(classInfo: ClassInfo, sourceName: string) => string} */
+  const defineClass = (
+    { name, ctor, methods },
+    sourceName
+  ) => `            constexpr MethodInfo ctor{${
+    !ctor
+      ? ""
+      : `
+                nullptr,
+                [](const v8::FunctionCallbackInfo<v8::Value>& info) {
+                    auto isolate = info.GetIsolate();
+                    v8::HandleScope handle_scope(isolate);
+
+                    if (!is_construct_call(
+                            info, "TypeError: ${name} is a constructor"))
+                    {
+                        return;
+                    }
+
+${generateArguments(
+  ctor,
+  "                    "
+)}                    auto ptr = make<${sourceName}>(${ctor
+          .map(({ name }) => name)
+          .join(", ")});
+                    set_reference(info.Holder(), ptr);
+                },
+                ${ctor ? ctor.length : 0},
+            `
+  }};
+            constexpr MethodInfo methods[]{
+                ${methods
+                  .map(
+                    ({ name, parameters, returnType }) =>
+                      `{
+                    "${name}",
+                    [](const v8::FunctionCallbackInfo<v8::Value>& info) {
+                        auto isolate = info.GetIsolate();
+                        v8::HandleScope handle_scope(isolate);
+${generateArguments(
+  parameters,
+  "                        "
+)}                        auto self = get_reference<${sourceName}>(info.Holder());
+                        ${(() => {
+                          const args = parameters
+                            .map(({ name }) => name)
+                            .join(", ");
+                          const call = `self->${name}(${args})`;
+                          switch (returnType) {
+                            case undefined:
+                            case "undefined":
+                              return `${call};`;
+
+                            case "TextAlignment":
+                              return `info.GetReturnValue().Set(to_underlying_type(${call}));`;
+
+                            case "bool":
+                            case "float":
+                            case "int":
+                            case "uint32_t":
+                              return `info.GetReturnValue().Set(${call});`;
+
+                            case "czstring":
+                              return `info.GetReturnValue().Set(
+                            v8::String::NewFromUtf8(isolate,
+                                                    ${call},
+                                                    v8::NewStringType::kNormal)
+                                .ToLocalChecked());`;
+
+                            default:
+                              return `info.GetReturnValue().Set(wrap(isolate, ${call}));`;
+                          }
+                        })()}
+                    },
+                    ${parameters.length},
+                },`
+                  )
+                  .join(`${EOL}                `)}
+            };
+            auto module = define_class(context, "${name}", ctor, ${
+    name === "Sprite" ? 2 : 1
+  }, methods);`;
+
+  /** @type {(enumInfo: EnumInfo) => string} */
+  const defineEnum = enumInfo => `            constexpr EnumValue values[]{
+                ${enumInfo.values
+                  .map(
+                    ({ name, integralValue }) =>
+                      `{"${name}", ${integralValue}},`
+                  )
+                  .join(`${EOL}                `)}
+            };
+            auto module = define_enum(context, values);`;
+
+  /** @type {(typeInfo: TypeInfo) => string} */
+  const defineModule = typeInfo => `        {
+${(() => {
+  switch (typeInfo.type) {
+    case "class": {
+      const m = /SharedPtr<(?:rainbow::)?(.*?)>/.exec(typeInfo.sourceName);
+      const sourceName = m ? m[1] : typeInfo.sourceName;
+      return defineClass(typeInfo, sourceName);
+    }
+    case "enum":
+      return defineEnum(typeInfo);
+    case "module":
+      return "";
+  }
+})()}
+            set_module(context, rainbow, "${typeInfo.name}", module);
+        }`;
+
+  return `${makeBanner(__filename)}
+
+#ifndef SCRIPT_V8_BINDINGS_G_H_
+#define SCRIPT_V8_BINDINGS_G_H_
+
+// clang-format off
+
+#include "Script/V8/BindingHelpers.h"
+
+namespace rainbow::js
+{
+    [[nodiscard]] auto generate_bindings(v8::Local<v8::Context> context)
+    {
+        auto isolate = context->GetIsolate();
+        v8::EscapableHandleScope handle_scope(isolate);
+
+        auto rainbow = v8::Object::New(isolate);
+${typeInfo
+  .filter(({ type }) => type !== "module")
+  .map(defineModule)
+  .join(EOL)}
+
+        rainbow->SetIntegrityLevel(context, v8::IntegrityLevel::kFrozen);
+        return handle_scope.Escape(rainbow);
+    }
+}  // namespace rainbow::js
+
+// clang-format on
+
+#endif
+`;
 }
 
 /**
@@ -749,95 +1002,15 @@ ${typeInfo.map(m => declareType(m)).join(`${EOL}${EOL}`)}
 `;
 }
 
-/**
- * @template T, U
- * @param {T[]=} array
- * @param {(value: T, index: number, array: T[]) => U} f
- * @returns {U[]}
- */
-function map(array, f) {
-  return !array ? [] : array.map(f);
-}
-
-/**
- * Pre-processes specified type information.
- * @param {TypeInfo} info
- * @returns {TypeInfo}
- */
-function preprocess(info) {
-  if (info.type !== "enum") {
-    return info;
-  }
-
-  const sourceFilePath = path.join(
-    sourcePath,
-    info.source.replace(/[/\\]+/g, path.sep)
-  );
-
-  // eslint-disable-next-line no-console
-  console.log(`${info.name} <- ${sourceFilePath}`);
-
-  const data = fs.readFileSync(sourceFilePath);
-  const marker = `${info.type}[\\s\\w]+?${info.sourceName}`;
-  const source = data.toString("utf8");
-  if (!new RegExp(marker, "g").test(source)) {
-    // eslint-disable-next-line no-console
-    console.error(`'${info.sourceName}' was not found in '${sourceFilePath}'`);
-    return info;
-  }
-
-  const re = new RegExp(`${marker}.*?{(.*?)};`, "g");
-  const matches = re.exec(source.replace(/\s+/g, " "));
-  if (!matches) {
-    // eslint-disable-next-line no-console
-    console.error(`Failed to extract values for '${info.sourceName}'`);
-    return info;
-  }
-
-  let count = -1;
-  return {
-    ...info,
-    values: matches[1].split(",").map(value => {
-      const parts = value.split("=");
-      count = parts[1] ? parseInt(parts[1]) : count + 1;
-      return {
-        name: parts[0].trim(),
-        integralValue: count
-      };
-    })
-  };
-}
-
-/**
- * Returns a copy of the string in camelCase.
- * @param {string} str
- */
-function toCamelCase(str) {
-  return str
-    .split("")
-    .reduce(
-      (arr, char, index) => {
-        if (char === "_") {
-          return arr;
-        }
-
-        if (str[index - 1] === "_") {
-          arr.push(char.toUpperCase());
-        } else {
-          arr.push(char);
-        }
-        return arr;
-      },
-      /** @type {string[]} */ ([])
-    )
-    .join("");
-}
-
 const typeInfo = modules.map(preprocess);
 [
   {
-    generate: generateCppBindings,
+    generate: duk_generateCppBindings,
     output: path.join(sourcePath, "Script", "JavaScript", "Modules.g.h")
+  },
+  {
+    generate: v8_generateCppBindings,
+    output: path.join(sourcePath, "Script", "V8", "Bindings.g.h")
   },
   {
     generate: generateTypeScriptDeclaration,
