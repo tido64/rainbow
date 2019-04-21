@@ -25,6 +25,8 @@
 #include "FileSystem/FileSystem.h"
 #include "Platform/SDL/Context.h"
 #include "Platform/SDL/RainbowController.h"
+#include "Script/V8/JSInstance.h"
+
 #ifdef RAINBOW_TEST
 #   include "Tests/Tests.h"
 #endif
@@ -64,6 +66,11 @@ auto main(int argc, char* argv[]) -> int
 
     const Bundle bundle{{argv, static_cast<size_t>(argc)}};
     rainbow::filesystem::initialize(bundle);
+
+    rainbow::JSInstance instance;
+    instance.init({1920, 1080});
+    instance.update(16);
+    return 0;
 
 #ifdef RAINBOW_TEST
     if (rainbow::should_run_tests(std::ref(argc), std::ref(argv)))

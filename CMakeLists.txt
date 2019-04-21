@@ -153,6 +153,8 @@ set(SOURCE_FILES
     src/Script/TimingFunctions.h
     src/Script/Transition.h
     src/Script/TransitionFunctions.h
+    src/Script/V8/JSInstance.cpp
+    src/Script/V8/JSInstance.h
     src/Text/FontCache.cpp
     src/Text/FontCache.h
     src/Text/SystemFonts.cpp
@@ -342,7 +344,6 @@ target_compile_options(
     rainbow
     PRIVATE
         ${RAINBOW_CXX_WARNINGS}
-        $<$<AND:$<NOT:$<CXX_COMPILER_ID:MSVC>>,$<BOOL:${UNIT_TESTS}>>:--coverage>
 )
 target_include_directories(
     rainbow
@@ -354,6 +355,7 @@ target_include_directories(
         ${LOCAL_LIBRARY}/abseil-cpp
         ${LOCAL_LIBRARY}/nanosvg/src
         ${LOCAL_LIBRARY}/variant/include
+        /usr/local/Cellar/v8/7.3.492.27/libexec/include
 )
 
 # Static libraries
@@ -408,7 +410,7 @@ elseif(APPLE)
     set(CMAKE_EXE_LINKER_FLAGS "--coverage")
   endif()
   find_library(CORESERVICES_LIBRARY CoreServices REQUIRED)
-  target_link_libraries(rainbow ${CORESERVICES_LIBRARY})
+  target_link_libraries(rainbow ${CORESERVICES_LIBRARY} /usr/local/Cellar/v8/7.3.492.27/libexec/libv8.dylib /usr/local/Cellar/v8/7.3.492.27/libexec/libv8_libplatform.dylib)
 elseif(UNIX AND NOT MINGW)
   if(UNIT_TESTS)
     set(CMAKE_EXE_LINKER_FLAGS "--coverage")

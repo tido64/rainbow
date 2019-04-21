@@ -1004,16 +1004,16 @@ ${typeInfo.map(m => declareType(m)).join(`${EOL}${EOL}`)}
 
 const typeInfo = modules.map(preprocess);
 [
-  {
+  /*{
     generate: duk_generateCppBindings,
     output: path.join(sourcePath, "Script", "JavaScript", "Modules.g.h")
-  },
+  },*/
   {
     generate: v8_generateCppBindings,
     output: path.join(sourcePath, "Script", "V8", "Bindings.g.h")
-  },
+  } /*,
   {
     generate: generateTypeScriptDeclaration,
     output: path.join(sourcePath, "..", "js", "index.d.ts")
-  }
+  }*/
 ].forEach(({ generate, output }) => writeFile(output, generate(typeInfo)));
