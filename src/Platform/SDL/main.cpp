@@ -62,8 +62,8 @@ auto main(int argc, char* argv[]) -> int
     absl::InstallFailureSignalHandler(absl::FailureSignalHandlerOptions{});
 #endif
 
-    const Bundle bundle{{argv, static_cast<size_t>(argc)}};
-    rainbow::filesystem::initialize(bundle);
+    const Bundle bundle({argv, static_cast<size_t>(argc)});
+    rainbow::filesystem::initialize(bundle, argv[0], true);
 
 #ifdef RAINBOW_TEST
     if (rainbow::should_run_tests(std::ref(argc), std::ref(argv)))

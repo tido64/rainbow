@@ -61,9 +61,7 @@ namespace
     auto compile_shader(const Shader::Params& shader) -> unsigned int
     {
         const GLuint id = glCreateShader(shader.type);
-        std::error_code error_code;
-        if (rainbow::filesystem::is_regular_file(
-                rainbow::filesystem::relative(shader.source), error_code))
+        if (rainbow::filesystem::is_regular_file(shader.source))
         {
             const Data& glsl = File::read(shader.source, FileType::Asset);
             if (!glsl)

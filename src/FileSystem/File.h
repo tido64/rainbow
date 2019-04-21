@@ -7,9 +7,9 @@
 
 #include <climits>
 #include <cstdint>
-#include <cstdio>
 #include <functional>
-#include <sys/stat.h>
+
+#include <physfs.h>
 
 #include "Common/Data.h"
 #include "Common/Logging.h"
@@ -20,10 +20,6 @@
 #    define CONSTEXPR
 #else
 #    define CONSTEXPR constexpr
-#endif
-
-#ifndef RAINBOW_OS_WINDOWS
-#    define _fileno fileno
 #endif
 
 namespace rainbow
@@ -46,17 +42,6 @@ namespace rainbow
 
     namespace detail
     {
-        constexpr auto file_access_mode(FileType type)
-        {
-            switch (type)
-            {
-                case FileType::UserFile:
-                    return "w+b";
-                default:
-                    return "rb";
-            }
-        }
-
         constexpr auto seek_origin(int origin)
         {
             switch (origin)
@@ -74,12 +59,14 @@ namespace rainbow
         {
             switch (origin)
             {
+                case SeekOrigin::Set:
+                    return SEEK_SET;
                 case SeekOrigin::Current:
                     return SEEK_CUR;
                 case SeekOrigin::End:
                     return SEEK_END;
                 default:
-                    return SEEK_SET;
+                    UNREACHABLE();
             }
         }
     }  // namespace detail
@@ -119,7 +106,7 @@ namespace rainbow
             if CONSTEXPR (T::is_platform_handle())
                 T::close();
             else
-                fclose(T::handle());
+                PHYSFS_close(T::handle());
         }
 
         /// <summary>Returns the file size; -1 on error.</summary>
@@ -133,10 +120,7 @@ namespace rainbow
             {
                 R_ASSERT(T::handle() != nullptr, "No file handle");
 
-                struct stat file_status;
-                const int fd = _fileno(T::handle());
-                return fstat(fd, &file_status) != 0 ? kInvalidFileSize
-                                                    : file_status.st_size;
+                return PHYSFS_fileLength(T::handle());
             }
         }
 
@@ -157,7 +141,7 @@ namespace rainbow
             {
                 R_ASSERT(T::handle() != nullptr, "No file handle");
 
-                return fread(dst, sizeof(uint8_t), size, T::handle());
+                return PHYSFS_readBytes(T::handle(), dst, size);
             }
         }
 
@@ -195,9 +179,8 @@ namespace rainbow
             {
                 R_ASSERT(T::handle() != nullptr, "No file handle");
 
-                auto stream = T::handle();
-                const int origin = detail::seek_origin(seek_origin);
-                return fseek(stream, offset, origin) == 0;
+                const auto pos = absolute_position(offset, seek_origin);
+                return PHYSFS_seek(T::handle(), pos) != 0;
             }
         }
 
@@ -212,8 +195,7 @@ namespace rainbow
             {
                 R_ASSERT(T::handle() != nullptr, "No file handle");
 
-                auto stream = T::handle();
-                return ftell(stream);
+                return PHYSFS_tell(T::handle());
             }
         }
 
@@ -222,37 +204,16 @@ namespace rainbow
         /// </summary>
         explicit operator bool() const { return T::operator bool(); }
 
-        explicit operator FILE*() const
-        {
-            if CONSTEXPR(T::is_platform_handle())
-                return nullptr;
-            else
-                return T::handle();
-        }
-
-#if defined(RAINBOW_OS_MACOS) && defined(USE_HEIMDALL)
-        static auto read(czstring path) -> Data
-        {
-            czstring access_mode = detail::file_access_mode(FileType::Asset);
-            TFile file;
-            file.set_handle(fopen(path, access_mode));
-            return read(file);
-        }
-#endif
-
     protected:
         template <typename U>
         static auto open(czstring path, FileType file_type) -> U
         {
             U file;
-            if (path != nullptr && path[0] != '\0')
+            if (!is_empty(path))
             {
                 const auto real_path = T::resolve_path(path, file_type);
                 if (!T::open(real_path.c_str(), file_type, std::ref(file)))
-                {
-                    czstring mode = detail::file_access_mode(file_type);
-                    file.set_handle(fopen(real_path.c_str(), mode));
-                }
+                    file.set_handle(PHYSFS_openRead(real_path.c_str()));
             }
 
             return file;
@@ -273,18 +234,43 @@ namespace rainbow
             buffer[size] = 0;
             return {buffer.release(), size, Data::Ownership::Owner};
         }
+
+    private:
+        auto absolute_position(int64_t offset, SeekOrigin seek_origin) const
+            -> size_t
+        {
+            switch (seek_origin)
+            {
+                case SeekOrigin::Set:
+                    return offset;
+                case SeekOrigin::Current:
+                    return tell() + offset;
+                case SeekOrigin::End:
+                    return size() - offset;
+                default:
+                    UNREACHABLE();
+            }
+        }
     };
 
     template <typename T>
-    class TWriteableFile : public TFile<T>
+    class TWriteableFile : private TFile<T>
     {
         using base = TFile<T>;
 
     public:
         static auto open(czstring path) -> TWriteableFile
         {
-            return base::template open<TWriteableFile>(
-                path, FileType::UserFile);
+            TWriteableFile file;
+            if (!is_empty(path))
+            {
+                constexpr auto file_type = FileType::UserFile;
+                const auto real_path = T::resolve_path(path, file_type);
+                if (!T::open(real_path.c_str(), file_type, std::ref(file)))
+                    file.set_handle(PHYSFS_openWrite(real_path.c_str()));
+            }
+
+            return file;
         }
 
         static auto write(czstring path, const Data& data) -> size_t
@@ -299,6 +285,11 @@ namespace rainbow
         {
         }
 
+        using base::seek;
+        using base::size;
+        using base::tell;
+        using base::operator bool;
+
         auto write(const void* buffer, size_t size) const -> size_t
         {
             R_ASSERT(size > 0, "No data to write");
@@ -311,7 +302,7 @@ namespace rainbow
             {
                 R_ASSERT(T::handle() != nullptr, "No file handle");
 
-                return fwrite(buffer, sizeof(uint8_t), size, T::handle());
+                return PHYSFS_writeBytes(T::handle(), buffer, size);
             }
         }
     };
@@ -319,17 +310,14 @@ namespace rainbow
 
 #undef CONSTEXPR
 
+#include "FileSystem/File.system.h"
 #ifdef RAINBOW_OS_ANDROID
-#    include "FileSystem/impl/File.android.h"
-#endif
-#include "FileSystem/impl/File.system.h"
-
-#ifndef RAINBOW_OS_WINDOWS
-#    undef _fileno
-#endif
-
-#ifdef USE_PLATFORM_FILE
-#    undef USE_PLATFORM_FILE
+#    include "FileSystem/File.android.h"
+#else
+namespace rainbow
+{
+    using File = TFile<system::File>;
+}  // namespace rainbow
 #endif
 
 #endif

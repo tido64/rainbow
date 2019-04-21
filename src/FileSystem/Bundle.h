@@ -5,24 +5,29 @@
 #ifndef FILESYSTEM_BUNDLE_H_
 #define FILESYSTEM_BUNDLE_H_
 
+#include "Common/NonCopyable.h"
 #include "Common/String.h"
+#include "FileSystem/Path.h"
 #include "Memory/Array.h"
 
 namespace rainbow
 {
-    class Bundle
+    class [[nodiscard]] Bundle : NonCopyable<Bundle>
     {
     public:
-        Bundle(ArrayView<zstring> args);
-        Bundle(czstring exec_path, czstring assets_path);
+        Bundle(ArrayView<zstring> args = {});
+        Bundle(Bundle&&) noexcept;
+        ~Bundle();
 
         auto assets_path() const { return assets_path_.c_str(); }
         auto exec_path() const { return exec_path_.c_str(); }
         auto main_script() const { return main_script_; }
 
+        auto operator=(Bundle&&) noexcept -> Bundle&;
+
     private:
-        std::string assets_path_;
-        std::string exec_path_;
+        filesystem::Path assets_path_;
+        filesystem::Path exec_path_;
         czstring main_script_;
     };
 }  // namespace rainbow

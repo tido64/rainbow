@@ -59,13 +59,12 @@ set(SOURCE_FILES
     src/Config.h
     src/Director.cpp
     src/Director.h
-    src/FileSystem/Bundle.cpp
     src/FileSystem/Bundle.h
+    src/FileSystem/Bundle.inc
     src/FileSystem/File.h
+    src/FileSystem/File.system.h
     src/FileSystem/FileSystem.cpp
     src/FileSystem/FileSystem.h
-    src/FileSystem/impl/File.system.h
-    src/FileSystem/Path.cpp
     src/FileSystem/Path.h
     src/Graphics/Animation.cpp
     src/Graphics/Animation.h
@@ -175,7 +174,8 @@ set(SOURCE_FILES
 
 if(ANDROID)
   list(APPEND SOURCE_FILES
-      src/FileSystem/impl/File.android.h
+      src/FileSystem/Bundle.android.cpp
+      src/FileSystem/File.android.h
       src/Heimdall/impl/ChangeMonitor.stub.cpp
       src/Platform/Android/main.cpp
       # Workaround for https://github.com/android-ndk/ndk/issues/184
@@ -185,6 +185,7 @@ if(ANDROID)
   )
 else()
   list(APPEND SOURCE_FILES
+      src/FileSystem/Bundle.sdl.cpp
       src/Platform/SDL/Context.cpp
       src/Platform/SDL/Context.h
       src/Platform/SDL/RainbowController.cpp
@@ -371,6 +372,7 @@ if(USE_PHYSICS)
 endif()
 include(${LOCAL_MODULE_PATH}/Duktape.cmake)
 include(${LOCAL_MODULE_PATH}/FreeType.cmake)
+include(${LOCAL_MODULE_PATH}/PhysicsFS.cmake)
 include(${LOCAL_MODULE_PATH}/SDL2.cmake)
 if(USE_SPINE)
   include(${LOCAL_MODULE_PATH}/Spine.cmake)

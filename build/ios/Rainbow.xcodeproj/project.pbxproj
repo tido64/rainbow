@@ -7,6 +7,30 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1913F11D22764354005B2D3B /* physfs_platform_qnx.c in Sources */ = {isa = PBXBuildFile; fileRef = 1913F10122764354005B2D3B /* physfs_platform_qnx.c */; };
+		1913F11E22764354005B2D3B /* physfs.c in Sources */ = {isa = PBXBuildFile; fileRef = 1913F10222764354005B2D3B /* physfs.c */; };
+		1913F11F22764354005B2D3B /* physfs_archiver_7z.c in Sources */ = {isa = PBXBuildFile; fileRef = 1913F10322764354005B2D3B /* physfs_archiver_7z.c */; };
+		1913F12022764354005B2D3B /* physfs_platform_unix.c in Sources */ = {isa = PBXBuildFile; fileRef = 1913F10422764354005B2D3B /* physfs_platform_unix.c */; };
+		1913F12122764354005B2D3B /* physfs_archiver_slb.c in Sources */ = {isa = PBXBuildFile; fileRef = 1913F10522764354005B2D3B /* physfs_archiver_slb.c */; };
+		1913F12222764354005B2D3B /* physfs_platform_winrt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1913F10622764354005B2D3B /* physfs_platform_winrt.cpp */; };
+		1913F12322764354005B2D3B /* physfs_archiver_mvl.c in Sources */ = {isa = PBXBuildFile; fileRef = 1913F10722764354005B2D3B /* physfs_archiver_mvl.c */; };
+		1913F12422764354005B2D3B /* physfs_archiver_wad.c in Sources */ = {isa = PBXBuildFile; fileRef = 1913F10822764354005B2D3B /* physfs_archiver_wad.c */; };
+		1913F12522764354005B2D3B /* physfs_platform_os2.c in Sources */ = {isa = PBXBuildFile; fileRef = 1913F10A22764354005B2D3B /* physfs_platform_os2.c */; };
+		1913F12622764354005B2D3B /* physfs_platform_haiku.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1913F10B22764354005B2D3B /* physfs_platform_haiku.cpp */; };
+		1913F12722764354005B2D3B /* physfs_platform_windows.c in Sources */ = {isa = PBXBuildFile; fileRef = 1913F10C22764354005B2D3B /* physfs_platform_windows.c */; };
+		1913F12822764354005B2D3B /* physfs_archiver_unpacked.c in Sources */ = {isa = PBXBuildFile; fileRef = 1913F10D22764354005B2D3B /* physfs_archiver_unpacked.c */; };
+		1913F12922764354005B2D3B /* physfs_unicode.c in Sources */ = {isa = PBXBuildFile; fileRef = 1913F10E22764354005B2D3B /* physfs_unicode.c */; };
+		1913F12A22764354005B2D3B /* physfs_archiver_vdf.c in Sources */ = {isa = PBXBuildFile; fileRef = 1913F11022764354005B2D3B /* physfs_archiver_vdf.c */; };
+		1913F12B22764354005B2D3B /* physfs_platform_apple.m in Sources */ = {isa = PBXBuildFile; fileRef = 1913F11122764354005B2D3B /* physfs_platform_apple.m */; };
+		1913F12C22764354005B2D3B /* physfs_archiver_dir.c in Sources */ = {isa = PBXBuildFile; fileRef = 1913F11222764354005B2D3B /* physfs_archiver_dir.c */; };
+		1913F12D22764354005B2D3B /* physfs_byteorder.c in Sources */ = {isa = PBXBuildFile; fileRef = 1913F11322764354005B2D3B /* physfs_byteorder.c */; };
+		1913F12E22764354005B2D3B /* physfs_archiver_iso9660.c in Sources */ = {isa = PBXBuildFile; fileRef = 1913F11422764354005B2D3B /* physfs_archiver_iso9660.c */; };
+		1913F12F22764354005B2D3B /* physfs_archiver_qpak.c in Sources */ = {isa = PBXBuildFile; fileRef = 1913F11522764354005B2D3B /* physfs_archiver_qpak.c */; };
+		1913F13022764354005B2D3B /* physfs_platform_posix.c in Sources */ = {isa = PBXBuildFile; fileRef = 1913F11822764354005B2D3B /* physfs_platform_posix.c */; };
+		1913F13122764354005B2D3B /* physfs_archiver_grp.c in Sources */ = {isa = PBXBuildFile; fileRef = 1913F11A22764354005B2D3B /* physfs_archiver_grp.c */; };
+		1913F13222764354005B2D3B /* physfs_archiver_hog.c in Sources */ = {isa = PBXBuildFile; fileRef = 1913F11B22764354005B2D3B /* physfs_archiver_hog.c */; };
+		1913F13322764354005B2D3B /* physfs_archiver_zip.c in Sources */ = {isa = PBXBuildFile; fileRef = 1913F11C22764354005B2D3B /* physfs_archiver_zip.c */; };
+		1913F13522764DE3005B2D3B /* Bundle.ios.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1913F13422764DE2005B2D3B /* Bundle.ios.mm */; };
 		193458551D5A3884008482E8 /* FileSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 193458531D5A3884008482E8 /* FileSystem.cpp */; };
 		193929B316E1932E0018340B /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 193929B216E1932E0018340B /* CoreMotion.framework */; };
 		193929B816E23D5F0018340B /* SystemInfo.apple.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 193929B716E23D5F0018340B /* SystemInfo.apple.cpp */; };
@@ -70,7 +94,6 @@
 		1939A23E152C432A00494609 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1939A23D152C432900494609 /* AudioToolbox.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		1939A240152C435000494609 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1939A23F152C435000494609 /* AVFoundation.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		1942A50A18985D450050CF5C /* Buffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1942A50818985D450050CF5C /* Buffer.cpp */; };
-		1946B7AF1836E54600F74A3B /* Path.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1946B7AC1836E54600F74A3B /* Path.cpp */; };
 		1948C023152C397D00E9B854 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1948C022152C397D00E9B854 /* UIKit.framework */; };
 		1948C025152C397D00E9B854 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1948C024152C397D00E9B854 /* Foundation.framework */; };
 		1948C027152C397D00E9B854 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1948C026152C397D00E9B854 /* CoreGraphics.framework */; };
@@ -127,6 +150,7 @@
 		198F42B11A9152E000BE7A73 /* SlotData.c in Sources */ = {isa = PBXBuildFile; fileRef = 198F42971A9152E000BE7A73 /* SlotData.c */; };
 		198F42B51A91531000BE7A73 /* spine-rainbow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 198F42B31A91531000BE7A73 /* spine-rainbow.cpp */; };
 		19937CBA1D398336009F8917 /* SmallBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19937CB81D398336009F8917 /* SmallBuffer.cpp */; };
+		19A8F5FC2279BB8500AED17C /* Bundle.inc in Sources */ = {isa = PBXBuildFile; fileRef = 19A8F5FB2279BB8500AED17C /* Bundle.inc */; };
 		19A9025320EECAAE0084A669 /* Error.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19A9025120EECAAE0084A669 /* Error.cpp */; };
 		19AB746E224FB76A0020C5A7 /* Module.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19AB746D224FB76A0020C5A7 /* Module.cpp */; };
 		19AB747C224FB8280020C5A7 /* path.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19AB747A224FB8280020C5A7 /* path.cpp */; };
@@ -174,7 +198,6 @@
 		19C66962225C11B9004245ED /* NanoSVG.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19C66960225C11B8004245ED /* NanoSVG.cpp */; };
 		19CB0669200AC971005D6740 /* duktape.c in Sources */ = {isa = PBXBuildFile; fileRef = 19CB0668200AC971005D6740 /* duktape.c */; };
 		19CB066B200AC97F005D6740 /* duk_module_node.c in Sources */ = {isa = PBXBuildFile; fileRef = 19CB066A200AC97F005D6740 /* duk_module_node.c */; };
-		19CBB6351E5E4BFA00378BBF /* NSString+Rainbow.m in Sources */ = {isa = PBXBuildFile; fileRef = 19CBB6341E5E4BFA00378BBF /* NSString+Rainbow.m */; };
 		19D045AA18071D6D00968F00 /* Chrono.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19D045A918071D6D00968F00 /* Chrono.cpp */; };
 		19D34F8D227996FA00FEE78E /* hb-aat-layout.cc in Sources */ = {isa = PBXBuildFile; fileRef = 19D34F8C227996F900FEE78E /* hb-aat-layout.cc */; };
 		19D351062279979300FEE78E /* hb-aat-map.cc in Sources */ = {isa = PBXBuildFile; fileRef = 19D351052279979300FEE78E /* hb-aat-map.cc */; };
@@ -198,11 +221,42 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		19018EBD1EEDA64D00724B3E /* File.system.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = File.system.h; sourceTree = "<group>"; };
 		190A0ADA15E0294C0088D8B7 /* Logging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Logging.h; sourceTree = "<group>"; };
 		190CD1C01DDF952E00B0EAD4 /* Passkey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Passkey.h; sourceTree = "<group>"; };
 		1910099519FDA3A70036D5F4 /* Global.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Global.h; sourceTree = "<group>"; };
 		1910099719FDA3A70036D5F4 /* Link.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Link.h; sourceTree = "<group>"; };
+		1913F0FB227642FE005B2D3B /* File.system.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = File.system.h; sourceTree = "<group>"; };
+		1913F0FC227642FE005B2D3B /* Bundle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Bundle.h; sourceTree = "<group>"; };
+		1913F10022764354005B2D3B /* physfs_internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = physfs_internal.h; sourceTree = "<group>"; };
+		1913F10122764354005B2D3B /* physfs_platform_qnx.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = physfs_platform_qnx.c; sourceTree = "<group>"; };
+		1913F10222764354005B2D3B /* physfs.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = physfs.c; sourceTree = "<group>"; };
+		1913F10322764354005B2D3B /* physfs_archiver_7z.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = physfs_archiver_7z.c; sourceTree = "<group>"; };
+		1913F10422764354005B2D3B /* physfs_platform_unix.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = physfs_platform_unix.c; sourceTree = "<group>"; };
+		1913F10522764354005B2D3B /* physfs_archiver_slb.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = physfs_archiver_slb.c; sourceTree = "<group>"; };
+		1913F10622764354005B2D3B /* physfs_platform_winrt.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = physfs_platform_winrt.cpp; sourceTree = "<group>"; };
+		1913F10722764354005B2D3B /* physfs_archiver_mvl.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = physfs_archiver_mvl.c; sourceTree = "<group>"; };
+		1913F10822764354005B2D3B /* physfs_archiver_wad.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = physfs_archiver_wad.c; sourceTree = "<group>"; };
+		1913F10922764354005B2D3B /* physfs_casefolding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = physfs_casefolding.h; sourceTree = "<group>"; };
+		1913F10A22764354005B2D3B /* physfs_platform_os2.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = physfs_platform_os2.c; sourceTree = "<group>"; };
+		1913F10B22764354005B2D3B /* physfs_platform_haiku.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = physfs_platform_haiku.cpp; sourceTree = "<group>"; };
+		1913F10C22764354005B2D3B /* physfs_platform_windows.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = physfs_platform_windows.c; sourceTree = "<group>"; };
+		1913F10D22764354005B2D3B /* physfs_archiver_unpacked.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = physfs_archiver_unpacked.c; sourceTree = "<group>"; };
+		1913F10E22764354005B2D3B /* physfs_unicode.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = physfs_unicode.c; sourceTree = "<group>"; };
+		1913F10F22764354005B2D3B /* physfs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = physfs.h; sourceTree = "<group>"; };
+		1913F11022764354005B2D3B /* physfs_archiver_vdf.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = physfs_archiver_vdf.c; sourceTree = "<group>"; };
+		1913F11122764354005B2D3B /* physfs_platform_apple.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = physfs_platform_apple.m; sourceTree = "<group>"; };
+		1913F11222764354005B2D3B /* physfs_archiver_dir.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = physfs_archiver_dir.c; sourceTree = "<group>"; };
+		1913F11322764354005B2D3B /* physfs_byteorder.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = physfs_byteorder.c; sourceTree = "<group>"; };
+		1913F11422764354005B2D3B /* physfs_archiver_iso9660.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = physfs_archiver_iso9660.c; sourceTree = "<group>"; };
+		1913F11522764354005B2D3B /* physfs_archiver_qpak.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = physfs_archiver_qpak.c; sourceTree = "<group>"; };
+		1913F11622764354005B2D3B /* physfs_platforms.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = physfs_platforms.h; sourceTree = "<group>"; };
+		1913F11722764354005B2D3B /* physfs_lzmasdk.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = physfs_lzmasdk.h; sourceTree = "<group>"; };
+		1913F11822764354005B2D3B /* physfs_platform_posix.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = physfs_platform_posix.c; sourceTree = "<group>"; };
+		1913F11922764354005B2D3B /* physfs_miniz.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = physfs_miniz.h; sourceTree = "<group>"; };
+		1913F11A22764354005B2D3B /* physfs_archiver_grp.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = physfs_archiver_grp.c; sourceTree = "<group>"; };
+		1913F11B22764354005B2D3B /* physfs_archiver_hog.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = physfs_archiver_hog.c; sourceTree = "<group>"; };
+		1913F11C22764354005B2D3B /* physfs_archiver_zip.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = physfs_archiver_zip.c; sourceTree = "<group>"; };
+		1913F13422764DE2005B2D3B /* Bundle.ios.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Bundle.ios.mm; sourceTree = "<group>"; };
 		191484E61891BD87004014D7 /* ShaderDetails.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShaderDetails.h; sourceTree = "<group>"; };
 		192A0B9B1681EF84009218EB /* SpriteVertex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpriteVertex.h; sourceTree = "<group>"; };
 		193458531D5A3884008482E8 /* FileSystem.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = FileSystem.cpp; sourceTree = "<group>"; };
@@ -337,7 +391,6 @@
 		1942A50818985D450050CF5C /* Buffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Buffer.cpp; sourceTree = "<group>"; };
 		1942A50918985D450050CF5C /* Buffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Buffer.h; sourceTree = "<group>"; };
 		1946B7AB1836E54600F74A3B /* File.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = File.h; sourceTree = "<group>"; };
-		1946B7AC1836E54600F74A3B /* Path.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = Path.cpp; sourceTree = "<group>"; };
 		1946B7AD1836E54600F74A3B /* Path.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Path.h; sourceTree = "<group>"; };
 		1948C01E152C397D00E9B854 /* Rainbow.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Rainbow.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1948C022152C397D00E9B854 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -397,7 +450,6 @@
 		1989645A1C4AE0080011BA15 /* RainbowViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RainbowViewController.h; sourceTree = "<group>"; };
 		1989645B1C4AE0080011BA15 /* RainbowViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = RainbowViewController.mm; sourceTree = "<group>"; };
 		198BE0A7174A5F420036055E /* Macros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Macros.h; sourceTree = "<group>"; };
-		198EA1992012733F00BB3FB4 /* index.js.map */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = index.js.map; sourceTree = "<group>"; };
 		198EA19A2012733F00BB3FB4 /* OpenSans-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSans-Light.ttf"; sourceTree = "<group>"; };
 		198EA19C2012733F00BB3FB4 /* index.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = index.js; sourceTree = "<group>"; };
 		198F42681A9151CB00BE7A73 /* GameBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameBase.h; sourceTree = "<group>"; };
@@ -438,6 +490,7 @@
 		19937CB71D398336009F8917 /* StableArray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StableArray.h; sourceTree = "<group>"; };
 		19937CB81D398336009F8917 /* SmallBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SmallBuffer.cpp; sourceTree = "<group>"; };
 		19937CB91D398336009F8917 /* SmallBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SmallBuffer.h; sourceTree = "<group>"; };
+		19A8F5FB2279BB8500AED17C /* Bundle.inc */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.h; fileEncoding = 4; path = Bundle.inc; sourceTree = "<group>"; };
 		19A9025020EECAAE0084A669 /* Error.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Error.h; sourceTree = "<group>"; };
 		19A9025120EECAAE0084A669 /* Error.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Error.cpp; sourceTree = "<group>"; };
 		19A9025220EECAAE0084A669 /* Variant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Variant.h; sourceTree = "<group>"; };
@@ -530,8 +583,6 @@
 		19C66961225C11B8004245ED /* NanoSVG.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NanoSVG.h; sourceTree = "<group>"; };
 		19CB0668200AC971005D6740 /* duktape.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = duktape.c; path = src/duktape.c; sourceTree = "<group>"; };
 		19CB066A200AC97F005D6740 /* duk_module_node.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = duk_module_node.c; path = "extras/module-node/duk_module_node.c"; sourceTree = "<group>"; };
-		19CBB6331E5E4BFA00378BBF /* NSString+Rainbow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Rainbow.h"; sourceTree = "<group>"; };
-		19CBB6341E5E4BFA00378BBF /* NSString+Rainbow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Rainbow.m"; sourceTree = "<group>"; };
 		19D045A918071D6D00968F00 /* Chrono.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Chrono.cpp; sourceTree = "<group>"; };
 		19D3204817BD6BD4007BDC67 /* PVRTC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PVRTC.h; sourceTree = "<group>"; };
 		19D3204917BD6BD4007BDC67 /* PNG.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNG.h; sourceTree = "<group>"; };
@@ -604,13 +655,42 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		19018EBB1EEDA64D00724B3E /* impl */ = {
+		1913F0FF22764354005B2D3B /* PhysicsFS */ = {
 			isa = PBXGroup;
 			children = (
-				19018EBD1EEDA64D00724B3E /* File.system.h */,
+				1913F10322764354005B2D3B /* physfs_archiver_7z.c */,
+				1913F11222764354005B2D3B /* physfs_archiver_dir.c */,
+				1913F11A22764354005B2D3B /* physfs_archiver_grp.c */,
+				1913F11B22764354005B2D3B /* physfs_archiver_hog.c */,
+				1913F11422764354005B2D3B /* physfs_archiver_iso9660.c */,
+				1913F10722764354005B2D3B /* physfs_archiver_mvl.c */,
+				1913F11522764354005B2D3B /* physfs_archiver_qpak.c */,
+				1913F10522764354005B2D3B /* physfs_archiver_slb.c */,
+				1913F10D22764354005B2D3B /* physfs_archiver_unpacked.c */,
+				1913F11022764354005B2D3B /* physfs_archiver_vdf.c */,
+				1913F10822764354005B2D3B /* physfs_archiver_wad.c */,
+				1913F11C22764354005B2D3B /* physfs_archiver_zip.c */,
+				1913F11322764354005B2D3B /* physfs_byteorder.c */,
+				1913F10922764354005B2D3B /* physfs_casefolding.h */,
+				1913F10022764354005B2D3B /* physfs_internal.h */,
+				1913F11722764354005B2D3B /* physfs_lzmasdk.h */,
+				1913F11922764354005B2D3B /* physfs_miniz.h */,
+				1913F11122764354005B2D3B /* physfs_platform_apple.m */,
+				1913F10B22764354005B2D3B /* physfs_platform_haiku.cpp */,
+				1913F10A22764354005B2D3B /* physfs_platform_os2.c */,
+				1913F11822764354005B2D3B /* physfs_platform_posix.c */,
+				1913F10122764354005B2D3B /* physfs_platform_qnx.c */,
+				1913F10422764354005B2D3B /* physfs_platform_unix.c */,
+				1913F10C22764354005B2D3B /* physfs_platform_windows.c */,
+				1913F10622764354005B2D3B /* physfs_platform_winrt.cpp */,
+				1913F11622764354005B2D3B /* physfs_platforms.h */,
+				1913F10E22764354005B2D3B /* physfs_unicode.c */,
+				1913F10222764354005B2D3B /* physfs.c */,
+				1913F10F22764354005B2D3B /* physfs.h */,
 			);
-			path = impl;
-			sourceTree = "<group>";
+			name = PhysicsFS;
+			path = lib/physfs/src;
+			sourceTree = SOURCE_ROOT;
 		};
 		19399E10152C401300494609 /* Box2D */ = {
 			isa = PBXGroup;
@@ -884,11 +964,13 @@
 		1946B7A91836E54600F74A3B /* FileSystem */ = {
 			isa = PBXGroup;
 			children = (
-				19018EBB1EEDA64D00724B3E /* impl */,
+				1913F0FC227642FE005B2D3B /* Bundle.h */,
+				19A8F5FB2279BB8500AED17C /* Bundle.inc */,
+				1913F13422764DE2005B2D3B /* Bundle.ios.mm */,
 				1946B7AB1836E54600F74A3B /* File.h */,
+				1913F0FB227642FE005B2D3B /* File.system.h */,
 				193458531D5A3884008482E8 /* FileSystem.cpp */,
 				193458541D5A3884008482E8 /* FileSystem.h */,
-				1946B7AC1836E54600F74A3B /* Path.cpp */,
 				1946B7AD1836E54600F74A3B /* Path.h */,
 			);
 			path = FileSystem;
@@ -967,6 +1049,7 @@
 				19CB0663200AC691005D6740 /* Duktape */,
 				19399EAF152C401300494609 /* FreeType */,
 				19B399112041FA2E00581AE0 /* HarfBuzz */,
+				1913F0FF22764354005B2D3B /* PhysicsFS */,
 				198F427C1A9152E000BE7A73 /* Spine */,
 			);
 			name = Libraries;
@@ -1067,8 +1150,6 @@
 		198964591C4AE0080011BA15 /* iOS */ = {
 			isa = PBXGroup;
 			children = (
-				19CBB6331E5E4BFA00378BBF /* NSString+Rainbow.h */,
-				19CBB6341E5E4BFA00378BBF /* NSString+Rainbow.m */,
 				1989645A1C4AE0080011BA15 /* RainbowViewController.h */,
 				1989645B1C4AE0080011BA15 /* RainbowViewController.mm */,
 			);
@@ -1141,7 +1222,6 @@
 			isa = PBXGroup;
 			children = (
 				198EA19C2012733F00BB3FB4 /* index.js */,
-				198EA1992012733F00BB3FB4 /* index.js.map */,
 				198EA19A2012733F00BB3FB4 /* OpenSans-Light.ttf */,
 				19E9F8DC2023D75F008E50E3 /* p1_spritesheet.png */,
 			);
@@ -1506,12 +1586,13 @@
 			outputFileListPaths = (
 				"$(SRCROOT)/duktape.xcfilelist",
 				"$(SRCROOT)/harfbuzz.xcfilelist",
+				"$(SRCROOT)/physfs.xcfilelist",
 			);
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "mkdir -p lib\npushd lib 1> /dev/null\ncmake -P ../../cmake/Duktape.cmake\ncmake -P ../../cmake/HarfBuzz.cmake\npopd 1> /dev/null\n";
+			shellScript = "mkdir -p lib\npushd lib 1> /dev/null\ncmake -P ../../cmake/Duktape.cmake\ncmake -P ../../cmake/HarfBuzz.cmake\ncmake -P ../../cmake/PhysicsFS.cmake\npopd 1> /dev/null\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1532,11 +1613,13 @@
 				19C66962225C11B9004245ED /* NanoSVG.cpp in Sources */,
 				19B3996C20421A6200581AE0 /* hb-blob.cc in Sources */,
 				1939A04D152C401300494609 /* b2CollideEdge.cpp in Sources */,
+				1913F13222764354005B2D3B /* physfs_archiver_hog.c in Sources */,
 				198F42A41A9152E000BE7A73 /* extension.c in Sources */,
 				1939A04E152C401300494609 /* b2CollidePolygon.cpp in Sources */,
 				195ACC40200ABA9D00FB7EDD /* Helper.cpp in Sources */,
 				198F42B51A91531000BE7A73 /* spine-rainbow.cpp in Sources */,
 				1939A04F152C401300494609 /* b2Collision.cpp in Sources */,
+				1913F12922764354005B2D3B /* physfs_unicode.c in Sources */,
 				1939A050152C401300494609 /* b2Distance.cpp in Sources */,
 				1939A051152C401300494609 /* b2DynamicTree.cpp in Sources */,
 				1939A052152C401300494609 /* b2TimeOfImpact.cpp in Sources */,
@@ -1548,7 +1631,6 @@
 				1939A053152C401300494609 /* b2ChainShape.cpp in Sources */,
 				1939A054152C401300494609 /* b2CircleShape.cpp in Sources */,
 				198F42A61A9152E000BE7A73 /* IkConstraintData.c in Sources */,
-				1946B7AF1836E54600F74A3B /* Path.cpp in Sources */,
 				1939A055152C401300494609 /* b2EdgeShape.cpp in Sources */,
 				19D34F8D227996FA00FEE78E /* hb-aat-layout.cc in Sources */,
 				1939A056152C401300494609 /* b2PolygonShape.cpp in Sources */,
@@ -1557,11 +1639,11 @@
 				1939A059152C401300494609 /* b2Math.cpp in Sources */,
 				198F42B11A9152E000BE7A73 /* SlotData.c in Sources */,
 				1939A05A152C401300494609 /* b2Settings.cpp in Sources */,
+				1913F12422764354005B2D3B /* physfs_archiver_wad.c in Sources */,
 				1939A05B152C401300494609 /* b2StackAllocator.cpp in Sources */,
 				19D9318A1834AFCE00F0137E /* ChangeMonitor.stub.cpp in Sources */,
 				19DFE5351C6002890079CB58 /* Mixer.cpp in Sources */,
 				1939A05C152C401300494609 /* b2Timer.cpp in Sources */,
-				19CBB6351E5E4BFA00378BBF /* NSString+Rainbow.m in Sources */,
 				1939A05D152C401300494609 /* b2Body.cpp in Sources */,
 				1939A05E152C401300494609 /* b2ContactManager.cpp in Sources */,
 				19D351062279979300FEE78E /* hb-aat-map.cc in Sources */,
@@ -1577,6 +1659,7 @@
 				19AB746E224FB76A0020C5A7 /* Module.cpp in Sources */,
 				19DB48B61CA6A4BD00999675 /* ImGuiHelper.cpp in Sources */,
 				19DFE53D1C6142F40079CB58 /* RainbowAudioSession.mm in Sources */,
+				1913F11D22764354005B2D3B /* physfs_platform_qnx.c in Sources */,
 				19B3998420421B6100581AE0 /* ucdn.c in Sources */,
 				19B399A820421D2900581AE0 /* hb-ot-shape-complex-indic-table.cc in Sources */,
 				19B3996520420F9F00581AE0 /* hb-set.cc in Sources */,
@@ -1587,6 +1670,7 @@
 				19B399A220421D2900581AE0 /* hb-ot-shape-complex-use.cc in Sources */,
 				198F42A91A9152E000BE7A73 /* RegionAttachment.c in Sources */,
 				1939A068152C401300494609 /* b2EdgeAndCircleContact.cpp in Sources */,
+				1913F12722764354005B2D3B /* physfs_platform_windows.c in Sources */,
 				19B399A420421D2900581AE0 /* hb-ot-shape-complex-hangul.cc in Sources */,
 				19AB747C224FB8280020C5A7 /* path.cpp in Sources */,
 				19B3998C20421C7600581AE0 /* hb-ot-var.cc in Sources */,
@@ -1597,6 +1681,7 @@
 				1939A06D152C401300494609 /* b2FrictionJoint.cpp in Sources */,
 				19B399AA20421D2900581AE0 /* hb-ot-shape-normalize.cc in Sources */,
 				1939A06E152C401300494609 /* b2GearJoint.cpp in Sources */,
+				19A8F5FC2279BB8500AED17C /* Bundle.inc in Sources */,
 				196540D32169FBA00052A9FA /* hb-ot-face.cc in Sources */,
 				19B3996F20421AB600581AE0 /* hb-face.cc in Sources */,
 				198F42AC1A9152E000BE7A73 /* SkeletonData.c in Sources */,
@@ -1607,23 +1692,30 @@
 				198F429F1A9152E000BE7A73 /* Bone.c in Sources */,
 				1939A071152C401300494609 /* b2PrismaticJoint.cpp in Sources */,
 				19B3997520421B2000581AE0 /* hb-unicode.cc in Sources */,
+				1913F12D22764354005B2D3B /* physfs_byteorder.c in Sources */,
 				19CB066B200AC97F005D6740 /* duk_module_node.c in Sources */,
 				1939A072152C401300494609 /* b2PulleyJoint.cpp in Sources */,
+				1913F12822764354005B2D3B /* physfs_archiver_unpacked.c in Sources */,
 				1939A073152C401300494609 /* b2RevoluteJoint.cpp in Sources */,
 				196C0A72189082860042190D /* Shaders.cpp in Sources */,
 				1939A074152C401300494609 /* b2RopeJoint.cpp in Sources */,
+				1913F12522764354005B2D3B /* physfs_platform_os2.c in Sources */,
 				198F42AD1A9152E000BE7A73 /* SkeletonJson.c in Sources */,
 				196DFF73225E6BED0053D6A4 /* libpng.c in Sources */,
 				198F42A21A9152E000BE7A73 /* Event.c in Sources */,
 				1960F19A204B532E00258DDE /* SystemFonts.cpp in Sources */,
+				1913F12B22764354005B2D3B /* physfs_platform_apple.m in Sources */,
 				1939A075152C401300494609 /* b2WeldJoint.cpp in Sources */,
 				1939A076152C401300494609 /* b2WheelJoint.cpp in Sources */,
+				1913F13022764354005B2D3B /* physfs_platform_posix.c in Sources */,
 				195ACC46200ABAAE00FB7EDD /* Scene.cpp in Sources */,
 				198F429D1A9152E000BE7A73 /* Attachment.c in Sources */,
+				1913F12E22764354005B2D3B /* physfs_archiver_iso9660.c in Sources */,
 				19B399A320421D2900581AE0 /* hb-ot-shape-complex-indic.cc in Sources */,
 				1939A078152C401300494609 /* b2Rope.cpp in Sources */,
 				198F429B1A9152E000BE7A73 /* Atlas.c in Sources */,
 				19B3995F20420F4B00581AE0 /* hb-ft.cc in Sources */,
+				1913F12C22764354005B2D3B /* physfs_archiver_dir.c in Sources */,
 				198F42A71A9152E000BE7A73 /* Json.c in Sources */,
 				19B6C59F216964C6000D5400 /* city.cc in Sources */,
 				19B3998A20421C4500581AE0 /* hb-shape-plan.cc in Sources */,
@@ -1633,6 +1725,8 @@
 				195ACC41200ABA9D00FB7EDD /* JavaScript.cpp in Sources */,
 				193458551D5A3884008482E8 /* FileSystem.cpp in Sources */,
 				1942A50A18985D450050CF5C /* Buffer.cpp in Sources */,
+				1913F12022764354005B2D3B /* physfs_platform_unix.c in Sources */,
+				1913F13122764354005B2D3B /* physfs_archiver_grp.c in Sources */,
 				195ACC47200ABAAE00FB7EDD /* NoGame.cpp in Sources */,
 				19A9025320EECAAE0084A669 /* Error.cpp in Sources */,
 				19E7748A1A02C8D3005DE249 /* OverlayActivator.cpp in Sources */,
@@ -1650,6 +1744,7 @@
 				198F429A1A9152E000BE7A73 /* AnimationStateData.c in Sources */,
 				1939A21C152C425D00494609 /* Animation.cpp in Sources */,
 				19CB0669200AC971005D6740 /* duktape.c in Sources */,
+				1913F12122764354005B2D3B /* physfs_archiver_slb.c in Sources */,
 				1939A21E152C425D00494609 /* Label.cpp in Sources */,
 				19B3997420421B2000581AE0 /* hb-fallback-shape.cc in Sources */,
 				1939A220152C425D00494609 /* Renderer.cpp in Sources */,
@@ -1668,28 +1763,37 @@
 				197396DD15A505F60064BF7D /* TextureManager.cpp in Sources */,
 				196CB728161E4ADD0068C809 /* Gatekeeper.cpp in Sources */,
 				19B3998E20421CB300581AE0 /* hb-ot-shape.cc in Sources */,
+				1913F12222764354005B2D3B /* physfs_platform_winrt.cpp in Sources */,
 				196CB72F161E4D940068C809 /* b2MotorJoint.cpp in Sources */,
 				19EBC55116599D9F00D3B5D7 /* ShaderManager.cpp in Sources */,
 				19B399A920421D2900581AE0 /* hb-ot-shape-complex-default.cc in Sources */,
+				1913F12622764354005B2D3B /* physfs_platform_haiku.cpp in Sources */,
 				19B6C57D21696426000D5400 /* raw_hash_set.cc in Sources */,
 				19B3997320421B2000581AE0 /* hb-ucdn.cc in Sources */,
 				19AF58A0167FFA0800F54B27 /* Overlay.cpp in Sources */,
 				19D3510A2279983600FEE78E /* hb-ot-shape-complex-vowel-constraints.cc in Sources */,
+				1913F13522764DE3005B2D3B /* Bundle.ios.mm in Sources */,
 				198F42A11A9152E000BE7A73 /* BoundingBoxAttachment.c in Sources */,
 				19DFE5361C6002890079CB58 /* AudioFile.cpp in Sources */,
 				19D045AA18071D6D00968F00 /* Chrono.cpp in Sources */,
 				19B3990E2041E8E400581AE0 /* FontCache.cpp in Sources */,
+				1913F12A22764354005B2D3B /* physfs_archiver_vdf.c in Sources */,
 				193929B816E23D5F0018340B /* SystemInfo.apple.cpp in Sources */,
 				19937CBA1D398336009F8917 /* SmallBuffer.cpp in Sources */,
 				198F42A51A9152E000BE7A73 /* IkConstraint.c in Sources */,
+				1913F12322764354005B2D3B /* physfs_archiver_mvl.c in Sources */,
+				1913F12F22764354005B2D3B /* physfs_archiver_qpak.c in Sources */,
 				198F42A01A9152E000BE7A73 /* BoneData.c in Sources */,
 				196911CD1713564A002BC2E4 /* VertexArray.cpp in Sources */,
 				198F42AE1A9152E000BE7A73 /* Skin.c in Sources */,
+				1913F11E22764354005B2D3B /* physfs.c in Sources */,
 				19B3990F2041E8E400581AE0 /* Typesetter.cpp in Sources */,
 				19655DEB187C65AF0053C398 /* freetype.c in Sources */,
 				198F429C1A9152E000BE7A73 /* AtlasAttachmentLoader.c in Sources */,
 				19B399A520421D2900581AE0 /* hb-ot-shape-fallback.cc in Sources */,
+				1913F13322764354005B2D3B /* physfs_archiver_zip.c in Sources */,
 				19B399AE20421D5600581AE0 /* hb-ot-map.cc in Sources */,
+				1913F11F22764354005B2D3B /* physfs_archiver_7z.c in Sources */,
 				19865982175E98F700723171 /* Data.cpp in Sources */,
 				19B3996720420FD700581AE0 /* hb-ot-tag.cc in Sources */,
 			);
@@ -1788,6 +1892,16 @@
 					"HAVE_OT=1",
 					"HAVE_UCDN=1",
 					"GLES_SILENCE_DEPRECATION=1",
+					"PHYSFS_SUPPORTS_ZIP=0",
+					"PHYSFS_SUPPORTS_7Z=0",
+					"PHYSFS_SUPPORTS_GRP=0",
+					"PHYSFS_SUPPORTS_WAD=0",
+					"PHYSFS_SUPPORTS_HOG=0",
+					"PHYSFS_SUPPORTS_MVL=0",
+					"PHYSFS_SUPPORTS_QPAK=0",
+					"PHYSFS_SUPPORTS_SLB=0",
+					"PHYSFS_SUPPORTS_ISO9660=0",
+					"PHYSFS_SUPPORTS_VDF=0",
 				);
 				HEADER_SEARCH_PATHS = (
 					../../src,
@@ -1805,6 +1919,7 @@
 					../../src/ThirdParty/libpng,
 					../../lib/libpng,
 					../../lib/nanosvg/src,
+					lib/physfs/src,
 					"../../lib/spine-runtimes/spine-c/include",
 					../../lib/variant/include,
 				);
@@ -1951,6 +2066,16 @@
 					"HAVE_OT=1",
 					"HAVE_UCDN=1",
 					"GLES_SILENCE_DEPRECATION=1",
+					"PHYSFS_SUPPORTS_ZIP=0",
+					"PHYSFS_SUPPORTS_7Z=0",
+					"PHYSFS_SUPPORTS_GRP=0",
+					"PHYSFS_SUPPORTS_WAD=0",
+					"PHYSFS_SUPPORTS_HOG=0",
+					"PHYSFS_SUPPORTS_MVL=0",
+					"PHYSFS_SUPPORTS_QPAK=0",
+					"PHYSFS_SUPPORTS_SLB=0",
+					"PHYSFS_SUPPORTS_ISO9660=0",
+					"PHYSFS_SUPPORTS_VDF=0",
 				);
 				HEADER_SEARCH_PATHS = (
 					../../src,
@@ -1968,6 +2093,7 @@
 					../../src/ThirdParty/libpng,
 					../../lib/libpng,
 					../../lib/nanosvg/src,
+					lib/physfs/src,
 					"../../lib/spine-runtimes/spine-c/include",
 					../../lib/variant/include,
 				);
@@ -2000,6 +2126,16 @@
 					"HAVE_OT=1",
 					"HAVE_UCDN=1",
 					"GLES_SILENCE_DEPRECATION=1",
+					"PHYSFS_SUPPORTS_ZIP=0",
+					"PHYSFS_SUPPORTS_7Z=0",
+					"PHYSFS_SUPPORTS_GRP=0",
+					"PHYSFS_SUPPORTS_WAD=0",
+					"PHYSFS_SUPPORTS_HOG=0",
+					"PHYSFS_SUPPORTS_MVL=0",
+					"PHYSFS_SUPPORTS_QPAK=0",
+					"PHYSFS_SUPPORTS_SLB=0",
+					"PHYSFS_SUPPORTS_ISO9660=0",
+					"PHYSFS_SUPPORTS_VDF=0",
 				);
 				HEADER_SEARCH_PATHS = (
 					../../src,
@@ -2017,6 +2153,7 @@
 					../../src/ThirdParty/libpng,
 					../../lib/libpng,
 					../../lib/nanosvg/src,
+					lib/physfs/src,
 					"../../lib/spine-runtimes/spine-c/include",
 					../../lib/variant/include,
 				);

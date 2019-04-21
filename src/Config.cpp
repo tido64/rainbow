@@ -52,9 +52,7 @@ rainbow::Config::Config()
     : width_(0), height_(0), msaa_(0), hidpi_(false), suspend_(true),
       accelerometer_(false)
 {
-    const auto path = filesystem::relative(kConfigINI);
-    std::error_code error;
-    if (!filesystem::is_regular_file(path, error))
+    if (!filesystem::exists(kConfigINI))
     {
         LOGI("No config file was found");
         return;

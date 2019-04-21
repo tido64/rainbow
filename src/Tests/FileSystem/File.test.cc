@@ -8,6 +8,7 @@
 
 #include "Common/Random.h"
 #include "FileSystem/FileSystem.h"
+#include "Tests/TestHelpers.h"
 
 #ifdef RAINBOW_OS_UNIX
 #    define _rmdir rmdir
@@ -19,20 +20,7 @@ using rainbow::File;
 using rainbow::FileType;
 using rainbow::SeekOrigin;
 using rainbow::WriteableFile;
-
-#define ASSERT_EMPTY_DATA(tmpfile, file_type)                                  \
-    do                                                                         \
-    {                                                                          \
-        const auto& data = File::read(tmpfile.c_str(), file_type);             \
-        ASSERT_FALSE(data);                                                    \
-    } while (false)
-
-#define ASSERT_EMPTY_FILE(tmpfile, file_type)                                  \
-    do                                                                         \
-    {                                                                          \
-        const auto& file = File::open(tmpfile.c_str(), file_type);             \
-        ASSERT_EQ(file.size(), 0u);                                            \
-    } while (false)
+using rainbow::test::ScopedAssetsDirectory;
 
 namespace
 {
@@ -57,8 +45,8 @@ namespace
 
         explicit TestFileImpl(File&&) noexcept {}
 
-        auto handle() const -> FILE* { return nullptr; }
-        void set_handle(FILE*) {}
+        auto handle() const -> PHYSFS_File* { return nullptr; }
+        void set_handle(PHYSFS_File*) {}
 
         constexpr auto size() const -> size_t { return kTestFileSuccess; }
 
@@ -94,40 +82,20 @@ TEST(FileTest, HandlesInvalidPaths)
 
 TEST(FileTest, HandlesEmptyFiles)
 {
-    constexpr int max = std::numeric_limits<int>::max();
-    const auto& tmpfile = std::to_string(rainbow::random(max / 2, max));
-
+    ScopedAssetsDirectory scoped_assets{"FileTest_HandlesEmptyFiles"};
+    std::string empty = "empty.dat";
     {
-        std::fclose(std::fopen(tmpfile.c_str(), "wb"));
-
-        ASSERT_EMPTY_DATA(tmpfile, FileType::Asset);
-        ASSERT_EMPTY_FILE(tmpfile, FileType::Asset);
-
-        ASSERT_EQ(std::remove(tmpfile.c_str()), 0);
+        ASSERT_FALSE(File::read(empty.c_str(), FileType::Asset));
     }
     {
-        namespace fs = rainbow::filesystem;
-
-        std::error_code error_code;
-        fs::create_directories(fs::user_data_path(), std::ref(error_code));
-
-        ASSERT_TRUE(WriteableFile::open(tmpfile.c_str()));
-        ASSERT_EMPTY_DATA(tmpfile, FileType::UserAsset);
-        ASSERT_EMPTY_FILE(tmpfile, FileType::UserAsset);
-
-        const auto& tmppath = fs::user(tmpfile.c_str());
-
-        SCOPED_TRACE(tmppath.c_str());
-        ASSERT_EQ(std::remove(tmppath.c_str()), 0);
-
-        // Wait until the file has been removed...
-        struct stat file_status;
-        while (stat(tmppath.c_str(), &file_status) == 0)
-        {
-        }
-
-        SCOPED_TRACE(fs::user_data_path());
-        ASSERT_EQ(_rmdir(fs::user_data_path()), 0);
+        const auto& file = File::open(empty.c_str(), FileType::Asset);
+        ASSERT_TRUE(file);
+        ASSERT_EQ(file.size(), 0u);
+    }
+    {
+        const auto& file = WriteableFile::open(empty.c_str());
+        ASSERT_TRUE(file);
+        ASSERT_EQ(file.size(), 0u);
     }
 }
 
@@ -145,17 +113,8 @@ TEST(FileTest, SupportsPlatformImplementation)
     ASSERT_TRUE(writeable_file);
     ASSERT_TRUE(writeable_file.seek(rainbow::kInvalidFileSize));
     ASSERT_EQ(writeable_file.size(), kTestFileSuccess);
-    ASSERT_EQ(writeable_file.read(nullptr, rainbow::kInvalidFileSize),
-              kTestFileSuccess);
     ASSERT_EQ(writeable_file.write(nullptr, rainbow::kInvalidFileSize),
               kTestFileSuccess);
-}
-
-TEST(FileTypeTest, CorrespondsToFileAccessMode)
-{
-    ASSERT_STREQ(rainbow::detail::file_access_mode(FileType::Asset), "rb");
-    ASSERT_STREQ(rainbow::detail::file_access_mode(FileType::UserAsset), "rb");
-    ASSERT_STREQ(rainbow::detail::file_access_mode(FileType::UserFile), "w+b");
 }
 
 TEST(SeekOriginTest, CorrespondsToSeekOriginParameter)

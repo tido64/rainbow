@@ -2,7 +2,7 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
-#include <memory>
+#include <optional>
 
 #include <EGL/egl.h>
 #include <android/input.h>
@@ -12,9 +12,12 @@
 #include "Common/Chrono.h"
 #include "Common/Data.h"
 #include "Director.h"
+#include "FileSystem/Bundle.h"
+#include "FileSystem/FileSystem.h"
 #include "Input/Pointer.h"
 #include "Platform/Android/ShakeGestureDetector.h"
 
+using rainbow::Bundle;
 using rainbow::Chrono;
 using rainbow::Pointer;
 using rainbow::ShakeGestureDetector;
@@ -34,15 +37,13 @@ struct AInstance
     bool initialised = false;
 
     android_app* app = nullptr;
-    ASensorManager* sensor_manager = nullptr;
-    const ASensor* accelerometer_sensor = nullptr;
     ASensorEventQueue* sensor_event_queue = nullptr;
 
     EGLDisplay display = EGL_NO_DISPLAY;
     EGLSurface surface = EGL_NO_SURFACE;
     EGLContext context = EGL_NO_CONTEXT;
 
-    std::unique_ptr<Director> director;
+    std::optional<Director> director;
 };
 
 void android_destroy_display(AInstance*);
@@ -51,6 +52,8 @@ void android_init_display(AInstance*);
 void android_handle_event(android_app*, int32_t cmd);
 auto android_handle_input(android_app*, AInputEvent*) -> int32_t;
 auto android_handle_motion(android_app*, AInputEvent*) -> int32_t;
+auto get_accelerometer(ASensorManager* manager = ASensorManager_getInstance())
+    -> const ASensor*;
 auto get_pointer_event(const Context&, AInputEvent*, int32_t index) -> Pointer;
 
 namespace
@@ -82,18 +85,20 @@ void android_main(android_app* state)
     ainstance.app = state;
     g_native_activity = state->activity;
 
+    const Bundle bundle;
+    rainbow::filesystem::initialize(bundle, nullptr, false);
+
     // Prepare to monitor accelerometer
-    ainstance.sensor_manager = ASensorManager_getInstance();
-    ainstance.accelerometer_sensor = ASensorManager_getDefaultSensor(
-        ainstance.sensor_manager, ASENSOR_TYPE_ACCELEROMETER);
-    if (ainstance.accelerometer_sensor != nullptr)
+    auto sensor_manager = ASensorManager_getInstance();
+    auto accelerometer_sensor = get_accelerometer(sensor_manager);
+    if (accelerometer_sensor != nullptr)
     {
-        ainstance.sensor_event_queue =
-            ASensorManager_createEventQueue(ainstance.sensor_manager,
-                                            state->looper,
-                                            LOOPER_ID_USER,
-                                            nullptr,
-                                            nullptr);
+        ainstance.sensor_event_queue = ASensorManager_createEventQueue(  //
+            sensor_manager,
+            state->looper,
+            LOOPER_ID_USER,
+            nullptr,
+            nullptr);
     }
 
 #ifdef USE_HEIMDALL
@@ -122,18 +127,21 @@ void android_main(android_app* state)
                 break;
 
             // If a sensor has data, process it now.
-            if (ainstance.active && ident == LOOPER_ID_USER &&
-                ainstance.accelerometer_sensor)
+            if (accelerometer_sensor != nullptr && ainstance.active &&
+                ident == LOOPER_ID_USER)
             {
                 ASensorEvent event;
                 while (ASensorEventQueue_getEvents(
                            ainstance.sensor_event_queue, &event, 1) > 0)
                 {
 #ifdef USE_HEIMDALL
-                    shake_gesture_detector.update({event.acceleration.x,
-                                                   event.acceleration.y,
-                                                   event.acceleration.z},
-                                                  event.timestamp);
+                    shake_gesture_detector.update(  //
+                        {
+                            event.acceleration.x,
+                            event.acceleration.y,
+                            event.acceleration.z,
+                        },
+                        event.timestamp);
 #endif
                     ainstance.director->input().accelerated(
                         event.acceleration.x,
@@ -185,7 +193,7 @@ void android_handle_display(AInstance* a)
     if (a->initialised)
         return;
 
-    a->director = std::make_unique<Director>();
+    a->director.emplace();
     if (a->director->terminated())
     {
         LOGF("%s", a->director->error().message().c_str());
@@ -213,13 +221,19 @@ void android_init_display(AInstance* a)
     }
 
     constexpr EGLint attrib_list[]{
-        EGL_ALPHA_SIZE, 8,
-        EGL_BLUE_SIZE, 8,
-        EGL_GREEN_SIZE, 8,
-        EGL_RED_SIZE, 8,
-        EGL_SURFACE_TYPE, EGL_WINDOW_BIT,
-        EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT,
-        EGL_NONE
+        EGL_ALPHA_SIZE,
+        8,
+        EGL_BLUE_SIZE,
+        8,
+        EGL_GREEN_SIZE,
+        8,
+        EGL_RED_SIZE,
+        8,
+        EGL_SURFACE_TYPE,
+        EGL_WINDOW_BIT,
+        EGL_RENDERABLE_TYPE,
+        EGL_OPENGL_ES2_BIT,
+        EGL_NONE,
     };
     EGLConfig config;
     EGLint nconfigs;
@@ -277,19 +291,23 @@ void android_handle_event(android_app* app, int32_t cmd)
             android_handle_display(a);
             break;
         case APP_CMD_GAINED_FOCUS:
+        {
             // When our app gains focus, we start monitoring the accelerometer.
-            if (a->accelerometer_sensor)
+            auto accelerometer_sensor = get_accelerometer();
+            if (accelerometer_sensor != nullptr)
             {
                 ASensorEventQueue_enableSensor(
-                    a->sensor_event_queue, a->accelerometer_sensor);
+                    a->sensor_event_queue, accelerometer_sensor);
                 // We'd like to get 60 events per second (in us).
-                ASensorEventQueue_setEventRate(a->sensor_event_queue,
-                                               a->accelerometer_sensor,
-                                               (1000 * 1000) / 60);
+                ASensorEventQueue_setEventRate(  //
+                    a->sensor_event_queue,
+                    accelerometer_sensor,
+                    (1000 * 1000) / 60);
             }
             a->director->on_focus_gained();
             a->active = true;
             break;
+        }
         case APP_CMD_LOST_FOCUS:
             break;
         case APP_CMD_LOW_MEMORY:
@@ -315,16 +333,20 @@ void android_handle_event(android_app* app, int32_t cmd)
         case APP_CMD_SAVE_STATE:
             break;
         case APP_CMD_PAUSE:
+        {
             eglMakeCurrent(
                 a->display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
-            if (a->accelerometer_sensor != nullptr)
+
+            auto accelerometer_sensor = get_accelerometer();
+            if (accelerometer_sensor != nullptr)
             {
                 ASensorEventQueue_disableSensor(
-                    a->sensor_event_queue, a->accelerometer_sensor);
+                    a->sensor_event_queue, accelerometer_sensor);
             }
             a->director->on_focus_lost();
             a->active = false;
             break;
+        }
         case APP_CMD_DESTROY:
             a->active = false;
             a->done = true;
@@ -419,6 +441,11 @@ auto android_handle_motion(android_app* app, AInputEvent* event) -> int32_t
     return 1;
 }
 
+auto get_accelerometer(ASensorManager* manager) -> const ASensor*
+{
+    return ASensorManager_getDefaultSensor(manager, ASENSOR_TYPE_ACCELEROMETER);
+}
+
 auto get_pointer_event(const Context& ctx, AInputEvent* event, int32_t index)
     -> Pointer
 {
@@ -426,8 +453,10 @@ auto get_pointer_event(const Context& ctx, AInputEvent* event, int32_t index)
         ctx,
         Vec2i(
             AMotionEvent_getX(event, index), AMotionEvent_getY(event, index)));
-    return {static_cast<uint32_t>(AMotionEvent_getPointerId(event, index)),
-            point.x,
-            point.y,
-            static_cast<uint64_t>(AMotionEvent_getEventTime(event))};
+    return {
+        static_cast<uint32_t>(AMotionEvent_getPointerId(event, index)),
+        point.x,
+        point.y,
+        static_cast<uint64_t>(AMotionEvent_getEventTime(event)),
+    };
 }

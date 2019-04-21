@@ -2,82 +2,109 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
+#include "FileSystem/FileSystem.h"
+
 #include <cstring>
 
 #include <gtest/gtest.h>
 
 #include "Common/Random.h"
-#include "FileSystem/FileSystem.h"
+#include "FileSystem/Bundle.h"
+#include "Tests/TestHelpers.h"
 
 #ifdef RAINBOW_OS_WINDOWS
-#   include <cstdint>
-#   include <direct.h>
-#   define getcwd(buf, size) _getcwd(buf, size)
-#   define kPathSeparator           "\\"
-#   define kPathSeparatorCharacter  '\\'
-#   define rmdir(path) _rmdir(path)
-using mode_t = uint16_t;
+#    include <direct.h>
+#    define getcwd(buf, size) _getcwd(buf, size)
+#    define kPathSeparator "\\"
 #else
-#   include <unistd.h>
-#   define kPathSeparator           "/"
-#   define kPathSeparatorCharacter  '/'
+#    include <unistd.h>
+#    define kPathSeparator "/"
 #endif
-#define kTestFileName    "rainbow.file"
-#define kTestPath        "rainbow-test"
-#define kTestRandomPath  "rainbow-%x"
 
-// For tests of File, see DataTest::SaveAndLoad.
+namespace fs = rainbow::filesystem;
+namespace sys = rainbow::system;
 
-using rainbow::filesystem::Path;
-
-TEST(FileSystemTest, AssetsPath)
-{
-    char cwd[256];
-    ASSERT_EQ(getcwd(cwd, sizeof(cwd)), cwd);
-    ASSERT_STREQ(rainbow::filesystem::assets_path(), cwd);
-}
+using rainbow::test::ScopedAssetsDirectory;
 
 TEST(FileSystemTest, CreatesDirectories)
 {
-    char random[32];
-    snprintf(random,
-             sizeof(random),
-             kTestRandomPath,
-             rainbow::random(0x10000000u, 0xffffffffu));
+    ScopedAssetsDirectory scoped_assets{"FileSystemTest"};
 
-    std::error_code error;
-    Path path = rainbow::filesystem::absolute(random);
+    fs::Path path;
     path /= "1";
     path /= "2";
     path /= "3";
     path /= "4";
 
-    ASSERT_TRUE(rainbow::filesystem::create_directories(path, error));
+    ASSERT_EQ(path.string(), "1/2/3/4");
+    ASSERT_TRUE(fs::create_directories(path));
 
     size_t offset = path.string().length();
     while (offset != std::string::npos)
     {
         auto p = path.string().substr(0, offset);
-        ASSERT_TRUE(rainbow::filesystem::is_directory(p.c_str(), error));
-        ASSERT_EQ(rmdir(p.c_str()), 0);
-        offset = p.rfind(kPathSeparatorCharacter, offset);
+
+        ASSERT_TRUE(fs::is_directory(p.c_str()));
+        ASSERT_TRUE(fs::remove(p.c_str()));
+        ASSERT_FALSE(fs::is_directory(p.c_str()));
+
+        offset = p.rfind('/', offset);
     }
+
+    ASSERT_FALSE(fs::is_directory("1"));
 }
 
-TEST(FileSystemTest, RelativeToCurrentPath)
+TEST(FileSystemTest, FileExists)
+{
+    ScopedAssetsDirectory scoped_assets{"FileSystemTest"};
+
+    ASSERT_FALSE(fs::exists("does not exist"));
+    ASSERT_FALSE(fs::is_directory("does not exist"));
+    ASSERT_FALSE(fs::is_regular_file("does not exist"));
+
+    ASSERT_TRUE(fs::exists("empty.dat"));
+    ASSERT_FALSE(fs::is_directory("empty.dat"));
+    ASSERT_TRUE(fs::is_regular_file("empty.dat"));
+
+    ASSERT_TRUE(fs::exists("folder"));
+    ASSERT_TRUE(fs::is_directory("folder"));
+    ASSERT_FALSE(fs::is_regular_file("folder"));
+}
+
+TEST(FileSystemTest, ReturnsPlatformPathSeparator)
+{
+    ASSERT_STREQ(fs::path_separator(), kPathSeparator);
+}
+
+TEST(FileSystemTest, ReturnsRealPath)
+{
+    ScopedAssetsDirectory scoped_assets{"FileSystemTest"};
+    auto full_path = fs::real_path("empty.dat");
+
+    ASSERT_EQ(full_path, scoped_assets.path() / "empty.dat");
+}
+
+TEST(FileSystemTest, SystemReturnsCurrentPath)
 {
     char cwd[256];
+
     ASSERT_EQ(getcwd(cwd, sizeof(cwd)), cwd);
-
-    std::string path{cwd};
-    path += kPathSeparatorCharacter;
-    path += kTestFileName;
-
-    ASSERT_STREQ(
-        rainbow::filesystem::relative(kTestFileName).c_str(), path.c_str());
+    ASSERT_EQ(sys::current_path(), cwd);
 }
 
-TEST(FileSystemTest, RelativeToRoot)
+TEST(FileSystemTest, SystemReturnsWhetherPathIsDirectory)
 {
-    ASSERT_STREQ(rainbow::filesystem::absolute(kTestPath).c_str(), kTestPath);
+    ScopedAssetsDirectory scoped_assets{"FileSystemTest"};
+
+    ASSERT_TRUE(sys::is_directory(scoped_assets.c_str()));
+    ASSERT_FALSE(sys::is_regular_file(scoped_assets.c_str()));
+}
+
+TEST(FileSystemTest, SystemReturnsWhetherPathIsRegularFile)
+{
+    ScopedAssetsDirectory scoped_assets{"FileSystemTest"};
+    auto file_path = fs::real_path("empty.dat");
+
+    ASSERT_FALSE(sys::is_directory(file_path.c_str()));
+    ASSERT_TRUE(sys::is_regular_file(file_path.c_str()));
 }

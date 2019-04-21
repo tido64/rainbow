@@ -5,8 +5,6 @@
 #ifndef FILESYSTEM_FILESYSTEM_H_
 #define FILESYSTEM_FILESYSTEM_H_
 
-#include <system_error>
-
 #include "Common/String.h"
 #include "FileSystem/Path.h"
 
@@ -17,21 +15,15 @@ namespace rainbow
 
 namespace rainbow::filesystem
 {
-    /// <summary>Creates an absolute path.</summary>
-    auto absolute(czstring path) -> Path;
-
-    /// <summary>Returns assets path.</summary>
-    auto assets_path() -> czstring;
+    /// <summary>Returns the currently loaded bundle.</summary>
+    auto bundle() -> const Bundle&;
 
     /// <summary>Creates new directories.</summary>
-    bool create_directories(czstring path, std::error_code& error);
-    inline bool create_directories(const Path& path, std::error_code& error)
+    bool create_directories(czstring path);
+    inline bool create_directories(const Path& path)
     {
-        return create_directories(path.c_str(), error);
+        return create_directories(path.c_str());
     }
-
-    /// <summary>Returns path of executable.</summary>
-    auto executable_path() -> czstring;
 
     /// <summary>
     ///   Returns whether the specified path refers to an existing file.
@@ -39,52 +31,62 @@ namespace rainbow::filesystem
     bool exists(czstring path);
 
     /// <summary>Initializes the file subsystem.</summary>
-    void initialize(const Bundle& bundle);
+    void initialize(const Bundle& bundle, czstring argv0, bool allow_symlinks);
 
     /// <summary>
     ///   Returns whether <paramref name="path"/> refers to a directory.
     /// </summary>
-    bool is_directory(czstring path, std::error_code& error);
-    inline bool is_directory(const Path& path, std::error_code& error)
+    bool is_directory(czstring path);
+    inline bool is_directory(const Path& path)
     {
-        return is_directory(path.c_str(), error);
+        return is_directory(path.c_str());
     }
 
     /// <summary>
     ///   Returns whether <paramref name="path"/> refers to a regular file.
     /// </summary>
-    bool is_regular_file(czstring path, std::error_code& error);
-    inline bool is_regular_file(const Path& path, std::error_code& error)
+    bool is_regular_file(czstring path);
+    inline bool is_regular_file(const Path& path)
     {
-        return is_regular_file(path.c_str(), error);
+        return is_regular_file(path.c_str());
     }
-
-    /// <summary>Returns main script name; <c>nullptr</c> if unset.</summary>
-    auto main_script() -> czstring;
 
     /// <summary>Returns the platform specific path separator.</summary>
     auto path_separator() -> czstring;
 
     /// <summary>
-    ///   Creates a path relative to the current working directory.
+    ///   Returns the app preferences directory for current user, suitable for
+    ///   writing smaller files.
     /// </summary>
-    auto relative(czstring path) -> Path;
+    /// <remarks>
+    ///   <list type="bullet">
+    ///     <item>Windows: %APPDATA%\\Bifrost Entertainment\\Rainbow</item>
+    ///     <item>macOS: ~/Library/Application Support/Rainbow</item>
+    ///     <item>Linux: ~/.local/share/Rainbow</item>
+    ///     <item>Android: The app's internal data directory</item>
+    ///     <item>iOS: NSDocumentDirectory</item>
+    ///   </list>
+    /// </remarks>
+    auto preferences_directory() -> const Path&;
+
+    /// <summary>Returns the real path.</summary>
+    auto real_path(czstring path) -> Path;
 
     /// <summary>Removes a file or empty directory.</summary>
-    bool remove(czstring path, std::error_code& error);
-    inline bool remove(const Path& path, std::error_code& error)
-    {
-        return remove(path.c_str(), error);
-    }
-
-    /// <summary>Returns current working directory.</summary>
-    auto system_current_path() -> std::string;
-
-    /// <summary>Creates a path relative to the user's data directory.</summary>
-    auto user(czstring path) -> Path;
-
-    /// <summary>Returns user data directory.</summary>
-    auto user_data_path() -> czstring;
+    bool remove(czstring path);
+    inline bool remove(const Path& path) { return remove(path.c_str()); }
 }  // namespace rainbow::filesystem
+
+namespace rainbow::system
+{
+    [[nodiscard]] auto absolute_path(czstring path) -> std::string;
+
+    /// <summary>Returns the current path.</summary>
+    [[nodiscard]] auto current_path() -> std::string;
+
+    [[nodiscard]] bool is_directory(czstring path);
+
+    [[nodiscard]] bool is_regular_file(czstring path);
+}  // namespace rainbow::system
 
 #endif
