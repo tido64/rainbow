@@ -43,7 +43,7 @@ class RainbowActivity : NativeActivity() {
 
     companion object {
         init {
-            System.loadLibrary("c++_shared")
+            //System.loadLibrary("c++_shared")
             //System.loadLibrary("fmod")
             //System.loadLibrary("fmodstudio")
             System.loadLibrary("rainbow")
