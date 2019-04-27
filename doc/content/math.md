@@ -15,7 +15,7 @@ unsigned int  ceil_pow2  (unsigned int i);
 
 Rounds `i` up to the nearest power of 2.
 
-<aside class="notice">0 is incorrectly considered a power of 2.</aside>
+> 0 is incorrectly considered a power of 2.
 
 ```c++
 unsigned int  floor_pow2  (unsigned int i);
