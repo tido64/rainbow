@@ -1496,7 +1496,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "../../tools/xcode-prebuild.sh\n";
+			shellScript = "mkdir -p lib\npushd lib 1> /dev/null\ncmake -P ../../cmake/Duktape.cmake\ncmake -P ../../cmake/HarfBuzz.cmake\npopd 1> /dev/null\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 

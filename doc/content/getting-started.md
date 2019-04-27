@@ -62,7 +62,7 @@ well.
 
 1. Install [Xcode](https://itunes.apple.com/app/xcode/id497799835?mt=12) from App Store.
 
-2. Once Xcode is installed, launch it once to install Command Line Tools.
+2. After Xcode is installed, launch it once to install Command Line Tools.
 
 3. Install [Homebrew](https://brew.sh/).
 
@@ -143,9 +143,12 @@ You'll find an overview of configuration and feature flags further below.
 
 ## Building for iOS
 
-1. Install [Xcode](https://itunes.apple.com/no/app/xcode/id497799835?mt=12) from the App Store.
-2. Open `build/ios/Rainbow.xcodeproj` in Xcode.
-3. Build and run the current scheme.
+1. Install [Xcode](https://itunes.apple.com/app/xcode/id497799835?mt=12) from App Store.
+2. After Xcode is installed, launch it once to install Command Line Tools.
+3. Install [Homebrew](https://brew.sh/).
+4. Install CMake: `brew install cmake`
+5. Open `build/ios/Rainbow.xcodeproj` in Xcode.
+6. Build and run the current scheme.
 
 ## Build Configuration
 

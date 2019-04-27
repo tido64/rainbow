@@ -1,4 +1,8 @@
-cmake_minimum_required(VERSION 3.4.3)
+if(DEFINED CMAKE_SCRIPT_MODE_FILE)
+  cmake_minimum_required(VERSION 3.11.4)
+else()
+  cmake_minimum_required(VERSION 3.5.2)
+endif()
 
 project(Rainbow)
 set(LOCAL_MODULE_PATH ${PROJECT_SOURCE_DIR}/build/cmake)
