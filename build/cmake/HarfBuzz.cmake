@@ -1,10 +1,10 @@
 set(HARFBUZZ_TARGET_VERSION 1.9.0)
-set(HARFBUZZ_URL https://github.com/harfbuzz/harfbuzz/releases/download/${HARFBUZZ_TARGET_VERSION}/harfbuzz-${HARFBUZZ_TARGET_VERSION}.tar.bz2)
 set(HARFBUZZ_URL_HASH 11eca62bf0ac549b8d6be55f4e130946399939cdfe7a562fdaee711190248b00)
+set(HARFBUZZ_URL https://github.com/harfbuzz/harfbuzz/releases/download/${HARFBUZZ_TARGET_VERSION}/harfbuzz-${HARFBUZZ_TARGET_VERSION}.tar.bz2)
 
 # Download HarfBuzz releases to avoid dependency on Ragel
-include(FetchContent)
 if(DEFINED CMAKE_SCRIPT_MODE_FILE)
+  include(FetchContent)
   FetchContent_Populate(
     HarfBuzz
     URL ${HARFBUZZ_URL}

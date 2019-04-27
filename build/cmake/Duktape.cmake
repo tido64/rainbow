@@ -1,6 +1,6 @@
 set(DUKTAPE_TARGET_VERSION 2.3.0)
-set(DUKTAPE_URL https://github.com/svaarala/duktape/releases/download/v${DUKTAPE_TARGET_VERSION}/duktape-${DUKTAPE_TARGET_VERSION}.tar.xz)
 set(DUKTAPE_URL_HASH ed6e2f3ab2061628a7aeee27ccff16538ba6a151480cccf2e846bd061e45afe8)
+set(DUKTAPE_URL https://github.com/svaarala/duktape/releases/download/v${DUKTAPE_TARGET_VERSION}/duktape-${DUKTAPE_TARGET_VERSION}.tar.xz)
 
 if(DEFINED CMAKE_SCRIPT_MODE_FILE)
   include(FetchContent)
