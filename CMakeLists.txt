@@ -1,7 +1,7 @@
 if(DEFINED CMAKE_SCRIPT_MODE_FILE)
   cmake_minimum_required(VERSION 3.11.4)
 else()
-  cmake_minimum_required(VERSION 3.6.3)
+  cmake_minimum_required(VERSION 3.5.2)
 endif()
 
 project(Rainbow)
