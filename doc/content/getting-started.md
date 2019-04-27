@@ -136,10 +136,8 @@ You'll find an overview of configuration and feature flags further below.
 4. Open `build/android/` in Android Studio.
 5. Run the app on your device or emulator.
 
-<aside class="notice">
-    If you get an error about selecting Android SDK, press Ctrl/⌘+Shift+A and
-    search for "Sync Project with Gradle Files".
-</aside>
+> If you get an error about selecting Android SDK, open File menu and select
+> "Sync Project with Gradle Files".
 
 ## Building for iOS
 
