@@ -34,7 +34,7 @@ case $1 in
       *)
         mkdir out
         cd out
-        cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DUNIT_TESTS=1 -DUSE_PHYSICS=1 -DUSE_SPINE=1 -G Ninja ..
+        cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DUNIT_TESTS=1 -DCOVERAGE=1 -DUSE_PHYSICS=1 -DUSE_SPINE=1 -G Ninja ..
         ninja
         ;;
     esac
