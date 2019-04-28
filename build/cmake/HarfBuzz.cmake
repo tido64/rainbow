@@ -14,9 +14,11 @@ if(DEFINED CMAKE_SCRIPT_MODE_FILE)
   )
 else()
   find_git(GIT)
+  ExternalProject_Get_Byproducts(harfbuzz-source harfbuzz HARFBUZZ_BYPRODUCTS)
   ExternalProject_Add(
-    harfbuzz
-    URL https://github.com/harfbuzz/harfbuzz/releases/download/${HARFBUZZ_TARGET_VERSION}/harfbuzz-${HARFBUZZ_TARGET_VERSION}.tar.bz2
+    harfbuzz-source
+    PREFIX _deps
+    URL ${HARFBUZZ_URL}
     URL_HASH SHA256=${HARFBUZZ_URL_HASH}
     PATCH_COMMAND ${GIT} apply ${PROJECT_SOURCE_DIR}/tools/harfbuzz-disable-tests.patch
     CMAKE_ARGS
@@ -33,9 +35,13 @@ else()
       $<$<BOOL:${ANDROID_STL}>:-DANDROID_STL=${ANDROID_STL}>
       $<$<BOOL:${CMAKE_MAKE_PROGRAM}>:-DCMAKE_MAKE_PROGRAM=${CMAKE_MAKE_PROGRAM}>
       $<$<BOOL:${CMAKE_TOOLCHAIN_FILE}>:-DCMAKE_TOOLCHAIN_FILE:FILEPATH=${CMAKE_TOOLCHAIN_FILE}>
-    BUILD_BYPRODUCTS ${HARFBUZZ_LIBRARY}
+    BUILD_BYPRODUCTS ${HARFBUZZ_BYPRODUCTS}  # Required by Ninja
     LOG_INSTALL OFF
     DEPENDS freetype-bootstrap
   )
-  ExternalProject_Get_Property(harfbuzz INSTALL_DIR)
+
+  ExternalProject_Get_Property(harfbuzz-source INSTALL_DIR)
+  set(HARFBUZZ_INCLUDE_DIR ${INSTALL_DIR}/include/harfbuzz)
+
+  ExternalProject_Get_Library(harfbuzz-source harfbuzz HARFBUZZ_LIBRARY)
 endif()
