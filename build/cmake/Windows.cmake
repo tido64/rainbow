@@ -2,7 +2,16 @@ if(WIN32)
   set(CMAKE_FIND_LIBRARY_SUFFIXES ".a" ".lib" ".dll.a" ".dll")
   list(APPEND RESOURCE_FILES
       .editorconfig
+      build/cmake/Audio.cmake
+      build/cmake/Box2D.cmake
+      build/cmake/Duktape.cmake
+      build/cmake/FreeType.cmake
+      build/cmake/libpng.cmake
+      build/cmake/SDL2.cmake
+      build/cmake/Spine.cmake
+      build/cmake/Utilities.cmake
       build/cmake/Windows.cmake
+      build/cmake/zlib.cmake
       src/Resources/Rainbow.natvis
       src/Resources/Rainbow.rc
   )

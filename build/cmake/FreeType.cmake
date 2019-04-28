@@ -1,8 +1,6 @@
 if(EMSCRIPTEN)
   set(EMCC_FLAGS "${EMCC_FLAGS} -s USE_FREETYPE=1 -s USE_HARFBUZZ=1")
 else()
-  set(HARFBUZZ_LIBRARY ${PROJECT_BINARY_DIR}/harfbuzz-prefix/lib/${CMAKE_STATIC_LIBRARY_PREFIX}harfbuzz${CMAKE_STATIC_LIBRARY_SUFFIX})
-
   # Build FreeType without HarfBuzz to break the circular dependency
   add_library(freetype-bootstrap STATIC ${THIRD_PARTY}/FreeType/freetype.c)
   target_compile_definitions(freetype-bootstrap PRIVATE RAINBOW_BUILD_FREETYPE_WITHOUT_HARFBUZZ)
@@ -26,13 +24,13 @@ else()
     PUBLIC
       ${THIRD_PARTY}/FreeType
       ${LOCAL_LIBRARY}/FreeType/include
-      ${INSTALL_DIR}/include/harfbuzz
+      ${HARFBUZZ_INCLUDE_DIR}
     PRIVATE
       ${LOCAL_LIBRARY}/FreeType/builds
       ${LOCAL_LIBRARY}/FreeType/src
   )
 
-  add_dependencies(freetype harfbuzz)
+  add_dependencies(freetype harfbuzz-source)
   target_link_libraries(freetype ${HARFBUZZ_LIBRARY})
   target_link_libraries(rainbow freetype)
 
