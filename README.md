@@ -60,12 +60,12 @@ Rainbow.RenderQueue.add(label);
 ```typescript
 const texture = new Rainbow.Texture("monkey.png");
 const frames = [
-  texture.addRegion(400, 724, 104, 149);
-  texture.addRegion(504, 724, 104, 149);
-  texture.addRegion(608, 724, 104, 149);
-  texture.addRegion(712, 724, 104, 149);
-  texture.addRegion(816, 724, 104, 149);
-  texture.addRegion(920, 724, 104, 149);
+  texture.addRegion(400, 724, 104, 149),
+  texture.addRegion(504, 724, 104, 149),
+  texture.addRegion(608, 724, 104, 149),
+  texture.addRegion(712, 724, 104, 149),
+  texture.addRegion(816, 724, 104, 149),
+  texture.addRegion(920, 724, 104, 149),
 ];
 
 const batch = new Rainbow.SpriteBatch(1);
@@ -110,7 +110,7 @@ Rainbow.RenderQueue.add(animation);
 | [Dear ImGui][]      | 1.65     | MIT                 |    ✓     |
 | [Duktape][]         | 2.3.0    | MIT                 |    ✓     |
 | [FreeType][]        | 2.9.1    | FreeType            |    ✓     |
-| [HarfBuzz][]        | 1.9.0    | Old MIT             |    ✓     |
+| [HarfBuzz][]        | 2.4.0    | Old MIT             |    ✓     |
 | [libpng][]          | 1.6.35   | zlib                |    ✓     |
 | [Mapbox Variant][]  | 1.1.5    | BSD-3               |    ✓     |
 | [NanoSVG][]         | dc12d905 | zlib                |    ✓     |
