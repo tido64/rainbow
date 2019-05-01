@@ -10,11 +10,13 @@ list(APPEND CMAKE_MODULE_PATH ${LOCAL_MODULE_PATH})
 set(LOCAL_LIBRARY ${PROJECT_SOURCE_DIR}/lib)
 set(THIRD_PARTY ${PROJECT_SOURCE_DIR}/src/ThirdParty)
 
+include(CMakeDependentOption)
 include(FindPkgConfig)
 include(${LOCAL_MODULE_PATH}/Utilities.cmake)
 
 #option(PROFILING   "Compile with profiling" OFF)
 option(UNIT_TESTS  "Compile unit tests" OFF)
+CMAKE_DEPENDENT_OPTION(COVERAGE "Compile with code coverage" OFF "UNIT_TESTS" OFF)
 
 # Features
 option(USE_FMOD_STUDIO  "Enable FMOD Studio audio engine" OFF)
@@ -346,7 +348,7 @@ target_compile_options(
     rainbow
     PRIVATE
         ${RAINBOW_CXX_WARNINGS}
-        $<$<AND:$<NOT:$<CXX_COMPILER_ID:MSVC>>,$<BOOL:${UNIT_TESTS}>>:--coverage>
+        $<$<AND:$<NOT:$<CXX_COMPILER_ID:MSVC>>,$<BOOL:${COVERAGE}>>:--coverage>
 )
 target_include_directories(
     rainbow
@@ -408,13 +410,13 @@ if(ANDROID)
   target_link_libraries(native_app_glue log)
   target_link_libraries(rainbow EGL GLESv2 native_app_glue log android z)
 elseif(APPLE)
-  if(UNIT_TESTS)
+  if(COVERAGE)
     set(CMAKE_EXE_LINKER_FLAGS "--coverage")
   endif()
   find_library(CORESERVICES_LIBRARY CoreServices REQUIRED)
   target_link_libraries(rainbow ${CORESERVICES_LIBRARY})
 elseif(UNIX AND NOT MINGW)
-  if(UNIT_TESTS)
+  if(COVERAGE)
     set(CMAKE_EXE_LINKER_FLAGS "--coverage")
   endif()
   set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-z,now -Wl,-z,relro -pie -pthread")
