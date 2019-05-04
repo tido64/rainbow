@@ -114,13 +114,14 @@ TEST(FileTest, SupportsPlatformImplementation)
 
 TEST(FileTest, TranslatesSeekOrigin)
 {
+    ASSERT_EQ(rainbow::detail::seek_origin(SeekOrigin::Set), SEEK_SET);
     ASSERT_EQ(rainbow::detail::seek_origin(SeekOrigin::Current), SEEK_CUR);
     ASSERT_EQ(rainbow::detail::seek_origin(SeekOrigin::End), SEEK_END);
-    ASSERT_EQ(rainbow::detail::seek_origin(SeekOrigin::Set), SEEK_SET);
 
+    ASSERT_EQ(rainbow::detail::seek_origin(SEEK_SET), SeekOrigin::Set);
     ASSERT_EQ(rainbow::detail::seek_origin(SEEK_CUR), SeekOrigin::Current);
     ASSERT_EQ(rainbow::detail::seek_origin(SEEK_END), SeekOrigin::End);
-    ASSERT_EQ(rainbow::detail::seek_origin(SEEK_SET), SeekOrigin::Set);
+    ASSERT_EQ(rainbow::detail::seek_origin(42), SeekOrigin::Set);
 }
 
 TEST(FileTest, SeeksInFile)
@@ -174,4 +175,20 @@ TEST(FileTest, SeeksInFile)
         file.seek(i, SeekOrigin::End);
         ASSERT_EQ(file.tell(), 10u - i);
     }
+}
+
+TEST(FileTest, IsMovable)
+{
+    ScopedAssetsDirectory scoped_assets{"FileTest_SeeksInFile"};
+
+    auto file = File::open("file", FileType::Asset);
+    ASSERT_TRUE(file);
+
+    file.seek(5);
+    ASSERT_EQ(file.tell(), 5u);
+
+    File file2{std::move(file)};
+    ASSERT_TRUE(file2);
+    ASSERT_FALSE(file);
+    ASSERT_EQ(file2.tell(), 5u);
 }
