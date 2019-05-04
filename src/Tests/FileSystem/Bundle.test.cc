@@ -10,6 +10,7 @@
 #include "Tests/TestHelpers.h"
 
 using rainbow::Bundle;
+using rainbow::czstring;
 using rainbow::zstring;
 using rainbow::test::fixture_path;
 using rainbow::test::ScopedAssetsDirectory;
@@ -93,4 +94,47 @@ TEST(BundleTest, WithScriptInAnotherDirectory)
     ASSERT_STREQ(bundle.assets_path(), directory.c_str());
     ASSERT_EQ(bundle.exec_path(), cwd + fs::path_separator() + executable);
     ASSERT_EQ(bundle.main_script(), script);
+}
+
+TEST(BundleTest, IsMovable)
+{
+    std::string executable = "rainbow";
+    auto directory = fixture_path("BundleTest_WithScriptInAnotherDirectory");
+    std::string script_path = (directory / "main.js").c_str();
+
+    zstring args[2]{executable.data(), script_path.data()};
+    {
+        Bundle bundle(args);
+        czstring assets_path = bundle.assets_path();
+        czstring exec_path = bundle.exec_path();
+        czstring main_script = bundle.main_script();
+
+        Bundle bundle2{std::move(bundle)};
+
+        // Assert pointer equality
+        ASSERT_EQ(bundle2.assets_path(), assets_path);
+        ASSERT_EQ(bundle2.exec_path(), exec_path);
+        ASSERT_EQ(bundle2.main_script(), main_script);
+    }
+    {
+        Bundle bundle(args);
+        czstring assets_path = bundle.assets_path();
+        czstring exec_path = bundle.exec_path();
+        czstring main_script = bundle.main_script();
+
+        zstring args2[1]{executable.data()};
+        Bundle bundle2(args2);
+
+        // Assert pointer inequality
+        ASSERT_NE(bundle2.assets_path(), assets_path);
+        ASSERT_NE(bundle2.exec_path(), exec_path);
+        ASSERT_NE(bundle2.main_script(), main_script);
+
+        bundle2 = std::move(bundle);
+
+        // Assert pointer equality
+        ASSERT_EQ(bundle2.assets_path(), assets_path);
+        ASSERT_EQ(bundle2.exec_path(), exec_path);
+        ASSERT_EQ(bundle2.main_script(), main_script);
+    }
 }

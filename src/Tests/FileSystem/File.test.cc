@@ -117,6 +117,10 @@ TEST(FileTest, TranslatesSeekOrigin)
     ASSERT_EQ(rainbow::detail::seek_origin(SeekOrigin::Current), SEEK_CUR);
     ASSERT_EQ(rainbow::detail::seek_origin(SeekOrigin::End), SEEK_END);
     ASSERT_EQ(rainbow::detail::seek_origin(SeekOrigin::Set), SEEK_SET);
+
+    ASSERT_EQ(rainbow::detail::seek_origin(SEEK_CUR), SeekOrigin::Current);
+    ASSERT_EQ(rainbow::detail::seek_origin(SEEK_END), SeekOrigin::End);
+    ASSERT_EQ(rainbow::detail::seek_origin(SEEK_SET), SeekOrigin::Set);
 }
 
 TEST(FileTest, SeeksInFile)
