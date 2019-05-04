@@ -6,6 +6,16 @@
 
 using rainbow::filesystem::Path;
 
+namespace
+{
+    auto is_zip_file(const Path& path)
+    {
+        constexpr uint8_t kZipSignature[4]{'P', 'K', 0x03, 0x04};
+        auto header = rainbow::system::file_header(path.c_str());
+        return memcmp(header.data(), kZipSignature, sizeof(kZipSignature)) == 0;
+    }
+}  // namespace
+
 Bundle::Bundle(ArrayView<zstring> args) : main_script_(nullptr)
 {
     czstring executable = args[0];
@@ -25,6 +35,12 @@ Bundle::Bundle(ArrayView<zstring> args) : main_script_(nullptr)
 
         if (system::is_regular_file(script_path.c_str()))
         {
+            if (is_zip_file(script_path))
+            {
+                assets_path_ = std::move(script_path);
+                return;
+            }
+
             if (script_path.has_parent_path())
             {
                 assets_path_ = script_path.parent_path();

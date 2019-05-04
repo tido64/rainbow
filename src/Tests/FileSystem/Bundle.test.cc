@@ -96,6 +96,21 @@ TEST(BundleTest, WithScriptInAnotherDirectory)
     ASSERT_EQ(bundle.main_script(), script);
 }
 
+TEST(BundleTest, WithZipFile)
+{
+    std::string executable = "rainbow";
+    auto directory = fixture_path("BundleTest_WithZipFile");
+    std::string assets_path = (directory / "assets.zip").c_str();
+
+    zstring args[2]{executable.data(), assets_path.data()};
+    const Bundle bundle(args);
+    auto cwd = sys::current_path();
+
+    ASSERT_STREQ(bundle.assets_path(), assets_path.c_str());
+    ASSERT_EQ(bundle.exec_path(), cwd + fs::path_separator() + executable);
+    ASSERT_EQ(bundle.main_script(), nullptr);
+}
+
 TEST(BundleTest, IsMovable)
 {
     std::string executable = "rainbow";

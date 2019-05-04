@@ -5,6 +5,8 @@
 #ifndef FILESYSTEM_FILESYSTEM_H_
 #define FILESYSTEM_FILESYSTEM_H_
 
+#include <array>
+
 #include "Common/String.h"
 #include "FileSystem/Path.h"
 
@@ -79,13 +81,27 @@ namespace rainbow::filesystem
 
 namespace rainbow::system
 {
+    /// <summary>
+    ///   Returns the absolute path to the file at specified path.
+    /// </summary>
     [[nodiscard]] auto absolute_path(czstring path) -> std::string;
 
     /// <summary>Returns the current path.</summary>
     [[nodiscard]] auto current_path() -> std::string;
 
+    /// <summary>
+    ///   Returns the header (8 bytes) of the file at specified path.
+    /// </summary>
+    [[nodiscard]] auto file_header(czstring path) -> std::array<uint8_t, 8>;
+
+    /// <summary>
+    ///   Returns whether the file at specified path is a directory.
+    /// </summary>
     [[nodiscard]] bool is_directory(czstring path);
 
+    /// <summary>
+    ///   Returns whether the file at specified path is a regular file.
+    /// </summary>
     [[nodiscard]] bool is_regular_file(czstring path);
 }  // namespace rainbow::system
 

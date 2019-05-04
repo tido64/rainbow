@@ -163,6 +163,16 @@ auto rainbow::system::absolute_path(czstring path) -> std::string
 #endif
 }
 
+auto rainbow::system::file_header(czstring path) -> std::array<uint8_t, 8>
+{
+    std::array<uint8_t, 8> header;
+    auto fd = std::fopen(path, "rb");
+    auto read = std::fread(header.data(), sizeof(uint8_t), header.size(), fd);
+    NOT_USED(read);
+    std::fclose(fd);
+    return header;
+}
+
 auto rainbow::system::current_path() -> std::string
 {
 #if HAS_FILESYSTEM
