@@ -8,8 +8,6 @@
 
 #include <gtest/gtest.h>
 
-#include "Common/Random.h"
-#include "FileSystem/Bundle.h"
 #include "Tests/TestHelpers.h"
 
 #ifdef RAINBOW_OS_WINDOWS
