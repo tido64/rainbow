@@ -26,7 +26,7 @@ namespace rainbow::test
         explicit ScopedAssetsDirectory(czstring path)
             : assets_path_(fixture_path(path))
         {
-            PHYSFS_unmount(rainbow::filesystem::bundle().assets_path());
+            PHYSFS_unmount(filesystem::bundle().assets_path());
             PHYSFS_mount(c_str(), nullptr, 0);
             PHYSFS_setWriteDir(c_str());
         }

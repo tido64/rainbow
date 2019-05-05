@@ -8,7 +8,6 @@
 
 #import <CoreMotion/CoreMotion.h>
 
-#include "Common/Data.h"
 #include "Config.h"
 #include "Director.h"
 #include "FileSystem/Bundle.h"

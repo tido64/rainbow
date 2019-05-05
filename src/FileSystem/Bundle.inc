@@ -7,7 +7,6 @@
 #include <physfs.h>
 
 #include "FileSystem/FileSystem.h"
-#include "Platform/Macros.h"
 
 using rainbow::Bundle;
 using rainbow::zstring;

@@ -38,11 +38,9 @@ namespace rainbow::android
             return true;
         }
 
-        static auto resolve_path(czstring path, FileType file_type)
+        static auto resolve_path(czstring path, FileType)
         {
-            const auto resolved_path = [](czstring path, FileType) {
-                return filesystem::Path{path};
-            }(path, file_type);
+            const filesystem::Path resolved_path{path};
 
             // Android is very particular about normalised paths.
             return resolved_path.lexically_normal();
