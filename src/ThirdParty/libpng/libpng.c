@@ -15,6 +15,7 @@
 #if PNG_ARM_NEON_OPT > 0
 #    include <arm/arm_init.c>
 #    include <arm/filter_neon_intrinsics.c>
+#    include <arm/palette_neon_intrinsics.c>
 #elif PNG_INTEL_SSE_OPT > 0
 #    include <intel/filter_sse2_intrinsics.c>
 #    include <intel/intel_init.c>
