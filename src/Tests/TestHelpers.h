@@ -3,30 +3,45 @@
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
 #include <cstdio>
-#include <type_traits>
-#include <utility>
 
+#include <physfs.h>
+
+#include "FileSystem/Bundle.h"
 #include "FileSystem/FileSystem.h"
 
 namespace rainbow::test
 {
-    class ScopedDirectory
+    inline auto fixture_path(czstring path)
+    {
+        filesystem::Path fixture_path{__FILE__};
+        fixture_path /= "..";
+        fixture_path /= "__fixtures";
+        fixture_path /= path;
+        return fixture_path.lexically_normal().make_preferred();
+    }
+
+    class ScopedAssetsDirectory
     {
     public:
-        ScopedDirectory(const std::string& path) : path_(path.c_str())
+        explicit ScopedAssetsDirectory(czstring path)
+            : assets_path_(fixture_path(path))
         {
-            std::error_code error;
-            filesystem::create_directories(path.c_str(), std::ref(error));
+            PHYSFS_unmount(filesystem::bundle().assets_path());
+            PHYSFS_mount(c_str(), nullptr, 0);
+            PHYSFS_setWriteDir(c_str());
         }
 
-        ~ScopedDirectory()
+        ~ScopedAssetsDirectory()
         {
-            std::error_code error;
-            filesystem::remove(path_, error);
+            PHYSFS_setWriteDir(nullptr);
+            PHYSFS_unmount(c_str());
         }
+
+        auto c_str() const -> czstring { return assets_path_.c_str(); }
+        auto path() const -> const filesystem::Path& { return assets_path_; }
 
     private:
-        czstring path_;
+        filesystem::Path assets_path_;
     };
 
     class ScopedFile
@@ -34,17 +49,13 @@ namespace rainbow::test
     public:
         ScopedFile(const std::string& path) : path_(path.c_str())
         {
-            FILE* fd = fopen(path.c_str(), "wb");
-            [fd] { ASSERT_NE(nullptr, fd); }();
-            fwrite(path.data(), 1, path.length(), fd);
-            fclose(fd);
+            FILE* fd = std::fopen(path.c_str(), "wb");
+            [](FILE* fd) { ASSERT_NE(nullptr, fd); }(fd);
+            std::fwrite(path.data(), 1, path.length(), fd);
+            std::fclose(fd);
         }
 
-        ~ScopedFile()
-        {
-            std::error_code error;
-            filesystem::remove(path_, std::ref(error));
-        }
+        ~ScopedFile() { std::remove(path_); }
 
     private:
         czstring path_;

@@ -16,11 +16,13 @@
 #   error Configuration not supported: Boost.Filesystem V3 and later requires std::wstring support
 # endif
 
-#include <boost/core/enable_if.hpp>
 #include <boost/filesystem/config.hpp>
-//#include <boost/type_traits/is_array.hpp>
-//#include <boost/type_traits/decay.hpp>
-//#include <boost/system/error_code.hpp>
+/*
+#include <boost/type_traits/is_array.hpp>
+#include <boost/type_traits/decay.hpp>
+#include <boost/system/error_code.hpp>
+*/
+#include <boost/core/enable_if.hpp>
 #include <cwchar>  // for mbstate_t
 #include <string>
 #include <vector>
@@ -73,7 +75,8 @@ namespace path_traits {
   template <class Container> inline
     // disable_if aids broken compilers (IBM, old GCC, etc.) and is harmless for
     // conforming compilers. Replace by plain "bool" at some future date (2012?)
-    bool empty(const Container & c)
+    typename boost::disable_if<boost::is_array<Container>, bool>::type
+      empty(const Container & c)
         { return c.begin() == c.end(); }
 
   template <class T> inline
@@ -277,7 +280,8 @@ namespace path_traits {
   template <class Container, class U> inline
     // disable_if aids broken compilers (IBM, old GCC, etc.) and is harmless for
     // conforming compilers. Replace by plain "void" at some future date (2012?)
-    void dispatch(const Container & c, U& to, const codecvt_type& cvt)
+    typename boost::disable_if<boost::is_array<Container>, void>::type
+    dispatch(const Container & c, U& to, const codecvt_type& cvt)
   {
     if (c.size())
     {
@@ -300,18 +304,19 @@ namespace path_traits {
 
   BOOST_FILESYSTEM_DECL
     void dispatch(const directory_entry & de,
-#                if 0 //def BOOST_WINDOWS_API
+#                if 0
     std::wstring & to,
 #                else
     std::string & to,
 #                endif
     const codecvt_type&);
-/*
+
   //  non-contiguous containers without codecvt
   template <class Container, class U> inline
     // disable_if aids broken compilers (IBM, old GCC, etc.) and is harmless for
     // conforming compilers. Replace by plain "void" at some future date (2012?)
-    void dispatch(const Container & c, U& to)
+    typename boost::disable_if<boost::is_array<Container>, void>::type
+    dispatch(const Container & c, U& to)
   {
     if (c.size())
     {
@@ -319,7 +324,7 @@ namespace path_traits {
       convert(seq.c_str(), seq.c_str()+seq.size(), to);
     }
   }
-*/
+
   //  c_str
   template <class T, class U> inline
     void dispatch(T * const & c_str, U& to)
@@ -334,7 +339,7 @@ namespace path_traits {
 
   BOOST_FILESYSTEM_DECL
     void dispatch(const directory_entry & de,
-#                if 0 //def BOOST_WINDOWS_API
+#                if 0
     std::wstring & to
 #                else
     std::string & to

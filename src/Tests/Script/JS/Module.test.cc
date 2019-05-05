@@ -8,13 +8,8 @@
 
 #include "Tests/TestHelpers.h"
 
-#ifdef RAINBOW_OS_WINDOWS
-#    define JOIN2(a, b) a "\\" b
-#    define JOIN3(a, b, c) a "\\" b "\\" c
-#else
-#    define JOIN2(a, b) a "/" b
-#    define JOIN3(a, b, c) a "/" b "/" c
-#endif
+#define JOIN2(a, b) a "/" b
+#define JOIN3(a, b, c) a "/" b "/" c
 
 namespace
 {
@@ -54,13 +49,13 @@ TEST_F(JSModuleTest, ThrowsLoadingEmptyModuleName)
 
 TEST_F(JSModuleTest, LoadsModules)
 {
-    constexpr char kTestModule[] = "rainbow-test-js-module-loads-modules.js";
-    rainbow::test::ScopedFile module(kTestModule);
+    rainbow::test::ScopedAssetsDirectory scoped_assets(
+        "JSModuleTest_LoadsModules");
 
-    duk_push_literal(context_, kTestModule);
+    duk_push_literal(context_, "module.js");
     duk::module::load(context_);
 
-    ASSERT_STREQ(duk_get_string(context_, 1), kTestModule);
+    ASSERT_STREQ(duk_get_string(context_, 1), "\"use strict\";");
 }
 
 TEST_F(JSModuleTest, ThrowsResolvingEmptyModuleName)

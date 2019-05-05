@@ -4,7 +4,9 @@
 
 #include "Script/JavaScript/JavaScript.h"
 
+#include "FileSystem/Bundle.h"
 #include "FileSystem/File.h"
+#include "FileSystem/FileSystem.h"
 #include "Script/JavaScript/Audio.h"
 #include "Script/JavaScript/Console.h"
 #include "Script/JavaScript/Helper.h"
@@ -86,7 +88,8 @@ JavaScript::JavaScript(Director& director)
 
     R_ASSERT(duk_get_top(context_) == 0, "We didn't clean up properly!");
 
-    auto index_js = filesystem::main_script();
+    auto& bundle = filesystem::bundle();
+    auto index_js = bundle.main_script();
     if (index_js == nullptr)
     {
         constexpr const char* const kEntryPoints[]{
@@ -102,9 +105,9 @@ JavaScript::JavaScript(Director& director)
         if (i == end)
         {
             LOGE("No script was found at these locations:");
-            auto assets_path = filesystem::assets_path() == nullptr
+            auto assets_path = is_empty(bundle.assets_path())
                                    ? "assets"
-                                   : filesystem::assets_path();
+                                   : bundle.assets_path();
             for (auto&& path : kEntryPoints)
             {
                 LOGE("    %s%s%s",

@@ -4,15 +4,17 @@
 
 #import "Platform/iOS/RainbowViewController.h"
 
+#import <optional>
+
 #import <CoreMotion/CoreMotion.h>
 
-#include "Common/Data.h"
 #include "Config.h"
 #include "Director.h"
+#include "FileSystem/Bundle.h"
+#include "FileSystem/FileSystem.h"
 #include "Input/Pointer.h"
 
-#pragma clang diagnostic ignored "-Wunused-parameter"
-
+using rainbow::Bundle;
 using rainbow::Pointer;
 using rainbow::Vec2i;
 
@@ -28,15 +30,18 @@ namespace
 
 @implementation RainbowViewController
 {
-    std::unique_ptr<Director> _director;
+    std::optional<Director> _director;
     CMMotionManager* _motionManager;
     Pointer _pointers[kMaxTouches];
+    Bundle _bundle;
 }
 
 - (instancetype)init
 {
     if (self = [super init])
     {
+        rainbow::filesystem::initialize(_bundle, _bundle.exec_path(), false);
+
         rainbow::Config config;
         _supportedInterfaceOrientations =
             (config.is_portrait() ? UIInterfaceOrientationMaskPortrait
@@ -53,7 +58,7 @@ namespace
 
 - (void)dealloc
 {
-    _director.release();
+    _director.reset();
     if (EAGLContext.currentContext == self.context)
         [EAGLContext setCurrentContext:nil];
 }
@@ -107,17 +112,18 @@ namespace
     if (_motionManager.accelerometerActive)
     {
         const CMAccelerometerData* data = _motionManager.accelerometerData;
-        _director->input().accelerated(data.acceleration.x,
-                                       data.acceleration.y,
-                                       data.acceleration.z,
-                                       data.timestamp);
+        _director->input().accelerated(  //
+            data.acceleration.x,
+            data.acceleration.y,
+            data.acceleration.z,
+            data.timestamp);
     }
     _director->update(self.timeSinceLastDraw * 1000);
 }
 
 #pragma mark - GLKViewDelegate protocol
 
-- (void)glkView:(GLKView*)view drawInRect:(CGRect)rect
+- (void)glkView:(GLKView*)__unused view drawInRect:(CGRect)__unused rect
 {
     _director->draw();
 }
@@ -131,31 +137,33 @@ namespace
 
 #pragma mark - UIResponder overrides
 
-- (void)touchesBegan:(NSSet*)touches withEvent:(nullable UIEvent*)event
+- (void)touchesBegan:(NSSet*)touches withEvent:(nullable UIEvent*)__unused event
 {
     _director->input().on_pointer_began(
         ArrayView<Pointer>{[self convertTouches:touches], touches.count});
 }
 
-- (void)touchesMoved:(NSSet*)touches withEvent:(nullable UIEvent*)event
+- (void)touchesMoved:(NSSet*)touches withEvent:(nullable UIEvent*)__unused event
 {
     _director->input().on_pointer_moved(
         ArrayView<Pointer>{[self convertTouches:touches], touches.count});
 }
 
-- (void)touchesEnded:(NSSet*)touches withEvent:(nullable UIEvent*)event
+- (void)touchesEnded:(NSSet*)touches withEvent:(nullable UIEvent*)__unused event
 {
     _director->input().on_pointer_ended(
         ArrayView<Pointer>{[self convertTouches:touches], touches.count});
 }
 
-- (void)touchesCancelled:(NSSet*)touches withEvent:(nullable UIEvent*)event
+- (void)touchesCancelled:(NSSet*)__unused touches
+               withEvent:(nullable UIEvent*)__unused event
 {
     _director->input().on_pointer_canceled();
 }
 
 #ifdef USE_HEIMDALL
-- (void)motionEnded:(UIEventSubtype)motion withEvent:(nullable UIEvent *)event
+- (void)motionEnded:(UIEventSubtype)motion
+          withEvent:(nullable UIEvent*)__unused event
 {
     if (motion == UIEventSubtypeMotionShake)
         [self showDiagnosticTools];
@@ -187,7 +195,8 @@ namespace
         // device rotates.
         std::swap(size.width, size.height);
     }
-    _director = std::make_unique<Director>();
+
+    _director.emplace();
     _director->init(Vec2i(size.width, size.height));
 
 #ifdef USE_HEIMDALL

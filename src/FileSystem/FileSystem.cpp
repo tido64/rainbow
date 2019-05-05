@@ -4,192 +4,179 @@
 
 #include "FileSystem/FileSystem.h"
 
+#include <physfs.h>
+
 #include "Platform/Macros.h"
 #if HAS_FILESYSTEM
-#    include <experimental/filesystem>
-namespace stdfs = std::experimental::filesystem;
+#    include <filesystem>
 #else
 #    include <climits>
-#    include <cstdlib>
 #    include <sys/stat.h>
 #    include <unistd.h>
-
-#    include "Common/Logging.h"
 #endif
 
-#if defined(RAINBOW_OS_WINDOWS)
-#    define kPathSeparator "\\"
-#else
-#    define kPathSeparator "/"
-#    if defined(RAINBOW_OS_ANDROID)
-#        include <android/native_activity.h>
+#if defined(RAINBOW_OS_ANDROID)
+#    include <android/native_activity.h>
 extern ANativeActivity* g_native_activity;
-#    elif defined(RAINBOW_OS_IOS)
-#        include "Platform/iOS/NSString+Rainbow.h"
-#    endif
 #endif
+
+#include "Common/Logging.h"
 #include "FileSystem/Bundle.h"
 
 namespace
 {
-#ifndef RAINBOW_OS_ANDROID
-    constexpr char kUserDataPath[] = kPathSeparator "user";
-#endif
-
     const rainbow::Bundle* g_bundle{};
 }  // namespace
 
-auto rainbow::filesystem::absolute(czstring path) -> Path
+auto rainbow::filesystem::bundle() -> const Bundle&
 {
-    return Path{path};
+    return *g_bundle;
 }
 
-auto rainbow::filesystem::assets_path() -> czstring
+bool rainbow::filesystem::create_directories(czstring path)
 {
-    return g_bundle == nullptr ? nullptr : g_bundle->assets_path();
+    return PHYSFS_mkdir(path) != 0;
 }
 
-bool rainbow::filesystem::create_directories(czstring path,
-                                             std::error_code& error)
+bool rainbow::filesystem::exists(czstring path)
 {
-#if HAS_FILESYSTEM
-    return stdfs::create_directories(path, error);
-#else
-    bool end = false;
-    struct stat sb;
-    char dir[PATH_MAX];
-    strncpy(dir, path, PATH_MAX);
-    for (int i = 1; !end; ++i)
-    {
-        end = dir[i] == '\0';
-        if (dir[i] == '/' || end)
-        {
-            dir[i] = '\0';
-            if (stat(dir, &sb) != 0)
-            {
-                if (errno != ENOENT)
-                {
-                    error = std::error_code(errno, std::generic_category());
-                    LOGE("Error accessing '%s' (%x)", dir, errno);
-                    return false;
-                }
-                if (mkdir(dir, 0775) != 0 || stat(dir, &sb) != 0)
-                {
-                    error = std::error_code(errno, std::generic_category());
-                    LOGE("Failed to create directory '%s' (%x)", dir, errno);
-                    return false;
-                }
-            }
-            if (!S_ISDIR(sb.st_mode))
-            {
-                error = std::make_error_code(std::errc::not_a_directory);
-                LOGE("'%s' is not a valid directory", dir);
-                return false;
-            }
-            dir[i] = '/';
-        }
-    }
-    return true;
-#endif
-}
-
-auto rainbow::filesystem::executable_path() -> czstring
-{
-    return g_bundle == nullptr ? nullptr : g_bundle->exec_path();
-}
-
-bool rainbow::filesystem::exists(czstring p)
-{
-    auto path = relative(p);
 #if defined(RAINBOW_OS_ANDROID)
-    auto asset = AAssetManager_open(
-        g_native_activity->assetManager, path.c_str(), AASSET_MODE_UNKNOWN);
-    AAsset_close(asset);
-    return asset != nullptr;
-#elif HAS_FILESYSTEM
-    std::error_code error;
-    return stdfs::exists(path.c_str(), error);
-#else
-    struct stat sb;
-    return stat(path.c_str(), &sb) == 0;
+    auto asset_manager = g_native_activity->assetManager;
+    auto asset = AAssetManager_open(asset_manager, path, AASSET_MODE_UNKNOWN);
+    if (asset != nullptr)
+    {
+        AAsset_close(asset);
+        return true;
+    }
 #endif
+    return PHYSFS_exists(path);
 }
 
-void rainbow::filesystem::initialize(const Bundle& bundle)
+void rainbow::filesystem::initialize(const Bundle& bundle,
+                                     czstring argv0,
+                                     bool allow_symlinks)
 {
     g_bundle = &bundle;
+
+    if (!PHYSFS_init(argv0))
+    {
+        const auto error_code = PHYSFS_getLastErrorCode();
+        LOGF("PhysicsFS: Initialization failed: %s",
+             PHYSFS_getErrorByCode(error_code));
+        return;
+    }
+
+    PHYSFS_permitSymbolicLinks(allow_symlinks);
+
+    if (!is_empty(bundle.assets_path()) &&
+        !PHYSFS_mount(bundle.assets_path(), nullptr, 0))
+    {
+        const auto error_code = PHYSFS_getLastErrorCode();
+        LOGF("PhysicsFS: Failed to mount bundle: %s",
+             PHYSFS_getErrorByCode(error_code));
+    }
+    else if (!PHYSFS_setWriteDir(filesystem::preferences_directory().c_str()))
+    {
+        const auto error_code = PHYSFS_getLastErrorCode();
+        LOGF("PhysicsFS: Failed to set preferences directory: %s",
+             PHYSFS_getErrorByCode(error_code));
+    }
+    else if (!PHYSFS_mount(PHYSFS_getWriteDir(), nullptr, 0))
+    {
+        const auto error_code = PHYSFS_getLastErrorCode();
+        LOGF("PhysicsFS: Failed to mount preferences directory: %s",
+             PHYSFS_getErrorByCode(error_code));
+    }
 }
 
-bool rainbow::filesystem::is_directory(czstring path,
-                                       [[maybe_unused]] std::error_code& error)
+bool rainbow::filesystem::is_directory(czstring path)
 {
-#if HAS_FILESYSTEM
-    return stdfs::is_directory(path, error);
-#else
-    struct stat sb;
-    return stat(path, &sb) == 0 && S_ISDIR(sb.st_mode);
-#endif
+    PHYSFS_Stat stat{};
+    PHYSFS_stat(path, &stat);
+    return stat.filetype == PHYSFS_FILETYPE_DIRECTORY;
 }
 
-bool rainbow::filesystem::is_regular_file(
-    czstring path, [[maybe_unused]] std::error_code& error)
+bool rainbow::filesystem::is_regular_file(czstring path)
 {
-#if HAS_FILESYSTEM
-    return stdfs::is_regular_file(path, error);
-#else
-    struct stat sb;
-    return stat(path, &sb) == 0 && S_ISREG(sb.st_mode);
-#endif
-}
-
-auto rainbow::filesystem::main_script() -> czstring
-{
-    return g_bundle == nullptr ? nullptr : g_bundle->main_script();
+    PHYSFS_Stat stat{};
+    PHYSFS_stat(path, &stat);
+    return stat.filetype == PHYSFS_FILETYPE_REGULAR;
 }
 
 auto rainbow::filesystem::path_separator() -> czstring
 {
-    return kPathSeparator;
+    return PHYSFS_getDirSeparator();
 }
 
-auto rainbow::filesystem::relative(czstring path) -> Path
+auto rainbow::filesystem::preferences_directory() -> const Path&
 {
 #if defined(RAINBOW_OS_ANDROID)
-    Path relative_path;
-    // Android doesn't ignore multiple '/' in paths.
-    for (int i = 0; path[i] != '\0'; ++i)
-    {
-        if (path[i] == '/' && path[i + 1] == '/')
-            continue;
-        relative_path += path[i];
-    }
-    return relative_path;
+    static const Path directory = [] {
+        auto data_path = g_native_activity->internalDataPath;
+        return !system::is_directory(data_path) && mkdir(data_path, 0755) != 0
+                   ? ""
+                   : data_path;
+    }();
 #elif defined(RAINBOW_OS_IOS)
-    NSString* str = [NSString stringWithUTF8StringNoCopy:path];
-    str = [NSBundle.mainBundle pathForResource:str.stringByDeletingPathExtension
-                                        ofType:str.pathExtension];
-    return str == nil ? Path{} : Path{str.UTF8String};
+    static const Path directory = [] {
+        NSError* error = nil;
+        auto document_dir = [NSFileManager.defaultManager  //
+              URLForDirectory:NSDocumentDirectory
+                     inDomain:NSUserDomainMask
+            appropriateForURL:nil
+                       create:YES
+                        error:&error];
+        return Path{document_dir == nil ? "" : document_dir.path.UTF8String};
+    }();
 #else
-    Path relative_path{assets_path()};
-    relative_path /= path;
-    return relative_path;
+    static const Path directory =
+        PHYSFS_getPrefDir(RAINBOW_ORGANIZATION, RAINBOW_APP_NAME);
+#endif
+    return directory;
+}
+
+auto rainbow::filesystem::real_path(czstring path) -> Path
+{
+    auto containing_dir = PHYSFS_getRealDir(path);
+    if (containing_dir == nullptr)
+        return path;
+
+    Path resolved_path{containing_dir};
+    resolved_path /= path;
+    return resolved_path;
+}
+
+bool rainbow::filesystem::remove(czstring path)
+{
+    return PHYSFS_delete(path) != 0;
+}
+
+auto rainbow::system::absolute_path(czstring path) -> std::string
+{
+#if HAS_FILESYSTEM
+    const std::filesystem::path p{path};
+    std::error_code ec;
+    return std::filesystem::absolute(p, std::ref(ec)).u8string();
+#else
+    char resolved_path[PATH_MAX];
+    return realpath(path, resolved_path) == nullptr ? path : resolved_path;
 #endif
 }
 
-bool rainbow::filesystem::remove(czstring path,
-                                 [[maybe_unused]] std::error_code& error)
+auto rainbow::system::file_header(czstring path) -> std::array<uint8_t, 8>
 {
-#if HAS_FILESYSTEM
-    return stdfs::remove(path, error);
-#else
-    return ::remove(path) == 0;
-#endif
+    std::array<uint8_t, 8> header;
+    auto fd = std::fopen(path, "rb");
+    auto read = std::fread(header.data(), sizeof(uint8_t), header.size(), fd);
+    NOT_USED(read);
+    std::fclose(fd);
+    return header;
 }
 
-auto rainbow::filesystem::system_current_path() -> std::string
+auto rainbow::system::current_path() -> std::string
 {
 #if HAS_FILESYSTEM
-    return stdfs::current_path().u8string();
+    return std::filesystem::current_path().u8string();
 #else
     char cwd[PATH_MAX];
     zstring result = getcwd(cwd, PATH_MAX);
@@ -200,61 +187,26 @@ auto rainbow::filesystem::system_current_path() -> std::string
 #endif
 }
 
-auto rainbow::filesystem::user(czstring path) -> Path
+bool rainbow::system::is_directory(czstring path)
 {
-#ifdef RAINBOW_OS_IOS
-    NSError* err = nil;
-    auto library_dir = [[NSFileManager.defaultManager  //
-          URLForDirectory:NSLibraryDirectory
-                 inDomain:NSUserDomainMask
-        appropriateForURL:nil
-                   create:YES
-                    error:&err] path];
-    if (library_dir == nil)
-        return {};
-
-    NSString* user_path = [NSString stringWithUTF8StringNoCopy:path];
-    user_path = [library_dir stringByAppendingPathComponent:user_path];
-    return Path{user_path.UTF8String};
+#if HAS_FILESYSTEM
+    const std::filesystem::path p{path};
+    std::error_code ec;
+    return std::filesystem::is_directory(p, std::ref(ec));
 #else
-    auto data_path = user_data_path();
-    std::error_code error;
-    if (data_path == nullptr || (!is_directory(data_path, error) &&
-                                 (!create_directories(data_path, error) ||
-                                  !is_directory(data_path, error))))
-    {
-        return {};
-    }
-
-    Path user_path{user_data_path()};
-    user_path /= path;
-    return user_path;
-#endif  // RAINBOW_OS_IOS
+    struct stat sb;
+    return stat(path, &sb) == 0 && S_ISDIR(sb.st_mode);
+#endif
 }
 
-auto rainbow::filesystem::user_data_path() -> czstring
+bool rainbow::system::is_regular_file(czstring path)
 {
-    static std::string data_path;
-    if (data_path.empty())
-    {
-#ifdef RAINBOW_OS_ANDROID
-        czstring path = g_native_activity->externalDataPath;
-        if (path == nullptr)
-            path = g_native_activity->internalDataPath;
-        if (path != nullptr)
-            data_path = path;
+#if HAS_FILESYSTEM
+    const std::filesystem::path p{path};
+    std::error_code ec;
+    return std::filesystem::is_regular_file(p, std::ref(ec));
 #else
-        data_path = assets_path();
-        data_path += kUserDataPath;
+    struct stat sb;
+    return stat(path, &sb) == 0 && S_ISREG(sb.st_mode);
 #endif
-    }
-
-    return data_path.c_str();
 }
-
-#ifdef RAINBOW_TEST
-namespace rainbow::filesystem::test
-{
-    auto bundle() -> const Bundle* { return g_bundle; }
-}  // namespace rainbow::filesystem::test
-#endif

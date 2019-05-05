@@ -2,25 +2,24 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
-#ifndef FILESYSTEM_IMPL_FILE_ANDROID_H_
-#define FILESYSTEM_IMPL_FILE_ANDROID_H_
+#ifndef FILESYSTEM_FILE_ANDROID_H_
+#define FILESYSTEM_FILE_ANDROID_H_
 
 #include <android/native_activity.h>
 
 #include "Common/String.h"
 #include "Common/Variant.h"
 #include "FileSystem/File.h"
-#include "FileSystem/FileSystem.h"
-
-#define USE_PLATFORM_FILE 1
+#include "FileSystem/Path.h"
 
 struct AAsset;
+struct PHYSFS_File;
 
 extern ANativeActivity* g_native_activity;
 
 namespace rainbow::android
 {
-    using FileHandle = variant<std::nullptr_t, AAsset*, FILE*>;
+    using FileHandle = variant<std::nullptr_t, AAsset*, PHYSFS_File*>;
 
     class File
     {
@@ -39,16 +38,12 @@ namespace rainbow::android
             return true;
         }
 
-        static auto resolve_path(czstring path, FileType file_type)
+        static auto resolve_path(czstring path, FileType)
         {
-            switch (file_type)
-            {
-                case FileType::UserAsset:
-                case FileType::UserFile:
-                    return filesystem::user(path);
-                default:
-                    return filesystem::relative(path);
-            }
+            const filesystem::Path resolved_path{path};
+
+            // Android is very particular about normalised paths.
+            return resolved_path.lexically_normal();
         }
 
         File() : handle_(nullptr) {}
@@ -58,7 +53,10 @@ namespace rainbow::android
             file.handle_ = nullptr;
         }
 
-        auto handle() const -> FILE* { return get<FILE*>(handle_).value(); }
+        auto handle() const -> PHYSFS_File*
+        {
+            return get<PHYSFS_File*>(handle_).value();
+        }
 
         template <typename T>
         void set_handle(T stream)

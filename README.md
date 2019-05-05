@@ -115,6 +115,7 @@ Rainbow.RenderQueue.add(animation);
 | [Mapbox Variant][]  | 1.1.5    | BSD-3               |    ✓     |
 | [NanoSVG][]         | dc12d905 | zlib                |    ✓     |
 | [Ogg Vorbis][]      | 1.3.3    | BSD-3               |    ✓     |
+| [PhysicsFS][]       | 3.0.2    | zlib                |    ✓     |
 | [SDL][]             | 2.0.9    | zlib                |    ✓     |
 | [zlib][]            | 1.2.8    | zlib                |    ✓     |
 | [Box2D][]           | 784a646c | zlib                |          |
@@ -166,6 +167,7 @@ THE SOFTWARE.
 [Mapbox Variant]: https://github.com/mapbox/variant "Mapbox Variant"
 [NanoSVG]: https://github.com/memononen/nanosvg "NanoSVG"
 [Ogg Vorbis]: https://xiph.org/vorbis/ "Ogg Vorbis"
+[PhysicsFS]: https://www.icculus.org/physfs/ "PhysicsFS"
 [SDL]: https://www.libsdl.org/ "Simple DirectMedia Layer"
 [Spine]: http://esotericsoftware.com/ "Spine: 2D skeletal animation for games"
 [zlib]: https://github.com/madler/zlib "zlib"

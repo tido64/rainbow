@@ -7,6 +7,7 @@ if(WIN32)
       build/cmake/Duktape.cmake
       build/cmake/FreeType.cmake
       build/cmake/libpng.cmake
+      build/cmake/PhysicsFS.cmake
       build/cmake/SDL2.cmake
       build/cmake/Spine.cmake
       build/cmake/Utilities.cmake
@@ -22,7 +23,6 @@ if(WIN32)
       -DNOATOM=1             # Atom Manager routines
       -DNOCOLOR=1            # Screen colors
       -DNOCOMM=1             # COMM driver routines
-      -DNOCTLMGR=1           # Control and Dialog routines
       -DNODEFERWINDOWPOS=1   # DeferWindowPos routines
       -DNODESKTOP=1          # Desktop-specific access flags
       -DNODRAWTEXT=1         # DrawText() and DT_*
@@ -56,7 +56,6 @@ if(WIN32)
       -DNOWH=1               # SetWindowsHook and WH_*
       -DNOWINDOWSTATION=1
       -DNOWINOFFSETS=1       # GWL_*, GCL_*, associated routines
-      -DNOWINSTYLES=1        # WS_*, CS_*, ES_*, LBS_*, SBS_*, CBS_*
       -DVC_EXTRALEAN=1
       -DWIN32_LEAN_AND_MEAN=1
   )

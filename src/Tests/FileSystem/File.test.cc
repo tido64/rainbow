@@ -6,33 +6,16 @@
 
 #include <gtest/gtest.h>
 
-#include "Common/Random.h"
+#include "Common/TypeCast.h"
 #include "FileSystem/FileSystem.h"
-
-#ifdef RAINBOW_OS_UNIX
-#    define _rmdir rmdir
-#endif
+#include "Tests/TestHelpers.h"
 
 using rainbow::czstring;
-using rainbow::Data;
 using rainbow::File;
 using rainbow::FileType;
 using rainbow::SeekOrigin;
 using rainbow::WriteableFile;
-
-#define ASSERT_EMPTY_DATA(tmpfile, file_type)                                  \
-    do                                                                         \
-    {                                                                          \
-        const auto& data = File::read(tmpfile.c_str(), file_type);             \
-        ASSERT_FALSE(data);                                                    \
-    } while (false)
-
-#define ASSERT_EMPTY_FILE(tmpfile, file_type)                                  \
-    do                                                                         \
-    {                                                                          \
-        const auto& file = File::open(tmpfile.c_str(), file_type);             \
-        ASSERT_EQ(file.size(), 0u);                                            \
-    } while (false)
+using rainbow::test::ScopedAssetsDirectory;
 
 namespace
 {
@@ -57,8 +40,8 @@ namespace
 
         explicit TestFileImpl(File&&) noexcept {}
 
-        auto handle() const -> FILE* { return nullptr; }
-        void set_handle(FILE*) {}
+        auto handle() const -> PHYSFS_File* { return nullptr; }
+        void set_handle(PHYSFS_File*) {}
 
         constexpr auto size() const -> size_t { return kTestFileSuccess; }
 
@@ -94,40 +77,20 @@ TEST(FileTest, HandlesInvalidPaths)
 
 TEST(FileTest, HandlesEmptyFiles)
 {
-    constexpr int max = std::numeric_limits<int>::max();
-    const auto& tmpfile = std::to_string(rainbow::random(max / 2, max));
-
+    ScopedAssetsDirectory scoped_assets{"FileTest_HandlesEmptyFiles"};
+    std::string empty = "empty.dat";
     {
-        std::fclose(std::fopen(tmpfile.c_str(), "wb"));
-
-        ASSERT_EMPTY_DATA(tmpfile, FileType::Asset);
-        ASSERT_EMPTY_FILE(tmpfile, FileType::Asset);
-
-        ASSERT_EQ(std::remove(tmpfile.c_str()), 0);
+        ASSERT_FALSE(File::read(empty.c_str(), FileType::Asset));
     }
     {
-        namespace fs = rainbow::filesystem;
-
-        std::error_code error_code;
-        fs::create_directories(fs::user_data_path(), std::ref(error_code));
-
-        ASSERT_TRUE(WriteableFile::open(tmpfile.c_str()));
-        ASSERT_EMPTY_DATA(tmpfile, FileType::UserAsset);
-        ASSERT_EMPTY_FILE(tmpfile, FileType::UserAsset);
-
-        const auto& tmppath = fs::user(tmpfile.c_str());
-
-        SCOPED_TRACE(tmppath.c_str());
-        ASSERT_EQ(std::remove(tmppath.c_str()), 0);
-
-        // Wait until the file has been removed...
-        struct stat file_status;
-        while (stat(tmppath.c_str(), &file_status) == 0)
-        {
-        }
-
-        SCOPED_TRACE(fs::user_data_path());
-        ASSERT_EQ(_rmdir(fs::user_data_path()), 0);
+        const auto& file = File::open(empty.c_str(), FileType::Asset);
+        ASSERT_TRUE(file);
+        ASSERT_EQ(file.size(), 0u);
+    }
+    {
+        const auto& file = WriteableFile::open(empty.c_str());
+        ASSERT_TRUE(file);
+        ASSERT_EQ(file.size(), 0u);
     }
 }
 
@@ -145,22 +108,87 @@ TEST(FileTest, SupportsPlatformImplementation)
     ASSERT_TRUE(writeable_file);
     ASSERT_TRUE(writeable_file.seek(rainbow::kInvalidFileSize));
     ASSERT_EQ(writeable_file.size(), kTestFileSuccess);
-    ASSERT_EQ(writeable_file.read(nullptr, rainbow::kInvalidFileSize),
-              kTestFileSuccess);
     ASSERT_EQ(writeable_file.write(nullptr, rainbow::kInvalidFileSize),
               kTestFileSuccess);
 }
 
-TEST(FileTypeTest, CorrespondsToFileAccessMode)
+TEST(FileTest, TranslatesSeekOrigin)
 {
-    ASSERT_STREQ(rainbow::detail::file_access_mode(FileType::Asset), "rb");
-    ASSERT_STREQ(rainbow::detail::file_access_mode(FileType::UserAsset), "rb");
-    ASSERT_STREQ(rainbow::detail::file_access_mode(FileType::UserFile), "w+b");
-}
-
-TEST(SeekOriginTest, CorrespondsToSeekOriginParameter)
-{
+    ASSERT_EQ(rainbow::detail::seek_origin(SeekOrigin::Set), SEEK_SET);
     ASSERT_EQ(rainbow::detail::seek_origin(SeekOrigin::Current), SEEK_CUR);
     ASSERT_EQ(rainbow::detail::seek_origin(SeekOrigin::End), SEEK_END);
-    ASSERT_EQ(rainbow::detail::seek_origin(SeekOrigin::Set), SEEK_SET);
+
+    ASSERT_EQ(rainbow::detail::seek_origin(SEEK_SET), SeekOrigin::Set);
+    ASSERT_EQ(rainbow::detail::seek_origin(SEEK_CUR), SeekOrigin::Current);
+    ASSERT_EQ(rainbow::detail::seek_origin(SEEK_END), SeekOrigin::End);
+    ASSERT_EQ(rainbow::detail::seek_origin(42), SeekOrigin::Set);
+}
+
+TEST(FileTest, SeeksInFile)
+{
+    ScopedAssetsDirectory scoped_assets{"FileTest_SeeksInFile"};
+
+    auto file = File::open("file", FileType::Asset);
+    ASSERT_EQ(file.tell(), 0u);
+
+    char pos = -1;
+    file.read(&pos, sizeof(pos));
+    ASSERT_EQ(pos, '0');
+    ASSERT_EQ(file.tell(), 1u);
+
+    file.read(&pos, sizeof(pos));
+    file.read(&pos, sizeof(pos));
+    ASSERT_EQ(pos, '2');
+    ASSERT_EQ(file.tell(), 3u);
+
+    file.seek(0, SeekOrigin::Current);
+    file.read(&pos, sizeof(pos));
+    ASSERT_EQ(pos, '3');
+    ASSERT_EQ(file.tell(), 4u);
+
+    file.seek(1, SeekOrigin::Current);
+    file.read(&pos, sizeof(pos));
+    ASSERT_EQ(pos, '5');
+    ASSERT_EQ(file.tell(), 6u);
+
+    file.seek(1, SeekOrigin::End);
+    file.read(&pos, sizeof(pos));
+    ASSERT_EQ(pos, '9');
+    ASSERT_EQ(file.tell(), 10u);
+
+    file.seek(1, SeekOrigin::Set);
+    file.read(&pos, sizeof(pos));
+    ASSERT_EQ(pos, '1');
+    ASSERT_EQ(file.tell(), 2u);
+
+    for (auto i = 0u; i < 10; ++i)
+    {
+        file.seek(i);
+        ASSERT_EQ(file.tell(), i);
+
+        file.read(&pos, sizeof(pos));
+        ASSERT_EQ(pos, '0' + rainbow::narrow_cast<char>(i));
+    }
+
+    for (auto i = 0u; i < 10; ++i)
+    {
+        file.seek(i, SeekOrigin::End);
+        ASSERT_EQ(file.tell(), 10u - i);
+    }
+}
+
+TEST(FileTest, IsMovable)
+{
+    ScopedAssetsDirectory scoped_assets{"FileTest_SeeksInFile"};
+
+    auto file = File::open("file", FileType::Asset);
+    ASSERT_TRUE(file);
+
+    file.seek(5);
+    ASSERT_EQ(file.tell(), 5u);
+
+    File file2{std::move(file)};
+    ASSERT_TRUE(file2);
+    ASSERT_FALSE(file);
+    ASSERT_EQ(file2.tell(), 5u);
 }

@@ -9,35 +9,35 @@
 
 using rainbow::czstring;
 using rainbow::audio::AppleAudioFile;
+using rainbow::filesystem::Path;
 
 namespace
 {
     constexpr unsigned int kBitsPerChannel = 16;
 
-    template <typename C, typename T>
-    auto bridge_cast(T& var) -> C
+    auto make_url(const Path& path) -> CFURLRef
     {
-#ifdef RAINBOW_OS_IOS
-        return (__bridge C)var;
-#else
-        return var;
-#endif
+        CFStringRef str = CFStringCreateWithBytesNoCopy(  //
+            kCFAllocatorDefault,
+            reinterpret_cast<const UInt8*>(path.c_str()),  // NOLINT
+            path.size(),
+            kCFStringEncodingUTF8,
+            FALSE,
+            kCFAllocatorNull);
+        CFURLRef url = CFURLCreateWithFileSystemPath(
+            kCFAllocatorDefault, str, kCFURLPOSIXPathStyle, FALSE);
+        CFRelease(str);
+        return url;
     }
 }  // namespace
 
 AppleAudioFile::AppleAudioFile(czstring file) : format_{}, ref_(nullptr)
 {
-    const auto path = filesystem::relative(file);
-#ifdef RAINBOW_OS_MACOS
-    CFURLRef url = filesystem::make_cfurl(path);
-#else
-    NSURL* url = filesystem::make_nsurl(path);
-#endif
-    if (ExtAudioFileOpenURL(bridge_cast<CFURLRef>(url), &ref_) != noErr)
+    const auto path = filesystem::real_path(file);
+    const auto url = make_url(path);
+    if (ExtAudioFileOpenURL(url, &ref_) != noErr)
         LOGE("AudioToolbox: Failed to open '%s'", file);
-#ifdef RAINBOW_OS_MACOS
     CFRelease(url);
-#endif
     if (ref_ == nullptr)
         return;
 
@@ -47,18 +47,20 @@ AppleAudioFile::AppleAudioFile(czstring file) : format_{}, ref_(nullptr)
     if (result != noErr)
         LOGE("AudioToolbox: Failed to retrieve audio format.");
 
-    FillOutASBDForLPCM(format_,
-                       format_.mSampleRate,
-                       format_.mChannelsPerFrame,
-                       kBitsPerChannel,
-                       kBitsPerChannel,
-                       false,
-                       false);
+    FillOutASBDForLPCM(  //
+        format_,
+        format_.mSampleRate,
+        format_.mChannelsPerFrame,
+        kBitsPerChannel,
+        kBitsPerChannel,
+        false,
+        false);
 
-    result = ExtAudioFileSetProperty(ref_,
-                                     kExtAudioFileProperty_ClientDataFormat,
-                                     sizeof(format_),
-                                     &format_);
+    result = ExtAudioFileSetProperty(  //
+        ref_,
+        kExtAudioFileProperty_ClientDataFormat,
+        sizeof(format_),
+        &format_);
     if (result != noErr)
         LOGE("AudioToolbox: Failed to set client data format.");
 }

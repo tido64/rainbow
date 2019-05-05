@@ -2,11 +2,13 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
-#ifndef FILESYSTEM_IMPL_FILE_SYSTEM_H_
-#define FILESYSTEM_IMPL_FILE_SYSTEM_H_
+#ifndef FILESYSTEM_FILE_SYSTEM_H_
+#define FILESYSTEM_FILE_SYSTEM_H_
 
 #include "FileSystem/File.h"
-#include "FileSystem/FileSystem.h"
+#include "FileSystem/Path.h"
+
+struct PHYSFS_File;
 
 namespace rainbow::system
 {
@@ -16,16 +18,9 @@ namespace rainbow::system
         static constexpr auto is_platform_handle() { return false; }
         static constexpr bool open(czstring, FileType, File&) { return false; }
 
-        static auto resolve_path(czstring path, FileType file_type)
+        static auto resolve_path(czstring path, FileType)
         {
-            switch (file_type)
-            {
-                case FileType::UserAsset:
-                case FileType::UserFile:
-                    return filesystem::user(path);
-                default:
-                    return filesystem::relative(path);
-            }
+            return filesystem::Path{path};
         }
 
         constexpr File() : stream_(nullptr) {}
@@ -37,7 +32,7 @@ namespace rainbow::system
 
         auto handle() const { return stream_; }
 
-        void set_handle(FILE* stream)
+        void set_handle(PHYSFS_File* stream)
         {
             R_ASSERT(stream_ == nullptr, "Set only once");
             stream_ = stream;
@@ -54,15 +49,12 @@ namespace rainbow::system
         explicit operator bool() const { return stream_ != nullptr; }
 
     private:
-        FILE* stream_;
+        PHYSFS_File* stream_;
     };
 }  // namespace rainbow::system
 
 namespace rainbow
 {
-#ifndef USE_PLATFORM_FILE
-    using File = TFile<system::File>;
-#endif
     using WriteableFile = TWriteableFile<system::File>;
 }  // namespace rainbow
 

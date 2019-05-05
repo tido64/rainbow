@@ -4,127 +4,15 @@
 
 #include "Config.h"
 
-#include <string>
-
 #include <gtest/gtest.h>
 
-#include "Common/Algorithm.h"
-#include "FileSystem/Bundle.h"
-#include "FileSystem/File.h"
-#include "FileSystem/FileSystem.h"
+#include "Tests/TestHelpers.h"
 
-using rainbow::Bundle;
-using rainbow::czstring;
-using rainbow::zstring;
-using rainbow::filesystem::Path;
-
-namespace rainbow::filesystem::test
-{
-    auto bundle() -> const Bundle*;
-}  // namespace rainbow::filesystem::test
-
-namespace
-{
-    constexpr char kConfigTestPath[] =
-        "rainbow-test-random-path-to-avoid-existing-config-files";
-
-    constexpr char kAlternateConfig[] =
-        "[core]\n"
-        "ResolutionWidth = 750\n"
-        "ResolutionHeight = 1334\n"
-        "MSAA = 6\n"
-        "AllowHiDPI = 0\n"
-        "SuspendOnFocusLost = 1\n"
-        "Accelerometer = 1\n";
-
-    constexpr char kInvalidConfig[] = "💩";
-
-    constexpr char kMissingValuesConfig[] =
-        "[core]\n"
-        "ResolutionWidth =\n"
-        "ResolutionHeight =\n"
-        "MSAA =\n"
-        "AllowHiDPI =\n"
-        "SuspendOnFocusLost =\n"
-        "Accelerometer =\n";
-
-    constexpr char kSparseConfig[] =
-        "[core]\n"
-        "MSAA = 10\n"
-        "AllowHiDPI = true\n"
-        "SuspendOnFocusLost = false\n";
-
-    constexpr char kStandardConfig[] =
-        "[core]\n"
-        "ResolutionWidth = 1920\n"
-        "ResolutionHeight = 1080\n"
-        "MSAA = 4\n"
-        "AllowHiDPI = true\n"
-        "SuspendOnFocusLost = false\n"
-        "Accelerometer = false\n";
-
-    class ScopedAssetsDirectory
-    {
-    public:
-        explicit ScopedAssetsDirectory(czstring path)
-            : current_bundle_(rainbow::filesystem::test::bundle()),
-              scope_bundle_(current_bundle_->exec_path(), path)
-        {
-            rainbow::filesystem::initialize(scope_bundle_);
-        }
-
-        ~ScopedAssetsDirectory()
-        {
-            rainbow::filesystem::initialize(*current_bundle_);
-        }
-
-    private:
-        const Bundle* current_bundle_;
-        Bundle scope_bundle_;
-    };
-
-    class ScopedConfig
-    {
-    public:
-        template <size_t N>
-        explicit ScopedConfig(const char (&config)[N])
-            : ScopedConfig(config, N - 1)
-        {
-        }
-
-        ~ScopedConfig()
-        {
-            std::error_code error;
-            rainbow::filesystem::remove(path_.c_str(), error);
-            rainbow::filesystem::remove(kConfigTestPath, error);
-        }
-
-    private:
-        Path path_;
-        ScopedAssetsDirectory assets_path_;
-
-        ScopedConfig(czstring config, size_t length)
-            : path_(rainbow::filesystem::relative(kConfigTestPath)),
-              assets_path_(kConfigTestPath)
-        {
-            std::error_code error;
-            rainbow::filesystem::create_directories(path_, error);
-            path_ /= "config.ini";
-            FILE* fd = fopen(path_.c_str(), "wb");
-            [fd] { ASSERT_NE(fd, nullptr); }();
-            fwrite(config, sizeof(*config), length, fd);
-            fclose(fd);
-        }
-    };
-}  // namespace
+using rainbow::test::ScopedAssetsDirectory;
 
 TEST(ConfigTest, NoConfiguration)
 {
-    {
-        ScopedConfig clear{kInvalidConfig};
-    }
-
-    ScopedAssetsDirectory test(kConfigTestPath);
+    ScopedAssetsDirectory scoped_assets("ConfigTest_NoConfiguration");
     rainbow::Config config;
 
     ASSERT_EQ(config.width(), 0);
@@ -137,7 +25,7 @@ TEST(ConfigTest, NoConfiguration)
 
 TEST(ConfigTest, EmptyConfiguration)
 {
-    ScopedConfig conf("");
+    ScopedAssetsDirectory scoped_assets{"ConfigTest_EmptyConfiguration"};
     rainbow::Config config;
 
     ASSERT_EQ(config.width(), 0);
@@ -150,7 +38,7 @@ TEST(ConfigTest, EmptyConfiguration)
 
 TEST(ConfigTest, InvalidConfiguration)
 {
-    ScopedConfig conf(kInvalidConfig);
+    ScopedAssetsDirectory scoped_assets{"ConfigTest_InvalidConfiguration"};
     rainbow::Config config;
 
     ASSERT_EQ(config.width(), 0);
@@ -163,7 +51,7 @@ TEST(ConfigTest, InvalidConfiguration)
 
 TEST(ConfigTest, NormalConfiguration)
 {
-    ScopedConfig config(kStandardConfig);
+    ScopedAssetsDirectory scoped_assets{"ConfigTest_NormalConfiguration"};
     rainbow::Config c;
 
     ASSERT_EQ(c.width(), 1920);
@@ -177,7 +65,7 @@ TEST(ConfigTest, NormalConfiguration)
 
 TEST(ConfigTest, AlternateConfiguration)
 {
-    ScopedConfig config(kAlternateConfig);
+    ScopedAssetsDirectory scoped_assets{"ConfigTest_AlternateConfiguration"};
     rainbow::Config c;
 
     ASSERT_EQ(c.width(), 750);
@@ -191,7 +79,7 @@ TEST(ConfigTest, AlternateConfiguration)
 
 TEST(ConfigTest, SparseConfiguration)
 {
-    ScopedConfig config(kSparseConfig);
+    ScopedAssetsDirectory scoped_assets{"ConfigTest_SparseConfiguration"};
     rainbow::Config c;
 
     ASSERT_EQ(c.width(), 0);
@@ -204,7 +92,7 @@ TEST(ConfigTest, SparseConfiguration)
 
 TEST(ConfigTest, MissingValues)
 {
-    ScopedConfig conf(kMissingValuesConfig);
+    ScopedAssetsDirectory scoped_assets{"ConfigTest_MissingValues"};
     rainbow::Config config;
 
     ASSERT_EQ(config.width(), 0);
