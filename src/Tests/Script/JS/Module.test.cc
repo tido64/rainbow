@@ -55,15 +55,7 @@ TEST_F(JSModuleTest, LoadsModules)
     duk_push_literal(context_, "module.js");
     duk::module::load(context_);
 
-#ifdef RAINBOW_OS_WINDOWS
-#    define EOL "\r\n"
-#else
-#    define EOL "\n"
-#endif
-
-    ASSERT_STREQ(duk_get_string(context_, 1), "\"use strict\";" EOL);
-
-#undef EOL
+    ASSERT_STREQ(duk_get_string(context_, 1), "\"use strict\";");
 }
 
 TEST_F(JSModuleTest, ThrowsResolvingEmptyModuleName)
