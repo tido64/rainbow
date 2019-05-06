@@ -8,6 +8,22 @@
 
 using rainbow::Chrono;
 
+TEST(ChronoTest, ReturnsCurrentTimeInMilliSeconds)
+{
+    const auto now = std::chrono::system_clock::now();
+    ASSERT_EQ(Chrono::system_now(),
+              std::chrono::duration_cast<std::chrono::milliseconds>(
+                  now.time_since_epoch()));
+}
+
+TEST(ChronoTest, ReturnsEpochTimeInSeconds)
+{
+    const auto now = std::chrono::steady_clock::now();
+    ASSERT_EQ(Chrono::time_since_epoch(),
+              std::chrono::duration_cast<std::chrono::seconds>(
+                  now.time_since_epoch()));
+}
+
 TEST(ChronoTest, TimeDifferenceBetweenUpdates)
 {
     Chrono chrono;
