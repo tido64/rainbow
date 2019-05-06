@@ -49,7 +49,7 @@ case $1 in
         ;;
       *)
         cd out
-        ./rainbow --gtest_filter=-AudioTest*:ChronoTest.TimeDifferenceBetweenUpdates --gtest_output="xml:test-report.xml"
+        ./rainbow --gtest_filter=-AudioTest* --gtest_output="xml:test-report.xml"
         ;;
     esac
     ;;
