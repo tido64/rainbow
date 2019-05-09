@@ -34,8 +34,7 @@ namespace rainbow
               int repeat_count,
               const Passkey<TimerManager>&)
             : active_(true), interval_(interval), elapsed_(0),
-              countdown_(repeat_count), tick_(std::forward<F>(func)),
-              repeat_count_(repeat_count)
+              repeat_count_(repeat_count), tick_(std::forward<F>(func))
         {
         }
 
@@ -50,7 +49,7 @@ namespace rainbow
             active_ = true;
             interval_ = interval;
             elapsed_ = 0;
-            countdown_ = repeat_count;
+            repeat_count_ = repeat_count;
             tick_ = std::forward<F>(func);
             repeat_count_ = repeat_count;
         }
@@ -61,9 +60,8 @@ namespace rainbow
         bool active_;
         int interval_;
         int elapsed_;
-        int countdown_;
-        std::function<void()> tick_;
         int repeat_count_;
+        std::function<void()> tick_;
     };
 
     class TimerManager : public Global<TimerManager>

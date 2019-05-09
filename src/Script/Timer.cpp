@@ -24,15 +24,17 @@ void Timer::update(uint64_t dt, const Passkey<TimerManager>&)
     for (int i = 0; i < ticks; ++i)
     {
         tick_();
-        if (countdown_ == 0)
+        if (repeat_count_ == 0)
         {
-            interval_ = 0;
+            pause();
+            elapsed_ = 0;
             return;
         }
 
-        if (countdown_ > 0)
-            --countdown_;
+        if (repeat_count_ > 0)
+            --repeat_count_;
     }
+
     elapsed_ -= ticks * interval_;
 }
 
