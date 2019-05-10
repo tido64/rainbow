@@ -51,7 +51,6 @@ namespace rainbow
             elapsed_ = 0;
             repeat_count_ = repeat_count;
             tick_ = std::forward<F>(func);
-            repeat_count_ = repeat_count;
         }
 
         void update(uint64_t dt, const Passkey<TimerManager>&);
