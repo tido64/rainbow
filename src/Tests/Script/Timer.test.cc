@@ -123,12 +123,13 @@ TEST(TimerTest, TriggersForever)
     ASSERT_EQ(timer->repeat_count(), repeat_count);
     ASSERT_EQ(count, 0);
 
-    timer_manager.update(42);
+    constexpr int forever = 7500000;
+    timer_manager.update(forever);
 
     ASSERT_EQ(timer->elapsed(), 0);
     ASSERT_TRUE(timer->is_active());
     ASSERT_EQ(timer->repeat_count(), repeat_count);
-    ASSERT_EQ(count, 42);
+    ASSERT_EQ(count, forever);
 }
 
 TEST(TimerTest, TimersCanBePaused)
