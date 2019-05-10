@@ -269,6 +269,7 @@ if(UNIT_TESTS)
       src/Tests/Memory/StableArray.test.cc
       src/Tests/Script/JS/Module.test.cc
       src/Tests/Script/JavaScript.test.cc
+      src/Tests/Script/Timer.test.cc
       src/Tests/TestHelpers.h
       src/Tests/Tests.cpp
       src/Tests/Tests.h

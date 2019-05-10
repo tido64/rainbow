@@ -29,11 +29,14 @@ Timer*  TimerManager::set_timer    (Timer::Closure func,
 
 `Timer::Closure` is defined as a callable whose signature is `void()`. The
 `interval` is the time, in milliseconds, to wait before the first call and
-between any subsequent calls. A 0 interval will immediately set the timer in a
-finished state. Calls are _repeated_ `repeat_count` times, e.g. a repeat count
-of 4 makes the timer perform an action 5 times. For infinity, use any negative
-value. `TimerManager::set_timer()` returns a `Timer` object which can be used to
-pause and resume the timer, as well as querying information.
+between any subsequent calls. A zero interval will immediately set the timer in
+a finished state. Calls are _repeated_ `repeat_count` times, e.g. a repeat count
+of four makes the timer perform an action five times. For infinity, use any
+negative value. `TimerManager::set_timer()` returns a `Timer` object which can
+be used to pause and resume the timer, as well as querying its state.
+
+A `Timer` that has run its course, will be put in a paused state. It can be
+resumed but the repeat count will not be restored.
 
 ### Pausing and Resuming Timers
 
@@ -51,8 +54,7 @@ bool  Timer::is_active  () const;
 ```
 
 Returns whether the timer is currently active. This method returns `true` while
-the timer is running normally, and `false` when it is finished or has been
-paused.
+the timer is running normally, and `false` otherwise.
 
 ```c++
 int  Timer::elapsed  () const;
