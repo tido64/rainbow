@@ -11,6 +11,7 @@
 
 #include "Common/Chrono.h"
 #include "Common/Data.h"
+#include "Config.h"
 #include "Director.h"
 #include "FileSystem/Bundle.h"
 #include "FileSystem/FileSystem.h"
@@ -19,6 +20,7 @@
 
 using rainbow::Bundle;
 using rainbow::Chrono;
+using rainbow::Config;
 using rainbow::Pointer;
 using rainbow::ShakeGestureDetector;
 using rainbow::Vec2i;
@@ -26,7 +28,7 @@ using rainbow::graphics::Context;
 
 ANativeActivity* g_native_activity;
 
-struct AInstance
+struct RainbowContext
 {
     /// <summary>Whether the window is in focus.</summary>
     bool active = false;
@@ -34,9 +36,6 @@ struct AInstance
     /// <summary>Whether the user has requested to quit.</summary>
     bool done = false;
 
-    bool initialised = false;
-
-    android_app* app = nullptr;
     ASensorEventQueue* sensor_event_queue = nullptr;
 
     EGLDisplay display = EGL_NO_DISPLAY;
@@ -46,12 +45,13 @@ struct AInstance
     std::optional<Director> director;
 };
 
-void android_destroy_display(AInstance*);
-void android_handle_display(AInstance*);
-void android_init_display(AInstance*);
+void android_handle_display(RainbowContext*);
 void android_handle_event(android_app*, int32_t cmd);
 auto android_handle_input(android_app*, AInputEvent*) -> int32_t;
 auto android_handle_motion(android_app*, AInputEvent*) -> int32_t;
+void android_init_display(RainbowContext*, ANativeWindow*);
+auto attach_rendering_context(RainbowContext*) -> EGLBoolean;
+auto detach_rendering_context(RainbowContext*) -> EGLBoolean;
 auto get_accelerometer(ASensorManager* manager = ASensorManager_getInstance())
     -> const ASensor*;
 auto get_pointer_event(const Context&, AInputEvent*, int32_t index) -> Pointer;
@@ -70,69 +70,65 @@ namespace
     }
 }  // namespace
 
-void android_main(android_app* state)
+void android_main(android_app* app)
 {
     pthread_key_create(&s_thread_key, detach_current_thread);
 
     JNIEnv* env;
-    state->activity->vm->AttachCurrentThread(&env, nullptr);
-    pthread_setspecific(s_thread_key, state->activity->vm);
+    app->activity->vm->AttachCurrentThread(&env, nullptr);
+    pthread_setspecific(s_thread_key, app->activity->vm);
 
-    AInstance ainstance;
-    state->userData = &ainstance;
-    state->onAppCmd = android_handle_event;
-    state->onInputEvent = android_handle_input;
-    ainstance.app = state;
-    g_native_activity = state->activity;
+    RainbowContext context;
+    app->userData = &context;
+    app->onAppCmd = android_handle_event;
+    app->onInputEvent = android_handle_input;
+    g_native_activity = app->activity;
 
     const Bundle bundle;
     rainbow::filesystem::initialize(bundle, nullptr, false);
 
-    // Prepare to monitor accelerometer
-    auto sensor_manager = ASensorManager_getInstance();
-    auto accelerometer_sensor = get_accelerometer(sensor_manager);
-    if (accelerometer_sensor != nullptr)
+#ifndef USE_HEIMDALL
+    const Config config;
+    if (config.needs_accelerometer())
+#endif
     {
-        ainstance.sensor_event_queue = ASensorManager_createEventQueue(  //
-            sensor_manager,
-            state->looper,
-            LOOPER_ID_USER,
-            nullptr,
-            nullptr);
+        auto sensor_manager = ASensorManager_getInstance();
+        if (get_accelerometer(sensor_manager) != nullptr)
+        {
+            context.sensor_event_queue = ASensorManager_createEventQueue(  //
+                sensor_manager,
+                app->looper,
+                LOOPER_ID_USER,
+                nullptr,
+                nullptr);
+        }
     }
 
 #ifdef USE_HEIMDALL
-    ShakeGestureDetector shake_gesture_detector([&instance = ainstance]() {
-        instance.director->show_diagnostic_tools();
-    });
+    ShakeGestureDetector shake_gesture_detector(
+        [&context] { context.director->show_diagnostic_tools(); });
 #endif
 
     Chrono chrono;
-    while (!ainstance.done)
+    while (!context.done)
     {
-        int ident;
         int events;
         struct android_poll_source* source;
-
-        while ((ident = ALooper_pollAll((!ainstance.active ? -1 : 0),
-                                        nullptr,
-                                        &events,
-                                        reinterpret_cast<void**>(&source))) >=
-               0)
+        while (ALooper_pollAll(!context.active ? -1 : 0,
+                               nullptr,
+                               &events,
+                               reinterpret_cast<void**>(&source)) >= 0)
         {
             if (source != nullptr)
-                source->process(state, source);
+                source->process(app, source);
 
-            if (ainstance.done)
+            if (!context.active || context.done)
                 break;
 
-            // If a sensor has data, process it now.
-            if (accelerometer_sensor != nullptr && ainstance.active &&
-                ident == LOOPER_ID_USER)
+            if (auto queue = context.sensor_event_queue)
             {
                 ASensorEvent event;
-                while (ASensorEventQueue_getEvents(
-                           ainstance.sensor_event_queue, &event, 1) > 0)
+                while (ASensorEventQueue_getEvents(queue, &event, 1) > 0)
                 {
 #ifdef USE_HEIMDALL
                     shake_gesture_detector.update(  //
@@ -143,7 +139,7 @@ void android_main(android_app* state)
                         },
                         event.timestamp);
 #endif
-                    ainstance.director->input().accelerated(
+                    context.director->input().accelerated(  //
                         event.acceleration.x,
                         event.acceleration.y,
                         event.acceleration.z,
@@ -153,67 +149,55 @@ void android_main(android_app* state)
         }
 
         chrono.tick();
-        if (!(ainstance.initialised & ainstance.active))
+        if (!context.active || !context.director)
             continue;
 
-        ainstance.director->update(chrono.delta());
-        ainstance.director->draw();
-        eglSwapBuffers(ainstance.display, ainstance.surface);
+        context.director->update(chrono.delta());
+        context.director->draw();
+        eglSwapBuffers(context.display, context.surface);
     }
 
-    android_destroy_display(&ainstance);
+    context.director.reset();
+    if (context.display != EGL_NO_DISPLAY)
+    {
+        detach_rendering_context(&context);
+        if (context.context != EGL_NO_CONTEXT)
+        {
+            eglDestroyContext(context.display, context.context);
+            context.context = EGL_NO_CONTEXT;
+        }
+        if (context.surface != EGL_NO_SURFACE)
+        {
+            eglDestroySurface(context.display, context.surface);
+            context.surface = EGL_NO_SURFACE;
+        }
+        eglTerminate(context.display);
+        context.display = EGL_NO_DISPLAY;
+    }
 }
 
-void android_destroy_display(AInstance* a)
+void android_handle_display(RainbowContext* ctx)
 {
-    a->director.reset();
-    if (a->display != EGL_NO_DISPLAY)
-    {
-        eglMakeCurrent(
-            a->display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
-        if (a->context != EGL_NO_CONTEXT)
-        {
-            eglDestroyContext(a->display, a->context);
-            a->context = EGL_NO_CONTEXT;
-        }
-        if (a->surface != EGL_NO_SURFACE)
-        {
-            eglDestroySurface(a->display, a->surface);
-            a->surface = EGL_NO_SURFACE;
-        }
-        eglTerminate(a->display);
-        a->display = EGL_NO_DISPLAY;
-    }
-    a->initialised = false;
-    a->active = false;
-}
-
-void android_handle_display(AInstance* a)
-{
-    if (a->initialised)
+    if (ctx->director)
         return;
-
-    a->director.emplace();
-    if (a->director->terminated())
-    {
-        LOGF("%s", a->director->error().message().c_str());
-        a->done = true;
-        return;
-    }
 
     EGLint width = 0;
     EGLint height = 0;
-    eglQuerySurface(a->display, a->surface, EGL_WIDTH, &width);
-    eglQuerySurface(a->display, a->surface, EGL_HEIGHT, &height);
+    eglQuerySurface(ctx->display, ctx->surface, EGL_WIDTH, &width);
+    eglQuerySurface(ctx->display, ctx->surface, EGL_HEIGHT, &height);
 
-    // Load game
-    a->director->init(Vec2i{width, height});
-    a->initialised = !a->director->terminated();
+    ctx->director.emplace();
+    if (ctx->director->terminated() ||
+        (ctx->director->init({width, height}), ctx->director->terminated()))
+    {
+        LOGF("%s", ctx->director->error().message().c_str());
+        ctx->done = true;
+    }
 }
 
-void android_init_display(AInstance* a)
+void android_init_display(RainbowContext* ctx, ANativeWindow* window)
 {
-    EGLDisplay& dpy = a->display;
+    EGLDisplay& dpy = ctx->display;
     if (dpy == EGL_NO_DISPLAY)
     {
         dpy = eglGetDisplay(EGL_DEFAULT_DISPLAY);
@@ -239,14 +223,14 @@ void android_init_display(AInstance* a)
     EGLint nconfigs;
     eglChooseConfig(dpy, attrib_list, &config, 1, &nconfigs);
 
-    EGLSurface& surface = a->surface;
+    EGLSurface& surface = ctx->surface;
     if (surface == EGL_NO_SURFACE)
     {
         EGLint format;
         eglGetConfigAttrib(dpy, config, EGL_NATIVE_VISUAL_ID, &format);
-        ANativeWindow_setBuffersGeometry(a->app->window, 0, 0, format);
+        ANativeWindow_setBuffersGeometry(window, 0, 0, format);
 
-        surface = eglCreateWindowSurface(dpy, config, a->app->window, nullptr);
+        surface = eglCreateWindowSurface(dpy, config, window, nullptr);
         if (surface == EGL_NO_SURFACE)
         {
             LOGF("Failed to create EGL window surface");
@@ -254,69 +238,70 @@ void android_init_display(AInstance* a)
         }
     }
 
-    EGLContext& ctx = a->context;
-    if (ctx == EGL_NO_CONTEXT)
+    EGLContext& context = ctx->context;
+    if (context == EGL_NO_CONTEXT)
     {
         constexpr EGLint gles_attrib[]{EGL_CONTEXT_CLIENT_VERSION, 2, EGL_NONE};
-        ctx = eglCreateContext(dpy, config, EGL_NO_CONTEXT, gles_attrib);
-        if (ctx == EGL_NO_CONTEXT)
+        context = eglCreateContext(dpy, config, EGL_NO_CONTEXT, gles_attrib);
+        if (context == EGL_NO_CONTEXT)
         {
             LOGF("Failed to create EGL rendering context");
             return;
         }
     }
 
-    a->done = eglMakeCurrent(dpy, surface, surface, ctx) == EGL_FALSE;
-    if (a->done)
+    ctx->done = attach_rendering_context(ctx) == EGL_FALSE;
+    if (ctx->done)
         LOGF("Failed to bind context to the current rendering thread");
     else
-        android_handle_display(a);
+        android_handle_display(ctx);
 }
 
+// https://developer.nvidia.com/fixing-common-android-lifecycle-issues-games
 void android_handle_event(android_app* app, int32_t cmd)
 {
-    AInstance* a = static_cast<AInstance*>(app->userData);
+    RainbowContext* ctx = static_cast<RainbowContext*>(app->userData);
     switch (cmd)
     {
         case APP_CMD_INIT_WINDOW:
-            android_init_display(a);
+            android_init_display(ctx, app->window);
             break;
+
         case APP_CMD_TERM_WINDOW:
-            eglMakeCurrent(
-                a->display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
-            eglDestroySurface(a->display, a->surface);
-            a->surface = EGL_NO_SURFACE;
+            detach_rendering_context(ctx);
+            eglDestroySurface(ctx->display, ctx->surface);
+            ctx->surface = EGL_NO_SURFACE;
             break;
+
         case APP_CMD_WINDOW_RESIZED:
-            android_handle_display(a);
+            android_handle_display(ctx);
             break;
+
         case APP_CMD_GAINED_FOCUS:
-        {
-            // When our app gains focus, we start monitoring the accelerometer.
-            auto accelerometer_sensor = get_accelerometer();
-            if (accelerometer_sensor != nullptr)
+            if (auto queue = ctx->sensor_event_queue)
             {
-                ASensorEventQueue_enableSensor(
-                    a->sensor_event_queue, accelerometer_sensor);
-                // We'd like to get 60 events per second (in us).
-                ASensorEventQueue_setEventRate(  //
-                    a->sensor_event_queue,
-                    accelerometer_sensor,
-                    (1000 * 1000) / 60);
+                // 60 events per second (in usec).
+                constexpr int32_t rate = (1000 * 1000) / 60;
+                auto accelerometer_sensor = get_accelerometer();
+                ASensorEventQueue_enableSensor(queue, accelerometer_sensor);
+                ASensorEventQueue_setEventRate(
+                    queue, accelerometer_sensor, rate);
             }
-            a->director->on_focus_gained();
-            a->active = true;
+            ctx->director->on_focus_gained();
+            ctx->active = true;
             break;
-        }
+
         case APP_CMD_LOST_FOCUS:
             break;
+
         case APP_CMD_LOW_MEMORY:
-            a->director->on_memory_warning();
+            ctx->director->on_memory_warning();
             break;
+
         case APP_CMD_RESUME:
-            if (a->surface != EGL_NO_SURFACE)
+            if (ctx->surface != EGL_NO_SURFACE)
             {
-                eglMakeCurrent(a->display, a->surface, a->surface, a->context);
+                attach_rendering_context(ctx);
 
                 // From NVIDIA:
                 // Note that in some cases, only the onPause is received on
@@ -326,31 +311,27 @@ void android_handle_event(android_app* app, int32_t cmd)
                 // resumed (onResume) and then an indication that you are hidden
                 // (focus lost). And the unlock case remains unchanged (focus
                 // regained).
-                if (!a->active)
+                if (!ctx->active)
                     android_handle_event(app, APP_CMD_GAINED_FOCUS);
             }
             break;
+
         case APP_CMD_SAVE_STATE:
             break;
-        case APP_CMD_PAUSE:
-        {
-            eglMakeCurrent(
-                a->display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
 
-            auto accelerometer_sensor = get_accelerometer();
-            if (accelerometer_sensor != nullptr)
-            {
-                ASensorEventQueue_disableSensor(
-                    a->sensor_event_queue, accelerometer_sensor);
-            }
-            a->director->on_focus_lost();
-            a->active = false;
+        case APP_CMD_PAUSE:
+            detach_rendering_context(ctx);
+            if (auto queue = ctx->sensor_event_queue)
+                ASensorEventQueue_disableSensor(queue, get_accelerometer());
+            ctx->director->on_focus_lost();
+            ctx->active = false;
             break;
-        }
+
         case APP_CMD_DESTROY:
-            a->active = false;
-            a->done = true;
+            ctx->active = false;
+            ctx->done = true;
             break;
+
         default:
             break;
     }
@@ -369,7 +350,7 @@ auto android_handle_input(android_app* app, AInputEvent* event) -> int32_t
                 case AKEYCODE_MENU:
                     if (AKeyEvent_getAction(event) == AKEY_EVENT_ACTION_DOWN)
                     {
-                        static_cast<AInstance*>(app->userData)
+                        static_cast<RainbowContext*>(app->userData)
                             ->director->show_diagnostic_tools();
                     }
                     return 1;
@@ -388,7 +369,7 @@ auto android_handle_input(android_app* app, AInputEvent* event) -> int32_t
 
 auto android_handle_motion(android_app* app, AInputEvent* event) -> int32_t
 {
-    auto& director = static_cast<AInstance*>(app->userData)->director;
+    auto& director = static_cast<RainbowContext*>(app->userData)->director;
     switch (AMotionEvent_getAction(event) & AMOTION_EVENT_ACTION_MASK)
     {
         case AMOTION_EVENT_ACTION_DOWN:
@@ -441,6 +422,18 @@ auto android_handle_motion(android_app* app, AInputEvent* event) -> int32_t
     return 1;
 }
 
+auto attach_rendering_context(RainbowContext* ctx) -> EGLBoolean
+{
+    return eglMakeCurrent(
+        ctx->display, ctx->surface, ctx->surface, ctx->context);
+}
+
+auto detach_rendering_context(RainbowContext* ctx) -> EGLBoolean
+{
+    return eglMakeCurrent(
+        ctx->display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
+}
+
 auto get_accelerometer(ASensorManager* manager) -> const ASensor*
 {
     return ASensorManager_getDefaultSensor(manager, ASENSOR_TYPE_ACCELEROMETER);
@@ -449,10 +442,9 @@ auto get_accelerometer(ASensorManager* manager) -> const ASensor*
 auto get_pointer_event(const Context& ctx, AInputEvent* event, int32_t index)
     -> Pointer
 {
-    const Vec2i& point = rainbow::graphics::convert_to_flipped_view(
-        ctx,
-        Vec2i(
-            AMotionEvent_getX(event, index), AMotionEvent_getY(event, index)));
+    const Vec2i p(
+        AMotionEvent_getX(event, index), AMotionEvent_getY(event, index));
+    const auto point = rainbow::graphics::convert_to_flipped_view(ctx, p);
     return {
         static_cast<uint32_t>(AMotionEvent_getPointerId(event, index)),
         point.x,
