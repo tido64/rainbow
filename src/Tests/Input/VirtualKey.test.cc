@@ -23,8 +23,8 @@ TEST(VirtualKeyTest, DISABLED_MapsKeyCode)
     // initialisation fails, we can't test to_keycode().
     if (SDL_VideoInit(nullptr) == 0)
     {
-        const auto begin = to_underlying_type(VirtualKey::Unknown) + 1;
-        const auto end = to_underlying_type(VirtualKey::KeyCount);
+        constexpr auto begin = to_underlying_type(VirtualKey::Unknown) + 1;
+        constexpr auto end = to_underlying_type(VirtualKey::KeyCount);
         for (auto i = begin; i < end; ++i)
         {
             const auto vk = static_cast<VirtualKey>(i);
@@ -79,8 +79,8 @@ TEST(VirtualKeyTest, MapsKeyMods)
 
 TEST(VirtualKeyTest, MapsScanCode)
 {
-    const auto begin = to_underlying_type(VirtualKey::Unknown);
-    const auto end = to_underlying_type(VirtualKey::KeyCount);
+    constexpr auto begin = to_underlying_type(VirtualKey::Unknown);
+    constexpr auto end = to_underlying_type(VirtualKey::KeyCount);
     for (auto i = begin; i < end; ++i)
     {
         const auto vk = static_cast<VirtualKey>(i);
