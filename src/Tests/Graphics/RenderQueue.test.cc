@@ -92,14 +92,47 @@ TEST(RenderQueueTest, SetsUnitTag)
     ASSERT_NE(unit2, unit1);
 }
 
+TEST(RenderQueueTest, DrawsOnlyEnabledUnits)
+{
+    TestDrawable drawables[5];
+    RenderQueue queue;
+    std::transform(  //
+        std::begin(drawables),
+        std::end(drawables),
+        std::back_inserter(queue),
+        [](auto&& drawable) -> RenderUnit { return drawable; });
+    rainbow::graphics::draw(queue);
+
+    ASSERT_TRUE(std::all_of(
+        std::begin(drawables), std::end(drawables), [](auto&& drawable) {
+            return drawable.draw_count() == 1;
+        }));
+
+    queue[1].disable();
+    queue[3].disable();
+    rainbow::graphics::draw(queue);
+
+    ASSERT_EQ(drawables[0].draw_count(), 2);
+    ASSERT_EQ(drawables[1].draw_count(), 1);
+    ASSERT_EQ(drawables[2].draw_count(), 2);
+    ASSERT_EQ(drawables[3].draw_count(), 1);
+    ASSERT_EQ(drawables[4].draw_count(), 2);
+
+    ASSERT_TRUE(std::all_of(
+        std::begin(drawables), std::end(drawables), [](auto&& drawable) {
+            return drawable.update_count() == 0;
+        }));
+}
+
 TEST(RenderQueueTest, UpdatesOnlyEnabledUnits)
 {
     TestDrawable drawables[10];
     RenderQueue queue;
-    std::transform(std::begin(drawables),
-                   std::end(drawables),
-                   std::back_inserter(queue),
-                   [](auto&& drawable) -> RenderUnit { return drawable; });
+    std::transform(  //
+        std::begin(drawables),
+        std::end(drawables),
+        std::back_inserter(queue),
+        [](auto&& drawable) -> RenderUnit { return drawable; });
     queue[1].disable();
     queue[7].disable();
     rainbow::graphics::update(queue, kDeltaTime);
