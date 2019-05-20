@@ -348,7 +348,7 @@ let State: {
   labelPos: { x: number; y: number };
 };
 
-function init(width: number, height: number) {
+export function init(width: number, height: number) {
   const createDemo = [
     () => new Audial(width, height),
     () => new Labels(width, height),
@@ -371,7 +371,7 @@ function init(width: number, height: number) {
   State = { createDemo, currentDemo, demo, label, labelPos };
 }
 
-function update(dt: number) {
+export function update(dt: number) {
   const pointersDown = Rainbow.Input.pointersDown;
   if (pointersDown.length > 0) {
     const { label, labelPos } = State;

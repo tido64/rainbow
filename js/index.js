@@ -11,6 +11,7 @@ var __assign = (this && this.__assign) || function () {
     };
     return __assign.apply(this, arguments);
 };
+Object.defineProperty(exports, "__esModule", { value: true });
 var Audial = /** @class */ (function () {
     function Audial(width, height) {
         var _this = this;
@@ -293,6 +294,7 @@ function init(width, height) {
     Rainbow.RenderQueue.add(label);
     State = { createDemo: createDemo, currentDemo: currentDemo, demo: demo, label: label, labelPos: labelPos };
 }
+exports.init = init;
 function update(dt) {
     var pointersDown = Rainbow.Input.pointersDown;
     if (pointersDown.length > 0) {
@@ -316,4 +318,5 @@ function update(dt) {
     }
     State.demo.update(dt);
 }
+exports.update = update;
 //# sourceMappingURL=index.js.map
