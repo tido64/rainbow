@@ -8,14 +8,17 @@
 
 #include <gtest/gtest.h>
 
+#include "Tests/TestHelpers.h"
+
 using rainbow::audio::Channel;
 using rainbow::audio::Mixer;
 using rainbow::audio::Sound;
+using rainbow::test::ScopedAssetsDirectory;
 
 namespace
 {
     constexpr int kMaxAudioChannels = 8;
-    constexpr char kAudioTestFile[] = "Silence.ogg";
+    constexpr char kAudioTestFile[] = "test.ogg";
 
     auto not_paused = std::not_fn(rainbow::audio::is_paused);
     auto not_playing = std::not_fn(rainbow::audio::is_playing);
@@ -37,7 +40,7 @@ namespace
     class AudioTest : public testing::Test
     {
     public:
-        AudioTest() : sound_(nullptr) {}
+        AudioTest() : sound_(nullptr), scoped_assets_("AudioTest") {}
 
         void SetUp() override
         {
@@ -50,6 +53,9 @@ namespace
         Mixer mixer_;
         Sound* sound_;
         T sound_type_;
+
+    private:
+        ScopedAssetsDirectory scoped_assets_;
     };
 
     using AudioSoundTypes = ::testing::Types<Static, Stream>;
@@ -155,6 +161,8 @@ TYPED_TEST(AudioTest, StopsPlaybackWhenSoundIsReleased)
 
 TEST(AudioTest, CanPlaySingleSoundOnMultipleChannels)
 {
+    ScopedAssetsDirectory scoped_assets{"AudioTest"};
+
     Mixer mixer_;
     ASSERT_FALSE(mixer_.initialize(kMaxAudioChannels));
     auto sound = rainbow::audio::load_sound(kAudioTestFile);

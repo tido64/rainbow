@@ -11,36 +11,27 @@
 #include "FileSystem/File.h"
 
 #if defined(RAINBOW_OS_IOS) || defined(RAINBOW_OS_MACOS)
+#    include "Audio/Codecs/AppleAudioFile.h"
 #    define USE_AUDIOTOOLBOX 1
 #endif
 #if !defined(RAINBOW_OS_IOS)
+#    include "Audio/Codecs/OggVorbisAudioFile.h"
 #    define USE_OGGVORBIS 1
 #endif
-
-#ifdef USE_AUDIOTOOLBOX
-#    include "Audio/Codecs/AppleAudioFile.h"
-#endif  // USE_AUDIOTOOLBOX
-
-#ifdef USE_OGGVORBIS
-#    include "Audio/Codecs/OggVorbisAudioFile.h"
-#endif  // USE_OGGVORBIS
 
 using rainbow::czstring;
 using rainbow::audio::IAudioFile;
 
 namespace
 {
-    constexpr size_t kAudioBufferSize = 2048;
-    constexpr size_t kFallbackBufferSize = 22050;
-
     class DummyAudioFile final : public IAudioFile
     {
     public:
         // IAudioFile implementation.
 
-        auto channels() const -> int override { return 1; }
-        auto rate() const -> int override { return kFallbackBufferSize >> 1; }
-        auto size() const -> size_t override { return kAudioBufferSize; }
+        auto channels() const -> int override { return 0; }
+        auto rate() const -> int override { return 0; }
+        auto size() const -> size_t override { return 0; }
 
         auto read(void* dst, size_t size) -> size_t override
         {
@@ -50,7 +41,7 @@ namespace
 
         bool seek(int64_t) override { return false; }
 
-        explicit operator bool() const override { return true; }
+        explicit operator bool() const override { return false; }
     };
 }  // namespace
 
