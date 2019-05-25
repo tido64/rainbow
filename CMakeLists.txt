@@ -228,6 +228,7 @@ if(UNIT_TESTS)
       PRIVATE ${LOCAL_LIBRARY}/googletest/googletest
   )
   list(APPEND SOURCE_FILES
+      src/Tests/Audio/AudioFile.test.cc
       src/Tests/Audio/Mixer.test.cc
       src/Tests/Collision/SAT.test.cc
       src/Tests/Common/Algorithm.test.cc
