@@ -73,7 +73,7 @@ namespace
     };
 }  // namespace
 
-TYPED_TEST_CASE(AudioTest, AudioSoundTypes, AudioSoundTypeNames);
+TYPED_TEST_SUITE(AudioTest, AudioSoundTypes, AudioSoundTypeNames);
 
 TYPED_TEST(AudioTest, ControlsChannelPlayback)
 {

@@ -49,7 +49,7 @@ namespace
     };
 }  // namespace
 
-TYPED_TEST_CASE(PoolTest, Types, PoolTestTypeNames);
+TYPED_TEST_SUITE(PoolTest, Types, PoolTestTypeNames);
 
 TYPED_TEST(PoolTest, ClearsElements)
 {
