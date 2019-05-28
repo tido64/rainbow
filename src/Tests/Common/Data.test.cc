@@ -50,7 +50,7 @@ namespace
     };
 }  // namespace
 
-TYPED_TEST_CASE(DataTest, DataTestTypes, DataTestTypeNames);
+TYPED_TEST_SUITE(DataTest, DataTestTypes, DataTestTypeNames);
 
 TYPED_TEST(DataTest, EncapsulatesInMemoryData)
 {
