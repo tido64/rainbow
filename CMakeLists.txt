@@ -396,6 +396,7 @@ target_link_libraries(
     absl::hash
     absl::hashtablez_sampler
     absl::raw_hash_set
+    absl::synchronization
     $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:absl::failure_signal_handler>
     $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:absl::symbolize>
 )
