@@ -112,7 +112,7 @@ Rainbow.RenderQueue.add(animation);
 | [FreeType][]        | 2.9.1    | FreeType            |    ✓     |
 | [HarfBuzz][]        | 2.4.0    | Old MIT             |    ✓     |
 | [libpng][]          | 1.6.37   | libpng v2           |    ✓     |
-| [Mapbox Variant][]  | 1.1.5    | BSD-3               |    ✓     |
+| [Mapbox Variant][]  | 1.1.6    | BSD-3               |    ✓     |
 | [NanoSVG][]         | dc12d905 | zlib                |    ✓     |
 | [Ogg Vorbis][]      | 1.3.3    | BSD-3               |    ✓     |
 | [PhysicsFS][]       | 3.0.2    | zlib                |    ✓     |
