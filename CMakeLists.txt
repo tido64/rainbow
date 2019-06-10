@@ -382,7 +382,7 @@ endif()
 include(${LOCAL_MODULE_PATH}/zlib.cmake)
 include(${LOCAL_MODULE_PATH}/libpng.cmake)
 
-add_subdirectory(${LOCAL_LIBRARY}/abseil-cpp)
+add_subdirectory(${LOCAL_LIBRARY}/abseil-cpp EXCLUDE_FROM_ALL)
 if(MSVC)
   # TODO: Abseil recommends against relying on internal names but there is
   # currently no other way to suppress these warnings.
