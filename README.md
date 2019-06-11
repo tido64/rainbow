@@ -105,7 +105,7 @@ Rainbow.RenderQueue.add(animation);
 
 | Name                | Version  | License             | Required |
 |---------------------|----------|---------------------|:--------:|
-| [Abseil][]          | 45221ccc | Apache 2.0          |    ✓     |
+| [Abseil][]          | 111ca706 | Apache 2.0          |    ✓     |
 | [cubeb][]           | 9a7a5515 | ISC                 |    ✓     |
 | [Dear ImGui][]      | 1.65     | MIT                 |    ✓     |
 | [Duktape][]         | 2.3.0    | MIT                 |    ✓     |
