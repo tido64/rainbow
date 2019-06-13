@@ -44,6 +44,10 @@ case $1 in
       "Android")
         # disabled
         ;;
+      "Linux")
+        cd out
+        ./rainbow --gtest_output="xml:test-report.xml"
+        ;;
       "iOS")
         # disabled
         ;;
@@ -55,6 +59,11 @@ case $1 in
     ;;
   "after_success")
     case $TARGET_OS in
+      "Darwin")
+        cd out
+        find . -type f -name '*.gcno' -execdir gcov -pb {} \;
+        PATH="/usr/local/bin:/usr/bin:/bin" bash <(curl -s https://codecov.io/bash) -X coveragepy -R .. -p . -d -K
+        ;;
       "Linux")
         cd out
         PATH="/usr/local/bin:/usr/bin:/bin" bash <(curl -s https://codecov.io/bash) -X coveragepy -R .. -p . -x gcov-7 -K
