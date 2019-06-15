@@ -14,21 +14,22 @@
     "typescript",
     "windows"
   ],
-  "license": "MIT",
   "homepage": "https://github.com/tido64/rainbow#rainbow",
   "bugs": "https://github.com/tido64/rainbow/issues",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/tido64/rainbow.git"
-  },
+  "license": "MIT",
   "author": "Tommy Nguyen",
-  "main": "index.js",
+  "main": "js/index.js",
   "directories": {
     "doc": "doc",
     "lib": "lib"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tido64/rainbow.git"
+  },
   "scripts": {
     "build": "tsc --project js",
+    "build:ci": "npm-run-all build check:tools",
     "check:tools": "tsc --build tsconfig.tools.json && yarn lint:tools",
     "generate:bindings": "node tools/generate-bindings.js",
     "generate:shaders": "node tools/generate-shaders.js",
@@ -40,7 +41,12 @@
     "@types/node": "^10.14.0",
     "@typescript-eslint/parser": "^1.10.0",
     "eslint": "^5.16.0",
+    "npm-run-all": "^4.1.0",
     "prettier": "^1.18.0",
     "typescript": "^3.5.0"
-  }
+  },
+  "private": true,
+  "workspaces": [
+    "doc"
+  ]
 }
