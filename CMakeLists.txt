@@ -268,6 +268,7 @@ if(UNIT_TESTS)
       src/Tests/Memory/SharedPtr.test.cc
       src/Tests/Memory/SmallBuffer.test.cc
       src/Tests/Memory/StableArray.test.cc
+      src/Tests/Platform/SDL/Context.test.cc
       src/Tests/Script/JS/Module.test.cc
       src/Tests/Script/JavaScript.test.cc
       src/Tests/Script/Timer.test.cc
