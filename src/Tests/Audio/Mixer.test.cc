@@ -163,8 +163,8 @@ TEST(AudioTest, CanPlaySingleSoundOnMultipleChannels)
 {
     ScopedAssetsDirectory scoped_assets{"AudioTest"};
 
-    Mixer mixer_;
-    ASSERT_FALSE(mixer_.initialize(kMaxAudioChannels));
+    Mixer mixer;
+    ASSERT_FALSE(mixer.initialize(kMaxAudioChannels));
     auto sound = rainbow::audio::load_sound(kAudioTestFile);
 
     Channel* channels[kMaxAudioChannels];
@@ -229,5 +229,84 @@ TEST(AudioTest, CanPlaySingleSoundOnMultipleChannels)
     {
         ASSERT_PRED1(not_paused, channel);
         ASSERT_PRED1(not_playing, channel);
+    }
+}
+
+TEST(AudioTest, SuspendsAndResumes)
+{
+    ScopedAssetsDirectory scoped_assets{"AudioTest"};
+
+    Mixer mixer;
+    ASSERT_FALSE(mixer.initialize(kMaxAudioChannels));
+    auto sound = rainbow::audio::load_sound(kAudioTestFile);
+
+    Channel* channels[kMaxAudioChannels];
+    std::generate(std::begin(channels), std::end(channels), [sound] {
+        return rainbow::audio::play(sound);
+    });
+
+    for (int i = 0; i < kMaxAudioChannels; ++i)
+        ASSERT_PRED1(rainbow::audio::is_playing, channels[i]);
+
+    for (int i = 0; i < kMaxAudioChannels; i += 2)
+    {
+        rainbow::audio::stop(channels[i]);
+        ASSERT_PRED1(not_paused, channels[i]);
+        ASSERT_PRED1(not_playing, channels[i]);
+    }
+
+    mixer.suspend(true);
+
+    for (int i = 0; i < kMaxAudioChannels; ++i)
+    {
+        if (i % 2 == 0)
+        {
+            ASSERT_PRED1(not_paused, channels[i]);
+            ASSERT_PRED1(not_playing, channels[i]);
+        }
+        else
+        {
+            ASSERT_PRED1(rainbow::audio::is_playing, channels[i]);
+        }
+    }
+
+    mixer.suspend(false);
+
+    for (int i = 0; i < kMaxAudioChannels; ++i)
+    {
+        if (i % 2 == 0)
+        {
+            ASSERT_PRED1(not_paused, channels[i]);
+            ASSERT_PRED1(not_playing, channels[i]);
+        }
+        else
+        {
+            ASSERT_PRED1(rainbow::audio::is_playing, channels[i]);
+        }
+    }
+}
+
+TEST(AudioTest, ClearsAllChannels)
+{
+    ScopedAssetsDirectory scoped_assets{"AudioTest"};
+
+    Mixer mixer;
+    ASSERT_FALSE(mixer.initialize(kMaxAudioChannels));
+    auto sound = rainbow::audio::load_sound(kAudioTestFile);
+
+    Channel* channels[kMaxAudioChannels];
+    std::generate(std::begin(channels), std::end(channels), [sound] {
+        return rainbow::audio::play(sound);
+    });
+
+    for (int i = 0; i < kMaxAudioChannels; ++i)
+        ASSERT_PRED1(rainbow::audio::is_playing, channels[i]);
+
+    mixer.clear();
+
+    for (int i = 0; i < kMaxAudioChannels; ++i)
+    {
+        ASSERT_PRED1(not_paused, channels[i]);
+        ASSERT_PRED1(not_playing, channels[i]);
     }
 }
