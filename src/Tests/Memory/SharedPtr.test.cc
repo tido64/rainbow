@@ -144,12 +144,14 @@ TEST(SharedPtrTest, AssignsItself)
         ASSERT_EQ(foo_ptr.get(), foo);
         ASSERT_EQ(foo_ptr.use_count(), 1u);
 
-#if defined(__clang__) && __apple_build_version__ >= 10000000
+#if defined(__clang__) &&                                                      \
+    (__apple_build_version__ >= 10000000 || __clang_major__ >= 8)
 #    pragma clang diagnostic push
 #    pragma clang diagnostic ignored "-Wself-assign-overloaded"
 #endif
         foo_ptr = foo_ptr;
-#if defined(__clang__) && __apple_build_version__ >= 10000000
+#if defined(__clang__) &&                                                      \
+    (__apple_build_version__ >= 10000000 || __clang_major__ >= 8)
 #    pragma clang diagnostic pop
 #endif
 

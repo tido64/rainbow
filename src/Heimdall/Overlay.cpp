@@ -325,7 +325,7 @@ void Overlay::draw_startup_message()
     ImGui::SetNextWindowPos({4.0f, 4.0f}, ImGuiCond_Once);
     ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
 
-    if (ImGui::Begin("", nullptr, kMinimalWindowFlags))
+    if (ImGui::Begin("Help", nullptr, kMinimalWindowFlags))
     {
         const ImVec4 yellow = Color{0xff, 0xeb, 0x3b};
         ImGui::TextColored(yellow, RAINBOW_SHORTCUT_DIAGNOSTIC_TOOLS ".");

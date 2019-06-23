@@ -4,6 +4,8 @@
 
 #include "ThirdParty/ImGui/ImGuiHelper.h"
 
+#include <limits>
+
 #ifdef __GNUC__
 // TODO: This is a workaround for 'diagnostic push' bug in GCC. See
 // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=53431 for details.
@@ -13,11 +15,13 @@
 #    endif
 #    pragma GCC diagnostic ignored "-Wformat"
 #    pragma GCC diagnostic ignored "-Wold-style-cast"
+#    pragma GCC diagnostic ignored "-Wsign-compare"
 #    pragma GCC diagnostic ignored "-Wsign-promo"
 #    pragma GCC diagnostic ignored "-Wtype-limits"
 #    pragma GCC diagnostic ignored "-Wunused-function"
 #    pragma GCC diagnostic ignored "-Wunused-parameter"
 #endif
+#define IMGUI_DISABLE_OSX_FUNCTIONS 1
 #include <imgui/imgui.cpp>
 #include <imgui/imgui_draw.cpp>
 #include <imgui/imgui_widgets.cpp>
@@ -164,7 +168,7 @@ void rainbow::imgui::new_frame(const Context& ctx, uint64_t dt)
         io.DisplaySize = ctx.window_size;
     }
 
-    io.DeltaTime = dt * 0.001f;
+    io.DeltaTime = std::max(dt * 0.001f, std::numeric_limits<float>::epsilon());
     io.DisplayFramebufferScale =
         g_window_scale * ctx.window_size.x / g_initial_window_width;
 
