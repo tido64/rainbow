@@ -22,25 +22,25 @@ namespace rainbow::duk::console
 
     auto debug([[maybe_unused]] duk_context* ctx)
     {
-        LOGD("JavaScript: %s", join_strings(ctx));
+        LOGD("JavaScript: {}", join_strings(ctx));
         return 0;
     }
 
     auto error(duk_context* ctx)
     {
-        LOGE("JavaScript: %s", join_strings(ctx));
+        LOGE("JavaScript: {}", join_strings(ctx));
         return 0;
     }
 
     auto info([[maybe_unused]] duk_context* ctx)
     {
-        LOGI("JavaScript: %s", join_strings(ctx));
+        LOGI("JavaScript: {}", join_strings(ctx));
         return 0;
     }
 
     auto warn([[maybe_unused]] duk_context* ctx)
     {
-        LOGW("JavaScript: %s", join_strings(ctx));
+        LOGW("JavaScript: {}", join_strings(ctx));
         return 0;
     }
 

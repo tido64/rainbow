@@ -86,7 +86,7 @@ namespace rainbow
             const auto& file = open(path, file_type);
             if (!file)
             {
-                LOGW("No such file: %s", path);
+                LOGW("No such file: {}", path);
                 return {};
             }
 

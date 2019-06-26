@@ -58,16 +58,16 @@ void rainbow::duk::dump_context(duk_context* ctx)
     if (duk_is_error(ctx, -1))
     {
         duk::get_prop_literal(ctx, -1, "stack");
-        LOGF("JavaScript: %s", duk_safe_to_string(ctx, -1));
+        LOGF("JavaScript: {}", duk_safe_to_string(ctx, -1));
         duk_pop(ctx);
     }
     else
     {
-        LOGF("JavaScript: %s", duk_safe_to_string(ctx, -1));
+        LOGF("JavaScript: {}", duk_safe_to_string(ctx, -1));
     }
 
     duk_push_context_dump(ctx);
-    LOGF("JavaScript: %s", duk_to_string(ctx, -1));
+    LOGF("JavaScript: {}", duk_to_string(ctx, -1));
     duk_pop(ctx);
 }
 

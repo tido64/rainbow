@@ -65,7 +65,7 @@ bool CubebMixer::initialize(int max_channels)
         return false;
     }
 
-    LOGI("cubeb: Using %s backend", cubeb_get_backend_id(context_));
+    LOGI("cubeb: Using {} backend", cubeb_get_backend_id(context_));
 
     drain_.reserve(max_channels);
     thread_id_ = std::this_thread::get_id();
@@ -170,7 +170,7 @@ auto CubebMixer::create_stream(Sound* source) -> Channel*
                                           &channel);
     if (result != CUBEB_OK)
     {
-        LOGE("Failed to initialize stream for '%s'", path);
+        LOGE("Failed to initialize stream for '{}'", path);
         return nullptr;
     }
     return &channel;

@@ -69,7 +69,7 @@ ChangeMonitor::ChangeMonitor(czstring directory)
         stream_, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
     FSEventStreamStart(stream_);
 
-    LOGI("Monitoring '%s'", directory);
+    LOGI("Monitoring '{}'", directory);
 }
 
 ChangeMonitor::~ChangeMonitor()

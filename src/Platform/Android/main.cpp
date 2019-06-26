@@ -190,7 +190,7 @@ void android_handle_display(RainbowContext* ctx)
     if (ctx->director->terminated() ||
         (ctx->director->init({width, height}), ctx->director->terminated()))
     {
-        LOGF("%s", ctx->director->error().message().c_str());
+        LOGF("{}", ctx->director->error().message().c_str());
         ctx->done = true;
     }
 }

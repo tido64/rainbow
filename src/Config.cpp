@@ -78,7 +78,7 @@ rainbow::Config::Config()
             if (state == panini::State::Error)
             {
                 LOGE(  //
-                    "Error parsing %s:%s: %s",
+                    "Error parsing {}:{}: {}",
                     kConfigINI,
                     section.data(),
                     key.data());

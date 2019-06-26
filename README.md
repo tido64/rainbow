@@ -125,6 +125,7 @@ working directory setting when discovering tests.
 | [cubeb][]           | 03ec1b3 | ISC          |    ✓     |
 | [Dear ImGui][]      | 1.77    | MIT          |    ✓     |
 | [Duktape][]         | 2.5.0   | MIT          |    ✓     |
+| [fmt][]             | 7.0.1   | MIT          |    ✓     |
 | [FreeType][]        | 2.10.1  | FreeType     |    ✓     |
 | [HarfBuzz][]        | 2.6.4   | Old MIT      |    ✓     |
 | [libpng][]          | 1.6.37  | libpng v2    |    ✓     |
@@ -178,6 +179,7 @@ THE SOFTWARE.
 [Dear ImGui]: https://github.com/ocornut/imgui "Dear ImGui"
 [Duktape]: https://duktape.org/ "Duktape"
 [FMOD]: https://www.fmod.com/ "FMOD"
+[fmt]: https://github.com/fmtlib/fmt "fmt"
 [FreeType]: https://freetype.org/ "FreeType"
 [HarfBuzz]: https://wiki.freedesktop.org/www/Software/HarfBuzz/ "HarfBuzz"
 [libpng]: https://github.com/glennrp/libpng "libpng"

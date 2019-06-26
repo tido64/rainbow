@@ -36,7 +36,7 @@ AppleAudioFile::AppleAudioFile(czstring file) : format_{}, ref_(nullptr)
     const auto path = filesystem::real_path(file);
     const auto url = make_url(path);
     if (ExtAudioFileOpenURL(url, &ref_) != noErr)
-        LOGE("AudioToolbox: Failed to open '%s'", file);
+        LOGE("AudioToolbox: Failed to open '{}'", file);
     CFRelease(url);
     if (ref_ == nullptr)
         return;
@@ -95,7 +95,7 @@ auto AppleAudioFile::read(void* dst, size_t size) -> size_t
     buffer.mBuffers[0].mDataByteSize = size;
     buffer.mBuffers[0].mData = dst;
     if (ExtAudioFileRead(ref_, &frames, &buffer) != noErr)
-        LOGE("AudioToolbox: Failed to read <%p>", static_cast<void*>(ref_));
+        LOGE("AudioToolbox: Failed to read <{}>", static_cast<void*>(ref_));
     return frames * static_cast<size_t>(format_.mBytesPerFrame);
 }
 

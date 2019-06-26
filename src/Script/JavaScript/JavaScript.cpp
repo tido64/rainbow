@@ -30,7 +30,7 @@ namespace
     [[noreturn]] void on_fatal(void* udata, const char* msg)
     {
         if (msg != nullptr)
-            LOGF("JavaScript: %s", msg);
+            LOGF("JavaScript: {}", msg);
 
         auto js = static_cast<JavaScript*>(udata);
         rainbow::duk::dump_context(js->context());
@@ -109,7 +109,7 @@ JavaScript::JavaScript(Director& director) : GameBase(director), context_(this)
                                    : bundle.assets_path();
             for (auto&& path : kEntryPoints)
             {
-                LOGE("    %s%s%s",
+                LOGE("    {}{}{}",
                      assets_path,
                      filesystem::path_separator(),
                      path);
@@ -129,7 +129,7 @@ JavaScript::JavaScript(Director& director) : GameBase(director), context_(this)
                                       data.as<const char*>(),
                                       data.size()) != 0)
     {
-        LOGF("JavaScript: %s", duk_safe_to_string(context_, -1));
+        LOGF("JavaScript: {}", duk_safe_to_string(context_, -1));
         terminate(ErrorCode::ScriptCompilationFailed);
     }
     else

@@ -291,7 +291,7 @@ namespace rainbow::duk
             duk_pcall(ctx, sizeof...(args)) == DUK_EXEC_SUCCESS;
         if (!success)
         {
-            LOGF("JavaScript: An error occurred while calling '%s'", func);
+            LOGF("JavaScript: An error occurred while calling '{}'", func);
             dump_context(ctx);
         }
 #endif

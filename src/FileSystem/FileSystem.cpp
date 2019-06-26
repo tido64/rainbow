@@ -61,7 +61,7 @@ void rainbow::filesystem::initialize(const Bundle& bundle,
     if (PHYSFS_init(argv0) == 0)
     {
         const auto error_code = PHYSFS_getLastErrorCode();
-        LOGF("PhysicsFS: Initialization failed: %s",
+        LOGF("PhysicsFS: Initialization failed: {}",
              PHYSFS_getErrorByCode(error_code));
         return;
     }
@@ -72,20 +72,20 @@ void rainbow::filesystem::initialize(const Bundle& bundle,
         PHYSFS_mount(bundle.assets_path(), nullptr, 0) == 0)
     {
         const auto error_code = PHYSFS_getLastErrorCode();
-        LOGF("PhysicsFS: Failed to mount bundle: %s",
+        LOGF("PhysicsFS: Failed to mount bundle: {}",
              PHYSFS_getErrorByCode(error_code));
     }
     else if (PHYSFS_setWriteDir(filesystem::preferences_directory().c_str()) ==
              0)
     {
         const auto error_code = PHYSFS_getLastErrorCode();
-        LOGF("PhysicsFS: Failed to set preferences directory: %s",
+        LOGF("PhysicsFS: Failed to set preferences directory: {}",
              PHYSFS_getErrorByCode(error_code));
     }
     else if (PHYSFS_mount(PHYSFS_getWriteDir(), nullptr, 0) == 0)
     {
         const auto error_code = PHYSFS_getLastErrorCode();
-        LOGF("PhysicsFS: Failed to mount preferences directory: %s",
+        LOGF("PhysicsFS: Failed to mount preferences directory: {}",
              PHYSFS_getErrorByCode(error_code));
     }
 }

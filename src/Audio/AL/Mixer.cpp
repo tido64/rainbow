@@ -84,7 +84,7 @@ bool ALMixer::initialize(int max_channels)
     std::unique_ptr<ALCdevice> device{alcOpenDevice(nullptr)};
     if (device == nullptr)
     {
-        LOGE("OpenAL: Failed to open audio device (code: 0x%x)", alGetError());
+        LOGE("OpenAL: Failed to open audio device (code: {:#x})", alGetError());
         return false;
     }
 
@@ -92,7 +92,7 @@ bool ALMixer::initialize(int max_channels)
         alcCreateContext(device.get(), nullptr)};
     if (context == nullptr)
     {
-        LOGE("OpenAL: Failed to create context (code: 0x%x)", alGetError());
+        LOGE("OpenAL: Failed to create context (code: {:#x})", alGetError());
         return false;
     }
 
@@ -106,7 +106,7 @@ bool ALMixer::initialize(int max_channels)
     auto result = alGetError();
     if (is_fail(result))
     {
-        LOGE("OpenAL: Failed to generate sources (code: 0x%x)", result);
+        LOGE("OpenAL: Failed to generate sources (code: {:#x})", result);
         return false;
     }
 
@@ -116,7 +116,7 @@ bool ALMixer::initialize(int max_channels)
     result = alGetError();
     if (is_fail(result))
     {
-        LOGE("OpenAL: Failed to generate buffers (code: 0x%x)", result);
+        LOGE("OpenAL: Failed to generate buffers (code: {:#x})", result);
         alDeleteSources(max_channels, sources.get());
         return false;
     }

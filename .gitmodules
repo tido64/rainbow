@@ -10,6 +10,9 @@
 [submodule "lib/duktape"]
 	path = lib/duktape
 	url = https://github.com/tido64/duktape.git
+[submodule "lib/fmt"]
+	path = lib/fmt
+	url = https://github.com/fmtlib/fmt.git
 [submodule "lib/FreeType"]
 	path = lib/FreeType
 	url = https://github.com/tido64/freetype2.git

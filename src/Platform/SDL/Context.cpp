@@ -34,7 +34,7 @@ SDLContext::SDLContext(const Config& config)
 {
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER) < 0)
     {
-        LOGF("SDL: Unable to initialise video: %s", SDL_GetError());
+        LOGF("SDL: Unable to initialise video: {}", SDL_GetError());
         return;
     }
 
@@ -67,7 +67,7 @@ SDLContext::SDLContext(const Config& config)
                                flags);
     if (window_ == nullptr)
     {
-        R_ABORT("SDL: Failed to create window: %s", SDL_GetError());
+        R_ABORT("SDL: Failed to create window: {}", SDL_GetError());
         return;
     }
 
@@ -75,7 +75,7 @@ SDLContext::SDLContext(const Config& config)
     context_ = SDL_GL_CreateContext(window_);
     if (context_ == nullptr)
     {
-        R_ABORT("SDL: Failed to create GL context: %s", SDL_GetError());
+        R_ABORT("SDL: Failed to create GL context: {}", SDL_GetError());
         return;
     }
 
@@ -88,14 +88,14 @@ SDLContext::SDLContext(const Config& config)
 
 #ifndef NDEBUG
     const Vec2i& resolution = drawable_size();
-    LOGI("SDL: Resolution: %ix%i", resolution.x, resolution.y);
+    LOGI("SDL: Resolution: {}x{}", resolution.x, resolution.y);
     int msaa = 0;
     SDL_GL_GetAttribute(SDL_GL_MULTISAMPLESAMPLES, &msaa);
     if (msaa > 0)
-        LOGI("SDL: Anti-aliasing: %ix MSAA", msaa);
+        LOGI("SDL: Anti-aliasing: {}x MSAA", msaa);
     else
         LOGI("SDL: Anti-aliasing: Disabled");
-    LOGI("SDL: Vertical sync: %s", (vsync_ ? "Enabled" : "Disabled"));
+    LOGI("SDL: Vertical sync: {}", (vsync_ ? "Enabled" : "Disabled"));
 #endif
 }
 

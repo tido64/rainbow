@@ -26,7 +26,7 @@ ChangeMonitor::ChangeMonitor(czstring directory)
     if (hDirectory_ == INVALID_HANDLE_VALUE)
         return;
 
-    LOGI("Monitoring '%s'", directory);
+    LOGI("Monitoring '{}'", directory);
     monitoring_ = true;
     worker_ = std::async(std::launch::async, [this]() {
         char lpPath[MAX_PATH * 4];

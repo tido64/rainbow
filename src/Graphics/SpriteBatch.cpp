@@ -67,8 +67,8 @@ auto SpriteBatch::create_sprite(uint32_t width, uint32_t height) -> SpriteRef
     if (count_ == sprites_.size())
     {
         LOGW(
-            "Tried to add a sprite (size: %ux%u) to a full SpriteBatch "
-            "(capacity: %u). Increase the capacity and try again.",
+            "Tried to add a sprite (size: {}x{}) to a full SpriteBatch "
+            "(capacity: {}). Increase the capacity and try again.",
             width,
             height,
             sprites_.size());

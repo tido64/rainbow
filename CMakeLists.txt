@@ -381,6 +381,9 @@ target_link_libraries(rainbow
   $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:absl::symbolize>
 )
 
+add_subdirectory(${LOCAL_LIBRARY}/fmt)
+target_link_libraries(rainbow fmt::fmt)
+
 # Dynamic libraries
 include(${LOCAL_MODULE_PATH}/Audio.cmake)
 if(NOT ANDROID)

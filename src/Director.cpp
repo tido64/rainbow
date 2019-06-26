@@ -112,7 +112,7 @@ namespace rainbow
 
         if (terminated())
         {
-            LOGF("%s", error().message().c_str());
+            LOGF("{}", error().message().c_str());
             LOGI("Booting 'NoGame'...");
             script_ = std::make_unique<NoGame>(*this, error());
             active_ = true;

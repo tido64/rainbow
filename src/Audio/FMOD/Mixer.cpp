@@ -30,7 +30,7 @@ namespace
 
     void log_error(FMOD_RESULT result)
     {
-        LOGE("FMOD Studio: %s (%d)", FMOD_ErrorString(result), result);
+        LOGE("FMOD Studio: {} ({})", FMOD_ErrorString(result), result);
     }
 
     template <typename F>
@@ -45,7 +45,7 @@ namespace
         std::error_code error;
         if (!rainbow::filesystem::is_regular_file(p, error))
         {
-            R_ABORT("No such file: %s", path);
+            R_ABORT("No such file: {}", path);
             UNREACHABLE();
             return nullptr;
         }

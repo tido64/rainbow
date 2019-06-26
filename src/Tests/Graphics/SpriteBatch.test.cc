@@ -4,6 +4,7 @@
 
 #include "Graphics/SpriteBatch.h"
 
+#include <fmt/format.h>
 #include <gtest/gtest.h>
 
 #include "Tests/TestHelpers.h"
@@ -62,7 +63,7 @@ namespace
         const SpriteVertex* vertices = batch.vertices();
         for (uint32_t i = 0; i < batch.size(); ++i)
         {
-            snprintf(trace.data(), trace.size(), "i = %u", i);
+            *fmt::format_to(trace.begin(), "i = {}", i) = '\0';
             SCOPED_TRACE(trace.data());
             auto vertex_array = vertices + i * 4;
             verify_sprite_vertices(sprites[i], vertex_array, Vec2f::Zero);

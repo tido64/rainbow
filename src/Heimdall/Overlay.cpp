@@ -8,6 +8,8 @@
 
 #include <numeric>
 
+#include <fmt/format.h>
+
 #include "Common/TypeCast.h"
 #include "Graphics/Animation.h"
 #include "Graphics/Label.h"
@@ -48,10 +50,7 @@ namespace
     constexpr float kStyleWindowWidth = 400.0F;
     constexpr float kStyleWindowHeight = 400.0F;
 
-    void write_address(const void* obj)
-    {
-        ImGui::Text("address = %p", obj);
-    }
+    void write_address(const void* obj) { ImGui::Text("address = %p", obj); }
 
     void write_prop(std::string_view property, std::string_view value)
     {
@@ -136,6 +135,12 @@ namespace
             std::min(resolution.x, resolution.y) / screen_height, 1.0F);
     }
 
+    template <typename Buffer, typename... Args>
+    void format_to(Buffer&& buffer, Args&&... args)
+    {
+        *fmt::format_to(buffer.begin(), std::forward<Args>(args)...) = '\0';
+    }
+
     template <typename Container>
     auto mean(const Container& container)
     {
@@ -143,12 +148,6 @@ namespace
                                std::end(container),
                                typename Container::value_type{}) /
                rainbow::narrow_cast<float>(container.size());
-    }
-
-    template <typename... Args>
-    void snprintf_q(Args&&... args)
-    {
-        static_cast<void>(std::snprintf(std::forward<Args>(args)...));
     }
 
     template <typename Container>
@@ -274,11 +273,7 @@ void Overlay::draw_performance(float scale)
     // NOLINTNEXTLINE(cppcoreguidelines-pro-type-member-init)
     std::array<char, 128> buffer;
 
-    snprintf_q(  //
-        buffer.data(),
-        buffer.size(),
-        "Frame time: %.01f ms/frame",
-        mean(frame_times_));
+    format_to(buffer, "Frame time: {:.1f} ms/frame", mean(frame_times_));
     ImGui::PlotLines(  //
         "",
         at<decltype(frame_times_)>,
@@ -290,11 +285,7 @@ void Overlay::draw_performance(float scale)
         100.0F,
         graph_size);
 
-    snprintf_q(  //
-        buffer.data(),
-        buffer.size(),
-        "Video memory: %.2f MBs",
-        vmem_usage_.back());
+    format_to(buffer, "Video memory: {:.2f} MBs", vmem_usage_.back());
     ImGui::PlotLines(  //
         "",
         at<decltype(vmem_usage_)>,

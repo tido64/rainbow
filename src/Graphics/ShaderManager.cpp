@@ -68,7 +68,7 @@ namespace
             const Data& glsl = File::read(shader.source, FileType::Asset);
             if (!glsl)
             {
-                LOGE("Failed to load shader: %s", shader.source);
+                LOGE("Failed to load shader: {}", shader.source);
                 if (shader.fallback == nullptr)
                 {
                     R_ABORT("No fallback was found");
@@ -94,7 +94,7 @@ namespace
         {
             glDeleteShader(id);
             R_ABORT(
-                "GLSL: Failed to compile %s shader: %s",
+                "GLSL: Failed to compile {} shader: {}",
                 (shader.type == Shader::kTypeVertex ? "vertex" : "fragment"),
                 error.c_str());
             UNREACHABLE();
@@ -119,7 +119,7 @@ namespace
         if (!error.empty())
         {
             glDeleteProgram(program);
-            R_ABORT("GLSL: Failed to link program: %s", error.c_str());
+            R_ABORT("GLSL: Failed to link program: {}", error.c_str());
             UNREACHABLE();
             return ShaderManager::kInvalidProgram;
         }

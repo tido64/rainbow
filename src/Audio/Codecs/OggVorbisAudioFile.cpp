@@ -65,7 +65,7 @@ namespace
             default:
                 break;
         }
-        LOGE("Vorbis: %s", error);
+        LOGE("Vorbis: {}", error);
     }
 }  // namespace
 

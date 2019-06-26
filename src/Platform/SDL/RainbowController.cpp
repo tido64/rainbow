@@ -62,7 +62,7 @@ RainbowController::RainbowController(SDLContext& context, const Config& config)
     on_window_resized();
 
     chrono_.tick();
-    LOGI("Initialization time: %" PRId64 " ms", chrono_.delta());
+    LOGI("Initialization time: {} ms", chrono_.delta());
 }
 
 auto RainbowController::run() -> bool

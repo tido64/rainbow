@@ -131,7 +131,7 @@ void Input::on_controller_connected(ControllerID id)
         return;
 
     controllers_[port].assign(id);
-    LOGI("Controller %u plugged into port %d", id, port + 1);
+    LOGI("Controller {} plugged into port {}", id, port + 1);
 
     for_each(
         next(), [port = static_cast<uint32_t>(port)](InputListener& listener) {
@@ -143,7 +143,7 @@ void Input::on_controller_disconnected(ControllerID id)
 {
     process_controller(id, [this](unsigned int i) {
         auto& controller = controllers_[i];
-        LOGI("Controller %u unplugged from port %d", controller.id(), i + 1);
+        LOGI("Controller {} unplugged from port {}", controller.id(), i + 1);
         controller.unassign();
 
         for_each(next(), [i](InputListener& listener) {
