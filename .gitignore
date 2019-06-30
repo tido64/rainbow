@@ -4,6 +4,7 @@
 *.aps
 *.iml
 *.jar
+*.spv
 *.swp
 .DS_Store
 .browse.VC.*

@@ -34,6 +34,9 @@
 [submodule "lib/vorbis"]
 	path = lib/vorbis
 	url = https://github.com/xiph/vorbis
+[submodule "lib/VulkanMemoryAllocator"]
+	path = lib/VulkanMemoryAllocator
+	url = https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator.git
 [submodule "lib/zlib"]
 	path = lib/zlib
 	url = https://github.com/madler/zlib.git

@@ -103,23 +103,24 @@ Rainbow.RenderQueue.add(animation);
 
 ## Dependencies
 
-| Name                | Version | License             | Required |
-|---------------------|---------|---------------------|:--------:|
-| [Abseil][]          | 111ca70 | Apache 2.0          |    ✓     |
-| [cubeb][]           | 03ec1b3 | ISC                 |    ✓     |
-| [Dear ImGui][]      | 1.74    | MIT                 |    ✓     |
-| [Duktape][]         | 2.3.0   | MIT                 |    ✓     |
-| [FreeType][]        | 2.10.1  | FreeType            |    ✓     |
-| [HarfBuzz][]        | 2.4.0   | Old MIT             |    ✓     |
-| [libpng][]          | 1.6.37  | libpng v2           |    ✓     |
-| [Mapbox Variant][]  | 1.1.6   | BSD-3               |    ✓     |
-| [NanoSVG][]         | dc12d90 | zlib                |    ✓     |
-| [Ogg Vorbis][]      | 1.3.6   | BSD-3               |    ✓     |
-| [PhysicsFS][]       | 3.0.2   | zlib                |    ✓     |
-| [SDL][]             | 2.0.9   | zlib                |    ✓     |
-| [zlib][]            | 1.2.11  | zlib                |    ✓     |
-| [Box2D][]           | 784a646 | zlib                |          |
-| [FMOD][]            | 1.05.x  | Proprietary         |          |
+| Name                         | Version | License             | Required |
+|------------------------------|---------|---------------------|:--------:|
+| [Abseil][]                   | 111ca70 | Apache 2.0          |    ✓     |
+| [cubeb][]                    | 03ec1b3 | ISC                 |    ✓     |
+| [Dear ImGui][]               | 1.74    | MIT                 |    ✓     |
+| [Duktape][]                  | 2.3.0   | MIT                 |    ✓     |
+| [FreeType][]                 | 2.10.1  | FreeType            |    ✓     |
+| [HarfBuzz][]                 | 2.4.0   | Old MIT             |    ✓     |
+| [libpng][]                   | 1.6.37  | libpng v2           |    ✓     |
+| [Mapbox Variant][]           | 1.1.6   | BSD-3               |    ✓     |
+| [NanoSVG][]                  | dc12d90 | zlib                |    ✓     |
+| [Ogg Vorbis][]               | 1.3.6   | BSD-3               |    ✓     |
+| [PhysicsFS][]                | 3.0.2   | zlib                |    ✓     |
+| [Vulkan Memory Allocator][]  | 2.3.0   | MIT                 |    ✓     |
+| [SDL][]                      | 2.0.9   | zlib                |    ✓     |
+| [zlib][]                     | 1.2.11  | zlib                |    ✓     |
+| [Box2D][]                    | 784a646 | zlib                |          |
+| [FMOD][]                     | 1.05.x  | Proprietary         |          |
 
 ## License
 
@@ -166,4 +167,5 @@ THE SOFTWARE.
 [Ogg Vorbis]: https://xiph.org/vorbis/ "Ogg Vorbis"
 [PhysicsFS]: https://www.icculus.org/physfs/ "PhysicsFS"
 [SDL]: https://www.libsdl.org/ "Simple DirectMedia Layer"
+[Vulkan Memory Allocator]: https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator "Vulkan Memory Allocator"
 [zlib]: https://github.com/madler/zlib "zlib"

@@ -104,8 +104,12 @@ set(SOURCE_FILES
     src/Graphics/Texture.h
     src/Graphics/TextureAllocator.gl.cpp
     src/Graphics/TextureAllocator.gl.h
+    src/Graphics/TextureAllocator.vk.cpp
+    src/Graphics/TextureAllocator.vk.h
     src/Graphics/VertexArray.cpp
     src/Graphics/VertexArray.h
+    src/Graphics/Vulkan.cpp
+    src/Graphics/Vulkan.h
     src/Heimdall/Gatekeeper.cpp
     src/Heimdall/Gatekeeper.h
     src/Heimdall/Overlay.cpp
@@ -187,20 +191,27 @@ else()
       src/Platform/SDL/RainbowController.cpp
       src/Platform/SDL/RainbowController.h
       src/Platform/SDL/main.cpp
+      src/Platform/SDL/Window.cpp
+      src/Platform/SDL/Window.h
   )
   if(WIN32)
     list(APPEND SOURCE_FILES
         lib/glad/glad.c
+        src/Platform/SDL/Window.windows.cpp
         src/Platform/SystemInfo.windows.cpp
         tools/make.ps1
     )
   elseif(APPLE)
     list(APPEND SOURCE_FILES
+        src/Graphics/Vulkan.macos.mm
+        src/Platform/SDL/Window.macos.cpp
         src/Platform/SystemInfo.cocoa.cpp
     )
   else()
     list(APPEND SOURCE_FILES
-        src/Platform/SystemInfo.unix.cpp)
+        src/Platform/SDL/Window.unix.cpp
+        src/Platform/SystemInfo.unix.cpp
+    )
   endif()
 endif()
 
@@ -229,6 +240,7 @@ if(UNIT_TESTS)
       src/Tests/Common/Chrono.test.cc
       src/Tests/Common/Color.test.cc
       src/Tests/Common/Data.test.cc
+      src/Tests/Common/Defer.test.cc
       src/Tests/Common/Error.test.cc
       src/Tests/Common/Global.test.cc
       src/Tests/Common/Link.test.cc
@@ -351,6 +363,7 @@ target_include_directories(
         ${LOCAL_LIBRARY}/abseil-cpp
         ${LOCAL_LIBRARY}/nanosvg/src
         ${LOCAL_LIBRARY}/variant/include
+        ${LOCAL_LIBRARY}/VulkanMemoryAllocator/src
 )
 
 # Static libraries
@@ -362,6 +375,7 @@ if(USE_PHYSICS)
 endif()
 include(${LOCAL_MODULE_PATH}/Duktape.cmake)
 include(${LOCAL_MODULE_PATH}/FreeType.cmake)
+include(${LOCAL_MODULE_PATH}/MoltenVK.cmake)
 include(${LOCAL_MODULE_PATH}/PhysicsFS.cmake)
 include(${LOCAL_MODULE_PATH}/SDL2.cmake)
 include(${LOCAL_MODULE_PATH}/zlib.cmake)
@@ -409,7 +423,8 @@ elseif(APPLE)
     set(CMAKE_EXE_LINKER_FLAGS "--coverage")
   endif()
   find_library(CORESERVICES_LIBRARY CoreServices REQUIRED)
-  target_link_libraries(rainbow ${CORESERVICES_LIBRARY})
+  find_library(QUARTZCORE_LIBRARY QuartzCore REQUIRED)
+  target_link_libraries(rainbow ${CORESERVICES_LIBRARY} ${QUARTZCORE_LIBRARY})
 elseif(UNIX AND NOT MINGW)
   if(COVERAGE)
     set(CMAKE_EXE_LINKER_FLAGS "--coverage")

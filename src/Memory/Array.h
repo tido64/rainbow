@@ -57,4 +57,26 @@ private:
 template <typename T>
 using ArrayView = ArraySpan<const T>;
 
+namespace rainbow
+{
+    namespace detail
+    {
+        template <typename T, typename... Types>
+        struct first
+        {
+            using type = T;
+        };
+
+        template <typename... Types>
+        using first_of = typename first<Types...>::type;
+    }  // namespace detail
+
+    template <typename... Args>
+    constexpr auto make_array(Args&&... elements)
+        -> std::array<detail::first_of<Args...>, sizeof...(elements)>
+    {
+        return {std::forward<Args>(elements)...};
+    }
+}  // namespace rainbow
+
 #endif

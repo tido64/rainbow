@@ -30,6 +30,8 @@
 #endif
 #ifndef GL_OES_compressed_ETC1_RGB8_texture
 #    define GL_ETC1_RGB8_OES 0x8D64
+#    define GL_COMPRESSED_RGB8_ETC2 0x9274
+#    define GL_COMPRESSED_RGBA8_ETC2_EAC 0x9278
 #endif
 
 #define kInvalidColorDepth "Invalid colour depth"
@@ -87,6 +89,12 @@ namespace
 
             case Image::Format::ETC1:
                 return std::make_tuple(GL_ETC1_RGB8_OES, GL_NONE);
+
+            case Image::Format::ETC2:
+                return std::make_tuple(image.channels == 3
+                                           ? GL_COMPRESSED_RGB8_ETC2
+                                           : GL_COMPRESSED_RGBA8_ETC2_EAC,
+                                       GL_NONE);
 
             case Image::Format::PVRTC:
                 R_ASSERT(image.depth == 2 || image.depth == 4,  //
@@ -217,6 +225,8 @@ void TextureAllocator::update(const TextureHandle& handle,
         case Image::Format::BC3:
             [[fallthrough]];
         case Image::Format::ETC1:
+            [[fallthrough]];
+        case Image::Format::ETC2:
             [[fallthrough]];
         case Image::Format::PVRTC:
             glCompressedTexImage2D(  //

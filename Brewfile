@@ -1,4 +1,5 @@
 brew "cmake"
+brew "glslang"
 brew "ninja"
 brew "pkg-config"
 brew "sdl2"

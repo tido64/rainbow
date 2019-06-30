@@ -24,6 +24,7 @@ namespace rainbow
             BC2,    // DXT3
             BC3,    // DXT5
             ETC1,   // OpenGL ES standard
+            ETC2,   // OpenGL ES 3.0 standard
             PVRTC,  // iOS, OMAP43xx, PowerVR
             PNG,
             RGBA,
