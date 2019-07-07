@@ -1,6 +1,3 @@
-[submodule "lib/FreeType"]
-	path = lib/FreeType
-	url = git://git.sv.nongnu.org/freetype/freetype2.git
 [submodule "lib/abseil-cpp"]
 	path = lib/abseil-cpp
 	url = https://github.com/abseil/abseil-cpp.git
@@ -10,6 +7,9 @@
 [submodule "lib/cubeb"]
 	path = lib/cubeb
 	url = https://github.com/kinetiknz/cubeb.git
+[submodule "lib/FreeType"]
+	path = lib/FreeType
+	url = git://git.savannah.gnu.org/freetype/freetype2.git
 [submodule "lib/googletest"]
 	path = lib/googletest
 	url = https://github.com/abseil/googletest.git
