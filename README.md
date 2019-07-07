@@ -109,7 +109,7 @@ Rainbow.RenderQueue.add(animation);
 | [cubeb][]           | 9a7a5515 | ISC                 |    ✓     |
 | [Dear ImGui][]      | 1.65     | MIT                 |    ✓     |
 | [Duktape][]         | 2.3.0    | MIT                 |    ✓     |
-| [FreeType][]        | 2.9.1    | FreeType            |    ✓     |
+| [FreeType][]        | 2.10.1   | FreeType            |    ✓     |
 | [HarfBuzz][]        | 2.4.0    | Old MIT             |    ✓     |
 | [libpng][]          | 1.6.37   | libpng v2           |    ✓     |
 | [Mapbox Variant][]  | 1.1.6    | BSD-3               |    ✓     |
