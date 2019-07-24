@@ -402,8 +402,13 @@ target_link_libraries(
 # Dynamic libraries
 include(${LOCAL_MODULE_PATH}/Audio.cmake)
 if(NOT ANDROID)
+  set(OpenGL_GL_PREFERENCE "GLVND")
   find_package(OpenGL REQUIRED)
-  target_link_libraries(rainbow ${OPENGL_ext_LIBRARY} ${OPENGL_gl_LIBRARY})
+  if(TARGET OpenGL::OpenGL)
+    target_link_libraries(rainbow OpenGL::OpenGL)
+  else()
+    target_link_libraries(rainbow ${OPENGL_ext_LIBRARY} ${OPENGL_gl_LIBRARY})
+  endif()
 endif()
 
 # Platform libraries
