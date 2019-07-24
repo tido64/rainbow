@@ -52,7 +52,7 @@ namespace rainbow::graphics
         /// </summary>
         explicit operator bool() const
         {
-            return static_cast<const bool>(array_);
+            return static_cast<bool>(array_);
         }
 
     private:

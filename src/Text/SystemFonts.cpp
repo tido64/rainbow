@@ -8,7 +8,10 @@
 
 #include "Common/NonCopyable.h"
 #include "Platform/Macros.h"
-#ifdef RAINBOW_OS_WINDOWS
+#if defined(RAINBOW_OS_UNIX)
+#    include "Common/Logging.h"
+#    include "FileSystem/FileSystem.h"
+#elif defined(RAINBOW_OS_WINDOWS)
 #    define fileno _fileno
 #endif
 
@@ -58,16 +61,27 @@ auto rainbow::text::monospace_font() -> Data
 
 auto rainbow::text::monospace_font_path() -> czstring
 {
-    return
 #if defined(RAINBOW_OS_ANDROID)
-        "/system/fonts/DroidSansMono.ttf";
+    return "/system/fonts/DroidSansMono.ttf";
 #elif defined(RAINBOW_OS_MACOS)
-        "/System/Library/Fonts/Menlo.ttc";
+    return "/System/Library/Fonts/Menlo.ttc";
 #elif defined(RAINBOW_OS_UNIX)
-        "/usr/share/fonts/TTF/DejaVuSansMono.ttf";
+    constexpr const char* const fonts[]{
+        "/usr/share/fonts/opentype/fira/FiraMono-Regular.otf",
+        "/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf",
+        "/usr/share/fonts/TTF/DejaVuSansMono.ttf",
+    };
+    for (auto path : fonts)
+    {
+        if (system::is_regular_file(path))
+            return path;
+    }
+
+    R_ABORT("No monospace fonts found");
+    return nullptr;
 #elif defined(RAINBOW_OS_WINDOWS)
-        "C:/Windows/Fonts/consola.ttf";
+    return "C:/Windows/Fonts/consola.ttf";
 #else
-        nullptr;
+    return nullptr;
 #endif
 }
