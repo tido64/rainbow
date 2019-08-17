@@ -7,19 +7,10 @@
 
 #include <string>
 
-#ifdef __GNUC__
-#    pragma GCC diagnostic push
-#    pragma GCC diagnostic ignored "-Wpedantic"
-#    pragma GCC diagnostic ignored "-Woverflow"
-#    ifdef __clang__
-#        pragma clang diagnostic ignored "-Wcomma"
-#    endif
-#endif
+#include "ThirdParty/DisableWarnings.h"
 #include <absl/container/flat_hash_map.h>
-#ifdef __GNUC__
-#    pragma GCC diagnostic pop
-#endif
 #include <duktape.h>
+#include "ThirdParty/ReenableWarnings.h"
 
 #include "Common/Passkey.h"
 #include "Common/String.h"

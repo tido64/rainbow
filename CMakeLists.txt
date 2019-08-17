@@ -164,11 +164,13 @@ set(SOURCE_FILES
     src/Text/SystemFonts.h
     src/Text/Typesetter.cpp
     src/Text/Typesetter.h
+    src/ThirdParty/DisableWarnings.h
     src/ThirdParty/ImGui/imconfig.h
     src/ThirdParty/ImGui/ImGuiHelper.cpp
     src/ThirdParty/ImGui/ImGuiHelper.h
     src/ThirdParty/NanoSVG/NanoSVG.cpp
     src/ThirdParty/NanoSVG/NanoSVG.h
+    src/ThirdParty/ReenableWarnings.h
     src/Threading/Synchronized.h
 )
 

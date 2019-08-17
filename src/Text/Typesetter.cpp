@@ -4,15 +4,10 @@
 
 #include "Text/Typesetter.h"
 
-#ifdef __GNUC__
-#   pragma GCC diagnostic push
-#   pragma GCC diagnostic ignored "-Wold-style-cast"
-#endif
+#include "ThirdParty/DisableWarnings.h"
 #include <hb.h>
 #include <hb-ft.h>
-#ifdef __GNUC__
-#   pragma GCC diagnostic pop
-#endif
+#include "ThirdParty/ReenableWarnings.h"
 
 #include "Common/Logging.h"
 #include "Common/TypeCast.h"

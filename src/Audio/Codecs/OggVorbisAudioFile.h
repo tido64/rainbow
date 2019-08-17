@@ -7,15 +7,9 @@
 
 #include <array>
 
-#ifdef __GNUC__
-#    pragma GCC diagnostic push
-#    pragma GCC diagnostic ignored "-Wold-style-cast"
-#    pragma GCC diagnostic ignored "-Wunused-variable"
-#endif
+#include "ThirdParty/DisableWarnings.h"
 #include <vorbis/vorbisfile.h>
-#ifdef __GNUC__
-#    pragma GCC diagnostic pop
-#endif
+#include "ThirdParty/ReenableWarnings.h"
 
 #include "Audio/AudioFile.h"
 #include "FileSystem/File.h"

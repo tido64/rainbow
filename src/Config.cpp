@@ -4,14 +4,9 @@
 
 #include "Config.h"
 
-#ifdef __GNUC__
-#    pragma GCC diagnostic push
-#    pragma GCC diagnostic ignored "-Wpedantic"
-#endif
+#include "ThirdParty/DisableWarnings.h"
 #include <absl/hash/hash.h>
-#ifdef __GNUC__
-#    pragma GCC diagnostic pop
-#endif
+#include "ThirdParty/ReenableWarnings.h"
 
 #include <panini/panini.hpp>
 
