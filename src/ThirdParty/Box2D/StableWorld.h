@@ -5,15 +5,9 @@
 #ifndef THIRDPARTY_BOX2D_STABLEWORLD_H_
 #define THIRDPARTY_BOX2D_STABLEWORLD_H_
 
-#ifdef __GNUC__
-#    pragma GCC diagnostic push
-#    pragma GCC diagnostic ignored "-Wold-style-cast"
-#    pragma GCC diagnostic ignored "-Wstrict-aliasing"
-#endif
+#include "ThirdParty/DisableWarnings.h"
 #include <Box2D/Dynamics/b2World.h>
-#ifdef __GNUC__
-#    pragma GCC diagnostic pop
-#endif
+#include "ThirdParty/ReenableWarnings.h"
 
 #include "Graphics/Sprite.h"
 #include "ThirdParty/Box2D/DebugDraw.h"

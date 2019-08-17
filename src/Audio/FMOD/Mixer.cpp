@@ -6,18 +6,10 @@
 
 #include <string>
 
-#ifdef __GNUC__
-#    pragma GCC diagnostic push
-#    pragma GCC diagnostic ignored "-Wignored-qualifiers"
-#    pragma GCC diagnostic ignored "-Wold-style-cast"
-#    pragma GCC diagnostic ignored "-Wunused-function"
-#    pragma GCC diagnostic ignored "-Wunused-parameter"
-#endif
+#include "ThirdParty/DisableWarnings.h"
 #include <fmod_errors.h>
 #include <fmod_studio.hpp>
-#ifdef __GNUC__
-#    pragma GCC diagnostic pop
-#endif
+#include "ThirdParty/ReenableWarnings.h"
 
 #include "Common/Logging.h"
 #include "FileSystem/FileSystem.h"

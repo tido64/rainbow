@@ -156,7 +156,7 @@ auto rainbow::system::absolute_path(czstring path) -> std::string
 #if HAS_FILESYSTEM
     const std::filesystem::path p{path};
     std::error_code ec;
-    return std::filesystem::absolute(p, std::ref(ec)).u8string();
+    return std::filesystem::absolute(p, std::ref(ec)).string();
 #else
     char resolved_path[PATH_MAX];
     return realpath(path, resolved_path) == nullptr ? path : resolved_path;
@@ -176,7 +176,7 @@ auto rainbow::system::file_header(czstring path) -> std::array<uint8_t, 8>
 auto rainbow::system::current_path() -> std::string
 {
 #if HAS_FILESYSTEM
-    return std::filesystem::current_path().u8string();
+    return std::filesystem::current_path().string();
 #else
     char cwd[PATH_MAX];
     zstring result = getcwd(cwd, PATH_MAX);

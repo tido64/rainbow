@@ -7,14 +7,9 @@
 
 #include "ThirdParty/ImGui/imconfig.h"
 
-#ifdef __GNUC__
-#    pragma GCC diagnostic push
-#    pragma GCC diagnostic ignored "-Wold-style-cast"
-#endif
+#include "ThirdParty/DisableWarnings.h"
 #include <imgui/imgui.h>
-#ifdef __GNUC__
-#    pragma GCC diagnostic pop
-#endif
+#include "ThirdParty/ReenableWarnings.h"
 
 #include "Input/Pointer.h"
 #include "Memory/Array.h"

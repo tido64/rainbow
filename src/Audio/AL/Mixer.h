@@ -8,14 +8,9 @@
 #include <string>
 #include <vector>
 
-#ifdef __clang__
-#    pragma clang diagnostic push
-#    pragma clang diagnostic ignored "-Wcomma"
-#endif
+#include "ThirdParty/DisableWarnings.h"
 #include <absl/container/node_hash_map.h>
-#ifdef __clang__
-#    pragma clang diagnostic pop
-#endif
+#include "ThirdParty/ReenableWarnings.h"
 
 #include "Audio/AL/Channel.h"
 #include "Audio/AL/Sound.h"

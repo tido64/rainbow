@@ -18,14 +18,9 @@ namespace std
 #    include <optional>
 #endif
 
-#ifdef _MSC_VER
-#    pragma warning(push)
-#    pragma warning(disable : 4996)
-#endif
+#include "ThirdParty/DisableWarnings.h"
 #include <mapbox/variant.hpp>
-#ifdef _MSC_VER
-#    pragma warning(pop)
-#endif
+#include "ThirdParty/ReenableWarnings.h"
 
 namespace rainbow
 {
