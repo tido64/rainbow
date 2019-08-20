@@ -28,11 +28,10 @@ namespace rainbow
     template <typename T>
     constexpr bool are_equal(T a, T b)
     {
-        if constexpr (std::is_floating_point_v<T>)
-        {
-            const auto max = std::max(std::abs(a), std::abs(b));
-            return std::abs(a - b) <= max * std::numeric_limits<T>::epsilon();
-        }
+        static_assert(std::is_floating_point_v<T>);
+
+        const auto max = std::max(std::abs(a), std::abs(b));
+        return std::abs(a - b) <= max * std::numeric_limits<T>::epsilon();
     }
 
     template <typename T, size_t N>
@@ -43,7 +42,7 @@ namespace rainbow
 
     /// <summary>Rounds up to the nearest power of 2.</summary>
     /// <remarks>Note that 0 is incorrectly considered a power of 2.</remarks>
-    inline auto ceil_pow2(unsigned int i)
+    constexpr auto ceil_pow2(unsigned int i)
     {
         --i;
         i |= i >> 1;
@@ -58,8 +57,8 @@ namespace rainbow
     template <typename T>
     constexpr auto degrees(T r)
     {
-        if constexpr (std::is_floating_point_v<T>)
-            return r * kRadian<T>;
+        static_assert(std::is_floating_point_v<T>);
+        return r * kRadian<T>;
     }
 
     /// <summary>Fast inverse square root by 0x5f3759df.</summary>
