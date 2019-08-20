@@ -26,7 +26,7 @@ namespace rainbow
     /// </summary>
     /// <returns><c>true</c> when approximately equal.</returns>
     template <typename T>
-    bool are_equal(T a, T b)
+    constexpr bool are_equal(T a, T b)
     {
         if constexpr (std::is_floating_point_v<T>)
         {
@@ -88,7 +88,7 @@ namespace rainbow
     }
 
     /// <summary>Rounds down to the nearest power of 2.</summary>
-    inline auto floor_pow2(unsigned int i)
+    constexpr auto floor_pow2(unsigned int i)
     {
         i |= i >> 1;
         i |= i >> 2;
