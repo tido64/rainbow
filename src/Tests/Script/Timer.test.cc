@@ -2,7 +2,8 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
-#include <Script/Timer.h>
+#include "Script/Timer.h"
+
 #include <gtest/gtest.h>
 
 using rainbow::TimerManager;
