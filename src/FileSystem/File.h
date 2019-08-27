@@ -77,9 +77,6 @@ namespace rainbow
     public:
         static auto open(czstring path, FileType file_type) -> TFile
         {
-            R_ASSERT(file_type != FileType::UserFile,
-                     "Invalid file type specified for read-only file");
-
             return open<TFile>(path, file_type);
         }
 
