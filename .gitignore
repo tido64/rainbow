@@ -7,6 +7,7 @@
 *.swp
 .DS_Store
 .browse.VC.*
+.cxx/
 .externalNativeBuild/
 .gradle/
 .idea/

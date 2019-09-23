@@ -103,24 +103,24 @@ Rainbow.RenderQueue.add(animation);
 
 ## Dependencies
 
-| Name                | Version  | License             | Required |
-|---------------------|----------|---------------------|:--------:|
-| [Abseil][]          | 111ca706 | Apache 2.0          |    ✓     |
-| [cubeb][]           | 9a7a5515 | ISC                 |    ✓     |
-| [Dear ImGui][]      | 1.65     | MIT                 |    ✓     |
-| [Duktape][]         | 2.3.0    | MIT                 |    ✓     |
-| [FreeType][]        | 2.10.1   | FreeType            |    ✓     |
-| [HarfBuzz][]        | 2.4.0    | Old MIT             |    ✓     |
-| [libpng][]          | 1.6.37   | libpng v2           |    ✓     |
-| [Mapbox Variant][]  | 1.1.6    | BSD-3               |    ✓     |
-| [NanoSVG][]         | dc12d905 | zlib                |    ✓     |
-| [Ogg Vorbis][]      | 1.3.3    | BSD-3               |    ✓     |
-| [PhysicsFS][]       | 3.0.2    | zlib                |    ✓     |
-| [SDL][]             | 2.0.9    | zlib                |    ✓     |
-| [zlib][]            | 1.2.8    | zlib                |    ✓     |
-| [Box2D][]           | 784a646c | zlib                |          |
-| [FMOD][]            | 1.05.x   | Proprietary         |          |
-| [Spine][]           | f8a76c64 | Spine Runtimes v2.2 |          |
+| Name                | Version | License             | Required |
+|---------------------|---------|---------------------|:--------:|
+| [Abseil][]          | 111ca70 | Apache 2.0          |    ✓     |
+| [cubeb][]           | 7b7210b | ISC                 |    ✓     |
+| [Dear ImGui][]      | 1.72b   | MIT                 |    ✓     |
+| [Duktape][]         | 2.3.0   | MIT                 |    ✓     |
+| [FreeType][]        | 2.10.1  | FreeType            |    ✓     |
+| [HarfBuzz][]        | 2.4.0   | Old MIT             |    ✓     |
+| [libpng][]          | 1.6.37  | libpng v2           |    ✓     |
+| [Mapbox Variant][]  | 1.1.6   | BSD-3               |    ✓     |
+| [NanoSVG][]         | dc12d90 | zlib                |    ✓     |
+| [Ogg Vorbis][]      | 1.3.6   | BSD-3               |    ✓     |
+| [PhysicsFS][]       | 3.0.2   | zlib                |    ✓     |
+| [SDL][]             | 2.0.9   | zlib                |    ✓     |
+| [zlib][]            | 1.2.8   | zlib                |    ✓     |
+| [Box2D][]           | 784a646 | zlib                |          |
+| [FMOD][]            | 1.05.x  | Proprietary         |          |
+| [Spine][]           | 2.1.25  | Spine Runtimes v2.2 |          |
 
 ## License
 
