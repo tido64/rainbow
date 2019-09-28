@@ -65,7 +65,8 @@
 
 #define NOT_USED(v) static_cast<void>(v)
 
-// TODO: As of v19.2, Android NDK has filesystem header but not the binary.
+// TODO: As of r20, Android NDK has filesystem header but not the binary.
+// See https://github.com/android/ndk/issues/609.
 #if __has_include(<filesystem>) && !defined(RAINBOW_OS_ANDROID)
 #    define HAS_FILESYSTEM 1
 #else
