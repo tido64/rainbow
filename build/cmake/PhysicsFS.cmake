@@ -49,6 +49,7 @@ else()
     BUILD_BYPRODUCTS ${PHYSFS_BYPRODUCTS}  # Required by Ninja
     INSTALL_COMMAND ""
   )
+  add_dependencies(rainbow PhysicsFS)
 
   ExternalProject_Get_Property(PhysicsFS SOURCE_DIR)
   target_include_directories(rainbow PRIVATE ${SOURCE_DIR}/src)
