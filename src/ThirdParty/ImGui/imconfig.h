@@ -9,6 +9,8 @@
 #define IM_ASSERT(_EXPR) R_ASSERT((_EXPR), "dear imgui")
 #define IMGUI_DISABLE_OBSOLETE_FUNCTIONS
 #define IMGUI_DISABLE_DEMO_WINDOWS
+#define IMGUI_DISABLE_METRICS_WINDOW
+#define IMGUI_DISABLE_STB_RECT_PACK_IMPLEMENTATION
 #define IMGUI_STB_NAMESPACE stb
 
 #define IM_VEC2_CLASS_EXTRA                                                    \

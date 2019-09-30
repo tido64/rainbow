@@ -107,7 +107,7 @@ Rainbow.RenderQueue.add(animation);
 |---------------------|---------|---------------------|:--------:|
 | [Abseil][]          | 111ca70 | Apache 2.0          |    ✓     |
 | [cubeb][]           | 7b7210b | ISC                 |    ✓     |
-| [Dear ImGui][]      | 1.72b   | MIT                 |    ✓     |
+| [Dear ImGui][]      | 1.73    | MIT                 |    ✓     |
 | [Duktape][]         | 2.3.0   | MIT                 |    ✓     |
 | [FreeType][]        | 2.10.1  | FreeType            |    ✓     |
 | [HarfBuzz][]        | 2.4.0   | Old MIT             |    ✓     |

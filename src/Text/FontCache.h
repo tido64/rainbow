@@ -14,7 +14,7 @@
 #include FT_FREETYPE_H
 #include "ThirdParty/ReenableWarnings.h"
 
-#include <stb/stb_rect_pack.h>
+#include <imgui/imstb_rectpack.h>
 
 #include "Common/Algorithm.h"
 #include "Common/Data.h"

@@ -190,5 +190,5 @@ void FontCache::update(TextureManager& texture_manager)
 
 #define STB_RECT_PACK_IMPLEMENTATION
 #include "ThirdParty/DisableWarnings.h"
-#include <stb/stb_rect_pack.h>
+#include <imgui/imstb_rectpack.h>
 #include "ThirdParty/ReenableWarnings.h"
