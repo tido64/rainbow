@@ -117,7 +117,7 @@ Rainbow.RenderQueue.add(animation);
 | [Ogg Vorbis][]      | 1.3.6   | BSD-3               |    ✓     |
 | [PhysicsFS][]       | 3.0.2   | zlib                |    ✓     |
 | [SDL][]             | 2.0.9   | zlib                |    ✓     |
-| [zlib][]            | 1.2.8   | zlib                |    ✓     |
+| [zlib][]            | 1.2.11  | zlib                |    ✓     |
 | [Box2D][]           | 784a646 | zlib                |          |
 | [FMOD][]            | 1.05.x  | Proprietary         |          |
 | [Spine][]           | 2.1.25  | Spine Runtimes v2.2 |          |
