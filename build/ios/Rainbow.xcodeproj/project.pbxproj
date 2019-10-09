@@ -93,11 +93,12 @@
 		1939A23C152C42ED00494609 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1939A23B152C42EC00494609 /* OpenAL.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		1939A23E152C432A00494609 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1939A23D152C432900494609 /* AudioToolbox.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		1939A240152C435000494609 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1939A23F152C435000494609 /* AVFoundation.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		193F198A234E77D600591B5C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 193F1988234E77D600591B5C /* LaunchScreen.storyboard */; };
+		193F198B234E77D600591B5C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 193F1989234E77D600591B5C /* Main.storyboard */; };
 		1942A50A18985D450050CF5C /* Buffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1942A50818985D450050CF5C /* Buffer.cpp */; };
 		1948C023152C397D00E9B854 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1948C022152C397D00E9B854 /* UIKit.framework */; };
 		1948C025152C397D00E9B854 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1948C024152C397D00E9B854 /* Foundation.framework */; };
 		1948C027152C397D00E9B854 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1948C026152C397D00E9B854 /* CoreGraphics.framework */; };
-		1948C02D152C397D00E9B854 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1948C02B152C397D00E9B854 /* InfoPlist.strings */; };
 		1948C02F152C397D00E9B854 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1948C02E152C397D00E9B854 /* main.m */; };
 		1948C033152C397D00E9B854 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1948C032152C397D00E9B854 /* AppDelegate.m */; };
 		195ACC40200ABA9D00FB7EDD /* Helper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 195ACC38200ABA9D00FB7EDD /* Helper.cpp */; };
@@ -214,7 +215,7 @@
 		19DFE5371C6002890079CB58 /* AppleAudioFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19DFE5281C6002890079CB58 /* AppleAudioFile.cpp */; };
 		19DFE53D1C6142F40079CB58 /* RainbowAudioSession.mm in Sources */ = {isa = PBXBuildFile; fileRef = 19DFE53C1C6142F40079CB58 /* RainbowAudioSession.mm */; };
 		19E7748A1A02C8D3005DE249 /* OverlayActivator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19E774871A02C8D3005DE249 /* OverlayActivator.cpp */; };
-		19E85AA91858DCBD00D8B170 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 19E85AA81858DCBD00D8B170 /* Images.xcassets */; };
+		19E85AA91858DCBD00D8B170 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 19E85AA81858DCBD00D8B170 /* Assets.xcassets */; };
 		19E9F8DD2023D75F008E50E3 /* p1_spritesheet.png in Resources */ = {isa = PBXBuildFile; fileRef = 19E9F8DC2023D75F008E50E3 /* p1_spritesheet.png */; };
 		19EBC55116599D9F00D3B5D7 /* ShaderManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19EBC54F16599D9F00D3B5D7 /* ShaderManager.cpp */; };
 		19EF136D1A7036DD00D7AAA9 /* DebugDraw.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19EF136B1A7036DD00D7AAA9 /* DebugDraw.cpp */; };
@@ -388,6 +389,8 @@
 		1939A23B152C42EC00494609 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
 		1939A23D152C432900494609 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		1939A23F152C435000494609 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		193F1988234E77D600591B5C /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		193F1989234E77D600591B5C /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		1942A50818985D450050CF5C /* Buffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Buffer.cpp; sourceTree = "<group>"; };
 		1942A50918985D450050CF5C /* Buffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Buffer.h; sourceTree = "<group>"; };
 		1946B7AB1836E54600F74A3B /* File.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = File.h; sourceTree = "<group>"; };
@@ -396,8 +399,7 @@
 		1948C022152C397D00E9B854 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		1948C024152C397D00E9B854 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1948C026152C397D00E9B854 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
-		1948C02A152C397D00E9B854 /* Rainbow-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Rainbow-Info.plist"; sourceTree = "<group>"; };
-		1948C02C152C397D00E9B854 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		1948C02A152C397D00E9B854 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1948C02E152C397D00E9B854 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		1948C030152C397D00E9B854 /* Rainbow-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Rainbow-Prefix.pch"; sourceTree = "<group>"; };
 		1948C031152C397D00E9B854 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -621,7 +623,7 @@
 		19DFE53C1C6142F40079CB58 /* RainbowAudioSession.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = RainbowAudioSession.mm; sourceTree = "<group>"; };
 		19E774871A02C8D3005DE249 /* OverlayActivator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OverlayActivator.cpp; sourceTree = "<group>"; };
 		19E774881A02C8D3005DE249 /* OverlayActivator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OverlayActivator.h; sourceTree = "<group>"; };
-		19E85AA81858DCBD00D8B170 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		19E85AA81858DCBD00D8B170 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		19E9F8DC2023D75F008E50E3 /* p1_spritesheet.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = p1_spritesheet.png; sourceTree = "<group>"; };
 		19EBC54F16599D9F00D3B5D7 /* ShaderManager.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = ShaderManager.cpp; sourceTree = "<group>"; };
 		19EBC55016599D9F00D3B5D7 /* ShaderManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShaderManager.h; sourceTree = "<group>"; };
@@ -1019,11 +1021,15 @@
 		1948C028152C397D00E9B854 /* Rainbow */ = {
 			isa = PBXGroup;
 			children = (
-				1948C031152C397D00E9B854 /* AppDelegate.h */,
-				1948C032152C397D00E9B854 /* AppDelegate.m */,
 				1948C039152C3A2600E9B854 /* Libraries */,
 				1948C03A152C3A3600E9B854 /* Source */,
-				19E85AA81858DCBD00D8B170 /* Images.xcassets */,
+				1948C031152C397D00E9B854 /* AppDelegate.h */,
+				1948C032152C397D00E9B854 /* AppDelegate.m */,
+				193F1989234E77D600591B5C /* Main.storyboard */,
+				19E85AA81858DCBD00D8B170 /* Assets.xcassets */,
+				193F1988234E77D600591B5C /* LaunchScreen.storyboard */,
+				1948C02A152C397D00E9B854 /* Info.plist */,
+				1948C02E152C397D00E9B854 /* main.m */,
 				1948C029152C397D00E9B854 /* Supporting Files */,
 			);
 			path = Rainbow;
@@ -1032,10 +1038,7 @@
 		1948C029152C397D00E9B854 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				1948C02B152C397D00E9B854 /* InfoPlist.strings */,
-				1948C02A152C397D00E9B854 /* Rainbow-Info.plist */,
 				1948C030152C397D00E9B854 /* Rainbow-Prefix.pch */,
-				1948C02E152C397D00E9B854 /* main.m */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -1565,9 +1568,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				19E85AA91858DCBD00D8B170 /* Images.xcassets in Resources */,
-				1948C02D152C397D00E9B854 /* InfoPlist.strings in Resources */,
+				193F198B234E77D600591B5C /* Main.storyboard in Resources */,
+				19E85AA91858DCBD00D8B170 /* Assets.xcassets in Resources */,
 				198EA19E2012733F00BB3FB4 /* OpenSans-Light.ttf in Resources */,
+				193F198A234E77D600591B5C /* LaunchScreen.storyboard in Resources */,
 				198EA1A02012733F00BB3FB4 /* index.js in Resources */,
 				19E9F8DD2023D75F008E50E3 /* p1_spritesheet.png in Resources */,
 			);
@@ -1801,17 +1805,6 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
-/* Begin PBXVariantGroup section */
-		1948C02B152C397D00E9B854 /* InfoPlist.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				1948C02C152C397D00E9B854 /* en */,
-			);
-			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
-
 /* Begin XCBuildConfiguration section */
 		1945808C15361BA900C25D18 /* Ad Hoc */ = {
 			isa = XCBuildConfiguration;
@@ -1874,7 +1867,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -1923,7 +1915,7 @@
 					"../../lib/spine-runtimes/spine-c/include",
 					../../lib/variant/include,
 				);
-				INFOPLIST_FILE = "Rainbow/Rainbow-Info.plist";
+				INFOPLIST_FILE = Rainbow/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = com.bifrostentertainment.rainbow;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
@@ -2048,7 +2040,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -2097,7 +2088,7 @@
 					"../../lib/spine-runtimes/spine-c/include",
 					../../lib/variant/include,
 				);
-				INFOPLIST_FILE = "Rainbow/Rainbow-Info.plist";
+				INFOPLIST_FILE = Rainbow/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = com.bifrostentertainment.rainbow;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
@@ -2109,7 +2100,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -2157,7 +2147,7 @@
 					"../../lib/spine-runtimes/spine-c/include",
 					../../lib/variant/include,
 				);
-				INFOPLIST_FILE = "Rainbow/Rainbow-Info.plist";
+				INFOPLIST_FILE = Rainbow/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = com.bifrostentertainment.rainbow;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
