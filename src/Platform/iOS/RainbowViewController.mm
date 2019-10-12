@@ -36,22 +36,21 @@ namespace
     Bundle _bundle;
 }
 
-- (instancetype)init
+- (instancetype)initWithNibName:(NSString*)nibNameOrNil
+                         bundle:(NSBundle*)nibBundleOrNil
 {
-    if (self = [super init])
+    if (self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil])
     {
-        rainbow::filesystem::initialize(_bundle, _bundle.exec_path(), false);
+        [self initialize];
+    }
+    return self;
+}
 
-        rainbow::Config config;
-        _supportedInterfaceOrientations =
-            (config.is_portrait() ? UIInterfaceOrientationMaskPortrait
-                                  : UIInterfaceOrientationMaskLandscape);
-        if (config.needs_accelerometer())
-        {
-            _motionManager = [[CMMotionManager alloc] init];
-            _motionManager.accelerometerUpdateInterval =
-                kAccelerometerUpdateInterval;
-        }
+- (instancetype)initWithCoder:(NSCoder*)coder
+{
+    if (self = [super initWithCoder:coder])
+    {
+        [self initialize];
     }
     return self;
 }
@@ -176,7 +175,6 @@ namespace
 {
     [super viewDidLoad];
 
-    self.view.multipleTouchEnabled = YES;
     self.context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
     if (self.context == nil)
     {
@@ -186,7 +184,10 @@ namespace
 
     [EAGLContext setCurrentContext:self.context];
 
-    CGSize size = UIScreen.mainScreen.nativeBounds.size;
+    const CGSize bounds = self.view.bounds.size;
+    const CGFloat scale = self.view.contentScaleFactor;
+    CGSize size = CGSizeMake(bounds.width * scale, bounds.height * scale);
+
     if (self.supportedInterfaceOrientations ==
         UIInterfaceOrientationMaskLandscape)
     {
@@ -237,6 +238,22 @@ namespace
 }
 
 #pragma mark - Private
+
+- (void)initialize
+{
+    rainbow::filesystem::initialize(_bundle, _bundle.exec_path(), false);
+
+    rainbow::Config config;
+    _supportedInterfaceOrientations =
+        (config.is_portrait() ? UIInterfaceOrientationMaskPortrait
+                              : UIInterfaceOrientationMaskLandscape);
+    if (config.needs_accelerometer())
+    {
+        _motionManager = [[CMMotionManager alloc] init];
+        _motionManager.accelerometerUpdateInterval =
+            kAccelerometerUpdateInterval;
+    }
+}
 
 #ifdef USE_HEIMDALL
 - (void)showDiagnosticTools
