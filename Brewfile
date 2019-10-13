@@ -1,4 +1,5 @@
 brew "cmake"
+brew "git-lfs"
 brew "ninja"
 brew "pkg-config"
 brew "sdl2"

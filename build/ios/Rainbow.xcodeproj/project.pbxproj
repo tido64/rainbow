@@ -50,6 +50,7 @@
 		1939A240152C435000494609 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1939A23F152C435000494609 /* AVFoundation.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		193F198A234E77D600591B5C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 193F1988234E77D600591B5C /* LaunchScreen.storyboard */; };
 		193F198B234E77D600591B5C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 193F1989234E77D600591B5C /* Main.storyboard */; };
+		193F199B2353700600591B5C /* 01 Sound Compilation Phong Nha National Park.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 193F199A2353700500591B5C /* 01 Sound Compilation Phong Nha National Park.m4a */; };
 		1942A50A18985D450050CF5C /* Buffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1942A50818985D450050CF5C /* Buffer.cpp */; };
 		1948C023152C397D00E9B854 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1948C022152C397D00E9B854 /* UIKit.framework */; };
 		1948C025152C397D00E9B854 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1948C024152C397D00E9B854 /* Foundation.framework */; };
@@ -139,9 +140,8 @@
 		19DB48B61CA6A4BD00999675 /* ImGuiHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19DB48B41CA6A4BD00999675 /* ImGuiHelper.cpp */; };
 		19DB48B91CA6AAFE00999675 /* ElementBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19DB48B71CA6AAFE00999675 /* ElementBuffer.cpp */; };
 		19DCB2731741A1D000660000 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 19DCB2721741A1D000660000 /* libz.dylib */; };
-		19DFE5351C6002890079CB58 /* Mixer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19DFE5221C6002890079CB58 /* Mixer.cpp */; };
+		19DFE5351C6002890079CB58 /* Mixer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 19DFE5221C6002890079CB58 /* Mixer.mm */; };
 		19DFE5361C6002890079CB58 /* AudioFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19DFE5251C6002890079CB58 /* AudioFile.cpp */; };
-		19DFE5371C6002890079CB58 /* AppleAudioFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19DFE5281C6002890079CB58 /* AppleAudioFile.cpp */; };
 		19DFE53D1C6142F40079CB58 /* RainbowAudioSession.mm in Sources */ = {isa = PBXBuildFile; fileRef = 19DFE53C1C6142F40079CB58 /* RainbowAudioSession.mm */; };
 		19E7748A1A02C8D3005DE249 /* OverlayActivator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19E774871A02C8D3005DE249 /* OverlayActivator.cpp */; };
 		19E85AA91858DCBD00D8B170 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 19E85AA81858DCBD00D8B170 /* Assets.xcassets */; };
@@ -230,6 +230,7 @@
 		1939A23F152C435000494609 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		193F1988234E77D600591B5C /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		193F1989234E77D600591B5C /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
+		193F199A2353700500591B5C /* 01 Sound Compilation Phong Nha National Park.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = "01 Sound Compilation Phong Nha National Park.m4a"; sourceTree = "<group>"; };
 		1942A50818985D450050CF5C /* Buffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Buffer.cpp; sourceTree = "<group>"; };
 		1942A50918985D450050CF5C /* Buffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Buffer.h; sourceTree = "<group>"; };
 		1946B7AB1836E54600F74A3B /* File.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = File.h; sourceTree = "<group>"; };
@@ -425,14 +426,10 @@
 		19DF40451C98B415001482BC /* TypeInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TypeInfo.h; sourceTree = "<group>"; };
 		19DF40461C98B425001482BC /* String.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = String.h; sourceTree = "<group>"; };
 		19DF40481C98B4AF001482BC /* Pool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Pool.h; sourceTree = "<group>"; };
-		19DFE5211C6002890079CB58 /* Channel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Channel.h; sourceTree = "<group>"; };
-		19DFE5221C6002890079CB58 /* Mixer.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = Mixer.cpp; sourceTree = "<group>"; };
+		19DFE5221C6002890079CB58 /* Mixer.mm */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = Mixer.mm; sourceTree = "<group>"; };
 		19DFE5231C6002890079CB58 /* Mixer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Mixer.h; sourceTree = "<group>"; };
-		19DFE5241C6002890079CB58 /* Sound.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Sound.h; sourceTree = "<group>"; };
 		19DFE5251C6002890079CB58 /* AudioFile.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = AudioFile.cpp; sourceTree = "<group>"; };
 		19DFE5261C6002890079CB58 /* AudioFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioFile.h; sourceTree = "<group>"; };
-		19DFE5281C6002890079CB58 /* AppleAudioFile.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = AppleAudioFile.cpp; sourceTree = "<group>"; };
-		19DFE5291C6002890079CB58 /* AppleAudioFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppleAudioFile.h; sourceTree = "<group>"; };
 		19DFE5301C6002890079CB58 /* Mixer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Mixer.h; sourceTree = "<group>"; };
 		19DFE53B1C6142B00079CB58 /* RainbowAudioSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RainbowAudioSession.h; sourceTree = "<group>"; };
 		19DFE53C1C6142F40079CB58 /* RainbowAudioSession.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = RainbowAudioSession.mm; sourceTree = "<group>"; };
@@ -929,6 +926,7 @@
 		19905B73152C50C100BDD15C /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				193F199A2353700500591B5C /* 01 Sound Compilation Phong Nha National Park.m4a */,
 				198EA19C2012733F00BB3FB4 /* index.js */,
 				198EA19A2012733F00BB3FB4 /* OpenSans-Light.ttf */,
 				19E9F8DC2023D75F008E50E3 /* p1_spritesheet.png */,
@@ -1115,8 +1113,7 @@
 		19DFE51F1C6002890079CB58 /* Audio */ = {
 			isa = PBXGroup;
 			children = (
-				19DFE5201C6002890079CB58 /* AL */,
-				19DFE5271C6002890079CB58 /* Codecs */,
+				19DFE5201C6002890079CB58 /* AVAudioEngine */,
 				19DFE5251C6002890079CB58 /* AudioFile.cpp */,
 				19DFE5261C6002890079CB58 /* AudioFile.h */,
 				19DFE5301C6002890079CB58 /* Mixer.h */,
@@ -1124,26 +1121,15 @@
 			path = Audio;
 			sourceTree = "<group>";
 		};
-		19DFE5201C6002890079CB58 /* AL */ = {
+		19DFE5201C6002890079CB58 /* AVAudioEngine */ = {
 			isa = PBXGroup;
 			children = (
-				19DFE5211C6002890079CB58 /* Channel.h */,
-				19DFE5221C6002890079CB58 /* Mixer.cpp */,
 				19DFE5231C6002890079CB58 /* Mixer.h */,
+				19DFE5221C6002890079CB58 /* Mixer.mm */,
 				19DFE53B1C6142B00079CB58 /* RainbowAudioSession.h */,
 				19DFE53C1C6142F40079CB58 /* RainbowAudioSession.mm */,
-				19DFE5241C6002890079CB58 /* Sound.h */,
 			);
-			path = AL;
-			sourceTree = "<group>";
-		};
-		19DFE5271C6002890079CB58 /* Codecs */ = {
-			isa = PBXGroup;
-			children = (
-				19DFE5281C6002890079CB58 /* AppleAudioFile.cpp */,
-				19DFE5291C6002890079CB58 /* AppleAudioFile.h */,
-			);
-			path = Codecs;
+			path = AVAudioEngine;
 			sourceTree = "<group>";
 		};
 		19F2038A1AAC5500005CD913 /* Memory */ = {
@@ -1218,6 +1204,7 @@
 				198EA19E2012733F00BB3FB4 /* OpenSans-Light.ttf in Resources */,
 				193F198A234E77D600591B5C /* LaunchScreen.storyboard in Resources */,
 				198EA1A02012733F00BB3FB4 /* index.js in Resources */,
+				193F199B2353700600591B5C /* 01 Sound Compilation Phong Nha National Park.m4a in Resources */,
 				19E9F8DD2023D75F008E50E3 /* p1_spritesheet.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1237,7 +1224,6 @@
 				1913F13222764354005B2D3B /* physfs_archiver_hog.c in Sources */,
 				195ACC40200ABA9D00FB7EDD /* Helper.cpp in Sources */,
 				1913F12922764354005B2D3B /* physfs_unicode.c in Sources */,
-				19DFE5371C6002890079CB58 /* AppleAudioFile.cpp in Sources */,
 				19DB48B91CA6AAFE00999675 /* ElementBuffer.cpp in Sources */,
 				19AB53CC24046C1A0085090B /* b2_revolute_joint.cpp in Sources */,
 				198F42781A9151CB00BE7A73 /* Timer.cpp in Sources */,
@@ -1249,7 +1235,7 @@
 				19AB53D224046C1A0085090B /* b2_gear_joint.cpp in Sources */,
 				19AB539924046BEB0085090B /* b2_time_of_impact.cpp in Sources */,
 				19D9318A1834AFCE00F0137E /* ChangeMonitor.stub.cpp in Sources */,
-				19DFE5351C6002890079CB58 /* Mixer.cpp in Sources */,
+				19DFE5351C6002890079CB58 /* Mixer.mm in Sources */,
 				19AB53D124046C1A0085090B /* b2_chain_polygon_contact.cpp in Sources */,
 				19E8DB8923B96DF400392708 /* Texture.cpp in Sources */,
 				19AB53A324046C040085090B /* b2_block_allocator.cpp in Sources */,
@@ -1428,9 +1414,8 @@
 				GCC_PREFIX_HEADER = "Rainbow/Rainbow-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
-					"RAINBOW_AUDIO_AL=1",
 					"USE_HEIMDALL=1",
-					"USE_PHYSICS=1",
+					"USE_PHYSICS=0",
 					"FONS_USE_FREETYPE=1",
 					"HAVE_CORETEXT=1",
 					"HAVE_FALLBACK=1",
@@ -1599,9 +1584,8 @@
 				GCC_PREFIX_HEADER = "Rainbow/Rainbow-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
-					"RAINBOW_AUDIO_AL=1",
 					"USE_HEIMDALL=1",
-					"USE_PHYSICS=1",
+					"USE_PHYSICS=0",
 					"FONS_USE_FREETYPE=1",
 					"HAVE_CORETEXT=1",
 					"HAVE_FALLBACK=1",
@@ -1657,8 +1641,7 @@
 				GCC_PREFIX_HEADER = "Rainbow/Rainbow-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"NDEBUG=1",
-					"RAINBOW_AUDIO_AL=1",
-					"USE_PHYSICS=1",
+					"USE_PHYSICS=0",
 					"FONS_USE_FREETYPE=1",
 					"HAVE_CORETEXT=1",
 					"HAVE_FALLBACK=1",

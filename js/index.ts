@@ -29,7 +29,7 @@ class Audial implements Demo {
     this.thread = new Thread(x => {
       const Audio = Rainbow.Audio;
       const soundPath = "sfx.ogg";
-      const streamPath = "bgm.ogg";
+      const streamPath = "01 Sound Compilation Phong Nha National Park.ogg";
 
       this.label.text(`Loading '${streamPath}' for streaming...`);
       this.music = Audio.loadStream(streamPath);

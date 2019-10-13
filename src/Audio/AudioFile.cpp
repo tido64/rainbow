@@ -10,10 +10,6 @@
 #include "Common/Logging.h"
 #include "FileSystem/File.h"
 
-#if defined(RAINBOW_OS_IOS) || defined(RAINBOW_OS_MACOS)
-#    include "Audio/Codecs/AppleAudioFile.h"
-#    define USE_AUDIOTOOLBOX 1
-#endif
 #if !defined(RAINBOW_OS_IOS)
 #    include "Audio/Codecs/OggVorbisAudioFile.h"
 #    define USE_OGGVORBIS 1
@@ -64,9 +60,5 @@ auto IAudioFile::open(czstring path) -> std::unique_ptr<IAudioFile>
     }
 #endif  // USE_OGGVORBIS
 
-#ifdef USE_AUDIOTOOLBOX
-    return std::unique_ptr<IAudioFile>{std::make_unique<AppleAudioFile>(path)};
-#else
     return std::unique_ptr<IAudioFile>{std::make_unique<DummyAudioFile>()};
-#endif  // USE_AUDIOTOOLBOX
 }

@@ -58,10 +58,10 @@ namespace rainbow::audio
 }  // namespace rainbow::audio
 
 #include "Platform/Macros.h"
-#if defined(RAINBOW_AUDIO_AL)
-#    include "Audio/AL/Mixer.h"
-#elif defined(RAINBOW_AUDIO_FMOD)
+#if defined(RAINBOW_AUDIO_FMOD)
 #    include "Audio/FMOD/Mixer.h"
+#elif defined(RAINBOW_OS_IOS)
+#    include "Audio/AVAudioEngine/Mixer.h"
 #else
 #    include "Audio/cubeb/Mixer.h"
 #endif

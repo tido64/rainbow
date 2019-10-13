@@ -282,12 +282,6 @@ else()
     src/Audio/cubeb/Mixer.cpp
     src/Audio/cubeb/Mixer.h
   )
-  if(APPLE)
-    list(APPEND SOURCE_FILES
-      src/Audio/Codecs/AppleAudioFile.cpp
-      src/Audio/Codecs/AppleAudioFile.h
-    )
-  endif()
 endif()
 
 if(USE_PHYSICS)

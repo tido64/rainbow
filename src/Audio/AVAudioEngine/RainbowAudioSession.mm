@@ -2,22 +2,22 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
-#import "Audio/AL/RainbowAudioSession.h"
+#import "Audio/AVAudioEngine/RainbowAudioSession.h"
 
 #include <AVFoundation/AVAudioSession.h>
 
-#import "Audio/AL/Mixer.h"
+#import "Audio/AVAudioEngine/Mixer.h"
 
 #pragma clang diagnostic ignored "-Wunused-parameter"
 
-using rainbow::audio::ALMixer;
+using rainbow::audio::AudioEngineMixer;
 
 @implementation RainbowAudioSession
 {
-    ALMixer* _mixer;
+    AudioEngineMixer* _mixer;
 }
 
-+ (instancetype)audioSessionWithMixer:(ALMixer*)mixer
++ (instancetype)audioSessionWithMixer:(AudioEngineMixer*)mixer
 {
     return [[RainbowAudioSession alloc] initWithMixer:mixer];
 }
@@ -48,7 +48,7 @@ using rainbow::audio::ALMixer;
 
 #pragma mark - Private
 
-- (instancetype)initWithMixer:(ALMixer*)mixer
+- (instancetype)initWithMixer:(AudioEngineMixer*)mixer
 {
     if (self = [super init])
     {

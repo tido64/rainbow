@@ -2,14 +2,21 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
+#import <Foundation/Foundation.h>
+
 namespace rainbow::audio
 {
-    class ALMixer;
+    class AudioEngineMixer;
 }
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface RainbowAudioSession : NSObject
-+ (instancetype)audioSessionWithMixer:(rainbow::audio::ALMixer*)mixer;
+
++ (instancetype)audioSessionWithMixer:(rainbow::audio::AudioEngineMixer*)mixer;
 
 - (instancetype)init UNAVAILABLE_ATTRIBUTE;
-- (BOOL)setCategory:(NSString*)category;
+
 @end
+
+NS_ASSUME_NONNULL_END

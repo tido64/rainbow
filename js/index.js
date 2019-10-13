@@ -26,7 +26,7 @@ var Audial = /** @class */ (function () {
         this.thread = new Thread(function (x) {
             var Audio = Rainbow.Audio;
             var soundPath = "sfx.ogg";
-            var streamPath = "bgm.ogg";
+            var streamPath = "01 Sound Compilation Phong Nha National Park.ogg";
             _this.label.text("Loading '" + streamPath + "' for streaming...");
             _this.music = Audio.loadStream(streamPath);
             if (!_this.music) {

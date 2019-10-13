@@ -198,6 +198,13 @@ namespace
     }
 
     _director.emplace();
+    if (_director->terminated())
+    {
+        R_ASSERT(false, "Failed to initialise Rainbow");
+        NSLog(@"%s", _director->error().message().c_str());
+        return;
+    }
+
     _director->init(Vec2i(size.width, size.height));
 
 #ifdef USE_HEIMDALL
