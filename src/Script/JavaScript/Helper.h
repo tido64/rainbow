@@ -363,7 +363,7 @@ namespace rainbow::duk
                 if (!duk_is_constructor_call(ctx))
                     return DUK_RET_TYPE_ERROR;
 
-                auto args = duk::get_args<Args...>(ctx);
+                std::tuple<Args...> args = duk::get_args<Args...>(ctx);
 
                 void* ptr = duk_alloc(ctx, sizeof(T));
                 detail::make_from_tuple_in<T>(
