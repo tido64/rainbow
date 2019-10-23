@@ -1,21 +1,36 @@
 {
-  // See https://go.microsoft.com/fwlink/?linkid=834763 for more information about this file.
+  // See https://docs.microsoft.com/en-us/cpp/build/cmakesettings-reference?view=vs-2019 for more information about this file.
+  "environments": [
+    {
+      "generator": "Visual Studio 16 2019 Win64",
+      "buildRoot": "${projectDir}\\build\\windows\\${name}",
+      "buildCommandArgs": "-m -v:minimal"
+    }
+  ],
   "configurations": [
     {
       "name": "x64-Debug",
-      "generator": "Visual Studio 15 2017 Win64",
+      "generator": "${env.generator}",
       "configurationType": "Debug",
-      "buildRoot": "${projectDir}\\build\\windows\\CMakeBuild\\${name}",
-      "cmakeCommandArgs": "-DUNIT_TESTS=1 -DUSE_HEIMDALL=1 -DUSE_PHYSICS=0 -DUSE_SPINE=0",
-      "buildCommandArgs": "-m -v:minimal"
+      "buildRoot": "${env.buildRoot}",
+      "buildCommandArgs": "${env.buildCommandArgs}",
+      "variables": [
+        { "name": "UNIT_TESTS", "value": 1, "type": "BOOL" },
+        { "name": "USE_PHYSICS", "value": 0, "type": "BOOL" },
+        { "name": "USE_SPINE", "value": 0, "type": "BOOL" }
+      ]
     },
     {
       "name": "x64-Release",
-      "generator": "Visual Studio 15 2017 Win64",
+      "generator": "${env.generator}",
       "configurationType": "Release",
-      "buildRoot": "${projectDir}\\build\\windows\\CMakeBuild\\${name}",
-      "cmakeCommandArgs": "-DUNIT_TESTS=0 -DUSE_HEIMDALL=1 -DUSE_PHYSICS=0 -DUSE_SPINE=0",
-      "buildCommandArgs": "-m -v:minimal"
+      "buildRoot": "${env.buildRoot}",
+      "buildCommandArgs": "${env.buildCommandArgs}",
+      "variables": [
+        { "name": "UNIT_TESTS", "value": 0, "type": "BOOL" },
+        { "name": "USE_PHYSICS", "value": 0, "type": "BOOL" },
+        { "name": "USE_SPINE", "value": 0, "type": "BOOL" }
+      ]
     }
   ]
 }
