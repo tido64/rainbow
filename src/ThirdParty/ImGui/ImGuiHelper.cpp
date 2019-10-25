@@ -17,20 +17,21 @@
 
 #include "Graphics/Buffer.h"
 #include "Graphics/ElementBuffer.h"
+#include "Graphics/Image.h"
 #include "Graphics/Renderer.h"
 #include "Graphics/VertexArray.h"
 #include "Input/VirtualKey.h"
 #include "Text/SystemFonts.h"
 
+using rainbow::Image;
 using rainbow::Vec2f;
 using rainbow::graphics::Buffer;
 using rainbow::graphics::Context;
 using rainbow::graphics::ElementBuffer;
+using rainbow::graphics::Filter;
 using rainbow::graphics::ScopedProjection;
 using rainbow::graphics::ScopedScissorTest;
 using rainbow::graphics::Texture;
-using rainbow::graphics::TextureFilter;
-using rainbow::graphics::TextureManager;
 using rainbow::graphics::VertexArray;
 
 namespace
@@ -92,7 +93,7 @@ namespace
     }
 }  // namespace
 
-void rainbow::imgui::init(float font_size, float scale)
+void rainbow::imgui::init(Context& ctx, float font_size, float scale)
 {
     ImGui::CreateContext();
     auto& io = ImGui::GetIO();
@@ -157,22 +158,23 @@ void rainbow::imgui::init(float font_size, float scale)
         render_data.vertex_buffer().bind();
     });
 
-    auto texture_manager = TextureManager::Get();
-    const TextureFilter filter = texture_manager->mag_filter();
-    texture_manager->set_filter(TextureFilter::Nearest);
-    render_data->texture() = texture_manager->create(
-        "rainbow://dear_imgui/monospace",
-        [&io](TextureManager& texture_manager, const Texture& texture) {
-            unsigned char* pixels;
-            int width, height;
-            io.Fonts->GetTexDataAsRGBA32(&pixels, &width, &height);
-            texture_manager.upload(
-                texture, GL_RGBA8, width, height, GL_RGBA, pixels);
-        });
-    texture_manager->set_filter(filter);
+    unsigned char* pixels;
+    int width, height, bytes_per_pixel;
+    io.Fonts->GetTexDataAsRGBA32(&pixels, &width, &height, &bytes_per_pixel);
 
-    io.Fonts->TexID =
-        reinterpret_cast<void*>(static_cast<intptr_t>(render_data->texture()));
+    render_data->texture() = ctx.texture_provider.get(  //
+        "rainbow://dear_imgui/monospace",
+        Image{Image::Format::RGBA,
+              narrow_cast<uint32_t>(width),
+              narrow_cast<uint32_t>(height),
+              narrow_cast<uint32_t>(bytes_per_pixel),
+              0,
+              narrow_cast<size_t>(width * height * bytes_per_pixel),
+              pixels},
+        Filter::Nearest,
+        Filter::Nearest);
+
+    io.Fonts->TexID = static_cast<void*>(&render_data->texture());
 }
 
 void rainbow::imgui::new_frame(const Context& ctx, uint64_t dt)
@@ -202,7 +204,7 @@ void rainbow::imgui::render(Context& ctx, ImDrawData* draw_data)
     draw_data->ScaleClipRects(io.DisplayFramebufferScale);
 
     ScopedProjection projection(
-        ctx, {0.0F, io.DisplaySize.y, io.DisplaySize.x, 0.0F});
+        ctx, {0.0F, io.DisplaySize.y, io.DisplaySize.x, -io.DisplaySize.y});
     ScopedScissorTest scissor_test;
 
     const auto window_height = io.DisplaySize.y * io.DisplayFramebufferScale.y;
@@ -222,9 +224,8 @@ void rainbow::imgui::render(Context& ctx, ImDrawData* draw_data)
             }
             else
             {
-                TextureManager::Get()->bind(static_cast<GLuint>(
-                    reinterpret_cast<intptr_t>(cmd.TextureId)));
-                rainbow::graphics::scissor(
+                graphics::bind(ctx, *static_cast<Texture*>(cmd.TextureId));
+                graphics::scissor(
                     ctx,
                     truncate<int>(cmd.ClipRect.x),
                     truncate<int>(window_height - cmd.ClipRect.w),

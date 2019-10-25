@@ -59,20 +59,21 @@ Rainbow.RenderQueue.add(label);
 
 ```typescript
 const texture = new Rainbow.Texture("monkey.png");
-const frames = [
-  texture.addRegion(400, 724, 104, 149),
-  texture.addRegion(504, 724, 104, 149),
-  texture.addRegion(608, 724, 104, 149),
-  texture.addRegion(712, 724, 104, 149),
-  texture.addRegion(816, 724, 104, 149),
-  texture.addRegion(920, 724, 104, 149),
-];
 
 const batch = new Rainbow.SpriteBatch(1);
 batch.setTexture(texture);
 
 const sprite = batch.createSprite(104, 149);
-sprite.setPosition({ x: screenWidth * 0.5, y: screenHeight * 0.5 });
+sprite.position({ x: screenWidth * 0.5, y: screenHeight * 0.5 });
+
+const frames = [
+  { left: 400, bottom: 724, width: 104, height: 149 },
+  { left: 504, bottom: 724, width: 104, height: 149 },
+  { left: 608, bottom: 724, width: 104, height: 149 },
+  { left: 712, bottom: 724, width: 104, height: 149 },
+  { left: 816, bottom: 724, width: 104, height: 149 },
+  { left: 920, bottom: 724, width: 104, height: 149 },
+];
 
 const animation = new Rainbow.Animation(sprite, frames, 6, 0);
 animation.start();

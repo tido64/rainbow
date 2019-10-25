@@ -49,7 +49,7 @@ namespace rainbow
     void Director::draw()
     {
         graphics::clear();
-        graphics::draw(render_queue_);
+        graphics::draw(renderer_, render_queue_);
 #ifdef USE_PHYSICS
         b2::DebugDraw::Draw();
 #endif  // USE_PHYSICS
@@ -78,10 +78,8 @@ namespace rainbow
         timer_manager_.update(dt);
         script_->update(dt);
 
-        graphics::update(render_queue_, dt);
-        font_cache().update(renderer_.texture_manager);
-        renderer_.texture_manager.trim();
-
+        graphics::update(renderer_, render_queue_, dt);
+        font_cache().update(renderer_.texture_provider);
         mixer_.process();
     }
 
@@ -122,6 +120,6 @@ namespace rainbow
             script_->init(renderer_.surface_size);
         }
 
-        graphics::update(render_queue_, 0);
+        graphics::update(renderer_, render_queue_, 0);
     }
 }  // namespace rainbow

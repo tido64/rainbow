@@ -22,7 +22,7 @@ namespace rainbow::graphics
         ~Buffer();
 
         /// <summary>
-        ///  Used by Label and SpriteBatch for interleaved vertex buffer.
+        ///   Used by Label and SpriteBatch for interleaved vertex buffer.
         /// </summary>
         void bind() const;
 

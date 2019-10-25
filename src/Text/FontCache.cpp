@@ -7,15 +7,14 @@
 #include "Common/Logging.h"
 #include "Common/TypeCast.h"
 #include "FileSystem/File.h"
-#include "Graphics/OpenGL.h"
+#include "Graphics/Image.h"
 #include "Text/SystemFonts.h"
 
 using rainbow::Color;
 using rainbow::FontCache;
 using rainbow::SpriteVertex;
 using rainbow::Vec2i;
-using rainbow::graphics::Texture;
-using rainbow::graphics::TextureManager;
+using rainbow::graphics::TextureProvider;
 
 namespace
 {
@@ -26,6 +25,9 @@ namespace
 
     /// <summary>26.6 fixed-point pixel coordinates.</summary>
     constexpr int kPixelFormat = 64;
+
+    constexpr size_t kTextureSizeBytes =
+        FontCache::kTextureSize * FontCache::kTextureSize * 4;
 
     void blit(const uint8_t* src,
               const stbrp_rect& src_rect,
@@ -44,7 +46,7 @@ namespace
     }
 }  // namespace
 
-FontCache::FontCache() : is_stale_(false)
+FontCache::FontCache()
 {
     const auto texture_size = ceil_pow2(kTextureSize);
     stbrp_init_target(&bin_context_,
@@ -53,10 +55,9 @@ FontCache::FontCache() : is_stale_(false)
                       bin_nodes_.data(),
                       narrow_cast<int>(bin_nodes_.size()));
 
-    constexpr size_t size = kTextureSize * kTextureSize * 4;
     // NOLINTNEXTLINE(cppcoreguidelines-avoid-c-arrays)
-    bitmap_ = std::make_unique<uint8_t[]>(size);
-    std::fill_n(bitmap_.get(), size, 0);
+    bitmap_ = std::make_unique<uint8_t[]>(kTextureSizeBytes);
+    std::fill_n(bitmap_.get(), kTextureSizeBytes, 0);
 
     FT_Init_FreeType(&library_);
     R_ASSERT(library_, "Failed to initialise FreeType");
@@ -87,16 +88,16 @@ auto FontCache::get(std::string_view font_name) -> FT_Face
         [[maybe_unused]] FT_Error error =
             FT_New_Memory_Face(library_,
                                data.as<FT_Byte*>(),
-                               static_cast<FT_Long>(data.size()),
+                               narrow_cast<FT_Long>(data.size()),
                                0,
                                &face);
 
-        R_ASSERT(error == 0, "Failed to load font face");
+        R_ASSERT(error == FT_Err_Ok, "Failed to load font face");
         R_ASSERT(FT_IS_SCALABLE(face), "Unscalable fonts are not supported");
 
         error = FT_Select_Charmap(face, FT_ENCODING_UNICODE);
 
-        R_ASSERT(error == 0, "Failed to select character map");
+        R_ASSERT(error == FT_Err_Ok, "Failed to select character map");
 
         font_cache_.emplace(font_name, FontFace{face, std::move(data)});
         return face;
@@ -108,7 +109,7 @@ auto FontCache::get(std::string_view font_name) -> FT_Face
 auto FontCache::get_glyph(FT_Face face, int32_t font_size, uint32_t glyph_index)
     -> std::array<SpriteVertex, 4>
 {
-    const GlyphCacheIndex cache_index{face, font_size, glyph_index};
+    const Index cache_index{face, font_size, glyph_index};
     auto search = glyph_cache_.find(cache_index);
     if (search == glyph_cache_.end())
     {
@@ -142,26 +143,26 @@ auto FontCache::get_glyph(FT_Face face, int32_t font_size, uint32_t glyph_index)
              rect,
              reinterpret_cast<Color*>(bitmap_.get()),
              {kTextureSize, kTextureSize});
-        is_stale_ = true;
+        state_ = State::NeedsUpdate;
 
         std::array<SpriteVertex, 4> vx;
 
         vx[0].position.x = slot->bitmap_left;
-        vx[0].position.y = static_cast<float>(slot->bitmap_top -
-                                              static_cast<FT_Int>(bitmap.rows));
-        vx[1].position.x = static_cast<float>(slot->bitmap_left + bitmap.width);
+        vx[0].position.y = narrow_cast<float>(slot->bitmap_top -
+                                              narrow_cast<FT_Int>(bitmap.rows));
+        vx[1].position.x = narrow_cast<float>(slot->bitmap_left + bitmap.width);
         vx[1].position.y = vx[0].position.y;
         vx[2].position.x = vx[1].position.x;
-        vx[2].position.y = static_cast<float>(slot->bitmap_top);
+        vx[2].position.y = narrow_cast<float>(slot->bitmap_top);
         vx[3].position.x = vx[0].position.x;
         vx[3].position.y = vx[2].position.y;
 
-        vx[0].texcoord.x = rect.x / static_cast<float>(kTextureSize);
-        vx[0].texcoord.y = (rect.y + rect.h) / static_cast<float>(kTextureSize);
-        vx[1].texcoord.x = (rect.x + rect.w) / static_cast<float>(kTextureSize);
+        vx[0].texcoord.x = rect.x / narrow_cast<float>(kTextureSize);
+        vx[0].texcoord.y = (rect.y + rect.h) / narrow_cast<float>(kTextureSize);
+        vx[1].texcoord.x = (rect.x + rect.w) / narrow_cast<float>(kTextureSize);
         vx[1].texcoord.y = vx[0].texcoord.y;
         vx[2].texcoord.x = vx[1].texcoord.x;
-        vx[2].texcoord.y = rect.y / static_cast<float>(kTextureSize);
+        vx[2].texcoord.y = rect.y / narrow_cast<float>(kTextureSize);
         vx[3].texcoord.x = vx[0].texcoord.x;
         vx[3].texcoord.y = vx[2].texcoord.y;
 
@@ -172,25 +173,30 @@ auto FontCache::get_glyph(FT_Face face, int32_t font_size, uint32_t glyph_index)
     return search->second.vertices;
 }
 
-void FontCache::update(TextureManager& texture_manager)
+void FontCache::update(TextureProvider& texture_provider)
 {
-    if (is_stale_)
+    if (state_ != State::Ready)
     {
-        auto data = bitmap_.get();
-        auto upload = [data](TextureManager& texture_manager,
-                             const Texture& texture) {
-            texture_manager.upload(
-                texture, GL_RGBA, kTextureSize, kTextureSize, GL_RGBA, data);
+        const auto image = Image{
+            Image::Format::RGBA,
+            narrow_cast<uint32_t>(kTextureSize),
+            narrow_cast<uint32_t>(kTextureSize),
+            32U,
+            4U,
+            kTextureSizeBytes,
+            bitmap_.get(),
         };
         if (!texture_)
-            texture_ = texture_manager.create("rainbow://font_cache", upload);
+            texture_ = texture_provider.get("rainbow://font-cache", image);
         else
-            upload(texture_manager, texture_);
-        is_stale_ = false;
+            texture_provider.update(texture_, image);
+        state_ = State::Ready;
     }
 }
 
 #define STB_RECT_PACK_IMPLEMENTATION
+// clang-format off
 #include "ThirdParty/DisableWarnings.h"
 #include <imgui/imstb_rectpack.h>  // NOLINT(llvm-include-order)
 #include "ThirdParty/ReenableWarnings.h"
+// clang-format on

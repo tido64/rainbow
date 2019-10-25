@@ -32,30 +32,29 @@ namespace
         if (msg != nullptr)
             LOGF("JavaScript: %s", msg);
 
-        auto context = static_cast<rainbow::duk::Context*>(udata);
-        rainbow::duk::dump_context(*context);
+        auto js = static_cast<JavaScript*>(udata);
+        rainbow::duk::dump_context(js->context());
 
         std::terminate();
     }
 }  // namespace
 
-rainbow::duk::Context::Context()
-    : context_(duk_create_heap(nullptr, nullptr, nullptr, this, &on_fatal))
+rainbow::duk::Context::Context(void* udata)
+    : context_(duk_create_heap(nullptr, nullptr, nullptr, udata, &on_fatal))
 {
 }
 
 rainbow::duk::Context::~Context()
 {
-    if (!is_valid())
+    if (context_ == nullptr)
         return;
 
     duk_destroy_heap(context_);
 }
 
-JavaScript::JavaScript(Director& director)
-    : GameBase(director), has_pointer_events_(false)
+JavaScript::JavaScript(Director& director) : GameBase(director), context_(this)
 {
-    if (!context_)
+    if (context_ == nullptr)
         return;
 
     duk::module::initialize(context_);
@@ -92,7 +91,7 @@ JavaScript::JavaScript(Director& director)
     auto index_js = bundle.main_script();
     if (index_js == nullptr)
     {
-        constexpr const char* const kEntryPoints[]{
+        constexpr std::array<czstring, 3> kEntryPoints{
             "index.js",
             "index.bs.js",
             "main.jsbundle",
@@ -141,7 +140,7 @@ JavaScript::JavaScript(Director& director)
     duk_pop(context_);
 }
 
-bool JavaScript::update_controller_id(uint32_t port)
+auto JavaScript::update_controller_id(uint32_t port) -> bool
 {
     const auto controller_id = input().controller_states()[port].id();
     duk::update_controller_id(context_, port, controller_id);
@@ -177,38 +176,41 @@ void JavaScript::on_memory_warning_impl()
     duk_gc(context_, DUK_GC_COMPACT);
 }
 
-bool JavaScript::on_controller_connected_impl(uint32_t port)
+auto JavaScript::on_controller_connected_impl(uint32_t port) -> bool
 {
     return update_controller_id(port);
 }
 
-bool JavaScript::on_controller_disconnected_impl(uint32_t port)
+auto JavaScript::on_controller_disconnected_impl(uint32_t port) -> bool
 {
     return update_controller_id(port);
 }
 
-bool JavaScript::on_pointer_began_impl(const ArrayView<Pointer>& pointers)
+auto JavaScript::on_pointer_began_impl(const ArrayView<Pointer>& pointers)
+    -> bool
 {
     has_pointer_events_ = true;
     duk::update_pointer_event(context_, "pointersDown", pointers);
     return true;
 }
 
-bool JavaScript::on_pointer_canceled_impl()
+auto JavaScript::on_pointer_canceled_impl() -> bool
 {
     has_pointer_events_ = false;
     duk::clear_pointer_events(context_);
     return true;
 }
 
-bool JavaScript::on_pointer_ended_impl(const ArrayView<Pointer>& pointers)
+auto JavaScript::on_pointer_ended_impl(const ArrayView<Pointer>& pointers)
+    -> bool
 {
     has_pointer_events_ = true;
     duk::update_pointer_event(context_, "pointersUp", pointers);
     return true;
 }
 
-bool JavaScript::on_pointer_moved_impl(const ArrayView<Pointer>& pointers)
+auto JavaScript::on_pointer_moved_impl(const ArrayView<Pointer>& pointers)
+    -> bool
 {
     has_pointer_events_ = true;
     duk::update_pointer_event(context_, "pointersMoved", pointers);

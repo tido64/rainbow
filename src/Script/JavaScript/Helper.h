@@ -12,14 +12,10 @@
 #include <Rainbow/TextAlignment.h>
 #include <duktape.h>
 
-#include "Audio/Mixer.h"
 #include "Common/Logging.h"
-#include "Common/TypeCast.h"
+#include "Common/String.h"
 #include "Common/TypeInfo.h"
-#include "Graphics/Animation.h"
 #include "Graphics/Sprite.h"
-#include "Memory/Array.h"
-#include "Memory/SharedPtr.h"
 
 #define dukr_type_error(ctx, ...)                                              \
     duk_error_raw((ctx),                                                       \
@@ -35,6 +31,17 @@
 #define DUKR_IDX_SPRITE_PROTOTYPE 1
 #define DUKR_WELLKNOWN_SYMBOL_TOSTRINGTAG                                      \
     DUK_WELLKNOWN_SYMBOL("Symbol.toStringTag")
+
+namespace rainbow::audio
+{
+    struct Channel;
+    struct Sound;
+}  // namespace rainbow::audio
+
+namespace rainbow::graphics
+{
+    class Texture;
+}  // namespace rainbow::graphics
 
 namespace rainbow::duk
 {
@@ -52,11 +59,17 @@ namespace rainbow::duk
         {
         }
 
+        ScopedStack(const ScopedStack&) = delete;
+        ScopedStack(ScopedStack&&) noexcept = delete;
+
         ~ScopedStack()
         {
             auto count = duk_get_top(context_) - index_;
             duk_pop_n(context_, count);
         }
+
+        auto operator=(const ScopedStack&) -> ScopedStack& = delete;
+        auto operator=(ScopedStack&&) noexcept -> ScopedStack& = delete;
 
     private:
         duk_context* context_;
@@ -95,18 +108,6 @@ namespace rainbow::duk
     }
 
     void dump_context(duk_context* ctx);
-
-    template <typename T>
-    auto forward(T&& t) noexcept
-    {
-        return std::forward<T>(t);
-    }
-
-    template <typename T>
-    auto forward(std::unique_ptr<T>& p) noexcept
-    {
-        return std::move(p);
-    }
 
     template <size_t N>
     auto get_prop_literal(duk_context* ctx,
@@ -219,6 +220,7 @@ namespace rainbow::duk
     template <typename... Args>
     void push(duk_context* ctx, const void* p, Args&&... args)
     {
+        // NOLINTNEXTLINE(cppcoreguidelines-pro-type-const-cast)
         duk_push_pointer(ctx, const_cast<void*>(p));
         push(ctx, std::forward<Args>(args)...);
     }
@@ -234,10 +236,11 @@ namespace rainbow::duk
         duk_push_int(ctx, to_underlying_type(alignment));
     }
 
-    inline auto push_instance(duk_context* ctx, duk_idx_t obj_idx) -> void*
+    template <typename T>
+    auto push_instance(duk_context* ctx, duk_idx_t obj_idx) -> T
     {
         duk::get_prop_literal(ctx, obj_idx, DUKR_HIDDEN_SYMBOL_ADDRESS);
-        return duk_require_pointer(ctx, -1);
+        return static_cast<T>(duk_require_pointer(ctx, -1));
     }
 
     template <size_t N>
@@ -269,16 +272,9 @@ namespace rainbow::duk
                                           [[maybe_unused]] Tuple&& t,
                                           std::index_sequence<I...>) -> T*
         {
-            if constexpr (is_shared_ptr<T>)
-            {
-                return new (ptr) T(std::make_unique<typename T::element_type>(
-                    forward(std::get<I>(std::forward<Tuple>(t)))...));
-            }
-            else
-            {
-                return new (ptr)
-                    T(forward(std::get<I>(std::forward<Tuple>(t)))...);
-            }
+            // NOLINTNEXTLINE(cppcoreguidelines-owning-memory)
+            return new (ptr)
+                T(std::move(std::get<I>(std::forward<Tuple>(t)))...);
         }
     }  // namespace detail
 
@@ -332,9 +328,10 @@ namespace rainbow::duk
                 dukr_type_error(ctx, "Expected an opaque handle");
         }
 
-        auto ptr = duk::push_instance(ctx, idx);
-        return static_cast<T*>(ptr);
+        return duk::push_instance<T*>(ctx, idx);
     }
+
+    void get_texture(duk_context*, std::string_view path, graphics::Texture&);
 
     template <size_t N>
     auto has_prop_literal(duk_context* ctx,
@@ -363,14 +360,22 @@ namespace rainbow::duk
                 if (!duk_is_constructor_call(ctx))
                     return DUK_RET_TYPE_ERROR;
 
-                std::tuple<Args...> args = duk::get_args<Args...>(ctx);
-
                 void* ptr = duk_alloc(ctx, sizeof(T));
-                detail::make_from_tuple_in<T>(
-                    ptr,
-                    args,
-                    std::make_index_sequence<std::tuple_size_v<
-                        std::remove_reference_t<decltype(args)>>>{});
+                if constexpr (std::is_same_v<T, graphics::Texture>)
+                {
+                    auto path = duk::get<czstring>(ctx, 0);
+                    auto& texture = *static_cast<graphics::Texture*>(ptr);
+                    get_texture(ctx, path, texture);
+                }
+                else
+                {
+                    std::tuple<Args...> args = duk::get_args<Args...>(ctx);
+                    detail::make_from_tuple_in<T>(
+                        ptr,
+                        args,
+                        std::make_index_sequence<std::tuple_size_v<
+                            std::remove_reference_t<decltype(args)>>>{});
+                }
 
                 duk_push_this(ctx);
                 duk::put_instance(ctx, duk_get_top(ctx) - 1, ptr);
@@ -398,13 +403,9 @@ namespace rainbow::duk
     auto push_this(duk_context* ctx)
     {
         duk_push_this(ctx);
-        auto ptr = static_cast<T*>(duk::push_instance(ctx, -1));
+        auto ptr = duk::push_instance<T*>(ctx, -1);
         duk_pop(ctx);
-
-        if constexpr (is_shared_ptr<T>)
-            return *ptr;
-        else
-            return ptr;
+        return ptr;
     }
 
     template <>
@@ -428,7 +429,7 @@ namespace rainbow::duk
             duk_push_c_function(
                 ctx,
                 [](duk_context* ctx) -> duk_ret_t {
-                    auto ptr = static_cast<T*>(duk::push_instance(ctx, -1));
+                    auto ptr = duk::push_instance<T*>(ctx, -1);
                     ptr->~T();
                     duk_free(ctx, ptr);
                     return 0;

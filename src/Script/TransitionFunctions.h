@@ -67,7 +67,7 @@ namespace rainbow
             Color color = this->component_->color();
             const int d = this->timing_(0.0f, this->delta_, this->tick());
             color.a += d - this->previous_;
-            this->component_->set_color(color);
+            this->component_->color(color);
             this->previous_ = d;
         }
     };
@@ -129,7 +129,7 @@ namespace rainbow
                           this->timing_(0.0f, this->delta_.y, progress));
             Vec2f scale = this->component_->scale();
             scale += Vec2f(d.x - this->previous_.x, d.y - this->previous_.y);
-            this->component_->set_scale(scale);
+            this->component_->scale(scale);
             this->previous_ = d;
         }
     };

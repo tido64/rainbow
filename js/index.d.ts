@@ -4,6 +4,8 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
+/* eslint-disable no-dupe-class-members, no-unused-vars */
+
 declare namespace Duktape {
   const version: number;
   const env: string;
@@ -31,16 +33,48 @@ declare namespace Duktape {
 }
 
 declare namespace Rainbow {
+  export type Color = {
+    r: number;
+    g: number;
+    b: number;
+    a: number;
+  };
+
+  export type ControllerState = {
+    id: number;
+    buttons: Int8Array;
+    axes: Int32Array;
+  };
+
+  export type Pointer = {
+    hash: number;
+    x: number;
+    y: number;
+    timestamp: number;
+  };
+
+  export type Rect = {
+    left: number;
+    bottom: number;
+    width: number;
+    height: number;
+  };
+
+  export type Vec2f = {
+    x: number;
+    y: number;
+  };
+
   export class Animation {
     private readonly $type: "Rainbow.Animation";
-    constructor(sprite: Sprite, frames: number[], fps: number, delay: number);
+    constructor(sprite: Sprite, frames: Rect[], fps: number, delay: number);
     currentFrame(): number;
     frameRate(): number;
     sprite(): Sprite;
     setCallback(callback: (animation: Animation, event: AnimationEvent) => void): void;
     setDelay(delay: number): void;
     setFrameRate(fps: number): void;
-    setFrames(frames: number[]): void;
+    setFrames(frames: Rect[]): void;
     setSprite(sprite: Sprite): void;
     jumpTo(frame: number): void;
     rewind(): void;
@@ -91,52 +125,52 @@ declare namespace Rainbow {
     constructor();
     alignment(): TextAlignment;
     angle(): number;
-    color(): { r: number, g: number, b: number, a: number };
+    color(): Color;
     height(): number;
     length(): number;
-    position(): { x: number, y: number };
+    position(): Vec2f;
     scale(): number;
     text(): string;
     width(): number;
     setAlignment(alignment: TextAlignment): void;
-    setColor(color: { r: number, g: number, b: number, a: number }): void;
+    setColor(color: Color): void;
     setFont(font: string): void;
     setFontSize(fontSize: number): void;
-    setPosition(position: { x: number, y: number }): void;
+    setPosition(position: Vec2f): void;
     setRotation(r: number): void;
     setScale(factor: number): void;
     setText(text: string): void;
-    move(delta: { x: number, y: number }): void;
+    move(delta: Vec2f): void;
   }
 
-  export class Sprite {
-    private readonly $type: "Rainbow.Sprite";
+  export type Sprite = {
+    readonly $type: "Rainbow.Sprite";
     angle(): number;
-    color(): { r: number, g: number, b: number, a: number };
+    angle(r: number): Sprite;
+    color(): Color;
+    color(color: Color): Sprite;
+    flip(): Sprite;
     height(): number;
+    hide(): Sprite;
     id(): number;
+    id(id: number): Sprite;
     isFlipped(): boolean;
     isHidden(): boolean;
     isMirrored(): boolean;
-    pivot(): { x: number, y: number };
-    position(): { x: number, y: number };
-    scale(): { x: number, y: number };
+    mirror(): Sprite;
+    move(dt: Vec2f): Sprite;
+    normal(area: Rect): Sprite;
+    pivot(): Vec2f;
+    pivot(pivot: Vec2f): Sprite;
+    position(): Vec2f;
+    position(position: Vec2f): Sprite;
+    rotate(r: number): Sprite;
+    scale(): Vec2f;
+    scale(factor: Vec2f): Sprite;
+    show(): Sprite;
+    texture(area: Rect): Sprite;
     width(): number;
-    setColor(color: { r: number, g: number, b: number, a: number }): void;
-    setId(id: number): void;
-    setNormal(id: number): void;
-    setPivot(pivot: { x: number, y: number }): void;
-    setPosition(position: { x: number, y: number }): void;
-    setRotation(r: number): void;
-    setScale(factor: { x: number, y: number }): void;
-    setTexture(id: number): void;
-    flip(): void;
-    hide(): void;
-    mirror(): void;
-    move(dt: { x: number, y: number }): void;
-    rotate(r: number): void;
-    show(): void;
-  }
+  };
 
   export class SpriteBatch {
     private readonly $type: "Rainbow.SpriteBatch";
@@ -161,8 +195,6 @@ declare namespace Rainbow {
   export class Texture {
     private readonly $type: "Rainbow.Texture";
     constructor(path: string);
-    addRegion(x: number, y: number, width: number, height: number): number;
-    trim(): void;
   }
 
   export enum VirtualKey {
@@ -298,25 +330,25 @@ declare namespace Rainbow {
     function isPlaying(channel: Channel): boolean;
     function setLoopCount(channel: Channel, count: number): void;
     function setVolume(channel: Channel, volume: number): void;
-    function setWorldPosition(channel: Channel, position: { x: number, y: number }): void;
+    function setWorldPosition(channel: Channel, position: Vec2f): void;
     function pause(channel: Channel): void;
     function play(audial: Channel | Sound): Channel | undefined;
     function stop(channel: Channel): void;
-    export class Channel {
-      private readonly $type: "Rainbow.Channel";
-    }
-    export class Sound {
-      private readonly $type: "Rainbow.Sound";
-    }
+    export type Channel = {
+      readonly $type: "Rainbow.Channel";
+    };
+    export type Sound = {
+      readonly $type: "Rainbow.Sound";
+    };
   }
 
   export namespace Input {
     const acceleration: Float64Array;
-    const controllers: ReadonlyArray<Readonly<{ id: number, buttons: Int8Array, axes: Int32Array }>>;
+    const controllers: ReadonlyArray<Readonly<ControllerState>>;
     const keysDown: Int8Array;
-    const pointersDown: ReadonlyArray<Readonly<{ hash: number, x: number, y: number, timestamp: number }>>;
-    const pointersMoved: ReadonlyArray<Readonly<{ hash: number, x: number, y: number, timestamp: number }>>;
-    const pointersUp: ReadonlyArray<Readonly<{ hash: number, x: number, y: number, timestamp: number }>>;
+    const pointersDown: ReadonlyArray<Readonly<Pointer>>;
+    const pointersMoved: ReadonlyArray<Readonly<Pointer>>;
+    const pointersUp: ReadonlyArray<Readonly<Pointer>>;
   }
 
   export namespace RenderQueue {

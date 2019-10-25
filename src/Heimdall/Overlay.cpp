@@ -32,8 +32,7 @@ using rainbow::Sprite;
 using rainbow::SpriteBatch;
 using rainbow::Vec2f;
 using rainbow::Vec2i;
-
-namespace graphics = rainbow::graphics;
+using rainbow::graphics::Texture;
 
 namespace
 {
@@ -91,6 +90,14 @@ namespace
     void write_prop(std::string_view property, Vec2f v)
     {
         ImGui::Text("%s = %f,%f", property.data(), v.x, v.y);
+    }
+
+    void write_prop(std::string_view property, const Texture* texture)
+    {
+        if (texture == nullptr)
+            ImGui::Text("%s = nullptr", property.data());
+        else
+            write_prop(property, texture->key());
     }
 
     template <typename T>
@@ -190,6 +197,8 @@ namespace
                                 tag))
             {
                 write_address(batch);
+                WRITE_PROP(*batch, texture);
+                WRITE_PROP(*batch, normal);
                 WRITE_PROP(*batch, is_visible);
 
                 for (auto&& sprite : *batch)
@@ -222,7 +231,7 @@ Overlay::~Overlay()
 void Overlay::initialize(Vec2i resolution)
 {
     const float scale = display_scale(resolution, kStyleScreenHeight);
-    rainbow::imgui::init(kStyleFontSize, scale);
+    rainbow::imgui::init(director_.graphics_context(), kStyleFontSize, scale);
 }
 
 auto Overlay::surface_height() const
@@ -246,6 +255,8 @@ void Overlay::draw_menu_bar()
 
 void Overlay::draw_performance(float scale)
 {
+    namespace graphics = rainbow::graphics;
+
     if (!ImGui::CollapsingHeader("Performance",
                                  ImGuiTreeNodeFlags_NoAutoOpenOnLog |
                                      ImGuiTreeNodeFlags_DefaultOpen))
@@ -371,8 +382,10 @@ void Overlay::update_impl(uint64_t dt)
 
     frame_times_.pop_front();
     frame_times_.push_back(dt);
+
+    auto [used, peak] = director_.texture_provider().memory_usage();
     vmem_usage_.pop_front();
-    vmem_usage_.push_back(director_.texture_manager().memory_usage().used);
+    vmem_usage_.push_back(used * 1e-6);
 
     if (!is_enabled())
     {

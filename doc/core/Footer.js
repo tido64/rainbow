@@ -79,6 +79,6 @@ function Footer(props) {
       <section className="copyright">{config.copyright}</section>
     </footer>
   );
-};
+}
 
 module.exports = Footer;

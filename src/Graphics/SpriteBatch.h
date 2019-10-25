@@ -9,9 +9,14 @@
 
 #include "Graphics/Buffer.h"
 #include "Graphics/Sprite.h"
-#include "Graphics/TextureAtlas.h"
+#include "Graphics/Texture.h"
 #include "Graphics/VertexArray.h"
 #include "Memory/StableArray.h"
+
+namespace rainbow::graphics
+{
+    struct Context;
+}  // namespace rainbow::graphics
 
 namespace rainbow
 {
@@ -31,66 +36,70 @@ namespace rainbow
         SpriteBatch(uint32_t count);
 
         template <typename... Args>
-        SpriteBatch(SharedPtr<TextureAtlas> texture, Args&&... sprites)
+        SpriteBatch(const graphics::Texture& texture, Args&&... sprites)
             : SpriteBatch(sizeof...(Args))
         {
-            set_texture(std::move(texture));
+            set_texture(texture);
             add(std::forward<Args>(sprites)...);
         }
 
         SpriteBatch(SpriteBatch&&) noexcept;
 
         /// <summary>Returns a pointer to the beginning.</summary>
-        auto begin() { return sprites_.data(); }
-        auto begin() const { return sprites_.data(); }
+        [[nodiscard]] auto begin() { return sprites_.data(); }
+        [[nodiscard]] auto begin() const { return sprites_.data(); }
 
         /// <summary>Returns a pointer to the end.</summary>
-        auto end() { return begin() + count_; }
-        auto end() const { return begin() + count_; }
+        [[nodiscard]] auto end() { return begin() + count_; }
+        [[nodiscard]] auto end() const { return begin() + count_; }
 
         /// <summary>Returns whether the batch is visible.</summary>
-        auto is_visible() const { return visible_; }
+        [[nodiscard]] auto is_visible() const { return visible_; }
 
         /// <summary>Returns current normal map.</summary>
-        auto normal() const -> const TextureAtlas&
-        {
-            R_ASSERT(normal_.get(), "Normal texture is not set");
-            return *normal_.get();
-        }
+        [[nodiscard]] auto normal() const { return normal_; }
 
         /// <summary>Returns sprite count.</summary>
-        auto size() const { return count_; }
+        [[nodiscard]] auto size() const { return count_; }
 
         /// <summary>Returns current texture.</summary>
-        auto texture() const -> TextureAtlas&
-        {
-            R_ASSERT(texture_.get(), "Texture is not set");
-            return *texture_.get();
-        }
+        [[nodiscard]] auto texture() const { return texture_; }
 
         /// <summary>Returns the vertex array object.</summary>
-        auto vertex_array() const -> const graphics::VertexArray&
+        [[nodiscard]] auto vertex_array() const -> const graphics::VertexArray&
         {
             return array_;
         }
 
-        /// <summary>Returns the vertex count.</summary>
-        auto vertex_count() const { return !visible_ ? 0 : count_ * 6; }
+        /// <summary>Returns vertex count.</summary>
+        [[nodiscard]] auto vertex_count() const
+        {
+            return !visible_ ? 0 : count_ * 6;
+        }
 
         /// <summary>Assigns a normal map.</summary>
-        void set_normal(SharedPtr<TextureAtlas> texture);
+        void set_normal(const graphics::Texture&);
+        void set_normal(NotNull<const graphics::Texture*> texture)
+        {
+            set_normal(*texture.get());
+        }
 
         /// <summary>Assigns a texture atlas.</summary>
-        void set_texture(SharedPtr<TextureAtlas> texture);
+        void set_texture(const graphics::Texture&);
+        void set_texture(NotNull<const graphics::Texture*> texture)
+        {
+            set_texture(*texture.get());
+        }
 
         /// <summary>Sets batch visibility.</summary>
         void set_visible(bool visible) { visible_ = visible; }
 
-        auto at(uint32_t i) -> Sprite& { return (*this)[i]; }
-        auto at(uint32_t i) const -> const Sprite& { return (*this)[i]; }
+        [[nodiscard]] auto at(uint32_t i) -> Sprite& { return (*this)[i]; }
 
-        /// <summary>Binds all used textures.</summary>
-        void bind_textures() const;
+        [[nodiscard]] auto at(uint32_t i) const -> const Sprite&
+        {
+            return (*this)[i];
+        }
 
         /// <summary>Brings sprite to front.</summary>
         void bring_to_front(uint32_t i);
@@ -128,7 +137,7 @@ namespace rainbow
         }
 
         /// <summary>Returns the first sprite with the given id.</summary>
-        auto find_sprite_by_id(int id) const -> SpriteRef;
+        [[nodiscard]] auto find_sprite_by_id(int id) const -> SpriteRef;
 
         /// <summary>Moves all sprites by (x,y).</summary>
         void move(const Vec2f&);
@@ -145,11 +154,14 @@ namespace rainbow
         }
 
         /// <summary>Updates the batch of sprites.</summary>
-        void update();
+        void update(graphics::Context&);
 
-        auto operator[](uint32_t i) -> Sprite& { return sprites_[i]; }
+        [[nodiscard]] auto operator[](uint32_t i) -> Sprite&
+        {
+            return sprites_[i];
+        }
 
-        auto operator[](uint32_t i) const -> const Sprite&
+        [[nodiscard]] auto operator[](uint32_t i) const -> const Sprite&
         {
             return sprites_[i];
         }
@@ -161,10 +173,10 @@ namespace rainbow
 #ifdef RAINBOW_TEST
         explicit SpriteBatch(const ISolemnlySwearThatIAmOnlyTesting&);
 
-        auto capacity() const { return sprites_.size(); }
-        auto sprites() { return sprites_.data(); }
-        auto sprites() const { return sprites_.data(); }
-        auto vertices() const { return vertices_.get(); }
+        [[nodiscard]] auto capacity() const { return sprites_.size(); }
+        [[nodiscard]] auto sprites() { return sprites_.data(); }
+        [[nodiscard]] auto sprites() const { return sprites_.data(); }
+        [[nodiscard]] auto vertices() const { return vertices_.get(); }
 #endif
 
     private:
@@ -177,7 +189,7 @@ namespace rainbow
         std::unique_ptr<Vec2f[]> normals_;
 
         /// <summary>Number of sprites.</summary>
-        uint32_t count_;
+        uint32_t count_ = 0;
 
         /// <summary>Shared, interleaved vertex buffer.</summary>
         graphics::Buffer vertex_buffer_;
@@ -188,14 +200,14 @@ namespace rainbow
         /// <summary>Vertex array object.</summary>
         graphics::VertexArray array_;
 
-        /// <summary>Normal map used by all sprites in the batch.</summary>
-        SharedPtr<TextureAtlas> normal_;
+        /// <summary>Texture used by all sprites in the batch.</summary>
+        const graphics::Texture* texture_ = nullptr;
 
-        /// <summary>Texture atlas used by all sprites in the batch.</summary>
-        SharedPtr<TextureAtlas> texture_;
+        /// <summary>Normal map used by all sprites in the batch.</summary>
+        const graphics::Texture* normal_ = nullptr;
 
         /// <summary>Whether the batch is visible.</summary>
-        bool visible_;
+        bool visible_ = true;
 
         void add() {}
 
@@ -214,5 +226,10 @@ namespace rainbow
         void bind_arrays() const;
     };
 }  // namespace rainbow
+
+namespace rainbow::graphics
+{
+    void draw(Context&, const SpriteBatch&);
+}  // namespace rainbow::graphics
 
 #endif

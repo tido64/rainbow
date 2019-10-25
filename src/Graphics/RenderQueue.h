@@ -22,6 +22,8 @@ namespace rainbow
 
 namespace rainbow::graphics
 {
+    struct Context;
+
     class RenderUnit
     {
     public:
@@ -91,9 +93,21 @@ namespace rainbow::graphics
 
     using RenderQueue = std::vector<RenderUnit>;
 
-    void draw(RenderQueue& queue);
+    void draw(graphics::Context&, RenderQueue&);
 
-    void update(RenderQueue& queue, uint64_t dt);
+    void update(graphics::Context&, RenderQueue&, uint64_t dt);
+
+    template <typename F>
+    void visit_all(F&& f, RenderQueue& queue)
+    {
+        for (auto&& unit : queue)
+        {
+            if (!unit.is_enabled())
+                continue;
+
+            visit(f, unit.object());
+        }
+    }
 }  // namespace rainbow::graphics
 
 #endif

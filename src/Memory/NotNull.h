@@ -28,6 +28,8 @@ public:
     NotNull(T t) : ptr_(t) { R_ASSERT(t != nullptr, "t cannot be nullptr"); }
 
     NotNull(const NotNull& other) = default;
+    NotNull(NotNull&& other) noexcept = default;
+    ~NotNull() = default;
 
     template <typename U,
               typename = std::enable_if<std::is_convertible_v<U, T>>>
@@ -37,6 +39,22 @@ public:
 
     operator T() const { return get(); }
     auto operator->() const { return get(); }
+
+    auto operator=(const NotNull& other) -> NotNull&
+    {
+        if (&other == this)
+            return *this;
+
+        ptr_ = other.ptr_;
+        return *this;
+    }
+
+    auto operator=(NotNull&& other) noexcept -> NotNull&
+    {
+        ptr_ = other.ptr_;
+        other.ptr_ = nullptr;
+        return *this;
+    }
 
     NotNull(std::nullptr_t) = delete;
     NotNull(int) = delete;

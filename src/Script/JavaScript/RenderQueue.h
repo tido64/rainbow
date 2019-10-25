@@ -53,7 +53,7 @@ namespace rainbow::duk
                 }
                 else
                 {
-                    auto target = duk::push_instance(ctx, obj_idx);
+                    auto target = duk::push_instance<void*>(ctx, obj_idx);
                     return std::find_if(
                         queue->begin(),
                         queue->end(),
@@ -89,7 +89,7 @@ namespace rainbow::duk
                 dukr_type_error(ctx, kIncompatibleTypeForRenderUnit);
 
             auto type = duk_get_pointer(ctx, -1);
-            auto ptr = duk::push_instance(ctx, obj_idx);
+            auto ptr = duk::push_instance<void*>(ctx, obj_idx);
             if (type == type_id<Animation>().value())
                 fa(ctx, q, *static_cast<Animation*>(ptr));
             else if (type == type_id<Label>().value())

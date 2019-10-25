@@ -5,102 +5,175 @@
 #ifndef GRAPHICS_TEXTURE_H_
 #define GRAPHICS_TEXTURE_H_
 
+#include <array>
+#include <optional>
 #include <string>
-#include <utility>
 
-#include "Math/Vec2.h"
+#include "Common/Global.h"
+#include "Common/Passkey.h"
+#include "Memory/ArrayMap.h"
 
 namespace rainbow
 {
+    class Data;
+    struct Image;
     struct ISolemnlySwearThatIAmOnlyTesting;
-}
+}  // namespace rainbow
 
 namespace rainbow::graphics
 {
-    namespace detail
+    struct Context;
+    struct ITextureAllocator;
+    class Texture;
+
+    using TextureHandle = std::array<intptr_t, 4>;
+
+    enum class Filter
     {
-        struct Texture
+        Nearest,
+        Linear,
+        Cubic,
+    };
+
+    struct TextureData
+    {
+        TextureHandle data{};
+        uint32_t width = 0;
+        uint32_t height = 0;
+        uint32_t use_count = 0;
+#ifdef USE_HEIMDALL
+        uint32_t size = 0;
+#endif
+    };
+
+    class TextureProvider : public Global<TextureProvider>
+    {
+    public:
+        explicit TextureProvider(ITextureAllocator& allocator)
+            : allocator_(allocator)
         {
-            uint32_t name = 0;
-            uint32_t width = 0;
-            uint32_t height = 0;
-            uint32_t size = 0;
-            uint32_t use_count = 0;
+            make_global();
+        }
 
-            Texture(uint32_t name_) : name(name_) {}
+        ~TextureProvider();
 
-            auto operator==(uint32_t name_) const { return name == name_; }
-        };
-    }  // namespace detail
+        [[nodiscard]]
+        auto get(std::string_view path,
+                 float scale = 1.0F,
+                 Filter mag_filter = Filter::Cubic,
+                 Filter min_filter = Filter::Linear) -> Texture;
+
+        [[nodiscard]]
+        auto get(std::string_view path,
+                 const Data&,
+                 float scale = 1.0F,
+                 Filter mag_filter = Filter::Cubic,
+                 Filter min_filter = Filter::Linear) -> Texture;
+
+        [[nodiscard]]
+        auto get(std::string_view path,
+                 const Image&,
+                 Filter mag_filter = Filter::Cubic,
+                 Filter min_filter = Filter::Linear) -> Texture;
+
+        [[nodiscard]]
+        auto raw_get(const Texture&) const -> TextureData;
+
+        void release(const Texture&);
+
+        [[nodiscard]]
+        auto try_get(const Texture&) -> std::optional<TextureData>;
+
+        void update(const Texture&,
+                    const Image&,
+                    Filter mag_filter = Filter::Cubic,
+                    Filter min_filter = Filter::Linear);
+
+    private:
+        using TextureMap = ArrayMap<std::string, TextureData>;
+
+        TextureMap texture_map_;
+        ITextureAllocator& allocator_;
+
+        template <typename T>
+        auto get(std::string_view path,
+                 T,
+                 float scale,
+                 Filter mag_filter,
+                 Filter min_filter) -> Texture;
+
+        void load(TextureMap::iterator i,
+                  const Image&,
+                  Filter mag_filter,
+                  Filter min_filter);
+
+#ifdef USE_HEIMDALL
+    public:
+        [[nodiscard]]
+        auto memory_usage() const
+        {
+            return std::make_tuple(mem_used_, mem_peak_);
+        }
+
+    private:
+        size_t mem_used_ = 0;
+        size_t mem_peak_ = 0;
+
+        void record_usage(size_t image_size)
+        {
+            mem_used_ += image_size;
+            if (mem_used_ > mem_peak_)
+                mem_peak_ = mem_used_;
+        }
+#endif
+    };
 
     class Texture
     {
     public:
-        Texture() : name_(0) {}
-
-        Texture(detail::Texture& texture)
-            : name_(texture.name), size_(texture.width, texture.height)
-        {
-            ++texture.use_count;
-        }
-
-        explicit Texture(const ISolemnlySwearThatIAmOnlyTesting&)
-            : name_(0), size_(64, 64)
-        {
-        }
-
-        Texture(const Texture& texture);
+        Texture() = default;
+        Texture(const Texture&) = delete;
+        Texture(Texture&& texture) noexcept : key_(std::move(texture.key_)) {}
+        Texture(std::string_view key, Passkey<TextureProvider>) : key_(key) {}
         ~Texture();
 
-        auto width() const { return size_.x; }
-        auto height() const { return size_.y; }
+        [[nodiscard]] auto key() const { return std::string_view{key_}; }
 
-        void bind() const;
-        void bind(uint32_t unit) const;
+        auto operator=(const Texture&) -> Texture&;
+        auto operator=(Texture&&) noexcept -> Texture&;
 
-        explicit operator bool() const { return name_ != 0; }
-        operator uint32_t() const { return name_; }
+        explicit operator bool() const { return !key_.empty(); }
 
-        auto operator=(const Texture& texture) -> Texture& = delete;
-        auto operator=(Texture&& texture) noexcept -> Texture&;
+#ifdef RAINBOW_TEST
+        Texture(std::string_view key, const ISolemnlySwearThatIAmOnlyTesting&)
+            : key_(key)
+        {
+        }
+#endif  // RAINBOW_TEST
 
     private:
-        uint32_t name_;
-        Vec2u size_;
+        std::string key_;
     };
 
-    /// <summary>Stores texture id and UV coordinates.</summary>
-    /// <remarks>
-    ///   <code>
-    ///     3 ┌─────┐ 2
-    ///       │     │
-    ///       │     │
-    ///     0 └─────┘ 1
-    ///   </code>
-    ///   Textures are read into memory upside-down. Therefore, the order of the
-    ///   UV coordinates are flipped vertically, giving us 3,2,1 and 1,0,3.
-    /// </remarks>
-    struct TextureRegion
+    struct ITextureAllocator
     {
-        Vec2f vx[4];
-        uint32_t atlas;
+        virtual void construct(TextureHandle&,
+                               const Image&,
+                               Filter mag_filter,
+                               Filter min_filter) = 0;
 
-        TextureRegion() : atlas(0) {}
+        virtual void destroy(TextureHandle&) = 0;
 
-        TextureRegion(const Vec2f& v0, const Vec2f& v1) : atlas(0)
-        {
-            vx[0].x = v0.x;
-            vx[0].y = v1.y;
-            vx[1].x = v1.x;
-            vx[1].y = v1.y;
-            vx[2].x = v1.x;
-            vx[2].y = v0.y;
-            vx[3].x = v0.x;
-            vx[3].y = v0.y;
-        }
+        [[maybe_unused, nodiscard]]
+        virtual auto max_size() const noexcept -> size_t = 0;
 
-        operator uint32_t() const { return atlas; }
+        virtual void update(const TextureHandle&,
+                            const Image&,
+                            Filter mag_filter,
+                            Filter min_filter) = 0;
     };
+
+    void bind(const Context&, const Texture&, uint32_t unit = 0);
 }  // namespace rainbow::graphics
 
 #endif

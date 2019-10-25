@@ -7,15 +7,18 @@
 
 #include "Common/NonCopyable.h"
 #include "Graphics/SpriteVertex.h"
+#include "Math/Geometry.h"
 #include "Memory/Array.h"
 
-#define USE_SPRITE_FUNCTION_CHAINING 1
+namespace rainbow::graphics
+{
+    struct TextureData;
+}  // namespace rainbow::graphics
 
 namespace rainbow
 {
     class Sprite;
     class SpriteBatch;
-    class TextureAtlas;
 
     class SpriteRef
     {
@@ -61,7 +64,9 @@ namespace rainbow
     ///   </code>
     ///   <para>
     ///     The vertex order of the quad is 0,1,2 for the first triangle, and
-    ///     2,3,0 for the second.
+    ///     2,3,0 for the second. Textures, on the other hand, are read into
+    ///     memory upside-down. The order of the UV coordinates must be flipped
+    ///     vertically, giving us 3,2,1 and 1,0,3.
     ///   </para>
     ///   <para>
     ///     The sprite itself does not have a texture. It holds the texture
@@ -78,10 +83,17 @@ namespace rainbow
     class Sprite : private NonCopyable<Sprite>
     {
     public:
-        enum { kNoId };
+        enum
+        {
+            kNoId
+        };
 
-        Sprite() : Sprite(0, 0) {}
-        Sprite(unsigned int w, unsigned int h) : width_(w), height_(h) {}
+        Sprite() = default;
+
+        Sprite(uint32_t width, uint32_t height) : width_(width), height_(height)
+        {
+        }
+
         Sprite(Sprite&&) noexcept;
 
         [[nodiscard]] auto angle() const { return angle_; }
@@ -94,156 +106,125 @@ namespace rainbow
         [[nodiscard]] auto pivot() const { return pivot_; }
         [[nodiscard]] auto position() const { return position_; }
         [[nodiscard]] auto scale() const { return scale_; }
-
-        [[nodiscard]] auto vertex_array() const -> const SpriteVertex*
-        {
-            return vertex_array_;
-        }
-
         [[nodiscard]] auto width() const { return width_; }
 
+        /// <summary>Sets angle of rotation (in radian).</summary>
+        auto angle(float r) -> Sprite&;
+
         /// <summary>Sets sprite colour.</summary>
-        void set_color(Color c);
+        auto color(Color c) -> Sprite&;
+
+        /// <summary>Flips sprite vertically.</summary>
+        auto flip() -> Sprite&;
+
+        /// <summary>Hides sprite if it is currently shown.</summary>
+        auto hide() -> Sprite&;
 
         /// <summary>Sets the identifier for the sprite</summary>
-        void set_id(int id) { id_ = id; }
+        auto id(int id) -> Sprite&
+        {
+            id_ = id;
+            return *this;
+        }
 
-        /// <summary>Sets normal map.</summary>
-        /// <param name="id">Identifier of the normal map to set.</param>
-        void set_normal(unsigned int id);
+        /// <summary>Mirrors sprite.</summary>
+        auto mirror() -> Sprite&;
+
+        /// <summary>Moves sprite by (x,y).</summary>
+        auto move(Vec2f) -> Sprite&;
+
+        /// <summary>Sets the area of the normal texture area to map.</summary>
+        /// <param name="area">Area of the normal texture.</param>
+        auto normal(const Rect& area) -> Sprite&;
 
         /// <summary>Sets pivot point for rotation and translation.</summary>
         /// <param name="p">Normalised pivot point.</param>
-        void set_pivot(const Vec2f& pivot);
+        auto pivot(Vec2f pivot) -> Sprite&;
 
         /// <summary>Sets sprite position (absolute).</summary>
-        void set_position(const Vec2f& position);
+        auto position(Vec2f position) -> Sprite&;
 
-        /// <summary>Sets angle of rotation (in radian).</summary>
-        void set_rotation(float r);
+        /// <summary>Rotates sprite by <paramref name="r"/>.</summary>
+        auto rotate(float r) -> Sprite&;
 
         /// <summary>
         ///   Uniform scaling of sprite (does not affect actual width and
         ///   height).
         /// </summary>
         /// <param name="f">Scaling factor for both axes.</param>
-        void set_scale(float f) { set_scale(Vec2f(f, f)); }
+        auto scale(float f) -> Sprite& { return scale({f, f}); }
 
         /// <summary>
         ///   Non-uniform scaling of sprite (does not affect actual width and
         ///   height).
         /// </summary>
         /// <param name="f">Scaling factors for x- and y-axis.</param>
-        void set_scale(const Vec2f& f);
-
-        /// <summary>Sets texture.</summary>
-        /// <param name="id">Identifier of the texture to set.</param>
-        void set_texture(unsigned int id);
-
-        /// <summary>Flips sprite vertically.</summary>
-        void flip();
-
-        /// <summary>Hides sprite if it is currently shown.</summary>
-        void hide();
-
-        /// <summary>Mirrors sprite.</summary>
-        void mirror();
-
-        /// <summary>Moves sprite by (x,y).</summary>
-        void move(const Vec2f&);
-
-        /// <summary>Rotates sprite by <paramref name="r"/>.</summary>
-        void rotate(float r);
+        auto scale(Vec2f f) -> Sprite&;
 
         /// <summary>Shows sprite if it is currently hidden.</summary>
-        void show();
+        auto show() -> Sprite&;
+
+        /// <summary>Sets the area of the texture area to map.</summary>
+        /// <param name="area">Area of the texture.</param>
+        auto texture(const Rect& area) -> Sprite&;
 
         /// <summary>Updates the vertex buffer.</summary>
         /// <returns>
         ///   <c>true</c> if the buffer has changed; <c>false</c> otherwise.
         /// </returns>
-        auto update(const ArraySpan<SpriteVertex>& vertex_array,
-                    const TextureAtlas& texture) -> bool;
+        auto update(ArraySpan<SpriteVertex> vertex_array,
+                    const graphics::TextureData&) -> bool;
 
         /// <summary>Updates the normal buffer.</summary>
         /// <returns>
         ///   <c>true</c> if the buffer has changed; <c>false</c> otherwise.
         /// </returns>
-        auto update(const ArraySpan<Vec2f>& normal_array,
-                    const TextureAtlas& normal) -> bool;
+        auto update(ArraySpan<Vec2f> normal_array, const graphics::TextureData&)
+            -> bool;
 
         auto operator=(Sprite&&) noexcept -> Sprite&;
-
-#if USE_SPRITE_FUNCTION_CHAINING
-        auto angle(float angle) -> Sprite&
-        {
-            set_rotation(angle);
-            return *this;
-        }
-
-        auto color(Color c) -> Sprite&
-        {
-            set_color(c);
-            return *this;
-        }
-
-        auto id(int id) -> Sprite&
-        {
-            set_id(id);
-            return *this;
-        }
-
-        auto normal(unsigned int id) -> Sprite&
-        {
-            set_normal(id);
-            return *this;
-        }
-
-        auto pivot(const Vec2f& pivot) -> Sprite&
-        {
-            set_pivot(pivot);
-            return *this;
-        }
-
-        auto position(const Vec2f& pos) -> Sprite&
-        {
-            set_position(pos);
-            return *this;
-        }
-
-        auto scale(const Vec2f& scale) -> Sprite&
-        {
-            set_scale(scale);
-            return *this;
-        }
-
-        auto texture(unsigned int id) -> Sprite&
-        {
-            set_texture(id);
-            return *this;
-        }
-#endif  // USE_SPRITE_FUNCTION_CHAINING
 
 #ifdef RAINBOW_TEST
         [[nodiscard]] auto state() const { return state_; }
 #endif
 
     private:
-        unsigned int state_ = 1;  ///< State of internals, e.g. buffer.
-        Vec2f center_;            ///< Committed position.
-        Vec2f position_;          ///< Uncommitted position.
-        unsigned int texture_ = 0;
+        /// <summary>State of internals, e.g. buffer.</summary>
+        uint32_t state_ = 1;
+
+        /// <summary>Committed position.</summary>
+        Vec2f center_;
+
+        /// <summary>Uncommitted position.</summary>
+        Vec2f position_;
+
+        /// <summary>Area of the texture to map.</summary>
+        Rect texture_area_;
+
+        /// <summary>Tint color.</summary>
         Color color_;
-        unsigned int width_ = 0;      ///< Width of sprite (not scaled).
-        unsigned int height_ = 0;     ///< Height of sprite (not scaled).
-        float angle_ = 0.0F;          ///< Angle of rotation.
-        Vec2f pivot_ = {0.5F, 0.5F};  ///< Pivot point (normalised).
-        Vec2f scale_ = Vec2f::One;    ///< Scaling factor.
-        unsigned int normal_map_ = 0;
-        int id_ = kNoId;                        ///< Sprite identifier.
-        SpriteVertex* vertex_array_ = nullptr;  ///< Interleaved vertex array.
+
+        /// <summary>Width of sprite (unscaled).</summary>
+        uint32_t width_ = 0;
+
+        /// <summary>Height of sprite (unscaled).</summary>
+        uint32_t height_ = 0;
+
+        /// <summary>Angle of rotation.</summary>
+        float angle_ = 0.0F;
+
+        /// <summary>Pivot point (normalised).</summary>
+        Vec2f pivot_ = {0.5F, 0.5F};
+
+        /// <summary>Scaling factor.</summary>
+        Vec2f scale_ = Vec2f::One;
+
+        /// <summary>Area of the normal texture to map.</summary>
+        Rect normal_map_;
+
+        /// <summary>User defined identifier.</summary>
+        int id_ = kNoId;
     };
 }  // namespace rainbow
 
-#undef USE_SPRITE_FUNCTION_CHAINING
 #endif

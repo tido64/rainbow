@@ -159,37 +159,38 @@ To see how each of these behave visually, see [Easing Functions Cheat Sheet].
 ## Example
 
 ```c++
-#include "FileSystem/FileSystem.h"
+#include "Graphics/SpriteBatch.h"
 #include "Script/GameBase.h"
 #include "Script/Transition.h"
 
 class TransitionExample final : public rainbow::GameBase
 {
 public:
-    TransitionExample(rainbow::Director &director) : rainbow::GameBase(director)
-    {
-    }
+  TransitionExample(rainbow::Director &director)
+    : rainbow::GameBase(director),
+      batch_(1)
+  {
+  }
 
 private:
-    rainbow::spritebatch_t batch_;
+  rainbow::graphics::Texture texture_;
+  rainbow::SpriteBatch batch_;
 
-    void init_impl(const rainbow::Vec2i &screen) override
-    {
-        batch_ = rainbow::spritebatch(1);
+  void init_impl(const rainbow::Vec2i &screen) override
+  {
+    texture_ = texture_provider().get("rainbow-logo.png");
+    batch_.set_texture(texture_);
 
-        auto logo_path = rainbow::filesystem::relative("rainbow-logo.png");
-        auto texture = rainbow::texture(logo_path);
-        batch_->set_texture(texture);
+    auto logo = batch_.create_sprite(392, 710);
+    logo->color({0xffffff00})
+        .position({screen.x * 0.5F, screen.y * 0.5F})
+        .scale(0.5F)
+        .texture({1, 1, 392, 710});
 
-        auto logo = batch_->create_sprite(392, 710);
-        logo->set_color(rainbow::Color{0xffffff00});
-        logo->set_position(rainbow::Vec2f{screen.x * 0.5f, screen.y * 0.5f});
-        logo->set_scale(0.5);
-        logo->set_texture(texture->add_region(1, 1, 392, 710));
-        render_queue().emplace_back(batch_);
+    render_queue().emplace_back(batch_);
 
-        rainbow::fade(logo, 1.0f, 1500, rainbow::timing::linear);
-    }
+    rainbow::fade(logo, 1.0F, 1500, rainbow::timing::linear);
+  }
 };
 
 auto rainbow::GameBase::create(rainbow::Director& director)

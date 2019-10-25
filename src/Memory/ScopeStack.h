@@ -9,7 +9,8 @@
 #include <functional>
 #include <memory>
 
-#include "Memory/SharedPtr.h"
+#include "Common/Logging.h"
+#include "Common/NonCopyable.h"
 
 namespace rainbow
 {
@@ -49,15 +50,6 @@ namespace rainbow
             end_ += aligned_size(size);
             R_ASSERT(end_ <= block_.get() + size_, "Out of memory");
             return block;
-        }
-
-        void retain(RefCounted* ref) const
-        {
-            R_ASSERT(std::less_equal<void*>()(block_.get(), ref) &&
-                         std::less<void*>()(ref, end_),
-                     "Cannot retain a pointer allocated outside of block");
-
-            ref->retain();
         }
 
         void rewind(void* ptr) { end_ = static_cast<uint8_t*>(ptr); }
@@ -104,8 +96,6 @@ namespace rainbow
         {
             auto obj =  // NOLINT(cppcoreguidelines-owning-memory)
                 new (address_of(new_block<T>())) T(std::forward<Args>(args)...);
-            if constexpr (std::is_base_of_v<RefCounted, T>)
-                allocator_.retain(obj);
             return obj;
         }
 

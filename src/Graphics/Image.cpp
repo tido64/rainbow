@@ -37,6 +37,11 @@ auto Image::decode(const Data& data, float scale) -> Image
     if (svg::check(data))
         return svg::decode(data, scale);
 
+#ifdef RAINBOW_TEST
+    if (memcmp(data.bytes(), "RNBWMOCK", 8) == 0)
+        return {};
+#endif
+
     R_ASSERT(false, "Unknown image format");
     return {};
 }

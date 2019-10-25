@@ -5,17 +5,21 @@
 #include "Graphics/Sprite.h"
 
 #include "Graphics/SpriteBatch.h"
+#include "Graphics/Texture.h"
 #include "Math/Transform.h"
 
+// TODO: As of iOS 13.2, `using rainbow::Rect` clashes with another definition
+// in `MacTypes.h`.
 using rainbow::Color;
 using rainbow::Sprite;
 using rainbow::SpriteRef;
 using rainbow::SpriteVertex;
-using rainbow::TextureAtlas;
 using rainbow::Vec2f;
+using rainbow::graphics::TextureData;
 
 namespace
 {
+    // clang-format off
     constexpr uint32_t kStaleBuffer     = 1U << 0;
     constexpr uint32_t kStalePosition   = 1U << 1;
     constexpr uint32_t kStaleTexture    = 1U << 2;
@@ -25,11 +29,14 @@ namespace
     constexpr uint32_t kIsFlipped       = 1U << 17;
     constexpr uint32_t kIsMirrored      = 1U << 18;
 
-    constexpr uint32_t kFlipTable[]{
-        0, 1, 2, 3,   // Normal
-        3, 2, 1, 0,   // Flipped
-        1, 0, 3, 2,   // Mirrored
-        2, 3, 0, 1};  // Flipped + mirrored
+    constexpr std::array<uint32_t, 16> kFlipTable{
+        0, 1, 2, 3,  // Normal
+        3, 2, 1, 0,  // Flipped
+        1, 0, 3, 2,  // Mirrored
+        2, 3, 0, 1,  // Flipped + mirrored
+    };
+    // clang-format on
+
     constexpr uint32_t kFlipVertically = 4;
     constexpr uint32_t kFlipHorizontally = 8;
 
@@ -40,6 +47,21 @@ namespace
     {
         return ((state & kIsFlipped) >> 0xf) + ((state & kIsMirrored) >> 0xf);
     }
+
+    auto normalized_coordinates(const TextureData& texture,
+                                const rainbow::Rect& rect)
+    {
+        const auto left = rect.left / texture.width;
+        const auto bottom = rect.bottom / texture.height;
+        const auto right = (rect.left + rect.width) / texture.width;
+        const auto top = (rect.bottom + rect.height) / texture.height;
+        return std::array<Vec2f, 4>{
+            Vec2f{left, top},
+            Vec2f{right, top},
+            Vec2f{right, bottom},
+            Vec2f{left, bottom},
+        };
+    }
 }  // namespace
 
 auto SpriteRef::get() const -> Sprite&
@@ -49,12 +71,41 @@ auto SpriteRef::get() const -> Sprite&
 
 Sprite::Sprite(Sprite&& s) noexcept
     : state_(s.state_ | kStaleMask), center_(s.center_), position_(s.position_),
-      texture_(s.texture_), color_(s.color_), width_(s.width_),
+      texture_area_(s.texture_area_), color_(s.color_), width_(s.width_),
       height_(s.height_), angle_(s.angle_), pivot_(s.pivot_), scale_(s.scale_),
-      normal_map_(s.normal_map_), id_(s.id_), vertex_array_(s.vertex_array_)
+      normal_map_(s.normal_map_), id_(s.id_)
 {
     s.id_ = kNoId;
-    s.vertex_array_ = nullptr;
+}
+
+auto Sprite::angle(float r) -> Sprite&
+{
+    state_ |= kStaleBuffer;
+    angle_ = r;
+    return *this;
+}
+
+auto Sprite::color(Color c) -> Sprite&
+{
+    state_ |= kStaleTexture;
+    color_ = c;
+    return *this;
+}
+
+auto Sprite::flip() -> Sprite&
+{
+    state_ ^= kIsFlipped;
+    state_ |= kStaleTexture;
+    return *this;
+}
+
+auto Sprite::hide() -> Sprite&
+{
+    if (is_hidden())
+        return *this;
+
+    state_ |= kIsHidden | kStaleMask;
+    return *this;
 }
 
 auto Sprite::is_flipped() const -> bool
@@ -72,106 +123,88 @@ auto Sprite::is_mirrored() const -> bool
     return (state_ & kIsMirrored) == kIsMirrored;
 }
 
-void Sprite::set_color(Color c)
+auto Sprite::mirror() -> Sprite&
 {
+    state_ ^= kIsMirrored;
     state_ |= kStaleTexture;
-    color_ = c;
+    return *this;
 }
 
-void Sprite::set_normal(unsigned int id)
+auto Sprite::move(Vec2f delta) -> Sprite&
+{
+    state_ |= kStalePosition;
+    position_ += delta;
+    return *this;
+}
+
+auto Sprite::normal(const rainbow::Rect& area) -> Sprite&
 {
     state_ |= kStaleNormalMap;
-    normal_map_ = id;
+    normal_map_ = area;
+    return *this;
 }
 
-void Sprite::set_pivot(const Vec2f& pivot)
+auto Sprite::pivot(Vec2f pivot) -> Sprite&
 {
-    R_ASSERT(pivot.x >= 0.0F && pivot.x <= 1.0F &&
-             pivot.y >= 0.0F && pivot.y <= 1.0F,
+    R_ASSERT(pivot.x >= 0.0F && pivot.x <= 1.0F &&  //
+                 pivot.y >= 0.0F && pivot.y <= 1.0F,
              "Invalid pivot point");
 
-    Vec2f diff = pivot;
-    diff -= pivot_;
-    if (diff.is_zero())
-        return;
-
-    diff.x *= width_ * scale_.x;
-    diff.y *= height_ * scale_.y;
-    center_ += diff;
-    position_ += diff;
-    pivot_ = pivot;
+    Vec2f diff = pivot - pivot_;
+    if (!diff.is_zero())
+    {
+        diff.x *= width_ * scale_.x;
+        diff.y *= height_ * scale_.y;
+        center_ += diff;
+        position_ += diff;
+        pivot_ = pivot;
+    }
+    return *this;
 }
 
-void Sprite::set_position(const Vec2f& position)
+auto Sprite::position(Vec2f position) -> Sprite&
 {
     state_ |= kStalePosition;
     position_ = position;
+    return *this;
 }
 
-void Sprite::set_rotation(float r)
+auto Sprite::rotate(float r) -> Sprite&
 {
     state_ |= kStaleBuffer;
-    angle_ = r;
+    angle_ += r;
+    return *this;
 }
 
-void Sprite::set_scale(const Vec2f& f)
+auto Sprite::scale(Vec2f f) -> Sprite&
 {
-    R_ASSERT(f.x > 0.0F && f.y > 0.0F,
+    R_ASSERT(f.x > 0.0F && f.y > 0.0F,  //
              "Can't scale with a factor of zero or less");
 
     state_ |= kStaleBuffer;
     scale_ = f;
+    return *this;
 }
 
-void Sprite::set_texture(unsigned int id)
-{
-    state_ |= kStaleTexture;
-    texture_ = id;
-}
-
-void Sprite::flip()
-{
-    state_ ^= kIsFlipped;
-    state_ |= kStaleTexture;
-}
-
-void Sprite::hide()
-{
-    if (is_hidden())
-        return;
-
-    state_ |= kIsHidden | kStaleMask;
-}
-
-void Sprite::mirror()
-{
-    state_ ^= kIsMirrored;
-    state_ |= kStaleTexture;
-}
-
-void Sprite::move(const Vec2f& delta)
-{
-    state_ |= kStalePosition;
-    position_ += delta;
-}
-
-void Sprite::rotate(float r)
-{
-    state_ |= kStaleBuffer;
-    angle_ += r;
-}
-
-void Sprite::show()
+auto Sprite::show() -> Sprite&
 {
     if (!is_hidden())
-        return;
+        return *this;
 
     state_ &= ~kIsHidden;
     state_ |= kStaleMask;
+    return *this;
 }
 
-auto Sprite::update(const ArraySpan<SpriteVertex>& vertex_array,
-                    const TextureAtlas& texture) -> bool
+auto Sprite::texture(const rainbow::Rect& area) -> Sprite&
+{
+    state_ |= kStaleTexture;
+    texture_area_ = area;
+    return *this;
+}
+
+auto Sprite::update(ArraySpan<SpriteVertex> vertex_array,
+                    const TextureData& texture) -> bool
 {
     if ((state_ & kStaleMask) == 0)
         return false;
@@ -206,32 +239,32 @@ auto Sprite::update(const ArraySpan<SpriteVertex>& vertex_array,
 
     if ((state_ & kStaleTexture) != 0)
     {
-        const unsigned int f = flip_index(state_);
-        const auto& tx = texture[texture_];
-        for (unsigned int i = 0; i < 4; ++i)
+        auto coords = normalized_coordinates(texture, texture_area_);
+        const uint32_t f = flip_index(state_);
+        for (uint32_t i = 0; i < 4; ++i)
         {
-            vertex_array[kFlipTable[f + i]].color = color_;
-            vertex_array[kFlipTable[f + i]].texcoord = tx.vx[i];
+            auto& vx = vertex_array[kFlipTable[f + i]];
+            vx.color = color_;
+            vx.texcoord = coords[i];
         }
     }
 
     state_ &= ~kStaleMask;
-    vertex_array_ = vertex_array.data();
     return true;
 }
 
-auto Sprite::update(const ArraySpan<Vec2f>& normal_array,
-                    const TextureAtlas& normal) -> bool
+auto Sprite::update(ArraySpan<Vec2f> normal_array, const TextureData& normal)
+    -> bool
 {
     if ((state_ & kStaleNormalMap) == 0)
         return false;
 
     state_ ^= kStaleNormalMap;
 
-    const unsigned int f = flip_index(state_);
-    const auto& tx = normal[normal_map_];
-    for (unsigned int i = 0; i < 4; ++i)
-        normal_array[kFlipTable[f + i]] = tx.vx[i];
+    auto coords = normalized_coordinates(normal, normal_map_);
+    const uint32_t f = flip_index(state_);
+    for (uint32_t i = 0; i < 4; ++i)
+        normal_array[kFlipTable[f + i]] = coords[i];
     return true;
 }
 
@@ -240,7 +273,7 @@ auto Sprite::operator=(Sprite&& s) noexcept -> Sprite&
     state_ = s.state_ | kStaleMask;
     center_ = s.center_;
     position_ = s.position_;
-    texture_ = s.texture_;
+    texture_area_ = s.texture_area_;
     color_ = s.color_;
     width_ = s.width_;
     height_ = s.height_;
@@ -249,10 +282,8 @@ auto Sprite::operator=(Sprite&& s) noexcept -> Sprite&
     scale_ = s.scale_;
     normal_map_ = s.normal_map_;
     id_ = s.id_;
-    vertex_array_ = s.vertex_array_;
 
     s.id_ = kNoId;
-    s.vertex_array_ = nullptr;
 
     return *this;
 }

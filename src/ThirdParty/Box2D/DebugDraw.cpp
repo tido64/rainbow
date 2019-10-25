@@ -16,7 +16,7 @@ using rainbow::graphics::ShaderManager;
 
 namespace
 {
-    const float32 kAxisScale = 0.4f;
+    const float32 kAxisScale = 0.4F;
     const int32 kCircleSegments = 16;
 
     unsigned int g_debug_draw_buffer = 0;
@@ -47,11 +47,14 @@ namespace b2
         if (g_debug_draw_program == 0)
         {
             Shader::Params shaders[]{
-                rainbow::gl::Simple2D_vert(), rainbow::gl::Simple_frag()};
+                rainbow::graphics::gl::Simple2D_vert(),
+                rainbow::graphics::gl::Simple_frag(),
+            };
             const Shader::AttributeParams attributes[]{
                 {Shader::kAttributeVertex, "vertex"},
                 {Shader::kAttributeColor, "color"},
-                {Shader::kAttributeNone, nullptr}};
+                {Shader::kAttributeNone, nullptr},
+            };
             g_debug_draw_program =
                 ShaderManager::Get()->compile(shaders, attributes);
             Shader::Details& details =

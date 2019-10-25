@@ -13,7 +13,7 @@ using rainbow::Vec2f;
 
 TEST(GeometryTest, WalksCircleEdge)
 {
-    constexpr float kRadius = 10.0f;
+    constexpr float kRadius = 10.0F;
     constexpr float kCircumference = 2 * kRadius * rainbow::kPi<float>;
     constexpr int kSegments = 32;
     constexpr float kArcLength = kCircumference / kSegments;
@@ -25,8 +25,8 @@ TEST(GeometryTest, WalksCircleEdge)
         kSegments,
         [=, &count](const Vec2f& v0, const Vec2f& v1) mutable {
             ++count;
-            ASSERT_NEAR(v0.distance(v1), kArcLength, 0.0033f);
-            ASSERT_NEAR(v1.distance(Vec2f::Zero), kRadius, 0.00002f);
+            ASSERT_NEAR(v0.distance(v1), kArcLength, 0.0033F);
+            ASSERT_NEAR(v1.distance(Vec2f::Zero), kRadius, 0.00002F);
         });
 
     ASSERT_EQ(count, kSegments);
@@ -41,7 +41,7 @@ TEST(GeometryTest, ReturnsRectangleVertices)
     ASSERT_EQ(rect0.top_left(), Vec2f::Zero);
     ASSERT_EQ(rect0.top_right(), Vec2f::Zero);
 
-    const Rect rect1{1, 1, 1, 1};
+    const Rect rect1{1, 1, 0, 0};
 
     ASSERT_EQ(rect1.bottom_left(), Vec2f::One);
     ASSERT_EQ(rect1.bottom_right(), Vec2f::One);
@@ -51,11 +51,11 @@ TEST(GeometryTest, ReturnsRectangleVertices)
     const Rect rect2{1, 2, 3, 4};
 
     ASSERT_EQ(rect2.bottom_left(), Vec2f(1, 2));
-    ASSERT_EQ(rect2.bottom_right(), Vec2f(3, 2));
-    ASSERT_EQ(rect2.top_left(), Vec2f(1, 4));
-    ASSERT_EQ(rect2.top_right(), Vec2f(3, 4));
+    ASSERT_EQ(rect2.bottom_right(), Vec2f(4, 2));
+    ASSERT_EQ(rect2.top_left(), Vec2f(1, 6));
+    ASSERT_EQ(rect2.top_right(), Vec2f(4, 6));
 
     ASSERT_NE(rect1, rect0);
-    ASSERT_EQ(rect0, Rect());
-    ASSERT_EQ(rect1, Rect(1, 1, 1, 1));
+    ASSERT_EQ(rect0, Rect{});
+    ASSERT_EQ(rect1, Rect(1, 1, 0, 0));
 }
