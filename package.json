@@ -38,7 +38,7 @@
     "prettier:all": "prettier --no-config --prose-wrap always --write .vscode/*.json README.md doc/**/*.md js/*.json tools/*.js"
   },
   "devDependencies": {
-    "@types/node": "^10.14.22",
+    "@types/node": "^10.17.4",
     "@typescript-eslint/parser": "^2.5.0",
     "eslint": "^6.5.1",
     "npm-run-all": "^4.1.0",
