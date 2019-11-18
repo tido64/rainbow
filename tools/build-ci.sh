@@ -7,6 +7,7 @@ case $1 in
   "install")
     case $TARGET_OS in
       "Darwin")
+        sudo xcode-select --switch /Applications/Xcode_10.3.app/Contents/Developer
         brew bundle
         ;;
       "Linux")
