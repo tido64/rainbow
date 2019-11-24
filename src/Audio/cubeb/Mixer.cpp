@@ -19,7 +19,11 @@ namespace
 
     CubebMixer* cubeb_mixer = nullptr;
 
-    auto as_index(Sound* sound) { return reinterpret_cast<intptr_t>(sound); }
+    auto as_index(Sound* sound)
+    {
+        // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
+        return reinterpret_cast<intptr_t>(sound);
+    }
 
     void reset_channel(Channel& ch)
     {

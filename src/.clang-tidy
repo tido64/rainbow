@@ -1,4 +1,4 @@
-Checks: '*,-clang-analyzer-alpha.*,-clang-diagnostic-expansion-to-defined,-cppcoreguidelines-pro-bounds-*,-cppcoreguidelines-pro-type-union-access,-cppcoreguidelines-pro-type-vararg,-google-readability-braces-around-statements,-google-readability-namespace-comments,-google-readability-todo,-llvm-namespace-comment,-readability-braces-around-statements,-readability-named-parameter'
+Checks: '*,-clang-analyzer-alpha.*,-clang-diagnostic-expansion-to-defined,-cppcoreguidelines-pro-bounds-*,-cppcoreguidelines-pro-type-union-access,-cppcoreguidelines-pro-type-vararg,-fuchsia-*,-google-readability-braces-around-statements,-google-readability-namespace-comments,-google-readability-todo,-hicpp-*,-llvm-namespace-comment,-readability-braces-around-statements,-readability-named-parameter'
 WarningsAsErrors: ''
 HeaderFilterRegex: ''
 AnalyzeTemporaryDtors: false
