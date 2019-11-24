@@ -31,29 +31,32 @@ namespace rainbow
         Config();
 
         /// <summary>Returns the width of the screen.</summary>
-        auto width() const { return width_; }
+        [[nodiscard]] auto width() const { return width_; }
 
         /// <summary>Returns the height of the screen.</summary>
-        auto height() const { return height_; }
+        [[nodiscard]] auto height() const { return height_; }
 
         /// <summary>
         ///   Returns whether to create windows in HiDPI mode.
         /// </summary>
-        bool hidpi() const { return hidpi_; }
+        [[nodiscard]] auto hidpi() const { return hidpi_; }
 
         /// <summary>Returns whether the screen is in portrait mode.</summary>
-        bool is_portrait() const { return width_ < height_; }
+        [[nodiscard]] auto is_portrait() const { return width_ < height_; }
 
         /// <summary>
         ///   Returns number of samples for multisample anti-aliasing.
         /// </summary>
-        auto msaa() const { return msaa_; }
+        [[nodiscard]] auto msaa() const { return msaa_; }
 
         /// <summary>Returns whether we need to use the accelerometer.</summary>
-        bool needs_accelerometer() const { return accelerometer_; }
+        [[nodiscard]] auto needs_accelerometer() const
+        {
+            return accelerometer_;
+        }
 
         /// <summary>Returns whether to suspend when focus is lost.</summary>
-        bool suspend() const { return suspend_; }
+        [[nodiscard]] auto suspend() const { return suspend_; }
 
     private:
         int width_;

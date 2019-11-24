@@ -101,7 +101,7 @@ auto Typesetter::layout_text(std::string_view text,
     auto font = hb_ft_font_create(font_face, nullptr);
     hb_ft_font_set_load_flags(font, FT_LOAD_DEFAULT);
 
-    float width = 0.0f;
+    float width = 0.0F;
     int line_count = 0;
     int start = 0;
     const auto length = narrow_cast<int>(text.length());

@@ -13,9 +13,12 @@ namespace
     class RainbowErrorCategory final : public std::error_category
     {
     public:
-        auto name() const noexcept -> const char* override { return "Rainbow"; }
+        [[nodiscard]] auto name() const noexcept -> const char* override
+        {
+            return "Rainbow";
+        }
 
-        auto message(int condition) const -> std::string override
+        [[nodiscard]] auto message(int condition) const -> std::string override
         {
             using rainbow::ErrorCode;
 

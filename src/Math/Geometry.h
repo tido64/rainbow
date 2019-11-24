@@ -5,6 +5,7 @@
 #ifndef MATH_GEOMETRY_H_
 #define MATH_GEOMETRY_H_
 
+#include "Common/TypeCast.h"
 #include "Math/Vec2.h"
 
 namespace rainbow
@@ -24,8 +25,8 @@ namespace rainbow
                                        F&& f)
     {
         const double increment = 2.0 * kPi<double> / num_segments;
-        const float sin_inc = std::sin(increment);
-        const float cos_inc = std::cos(increment);
+        const float sin_inc = narrow_cast<float>(std::sin(increment));
+        const float cos_inc = narrow_cast<float>(std::cos(increment));
         Vec2f r0 = Vec2f::Left;
         const Vec2f start = center + radius * r0;
         Vec2f v0 = start;
@@ -43,31 +44,32 @@ namespace rainbow
 
     struct Rect
     {
-        float left;
-        float bottom;
-        float right;
-        float top;
+        float left;    // NOLINT(misc-non-private-member-variables-in-classes)
+        float bottom;  // NOLINT(misc-non-private-member-variables-in-classes)
+        float right;   // NOLINT(misc-non-private-member-variables-in-classes)
+        float top;     // NOLINT(misc-non-private-member-variables-in-classes)
 
-        Rect() : Rect(0.0f, 0.0f, 0.0f, 0.0f) {}
+        Rect() : Rect(0.0F, 0.0F, 0.0F, 0.0F) {}
+
         Rect(float left_, float bottom_, float right_, float top_)
             : left(left_), bottom(bottom_), right(right_), top(top_)
         {
         }
 
-        auto bottom_left() const { return Vec2f{left, bottom}; }
-        auto bottom_right() const { return Vec2f{right, bottom}; }
-        auto top_left() const { return Vec2f{left, top}; }
-        auto top_right() const { return Vec2f{right, top}; }
+        [[nodiscard]] auto bottom_left() const { return Vec2f{left, bottom}; }
+        [[nodiscard]] auto bottom_right() const { return Vec2f{right, bottom}; }
+        [[nodiscard]] auto top_left() const { return Vec2f{left, top}; }
+        [[nodiscard]] auto top_right() const { return Vec2f{right, top}; }
 
-        friend bool operator!=(const Rect& r, const Rect& s)
-        {
-            return !(r == s);
-        }
-
-        friend bool operator==(const Rect& r, const Rect& s)
+        friend auto operator==(const Rect& r, const Rect& s)
         {
             return r.left == s.left && r.bottom == s.bottom &&
                    r.right == s.right && r.top == s.top;
+        }
+
+        friend auto operator!=(const Rect& r, const Rect& s)
+        {
+            return !(r == s);
         }
     };
 }  // namespace rainbow

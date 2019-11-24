@@ -9,7 +9,7 @@ namespace rainbow
 {
     class SpriteRef;
 
-    bool overlaps(const SpriteRef& a, const SpriteRef& b);
+    auto overlaps(const SpriteRef& a, const SpriteRef& b) -> bool;
 }  // namespace rainbow
 
 #endif

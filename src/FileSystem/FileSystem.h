@@ -13,7 +13,7 @@
 namespace rainbow
 {
     class Bundle;
-}
+}  // namespace rainbow
 
 namespace rainbow::filesystem
 {
@@ -21,8 +21,8 @@ namespace rainbow::filesystem
     auto bundle() -> const Bundle&;
 
     /// <summary>Creates new directories.</summary>
-    bool create_directories(czstring path);
-    inline bool create_directories(const Path& path)
+    auto create_directories(czstring path) -> bool;
+    inline auto create_directories(const Path& path)
     {
         return create_directories(path.c_str());
     }
@@ -30,7 +30,7 @@ namespace rainbow::filesystem
     /// <summary>
     ///   Returns whether the specified path refers to an existing file.
     /// </summary>
-    bool exists(czstring path);
+    [[nodiscard]] auto exists(czstring path) -> bool;
 
     /// <summary>Initializes the file subsystem.</summary>
     void initialize(const Bundle& bundle, czstring argv0, bool allow_symlinks);
@@ -38,8 +38,8 @@ namespace rainbow::filesystem
     /// <summary>
     ///   Returns whether <paramref name="path"/> refers to a directory.
     /// </summary>
-    bool is_directory(czstring path);
-    inline bool is_directory(const Path& path)
+    [[nodiscard]] auto is_directory(czstring path) -> bool;
+    [[nodiscard]] inline auto is_directory(const Path& path)
     {
         return is_directory(path.c_str());
     }
@@ -47,14 +47,14 @@ namespace rainbow::filesystem
     /// <summary>
     ///   Returns whether <paramref name="path"/> refers to a regular file.
     /// </summary>
-    bool is_regular_file(czstring path);
-    inline bool is_regular_file(const Path& path)
+    [[nodiscard]] auto is_regular_file(czstring path) -> bool;
+    [[nodiscard]] inline auto is_regular_file(const Path& path)
     {
         return is_regular_file(path.c_str());
     }
 
     /// <summary>Returns the platform specific path separator.</summary>
-    auto path_separator() -> czstring;
+    [[nodiscard]] auto path_separator() -> czstring;
 
     /// <summary>
     ///   Returns the app preferences directory for current user, suitable for
@@ -69,14 +69,14 @@ namespace rainbow::filesystem
     ///     <item>iOS: NSDocumentDirectory</item>
     ///   </list>
     /// </remarks>
-    auto preferences_directory() -> const Path&;
+    [[nodiscard]] auto preferences_directory() -> const Path&;
 
     /// <summary>Returns the real path.</summary>
-    auto real_path(czstring path) -> Path;
+    [[nodiscard]] auto real_path(czstring path) -> Path;
 
     /// <summary>Removes a file or empty directory.</summary>
-    bool remove(czstring path);
-    inline bool remove(const Path& path) { return remove(path.c_str()); }
+    auto remove(czstring path) -> bool;
+    inline auto remove(const Path& path) { return remove(path.c_str()); }
 }  // namespace rainbow::filesystem
 
 namespace rainbow::system
@@ -97,12 +97,12 @@ namespace rainbow::system
     /// <summary>
     ///   Returns whether the file at specified path is a directory.
     /// </summary>
-    [[nodiscard]] bool is_directory(czstring path);
+    [[nodiscard]] auto is_directory(czstring path) -> bool;
 
     /// <summary>
     ///   Returns whether the file at specified path is a regular file.
     /// </summary>
-    [[nodiscard]] bool is_regular_file(czstring path);
+    [[nodiscard]] auto is_regular_file(czstring path) -> bool;
 }  // namespace rainbow::system
 
 #endif

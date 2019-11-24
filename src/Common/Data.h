@@ -54,13 +54,9 @@ namespace rainbow
         /// <summary>
         ///   Constructs an empty data object. No memory will be allocated.
         /// </summary>
-        Data()
-            : ownership_(Ownership::Owner), allocated_(0), sz_(0),
-              data_(nullptr)
-        {
-        }
+        Data() = default;
 
-        Data(Data&& d)
+        Data(Data&& d) noexcept
             : ownership_(d.ownership_), allocated_(d.allocated_), sz_(d.sz_),
               data_(d.data_)
         {
@@ -72,6 +68,7 @@ namespace rainbow
         /// <summary>Constructs a wrapper around a buffer.</summary>
         Data(const void* buffer, size_t size, Ownership ownership)
             : ownership_(ownership), allocated_(size), sz_(size),
+              // NOLINTNEXTLINE(cppcoreguidelines-pro-type-const-cast)
               data_(const_cast<void*>(buffer))
         {
         }
@@ -79,7 +76,7 @@ namespace rainbow
         ~Data();
 
         template <typename T>
-        auto as() const
+        [[nodiscard]] auto as() const
         {
             return static_cast<const T>(data_);
         }
@@ -88,12 +85,12 @@ namespace rainbow
         /// <returns>
         ///   Pointer to array. Returns <c>nullptr</c> if buffer is empty.
         /// </returns>
-        auto bytes() const { return as<uint8_t*>(); }
+        [[nodiscard]] auto bytes() const { return as<uint8_t*>(); }
 
         /// <summary>Returns the size of this buffer.</summary>
-        auto size() const { return sz_; }
+        [[nodiscard]] auto size() const { return sz_; }
 
-        explicit operator bool() const { return data_; }
+        explicit operator bool() const { return data_ != nullptr; }
 
 #ifdef RAINBOW_OS_IOS
         operator NSData*() const
@@ -112,11 +109,22 @@ namespace rainbow
 #endif
 
     private:
-        Ownership ownership_;  ///< Decides whether to free the buffer on destruction.
-        size_t allocated_;     ///< Allocated memory size.
-        size_t sz_;            ///< Size of used buffer, not necessarily equal to allocated.
-        void* data_;           ///< Actual buffer, implemented as a C-array.
+        /// <summary>
+        ///   Whether the buffer should be freed on destruction.
+        /// </summary>
+        Ownership ownership_ = Ownership::Owner;
+
+        /// <summary>Allocated memory size.</summary>
+        size_t allocated_ = 0;
+
+        /// <summary>
+        ///   Size of used buffer, not necessarily equal to allocated.
+        /// </summary>
+        size_t sz_ = 0;
+
+        /// <summary>Actual buffer, implemented as a C-array.</summary>
+        void* data_ = nullptr;
     };
-}
+}  // namespace rainbow
 
 #endif

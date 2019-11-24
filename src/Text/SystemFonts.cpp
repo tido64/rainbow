@@ -30,8 +30,9 @@ namespace
 
         ~MonospaceFont() { fclose(file_); }
 
-        auto file_size() const -> size_t
+        [[nodiscard]] auto file_size() const -> size_t
         {
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-member-init)
             struct stat file_status;
             const int fd = fileno(file_);
             return fstat(fd, &file_status) != 0 ? 0 : file_status.st_size;

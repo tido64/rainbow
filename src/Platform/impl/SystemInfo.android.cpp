@@ -4,12 +4,12 @@
 
 #include "Platform/SystemInfo.h"
 
-bool rainbow::system_info::has_accelerometer()
+auto rainbow::system_info::has_accelerometer() -> bool
 {
     return true;
 }
 
-bool rainbow::system_info::has_touchscreen()
+auto rainbow::system_info::has_touchscreen() -> bool
 {
     return true;
 }

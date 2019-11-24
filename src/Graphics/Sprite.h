@@ -20,11 +20,15 @@ namespace rainbow
     class SpriteRef
     {
     public:
-        SpriteRef() : batch_(nullptr), i_(0) {}
+        SpriteRef() = default;
         SpriteRef(SpriteBatch& batch, uint32_t i) : batch_(&batch), i_(i) {}
 
-        auto batch() const -> const SpriteBatch* { return batch_; }
-        auto index() const { return i_; }
+        [[nodiscard]] auto batch() const -> const SpriteBatch*
+        {
+            return batch_;
+        }
+
+        [[nodiscard]] auto index() const { return i_; }
 
         auto operator*() -> Sprite& { return get(); }
         auto operator*() const -> const Sprite& { return get(); }
@@ -32,19 +36,19 @@ namespace rainbow
         auto operator->() -> Sprite* { return &get(); }
         auto operator->() const -> const Sprite* { return &get(); }
 
-        explicit operator bool() const { return batch_; }
+        explicit operator bool() const { return batch_ != nullptr; }
         explicit operator uint32_t() const { return i_; }
 
-        friend bool operator==(const SpriteRef& lhs, const SpriteRef& rhs)
+        friend auto operator==(const SpriteRef& lhs, const SpriteRef& rhs)
         {
             return lhs.batch() == rhs.batch() && lhs.index() == rhs.index();
         }
 
     private:
-        SpriteBatch* batch_;
-        uint32_t i_;
+        SpriteBatch* batch_ = nullptr;
+        uint32_t i_ = 0;
 
-        auto get() const -> Sprite&;
+        [[nodiscard]] auto get() const -> Sprite&;
     };
 
     /// <summary>A textured quad.</summary>
@@ -80,23 +84,23 @@ namespace rainbow
         Sprite(unsigned int w, unsigned int h) : width_(w), height_(h) {}
         Sprite(Sprite&&) noexcept;
 
-        auto angle() const { return angle_; }
-        auto color() const { return color_; }
-        auto height() const { return height_; }
-        auto id() const { return id_; }
-        auto is_flipped() const -> bool;
-        auto is_hidden() const -> bool;
-        auto is_mirrored() const -> bool;
-        auto pivot() const { return pivot_; }
-        auto position() const { return position_; }
-        auto scale() const { return scale_; }
+        [[nodiscard]] auto angle() const { return angle_; }
+        [[nodiscard]] auto color() const { return color_; }
+        [[nodiscard]] auto height() const { return height_; }
+        [[nodiscard]] auto id() const { return id_; }
+        [[nodiscard]] auto is_flipped() const -> bool;
+        [[nodiscard]] auto is_hidden() const -> bool;
+        [[nodiscard]] auto is_mirrored() const -> bool;
+        [[nodiscard]] auto pivot() const { return pivot_; }
+        [[nodiscard]] auto position() const { return position_; }
+        [[nodiscard]] auto scale() const { return scale_; }
 
-        auto vertex_array() const -> const SpriteVertex*
+        [[nodiscard]] auto vertex_array() const -> const SpriteVertex*
         {
             return vertex_array_;
         }
 
-        auto width() const { return width_; }
+        [[nodiscard]] auto width() const { return width_; }
 
         /// <summary>Sets sprite colour.</summary>
         void set_color(Color c);
@@ -221,7 +225,7 @@ namespace rainbow
 #endif  // USE_SPRITE_FUNCTION_CHAINING
 
 #ifdef RAINBOW_TEST
-        auto state() const { return state_; }
+        [[nodiscard]] auto state() const { return state_; }
 #endif
 
     private:
@@ -232,8 +236,8 @@ namespace rainbow
         Color color_;
         unsigned int width_ = 0;      ///< Width of sprite (not scaled).
         unsigned int height_ = 0;     ///< Height of sprite (not scaled).
-        float angle_ = 0.0f;          ///< Angle of rotation.
-        Vec2f pivot_ = {0.5f, 0.5f};  ///< Pivot point (normalised).
+        float angle_ = 0.0F;          ///< Angle of rotation.
+        Vec2f pivot_ = {0.5F, 0.5F};  ///< Pivot point (normalised).
         Vec2f scale_ = Vec2f::One;    ///< Scaling factor.
         unsigned int normal_map_ = 0;
         int id_ = kNoId;                        ///< Sprite identifier.

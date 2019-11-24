@@ -7,8 +7,6 @@
 
 #include "Math/Vec3.h"
 
-#define kFilteringFactor 0.1
-
 namespace rainbow
 {
     /// <summary>
@@ -20,13 +18,13 @@ namespace rainbow
     /// </remarks>
     class Acceleration
     {
-    public:
-        Acceleration() : timestamp_(0.0) {}
+        static constexpr double kFilteringFactor = 0.1;
 
-        auto timestamp() const { return timestamp_; }
-        auto x() const { return pass_.x; }
-        auto y() const { return pass_.y; }
-        auto z() const { return pass_.z; }
+    public:
+        [[nodiscard]] auto timestamp() const { return timestamp_; }
+        [[nodiscard]] auto x() const { return pass_.x; }
+        [[nodiscard]] auto y() const { return pass_.y; }
+        [[nodiscard]] auto z() const { return pass_.z; }
 
         /// <summary>Updates acceleration data.</summary>
         /// <param name="x">Raw acceleration data (x-value).</param>
@@ -49,9 +47,14 @@ namespace rainbow
         }
 
     private:
-        Vec3d pass_;        ///< Filtered acceleration data.
-        double timestamp_;  ///< The relative time at which the acceleration event occurred.
+        /// <summary>Filtered acceleration data.</summary>
+        Vec3d pass_;
+
+        /// <summary>
+        ///   The relative time at which the acceleration event occurred.
+        /// </summary>
+        double timestamp_ = 0.0;
     };
-}
+}  // namespace rainbow
 
 #endif

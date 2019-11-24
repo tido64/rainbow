@@ -23,7 +23,7 @@ constexpr uint32_t Input::kNumSupportedControllers;  // NOLINT(readability-redun
 template <typename F>
 void Input::process_controller(ControllerID id, F&& process)
 {
-    for (auto i = 0u; i < controllers_.size(); ++i)
+    for (auto i = 0U; i < controllers_.size(); ++i)
     {
         if (controllers_[i].id() == id)
         {
@@ -100,7 +100,7 @@ void Input::on_controller_button_up(const ControllerButtonEvent& button)
 void Input::on_controller_connected(ControllerID id)
 {
     int32_t port = -1;
-    for (auto i = 0u; i < controllers_.size(); ++i)
+    for (auto i = 0U; i < controllers_.size(); ++i)
     {
         auto& controller = controllers_[i];
         if (controller.id() == id)

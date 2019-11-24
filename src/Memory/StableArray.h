@@ -27,8 +27,7 @@ namespace rainbow
 
         StableArray(size_type count) noexcept : size_(count)
         {
-            auto aligned_sizeof = [](auto bytes, auto align) noexcept
-            {
+            auto aligned_sizeof = [](auto bytes, auto align) noexcept {
                 return ((bytes / align) + (bytes % align != 0)) * align;
             };
 
@@ -38,7 +37,10 @@ namespace rainbow
             auto ptr =
                 static_cast<uint8_t*>(::operator new(bytes, std::nothrow));
 
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
             indices_ = reinterpret_cast<size_type*>(ptr);
+
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
             data_ = reinterpret_cast<value_type*>(ptr + header_size);
 
             R_ASSERT(
@@ -59,11 +61,11 @@ namespace rainbow
 
         ~StableArray() { ::operator delete(indices_); }
 
-        auto data() { return data_; }
-        auto data() const -> const value_type* { return data_; }
-        auto size() const { return size_; }
+        [[nodiscard]] auto data() { return data_; }
+        [[nodiscard]] auto data() const -> const value_type* { return data_; }
+        [[nodiscard]] auto size() const { return size_; }
 
-        auto find_iterator(size_type offset) const
+        [[nodiscard]] auto find_iterator(size_type offset) const
         {
             for (size_type i = 0; i < size(); ++i)
             {
@@ -131,9 +133,12 @@ namespace rainbow
         value_type* data_;
         size_type size_;
 
-        auto at(size_type i) const -> value_type& { return data_[index_of(i)]; }
+        [[nodiscard]] auto at(size_type i) const -> value_type&
+        {
+            return data_[index_of(i)];
+        }
 
-        auto index_of(size_type element) const -> size_type
+        [[nodiscard]] auto index_of(size_type element) const -> size_type
         {
             return indices_[element];
         }
@@ -147,7 +152,7 @@ namespace rainbow
             const size_type count = upper - lower + 1;
 
             std::unique_ptr<size_type[]> scoped_buffer;
-            size_type* sorted_indices = get_small_buffer<size_type>(count);
+            auto sorted_indices = get_small_buffer<size_type>(count);
             if (sorted_indices == nullptr)
             {
                 scoped_buffer = std::make_unique<size_type[]>(count);

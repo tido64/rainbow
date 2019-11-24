@@ -48,6 +48,7 @@ namespace rainbow
 
         void release(T& obj)
         {
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
             auto& item = reinterpret_cast<Item&>(obj);
 #ifndef NDEBUG
             auto i = std::find_if(

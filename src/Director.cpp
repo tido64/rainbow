@@ -15,11 +15,11 @@
 namespace
 {
     constexpr int kMaxAudioChannels = 24;
-}
+}  // namespace
 
 namespace rainbow
 {
-    Random random;
+    Random random;  // NOLINT(cert-err58-cpp)
 
     Director::Director()
         : active_(true), terminated_(false), error_(ErrorCode::Success)

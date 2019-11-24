@@ -18,7 +18,7 @@ namespace rainbow
         auto operator=(const NonCopyable&) -> NonCopyable& = delete;
 
     protected:
-        NonCopyable() = default;
+        constexpr NonCopyable() = default;
         ~NonCopyable() = default;
     };
 }  // namespace rainbow

@@ -107,7 +107,7 @@ namespace rainbow
         }
 
         /// <summary>Returns the file size; -1 on error.</summary>
-        auto size() const -> size_t
+        [[nodiscard]] auto size() const -> size_t
         {
             if CONSTEXPR (T::is_platform_handle())
             {
@@ -151,7 +151,7 @@ namespace rainbow
         ///   Number of bytes to shift the position relative to start.
         /// </param>
         /// <returns><c>true</c> upon success; <c>false</c> otherwise.</returns>
-        bool seek(int64_t offset) const
+        auto seek(int64_t offset) const -> bool
         {
             return seek(offset, SeekOrigin::Set);
         }
@@ -166,7 +166,7 @@ namespace rainbow
         /// </param>
         /// <param name="origin">Position to which offset is added.</param>
         /// <returns><c>true</c> upon success; <c>false</c> otherwise.</returns>
-        bool seek(int64_t offset, SeekOrigin seek_origin) const
+        auto seek(int64_t offset, SeekOrigin seek_origin) const -> bool
         {
             if CONSTEXPR (T::is_platform_handle())
             {
@@ -182,7 +182,7 @@ namespace rainbow
         }
 
         /// <summary>Returns the current file position indicator.</summary>
-        auto tell() const -> size_t
+        [[nodiscard]] auto tell() const -> size_t
         {
             if CONSTEXPR (T::is_platform_handle())
             {
@@ -233,7 +233,8 @@ namespace rainbow
         }
 
     private:
-        auto absolute_position(int64_t offset, SeekOrigin seek_origin) const
+        [[nodiscard]] auto absolute_position(int64_t offset,
+                                             SeekOrigin seek_origin) const
             -> size_t
         {
             switch (seek_origin)

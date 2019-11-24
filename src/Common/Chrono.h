@@ -28,7 +28,7 @@ namespace rainbow
         /// <summary>
         ///   Returns the time difference between current and previous frame.
         /// </summary>
-        auto delta() const { return delta_.count(); }
+        [[nodiscard]] auto delta() const { return delta_.count(); }
 
         /// <summary>Moves the clock one tick forward.</summary>
         void tick();

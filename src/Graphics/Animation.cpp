@@ -9,7 +9,7 @@
 using rainbow::Animation;
 using rainbow::SpriteRef;
 
-Animation::Animation(const SpriteRef& sprite,  // NOLINT
+Animation::Animation(const SpriteRef& sprite,
                      Frames frames,
                      unsigned int fps,
                      int delay)

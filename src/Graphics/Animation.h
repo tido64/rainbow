@@ -68,16 +68,19 @@ namespace rainbow
                   int delay = 0);
 
         /// <summary>Returns the currently displayed frame.</summary>
-        auto current_frame() const { return frame_; }
+        [[nodiscard]] auto current_frame() const { return frame_; }
 
         /// <summary>Returns the frame rate in frames per second.</summary>
-        auto frame_rate() const -> unsigned int { return 1000 / interval_; }
+        [[nodiscard]] auto frame_rate() const -> unsigned int
+        {
+            return 1000 / interval_;
+        }
 
         /// <summary>Returns whether animation is stopped.</summary>
-        bool is_stopped() const { return stopped_; }
+        [[nodiscard]] auto is_stopped() const { return stopped_; }
 
         /// <summary>Returns the target sprite.</summary>
-        auto sprite() const { return sprite_; }
+        [[nodiscard]] auto sprite() const { return sprite_; }
 
         /// <summary>
         ///   Sets callback for start, end, and complete (loop) events.

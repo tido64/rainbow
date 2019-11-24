@@ -15,11 +15,10 @@ namespace rainbow
     public:
         using element_type = T;
 
-        explicit RawPtr(T* p) : ptr_(p) {}
+        explicit RawPtr(element_type* p) : ptr_(p) {}
 
         explicit RawPtr(uint32_t upper, uint32_t lower)
-            : ptr_(reinterpret_cast<T*>((static_cast<uintptr_t>(upper) << 32) +
-                                        lower))
+            : ptr_(to_pointer(upper, lower))
         {
         }
 
@@ -28,12 +27,20 @@ namespace rainbow
         auto upper() const { return offset(32); }
 
     private:
-        T* ptr_;
+        element_type* ptr_;
 
-        auto offset(uintptr_t offset) const -> uint32_t
+        static auto to_pointer(uint32_t upper, uint32_t lower) -> element_type*
         {
-            return static_cast<uint32_t>(
-                (reinterpret_cast<uintptr_t>(ptr_) >> offset) & 0xffffffff);
+            auto value = (static_cast<uintptr_t>(upper) << 32) + lower;
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
+            return reinterpret_cast<element_type*>(value);
+        }
+
+        [[nodiscard]] auto offset(uintptr_t offset) const -> uint32_t
+        {
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
+            auto value = reinterpret_cast<uintptr_t>(ptr_);
+            return static_cast<uint32_t>((value >> offset) & 0xffffffff);
         }
     };
 }  // namespace rainbow

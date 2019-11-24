@@ -28,7 +28,7 @@ namespace
         SDL_BUTTON_X1,
         SDL_BUTTON_X2};
 
-    bool is_fullscreen(const SDL_Keysym& keysym)
+    auto is_fullscreen(const SDL_Keysym& keysym) -> bool
     {
 #ifdef RAINBOW_OS_MACOS
         const auto mod = KMOD_LCTRL | KMOD_LGUI;
@@ -39,7 +39,7 @@ namespace
 #endif
     }
 
-    bool is_quit([[maybe_unused]] const SDL_Keysym& keysym)
+    auto is_quit([[maybe_unused]] const SDL_Keysym& keysym) -> bool
     {
 #ifdef RAINBOW_OS_MACOS
         return false;
@@ -65,7 +65,7 @@ RainbowController::RainbowController(SDLContext& context, const Config& config)
     LOGI("Initialization time: %" PRId64 " ms", chrono_.delta());
 }
 
-bool RainbowController::run()
+auto RainbowController::run() -> bool
 {
     if (director_.terminated())
         return false;

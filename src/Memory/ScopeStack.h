@@ -91,7 +91,7 @@ namespace rainbow
                 LinearAllocator::aligned_size(sizeof(BlockHeader)) + sizeof(T));
         }
 
-        ScopeStack(LinearAllocator& allocator)
+        explicit ScopeStack(LinearAllocator& allocator)
             : allocator_(allocator), blocks_(nullptr),
               rewind_point_(static_cast<BlockHeader*>(allocator.end()))
         {
@@ -102,7 +102,7 @@ namespace rainbow
         template <typename T, typename... Args>
         auto allocate(Args&&... args)
         {
-            auto obj =
+            auto obj =  // NOLINT(cppcoreguidelines-owning-memory)
                 new (address_of(new_block<T>())) T(std::forward<Args>(args)...);
             if constexpr (std::is_base_of_v<RefCounted, T>)
                 allocator_.retain(obj);
@@ -111,7 +111,7 @@ namespace rainbow
 
         void reset()
         {
-            while (blocks_)
+            while (blocks_ != nullptr)
             {
                 (*blocks_->destructor)(address_of(blocks_));
                 blocks_ = blocks_->next;
@@ -136,8 +136,9 @@ namespace rainbow
         BlockHeader* blocks_;
         void* const rewind_point_;
 
-        auto address_of(BlockHeader* b) -> void*
+        static auto address_of(BlockHeader* b) -> void*
         {
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
             return reinterpret_cast<uint8_t*>(b) +
                    LinearAllocator::aligned_size(sizeof(*b));
         }
@@ -145,7 +146,7 @@ namespace rainbow
         template <typename T>
         auto new_block()
         {
-            BlockHeader* block = static_cast<BlockHeader*>(allocator_.allocate(
+            auto block = static_cast<BlockHeader*>(allocator_.allocate(
                 LinearAllocator::aligned_size(sizeof(BlockHeader)) +
                 sizeof(T)));
             block->destructor = &destruct<T>;

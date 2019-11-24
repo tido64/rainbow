@@ -9,7 +9,7 @@
 #include <string>
 
 #include "ThirdParty/DisableWarnings.h"
-#include <absl/container/flat_hash_map.h>
+#include <absl/container/flat_hash_map.h>  // NOLINT(llvm-include-order)
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include "ThirdParty/ReenableWarnings.h"

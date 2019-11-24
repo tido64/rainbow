@@ -26,7 +26,7 @@ namespace rainbow
     /// </summary>
     /// <returns><c>true</c> when approximately equal.</returns>
     template <typename T>
-    constexpr bool are_equal(T a, T b)
+    constexpr auto are_equal(T a, T b) -> bool
     {
         static_assert(std::is_floating_point_v<T>);
 
@@ -64,7 +64,7 @@ namespace rainbow
     /// <summary>Fast inverse square root by 0x5f3759df.</summary>
     inline auto fast_invsqrt(float x)
     {
-        const float xhalf = x * 0.5f;
+        const float xhalf = x * 0.5F;
         union {
             uint32_t u;
             float f;
@@ -72,7 +72,7 @@ namespace rainbow
         f = x;
         u = 0x5f3759df - (u >> 1);
         x = f;
-        return x * (1.5f - (xhalf * x * x));
+        return x * (1.5F - (xhalf * x * x));
     }
 
     /// <summary>
@@ -102,22 +102,22 @@ namespace rainbow
     ///   considered almost zero if it's within <c>10 * ε</c>. On some hardware,
     ///   this is 0.0000011920929.
     /// </summary>
-    inline bool is_almost_zero(float x)
+    inline auto is_almost_zero(float x) -> bool
     {
-        return std::abs(x) < std::numeric_limits<float>::epsilon() * 10.0f;
+        return std::abs(x) < std::numeric_limits<float>::epsilon() * 10.0F;
     }
 
     /// <summary>Determines whether an integer is a power of 2.</summary>
-    constexpr bool is_pow2(unsigned int i)
+    constexpr auto is_pow2(unsigned int i) -> bool
     {
-        return i && !(i & (i - 1));
+        return i != 0 && (i & (i - 1)) == 0;
     }
 
     /// <summary>Low-pass filter.</summary>
     inline auto low_pass(float value, float low_pass)
     {
-        return kLowPassAlpha * std::pow(10.0f, value * kLowPassAlpha) +
-               (1.0f - kLowPassAlpha) * low_pass;
+        return kLowPassAlpha * std::pow(10.0F, value * kLowPassAlpha) +
+               (1.0F - kLowPassAlpha) * low_pass;
     }
 
     constexpr auto make_fourcc(char a, char b, char c, char d)

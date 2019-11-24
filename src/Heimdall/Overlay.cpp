@@ -45,7 +45,6 @@ using heimdall::Overlay;
 using rainbow::Animation;
 using rainbow::Color;
 using rainbow::czstring;
-using rainbow::IDrawable;
 using rainbow::KeyStroke;
 using rainbow::Label;
 using rainbow::Pointer;
@@ -58,15 +57,15 @@ namespace graphics = rainbow::graphics;
 namespace
 {
     constexpr uint64_t kStartUpMessageMaxDuration = 8000;
-    constexpr float kStyleFontSize = 13.0f;
-    constexpr float kStylePlotHeight = 100.0f;
+    constexpr float kStyleFontSize = 13.0F;
+    constexpr float kStylePlotHeight = 100.0F;
 #if defined(RAINBOW_OS_ANDROID) || defined(RAINBOW_OS_IOS)
-    constexpr float kStyleScreenHeight = 600.0f;
+    constexpr float kStyleScreenHeight = 600.0F;
 #else
-    constexpr float kStyleScreenHeight = 1200.0f;
+    constexpr float kStyleScreenHeight = 1200.0F;
 #endif
-    constexpr float kStyleWindowWidth = 400.0f;
-    constexpr float kStyleWindowHeight = 400.0f;
+    constexpr float kStyleWindowWidth = 400.0F;
+    constexpr float kStyleWindowHeight = 400.0F;
 
     template <typename T>
     void print_address(const T* obj)
@@ -105,7 +104,7 @@ namespace
     auto display_scale(Vec2i resolution, float screen_height)
     {
         return std::max(
-            std::min(resolution.x, resolution.y) / screen_height, 1.0f);
+            std::min(resolution.x, resolution.y) / screen_height, 1.0F);
     }
 
     template <typename Container>
@@ -251,7 +250,7 @@ void Overlay::draw_performance(float scale)
         0,
         buffer,
         std::numeric_limits<float>::min(),
-        100.0f,
+        100.0F,
         graph_size);
 
     snprintf_q(  //
@@ -322,8 +321,8 @@ void Overlay::draw_startup_message()
         ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_NoFocusOnAppearing |
         ImGuiWindowFlags_NoNav;
 
-    ImGui::SetNextWindowPos({4.0f, 4.0f}, ImGuiCond_Once);
-    ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+    ImGui::SetNextWindowPos({4.0F, 4.0F}, ImGuiCond_Once);
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0F);
 
     if (ImGui::Begin("Help", nullptr, kMinimalWindowFlags))
     {
@@ -391,41 +390,41 @@ void Overlay::update_impl(uint64_t dt)
     ImGui::Render();
 }
 
-bool Overlay::on_key_down_impl(const KeyStroke& key)
+auto Overlay::on_key_down_impl(const KeyStroke& key) -> bool
 {
     return is_enabled() && rainbow::imgui::set_key_state(key, true);
 }
 
-bool Overlay::on_key_up_impl(const KeyStroke& key)
+auto Overlay::on_key_up_impl(const KeyStroke& key) -> bool
 {
     return is_enabled() && rainbow::imgui::set_key_state(key, false);
 }
 
-bool Overlay::on_mouse_wheel_impl(const ArrayView<Pointer>& w)
+auto Overlay::on_mouse_wheel_impl(const ArrayView<Pointer>& w) -> bool
 {
     return is_enabled() && rainbow::imgui::set_mouse_wheel(w);
 }
 
-bool Overlay::on_pointer_began_impl(const ArrayView<Pointer>& p)
+auto Overlay::on_pointer_began_impl(const ArrayView<Pointer>& p) -> bool
 {
     return is_enabled() &&
            rainbow::imgui::set_mouse_state(p, surface_height(), true);
 }
 
-bool Overlay::on_pointer_canceled_impl()
+auto Overlay::on_pointer_canceled_impl() -> bool
 {
     auto& state = ImGui::GetIO().MouseDown;
     std::fill(std::begin(state), std::end(state), false);
     return is_enabled();
 }
 
-bool Overlay::on_pointer_ended_impl(const ArrayView<Pointer>& p)
+auto Overlay::on_pointer_ended_impl(const ArrayView<Pointer>& p) -> bool
 {
     return is_enabled() &&
            rainbow::imgui::set_mouse_state(p, surface_height(), false);
 }
 
-bool Overlay::on_pointer_moved_impl(const ArrayView<Pointer>& p)
+auto Overlay::on_pointer_moved_impl(const ArrayView<Pointer>& p) -> bool
 {
     return is_enabled() && rainbow::imgui::set_mouse_state(p, surface_height());
 }

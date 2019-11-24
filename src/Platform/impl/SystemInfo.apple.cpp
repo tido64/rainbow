@@ -9,7 +9,7 @@
 
 #include <CoreFoundation/CoreFoundation.h>
 
-bool rainbow::system_info::has_accelerometer()
+auto rainbow::system_info::has_accelerometer() -> bool
 {
 #ifdef RAINBOW_OS_IOS
     return true;
@@ -18,7 +18,7 @@ bool rainbow::system_info::has_accelerometer()
 #endif
 }
 
-bool rainbow::system_info::has_touchscreen()
+auto rainbow::system_info::has_touchscreen() -> bool
 {
 #ifdef RAINBOW_OS_IOS
     return true;

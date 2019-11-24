@@ -19,9 +19,9 @@ namespace rainbow
         Bundle(Bundle&&) noexcept;
         ~Bundle();
 
-        auto assets_path() const { return assets_path_.c_str(); }
-        auto exec_path() const { return exec_path_.c_str(); }
-        auto main_script() const { return main_script_; }
+        [[nodiscard]] auto assets_path() const { return assets_path_.c_str(); }
+        [[nodiscard]] auto exec_path() const { return exec_path_.c_str(); }
+        [[nodiscard]] auto main_script() const { return main_script_; }
 
         auto operator=(Bundle&&) noexcept -> Bundle&;
 

@@ -31,17 +31,31 @@ namespace rainbow
         /// <summary>Loads and initialises main script.</summary>
         void init(const Vec2i& screen);
 
-        bool active() const { return active_; }
-        auto error() const { return error_; }
-        auto font_cache() -> FontCache& { return typesetter_.font_cache(); }
-        auto graphics_context() -> graphics::Context& { return renderer_; }
-        auto input() -> Input& { return input_; }
-        auto mixer() -> audio::Mixer& { return mixer_; }
-        auto render_queue() -> graphics::RenderQueue& { return render_queue_; }
-        auto script() { return script_.get(); }
-        bool terminated() const { return terminated_; }
+        [[nodiscard]] auto active() const { return active_; }
+        [[nodiscard]] auto error() const { return error_; }
 
-        auto texture_manager() -> graphics::TextureManager&
+        [[nodiscard]] auto font_cache() -> FontCache&
+        {
+            return typesetter_.font_cache();
+        }
+
+        [[nodiscard]] auto graphics_context() -> graphics::Context&
+        {
+            return renderer_;
+        }
+
+        [[nodiscard]] auto input() -> Input& { return input_; }
+        [[nodiscard]] auto mixer() -> audio::Mixer& { return mixer_; }
+
+        [[nodiscard]] auto render_queue() -> graphics::RenderQueue&
+        {
+            return render_queue_;
+        }
+
+        [[nodiscard]] auto script() { return script_.get(); }
+        [[nodiscard]] auto terminated() const { return terminated_; }
+
+        [[nodiscard]] auto texture_manager() -> graphics::TextureManager&
         {
             return renderer_.texture_manager;
         }

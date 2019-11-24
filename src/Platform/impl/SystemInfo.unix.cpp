@@ -4,18 +4,18 @@
 
 #include "Platform/SystemInfo.h"
 
-#include <locale.h>
+#include <clocale>
 #include <unistd.h>
 
 #include "Common/String.h"
 
 #ifdef RAINBOW_OS_UNIX
-bool rainbow::system_info::has_accelerometer()
+auto rainbow::system_info::has_accelerometer() -> bool
 {
     return false;
 }
 
-bool rainbow::system_info::has_touchscreen()
+auto rainbow::system_info::has_touchscreen() -> bool
 {
     return false;
 }

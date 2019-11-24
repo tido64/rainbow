@@ -2,6 +2,9 @@
 // Distributed under the MIT License.
 // (See accompanying file LICENSE or copy at http://opensource.org/licenses/MIT)
 
+#ifndef MEMORY_POOL_H_
+#define MEMORY_POOL_H_
+
 #include <deque>
 #include <utility>
 
@@ -109,9 +112,12 @@ namespace rainbow
         /// <summary>Returns the element's iterator.<summary>
         static auto get_iterator(NotNull<value_type*> element)
         {
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
             auto i = reinterpret_cast<decltype(free_)>(element.get());
             R_ASSERT(&i->element == element.get(), "This shouldn't happen.");
             return i;
         }
     };
 }  // namespace rainbow
+
+#endif

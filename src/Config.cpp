@@ -5,7 +5,7 @@
 #include "Config.h"
 
 #include "ThirdParty/DisableWarnings.h"
-#include <absl/hash/hash.h>
+#include <absl/hash/hash.h>  // NOLINT(llvm-include-order)
 #include "ThirdParty/ReenableWarnings.h"
 
 #include <panini/panini.hpp>

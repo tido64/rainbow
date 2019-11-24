@@ -24,11 +24,11 @@ namespace rainbow
     // Physical constants
 
     /// <summary>Standard gravitational acceleration value.</summary>
-    constexpr float kStandardGravity = -9.80665f;
+    constexpr float kStandardGravity = -9.80665F;
 
     // Other constants
 
-    constexpr float kLowPassAlpha = 0.5f;
+    constexpr float kLowPassAlpha = 0.5F;
 }  // namespace rainbow
 
 #endif

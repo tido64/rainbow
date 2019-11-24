@@ -45,8 +45,8 @@ namespace rainbow
         /// </summary>
         static const Vec2 Zero;
 
-        value_type x;
-        value_type y;
+        value_type x;  // NOLINT(misc-non-private-member-variables-in-classes)
+        value_type y;  // NOLINT(misc-non-private-member-variables-in-classes)
 
         constexpr Vec2() noexcept : Vec2(0, 0) {}
         constexpr Vec2(value_type x, value_type y) noexcept : x(x), y(y) {}
@@ -55,22 +55,25 @@ namespace rainbow
         ///   Returns the angle (in radians) between two points.
         /// </summary>
         template <typename U>
-        auto angle(const Vec2<U>& v) const
+        [[nodiscard]] auto angle(const Vec2<U>& v) const
         {
             return std::atan2(v.y - y, v.x - x);
         }
 
         /// <summary>Returns the distance between two points.</summary>
-        auto distance(const Vec2& v) const { return std::sqrt(distance_sq(v)); }
+        [[nodiscard]] auto distance(const Vec2& v) const
+        {
+            return std::sqrt(distance_sq(v));
+        }
 
         /// <summary>Returns the distance between two points, squared.</summary>
-        auto distance_sq(const Vec2& v) const
+        [[nodiscard]] auto distance_sq(const Vec2& v) const
         {
             const Vec2 w = *this - v;
             return w * w;
         }
 
-        bool is_zero() const
+        [[nodiscard]] auto is_zero() const -> bool
         {
             if constexpr (std::is_integral_v<T>)
                 return x == 0 && y == 0;
@@ -78,9 +81,9 @@ namespace rainbow
                 return are_equal<T>(0, x) && are_equal<T>(0, y);
         }
 
-        auto normal() const { return Vec2{-y, x}; }
+        [[nodiscard]] auto normal() const { return Vec2{-y, x}; }
 
-        auto normalize() const
+        [[nodiscard]] auto normalize() const
         {
             if constexpr (std::is_integral_v<T>)
             {
@@ -151,7 +154,7 @@ namespace rainbow
             return Vec2{f * a.x, f * a.y};
         }
 
-        friend bool operator==(const Vec2& a, const Vec2& b)
+        friend auto operator==(const Vec2& a, const Vec2& b) -> bool
         {
             return a.x == b.x && a.y == b.y;
         }
