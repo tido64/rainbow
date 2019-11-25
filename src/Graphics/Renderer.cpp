@@ -25,7 +25,8 @@ namespace
 
     auto gl_get_string(GLenum name)
     {
-        return reinterpret_cast<czstring>(glGetString(name));  // NOLINT
+        // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
+        return reinterpret_cast<czstring>(glGetString(name));
     }
 }  // namespace
 

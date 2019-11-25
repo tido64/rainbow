@@ -104,7 +104,8 @@ OggVorbisAudioFile::~OggVorbisAudioFile()
 
 auto OggVorbisAudioFile::size() const -> size_t
 {
-    auto vf = const_cast<OggVorbis_File*>(&vf_);  // NOLINT
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-const-cast)
+    auto vf = const_cast<OggVorbis_File*>(&vf_);
     return ov_pcm_total(vf, -1) * channels() * 2;
 }
 
