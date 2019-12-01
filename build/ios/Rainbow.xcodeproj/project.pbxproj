@@ -33,7 +33,7 @@
 		1913F13522764DE3005B2D3B /* Bundle.ios.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1913F13422764DE2005B2D3B /* Bundle.ios.mm */; };
 		193458551D5A3884008482E8 /* FileSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 193458531D5A3884008482E8 /* FileSystem.cpp */; };
 		193929B316E1932E0018340B /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 193929B216E1932E0018340B /* CoreMotion.framework */; };
-		193929B816E23D5F0018340B /* SystemInfo.apple.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 193929B716E23D5F0018340B /* SystemInfo.apple.cpp */; };
+		193929B816E23D5F0018340B /* SystemInfo.cocoa.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 193929B716E23D5F0018340B /* SystemInfo.cocoa.cpp */; };
 		1939A04B152C401300494609 /* b2BroadPhase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19399E15152C401300494609 /* b2BroadPhase.cpp */; };
 		1939A04C152C401300494609 /* b2CollideCircle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19399E17152C401300494609 /* b2CollideCircle.cpp */; };
 		1939A04D152C401300494609 /* b2CollideEdge.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19399E18152C401300494609 /* b2CollideEdge.cpp */; };
@@ -263,7 +263,7 @@
 		193458531D5A3884008482E8 /* FileSystem.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = FileSystem.cpp; sourceTree = "<group>"; };
 		193458541D5A3884008482E8 /* FileSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileSystem.h; sourceTree = "<group>"; };
 		193929B216E1932E0018340B /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
-		193929B716E23D5F0018340B /* SystemInfo.apple.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SystemInfo.apple.cpp; sourceTree = "<group>"; };
+		193929B716E23D5F0018340B /* SystemInfo.cocoa.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SystemInfo.cocoa.cpp; sourceTree = "<group>"; };
 		193929C816E3527F0018340B /* Algorithm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Algorithm.h; sourceTree = "<group>"; };
 		19399E11152C401300494609 /* Box2D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Box2D.h; sourceTree = "<group>"; };
 		19399E15152C401300494609 /* b2BroadPhase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = b2BroadPhase.cpp; sourceTree = "<group>"; };
@@ -1143,8 +1143,8 @@
 			isa = PBXGroup;
 			children = (
 				198964591C4AE0080011BA15 /* iOS */,
-				19F98DA4171B5DC000A85873 /* impl */,
 				198BE0A7174A5F420036055E /* Macros.h */,
+				193929B716E23D5F0018340B /* SystemInfo.cocoa.cpp */,
 				19F98DA5171B5DDF00A85873 /* SystemInfo.h */,
 			);
 			path = Platform;
@@ -1508,14 +1508,6 @@
 			path = Memory;
 			sourceTree = "<group>";
 		};
-		19F98DA4171B5DC000A85873 /* impl */ = {
-			isa = PBXGroup;
-			children = (
-				193929B716E23D5F0018340B /* SystemInfo.apple.cpp */,
-			);
-			path = impl;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1782,7 +1774,7 @@
 				19D045AA18071D6D00968F00 /* Chrono.cpp in Sources */,
 				19B3990E2041E8E400581AE0 /* FontCache.cpp in Sources */,
 				1913F12A22764354005B2D3B /* physfs_archiver_vdf.c in Sources */,
-				193929B816E23D5F0018340B /* SystemInfo.apple.cpp in Sources */,
+				193929B816E23D5F0018340B /* SystemInfo.cocoa.cpp in Sources */,
 				19937CBA1D398336009F8917 /* SmallBuffer.cpp in Sources */,
 				198F42A51A9152E000BE7A73 /* IkConstraint.c in Sources */,
 				1913F12322764354005B2D3B /* physfs_archiver_mvl.c in Sources */,

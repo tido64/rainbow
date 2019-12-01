@@ -105,7 +105,6 @@ set(SOURCE_FILES
     src/Graphics/TextureManager.h
     src/Graphics/VertexArray.cpp
     src/Graphics/VertexArray.h
-    src/Heimdall/ChangeMonitor.h
     src/Heimdall/Gatekeeper.cpp
     src/Heimdall/Gatekeeper.h
     src/Heimdall/Overlay.cpp
@@ -114,12 +113,12 @@ set(SOURCE_FILES
     src/Heimdall/OverlayActivator.h
     src/Input/Acceleration.h
     src/Input/Controller.h
-    src/Input/impl/VirtualKey.sdl.cpp
     src/Input/Input.cpp
     src/Input/Input.h
     src/Input/InputListener.h
     src/Input/Pointer.h
     src/Input/VirtualKey.h
+    src/Input/VirtualKey.sdl.cpp
     src/Math/Geometry.h
     src/Math/Transform.h
     src/Math/Vec2.h
@@ -178,12 +177,11 @@ if(ANDROID)
   list(APPEND SOURCE_FILES
       src/FileSystem/Bundle.android.cpp
       src/FileSystem/File.android.h
-      src/Heimdall/impl/ChangeMonitor.stub.cpp
       src/Platform/Android/main.cpp
       # Workaround for https://github.com/android-ndk/ndk/issues/184
       src/Platform/Android/mulodi4.c
-      src/Platform/impl/SystemInfo.android.cpp
-      src/Platform/impl/SystemInfo.unix.cpp
+      src/Platform/SystemInfo.android.cpp
+      src/Platform/SystemInfo.unix.cpp
   )
 else()
   list(APPEND SOURCE_FILES
@@ -197,19 +195,16 @@ else()
   if(WIN32)
     list(APPEND SOURCE_FILES
         lib/glad/glad.c
-        src/Heimdall/impl/ChangeMonitor.win.cpp
-        src/Platform/impl/SystemInfo.win.cpp
+        src/Platform/SystemInfo.windows.cpp
         tools/make.ps1
     )
   elseif(APPLE)
     list(APPEND SOURCE_FILES
-        src/Heimdall/impl/ChangeMonitor.mac.cpp
-        src/Platform/impl/SystemInfo.apple.cpp
+        src/Platform/SystemInfo.cocoa.cpp
     )
   else()
     list(APPEND SOURCE_FILES
-        src/Heimdall/impl/ChangeMonitor.stub.cpp
-        src/Platform/impl/SystemInfo.unix.cpp)
+        src/Platform/SystemInfo.unix.cpp)
   endif()
 endif()
 
