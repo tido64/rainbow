@@ -9,7 +9,7 @@
 	url = https://github.com/kinetiknz/cubeb.git
 [submodule "lib/FreeType"]
 	path = lib/FreeType
-	url = https://git.savannah.gnu.org/git/freetype/freetype2.git
+	url = https://github.com/tido64/freetype2.git
 [submodule "lib/googletest"]
 	path = lib/googletest
 	url = https://github.com/abseil/googletest.git
