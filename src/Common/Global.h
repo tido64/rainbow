@@ -20,7 +20,7 @@ namespace rainbow
         Global() = default;
         ~Global() { s_instance = nullptr; }
 
-        bool is_global() const
+        [[nodiscard]] auto is_global() const
         {
             return s_instance == static_cast<const T*>(this);
         }

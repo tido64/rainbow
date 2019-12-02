@@ -5,6 +5,7 @@
 #ifndef COMMON_TYPECAST_H_
 #define COMMON_TYPECAST_H_
 
+#include <limits>
 #include <type_traits>
 
 namespace rainbow

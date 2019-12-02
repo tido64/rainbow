@@ -23,17 +23,17 @@ namespace rainbow
         using iterator = typename container_type::iterator;
         using reference = mapped_type&;
 
-        bool empty() const noexcept { return map_.empty(); }
-        auto size() const noexcept { return map_.size(); }
+        [[nodiscard]] auto empty() const noexcept { return map_.empty(); }
+        [[nodiscard]] auto size() const noexcept { return map_.size(); }
 
-        auto back() -> reference { return map_.back().second; }
-        auto begin() noexcept { return std::begin(map_); }
-        auto end() noexcept { return std::end(map_); }
+        [[nodiscard]] auto back() -> reference { return map_.back().second; }
+        [[nodiscard]] auto begin() noexcept { return std::begin(map_); }
+        [[nodiscard]] auto end() noexcept { return std::end(map_); }
 
         void clear() noexcept { map_.clear(); }
 
         template <typename K>
-        auto find(K&& key) -> iterator
+        [[nodiscard]] auto find(K&& key) -> iterator
         {
             auto end = this->end();
             for (auto i = begin(); i != end; ++i)
@@ -45,7 +45,7 @@ namespace rainbow
         }
 
         template <typename U>
-        auto find_value(U&& value) -> iterator
+        [[nodiscard]] auto find_value(U&& value) -> iterator
         {
             auto end = this->end();
             for (auto i = begin(); i != end; ++i)

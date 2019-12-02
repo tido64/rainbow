@@ -30,7 +30,7 @@ namespace rainbow
     public:
         template <typename F>
         ShakeGestureDetector(F&& on_shake)
-            : ShakeGestureDetector(kStandardGravity * (-4.0f / 3.0f),
+            : ShakeGestureDetector(kStandardGravity * (-4.0F / 3.0F),
                                    300,
                                    std::forward<F>(on_shake))
         {
@@ -50,7 +50,7 @@ namespace rainbow
             const auto a = std::sqrt(acceleration.x * acceleration.x +
                                      acceleration.y * acceleration.y +
                                      acceleration.z * acceleration.z);
-            const auto mag = magnitude_ * 0.9f + (a - acceleration_);
+            const auto mag = magnitude_ * 0.9F + (a - acceleration_);
             if (mag > threshold_)
             {
                 if (!is_shaking_)
@@ -71,9 +71,9 @@ namespace rainbow
 
     private:
         bool is_shaking_ = false;
-        float magnitude_ = 0.0f;
+        float magnitude_ = 0.0F;
         float acceleration_ = -kStandardGravity;
-        float threshold_ = 0.0f;
+        float threshold_ = 0.0F;
         int64_t last_shake_ = 0;
         int64_t min_shake_duration_ = 0;
         std::function<void()> on_shake_;

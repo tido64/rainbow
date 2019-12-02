@@ -19,8 +19,8 @@ namespace heimdall
 
         void init(const rainbow::Vec2i& screen);
 
-        bool active() const { return director_.active(); }
-        auto error() const { return director_.error(); }
+        [[nodiscard]] auto active() const { return director_.active(); }
+        [[nodiscard]] auto error() const { return director_.error(); }
 
         auto graphics_context() -> rainbow::graphics::Context&
         {
@@ -28,7 +28,7 @@ namespace heimdall
         }
 
         auto input() -> rainbow::Input& { return director_.input(); }
-        auto terminated() const { return director_.terminated(); }
+        [[nodiscard]] auto terminated() const { return director_.terminated(); }
 
         void draw()
         {

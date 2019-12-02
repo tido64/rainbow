@@ -33,12 +33,12 @@ auto rainbow::filesystem::bundle() -> const Bundle&
     return *g_bundle;
 }
 
-bool rainbow::filesystem::create_directories(czstring path)
+auto rainbow::filesystem::create_directories(czstring path) -> bool
 {
     return PHYSFS_mkdir(path) != 0;
 }
 
-bool rainbow::filesystem::exists(czstring path)
+auto rainbow::filesystem::exists(czstring path) -> bool
 {
 #if defined(RAINBOW_OS_ANDROID)
     auto asset_manager = g_native_activity->assetManager;
@@ -49,7 +49,7 @@ bool rainbow::filesystem::exists(czstring path)
         return true;
     }
 #endif
-    return PHYSFS_exists(path);
+    return PHYSFS_exists(path) != 0;
 }
 
 void rainbow::filesystem::initialize(const Bundle& bundle,
@@ -58,7 +58,7 @@ void rainbow::filesystem::initialize(const Bundle& bundle,
 {
     g_bundle = &bundle;
 
-    if (!PHYSFS_init(argv0))
+    if (PHYSFS_init(argv0) == 0)
     {
         const auto error_code = PHYSFS_getLastErrorCode();
         LOGF("PhysicsFS: Initialization failed: %s",
@@ -66,22 +66,23 @@ void rainbow::filesystem::initialize(const Bundle& bundle,
         return;
     }
 
-    PHYSFS_permitSymbolicLinks(allow_symlinks);
+    PHYSFS_permitSymbolicLinks(static_cast<int>(allow_symlinks));
 
     if (!is_empty(bundle.assets_path()) &&
-        !PHYSFS_mount(bundle.assets_path(), nullptr, 0))
+        PHYSFS_mount(bundle.assets_path(), nullptr, 0) == 0)
     {
         const auto error_code = PHYSFS_getLastErrorCode();
         LOGF("PhysicsFS: Failed to mount bundle: %s",
              PHYSFS_getErrorByCode(error_code));
     }
-    else if (!PHYSFS_setWriteDir(filesystem::preferences_directory().c_str()))
+    else if (PHYSFS_setWriteDir(filesystem::preferences_directory().c_str()) ==
+             0)
     {
         const auto error_code = PHYSFS_getLastErrorCode();
         LOGF("PhysicsFS: Failed to set preferences directory: %s",
              PHYSFS_getErrorByCode(error_code));
     }
-    else if (!PHYSFS_mount(PHYSFS_getWriteDir(), nullptr, 0))
+    else if (PHYSFS_mount(PHYSFS_getWriteDir(), nullptr, 0) == 0)
     {
         const auto error_code = PHYSFS_getLastErrorCode();
         LOGF("PhysicsFS: Failed to mount preferences directory: %s",
@@ -89,14 +90,14 @@ void rainbow::filesystem::initialize(const Bundle& bundle,
     }
 }
 
-bool rainbow::filesystem::is_directory(czstring path)
+auto rainbow::filesystem::is_directory(czstring path) -> bool
 {
     PHYSFS_Stat stat{};
     PHYSFS_stat(path, &stat);
     return stat.filetype == PHYSFS_FILETYPE_DIRECTORY;
 }
 
-bool rainbow::filesystem::is_regular_file(czstring path)
+auto rainbow::filesystem::is_regular_file(czstring path) -> bool
 {
     PHYSFS_Stat stat{};
     PHYSFS_stat(path, &stat);
@@ -146,7 +147,7 @@ auto rainbow::filesystem::real_path(czstring path) -> Path
     return resolved_path;
 }
 
-bool rainbow::filesystem::remove(czstring path)
+auto rainbow::filesystem::remove(czstring path) -> bool
 {
     return PHYSFS_delete(path) != 0;
 }
@@ -178,35 +179,35 @@ auto rainbow::system::current_path() -> std::string
 #if HAS_FILESYSTEM
     return std::filesystem::current_path().string();
 #else
-    char cwd[PATH_MAX];
-    zstring result = getcwd(cwd, PATH_MAX);
+    std::array<char, PATH_MAX> cwd;
+    zstring result = getcwd(cwd.data(), cwd.size());
 
-    R_ASSERT(result == cwd, "Failed to get current working directory");
+    R_ASSERT(result == cwd.data(), "Failed to get current working directory");
 
     return result;
 #endif
 }
 
-bool rainbow::system::is_directory(czstring path)
+auto rainbow::system::is_directory(czstring path) -> bool
 {
 #if HAS_FILESYSTEM
     const std::filesystem::path p{path};
     std::error_code ec;
     return std::filesystem::is_directory(p, std::ref(ec));
 #else
-    struct stat sb;
+    struct stat sb;  // NOLINT(cppcoreguidelines-pro-type-member-init)
     return stat(path, &sb) == 0 && S_ISDIR(sb.st_mode);
 #endif
 }
 
-bool rainbow::system::is_regular_file(czstring path)
+auto rainbow::system::is_regular_file(czstring path) -> bool
 {
 #if HAS_FILESYSTEM
     const std::filesystem::path p{path};
     std::error_code ec;
     return std::filesystem::is_regular_file(p, std::ref(ec));
 #else
-    struct stat sb;
+    struct stat sb;  // NOLINT(cppcoreguidelines-pro-type-member-init)
     return stat(path, &sb) == 0 && S_ISREG(sb.st_mode);
 #endif
 }

@@ -19,7 +19,7 @@ namespace std
 #endif
 
 #include "ThirdParty/DisableWarnings.h"
-#include <mapbox/variant.hpp>
+#include <mapbox/variant.hpp>  // NOLINT(llvm-include-order)
 #include "ThirdParty/ReenableWarnings.h"
 
 namespace rainbow

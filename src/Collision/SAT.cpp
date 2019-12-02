@@ -5,6 +5,7 @@
 #include "Collision/SAT.h"
 
 #include <algorithm>
+#include <array>
 
 #include "Graphics/Sprite.h"
 
@@ -16,6 +17,7 @@ namespace
 {
     struct Quad
     {
+        // NOLINTNEXTLINE(misc-non-private-member-variables-in-classes)
         Vec2f v0, v1, v2, v3;
 
         explicit Quad(const SpriteRef& sprite) : Quad(sprite->vertex_array()) {}
@@ -28,16 +30,16 @@ namespace
     };
 
     template <typename T>
-    bool overlaps(const std::pair<T, T>& a, const std::pair<T, T>& b)
+    auto overlaps(const std::pair<T, T>& a, const std::pair<T, T>& b) -> bool
     {
         return *a.first < *b.first ? *a.second >= *b.first
                                    : *a.first <= *b.second;
     }
 
-    bool overlaps(const Quad& a, float ar, const Quad& b, float br)
+    auto overlaps(const Quad& a, float ar, const Quad& b, float br) -> bool
     {
         int count = 4;
-        Vec2f axes[8]{
+        std::array<Vec2f, 8> axes{
             (a.v1 - a.v0).normal().normalize(),
             (a.v2 - a.v1).normal().normalize(),
             (a.v3 - a.v2).normal().normalize(),
@@ -52,19 +54,22 @@ namespace
             axes[7] = (b.v0 - b.v3).normal().normalize();
         }
 
-        return std::all_of(axes, axes + count, [&a, &b](const Vec2f& axis) {
-            const float a_dots[]{
-                axis * a.v0, axis * a.v1, axis * a.v2, axis * a.v3};
-            const float b_dots[]{
-                axis * b.v0, axis * b.v1, axis * b.v2, axis * b.v3};
-            return overlaps(
-                std::minmax_element(std::begin(a_dots), std::end(a_dots)),
-                std::minmax_element(std::begin(b_dots), std::end(b_dots)));
-        });
+        return std::all_of(
+            std::begin(axes),
+            std::begin(axes) + count,
+            [&a, &b](const Vec2f& axis) {
+                const std::array<float, 4> a_dots{
+                    axis * a.v0, axis * a.v1, axis * a.v2, axis * a.v3};
+                const std::array<float, 4> b_dots{
+                    axis * b.v0, axis * b.v1, axis * b.v2, axis * b.v3};
+                return overlaps(
+                    std::minmax_element(std::begin(a_dots), std::end(a_dots)),
+                    std::minmax_element(std::begin(b_dots), std::end(b_dots)));
+            });
     }
 }  // namespace
 
-bool rainbow::overlaps(const SpriteRef& a, const SpriteRef& b)
+auto rainbow::overlaps(const SpriteRef& a, const SpriteRef& b) -> bool
 {
     return ::overlaps(Quad{a}, a->angle(), Quad{b}, b->angle());
 }

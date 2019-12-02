@@ -13,7 +13,7 @@
 namespace rainbow
 {
     class Director;
-}
+}  // namespace rainbow
 
 namespace heimdall
 {
@@ -29,11 +29,11 @@ namespace heimdall
         {
         }
 
-        ~Overlay();
+        ~Overlay() override;
 
         void initialize(rainbow::Vec2i resolution);
 
-        auto is_enabled() const { return enabled_; }
+        [[nodiscard]] auto is_enabled() const { return enabled_; }
 
         void disable() { enabled_ = false; }
         void enable() { enabled_ = true; }
@@ -44,7 +44,7 @@ namespace heimdall
         std::deque<uint64_t> frame_times_;
         std::deque<float> vmem_usage_;
 
-        auto surface_height() const;
+        [[nodiscard]] auto surface_height() const;
 
         void draw_menu_bar();
         void draw_performance(float scale);
@@ -58,13 +58,22 @@ namespace heimdall
 
         // InputListener implementation details
 
-        bool on_key_down_impl(const rainbow::KeyStroke&) override;
-        bool on_key_up_impl(const rainbow::KeyStroke&) override;
-        bool on_mouse_wheel_impl(const ArrayView<rainbow::Pointer>&) override;
-        bool on_pointer_began_impl(const ArrayView<rainbow::Pointer>&) override;
-        bool on_pointer_canceled_impl() override;
-        bool on_pointer_ended_impl(const ArrayView<rainbow::Pointer>&) override;
-        bool on_pointer_moved_impl(const ArrayView<rainbow::Pointer>&) override;
+        auto on_key_down_impl(const rainbow::KeyStroke&) -> bool override;
+        auto on_key_up_impl(const rainbow::KeyStroke&) -> bool override;
+
+        auto on_mouse_wheel_impl(const ArrayView<rainbow::Pointer>&)
+            -> bool override;
+
+        auto on_pointer_began_impl(const ArrayView<rainbow::Pointer>&)
+            -> bool override;
+
+        auto on_pointer_canceled_impl() -> bool override;
+
+        auto on_pointer_ended_impl(const ArrayView<rainbow::Pointer>&)
+            -> bool override;
+
+        auto on_pointer_moved_impl(const ArrayView<rainbow::Pointer>&)
+            -> bool override;
     };
 }  // namespace heimdall
 

@@ -24,7 +24,8 @@ namespace rainbow::android
     class File
     {
     protected:
-        static constexpr bool open(czstring path, FileType type, File& file)
+        static constexpr auto open(czstring path, FileType type, File& file)
+            -> bool
         {
             if (type != FileType::Asset)
                 return false;
@@ -46,14 +47,14 @@ namespace rainbow::android
             return resolved_path.lexically_normal();
         }
 
-        File() : handle_(nullptr) {}
+        File() = default;
 
         File(File&& file) noexcept : handle_(file.handle_)
         {
             file.handle_ = nullptr;
         }
 
-        auto handle() const -> PHYSFS_File*
+        [[nodiscard]] auto handle() const -> PHYSFS_File*
         {
             return get<PHYSFS_File*>(handle_).value();
         }
@@ -67,12 +68,12 @@ namespace rainbow::android
             handle_ = stream;
         }
 
-        auto is_platform_handle() const
+        [[nodiscard]] auto is_platform_handle() const
         {
             return holds_alternative<AAsset*>(handle_);
         }
 
-        auto size() const -> size_t
+        [[nodiscard]] auto size() const -> size_t
         {
             return AAsset_getLength64(get<AAsset*>(handle_).value());
         }
@@ -89,14 +90,14 @@ namespace rainbow::android
             return std::max(AAsset_read(handle, dst, size), 0);
         }
 
-        bool seek(int64_t offset, SeekOrigin origin) const
+        auto seek(int64_t offset, SeekOrigin origin) const -> bool
         {
             const int whence = detail::seek_origin(origin);
             auto handle = get<AAsset*>(handle_).value();
             return AAsset_seek64(handle, offset, whence) >= 0;
         }
 
-        auto tell() const -> size_t
+        [[nodiscard]] auto tell() const -> size_t
         {
             auto handle = get<AAsset*>(handle_).value();
             return AAsset_getLength64(handle) -
@@ -110,7 +111,7 @@ namespace rainbow::android
         }
 
     private:
-        FileHandle handle_;
+        FileHandle handle_ = nullptr;
     };
 }  // namespace rainbow::android
 

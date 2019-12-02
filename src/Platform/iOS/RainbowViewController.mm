@@ -22,7 +22,7 @@ namespace
 {
     constexpr NSTimeInterval kAccelerometerUpdateInterval = 1.0 / 60.0;
     constexpr NSUInteger kMaxTouches = 16;
-}
+}  // namespace
 
 @interface RainbowViewController ()
 @property(readonly, nonatomic) NSUInteger supportedInterfaceOrientations;

@@ -24,7 +24,7 @@ namespace rainbow
     };
 
     template <size_t N>
-    bool ends_with(std::string_view str, const char (&suffix)[N])
+    auto ends_with(std::string_view str, const char (&suffix)[N]) -> bool
     {
         constexpr size_t length = N - 1;
 
@@ -36,9 +36,9 @@ namespace rainbow
     }
 
     template <size_t N>
-    bool ends_with(std::string_view str,
+    auto ends_with(std::string_view str,
                    const char (&suffix)[N],
-                   StringComparison comparison)
+                   StringComparison comparison) -> bool
     {
         if (comparison == StringComparison::Ordinal)
             return ends_with(str, suffix);
@@ -57,7 +57,7 @@ namespace rainbow
         return true;
     }
 
-    constexpr bool is_empty(czstring str)
+    constexpr auto is_empty(czstring str) -> bool
     {
         return str == nullptr || *str == '\0';
     }

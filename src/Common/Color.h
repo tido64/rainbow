@@ -12,9 +12,12 @@ namespace rainbow
     /// <summary>Structure for storing a colour (RGBA).</summary>
     struct Color
     {
-        uint8_t r, g, b, a;
+        uint8_t r = 0xff;
+        uint8_t g = 0xff;
+        uint8_t b = 0xff;
+        uint8_t a = 0xff;
 
-        constexpr Color() : r(0xff), g(0xff), b(0xff), a(0xff) {}
+        constexpr Color() = default;
 
         constexpr Color(uint8_t r, uint8_t g, uint8_t b, uint8_t a = 0xff)
             : r(r), g(g), b(b), a(a)
@@ -29,16 +32,16 @@ namespace rainbow
 
         auto operator=(uint32_t c) -> Color& { return *this = Color{c}; }
 
-        // TODO: Having constexpr here breaks Xcode 8.3
-        friend bool operator!=(Color lhs, Color rhs) { return !(lhs == rhs); }
-
-        friend constexpr bool operator==(Color lhs, Color rhs)
+        friend constexpr auto operator==(Color lhs, Color rhs)
         {
             return lhs.r == rhs.r &&  //
                    lhs.g == rhs.g &&  //
                    lhs.b == rhs.b &&  //
                    lhs.a == rhs.a;
         }
+
+        // TODO: Having constexpr here breaks Xcode 8.3
+        friend auto operator!=(Color lhs, Color rhs) { return !(lhs == rhs); }
     };
 }  // namespace rainbow
 

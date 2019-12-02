@@ -4,15 +4,17 @@
 
 #include "FileSystem/Bundle.inc"
 
+#include <array>
+
 using rainbow::filesystem::Path;
 
 namespace
 {
     auto is_zip_file(const Path& path)
     {
-        constexpr uint8_t kZipSignature[4]{'P', 'K', 0x03, 0x04};
+        constexpr std::array<uint8_t, 4> kPKZIP{'P', 'K', 0x03, 0x04};
         auto header = rainbow::system::file_header(path.c_str());
-        return memcmp(header.data(), kZipSignature, sizeof(kZipSignature)) == 0;
+        return memcmp(header.data(), kPKZIP.data(), kPKZIP.size()) == 0;
     }
 }  // namespace
 

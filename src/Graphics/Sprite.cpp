@@ -16,14 +16,14 @@ using rainbow::Vec2f;
 
 namespace
 {
-    constexpr uint32_t kStaleBuffer     = 1u << 0;
-    constexpr uint32_t kStalePosition   = 1u << 1;
-    constexpr uint32_t kStaleTexture    = 1u << 2;
-    constexpr uint32_t kStaleNormalMap  = 1u << 3;
-    constexpr uint32_t kStaleMask       = 0xffffu;
-    constexpr uint32_t kIsHidden        = 1u << 16;
-    constexpr uint32_t kIsFlipped       = 1u << 17;
-    constexpr uint32_t kIsMirrored      = 1u << 18;
+    constexpr uint32_t kStaleBuffer     = 1U << 0;
+    constexpr uint32_t kStalePosition   = 1U << 1;
+    constexpr uint32_t kStaleTexture    = 1U << 2;
+    constexpr uint32_t kStaleNormalMap  = 1U << 3;
+    constexpr uint32_t kStaleMask       = 0xffffU;
+    constexpr uint32_t kIsHidden        = 1U << 16;
+    constexpr uint32_t kIsFlipped       = 1U << 17;
+    constexpr uint32_t kIsMirrored      = 1U << 18;
 
     constexpr uint32_t kFlipTable[]{
         0, 1, 2, 3,   // Normal
@@ -33,10 +33,10 @@ namespace
     constexpr uint32_t kFlipVertically = 4;
     constexpr uint32_t kFlipHorizontally = 8;
 
-    static_assert((kIsFlipped >> 0xf) == kFlipVertically, "");
-    static_assert((kIsMirrored >> 0xf) == kFlipHorizontally, "");
+    static_assert((kIsFlipped >> 0xf) == kFlipVertically);
+    static_assert((kIsMirrored >> 0xf) == kFlipHorizontally);
 
-    uint32_t flip_index(uint32_t state)
+    auto flip_index(uint32_t state) -> uint32_t
     {
         return ((state & kIsFlipped) >> 0xf) + ((state & kIsMirrored) >> 0xf);
     }
@@ -86,8 +86,8 @@ void Sprite::set_normal(unsigned int id)
 
 void Sprite::set_pivot(const Vec2f& pivot)
 {
-    R_ASSERT(pivot.x >= 0.0f && pivot.x <= 1.0f &&
-             pivot.y >= 0.0f && pivot.y <= 1.0f,
+    R_ASSERT(pivot.x >= 0.0F && pivot.x <= 1.0F &&
+             pivot.y >= 0.0F && pivot.y <= 1.0F,
              "Invalid pivot point");
 
     Vec2f diff = pivot;
@@ -116,7 +116,7 @@ void Sprite::set_rotation(float r)
 
 void Sprite::set_scale(const Vec2f& f)
 {
-    R_ASSERT(f.x > 0.0f && f.y > 0.0f,
+    R_ASSERT(f.x > 0.0F && f.y > 0.0F,
              "Can't scale with a factor of zero or less");
 
     state_ |= kStaleBuffer;

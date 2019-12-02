@@ -21,7 +21,7 @@ namespace rainbow
         ErrorExecutingScript,
         Unknown  // Unknown is always the last element.
     };
-}
+}  // namespace rainbow
 
 namespace std
 {
@@ -34,6 +34,6 @@ namespace std
 namespace rainbow
 {
     auto make_error_code(ErrorCode) noexcept -> std::error_code;
-}
+}  // namespace rainbow
 
 #endif

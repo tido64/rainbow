@@ -22,17 +22,17 @@ namespace rainbow
     class RefCounted : private NonCopyable<RefCounted>
     {
     public:
-        auto use_count() const { return refs_; }
+        [[nodiscard]] auto use_count() const { return refs_; }
 
         auto release() { return --refs_; }
         void retain() { ++refs_; }
 
     protected:
-        RefCounted() : refs_(0) {}
+        RefCounted() = default;
         ~RefCounted() = default;
 
     private:
-        uint32_t refs_;
+        uint32_t refs_ = 0;
     };
 
     /// <summary>
@@ -130,6 +130,9 @@ namespace rainbow
         /// </summary>
         auto operator=(const SharedPtr<T>& ptr) -> SharedPtr<T>&
         {
+            if (&ptr == this)
+                return *this;
+
             reset(ptr.ptr_);
             return *this;
         }
@@ -137,7 +140,7 @@ namespace rainbow
         /// <summary>
         ///   Releases the current pointer and takes over the new one.
         /// </summary>
-        auto operator=(SharedPtr<T>&& ptr) -> SharedPtr<T>&
+        auto operator=(SharedPtr<T>&& ptr) noexcept -> SharedPtr<T>&
         {
             reset_internal(ptr.ptr_);
             ptr.ptr_ = nullptr;

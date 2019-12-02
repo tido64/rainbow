@@ -12,7 +12,7 @@ namespace rainbow
     template <typename T>
     class Passkey : private NonCopyable<Passkey<T>>
     {
-        Passkey() {}
+        Passkey() = default;
 
         friend T;
     };

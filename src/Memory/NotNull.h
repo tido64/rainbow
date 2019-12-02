@@ -38,9 +38,6 @@ public:
     operator T() const { return get(); }
     auto operator->() const { return get(); }
 
-private:
-    T ptr_;
-
     NotNull(std::nullptr_t) = delete;
     NotNull(int) = delete;
 
@@ -58,6 +55,9 @@ private:
 
     auto operator+=(size_t) -> NotNull& = delete;
     auto operator-=(size_t) -> NotNull& = delete;
+
+private:
+    T ptr_;
 };
 
 #endif

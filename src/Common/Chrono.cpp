@@ -10,10 +10,7 @@ using rainbow::Chrono;
 
 namespace
 {
-    Chrono::clock::duration now()
-    {
-        return Chrono::clock::now().time_since_epoch();
-    }
+    auto now() { return Chrono::clock::now().time_since_epoch(); }
 }  // namespace
 
 void Chrono::sleep(duration::rep milliseconds)

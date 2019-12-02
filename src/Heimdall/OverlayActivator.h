@@ -5,6 +5,7 @@
 #ifndef HEIMDALL_OVERLAYACTIVATOR_H_
 #define HEIMDALL_OVERLAYACTIVATOR_H_
 
+#include <array>
 #include <cstdint>
 
 #include "Input/InputListener.h"
@@ -18,7 +19,7 @@ namespace heimdall
     public:
         OverlayActivator(Overlay* overlay) : overlay_(overlay) { reset(); }
 
-        bool is_activated() const
+        [[nodiscard]] auto is_activated() const
         {
             return time_till_activation_ == 0 && resistance_ < 2;
         }
@@ -29,15 +30,20 @@ namespace heimdall
     private:
         int resistance_;
         int time_till_activation_;
-        uint32_t pointers_[2];
+        std::array<uint32_t, 2> pointers_;
         Overlay* overlay_;
 
         // InputListener implementation details
 
-        bool on_key_down_impl(const rainbow::KeyStroke&) override;
-        bool on_pointer_began_impl(const ArrayView<rainbow::Pointer>&) override;
-        bool on_pointer_canceled_impl() override;
-        bool on_pointer_ended_impl(const ArrayView<rainbow::Pointer>&) override;
+        auto on_key_down_impl(const rainbow::KeyStroke&) -> bool override;
+
+        auto on_pointer_began_impl(const ArrayView<rainbow::Pointer>&)
+            -> bool override;
+
+        auto on_pointer_canceled_impl() -> bool override;
+
+        auto on_pointer_ended_impl(const ArrayView<rainbow::Pointer>&)
+            -> bool override;
     };
 }  // namespace heimdall
 

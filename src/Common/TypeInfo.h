@@ -12,14 +12,14 @@ namespace rainbow
     class type_id_t
     {
     public:
-        auto value() const { return id_; }
+        [[nodiscard]] auto value() const { return id_; }
 
-        friend bool operator!=(type_id_t a, type_id_t b)
+        friend auto operator!=(type_id_t a, type_id_t b)
         {
             return !(a.id_ == b.id_);
         }
 
-        friend bool operator==(type_id_t a, type_id_t b)
+        friend auto operator==(type_id_t a, type_id_t b)
         {
             return a.id_ == b.id_;
         }

@@ -13,12 +13,12 @@ namespace rainbow
     template <typename T>
     struct Vec3
     {
-        T x, y, z;
+        T x, y, z;  // NOLINT(misc-non-private-member-variables-in-classes)
 
         Vec3() : Vec3(0, 0, 0) {}
         Vec3(T x, T y, T z) : x(x), y(y), z(z) {}
 
-        bool is_zero() const
+        [[nodiscard]] auto is_zero() const -> bool
         {
             if constexpr (std::is_integral_v<T>)
             {

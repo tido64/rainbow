@@ -40,22 +40,26 @@ namespace rainbow
 
         Input() : keys_({}), last_listener_(this) { make_global(); }
 
-        auto acceleration() const -> const Acceleration&
+        [[nodiscard]] auto acceleration() const -> const Acceleration&
         {
             return acceleration_;
         }
 
-        auto controller_states() const -> const ControllerStates&
+        [[nodiscard]] auto controller_states() const -> const ControllerStates&
         {
             return controllers_;
         }
 
-        auto keyboard_state() const -> const KeyboardState& { return keys_; }
+        [[nodiscard]] auto keyboard_state() const -> const KeyboardState&
+        {
+            return keys_;
+        }
 
         /// <summary>
         ///   Returns the value of the specified axis on specified controller.
         /// </summary>
-        auto axis(unsigned int controller, ControllerAxis axis) const
+        [[nodiscard]] auto axis(unsigned int controller,
+                                ControllerAxis axis) const
         {
             return controllers_[controller].axis(axis);
         }
@@ -64,7 +68,8 @@ namespace rainbow
         ///   Returns whether specified button is currently pressed on specified
         ///   controller.
         /// </summary>
-        bool is_down(unsigned int controller, ControllerButton btn) const
+        [[nodiscard]] auto is_down(unsigned int controller,
+                                   ControllerButton btn) const
         {
             return controllers_[controller].is_down(btn);
         }
@@ -72,7 +77,7 @@ namespace rainbow
         /// <summary>
         ///   Returns whether specified key is currently pressed.
         /// </summary>
-        bool is_down(VirtualKey key) const
+        [[nodiscard]] auto is_down(VirtualKey key) const
         {
             return keys_[to_underlying_type(key)];
         }
@@ -120,12 +125,12 @@ namespace rainbow
         void on_pointer_moved(const ArrayView<Pointer>& pointers);
 
 #ifdef RAINBOW_TEST
-        auto buttons_down(unsigned int i) const
+        [[nodiscard]] auto buttons_down(unsigned int i) const
         {
             return controllers_[i].buttons_down();
         }
 
-        auto connected_controllers() const
+        [[nodiscard]] auto connected_controllers() const
         {
             return std::count_if(
                 std::cbegin(controllers_),
@@ -133,7 +138,7 @@ namespace rainbow
                 [](auto&& controller) { return controller.is_assigned(); });
         }
 
-        auto keys_down() const
+        [[nodiscard]] auto keys_down() const
         {
             return std::count(keys_.cbegin(), keys_.cend(), true);
         }
@@ -142,7 +147,7 @@ namespace rainbow
     private:
         ControllerStates controllers_;
         KeyboardState keys_;
-        Acceleration acceleration_;  ///< Accelerometer data
+        Acceleration acceleration_;
         InputListener* last_listener_;
 
         template <typename F>

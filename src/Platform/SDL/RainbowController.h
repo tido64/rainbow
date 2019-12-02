@@ -22,9 +22,12 @@ namespace rainbow
     public:
         RainbowController(SDLContext& context, const Config& config);
 
-        auto error() const -> std::error_code { return director_.error(); }
+        [[nodiscard]] auto error() const -> std::error_code
+        {
+            return director_.error();
+        }
 
-        bool run();
+        auto run() -> bool;
 
     private:
         SDLContext& context_;

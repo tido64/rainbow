@@ -15,10 +15,10 @@ namespace rainbow::system_info
     /// <summary>
     ///   Returns whether the platform has an accelerometer.
     /// </summary>
-    bool has_accelerometer();
+    auto has_accelerometer() -> bool;
 
     /// <summary>Returns whether the platform has a touchscreen.</summary>
-    bool has_touchscreen();
+    auto has_touchscreen() -> bool;
 
     /// <summary>Returns a list of user-preferred locales.</summary>
     auto locales() -> std::vector<std::string>;

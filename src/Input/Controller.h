@@ -105,19 +105,24 @@ namespace rainbow
     public:
         ControllerState() : id_(kNoController), buttons_{}, axes_{} {}
 
-        auto axes() const -> const AxisStates& { return axes_; }
-        auto buttons() const -> const ButtonStates& { return buttons_; }
-        auto id() const { return id_; }
-        bool is_assigned() const { return id_ != kNoController; }
+        [[nodiscard]] auto axes() const -> const AxisStates& { return axes_; }
+
+        [[nodiscard]] auto buttons() const -> const ButtonStates&
+        {
+            return buttons_;
+        }
+
+        [[nodiscard]] auto id() const { return id_; }
+        [[nodiscard]] auto is_assigned() const { return id_ != kNoController; }
 
         void assign(ControllerID id) { id_ = id; }
 
-        auto axis(ControllerAxis axis) const
+        [[nodiscard]] auto axis(ControllerAxis axis) const
         {
             return axes_[to_underlying_type(axis)];
         }
 
-        bool is_down(ControllerButton button) const
+        [[nodiscard]] auto is_down(ControllerButton button) const
         {
             return buttons_[to_underlying_type(button)];
         }
@@ -154,7 +159,7 @@ namespace rainbow
         }
 
 #ifdef RAINBOW_TEST
-        auto buttons_down() const
+        [[nodiscard]] auto buttons_down() const
         {
             return std::count(buttons_.cbegin(), buttons_.cend(), true);
         }

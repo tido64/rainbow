@@ -16,21 +16,21 @@ namespace rainbow::system
     {
     protected:
         static constexpr auto is_platform_handle() { return false; }
-        static constexpr bool open(czstring, FileType, File&) { return false; }
+        static constexpr auto open(czstring, FileType, File&) { return false; }
 
         static auto resolve_path(czstring path, FileType)
         {
             return filesystem::Path{path};
         }
 
-        constexpr File() : stream_(nullptr) {}
+        constexpr File() = default;
 
         File(File&& file) noexcept : stream_(file.stream_)
         {
             file.stream_ = nullptr;
         }
 
-        auto handle() const { return stream_; }
+        [[nodiscard]] auto handle() const { return stream_; }
 
         void set_handle(PHYSFS_File* stream)
         {
@@ -38,18 +38,18 @@ namespace rainbow::system
             stream_ = stream;
         }
 
-        constexpr auto size() const -> size_t { return 0; }
+        [[nodiscard]] constexpr auto size() const -> size_t { return 0; }
 
         void close() {}
         constexpr auto read(void*, size_t) const -> size_t { return 0; }
-        constexpr bool seek(int64_t, SeekOrigin) const { return false; }
-        constexpr auto tell() const -> size_t { return 0; }
+        constexpr auto seek(int64_t, SeekOrigin) const -> bool { return false; }
+        [[nodiscard]] constexpr auto tell() const -> size_t { return 0; }
         constexpr auto write(const void*, size_t) const -> size_t { return 0; }
 
         explicit operator bool() const { return stream_ != nullptr; }
 
     private:
-        PHYSFS_File* stream_;
+        PHYSFS_File* stream_ = nullptr;
     };
 }  // namespace rainbow::system
 

@@ -37,6 +37,7 @@ namespace
             auto out = dst + ((src_rect.y + row) * dst_sz.x + src_rect.x);
             const auto begin = src + src_rect.w * row;
             std::transform(begin, begin + src_rect.w, out, [](uint8_t alpha) {
+                // NOLINTNEXTLINE(cppcoreguidelines-avoid-magic-numbers)
                 return Color{0xff, 0xff, 0xff, alpha};
             });
         }
@@ -53,6 +54,7 @@ FontCache::FontCache() : is_stale_(false)
                       narrow_cast<int>(bin_nodes_.size()));
 
     constexpr size_t size = kTextureSize * kTextureSize * 4;
+    // NOLINTNEXTLINE(cppcoreguidelines-avoid-c-arrays)
     bitmap_ = std::make_unique<uint8_t[]>(size);
     std::fill_n(bitmap_.get(), size, 0);
 
@@ -190,5 +192,5 @@ void FontCache::update(TextureManager& texture_manager)
 
 #define STB_RECT_PACK_IMPLEMENTATION
 #include "ThirdParty/DisableWarnings.h"
-#include <imgui/imstb_rectpack.h>
+#include <imgui/imstb_rectpack.h>  // NOLINT(llvm-include-order)
 #include "ThirdParty/ReenableWarnings.h"

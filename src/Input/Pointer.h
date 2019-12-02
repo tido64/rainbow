@@ -12,11 +12,20 @@ namespace rainbow
     /// <summary>A pointer event.</summary>
     struct Pointer
     {
-        uint32_t hash;       ///< Unique hash value for each pointer.
-        int32_t x;           ///< Position of pointer (x-component).
-        int32_t y;           ///< Position of pointer (y-component).
-        uint64_t timestamp;  ///< The relative time at which this event occurred, in milliseconds.
+        /// <summary>Unique hash value for each pointer.</summary>
+        uint32_t hash;
+
+        /// <summary>Position of pointer (x-component).</summary>
+        int32_t x;
+
+        /// <summary>Position of pointer (y-component).</summary>
+        int32_t y;
+
+        /// <summary>
+        ///   The relative time at which this event occurred, in milliseconds.
+        /// </summary>
+        uint64_t timestamp;
     };
-}
+}  // namespace rainbow
 
 #endif

@@ -6,12 +6,12 @@
 
 #include <Windows.h>
 
-bool rainbow::system_info::has_accelerometer()
+auto rainbow::system_info::has_accelerometer() -> bool
 {
     return false;
 }
 
-bool rainbow::system_info::has_touchscreen()
+auto rainbow::system_info::has_touchscreen() -> bool
 {
     return GetSystemMetrics(SM_MAXIMUMTOUCHES) > 0;
 }

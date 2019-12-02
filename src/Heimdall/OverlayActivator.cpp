@@ -45,7 +45,7 @@ void OverlayActivator::update(uint64_t dt)
     }
 }
 
-bool OverlayActivator::on_key_down_impl(const KeyStroke& key)
+auto OverlayActivator::on_key_down_impl(const KeyStroke& key) -> bool
 {
     if (!overlay_->is_enabled() && key.key == VirtualKey::F2)
     {
@@ -70,7 +70,8 @@ bool OverlayActivator::on_key_down_impl(const KeyStroke& key)
     return false;
 }
 
-bool OverlayActivator::on_pointer_began_impl(const ArrayView<Pointer>& pointers)
+auto OverlayActivator::on_pointer_began_impl(const ArrayView<Pointer>& pointers)
+    -> bool
 {
     if (overlay_->is_enabled())
         return false;
@@ -96,14 +97,15 @@ bool OverlayActivator::on_pointer_began_impl(const ArrayView<Pointer>& pointers)
     return false;
 }
 
-bool OverlayActivator::on_pointer_canceled_impl()
+auto OverlayActivator::on_pointer_canceled_impl() -> bool
 {
     const bool prevent_propagation = is_activated();
     reset();
     return prevent_propagation;
 }
 
-bool OverlayActivator::on_pointer_ended_impl(const ArrayView<Pointer>& pointers)
+auto OverlayActivator::on_pointer_ended_impl(const ArrayView<Pointer>& pointers)
+    -> bool
 {
     const bool prevent_propagation = is_activated();
     for (auto&& p : pointers)
