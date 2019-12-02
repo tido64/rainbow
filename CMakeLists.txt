@@ -178,8 +178,6 @@ if(ANDROID)
       src/FileSystem/Bundle.android.cpp
       src/FileSystem/File.android.h
       src/Platform/Android/main.cpp
-      # Workaround for https://github.com/android-ndk/ndk/issues/184
-      src/Platform/Android/mulodi4.c
       src/Platform/SystemInfo.android.cpp
       src/Platform/SystemInfo.unix.cpp
   )
