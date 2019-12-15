@@ -148,7 +148,7 @@ function isShaderHeader(file) {
 }
 
 /**
- Strips comments from specified line.
+ * Strips comments from specified line.
  * @param {string} line
  * @returns {string}
  */
@@ -157,7 +157,7 @@ function stripComments(line) {
 }
 
 /**
- Trims specified line.
+ * Trims specified line.
  * @param {string} line
  * @returns {string}
  */
