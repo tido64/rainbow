@@ -76,8 +76,28 @@ case $1 in
     ANALYZER=scan-build CC=ccc-analyzer CXX=c++-analyzer $SHELL $0 $args
     ;;
   "clean")
-    rm -fr CMakeFiles CMakeScripts Debug MinSizeRel Rainbow.* Release RelWithDebInfo
-    rm -f .ninja_* CMakeCache.txt Makefile {build,rules}.ninja cmake_install.cmake lib*.a rainbow*
+    rm -fr \
+      *-build \
+      *-subbuild \
+      .ninja_* \
+      CMakeCache.txt \
+      CMakeFiles \
+      CMakeScripts \
+      CPack* \
+      Debug \
+      Makefile \
+      MinSizeRel \
+      Rainbow.* \
+      RelWithDebInfo \
+      Release \
+      _deps \
+      cmake_install.cmake \
+      compile_commands.json \
+      exports \
+      lib \
+      lib*.a \
+      rainbow* \
+      {build,rules}.ninja
     ;;
   "emscripten")
     EMSCRIPTEN=$(em-config EMSCRIPTEN_ROOT)
