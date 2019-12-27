@@ -93,21 +93,17 @@ Within each section, order the includes alphabetically. The paths to Rainbow's
 header files must always be descendants of `src/`. Don't use relative paths, or
 paths with `.` or `..`.
 
-For example, see `src/ThirdParty/Spine/spine-rainbow.cpp`:
+For example, see `src/FileSystem/FileSystem.cpp`:
 
 ```c++
-#include "ThirdParty/Spine/spine-rainbow.h"
+#include "FileSystem/FileSystem.h"
 
-#include <algorithm>
+#include <filesystem>
 
-#include <spine/SkeletonJson.h>
-#include <spine/extension.h>
+#include <physfs.h>
 
-#include "Common/DataMap.h"
-#include "FileSystem/Path.h"
-#include "Graphics/Renderer.h"
-#include "Graphics/SpriteVertex.h"
-#include "Graphics/TextureAtlas.h"
+#include "Common/Logging.h"
+#include "FileSystem/Bundle.h"
 ```
 
 ### Forward Declarations

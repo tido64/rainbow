@@ -17,7 +17,7 @@ extraction:
       command:
         - mkdir out
         - cd out
-        - cmake -DCMAKE_BUILD_TYPE=Debug -DUSE_PHYSICS=1 -DUSE_SPINE=1 ..
+        - cmake -DCMAKE_BUILD_TYPE=Debug -DUSE_PHYSICS=1 ..
     index:
       build_command:
         - cd out

@@ -13,7 +13,6 @@ $SourcePath = Join-Path (Split-Path (Get-Variable MyInvocation).Value.MyCommand.
 $FMODDescription = "Enable FMOD Studio audio engine"
 $HeimdallDescription = "Enable Heimdall debugging facilities"
 $PhysicsDescription = "Enable physics module (Box2D)"
-$SpineDescription = "Enable Spine runtime"
 $UnitTestsDescription = "Enable unit tests"
 
 function Make
@@ -33,7 +32,6 @@ if ($Help) {
 	Write-Output "  -DUSE_FMOD_STUDIO=1      $FMODDescription"
 	Write-Output "  -DUSE_HEIMDALL=1         $HeimdallDescription"
 	Write-Output "  -DUSE_PHYSICS=1          $PhysicsDescription"
-	Write-Output "  -DUSE_SPINE=1            $SpineDescription"
 	Write-Output ""
 	Write-Output "CMake options are passed directly to CMake so you can set variables like"
 	Write-Output "-DCMAKE_BUILD_TYPE=<type> among others."
@@ -63,10 +61,6 @@ else {
 		AutoSize = $true
 		Text = $PhysicsDescription
 	}
-	$SpineCheckBox = New-Object System.Windows.Forms.CheckBox -Property @{
-		AutoSize = $true
-		Text = $SpineDescription
-	}
 
 	$AcceptButton = New-Object System.Windows.Forms.Button -Property @{
 		DialogResult = [System.Windows.Forms.DialogResult]::OK
@@ -95,7 +89,6 @@ else {
 		$FMODCheckBox,
 		$HeimdallCheckBox,
 		$PhysicsCheckBox,
-		$SpineCheckBox,
 		$ButtonLayout
 	));
 
@@ -131,9 +124,6 @@ else {
 	}
 	if ($PhysicsCheckBox.Checked) {
 		$Options += "-DUSE_PHYSICS=1"
-	}
-	if ($SpineCheckBox.Checked) {
-		$Options += "-DUSE_SPINE=1"
 	}
 
 	Push-Location $SourcePath\build\windows

@@ -9,7 +9,6 @@ if(WIN32)
       build/cmake/libpng.cmake
       build/cmake/PhysicsFS.cmake
       build/cmake/SDL2.cmake
-      build/cmake/Spine.cmake
       build/cmake/Utilities.cmake
       build/cmake/Windows.cmake
       build/cmake/zlib.cmake

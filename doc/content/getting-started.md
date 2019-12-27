@@ -165,15 +165,13 @@ Available features and build configurations:
 | `USE_FMOD_STUDIO` | Replaces Rainbow's custom audio engine with FMOD Studio.            |
 | `USE_HEIMDALL`    | Compiles in Rainbow's debug overlay and other debugging facilities. |
 | `USE_PHYSICS`     | Compiles in Box2D.                                                  |
-| `USE_SPINE`       | Enables support for loading Spine rigs.                             |
 
-Example: Build Rainbow with physics and Spine support for game development.
+Example: Build Rainbow with physics support for game development.
 
 ```shell
 /path/to/rainbow/tools/build.sh -DCMAKE_BUILD_TYPE=Debug \
                                 -DUSE_HEIMDALL=1 \
-                                -DUSE_PHYSICS=1 \
-                                -DUSE_SPINE=1
+                                -DUSE_PHYSICS=1
 ```
 
 You can pass any number of CMake options.
