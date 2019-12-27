@@ -20,8 +20,7 @@ HTML_DYNAMIC_SECTIONS  = YES
 GENERATE_LATEX         = NO
 INCLUDE_PATH           = src lib lib/FMOD/inc lib/FreeType/include lib/SDL/include lib/libpng
 PREDEFINED             = NDEBUG \
-                         USE_PHYSICS \
-                         USE_SPINE
+                         USE_PHYSICS
 CLASS_DIAGRAMS         = NO
 HIDE_UNDOC_RELATIONS   = NO
 HAVE_DOT               = YES

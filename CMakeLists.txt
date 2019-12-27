@@ -22,7 +22,6 @@ CMAKE_DEPENDENT_OPTION(COVERAGE "Compile with code coverage" OFF "UNIT_TESTS" OF
 option(USE_FMOD_STUDIO  "Enable FMOD Studio audio engine" OFF)
 option(USE_HEIMDALL     "Enable Heimdall debugging facilities" OFF)
 option(USE_PHYSICS      "Enable physics module (Box2D)" OFF)
-option(USE_SPINE        "Enable Spine runtime" OFF)
 
 # Platform-specific flags
 include(${LOCAL_MODULE_PATH}/Unix.cmake)
@@ -303,13 +302,6 @@ if(USE_PHYSICS)
   )
 endif()
 
-if(USE_SPINE)
-  list(APPEND SOURCE_FILES
-      src/ThirdParty/Spine/spine-rainbow.cpp
-      src/ThirdParty/Spine/spine-rainbow.h
-  )
-endif()
-
 foreach(src IN LISTS SOURCE_FILES)
   string(REGEX REPLACE "^src/" "" src_file ${src})
   if(NOT src_file STREQUAL "")
@@ -372,9 +364,6 @@ include(${LOCAL_MODULE_PATH}/Duktape.cmake)
 include(${LOCAL_MODULE_PATH}/FreeType.cmake)
 include(${LOCAL_MODULE_PATH}/PhysicsFS.cmake)
 include(${LOCAL_MODULE_PATH}/SDL2.cmake)
-if(USE_SPINE)
-  include(${LOCAL_MODULE_PATH}/Spine.cmake)
-endif()
 include(${LOCAL_MODULE_PATH}/zlib.cmake)
 include(${LOCAL_MODULE_PATH}/libpng.cmake)
 

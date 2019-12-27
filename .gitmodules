@@ -28,9 +28,6 @@
 [submodule "lib/panini"]
 	path = lib/panini
 	url = https://github.com/tido64/panini.git
-[submodule "lib/spine-runtimes"]
-	path = lib/spine-runtimes
-	url = https://github.com/EsotericSoftware/spine-runtimes.git
 [submodule "lib/variant"]
 	path = lib/variant
 	url = https://github.com/mapbox/variant.git

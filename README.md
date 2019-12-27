@@ -120,7 +120,6 @@ Rainbow.RenderQueue.add(animation);
 | [zlib][]            | 1.2.11  | zlib                |    ✓     |
 | [Box2D][]           | 784a646 | zlib                |          |
 | [FMOD][]            | 1.05.x  | Proprietary         |          |
-| [Spine][]           | 2.1.25  | Spine Runtimes v2.2 |          |
 
 ## License
 
@@ -169,5 +168,4 @@ THE SOFTWARE.
 [Ogg Vorbis]: https://xiph.org/vorbis/ "Ogg Vorbis"
 [PhysicsFS]: https://www.icculus.org/physfs/ "PhysicsFS"
 [SDL]: https://www.libsdl.org/ "Simple DirectMedia Layer"
-[Spine]: http://esotericsoftware.com/ "Spine: 2D skeletal animation for games"
 [zlib]: https://github.com/madler/zlib "zlib"

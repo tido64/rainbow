@@ -4,8 +4,6 @@
 
 #include "FileSystem/FileSystem.h"
 
-#include <physfs.h>
-
 #include "Platform/Macros.h"
 #if HAS_FILESYSTEM
 #    include <filesystem>
@@ -19,6 +17,8 @@
 #    include <android/native_activity.h>
 extern ANativeActivity* g_native_activity;
 #endif
+
+#include <physfs.h>
 
 #include "Common/Logging.h"
 #include "FileSystem/Bundle.h"

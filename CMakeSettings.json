@@ -16,8 +16,7 @@
       "buildCommandArgs": "${env.buildCommandArgs}",
       "variables": [
         { "name": "UNIT_TESTS", "value": 1, "type": "BOOL" },
-        { "name": "USE_PHYSICS", "value": 0, "type": "BOOL" },
-        { "name": "USE_SPINE", "value": 0, "type": "BOOL" }
+        { "name": "USE_PHYSICS", "value": 0, "type": "BOOL" }
       ]
     },
     {
@@ -28,8 +27,7 @@
       "buildCommandArgs": "${env.buildCommandArgs}",
       "variables": [
         { "name": "UNIT_TESTS", "value": 0, "type": "BOOL" },
-        { "name": "USE_PHYSICS", "value": 0, "type": "BOOL" },
-        { "name": "USE_SPINE", "value": 0, "type": "BOOL" }
+        { "name": "USE_PHYSICS", "value": 0, "type": "BOOL" }
       ]
     }
   ]
