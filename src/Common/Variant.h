@@ -18,9 +18,11 @@ namespace std
 #    include <optional>
 #endif
 
+// clang-format off
 #include "ThirdParty/DisableWarnings.h"
 #include <mapbox/variant.hpp>  // NOLINT(llvm-include-order)
 #include "ThirdParty/ReenableWarnings.h"
+// clang-format on
 
 namespace rainbow
 {

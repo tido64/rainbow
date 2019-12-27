@@ -4,12 +4,14 @@
 
 #include <cstdio>
 
+// clang-format off
 #include "ThirdParty/DisableWarnings.h"
 
 #define NANOSVG_IMPLEMENTATION
-#include <nanosvg.h>
+#include <nanosvg.h>  // NOLINT(llvm-include-order)
 
 #define NANOSVGRAST_IMPLEMENTATION
 #include <nanosvgrast.h>
 
 #include "ThirdParty/ReenableWarnings.h"
+// clang-format on

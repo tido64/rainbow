@@ -8,9 +8,11 @@
 #include <string>
 #include <vector>
 
+// clang-format off
 #include "ThirdParty/DisableWarnings.h"
-#include <absl/container/node_hash_map.h>
+#include <absl/container/node_hash_map.h>  // NOLINT(llvm-include-order)
 #include "ThirdParty/ReenableWarnings.h"
+// clang-format on
 
 #include "Audio/AL/Channel.h"
 #include "Audio/AL/Sound.h"

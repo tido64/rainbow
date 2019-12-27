@@ -11,11 +11,14 @@
 #ifdef __clang__
 #    pragma clang diagnostic push
 #endif
+// clang-format off
 #include "ThirdParty/DisableWarnings.h"
 #define IMGUI_DISABLE_OSX_FUNCTIONS 1
-#include <imgui/imgui.cpp>
+#include <imgui/imgui.cpp>  // NOLINT(llvm-include-order)
 #include <imgui/imgui_draw.cpp>
 #include <imgui/imgui_widgets.cpp>
+#include "ThirdParty/ReenableWarnings.h"
+// clang-format on
 #ifdef __clang__
 #    pragma clang diagnostic pop
 #endif

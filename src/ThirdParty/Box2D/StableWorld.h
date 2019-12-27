@@ -5,9 +5,11 @@
 #ifndef THIRDPARTY_BOX2D_STABLEWORLD_H_
 #define THIRDPARTY_BOX2D_STABLEWORLD_H_
 
+// clang-format off
 #include "ThirdParty/DisableWarnings.h"
-#include <Box2D/Dynamics/b2World.h>
+#include <Box2D/Dynamics/b2World.h>  // NOLINT(llvm-include-order)
 #include "ThirdParty/ReenableWarnings.h"
+// clang-format on
 
 #include "Graphics/Sprite.h"
 #include "ThirdParty/Box2D/DebugDraw.h"
