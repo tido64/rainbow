@@ -31,7 +31,7 @@ TEST(ColorTest, IsWhiteByDefault)
     ASSERT_EQ(cb.a, 255);
 }
 
-TEST(ColorTest, ConstructsColor)
+TEST(ColorTest, ConstructsWithRGBA)
 {
     constexpr Color c(kTestColor);
 
@@ -53,6 +53,16 @@ TEST(ColorTest, ConstructsColor)
     ASSERT_EQ(e.g, kGreen);
     ASSERT_EQ(e.b, kBlue);
     ASSERT_EQ(e.a, 0xff);
+}
+
+TEST(ColorTest, ConstructsWithLuminance)
+{
+    constexpr Color c(0x80, 0x9e);
+
+    ASSERT_EQ(c.r, 0x80);
+    ASSERT_EQ(c.g, 0x80);
+    ASSERT_EQ(c.b, 0x80);
+    ASSERT_EQ(c.a, 0x9e);
 }
 
 TEST(ColorTest, AssignsIntegerColor)

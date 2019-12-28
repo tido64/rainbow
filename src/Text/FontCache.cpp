@@ -38,7 +38,7 @@ namespace
             const auto begin = src + src_rect.w * row;
             std::transform(begin, begin + src_rect.w, out, [](uint8_t alpha) {
                 // NOLINTNEXTLINE(cppcoreguidelines-avoid-magic-numbers)
-                return Color{0xff, 0xff, 0xff, alpha};
+                return Color{0xff, alpha};
             });
         }
     }
