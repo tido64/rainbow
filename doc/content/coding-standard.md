@@ -49,9 +49,9 @@ Some of its points may only be repeated here on this page for emphasis.
 
 ### Comments
 
-Use [XML documentation](https://msdn.microsoft.com/en-us/library/ms177226.aspx).
+Use [XML documentation](https://docs.microsoft.com/en-us/cpp/build/reference/xml-documentation-visual-cpp).
 It is supported by both [Doxygen](http://doxygen.org/) and Visual Studio's
-[IntelliSense](https://msdn.microsoft.com/en-us/library/hcw1s69b.aspx).
+[IntelliSense](https://docs.microsoft.com/en-us/visualstudio/ide/using-intellisense).
 
 ### Logging
 
@@ -163,7 +163,7 @@ for your favourite editor:
 * Sublime Text: [Clang Format](https://github.com/rosshemsley/SublimeClangFormat)
 * Vim: [vim-clang-format](https://github.com/rhysd/vim-clang-format)
 * Visual Studio: [clang-format plugin](https://llvm.org/builds/)
-* Visual Studio Code: [C/C++ for Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools)
+* Visual Studio Code: [C/C++ for Visual Studio Code](https://code.visualstudio.com/docs/languages/cpp)
 
 ## Using Linters
 
@@ -172,6 +172,6 @@ You can tell CMake to run **clang-tidy** as part of the build process by passing
 
 ## Other Guidelines
 
-* [Google C++ Style Guide](https://google-styleguide.googlecode.com/svn/trunk/cppguide.html)
+* [Google C++ Style Guide](https://google.github.io/styleguide/cppguide.html)
 * [LLVM Coding Standards](https://llvm.org/docs/CodingStandards.html)
-* [Unreal Engine Coding Standard](https://docs.unrealengine.com/latest/INT/Programming/Development/CodingStandard/)
+* [Unreal Engine Coding Standard](https://docs.unrealengine.com/Programming/Development/CodingStandard/)
