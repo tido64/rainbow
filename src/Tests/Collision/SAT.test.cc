@@ -6,288 +6,290 @@
 
 #include <gtest/gtest.h>
 
-#include "Graphics/SpriteBatch.h"
+#include "Graphics/SpriteVertex.h"
+#include "Math/Geometry.h"
+#include "Math/Transform.h"
+#include "Math/Vec2.h"
 #include "Tests/TestHelpers.h"
 
-using rainbow::SpriteBatch;
+using rainbow::Quad;
 using rainbow::SpriteVertex;
 using rainbow::Vec2f;
 
 namespace
 {
-    void update(SpriteBatch& batch)  // NOLINT(google-runtime-references)
+    constexpr float kSize = 10.0F;
+
+    struct Hitbox
     {
-        auto sprites = batch.sprites();
-        for (uint32_t i = 0; i < batch.size(); ++i)
+        Quad quad{
+            {-5.0F, -5.0F},
+            {5.0F, -5.0F},
+            {5.0F, 5.0F},
+            {-5.0F, 5.0F},
+        };
+        float r = 0.0F;
+
+        void move(Vec2f distance)
         {
-            ArraySpan<SpriteVertex> buffer{batch.vertices() + i * 4, 4};
-            sprites[i].update(buffer, batch.texture());
+            quad.v0 += distance;
+            quad.v1 += distance;
+            quad.v2 += distance;
+            quad.v3 += distance;
         }
-    }
+
+        void position(Vec2f position)
+        {
+            quad = Hitbox{}.quad;
+            transform();
+            move(position - Vec2f::Zero);
+        }
+
+        void rotate(float radian)
+        {
+            r += radian;
+            transform();
+        }
+
+        void transform()
+        {
+            SpriteVertex out[4];
+            rainbow::transform(
+                {
+                    quad.v0,
+                    quad.v1,
+                    quad.v2,
+                    quad.v3,
+                },
+                {
+                    kSize * 0.5F + quad.v0.x,
+                    kSize * 0.5F + quad.v0.y,
+                },
+                r,
+                Vec2f::One,
+                ArraySpan<SpriteVertex>{out});
+            quad.v0 = out[0].position;
+            quad.v1 = out[1].position;
+            quad.v2 = out[2].position;
+            quad.v3 = out[3].position;
+        }
+    };
 }  // namespace
 
 TEST(CollisionTest, SeparatingAxisTheorem)
 {
-    constexpr int size = 10;
+    Hitbox b0, b1;
 
-    SpriteBatch batch(rainbow::ISolemnlySwearThatIAmOnlyTesting{});
-    auto s0 = batch.create_sprite(size, size);
-    auto s1 = batch.create_sprite(size, size);
-    update(batch);
+    ASSERT_TRUE(rainbow::overlaps(b0.quad, b0.r, b1.quad, b1.r));
 
-    ASSERT_TRUE(rainbow::overlaps(s0, s1));
+    b1.move({-kSize, 0});
 
-    s1->move({-size, 0});
-    update(batch);
+    ASSERT_TRUE(rainbow::overlaps(b0.quad, b0.r, b1.quad, b1.r));
 
-    ASSERT_TRUE(rainbow::overlaps(s0, s1));
+    b1.move({-1, 0});
 
-    s1->move({-1, 0});
-    update(batch);
-
-    ASSERT_FALSE(rainbow::overlaps(s0, s1));
+    ASSERT_FALSE(rainbow::overlaps(b0.quad, b0.r, b1.quad, b1.r));
 
     // Lower left corner
 
-    s1->move({0, -size});
-    update(batch);
+    b1.move({0, -kSize});
 
-    ASSERT_FALSE(rainbow::overlaps(s0, s1));
+    ASSERT_FALSE(rainbow::overlaps(b0.quad, b0.r, b1.quad, b1.r));
 
-    s1->move({1, 0});
-    update(batch);
+    b1.move({1, 0});
 
-    ASSERT_TRUE(rainbow::overlaps(s0, s1));
+    ASSERT_TRUE(rainbow::overlaps(b0.quad, b0.r, b1.quad, b1.r));
 
-    s1->move({0, -1});
-    update(batch);
+    b1.move({0, -1});
 
-    ASSERT_FALSE(rainbow::overlaps(s0, s1));
+    ASSERT_FALSE(rainbow::overlaps(b0.quad, b0.r, b1.quad, b1.r));
 
     // Lower right corner
 
-    s1->move({size * 2, 0});
-    update(batch);
+    b1.move({kSize * 2, 0});
 
-    ASSERT_FALSE(rainbow::overlaps(s0, s1));
+    ASSERT_FALSE(rainbow::overlaps(b0.quad, b0.r, b1.quad, b1.r));
 
-    s1->move({0, 1});
-    update(batch);
+    b1.move({0, 1});
 
-    ASSERT_TRUE(rainbow::overlaps(s0, s1));
+    ASSERT_TRUE(rainbow::overlaps(b0.quad, b0.r, b1.quad, b1.r));
 
-    s1->move({1, 0});
-    update(batch);
+    b1.move({1, 0});
 
-    ASSERT_FALSE(rainbow::overlaps(s0, s1));
+    ASSERT_FALSE(rainbow::overlaps(b0.quad, b0.r, b1.quad, b1.r));
 
     // Upper right corner
 
-    s1->move({0, size * 2});
-    update(batch);
+    b1.move({0, kSize * 2});
 
-    ASSERT_FALSE(rainbow::overlaps(s0, s1));
+    ASSERT_FALSE(rainbow::overlaps(b0.quad, b0.r, b1.quad, b1.r));
 
-    s1->move({-1, 0});
-    update(batch);
+    b1.move({-1, 0});
 
-    ASSERT_TRUE(rainbow::overlaps(s0, s1));
+    ASSERT_TRUE(rainbow::overlaps(b0.quad, b0.r, b1.quad, b1.r));
 
-    s1->move({0, 1});
-    update(batch);
+    b1.move({0, 1});
 
-    ASSERT_FALSE(rainbow::overlaps(s0, s1));
+    ASSERT_FALSE(rainbow::overlaps(b0.quad, b0.r, b1.quad, b1.r));
 
     // Upper left corner
 
-    s1->move({-size * 2, 0});
-    update(batch);
+    b1.move({-kSize * 2, 0});
 
-    ASSERT_FALSE(rainbow::overlaps(s0, s1));
+    ASSERT_FALSE(rainbow::overlaps(b0.quad, b0.r, b1.quad, b1.r));
 
-    s1->move({0, -1});
-    update(batch);
+    b1.move({0, -1});
 
-    ASSERT_TRUE(rainbow::overlaps(s0, s1));
+    ASSERT_TRUE(rainbow::overlaps(b0.quad, b0.r, b1.quad, b1.r));
 
-    s1->move({-1, 0});
-    update(batch);
+    b1.move({-1, 0});
 
-    ASSERT_FALSE(rainbow::overlaps(s0, s1));
+    ASSERT_FALSE(rainbow::overlaps(b0.quad, b0.r, b1.quad, b1.r));
 
-    // S0: 0° / S1: 45°
+    // B0: 0° / B1: 45°
 
-    s1->set_position(Vec2f::Zero);
-    s1->rotate(rainbow::radians(45.0f));
-    update(batch);
+    b1 = Hitbox{};
+    b1.rotate(rainbow::radians(45.0F));
 
-    ASSERT_TRUE(rainbow::overlaps(s0, s1));
+    ASSERT_TRUE(rainbow::overlaps(b0.quad, b0.r, b1.quad, b1.r));
 
     // Left
 
-    const float diagonal = std::sqrt(size * size + size * size);
-    const float distance = size * 0.5f + diagonal * 0.5f;
-    s1->move({-distance, 0});
-    update(batch);
+    const float diagonal = std::sqrt(kSize * kSize + kSize * kSize);
+    const float distance = kSize * 0.5F + diagonal * 0.5F;
+    b1.move({-distance, 0});
 
-    ASSERT_TRUE(rainbow::overlaps(s0, s1));
+    ASSERT_TRUE(rainbow::overlaps(b0.quad, b0.r, b1.quad, b1.r));
 
-    s1->move({-1, 0});
-    update(batch);
+    b1.move({-1, 0});
 
-    ASSERT_FALSE(rainbow::overlaps(s0, s1));
+    ASSERT_FALSE(rainbow::overlaps(b0.quad, b0.r, b1.quad, b1.r));
 
     // Lower left corner
 
-    const float inner_size = size * 0.5f + std::sqrt(size * size / 8.0f);
-    s1->set_position({-inner_size, -inner_size});
-    update(batch);
+    const float inner_size = kSize * 0.5F + std::sqrt(kSize * kSize / 8.0F);
+    b1.position({-inner_size, -inner_size});
 
-    ASSERT_TRUE(rainbow::overlaps(s0, s1));
+    ASSERT_TRUE(rainbow::overlaps(b0.quad, b0.r, b1.quad, b1.r));
 
-    s1->move({-1, 0});
-    update(batch);
+    b1.move({-1, 0});
 
-    ASSERT_FALSE(rainbow::overlaps(s0, s1));
+    ASSERT_FALSE(rainbow::overlaps(b0.quad, b0.r, b1.quad, b1.r));
 
-    s1->move({1, -1});
-    update(batch);
+    b1.move({1, -1});
 
-    ASSERT_FALSE(rainbow::overlaps(s0, s1));
+    ASSERT_FALSE(rainbow::overlaps(b0.quad, b0.r, b1.quad, b1.r));
 
     // Bottom
 
-    s1->set_position({0, -distance});
-    update(batch);
+    b1.position({0, -distance});
 
-    ASSERT_TRUE(rainbow::overlaps(s0, s1));
+    ASSERT_TRUE(rainbow::overlaps(b0.quad, b0.r, b1.quad, b1.r));
 
-    s1->move({0, -1});
-    update(batch);
+    b1.move({0, -1});
 
-    ASSERT_FALSE(rainbow::overlaps(s0, s1));
+    ASSERT_FALSE(rainbow::overlaps(b0.quad, b0.r, b1.quad, b1.r));
 
     // Lower right corner
 
-    s1->set_position({inner_size, -inner_size});
-    update(batch);
+    b1.position({inner_size, -inner_size});
 
-    ASSERT_TRUE(rainbow::overlaps(s0, s1));
+    ASSERT_TRUE(rainbow::overlaps(b0.quad, b0.r, b1.quad, b1.r));
 
-    s1->move({0, -1});
-    update(batch);
+    b1.move({0, -1});
 
-    ASSERT_FALSE(rainbow::overlaps(s0, s1));
+    ASSERT_FALSE(rainbow::overlaps(b0.quad, b0.r, b1.quad, b1.r));
 
-    s1->move({1, 1});
-    update(batch);
+    b1.move({1, 1});
 
-    ASSERT_FALSE(rainbow::overlaps(s0, s1));
+    ASSERT_FALSE(rainbow::overlaps(b0.quad, b0.r, b1.quad, b1.r));
 
     // Right
 
-    s1->set_position({distance, 0});
-    update(batch);
+    b1.position({distance, 0});
 
-    ASSERT_TRUE(rainbow::overlaps(s0, s1));
+    ASSERT_TRUE(rainbow::overlaps(b0.quad, b0.r, b1.quad, b1.r));
 
-    s1->move({1, 0});
-    update(batch);
+    b1.move({1, 0});
 
-    ASSERT_FALSE(rainbow::overlaps(s0, s1));
+    ASSERT_FALSE(rainbow::overlaps(b0.quad, b0.r, b1.quad, b1.r));
 
     // Upper right corner
 
-    s1->set_position({inner_size, inner_size});
-    update(batch);
+    b1.position({inner_size, inner_size});
 
-    ASSERT_TRUE(rainbow::overlaps(s0, s1));
+    ASSERT_TRUE(rainbow::overlaps(b0.quad, b0.r, b1.quad, b1.r));
 
-    s1->move({1, 0});
-    update(batch);
+    b1.move({1, 0});
 
-    ASSERT_FALSE(rainbow::overlaps(s0, s1));
+    ASSERT_FALSE(rainbow::overlaps(b0.quad, b0.r, b1.quad, b1.r));
 
-    s1->move({-1, 1});
-    update(batch);
+    b1.move({-1, 1});
 
-    ASSERT_FALSE(rainbow::overlaps(s0, s1));
+    ASSERT_FALSE(rainbow::overlaps(b0.quad, b0.r, b1.quad, b1.r));
 
     // Top
 
-    s1->set_position({0, distance});
-    update(batch);
+    b1.position({0, distance});
 
-    ASSERT_TRUE(rainbow::overlaps(s0, s1));
+    ASSERT_TRUE(rainbow::overlaps(b0.quad, b0.r, b1.quad, b1.r));
 
-    s1->move({0, 1});
-    update(batch);
+    b1.move({0, 1});
 
-    ASSERT_FALSE(rainbow::overlaps(s0, s1));
+    ASSERT_FALSE(rainbow::overlaps(b0.quad, b0.r, b1.quad, b1.r));
 
     // Upper left corner
 
-    s1->set_position({-inner_size, inner_size});
-    update(batch);
+    b1.position({-inner_size, inner_size});
 
-    ASSERT_TRUE(rainbow::overlaps(s0, s1));
+    ASSERT_TRUE(rainbow::overlaps(b0.quad, b0.r, b1.quad, b1.r));
 
-    s1->move({0, 1});
-    update(batch);
+    b1.move({0, 1});
 
-    ASSERT_FALSE(rainbow::overlaps(s0, s1));
+    ASSERT_FALSE(rainbow::overlaps(b0.quad, b0.r, b1.quad, b1.r));
 
-    s1->move({-1, -1});
-    update(batch);
+    b1.move({-1, -1});
 
-    ASSERT_FALSE(rainbow::overlaps(s0, s1));
+    ASSERT_FALSE(rainbow::overlaps(b0.quad, b0.r, b1.quad, b1.r));
 
     // Lower left quadrant
 
-    s0->rotate(rainbow::radians(45.0f));
-    s1->set_position({diagonal * -0.5f, diagonal * -0.5f});
-    update(batch);
+    b0.rotate(rainbow::radians(45.0F));
+    b1.position({diagonal * -0.5F, diagonal * -0.5F});
 
-    ASSERT_TRUE(rainbow::overlaps(s0, s1));
+    ASSERT_TRUE(rainbow::overlaps(b0.quad, b0.r, b1.quad, b1.r));
 
-    s1->move({-0.1f, -0.1f});
-    update(batch);
+    b1.move({-0.1F, -0.1F});
 
-    ASSERT_FALSE(rainbow::overlaps(s0, s1));
+    ASSERT_FALSE(rainbow::overlaps(b0.quad, b0.r, b1.quad, b1.r));
 
     // Lower right quadrant
 
-    s1->set_position({diagonal * 0.5f, diagonal * -0.5f});
-    update(batch);
+    b1.position({diagonal * 0.5F, diagonal * -0.5F});
 
-    ASSERT_TRUE(rainbow::overlaps(s0, s1));
+    ASSERT_TRUE(rainbow::overlaps(b0.quad, b0.r, b1.quad, b1.r));
 
-    s1->move({0.1f, -0.1f});
-    update(batch);
+    b1.move({0.1F, -0.1F});
 
-    ASSERT_FALSE(rainbow::overlaps(s0, s1));
+    ASSERT_FALSE(rainbow::overlaps(b0.quad, b0.r, b1.quad, b1.r));
 
     // Upper right quadrant
 
-    s1->set_position({diagonal * 0.5f, diagonal * 0.5f});
-    update(batch);
+    b1.position({diagonal * 0.5F, diagonal * 0.5F});
 
-    ASSERT_TRUE(rainbow::overlaps(s0, s1));
+    ASSERT_TRUE(rainbow::overlaps(b0.quad, b0.r, b1.quad, b1.r));
 
-    s1->move({0.1f, 0.1f});
-    update(batch);
+    b1.move({0.1F, 0.1F});
 
-    ASSERT_FALSE(rainbow::overlaps(s0, s1));
+    ASSERT_FALSE(rainbow::overlaps(b0.quad, b0.r, b1.quad, b1.r));
 
     // Upper left quadrant
 
-    s1->set_position({-diagonal * 0.5f, diagonal * 0.5f});
-    update(batch);
+    b1.position({-diagonal * 0.5F, diagonal * 0.5F});
 
-    ASSERT_TRUE(rainbow::overlaps(s0, s1));
+    ASSERT_TRUE(rainbow::overlaps(b0.quad, b0.r, b1.quad, b1.r));
 
-    s1->move({-0.1f, 0.1f});
-    update(batch);
+    b1.move({-0.1F, 0.1F});
 
-    ASSERT_FALSE(rainbow::overlaps(s0, s1));
+    ASSERT_FALSE(rainbow::overlaps(b0.quad, b0.r, b1.quad, b1.r));
 }

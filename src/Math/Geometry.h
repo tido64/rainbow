@@ -42,6 +42,12 @@ namespace rainbow
         f(v0, start);
     }
 
+    struct Quad
+    {
+        // NOLINTNEXTLINE(misc-non-private-member-variables-in-classes)
+        Vec2f v0, v1, v2, v3;
+    };
+
     struct Rect
     {
         float left;    // NOLINT(misc-non-private-member-variables-in-classes)
