@@ -7,9 +7,9 @@
 
 namespace rainbow
 {
-    class SpriteRef;
+    struct Quad;
 
-    auto overlaps(const SpriteRef& a, const SpriteRef& b) -> bool;
+    auto overlaps(const Quad& a, float ar, const Quad& b, float br) -> bool;
 }  // namespace rainbow
 
 #endif
