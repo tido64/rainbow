@@ -118,7 +118,6 @@
 		196DFF73225E6BED0053D6A4 /* libpng.c in Sources */ = {isa = PBXBuildFile; fileRef = 196DFF72225E6BED0053D6A4 /* libpng.c */; };
 		1972A081225D31CD0071415E /* Image.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1972A080225D31CD0071415E /* Image.cpp */; };
 		197396DD15A505F60064BF7D /* TextureManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 197396DB15A505F60064BF7D /* TextureManager.cpp */; };
-		19865982175E98F700723171 /* Data.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19865981175E98F700723171 /* Data.cpp */; };
 		1989645C1C4AE0080011BA15 /* RainbowViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1989645B1C4AE0080011BA15 /* RainbowViewController.mm */; };
 		198EA19E2012733F00BB3FB4 /* OpenSans-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 198EA19A2012733F00BB3FB4 /* OpenSans-Light.ttf */; };
 		198EA1A02012733F00BB3FB4 /* index.js in Resources */ = {isa = PBXBuildFile; fileRef = 198EA19C2012733F00BB3FB4 /* index.js */; };
@@ -417,7 +416,6 @@
 		1972A080225D31CD0071415E /* Image.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = Image.cpp; sourceTree = "<group>"; };
 		197396DB15A505F60064BF7D /* TextureManager.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = TextureManager.cpp; sourceTree = "<group>"; };
 		197396DC15A505F60064BF7D /* TextureManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextureManager.h; sourceTree = "<group>"; };
-		19865981175E98F700723171 /* Data.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = Data.cpp; sourceTree = "<group>"; };
 		1987ADA6194F34BF003D2B3E /* libfmod_iphoneos.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libfmod_iphoneos.a; path = ../../lib/FMOD/lib/ios/libfmod_iphoneos.a; sourceTree = "<group>"; };
 		1987ADA7194F34BF003D2B3E /* libfmod_iphonesimulator.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libfmod_iphonesimulator.a; path = ../../lib/FMOD/lib/ios/libfmod_iphonesimulator.a; sourceTree = "<group>"; };
 		1987ADA8194F34BF003D2B3E /* libfmodstudio_iphoneos.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libfmodstudio_iphoneos.a; path = ../../lib/FMOD/lib/ios/libfmodstudio_iphoneos.a; sourceTree = "<group>"; };
@@ -814,7 +812,6 @@
 				1939A181152C425D00494609 /* Chrono.h */,
 				1939A184152C425D00494609 /* Color.h */,
 				1939A185152C425D00494609 /* Constants.h */,
-				19865981175E98F700723171 /* Data.cpp */,
 				1939A186152C425D00494609 /* Data.h */,
 				19A9025120EECAAE0084A669 /* Error.cpp */,
 				19A9025020EECAAE0084A669 /* Error.h */,
@@ -1661,7 +1658,6 @@
 				1913F13322764354005B2D3B /* physfs_archiver_zip.c in Sources */,
 				19B399AE20421D5600581AE0 /* hb-ot-map.cc in Sources */,
 				1913F11F22764354005B2D3B /* physfs_archiver_7z.c in Sources */,
-				19865982175E98F700723171 /* Data.cpp in Sources */,
 				19B3996720420FD700581AE0 /* hb-ot-tag.cc in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
