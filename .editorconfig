@@ -9,11 +9,13 @@ insert_final_newline = true
 [*.{cpp,cs,h,m,mm}]
 indent_size = 4
 
-[*.{cpp,h,m,mm}]
+[*.{cpp,h,m,md,mm}]
 max_line_length = 80
+guidelines = 80
 
 [*.cs]
 max_line_length = 100
+guidelines = 100
 
 [*.{cmake,js,json,natvis,sh,ts,yml},CMakeLists.txt]
 indent_size = 2

@@ -35,7 +35,7 @@
     "generate:shaders": "node tools/generate-shaders.js",
     "import-asset": "node tools/import-asset.js",
     "lint:tools": "eslint tools/",
-    "prettier:all": "prettier --no-config --prose-wrap always --write .vscode/*.json README.md doc/**/*.md js/*.json tools/*.js"
+    "prettier:all": "prettier --no-config --write .vscode/*.json js/*.json tools/*.js"
   },
   "devDependencies": {
     "@types/node": "^12.12.0",

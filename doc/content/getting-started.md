@@ -16,7 +16,7 @@ well.
 
 ## Building for Windows
 
-1. Install [Visual Studio Community](https://www.visualstudio.com/vs/community/).
+1. Install [Visual Studio Community](https://visualstudio.microsoft.com/vs/community/).
 
 2. Install [CMake](https://cmake.org/download/).
 
@@ -60,7 +60,7 @@ well.
 
 ## Building for macOS
 
-1. Install [Xcode](https://itunes.apple.com/app/xcode/id497799835?mt=12) from App Store.
+1. Install [Xcode](https://apps.apple.com/app/xcode/id497799835?mt=12) from App Store.
 
 2. After Xcode is installed, launch it once to install Command Line Tools.
 
@@ -141,7 +141,7 @@ You'll find an overview of configuration and feature flags further below.
 
 ## Building for iOS
 
-1. Install [Xcode](https://itunes.apple.com/app/xcode/id497799835?mt=12) from App Store.
+1. Install [Xcode](https://apps.apple.com/app/xcode/id497799835?mt=12) from App Store.
 2. After Xcode is installed, launch it once to install Command Line Tools.
 3. Install [Homebrew](https://brew.sh/).
 4. Install CMake: `brew install cmake`
