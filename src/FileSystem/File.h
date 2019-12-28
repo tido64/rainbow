@@ -14,6 +14,7 @@
 #include "Common/Data.h"
 #include "Common/Logging.h"
 #include "Common/NonCopyable.h"
+#include "Common/String.h"
 #include "Platform/Macros.h"
 
 #ifdef RAINBOW_OS_ANDROID

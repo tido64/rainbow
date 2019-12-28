@@ -6,6 +6,7 @@
 #define TEXT_SYSTEMFONTS_H_
 
 #include "Common/Data.h"
+#include "Common/String.h"
 
 namespace rainbow::text
 {

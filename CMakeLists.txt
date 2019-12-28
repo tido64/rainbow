@@ -39,7 +39,6 @@ set(SOURCE_FILES
     src/Common/Chrono.h
     src/Common/Color.h
     src/Common/Constants.h
-    src/Common/Data.cpp
     src/Common/Data.h
     src/Common/Error.cpp
     src/Common/Error.h

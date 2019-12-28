@@ -7,9 +7,9 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <type_traits>
 
 #include "Common/NonCopyable.h"
-#include "Common/String.h"
 #include "Platform/Macros.h"
 
 namespace rainbow
@@ -34,7 +34,7 @@ namespace rainbow
         enum class Ownership
         {
             Owner,
-            Reference
+            Reference,
         };
 
         template <typename T, size_t N>
@@ -57,23 +57,27 @@ namespace rainbow
         Data() = default;
 
         Data(Data&& d) noexcept
-            : ownership_(d.ownership_), allocated_(d.allocated_), sz_(d.sz_),
-              data_(d.data_)
+            : data_(d.data_), size_(d.size_), ownership_(d.ownership_)
         {
-            d.allocated_ = 0;
-            d.sz_ = 0;
             d.data_ = nullptr;
+            d.size_ = 0;
         }
 
         /// <summary>Constructs a wrapper around a buffer.</summary>
         Data(const void* buffer, size_t size, Ownership ownership)
-            : ownership_(ownership), allocated_(size), sz_(size),
-              // NOLINTNEXTLINE(cppcoreguidelines-pro-type-const-cast)
-              data_(const_cast<void*>(buffer))
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-const-cast)
+            : data_(const_cast<void*>(buffer)), size_(size),
+              ownership_(ownership)
         {
         }
 
-        ~Data();
+        ~Data()
+        {
+            if (ownership_ != Ownership::Owner)
+                return;
+
+            operator delete(data_);
+        }
 
         template <typename T>
         [[nodiscard]] auto as() const
@@ -88,7 +92,7 @@ namespace rainbow
         [[nodiscard]] auto bytes() const { return as<uint8_t*>(); }
 
         /// <summary>Returns the size of this buffer.</summary>
-        [[nodiscard]] auto size() const { return sz_; }
+        [[nodiscard]] auto size() const { return size_; }
 
         explicit operator bool() const { return data_ != nullptr; }
 
@@ -96,34 +100,31 @@ namespace rainbow
         operator NSData*() const
         {
             return [NSData dataWithBytesNoCopy:data_
-                                        length:sz_
+                                        length:size_
                                   freeWhenDone:NO];
         }
 
         operator NSMutableData*() const
         {
             return [NSMutableData dataWithBytesNoCopy:data_
-                                               length:sz_
+                                               length:size_
                                          freeWhenDone:NO];
         }
 #endif
 
     private:
-        /// <summary>
-        ///   Whether the buffer should be freed on destruction.
-        /// </summary>
-        Ownership ownership_ = Ownership::Owner;
-
-        /// <summary>Allocated memory size.</summary>
-        size_t allocated_ = 0;
+        /// <summary>Actual buffer, implemented as a C-array.</summary>
+        void* data_ = nullptr;
 
         /// <summary>
         ///   Size of used buffer, not necessarily equal to allocated.
         /// </summary>
-        size_t sz_ = 0;
+        size_t size_ = 0;
 
-        /// <summary>Actual buffer, implemented as a C-array.</summary>
-        void* data_ = nullptr;
+        /// <summary>
+        ///   Whether the buffer should be freed on destruction.
+        /// </summary>
+        Ownership ownership_ = Ownership::Owner;
     };
 }  // namespace rainbow
 

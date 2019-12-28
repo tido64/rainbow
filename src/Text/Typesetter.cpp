@@ -12,6 +12,7 @@
 // clang-format on
 
 #include "Common/Logging.h"
+#include "Common/String.h"
 #include "Common/TypeCast.h"
 
 using rainbow::czstring;
