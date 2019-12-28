@@ -12,10 +12,10 @@ namespace rainbow
     /// <summary>Structure for storing a colour (RGBA).</summary>
     struct Color
     {
-        uint8_t r = 0xff;
-        uint8_t g = 0xff;
-        uint8_t b = 0xff;
-        uint8_t a = 0xff;
+        uint8_t r = 0xff;  // NOLINT
+        uint8_t g = 0xff;  // NOLINT
+        uint8_t b = 0xff;  // NOLINT
+        uint8_t a = 0xff;  // NOLINT
 
         constexpr Color() = default;
 
@@ -24,9 +24,13 @@ namespace rainbow
         {
         }
 
+        constexpr Color(uint8_t l, uint8_t a) : Color(l, l, l, a) {}
+
         constexpr Color(uint32_t rgba)
-            : r(0xff & (rgba >> 24)), g(0xff & (rgba >> 16)),
-              b(0xff & (rgba >> 8)), a(0xff & rgba)
+            : Color(0xff & (rgba >> 24),
+                    0xff & (rgba >> 16),
+                    0xff & (rgba >> 8),
+                    0xff & rgba)
         {
         }
 
