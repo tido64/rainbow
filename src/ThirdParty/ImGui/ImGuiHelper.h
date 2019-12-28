@@ -8,7 +8,7 @@
 #include "ThirdParty/ImGui/imconfig.h"
 
 #include "ThirdParty/DisableWarnings.h"
-#include <imgui/imgui.h>
+#include <imgui/imgui.h>  // NOLINT(llvm-include-order)
 #include "ThirdParty/ReenableWarnings.h"
 
 #include "Input/Pointer.h"

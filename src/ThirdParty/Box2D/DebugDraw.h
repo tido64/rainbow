@@ -7,9 +7,11 @@
 
 #include <vector>
 
+// clang-format off
 #include "ThirdParty/DisableWarnings.h"
-#include <Box2D/Common/b2Draw.h>
+#include <Box2D/Common/b2Draw.h>  // NOLINT(llvm-include-order)
 #include "ThirdParty/ReenableWarnings.h"
+// clang-format on
 
 namespace b2
 {

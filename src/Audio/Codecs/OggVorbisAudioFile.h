@@ -7,9 +7,11 @@
 
 #include <array>
 
+// clang-format off
 #include "ThirdParty/DisableWarnings.h"
-#include <vorbis/vorbisfile.h>
+#include <vorbis/vorbisfile.h>  // NOLINT(llvm-include-order)
 #include "ThirdParty/ReenableWarnings.h"
+// clang-format on
 
 #include "Audio/AudioFile.h"
 #include "FileSystem/File.h"

@@ -6,10 +6,12 @@
 
 #include <string>
 
+// clang-format off
 #include "ThirdParty/DisableWarnings.h"
-#include <fmod_errors.h>
+#include <fmod_errors.h>  // NOLINT(llvm-include-order)
 #include <fmod_studio.hpp>
 #include "ThirdParty/ReenableWarnings.h"
+// clang-format on
 
 #include "Common/Logging.h"
 #include "FileSystem/FileSystem.h"

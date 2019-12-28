@@ -9,10 +9,12 @@
 #include <string>
 #include <thread>
 
+// clang-format off
 #include "ThirdParty/DisableWarnings.h"
-#include <absl/container/flat_hash_map.h>
+#include <absl/container/flat_hash_map.h>  // NOLINT(llvm-include-order)
 #include <cubeb/cubeb.h>
 #include "ThirdParty/ReenableWarnings.h"
+// clang-format on
 
 #include "Audio/AudioFile.h"
 #include "Audio/Mixer.h"

@@ -4,10 +4,12 @@
 
 #include "Text/Typesetter.h"
 
+// clang-format off
 #include "ThirdParty/DisableWarnings.h"
-#include <hb.h>
+#include <hb.h>  // NOLINT(llvm-include-order)
 #include <hb-ft.h>
 #include "ThirdParty/ReenableWarnings.h"
+// clang-format on
 
 #include "Common/Logging.h"
 #include "Common/TypeCast.h"

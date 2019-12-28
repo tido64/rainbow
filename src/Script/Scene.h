@@ -7,10 +7,12 @@
 
 #include <string>
 
+// clang-format off
 #include "ThirdParty/DisableWarnings.h"
-#include <absl/container/flat_hash_map.h>
+#include <absl/container/flat_hash_map.h>  // NOLINT(llvm-include-order)
 #include <duktape.h>
 #include "ThirdParty/ReenableWarnings.h"
+// clang-format on
 
 #include "Common/Passkey.h"
 #include "Common/String.h"

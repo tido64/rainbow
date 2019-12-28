@@ -4,9 +4,11 @@
 
 #include "Config.h"
 
+// clang-format off
 #include "ThirdParty/DisableWarnings.h"
 #include <absl/hash/hash.h>  // NOLINT(llvm-include-order)
 #include "ThirdParty/ReenableWarnings.h"
+// clang-format on
 
 #include <panini/panini.hpp>
 
