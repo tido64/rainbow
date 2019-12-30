@@ -1,7 +1,7 @@
 if(DEFINED CMAKE_SCRIPT_MODE_FILE)
   cmake_minimum_required(VERSION 3.11.4)
 else()
-  cmake_minimum_required(VERSION 3.5.2)
+  cmake_minimum_required(VERSION 3.8.2)
 endif()
 
 project(Rainbow)
@@ -24,6 +24,10 @@ option(USE_HEIMDALL     "Enable Heimdall debugging facilities" OFF)
 option(USE_PHYSICS      "Enable physics module (Box2D)" OFF)
 
 # Platform-specific flags
+set(CMAKE_C_STANDARD 11)
+set(CMAKE_C_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 include(${LOCAL_MODULE_PATH}/Unix.cmake)
 include(${LOCAL_MODULE_PATH}/Windows.cmake)
 
