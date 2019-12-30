@@ -6,6 +6,9 @@ TARGET_OS=${TARGET_OS:-$(uname)}
 case $1 in
   "install")
     case $TARGET_OS in
+      "Android")
+        $ANDROID_HOME/tools/bin/sdkmanager "cmake;3.10.2.4988404"
+        ;;
       "Darwin")
         sudo xcode-select --switch /Applications/Xcode_10.3.app/Contents/Developer
         brew bundle
