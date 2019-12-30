@@ -152,8 +152,6 @@ set(SOURCE_FILES
     src/Script/JavaScript/RenderQueue.h
     src/Script/NoGame.cpp
     src/Script/NoGame.h
-    src/Script/Scene.cpp
-    src/Script/Scene.h
     src/Script/Timer.cpp
     src/Script/Timer.h
     src/Script/TimingFunctions.h

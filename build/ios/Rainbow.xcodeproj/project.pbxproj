@@ -103,7 +103,6 @@
 		1948C033152C397D00E9B854 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1948C032152C397D00E9B854 /* AppDelegate.m */; };
 		195ACC40200ABA9D00FB7EDD /* Helper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 195ACC38200ABA9D00FB7EDD /* Helper.cpp */; };
 		195ACC41200ABA9D00FB7EDD /* JavaScript.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 195ACC3B200ABA9D00FB7EDD /* JavaScript.cpp */; };
-		195ACC46200ABAAE00FB7EDD /* Scene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 195ACC44200ABAAD00FB7EDD /* Scene.cpp */; };
 		195ACC47200ABAAE00FB7EDD /* NoGame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 195ACC45200ABAAD00FB7EDD /* NoGame.cpp */; };
 		1960AFD71A4E278E0015A3AD /* StableWorld.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1960AFCC1A4E278E0015A3AD /* StableWorld.cpp */; };
 		1960F19A204B532E00258DDE /* SystemFonts.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1960F199204B532D00258DDE /* SystemFonts.cpp */; };
@@ -386,9 +385,7 @@
 		195ACC3D200ABA9D00FB7EDD /* Module.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Module.h; sourceTree = "<group>"; };
 		195ACC3E200ABA9D00FB7EDD /* Modules.g.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Modules.g.h; sourceTree = "<group>"; };
 		195ACC3F200ABA9D00FB7EDD /* RenderQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RenderQueue.h; sourceTree = "<group>"; };
-		195ACC42200ABAAD00FB7EDD /* Scene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Scene.h; sourceTree = "<group>"; };
 		195ACC43200ABAAD00FB7EDD /* NoGame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NoGame.h; sourceTree = "<group>"; };
-		195ACC44200ABAAD00FB7EDD /* Scene.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = Scene.cpp; sourceTree = "<group>"; };
 		195ACC45200ABAAD00FB7EDD /* NoGame.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = NoGame.cpp; sourceTree = "<group>"; };
 		195D565617D90DD100C78117 /* Functional.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Functional.h; sourceTree = "<group>"; };
 		1960AFCC1A4E278E0015A3AD /* StableWorld.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = StableWorld.cpp; sourceTree = "<group>"; };
@@ -1105,8 +1102,6 @@
 				198F42681A9151CB00BE7A73 /* GameBase.h */,
 				195ACC45200ABAAD00FB7EDD /* NoGame.cpp */,
 				195ACC43200ABAAD00FB7EDD /* NoGame.h */,
-				195ACC44200ABAAD00FB7EDD /* Scene.cpp */,
-				195ACC42200ABAAD00FB7EDD /* Scene.h */,
 				198F42701A9151CB00BE7A73 /* Timer.cpp */,
 				198F42711A9151CB00BE7A73 /* Timer.h */,
 				198F42721A9151CB00BE7A73 /* TimingFunctions.h */,
@@ -1588,7 +1583,6 @@
 				1939A075152C401300494609 /* b2WeldJoint.cpp in Sources */,
 				1939A076152C401300494609 /* b2WheelJoint.cpp in Sources */,
 				1913F13022764354005B2D3B /* physfs_platform_posix.c in Sources */,
-				195ACC46200ABAAE00FB7EDD /* Scene.cpp in Sources */,
 				1913F12E22764354005B2D3B /* physfs_archiver_iso9660.c in Sources */,
 				19B399A320421D2900581AE0 /* hb-ot-shape-complex-indic.cc in Sources */,
 				1939A078152C401300494609 /* b2Rope.cpp in Sources */,
