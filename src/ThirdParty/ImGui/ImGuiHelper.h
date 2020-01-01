@@ -7,9 +7,11 @@
 
 #include "ThirdParty/ImGui/imconfig.h"
 
+// clang-format off
 #include "ThirdParty/DisableWarnings.h"
 #include <imgui/imgui.h>  // NOLINT(llvm-include-order)
 #include "ThirdParty/ReenableWarnings.h"
+// clang-format on
 
 #include "Input/Pointer.h"
 #include "Memory/Array.h"
@@ -17,12 +19,12 @@
 namespace rainbow
 {
     struct KeyStroke;
-}
+}  // namespace rainbow
 
 namespace rainbow::graphics
 {
     struct Context;
-}
+}  // namespace rainbow::graphics
 
 namespace rainbow::imgui
 {
@@ -33,12 +35,11 @@ namespace rainbow::imgui
     void init(float font_size, float scale);
     void new_frame(const graphics::Context&, uint64_t dt);
     void render(graphics::Context&, ImDrawData*);
-    bool set_key_state(const KeyStroke& key, bool down);
-    bool set_mouse_state(const ArrayView<Pointer>&, int surface_height);
-    bool set_mouse_state(const ArrayView<Pointer>&,
-                         int surface_height,
-                         bool down);
-    bool set_mouse_wheel(const ArrayView<Pointer>& wheels);
+    auto set_key_state(const KeyStroke& key, bool down) -> bool;
+    auto set_mouse_state(ArrayView<Pointer>, int surface_height) -> bool;
+    auto set_mouse_state(ArrayView<Pointer>, int surface_height, bool down)
+        -> bool;
+    auto set_mouse_wheel(ArrayView<Pointer> wheels) -> bool;
     void shutdown();
 }  // namespace rainbow::imgui
 
