@@ -6,11 +6,6 @@
 
 #include <limits>
 
-// TODO: This is a workaround for 'diagnostic push' bug in GCC. See
-// https://gcc.gnu.org/bugzilla/show_bug.cgi?id=53431 for details.
-#ifdef __clang__
-#    pragma clang diagnostic push
-#endif
 // clang-format off
 #include "ThirdParty/DisableWarnings.h"
 #define IMGUI_DISABLE_OSX_FUNCTIONS 1
@@ -19,9 +14,6 @@
 #include <imgui/imgui_widgets.cpp>
 #include "ThirdParty/ReenableWarnings.h"
 // clang-format on
-#ifdef __clang__
-#    pragma clang diagnostic pop
-#endif
 
 #include "Graphics/Buffer.h"
 #include "Graphics/ElementBuffer.h"
@@ -43,21 +35,36 @@ using rainbow::graphics::VertexArray;
 
 namespace
 {
-    constexpr ImWchar kCommandKey = 0x2318;
-    constexpr ImWchar kOptionKey = 0x2325;
-    constexpr ImWchar kGlyphRanges[]{
-        0x0020, 0x00ff, kCommandKey, kCommandKey, kOptionKey, kOptionKey, 0};
-
-    float g_initial_window_width = 0.0f;
-    Vec2f g_window_scale;
-
-    class Renderable
+    class RenderData
     {
     public:
-        auto& element_buffer() { return element_buffer_; }
-        auto& texture() { return texture_; }
-        auto& vertex_array() { return vertex_array_; }
-        auto& vertex_buffer() { return vertex_buffer_; }
+        [[nodiscard]] auto element_buffer() -> ElementBuffer&
+        {
+            return element_buffer_;
+        }
+
+        [[nodiscard]] auto initial_window_width() const
+        {
+            return initial_window_width_;
+        }
+
+        [[nodiscard]] auto texture() -> Texture& { return texture_; }
+
+        [[nodiscard]] auto vertex_array() -> VertexArray&
+        {
+            return vertex_array_;
+        }
+
+        [[nodiscard]] auto vertex_buffer() -> Buffer& { return vertex_buffer_; }
+
+        [[nodiscard]] auto window_scale() const { return window_scale_; }
+
+        void initial_window_width(float width)
+        {
+            initial_window_width_ = width;
+        }
+
+        void window_scale(Vec2f scale) { window_scale_ = scale; }
 
         void set_draw_list(const ImDrawList* list)
         {
@@ -71,11 +78,18 @@ namespace
         }
 
     private:
+        Vec2f window_scale_;
+        float initial_window_width_ = 0.0F;
         ElementBuffer element_buffer_;
         Buffer vertex_buffer_;
         VertexArray vertex_array_;
         Texture texture_;
     };
+
+    auto get_render_data(ImGuiIO& io) -> RenderData&
+    {
+        return *static_cast<RenderData*>(io.UserData);
+    }
 }  // namespace
 
 void rainbow::imgui::init(float font_size, float scale)
@@ -106,7 +120,7 @@ void rainbow::imgui::init(float font_size, float scale)
 #endif  // RAINBOW_SDL
 
     const float scaled_font_size = font_size * scale;
-    if (rainbow::text::monospace_font_path() == nullptr)
+    if (text::monospace_font_path() == nullptr)
     {
         ImFontConfig font_config;
         font_config.SizePixels = scaled_font_size;
@@ -114,28 +128,39 @@ void rainbow::imgui::init(float font_size, float scale)
     }
     else
     {
-        io.Fonts->AddFontFromFileTTF(rainbow::text::monospace_font_path(),
+        constexpr ImWchar kCommandKey = 0x2318;
+        constexpr ImWchar kOptionKey = 0x2325;
+        static constexpr std::array<ImWchar, 7> kGlyphRanges{
+            0x0020,
+            0x00ff,
+            kCommandKey,
+            kCommandKey,
+            kOptionKey,
+            kOptionKey,
+            0,
+        };
+        io.Fonts->AddFontFromFileTTF(text::monospace_font_path(),
                                      scaled_font_size,
                                      nullptr,
-                                     kGlyphRanges);
+                                     kGlyphRanges.data());
     }
 
-    auto renderable = std::make_unique<Renderable>().release();
-    io.UserData = renderable;
+    auto render_data = std::make_unique<RenderData>().release();
+    io.UserData = render_data;
 
     unsigned int buffer;
     glGenBuffers(1, &buffer);
-    renderable->element_buffer() = buffer;
-    renderable->vertex_array().reconfigure([] {
-        auto renderable = static_cast<Renderable*>(ImGui::GetIO().UserData);
-        renderable->element_buffer().bind();
-        renderable->vertex_buffer().bind();
+    render_data->element_buffer() = buffer;
+    render_data->vertex_array().reconfigure([] {
+        auto& render_data = get_render_data(ImGui::GetIO());
+        render_data.element_buffer().bind();
+        render_data.vertex_buffer().bind();
     });
 
     auto texture_manager = TextureManager::Get();
     const TextureFilter filter = texture_manager->mag_filter();
     texture_manager->set_filter(TextureFilter::Nearest);
-    renderable->texture() = texture_manager->create(
+    render_data->texture() = texture_manager->create(
         "rainbow://dear_imgui/monospace",
         [&io](TextureManager& texture_manager, const Texture& texture) {
             unsigned char* pixels;
@@ -147,24 +172,26 @@ void rainbow::imgui::init(float font_size, float scale)
     texture_manager->set_filter(filter);
 
     io.Fonts->TexID =
-        reinterpret_cast<void*>(static_cast<intptr_t>(renderable->texture()));
+        reinterpret_cast<void*>(static_cast<intptr_t>(render_data->texture()));
 }
 
 void rainbow::imgui::new_frame(const Context& ctx, uint64_t dt)
 {
     auto& io = ImGui::GetIO();
-    if (g_window_scale.x == 0.0f)
+    auto& render_data = get_render_data(io);
+    if (render_data.window_scale().x == 0.0F)
     {
-        g_initial_window_width = ctx.window_size.x;
-        g_window_scale =
-            Vec2f{narrow_cast<float>(ctx.surface_size.x) / ctx.window_size.x,
-                  narrow_cast<float>(ctx.surface_size.y) / ctx.window_size.y};
+        render_data.initial_window_width(ctx.window_size.x);
+        render_data.window_scale(
+            {narrow_cast<float>(ctx.surface_size.x) / ctx.window_size.x,
+             narrow_cast<float>(ctx.surface_size.y) / ctx.window_size.y});
         io.DisplaySize = ctx.window_size;
     }
 
-    io.DeltaTime = std::max(dt * 0.001f, std::numeric_limits<float>::epsilon());
-    io.DisplayFramebufferScale =
-        g_window_scale * ctx.window_size.x / g_initial_window_width;
+    io.DeltaTime = std::max(dt * 0.001F, std::numeric_limits<float>::epsilon());
+    io.DisplayFramebufferScale = render_data.window_scale() *
+                                 ctx.window_size.x /
+                                 render_data.initial_window_width();
 
     ImGui::NewFrame();
 }
@@ -175,19 +202,18 @@ void rainbow::imgui::render(Context& ctx, ImDrawData* draw_data)
     draw_data->ScaleClipRects(io.DisplayFramebufferScale);
 
     ScopedProjection projection(
-        ctx, {0.0f, io.DisplaySize.y, io.DisplaySize.x, 0.0f});
+        ctx, {0.0F, io.DisplaySize.y, io.DisplaySize.x, 0.0F});
     ScopedScissorTest scissor_test;
 
-    const int window_height =
-        truncate<int>(io.DisplaySize.y * io.DisplayFramebufferScale.y);
-    auto render = static_cast<Renderable*>(io.UserData);
-    render->vertex_array().bind();
+    const auto window_height = io.DisplaySize.y * io.DisplayFramebufferScale.y;
+    auto& render_data = get_render_data(io);
+    render_data.vertex_array().bind();
     for (int i = 0; i < draw_data->CmdListsCount; ++i)
     {
         const ImDrawList* cmd_list = draw_data->CmdLists[i];
         const ImDrawIdx* idx_buffer_offset = nullptr;
 
-        render->set_draw_list(cmd_list);
+        render_data.set_draw_list(cmd_list);
         for (auto&& cmd : cmd_list->CmdBuffer)
         {
             if (cmd.UserCallback != nullptr)
@@ -217,11 +243,11 @@ void rainbow::imgui::render(Context& ctx, ImDrawData* draw_data)
     }
 
     draw_data->Clear();
-    rainbow::graphics::bind_element_array();
+    graphics::bind_element_array();
 }
 
-bool rainbow::imgui::set_key_state([[maybe_unused]] const KeyStroke& key,
-                                   [[maybe_unused]] bool down)
+auto rainbow::imgui::set_key_state([[maybe_unused]] const KeyStroke& key,
+                                   [[maybe_unused]] bool down) -> bool
 {
     auto& io = ImGui::GetIO();
 #ifdef RAINBOW_SDL
@@ -273,22 +299,23 @@ bool rainbow::imgui::set_key_state([[maybe_unused]] const KeyStroke& key,
     return io.WantCaptureKeyboard;
 }
 
-bool rainbow::imgui::set_mouse_state(const ArrayView<Pointer>& p,
-                                     int surface_height)
+auto rainbow::imgui::set_mouse_state(ArrayView<Pointer> p, int surface_height)
+    -> bool
 {
     auto& io = ImGui::GetIO();
     auto& pos = io.MousePos;
-    pos.x = p[0].x / g_window_scale.x;
-    pos.y = (surface_height - p[0].y) / g_window_scale.y;
+    auto window_scale = get_render_data(io).window_scale();
+    pos.x = p[0].x / window_scale.x;
+    pos.y = (surface_height - p[0].y) / window_scale.y;
     return io.WantCaptureMouse;
 }
 
-bool rainbow::imgui::set_mouse_state(const ArrayView<Pointer>& p,
+auto rainbow::imgui::set_mouse_state(ArrayView<Pointer> p,
                                      int surface_height,
-                                     bool down)
+                                     bool down) -> bool
 {
     // Map SDL_BUTTON -> ImGuiIO::MouseDown.
-    static constexpr int kMouseButtons[]{0, 2, 1, 3, 4};
+    static constexpr std::array<int, 5> kMouseButtons{0, 2, 1, 3, 4};
 
     // Always update mouse position as we don't know whether an actual mouse or
     // touch pad is attached.
@@ -307,18 +334,18 @@ bool rainbow::imgui::set_mouse_state(const ArrayView<Pointer>& p,
     return io.WantCaptureMouse;
 }
 
-bool rainbow::imgui::set_mouse_wheel(const ArrayView<Pointer>& wheels)
+auto rainbow::imgui::set_mouse_wheel(ArrayView<Pointer> wheels) -> bool
 {
     // 1 unit scrolls about 5 lines text. Adjust to make it 1:1.
     auto& io = ImGui::GetIO();
-    io.MouseWheel = wheels[0].y * 0.2f;
-    io.MouseWheelH = wheels[0].x * 0.2f;
+    io.MouseWheel = wheels[0].y * 0.2F;
+    io.MouseWheelH = wheels[0].x * 0.2F;
     return io.WantCaptureMouse;
 }
 
 void rainbow::imgui::shutdown()
 {
-    auto& io = ImGui::GetIO();
-    delete static_cast<Renderable*>(io.UserData);
+    // NOLINTNEXTLINE(cppcoreguidelines-owning-memory)
+    delete &get_render_data(ImGui::GetIO());
     ImGui::DestroyContext();
 }
