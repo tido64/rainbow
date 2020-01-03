@@ -33,7 +33,7 @@ namespace rainbow::graphics
 
         template <typename T>
         RenderUnit(T& variant, std::string tag = {})
-            : enabled_(true), variant_(&variant), tag_(std::move(tag))
+            : variant_(&variant), tag_(std::move(tag))
         {
         }
 
@@ -49,37 +49,42 @@ namespace rainbow::graphics
         {
         }
 
-        auto is_enabled() const { return enabled_; }
-        auto object() const -> const variant_type& { return variant_; }
-        auto tag() const -> const std::string& { return tag_; }
+        [[nodiscard]] auto is_enabled() const { return enabled_; }
 
-        void set_tag(std::string tag) { tag_ = std::move(tag); }
+        [[nodiscard]] auto object() const -> const variant_type&
+        {
+            return variant_;
+        }
+
+        [[nodiscard]] auto tag() const -> std::string_view { return tag_; }
+
+        void set_tag(std::string_view tag) { tag_ = tag; }
 
         void disable() { enabled_ = false; }
         void enable() { enabled_ = true; }
 
-        friend bool operator==(const RenderUnit& lhs, const RenderUnit& rhs)
+        friend auto operator==(const RenderUnit& lhs, const RenderUnit& rhs)
         {
             return lhs.variant_ == rhs.variant_;
         }
 
-        friend bool operator!=(const RenderUnit& lhs, const RenderUnit& rhs)
+        friend auto operator!=(const RenderUnit& lhs, const RenderUnit& rhs)
         {
             return !(lhs == rhs);
         }
 
-        friend bool operator==(czstring tag, const RenderUnit& unit)
+        friend auto operator==(czstring tag, const RenderUnit& unit)
         {
             return tag == unit.tag();
         }
 
-        friend bool operator==(const RenderUnit& unit, czstring tag)
+        friend auto operator==(const RenderUnit& unit, czstring tag)
         {
             return unit.tag() == tag;
         }
 
     private:
-        bool enabled_;
+        bool enabled_ = true;
         variant_type variant_;
         std::string tag_;
     };

@@ -5,23 +5,22 @@
 #ifndef GRAPHICS_DRAWABLE_H_
 #define GRAPHICS_DRAWABLE_H_
 
-#include "Math/Vec2.h"
+#include <cstdint>
 
 namespace rainbow
 {
-    /// <summary>A drawable interface.</summary>
+    /// <summary>Interface for a drawable object.</summary>
     class IDrawable
     {
     public:
-        virtual ~IDrawable() {}
-
-        auto get() { return this; }
-
-        void draw() { draw_impl(); }
+        void draw() const { draw_impl(); }
         void update(uint64_t dt) { update_impl(dt); }
 
+    protected:
+        virtual ~IDrawable() = default;
+
     private:
-        virtual void draw_impl() = 0;
+        virtual void draw_impl() const = 0;
         virtual void update_impl(uint64_t dt) = 0;
     };
 }  // namespace rainbow

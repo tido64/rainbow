@@ -19,27 +19,7 @@
 #define BRIEF(type, properties) "(" #type ") " properties
 #define ONLY_TAG(type) BRIEF(type, "tag=\"%s\"")
 #define WITH_TAG(type, properties) BRIEF(type, properties " tag=\"%s\"")
-
-#define IM_TEXT_BOOL(source, prop)                                             \
-    ImGui::Text(#prop " = %s", (source).prop() ? "true" : "false")
-#define IM_TEXT_COLOR(source, prop)                                            \
-    do                                                                         \
-    {                                                                          \
-        ImGui::Text(#prop " = ");                                              \
-        ImGui::SameLine();                                                     \
-        ImGui::ColorButton(                                                    \
-            "", (source).prop(), ImGuiColorEditFlags_NoLabel, ImVec2(14, 14)); \
-        ImGui::SameLine();                                                     \
-        ImGui::Text("rgba(%u, %u, %u, %u)",                                    \
-                    (source).prop().r,                                         \
-                    (source).prop().g,                                         \
-                    (source).prop().b,                                         \
-                    (source).prop().a);                                        \
-    } while (false)
-#define IM_TEXT_NUMBER(source, prop) ImGui::Text(#prop " = %f", (source).prop())
-#define IM_TEXT_UINT32(source, prop) ImGui::Text(#prop " = %u", (source).prop())
-#define IM_TEXT_VEC2(source, prop)                                             \
-    ImGui::Text(#prop " = %f,%f", (source).prop().x, (source).prop().y)
+#define WRITE_PROP(obj, prop) write_prop(#prop, (obj).prop())
 
 using heimdall::Overlay;
 using rainbow::Animation;
@@ -50,6 +30,7 @@ using rainbow::Label;
 using rainbow::Pointer;
 using rainbow::Sprite;
 using rainbow::SpriteBatch;
+using rainbow::Vec2f;
 using rainbow::Vec2i;
 
 namespace graphics = rainbow::graphics;
@@ -67,10 +48,49 @@ namespace
     constexpr float kStyleWindowWidth = 400.0F;
     constexpr float kStyleWindowHeight = 400.0F;
 
-    template <typename T>
-    void print_address(const T* obj)
+    void write_address(const void* obj)
     {
-        ImGui::Text("address = %p", static_cast<const void*>(obj));
+        ImGui::Text("address = %p", obj);
+    }
+
+    void write_prop(std::string_view property, std::string_view value)
+    {
+        ImGui::Text("%s = %s", property.data(), value.data());
+    }
+
+    void write_prop(std::string_view property, bool value)
+    {
+        using namespace std::literals::string_view_literals;
+        write_prop(property, value ? "true"sv : "false"sv);
+    }
+
+    void write_prop(std::string_view property, int value)
+    {
+        ImGui::Text("%s = %i", property.data(), value);
+    }
+
+    void write_prop(std::string_view property, uint32_t value)
+    {
+        ImGui::Text("%s = %u", property.data(), value);
+    }
+
+    void write_prop(std::string_view property, float value)
+    {
+        ImGui::Text("%s = %f", property.data(), value);
+    }
+
+    void write_prop(std::string_view property, Color c)
+    {
+        ImGui::Text("%s = ", property.data());
+        ImGui::SameLine();
+        ImGui::ColorButton("", c, ImGuiColorEditFlags_NoLabel, {14.0F, 14.0F});
+        ImGui::SameLine();
+        ImGui::Text("rgba(%u, %u, %u, %u)", c.r, c.g, c.b, c.a);
+    }
+
+    void write_prop(std::string_view property, Vec2f v)
+    {
+        ImGui::Text("%s = %f,%f", property.data(), v.x, v.y);
     }
 
     template <typename T>
@@ -88,15 +108,15 @@ namespace
                             sprite.width(),
                             sprite.height()))
         {
-            print_address(&sprite);
-            IM_TEXT_VEC2(sprite, position);
-            IM_TEXT_COLOR(sprite, color);
-            IM_TEXT_VEC2(sprite, scale);
-            IM_TEXT_NUMBER(sprite, angle);
-            IM_TEXT_VEC2(sprite, pivot);
-            IM_TEXT_BOOL(sprite, is_flipped);
-            IM_TEXT_BOOL(sprite, is_hidden);
-            IM_TEXT_BOOL(sprite, is_mirrored);
+            write_address(&sprite);
+            WRITE_PROP(sprite, position);
+            WRITE_PROP(sprite, color);
+            WRITE_PROP(sprite, scale);
+            WRITE_PROP(sprite, angle);
+            WRITE_PROP(sprite, pivot);
+            WRITE_PROP(sprite, is_flipped);
+            WRITE_PROP(sprite, is_hidden);
+            WRITE_PROP(sprite, is_mirrored);
             ImGui::TreePop();
         }
     }
@@ -131,7 +151,7 @@ namespace
 
     struct CreateNode
     {
-        czstring tag;
+        czstring tag;  // NOLINT
 
         void operator()(Animation* animation) const
         {
@@ -141,8 +161,8 @@ namespace
                                 animation->current_frame(),
                                 tag))
             {
-                print_address(animation);
-                IM_TEXT_UINT32(*animation, frame_rate);
+                write_address(animation);
+                WRITE_PROP(*animation, frame_rate);
                 create_node(*animation->sprite());
                 ImGui::TreePop();
             }
@@ -153,9 +173,11 @@ namespace
             if (ImGui::TreeNode(
                     label, WITH_TAG(Label, "%s"), label->text(), tag))
             {
-                print_address(label);
-                IM_TEXT_VEC2(*label, position);
-                IM_TEXT_COLOR(*label, color);
+                write_address(label);
+                WRITE_PROP(*label, position);
+                WRITE_PROP(*label, font);
+                WRITE_PROP(*label, font_size);
+                WRITE_PROP(*label, color);
                 ImGui::TreePop();
             }
         }
@@ -167,8 +189,8 @@ namespace
                                 batch->size(),
                                 tag))
             {
-                print_address(batch);
-                IM_TEXT_BOOL(*batch, is_visible);
+                write_address(batch);
+                WRITE_PROP(*batch, is_visible);
 
                 for (auto&& sprite : *batch)
                     create_node(sprite);
@@ -182,7 +204,7 @@ namespace
         {
             if (ImGui::TreeNode(drawable, ONLY_TAG(IDrawable), tag))
             {
-                print_address(drawable);
+                write_address(drawable);
                 ImGui::TreePop();
             }
         }
@@ -236,10 +258,10 @@ void Overlay::draw_performance(float scale)
 
     ImGui::TextWrapped("Draw count: %u", graphics::draw_count());
 
-    char buffer[128];
+    std::array<char, 128> buffer;
     snprintf_q(  //
-        buffer,
-        rainbow::array_size(buffer),
+        buffer.data(),
+        buffer.size(),
         "Frame time: %.01f ms/frame",
         mean(frame_times_));
     ImGui::PlotLines(  //
@@ -248,14 +270,14 @@ void Overlay::draw_performance(float scale)
         &frame_times_,
         rainbow::narrow_cast<int>(frame_times_.size()),
         0,
-        buffer,
+        buffer.data(),
         std::numeric_limits<float>::min(),
         100.0F,
         graph_size);
 
     snprintf_q(  //
-        buffer,
-        rainbow::array_size(buffer),
+        buffer.data(),
+        buffer.size(),
         "Video memory: %.2f MBs",
         vmem_usage_.back());
     ImGui::PlotLines(  //
@@ -264,7 +286,7 @@ void Overlay::draw_performance(float scale)
         &vmem_usage_,
         rainbow::narrow_cast<int>(vmem_usage_.size()),
         0,
-        buffer,
+        buffer.data(),
         std::numeric_limits<float>::min(),
         upper_limit(vmem_usage_),
         graph_size);
@@ -309,7 +331,7 @@ void Overlay::draw_render_queue()
     }
 
     for (auto&& unit : render_queue)
-        rainbow::visit(CreateNode{unit.tag().c_str()}, unit.object());
+        rainbow::visit(CreateNode{unit.tag().data()}, unit.object());
 }
 
 void Overlay::draw_startup_message()
@@ -334,7 +356,7 @@ void Overlay::draw_startup_message()
     ImGui::End();
 }
 
-void Overlay::draw_impl()
+void Overlay::draw_impl() const
 {
     auto draw_data = ImGui::GetDrawData();
     if (draw_data == nullptr || !draw_data->Valid)
