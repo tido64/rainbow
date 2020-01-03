@@ -9,6 +9,7 @@
 
 #include "Graphics/Drawable.h"
 #include "Input/InputListener.h"
+#include "Math/Vec2.h"
 
 namespace rainbow
 {
@@ -24,8 +25,8 @@ namespace heimdall
 
     public:
         Overlay(rainbow::Director& director)
-            : enabled_(false), director_(director),
-              frame_times_(kDataSampleSize), vmem_usage_(kDataSampleSize)
+            : director_(director), frame_times_(kDataSampleSize),
+              vmem_usage_(kDataSampleSize)
         {
         }
 
@@ -39,7 +40,7 @@ namespace heimdall
         void enable() { enabled_ = true; }
 
     private:
-        bool enabled_;
+        bool enabled_ = false;
         rainbow::Director& director_;
         std::deque<uint64_t> frame_times_;
         std::deque<float> vmem_usage_;
@@ -53,7 +54,7 @@ namespace heimdall
 
         // IDrawable implementation details
 
-        void draw_impl() override;
+        void draw_impl() const override;
         void update_impl(uint64_t) override;
 
         // InputListener implementation details

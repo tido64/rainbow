@@ -25,7 +25,11 @@ namespace
         int drawn_ = 0;
         int updated_ = 0;
 
-        void draw_impl() override { ++drawn_; }
+        void draw_impl() const override
+        {
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-const-cast)
+            ++const_cast<TestDrawable*>(this)->drawn_;
+        }
 
         void update_impl(uint64_t dt) override
         {
