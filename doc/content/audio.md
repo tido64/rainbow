@@ -37,9 +37,9 @@ function Rainbow.Audio.release(sound: Sound): undefined;
 
 <!-- C++ -->
 ```cpp
-Sound*  rainbow::audio::load_sound   (const char* path);
-Sound*  rainbow::audio::load_stream  (const char* path);
-void    rainbow::audio::release      (Sound*);
+auto rainbow::audio::load_sound(const char* path) -> Sound*;
+auto rainbow::audio::load_stream(const char* path) -> Sound*;
+void rainbow::audio::release(Sound*);
 ```
 
 <!--END_DOCUSAURUS_CODE_TABS-->
@@ -66,12 +66,12 @@ function Rainbow.Audio.stop(channel: Channel): void;
 
 <!-- C++ -->
 ```cpp
-bool      rainbow::audio::is_paused   (Channel*);
-bool      rainbow::audio::is_playing  (Channel*);
-void      rainbow::audio::pause       (Channel*);
-Channel*  rainbow::audio::play        (Channel*);
-Channel*  rainbow::audio::play        (Sound*, Vec2f world_position = Vec2f::Zero);
-void      rainbow::audio::stop        (Channel*);
+auto rainbow::audio::is_paused(Channel*) -> bool;
+auto rainbow::audio::is_playing(Channel*) -> bool;
+void rainbow::audio::pause(Channel*);
+auto rainbow::audio::play(Channel*) -> Channel*;
+auto rainbow::audio::play(Sound*, Vec2f world_position = Vec2f::Zero) -> Channel*;
+void rainbow::audio::stop(Channel*);
 ```
 
 <!--END_DOCUSAURUS_CODE_TABS-->
@@ -95,9 +95,9 @@ function Rainbow.Audio.setWorldPosition(channel: Channel, position: { x: number,
 
 <!-- C++ -->
 ```cpp
-void  rainbow::audio::set_loop_count      (Channel*, int count);
-void  rainbow::audio::set_volume          (Channel*, float volume);
-void  rainbow::audio::set_world_position  (Channel*, Vec2f position);
+void rainbow::audio::set_loop_count(Channel*, int count);
+void rainbow::audio::set_volume(Channel*, float volume);
+void rainbow::audio::set_world_position(Channel*, Vec2f position);
 ```
 
 <!--END_DOCUSAURUS_CODE_TABS-->

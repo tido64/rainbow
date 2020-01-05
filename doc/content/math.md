@@ -10,7 +10,7 @@ stated.
 ## Power of 2
 
 ```c++
-unsigned int  ceil_pow2  (unsigned int i);
+auto ceil_pow2(unsigned int i) -> unsigned int;
 ```
 
 Rounds `i` up to the nearest power of 2.
@@ -18,13 +18,13 @@ Rounds `i` up to the nearest power of 2.
 > 0 is incorrectly considered a power of 2.
 
 ```c++
-unsigned int  floor_pow2  (unsigned int i);
+auto floor_pow2(unsigned int i) -> unsigned int;
 ```
 
 Rounds `i` down to the nearest power of 2.
 
 ```c++
-bool  is_pow2  (unsigned int i);
+auto is_pow2(unsigned int i) -> bool;
 ```
 
 Returns whether integer `i` is a power of 2.
@@ -32,11 +32,11 @@ Returns whether integer `i` is a power of 2.
 ## Trigonometry
 
 ```c++
-template <typename T, typename = FloatingPoint<T>>
-T  degrees  (T r);
+template <typename T>
+auto degrees(T r) -> T;
 
-template <typename T, typename = FloatingPoint<T>>
-T  radian   (T d);
+template <typename T>
+auto radian(T d) -> T;
 ```
 
 Converts values between degrees and radians.
@@ -56,42 +56,42 @@ using Vec2u = Vec2<unsigned>;
 
 ```c++
 template <typename T>
-const Vec2<T>  Vec2<T>::Down;
+const Vec2<T> Vec2<T>::Down;
 ```
 
 Vector representing down; shorthand for `Vec2<T>(0, -1)`.
 
 ```c++
 template <typename T>
-const Vec2<T>  Vec2<T>::Left;
+const Vec2<T> Vec2<T>::Left;
 ```
 
 Vector representing left; shorthand for `Vec2<T>(-1, 0)`.
 
 ```c++
 template <typename T>
-const Vec2<T>  Vec2<T>::One;
+const Vec2<T> Vec2<T>::One;
 ```
 
 One vector; shorthand for `Vec2<T>(1, 1)`.
 
 ```c++
 template <typename T>
-const Vec2<T>  Vec2<T>::Right;
+const Vec2<T> Vec2<T>::Right;
 ```
 
 Vector representing right; shorthand for `Vec2<T>(1, 0)`.
 
 ```c++
 template <typename T>
-const Vec2<T>  Vec2<T>::Up;
+const Vec2<T> Vec2<T>::Up;
 ```
 
 Vector representing up; shorthand for `Vec2<T>(0, 1)`.
 
 ```c++
 template <typename T>
-const Vec2<T>  Vec2<T>::Zero;
+const Vec2<T> Vec2<T>::Zero;
 ```
 
 Zero vector; shorthand for `Vec2<T>(0, 0)`.
@@ -99,27 +99,27 @@ Zero vector; shorthand for `Vec2<T>(0, 0)`.
 ### Methods
 
 ```c++
-float  Vec2<T>::angle  (const Vec2 &v) const;
+auto Vec2<T>::angle(const Vec2 &v) const -> float;
 ```
 
 Returns the angle (in radians) between two points.
 
 ```c++
-float  Vec2<T>::distance  (const Vec2 &v) const;
+auto Vec2<T>::distance(const Vec2 &v) const -> float;
 ```
 
 Returns the distance between two points.
 
 ```c++
-float  Vec2<T>::distance_sq  (const Vec2 &v) const;
+auto Vec2<T>::distance_sq(const Vec2 &v) const -> float;
 ```
 
-Returns the distance between two points, squared. This method skips the square
-root step performed in `distance()` and is therefore preferred unless you need
-the exact distance.
+Returns the distance between two points, squared. This method returns before
+calculating the square root as opposed to `distance()`. This can give you some
+performance gains if you don't need the exact distance.
 
 ```c++
-bool  Vec2<T>::is_zero()  const;
+auto Vec2<T>::is_zero() const -> bool;
 ```
 
 Returns whether both vector components are zero.
@@ -202,27 +202,20 @@ Equivalent to `v.x == w.x && v.y == w.y`.
 
 ```c++
 template <typename T, typename = FloatingPoint<T>>
-bool  are_equal  (T a, T b);
+auto are_equal(T a, T b) -> bool;
 ```
 
 Returns whether two floating point numbers are (almost) equal. Based on the
 `AlmostEqualRelative()` implementation from a [Random ASCII blog post][1].
 
 ```c++
-template <typename T>
-T  clamp  (T x, T min_val, T max_val);
-```
-
-Returns the restricted value of `x` clamped in the range [`min_val`, `max_val`].
-
-```c++
-float  fast_invsqrt  (float x);
+auto fast_invsqrt(float x) -> float;
 ```
 
 Returns an approximation of 1/√x using the infamous constant 0x5f3759df.
 
 ```c++
-bool  is_almost_zero  (float x);
+auto is_almost_zero(float x) -> bool;
 ```
 
 Returns whether `x` is practically zero. A number is considered almost zero if

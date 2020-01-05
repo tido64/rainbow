@@ -185,7 +185,7 @@ Sets new frames to be played.
 auto release() -> const Rect*;
 ```
 
-Releases ownership of animation frames and returns it.
+**C++ only:** Releases ownership of animation frames and returns it.
 
 ### Changing Sprite To Animate
 
@@ -254,9 +254,10 @@ function setCallback(callback: (animation: Animation, event: AnimationEvent) => 
 ```cpp
 void Animation::set_callback(Animation::Callback);
 
-// Where `Animation::Callback` is a callable whose signature is
-// `void(Animation *animation, AnimationEvent event)`, and `animation` is the
-// animation object that triggered `event`.
+// Where `Animation::Callback` is a callable whose
+// signature is `void(Animation*, AnimationEvent)`,
+// and `animation` is the animation object that
+// triggered `event`.
 ```
 
 <!--END_DOCUSAURUS_CODE_TABS-->

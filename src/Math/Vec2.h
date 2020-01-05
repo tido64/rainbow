@@ -66,7 +66,12 @@ namespace rainbow
             return std::sqrt(distance_sq(v));
         }
 
-        /// <summary>Returns the distance between two points, squared.</summary>
+        /// <summary>
+        ///   Returns the distance between two points, squared. This method
+        ///   returns before calculating the square root as opposed to
+        ///   `distance()`. This can give you some performance gains if you
+        ///   don't need the exact distance.
+        /// </summary>
         [[nodiscard]] auto distance_sq(const Vec2& v) const
         {
             const Vec2 w = *this - v;
