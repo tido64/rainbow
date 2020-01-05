@@ -13,6 +13,7 @@
 
 #include "Common/NonCopyable.h"
 #include "Graphics/Sprite.h"
+#include "Math/Geometry.h"
 
 namespace rainbow
 {
@@ -20,42 +21,16 @@ namespace rainbow
     class Animation : private NonCopyable<Animation>
     {
     public:
-        class Frame
-        {
-        public:
-            static constexpr auto end()
-            {
-                return std::numeric_limits<uint32_t>::max();
-            }
-
-            constexpr Frame() : frame_(end()) {}
-            constexpr Frame(uint32_t frame) : frame_(frame) {}
-
-            auto operator=(uint32_t frame) -> Frame&
-            {
-                frame_ = frame;
-                return *this;
-            }
-
-            constexpr explicit operator uint32_t() const { return frame_; }
-
-            friend constexpr auto operator==(Frame lhs, uint32_t rhs)
-            {
-                return lhs.frame_ == rhs;
-            }
-
-        private:
-            uint32_t frame_;
-        };
-
         using Callback = std::function<void(Animation*, AnimationEvent)>;
-        using Frames = std::unique_ptr<Frame[]>;
+        using Frames = std::unique_ptr<Rect[]>;
+
+        static constexpr auto end_frame() { return Rect{}; }
 
         /// <summary>Constructs a sprite animation.</summary>
         /// <param name="sprite">The sprite to animate.</param>
         /// <param name="frames">
-        ///   Array of texture ids to be used as frames, terminated with
-        ///   <c>Frame::end()</c>.
+        ///   Array of texture areas to be used as frames, terminated with
+        ///   <c>end_frame()</c>.
         /// </param>
         /// <param name="fps">Frames per second.</param>
         /// <param name="delay">
@@ -99,8 +74,8 @@ namespace rainbow
         /// <summary>Sets animation frames.</summary>
         /// <remarks>This method takes ownership of the array.</remarks>
         /// <param name="frames">
-        ///   Array of texture ids to be used as frames, terminated with
-        ///   <c>Frame::end()</c>.
+        ///   Array of texture areas to be used as frames, terminated with
+        ///   <c>end_frame()</c>.
         /// </param>
         void set_frames(Frames frames);
 
@@ -135,20 +110,20 @@ namespace rainbow
 #endif
 
     private:
-        bool stopped_;
+        bool stopped_ = true;
 
         /// <summary>Accumulated monotonic time.</summary>
-        unsigned int accumulated_;
+        unsigned int accumulated_ = 0;
 
         /// <summary>Time till a tick.</summary>
         unsigned int interval_;
 
         /// <summary>Current frame.</summary>
-        unsigned int frame_;
+        unsigned int frame_ = 0;
 
         /// <summary>
-        ///   Array of texture ids to be used as frames, terminated with
-        ///   <c>Frame::end()</c>.
+        ///   Array of texture areas to be used as frames, terminated with
+        ///   <c>Animation::end_frame()</c>.
         /// </summary>
         Frames frames_;
 
@@ -162,7 +137,7 @@ namespace rainbow
         int delay_;
 
         /// <summary>Number of frames idled.</summary>
-        int idled_;
+        int idled_ = 0;
 
         /// <summary>Event callback.</summary>
         Callback callback_;

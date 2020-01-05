@@ -64,6 +64,9 @@ namespace rainbow::graphics
 
         auto init_state() const -> GLuint;
     };
+
+    void draw(const VertexArray& array, uint32_t count);
+    void draw(const VertexArray& array, uint32_t first, uint32_t count);
 }  // namespace rainbow::graphics
 
 #endif

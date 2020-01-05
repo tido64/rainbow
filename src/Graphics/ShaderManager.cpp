@@ -18,6 +18,8 @@ using rainbow::File;
 using rainbow::FileType;
 using rainbow::graphics::ShaderManager;
 
+namespace gl = rainbow::graphics::gl;
+
 namespace
 {
     const Shader::AttributeParams kAttributeDefaultParams[]{
@@ -29,9 +31,9 @@ namespace
     void shader_source(GLuint shader, czstring string)
     {
 #ifdef GL_ES_VERSION_2_0
-        auto glsl_header = rainbow::gl::GLES2_header_glsl();
+        auto glsl_header = gl::GLES2_header_glsl();
 #else
-        auto glsl_header = rainbow::gl::GL2_1_header_glsl();
+        auto glsl_header = gl::GL2_1_header_glsl();
 #endif
         const czstring source[]{glsl_header, string};
         glShaderSource(shader, 2, source, nullptr);
@@ -199,12 +201,12 @@ void ShaderManager::update_projection()
     // The matrix is stored in column-major order.
     const auto& rect = context_->projection;
     const float projection[]{
-        2.0f / (rect.right - rect.left), 0.0f, 0.0f, 0.0f,
-        0.0f, 2.0f / (rect.top - rect.bottom), 0.0f, 0.0f,
-        0.0f, 0.0f, -1.0f, 0.0f,
-        -(rect.right + rect.left) / (rect.right - rect.left),
-        -(rect.top + rect.bottom) / (rect.top - rect.bottom),
-        0.0f, 1.0f};
+        2.0F / rect.width, 0.0F, 0.0F, 0.0F,
+        0.0F, 2.0F / rect.height, 0.0F, 0.0F,
+        0.0F, 0.0F, -1.0F, 0.0F,
+        -(rect.width + rect.left + rect.left) / rect.width,
+        -(rect.height + rect.bottom + rect.bottom) / rect.height,
+        0.0F, 1.0F};
     glUniformMatrix4fv(get_program().mvp_matrix, 1, GL_FALSE, projection);
 }
 

@@ -7,7 +7,7 @@
 #include "Common/String.h"
 #include "Graphics/ShaderDetails.h"
 
-namespace rainbow::gl
+namespace rainbow::graphics::gl
 {
     auto DiffuseLight2D_frag() -> Shader::Params;
     auto DiffuseLightNormal_frag() -> Shader::Params;
@@ -18,4 +18,4 @@ namespace rainbow::gl
     auto NormalMapped_vert() -> Shader::Params;
     auto Simple_frag() -> Shader::Params;
     auto Simple2D_vert() -> Shader::Params;
-}  // namespace rainbow::gl
+}  // namespace rainbow::graphics::gl

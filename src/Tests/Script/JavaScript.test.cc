@@ -20,7 +20,7 @@ namespace
     class JavaScriptTest : public ::testing::Test
     {
     protected:
-        duk::Context context_;
+        duk::Context context_{nullptr};
     };
 }  // namespace
 

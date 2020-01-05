@@ -10,6 +10,8 @@
 using rainbow::graphics::ShaderManager;
 using rainbow::shaders::Diffuse;
 
+namespace gl = rainbow::graphics::gl;
+
 Diffuse::Diffuse(ShaderManager& shader_manager, bool normal)
     : shader_manager_(shader_manager), cutoff_(0), radius_(0), position_(0),
       program_(ShaderManager::kInvalidProgram)

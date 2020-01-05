@@ -34,7 +34,11 @@ namespace rainbow
         {
         }
 
-        auto operator=(uint32_t c) -> Color& { return *this = Color{c}; }
+        auto operator=(uint32_t c) -> Color&
+        {
+            // NOLINTNEXTLINE(cppcoreguidelines-c-copy-assignment-signature,misc-unconventional-assign-operator)
+            return *this = Color{c};
+        }
 
         friend constexpr auto operator==(Color lhs, Color rhs)
         {
@@ -44,8 +48,10 @@ namespace rainbow
                    lhs.a == rhs.a;
         }
 
-        // TODO: Having constexpr here breaks Xcode 8.3
-        friend auto operator!=(Color lhs, Color rhs) { return !(lhs == rhs); }
+        friend constexpr auto operator!=(Color lhs, Color rhs)
+        {
+            return !(lhs == rhs);
+        }
     };
 }  // namespace rainbow
 

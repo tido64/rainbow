@@ -17,11 +17,16 @@
 #include "Graphics/RenderQueue.h"
 #include "Graphics/Sprite.h"
 #include "Graphics/SpriteBatch.h"
-#include "Graphics/TextureAtlas.h"
+#include "Graphics/Texture.h"
 #include "Input/Controller.h"
 #include "Input/Input.h"
 #include "Input/VirtualKey.h"
 #include "Script/JavaScript/Helper.h"
+
+#ifdef __GNUC__
+#    pragma GCC diagnostic push
+#    pragma GCC diagnostic ignored "-Wold-style-cast"
+#endif
 
 // clang-format off
 
@@ -65,7 +70,7 @@ void rainbow::duk::register_module<rainbow::Animation>(duk_context* ctx, duk_idx
             [](duk_context* ctx) -> duk_ret_t {
                 auto obj = duk::push_this<Animation>(ctx);
                 auto args = duk::get_args<Animation::Callback>(ctx);
-                obj->set_callback(duk::forward(std::get<0>(args)));
+                obj->set_callback(std::get<0>(args));
                 return 0;
             },
             1);
@@ -75,7 +80,7 @@ void rainbow::duk::register_module<rainbow::Animation>(duk_context* ctx, duk_idx
             [](duk_context* ctx) -> duk_ret_t {
                 auto obj = duk::push_this<Animation>(ctx);
                 auto args = duk::get_args<int>(ctx);
-                obj->set_delay(duk::forward(std::get<0>(args)));
+                obj->set_delay(std::get<0>(args));
                 return 0;
             },
             1);
@@ -85,7 +90,7 @@ void rainbow::duk::register_module<rainbow::Animation>(duk_context* ctx, duk_idx
             [](duk_context* ctx) -> duk_ret_t {
                 auto obj = duk::push_this<Animation>(ctx);
                 auto args = duk::get_args<uint32_t>(ctx);
-                obj->set_frame_rate(duk::forward(std::get<0>(args)));
+                obj->set_frame_rate(std::get<0>(args));
                 return 0;
             },
             1);
@@ -95,7 +100,7 @@ void rainbow::duk::register_module<rainbow::Animation>(duk_context* ctx, duk_idx
             [](duk_context* ctx) -> duk_ret_t {
                 auto obj = duk::push_this<Animation>(ctx);
                 auto args = duk::get_args<Animation::Frames>(ctx);
-                obj->set_frames(duk::forward(std::get<0>(args)));
+                obj->set_frames(std::move(std::get<0>(args)));
                 return 0;
             },
             1);
@@ -105,7 +110,7 @@ void rainbow::duk::register_module<rainbow::Animation>(duk_context* ctx, duk_idx
             [](duk_context* ctx) -> duk_ret_t {
                 auto obj = duk::push_this<Animation>(ctx);
                 auto args = duk::get_args<SpriteRef>(ctx);
-                obj->set_sprite(duk::forward(std::get<0>(args)));
+                obj->set_sprite(std::get<0>(args));
                 return 0;
             },
             1);
@@ -115,7 +120,7 @@ void rainbow::duk::register_module<rainbow::Animation>(duk_context* ctx, duk_idx
             [](duk_context* ctx) -> duk_ret_t {
                 auto obj = duk::push_this<Animation>(ctx);
                 auto args = duk::get_args<uint32_t>(ctx);
-                obj->jump_to(duk::forward(std::get<0>(args)));
+                obj->jump_to(std::get<0>(args));
                 return 0;
             },
             1);
@@ -336,7 +341,7 @@ void rainbow::duk::register_module<rainbow::Label>(duk_context* ctx, duk_idx_t r
             [](duk_context* ctx) -> duk_ret_t {
                 auto obj = duk::push_this<Label>(ctx);
                 auto args = duk::get_args<TextAlignment>(ctx);
-                obj->set_alignment(duk::forward(std::get<0>(args)));
+                obj->set_alignment(std::get<0>(args));
                 return 0;
             },
             1);
@@ -346,7 +351,7 @@ void rainbow::duk::register_module<rainbow::Label>(duk_context* ctx, duk_idx_t r
             [](duk_context* ctx) -> duk_ret_t {
                 auto obj = duk::push_this<Label>(ctx);
                 auto args = duk::get_args<Color>(ctx);
-                obj->set_color(duk::forward(std::get<0>(args)));
+                obj->set_color(std::get<0>(args));
                 return 0;
             },
             1);
@@ -356,7 +361,7 @@ void rainbow::duk::register_module<rainbow::Label>(duk_context* ctx, duk_idx_t r
             [](duk_context* ctx) -> duk_ret_t {
                 auto obj = duk::push_this<Label>(ctx);
                 auto args = duk::get_args<czstring>(ctx);
-                obj->set_font(duk::forward(std::get<0>(args)));
+                obj->set_font(std::get<0>(args));
                 return 0;
             },
             1);
@@ -366,7 +371,7 @@ void rainbow::duk::register_module<rainbow::Label>(duk_context* ctx, duk_idx_t r
             [](duk_context* ctx) -> duk_ret_t {
                 auto obj = duk::push_this<Label>(ctx);
                 auto args = duk::get_args<int>(ctx);
-                obj->set_font_size(duk::forward(std::get<0>(args)));
+                obj->set_font_size(std::get<0>(args));
                 return 0;
             },
             1);
@@ -376,7 +381,7 @@ void rainbow::duk::register_module<rainbow::Label>(duk_context* ctx, duk_idx_t r
             [](duk_context* ctx) -> duk_ret_t {
                 auto obj = duk::push_this<Label>(ctx);
                 auto args = duk::get_args<Vec2f>(ctx);
-                obj->set_position(duk::forward(std::get<0>(args)));
+                obj->set_position(std::get<0>(args));
                 return 0;
             },
             1);
@@ -386,7 +391,7 @@ void rainbow::duk::register_module<rainbow::Label>(duk_context* ctx, duk_idx_t r
             [](duk_context* ctx) -> duk_ret_t {
                 auto obj = duk::push_this<Label>(ctx);
                 auto args = duk::get_args<float>(ctx);
-                obj->set_rotation(duk::forward(std::get<0>(args)));
+                obj->set_rotation(std::get<0>(args));
                 return 0;
             },
             1);
@@ -396,7 +401,7 @@ void rainbow::duk::register_module<rainbow::Label>(duk_context* ctx, duk_idx_t r
             [](duk_context* ctx) -> duk_ret_t {
                 auto obj = duk::push_this<Label>(ctx);
                 auto args = duk::get_args<float>(ctx);
-                obj->set_scale(duk::forward(std::get<0>(args)));
+                obj->set_scale(std::get<0>(args));
                 return 0;
             },
             1);
@@ -406,7 +411,7 @@ void rainbow::duk::register_module<rainbow::Label>(duk_context* ctx, duk_idx_t r
             [](duk_context* ctx) -> duk_ret_t {
                 auto obj = duk::push_this<Label>(ctx);
                 auto args = duk::get_args<czstring>(ctx);
-                obj->set_text(duk::forward(std::get<0>(args)));
+                obj->set_text(std::get<0>(args));
                 return 0;
             },
             1);
@@ -416,7 +421,7 @@ void rainbow::duk::register_module<rainbow::Label>(duk_context* ctx, duk_idx_t r
             [](duk_context* ctx) -> duk_ret_t {
                 auto obj = duk::push_this<Label>(ctx);
                 auto args = duk::get_args<Vec2f>(ctx);
-                obj->move(duk::forward(std::get<0>(args)));
+                obj->move(std::get<0>(args));
                 return 0;
             },
             1);
@@ -436,23 +441,60 @@ void rainbow::duk::register_module<rainbow::SpriteRef>(duk_context* ctx, duk_idx
         duk_push_c_function(
             ctx,
             [](duk_context* ctx) -> duk_ret_t {
-                auto obj = duk::push_this<SpriteRef>(ctx);
-                auto result = obj->angle();
-                duk::push(ctx, result);
-                return 1;
+                switch (duk_get_top(ctx))
+                {
+                    case 0: {
+                        auto obj = duk::push_this<SpriteRef>(ctx);
+                        auto result = obj->angle();
+                        duk::push(ctx, result);
+                        return 1;
+                    }
+                    case 1: {
+                        auto obj = duk::push_this<SpriteRef>(ctx);
+                        auto args = duk::get_args<float>(ctx);
+                        obj->angle(std::get<0>(args));
+                        return 1;
+                    }
+                    default:
+                        duk_push_error_object(ctx, DUK_ERR_SYNTAX_ERROR, "invalid number of arguments");
+                        return DUK_RET_SYNTAX_ERROR;
+                }
             },
-            0);
+            DUK_VARARGS);
         duk::put_prop_literal(ctx, -2, "angle");
         duk_push_c_function(
             ctx,
             [](duk_context* ctx) -> duk_ret_t {
+                switch (duk_get_top(ctx))
+                {
+                    case 0: {
+                        auto obj = duk::push_this<SpriteRef>(ctx);
+                        auto result = obj->color();
+                        duk::push(ctx, result);
+                        return 1;
+                    }
+                    case 1: {
+                        auto obj = duk::push_this<SpriteRef>(ctx);
+                        auto args = duk::get_args<Color>(ctx);
+                        obj->color(std::get<0>(args));
+                        return 1;
+                    }
+                    default:
+                        duk_push_error_object(ctx, DUK_ERR_SYNTAX_ERROR, "invalid number of arguments");
+                        return DUK_RET_SYNTAX_ERROR;
+                }
+            },
+            DUK_VARARGS);
+        duk::put_prop_literal(ctx, -2, "color");
+        duk_push_c_function(
+            ctx,
+            [](duk_context* ctx) -> duk_ret_t {
                 auto obj = duk::push_this<SpriteRef>(ctx);
-                auto result = obj->color();
-                duk::push(ctx, result);
+                obj->flip();
                 return 1;
             },
             0);
-        duk::put_prop_literal(ctx, -2, "color");
+        duk::put_prop_literal(ctx, -2, "flip");
         duk_push_c_function(
             ctx,
             [](duk_context* ctx) -> duk_ret_t {
@@ -467,11 +509,34 @@ void rainbow::duk::register_module<rainbow::SpriteRef>(duk_context* ctx, duk_idx
             ctx,
             [](duk_context* ctx) -> duk_ret_t {
                 auto obj = duk::push_this<SpriteRef>(ctx);
-                auto result = obj->id();
-                duk::push(ctx, result);
+                obj->hide();
                 return 1;
             },
             0);
+        duk::put_prop_literal(ctx, -2, "hide");
+        duk_push_c_function(
+            ctx,
+            [](duk_context* ctx) -> duk_ret_t {
+                switch (duk_get_top(ctx))
+                {
+                    case 0: {
+                        auto obj = duk::push_this<SpriteRef>(ctx);
+                        auto result = obj->id();
+                        duk::push(ctx, result);
+                        return 1;
+                    }
+                    case 1: {
+                        auto obj = duk::push_this<SpriteRef>(ctx);
+                        auto args = duk::get_args<int>(ctx);
+                        obj->id(std::get<0>(args));
+                        return 1;
+                    }
+                    default:
+                        duk_push_error_object(ctx, DUK_ERR_SYNTAX_ERROR, "invalid number of arguments");
+                        return DUK_RET_SYNTAX_ERROR;
+                }
+            },
+            DUK_VARARGS);
         duk::put_prop_literal(ctx, -2, "id");
         duk_push_c_function(
             ctx,
@@ -507,32 +572,132 @@ void rainbow::duk::register_module<rainbow::SpriteRef>(duk_context* ctx, duk_idx
             ctx,
             [](duk_context* ctx) -> duk_ret_t {
                 auto obj = duk::push_this<SpriteRef>(ctx);
-                auto result = obj->pivot();
-                duk::push(ctx, result);
+                obj->mirror();
                 return 1;
             },
             0);
-        duk::put_prop_literal(ctx, -2, "pivot");
+        duk::put_prop_literal(ctx, -2, "mirror");
         duk_push_c_function(
             ctx,
             [](duk_context* ctx) -> duk_ret_t {
                 auto obj = duk::push_this<SpriteRef>(ctx);
-                auto result = obj->position();
-                duk::push(ctx, result);
+                auto args = duk::get_args<Vec2f>(ctx);
+                obj->move(std::get<0>(args));
                 return 1;
             },
-            0);
+            1);
+        duk::put_prop_literal(ctx, -2, "move");
+        duk_push_c_function(
+            ctx,
+            [](duk_context* ctx) -> duk_ret_t {
+                auto obj = duk::push_this<SpriteRef>(ctx);
+                auto args = duk::get_args<Rect>(ctx);
+                obj->normal(std::get<0>(args));
+                return 1;
+            },
+            1);
+        duk::put_prop_literal(ctx, -2, "normal");
+        duk_push_c_function(
+            ctx,
+            [](duk_context* ctx) -> duk_ret_t {
+                switch (duk_get_top(ctx))
+                {
+                    case 0: {
+                        auto obj = duk::push_this<SpriteRef>(ctx);
+                        auto result = obj->pivot();
+                        duk::push(ctx, result);
+                        return 1;
+                    }
+                    case 1: {
+                        auto obj = duk::push_this<SpriteRef>(ctx);
+                        auto args = duk::get_args<Vec2f>(ctx);
+                        obj->pivot(std::get<0>(args));
+                        return 1;
+                    }
+                    default:
+                        duk_push_error_object(ctx, DUK_ERR_SYNTAX_ERROR, "invalid number of arguments");
+                        return DUK_RET_SYNTAX_ERROR;
+                }
+            },
+            DUK_VARARGS);
+        duk::put_prop_literal(ctx, -2, "pivot");
+        duk_push_c_function(
+            ctx,
+            [](duk_context* ctx) -> duk_ret_t {
+                switch (duk_get_top(ctx))
+                {
+                    case 0: {
+                        auto obj = duk::push_this<SpriteRef>(ctx);
+                        auto result = obj->position();
+                        duk::push(ctx, result);
+                        return 1;
+                    }
+                    case 1: {
+                        auto obj = duk::push_this<SpriteRef>(ctx);
+                        auto args = duk::get_args<Vec2f>(ctx);
+                        obj->position(std::get<0>(args));
+                        return 1;
+                    }
+                    default:
+                        duk_push_error_object(ctx, DUK_ERR_SYNTAX_ERROR, "invalid number of arguments");
+                        return DUK_RET_SYNTAX_ERROR;
+                }
+            },
+            DUK_VARARGS);
         duk::put_prop_literal(ctx, -2, "position");
         duk_push_c_function(
             ctx,
             [](duk_context* ctx) -> duk_ret_t {
                 auto obj = duk::push_this<SpriteRef>(ctx);
-                auto result = obj->scale();
-                duk::push(ctx, result);
+                auto args = duk::get_args<float>(ctx);
+                obj->rotate(std::get<0>(args));
+                return 1;
+            },
+            1);
+        duk::put_prop_literal(ctx, -2, "rotate");
+        duk_push_c_function(
+            ctx,
+            [](duk_context* ctx) -> duk_ret_t {
+                switch (duk_get_top(ctx))
+                {
+                    case 0: {
+                        auto obj = duk::push_this<SpriteRef>(ctx);
+                        auto result = obj->scale();
+                        duk::push(ctx, result);
+                        return 1;
+                    }
+                    case 1: {
+                        auto obj = duk::push_this<SpriteRef>(ctx);
+                        auto args = duk::get_args<Vec2f>(ctx);
+                        obj->scale(std::get<0>(args));
+                        return 1;
+                    }
+                    default:
+                        duk_push_error_object(ctx, DUK_ERR_SYNTAX_ERROR, "invalid number of arguments");
+                        return DUK_RET_SYNTAX_ERROR;
+                }
+            },
+            DUK_VARARGS);
+        duk::put_prop_literal(ctx, -2, "scale");
+        duk_push_c_function(
+            ctx,
+            [](duk_context* ctx) -> duk_ret_t {
+                auto obj = duk::push_this<SpriteRef>(ctx);
+                obj->show();
                 return 1;
             },
             0);
-        duk::put_prop_literal(ctx, -2, "scale");
+        duk::put_prop_literal(ctx, -2, "show");
+        duk_push_c_function(
+            ctx,
+            [](duk_context* ctx) -> duk_ret_t {
+                auto obj = duk::push_this<SpriteRef>(ctx);
+                auto args = duk::get_args<Rect>(ctx);
+                obj->texture(std::get<0>(args));
+                return 1;
+            },
+            1);
+        duk::put_prop_literal(ctx, -2, "texture");
         duk_push_c_function(
             ctx,
             [](duk_context* ctx) -> duk_ret_t {
@@ -543,142 +708,6 @@ void rainbow::duk::register_module<rainbow::SpriteRef>(duk_context* ctx, duk_idx
             },
             0);
         duk::put_prop_literal(ctx, -2, "width");
-        duk_push_c_function(
-            ctx,
-            [](duk_context* ctx) -> duk_ret_t {
-                auto obj = duk::push_this<SpriteRef>(ctx);
-                auto args = duk::get_args<Color>(ctx);
-                obj->set_color(duk::forward(std::get<0>(args)));
-                return 0;
-            },
-            1);
-        duk::put_prop_literal(ctx, -2, "setColor");
-        duk_push_c_function(
-            ctx,
-            [](duk_context* ctx) -> duk_ret_t {
-                auto obj = duk::push_this<SpriteRef>(ctx);
-                auto args = duk::get_args<int>(ctx);
-                obj->set_id(duk::forward(std::get<0>(args)));
-                return 0;
-            },
-            1);
-        duk::put_prop_literal(ctx, -2, "setId");
-        duk_push_c_function(
-            ctx,
-            [](duk_context* ctx) -> duk_ret_t {
-                auto obj = duk::push_this<SpriteRef>(ctx);
-                auto args = duk::get_args<uint32_t>(ctx);
-                obj->set_normal(duk::forward(std::get<0>(args)));
-                return 0;
-            },
-            1);
-        duk::put_prop_literal(ctx, -2, "setNormal");
-        duk_push_c_function(
-            ctx,
-            [](duk_context* ctx) -> duk_ret_t {
-                auto obj = duk::push_this<SpriteRef>(ctx);
-                auto args = duk::get_args<Vec2f>(ctx);
-                obj->set_pivot(duk::forward(std::get<0>(args)));
-                return 0;
-            },
-            1);
-        duk::put_prop_literal(ctx, -2, "setPivot");
-        duk_push_c_function(
-            ctx,
-            [](duk_context* ctx) -> duk_ret_t {
-                auto obj = duk::push_this<SpriteRef>(ctx);
-                auto args = duk::get_args<Vec2f>(ctx);
-                obj->set_position(duk::forward(std::get<0>(args)));
-                return 0;
-            },
-            1);
-        duk::put_prop_literal(ctx, -2, "setPosition");
-        duk_push_c_function(
-            ctx,
-            [](duk_context* ctx) -> duk_ret_t {
-                auto obj = duk::push_this<SpriteRef>(ctx);
-                auto args = duk::get_args<float>(ctx);
-                obj->set_rotation(duk::forward(std::get<0>(args)));
-                return 0;
-            },
-            1);
-        duk::put_prop_literal(ctx, -2, "setRotation");
-        duk_push_c_function(
-            ctx,
-            [](duk_context* ctx) -> duk_ret_t {
-                auto obj = duk::push_this<SpriteRef>(ctx);
-                auto args = duk::get_args<Vec2f>(ctx);
-                obj->set_scale(duk::forward(std::get<0>(args)));
-                return 0;
-            },
-            1);
-        duk::put_prop_literal(ctx, -2, "setScale");
-        duk_push_c_function(
-            ctx,
-            [](duk_context* ctx) -> duk_ret_t {
-                auto obj = duk::push_this<SpriteRef>(ctx);
-                auto args = duk::get_args<uint32_t>(ctx);
-                obj->set_texture(duk::forward(std::get<0>(args)));
-                return 0;
-            },
-            1);
-        duk::put_prop_literal(ctx, -2, "setTexture");
-        duk_push_c_function(
-            ctx,
-            [](duk_context* ctx) -> duk_ret_t {
-                auto obj = duk::push_this<SpriteRef>(ctx);
-                obj->flip();
-                return 0;
-            },
-            0);
-        duk::put_prop_literal(ctx, -2, "flip");
-        duk_push_c_function(
-            ctx,
-            [](duk_context* ctx) -> duk_ret_t {
-                auto obj = duk::push_this<SpriteRef>(ctx);
-                obj->hide();
-                return 0;
-            },
-            0);
-        duk::put_prop_literal(ctx, -2, "hide");
-        duk_push_c_function(
-            ctx,
-            [](duk_context* ctx) -> duk_ret_t {
-                auto obj = duk::push_this<SpriteRef>(ctx);
-                obj->mirror();
-                return 0;
-            },
-            0);
-        duk::put_prop_literal(ctx, -2, "mirror");
-        duk_push_c_function(
-            ctx,
-            [](duk_context* ctx) -> duk_ret_t {
-                auto obj = duk::push_this<SpriteRef>(ctx);
-                auto args = duk::get_args<Vec2f>(ctx);
-                obj->move(duk::forward(std::get<0>(args)));
-                return 0;
-            },
-            1);
-        duk::put_prop_literal(ctx, -2, "move");
-        duk_push_c_function(
-            ctx,
-            [](duk_context* ctx) -> duk_ret_t {
-                auto obj = duk::push_this<SpriteRef>(ctx);
-                auto args = duk::get_args<float>(ctx);
-                obj->rotate(duk::forward(std::get<0>(args)));
-                return 0;
-            },
-            1);
-        duk::put_prop_literal(ctx, -2, "rotate");
-        duk_push_c_function(
-            ctx,
-            [](duk_context* ctx) -> duk_ret_t {
-                auto obj = duk::push_this<SpriteRef>(ctx);
-                obj->show();
-                return 0;
-            },
-            0);
-        duk::put_prop_literal(ctx, -2, "show");
         duk::push_literal(ctx, "Rainbow.Sprite");
         duk::put_prop_literal(ctx, -2, DUKR_WELLKNOWN_SYMBOL_TOSTRINGTAG);
     });
@@ -705,8 +734,8 @@ void rainbow::duk::register_module<rainbow::SpriteBatch>(duk_context* ctx, duk_i
             ctx,
             [](duk_context* ctx) -> duk_ret_t {
                 auto obj = duk::push_this<SpriteBatch>(ctx);
-                auto args = duk::get_args<SharedPtr<TextureAtlas>>(ctx);
-                obj->set_normal(duk::forward(std::get<0>(args)));
+                auto args = duk::get_args<graphics::Texture*>(ctx);
+                obj->set_normal(std::get<0>(args));
                 return 0;
             },
             1);
@@ -715,8 +744,8 @@ void rainbow::duk::register_module<rainbow::SpriteBatch>(duk_context* ctx, duk_i
             ctx,
             [](duk_context* ctx) -> duk_ret_t {
                 auto obj = duk::push_this<SpriteBatch>(ctx);
-                auto args = duk::get_args<SharedPtr<TextureAtlas>>(ctx);
-                obj->set_texture(duk::forward(std::get<0>(args)));
+                auto args = duk::get_args<graphics::Texture*>(ctx);
+                obj->set_texture(std::get<0>(args));
                 return 0;
             },
             1);
@@ -726,7 +755,7 @@ void rainbow::duk::register_module<rainbow::SpriteBatch>(duk_context* ctx, duk_i
             [](duk_context* ctx) -> duk_ret_t {
                 auto obj = duk::push_this<SpriteBatch>(ctx);
                 auto args = duk::get_args<bool>(ctx);
-                obj->set_visible(duk::forward(std::get<0>(args)));
+                obj->set_visible(std::get<0>(args));
                 return 0;
             },
             1);
@@ -745,7 +774,7 @@ void rainbow::duk::register_module<rainbow::SpriteBatch>(duk_context* ctx, duk_i
             [](duk_context* ctx) -> duk_ret_t {
                 auto obj = duk::push_this<SpriteBatch>(ctx);
                 auto args = duk::get_args<uint32_t, uint32_t>(ctx);
-                auto result = obj->create_sprite(duk::forward(std::get<0>(args)), duk::forward(std::get<1>(args)));
+                auto result = obj->create_sprite(std::get<0>(args), std::get<1>(args));
                 duk::push(ctx, result);
                 return 1;
             },
@@ -756,7 +785,7 @@ void rainbow::duk::register_module<rainbow::SpriteBatch>(duk_context* ctx, duk_i
             [](duk_context* ctx) -> duk_ret_t {
                 auto obj = duk::push_this<SpriteBatch>(ctx);
                 auto args = duk::get_args<uint32_t>(ctx);
-                obj->erase(duk::forward(std::get<0>(args)));
+                obj->erase(std::get<0>(args));
                 return 0;
             },
             1);
@@ -766,7 +795,7 @@ void rainbow::duk::register_module<rainbow::SpriteBatch>(duk_context* ctx, duk_i
             [](duk_context* ctx) -> duk_ret_t {
                 auto obj = duk::push_this<SpriteBatch>(ctx);
                 auto args = duk::get_args<int>(ctx);
-                auto result = obj->find_sprite_by_id(duk::forward(std::get<0>(args)));
+                auto result = obj->find_sprite_by_id(std::get<0>(args));
                 duk::push(ctx, result);
                 return 1;
             },
@@ -777,7 +806,7 @@ void rainbow::duk::register_module<rainbow::SpriteBatch>(duk_context* ctx, duk_i
             [](duk_context* ctx) -> duk_ret_t {
                 auto obj = duk::push_this<SpriteBatch>(ctx);
                 auto args = duk::get_args<SpriteRef, SpriteRef>(ctx);
-                obj->swap(duk::forward(std::get<0>(args)), duk::forward(std::get<1>(args)));
+                obj->swap(std::get<0>(args), std::get<1>(args));
                 return 0;
             },
             2);
@@ -804,30 +833,10 @@ void rainbow::duk::register_module<rainbow::TextAlignment>(duk_context* ctx, duk
 }
 
 template <>
-void rainbow::duk::register_module<rainbow::SharedPtr<rainbow::TextureAtlas>>(duk_context* ctx, duk_idx_t rainbow)
+void rainbow::duk::register_module<rainbow::graphics::Texture>(duk_context* ctx, duk_idx_t rainbow)
 {
-    duk::push_constructor<SharedPtr<rainbow::TextureAtlas>, czstring>(ctx);
-    duk::put_prototype<SharedPtr<rainbow::TextureAtlas>, Allocation::HeapAllocated>(ctx, [](duk_context* ctx) {
-        duk_push_c_function(
-            ctx,
-            [](duk_context* ctx) -> duk_ret_t {
-                auto obj = duk::push_this<SharedPtr<rainbow::TextureAtlas>>(ctx);
-                auto args = duk::get_args<int, int, int, int>(ctx);
-                auto result = obj->add_region(duk::forward(std::get<0>(args)), duk::forward(std::get<1>(args)), duk::forward(std::get<2>(args)), duk::forward(std::get<3>(args)));
-                duk::push(ctx, result);
-                return 1;
-            },
-            4);
-        duk::put_prop_literal(ctx, -2, "addRegion");
-        duk_push_c_function(
-            ctx,
-            [](duk_context* ctx) -> duk_ret_t {
-                auto obj = duk::push_this<SharedPtr<rainbow::TextureAtlas>>(ctx);
-                obj->trim();
-                return 0;
-            },
-            0);
-        duk::put_prop_literal(ctx, -2, "trim");
+    duk::push_constructor<graphics::Texture, czstring>(ctx);
+    duk::put_prototype<graphics::Texture, Allocation::HeapAllocated>(ctx, [](duk_context* ctx) {
         duk::push_literal(ctx, "Rainbow.Texture");
         duk::put_prop_literal(ctx, -2, DUKR_WELLKNOWN_SYMBOL_TOSTRINGTAG);
     });
@@ -1099,9 +1108,15 @@ namespace rainbow::duk
         duk::register_module<SpriteRef>(ctx, obj_idx);
         duk::register_module<SpriteBatch>(ctx, obj_idx);
         duk::register_module<TextAlignment>(ctx, obj_idx);
-        duk::register_module<SharedPtr<TextureAtlas>>(ctx, obj_idx);
+        duk::register_module<graphics::Texture>(ctx, obj_idx);
         duk::register_module<VirtualKey>(ctx, obj_idx);
     }
 }
+
+// clang-format on
+
+#ifdef __GNUC__
+#    pragma GCC diagnostic pop
+#endif
 
 #endif

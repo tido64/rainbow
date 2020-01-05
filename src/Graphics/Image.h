@@ -26,6 +26,7 @@ namespace rainbow
             ETC1,   // OpenGL ES standard
             PVRTC,  // iOS, OMAP43xx, PowerVR
             PNG,
+            RGBA,
             SVG,
         };
 
@@ -50,13 +51,13 @@ namespace rainbow
         /// </remarks>
         static auto decode(const Data&, float scale) -> Image;
 
-        Format format;
-        uint32_t width;
-        uint32_t height;
-        uint32_t depth;
-        uint32_t channels;
-        size_t size;
-        const uint8_t* data;
+        Format format;        // NOLINT
+        uint32_t width;       // NOLINT
+        uint32_t height;      // NOLINT
+        uint32_t depth;       // NOLINT
+        uint32_t channels;    // NOLINT
+        size_t size;          // NOLINT
+        const uint8_t* data;  // NOLINT
 
         Image(Format format_ = Format::Unknown,
               uint32_t width_ = 0,
@@ -94,6 +95,7 @@ namespace rainbow
                 case Format::BC3:
                 case Format::ETC1:
                 case Format::PVRTC:
+                case Format::RGBA:
                     break;
 
                 case Format::PNG:

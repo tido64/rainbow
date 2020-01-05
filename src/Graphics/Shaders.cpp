@@ -6,6 +6,8 @@
 
 #include "Graphics/Shaders.h"
 
+namespace gl = rainbow::graphics::gl;
+
 // clang-format off
 
 namespace
@@ -127,47 +129,47 @@ namespace
         "}\n";
 }  // namespace
 
-auto rainbow::gl::DiffuseLight2D_frag() -> Shader::Params
+auto gl::DiffuseLight2D_frag() -> Shader::Params
 {
     return {Shader::kTypeFragment, 0, "Shaders/DiffuseLight2D.frag", kDiffuseLight2D_frag};
 }
 
-auto rainbow::gl::DiffuseLightNormal_frag() -> Shader::Params
+auto gl::DiffuseLightNormal_frag() -> Shader::Params
 {
     return {Shader::kTypeFragment, 0, "Shaders/DiffuseLightNormal.frag", kDiffuseLightNormal_frag};
 }
 
-auto rainbow::gl::Fixed2D_frag() -> Shader::Params
+auto gl::Fixed2D_frag() -> Shader::Params
 {
     return {Shader::kTypeFragment, 0, "Shaders/Fixed2D.frag", kFixed2D_frag};
 }
 
-auto rainbow::gl::Fixed2D_vert() -> Shader::Params
+auto gl::Fixed2D_vert() -> Shader::Params
 {
     return {Shader::kTypeVertex, 0, "Shaders/Fixed2D.vert", kFixed2D_vert};
 }
 
-auto rainbow::gl::GL2_1_header_glsl() -> rainbow::czstring
+auto gl::GL2_1_header_glsl() -> rainbow::czstring
 {
     return kGL2_1_header_glsl;
 }
 
-auto rainbow::gl::GLES2_header_glsl() -> rainbow::czstring
+auto gl::GLES2_header_glsl() -> rainbow::czstring
 {
     return kGLES2_header_glsl;
 }
 
-auto rainbow::gl::NormalMapped_vert() -> Shader::Params
+auto gl::NormalMapped_vert() -> Shader::Params
 {
     return {Shader::kTypeVertex, 0, "Shaders/NormalMapped.vert", kNormalMapped_vert};
 }
 
-auto rainbow::gl::Simple_frag() -> Shader::Params
+auto gl::Simple_frag() -> Shader::Params
 {
     return {Shader::kTypeFragment, 0, "Shaders/Simple.frag", kSimple_frag};
 }
 
-auto rainbow::gl::Simple2D_vert() -> Shader::Params
+auto gl::Simple2D_vert() -> Shader::Params
 {
     return {Shader::kTypeVertex, 0, "Shaders/Simple2D.vert", kSimple2D_vert};
 }

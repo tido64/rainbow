@@ -10,38 +10,35 @@
 #include "Input/InputListener.h"
 #include "Script/GameBase.h"
 
+namespace rainbow::duk
+{
+    class Context : private NonCopyable<Context>
+    {
+    public:
+        Context(void* udata);
+        ~Context();
+
+        operator duk_context*() const { return context_; }
+
+    private:
+        duk_context* context_;
+    };
+}  // namespace rainbow::duk
+
 namespace rainbow
 {
-    namespace duk
-    {
-        class Context : private NonCopyable<Context>
-        {
-        public:
-            Context();
-            ~Context();
-
-            explicit operator bool() const { return is_valid(); }
-            operator duk_context*() { return context_; }
-
-        private:
-            duk_context* context_;
-
-            auto is_valid() const -> bool { return context_ != nullptr; }
-        };
-    }  // namespace duk
-
     class JavaScript final : public GameBase, public InputListener
     {
     public:
         JavaScript(Director& director);
 
-        auto context() -> duk_context* { return context_; }
+        auto context() { return static_cast<duk_context*>(context_); }
 
     private:
         duk::Context context_;
-        bool has_pointer_events_;
+        bool has_pointer_events_ = false;
 
-        bool update_controller_id(uint32_t port);
+        auto update_controller_id(uint32_t port) -> bool;
 
         // GameBase implementation details.
 
@@ -51,12 +48,12 @@ namespace rainbow
 
         // InputListener implementation details.
 
-        bool on_controller_connected_impl(uint32_t port) override;
-        bool on_controller_disconnected_impl(uint32_t port) override;
-        bool on_pointer_began_impl(const ArrayView<Pointer>&) override;
-        bool on_pointer_canceled_impl() override;
-        bool on_pointer_ended_impl(const ArrayView<Pointer>&) override;
-        bool on_pointer_moved_impl(const ArrayView<Pointer>&) override;
+        auto on_controller_connected_impl(uint32_t port) -> bool override;
+        auto on_controller_disconnected_impl(uint32_t port) -> bool override;
+        auto on_pointer_began_impl(const ArrayView<Pointer>&) -> bool override;
+        auto on_pointer_canceled_impl() -> bool override;
+        auto on_pointer_ended_impl(const ArrayView<Pointer>&) -> bool override;
+        auto on_pointer_moved_impl(const ArrayView<Pointer>&) -> bool override;
     };
 }  // namespace rainbow
 

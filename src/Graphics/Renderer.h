@@ -9,7 +9,9 @@
 
 #include "Graphics/ElementBuffer.h"
 #include "Graphics/ShaderManager.h"
-#include "Graphics/TextureManager.h"
+#include "Graphics/Texture.h"
+#include "Graphics/TextureAllocator.gl.h"
+#include "Graphics/VertexArray.h"
 #include "Math/Geometry.h"
 
 namespace rainbow::graphics
@@ -19,15 +21,16 @@ namespace rainbow::graphics
 
     struct Context
     {
-        float scale = 1.0f;
-        float zoom = 1.0f;
+        float scale = 1.0F;
+        float zoom = 1.0F;
         Vec2i origin;
         Vec2i surface_size;
         Vec2i window_size;
         Rect projection;
         ElementBuffer element_buffer;
-        TextureManager texture_manager = Passkey<Context>{};
-        ShaderManager shader_manager = {*this, Passkey<Context>{}};
+        gl::TextureAllocator texture_allocator;
+        TextureProvider texture_provider{texture_allocator};
+        ShaderManager shader_manager{*this, Passkey<Context>{}};
 
         ~Context();
 
@@ -49,7 +52,7 @@ namespace rainbow::graphics
 
     void set_projection(Context&, const Rect&);
     void set_surface_size(Context&, const Vec2i& resolution);
-    void set_window_size(Context&, const Vec2i& size, float factor = 1.0f);
+    void set_window_size(Context&, const Vec2i& size, float factor = 1.0F);
 
     void bind_element_array();
 
@@ -62,31 +65,15 @@ namespace rainbow::graphics
     void increment_draw_count();
 
     template <typename T>
-    void draw(const T& obj)
-    {
-        obj.vertex_array().bind();
-        obj.bind_textures();
-        glDrawElements(
-            GL_TRIANGLES, obj.vertex_count(), GL_UNSIGNED_SHORT, nullptr);
-
-        IF_DEBUG(increment_draw_count());
-    }
-
-    template <typename T>
     void draw_arrays(const T& obj, int first, size_t count)
     {
-        obj.vertex_array().bind();
         obj.bind_textures();
-        glDrawArrays(GL_TRIANGLES, first, static_cast<GLsizei>(count));
-
-        IF_DEBUG(increment_draw_count());
+        draw(obj.vertex_array(), first, count);
     }
 
     void reset();
 
     void scissor(const Context&, int x, int y, int width, int height);
-
-    void unbind_all(Context&);
 
     class ScopedProjection
     {

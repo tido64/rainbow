@@ -55,3 +55,23 @@ auto VertexArray::init_state() const -> GLuint
     return 0;
 #endif
 }
+
+void rainbow::graphics::draw(const VertexArray& array, uint32_t count)
+{
+    array.bind();
+    glDrawElements(
+        GL_TRIANGLES, narrow_cast<GLsizei>(count), GL_UNSIGNED_SHORT, nullptr);
+
+    IF_DEBUG(increment_draw_count());
+}
+
+void rainbow::graphics::draw(const VertexArray& array,
+                             uint32_t first,
+                             uint32_t count)
+{
+    array.bind();
+    glDrawArrays(
+        GL_TRIANGLES, narrow_cast<GLint>(first), narrow_cast<GLsizei>(count));
+
+    IF_DEBUG(increment_draw_count());
+}

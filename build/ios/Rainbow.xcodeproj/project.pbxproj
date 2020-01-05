@@ -88,7 +88,6 @@
 		1939A220152C425D00494609 /* Renderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1939A1C8152C425D00494609 /* Renderer.cpp */; };
 		1939A227152C425D00494609 /* Sprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1939A1D4152C425D00494609 /* Sprite.cpp */; };
 		1939A228152C425D00494609 /* SpriteBatch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1939A1D6152C425D00494609 /* SpriteBatch.cpp */; };
-		1939A229152C425D00494609 /* TextureAtlas.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1939A1D9152C425D00494609 /* TextureAtlas.cpp */; };
 		1939A22C152C425D00494609 /* Input.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1939A1E1152C425D00494609 /* Input.cpp */; };
 		1939A23C152C42ED00494609 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1939A23B152C42EC00494609 /* OpenAL.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		1939A23E152C432A00494609 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1939A23D152C432900494609 /* AudioToolbox.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
@@ -116,7 +115,6 @@
 		196CB72F161E4D940068C809 /* b2MotorJoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 196CB72D161E4D940068C809 /* b2MotorJoint.cpp */; };
 		196DFF73225E6BED0053D6A4 /* libpng.c in Sources */ = {isa = PBXBuildFile; fileRef = 196DFF72225E6BED0053D6A4 /* libpng.c */; };
 		1972A081225D31CD0071415E /* Image.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1972A080225D31CD0071415E /* Image.cpp */; };
-		197396DD15A505F60064BF7D /* TextureManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 197396DB15A505F60064BF7D /* TextureManager.cpp */; };
 		1989645C1C4AE0080011BA15 /* RainbowViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1989645B1C4AE0080011BA15 /* RainbowViewController.mm */; };
 		198EA19E2012733F00BB3FB4 /* OpenSans-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 198EA19A2012733F00BB3FB4 /* OpenSans-Light.ttf */; };
 		198EA1A02012733F00BB3FB4 /* index.js in Resources */ = {isa = PBXBuildFile; fileRef = 198EA19C2012733F00BB3FB4 /* index.js */; };
@@ -187,6 +185,8 @@
 		19DFE53D1C6142F40079CB58 /* RainbowAudioSession.mm in Sources */ = {isa = PBXBuildFile; fileRef = 19DFE53C1C6142F40079CB58 /* RainbowAudioSession.mm */; };
 		19E7748A1A02C8D3005DE249 /* OverlayActivator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19E774871A02C8D3005DE249 /* OverlayActivator.cpp */; };
 		19E85AA91858DCBD00D8B170 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 19E85AA81858DCBD00D8B170 /* Assets.xcassets */; };
+		19E8DB8823B96DF400392708 /* TextureAllocator.gl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19E8DB8623B96DF400392708 /* TextureAllocator.gl.cpp */; };
+		19E8DB8923B96DF400392708 /* Texture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19E8DB8723B96DF400392708 /* Texture.cpp */; };
 		19E9F8DD2023D75F008E50E3 /* p1_spritesheet.png in Resources */ = {isa = PBXBuildFile; fileRef = 19E9F8DC2023D75F008E50E3 /* p1_spritesheet.png */; };
 		19EBC55116599D9F00D3B5D7 /* ShaderManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19EBC54F16599D9F00D3B5D7 /* ShaderManager.cpp */; };
 		19EF136D1A7036DD00D7AAA9 /* DebugDraw.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 19EF136B1A7036DD00D7AAA9 /* DebugDraw.cpp */; };
@@ -351,8 +351,6 @@
 		1939A1D6152C425D00494609 /* SpriteBatch.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = SpriteBatch.cpp; sourceTree = "<group>"; };
 		1939A1D7152C425D00494609 /* SpriteBatch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpriteBatch.h; sourceTree = "<group>"; };
 		1939A1D8152C425D00494609 /* Texture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Texture.h; sourceTree = "<group>"; };
-		1939A1D9152C425D00494609 /* TextureAtlas.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = TextureAtlas.cpp; sourceTree = "<group>"; };
-		1939A1DA152C425D00494609 /* TextureAtlas.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextureAtlas.h; sourceTree = "<group>"; };
 		1939A1DC152C425D00494609 /* Acceleration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Acceleration.h; sourceTree = "<group>"; };
 		1939A1E1152C425D00494609 /* Input.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = Input.cpp; sourceTree = "<group>"; };
 		1939A1E2152C425D00494609 /* Input.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Input.h; sourceTree = "<group>"; };
@@ -411,8 +409,6 @@
 		196DFF71225E6BED0053D6A4 /* pnglibconf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pnglibconf.h; sourceTree = "<group>"; };
 		196DFF72225E6BED0053D6A4 /* libpng.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = libpng.c; sourceTree = "<group>"; };
 		1972A080225D31CD0071415E /* Image.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = Image.cpp; sourceTree = "<group>"; };
-		197396DB15A505F60064BF7D /* TextureManager.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = TextureManager.cpp; sourceTree = "<group>"; };
-		197396DC15A505F60064BF7D /* TextureManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextureManager.h; sourceTree = "<group>"; };
 		1987ADA6194F34BF003D2B3E /* libfmod_iphoneos.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libfmod_iphoneos.a; path = ../../lib/FMOD/lib/ios/libfmod_iphoneos.a; sourceTree = "<group>"; };
 		1987ADA7194F34BF003D2B3E /* libfmod_iphonesimulator.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libfmod_iphonesimulator.a; path = ../../lib/FMOD/lib/ios/libfmod_iphonesimulator.a; sourceTree = "<group>"; };
 		1987ADA8194F34BF003D2B3E /* libfmodstudio_iphoneos.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libfmodstudio_iphoneos.a; path = ../../lib/FMOD/lib/ios/libfmodstudio_iphoneos.a; sourceTree = "<group>"; };
@@ -563,6 +559,9 @@
 		19E774871A02C8D3005DE249 /* OverlayActivator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OverlayActivator.cpp; sourceTree = "<group>"; };
 		19E774881A02C8D3005DE249 /* OverlayActivator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OverlayActivator.h; sourceTree = "<group>"; };
 		19E85AA81858DCBD00D8B170 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		19E8DB8523B96DF400392708 /* TextureAllocator.gl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextureAllocator.gl.h; sourceTree = "<group>"; };
+		19E8DB8623B96DF400392708 /* TextureAllocator.gl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TextureAllocator.gl.cpp; sourceTree = "<group>"; };
+		19E8DB8723B96DF400392708 /* Texture.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = Texture.cpp; sourceTree = "<group>"; };
 		19E9F8DC2023D75F008E50E3 /* p1_spritesheet.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = p1_spritesheet.png; sourceTree = "<group>"; };
 		19EBC54F16599D9F00D3B5D7 /* ShaderManager.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = ShaderManager.cpp; sourceTree = "<group>"; };
 		19EBC55016599D9F00D3B5D7 /* ShaderManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShaderManager.h; sourceTree = "<group>"; };
@@ -830,12 +829,11 @@
 		1939A1BC152C425D00494609 /* Graphics */ = {
 			isa = PBXGroup;
 			children = (
-				19D3204617BD6BD4007BDC67 /* Decoders */,
-				1939A1CE152C425D00494609 /* Shaders */,
 				1939A1BD152C425D00494609 /* Animation.cpp */,
 				1939A1BE152C425D00494609 /* Animation.h */,
 				1942A50818985D450050CF5C /* Buffer.cpp */,
 				1942A50918985D450050CF5C /* Buffer.h */,
+				19D3204617BD6BD4007BDC67 /* Decoders */,
 				1939A1BF152C425D00494609 /* Drawable.h */,
 				19DB48B71CA6AAFE00999675 /* ElementBuffer.cpp */,
 				19DB48B81CA6AAFE00999675 /* ElementBuffer.h */,
@@ -851,6 +849,7 @@
 				191484E61891BD87004014D7 /* ShaderDetails.h */,
 				19EBC54F16599D9F00D3B5D7 /* ShaderManager.cpp */,
 				19EBC55016599D9F00D3B5D7 /* ShaderManager.h */,
+				1939A1CE152C425D00494609 /* Shaders */,
 				196C0A70189082860042190D /* Shaders.cpp */,
 				196C0A71189082860042190D /* Shaders.h */,
 				1939A1D4152C425D00494609 /* Sprite.cpp */,
@@ -858,11 +857,10 @@
 				1939A1D6152C425D00494609 /* SpriteBatch.cpp */,
 				1939A1D7152C425D00494609 /* SpriteBatch.h */,
 				192A0B9B1681EF84009218EB /* SpriteVertex.h */,
+				19E8DB8723B96DF400392708 /* Texture.cpp */,
 				1939A1D8152C425D00494609 /* Texture.h */,
-				1939A1D9152C425D00494609 /* TextureAtlas.cpp */,
-				1939A1DA152C425D00494609 /* TextureAtlas.h */,
-				197396DB15A505F60064BF7D /* TextureManager.cpp */,
-				197396DC15A505F60064BF7D /* TextureManager.h */,
+				19E8DB8623B96DF400392708 /* TextureAllocator.gl.cpp */,
+				19E8DB8523B96DF400392708 /* TextureAllocator.gl.h */,
 				196911CB1713564A002BC2E4 /* VertexArray.cpp */,
 				196911CC1713564A002BC2E4 /* VertexArray.h */,
 			);
@@ -1531,6 +1529,7 @@
 				1939A05F152C401300494609 /* b2Fixture.cpp in Sources */,
 				1939A060152C401300494609 /* b2Island.cpp in Sources */,
 				19B399A120421D2900581AE0 /* hb-ot-shape-complex-hebrew.cc in Sources */,
+				19E8DB8923B96DF400392708 /* Texture.cpp in Sources */,
 				1939A061152C401300494609 /* b2World.cpp in Sources */,
 				1972A081225D31CD0071415E /* Image.cpp in Sources */,
 				1939A062152C401300494609 /* b2WorldCallbacks.cpp in Sources */,
@@ -1616,14 +1615,12 @@
 				1939A220152C425D00494609 /* Renderer.cpp in Sources */,
 				1939A227152C425D00494609 /* Sprite.cpp in Sources */,
 				1939A228152C425D00494609 /* SpriteBatch.cpp in Sources */,
-				1939A229152C425D00494609 /* TextureAtlas.cpp in Sources */,
 				196540D52169FBE10052A9FA /* hb-static.cc in Sources */,
 				19B6C59D216964C6000D5400 /* hash.cc in Sources */,
 				19B3996B20421A6200581AE0 /* hb-coretext.cc in Sources */,
 				1939A22C152C425D00494609 /* Input.cpp in Sources */,
 				19B3998820421C0300581AE0 /* hb-shape.cc in Sources */,
 				1960AFD71A4E278E0015A3AD /* StableWorld.cpp in Sources */,
-				197396DD15A505F60064BF7D /* TextureManager.cpp in Sources */,
 				196CB728161E4ADD0068C809 /* Gatekeeper.cpp in Sources */,
 				19B3998E20421CB300581AE0 /* hb-ot-shape.cc in Sources */,
 				1913F12222764354005B2D3B /* physfs_platform_winrt.cpp in Sources */,
@@ -1633,6 +1630,7 @@
 				1913F12622764354005B2D3B /* physfs_platform_haiku.cpp in Sources */,
 				19B6C57D21696426000D5400 /* raw_hash_set.cc in Sources */,
 				19B3997320421B2000581AE0 /* hb-ucdn.cc in Sources */,
+				19E8DB8823B96DF400392708 /* TextureAllocator.gl.cpp in Sources */,
 				19AF58A0167FFA0800F54B27 /* Overlay.cpp in Sources */,
 				19D3510A2279983600FEE78E /* hb-ot-shape-complex-vowel-constraints.cc in Sources */,
 				1913F13522764DE3005B2D3B /* Bundle.ios.mm in Sources */,

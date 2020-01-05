@@ -55,9 +55,9 @@ namespace rainbow
         [[nodiscard]] auto script() { return script_.get(); }
         [[nodiscard]] auto terminated() const { return terminated_; }
 
-        [[nodiscard]] auto texture_manager() -> graphics::TextureManager&
+        [[nodiscard]] auto texture_provider() -> graphics::TextureProvider&
         {
-            return renderer_.texture_manager;
+            return renderer_.texture_provider;
         }
 
         void draw();

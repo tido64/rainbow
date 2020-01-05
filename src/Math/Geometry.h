@@ -50,30 +50,45 @@ namespace rainbow
 
     struct Rect
     {
-        float left;    // NOLINT(misc-non-private-member-variables-in-classes)
-        float bottom;  // NOLINT(misc-non-private-member-variables-in-classes)
-        float right;   // NOLINT(misc-non-private-member-variables-in-classes)
-        float top;     // NOLINT(misc-non-private-member-variables-in-classes)
+        float left = 0.0F;    // NOLINT
+        float bottom = 0.0F;  // NOLINT
+        float width = 0.0F;   // NOLINT
+        float height = 0.0F;  // NOLINT
 
-        Rect() : Rect(0.0F, 0.0F, 0.0F, 0.0F) {}
+        constexpr Rect() = default;
 
-        Rect(float left_, float bottom_, float right_, float top_)
-            : left(left_), bottom(bottom_), right(right_), top(top_)
+        constexpr Rect(float left_, float bottom_, float width_, float height_)
+            : left(left_), bottom(bottom_), width(width_), height(height_)
         {
         }
 
-        [[nodiscard]] auto bottom_left() const { return Vec2f{left, bottom}; }
-        [[nodiscard]] auto bottom_right() const { return Vec2f{right, bottom}; }
-        [[nodiscard]] auto top_left() const { return Vec2f{left, top}; }
-        [[nodiscard]] auto top_right() const { return Vec2f{right, top}; }
+        [[nodiscard]] constexpr auto bottom_left() const
+        {
+            return Vec2f{left, bottom};
+        }
 
-        friend auto operator==(const Rect& r, const Rect& s)
+        [[nodiscard]] constexpr auto bottom_right() const
+        {
+            return Vec2f{left + width, bottom};
+        }
+
+        [[nodiscard]] constexpr auto top_left() const
+        {
+            return Vec2f{left, bottom + height};
+        }
+
+        [[nodiscard]] constexpr auto top_right() const
+        {
+            return Vec2f{left + width, bottom + height};
+        }
+
+        friend constexpr auto operator==(const Rect& r, const Rect& s)
         {
             return r.left == s.left && r.bottom == s.bottom &&
-                   r.right == s.right && r.top == s.top;
+                   r.width == s.width && r.height == s.height;
         }
 
-        friend auto operator!=(const Rect& r, const Rect& s)
+        friend constexpr auto operator!=(const Rect& r, const Rect& s)
         {
             return !(r == s);
         }

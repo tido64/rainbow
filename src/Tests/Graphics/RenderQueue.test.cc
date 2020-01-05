@@ -4,10 +4,13 @@
 
 #include "Graphics/RenderQueue.h"
 
+#include <array>
+
 #include <gtest/gtest.h>
 
 #include "Graphics/Drawable.h"
 
+using rainbow::IDrawable;
 using rainbow::graphics::RenderQueue;
 using rainbow::graphics::RenderUnit;
 
@@ -15,11 +18,24 @@ namespace
 {
     constexpr uint64_t kDeltaTime = 16;
 
-    class TestDrawable : public rainbow::IDrawable
+    struct MockUpdateCommand
+    {
+        void operator()(IDrawable* drawable) const
+        {
+            drawable->update(kDeltaTime);
+        }
+
+        template <typename T>
+        void operator()(T&&) const
+        {
+        }
+    };
+
+    class TestDrawable : public IDrawable
     {
     public:
-        auto draw_count() const { return drawn_; }
-        auto update_count() const { return updated_; }
+        [[nodiscard]] auto draw_count() const { return drawn_; }
+        [[nodiscard]] auto update_count() const { return updated_; }
 
     private:
         int drawn_ = 0;
@@ -40,8 +56,9 @@ namespace
 
 TEST(RenderQueueTest, UnitsHaveReasonableDefaults)
 {
-    const std::string tag2{"test"};
-    TestDrawable drawables[2];
+    const std::string tag2 = "test";
+
+    std::array<TestDrawable, 2> drawables;
     RenderQueue queue{drawables[0]};
     queue.emplace_back(drawables[1], tag2);
 
@@ -61,7 +78,7 @@ TEST(RenderQueueTest, SetsUnitTag)
     const std::string kRandomTag = "42";
     const std::string kSecureRandomTag = "4";
 
-    TestDrawable drawables[2];
+    std::array<TestDrawable, 2> drawables;
     RenderQueue queue{{drawables[0], kRandomTag}, drawables[1]};
     auto& unit1 = queue.front();
     auto& unit2 = queue.back();
@@ -96,41 +113,9 @@ TEST(RenderQueueTest, SetsUnitTag)
     ASSERT_NE(unit2, unit1);
 }
 
-TEST(RenderQueueTest, DrawsOnlyEnabledUnits)
+TEST(RenderQueueTest, VisitsEnabledUnitsOnly)
 {
-    TestDrawable drawables[5];
-    RenderQueue queue;
-    std::transform(  //
-        std::begin(drawables),
-        std::end(drawables),
-        std::back_inserter(queue),
-        [](auto&& drawable) -> RenderUnit { return drawable; });
-    rainbow::graphics::draw(queue);
-
-    ASSERT_TRUE(std::all_of(
-        std::begin(drawables), std::end(drawables), [](auto&& drawable) {
-            return drawable.draw_count() == 1;
-        }));
-
-    queue[1].disable();
-    queue[3].disable();
-    rainbow::graphics::draw(queue);
-
-    ASSERT_EQ(drawables[0].draw_count(), 2);
-    ASSERT_EQ(drawables[1].draw_count(), 1);
-    ASSERT_EQ(drawables[2].draw_count(), 2);
-    ASSERT_EQ(drawables[3].draw_count(), 1);
-    ASSERT_EQ(drawables[4].draw_count(), 2);
-
-    ASSERT_TRUE(std::all_of(
-        std::begin(drawables), std::end(drawables), [](auto&& drawable) {
-            return drawable.update_count() == 0;
-        }));
-}
-
-TEST(RenderQueueTest, UpdatesOnlyEnabledUnits)
-{
-    TestDrawable drawables[10];
+    std::array<TestDrawable, 10> drawables;
     RenderQueue queue;
     std::transform(  //
         std::begin(drawables),
@@ -139,7 +124,7 @@ TEST(RenderQueueTest, UpdatesOnlyEnabledUnits)
         [](auto&& drawable) -> RenderUnit { return drawable; });
     queue[1].disable();
     queue[7].disable();
-    rainbow::graphics::update(queue, kDeltaTime);
+    rainbow::graphics::visit_all(MockUpdateCommand{}, queue);
 
     for (size_t i = 0; i < queue.size(); ++i)
     {
@@ -150,7 +135,7 @@ TEST(RenderQueueTest, UpdatesOnlyEnabledUnits)
     queue[1].enable();
     queue[2].enable();
     queue[6].disable();
-    rainbow::graphics::update(queue, kDeltaTime);
+    rainbow::graphics::visit_all(MockUpdateCommand{}, queue);
 
     ASSERT_EQ(drawables[0].update_count(), 2);
     ASSERT_EQ(drawables[1].update_count(), 1);

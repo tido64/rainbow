@@ -12,8 +12,8 @@ using rainbow::Vec2f;
 
 namespace
 {
-    constexpr float kFixedStep = 1.0f / 100.0f;
-    constexpr float kStepsPerMs = 1.0f / kFixedStep / 1000.0f;
+    constexpr float kFixedStep = 1.0F / 100.0F;
+    constexpr float kStepsPerMs = 1.0F / kFixedStep / 1000.0F;
     constexpr int kMaxSteps = 10;
 
     template <typename F, typename... Args>
@@ -111,8 +111,8 @@ namespace b2
                     return;
 
                 const b2Vec2 v = ptm_ * (ratio * d->curr_p + rest * d->prev_p);
-                d->sprite->set_position(Vec2f(v.x, v.y));
-                d->sprite->set_rotation(ratio * d->curr_r + rest * d->prev_r);
+                d->sprite->position(Vec2f(v.x, v.y))
+                    .angle(ratio * d->curr_r + rest * d->prev_r);
             },
             ratio,
             1.0f - ratio);
@@ -126,8 +126,7 @@ namespace b2
                 return;
 
             const Vec2f position(d->curr_p.x * ptm_, d->curr_p.y * ptm_);
-            d->sprite->set_position(position);
-            d->sprite->set_rotation(d->curr_r);
+            d->sprite->position(position).angle(d->curr_r);
         });
     }
 

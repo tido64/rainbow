@@ -1,5 +1,7 @@
 /// <reference path="./index.d.ts" />
 
+/* eslint-disable no-undef, no-unused-vars */
+
 interface Demo {
   deinit(): void;
   update(dt: number): void;
@@ -180,6 +182,7 @@ class Labels implements Demo {
     let frame = 0;
     this.thread = new Thread(x => {
       const { floor, random } = Math;
+      // eslint-disable-next-line no-constant-condition
       while (true) {
         const stanza = this.text[frame];
         const lines = (stanza.match(/\n/g) || []).length;
@@ -225,7 +228,6 @@ class Shaker implements Demo {
 
   private screen: { width: number; height: number };
   private texture: Rainbow.Texture;
-  private textureId: number;
   private batches: Rainbow.SpriteBatch[] = [];
   private sprites: Rainbow.Sprite[] = [];
   private frameTimes: number[] = [];
@@ -235,7 +237,6 @@ class Shaker implements Demo {
 
     this.screen = { width, height };
     this.texture = new Rainbow.Texture("p1_spritesheet.png");
-    this.textureId = this.texture.addRegion(0, 0, 72, 97);
   }
 
   public deinit(): void {
@@ -258,12 +259,13 @@ class Shaker implements Demo {
       batch.setTexture(this.texture);
 
       for (let i = 0; i < Shaker.MAX_NUM_SPRITES; ++i) {
-        const sprite = batch.createSprite(72, 97);
-        sprite.setPosition({
-          x: Math.random() * this.screen.width,
-          y: Math.random() * this.screen.height
-        });
-        sprite.setTexture(this.textureId);
+        const sprite = batch
+          .createSprite(72, 97)
+          .position({
+            x: Math.random() * this.screen.width,
+            y: Math.random() * this.screen.height
+          })
+          .texture({ left: 0, bottom: 0, width: 72, height: 97 });
         this.sprites.push(sprite);
       }
 
@@ -280,44 +282,47 @@ class Shaker implements Demo {
 }
 
 class Stalker implements Demo {
-  private animation: Rainbow.Animation;
+  private texture: Rainbow.Texture;
   private batch: Rainbow.SpriteBatch;
   private sprite: Rainbow.Sprite;
+  private animation: Rainbow.Animation;
   private pointersDown: typeof Rainbow.Input.pointersDown;
   private pointersMoved: typeof Rainbow.Input.pointersMoved;
 
   constructor(width: number, height: number) {
     console.log("Demo: Stalker");
 
-    const texture = new Rainbow.Texture("p1_spritesheet.png");
-    const walkingFrames = [
-      texture.addRegion(0, 0, 72, 97),
-      texture.addRegion(73, 0, 72, 97),
-      texture.addRegion(146, 0, 72, 97),
-      texture.addRegion(0, 98, 72, 97),
-      texture.addRegion(73, 98, 72, 97),
-      texture.addRegion(146, 98, 72, 97),
-      texture.addRegion(219, 0, 72, 97),
-      texture.addRegion(292, 0, 72, 97),
-      texture.addRegion(219, 98, 72, 97),
-      texture.addRegion(365, 0, 72, 97),
-      texture.addRegion(292, 98, 72, 97)
-    ];
+    this.texture = new Rainbow.Texture("p1_spritesheet.png");
 
     this.batch = new Rainbow.SpriteBatch(1);
-    this.batch.setTexture(texture);
-    this.sprite = this.batch.createSprite(72, 97);
-    this.sprite.setTexture(walkingFrames[0]);
+    this.batch.setTexture(this.texture);
+
+    const walkingFrames = [
+      { left: 0, bottom: 0, width: 72, height: 97 },
+      { left: 73, bottom: 0, width: 72, height: 97 },
+      { left: 146, bottom: 0, width: 72, height: 97 },
+      { left: 0, bottom: 98, width: 72, height: 97 },
+      { left: 73, bottom: 98, width: 72, height: 97 },
+      { left: 146, bottom: 98, width: 72, height: 97 },
+      { left: 219, bottom: 0, width: 72, height: 97 },
+      { left: 292, bottom: 0, width: 72, height: 97 },
+      { left: 219, bottom: 98, width: 72, height: 97 },
+      { left: 365, bottom: 0, width: 72, height: 97 },
+      { left: 292, bottom: 98, width: 72, height: 97 }
+    ];
+    const { pointersDown, pointersMoved } = Rainbow.Input;
+
+    this.sprite = this.batch
+      .createSprite(72, 97)
+      .texture(walkingFrames[0])
+      .position(
+        pointersDown.length > 0
+          ? pointersDown[0]
+          : { x: width * 0.5, y: height * 0.5 }
+      );
 
     this.animation = new Rainbow.Animation(this.sprite, walkingFrames, 24, 0);
     this.animation.start();
-
-    const { pointersDown, pointersMoved } = Rainbow.Input;
-    this.sprite.setPosition(
-      pointersDown.length > 0
-        ? pointersDown[0]
-        : { x: width * 0.5, y: height * 0.5 }
-    );
 
     this.pointersDown = pointersDown;
     this.pointersMoved = pointersMoved;
@@ -333,9 +338,9 @@ class Stalker implements Demo {
 
   public update(dt: number): void {
     if (this.pointersMoved.length > 0) {
-      this.sprite.setPosition(this.pointersMoved[0]);
+      this.sprite.position(this.pointersMoved[0]);
     } else if (this.pointersDown.length > 0) {
-      this.sprite.setPosition(this.pointersDown[0]);
+      this.sprite.position(this.pointersDown[0]);
     }
   }
 }

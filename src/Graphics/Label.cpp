@@ -15,8 +15,6 @@ using rainbow::TextAlignment;
 using rainbow::Vec2f;
 
 Label::Label()
-    : stale_(0), font_size_(15), alignment_(TextAlignment::Left), scale_(1.0f),
-      angle_(0.0f)
 {
     array_.reconfigure([this] { buffer_.bind(); });
 }
@@ -74,7 +72,7 @@ void Label::set_scale(float f)
     if (are_equal(f, scale_))
         return;
 
-    scale_ = std::clamp(f, 0.01f, 1.0f);
+    scale_ = std::clamp(f, 0.01F, 1.0F);
     set_needs_update(kStaleBuffer);
 }
 
@@ -122,4 +120,11 @@ void Label::update_internal()
 void Label::upload() const
 {
     buffer_.upload(vertices_.data(), vertices_.size() * sizeof(vertices_[0]));
+}
+
+void rainbow::graphics::draw(Context& ctx, const Label& label)
+{
+    auto& font_cache = *FontCache::Get();
+    bind(ctx, font_cache.texture());
+    draw(label.vertex_array(), label.vertex_count());
 }

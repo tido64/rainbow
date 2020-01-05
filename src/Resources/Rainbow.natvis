@@ -17,6 +17,12 @@
       <Item Condition="sprite_.batch_ != nullptr" Name="[sprite]">(*sprite_.batch_)[sprite_.i_]</Item>
     </Expand>
   </Type>
+  <Type Name="rainbow::ArrayMap&lt;*&gt;">
+    <DisplayString>{map_}</DisplayString>
+    <Expand>
+      <ExpandedItem>map_</ExpandedItem>
+    </Expand>
+  </Type>
   <Type Name="rainbow::Label">
     <DisplayString>{text_._Mypair._Myval2,s8}</DisplayString>
     <Expand>
@@ -76,12 +82,6 @@
       </ArrayItems>
     </Expand>
   </Type>
-  <Type Name="rainbow::TextureAtlas">
-    <DisplayString>{texture_}</DisplayString>
-    <Expand>
-      <ExpandedItem>regions_</ExpandedItem>
-    </Expand>
-  </Type>
   <Type Name="rainbow::graphics::Buffer">
     <DisplayString>{{name={id_}}}</DisplayString>
   </Type>
@@ -94,14 +94,12 @@
     </Expand>
   </Type>
   <Type Name="rainbow::graphics::Texture">
-    <DisplayString>{{name={name_} width={size_.x} height={size_.y}}}</DisplayString>
+    <DisplayString>{{key={key_}}}</DisplayString>
   </Type>
-  <Type Name="rainbow::graphics::TextureManager">
-    <DisplayString>{{active={active_} textures={textures_}}}</DisplayString>
+  <Type Name="rainbow::graphics::TextureProvider">
+    <DisplayString>{texture_map_}</DisplayString>
     <Expand>
-      <Item Name="[mag filter]">mag_filter_</Item>
-      <Item Name="[min filter]">min_filter_</Item>
-      <ExpandedItem>textures_</ExpandedItem>
+      <ExpandedItem>texture_map_</ExpandedItem>
     </Expand>
   </Type>
   <Type Name="rainbow::graphics::VertexArray">

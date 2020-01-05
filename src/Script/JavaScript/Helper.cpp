@@ -4,32 +4,31 @@
 
 #include "Script/JavaScript/Helper.h"
 
-#include "Graphics/TextureAtlas.h"
+#include "Graphics/Animation.h"
+#include "Graphics/Texture.h"
 #include "Input/VirtualKey.h"
+#include "Script/JavaScript/JavaScript.h"
 
 using rainbow::Animation;
 using rainbow::Color;
-using rainbow::SharedPtr;
-using rainbow::TextureAtlas;
 using rainbow::Vec2f;
+using rainbow::graphics::Texture;
 
 #define PUSH_OBJECT() const auto obj_idx = duk_push_object(ctx)
 #define PUT_PROP(obj, prop)                                                    \
     do                                                                         \
     {                                                                          \
-        duk::push(ctx, obj.prop);                                              \
+        duk::push(ctx, (obj).prop);                                            \
         duk::put_prop_literal(ctx, obj_idx, #prop);                            \
     } while (false)
 
 namespace rainbow::duk
 {
-    template <typename T>
-    auto get_shared(duk_context* ctx, duk_idx_t idx) -> SharedPtr<T>
+    auto get_engine(duk_context* ctx) -> JavaScript&
     {
-        duk_require_object(ctx, idx);
-        auto ptr = static_cast<SharedPtr<T>*>(duk::push_instance(ctx, idx));
-        duk_pop(ctx);
-        return *ptr;
+        duk_memory_functions funcs;
+        duk_get_memory_functions(ctx, &funcs);
+        return *static_cast<JavaScript*>(funcs.udata);
     }
 
     void push(duk_context* ctx, VirtualKey key)
@@ -40,10 +39,12 @@ namespace rainbow::duk
     template <typename T, size_t N>
     void push_tagged_pointer(duk_context* ctx, T ptr, const char (&tag)[N])
     {
+        using Type = std::remove_pointer_t<decltype(ptr)>;
+
         const auto obj_idx = duk_push_bare_object(ctx);
         duk::push(ctx,
-                  const_cast<void*>(
-                      type_id<std::remove_pointer_t<decltype(ptr)>>().value()));
+                  // NOLINTNEXTLINE(cppcoreguidelines-pro-type-const-cast)
+                  const_cast<void*>(type_id<Type>().value()));
         duk::put_prop_literal(ctx, obj_idx, DUKR_HIDDEN_SYMBOL_TYPE);
         duk::put_instance(ctx, obj_idx, ptr);
         duk::push_literal(ctx, tag);
@@ -100,24 +101,6 @@ auto rainbow::duk::get<Animation::Callback>(duk_context* ctx, duk_idx_t idx)
 }
 
 template <>
-auto rainbow::duk::get<Animation::Frames>(duk_context* ctx, duk_idx_t idx)
-    -> Animation::Frames
-{
-    auto size = duk_get_length(ctx, idx);
-    auto frames = std::make_unique<Animation::Frame[]>(size + 1);
-
-    for (duk_uarridx_t i = 0; i < size; ++i)
-    {
-        duk_get_prop_index(ctx, idx, i);
-        frames[i] = duk_require_uint(ctx, -1);
-        duk_pop(ctx);
-    }
-
-    frames[size] = Animation::Frame::end();
-    return frames;
-}
-
-template <>
 auto rainbow::duk::get<Color>(duk_context* ctx, duk_idx_t idx) -> Color
 {
     duk::get_prop_literal(ctx, idx, "r");
@@ -135,10 +118,44 @@ auto rainbow::duk::get<Color>(duk_context* ctx, duk_idx_t idx) -> Color
 }
 
 template <>
-auto rainbow::duk::get<SharedPtr<TextureAtlas>>(duk_context* ctx, duk_idx_t idx)
-    -> SharedPtr<TextureAtlas>
+auto rainbow::duk::get<rainbow::Rect>(duk_context* ctx, duk_idx_t idx) -> Rect
 {
-    return get_shared<TextureAtlas>(ctx, idx);
+    duk::get_prop_literal(ctx, idx, "left");
+    duk::get_prop_literal(ctx, idx, "bottom");
+    duk::get_prop_literal(ctx, idx, "width");
+    duk::get_prop_literal(ctx, idx, "height");
+
+    Rect rect{narrow_cast<float>(duk_require_number(ctx, -4)),
+              narrow_cast<float>(duk_require_number(ctx, -3)),
+              narrow_cast<float>(duk_require_number(ctx, -2)),
+              narrow_cast<float>(duk_require_number(ctx, -1))};
+
+    duk_pop_n(ctx, 4);
+    return rect;
+}
+
+template <>
+auto rainbow::duk::get<Animation::Frames>(duk_context* ctx, duk_idx_t idx)
+    -> Animation::Frames
+{
+    auto size = duk_get_length(ctx, idx);
+    auto frames = std::make_unique<Rect[]>(size + 1);
+
+    for (duk_uarridx_t i = 0; i < size; ++i)
+    {
+        duk_get_prop_index(ctx, idx, i);
+        frames[i] = get<Rect>(ctx, duk_get_top_index(ctx));
+        duk_pop(ctx);
+    }
+
+    frames[size] = Animation::end_frame();
+    return frames;
+}
+
+template <>
+auto rainbow::duk::get<Texture*>(duk_context* ctx, duk_idx_t idx) -> Texture*
+{
+    return duk::push_instance<Texture*>(ctx, idx);
 }
 
 template <>
@@ -210,4 +227,12 @@ void rainbow::duk::push(duk_context* ctx, audio::Channel* channel)
 void rainbow::duk::push(duk_context* ctx, audio::Sound* sound)
 {
     push_tagged_pointer(ctx, sound, "Rainbow.Sound");
+}
+
+void rainbow::duk::get_texture(duk_context* ctx,
+                               std::string_view path,
+                               graphics::Texture& texture)
+{
+    new (&texture) graphics::Texture();
+    texture = get_engine(ctx).texture_provider().get(path);
 }

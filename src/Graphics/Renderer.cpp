@@ -109,8 +109,8 @@ void graphics::set_projection(Context& ctx, const Rect& projection)
 void graphics::set_surface_size(Context& ctx, const Vec2i& resolution)
 {
     ctx.surface_size = resolution;
-    ctx.projection.right = ctx.projection.left + resolution.x;
-    ctx.projection.top = ctx.projection.bottom + resolution.y;
+    ctx.projection.width = resolution.x;
+    ctx.projection.height = resolution.y;
     ctx.shader_manager.update_viewport();
     set_window_size(
         ctx, ctx.window_size.is_zero() ? ctx.surface_size : ctx.window_size);
@@ -202,13 +202,6 @@ void graphics::reset()
 void graphics::scissor(const Context& ctx, int x, int y, int width, int height)
 {
     glScissor(ctx.origin.x + x, ctx.origin.y + y, width, height);
-}
-
-void graphics::unbind_all(Context& ctx)
-{
-    VertexArray::unbind();
-    ctx.shader_manager.use(ShaderManager::kInvalidProgram);
-    ctx.texture_manager.bind();
 }
 
 Context::~Context()

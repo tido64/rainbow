@@ -25,10 +25,10 @@ namespace rainbow
     class Label : private NonCopyable<Label>
     {
     public:
-        static constexpr uint32_t kStaleBuffer      = 1u << 0;
-        static constexpr uint32_t kStaleBufferSize  = 1u << 1;
-        static constexpr uint32_t kStaleColor       = 1u << 2;
-        static constexpr uint32_t kStaleMask        = 0xffffu;
+        static constexpr uint32_t kStaleBuffer      = 1U << 0;
+        static constexpr uint32_t kStaleBufferSize  = 1U << 1;
+        static constexpr uint32_t kStaleColor       = 1U << 2;
+        static constexpr uint32_t kStaleMask        = 0xffffU;
 
         Label();
         virtual ~Label();
@@ -114,9 +114,6 @@ namespace rainbow
         /// <summary>Sets text to display.</summary>
         void set_text(czstring);
 
-        /// <summary>Binds all used textures.</summary>
-        void bind_textures() const {}
-
         /// <summary>Moves label by (x,y).</summary>
         void move(const Vec2f&);
 
@@ -133,7 +130,7 @@ namespace rainbow
 
     private:
         /// <summary>Flags indicating need for update.</summary>
-        unsigned int stale_;
+        unsigned int stale_ = 0;
 
         /// <summary>Vertex array object.</summary>
         graphics::VertexArray array_;
@@ -148,10 +145,10 @@ namespace rainbow
         std::string font_face_;
 
         /// <summary>Font size used to draw the text.</summary>
-        int font_size_;
+        int font_size_ = 15;
 
         /// <summary>Text alignment.</summary>
-        TextAlignment alignment_;
+        TextAlignment alignment_ = TextAlignment::Left;
 
         /// <summary>Position of the text (bottom left).</summary>
         Vec2f position_;
@@ -160,10 +157,10 @@ namespace rainbow
         Color color_;
 
         /// <summary>Label scale factor.</summary>
-        float scale_;
+        float scale_ = 1.0F;
 
         /// <summary>Angle of rotation.</summary>
-        float angle_;
+        float angle_ = 0.0F;
 
         /// <summary>Label size.</summary>
         Vec2f size_;
@@ -172,5 +169,12 @@ namespace rainbow
         graphics::Buffer buffer_;
     };
 }  // namespace rainbow
+
+namespace rainbow::graphics
+{
+    struct Context;
+
+    void draw(Context&, const Label&);
+}  // namespace rainbow::graphics
 
 #endif

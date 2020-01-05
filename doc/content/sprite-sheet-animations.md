@@ -14,32 +14,32 @@ where we take a sprite and change its texture at set interval.
 
 <!-- TypeScript -->
 ```typescript
-Rainbow.Animation(sprite: Sprite, frames: number[], fps: number, delay: number);
+Rainbow.Animation(sprite: Sprite, frames: Rect[], fps: number, delay: number)
 ```
 
 <!-- C++ -->
 ```cpp
-Animation(const SpriteRef &sprite,
-          std::unique_ptr<Frame[]> frames,
+Animation(const SpriteRef& sprite,
+          std::unique_ptr<Rect[]> frames,
           unsigned int fps,
           int delay = 0);
 ```
 
 <!--END_DOCUSAURUS_CODE_TABS-->
 
-`frames` is an array of texture ids that are played back in succession. In C++,
-the array must be terminated with `Animation::Frame::end()`. The playback rate
-is determined by frames per second, or `fps`.
+`frames` is an array of texture areas that are played back in succession. In
+C++, the array must be terminated with `Animation::end_frame()`. The playback
+rate is determined by frames per second, or `fps`.
 
 By default, an animation always loops without any delays between each cycle.
 Setting `delay` to anything greater than 0, will introduce delays, measured in
-frames. For instance, setting `fps` to 30 and `delay` to 2, will make the
-animation wait 66⅔ ms before playing the next cycle. A negative `delay` disables
-looping.
+frames. For instance, setting `fps` to 25 and `delay` to 2, will make the
+animation wait **80 ms** before playing the next cycle. A negative `delay`
+disables looping.
 
 Before an animation can be played, it must also be added to the render queue.
-Batches of animations can be created and assigned a sprite at a later point in
-time.
+Note that animations can be assigned a sprite at any point in time, so it is
+possible to cache them for later use.
 
 ### Starting and Stopping Animations
 
@@ -53,16 +53,16 @@ function stop(): void;
 
 <!-- C++ -->
 ```cpp
-bool  Animation::is_stopped  () const;
-void  Animation::start       ();
-void  Animation::stop        ();
+auto Animation::is_stopped() const -> bool;
+void Animation::start();
+void Animation::stop();
 ```
 
 <!--END_DOCUSAURUS_CODE_TABS-->
 
 An animation will always start from the beginning. There is no pause function
 because animations live in the render queue and can therefore be paused by
-disabling its render unit.
+disabling the render unit itself.
 
 ### Navigating the Animation
 
@@ -75,12 +75,12 @@ function currentFrame(): number;
 
 <!-- C++ -->
 ```cpp
-unsigned int  current_frame  () const;
+auto current_frame() const -> unsigned int;
 ```
 
 <!--END_DOCUSAURUS_CODE_TABS-->
 
-Returns the currently displayed frame; `Animation::Frame::end()` (-1) if none.
+Returns the currently displayed frame; **-1** if none.
 
 <!--DOCUSAURUS_CODE_TABS-->
 
@@ -91,7 +91,7 @@ function frameRate(): number;
 
 <!-- C++ -->
 ```cpp
-unsigned int  frame_rate  () const;
+auto frame_rate() const -> unsigned int;
 ```
 
 <!--END_DOCUSAURUS_CODE_TABS-->
@@ -107,7 +107,7 @@ function jumpTo(frame: number): void;
 
 <!-- C++ -->
 ```cpp
-void  Animation::jump_to  (unsigned int frame);
+void Animation::jump_to(unsigned int frame);
 ```
 
 <!--END_DOCUSAURUS_CODE_TABS-->
@@ -123,7 +123,7 @@ function rewind(): void;
 
 <!-- C++ -->
 ```cpp
-void  Animation::rewind  ();
+void Animation::rewind();
 ```
 
 <!--END_DOCUSAURUS_CODE_TABS-->
@@ -141,7 +141,7 @@ function setDelay(delay: number): void;
 
 <!-- C++ -->
 ```cpp
-void  Animation::set_delay  (int delay);
+void Animation::set_delay(int delay);
 ```
 
 <!--END_DOCUSAURUS_CODE_TABS-->
@@ -158,7 +158,7 @@ function setFrameRate(fps: number): void;
 
 <!-- C++ -->
 ```cpp
-void  Animation::set_frame_rate  (unsigned int fps);
+void Animation::set_frame_rate(unsigned int fps);
 ```
 
 <!--END_DOCUSAURUS_CODE_TABS-->
@@ -169,12 +169,12 @@ Sets the frame rate in frames per second.
 
 <!-- TypeScript -->
 ```typescript
-function setFrames(frames: number[]): void;
+function setFrames(frames: Rect[]): void;
 ```
 
 <!-- C++ -->
 ```cpp
-void  Animation::set_frames  (std::unique_ptr<Frame[]> frames);
+void Animation::set_frames(std::unique_ptr<Rect[]> frames);
 ```
 
 <!--END_DOCUSAURUS_CODE_TABS-->
@@ -182,7 +182,7 @@ void  Animation::set_frames  (std::unique_ptr<Frame[]> frames);
 Sets new frames to be played.
 
 ```cpp
-const Frame*  release  ();
+auto release() -> const Rect*;
 ```
 
 Releases ownership of animation frames and returns it.
@@ -190,7 +190,7 @@ Releases ownership of animation frames and returns it.
 ### Changing Sprite To Animate
 
 ```cpp
-SpriteRef  sprite  () const;
+auto sprite() const -> SpriteRef;
 ```
 
 Returns the target sprite.
@@ -204,7 +204,7 @@ function setSprite(sprite: Sprite): void;
 
 <!-- C++ -->
 ```cpp
-void  Animation::set_sprite  (const SpriteRef &sprite);
+void Animation::set_sprite(const SpriteRef&);
 ```
 
 <!--END_DOCUSAURUS_CODE_TABS-->
@@ -252,7 +252,7 @@ function setCallback(callback: (animation: Animation, event: AnimationEvent) => 
 
 <!-- C++ -->
 ```cpp
-void   Animation::set_callback  (Animation::Callback f);
+void Animation::set_callback(Animation::Callback);
 
 // Where `Animation::Callback` is a callable whose signature is
 // `void(Animation *animation, AnimationEvent event)`, and `animation` is the
@@ -271,31 +271,32 @@ In this example, we set up a walking animation.
 ```typescript
 /// <reference path="./index.d.ts" />
 
-interface World {
+type World = {
   screen: { width: number; height: number };
+  texture: Rainbow.Texture;
   batch: Rainbow.SpriteBatch;
   animation: Rainbow.Animation;
-}
+};
 
 let world: World;
 
 function init(width: number, height: number) {
   const texture = new Rainbow.Texture("monkey.png");
-  const walkingFrames = [
-    texture.addRegion(400, 724, 104, 149);
-    texture.addRegion(504, 724, 104, 149);
-    texture.addRegion(608, 724, 104, 149);
-    texture.addRegion(712, 724, 104, 149);
-    texture.addRegion(816, 724, 104, 149);
-    texture.addRegion(920, 724, 104, 149);
-  ];
 
   const batch = new Rainbow.SpriteBatch(1);
   batch.setTexture(texture);
 
   const sprite = batch.createSprite(104, 149);
-  sprite.setPosition({ x: width * 0.5, y: height * 0.5 });
+  sprite.position({ x: width * 0.5, y: height * 0.5 });
 
+  const walkingFrames = [
+    { left: 400, bottom: 724, width: 104, height: 149 },
+    { left: 504, bottom: 724, width: 104, height: 149 },
+    { left: 608, bottom: 724, width: 104, height: 149 },
+    { left: 712, bottom: 724, width: 104, height: 149 },
+    { left: 816, bottom: 724, width: 104, height: 149 },
+    { left: 920, bottom: 724, width: 104, height: 149 },
+  ];
   const animation = new Rainbow.Animation(sprite, walkingFrames, 6, 0);
   animation.start();
 
@@ -304,6 +305,7 @@ function init(width: number, height: number) {
 
   world = {
     screen: { width, height },
+    texture,
     batch,
     animation
   };
@@ -314,94 +316,87 @@ function update(dt: number) {}
 
 <!-- C++ -->
 ```cpp
-#include "FileSystem/FileSystem.h"
 #include "Graphics/Animation.h"
+#include "Graphics/SpriteBatch.h"
 #include "Script/GameBase.h"
 
 namespace
 {
-    constexpr int kTextureRegions[]{
-        400, 724, 104, 149,
-        504, 724, 104, 149,
-        608, 724, 104, 149,
-        712, 724, 104, 149,
-        816, 724, 104, 149,
-        920, 724, 104, 149};
-
-    rainbow::Animation::Frame kAnimationFrames[]{
-        0, 1, 2, 3, 4, 5, rainbow::Animation::Frame::end()};
+  auto make_frames()
+  {
+    auto frames = new rainbow::Rect[7]{
+      {400, 724, 104, 149},
+      {504, 724, 104, 149},
+      {608, 724, 104, 149},
+      {712, 724, 104, 149},
+      {816, 724, 104, 149},
+      {920, 724, 104, 149},
+      rainbow::Animation::end_frame(),
+    };
+    return std::unique_ptr<rainbow::Rect[]>{frames};
+  }
 }
 
-auto load_texture()
+void animation_event_handler(rainbow::Animation*,
+                             rainbow::AnimationEvent e)
 {
-    auto texture_path = rainbow::filesystem::relative("monkey.png");
-    auto texture = rainbow::make_shared<rainbow::TextureAtlas>(texture_path.c_str());
-    texture->set_regions(kTextureRegions);
-    return texture;
-}
-
-void animation_event_handler(rainbow::Animation*, rainbow::AnimationEvent e)
-{
-    switch (e)
-    {
-        case rainbow::AnimationEvent::Start:
-            // Handle animation start here.
-            break;
-        case rainbow::AnimationEvent::End:
-            // Handle animation end here.
-            break;
-        case rainbow::AnimationEvent::Complete:
-            // Handle animation cycle complete here.
-            break;
-        case rainbow::AnimationEvent::Frame:
-            // Handle animation frame update here.
-            break;
-    }
+  switch (e) {
+    case rainbow::AnimationEvent::Start:
+      // Handle animation start here.
+      break;
+    case rainbow::AnimationEvent::End:
+      // Handle animation end here.
+      break;
+    case rainbow::AnimationEvent::Complete:
+      // Handle animation cycle complete here.
+      break;
+    case rainbow::AnimationEvent::Frame:
+      // Handle animation frame update here.
+      break;
+  }
 }
 
 class AnimationExample final : public rainbow::GameBase
 {
 public:
-    AnimationExample(rainbow::Director& director)
-        : rainbow::GameBase(director), batch_(1),
-          animation_(rainbow::SpriteRef{},
-                     rainbow::Animation::Frames(kAnimationFrames),
-                     6,
-                     0)
-    {
-    }
-
-    ~AnimationExample() { animation_.release(); }
+  AnimationExample(rainbow::Director& director)
+    : rainbow::GameBase(director),
+      batch_(1),
+      animation_({}, make_frames(), 6, 0)
+  {
+  }
 
 private:
-    rainbow::SpriteBatch batch_;
-    rainbow::Animation animation_;
+  rainbow::graphics::Texture texture_;
+  rainbow::SpriteBatch batch_;
+  rainbow::Animation animation_;
 
-    void init_impl(const rainbow::Vec2i& screen) override
-    {
-        rainbow::graphics::TextureManager::Get()->set_filter(
-            rainbow::graphics::TextureFilter::Nearest);
+  void init_impl(const rainbow::Vec2i& screen) override
+  {
+    texture_ = texture_provider().get(
+        "monkey.png",
+        1.0F,
+        rainbow::graphics::Filter::Nearest,
+        rainbow::graphics::Filter::Nearest);
 
-        auto texture = load_texture();
-        batch_.set_texture(texture);
+    batch_.set_texture(texture_);
 
-        auto sprite = batch_.create_sprite(104, 149);
-        sprite->set_position(rainbow::Vec2f(screen.x * 0.5f, screen.y * 0.5f));
+    auto sprite = batch_.create_sprite(104, 149);
+    sprite->position({screen.x * 0.5F, screen.y * 0.5F});
 
-        animation_.set_sprite(sprite);
-        animation_.set_callback(&animation_event_handler);
+    animation_.set_sprite(sprite);
+    animation_.set_callback(&animation_event_handler);
+    animation_.start();
 
-        render_queue().emplace_back(batch_);
-        render_queue().emplace_back(animation_);
-
-        animation_.start();
-    }
+    render_queue().emplace_back(batch_);
+    render_queue().emplace_back(animation_);
+  }
 };
 
 auto rainbow::GameBase::create(rainbow::Director& director)
-    -> std::unique_ptr<rainbow::GameBase>
+  -> std::unique_ptr<rainbow::GameBase>
 {
-    return std::make_unique<AnimationExample>(director);
+  return std::make_unique<AnimationExample>(director);
 }
 ```
 

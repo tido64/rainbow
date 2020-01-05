@@ -68,13 +68,17 @@ function update(dt) {
 class MyGame final : public rainbow::GameBase
 {
 public:
-    MyGame(rainbow::Director& director) : rainbow::GameBase(director) {}
+  MyGame(rainbow::Director& director)
+    : rainbow::GameBase(director)
+  {
+  }
 
 private:
-    rainbow::spritebatch_t batch_;
+  rainbow::graphics::Texture texture_;
+  std::unique_ptr<SpriteBatch> batch_;
 
-    void init_impl(const Vec2i &screen) override;
-    void update_impl(unsigned long dt) override;
+  void init_impl(const Vec2i &screen) override;
+  void update_impl(unsigned long dt) override;
 };
 
 // The engine will call `init_impl()` once on startup, after a graphics context
@@ -105,36 +109,54 @@ a sprite, one must first create a batch.
 
 <!-- TypeScript -->
 ```typescript
-function init(screenWidth, screenHeight) {
-  const count = 2;  // Intended number of sprites in batch
-  const batch = new Rainbow.SpriteBatch(count);
+// Ensure our objects are alive while being used.
+let batch, texture;
+
+function init(screenWidth, screenHeight)
+{
+  // Intended number of sprites in batch
+  const count = 2;
+  batch = new Rainbow.SpriteBatch(count);
 ```
 
 <!-- C++ -->
 ```cpp
 void MyGame::init_impl(const Vec2i& screen)
 {
-    constexpr unsigned int count = 2;  // Intended number of sprites in batch
-    batch_ = rainbow::spritebatch(count);
+  // Intended number of sprites in batch
+  constexpr uint32_t count = 2;
+  batch_ = std::make_unique<SpriteBatch>(count);
 ```
 
 <!--END_DOCUSAURUS_CODE_TABS-->
 
-The `count` tells Rainbow that we intend to create a batch of two sprites. Next,
+`count` tells Rainbow that we intend to create a batch of two sprites. Next,
 we'll create two sprites:
 
 <!--DOCUSAURUS_CODE_TABS-->
 
 <!-- TypeScript -->
 ```typescript
-  const sprite1 = batch.createSprite(100, 100);
-  const sprite2 = batch.createSprite(100, 100);
+  const sprite1 = batch.createSprite(72, 97);
+  const sprite2 = batch.createSprite(72, 97);
+
+  // Position our sprites at the center of the screen.
+  const cx = screenWidth * 0.5;
+  const cy = screenHeight * 0.5;
+  sprite1.position({ x: cx - 50, y: cy });
+  sprite2.position({ x: cx + 50, y: cy });
 ```
 
 <!-- C++ -->
 ```cpp
-    auto sprite1 = batch_->create_sprite(100, 100);
-    auto sprite2 = batch_->create_sprite(100, 100);
+  auto sprite1 = batch_->create_sprite(72, 97);
+  auto sprite2 = batch_->create_sprite(72, 97);
+
+  // Position our sprites at the center of the screen.
+  const float cx = screen.x * 0.5F;
+  const float cy = screen.y * 0.5F;
+  sprite1->position({cx - 50, cy});
+  sprite2->position({cx + 50, cy});
 ```
 
 <!--END_DOCUSAURUS_CODE_TABS-->
@@ -142,43 +164,41 @@ we'll create two sprites:
 The order in which sprites are created are important as it determines the draw
 order. Here, `sprite1` is drawn first, followed by `sprite2`.
 
-Now we have a sprite batch containing two untextured sprites. Let's add a
-texture:
+Now we have a sprite batch containing two untextured sprites. Let's add texture:
 
 <!--DOCUSAURUS_CODE_TABS-->
 
 <!-- TypeScript -->
 ```typescript
-  // Load the texture atlas.
-  const atlas = new Rainbow.Texture("canvas.png");
-  batch.setTexture(atlas);
+  // Load the texture.
+  texture = new Rainbow.Texture("p1_spritesheet.png");
+  batch.setTexture(texture);
 
-  // Create a texture from the atlas, and assign to our sprites.
-  const texture = atlas.addRegion(448, 108, 100, 100);
-  sprite1.setTexture(texture);
-  sprite2.setTexture(texture);
+  // Assign a texture area to our sprites.
+  const texture_area = { left: 0, bottom: 98, width: 72, height: 97 };
+  sprite1.texture(texture_area);
+  sprite2.texture(texture_area);
 ```
 
 <!-- C++ -->
 ```cpp
-    // Load the texture atlas.
-    auto atlas = rainbow::texture("canvas.png");
-    batch_->set_texture(atlas);
+  // Load the texture.
+  texture_ = texture_provider().get("p1_spritesheet.png");
+  batch_->set_texture(texture_);
 
-    // Create a texture from the atlas, and assign to our sprites.
-    auto texture = atlas->create(Vec2i{448, 108}, 100, 100);
-    sprite1->set_texture(texture);
-    sprite2->set_texture(texture);
+  // Assign a texture area to our sprites.
+  sprite1->texture({0, 98, 72, 97});
+  sprite2->texture({0, 98, 72, 97});
 ```
 
 <!--END_DOCUSAURUS_CODE_TABS-->
 
-First, we load the actual texture. Textures are always loaded into atlases which
-can be assigned to sprite batches. "Actual" textures are created by defining a
-region. These, in turn, are assigned individual sprites. This makes the texture
-atlas and its textures reusable. Additionally, it enables skinning, i.e.
-changing the texture of every sprite in a batch by changing only the texture
-atlas. Rainbow does not prevent you from loading the same asset.
+First, we load the image to be used as texture, and assign it to the sprite
+batch. The assigned texture will be used on all sprites within a batch. We then
+assign each sprite an area of the texture that it should be mapped to.
+
+Since sprites have no direct dependency on the texture, one could replace the
+underlying texture and completely change the look of all sprites within a batch.
 
 Please refer to the API reference for full details. For displaying text, look up
 `Label`.
@@ -188,35 +208,23 @@ Please refer to the API reference for full details. For displaying text, look up
 Anything that needs to be updated and/or drawn every frame, must be added to the
 render queue. The render queue determines the order in which objects are drawn.
 
-Now we'll add the batches we've created earlier:
+Now we'll add the batch we created earlier:
 
 <!--DOCUSAURUS_CODE_TABS-->
 
 <!-- TypeScript -->
 ```typescript
   // Add batch to the render queue.
-  const unit = Rainbow.RenderQueue.add(batch);
-
-  // Position our sprites at the center of the screen.
-  const cx = screenWidth * 0.5;
-  const cy = screenHeight * 0.5;
-  sprite1.setPosition({ x: cx - 50, y: cy });
-  sprite2.setPosition({ x: cx + 50, y: cy });
+  Rainbow.RenderQueue.add(batch);
 }
 ```
 
 <!-- C++ -->
 ```cpp
-    // Add batch to the render queue. Note that the render queue is only
-    // accessible from the entry point. If you need it elsewhere, you must pass
-    // along its pointer.
-    auto unit = render_queue().emplace_back(batch_);
-
-    // Position our sprites at the center of the screen.
-    const float cx = screen.x * 0.5f;
-    const float cy = screen.y * 0.5f;
-    sprite1->set_position(Vec2f{cx - 50, cy});
-    sprite2->set_position(Vec2f{cx + 50, cy});
+  // Add batch to the render queue. Note that the render queue is only
+  // accessible from the entry point. If you need it elsewhere, you must pass
+  // along a reference to it.
+  render_queue().emplace_back(batch_);
 }
 ```
 

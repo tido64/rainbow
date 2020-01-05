@@ -13,8 +13,8 @@ Animation::Animation(const SpriteRef& sprite,
                      Frames frames,
                      unsigned int fps,
                      int delay)
-    : stopped_(true), accumulated_(0), interval_(1000 / fps), frame_(0),
-      frames_(std::move(frames)), sprite_(sprite), delay_(delay), idled_(0)
+    : interval_(1000 / fps), frames_(std::move(frames)), sprite_(sprite),
+      delay_(delay)
 {
 }
 
@@ -88,12 +88,12 @@ void Animation::set_current_frame()
     if (!frames_ || !sprite_)
         return;
 
-    sprite_->set_texture(static_cast<uint32_t>(frames_[frame_]));
+    sprite_->texture(frames_[frame_]);
 }
 
 void Animation::tick()
 {
-    if (frames_[frame_ + 1] == Frame::end())
+    if (frames_[frame_ + 1] == end_frame())
     {
         if (delay_ < 0)
         {
@@ -120,7 +120,7 @@ void Animation::tick()
         if (callback_)
             callback_(this, AnimationEvent::Frame);
     }
-    sprite_->set_texture(static_cast<uint32_t>(frames_[frame_]));
+    sprite_->texture(frames_[frame_]);
 }
 
 #ifndef NDEBUG

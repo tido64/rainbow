@@ -21,6 +21,7 @@ namespace rainbow
         }
 
     private:
+        graphics::Texture texture_;
         std::unique_ptr<SpriteBatch> batch_;
         std::unique_ptr<Label> label_;
         std::error_code error_;

@@ -146,6 +146,7 @@ var Labels = /** @class */ (function () {
         var frame = 0;
         this.thread = new Thread(function (x) {
             var floor = Math.floor, random = Math.random;
+            // eslint-disable-next-line no-constant-condition
             while (true) {
                 var stanza = _this.text[frame];
                 var lines = (stanza.match(/\n/g) || []).length;
@@ -188,7 +189,6 @@ var Shaker = /** @class */ (function () {
         console.log("Demo: Shaker");
         this.screen = { width: width, height: height };
         this.texture = new Rainbow.Texture("p1_spritesheet.png");
-        this.textureId = this.texture.addRegion(0, 0, 72, 97);
     }
     Shaker.prototype.deinit = function () {
         for (var i = this.batches.length - 1; i >= 0; --i) {
@@ -206,12 +206,13 @@ var Shaker = /** @class */ (function () {
             var batch = new Rainbow.SpriteBatch(Shaker.MAX_NUM_SPRITES);
             batch.setTexture(this.texture);
             for (var i = 0; i < Shaker.MAX_NUM_SPRITES; ++i) {
-                var sprite = batch.createSprite(72, 97);
-                sprite.setPosition({
+                var sprite = batch
+                    .createSprite(72, 97)
+                    .position({
                     x: Math.random() * this.screen.width,
                     y: Math.random() * this.screen.height
-                });
-                sprite.setTexture(this.textureId);
+                })
+                    .texture({ left: 0, bottom: 0, width: 72, height: 97 });
                 this.sprites.push(sprite);
             }
             Rainbow.RenderQueue.add(batch);
@@ -229,30 +230,31 @@ var Shaker = /** @class */ (function () {
 var Stalker = /** @class */ (function () {
     function Stalker(width, height) {
         console.log("Demo: Stalker");
-        var texture = new Rainbow.Texture("p1_spritesheet.png");
-        var walkingFrames = [
-            texture.addRegion(0, 0, 72, 97),
-            texture.addRegion(73, 0, 72, 97),
-            texture.addRegion(146, 0, 72, 97),
-            texture.addRegion(0, 98, 72, 97),
-            texture.addRegion(73, 98, 72, 97),
-            texture.addRegion(146, 98, 72, 97),
-            texture.addRegion(219, 0, 72, 97),
-            texture.addRegion(292, 0, 72, 97),
-            texture.addRegion(219, 98, 72, 97),
-            texture.addRegion(365, 0, 72, 97),
-            texture.addRegion(292, 98, 72, 97)
-        ];
+        this.texture = new Rainbow.Texture("p1_spritesheet.png");
         this.batch = new Rainbow.SpriteBatch(1);
-        this.batch.setTexture(texture);
-        this.sprite = this.batch.createSprite(72, 97);
-        this.sprite.setTexture(walkingFrames[0]);
-        this.animation = new Rainbow.Animation(this.sprite, walkingFrames, 24, 0);
-        this.animation.start();
+        this.batch.setTexture(this.texture);
+        var walkingFrames = [
+            { left: 0, bottom: 0, width: 72, height: 97 },
+            { left: 73, bottom: 0, width: 72, height: 97 },
+            { left: 146, bottom: 0, width: 72, height: 97 },
+            { left: 0, bottom: 98, width: 72, height: 97 },
+            { left: 73, bottom: 98, width: 72, height: 97 },
+            { left: 146, bottom: 98, width: 72, height: 97 },
+            { left: 219, bottom: 0, width: 72, height: 97 },
+            { left: 292, bottom: 0, width: 72, height: 97 },
+            { left: 219, bottom: 98, width: 72, height: 97 },
+            { left: 365, bottom: 0, width: 72, height: 97 },
+            { left: 292, bottom: 98, width: 72, height: 97 }
+        ];
         var _a = Rainbow.Input, pointersDown = _a.pointersDown, pointersMoved = _a.pointersMoved;
-        this.sprite.setPosition(pointersDown.length > 0
+        this.sprite = this.batch
+            .createSprite(72, 97)
+            .texture(walkingFrames[0])
+            .position(pointersDown.length > 0
             ? pointersDown[0]
             : { x: width * 0.5, y: height * 0.5 });
+        this.animation = new Rainbow.Animation(this.sprite, walkingFrames, 24, 0);
+        this.animation.start();
         this.pointersDown = pointersDown;
         this.pointersMoved = pointersMoved;
         Rainbow.RenderQueue.add(this.batch);
@@ -264,10 +266,10 @@ var Stalker = /** @class */ (function () {
     };
     Stalker.prototype.update = function (dt) {
         if (this.pointersMoved.length > 0) {
-            this.sprite.setPosition(this.pointersMoved[0]);
+            this.sprite.position(this.pointersMoved[0]);
         }
         else if (this.pointersDown.length > 0) {
-            this.sprite.setPosition(this.pointersDown[0]);
+            this.sprite.position(this.pointersDown[0]);
         }
     };
     return Stalker;
@@ -310,7 +312,7 @@ function update(dt) {
             var nextDemo = (currentDemo + 1) % createDemo.length;
             var newDemo = createDemo[nextDemo]();
             Duktape.gc();
-            State = __assign({}, State, { currentDemo: nextDemo, demo: newDemo });
+            State = __assign(__assign({}, State), { currentDemo: nextDemo, demo: newDemo });
             return;
         }
     }

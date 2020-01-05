@@ -100,11 +100,10 @@ set(SOURCE_FILES
     src/Graphics/SpriteBatch.cpp
     src/Graphics/SpriteBatch.h
     src/Graphics/SpriteVertex.h
+    src/Graphics/Texture.cpp
     src/Graphics/Texture.h
-    src/Graphics/TextureAtlas.cpp
-    src/Graphics/TextureAtlas.h
-    src/Graphics/TextureManager.cpp
-    src/Graphics/TextureManager.h
+    src/Graphics/TextureAllocator.gl.cpp
+    src/Graphics/TextureAllocator.gl.h
     src/Graphics/VertexArray.cpp
     src/Graphics/VertexArray.h
     src/Heimdall/Gatekeeper.cpp
@@ -248,7 +247,7 @@ if(UNIT_TESTS)
       src/Tests/Graphics/RenderQueue.test.cc
       src/Tests/Graphics/Sprite.test.cc
       src/Tests/Graphics/SpriteBatch.test.cc
-      src/Tests/Graphics/TextureAtlas.test.cc
+      src/Tests/Graphics/TextureProvider.test.cc
       src/Tests/Input/Controller.test.cc
       src/Tests/Input/Input.test.cc
       src/Tests/Input/Pointer.test.cc
