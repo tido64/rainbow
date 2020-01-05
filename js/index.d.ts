@@ -124,23 +124,23 @@ declare namespace Rainbow {
     private readonly $type: "Rainbow.Label";
     constructor();
     alignment(): TextAlignment;
+    alignment(alignment: TextAlignment): Label;
     angle(): number;
+    angle(r: number): Label;
     color(): Color;
+    color(color: Color): Label;
+    font(font: string): Label;
+    fontSize(fontSize: number): Label;
     height(): number;
     length(): number;
+    move(delta: Vec2f): Label;
     position(): Vec2f;
+    position(position: Vec2f): Label;
     scale(): number;
+    scale(factor: number): Label;
     text(): string;
+    text(text: string): Label;
     width(): number;
-    setAlignment(alignment: TextAlignment): void;
-    setColor(color: Color): void;
-    setFont(font: string): void;
-    setFontSize(fontSize: number): void;
-    setPosition(position: Vec2f): void;
-    setRotation(r: number): void;
-    setScale(factor: number): void;
-    setText(text: string): void;
-    move(delta: Vec2f): void;
   }
 
   export type Sprite = {

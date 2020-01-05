@@ -168,35 +168,59 @@ const modules = [
     ctor: [],
     methods: [
       { name: "alignment", parameters: [], returnType: "TextAlignment" },
+      {
+        name: "alignment",
+        parameters: [{ type: "TextAlignment", name: "alignment" }],
+        returnType: "this"
+      },
       { name: "angle", parameters: [], returnType: "float" },
+      {
+        name: "angle",
+        parameters: [{ type: "float", name: "r" }],
+        returnType: "this"
+      },
       { name: "color", parameters: [], returnType: "Color" },
+      {
+        name: "color",
+        parameters: [{ type: "Color", name: "color" }],
+        returnType: "this"
+      },
+      {
+        name: "font",
+        parameters: [{ type: "czstring", name: "font" }],
+        returnType: "this"
+      },
+      {
+        name: "font_size",
+        parameters: [{ type: "int", name: "fontSize" }],
+        returnType: "this"
+      },
       { name: "height", parameters: [], returnType: "float" },
       { name: "length", parameters: [], returnType: "uint32_t" },
+      {
+        name: "move",
+        parameters: [{ type: "Vec2f", name: "delta" }],
+        returnType: "this"
+      },
       { name: "position", parameters: [], returnType: "Vec2f" },
+      {
+        name: "position",
+        parameters: [{ type: "Vec2f", name: "position" }],
+        returnType: "this"
+      },
       { name: "scale", parameters: [], returnType: "float" },
+      {
+        name: "scale",
+        parameters: [{ type: "float", name: "factor" }],
+        returnType: "this"
+      },
       { name: "text", parameters: [], returnType: "czstring" },
-      { name: "width", parameters: [], returnType: "float" },
       {
-        name: "set_alignment",
-        parameters: [{ type: "TextAlignment", name: "alignment" }]
+        name: "text",
+        parameters: [{ type: "czstring", name: "text" }],
+        returnType: "this"
       },
-      { name: "set_color", parameters: [{ type: "Color", name: "color" }] },
-      {
-        name: "set_font",
-        parameters: [{ type: "czstring", name: "font" }]
-      },
-      {
-        name: "set_font_size",
-        parameters: [{ type: "int", name: "fontSize" }]
-      },
-      {
-        name: "set_position",
-        parameters: [{ type: "Vec2f", name: "position" }]
-      },
-      { name: "set_rotation", parameters: [{ type: "float", name: "r" }] },
-      { name: "set_scale", parameters: [{ type: "float", name: "factor" }] },
-      { name: "set_text", parameters: [{ type: "czstring", name: "text" }] },
-      { name: "move", parameters: [{ type: "Vec2f", name: "delta" }] }
+      { name: "width", parameters: [], returnType: "float" }
     ]
   },
   {

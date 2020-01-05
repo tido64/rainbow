@@ -249,33 +249,95 @@ void rainbow::duk::register_module<rainbow::Label>(duk_context* ctx, duk_idx_t r
         duk_push_c_function(
             ctx,
             [](duk_context* ctx) -> duk_ret_t {
-                auto obj = duk::push_this<Label>(ctx);
-                auto result = obj->alignment();
-                duk::push(ctx, result);
-                return 1;
+                switch (duk_get_top(ctx))
+                {
+                    case 0: {
+                        auto obj = duk::push_this<Label>(ctx);
+                        auto result = obj->alignment();
+                        duk::push(ctx, result);
+                        return 1;
+                    }
+                    case 1: {
+                        auto obj = duk::push_this<Label>(ctx);
+                        auto args = duk::get_args<TextAlignment>(ctx);
+                        obj->alignment(std::get<0>(args));
+                        return 1;
+                    }
+                    default:
+                        duk_push_error_object(ctx, DUK_ERR_SYNTAX_ERROR, "invalid number of arguments");
+                        return DUK_RET_SYNTAX_ERROR;
+                }
             },
-            0);
+            DUK_VARARGS);
         duk::put_prop_literal(ctx, -2, "alignment");
         duk_push_c_function(
             ctx,
             [](duk_context* ctx) -> duk_ret_t {
-                auto obj = duk::push_this<Label>(ctx);
-                auto result = obj->angle();
-                duk::push(ctx, result);
-                return 1;
+                switch (duk_get_top(ctx))
+                {
+                    case 0: {
+                        auto obj = duk::push_this<Label>(ctx);
+                        auto result = obj->angle();
+                        duk::push(ctx, result);
+                        return 1;
+                    }
+                    case 1: {
+                        auto obj = duk::push_this<Label>(ctx);
+                        auto args = duk::get_args<float>(ctx);
+                        obj->angle(std::get<0>(args));
+                        return 1;
+                    }
+                    default:
+                        duk_push_error_object(ctx, DUK_ERR_SYNTAX_ERROR, "invalid number of arguments");
+                        return DUK_RET_SYNTAX_ERROR;
+                }
             },
-            0);
+            DUK_VARARGS);
         duk::put_prop_literal(ctx, -2, "angle");
         duk_push_c_function(
             ctx,
             [](duk_context* ctx) -> duk_ret_t {
+                switch (duk_get_top(ctx))
+                {
+                    case 0: {
+                        auto obj = duk::push_this<Label>(ctx);
+                        auto result = obj->color();
+                        duk::push(ctx, result);
+                        return 1;
+                    }
+                    case 1: {
+                        auto obj = duk::push_this<Label>(ctx);
+                        auto args = duk::get_args<Color>(ctx);
+                        obj->color(std::get<0>(args));
+                        return 1;
+                    }
+                    default:
+                        duk_push_error_object(ctx, DUK_ERR_SYNTAX_ERROR, "invalid number of arguments");
+                        return DUK_RET_SYNTAX_ERROR;
+                }
+            },
+            DUK_VARARGS);
+        duk::put_prop_literal(ctx, -2, "color");
+        duk_push_c_function(
+            ctx,
+            [](duk_context* ctx) -> duk_ret_t {
                 auto obj = duk::push_this<Label>(ctx);
-                auto result = obj->color();
-                duk::push(ctx, result);
+                auto args = duk::get_args<czstring>(ctx);
+                obj->font(std::get<0>(args));
                 return 1;
             },
-            0);
-        duk::put_prop_literal(ctx, -2, "color");
+            1);
+        duk::put_prop_literal(ctx, -2, "font");
+        duk_push_c_function(
+            ctx,
+            [](duk_context* ctx) -> duk_ret_t {
+                auto obj = duk::push_this<Label>(ctx);
+                auto args = duk::get_args<int>(ctx);
+                obj->font_size(std::get<0>(args));
+                return 1;
+            },
+            1);
+        duk::put_prop_literal(ctx, -2, "fontSize");
         duk_push_c_function(
             ctx,
             [](duk_context* ctx) -> duk_ret_t {
@@ -300,31 +362,83 @@ void rainbow::duk::register_module<rainbow::Label>(duk_context* ctx, duk_idx_t r
             ctx,
             [](duk_context* ctx) -> duk_ret_t {
                 auto obj = duk::push_this<Label>(ctx);
-                auto result = obj->position();
-                duk::push(ctx, result);
+                auto args = duk::get_args<Vec2f>(ctx);
+                obj->move(std::get<0>(args));
                 return 1;
             },
-            0);
+            1);
+        duk::put_prop_literal(ctx, -2, "move");
+        duk_push_c_function(
+            ctx,
+            [](duk_context* ctx) -> duk_ret_t {
+                switch (duk_get_top(ctx))
+                {
+                    case 0: {
+                        auto obj = duk::push_this<Label>(ctx);
+                        auto result = obj->position();
+                        duk::push(ctx, result);
+                        return 1;
+                    }
+                    case 1: {
+                        auto obj = duk::push_this<Label>(ctx);
+                        auto args = duk::get_args<Vec2f>(ctx);
+                        obj->position(std::get<0>(args));
+                        return 1;
+                    }
+                    default:
+                        duk_push_error_object(ctx, DUK_ERR_SYNTAX_ERROR, "invalid number of arguments");
+                        return DUK_RET_SYNTAX_ERROR;
+                }
+            },
+            DUK_VARARGS);
         duk::put_prop_literal(ctx, -2, "position");
         duk_push_c_function(
             ctx,
             [](duk_context* ctx) -> duk_ret_t {
-                auto obj = duk::push_this<Label>(ctx);
-                auto result = obj->scale();
-                duk::push(ctx, result);
-                return 1;
+                switch (duk_get_top(ctx))
+                {
+                    case 0: {
+                        auto obj = duk::push_this<Label>(ctx);
+                        auto result = obj->scale();
+                        duk::push(ctx, result);
+                        return 1;
+                    }
+                    case 1: {
+                        auto obj = duk::push_this<Label>(ctx);
+                        auto args = duk::get_args<float>(ctx);
+                        obj->scale(std::get<0>(args));
+                        return 1;
+                    }
+                    default:
+                        duk_push_error_object(ctx, DUK_ERR_SYNTAX_ERROR, "invalid number of arguments");
+                        return DUK_RET_SYNTAX_ERROR;
+                }
             },
-            0);
+            DUK_VARARGS);
         duk::put_prop_literal(ctx, -2, "scale");
         duk_push_c_function(
             ctx,
             [](duk_context* ctx) -> duk_ret_t {
-                auto obj = duk::push_this<Label>(ctx);
-                auto result = obj->text();
-                duk::push(ctx, result);
-                return 1;
+                switch (duk_get_top(ctx))
+                {
+                    case 0: {
+                        auto obj = duk::push_this<Label>(ctx);
+                        auto result = obj->text();
+                        duk::push(ctx, result);
+                        return 1;
+                    }
+                    case 1: {
+                        auto obj = duk::push_this<Label>(ctx);
+                        auto args = duk::get_args<czstring>(ctx);
+                        obj->text(std::get<0>(args));
+                        return 1;
+                    }
+                    default:
+                        duk_push_error_object(ctx, DUK_ERR_SYNTAX_ERROR, "invalid number of arguments");
+                        return DUK_RET_SYNTAX_ERROR;
+                }
             },
-            0);
+            DUK_VARARGS);
         duk::put_prop_literal(ctx, -2, "text");
         duk_push_c_function(
             ctx,
@@ -336,96 +450,6 @@ void rainbow::duk::register_module<rainbow::Label>(duk_context* ctx, duk_idx_t r
             },
             0);
         duk::put_prop_literal(ctx, -2, "width");
-        duk_push_c_function(
-            ctx,
-            [](duk_context* ctx) -> duk_ret_t {
-                auto obj = duk::push_this<Label>(ctx);
-                auto args = duk::get_args<TextAlignment>(ctx);
-                obj->set_alignment(std::get<0>(args));
-                return 0;
-            },
-            1);
-        duk::put_prop_literal(ctx, -2, "setAlignment");
-        duk_push_c_function(
-            ctx,
-            [](duk_context* ctx) -> duk_ret_t {
-                auto obj = duk::push_this<Label>(ctx);
-                auto args = duk::get_args<Color>(ctx);
-                obj->set_color(std::get<0>(args));
-                return 0;
-            },
-            1);
-        duk::put_prop_literal(ctx, -2, "setColor");
-        duk_push_c_function(
-            ctx,
-            [](duk_context* ctx) -> duk_ret_t {
-                auto obj = duk::push_this<Label>(ctx);
-                auto args = duk::get_args<czstring>(ctx);
-                obj->set_font(std::get<0>(args));
-                return 0;
-            },
-            1);
-        duk::put_prop_literal(ctx, -2, "setFont");
-        duk_push_c_function(
-            ctx,
-            [](duk_context* ctx) -> duk_ret_t {
-                auto obj = duk::push_this<Label>(ctx);
-                auto args = duk::get_args<int>(ctx);
-                obj->set_font_size(std::get<0>(args));
-                return 0;
-            },
-            1);
-        duk::put_prop_literal(ctx, -2, "setFontSize");
-        duk_push_c_function(
-            ctx,
-            [](duk_context* ctx) -> duk_ret_t {
-                auto obj = duk::push_this<Label>(ctx);
-                auto args = duk::get_args<Vec2f>(ctx);
-                obj->set_position(std::get<0>(args));
-                return 0;
-            },
-            1);
-        duk::put_prop_literal(ctx, -2, "setPosition");
-        duk_push_c_function(
-            ctx,
-            [](duk_context* ctx) -> duk_ret_t {
-                auto obj = duk::push_this<Label>(ctx);
-                auto args = duk::get_args<float>(ctx);
-                obj->set_rotation(std::get<0>(args));
-                return 0;
-            },
-            1);
-        duk::put_prop_literal(ctx, -2, "setRotation");
-        duk_push_c_function(
-            ctx,
-            [](duk_context* ctx) -> duk_ret_t {
-                auto obj = duk::push_this<Label>(ctx);
-                auto args = duk::get_args<float>(ctx);
-                obj->set_scale(std::get<0>(args));
-                return 0;
-            },
-            1);
-        duk::put_prop_literal(ctx, -2, "setScale");
-        duk_push_c_function(
-            ctx,
-            [](duk_context* ctx) -> duk_ret_t {
-                auto obj = duk::push_this<Label>(ctx);
-                auto args = duk::get_args<czstring>(ctx);
-                obj->set_text(std::get<0>(args));
-                return 0;
-            },
-            1);
-        duk::put_prop_literal(ctx, -2, "setText");
-        duk_push_c_function(
-            ctx,
-            [](duk_context* ctx) -> duk_ret_t {
-                auto obj = duk::push_this<Label>(ctx);
-                auto args = duk::get_args<Vec2f>(ctx);
-                obj->move(std::get<0>(args));
-                return 0;
-            },
-            1);
-        duk::put_prop_literal(ctx, -2, "move");
         duk::push_literal(ctx, "Rainbow.Label");
         duk::put_prop_literal(ctx, -2, DUKR_WELLKNOWN_SYMBOL_TOSTRINGTAG);
     });

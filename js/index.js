@@ -16,75 +16,75 @@ var Audial = /** @class */ (function () {
         var _this = this;
         this.time = 0;
         console.log("Demo: Audial");
-        this.label = new Rainbow.Label();
-        this.label.setAlignment(Rainbow.TextAlignment.Center);
-        this.label.setFont("OpenSans-Light.ttf");
-        this.label.setFontSize(21);
-        this.label.setPosition({ x: width * 0.5, y: height * 0.5 });
+        this.label = new Rainbow.Label()
+            .alignment(Rainbow.TextAlignment.Center)
+            .font("OpenSans-Light.ttf")
+            .fontSize(21)
+            .position({ x: width * 0.5, y: height * 0.5 });
         Rainbow.RenderQueue.add(this.label);
         var Thread = Duktape.Thread;
         this.thread = new Thread(function (x) {
             var Audio = Rainbow.Audio;
             var soundPath = "sfx.ogg";
             var streamPath = "bgm.ogg";
-            _this.label.setText("Loading '" + streamPath + "' for streaming...");
+            _this.label.text("Loading '" + streamPath + "' for streaming...");
             _this.music = Audio.loadStream(streamPath);
             if (!_this.music) {
-                _this.label.setText("Failed to load '" + streamPath + "'");
+                _this.label.text("Failed to load '" + streamPath + "'");
                 return;
             }
             Thread.yield(1000);
-            _this.label.setText("Streaming '" + streamPath + "'...");
+            _this.label.text("Streaming '" + streamPath + "'...");
             var channel = Audio.play(_this.music);
             if (!channel) {
-                _this.label.setText("Failed to stream '" + streamPath + "'");
+                _this.label.text("Failed to stream '" + streamPath + "'");
                 return;
             }
             Thread.yield(1000);
-            _this.label.setText("Paused");
+            _this.label.text("Paused");
             Audio.pause(channel);
             Thread.yield(1000);
-            _this.label.setText("Resume streaming...");
+            _this.label.text("Resume streaming...");
             Audio.play(channel);
             Thread.yield(1000);
-            _this.label.setText("Stop streaming");
+            _this.label.text("Stop streaming");
             Audio.stop(channel);
             Thread.yield(1000);
-            _this.label.setText("Loading '" + soundPath + "' into memory...");
+            _this.label.text("Loading '" + soundPath + "' into memory...");
             _this.sound = Audio.loadSound(soundPath);
             if (!_this.sound) {
-                _this.label.setText("Failed to load '" + soundPath + "'");
+                _this.label.text("Failed to load '" + soundPath + "'");
                 return;
             }
             Thread.yield(1000);
-            _this.label.setText("Playing '" + soundPath + "'...");
+            _this.label.text("Playing '" + soundPath + "'...");
             channel = Audio.play(_this.sound);
             if (!channel) {
-                _this.label.setText("Failed to play '" + soundPath + "'");
+                _this.label.text("Failed to play '" + soundPath + "'");
                 return;
             }
             Thread.yield(1000);
-            _this.label.setText("Paused");
+            _this.label.text("Paused");
             Audio.pause(channel);
             Thread.yield(1000);
-            _this.label.setText("Resume playing...");
+            _this.label.text("Resume playing...");
             Audio.play(channel);
             Thread.yield(1000);
-            _this.label.setText("Streaming (different channel)...");
+            _this.label.text("Streaming (different channel)...");
             channel = Audio.play(_this.music);
             if (!channel) {
-                _this.label.setText("Failed to play '" + streamPath + "'");
+                _this.label.text("Failed to play '" + streamPath + "'");
                 return;
             }
             Thread.yield(1000);
-            _this.label.setText("Delete both buffer and stream");
+            _this.label.text("Delete both buffer and stream");
             _this.music = Audio.release(_this.music);
             _this.sound = Audio.release(_this.sound);
             Thread.yield(1500);
-            _this.label.setText("Load into buffer and play (overflow)");
+            _this.label.text("Load into buffer and play (overflow)");
             _this.sound = Audio.loadSound(soundPath);
             if (!_this.sound) {
-                _this.label.setText("Failed to load '" + soundPath + "'");
+                _this.label.text("Failed to load '" + soundPath + "'");
                 return;
             }
             for (var i = 0; i < 40; ++i) {
@@ -92,18 +92,18 @@ var Audial = /** @class */ (function () {
                 Thread.yield(100);
             }
             Thread.yield(1000);
-            _this.label.setText("Clear");
+            _this.label.text("Clear");
             _this.sound = Audio.release(_this.sound);
             Thread.yield(1500);
-            _this.label.setText("Loop once");
+            _this.label.text("Loop once");
             _this.music = Audio.loadSound(soundPath);
             if (!_this.music) {
-                _this.label.setText("Failed to load '" + streamPath + "'");
+                _this.label.text("Failed to load '" + streamPath + "'");
                 return;
             }
             channel = Audio.play(_this.music);
             if (!channel) {
-                _this.label.setText("Failed to play '" + soundPath + "'");
+                _this.label.text("Failed to play '" + soundPath + "'");
                 return;
             }
             Audio.setLoopCount(channel, 1);
@@ -137,10 +137,10 @@ var Labels = /** @class */ (function () {
         this.time = 0;
         console.log("Demo: Labels");
         this.screen = { width: width, height: height };
-        this.label = new Rainbow.Label();
-        this.label.setAlignment(Rainbow.TextAlignment.Center);
-        this.label.setFont("OpenSans-Light.ttf");
-        this.label.setFontSize(60);
+        this.label = new Rainbow.Label()
+            .alignment(Rainbow.TextAlignment.Center)
+            .font("OpenSans-Light.ttf")
+            .fontSize(60);
         Rainbow.RenderQueue.add(this.label);
         var Thread = Duktape.Thread;
         var frame = 0;
@@ -150,15 +150,16 @@ var Labels = /** @class */ (function () {
             while (true) {
                 var stanza = _this.text[frame];
                 var lines = (stanza.match(/\n/g) || []).length;
-                _this.label.setPosition({
+                _this.label
+                    .position({
                     x: _this.screen.width * 0.5,
                     y: _this.screen.height * _this.yOffset[lines - 1]
-                });
-                _this.label.setText(stanza);
+                })
+                    .text(stanza);
                 Thread.yield(3000);
                 frame = (frame + 1) % _this.text.length;
                 // Test that colour is set for future strings
-                _this.label.setColor({
+                _this.label.color({
                     r: floor(random() * 256),
                     g: floor(random() * 256),
                     b: floor(random() * 256),
@@ -286,12 +287,12 @@ function init(width, height) {
     var demo = createDemo[currentDemo]();
     var margin = 16;
     var labelPos = { x: width - margin, y: margin };
-    var label = new Rainbow.Label();
-    label.setAlignment(Rainbow.TextAlignment.Right);
-    label.setFont("OpenSans-Light.ttf");
-    label.setFontSize(24);
-    label.setPosition(labelPos);
-    label.setText("NEXT DEMO");
+    var label = new Rainbow.Label()
+        .alignment(Rainbow.TextAlignment.Right)
+        .font("OpenSans-Light.ttf")
+        .fontSize(24)
+        .position(labelPos)
+        .text("NEXT DEMO");
     Rainbow.RenderQueue.add(label);
     State = { createDemo: createDemo, currentDemo: currentDemo, demo: demo, label: label, labelPos: labelPos };
 }

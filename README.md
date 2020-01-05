@@ -43,12 +43,12 @@ We even have a prototype that runs in your browser.
 ### Label
 
 ```typescript
-const label = new Rainbow.Label();
-label.setAlignment(Rainbow.TextAlignment.Center);
-label.setFont("OpenSans-Light.ttf");
-label.setFontSize(60);
-label.setPosition({ x: screenWidth * 0.5, y: screenHeight * 0.55 });
-label.setText("Hello\nWorld");
+const label = new Rainbow.Label()
+  .alignment(Rainbow.TextAlignment.Center)
+  .font("OpenSans-Light.ttf")
+  .fontSize(60)
+  .position({ x: screenWidth * 0.5, y: screenHeight * 0.55 })
+  .text("Hello\nWorld");
 
 Rainbow.RenderQueue.add(label);
 ```

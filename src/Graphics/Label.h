@@ -25,106 +25,112 @@ namespace rainbow
     class Label : private NonCopyable<Label>
     {
     public:
+        // clang-format off
         static constexpr uint32_t kStaleBuffer      = 1U << 0;
         static constexpr uint32_t kStaleBufferSize  = 1U << 1;
         static constexpr uint32_t kStaleColor       = 1U << 2;
         static constexpr uint32_t kStaleMask        = 0xffffU;
+        // clang-format on
 
         Label();
         virtual ~Label();
 
         /// <summary>Returns label text alignment.</summary>
-        auto alignment() const { return alignment_; }
+        [[nodiscard]] auto alignment() const { return alignment_; }
 
         /// <summary>Returns label angle of rotation.</summary>
-        auto angle() const { return angle_; }
+        [[nodiscard]] auto angle() const { return angle_; }
 
         /// <summary>Returns label text color.</summary>
-        auto color() const { return color_; }
+        [[nodiscard]] auto color() const { return color_; }
 
         /// <summary>Returns the assigned font.</summary>
-        auto font() const -> const std::string& { return font_face_; }
+        [[nodiscard]] auto font() const -> std::string_view
+        {
+            return font_face_;
+        }
 
         /// <summary>Returns font size.</summary>
-        auto font_size() const { return font_size_; }
+        [[nodiscard]] auto font_size() const { return font_size_; }
 
         /// <summary>Returns label height.</summary>
-        auto height() const { return size_.y; }
+        [[nodiscard]] auto height() const { return size_.y; }
 
         /// <summary>Returns the number of characters.</summary>
-        auto length() const
+        [[nodiscard]] auto length() const
         {
             return narrow_cast<uint32_t>(vertices_.size() / 4);
         }
 
         /// <summary>Returns label position.</summary>
-        auto position() const -> const Vec2f& { return position_; }
+        [[nodiscard]] auto position() const { return position_; }
 
         /// <summary>Returns label scale.</summary>
-        auto scale() const { return scale_; }
+        [[nodiscard]] auto scale() const { return scale_; }
 
         /// <summary>Returns the string.</summary>
-        auto text() const { return text_.c_str(); }
+        [[nodiscard]] auto text() const { return text_.c_str(); }
 
         /// <summary>Returns the vertex array object.</summary>
-        auto vertex_array() const -> const graphics::VertexArray&
+        [[nodiscard]] auto vertex_array() const -> const graphics::VertexArray&
         {
             return array_;
         }
 
         /// <summary>Returns the vertex count.</summary>
-        auto vertex_count() const
+        [[nodiscard]] auto vertex_count() const
         {
             const auto count = vertices_.size();
             return narrow_cast<int>(count + (count >> 1));
         }
 
         /// <summary>Returns label width.</summary>
-        auto width() const { return size_.x; }
+        [[nodiscard]] auto width() const { return size_.x; }
 
         /// <summary>Sets text alignment.</summary>
-        void set_alignment(TextAlignment);
-
-        /// <summary>Sets text color.</summary>
-        void set_color(Color c);
-
-        /// <summary>Sets text font.</summary>
-        void set_font(czstring font_face);
-
-        /// <summary>Sets font size.</summary>
-        void set_font_size(int font_size);
-
-        /// <summary>Sets label as needing update.</summary>
-        void set_needs_update(unsigned int what) { stale_ |= what; }
-
-        /// <summary>Sets position of text.</summary>
-        void set_position(const Vec2f&);
+        auto alignment(TextAlignment) -> Label&;
 
         /// <summary>
         ///   Sets angle of rotation (in radian). Pivot depends on text
         ///   alignment.
         /// </summary>
-        void set_rotation(float r);
+        auto angle(float r) -> Label&;
+
+        /// <summary>Sets text color.</summary>
+        auto color(Color c) -> Label&;
+
+        /// <summary>Sets text font.</summary>
+        auto font(czstring font_face) -> Label&;
+
+        /// <summary>Sets font size.</summary>
+        auto font_size(int font_size) -> Label&;
+
+        /// <summary>Moves label by (x,y).</summary>
+        auto move(Vec2f) -> Label&;
+
+        /// <summary>Sets position of text.</summary>
+        auto position(Vec2f) -> Label&;
 
         /// <summary>
         ///   Sets label scale. Value is clamped between 0.01 and 1.0.
         /// </summary>
-        void set_scale(float f);
+        auto scale(float f) -> Label&;
 
         /// <summary>Sets text to display.</summary>
-        void set_text(czstring);
-
-        /// <summary>Moves label by (x,y).</summary>
-        void move(const Vec2f&);
+        auto text(czstring) -> Label&;
 
         /// <summary>Populates the vertex array.</summary>
         virtual void update();
 
     protected:
-        auto state() const { return stale_; }
-        auto vertex_buffer() const { return vertices_.data(); }
+        [[nodiscard]] auto state() const { return stale_; }
+        [[nodiscard]] auto vertex_buffer() const { return vertices_.data(); }
 
         void clear_state() { stale_ = 0; }
+
+        /// <summary>Sets label as needing update.</summary>
+        void set_needs_update(unsigned int what) { stale_ |= what; }
+
         void update_internal();
         void upload() const;
 

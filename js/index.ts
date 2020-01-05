@@ -18,11 +18,11 @@ class Audial implements Demo {
   constructor(width: number, height: number) {
     console.log("Demo: Audial");
 
-    this.label = new Rainbow.Label();
-    this.label.setAlignment(Rainbow.TextAlignment.Center);
-    this.label.setFont("OpenSans-Light.ttf");
-    this.label.setFontSize(21);
-    this.label.setPosition({ x: width * 0.5, y: height * 0.5 });
+    this.label = new Rainbow.Label()
+      .alignment(Rainbow.TextAlignment.Center)
+      .font("OpenSans-Light.ttf")
+      .fontSize(21)
+      .position({ x: width * 0.5, y: height * 0.5 });
     Rainbow.RenderQueue.add(this.label);
 
     const Thread = Duktape.Thread;
@@ -31,80 +31,80 @@ class Audial implements Demo {
       const soundPath = "sfx.ogg";
       const streamPath = "bgm.ogg";
 
-      this.label.setText(`Loading '${streamPath}' for streaming...`);
+      this.label.text(`Loading '${streamPath}' for streaming...`);
       this.music = Audio.loadStream(streamPath);
       if (!this.music) {
-        this.label.setText(`Failed to load '${streamPath}'`);
+        this.label.text(`Failed to load '${streamPath}'`);
         return;
       }
 
       Thread.yield(1000);
 
-      this.label.setText(`Streaming '${streamPath}'...`);
+      this.label.text(`Streaming '${streamPath}'...`);
       let channel = Audio.play(this.music);
       if (!channel) {
-        this.label.setText(`Failed to stream '${streamPath}'`);
+        this.label.text(`Failed to stream '${streamPath}'`);
         return;
       }
 
       Thread.yield(1000);
 
-      this.label.setText("Paused");
+      this.label.text("Paused");
       Audio.pause(channel);
       Thread.yield(1000);
 
-      this.label.setText("Resume streaming...");
+      this.label.text("Resume streaming...");
       Audio.play(channel);
       Thread.yield(1000);
 
-      this.label.setText("Stop streaming");
+      this.label.text("Stop streaming");
       Audio.stop(channel);
       Thread.yield(1000);
 
-      this.label.setText(`Loading '${soundPath}' into memory...`);
+      this.label.text(`Loading '${soundPath}' into memory...`);
       this.sound = Audio.loadSound(soundPath);
       if (!this.sound) {
-        this.label.setText(`Failed to load '${soundPath}'`);
+        this.label.text(`Failed to load '${soundPath}'`);
         return;
       }
 
       Thread.yield(1000);
 
-      this.label.setText(`Playing '${soundPath}'...`);
+      this.label.text(`Playing '${soundPath}'...`);
       channel = Audio.play(this.sound);
       if (!channel) {
-        this.label.setText(`Failed to play '${soundPath}'`);
+        this.label.text(`Failed to play '${soundPath}'`);
         return;
       }
 
       Thread.yield(1000);
 
-      this.label.setText("Paused");
+      this.label.text("Paused");
       Audio.pause(channel);
       Thread.yield(1000);
 
-      this.label.setText("Resume playing...");
+      this.label.text("Resume playing...");
       Audio.play(channel);
       Thread.yield(1000);
 
-      this.label.setText("Streaming (different channel)...");
+      this.label.text("Streaming (different channel)...");
       channel = Audio.play(this.music);
       if (!channel) {
-        this.label.setText(`Failed to play '${streamPath}'`);
+        this.label.text(`Failed to play '${streamPath}'`);
         return;
       }
 
       Thread.yield(1000);
 
-      this.label.setText("Delete both buffer and stream");
+      this.label.text("Delete both buffer and stream");
       this.music = Audio.release(this.music);
       this.sound = Audio.release(this.sound);
       Thread.yield(1500);
 
-      this.label.setText("Load into buffer and play (overflow)");
+      this.label.text("Load into buffer and play (overflow)");
       this.sound = Audio.loadSound(soundPath);
       if (!this.sound) {
-        this.label.setText(`Failed to load '${soundPath}'`);
+        this.label.text(`Failed to load '${soundPath}'`);
         return;
       }
 
@@ -114,20 +114,20 @@ class Audial implements Demo {
       }
       Thread.yield(1000);
 
-      this.label.setText("Clear");
+      this.label.text("Clear");
       this.sound = Audio.release(this.sound);
       Thread.yield(1500);
 
-      this.label.setText("Loop once");
+      this.label.text("Loop once");
       this.music = Audio.loadSound(soundPath);
       if (!this.music) {
-        this.label.setText(`Failed to load '${streamPath}'`);
+        this.label.text(`Failed to load '${streamPath}'`);
         return;
       }
 
       channel = Audio.play(this.music);
       if (!channel) {
-        this.label.setText(`Failed to play '${soundPath}'`);
+        this.label.text(`Failed to play '${soundPath}'`);
         return;
       }
 
@@ -171,10 +171,10 @@ class Labels implements Demo {
 
     this.screen = { width, height };
 
-    this.label = new Rainbow.Label();
-    this.label.setAlignment(Rainbow.TextAlignment.Center);
-    this.label.setFont("OpenSans-Light.ttf");
-    this.label.setFontSize(60);
+    this.label = new Rainbow.Label()
+      .alignment(Rainbow.TextAlignment.Center)
+      .font("OpenSans-Light.ttf")
+      .fontSize(60);
     Rainbow.RenderQueue.add(this.label);
 
     const Thread = Duktape.Thread;
@@ -186,17 +186,18 @@ class Labels implements Demo {
       while (true) {
         const stanza = this.text[frame];
         const lines = (stanza.match(/\n/g) || []).length;
-        this.label.setPosition({
-          x: this.screen.width * 0.5,
-          y: this.screen.height * this.yOffset[lines - 1]
-        });
-        this.label.setText(stanza);
+        this.label
+          .position({
+            x: this.screen.width * 0.5,
+            y: this.screen.height * this.yOffset[lines - 1]
+          })
+          .text(stanza);
         Thread.yield(3000);
 
         frame = (frame + 1) % this.text.length;
 
         // Test that colour is set for future strings
-        this.label.setColor({
+        this.label.color({
           r: floor(random() * 256),
           g: floor(random() * 256),
           b: floor(random() * 256),
@@ -365,12 +366,12 @@ function init(width: number, height: number) {
 
   const margin = 16;
   const labelPos = { x: width - margin, y: margin };
-  const label = new Rainbow.Label();
-  label.setAlignment(Rainbow.TextAlignment.Right);
-  label.setFont("OpenSans-Light.ttf");
-  label.setFontSize(24);
-  label.setPosition(labelPos);
-  label.setText("NEXT DEMO");
+  const label = new Rainbow.Label()
+    .alignment(Rainbow.TextAlignment.Right)
+    .font("OpenSans-Light.ttf")
+    .fontSize(24)
+    .position(labelPos)
+    .text("NEXT DEMO");
   Rainbow.RenderQueue.add(label);
 
   State = { createDemo, currentDemo, demo, label, labelPos };

@@ -27,65 +27,75 @@ Label::~Label()
 #endif
 }
 
-void Label::set_alignment(TextAlignment a)
+auto Label::alignment(TextAlignment a) -> Label&
 {
     alignment_ = a;
     set_needs_update(kStaleBuffer);
+    return *this;
 }
 
-void Label::set_color(Color c)
+auto Label::angle(float r) -> Label&
+{
+    if (are_equal(r, angle_))
+        return *this;
+
+    angle_ = r;
+    set_needs_update(kStaleBuffer);
+    return *this;
+}
+
+auto Label::color(Color c) -> Label&
 {
     color_ = c;
     set_needs_update(kStaleColor);
+    return *this;
 }
 
-void Label::set_font(czstring font_face)
+auto Label::font(czstring font_face) -> Label&
 {
     font_face_ = font_face == nullptr ? "" : font_face;
     set_needs_update(kStaleBuffer);
+    return *this;
 }
 
-void Label::set_font_size(int font_size)
+auto Label::font_size(int font_size) -> Label&
 {
     font_size_ = font_size;
     set_needs_update(kStaleBuffer);
+    return *this;
 }
 
-void Label::set_position(const Vec2f& position)
+auto Label::move(Vec2f delta) -> Label&
+{
+    position_ += delta;
+    set_needs_update(kStaleBuffer);
+    return *this;
+}
+
+auto Label::position(Vec2f position) -> Label&
 {
     position_.x = std::round(position.x);
     position_.y = std::round(position.y);
     set_needs_update(kStaleBuffer);
+    return *this;
 }
 
-void Label::set_rotation(float r)
-{
-    if (are_equal(r, angle_))
-        return;
-
-    angle_ = r;
-    set_needs_update(kStaleBuffer);
-}
-
-void Label::set_scale(float f)
+auto Label::scale(float f) -> Label&
 {
     if (are_equal(f, scale_))
-        return;
+        return *this;
 
-    scale_ = std::clamp(f, 0.01F, 1.0F);
+    constexpr auto min_scale = 0.01F;
+    scale_ = std::clamp(f, min_scale, 1.0F);
     set_needs_update(kStaleBuffer);
+    return *this;
 }
 
-void Label::set_text(czstring text)
+auto Label::text(czstring text) -> Label&
 {
     text_ = text;
     set_needs_update(kStaleBuffer);
-}
-
-void Label::move(const Vec2f& delta)
-{
-    position_ += delta;
-    set_needs_update(kStaleBuffer);
+    return *this;
 }
 
 void Label::update()
