@@ -42,14 +42,15 @@ void NoGame::init_impl(const Vec2i& screen)
     if (error_)
     {
         label_ = std::make_unique<Label>();
-        label_->set_color(Color{0xF4, 0x43, 0x36});
-        label_->set_font_size(truncate<int>(24 * scale));
-        label_->set_text(error_.message().c_str());
+        label_->color({0xf4, 0x43, 0x36})
+            .font_size(truncate<int>(24 * scale))
+            .text(error_.message().c_str());
 
         // Force an update to get measurements early.
         label_->update();
+
         const float margin = 16 * scale;
-        label_->set_position(
+        label_->position(
             {margin, narrow_cast<float>(screen.y) - label_->height() - margin});
 
         render_queue().emplace_back(label_);
