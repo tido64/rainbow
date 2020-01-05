@@ -26,7 +26,7 @@ namespace
     protected:
         static constexpr auto is_platform_handle() { return true; }
 
-        static constexpr bool open(czstring, FileType, TestFileImpl&)
+        static constexpr auto open(czstring, FileType, TestFileImpl&) -> bool
         {
             return true;
         }
@@ -36,7 +36,7 @@ namespace
             return path;
         }
 
-        constexpr TestFileImpl() {}
+        constexpr TestFileImpl() = default;
 
         explicit TestFileImpl(File&&) noexcept {}
 
@@ -85,13 +85,20 @@ TEST(FileTest, HandlesEmptyFiles)
     {
         const auto& file = File::open(empty.c_str(), FileType::Asset);
         ASSERT_TRUE(file);
-        ASSERT_EQ(file.size(), 0u);
+        ASSERT_EQ(file.size(), 0U);
     }
     {
         const auto& file = WriteableFile::open(empty.c_str());
         ASSERT_TRUE(file);
-        ASSERT_EQ(file.size(), 0u);
+        ASSERT_EQ(file.size(), 0U);
     }
+}
+
+TEST(FileTest, HandlesNonExistingFiles)
+{
+    ScopedAssetsDirectory scoped_assets{"FileTest_HandlesEmptyFiles"};
+    ASSERT_FALSE(File::open("this file does not exist", FileType::Asset));
+    ASSERT_FALSE(File::read("this file does not exist", FileType::Asset));
 }
 
 TEST(FileTest, SupportsPlatformImplementation)
@@ -129,37 +136,37 @@ TEST(FileTest, SeeksInFile)
     ScopedAssetsDirectory scoped_assets{"FileTest_SeeksInFile"};
 
     auto file = File::open("file", FileType::Asset);
-    ASSERT_EQ(file.tell(), 0u);
+    ASSERT_EQ(file.tell(), 0U);
 
     char pos = -1;
     file.read(&pos, sizeof(pos));
     ASSERT_EQ(pos, '0');
-    ASSERT_EQ(file.tell(), 1u);
+    ASSERT_EQ(file.tell(), 1U);
 
     file.read(&pos, sizeof(pos));
     file.read(&pos, sizeof(pos));
     ASSERT_EQ(pos, '2');
-    ASSERT_EQ(file.tell(), 3u);
+    ASSERT_EQ(file.tell(), 3U);
 
     file.seek(0, SeekOrigin::Current);
     file.read(&pos, sizeof(pos));
     ASSERT_EQ(pos, '3');
-    ASSERT_EQ(file.tell(), 4u);
+    ASSERT_EQ(file.tell(), 4U);
 
     file.seek(1, SeekOrigin::Current);
     file.read(&pos, sizeof(pos));
     ASSERT_EQ(pos, '5');
-    ASSERT_EQ(file.tell(), 6u);
+    ASSERT_EQ(file.tell(), 6U);
 
     file.seek(1, SeekOrigin::End);
     file.read(&pos, sizeof(pos));
     ASSERT_EQ(pos, '9');
-    ASSERT_EQ(file.tell(), 10u);
+    ASSERT_EQ(file.tell(), 10U);
 
     file.seek(1, SeekOrigin::Set);
     file.read(&pos, sizeof(pos));
     ASSERT_EQ(pos, '1');
-    ASSERT_EQ(file.tell(), 2u);
+    ASSERT_EQ(file.tell(), 2U);
 
     for (auto i = 0u; i < 10; ++i)
     {
@@ -173,7 +180,7 @@ TEST(FileTest, SeeksInFile)
     for (auto i = 0u; i < 10; ++i)
     {
         file.seek(i, SeekOrigin::End);
-        ASSERT_EQ(file.tell(), 10u - i);
+        ASSERT_EQ(file.tell(), 10U - i);
     }
 }
 
@@ -185,10 +192,10 @@ TEST(FileTest, IsMovable)
     ASSERT_TRUE(file);
 
     file.seek(5);
-    ASSERT_EQ(file.tell(), 5u);
+    ASSERT_EQ(file.tell(), 5U);
 
     File file2{std::move(file)};
     ASSERT_TRUE(file2);
     ASSERT_FALSE(file);
-    ASSERT_EQ(file2.tell(), 5u);
+    ASSERT_EQ(file2.tell(), 5U);
 }

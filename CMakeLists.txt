@@ -235,6 +235,7 @@ if(UNIT_TESTS)
       src/Tests/Common/Random.test.cc
       src/Tests/Common/RawPtr.test.cc
       src/Tests/Common/String.test.cc
+      src/Tests/Common/TypeCast.test.cc
       src/Tests/Common/TypeInfo.test.cc
       src/Tests/Common/Variant.test.cc
       src/Tests/Config.test.cc
