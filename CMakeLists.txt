@@ -130,7 +130,6 @@ set(SOURCE_FILES
     src/Memory/NotNull.h
     src/Memory/Pool.h
     src/Memory/ScopeStack.h
-    src/Memory/SharedPtr.h
     src/Memory/SmallBuffer.cpp
     src/Memory/SmallBuffer.h
     src/Memory/StableArray.h
@@ -260,7 +259,6 @@ if(UNIT_TESTS)
       src/Tests/Memory/BoundedPool.test.cc
       src/Tests/Memory/Pool.test.cc
       src/Tests/Memory/ScopeStack.test.cc
-      src/Tests/Memory/SharedPtr.test.cc
       src/Tests/Memory/SmallBuffer.test.cc
       src/Tests/Memory/StableArray.test.cc
       src/Tests/Platform/SDL/Context.test.cc
