@@ -21,8 +21,8 @@ transition. Which definitions they must implement will be specified.
 A colourable component must implement methods for getting and setting colour.
 
 ```c++
-Color  Colourable::color      () const;
-void   Colourable::set_color  (Color);
+auto Colorable::color() const -> Color;
+void Colorable::color(Color);
 ```
 
 #### Rotatable
@@ -31,7 +31,7 @@ A rotatable component must implement a method for rotating it relative to its
 current angle. The value passed is in radians.
 
 ```c++
-void   Rotatable::rotate  (float);
+void Rotatable::rotate(float);
 ```
 
 #### Scalable
@@ -40,8 +40,8 @@ A scalable component must implement methods for getting and setting the
 component's current scale factors individually on each axis.
 
 ```c++
-Vec2f  Scalable::scale      () const;
-void   Scalable::set_scale  (Vec2f);
+auto Scalable::scale() const -> Vec2f;
+void Scalable::scale(Vec2f);
 ```
 
 #### Translatable
@@ -50,23 +50,23 @@ A translatable component must implement a method for retrieving the component's
 current position, and one for moving it relatively to its current position.
 
 ```c++
-Vec2f  Translatable::position  () const;
-void   Translatable::move      (Vec2f);
+auto Translatable::position() const -> Vec2f;
+void Translatable::move(Vec2f);
 ```
 
 ### Fade Transition
 
 ```c++
 template <typename T>
-rainbow::Timer*  rainbow::fade  (T component,
-                                 int opacity,
-                                 int duration,
-                                 TimingFunction timing)
+auto rainbow::fade(T component,
+                   int opacity,
+                   int duration,
+                   TimingFunction) -> rainbow::Timer*;
 template <typename T>
-rainbow::Timer*  rainbow::fade  (T component,
-                                 float opacity,
-                                 int duration,
-                                 TimingFunction timing)
+auto rainbow::fade(T component,
+                   float opacity,
+                   int duration,
+                   TimingFunction) -> rainbow::Timer*;
 ```
 
 Useful for fading objects in/out, or for pulse-fading.
@@ -80,10 +80,10 @@ Components must be [colourable](#colourable).
 
 ```c++
 template <typename T>
-rainbow::Timer*  rainbow::move  (T component,
-                                 Vec2f destination,
-                                 int duration,
-                                 TimingFunction timing)
+auto rainbow::move(T component,
+                   Vec2f destination,
+                   int duration,
+                   TimingFunction) -> rainbow::Timer*;
 ```
 
 Animates `component` moving towards `destination`.
@@ -94,10 +94,10 @@ Components must be [translatable](#translatable).
 
 ```c++
 template <typename T>
-rainbow::Timer*  rainbow::rotate  (T component,
-                                   float angle,
-                                   int duration,
-                                   TimingFunction timing)
+auto rainbow::rotate(T component,
+                     float angle,
+                     int duration,
+                     TimingFunction) -> rainbow::Timer*;
 ```
 
 Animates `component` rotating towards `angle` radians.
@@ -108,15 +108,15 @@ Components must be [rotatable](#rotatable).
 
 ```c++
 template <typename T>
-rainbow::Timer*  rainbow::scale  (T component,
-                                  float factor,
-                                  int duration,
-                                  TimingFunction timing)
+auto rainbow::scale(T component,
+                    float factor,
+                    int duration,
+                    TimingFunction) -> rainbow::Timer*;
 template <typename T>
-rainbow::Timer*  rainbow::scale  (T component,
-                                  Vec2f factor,
-                                  int duration,
-                                  TimingFunction timing)
+auto rainbow::scale(T component,
+                    Vec2f factor,
+                    int duration,
+                    TimingFunction) -> rainbow::Timer*;
 ```
 
 The first version scales the component uniformly on both axes. Use the second

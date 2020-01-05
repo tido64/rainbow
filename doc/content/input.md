@@ -28,16 +28,16 @@ lifetime of your main class.
 ```cpp
 void MyGame::init_impl(const Vec2i&)
 {
-    Input* input_manager = &input();
-    […]
+  Input* input_manager = &input();
+  [...]
 }
 ```
 
 ### Subscribing
 
 ```cpp
-void  Input::subscribe    (InputListener& listener);
-void  Input::unsubscribe  (InputListener& listener);
+void Input::subscribe(InputListener&);
+void Input::unsubscribe(InputListener&);
 ```
 
 Subscribes/unsubscribes `listener` to input events. A listener will always be
@@ -51,8 +51,8 @@ when it is released. Listeners may implement any of the following methods to
 receive key events.
 
 ```cpp
-bool  InputListener::on_key_down_impl  (const Key& key) override;
-bool  InputListener::on_key_up_impl    (const Key& key) override;
+auto InputListener::on_key_down_impl(const Key&) override -> bool;
+auto InputListener::on_key_up_impl(const Key&) override -> bool;
 ```
 
 The key value of the event is passed as argument and, if available, its
@@ -63,7 +63,7 @@ buttons and check for equality:
 
 ```cpp
 if (key.modifier == (Key::Mods::Shift | Key::Mods::Ctrl))
-    LOGI("Ctrl+Shift is currently pressed");
+  LOGI("Ctrl+Shift is currently pressed");
 ```
 
 ### Handling Mouse/Touch Events
@@ -71,10 +71,10 @@ if (key.modifier == (Key::Mods::Shift | Key::Mods::Ctrl))
 Implement any of the following methods to receive mouse/touch events.
 
 ```cpp
-bool  InputListener::on_pointer_began_impl     (const ArrayView<Pointer>& pointers) override;
-bool  InputListener::on_pointer_canceled_impl  () override;
-bool  InputListener::on_pointer_ended_impl     (const ArrayView<Pointer>& pointers) override;
-bool  InputListener::on_pointer_moved_impl     (const ArrayView<Pointer>& pointers) override;
+auto InputListener::on_pointer_began_impl(const ArrayView<Pointer>&) override -> bool;
+auto InputListener::on_pointer_canceled_impl() override -> bool;
+auto InputListener::on_pointer_ended_impl(const ArrayView<Pointer>&) override -> bool;
+auto InputListener::on_pointer_moved_impl(const ArrayView<Pointer>&) override -> bool;
 ```
 
 A `Pointer` instance stores the location of the event, `x` and `y`, and the
@@ -100,46 +100,50 @@ shortcut Ctrl+Q/⌘Q.
 class InputHandler final : public rainbow::InputListener
 {
 private:
-    bool on_key_down_impl(const rainbow::KeyStroke& k) override
-    {
-        LOGI("Pressed a key: %c", rainbow::to_keycode(k.key));
-        return true;
-    }
+  auto on_key_down_impl(const rainbow::KeyStroke& k) -> bool override
+  {
+    LOGI("Pressed a key: %c", rainbow::to_keycode(k.key));
+    return true;
+  }
 
-    bool on_pointer_began_impl(
-        const ArrayView<rainbow::Pointer>& pointers) override
-    {
-        for (auto&& p : pointers)
-            LOGI("Pressed mouse button %u at %i,%i", p.hash, p.x, p.y);
-        return true;
-    }
+  auto on_pointer_began_impl(
+    const ArrayView<rainbow::Pointer>& pointers) -> bool override
+  {
+    for (auto&& p : pointers)
+      LOGI("Pressed mouse button %u at %i,%i", p.hash, p.x, p.y);
+    return true;
+  }
 };
 
 class InputExample final : public rainbow::GameBase
 {
 public:
-    InputExample(rainbow::Director& director) : rainbow::GameBase(director) {}
+  InputExample(rainbow::Director& director)
+    : rainbow::GameBase(director)
+  {
+  }
 
-    ~InputExample()
-    {
-        // The following line is strictly unnecessary as |input_handler_| will
-        // automatically unsubscribe itself on destruction.
-        input().unsubscribe(input_handler_);
-    }
+  ~InputExample()
+  {
+    // The following line is strictly unnecessary
+    // as |input_handler_| will automatically
+    // unsubscribe itself on destruction.
+    input().unsubscribe(input_handler_);
+  }
 
 private:
-    InputHandler input_handler_;
+  InputHandler input_handler_;
 
-    void init_impl(const rainbow::Vec2i&) override
-    {
-        input().subscribe(input_handler_);
-    }
+  void init_impl(const rainbow::Vec2i&) override
+  {
+    input().subscribe(input_handler_);
+  }
 };
 
 auto rainbow::GameBase::create(rainbow::Director& director)
-    -> std::unique_ptr<rainbow::GameBase>
+  -> std::unique_ptr<rainbow::GameBase>
 {
-    return std::make_unique<InputExample>(director);
+  return std::make_unique<InputExample>(director);
 }
 ```
 

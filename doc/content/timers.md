@@ -21,10 +21,10 @@ TimerManager* timer_manager = TimerManager::Get();
 ### Creating and Clearing Timers
 
 ```c++
-Timer*  TimerManager::set_timer    (Timer::Closure func,
-                                    const int interval,
-                                    const int repeat_count);
-  void  TimerManager::clear_timer  (Timer* t);
+auto TimerManager::set_timer(Timer::Closure,
+                             const int interval,
+                             const int repeat_count) -> Timer*;
+auto TimerManager::clear_timer(Timer*) -> void;
 ```
 
 `Timer::Closure` is defined as a callable whose signature is `void()`. The
@@ -41,8 +41,8 @@ resumed but the repeat count will not be restored.
 ### Pausing and Resuming Timers
 
 ```c++
-void  Timer::pause   ();
-void  Timer::resume  ();
+void Timer::pause();
+void Timer::resume();
 ```
 
 Pausing a timer will freeze it in its current state until it is resumed.
@@ -50,26 +50,26 @@ Pausing a timer will freeze it in its current state until it is resumed.
 ### Timer Information
 
 ```c++
-bool  Timer::is_active  () const;
+auto Timer::is_active() const -> bool;
 ```
 
 Returns whether the timer is currently active. This method returns `true` while
 the timer is running normally, and `false` otherwise.
 
 ```c++
-int  Timer::elapsed  () const;
+auto Timer::elapsed() const -> int;
 ```
 
 Returns the elapsed time.
 
 ```c++
-int  Timer::interval  () const;
+auto Timer::interval() const -> int;
 ```
 
 Returns the timer's delay/interval in milliseconds.
 
 ```c++
-int  Timer::repeat_count  () const;
+auto Timer::repeat_count() const -> int;
 ```
 
 Returns the number of times the action will be repeated. Note that this number
@@ -91,69 +91,72 @@ the first repeated timer.
 
 void action()
 {
-    LOGI("A freestanding function was called.");
+  LOGI("A freestanding function was called.");
 }
 
 class RepeatableAction
 {
 public:
-    void action()
-    {
-        LOGI("A bound, repeated action was performed: %i time(s)", ++counter_);
-    }
+  void action()
+  {
+    LOGI("A bound, repeated action was performed: %i time(s)", ++counter_);
+  }
 
-    void operator()()
-    {
-        LOGI("A repeated action was performed: %i time(s)", ++counter_);
-    }
+  void operator()()
+  {
+    LOGI("A repeated action was performed: %i time(s)", ++counter_);
+  }
 
 private:
-    int counter_ = 0;
+  int counter_ = 0;
 };
 
 class TimerExample final : public rainbow::GameBase
 {
 public:
-    TimerExample(rainbow::Director& director)
-        : rainbow::GameBase(director), repeated_(nullptr)  {}
+  TimerExample(rainbow::Director& director)
+    : rainbow::GameBase(director), repeated_(nullptr)
+  {
+  }
 
 private:
-    rainbow::Timer* repeated_;
-    RepeatableAction action_;
+  rainbow::Timer* repeated_;
+  RepeatableAction action_;
 
-    void init_impl(const rainbow::Vec2i&) override
+  void init_impl(const rainbow::Vec2i&) override
+  {
+    auto timer_manager = rainbow::TimerManager::Get();
+
+    // Create a delayed action using a function.
+    timer_manager->set_timer(&action, 500, 0);
+
+    // Create a repeated action using a functor.
+    repeated_ = timer_manager->set_timer(RepeatableAction{}, 500, 4);
+
+    // Create a delayed action using a lambda function.
+    timer_manager->set_timer(
+      [] { LOGI("A delayed action was performed."); }, 500, 0);
+
+    // Create a repeated action using a bound member function.
+    timer_manager->set_timer(
+      std::bind(&RepeatableAction::action, action_), 500, 4);
+  }
+
+  void update_impl(uint64_t) override
+  {
+    if (repeated_ && !repeated_->is_active())
     {
-        // Create a delayed action using a function.
-        rainbow::TimerManager::Get()->set_timer(&action, 500, 0);
-
-        // Create a repeated action using a functor.
-        repeated_ =
-            rainbow::TimerManager::Get()->set_timer(RepeatableAction{}, 500, 4);
-
-        // Create a delayed action using a lambda function.
-        rainbow::TimerManager::Get()->set_timer(
-            [] { LOGI("A delayed action was performed."); }, 500, 0);
-
-        // Create a repeated action using a bound member function.
-        rainbow::TimerManager::Get()->set_timer(
-            std::bind(&RepeatableAction::action, action_), 500, 4);
+      rainbow::TimerManager::Get()->clear_timer(repeated_);
+      repeated_ = nullptr;
+      LOGI("The repeated timer was cleared.");
     }
-
-    void update_impl(uint64_t) override
-    {
-        if (repeated_ && !repeated_->is_active())
-        {
-            rainbow::TimerManager::Get()->clear_timer(repeated_);
-            repeated_ = nullptr;
-            LOGI("The repeated timer was cleared.");
-        }
-    }
+  }
 };
 
 auto rainbow::GameBase::create(rainbow::Director& director)
-    -> std::unique_ptr<rainbow::GameBase>
+  -> std::unique_ptr<rainbow::GameBase>
 {
-    return std::make_unique<TimerExample>(director);
+  return std::make_unique<TimerExample>(director);
 }
 ```
 
