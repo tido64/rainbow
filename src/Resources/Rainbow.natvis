@@ -35,14 +35,6 @@
       <Item Name="[width]">width_</Item>
     </Expand>
   </Type>
-  <Type Name="rainbow::SharedPtr&lt;*&gt;">
-    <DisplayString Condition="ptr_ == nullptr">empty</DisplayString>
-    <DisplayString Condition="ptr_->refs_ == 1">SharedPtr {*ptr_} [{ptr_->refs_} strong ref]</DisplayString>
-    <DisplayString Condition="ptr_->refs_ != 1">SharedPtr {*ptr_} [{ptr_->refs_} strong refs]</DisplayString>
-    <Expand>
-      <Item Condition="ptr_ != nullptr" Name="[ptr]">*ptr_</Item>
-    </Expand>
-  </Type>
   <Type Name="rainbow::Sprite">
     <DisplayString>{{position={position_} width={width_} height={height_}}}</DisplayString>
     <Expand>
