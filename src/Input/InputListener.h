@@ -10,6 +10,7 @@
 
 namespace rainbow
 {
+    class Input;
     struct ControllerAxisMotion;
     struct ControllerButtonEvent;
     struct KeyStroke;
@@ -100,6 +101,8 @@ namespace rainbow
         ~InputListener() = default;
 
     private:
+        static Input* s_input_manager;
+
         virtual auto on_controller_axis_motion_impl(const ControllerAxisMotion&)
             -> bool
         {
@@ -161,7 +164,7 @@ namespace rainbow
 
         void on_end_link_changed(InputListener& new_link) final;
 
-        friend class Input;
+        friend Input;
         friend Link;
     };
 }  // namespace rainbow

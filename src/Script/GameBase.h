@@ -15,30 +15,47 @@ namespace rainbow
         static auto create(Director& director) -> std::unique_ptr<GameBase>;
 
         GameBase(const GameBase&) = default;
-        GameBase(GameBase&&) = default;
+        GameBase(GameBase&&) noexcept = default;
         virtual ~GameBase() = default;
 
-        auto input() -> Input& { return director_.input(); }
+        [[nodiscard]] auto input() -> Input& { return director_.input(); }
 
-        auto render_queue() -> graphics::RenderQueue&
+        [[nodiscard]] auto render_queue() -> graphics::RenderQueue&
         {
             return director_.render_queue();
         }
 
-        auto texture_provider() -> graphics::TextureProvider&
+        [[nodiscard]] auto texture_provider() -> graphics::TextureProvider&
         {
             return director_.texture_provider();
         }
 
-        void terminate() { director_.terminate(); }
-        void terminate(std::error_code error) { director_.terminate(error); }
+        [[nodiscard]] auto texture_provider() const
+            -> graphics::TextureProvider&
+        {
+            return director_.texture_provider();
+        }
+
+        [[nodiscard]] auto timer_manager() -> TimerManager&
+        {
+            return director_.timer_manager();
+        }
+
+        [[nodiscard]] auto typesetter() -> Typesetter&
+        {
+            return director_.typesetter();
+        }
 
         void init(const Vec2i& screen_size) { init_impl(screen_size); }
         void update(uint64_t dt) { update_impl(dt); }
+
+        void terminate() { director_.terminate(); }
+        void terminate(std::error_code error) { director_.terminate(error); }
+
         void on_memory_warning() { on_memory_warning_impl(); }
 
         auto operator=(const GameBase&) -> GameBase& = delete;
-        auto operator=(GameBase&&) -> GameBase& = delete;
+        auto operator=(GameBase&&) noexcept -> GameBase& = delete;
 
     protected:
         GameBase(Director& director) : director_(director) {}

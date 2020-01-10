@@ -40,14 +40,14 @@ void OverlayActivator::update(uint64_t dt)
         if (time_till_activation_ == 0)
         {
             reset();
-            overlay_->enable();
+            overlay_.enable();
         }
     }
 }
 
 auto OverlayActivator::on_key_down_impl(const KeyStroke& key) -> bool
 {
-    if (!overlay_->is_enabled() && key.key == VirtualKey::F2)
+    if (!overlay_.is_enabled() && key.key == VirtualKey::F2)
     {
 #    ifdef RAINBOW_OS_MACOS
         constexpr auto LeftSuper = VirtualKey::LeftSuper;
@@ -56,13 +56,13 @@ auto OverlayActivator::on_key_down_impl(const KeyStroke& key) -> bool
         constexpr auto LeftSuper = VirtualKey::LeftCtrl;
         constexpr auto RightSuper = VirtualKey::RightCtrl;
 #    endif
-        auto& keyboard_state = rainbow::Input::Get()->keyboard_state();
+        auto& keyboard_state = input_.keyboard_state();
         if ((keyboard_state[to_underlying_type(VirtualKey::LeftAlt)] ||
              keyboard_state[to_underlying_type(VirtualKey::RightAlt)]) &&
             (keyboard_state[to_underlying_type(LeftSuper)] ||
              keyboard_state[to_underlying_type(RightSuper)]))
         {
-            overlay_->enable();
+            overlay_.enable();
             return true;
         }
     }
@@ -73,7 +73,7 @@ auto OverlayActivator::on_key_down_impl(const KeyStroke& key) -> bool
 auto OverlayActivator::on_pointer_began_impl(const ArrayView<Pointer>& pointers)
     -> bool
 {
-    if (overlay_->is_enabled())
+    if (overlay_.is_enabled())
         return false;
 
     int i = 0;

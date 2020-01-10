@@ -21,11 +21,12 @@ namespace rainbow
     /// <summary>
     ///   Simple game loop. Must be created after having set up a video context.
     /// </summary>
-    class Director final
-        : IF_DEBUG_ELSE(public Global<Director>, private NonCopyable<Director>)
+    class Director final IF_DEBUG_ELSE(: public Global<Director>,)
     {
     public:
         Director();
+        Director(const Director&) = delete;
+        Director(Director&&) noexcept = delete;
         ~Director();
 
         /// <summary>Loads and initialises main script.</summary>
@@ -60,6 +61,13 @@ namespace rainbow
             return renderer_.texture_provider;
         }
 
+        [[nodiscard]] auto timer_manager() -> TimerManager&
+        {
+            return timer_manager_;
+        }
+
+        [[nodiscard]] auto typesetter() -> Typesetter& { return typesetter_; }
+
         void draw();
         void restart();
 
@@ -84,6 +92,9 @@ namespace rainbow
 
         /// <summary>Called when a low memory warning has been issued.</summary>
         void on_memory_warning();
+
+        auto operator=(const Director&) -> Director& = delete;
+        auto operator=(Director&&) noexcept -> Director& = delete;
 
 #ifndef NDEBUG
         template <typename T>

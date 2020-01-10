@@ -21,6 +21,8 @@
 
 namespace rainbow
 {
+    class GameBase;
+
     /// <summary>Label for displaying text.</summary>
     class Label : private NonCopyable<Label>
     {
@@ -33,7 +35,7 @@ namespace rainbow
         // clang-format on
 
         Label();
-        virtual ~Label();
+        ~Label();
 
         /// <summary>Returns label text alignment.</summary>
         [[nodiscard]] auto alignment() const { return alignment_; }
@@ -120,7 +122,7 @@ namespace rainbow
         auto text(czstring) -> Label&;
 
         /// <summary>Populates the vertex array.</summary>
-        virtual void update();
+        void update(GameBase&);
 
     protected:
         [[nodiscard]] auto state() const { return stale_; }
@@ -131,7 +133,7 @@ namespace rainbow
         /// <summary>Sets label as needing update.</summary>
         void set_needs_update(unsigned int what) { stale_ |= what; }
 
-        void update_internal();
+        void update_internal(GameBase&);
         void upload() const;
 
     private:

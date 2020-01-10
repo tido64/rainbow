@@ -13,13 +13,9 @@
 #include "Graphics/VertexArray.h"
 #include "Memory/StableArray.h"
 
-namespace rainbow::graphics
-{
-    struct Context;
-}  // namespace rainbow::graphics
-
 namespace rainbow
 {
+    class GameBase;
     struct ISolemnlySwearThatIAmOnlyTesting;
 
     /// <summary>A drawable batch of sprites.</summary>
@@ -154,7 +150,7 @@ namespace rainbow
         }
 
         /// <summary>Updates the batch of sprites.</summary>
-        void update(graphics::Context&);
+        void update(GameBase&);
 
         [[nodiscard]] auto operator[](uint32_t i) -> Sprite&
         {

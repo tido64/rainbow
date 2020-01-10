@@ -78,8 +78,8 @@ namespace rainbow
         timer_manager_.update(dt);
         script_->update(dt);
 
-        graphics::update(renderer_, render_queue_, dt);
-        font_cache().update(renderer_.texture_provider);
+        graphics::update(*script_, render_queue_, dt);
+        font_cache().update(texture_provider());
         mixer_.process();
     }
 
@@ -120,6 +120,6 @@ namespace rainbow
             script_->init(renderer_.surface_size);
         }
 
-        graphics::update(renderer_, render_queue_, 0);
+        graphics::update(*script_, render_queue_, 0);
     }
 }  // namespace rainbow

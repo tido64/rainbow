@@ -15,7 +15,11 @@ namespace heimdall
     class Gatekeeper final
     {
     public:
-        Gatekeeper() : overlay_(director_), overlay_activator_(&overlay_) {}
+        Gatekeeper()
+            : overlay_(director_),
+              overlay_activator_(director_.input(), overlay_)
+        {
+        }
 
         void init(const rainbow::Vec2i& screen);
 
@@ -33,7 +37,7 @@ namespace heimdall
         void draw()
         {
             director_.draw();
-            overlay_.draw();
+            overlay_.draw(director_.graphics_context());
         }
 
         void show_diagnostic_tools() { overlay_.enable(); }

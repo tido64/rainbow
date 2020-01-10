@@ -9,7 +9,7 @@
 #include <optional>
 #include <string>
 
-#include "Common/Global.h"
+#include "Common/NonCopyable.h"
 #include "Common/Passkey.h"
 #include "Memory/ArrayMap.h"
 
@@ -46,15 +46,10 @@ namespace rainbow::graphics
 #endif
     };
 
-    class TextureProvider : public Global<TextureProvider>
+    class TextureProvider : private NonCopyable<TextureProvider>
     {
     public:
-        explicit TextureProvider(ITextureAllocator& allocator)
-            : allocator_(allocator)
-        {
-            make_global();
-        }
-
+        explicit TextureProvider(ITextureAllocator&);
         ~TextureProvider();
 
         [[nodiscard]]
@@ -152,7 +147,11 @@ namespace rainbow::graphics
 #endif  // RAINBOW_TEST
 
     private:
+        static TextureProvider* s_texture_provider;
+
         std::string key_;
+
+        friend TextureProvider;
     };
 
     struct ITextureAllocator

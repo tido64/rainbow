@@ -32,7 +32,7 @@ namespace heimdall
 
         ~Overlay() override;
 
-        void initialize(rainbow::Vec2i resolution);
+        void initialize(rainbow::graphics::Context&, rainbow::Vec2i resolution);
 
         [[nodiscard]] auto is_enabled() const { return enabled_; }
 
@@ -49,13 +49,13 @@ namespace heimdall
 
         void draw_menu_bar();
         void draw_performance(float scale);
-        void draw_render_queue();
+        void draw_render_queue(rainbow::GameBase&);
         void draw_startup_message();
 
         // IDrawable implementation details
 
-        void draw_impl() const override;
-        void update_impl(uint64_t) override;
+        void draw_impl(rainbow::graphics::Context&) const override;
+        void update_impl(rainbow::GameBase&, uint64_t) override;
 
         // InputListener implementation details
 

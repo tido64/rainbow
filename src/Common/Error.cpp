@@ -45,11 +45,10 @@ namespace
             }
         }
     };
-
-    RainbowErrorCategory sRainbowErrorCategory;
 }  // namespace
 
 auto rainbow::make_error_code(rainbow::ErrorCode c) noexcept -> std::error_code
 {
-    return {to_underlying_type(c), sRainbowErrorCategory};
+    static RainbowErrorCategory s_error_category;
+    return {to_underlying_type(c), s_error_category};
 }

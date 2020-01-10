@@ -14,12 +14,26 @@ using rainbow::FileType;
 using rainbow::Image;
 using rainbow::Passkey;
 using rainbow::graphics::Filter;
+using rainbow::graphics::ITextureAllocator;
 using rainbow::graphics::Texture;
 using rainbow::graphics::TextureData;
 using rainbow::graphics::TextureProvider;
 
+TextureProvider::TextureProvider(ITextureAllocator& allocator)
+    : allocator_(allocator)
+{
+    R_ASSERT(Texture::s_texture_provider == nullptr,  //
+             "An instance already exists");
+
+    Texture::s_texture_provider = this;
+}
+
 TextureProvider::~TextureProvider()
 {
+    R_ASSERT(Texture::s_texture_provider == this, "This shouldn't happen.");
+
+    Texture::s_texture_provider = nullptr;
+
     for (auto&& texture : texture_map_)
         allocator_.destroy(texture.second.data);
 }
@@ -134,13 +148,14 @@ void TextureProvider::load(TextureMap::iterator i,
     IF_DEVMODE(record_usage(image.size));
 }
 
+TextureProvider* Texture::s_texture_provider = nullptr;
+
 Texture::~Texture()
 {
     if (key_.empty())
         return;
 
-    auto& texture_provider = *TextureProvider::Get();
-    texture_provider.release(*this);
+    s_texture_provider->release(*this);
 }
 
 auto Texture::operator=(const Texture& texture) -> Texture&
@@ -148,11 +163,10 @@ auto Texture::operator=(const Texture& texture) -> Texture&
     if (&texture == this)
         return *this;
 
-    auto& texture_provider = *TextureProvider::Get();
     if (!key_.empty())
-        texture_provider.release(*this);
+        s_texture_provider->release(*this);
 
-    auto handle = texture_provider.get(texture.key());
+    auto handle = s_texture_provider->get(texture.key());
     key_ = std::move(handle.key_);
     return *this;
 }
@@ -161,8 +175,7 @@ auto Texture::operator=(Texture&& texture) noexcept -> Texture&
 {
     if (!key_.empty())
     {
-        auto& texture_provider = *TextureProvider::Get();
-        texture_provider.release(*this);
+        s_texture_provider->release(*this);
     }
 
     key_ = std::move(texture.key_);

@@ -4,12 +4,12 @@
 
 #include "Graphics/Label.h"
 
-#include "Director.h"
 #include "Math/Transform.h"
-#include "Text/Typesetter.h"
+#include "Script/GameBase.h"
 
 using rainbow::Color;
 using rainbow::czstring;
+using rainbow::GameBase;
 using rainbow::Label;
 using rainbow::TextAlignment;
 using rainbow::Vec2f;
@@ -98,21 +98,21 @@ auto Label::text(czstring text) -> Label&
     return *this;
 }
 
-void Label::update()
+void Label::update(GameBase& context)
 {
     if (stale_ != 0)
     {
-        update_internal();
+        update_internal(context);
         upload();
         clear_state();
     }
 }
 
-void Label::update_internal()
+void Label::update_internal(GameBase& context)
 {
     if ((stale_ & kStaleBuffer) != 0)
     {
-        vertices_ = Typesetter::Get()->draw_text(
+        vertices_ = context.typesetter().draw_text(
             text_,
             position_,
             TextAttributes{font_face_, font_size_, alignment_},

@@ -10,6 +10,11 @@
 
 #include "Input/InputListener.h"
 
+namespace rainbow
+{
+    class Input;
+}  // namespace rainbow
+
 namespace heimdall
 {
     class Overlay;
@@ -17,7 +22,11 @@ namespace heimdall
     class OverlayActivator final : public rainbow::InputListener
     {
     public:
-        OverlayActivator(Overlay* overlay) : overlay_(overlay) { reset(); }
+        OverlayActivator(rainbow::Input& input, Overlay& overlay)
+            : input_(input), overlay_(overlay)
+        {
+            reset();
+        }
 
         [[nodiscard]] auto is_activated() const
         {
@@ -31,7 +40,8 @@ namespace heimdall
         int resistance_;
         int time_till_activation_;
         std::array<uint32_t, 2> pointers_;
-        Overlay* overlay_;
+        rainbow::Input& input_;
+        Overlay& overlay_;
 
         // InputListener implementation details
 

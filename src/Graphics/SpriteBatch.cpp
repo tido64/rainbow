@@ -4,14 +4,13 @@
 
 #include "Graphics/SpriteBatch.h"
 
-#include "Director.h"
-#include "Graphics/Renderer.h"
+#include "Script/GameBase.h"
 
+using rainbow::GameBase;
 using rainbow::SpriteBatch;
 using rainbow::SpriteRef;
 using rainbow::SpriteVertex;
 using rainbow::Vec2f;
-using rainbow::graphics::Context;
 using rainbow::graphics::Texture;
 
 namespace
@@ -122,15 +121,15 @@ void SpriteBatch::swap(uint32_t i, uint32_t j)
     sprites_.swap(i, j);
 }
 
-void SpriteBatch::update(Context& context)
+void SpriteBatch::update(GameBase& context)
 {
     bool needs_update = false;
     auto sprites = sprites_.data();
-    auto texture = context.texture_provider.raw_get(*texture_);
+    auto texture = context.texture_provider().raw_get(*texture_);
 
     if (normals_)
     {
-        auto normal = context.texture_provider.raw_get(*normal_);
+        auto normal = context.texture_provider().raw_get(*normal_);
         for (uint32_t i = 0; i < count_; ++i)
         {
             ArraySpan<Vec2f> normal_buffer{normals_.get() + i * 4, 4};

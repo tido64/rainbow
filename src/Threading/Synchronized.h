@@ -8,22 +8,20 @@
 #include <mutex>
 #include <utility>
 
-#include "Common/NonCopyable.h"
-
 namespace rainbow
 {
     template <typename T>
     class Synchronized
     {
-        class LockedPtr : private NonCopyable<LockedPtr>
+        class LockedPtr
         {
         public:
             LockedPtr(std::mutex& mutex, T& value) : lock_(mutex), value_(value)
             {
             }
 
+            LockedPtr(const LockedPtr&) = delete;
             LockedPtr(LockedPtr&&) = delete;
-            auto operator=(LockedPtr&&) ->LockedPtr& = delete;
 
             template <typename F>
             void invoke_unlocked(F&& func)
@@ -35,6 +33,9 @@ namespace rainbow
 
             auto operator->() -> T* { return &value_; }
             auto operator*() -> T& { return value_; }
+
+            auto operator=(const LockedPtr&) -> LockedPtr& = delete;
+            auto operator=(LockedPtr&&) noexcept -> LockedPtr& = delete;
 
         private:
             std::unique_lock<std::mutex> lock_;

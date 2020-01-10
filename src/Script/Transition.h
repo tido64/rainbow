@@ -25,7 +25,7 @@ namespace rainbow
     auto fade(T component, float opacity, int duration, TimingFunction timing)
     {
         return fade(component,
-                    truncate<int>(opacity * 255.0f + 0.5f),
+                    truncate<int>(std::round(opacity * 255.0F)),
                     duration,
                     std::move(timing));
     }
