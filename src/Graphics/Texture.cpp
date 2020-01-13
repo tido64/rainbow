@@ -174,9 +174,7 @@ auto Texture::operator=(const Texture& texture) -> Texture&
 auto Texture::operator=(Texture&& texture) noexcept -> Texture&
 {
     if (!key_.empty())
-    {
         s_texture_provider->release(*this);
-    }
 
     key_ = std::move(texture.key_);
     return *this;

@@ -6,6 +6,7 @@ if(WIN32)
       build/cmake/Box2D.cmake
       build/cmake/Duktape.cmake
       build/cmake/FreeType.cmake
+      build/cmake/HarfBuzz.cmake
       build/cmake/libpng.cmake
       build/cmake/PhysicsFS.cmake
       build/cmake/SDL2.cmake
