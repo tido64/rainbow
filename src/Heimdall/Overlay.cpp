@@ -9,11 +9,10 @@
 #include <numeric>
 
 #include "Common/TypeCast.h"
-#include "Director.h"
 #include "Graphics/Animation.h"
 #include "Graphics/Label.h"
-#include "Graphics/Renderer.h"
 #include "Graphics/SpriteBatch.h"
+#include "Script/GameBase.h"
 #include "ThirdParty/ImGui/ImGuiHelper.h"
 
 #define BRIEF(type, properties) "(" #type ") " properties
@@ -25,6 +24,7 @@ using heimdall::Overlay;
 using rainbow::Animation;
 using rainbow::Color;
 using rainbow::czstring;
+using rainbow::GameBase;
 using rainbow::KeyStroke;
 using rainbow::Label;
 using rainbow::Pointer;
@@ -32,6 +32,7 @@ using rainbow::Sprite;
 using rainbow::SpriteBatch;
 using rainbow::Vec2f;
 using rainbow::Vec2i;
+using rainbow::graphics::Context;
 using rainbow::graphics::Texture;
 
 namespace
@@ -80,9 +81,10 @@ namespace
 
     void write_prop(std::string_view property, Color c)
     {
+        const auto kButtonSize = ImVec2{14.0F, 14.0F};
         ImGui::Text("%s = ", property.data());
         ImGui::SameLine();
-        ImGui::ColorButton("", c, ImGuiColorEditFlags_NoLabel, {14.0F, 14.0F});
+        ImGui::ColorButton("", c, ImGuiColorEditFlags_NoLabel, kButtonSize);
         ImGui::SameLine();
         ImGui::Text("rgba(%u, %u, %u, %u)", c.r, c.g, c.b, c.a);
     }
@@ -228,10 +230,10 @@ Overlay::~Overlay()
     rainbow::imgui::shutdown();
 }
 
-void Overlay::initialize(Vec2i resolution)
+void Overlay::initialize(Context& context, Vec2i resolution)
 {
     const float scale = display_scale(resolution, kStyleScreenHeight);
-    rainbow::imgui::init(director_.graphics_context(), kStyleFontSize, scale);
+    rainbow::imgui::init(context, kStyleFontSize, scale);
 }
 
 auto Overlay::surface_height() const
@@ -269,7 +271,9 @@ void Overlay::draw_performance(float scale)
 
     ImGui::TextWrapped("Draw count: %u", graphics::draw_count());
 
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-member-init)
     std::array<char, 128> buffer;
+
     snprintf_q(  //
         buffer.data(),
         buffer.size(),
@@ -324,14 +328,14 @@ void Overlay::draw_performance(float scale)
     }
 }
 
-void Overlay::draw_render_queue()
+void Overlay::draw_render_queue(GameBase& context)
 {
     constexpr ImGuiTreeNodeFlags kCollapsingHeaderFlags =
         ImGuiTreeNodeFlags_NoTreePushOnOpen |
         ImGuiTreeNodeFlags_NoAutoOpenOnLog |
         ImGuiTreeNodeFlags_CollapsingHeader;
 
-    auto& render_queue = director_.render_queue();
+    auto& render_queue = context.render_queue();
     if (!ImGui::TreeNodeEx(&render_queue,
                            kCollapsingHeaderFlags,
                            "Render Queue (%zu unit%s)",
@@ -367,23 +371,23 @@ void Overlay::draw_startup_message()
     ImGui::End();
 }
 
-void Overlay::draw_impl() const
+void Overlay::draw_impl(Context& context) const
 {
     auto draw_data = ImGui::GetDrawData();
     if (draw_data == nullptr || !draw_data->Valid)
         return;
 
-    rainbow::imgui::render(director_.graphics_context(), draw_data);
+    rainbow::imgui::render(context, draw_data);
 }
 
-void Overlay::update_impl(uint64_t dt)
+void Overlay::update_impl(GameBase& context, uint64_t dt)
 {
     static uint64_t startup_message_duration = 0;
 
     frame_times_.pop_front();
     frame_times_.push_back(dt);
 
-    auto [used, peak] = director_.texture_provider().memory_usage();
+    auto [used, peak] = context.texture_provider().memory_usage();
     vmem_usage_.pop_front();
     vmem_usage_.push_back(used * 1e-6);
 
@@ -416,7 +420,7 @@ void Overlay::update_impl(uint64_t dt)
         if (ImGui::BeginChild("Body", window_size))
         {
             draw_performance(scale);
-            draw_render_queue();
+            draw_render_queue(context);
         }
         ImGui::EndChild();
     }

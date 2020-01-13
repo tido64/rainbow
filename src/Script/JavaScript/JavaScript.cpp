@@ -217,7 +217,9 @@ auto JavaScript::on_pointer_moved_impl(const ArrayView<Pointer>& pointers)
     return true;
 }
 
+#if 1
 auto GameBase::create(rainbow::Director& director) -> std::unique_ptr<GameBase>
 {
     return std::make_unique<JavaScript>(director);
 }
+#endif

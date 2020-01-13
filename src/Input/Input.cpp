@@ -4,9 +4,11 @@
 
 #include "Input/Input.h"
 
+// clang-format off
 #define kInvalidControllerAxis    "Invalid controller axis"
 #define kInvalidControllerButton  "Invalid controller button"
 #define kInvalidVirtualKey        "Invalid virtual key"
+// clang-format on
 
 using rainbow::ControllerAxisMotion;
 using rainbow::ControllerButtonEvent;
@@ -18,7 +20,22 @@ using rainbow::Passkey;
 using rainbow::Pointer;
 using rainbow::VirtualKey;
 
-constexpr uint32_t Input::kNumSupportedControllers;  // NOLINT(readability-redundant-declaration)
+// NOLINTNEXTLINE(readability-redundant-declaration)
+constexpr uint32_t Input::kNumSupportedControllers;
+
+Input::Input()
+{
+    R_ASSERT(InputListener::s_input_manager == nullptr,  //
+             "An instance already exists");
+
+    InputListener::s_input_manager = this;
+}
+
+Input::~Input()
+{
+    R_ASSERT(InputListener::s_input_manager == this, "This shouldn't happen.");
+    InputListener::s_input_manager = nullptr;
+}
 
 template <typename F>
 void Input::process_controller(ControllerID id, F&& process)
@@ -196,11 +213,12 @@ void Input::on_pointer_moved(const ArrayView<Pointer>& pointers)
     });
 }
 
+Input* InputListener::s_input_manager = nullptr;
+
 void InputListener::on_end_link_changed(InputListener& new_link)
 {
-    auto input = Input::Get();
-    if (input == nullptr)
+    if (s_input_manager == nullptr)
         return;
 
-    input->on_last_listener_changed(new_link, {});
+    s_input_manager->on_last_listener_changed(new_link, {});
 }

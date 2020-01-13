@@ -10,6 +10,7 @@
 #include "Graphics/SpriteBatch.h"
 
 using rainbow::Animation;
+using rainbow::GameBase;
 using rainbow::IDrawable;
 using rainbow::Label;
 using rainbow::SpriteBatch;
@@ -24,7 +25,7 @@ namespace
 
         void operator()(Animation*) const {}
 
-        void operator()(IDrawable* drawable) const { drawable->draw(); }
+        void operator()(IDrawable* drawable) const { drawable->draw(context); }
 
         template <typename T>
         void operator()(T&& unit) const
@@ -35,20 +36,19 @@ namespace
 
     struct UpdateCommand
     {
-        Context& context;   // NOLINT
+        GameBase& context;  // NOLINT
         const uint64_t dt;  // NOLINT
 
-        void operator()(Label* label) const { label->update(); }
+        void operator()(Animation* animation) const { animation->update(dt); }
 
-        void operator()(SpriteBatch* sprite_batch) const
-        {
-            sprite_batch->update(context);
-        }
+        void operator()(Label* label) const { label->update(context); }
+
+        void operator()(SpriteBatch* batch) const { batch->update(context); }
 
         template <typename T>
         void operator()(T&& unit) const
         {
-            unit->update(dt);
+            unit->update(context, dt);
         }
     };
 }  // namespace
@@ -58,7 +58,7 @@ void rainbow::graphics::draw(Context& ctx, RenderQueue& queue)
     visit_all(DrawCommand{ctx}, queue);
 }
 
-void rainbow::graphics::update(Context& ctx, RenderQueue& queue, uint64_t dt)
+void rainbow::graphics::update(GameBase& ctx, RenderQueue& queue, uint64_t dt)
 {
     visit_all(UpdateCommand{ctx, dt}, queue);
 }

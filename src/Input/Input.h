@@ -5,7 +5,7 @@
 #ifndef INPUT_INPUT_H_
 #define INPUT_INPUT_H_
 
-#include "Common/Global.h"
+#include "Common/NonCopyable.h"
 #include "Common/Passkey.h"
 #include "Input/Acceleration.h"
 #include "Input/Controller.h"
@@ -28,7 +28,7 @@ namespace rainbow
     ///     <item>http://developer.apple.com/library/ios/#documentation/UIKit/Reference/UIAcceleration_Class/Reference/UIAcceleration.html</item>
     ///   </list>
     /// <remarks>
-    class Input : public Global<Input>, private InputListener
+    class Input : private InputListener, private NonCopyable<Input>
     {
     public:
         static constexpr unsigned int kNumSupportedControllers = 4;
@@ -38,7 +38,8 @@ namespace rainbow
         using KeyboardState =
             std::array<bool, to_underlying_type(VirtualKey::KeyCount)>;
 
-        Input() : keys_({}), last_listener_(this) { make_global(); }
+        Input();
+        ~Input();
 
         [[nodiscard]] auto acceleration() const -> const Acceleration&
         {
@@ -145,10 +146,10 @@ namespace rainbow
 #endif  // RAINBOW_TEST
 
     private:
-        ControllerStates controllers_;
-        KeyboardState keys_;
+        ControllerStates controllers_ = {};
+        KeyboardState keys_ = {};
         Acceleration acceleration_;
-        InputListener* last_listener_;
+        InputListener* last_listener_ = this;
 
         template <typename F>
         void process_controller(ControllerID id, F&& process);

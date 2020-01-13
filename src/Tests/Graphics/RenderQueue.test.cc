@@ -11,6 +11,8 @@
 #include "Graphics/Drawable.h"
 
 using rainbow::IDrawable;
+using rainbow::GameBase;
+using rainbow::graphics::Context;
 using rainbow::graphics::RenderQueue;
 using rainbow::graphics::RenderUnit;
 
@@ -22,7 +24,9 @@ namespace
     {
         void operator()(IDrawable* drawable) const
         {
-            drawable->update(kDeltaTime);
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
+            auto mock_context = reinterpret_cast<GameBase*>(0);
+            drawable->update(*mock_context, kDeltaTime);
         }
 
         template <typename T>
@@ -41,13 +45,13 @@ namespace
         int drawn_ = 0;
         int updated_ = 0;
 
-        void draw_impl() const override
+        void draw_impl(Context&) const override
         {
             // NOLINTNEXTLINE(cppcoreguidelines-pro-type-const-cast)
             ++const_cast<TestDrawable*>(this)->drawn_;
         }
 
-        void update_impl(uint64_t dt) override
+        void update_impl(GameBase&, uint64_t dt) override
         {
             updated_ += dt != kDeltaTime ? 0 : 1;
         }

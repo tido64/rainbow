@@ -11,7 +11,7 @@ using rainbow::Vec2i;
 
 void Gatekeeper::init(const Vec2i& screen)
 {
-    overlay_.initialize(screen);
+    overlay_.initialize(director_.graphics_context(), screen);
     director_.input().subscribe(overlay_);
     director_.input().subscribe(overlay_activator_);
     director_.init(screen);
@@ -24,7 +24,7 @@ void Gatekeeper::update(uint64_t dt)
     if (!overlay_.is_enabled())
         overlay_activator_.update(dt);
 
-    overlay_.update(dt);
+    overlay_.update(*director_.script(), dt);
 }
 
 #endif  // USE_HEIMDALL

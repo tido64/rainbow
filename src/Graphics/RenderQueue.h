@@ -15,6 +15,7 @@
 namespace rainbow
 {
     class Animation;
+    class GameBase;
     class IDrawable;
     class Label;
     class SpriteBatch;
@@ -93,9 +94,9 @@ namespace rainbow::graphics
 
     using RenderQueue = std::vector<RenderUnit>;
 
-    void draw(graphics::Context&, RenderQueue&);
+    void draw(Context&, RenderQueue&);
 
-    void update(graphics::Context&, RenderQueue&, uint64_t dt);
+    void update(GameBase&, RenderQueue&, uint64_t dt);
 
     template <typename F>
     void visit_all(F&& f, RenderQueue& queue)

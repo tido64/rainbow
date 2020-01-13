@@ -11,7 +11,7 @@
 
 #include <Rainbow/TextAlignment.h>
 
-#include "Common/Global.h"
+#include "Common/NonCopyable.h"
 #include "Math/Vec2.h"
 #include "Text/FontCache.h"
 
@@ -21,7 +21,7 @@ namespace rainbow
 {
     struct GlyphPosition
     {
-        uint32_t glyph_index;
+        uint32_t glyph_index = 0;
         Vec2f position;
     };
 
@@ -32,7 +32,7 @@ namespace rainbow
         TextAlignment text_alignment;
     };
 
-    class Typesetter : public Global<Typesetter>
+    class Typesetter : private NonCopyable<Typesetter>
     {
     public:
         Typesetter();

@@ -58,8 +58,6 @@ Typesetter::Typesetter()
     buffer_ = hb_buffer_create();
     R_ASSERT(hb_buffer_allocation_successful(buffer_),  //
              "Failed to allocate HarfBuzz buffer");
-
-    make_global();
 }
 
 Typesetter::~Typesetter()
@@ -121,7 +119,7 @@ auto Typesetter::layout_text(std::string_view text,
         auto infos = hb_buffer_get_glyph_infos(buffer_, &count);
         auto positions = hb_buffer_get_glyph_positions(buffer_, &count);
 
-        Vec2f origin{0, -line_height * line_count};
+        Vec2f origin{0, -line_height * narrow_cast<float>(line_count)};
         for (unsigned int i = 0; i < count; ++i)
         {
             const auto& p = positions[i];
@@ -157,7 +155,7 @@ auto Typesetter::layout_text(std::string_view text,
     if (size != nullptr)
     {
         size->x = width;
-        size->y = line_height * line_count;
+        size->y = line_height * narrow_cast<float>(line_count);
     }
 
     return result;

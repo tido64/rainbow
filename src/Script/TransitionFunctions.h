@@ -18,7 +18,7 @@ namespace rainbow
     namespace timing
     {
         constexpr int kInterval = 4;
-    }
+    }  // namespace timing
 
     inline auto repeat_count_from_duration(int duration) -> int
     {
@@ -29,7 +29,7 @@ namespace rainbow
     class Transition
     {
     protected:
-        int elapsed_;
+        int elapsed_ = 0;
         int duration_;
         const U delta_;
         TimingFunction timing_;
@@ -40,15 +40,15 @@ namespace rainbow
                    const U& delta,
                    int duration,
                    TimingFunction timing)
-            : elapsed_(0), duration_(duration), delta_(delta),
-              timing_(std::move(timing)), previous_(U{}), component_(component)
+            : duration_(duration), delta_(delta), timing_(std::move(timing)),
+              previous_(U{}), component_(component)
         {
         }
 
         auto tick() -> float
         {
             elapsed_ += timing::kInterval;
-            return std::min(narrow_cast<float>(elapsed_) / duration_, 1.0f);
+            return std::min(narrow_cast<float>(elapsed_) / duration_, 1.0F);
         }
     };
 
@@ -65,7 +65,7 @@ namespace rainbow
         void operator()()
         {
             Color color = this->component_->color();
-            const int d = this->timing_(0.0f, this->delta_, this->tick());
+            const int d = this->timing_(0.0F, this->delta_, this->tick());
             color.a += d - this->previous_;
             this->component_->color(color);
             this->previous_ = d;
@@ -88,8 +88,8 @@ namespace rainbow
         void operator()()
         {
             const float progress = this->tick();
-            const Vec2f d(this->timing_(0.0f, this->delta_.x, progress),
-                          this->timing_(0.0f, this->delta_.y, progress));
+            const Vec2f d(this->timing_(0.0F, this->delta_.x, progress),
+                          this->timing_(0.0F, this->delta_.y, progress));
             this->component_->move(
                 Vec2f(d.x - this->previous_.x, d.y - this->previous_.y));
             this->previous_ = d;
@@ -125,8 +125,8 @@ namespace rainbow
         void operator()()
         {
             const float progress = this->tick();
-            const Vec2f d(this->timing_(0.0f, this->delta_.x, progress),
-                          this->timing_(0.0f, this->delta_.y, progress));
+            const Vec2f d(this->timing_(0.0F, this->delta_.x, progress),
+                          this->timing_(0.0F, this->delta_.y, progress));
             Vec2f scale = this->component_->scale();
             scale += Vec2f(d.x - this->previous_.x, d.y - this->previous_.y);
             this->component_->scale(scale);
