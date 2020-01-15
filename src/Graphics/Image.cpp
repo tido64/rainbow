@@ -12,7 +12,7 @@
 #ifdef GL_IMG_texture_compression_pvrtc
 #    include "Graphics/Decoders/PVRTC.h"
 #endif  // GL_IMG_texture_compression_pvrtc
-#ifdef GL_EXT_texture_compression_s3tc
+#if defined(GL_EXT_texture_compression_s3tc) || defined(RAINBOW_OS_WINDOWS)
 #    include "Graphics/Decoders/DDS.h"
 #endif  // GL_EXT_texture_compression_s3tc
 
