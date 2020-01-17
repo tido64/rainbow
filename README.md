@@ -11,11 +11,9 @@
 [![Language grade: C/C++][lgtm-cpp-badge]][lgtm-cpp]
 [![Code coverage][codecov-badge]][codecov]
 [![Build status][azure-badge]][azure]
-[![macOS build status][doozer-badge]][doozer]
 
-Rainbow is a fast, scriptable, cross-platform, 2D game engine written in modern
-C++. Games can be written in both C++ and JavaScript (but you really should make
-your life easier and try [TypeScript](https://www.typescriptlang.org/)). Check
+Rainbow is a scriptable, cross-platform, 2D game engine. Games can be written in
+both C++ and JavaScript/[TypeScript](https://www.typescriptlang.org/). Check
 out the [examples](#examples) below.
 
 [[Documentation](https://tido64.github.io/rainbow/)] Get started. It's a good
@@ -24,8 +22,9 @@ place to start learning what you can do with Rainbow.
 [[Forum](https://www.reddit.com/r/rainbowtech)] Get answers, or even better,
 share your awesome work!
 
-[[Roadmap](https://trello.com/b/r2TqudY6/rainbow)] Find planned features and
-future directions.
+[[Roadmap](https://github.com/tido64/rainbow/projects)] Find planned features
+and future directions (the old board can be found on
+[Trello](https://trello.com/b/r2TqudY6/rainbow)).
 
 Rainbow currently runs on the following platforms:
 
@@ -149,8 +148,6 @@ THE SOFTWARE.
 [azure]: https://tido64.visualstudio.com/Rainbow/_build/latest?definitionId=1
 [codecov-badge]: https://codecov.io/gh/tido64/rainbow/branch/master/graph/badge.svg
 [codecov]: https://codecov.io/gh/tido64/rainbow
-[doozer-badge]: https://doozer.io/badge/tn0502/rainbow/buildstatus/master
-[doozer]: https://doozer.io/tn0502/rainbow
 [lgtm-cpp-badge]: https://img.shields.io/lgtm/grade/cpp/g/tido64/rainbow.svg?logo=lgtm&logoWidth=18
 [lgtm-cpp]: https://lgtm.com/projects/g/tido64/rainbow/context:cpp
 
