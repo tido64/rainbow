@@ -11,6 +11,7 @@
     "lib/nanosvg",
     "lib/ogg",
     "lib/panini",
+    "lib/physfs",
     "lib/variant",
     "lib/vorbis",
     "lib/zlib"

@@ -28,6 +28,7 @@
                 "${workspaceRoot}/lib/harfbuzz/src",
                 "${workspaceRoot}/lib/libpng",
                 "${workspaceRoot}/lib/nanosvg/src",
+                "${workspaceRoot}/lib/physfs/src",
                 "${workspaceRoot}/lib/SDL/include",
                 "${workspaceRoot}/lib/variant/include",
                 "${workspaceRoot}/lib/zlib"
@@ -77,6 +78,7 @@
                 "${workspaceRoot}/lib/harfbuzz/src",
                 "${workspaceRoot}/lib/libpng",
                 "${workspaceRoot}/lib/nanosvg/src",
+                "${workspaceRoot}/lib/physfs/src",
                 "${workspaceRoot}/lib/variant/include",
                 "${workspaceRoot}/lib/zlib"
             ],
@@ -108,7 +110,6 @@
                 "${workspaceRoot}/src/ThirdParty/libpng",
                 "${workspaceRoot}/build/windows/_deps/src/duktape-source/src",
                 "${workspaceRoot}/build/windows/_deps/src/duktape-source/extras/module-node",
-                "${workspaceRoot}/build/windows/_deps/src/PhysicsFS/src",
                 "${workspaceRoot}/build/windows/_deps/src/sdl2-dev/include",
                 "${workspaceRoot}/lib",
                 "${workspaceRoot}/lib/abseil-cpp",
@@ -122,6 +123,7 @@
                 "${workspaceRoot}/lib/harfbuzz/src",
                 "${workspaceRoot}/lib/libpng",
                 "${workspaceRoot}/lib/nanosvg/src",
+                "${workspaceRoot}/lib/physfs/src",
                 "${workspaceRoot}/lib/variant/include",
                 "${workspaceRoot}/lib/zlib"
             ],
