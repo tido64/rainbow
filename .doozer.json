@@ -5,6 +5,7 @@
     "lib/box2d",
     "lib/cubeb",
     "lib/googletest",
+    "lib/harfbuzz",
     "lib/imgui",
     "lib/libpng",
     "lib/nanosvg",
