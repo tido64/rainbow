@@ -546,8 +546,8 @@
 				1913F10F22764354005B2D3B /* physfs.h */,
 			);
 			name = PhysicsFS;
-			path = lib/physfs/src;
-			sourceTree = SOURCE_ROOT;
+			path = physfs/src;
+			sourceTree = "<group>";
 		};
 		19399E10152C401300494609 /* Box2D */ = {
 			isa = PBXGroup;
@@ -1086,7 +1086,7 @@
 				191C294F23D7A36C00BFCFAB /* harfbuzz.cc */,
 			);
 			name = HarfBuzz;
-			path = ../lib/harfbuzz/src;
+			path = harfbuzz/src;
 			sourceTree = "<group>";
 		};
 		19B6C53B21696352000D5400 /* Abseil */ = {
@@ -1335,13 +1335,12 @@
 			);
 			outputFileListPaths = (
 				"$(SRCROOT)/duktape.xcfilelist",
-				"$(SRCROOT)/physfs.xcfilelist",
 			);
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "mkdir -p lib\npushd lib 1> /dev/null\ncmake -P ../../cmake/Duktape.cmake\ncmake -P ../../cmake/PhysicsFS.cmake\npopd 1> /dev/null\n";
+			shellScript = "mkdir -p lib\npushd lib 1> /dev/null\ncmake -P ../../cmake/Duktape.cmake\npopd 1> /dev/null\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1585,7 +1584,7 @@
 					../../src/ThirdParty/libpng,
 					../../lib/libpng,
 					../../lib/nanosvg/src,
-					lib/physfs/src,
+					../../lib/physfs/src,
 					../../lib/variant/include,
 				);
 				INFOPLIST_FILE = Rainbow/Info.plist;
@@ -1755,7 +1754,7 @@
 					../../src/ThirdParty/libpng,
 					../../lib/libpng,
 					../../lib/nanosvg/src,
-					lib/physfs/src,
+					../../lib/physfs/src,
 					../../lib/variant/include,
 				);
 				INFOPLIST_FILE = Rainbow/Info.plist;
@@ -1811,7 +1810,7 @@
 					../../src/ThirdParty/libpng,
 					../../lib/libpng,
 					../../lib/nanosvg/src,
-					lib/physfs/src,
+					../../lib/physfs/src,
 					../../lib/variant/include,
 				);
 				INFOPLIST_FILE = Rainbow/Info.plist;

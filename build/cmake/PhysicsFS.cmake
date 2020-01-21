@@ -1,65 +1,22 @@
-set(PHYSFS_TARGET_VERSION 3.0.2)
-set(PHYSFS_URL https://icculus.org/physfs/downloads/physfs-${PHYSFS_TARGET_VERSION}.tar.bz2)
-set(PHYSFS_URL_HASH 304df76206d633df5360e738b138c94e82ccf086e50ba84f456d3f8432f9f863)
+set(PHYSFS_ARCHIVE_ZIP $<NOT:$<BOOL:${ANDROID}>> CACHE INTERNAL "Enable ZIP support")
+set(PHYSFS_ARCHIVE_7Z FALSE CACHE INTERNAL "Enable 7zip support")
+set(PHYSFS_ARCHIVE_GRP FALSE CACHE INTERNAL "Enable Build Engine GRP support")
+set(PHYSFS_ARCHIVE_WAD FALSE CACHE INTERNAL "Enable Doom WAD support")
+set(PHYSFS_ARCHIVE_HOG FALSE CACHE INTERNAL "Enable Descent I/II HOG support")
+set(PHYSFS_ARCHIVE_MVL FALSE CACHE INTERNAL "Enable Descent I/II MVL support")
+set(PHYSFS_ARCHIVE_QPAK FALSE CACHE INTERNAL "Enable Quake I/II QPAK support")
+set(PHYSFS_ARCHIVE_SLB FALSE CACHE INTERNAL "Enable I-War / Independence War SLB support")
+set(PHYSFS_ARCHIVE_ISO9660 FALSE CACHE INTERNAL "Enable ISO9660 support")
+set(PHYSFS_ARCHIVE_VDF FALSE CACHE INTERNAL "Enable Gothic I/II VDF archive support")
+set(PHYSFS_BUILD_STATIC TRUE CACHE INTERNAL "Build static library")
+set(PHYSFS_BUILD_SHARED FALSE CACHE INTERNAL "Build shared library")
+set(PHYSFS_BUILD_TEST FALSE CACHE INTERNAL "Build stdio test program.")
+add_subdirectory(${LOCAL_LIBRARY}/physfs EXCLUDE_FROM_ALL)
 
-if(DEFINED CMAKE_SCRIPT_MODE_FILE)
-  include(FetchContent)
-  FetchContent_Populate(
-    PhysicsFS
-    URL ${PHYSFS_URL}
-    URL_HASH SHA256=${PHYSFS_URL_HASH}
-    SOURCE_DIR physfs
-  )
-else()
-  if(MSVC)
-    set(PHYSFS_LIBRARY physfs-static)
-  else()
-    set(PHYSFS_LIBRARY physfs)
-  endif()
-  ExternalProject_Get_Byproducts(PhysicsFS ${PHYSFS_LIBRARY} PHYSFS_BYPRODUCTS)
-  ExternalProject_Add(
-    PhysicsFS
-    PREFIX _deps
-    URL ${PHYSFS_URL}
-    URL_HASH SHA256=${PHYSFS_URL_HASH}
-    CMAKE_ARGS
-      -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER}
-      -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
-      -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>
-      -DCMAKE_POSITION_INDEPENDENT_CODE=ON
-      -DPHYSFS_ARCHIVE_ZIP=$<NOT:$<BOOL:${ANDROID}>>
-      -DPHYSFS_ARCHIVE_7Z=OFF
-      -DPHYSFS_ARCHIVE_GRP=OFF
-      -DPHYSFS_ARCHIVE_WAD=OFF
-      -DPHYSFS_ARCHIVE_HOG=OFF
-      -DPHYSFS_ARCHIVE_MVL=OFF
-      -DPHYSFS_ARCHIVE_QPAK=OFF
-      -DPHYSFS_ARCHIVE_SLB=OFF
-      -DPHYSFS_ARCHIVE_ISO9660=OFF
-      -DPHYSFS_ARCHIVE_VDF=OFF
-      -DPHYSFS_BUILD_SHARED=OFF
-      -DPHYSFS_BUILD_TEST=OFF
-      $<$<BOOL:${ANDROID_ABI}>:-DANDROID_ABI=${ANDROID_ABI}>
-      $<$<BOOL:${ANDROID_ARM_NEON}>:-DANDROID_ARM_NEON=${ANDROID_ARM_NEON}>
-      $<$<BOOL:${ANDROID_NDK}>:-DANDROID_NDK=${ANDROID_NDK}>
-      $<$<BOOL:${ANDROID_PLATFORM}>:-DANDROID_PLATFORM=${ANDROID_PLATFORM}>
-      $<$<BOOL:${ANDROID_STL}>:-DANDROID_STL=${ANDROID_STL}>
-      $<$<BOOL:${CMAKE_MAKE_PROGRAM}>:-DCMAKE_MAKE_PROGRAM=${CMAKE_MAKE_PROGRAM}>
-      $<$<BOOL:${CMAKE_TOOLCHAIN_FILE}>:-DCMAKE_TOOLCHAIN_FILE:FILEPATH=${CMAKE_TOOLCHAIN_FILE}>
-    BUILD_BYPRODUCTS ${PHYSFS_BYPRODUCTS}  # Required by Ninja
-    INSTALL_COMMAND ""
-  )
-  add_dependencies(rainbow PhysicsFS)
-
-  ExternalProject_Get_Property(PhysicsFS SOURCE_DIR)
-  target_include_directories(rainbow PRIVATE ${SOURCE_DIR}/src)
-
-  ExternalProject_Get_Library(PhysicsFS ${PHYSFS_LIBRARY} PHYSFS_LIBRARY)
-  target_link_libraries(rainbow ${PHYSFS_LIBRARY})
-
-  if(APPLE)
-    find_library(FOUNDATION_LIBRARY Foundation REQUIRED)
-    find_library(IOKIT_LIBRARY IOKit REQUIRED)
-    target_link_libraries(rainbow ${IOKIT_LIBRARY} ${FOUNDATION_LIBRARY})
-  endif()
+target_include_directories(physfs-static PUBLIC ${LOCAL_LIBRARY}/physfs/src)
+target_link_libraries(rainbow physfs-static)
+if(APPLE)
+  find_library(FOUNDATION_LIBRARY Foundation REQUIRED)
+  find_library(IOKIT_LIBRARY IOKit REQUIRED)
+  target_link_libraries(rainbow ${IOKIT_LIBRARY} ${FOUNDATION_LIBRARY})
 endif()

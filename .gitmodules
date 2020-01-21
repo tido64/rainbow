@@ -31,6 +31,9 @@
 [submodule "lib/panini"]
 	path = lib/panini
 	url = https://github.com/tido64/panini.git
+[submodule "lib/physfs"]
+	path = lib/physfs
+	url = https://github.com/tido64/physfs.git
 [submodule "lib/variant"]
 	path = lib/variant
 	url = https://github.com/mapbox/variant.git
