@@ -13,6 +13,9 @@
 [submodule "lib/googletest"]
 	path = lib/googletest
 	url = https://github.com/abseil/googletest.git
+[submodule "lib/harfbuzz"]
+	path = lib/harfbuzz
+	url = https://github.com/tido64/harfbuzz.git
 [submodule "lib/imgui"]
 	path = lib/imgui
 	url = https://github.com/ocornut/imgui.git
