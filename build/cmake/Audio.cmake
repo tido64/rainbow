@@ -27,10 +27,16 @@ elseif(USE_FMOD_STUDIO)
   set(FMOD_LIBRARY_PREFIX ${LOCAL_LIBRARY}/FMOD/lib/${FMOD_ARCH}/${CMAKE_SHARED_LIBRARY_PREFIX})
 
   add_library(fmod SHARED IMPORTED)
-  set_target_properties(fmod PROPERTIES IMPORTED_LOCATION ${FMOD_LIBRARY_PREFIX}fmod${FMOD_LIBRARY_SUFFIX})
+  set_target_properties(fmod
+    PROPERTIES
+      IMPORTED_LOCATION ${FMOD_LIBRARY_PREFIX}fmod${FMOD_LIBRARY_SUFFIX}
+  )
 
   add_library(fmodstudio SHARED IMPORTED)
-  set_target_properties(fmodstudio PROPERTIES IMPORTED_LOCATION ${FMOD_LIBRARY_PREFIX}fmodstudio${FMOD_LIBRARY_SUFFIX})
+  set_target_properties(fmodstudio
+    PROPERTIES
+      IMPORTED_LOCATION ${FMOD_LIBRARY_PREFIX}fmodstudio${FMOD_LIBRARY_SUFFIX}
+  )
 
   target_include_directories(rainbow PRIVATE ${LOCAL_LIBRARY}/FMOD/inc)
   target_link_libraries(rainbow fmodstudio fmod)
@@ -52,7 +58,11 @@ else()
   endif()
   add_subdirectory(${LOCAL_LIBRARY}/ogg EXCLUDE_FROM_ALL)
   add_subdirectory(${LOCAL_LIBRARY}/vorbis EXCLUDE_FROM_ALL)
-  target_include_directories(rainbow PRIVATE ${LOCAL_LIBRARY}/vorbis/include ${OGG_INCLUDE_DIRS})
+  target_include_directories(rainbow
+    PRIVATE
+      ${LOCAL_LIBRARY}/vorbis/include
+      ${OGG_INCLUDE_DIRS}
+  )
   target_link_libraries(rainbow vorbisfile vorbis ogg)
 
   if(APPLE)

@@ -12,11 +12,10 @@ foreach(file ${ZLIB_SRCZ} ${ZLIB_SRCG})
 endforeach()
 
 add_library(z STATIC ${ZLIB_SRC})
-target_compile_definitions(
-    z
-    PUBLIC
-        HAVE_STDARG_H
-        $<$<NOT:$<C_COMPILER_ID:MSVC>>:HAVE_UNISTD_H>
+target_compile_definitions(z
+  PUBLIC
+    HAVE_STDARG_H
+    $<$<NOT:$<C_COMPILER_ID:MSVC>>:HAVE_UNISTD_H>
 )
 target_include_directories(z PUBLIC ${ZLIB_INCLUDE_DIR})
 
