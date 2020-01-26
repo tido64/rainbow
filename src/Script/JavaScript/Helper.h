@@ -357,8 +357,7 @@ namespace rainbow::duk
         duk_push_c_function(
             ctx,
             [](duk_context* ctx) -> duk_ret_t {
-                if (!duk_is_constructor_call(ctx))
-                    return DUK_RET_TYPE_ERROR;
+                duk_require_constructor_call(ctx);
 
                 void* ptr = duk_alloc(ctx, sizeof(T));
                 if constexpr (std::is_same_v<T, graphics::Texture>)

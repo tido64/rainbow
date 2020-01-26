@@ -29,31 +29,3 @@ function(download_library name url url_hash)
       LOG_INSTALL OFF
   )
 endfunction()
-
-function(ExternalProject_Get_Byproducts target library name)
-  if(MSVC OR XCODE)
-    set(LIBRARY_BUILD_DIR ${PROJECT_BINARY_DIR}/_deps/src/${target}-build)
-    set(LIBRARY_NAME ${CMAKE_STATIC_LIBRARY_PREFIX}${library}${CMAKE_STATIC_LIBRARY_SUFFIX})
-    set(
-      ${name}
-      ${LIBRARY_BUILD_DIR}/Debug/${LIBRARY_NAME}
-      ${LIBRARY_BUILD_DIR}/MinSizeRel/${LIBRARY_NAME}
-      ${LIBRARY_BUILD_DIR}/Release/${LIBRARY_NAME}
-      ${LIBRARY_BUILD_DIR}/RelWithDebInfo/${LIBRARY_NAME}
-      PARENT_SCOPE
-    )
-  else()
-    ExternalProject_Get_Library(${target} ${library} LIBRARY)
-    set(${name} ${LIBRARY} PARENT_SCOPE)
-  endif()
-endfunction()
-
-function(ExternalProject_Get_Library target library name)
-  set(LIBRARY_BUILD_DIR ${PROJECT_BINARY_DIR}/_deps/src/${target}-build)
-  set(LIBRARY_NAME ${CMAKE_STATIC_LIBRARY_PREFIX}${library}${CMAKE_STATIC_LIBRARY_SUFFIX})
-  if(MSVC OR XCODE)
-    set(${name} ${LIBRARY_BUILD_DIR}/$<CONFIG>/${LIBRARY_NAME} PARENT_SCOPE)
-  else()
-    set(${name} ${LIBRARY_BUILD_DIR}/${LIBRARY_NAME} PARENT_SCOPE)
-  endif()
-endfunction()

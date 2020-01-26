@@ -141,6 +141,12 @@ namespace rainbow::duk
                     ctx,
                     "Expected 'Rainbow.Audio.Channel' or "
                     "'Rainbow.Audio.Sound'");
+#ifndef _MSC_VER
+                // GCC throws 'error: control reaches end of non-void function'
+                // if the return statement is missing. But this causes 'Warning
+                // C4702: unreachable code' with MSC.
+                return DUK_RET_TYPE_ERROR;
+#endif
             },
             1);
         duk::put_prop_literal(ctx, -2, "play");
