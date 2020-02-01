@@ -104,22 +104,22 @@ case $1 in
       echo "$0: Could not find Emscripten"
       exit 1
     fi
-    run_cmake -DCMAKE_TOOLCHAIN_FILE="$EMSCRIPTEN/cmake/Modules/Platform/Emscripten.cmake" $args &&
+    eval run_cmake -DCMAKE_TOOLCHAIN_FILE="$EMSCRIPTEN/cmake/Modules/Platform/Emscripten.cmake" $args &&
     compile Emscripten
     ;;
   "help")
     $SHELL $0 --help
     ;;
   "linux")
-    run_cmake $args &&
+    eval run_cmake $args &&
     compile "$(generator)"
     ;;
   "mac")
-    run_cmake $args &&
+    eval run_cmake $args &&
     compile "$(generator)"
     ;;
   "windows")
-    run_cmake -DCMAKE_TOOLCHAIN_FILE="$project_root/build/cmake/MinGW.cmake" $args &&
+    eval run_cmake -DCMAKE_TOOLCHAIN_FILE="$project_root/build/cmake/MinGW.cmake" $args &&
     compile "$(generator)"
     ;;
   *)  # Attempt to detect platform
