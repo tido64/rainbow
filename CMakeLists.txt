@@ -191,16 +191,20 @@ else()
   if(WIN32)
     list(APPEND SOURCE_FILES
         lib/glad/glad.c
+        src/Platform/SDL/Window.cpp
         src/Platform/SystemInfo.windows.cpp
         tools/make.ps1
     )
   elseif(APPLE)
     list(APPEND SOURCE_FILES
+        src/Platform/SDL/Window.macos.mm
         src/Platform/SystemInfo.cocoa.cpp
     )
   else()
     list(APPEND SOURCE_FILES
-        src/Platform/SystemInfo.unix.cpp)
+        src/Platform/SDL/Window.cpp
+        src/Platform/SystemInfo.unix.cpp
+    )
   endif()
 endif()
 

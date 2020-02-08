@@ -71,6 +71,7 @@ SDLContext::SDLContext(const Config& config)
         return;
     }
 
+    set_hidpi_mode(window_, config.hidpi());
     context_ = SDL_GL_CreateContext(window_);
     if (context_ == nullptr)
     {
