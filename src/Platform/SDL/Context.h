@@ -9,6 +9,7 @@
 #include <SDL.h>
 
 #include "Math/Vec2.h"
+#include "Platform/SDL/Window.h"
 
 namespace rainbow
 {

@@ -112,8 +112,6 @@ void graphics::set_surface_size(Context& ctx, const Vec2i& resolution)
     ctx.projection.width = resolution.x;
     ctx.projection.height = resolution.y;
     ctx.shader_manager.update_viewport();
-    set_window_size(
-        ctx, ctx.window_size.is_zero() ? ctx.surface_size : ctx.window_size);
 
     R_ASSERT(glGetError() == GL_NO_ERROR, "Failed to set resolution");
 }
