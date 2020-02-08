@@ -9,16 +9,16 @@ elseif(EMSCRIPTEN)
   set_target_properties(rainbow PROPERTIES LINK_FLAGS "-s DEMANGLE_SUPPORT=1 -s USE_SDL=2")
 elseif(MSVC)
   download_library(
-      sdl2-bin
-      https://libsdl.org/release/SDL2-${SDL2_TARGET_VERSION}-win32-x64.zip
-      ${SDL2_BIN_HASH}
+    sdl2-bin
+    https://libsdl.org/release/SDL2-${SDL2_TARGET_VERSION}-win32-x64.zip
+    ${SDL2_BIN_HASH}
   )
   copy_to_build_dir(sdl2-bin SDL2.dll SDL2.dll)
 
   download_library(
-      sdl2-dev
-      https://libsdl.org/release/SDL2-devel-${SDL2_TARGET_VERSION}-VC.zip
-      ${SDL2_DEV_HASH}
+    sdl2-dev
+    https://libsdl.org/release/SDL2-devel-${SDL2_TARGET_VERSION}-VC.zip
+    ${SDL2_DEV_HASH}
   )
   ExternalProject_Get_Property(sdl2-dev SOURCE_DIR)
   add_dependencies(sdl2-dev sdl2-bin)
@@ -26,7 +26,10 @@ elseif(MSVC)
 
   target_include_directories(rainbow PRIVATE ${SOURCE_DIR}/include)
   set(SDL2_LIBRARY_DIR ${SOURCE_DIR}/lib/x64)
-  target_link_libraries(rainbow ${SDL2_LIBRARY_DIR}/SDL2.lib ${SDL2_LIBRARY_DIR}/SDL2main.lib)
+  target_link_libraries(rainbow
+    ${SDL2_LIBRARY_DIR}/SDL2.lib
+    ${SDL2_LIBRARY_DIR}/SDL2main.lib
+  )
 elseif(UNIX)
   pkg_check_modules(SDL2 REQUIRED sdl2)
   target_include_directories(rainbow PRIVATE ${SDL2_INCLUDE_DIRS})

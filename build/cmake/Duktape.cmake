@@ -1,11 +1,9 @@
-add_library(
-  duktape
+add_library(duktape
   STATIC
     ${LOCAL_LIBRARY}/duktape/src/duktape.c
     ${LOCAL_LIBRARY}/duktape/extras/module-node/duk_module_node.c
 )
-target_compile_definitions(
-  duktape
+target_compile_definitions(duktape
   PRIVATE
     DUK_USE_ARRAY_FASTPATH=1
     DUK_USE_ARRAY_PROP_FASTPATH=1
@@ -27,8 +25,7 @@ target_compile_definitions(
     $<$<CONFIG:Debug>:DUK_USE_DEBUGGER_THROW_NOTIFY=1>
     $<$<NOT:$<CONFIG:Debug>>:DUK_USE_VALSTACK_UNSAFE=1>
 )
-target_include_directories(
-  duktape
+target_include_directories(duktape
   PUBLIC
     ${LOCAL_LIBRARY}/duktape/src
     ${LOCAL_LIBRARY}/duktape/extras/module-node

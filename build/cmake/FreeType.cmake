@@ -5,9 +5,11 @@ else()
   set(FREETYPE_INCLUDE_DIR_freetype2 ${LOCAL_LIBRARY}/FreeType/include)
   set(FREETYPE_INCLUDE_DIR_ft2build ${THIRD_PARTY}/FreeType)
   add_library(freetype-bootstrap STATIC ${THIRD_PARTY}/FreeType/freetype.c)
-  target_compile_definitions(freetype-bootstrap PRIVATE RAINBOW_BUILD_FREETYPE_WITHOUT_HARFBUZZ)
-  target_include_directories(
-    freetype-bootstrap
+  target_compile_definitions(freetype-bootstrap
+    PRIVATE
+      RAINBOW_BUILD_FREETYPE_WITHOUT_HARFBUZZ
+  )
+  target_include_directories(freetype-bootstrap
     PUBLIC
       ${FREETYPE_INCLUDE_DIR_ft2build}
       ${FREETYPE_INCLUDE_DIR_freetype2}
@@ -26,8 +28,7 @@ else()
 
   # Finally, build FreeType _with_ HarfBuzz
   add_library(freetype STATIC ${THIRD_PARTY}/FreeType/freetype.c)
-  target_include_directories(
-    freetype
+  target_include_directories(freetype
     PUBLIC
       ${THIRD_PARTY}/FreeType
       ${LOCAL_LIBRARY}/FreeType/include
