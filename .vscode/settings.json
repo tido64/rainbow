@@ -54,11 +54,5 @@
   },
   "[yaml]": {
     "editor.tabSize": 2
-  },
-  "json.schemas": [
-    {
-      "fileMatch": ["*.scene.json"],
-      "url": "/js/rainbow-scene.schema.json"
-    }
-  ]
+  }
 }
