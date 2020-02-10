@@ -15,7 +15,7 @@ case $1 in
         ;;
       "Linux")
         sudo apt-get update
-        sudo apt-get install --yes gcc-7 g++-7 libpulse-dev libsdl2-dev ninja-build pulseaudio
+        sudo apt-get install --yes gcc-8 g++-8 libpulse-dev libsdl2-dev ninja-build pulseaudio
         ;;
       *)
         ;;
@@ -24,7 +24,7 @@ case $1 in
   "build")
     case $(uname) in
       "Linux")
-        export CC=gcc-7 CXX=g++-7
+        export CC=gcc-8 CXX=g++-8
         ;;
     esac
     case $TARGET_OS in
@@ -70,7 +70,7 @@ case $1 in
         ;;
       "Linux")
         cd out
-        PATH="/usr/local/bin:/usr/bin:/bin" bash <(curl -s https://codecov.io/bash) -X coveragepy -R .. -p . -x gcov-7 -K
+        PATH="/usr/local/bin:/usr/bin:/bin" bash <(curl -s https://codecov.io/bash) -X coveragepy -R .. -p . -x gcov-8 -K
         ;;
     esac
     ;;
