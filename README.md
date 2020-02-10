@@ -28,11 +28,13 @@ and future directions (the old board can be found on
 
 Rainbow currently runs on the following platforms:
 
-* [x] Windows
-* [x] macOS
-* [x] Linux
-* [x] Android
-* [x] iOS
+| Platform | Status                                                |
+|:---------|:------------------------------------------------------|
+| Windows  | [![Windows Build Status][azure-windows-badge]][azure] |
+| macOS    | [![macOS Build Status][azure-macos-badge]][azure]     |
+| Linux    | [![Linux Build Status][azure-linux-badge]][azure]     |
+| Android  | [![Android Build Status][azure-android-badge]][azure] |
+| iOS      | [![iOS Build Status][azure-ios-badge]][azure]         |
 
 We even have a prototype that runs in your browser.
 [Give it a try!](https://tido64.github.io/rainbow.js/)
@@ -144,12 +146,17 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 <!-- Badges -->
+[azure]: https://tido64.visualstudio.com/Rainbow/_build/latest?definitionId=1&branchName=master
 [azure-badge]: https://tido64.visualstudio.com/Rainbow/_apis/build/status/Rainbow%20CI?branchName=master
-[azure]: https://tido64.visualstudio.com/Rainbow/_build/latest?definitionId=1
-[codecov-badge]: https://codecov.io/gh/tido64/rainbow/branch/master/graph/badge.svg
+[azure-android-badge]: https://tido64.visualstudio.com/Rainbow/_apis/build/status/Rainbow%20CI?branchName=master&jobName=Android%20Agent
+[azure-ios-badge]: https://tido64.visualstudio.com/Rainbow/_apis/build/status/Rainbow%20CI?branchName=master&jobName=iOS%20Agent
+[azure-linux-badge]: https://tido64.visualstudio.com/Rainbow/_apis/build/status/Rainbow%20CI?branchName=master&jobName=Linux%20Agent
+[azure-macos-badge]: https://tido64.visualstudio.com/Rainbow/_apis/build/status/Rainbow%20CI?branchName=master&jobName=macOS%20Agent
+[azure-windows-badge]: https://tido64.visualstudio.com/Rainbow/_apis/build/status/Rainbow%20CI?branchName=master&jobName=Windows%20Agent
 [codecov]: https://codecov.io/gh/tido64/rainbow
-[lgtm-cpp-badge]: https://img.shields.io/lgtm/grade/cpp/g/tido64/rainbow.svg?logo=lgtm&logoWidth=18
+[codecov-badge]: https://codecov.io/gh/tido64/rainbow/branch/master/graph/badge.svg
 [lgtm-cpp]: https://lgtm.com/projects/g/tido64/rainbow/context:cpp
+[lgtm-cpp-badge]: https://img.shields.io/lgtm/grade/cpp/g/tido64/rainbow.svg?logo=lgtm&logoWidth=18
 
 <!-- Dependencies -->
 [Abseil]: https://abseil.io/ "Abseil"
