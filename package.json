@@ -1,7 +1,8 @@
 {
+  "private": true,
   "name": "rainbow",
   "version": "1.0.0",
-  "description": "Rainbow is a scriptable, cross-platform, 2D game engine written in modern C++.",
+  "description": "Rainbow is a scriptable, cross-platform, 2D game engine.",
   "keywords": [
     "android",
     "cpp",
@@ -38,14 +39,13 @@
     "prettier:all": "prettier --no-config --write .vscode/*.json js/*.json tools/*.js"
   },
   "devDependencies": {
-    "@types/node": "^12.12.26",
-    "@typescript-eslint/parser": "^2.18.0",
+    "@types/node": "^12.12.0",
+    "@typescript-eslint/parser": "^2.20.0",
     "eslint": "^6.8.0",
     "npm-run-all": "^4.1.0",
-    "prettier": "^1.19.1",
-    "typescript": "^3.7.5"
+    "prettier": "^1.19.0",
+    "typescript": "^3.8.0"
   },
-  "private": true,
   "workspaces": [
     "doc"
   ]
