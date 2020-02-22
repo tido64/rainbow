@@ -1,0 +1,166 @@
+name: CI
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+env:
+  CONFIGURATION: RelWithDebInfo
+jobs:
+  Windows:
+    runs-on: windows-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Checkout submodules
+      run: |
+        git submodule update --init
+    - name: Build
+      run: |
+        cmake -DCOVERAGE=1 -DUNIT_TESTS=1 -DUSE_HEIMDALL=1 -DUSE_PHYSICS=1 -A x64 ../..
+        cmake --build . --parallel --config $CONFIGURATION -- /verbosity:minimal
+      shell: bash
+      working-directory: build/windows
+    - name: Test
+      run: |
+        $CONFIGURATION/rainbow.exe --test --gtest_filter=-AudioTest* --gtest_output=xml:test-report.xml
+      shell: bash
+      working-directory: build/windows
+  Windows-publish:
+    name: Windows (publish)
+    runs-on: windows-latest
+    env:
+      ARTIFACT_NAME: rainbow-v1.0.${{ github.run_id }}
+    if: github.event_name == 'push'
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Checkout submodules
+      run: |
+        git submodule update --init
+    - name: Build
+      run: |
+        cmake -DUSE_HEIMDALL=1 -DUSE_PHYSICS=1 -A x64 ../..
+        cmake --build . --parallel --config $CONFIGURATION -- /verbosity:minimal
+      shell: bash
+      working-directory: build/windows
+    - name: Stage artifact
+      if: success()
+      run: |
+        mkdir $ARTIFACT_NAME
+        cp build/windows/$CONFIGURATION/rainbow.exe $ARTIFACT_NAME
+        cp build/windows/*.dll $ARTIFACT_NAME
+        cp LICENSE $ARTIFACT_NAME
+        cp THIRDPARTY $ARTIFACT_NAME
+        cp js/* $ARTIFACT_NAME
+        mkdir artifact
+        mv $ARTIFACT_NAME artifact/
+      shell: bash
+    - name: Upload artifact
+      uses: actions/upload-artifact@v1
+      if: success()
+      with:
+        name: rainbow-v1.0.${{ github.run_id }}
+        path: artifact
+  macOS:
+    runs-on: macos-latest
+    env:
+      CONFIGURATION: MinSizeRel  # RelWithDebInfo breaks ScopeStackTest.CallsDestructorsInReverseOrder
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Checkout submodules
+      run: |
+        git submodule update --init
+    - name: Install build dependencies
+      run: |
+        brew bundle
+    - name: Build
+      run: |
+        mkdir -p build/macos
+        cd build/macos
+        cmake -DCMAKE_BUILD_TYPE=$CONFIGURATION -DUNIT_TESTS=1 -DUSE_HEIMDALL=1 -DUSE_PHYSICS=1 -G Ninja ../..
+        ninja
+    - name: Test
+      run: |
+        ./rainbow --gtest_filter=-AudioTest* --gtest_output="xml:test-report.xml"
+      working-directory: build/macos
+  Linux:
+    runs-on: ubuntu-18.04
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Checkout submodules
+      run: |
+        git submodule update --init
+    - name: Install build dependencies
+      run: |
+        sudo apt-get install --yes gcc-8 g++-8 libpulse-dev libsdl2-dev ninja-build pulseaudio
+    - name: Build
+      env:
+        CC: gcc-8
+        CXX: g++-8
+      run: |
+        mkdir -p build/linux
+        cd build/linux
+        cmake -DCMAKE_BUILD_TYPE=$CONFIGURATION -DCOVERAGE=1 -DUNIT_TESTS=1 -DUSE_HEIMDALL=1 -DUSE_PHYSICS=1 -G Ninja ../..
+        ninja
+    - name: Test
+      run: |
+        ./rainbow --gtest_output="xml:test-report.xml"
+      working-directory: build/linux
+    - name: Upload test coverage
+      env:
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+        PATH: /usr/local/bin:/usr/bin:/bin
+      run: |
+        bash <(curl -s https://codecov.io/bash) -t $CODECOV_TOKEN -X coveragepy -R .. -p . -x gcov-8 -K
+      working-directory: build/linux
+  Android:
+    runs-on: macos-latest
+    env:
+      ANDROID_CMAKE_VERSION: 3.10.2.4988404
+      ANDROID_SDK_TOOLS_VERSION: 4333796
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Checkout submodules
+      run: |
+        git submodule update --init
+    - name: Download Android command line tools
+      run: |
+        curl -O https://dl.google.com/android/repository/sdk-tools-linux-$ANDROID_SDK_TOOLS_VERSION.zip
+        sudo unzip -oqq sdk-tools-linux-$ANDROID_SDK_TOOLS_VERSION.zip -d $ANDROID_HOME
+        sudo chmod +x $ANDROID_HOME/tools/bin/sdkmanager
+    - name: Install build dependencies
+      run: |
+        $ANDROID_HOME/tools/bin/sdkmanager "cmake;$ANDROID_CMAKE_VERSION"
+    - name: Build
+      env:
+        TERM: dumb
+      run: |
+        gradle build
+      working-directory: build/android
+  iOS:
+    runs-on: macos-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Checkout submodules
+      run: |
+        git submodule update --init
+    - name: Build
+      run: |
+        xcodebuild -project build/ios/Rainbow.xcodeproj -scheme Rainbow -arch arm64 CODE_SIGNING_ALLOWED=NO | xcpretty
+  Node:
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        node-version: [10.x, 12.x]
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Build
+      run: |
+        yarn
+        yarn build:ci
