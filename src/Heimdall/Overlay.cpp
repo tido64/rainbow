@@ -388,6 +388,8 @@ void Overlay::update_impl(GameBase& context, uint64_t dt)
     frame_times_.push_back(dt);
 
     auto [used, peak] = context.texture_provider().memory_usage();
+    NOT_USED(peak);
+
     vmem_usage_.pop_front();
     vmem_usage_.push_back(used * 1e-6);
 
