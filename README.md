@@ -10,7 +10,7 @@
 
 [![Language grade: C/C++][lgtm-cpp-badge]][lgtm-cpp]
 [![Code coverage][codecov-badge]][codecov]
-[![Build status][azure-badge]][azure]
+![CI](https://github.com/tido64/rainbow/workflows/CI/badge.svg?branch=master)
 
 Rainbow is a scriptable, cross-platform, 2D game engine. Games can be written in
 both C++ and JavaScript/[TypeScript](https://www.typescriptlang.org/). Check
@@ -147,7 +147,6 @@ THE SOFTWARE.
 
 <!-- Badges -->
 [azure]: https://tido64.visualstudio.com/Rainbow/_build/latest?definitionId=1&branchName=master
-[azure-badge]: https://tido64.visualstudio.com/Rainbow/_apis/build/status/Rainbow%20CI?branchName=master
 [azure-android-badge]: https://tido64.visualstudio.com/Rainbow/_apis/build/status/Rainbow%20CI?branchName=master&jobName=Android%20Agent
 [azure-ios-badge]: https://tido64.visualstudio.com/Rainbow/_apis/build/status/Rainbow%20CI?branchName=master&jobName=iOS%20Agent
 [azure-linux-badge]: https://tido64.visualstudio.com/Rainbow/_apis/build/status/Rainbow%20CI?branchName=master&jobName=Linux%20Agent
