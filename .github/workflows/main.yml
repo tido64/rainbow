@@ -72,7 +72,7 @@ jobs:
     - name: Checkout submodules
       run: |
         git submodule update --init
-    - name: Install build dependencies
+    - name: Install dependencies
       run: |
         brew bundle
     - name: Build
@@ -87,19 +87,20 @@ jobs:
       working-directory: build/macos
   Linux:
     runs-on: ubuntu-18.04
+    env:
+      CC: gcc-7
+      CXX: g++-7
+      GCOV: gcov-7
     steps:
     - name: Checkout
       uses: actions/checkout@v2
     - name: Checkout submodules
       run: |
         git submodule update --init
-    - name: Install build dependencies
+    - name: Install dependencies
       run: |
-        sudo apt-get install --yes gcc-8 g++-8 libpulse-dev libsdl2-dev ninja-build pulseaudio
+        sudo apt-get install --yes $CC $CXX lcov libpulse-dev libsdl2-dev ninja-build pulseaudio
     - name: Build
-      env:
-        CC: gcc-8
-        CXX: g++-8
       run: |
         mkdir -p build/linux
         cd build/linux
@@ -114,7 +115,10 @@ jobs:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         PATH: /usr/local/bin:/usr/bin:/bin
       run: |
-        bash <(curl -s https://codecov.io/bash) -t $CODECOV_TOKEN -X coveragepy -R .. -p . -x gcov-8 -K
+        lcov --quiet --capture --output-file coverage.info --directory . --base-directory . --gcov-tool $GCOV
+        lcov --quiet --remove coverage.info '/usr/*' '*/lib/*' --output-file coverage.info
+        lcov --list coverage.info
+        bash <(curl -s https://codecov.io/bash) -f coverage.info -t $CODECOV_TOKEN -K
       working-directory: build/linux
   Android:
     runs-on: macos-latest
@@ -132,7 +136,7 @@ jobs:
         curl -O https://dl.google.com/android/repository/sdk-tools-linux-$ANDROID_SDK_TOOLS_VERSION.zip
         sudo unzip -oqq sdk-tools-linux-$ANDROID_SDK_TOOLS_VERSION.zip -d $ANDROID_HOME
         sudo chmod +x $ANDROID_HOME/tools/bin/sdkmanager
-    - name: Install build dependencies
+    - name: Install dependencies
       run: |
         $ANDROID_HOME/tools/bin/sdkmanager "cmake;$ANDROID_CMAKE_VERSION"
     - name: Build
