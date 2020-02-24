@@ -153,6 +153,7 @@ jobs:
         git submodule update --init
     - name: Build
       run: |
+        set -o pipefail
         xcodebuild -project build/ios/Rainbow.xcodeproj -scheme Rainbow -arch arm64 CODE_SIGNING_ALLOWED=NO | xcpretty
   Node:
     runs-on: macos-latest
