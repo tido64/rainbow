@@ -120,7 +120,7 @@ Rainbow.RenderQueue.add(animation);
 | [PhysicsFS][]       | 3.0.2   | zlib                |    ✓     |
 | [SDL][]             | 2.0.9   | zlib                |    ✓     |
 | [zlib][]            | 1.2.11  | zlib                |    ✓     |
-| [Box2D][]           | 784a646 | zlib                |          |
+| [Box2D][]           | 4c1d671 | zlib                |          |
 | [FMOD][]            | 1.05.x  | Proprietary         |          |
 
 ## License
