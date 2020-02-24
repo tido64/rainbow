@@ -16,7 +16,7 @@ using rainbow::graphics::ShaderManager;
 
 namespace
 {
-    const float32 kAxisScale = 0.4F;
+    const float kAxisScale = 0.4F;
     const int32 kCircleSegments = 16;
 
     unsigned int g_debug_draw_buffer = 0;
@@ -161,7 +161,7 @@ namespace b2
     }
 
     void DebugDraw::DrawCircle(const b2Vec2& center,
-                               float32 radius,
+                               float radius,
                                const b2Color& color)
     {
         rainbow::for_each_point_on_circle_edge(
@@ -175,7 +175,7 @@ namespace b2
     }
 
     void DebugDraw::DrawSolidCircle(const b2Vec2& center,
-                                    float32 radius,
+                                    float radius,
                                     const b2Vec2& axis,
                                     const b2Color& color)
     {

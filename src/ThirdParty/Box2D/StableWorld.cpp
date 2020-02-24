@@ -4,7 +4,7 @@
 
 #include "ThirdParty/Box2D/StableWorld.h"
 
-#include <Box2D/Dynamics/b2Body.h>
+#include <box2d/b2_body.h>
 
 #include "ThirdParty/Box2D/DebugDraw.h"
 
@@ -73,7 +73,7 @@ namespace b2
         b2World::DestroyBody(body);
     }
 
-    void StableWorld::Step(float32 timeStep,
+    void StableWorld::Step(float timeStep,
                            int32 velocityIterations,
                            int32 positionIterations)
     {
