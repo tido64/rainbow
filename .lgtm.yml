@@ -11,14 +11,15 @@ extraction:
       packages:
         - libpulse-dev
         - libsdl2-dev
+        - ninja-build
         - pkg-config
         - pulseaudio
     configure:
       command:
         - mkdir out
         - cd out
-        - cmake -DCMAKE_BUILD_TYPE=Debug -DUSE_PHYSICS=1 ..
+        - cmake -DCMAKE_BUILD_TYPE=Debug -DUSE_PHYSICS=1 -G Ninja ..
     index:
       build_command:
         - cd out
-        - make -j2
+        - ninja
