@@ -9,7 +9,7 @@
 
 // clang-format off
 #include "ThirdParty/DisableWarnings.h"
-#include <Box2D/Common/b2Draw.h>  // NOLINT(llvm-include-order)
+#include <box2d/b2_draw.h>  // NOLINT(llvm-include-order)
 #include "ThirdParty/ReenableWarnings.h"
 // clang-format on
 
@@ -50,10 +50,10 @@ namespace b2
                               int32 vertex_count,
                               const b2Color& color) override;
         void DrawCircle(const b2Vec2& center,
-                        float32 radius,
+                        float radius,
                         const b2Color& color) override;
         void DrawSolidCircle(const b2Vec2& center,
-                             float32 radius,
+                             float radius,
                              const b2Vec2& axis,
                              const b2Color& color) override;
         void DrawSegment(const b2Vec2& p1,
@@ -72,7 +72,7 @@ namespace b2
             Vertex(const b2Color& c, const b2Vec2& v) : color(c), vertex(v) {}
         };
 
-        float32 ptm_;
+        float ptm_;
         std::vector<Vertex> lines_;
         std::vector<Vertex> triangles_;
         DebuggableWorld* worlds_[kMaxNumWorlds];

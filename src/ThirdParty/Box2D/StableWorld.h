@@ -7,7 +7,7 @@
 
 // clang-format off
 #include "ThirdParty/DisableWarnings.h"
-#include <Box2D/Dynamics/b2World.h>  // NOLINT(llvm-include-order)
+#include <box2d/b2_world.h>  // NOLINT(llvm-include-order)
 #include "ThirdParty/ReenableWarnings.h"
 // clang-format on
 
@@ -38,7 +38,7 @@ namespace b2
         void SetDebugDraw(b2Draw* debugDraw) /* override */;
         auto CreateBody(const b2BodyDef* def) -> b2Body* /* override */;
         void DestroyBody(b2Body* body) /* override */;
-        void Step(float32 timeStep,
+        void Step(float timeStep,
                   int32 velocityIterations,
                   int32 positionIterations) /* override */;
 
