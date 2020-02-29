@@ -32,18 +32,4 @@ xcuserdata/
 yarn-error.log
 
 # Libraries
-build/ios/lib/
-lib/**/*.cmake
-lib/**/*.txt
-lib/**/.git*
-lib/**/.hg*
-lib/**/.svn
-lib/**/LICENSE
-lib/**/Makefile*
-lib/**/README
-lib/**/docs/
-lib/**/html/
-lib/**/makefile
 lib/FMOD/
-lib/dSFMT/check.sh
-lib/dSFMT/test.c
