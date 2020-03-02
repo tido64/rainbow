@@ -44,7 +44,7 @@
     "eslint": "^6.8.0",
     "npm-run-all": "^4.1.0",
     "prettier": "^1.19.0",
-    "typescript": "^3.8.0"
+    "typescript": "^3.8.3"
   },
   "workspaces": [
     "doc"
