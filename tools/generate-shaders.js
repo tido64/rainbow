@@ -10,16 +10,13 @@ const path = require("path");
 const {
   makeBanner,
   makeSafeName,
-  writeFile: writeFileInternal
+  writeFile: writeFileInternal,
 } = require("./import-asset");
 
 const EOL = "\n";
 
 const shadersPath = path.resolve(__dirname, "..", "src", "Graphics", "Shaders");
-const shaders = fs
-  .readdirSync(shadersPath)
-  .filter(isShader)
-  .sort();
+const shaders = fs.readdirSync(shadersPath).filter(isShader).sort();
 
 const copyright = makeBanner(__filename);
 
@@ -79,7 +76,7 @@ function defineGetter(file) {
     ? ["rainbow::czstring", `k${name}`]
     : [
         "Shader::Params",
-        `{${inferShaderType(file)}, 0, "Shaders/${file}", k${name}}`
+        `{${inferShaderType(file)}, 0, "Shaders/${file}", k${name}}`,
       ];
   return `auto rainbow::gl::${name}() -> ${returnType}
 {

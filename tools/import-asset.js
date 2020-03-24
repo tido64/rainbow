@@ -84,8 +84,8 @@ ${" ".repeat(INDENT)}`);
       .on(
         "data",
         /** @type {(chunk: Buffer) => void} */
-        chunk =>
-          chunk.forEach(byte => {
+        (chunk) =>
+          chunk.forEach((byte) => {
             const b = byte.toString();
             if (cursor + b.length >= COLUMN_LIMIT) {
               output.write(newline);
@@ -113,7 +113,7 @@ ${" ".repeat(INDENT)}`);
       .on(
         "error",
         /** @type {(e: Error) => void} */
-        e => {
+        (e) => {
           output.destroy(e);
           reject(e.message);
         }
@@ -128,7 +128,7 @@ ${" ".repeat(INDENT)}`);
  * @param {string} data
  */
 function writeFile(path, data) {
-  fs.writeFile(path, data, { encoding: "utf8", mode: 0o644 }, err => {
+  fs.writeFile(path, data, { encoding: "utf8", mode: 0o644 }, (err) => {
     if (err) {
       throw err;
     }
@@ -145,5 +145,5 @@ if (require.main && require.main.filename === __filename) {
 module.exports = {
   makeBanner,
   makeSafeName,
-  writeFile
+  writeFile,
 };

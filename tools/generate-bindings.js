@@ -102,7 +102,7 @@ const modules = [
       { type: "SpriteRef", name: "sprite" },
       { type: "Animation::Frames", name: "frames" },
       { type: "uint32_t", name: "fps" },
-      { type: "int", name: "delay" }
+      { type: "int", name: "delay" },
     ],
     methods: [
       { name: "current_frame", parameters: [], returnType: "uint32_t" },
@@ -110,55 +110,55 @@ const modules = [
       { name: "sprite", parameters: [], returnType: "SpriteRef" },
       {
         name: "set_callback",
-        parameters: [{ type: "Animation::Callback", name: "callback" }]
+        parameters: [{ type: "Animation::Callback", name: "callback" }],
       },
       {
         name: "set_delay",
-        parameters: [{ type: "int", name: "delay" }]
+        parameters: [{ type: "int", name: "delay" }],
       },
       {
         name: "set_frame_rate",
-        parameters: [{ type: "uint32_t", name: "fps" }]
+        parameters: [{ type: "uint32_t", name: "fps" }],
       },
       {
         name: "set_frames",
         parameters: [
-          { type: "Animation::Frames", name: "frames", mustBeMoved: true }
-        ]
+          { type: "Animation::Frames", name: "frames", mustBeMoved: true },
+        ],
       },
       {
         name: "set_sprite",
-        parameters: [{ type: "SpriteRef", name: "sprite" }]
+        parameters: [{ type: "SpriteRef", name: "sprite" }],
       },
       {
         name: "jump_to",
-        parameters: [{ type: "uint32_t", name: "frame" }]
+        parameters: [{ type: "uint32_t", name: "frame" }],
       },
       { name: "rewind", parameters: [] },
       { name: "start", parameters: [] },
-      { name: "stop", parameters: [] }
-    ]
+      { name: "stop", parameters: [] },
+    ],
   },
   {
     type: "enum",
     name: "AnimationEvent",
     source: "../include/Rainbow/AnimationEvent.h",
     sourceName: "AnimationEvent",
-    values: []
+    values: [],
   },
   {
     type: "enum",
     name: "ControllerAxis",
     source: "Input/Controller.h",
     sourceName: "ControllerAxis",
-    values: []
+    values: [],
   },
   {
     type: "enum",
     name: "ControllerButton",
     source: "Input/Controller.h",
     sourceName: "ControllerButton",
-    values: []
+    values: [],
   },
   {
     type: "class",
@@ -171,57 +171,57 @@ const modules = [
       {
         name: "alignment",
         parameters: [{ type: "TextAlignment", name: "alignment" }],
-        returnType: "this"
+        returnType: "this",
       },
       { name: "angle", parameters: [], returnType: "float" },
       {
         name: "angle",
         parameters: [{ type: "float", name: "r" }],
-        returnType: "this"
+        returnType: "this",
       },
       { name: "color", parameters: [], returnType: "Color" },
       {
         name: "color",
         parameters: [{ type: "Color", name: "color" }],
-        returnType: "this"
+        returnType: "this",
       },
       {
         name: "font",
         parameters: [{ type: "czstring", name: "font" }],
-        returnType: "this"
+        returnType: "this",
       },
       {
         name: "font_size",
         parameters: [{ type: "int", name: "fontSize" }],
-        returnType: "this"
+        returnType: "this",
       },
       { name: "height", parameters: [], returnType: "float" },
       { name: "length", parameters: [], returnType: "uint32_t" },
       {
         name: "move",
         parameters: [{ type: "Vec2f", name: "delta" }],
-        returnType: "this"
+        returnType: "this",
       },
       { name: "position", parameters: [], returnType: "Vec2f" },
       {
         name: "position",
         parameters: [{ type: "Vec2f", name: "position" }],
-        returnType: "this"
+        returnType: "this",
       },
       { name: "scale", parameters: [], returnType: "float" },
       {
         name: "scale",
         parameters: [{ type: "float", name: "factor" }],
-        returnType: "this"
+        returnType: "this",
       },
       { name: "text", parameters: [], returnType: "czstring" },
       {
         name: "text",
         parameters: [{ type: "czstring", name: "text" }],
-        returnType: "this"
+        returnType: "this",
       },
-      { name: "width", parameters: [], returnType: "float" }
-    ]
+      { name: "width", parameters: [], returnType: "float" },
+    ],
   },
   {
     type: "class",
@@ -233,13 +233,13 @@ const modules = [
       {
         name: "angle",
         parameters: [{ type: "float", name: "r" }],
-        returnType: "this"
+        returnType: "this",
       },
       { name: "color", parameters: [], returnType: "Color" },
       {
         name: "color",
         parameters: [{ type: "Color", name: "color" }],
-        returnType: "this"
+        returnType: "this",
       },
       { name: "flip", parameters: [], returnType: "this" },
       { name: "height", parameters: [], returnType: "uint32_t" },
@@ -248,7 +248,7 @@ const modules = [
       {
         name: "id",
         parameters: [{ type: "int", name: "id" }],
-        returnType: "this"
+        returnType: "this",
       },
       { name: "is_flipped", parameters: [], returnType: "bool" },
       { name: "is_hidden", parameters: [], returnType: "bool" },
@@ -257,44 +257,44 @@ const modules = [
       {
         name: "move",
         parameters: [{ type: "Vec2f", name: "dt" }],
-        returnType: "this"
+        returnType: "this",
       },
       {
         name: "normal",
         parameters: [{ type: "Rect", name: "area" }],
-        returnType: "this"
+        returnType: "this",
       },
       { name: "pivot", parameters: [], returnType: "Vec2f" },
       {
         name: "pivot",
         parameters: [{ type: "Vec2f", name: "pivot" }],
-        returnType: "this"
+        returnType: "this",
       },
       { name: "position", parameters: [], returnType: "Vec2f" },
       {
         name: "position",
         parameters: [{ type: "Vec2f", name: "position" }],
-        returnType: "this"
+        returnType: "this",
       },
       {
         name: "rotate",
         parameters: [{ type: "float", name: "r" }],
-        returnType: "this"
+        returnType: "this",
       },
       { name: "scale", parameters: [], returnType: "Vec2f" },
       {
         name: "scale",
         parameters: [{ type: "Vec2f", name: "factor" }],
-        returnType: "this"
+        returnType: "this",
       },
       { name: "show", parameters: [], returnType: "this" },
       {
         name: "texture",
         parameters: [{ type: "Rect", name: "area" }],
-        returnType: "this"
+        returnType: "this",
       },
-      { name: "width", parameters: [], returnType: "uint32_t" }
-    ]
+      { name: "width", parameters: [], returnType: "uint32_t" },
+    ],
   },
   {
     type: "class",
@@ -306,46 +306,46 @@ const modules = [
       { name: "is_visible", parameters: [], returnType: "bool" },
       {
         name: "set_normal",
-        parameters: [{ type: "Texture", name: "texture" }]
+        parameters: [{ type: "Texture", name: "texture" }],
       },
       {
         name: "set_texture",
-        parameters: [{ type: "Texture", name: "texture" }]
+        parameters: [{ type: "Texture", name: "texture" }],
       },
       {
         name: "set_visible",
-        parameters: [{ type: "bool", name: "visible" }]
+        parameters: [{ type: "bool", name: "visible" }],
       },
       { name: "clear", parameters: [] },
       {
         name: "create_sprite",
         parameters: [
           { type: "uint32_t", name: "width" },
-          { type: "uint32_t", name: "height" }
+          { type: "uint32_t", name: "height" },
         ],
-        returnType: "SpriteRef"
+        returnType: "SpriteRef",
       },
       { name: "erase", parameters: [{ type: "uint32_t", name: "i" }] },
       {
         name: "find_sprite_by_id",
         parameters: [{ type: "int", name: "id" }],
-        returnType: "SpriteRef"
+        returnType: "SpriteRef",
       },
       {
         name: "swap",
         parameters: [
           { type: "SpriteRef", name: "a" },
-          { type: "SpriteRef", name: "b" }
-        ]
-      }
-    ]
+          { type: "SpriteRef", name: "b" },
+        ],
+      },
+    ],
   },
   {
     type: "enum",
     name: "TextAlignment",
     source: "../include/Rainbow/TextAlignment.h",
     sourceName: "TextAlignment",
-    values: []
+    values: [],
   },
   {
     type: "class",
@@ -353,14 +353,14 @@ const modules = [
     source: "Graphics/Texture.h",
     sourceName: "graphics::Texture",
     ctor: [{ type: "czstring", name: "path" }],
-    methods: []
+    methods: [],
   },
   {
     type: "enum",
     name: "VirtualKey",
     source: "Input/VirtualKey.h",
     sourceName: "VirtualKey",
-    values: []
+    values: [],
   },
   {
     type: "module",
@@ -371,56 +371,56 @@ const modules = [
       {
         name: "load_sound",
         parameters: [{ type: "czstring", name: "path" }],
-        returnType: "Sound|undefined"
+        returnType: "Sound|undefined",
       },
       {
         name: "load_stream",
         parameters: [{ type: "czstring", name: "path" }],
-        returnType: "Sound|undefined"
+        returnType: "Sound|undefined",
       },
       {
         name: "release",
         parameters: [{ type: "Sound", name: "sound" }],
-        returnType: "undefined"
+        returnType: "undefined",
       },
       {
         name: "is_paused",
         parameters: [{ type: "Channel", name: "channel" }],
-        returnType: "bool"
+        returnType: "bool",
       },
       {
         name: "is_playing",
         parameters: [{ type: "Channel", name: "channel" }],
-        returnType: "bool"
+        returnType: "bool",
       },
       {
         name: "set_loop_count",
         parameters: [
           { type: "Channel", name: "channel" },
-          { type: "int", name: "count" }
-        ]
+          { type: "int", name: "count" },
+        ],
       },
       {
         name: "set_volume",
         parameters: [
           { type: "Channel", name: "channel" },
-          { type: "float", name: "volume" }
-        ]
+          { type: "float", name: "volume" },
+        ],
       },
       {
         name: "set_world_position",
         parameters: [
           { type: "Channel", name: "channel" },
-          { type: "Vec2f", name: "position" }
-        ]
+          { type: "Vec2f", name: "position" },
+        ],
       },
       { name: "pause", parameters: [{ type: "Channel", name: "channel" }] },
       {
         name: "play",
         parameters: [{ type: "Channel|Sound", name: "audial" }],
-        returnType: "Channel|undefined"
+        returnType: "Channel|undefined",
       },
-      { name: "stop", parameters: [{ type: "Channel", name: "channel" }] }
+      { name: "stop", parameters: [{ type: "Channel", name: "channel" }] },
     ],
     types: [
       {
@@ -428,16 +428,16 @@ const modules = [
         name: "Channel",
         source: "Audio/Mixer.h",
         sourceName: "Channel",
-        methods: []
+        methods: [],
       },
       {
         type: "class",
         name: "Sound",
         source: "Audio/Mixer.h",
         sourceName: "Sound",
-        methods: []
-      }
-    ]
+        methods: [],
+      },
+    ],
   },
   {
     type: "module",
@@ -448,22 +448,22 @@ const modules = [
       { type: "Float64Array", name: "acceleration" },
       {
         type: "ReadonlyArray<Readonly<ControllerState>>",
-        name: "controllers"
+        name: "controllers",
       },
       { type: "Int8Array", name: "keysDown" },
       {
         type: "ReadonlyArray<Readonly<Pointer>>",
-        name: "pointersDown"
+        name: "pointersDown",
       },
       {
         type: "ReadonlyArray<Readonly<Pointer>>",
-        name: "pointersMoved"
+        name: "pointersMoved",
       },
       {
         type: "ReadonlyArray<Readonly<Pointer>>",
-        name: "pointersUp"
-      }
-    ]
+        name: "pointersUp",
+      },
+    ],
   },
   {
     type: "module",
@@ -473,42 +473,42 @@ const modules = [
     functions: [
       {
         name: "add",
-        parameters: [{ type: "Animation|Label|SpriteBatch", name: "obj" }]
+        parameters: [{ type: "Animation|Label|SpriteBatch", name: "obj" }],
       },
       {
         name: "disable",
         parameters: [
-          { type: "Animation|Label|SpriteBatch|czstring|int", name: "obj" }
-        ]
+          { type: "Animation|Label|SpriteBatch|czstring|int", name: "obj" },
+        ],
       },
       {
         name: "enable",
         parameters: [
-          { type: "Animation|Label|SpriteBatch|czstring|int", name: "obj" }
-        ]
+          { type: "Animation|Label|SpriteBatch|czstring|int", name: "obj" },
+        ],
       },
       {
         name: "insert",
         parameters: [
           { type: "uint32_t", name: "position" },
-          { type: "Animation|Label|SpriteBatch", name: "obj" }
-        ]
+          { type: "Animation|Label|SpriteBatch", name: "obj" },
+        ],
       },
       {
         name: "erase",
         parameters: [
-          { type: "Animation|Label|SpriteBatch|czstring|int", name: "obj" }
-        ]
+          { type: "Animation|Label|SpriteBatch|czstring|int", name: "obj" },
+        ],
       },
       {
         name: "set_tag",
         parameters: [
           { type: "Animation|Label|SpriteBatch", name: "obj" },
-          { type: "czstring", name: "tag" }
-        ]
-      }
-    ]
-  }
+          { type: "czstring", name: "tag" },
+        ],
+      },
+    ],
+  },
 ];
 
 /**
@@ -530,7 +530,7 @@ function generateCppBindings(typeInfo) {
   };
 
   /** @type {(parameters: ParameterInfo[]) => string} */
-  const joinTypeParams = parameters => parameters.map(toCppType).join(", ");
+  const joinTypeParams = (parameters) => parameters.map(toCppType).join(", ");
 
   /** @type {(typeName: string, method: FunctionInfo, indent?: string) => string} */
   const registerMethod = (
@@ -552,7 +552,7 @@ function generateCppBindings(typeInfo) {
         })
         .join(", ")});`,
       ...(result ? [`${indent}    duk::push(ctx, result);`] : []),
-      `${indent}    return ${result || returnType === "this" ? 1 : 0};`
+      `${indent}    return ${result || returnType === "this" ? 1 : 0};`,
     ].join(EOL);
   };
 
@@ -561,22 +561,22 @@ function generateCppBindings(typeInfo) {
     return [
       `                switch (duk_get_top(ctx))`,
       `                {`,
-      ...methods.map(info => {
+      ...methods.map((info) => {
         return [
           `                    case ${info.parameters.length}: {`,
           registerMethod(typeName, info, "                    "),
-          `                    }`
+          `                    }`,
         ].join(EOL);
       }),
       `                    default:`,
       `                        duk_push_error_object(ctx, DUK_ERR_SYNTAX_ERROR, "invalid number of arguments");`,
       `                        return DUK_RET_SYNTAX_ERROR;`,
-      `                }`
+      `                }`,
     ].join(EOL);
   };
 
   /** @type {(typeName: string, functionsMap: FunctionsMap) => (name: string) => string} */
-  const registerMethods = (typeName, functionsMap) => name => {
+  const registerMethods = (typeName, functionsMap) => (name) => {
     const functions = functionsMap[name];
     return [
       `        duk_push_c_function(`,
@@ -589,7 +589,7 @@ function generateCppBindings(typeInfo) {
       `            ${
         functions.length === 1 ? functions[0].parameters.length : "DUK_VARARGS"
       });`,
-      `        duk::put_prop_literal(ctx, -2, "${toCamelCase(name)}");`
+      `        duk::put_prop_literal(ctx, -2, "${toCamelCase(name)}");`,
     ].join(EOL);
   };
 
@@ -621,12 +621,12 @@ function generateCppBindings(typeInfo) {
       ...Object.keys(methodMap).map(registerMethods(sourceName, methodMap)),
       `        duk::push_literal(ctx, "Rainbow.${name}");`,
       "        duk::put_prop_literal(ctx, -2, DUKR_WELLKNOWN_SYMBOL_TOSTRINGTAG);",
-      "    });"
+      "    });",
     ];
   };
 
   /** @type {(sourceName: string) => (value: EnumValueInfo) => string} */
-  const registerEnumValue = sourceName => ({ name }) => {
+  const registerEnumValue = (sourceName) => ({ name }) => {
     return `    duk_push_int(ctx, to_underlying_type(${sourceName}::${name}));
     duk::put_prop_literal(ctx, obj_idx, "${name}");`;
   };
@@ -635,12 +635,12 @@ function generateCppBindings(typeInfo) {
   const defineEnum = ({ sourceName, values }) => {
     return [
       "    const auto obj_idx = duk_push_bare_object(ctx);",
-      ...values.map(registerEnumValue(sourceName))
+      ...values.map(registerEnumValue(sourceName)),
     ];
   };
 
   /** @type {(typeInfo: TypeInfo) => string} */
-  const defineModule = typeInfo => {
+  const defineModule = (typeInfo) => {
     const sourceName = typeInfo.sourceName;
     return [
       "",
@@ -659,29 +659,26 @@ function generateCppBindings(typeInfo) {
       })(),
       "    duk_freeze(ctx, -1);",
       `    duk::put_prop_literal(ctx, rainbow, "${typeInfo.name}");`,
-      "}"
+      "}",
     ].join(EOL);
   };
 
   /** @type {(typeInfo: TypeInfo[], extraIncludes?: string[]) => string[]} */
   const includeHeaders = (typeInfo, extraIncludes = []) => {
     return typeInfo
-      .map(type => type.source)
+      .map((type) => type.source)
       .concat(extraIncludes)
       .sort()
-      .reduce(
-        (includes, p, i, typeInfo) => {
-          if (i === 0 || p !== typeInfo[i - 1]) {
-            const header =
-              p.lastIndexOf("../include/Rainbow/", 0) === 0
-                ? `<${p.replace("../include/", "")}>`
-                : `"${p}"`;
-            includes.push(`#include ${header}`);
-          }
-          return includes;
-        },
-        /** @type {string[]} */ ([])
-      );
+      .reduce((includes, p, i, typeInfo) => {
+        if (i === 0 || p !== typeInfo[i - 1]) {
+          const header =
+            p.lastIndexOf("../include/Rainbow/", 0) === 0
+              ? `<${p.replace("../include/", "")}>`
+              : `"${p}"`;
+          includes.push(`#include ${header}`);
+        }
+        return includes;
+      }, /** @type {string[]} */ ([]));
   };
 
   /** @type {(typeInfo: TypeInfo) => string} */
@@ -699,7 +696,7 @@ function generateCppBindings(typeInfo) {
     ...includeHeaders(typeInfo, [
       "Common/TypeCast.h",
       "Common/TypeInfo.h",
-      "Script/JavaScript/Helper.h"
+      "Script/JavaScript/Helper.h",
     ]),
     "",
     "#ifdef __GNUC__",
@@ -725,7 +722,7 @@ function generateCppBindings(typeInfo) {
     "#endif",
     "",
     "#endif",
-    ""
+    "",
   ].join(EOL);
 }
 
@@ -743,14 +740,14 @@ function generateTypeScriptDeclaration(typeInfo) {
           `class ${name}`,
           " private",
           [`${indent}    constructor(${joinParams(ctor)});`],
-          ""
+          "",
         ];
     return [
       `${indent}  export ${exportType} {`,
       `${indent}   ${accessibility} readonly $type: "Rainbow.${name}";`,
       ...ctorDecl,
-      ...methods.map(method => declareFunction(method, name, indent)),
-      `${indent}  }${endline}`
+      ...methods.map((method) => declareFunction(method, name, indent)),
+      `${indent}  }${endline}`,
     ].join(EOL);
   };
 
@@ -759,7 +756,7 @@ function generateTypeScriptDeclaration(typeInfo) {
     return [
       `${indent}  export enum ${name} {`,
       ...values.map(defineEnumValue(indent)),
-      `${indent}  }`
+      `${indent}  }`,
     ].join(EOL);
   };
 
@@ -780,14 +777,14 @@ function generateTypeScriptDeclaration(typeInfo) {
     return [
       `${indent}  export namespace ${name} {`,
       ...map(properties, declareProp(indent)),
-      ...map(functions, f => declareFunction(f, "", indent)),
-      ...map(types, t => declareType(t, "  ")),
-      `${indent}  }`
+      ...map(functions, (f) => declareFunction(f, "", indent)),
+      ...map(types, (t) => declareType(t, "  ")),
+      `${indent}  }`,
     ].join(EOL);
   };
 
   /** @type {(indent: string) => (prop: PropertyInfo) => string} */
-  const declareProp = indent => prop =>
+  const declareProp = (indent) => (prop) =>
     `${indent}    const ${prop.name}: ${prop.type};`;
 
   /** @type {(t: TypeInfo, indent?: string) => string} */
@@ -803,21 +800,21 @@ function generateTypeScriptDeclaration(typeInfo) {
   };
 
   /** @type {(indent: string) => (value: EnumValueInfo) => string} */
-  const defineEnumValue = indent => value =>
+  const defineEnumValue = (indent) => (value) =>
     `${indent}    ${value.name} = ${value.integralValue},`;
 
   /** @type {(parameters: ParameterInfo[]) => string} */
-  const joinParams = parameters => {
+  const joinParams = (parameters) => {
     return parameters
-      .map(p => `${p.name}: ${toTypeScriptType(p.type)}`)
+      .map((p) => `${p.name}: ${toTypeScriptType(p.type)}`)
       .join(", ");
   };
 
   /** @type {(type?: NativeType) => string} */
-  const toTypeScriptType = type => {
+  const toTypeScriptType = (type) => {
     return (type || "")
       .split("|")
-      .map(t => {
+      .map((t) => {
         switch (t) {
           case "Animation::Callback":
             return "(animation: Animation, event: AnimationEvent) => void";
@@ -906,7 +903,7 @@ declare namespace Rainbow {
     y: number;
   };
 
-${typeInfo.map(m => declareType(m)).join(`${EOL}${EOL}`)}
+${typeInfo.map((m) => declareType(m)).join(`${EOL}${EOL}`)}
 }
 `;
 }
@@ -956,14 +953,14 @@ function preprocess(info) {
   let count = -1;
   return {
     ...info,
-    values: matches[1].split(",").map(value => {
+    values: matches[1].split(",").map((value) => {
       const parts = value.split("=");
       count = parts[1] ? parseInt(parts[1]) : count + 1;
       return {
         name: parts[0].trim(),
-        integralValue: count
+        integralValue: count,
       };
-    })
+    }),
   };
 }
 
@@ -974,21 +971,18 @@ function preprocess(info) {
 function toCamelCase(str) {
   return str
     .split("")
-    .reduce(
-      (arr, char, index) => {
-        if (char === "_") {
-          return arr;
-        }
-
-        if (str[index - 1] === "_") {
-          arr.push(char.toUpperCase());
-        } else {
-          arr.push(char);
-        }
+    .reduce((arr, char, index) => {
+      if (char === "_") {
         return arr;
-      },
-      /** @type {string[]} */ ([])
-    )
+      }
+
+      if (str[index - 1] === "_") {
+        arr.push(char.toUpperCase());
+      } else {
+        arr.push(char);
+      }
+      return arr;
+    }, /** @type {string[]} */ ([]))
     .join("");
 }
 
@@ -996,10 +990,10 @@ const typeInfo = modules.map(preprocess);
 [
   {
     generate: generateCppBindings,
-    output: path.join(sourcePath, "Script", "JavaScript", "Modules.g.h")
+    output: path.join(sourcePath, "Script", "JavaScript", "Modules.g.h"),
   },
   {
     generate: generateTypeScriptDeclaration,
-    output: path.join(sourcePath, "..", "js", "index.d.ts")
-  }
+    output: path.join(sourcePath, "..", "js", "index.d.ts"),
+  },
 ].forEach(({ generate, output }) => writeFile(output, generate(typeInfo)));
