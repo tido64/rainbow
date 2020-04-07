@@ -43,7 +43,7 @@
     "@typescript-eslint/parser": "^2.20.0",
     "eslint": "^6.8.0",
     "npm-run-all": "^4.1.0",
-    "prettier": "^2.0.0",
+    "prettier": "^2.0.4",
     "typescript": "^3.8.0"
   },
   "workspaces": [
