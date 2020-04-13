@@ -97,6 +97,7 @@ jobs:
         git submodule update --init
     - name: Install dependencies
       run: |
+        sudo apt-get update
         sudo apt-get install --yes $CC $CXX lcov libpulse-dev libsdl2-dev ninja-build pulseaudio
     - name: Build
       run: |
