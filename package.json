@@ -36,12 +36,13 @@
     "generate:shaders": "node tools/generate-shaders.js",
     "import-asset": "node tools/import-asset.js",
     "lint:tools": "eslint tools/",
-    "prettier:all": "prettier --no-config --write js/*.json tools/*.js"
+    "prettier:all": "prettier --no-config --write .eslintrc.js js/*.json tools/*.js"
   },
   "devDependencies": {
     "@types/node": "^12.12.0",
     "@typescript-eslint/parser": "^2.20.0",
     "eslint": "^6.8.0",
+    "eslint-plugin-prettier": "^3.1.0",
     "npm-run-all": "^4.1.0",
     "prettier": "^2.0.0",
     "typescript": "^3.8.0"
