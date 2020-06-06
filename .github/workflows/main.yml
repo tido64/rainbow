@@ -9,6 +9,20 @@ env:
 jobs:
   Windows:
     runs-on: windows-latest
+    env:
+      # MSVC 19.26.28805.0 breaks these 11 tests when built with RelWithDebInfo:
+      #   [  FAILED  ] SpriteBatchTest.CreatesSprites
+      #   [  FAILED  ] SpriteBatchOperationsTest.SpritesPositionAtOriginOnCreation
+      #   [  FAILED  ] SpriteBatchOperationsTest.BringsSpritesToFront
+      #   [  FAILED  ] SpriteBatchOperationsTest.ErasesSprites
+      #   [  FAILED  ] SpriteBatchOperationsTest.FindsSpritesById
+      #   [  FAILED  ] SpriteBatchOperationsTest.MovesSprites
+      #   [  FAILED  ] SpriteBatchOperationsTest.SwapsSprites
+      #   [  FAILED  ] StableArrayTest.FindsIterators
+      #   [  FAILED  ] StableArrayTest.IteratesWithForEach
+      #   [  FAILED  ] StableArrayTest.IteratorsAreStableAfterMoves
+      #   [  FAILED  ] StableArrayTest.IteratorsAreStableAfterSwaps
+      CONFIGURATION: MinSizeRel
     steps:
     - name: Checkout
       uses: actions/checkout@v2
@@ -31,6 +45,7 @@ jobs:
     runs-on: windows-latest
     env:
       ARTIFACT_NAME: rainbow-1.0.0+${{ github.run_id }}
+      CONFIGURATION: MinSizeRel
     if: github.event_name == 'push'
     steps:
     - name: Checkout
@@ -63,7 +78,8 @@ jobs:
   macOS:
     runs-on: macos-latest
     env:
-      CONFIGURATION: MinSizeRel  # RelWithDebInfo breaks ScopeStackTest.CallsDestructorsInReverseOrder
+      # RelWithDebInfo breaks ScopeStackTest.CallsDestructorsInReverseOrder
+      CONFIGURATION: MinSizeRel
     steps:
     - name: Checkout
       uses: actions/checkout@v2

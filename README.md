@@ -103,25 +103,39 @@ Rainbow.RenderQueue.add(animation);
 * Please make sure to read our
   [coding standard](https://tido64.github.io/rainbow/docs/coding-standard).
 
+## Visual Studio Test Adapter for Google Test
+
+Rainbow uses [Google Test](https://github.com/google/googletest). To make Visual
+Studio recognize the tests, you'll need to install
+[Test Adapter for Google Test](https://marketplace.visualstudio.com/items?itemName=VisualCPPTeam.TestAdapterforGoogleTest)
+and set the working directory in **Test** ❭ **Options…** ❭
+**Test Adapter for Google Test**:
+
+* Working directory: `$(SolutionDir)`
+
+You'll also need to copy `SDL2.dll` into `$(SolutionDir)\$(Configuration)`, e.g.
+`$(SolutionDir)\Debug`, because Test Adapter for Google Test doesn't honour the
+working directory setting when discovering tests.
+
 ## Dependencies
 
-| Name                | Version | License             | Required |
-|---------------------|---------|---------------------|:--------:|
-| [Abseil][]          | 111ca70 | Apache 2.0          |    ✓     |
-| [cubeb][]           | 03ec1b3 | ISC                 |    ✓     |
-| [Dear ImGui][]      | 1.76    | MIT                 |    ✓     |
-| [Duktape][]         | 2.5.0   | MIT                 |    ✓     |
-| [FreeType][]        | 2.10.1  | FreeType            |    ✓     |
-| [HarfBuzz][]        | 2.6.4   | Old MIT             |    ✓     |
-| [libpng][]          | 1.6.37  | libpng v2           |    ✓     |
-| [Mapbox Variant][]  | 1.1.6   | BSD-3               |    ✓     |
-| [NanoSVG][]         | dc12d90 | zlib                |    ✓     |
-| [Ogg Vorbis][]      | 1.3.6   | BSD-3               |    ✓     |
-| [PhysicsFS][]       | 3.0.2   | zlib                |    ✓     |
-| [SDL][]             | 2.0.9   | zlib                |    ✓     |
-| [zlib][]            | 1.2.11  | zlib                |    ✓     |
-| [Box2D][]           | 4c1d671 | MIT                 |          |
-| [FMOD][]            | 1.05.x  | Proprietary         |          |
+| Name                | Version | License      | Required |
+|---------------------|---------|--------------|:--------:|
+| [Abseil][]          | 111ca70 | Apache 2.0   |    ✓     |
+| [cubeb][]           | 03ec1b3 | ISC          |    ✓     |
+| [Dear ImGui][]      | 1.76    | MIT          |    ✓     |
+| [Duktape][]         | 2.5.0   | MIT          |    ✓     |
+| [FreeType][]        | 2.10.1  | FreeType     |    ✓     |
+| [HarfBuzz][]        | 2.6.4   | Old MIT      |    ✓     |
+| [libpng][]          | 1.6.37  | libpng v2    |    ✓     |
+| [Mapbox Variant][]  | 1.1.6   | BSD-3        |    ✓     |
+| [NanoSVG][]         | dc12d90 | zlib         |    ✓     |
+| [Ogg Vorbis][]      | 1.3.6   | BSD-3        |    ✓     |
+| [PhysicsFS][]       | 3.0.2   | zlib         |    ✓     |
+| [SDL][]             | 2.0.9   | zlib         |    ✓     |
+| [zlib][]            | 1.2.11  | zlib         |    ✓     |
+| [Box2D][]           | 4c1d671 | MIT          |          |
+| [FMOD][]            | 1.05.x  | Proprietary  |          |
 
 ## License
 
