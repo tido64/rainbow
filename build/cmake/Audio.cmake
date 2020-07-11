@@ -49,20 +49,26 @@ else()
   target_compile_options(cubeb PRIVATE ${CFLAG_NO_WARNINGS})
   target_link_libraries(rainbow cubeb)
 
+  set(INSTALL_CMAKE_PACKAGE_MODULE OFF CACHE BOOL "Install CMake package configuration module")
   set(OGG_INSTALL_DIR ${CMAKE_BINARY_DIR}/lib/ogg)
-  set(OGG_INCLUDE_DIRS ${OGG_INSTALL_DIR}/include ${LOCAL_LIBRARY}/ogg/include)
+  set(OGG_INCLUDE_DIR ${OGG_INSTALL_DIR}/include ${LOCAL_LIBRARY}/ogg/include)
+  set(OGG_STATIC_LIBRARY ${CMAKE_STATIC_LIBRARY_PREFIX}ogg${CMAKE_STATIC_LIBRARY_SUFFIX})
   if(MSVC OR XCODE)
-    set(OGG_LIBRARIES ${OGG_INSTALL_DIR}/$<CONFIG>/${CMAKE_STATIC_LIBRARY_PREFIX}ogg${CMAKE_STATIC_LIBRARY_SUFFIX})
+    set(OGG_LIBRARY ${OGG_INSTALL_DIR}/$<CONFIG>/${OGG_STATIC_LIBRARY})
+    add_library(Ogg::ogg STATIC IMPORTED)
+    set_target_properties(Ogg::ogg
+      PROPERTIES
+        INTERFACE_INCLUDE_DIRECTORIES "${OGG_INCLUDE_DIR}"
+        IMPORTED_LOCATION_DEBUG "${OGG_INSTALL_DIR}/Debug/${OGG_STATIC_LIBRARY}"
+        IMPORTED_LOCATION_MINSIZEREL "${OGG_INSTALL_DIR}/MinSizeRel/${OGG_STATIC_LIBRARY}"
+        IMPORTED_LOCATION_RELEASE "${OGG_INSTALL_DIR}/Release/${OGG_STATIC_LIBRARY}"
+        IMPORTED_LOCATION_RELWITHDEBINFO "${OGG_INSTALL_DIR}/RelWithDebInfo/${OGG_STATIC_LIBRARY}"
+    )
   else()
-    set(OGG_LIBRARIES ${OGG_INSTALL_DIR}/${CMAKE_STATIC_LIBRARY_PREFIX}ogg${CMAKE_STATIC_LIBRARY_SUFFIX})
+    set(OGG_LIBRARY ${OGG_INSTALL_DIR}/${OGG_STATIC_LIBRARY})
   endif()
   add_subdirectory(${LOCAL_LIBRARY}/ogg EXCLUDE_FROM_ALL)
   add_subdirectory(${LOCAL_LIBRARY}/vorbis EXCLUDE_FROM_ALL)
-  target_include_directories(rainbow
-    PRIVATE
-      ${LOCAL_LIBRARY}/vorbis/include
-      ${OGG_INCLUDE_DIRS}
-  )
   target_link_libraries(rainbow vorbisfile vorbis ogg)
 
   if(APPLE)
