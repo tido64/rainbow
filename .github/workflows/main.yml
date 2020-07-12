@@ -4,10 +4,11 @@ on:
     branches:
       - master
   pull_request:
-env:
-  CONFIGURATION: RelWithDebInfo
 jobs:
   Windows:
+    strategy:
+      matrix:
+        configuration: [Debug, MinSizeRel]
     runs-on: windows-latest
     env:
       # MSVC 19.26.28805.0 breaks these 11 tests when built with RelWithDebInfo:
@@ -22,7 +23,7 @@ jobs:
       #   [  FAILED  ] StableArrayTest.IteratesWithForEach
       #   [  FAILED  ] StableArrayTest.IteratorsAreStableAfterMoves
       #   [  FAILED  ] StableArrayTest.IteratorsAreStableAfterSwaps
-      CONFIGURATION: MinSizeRel
+      CONFIGURATION: ${{ matrix.configuration }}
     steps:
     - name: Checkout
       uses: actions/checkout@v2
@@ -76,10 +77,13 @@ jobs:
         name: rainbow-1.0.0+${{ github.run_id }}
         path: artifact
   macOS:
+    strategy:
+      matrix:
+        configuration: [Debug, MinSizeRel]
     runs-on: macos-latest
     env:
       # RelWithDebInfo breaks ScopeStackTest.CallsDestructorsInReverseOrder
-      CONFIGURATION: MinSizeRel
+      CONFIGURATION: ${{ matrix.configuration }}
     steps:
     - name: Checkout
       uses: actions/checkout@v2
@@ -100,11 +104,15 @@ jobs:
         ./rainbow --gtest_filter=-AudioTest* --gtest_output="xml:test-report.xml"
       working-directory: build/macos
   Linux:
+    strategy:
+      matrix:
+        configuration: [Debug, MinSizeRel]
     runs-on: ubuntu-18.04
     env:
       CC: gcc-7
       CXX: g++-7
       GCOV: gcov-7
+      CONFIGURATION: ${{ matrix.configuration }}
     steps:
     - name: Checkout
       uses: actions/checkout@v2
@@ -174,12 +182,13 @@ jobs:
         xcodebuild -project build/ios/Rainbow.xcodeproj -scheme Rainbow -arch arm64 CODE_SIGNING_ALLOWED=NO | xcpretty
   Node:
     runs-on: macos-latest
-    strategy:
-      matrix:
-        node-version: [10.x, 12.x]
     steps:
     - name: Checkout
       uses: actions/checkout@v2
+    - name: Set up Node.js
+      uses: actions/setup-node@v1
+      with:
+        node-version: 12
     - name: Build
       run: |
         yarn
