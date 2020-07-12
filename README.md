@@ -132,7 +132,7 @@ working directory setting when discovering tests.
 | [NanoSVG][]         | dc12d90 | zlib         |    ✓     |
 | [Ogg Vorbis][]      | 1.3.7   | BSD-3        |    ✓     |
 | [PhysicsFS][]       | 3.0.2   | zlib         |    ✓     |
-| [SDL][]             | 2.0.9   | zlib         |    ✓     |
+| [SDL][]             | 2.0.12  | zlib         |    ✓     |
 | [zlib][]            | 1.2.11  | zlib         |    ✓     |
 | [Box2D][]           | 4c1d671 | MIT          |          |
 | [FMOD][]            | 1.05.x  | Proprietary  |          |
