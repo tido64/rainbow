@@ -45,7 +45,7 @@ jobs:
     name: Windows (publish)
     runs-on: windows-latest
     env:
-      ARTIFACT_NAME: rainbow-1.0.0+${{ github.run_id }}
+      ARTIFACT_NAME: rainbow-1.0.0+${{ github.run_number }}.${{ github.sha }}
       CONFIGURATION: MinSizeRel
     if: github.event_name == 'push'
     steps:
