@@ -130,7 +130,7 @@ working directory setting when discovering tests.
 | [libpng][]          | 1.6.37  | libpng v2    |    ✓     |
 | [Mapbox Variant][]  | 1.1.6   | BSD-3        |    ✓     |
 | [NanoSVG][]         | dc12d90 | zlib         |    ✓     |
-| [Ogg Vorbis][]      | 1.3.6   | BSD-3        |    ✓     |
+| [Ogg Vorbis][]      | 1.3.7   | BSD-3        |    ✓     |
 | [PhysicsFS][]       | 3.0.2   | zlib         |    ✓     |
 | [SDL][]             | 2.0.9   | zlib         |    ✓     |
 | [zlib][]            | 1.2.11  | zlib         |    ✓     |
