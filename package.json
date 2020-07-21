@@ -39,7 +39,7 @@
     "prettier:all": "prettier --no-config --write .eslintrc.js js/*.json tools/*.js"
   },
   "devDependencies": {
-    "@types/node": "^12.0",
+    "@types/node": "^12.12",
     "@typescript-eslint/parser": "^3.6.0",
     "eslint": "^7.4.0",
     "eslint-plugin-prettier": "^3.1.4",
