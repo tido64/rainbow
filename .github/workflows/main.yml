@@ -183,12 +183,17 @@ jobs:
   Node:
     runs-on: macos-latest
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
     - name: Set up Node.js
       uses: actions/setup-node@v1
       with:
         node-version: 12
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Cache /node_modules
+      uses: actions/cache@v2
+      with:
+        path: node_modules
+        key: rainbow-${{ runner.os }}-${{ hashFiles('yarn.lock') }}
     - name: Build
       run: |
         yarn
