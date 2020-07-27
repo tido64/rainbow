@@ -43,7 +43,7 @@ namespace b2
     }
 
     StableWorld::StableWorld(float gx, float gy)
-        : b2World(b2Vec2(gx, gy)), elapsed_(0.0), debug_draw_(nullptr)
+        : elapsed_(0.0), debug_draw_(nullptr), world_(b2Vec2(gx, gy))
     {
         SetAutoClearForces(false);  // TODO: Needed?
     }
@@ -54,7 +54,7 @@ namespace b2
     {
         if (debug_draw_ != nullptr)
             debug_draw_->Remove(this);
-        b2World::SetDebugDraw(debugDraw);
+        world_.SetDebugDraw(debugDraw);
         debug_draw_ = static_cast<DebugDraw*>(debugDraw);
         if (debug_draw_ != nullptr)
             debug_draw_->Add(this);
@@ -62,7 +62,7 @@ namespace b2
 
     auto StableWorld::CreateBody(const b2BodyDef* bd) -> b2Body*
     {
-        auto body = b2World::CreateBody(bd);
+        auto body = world_.CreateBody(bd);
         body->SetUserData(new BodyState(bd));
         return body;
     }
@@ -70,7 +70,7 @@ namespace b2
     void StableWorld::DestroyBody(b2Body* body)
     {
         delete GetBodyState(body);
-        b2World::DestroyBody(body);
+        world_.DestroyBody(body);
     }
 
     void StableWorld::Step(float timeStep,
@@ -86,8 +86,7 @@ namespace b2
             elapsed_ -= steps / kStepsPerMs;
             for (int i = 0; i < std::min(steps, kMaxSteps); ++i)
             {
-                b2World::Step(
-                    kFixedStep, velocityIterations, positionIterations);
+                world_.Step(kFixedStep, velocityIterations, positionIterations);
                 SaveState();
             }
             ClearForces();  // TODO: Needed?
@@ -95,7 +94,7 @@ namespace b2
         }
     }
 
-    void StableWorld::DrawDebugData() { b2World::DrawDebugData(); }
+    void StableWorld::DrawDebugData() { world_.DebugDraw(); }
 
     void StableWorld::Interpolate()
     {

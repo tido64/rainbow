@@ -32,11 +32,11 @@
     "build": "tsc --project js",
     "build:ci": "npm-run-all build check:tools",
     "check:tools": "tsc --build tsconfig.tools.json && yarn lint:tools",
+    "format:js": "prettier --no-config --write $(git ls-files -- '*.js*' ':!:*.vscode/*' ':!:*xcassets/*')",
     "generate:bindings": "node tools/generate-bindings.js",
     "generate:shaders": "node tools/generate-shaders.js",
     "import-asset": "node tools/import-asset.js",
-    "lint:tools": "eslint tools/",
-    "prettier:all": "prettier --no-config --write .eslintrc.js js/*.json tools/*.js"
+    "lint:tools": "eslint tools/"
   },
   "devDependencies": {
     "@types/node": "^12.0",

@@ -8,7 +8,7 @@
       "projectTarget": "rainbow.exe (Debug\\rainbow.exe)",
       "name": "​Rainbow",
       "currentDir": "${projectDir}\\build\\windows\\CMakeBuild\\${cmake.name}",
-      "args": [ "${projectDir}\\js" ]
+      "args": ["${projectDir}\\js"]
     },
     {
       "type": "default",
@@ -16,7 +16,7 @@
       "projectTarget": "rainbow.exe (Debug\\rainbow.exe)",
       "name": "​Rainbow Tests",
       "currentDir": "${projectDir}\\build\\windows\\CMakeBuild\\${cmake.name}",
-      "args": [ "--gtest_filter=*" ]
+      "args": ["--gtest_filter=*"]
     }
   ]
 }

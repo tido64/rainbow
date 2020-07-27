@@ -14,12 +14,12 @@ module.exports = {
   favicon: "",
   colors: {
     primaryColor: "#212121",
-    secondaryColor: "#b71c1c"
+    secondaryColor: "#b71c1c",
   },
   copyright: `Copyright © ${new Date().getFullYear()} Bifrost Entertainment AS and Tommy Nguyen`,
   highlight: {
     // Highlight.js theme to use for syntax highlighting in code blocks.
-    theme: "rainbow"
+    theme: "rainbow",
   },
   scripts: ["https://buttons.github.io/buttons.js"],
   onPageNav: "separate",
@@ -27,5 +27,5 @@ module.exports = {
   customDocsPath: "doc/content",
   ogImage: "",
   twitterImage: "",
-  repoUrl: "https://github.com/tido64/rainbow"
+  repoUrl: "https://github.com/tido64/rainbow",
 };
