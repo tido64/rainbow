@@ -27,9 +27,8 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2
-    - name: Checkout submodules
-      run: |
-        git submodule update --init
+      with:
+        submodules: true
     - name: Build
       run: |
         cmake -DCOVERAGE=1 -DUNIT_TESTS=1 -DUSE_HEIMDALL=1 -DUSE_PHYSICS=1 -A x64 ../..
@@ -51,9 +50,8 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2
-    - name: Checkout submodules
-      run: |
-        git submodule update --init
+      with:
+        submodules: true
     - name: Build
       run: |
         cmake -DUSE_HEIMDALL=1 -DUSE_PHYSICS=1 -A x64 ../..
@@ -87,9 +85,8 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2
-    - name: Checkout submodules
-      run: |
-        git submodule update --init
+      with:
+        submodules: true
     - name: Install dependencies
       run: |
         brew bundle
@@ -116,9 +113,8 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2
-    - name: Checkout submodules
-      run: |
-        git submodule update --init
+      with:
+        submodules: true
     - name: Install dependencies
       run: |
         sudo apt-get update
@@ -152,9 +148,8 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2
-    - name: Checkout submodules
-      run: |
-        git submodule update --init
+      with:
+        submodules: true
     - name: Download Android command line tools
       run: |
         curl -O https://dl.google.com/android/repository/sdk-tools-linux-$ANDROID_SDK_TOOLS_VERSION.zip
@@ -174,9 +169,8 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2
-    - name: Checkout submodules
-      run: |
-        git submodule update --init
+      with:
+        submodules: true
     - name: Build
       run: |
         set -o pipefail
