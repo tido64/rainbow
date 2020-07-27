@@ -134,6 +134,7 @@ jobs:
         ./rainbow --gtest_output="xml:test-report.xml"
       working-directory: build/linux
     - name: Upload test coverage
+      if: ${{ matrix.configuration == 'MinSizeRel' }}
       env:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         PATH: /usr/local/bin:/usr/bin:/bin
