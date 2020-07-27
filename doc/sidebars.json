@@ -1,9 +1,6 @@
 {
   "docs": {
-    "Getting Started": [
-      "getting-started",
-      "basics"
-    ],
+    "Getting Started": ["getting-started", "basics"],
     "Components": [
       "audio",
       "input",
@@ -12,8 +9,6 @@
       "timers",
       "transitions"
     ],
-    "Contributing": [
-      "coding-standard"
-    ]
+    "Contributing": ["coding-standard"]
   }
 }

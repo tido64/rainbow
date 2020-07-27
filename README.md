@@ -134,7 +134,7 @@ working directory setting when discovering tests.
 | [PhysicsFS][]       | 3.0.2   | zlib         |    ✓     |
 | [SDL][]             | 2.0.12  | zlib         |    ✓     |
 | [zlib][]            | 1.2.11  | zlib         |    ✓     |
-| [Box2D][]           | 4c1d671 | MIT          |          |
+| [Box2D][]           | 2.4.0   | MIT          |          |
 | [FMOD][]            | 1.05.x  | Proprietary  |          |
 
 ## License
