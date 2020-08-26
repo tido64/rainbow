@@ -39,7 +39,7 @@
     "lint:tools": "eslint tools/"
   },
   "devDependencies": {
-    "@types/node": "^12.0",
+    "@types/node": "^12.12",
     "@typescript-eslint/parser": "^3.10.1",
     "eslint": "^7.5.0",
     "eslint-plugin-prettier": "^3.1.4",
