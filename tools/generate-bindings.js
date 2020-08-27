@@ -910,7 +910,7 @@ ${typeInfo.map((m) => declareType(m)).join(`${EOL}${EOL}`)}
 
 /**
  * @template T, U
- * @param {T[]=} array
+ * @param {T[] | undefined} array
  * @param {(value: T, index: number, array: T[]) => U} f
  * @returns {U[]}
  */
