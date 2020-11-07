@@ -128,7 +128,7 @@ working directory setting when discovering tests.
 | [FreeType][]        | 2.10.1  | FreeType     |    ✓     |
 | [HarfBuzz][]        | 2.6.4   | Old MIT      |    ✓     |
 | [libpng][]          | 1.6.37  | libpng v2    |    ✓     |
-| [Mapbox Variant][]  | 1.1.6   | BSD-3        |    ✓     |
+| [Mapbox Variant][]  | 1.2.0   | BSD-3        |    ✓     |
 | [NanoSVG][]         | dc12d90 | zlib         |    ✓     |
 | [Ogg Vorbis][]      | 1.3.7   | BSD-3        |    ✓     |
 | [PhysicsFS][]       | 3.0.2   | zlib         |    ✓     |
