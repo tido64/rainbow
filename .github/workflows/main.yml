@@ -141,7 +141,7 @@ jobs:
         bash <(curl -s https://codecov.io/bash) -f coverage.info -t $CODECOV_TOKEN -K
       working-directory: build/linux
   Android:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     env:
       ANDROID_CMAKE_VERSION: 3.10.2.4988404
       ANDROID_SDK_TOOLS_VERSION: 4333796
@@ -176,12 +176,12 @@ jobs:
         set -o pipefail
         xcodebuild -project build/ios/Rainbow.xcodeproj -scheme Rainbow -arch arm64 CODE_SIGNING_ALLOWED=NO | xcpretty
   Node:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     steps:
     - name: Set up Node.js
       uses: actions/setup-node@v1
       with:
-        node-version: 12
+        node-version: 14
     - name: Checkout
       uses: actions/checkout@v2
     - name: Cache /node_modules
@@ -191,5 +191,5 @@ jobs:
         key: rainbow-${{ runner.os }}-${{ hashFiles('yarn.lock') }}
     - name: Build
       run: |
-        yarn
+        yarn --frozen-lockfile --non-interactive
         yarn build:ci
