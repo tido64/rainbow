@@ -123,13 +123,13 @@ working directory setting when discovering tests.
 |---------------------|---------|--------------|:--------:|
 | [Abseil][]          | 111ca70 | Apache 2.0   |    ✓     |
 | [cubeb][]           | 03ec1b3 | ISC          |    ✓     |
-| [Dear ImGui][]      | 1.77    | MIT          |    ✓     |
+| [Dear ImGui][]      | 1.79    | MIT          |    ✓     |
 | [Duktape][]         | 2.5.0   | MIT          |    ✓     |
 | [FreeType][]        | 2.10.1  | FreeType     |    ✓     |
 | [HarfBuzz][]        | 2.6.4   | Old MIT      |    ✓     |
 | [libpng][]          | 1.6.37  | libpng v2    |    ✓     |
 | [Mapbox Variant][]  | 1.2.0   | BSD-3        |    ✓     |
-| [NanoSVG][]         | dc12d90 | zlib         |    ✓     |
+| [NanoSVG][]         | cc6c08d | zlib         |    ✓     |
 | [Ogg Vorbis][]      | 1.3.7   | BSD-3        |    ✓     |
 | [PhysicsFS][]       | 3.0.2   | zlib         |    ✓     |
 | [SDL][]             | 2.0.12  | zlib         |    ✓     |
