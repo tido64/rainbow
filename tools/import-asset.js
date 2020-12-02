@@ -45,17 +45,17 @@ async function importAsset(asset) {
   if (!fs.existsSync(asset)) {
     // eslint-disable-next-line no-console
     console.warn(`No such file: ${asset}`);
-    return false;
+    return Promise.resolve(false);
   }
 
   const stat = fs.statSync(asset);
   if (!stat.isFile()) {
     // eslint-disable-next-line no-console
     console.warn(`Not a file: ${asset}`);
-    return false;
+    return Promise.resolve(false);
   }
 
-  /** @type {(resolve: (value?: boolean | PromiseLike<Boolean>) => void, reject: (reason?: string) => void) => void} */
+  /** @type {(resolve: (value: boolean | PromiseLike<Boolean>) => void, reject: (reason?: string) => void) => void} */
   const executor = (resolve, reject) => {
     const filename = path.basename(asset);
     const name = makeSafeName(filename);
