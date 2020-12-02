@@ -37,15 +37,15 @@
 #       define LOGE(...) LOG_F("ERROR", __VA_ARGS__, '\n')
 #       define LOGF(...) LOG_F("FATAL", __VA_ARGS__, '\n')
 #   endif  // _MSC_VER
-#   ifdef NDEBUG
-#       define LOGD(...) static_cast<void>(0)
-#       define LOGI(...) static_cast<void>(0)
-#       define LOGW(...) static_cast<void>(0)
+#   ifdef _MSC_VER
+#       define LOGD(fmt, ...) LOG_F("DEBUG", fmt, __VA_ARGS__)
+#       define LOGI(fmt, ...) LOG_F("INFO", fmt, __VA_ARGS__)
+#       define LOGW(fmt, ...) LOG_F("WARN", fmt, __VA_ARGS__)
 #   else
-#       ifdef _MSC_VER
-#           define LOGD(fmt, ...) LOG_F("DEBUG", fmt, __VA_ARGS__)
-#           define LOGI(fmt, ...) LOG_F("INFO", fmt, __VA_ARGS__)
-#           define LOGW(fmt, ...) LOG_F("WARN", fmt, __VA_ARGS__)
+#       ifdef NDEBUG
+#           define LOGD(...) static_cast<void>(0)
+#           define LOGI(...) static_cast<void>(0)
+#           define LOGW(...) static_cast<void>(0)
 #       else
 #           define LOGD(...) LOG_F("DEBUG", __VA_ARGS__, '\n')
 #           define LOGI(...) LOG_F("INFO", __VA_ARGS__, '\n')
