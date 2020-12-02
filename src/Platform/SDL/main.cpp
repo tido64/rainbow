@@ -17,6 +17,7 @@
 #       pragma comment(linker, "/SUBSYSTEM:WINDOWS")
 #   endif
 #   include "Graphics/OpenGL.h"
+#   include "Platform/Windows/Console.h"
 #endif
 
 #include "Common/Functional.h"
@@ -71,7 +72,7 @@ auto main(int argc, char* argv[]) -> int
 #endif
 
 #ifdef RAINBOW_OS_WINDOWS
-    SetConsoleOutputCP(CP_UTF8);
+    rainbow::windows::Console console;
 #endif
 
     const rainbow::Config config;

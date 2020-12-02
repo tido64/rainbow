@@ -188,6 +188,8 @@ else()
       lib/glad/glad.c
       src/Platform/SDL/Window.cpp
       src/Platform/SystemInfo.windows.cpp
+      src/Platform/Windows/Console.cpp
+      src/Platform/Windows/Console.h
       tools/make.ps1
     )
   elseif(APPLE)
