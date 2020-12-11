@@ -192,6 +192,9 @@ else()
       src/Platform/Windows/Console.h
       tools/make.ps1
     )
+    set_property(SOURCE lib/glad/glad.c APPEND PROPERTY
+      COMPILE_FLAGS ${CFLAG_NO_WARNINGS}
+    )
   elseif(APPLE)
     list(APPEND SOURCE_FILES
       src/Platform/SDL/Window.macos.mm
