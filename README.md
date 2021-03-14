@@ -123,7 +123,7 @@ working directory setting when discovering tests.
 |---------------------|---------|--------------|:--------:|
 | [Abseil][]          | 111ca70 | Apache 2.0   |    ✓     |
 | [cubeb][]           | 03ec1b3 | ISC          |    ✓     |
-| [Dear ImGui][]      | 1.79    | MIT          |    ✓     |
+| [Dear ImGui][]      | 1.81    | MIT          |    ✓     |
 | [Duktape][]         | 2.5.0   | MIT          |    ✓     |
 | [FreeType][]        | 2.10.1  | FreeType     |    ✓     |
 | [HarfBuzz][]        | 2.6.4   | Old MIT      |    ✓     |
