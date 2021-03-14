@@ -9,9 +9,10 @@
 // clang-format off
 #include "ThirdParty/DisableWarnings.h"
 #define IMGUI_DISABLE_OSX_FUNCTIONS 1
-#include <imgui/imgui.cpp>  // NOLINT(llvm-include-order)
-#include <imgui/imgui_draw.cpp>
-#include <imgui/imgui_widgets.cpp>
+#include <imgui/imgui.cpp>  // NOLINT(bugprone-suspicious-include,llvm-include-order)
+#include <imgui/imgui_draw.cpp>  // NOLINT(bugprone-suspicious-include)
+#include <imgui/imgui_tables.cpp>  // NOLINT(bugprone-suspicious-include)
+#include <imgui/imgui_widgets.cpp>  // NOLINT(bugprone-suspicious-include)
 #include "ThirdParty/ReenableWarnings.h"
 // clang-format on
 
